@@ -1,0 +1,513 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Cmake Logs:](#cmake-logs)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Cmake Logs:
+<pre><code># cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DDEFAULT_CHARSET=gbk -DDEFAULT_COLLATION=gbk_chinese_ci -DENABLED_LOCAL_INFILE=ON -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_COMMENT="Marslo edition" -DMYSQL_UNIX_ADDR=/tmp/mysqld.sock -DWITH_DEBUG=0 -DMYSQL_TCP_PORT=3306
+-- Running cmake version 2.8.11.2
+-- Configuring with MAX_INDEXES = 64U
+-- Looking for SHM_HUGETLB
+-- Looking for SHM_HUGETLB - found
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of void *
+-- Check size of void * - done
+-- MySQL 5.7.3-m13
+-- Packaging as: mysql-5.7.3-m13-Linux-i686
+-- Looking for floor
+-- Looking for floor - not found
+-- Looking for floor in m
+-- Looking for floor in m - found
+-- Looking for gethostbyname_r
+-- Looking for gethostbyname_r - found
+-- Looking for bind
+-- Looking for bind - found
+-- Looking for crypt
+-- Looking for crypt - not found
+-- Looking for crypt in crypt
+-- Looking for crypt in crypt - found
+-- Looking for setsockopt
+-- Looking for setsockopt - found
+-- Looking for dlopen
+-- Looking for dlopen - not found
+-- Looking for dlopen in dl
+-- Looking for dlopen in dl - found
+-- Looking for sched_yield
+-- Looking for sched_yield - found
+-- Looking for clock_gettime
+-- Looking for clock_gettime - found
+-- Looking for include file pthread.h
+-- Looking for include file pthread.h - found
+-- Looking for pthread_create
+-- Looking for pthread_create - not found
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Looking for include file alloca.h
+-- Looking for include file alloca.h - found
+-- Looking for include file arpa/inet.h
+-- Looking for include file arpa/inet.h - found
+-- Looking for include file crypt.h
+-- Looking for include file crypt.h - found
+-- Looking for include file cxxabi.h
+-- Looking for include file cxxabi.h - not found
+-- Looking for include file dirent.h
+-- Looking for include file dirent.h - found
+-- Looking for include file dlfcn.h
+-- Looking for include file dlfcn.h - found
+-- Looking for include file execinfo.h
+-- Looking for include file execinfo.h - found
+-- Looking for include file fcntl.h
+-- Looking for include file fcntl.h - found
+-- Looking for include file fenv.h
+-- Looking for include file fenv.h - found
+-- Looking for include file fpu_control.h
+-- Looking for include file fpu_control.h - found
+-- Looking for include file grp.h
+-- Looking for include file grp.h - found
+-- Looking for include file ieeefp.h
+-- Looking for include file ieeefp.h - not found
+-- Looking for include file inttypes.h
+-- Looking for include file inttypes.h - found
+-- Looking for include file langinfo.h
+-- Looking for include file langinfo.h - found
+-- Looking for include file malloc.h
+-- Looking for include file malloc.h - found
+-- Looking for include file ndir.h
+-- Looking for include file ndir.h - not found
+-- Looking for include file netinet/in.h
+-- Looking for include file netinet/in.h - found
+-- Looking for include file paths.h
+-- Looking for include file paths.h - found
+-- Looking for include file poll.h
+-- Looking for include file poll.h - found
+-- Looking for include file pwd.h
+-- Looking for include file pwd.h - found
+-- Looking for include file sched.h
+-- Looking for include file sched.h - found
+-- Looking for include file select.h
+-- Looking for include file select.h - not found
+-- Looking for include files sys/types.h, sys/dir.h
+-- Looking for include files sys/types.h, sys/dir.h - found
+-- Looking for include file sys/ndir.h
+-- Looking for include file sys/ndir.h - not found
+-- Looking for include file strings.h
+-- Looking for include file strings.h - found
+-- Looking for include file synch.h
+-- Looking for include file synch.h - not found
+-- Looking for include file sysent.h
+-- Looking for include file sysent.h - not found
+-- Looking for include file sys/cdefs.h
+-- Looking for include file sys/cdefs.h - found
+-- Looking for include file sys/ioctl.h
+-- Looking for include file sys/ioctl.h - found
+-- Looking for include file sys/ipc.h
+-- Looking for include file sys/ipc.h - found
+-- Looking for include file sys/malloc.h
+-- Looking for include file sys/malloc.h - not found
+-- Looking for include file sys/mman.h
+-- Looking for include file sys/mman.h - found
+-- Looking for include file sys/prctl.h
+-- Looking for include file sys/prctl.h - found
+-- Looking for include file sys/resource.h
+-- Looking for include file sys/resource.h - found
+-- Looking for include file sys/select.h
+-- Looking for include file sys/select.h - found
+-- Looking for include file sys/shm.h
+-- Looking for include file sys/shm.h - found
+-- Looking for include file sys/socket.h
+-- Looking for include file sys/socket.h - found
+-- Looking for include file sys/stat.h
+-- Looking for include file sys/stat.h - found
+-- Looking for include files curses.h, term.h
+-- Looking for include files curses.h, term.h - found
+-- Looking for include file asm/termbits.h
+-- Looking for include file asm/termbits.h - found
+-- Looking for include file termbits.h
+-- Looking for include file termbits.h - not found
+-- Looking for include file termios.h
+-- Looking for include file termios.h - found
+-- Looking for include file termio.h
+-- Looking for include file termio.h - found
+-- Looking for include file termcap.h
+-- Looking for include file termcap.h - found
+-- Looking for include file unistd.h
+-- Looking for include file unistd.h - found
+-- Looking for include file utime.h
+-- Looking for include file utime.h - found
+-- Looking for include file sys/time.h
+-- Looking for include file sys/time.h - found
+-- Looking for include file sys/utime.h
+-- Looking for include file sys/utime.h - not found
+-- Looking for include file sys/wait.h
+-- Looking for include file sys/wait.h - found
+-- Looking for include file sys/param.h
+-- Looking for include file sys/param.h - found
+-- Looking for include file sys/vadvise.h
+-- Looking for include file sys/vadvise.h - not found
+-- Looking for include file fnmatch.h
+-- Looking for include file fnmatch.h - found
+-- Looking for include files stdlib.h, sys/un.h
+-- Looking for include files stdlib.h, sys/un.h - found
+-- Looking for include file vis.h
+-- Looking for include file vis.h - not found
+-- Looking for include file sasl/sasl.h
+-- Looking for include file sasl/sasl.h - not found
+-- Looking for include file sys/devpoll.h
+-- Looking for include file sys/devpoll.h - not found
+-- Looking for include file sys/epoll.h
+-- Looking for include file sys/epoll.h - found
+-- Looking for TAILQ_FOREACH
+-- Looking for TAILQ_FOREACH - found
+-- Performing Test HAVE_WERROR_FLAG
+-- Performing Test HAVE_WERROR_FLAG - Success
+-- Performing Test HAVE_PTHREAD_ONCE_INIT
+-- Performing Test HAVE_PTHREAD_ONCE_INIT - Success
+-- Looking for _aligned_malloc
+-- Looking for _aligned_malloc - not found
+-- Looking for alarm
+-- Looking for alarm - found
+-- Looking for backtrace
+-- Looking for backtrace - found
+-- Looking for backtrace_symbols
+-- Looking for backtrace_symbols - found
+-- Looking for backtrace_symbols_fd
+-- Looking for backtrace_symbols_fd - found
+-- Looking for printstack
+-- Looking for printstack - not found
+-- Looking for index
+-- Looking for index - found
+-- Looking for clock_gettime
+-- Looking for clock_gettime - found
+-- Looking for cuserid
+-- Looking for cuserid - found
+-- Looking for directio
+-- Looking for directio - not found
+-- Looking for ftruncate
+-- Looking for ftruncate - found
+-- Looking for compress
+-- Looking for compress - not found
+-- Looking for crypt
+-- Looking for crypt - found
+-- Looking for dlerror
+-- Looking for dlerror - found
+-- Looking for dlopen
+-- Looking for dlopen - found
+-- Looking for fchmod
+-- Looking for fchmod - found
+-- Looking for fcntl
+-- Looking for fcntl - found
+-- Looking for fdatasync
+-- Looking for fdatasync - found
+-- Looking for fdatasync
+-- Looking for fdatasync - found
+-- Looking for fedisableexcept
+-- Looking for fedisableexcept - found
+-- Looking for fseeko
+-- Looking for fseeko - found
+-- Looking for fsync
+-- Looking for fsync - found
+-- Looking for gethostbyaddr_r
+-- Looking for gethostbyaddr_r - found
+-- Looking for gethrtime
+-- Looking for gethrtime - not found
+-- Looking for getnameinfo
+-- Looking for getnameinfo - found
+-- Looking for getpass
+-- Looking for getpass - found
+-- Looking for getpassphrase
+-- Looking for getpassphrase - not found
+-- Looking for getpwnam
+-- Looking for getpwnam - found
+-- Looking for getpwuid
+-- Looking for getpwuid - found
+-- Looking for getrlimit
+-- Looking for getrlimit - found
+-- Looking for getrusage
+-- Looking for getrusage - found
+-- Looking for initgroups
+-- Looking for initgroups - found
+-- Looking for issetugid
+-- Looking for issetugid - not found
+-- Looking for getuid
+-- Looking for getuid - found
+-- Looking for geteuid
+-- Looking for geteuid - found
+-- Looking for getgid
+-- Looking for getgid - found
+-- Looking for getegid
+-- Looking for getegid - found
+-- Looking for lstat
+-- Looking for lstat - found
+-- Looking for madvise
+-- Looking for madvise - found
+-- Looking for malloc_info
+-- Looking for malloc_info - found
+-- Looking for mlock
+-- Looking for mlock - found
+-- Looking for mlockall
+-- Looking for mlockall - found
+-- Looking for mmap
+-- Looking for mmap - found
+-- Looking for mmap64
+-- Looking for mmap64 - found
+-- Looking for poll
+-- Looking for poll - found
+-- Looking for posix_fallocate
+-- Looking for posix_fallocate - found
+-- Looking for posix_memalign
+-- Looking for posix_memalign - found
+-- Looking for pread
+-- Looking for pread - found
+-- Looking for pthread_attr_getguardsize
+-- Looking for pthread_attr_getguardsize - found
+-- Looking for pthread_condattr_setclock
+-- Looking for pthread_condattr_setclock - found
+-- Looking for pthread_sigmask
+-- Looking for pthread_sigmask - found
+-- Looking for pthread_yield_np
+-- Looking for pthread_yield_np - not found
+-- Looking for readdir_r
+-- Looking for readdir_r - found
+-- Looking for readlink
+-- Looking for readlink - found
+-- Looking for realpath
+-- Looking for realpath - found
+-- Looking for sched_yield
+-- Looking for sched_yield - found
+-- Looking for setenv
+-- Looking for setenv - found
+-- Looking for setfd
+-- Looking for setfd - not found
+-- Looking for sigaction
+-- Looking for sigaction - found
+-- Looking for sigset
+-- Looking for sigset - found
+-- Looking for sleep
+-- Looking for sleep - found
+-- Looking for stpcpy
+-- Looking for stpcpy - found
+-- Looking for stpncpy
+-- Looking for stpncpy - found
+-- Looking for strlcpy
+-- Looking for strlcpy - not found
+-- Looking for strnlen
+-- Looking for strnlen - found
+-- Looking for strlcat
+-- Looking for strlcat - not found
+-- Looking for strsignal
+-- Looking for strsignal - found
+-- Looking for fgetln
+-- Looking for fgetln - not found
+-- Looking for strsep
+-- Looking for strsep - found
+-- Looking for tell
+-- Looking for tell - not found
+-- Looking for thr_yield
+-- Looking for thr_yield - not found
+-- Looking for vasprintf
+-- Looking for vasprintf - found
+-- Looking for memalign
+-- Looking for memalign - found
+-- Looking for nl_langinfo
+-- Looking for nl_langinfo - found
+-- Looking for ntohll
+-- Looking for ntohll - not found
+-- Looking for clock_gettime
+-- Looking for clock_gettime - found
+-- Looking for epoll_create
+-- Looking for epoll_create - found
+-- Looking for inet_ntop
+-- Looking for inet_ntop - found
+-- Looking for kqueue
+-- Looking for kqueue - not found
+-- Looking for timeradd
+-- Looking for timeradd - found
+-- Looking for timerclear
+-- Looking for timerclear - found
+-- Looking for timercmp
+-- Looking for timercmp - found
+-- Looking for timerisset
+-- Looking for timerisset - found
+-- Looking for include file sys/times.h
+-- Looking for include file sys/times.h - found
+-- Looking for include file asm/msr.h
+-- Looking for include file asm/msr.h - found
+-- Looking for times
+-- Looking for times - found
+-- Looking for gettimeofday
+-- Looking for gettimeofday - found
+-- Looking for rdtscll
+-- Looking for rdtscll - not found
+-- Looking for madvise
+-- Looking for madvise - found
+-- Looking for lrand48
+-- Looking for lrand48 - found
+-- Looking for getpagesize
+-- Looking for getpagesize - found
+-- Looking for TIOCGWINSZ
+-- Looking for TIOCGWINSZ - found
+-- Looking for FIONREAD
+-- Looking for FIONREAD - found
+-- Looking for FIONREAD
+-- Looking for FIONREAD - not found
+-- Looking for finite
+-- Looking for finite - found
+-- Looking for log2
+-- Looking for log2 - found
+-- Looking for rint
+-- Looking for rint - found
+-- Performing Test HAVE_ISINF
+-- Performing Test HAVE_ISINF - Success
+-- Performing Test HAVE_FESETROUND
+-- Performing Test HAVE_FESETROUND - Success
+-- Check if the system is big endian
+-- Searching 16 bit integer
+-- Check size of unsigned short
+-- Check size of unsigned short - done
+-- Using unsigned short
+-- Check if the system is big endian - little endian
+-- Check size of sigset_t
+-- Check size of sigset_t - done
+-- Check size of mode_t
+-- Check size of mode_t - done
+-- Check size of char *
+-- Check size of char * - done
+-- Check size of long
+-- Check size of long - done
+-- Check size of char
+-- Check size of char - done
+-- Check size of short
+-- Check size of short - done
+-- Check size of int
+-- Check size of int - done
+-- Check size of long long
+-- Check size of long long - done
+-- Check size of off_t
+-- Check size of off_t - done
+-- Check size of uint
+-- Check size of uint - done
+-- Check size of ulong
+-- Check size of ulong - done
+-- Check size of u_int32_t
+-- Check size of u_int32_t - done
+-- Check size of time_t
+-- Check size of time_t - done
+-- Performing Test TIME_T_UNSIGNED
+-- Performing Test TIME_T_UNSIGNED - Failed
+-- Performing Test HAVE_GETADDRINFO
+-- Performing Test HAVE_GETADDRINFO - Success
+-- Performing Test HAVE_SELECT
+-- Performing Test HAVE_SELECT - Success
+-- Performing Test QSORT_TYPE_IS_VOID
+-- Performing Test QSORT_TYPE_IS_VOID - Success
+-- Performing Test HAVE_SOCKET_SIZE_T_AS_socklen_t
+-- Performing Test HAVE_SOCKET_SIZE_T_AS_socklen_t - Success
+-- Performing Test HAVE_PTHREAD_YIELD_ZERO_ARG
+-- Performing Test HAVE_PTHREAD_YIELD_ZERO_ARG - Success
+-- Checking stack direction : -1
+-- Performing Test SIGNAL_RETURN_TYPE_IS_VOID
+-- Performing Test SIGNAL_RETURN_TYPE_IS_VOID - Success
+-- Looking for include files time.h, sys/time.h
+-- Looking for include files time.h, sys/time.h - found
+-- Looking for O_NONBLOCK
+-- Looking for O_NONBLOCK - found
+-- Performing Test C_HAS_inline
+-- Performing Test C_HAS_inline - Success
+-- Performing Test HAVE_PAUSE_INSTRUCTION
+-- Performing Test HAVE_PAUSE_INSTRUCTION - Success
+-- Performing Test HAVE_POSIX_SIGNALS
+-- Performing Test HAVE_POSIX_SIGNALS - Success
+-- Performing Test HAVE_BSS_START
+-- Performing Test HAVE_BSS_START - Success
+-- Performing Test HAVE_WEAK_SYMBOL
+-- Performing Test HAVE_WEAK_SYMBOL - Success
+-- Performing Test HAVE_SOLARIS_STYLE_GETHOST
+-- Performing Test HAVE_SOLARIS_STYLE_GETHOST - Failed
+-- Performing Test HAVE_GCC_ATOMIC_BUILTINS
+-- Performing Test HAVE_GCC_ATOMIC_BUILTINS - Success
+-- Looking for netinet/in6.h
+-- Looking for netinet/in6.h - not found
+-- Check size of struct sockaddr_in6
+-- Check size of struct sockaddr_in6 - done
+-- Check size of struct in6_addr
+-- Check size of struct in6_addr - done
+-- Performing Test HAVE_SOCKADDR_STORAGE_SS_FAMILY
+-- Performing Test HAVE_SOCKADDR_STORAGE_SS_FAMILY - Success
+-- Performing Test HAVE_SOCKADDR_IN_SIN_LEN
+-- Performing Test HAVE_SOCKADDR_IN_SIN_LEN - Failed
+-- Performing Test HAVE_SOCKADDR_IN6_SIN6_LEN
+-- Performing Test HAVE_SOCKADDR_IN6_SIN6_LEN - Failed
+-- Performing Test HAVE_VISIBILITY_HIDDEN
+-- Performing Test HAVE_VISIBILITY_HIDDEN - Success
+-- HAVE_VISIBILITY_HIDDEN
+-- HAVE_VISIBILITY_HIDDEN
+-- HAVE_VISIBILITY_HIDDEN
+-- Check size of mbstate_t
+-- Check size of mbstate_t - done
+-- Performing Test HAVE_LANGINFO_CODESET
+-- Performing Test HAVE_LANGINFO_CODESET - Success
+-- Looking for wcsdup
+-- Looking for wcsdup - found
+-- Check size of wchar_t
+-- Check size of wchar_t - done
+-- Check size of wint_t
+-- Check size of wint_t - done
+-- Found Curses: /usr/lib/i386-linux-gnu/libcurses.so  
+-- Looking for tputs in /usr/lib/i386-linux-gnu/libcurses.so
+-- Looking for tputs in /usr/lib/i386-linux-gnu/libcurses.so - found
+-- Performing Test HAVE_DECL_TGOTO
+-- Performing Test HAVE_DECL_TGOTO - Success
+-- Looking for strvis
+-- Looking for strvis - not found
+-- Looking for strunvis
+-- Looking for strunvis - not found
+-- Using cmake version 2.8.11.2
+-- Performing Test flag_supported
+-- Performing Test flag_supported - Success
+-- Disabling -Wunused-but-set-variable warning
+-- Performing Test flag_supported
+-- Performing Test flag_supported - Success
+-- Disabling -Wstrict-aliasing warning
+-- Not building NDB
+-- Looking for include file libaio.h
+-- Looking for include file libaio.h - not found
+-- Looking for io_queue_init in aio
+-- Looking for io_queue_init in aio - not found
+-- Looking for sched_getcpu
+-- Looking for sched_getcpu - found
+-- Looking for nanosleep
+-- Looking for nanosleep - found
+-- Performing Test HAVE_IB_GCC_ATOMIC_BUILTINS
+-- Performing Test HAVE_IB_GCC_ATOMIC_BUILTINS - Success
+-- Performing Test HAVE_IB_GCC_ATOMIC_BUILTINS_64
+-- Performing Test HAVE_IB_GCC_ATOMIC_BUILTINS_64 - Success
+-- Performing Test HAVE_IB_ATOMIC_PTHREAD_T_GCC
+-- Performing Test HAVE_IB_ATOMIC_PTHREAD_T_GCC - Success
+-- Performing Test HAVE_IB_LINUX_FUTEX
+-- Performing Test HAVE_IB_LINUX_FUTEX - Success
+-- Looking for asprintf
+-- Looking for asprintf - found
+-- Check size of pthread_t
+-- Check size of pthread_t - done
+-- Performing Test HAVE_PEERCRED
+-- Performing Test HAVE_PEERCRED - Success
+-- Library mysqlclient depends on OSLIBS -lpthread;m;dl
+-- Googlemock was not found. gtest-based unit tests will be disabled. You can run cmake . -DENABLE_DOWNLOADS=1 to automatically download and build required components from source.
+-- If you are inside a firewall, you may need to use an http proxy: export http_proxy=http://foo.bar.com:80
+Warning: Bison executable not found in PATH
+-- Library mysqlserver depends on OSLIBS -lpthread;m;crypt;dl
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/marslo/Tools/Software/MySql/mysql-5.7.3-m13
+</code></pre>
