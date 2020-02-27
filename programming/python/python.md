@@ -1743,7 +1743,8 @@ while t < 10: t = delay()
 
 - yes:
 
-```python """Return a foobang
+```python
+"""Return a foobang
 
 Optional plotz says to frobnicate the bizbaz first.
 """
