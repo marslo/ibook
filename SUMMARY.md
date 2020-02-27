@@ -42,6 +42,7 @@
 - programming
   - angular
     * [angularConfiguraion](programming/angular/angularConfiguraion.md)
+  - [groovy](programming/groovy/groovy.md)
   - [maven](programming/maven/README.md)
   - mysql
     * [mysqlCmakeLogs](programming/mysql/mysqlCmakeLogs.md)
