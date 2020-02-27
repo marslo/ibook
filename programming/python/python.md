@@ -1324,7 +1324,7 @@ foo = long_function_name(
   var_three, var_four)
 ```
 
-#### If-statemant
+#### `if` statemant
 
 ```python
 # No extra indentation.
@@ -1457,7 +1457,8 @@ import foo.bar.yourclass
 # use "myclass.MyClass" or "foo.bar.yourclass.YourClass"
 ```
 
-----
+--------
+
 ### module Level dunder names
 > Module level "dunder" names with two leading and two trailing underscores, such as `__all__`, `__author__`, `__version__`, etc
 
@@ -1481,6 +1482,7 @@ import sys
 
 ### Whitespace in Expressions and Statements
 
+--------
 - no:
 
 ```python
@@ -1493,7 +1495,7 @@ spam( ham[ 1 ], { eggs: 2 } )
 spam(ham[1], {eggs: 2})
 ```
 
---
+--------
 
 - no:
 
@@ -1506,8 +1508,7 @@ if x == 4 : print x , y ; x , y = y , x
 ```python
 if x == 4; print x, y; x, y = y, x
 ```
-
---
+--------
 
 - no:
 
@@ -1528,6 +1529,7 @@ ham[: upper_fn(x) : setp_fn(x)], ham[:: setp_fn(x)]
 ham[lower + offset : upper + offset]
 ```
 
+--------
 - no:
 
 ```python
@@ -1539,8 +1541,8 @@ spam (1)
 ```python
 spam(1)
 ```
---
 
+--------
 - no:
 
 ```python
@@ -1552,6 +1554,7 @@ dct ['key'] = lst [index]
 ```python
 dct['key'] = lst[index]
 ```
+--------
 
 - no:
 
@@ -1569,9 +1572,9 @@ dct['key'] = lst[index]
     long_variable = 3
 ```
 
-----
 ### Other Recommendations
 
+--------
 - no:
 
 ```python
@@ -1592,7 +1595,7 @@ hypot2 = x*x + y*y
 c = (a+b) * (a-b)
 ```
 
---
+--------
 
 - no:
 
@@ -1607,6 +1610,7 @@ def complex(real, imag=0.0):
   return magic(r=real, i=imag)
 ```
 
+--------
 - no:
 
 ```python
@@ -1620,6 +1624,7 @@ def munge(input: AnyStr): ...
 def munge() -> AnyStr: ...
 ```
 
+--------
 - no:
 
 ```python
@@ -1684,6 +1689,7 @@ Optional plotz says to frobnicate the bizbaz first.
 
 ### Programming Recommendations
 
+--------
 - no:
 
 ```python
@@ -1696,6 +1702,7 @@ if not foo is None:
 if foo is not None:
 ```
 
+--------
 - no:
 
 ```python
@@ -1708,6 +1715,7 @@ f = lambda x: 2*x
 def f(x): return 2*x
 ```
 
+--------
 - no:
 
 ```python
@@ -1730,7 +1738,7 @@ else:
   return handle_value(value)
 
 ```
---
+--------
 
 - no:
 
@@ -1746,7 +1754,7 @@ with conn.begin_transaction():
   do_stuff_in_transaction(conn)
 
 ```
---
+--------
 
 - no:
 
@@ -1777,7 +1785,7 @@ def bar(x):
 
 ```
 
---
+--------
 - no:
 
 ```python
@@ -1790,7 +1798,7 @@ if foo[:3] == 'bar':
 if foo.startwith('bar'):
 ```
 
---
+--------
 
 - no:
 
@@ -1804,7 +1812,7 @@ if type(obj) is type(1):
 if isinstance(obj, int):
 ```
 
---
+--------
 
 - no:
 
@@ -1819,8 +1827,7 @@ if not len(seq):
 if not seq:
 if seq:
 ```
-===
-
+--------
 - no:
 
 ```python
@@ -1839,6 +1846,7 @@ if greeting:
 if greeting is True:
 ```
 
+--------
 
 ## [PEP8 Error/Warning Code](http://pep8.readthedocs.io/en/release-1.7.x/intro.html#error-codes)
 #### E1 Indentation
