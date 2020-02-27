@@ -1483,6 +1483,7 @@ import sys
 ### Whitespace in Expressions and Statements
 
 --------
+
 - no:
 
 ```python
@@ -1508,6 +1509,7 @@ if x == 4 : print x , y ; x , y = y , x
 ```python
 if x == 4; print x, y; x, y = y, x
 ```
+
 --------
 
 - no:
@@ -1530,6 +1532,7 @@ ham[lower + offset : upper + offset]
 ```
 
 --------
+
 - no:
 
 ```python
@@ -1543,6 +1546,7 @@ spam(1)
 ```
 
 --------
+
 - no:
 
 ```python
@@ -1554,27 +1558,29 @@ dct ['key'] = lst [index]
 ```python
 dct['key'] = lst[index]
 ```
+
 --------
 
 - no:
 
 ```python
-    x             = 1
-    y             = 2
-    long_variable = 3
+x             = 1
+y             = 2
+long_variable = 3
 ```
 
 - yes:
 
 ```python
-    x = 1
-    y = 2
-    long_variable = 3
+x = 1
+y = 2
+long_variable = 3
 ```
 
 ### Other Recommendations
 
 --------
+
 - no:
 
 ```python
@@ -1611,6 +1617,7 @@ def complex(real, imag=0.0):
 ```
 
 --------
+
 - no:
 
 ```python
@@ -1625,6 +1632,7 @@ def munge() -> AnyStr: ...
 ```
 
 --------
+
 - no:
 
 ```python
@@ -1681,6 +1689,7 @@ while t < 10: t = delay()
 ### documentation strings
 
 - yes:
+
 ```python """Return a foobang
 
 Optional plotz says to frobnicate the bizbaz first.
@@ -1690,6 +1699,7 @@ Optional plotz says to frobnicate the bizbaz first.
 ### Programming Recommendations
 
 --------
+
 - no:
 
 ```python
@@ -1703,6 +1713,7 @@ if foo is not None:
 ```
 
 --------
+
 - no:
 
 ```python
@@ -1716,6 +1727,7 @@ def f(x): return 2*x
 ```
 
 --------
+
 - no:
 
 ```python
@@ -1738,6 +1750,7 @@ else:
   return handle_value(value)
 
 ```
+
 --------
 
 - no:
@@ -1754,6 +1767,7 @@ with conn.begin_transaction():
   do_stuff_in_transaction(conn)
 
 ```
+
 --------
 
 - no:
@@ -1769,6 +1783,7 @@ def bar(x):
   return math.sqrt(x)
 
 ```
+
 - yes:
 
 ```python
@@ -1786,6 +1801,7 @@ def bar(x):
 ```
 
 --------
+
 - no:
 
 ```python
