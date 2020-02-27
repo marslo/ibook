@@ -206,173 +206,200 @@ b >= 1 and b <= a and a < 10 #True
 
 ##### Boolean
 P:
+```python
+name = 'Tim'
+langs = ['AS3', 'Lua', 'C']
+info = {'name': 'Tim', 'sex': 'Male', 'age':23 }
 
-        name = 'Tim'
-        langs = ['AS3', 'Lua', 'C']
-        info = {'name': 'Tim', 'sex': 'Male', 'age':23 }
-
-        if name and langs and info:
-                print('All True!')  #All True!
+if name and langs and info:
+  print('All True!')  #All True!
+```
 
 NP:
 
-        if name != '' and len(langs) > 0 and info != {}:
-                print('All True!') #All True!
+```python
+if name != '' and len(langs) > 0 and info != {}:
+  print('All True!') #All True!
+```
 
 --
 
 ##### Reverse
 P:
+```python
+def reverse_str( s ):
+  return s[::-1]
+```
 
-        def reverse_str( s ):
-                return s[::-1]
 
 NP:
-
-        def reverse_str( s ):
-                t = ''
-                for x in xrange(len(s)-1,-1,-1):
-                        t += s[x]
-                return t
+```python
+def reverse_str( s ):
+  t = ''
+  for x in xrange(len(s)-1,-1,-1):
+    t += s[x]
+  return t
+```
 
 --
 
 ##### Join in list
 P:
-
-        strList = ["Python", "is", "good"]
-
-        res =  ' '.join(strList) #Python is good
+```python
+strList = ["Python", "is", "good"]
+res =  ' '.join(strList) #Python is good
+```
 
 NP:
 
-    res = ''
-    for s in strList:
-        res += s + ' '
-    #Python is good
-    #最后还有个多余空格
+```python
+res = ''
+for s in strList:
+  res += s + ' '
+#Python is good
+#最后还有个多余空格
+```
 
 --
 
 ##### Sum & Max & Min & Time
 P:
 
-        numList = [1,2,3,4,5]
-        sum = sum(numList)  #sum = 15
-        maxNum = max(numList) #maxNum = 5
-        minNum = min(numList) #minNum = 1
-        from operator import mul
-        prod = reduce(mul, numList, 1) #prod = 120 默认值传1以防空列表报错
+```python
+numList = [1,2,3,4,5]
+sum = sum(numList)  #sum = 15
+maxNum = max(numList) #maxNum = 5
+minNum = min(numList) #minNum = 1
+from operator import mul
+prod = reduce(mul, numList, 1) #prod = 120 默认值传1以防空列表报错
+```
 
 NP:
 
-        sum = 0
-        maxNum = -float('inf')
-        minNum = float('inf')
-        prod = 1
-        for num in numList:
-                if num > maxNum:
-                        maxNum = num
-                if num < minNum:
-                        minNum = num
-                sum += num
-                prod *= num
-        # sum = 15 maxNum = 5 minNum = 1 prod = 120
+```python
+sum = 0
+maxNum = -float('inf')
+minNum = float('inf')
+prod = 1
+for num in numList:
+  if num > maxNum:
+    maxNum = num
+  if num < minNum:
+    minNum = num
+  sum += num
+  prod *= num
+# sum = 15 maxNum = 5 minNum = 1 prod = 120
+```
 
 --
 
 ##### List Comprehensions
 P:
+```python
+l = [x*x for x in range(10) if x % 3 == 0]
+# l = [0, 9, 36, 81]
+```
 
-        l = [x*x for x in range(10) if x % 3 == 0]
-        # l = [0, 9, 36, 81]
 
 NP:
-
-        l = []
-        for x in range(10):
-                if x % 3 == 0:
-                        l.append(x*x)
-        # l = [0, 9, 36, 81]
+```python
+l = []
+for x in range(10):
+  if x % 3 == 0:
+    l.append(x*x)
+# l = [0, 9, 36, 81]
+```
 
 --
 
 ##### Default Dict
 P:
+```python
+dic = {'name':'Tim', 'age':23}
 
-        dic = {'name':'Tim', 'age':23}
-
-        dic['workage'] = dic.get('workage',0) + 1
-        # dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
+dic['workage'] = dic.get('workage',0) + 1
+# dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
+```
 
 NP:
-
-        if 'workage' in dic:
-                dic['workage'] += 1
-        else:
-                dic['workage'] = 1
-        # dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
+```python
+if 'workage' in dic:
+  dic['workage'] += 1
+else:
+  dic['workage'] = 1
+# dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
+```
 
 --
 
 ##### if...else...
 P:
 
-        for x in xrange(1,5):
-            if x == 5:
-                print 'find 5'
-                break
-        else:
-            print 'can not find 5!'
-        # can not find 5!
+```python
+for x in xrange(1,5):
+  if x == 5:
+    print 'find 5'
+    break
+else:
+  print 'can not find 5!'
+# can not find 5!
+```
 
 NP:
-
-        find = False
-        for x in xrange(1,5):
-            if x == 5:
-                find = True
-                print 'find 5'
-                break
-        if not find:
-            print 'can not find 5!'
-        # can not find 5!
+```python
+find = False
+for x in xrange(1,5):
+  if x == 5:
+    find = True
+    print 'find 5'
+    break
+if not find:
+  print 'can not find 5!'
+# can not find 5!
+```
 
 --
 
 ##### Ternary Operator
 P:
-        a = 3
+```python
+a = 3
 
-        b = 2 if a > 2 else 1
-        # b = 2
+b = 2 if a > 2 else 1
+# b = 2
+```
 
 NP:
 
-        if a > 2:
-            b = 2
-        else:
-            b = 1
-        # b = 2
+```python
+if a > 2:
+  b = 2
+else:
+  b = 1
+# b = 2
 
+```
 --
 
 ##### dict & zip
 P:
 
-        keys = ['Name', 'Sex', 'Age']
-        values = ['Tim', 'Male', 23]
+```python
+keys = ['Name', 'Sex', 'Age']
+values = ['Tim', 'Male', 23]
 
-        dic = dict(zip(keys, values))
-        # {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
+dic = dict(zip(keys, values))
+# {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
+```
 
 NP:
 
-        dic = {}
-        for i,e in enumerate(keys):
-            dic[e] = values[i]
-        # {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
-
+```python
+dic = {}
+for i,e in enumerate(keys):
+  dic[e] = values[i]
+# {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
+```
 
 --------
 
@@ -381,40 +408,48 @@ NP:
 ### Numbers:
 ##### round
 
-        >>> str(round(1234.5678, -2))
-        '1200.0'
-        >>> str(round(1234.5678, 2))
-        '1234.57'
+```python
+>>> str(round(1234.5678, -2))
+'1200.0'
+>>> str(round(1234.5678, 2))
+'1234.57'
+```
 
 
 ##### Integer base
 
-        >>> int('10', 0)
-        10
-        >>> int('0x10', 0)
-        16
-        >>> int('010', 0)  # does not work on Python 3.x
-        8
-        >>> int('0o10', 0)  # Python >=2.6 and Python 3.x
-        8
-        >>> int('0b10', 0)  # Python >=2.6 and Python 3.x
-        2
+```python
+>>> int('10', 0)
+10
+>>> int('0x10', 0)
+16
+>>> int('010', 0)  # does not work on Python 3.x
+8
+>>> int('0o10', 0)  # Python >=2.6 and Python 3.x
+8
+>>> int('0b10', 0)  # Python >=2.6 and Python 3.x
+2
+```
 
 ##### In-place value swapping
 
-        >>> a = 10
-        >>> b = 5
-        >>> a, b
-        (10, 5)
+```python
+>>> a = 10
+>>> b = 5
+>>> a, b
+(10, 5)
 
-        >>> a, b = b, a
-        >>> a, b
-        (5, 10)
+>>> a, b = b, a
+>>> a, b
+(5, 10)
+```
 
 ##### Sum
 
-        from operator import add
-        print reduce(add, [1,2,3,4,5,6])
+```python
+from operator import add
+print reduce(add, [1,2,3,4,5,6])
+```
 
 ------
 
@@ -422,98 +457,122 @@ NP:
 
 ##### Multi-line Strings
 
-        >>> sql = "select * from some_table \
-        where id > 10"
-        >>> print sql
-        select * from some_table where id > 10
+```python
+>>> sql = "select * from some_table \
+where id > 10"
+>>> print sql
+select * from some_table where id > 10
+```
 
 --
 
-        >>> sql = """select * from some_table
-        where id > 10"""
-        >>> print sql
-        select * from some_table where id > 10
+```python
+>>> sql = """select * from some_table
+where id > 10"""
+>>> print sql
+select * from some_table where id > 10
+```
 
 --
 
-        >>> sql = ("select * from some_table " # <-- no comma, whitespace at end
-                             "where id > 10 "
-                             "order by name")
-        >>> print sql
-        select * from some_table where id > 10 order by name
+```python
+>>> sql = ("select * from some_table " # <-- no comma, whitespace at end
+           "where id > 10 "
+           "order by name")
+>>> print sql
+select * from some_table where id > 10 order by name
+```
 
 ##### In
 
-        >>> 'str' in 'string'
-        True
-        >>> 'no' in 'yes'
-        False
-        >>>
+```python
+>>> 'str' in 'string'
+True
+>>> 'no' in 'yes'
+False
+>>>
+```
 
 ##### Join
 
-        ''.join(list_of_strings)
+```python
+''.join(list_of_strings)
+```
 
 ##### set
 
-        >>> a = set([1,2,3,4])
-        >>> b = set([3,4,5,6])
-        >>> a | b # Union
-        {1, 2, 3, 4, 5, 6}
-        >>> a & b # Intersection
-        {3, 4}
-        >>> a < b # Subset
-        False
-        >>> a - b # Difference
-        {1, 2}
-        >>> a ^ b # Symmetric Difference
-        {1, 2, 5, 6}
+```python
+>>> a = set([1,2,3,4])
+>>> b = set([3,4,5,6])
+>>> a | b # Union
+{1, 2, 3, 4, 5, 6}
+>>> a & b # Intersection
+{3, 4}
+>>> a < b # Subset
+False
+>>> a - b # Difference
+{1, 2}
+>>> a ^ b # Symmetric Difference
+{1, 2, 5, 6}
+```
 
 ##### Slice operators
 
-    a = [1,2,3,4,5]
-    >>> a[::2]  # iterate over the whole list in 2-increments
-    [1,3,5]
+```python
+a = [1,2,3,4,5]
+>>> a[::2]  # iterate over the whole list in 2-increments
+[1,3,5]
+```
 
 --
 
-    >>> a[::-1]
-    [5,4,3,2,1]
+```python
+>>> a[::-1]
+[5,4,3,2,1]
+```
 
 --
 
-    >>> a = range(10)
-    >>> a
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    >>> a[:5] = [42]
-    >>> a
-    [42, 5, 6, 7, 8, 9]
-    >>> a[:1] = range(5)
-    >>> a
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    >>> del a[::2]
-    >>> a
-    [1, 3, 5, 7, 9]
-    >>> a[::2] = a[::-2]
-    >>> a
-    [9, 3, 5, 7, 1]
+```python
+>>> a = range(10)
+>>> a
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> a[:5] = [42]
+>>> a
+[42, 5, 6, 7, 8, 9]
+>>> a[:1] = range(5)
+>>> a
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> del a[::2]
+>>> a
+[1, 3, 5, 7, 9]
+>>> a[::2] = a[::-2]
+>>> a
+[9, 3, 5, 7, 1]
+```
 
 ##### Reversed
 
-        for i in reversed([1, 2, 3]):
-                print(i)
+```python
+for i in reversed([1, 2, 3]):
+  print(i)
+```
 
 ##### Backslashes
 
-        >>> print repr(r"aaa\"bbb")
-        'aaa\\"bbb'
+```python
+>>> print repr(r"aaa\"bbb")
+'aaa\\"bbb'
+```
 
 --
 
-        >>> print repr(r"C:\")
-        SyntaxError: EOL while scanning string literal
-        >>> print repr(r"C:\"")
-        'C:\\"'
+```python
+>>> print repr(r"C:\")
+SyntaxError: EOL while scanning string literal
+>>> print repr(r"C:\"")
+'C:\\"'
+```
 
 ------
 
@@ -521,36 +580,45 @@ NP:
 
 ##### Use _ instead of last printed item
 
-    >>> range(10)
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    >>> _
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    >>>
+```python
+>>> range(10)
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+>>> _
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>>
+```
 
 ##### *args & **kwargs
 
-    >>> g = lambda *args, **kwargs: args[0], kwargs['thing']
-    >>> g(1, 2, 3, thing='stuff')
-    (1, 'stuff')
+```python
+>>> g = lambda *args, **kwargs: args[0], kwargs['thing']
+>>> g(1, 2, 3, thing='stuff')
+(1, 'stuff')
+```
 
 --
 
-        def foo(a, b, c):
-                        print a, b, c
+```python
+def foo(a, b, c):
+  print a, b, c
 
-        bar = (3, 14, 15)
-        foo(*bar)
+bar = (3, 14, 15)
+foo(*bar)
+```
 
 ##### Function argument unpacking
 
-        def draw_point(x, y):
-                # do some magic
+```python
+def draw_point(x, y):
+  # do some magic
 
-        point_foo = (3, 4)
-        point_bar = {'y': 3, 'x': 2}
+point_foo = (3, 4)
+point_bar = {'y': 3, 'x': 2}
 
-        draw_point(*point_foo)
-        draw_point(**point_bar)
+draw_point(*point_foo)
+draw_point(**point_bar)
+```
 
 ------
 
@@ -558,99 +626,130 @@ NP:
 
 ##### Ternary operator
 
-    >>> 'ham' if True else 'spam'
-    'ham'
-    >>> 'ham' if False else 'spam'
-    'spam'
+```python
+>>> 'ham' if True else 'spam'
+'ham'
+>>> 'ham' if False else 'spam'
+'spam'
+```
 
 --
 
-    >>> True and 'ham' or 'spam'
-    'ham'
-    >>> False and 'ham' or 'spam'
-    'spam'
+```python
+>>> True and 'ham' or 'spam'
+'ham'
+>>> False and 'ham' or 'spam'
+'spam'
+```
 
 --
 
-    >>> [] if True else 'spam'
-    []
-    >>> True and [] or 'spam'
-    'spam'
+```python
+>>> [] if True else 'spam'
+[]
+>>> True and [] or 'spam'
+'spam'
+```
 
 --
 
-        In [18]: a = True
+```python
+In [18]: a = True
 
-        In [19]: a and 3 or 4
-        Out[19]: 3
+In [19]: a and 3 or 4
+Out[19]: 3
 
-        In [20]: a = False
+In [20]: a = False
 
-        In [21]: a and 3 or 4
-        Out[21]: 4
+In [21]: a and 3 or 4
+Out[21]: 4
 
---
-
-        >>> (1 and [foo()] or [bar()])[0]
-        foo
-        0
+```
 
 --
 
-        >>> foo() if True or bar()
-        foo
-        0
+```python
+>>> (1 and [foo()] or [bar()])[0]
+foo
+0
+```
+
+--
+
+```python
+>>> foo() if True or bar()
+foo
+0
+```
 
 ##### Conditional
 
-        x = 3 if (y == 1) else 2
+```python
+x = 3 if (y == 1) else 2
+```
 
 --
 
-        x = 3 if (y == 1) else 2 if (y == -1) else 1
+```python
+x = 3 if (y == 1) else 2 if (y == -1) else 1
+```
 
 --
 
-        (func1 if y == 1 else func2)(arg1, arg2)
+```python
+(func1 if y == 1 else func2)(arg1, arg2)
+```
 
 --
 
-        x = (class1 if y == 1 else class2)(arg1, arg2)
+```python
+x = (class1 if y == 1 else class2)(arg1, arg2)
+```
 
 --
 
-        [(x, y) for x in range(4) if x % 2 == 1 for y in range(4)]
-        [(1, 0), (1, 1), (1, 2), (1, 3), (3, 0), (3, 1), (3, 2), (3, 3)]
+```python
+[(x, y) for x in range(4) if x % 2 == 1 for y in range(4)]
+[(1, 0), (1, 1), (1, 2), (1, 3), (3, 0), (3, 1), (3, 2), (3, 3)]
+```
 
 --
 
-        x = 3 if (y == 1) else 2                is equvalent to                 x = y == 1 and 3 or 2
-        x = 0 if True else 1                        is equvalent to                 x = True and 0 or 1
+```python
+x = 3 if (y == 1) else 2                is equvalent to                 x = y == 1 and 3 or 2
+x = 0 if True else 1                    is equvalent to                 x = True and 0 or 1
+```
 
 --
 
-        foo = [x for x in xrange(10) if x % 2 == 0]
+```python
+foo = [x for x in xrange(10) if x % 2 == 0]
+```
 
 equal to
 
-        foo = []
-        for x in xrange(10):
-            if x % 2 == 0:
-                 foo.append(x)
+```python
+foo = []
+for x in xrange(10):
+  if x % 2 == 0:
+    foo.append(x)
+```
 
 ##### Dict Comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Dictionary_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#dictionary-displays))
 
-        >>> {i: i**2 for i in range(5)}
-        {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
-
+```python
+>>> {i: i**2 for i in range(5)}
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+```
 
 ##### Set comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Set_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#set-displays))
 
-        >>> {i**2 for i in range(5)}
-        set([0, 1, 4, 16, 9])
+```python
+>>> {i**2 for i in range(5)}
+set([0, 1, 4, 16, 9])
+```
 
 ------
-
 ### List & Dics
 
 ##### zip
