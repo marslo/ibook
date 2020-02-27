@@ -104,32 +104,31 @@ for index, item in enumerate(x):
 ```
 --
 
-P:
+- P:
 
-```python
-array = [1, 2, 3, 4, 5]
+  ```python
+  array = [1, 2, 3, 4, 5]
 
-for i, e in enumerate(array,0):
-  print i, e
-#0 1
-#1 2
-#2 3
-#3 4
-#4 5
-```
+  for i, e in enumerate(array,0):
+    print i, e
+  #0 1
+  #1 2
+  #2 3
+  #3 4
+  #4 5
+  ```
 
-NP:
+- NP:
 
-```python
-for i in xrange(len(array)):
-  print i, array[i]
-#0 1
-#1 2
-#2 3
-#3 4
-#4 5
-
-```
+  ```python
+  for i in xrange(len(array)):
+    print i, array[i]
+  #0 1
+  #1 2
+  #2 3
+  #3 4
+  #4 5
+  ```
 --
 
 ### import local module
@@ -403,7 +402,7 @@ is_palindrome = word.find(word[-1::-1])
 ## Hidden Features ([Got from here](http://stackoverflow.com/questions/101268/hidden-features-of-python))
 
 ### Numbers:
-##### round
+#### round
 
 ```python
 >>> str(round(1234.5678, -2))
@@ -413,8 +412,7 @@ is_palindrome = word.find(word[-1::-1])
 ```
 
 
-##### Integer base
-
+#### Integer base
 ```python
 >>> int('10', 0)
 10
@@ -428,7 +426,7 @@ is_palindrome = word.find(word[-1::-1])
 2
 ```
 
-##### In-place value swapping
+#### In-place value swapping
 
 ```python
 >>> a = 10
@@ -441,7 +439,7 @@ is_palindrome = word.find(word[-1::-1])
 (5, 10)
 ```
 
-##### Sum
+#### Sum
 
 ```python
 from operator import add
@@ -452,7 +450,7 @@ print reduce(add, [1,2,3,4,5,6])
 
 ### String:
 
-##### Multi-line Strings
+#### Multi-line Strings
 
 ```python
 >>> sql = "select * from some_table \
@@ -480,7 +478,7 @@ select * from some_table where id > 10
 select * from some_table where id > 10 order by name
 ```
 
-##### In
+#### In
 
 ```python
 >>> 'str' in 'string'
@@ -490,13 +488,13 @@ False
 >>>
 ```
 
-##### Join
+#### Join
 
 ```python
 ''.join(list_of_strings)
 ```
 
-##### set
+#### set
 
 ```python
 >>> a = set([1,2,3,4])
@@ -513,7 +511,7 @@ False
 {1, 2, 5, 6}
 ```
 
-##### Slice operators
+#### Slice operators
 
 ```python
 a = [1,2,3,4,5]
@@ -521,14 +519,14 @@ a = [1,2,3,4,5]
 [1,3,5]
 ```
 
---
+- or
 
 ```python
 >>> a[::-1]
 [5,4,3,2,1]
 ```
 
---
+- or
 
 ```python
 >>> a = range(10)
@@ -548,14 +546,14 @@ a = [1,2,3,4,5]
 [9, 3, 5, 7, 1]
 ```
 
-##### Reversed
+#### Reversed
 
 ```python
 for i in reversed([1, 2, 3]):
   print(i)
 ```
 
-##### Backslashes
+#### Backslashes
 
 ```python
 >>> print repr(r"aaa\"bbb")
@@ -575,7 +573,7 @@ SyntaxError: EOL while scanning string literal
 
 ### Args:
 
-##### Use _ instead of last printed item
+#### Use `_` instead of last printed item
 
 ```python
 >>> range(10)
@@ -586,7 +584,7 @@ SyntaxError: EOL while scanning string literal
 >>>
 ```
 
-##### *args & **kwargs
+#### `*args` & `**kwargs`
 
 ```python
 >>> g = lambda *args, **kwargs: args[0], kwargs['thing']
@@ -594,7 +592,7 @@ SyntaxError: EOL while scanning string literal
 (1, 'stuff')
 ```
 
---
+- or
 
 ```python
 def foo(a, b, c):
@@ -604,7 +602,7 @@ bar = (3, 14, 15)
 foo(*bar)
 ```
 
-##### Function argument unpacking
+#### function argument unpacking
 
 ```python
 def draw_point(x, y):
@@ -621,7 +619,7 @@ draw_point(**point_bar)
 
 ### Conditional Assignment
 
-##### Ternary operator
+#### Ternary operator
 
 ```python
 >>> 'ham' if True else 'spam'
@@ -630,7 +628,7 @@ draw_point(**point_bar)
 'spam'
 ```
 
---
+- or
 
 ```python
 >>> True and 'ham' or 'spam'
@@ -639,7 +637,7 @@ draw_point(**point_bar)
 'spam'
 ```
 
---
+- or
 
 ```python
 >>> [] if True else 'spam'
@@ -648,7 +646,7 @@ draw_point(**point_bar)
 'spam'
 ```
 
---
+- or
 
 ```python
 In [18]: a = True
@@ -663,7 +661,7 @@ Out[21]: 4
 
 ```
 
---
+- or
 
 ```python
 >>> (1 and [foo()] or [bar()])[0]
@@ -671,7 +669,7 @@ foo
 0
 ```
 
---
+- or
 
 ```python
 >>> foo() if True or bar()
@@ -679,67 +677,67 @@ foo
 0
 ```
 
-##### Conditional
+#### Conditional
 
 ```python
 x = 3 if (y == 1) else 2
 ```
 
---
+- or
 
 ```python
 x = 3 if (y == 1) else 2 if (y == -1) else 1
 ```
 
---
+- or
 
 ```python
 (func1 if y == 1 else func2)(arg1, arg2)
 ```
 
---
+- or
 
 ```python
 x = (class1 if y == 1 else class2)(arg1, arg2)
 ```
 
---
+- or
 
 ```python
 [(x, y) for x in range(4) if x % 2 == 1 for y in range(4)]
 [(1, 0), (1, 1), (1, 2), (1, 3), (3, 0), (3, 1), (3, 2), (3, 3)]
 ```
 
---
+- or
 
 ```python
 x = 3 if (y == 1) else 2                is equvalent to                 x = y == 1 and 3 or 2
 x = 0 if True else 1                    is equvalent to                 x = True and 0 or 1
 ```
 
---
+- or
 
 ```python
 foo = [x for x in xrange(10) if x % 2 == 0]
 ```
 
-equal to
+  - equal to
 
-```python
-foo = []
-for x in xrange(10):
-  if x % 2 == 0:
-    foo.append(x)
-```
+  ```python
+  foo = []
+  for x in xrange(10):
+    if x % 2 == 0:
+      foo.append(x)
+  ```
 
-##### Dict Comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Dictionary_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#dictionary-displays))
+#### Dict Comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Dictionary_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#dictionary-displays))
 
 ```python
 >>> {i: i**2 for i in range(5)}
 {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
 ```
 
-##### Set comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Set_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#set-displays))
+#### Set comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Set_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#set-displays))
 
 ```python
 >>> {i**2 for i in range(5)}
@@ -749,337 +747,406 @@ set([0, 1, 4, 16, 9])
 ------
 ### List & Dics
 
-##### zip
+#### zip
 
-    a = [(1,2), (3,4), (5,6)]
-    zip(*a)
-    # [(1, 3, 5), (2, 4, 6)]
+```python
+a = [(1,2), (3,4), (5,6)]
+zip(*a)
+# [(1, 3, 5), (2, 4, 6)]
+```
 
---
+- or
 
-        >>> dict([ ('foo','bar'),('a',1),('b',2) ])
-        {'a': 1, 'b': 2, 'foo': 'bar'}
+```python
+>>> dict([ ('foo','bar'),('a',1),('b',2) ])
+{'a': 1, 'b': 2, 'foo': 'bar'}
 
-        >>> names = ['Bob', 'Marie', 'Alice']
-        >>> ages = [23, 27, 36]
-        >>> dict(zip(names, ages))
-        {'Alice': 36, 'Bob': 23, 'Marie': 27}
+>>> names = ['Bob', 'Marie', 'Alice']
+>>> ages = [23, 27, 36]
+>>> dict(zip(names, ages))
+{'Alice': 36, 'Bob': 23, 'Marie': 27}
 
---
+```
 
-        >>> t1 = (0,1,2,3)
-        >>> t2 = (7,6,5,4)
-        >>> [t1,t2] == zip(*zip(t1,t2))
-        True
+- or
 
---
+```python
+>>> t1 = (0,1,2,3)
+>>> t2 = (7,6,5,4)
+>>> [t1,t2] == zip(*zip(t1,t2))
+True
+```
 
-        In [15]: t1 = (1, 2, 3)
-        In [16]: t2 = (4, 5, 6)
-        In [17]: dict (zip(t1,t2))
-        Out[17]: {1: 4, 2: 5, 3: 6}
+- or
 
---
+```python
+In [15]: t1 = (1, 2, 3)
+In [16]: t2 = (4, 5, 6)
+In [17]: dict (zip(t1,t2))
+Out[17]: {1: 4, 2: 5, 3: 6}
+```
 
-        >>> l=[(1,2),(3,4)]
-        >>> [a+b for a,b in l ]
-        [3,7]
+- or
 
-##### List & Sum
+```python
+>>> l=[(1,2),(3,4)]
+>>> [a+b for a,b in l ]
+[3,7]
+```
 
-        >>> l = [[1, 2, 3], [4, 5], [6], [7, 8, 9]]
-        >>> sum(l, [])
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+#### List & Sum
 
-##### Nested list
+```python
+>>> l = [[1, 2, 3], [4, 5], [6], [7, 8, 9]]
+>>> sum(l, [])
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
 
-        [(i,j) for i in range(3) for j in range(i) ]
+#### Nested list
 
---
+```python
+[(i,j) for i in range(3) for j in range(i) ]
+```
 
-        ((i,j) for i in range(4) for j in range(i) )
+- or
 
+```python
+((i,j) for i in range(4) for j in range(i) )
+```
 
-##### enumerate
+#### enumerate
 
-        >>> a = ['a', 'b', 'c', 'd', 'e']
-        >>> for index, item in enumerate(a): print index, item
-        ...
-        0 a
-        1 b
-        2 c
-        3 d
-        4 e
+```python
+>>> a = ['a', 'b', 'c', 'd', 'e']
+>>> for index, item in enumerate(a): print index, item
+...
+0 a
+1 b
+2 c
+3 d
+4 e
+```
 
---
+- or
 
-        >>> l = ["spam", "ham", "eggs"]
-        >>> list(enumerate(l))
-        >>> [(0, "spam"), (1, "ham"), (2, "eggs")]
-        >>> list(enumerate(l, 1))
-        >>> [(1, "spam"), (2, "ham"), (3, "eggs")]
+```python
+>>> l = ["spam", "ham", "eggs"]
+>>> list(enumerate(l))
+>>> [(0, "spam"), (1, "ham"), (2, "eggs")]
+>>> list(enumerate(l, 1))
+>>> [(1, "spam"), (2, "ham"), (3, "eggs")]
+```
 
-##### Generate List
+#### Generate List
 
-        >>> from functools import partial
-        >>> bound_func = partial(range, 0, 10)
-        >>> bound_func()
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        >>> bound_func(2)
-        [0, 2, 4, 6, 8]
+```python
+>>> from functools import partial
+>>> bound_func = partial(range, 0, 10)
+>>> bound_func()
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> bound_func(2)
+[0, 2, 4, 6, 8]
 
+```
 
-##### dict's constructor
+#### dict's constructor
 
-        >>> dict(foo=1, bar=2)
-        {'foo': 1, 'bar': 2}
+```python
+>>> dict(foo=1, bar=2)
+{'foo': 1, 'bar': 2}
+```
 
---
+- or
 
-        >>> a = {}
-        >>> b = a.setdefault('foo', 'bar')
-        >>> a
-        {'foo': 'bar'}
-        >>> b
-        'bar
+```python
+>>> a = {}
+>>> b = a.setdefault('foo', 'bar')
+>>> a
+{'foo': 'bar'}
+>>> b
+'bar
+```
 
-##### dict's get
+#### dict's get
 
-        t = {1: 'a'}
-        >>> test[2]
+```python
+t = {1: 'a'}
+>>> test[2]
 
-        Traceback (most recent call last):
-            File "<pyshell#158>", line 1, in <module>
-                test[2]
-        KeyError: 2
-        >>> test.get(2)
-        >>> test.get(1)
-        'a'
-        >>> test.get(2) == None
-        True
-        >>> test.get(2, 'some') == 'some'
-        True
+Traceback (most recent call last):
+  File "<pyshell#158>", line 1, in <module>
+    test[2]
+KeyError: 2
+>>> test.get(2)
+>>> test.get(1)
+'a'
+>>> test.get(2) == None
+True
+>>> test.get(2, 'some') == 'some'
+True
+```
 
-##### Copy List
+#### Copy List
 
-        >>> x = [1,2,3]
-        >>> y = x[:]
-        >>> y.pop()
-        3
-        >>> y
-        [1, 2]
-        >>> x
-        [1, 2, 3]
+```python
+>>> x = [1,2,3]
+>>> y = x[:]
+>>> y.pop()
+3
+>>> y
+[1, 2]
+>>> x
+[1, 2, 3]
+```
 
-##### Replace list
+#### Replace list
 
-        >>> x = [1,2,3]
-        >>> y = x
-        >>> y[:] = [4,5,6]
-        >>> x
-        [4, 5, 6]
+```python
+>>> x = [1,2,3]
+>>> y = x
+>>> y[:] = [4,5,6]
+>>> x
+[4, 5, 6]
+```
 
-##### generators objects
+#### generators objects
 
-        x = [n for n in foo if bar(n)]
+```python
+x = [n for n in foo if bar(n)]
+```
 
---
+- or
 
-        >>> n = ((a,b) for a in range(0,2) for b in range(4,6))
-        >>> for i in n:
-        ...   print i
+```python
+>>> n = ((a,b) for a in range(0,2) for b in range(4,6))
+>>> for i in n:
+...   print i
 
-        (0, 4)
-        (0, 5)
-        (1, 4)
-        (1, 5)
+(0, 4)
+(0, 5)
+(1, 4)
+(1, 5)
+```
 
 ------
 
 ### Generator & Iteration
 
-##### iteration ([itertools](http://docs.python.org/library/itertools.html)) & constructor (yield)
+#### iteration ([itertools](http://docs.python.org/library/itertools.html)) & constructor (yield)
 
-        >>> def g(n):
-        ...     for i in range(n):
-        ...             yield i **2
-        >>> t = g(5)
-        >>> t.next()
-        0
-        >>> t.next()
-        1
-        >>> t.next()
-        4
-        >>> t.next()
-        9
-        >>> t.next()
-        16
-        >>> t.next()
-        Traceback (most recent call last):
-            File "<stdin>", line 1, in <module>
-        StopIteration
+```python
+>>> def g(n):
+...     for i in range(n):
+...             yield i **2
+>>> t = g(5)
+>>> t.next()
+0
+>>> t.next()
+1
+>>> t.next()
+4
+>>> t.next()
+9
+>>> t.next()
+16
+>>> t.next()
+Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+StopIteration
+```
 
---
+- or
 
-        def fab(max):
-                a,b = 0,1
-                while a < max:
-                        yield a
-                        a, b = b, a+b
+```python
+def fab(max):
+  a,b = 0,1
+  while a < max:
+    yield a
+    a, b = b, a+b
 
-        >>> for i in fab(20):
-        ...     print i,",",
-        ...
-        0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 ,
+>>> for i in fab(20):
+...     print i,",",
+...
+0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 ,
+```
 
---
+- or
 
-        >>> i = (1,2,3,4,5,6,7,8,9,10) # or any iterable object
-        >>> iterators = [iter(i)] * 2
-        >>> iterators[0].next()
-        1
-        >>> iterators[1].next()
-        2
-        >>> iterators[0].next()
-        3
+```python
+>>> i = (1,2,3,4,5,6,7,8,9,10) # or any iterable object
+>>> iterators = [iter(i)] * 2
+>>> iterators[0].next()
+1
+>>> iterators[1].next()
+2
+>>> iterators[0].next()
+3
+```
 
---
+- or
 
-        def grouper(n, iterable, fillvalue=None):
-                "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
-                args = [iter(iterable)] * n
-                return izip_longest(fillvalue=fillvalue, *args)
+```python
+def grouper(n, iterable, fillvalue=None):
+  "grouper(3, 'ABCDEFG', 'x') --> ABC DEF Gxx"
+  args = [iter(iterable)] * n
+  return izip_longest(fillvalue=fillvalue, *args)
+```
 
---
+- or
 
-        >>> from itertools import *
-        >>> l = [[1, 2], [3, 4]]
-        >>> list(chain(*l))
-        [1, 2, 3, 4]
+```python
+>>> from itertools import *
+>>> l = [[1, 2], [3, 4]]
+>>> list(chain(*l))
+[1, 2, 3, 4]
+```
 
---
+- or
 
-        def create_printers(n):
-                for i in xrange(n):
-                        def printer(i=i): # Doesn't work without the i=i
-                                print i
-                        yield printer
+```python
+def create_printers(n):
+  for i in xrange(n):
+    def printer(i=i): # Doesn't work without the i=i
+      print i
+    yield printer
 
+```
 
 ------
 
 ### Statement
 
-##### for...else...
+#### `for...else...`
 
-        for i in foo:
-                if i == 0:
-                        break
-        else:
-                print("i was never 0")
+```python
+for i in foo:
+  if i == 0:
+          break
+else:
+  print("i was never 0")
 
---
+```
 
-        found = False
-        for i in foo:
-                if i == 0:
-                        found = True
-                        break
-        if not found:
-                print("i was never 0")
+- or
 
+```python
+found = False
+for i in foo:
+  if i == 0:
+    found = True
+    break
+if not found:
+  print("i was never 0")
+```
 
-##### Context managers and the "with" Statement
+#### Context managers and the "with" Statement
 
-        from __future__ import with_statement
+```python
+from __future__ import with_statement
 
-        with open('foo.txt', 'w') as f:
-                f.write('hello!')
+with open('foo.txt', 'w') as f:
+  f.write('hello!')
+```
 
-##### Exception else
+#### `try...except...elese...finally`
 
-        try:
-            put_4000000000_volts_through_it(parrot)
-        except Voom:
-            print "'E's pining!"
-        else:
-            print "This parrot is no more!"
-        finally:
-            end_sketch()
+```python
+try:
+  put_4000000000_volts_through_it(parrot)
+except Voom:
+  print "'E's pining!"
+else:
+  print "This parrot is no more!"
+finally:
+  end_sketch()
+```
 
 ------
 
 ### Funcs:
 
-##### dir
-
-        >>> dir("foo")
-        ['__add__', '__class__', '__contains__', (snipped a bunch), 'title',
-         'translate', 'upper', 'zfill']
+#### dir
+```python
+>>> dir("foo")
+['__add__', '__class__', '__contains__', (snipped a bunch), 'title',
+ 'translate', 'upper', 'zfill']
+```
 
 --
 
-        >>> help("foo".upper)
-                Help on built-in function upper:
+```python
+>>> help("foo".upper)
+  Help on built-in function upper:
 
-        upper(...)
-                S.upper() -> string
+upper(...)
+  S.upper() -> string
 
-                Return a copy of the string S converted to uppercase.
+  Return a copy of the string S converted to uppercase.
+```
 
-##### Convenient Web-browser controller
+#### Convenient Web-browser controller
 
-        >>> import webbrowser
-        >>> webbrowser.open_new_tab('http://www.stackoverflow.com')
+```python
+>>> import webbrowser
+>>> webbrowser.open_new_tab('http://www.stackoverflow.com')
+```
 
-##### Built-in http server
+#### Built-in http server
 
-        python -m SimpleHTTPServer 8000
+```python
+python -m SimpleHTTPServer 8000
+```
 
-##### An interpreter within the interpreter
+#### An interpreter within the interpreter
 
-        $ python
-        Python 2.5.1 (r251:54863, Jan 17 2008, 19:35:17)
-        [GCC 4.0.1 (Apple Inc. build 5465)] on darwin
-        Type "help", "copyright", "credits" or "license" for more information.
-        >>> shared_var = "Set in main console"
-        >>> import code
-        >>> ic = code.InteractiveConsole({ 'shared_var': shared_var })
-        >>> try:
-        ...     ic.interact("My custom console banner!")
-        ... except SystemExit, e:
-        ...     print "Got SystemExit!"
-        ...
-        My custom console banner!
-        >>> shared_var
-        'Set in main console'
-        >>> shared_var = "Set in sub-console"
-        >>> import sys
-        >>> sys.exit()
-        Got SystemExit!
-        >>> shared_var
-        'Set in main console'
+```python
+$ python
+Python 2.5.1 (r251:54863, Jan 17 2008, 19:35:17)
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> shared_var = "Set in main console"
+>>> import code
+>>> ic = code.InteractiveConsole({ 'shared_var': shared_var })
+>>> try:
+...     ic.interact("My custom console banner!")
+... except SystemExit, e:
+...     print "Got SystemExit!"
+...
+My custom console banner!
+>>> shared_var
+'Set in main console'
+>>> shared_var = "Set in sub-console"
+>>> import sys
+>>> sys.exit()
+Got SystemExit!
+>>> shared_var
+'Set in main console'
+```
 
 ##### pretty print
 
-        >>> import pprint
-        >>> stuff = sys.path[:]
-        >>> stuff.insert(0, stuff)
-        >>> pprint.pprint(stuff)
-        [<Recursion on list with id=869440>,
-         '',
-         '/usr/local/lib/python1.5',
-         '/usr/local/lib/python1.5/test',
-         '/usr/local/lib/python1.5/sunos5',
-         '/usr/local/lib/python1.5/sharedmodules',
-         '/usr/local/lib/python1.5/tkinter']
+```python
+>>> import pprint
+>>> stuff = sys.path[:]
+>>> stuff.insert(0, stuff)
+>>> pprint.pprint(stuff)
+[<Recursion on list with id=869440>,
+ '',
+ '/usr/local/lib/python1.5',
+ '/usr/local/lib/python1.5/test',
+ '/usr/local/lib/python1.5/sunos5',
+ '/usr/local/lib/python1.5/sharedmodules',
+ '/usr/local/lib/python1.5/tkinter']
+```
 
---
+- or
 
-        from __future__ import print_function
+```python
+from __future__ import print_function
 
-        mylist = ['foo', 'bar', 'some other value', 1,2,3,4]
-        print(*mylist)
+mylist = ['foo', 'bar', 'some other value', 1,2,3,4]
+print(*mylist)
+```
 
 ------
 
@@ -1087,105 +1154,125 @@ set([0, 1, 4, 16, 9])
 
 ##### Bash
 
-        python -c"import os; print(os.getcwd());"
+```python
+python -c"import os; print(os.getcwd());"
+```
 
 ##### Assertion
 
-        >>> try:
-        ...     assert []
-        ... except AssertionError:
-        ...     print "This list should not be empty"
-        This list should not be empty
+```python
+>>> try:
+...     assert []
+... except AssertionError:
+...     print "This list should not be empty"
+This list should not be empty
+```
 
-##### Imports
+#### Imports
 
-        try:
-                import json
-        except ImportError:
-                import simplejson as json
+```python
+try:
+  import json
+except ImportError:
+  import simplejson as json
+```
 
-##### Creating new types
+#### Creating new types
 
-        >>> NewType = type("NewType", (object,), {"x": "hello"})
-        >>> n = NewType()
-        >>> n.x
-        "hello"
-
---
-
-        >>> class NewType(object):
-        >>>     x = "hello"
-        >>> n = NewType()
-        >>> n.x
-        "hello"
-
-##### Manipulating sys.modules
-
-        >>> import sys
-        >>> import ham
-        Traceback (most recent call last):
-            File "<stdin>", line 1, in <module>
-        ImportError: No module named ham
-
-        # Make the 'ham' module available -- as a non-module object even!
-        >>> sys.modules['ham'] = 'ham, eggs, saussages and spam.'
-        >>> import ham
-        >>> ham
-        'ham, eggs, saussages and spam.'
-
-        # Now remove it again.
-        >>> sys.modules['ham'] = None
-        >>> import ham
-        Traceback (most recent call last):
+```python
+>>> NewType = type("NewType", (object,), {"x": "hello"})
+>>> n = NewType()
+>>> n.x
+"hello"
+```
 
 --
 
-        >>> import os
-        # Stop future imports of 'os'.
-        >>> sys.modules['os'] = None
-        >>> import os
-        Traceback (most recent call last):
-            File "<stdin>", line 1, in <module>
-        ImportError: No module named os
-        # Our old imported module is still available.
-        >>> os
-        <module 'os' from '/usr/lib/python2.5/os.pyc'>
+```python
+>>> class NewType(object):
+>>>     x = "hello"
+>>> n = NewType()
+>>> n.x
+"hello"
+```
+
+#### Manipulating sys.modules
+
+```python
+>>> import sys
+>>> import ham
+Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+ImportError: No module named ham
+
+# Make the 'ham' module available -- as a non-module object even!
+>>> sys.modules['ham'] = 'ham, eggs, saussages and spam.'
+>>> import ham
+>>> ham
+'ham, eggs, saussages and spam.'
+
+# Now remove it again.
+>>> sys.modules['ham'] = None
+>>> import ham
+Traceback (most recent call last):
+```
+
+--
+
+```python
+>>> import os
+# Stop future imports of 'os'.
+>>> sys.modules['os'] = None
+>>> import os
+Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+ImportError: No module named os
+# Our old imported module is still available.
+>>> os
+<module 'os' from '/usr/lib/python2.5/os.pyc'>
+```
 
 ------
 
 ### Others
 
-##### not hidden but still nice
+#### not hidden but still nice
 
-        import os.path as op
+```python
+import os.path as op
 
-        root_dir = op.abspath(op.join(op.dirname(__file__), ".."))
+root_dir = op.abspath(op.join(op.dirname(__file__), ".."))
+```
 
-##### Be careful with mutable default arguments
+#### Be careful with mutable default arguments
 
-        >>> def foo(x=[]):
-        ...     x.append(1)
-        ...     print x
-        ...
-        >>> foo()
-        [1]
-        >>> foo()
-        [1, 1]
-        >>> foo()
-        [1, 1, 1]
+```python
+>>> def foo(x=[]):
+...     x.append(1)
+...     print x
+...
+>>> foo()
+[1]
+>>> foo()
+[1, 1]
+>>> foo()
+[1, 1, 1]
+```
 
 --
 
-        >>> def foo(x=None):
-        ...     if x is None:
-        ...         x = []
-        ...     x.append(1)
-        ...     print x
-        >>> foo()
-        [1]
-        >>> foo()
-        [1]
+```python
+>>> def foo(x=None):
+...     if x is None:
+...         x = []
+...     x.append(1)
+...     print x
+>>> foo()
+[1]
+>>> foo()
+[1]
 
+```
 
 --------
 
