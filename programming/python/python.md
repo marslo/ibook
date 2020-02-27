@@ -448,7 +448,7 @@ print reduce(add, [1,2,3,4,5,6])
 
 ------
 
-### String:
+### String
 
 #### Multi-line Strings
 
@@ -459,7 +459,7 @@ where id > 10"
 select * from some_table where id > 10
 ```
 
---
+- or
 
 ```python
 >>> sql = """select * from some_table
@@ -468,7 +468,7 @@ where id > 10"""
 select * from some_table where id > 10
 ```
 
---
+- or
 
 ```python
 >>> sql = ("select * from some_table " # <-- no comma, whitespace at end
@@ -560,7 +560,7 @@ for i in reversed([1, 2, 3]):
 'aaa\\"bbb'
 ```
 
---
+- or
 
 ```python
 >>> print repr(r"C:\")
@@ -737,7 +737,9 @@ foo = [x for x in xrange(10) if x % 2 == 0]
 {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
 ```
 
-#### Set comprehensions ([wiki](https://en.wikipedia.org/wiki/List_comprehension#Set_comprehension), [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#set-displays))
+#### Set comprehensions
+> [wiki](https://en.wikipedia.org/wiki/List_comprehension#Set_comprehension)
+> [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#set-displays)
 
 ```python
 >>> {i**2 for i in range(5)}
@@ -1021,7 +1023,7 @@ def create_printers(n):
 ```python
 for i in foo:
   if i == 0:
-          break
+    break
 else:
   print("i was never 0")
 
@@ -1063,7 +1065,7 @@ finally:
 
 ------
 
-### Funcs:
+### Funcs
 
 #### dir
 ```python
@@ -1072,7 +1074,7 @@ finally:
  'translate', 'upper', 'zfill']
 ```
 
---
+#### help
 
 ```python
 >>> help("foo".upper)
@@ -1123,7 +1125,7 @@ Got SystemExit!
 'Set in main console'
 ```
 
-##### pretty print
+#### pretty print
 
 ```python
 >>> import pprint
@@ -1152,13 +1154,13 @@ print(*mylist)
 
 ### Class & Module
 
-##### Bash
+#### bash
 
 ```python
 python -c"import os; print(os.getcwd());"
 ```
 
-##### Assertion
+#### assertion
 
 ```python
 >>> try:
@@ -1168,7 +1170,7 @@ python -c"import os; print(os.getcwd());"
 This list should not be empty
 ```
 
-#### Imports
+#### `import`
 
 ```python
 try:
@@ -1177,7 +1179,7 @@ except ImportError:
   import simplejson as json
 ```
 
-#### Creating new types
+#### create new types
 
 ```python
 >>> NewType = type("NewType", (object,), {"x": "hello"})
@@ -1186,7 +1188,7 @@ except ImportError:
 "hello"
 ```
 
---
+- or
 
 ```python
 >>> class NewType(object):
@@ -1217,7 +1219,7 @@ ImportError: No module named ham
 Traceback (most recent call last):
 ```
 
---
+- or
 
 ```python
 >>> import os
@@ -1244,7 +1246,7 @@ import os.path as op
 root_dir = op.abspath(op.join(op.dirname(__file__), ".."))
 ```
 
-#### Be careful with mutable default arguments
+#### be careful with mutable default arguments
 
 ```python
 >>> def foo(x=[]):
@@ -1259,7 +1261,7 @@ root_dir = op.abspath(op.join(op.dirname(__file__), ".."))
 [1, 1, 1]
 ```
 
---
+- or
 
 ```python
 >>> def foo(x=None):
@@ -1278,475 +1280,564 @@ root_dir = op.abspath(op.join(op.dirname(__file__), ".."))
 
 ## [PEP8 -- Style Guide for Python Code](https://www.python.org/dev/peps/pep-0008/)
 
-----
 ### Indentation
 
-##### Yes:
+- yes:
 
-    # Aligned with opening delimiter.
-    foo = long_function_name(var_one, var_two,
-                             var_three, var_four)
+```python
+# Aligned with opening delimiter.
+foo = long_function_name(var_one, var_two,
+                         var_three, var_four)
 
-    # More indentation included to distinguish this from the rest.
-    def long_function_name(
-            var_one, var_two, var_three,
-            var_four):
-        print(var_one)
+# More indentation included to distinguish this from the rest.
+def long_function_name(
+    var_one, var_two, var_three,
+    var_four):
+  print(var_one)
 
-    # Hanging indents should add a level.
-    foo = long_function_name(
-        var_one, var_two,
-        var_three, var_four)
+# Hanging indents should add a level.
+foo = long_function_name(
+    var_one, var_two,
+    var_three, var_four)
 
-##### No:
+```
+- no:
 
-    # Arguments on first line forbidden when not using vertical alignment.
-    foo = long_function_name(var_one, var_two,
-        var_three, var_four)
+```python
+# Arguments on first line forbidden when not using vertical alignment.
+foo = long_function_name(var_one, var_two,
+    var_three, var_four)
 
-    # Further indentation required as indentation is not distinguishable.
-    def long_function_name(
-        var_one, var_two, var_three,
-        var_four):
-        print(var_one)
+# Further indentation required as indentation is not distinguishable.
+def long_function_name(
+    var_one, var_two, var_three,
+    var_four):
+  print(var_one)
+```
 
-##### Optional:
+#### Optional:
 
-    # Hanging indents *may* be indented to other than 4 spaces.
-    foo = long_function_name(
-      var_one, var_two,
-      var_three, var_four)
+```python
+# Hanging indents *may* be indented to other than 4 spaces.
+foo = long_function_name(
+  var_one, var_two,
+  var_three, var_four)
+```
 
-##### If-statemant
+#### If-statemant
 
-    # No extra indentation.
-        if (this_is_one_thing and
-                that_is_another_thing):
-                do_something()
+```python
+# No extra indentation.
+if (this_is_one_thing and
+    that_is_another_thing):
+  do_something()
 
-    # Add a comment, which will provide some distinction in editors
-    # supporting syntax highlighting.
-        if (this_is_one_thing and
-                that_is_another_thing):
-                # Since both conditions are true, we can frobnicate.
-                do_something()
+# Add a comment, which will provide some distinction in editors
+# supporting syntax highlighting.
+if (this_is_one_thing and
+    that_is_another_thing):
+    # Since both conditions are true, we can frobnicate.
+  do_something()
 
-    # Add some extra indentation on the conditional continuation line.
-        if (this_is_one_thing
-                        and that_is_another_thing):
-                do_something()o
+# Add some extra indentation on the conditional continuation line.
+if (this_is_one_thing
+    and that_is_another_thing):
+  do_something()o
 
-##### List
+```
+#### List
 
-    my_list = [
-            1, 2, 3,
-            4, 5, 6,
-            ]
-    result = some_function_that_takes_arguments(
-            'a', 'b', 'c',
-            'd', 'e', 'f',
-            )
+```python
+my_list = [
+        1, 2, 3,
+        4, 5, 6,
+        ]
+result = some_function_that_takes_arguments(
+        'a', 'b', 'c',
+        'd', 'e', 'f',
+        )
 
---
+```
+- or
 
-    my_list = [
-            1, 2, 3,
-            4, 5, 6,
-    ]
-    result = some_function_that_takes_arguments(
-            'a', 'b', 'c',
-            'd', 'e', 'f',
-    )
+```python
+my_list = [
+        1, 2, 3,
+        4, 5, 6,
+]
+result = some_function_that_takes_arguments(
+        'a', 'b', 'c',
+        'd', 'e', 'f',
+)
 
+```
 
-----
 ### Maximum Line Length
 
-##### Yes:
-        with open('/path/to/some/file/you/want/to/read') as file_1, \
-                 open('/path/to/some/file/being/written', 'w') as file_2:
-                file_2.write(file_1.read())
+- yes:
+```python
+with open('/path/to/some/file/you/want/to/read') as file_1, \
+         open('/path/to/some/file/being/written', 'w') as file_2:
+  file_2.write(file_1.read())
 
-----
+```
+
 ### Should a Line break before or after a binary operator?
-##### No: operators sit far away from their operands
 
-    income = (gross_wages +
-                        taxable_interest +
-                        (dividends - qualified_dividends) -
-                        ira_deduction -
-                        student_loan_interest)
+- no: operators sit far away from their operands
 
+```python
+income = (gross_wages +
+          taxable_interest +
+          (dividends - qualified_dividends) -
+          ira_deduction -
+          student_loan_interest)
 
-##### Yes: easy to match operators with operands
+```
 
-    income = (gross_wages
-                        + taxable_interest
-                        + (dividends - qualified_dividends)
-                        - ira_deduction
-                        - student_loan_interest)
+- yes: easy to match operators with operands
 
-----
+```python
+income = (gross_wages
+          + taxable_interest
+          + (dividends - qualified_dividends)
+          - ira_deduction
+          - student_loan_interest)
+
+```
+
 ### Imports
-##### No:
 
-    import sys, os
+- no:
+```python
+import sys, os
+```
 
-##### Yes:
+- yes:
 
-    import os
-    import sys
+```python
+import os
+import sys
+```
 
-##### Bad:
+- bad:
 
-    import <module> from *
+```python
+import <module> from *
+```
 
-##### Absolute imports are recommended
+#### Absolute imports are *recommended*
 
-    import mypkg.sibling
-    from mypkg import silbing
-    from mypkg.sibling import example
+```python
+import mypkg.sibling
+from mypkg import silbing
+from mypkg.sibling import example
+```
 
-##### Explicit relative imports are acceptable
+#### Explicit relative imports are acceptable
 
-    from . import sibling
-    from .sibling import example
+```python
+from . import sibling
+from .sibling import example
+```
 
-##### Import a class from a class-containing module
+#### Import a class from a class-containing module
 
-    from myclass import MyClass
-    from foo.bar.yourclass import YourClass
+```python
+from myclass import MyClass
+from foo.bar.yourclass import YourClass
+```
 
-##### Local name classes
+#### Local name classes
 
-    import myclass
-    import foo.bar.yourclass
+```python
+import myclass
+import foo.bar.yourclass
 
-    And use "myclass.MyClass" or "foo.bar.yourclass.YourClass"
-
-
-----
-### Module level dunder names
-Module level "dunder" names with two leading and two trailing underscores, such as `__all__`, `__author__`, `__version__`, etc
-
-##### Yes:
-
-    """This is the example module.
-
-    This module does stuff.
-    """
-
-    from __future__ import barry_as_FLUFL
-
-    __all__ = ['a', 'b', 'c']
-    __version__ = '0.1'
-    __author__ = 'Cardinal Biggles'
-
-    import os
-    import sys
-
+# use "myclass.MyClass" or "foo.bar.yourclass.YourClass"
+```
 
 ----
+### module Level dunder names
+> Module level "dunder" names with two leading and two trailing underscores, such as `__all__`, `__author__`, `__version__`, etc
+
+- yes:
+
+```python
+"""This is the example module.
+
+This module does stuff.
+"""
+
+from __future__ import barry_as_FLUFL
+
+__all__ = ['a', 'b', 'c']
+__version__ = '0.1'
+__author__ = 'Cardinal Biggles'
+
+import os
+import sys
+```
+
 ### Whitespace in Expressions and Statements
 
-##### No:
+- no:
 
-    spam( ham[ 1 ], { eggs: 2 } )
+```python
+spam( ham[ 1 ], { eggs: 2 } )
+```
 
-##### Yes:
+- yes:
 
-    spam(ham[1], {eggs: 2})
-
---
-
-##### No:
-
-    if x == 4 : print x , y ; x , y = y , x
-
-##### Yes:
-
-    if x == 4; print x, y; x, y = y, x
+```python
+spam(ham[1], {eggs: 2})
+```
 
 --
 
-##### No:
+- no:
 
-    ham[lower + offset:upper + offset]
-    ham[1: 9], ham[1 :9], ham[1:9 :3]
-    ham[lower : : upper]
-    ham[ : upper ]
+```python
+if x == 4 : print x , y ; x , y = y , x
+```
 
-##### Yes:
+- yes:
 
-    ham[1:9], ham[1:9:3], ham[:9:3], ham[1::3], ham[1:9:]
-    ham[lower:upper], ham[lowser:pper:], ham[lower::step]
-    ham[lower+offset : upper+offset]
-    ham[: upper_fn(x) : setp_fn(x)], ham[:: setp_fn(x)]
-    ham[lower + offset : upper + offset]
---
-
-##### No:
-
-    spam (1)
-
-##### Yes:
-
-    spam(1)
+```python
+if x == 4; print x, y; x, y = y, x
+```
 
 --
 
-##### No:
+- no:
 
-    dct ['key'] = lst [index]
+```python
+ham[lower + offset:upper + offset]
+ham[1: 9], ham[1 :9], ham[1:9 :3]
+ham[lower : : upper]
+ham[ : upper ]
+```
 
-##### Yes:
+- yes:
 
-    dct['key'] = lst[index]
+```python
+ham[1:9], ham[1:9:3], ham[:9:3], ham[1::3], ham[1:9:]
+ham[lower:upper], ham[lowser:pper:], ham[lower::step]
+ham[lower+offset : upper+offset]
+ham[: upper_fn(x) : setp_fn(x)], ham[:: setp_fn(x)]
+ham[lower + offset : upper + offset]
+```
 
+- no:
+
+```python
+spam (1)
+```
+
+- yes:
+
+```python
+spam(1)
+```
 --
 
-##### No:
+- no:
 
+```python
+dct ['key'] = lst [index]
+```
+
+- yes:
+
+```python
+dct['key'] = lst[index]
+```
+
+- no:
+
+```python
     x             = 1
     y             = 2
     long_variable = 3
+```
 
-##### Yes:
+- yes:
 
+```python
     x = 1
     y = 2
     long_variable = 3
+```
 
 ----
 ### Other Recommendations
 
-##### No:
+- no:
 
-        i=i+1
-        submitted +=1
-        x = x * 2 - 1
-        hypot2 = x * x + y * y
-        c = (a + b) * (a - b)
+```python
+i=i+1
+submitted +=1
+x = x * 2 - 1
+hypot2 = x * x + y * y
+c = (a + b) * (a - b)
+```
 
-##### Yes:
+- yes:
 
-        i = i + 1
-        submitted += 1
-        x = x*2 - 1
-        hypot2 = x*x + y*y
-        c = (a+b) * (a-b)
-
-
---
-
-##### No:
-
-        def complex(real, imag = 0.0):
-                return magic(r = real, i = imag)
-
-##### Yes:
-
-        def complex(real, imag=0.0):
-                return magic(r=real, i=imag)
+```python
+i = i + 1
+submitted += 1
+x = x*2 - 1
+hypot2 = x*x + y*y
+c = (a+b) * (a-b)
+```
 
 --
 
-##### No:
+- no:
 
-        def munge(input:AnyStr): ...
-        def munge()->PosInt: ...
+```python
+def complex(real, imag = 0.0):
+  return magic(r = real, i = imag)
+```
+- yes:
 
-##### Yes:
+```python
+def complex(real, imag=0.0):
+  return magic(r=real, i=imag)
+```
 
-        def munge(input: AnyStr): ...
-        def munge() -> AnyStr: ...
+- no:
 
---
+```python
+def munge(input:AnyStr): ...
+def munge()->PosInt: ...
+```
+- yes:
 
-##### No:
+```python
+def munge(input: AnyStr): ...
+def munge() -> AnyStr: ...
+```
 
-        def munge(input: AnyStr=None): ...
-        def munge(input: AnyStr, limit = 1000): ...
+- no:
 
-##### Yes:
+```python
+def munge(input: AnyStr=None): ...
+def munge(input: AnyStr, limit = 1000): ...
+```
+- yes:
 
-        def munge(sep: AnyStr = None): ...
-        def munge(input: AnyStr, sep: AnyStr = None, limit=1000): ...
+```python
+def munge(sep: AnyStr = None): ...
+def munge(input: AnyStr, sep: AnyStr = None, limit=1000): ...
+```
 
---
+##### rather no:
 
-##### Rather no:
+```python
+if foo == 'blah': do_blah_thing()
+do_one(); do_two(); do_three()
+```
 
-        if foo == 'blah': do_blah_thing()
-        do_one(); do_two(); do_three()
+- yes:
 
-##### Yes:
+```python
+if foo == 'blah':
+  do_blah_thing()
+do_one()
+do_two()
+do_three()
+```
 
-        if foo == 'blah':
-                do_blah_thing()
-        do_one()
-        do_two()
-        do_three()
+#### Definitely No:
 
---
+```python
+if foo == 'blah': do_blah_thing()
+else: do_non_blah_thing()
 
-##### Definitely No:
+try: something()
+finally: cleanup()
 
-        if foo == 'blah': do_blah_thing()
-        else: do_non_blah_thing()
+do_one(); do_two(); do_three(long, argument,
+                             list, like, this)
 
-        try: something()
-        finally: cleanup()
+if foo == 'blah': one(); two(); three()
+```
 
-        do_one(); do_two(); do_three(long, argument,
-                                                                 list, like, this)
+- yes:
 
-        if foo == 'blah': one(); two(); three()
+```python
+if foo == 'blah': do_blah_thing()
+for x in lst: total += x
+while t < 10: t = delay()
+```
 
-##### Yes:
+### documentation strings
 
-        if foo == 'blah': do_blah_thing()
-        for x in lst: total += x
-        while t < 10: t = delay()
+- yes:
+```python """Return a foobang
 
-----
-### Documentation Strings
+Optional plotz says to frobnicate the bizbaz first.
+"""
+```
 
-##### Yes:
-
-        """Return a foobang
-
-        Optional plotz says to frobnicate the bizbaz first.
-        """
-
-----
 ### Programming Recommendations
 
+- no:
+
+```python
+if not foo is None:
+```
+
+- yes:
+
+```python
+if foo is not None:
+```
+
+- no:
+
+```python
+f = lambda x: 2*x
+```
+
+- yes:
+
+```python
+def f(x): return 2*x
+```
+
+- no:
+
+```python
+try:
+  # Too broad!
+  return handle_value(collection[key])
+expect KeyError:
+  # Will also catch KeyError raised by handle_value()
+  return key_not_found(key)
+```
+
+- yes:
+
+```python
+try:
+  value = collection[key]
+except KeyError:
+  return key_not_found(key)
+else:
+  return handle_value(value)
+
+```
 --
 
-##### No:
+- no:
 
-        if not foo is None:
+```python
+with conn:
+  do_stuff_in_transaction(conn)
+```
 
-##### Yes:
+- yes:
 
-        if foo is not None:
+```python
+with conn.begin_transaction():
+  do_stuff_in_transaction(conn)
 
+```
 --
 
-##### No:
+- no:
 
-        f = lambda x: 2*x
+```python
+def foo(x):
+  fi x >= 0:
+    return math.sqrt(x)
 
-##### Yes:
+def bar(x):
+  if x < 0:
+    return
+  return math.sqrt(x)
 
-        def f(x): return 2*x
+```
+- yes:
 
---
+```python
+def foo(x):
+  if x >= 0:
+    return math.sqrt(x)
+  else:
+    return None
 
-##### No:
+def bar(x):
+  if x < 0:
+    return None
+  return math.sqrt(x)
 
-        try:
-                # Too broad!
-        return handle_value(collection[key])
-    expect KeyError:
-        # Will also catch KeyError raised by handle_value()
-        return key_not_found(key)
-
-##### Yes:
-
-    try:
-        value = collection[key]
-    except KeyError:
-        return key_not_found(key)
-    else:
-        return handle_value(value)
-
---
-
-##### No:
-
-    with conn:
-        do_stuff_in_transaction(conn)
-
-##### Yes:
-
-    with conn.begin_transaction():
-        do_stuff_in_transaction(conn)
+```
 
 --
+- no:
 
-##### No:
+```python
+if foo[:3] == 'bar':
+```
 
-    def foo(x):
-        fi x >= 0:
-            return math.sqrt(x)
+- yes:
 
-    def bar(x):
-        if x < 0:
-            return
-        return math.sqrt(x)
-
-##### Yes:
-
-    def foo(x):
-        if x >= 0:
-            return math.sqrt(x)
-        else:
-            return None
-
-    def bar(x):
-        if x < 0:
-            return None
-        return math.sqrt(x)
-
---
-
-##### No:
-
-    if foo[:3] == 'bar':
-
-##### Yes:
-
-    if foo.startwith('bar'):
-
---
-
-##### No:
-
-    if type(obj) is type(1):
-
-##### Yes:
-
-    if isinstance(obj, int):
-
---
-
-##### No:
-
-    if len(seq):
-    if not len(seq):
-
-##### Yes:
-
-    if not seq:
-    if seq:
+```python
+if foo.startwith('bar'):
+```
 
 --
 
-##### No:
+- no:
 
-        if greeting == True:
+```python
+if type(obj) is type(1):
+```
 
+- yes:
 
-##### Yes:
+```python
+if isinstance(obj, int):
+```
 
-        if greeting:
+--
 
+- no:
 
-##### Worse:
+```python
+if len(seq):
+if not len(seq):
+```
 
-        if greeting is True:
+- yes:
+
+```python
+if not seq:
+if seq:
+```
+===
+
+- no:
+
+```python
+if greeting == True:
+```
+
+- yes:
+
+```python
+if greeting:
+```
+
+- worse:
+
+```python
+if greeting is True:
+```
 
 
 ## [PEP8 Error/Warning Code](http://pep8.readthedocs.io/en/release-1.7.x/intro.html#error-codes)
