@@ -2,52 +2,70 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Pythonic](#pythonic)
-  - [Got from here and here](#got-from-here-and-here)
-- [Hidden Features (Got from here)](#hidden-features-got-from-here)
-  - [Numbers:](#numbers)
-  - [String:](#string)
-  - [Args:](#args)
-  - [Conditional Assignment](#conditional-assignment)
-  - [List & Dics](#list--dics)
-  - [Generator & Iteration](#generator--iteration)
-  - [Statement](#statement)
-  - [Funcs:](#funcs)
-  - [Class & Module](#class--module)
-  - [Others](#others)
-- [PEP8 -- Style Guide for Python Code](#pep8----style-guide-for-python-code)
-  - [Indentation](#indentation)
-  - [Maximum Line Length](#maximum-line-length)
-  - [Should a Line break before or after a binary operator?](#should-a-line-break-before-or-after-a-binary-operator)
-  - [Imports](#imports)
-  - [Module level dunder names](#module-level-dunder-names)
-  - [Whitespace in Expressions and Statements](#whitespace-in-expressions-and-statements)
-  - [Other Recommendations](#other-recommendations)
-  - [Documentation Strings](#documentation-strings)
-  - [Programming Recommendations](#programming-recommendations)
-- [PEP8 Error/Warning Code](#pep8-errorwarning-code)
-    - [E1 Indentation](#e1-indentation)
-    - [E2 Whitespace](#e2-whitespace)
-    - [E3 Blank line](#e3-blank-line)
-    - [E4 Import](#e4-import)
-    - [E5 Line length](#e5-line-length)
-    - [E7 Statement](#e7-statement)
-    - [E9 Runtime](#e9-runtime)
-    - [W1 Indentation warning](#w1-indentation-warning)
-    - [W2 Whitespace warning](#w2-whitespace-warning)
-    - [W3 Blank line warning](#w3-blank-line-warning)
-    - [W5 Line break warning](#w5-line-break-warning)
-    - [W6 Deprecation warning](#w6-deprecation-warning)
+  - [Pythonic](#pythonic)
+    - [zip/unzip](#zipunzip)
+    - [in](#in)
+    - [dict & counter](#dict--counter)
+    - [enumerate](#enumerate)
+    - [import local module](#import-local-module)
+    - [**args & **kwargs](#args--kwargs)
+    - [itertools](#itertools)
+    - [one-line python code](#one-line-python-code)
+    - [slice](#slice)
+    - [Chain Compare](#chain-compare)
+    - [Boolean](#boolean)
+    - [Reverse](#reverse)
+    - [Join in list](#join-in-list)
+    - [Sum & Max & Min & Time](#sum--max--min--time)
+- [sum = 15 maxNum = 5 minNum = 1 prod = 120](#sum--15-maxnum--5-minnum--1-prod--120)
+    - [Default Dict](#default-dict)
+    - [if...else...](#ifelse)
+    - [Ternary Operator](#ternary-operator)
+    - [dict & zip](#dict--zip)
+  - [Hidden Features (Got from here)](#hidden-features-got-from-here)
+    - [Numbers:](#numbers)
+    - [String:](#string)
+    - [Args:](#args)
+    - [Conditional Assignment](#conditional-assignment)
+    - [List & Dics](#list--dics)
+    - [Generator & Iteration](#generator--iteration)
+    - [Statement](#statement)
+    - [Funcs:](#funcs)
+    - [Class & Module](#class--module)
+    - [Others](#others)
+  - [PEP8 -- Style Guide for Python Code](#pep8----style-guide-for-python-code)
+    - [Indentation](#indentation)
+    - [Maximum Line Length](#maximum-line-length)
+    - [Should a Line break before or after a binary operator?](#should-a-line-break-before-or-after-a-binary-operator)
+    - [Imports](#imports)
+    - [Module level dunder names](#module-level-dunder-names)
+    - [Whitespace in Expressions and Statements](#whitespace-in-expressions-and-statements)
+    - [Other Recommendations](#other-recommendations)
+    - [Documentation Strings](#documentation-strings)
+    - [Programming Recommendations](#programming-recommendations)
+  - [PEP8 Error/Warning Code](#pep8-errorwarning-code)
+      - [E1 Indentation](#e1-indentation)
+      - [E2 Whitespace](#e2-whitespace)
+      - [E3 Blank line](#e3-blank-line)
+      - [E4 Import](#e4-import)
+      - [E5 Line length](#e5-line-length)
+      - [E7 Statement](#e7-statement)
+      - [E9 Runtime](#e9-runtime)
+      - [W1 Indentation warning](#w1-indentation-warning)
+      - [W2 Whitespace warning](#w2-whitespace-warning)
+      - [W3 Blank line warning](#w3-blank-line-warning)
+      - [W5 Line break warning](#w5-line-break-warning)
+      - [W6 Deprecation warning](#w6-deprecation-warning)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 --------
 
 ## Pythonic
-### Got from [here](https://www.quora.com/What-are-some-examples-of-beautiful-Pythonic-code) and [here](http://www.pythontab.com/html/2015/pythonhexinbiancheng_1029/970.html)
+> Inspired from [what are same example of beautiful 'Pythonic' code?](https://www.quora.com/What-are-some-examples-of-beautiful-Pythonic-code) and [如何让你的Python代码更加pythonic?](http://www.pythontab.com/html/2015/pythonhexinbiancheng_1029/970.html)
 
 --
-##### zip/unzip
+### zip/unzip
 
 ```python
 def unzip(tuples):
@@ -58,7 +76,7 @@ def unzip(tuples):
 ```
 
 --
-##### in
+### in
 
 ```python
 long_string = "This is a very long string"
@@ -66,8 +84,7 @@ if "long" in long_string:
   print("Match found")
 ```
 
---
-##### dict & counter
+### dict & counter
 
 ```python
 >>> from collections import Counter
@@ -76,15 +93,17 @@ if "long" in long_string:
 Counter({'orange': 2, 'banana': 2, 'apple': 1})
 ```
 --
-##### enumerate
+
+### enumerate
 
 ```python
 x = ['a', 'b', 'c']
 
 for index, item in enumerate(x):
-        print(index, item)
+  print(index, item)
 ```
 --
+
 P:
 
 ```python
@@ -111,12 +130,11 @@ for i in xrange(len(array)):
 #4 5
 
 ```
-
 --
-##### import local module
+
+### import local module
 ```python
 # A.py
-
 def filter_items(items):
   for i in items:
     if i < 10:
@@ -124,7 +142,6 @@ def filter_items(items):
 
 
 # B.py
-
 from A import filter_items as A_filter_items
 
 def filter_items(items):
@@ -136,11 +153,10 @@ def do_something(items):
   x = A_filter_items(items)
   y = filter_items(items)
   return (x, y)
-
 ```
 
 --
-##### **args & **kwargs
+### **args & **kwargs
 ```python
 def add(one, two):
   return one + two
@@ -153,7 +169,7 @@ y = add(**my_dict) #y = 3
 ```
 
 --
-##### itertools
+### itertools
 ```python
 >>> from itertools import zip_longest
 >>> x = [1, 2, 3, 4]
@@ -168,7 +184,7 @@ y = add(**my_dict) #y = 3
 ```
 
 --
-##### one-line python code
+### one-line python code
 ```python
 >>> my_dict = {key: value for key, value in zip_longest(x,y)}
 >>> my_dict
@@ -176,16 +192,15 @@ y = add(**my_dict) #y = 3
 ```
 
 --
-##### slice
-
+### slice
 ```python
 word = #some word
 is_palindrome = word.find(word[-1::-1])
 ```
 --
-##### Chain Compare
 
-P:
+### Chain Compare
+- P:
 
   ```python
   a = 3
@@ -194,213 +209,195 @@ P:
 
   ```
 
-NP:
+- NP:
 
-```python
-a = 3
-b = 1
-b >= 1 and b <= a and a < 10 #True
-```
-
---
-
-##### Boolean
-P:
-```python
-name = 'Tim'
-langs = ['AS3', 'Lua', 'C']
-info = {'name': 'Tim', 'sex': 'Male', 'age':23 }
-
-if name and langs and info:
-  print('All True!')  #All True!
-```
-
-NP:
-
-```python
-if name != '' and len(langs) > 0 and info != {}:
-  print('All True!') #All True!
-```
-
---
-
-##### Reverse
-P:
-```python
-def reverse_str( s ):
-  return s[::-1]
-```
-
-
-NP:
-```python
-def reverse_str( s ):
-  t = ''
-  for x in xrange(len(s)-1,-1,-1):
-    t += s[x]
-  return t
-```
-
---
-
-##### Join in list
-P:
-```python
-strList = ["Python", "is", "good"]
-res =  ' '.join(strList) #Python is good
-```
-
-NP:
-
-```python
-res = ''
-for s in strList:
-  res += s + ' '
-#Python is good
-#最后还有个多余空格
-```
-
---
-
-##### Sum & Max & Min & Time
-P:
-
-```python
-numList = [1,2,3,4,5]
-sum = sum(numList)  #sum = 15
-maxNum = max(numList) #maxNum = 5
-minNum = min(numList) #minNum = 1
-from operator import mul
-prod = reduce(mul, numList, 1) #prod = 120 默认值传1以防空列表报错
-```
-
-NP:
-
-```python
-sum = 0
-maxNum = -float('inf')
-minNum = float('inf')
-prod = 1
-for num in numList:
-  if num > maxNum:
-    maxNum = num
-  if num < minNum:
-    minNum = num
-  sum += num
-  prod *= num
-# sum = 15 maxNum = 5 minNum = 1 prod = 120
-```
-
---
-
-##### List Comprehensions
-P:
-```python
-l = [x*x for x in range(10) if x % 3 == 0]
-# l = [0, 9, 36, 81]
-```
-
-
-NP:
-```python
-l = []
-for x in range(10):
-  if x % 3 == 0:
-    l.append(x*x)
-# l = [0, 9, 36, 81]
-```
-
---
-
-##### Default Dict
-P:
-```python
-dic = {'name':'Tim', 'age':23}
-
-dic['workage'] = dic.get('workage',0) + 1
-# dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
-```
-
-NP:
-```python
-if 'workage' in dic:
-  dic['workage'] += 1
-else:
-  dic['workage'] = 1
-# dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
-```
-
---
-
-##### if...else...
-P:
-
-```python
-for x in xrange(1,5):
-  if x == 5:
-    print 'find 5'
-    break
-else:
-  print 'can not find 5!'
-# can not find 5!
-```
-
-NP:
-```python
-find = False
-for x in xrange(1,5):
-  if x == 5:
-    find = True
-    print 'find 5'
-    break
-if not find:
-  print 'can not find 5!'
-# can not find 5!
-```
-
---
-
-##### Ternary Operator
-P:
-```python
-a = 3
-
-b = 2 if a > 2 else 1
-# b = 2
-```
-
-NP:
-
-```python
-if a > 2:
-  b = 2
-else:
+  ```python
+  a = 3
   b = 1
-# b = 2
+  b >= 1 and b <= a and a < 10 #True
+  ```
 
-```
 --
+### Boolean
+- P:
+  ```python
+  name = 'Tim'
+  langs = ['AS3', 'Lua', 'C']
+  info = {'name': 'Tim', 'sex': 'Male', 'age':23 }
 
-##### dict & zip
-P:
+  if name and langs and info:
+    print('All True!')  #All True!
+  ```
 
-```python
-keys = ['Name', 'Sex', 'Age']
-values = ['Tim', 'Male', 23]
+- NP:
 
-dic = dict(zip(keys, values))
-# {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
-```
+  ```python
+  if name != '' and len(langs) > 0 and info != {}:
+    print('All True!') #All True!
+  ```
 
-NP:
+--
+### Reverse
 
-```python
-dic = {}
-for i,e in enumerate(keys):
-  dic[e] = values[i]
-# {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
-```
+- P:
+  ```python
+  def reverse_str( s ):
+    return s[::-1]
+  ```
 
+
+- NP:
+  ```python
+  def reverse_str( s ):
+    t = ''
+    for x in xrange(len(s)-1,-1,-1):
+      t += s[x]
+    return t
+  ```
+
+--
+### Join in list
+- P:
+  ```python
+  strList = ["Python", "is", "good"]
+  res =  ' '.join(strList) #Python is good
+  ```
+
+- NP:
+  ```python
+  res = ''
+  for s in strList:
+    res += s + ' '
+  #Python is good
+  #最后还有个多余空格
+  ```
+
+--
+### Sum & Max & Min & Time
+- P:
+  ```python
+  numList = [1,2,3,4,5]
+  sum = sum(numList)  #sum = 15
+  maxNum = max(numList) #maxNum = 5
+  minNum = min(numList) #minNum = 1
+  from operator import mul
+  prod = reduce(mul, numList, 1) #prod = 120 默认值传1以防空列表报错
+  ```
+
+- NP:
+
+  ```python
+  sum = 0
+  maxNum = -float('inf')
+  minNum = float('inf')
+  prod = 1
+  for num in numList:
+    if num > maxNum:
+      maxNum = num
+    if num < minNum:
+      minNum = num
+    sum += num
+    prod *= num
+# sum = 15 maxNum = 5 minNum = 1 prod = 120
+  ```
+
+--
+### List Comprehensions
+- P:
+  ```python
+  l = [x*x for x in range(10) if x % 3 == 0]
+  # l = [0, 9, 36, 81]
+  ```
+
+- NP:
+  ```python
+  l = []
+  for x in range(10):
+    if x % 3 == 0:
+      l.append(x*x)
+  # l = [0, 9, 36, 81]
+  ```
+
+--
+### Default Dict
+- P:
+  ```python
+  dic = {'name':'Tim', 'age':23}
+
+  dic['workage'] = dic.get('workage',0) + 1
+  # dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
+  ```
+
+- NP:
+  ```python
+  if 'workage' in dic:
+    dic['workage'] += 1
+  else:
+    dic['workage'] = 1
+  # dic = {'age': 23, 'workage': 1, 'name': 'Tim'}
+  ```
+--
+### if...else...
+- P:
+  ```python
+  for x in xrange(1,5):
+    if x == 5:
+      print 'find 5'
+      break
+  else:
+    print 'can not find 5!'
+  # can not find 5!
+  ```
+
+- NP:
+  ```python
+  find = False
+  for x in xrange(1,5):
+    if x == 5:
+      find = True
+      print 'find 5'
+      break
+  if not find:
+    print 'can not find 5!'
+  # can not find 5!
+  ```
+
+--
+### Ternary Operator
+- P:
+  ```python
+  a = 3
+
+  b = 2 if a > 2 else 1
+  # b = 2
+  ```
+
+- NP:
+  ```python
+  if a > 2:
+    b = 2
+  else:
+    b = 1
+  # b = 2
+  ```
+--
+### dict & zip
+- P:
+  ```python
+  keys = ['Name', 'Sex', 'Age']
+  values = ['Tim', 'Male', 23]
+
+  dic = dict(zip(keys, values))
+  # {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
+  ```
+
+- NP:
+  ```python
+  dic = {}
+  for i,e in enumerate(keys):
+    dic[e] = values[i]
+  # {'Age': 23, 'Name': 'Tim', 'Sex': 'Male'}
+  ```
 --------
 
 ## Hidden Features ([Got from here](http://stackoverflow.com/questions/101268/hidden-features-of-python))
