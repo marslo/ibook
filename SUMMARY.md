@@ -50,6 +50,7 @@
     * [mysqlInstallDB](programming/mysql/mysqlInstallDB.md)
     * [mysqlSecureInstallation](programming/mysql/mysqlSecureInstallation.md)
   - [python](programming/python/python.md)
+    * [list](programming/python/list.md)
   - ruby
     * [rubyInstallationBySourceCode](programming/ruby/rubyInstallationBySourceCode.md)
     * [rubyInstallationQ&A](programming/ruby/rubyInstallationQ&A.md)
