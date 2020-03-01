@@ -89,3 +89,10 @@ list( map(int, sample_list) )
 4 four
 ```
 
+- or zip to a map
+  ```python
+  >>> x = ['1', '2', '3', '4']
+  >>> y = ['one', 'two', 'three', 'four']
+  >>> print( {key: value for key, value in zip_longest(x, y)} )
+  {'1': 'one', '2': 'two', '3': 'three', '4': 'four'}
+  ```
