@@ -1,4 +1,59 @@
 
+### list copy
+> inspired by [How to clone or copy a list?](https://stackoverflow.com/a/2612815/2940319) in stackoverflow
+
+```python
+clone_list = sample_list.copy()
+```
+
+- or
+  ```python
+  clone_list = sample_list[:]
+  ```
+- or
+  ```python
+  clone_list = list(sample_list)
+  ```
+- or
+  ```python
+  import copy
+  clone_list = copy.copy(sample_list)
+  ```
+- or
+  ```python
+  import copy
+  clone_list = copy.deepcopy(sample_list)
+  ```
+
+- example:
+  ```python
+  >>> id(x)
+  4505979072
+  >>> k = x
+  >>> id(k)
+  4505979072
+
+  >>> k = x.copy()
+  >>> id(k)
+  4445208000
+  >>> k = x[:]
+  >>> id(k)
+  4505977632
+  >>> import copy
+  >>> k = copy.copy(x)
+  >>> id(k)
+  4505754352
+  >>> k = copy.deepcopy(x)
+  >>> id(k)
+  4505978352
+  >>> k = x[:]
+  >>> id(k)
+  4506260896
+  >>> k = copy.deepcopy(x)
+  >>> id(k)
+  4506261136
+  ```
+
 ### reverse list
 ```python
 sample_list[::-1]
@@ -33,3 +88,4 @@ list( map(int, sample_list) )
 3 three
 4 four
 ```
+
