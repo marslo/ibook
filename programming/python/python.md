@@ -127,6 +127,11 @@ def unzip(tuples):
   else:
     return []
 ```
+- result:
+  ```python
+  >>> unzip( ((1, 2), (3, 4), (5, 6)) )
+  [(1, 3, 5), (2, 4, 6)]
+  ```
 
 --
 ### in
