@@ -18,6 +18,8 @@ def hasValue( Map m, String value ) {
 
 - another version
 
+> credit belongs to [stackoverflow: How to search value by key from Map as well as Nested Map](https://stackoverflow.com/a/39749720/2940319)
+
 ```groovy
 def hasValue( Map m, String value ) {
   if ( m.containsValue(value) ) return m.containsValue(value)
