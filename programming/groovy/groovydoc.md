@@ -1,5 +1,4 @@
-
-## Generate Groovy API doc from command line
+# Generate Groovy API doc from command line
 
 > credit belongs to [HOW-TO Documenting Groovy with Groovydoc](https://www.javaworld.com/article/2074120/documenting-groovy-with-groovydoc.html)
 
