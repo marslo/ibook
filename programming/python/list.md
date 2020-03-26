@@ -96,3 +96,15 @@ list( map(int, sample_list) )
   >>> print( {key: value for key, value in zip_longest(x, y)} )
   {'1': 'one', '2': 'two', '3': 'three', '4': 'four'}
   ```
+
+### list mathematical
+- sum
+  ```python
+  >>> n = ['1', '2', '3', '4']
+  >>> print( sum( list( map(int, n) ) ) )
+  10
+  ```
+
+- multiplication
+  ```python
+  ```
