@@ -27,6 +27,30 @@ $ git config --global gitreview.remote origin
     value = +1 Verified
 ```
 
+
+#### integrate with Jira:
+```bash
+[plugin "its-jira"]
+  association = OPTIONAL
+  branch = ^refs/heads/.*
+  branch = ^refs/heads/stable-.*
+  commentOnChangeAbandoned = false
+  commentOnChangeCreated = true
+  commentOnChangeMerged = true
+  commentOnChangeRestored = false
+  commentOnCommentAdded = false
+  commentOnFirstLinkedPatchSetCreated = true
+  commentOnPatchSetCreated = false
+  commentOnRefUpdatedGitWeb = false
+  enabled = enforced
+[commentlink "its-jira"]
+  match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
+  link = https://<jira-domain>:<jira-port>/browse/$1
+[commentlink "changeid"]
+  match = (I[0-9a-f]{8,40})
+  link = "#/q/$1"
+```
+
 #### reference
 - [project.config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
 
@@ -108,7 +132,6 @@ $ git config --global gitreview.remote origin
     push = group gerrit-tricium-admins
 ```
 
-
 ### [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
 
 #### get project.config
@@ -153,20 +176,42 @@ $ git merge meta/config
 ```
 
 #### useful refs
-- `refs/heads/sandbox/${username}/*`
-- `refs/heads/jira/jira-[0-9]{1,5}(_.*)?`
+- sandbox: `refs/heads/sandbox/${username}/*`
+- its-jira: `refs/heads/jira/jira-[0-9]{1,5}(_.*)?`
 - freeze `master` branch
     - `project.config`
         ```bash
         [access "refs/for/refs/heads/master"]
-        push = block group user/Marslo Jiao (marslo)
-        push = block group Registered Users
-        submit = block group Registered Users
-        submit = block group group user/Marslo Jiao (marslo)
-        addPatchSet = block group user/Marslo Jiao (marslo)
-        addPatchSet = block group Registered Users
-        pushMerge = block group user/Marslo Jiao (marslo)
-        pushMerge = block group Registered Users
+          push = block group user/Marslo Jiao (marslo)
+          push = block group Registered Users
+          submit = block group Registered Users
+          submit = block group group user/Marslo Jiao (marslo)
+          addPatchSet = block group user/Marslo Jiao (marslo)
+          addPatchSet = block group Registered Users
+          pushMerge = block group user/Marslo Jiao (marslo)
+          pushMerge = block group Registered Users
+        ```
+    - `groups`
+        ```bash
+        ...
+        global:Project-Owners      Project Owners
+        global:Registered-Users    Registered Users
+        ...
+        user:marslo                user/Marslo Jiao(marslo)
+        ...
+        ```
+- freeze `stable` branch for the other account
+    - `project.config`
+        ```bash
+        [access "refs/for/refs/heads/stable"]
+          push = block group Registered Users
+          submit = block group Registered Users
+          addPatchSet = block group Registered Users
+          pushMerge = block group Registered Users
+        [access "^refs/heads/stable"]
+          read = group user/Marslo Jiao (marslo)
+          push = +force group user/Marslo Jiao (marslo)
+          pushMerge = group user/Marslo Jiao (marslo)
         ```
     - `groups`
         ```bash
@@ -183,3 +228,5 @@ $ git merge meta/config
 - [Gerrit Code Review - Uploading Changes](https://www.gerritcodereview.com/user-upload.html)
 - [gerrit/gerrit/refs/meta/config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config)
 - [gerrit 权限控制](https://blog.csdn.net/chenjh213/article/details/50571190)
+- [its-jira plugin md](https://gerrit.googlesource.com/plugins/its-jira/+/refs/heads/stable-3.0/src/main/resources/Documentation/config.md)
+- [Rule base configuration](https://review.opendev.org/plugins/its-storyboard/Documentation/config-rulebase-common.html)
