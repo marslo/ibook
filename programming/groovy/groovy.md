@@ -26,3 +26,54 @@ def hasValue( Map m, String value ) {
   m.findResult { k, v -> v instanceof Map ? hasValue(v, value) : null }
 }
 ```
+
+### find a `string` exists in a `list` of `Map`
+```groovy
+def isTargetExists( Map m, String subKey, String value ) {
+  def map = m.findAll { it.value instanceof Map }.collect { it.key }
+  return m.subMap(map).any { k, v -> v.get(subKey, []).contains(value) }
+}
+
+Map<String, Map<String, String>> matrix = [
+  dev : [
+    user: ['dev1', 'dev2', 'dev3'] ,
+    passwd: '123456',
+    customer: ['yahoo', 'bing']
+  ] ,
+  staging : [
+    user: ['stg1', 'stg2', 'stg3'] ,
+    passwd: 'abcdefg' ,
+    customer: ['google', 'huawei']
+  ] ,
+  prod : [
+    user: ['prod1', 'prod2', 'prod3'] ,
+    passwd: 'a1b2c3d4'
+  ]
+]
+
+assert isTargetExists( matrix, 'user', 'dev4' ) == false
+assert isTargetExists( matrix, 'release', 'huawei' ) == true
+```
+
+## elvis operator
+### if/elseif{if}/else
+```groovy
+// by using if/elseif{if}/else
+Map option = [:]
+if ( [ 'apple', 'orange' ].contains(fruits) ) {
+    option = [ "${fruits}" : '5' ]
+} else if ( [ 'watermelon' ].contains(fruits) ) {
+   if (mode) {
+     option = [  "${fruits}" : mode]
+   }
+} else {
+    println( 'basket CANNOT be empty while fruits is watermelon' )
+}
+
+// by using elvis operator
+Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
+         : ( [ 'watermelon' ].contains(fruits) ) ? ( mode )
+            ? [ "${fruits}" : mode ]
+            : println( 'basket CANNOT be empty while fruits is watermelon' )
+         : null
+```
