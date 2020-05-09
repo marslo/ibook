@@ -49,6 +49,25 @@ rlog        = "!bash -c 'while read branch; do \n\
              done < <(git rev-parse --abbrev-ref HEAD) '"
 ```
 
+## git branch
+### create empty branch
+
+  - create an empty branch
+    ```bash
+    $ mkdir <MY_FOLDER> && cd $_
+    $ git init
+    $ git remote add origin <REMOTE_URL>
+    $ git fetch --all --progress --force
+    $ git checkout -b <BRANCH_NAME>
+    ```
+
+  - push to remote
+    ```bash
+    $ git add --all .
+    $ git commit -m 'inital an empty branch'
+    $ git push --force -u origin HEAD:<BRANCH_NAME>
+    ```
+
 ## git log
 ### show files and status without comments
 ```bash
