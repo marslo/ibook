@@ -169,6 +169,7 @@ or
   $ git push origin HEAD:refs/meta/config
   ```
 - submit review
+
   ```bash
   $ git push origin HEAD:refs/for/refs/meta/config
   ```
@@ -212,7 +213,7 @@ $ git merge meta/config
         user:marslo                user/Marslo Jiao(marslo)
         ...
         ```
-- freeze `stable` & `release` branch for the other account
+- freeze multiple branches (`stable` & `release`) for the specific account
     - `project.config`
         ```bash
         [access "^refs/for/refs/heads/(stable|release)$"]
@@ -234,6 +235,33 @@ $ git merge meta/config
         user:marslo                user/Marslo Jiao(marslo)
         ...
         ```
+- restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push
+  - `project.config`
+    ```bash
+    [access "refs/*"]
+      read = group Project Owners
+      read = group user/Marslo Jiao (marslo)
+    [access "refs/for/*"]
+      addPatchSet = group Project Owners
+      addPatchSet = group user/Marslo Jiao (marslo)
+      push = group Project Owners
+      push = group user/Marslo Jiao (marslo)
+      pushMerge = group Project Owners
+      pushMerge = group user/Marslo Jiao (marslo)
+    [access "^refs/heads/(feature1|feature2|master)$"]
+      push = block group Registered Users
+      pushMerge = block group Registered Users
+      submit = group Change Owner
+    ```
+  - `groups`
+      ```bash
+      ...
+      global:Project-Owners      Project Owners
+      global:Registered-Users    Registered Users
+      ...
+      user:marslo                user/Marslo Jiao(marslo)
+      ...
+      ```
 
 ## reference
 - [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
