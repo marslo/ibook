@@ -135,18 +135,24 @@ $ git config --global gitreview.remote origin
 ### [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
 
 #### get project.config
-```bash
-$ git clone <repo url>
-# or update the local repo to HEAD
-$ git pull [--rebase]
-
-$ git fetch origin refs/meta/config:refs/remotes/origin/meta/config
-$ git checkout meta/config
-
-# or
-$ git fetch ssh://localhost:29418/project refs/meta/config
-$ git checkout FETCH_HEAD
-```
+- clone the repo
+  ```bash
+  $ git clone <repo url>
+  # or update the local repo to HEAD
+  $ git pull [--rebase]
+  ```
+ 
+- checkout `meta/config`
+  ```bash
+  $ git fetch origin refs/meta/config:refs/remotes/origin/meta/config
+  $ git checkout meta/config
+  ```
+or
+ 
+  ```bash
+  $ git fetch ssh://localhost:29418/project refs/meta/config
+  $ git checkout FETCH_HEAD
+  ```
 
 #### publish to remote
 ```bash
@@ -154,17 +160,23 @@ $ git add --all .
 $ git commit -m "<add your comments here>"
 ```
 - submit directly
-```bash
-$ git push origin meta/config:meta/config
-# OR
-$ git push origin HEAD:refs/meta/config
-```
+  ```bash
+  $ git push origin meta/config:meta/config
+  ```
+or
+
+  ```bash
+  $ git push origin HEAD:refs/meta/config
+  ```
 - submit review
-```bash
-$ git push origin HEAD:refs/for/refs/meta/config
-# or
-$ git push origin meta/config:refs/for/refs/meta/config
-```
+  ```bash
+  $ git push origin HEAD:refs/for/refs/meta/config
+  ```
+or
+
+  ```bash
+  $ git push origin meta/config:refs/for/refs/meta/config
+  ```
 
 #### update meta/config if remotes update
 ```bash
@@ -200,15 +212,15 @@ $ git merge meta/config
         user:marslo                user/Marslo Jiao(marslo)
         ...
         ```
-- freeze `stable` branch for the other account
+- freeze `stable` & `release` branch for the other account
     - `project.config`
         ```bash
-        [access "refs/for/refs/heads/stable"]
+        [access "^refs/for/refs/heads/(stable|release)$"]
           push = block group Registered Users
           submit = block group Registered Users
           addPatchSet = block group Registered Users
           pushMerge = block group Registered Users
-        [access "^refs/heads/stable"]
+        [access "^refs/heads/(stable|release)$"]
           read = group user/Marslo Jiao (marslo)
           push = +force group user/Marslo Jiao (marslo)
           pushMerge = group user/Marslo Jiao (marslo)
