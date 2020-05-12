@@ -78,14 +78,25 @@
 $ sudo xcodebuild -license accept
 ```
 
-### commandline tools and compoents installation
-```bash
-$ xcode-select -p
+### commandline tools and compoents
+- installation
+  ```bash
+  $ xcode-select -p
 
-$ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
-    sudo installer -pkg "$pkg" -target /;
-done
-```
+  $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
+      sudo installer -pkg "$pkg" -target /;
+  done
+  ```
+- upgrade
+  ```bash
+  $ softwareupdate --all --install --force
+  ```
+  or
+
+  ```bash
+  $ sudo rm -rf /Library/Developer/CommandLineTools
+  $ sudo xcode-select --install
+  ```
 
 ### enable dev mode
 ```bash
