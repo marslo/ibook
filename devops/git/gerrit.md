@@ -2,9 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-  - [.gitconfig](#gitconfig)
-  - [project.config](#projectconfig)
-  - [refs/meta/config](#refsmetaconfig)
+- [.gitconfig](#gitconfig)
+- [refs/meta/config](#refsmetaconfig)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -14,43 +13,6 @@
 $ git config --global gitreview.username <UserName>
 $ git config --global gitreview.remote origin
 ```
-### project.config
-
-#### refs for Verified
-```bash
-[label "Verified"]
-    function = MaxWithBlock
-    defaultValue = 0
-    copyAllScoresIfNoCodeChange = true
-    value = -1 Fails
-    value =  0 No score
-    value = +1 Verified
-```
-
-
-#### integrate with Jira:
-```bash
-[plugin "its-jira"]
-  association = OPTIONAL
-  branch = ^refs/heads/.*
-  branch = ^refs/heads/stable-.*
-  commentOnChangeAbandoned = false
-  commentOnChangeCreated = true
-  commentOnChangeMerged = true
-  commentOnChangeRestored = false
-  commentOnCommentAdded = false
-  commentOnFirstLinkedPatchSetCreated = true
-  commentOnPatchSetCreated = false
-  commentOnRefUpdatedGitWeb = false
-  enabled = enforced
-[commentlink "its-jira"]
-  match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
-  link = https://<jira-domain>:<jira-port>/browse/$1
-[commentlink "changeid"]
-  match = (I[0-9a-f]{8,40})
-  link = "#/q/$1"
-```
-
 ### [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
 
 #### get project.config
@@ -110,6 +72,43 @@ $ git merge meta/config
 #### useful refs
 - sandbox: `refs/heads/sandbox/${username}/*`
 - its-jira: `refs/heads/jira/jira-[0-9]{1,5}(_.*)?`
+
+  ```bash
+  [plugin "its-jira"]
+    association = OPTIONAL
+    branch = ^refs/heads/.*
+    branch = ^refs/heads/stable-.*
+    commentOnChangeAbandoned = false
+    commentOnChangeCreated = true
+    commentOnChangeMerged = true
+    commentOnChangeRestored = false
+    commentOnCommentAdded = false
+    commentOnFirstLinkedPatchSetCreated = true
+    commentOnPatchSetCreated = false
+    commentOnRefUpdatedGitWeb = true
+    enabled = enforced
+  [commentlink "its-jira"]
+    match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
+    link = https://<jira-domain>:<jira-port>/browse/$1
+  [commentlink "changeid"]
+    match = (I[0-9a-f]{8,40})
+    link = "#/q/$1"
+  ```
+
+- verified label
+
+  ```bash
+  [label "Verified"]
+      function = MaxWithBlock
+      defaultValue = 0
+      copyAllScoresIfNoCodeChange = true
+      value = -1 Fails
+      value =  0 No score
+      value = +1 Verified
+  ```
+
+#### integrate with Jira:
+
 - freeze `master` branch
   - `project.config`
     ```bash
@@ -265,7 +264,7 @@ $ git merge meta/config
     push = group gerrit-tricium-admins
   ```
 
-## reference
+### reference
 - [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
 - [Gerrit Code Review - Uploading Changes](https://www.gerritcodereview.com/user-upload.html)
 - [gerrit/gerrit/refs/meta/config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config)
