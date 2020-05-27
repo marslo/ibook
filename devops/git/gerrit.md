@@ -22,14 +22,14 @@ $ git config --global gitreview.remote origin
   # or update the local repo to HEAD
   $ git pull [--rebase]
   ```
- 
+
 - checkout `meta/config`
   ```bash
   $ git fetch origin refs/meta/config:refs/remotes/origin/meta/config
   $ git checkout meta/config
   ```
   or
- 
+
   ```bash
   $ git fetch ssh://localhost:29418/project refs/meta/config
   $ git checkout FETCH_HEAD
@@ -69,94 +69,125 @@ $ git pull origin refs/meta/config
 $ git merge meta/config
 ```
 
-#### useful refs
-- sandbox: `refs/heads/sandbox/${username}/*`
-- its-jira: `refs/heads/jira/jira-[0-9]{1,5}(_.*)?`
+### useful refs
+
+#### sandbox:
+```bash
+refs/heads/sandbox/${username}/*
+```
+
+#### its-jira:
+
+- for project specific
+
+```bash
+[commentlink "its-jira"]
+  match = ^[ \\t]*PROJECT-([0-9]{1,5}):
+  link = https://<jira-domain>:<jira-port>/browse/PROJECT-$1
+```
+
+- for common setup
+
+```bash
+[plugin "its-jira"]
+  association = OPTIONAL
+  branch = ^refs/heads/.*
+  branch = ^refs/heads/stable-.*
+  commentOnChangeAbandoned = false
+  commentOnChangeCreated = true
+  commentOnChangeMerged = true
+  commentOnChangeRestored = false
+  commentOnCommentAdded = false
+  commentOnFirstLinkedPatchSetCreated = true
+  commentOnPatchSetCreated = false
+  commentOnRefUpdatedGitWeb = true
+  enabled = enforced
+[commentlink "its-jira"]
+  match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
+  link = https://<jira-domain>:<jira-port>/browse/$1
+[commentlink "changeid"]
+  match = (I[0-9a-f]{8,40})
+  link = "#/q/$1"
+```
+
+#### verified label
+
+```bash
+[label "Verified"]
+    function = MaxWithBlock
+    defaultValue = 0
+    copyAllScoresIfNoCodeChange = true
+    value = -1 Fails
+    value =  0 No score
+    value = +1 Verified
+```
+
+#### change-id
+```bash
+[receive]
+  requireChangeId = true
+  createNewChangeForAllNotInTarget = false
+  maxObjectSizeLimit = 6m
+  maxBatchChanges = 1
+[commentlink "changeid"]
+  match = (I[0-9a-f]{8,40})
+  link = "#/q/$1"
+```
+
+#### freeze `master` branch
+- `project.config`
 
   ```bash
-  [plugin "its-jira"]
-    association = OPTIONAL
-    branch = ^refs/heads/.*
-    branch = ^refs/heads/stable-.*
-    commentOnChangeAbandoned = false
-    commentOnChangeCreated = true
-    commentOnChangeMerged = true
-    commentOnChangeRestored = false
-    commentOnCommentAdded = false
-    commentOnFirstLinkedPatchSetCreated = true
-    commentOnPatchSetCreated = false
-    commentOnRefUpdatedGitWeb = true
-    enabled = enforced
-  [commentlink "its-jira"]
-    match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
-    link = https://<jira-domain>:<jira-port>/browse/$1
-  [commentlink "changeid"]
-    match = (I[0-9a-f]{8,40})
-    link = "#/q/$1"
+  [access "refs/for/refs/heads/master"]
+    push = block group user/Marslo Jiao (marslo)
+    push = block group Registered Users
+    submit = block group Registered Users
+    submit = block group group user/Marslo Jiao (marslo)
+    addPatchSet = block group user/Marslo Jiao (marslo)
+    addPatchSet = block group Registered Users
+    pushMerge = block group user/Marslo Jiao (marslo)
+    pushMerge = block group Registered Users
   ```
-
-- verified label
+- `groups`
 
   ```bash
-  [label "Verified"]
-      function = MaxWithBlock
-      defaultValue = 0
-      copyAllScoresIfNoCodeChange = true
-      value = -1 Fails
-      value =  0 No score
-      value = +1 Verified
+  ...
+  global:Project-Owners      Project Owners
+  global:Registered-Users    Registered Users
+  ...
+  user:marslo                user/Marslo Jiao(marslo)
+  ...
   ```
 
-#### integrate with Jira:
+#### freeze multiple branches (`stable` & `release`) for the specific account
+- `project.config`
 
-- freeze `master` branch
-  - `project.config`
-    ```bash
-    [access "refs/for/refs/heads/master"]
-      push = block group user/Marslo Jiao (marslo)
-      push = block group Registered Users
-      submit = block group Registered Users
-      submit = block group group user/Marslo Jiao (marslo)
-      addPatchSet = block group user/Marslo Jiao (marslo)
-      addPatchSet = block group Registered Users
-      pushMerge = block group user/Marslo Jiao (marslo)
-      pushMerge = block group Registered Users
-    ```
-  - `groups`
-      ```bash
-      ...
-      global:Project-Owners      Project Owners
-      global:Registered-Users    Registered Users
-      ...
-      user:marslo                user/Marslo Jiao(marslo)
-      ...
-      ```
+  ```bash
+  [access "^refs/for/refs/heads/(stable|release)$"]
+    push = block group Registered Users
+    submit = block group Registered Users
+    addPatchSet = block group Registered Users
+    pushMerge = block group Registered Users
+  [access "^refs/heads/(stable|release)$"]
+    read = group user/Marslo Jiao (marslo)
+    push = +force group user/Marslo Jiao (marslo)
+    pushMerge = group user/Marslo Jiao (marslo)
+  ```
+- `groups`
 
-- freeze multiple branches (`stable` & `release`) for the specific account
-  - `project.config`
-      ```bash
-      [access "^refs/for/refs/heads/(stable|release)$"]
-        push = block group Registered Users
-        submit = block group Registered Users
-        addPatchSet = block group Registered Users
-        pushMerge = block group Registered Users
-      [access "^refs/heads/(stable|release)$"]
-        read = group user/Marslo Jiao (marslo)
-        push = +force group user/Marslo Jiao (marslo)
-        pushMerge = group user/Marslo Jiao (marslo)
-      ```
-  - `groups`
-      ```bash
-      ...
-      global:Project-Owners      Project Owners
-      global:Registered-Users    Registered Users
-      ...
-      user:marslo                user/Marslo Jiao(marslo)
-      ...
-      ```
+  ```bash
+  ...
+  global:Project-Owners      Project Owners
+  global:Registered-Users    Registered Users
+  ...
+  user:marslo                user/Marslo Jiao(marslo)
+  ...
+  ```
 
-- restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push
-  - `project.config`
+### restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push
+
+- `project.config`
+
   ```bash
   [access "refs/*"]
     read = group Project Owners
@@ -173,17 +204,19 @@ $ git merge meta/config
     pushMerge = block group Registered Users
     submit = group Change Owner
   ```
-  - `groups`
-    ```bash
-    ...
-    global:Project-Owners      Project Owners
-    global:Registered-Users    Registered Users
-    ...
-    user:marslo                user/Marslo Jiao(marslo)
-    ...
-    ```
 
-- example of `project.config`
+- `groups`
+
+  ```bash
+  ...
+  global:Project-Owners      Project Owners
+  global:Registered-Users    Registered Users
+  ...
+  user:marslo                user/Marslo Jiao(marslo)
+  ...
+  ```
+
+#### example of `project.config`
   - [project.config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
 
   ```bash
