@@ -4,6 +4,8 @@
 
 - [Brace Expansion](#brace-expansion)
   - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
+- [Basic Comamnds](#basic-comamnds)
+  - [`du`](#du)
 - [CentOS](#centos)
   - [Yum](#yum)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
@@ -17,6 +19,28 @@
 ```bash
 $ scp -r `echo dir{1..10}` user@target.server:/target/server/path/
 ```
+# Basic Comamnds
+## `du`
+- top biggest directories under _[path]_
+  ```bash
+  $ du -a [path] | sort -n -r | head -n 5
+  ```
+- display the largest files according to human-readable format
+  ```bash
+  $ du -hs * | sort -rh | head -5
+  ```
+- display the largest folders/files including the sub-directories
+  ```bash
+  $ du -Sh | sort -rh | head -5
+  ```
+- biggest file sizes
+  ```bash
+  $ find -type f -exec du -Sh {} + | sort -rh | head -n 5
+
+  or
+  $ find [PATH] -type f -printf "%s %p\n" | sort -rn | head -n 5
+  ```
+
 
 # CentOS
 ## Yum
@@ -68,6 +92,7 @@ OR
     ```
 
 - reference
-    - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
-    - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
-    - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
+  - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
+  - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
+  - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
+  - [How to Find Out Top Directories and Files (Disk Space) in Linux](https://www.tecmint.com/find-top-large-directories-and-files-sizes-in-linux/)
