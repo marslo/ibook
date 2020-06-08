@@ -34,6 +34,7 @@
   * [kubernetes-plugin](jenkins/kubernetes-plugin.md)
 - kubernetes
   * [certificates](kubernetes/certificates.md)
+  * [docker](kubernetes/docker.md)
   * [kubeadm](kubernetes/kubeadm.md)
   * [monitor](kubernetes/monitor.md)
   * [namespace](kubernetes/namespace.md)
