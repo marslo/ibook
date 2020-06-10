@@ -10,6 +10,8 @@
   - [Get downstream build environment](#get-downstream-build-environment)
   - [Get previous build environment](#get-previous-build-environment)
 - [Stop the current build](#stop-the-current-build)
+  - [stop current](#stop-current)
+  - [stop all](#stop-all)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
