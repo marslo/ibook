@@ -1,4 +1,4 @@
-# Your Book Title
+# Life is hard, make it easier
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
