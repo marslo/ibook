@@ -5,6 +5,11 @@
 - [Trigger](#trigger)
   - [Poll SCM](#poll-scm)
   - [Triggered by](#triggered-by)
+- [Environment Variables](#environment-variables)
+  - [Get current customized environment](#get-current-customized-environment)
+  - [Get downstream build environment](#get-downstream-build-environment)
+  - [Get previous build environment](#get-previous-build-environment)
+- [Stop the current build](#stop-the-current-build)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -59,4 +64,12 @@ commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLa
 ### Get previous build environment
 ```groovy
   println currentBuild.getPreviousBuild().getBuildVariables()?.MY_ENV
+```
+
+## Stop the current build
+```groovy
+  // stop and show status to UNSTABLE
+  if ( 'UNSTABLE' == currentBuild.result ) {
+    currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
+  }
 ```
