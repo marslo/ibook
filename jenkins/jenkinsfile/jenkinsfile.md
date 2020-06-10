@@ -44,3 +44,19 @@ currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookC
 // or
 commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
 ```
+
+
+## Environment Variables
+### Get current customized environment
+```groovy
+  println currentBuild.getBuildVariables()?.MY_ENV
+```
+### Get downstream build environment
+```groovy
+  def res = build job: 'downstream-job', propagate: false
+  println res.getBuildVariables()?.MY_ENV
+```
+### Get previous build environment
+```groovy
+  println currentBuild.getPreviousBuild().getBuildVariables()?.MY_ENV
+```
