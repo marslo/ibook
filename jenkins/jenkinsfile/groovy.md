@@ -49,7 +49,7 @@ jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.P
 
 import org.jvnet.hudson.plugins.shelveproject.ShelveProjectTask
 
-def daysBack=365; 
+def daysBack=365;
 Jenkins.instance.getAllItems(AbstractProject.class).each{ it->
   def lastBuild=it.getLastBuild()
   if(lastBuild != null){
@@ -61,9 +61,31 @@ Jenkins.instance.getAllItems(AbstractProject.class).each{ it->
       def spt=  new ShelveProjectTask(it)
         Hudson.getInstance().getQueue().schedule(spt , 0 );
       }else{
-        println it.name + " was not shelved----------- " 
+        println it.name + " was not shelved----------- "
       }
     }
   }
+}
+```
+
+## [run shell scripts in a cluster-operation](https://support.cloudbees.com/hc/en-us/articles/360020737392-How-to-run-shell-scripts-in-a-cluster-operation)
+```groovy
+def exec(cmd) {
+  println cmd
+  def process = new ProcessBuilder([ "sh", "-c", cmd])
+                                    .directory(new File("/tmp"))
+                                    .redirectErrorStream(true)
+                                    .start()
+  process.outputStream.close()
+  process.inputStream.eachLine {println it}
+  process.waitFor();
+  return process.exitValue()
+}
+
+[
+  "echo hello world",
+  "ls -al"
+].each {
+  exec(it)
 }
 ```
