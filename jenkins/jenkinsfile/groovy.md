@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Groovy to list all jobs](#groovy-to-list-all-jobs)
+  - [list all Abstract Project](#list-all-abstract-project)
+  - [list all jobs and folders](#list-all-jobs-and-folders)
+  - [get name and classes](#get-name-and-classes)
+  - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
+- [shelve jobs](#shelve-jobs)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## [Groovy to list all jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 ### list all Abstract Project
 >> Abstract Project: freestyle, maven, etc...
