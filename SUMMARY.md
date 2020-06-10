@@ -27,11 +27,12 @@
   * [osx](devops/osx.md)
   * [python](devops/python.md)
   * [ssh](devops/ssh.md)
-- jenkins
+- [jenkins](jenkins/jenkins.md)
   - [jenkinsfile](jenkins/jenkinsfile/jenkinsfile.md)
     * [lockable-resource](jenkins/jenkinsfile/lockable-resource.md)
   * [configuration](jenkins/configuration.md)
   * [groovy-script](jenkins/groovy-script.md)
+  * [jenkins](jenkins/jenkins.md)
   * [kubernetes-plugin](jenkins/kubernetes-plugin.md)
 - kubernetes
   * [certificates](kubernetes/certificates.md)

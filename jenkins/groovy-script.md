@@ -89,3 +89,11 @@ def exec(cmd) {
   exec(it)
 }
 ```
+
+## [execute Groovy script with an API call](https://support.cloudbees.com/hc/en-us/articles/217509228-Execute-Groovy-script-in-Jenkins-with-an-API-call)
+```bash
+$ curl -d "script=$(cat /tmp/script.groovy)" -v --user username:ApiToken http://localhost:8080/scriptText
+
+# or
+$ curl -d "script=println 'this script works'" -v --user username:ApiToken http://localhost:8080/scriptText
+```
