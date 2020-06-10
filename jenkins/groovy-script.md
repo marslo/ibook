@@ -13,7 +13,7 @@
 
 ## [Groovy to list all jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 ### list all Abstract Project
->> Abstract Project: freestyle, maven, etc...
+> Abstract Project: freestyle, maven, etc...
 
 ```groovy
 Jenkins.instance.getAllItems(AbstractProject.class).each {
