@@ -1,4 +1,4 @@
-# Life is hard, make it easier
+# life is hard, make it easier
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
@@ -29,9 +29,9 @@
   * [ssh](devops/ssh.md)
 - jenkins
   - [jenkinsfile](jenkins/jenkinsfile/jenkinsfile.md)
-    * [groovy](jenkins/jenkinsfile/groovy.md)
     * [lockable-resource](jenkins/jenkinsfile/lockable-resource.md)
   * [configuration](jenkins/configuration.md)
+  * [groovy-script](jenkins/groovy-script.md)
   * [kubernetes-plugin](jenkins/kubernetes-plugin.md)
 - kubernetes
   * [certificates](kubernetes/certificates.md)

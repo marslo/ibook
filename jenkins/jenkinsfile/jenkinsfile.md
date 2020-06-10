@@ -68,15 +68,32 @@ commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLa
   println currentBuild.getPreviousBuild().getBuildVariables()?.MY_ENV
 ```
 
-## Stop the current build
-### stop current
+
+## build & current build
+### [check previous build status](https://support.cloudbees.com/hc/en-us/articles/230922188-Pipeline-How-can-I-check-previous-build-status-in-a-Pipeline-Script-)
+> useful info:
+> ```groovy
+> method hudson.model.Run getPreviousBuild
+> method hudson.model.Run getResult
+> method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild
+> ```
+
+```groovy
+if(!hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?.getResult())) {
+  echo "last build failed"
+}
+
+```
+
+### Stop the current build
+#### stop current
 ```groovy
   // stop and show status to UNSTABLE
   if ( 'UNSTABLE' == currentBuild.result ) {
     currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
   }
 ```
-### [stop all](https://stackoverflow.com/a/26306081/2940319)
+#### [stop all](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
 Thread.getAllStackTraces().keySet().each() {
   t -> if (t.getName()=="YOUR THREAD NAME" ) { t.interrupt(); }          // or t.stop();
@@ -91,4 +108,3 @@ Jenkins.instance.getItemByFullName("JobName")
                         new java.io.IOException("Aborting build")
                 );
 ```
-
