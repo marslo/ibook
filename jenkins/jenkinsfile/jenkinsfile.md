@@ -67,9 +67,26 @@ commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLa
 ```
 
 ## Stop the current build
+### stop current
 ```groovy
   // stop and show status to UNSTABLE
   if ( 'UNSTABLE' == currentBuild.result ) {
     currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
   }
 ```
+### [stop all](https://stackoverflow.com/a/26306081/2940319)
+```groovy
+Thread.getAllStackTraces().keySet().each() {
+  t -> if (t.getName()=="YOUR THREAD NAME" ) { t.interrupt(); }          // or t.stop();
+}
+
+// and
+
+Jenkins.instance.getItemByFullName("JobName")
+                .getBuildByNumber(JobNumber)
+                .finish(
+                        hudson.model.Result.ABORTED,
+                        new java.io.IOException("Aborting build")
+                );
+```
+
