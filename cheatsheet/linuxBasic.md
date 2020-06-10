@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [metacharacter](#metacharacter)
 - [Brace Expansion](#brace-expansion)
   - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
 - [Basic Comamnds](#basic-comamnds)
@@ -11,6 +12,69 @@
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# metacharacter
+
+| Character        | Where                | Meaning                                       |
+|:----------------:|----------------------|-----------------------------------------------|
+| `<RETURN>`       | csh, sh              | Execute command                               |
+| `#`              | csh, sh, ASCII files | Start a comment                               |
+| `<SPACE>`        | csh, sh              | Argument separator                            |
+| ```              | csh, sh              | Command substitution                          |
+| `"`              | csh, sh              | Weak Quotes                                   |
+| `'`              | csh, sh              | Strong Quotes                                 |
+| `\`              | csh, sh              | Single Character Quote                        |
+| `variable`       | sh, csh              | Variable                                      |
+| `variable`       | csh, sh              | Same as variable                              |
+| `\`              | csh, sh              | Pipe character                                |
+| `^`              | sh                   | Pipe Character                                |
+| `&`              | csh, sh              | Run program in background                     |
+| `?`              | csh, sh              | Match one character                           |
+| `*`              | csh, sh              | Match any number of characters                |
+| `;`              | csh, sh              | Command separator                             |
+| `;;`             | sh                   | End of Case statement                         |
+| `~`              | csh                  | Home Directory                                |
+| `~user`          | csh                  | User's Home Directory                         |
+| `!`              | csh                  | History of Commands                           |
+| `-`              | Programs             | Start of optional argument                    |
+| `$#`             | csh, sh              | Number of arguments to script                 |
+| `$*`             | csh, sh              | Arguments to script                           |
+| `$@`             | sh                   | Original arguments to script                  |
+| `$-`             | sh                   | Flags passed to shell                         |
+| `$?`             | sh                   | Status of previous command                    |
+| `$$`             | sh                   | Process identification number                 |
+| `$!`             | sh                   | PID of last background job                    |
+| `&&`             | sh                   | Short-circuit AND                             |
+| `||`             | sh                   | Short-circuit OR                              |
+| `.`              | csh, sh              | Typ. filename extension                       |
+| `.`              | sh                   | Source a file and execute as command          |
+| `:`              | sh                   | Nothing command                               |
+| `:`              | sh                   | Separates Values in environment variables     |
+| `:`              | csh                  | Variable modifier                             |
+| `Character`      | Where                | Meaning                                       |
+| `[ ]`            | csh, sh              | Match range of characters                     |
+| `[ ]`            | sh                   | Test                                          |
+| `%job`           | csh                  | Identifies job Number                         |
+| `(cmd;cmd)`      | csh. sh              | Runs cmd;cmd as a sub-shell                   |
+| `{ }`            | csh                  | In-line expansions                            |
+| `{cmd;cmd }`     | sh                   | Like (cmd;cmd ) without a subshell            |
+| `>ofile`         | csh, sh              | Standard output                               |
+| `>>ofile`        | csh, sh              | Append to standard output                     |
+| `<ifile`         | csh, sh              | Standard Input                                |
+| `<<word`         | csh, sh              | Read until word, substitute variables         |
+| `<<\word`        | csh, sh              | Read until word, no substitution              |
+| `<<-word`        | sh                   | Read until word, ignoring TABS                |
+| `>>!file`        | csh                  | Append to file, ignore error if not there     |
+| `>!file`         | csh                  | Output to new file, ignore error if not there |
+| `>&file`         | csh                  | Send standard & error output to file          |
+| `<&digit`        | sh                   | Switch Standard Input to file                 |
+| `<&-`            | sh                   | Close Standard Input                          |
+| `>&digit`        | sh                   | Switch Standard Output to file                |
+| `>&-`            | sh                   | Close Standard Output                         |
+| `digit1<&digit2` | sh                   | Connect digit2 to digit1                      |
+| `digit<&-`       | sh                   | Close file digit                              |
+| `digit2>&digit1` | sh                   | Connect digit2 to digit1                      |
+| `digit>&-`       | sh                   | Close file digit                              |
 
 
 # [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
