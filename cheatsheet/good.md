@@ -3,17 +3,17 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [time & date](#time--date)
-- [Get URL](#get-url)
-- [Download and unzip](#download-and-unzip)
-- [Get cookie from firefox](#get-cookie-from-firefox)
-- [Echo 256 colors](#echo-256-colors)
-- [Directory diff](#directory-diff)
-- [Commands](#commands)
+- [get URL](#get-url)
+- [download and extract](#download-and-extract)
+- [get cookie from firefox](#get-cookie-from-firefox)
+- [echo 256 colors](#echo-256-colors)
+- [directory diff](#directory-diff)
+- [commands](#commands)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### time & date
-#### Show Cal
+#### show cal
 
 ```bash
 $ cal -y | tr '\n' '|' | sed "s/^/ /;s/$/ /;s/ $(date +%e) / $(date +%e | sed 's/./#/g') /$(date +%m | sed s/^0//)" | tr '|' '\n'
@@ -55,41 +55,55 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
                       30
 ```
 
-#### Synchronize date and time with a server over ssh (Inspired from [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
+#### synchronize date and time with a server over ssh (Inspired from [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
 ```bash
 $ date --set="$(ssh [username]@[sshserver] date)"
 ```
 
-### Get URL
-
+### get URL
 ```bash
 $ echo http://www.baidu.com | awk '{for(i=1;i<=NF;i++){if($i~/^(http|ftp):\/\//)print $i}}'
 http://www.baidu.com
 ```
 
-### Download and unzip
-```bash
-$ wget -O - http://example.com/a.gz | tar xz
-```
+### download and extract
+- `*.gz`
+  ```bash
+  $ wget -O - http://example.com/a.gz | tar xz
+  ```
+- `*.zip`
+  ```bash
+  $ curl -fsSL https://services.gradle.org/distributions/gradle-4.7-all.zip | bsdtar xzf - -C <EXTRACT_PATH>
 
-### Get cookie from firefox
+  # with zip password
+  $ curl -fsSL -u<user>:<passwd> https://path/to/file.zip | bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
+  ```
+- `*.tar.gz`
+  ```bah
+  $ curl -fsSL https://path/to/file.tar.gz | tar xzf - -C <EXTRACT_PATH>
+
+  # example
+  $ curl -fsSL -j -k -L -H "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz | tar xzf - -C '/opt/java'
+  ```
+
+### get cookie from firefox
 ```bash
 $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
 ```
 
-### Echo 256 colors
+### echo 256 colors
 ```bash
 $ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
 # or
 $ yes "$(seq 1 255)" | while read i; do printf "\x1b[48;5;${i}m\n"; sleep .01; done
 ```
 
-### Directory diff
+### directory diff
 ```bash
 diff --suppress-common-lines -y <(cd path_to_dir1; find .|sort) <(cd path_to_dir2; find .|sort)
 ```
 
-### Commands
+### commands
 #### PWD's secrets
 ```bash
 $ l | grep bc
@@ -101,7 +115,7 @@ $ pwd -P
 /home/marslo/Tools/Git/BrowserConfig
 ```
 
-#### List the command beginning with
+#### list the command beginning with
 ```bash
 $ compgen -c "system-config-"
 system-config-authentication
@@ -124,7 +138,7 @@ system-config-services
 system-config-users
 ```
 
-#### Searching for commands without knowing their exact names
+#### searching for commands without knowing their exact names
 ```bash
 $ apropos editor | head
 Git::SVN::Editor (3pm) - commit driver for "git svn set-tree" and dcommit
