@@ -4,6 +4,9 @@
 
 - [`Map`](#map)
   - [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
+  - [find a `string` exists in a `list` of `Map`](#find-a-string-exists-in-a-list-of-map)
+- [elvis operator](#elvis-operator)
+  - [if/elseif{if}/else](#ifelseififelse)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
