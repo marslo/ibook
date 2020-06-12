@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [list copy](#list-copy)
+- [reverse list](#reverse-list)
+- [cast format (str -> int)](#cast-format-str---int)
+- [zip two lists](#zip-two-lists)
+- [list mathematical](#list-mathematical)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ### list copy
 > inspired by [How to clone or copy a list?](https://stackoverflow.com/a/2612815/2940319) in stackoverflow
