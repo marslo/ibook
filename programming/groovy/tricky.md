@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
+- [elegant way to merge Map<String, List<String>> structure by using groovy](#elegant-way-to-merge-mapstring-liststring-structure-by-using-groovy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -25,8 +26,8 @@ println (['a': '1'].find{ true }.getClass())
 
 <table>
 <tr> <td> original Map structure </td> <td> wanted result</td> </tr>
-<td>
-```groovy
+<tr> <td>
+<pre lang="groovy">
 Map<String, List<String>> case_pool = [
   dev : [
     funcA : ['devCaseA'] ,
@@ -44,11 +45,9 @@ Map<String, List<String>> case_pool = [
    funcC : ['stgCaseC']
   ]
 ]
-```
-</td>
-</tr>
-<td>
-```groovy
+</pre>
+</td> <td>
+<pre lang="groovy">
 String branch = 'dev/funcA/feature-1.0'
 
 result:
@@ -57,7 +56,7 @@ result:
   funcB: [ "devCaseB" ],
   funcC: [ "devCaseC" ]
 ]
-```
+</pre>
 </td>
 </tr>
 </table>
