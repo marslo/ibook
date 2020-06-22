@@ -5,6 +5,7 @@
   * [files&chars](cheatsheet/files&chars.md)
   * [good](cheatsheet/good.md)
   * [havefun](cheatsheet/havefun.md)
+  * [kubectl](cheatsheet/kubectl.md)
   * [kubernetes](cheatsheet/kubernetes.md)
   * [linuxBasic](cheatsheet/linuxBasic.md)
   * [media](cheatsheet/media.md)
