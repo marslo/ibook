@@ -49,6 +49,7 @@
   - [groovy](programming/groovy/groovy.md)
     * [groovydoc](programming/groovy/groovydoc.md)
     * [map](programming/groovy/map.md)
+    * [tricky](programming/groovy/tricky.md)
   - [maven](programming/maven/README.md)
   - mysql
     * [mysqlCmakeLogs](programming/mysql/mysqlCmakeLogs.md)
