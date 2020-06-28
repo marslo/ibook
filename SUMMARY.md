@@ -10,6 +10,7 @@
     * [utils](cheatsheet/linux/utils.md)
   * [good](cheatsheet/good.md)
   * [havefun](cheatsheet/havefun.md)
+  * [markdown](cheatsheet/markdown.md)
   * [media](cheatsheet/media.md)
   * [windows](cheatsheet/windows.md)
 - devops
