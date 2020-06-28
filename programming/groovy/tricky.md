@@ -61,6 +61,14 @@ result:
 </tr>
 </table>
 
+
+| original map structure | wanted result |
+| : -- | : -- |
+| `Map<String, List<String>> case_pool = [				` <br> `	dev : [																				` <br> `		funcA : ['devCaseA'] ,											` <br> `		funcB : ['devCaseB'] ,											` <br> `		funcC : ['devCaseC']												` <br> `	],																						` <br> `	'dev/funcA' : [																` <br> `		funcA : ['performanceCaseA']								` <br> `	],																						` <br> `	'dev/funcA/feature' : [												` <br> `		funcA : ['performanceCaseA', 'featureCase']	` <br> `	],																						` <br> `	staging : [																		` <br> `	 funcB : ['stgCaseB'] ,												` <br> `	 funcC : ['stgCaseC']													` <br> `	]																							` <br> `]																							` | `String branch = 'dev/funcA/feature-1.0'										` <br> `																														` <br> `// result:																									` <br> `[																													` <br> `  funcA: [ "devCaseA", "performanceCaseA", "featureCase" ],` <br> `  funcB: [ "devCaseB" ],																		` <br> `  funcC: [ "devCaseC" ]																		` <br> `]																													`|
+
+
+
+
 - method 1st
 
 - method 2nd
