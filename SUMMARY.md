@@ -2,16 +2,17 @@
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
-  * [files&chars](cheatsheet/files&chars.md)
+  - [kubernetes](cheatsheet/kubernetes/kubernetes.md)
+    * [kubectl](cheatsheet/kubernetes/kubectl.md)
+  - linux
+    * [basic](cheatsheet/linux/basic.md)
+    * [files&chars](cheatsheet/linux/files&chars.md)
+    * [system](cheatsheet/linux/system.md)
+    * [ubuntu](cheatsheet/linux/ubuntu.md)
+    * [utils](cheatsheet/linux/utils.md)
   * [good](cheatsheet/good.md)
   * [havefun](cheatsheet/havefun.md)
-  * [kubectl](cheatsheet/kubectl.md)
-  * [kubernetes](cheatsheet/kubernetes.md)
-  * [linuxBasic](cheatsheet/linuxBasic.md)
   * [media](cheatsheet/media.md)
-  * [system](cheatsheet/system.md)
-  * [ubuntu](cheatsheet/ubuntu.md)
-  * [utils](cheatsheet/utils.md)
   * [windows](cheatsheet/windows.md)
 - devops
   - [git](devops/git/git.md)
