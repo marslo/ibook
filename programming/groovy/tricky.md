@@ -22,12 +22,55 @@ println (['a': '1'].find{ true }.getClass())
 ```
 
 
-### [elegant way to merge Map<String, List<String>> structure by using groovy](https://stackoverflow.com/q/62466451/2940319)
+### [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](https://stackoverflow.com/q/62466451/2940319)
 
 <table>
 <tr> <td> original Map structure </td> <td> wanted result</td> </tr>
 <tr> <td>
-<pre lang="groovy">
+<pre lang="groovy"><code lang="groovy">
+Map&#60;String, List&#60;String&#62;&#62; case_pool = [
+  dev : [
+    funcA : ['devA'] ,
+    funcB : ['devB'] ,
+    funcC : ['devC']
+  ],
+  'dev/funcA' : [
+    funcA : ['performanceA']
+  ],
+  'dev/funcA/feature' : [
+    funcA : ['performanceA', 'feature']
+  ],
+  staging : [
+   funcB : ['stgB'] ,
+   funcC : ['stgC']
+  ]
+]
+</code></pre>
+</td> <td>
+<pre lang="groovy"><code>
+String branch = 'dev/funcA/feature-1.0'
+
+result:
+[
+  funcA: [ "devA", "performanceA", "feature" ],
+  funcB: [ "devB" ],
+  funcC: [ "devC" ]
+]
+</code></pre>
+</td>
+</tr>
+</table>
+
+
+|  <div style="width:50%"> original map structure</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | wanted result                                                                                                                                                                                  |
+| : --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | : --                                                                                                                                                                                           |
+| Map&#60;String, List&#60;String&#62;&#62; case_pool = [<br> &nbsp;&nbsp;dev : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['devA'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['devB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['devC']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA/feature' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA', 'feature']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;staging : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['stgB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['stgC']<br> &nbsp;&nbsp;]<br> ] | String branch = 'dev/funcA/feature-1.0'<br> <br> // will final get result of: <br> // " 'dev' + 'dev/funcA' + 'dev/funcA/feature' ":<br> [<br> &nbsp;&nbsp;funcA: [ "devA", "performanceA", "feature" ],<br> &nbsp;&nbsp;funcB: [ "devB" ],<br> &nbsp;&nbsp;funcC: [ "devC" ]<br> ] |
+
+
+
+- original map structure:
+
+```groovy
 Map<String, List<String>> case_pool = [
   dev : [
     funcA : ['devA'] ,
@@ -45,34 +88,44 @@ Map<String, List<String>> case_pool = [
    funcC : ['stgC']
   ]
 ]
-</pre>
-</td> <td>
-<pre lang="groovy">
+```
+
+- method 1st: by using loop
+
+```groovy
 String branch = 'dev/funcA/feature-1.0'
+def result = [:].withDefault { [] as Set }
+case_pool.keySet().each {
+  if ( branch.contains(it) ) {
+    case_pool.get(it).each { k, v ->
+      result[k].addAll(v)
+    }
+  }
+}
+println 'result: ' + result
+```
 
-result:
-[
-  funcA: [ "devA", "performanceA", "feature" ],
-  funcB: [ "devB" ],
-  funcC: [ "devC" ]
-]
-</pre>
-</td>
-</tr>
-</table>
+- method 2nd: by using closure
 
+```groovy
+String branch = 'dev/funcA/feature-1.0'
+def result = [:].withDefault { [] as Set }
+case_pool.findAll{ k, v -> branch.contains(k) }.collectMany{ k, v -> v.collect{ c, l ->
+    result[c].addAll(l)
+}}
+println 'result: ' + result
+```
 
-|  <div style="width:50%"> original map structure</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | wanted result                                                                                                                                                                                  |
-| : --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | : --                                                                                                                                                                                           |
-| Map<String, List<String>> case_pool = [<br> &nbsp;&nbsp;dev : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['devA'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['devB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['devC']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA/feature' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA', 'feature']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;staging : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['stgB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['stgC']<br> &nbsp;&nbsp;]<br> ] | String branch = 'dev/funcA/feature-1.0'<br> <br> // will final get result of: <br> // " 'dev' + 'dev/funcA' + 'dev/funcA/feature' ":<br> [<br> &nbsp;&nbsp;funcA: [ "devA", "performanceA", "feature" ],<br> &nbsp;&nbsp;funcB: [ "devB" ],<br> &nbsp;&nbsp;funcC: [ "devC" ]<br> ] |
+- method 3rd: by using closure elegantly
 
-
-
-
-- method 1st
-
-- method 2nd
-- method 3rd
+```groovy
+def result = case_pool.inject([:].withDefault { [] as Set }) { result, key, value ->
+  if (branch.contains(key)) {
+    value.each { k, v -> result[k] += v }
+  }; result
+}
+println 'result: ' + result
+```
 
 
 
