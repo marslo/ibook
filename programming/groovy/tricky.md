@@ -30,19 +30,19 @@ println (['a': '1'].find{ true }.getClass())
 <pre lang="groovy">
 Map<String, List<String>> case_pool = [
   dev : [
-    funcA : ['devCaseA'] ,
-    funcB : ['devCaseB'] ,
-    funcC : ['devCaseC']
+    funcA : ['devA'] ,
+    funcB : ['devB'] ,
+    funcC : ['devC']
   ],
   'dev/funcA' : [
-    funcA : ['performanceCaseA']
+    funcA : ['performanceA']
   ],
   'dev/funcA/feature' : [
-    funcA : ['performanceCaseA', 'featureCase']
+    funcA : ['performanceA', 'feature']
   ],
   staging : [
-   funcB : ['stgCaseB'] ,
-   funcC : ['stgCaseC']
+   funcB : ['stgB'] ,
+   funcC : ['stgC']
   ]
 ]
 </pre>
@@ -52,9 +52,9 @@ String branch = 'dev/funcA/feature-1.0'
 
 result:
 [
-  funcA: [ "devCaseA", "performanceCaseA", "featureCase" ],
-  funcB: [ "devCaseB" ],
-  funcC: [ "devCaseC" ]
+  funcA: [ "devA", "performanceA", "feature" ],
+  funcB: [ "devB" ],
+  funcC: [ "devC" ]
 ]
 </pre>
 </td>
@@ -62,9 +62,9 @@ result:
 </table>
 
 
-| original map structure | wanted result |
-| : -- | : -- |
-| `Map<String, List<String>> case_pool = [				` <br> `	dev : [																				` <br> `		funcA : ['devCaseA'] ,											` <br> `		funcB : ['devCaseB'] ,											` <br> `		funcC : ['devCaseC']												` <br> `	],																						` <br> `	'dev/funcA' : [																` <br> `		funcA : ['performanceCaseA']								` <br> `	],																						` <br> `	'dev/funcA/feature' : [												` <br> `		funcA : ['performanceCaseA', 'featureCase']	` <br> `	],																						` <br> `	staging : [																		` <br> `	 funcB : ['stgCaseB'] ,												` <br> `	 funcC : ['stgCaseC']													` <br> `	]																							` <br> `]																							` | `String branch = 'dev/funcA/feature-1.0'										` <br> `																														` <br> `// result:																									` <br> `[																													` <br> `  funcA: [ "devCaseA", "performanceCaseA", "featureCase" ],` <br> `  funcB: [ "devCaseB" ],																		` <br> `  funcC: [ "devCaseC" ]																		` <br> `]																													`|
+|  <div style="width:50%"> original map structure</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | wanted result                                                                                                                                                                                  |
+| : --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | : --                                                                                                                                                                                           |
+| Map<String, List<String>> case_pool = [<br> &nbsp;&nbsp;dev : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['devA'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['devB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['devC']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA/feature' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA', 'feature']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;staging : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['stgB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['stgC']<br> &nbsp;&nbsp;]<br> ] | String branch = 'dev/funcA/feature-1.0'<br> <br> // will final get result of: <br> // " 'dev' + 'dev/funcA' + 'dev/funcA/feature' ":<br> [<br> &nbsp;&nbsp;funcA: [ "devA", "performanceA", "feature" ],<br> &nbsp;&nbsp;funcB: [ "devB" ],<br> &nbsp;&nbsp;funcC: [ "devC" ]<br> ] |
 
 
 
