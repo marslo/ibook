@@ -2,8 +2,6 @@
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
-  - [kubernetes](cheatsheet/kubernetes/kubernetes.md)
-    * [kubectl](cheatsheet/kubernetes/kubectl.md)
   - linux
     * [basic](cheatsheet/linux/basic.md)
     * [files&chars](cheatsheet/linux/files&chars.md)
@@ -37,10 +35,11 @@
     * [lockable-resource](jenkins/plugins/lockable-resource.md)
   * [groovy-script](jenkins/groovy-script.md)
   * [jenkins](jenkins/jenkins.md)
-- kubernetes
+- [kubernetes](kubernetes/kubernetes.md)
   * [certificates](kubernetes/certificates.md)
   * [docker](kubernetes/docker.md)
   * [kubeadm](kubernetes/kubeadm.md)
+  * [kubectl](kubernetes/kubectl.md)
   * [monitor](kubernetes/monitor.md)
   * [namespace](kubernetes/namespace.md)
   * [network](kubernetes/network.md)
