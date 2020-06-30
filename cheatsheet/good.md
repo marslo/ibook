@@ -5,6 +5,7 @@
 - [time & date](#time--date)
 - [get URL](#get-url)
 - [download and extract](#download-and-extract)
+- [compress](#compress)
 - [get cookie from firefox](#get-cookie-from-firefox)
 - [echo 256 colors](#echo-256-colors)
 - [directory diff](#directory-diff)
@@ -85,6 +86,27 @@ http://www.baidu.com
   # example
   $ curl -fsSL -j -k -L -H "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz | tar xzf - -C '/opt/java'
   ```
+
+### compress
+#### zip package with dot-file
+- `.[^.]*`
+
+```bash
+zip name.zip * .[^.]*'
+```
+
+- `shopt -s dotglob`
+
+```bash
+shopt -s dotglob
+zip name.zip *
+```
+
+- `.`
+
+```bash
+zip -r name.zip .
+```
 
 ### get cookie from firefox
 ```bash
