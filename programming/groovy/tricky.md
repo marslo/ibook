@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
-- [elegant way to merge Map<String, List<String>> structure by using groovy](#elegant-way-to-merge-mapstring-liststring-structure-by-using-groovy)
+- [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

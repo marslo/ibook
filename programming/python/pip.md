@@ -1,3 +1,12 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [issues](#issues)
+  - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 
 ## issues
@@ -80,7 +89,7 @@ $ which -a pip3
   $ ln -sf /usr/local/bin/pip3 /usr/local/opt/python/bin/pip3
   ```
 
-  * `re-install`
+  * [`re-install`](https://github.com/Homebrew/homebrew-core/issues/43867#issuecomment-529194418)
 
   ```bash
   $ brew reinstall python
