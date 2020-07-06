@@ -60,6 +60,7 @@
     * [mysqlSecureInstallation](programming/mysql/mysqlSecureInstallation.md)
   - [python](programming/python/python.md)
     * [list](programming/python/list.md)
+    * [pip](programming/python/pip.md)
   - ruby
     * [rubyInstallationBySourceCode](programming/ruby/rubyInstallationBySourceCode.md)
     * [rubyInstallationQ&A](programming/ruby/rubyInstallationQ&A.md)
