@@ -118,7 +118,13 @@ plugins.each {println "${it.getShortName()}: ${it.getVersion()}"}
 
 ```bash
 $ curl -fsSL -O https://JENKINS_URL/jnlpJars/jenkins-cli.jar
-$ java -jar jenkins-cli.jar -s https://JENKINS_URL -auth <username>:<password> groovy = < plugin.groovy
+$ java -jar jenkins-cli.jar -s https://JENKINS_URL -auth marslo:<MY-JENKINS-TOKEN> groovy = < plugin.groovy
+
+# or
+
+$ export JENKINS_USER_ID=marslo
+$ export JENKINS_API_TOKEN=<MY-JENKINS-TOKEN>
+$ java -jar jenkins-cli.jar -s https://JENKINS_URL groovy = < plugin.groovy
 ```
 
 - [by `ssh`](https://www.jenkins.io/doc/book/managing/cli/)
