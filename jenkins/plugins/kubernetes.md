@@ -29,6 +29,11 @@ Verifying - Enter Export Password:
 
 $ ls
 ca.crt  cert.pfx  client.crt  client.key
+
+# or
+
+# using password 'marslo'
+$ openssl pkcs12 -export -out cert.pfx -inkey client.key -in client.crt -certfile ca.crt -password pass:marslo
 ```
 
 ### configure in jenkins
