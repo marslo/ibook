@@ -42,9 +42,16 @@ ca.crt  cert.pfx  client.crt  client.key
     * `Credentials`:
         * `Add` -> `Jenkins`
         * **Kind**: `Certificate`
-![plugin-1](../screenshot/k8s-plugin-1.png)
-![plugin-2](../screenshot/k8s-plugin-2.png)
-![plugin-3](../screenshot/k8s-plugin-3.png)
-![plugin-4](../screenshot/k8s-plugin-4.png)
+
+
+![plugin-1](../../screenshot/k8s-plugin-1.png)
+
+![plugin-2](../../screenshot/k8s-plugin-2.png)
+
+![plugin-3](../../screenshot/k8s-plugin-3.png)
+
+![plugin-4](../../screenshot/k8s-plugin-4.png)
+
     * Setup in Jenkins
-![plugin-5](../screenshot/k8s-plugin-5.png)
+
+![plugin-5](../../screenshot/k8s-plugin-5.png)
