@@ -2,16 +2,22 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Groovy to list all jobs](#groovy-to-list-all-jobs)
+- [list all jobs](#list-all-jobs)
   - [list all Abstract Project](#list-all-abstract-project)
   - [list all jobs and folders](#list-all-jobs-and-folders)
   - [get name and classes](#get-name-and-classes)
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
 - [shelve jobs](#shelve-jobs)
+- [run shell scripts in a cluster-operation](#run-shell-scripts-in-a-cluster-operation)
+- [List plugins](#list-plugins)
+  - [using api (`curl`)](#using-api-curl)
+  - [using cli](#using-cli)
+  - [simple list](#simple-list)
+  - [List plugin and dependencies](#list-plugin-and-dependencies)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## [Groovy to list all jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
+## [list all jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 ### list all Abstract Project
 > Abstract Project: freestyle, maven, etc...
 
@@ -90,10 +96,70 @@ def exec(cmd) {
 }
 ```
 
-## [execute Groovy script with an API call](https://support.cloudbees.com/hc/en-us/articles/217509228-Execute-Groovy-script-in-Jenkins-with-an-API-call)
-```bash
-$ curl -d "script=$(cat /tmp/script.groovy)" -v --user username:ApiToken http://localhost:8080/scriptText
+## List plugins
 
-# or
-$ curl -d "script=println 'this script works'" -v --user username:ApiToken http://localhost:8080/scriptText
+### [using api (`curl`)](https://stackoverflow.com/a/52836951/2940319)
+```bash
+$ curl -u<username>:<password> \
+       -s https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?depth=1 \
+       | jq -r '.plugins[] | "\(.shortName):\(.version)"' \
+       | sort
+```
+
+### [using cli](https://stackoverflow.com/a/44979051/2940319)
+
+```bash
+$ cat plugin.groovy
+def plugins = jenkins.model.Jenkins.instance.getPluginManager().getPlugins()
+plugins.each {println "${it.getShortName()}: ${it.getVersion()}"}
+```
+
+- by `jar`
+
+```bash
+$ curl -fsSL -O https://JENKINS_URL/jnlpJars/jenkins-cli.jar
+$ java -jar jenkins-cli.jar -s https://JENKINS_URL -auth <username>:<password> groovy = < plugin.groovy
+```
+
+- [by `ssh`](https://www.jenkins.io/doc/book/managing/cli/)
+
+```bash
+$ k -n ci get svc jenkins-discovery -o yaml
+...
+  - name: cli-agent
+    nodePort: 32123
+    port: 33212
+    protocol: TCP
+    targetPort: cli-port
+...
+
+$ ssh [-i <private-key>] [-auth <username>:<password>] [-l <user>] -p 32123 JENKINS_URL groovy =< plugin.groovy
+```
+
+### [simple list]()
+```groovy
+Jenkins.instance.pluginManager.plugins.each{
+  plugin ->
+    println ("${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}")
+}
+```
+
+### [List plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)
+```groovy
+println "Jenkins Instance : " + Jenkins.getInstance().getComputer('').getHostName() + " - " + Jenkins.getInstance().getRootUrl()
+println "Installed Plugins: "
+println "=================="
+Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()}.each { plugin ->
+   println "${plugin.getShortName()}:${plugin.getVersion()} | ${plugin.getDisplayName()} "
+}
+
+println ""
+println "Plugins Dependency tree (...: dependencies; +++: dependants) :"
+println "======================="
+Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()}.each { plugin ->
+   println "${plugin.getShortName()}:${plugin.getVersion()} | ${plugin.getDisplayName()} "
+   println "+++ ${plugin.getDependants()}"
+   println "... ${plugin.getDependencies()}"
+   println ''
+}
 ```
