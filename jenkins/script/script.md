@@ -118,29 +118,29 @@ plugins.each {println "${it.getShortName()}: ${it.getVersion()}"}
 
 ```bash
 $ curl -fsSL -O https://JENKINS_URL/jnlpJars/jenkins-cli.jar
-$ java -jar jenkins-cli.jar -s https://JENKINS_URL -auth marslo:<MY-JENKINS-TOKEN> groovy = < plugin.groovy
-
-# or
-
-$ export JENKINS_USER_ID=marslo
-$ export JENKINS_API_TOKEN=<MY-JENKINS-TOKEN>
-$ java -jar jenkins-cli.jar -s https://JENKINS_URL groovy = < plugin.groovy
+$ java -jar jenkins-cli.jar \
+    [-auth <username>:<password>] \
+    -s https://JENKINS_URL groovy = < plugin.groovy
 ```
+
+  OR
+  ```bash
+  $ java -jar jenkins-cli.jar \
+      [-auth <username>:<password>] \
+      -s https://JENKINS_URL \
+      list-plugins
+  ```
 
 - [by `ssh`](https://www.jenkins.io/doc/book/managing/cli/)
 
 ```bash
-$ k -n ci get svc jenkins-discovery -o yaml
-...
-  - name: cli-agent
-    nodePort: 32123
-    port: 33212
-    protocol: TCP
-    targetPort: cli-port
-...
-
-$ ssh [-i <private-key>] [-auth <username>:<password>] [-l <user>] -p 32123 JENKINS_URL groovy =< plugin.groovy
+$ ssh [-i <private-key>] [-l <user>] -p <port> JENKINS_URL groovy =< plugin.groovy
 ```
+
+  OR
+  ```bah
+  $ ssh [-i <private-key>] [-l <user>] -p <port> JENKINS_URL list-plugins
+  ```
 
 ### [simple list]()
 ```groovy
