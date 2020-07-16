@@ -294,7 +294,6 @@ $ echo {1..100..3}
         ```
 
 #### Multiple Directories Createion
-
 ```bash
 $ mkdir sa{1..50}
 $ mkdir -p sa{1..50}/sax{1..50}
@@ -306,7 +305,6 @@ $ mkdir -p $USER/{1,2,3}
 ```
 
 #### Copy a File to Multipule Folder
-
 ```bash
 $ echo dir1 dir2 dir3 | xargs -n 1 cp file1
 # OR
