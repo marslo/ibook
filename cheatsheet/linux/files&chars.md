@@ -76,6 +76,7 @@ efg
     ```bash
     $ find . -printf '%m\t%u\t%g\t%p\0' > file.perm
     ```
+
 - restore
     ```bash
     while read -rd $'\0' perms user group file; do
@@ -88,6 +89,46 @@ efg
     done < file.perm
     ```
 
+#### check perm
+- `find` & `printf`
+    ```bash
+    $ find $PWD -printf '%m\t%u\t%g\t%p\n' | head
+    755	marslo	staff	/Users/marslo
+    755	marslo	staff	/Users/marslo/.eclipse
+    755	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo
+    644	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/defaults.properties
+    644	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/infos.txt
+
+    $ find $PWD -printf '%M %u %g %p\n' | head
+    drwxr-xr-x marslo staff /Users/marslo
+    drwxr-xr-x marslo staff /Users/marslo/.eclipse
+    drwxr-xr-x marslo staff /Users/marslo/.eclipse/org.eclipse.oomph.jreinfo
+    -rw-r--r-- marslo staff /Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/defaults.properties
+    ```
+- `stat`
+    ```bash
+    $ stat -c '%A %a %n' *
+    drwx------ 700 Applications
+    drwx------ 700 Desktop
+    drwx------ 700 Documents
+    drwx------ 700 Downloads
+    drwx------ 700 Library
+    drwx------ 700 Movies
+    drwx------ 700 Music
+    drwx------ 700 Pictures
+    drwxr-xr-x 755 Public
+    drwxr-xr-x 755 mywork
+    drwxr-xr-x 755 test
+    ```
+
+- `namei`
+    ```bash
+     $ namei -l $PWD
+    /Users/marslo
+       / = drwxr-xr-x l=22 u=root/0 g=admin/80 s=704 m=07-16-2020@13:40:21
+       Users = drwxr-xr-x l=6 u=root/0 g=admin/80 s=192 m=09-30-2019@04:22:36
+       marslo = drwxr-xr-x l=72 u=marslo/501 g=staff/20 s=2304 m=07-16-2020@17:37:27
+    ```
 
 ### Encrypt bash file
 
