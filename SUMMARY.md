@@ -4,6 +4,7 @@
 - cheatsheet
   - linux
     * [basic](cheatsheet/linux/basic.md)
+    * [disk](cheatsheet/linux/disk.md)
     * [files&chars](cheatsheet/linux/files&chars.md)
     * [system](cheatsheet/linux/system.md)
     * [ubuntu](cheatsheet/linux/ubuntu.md)
