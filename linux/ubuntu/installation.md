@@ -10,6 +10,7 @@
   - [get public IP address](#get-public-ip-address)
 - [applications](#applications)
   - [shadowsocks](#shadowsocks)
+  - [shadowsocks-libev](#shadowsocks-libev)
   - [terminal configurations](#terminal-configurations)
   - [vncserver](#vncserver)
 - [artifactory](#artifactory)
@@ -107,6 +108,100 @@ $ sudo apt install shadowsocks-qt5
 $ sudo apt install python-pip
 $ sudo pip install genpac
 ```
+
+### shadowsocks-libev
+#### service
+- started by docker image `teddysun/shadowsocks-libev`
+    ```bash
+    $ mkdir -p /etc/shadowsocks-libev
+    $ sudo bash -c "cat > /etc/shadowsocks-libev/config.json" << EOF
+    {
+        "server":"0.0.0.0",
+        "server_port":1111,
+        "password":"password0",
+        "timeout":300,
+        "user":"nobody",                // optional
+        "method":"aes-256-gcm",
+        "fast_open":false,
+        "nameserver":"8.8.8.8",         // be careful for this in private sub-network
+        "mode":"tcp_and_udp",
+        "plugin":"obfs-server",
+        "plugin_opts":"obfs=http"
+    }
+    EOF
+
+    $ docker run -d -p 1111:1111 -p 1111:1111/udp --name ss-libev --restart=always -v /etc/shadowsocks-libev:/etc/shadowsocks-libev teddysun/shadowsocks-libev
+    $ docker logs -f ss-libev
+    ```
+
+- started by `/etc/init.d/shadowsocks-libev`
+    ```bash
+    $ wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+    $ chmod +x shadowsocks-all.sh
+    $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+    ...
+
+    Which Shadowsocks server you'd select:
+    1) Shadowsocks-Python
+    2) ShadowsocksR
+    3) Shadowsocks-Go
+    4) Shadowsocks-libev
+    Please enter a number (Default Shadowsocks-Python): 4
+    You choose = Shadowsocks-libev
+    ...
+
+    [Info] Starting install package autoconf
+    Do you want install simple-obfs for Shadowsocks-libev? [y/n]
+    (default: n): y
+    You choose = y
+
+    Please select obfs for simple-obfs:
+    1) http
+    2) tls
+    Which obfs you'd select(Default: http): 1
+    obfs = http
+    ...
+    ```
+    - service
+        ```bash
+        $ sudo /etc/init.d/shadowsocks-libev start
+        $ sudo /etc/init.d/shadowsocks-libev stop
+        $ sudo /etc/init.d/shadowsocks-libev restart
+        $ sudo /etc/init.d/shadowsocks-libev status
+        ```
+    - config
+        ```bash
+        $ /etc/shadowsocks-libev/config.json
+        {
+            "server":"0.0.0.0",
+            "server_port": 1111,
+            "password":"mypassword",
+            "timeout":300,
+            "user":"nobody",                  // optinal
+            "method":"aes-256-cfb",
+            "fast_open":false,
+            "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
+            "mode":"tcp_and_udp",
+            "plugin":"obfs-server",
+            "plugin_opts":"obfs=http"
+        }
+        ```
+
+- check status
+    ```bash
+    $ sudo lsof -i:1111
+    $ sudo netstatus -tunpla | grep 1111
+    ```
+
+![ss-libev-service](../../screenshot/ss/ss-libev-port.png)
+
+#### client
+
+| plugin        | plugin opts                          |
+| :-:           | :-:                                  |
+| `simple-obfs` | `obfs=http;obfs-host=www.google.com` |
+
+![ss-libev-client](../../screenshot/ss/ss-libev-client.png)
 
 ### terminal configurations
 - Backup
