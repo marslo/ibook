@@ -6,6 +6,7 @@
     * [basic](cheatsheet/linux/basic.md)
     * [disk](cheatsheet/linux/disk.md)
     * [files&chars](cheatsheet/linux/files&chars.md)
+    * [network](cheatsheet/linux/network.md)
     * [system](cheatsheet/linux/system.md)
     * [ubuntu](cheatsheet/linux/ubuntu.md)
     * [utils](cheatsheet/linux/utils.md)
