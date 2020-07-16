@@ -41,11 +41,13 @@ spec:
     app: jenkins
 ...
 ```
+
 ![jenkins-cli-port](../../screenshot/jenkins/jenkins-cli-1.png)
 
 
 ### [ssh](https://www.jenkins.io/doc/book/managing/cli/)
 * Jenkins config
+
 ![jenkins-cli-ssh](../../screenshot/jenkins/jenkins-cli-2.png)
 
 * `~/.ssh/config`
@@ -75,12 +77,12 @@ $ ssh -q ${JENKINS_URL} help
 
   OR
 
-```bash
-$ ssh -l <user> -i <ssh-private-key> -p <port> ${JENKINS_URL} <command>
+    ```bash
+    $ ssh -l <user> -i <ssh-private-key> -p <port> ${JENKINS_URL} <command>
 
-# example
-$ ssh -l marslo -i ~/.ssh/marslo -p 32123 ${JENKINS_URL} help
-```
+    # example
+    $ ssh -l marslo -i ~/.ssh/marslo -p 32123 ${JENKINS_URL} help
+    ```
 
 
 ### [jenkins-cli.jar](https://www.jenkins.io/doc/book/managing/cli/#using-the-cli-client)

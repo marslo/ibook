@@ -11,13 +11,28 @@
 
 ## get into
 
+### get IP address by hostname
+- [`ping` & `sed`](https://unix.stackexchange.com/a/45246/29178)
+    ```bash
+    $ ping -q -c 1 -t 1 github.com | sed -n -re 's:^PING.*\(([0-9\.]{7,15})\).*$:\1:p'
+    ```
+
+- [`dig`](https://unix.stackexchange.com/a/20793/29178)
+    ```bash
+    $ dig +short github.com
+
+    # or
+    $ dig github.com | awk '/^;; ANSWER SECTION:$/ { getline ; print $5 }'
+    ```
+
+- `nslookup`
+    ```bash
+    $ nslookup github.com | awk '/Name:/{getline; print $2;}'
+    ```
+
 ### get current IP address
 ```bash
 $ githubIP=$(dig +short github.com | head -1)
-
-# https://unix.stackexchange.com/a/20793/29178
-# or githubIP=$(nslookup github.com | awk '/Name:/{getline; print $2;}' | head -1)
-# or githubIP=$(dig github.com | awk '/^;; ANSWER SECTION:$/ { getline ; print $5 }')
 
 $ interface=$(ip route get ${githubIP} | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
 $ ipaddr=$(ip a s ${interface} | sed -rn 's|.*inet ([0-9\.]{11}).*$|\1|p')
@@ -26,10 +41,6 @@ $ ipaddr=$(ip a s ${interface} | sed -rn 's|.*inet ([0-9\.]{11}).*$|\1|p')
 ### get Mac address
 ```bash
 $ githubIP=$(dig +short github.com | head -1)
-
-# https://unix.stackexchange.com/a/20793/29178
-# or githubIP=$(nslookup github.com | awk '/Name:/{getline; print;}' | awk -F' ' '{print $NF}' | head -1)
-# or githubIP=$(dig github.com | awk '/^;; ANSWER SECTION:$/ { getline ; print $5 }')
 
 $ interface=$(ip route get ${githubIP} | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
 $ macaddr=$(ip link show ${interface} | sed -rn 's|.*ether ([0-9a-fA-F:]{17}).*$|\1|p' | sed 's|:||g' | tr [a-z] [A-Z])
