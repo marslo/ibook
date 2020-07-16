@@ -2,14 +2,6 @@
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
-  - linux
-    * [basic](cheatsheet/linux/basic.md)
-    * [disk](cheatsheet/linux/disk.md)
-    * [files&chars](cheatsheet/linux/files&chars.md)
-    * [network](cheatsheet/linux/network.md)
-    * [system](cheatsheet/linux/system.md)
-    * [ubuntu](cheatsheet/linux/ubuntu.md)
-    * [utils](cheatsheet/linux/utils.md)
   * [good](cheatsheet/good.md)
   * [havefun](cheatsheet/havefun.md)
   * [markdown](cheatsheet/markdown.md)
@@ -49,6 +41,20 @@
   * [namespace](kubernetes/namespace.md)
   * [network](kubernetes/network.md)
   * [pod](kubernetes/pod.md)
+- linux
+  - [ubuntu](linux/ubuntu/ubuntu.md)
+    * [apps](linux/ubuntu/apps.md)
+    * [installation](linux/ubuntu/installation.md)
+    * [repo](linux/ubuntu/repo.md)
+    * [ssl](linux/ubuntu/ssl.md)
+    * [systemctl](linux/ubuntu/systemctl.md)
+    * [x](linux/ubuntu/x.md)
+  * [basic](linux/basic.md)
+  * [disk](linux/disk.md)
+  * [files&chars](linux/files&chars.md)
+  * [network](linux/network.md)
+  * [system](linux/system.md)
+  * [utils](linux/utils.md)
 - programming
   - angular
     * [angularConfiguraion](programming/angular/angularConfiguraion.md)
@@ -69,13 +75,6 @@
     * [rubyInstallationBySourceCode](programming/ruby/rubyInstallationBySourceCode.md)
     * [rubyInstallationQ&A](programming/ruby/rubyInstallationQ&A.md)
   * [programCommand](programming/programCommand.md)
-- tool
-  * [skype](tool/skype.md)
-  * [teamviewer](tool/teamviewer.md)
-- ubuntu
-  * [apps](ubuntu/apps.md)
-  * [installation](ubuntu/installation.md)
-  * [repo](ubuntu/repo.md)
-  * [ssl](ubuntu/ssl.md)
-  * [systemctl](ubuntu/systemctl.md)
-  * [x](ubuntu/x.md)
+- tools
+  * [skype](tools/skype.md)
+  * [teamviewer](tools/teamviewer.md)
