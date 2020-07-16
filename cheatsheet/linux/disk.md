@@ -59,3 +59,20 @@ $ sudo bash -c "cat > /etc/fstab" << EOF
 1.2.3.4:/a/b    /mnt/mynfs nfs default 0 0
 EOF
 ```
+
+## LVM
+
+### check status
+- `lsblk`
+- `pvs`
+- `lvs`
+- `vgs`
+- `pvscan`
+- `lvscan`
+- `pvdisplay`
+- `vgdisplay`
+- `lvdisplay`
+- `fdisk -l`
+- `sfdisk  -l -uM`
+- `lshw -class disk`
+- `hwinfo --block --short`
