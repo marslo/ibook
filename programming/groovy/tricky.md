@@ -128,5 +128,27 @@ println 'result: ' + result
 ```
 
 
+### fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`
+```groovy
+
+/**
+ * "fuzzy" search and merge the {@code Map<String, Map<String, String>>} according to keywords.
+ * To replace the hardcode 'keyword' search {@code case_pool.get(stg).get(keyword).values()}. example:
+ * <pre><code>
+ *
+ * @param map       the map structure for {@code Map<String, Map<String, String>>}
+ * @param keyword   use branch as keyword normally
+**/
+def mergeStructure( Map map, String keyword ) {
+  List res = []
+  map.each { k , v ->
+    if( keyword.toLowerCase().contains(k.toLowerCase()) ) {
+      // [,].flatten() instead of (+).flatten() to avoid non-list variable combine issue (i.e: {@code Cannot execute null+[...]})
+      res = [ res, v.values() ].flatten().unique()
+    }
+  }
+  return res
+}
 
 
+```

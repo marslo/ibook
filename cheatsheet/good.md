@@ -6,7 +6,6 @@
 - [get URL](#get-url)
 - [download and extract](#download-and-extract)
 - [compress](#compress)
-- [get cookie from firefox](#get-cookie-from-firefox)
 - [echo 256 colors](#echo-256-colors)
 - [directory diff](#directory-diff)
 - [commands](#commands)
@@ -90,23 +89,43 @@ http://www.baidu.com
 ### compress
 #### zip package with dot-file
 - `.[^.]*`
-
-```bash
-zip name.zip * .[^.]*'
-```
+    ```bash
+    $ zip name.zip * .[^.]*'
+    ```
 
 - `shopt -s dotglob`
-
-```bash
-shopt -s dotglob
-zip name.zip *
+    ```bash
+    $ shopt -s dotglob
+    $ zip name.zip *
 ```
 
 - `.`
+    ```bash
+    $ zip -r name.zip .
+    ```
 
-```bash
-zip -r name.zip .
-```
+#### remove dot-file without `skipping '..' '.'` issue
+- [`shopt -s dotglob`](https://unix.stackexchange.com/a/289393/29179)
+    ```bash
+    $ shopt -s dotglob
+    $ rm [-rf] *
+    ```
+  - using `shopt -u dotglob` to turn `dotglob` off
+
+- `.[^.]*`
+    ```bash
+    $ rm [-rf] .[^.]*
+    ```
+
+- [`.[!.]*`](https://unix.stackexchange.com/a/310951/29178)
+    ```bash
+    $ rm [-rf] .[!.]*
+    ```
+
+- [`.??*`](https://unix.stackexchange.com/a/310763/29178)
+    ```bash
+    $ rm [-rf] .??*
+    ```
 
 ### get cookie from firefox
 ```bash
