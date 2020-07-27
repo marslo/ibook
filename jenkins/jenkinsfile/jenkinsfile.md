@@ -9,9 +9,10 @@
   - [Get current customized environment](#get-current-customized-environment)
   - [Get downstream build environment](#get-downstream-build-environment)
   - [Get previous build environment](#get-previous-build-environment)
-- [Stop the current build](#stop-the-current-build)
-  - [stop current](#stop-current)
-  - [stop all](#stop-all)
+- [build & current build](#build--current-build)
+  - [check previous build status](#check-previous-build-status)
+  - [Stop the current build](#stop-the-current-build)
+  - [Get current build info()](#get-current-build-info)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -108,3 +109,10 @@ Jenkins.instance.getItemByFullName("JobName")
                         new java.io.IOException("Aborting build")
                 );
 ```
+### Get current build info()
+#### get `BUILD_NUMBER`
+```groovy
+Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
+```
+
+#### [reference: How to get Jenkins build job details?](https://medium.com/faun/how-to-get-jenkins-build-job-details-b8c918087030)
