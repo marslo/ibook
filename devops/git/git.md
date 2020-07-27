@@ -9,6 +9,7 @@ Git Command Study and practice
   - [Git Alias](#git-alias)
 - [git branch](#git-branch)
   - [create empty branch](#create-empty-branch)
+  - [get branch name from reversion](#get-branch-name-from-reversion)
 - [git log](#git-log)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
@@ -21,6 +22,8 @@ Git Command Study and practice
 - [undo](#undo)
   - [delete after push](#delete-after-push)
   - [change latest comments in local](#change-latest-comments-in-local)
+- [tag](#tag)
+  - [get distance between tags](#get-distance-between-tags)
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout single branch](#checkout-single-branch)
@@ -68,6 +71,55 @@ rlog        = "!bash -c 'while read branch; do \n\
     $ git add --all .
     $ git commit -m 'inital an empty branch'
     $ git push --force -u origin HEAD:<BRANCH_NAME>
+    ```
+
+  - git-alias (`~/.gitconfig`):
+    ```bash
+    [alias]
+    init-repo   = "!f() { \
+                      declare help=\"\"\"\
+                        USAGE: git init-repo <REMOTE_URL> [DEFAULT_BRANCH] [LOCAL_DIR] \n\
+                        OPT: \n\
+                            REMOTE_URL: mandatory \n\
+                            DEFAULT_BRANCH: optinal. default is 'master' \n\
+                            LOCAL_DIR: optional. default is current directory: '\"$(pwd)\"' \n\
+                      \"\"\"; \
+                      declare remoteURL=\"$1\"; \
+                      declare defaultBr='master'; \
+                      declare localDir='.'; \
+                      [ 2 -eq $# ] && defaultBr=\"$2\"; \
+                      [ 3 -eq $# ] && localDir=\"$3\"; \
+                      if [ 0 -eq $# ]; then \
+                        echo \"${help}\"; \
+                      else \
+                        [ -d ${localDir} ] || mkdir -p ${localDir}; \
+                        cd ${localDir} ; \
+                        git init && \
+                        git remote add origin ${remoteURL} && \
+                        git fetch --all --force --quiet && \
+                        git checkout -b ${defaultBr}; \
+                      fi \
+                    }; f"
+    ```
+### get branch name from reversion
+- `branch -a --contians`
+    ```bash
+    $ git branch -a --contains a3879d3
+    * master
+      remotes/origin/master
+    ```
+
+  or
+
+  ```bash
+  $ git branch -r --contains a3879d3
+  origin/master
+  ```
+
+- `name-rev`
+    ```bash
+    $ git name-rev a3879d3
+    a3879d3 master~12
     ```
 
 ## git log
@@ -258,6 +310,16 @@ And then change `pick` to `reword`
     # or
     $ git push origin +master
     ```
+
+## tag
+### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
+```bash
+$ git describe HEAD --tags
+```
+or
+```bash
+$ git describe HEAD --all --long
+```
 
 ## checkout
 ### checkout specific commit

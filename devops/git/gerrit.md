@@ -4,6 +4,8 @@
 
 - [.gitconfig](#gitconfig)
 - [refs/meta/config](#refsmetaconfig)
+- [useful refs](#useful-refs)
+- [restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push](#restriction-for-branches-feature1-feature2-and-master-for-only-allow-code-review-merge-forbidden-code-push)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
