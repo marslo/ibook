@@ -21,6 +21,21 @@ println (['a': '1'].find{ true }.getClass())
 // class java.util.LinkedHashMap$Entry
 ```
 
+### split and trim in string
+- [spread operator](https://groovy-lang.org/operators.html#_spread_operator): `*.`
+  ```groovy
+  groovy:000> 'a  , b, ccc  ,d'.split(',')*.trim()
+  ===> [a, b, ccc, d]
+  ```
+
+- [regular expression `\s*<opt>\s*`](https://stackoverflow.com/a/41953571/2940319)
+  ```groovy
+  groovy:000> 'a  , b, ccc  ,d'.trim().split("\\s*,\\s*")
+  ===> [a, b, ccc, d]
+  ```
+
+
+
 
 ### [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](https://stackoverflow.com/q/62466451/2940319)
 
