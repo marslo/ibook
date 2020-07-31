@@ -3,8 +3,11 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get into](#get-into)
-  - [get IP address](#get-ip-address)
+  - [get IP address by hostname](#get-ip-address-by-hostname)
+  - [get current IP address](#get-current-ip-address)
   - [get Mac address](#get-mac-address)
+- [scan](#scan)
+  - [route](#route)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

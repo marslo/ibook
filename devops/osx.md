@@ -6,7 +6,7 @@
   - [downlaod xcode by wget](#downlaod-xcode-by-wget)
   - [Appendix](#appendix)
   - [accpet license from cmd](#accpet-license-from-cmd)
-  - [commandline tools and compoents installation](#commandline-tools-and-compoents-installation)
+  - [commandline tools and compoents](#commandline-tools-and-compoents)
   - [enable dev mode](#enable-dev-mode)
 - [system info](#system-info)
 - [system](#system)
