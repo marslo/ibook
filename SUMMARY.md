@@ -12,6 +12,7 @@
     * [eol](devops/git/eol.md)
     * [gerrit](devops/git/gerrit.md)
     * [q&a](devops/git/q&a.md)
+    * [tricky](devops/git/tricky.md)
   * [adminTools](devops/adminTools.md)
   * [android](devops/android.md)
   * [commonTools](devops/commonTools.md)
@@ -76,5 +77,6 @@
     * [rubyInstallationQ&A](programming/ruby/rubyInstallationQ&A.md)
   * [others](programming/others.md)
 - tools
+  * [iterm2](tools/iterm2.md)
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
