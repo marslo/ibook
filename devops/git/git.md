@@ -154,6 +154,11 @@ $ git submodule status
 $ git log -- <submodule name>
 ```
 
+### get change from `.git/objects`
+```bash
+$ find .git/objects -type f -printf "%P\n" | sed s,/,,
+```
+
 ## git commit
 ### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
 

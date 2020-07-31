@@ -132,3 +132,5 @@ $ sudo -H pip install <pacakge-name>
 $ export PYTHONUSERBASE="$(python -c 'import site; print(site.USER_BASE)')"
 $ pip install --upgrade --force-reinstall --user <package-name>
 ```
+- reference:
+  - [Can I force pip to reinstall the current version?](https://stackoverflow.com/a/19549035/2940319)
