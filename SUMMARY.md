@@ -74,7 +74,7 @@
   - ruby
     * [rubyInstallationBySourceCode](programming/ruby/rubyInstallationBySourceCode.md)
     * [rubyInstallationQ&A](programming/ruby/rubyInstallationQ&A.md)
-  * [programCommand](programming/programCommand.md)
+  * [others](programming/others.md)
 - tools
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
