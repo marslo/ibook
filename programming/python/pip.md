@@ -103,3 +103,32 @@ $ which -a pip3
   $ pip --version
   pip 20.1.1 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
   ```
+
+## installation
+
+### for global user [(or non user)](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONNOUSERSITE)
+> ```bash
+> export PYTHONPATH="/usr/local/lib/python3.8/site-packages:$PYTHONPATH"
+> ```
+
+```bash
+# load the user's $HOME/.pip/pip.conf
+$ sudo python -m pip install <package-name>
+```
+or
+
+```bash
+# CANNOT load the user's $HOME/.pip/pip.conf
+$ sudo -H pip install <pacakge-name>
+```
+
+### [re-install package in `site.USER_BASE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
+> ```bash
+> $ python -c 'import site; print(site.USER_BASE)'
+> /Users/marslo/Library/Python/3.8
+> ```
+
+```bash
+$ export PYTHONUSERBASE="$(python -c 'import site; print(site.USER_BASE)')"
+$ pip install --upgrade --force-reinstall --user <package-name>
+```
