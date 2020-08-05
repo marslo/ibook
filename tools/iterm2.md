@@ -69,18 +69,37 @@ function itit {
   if [ "$1" ]; then
     unset PROMPT_COMMAND
     echo -ne "\\033]0;${1}\\007"
-    [ 'c' == "${2}" ] && it2setcolor tab $(shuf -n 1 ~/.marslo/.it2colors)
+
+    if [ 2 -eq $# ]; then
+      case $2 in
+        [cC] )
+          it2setcolor tab $(shuf -n 1 ~/.marslo/.it2colors) || echo
+          ;;
+        [bB] )
+          printf "\e]1337;SetBadgeFormat=%s\a" $(echo -n "${1} \(user.gitBranch)" | base64)
+          ;;
+        [bB][cC] | [cC][bB] )
+          printf "\e]1337;SetBadgeFormat=%s\a" $(echo -n "${1}" | base64)
+          it2setcolor tab $(shuf -n 1 ~/.marslo/.it2colors) || echo
+          ;;
+      esac
+    fi
+
   else
     export PROMPT_COMMAND='echo -ne "\033]0;${PWD/#$HOME/\~}\007";'
+    printf "\e]1337;SetBadgeFormat=%s\a" $(echo -n "" | base64)
     it2setcolor tab default
   fi
 }
 EOF
 ```
+
 - usage:
   ```bash
-  $ itit 'title-string-here' [c]
+  $ itit 'title-string-here' [c][b]
   ```
 - result:
 
-![tabset list](../screenshot/iterm2/itit-c.png)
+![itit <string> c](../screenshot/iterm2/itit-c.png)
+
+![itit string bc](../screenshot/iterm2/itit-bc.png)

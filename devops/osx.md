@@ -213,7 +213,7 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
     $ sudo chflags restricted /usr/local
     ```
 
-- Remove file lock (uchg) flag
+- [Remove file lock (uchg) flag](https://superuser.com/a/40754/112396)
     ```bash
     $ chflags -R nouchg *
     # or
