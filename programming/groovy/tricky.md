@@ -147,7 +147,6 @@ println 'result: ' + result
 
 ### fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`
 ```groovy
-
 /**
  * "fuzzy" search and merge the {@code Map<String, Map<String, String>>} according to keywords.
  * To replace the hardcode 'keyword' search {@code case_pool.get(stg).get(keyword).values()}. example:
@@ -166,6 +165,23 @@ def mergeStructure( Map map, String keyword ) {
   }
   return res
 }
-
-
 ```
+
+### get object id (`python -c 'id('abc')`)
+```groovy
+java.lang.System.identityHashCode( obj )
+```
+example
+  ```bash
+  String s = 'abc'
+  String x = s
+  println java.lang.System.identityHashCode(s)
+  println java.lang.System.identityHashCode(x)
+  x = s + 'aa'
+  println java.lang.System.identityHashCode(x)
+
+  ==>
+  51571311
+  51571311
+  733591550
+  ```
