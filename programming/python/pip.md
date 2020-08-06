@@ -2,11 +2,49 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [environment in macos](#environment-in-macos)
+  - [python libs](#python-libs)
 - [issues](#issues)
   - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
+  - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
+- [installation](#installation)
+  - [cache dir and clean caches](#cache-dir-and-clean-caches)
+  - [for global user (or non user)](#for-global-user-or-non-user)
+  - [re-install package in `site.USER_BASE`](#re-install-package-in-siteuser_base)
+  - [setup default python version](#setup-default-python-version)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## environment in macos
+### [setup default python](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
+> `$ defaults write com.apple.versioner.python Version 3.8`
+
+### python libs
+- global
+ ```bash
+  $ ls -ld /usr/local/lib/python*/
+  drwxr-xr-x 3 marslo admin 96 May 17  2019 /usr/local/lib/python2.7/
+  drwxr-xr-x 3 marslo admin 96 May 17  2019 /usr/local/lib/python3.7/
+  drwxr-xr-x 3 marslo admin 96 Jan 13  2020 /usr/local/lib/python3.8/
+
+  $ ls -ld /Library/Python/2.7/site-packages/
+  drwxr-xr-x 9 root wheel 288 Aug  6 18:16 /Library/Python/2.7/site-packages/
+ ```
+- local
+  ```bash
+  $ ls -ld ~/Library/Python/*/
+  drwx------ 4 marslo staff 128 Aug  6 17:23 /Users/marslo/Library/Python/2.7/
+  drwx------ 6 marslo staff 192 Jun  5 18:40 /Users/marslo/Library/Python/3.7/
+  drwx------ 6 marslo staff 192 Aug  3 16:19 /Users/marslo/Library/Python/3.8/
+  ```
+- how to check
+  ```bash
+  $ /usr/bin/pyth -c 'import site; print(site.USER_BASE)'
+  python            python-config     python2           python2.7         python2.7-config  python3
+  pythonw           pythonw2.7
+  $ /usr/bin/python -c 'import site; print(site.USER_BASE)'
+  /Users/marslo/Library/Python/2.7
+  ```
 
 
 ## issues
@@ -159,7 +197,6 @@ $ which -a pip3
     requests                     2.22.0
     setuptools                   41.0.1
     six                          1.12.0
-    ssdfw-scripts                1.2.2
     tabulate                     0.8.3
     urllib3                      1.25.3
     websocket-client             0.56.0
@@ -184,49 +221,105 @@ $ which -a pip3
     pkg_resources.DistributionNotFound: The 'xattr==0.6.4' distribution was not found and is required by the application
     ```
 
-  - install `setuptools==39.1.0`
+  - install `setuptools==39.1.0` and [`xattr==0.6.4`](http://qpypi.qpython.org/repository/121480/xattr-0.6.4.tar.gz#1bef31afb7038800f8d5cfa2f4562b37)
     ```bash
     [$ sudo -H python -m pip install --upgrade pip setuptools wheel]
     [$ sudo -H /usr/bin/python -m pip uninstall -y setuptools]
 
     $ /usr/bin/python -m pip install --user setuptools==39.1.0
     DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
-    Looking in indexes: https://ssdfw-repo-dev.marvell.com/artifactory/api/pypi/tools/simple
     Collecting setuptools==39.1.0
-      Using cached https://ssdfw-repo-dev.marvell.com/artifactory/api/pypi/tools/packages/8c/10/79282747f9169f21c053c562a0baa21815a8c7879be97abd930dbcf862e8/setuptools-39.1.0-py2.py3-none-any.whl
     Installing collected packages: setuptools
       Found existing installation: setuptools 41.0.1
         Uninstalling setuptools-41.0.1:
           Successfully uninstalled setuptools-41.0.1
     Successfully installed setuptools-39.1.0
+
+    $ curl -fsSL https://raw.githubusercontent.com/marslo/ibook/master/programming/python/xattr-0.6.4.tar.gz -o xattr-0.6.4.tar.gz
+    $ /usr/bin/python -m pip install --user xattr-0.6.4.tar.gz
+    DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
+    Processing ./xattr-0.6.4.tar.gz
+    Building wheels for collected packages: xattr
+      Building wheel for xattr (setup.py) ... done
+      Stored in directory: /Users/marslo/Library/Caches/pip/wheels/63/db/04/be8c6e423b8158e30b1d63992368c899811286844edf41ce32
+    Successfully built xattr
+    Installing collected packages: xattr
+      WARNING: The script xattr is installed in '/Users/marslo/Library/Python/2.7/bin' which is not on PATH.
+      Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+    Successfully installed xattr-0.6.4
     ```
 
-    result:
-      ```bash
-      $ /usr/bin/xattr
-      Traceback (most recent call last):
-        File "/usr/bin/xattr", line 8, in <module>
-          from pkg_resources import load_entry_point
-        File "/Users/marslo/Library/Python/2.7/lib/python/site-packages/pkg_resources/__init__.py", line 3086, in <module>
-          @_call_aside
-        File "/Users/marslo/Library/Python/2.7/lib/python/site-packages/pkg_resources/__init__.py", line 3070, in _call_aside
-          f(*args, **kwargs)
-        File "/Users/marslo/Library/Python/2.7/lib/python/site-packages/pkg_resources/__init__.py", line 3099, in _initialize_master_working_set
-          working_set = WorkingSet._build_master()
-        File "/Users/marslo/Library/Python/2.7/lib/python/site-packages/pkg_resources/__init__.py", line 574, in _build_master
-          ws.require(__requires__)
-        File "/Users/marslo/Library/Python/2.7/lib/python/site-packages/pkg_resources/__init__.py", line 892, in require
-          needed = self.resolve(parse_requirements(requirements))
-        File "/Users/marslo/Library/Python/2.7/lib/python/site-packages/pkg_resources/__init__.py", line 778, in resolve
-          raise DistributionNotFound(req, requirers)
-      pkg_resources.DistributionNotFound: The 'xattr==0.6.4' distribution was not found and is required by the application
-      ```
-
-  - reinstall `xattr==0.6.4`
+  result:
     ```bash
-    
+    $ /usr/bin/xattr -h
+    usage: xattr [-lz] file [file ...]
+           xattr -p [-lz] attr_name file [file ...]
+           xattr -w [-z] attr_name attr_value file [file ...]
+           xattr -d attr_name file [file ...]
+
+    The first form lists the names of all xattrs on the given file(s).
+    The second form (-p) prints the value of the xattr attr_name.
+    The third form (-w) sets the value of the xattr attr_name to attr_value.
+    The fourth form (-d) deletes the xattr attr_name.
+
+    options:
+      -h: print this help
+      -l: print long format (attr_name: attr_value)
+      -z: compress or decompress (if compressed) attribute value in zip format
+
+    $ /usr/bin/python -m pip list
+    DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
+    Package                      Version
+    ---------------------------- ---------
+    backports.ssl-match-hostname 3.7.0.1
+    certifi                      2019.6.16
+    chardet                      3.0.4
+    Click                        7.0
+    click-config-file            0.5.0
+    colorama                     0.4.1
+    configobj                    5.0.6
+    docker                       4.0.2
+    idna                         2.8
+    ipaddress                    1.0.22
+    Markdown                     3.1.1
+    mdv                          1.7.4
+    pip                          19.1.1
+    Pygments                     2.4.2
+    requests                     2.22.0
+    setuptools                   39.1.0
+    six                          1.12.0
+    tabulate                     0.8.3
+    urllib3                      1.25.3
+    websocket-client             0.56.0
+    wheel                        0.33.4
+    xattr                        0.6.4
     ```
 
+  - reinstall `xattr==0.6.4` for global [if necessary]
+    ```bash
+    $ sudo -H /usr/bin/python -m pip install xattr-0.6.4.tar.gz
+    DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
+    Processing /Users/marslo/Desktop/xattr-0.6.4.tar.gz
+    Building wheels for collected packages: xattr
+      Building wheel for xattr (setup.py) ... error
+      ERROR: Complete output from command /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python -u -c 'import setuptools, tokenize;__file__='"'"'/private/tmp/pip-req-build-dVgPOl/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' bdist_wheel -d /private/tmp/pip-wheel-ZV80PW --python-tag cp27:
+      ERROR: usage: -c [global_opts] cmd1 [cmd1_opts] [cmd2 [cmd2_opts] ...]
+         or: -c --help [cmd1 cmd2 ...]
+         or: -c --help-commands
+         or: -c cmd --help
+
+      error: invalid command 'bdist_wheel'
+      ----------------------------------------
+      ERROR: Failed building wheel for xattr
+      Running setup.py clean for xattr
+    Failed to build xattr
+    Installing collected packages: xattr
+      Found existing installation: xattr 0.6.4
+        Uninstalling xattr-0.6.4:
+          Successfully uninstalled xattr-0.6.4
+      Running setup.py install for xattr ... done
+    Successfully installed xattr-0.6.4
+    ```
 
 ## installation
 
