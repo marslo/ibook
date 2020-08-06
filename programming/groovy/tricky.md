@@ -3,7 +3,9 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
+- [split and trim in string](#split-and-trim-in-string)
 - [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
+- [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
