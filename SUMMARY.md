@@ -6,6 +6,7 @@
   * [havefun](cheatsheet/havefun.md)
   * [markdown](cheatsheet/markdown.md)
   * [media](cheatsheet/media.md)
+  * [osx](cheatsheet/osx.md)
   * [windows](cheatsheet/windows.md)
 - devops
   - [git](devops/git/git.md)
