@@ -32,7 +32,6 @@
   - [script](jenkins/script/script.md)
     * [api](jenkins/script/api.md)
     * [cli](jenkins/script/cli.md)
-  * [jenkins](jenkins/jenkins.md)
 - [kubernetes](kubernetes/kubernetes.md)
   * [certificates](kubernetes/certificates.md)
   * [docker](kubernetes/docker.md)

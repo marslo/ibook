@@ -185,3 +185,15 @@ example
   51571311
   733591550
   ```
+
+example for `identityHashCode() and hashCode()`
+  ```groovy
+  String a = new String("hhh")
+  String b = new String("hhh")
+
+  println(System.identityHashCode(a))
+  println(System.identityHashCode(b))
+
+  println(a.hashCode())
+  println(b.hashCode())
+  ```
