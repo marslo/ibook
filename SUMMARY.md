@@ -32,6 +32,7 @@
   - [script](jenkins/script/script.md)
     * [api](jenkins/script/api.md)
     * [cli](jenkins/script/cli.md)
+  * [jenkins](jenkins/jenkins.md)
 - [kubernetes](kubernetes/kubernetes.md)
   * [certificates](kubernetes/certificates.md)
   * [docker](kubernetes/docker.md)
@@ -56,24 +57,28 @@
   * [system](linux/system.md)
   * [utils](linux/utils.md)
 - programming
-  - angular
-    * [angularConfiguraion](programming/angular/angularConfiguraion.md)
+  - archive
+    - angular
+      * [config](programming/archive/angular/config.md)
+    - [maven](programming/archive/maven/README.md)
+    - mysql
+      - installation
+        * [installDB](programming/archive/mysql/installation/installDB.md)
+        * [installFromSourceCode](programming/archive/mysql/installation/installFromSourceCode.md)
+        * [secureInstation](programming/archive/mysql/installation/secureInstation.md)
+      - logs
+        * [cmakeLogs](programming/archive/mysql/logs/cmakeLogs.md)
+    - ruby
+      * [rubyInstallationBySourceCode](programming/archive/ruby/rubyInstallationBySourceCode.md)
+      * [rubyInstallationQ&A](programming/archive/ruby/rubyInstallationQ&A.md)
   - [groovy](programming/groovy/groovy.md)
     * [groovydoc](programming/groovy/groovydoc.md)
     * [map](programming/groovy/map.md)
     * [tricky](programming/groovy/tricky.md)
-  - [maven](programming/maven/README.md)
-  - mysql
-    * [mysqlCmakeLogs](programming/mysql/mysqlCmakeLogs.md)
-    * [mysqlInstallationBySourceCode](programming/mysql/mysqlInstallationBySourceCode.md)
-    * [mysqlInstallDB](programming/mysql/mysqlInstallDB.md)
-    * [mysqlSecureInstallation](programming/mysql/mysqlSecureInstallation.md)
   - [python](programming/python/python.md)
+    * [config](programming/python/config.md)
     * [list](programming/python/list.md)
     * [pip](programming/python/pip.md)
-  - ruby
-    * [rubyInstallationBySourceCode](programming/ruby/rubyInstallationBySourceCode.md)
-    * [rubyInstallationQ&A](programming/ruby/rubyInstallationQ&A.md)
   * [others](programming/others.md)
 - tools
   * [iterm2](tools/iterm2.md)
