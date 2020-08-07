@@ -14,6 +14,10 @@
   - [using cli](#using-cli)
   - [simple list](#simple-list)
   - [List plugin and dependencies](#list-plugin-and-dependencies)
+- [scriptApproval](#scriptapproval)
+  - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)
+  - [automatic approval all pending](#automatic-approval-all-pending)
+  - [disable the scriptApproval](#disable-the-scriptapproval)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -168,4 +172,96 @@ Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().to
    println "... ${plugin.getDependencies()}"
    println ''
 }
+```
+
+## scriptApproval
+### backup & restore all scriptApproval items
+- backup
+  ```groovy
+  import java.lang.reflect.*
+  import jenkins.model.Jenkins
+  import jenkins.model.*
+  import org.jenkinsci.plugins.scriptsecurity.scripts.*
+  import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.*
+  import static groovy.json.JsonOutput.*
+
+  scriptApproval = ScriptApproval.get()
+  alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
+  println prettyPrint( toJson(alreadyApproved) )
+  ```
+
+- restore
+  ```bash
+  def scriptApproval = org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval.get()
+
+  String[] signs = [
+      "method org.jenkinsci.plugins.workflow.steps.FlowInterruptedException getCauses",
+      "method org.jenkinsci.plugins.workflow.support.steps.input.Rejection getUser"
+      ]
+
+  for( String sign : signs ) {
+      scriptApproval.approveSignature(sign)
+  }
+
+  scriptApproval.save()
+  ```
+
+  [example](https://stackoverflow.com/a/55714171/2940319)
+    ```groovy
+    import java.lang.reflect.*;
+    import jenkins.model.Jenkins;
+    import jenkins.model.*;
+    import org.jenkinsci.plugins.scriptsecurity.scripts.*;
+    import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.*;
+    import static groovy.json.JsonOutput.*
+
+    scriptApproval = ScriptApproval.get()
+    alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
+    void approveSignature(String signature) {
+      if (!alreadyApproved.contains(signature)) {
+        scriptApproval.approveSignature(signature)
+      }
+    }
+
+    List scriptList = ['method hudson.model.Job getLastSuccessfulBuild', 'method hudson.model.Node getNodeName']
+
+    scriptList.each {
+      approveSignature(it)
+    }
+    scriptApproval.save()
+
+    ```
+
+### automatic approval all pending
+- [list pending scriptApproval](https://stackoverflow.com/a/55940005/2940319)
+  ```groovy
+  import org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval
+
+  ScriptApproval scriptApproval = ScriptApproval.get()
+  scriptApproval.pendingScripts.each {
+      scriptApproval.approveScript(it.hash)
+  }
+  ```
+
+- [Job DSL support for ScriptApproval](https://issues.jenkins-ci.org/browse/JENKINS-31201?focusedCommentId=285330&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-285330)
+  ```groovy
+  import jenkins.model.Jenkins
+
+  def scriptApproval = Jenkins.instance.getExtensionList('org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval')[0]
+  def hashesToApprove = scriptApproval.pendingScripts.findAll{ it.script.startsWith(approvalPrefix) }.collect{ it.getHash() }
+  hashesToApprove.each {
+    scriptApproval.approveScript(it)
+  }
+  ```
+
+### [disable the scriptApproval](https://stackoverflow.com/a/49372857/2940319)
+> file: `$JENKINS_HOME/init.groovy.d/disable-script-security.groovy`
+
+```groovy
+import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration
+import jenkins.model.GlobalConfiguration
+
+// disable Job DSL script approval
+GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
+GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
 ```
