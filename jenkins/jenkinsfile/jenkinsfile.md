@@ -21,28 +21,40 @@
 ### Poll SCM
 ```groovy
 properties([
-    // every 6 hours
-    pipelineTriggers([
-        pollSCM( ignorePostCommitHooks: true, scmpoll_spec: 'H H/6 * * *' )
-    ])
+  // every 6 hours
+  pipelineTriggers([
+      pollSCM( ignorePostCommitHooks: true, scmpoll_spec: 'H H/6 * * *' )
+  ])
 ])
 ```
 
 ```groovy
 properties([
-    pipelineTriggers([
-        [ $class: "SCMTrigger", scmpoll_spec: 'H/5 * * * *' ],
-    ])
+  pipelineTriggers([
+    [ $class: "SCMTrigger", scmpoll_spec: 'H/5 * * * *' ],
+  ])
 ])
 ```
 
 - declarative:
+  ```groovy
+  triggers {
+      pollSCM ignorePostCommitHooks: true, scmpoll_spec: 'H H * * *'
+  }
+  ```
 
-    ```groovy
-    triggers {
-        pollSCM ignorePostCommitHooks: true, scmpoll_spec: 'H H * * *'
-    }
-    ```
+### [`parameterizedCron`](https://github.com/jenkinsci/parameterized-scheduler-plugin)
+```groovy
+properties([
+  parameters([ choice(choices: ['', 'a', 'b', 'c'], description: '', name: 'var') ]),
+  pipelineTriggers([
+    parameterizedCron( '''
+      H/3 * * * * % var=a
+      H/6 * * * * % var=b
+    ''' )
+  ])
+])
+```
 
 ### Triggered by
 
