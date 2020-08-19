@@ -60,24 +60,52 @@
 
 ### Appendix
 
-| xcode       | url                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| ----------  | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 11.5 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta_2/Xcode_11.5_beta_2.xip`                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| 11.5 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta/Xcode_11.5_beta.xip`                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| 11.4.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4.1/Xcode_11.4.1.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4.1/Command_Line_Tools_for_Xcode_11.4.1.dmg`                                                                                                                                                                                                                                                                                                               |
-| 11.4        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4/Xcode_11.4.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4/Command_Line_Tools_for_Xcode_11.4.dmg`<br>`https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4/Additional_Tools_for_Xcode_11.4.dmg`                                                                                                                                                                                         |
-| 11.4 beta 3 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_3/Xcode_11.4_beta_3.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_3/Command_Line_Tools_for_Xcode_11.4_beta_3.dmg`                                                                                                                                                                                                                                                                                           |
-| 11.4 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_2/Xcode_11.4_beta_2.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_2/Command_Line_Tools_for_Xcode_11.4_beta_2.dmg`<br>`https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4_beta_2/Additional_Tools_for_Xcode_11.4_beta_2.dmg`                                                                                                                                               |
-| 11.4 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta/Xcode_11.4_beta.xip`                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| 11.3.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.3.1/Xcode_11.3.1.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.3.1/Command_Line_Tools_for_Xcode_11.3.1.dmg`                                                                                                                                                                                                                                                                                                               |
-| 11.2 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip` <br> `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta_2/Command_Line_Tools_for_Xcode_11.2_beta_2.dmg`                                                                                                                                                                                                                                                                                         |
-| 11.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.1/Xcode_11.1.xip` <br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg`                                                                                                                                                                                                                                                                                                            |
-| 11.2 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta/Xcode_11.2_beta.xip`                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| 11          | `https://download.developer.apple.com/Developer_Tools/Xcode_11/Xcode_11.xip` <br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11/Command_Line_Tools_for_Xcode_11.dmg` <br> `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11/Additional_Tools_for_Xcode_11.dmg`                                                                                                                                                                                                  |
-| 10.3        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.3/Xcode_10.3.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.3/Command_Line_Tools_macOS_10.14_for_Xcode_10.3.dmg`                                                                                                                                                                                                                                                                                               |
-| 10.2.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2.1/Xcode_10.2.1.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg`                                                                                                                                                                                                                                                                                   |
-| 10.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2/Xcode_10.2.xip`<br>`https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.dmg`   <br> `https://download.developer.apple.com/Developer_Tools/Xcode_10.2/Xcode_10.2.xip`                                                                                                                                                                                                       |
-| 10.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.1/Xcode_10.1.xip` <br>`https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_10.1/Additional_Tools_for_Xcode_10.1.dmg` <br> `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg` <br> `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.13_for_Xcode_10.1/Command_Line_Tools_macOS_10.13_for_Xcode_10.1.dmg`  |
+#### xcode
+| xcode       | url                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| 12 beta 5   | `https://download.developer.apple.com/Developer_Tools/Xcode_12_beta_5/Xcode_12_beta_5.xip`     |
+| 11.6        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.6/Xcode_11.6.xip`               |
+| 11.5 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta_2/Xcode_11.5_beta_2.xip` |
+| 11.5 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta/Xcode_11.5_beta.xip`     |
+| 11.4.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4.1/Xcode_11.4.1.xip`           |
+| 11.4        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4/Xcode_11.4.xip`               |
+| 11.4 beta 3 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_3/Xcode_11.4_beta_3.xip` |
+| 11.4 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_2/Xcode_11.4_beta_2.xip` |
+| 11.4 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta/Xcode_11.4_beta.xip`     |
+| 11.3.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.3.1/Xcode_11.3.1.xip`           |
+| 11.2 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip` |
+| 11.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.1/Xcode_11.1.xip`               |
+| 11.2 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta/Xcode_11.2_beta.xip`     |
+| 11          | `https://download.developer.apple.com/Developer_Tools/Xcode_11/Xcode_11.xip`                   |
+| 10.3        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.3/Xcode_10.3.xip`               |
+| 10.2.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2.1/Xcode_10.2.1.xip`           |
+| 10.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2/Xcode_10.2.xip`               |
+| 10.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.1/Xcode_10.1.xip`               |
+
+#### command line tool
+| command line tool    | url                                                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 11.4.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4.1/Command_Line_Tools_for_Xcode_11.4.1.dmg`                             |
+| 11.4                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4/Command_Line_Tools_for_Xcode_11.4.dmg`                                 |
+| 11.4 beta 3          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_3/Command_Line_Tools_for_Xcode_11.4_beta_3.dmg`                   |
+| 11.4 beta 2          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_2/Command_Line_Tools_for_Xcode_11.4_beta_2.dmg`                   |
+| 11.3.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.3.1/Command_Line_Tools_for_Xcode_11.3.1.dmg`                             |
+| 11.2 beta 2          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta_2/Command_Line_Tools_for_Xcode_11.2_beta_2.dmg`                   |
+| 11.1                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg`                       |
+| 11                   | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11/Command_Line_Tools_for_Xcode_11.dmg`                                     |
+| 10.3                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.3/Command_Line_Tools_macOS_10.14_for_Xcode_10.3.dmg`         |
+| 10.2.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg` |
+| 10.2                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.dmg`         |
+| 10.1 for macOS 10.14 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg`         |
+| 10.1 for macOS 10.13 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.13_for_Xcode_10.1/Command_Line_Tools_macOS_10.13_for_Xcode_10.1.dmg`         |
+
+#### additional tools
+| additional tool      | url                                                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 11.4                 | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4/Additional_Tools_for_Xcode_11.4.dmg`                                     |
+| 11.4 beta 2          | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4_beta_2/Additional_Tools_for_Xcode_11.4_beta_2.dmg`                       |
+| 11                   | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11/Additional_Tools_for_Xcode_11.dmg`                                         |
+| 10.1                 | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_10.1/Additional_Tools_for_Xcode_10.1.dmg`                                     |
 
 * [additional info](https://stackoverflow.com/a/44390183/2940319)
 
@@ -202,7 +230,7 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
      Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
     ```
 
-![csrutil](../screenshot/csrutil.HEIC)
+![csrutil](../screenshot/csrutil-1.png)
 
 - [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
     ```bash
@@ -221,38 +249,36 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
     ```
 
 - example
-    ```bash
-    $ find /usr -flags +sunlnk -print
-    /usr/libexec/cups
-    find: /usr/sbin/authserver: Permission denied
-    /usr/local
-    /usr/share/man
-    /usr/share/snmp
-    $ /bin/ls -lO /usr
-    total 0
-    drwxr-xr-x  976 root  wheel  restricted 31232 Oct 28 19:17 bin/
-    drwxr-xr-x  292 root  wheel  restricted  9344 Oct 28 10:04 lib/
-    drwxr-xr-x  234 root  wheel  restricted  7488 Oct 28 19:17 libexec/
-    drwxr-xr-x   16 root  wheel  sunlnk       512 Oct 28 19:26 local/
-    drwxr-xr-x  246 root  wheel  restricted  7872 Oct 28 09:55 sbin/
-    drwxr-xr-x   46 root  wheel  restricted  1472 Oct 28 09:55 share/
-    drwxr-xr-x    5 root  wheel  restricted   160 Oct  3 13:48 standalone/
+  ```bash
+  $ find /usr -flags +sunlnk -print
+  /usr/libexec/cups
+  find: /usr/sbin/authserver: Permission denied
+  /usr/local
+  /usr/share/man
+  /usr/share/snmp
+  $ /bin/ls -lO /usr
+  total 0
+  drwxr-xr-x  976 root  wheel  restricted 31232 Oct 28 19:17 bin/
+  drwxr-xr-x  292 root  wheel  restricted  9344 Oct 28 10:04 lib/
+  drwxr-xr-x  234 root  wheel  restricted  7488 Oct 28 19:17 libexec/
+  drwxr-xr-x   16 root  wheel  sunlnk       512 Oct 28 19:26 local/
+  drwxr-xr-x  246 root  wheel  restricted  7872 Oct 28 09:55 sbin/
+  drwxr-xr-x   46 root  wheel  restricted  1472 Oct 28 09:55 share/
+  drwxr-xr-x    5 root  wheel  restricted   160 Oct  3 13:48 standalone/
 
+  $ csrutil status
+  System Integrity Protection status: enabled.
 
-    $ csrutil status
-    System Integrity Protection status: enabled.
+  $ sudo csrutil disable
+  csrutil: failed to modify system integrity configuration. This tool needs to be executed from the Recovery OS
 
-    $ sudo csrutil disable
-    csrutil: failed to modify system integrity configuration. This tool needs to be executed from the Recovery OS
-
-    $ cat /System/Library/Sandbox/rootless.conf
-    $ /bin/ls -lO /Applications | grep firefox
-    22:drwxr-xr-x   3 marslo  staff  -           96 Dec  7 03:14 Firefox.app
-    $ sudo chflags restricted Firefox.app
-    $ /bin/ls -lO /Applications | grep firefox
-    drwxr-xr-x   3 marslo  staff  restricted  96 Dec  7 03:14 Firefox.app
-
-    ```
+  $ cat /System/Library/Sandbox/rootless.conf
+  $ /bin/ls -lO /Applications | grep firefox
+  22:drwxr-xr-x   3 marslo  staff  -           96 Dec  7 03:14 Firefox.app
+  $ sudo chflags restricted Firefox.app
+  $ /bin/ls -lO /Applications | grep firefox
+  drwxr-xr-x   3 marslo  staff  restricted  96 Dec  7 03:14 Firefox.app
+  ```
 
 ## app
 ### java
