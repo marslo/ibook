@@ -10,6 +10,7 @@
     - [Disable Guest User](#disable-guest-user)
     - [Go to Hidden path in Finder](#go-to-hidden-path-in-finder)
     - [ReIndex Spotilght](#reindex-spotilght)
+    - [Copy path from finder](#copy-path-from-finder)
   - [System Integrity Protection](#system-integrity-protection)
     - [turn off the Rootless System Integrity Protection](#turn-off-the-rootless-system-integrity-protection)
     - [Remove file lock (uchg) flag](#remove-file-lock-uchg-flag)
@@ -138,6 +139,37 @@ $ sudo mdutil -E /
 $ sudo mdutil -E /Volumes/marslo/
 ```
 
+### Copy path from finder
+- [*right-click*(<kbd>control</kbd> + left-click) -> <kbd>option</kbd>](https://osxdaily.com/2013/06/19/copy-file-folder-path-mac-os-x/)
+
+![option key](../screenshot/osx/copy-path-optional-key.png)
+
+- Automator -> Quick Action
+
+![create quick action](../screenshot/osx/copy-path-service-1.png)
+
+![content menu](../screenshot/osx/copy-path-service-2.png)
+
+- [Automator -> Apple Script](https://apple.stackexchange.com/a/47234/254265)
+
+  ```bash
+  on run {input, parameters}
+
+    try
+      tell application "Finder" to set the clipboard to POSIX path of (target of window 1 as alias)
+    on error
+      beep
+    end try
+
+    return input
+  end run
+  ```
+
+![copy path apple script](../screenshot/osx/copy-path-applescript.png)
+
+![copy path shortcut key](../screenshot/osx/copy-path-shortcut.png)
+
+
 ## [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
 ```bash
 $ csrutil disable
@@ -156,7 +188,7 @@ $ sudo csrutil disable
 csrutil: failed to modify system integrity configuration. This tool needs to be executed from the Recovery OS
 ```
 
-- Reboot System, and press [command+R](https://support.apple.com/en-us/HT201314)
+- Reboot System, and press [<kbd>command</kbd>+<kbd>R</kbd>](https://support.apple.com/en-us/HT201314)
 - Go to Utilities -> Terminal
 
 ![csrutil-1](../screenshot/osx/csrutil-1.jpg)
@@ -727,8 +759,6 @@ example:
 
 
        4.2 Mbps ↓
-  
-  
   ```
 
 ## System tools
