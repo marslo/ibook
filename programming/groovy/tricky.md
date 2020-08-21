@@ -197,3 +197,9 @@ example for `identityHashCode() and hashCode()`
   println(a.hashCode())
   println(b.hashCode())
   ```
+
+### getField()
+```groovy
+groovy:000 > 'aaa'.getClass().getFields()
+===> [public static final java.util.Comparator java.lang.String.CASE_INSENSITIVE_ORDER]
+```
