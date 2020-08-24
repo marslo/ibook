@@ -6,6 +6,8 @@
   - [get port](#get-port)
   - [ssh](#ssh)
   - [jenkins-cli.jar](#jenkins-clijar)
+- [Execute groovy script via cli](#execute-groovy-script-via-cli)
+  - [`ERROR: This command is requesting the -remoting mode which is no longer supported`](#error-this-command-is-requesting-the--remoting-mode-which-is-no-longer-supported)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -132,3 +134,18 @@ $ export JENKINS_USER_ID=marslo
 $ export JENKINS_API_TOKEN=<MY-CLI-TOKEN>
 $ java -jar jenkins-cli.jar -s https://${JENKINS_URL}
 ```
+
+## Execute groovy script via cli
+### `ERROR: This command is requesting the -remoting mode which is no longer supported`
+```bash
+$ ssh -q <jenkins.domain.name> groovy <script.groovy>
+```
+
+#### Solution
+```bash
+$ ssh -q <jenkins.domain.name> groovy = < <script.groovy>
+```
+- i.e.:
+  ```bash
+  $ ssh -q my.jenkins.com groovy < = plugin.groovy
+  ```
