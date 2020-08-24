@@ -135,13 +135,13 @@ $ export JENKINS_API_TOKEN=<MY-CLI-TOKEN>
 $ java -jar jenkins-cli.jar -s https://${JENKINS_URL}
 ```
 
-## Execute groovy script via cli
+## [Execute groovy script via cli](https://xanderx.com/post/run-jenkins-script-console-scripts-from-command-line-without-remoting/)
 ### `ERROR: This command is requesting the -remoting mode which is no longer supported`
 ```bash
 $ ssh -q <jenkins.domain.name> groovy <script.groovy>
 ```
 
-#### Solution
+### Solution
 ```bash
 $ ssh -q <jenkins.domain.name> groovy = < <script.groovy>
 ```
