@@ -142,8 +142,13 @@ $ ssh [-i <private-key>] [-l <user>] -p <port> JENKINS_URL groovy =< plugin.groo
 ```
 
   OR
-  ```bah
+  ```bash
   $ ssh [-i <private-key>] [-l <user>] -p <port> JENKINS_URL list-plugins
+  ```
+
+  OR
+  ```bash
+  $ ssh [-i <private-key>] [-l <user>] -p <port> JENKINS_URL groovy < = <script.groovy>
   ```
 
 ### [simple list]()
