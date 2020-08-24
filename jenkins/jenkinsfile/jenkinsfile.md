@@ -4,6 +4,7 @@
 
 - [Trigger](#trigger)
   - [Poll SCM](#poll-scm)
+  - [`parameterizedCron`](#parameterizedcron)
   - [Triggered by](#triggered-by)
 - [Environment Variables](#environment-variables)
   - [Get current customized environment](#get-current-customized-environment)
@@ -13,6 +14,10 @@
   - [check previous build status](#check-previous-build-status)
   - [Stop the current build](#stop-the-current-build)
   - [Get current build info()](#get-current-build-info)
+- [update node name](#update-node-name)
+  - [Get label](#get-label)
+  - [Set Label](#set-label)
+  - [Jenkinsfile Example](#jenkinsfile-example)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -128,3 +133,58 @@ Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toIn
 ```
 
 #### [reference: How to get Jenkins build job details?](https://medium.com/faun/how-to-get-jenkins-build-job-details-b8c918087030)
+
+## update node name
+### Get label
+```groovy
+@NonCPS
+def getLabel(){
+  for (node in jenkins.model.Jenkins.instance.nodes) {
+    if (node.getNodeName().toString().equals("${env.NODE_NAME}".toString())) {
+      currentLabel = node.getLabelString()
+      return currentLabel
+    }
+  }
+}
+```
+### Set Label
+```groovy
+@NonCPS
+def updateLabel(nodeName, newLabel) {
+  def node = jenkins.model.Jenkins.instance.getNode(nodeName)
+  if (node) {
+    node.setLabelString(newLabel)
+    node.save()
+  }
+}
+```
+### Jenkinsfile Example
+```groovy
+String curLabel       = null
+String newLabel       = null
+String testNodeName   = null
+String curProject     = env.JOB_NAME
+String curBuildNumber = env.BUILD_NUMBER
+
+node("master") {
+  try{
+    stage("reserve node") {
+      node("${params.tmNode}") {
+        testNodeName = env.NODE_NAME
+        curLabel  = getLabel()
+        newLabel = "${curLabel}~running_${curProject}#${curBuildNumber}"
+        echo "~~> lock ${testNodeName}. update lable: ${curLabel} ~> ${newLabel}"
+        updateLabel(testNodeName, newLabel)
+      } // node
+    } // reserve stage
+  } finally {
+  if (newLabel) {
+    stage("release node") {
+      nodeLabels = "${newLabel}".split('~')
+      orgLabel = nodeLabels[0]
+      echo "~~> release ${testNodeName}. update lable ${newLabel} ~> ${orgLabel}"
+      updateLabel(testNodeName, orgLabel)
+    } // release stage
+  } // if
+} // finally
+```
