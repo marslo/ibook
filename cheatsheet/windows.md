@@ -2,10 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [PuTTy](#putty)
-  - [Backup PuTTy sessions](#backup-putty-sessions)
-  - [Launchy PuTTy session as shortcut](#launchy-putty-session-as-shortcut)
-  - [Backup PuTTy session](#backup-putty-session)
 - [process](#process)
   - [get the list of programs (`wmic`)](#get-the-list-of-programs-wmic)
   - [`ps auxf`](#ps-auxf)
@@ -20,6 +16,8 @@
   - [System Icon](#system-icon)
 - [`regedit`](#regedit)
   - [Set `%USERPROFILE%` as `${HOME}` for **cygwin** (Inspired from here)](#set-%25userprofile%25-as-home-for-cygwin-inspired-from-here)
+  - [PuTTy](#putty)
+  - [disable screensaver](#disable-screensaver)
   - [Remove Graphics card context menu](#remove-graphics-card-context-menu)
   - [Set Environment Variables](#set-environment-variables)
   - [setx problem](#setx-problem)
@@ -32,22 +30,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## PuTTy
-### Backup PuTTy sessions
-```bat
-C:> regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
-```
-
-### Launchy PuTTy session as shortcut
-```bat
-C:> [PuTTy.exe] -load [SessionName]
-```
-
-### Backup PuTTy session
-```bat
-C:> regedit /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
-```
 
 ## process
 ### get the list of programs (`wmic`)
@@ -110,7 +92,7 @@ Microsoft Office OneNote MUI (English) 2010                              14.0.60
   > inetcpl.cpl
   ```
 
-- Internet Settings with Connections Tab 
+- Internet Settings with Connections Tab
   ```bat
   > rundll32.exe shell32.dll,Control_RunDLL inetcpl.cpl,,4
   ```
@@ -169,11 +151,69 @@ or
 
 ## `regedit`
 ### Set `%USERPROFILE%` as `${HOME}` for **cygwin** (Inspired from [here](http://stackoverflow.com/questions/225764/safely-change-home-directory-in-cygwin))
-
 ```bat
 [15:55:36.30 C:\]
 $ reg add HKCU\Environment /v HOME /t REG_EXPAND_SZ /d ^%USERPROFILE^%
 ```
+
+### PuTTy
+- Backup PuTTy sessions
+  ```bat
+  C:> regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
+  ```
+
+- Launchy PuTTy session as shortcut
+  ```bat
+  C:> [PuTTy.exe] -load [SessionName]
+  ```
+
+- Backup PuTTy session
+  ```bat
+  C:> regedit /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
+  ```
+
+### [disable screensaver](https://gist.github.com/Otiel/8d15d21593b481c1e525500762db52ba)
+```bat
+REM  Disable the screensaver
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
+REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 0 /f
+```
+- or by using autohotkey
+  ```ahk
+  CoordMode, Mouse, Screen
+  Loop
+  {
+    ; Move mouse
+    MouseMove, 1, 1, 0, R
+    ; Replace mouse to its original location
+    MouseMove, -1, -1, 0, R
+    ; Wait before moving the mouse again
+    Sleep, 600000
+  }
+  return
+  ```
+
+  [or](https://autohotkey.com/board/topic/13510-move-mouse-when-not-in-use-to-disable-screensaver/)
+  ```ahk
+  #Persistent
+  SetTimer, WatchCursor, 100
+  return
+
+  Loop
+  {
+    WatchCursor:
+    MouseGetPos,X1 ,Y1
+    Sleep 10000
+    MouseGetPos,X2,Y2
+    if X1=X2 And Y1=Y2
+    {
+      MouseMove,100,100
+      Sleep, 10000
+      MouseMove,200,200
+      Sleep, 10000
+    }
+  }
+  ```
 
 ### Remove Graphics card context menu
 - Unregister igfxpph.dll
