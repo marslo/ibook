@@ -39,6 +39,10 @@ Git Command Study and practice
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> reference:
+> - [git-tips/tips](https://github.com/git-tips/tips)
+> - [521xueweihan/git-tips](https://github.com/521xueweihan/git-tips)
+
 ## Appoint
 ### [Git Alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/git/.gitconfig)
 ```bash
