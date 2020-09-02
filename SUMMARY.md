@@ -2,12 +2,15 @@
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
+  - [windows](cheatsheet/windows/windows.md)
+    * [clsid](cheatsheet/windows/clsid.md)
+    * [env](cheatsheet/windows/env.md)
+    * [shell:folder](cheatsheet/windows/shell:folder.md)
   * [good](cheatsheet/good.md)
   * [havefun](cheatsheet/havefun.md)
   * [markdown](cheatsheet/markdown.md)
   * [media](cheatsheet/media.md)
   * [osx](cheatsheet/osx.md)
-  * [windows](cheatsheet/windows.md)
 - devops
   - [git](devops/git/git.md)
     * [eol](devops/git/eol.md)
