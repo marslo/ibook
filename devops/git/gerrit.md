@@ -72,6 +72,12 @@ $ git pull origin refs/meta/config
 $ git merge meta/config
 ```
 
+#### reset to remotes
+```bash
+$ git fetch origin --force refs/meta/config:refs/remotes/origin/meta/config
+$ git reset --hard remotes/origin/meta/config
+```
+
 ### useful refs
 
 #### sandbox:

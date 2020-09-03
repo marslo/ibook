@@ -32,7 +32,8 @@ Git Command Study and practice
   - [Without Confilite file](#without-confilite-file)
   - [With Confilite file](#with-confilite-file)
 - [trick and scripts](#trick-and-scripts)
-  - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes` (reference)](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes-reference)
+  - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes)
+  - [`.gitattributes`](#gitattributes)
   - [fetch merge all](#fetch-merge-all)
   - [fetchall <branch>](#fetchall-branch)
   - [.marslorc](#marslorc)
@@ -573,7 +574,7 @@ Applying: 2: 1
     ```
 
 ## trick and scripts
-### remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes` ([reference](https://help.github.com/en/github/using-git/configuring-git-to-handle-line-endings))
+### [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](https://help.github.com/en/github/using-git/configuring-git-to-handle-line-endings)
 ```bash
 $ git add --all -u --renormalize .
 ```
@@ -582,6 +583,43 @@ $ git add --all -u --renormalize .
 
 ```bash
 $ git config --global core.safecrlf false
+```
+
+### `.gitattributes`
+
+#### [Refreshing the repository after committing .gitattributes](https://www.droidship.com/posts/gitattributes/)
+> reference:
+> - [Please Add .gitattributes To Your Git Repository](https://dev.to/deadlybyte/please-add-gitattributes-to-your-git-repository-1jld)
+> - [Git tip: Add a .gitattributes file to deal with line endings](https://www.droidship.com/posts/gitattributes/)
+> - [gitattributes - Defining attributes per path](https://git-scm.com/docs/gitattributes)
+> - [Force LF eol in git repo and working copy](https://stackoverflow.com/a/34810209/2940319)
+
+```bash
+$ rm -rf .git/index
+# or
+$ git rm --cached -r .
+# or
+$ git ls-files -z | xargs -0 rm
+
+$ git reset --hard
+```
+
+[or](https://git-scm.com/docs/gitattributes)
+  ```bash
+  $ echo "* text=auto" >.gitattributes
+  $ git add --renormalize .
+  $ git status        # Show files that will be normalized
+  $ git commit -m "Introduce end-of-line normalization"
+  ```
+
+#### format
+> reference [Be a Git ninja: the .gitattributes file](https://medium.com/@pablorsk/be-a-git-ninja-the-gitattributes-file-e58c07c9e915)
+
+```bash
+$ cat .gitattributes
+*             text=auto
+*.sh          eol=lf
+path/to/file  eol=lf
 ```
 
 ### fetch merge all
@@ -602,92 +640,7 @@ $ cat ~/.gitconfig
 ...
 ```
 
-### fetchall <branch>
-```bash
-$ cat ~/.marslorc
-...
-function fetchall()
-{
-  if [ 1 -eq $# ]; then
-    brName=$1
-  else
-    brName="development"
-  fi
-  for i in $(${LS} -1d */); do
-    gitFetch "$i" "$brName"
-  done
-}
-
-function gitFetch() {
-  GITDIR=${1%%/}
-  GITBRANCH=$2
-  ISStashed=false
-  pushd . > /dev/null
-  cd "${GITDIR}"
-  echo -e "\\033[34m=== ${GITDIR} ===\\033[0m"
-
-  if git rev-parse --git-dir > /dev/null 2>&1; then
-    utFiles=$(git ls-files --others --exclude-standard)
-    mdFiles=$(git ls-files --modified)
-    cBranch=$(git rev-parse --abbrev-ref HEAD)
-    [ ! -z "${utFiles}" ] && echo -e "\\033[35mUNTRACKED FILES in ${cBranch}: ${utFiles}\\033[0m"
-
-    if ! git branch -a | ${GREP} "${GITBRANCH}" > /dev/null 2>&1; then
-      GITBRANCH=master
-    fi
-    echo -e "\\033[33m~> ${GITBRANCH}\\033[0m"
-
-    # checkout branch to $GITBRANCH
-    if [ ! "${cBranch}" = "${GITBRANCH}" ]; then
-      if [ ! -z "${mdFiles}" ]; then
-        echo -e "\\033[31mGIT STASH: ${GITDIR} : ${cBranch} !!\\033[0m"
-        git stash save "auto-stashed by gitFetch command"
-        ISStashed=true
-      fi
-      git checkout "${GITBRANCH}"
-    fi
-
-    # remove the local branch if the branch has been deleted in remote
-    if git remote prune origin --dry-run | ${GREP} prune; then
-      prBranch=$(git remote prune origin --dry-run | ${GREP} prune | awk -F'origin/' '{print $NF}')
-      if [ "${cBranch}" = "${prBranch}" ] && [ -z "${mdFiles}" ]; then
-        echo -e "\\033[32mThe current branch ${cBranch} has been rmeoved in remote. And the current branch has no modified files!\\033[0m"
-        ISStashed=false
-      fi
-
-      if git branch | ${GREP} "${prBranch}"; then
-        echo -e "\\033[35mREMOVE LOCAL BRNACH ${prBranch}, due to ${prBranch} has been rmeoved in remote.\\033[0m"
-        if ! git branch -D "${prBranch}"; then
-          echo -e "\\033[32mWARNING: REMOVE LOCAL BRANCH ${prBranch} failed!!\\033[0m"
-        fi
-      fi
-    fi
-
-    # git fetchall on ${GITBRANCH}
-    git fetch origin --prune
-    git fetch --all --force
-    git rebase -v --all refs/remotes/origin/${GITBRANCH}
-    git merge --all --progress refs/remotes/origin/${GITBRANCH}
-    git remote prune origin
-
-    if git --no-pager config --file "$(git rev-parse --show-toplevel)/.gitmodules" --get-regexp url; then
-      git submodule sync --recursive
-      git submodule update --init --recursive
-    fi
-
-    # restore the current working branch
-    if ${ISStashed}; then
-      git checkout "${cBranch}"
-      git stash pop
-      echo -e "\\033[35mGIT STASH POP: ${GITDIR} : ${cBranch}\\033[0m"
-    fi
-  else
-    echo -e "\\033[33mNOT Git Repo!!\\033[0m"
-  fi
-  popd > /dev/null
-}
-...
-```
+### [fetchall <branch>](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.marslorc#L452)
 
 ### .marslorc
 - [.marslorc](https://raw.githubusercontent.com/marslo/mylinux/master/Configs/HOME/.marslo/.marslorc)
