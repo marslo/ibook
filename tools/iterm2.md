@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [setup a colorful tab](#setup-a-colorful-tab)
+- [add favor color to a file (`~/.marslo/.colors`)](#add-favor-color-to-a-file-marslocolors)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

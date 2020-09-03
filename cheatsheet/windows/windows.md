@@ -16,6 +16,7 @@
   - [System Icon](#system-icon)
 - [CLSID](#clsid)
   - [usage](#usage)
+  - [details](#details)
 - [`regedit`](#regedit)
   - [Set `%USERPROFILE%` as `${HOME}` for **cygwin**](#set-%25userprofile%25-as-home-for-cygwin)
   - [PuTTy](#putty)
@@ -29,6 +30,7 @@
   - [issue about `"profile.d\Active"' is not recognized as an internal or external command`](#issue-about-profiled%5Cactive-is-not-recognized-as-an-internal-or-external-command)
 - [`shell`](#shell)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
+  - [details](#details-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

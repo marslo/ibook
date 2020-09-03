@@ -8,6 +8,7 @@
   - [jenkins-cli.jar](#jenkins-clijar)
 - [Execute groovy script via cli](#execute-groovy-script-via-cli)
   - [`ERROR: This command is requesting the -remoting mode which is no longer supported`](#error-this-command-is-requesting-the--remoting-mode-which-is-no-longer-supported)
+  - [Solution](#solution)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

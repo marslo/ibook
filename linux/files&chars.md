@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [`.join()` alike in shell](#join-alike-in-shell)
 - [find out the file is ending by crlf or lf](#find-out-the-file-is-ending-by-crlf-or-lf)
 - [Show all line numbers in a file](#show-all-line-numbers-in-a-file)
 - [Insert into the first line](#insert-into-the-first-line)

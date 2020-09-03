@@ -1,4 +1,4 @@
-# life is hard, make it easier
+#  life is hard, make it easier
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
