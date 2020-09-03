@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [theory](#theory)
+  - [list eol in repo](#list-eol-in-repo)
   - [core.autocrlf](#coreautocrlf)
   - [please notice](#please-notice)
 - [practice](#practice)
@@ -13,8 +14,12 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## theory
-### core.autocrlf
+### [list eol in repo](https://stackoverflow.com/a/21822812/2940319)
+```bash
+> git ls-files --eol
+```
 
+### core.autocrlf
 #### [parameters](https://stackoverflow.com/a/41282375/2940319)
 | core.autocrlf |                    false                   |                    input                    |                     true                    |
 |:-------------:|:------------------------------------------:|:-------------------------------------------:|:-------------------------------------------:|
