@@ -30,3 +30,6 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,, | while read object; do
     git cat-file -p $object
 done
 ```
+
+### unicode
+- [arrow](https://unicode-table.com/en/sets/arrow-symbols/)
