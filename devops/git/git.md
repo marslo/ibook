@@ -14,6 +14,7 @@ Git Command Study and practice
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
   - [get change from `.git/objects`](#get-change-from-gitobjects)
+  - [get change history for deleted files](#get-change-history-for-deleted-files)
 - [git commit](#git-commit)
   - [emoji](#emoji)
 - [git mv](#git-mv)
@@ -109,11 +110,11 @@ rlog        = "!bash -c 'while read branch; do \n\
     ```
 ### get branch name from reversion
 - `branch -a --contians`
-    ```bash
-    $ git branch -a --contains a3879d3
-    * master
-      remotes/origin/master
-    ```
+  ```bash
+  $ git branch -a --contains a3879d3
+  * master
+    remotes/origin/master
+  ```
 
   or
 
@@ -123,10 +124,10 @@ rlog        = "!bash -c 'while read branch; do \n\
   ```
 
 - `name-rev`
-    ```bash
-    $ git name-rev a3879d3
-    a3879d3 master~12
-    ```
+  ```bash
+  $ git name-rev a3879d3
+  a3879d3 master~12
+  ```
 
 ## git log
 ### show files and status without comments
@@ -137,22 +138,22 @@ $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --f
 $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%h %ad- %s [%an]"
 ```
 - e.g.:
-    ```bash
-    $ git log -3 --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
-    * 50ede51fcc3cf0311fd85b3e9c4a36d4beb89e69
-    |
-    |  devops/git/gerrit.md | 6 ++++--
-    |  devops/git/git.md    | 5 +++++
-    |  2 files changed, 9 insertions(+), 2 deletions(-)
-    * 41d58dabcd0aaee33edd1de7793ffd82c7cffa89
-    |
-    |  SUMMARY.md | 2 +-
-    |  1 file changed, 1 insertion(+), 1 deletion(-)
-    * 4460a32d8fddbe7c5c434947aea153273ce215d4
-    |
-    |  devops/git/{gitStudy.md => git.md} | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-    |  1 file changed, 116 insertions(+), 1 deletion(-)
-    ```
+  ```bash
+  $ git log -3 --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
+  * 50ede51fcc3cf0311fd85b3e9c4a36d4beb89e69
+  |
+  |  devops/git/gerrit.md | 6 ++++--
+  |  devops/git/git.md    | 5 +++++
+  |  2 files changed, 9 insertions(+), 2 deletions(-)
+  * 41d58dabcd0aaee33edd1de7793ffd82c7cffa89
+  |
+  |  SUMMARY.md | 2 +-
+  |  1 file changed, 1 insertion(+), 1 deletion(-)
+  * 4460a32d8fddbe7c5c434947aea153273ce215d4
+  |
+  |  devops/git/{gitStudy.md => git.md} | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+  |  1 file changed, 116 insertions(+), 1 deletion(-)
+  ```
 
 ### show submodule changes
 ```bash
@@ -165,36 +166,62 @@ $ git log -- <submodule name>
 $ find .git/objects -type f -printf "%P\n" | sed s,/,,
 ```
 
+### get change history for deleted files
+
+- [`full-history`](https://stackoverflow.com/a/7203551/2940319)
+  ```bash
+  $ git log --all --full-history -- <path/to/file>
+  ```
+ 
+  [or](https://stackoverflow.com/a/60993503/2940319)
+    ```bash
+    $ git log --all --full-history --online -- <path/to/file>
+    ```
+
+  [or](https://stackoverflow.com/a/42582877/2940319)
+    ```bash
+    $ git log --oneline --follow -- <path/to/file>
+    ```
+
+  or
+    ```bash
+    $ git log --diff-filter=D --summary | find "delete" | grep <filename>
+    ```
+- [`--follow`](https://stackoverflow.com/a/36561814/2940319)
+  ```bash
+  $ git log --follow <path/to/file>
+  ```
+
 ## git commit
 ### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
 
 ## git mv
 ### case sensitive
 - error with regular `git mv`
-    ```bash
-    $ git config --global core.ignorecase true
-    $ git mv Tig tig
-    fatal: renaming 'confs/home/Tig' failed: Invalid argument
-    ```
+  ```bash
+  $ git config --global core.ignorecase true
+  $ git mv Tig tig
+  fatal: renaming 'confs/home/Tig' failed: Invalid argument
+  ```
 
 - renmae
-    ```bash
-    $ git mv Tig temp
-    $ git aa
-    $ git mv temp tig
-    $ git aa
-    $ git st
-    On branch master
-    Your branch is up to date with 'origin/master'.
+  ```bash
+  $ git mv Tig temp
+  $ git aa
+  $ git mv temp tig
+  $ git aa
+  $ git st
+  On branch master
+  Your branch is up to date with 'origin/master'.
 
-    Changes to be committed:
-      (use "git restore --staged <file>..." to unstage)
-        renamed:    Tig/.tig/marslo.tigrc -> tig/.tig/marslo.tigrc
-        renamed:    Tig/.tigrc -> tig/.tigrc
-        renamed:    Tig/.tigrc_latest -> tig/.tigrc_latest
-        renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
-        renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
-    ```
+  Changes to be committed:
+    (use "git restore --staged <file>..." to unstage)
+      renamed:    Tig/.tig/marslo.tigrc -> tig/.tig/marslo.tigrc
+      renamed:    Tig/.tigrc -> tig/.tigrc
+      renamed:    Tig/.tigrc_latest -> tig/.tigrc_latest
+      renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
+      renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
+  ```
 
 ## clean
 ### clean untracked directory and item in `.gitignore`
@@ -240,25 +267,25 @@ $ git push origin +cb46bdc^:master
 
 #### delete multple commits
 - revert local
-    ```bash
-    $ git reset --hard HEAD~
+  ```bash
+  $ git reset --hard HEAD~
 
-    # or
-    $ git reset --hard HEAD^^^
+  # or
+  $ git reset --hard HEAD^^^
 
-    # or
-    $ git reset --hard <commit_hash>
+  # or
+  $ git reset --hard <commit_hash>
 
-    # or
-    $ git rebase -i HEAD~<n>
-    ```
+  # or
+  $ git rebase -i HEAD~<n>
+  ```
 
 - push to remote
-    ```bash
-    $ git push [--force] origin +<branch>
-    # e.g.:
-    $ git push [--force] origin +master
-    ```
+  ```bash
+  $ git push [--force] origin +<branch>
+  # e.g.:
+  $ git push [--force] origin +master
+  ```
 
 ### change latest comments in local
 ```bash
@@ -266,24 +293,24 @@ $ git commit --amend
 ```
 
 - change comments in remote
-    ```bash
-    $ git plog
-    * a79d384 - (HEAD -> master, origin/master, origin/HEAD) update (11 seconds ago) <marslo>
-    * 7cef7c7 - update (7 hours ago) <marslo>
-    * e1d7a64 - update (7 hours ago) <marslo>
+  ```bash
+  $ git plog
+  * a79d384 - (HEAD -> master, origin/master, origin/HEAD) update (11 seconds ago) <marslo>
+  * 7cef7c7 - update (7 hours ago) <marslo>
+  * e1d7a64 - update (7 hours ago) <marslo>
 
-    # change comments on a79d384
-    $ git commit --amend
-    $ git push --force-with-lease origin master
+  # change comments on a79d384
+  $ git commit --amend
+  $ git push --force-with-lease origin master
 
-    # result
-    $ git fetch --all --force
-    $ git plog remotes/origin/master
-    Fetching origin
-    * ba49259 - (HEAD -> master, origin/master, origin/HEAD) update a79d384 for change comments (24 seconds ago) <marslo>
-    * 7cef7c7 - update (7 hours ago) <marslo>
-    * e1d7a64 - update (7 hours ago) <marslo>
-    ```
+  # result
+  $ git fetch --all --force
+  $ git plog remotes/origin/master
+  Fetching origin
+  * ba49259 - (HEAD -> master, origin/master, origin/HEAD) update a79d384 for change comments (24 seconds ago) <marslo>
+  * 7cef7c7 - update (7 hours ago) <marslo>
+  * e1d7a64 - update (7 hours ago) <marslo>
+  ```
 
 #### change remote root comments
 ```bash
@@ -301,26 +328,26 @@ $ git rebase -i HEAD~<n>
 And then change `pick` to `reword`
 
 - example
-    ```bash
-    $ git plogs
-    * 1e7d979 - (HEAD -> master, origin/master, origin/HEAD) f (24 seconds ago) <marslo>
-    * 9b89ed7 - c (40 seconds ago) <marslo>
-    * beb575f - d (51 seconds ago) <marslo>
-    * 25d010d - e (57 seconds ago) <marslo>
-    * c502e34 - b (64 seconds ago) <marslo>
-    * 8890288 - init commit (4 minutes ago) <Marslo Jiao>
+  ```bash
+  $ git plogs
+  * 1e7d979 - (HEAD -> master, origin/master, origin/HEAD) f (24 seconds ago) <marslo>
+  * 9b89ed7 - c (40 seconds ago) <marslo>
+  * beb575f - d (51 seconds ago) <marslo>
+  * 25d010d - e (57 seconds ago) <marslo>
+  * c502e34 - b (64 seconds ago) <marslo>
+  * 8890288 - init commit (4 minutes ago) <Marslo Jiao>
 
-    $ git rebase -i HEAD~5
-    reword c502e34 b
-    pick 25d010d e
-    pick beb575f d
-    reword 9b89ed7 c
-    pick 1e7d979 f
+  $ git rebase -i HEAD~5
+  reword c502e34 b
+  pick 25d010d e
+  pick beb575f d
+  reword 9b89ed7 c
+  pick 1e7d979 f
 
-    $ git push --force origin master
-    # or
-    $ git push origin +master
-    ```
+  $ git push --force origin master
+  # or
+  $ git push origin +master
+  ```
 
 ## tag
 ### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
@@ -328,9 +355,9 @@ And then change `pick` to `reword`
 $ git describe HEAD --tags
 ```
 or
-```bash
-$ git describe HEAD --all --long
-```
+  ```bash
+  $ git describe HEAD --all --long
+  ```
 
 ## checkout
 ### checkout specific commit
@@ -356,7 +383,6 @@ git reset --hard FETCH_HEAD
 ```bash
 $ git clone --single-branch --branch <branch name> url://to/source/repository [target dir]
 ```
-
 
 ## Rebase
 ### Without Confilite file
@@ -394,7 +420,7 @@ Applying: 2: 2.txt
 ##### Check the status after pull rebase
 - Check the status
 
-    - The status of meraged file hasn't been changed
+  - The status of meraged file hasn't been changed
     ```bash
     $ git st
     # On branch master
@@ -404,13 +430,13 @@ Applying: 2: 2.txt
     nothing to commit, working directory clean
     ```
 
-    - The branch hasn't been changed
+  - The branch hasn't been changed
     ```bash
     $ git br
       master
     ```
 
-    - Log added the remote new version
+  - Log added the remote new version
     ```bash
     $ git plog
     7bc54e0 - (HEAD, master) 2: 2.txt (12 seconds ago) <Marslo>
@@ -468,29 +494,29 @@ To check out the original branch and stop rebasing, run "git rebase --abort".
 
 ##### Check the status after pull rebase
 - branch is changed (`master` -> `no branch`)
-```bash
-$ git br
-  (no branch, rebasing master)
-  master
-```
+  ```bash
+  $ git br
+    (no branch, rebasing master)
+    master
+  ```
 
 - Status from `unchanged` and `staged` -> `Umerged`
-```bash
-$ git st
-# HEAD detached at b9709fe
-# You are currently rebasing branch 'master' on 'b9709fe'.
-#   (fix conflicts and then run "git rebase --continue")
-#   (use "git rebase --skip" to skip this patch)
-#   (use "git rebase --abort" to check out the original branch)
-#
-# Unmerged paths:
-#   (use "git reset HEAD <file>..." to unstage)
-#   (use "git add <file>..." to mark resolution)
-#
-#       both modified:      README.md
-#
-no changes added to commit (use "git add" and/or "git commit -a")
-```
+  ```bash
+  $ git st
+  # HEAD detached at b9709fe
+  # You are currently rebasing branch 'master' on 'b9709fe'.
+  #   (fix conflicts and then run "git rebase --continue")
+  #   (use "git rebase --skip" to skip this patch)
+  #   (use "git rebase --abort" to check out the original branch)
+  #
+  # Unmerged paths:
+  #   (use "git reset HEAD <file>..." to unstage)
+  #   (use "git add <file>..." to mark resolution)
+  #
+  #       both modified:      README.md
+  #
+  no changes added to commit (use "git add" and/or "git commit -a")
+  ```
 
 - Log changed:
     - New committed version has been **removed**
@@ -580,10 +606,9 @@ $ git add --all -u --renormalize .
 ```
 
 - or ignore the warning
-
-```bash
-$ git config --global core.safecrlf false
-```
+  ```bash
+  $ git config --global core.safecrlf false
+  ```
 
 ### `.gitattributes`
 
@@ -627,8 +652,12 @@ path/to/file  eol=lf
 $ cat ~/.gitconfig
 ...
 [alias]
-  fma         = "!bash -c 'while read branch; do \n\
+  ua          = "!bash -c 'while read branch; do \n\
+                   echo -e \"\\033[1;33m~~> ${branch}\\033[0m\" \n\
                    git fetch --all --force; \n\
+                   if [ 'meta/config' == \"${branch}\" ]; then \n\
+                     git fetch origin --force refs/${branch}:refs/remotes/origin/${branch} \n\
+                   fi \n\
                    git rebase -v refs/remotes/origin/${branch}; \n\
                    git merge --all --progress refs/remotes/origin/${branch}; \n\
                    git remote prune origin; \n\
