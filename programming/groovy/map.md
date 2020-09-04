@@ -8,6 +8,13 @@
 
 
 ### map withDefault
+> requirement:
+>
+> `[a:1,b:2,c:2]`
+>
+>   ⇣
+>
+> `[1:['a'], 2:['b','c']]`
 
 ```groovy
 def newMap = [:].withDefault { [] }
@@ -16,3 +23,16 @@ def newMap = [:].withDefault { [] }
 }
 assert newMap == [1:['a'], 2:['b','c']]
 ```
+
+- alternative
+  ```groovy
+  [a:1, b:2, c:2].inject([:].withDefault{[]}) { map, k, v ->
+    map[v] << k
+    map
+  }
+  ```
+
+- alternatives
+  ```groovy
+  [a:1,b:2,c:2].groupBy{ it.value }.collectEntries{ k, v -> [(k): v.collect{ it.key }] }
+  ```

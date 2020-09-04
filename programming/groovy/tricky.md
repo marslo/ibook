@@ -6,6 +6,7 @@
 - [split and trim in string](#split-and-trim-in-string)
 - [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
 - [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
+- [groupBy `List<List<String>>` to `Map<String, List>`](#groupby-listliststring-to-mapstring-list)
 - [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
 - [getField()](#getfield)
 
@@ -153,21 +154,54 @@ println 'result: ' + result
  * "fuzzy" search and merge the {@code Map<String, Map<String, String>>} according to keywords.
  * To replace the hardcode 'keyword' search {@code case_pool.get(stg).get(keyword).values()}. example:
  * <pre><code>
+ * keyword = 'dev/funcA/feature1'
+ * fuzzyFindAll( case_pool, keyword )
+ *  => Result: [funcA:[devA, performanceA, feature], funcB:[devB], funcC:[devC]]
+ * </pre></code>
  *
  * @param map       the map structure for {@code Map<String, Map<String, String>>}
  * @param keyword   use branch as keyword normally
 **/
-def mergeStructure( Map map, String keyword ) {
-  List res = []
-  map.each { k , v ->
-    if( keyword.toLowerCase().contains(k.toLowerCase()) ) {
-      // [,].flatten() instead of (+).flatten() to avoid non-list variable combine issue (i.e: {@code Cannot execute null+[...]})
-      res = [ res, v.values() ].flatten().unique()
+def fuzzyFindAll( Map map, String keyword ) {
+  Map result = [:]
+  map.findAll{ k, v -> keyword.toLowerCase().contains(k.toLowerCase()) }.collect { k, v ->
+    v.each { key, value ->
+      result[key] = [ result.getOrDefault(key,[]) + value ].flatten().unique()
     }
   }
-  return res
+  return result
 }
 ```
+
+### [groupBy `List<List<String>>` to `Map<String, List>`](https://stackoverflow.com/questions/40981393/group-by-in-groovy)
+> requirements:
+>
+> `[ ["GX 470","Model"], ["Lexus","Make"], ["Jeep","Make"], ["Red","Color"], ["blue","Color"] ]`
+>
+>   ⇣
+>
+> `["Model":["GX 470"],"Make":["Lexus","Jeep"],"Color":["Red", "blue"]]`
+
+- solution
+  ```groovy
+  def list = [
+      ["GX-470","Model"],
+      ["Lexus","Make"],
+      ["Jeep","Make"],
+      ["Red","Color"],
+      ["blue","Color"]
+  ]
+
+  list.groupBy{ it[1] }.collectEntries{ k, v -> [(k): v.collect{it.get(0)}] }
+  ```
+
+[alternatives](https://stackoverflow.com/a/40982023/2940319)
+  ```groovy
+  list.inject([:].withDefault{[]}) { map, elem ->
+    map[elem[1]] << elem[0]
+    map
+  }
+  ```
 
 ### get object id (`python -c 'id('abc')`)
 ```groovy
