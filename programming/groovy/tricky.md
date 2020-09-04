@@ -178,7 +178,7 @@ def fuzzyFindAll( Map map, String keyword ) {
 >
 > `[ ["GX 470","Model"], ["Lexus","Make"], ["Jeep","Make"], ["Red","Color"], ["blue","Color"] ]`
 >
->   ⇣
+>   ⇣⇣
 >
 > `["Model":["GX 470"],"Make":["Lexus","Jeep"],"Color":["Red", "blue"]]`
 
