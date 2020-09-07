@@ -1,4 +1,4 @@
-#  life is hard, make it easier
+# life is hard, make it easier
 
 - [artifactory](artifactory/artifactory.md)
 - cheatsheet
@@ -88,3 +88,4 @@
   * [iterm2](tools/iterm2.md)
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
+  * [vim](tools/vim.md)
