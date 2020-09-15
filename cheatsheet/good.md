@@ -194,12 +194,12 @@ ex (1)               - Vi IMproved, a programmers text editor
 gedit (1)            - text editor for the GNOME Desktop
 ```
 
-#### Show some command periodically
+#### show some command periodically
 ```bash
 $ whatch --interval 1 ls -alt
 ```
 
-#### Rename
+#### rename
 ```bash
 $ l
 total 4.0K
@@ -211,17 +211,36 @@ total 4.0K
 -rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a_b
 ```
 
-#### Clear
+#### clear
 ```bash
 $ printf "\ec"
 ```
 
-#### Use less as tail -f
+#### use less as tail -f
 ```bash
 $ less +F <filename>
 ```
 
-#### Batch move
+#### batch move
 ```bash
 $ mkdir backup-folder && ls | grep -Ze ".*rar" | xargs -d '\n' -I {} mv {} backup-folder
 ```
+
+### bash
+
+#### [bash alias](https://askubuntu.com/a/871435)
+```bash
+$ echo ${BASH_ALIASES[ls]}
+ls --color=always
+```
+
+#### [`bash -<parameter>`](https://unix.stackexchange.com/a/38363/29178)
+- get bash login log
+  ```bash
+  $ bash -l -v
+  ```
+
+- run with only one startup file
+  ```bash
+  $ bash -i --rcfile="$HOME/.marslo/.imarslo"
+  ```
