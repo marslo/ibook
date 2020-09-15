@@ -94,6 +94,13 @@ $ ssh -q ${JENKINS_URL} help
 
 ```bash
 $ curl -fsSL -O [-u<username>:<password>] https://${JENKINS_URL}/jnlpJars/jenkins-cli.jar
+
+# or
+$ curl -fsSL -O --netrc-file ~/.marslo/.netrc' https://${JENKINS_URL}/jnlpJars/jenkins-cli.jar
+$ cat ~/.marslo/.netrc
+machine <JENKINS_URL>
+login myaccount
+password mypassword
 ```
 
 * use cli
