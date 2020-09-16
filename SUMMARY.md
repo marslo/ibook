@@ -86,6 +86,7 @@
     * [pip](programming/python/pip.md)
   * [others](programming/others.md)
 - tools
+  * [github.page](tools/github.page.md)
   * [iterm2](tools/iterm2.md)
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
