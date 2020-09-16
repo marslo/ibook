@@ -29,6 +29,7 @@
   * [ssh](devops/ssh.md)
 - [jenkins](jenkins/jenkins.md)
   - [config](jenkins/config/config.md)
+    * [windows](jenkins/config/windows.md)
   - [jenkinsfile](jenkins/jenkinsfile/jenkinsfile.md)
   - [plugins](jenkins/plugins/plugins.md)
     * [kubernetes](jenkins/plugins/kubernetes.md)
