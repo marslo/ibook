@@ -12,6 +12,16 @@
 
 ## windows agent
 
+> reference
+> windows agent:
+> - [How to create an agent in Linux from console](https://support.cloudbees.com/hc/en-us/articles/115003929412-How-to-create-an-agent-in-Linux-from-console)
+> - [How to Install Several Windows Agents as a Service?](https://support.cloudbees.com/hc/en-us/articles/217423827-How-to-Install-Several-Windows-Slaves-as-a-Service-)
+> - [Launch Java Web Start slave agent via Windows Scheduler](https://wiki.jenkins.io/display/JENKINS/Launch+Java+Web+Start+slave+agent+via+Windows+Scheduler)
+> - [Step by step guide to set up master and agent machines on Windows](https://wiki.jenkins.io/display/JENKINS/Step+by+step+guide+to+set+up+master+and+agent+machines+on+Windows)
+>
+> windows services:
+> - [sc.exe query](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/sc-query)
+
 ### windows agent configuration
 - jenkins node
 
@@ -51,8 +61,6 @@ SERVICE_NAME: jenkins
         PID                : 27784
         FLAGS              :
 ```
-
-> reference: [sc.exe query](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/sc-query)
 
 - service configuration
   ```bat

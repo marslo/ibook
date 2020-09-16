@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [check where vim executable package](#check-where-vim-executable-package)
+- [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
