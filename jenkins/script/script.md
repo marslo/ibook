@@ -7,6 +7,7 @@
   - [list all jobs and folders](#list-all-jobs-and-folders)
   - [get name and classes](#get-name-and-classes)
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
+  - [get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)](#get-all-failure-builds-in-last-24-hourshttpsstackoverflowcoma603758622940319)
 - [shelve jobs](#shelve-jobs)
 - [run shell scripts in a cluster-operation](#run-shell-scripts-in-a-cluster-operation)
 - [List plugins](#list-plugins)
@@ -49,6 +50,30 @@ Jenkins.instance.getAllItems(Job.class).each {
 ```groovy
 jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class).findAll{ it -> it.disabled }.each {
   println it.fullName;
+}
+```
+
+### get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)
+```groovy
+import hudson.model.Job
+import hudson.model.Result
+import hudson.model.Run
+import java.util.Calendar
+import jenkins.model.Jenkins
+
+//24 hours in a day, 3600 seconds in 1 hour, 1000 milliseconds in 1 second
+long time_in_millis = 24*3600*1000
+Calendar rightNow = Calendar.getInstance()
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+    !job.isBuilding()
+}.collect { Job job ->
+    //find all matching items and return a list but if null then return an empty list
+    job.builds.findAll { Run run ->
+        job.lastBuild.result == Result.FAILURE && ((rightNow.getTimeInMillis() - run.getStartTimeInMillis()) <= time_in_millis)
+    } ?: []
+}.sum().each{ job ->
+  println "${job}"
 }
 ```
 
@@ -271,26 +296,3 @@ GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScript
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
 ```
 
-### get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)
-```groovy
-import hudson.model.Job
-import hudson.model.Result
-import hudson.model.Run
-import java.util.Calendar
-import jenkins.model.Jenkins
-
-//24 hours in a day, 3600 seconds in 1 hour, 1000 milliseconds in 1 second
-long time_in_millis = 24*3600*1000
-Calendar rightNow = Calendar.getInstance()
-
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-    !job.isBuilding()
-}.collect { Job job ->
-    //find all matching items and return a list but if null then return an empty list
-    job.builds.findAll { Run run ->
-        job.lastBuild.result == Result.FAILURE && ((rightNow.getTimeInMillis() - run.getStartTimeInMillis()) <= time_in_millis)
-    } ?: []
-}.sum().each{ job ->
-  println "${job}"
-}
-```
