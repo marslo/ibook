@@ -15,10 +15,10 @@ Git Command Study and practice
   - [show submodule changes](#show-submodule-changes)
   - [get change from `.git/objects`](#get-change-from-gitobjects)
   - [get change history for deleted files](#get-change-history-for-deleted-files)
-- [git commit](#git-commit)
-  - [emoji](#emoji)
-- [git mv](#git-mv)
-  - [case sensitive](#case-sensitive)
+- [git rebase](#git-rebase)
+  - [automatic edit by `git rebase -i`](#automatic-edit-by-git-rebase--i)
+  - [auto rebaes](#auto-rebaes)
+  - [fix typo in commits](#fix-typo-in-commits)
 - [clean](#clean)
   - [clean untracked directory and item in `.gitignore`](#clean-untracked-directory-and-item-in-gitignore)
 - [undo](#undo)
@@ -29,11 +29,10 @@ Git Command Study and practice
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout single branch](#checkout-single-branch)
-- [Rebase](#rebase)
-  - [Without Confilite file](#without-confilite-file)
-  - [With Confilite file](#with-confilite-file)
-- [trick and scripts](#trick-and-scripts)
+- [tricky and scripts](#tricky-and-scripts)
+  - [commits](#commits)
   - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes)
+  - [git commit](#git-commit)
   - [`.gitattributes`](#gitattributes)
   - [fetch merge all](#fetch-merge-all)
   - [fetchall <branch>](#fetchall-branch)
@@ -44,12 +43,13 @@ Git Command Study and practice
 > reference:
 > - [git-tips/tips](https://github.com/git-tips/tips)
 > - [521xueweihan/git-tips](https://github.com/521xueweihan/git-tips)
+> - [CS Visualized: Useful Git Commands](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
 
 ## Appoint
 ### [Git Alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/git/.gitconfig)
 ```bash
 br          = branch
-bra         = branch -a
+co          = checkout
 coa         = commit --amend --no-edit
 plog        = !git --no-pager log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative --max-count=3
 plogs       = log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
@@ -63,7 +63,6 @@ rlog        = "!bash -c 'while read branch; do \n\
 
 ## git branch
 ### create empty branch
-
   - create an empty branch
     ```bash
     $ mkdir <MY_FOLDER> && cd $_
@@ -80,7 +79,7 @@ rlog        = "!bash -c 'while read branch; do \n\
     $ git push --force -u origin HEAD:<BRANCH_NAME>
     ```
 
-  - git-alias (`~/.gitconfig`):
+  - git alias [`~/.gitconfig.alias`](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/git/.gitconfig.alias):
     ```bash
     [alias]
     init-repo   = "!f() { \
@@ -108,6 +107,7 @@ rlog        = "!bash -c 'while read branch; do \n\
                       fi \
                     }; f"
     ```
+
 ### get branch name from reversion
 - `branch -a --contians`
   ```bash
@@ -115,7 +115,6 @@ rlog        = "!bash -c 'while read branch; do \n\
   * master
     remotes/origin/master
   ```
-
   or
 
   ```bash
@@ -133,10 +132,17 @@ rlog        = "!bash -c 'while read branch; do \n\
 ### show files and status without comments
 ```bash
 $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
-
-# or
-$ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%h %ad- %s [%an]"
 ```
+
+- more
+  ```bash
+  # or
+  $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%h %ad- %s [%an]"
+
+  # or
+  $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format='%C(red)%h%Creset %C(yellow)(%ad)%Creset %s %C(blue)<%an>%Creset'
+  ```
+
 - e.g.:
   ```bash
   $ git log -3 --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
@@ -174,26 +180,114 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,,
   ```
  
   [or](https://stackoverflow.com/a/60993503/2940319)
-    ```bash
-    $ git log --all --full-history --online -- <path/to/file>
-    ```
+  ```bash
+  $ git log --all --full-history --online -- <path/to/file>
+  ```
 
   [or](https://stackoverflow.com/a/42582877/2940319)
-    ```bash
-    $ git log --oneline --follow -- <path/to/file>
-    ```
+  ```bash
+  $ git log --oneline --follow -- <path/to/file>
+  ```
 
   or
-    ```bash
-    $ git log --diff-filter=D --summary | find "delete" | grep <filename>
-    ```
+  ```bash
+  $ git log --diff-filter=D --summary | find "delete" | grep <filename>
+  ```
+
 - [`--follow`](https://stackoverflow.com/a/36561814/2940319)
   ```bash
   $ git log --follow <path/to/file>
   ```
 
-## git commit
-### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
+## git rebase
+> about [`GIT_SEQUENCE_EDITOR`](https://stackoverflow.com/a/54970726/2940319)
+> [git rebase in depth](https://git-rebase.io/)
+
+### automatic edit by `git rebase -i`
+> inspired from [.gitconfig](https://github.com/brauliobo/gitconfig/blob/master/configs/.gitconfig#L220) & [Is there a way to squash a number of commits non-interactively?](https://stackoverflow.com/a/28789332/2940319)
+
+```bash
+$ COUNT=$1
+$ GIT_EDITOR="sed -i -e '2,$COUNT s/^pick /s /;/# This is the 2nd commit message:/d'" git rebase -i HEAD~$COUNT
+```
+
+  [git alias](https://github.com/marslo/mylinux/blob/master/confs/home/git/.gitconfig.alias#L32)
+
+  ```
+  [alias]
+    sq = ! "f() { TARGET=$1 && GIT_EDITOR=\"sed -i -e '2,$TARGET s/^pick /s /;/# This is the 2nd commit message:/,$ {d}'\" git rebase -i HEAD~$TARGET; }; f"
+  ```
+
+  example
+
+![git rebase and squash automatic](../../screenshot/git/gitrebase-isquash-auto.png)
+
+- [or](https://stackoverflow.com/a/25941070/2940319)
+  ```bash
+  $ GIT_SEQUENCE_EDITOR="sed -i 's/^pick ce5efdb /edit ce5efdb /;/^pick ce6efdb /d'" git rebase -i ${SHA}
+  ```
+
+- or edit
+  ```bash
+  $ GIT_SEQUENCE_EDITOR="sed -i -re 's/^pick 134567/e 1234567/'" git rebase -i 1234567^
+  ```
+
+- or [`sequence.editor`](https://stackoverflow.com/a/38234236/2940319)
+  ```bash
+  $ git -c sequence.editor='sed -i s/pick/reword/' rebase -i ${SHA}
+  ```
+
+### [auto rebaes](https://stackoverflow.com/a/19267103/2940319)
+- `.gitconfig`
+  ```
+  [alias]
+    arebase = ! ~/.marslo/bin/arebase.sh
+  ```
+
+- `~/.marslo/bin/arebase.sh`
+
+  ```bash
+  #!/bin/bash
+
+  ACTION=$1
+  COMMIT=$(git rev-parse --short $2)
+  [[ "$COMMIT" ]] || exit 1
+  CORRECT=
+  for A in p pick r reword e edit s squash f fixup d drop t split; do
+       [[ $ACTION == $A ]] && CORRECT=1
+  done 
+  [[ "$CORRECT" ]] || exit 1
+  git merge-base --is-ancestor $COMMIT HEAD || exit 1
+  if [[ $ACTION == "drop" || $ACTION == "d" ]]; then
+      GIT_SEQUENCE_EDITOR="sed -i -e '/^pick $COMMIT/d'" git rebase -i $COMMIT^^
+  elif [[ $ACTION == "split" || $ACTION == "t" ]]; then
+      GIT_SEQUENCE_EDITOR="sed -i -e 's/^pick $COMMIT/edit $COMMIT/'" git rebase -i $COMMIT^^ || exit 1
+      git reset --soft HEAD^
+      echo "Hints:"
+      echo "  Select files to be commited using 'git reset', 'git add' or 'git add -p'"
+      echo "  Commit using 'git commit -c $COMMIT'"
+      echo "  Finish with 'git rebase --continue'"
+  else
+      GIT_SEQUENCE_EDITOR="sed -i -e 's/^pick $COMMIT/$1 $COMMIT/'" git rebase -i $COMMIT^^
+  fi
+  ```
+
+### [fix typo in commits](https://stackoverflow.com/a/12395024/2940319)
+```bash
+$ EDITOR="sed -i -e 's/borken/broken/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
+```
+
+  or:
+
+  ```bash
+  $ VISUAL="sed -i -e '/^[[:blank:]]*Change-Id/ d'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
+  ```
+
+  or:
+
+  ```bash
+  $ GIT_EDITOR="sed -i -e 's/kyewrod/keyword/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
+  ```
 
 ## git mv
 ### case sensitive
@@ -265,7 +359,7 @@ $ git plog --pretty=format:"%h" --no-patch
 $ git push origin +cb46bdc^:master
 ```
 
-#### delete multple commits
+#### delete multiple commits
 - revert local
   ```bash
   $ git reset --hard HEAD~
@@ -384,222 +478,13 @@ git reset --hard FETCH_HEAD
 $ git clone --single-branch --branch <branch name> url://to/source/repository [target dir]
 ```
 
-## Rebase
-### Without Confilite file
-#### Precondiction
-```bash
-$ git plog
-37a0595 - (HEAD, master) 2: 2.txt (5 seconds ago) <Marslo>
-1d9bcce - Initial commit (65 minutes ago) <Marslo>
-
-$ git rlog
-4e3106e - (origin/master, origin/HEAD) 1: 1.txt (2 minutes ago) <Marslo>
-1d9bcce - Initial commit (65 minutes ago) <Marslo>
-
-$ git br
-  master
-
-$ git push
-To git@github.com:Marslo/GitStudy.git
- ! [rejected]        master -> master (non-fast-forward)
-error: failed to push some refs to 'git@github.com:Marslo/GitStudy.git'
-hint: Updates were rejected because the tip of your current branch is behind
-hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
-hint: before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-```
-
-#### Merge with rebase
-##### Use command: git pulll --rebase
-```bash
-$ git pull --rebase
-First, rewinding head to replay your work on top of it...
-Applying: 2: 2.txt
-```
-
-##### Check the status after pull rebase
-- Check the status
-
-  - The status of meraged file hasn't been changed
+## tricky and scripts
+### commits
+  - the first commit
     ```bash
-    $ git st
-    # On branch master
-    # Your branch is ahead of 'origin/master' by 1 commit.
-    #   (use "git push" to publish your local commits)
-    #
-    nothing to commit, working directory clean
+    $ git rev-list --max-parents=0 HEAD
     ```
 
-  - The branch hasn't been changed
-    ```bash
-    $ git br
-      master
-    ```
-
-  - Log added the remote new version
-    ```bash
-    $ git plog
-    7bc54e0 - (HEAD, master) 2: 2.txt (12 seconds ago) <Marslo>
-    4e3106e - (origin/master, origin/HEAD) 1: 1.txt (4 minutes ago) <Marslo>
-    1d9bcce - Initial commit (68 minutes ago) <Marslo>
-
-    $ git rlog
-    4e3106e - (origin/master, origin/HEAD) 1: 1.txt (4 minutes ago) <Marslo>
-    1d9bcce - Initial commit (68 minutes ago) <Marslo>
-    ```
-
-### With Confilite file
-#### Precondiction
-```bash
-$ git plog
- 94a5935 - (HEAD, master) 2: 1 (25 seconds ago) <Marslo>
- 1d9bcce - Initial commit (25 minutes ago) <Marslo>
-
-$ git rlog
-b9709fe - (origin/master, origin/HEAD) 1: 1 (71 seconds ago) <Mar
-1d9bcce - Initial commit (25 minutes ago) <Marslo>
-
-$ git br
-  master
-
-$ git push
-To git@github.com:Marslo/GitStudy.git
- ! [rejected]        master -> master (non-fast-forward)
-error: failed to push some refs to 'git@github.com:Marslo/GitStudy.git'
-hint: Updates were rejected because the tip of your current branch is behind
-hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
-hint: before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-```
-
-#### Merge by rebase
-##### Using command: git pull --rebase
-```bash
-$ git pull --rebase
-First, rewinding head to replay your work on top of it...
-Applying: 2: 1
-Using index info to reconstruct a base tree...
-M       README.md
-Falling back to patching base and 3-way merge...
-Auto-merging README.md
-CONFLICT (content): Merge conflict in README.md
-Failed to merge in the changes.
-Patch failed at 0001 2: 1
-The copy of the patch that failed is found in:
-   /home/marslo/Tools/Git/2_GitStudy/.git/rebase-apply/patch
-When you have resolved this problem, run "git rebase --continue".
-If you prefer to skip this patch, run "git rebase --skip" instead.
-To check out the original branch and stop rebasing, run "git rebase --abort".
-```
-
-##### Check the status after pull rebase
-- branch is changed (`master` -> `no branch`)
-  ```bash
-  $ git br
-    (no branch, rebasing master)
-    master
-  ```
-
-- Status from `unchanged` and `staged` -> `Umerged`
-  ```bash
-  $ git st
-  # HEAD detached at b9709fe
-  # You are currently rebasing branch 'master' on 'b9709fe'.
-  #   (fix conflicts and then run "git rebase --continue")
-  #   (use "git rebase --skip" to skip this patch)
-  #   (use "git rebase --abort" to check out the original branch)
-  #
-  # Unmerged paths:
-  #   (use "git reset HEAD <file>..." to unstage)
-  #   (use "git add <file>..." to mark resolution)
-  #
-  #       both modified:      README.md
-  #
-  no changes added to commit (use "git add" and/or "git commit -a")
-  ```
-
-- Log changed:
-    - New committed version has been **removed**
-    - Remote new version has been **added*
-
-    ```bash
-    $ git rlog
-    b9709fe - (HEAD, origin/master, origin/HEAD) 1: 1 (2 minutes ago)
-    1d9bcce - Initial commit (26 minutes ago) <Marslo>
-
-    $ git plog
-    b9709fe - (HEAD, origin/master, origin/HEAD) 1: 1 (2 minutes ago)
-    1d9bcce - Initial commit (26 minutes ago) <Marslo>
-    ```
-
-- The confilicted file has been meraged
-    ```bash
-    $ git add .
-
-    $ git st
-    # HEAD detached at b9709fe
-    # You are currently rebasing branch 'master' on 'b9709fe'.
-    #   (all conflicts fixed: run "git rebase --continue")
-    #
-    # Changes to be committed:
-    #   (use "git reset HEAD <file>..." to unstage)
-    #
-    #       modified:   README.md
-    #
-
-    $ git br
-      (no branch, rebasing master)
-      master
-
-    $ git diff --staged
-    diff --git a/README.md b/README.md
-    index b1acca3..12afed2 100644
-    --- a/README.md
-    +++ b/README.md
-    @@ -1 +1,5 @@
-    +<<<<<<< HEAD
-     1: 1
-    +=======
-    +2: 1
-    +>>>>>>> 2: 1
-    ```
-
-#### Return to master branch
-```bash
-$ git rebase --continue
-Applying: 2: 1
-```
-
-- Check the status
-    - The merged file (`Unmerged`) -> `staged`
-    ```bash
-    $ git st
-    # On branch master
-    # Your branch is ahead of 'origin/master' by 1 commit.
-    #   (use "git push" to publish your local commits)
-    #
-    nothing to commit, working directory clean
-    ```
-
-    - Log added the remote new version
-    ```bash
-    $ git plog
-    d6962d6 - (HEAD, master) 2: 1 (4 seconds ago) <Marslo>
-    b9709fe - (origin/master, origin/HEAD) 1: 1 (3 minutes ago) <Marslo>
-    1d9bcce - Initial commit (27 minutes ago) <Marslo>
-
-    $ git rlog
-    b9709fe - (origin/master, origin/HEAD) 1: 1 (3 minutes ago) <Marslo>
-    1d9bcce - Initial commit (27 minutes ago) <Marslo>
-    ```
-
-    - Branch changed `no branch, rebasing master` -> `master`
-    ```bash
-    $ git br
-      master
-    ```
-
-## trick and scripts
 ### [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](https://help.github.com/en/github/using-git/configuring-git-to-handle-line-endings)
 ```bash
 $ git add --all -u --renormalize .
@@ -610,8 +495,19 @@ $ git add --all -u --renormalize .
   $ git config --global core.safecrlf false
   ```
 
-### `.gitattributes`
+### [create multiple commits](https://git-rebase.io/)
+```bash
+for c in {0..10}; do
+  echo "$c" >>squash.txt
+  git add squash.txt
+  git commit -m"Add '$c' to squash.txt"
+done
+```
 
+### git commit
+#### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
+
+### `.gitattributes`
 #### [Refreshing the repository after committing .gitattributes](https://www.droidship.com/posts/gitattributes/)
 > reference:
 > - [Please Add .gitattributes To Your Git Repository](https://dev.to/deadlybyte/please-add-gitattributes-to-your-git-repository-1jld)
