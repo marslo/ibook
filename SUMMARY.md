@@ -14,6 +14,7 @@
 - devops
   - [git](devops/git/git.md)
     * [eol](devops/git/eol.md)
+    * [example](devops/git/example.md)
     * [gerrit](devops/git/gerrit.md)
     * [q&a](devops/git/q&a.md)
     * [tricky](devops/git/tricky.md)
