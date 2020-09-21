@@ -9,6 +9,7 @@
 - [echo 256 colors](#echo-256-colors)
 - [directory diff](#directory-diff)
 - [commands](#commands)
+- [bash](#bash)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
