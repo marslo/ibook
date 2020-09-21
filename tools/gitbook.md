@@ -10,6 +10,7 @@
   - [quote](#quote)
 - [tab](#tab)
   - [code](#code)
+- [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -117,3 +118,4 @@ python
 - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
 - [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
 - [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
+- [emoji](https://gist.github.com/rxaviers/7360908)

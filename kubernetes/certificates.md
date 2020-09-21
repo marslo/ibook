@@ -5,7 +5,6 @@
 - [renew master](#renew-master)
   - [check info](#check-info)
   - [backup](#backup)
-  - [clean expired certificates](#clean-expired-certificates)
   - [renew cert](#renew-cert)
   - [renew kubeconfig](#renew-kubeconfig)
   - [Restart the master components](#restart-the-master-components)
@@ -49,12 +48,12 @@ stacked CA mode can found from [Certificate Management with kubeadm](https://kub
 ```bash
 $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
        | egrep -v 'ca.crt$' \
-       | xargs -L 1 -t  -i bash -c 'openssl x509 -noout -text -in {} | grep After'
-bash -c openssl x509  -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt|grep After
+       | xargs -L 1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep After'
+bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep After
             Not After : Sep 16 07:51:58 2020 GMT
-bash -c openssl x509  -noout -text -in /etc/kubernetes/pki/apiserver.crt|grep After
+bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep After
             Not After : Sep 16 07:51:59 2020 GMT
-bash -c openssl x509  -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt|grep After
+bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep After
             Not After : Sep 16 07:52:00 2020 GMT
 ```
 {% endtab %}
@@ -64,12 +63,14 @@ bash -c openssl x509  -noout -text -in /etc/kubernetes/pki/front-proxy-client.cr
 $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
        | egrep -v 'ca.crt$' \
        | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver.crt
-notAfter=Sep 18 12:10:31 2021 GMT
-bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver-kubelet-client.crt
-notAfter=Sep 18 12:10:31 2021 GMT
-bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/front-proxy-client.crt
-notAfter=Sep 18 12:10:31 2021 GMT
+```
+{% endtab %}
+
+{% tab title="or" %}
+```bash
+$ ls -1 /etc/kubernetes/pki/*.crt \
+       | grep -Ev 'ca.crt$' \
+       | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
 ```
 {% endtab %}
 {% endtabs %}
@@ -83,7 +84,7 @@ notAfter=Sep 18 12:10:31 2021 GMT
 $ for i in ca client server peer; do
   echo /etc/etcd/ssl/$i.pem
   openssl x509 -enddate -noout -in /etc/etcd/ssl/$i.pem
-  done
+done
 /etc/etcd/ssl/ca.pem
 notAfter=Sep  8 10:44:00 2024 GMT
 /etc/etcd/ssl/client.pem
@@ -110,6 +111,14 @@ bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/peer.pem
 notAfter=Sep  8 11:03:00 2024 GMT
 ```
 {% endtab %}
+
+{% tab title="or" %}
+```bash
+$ ls -1 /etc/etcd/ssl/*.pem \
+       | grep -Ev '\-key.pem$' \
+       | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+```
+{% endtab %}
 {% endtabs %}
 
 ### backup
@@ -121,13 +130,13 @@ $ sudo cp -rp /var/lib/kubelet/pki /var/lib/kubelet/pki.orig
 $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
 ```
 
-### clean expired certificates
+#### clean expired certificates
 - `/etc/kubernetes/pki`
   ```bash
   $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-      sudo mv /etc/kubernetes/pki/${i}.key{,.orig}
-      sudo cp /etc/kubernetes/pki/${i}.crt{,.orig}
-    done
+    sudo mv /etc/kubernetes/pki/${i}.key{,.orig}
+    sudo cp /etc/kubernetes/pki/${i}.crt{,.orig}
+  done
   ```
 
   or
@@ -161,7 +170,7 @@ $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
 ```bash
 $ for i in admin kubelet controller-manager scheduler; do
   sudo mv /etc/kubernetes/${i}.conf{.orig,}
-  done
+done
 ```
 {% endtab %}
 
@@ -206,7 +215,7 @@ renew cert in **major master**
           <li><code>front-proxy-client.key</code></li>
         </ul>
       </td>
-      <td style="text-align:left"><code>/etc/kubernetes/pki</code></td>
+      <td style="text-align:center"><code>/etc/kubernetes/pki</code></td>
     </tr>
   </tbody>
 </table>
@@ -316,7 +325,7 @@ bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-client.crt -noout -text
 
 <table>
   <thead>
-    <tr>
+    <tr style="text-align:center">
       <th style="text-align:center">config files</th>
       <th style="text-align:center">path</th>
     </tr>
@@ -331,7 +340,7 @@ bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-client.crt -noout -text
           <li><code>scheduler.conf</code></li>
         </ul>
       </td>
-      <td style="text-align:left"><code>/etc/kubernetes/</code></td>
+      <td style="text-align:center"><code>/etc/kubernetes/</code></td>
     </tr>
   </tbody>
 </table>
