@@ -1,0 +1,57 @@
+{
+  "name": "my-notebook",
+  "version": "3.2.3",
+  "homepage": "https://imarslo.gitbook.io/handbook/",
+  "description": "life is hard, make it simple!",
+  "scripts": {
+    "gbook:prepare": "gitbook install",
+    "gbook:watch": "npm run docs:prepare && gitbook serve",
+    "gbook:dev": "cd books && gitbook serve --config=../book.json"
+  },
+  "keywords": [
+    "git",
+    "book",
+    "gitbook"
+  ],
+  "author": "marslo",
+  "contributors": [
+    {
+      "name": "marslo",
+      "email": "marslo.jiao@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "gitbook-plugin-ace": "^0.3.2",
+    "gitbook-plugin-advanced-emoji": "^0.2.2",
+    "gitbook-plugin-alerts": "^0.2.0",
+    "gitbook-plugin-anchor-navigation-ex": "^0.1.8",
+    "gitbook-plugin-anchors": "^0.7.1",
+    "gitbook-plugin-disqus": "^0.1.0",
+    "gitbook-plugin-donate": "^1.0.2",
+    "gitbook-plugin-downloadpdf": "^1.0.3",
+    "gitbook-plugin-edit-link": "^2.0.2",
+    "gitbook-plugin-emphasize": "^1.1.0",
+    "gitbook-plugin-expandable-chapters-small": "^0.1.7",
+    "gitbook-plugin-favicon": "0.0.2",
+    "gitbook-plugin-github": "^2.0.0",
+    "gitbook-plugin-github-buttons": "^2.1.0",
+    "gitbook-plugin-image-captions": "^3.1.0",
+    "gitbook-plugin-include-codeblock": "^3.2.2",
+    "gitbook-plugin-include-csv": "^0.1.0",
+    "gitbook-plugin-katex": "^1.1.4",
+    "gitbook-plugin-local-video": "^1.0.1",
+    "gitbook-plugin-mermaid-gb3": "^2.1.0",
+    "gitbook-plugin-navigator": "^1.1.1",
+    "gitbook-plugin-prism": "^2.4.0",
+    "gitbook-plugin-prism-themes": "0.0.2",
+    "gitbook-plugin-puml": "^1.0.1",
+    "gitbook-plugin-search-plus": "0.0.11",
+    "gitbook-plugin-sectionx": "^3.1.0",
+    "gitbook-plugin-sharing-plus": "0.0.2",
+    "gitbook-plugin-simple-page-toc": "^0.1.2",
+    "gitbook-plugin-splitter": "0.0.8",
+    "gitbook-plugin-tbfed-pagefooter": "0.0.1",
+    "gitbook-plugin-todo": "^0.1.3",
+    "gitbook-plugin-toggle-chapters": "0.0.3"
+  }
+}
