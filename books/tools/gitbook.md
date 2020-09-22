@@ -198,6 +198,43 @@ python
     64   // fs.lstat = statFix(fs.lstat)
     ```
 
+### `unexpected token: .`
+- issue
+  ```bash
+  $ git serve
+  ...
+  unexpected token: .
+  ```
+
+- [solution](https://blog.csdn.net/HammerTien/article/details/86613392)
+
+  - raw code
+    {% raw %}
+    ```markdown
+    ```bash
+    $ k -n kube-system get pods \
+        -o go-template \
+        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+        | head
+    \`\`\`
+    ```
+    {% endraw %}
+
+  - fixed code
+    {% raw %}
+    ```markdown
+
+    {% raw %}
+    ```bash
+    $ k -n kube-system get pods \
+        -o go-template \
+        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+        | head
+    \`\`\`
+    {% endraw %}
+    ```
+    {% endraw %}
+
 ## reference
 - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
 - [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
