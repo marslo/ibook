@@ -10,6 +10,7 @@
     - [Disable Guest User](#disable-guest-user)
     - [Go to Hidden path in Finder](#go-to-hidden-path-in-finder)
     - [ReIndex Spotilght](#reindex-spotilght)
+    - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
     - [Copy path from finder](#copy-path-from-finder)
   - [System Integrity Protection](#system-integrity-protection)
     - [turn off the Rootless System Integrity Protection](#turn-off-the-rootless-system-integrity-protection)
@@ -138,6 +139,23 @@ $ sudo mdutil -i on /
 $ sudo mdutil -E /
 $ sudo mdutil -E /Volumes/marslo/
 ```
+
+### copy STDOUT into clipboard
+
+{% hint style='success' %}
+- `pbcopy` for macOS
+- `xclip` for Linux
+{% endhint %}
+
+```bash
+$ <cmd> | pbcopy
+```
+
+- example
+  ```bash
+  $ cat file | pbcopy
+  $ pwd | pbcopy
+  ```
 
 ### Copy path from finder
 - [*right-click*(<kbd>control</kbd> + left-click) -> <kbd>option</kbd>](https://osxdaily.com/2013/06/19/copy-file-folder-path-mac-os-x/)
@@ -437,6 +455,12 @@ example:
 #### Enable Developer Mode
 ```bash
 $ DevToolsSecurity -enable
+```
+
+#### show SDK path
+```bash
+$ xcrun --show-sdk-path
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 ```
 
 ## Homebrew
