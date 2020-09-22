@@ -93,4 +93,3 @@
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
   * [vim](tools/vim.md)
-* [sample](tools/sample.md)

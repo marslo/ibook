@@ -1,5 +1,5 @@
 {
-  "title": "my-handbook",
+  "title": "handbook",
   "author": "marslo",
   "output.name": "site",
   "gitbook": "3.2.3",
@@ -11,7 +11,7 @@
   },
   "links": {
     "sidebar": {
-      "my home": "https://marslo.github.io/"
+      "I, Marslo": "https://marslo.github.io/"
     }
   },
   "plugins": [
@@ -38,7 +38,6 @@
     "tbfed-pagefooter",
     "sectionx",
     "local-video",
-    "anchor-navigation-ex",
     "favicon",
     "todo",
     "alerts",
@@ -60,7 +59,8 @@
     "back-to-top-button",
     "copy-code-button",
     "splitter",
-    "chart"
+    "chart",
+    "anchor-navigation-ex"
   ],
 
   "pluginsConfig": {
@@ -77,7 +77,7 @@
     },
     "prism": {
       "css": [
-        "prism-themes/themes/prism-base16-ateliersulphurpool.light.css"
+        "prismjs/themes/prism-solarizedlight.css"
       ]
     },
     "github": {
