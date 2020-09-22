@@ -1,0 +1,184 @@
+{
+  "title": "my-handbook",
+  "author": "marslo",
+  "output.name": "site",
+  "gitbook": "3.2.3",
+  "language": "en",
+  "direction" : "ltr",
+  "root": "./books",
+  "styles": {
+    "website": "styles/website.css"
+  },
+  "links": {
+    "sidebar": {
+      "my home": "https://marslo.github.io/"
+    }
+  },
+  "plugins": [
+    "-lunr",
+    "-search",
+    "-highlight",
+    "-livereload",
+    "search-plus",
+    "simple-page-toc",
+    "github",
+    "github-buttons",
+    "edit-link",
+    "disqus",
+    "prism",
+    "prism-themes",
+    "advanced-emoji",
+    "anchors",
+    "include-codeblock",
+    "ace",
+    "emphasize",
+    "katex",
+    "splitter",
+    "mermaid-gb3",
+    "tbfed-pagefooter",
+    "sectionx",
+    "local-video",
+    "anchor-navigation-ex",
+    "favicon",
+    "todo",
+    "alerts",
+    "include-csv",
+    "puml",
+    "-sharing",
+    "sharing-plus",
+    "image-captions",
+    "donate",
+    "navigator",
+    "downloadpdf",
+    "hints",
+    "codetabs",
+    "codegroup",
+    "tabs",
+    "codeblock-filename",
+    "-fontsettings",
+    "flexible-alerts",
+    "back-to-top-button",
+    "copy-code-button",
+    "splitter",
+    "chart"
+  ],
+
+  "pluginsConfig": {
+    "fontsettings": {
+      "theme": "sepia",
+      "family": "sans",
+      "size":  1
+    },
+    "theme-default": {
+      "showLevel": false
+    },
+    "disqus": {
+      "shortName": "mbooks"
+    },
+    "prism": {
+      "css": [
+        "prism-themes/themes/prism-base16-ateliersulphurpool.light.css"
+      ]
+    },
+    "github": {
+      "url": "https://github.com/marslo/ibook"
+    },
+    "github-buttons": {
+      "repo": "marslo/ibook",
+      "types": [
+        "star",
+        "watch"
+      ],
+      "size": "small"
+    },
+    "include-codeblock": {
+      "template": "ace",
+      "unindent": true,
+      "edit": true
+    },
+    "sharing": {
+      "douban": false,
+      "facebook": false,
+      "google": false,
+      "hatenaBookmark": false,
+      "instapaper": false,
+      "line": false,
+      "linkedin": true,
+      "messenger": false,
+      "pocket": false,
+      "qq": false,
+      "qzone": false,
+      "stumbleupon": false,
+      "twitter": false,
+      "viber": false,
+      "vk": false,
+      "weibo": false,
+      "whatsapp": false,
+      "all": [
+        "facebook",
+        "google",
+        "twitter",
+        "weibo",
+        "instapaper",
+        "linkedin",
+        "pocket"
+      ]
+    },
+    "tbfed-pagefooter": {
+      "copyright": "Copyright © marslo 2020-2021",
+      "modify_label": "Last Modified:",
+      "modify_format": "YYYY-MM-DD HH:mm:ss"
+    },
+    "simple-page-toc": {
+      "maxDepth": 3,
+      "skipFirstH1": true
+    },
+    "edit-link": {
+      "base": "https://github.com/marslo/ibook/edit/master",
+      "label": "Edit in Github"
+    },
+    "anchor-navigation-ex": {
+      "isRewritePageTitle": false,
+      "tocLevel1Icon": "fa fa-hand-o-right",
+      "tocLevel2Icon": "fa fa-hand-o-right",
+      "tocLevel3Icon": "fa fa-hand-o-right"
+    },
+    "sectionx": {
+      "tag": "b"
+    },
+    "favicon": {
+      "shortcut": "favicon.ico",
+      "bookmark": "favicon.ico"
+    },
+    "image-captions": {
+      "caption": "_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_"
+    },
+    "donate": {
+      "wechat": "",
+      "alipay": "",
+      "title": "",
+      "button": " 👍  ",
+      "alipayText": "Alipay",
+      "wechatText": "WechatPay"
+    },
+    "downloadpdf": {
+      "base": "https://www.gitbook.com/download/pdf/book/alinex/nodejs",
+      "label": "Download PDF",
+      "multilingual": false
+    },
+    "hints": {
+      "info": "fa fa-info-circle",
+      "tip": "fa fa-mortar-board",
+      "danger": "fa fa-exclamation-cicle",
+      "working": "fa fa-wrench"
+    },
+    "codegroup":{
+      "defaultTabName": "Code",
+      "tabNameSeperator": "::",
+      "rememberTabs": true
+    },
+    "chart": {
+      "type": "highcharts"
+    }
+  }
+}
