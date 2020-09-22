@@ -114,6 +114,22 @@ python
 {% endtab %}
 {% endtabs %}
 
+## emoji
+> **reference**:
+> - [gist](https://gist.github.com/rxaviers/7360908)
+> - [Emoji](https://github.com/StylishThemes/GitHub-Dark/wiki/Emoji)
+> - [broken & new emojis](https://github.com/WebpageFX/emoji-cheat-sheet.com/issues/429)
+> - [Emojis list from https://api.github.com/emojis](https://awes0mem4n.github.io/emojis-github.html)
+> - [emoji-cheat-sheet.com](https://github.com/WebpageFX/emoji-cheat-sheet.com)
+
+| **emoji**          | **code**             |
+| :-:                | :-:                  |
+| :joy:              | `:joy:`              |
+| :u7981:            | `:u7981:`            |
+| :u7121:            | `:u7121:`            |
+| :white_check_mark: | `:white_check_mark:` |
+| :four_leaf_clover: | `:four_leaf_clover:` |
+
 ## reference
 - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
 - [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
