@@ -41,85 +41,83 @@ stacked CA mode can found from [Certificate Management with kubeadm](https://kub
   Server Version: v1.15.3
   ```
 - crt for kubernetes
+  {% tabs %}
 
-{% tabs %}
+  {% tab title="openssl" %}
+  ```bash
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
+         | egrep -v 'ca.crt$' \
+         | xargs -L 1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep After'
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep After
+              Not After : Sep 16 07:51:58 2020 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep After
+              Not After : Sep 16 07:51:59 2020 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep After
+              Not After : Sep 16 07:52:00 2020 GMT
+  ```
+  {% endtab %}
 
-{% tab title="openssl" %}
-```bash
-$ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
-       | egrep -v 'ca.crt$' \
-       | xargs -L 1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep After'
-bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep After
-            Not After : Sep 16 07:51:58 2020 GMT
-bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep After
-            Not After : Sep 16 07:51:59 2020 GMT
-bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep After
-            Not After : Sep 16 07:52:00 2020 GMT
-```
-{% endtab %}
+  {% tab title="or" %}
+  ```bash
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
+         | egrep -v 'ca.crt$' \
+         | xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
+  ```
+  {% endtab %}
 
-{% tab title="or" %}
-```bash
-$ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
-       | egrep -v 'ca.crt$' \
-       | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-```
-{% endtab %}
-
-{% tab title="or" %}
-```bash
-$ ls -1 /etc/kubernetes/pki/*.crt \
-       | grep -Ev 'ca.crt$' \
-       | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-```
-{% endtab %}
-{% endtabs %}
+  {% tab title="or" %}
+  ```bash
+  $ ls -1 /etc/kubernetes/pki/*.crt \
+         | grep -Ev 'ca.crt$' \
+         | xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
+  ```
+  {% endtab %}
+  {% endtabs %}
 
 - [pem for extend etcd](https://stackoverflow.com/a/21297927/2940319)
+  {% tabs %}
 
-{% tabs %}
+  {% tab title="openssl" %}
+  ```bash
+  $ for i in ca client server peer; do
+    echo /etc/etcd/ssl/$i.pem
+    openssl x509 -enddate -noout -in /etc/etcd/ssl/$i.pem
+  done
+  /etc/etcd/ssl/ca.pem
+  notAfter=Sep  8 10:44:00 2024 GMT
+  /etc/etcd/ssl/client.pem
+  notAfter=Sep  8 10:49:00 2024 GMT
+  /etc/etcd/ssl/server.pem
+  notAfter=Sep  8 11:03:00 2024 GMT
+  /etc/etcd/ssl/peer.pem
+  notAfter=Sep  8 11:03:00 2024 GMT
+  ```
+  {% endtab %}
 
-{% tab title="openssl" %}
-```bash
-$ for i in ca client server peer; do
-  echo /etc/etcd/ssl/$i.pem
-  openssl x509 -enddate -noout -in /etc/etcd/ssl/$i.pem
-done
-/etc/etcd/ssl/ca.pem
-notAfter=Sep  8 10:44:00 2024 GMT
-/etc/etcd/ssl/client.pem
-notAfter=Sep  8 10:49:00 2024 GMT
-/etc/etcd/ssl/server.pem
-notAfter=Sep  8 11:03:00 2024 GMT
-/etc/etcd/ssl/peer.pem
-notAfter=Sep  8 11:03:00 2024 GMT
-```
-{% endtab %}
+  {% tab title="or" %}
+  ```bash
+  $ find /etc/etcd/ssl/ -type f -name '*.pem' \
+         | egrep -v '*-key.pem$' \
+         | xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
+  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/ca.pem
+  notAfter=Sep  8 10:44:00 2024 GMT
+  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/client.pem
+  notAfter=Sep  8 10:49:00 2024 GMT
+  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/server.pem
+  notAfter=Sep  8 11:03:00 2024 GMT
+  bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/peer.pem
+  notAfter=Sep  8 11:03:00 2024 GMT
+  ```
+  {% endtab %}
 
-{% tab title="or" %}
-```bash
-$ find /etc/etcd/ssl/ -type f -name '*.pem' \
-       | egrep -v '*-key.pem$' \
-       | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/ca.pem
-notAfter=Sep  8 10:44:00 2024 GMT
-bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/client.pem
-notAfter=Sep  8 10:49:00 2024 GMT
-bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/server.pem
-notAfter=Sep  8 11:03:00 2024 GMT
-bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/peer.pem
-notAfter=Sep  8 11:03:00 2024 GMT
-```
-{% endtab %}
-
-{% tab title="or" %}
-```bash
-$ ls -1 /etc/etcd/ssl/*.pem \
-       | grep -Ev '\-key.pem$' \
-       | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-```
-{% endtab %}
-{% endtabs %}
+  {% tab title="or" %}
+  ```bash
+  $ ls -1 /etc/etcd/ssl/*.pem \
+         | grep -Ev '\-key.pem$' \
+         | xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
+  ```
+  {% endtab %}
+  {% endtabs %}
 
 ### backup
 ```bash
@@ -154,35 +152,34 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
   ```
 
 - restore
-
-{% tabs %}
-{% tab title="/etc/kubernetes/pki" %}
-```bash
-$ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-    for j in crt key; do
-      sudo mv /etc/kubernetes/pki/${i}.${j}{.orig,}
+  {% tabs %}
+  {% tab title="/etc/kubernetes/pki" %}
+  ```bash
+  $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
+      for j in crt key; do
+        sudo mv /etc/kubernetes/pki/${i}.${j}{.orig,}
+      done
     done
+  ```
+  {% endtab %}
+
+  {% tab title="/etc/kubrnetes/*.conf" %}
+  ```bash
+  $ for i in admin kubelet controller-manager scheduler; do
+    sudo mv /etc/kubernetes/${i}.conf{.orig,}
   done
-```
-{% endtab %}
+  ```
+  {% endtab %}
 
-{% tab title="/etc/kubrnetes/*.conf" %}
-```bash
-$ for i in admin kubelet controller-manager scheduler; do
-  sudo mv /etc/kubernetes/${i}.conf{.orig,}
-done
-```
-{% endtab %}
+  {% tab title="or" %}
+  ```bash
+  $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
+    -> sudo cp ~/k8s-cert-expired/${i}.{key,crt} /etc/kubernetes/pki/
+    -> done
+  ```
+  {% endtab %}
 
-{% tab title="or" %}
-```bash
-$ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-  -> sudo cp ~/k8s-cert-expired/${i}.{key,crt} /etc/kubernetes/pki/
-  -> done
-```
-{% endtab %}
-
-{% endtabs %}
+  {% endtabs %}
 
 ### renew cert
 - major master
@@ -231,7 +228,6 @@ certificate for serving the Kubernetes API renewed
 certificate for the API server to connect to kubelet renewed
 certificate for the front proxy client renewed
 ```
-
 {% endtab %}
 
 {% tab title="renew with --config kubeadm-conf.yaml" %}
@@ -254,10 +250,9 @@ certificate for serving the Kubernetes API renewed
 certificate for the API server to connect to kubelet renewed
 certificate for the front proxy client renewed
 ```
-
 {% endtab %}
-{% endtabs %}
 
+{% endtabs %}
 
 - redundant masters
 
@@ -287,7 +282,7 @@ $ for pkg in '*.key' '*.crt' '*.pub'; do
 ```bash
 $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
            | egrep -v 'ca.crt$' \
-           | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+           | xargs -L 1 -t -i bash -c 'openssl x509 -enddate -noout -in {}'
 bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver.crt 
 notAfter=Sep 18 12:10:31 2021 GMT
 bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver-kubelet-client.crt 

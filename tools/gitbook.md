@@ -1,25 +1,87 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [hints](#hints)
-  - [success](#success)
-  - [tip](#tip)
-  - [danger](#danger)
-  - [warning](#warning)
-  - [quote](#quote)
-- [tab](#tab)
-  - [code](#code)
-- [reference](#reference)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ---
 search:
     keywords: ['gitbook']
 ---
 
-## [hints](https://github.com/GitbookIO/plugin-hints)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [`gitbook-cli`](#gitbook-cli)
+  - [installation](#installation)
+  - [initial `book.json`](#initial-bookjson)
+- [gitbook format](#gitbook-format)
+  - [hints](#hints)
+  - [tab](#tab)
+  - [emoji](#emoji)
+- [Q&A](#qa)
+  - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
+  - [`unexpected token: .`](#unexpected-token-)
+- [reference](#reference)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## `gitbook-cli`
+### installation
+
+{% tabs %}
+{% tab title="install" %}
+```bash
+$ brew install node
+$ npm i -g gitbook-cli [--save-dev]
+```
+{% endtab %}
+
+{% tab title="verify" %}
+```bash
+$ gitbook --version
+CLI version: 2.3.2
+GitBook version: 3.2.3
+```
+{% endtab %}
+
+{% tab title="check pacakges"%}
+```bash
+$ npm root -g
+/usr/local/lib/node_modules
+```
+{% endtab %}
+{% endtabs %}
+
+### initial `book.json`
+{% tabs %}
+{% tab title="`gitbook install`" %}
+```bash
+$ gitbook install
+info: installing 29 plugins using npm@3.9.2
+info:
+info: installing plugin "search-plus"
+info: install plugin "search-plus" (^0.0.11) from NPM with version 0.0.11
+/Users/marslo/mywork/tools/git/marslo/mbook
+└─┬ gitbook-plugin-search-plus@0.0.11
+  └── html-entities@1.2.0
+....
+```
+{% endtab %}
+
+{% tab title="otherwise"%}
+```bash
+$ gitbook serve
+Live reload server started on port: 35729
+Press CTRL+C to quit ...
+
+info: 7 plugins are installed
+info: 31 explicitly listed
+
+Error: Couldn't locate plugins "search-plus, simple-page-toc, github, github-buttons, prism, prism-themes, advanced-emoji, anchors, include-codeblock, ace, emphasize, katex, splitter, mermaid-gb3, tbfed-pagefooter, sectionx, local-video, anchor-navigation-ex, favicon, todo, alerts, include-csv, puml, sharing-plus, image-captions, donate, toggle-chapters, navigator, downloadpdf", Run 'gitbook install' to install plugins from registry.
+```
+{% endtab %}
+
+{% endtabs %}
+
+
+## gitbook format
+### [hints](https://github.com/GitbookIO/plugin-hints)
 > [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
 
 | styles  | code                                             |
@@ -31,7 +93,7 @@ search:
 | success | `{% hint style='success' %}`<br> `{% endhint %}` |
 
 
-### success
+#### success
 {% hint style='success' %}
 ```javascript
 {% hint style='success' %}
@@ -41,7 +103,7 @@ success
 {% endhint %}
 
 
-### tip
+#### tip
 {% hint style='tip' %}
 ```javascript
 {% hint style='tip' %}
@@ -51,7 +113,7 @@ info
 {% endhint %}
 
 
-### danger
+#### danger
 {% hint style='danger' %}
 ```javascript
 {% hint style='danger' %}
@@ -61,7 +123,7 @@ danger
 {% endhint %}
 
 
-### warning
+#### warning
 {% hint style='warning' %}
 ```javascript
 {% hint style='warning' %}
@@ -70,7 +132,7 @@ warning
 ```
 {% endhint %}
 
-### quote
+#### quote
 {% hint 'info' %}
 **Important info**: this *note* needs to be highlighted
 
@@ -81,9 +143,9 @@ warning
 ```
 {% endhint %}
 
-## tab
+### tab
 
-### code
+#### code
 ```
 {% tabs %}
 {% tab title="bash" %}
@@ -98,23 +160,23 @@ python
 {% endtabs %}
 ```
 - example
-{% tabs %}
-{% tab title="bash" %}
-{% code title="filename: bash.sh" %}
-```bash
-# bash
-```
-{% endcode %}
-{% endtab %}
+  {% tabs %}
+  {% tab title="bash" %}
+  {% code title="filename: bash.sh" %}
+  ```bash
+  # bash
+  ```
+  {% endcode %}
+  {% endtab %}
 
-{% tab title="python" %}
-```python
-python
-```
-{% endtab %}
-{% endtabs %}
+  {% tab title="python" %}
+  ```python
+  python
+  ```
+  {% endtab %}
+  {% endtabs %}
 
-## emoji
+### emoji
 > **reference**:
 > - [gist](https://gist.github.com/rxaviers/7360908)
 > - [Emoji](https://github.com/StylishThemes/GitHub-Dark/wiki/Emoji)
@@ -130,8 +192,80 @@ python
 | :white_check_mark: | `:white_check_mark:` |
 | :four_leaf_clover: | `:four_leaf_clover:` |
 
+
+## Q&A
+### `if (cb) cb.apply(this, arguments)`
+> **reference**:
+> - [How I fixed a "cb.apply is not a function" error while using Gitbook](https://flaviocopes.com/cb-apply-not-a-function/)
+
+- issue
+  ```bash
+   $ gitbook serve
+  Live reload server started on port: 35729
+  Press CTRL+C to quit ...
+
+  /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js:287
+        if (cb) cb.apply(this, arguments)
+                   ^
+
+  TypeError: cb.apply is not a function
+      at /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js:287:18
+  ```
+
+- fix
+  {% tabs %}
+  {% tab title="origin `polyfills.js`" %}
+  ```javascript
+  62   fs.stat = statFix(fs.stat)
+  63   fs.fstat = statFix(fs.fstat)
+  64   fs.lstat = statFix(fs.lstat)
+  ```
+  {% endtab %}
+
+  {% tab title="fix `polyfills.js`" %}
+  ```javascript
+  62   // fs.stat = statFix(fs.stat)
+  63   // fs.fstat = statFix(fs.fstat)
+  64   // fs.lstat = statFix(fs.lstat)
+  ```
+  {% endtab %}
+  {% endtabs %}
+
+### `unexpected token: .`
+- issue
+  ```bash
+  $ git serve
+  ...
+  unexpected token: .
+  ```
+
+- [solution](https://blog.csdn.net/HammerTien/article/details/86613392)
+  - raw code
+    ```markdown
+    '''bash
+    $ k -n kube-system get pods \
+        -o go-template \
+        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+        | head
+    '''
+    ```
+
+  - fixed code
+    ```markdown
+    {% raw %}
+    '''bash
+    $ k -n kube-system get pods \
+        -o go-template \
+        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+        | head
+    '''
+    {% endraw %}
+    ```
+
 ## reference
 - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
 - [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
 - [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
 - [emoji](https://gist.github.com/rxaviers/7360908)
+- [gitbook howto](https://coding-notes.readthedocs.io/en/latest/rst/dt/gitbook.html)
+- [gitbook 安装配置](http://gitbook.wiliam.me/)
