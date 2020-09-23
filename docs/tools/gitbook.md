@@ -11,11 +11,11 @@ search:
   - [installation](#installation)
   - [initial `book.json`](#initial-bookjson)
 - [gitbook format](#gitbook-format)
-  - [hints](#hints)
   - [tab](#tab)
   - [emoji](#emoji)
 - [Q&A](#qa)
   - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
+  - [`unexpected token: .`](#unexpected-token-)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -66,6 +66,11 @@ info: install plugin "search-plus" (^0.0.11) from NPM with version 0.0.11
 
 ## gitbook format
 ### tab
+
+> [!TIP]
+> this function only for native [gitbook.io](https://www.gitbook.com/)
+> example:
+> - [here](https://imarslo.gitbook.io/handbook/kubernetes/certificates#check-info)
 
 #### code
 
@@ -147,18 +152,30 @@ python
 - [solution](https://blog.csdn.net/HammerTien/article/details/86613392)
 
   - raw code
-    ```markdown
-    invalid code here
-    ```
-
-  - fixed code
-    ```markdown
-
     {% raw %}
-    invalide code here
+    ```markdown
+    '''bash
+    $ k -n kube-system get pods \
+    -o go-template \
+    --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+    | head
+    '''
+    ```
     {% endraw %}
 
+  - fixed code
+    {% raw %}
+    ```markdown
+    {% raw %}
+    '''bash
+    $ k -n kube-system get pods \
+    -o go-template \
+    --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+    | head
+    '''
+    {% endraw %}
     ```
+    {% endraw %}
 
 ## reference
 - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)

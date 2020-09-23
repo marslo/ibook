@@ -196,35 +196,35 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
     </tbody>
   </table>
 
-  ```bash
-  $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-     sudo kubeadm alpha certs renew ${i}
-     done
-  certificate for serving the Kubernetes API renewed
-  certificate for the API server to connect to kubelet renewed
-  certificate for the front proxy client renewed
-  ```
+```bash
+$ for i in apiserver apiserver-kubelet-client front-proxy-client; do
+   sudo kubeadm alpha certs renew ${i}
+   done
+certificate for serving the Kubernetes API renewed
+certificate for the API server to connect to kubelet renewed
+certificate for the front proxy client renewed
+```
 
 
-  or
-  ```bash
-  $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-     sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
-     done
-  certificate for serving the Kubernetes API renewed
-  certificate for the API server to connect to kubelet renewed
-  certificate for the front proxy client renewed
-  ```
+or
+```bash
+$ for i in apiserver apiserver-kubelet-client front-proxy-client; do
+   sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
+   done
+certificate for serving the Kubernetes API renewed
+certificate for the API server to connect to kubelet renewed
+certificate for the front proxy client renewed
+```
 
-  or
-  ```bash
-  $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-     sudo kubeadm alpha certs renew ${i} --config=kubeadm-conf.yaml
-     done
-  certificate for serving the Kubernetes API renewed
-  certificate for the API server to connect to kubelet renewed
-  certificate for the front proxy client renewed
-  ```
+or
+```bash
+$ for i in apiserver apiserver-kubelet-client front-proxy-client; do
+   sudo kubeadm alpha certs renew ${i} --config=kubeadm-conf.yaml
+   done
+certificate for serving the Kubernetes API renewed
+certificate for the API server to connect to kubelet renewed
+certificate for the front proxy client renewed
+```
 
 - redundant masters
 
