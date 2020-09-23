@@ -65,68 +65,6 @@ info: install plugin "search-plus" (^0.0.11) from NPM with version 0.0.11
   ```
 
 ## gitbook format
-### [hints](https://github.com/GitbookIO/plugin-hints)
-> [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
-
-| styles  | code                                             |
-| -       | -                                                |
-| info    | `{% hint style='info' %}`<br> `{% endhint %}`    |
-| tip     | `{% hint style='tip' %}`<br> `{% endhint %}`     |
-| danger  | `{% hint style='danger' %}`<br> `{% endhint %}`  |
-| warning | `{% hint style='warning' %}`<br> `{% endhint %}` |
-| success | `{% hint style='success' %}`<br> `{% endhint %}` |
-
-
-#### success
-{% hint style='success' %}
-```javascript
-{% hint style='success' %}
-success
-{% endhint %}
-```
-{% endhint %}
-
-
-#### tip
-{% hint style='tip' %}
-```javascript
-{% hint style='tip' %}
-info
-{% endhint %}
-```
-{% endhint %}
-
-
-#### danger
-{% hint style='danger' %}
-```javascript
-{% hint style='danger' %}
-danger
-{% endhint %}
-```
-{% endhint %}
-
-
-#### warning
-{% hint style='warning' %}
-```javascript
-{% hint style='warning' %}
-warning
-{% endhint %}
-```
-{% endhint %}
-
-#### quote
-{% hint 'info' %}
-**Important info**: this *note* needs to be highlighted
-
-```javascript
-{% hint 'info' %}
-**Important info**: this *note* needs to be highlighted
-{% endhint %}
-```
-{% endhint %}
-
 ### tab
 
 #### code
@@ -209,29 +147,18 @@ python
 - [solution](https://blog.csdn.net/HammerTien/article/details/86613392)
 
   - raw code
-    {% raw %}
     ```markdown
-    ```bash
-    $ k -n kube-system get pods \
-        -o go-template \
-        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
-        | head
-    \`\`\`
+    invalid code here
     ```
-    {% endraw %}
 
   - fixed code
     {% raw %}
     ```markdown
 
     {% raw %}
-    ```bash
-    $ k -n kube-system get pods \
-        -o go-template \
-        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
-        | head
-    \`\`\`
+    invalide code here
     {% endraw %}
+
     ```
     {% endraw %}
 

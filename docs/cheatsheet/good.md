@@ -81,7 +81,7 @@ http://www.baidu.com
   $ curl -fsSL -u<user>:<passwd> https://path/to/file.zip | bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
   ```
 - `*.tar.gz`
-  ```bah
+  ```bash
   $ curl -fsSL https://path/to/file.tar.gz | tar xzf - -C <EXTRACT_PATH>
 
   # example
