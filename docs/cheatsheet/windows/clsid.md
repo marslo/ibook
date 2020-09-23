@@ -10,13 +10,13 @@
 
 
 ## Usage
-```bat
+```batch
 > explorer.exe shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}
 ```
 
 or
 
-  ```bat
+  ```batch
   > explorer.exe /e,::{CLSID key number}
   ```
 
@@ -137,7 +137,7 @@ or
 
 
 ## reference
-```bat
+```batch
 C:\Users\marslo>Netsh
 
 netsh>interface

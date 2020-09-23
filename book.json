@@ -5,7 +5,7 @@
   "gitbook": "3.2.3",
   "language": "en",
   "direction" : "ltr",
-  "root": "./books",
+  "root": "./docs",
   "styles": {
     "website": "styles/website.css"
   },
@@ -20,52 +20,36 @@
     "-highlight",
     "-livereload",
     "search-plus",
-    "simple-page-toc",
-    "github",
-    "github-buttons",
     "edit-link",
     "disqus",
     "prism",
     "prism-themes",
     "advanced-emoji",
     "anchors",
-    "include-codeblock",
-    "ace",
-    "emphasize",
-    "katex",
     "splitter",
-    "mermaid-gb3",
-    "tbfed-pagefooter",
-    "sectionx",
-    "local-video",
     "favicon",
     "todo",
-    "alerts",
-    "include-csv",
-    "puml",
+    "flexible-alerts",
     "-sharing",
     "sharing-plus",
-    "image-captions",
-    "donate",
-    "navigator",
-    "downloadpdf",
+    "sectionx",
     "hints",
-    "codetabs",
-    "codegroup",
-    "tabs",
+    "anchor-navigation-ex",
+    "expandable-chapters-small",
+    "code",
     "codeblock-filename",
-    "-fontsettings",
-    "flexible-alerts",
-    "back-to-top-button",
-    "copy-code-button",
-    "splitter",
-    "chart",
-    "anchor-navigation-ex"
+    "emphasize",
+    "tbfed-pagefooter",
+    "image-captions",
+    "todo",
+    "github-buttons",
+    "hide-element",
+    "accordion"
   ],
 
   "pluginsConfig": {
     "fontsettings": {
-      "theme": "sepia",
+      "theme": "white",
       "family": "sans",
       "size":  1
     },
@@ -79,22 +63,6 @@
       "css": [
         "prismjs/themes/prism-solarizedlight.css"
       ]
-    },
-    "github": {
-      "url": "https://github.com/marslo/ibook"
-    },
-    "github-buttons": {
-      "repo": "marslo/ibook",
-      "types": [
-        "star",
-        "watch"
-      ],
-      "size": "small"
-    },
-    "include-codeblock": {
-      "template": "ace",
-      "unindent": true,
-      "edit": true
     },
     "sharing": {
       "douban": false,
@@ -129,42 +97,33 @@
       "modify_label": "Last Modified:",
       "modify_format": "YYYY-MM-DD HH:mm:ss"
     },
-    "simple-page-toc": {
-      "maxDepth": 3,
-      "skipFirstH1": true
-    },
     "edit-link": {
       "base": "https://github.com/marslo/ibook/edit/master",
       "label": "Edit in Github"
     },
     "anchor-navigation-ex": {
-      "isRewritePageTitle": false,
-      "tocLevel1Icon": "fa fa-hand-o-right",
-      "tocLevel2Icon": "fa fa-hand-o-right",
-      "tocLevel3Icon": "fa fa-hand-o-right"
+      "showLevel": false,
+      "associatedWithSummary": true,
+      "printLog": false,
+      "multipleH1": true,
+      "mode": "float",
+      "showGoTop":true,
+      "float": {
+        "floatIcon": "fa fa-navicon",
+        "showLevelIcon": false,
+        "level1Icon": "fa fa-hand-o-right",
+        "level2Icon": "fa fa-hand-o-right",
+        "level3Icon": "fa fa-hand-o-right"
+      },
+      "pageTop": {
+        "showLevelIcon": false,
+        "level1Icon": "fa fa-hand-o-right",
+        "level2Icon": "fa fa-hand-o-right",
+        "level3Icon": "fa fa-hand-o-right"
+      }
     },
     "sectionx": {
       "tag": "b"
-    },
-    "favicon": {
-      "shortcut": "favicon.ico",
-      "bookmark": "favicon.ico"
-    },
-    "image-captions": {
-      "caption": "_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_"
-    },
-    "donate": {
-      "wechat": "",
-      "alipay": "",
-      "title": "",
-      "button": " 👍  ",
-      "alipayText": "Alipay",
-      "wechatText": "WechatPay"
-    },
-    "downloadpdf": {
-      "base": "https://www.gitbook.com/download/pdf/book/alinex/nodejs",
-      "label": "Download PDF",
-      "multilingual": false
     },
     "hints": {
       "info": "fa fa-info-circle",
@@ -172,13 +131,32 @@
       "danger": "fa fa-exclamation-cicle",
       "working": "fa fa-wrench"
     },
-    "codegroup":{
-      "defaultTabName": "Code",
-      "tabNameSeperator": "::",
-      "rememberTabs": true
+    "image-captions": {
+      "caption": "_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_"
     },
-    "chart": {
-      "type": "highcharts"
-    }
+    "code": {
+      "copyButtons": true
+    },
+    "favicon": {
+      "shortcut": "assets/images/favicon.ico",
+      "bookmark": "assets/images/favicon.ico",
+      "appleTouch": "assets/images/apple-touch-icon.png",
+      "appleTouchMore": {
+          "120x120": "assets/images/apple-touch-icon-120x120.png",
+          "180x180": "assets/images/apple-touch-icon-180x180.png"
+      }
+    },
+    "github-buttons": {
+      "buttons": [{
+        "user": "marslo",
+        "repo": "ibook",
+        "type": "star",
+        "size": "small"
+      }]
+    },
+    "hide-element": {
+      "elements": [".gitbook-link"]
+    },
+    "expandable-chapters-small":{}
   }
 }

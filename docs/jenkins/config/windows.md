@@ -41,7 +41,7 @@
 
 ![sc](../../screenshot/jenkins/config/win-7.png)
 
-```bat
+```batch
 C:\WINDOWS\system32>sc.exe create "jenkins" start= auto binPath= "E:\devops\jenkins-slave.exe" DisplayName= "jenkins"
 [SC] CreateService SUCCESS
 
@@ -63,7 +63,7 @@ SERVICE_NAME: jenkins
 ```
 
 - service configuration
-  ```bat
+  ```batch
   C:\WINDOWS\system32>sc config jenkins start= disabled
   [SC] ChangeServiceConfig SUCCESS
 
@@ -80,7 +80,7 @@ SERVICE_NAME: jenkins
   ```
 
 - list all services
-  ```bat
+  ```batch
   C:\WINDOWS\system32>sc queryex type=service state=all | find /i "SERVICE_NAME:"
   SERVICE_NAME: AJRouter
   SERVICE_NAME: ALG
@@ -104,7 +104,7 @@ SERVICE_NAME: jenkins
 
 ![remove service](../../screenshot/jenkins/config/win-9.png)
 
-```bat
+```batch
 C:\WINDOWS\system32>sc stop jenkins
 
 SERVICE_NAME: jenkins
