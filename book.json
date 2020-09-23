@@ -71,7 +71,7 @@
       "hatenaBookmark": false,
       "instapaper": false,
       "line": false,
-      "linkedin": true,
+      "linkedin": false,
       "messenger": false,
       "pocket": false,
       "qq": false,
@@ -80,7 +80,7 @@
       "twitter": false,
       "viber": false,
       "vk": false,
-      "weibo": false,
+      "weibo": true,
       "whatsapp": false,
       "all": [
         "facebook",
