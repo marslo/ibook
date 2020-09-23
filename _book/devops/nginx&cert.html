@@ -1,0 +1,2405 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>nginx&cert · handbook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="marslo">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-disqus/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism-solarizedlight.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-flexible-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-hints/plugin-hints.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-emphasize/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-image-captions/image-captions.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-accordion/accordion.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+
+        
+    
+    
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="osx.html" />
+    
+    
+    <link rel="prev" href="network.html" />
+    
+
+    <style>
+    @media only screen and (max-width: 640px) {
+        .book-header .hidden-mobile {
+            display: none;
+        }
+    }
+    </style>
+    <script>
+        window["gitbook-plugin-github-buttons"] = {"buttons":[{"user":"marslo","repo":"ibook","type":"star","size":"small"}]};
+    </script>
+
+    
+        <link rel="shortcut icon" href='../assets/images/favicon.ico' type="image/x-icon">
+    
+    
+        <link rel="bookmark" href='../assets/images/favicon.ico' type="image/x-icon">
+    
+    
+        <link rel="apple-touch-icon" href='../assets/images/apple-touch-icon.png'>
+    
+    
+        
+        <link rel="apple-touch-icon" sizes="120x120" href="../assets/images/apple-touch-icon-120x120.png">
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon-180x180.png">
+        
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://marslo.github.io/" target="_blank" class="custom-link">I, Marslo</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../artifactory/artifactory.html">
+            
+                <a href="../artifactory/artifactory.html">
+            
+                    
+                    artifactory
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../cheatsheet/good.html">
+            
+                <a href="../cheatsheet/good.html">
+            
+                    
+                    cheatsheet
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../cheatsheet/windows/windows.html">
+            
+                <a href="../cheatsheet/windows/windows.html">
+            
+                    
+                    windows
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../cheatsheet/windows/clsid.html">
+            
+                <a href="../cheatsheet/windows/clsid.html">
+            
+                    
+                    clsid
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../cheatsheet/windows/env.html">
+            
+                <a href="../cheatsheet/windows/env.html">
+            
+                    
+                    env
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.3" data-path="../cheatsheet/windows/shell:folder.html">
+            
+                <a href="../cheatsheet/windows/shell:folder.html">
+            
+                    
+                    shell:folder
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../cheatsheet/good.html">
+            
+                <a href="../cheatsheet/good.html">
+            
+                    
+                    good
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../cheatsheet/havefun.html">
+            
+                <a href="../cheatsheet/havefun.html">
+            
+                    
+                    havefun
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../cheatsheet/markdown.html">
+            
+                <a href="../cheatsheet/markdown.html">
+            
+                    
+                    markdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../cheatsheet/media.html">
+            
+                <a href="../cheatsheet/media.html">
+            
+                    
+                    media
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../cheatsheet/osx.html">
+            
+                <a href="../cheatsheet/osx.html">
+            
+                    
+                    osx
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="adminTools.html">
+            
+                <a href="adminTools.html">
+            
+                    
+                    devops
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="git/git.html">
+            
+                <a href="git/git.html">
+            
+                    
+                    git
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1" data-path="git/eol.html">
+            
+                <a href="git/eol.html">
+            
+                    
+                    eol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="git/example.html">
+            
+                <a href="git/example.html">
+            
+                    
+                    example
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3" data-path="git/gerrit.html">
+            
+                <a href="git/gerrit.html">
+            
+                    
+                    gerrit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4" data-path="git/q&a.html">
+            
+                <a href="git/q&a.html">
+            
+                    
+                    q&a
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.5" data-path="git/tricky.html">
+            
+                <a href="git/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="adminTools.html">
+            
+                <a href="adminTools.html">
+            
+                    
+                    adminTools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="android.html">
+            
+                <a href="android.html">
+            
+                    
+                    android
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="commonTools.html">
+            
+                <a href="commonTools.html">
+            
+                    
+                    commonTools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="compilation.html">
+            
+                <a href="compilation.html">
+            
+                    
+                    compilation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="mobile.html">
+            
+                <a href="mobile.html">
+            
+                    
+                    mobile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="network.html">
+            
+                <a href="network.html">
+            
+                    
+                    network
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.8" data-path="nginx&cert.html">
+            
+                <a href="nginx&cert.html">
+            
+                    
+                    nginx&cert
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="osx.html">
+            
+                <a href="osx.html">
+            
+                    
+                    osx
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="python.html">
+            
+                <a href="python.html">
+            
+                    
+                    python
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="ssh.html">
+            
+                <a href="ssh.html">
+            
+                    
+                    ssh
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../jenkins/jenkins.html">
+            
+                <a href="../jenkins/jenkins.html">
+            
+                    
+                    jenkins
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../jenkins/config/config.html">
+            
+                <a href="../jenkins/config/config.html">
+            
+                    
+                    config
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1.1" data-path="../jenkins/config/windows.html">
+            
+                <a href="../jenkins/config/windows.html">
+            
+                    
+                    windows
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../jenkins/jenkinsfile/jenkinsfile.html">
+            
+                <a href="../jenkins/jenkinsfile/jenkinsfile.html">
+            
+                    
+                    jenkinsfile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../jenkins/plugins/plugins.html">
+            
+                <a href="../jenkins/plugins/plugins.html">
+            
+                    
+                    plugins
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="../jenkins/plugins/kubernetes.html">
+            
+                <a href="../jenkins/plugins/kubernetes.html">
+            
+                    
+                    kubernetes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../jenkins/plugins/lockable-resource.html">
+            
+                <a href="../jenkins/plugins/lockable-resource.html">
+            
+                    
+                    lockable-resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../jenkins/script/script.html">
+            
+                <a href="../jenkins/script/script.html">
+            
+                    
+                    script
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.4.1" data-path="../jenkins/script/api.html">
+            
+                <a href="../jenkins/script/api.html">
+            
+                    
+                    api
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.2" data-path="../jenkins/script/cli.html">
+            
+                <a href="../jenkins/script/cli.html">
+            
+                    
+                    cli
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../jenkins/jenkins.html">
+            
+                <a href="../jenkins/jenkins.html">
+            
+                    
+                    jenkins
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../kubernetes/kubernetes.html">
+            
+                <a href="../kubernetes/kubernetes.html">
+            
+                    
+                    kubernetes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../kubernetes/kubeadm/kubeadm.html">
+            
+                <a href="../kubernetes/kubeadm/kubeadm.html">
+            
+                    
+                    kubeadm
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1.1" data-path="../kubernetes/kubeadm/init.html">
+            
+                <a href="../kubernetes/kubeadm/init.html">
+            
+                    
+                    init
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../kubernetes/kubectl/kubectl.html">
+            
+                <a href="../kubernetes/kubectl/kubectl.html">
+            
+                    
+                    kubectl
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.2.1" data-path="../kubernetes/kubectl/set.html">
+            
+                <a href="../kubernetes/kubectl/set.html">
+            
+                    
+                    set
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../kubernetes/certificates.html">
+            
+                <a href="../kubernetes/certificates.html">
+            
+                    
+                    certificates
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../kubernetes/docker.html">
+            
+                <a href="../kubernetes/docker.html">
+            
+                    
+                    docker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../kubernetes/kubernetes.html">
+            
+                <a href="../kubernetes/kubernetes.html">
+            
+                    
+                    kubernetes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="../kubernetes/monitor.html">
+            
+                <a href="../kubernetes/monitor.html">
+            
+                    
+                    monitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="../kubernetes/namespace.html">
+            
+                <a href="../kubernetes/namespace.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="../kubernetes/network.html">
+            
+                <a href="../kubernetes/network.html">
+            
+                    
+                    network
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.9" data-path="../kubernetes/pod.html">
+            
+                <a href="../kubernetes/pod.html">
+            
+                    
+                    pod
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../linux/basic.html">
+            
+                <a href="../linux/basic.html">
+            
+                    
+                    linux
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../linux/ubuntu/ubuntu.html">
+            
+                <a href="../linux/ubuntu/ubuntu.html">
+            
+                    
+                    ubuntu
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1.1" data-path="../linux/ubuntu/apps.html">
+            
+                <a href="../linux/ubuntu/apps.html">
+            
+                    
+                    apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.1.2" data-path="../linux/ubuntu/installation.html">
+            
+                <a href="../linux/ubuntu/installation.html">
+            
+                    
+                    installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.1.3" data-path="../linux/ubuntu/repo.html">
+            
+                <a href="../linux/ubuntu/repo.html">
+            
+                    
+                    repo
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.1.4" data-path="../linux/ubuntu/ssl.html">
+            
+                <a href="../linux/ubuntu/ssl.html">
+            
+                    
+                    ssl
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.1.5" data-path="../linux/ubuntu/systemctl.html">
+            
+                <a href="../linux/ubuntu/systemctl.html">
+            
+                    
+                    systemctl
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.1.6" data-path="../linux/ubuntu/x.html">
+            
+                <a href="../linux/ubuntu/x.html">
+            
+                    
+                    x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../linux/basic.html">
+            
+                <a href="../linux/basic.html">
+            
+                    
+                    basic
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../linux/disk.html">
+            
+                <a href="../linux/disk.html">
+            
+                    
+                    disk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../linux/files&chars.html">
+            
+                <a href="../linux/files&chars.html">
+            
+                    
+                    files&chars
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../linux/network.html">
+            
+                <a href="../linux/network.html">
+            
+                    
+                    network
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="../linux/system.html">
+            
+                <a href="../linux/system.html">
+            
+                    
+                    system
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.7" data-path="../linux/utils.html">
+            
+                <a href="../linux/utils.html">
+            
+                    
+                    utils
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../programming/archive/archive.html">
+            
+                <a href="../programming/archive/archive.html">
+            
+                    
+                    programming
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../programming/archive/archive.html">
+            
+                <a href="../programming/archive/archive.html">
+            
+                    
+                    archive
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.1" data-path="../programming/archive/angular/config.html">
+            
+                <a href="../programming/archive/angular/config.html">
+            
+                    
+                    angular
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.2" data-path="../programming/archive/maven/">
+            
+                <a href="../programming/archive/maven/">
+            
+                    
+                    maven
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.3" data-path="../programming/archive/mysql/installation/installDB.html">
+            
+                <a href="../programming/archive/mysql/installation/installDB.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.3.1" data-path="../programming/archive/mysql/installation/installDB.html">
+            
+                <a href="../programming/archive/mysql/installation/installDB.html">
+            
+                    
+                    installation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.3.1.1" data-path="../programming/archive/mysql/installation/installDB.html">
+            
+                <a href="../programming/archive/mysql/installation/installDB.html">
+            
+                    
+                    installDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.3.1.2" data-path="../programming/archive/mysql/installation/installFromSourceCode.html">
+            
+                <a href="../programming/archive/mysql/installation/installFromSourceCode.html">
+            
+                    
+                    installFromSourceCode
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.3.1.3" data-path="../programming/archive/mysql/installation/secureInstation.html">
+            
+                <a href="../programming/archive/mysql/installation/secureInstation.html">
+            
+                    
+                    secureInstation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.3.2" data-path="../programming/archive/mysql/logs/cmakeLogs.html">
+            
+                <a href="../programming/archive/mysql/logs/cmakeLogs.html">
+            
+                    
+                    logs
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.4" data-path="../programming/archive/ruby/rubyInstallationBySourceCode.html">
+            
+                <a href="../programming/archive/ruby/rubyInstallationBySourceCode.html">
+            
+                    
+                    ruby
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.4.1" data-path="../programming/archive/ruby/rubyInstallationQ&A.html">
+            
+                <a href="../programming/archive/ruby/rubyInstallationQ&A.html">
+            
+                    
+                    rubyInstallationQ&A
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../programming/groovy/groovy.html">
+            
+                <a href="../programming/groovy/groovy.html">
+            
+                    
+                    groovy
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.2.1" data-path="../programming/groovy/groovydoc.html">
+            
+                <a href="../programming/groovy/groovydoc.html">
+            
+                    
+                    groovydoc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.2" data-path="../programming/groovy/map.html">
+            
+                <a href="../programming/groovy/map.html">
+            
+                    
+                    map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2.3" data-path="../programming/groovy/tricky.html">
+            
+                <a href="../programming/groovy/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../programming/python/python.html">
+            
+                <a href="../programming/python/python.html">
+            
+                    
+                    python
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.3.1" data-path="../programming/python/config.html">
+            
+                <a href="../programming/python/config.html">
+            
+                    
+                    config
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3.2" data-path="../programming/python/list.html">
+            
+                <a href="../programming/python/list.html">
+            
+                    
+                    list
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3.3" data-path="../programming/python/pip.html">
+            
+                <a href="../programming/python/pip.html">
+            
+                    
+                    pip
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../programming/others.html">
+            
+                <a href="../programming/others.html">
+            
+                    
+                    others
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../tools/gitbook.html">
+            
+                <a href="../tools/gitbook.html">
+            
+                    
+                    tools
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../tools/gitbook.html">
+            
+                <a href="../tools/gitbook.html">
+            
+                    
+                    gitbook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../tools/github.page.html">
+            
+                <a href="../tools/github.page.html">
+            
+                    
+                    github.page
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="../tools/iterm2.html">
+            
+                <a href="../tools/iterm2.html">
+            
+                    
+                    iterm2
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="../tools/skype.html">
+            
+                <a href="../tools/skype.html">
+            
+                    
+                    skype
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="../tools/teamviewer.html">
+            
+                <a href="../tools/teamviewer.html">
+            
+                    
+                    teamviewer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.6" data-path="../tools/vim.html">
+            
+                <a href="../tools/vim.html">
+            
+                    
+                    vim
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >nginx&cert</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><ul><ul><li><span class="title-icon "></span><a href="#nginx"><b></b>nginx</a></li></ul><li><span class="title-icon "></span><a href="#ssl-cert"><b></b>ssl cert</a></li><ul><li><span class="title-icon "></span><a href="#generate-cert-for-server"><b></b>generate cert for server</a></li><li><span class="title-icon "></span><a href="#cert-working-with-nginx"><b></b>cert working with Nginx</a></li><li><span class="title-icon "></span><a href="#certificate-working-with-client"><b></b>certificate working with client</a></li></ul><li><span class="title-icon "></span><a href="#writing-new-private-key-to-certswwwartifactorymycompanycomkey"><b></b>writing new private key to &apos;certs/www.artifactory.mycompany.com.key&apos;</a></li><li><span class="title-icon "></span><a href="#if-you-enter--the-field-will-be-left-blank"><b></b>If you enter &apos;.&apos;, the field will be left blank.</a></li><li><span class="title-icon "></span><a href="#artifactory-https"><b></b>artifactory https</a></li><ul><li><span class="title-icon "></span><a href="#general-ssl-certs"><b></b>general SSL certs</a></li></ul></ul></ul></div><a href="#" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc" target="_blank">DocToc</a></em></p>
+<ul>
+<li><a href="#nginx">nginx</a><ul>
+<li><a href="#ssl-cert">ssl cert</a></li>
+</ul>
+</li>
+<li><a href="#generate-cert-for-server">generate cert for server</a></li>
+<li><a href="#cert-working-with-nginx">cert working with Nginx</a></li>
+<li><a href="#certificate-working-with-client">certificate working with client</a><ul>
+<li><a href="#if-you-enter--the-field-will-be-left-blank">If you enter &apos;.&apos;, the field will be left blank.</a></li>
+<li><a href="#artifactory-https">artifactory https</a></li>
+</ul>
+</li>
+<li><a href="#general-ssl-certs">general SSL certs</a><ul>
+<li><a href="#if-you-enter--the-field-will-be-left-blank-1">If you enter &apos;.&apos;, the field will be left blank.</a></li>
+<li><a href="#if-you-enter--the-field-will-be-left-blank-2">If you enter &apos;.&apos;, the field will be left blank.</a></li>
+</ul>
+</li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<h3 id="nginx"><a name="nginx" class="anchor-navigation-ex-anchor" href="#nginx"><i class="fa fa-link" aria-hidden="true"></i></a><a name="nginx" class="plugin-anchor" href="#nginx"><i class="fa fa-link" aria-hidden="true"></i></a>nginx</h3>
+<h4 id="installation"><a name="installation" class="anchor-navigation-ex-anchor" href="#installation"><i class="fa fa-link" aria-hidden="true"></i></a><a name="installation" class="plugin-anchor" href="#installation"><i class="fa fa-link" aria-hidden="true"></i></a>installation</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">sudo</span> <span class="token function">apt</span> udpate
+$ <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> nginx
+</code></pre>
+<h4 id="configuration"><a name="configuration" class="anchor-navigation-ex-anchor" href="#configuration"><i class="fa fa-link" aria-hidden="true"></i></a><a name="configuration" class="plugin-anchor" href="#configuration"><i class="fa fa-link" aria-hidden="true"></i></a>configuration</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">sudo</span> ufw app list
+Available applications:
+  CUPS
+  Nginx Full
+  Nginx HTTP
+  Nginx HTTPS
+  OpenSSH
+  Postfix
+  Postfix SMTPS
+  Postfix Submission
+</code></pre>
+<ul>
+<li>OR<pre class="language-"><code class="lang-bash">  $ <span class="token function">sudo</span> ufw allow <span class="token string">&apos;Nginx HTTP&apos;</span>
+</code></pre>
+</li>
+</ul>
+<h2 id="ssl-cert"><a name="ssl-cert" class="anchor-navigation-ex-anchor" href="#ssl-cert"><i class="fa fa-link" aria-hidden="true"></i></a><a name="ssl-cert" class="plugin-anchor" href="#ssl-cert"><i class="fa fa-link" aria-hidden="true"></i></a>ssl cert</h2>
+<h3 id="generate-cert-for-server"><a name="generate-cert-for-server" class="anchor-navigation-ex-anchor" href="#generate-cert-for-server"><i class="fa fa-link" aria-hidden="true"></i></a><a name="generate-cert-for-server" class="plugin-anchor" href="#generate-cert-for-server"><i class="fa fa-link" aria-hidden="true"></i></a>generate cert for server</h3>
+<h4 id="ca-root-cert"><a name="ca-root-cert" class="anchor-navigation-ex-anchor" href="#ca-root-cert"><i class="fa fa-link" aria-hidden="true"></i></a><a name="ca-root-cert" class="plugin-anchor" href="#ca-root-cert"><i class="fa fa-link" aria-hidden="true"></i></a>CA (root cert)</h4>
+<pre class="language-"><code class="lang-bash">$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key <span class="token number">2048</span>
+$ openssl req -new -x509 -days <span class="token number">365</span> -key www.artifactory.mycompany.com-ca.key -sha256 -out www.artifactory.mycompany.com-ca.crt -subj <span class="token string">&quot;/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com&quot;</span>
+</code></pre>
+<details><summary>Click to check details</summary>
+<pre class="language-"><code>$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048
+Generating RSA private key, 2048 bit long modulus
+....................................................................+++
+...................................................+++
+unable to write &apos;random state&apos;
+e is 65537 (0x10001)
+Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+Verifying - Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+$ openssl req -new -x509 -days 365 -key www.artifactory.mycompany.com-ca.key -sha256 -out www.artifactory.mycompany.com-ca.crt -subj &quot;/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com&quot;
+Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+</code></pre>
+</details>
+
+<h4 id="cert-for-server"><a name="cert-for-server" class="anchor-navigation-ex-anchor" href="#cert-for-server"><i class="fa fa-link" aria-hidden="true"></i></a><a name="cert-for-server" class="plugin-anchor" href="#cert-for-server"><i class="fa fa-link" aria-hidden="true"></i></a>cert for server</h4>
+<pre class="language-"><code class="lang-bash">$ openssl genrsa -out  www.artifactory.mycompany.com-server.key <span class="token number">2048</span>
+$ openssl req -sha256 -new -key www.artifactory.mycompany.com-server.key -out www.artifactory.mycompany.com-server.csr -subj <span class="token string">&quot;/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com&quot;</span>
+</code></pre>
+<details><summary>Click to check details</summary>
+<pre class="language-"><code>$ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
+Generating RSA private key, 2048 bit long modulus
+......................................................................+++
+............................................................................................................................................................................................................................+++
+unable to write &apos;random state&apos;
+e is 65537 (0x10001)
+$ openssl req -sha256 -new -key www.artifactory.mycompany.com-server.key -out www.artifactory.mycompany.com-server.csr -subj &quot;/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com&quot;
+</code></pre>
+</details>
+
+<h4 id="sign-the-server-cert-with-ca"><a name="sign-the-server-cert-with-ca" class="anchor-navigation-ex-anchor" href="#sign-the-server-cert-with-ca"><i class="fa fa-link" aria-hidden="true"></i></a><a name="sign-the-server-cert-with-ca" class="plugin-anchor" href="#sign-the-server-cert-with-ca"><i class="fa fa-link" aria-hidden="true"></i></a>sign the server cert with CA</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token builtin class-name">echo</span> subjectAltName <span class="token operator">=</span> DNS:www.artifactory.mycompany.com,IP:130.147.219.19 <span class="token operator">&gt;&gt;</span> extfile.cnf
+$ <span class="token builtin class-name">echo</span> extendedKeyUsage <span class="token operator">=</span> serverAuth <span class="token operator">&gt;&gt;</span> extfile.cnf
+
+$ openssl x509 -req -days <span class="token number">365</span> -sha256 -in www.artifactory.mycompany.com-server.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-server.crt -extfile extfile.cnf
+</code></pre>
+<details><summary>Click to check details</summary>
+<pre class="language-"><code>$ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 &gt;&gt; extfile.cnf
+$ echo extendedKeyUsage = serverAuth &gt;&gt; extfile.cnf
+$ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-server.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-server.crt -extfile extfile.cnf
+Signature ok
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+Getting CA Private Key
+Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+unable to write &apos;random state&apos;
+
+$ ls
+extfile.cnf                             www.artifactory.mycompany.com-ca.key      www.artifactory.mycompany.com-server.csr  www.srl
+www.artifactory.mycompany.com-ca.crt  www.artifactory.mycompany.com-server.crt  www.artifactory.mycompany.com-server.key
+</code></pre>
+</details>
+
+
+<h4 id="generate-client-cert-and-signed-by-ca"><a name="generate-client-cert-and-signed-by-ca" class="anchor-navigation-ex-anchor" href="#generate-client-cert-and-signed-by-ca"><i class="fa fa-link" aria-hidden="true"></i></a><a name="generate-client-cert-and-signed-by-ca" class="plugin-anchor" href="#generate-client-cert-and-signed-by-ca"><i class="fa fa-link" aria-hidden="true"></i></a>generate client cert and signed by CA</h4>
+<pre class="language-"><code class="lang-bash">$ openssl genrsa -out www.artifactory.mycompany.com-client.key
+$ openssl req -subj <span class="token string">&quot;/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com&quot;</span> -new -key www.artifactory.mycompany.com-client.key -out www.artifactory.mycompany.com-client.csr
+$ <span class="token builtin class-name">echo</span> extendedKeyUsage <span class="token operator">=</span> clientAuth <span class="token operator">&gt;&gt;</span> extfile.cnf
+$ openssl x509 -req -days <span class="token number">365</span> -sha256 -in www.artifactory.mycompany.com-client.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-client.cert -extfile extfile.cnf
+</code></pre>
+<details><summary>Click to check details</summary>
+<pre class="language-"><code>$ openssl genrsa -out www.artifactory.mycompany.com-client.key 2048
+Generating RSA private key, 2048 bit long modulus
+................................................+++
+.......................+++
+unable to write &apos;random state&apos;
+e is 65537 (0x10001)
+
+$ openssl req -subj &quot;/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com&quot; -new -key www.artifactory.mycompany.com-client.key -out www.artifactory.mycompany.com-client.csr
+
+$ echo extendedKeyUsage = clientAuth &gt;&gt; extfile.cnf
+$ cat extfile.cnf
+subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19
+extendedKeyUsage = serverAuth
+extendedKeyUsage = clientAuth
+
+$ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-client.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-client.cert -extfile extfile.cnf
+Signature ok
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+Getting CA Private Key
+Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactor
+unable to write &apos;random state&apos;
+</code></pre>
+</details>
+
+
+<h4 id="update-the-file-perm"><a name="update-the-file-perm" class="anchor-navigation-ex-anchor" href="#update-the-file-perm"><i class="fa fa-link" aria-hidden="true"></i></a><a name="update-the-file-perm" class="plugin-anchor" href="#update-the-file-perm"><i class="fa fa-link" aria-hidden="true"></i></a>update the file perm</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">sudo</span> <span class="token function">chmod</span> -v 0444 www.artifactory.mycompany.com-ca.crt www.artifactory.mycompany.com-server.crt client.cert
+$ <span class="token function">sudo</span> <span class="token function">chmod</span> -v 0400 www.artifactory.mycompany.com-ca.key client.key www.artifactory.mycompany.com-server.key
+</code></pre>
+<h4 id="check-certs"><a name="check-certs" class="anchor-navigation-ex-anchor" href="#check-certs"><i class="fa fa-link" aria-hidden="true"></i></a><a name="check-certs" class="plugin-anchor" href="#check-certs"><i class="fa fa-link" aria-hidden="true"></i></a>check certs</h4>
+<h5 id="crt"><a name="crt" class="anchor-navigation-ex-anchor" href="#crt"><i class="fa fa-link" aria-hidden="true"></i></a><a name="crt" class="plugin-anchor" href="#crt"><i class="fa fa-link" aria-hidden="true"></i></a>crt</h5>
+<pre class="language-"><code class="lang-bash">$ openssl x509 -noout -text -in www.artifactory.mycompany.com-server.crt
+</code></pre>
+<details><summary>openssl x509 ca.crt</summary>
+<pre class="language-"><code>$ openssl x509 -noout -text -in www.artifactory.mycompany.com-ca.crt
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 15145698426239402702 (0xd23054792b3142ce)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Validity
+            Not Before: Jan  2 11:35:31 2018 GMT
+            Not After : Jan  2 11:35:31 2019 GMT
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:d0:3f:b6:c5:e5:52:8d:c7:26:3f:e7:0a:7a:5f:
+                    c1:71:2a:9e:34:07:7e:10:4a:3d:c4:4f:f7:df:58:
+                    93:0d:fa:00:e8:21:75:6d:d1:45:7d:bd:27:f2:c5:
+                    08:13:8f:4f:be:91:9f:28:19:7e:c3:a7:42:1b:fc:
+                    b4:96:21:8a:33:59:79:27:a3:cf:13:3e:cd:92:0d:
+                    7e:b9:9f:0d:01:bf:27:5f:e4:7a:7d:db:69:a3:78:
+                    96:a8:c3:a9:2d:31:28:97:ba:6c:20:17:ab:eb:85:
+                    ce:2c:25:e8:3e:a0:8b:c0:0b:b2:a9:e1:ac:9f:e1:
+                    57:35:bb:64:6a:99:2e:8f:27:f1:04:40:a7:16:32:
+                    31:4e:ad:18:5e:9e:0b:dd:42:17:af:8a:58:c6:1a:
+                    e9:00:52:97:7b:7a:24:cc:b1:81:8d:b9:20:60:e4:
+                    96:d5:77:82:07:4e:df:9c:3a:26:95:d5:ed:aa:a1:
+                    24:94:64:0e:93:9a:9e:9b:d4:78:6b:46:50:69:05:
+                    19:6a:ff:7b:1d:1b:0f:ce:6b:30:33:c7:99:9d:6a:
+                    30:0c:fc:f8:74:00:df:65:6f:fa:1b:24:0a:73:77:
+                    4d:94:45:27:9b:93:a6:81:37:57:57:6f:e9:ae:e4:
+                    5e:a8:b8:be:31:0f:73:4b:9e:1b:ed:78:5c:48:ec:
+                    0b:a5
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Alternative Name:
+                IP Address:130.147.219.19
+            X509v3 Subject Key Identifier:
+                23:32:BC:61:9E:51:8E:94:22:30:5B:AE:68:8A:7E:8E:53:D2:45:7C
+            X509v3 Authority Key Identifier:
+                keyid:23:32:BC:61:9E:51:8E:94:22:30:5B:AE:68:8A:7E:8E:53:D2:45:7C
+
+            X509v3 Basic Constraints:
+                CA:TRUE
+    Signature Algorithm: sha256WithRSAEncryption
+         69:a3:fe:35:63:a5:e8:4e:e6:3e:4f:9d:f6:82:3d:73:f2:a7:
+         22:c1:46:e5:09:5e:61:81:b7:70:3c:62:ba:43:7d:bd:ac:67:
+         d0:41:ea:a7:b8:41:47:04:bc:41:9a:46:35:31:3f:62:10:7a:
+         58:73:45:3a:59:3b:41:6b:2b:1e:62:42:b7:7e:c1:6b:92:25:
+         2a:df:3f:69:b5:26:8e:c7:5d:c6:24:a0:65:21:b7:63:74:60:
+         7f:3b:0e:9a:80:a4:4f:a2:79:20:19:92:64:60:b7:53:5c:09:
+         6e:46:6e:7a:d7:ee:ef:f4:2e:27:7a:1a:0e:da:5b:8b:7a:bf:
+         40:56:9f:16:63:6b:89:ab:48:65:07:45:e0:a0:21:7c:0f:6d:
+         9c:2a:ab:ca:d0:02:06:8a:39:7a:ea:65:b9:04:13:0f:6b:cd:
+         ea:e5:9f:59:c5:d2:06:b2:e4:c3:cb:ab:59:69:aa:11:e6:08:
+         49:12:cc:d4:29:21:2b:59:c1:dc:bb:e6:a9:7d:96:68:a4:7b:
+         61:76:8a:21:a9:69:a5:83:d5:8b:f6:08:4e:c0:34:64:6b:65:
+         96:ac:ed:cd:c1:0b:54:7d:a9:57:07:77:0c:6a:43:9e:4f:c0:
+         6c:12:88:e8:cf:34:08:67:af:1c:2f:bb:49:54:1b:17:95:89:
+         b3:2d:c9:5f
+</code></pre>
+</details>
+
+<details><summary>openssl x509 server.crt</summary>
+<pre class="language-"><code>$ openssl x509 -noout -text -in www.artifactory.mycompany.com-server.crt
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 12625600037876864867 (0xaf37245755cf1763)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Validity
+            Not Before: Jan  2 11:39:47 2018 GMT
+            Not After : Jan  2 11:39:47 2019 GMT
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:b9:af:45:ba:6d:99:42:34:09:c5:ef:da:be:a6:
+                    c4:ff:09:9a:bf:7c:89:51:a8:c6:df:c8:ba:b3:a6:
+                    42:24:36:d5:5d:ff:f3:ab:df:de:6e:05:8b:81:4a:
+                    ec:4c:58:16:ca:0c:56:9e:a7:0e:2d:ba:93:68:e1:
+                    0d:f9:f6:82:ce:98:9b:65:53:8f:ba:27:c9:0c:f8:
+                    f1:4c:14:11:67:ef:97:5c:bb:15:16:ae:c4:eb:16:
+                    e2:22:29:7a:36:fd:aa:19:f3:ad:93:9a:a3:5c:0c:
+                    92:77:d3:cc:75:b1:29:b4:8d:cd:74:57:18:5c:d2:
+                    c2:00:7a:d4:b2:54:81:0a:44:e7:b8:ef:44:36:86:
+                    4f:04:ab:21:0c:fe:79:9c:93:31:f5:44:46:9d:d8:
+                    36:79:4b:c0:dd:5b:8e:6f:dc:0c:8a:0a:a4:d7:4d:
+                    5a:5c:b0:c0:af:4d:38:45:30:79:3f:a1:69:8a:5b:
+                    19:49:25:bd:5f:19:d8:4f:e0:03:9a:43:fb:ad:6d:
+                    2b:cc:7c:eb:c5:7c:64:fc:9b:bf:83:91:50:ac:21:
+                    a1:b6:3f:70:23:cb:d6:af:eb:48:71:cf:f4:da:41:
+                    4e:97:84:64:0c:b4:4d:5f:cb:30:f5:47:a6:35:3d:
+                    02:99:6f:3f:e9:e9:56:42:a0:58:54:21:04:87:f9:
+                    7a:a5
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Alternative Name:
+                DNS:www.artifactory.mycompany.com, IP Address:130.147.219.19
+            X509v3 Extended Key Usage:
+                TLS Web Server Authentication
+    Signature Algorithm: sha256WithRSAEncryption
+         3d:e8:81:f2:ab:89:47:e2:2c:8c:5a:54:31:c2:2a:11:37:e6:
+         ab:89:ff:d1:c2:8c:8e:3a:7d:d2:1d:28:3e:9e:5f:9e:89:08:
+         78:2e:16:32:52:e7:35:ab:66:09:a4:83:85:42:55:d6:7c:4f:
+         37:cf:8d:37:bd:57:d0:00:f2:9c:67:68:a2:ed:49:c6:eb:0f:
+         b7:49:ba:ae:12:35:82:a6:a5:b6:5e:f7:68:08:f7:3f:a1:73:
+         d2:94:3e:7a:d9:5c:e1:e2:ab:12:46:66:9d:59:3a:e1:2d:aa:
+         a6:53:97:40:ac:a3:ca:80:6d:5b:75:dc:c4:ee:10:48:55:2c:
+         10:00:43:07:e6:c4:16:09:fb:04:5d:78:8e:85:21:21:75:01:
+         a5:af:c0:c0:d1:fd:33:6e:5b:24:8b:f8:e6:1c:df:b7:f1:e5:
+         38:02:d4:a8:e1:09:93:2e:8d:19:ea:e2:11:3f:c1:fe:75:bb:
+         ef:03:6e:c3:50:77:a5:54:7d:7e:e0:cd:85:20:08:41:38:b2:
+         86:65:aa:58:51:1b:7b:ed:6a:07:0f:cc:ab:49:d8:34:ec:5d:
+         fd:0d:75:48:81:3c:a5:bc:ce:c0:95:8c:8e:d3:8c:0f:0d:a3:
+         a7:73:70:bc:59:89:7c:42:25:0b:cb:2f:b0:86:4a:46:56:f2:
+         e9:d9:63:f1
+</code></pre>
+</details>
+
+<h4 id="csr"><a name="csr" class="anchor-navigation-ex-anchor" href="#csr"><i class="fa fa-link" aria-hidden="true"></i></a><a name="csr" class="plugin-anchor" href="#csr"><i class="fa fa-link" aria-hidden="true"></i></a>csr</h4>
+<pre class="language-"><code class="lang-bash">$ openssl req -noout -text -in www.artifactory.mycompany.com-server.csr
+</code></pre>
+<details><summary>openss req</summary>
+<pre class="language-"><code>$ openssl req -noout -text -in www.artifactory.mycompany.com-server.csr
+Certificate Request:
+    Data:
+        Version: 0 (0x0)
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:b9:af:45:ba:6d:99:42:34:09:c5:ef:da:be:a6:
+                    c4:ff:09:9a:bf:7c:89:51:a8:c6:df:c8:ba:b3:a6:
+                    42:24:36:d5:5d:ff:f3:ab:df:de:6e:05:8b:81:4a:
+                    ec:4c:58:16:ca:0c:56:9e:a7:0e:2d:ba:93:68:e1:
+                    0d:f9:f6:82:ce:98:9b:65:53:8f:ba:27:c9:0c:f8:
+                    f1:4c:14:11:67:ef:97:5c:bb:15:16:ae:c4:eb:16:
+                    e2:22:29:7a:36:fd:aa:19:f3:ad:93:9a:a3:5c:0c:
+                    92:77:d3:cc:75:b1:29:b4:8d:cd:74:57:18:5c:d2:
+                    c2:00:7a:d4:b2:54:81:0a:44:e7:b8:ef:44:36:86:
+                    4f:04:ab:21:0c:fe:79:9c:93:31:f5:44:46:9d:d8:
+                    36:79:4b:c0:dd:5b:8e:6f:dc:0c:8a:0a:a4:d7:4d:
+                    5a:5c:b0:c0:af:4d:38:45:30:79:3f:a1:69:8a:5b:
+                    19:49:25:bd:5f:19:d8:4f:e0:03:9a:43:fb:ad:6d:
+                    2b:cc:7c:eb:c5:7c:64:fc:9b:bf:83:91:50:ac:21:
+                    a1:b6:3f:70:23:cb:d6:af:eb:48:71:cf:f4:da:41:
+                    4e:97:84:64:0c:b4:4d:5f:cb:30:f5:47:a6:35:3d:
+                    02:99:6f:3f:e9:e9:56:42:a0:58:54:21:04:87:f9:
+                    7a:a5
+                Exponent: 65537 (0x10001)
+        Attributes:
+            a0:00
+    Signature Algorithm: sha256WithRSAEncryption
+         74:99:e5:36:44:b4:48:a9:50:83:eb:61:02:37:6c:8a:46:45:
+         0e:58:04:40:66:55:56:fc:fd:cf:15:a0:31:be:de:3a:16:4f:
+         9a:46:1d:17:33:7f:38:dd:36:a9:76:e5:92:b2:48:29:60:e7:
+         af:c0:f6:76:0d:9a:a6:40:43:a8:98:75:90:c3:c1:2a:7d:51:
+         1d:df:1b:50:8b:69:ce:7c:74:cf:03:9d:69:6b:41:7f:ed:bc:
+         f1:6c:c0:93:22:36:5e:f7:8c:d0:f7:f5:0f:dc:51:93:1e:23:
+         cc:12:cd:f3:0e:6c:1b:4e:b2:df:01:86:5b:d0:79:c8:6e:c8:
+         57:72:a8:dd:81:8a:af:c3:52:e2:ff:e8:f1:3d:6f:cb:e4:a9:
+         1c:51:58:b9:31:00:c0:88:5e:ca:63:59:f8:d7:82:d4:22:30:
+         0c:d8:bd:e6:01:11:d2:4a:68:64:d1:8e:d5:a1:19:0c:5a:99:
+         25:cd:c2:e5:ed:f3:48:e3:c0:7a:00:a3:a8:09:8e:d3:50:2a:
+         84:29:63:66:50:3e:42:af:43:ea:fa:5b:28:f9:f1:84:89:88:
+         2e:7f:8d:bf:44:29:83:fa:89:b3:b8:3c:13:98:20:76:6c:d3:
+         67:ce:03:9e:15:ea:3e:9d:4b:cb:c2:78:ab:57:1d:b7:e8:9e:
+         81:1b:b5:1f
+</code></pre>
+</details>
+
+<h3 id="cert-working-with-nginx"><a name="cert-working-with-nginx" class="anchor-navigation-ex-anchor" href="#cert-working-with-nginx"><i class="fa fa-link" aria-hidden="true"></i></a><a name="cert-working-with-nginx" class="plugin-anchor" href="#cert-working-with-nginx"><i class="fa fa-link" aria-hidden="true"></i></a>cert working with Nginx</h3>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">grep</span> ssl_certificate /etc/nginx/sites-enabled/artifactoryv2.conf
+ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.crt<span class="token punctuation">;</span>
+ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.key<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="certificate-working-with-client"><a name="certificate-working-with-client" class="anchor-navigation-ex-anchor" href="#certificate-working-with-client"><i class="fa fa-link" aria-hidden="true"></i></a><a name="certificate-working-with-client" class="plugin-anchor" href="#certificate-working-with-client"><i class="fa fa-link" aria-hidden="true"></i></a>certificate working with client</h3>
+<h4 id="macos"><a name="macos" class="anchor-navigation-ex-anchor" href="#macos"><i class="fa fa-link" aria-hidden="true"></i></a><a name="macos" class="plugin-anchor" href="#macos"><i class="fa fa-link" aria-hidden="true"></i></a>MacOS</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">sudo</span> security add-trusted-cert -d -r trustRoot -k <span class="token string">&quot;/Library/Keychains/System.keychain&quot;</span> <span class="token string">&quot;/Users/marslo/Downloads/www.artifactory.mycompany.com-ca.crt&quot;</span>
+</code></pre>
+<h5 id="get-cert-info-in-macos"><a name="get-cert-info-in-macos" class="anchor-navigation-ex-anchor" href="#get-cert-info-in-macos"><i class="fa fa-link" aria-hidden="true"></i></a><a name="get-cert-info-in-macos" class="plugin-anchor" href="#get-cert-info-in-macos"><i class="fa fa-link" aria-hidden="true"></i></a>get cert info in MacOS</h5>
+<pre class="language-"><code class="lang-bash">$ security find-certificate -a -c <span class="token operator">&lt;</span>artifactory<span class="token operator">&gt;</span> -Z
+$ security find-certificate -a -c artifactor -Z <span class="token operator">|</span> <span class="token function">grep</span> SHA-1
+SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
+
+$ security list-keychain
+    <span class="token string">&quot;/Users/marslo/Library/Keychains/login.keychain-db&quot;</span>
+    <span class="token string">&quot;/Library/Keychains/System.keychain&quot;</span>
+</code></pre>
+<details><summary>Click to check details</summary>
+<pre class="language-"><code>$ security find-certificate -a -c artifactor -Z
+SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
+keychain: &quot;/Library/Keychains/System.keychain&quot;
+version: 256
+class: 0x80001000
+attributes:
+    &quot;alis&quot;=&quot;marslo.jiao@mycompany.com&quot;
+    &quot;cenc&quot;=0x00000003
+    &quot;ctyp&quot;=0x00000001
+    &quot;hpky&quot;=0x2332BC619E518E9422305BAE688A7E8E53D2457C  &quot;##2\274a\236Q\216\224&quot;0[\256h\212~\216S\322E|&quot;
+    &quot;issu&quot;=0x3081A3310B300906035504061302434E3110300E06035504080C075369636875616E3110300E06035504070C074368656E6764753110300E060355040A0C075068696C697073310C300A060355040B0C034344493128302606035504030C1F7077772E61727469666163746F72792E6364692E7068696C6970732E636F6D3126302406092A864886F70D01090116176D6172736C6F2E6A69616F407068696C6970732E636F6D  &quot;0\201\2431\0130\011\006\003U\004\006\023\002CN1\0200\016\006\003U\004\010\014\007Sichuan1\0200\016\006\003U\004\007\014\007Chengdu1\0200\016\006\003U\004\012\014\007mycompany1\0140\012\006\003U\004\013\014\003CDI1(0&amp;\006\003U\004\003\014\037www.artifactory.mycompany.com1&amp;0$\006\011*\206H\206\367\015\001\011\001\026\027marslo.jiao@mycompany.com&quot;
+    &quot;labl&quot;=&quot;www.artifactory.mycompany.com&quot;
+    &quot;skid&quot;=0x2332BC619E518E9422305BAE688A7E8E53D2457C  &quot;##2\274a\236Q\216\224&quot;0[\256h\212~\216S\322E|&quot;
+    &quot;snbr&quot;=0x00D23054792B3142CE  &quot;\000\3220Ty+1B\316&quot;
+    &quot;subj&quot;=0x3081A3310B300906035504061302434E3110300E06035504080C075369636875616E3110300E06035504070C074368656E6764753110300E060355040A0C075068696C697073310C300A060355040B0C034344493128302606035504030C1F7077772E61727469666163746F72792E6364692E7068696C6970732E636F6D3126302406092A864886F70D01090116176D6172736C6F2E6A69616F407068696C6970732E636F6D  &quot;0\201\2431\0130\011\006\003U\004\006\023\002CN1\0200\016\006\003U\004\010\014\007Sichuan1\0200\016\006\003U\004\007\014\007Chengdu1\0200\016\006\003U\004\012\014\007mycompany1\0140\012\006\003U\004\013\014\003CDI1(0&amp;\006\003U\004\003\014\037www.artifactory.mycompany.com1&amp;0$\006\011*\206H\206\367\015\001\011\001\026\027marslo.jiao@mycompany.com&quot;
+
+$ security find-certificate -a -c artifactor -Z -p -m
+SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
+email addresses: marslo.jiao@mycompany.com
+-----BEGIN CERTIFICATE-----
+MIIELDCCAxSgAwIBAgIJANIwVHkrMULOMA0GCSqGSIb3DQEBCwUAMIGjMQswCQYD
+VQQGEwJDTjEQMA4GA1UECAwHU2ljaHVhbjEQMA4GA1UEBwwHQ2hlbmdkdTEQMA4G
+A1UECgwHUGhpbGlwczEMMAoGA1UECwwDQ0RJMSgwJgYDVQQDDB9wd3cuYXJ0aWZh
+Y3RvcnkuY2RpLnBoaWxpcHMuY29tMSYwJAYJKoZIhvcNAQkBFhdtYXJzbG8uamlh
+b0BwaGlsaXBzLmNvbTAeFw0xODAxMDIxMTM1MzFaFw0xOTAxMDIxMTM1MzFaMIGj
+MQswCQYDVQQGEwJDTjEQMA4GA1UECAwHU2ljaHVhbjEQMA4GA1UEBwwHQ2hlbmdk
+dTEQMA4GA1UECgwHUGhpbGlwczEMMAoGA1UECwwDQ0RJMSgwJgYDVQQDDB9wd3cu
+YXJ0aWZhY3RvcnkuY2RpLnBoaWxpcHMuY29tMSYwJAYJKoZIhvcNAQkBFhdtYXJz
+bG8uamlhb0BwaGlsaXBzLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBANA/tsXlUo3HJj/nCnpfwXEqnjQHfhBKPcRP999Ykw36AOghdW3RRX29J/LF
+CBOPT76RnygZfsOnQhv8tJYhijNZeSejzxM+zZINfrmfDQG/J1/ken3baaN4lqjD
+qS0xKJe6bCAXq+uFziwl6D6gi8ALsqnhrJ/hVzW7ZGqZLo8n8QRApxYyMU6tGF6e
+C91CF6+KWMYa6QBSl3t6JMyxgY25IGDkltV3ggdO35w6JpXV7aqhJJRkDpOanpvU
+eGtGUGkFGWr/ex0bD85rMDPHmZ1qMAz8+HQA32Vv+hskCnN3TZRFJ5uTpoE3V1dv
+6a7kXqi4vjEPc0ueG+14XEjsC6UCAwEAAaNhMF8wDwYDVR0RBAgwBocEgpPbEzAd
+BgNVHQ4EFgQUIzK8YZ5RjpQiMFuuaIp+jlPSRXwwHwYDVR0jBBgwFoAUIzK8YZ5R
+jpQiMFuuaIp+jlPSRXwwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEA
+aaP+NWOl6E7mPk+d9oI9c/KnIsFG5QleYYG3cDxiukN9vaxn0EHqp7hBRwS8QZpG
+NTE/YhB6WHNFOlk7QWsrHmJCt37Ba5IlKt8/abUmjsddxiSgZSG3Y3RgfzsOmoCk
+T6J5IBmSZGC3U1wJbkZuetfu7/QuJ3oaDtpbi3q/QFafFmNriatIZQdF4KAhfA9t
+nCqrytACBoo5eupluQQTD2vN6uWfWcXSBrLkw8urWWmqEeYISRLM1CkhK1nB3Lvm
+qX2WaKR7YXaKIalppYPVi/YITsA0ZGtllqztzcELVH2pVwd3DGpDnk/AbBKI6M80
+CGevHC+7SVQbF5WJsy3JXw==
+-----END CERTIFICATE-----
+</code></pre>
+</details>
+
+
+<h5 id="remove-the-cert-in-macos"><a name="remove-the-cert-in-macos" class="anchor-navigation-ex-anchor" href="#remove-the-cert-in-macos"><i class="fa fa-link" aria-hidden="true"></i></a><a name="remove-the-cert-in-macos" class="plugin-anchor" href="#remove-the-cert-in-macos"><i class="fa fa-link" aria-hidden="true"></i></a>remove the cert in MacOS</h5>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">sudo</span> security delete-certificate -Z 915D019F0993F369C09D75C6B8DA201B8DE2636E
+</code></pre>
+<h5 id="others"><a name="others" class="anchor-navigation-ex-anchor" href="#others"><i class="fa fa-link" aria-hidden="true"></i></a><a name="others" class="plugin-anchor" href="#others"><i class="fa fa-link" aria-hidden="true"></i></a>Others</h5>
+<details><summary>Click to check details</summary>
+<li>Others 1:</li>
+
+<pre class="language-"><code>$ cd /etc/nginx/
+$ sudo openssl genrsa -des3 -out server.key 1024
+$ sudo openssl req -new -key server.key -out server.csr
+$ sudo cp server.key{,.org}
+$ sudo cp server.csr{,.org}
+$ sudo openssl rsa -in server.key.org -out server.key
+$ sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+</code></pre>
+
+<details><summary>Click to check details</summary>
+<pre class="language-"><code>$ ls -Altrh
+total 80K
+-rw-r--r--   1 root root 3.0K May  3  2017 win-utf
+-rw-r--r--   1 root root  664 May  3  2017 uwsgi_params
+-rw-r--r--   1 root root  636 May  3  2017 scgi_params
+-rw-r--r--   1 root root  180 May  3  2017 proxy_params
+-rw-r--r--   1 root root 1.5K May  3  2017 nginx.conf
+-rw-r--r--   1 root root 3.9K May  3  2017 mime.types
+-rw-r--r--   1 root root 2.2K May  3  2017 koi-win
+-rw-r--r--   1 root root 2.8K May  3  2017 koi-utf
+-rw-r--r--   1 root root 1007 May  3  2017 fastcgi_params
+-rw-r--r--   1 root root 1.1K May  3  2017 fastcgi.conf
+drwxr-xr-x   2 root root 4.0K Jul 27 04:11 modules-available
+drwxr-xr-x   2 root root 4.0K Jul 27 04:11 conf.d
+drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-available
+drwxr-xr-x   2 root root 4.0K Dec 26 18:08 snippets
+drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-enabled
+drwxr-xr-x   2 root root 4.0K Dec 26 18:08 modules-enabled
+$ sudo openssl genrsa -des3 -out server.key 1024
+Generating RSA private key, 1024 bit long modulus
+.................................................................++++++
+......++++++
+e is 65537 (0x10001)
+Enter pass phrase for server.key: artifactory
+Verifying - Enter pass phrase for server.key: artifactory
+
+$ sudo openssl req -new -key server.key -out server.csr
+Enter pass phrase for server.key: artifactory
+You are about to be asked to enter information that will be incorporated into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &apos;.&apos;, the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:CN
+State or Province Name (full name) [Some-State]:Sichuan
+Locality Name (eg, city) []:Chengdu
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
+Organizational Unit Name (eg, section) []:mycompany
+Common Name (e.g. server FQDN or YOUR name) []:docker-2.artifactory
+Email Address []:marslo.jiao@mycompany.com
+
+Please enter the following &apos;extra&apos; attributes
+to be sent with your certificate request
+A challenge password []:artifactory
+An optional company name []:mycompany
+
+$ ls -Altrh
+total 80K
+-rw-r--r-- 1 root root 3.0K May  3  2017 win-utf
+-rw-r--r-- 1 root root  664 May  3  2017 uwsgi_params
+-rw-r--r-- 1 root root  636 May  3  2017 scgi_params
+-rw-r--r-- 1 root root  180 May  3  2017 proxy_params
+-rw-r--r-- 1 root root 1.5K May  3  2017 nginx.conf
+-rw-r--r-- 1 root root 3.9K May  3  2017 mime.types
+-rw-r--r-- 1 root root 2.2K May  3  2017 koi-win
+-rw-r--r-- 1 root root 2.8K May  3  2017 koi-utf
+-rw-r--r-- 1 root root 1007 May  3  2017 fastcgi_params
+-rw-r--r-- 1 root root 1.1K May  3  2017 fastcgi.conf
+drwxr-xr-x 2 root root 4.0K Jul 27 04:11 modules-available
+drwxr-xr-x 2 root root 4.0K Jul 27 04:11 conf.d
+drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-available
+drwxr-xr-x 2 root root 4.0K Dec 26 18:08 snippets
+drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-enabled
+drwxr-xr-x 2 root root 4.0K Dec 26 18:08 modules-enabled
+-rw-r--r-- 1 root root  951 Dec 26 18:32 server.key
+-rw-r--r-- 1 root root  785 Dec 26 18:36 server.csr
+-rw-r--r-- 1 root root  951 Dec 26 18:38 server.key.org
+-rw-r--r-- 1 root root  785 Dec 26 18:38 server.csr.org
+
+$ sudo openssl rsa -in server.key.org -out server.key
+Enter pass phrase for server.key.org:
+writing RSA key
+
+$ sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+Signature ok
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=mycompany/CN=docker-2.artifactory/emailAddress=marslo.jiao@mycompany.com
+Getting Private key
+</code></pre>
+</details>
+
+<p><li>Others 2:</li></p>
+<p><pre class="language-"><code>/etc/nginx$ sudo openssl req -newkey rsa:2048 -nodes -sha256 -keyout certs/www.artifactory.mycompany.com.key -x509 -days 365 -out certs/www.artifactory.mycompany.com.crt
+Generating a 2048 bit RSA private key
+........+++
+..............................................................+++</code></pre></p>
+<h2 id="writing-new-private-key-to-certswwwartifactorymycompanycomkey"><a name="writing-new-private-key-to-certswwwartifactorymycompanycomkey" class="anchor-navigation-ex-anchor" href="#writing-new-private-key-to-certswwwartifactorymycompanycomkey"><i class="fa fa-link" aria-hidden="true"></i></a><a name="writing-new-private-key-to-certswwwartifactorymycompanycomkey" class="plugin-anchor" href="#writing-new-private-key-to-certswwwartifactorymycompanycomkey"><i class="fa fa-link" aria-hidden="true"></i></a>writing new private key to &apos;certs/www.artifactory.mycompany.com.key&apos;</h2>
+<p>You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,</p>
+<h2 id="if-you-enter--the-field-will-be-left-blank"><a name="if-you-enter--the-field-will-be-left-blank" class="anchor-navigation-ex-anchor" href="#if-you-enter--the-field-will-be-left-blank"><i class="fa fa-link" aria-hidden="true"></i></a><a name="if-you-enter--the-field-will-be-left-blank" class="plugin-anchor" href="#if-you-enter--the-field-will-be-left-blank"><i class="fa fa-link" aria-hidden="true"></i></a>If you enter &apos;.&apos;, the field will be left blank.</h2>
+<p>Country Name (2 letter code) [AU]:CN
+State or Province Name (full name) [Some-State]:Sichuan
+Locality Name (eg, city) []:Chengdu
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
+Organizational Unit Name (eg, section) []:mycompany
+Common Name (e.g. server FQDN or YOUR name) []:www.artifactory.mycompany.com
+Email Address []:marslo.jiao@mycompany.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/details&gt;</p>
+<h2 id="artifactory-https"><a name="artifactory-https" class="anchor-navigation-ex-anchor" href="#artifactory-https"><i class="fa fa-link" aria-hidden="true"></i></a><a name="artifactory-https" class="plugin-anchor" href="#artifactory-https"><i class="fa fa-link" aria-hidden="true"></i></a>artifactory https</h2>
+<h3 id="general-ssl-certs"><a name="general-ssl-certs" class="anchor-navigation-ex-anchor" href="#general-ssl-certs"><i class="fa fa-link" aria-hidden="true"></i></a><a name="general-ssl-certs" class="plugin-anchor" href="#general-ssl-certs"><i class="fa fa-link" aria-hidden="true"></i></a>general SSL certs</h3>
+<details><summary>try 1</summary>
+<pre class="language-"><code>$ sudo openssl genrsa -des3 -out artifactorykey 2048
+$ sudo openssl req -new -key artifactorykey -out artifactorycsr
+$ sudo cp artifactorykey{,.org}
+$ sudo openssl rsa -in artifactorykey.org -out artifactorykey
+$ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactorykey -out artifactorycrt
+</code></pre>
+</details>
+<details><summary>SSL with IP</summary>
+<pre class="language-"><code>$ sudo openssl genrsa -des3 -out artifactorykey 2048
+Generating RSA private key, 2048 bit long modulus
+.........................+++
+........................................................................+++
+e is 65537 (0x10001)
+Enter pass phrase for artifactorykey: artifactory
+Verifying - Enter pass phrase for artifactorykey: artifactory
+
+$ sudo openssl req -new -key artifactorykey -out artifactorycsr
+Enter pass phrase for artifactorykey: artifactory
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &apos;.&apos;, the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:CN
+State or Province Name (full name) [Some-State]:Sichuan
+Locality Name (eg, city) []:Chengdu
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany Ltd
+Organizational Unit Name (eg, section) []:.
+Common Name (e.g. server FQDN or YOUR name) []:192.168.1.102
+Email Address []:.
+
+Please enter the following &apos;extra&apos; attributes
+to be sent with your certificate request
+A challenge password []:.
+An optional company name []:.
+
+$ sudo cp artifactorykey{,.org}
+
+$ sudo openssl rsa -in artifactorykey.org -out artifactorykey
+Enter pass phrase for artifactorykey.org: artifactory
+writing RSA key
+
+
+$ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactorykey -out artifactorycrt
+Signature ok
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany Ltd/CN=192.168.1.102
+Getting Private key
+
+$ openssl x509 -text -noout -in ssl_ip/artifactorycrt
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 9804858425156156035 (0x8811daca106dba83)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany Ltd, CN=192.168.1.102
+        Validity
+            Not Before: Dec 26 16:23:15 2017 GMT
+            Not After : Dec 26 16:23:15 2018 GMT
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany Ltd, CN=192.168.1.102
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:ad:32:26:35:8a:8f:09:82:ff:59:61:14:14:1b:
+                    9c:da:02:74:09:48:2a:d5:05:1d:ad:8a:d0:e0:70:
+                    1f:9b:44:b4:df:4d:c5:4c:5a:1b:8a:52:7b:2a:69:
+                    a2:77:d3:cf:c7:fb:a6:ef:34:d1:bb:23:8d:d0:78:
+                    e6:48:3f:8c:12:3c:69:d5:62:2d:74:24:b8:49:a8:
+                    59:c7:36:5f:64:97:5a:d1:8f:9a:5b:2f:aa:a8:65:
+                    6c:75:28:60:55:b9:2a:5b:41:71:a4:fa:eb:10:7e:
+                    84:4b:fb:c3:57:9c:55:8e:e8:2a:4a:c1:45:74:54:
+                    58:d5:09:0d:59:d4:14:94:db:5b:67:91:9c:23:24:
+                    c4:07:10:d1:f1:28:fa:97:38:01:da:81:c4:f3:63:
+                    d7:84:24:dc:3c:ff:04:64:b2:3e:41:f0:d8:08:66:
+                    06:cc:7c:05:3c:90:97:0b:02:b6:b5:2f:03:28:b7:
+                    4c:38:aa:84:23:3e:9e:d4:b0:3a:58:4c:f3:74:df:
+                    36:63:f2:18:ac:d1:0d:ef:05:6b:f3:dc:b6:d3:c7:
+                    f0:91:7b:b8:69:4f:ae:19:da:34:b7:38:1e:e2:9a:
+                    10:2e:a9:a0:54:f6:61:b9:da:e6:98:c8:9b:76:83:
+                    d6:59:77:d9:18:c6:57:8c:cf:af:a4:89:5a:87:99:
+                    c4:15
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha256WithRSAEncryption
+         5a:06:ad:9b:d0:07:d7:9b:92:2a:77:71:ff:80:6e:c1:39:bd:
+         81:e8:0f:21:39:bd:80:3e:96:a9:6b:7a:73:f1:80:70:4e:b1:
+         d4:b7:1e:54:be:62:dc:35:c0:b9:d8:8c:d1:24:75:8a:42:ec:
+         a9:dd:9b:9a:f2:4b:ad:6e:38:d7:a2:fa:7a:70:be:7b:8c:37:
+         63:71:10:fe:73:18:de:e5:9c:c5:6e:1a:4e:cb:7b:51:26:56:
+         68:56:fb:4f:71:d7:7b:94:b6:55:b9:f8:9b:31:a8:26:a5:e5:
+         32:36:33:65:7b:1d:9f:27:7d:f1:b0:d2:06:7c:75:d7:39:bb:
+         7a:44:92:e1:b8:fc:2b:fd:3c:43:93:d6:47:19:f6:ad:d3:cc:
+         82:dd:15:bd:d3:a0:e2:2d:92:fd:65:44:60:44:21:b9:1f:31:
+         fd:91:c2:78:86:d9:aa:77:fd:54:ae:2f:4c:ae:5d:5e:c7:a3:
+         43:0d:6b:32:23:d9:61:b6:a7:c4:47:eb:bc:c2:79:6c:06:f0:
+         a6:af:e8:45:c6:02:d5:1c:09:26:8a:a7:b0:ff:74:50:85:82:
+         1d:88:b2:2c:eb:20:3e:bf:3b:4e:9b:ab:b7:4f:e8:14:a8:1a:
+         33:50:e9:a8:24:3e:5e:2a:68:ea:fa:f3:12:30:94:8e:0f:0d:
+         da:6c:17:60
+</code></pre>
+</details>
+
+<details><summary>ssl with domain</summary>
+<pre class="language-"><code>$ sudo openssl genrsa -des3 -out artifactorykey 2048
+Generating RSA private key, 2048 bit long modulus
+........................+++
+.......................................+++
+e is 65537 (0x10001)
+Enter pass phrase for artifactorykey: artifactory
+Verifying - Enter pass phrase for artifactorykey: artifactory
+
+$ sudo openssl req -new -key artifactorykey -out artifactorycsr
+Enter pass phrase for artifactorykey: artifactory
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter &apos;.&apos;, the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:CN
+State or Province Name (full name) [Some-State]:Sichuan
+Locality Name (eg, city) []:Chengdu
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany Ltd
+Organizational Unit Name (eg, section) []:mycompany CDI
+Common Name (e.g. server FQDN or YOUR name) []:docker-1.artifactory
+Email Address []:.
+
+Please enter the following &apos;extra&apos; attributes
+to be sent with your certificate request
+A challenge password []:.
+An optional company name []:.
+
+$ sudo cp artifactorykey{,.org}
+
+$ sudo openssl rsa -in artifactorykey.org -out artifactorykey
+Enter pass phrase for artifactorykey.org: artifactory
+writing RSA key
+
+$ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactorykey -out artifactorycrt
+Signature ok
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany Ltd/OU=mycompany CDI/CN=docker-1.artifactory
+Getting Private key
+
+$ openssl x509 -text -noout -in ssl/artifactorycrt
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number: 15006671364169185053 (0xd0426818d254b71d)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany Ltd, OU=mycompany CDI, CN=docker-1.artifactory
+        Validity
+            Not Before: Dec 26 16:02:10 2017 GMT
+            Not After : Dec 26 16:02:10 2018 GMT
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany Ltd, OU=mycompany CDI, CN=docker-1.artifactory
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:dc:30:6b:83:56:92:fb:f3:fb:bc:da:3e:a9:5c:
+                    67:c3:19:42:9a:8f:8f:30:e6:27:fa:a9:9d:c9:3e:
+                    9c:31:3d:aa:d8:9f:ae:9b:64:b0:75:2a:01:51:ad:
+                    04:c4:00:5d:f4:f8:b4:af:bb:20:f3:77:45:65:28:
+                    d8:38:28:b2:03:46:d0:67:d1:91:8e:7b:65:66:a0:
+                    7e:a5:e2:fe:80:00:5e:54:95:50:52:9c:44:2a:aa:
+                    dc:a2:80:be:16:07:79:b4:13:1d:f5:8a:ca:c3:ab:
+                    1c:76:de:f3:b8:23:9b:54:17:28:be:ac:e5:68:5c:
+                    f3:83:49:61:55:d2:e1:ea:0c:e7:72:75:6e:90:5a:
+                    90:a8:85:01:c6:cc:69:94:5b:c4:f9:14:6d:70:0a:
+                    8e:45:e0:b9:28:aa:99:3a:22:12:db:0b:d7:d9:6e:
+                    aa:35:36:5e:e6:00:eb:99:ab:46:6d:7b:e5:12:b1:
+                    f9:0c:5c:d3:c0:47:7b:b3:e4:03:15:fa:8d:42:f8:
+                    a1:c1:ce:dc:42:d2:81:88:18:0d:26:28:7e:90:cf:
+                    e8:05:84:75:94:e9:ac:20:47:95:c7:50:1c:d8:42:
+                    c3:d7:8b:90:f9:a9:48:cc:a5:8d:88:3b:54:a9:ef:
+                    20:ce:ee:4c:6d:04:65:eb:6c:f7:22:9d:c8:13:33:
+                    b1:6d
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha256WithRSAEncryption
+         c3:c7:c8:0d:19:d1:0b:05:ac:11:e3:e4:af:25:0e:95:f5:f5:
+         31:ed:90:4e:7f:1a:2b:a2:2f:4d:a3:d9:57:40:a2:f6:af:55:
+         90:53:bf:72:39:81:5d:53:41:85:e0:1d:26:9f:9e:33:05:46:
+         9c:fc:51:99:19:5c:7d:ef:aa:cc:50:61:0b:f4:11:69:bd:9e:
+         2a:34:48:e9:9d:7c:d0:e0:80:a5:42:67:ac:8e:0c:d6:84:19:
+         8e:cb:05:97:9f:21:c5:e0:78:8f:97:f6:53:fa:f2:ec:49:3f:
+         fb:11:68:ed:ea:c0:8c:c5:be:08:61:e4:bd:4e:05:5f:89:99:
+         f6:47:6f:b3:1e:5f:49:62:ff:37:dc:f0:c4:4b:bb:a4:15:06:
+         b1:80:4d:24:ef:bb:25:d6:a5:60:13:34:57:73:ba:b4:b0:8b:
+         42:0f:18:ef:0e:17:60:83:4d:61:bd:ef:55:b9:52:6a:47:ab:
+         c3:ee:b3:11:27:86:aa:87:18:d5:60:b8:b4:34:c2:fa:75:48:
+         0e:f1:f4:30:b3:fa:b3:ad:a9:8a:6e:e6:62:71:02:5a:72:bd:
+         5c:45:a0:23:ea:1d:84:16:24:3d:88:a0:12:20:61:7a:f8:bd:
+         dc:0f:fb:26:c0:f3:2f:1f:66:7e:64:35:b6:45:05:c4:00:43:
+         2d:18:da:a1
+</code></pre>
+</details>
+
+
+<footer class="page-footer"><span class="copyright">Copyright &#xA9; marslo 2020-2021 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">Last Modified:
+2020-09-22 23:02:55
+</span></footer></details>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="network.html" class="navigation navigation-prev " aria-label="Previous page: network">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="osx.html" class="navigation navigation-next " aria-label="Next page: osx">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"nginx&cert","level":"1.4.8","depth":2,"next":{"title":"osx","level":"1.4.9","depth":2,"path":"devops/osx.md","ref":"devops/osx.md","articles":[]},"previous":{"title":"network","level":"1.4.7","depth":2,"path":"devops/network.md","ref":"devops/network.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-livereload","search-plus","edit-link","disqus","prism","prism-themes","advanced-emoji","anchors","splitter","favicon","todo","flexible-alerts","-sharing","sharing-plus","sectionx","hints","anchor-navigation-ex","expandable-chapters-small","code","codeblock-filename","emphasize","tbfed-pagefooter","image-captions","todo","github-buttons","hide-element","accordion","livereload"],"root":"./docs","styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright © marslo 2020-2021","modify_label":"Last Modified:","modify_format":"YYYY-MM-DD HH:mm:ss"},"prism":{"css":["prismjs/themes/prism-solarizedlight.css"]},"disqus":{"useIdentifier":false,"shortName":"mbooks"},"emphasize":{},"todo":{},"splitter":{},"accordion":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"hints":{"danger":"fa fa-exclamation-cicle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":1},"sectionx":{"tag":"b"},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"floatIcon":"fa fa-navicon","level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"printLog":false,"showGoTop":true,"showLevel":false},"favicon":{"shortcut":"assets/images/favicon.ico","bookmark":"assets/images/favicon.ico","appleTouch":"assets/images/apple-touch-icon.png","appleTouchMore":{"120x120":"assets/images/apple-touch-icon-120x120.png","180x180":"assets/images/apple-touch-icon-180x180.png"}},"codeblock-filename":{},"prism-themes":{},"github-buttons":{"buttons":[{"user":"marslo","repo":"ibook","type":"star","size":"small"}]},"expandable-chapters-small":{},"flexible-alerts":{"danger":{"className":"danger","icon":"fa fa-ban","label":"Attention"},"note":{"className":"info","icon":"fa fa-info-circle","label":"Note"},"style":"flat","tip":{"className":"tip","icon":"fa fa-lightbulb-o","label":"Tip"},"warning":{"className":"warning","icon":"fa fa-exclamation-triangle","label":"Warning"}},"advanced-emoji":{"embedEmojis":false},"sharing":{"qq":false,"all":["facebook","google","twitter","weibo","instapaper","linkedin","pocket"],"douban":false,"facebook":false,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":false,"messenger":false,"line":false,"vk":false,"pocket":false,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":true},"edit-link":{"label":"Edit in Github","base":"https://github.com/marslo/ibook/edit/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"search-plus":{},"image-captions":{"caption":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","variable_name":"_pictures"}},"theme":"default","author":"marslo","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"_pictures":[{"backlink":"cheatsheet/windows/windows.html#fig1.3.1.1","level":"1.3.1","list_caption":"Figure: new","alt":"new","nro":1,"url":"../../screenshot/win/cmd-admin-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"new","attributes":{},"skip":false,"key":"1.3.1.1"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.1.2","level":"1.3.1","list_caption":"Figure: new","alt":"new","nro":2,"url":"../../screenshot/win/cmd-admin-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"new","attributes":{},"skip":false,"key":"1.3.1.2"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.1.3","level":"1.3.1","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":3,"url":"../../screenshot/win/cmd-admin-3.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.1.3"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.1.4","level":"1.3.1","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":4,"url":"../../screenshot/win/cmd-admin-5.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.1.4"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.1.5","level":"1.3.1","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":5,"url":"../../screenshot/win/cmd-admin-6.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.1.5"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.1.6","level":"1.3.1","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":6,"url":"../../screenshot/win/cmd-admin-7.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.1.6"},{"backlink":"cheatsheet/media.html#fig1.3.5.1","level":"1.3.5","list_caption":"Figure: combine","alt":"combine","nro":7,"url":"../screenshot/ffmpeg-combine.jpg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"combine","attributes":{},"skip":false,"key":"1.3.5.1"},{"backlink":"cheatsheet/media.html#fig1.3.5.2","level":"1.3.5","list_caption":"Figure: magick","alt":"magick","nro":8,"url":"../screenshot/heic-1.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"magick","attributes":{},"skip":false,"key":"1.3.5.2"},{"backlink":"cheatsheet/osx.html#fig1.3.6.1","level":"1.3.6","list_caption":"Figure: system-info","alt":"system-info","nro":9,"url":"../screenshot/osx/system_info.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"system-info","attributes":{},"skip":false,"key":"1.3.6.1"},{"backlink":"cheatsheet/osx.html#fig1.3.6.2","level":"1.3.6","list_caption":"Figure: option key","alt":"option key","nro":10,"url":"../screenshot/osx/copy-path-optional-key.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"option key","attributes":{},"skip":false,"key":"1.3.6.2"},{"backlink":"cheatsheet/osx.html#fig1.3.6.3","level":"1.3.6","list_caption":"Figure: create quick action","alt":"create quick action","nro":11,"url":"../screenshot/osx/copy-path-service-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"create quick action","attributes":{},"skip":false,"key":"1.3.6.3"},{"backlink":"cheatsheet/osx.html#fig1.3.6.4","level":"1.3.6","list_caption":"Figure: content menu","alt":"content menu","nro":12,"url":"../screenshot/osx/copy-path-service-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"content menu","attributes":{},"skip":false,"key":"1.3.6.4"},{"backlink":"cheatsheet/osx.html#fig1.3.6.5","level":"1.3.6","list_caption":"Figure: copy path apple script","alt":"copy path apple script","nro":13,"url":"../screenshot/osx/copy-path-applescript.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path apple script","attributes":{},"skip":false,"key":"1.3.6.5"},{"backlink":"cheatsheet/osx.html#fig1.3.6.6","level":"1.3.6","list_caption":"Figure: copy path shortcut key","alt":"copy path shortcut key","nro":14,"url":"../screenshot/osx/copy-path-shortcut.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path shortcut key","attributes":{},"skip":false,"key":"1.3.6.6"},{"backlink":"cheatsheet/osx.html#fig1.3.6.7","level":"1.3.6","list_caption":"Figure: csrutil-1","alt":"csrutil-1","nro":15,"url":"../screenshot/osx/csrutil-1.jpg","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"csrutil-1","attributes":{},"skip":false,"key":"1.3.6.7"},{"backlink":"cheatsheet/osx.html#fig1.3.6.8","level":"1.3.6","list_caption":"Figure: csrutil-2","alt":"csrutil-2","nro":16,"url":"../screenshot/osx/csrutil-2.jpg","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"csrutil-2","attributes":{},"skip":false,"key":"1.3.6.8"},{"backlink":"devops/adminTools.html#fig1.4.1","level":"1.4","list_caption":"Figure: vnstat","alt":"vnstat","nro":17,"url":"../screenshot/vnstat.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vnstat","attributes":{},"skip":false,"key":"1.4.1"},{"backlink":"devops/adminTools.html#fig1.4.2","level":"1.4","list_caption":"Figure: ipcalc","alt":"ipcalc","nro":18,"url":"../screenshot/ipcalc.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ipcalc","attributes":{},"skip":false,"key":"1.4.2"},{"backlink":"devops/adminTools.html#fig1.4.3","level":"1.4","list_caption":"Figure: dstat","alt":"dstat","nro":19,"url":"../screenshot/dstat.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"dstat","attributes":{},"skip":false,"key":"1.4.3"},{"backlink":"devops/git/git.html#fig1.4.1.1","level":"1.4.1","list_caption":"Figure: git rebase and squash automatic","alt":"git rebase and squash automatic","nro":20,"url":"../../screenshot/git/gitrebase-isquash-auto.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git rebase and squash automatic","attributes":{},"skip":false,"key":"1.4.1.1"},{"backlink":"devops/git/git.html#fig1.4.1.2","level":"1.4.1","list_caption":"Figure: rebase -i --root","alt":"rebase -i --root","nro":21,"url":"../../screenshot/rebase-i-root.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"rebase -i --root","attributes":{},"skip":false,"key":"1.4.1.2"},{"backlink":"devops/git/eol.html#fig1.4.1.1.1","level":"1.4.1.1","list_caption":"Figure: git line ending setup","alt":"git line ending setup","nro":22,"url":"../../screenshot/git-eol.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git line ending setup","attributes":{},"skip":false,"key":"1.4.1.1.1"},{"backlink":"devops/git/gerrit.html#fig1.4.1.3.1","level":"1.4.1.3","list_caption":"Figure: non author cr","alt":"non author cr","nro":23,"url":"../../screenshot/gerrit/none-author-CR.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"non author cr","attributes":{},"skip":false,"key":"1.4.1.3.1"},{"backlink":"devops/git/gerrit.html#fig1.4.1.3.2","level":"1.4.1.3","list_caption":"Figure: optional-check","alt":"optional-check","nro":24,"url":"../../screenshot/gerrit/optional_ticket_check-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check","attributes":{},"skip":false,"key":"1.4.1.3.2"},{"backlink":"devops/git/gerrit.html#fig1.4.1.3.3","level":"1.4.1.3","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":25,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.4.1.3.3"},{"backlink":"devops/git/gerrit.html#fig1.4.1.3.4","level":"1.4.1.3","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":26,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.4.1.3.4"},{"backlink":"devops/git/gerrit.html#fig1.4.1.3.5","level":"1.4.1.3","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":27,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.4.1.3.5"},{"backlink":"devops/git/gerrit.html#fig1.4.1.3.6","level":"1.4.1.3","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":28,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.4.1.3.6"},{"backlink":"devops/adminTools.html#fig1.4.2.1","level":"1.4.2","list_caption":"Figure: vnstat","alt":"vnstat","nro":29,"url":"../screenshot/vnstat.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vnstat","attributes":{},"skip":false,"key":"1.4.2.1"},{"backlink":"devops/adminTools.html#fig1.4.2.2","level":"1.4.2","list_caption":"Figure: ipcalc","alt":"ipcalc","nro":30,"url":"../screenshot/ipcalc.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ipcalc","attributes":{},"skip":false,"key":"1.4.2.2"},{"backlink":"devops/adminTools.html#fig1.4.2.3","level":"1.4.2","list_caption":"Figure: dstat","alt":"dstat","nro":31,"url":"../screenshot/dstat.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"dstat","attributes":{},"skip":false,"key":"1.4.2.3"},{"backlink":"devops/network.html#fig1.4.7.1","level":"1.4.7","list_caption":"Figure: nmcli-1","alt":"nmcli-1","nro":32,"url":"../screenshot/nmcli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-1","attributes":{},"skip":false,"key":"1.4.7.1"},{"backlink":"devops/network.html#fig1.4.7.2","level":"1.4.7","list_caption":"Figure: nmcli-2","alt":"nmcli-2","nro":33,"url":"../screenshot/nmcli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-2","attributes":{},"skip":false,"key":"1.4.7.2"},{"backlink":"devops/network.html#fig1.4.7.3","level":"1.4.7","list_caption":"Figure: nmtui-1","alt":"nmtui-1","nro":34,"url":"../screenshot/nmtui-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmtui-1","attributes":{},"skip":false,"key":"1.4.7.3"},{"backlink":"devops/network.html#fig1.4.7.4","level":"1.4.7","list_caption":"Figure: nmtui-2","alt":"nmtui-2","nro":35,"url":"../screenshot/nmtui-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmtui-2","attributes":{},"skip":false,"key":"1.4.7.4"},{"backlink":"devops/osx.html#fig1.4.9.1","level":"1.4.9","list_caption":"Figure: download cookies.txt","alt":"download cookies.txt","nro":36,"url":"../screenshot/cookies.txt-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"download cookies.txt","attributes":{},"skip":false,"key":"1.4.9.1"},{"backlink":"devops/osx.html#fig1.4.9.2","level":"1.4.9","list_caption":"Figure: copy link address","alt":"copy link address","nro":37,"url":"../screenshot/cookies.txt-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy link address","attributes":{},"skip":false,"key":"1.4.9.2"},{"backlink":"devops/osx.html#fig1.4.9.3","level":"1.4.9","list_caption":"Figure: csrutil","alt":"csrutil","nro":38,"url":"../screenshot/csrutil-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"csrutil","attributes":{},"skip":false,"key":"1.4.9.3"},{"backlink":"jenkins/config/windows.html#fig1.5.1.1.1","level":"1.5.1.1","list_caption":"Figure: config","alt":"config","nro":39,"url":"../../screenshot/jenkins/config/win-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"config","attributes":{},"skip":false,"key":"1.5.1.1.1"},{"backlink":"jenkins/config/windows.html#fig1.5.1.1.2","level":"1.5.1.1","list_caption":"Figure: start server manually","alt":"start server manually","nro":40,"url":"../../screenshot/jenkins/config/win-3.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"start server manually","attributes":{},"skip":false,"key":"1.5.1.1.2"},{"backlink":"jenkins/config/windows.html#fig1.5.1.1.3","level":"1.5.1.1","list_caption":"Figure: run as administrator","alt":"run as administrator","nro":41,"url":"../../screenshot/jenkins/config/win-6.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"run as administrator","attributes":{},"skip":false,"key":"1.5.1.1.3"},{"backlink":"jenkins/config/windows.html#fig1.5.1.1.4","level":"1.5.1.1","list_caption":"Figure: sc","alt":"sc","nro":42,"url":"../../screenshot/jenkins/config/win-7.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sc","attributes":{},"skip":false,"key":"1.5.1.1.4"},{"backlink":"jenkins/config/windows.html#fig1.5.1.1.5","level":"1.5.1.1","list_caption":"Figure: restart when anything abnormal","alt":"restart when anything abnormal","nro":43,"url":"../../screenshot/jenkins/config/win-8.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"restart when anything abnormal","attributes":{},"skip":false,"key":"1.5.1.1.5"},{"backlink":"jenkins/config/windows.html#fig1.5.1.1.6","level":"1.5.1.1","list_caption":"Figure: remove service","alt":"remove service","nro":44,"url":"../../screenshot/jenkins/config/win-9.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"remove service","attributes":{},"skip":false,"key":"1.5.1.1.6"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.3.1.1","level":"1.5.3.1","list_caption":"Figure: plugin-1","alt":"plugin-1","nro":45,"url":"../../screenshot/k8s-plugin-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-1","attributes":{},"skip":false,"key":"1.5.3.1.1"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.3.1.2","level":"1.5.3.1","list_caption":"Figure: plugin-2","alt":"plugin-2","nro":46,"url":"../../screenshot/k8s-plugin-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-2","attributes":{},"skip":false,"key":"1.5.3.1.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.3.1.3","level":"1.5.3.1","list_caption":"Figure: plugin-3","alt":"plugin-3","nro":47,"url":"../../screenshot/k8s-plugin-3.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-3","attributes":{},"skip":false,"key":"1.5.3.1.3"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.3.1.4","level":"1.5.3.1","list_caption":"Figure: plugin-4","alt":"plugin-4","nro":48,"url":"../../screenshot/k8s-plugin-4.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-4","attributes":{},"skip":false,"key":"1.5.3.1.4"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.3.1.5","level":"1.5.3.1","list_caption":"Figure: plugin-5","alt":"plugin-5","nro":49,"url":"../../screenshot/k8s-plugin-5.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-5","attributes":{},"skip":false,"key":"1.5.3.1.5"},{"backlink":"jenkins/script/cli.html#fig1.5.4.2.1","level":"1.5.4.2","list_caption":"Figure: jenkins-cli-port","alt":"jenkins-cli-port","nro":50,"url":"../../screenshot/jenkins/jenkins-cli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-port","attributes":{},"skip":false,"key":"1.5.4.2.1"},{"backlink":"jenkins/script/cli.html#fig1.5.4.2.2","level":"1.5.4.2","list_caption":"Figure: jenkins-cli-ssh","alt":"jenkins-cli-ssh","nro":51,"url":"../../screenshot/jenkins/jenkins-cli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-ssh","attributes":{},"skip":false,"key":"1.5.4.2.2"},{"backlink":"kubernetes/kubectl/kubectl.html#fig1.6.2.1","level":"1.6.2","list_caption":"Figure: kubectl","alt":"kubectl","nro":52,"url":"../screenshot/k8s/k-1.svg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"kubectl","attributes":{},"skip":false,"key":"1.6.2.1"},{"backlink":"kubernetes/monitor.html#fig1.6.6.1","level":"1.6.6","list_caption":"Figure: grafana-315.gif","alt":"grafana-315.gif","nro":53,"url":"../screenshot/grafana-315.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"grafana-315.gif","attributes":{},"skip":false,"key":"1.6.6.1"},{"backlink":"linux/ubuntu/installation.html#fig1.7.1.2.1","level":"1.7.1.2","list_caption":"Figure: ss-libev-service","alt":"ss-libev-service","nro":54,"url":"../../screenshot/ss/ss-libev-port.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-service","attributes":{},"skip":false,"key":"1.7.1.2.1"},{"backlink":"linux/ubuntu/installation.html#fig1.7.1.2.2","level":"1.7.1.2","list_caption":"Figure: ss-libev-client","alt":"ss-libev-client","nro":55,"url":"../../screenshot/ss/ss-libev-client.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-client","attributes":{},"skip":false,"key":"1.7.1.2.2"},{"backlink":"linux/ubuntu/x.html#fig1.7.1.6.1","level":"1.7.1.6","list_caption":"Figure: desktop styles","alt":"desktop styles","nro":56,"url":"screenshots/desktop-style-2.jpeg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"desktop styles","attributes":{},"skip":false,"key":"1.7.1.6.1"},{"backlink":"tools/iterm2.html#fig1.9.3.1","level":"1.9.3","list_caption":"Figure: tabset list","alt":"tabset list","nro":57,"url":"../screenshot/iterm2/tabset-list-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabset list","attributes":{},"skip":false,"key":"1.9.3.1"},{"backlink":"tools/iterm2.html#fig1.9.3.2","level":"1.9.3","list_caption":"Figure: itit <string> c","alt":"itit <string> c","nro":58,"url":"../screenshot/iterm2/itit-c.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit <string> c","attributes":{},"skip":false,"key":"1.9.3.2"},{"backlink":"tools/iterm2.html#fig1.9.3.3","level":"1.9.3","list_caption":"Figure: itit string bc","alt":"itit string bc","nro":59,"url":"../screenshot/iterm2/itit-bc.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit string bc","attributes":{},"skip":false,"key":"1.9.3.3"}]},"title":"handbook","language":"en","output.name":"site","links":{"sidebar":{"I, Marslo":"https://marslo.github.io/"}},"gitbook":"3.2.3","direction":"ltr"},"file":{"path":"devops/nginx&cert.md","mtime":"2020-09-22T15:02:55.354Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-09-23T14:26:37.354Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.16.1/URI.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-disqus/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-flexible-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github-buttons/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-hide-element/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-accordion/accordionSelector.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
