@@ -157,6 +157,9 @@
     "hide-element": {
       "elements": [".gitbook-link"]
     },
+    "flexible-alerts": {
+      "style": "flat"
+    },
     "expandable-chapters-small":{}
   }
 }

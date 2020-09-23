@@ -142,10 +142,9 @@ $ sudo mdutil -E /Volumes/marslo/
 
 ### copy STDOUT into clipboard
 
-{% hint style='success' %}
-- `pbcopy` for macOS
-- `xclip` for Linux
-{% endhint %}
+> [!NOTE]
+> - `pbcopy` for macOS
+> - `xclip` for Linux
 
 ```bash
 $ <cmd> | pbcopy
