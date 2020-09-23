@@ -19,11 +19,10 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-{% hint style='tip' %}
-this for renew extend CA mode
-<br>
-stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
-{% endhint %}
+> [!TIP]
+> this for renew extend CA mode
+>
+> stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
 
 ## renew master
 > reference:
@@ -170,9 +169,8 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
 >
 > [kubeadm-conf.yaml](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/init/kubeadm-conf.yaml)
 
-  {% hint style="info" %}
-  renew cert in **major master**
-  {% endhint %}
+> [!NOTE]
+> renew cert in **major master**
 
   <table>
     <thead>
@@ -230,9 +228,8 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
 
 - redundant masters
 
-{% hint style="info" %}
-sync renewed certificates to **another masters**
-{% endhint %}
+> [!NOTE]
+> sync renewed certificates to **another masters**
 
   ```bash
   $ leadIP=<master-1>

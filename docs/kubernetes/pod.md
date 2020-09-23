@@ -28,7 +28,6 @@
   ```
 
 - `--template`
-  !FILENAME "kube-system get template"
   {% raw %}
   ```bash
   $ k -n kube-system get pods \

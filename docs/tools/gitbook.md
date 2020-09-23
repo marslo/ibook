@@ -152,7 +152,6 @@ python
     ```
 
   - fixed code
-    {% raw %}
     ```markdown
 
     {% raw %}
@@ -160,7 +159,6 @@ python
     {% endraw %}
 
     ```
-    {% endraw %}
 
 ## reference
 - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
