@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2039
+# shellcheck disable=SC2039,SC1078,SC1079,SC2015
 # =============================================================================
 #   FileName : deploy.sh
 #     Author : marslo.jiao@gmail.com
@@ -13,18 +13,44 @@ branch='gh-pages'
 remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
 msg=$(git show HEAD --no-patch --format="%s")
 
-usage="""USAGE:
-\n\t$0 [help] [function name]
+# References:
+#  - [WAOW! Complete explanations](https://stackoverflow.com/a/28938235/101831)
+#  - [coloring functions](https://gist.github.com/inexorabletash/9122583)
+# credit belongs to https://raw.githubusercontent.com/ppo/bash-colors/master/bash-colors.sh
+c() {
+  [ $# -eq 0 ] && echo "\033[0m" || echo "$1" | sed -E "s/(.)/‹\1›/g;s/([KRGYBMCW])/3\1/g;s/([krgybmcw])/4\1/g;s/S/22/;y/sufnKRGYBMCWkrgybmcw›/14570123456701234567m/;s/‹/\\\033[/g";
+}
+
+
+usage="""$(c B)deploy.sh - to quickly deploy _book/* into gh-pages branch $(c)
+\nUSAGE:
+\t$(c sG)$ $0 [help] [function name]$(c)
 \nNOTICE:
-\n\tAdd two commands 'clean' and 'built' in ./package.json.
-\n\tDetails can be found by $ $0 info
+\tAdd command $(c Y)'built'$(c) in ./package.json as below:
+\t\t$(c u){$(c)
+\t\t$(c u)  \"scripts\": {$(c)
+\t\t$(c u)    \"built\": \"gitbook install && gitbook build\",$(c)
+\t\t$(c u)  }$(c)
+\t\t$(c u)}$(c)
+\n\tMore details can be found by $(c Y)$ $0 info$(c)
 \nEXAMPLE:
 \n\tDeploy _book into remote repository gh-pages branch:
-\n\t\t$0 doDeploy
+\t\t$(c Y)$ $0 doDeploy$(c)
 \n\tShow current information:
-\n\t\t$0 info
+\t\t$(c Y)$ $0 info$(c)
+\nINDEPENDENT FUNCTION NAME:
+"""
 
-\n\nINDEPENDENT FUNCTION NAME:
+info="""
+  $(c M)BASIC :$(c)
+           $(c Y)temp dir$(c) : ${target}
+  $(c Y)remote repository$(c) : ${remotes}
+   $(c Y)branch to deploy$(c) : ${branch}
+     $(c Y)commit message$(c) : ${msg}
+
+  $(c M)NPM COMMANDS :$(c)
+      $(c Y)npm run clean$(c) : $(grep \"clean\" package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run built$(c) : $(grep \"built\" package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
 """
 
 function help()
@@ -35,23 +61,13 @@ function help()
 }
 
 function info() {
-  echo -e """
-    basic :
-             temp dir : ${target}
-    remote repository : ${remotes}
-     branch to deploy : ${branch}
-       commit message : ${msg}
-
-    npm commands :
-        npm run clean : $(grep \"clean\" package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
-        npm run built : $(grep \"built\" package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
-  """
+  echo -e "${info}"
 }
 
 function build() {
-  npm run clean
-  gitbook install
-  gitbook build
+  [ -d ./node_modules ] && rm -rf ./node_modules
+  [ -d ./_book ] && rm -rf ./_book
+  npm run built
 }
 
 function updateRepo() {
@@ -78,7 +94,6 @@ function updateBook() {
 }
 
 function doDeploy() {
-
   if [ -d "${target}" ]; then
     updateRepo
   else
@@ -86,7 +101,6 @@ function doDeploy() {
     cloneRepo
   fi
   updateBook
-
 }
 
 if [ "$1" = "help" ]; then
