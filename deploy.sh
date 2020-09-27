@@ -7,8 +7,8 @@
 # LastChange : 2020-09-27 22:03:34
 # =============================================================================
 
-target='./.target_book'
-book='./_book'
+target='.target_book'
+book='_book'
 branch='gh-pages'
 remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
 msg=$(git show HEAD --no-patch --format="%s")
@@ -71,8 +71,10 @@ function build() {
 }
 
 function updateRepo() {
-  git -C "${target}" fetch origin --force "${branch}"
-  git -C "${target}" rebase -v refs/remotes/origin/${branch}
+  if [ "$(git rev-parse remotes/origin/${branch})" != "$(git -C ${target} rev-parse HEAD)" ]; then
+    git -C "${target}" fetch origin --force "${branch}"
+    git -C "${target}" rebase -v refs/remotes/origin/${branch}
+  fi
 }
 
 function cloneRepo() {
@@ -81,9 +83,9 @@ function cloneRepo() {
 
 function updateBook() {
   npm run built
-  cp -rf ${book}/* ${target}/
+  yes | cp -rf ${book}/* ${target}/
 
-  push .
+  pushd .
   cd "${target}" || exit
 
   git add --all .

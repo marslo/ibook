@@ -9,7 +9,8 @@
     "ibook:dev": "cd books && gitbook serve --config=../book.json",
     "clean": "[ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book",
     "built": "[ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book; gitbook install && gitbook build",
-    "ibook": "gitbook install && gitbook serve"
+    "ibook": "gitbook install && gitbook serve",
+    "deploy": "bash deploy.sh doDeploy"
   },
   "keywords": [
     "git",
