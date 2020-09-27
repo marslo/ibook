@@ -88,6 +88,7 @@
   * [others](programming/others.md)
 * [tools](tools/gitbook.md)
   * [gitbook](tools/gitbook.md)
+  * [hexo](tools/hexo.md)
   * [github.page](tools/github.page.md)
   * [iterm2](tools/iterm2.md)
   * [skype](tools/skype.md)
