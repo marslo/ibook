@@ -7,8 +7,8 @@
     "ibook:prepare": "gitbook install",
     "ibook:watch": "npm run ibook:prepare && gitbook serve",
     "ibook:dev": "cd books && gitbook serve --config=../book.json",
-    "clean": "[ -d ./node_modules ] && rm -rf ./node_modules; [ -d ./_book ] && rm -rf ./_book",
-    "built": "npm run clean && gitbook install && gitbook build",
+    "clean": "[ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book",
+    "built": "[ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book; gitbook install && gitbook build",
     "ibook": "gitbook install && gitbook serve"
   },
   "keywords": [
