@@ -44,7 +44,9 @@
     "todo",
     "github-buttons",
     "hide-element",
-    "accordion"
+    "accordion",
+    "codetabs",
+    "codesnippet"
   ],
 
   "pluginsConfig": {
