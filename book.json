@@ -1,0 +1,167 @@
+{
+  "title": "handbook",
+  "author": "marslo",
+  "output.name": "site",
+  "gitbook": "3.2.3",
+  "language": "en",
+  "direction" : "ltr",
+  "root": "./docs",
+  "styles": {
+    "website": "styles/website.css"
+  },
+  "links": {
+    "sidebar": {
+      "I, Marslo": "https://imarslo.github.io/"
+    }
+  },
+  "plugins": [
+    "-lunr",
+    "-search",
+    "-highlight",
+    "-livereload",
+    "search-plus",
+    "edit-link",
+    "disqus",
+    "prism",
+    "prism-themes",
+    "advanced-emoji",
+    "anchors",
+    "splitter",
+    "favicon",
+    "todo",
+    "flexible-alerts",
+    "-sharing",
+    "sharing-plus",
+    "sectionx",
+    "hints",
+    "anchor-navigation-ex",
+    "expandable-chapters-small",
+    "code",
+    "codeblock-filename",
+    "emphasize",
+    "tbfed-pagefooter",
+    "image-captions",
+    "todo",
+    "github-buttons",
+    "hide-element",
+    "accordion",
+    "codetabs",
+    "codesnippet"
+  ],
+
+  "pluginsConfig": {
+    "fontsettings": {
+      "theme": "white",
+      "family": "sans",
+      "size":  1
+    },
+    "theme-default": {
+      "showLevel": false
+    },
+    "disqus": {
+      "shortName": "mbooks"
+    },
+    "prism": {
+      "css": [
+        "prismjs/themes/prism-solarizedlight.css"
+      ]
+    },
+    "sharing": {
+      "douban": false,
+      "facebook": false,
+      "google": false,
+      "hatenaBookmark": false,
+      "instapaper": false,
+      "line": false,
+      "linkedin": false,
+      "messenger": false,
+      "pocket": false,
+      "qq": false,
+      "qzone": false,
+      "stumbleupon": false,
+      "twitter": false,
+      "viber": false,
+      "vk": false,
+      "weibo": true,
+      "whatsapp": false,
+      "all": [
+        "facebook",
+        "google",
+        "twitter",
+        "weibo",
+        "instapaper",
+        "linkedin",
+        "pocket"
+      ]
+    },
+    "tbfed-pagefooter": {
+      "copyright": "Copyright © marslo 2020-2021",
+      "modify_label": "Last Modified:",
+      "modify_format": "YYYY-MM-DD HH:mm:ss"
+    },
+    "edit-link": {
+      "base": "https://github.com/marslo/ibook/edit/master",
+      "label": "Edit in Github"
+    },
+    "anchor-navigation-ex": {
+      "showLevel": false,
+      "associatedWithSummary": true,
+      "printLog": false,
+      "multipleH1": true,
+      "mode": "float",
+      "showGoTop":true,
+      "float": {
+        "floatIcon": "fa fa-navicon",
+        "showLevelIcon": false,
+        "level1Icon": "fa fa-hand-o-right",
+        "level2Icon": "fa fa-hand-o-right",
+        "level3Icon": "fa fa-hand-o-right"
+      },
+      "pageTop": {
+        "showLevelIcon": false,
+        "level1Icon": "fa fa-hand-o-right",
+        "level2Icon": "fa fa-hand-o-right",
+        "level3Icon": "fa fa-hand-o-right"
+      }
+    },
+    "sectionx": {
+      "tag": "b"
+    },
+    "hints": {
+      "info": "fa fa-info-circle",
+      "tip": "fa fa-mortar-board",
+      "danger": "fa fa-exclamation-cicle",
+      "working": "fa fa-wrench"
+    },
+    "image-captions": {
+      "caption": "_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_"
+    },
+    "code": {
+      "copyButtons": true
+    },
+    "favicon": {
+      "shortcut": "assets/images/favicon.ico",
+      "bookmark": "assets/images/favicon.ico",
+      "appleTouch": "assets/images/apple-touch-icon.png",
+      "appleTouchMore": {
+          "120x120": "assets/images/apple-touch-icon-120x120.png",
+          "180x180": "assets/images/apple-touch-icon-180x180.png"
+      }
+    },
+    "github-buttons": {
+      "buttons": [{
+        "user": "marslo",
+        "repo": "ibook",
+        "type": "star",
+        "size": "small"
+      }]
+    },
+    "hide-element": {
+      "elements": [".gitbook-link"]
+    },
+    "flexible-alerts": {
+      "style": "flat"
+    },
+    "expandable-chapters-small":{}
+  }
+}
