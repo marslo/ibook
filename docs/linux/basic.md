@@ -107,6 +107,10 @@ $ scp -r `echo dir{1..10}` user@target.server:/target/server/path/
   $ find [PATH] -type f -printf "%s %p\n" | sort -rn | head -n 5
   ```
 
+## sed
+> reference
+> - [50 `sed` Command Examples](https://linuxhint.com/50_sed_command_examples/)
+
 
 # CentOS
 ## Yum
