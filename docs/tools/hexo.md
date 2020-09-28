@@ -30,15 +30,17 @@ $ hexo init
 > credit belongs to [snark](https://github.com/Litreily/hexo-theme-snark)
 
 ### clone code
-- in Git repo
-  ```bash
-  $ git submodule add https://github.com/imarslo/hexo-theme-snark.git themes/snark
-  ```
 
-- in independent folder
-  ```bash
-  $ git clone https://github.com/imarslo/hexo-theme-snark.git themes/snark
-  ```
+{% codetabs name="In a Git repo", type="bash" -%}
+$ git submodule add https://github.com/imarslo/hexo-theme-snark.git themes/snark
+{%- language name="In a folder", type="bash" -%}
+$ git clone https://github.com/imarslo/hexo-theme-snark.git themes/snark
+$ sed '/highlight:/{n;s/^.*$/\ \ enable: false/}' -i _config.xml
+$ sed '/highlight:/{n;n;s/^.*$/\ \ line_number: false/}' -i _config.xml
+{%- language name="Update theme", type="bash" -%}
+$ git submodule sync --recursive
+$ git submodule update --init --recursive
+{%- endcodetabs %}
 
 ### install plugin
 ```bash
@@ -48,7 +50,6 @@ $ npm install hexo-generator-feed --save
 $ npm install hexo-generator-search --save
 $ npm install hexo-generator-sitemap --save
 ```
-
 
 ### generate new pages
 ```bash
@@ -61,7 +62,18 @@ $ hexo new page about
 ### diable the default highlight settings
 > default settings in `_config.xml`
 
-```bash
+{% codetabs name="cmd with sed", type="bash" -%}
+$ sed '/highlight:/{n;s/^.*$/\ \ enable: false/;n;s/^.*$/\ \ line_number: false/;}' -i _config.xml
+{%- language name="or", type="bash" -%}
 $ sed '/highlight:/{n;s/^.*$/\ \ enable: false/}' -i _config.xml
 $ sed '/highlight:/{n;n;s/^.*$/\ \ line_number: false/}' -i _config.xml
-```
+{%- language name="result", type="bash" -%}
+$ grep highlight: _config.yml -A 6
+highlight:
+  enable: false
+  line_number: false
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+{%- endcodetabs %}
