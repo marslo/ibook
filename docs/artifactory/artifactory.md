@@ -5,6 +5,7 @@
 - [AQL](#aql)
   - [Relative Time Operators](#relative-time-operators)
   - [find items (folder) some times ago by aql](#find-items-folder-some-times-ago-by-aql)
+- [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -12,6 +13,9 @@
 ## AQL
 
 ### [Relative Time Operators](https://www.jfrog.com/confluence/display/RTF/Artifactory+Query+Language#ArtifactoryQueryLanguage-RelativeTimeOperators)
+> [aqlCleanup.groovy](https://github.com/JFrog/artifactory-scripts/blob/master/cleanup/aqlCleanup.groovy)
+> [Advanced Cleanup Using Artifactory Query Language (AQL)](https://jfrog.com/blog/advanced-cleanup-using-artifactory-query-language-aql/)
+
 AQL supports specifying time intervals for queries using relative time. In other words, the time interval for the query will always be relative to the time that the query is run, so you don't have to change or formulate the time period, in some other way, each time the query is run. For example, you may want to run a query over the last day, or for the time period up to two weeks ago.
 
 Relative time is specified using the following two operators:
@@ -24,7 +28,7 @@ Relative time is specified using the following two operators:
 Time periods are specified with a number and one of the following suffixes:
 
 | time period  | suffixes       |
-| :--:         | --             |
+| :--:         | :--:           |
 | milliseconds | "mills", "ms"  |
 | seconds      | "seconds", "s" |
 | minutes      | "minutes"      |
@@ -132,21 +136,6 @@ Time periods are specified with a number and one of the following suffixes:
               """ \
            | jq --raw-output .results[].name?
     ```
-
-#### delete all in `my-repo` 4 weeks ago
-```bash
-username='admin'
-password='password'
-rtURL='https://my.artifactory.com/artifactory'
-cibuild='my-jenkins-build'
-reponame='my-repo'
-curlOpt= "-g -u${username}:${password}
-
-for _i in $(curl -s -X POST ${curlOpt} ${rtURL}/api/search/aql -T find.aql | jq --raw-output .results[].name); do
-  curl -X DELETE ${curlOpt} "${rtURL}/${reponame}/${_i}"
-  curl -X DELETE ${curlOpt} "${rtURL}/api/build/${cibuild}?buildNumbers=${_i}&artifacts=1"
-done
-```
 
 ## reference
 - [Jenkins Artifactory Plugin AQL download latest artifact matching pattern](https://stackoverflow.com/a/40351260/2940319)

@@ -1,13 +1,16 @@
 # life is hard, make it easier
 
 * [artifactory](artifactory/artifactory.md)
+  * [api](artifactory/api.md)
+  * [cli](artifactory/cli.md)
 * [cheatsheet](cheatsheet/good.md)
   * [windows](cheatsheet/windows/windows.md)
     * [clsid](cheatsheet/windows/clsid.md)
     * [env](cheatsheet/windows/env.md)
     * [shell:folder](cheatsheet/windows/shell:folder.md)
+  * [character](cheatsheet/character/character.md)
+    * [markdown](cheatsheet/character/markdown.md)
   * [havefun](cheatsheet/havefun.md)
-  * [markdown](cheatsheet/markdown.md)
   * [media](cheatsheet/media.md)
   * [osx](cheatsheet/osx.md)
 * [devops](devops/adminTools.md)

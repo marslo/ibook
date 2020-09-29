@@ -8,6 +8,7 @@
   - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
 - [Basic Comamnds](#basic-comamnds)
   - [`du`](#du)
+  - [sed](#sed)
 - [CentOS](#centos)
   - [Yum](#yum)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
