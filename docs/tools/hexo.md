@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [prepare](#prepare)
+- [init](#init)
+- [add theme](#add-theme)
+  - [clone code](#clone-code)
+  - [install plugin](#install-plugin)
+  - [generate new pages](#generate-new-pages)
+  - [diable the default highlight settings](#diable-the-default-highlight-settings)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## prepare
 ```bash
