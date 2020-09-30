@@ -83,6 +83,7 @@ function cloneRepo() {
 
 function updateBook() {
   npm run built
+  yes | rm -rf ${target}/*
   yes | cp -rf ${book}/* ${target}/
 
   pushd .
