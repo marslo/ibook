@@ -5,12 +5,17 @@
 - [date](#date)
   - [epoch](#epoch)
   - [timestamps](#timestamps)
+  - [format](#format)
+  - [IOS 8601](#ios-8601)
+  - [rfc-3339](#rfc-3339)
   - [utc](#utc)
   - [timezone](#timezone)
   - [Common formats](#common-formats)
 - [convert](#convert)
   - [timestamps to epoch](#timestamps-to-epoch)
   - [epoch to timestamps](#epoch-to-timestamps)
+  - [calculate time different](#calculate-time-different)
+  - [transfer date format](#transfer-date-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
