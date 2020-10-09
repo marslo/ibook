@@ -46,6 +46,7 @@ $ date '+%s'
 ```
 
 ### timestamps
+### format
 > `yyyy-MM-dd'T'HH:mm:ss.SSSZ`
 >
 > `yyyy-MM-dd'T'HH:mm:ss`
@@ -75,20 +76,37 @@ $ date '+%s'
 |     `date +%p`     | locale’s equivalent of AM or PM                   |            AM           |
 |     `date +%P`     | same as %p but in lower case                      |            am           |
 
+- classical date format
+  ```bash
+  $ secs=259200
 
-```bash
-$ date -u +"%Y-%m-%dT%H:%M:%SZ"
-2020-10-09T08:14:47Z
+  $ date -u -d @${secs} +"%F"
+  1970-01-04
+  $ date -u -d @${secs} +"%T"
+  00:00:00
 
-$ date +%FT%T.%3N%:z
-2020-10-09T17:27:18.491+08:00
+  $ date -u -d @${secs} +"%F %T"
+  1970-01-04 00:00:00
 
-$ date -u +"%Y-%m-%dT%H:%M:%S.%3NZ"
-2020-10-09T08:14:47.167Z
+  $ date -u -d @${secs} -Is
+  1970-01-04T00:00:00+00:00
+  ```
 
-$ date +%Y-%m-%d-T%H:%M:%S.%3N%z
-2020-10-09-T17:27:18.491+0800
-```
+
+- date format with timezone
+  ```bash
+  $ date -u +"%Y-%m-%dT%H:%M:%SZ"
+  2020-10-09T08:14:47Z
+
+  $ date +%FT%T.%3N%:z
+  2020-10-09T17:27:18.491+08:00
+
+  $ date -u +"%Y-%m-%dT%H:%M:%S.%3NZ"
+  2020-10-09T08:14:47.167Z
+
+  $ date +%Y-%m-%d-T%H:%M:%S.%3N%z
+  2020-10-09-T17:27:18.491+0800
+  ```
 
 #### time described by STRING
 ```bash
