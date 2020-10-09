@@ -18,6 +18,7 @@
 - [Get the file inode](#get-the-file-inode)
 - [All About {Curly Braces} In Bash](#all-about-curly-braces-in-bash)
 - [find and replace](#find-and-replace)
+- [Shell Parameter Expansion](#shell-parameter-expansion)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

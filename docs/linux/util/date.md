@@ -5,12 +5,17 @@
 - [date](#date)
   - [epoch](#epoch)
   - [timestamps](#timestamps)
+  - [format](#format)
+  - [IOS 8601](#ios-8601)
+  - [rfc-3339](#rfc-3339)
   - [utc](#utc)
   - [timezone](#timezone)
   - [Common formats](#common-formats)
 - [convert](#convert)
   - [timestamps to epoch](#timestamps-to-epoch)
   - [epoch to timestamps](#epoch-to-timestamps)
+  - [calculate time different](#calculate-time-different)
+  - [transfer date format](#transfer-date-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -364,6 +369,15 @@ $ printf '%dh:%dm:%ds\n' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))
 $ datediff -f "%d days, %H hours, %M mins, %S secs" "$(date +'%Y-%m-%d %H:%M:%S')" "$(date +'%Y-%m-%d %H:%M:%S' -d '3 days ago')"
 -3 days, 0 hours, 0 mins, 0 secs
 ```
+
+- or with specific format
+  ```bash
+  $ ddiff -i '%Y%m%d%H%M%S' 20190817040001 20200312000101
+  17956860s
+
+  $ ddiff -f "%d days, %H hours, %M mins, %S secs" -i '%Y%m%d%H%M%S' 20190817040001 20200312000101
+  207 days, 20 hours, 1 mins, 0 secs
+  ```
 
 #### calculate with epoch
 ```bash
