@@ -92,7 +92,6 @@ $ date '+%s'
   1970-01-04T00:00:00+00:00
   ```
 
-
 - date format with timezone
   ```bash
   $ date -u +"%Y-%m-%dT%H:%M:%SZ"
@@ -107,24 +106,6 @@ $ date '+%s'
   $ date +%Y-%m-%d-T%H:%M:%S.%3N%z
   2020-10-09-T17:27:18.491+0800
   ```
-
-#### time described by STRING
-```bash
-$ date -u +"%Y-%m-%dT%H:%M:%S.%3NZ" -d '90 day ago'
-2020-07-11T08:14:03.145Z
-
-$ date -u +"%Y-%m-%dT%H:%M:%S.%3NZ" -d '3 months ago'
-2020-07-09T08:14:47.164Z
-
-$ date -u -d "2019-01-19T05:00:00Z - 2 hours" +%Y-%m-%d_%H:%M:%S
-2019-01-19_03:00:00
-
-$ date -d "$(date -Iseconds -d "2018-12-10 00:00:00") - 5 hours - 20 minutes - 5 seconds"
-Sun Dec  9 18:39:55 CST 2018
-
-$ date -d "2018-12-10 00:00:00 5 hours ago 20 minutes ago 5 seconds ago"
-Sun Dec  9 18:39:55 CST 2018
-```
 
 - details
   ```bash
@@ -313,7 +294,40 @@ Fri Oct  9 09:18:17 UTC 2020
   ms: 534
   ```
 
-### caculate time different
+### calculate time different
+```bash
+$ date -d 'now + 3 weeks'
+Fri Oct 30 20:32:04 CST 2020
+
+$ date -d 'now + 3 weeks' +%s
+1604061130
+
+$ date -d 'Jan 1 + 11 weeks'
+Wed Mar 18 00:00:00 CST 2020
+
+$ date -d 'Jan 1 2021 + 11 weeks'
+Fri Mar 19 00:00:00 CST 2021
+```
+
+#### time described by STRING
+```bash
+$ date -u +"%Y-%m-%dT%H:%M:%S.%3NZ" -d '90 day ago'
+2020-07-11T08:14:03.145Z
+
+$ date -u +"%Y-%m-%dT%H:%M:%S.%3NZ" -d '3 months ago'
+2020-07-09T08:14:47.164Z
+
+$ date -u -d "2019-01-19T05:00:00Z - 2 hours" +%Y-%m-%d_%H:%M:%S
+2019-01-19_03:00:00
+
+$ date -d "$(date -Iseconds -d "2018-12-10 00:00:00") - 5 hours - 20 minutes - 5 seconds"
+Sun Dec  9 18:39:55 CST 2018
+
+$ date -d "2018-12-10 00:00:00 5 hours ago 20 minutes ago 5 seconds ago"
+Sun Dec  9 18:39:55 CST 2018
+```
+
+#### two times different
 ```bash
 $ seconds=$(date +%s)
 $ printf "%d days %(%H hours %M minutes %S seconds)T\n" $((seconds/86400)) $seconds
@@ -350,6 +364,15 @@ $ printf '%dh:%dm:%ds\n' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))
 $ datediff -f "%d days, %H hours, %M mins, %S secs" "$(date +'%Y-%m-%d %H:%M:%S')" "$(date +'%Y-%m-%d %H:%M:%S' -d '3 days ago')"
 -3 days, 0 hours, 0 mins, 0 secs
 ```
+
+- or with specific format
+  ```bash
+  $ ddiff -i '%Y%m%d%H%M%S' 20190817040001 20200312000101
+  17956860s
+
+  $ ddiff -f "%d days, %H hours, %M mins, %S secs" -i '%Y%m%d%H%M%S' 20190817040001 20200312000101
+  207 days, 20 hours, 1 mins, 0 secs
+  ```
 
 #### calculate with epoch
 ```bash
