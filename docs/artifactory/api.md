@@ -83,3 +83,14 @@ $ curl -s \
     curl ${curlOpt} -X DELETE "${rtUrl}/api/trash/clean/artifactory-build-info"
   done
   ```
+
+## trash can
+### empty trash can
+```bash
+$ curl ${curlOpt} -X POST "${rtUrl}/api/trash/empty"
+```
+
+### list items in trash can
+```bash
+$ curl ${curlOpt} -X GET "${rtURL}/api/storage/auto-trashcan" | jq .children[].uri
+```
