@@ -22,9 +22,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### `.join()` alike in shell
-
 - [`paste`](https://stackoverflow.com/a/6539865/2940319)
-
   ```bash
   $ seq 1 100 | paste -sd ':' -
   1:2:3:4:5:6:7:8:9:10:11:12:13:14:15:16:17:18:19:20:21:22:23:24:25:26:27:28:29:30:31:32:33:34:35:36:37:38:39:40:41:42:43:44:45:46:47:48:49:50:51:52:53:54:55:56:57:58:59:60:61:62:63:64:65:66:67:68:69:70:71:72:73:74:75:76:77:78:79:80:81:82:83:84:85:86:87:88:89:90:91:92:93:94:95:96:97:98:99:100
@@ -54,44 +52,43 @@
 
 ### find out the file is ending by crlf or lf
 - `cat -e`
-    ```bash
-    $ cat -e <file>
+  ```bash
+  $ cat -e <file>
 
-    # e.g.
-    $ cat -e windows.txt
-    test^M$
-    windows^M$
-    format
+  # e.g.
+  $ cat -e windows.txt
+  test^M$
+  windows^M$
+  format
 
-    $ cat -e linux.txt
-    test$
-    windows$
-    format
-    ```
+  $ cat -e linux.txt
+  test$
+  windows$
+  format
+  ```
 - `file`
-    ```bash
-    $ file windows.txt
-    windows.txt: ASCII text, with CRLF line terminators
+  ```bash
+  $ file windows.txt
+  windows.txt: ASCII text, with CRLF line terminators
 
-    $ file windows.txt
-    windows.txt: ASCII text
-    ```
+  $ file windows.txt
+  windows.txt: ASCII text
+  ```
 
 ### Show all line numbers in a file
 - `cat`
-    ```bash
-    $ sudo cat /etc/passwd | wc -l
-    36
-    ```
+  ```bash
+  $ sudo cat /etc/passwd | wc -l
+  36
+  ```
 
 - `awk`
-    ```bash
-    $ awk 'END {print NR}' /etc/passwd
-    36
-    ```
+  ```bash
+  $ awk 'END {print NR}' /etc/passwd
+  36
+  ```
 
 ### Insert into the first line
-
 ```bash
 $ cat demo.file
 abc
@@ -105,65 +102,64 @@ efg
 
 ### [backup and restore filer & folder permission](https://unix.stackexchange.com/a/128499/29178)
 - backup
-    ```bash
-    $ find . -printf '%m\t%u\t%g\t%p\0' > file.perm
-    ```
+  ```bash
+  $ find . -printf '%m\t%u\t%g\t%p\0' > file.perm
+  ```
 
 - restore
-    ```bash
-    while read -rd $'\0' perms user group file; do
-      if [ -e "$file" ]; then
-        chown "$user:$group" "$file"
-        chmod "$perms" "$file"
-      else
-        echo "warning: $file not found"
-      fi
-    done < file.perm
-    ```
+  ```bash
+  while read -rd $'\0' perms user group file; do
+    if [ -e "$file" ]; then
+      chown "$user:$group" "$file"
+      chmod "$perms" "$file"
+    else
+      echo "warning: $file not found"
+    fi
+  done < file.perm
+  ```
 
 #### check perm
 - `find` & `printf`
-    ```bash
-    $ find $PWD -printf '%m\t%u\t%g\t%p\n' | head
-    755	marslo	staff	/Users/marslo
-    755	marslo	staff	/Users/marslo/.eclipse
-    755	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo
-    644	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/defaults.properties
-    644	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/infos.txt
+  ```bash
+  $ find $PWD -printf '%m\t%u\t%g\t%p\n' | head
+  755	marslo	staff	/Users/marslo
+  755	marslo	staff	/Users/marslo/.eclipse
+  755	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo
+  644	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/defaults.properties
+  644	marslo	staff	/Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/infos.txt
 
-    $ find $PWD -printf '%M %u %g %p\n' | head
-    drwxr-xr-x marslo staff /Users/marslo
-    drwxr-xr-x marslo staff /Users/marslo/.eclipse
-    drwxr-xr-x marslo staff /Users/marslo/.eclipse/org.eclipse.oomph.jreinfo
-    -rw-r--r-- marslo staff /Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/defaults.properties
-    ```
+  $ find $PWD -printf '%M %u %g %p\n' | head
+  drwxr-xr-x marslo staff /Users/marslo
+  drwxr-xr-x marslo staff /Users/marslo/.eclipse
+  drwxr-xr-x marslo staff /Users/marslo/.eclipse/org.eclipse.oomph.jreinfo
+  -rw-r--r-- marslo staff /Users/marslo/.eclipse/org.eclipse.oomph.jreinfo/defaults.properties
+  ```
 - `stat`
-    ```bash
-    $ stat -c '%A %a %n' *
-    drwx------ 700 Applications
-    drwx------ 700 Desktop
-    drwx------ 700 Documents
-    drwx------ 700 Downloads
-    drwx------ 700 Library
-    drwx------ 700 Movies
-    drwx------ 700 Music
-    drwx------ 700 Pictures
-    drwxr-xr-x 755 Public
-    drwxr-xr-x 755 mywork
-    drwxr-xr-x 755 test
-    ```
+  ```bash
+  $ stat -c '%A %a %n' *
+  drwx------ 700 Applications
+  drwx------ 700 Desktop
+  drwx------ 700 Documents
+  drwx------ 700 Downloads
+  drwx------ 700 Library
+  drwx------ 700 Movies
+  drwx------ 700 Music
+  drwx------ 700 Pictures
+  drwxr-xr-x 755 Public
+  drwxr-xr-x 755 mywork
+  drwxr-xr-x 755 test
+  ```
 
 - `namei`
     ```bash
-     $ namei -l $PWD
+    $ namei -l $PWD
     /Users/marslo
-       / = drwxr-xr-x l=22 u=root/0 g=admin/80 s=704 m=07-16-2020@13:40:21
-       Users = drwxr-xr-x l=6 u=root/0 g=admin/80 s=192 m=09-30-2019@04:22:36
-       marslo = drwxr-xr-x l=72 u=marslo/501 g=staff/20 s=2304 m=07-16-2020@17:37:27
+      / = drwxr-xr-x l=22 u=root/0 g=admin/80 s=704 m=07-16-2020@13:40:21
+      Users = drwxr-xr-x l=6 u=root/0 g=admin/80 s=192 m=09-30-2019@04:22:36
+      marslo = drwxr-xr-x l=72 u=marslo/501 g=staff/20 s=2304 m=07-16-2020@17:37:27
     ```
 
 ### Encrypt bash file
-
 ```bash
 $ echo "ls" > script.bash; gpg -c script.bash; cat script.bash.gpg | gpg -d --no-mdc-warning | bash
 ```
@@ -200,14 +196,12 @@ $ cat common
 ```
 
 ### Revert a word
-
 ```bash
 $ echo linux | rev
 xunil
 ```
 
 ### Format a file to a table
-
 ```bash
 $ cat a_b
 1:1
@@ -220,7 +214,6 @@ $ column -tns: a_b
 ```
 
 ### Show last n lines in a file
-
 ```bash
 $ tail /etc/passwd -n 3
 saned:x:115:123::/home/saned:/bin/false
@@ -240,6 +233,8 @@ $ cat a
 4
 5
 $ echo $(cat a)
+1 2 3 4 5
+$ cat a | xargs
 1 2 3 4 5
 ```
 
@@ -325,7 +320,7 @@ $ echo {1..100..3}
         4 directories, 0 files
         ```
 
-#### Multiple Directories Createion
+#### Multiple Directories Creation
 ```bash
 $ mkdir sa{1..50}
 $ mkdir -p sa{1..50}/sax{1..50}
@@ -346,4 +341,26 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 ### [find and replace](https://unix.stackexchange.com/a/36805/29178)
 ```bash
 $ find . -type f -name '*.md' -exec sed -i 's/<string1>/<string2>/g' {} +
+```
+
+### [Shell Parameter Expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+```bash
+$ x='aabbcc'
+
+$ echo ${x#a*b}
+bcc
+$ echo ${x#a}
+abbcc
+$ echo ${x##a}
+abbcc
+
+$ echo ${x%b*c}
+aab
+$ echo ${x%%b*c}
+aa
+
+$ echo ${x%c}
+aabbc
+$ echo ${x%%c}
+aabbc
 ```
