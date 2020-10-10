@@ -3,8 +3,15 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [variable](#variable)
+- [repo](#repo)
+  - [check repo exists](#check-repo-exists)
 - [Build Info](#build-info)
-  - [List timestamps in](#list-timestamps-in)
+  - [List all timestamps in ${buildName}](#list-all-timestamps-in-buildname)
+  - [List specific build-info](#list-specific-build-info)
+- [delete all in `my-repo` 4 weeks ago](#delete-all-in-my-repo-4-weeks-ago)
+- [trash can](#trash-can)
+  - [empty trash can](#empty-trash-can)
+  - [list items in trash can](#list-items-in-trash-can)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
