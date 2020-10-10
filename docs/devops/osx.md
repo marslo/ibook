@@ -131,10 +131,35 @@ $ sudo xcodebuild -license accept
   $ softwareupdate --all --install --force
   ```
   or
-
   ```bash
   $ sudo rm -rf /Library/Developer/CommandLineTools
   $ sudo xcode-select --install
+  ```
+
+  [more details](https://stackoverflow.com/a/44234214/2940319)
+  ```bash
+  $ defaults read /Library/Preferences/com.apple.SoftwareUpdate
+  {
+      AutomaticallyInstallMacOSUpdates = 1;
+      LastAttemptBuildVersion = "10.15.7 (19H2)";
+      LastAttemptSystemVersion = "10.15.7 (19H2)";
+      LastBackgroundSuccessfulDate = "2020-10-10 06:15:40 +0000";
+      LastCatalogChangeDate = "2020-10-10 14:13:29 +0000";
+      LastFullSuccessfulDate = "2020-10-10 14:14:38 +0000";
+      LastRecommendedMajorOSBundleIdentifier = "";
+      LastRecommendedUpdatesAvailable = 0;
+      LastResultCode = 2;
+      LastSessionSuccessful = 1;
+      LastSuccessfulDate = "2020-10-10 14:14:38 +0000";
+      LastUpdatesAvailable = 0;
+      PrimaryLanguages =     (
+          "en-CN",
+          en
+      );
+      RecommendedUpdates =     (
+      );
+      SkipLocalCDN = 0;
+  }
   ```
 
 ### enable dev mode
