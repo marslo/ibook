@@ -33,6 +33,7 @@
     - [Homebrew Installation](#homebrew-installation)
     - [Homebrew Caskroom Installation](#homebrew-caskroom-installation)
     - [Package Installation](#package-installation)
+    - [check formula config files](#check-formula-config-files)
   - [system settings](#system-settings)
   - [accessory](#accessory)
     - [iTerm2](#iterm2)
@@ -514,6 +515,11 @@ $ brew cu --all
   🍺  iterm2-beta was successfully installed!
   ```
 
+  - [or](https://stackoverflow.com/a/31994862/2940319)
+  ```bash
+  $ brew upgrade --cask --greedy
+  ```
+
 ### Package Installation
 > more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/blob/master/osx/belloMyOSX.sh#L429)
 > ```bash
@@ -554,6 +560,33 @@ $ brew install less --with-pcre
   $ mv /Applications/gVim.app/Contents/PkgInfo{,.link}
   $ cp /Applications/gVim.app/Contents/Info.plist{.link,}
   $ cp /Applications/gVim.app/Contents/PkgInfo{.link,}
+  ```
+
+- `brew upgrade` ignore specific formulas
+> [Ignore formula on brew upgrade](https://stackoverflow.com/a/48995512/2940319)
+
+```bash
+$ brew pin macvim
+$ brew list --pinned
+macvim
+
+$ brew upgrade
+Updating Homebrew...
+Error: Not upgrading 1 pinned package:
+macvim HEAD-caf7642_1
+==> Upgrading 6 outdated packages:
+ghostscript 9.53.2 -> 9.53.3
+groovy 3.0.5 -> 3.0.6
+node 14.12.0 -> 14.13.1
+unbound 1.11.0 -> 1.12.0
+nmap 7.80_1 -> 7.90
+imagemagick 7.0.10-31 -> 7.0.10-34
+...
+```
+  - unpin
+  ```bash
+  $ brew unpin macvim
+  $ brew list --pinned
   ```
 
 #### Spotlight Error
@@ -619,6 +652,38 @@ $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr
   🍺  /usr/local/Cellar/macvim/HEAD-4bf1de8: 2,183 files, 39.7MB, built in 1 minute 13 seconds
   ```
 
+### check formula config files
+```bash
+$ brew -v edit macvim
+Editing /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/macvim.rb
+vim /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/macvim.rb
+...
+    system "./configure", "--with-features=huge",
+                          "--enable-multibyte",
+                          "--enable-perlinterp",
+                          "--enable-rubyinterp",
+                          "--enable-tclinterp",
+                          "--enable-terminal",
+                          "--with-tlib=ncurses",
+                          "--with-compiledby=Homebrew",
+                          "--with-local-dir=#{HOMEBREW_PREFIX}",
+                          "--enable-cscope",
+                          "--enable-luainterp",
+                          "--with-lua-prefix=#{Formula["lua"].opt_prefix}",
+                          "--enable-luainterp",
+                          "--enable-python3interp",
+                          "--disable-sparkle"
+...
+```
+- manual install formula
+> [How to prevent homebrew from upgrading a package?](https://stackoverflow.com/a/48343355/2940319)
+
+  ```bash
+  $ brew -v edit macvim
+  $ brew -v fetch --deps macvim
+  $ brew -v install --build-from-source macvim
+  $ brew pin macvim
+  ```
 
 ## system settings
 
