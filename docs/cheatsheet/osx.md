@@ -415,6 +415,17 @@ $ sudo xcodebuild -license [accept]
   xcode-select: note: install requested for command line developer tools
   ```
 
+- upgrade CommandLine tools
+  ```bash
+  $ softwareupdate --all --install --force
+  ```
+  or
+
+  ```bash
+  $ sudo rm -rf /Library/Developer/CommandLineTools
+  $ sudo xcode-select --install
+  ```
+
 #### xcode Components Installation
 ```bash
 $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
