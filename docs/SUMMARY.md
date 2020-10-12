@@ -3,6 +3,7 @@
 * [artifactory](artifactory/artifactory.md)
   * [api](artifactory/api.md)
   * [cli](artifactory/cli.md)
+  * [aql](artifactory/aql.md)
 * [cheatsheet](cheatsheet/good.md)
   * [windows](cheatsheet/windows/windows.md)
     * [clsid](cheatsheet/windows/clsid.md)
