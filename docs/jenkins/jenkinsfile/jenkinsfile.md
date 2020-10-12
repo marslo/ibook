@@ -2,28 +2,29 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Trigger](#trigger)
-  - [Poll SCM](#poll-scm)
+- [trigger](#trigger)
+  - [poll SCM](#poll-scm)
   - [`parameterizedCron`](#parameterizedcron)
-  - [Triggered by](#triggered-by)
-- [Environment Variables](#environment-variables)
-  - [Get current customized environment](#get-current-customized-environment)
-  - [Get downstream build environment](#get-downstream-build-environment)
-  - [Get previous build environment](#get-previous-build-environment)
+  - [triggered by](#triggered-by)
+- [environment variables](#environment-variables)
+  - [get current customized environment](#get-current-customized-environment)
+  - [get downstream build environment](#get-downstream-build-environment)
+  - [get previous build environment](#get-previous-build-environment)
 - [build & current build](#build--current-build)
   - [check previous build status](#check-previous-build-status)
   - [Stop the current build](#stop-the-current-build)
-  - [Get current build info()](#get-current-build-info)
-- [Jenkins API](#jenkins-api)
+  - [get current build info()](#get-current-build-info)
+- [jenkins API](#jenkins-api)
   - [update node name](#update-node-name)
-  - [Raw build](#raw-build)
+  - [raw build](#raw-build)
   - [manager.build.result.isBetterThan](#managerbuildresultisbetterthan)
+- [customized build](#customized-build)
+  - [display name](#display-name)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Trigger
-
-### Poll SCM
+## trigger
+### poll SCM
 ```groovy
 properties([
   // every 6 hours
@@ -51,41 +52,46 @@ properties([
 ### [`parameterizedCron`](https://github.com/jenkinsci/parameterized-scheduler-plugin)
 ```groovy
 properties([
-  parameters([ choice(choices: ['', 'a', 'b', 'c'], description: '', name: 'var') ]),
+  parameters([
+    choice(choices: ['', 'a', 'b', 'c'], description: '', name: 'var1')
+    choice(choices: ['', 'a', 'b', 'c'], description: '', name: 'var2')
+  ]),
   pipelineTriggers([
     parameterizedCron( '''
-      H/3 * * * * % var=a
-      H/6 * * * * % var=b
+      H/3 * * * * % var1=a; var2=b
+      H/6 * * * * % var1=b; var2=a
     ''' )
   ])
 ])
 ```
 
-### Triggered by
+### triggered by
+> - [gitlab](https://stackoverflow.com/a/55366682/2940319)
 
-- [gitlab](https://stackoverflow.com/a/55366682/2940319)
-```groovy
-currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData()
-// or
-commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
-```
+- gitlab
+  ```groovy
+  currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData()
+  // or
+  commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
+  ```
 
 
-## Environment Variables
-### Get current customized environment
+## environment variables
+### get current customized environment
 ```groovy
   println currentBuild.getBuildVariables()?.MY_ENV
 ```
-### Get downstream build environment
+
+### get downstream build environment
 ```groovy
   def res = build job: 'downstream-job', propagate: false
   println res.getBuildVariables()?.MY_ENV
 ```
-### Get previous build environment
+
+### get previous build environment
 ```groovy
   println currentBuild.getPreviousBuild().getBuildVariables()?.MY_ENV
 ```
-
 
 ## build & current build
 ### [check previous build status](https://support.cloudbees.com/hc/en-us/articles/230922188-Pipeline-How-can-I-check-previous-build-status-in-a-Pipeline-Script-)
@@ -106,11 +112,12 @@ if(!hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?
 ### Stop the current build
 #### stop current
 ```groovy
-  // stop and show status to UNSTABLE
-  if ( 'UNSTABLE' == currentBuild.result ) {
-    currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
-  }
+// stop and show status to UNSTABLE
+if ( 'UNSTABLE' == currentBuild.result ) {
+  currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
+}
 ```
+
 #### [stop all](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
 Thread.getAllStackTraces().keySet().each() {
@@ -126,17 +133,19 @@ Jenkins.instance.getItemByFullName("JobName")
                         new java.io.IOException("Aborting build")
                 );
 ```
-### Get current build info()
+
+### get current build info()
+> reference:
+> - [How to get Jenkins build job details?](https://medium.com/faun/how-to-get-jenkins-build-job-details-b8c918087030)
+
 #### get `BUILD_NUMBER`
 ```groovy
 Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
 ```
 
-#### [reference: How to get Jenkins build job details?](https://medium.com/faun/how-to-get-jenkins-build-job-details-b8c918087030)
-
-## Jenkins API
+## jenkins API
 ### update node name
-- Get label
+- get label
   ```groovy
   @NonCPS
   def getLabel(){
@@ -149,7 +158,7 @@ Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toIn
   }
   ```
 
-- Set Label
+- set label
   ```groovy
   @NonCPS
   def updateLabel(nodeName, newLabel) {
@@ -192,7 +201,7 @@ Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toIn
   } // finally
   ```
 
-### Raw build
+### raw build
 ```groovy
 Map buildResult = [:]
 
@@ -229,3 +238,10 @@ if(manager.build.result.isBetterThan(hudson.model.Result.UNSTABLE)) {
   manager.addShortText("M")
 }
 ```
+
+## customized build
+### display name
+```groovy
+currentBuild.displayName = '#' + Integer.toString(currentBuild.number) + ' mytest'
+```
+![customized display name](../../screenshot/jenkins/showDisplayName.png)
