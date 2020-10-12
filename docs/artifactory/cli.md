@@ -111,3 +111,12 @@
   $ jfrog rt use myrt
   $ jfrog rt bdi --max-days=30 --delete-artifacts=true "my-job-build"
   ```
+
+- using cli via docker
+  ```bash
+  $ docker run \
+           -it \
+           --rm \
+           -v $(PWD):/root docker.bintray.io/jfrog/jfrog-cli-go \
+                     jfrog rt bdi --max-days=45 --delete-artifacts 'ci - buildinfo - name'
+  ```
