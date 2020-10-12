@@ -12,6 +12,7 @@
 - [trash can](#trash-can)
   - [empty trash can](#empty-trash-can)
   - [list items in trash can](#list-items-in-trash-can)
+- [builds rotation by `api/build/retention`](#builds-rotation-by-apibuildretention)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -80,7 +81,7 @@ $ curl -s \
   rtURL='https://my.artifactory.com/artifactory'
   cibuild='my-jenkins-build'
   repo='my-repo'
-  curlOpt= "-s -g --netrc-file ~/.marslo/.netrc"
+  curlOpt= '-s -g --netrc-file ~/.marslo/.netrc'
 
   for _i in $(curl ${curlOpt} -X POST ${curlOpt} ${rtURL}/api/search/aql -T find.aql | jq --raw-output .results[].name); do
     curl ${curlOpt} -X DELETE "${rtURL}/${repo}/${_i}"
@@ -94,10 +95,42 @@ $ curl -s \
 ## trash can
 ### empty trash can
 ```bash
-$ curl ${curlOpt} -X POST "${rtUrl}/api/trash/empty"
+$ curl -s \
+       -g \
+       --netrc-file ~/.marslo/.netrc' \
+       -X POST \
+       "${rtUrl}/api/trash/empty"
 ```
 
 ### list items in trash can
 ```bash
-$ curl ${curlOpt} -X GET "${rtURL}/api/storage/auto-trashcan" | jq .children[].uri
+$ curl -s \
+       -g \
+       --netrc-file ~/.marslo/.netrc' \
+       -X GET \
+       "${rtURL}/api/storage/auto-trashcan" | jq .children[].uri
+```
+
+## [builds rotation by `api/build/retention`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ControlBuildRetention)
+
+```bash
+$ date -d 'now - 2 months' +%s%3N
+1597232120161
+$ date -d @$(echo '1597232120161' | rev | cut -c4- | rev)
+Wed Aug 12 19:35:20 CST 2020
+
+$ cat rotation.json
+{
+  "deleteBuildArtifacts" : true ,
+  "count" : 3 ,
+  "minimumBuildDate" : 1597232120161 ,
+  "buildNumbersNotToBeDiscarded" : []
+}
+$ curl -s \
+       -g \
+       -X POST \
+       -d @rotation.json \
+       -H "Content-Type: application/json" \
+       --netrc-file ~/.marslo/.netrc' \
+       "https://my.artifactory.com/artifactory/api/build/retention/build%20-%20name?async=false"
 ```
