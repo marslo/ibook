@@ -1,5 +1,34 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [trim](#trim)
+  - [trim tailing chars](#trim-tailing-chars)
+- [get next line of match string](#get-next-line-of-match-string)
+- [insert new line](#insert-new-line)
+- [write to file without indent space](#write-to-file-without-indent-space)
+- [cat](#cat)
+  - [`<<-` && `<<`](#---)
 
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## trim
+### trim tailing chars
+> ```bash
+> str='1234567890'
+> ```
+
+- `awk` + `rev`
+  ```bash
+  $ echo $str | rev | cut -c4- | rev
+  1234567
+  ```
+
+- `${var:: -x})`
+  ```bash
+  $ echo ${str:: -3}
+  1234567
+  ```
 
 ## get next line of match string
 - awk
@@ -137,3 +166,4 @@ HERE DOC WITH <<
 
 ECHO THE INTENDED END WAS BEFORE THIS LINE
 {%- endcodetabs %}
+
