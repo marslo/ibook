@@ -157,6 +157,7 @@ Time periods are specified with a number and one of the following suffixes:
   ```
 
   - or `-d @<filename>`
+  > [JFrog Artifactory REST API in 5min](https://greenido.wordpress.com/2019/08/13/jfrog-artifactory-rest-api-in-5min/)
   ```bash
   $ cat builds.json
   builds.find({
