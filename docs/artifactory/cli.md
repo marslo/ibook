@@ -7,6 +7,7 @@
   - [configuration](#configuration)
   - [ping](#ping)
   - [Discarding Old Builds from Artifactory](#discarding-old-builds-from-artifactory)
+  - [search with aql](#search-with-aql)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -122,6 +123,8 @@
   ```
 
 ### search with aql
+> [Jfrog artifactory delete folder of containing artifacts after remove them](https://stackoverflow.com/a/59273175/2940319)
+
 ```bash
 $ cat spec.json
 {

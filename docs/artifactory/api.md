@@ -16,8 +16,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 ## variable
 ```bash
 $ rtUrl='https://my.artifactory.com/artifactory'
@@ -27,7 +25,6 @@ $ curlOpt="-s -g --netrc-file ~/.marslo/.netrc"
 ```
 
 ## repo
-
 ### check repo exists
 ```bash
 $ /usr/bin/curl ${curlOpt} \
@@ -133,4 +130,34 @@ $ curl -s \
        -H "Content-Type: application/json" \
        --netrc-file ~/.marslo/.netrc' \
        "https://my.artifactory.com/artifactory/api/build/retention/build%20-%20name?async=false"
+```
+
+## promot
+> reference:
+> - [How do I promote a build using the REST-API?](https://jfrog.com/knowledge-base/how-do-i-promote-a-build-using-the-rest-api/)
+> - [build promotion](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-BuildPromotion)
+
+```bash
+$ cat promot.json
+{
+  "status": "released",
+  "ciUser": "ci-user",
+  "dryRun" : false,
+  "targetRepo" : "my-repo-release",
+  "copy": true,
+  "artifacts" : true,
+  "dependencies" : true,
+  "scopes" : [ "compile", "runtime" ],
+  "properties": {
+    "release-name": ["marslo-test"]
+  }
+}
+
+$ curl -s \
+       -g \
+       -i \
+       -k \
+       -H "Content-type:application/json" \
+       -d @promot.json \
+       -X POST 'http://${rtURL}/api/build/promote/my - build - name/<buildID>'
 ```
