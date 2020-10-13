@@ -6,7 +6,7 @@
   - [get info](#get-info)
     - [get all labels](#get-all-labels)
     - [Get resource by label](#get-resource-by-label)
-    - [is label valided](#is-label-valided)
+    - [if label validated](#if-label-validated)
     - [Get free number of label](#get-free-number-of-label)
     - [Get all resource](#get-all-resource)
   - [add or remove](#add-or-remove)

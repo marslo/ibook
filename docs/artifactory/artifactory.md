@@ -6,6 +6,8 @@
   - [Relative Time Operators](#relative-time-operators)
   - [find items (folder) some times ago by aql](#find-items-folder-some-times-ago-by-aql)
 - [reference](#reference)
+  - [integration with pipeline](#integration-with-pipeline)
+  - [aql](#aql)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -154,7 +156,12 @@ Time periods are specified with a number and one of the following suffixes:
   ```
 
 ## reference
-- [Jenkins Artifactory Plugin AQL download latest artifact matching pattern](https://stackoverflow.com/a/40351260/2940319)
+### integration with pipeline
+> - [Scripted Pipeline Syntax](https://www.jfrog.com/confluence/display/JFROG/Scripted+Pipeline+Syntax#ScriptedPipelineSyntax-PromotingBuildsinArtifactory)
+>   - [Jenkins Pipeline Examples](https://github.com/jfrog/project-examples/tree/master/jenkins-examples/pipeline-examples)
+
+### aql
+#### [Jenkins Artifactory Plugin AQL download latest artifact matching pattern](https://stackoverflow.com/a/40351260/2940319)
 
 <!--sec data-title="example" data-id="section2" data-show=true data-collapse=true ces-->
   ```powershell
