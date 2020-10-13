@@ -120,3 +120,27 @@
            -v $(PWD):/root docker.bintray.io/jfrog/jfrog-cli-go \
                      jfrog rt bdi --max-days=45 --delete-artifacts 'ci - buildinfo - name'
   ```
+
+### search with aql
+```bash
+$ cat spec.json
+{
+  "files": [{
+    "aql": {
+      "items.find": {
+        "repo": "my-repo",
+        "type":"folder",
+        "depth" : "1",
+        "created": { "$before": "15d" }
+      }
+    }
+  }]
+}
+
+$ jfrog rt s --spec spec.json
+```
+
+- delete with aql search
+  ```bash
+  $ jfrog rt del --spec spec.json
+  ```
