@@ -30,8 +30,8 @@
 import org.jenkins.plugins.lockableresources.LockableResourcesManager;
 
 stage('all label') {
-    println '~~> all labels:'
-    println new LockableResourcesManager().getAllLabels()
+  println '~~> all labels:'
+  println new LockableResourcesManager().getAllLabels()
 }
 ```
 
@@ -40,21 +40,20 @@ stage('all label') {
 import org.jenkins.plugins.lockableresources.LockableResourcesManager;
 
 stage('get label') {
-    String l = 'my-label'
-    println "~~> resources for ${l}:"
-    println new LockableResourcesManager().getResourcesWithLabel(l, null)
+  String l = 'my-label'
+  println "~~> resources for ${l}:"
+  println new LockableResourcesManager().getResourcesWithLabel(l, null)
 }
 ```
 
-
-### is label valided
+### if label validated
 ```groovy
 import org.jenkins.plugins.lockableresources.LockableResourcesManager;
 
-stage('is label valid') {
-    String l = 'my-label'
-    println '~~> is ${l} valid:'
-    println new LockableResourcesManager().isValidLabel(l)
+stage('does label validated') {
+  String l = 'my-label'
+  println '~~> is ${l} valid:'
+  println new LockableResourcesManager().isValidLabel(l)
 }
 ```
 
@@ -63,8 +62,8 @@ stage('is label valid') {
 import org.jenkins.plugins.lockableresources.LockableResourcesManager;
 
 stage('number of free') {
-    String l = 'my-label'
-    println new LockableResourcesManager().getFreeResourceAmount(l)
+  String l = 'my-label'
+  println new LockableResourcesManager().getFreeResourceAmount(l)
 }
 ```
 
@@ -72,12 +71,12 @@ stage('number of free') {
 ### [Get all resource](https://issues.jenkins-ci.org/browse/JENKINS-46235?focusedCommentId=345401&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-345401)
 ```groovy
 stage('get all resoruces') {
-    def all_lockable_resources = GlobalConfiguration.all().get(org.jenkins.plugins.lockableresources.LockableResourcesManager.class).resources
+  def all_lockable_resources = GlobalConfiguration.all().get(org.jenkins.plugins.lockableresources.LockableResourcesManager.class).resources
 
-    println "~~> free resource for ${l}"
-    println all_lockable_resources
-    // remove
-    all_lockable_resources.removeAll { it.name.contains('somestr')}
+  println "~~> free resource for ${l}"
+  println all_lockable_resources
+  // remove
+  all_lockable_resources.removeAll { it.name.contains('somestr')}
 }
 ```
 
@@ -144,50 +143,49 @@ stage('reserve & unlock') {
 print "START\n"
 def all_lockable_resources = org.jenkins.plugins.lockableresources.LockableResourcesManager.get().resources
 all_lockable_resources.each { r->
-    if (r.isLocked() || r.isReserved()) {
-    println "Lock " + r + " is locked or reserved by " + r.getBuild() + " B CARSE " + r.getLockCause()
+  if (r.isLocked() || r.isReserved()) {
+  println "Lock " + r + " is locked or reserved by " + r.getBuild() + " B CARSE " + r.getLockCause()
 
-    b = r.getBuild()
+  b = r.getBuild()
 
-        if (b) {
-            if (b.isBuilding()) { println "build:" + b + " is building" }
-            if (b.getResult().equals(null)) { println "build:" + b + " result is not in yet" }
+    if (b) {
+      if (b.isBuilding()) { println "build:" + b + " is building" }
+      if (b.getResult().equals(null)) { println "build:" + b + " result is not in yet" }
 
-            if ( ! b.isBuilding() && ! b.getResult().equals(null)) {
-                println "build:" + b + " is not building and result is " + b.getResult() + " yet the lock " + r + " is locked."
-                println "ACTION RELEASE LOCK " + r
+      if ( ! b.isBuilding() && ! b.getResult().equals(null)) {
+        println "build:" + b + " is not building and result is " + b.getResult() + " yet the lock " + r + " is locked."
+        println "ACTION RELEASE LOCK " + r
 
-                println "getLockCause:" + r.getLockCause()
-                println "getDescription:" + r.getDescription()
-                println "getReservedBy:" + r.getReservedBy()
-                println "isReserved:" + r.isReserved()
-                println "isLocked:" + r.isLocked()
-                println "isQueued:" + r.isQueued()
+        println "getLockCause:" + r.getLockCause()
+        println "getDescription:" + r.getDescription()
+        println "getReservedBy:" + r.getReservedBy()
+        println "isReserved:" + r.isReserved()
+        println "isLocked:" + r.isLocked()
+        println "isQueued:" + r.isQueued()
 
-                //release the lock
-                r.reset()
+        //release the lock
+        r.reset()
 
-                println "getLockCause:" + r.getLockCause()
-                println "getDescription:" + r.getDescription()
-                println "getReservedBy:" + r.getReservedBy()
-                println "isReserved:" + r.isReserved()
-                println "isLocked:" + r.isLocked()
-                println "isQueued:" + r.isQueued()
-
-            }
-        }
+        println "getLockCause:" + r.getLockCause()
+        println "getDescription:" + r.getDescription()
+        println "getReservedBy:" + r.getReservedBy()
+        println "isReserved:" + r.isReserved()
+        println "isLocked:" + r.isLocked()
+        println "isQueued:" + r.isQueued()
+      }
 
     }
+  }
 }
 ```
 
 ## reference
-    - [javadoc](https://javadoc.jenkins.io/plugin/lockable-resources/org/jenkins/plugins/lockableresources/LockableResource.html)
-    - [configure-lockable-resources.groovy](https://gist.github.com/ansig/d7edafe38fbfc13c5b3cd15351849804)
-    - [collect-resources-data-for-graphite.groovy](https://gist.github.com/ansig/c9f2ac8e291d5dcb854d49f691f6c7e8)
-    - [LockableResourcesHelper.groovy](https://gist.github.com/glance-/aaa3c037757895798d4e1be5134bb843)
-    - [lockable_resources_from_json.groovy](https://gist.github.com/evidex/520d7a096929bdda1779a51e380819be)
-    - [list_lockable_resources.groovy](https://gist.github.com/evidex/925fbc47a871141070b81e7dbbcf713f)
-    - [JenkinsJobDslCleanupLockableResources.groovy](https://gist.github.com/marcusphi/3380f83964249b1250a6d5230be741e5)
-    - [JenkinsScriptedPipelineCleanupLockableResources.groovy](https://gist.github.com/marcusphi/d5a5d5769b69627a5169dc440d52a223)
-    - [jenkins-remove-lockable-resources.groovy](https://gist.github.com/hrickmachado/86683781f700ea2b5a5012ad1d22b54)
+  - [javadoc](https://javadoc.jenkins.io/plugin/lockable-resources/org/jenkins/plugins/lockableresources/LockableResource.html)
+  - [configure-lockable-resources.groovy](https://gist.github.com/ansig/d7edafe38fbfc13c5b3cd15351849804)
+  - [collect-resources-data-for-graphite.groovy](https://gist.github.com/ansig/c9f2ac8e291d5dcb854d49f691f6c7e8)
+  - [LockableResourcesHelper.groovy](https://gist.github.com/glance-/aaa3c037757895798d4e1be5134bb843)
+  - [lockable_resources_from_json.groovy](https://gist.github.com/evidex/520d7a096929bdda1779a51e380819be)
+  - [list_lockable_resources.groovy](https://gist.github.com/evidex/925fbc47a871141070b81e7dbbcf713f)
+  - [JenkinsJobDslCleanupLockableResources.groovy](https://gist.github.com/marcusphi/3380f83964249b1250a6d5230be741e5)
+  - [JenkinsScriptedPipelineCleanupLockableResources.groovy](https://gist.github.com/marcusphi/d5a5d5769b69627a5169dc440d52a223)
+  - [jenkins-remove-lockable-resources.groovy](https://gist.github.com/hrickmachado/86683781f700ea2b5a5012ad1d22b54)
