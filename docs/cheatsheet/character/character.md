@@ -33,10 +33,10 @@
 ## get next line of match string
 - awk
   ```bash
-  $ awk '/ssdfw-repo.marvell.com$/{getline; print}' ~/.marslo/.netrc
+  $ awk '/my.company.com$/{getline; print}' ~/.marslo/.netrc
   login marslo
 
-  $ awk '/ssdfw-repo.marvell.com$/{getline; print $2}' ~/.marslo/.netrc
+  $ awk '/my.company.com$/{getline; print $2}' ~/.marslo/.netrc
   marslo
   ```
 

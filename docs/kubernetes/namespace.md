@@ -66,7 +66,7 @@ No resources found.
 No resources found.
 ----- challenges.certmanager.k8s.io ------
 NAME                            STATE     DOMAIN                         AGE
-marslo-dashboard-2318568841-0   pending   marslo-dashboard.marvell.com   72m
+marslo-dashboard-2318568841-0   pending   marslo-dashboard.mycompany.com   72m
 ----- issuers.certmanager.k8s.io ------
 No resources found.
 ----- orders.certmanager.k8s.io ------
@@ -148,7 +148,7 @@ Spec:
   Config:
     http01:
       Ingress Class:  nginx
-  Dns Name:           marslo-dashboard.marvell.com
+  Dns Name:           marslo-dashboard.mycompany.com
   Issuer Ref:
     Kind:    ClusterIssuer
     Name:    marslo-cert
@@ -160,7 +160,7 @@ Spec:
 Status:
   Presented:   true
   Processing:  true
-  Reason:      Waiting for http-01 challenge propagation: failed to perform self check GET request 'http://marslo-dashboard.marvell.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY': Get http://marslo-dashboard.marvell.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY: dial tcp: lookup marslo-dashboard.marvell.com on 10.96.0.10:53: no such host
+  Reason:      Waiting for http-01 challenge propagation: failed to perform self check GET request 'http://marslo-dashboard.mycompany.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY': Get http://marslo-dashboard.mycompany.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY: dial tcp: lookup marslo-dashboard.mycompany.com on 10.96.0.10:53: no such host
   State:       pending
 Events:        <none>
 
