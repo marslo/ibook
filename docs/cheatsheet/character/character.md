@@ -2,17 +2,26 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [`sed`](#sed)
-- [`awk`](#awk)
+- [get line after the pattern](#get-line-after-the-pattern)
+- [get certain Line between 2 matched patterns](#get-certain-line-between-2-matched-patterns)
+  - [working with empty line](#working-with-empty-line)
+- [`xargs`](#xargs)
+  - [multiple move](#multiple-move)
+  - [subset of arguments](#subset-of-arguments)
+  - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
+  - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
 - [`find`](#find)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
+  - [`find` && `tar`](#find--tar)
+  - [tar all and extra in remote](#tar-all-and-extra-in-remote)
+  - [`exec` and `sed`](#exec-and-sed)
+  - [find and rename](#find-and-rename)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
-- [get next line of match string](#get-next-line-of-match-string)
 - [insert new line](#insert-new-line)
-- [write to file without indent space](#write-to-file-without-indent-space)
+- [write a file without indent space](#write-a-file-without-indent-space)
 - [cat](#cat)
-  - [`<<-` && `<<`](#---)
+  - [`<< -` and `<<`](#---and-)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -41,18 +50,31 @@ $ cat a.txt
   4d
   5e
   ```
+
   or
   ```bash
   $ cat a.txt | awk '/^3c$/ {s=NR;next} s && NR<=s+2'
   4d
   5e
   ```
+
   or
   ```bash
   $ cat a.txt | awk '{if(a-->0){print;next}} /3c/{a=2}'
   4d
   5e
   ```
+
+  or get second column of next line of pattern
+  ```bash
+  $ awk '/my.company.com$/{getline; print}' ~/.marslo/.netrc
+  login marslo
+
+  $ awk '/my.company.com$/{getline; print $2}' ~/.marslo/.netrc
+  marslo
+  ```
+
+
 - sed
   ```bash
   $ cat a.txt | sed -n '/3c/{n;p;n;p}'
@@ -208,7 +230,7 @@ $ git log --format="%H %P" | xargs -L 1 git diff
   $ find ${JENKINS_HOME}/jobs -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
   ```
 
-#### tar all and extra in remote
+### tar all and extra in remote
 ```bash
 # ssh -C
 $ tar cf - . | ssh -C hostname "cd ~/.marslo/test/; tar xvf -"
@@ -234,8 +256,18 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
 ### `exec` and `sed`
 - change bunches ip address
   ```bash
-  $ find ${JENKINS_HOME}/jobs -type f -name "config.xml" -maxdepth 2 -exec sed -i 's/1.2.3./4.5.6./g' {} \; -print
+  $ find ${JENKINS_HOME}/jobs \
+         -type f \
+         -name "config.xml" \
+         -maxdepth 2 \
+         -exec sed -i 's/1.2.3./4.5.6./g' {} \; -print
   ```
+
+
+### find and rename
+```bash
+$ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
+```
 
 ## trim
 ### trim tailing chars
@@ -255,18 +287,7 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
   1234567
   ```
 
-## get next line of match string
-- awk
-  ```bash
-  $ awk '/my.company.com$/{getline; print}' ~/.marslo/.netrc
-  login marslo
-
-  $ awk '/my.company.com$/{getline; print $2}' ~/.marslo/.netrc
-  marslo
-  ```
-
 ## insert new line
-
 - insert right after the second match sting
 {% codetabs name="original", type="bash" -%}
 DCR
@@ -279,11 +300,11 @@ check
 DCR
 {%- endcodetabs %}
 
-  ```bash
-  $ echo -e "DCR\nDCR\nDCR" |awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
-  ```
+```bash
+$ echo -e "DCR\nDCR\nDCR" |awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
+```
 
-## write to file without indent space
+## write a file without indent space
 ```bash
 $ sed -e 's:^\s*::' > ~/file-without-indent-space.txt < <(echo "items.find ({
       \"repo\": \"my-repo\",
@@ -293,7 +314,7 @@ $ sed -e 's:^\s*::' > ~/file-without-indent-space.txt < <(echo "items.find ({
     })
 ")
 
-$ ~/file-without-indent-space.txt
+$ cat ~/file-without-indent-space.txt
 items.find ({
 "repo": "my-repo",
 "type" : "folder" ,
@@ -301,6 +322,7 @@ items.find ({
 "created" : { "$before" : "4mo" }
 })
 ```
+
 - or
   ```bash
   $ sed -e 's:^\s*::' > find.aql <<-'EOF'
@@ -331,17 +353,20 @@ items.find ({
 
 
 ## cat
-### `<<-` && `<<`
-- [Here Documents](https://en.wikipedia.org/wiki/Here_document#Unix_shells):
-  > This type of redirection instructs the shell to read input from the current source until a line containing only delimiter (with no trailing blanks) is seen. All of the lines read up to that point are then used as the standard input for a command.
-  >
-  > The format of here-documents is:
-  > ```bash
-  >       <<[-]word
-  >               here-document
-  >       delimiter
-  >```
-  > No parameter expansion, command substitution, arithmetic expansion, or pathname expansion is performed on word. If any characters in word are quoted, the delimiter is the result of quote removal on word, and the lines in the here-document are not expanded. If word is unquoted, all lines of the here-document are subjected to parameter expansion, command substitution, and arithmetic expansion. In the latter case, the character sequence \ is ignored, and \ must be used to quote the characters \, $, and `.
+### `<< -` and `<<`
+
+<!--sec data-title="doc for <<[-]word" data-id="section0" data-show=true data-collapse=true ces-->
+ [Here Documents](https://en.wikipedia.org/wiki/Here_document#Unix_shells):
+> This type of redirection instructs the shell to read input from the current source until a line containing only delimiter (with no trailing blanks) is seen. All of the lines read up to that point are then used as the standard input for a command.
+>
+> The format of here-documents is:
+> ```bash
+>       <<[-]word
+>               here-document
+>       delimiter
+>```
+> No parameter expansion, command substitution, arithmetic expansion, or pathname expansion is performed on word. If any characters in word are quoted, the delimiter is the result of quote removal on word, and the lines in the here-document are not expanded. If word is unquoted, all lines of the here-document are subjected to parameter expansion, command substitution, and arithmetic expansion. In the latter case, the character sequence \ is ignored, and \ must be used to quote the characters \, $, and `.
+<!--endsec-->
 
 - cat with specific character
   > ```bash
@@ -356,7 +381,7 @@ items.find ({
   > - [Bash - Removing white space from indented multiline strings](https://stackoverflow.com/questions/46537619/bash-removing-white-space-from-indented-multiline-strings)
   > - [How to avoid heredoc expanding variables? [duplicate]](https://stackoverflow.com/questions/27920806/how-to-avoid-heredoc-expanding-variables)
 
-{% codetabs name="<<- to ignore tab", type="bash" -%}
+{% codetabs name="<< -", type="bash" -%}
 $ cat -A sample.sh
 LANG=C tr a-z A-Z <<- END_TEXT$
 Here doc with <<$
