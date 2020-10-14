@@ -38,6 +38,7 @@
     * [kubernetes](jenkins/plugins/kubernetes.md)
     * [lockable-resource](jenkins/plugins/lockable-resource.md)
     * [postbuild](jenkins/plugins/postbuild.md)
+    * [artifactory](jenkins/plugins/artifactory.md)
   * [script](jenkins/script/script.md)
     * [api](jenkins/script/api.md)
     * [cli](jenkins/script/cli.md)

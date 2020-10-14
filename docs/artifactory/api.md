@@ -13,6 +13,7 @@
   - [empty trash can](#empty-trash-can)
   - [list items in trash can](#list-items-in-trash-can)
 - [builds rotation by `api/build/retention`](#builds-rotation-by-apibuildretention)
+- [promot](#promot)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
