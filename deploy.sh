@@ -70,6 +70,13 @@ function build() {
   npm run built
 }
 
+function rebuiltToc() {
+  find $(git rev-parse --show-toplevel)/docs \
+       -iname '*.md' \
+       -not -path '**/SUMMARY.md' \
+       -exec doctoc --github --maxlevel 3 {} \;
+}
+
 function updateRepo() {
   if [ "$(git rev-parse remotes/origin/${branch})" != "$(git -C ${target} rev-parse HEAD)" ]; then
     git -C "${target}" fetch origin --force "${branch}"
@@ -97,6 +104,7 @@ function updateBook() {
 }
 
 function doDeploy() {
+  rebuiltToc
   if [ -d "${target}" ]; then
     updateRepo
   else
