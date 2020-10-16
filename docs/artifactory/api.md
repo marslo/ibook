@@ -13,13 +13,16 @@
   - [empty trash can](#empty-trash-can)
   - [list items in trash can](#list-items-in-trash-can)
 - [builds rotation by `api/build/retention`](#builds-rotation-by-apibuildretention)
-- [promot](#promot)
+- [promote](#promote)
+  - [property](#property)
+  - [search](#search)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## variable
 ```bash
 $ rtUrl='https://my.artifactory.com/artifactory'
+$ repoName='my-repo'
 $ buildName='my - repo'
 $ buildNumber=12345
 $ curlOpt="-s -g --netrc-file ~/.marslo/.netrc"
@@ -133,7 +136,7 @@ $ curl -s \
        "https://my.artifactory.com/artifactory/api/build/retention/build%20-%20name?async=false"
 ```
 
-## promot
+## promote
 > reference:
 > - [How do I promote a build using the REST-API?](https://jfrog.com/knowledge-base/how-do-i-promote-a-build-using-the-rest-api/)
 > - [build promotion](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-BuildPromotion)
@@ -160,5 +163,49 @@ $ curl -s \
        -k \
        -H "Content-type:application/json" \
        -d @promot.json \
-       -X POST 'http://${rtURL}/api/build/promote/my - build - name/<buildID>'
+       -X POST \
+       '${rtURL}/api/build/promote/${buildName}/<buildID>'
 ```
+
+### property
+#### [add property](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-SetItemProperties)
+```bash
+$ path='libs-release-local/pkg'
+$ properties=$('os=win,linux|qa=done' | sed 's:|:%7C:')
+$ curl -s \
+       -g \
+       -I \
+       --netrc-file ~/.marslo/.netrc \
+       -X PUT \
+       '${rtURL}/storage/${repoName}-local/${path}?properties=${properties}&recursive=1'
+```
+
+- get result
+  ```bash
+  $ curl -sgI \
+         --netrc-file ~/.marslo/.netrc \
+         -X PUT \
+         '${rtURL}/storage/${repoName}-local/${path}?properties=${properties}&recursive=1' \
+         | sed -rn 's:^HTTP/2\s?([0-9]+)\s?:\1:gp'
+  204
+
+  # or
+  400
+
+  # or
+  404
+  ```
+
+### search
+#### [pattern search](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-PatternSearch)
+```bash
+$ pattern='*/pkg/*/*.jar'
+$ curl -s \
+       -g \
+       -k \
+       --netrc-file ~/.marslo/.netrc \
+       -X GET \
+       "${rtURL}/search/pattern?pattern=${repoName}-local:${pattern}"
+```
+
+#### [aql search](aql.md)
