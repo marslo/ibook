@@ -38,6 +38,28 @@ $ curl -s \
          | jq --raw-output .fields.attachment[].id
   ```
 
+- get attachments download url
+  ```bash
+  $ curl -s \
+         -k \
+         -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment \
+         | jq --raw-output .fields.attachment[].content
+  ```
+
+  - download all attachments in Jira
+    >    -I replace-str
+    >           Replace occurrences of replace-str in the initial-arguments with names read from standard in-
+    >           put.  Also, unquoted blanks do not terminate input items; instead the separator is  the  new-
+    >           line character.  Implies -x and -L 1.
+
+    ```bash
+    $ curl -s \
+           -k \
+           -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment \
+           | jq --raw-output .fields.attachment[].content \
+           | xargs -I '{}' curl -sgOJL '{}'
+    ```
+
 ## confluence
 ```bash
 $ confluenceName='my.confluence.com'
