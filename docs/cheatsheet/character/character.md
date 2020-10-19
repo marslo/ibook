@@ -288,7 +288,7 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
   ```
 
 ## insert new line
-- insert right after the second match sting
+- insert right after the second match string
 {% codetabs name="original", type="bash" -%}
 DCR
 DCR
