@@ -3,7 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [time & date](#time--date)
-- [get URL](#get-url)
 - [download and extract](#download-and-extract)
 - [extract `jar`](#extract-jar)
 - [compress](#compress)
@@ -62,31 +61,43 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
 $ date --set="$(ssh [username]@[sshserver] date)"
 ```
 
-### get URL
-```bash
-$ echo http://www.baidu.com | awk '{for(i=1;i<=NF;i++){if($i~/^(http|ftp):\/\//)print $i}}'
-http://www.baidu.com
-```
-
 ### download and extract
 - `*.gz`
   ```bash
   $ wget -O - http://example.com/a.gz | tar xz
   ```
+
 - `*.zip`
   ```bash
   $ curl -fsSL https://services.gradle.org/distributions/gradle-4.7-all.zip | bsdtar xzf - -C <EXTRACT_PATH>
-
-  # with zip password
-  $ curl -fsSL -u<user>:<passwd> https://path/to/file.zip | bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
   ```
+  - with zip password
+    ```bash
+    $ curl -fsSL \
+           -u<user>:<passwd> \
+           https://path/to/file.zip \
+           | bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
+    ```
+
 - `*.tar.gz`
   ```bah
   $ curl -fsSL https://path/to/file.tar.gz | tar xzf - -C <EXTRACT_PATH>
-
-  # example
-  $ curl -fsSL -j -k -L -H "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz | tar xzf - -C '/opt/java'
   ```
+  - example
+    ```bash
+    $ curl -fsSL \
+           -j \
+           -k \
+           -L \
+           -H "Cookie: oraclelicense=accept-securebackup-cookie" \
+           http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz \
+           | tar xzf - -C '/opt/java'
+    ```
+
+#### check file without extract
+```bash
+$ tar -Oxvf myfile.tgz path/to/my.sh | less
+```
 
 ### extract `jar`
 ```bash
