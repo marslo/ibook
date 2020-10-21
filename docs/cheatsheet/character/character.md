@@ -18,6 +18,8 @@
   - [find and rename](#find-and-rename)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
+- [regex](#regex)
+  - [get URL](#get-url)
 - [insert new line](#insert-new-line)
 - [write a file without indent space](#write-a-file-without-indent-space)
 - [cat](#cat)
@@ -286,6 +288,14 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
   $ echo ${str:: -3}
   1234567
   ```
+
+## regex
+
+### get URL
+```bash
+$ echo http://www.baidu.com | awk '{for(i=1;i<=NF;i++){if($i~/^(http|ftp):\/\//)print $i}}'
+http://www.baidu.com
+```
 
 ## insert new line
 - insert right after the second match string
