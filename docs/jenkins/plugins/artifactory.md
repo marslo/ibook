@@ -1,3 +1,11 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [allow interactive promotion](#allow-interactive-promotion)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ### [allow interactive promotion](https://www.jfrog.com/confluence/display/JFROG/Scripted+Pipeline+Syntax#ScriptedPipelineSyntax-AllowingInteractivePromotionforPublishedBuilds)
 ```groovy
