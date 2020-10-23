@@ -267,3 +267,97 @@ ls --color=always
   ```bash
   $ bash -i --rcfile="$HOME/.marslo/.imarslo"
   ```
+
+### ldapsearch
+> reference:
+> - [Querying AD with ldapsearch](http://www.cs.rug.nl/~jurjen/ApprenticesNotes/ldapsearch_ad_query.html)
+> ```bash
+> -LLL                                          # just a particular way to display the results
+> -H ldap://wspace.mydomain.com                 # the URL where the LDAP server listens
+> -x                                            # use simple authentication, not SASL
+> -D 'user1'                                    # the account to use to authenticate to LDAP
+> -w 'user1password'                            # the password that goes with the account on the previous line
+> -E pr=1000/noprompt                           # ask the server for all pages, don't stop after one
+> -b 'ou=mydomain,dc=wspace,dc=mydomain,dc=com' # the base of the search. We don't want results from e.g. 'ou=blah,dc=wspace,dc=mydomain,dc=com'
+> '(&(objectClass=person)(uidNumber=*))'        # Ask for any entry that has attributes objectClass=person and uidNumber has a value
+> SAMAccountName uid uidNumber                  # Show only these attributes
+> ```
+
+#### search specific user
+> Info :
+> - ldap url         : `ldaps://ldap.mydomain.com:636`
+> - base search base : `dc=mydomain,dc=com`
+> - login user       : `user1` / `user1password`
+> - search           : `user2`
+
+```bash
+$ ldapsearch \
+    -LLL \
+    -x \
+    -H 'ldaps://ldap.mydomain.com:636' \
+    -b 'dc=mydomain,dc=com' \
+    -D 'user1' \
+    -w 'user1password' \
+    CN='user2'
+```
+- or insert password via interactive mode ( `-W` )
+  ```bash
+  $ ldapsearch \
+      -LLL \
+      -x \
+      -H 'ldaps://ldap.mydomain.com:636' \
+      -b 'dc=mydomain,dc=com' \
+      -W \
+      -D 'user1' \
+      CN='user2'
+  ```
+
+#### search `DN` field of particular user (`user2`)
+```bash
+$ ldapsearch \
+    [-LLL \]
+    -H 'ldaps://ldap.mydomain.com:636' \
+    -b 'dc=mydomain,dc=com' \
+    -x \
+    -D 'user1' \
+    -w 'user1password' \
+    CN='user2' \
+    DN
+```
+#### filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)
+```bash
+$ ldapsearch \
+    -LLL \
+    -x \
+    -H 'ldaps://ldap.mydomain.com:636' \
+    -b 'ou=Workers,dc=mydomain,dc=com' \
+    -D 'user1' \
+    -w 'user1password' \
+    -E 'pr=1000/noprompt' \
+    '(&(objectClass=user)(sAMAccountName=*))' \
+    SAMAccountName uid uidNumber DN
+```
+
+#### filter particular group
+```bash
+$ ldapsearch \
+    -x \
+    -H 'ldaps://ldap.mydomain.com:636' \
+    -b 'OU=DL,OU=Groups,OU=GLOBAL,OU=Sites,dc=mydomain,dc=com' \
+    -D 'user1' \
+    -w 'user1password' \
+    -E 'pr=1000/noprompt' \
+    '(&(objectClass=group)(CN=*))'
+```
+
+- search particular group (`cn=DL-mydomaindis-group`)
+  ```bash
+  $ ldapsearch \
+      -x \
+      -H 'ldaps://ldap.mydomain.com:636' \
+      -b 'OU=DL,OU=Groups,OU=GLOBAL,OU=Sites,dc=mydomain,dc=com' \
+      -D 'user1' \
+      -w 'user1password' \
+      -E 'pr=1000/noprompt' \
+      CN='DL-mydomaindis-group'
+  ```
