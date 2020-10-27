@@ -10,6 +10,7 @@
 - [directory diff](#directory-diff)
 - [commands](#commands)
 - [bash](#bash)
+- [ldapsearch](#ldapsearch)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -270,6 +271,8 @@ ls --color=always
 
 ### ldapsearch
 > reference:
+> - [ldapsearch Examples](https://docs.oracle.com/cd/E19693-01/819-0997/auto45/index.html)
+> - [The ldapsearch Tool](https://docs.oracle.com/cd/E19850-01/816-6400-10/lsearch.html)
 > - [Querying AD with ldapsearch](http://www.cs.rug.nl/~jurjen/ApprenticesNotes/ldapsearch_ad_query.html)
 > ```bash
 > -LLL                                          # just a particular way to display the results
