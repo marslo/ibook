@@ -7,21 +7,26 @@
   - [`pip.conf`](#pipconf)
   - [python libs](#python-libs)
   - [multiple versions](#multiple-versions)
+- [version change](#version-change)
+  - [modules re-installation](#modules-re-installation)
+  - [`PYTHONPATH`](#pythonpath)
+  - [`/usr/local/opt/python`](#usrlocaloptpython)
 - [issues](#issues)
   - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
   - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## environment in MacOS
-### [setup default python](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
-> `$ defaults write com.apple.versioner.python Version 3.8`
->
 > reference:
 > - [homebrew and python](https://docs.brew.sh/Homebrew-and-Python)
 > - [Installing from local packages](https://pip.pypa.io/en/stable/user_guide/#installing-from-local-packages)
 > - [pip list](https://pip.pypa.io/en/stable/reference/pip_list/)
 
+## environment in MacOS
+### [setup default python](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
+```bash
+$ defaults write com.apple.versioner.python Version 3.8
+```
 ### `pip.conf`
 - user: `~/.pip/pip.conf`
 - global: `/Library/Application Support/pip/pip.conf`
@@ -150,6 +155,38 @@ $ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.t
     $ pip list --outdate --format=json
     [{"name": "docker", "version": "4.2.2", "latest_version": "4.3.1", "latest_filetype": "wheel"}, {"name": "rich", "version": "3.0.5", "latest_version": "9.1.0", "latest_filetype": "wheel"}]
     ```
+
+## version change
+> change default python from `3.8` to `3.9`
+
+### modules re-installation
+```bash
+$ /usr/local/bin/python3.8 -m pip freeze > pip3.8-requirements.txt
+$ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.txt
+```
+
+### `PYTHONPATH`
+```bash
+$ export PYTHONPATH="/usr/local/lib/python3.8/site-packages:$PYTHONPATH"
+
+    |
+    v
+$ export PYTHONPATH="/usr/local/lib/python3.9/site-packages:$PYTHONPATH"
+```
+
+### `/usr/local/opt/python`
+```bash
+$ unlink /usr/local/opt/python
+$ ln -sf /usr/local/Cellar/python@3.9/3.9.0 /usr/local/opt/python
+
+$ unlink /usr/local/bin/python
+$ ln -sf /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9 /usr/local/bin/python3
+$ ln -sf /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9 /usr/local/bin/python
+
+$ export PYTHONUSERBASE="$(/usr/local/opt/python/libexec/bin/python -c 'import site; print(site.USER_BASE)')"
+$ export PYTHON3='/usr/local/opt/python/libexec/bin'
+$ export PATH="$PYTHONUSERBASE/bin:${PYTHON3}:$PATH"
+```
 
 ## issues
 ### `pkg_resources.VersionConflict`
