@@ -29,7 +29,7 @@
 
 ### for global user [(or non user)](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONNOUSERSITE)
 > ```bash
-> export PYTHONPATH="/usr/local/lib/python3.8/site-packages:$PYTHONPATH"
+> export PYTHONPATH="/usr/local/lib/python3.9/site-packages:$PYTHONPATH"
 > ```
 
 ```bash
@@ -46,7 +46,7 @@ $ sudo -H pip install <pacakge-name>
 ### [re-install package in `site.USER_BASE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
 > ```bash
 > $ python -c 'import site; print(site.USER_BASE)'
-> /Users/marslo/Library/Python/3.8
+> /Users/marslo/Library/Python/3.9
 > ```
 
 ```bash
@@ -59,7 +59,7 @@ $ pip install --upgrade --force-reinstall --user <package-name>
 ### [setup default python version](https://stackoverflow.com/a/7000324/2940319)
 ``` bash
 # temporary
-$ export VERSIONER_PYTHON_VERSION=3.8
+$ export VERSIONER_PYTHON_VERSION=3.9
 
-$ defaults write com.apple.versioner.python Version 3.8
+$ defaults write com.apple.versioner.python Version 3.9
 ```
