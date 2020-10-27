@@ -197,7 +197,7 @@ $ curl -s \
   ```
 
 ### search
-#### [pattern search](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-PatternSearch)
+#### via [pattern search](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-PatternSearch)
 ```bash
 $ pattern='*/pkg/*/*.jar'
 $ curl -s \
@@ -208,4 +208,16 @@ $ curl -s \
        "${rtURL}/search/pattern?pattern=${repoName}-local:${pattern}"
 ```
 
-#### [aql search](aql.md)
+#### via [aql search](aql.md)
+```bash
+$ curl -s \
+       -k \
+       -X POST \
+       -H 'Content-Type:text/plain' \
+       'https://artifactory.domain.com/artifactory/api/search/aql' \
+       -d 'builds.find({
+               "name": "my - build - dev",
+               "created": {"$before": "3days"}
+           }).sort({"$desc": ["created"]}).limit(1)
+       '
+```
