@@ -9,9 +9,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
-
-
 ## AQL
 ### [Relative Time Operators](https://www.jfrog.com/confluence/display/RTF/Artifactory+Query+Language#ArtifactoryQueryLanguage-RelativeTimeOperators)
 > [aqlCleanup.groovy](https://github.com/JFrog/artifactory-scripts/blob/master/cleanup/aqlCleanup.groovy)
@@ -150,12 +147,12 @@ Time periods are specified with a number and one of the following suffixes:
          -i \
          'https://my.artifactory.com/artifactory/api/search/aql' \
          -d 'items.find ({
-              "repo": "wukong-precommit-local",
-              "type" : "folder" ,
-              "depth" : "1",
-              "created" : { "$before" : "3days" }
-            }).sort({"$desc":["created"]}).limit(1)
-          '
+                          "repo": "wukong-precommit-local",
+                          "type" : "folder" ,
+                          "depth" : "1",
+                          "created" : { "$before" : "3days" }
+                        }).sort({"$desc":["created"]}).limit(1)
+            '
   ```
 
   - or `-d @<filename>`
