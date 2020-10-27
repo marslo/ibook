@@ -78,6 +78,7 @@
     * [config](programming/python/config.md)
     * [list](programming/python/list.md)
     * [pip](programming/python/pip.md)
+    * [q&a](programming/python/qa.md)
   * [others](programming/others.md)
   * [archive](programming/archive/archive.md)
     * [angular](programming/archive/angular/config.md)
