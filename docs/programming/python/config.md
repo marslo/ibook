@@ -173,9 +173,7 @@ $ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.t
 ### `PYTHONPATH`
 ```bash
 $ export PYTHONPATH="/usr/local/lib/python3.8/site-packages:$PYTHONPATH"
-
-    |
-    v
+    ⇣⇣
 $ export PYTHONPATH="/usr/local/lib/python3.9/site-packages:$PYTHONPATH"
 ```
 

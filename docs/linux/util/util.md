@@ -3,6 +3,9 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Utils](#utils)
+  - [shell paramters](#shell-paramters)
+    - [pass self parameters to another script](#pass-self-parameters-to-another-script)
+    - [getopts with long option](#getopts-with-long-option)
   - [Network](#network)
     - [Get Interface by command](#get-interface-by-command)
     - [get ipv4 address](#get-ipv4-address)
@@ -14,6 +17,149 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Utils
+## shell paramters
+### pass self parameters to another script
+> objective:
+> `$ ./b.sh a b c d` -> `$ ./a.sh a b c d`
+
+- b.sh
+  ```bash
+  #!/bin/bash
+  echo """
+  b.sh:
+    \$1: "$1"
+    \$#: "$#"
+    \$@: "$@"
+    \${@: -1}: ${@: -1}
+    \${@: -2}: ${@: -2}
+    \${@: -3}: ${@: -2}
+    \${@: -\$(( \$#-1 ))}: ${@: -$(( $#-1 ))}
+    \$(echo '\${@: -\$(( \$#-1 ))}' | cut -d' ' -f1-) : $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)
+  """
+  echo -e "\n'~~> ./a.sh \"\${@: -1}\"': ~~~> ./a.sh ${@: -1}:"
+  ./a.sh "${@: -1}"
+
+  echo -e "\n'~~> ./a.sh \$(echo '\${@: -1}' | cut -d' ' -f1-)': ~~~> ./a.sh $(echo "${@: -1}" | cut -d' ' -f1-):"
+  ./a.sh $(echo "${@: -1}" | cut -d' ' -f1-)
+
+  echo -e "\n'~~> ./a.sh \"\${@: -4}\"': ~~~> ./a.sh ${@: -4}:"
+  ./a.sh "${@: -4}"
+
+  echo -e "\n'~~> ./a.sh \$(echo '\${@: -\$(( \$#-1 ))}' | cut -d' ' -f1-)': ~~~> ./a.sh $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)"
+  ./a.sh $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)
+  ```
+
+- a.sh
+  ```bash
+  echo """
+  a.sh:
+    \$1: "$1"
+    \$#: "$#"
+    \$@: "$@"
+    \${@: -$(( $#-2 ))}: ${@: -$(( $#-2 ))}
+  """
+  ```
+
+- result
+  ```bash
+  $ ./b.sh a b c d e
+
+  b.sh:
+    $1: a
+    $#: 5
+    $@: a b c d e
+    ${@: -1}: e
+    ${@: -2}: d e
+    ${@: -3}: d e
+    ${@: -$(( $#-1 ))}: b c d e
+    $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-) : b c d e
+
+  '~~> ./a.sh "${@: -1}"': ~~~> ./a.sh e:
+  a.sh:
+    $1: e
+    $#: 1
+    $@: e
+    ${@: --1}: e
+
+  '~~> ./a.sh $(echo '${@: -1}' | cut -d' ' -f1-)': ~~~> ./a.sh e:
+  a.sh:
+    $1: e
+    $#: 1
+    $@: e
+    ${@: --1}: e
+
+  '~~> ./a.sh "${@: -4}"': ~~~> ./a.sh b c d e:
+  a.sh:
+    $1: b
+    $#: 4
+    $@: b c d e
+    ${@: -2}: d e
+
+  '~~> ./a.sh $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-)': ~~~> ./a.sh b c d e
+  a.sh:
+    $1: b
+    $#: 4
+    $@: b c d e
+    ${@: -2}: d e
+  ```
+
+### getopts with long option
+```bash
+#!/bin/bash
+# shellcheck disable=SC1079,SC1078
+
+usage="""USAGE
+\t$0\t[-h|--help] [-c|--clean] [-t|--tag <tag>] [-i|--image <image>]
+\t\t\t[-v|--ver <new-version>] [-n|--name <name>]
+\t\t\t[-p|--prop <key=value>]
+"""
+
+while test -n "$1"; do
+    case "$1" in
+      -c | --clean ) clean=true ; shift   ;;
+      -t | --tag   ) tag=$2     ; shift 2 ;;
+      -i | --image ) image=$2   ; shift 2 ;;
+      -v | --ver   ) ver=$2     ; shift 2 ;;
+      -n | --name  ) name=$2    ; shift 2 ;;
+      -p | --prop  ) prop=$2    ; shift 2 ;;
+      -h | --help | * ) echo -e "${usage}"; exit 0 ;;
+    esac
+done
+
+echo """
+  clean : ${clean}
+    tag : ${tag}
+  image : ${image}
+    ver : ${ver}
+   name : ${name}
+   prop : ${prop}
+"""
+```
+- result
+  ```bash
+  $ ./longopts.sh -h
+  USAGE
+    ./longopts.sh [-h|--help] [-c|--clean] [-t|--tag <tag>] [-i|--image <image>]
+                  [-v|--ver <new-version>] [-n|--name <name>]
+                  [-p|--prop <key=value>]
+
+  $ ./longopts.sh -c
+    clean : true
+      tag :
+    image :
+      ver :
+     name :
+     prop :
+
+  $ ./longopts.sh -c -t 'ttt' -i 'iii' --ver '1.1.1' --name 'name'
+    clean : true
+      tag : ttt
+    image : iii
+      ver : 1.1.1
+     name : name
+     prop :
+  ```
+
 ## Network
 ### Get Interface by command
 ```bash
