@@ -12,8 +12,8 @@
   - [`PYTHONPATH`](#pythonpath)
   - [`/usr/local/opt/python`](#usrlocaloptpython)
 - [issues](#issues)
-  - [`pkg_resources.VersionConflict`](#pkgresourcesversionconflict)
-  - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkgresources)
+  - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
+  - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
   - [`No module named pip`](#no-module-named-pip)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -49,6 +49,13 @@ $ defaults write com.apple.versioner.python Version 3.8
     ```bash
     $ pip3.9 install --upgrade --user $(pip3.9 list --outdated | sed 1,2d | awk '{print $1}' | grep -vw 'docker\|rich')
     ```
+
+### [list python path](https://github.com/Homebrew/legacy-homebrew/issues/31873#issuecomment-53532229)
+```bash
+$ python -vv -c "import sys; print sys.path"
+$ python -vvE -c "import sys; print sys.path"
+$ python -vvEsS -c "import sys; print sys.path"
+```
 
 ### python libs
 - global
