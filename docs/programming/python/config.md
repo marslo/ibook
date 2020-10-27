@@ -12,8 +12,9 @@
   - [`PYTHONPATH`](#pythonpath)
   - [`/usr/local/opt/python`](#usrlocaloptpython)
 - [issues](#issues)
-  - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
-  - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
+  - [`pkg_resources.VersionConflict`](#pkgresourcesversionconflict)
+  - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkgresources)
+  - [`No module named pip`](#no-module-named-pip)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -363,8 +364,8 @@ $ which -a pip3
 
   - install `setuptools==39.1.0` and [`xattr==0.6.4`](http://qpypi.qpython.org/repository/121480/xattr-0.6.4.tar.gz#1bef31afb7038800f8d5cfa2f4562b37)
     ```bash
-    [$ sudo -H python -m pip install --upgrade pip setuptools wheel]
-    [$ sudo -H /usr/bin/python -m pip uninstall -y setuptools]
+    $ sudo -H python -m pip install --upgrade pip setuptools wheel
+    $ sudo -H /usr/bin/python -m pip uninstall -y setuptools
 
     $ /usr/bin/python -m pip install --user setuptools==39.1.0
     DEPRECATION: Python 2.7 will reach the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 won't be maintained after that date. A future version of pip will drop support for Python 2.7.
@@ -461,3 +462,40 @@ $ which -a pip3
     Successfully installed xattr-0.6.4
     ```
 
+### `No module named pip`
+- issue
+  ```bash
+  $ sudo -H /usr/bin/python -m pip install --upgrade pip setuptools wheel
+  /System/Library/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python: No module named pip
+  ```
+
+- [solution](https://stackoverflow.com/a/46631019/2940319)
+  ```bash
+  $ sudo -H /usr/bin/python -m ensurepip --default-pip
+  Looking in links: /tmp/tmpkmqQV6
+  Requirement already satisfied: setuptools in /Library/Python/2.7/site-packages (39.1.0)
+  Collecting pip
+  Installing collected packages: pip
+  Successfully installed pip-18.1
+  ```
+
+- verify
+  ```bash
+  $ sudo /usr/bin/python -m pip install --upgrade pip setuptools wheel
+  DEPRECATION: Python 2.7 reached the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 is no longer maintained. pip 21.0 will drop support for Python 2.7 in January 2021. More details about Python 2 support in pip can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support pip 21.0 will remove support for this functionality.
+  WARNING: The directory '/Users/marslo/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
+  Looking in indexes: https://ssdfw-repo-dev.marvell.com/artifactory/api/pypi/tools/simple
+  Requirement already up-to-date: pip in /Users/marslo/Library/Python/2.7/lib/python/site-packages (20.2.4)
+  Requirement already up-to-date: setuptools in /Users/marslo/Library/Python/2.7/lib/python/site-packages (44.1.1)
+  Requirement already up-to-date: wheel in /Users/marslo/Library/Python/2.7/lib/python/site-packages (0.35.1)
+
+  $ ls -Altrh /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python
+  ```
+
+- alternatives
+  > [get-pip.py](https://pip.pypa.io/en/stable/installing/)
+
+  ```bash
+  $ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  $ /usr/bin/python get-pip.py
+  ```
