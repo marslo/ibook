@@ -100,7 +100,7 @@
       "modify_format": "YYYY-MM-DD HH:mm:ss"
     },
     "edit-link": {
-      "base": "https://github.com/marslo/ibook/edit/master",
+      "base": "https://github.com/marslo/ibook/edit/marslo",
       "label": "Edit in Github"
     },
     "anchor-navigation-ex": {
