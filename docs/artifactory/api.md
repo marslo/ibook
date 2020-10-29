@@ -16,6 +16,9 @@
 - [promote](#promote)
   - [property](#property)
   - [search](#search)
+- [deploy](#deploy)
+  - [deploy single artifacts](#deploy-single-artifacts)
+  - [deploy bundle artifact](#deploy-bundle-artifact)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -220,4 +223,18 @@ $ curl -s \
                "created": {"$before": "3days"}
            }).sort({"$desc": ["created"]}).limit(1)
        '
+```
+
+## deploy
+### deploy single artifacts
+
+### [deploy bundle artifact](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifactsfromArchive)
+```bash
+$ curl -g \
+       -s \
+       -SL \
+       -H "X-Explode-Archive-Atomic: true" \
+       -X PUT \
+       "https://artifactory.domain.com/artifactory/<repo-name>/<path>/" \
+       -T <artifacts>.[zip\|tar.gz\|tgz]
 ```
