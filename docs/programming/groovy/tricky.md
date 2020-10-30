@@ -2,13 +2,17 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
-- [split and trim in string](#split-and-trim-in-string)
-- [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
-- [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
-- [groupBy `List<List<String>>` to `Map<String, List>`](#groupby-listliststring-to-mapstring-list)
-- [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
-- [getField()](#getfield)
+  - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
+  - [split and trim in string](#split-and-trim-in-string)
+  - [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
+  - [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
+  - [groupBy `List<List<String>>` to `Map<String, List>`](#groupby-listliststring-to-mapstring-list)
+  - [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
+  - [getField()](#getfield)
+- [enum](#enum)
+  - [check whether if enum contains a given string](#check-whether-if-enum-contains-a-given-string)
+  - [list all values in Enum](#list-all-values-in-enum)
+  - [Convert String type to Enum](#convert-string-type-to-enum)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -238,4 +242,71 @@ example for `identityHashCode() and hashCode()`
 ```groovy
 groovy:000 > 'aaa'.getClass().getFields()
 ===> [public static final java.util.Comparator java.lang.String.CASE_INSENSITIVE_ORDER]
+```
+
+## enum
+> precondition:
+> ```groovy
+> enum Choices {a1, a2, b1, b2}
+> ```
+
+### [check whether if enum contains a given string](https://stackoverflow.com/a/51068456/2940319)
+```groovy
+assert Arrays.asList(Choices.values()).toString().contains("a9") == false
+assert Arrays.asList(Choices.values()).toString().contains("a1") == true
+```
+- [or](https://stackoverflow.com/a/37611080/2940319)
+  ```groovy
+  assert Arrays.stream(Choices.values()).anyMatch((t) -> t.name().equals("a1")) == true
+  ```
+
+- [or](https://stackoverflow.com/a/10171194/2940319)
+  ```bash
+  public enum Choices {
+    a1, a2, b1, b2;
+
+    public static boolean contains(String s) {
+      try {
+        Choices.valueOf(s);
+        return true;
+      } catch (Exception e) {
+        return false;
+      }
+    }
+  }
+
+  Choices.contains('a1')
+  ```
+
+- or
+  ```groovy
+  public enum Choices {
+    a1, a2, b1, b2;
+
+    public static boolean contains(String str) {
+      return Arrays.asList(Choices.values()).toString().contains(str)
+    }
+  }
+  assert Choices.contains('a1') == true
+  ```
+
+### [list all values in Enum](https://stackoverflow.com/a/15436799/2940319)
+```bash
+groovy:000> enum Choices {a1, a2, b1, b2}
+===> true
+groovy:000> println Choices.values()
+[a1, a2, b1, b2]
+===> null
+```
+- or
+  ```groovy
+  List<String> enumValues = Arrays.asList( Choices.values() )
+  ```
+
+### Convert String type to Enum
+```bash
+groovy:000> enum Choices {a1, a2, b1, b2}
+===> true
+groovy:000> Choices.valueOf("a1").getClass()
+===> class Choices
 ```
