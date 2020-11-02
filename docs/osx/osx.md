@@ -258,7 +258,7 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
      Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
     ```
 
-![csrutil](../screenshot/csrutil-1.png)
+![csrutil](../screenshot/osx/csrutil-1.png)
 
 - [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
     ```bash
