@@ -55,6 +55,7 @@
   * [pod](kubernetes/pod.md)
 * [osx](osx/osx.md)
   * [performance](osx/performance.md)
+  * [util](osx/util.md)
 * [linux](linux/basic.md)
   * [util](linux/util/util.md)
     * [time & date](linux/util/date.md)
