@@ -101,6 +101,39 @@ $ while read branch; do
   ```bash
   $ bash < <(wget -q0 https://raw.githubusercontent.com/ubports/unity8-desktop-install-tools/master/install.sh)
   ```
+  - [or](https://github.com/giampaolo/psutil/blob/master/scripts/meminfo.py)
+    ```bash
+    $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
+    MEMORY
+    ------
+    Total      :   16.0G
+    Available  :    5.8G
+    Percent    :    63.8
+    Used       :    8.8G
+    Free       :  204.5M
+    Active     :    5.4G
+    Inactive   :    5.6G
+    Wired      :    3.4G
+
+    SWAP
+    ----
+    Total      :    1.0G
+    Used       :  269.2M
+    Free       :  754.8M
+    Percent    :    26.3
+    Sin        :   38.3G
+    Sout       :   63.9M
+    ```
+
+  - or
+    ```bash
+    $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/disk_usage.py)
+    Device               Total     Used     Free  Use %      Type  Mount
+    /dev/disk1s5        233.5G    10.6G    70.6G    13%      apfs  /
+    /dev/disk1s1        233.5G   149.6G    70.6G    67%      apfs  /System/Volumes/Data
+    /dev/disk1s4        233.5G     2.0G    70.6G     2%      apfs  /private/var/vm
+    /Library/Input Methods/SogouInput.app   233.5G   149.1G    71.1G    67%    nullfs  /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/AppTranslocation/E29031DE-FE63-4ABC-BA3D-E99C743E57D2
+    ```
 
 - example: merge lines of file
   > inspired by [here](https://apple.stackexchange.com/a/216657/254265) and [here](https://stackoverflow.com/q/31371672/2940319)
