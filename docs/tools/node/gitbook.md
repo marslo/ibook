@@ -63,6 +63,27 @@ info: install plugin "search-plus" (^0.0.11) from NPM with version 0.0.11
 ....
 ```
 {% endtab %}
+{% tab title="gitbook install from fresh environment" %}
+```bash
+$ gitbook install --log=debug --debug
+Installing GitBook 3.2.3
+  SOLINK_MODULE(target) Release/.node
+  CXX(target) Release/obj.target/fse/fsevents.o
+  SOLINK_MODULE(target) Release/fse.node
+  SOLINK_MODULE(target) Release/.node
+  CXX(target) Release/obj.target/fse/fsevents.o
+  SOLINK_MODULE(target) Release/fse.node
+gitbook@3.2.3 ../../var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/tmp-10600Rn1q3aFhRWiI/node_modules/gitbook
+├── escape-html@1.0.3
+├── escape-string-regexp@1.0.5
+├── destroy@1.0.4
+├── ignore@3.1.2
+├── bash-color@0.0.4
+├── gitbook-plugin-livereload@0.0.1
+├── cp@0.2.0
+...
+```
+{% endtab %}
 
 {% tab title="otherwise"%}
 ```bash
