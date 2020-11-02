@@ -28,3 +28,17 @@ $ top -l 1 -n 0
 ```bash
 $ sudo purge
 ```
+
+## clean OSX native dot file
+```bash
+$ dot_clean -mvp <path>
+```
+- i.e.:
+  ```bash
+  $ sudo dot_clean -mvp /
+  ```
+
+OR
+```bash
+$ find $HOME -name '.DS_Store' -type f -delete
+```
