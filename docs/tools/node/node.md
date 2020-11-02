@@ -35,6 +35,41 @@ $ ncu -u
   $ npm update -g react-sticky
   ```
 
+## npm packages
+### view details
+```bash
+$ npm view <package>
+```
+  - example
+    ```bash
+    $ npm view gitbook-cli
+
+    gitbook-cli@2.3.2 | Apache-2.0 | deps: 11 | versions: 21
+    CLI to generate books and documentation using gitbook
+    https://www.gitbook.com
+
+    bin: gitbook
+
+    dist
+    .tarball: https://registry.npm.taobao.org/gitbook-cli/download/gitbook-cli-2.3.2.tgz
+    .shasum: 5e893582e1f743f6fa920c3c3eb36b62ea4a31a0
+
+    dependencies:
+    bash-color: 0.0.4 fs-extra: 3.0.1   npm: 5.1.0        optimist: 0.6.1   semver: 5.3.0     user-home: 2.0.0
+    commander: 2.11.0 lodash: 4.17.4    npmi: 1.0.1       q: 1.5.0          tmp: 0.0.31
+
+    maintainers:
+    - aymeric-gb <aymeric@gitbook.com>
+    - gitbook-bot <contact@gitbook.com>
+    - jpreynat <johan.preynat@gmail.com>
+    - samypesse <samypesse@gmail.com>
+
+    dist-tags:
+    latest: 2.3.2
+
+    published over a year ago by aarono <aaron.omullan@gmail.com>
+    ```
+
 ## QnA
 ### empty of `npm ls -g`
 ```bash
