@@ -6,7 +6,9 @@
   - [metacharacter](#metacharacter)
 - [Brace Expansion](#brace-expansion)
   - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
-- [Basic Comamnds](#basic-comamnds)
+- [Process Substitution](#process-substitution)
+  - [`strace`](#strace)
+- [Basic Commands](#basic-commands)
   - [`du`](#du)
   - [sed](#sed)
 - [CentOS](#centos)
@@ -82,12 +84,71 @@
 
 # [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
 ## Scp Multipule Folder/File to Target Server
-
 ```bash
 $ scp -r `echo dir{1..10}` user@target.server:/target/server/path/
 ```
 
-# Basic Comamnds
+# [Process Substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
+> Process substitution is a form of redirection where the input or output of a process (some sequence of commands) appear as a temporary file.
+
+```bash
+$ while read branch; do
+    git fetch --all --force;
+  done < <(git rev-parse --abbrev-ref HEAD)
+```
+
+- [example: run script without download](https://askubuntu.com/a/1086668)
+  ```bash
+  $ bash < <(wget -q0 https://raw.githubusercontent.com/ubports/unity8-desktop-install-tools/master/install.sh)
+  ```
+
+- example: merge lines of file
+  > inspired by [here](https://apple.stackexchange.com/a/216657/254265) and [here](https://stackoverflow.com/q/31371672/2940319)
+
+  ```bash
+  $ cat a
+  t1
+  t2
+  t3
+  t4
+  $ cat b
+  11
+  22
+  33
+  44
+
+  $ paste <(cat a) <(cat b)
+  t1	11
+  t2	22
+  t3	33
+  t4	44
+  ```
+
+- `/dev/fd/63` is not a regular file
+  ```bash
+  $ more <( ls -l )
+  /dev/fd/63 is not a regular file (use -f to see it)
+
+  $ more -f <( ls -l )
+  total 12
+  -rw-r--r--  1 marslo staff 3457 Nov  2 15:53 README.md
+  -rw-r--r--  1 marslo staff 4314 Nov  2 15:53 SUMMARY.md
+  drwxr-xr-x  6 marslo staff  192 Oct 12 22:10 artifactory
+  drwxr-xr-x  8 marslo staff  256 Sep 29 17:40 cheatsheet
+  drwxr-xr-x 12 marslo staff  384 Oct 15 15:27 devops
+  drwxr-xr-x  7 marslo staff  224 Sep 28 22:17 jenkins
+  drwxr-xr-x 11 marslo staff  352 Sep 28 22:17 kubernetes
+  drwxr-xr-x  8 marslo staff  256 Oct  9 19:15 linux
+  drwxr-xr-x  8 marslo staff  256 Nov  2 15:51 osx
+  drwxr-xr-x  6 marslo staff  192 Sep 28 22:17 programming
+  drwxr-xr-x 45 marslo staff 1440 Nov  2 13:56 screenshot
+  drwxr-xr-x 11 marslo staff  352 Oct 14 21:22 tools
+  ```
+
+## `strace`
+> reference [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
+
+# Basic Commands
 ## `du`
 - top biggest directories under _[path]_
   ```bash

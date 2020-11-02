@@ -10,6 +10,9 @@
   - [enable dev mode](#enable-dev-mode)
 - [system info](#system-info)
 - [system](#system)
+  - [setup hostname](#setup-hostname)
+  - [disable guest user](#disable-guest-user)
+  - [System Integrity Protection](#system-integrity-protection)
 - [app](#app)
   - [java](#java)
 
@@ -226,7 +229,7 @@ machdep.cpu.model: 158
 ```
 
 ## system
-- setup hostname
+### setup hostname
 
 ```bash
 $ sudo scutil --set HostName [HOSTNAME]
@@ -237,8 +240,7 @@ $ sudo scutil --set ComputerName [HOSTNAME]
 $ dscacheutil -flushcache
 $ sudo shutdown -r now
 ```
-
-- disable guest user
+### disable guest user
 
 ```bash
 $ dscl . delete /Users/Guest
@@ -246,35 +248,42 @@ $ sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess
 $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server AllowGuestAccess -bool NO
 ```
 
-- Trun off the Rootless System Integrity Protection
-    - [reboot and <kbd>command</kbd> + <kbd>r</kbd>](https://support.apple.com/en-us/HT201314)
-    - go to `Utilities` -> `Terminal`
-    - disable
+### [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
+```bash
+$ csrutil disable
+Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
+$ csrutil clear
+Successfully cleared System Integrity Proteciton. Please restart the machine for the changes to take effect.
+$ sudo chflags restricted /usr/local
+```
 
-    ```bash
-    -bash-3.2# csrutil status
-     System Integrity Protection status: enabled
-     -bash-3.2# csrutil disable
-     Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
-    ```
+#### turn off the Rootless System Integrity Protection
+> ```bash
+> $ csrutil status
+> System Integrity Protection status: enabled.
+>
+> $ sudo csrutil disable
+> csrutil: failed to modify system integrity configuration. This tool needs to be executed from the Recovery OS
+> ```
 
-![csrutil](../screenshot/osx/csrutil-1.png)
+- [reboot and <kbd>command</kbd> + <kbd>r</kbd>](https://support.apple.com/en-us/HT201314)
+- go to `Utilities` -> `Terminal`
+  ![csrutil](../screenshot/osx/csrutil-1.jpg)
 
-- [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
-    ```bash
-    $ csrutil disable
-    Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
-    $ csrutil clear
-    Successfully cleared System Integrity Proteciton. Please restart the machine for the changes to take effect.
-    $ sudo chflags restricted /usr/local
-    ```
+- disable
+  ```bash
+  -bash-3.2# csrutil status
+   System Integrity Protection status: enabled
+   -bash-3.2# csrutil disable
+   Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
+  ```
 
-- [Remove file lock (uchg) flag](https://superuser.com/a/40754/112396)
-    ```bash
-    $ chflags -R nouchg *
-    # or
-    $ chflags -R nouchg <PATH of folder>
-    ```
+#### [Remove file lock (uchg) flag](https://superuser.com/a/40754/112396)
+```bash
+$ chflags -R nouchg *
+# or
+$ chflags -R nouchg <PATH of folder>
+```
 
 - example
   ```bash
@@ -284,6 +293,7 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
   /usr/local
   /usr/share/man
   /usr/share/snmp
+
   $ /bin/ls -lO /usr
   total 0
   drwxr-xr-x  976 root  wheel  restricted 31232 Oct 28 19:17 bin/
@@ -310,8 +320,7 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
 
 ## app
 ### java
-    - setup java home
-
-    ```bash
-    $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
-    ```
+- setup java home
+  ```bash
+  $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
+  ```
