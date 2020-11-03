@@ -49,19 +49,19 @@ Git Command Study and practice
 > - [CS Visualized: Useful Git Commands](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
 
 ## Appoint
-### [Git Alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/git/.gitconfig)
+### [Git Alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.gitalias)
 ```bash
-br          = branch
-co          = checkout
-coa         = commit --amend --no-edit
-plog        = !git --no-pager log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative --max-count=3
-plogs       = log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
-fplog       = log --color --graph --pretty=tformat:'%Cred%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
-flog        = log -p --graph --color --graph
-rlog        = "!bash -c 'while read branch; do \n\
-               git fetch --all --force; \n\
-               git plog remotes/origin/$branch; \n\
-             done < <(git rev-parse --abbrev-ref HEAD) '"
+br      = branch
+co      = checkout
+coa     = commit --amend --no-edit
+pl      = !git --no-pager log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative --max-count=3
+pls     = log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
+fpl     = log --color --graph --pretty=tformat:'%Cred%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
+fl      = log -p --graph --color --graph
+rlog    = "!bash -c 'while read branch; do \n\
+             git fetch --all --force; \n\
+             git pl remotes/origin/$branch; \n\
+           done < <(git rev-parse --abbrev-ref HEAD) '"
 ```
 
 ## git branch
@@ -353,7 +353,7 @@ Removing my-submodule/
 $ git push origin +<hash_for_delete>^:<branch>
 
 # e.g.:
-$ git plog --pretty=format:"%h" --no-patch
+$ git pl --pretty=format:"%h" --no-patch
 * cb46bdc
 * 936543c
 * a83ac6b
@@ -384,6 +384,21 @@ $ git push origin +cb46bdc^:master
   $ git push [--force] origin +master
   ```
 
+#### revert single file to remotes
+```bash
+$ git checkout origin/<branch> -- <path/to/file>
+```
+
+#### [Git Reset vs Revert vs Checkout reference](https://www.atlassian.com/git/tutorials/resetting-checking-out-and-reverting)
+|     Command    | Scope        | Common use cases                                                     |
+|:--------------:|--------------|----------------------------------------------------------------------|
+|   `git reset`  | Commit-level | Discard commits in a private branch or throw away uncommited changes |
+|   `git reset`  | File-level   | Unstage a file                                                       |
+| `git checkout` | Commit-level | Switch between branches or inspect old snapshots                     |
+| `git checkout` | File-level   | Discard changes in the working directory                             |
+|  `git revert`  | Commit-level | Undo commits in a public branch                                      |
+|  `git revert`  | File-level   | (N/A)                                                                |
+
 ### change latest comments in local
 ```bash
 $ git commit --amend
@@ -391,7 +406,7 @@ $ git commit --amend
 
 - change comments in remote
   ```bash
-  $ git plog
+  $ git pl
   * a79d384 - (HEAD -> master, origin/master, origin/HEAD) update (11 seconds ago) <marslo>
   * 7cef7c7 - update (7 hours ago) <marslo>
   * e1d7a64 - update (7 hours ago) <marslo>
@@ -402,7 +417,7 @@ $ git commit --amend
 
   # result
   $ git fetch --all --force
-  $ git plog remotes/origin/master
+  $ git pl remotes/origin/master
   Fetching origin
   * ba49259 - (HEAD -> master, origin/master, origin/HEAD) update a79d384 for change comments (24 seconds ago) <marslo>
   * 7cef7c7 - update (7 hours ago) <marslo>
@@ -426,7 +441,7 @@ And then change `pick` to `reword`
 
 - example
   ```bash
-  $ git plogs
+  $ git pls
   * 1e7d979 - (HEAD -> master, origin/master, origin/HEAD) f (24 seconds ago) <marslo>
   * 9b89ed7 - c (40 seconds ago) <marslo>
   * beb575f - d (51 seconds ago) <marslo>
