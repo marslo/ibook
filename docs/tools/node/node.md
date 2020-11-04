@@ -6,6 +6,8 @@
   - [registry](#registry)
 - [npm usage](#npm-usage)
   - [upgrade](#upgrade)
+- [npm packages](#npm-packages)
+  - [view details](#view-details)
 - [QnA](#qna)
   - [empty of `npm ls -g`](#empty-of-npm-ls--g)
 

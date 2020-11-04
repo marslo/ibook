@@ -97,7 +97,6 @@ info: 31 explicitly listed
 Error: Couldn't locate plugins "search-plus, simple-page-toc, github, github-buttons, prism, prism-themes, advanced-emoji, anchors, include-codeblock, ace, emphasize, katex, splitter, mermaid-gb3, tbfed-pagefooter, sectionx, local-video, anchor-navigation-ex, favicon, todo, alerts, include-csv, puml, sharing-plus, image-captions, donate, toggle-chapters, navigator, downloadpdf", Run 'gitbook install' to install plugins from registry.
 ```
 {% endtab %}
-
 {% endtabs %}
 
 
@@ -166,6 +165,12 @@ warning
 
 ### tab
 
+> [!TIP]
+> this function only for native [gitbook.io](https://www.gitbook.com/)
+> example:
+> - [here](https://imarslo.gitbook.io/handbook/kubernetes/certificates#check-info)
+> reference:
+> -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)
 #### code
 ```
 {% tabs %}
