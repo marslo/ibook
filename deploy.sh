@@ -89,11 +89,13 @@ function cloneRepo() {
 }
 
 function updateBook() {
+  pushd .
+  cd $(git rev-parse --show-toplevel)
   npm run built
+
   yes | rm -rf ${target}/*
   yes | cp -rf ${book}/* ${target}/
 
-  pushd .
   cd "${target}" || exit
 
   git add --all .
