@@ -15,7 +15,7 @@
 
 #### Precondiction
 ```bash
-$ git plog
+$ git pl
 37a0595 - (HEAD, master) 2: 2.txt (5 seconds ago) <Marslo>
 1d9bcce - Initial commit (65 minutes ago) <Marslo>
 
@@ -65,7 +65,7 @@ Applying: 2: 2.txt
 
   - Log added the remote new version
     ```bash
-    $ git plog
+    $ git pl
     7bc54e0 - (HEAD, master) 2: 2.txt (12 seconds ago) <Marslo>
     4e3106e - (origin/master, origin/HEAD) 1: 1.txt (4 minutes ago) <Marslo>
     1d9bcce - Initial commit (68 minutes ago) <Marslo>
@@ -78,7 +78,7 @@ Applying: 2: 2.txt
 ### With Confilite file
 #### Precondiction
 ```bash
-$ git plog
+$ git pl
  94a5935 - (HEAD, master) 2: 1 (25 seconds ago) <Marslo>
  1d9bcce - Initial commit (25 minutes ago) <Marslo>
 
@@ -153,7 +153,7 @@ To check out the original branch and stop rebasing, run "git rebase --abort".
     b9709fe - (HEAD, origin/master, origin/HEAD) 1: 1 (2 minutes ago)
     1d9bcce - Initial commit (26 minutes ago) <Marslo>
 
-    $ git plog
+    $ git pl
     b9709fe - (HEAD, origin/master, origin/HEAD) 1: 1 (2 minutes ago)
     1d9bcce - Initial commit (26 minutes ago) <Marslo>
     ```
@@ -214,7 +214,7 @@ Applying: 2: 1
 
   - Log added the remote new version
     ```bash
-    $ git plog
+    $ git pl
     d6962d6 - (HEAD, master) 2: 1 (4 seconds ago) <Marslo>
     b9709fe - (origin/master, origin/HEAD) 1: 1 (3 minutes ago) <Marslo>
     1d9bcce - Initial commit (27 minutes ago) <Marslo>
