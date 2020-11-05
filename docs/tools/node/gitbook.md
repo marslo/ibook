@@ -22,10 +22,13 @@ search:
 
 ## `gitbook-cli`
 ### installation
-```bash
-$ brew install node
-$ npm i -g gitbook-cli [--save-dev]
-```
+
+- install
+  ```bash
+  $ brew install node
+  $ npm i -g gitbook-cli [--save-dev]
+  ```
+
 - verify
   ```bash
   $ gitbook --version
@@ -40,65 +43,123 @@ $ npm i -g gitbook-cli [--save-dev]
   ```
 
 ### initial `book.json`
-```bash
-$ gitbook install
-info: installing 29 plugins using npm@3.9.2
-info:
-info: installing plugin "search-plus"
-info: install plugin "search-plus" (^0.0.11) from NPM with version 0.0.11
-/Users/marslo/mywork/tools/git/marslo/mbook
-└─┬ gitbook-plugin-search-plus@0.0.11
-  └── html-entities@1.2.0
-....
-```
-{% endtab %}
-{% tab title="gitbook install from fresh environment" %}
-```bash
-$ gitbook install --log=debug --debug
-Installing GitBook 3.2.3
-  SOLINK_MODULE(target) Release/.node
-  CXX(target) Release/obj.target/fse/fsevents.o
-  SOLINK_MODULE(target) Release/fse.node
-  SOLINK_MODULE(target) Release/.node
-  CXX(target) Release/obj.target/fse/fsevents.o
-  SOLINK_MODULE(target) Release/fse.node
-gitbook@3.2.3 ../../var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/tmp-10600Rn1q3aFhRWiI/node_modules/gitbook
-├── escape-html@1.0.3
-├── escape-string-regexp@1.0.5
-├── destroy@1.0.4
-├── ignore@3.1.2
-├── bash-color@0.0.4
-├── gitbook-plugin-livereload@0.0.1
-├── cp@0.2.0
-...
-```
-{% endtab %}
-
-{% tab title="otherwise"%}
-```bash
-$ gitbook serve
-Live reload server started on port: 35729
-Press CTRL+C to quit ...
-```
-  - Error
+- gitbook install
   ```bash
-  $ gitbook serve
-  Live reload server started on port: 35729
-  Press CTRL+C to quit ...
-
-  info: 7 plugins are installed
-  info: 31 explicitly listed
-
-  Error: Couldn't locate plugins "search-plus, simple-page-toc, github, github-buttons, prism, prism-themes, advanced-emoji, anchors, include-codeblock, ace, emphasize, katex, splitter, mermaid-gb3, tbfed-pagefooter, sectionx, local-video, anchor-navigation-ex, favicon, todo, alerts, include-csv, puml, sharing-plus, image-captions, donate, toggle-chapters, navigator, downloadpdf", Run 'gitbook install' to install plugins from registry.
+  $ gitbook install
+  info: installing 29 plugins using npm@3.9.2
+  info:
+  info: installing plugin "search-plus"
+  info: install plugin "search-plus" (^0.0.11) from NPM with version 0.0.11
+  /Users/marslo/mywork/tools/git/marslo/mbook
+  └─┬ gitbook-plugin-search-plus@0.0.11
+    └── html-entities@1.2.0
+  ....
   ```
 
+  - gitbook install in fresh environment"
+    ```bash
+    $ gitbook install --log=debug --debug
+    Installing GitBook 3.2.3
+      SOLINK_MODULE(target) Release/.node
+      CXX(target) Release/obj.target/fse/fsevents.o
+      SOLINK_MODULE(target) Release/fse.node
+      SOLINK_MODULE(target) Release/.node
+      CXX(target) Release/obj.target/fse/fsevents.o
+      SOLINK_MODULE(target) Release/fse.node
+    gitbook@3.2.3 ../../var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/tmp-10600Rn1q3aFhRWiI/node_modules/gitbook
+    ├── escape-html@1.0.3
+    ├── escape-string-regexp@1.0.5
+    ├── destroy@1.0.4
+    ├── ignore@3.1.2
+    ├── bash-color@0.0.4
+    ├── gitbook-plugin-livereload@0.0.1
+    ├── cp@0.2.0
+    ...
+    ```
+
+  - alternatively
+    ```bash
+    $ gitbook serve
+    Live reload server started on port: 35729
+    Press CTRL+C to quit ...
+
+    info: 7 plugins are installed
+    info: 31 explicitly listed
+
+    Error: Couldn't locate plugins "search-plus, simple-page-toc, github, github-buttons, prism, prism-themes, advanced-emoji, anchors, include-codeblock, ace, emphasize, katex, splitter, mermaid-gb3, tbfed-pagefooter, sectionx, local-video, anchor-navigation-ex, favicon, todo, alerts, include-csv, puml, sharing-plus, image-captions, donate, toggle-chapters, navigator, downloadpdf", Run 'gitbook install' to install plugins from registry.
+    ```
+
 ## gitbook format
+### [hints](https://github.com/GitbookIO/plugin-hints)
+> [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
+
+| styles  | code                                             |
+| -       | -                                                |
+| info    | `{% hint style='info' %}`<br> `{% endhint %}`    |
+| tip     | `{% hint style='tip' %}`<br> `{% endhint %}`     |
+| danger  | `{% hint style='danger' %}`<br> `{% endhint %}`  |
+| warning | `{% hint style='warning' %}`<br> `{% endhint %}` |
+| success | `{% hint style='success' %}`<br> `{% endhint %}` |
+
+
+#### success
+{% hint style='success' %}
+```javascript
+{% hint style='success' %}
+success
+{% endhint %}
+```
+{% endhint %}
+
+
+#### tip
+{% hint style='tip' %}
+```javascript
+{% hint style='tip' %}
+info
+{% endhint %}
+```
+{% endhint %}
+
+
+#### danger
+{% hint style='danger' %}
+```javascript
+{% hint style='danger' %}
+danger
+{% endhint %}
+```
+{% endhint %}
+
+
+#### warning
+{% hint style='warning' %}
+```javascript
+{% hint style='warning' %}
+warning
+{% endhint %}
+```
+{% endhint %}
+
+#### quote
+{% hint 'info' %}
+**Important info**: this *note* needs to be highlighted
+
+```javascript
+{% hint 'info' %}
+**Important info**: this *note* needs to be highlighted
+{% endhint %}
+```
+{% endhint %}
+
 ### tab
 
 > [!TIP]
 > this function only for native [gitbook.io](https://www.gitbook.com/)
 > example:
 > - [here](https://imarslo.gitbook.io/handbook/kubernetes/certificates#check-info)
+> reference:
+> -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)
 
 #### code
 
@@ -178,7 +239,6 @@ python
   ```
 
 - [solution](https://blog.csdn.net/HammerTien/article/details/86613392)
-
   - raw code
     {% raw %}
     ```markdown
@@ -197,9 +257,9 @@ python
     {% raw %}
     '''bash
     $ k -n kube-system get pods \
-    -o go-template \
-    --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
-    | head
+        -o go-template \
+        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+        | head
     '''
     {% endraw %}
     ```

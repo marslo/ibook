@@ -21,7 +21,7 @@
     "-livereload",
     "search-plus",
     "edit-link",
-    "disqus",
+    "-disqus",
     "prism",
     "advanced-emoji",
     "anchors",
