@@ -259,7 +259,11 @@ assert Arrays.asList(Choices.values()).toString().contains("a1") == true
   ```groovy
   assert Arrays.stream(Choices.values()).anyMatch((t) -> t.name().equals("a1")) == true
   ```
-
+- or
+  ```bash
+  assert Choices.values()*.name().contains('a1') == true
+  assert Choices.values()*.name().contains('a9') == false
+  ```
 - [or](https://stackoverflow.com/a/10171194/2940319)
   ```bash
   public enum Choices {
