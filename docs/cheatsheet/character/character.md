@@ -10,6 +10,7 @@
   - [subset of arguments](#subset-of-arguments)
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
   - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
+  - [Running multiple commands with xargs](#running-multiple-commands-with-xargs)
 - [`find`](#find)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
   - [`find` && `tar`](#find--tar)
@@ -207,6 +208,115 @@ $ find . -name "*.sh" | xargs wc -l | sort -hr
 ### diff every git commit against its parent
 ```bash
 $ git log --format="%H %P" | xargs -L 1 git diff
+```
+
+### [Running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
+> precondition:
+> ```bash
+> $ cat a.txt
+> a b c
+> 123
+> ###this is a comment
+> ```
+
+```bash
+$ myCommandWithDifferentQuotes=$(cat <<'EOF'
+  -> echo "command 1: $@"; echo 'will you do the fandango?'; echo "command 2: $@"; echo
+  -> EOF
+  -> )
+
+$ < a.txt xargs -I @@ bash -c "$myCommandWithDifferentQuotes" -- @@
+command 1: a b c
+will you do the fandango?
+command 2: a b c
+
+command 1: 123
+will you do the fandango?
+command 2: 123
+
+command 1: ###this is a comment
+will you do the fandango?
+command 2: ###this is a comment
+```
+
+- or
+  ```bash
+  $ cat a.txt | xargs -I @@ bash -c "$myCommandWithDifferentQuotes" -- @@
+  ```
+- [or](https://stackoverflow.com/a/6959074/2940319)
+  ```bash
+  $ while read stuff; do
+    ->   echo "command 1: $stuff";
+    ->   echo 'will you do the fandango?';
+    ->   echo "command 2: $stuff";
+    ->   echo
+    -> done < a.txt
+  ```
+
+#### compress sub-folders
+  ```bash
+  $ find . -maxdepth 1 ! -path . -type d -print0 \
+         | xargs -0 -I @@ bash -c '{ \
+             tar caf "@@.tar.lzop" "@@" \
+             && echo Completed compressing directory "@@" ; \
+           }'
+  ```
+
+#### execute commands from file
+- [create files](https://linuxize.com/post/linux-xargs-command/)
+  > ```bash
+  > -t, --verbose
+  >           Print the command line on the standard error output before executing it.
+  > -p, --interactive
+  >           Prompt  the  user  about  whether to run each command line and read a line from the terminal.
+  >           Only run the command line if the response starts with `y' or `Y'.  Implies -t.
+  > -I replace-str
+  >           Replace occurrences of replace-str in the initial-arguments with names read from standard in-
+  >           put.  Also, unquoted blanks do not terminate input items; instead the separator is  the  new-
+  >           line character.  Implies -x and -L 1.
+  > ```
+  >
+
+  > precondition
+  > ```bash
+  > $ cat a.txt
+  > a b c
+  > ```
+
+  ```bash
+  $ echo 'a b c'
+  a b c
+  $ echo 'a b c' | xargs -n1
+  a
+  b
+  c
+
+  $ echo 'a b c' | xargs -n1 -t touch
+  touch a
+  touch b
+  touch c
+  $ echo 'a b c' | xargs -n1 -p touch
+  touch a ?...y
+  ```
+
+#### ping multiple ips
+```bash
+$ cat a.txt
+8.8.8.8
+1.1.1.1
+
+$ xargs -L1 -a a.txt /sbin/ping -c 1
+PING 8.8.8.8 (8.8.8.8): 56 data bytes
+64 bytes from 8.8.8.8: icmp_seq=0 ttl=44 time=82.868 ms
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 82.868/82.868/82.868/0.000 ms
+
+PING 1.1.1.1 (1.1.1.1): 56 data bytes
+64 bytes from 1.1.1.1: icmp_seq=0 ttl=63 time=1.016 ms
+--- 1.1.1.1 ping statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
 ```
 
 ## `find`

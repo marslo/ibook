@@ -7,6 +7,7 @@
 - [Brace Expansion](#brace-expansion)
   - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
 - [Process Substitution](#process-substitution)
+    - [nstalling tools via running random scripts from unknown sites](#nstalling-tools-via-running-random-scripts-from-unknown-sites)
   - [`strace`](#strace)
 - [Basic Commands](#basic-commands)
   - [`du`](#du)
@@ -177,6 +178,12 @@ $ while read branch; do
   drwxr-xr-x 45 marslo staff 1440 Nov  2 13:56 screenshot
   drwxr-xr-x 11 marslo staff  352 Oct 14 21:22 tools
   ```
+
+### [nstalling tools via running random scripts from unknown sites](https://stackoverflow.com/a/12748630/2940319)
+```bash
+$ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
+    fetch -o - http://pi.dk/3 ) > install.sh
+```
 
 ## `strace`
 > reference [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
