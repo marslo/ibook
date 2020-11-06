@@ -8,8 +8,9 @@
   - [Convert flv to mp4](#convert-flv-to-mp4)
   - [Combine video and audio](#combine-video-and-audio)
 - [Image](#image)
-  - [Identity an image](#identity-an-image)
-  - [Convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
+  - [identity an image](#identity-an-image)
+  - [convert svg to png](#convert-svg-to-png)
+  - [convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -54,13 +55,18 @@ $ ffmpeg -i <origin-video> -i <origin-audio> -c copy -map 0:0 -map 1:0 -shortest
 ![combine](../screenshot/ffmpeg-combine.jpg)
 
 ## Image
-### Identity an image
+### identity an image
 ```bash
 $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 1024x768
 ```
 
-### Convert HEIC/HEIF to PNG
+### convert svg to png
+```bash
+$ qlmanage -t -s 1000 -o . k-1.svg
+```
+
+### convert HEIC/HEIF to PNG
 
 ![magick](../screenshot/heic-1.gif)
 
