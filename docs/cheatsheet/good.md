@@ -113,20 +113,20 @@ $ unzip <jar-name>.jar -d <target-folder>
 ### compress
 #### zip package with dot-file
 - `.[^.]*`
-    ```bash
-    $ zip name.zip * .[^.]*'
-    ```
+  ```bash
+  $ zip name.zip * .[^.]*'
+  ```
 
 - `shopt -s dotglob`
-    ```bash
-    $ shopt -s dotglob
-    $ zip name.zip *
-```
+  ```bash
+  $ shopt -s dotglob
+  $ zip name.zip *
+  ```
 
 - `.`
-    ```bash
-    $ zip -r name.zip .
-    ```
+  ```bash
+  $ zip -r name.zip .
+  ```
 
 #### remove dot-file without `skipping '..' '.'` issue
 - [`shopt -s dotglob`](https://unix.stackexchange.com/a/289393/29179)
