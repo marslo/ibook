@@ -5,6 +5,7 @@
 - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
 - [Copy path from finder](#copy-path-from-finder)
 - [create an app for script](#create-an-app-for-script)
+- [add snippets for input](#add-snippets-for-input)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -135,8 +136,8 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
 
 $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 ```
-
 - try validate via execute `groovyConsole.app/Contents/MacOS/groovyConsole` directly. to see whether if the groovyConsole will be opened.
+  ![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
 
 #### set the icon for new app
 > optional
@@ -154,4 +155,21 @@ $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Re
 $ mv groovyConsole.app/ /Applications/
 ```
 
-![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
+### [add snippets for input](https://sspai.com/post/36203)
+#### enable Technical Symbols
+- Input Method ⇢ **Show emoji and symbols**
+  ![show emoji & symbols](../screenshot/osx/snippets-0.png)
+
+- Open **Customized List** ⇢ **Technical Symbols**
+  ![customized list](../screenshot/osx/snippets-1.png)
+
+  ![technical symbols](../screenshot/osx/snippets-2.png)
+
+#### And snippets
+- go to **System Preferences** ⇢ **Keyboard** ⇢ **Test**
+- Add snippets as below
+  ![snippets](../screenshot/osx/snippets-3.png)
+
+#### finally
+![test-1](../screenshot/osx/snippets-4.png)
+![test-2](../screenshot/osx/snippets-5.png)
