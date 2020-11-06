@@ -6,6 +6,8 @@
   - [force the link and overwrite everything](#force-the-link-and-overwrite-everything)
   - [rerurn postinstall](#rerurn-postinstall)
   - [check brew configure file](#check-brew-configure-file)
+  - [whatprovide alternatives](#whatprovide-alternatives)
+  - [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -56,3 +58,38 @@ $ brew -v fetch --deps macvim
 $ brew -v install --build-from-source macvim
 $ brew pin macvim
 ```
+
+### whatprovide alternatives
+```bash
+$ pkgutil --file-info /usr/bin/qlmanage
+volume: /
+path: /usr/bin/qlmanage
+
+pkgid: com.apple.pkg.Core
+pkg-version: 10.15.0.1.1.1569789135
+install-time: 1570542610
+uid: 0
+gid: 0
+mode: 755
+```
+- for brew formula
+  ```bash
+  $ while read formula; do brew list --formula "${formula}" | grep -w magick; done < <(brew list --formula)
+  ```
+
+### tricky
+> reference:
+> - [Tips and Tricks](https://docs.brew.sh/Tips-N'-Tricks)
+
+- interactive homebrew shell
+  ```bash
+  $ brew irb
+  ==> Interactive Homebrew Shell
+  Example commands available with: brew irb --examples
+
+  WARNING: This version of ruby is included in macOS for compatibility with legacy software. 
+  In future versions of macOS the ruby runtime will not be available by 
+  default, and may require you to install an additional package.
+
+  irb(main):001:0>
+  ```
