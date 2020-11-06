@@ -11,6 +11,7 @@ search:
   - [installation](#installation)
   - [initial `book.json`](#initial-bookjson)
 - [gitbook format](#gitbook-format)
+  - [hints](#hints)
   - [tab](#tab)
   - [emoji](#emoji)
 - [Q&A](#qa)
