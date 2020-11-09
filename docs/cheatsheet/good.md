@@ -6,6 +6,7 @@
 - [download and extract](#download-and-extract)
 - [extract `jar`](#extract-jar)
 - [compress](#compress)
+- [get cookie from firefox](#get-cookie-from-firefox)
 - [echo 256 colors](#echo-256-colors)
 - [directory diff](#directory-diff)
 - [commands](#commands)

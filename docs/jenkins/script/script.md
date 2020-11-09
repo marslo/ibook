@@ -19,6 +19,8 @@
   - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)
   - [automatic approval all pending](#automatic-approval-all-pending)
   - [disable the scriptApproval](#disable-the-scriptapproval)
+- [others](#others)
+  - [get all running thread](#get-all-running-thread)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -296,3 +298,16 @@ GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScript
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
 ```
 
+## others
+### get all running thread
+```groovy
+Thread.getAllStackTraces().keySet().each() {
+  println it.getName()
+}
+```
+- [kill running thread](https://stackoverflow.com/a/26306081/2940319)
+  ```groovy
+  Thread.getAllStackTraces().keySet().each() { t ->
+    if (t.getName()=="YOUR THREAD NAME" ) { t.interrupt(); }
+  }
+  ```
