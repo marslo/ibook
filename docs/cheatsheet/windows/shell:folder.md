@@ -11,7 +11,7 @@
 ## Usage
 - <kbd>win</kbd> + <kbd>r</kbd>
 - run
-  ```bat
+  ```batch
   > shell:startup
   ```
 

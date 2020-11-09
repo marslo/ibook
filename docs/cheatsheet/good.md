@@ -82,7 +82,7 @@ $ date --set="$(ssh [username]@[sshserver] date)"
     ```
 
 - `*.tar.gz`
-  ```bah
+  ```bash
   $ curl -fsSL https://path/to/file.tar.gz | tar xzf - -C <EXTRACT_PATH>
   ```
   - example

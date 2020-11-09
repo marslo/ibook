@@ -29,7 +29,7 @@ $ python get-pip.py pip==9.0.2 wheel==0.30.0 setuptools==28.8.0
 $ [sudo [-H]] pip install --upgrade pip
 ```
 - windows
-```bat
+```batch
 > python -m pip install --upgrade pip
 ```
 
