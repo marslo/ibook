@@ -56,7 +56,7 @@
   * [monitor](kubernetes/monitor.md)
   * [namespace](kubernetes/namespace.md)
   * [network](kubernetes/network.md)
-  * [pod](kubernetes/pod.md)
+  * [events](kubernetes/events.md)
 * [osx](osx/osx.md)
   * [defaults](osx/defaults.md)
   * [apps](osx/apps.md)

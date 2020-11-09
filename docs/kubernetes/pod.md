@@ -3,7 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Pod](#pod)
-    - [List Pods name](#list-pods-name)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
