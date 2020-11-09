@@ -68,7 +68,7 @@ $ git config --global core.autocrlf false
 
 ## practice
 ### force using `lf` in both remote and local
-```bahs
+```bash
 $ git config core.eol lf
 $ git config core.autocrlf input
 ```

@@ -8,7 +8,7 @@
     - [dict & counter](#dict--counter)
     - [enumerate](#enumerate)
     - [import local module](#import-local-module)
-    - [**args & **kwargs](#args--kwargs)
+    - [args & kwargs](#args--kwargs)
     - [itertools](#itertools)
     - [one-line python code](#one-line-python-code)
     - [slice](#slice)
@@ -148,7 +148,7 @@ def do_something(items):
 ```
 
 --
-### **args & **kwargs
+### args & kwargs
 ```python
 def add(one, two):
   return one + two

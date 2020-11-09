@@ -65,6 +65,8 @@ $ curl -s \
 $ confluenceName='my.confluence.com'
 $ pageID='143765713'
 ```
+> get page id:
+> ![confluence page id](../screenshot/confluence-pageid.png)
 
 ### get info
 ```bash
@@ -123,3 +125,5 @@ $ curl -s \
        --data "$(cat a.json)" \
        https://${confluenceName}/rest/api/content/${pageID}
 ```
+- result
+![publish via api](../screenshot/publish-to-confluence.png)

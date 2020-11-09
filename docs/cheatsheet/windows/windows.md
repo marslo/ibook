@@ -40,7 +40,7 @@
 
 ## process
 ### get the list of programs (`wmic`)
-```bat
+```batch
 [12:26:33.40 C:\Windows\SysWOW64]
 $ wmic product get name,version
 Name                                                                     Version
@@ -54,7 +54,7 @@ Microsoft Office OneNote MUI (English) 2010                              14.0.60
 
 ### `ps auxf`
 - `tasklist`
-  ```bat
+  ```batch
   > tasklist
 
   Image Name                     PID Session Name        Session#    Mem Usage
@@ -95,64 +95,64 @@ Microsoft Office OneNote MUI (English) 2010                              14.0.60
 
 ### [lansettings](https://stackoverflow.com/a/3648396/2940319)
 - Internet Settings
-  ```bat
+  ```batch
   > inetcpl.cpl
   ```
 
 - Internet Settings with Connections Tab
-  ```bat
+  ```batch
   > rundll32.exe shell32.dll,Control_RunDLL inetcpl.cpl,,4
   ```
 
   [or](https://stackoverflow.com/a/45907190/2940319)
 
-  ```bat
+  ```batch
   > inetcpl.cpl ,4
   ```
 
   [or](https://stackoverflow.com/a/3648390/2940319)
-  ```bat
+  ```batch
   > control inetcpl.cpl,,4
   ```
 
 - [proxy setup](https://stackoverflow.com/a/16453587/2940319)
-  ```bat
+  ```batch
   > REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer  /d "hhttp=proxy-url:port;https=proxy-url:port;ftp=proxy-url:port;socks=proxy-url:port;" /t REG_SZ /f
   ```
 
 ### Desktop Icon Settings
-```bat
+```batch
 > rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0
 ```
 
 ### Notification Area Icons
-```bat
+```batch
 > explorer shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}
 ```
 
 ### Personalization
-```bat
+```batch
 > explorer shell:::{ED834ED6-4B5A-4bfe-8F11-A626DCB6A921}
 ```
 
 ### Screen Saver
-```bat
+```batch
 > rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,1
 ```
 
 ### System
-```bat
+```batch
 > control /name Microsoft.System
 ```
 
 or
 
-  ```bat
+  ```batch
   > control sysdm.cpl
   ```
 
 ### System Icon
-```bat
+```batch
 > explorer shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9} \SystemIcons,,0
 ```
 
@@ -161,13 +161,13 @@ or
 > http://www.klapac.funsite.cz/mediawiki/index.php?title=List_of_Windows_10_CLSID_Key_(GUID)_Shortcuts
 
 ### usage
-```bat
+```batch
 > explorer.exe shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}
 ```
 
 or
 
-  ```bat
+  ```batch
   > explorer.exe /e,::{CLSID key number}
   ```
 
@@ -176,37 +176,37 @@ or
 
 ## `regedit`
 ### [Set `%USERPROFILE%` as `${HOME}` for **cygwin**](http://stackoverflow.com/questions/225764/safely-change-home-directory-in-cygwin)
-```bat
+```batch
 [15:55:36.30 C:\]
 $ reg add HKCU\Environment /v HOME /t REG_EXPAND_SZ /d ^%USERPROFILE^%
 ```
 
 ### PuTTy
 - Backup PuTTy sessions
-  ```bat
+  ```batch
   C:> regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
   ```
 
 - Launchy PuTTy session as shortcut
-  ```bat
+  ```batch
   C:> [PuTTy.exe] -load [SessionName]
   ```
 
 - Backup PuTTy session
-  ```bat
+  ```batch
   C:> regedit /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
   ```
 
 ### [disable screensaver](https://gist.github.com/Otiel/8d15d21593b481c1e525500762db52ba)
 > reference [Configure screensaver command line](https://www.windows-commandline.com/configure-screensaver-command-line/)
 
-```bat
+```batch
 REM  Disable the screensaver
 REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
 REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 0 /f
 ```
 - or by using autohotkey
-  ```ahk
+  ```autohotkey
   CoordMode, Mouse, Screen
   Loop
   {
@@ -221,7 +221,7 @@ REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v Scre
   ```
 
   [or](https://autohotkey.com/board/topic/13510-move-mouse-when-not-in-use-to-disable-screensaver/)
-  ```ahk
+  ```autohotkey
   #Persistent
   SetTimer, WatchCursor, 100
   return
@@ -244,33 +244,33 @@ REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v Scre
 
 ### Remove Graphics card context menu
 - Unregister igfxpph.dll
-  ```bat
+  ```batch
   [11:39:50.61 C:\]
   $ regsvr32 /u igfxpph.dll
   ```
 
 - Remove register
     - Setting from regedit
-    ```bat
+    ```batch
     [11:47:10.20 C:\]
     $ REG DELETE "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\igfxcui" /f
     ```
 
     - Setting from setx
-    ```bat
+    ```batch
     [11:47:10.20 C:\]
     $ REG DELETE "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\igfxcui" /f
     ```
 
 ### Set Environment Variables
 - Set User Varialbe
-  ```bat
+  ```batch
   [13:48:11.20 C:\]
   $ setx VIM_HOME C:\Marslo\MyProgramFiles\Vim\vim74\gvim.exe
   ```
 
 - Set System Variable
-  ```bat
+  ```batch
   [13:48:11.20 C:\]
   $ setx /M VIM_HOME C:\Marslo\MyProgramFiles\Vim\vim74\gvim.exe
   ```
@@ -280,7 +280,7 @@ REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v Scre
 
 ### setx problem
 
-```bat
+```batch
 [14:31:18.67 C:\]
 $ setx /M PATH %PATH%;%M2_HOME%\bin
 ERROR: Invalid syntax. Default option is not allowed more than '2' time(s).
@@ -288,14 +288,14 @@ Type "SETX /?" for usage.
 ```
 
 - Fix:
-  ```bat
+  ```batch
   [14:31:18.67 C:\]
   $ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path /t REG_SZ /d "%path%;%M2_HOME%\bin" /f
   ```
 
 ### whoami check SID
 
-```bat
+```batch
 [15:59:24.12 C:\Windows\SysWOW64]
 $ whoami /user
 USER INFORMATION
@@ -307,7 +307,7 @@ mj\marslo_jiao S-1-5-21-354581543-3608027983-2995495404-970613
 
 ### Fingerprint Pro
 
-```bat
+```batch
 URL: www.lenovo.com
 Help link: support.lenovo.com
 Installation folder: C:\Program Files\Lenovo\Fingerprint Manager Pro\
@@ -317,7 +317,7 @@ Estimated size: 70.21 MB
 
 ### Enable Gadgets
 
-```bat
+```batch
 Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Windows\Sidebar]
 "TurnOffSidebar"=-
@@ -328,25 +328,25 @@ Windows Registry Editor Version 5.00
 ### [issue about `"profile.d\Active"' is not recognized as an internal or external command`](https://github.com/cmderdev/cmder/issues/1102#issuecomment-251550950)
 
 - regedit
-  ```bat
+  ```batch
   [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor]
   "Autorun"="@CHCP 65001>nul"
   ```
 
 - cmd
-  ```bat
+  ```batch
   $ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d "@CHCP 65001>nul" /f
   ```
 
 ## `shell`
 ### <kbd>win</kbd> + <kbd>r</kbd>
 - appfolder
-  ```bat
+  ```batch
   > shell:appfolder
   ```
 
 - startup folder
-  ```bat
+  ```batch
   > shell:startup
   > shell:Common Startup
   ```
