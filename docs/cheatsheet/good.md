@@ -261,6 +261,14 @@ $ mkdir backup-folder && ls | grep -Ze ".*rar" | xargs -d '\n' -I {} mv {} backu
 $ ls -1 a/b/* 11 12 | xargs cp -t copy-target-folder/
 ```
 
+#### batch copy
+> reference:
+> - [Hack 22. Xargs Command Examples](https://linux.101hacks.com/linux-commands/xargs-command-examples/)
+
+```bash
+$ ls -1 a/b/* 11 12 | xargs cp -t copy-target-folder/
+```
+
 ### bash
 
 #### [bash alias](https://askubuntu.com/a/871435)
