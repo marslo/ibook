@@ -4,6 +4,9 @@
 
 - [docker completion](#docker-completion)
   - [OSX](#osx)
+- [docker build](#docker-build)
+- [docker run](#docker-run)
+  - [run dind](#run-dind)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -49,3 +52,18 @@ EOF
   $ complete -p git
   complete -o bashdefault -o default -o nospace -F __git_wrap__git_main git
   ```
+
+## docker build
+## docker run
+### run dind
+```bash
+$ docker run \
+         --name "marslo" \
+         --privileged \
+         -it \
+         -v /var/run/docker.sock:/var/run/docker.sock
+         docker:dind
+
+$ ubuntu@01acbffd94ec:~$ docker --version
+Docker version 18.06.1-ce, build e68fc7a
+```

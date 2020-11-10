@@ -2,10 +2,19 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
-- [Copy path from finder](#copy-path-from-finder)
-- [create an app for script](#create-an-app-for-script)
-- [add snippets for input](#add-snippets-for-input)
+  - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
+  - [Copy path from finder](#copy-path-from-finder)
+  - [create an app for script](#create-an-app-for-script)
+  - [add snippets for input](#add-snippets-for-input)
+- [others](#others)
+  - [launch apps](#launch-apps)
+  - [create image](#create-image)
+  - [disk](#disk)
+  - [disable startup music](#disable-startup-music)
+  - [3D lock screen](#3d-lock-screen)
+  - [take screenshot after 3 sec](#take-screenshot-after-3-sec)
+  - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
+  - [show message on desktop](#show-message-on-desktop)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -173,3 +182,99 @@ $ mv groovyConsole.app/ /Applications/
 #### finally
 ![test-1](../screenshot/osx/snippets-4.png)
 ![test-2](../screenshot/osx/snippets-5.png)
+
+
+## others
+### launch apps
+```bash
+$ launchctl list
+```
+
+### create image
+- create dmg image
+  ```bash
+  $ hdiutil create -volname "Volume Name" -srcfolder /path/to/folder -ov diskimage.dmg
+  ```
+- create encrypted image
+  ```bash
+  $ hdiutil create -encryption -stdinpass -volname "Volume Name" -srcfolder /path/to/folder -ov encrypted.dmg
+  ```
+- creaste dvd (for .iso, .img, .dmg)
+  ```bash
+  $ hdiutil burn /path/to/image_file
+  ```
+
+### disk
+- check volumn info
+  ```bash
+  $ diskutil info <path/to/volumn>
+  ```
+  - i.e.:
+    ```bash
+    $ diskutil info /Volumes/iMarsloOSX/
+       Device Identifier:         disk1s5
+       Device Node:               /dev/disk1s5
+       Whole:                     No
+       Part of Whole:             disk1
+
+       Volume Name:               iMarsloOSX
+       Mounted:                   Yes
+       Mount Point:               /
+    ```
+
+- list disks and volumns
+  ```bash
+  $ diskutil list
+  ```
+
+- list the apfs info
+  ```bash
+  $ diskutil apfs list
+  APFS Container (1 found)
+  |
+  +-- Container disk1 ********-****-****-****-************
+      ====================================================
+      APFS Container Reference:     disk1
+      Size (Capacity Ceiling):      250685575168 B (250.7 GB)
+      Capacity In Use By Volumes:   176258826240 B (176.3 GB) (70.3% used)
+      Capacity Not Allocated:       74426748928 B (74.4 GB) (29.7% free)
+      |
+      +-< Physical Store...>
+      |
+      +-> ...
+  ```
+
+- check detail diskage usage
+  ```bash
+  $ sudo fs_usage
+  21:03:47  ioctl        0.000003   iTerm2
+  21:03:47  ioctl        0.000003   iTerm2
+  21:03:47  close        0.000031   privoxy
+  21:03:47  select       0.000004   privoxy
+  ...
+  ```
+
+### disable startup music
+```bash
+$ sudo nvram SystemAudioVolume=" "
+```
+
+### 3D lock screen
+```bash
+$ /System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
+```
+
+### take screenshot after 3 sec
+```bash
+$ screencapture -T 3 -t jpg -P delayedpic.jpg
+```
+
+### setup welcome text in login screen
+```bash
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText 'Awesome Marslo!!'
+```
+
+### show message on desktop
+```bash
+$ sudo jamf displayMessage -message "Hello World!"
+```
