@@ -7,8 +7,7 @@
   - [find items (folder) some times ago by aql](#find-items-folder-some-times-ago-by-aql)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
+			
 ## AQL
 ### [Relative Time Operators](https://www.jfrog.com/confluence/display/RTF/Artifactory+Query+Language#ArtifactoryQueryLanguage-RelativeTimeOperators)
 > [aqlCleanup.groovy](https://github.com/JFrog/artifactory-scripts/blob/master/cleanup/aqlCleanup.groovy)

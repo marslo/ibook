@@ -12,7 +12,7 @@
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
   - [get particular job status](#get-particular-job-status)
   - [get build status](#get-build-status)
-  - [get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)](#get-all-failure-builds-in-last-24-hourshttpsstackoverflowcoma603758622940319)
+  - [get all failure builds in last 24 hours](#get-all-failure-builds-in-last-24-hours)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
 - [List plugins](#list-plugins)
@@ -140,7 +140,7 @@ results.each{ name, map ->
 "DONE"
 ```
 
-### get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)
+### [get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
