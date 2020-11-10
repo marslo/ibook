@@ -9,6 +9,7 @@
   - [whatprovide alternatives](#whatprovide-alternatives)
   - [tricky](#tricky)
   - [rpm & dpkg & brew](#rpm--dpkg--brew)
+  - [brew command](#brew-command)
 - [network](#network)
   - [show network information](#show-network-information)
   - [change order of networks](#change-order-of-networks)

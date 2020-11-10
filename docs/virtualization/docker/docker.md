@@ -7,6 +7,12 @@
 - [docker build](#docker-build)
 - [docker run](#docker-run)
   - [run dind](#run-dind)
+- [docker exec](#docker-exec)
+  - [login docker container as root](#login-docker-container-as-root)
+- [docker ps](#docker-ps)
+  - [list without wrap](#list-without-wrap)
+  - [filter](#filter)
+  - [format](#format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -67,3 +73,58 @@ $ docker run \
 $ ubuntu@01acbffd94ec:~$ docker --version
 Docker version 18.06.1-ce, build e68fc7a
 ```
+
+
+## docker exec
+### login docker container as root
+```bash
+$ docker run -d <image>:<tag>
+$ docker exec --privileged -u root -it <image-id> -- /bin/bash
+```
+
+## docker ps
+### list without wrap
+```bash
+$ docker ps -a --no-trunc
+```
+
+[or](https://github.com/moby/moby/issues/40405#issuecomment-578066973)
+```bash
+$ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
+```
+
+- i.e.:
+  ```bash
+  $ docker ps -a --no-trunc --filter name=marslo*
+  ```
+
+### [filter](https://docs.docker.com/engine/reference/commandline/ps/#filtering)
+- filter with image
+  ```bash
+  $ docker ps -a --no-trunc --filter ancestor='busybox:latest'
+  ```
+- filter with exit code
+  ```bash
+  $ docker ps -a --filter 'exited=0'
+  ```
+- filter with status
+  ```bash
+  $ docker ps --filter status=running
+  ```
+
+### [format](https://docs.docker.com/engine/reference/commandline/ps/#formatting)
+- id and command
+
+  {% raw %}
+  ```bash
+  $ docker ps --no-trunc --format "{{.ID}}: {{.Command}}"
+  ```
+  {% endraw %}
+
+- id, image and commands
+
+  {% raw %}
+  ```bash
+  $ docker ps --no-trunc --format "{{.ID}}: {{.Command}}: {{.Image}}"
+  ```
+  {% endraw %}
