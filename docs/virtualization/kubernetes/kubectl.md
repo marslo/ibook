@@ -101,3 +101,11 @@ $ k get pods --all-namespaces -o go-template --template="{{range .items}}{{range
   ```bash
   $ k get deployment -o=jsonpath="{range .items[*]}{'\n'}{.metadata.name}{':\t'}{range .spec.template.spec.containers[*]}{.image}{', '}{end}{end}"
   ```
+
+### list all quota
+```bash
+$ for _i in $(k get ns --no-headers | awk -F' ' '{print $1}'); do
+    echo ------------- ${_i} ------------
+    k -n ${_i} describe quota
+  done
+```
