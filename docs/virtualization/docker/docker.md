@@ -61,7 +61,7 @@ EOF
 
 ## docker build
 ## docker run
-### run dind
+### run into dind
 ```bash
 $ docker run \
          --name "marslo" \
@@ -74,6 +74,14 @@ $ ubuntu@01acbffd94ec:~$ docker --version
 Docker version 18.06.1-ce, build e68fc7a
 ```
 
+### run to override ENTRYPOINT
+```bash
+$ docker run \
+         --name marslo \
+         -it \
+         --entrypoint /bin/bash \
+         docker:dind
+```
 
 ## docker exec
 ### login docker container as root
@@ -128,3 +136,13 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
   $ docker ps --no-trunc --format "{{.ID}}: {{.Command}}: {{.Image}}"
   ```
   {% endraw %}
+
+## docker rm
+- remove via docker image
+  ```bash
+  $ docker rmi -f $(docker images "*/*/*/myimage" --format "{{.ID}}")
+  ```
+  - or
+    ```bash
+    $ docker images "*/*/*/myimage" --format "{{.ID}}" | xargs docker rmi -f
+    ```
