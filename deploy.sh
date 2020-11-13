@@ -93,16 +93,22 @@ function updateBook() {
   cd $(git rev-parse --show-toplevel)
   npm run built
 
-  yes | rm -rf ${target}/*
-  yes | cp -rf ${book}/* ${target}/
+  if [ $? -ne 0 ]; then
+    echo "ERROR: FAILED on gitbook build. Exiting."
+    popd || return
+    exit 1
+  else
+    yes | rm -rf ${target}/*
+    yes | cp -rf ${book}/* ${target}/
 
-  cd "${target}" || exit
+    cd "${target}" || exit
 
-  git add --all .
-  git commit -am "${msg}"
-  git push origin gh-pages --force
+    git add --all .
+    git commit -am "${msg}"
+    git push origin gh-pages --force
 
-  popd || return
+    popd || return
+  fi
 }
 
 function doDeploy() {
