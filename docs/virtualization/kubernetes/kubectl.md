@@ -13,6 +13,7 @@
   - [list all Container images in all namespaces](#list-all-container-images-in-all-namespaces)
   - [list Container images filtering by Pod namespace](#list-container-images-filtering-by-pod-namespace)
   - [list Container images using a go-template instead of jsonpath](#list-container-images-using-a-go-template-instead-of-jsonpath)
+  - [list all quota](#list-all-quota)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
