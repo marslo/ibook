@@ -6,13 +6,15 @@
   - [OSX](#osx)
 - [docker build](#docker-build)
 - [docker run](#docker-run)
-  - [run dind](#run-dind)
+  - [run into dind](#run-into-dind)
+  - [run to override ENTRYPOINT](#run-to-override-entrypoint)
 - [docker exec](#docker-exec)
   - [login docker container as root](#login-docker-container-as-root)
 - [docker ps](#docker-ps)
   - [list without wrap](#list-without-wrap)
   - [filter](#filter)
   - [format](#format)
+- [docker rm](#docker-rm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
