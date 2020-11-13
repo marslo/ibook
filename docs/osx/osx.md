@@ -62,7 +62,6 @@
     ```
 
 ### Appendix
-
 #### xcode
 | xcode       | url                                                                                            |
 | ----------- | ---------------------------------------------------------------------------------------------- |
@@ -179,58 +178,69 @@ ProductName:    Mac OS X
 ProductVersion: 10.15
 BuildVersion:   19A602
 ```
+
+  - [or](https://apple.stackexchange.com/a/368722/254265)
+    ```bash
+    $ /usr/libexec/PlistBuddy -c "Print:ProductName" \
+      ->                         -c "Print:ProductVersion" \
+      ->                         -c "Print:ProductBuildVersion" /System/Library/CoreServices/SystemVersion.plist
+    macOS
+    11.0.1
+    20B29
+    ```
+
 - hardware
+  ```bash
+  $ /usr/sbin/system_profiler SPHardwareDataType
+  Hardware:
 
-```bash
-$ /usr/sbin/system_profiler SPHardwareDataType
-Hardware:
+      Hardware Overview:
 
-    Hardware Overview:
+        Model Name: MacBook Pro
+        Model Identifier: MacBookPro15,1
+        Processor Name: 6-Core Intel Core i7
+        Processor Speed: 2.2 GHz
+        Number of Processors: 1
+        Total Number of Cores: 6
+        L2 Cache (per Core): 256 KB
+        L3 Cache: 9 MB
+        Hyper-Threading Technology: Enabled
+        Memory: 16 GB
+        Boot ROM Version: 1037.0.78.0.0 (iBridge: 17.16.10572.0.0,0)
+        Serial Number (system): C02XFGWEJG5H
+        Hardware UUID: 4EA008BF-9B36-5F1D-9151-AD4F64808AAB
+        Activation Lock Status: Enabled
 
-      Model Name: MacBook Pro
-      Model Identifier: MacBookPro15,1
-      Processor Name: 6-Core Intel Core i7
-      Processor Speed: 2.2 GHz
-      Number of Processors: 1
-      Total Number of Cores: 6
-      L2 Cache (per Core): 256 KB
-      L3 Cache: 9 MB
-      Hyper-Threading Technology: Enabled
-      Memory: 16 GB
-      Boot ROM Version: 1037.0.78.0.0 (iBridge: 17.16.10572.0.0,0)
-      Serial Number (system): C02XFGWEJG5H
-      Hardware UUID: 4EA008BF-9B36-5F1D-9151-AD4F64808AAB
-      Activation Lock Status: Enabled
+  $ system_profiler SPCameraDataType
+  Camera:
 
-$ system_profiler SPCameraDataType
-Camera:
+      FaceTime HD Camera (Built-in):
 
-    FaceTime HD Camera (Built-in):
-
-      Model ID: UVC Camera VendorID_1452 ProductID_34068
-      Unique ID: 0x8020000005ac8514
-```
+        Model ID: UVC Camera VendorID_1452 ProductID_34068
+        Unique ID: 0x8020000005ac8514
+  ```
 
 - cpu
 
-```bash
-$ sysctl -n machdep.cpu.brand_string
-Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+  ```bash
+  $ sysctl -n machdep.cpu.brand_string
+  Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+  ```
 
-# or
-$ sysctl machdep.cpu
-machdep.cpu.max_basic: 22
-machdep.cpu.max_ext: 2147483656
-machdep.cpu.vendor: GenuineIntel
-machdep.cpu.brand_string: Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
-machdep.cpu.family: 6
-machdep.cpu.model: 158
-...
-```
+  - or
+    ```bash
+    $ sysctl machdep.cpu
+    machdep.cpu.max_basic: 22
+    machdep.cpu.max_ext: 2147483656
+    machdep.cpu.vendor: GenuineIntel
+    machdep.cpu.brand_string: Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+    machdep.cpu.family: 6
+    machdep.cpu.model: 158
+    ...
+    ```
 
 ## system
 ### setup hostname
-
 ```bash
 $ sudo scutil --set HostName [HOSTNAME]
 $ sudo scutil --set LocalHostName [HOSTNAME]
@@ -240,8 +250,8 @@ $ sudo scutil --set ComputerName [HOSTNAME]
 $ dscacheutil -flushcache
 $ sudo shutdown -r now
 ```
-### disable guest user
 
+### disable guest user
 ```bash
 $ dscl . delete /Users/Guest
 $ sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess -bool NO

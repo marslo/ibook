@@ -14,6 +14,7 @@
   - [hardware](#hardware)
   - [memory](#memory)
   - [swap usage](#swap-usage)
+  - [show kernel version](#show-kernel-version)
 - [flushed](#flushed)
   - [disk cache](#disk-cache)
 - [clean OSX native dot file](#clean-osx-native-dot-file)
@@ -24,7 +25,7 @@
 ## system tools
 ### `hostinfo`
 ```bash
- $ hostinfo
+$ hostinfo
 Mach kernel version:
 	 Darwin Kernel Version 19.6.0: Mon Aug 31 22:12:52 PDT 2020; root:xnu-6153.141.2~1/RELEASE_X86_64
 Kernel configured for up to 12 processors.
@@ -220,6 +221,26 @@ Memory:
 $ sysctl vm.swapusage
 vm.swapusage: total = 1024.00M  used = 34.00M  free = 990.00M  (encrypted)
 ```
+
+### [show kernel version](https://apple.stackexchange.com/a/368722/254265)
+```bash
+$ sysctl kern.version
+kern.version: Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64
+
+$ sysctl kern.ostype
+kern.ostype: Darwin
+
+$ sysctl kern.osrelease
+kern.osrelease: 20.1.0
+
+$ sysctl kern.osrevision
+kern.osrevision: 199506
+```
+- or
+  ```bash
+  $ uname -a
+  Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
+  ```
 
 ## flushed
 ### disk cache
