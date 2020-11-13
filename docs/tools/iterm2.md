@@ -2,11 +2,14 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [setup a colorful tab](#setup-a-colorful-tab)
-- [add favor color to a file (`~/.marslo/.colors`)](#add-favor-color-to-a-file-marslocolors)
+- [tab](#tab)
+  - [setup a colorful tab](#setup-a-colorful-tab)
+  - [add favor color to a file (`~/.marslo/.colors`)](#add-favor-color-to-a-file-marslocolors)
+- [[hidden settings](Hidden Settings)](#hidden-settingshidden-settings)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## tab
 ### setup a colorful tab
 #### pick colors
 > using `tabset --list`
@@ -104,3 +107,116 @@ EOF
 ![itit <string> c](../screenshot/iterm2/itit-c.png)
 
 ![itit string bc](../screenshot/iterm2/itit-bc.png)
+
+## [hidden settings](Hidden Settings)
+- To change the number of entries in the autocomplete menu:
+  ```bash
+  $ defaults write com.googlecode.iterm2 AutocompleteMaxOptions -int 10
+  ```
+
+- To change the number of coprocess commands remembered:
+  ```bash
+  $ defaults write com.googlecode.iterm2 "Coprocess MRU" -int 10
+  ```
+
+- To preserve whitespace in selections copied to the pasteboard:
+  ```bash
+  $ defaults write com.googlecode.iterm2 TrimWhitespaceOnCopy -bool false
+  ```
+
+- When you open a file from the finder in iTerm2 (e.g., by double-clicking a shell script), it will either open in a window or a tab. By default, it opens in a tab. You can change this with:
+  ```bash
+  $ defaults write com.googlecode.iterm2 OpenFileInNewWindows -bool true
+  ```
+- quite iTerm2 when the last session is closed
+  ```bash
+
+  $ defaults write com.googlecode.iterm2 MinRunningTime -float 10.0
+  ```
+- increase the delay before it attempts to reconfigure itself after a change of monitors
+  ```bash
+  $ defaults write com.googlecode.iterm2 UpdateScreenParamsDelay -float 1.0
+  ```
+
+- To change the number of paste history entries saved:
+  ```bash
+  defaults write com.googlecode.iterm2 MaxPasteHistoryEntries -int 20
+  ```
+
+- Pastes (both regular and slow) are done by splitting the text to paste into chunks. There is a delay between the transmission of each chunk. To change the speed that "paste" pastes at:
+  ```bash
+  $ defaults write com.googlecode.iterm2 QuickPasteBytesPerCall -int 1024
+  $ defaults write com.googlecode.iterm2 QuickPasteDelayBetweenCalls -float 0.01
+  ```
+
+- To change the speed that "paste slowly" pastes at:
+  ```bash
+  $ defaults write com.googlecode.iterm2 SlowPasteBytesPerCall -int 16
+  $ defaults write com.googlecode.iterm2 SlowPasteDelayBetweenCalls -float 0.125
+  ```
+
+- To disable using the pinch gesture to change font size:
+  ```bash
+  $ defaults write com.googlecode.iterm2 PinchToChangeFontSizeDisabled -bool true
+  ```
+
+- To keep LC_CTYPE from being set when locale environment variables are set:
+  ```bash
+  $ defaults write com.googlecode.iterm2 DoNotSetCtype -bool true
+  ```
+
+- To allow Growl notifications to be posted for the current tab:
+  ```bash
+  $ defaults write com.googlecode.iterm2 GrowlOnForegroundTabs -bool true
+  ```
+
+- To tune smart cursor color settings:
+  ```bash
+  $ defaults write com.googlecode.iterm2.plist SmartCursorColorBgThreshold -float 0.5
+  $ defaults write com.googlecode.iterm2.plist SmartCursorColorFgThreshold -float 0.75
+  ```
+
+- To allow a three-finger tap to act like a three-finger click:
+  ```bash
+  $ defaults write com.googlecode.iterm2.plist ThreeFingerTapEmulatesThreeFingerClick \
+  -bool true
+  ```
+
+- To change the set of characters that are considered part of a URL (besides alphanumerics):
+  ```bash
+  $ defaults write com.googlecode.iterm2.plist URLCharacterSet -string \
+  ".?\\/:;%=&_-,+~#@!*'()|[]"
+  ```
+
+- To use some experimental optimizations that will improve performance (safety not guaranteed):
+  ```bash
+  $ defaults write com.googlecode.iterm2.plist ExperimentalOptimizationsEnabled \
+  -bool true
+  ```
+
+- To tweak tab sizes:
+  ```bash
+  $ defaults write com.googlecode.iterm2 UseUnevenTabs -bool false
+  $ defaults write com.googlecode.iterm2 MinTabWidth -int 75
+  $ defaults write com.googlecode.iterm2 MinCompactTabWidth -int 60
+  $ defaults write com.googlecode.iterm2 OptimumTabWidth -int 175
+  ```
+
+- To change your search engine:
+  ```bash
+  $ defaults write com.googlecode.iterm2 SearchCommand \
+  -string "http://google.com/search?q=%@"
+  ```
+
+- To adjust the speed of the animation of the hotkey window's appearance and disappearance:
+  ```bash
+  $ defaults write com.googlecode.iterm2 HotkeyTermAnimationDuration \
+  -float 0.25
+  ```
+
+- To adjust the amount of dimming of split panes. Set the value to a floating-point number between 0 (no dimming) and 1 (complete dimming). The default is 0.15:
+  ```bash
+  $ defaults write com.googlecode.iterm2 SplitPaneDimmingAmount \
+  -float 0.25
+  ```
+
