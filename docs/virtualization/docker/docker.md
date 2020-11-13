@@ -141,10 +141,15 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
 
 ## docker rm
 - remove via docker image
+  {% raw %}
   ```bash
   $ docker rmi -f $(docker images "*/*/*/myimage" --format "{{.ID}}")
   ```
+  {% endraw %}
+
   - or
+    {% raw %}
     ```bash
     $ docker images "*/*/*/myimage" --format "{{.ID}}" | xargs docker rmi -f
     ```
+    {% endraw %}
