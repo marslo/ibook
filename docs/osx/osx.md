@@ -21,9 +21,9 @@
 ## xcode
 ### downlaod xcode by wget
 * get cookies.txt
-    * install google chrome extension from [official website](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en)
-    * login [developer.apple.com](https://developer.apple.com/download/more/)
-    * select cookies.txt and download
+  * install google chrome extension from [official website](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en)
+  * login [developer.apple.com](https://developer.apple.com/download/more/)
+  * select cookies.txt and download
 
 ![download cookies.txt](../screenshot/cookies.txt-1.png)
 
@@ -32,14 +32,14 @@
 ![copy link address](../screenshot/cookies.txt-2.png)
 
 * download xcode (inspired from [here](https://stackoverflow.com/a/4089758/2940319) and [here](https://stackoverflow.com/a/46020878/2940319))
-    ```bash
-    $ wget --cookies=on \
-           --load-cookies=cookies.txt \
-           --keep-session-cookies \
-           --save-cookies=cookies.txt \
-           https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
-    ```
-    * exmaple
+  ```bash
+  $ wget --cookies=on \
+         --load-cookies=cookies.txt \
+         --keep-session-cookies \
+         --save-cookies=cookies.txt \
+         https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
+  ```
+  * exmaple
     ```bash
     $ wget --cookies=on \
     >          --load-cookies=cookies.txt \
@@ -65,6 +65,8 @@
 #### xcode
 | xcode       | url                                                                                            |
 | ----------- | ---------------------------------------------------------------------------------------------- |
+| 12.3 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_12.3_beta/Xcode_12.3_beta.xip`     |
+| 12.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_12.2/Xcode_12.2.xip`               |
 | 12.2beta2   | `https://download.developer.apple.com/Developer_Tools/Xcode_12.2_beta_2/Xcode_12.2_beta_2.xip` |
 | 12.0.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_12.0.1/Xcode_12.0.1.xip`           |
 | 12 beta 5   | `https://download.developer.apple.com/Developer_Tools/Xcode_12_beta_5/Xcode_12_beta_5.xip`     |
@@ -89,6 +91,8 @@
 #### command line tool
 | command line tool    | url                                                                                                                                                            |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 12.3 beta            | `https://download.developer.apple.com/Developer_Tools/Xcode_12.3_beta/Xcode_12.3_beta.xip`                                                                     |
+| 12.2                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12.2/Command_Line_Tools_for_Xcode_12.2.dmg`                                 |
 | 12.0                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12/Command_Line_Tools_for_Xcode_12.dmg`                                     |
 | 11.4.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4.1/Command_Line_Tools_for_Xcode_11.4.1.dmg`                             |
 | 11.4                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4/Command_Line_Tools_for_Xcode_11.4.dmg`                                 |
