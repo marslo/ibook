@@ -6,6 +6,7 @@
   - [get IP address by hostname](#get-ip-address-by-hostname)
   - [get current IP address](#get-current-ip-address)
   - [get Mac address](#get-mac-address)
+  - [check remote server dns](#check-remote-server-dns)
 - [scan](#scan)
   - [route](#route)
 
@@ -52,6 +53,14 @@ $ macaddr=$(ip link show ${interface} | sed -rn 's|.*ether ([0-9a-fA-F:]{17}).*$
 #### `dig`
 ```bash
 $ dig +noall +answer <domain.name>
+```
+
+### check remote server dns
+```bash
+$ for _i in {1..10}; do
+    echo -e "\n\n ~~~> myserver_${i}"
+    ssh -q marslo@myserver_${_i} "cat /etc/resolv.conf | sed -nre 's:^nameserver\s([0-9.]+):\1:p' | xargs -L1 /usr/bin/ping -c 1"
+  done
 ```
 
 ## scan
