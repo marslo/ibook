@@ -8,6 +8,7 @@
 - [reference](#reference)
   - [integration with pipeline](#integration-with-pipeline)
   - [aql](#aql)
+- [configuration](#configuration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -192,3 +193,7 @@ Time periods are specified with a number and one of the following suffixes:
   }
   ```
 <!--endsec-->
+
+## configuration
+#### allow partial folder in particular repo
+![allow temp && demo, and disallow sprint && weekly](../screenshot/artifactory/repo-permission.png)
