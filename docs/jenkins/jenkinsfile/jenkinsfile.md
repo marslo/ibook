@@ -22,6 +22,10 @@
   - [manager.build.result.isBetterThan](#managerbuildresultisbetterthan)
 - [customized build](#customized-build)
   - [display name](#display-name)
+  - [description](#description)
+- [parallel](#parallel)
+  - [static](#static)
+  - [dynamic](#dynamic)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -37,24 +41,24 @@
   sh "touch a.txt"
   def files = findFiles (glob: "**/*.txt")
   println """
-    name: ${files[0].name} 
-    path: ${files[0].path} 
-    directory: ${files[0].directory} 
-    length: ${files[0].length} 
+    name: ${files[0].name}
+    path: ${files[0].path}
+    directory: ${files[0].directory}
+    length: ${files[0].length}
     lastModified: ${files[0].lastModified}
   """
   ```
 - result
-  ```bash
+  ```groovy
   [Pipeline] sh (hide)
   + touch a.txt
   [Pipeline] findFiles
   [Pipeline] echo
 
-        name: a.txt 
-        path: a.txt 
-        directory: false 
-        length: 0 
+        name: a.txt
+        path: a.txt
+        directory: false
+        length: 0
         lastModified: 1605525397000
   ```
 
@@ -109,6 +113,42 @@ properties([
   // or
   commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
   ```
+
+- get build cause
+  ```groovy
+  def build = currentBuild.rawBuild
+  println build.getCauses().collect { it.getClass().getCanonicalName().tokenize('.').last() }
+
+  println """
+    cause: ${build.getCauses().toString()}
+    cause.getClass(): ${build.getCauses().getClass()} : ${build.getCauses().getClass().getCanonicalName()}
+    build.getCause(hudson.model.Cause.UserIdCause.class): ${build.getCause(hudson.model.Cause.UserIdCause.class)}
+  """
+  ```
+- get user id if triggered by manually
+  ```groovy
+  def build = currentBuild.rawBuild
+  if ( build.getCause(hudson.model.Cause.UserIdCause.class) ) {
+    println """
+      username: ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserName()}
+      id: ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserId()}
+      mail: ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserId()}@domain.com
+    """
+  }
+  ```
+
+  - or
+    ```groovy
+    import hudson.model.Cause.UserIdCause
+
+    if ( build.getCause(UserIdCause.class) ) {
+      println """
+        username: ${build.getCause(UserIdCause.class).getUserName()}
+        id: ${build.getCause(UserIdCause.class).getUserId()}
+        mail: ${build.getCause(UserIdCause.class).getUserId()}@domain.com
+      """
+    }
+    ```
 
 
 ## environment variables
@@ -176,6 +216,25 @@ Jenkins.instance.getItemByFullName("JobName")
 ```groovy
 Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
 ```
+
+#### get build id of lastSuccessfulBuild
+- get via api
+  ```groovy
+  sh """
+    curl -sSLg 'https://<jenkins.domain.com>/job/<job-name>/api/json' -o 'output.json'
+  """
+  def data = readJSON file: 'output.json'
+  println data.lastSuccessfulBuild.number
+  ```
+
+- get via `Jenkins.instance.getItemByFullName(env.JOB_NAME)`
+  ```groovy
+  println Jenkins.instance.getItemByFullName(env.JOB_NAME).lastSuccessfulBuild.number
+  ```
+  - get last build id
+    ```groovy
+    println Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
+    ```
 
 ## jenkins API
 ### update node name
@@ -280,4 +339,69 @@ currentBuild.displayName = '#' + Integer.toString(currentBuild.number) + ' mytes
 ```
 ![customized display name](../../screenshot/jenkins/showDisplayName.png)
 
+### description
+```groovy
+currentBuild.description = 'this is whitebox'
+```
 
+## parallel
+### static
+```groovy
+timestamps { ansiColor('xterm') {
+  parallel([
+    'k1 \u00BB v1': {
+      stage( 'build k1' ) {
+        node("master") {
+          println "KEY= k1, VALUE=v1"
+          sleep 3
+        } // node
+      }
+    },
+    'k2 \u00BB v2': {
+      stage( 'build k2' ) {
+        node("master") {
+          println "KEY= k2, VALUE=v2"
+          sleep 3
+        } // node
+      }
+    },
+    'k3 \u00BB v3': {
+      stage( 'build k3' ) {
+        node("master") {
+          println "KEY= k3, VALUE=v3"
+          sleep 3
+        } // node
+      }
+    }
+  ])
+  println 'done'
+}} // ansiColor | timestamps
+```
+
+### dynamic
+```groovy
+timestamps { ansiColor('xterm') {
+  Map worker = [:]
+  Map<String, String> data = [
+    "k1": "v1",
+    "k2": "v2",
+    "k3": "v3",
+  ]
+  data.each { k ,v ->
+    worker["${k} \u00BB ${v}"] = {
+      stage("build ${k}") {
+        node("master") {
+          println """
+            ---------------
+            "KEY=${k} VALUE=${v}"
+            ---------------
+          """
+          sleep 3
+        } // node : master
+      } // stage
+    } // work
+  }
+  parallel worker
+  println "done !"
+}} // ansiColor | timestamps
+```
