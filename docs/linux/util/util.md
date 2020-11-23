@@ -278,3 +278,23 @@ for detailed information.
 
 >>> Last update of whois database: Mon, 24 Feb 2014 17:24:05 UTC <<<
 ```
+
+# readline & bind
+## get info
+- get current keymap
+  ```bash
+  $ bind -v | awk '/keymap/ {print $NF}'
+  vi-insert
+  ```
+
+  - [tricky for switch keymap](https://unix.stackexchange.com/a/409866/29178)
+    ```bash
+    set keymap emacs
+    "\ee": vi-editing-mode
+
+    set keymap vi-insert
+    "\e": vi-movement-mode
+
+    set keymap vi-command
+    "\ee": emacs-editing-mode
+    ```
