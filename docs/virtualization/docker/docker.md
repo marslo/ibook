@@ -121,6 +121,10 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
   ```bash
   $ docker ps --filter status=running
   ```
+- filter with tag
+  ```bash
+  $ docker images --filter "reference=*/*/*/*:1.4-bionic-dind"
+  ```
 
 ### [format](https://docs.docker.com/engine/reference/commandline/ps/#formatting)
 - id and command
@@ -138,6 +142,16 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
   $ docker ps --no-trunc --format "{{.ID}}: {{.Command}}: {{.Image}}"
   ```
   {% endraw %}
+
+- [log path](https://stackoverflow.com/a/41147654/2940319)
+  > [HOW TO REDIRECT DOCKER LOGS TO A SINGLE FILE](https://www.scalyr.com/blog/how-to-redirect-docker-logs-to-a-single-file)
+
+  {% raw %}
+  ```bash
+  $ docker inspect --format='{{.LogPath}}' containername
+  ```
+  {% endraw %}
+
 
 ## docker rm
 - remove via docker image
