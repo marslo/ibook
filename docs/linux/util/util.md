@@ -13,6 +13,8 @@
     - [use parameter in `xargs`](#use-parameter-in-xargs)
     - [findout commands from](#findout-commands-from)
     - [Get all google website](#get-all-google-website)
+- [readline & bind](#readline--bind)
+  - [get info](#get-info)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
