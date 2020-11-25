@@ -70,6 +70,7 @@
   * [util](linux/util/util.md)
     * [time & date](linux/util/date.md)
     * [files & chars](linux/util/files&chars.md)
+    * [ansicolor](linux/util/ansicolor.md)
   * [disk](linux/disk.md)
   * [network](linux/network.md)
   * [system](linux/system.md)
