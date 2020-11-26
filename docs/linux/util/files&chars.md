@@ -272,54 +272,47 @@ $ echo {1..100..3}
 
 #### Fast copy or moving or someting ([Detials](http://www.manpager.com/linux/man1/bash.1.html) -> Brace Expansion)
 
-    - Example 1:
+- Example 1:
+  ```bash
+  $ ls | grep foo
+  $ touch foo{1,2,3}
+  $ ls | grep foo
+  foo1
+  foo2
+  foo3
+  ```
+- Example 2
+  ```bash
+  $ ls | grep foo
+  $ touch foo-{a..d}
+  $ ls | grep foo
+  foo-a
+  foo-b
+  foo-c
+  foo-d
+  ```
 
-        ```bash
-        $ ls | grep foo
-        $ touch foo{1,2,3}
-        $ ls | grep foo
-        foo1
-        foo2
-        foo3
-        ```
+- Example 3
+  ```bash
+  $ ls foo-*
+  foo-a  foo-b  foo-c  foo-d
+  $ mv foo-{a,}
+  $ ls foo-*
+  foo-  foo-b  foo-c  foo-d
+  ```
 
+- Example 4
+  ```bash
+  $ mkdir -p test/{a,b,c,d}
+  $ tree test/
+  test/
+  ├── a
+  ├── b
+  ├── c
+  └── d
 
-    - Example 2
-
-        ```bash
-        $ ls | grep foo
-        $ touch foo-{a..d}
-        $ ls | grep foo
-        foo-a
-        foo-b
-        foo-c
-        foo-d
-        ```
-
-    - Example 3
-
-        ```bash
-        $ ls foo-*
-        foo-a  foo-b  foo-c  foo-d
-        $ mv foo-{a,}
-        $ ls foo-*
-        foo-  foo-b  foo-c  foo-d
-        ```
-
-
-    - Example 4
-
-        ```bash
-        $ mkdir -p test/{a,b,c,d}
-        $ tree test/
-        test/
-        ├── a
-        ├── b
-        ├── c
-        └── d
-
-        4 directories, 0 files
-        ```
+  4 directories, 0 files
+  ```
 
 #### Multiple Directories Creation
 ```bash
