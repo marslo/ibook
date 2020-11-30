@@ -14,6 +14,7 @@
   - [list without wrap](#list-without-wrap)
   - [filter](#filter)
   - [format](#format)
+- [docker rmi](#docker-rmi)
 - [docker rm](#docker-rm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -21,7 +22,6 @@
 ## docker completion
 
 ### OSX
-
 ```bash
 bashComp="$(brew --prefix)/etc/bash_completion.d"
 bashComp2="$(brew --prefix)/etc/profile.d/bash_completion.sh"
@@ -62,6 +62,19 @@ EOF
   ```
 
 ## docker build
+> [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+> [Create a base image](https://docs.docker.com/develop/develop-images/baseimages/)
+> [Dockerfile reference](https://docs.docker.com/engine/reference/builder/#entrypoint)
+
+```bash
+$ docker build \
+         --no-cache \
+         --build-arg REPO=<private.registry.com> \
+         --build-arg TAG=1.4-bionic \
+         -t <private.registry.com>/devops/jnlp.bionic \
+         -f devops-jnlp .
+```
+
 ## docker run
 ### run into dind
 ```bash
@@ -152,8 +165,12 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
   ```
   {% endraw %}
 
+- [with table](https://stackoverflow.com/q/34748747/2940319)
+  ```bash
+  $ docker ps --format "table {{.Image}}\t{{.Names}}\t{{.Ports}}\t{{.Status}}"
+  ```
 
-## docker rm
+## docker rmi
 - remove via docker image
   {% raw %}
   ```bash
@@ -167,3 +184,16 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
     $ docker images "*/*/*/myimage" --format "{{.ID}}" | xargs docker rmi -f
     ```
     {% endraw %}
+
+## docker rm
+- [remove all stopped container](https://stackoverflow.com/a/61866643/2940319)
+  {% raw %}
+  ```bash
+  $ docker ps --filter "status=exited" --format '{{.ID}}' | xargs docker rm -f
+  ```
+  {% endraw %}
+  - or
+    ```bash
+    $ docker rm $(docker ps -aq --filter "status=exited")
+    ```
+## docker ps
