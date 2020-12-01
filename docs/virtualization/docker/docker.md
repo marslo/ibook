@@ -81,6 +81,7 @@ $ docker build \
 $ docker run \
          --name "marslo" \
          --privileged \
+         --rm \
          -it \
          -v /var/run/docker.sock:/var/run/docker.sock
          docker:dind
@@ -166,9 +167,11 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
   {% endraw %}
 
 - [with table](https://stackoverflow.com/q/34748747/2940319)
+  {% raw %}
   ```bash
   $ docker ps --format "table {{.Image}}\t{{.Names}}\t{{.Ports}}\t{{.Status}}"
   ```
+  {% endraw %}
 
 ## docker rmi
 - remove via docker image
@@ -185,6 +188,16 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
     ```
     {% endraw %}
 
+- [remove `<none>` tag images](https://stackoverflow.com/a/33913711/2940319)
+  ```bash
+  $ docker images -q -f "dangling=true" | xargs docker rmi -f --no-trunc
+  ```
+
+  [or](https://stackoverflow.com/a/59933159/2940319)
+  ```bash
+  $ docker image prune --filter="dangling=true"
+  ```
+
 ## docker rm
 - [remove all stopped container](https://stackoverflow.com/a/61866643/2940319)
   {% raw %}
@@ -196,4 +209,3 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
     ```bash
     $ docker rm $(docker ps -aq --filter "status=exited")
     ```
-## docker ps
