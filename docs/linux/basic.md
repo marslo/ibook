@@ -18,6 +18,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> reference
+> - [The Bash Shell Startup Files](http://www.linuxfromscratch.org/blfs/view/svn/postlfs/profile.html)
+
 # character
 ## [metacharacter](https://www.grymoire.com/Unix/Quote.html)
 
