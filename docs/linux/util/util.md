@@ -11,7 +11,7 @@
     - [get ipv4 address](#get-ipv4-address)
   - [system command](#system-command)
     - [use parameter in `xargs`](#use-parameter-in-xargs)
-    - [findout commands from](#findout-commands-from)
+    - [find out commands belongs to and come from](#find-out-commands-belongs-to-and-come-from)
     - [Get all google website](#get-all-google-website)
 - [readline & bind](#readline--bind)
   - [get info](#get-info)
@@ -190,18 +190,39 @@ text/plain
 text/plain
 ```
 
-### findout commands from
-```bash
-$ type which
-which is aliased to `alias | which -a --tty-only --read-alias --show-dot --show-tilde'
+### find out commands belongs to and come from
+- belongs to
+  ```bash
+  $ type which
+  which is aliased to `alias | which -a --tty-only --read-alias --show-dot --show-tilde'
 
-$ type bello
-bello is a function
-bello ()
-{
+  $ type bello
+  bello is a function
+  bello ()
+  {
     source "${iRCHOME}/.imac"
-}
-```
+  }
+  ```
+- [come from](https://unix.stackexchange.com/a/322887/29178)
+  ```bash
+  $ shopt -s extdebug
+
+  $ declare -F _docker
+  _docker 5463 /usr/local/etc/bash_completion.d/docker
+
+  $ declare -F __git_ps1
+  __git_ps1 340 /usr/local/etc/bash_completion.d/git-prompt.sh
+
+  $ declare -F bello
+  bello 79 /Users/marslo/.marslo/.marslorc
+  ```
+
+  - linux
+    ```bash
+    $ bash --debugger
+    $ declare -F _docker
+    _docker 5011 /usr/share/bash-completion/completions/docker
+    ```
 
 ### Get all google website
 ```bash
