@@ -9,6 +9,9 @@
 - [complete_alias](#complete_alias)
 - [get tags from docker hub](#get-tags-from-docker-hub)
   - [simple script for get tags](#simple-script-for-get-tags)
+  - [get current container ID](#get-current-container-id)
+  - [get volume from container ID](#get-volume-from-container-id)
+  - [mount volume in DinD](#mount-volume-in-dind)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -176,4 +179,58 @@ for _r in $* ; do
     sort -fu | \
     sed -e "s/^/${_r}:/"
 done
+```
+
+### get current container ID
+```bash
+$ basename $(cat /proc/self/cpuset)
+ab8c1732f1a3fdb46b9f9a477f0fbcc1d23c6787d7532648242a76d6eb1e8b84
+```
+- or
+  ```bash
+  $ hostname
+  ab8c1732f1a3
+  ```
+
+### [get volume from container ID](https://stackoverflow.com/a/30133768/2940319)
+{% raw %}
+```bash
+$ docker inspect -f '{{ .Mounts }}' <container ID>
+```
+{% endraw %}
+
+- or
+  ```bash
+  $ docker inspect <container ID> | grep volume
+  ```
+
+- [or get all](https://stackoverflow.com/a/63448756/2940319)
+  {% raw %}
+  ```bash
+  $ docker ps -a --no-trunc --format "{{.ID}}\t{{.Names}}\t{{.Mounts}}"
+  ```
+  {% endraw %}
+
+- [or](https://stackoverflow.com/a/62285540/2940319)
+  ```bash
+  $ docker inspect <container ID> | jq --raw-output .[].Mounts
+  ```
+- [or](https://stackoverflow.com/a/47014770/2940319)
+  {% raw %}
+  ```bash
+  $ docker ps -q | xargs docker container inspect -f '{{ .Name }} {{ .HostConfig.Binds }}'
+  ```
+  {% endraw %}
+
+
+### mount volume in DinD
+> reference:
+> - [Mounting Volumes in Sibling Containers with Gitlab CI](https://medium.com/@patrick.winters/mounting-volumes-in-sibling-containers-with-gitlab-ci-534e5edc4035)
+> - [Mount volumes from container (--volumes-from)](https://docs.docker.com/engine/reference/commandline/run/#mount-volumes-from-container---volumes-from)
+> - [Kubernetes emptyDir is not the same as Docker's volumes-from](https://www.fairwinds.com/blog/kubernetes-emptydir-not-the-same-as-dockers-volumes-from)
+
+```bash
+$ cid=$(basename $(cat /proc/self/cpuset))
+$ VOLUME_OPTION="--volumes-from ${cid}:rw"
+$ docker run <...> ${VOLUME_OPTION}
 ```

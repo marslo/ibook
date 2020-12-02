@@ -122,6 +122,19 @@ $ curl --unix-socket /var/run/docker.sock 'http://localhost/containers/json'
   $ docker ps -a --no-trunc --filter name=marslo*
   ```
 
+#### [list full container id](https://forums.docker.com/t/how-to-get-a-full-id-of-a-certain-container/2418)
+```bash
+$ docker ps -aq --no-trunc
+```
+
+- [or](https://forums.docker.com/t/how-to-get-a-full-id-of-a-certain-container/2418/3)
+  {% raw %}
+  ```bash
+  $ docker inspect --format="{{.Id}}" d40df87b2f87
+  d40df87b2f87261152d2541b870c6b801c031f8df969e4bd3e9b3c607e6c1698
+  ```
+  {%endraw%}
+
 ### [filter](https://docs.docker.com/engine/reference/commandline/ps/#filtering)
 - filter with image
   ```bash
