@@ -9,6 +9,7 @@
 - [specified terminal size](#specified-terminal-size)
 - [logout](#logout)
 - [about `whatis`](#about-whatis)
+- [user management](#user-management)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -275,3 +276,45 @@ which (1)            - locate a command
 $ whatis whereis
 whereis (1)          - locate the binary, source, and manual page files for a command
 ```
+
+### user management
+#### create new user in Ubuntu
+> create user `devops`
+
+```bash
+$ useradd -c "comments here" \
+          -d "/home/devops" \
+          -u 1000 \
+          -g 1000 \
+          -m \
+          -s /bin/bash \
+          devops
+```
+
+- full steps
+  ```bash
+  $ uid='1000'
+  $ gid='1000'
+  $ user='devops'
+
+  $ mkdir -p /home/${user}
+  $ chown -R ${uid}:${gid} /home/${user}
+  $ groupadd -g ${gid} ${user}
+  $ useradd -c "create user ${user}" \
+            -d "/home/${user}" \
+            -u ${uid} \
+            -g ${gid} \
+            -m \
+            -s /bin/bash \
+            ${user}
+  ```
+
+#### add user into group
+```bash
+$ usermod -a -G adm,root,sudo,docker devops
+```
+
+- [list all groups](https://www.howtogeek.com/50787/add-a-user-to-a-group-or-second-group-on-linux/)
+  ```bash
+  $ getent group
+  ```
