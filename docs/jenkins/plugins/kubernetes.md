@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [generate credentials](#generate-credentials)
+- [full steps](#full-steps)
 - [configure in jenkins](#configure-in-jenkins)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -34,6 +35,28 @@ ca.crt  cert.pfx  client.crt  client.key
 
 # using password 'marslo'
 $ openssl pkcs12 -export -out cert.pfx -inkey client.key -in client.crt -certfile ca.crt -password pass:marslo
+```
+
+### full steps
+```bash
+$ cat ~/.kube/config \
+      | grep certificate-authority-data \
+      | awk '{print $2}' \
+      | base64 -d > ca.crt
+$ cat ~/.kube/config \
+      | grep client-certificate-data \
+      | awk '{print $2}' \
+      | base64 -d > client.crt
+$ cat ~/.kube/config \
+      | grep client-key-data \
+      | awk '{print $2}' \
+      | base64 -d > client.key
+$ openssl pkcs12 -export \
+                 -out cert.pfx \
+                 -in client.crt \
+                 -inkey client.key \
+                 -certfile ca.crt \
+                 -password pass:devops
 ```
 
 ### configure in jenkins
