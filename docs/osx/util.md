@@ -54,6 +54,11 @@ $ brew postinstall <formula>
   ==> /usr/local/Cellar/python@3.8/3.8.6_1/bin/python3 -s setup.py --no-user-cfg install --force --verbose --install-scripts=/usr/local/Cellar/python@3.8
   ```
 
+- update homebrew-cask
+  ```bash
+  $ git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch --unshallow
+  ```
+
 ### check brew configure file
 ```bash
 $ brew -v edit <formula>
@@ -85,7 +90,9 @@ mode: 755
 ```
 - for brew formula
   ```bash
-  $ while read formula; do brew list --formula "${formula}" | grep -w magick; done < <(brew list --formula)
+  $ while read formula; do
+      brew list --formula "${formula}" | grep -w magick;
+    done < <(brew list --formula)
   ```
 
 ### tricky

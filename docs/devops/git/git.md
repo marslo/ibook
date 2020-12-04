@@ -21,6 +21,12 @@ Git Command Study and practice
   - [fix typo in commits](#fix-typo-in-commits)
 - [git mv](#git-mv)
   - [case sensitive](#case-sensitive)
+- [git submodule](#git-submodule)
+  - [init submodule](#init-submodule)
+  - [update submodule](#update-submodule)
+  - [revert changes in submodule](#revert-changes-in-submodule)
+  - [working with submodule](#working-with-submodule)
+  - [remove submodule](#remove-submodule)
 - [clean](#clean)
   - [clean untracked directory and item in `.gitignore`](#clean-untracked-directory-and-item-in-gitignore)
 - [undo](#undo)
@@ -181,7 +187,7 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,,
   ```bash
   $ git log --all --full-history -- <path/to/file>
   ```
- 
+
   [or](https://stackoverflow.com/a/60993503/2940319)
   ```bash
   $ git log --all --full-history --online -- <path/to/file>
@@ -258,7 +264,7 @@ $ GIT_EDITOR="sed -i -e '2,$COUNT s/^pick /s /;/# This is the 2nd commit message
   CORRECT=
   for A in p pick r reword e edit s squash f fixup d drop t split; do
        [[ $ACTION == $A ]] && CORRECT=1
-  done 
+  done
   [[ "$CORRECT" ]] || exit 1
   git merge-base --is-ancestor $COMMIT HEAD || exit 1
   if [[ $ACTION == "drop" || $ACTION == "d" ]]; then
@@ -319,6 +325,80 @@ $ EDITOR="sed -i -e 's/borken/broken/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/
       renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
       renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
   ```
+
+## git submodule
+> reference:
+> - [gitmodules - Defining submodule properties](https://git-scm.com/docs/gitmodules)
+> - [Gerrit Code Review - Superproject subscription to submodules updates](https://gerrit-review.googlesource.com/Documentation/user-submodules.html)https://gerrit-review.googlesource.com/Documentation/user-submodules.html
+
+### init submodule
+```bash
+$ git submodule add -b <BranchName> <SubRepoUrl> <NameInSuper>
+$ git submodule init
+$ git submodule update --init
+```
+
+### update submodule
+```bash
+$ git config -f .gitmodules submodule.<SubmoduleNameInSuperRepo>.branch <NewBranchName>
+$ git submodule update --remote
+```
+
+### [revert changes in submodule](https://stackoverflow.com/a/27415757/2940319)
+```bash
+$ git submodule deinit -f .
+$ git submodule update --init
+```
+
+- [or](https://stackoverflow.com/a/62792847/2940319)
+  > [or](https://gist.github.com/nicktoumpelis/11214362)
+  ```bash
+  $ git submodule foreach --recursive git clean -dffx
+  $ git submodule foreach --recursive git reset --hard
+  ```
+
+### working with submodule
+#### pull from remote
+- update submodule only
+  ```bash
+  $ git submodule update --remote --recursive --force --rebase
+  ```
+- update both super and submodule
+  ```bash
+  $ git pull [--rebase] --recurse-submodules
+  ```
+
+#### push to remote
+- push submodule only
+  ```bash
+  $ cd <SubFolder>
+  $ git push --recurse-submodule=on-demand
+  ```
+- push for both super and submodule
+  ```bash
+  $ cd <SubFolder>
+  $ git add --all
+  $ git commit -am "<Comments for Sub>"
+  $ git push --recurse-submodule=on-demand
+
+  $ cd $(git rev-parse --show-superproject-working-tree)
+  # or: https://stackoverflow.com/a/7359782/2940319
+  $ cd $(git rev-parse --show-superproject-working-tree --show-toplevel | head -1)
+
+  $ git add --all
+  $ git commit -am "<Comments for Super>"
+  $ git push origin $(git rev-parse --abbrev-ref HEAD)
+  ```
+
+
+### remove submodule
+```bash
+$ git rm --cached <SubmoudleName>
+$ rm -rf <SubmodulePath>
+$ rm -rf .gitmodules
+$ rm -rf .git/modules/<SubmoduleName>
+$ vim .git/config
+```
 
 ## clean
 ### clean untracked directory and item in `.gitignore`
