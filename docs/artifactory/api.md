@@ -8,6 +8,7 @@
 - [Build Info](#build-info)
   - [List all timestamps in ${buildName}](#list-all-timestamps-in-buildname)
   - [List specific build-info](#list-specific-build-info)
+  - [filter `"buildInfo.env.JOB_NAME"` in all builds](#filter-buildinfoenvjob_name-in-all-builds)
 - [delete all in `my-repo` 4 weeks ago](#delete-all-in-my-repo-4-weeks-ago)
 - [trash can](#trash-can)
   - [empty trash can](#empty-trash-can)
@@ -64,6 +65,50 @@ $ curl -s \
          -X GET ${rtUrl}/api/build/${buildNazme}/${buildNumber} \
          | jq .buildInfo.started
   "2020-09-30T02:38:32.264-0700"
+  ```
+
+### filter `"buildInfo.env.JOB_NAME"` in all builds
+```bash
+$ BUILD_NAME='my - job'
+$ RT_URL='https://my.artifactory.com/artifactory'
+$ for i in $(curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?.uri' ); do
+    echo "~~~> ${i}"
+    curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}${i}" | jq --raw-output '.buildInfo.properties."buildInfo.env.JOB_NAME"'
+    echo ''
+  done
+```
+or
+```bash
+#!/usr/bin/env bash
+
+BUILD_NAME='my - build'
+CURL_OPT="-sg --netrc-file $HOME/.marslo/.netrc"
+RT_URL='https://my.artifactory.com/artifactory'
+for bid in $(curl ${CURL_OPT} -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?.uri'); do
+  curl ${CURL_OPT}  -X GET "${RT_URL}/api/build/${BUILD_NAME}${bid}" \
+       | jq -r '.buildInfo.properties | select(."buildInfo.env.JOB_NAME" | contains("marslo"))' \
+       | jq -r  '[."buildInfo.env.JOB_NAME" , ."buildInfo.env.BUILD_URL"]'
+done
+```
+
+- filter `"buildInfo.env.JOB_NAME"` by keyword
+  ```bash
+  $ BUILD_ID='/297'
+  $ curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}${BUILD_ID}" \
+         | jq -r '.buildInfo.properties | select(."buildInfo.env.JOB_NAME" | contains("marslo"))' \
+         | jq -r '."buildInfo.env.JOB_NAME"'
+  marslo/rc
+  ```
+
+- filter both `"buildInfo.env.BUILD_URL"` and `"buildInfo.env.JOB_NAME"` if `JOB_NAME` contains keyword
+  ```bash
+  $ curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}${BUILD_ID}" \
+         | jq -r '.buildInfo.properties | select(."buildInfo.env.JOB_NAME" | contains("marslo"))' \
+         | jq -r '[."buildInfo.env.JOB_NAME" , ."buildInfo.env.BUILD_URL"]'
+  [
+    "marslo/rc",
+    "https://my.jenkins.com/job/marslo/job/rc/297/"
+  ]
   ```
 
 
