@@ -14,6 +14,7 @@
     * [shell:folder](cheatsheet/windows/shell:folder.md)
   * [character](cheatsheet/character/character.md)
     * [markdown](cheatsheet/character/markdown.md)
+    * [json](cheatsheet/character/json.md)
   * [havefun](cheatsheet/havefun.md)
   * [media](cheatsheet/media.md)
   * [osx](cheatsheet/osx.md)
