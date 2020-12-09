@@ -7,6 +7,8 @@
   - [Homebrew Caskroom Installation](#homebrew-caskroom-installation)
   - [Package Installation](#package-installation)
   - [check formula config files](#check-formula-config-files)
+  - [brew debug](#brew-debug)
+  - [tricky](#tricky)
 - [system settings](#system-settings)
 - [accessory](#accessory)
   - [iTerm2](#iterm2)
@@ -75,6 +77,10 @@ $ brew cu --all
   ```
 
 ### Package Installation
+> reference:
+> - [Homebrew Formulae - macvim](https://formulae.brew.sh/formula/macvim)
+> - [MacVim](https://macvim-dev.github.io/macvim/)
+>
 > more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/blob/master/osx/belloMyOSX.sh#L429)
 > ```bash
 > systemlist="imagemagick coreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof"
@@ -228,6 +234,9 @@ vim /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/macvim.rb
                           "--enable-python3interp",
                           "--disable-sparkle"
 ...
+
+# or
+$ brew -v edit macvim-dev/macvim/macvim
 ```
 - manual install formula
 > [How to prevent homebrew from upgrading a package?](https://stackoverflow.com/a/48343355/2940319)
@@ -237,6 +246,63 @@ vim /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/macvim.rb
   $ brew -v fetch --deps macvim
   $ brew -v install --build-from-source macvim
   $ brew pin macvim
+  ```
+
+### brew debug
+- info
+  ```bash
+  $ brew info --analytics
+  ```
+- doctor
+  ```bash
+  $ brew doctor
+  ```
+- info
+  ```bash
+  $ brew config
+  HOMEBREW_VERSION: 2.6.0-211-g2c77a54
+  ORIGIN: https://github.com/Homebrew/brew
+  HEAD: 2c77a540b522c2eee74af0745851167412adb83b
+  Last commit: 68 minutes ago
+  Core tap ORIGIN: https://github.com/Homebrew/homebrew-core
+  Core tap HEAD: 4fb418f9d1b35c372d82d0b49b0f1df9143be236
+  Core tap last commit: 20 minutes ago
+  Core tap branch: master
+  HOMEBREW_PREFIX: /usr/local
+  HOMEBREW_CASK_OPTS: []
+  HOMEBREW_EDITOR: vim
+  HOMEBREW_INSTALL_BADGE: ☕️ 🐸
+  HOMEBREW_MAKE_JOBS: 12
+  Homebrew Ruby: 2.6.3 => /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby
+  CPU: dodeca-core 64-bit kabylake
+  Clang: 12.0 build 1200
+  Git: 2.29.2 => /usr/local/bin/git
+  Curl: 7.64.1 => /usr/bin/curl
+  Java: 1.8.271.09, 1.8.0_211
+  macOS: 11.0.1-x86_64
+  CLT: 12.2.0.0.1.1604076827
+  Xcode: 12.2
+  ```
+
+### tricky
+- get info
+  ```bash
+  $ brew --repository
+  /usr/local/Homebrew
+
+  $ brew --prefix python@3
+  /usr/local/opt/python@3.9
+
+  $ brew --cache
+  /Users/marslo/Library/Caches/Homebre
+  ```
+- [cleanup](https://github.com/Homebrew/brew/issues/3784#issuecomment-364675767)
+  ```bash
+  # Remove all cache files older than specified days
+  $ brew cleanup --prune=1
+
+  # remove all caches
+  $ brew cleanup -s
   ```
 
 ## system settings
