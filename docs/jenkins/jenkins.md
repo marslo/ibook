@@ -22,6 +22,11 @@ $ curl -X POST http://developer:developer@localhost:8080/job/test/build --data-u
 ```
 
 ## run Jenkins
+> refernce:
+> - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+> - [-Dhudson.security.ArtifactsPermission=true](https://github.com/jenkinsci/docker/issues/202#issuecomment-244321911)
+> - [remoting configuration](https://github.com/jenkinsci/remoting/blob/master/docs/configuration.md)
+
 ### in docker
 ```bash
 $ docker run \
@@ -39,7 +44,48 @@ $ docker run \
          jenkins/jenkins:latest
 ```
 
+- docker run with `JAVA_OPTS`
+  ```bash
+  $ docker run \
+           --name jenkins \
+           --detach   \
+           --rm \
+           --network jenkins \
+           --env DOCKER_HOST=tcp://docker:2376   \
+           --env DOCKER_CERT_PATH=/certs/client \
+           --env DOCKER_TLS_VERIFY=1   \
+           --publish 8080:8080 \
+           --publish 50000:50000   \
+           --env JAVA_OPTS=" \
+                  -DsessionTimeout=1440 \
+                  -DsessionEviction=43200 \
+                  -Djava.awt.headless=true \
+                  -Djenkins.ui.refresh=true \
+                  -Divy.message.logger.level=4 \
+                  -Dhudson.Main.development=true \
+                  -Duser.timezone='America/Los_Angeles' \
+                  -Djenkins.install.runSetupWizard=true \
+                  -Dhudson.security.ArtifactsPermission=true \
+                  -Dpermissive-script-security.enabled=true  \
+                  -Djenkins.slaves.NioChannelSelector.disabled=true \
+                  -Dhudson.security.LDAPSecurityRealm.groupSearch=true \
+                  -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=false \
+                  -Djenkins.security.ClassFilterImpl.SUPPRESS_WHITELIST=true \
+                  -Dhudson.model.ParametersAction.keepUndefinedParameters=true \
+                  -Dcom.cloudbees.workflow.rest.external.ChangeSetExt.resolveCommitAuthors=true \
+                  -Dhudson.plugins.active_directory.ActiveDirectorySecurityRealm.forceLdaps=false \
+                  -Dhudson.model.DirectoryBrowserSupport.CSP=\"sandbox allow-same-origin allow-scripts; default-src 'self'; script-src * 'unsafe-eval'; img-src *; style-src * 'unsafe-inline'; font-src *;\" \
+                " \
+           --env JNLP_PROTOCOL_OPTS="-Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=false" \
+           --volume /opt/JENKINS_HOME:/var/jenkins_home \
+           jenkins/jenkins:latest
+  ```
+
 ### in kubernetes
+> reference:
+> - [official yaml](https://github.com/jenkinsci/kubernetes-plugin/blob/master/src/main/kubernetes/jenkins.yml)
+> - [official sa yaml](https://github.com/jenkinsci/kubernetes-plugin/blob/master/src/main/kubernetes/service-account.yml)
+
 ```bash
 $ cat << EOF | kubectl apply -f -
 # namespace
