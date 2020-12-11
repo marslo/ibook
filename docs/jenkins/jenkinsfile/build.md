@@ -111,10 +111,9 @@ timestamps { ansiColor('xterm') {
       [$class: 'StringParameterValue' , name: 'lastName'  , value: 'Jiao'    ] ,
       [$class: 'StringParameterValue' , name: 'firstName' , value: 'Marslo'  ] ,
       [$class: 'StringParameterValue' , name: 'provinces' , value: 'Gansu'   ] ,
-      [$class: 'StringParameterValue' , name: 'cities'    , value: 'Lanzhou' ] ,
+      [$class: 'StringParameterValue' , name: 'cities'    , value: 'Lanzhou,Dingxi' ] ,
       [$class: 'BooleanParameterValue', name: 'notify', value: false]
     ]
-
     def res = build ( job: '/marslo/sandbox' ,
                       propagate  : false ,
                       wait       : true  ,

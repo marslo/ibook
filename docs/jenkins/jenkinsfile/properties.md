@@ -42,7 +42,7 @@ properties([
                 ]'''
         ]
       ]
-    ],
+    ], // ChoiceParameter
     [
       $class: 'CascadeChoiceParameter',
       name: 'cities',
@@ -57,17 +57,30 @@ properties([
                  script: '''if (provinces.equals("Gansu")) {
                     return ["Lanzhou", "Dingxi"]
                   } else if (provinces.equals("Sichuan")) {
-                    return ["Leshan", "Guangyuan", "Chengdu:selected"]
+                    return ["Leshan", "Guangyuan:disabled", "Chengdu:selected"]
                   } else if (provinces.equals("Disabled")) {
                     return ["notshow:selected"]
                   } else {
-                    return ["Unknown scenarios"]
+                    return ["Unknown provinces"]
                   }'''
         ]
-    ]]
+    ]], // CascadeChoiceParameter
+    [
+      $class: 'StringParameterDefinition' ,
+      name: 'lastName'  ,
+      defaultValue: 'Joe' ,
+      description: ''
+    ], // StringParameterDefinition
+    [
+      $class: 'BooleanParameterDefinition',
+      name: 'notify',
+      defaultValue: false,
+      description: ''
+    ] // BooleanParameterDefinition
   ])
 ])
 ```
+![active choice with mixed options](../../screenshot/jenkins/active_choice_mixed.gif)
 
 - or
   ```groovy
