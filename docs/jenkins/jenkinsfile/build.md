@@ -23,7 +23,6 @@
 if(!hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?.getResult())) {
   echo "last build failed"
 }
-
 ```
 
 ### Stop the current build
@@ -101,3 +100,33 @@ timestamps { ansiColor('xterm') {
   } // node : master
 }} // ansiColor | timestamps
 ```
+
+#### trigger downstream with active choice parameters
+> [/marslo/sandbox](properties.html#mixed-parameters)
+
+```groovy
+timestamps { ansiColor('xterm') {
+  podTemplate(cloud: 'DevOps Kubernetes') { node(POD_LABEL) {
+    List<ParameterValue> newParams = [
+      [$class: 'StringParameterValue' , name: 'lastName'  , value: 'Jiao'    ] ,
+      [$class: 'StringParameterValue' , name: 'firstName' , value: 'Marslo'  ] ,
+      [$class: 'StringParameterValue' , name: 'provinces' , value: 'Gansu'   ] ,
+      [$class: 'StringParameterValue' , name: 'cities'    , value: 'Lanzhou' ] ,
+      [$class: 'BooleanParameterValue', name: 'notify', value: false]
+    ]
+
+    def res = build ( job: '/marslo/sandbox' ,
+                      propagate  : false ,
+                      wait       : true  ,
+                      parameters: newParams
+                    )
+    println """
+            result : ${res.result}
+               url : ${res.absoluteUrl}
+      build number : ${res.number.toString()}
+    """
+  }} // node | podTemplate
+}} // ansiColor | timestamp
+```
+
+![build downstream jobs](../../screenshot/jenkins/trigger-downstream.png)
