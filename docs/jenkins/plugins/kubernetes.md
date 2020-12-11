@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [namespace](#namespace)
 - [generate credentials for pfx](#generate-credentials-for-pfx)
 - [full steps](#full-steps)
 - [configure in jenkins](#configure-in-jenkins)
@@ -9,6 +10,38 @@
 - [Q&A](#qa)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+### namespace
+#### namespace
+```bash
+$ cat << EOF | k apply -f -
+  ---
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: jenkins
+EOF
+namespace/jenkins created
+```
+
+#### quota
+```bash
+$ cat << EOF | k apply -f -
+  apiVersion: v1
+  kind: ResourceQuota
+  metadata:
+    name: jenkins-quota
+    namespace: jenkins
+  spec:
+    hard:
+      requests.cpu: "16"
+      requests.memory: 16Gi
+      limits.cpu: "32"
+      limits.memory: 32Gi
+EOF
+resourcequota/jenkins-quota edited
+```
 
 ### generate credentials for pfx
 #### ca.crt
@@ -105,8 +138,8 @@ $ k config view --minify | sed -n -re 's/^.*server: (https.*)$/\1/p'
 
 #### generate CA
 ```bash
-$ k -n devops get secret \
-              $(k -n devops get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
+$ k -n jenkins get secret \
+              $(k -n jenkins get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
               -o jsonpath={.data.'ca\.crt'} \
               | base64 --decode
 ```
@@ -129,21 +162,21 @@ $ alias k='kubectl'
 
 - setup sa
   ```bash
-  $ k -n devops create sa jenkins-admin
-  $ k -n devops create rolebinding jenkins-admin-binding \
+  $ k -n jenkins create sa jenkins-admin
+  $ k -n jenkins create rolebinding jenkins-admin-binding \
                        --clusterrole=cluster-admin \
                        --serviceaccount=devops:jenkins-admin
   ```
 - get token
   {% raw %}
   ```bash
-  $ k -n devops \
+  $ k -n jenkins \
          get sa jenkins-admin \
          -o go-template \
          --template='{{range .secrets}}{{.name}}{{"\n"}}{{end}}'
   jenkins-admin-token-kshsh
 
-  $ k -n devops \
+  $ k -n jenkins \
          get secrets jenkins-admin-token-kshsh \
          -o go-template \
          --template '{{index .data "token"}}' \
@@ -154,14 +187,15 @@ $ alias k='kubectl'
 
   more info
   ```bash
-  $ k get secret -n devops
+  $ k get secret -n jenkins
   NAME                        TYPE                                  DATA   AGE
-  jenkins-admin-token-kshsh   kubernetes.io/service-account-token   3      68m
+  default-token-8k7vj         kubernetes.io/service-account-token   3      27m
+  jenkins-admin-token-9r8pt   kubernetes.io/service-account-token   3      21m
 
-  $ k -n devops get rolebinding
-  NAME                            AGE
-  jenkins-admin-binding   68m
-  $ k -n devops describe rolebinding jenkins-admin-binding
+  $ k -n jenkins get rolebinding
+  NAME                    AGE
+  jenkins-admin-binding   15m
+  $ k -n jenkins describe rolebinding jenkins-admin-binding
   Name:         jenkins-admin-binding
   Labels:       <none>
   Annotations:  <none>
@@ -171,27 +205,39 @@ $ alias k='kubectl'
   Subjects:
     Kind            Name           Namespace
     ----            ----           ---------
-    ServiceAccount  jenkins-admin  devops
+    ServiceAccount  jenkins-admin  jenkins
+
+  $ k describe clusterrolebindings jenkins-admin-cluster-binding
+  Name:         jenkins-admin-cluster-binding
+  Labels:       <none>
+  Annotations:  <none>
+  Role:
+    Kind:  ClusterRole
+    Name:  cluster-admin
+  Subjects:
+    Kind            Name           Namespace
+    ----            ----           ---------
+    ServiceAccount  jenkins-admin  jenkins
   ```
 
   - [or](https://support.cloudbees.com/hc/en-us/articles/360038636511-Kubernetes-Plugin-Authenticate-with-a-ServiceAccount-to-a-remote-cluster)
     ```bash
-    $ k -n devops \
+    $ k -n jenkins \
         get secret \
-        $(k -n devops get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
+        $(k -n jenkins get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
         -o jsonpath={.data.token} \
         | base64 --decode
     ```
   - [or](https://stackoverflow.com/a/48853727/2940319)
   {% raw %}
   ```bash
-  $ k get -n devops \
-          sa jenkins-admin \
-          --template='{{range .secrets}}{{ .name }} {{end}}' \
-          | xargs -n 1 k -n devops get secret \
-                         --template='{{ if .data.token }}{{ .data.token }}{{end}}' \
-                         | head -n 1 \
-                         | base64 -d -
+  $ k -n jenkins \
+         get sa jenkins-admin \
+         --template='{{range .secrets}}{{ .name }} {{end}}' \
+         | xargs -n 1 k -n jenkins get secret \
+                        --template='{{ if .data.token }}{{ .data.token }}{{end}}' \
+                        | head -n 1 \
+                        | base64 -d -
   ```
   {% endraw %}
 
@@ -204,3 +250,29 @@ $ alias k='kubectl'
 
 ### Q&A
 - [Kubernetes agents are failing with `SocketTimeoutException: connect timed out`](https://support.cloudbees.com/hc/en-us/articles/360038066231-Kubernetes-agents-are-failing-with-SocketTimeoutException-connect-timed-out-)
+
+- [Message: pods is forbidden: User "system:serviceaccount:jenkins:jenkins-admin" cannot list resource "pods" in API group](https://github.com/helm/charts/issues/1092#issuecomment-303292037)
+  > solution:
+  > - [lachie83/jenkins-service-account](https://gist.github.com/lachie83/17c1fff4eb58cf75c5fb11a4957a64d2)
+  > - [see also](https://stackoverflow.com/a/59605326/2940319)
+  > - [chukaofili/k8s-dashboard-admin-user.yaml](https://gist.github.com/chukaofili/9e94d966e73566eba5abdca7ccb067e6#file-k8s-dashboard-admin-user-yaml)
+
+```bash
+$ k -n <namespace> create rolebinding <sa>-binding \
+                          --clusterrole=cluster-admin \
+                          --serviceaccount=<namespace>:<sa>
+$ k create clusterrolebinding jenkins-admin-cluster-binding \
+                              --clusterrole cluster-admin \
+                              --serviceaccount=<namespace>:jenkins-admin
+```
+  - thinking
+    ```bash
+    $ k -n jenkins auth can-i list pods --as jenkins-admin
+    no
+
+    $ k -n jenkins auth can-i list pods --as jenkins-admin-binding
+    no
+
+    $ k -n jenkins auth can-i list pods --as jenkins-admin-cluster-binding
+    no
+    ```
