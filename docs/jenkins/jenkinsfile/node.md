@@ -270,18 +270,17 @@ podTemplate(cloud: 'DevOps Kubernetes') {
 
 ## container
 ```groovy
-podTemplate(cloud: 'devops kubernetes', containers: [
+podTemplate(cloud: 'DevOps Kubernetes', containers: [
   containerTemplate(
     name: 'jnlp',
-    image: 'jenkins/jnlp-slave:latest',
+    image: 'jenkins/inbound-agent:latest',
     ttyEnabled: true,
     privileged: false,
     alwaysPullImage: false,
     workingDir: '/home/jenkins'
   )
-]) {
-  node(POD_LABEL) {
-    stage ('info') {
+]) { node(POD_LABEL) {
+    stage ('run') {
       echo 'yes!'
       sh """
         id
@@ -290,7 +289,5 @@ podTemplate(cloud: 'devops kubernetes', containers: [
         realpath ${WORKSPACE}
       """
     }
-  }
-}
+}}
 ```
-
