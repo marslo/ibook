@@ -2,43 +2,19 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [container](#container)
 - [yaml](#yaml)
+  - [with resources](#with-resources)
+  - [with `POD_LABEL`](#with-pod_label)
   - [default yaml](#default-yaml)
+- [container](#container)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > reference:
 > - [kubernetes](https://plugins.jenkins.io/kubernetes/)
-
-## container
-```groovy
-podTemplate(cloud: 'devops kubernetes', containers: [
-  containerTemplate(
-    name: 'jnlp',
-    image: 'jenkins/jnlp-slave:latest',
-    ttyEnabled: true,
-    privileged: false,
-    alwaysPullImage: false,
-    workingDir: '/home/jenkins'
-  )
-]) {
-  node(POD_LABEL) {
-    stage ('info') {
-      echo 'yes!'
-      sh """
-        id
-        whoami
-        echo ${WORKSPACE}
-        realpath ${WORKSPACE}
-      """
-    }
-  }
-}
-```
+> - [Kubernetes plugin](https://www.jenkins.io/doc/pipeline/steps/kubernetes/)
 
 ## yaml
-
 ```groovy
 #!/usr/bin/env groovy
 
@@ -69,6 +45,106 @@ ansiColor('xterm') { timestamps {
           tty: true
     """
   ) { node (label) { container(name:'jnlp', shell:'/bin/bash') {
+      stage('prepare') {
+        sh """
+          whoami
+          pwd
+          realpath ${WORKSPACE}
+        """
+      } // stage
+  }}} // container | node | podTemplate
+}} // timestamp | ansiColor
+
+// vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
+```
+
+### with resources
+```groovy
+#!/usr/bin/env groovy
+
+import groovy.transform.Field
+
+@Field final String CLUSTER = 'Jenkins Kubernetes'
+@Field final String NAMESPACE = 'jenkins'
+String label = env.BUILD_TAG
+
+ansiColor('xterm') { timestamps {
+  podTemplate(
+    label: label ,
+    cloud: CLUSTER ,
+    namespace: NAMESPACE ,
+    showRawYaml: true,
+    yaml: """
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        labels:
+          jenkins: jnlp-inbound-agent
+      spec:
+        hostNetwork: true
+        containers:
+        - name: jnlp
+          image: jenkins/inbound-agent:latest
+          workingDir: /home/jenkins
+          tty: true
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 1
+            requests:
+              memory: 500Mi
+              cpu: 0.5
+    """
+  ) { node (label) { container(name:'jnlp', shell:'/bin/bash') {
+      stage('prepare') {
+        sh """
+          whoami
+          pwd
+        """
+      } // stage
+  }}} // container | node | podTemplate
+}} // timestamp | ansiColor
+
+// vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
+
+```
+
+### with `POD_LABEL`
+```groovy
+#!/usr/bin/env groovy
+
+import groovy.transform.Field
+
+@Field final String CLUSTER = 'Jenkins Kubernetes'
+@Field final String NAMESPACE = 'jenkins'
+
+ansiColor('xterm') { timestamps {
+  podTemplate(
+    cloud: CLUSTER ,
+    namespace: NAMESPACE ,
+    showRawYaml: true,
+    yaml: """
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        labels:
+          jenkins: jnlp-inbound-agent
+      spec:
+        hostNetwork: true
+        containers:
+        - name: jnlp
+          image: jenkins/inbound-agent:latest
+          workingDir: /home/jenkins
+          tty: true
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 1
+            requests:
+              memory: 500Mi
+              cpu: 0.5
+    """
+  ) { node (POD_LABEL) { container(name:'jnlp', shell:'/bin/bash') {
       stage('prepare') {
         sh """
           whoami
@@ -191,3 +267,30 @@ podTemplate(cloud: 'DevOps Kubernetes') {
       }
   }
   ```
+
+## container
+```groovy
+podTemplate(cloud: 'devops kubernetes', containers: [
+  containerTemplate(
+    name: 'jnlp',
+    image: 'jenkins/jnlp-slave:latest',
+    ttyEnabled: true,
+    privileged: false,
+    alwaysPullImage: false,
+    workingDir: '/home/jenkins'
+  )
+]) {
+  node(POD_LABEL) {
+    stage ('info') {
+      echo 'yes!'
+      sh """
+        id
+        whoami
+        echo ${WORKSPACE}
+        realpath ${WORKSPACE}
+      """
+    }
+  }
+}
+```
+

@@ -39,3 +39,4 @@
 - [Monitoring](https://wiki.jenkins.io/display/JENKINS/Monitoring)
 - [Rebuilder](http://wiki.jenkins-ci.org/display/JENKINS/Rebuild+Plugin)
 - [ThinBackup](https://wiki.jenkins-ci.org/display/JENKINS/thinBackup)
+- [Sectioned View](https://plugins.jenkins.io/sectioned-view/)
