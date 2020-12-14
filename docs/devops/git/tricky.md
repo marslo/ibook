@@ -12,8 +12,8 @@
   - [`.gitattributes`](#gitattributes)
 - [scripts](#scripts)
   - [fetch merge all](#fetch-merge-all)
-  - [fetchall <branch>](#fetchall-branch)
-  - [.marslorc](#marslorc)
+  - [gfall <branch>](#gfall-branch)
+  - [iGitOpt](#igitopt)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
