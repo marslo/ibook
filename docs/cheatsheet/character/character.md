@@ -2,10 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [jq](#jq)
-  - [format](#format)
-  - [join](#join)
-  - [space in the key](#space-in-the-key)
 - [get line after the pattern](#get-line-after-the-pattern)
 - [get certain Line between 2 matched patterns](#get-certain-line-between-2-matched-patterns)
   - [working with empty line](#working-with-empty-line)
@@ -35,90 +31,6 @@
 > reference:
 > - [10 Awk Tips, Tricks and Pitfalls](https://catonmat.net/ten-awk-tips-tricks-and-pitfalls)
 > - [FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
-
-## [jq](https://github.com/stedolan/jq/issues/785#issuecomment-604557510)
-### format
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r 'to_entries[] | "\(.key)\t\(.value)"'
-some    thing
-json    like
-```
-
-or
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r '[.some, .json] | @csv'
-"thing","like"
-```
-or
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r '[.some, .json] | @tsv'
-thing	like
-```
-
-### join
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r '[.some, .json] | join(":")'
-thing:like
-```
-
-or
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r '[.some, .json] | "\(.[0]) \(.[1])"'
-thing like
-```
-
-or
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r '[.some, .json] | "\(.[0]): \(.[1])"'
-thing: like
-```
-
-or
-```bash
-$ echo '{ "some": "thing", "json": "like" }' \
-       | jq -r '[.some, .json] | reduce .[1:][] as $i ("\(.[0])"; . + ",\($i)")'
-thing,like
-```
-
-- [or](https://github.com/stedolan/jq/issues/785#issuecomment-101842421)
-  ```bash
-  $ echo '{ "k1": "v1", "k2": "v2", "k3": "v3", "k4": "v4" }' \
-         | jq -r '[.k1, .k2, .k3] | reduce .[1:][] as $i ("\(.[0])"; . + ",\($i)")'
-  v1,v2,v3
-  ```
-
-[or](https://stackoverflow.com/a/31791436/2940319)
-```bash
-$ echo '{ "users": [ { "first": "Stevie", "last": "Wonder" }, { "first": "Michael", "last": "Jackson" } ] }' \
-       | jq -r '.users[] | .first + " " + .last'
-Stevie Wonder
-Michael Jackson
-```
-- or
-  ```bash
-  $ echo '{ "users": [ { "first": "Stevie", "last": "Wonder" }, { "first": "Michael", "last": "Jackson" } ] }' \
-         | jq -r '.users[] | .first + " " + (.last|tostring)'
-  ```
-- or
-  ```bash
-  $ echo '{ "users": [ { "first": "Stevie", "last": "Wonder", "number": 1 }, { "first": "Michael", "last": "Jackson", "number": 2 } ] }' \
-         | jq -r '.users[] | .first + " " + (.number|tostring)'
-  Stevie 1
-  Michael 2
-  ```
-
-
-### space in the key
-```bash
-$ echo '{ "k1 name": "v1", "k2 name": "v2", "k3": "v3", "k4": "v4" }' | jq -r '."k1 name"'
-v1
-```
 
 ## get line after the pattern
 ```bash
