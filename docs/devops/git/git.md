@@ -32,20 +32,13 @@ Git Command Study and practice
 - [undo](#undo)
   - [delete after push](#delete-after-push)
   - [change latest comments in local](#change-latest-comments-in-local)
+- [git diff](#git-diff)
+  - [get difference between two branches](#get-difference-between-two-branches)
 - [tag](#tag)
   - [get distance between tags](#get-distance-between-tags)
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout single branch](#checkout-single-branch)
-- [tricky and scripts](#tricky-and-scripts)
-  - [commits](#commits)
-  - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes)
-  - [create multiple commits](#create-multiple-commits)
-  - [git commit](#git-commit)
-  - [`.gitattributes`](#gitattributes)
-  - [fetch merge all](#fetch-merge-all)
-  - [fetchall <branch>](#fetchall-branch)
-  - [.marslorc](#marslorc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -541,6 +534,20 @@ And then change `pick` to `reword`
   $ git push origin +master
   ```
 
+## git diff
+### [get difference between two branches](https://til.hashrocket.com/posts/18139f4f20-list-different-commits-between-two-branches)
+```bash
+$ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/<dev>
+```
+- [or](https://stackoverflow.com/a/20419458/2940319)
+  ```bash
+  $ git rev-list --reverse \
+                 --pretty="TO_TEST %h (<%ae>) %s" \
+                 --cherry-pick \
+                 --right-only origin/<release>...origin/<dev> \
+                 | grep "^TO_TEST "
+  ```
+
 ## tag
 ### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
 ```bash
@@ -576,94 +583,3 @@ git reset --hard FETCH_HEAD
 $ git clone --single-branch --branch <branch name> url://to/source/repository [target dir]
 ```
 
-## tricky and scripts
-### commits
-  - the first commit
-    ```bash
-    $ git rev-list --max-parents=0 HEAD
-    ```
-
-### [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](https://help.github.com/en/github/using-git/configuring-git-to-handle-line-endings)
-```bash
-$ git add --all -u --renormalize .
-```
-
-- or ignore the warning
-  ```bash
-  $ git config --global core.safecrlf false
-  ```
-
-### [create multiple commits](https://git-rebase.io/)
-```bash
-for c in {0..10}; do
-  echo "$c" >>squash.txt
-  git add squash.txt
-  git commit -m"Add '$c' to squash.txt"
-done
-```
-
-### git commit
-#### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
-
-### `.gitattributes`
-#### [Refreshing the repository after committing .gitattributes](https://www.droidship.com/posts/gitattributes/)
-> reference:
-> - [Please Add .gitattributes To Your Git Repository](https://dev.to/deadlybyte/please-add-gitattributes-to-your-git-repository-1jld)
-> - [Git tip: Add a .gitattributes file to deal with line endings](https://www.droidship.com/posts/gitattributes/)
-> - [gitattributes - Defining attributes per path](https://git-scm.com/docs/gitattributes)
-> - [Force LF eol in git repo and working copy](https://stackoverflow.com/a/34810209/2940319)
-
-```bash
-$ rm -rf .git/index
-# or
-$ git rm --cached -r .
-# or
-$ git ls-files -z | xargs -0 rm
-
-$ git reset --hard
-```
-
-[or](https://git-scm.com/docs/gitattributes)
-  ```bash
-  $ echo "* text=auto" >.gitattributes
-  $ git add --renormalize .
-  $ git status        # Show files that will be normalized
-  $ git commit -m "Introduce end-of-line normalization"
-  ```
-
-#### format
-> reference [Be a Git ninja: the .gitattributes file](https://medium.com/@pablorsk/be-a-git-ninja-the-gitattributes-file-e58c07c9e915)
-
-```bash
-$ cat .gitattributes
-*             text=auto
-*.sh          eol=lf
-path/to/file  eol=lf
-```
-
-### fetch merge all
-```bash
-$ cat ~/.gitconfig
-...
-[alias]
-  ua          = "!bash -c 'while read branch; do \n\
-                   echo -e \"\\033[1;33m~~> ${branch}\\033[0m\" \n\
-                   git fetch --all --force; \n\
-                   if [ 'meta/config' == \"${branch}\" ]; then \n\
-                     git fetch origin --force refs/${branch}:refs/remotes/origin/${branch} \n\
-                   fi \n\
-                   git rebase -v refs/remotes/origin/${branch}; \n\
-                   git merge --all --progress refs/remotes/origin/${branch}; \n\
-                   git remote prune origin; \n\
-                   if git --no-pager config --file $(git rev-parse --show-toplevel)/.gitmodules --get-regexp url; then \n\
-                     git submodule sync --recursive; \n\
-                     git submodule update --init --recursive \n\
-                   fi \n\
-                 done < <(git rev-parse --abbrev-ref HEAD) '"
-...
-```
-
-### [fetchall <branch>](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.marslorc#L452)
-
-### .marslorc
-- [.marslorc](https://raw.githubusercontent.com/marslo/mylinux/master/Configs/HOME/.marslo/.marslorc)
