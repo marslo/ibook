@@ -7,6 +7,8 @@
 - [Brace Expansion](#brace-expansion)
   - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
 - [Process Substitution](#process-substitution)
+  - [example: run script without download](#example-run-script-without-download)
+  - [example: merge lines of file](#example-merge-lines-of-file)
     - [nstalling tools via running random scripts from unknown sites](#nstalling-tools-via-running-random-scripts-from-unknown-sites)
   - [`strace`](#strace)
 - [Basic Commands](#basic-commands)
@@ -20,6 +22,8 @@
 
 > reference
 > - [The Bash Shell Startup Files](http://www.linuxfromscratch.org/blfs/view/svn/postlfs/profile.html)
+> - [Advanced Bash-Scripting Guide](https://tldp.org/LDP/abs/html/index.html)
+> - download pdf from [here](https://tldp.org/LDP/abs/abs-guide.pdf) or [here](http://www.linux-france.org/lug/ploug/doc/abs-guide.pdf)
 
 # character
 ## [metacharacter](https://www.grymoire.com/Unix/Quote.html)
@@ -89,11 +93,19 @@
 # [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
 ## Scp Multipule Folder/File to Target Server
 ```bash
-$ scp -r `echo dir{1..10}` user@target.server:/target/server/path/
+$ scp -r $(echo dir{1..10}) user@target.server:/target/server/path/
 ```
 
 # [Process Substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
 > Process substitution is a form of redirection where the input or output of a process (some sequence of commands) appear as a temporary file.
+> reference:
+> - [Chapter 23. Process Substitution](https://tldp.org/LDP/abs/html/process-sub.html)
+> Command list enclosed within parentheses
+> ```bash
+> >(command_list)
+> <(command_list)
+> ```
+> Process substitution uses /dev/fd/<n> files to send the results of the process(es) within parentheses to another process. [1]
 
 ```bash
 $ while read branch; do
@@ -101,65 +113,133 @@ $ while read branch; do
   done < <(git rev-parse --abbrev-ref HEAD)
 ```
 
-- [example: run script without download](https://askubuntu.com/a/1086668)
-  ```bash
-  $ bash < <(wget -q0 https://raw.githubusercontent.com/ubports/unity8-desktop-install-tools/master/install.sh)
-  ```
-  - [or](https://github.com/giampaolo/psutil/blob/master/scripts/meminfo.py)
-    ```bash
-    $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
-    MEMORY
-    ------
-    Total      :   16.0G
-    Available  :    5.8G
-    Percent    :    63.8
-    Used       :    8.8G
-    Free       :  204.5M
-    Active     :    5.4G
-    Inactive   :    5.6G
-    Wired      :    3.4G
+```bash
+$ echo >(true)
+/dev/fd/63
+$ echo <(true)
+/dev/fd/63
 
-    SWAP
-    ----
-    Total      :    1.0G
-    Used       :  269.2M
-    Free       :  754.8M
-    Percent    :    26.3
-    Sin        :   38.3G
-    Sout       :   63.9M
+$ echo >(true) <(true)
+/dev/fd/63 /dev/fd/62
+
+$ echo <(date)
+/dev/fd/63
+$ cat <(date)
+Tue Dec 15 22:32:08 CST 2020
+```
+
+[named pipe](https://tldp.org/LDP/abs/html/extmisc.html#NAMEDPIPEREF) similar
+```bash
+$ wc <(cat /usr/share/dict/words)
+ 235886  235886 2493109 /dev/fd/63
+$ cat /usr/share/dict/words | wc
+ 235886  235886 249310
+
+$ wc <(grep script /usr/share/dict/words)
+    176     176    5414 /dev/fd/63
+$ grep script /usr/share/dict/words | wc
+    176     176    5414
+
+# https://superuser.com/a/1059790/112396
+$ cat file | while read line; do ((count++)); done
+$ while read line; do ((count++)); done < <(cat file)
+```
+
+get diff in two folders
+```bash
+$ diff <(ls ibook) <(ls mbook)
+1c1,2
+< book.json
+---
+> _book
+> book.json
+3a5
+> node_modules
+
+$ diff <(sleep 4; date) <(sleep 5; date) 
+1c1
+< Tue Dec 15 22:48:31 CST 2020
+---
+> Tue Dec 15 22:48:32 CST 2020
+```
+
+## [example: run script without download](https://askubuntu.com/a/1086668)
+```bash
+$ bash < <(wget -qO - https://raw.githubusercontent.com/ubports/unity8-desktop-install-tools/master/install.sh)
+```
+- via curl
+  ```bash
+  $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
+  ```
+  or
+  ```bash
+  $ curl -so - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
     ```
 
-  - or
-    ```bash
-    $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/disk_usage.py)
-    Device               Total     Used     Free  Use %      Type  Mount
-    /dev/disk1s5        233.5G    10.6G    70.6G    13%      apfs  /
-    /dev/disk1s1        233.5G   149.6G    70.6G    67%      apfs  /System/Volumes/Data
-    /dev/disk1s4        233.5G     2.0G    70.6G     2%      apfs  /private/var/vm
-    /Library/Input Methods/SogouInput.app   233.5G   149.1G    71.1G    67%    nullfs  /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/AppTranslocation/E29031DE-FE63-4ABC-BA3D-E99C743E57D2
-    ```
-
-- example: merge lines of file
-  > inspired by [here](https://apple.stackexchange.com/a/216657/254265) and [here](https://stackoverflow.com/q/31371672/2940319)
-
+- [via wget](http://alvinalexander.com/linux/unix-linux-crontab-every-minute-hour-day-syntax/)
   ```bash
-  $ cat a
-  t1
-  t2
-  t3
-  t4
-  $ cat b
-  11
-  22
-  33
-  44
-
-  $ paste <(cat a) <(cat b)
-  t1	11
-  t2	22
-  t3	33
-  t4	44
+  $ python < <(wget -O - -q -t 1 https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
   ```
+  or
+  ```bash
+  $ wget -qO - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
+  ```
+
+- [or](https://github.com/giampaolo/psutil/blob/master/scripts/meminfo.py)
+  ```bash
+  $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
+  MEMORY
+  ------
+  Total      :   16.0G
+  Available  :    5.8G
+  Percent    :    63.8
+  Used       :    8.8G
+  Free       :  204.5M
+  Active     :    5.4G
+  Inactive   :    5.6G
+  Wired      :    3.4G
+
+  SWAP
+  ----
+  Total      :    1.0G
+  Used       :  269.2M
+  Free       :  754.8M
+  Percent    :    26.3
+  Sin        :   38.3G
+  Sout       :   63.9M
+  ```
+
+- or
+  ```bash
+  $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/disk_usage.py)
+  Device               Total     Used     Free  Use %      Type  Mount
+  /dev/disk1s5        233.5G    10.6G    70.6G    13%      apfs  /
+  /dev/disk1s1        233.5G   149.6G    70.6G    67%      apfs  /System/Volumes/Data
+  /dev/disk1s4        233.5G     2.0G    70.6G     2%      apfs  /private/var/vm
+  /Library/Input Methods/SogouInput.app   233.5G   149.1G    71.1G    67%    nullfs  /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/AppTranslocation/E29031DE-FE63-4ABC-BA3D-E99C743E57D2
+  ```
+
+## example: merge lines of file
+> inspired by [here](https://apple.stackexchange.com/a/216657/254265) and [here](https://stackoverflow.com/q/31371672/2940319)
+
+```bash
+$ cat a
+t1
+t2
+t3
+t4
+$ cat b
+11
+22
+33
+44
+
+$ paste <(cat a) <(cat b)
+t1	11
+t2	22
+t3	33
+t4	44
+```
 
 - `/dev/fd/63` is not a regular file
   ```bash
@@ -250,7 +330,7 @@ OR
   Enter to keep the current selection[+], or type selection number: 3
   ```
 
-- [Reason](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/) 
+- [Reason](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/)
   ```bash
   $ ls -l /usr/bin/python*
   lrwxrwxrwx 1 root root    24 Jul 10 02:29 /usr/bin/python -> /etc/alternatives/python
