@@ -6,6 +6,7 @@
   - [setup a colorful tab](#setup-a-colorful-tab)
   - [add favor color to a file (`~/.marslo/.colors`)](#add-favor-color-to-a-file-marslocolors)
 - [[hidden settings](Hidden Settings)](#hidden-settingshidden-settings)
+- [iTerm2 Python REPL](#iterm2-python-repl)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -220,3 +221,19 @@ EOF
   -float 0.25
   ```
 
+## [iTerm2 Python REPL](https://iterm2.com/python-api/tutorial/running.html)
+```bash
+Welcome to the iTerm2 Python REPL!
+
+This is an interactive Python interpreter where you can experiment with
+scripts. Unlike standard Python interpreters, you can use "await" not inside an
+async function. Here's an example script to try:
+
+import iterm2
+connection=await iterm2.Connection.async_create()
+await iterm2.Window.async_create(connection)
+
+⌘-click here for iTerm2 Python API Docs
+
+>>>
+```
