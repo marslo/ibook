@@ -10,6 +10,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> reference:
+> - [Groovy Cheatsheet](https://onecompiler.com/cheatsheets/groovy)
+> - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
 
 ## `Map`
 ### find a `string` in a nested `Map` by using recursive function
