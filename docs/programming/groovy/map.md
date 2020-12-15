@@ -17,7 +17,7 @@ Objective:
 ```bash
 [a:1,b:2,c:2]
 
-   ⇣⇣
+    ⇣⇣
 
 [1:['a'], 2:['b','c']]
 ```
@@ -38,14 +38,14 @@ assert newMap == [1:['a'], 2:['b','c']]
     map
   }
 
-  // Result: [1:[a], 2:[b, c]]
+  /* Result: [1:[a], 2:[b, c]] */
   ```
 
 - alternatives
   ```groovy
   [a:1,b:2,c:2].groupBy{ it.value }.collectEntries{ k, v -> [(k): v.collect{ it.key }] }
 
-  // Result: [1:[a], 2:[b, c]]
+  /* Result: [1:[a], 2:[b, c]] */
   ```
 
 ### get key or value from nested Map
@@ -55,33 +55,58 @@ assert newMap == [1:['a'], 2:['b','c']]
 {% hint style='tip' %}
 Objective:
 ```bash
-Map<String, Map<String, String>> m = [
+Map<String, Map<String, String>> map = [
   k1 : [k11 : 'v11'] ,
-  k2 : [k21 : 'v21'] ,
-  k3 : [k31 : 'v31']
+  k2 : [k11 : 'v21'] ,
+  k3 : [k11 : 'v31']
 ]
 
    ⇣⇣
 
-find'k11'
-findKey( 'k11') » 'k1'
-findValue( 'v31' ) » 'k3'
+findKeyBelongsTo( 'k11' )    »  'k1'
+findValueBelongsTo( 'v31' )  »  'k3'
 ```
 {% endhint %}
 
-findKey:
+find top key via sub-key:
+> <kbd>[try online](https://onecompiler.com/groovy/3wfvvc3p8)</kbd>
 
 ```groovy
-def findKey( Map map, String keyword ) {
+def findKeyBelongsTo( Map map, String keyword ) {
   map.find { keyword in it.value.keySet() }?.key
 }
 ```
-findValue:
+
+- find in nested map recursively (according to key):
+  ```groovy
+  def findKeyBelongsTo( Map map, String keyword ) {
+    map.findResult { k, v ->
+      v instanceof Map
+        ? v.containsKey(keyword) ? k : findKeyBelongsTo( v, keyword )
+        : null
+    }
+  }
+  ```
+
+find top key via sub-value:
+> <kbd>[try online](https://onecompiler.com/groovy/3wfvvjcnc)</kbd>
+
 ```groovy
-def findValue( Map map, String keyword ) {
+def findValueBelongsTo( Map map, String keyword ) {
   map.find { keyword in it.value.values() }?.key
 }
 ```
+
+- find in nested map recursively (according to value):
+  ```groovy
+  def findValueBelongsTo( Map map, String keyword ) {
+    map.findResult { k, v ->
+      v instanceof Map
+        ? v.containsValue(keyword) ? k : findValueBelongsTo( v, keyword )
+        : null
+    }
+  }
+  ```
 
 ### findResult & findResults
 > reference:
@@ -89,18 +114,18 @@ def findValue( Map map, String keyword ) {
 > - [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
 
 - collect: return all result (with null)
-  ```groovy
+  ```bash
   groovy:000> [a: 1, b: 2, c: 3, d: 4].collect{ k, v -> v>2 ? (k + '->' + v) : null }
   ===> [null, null, c->3, d->4]
   ```
 - findResult: return the first eligible value (first non-null element)
-  ```groovy
+  ```bash
   groovy:000> [a: 1, b: 2, c: 3, d: 4].findResult{ k, v -> v>2 ? (k + '->' + v) : null }
   ===> c->3
   ```
 
 - findResults: find all eligible values (all non-null elements)
-  ```groovy
+  ```bash
   groovy:000> [a: 1, b: 2, c: 3, d: 4].findResults{ k, v -> v>2 ? (k + '->' + v) : null }
   ===> [c->3, d->4]
   ```
@@ -108,69 +133,89 @@ def findValue( Map map, String keyword ) {
 #### [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
 {% hint style='tip' %}
 Example Map structure:
-```bash
-Map m = [
-  k1 : [
-    k11 : [
-      k111 : 'v111',
-      k112 : 'v112'
-    ]
-  ] ,
-  k2 : [
-    k12 : [
-      k121 : 'v121',
-      k122 : 'v122'
-    ]
-  ] ,
-  k3 : [k31 : 'v31']
+```groovy
+Map map = [
+  'a': [
+    'b': [
+      'c': [
+        'd' : '1',
+        'e' : '2',
+        'f' : '3'
+      ], // c
+      'g': '4',
+      'h': [
+        'i': '5',
+        'j': '6',
+        'k': '7'
+      ] // h
+    ], // b
+    'l': [
+      'm': '8',
+      'n': '9'
+    ], // l
+    'o': '10'
+  ] // a
 ]
 ```
 {% endhint %}
 
+find value via key name recursively
+> <kbd>[try online](https://onecompiler.com/groovy/3wfvvnjbq)</kbd>
+
 ```groovy
-def hasValues(Map m, String key) {
-  if (m.containsKey(key)) return m[key]
-  m.findResult { k, v -> v instanceof Map ? hasValues(v, key) : null }
+def findValues( Map map, String keyword ) {
+  map.findResult { k, v ->
+    v instanceof Map
+      ? v.containsKey(keyword) ? v.getOrDefault(keyword, null) : findValues( v, keyword )
+      : null
+  }
 }
 ```
+
+alternatives
+```groovy
+def findValues( Map map, String keyword ) {
+  if( map.containsKey(keyword) ) return map.getOrDefault( keyword, null )
+  map.findResult { k, v -> v instanceof Map ? findValues(v, keyword) : null }
+}
+```
+
 - result
-  ```bash
-  println """
-    hasValues(m, 'k11')  : ${hasValues(m, 'k11')}
-    hasValues(m, 'k112') : ${hasValues(m, 'k112')}
-  """
+  ```groovy
+  println "~~> findValues( map, 'f' )    : ${findValues( map, 'f' )} "
+  println "~~> findValues( map, 'o' )    : ${findValues( map, 'o' )} "
+  println "~~> findValues( map, 'aaaa' ) : ${findValues( map, 'aaaa' )} "
 
   /**
-   * output
-   * hasValues(m, 'k11')  : [k111 : v111, k112 : v112]
-   * hasValues(m, 'k112') : v112
-   *
+   * console output
+   * ~~> findValues( m, 'f' )    : 3
+   * ~~> findValues( m, 'o' )    : 10
+   * ~~> findValues( m, 'aaaa' ) : null
   **/
   ```
 
-alternatives
+- alternatives
+  > <kbd>[try online](https://onecompiler.com/groovy/3wfvvv42h)</kbd>
+
 ```groovy
 def hasValues(Map m, String key) {
   m.containsKey(key) || m.find { k, v -> v instanceof Map && hasValues(v, key) }
 }
 ```
 
-- result
-  ```bash
-  println """
-    hasValues(m, 'k11')  : ${hasValues(m, 'k11')}
-    hasValues(m, 'k112') : ${hasValues(m, 'k112')}
-    hasValues(m, 'k115') : ${hasValues(m, 'k115')}
-  """
+  - result
+    ```groovy
+    println "~~> hasValues( map, 'f' )    : ${hasValues( map, 'f' )} "
+    println "~~> hasValues( map, 'o' )    : ${hasValues( map, 'o' )} "
+    println "~~> hasValues( map, 'aaaa' ) : ${hasValues( map, 'aaaa' )} "
 
-  /**
-   * output
-   * hasValues(m, 'k11')  : true
-   * hasValues(m, 'k112') : true
-   * hasValues(m, 'k115') : false
-   *
-  **/
-  ```
+    /**
+     * console output
+     * ~~> hasValues( m, 'f' )    : true
+     * ~~> hasValues( m, 'o' )    : true
+     * ~~> hasValues( m, 'aaaa' ) : false
+    **/
+    ```
 
 ### collect & collectMany
 
