@@ -20,10 +20,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+{% hint style='tip' %}
 > reference
 > - [The Bash Shell Startup Files](http://www.linuxfromscratch.org/blfs/view/svn/postlfs/profile.html)
 > - [Advanced Bash-Scripting Guide](https://tldp.org/LDP/abs/html/index.html)
 > - download pdf from [here](https://tldp.org/LDP/abs/abs-guide.pdf) or [here](http://www.linux-france.org/lug/ploug/doc/abs-guide.pdf)
+> - [Perform tab-completion for aliases in Bash](https://brbsix.github.io/2015/11/23/perform-tab-completion-for-aliases-in-bash/)
+{% endhint %}
 
 # character
 ## [metacharacter](https://www.grymoire.com/Unix/Quote.html)

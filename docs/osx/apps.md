@@ -83,7 +83,7 @@ $ brew cu --all
 >
 > more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/blob/master/osx/belloMyOSX.sh#L429)
 > ```bash
-> systemlist="imagemagick coreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof"
+> systemlist="imagemagick coreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof trash"
 > regularlist="wget tmux corkscrew tig ifstat binutils diffutils gawk gnutls gzip less file-formula stow telnet iproute2mac ctags jshon colordiff tree vifm p7zip git mas htop watch jfrog-cli-go youtube-dl etcd mas figlet screenfetch glances bash-completion@2 dos2unix nmap rename renameutils pipenv inetutils hadolint"
 > regularheadlist="shellcheck bats jq gradle-completion git-flow"
 > gnulist="gnu-sed gnu-tar gnu-which grep ed findutils gnu-indent"
@@ -91,7 +91,7 @@ $ brew cu --all
 
 ```bash
 # utils
-$ brew install imagemagick coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof
+$ brew install imagemagick coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof trash
 $ brew install wget tmux corkscrew telnet figlet
 $ brew install gnu-sed --with-default-names
 $ brew install stow iproute2mac pandoc
@@ -257,6 +257,7 @@ $ brew -v edit macvim-dev/macvim/macvim
   ```bash
   $ brew doctor
   ```
+
 - info
   ```bash
   $ brew config
@@ -295,6 +296,9 @@ $ brew -v edit macvim-dev/macvim/macvim
 
   $ brew --cache
   /Users/marslo/Library/Caches/Homebre
+
+  $ brew --repo homebrew/core
+  /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
   ```
 - [cleanup](https://github.com/Homebrew/brew/issues/3784#issuecomment-364675767)
   ```bash
@@ -303,6 +307,16 @@ $ brew -v edit macvim-dev/macvim/macvim
 
   # remove all caches
   $ brew cleanup -s
+  ```
+- check formula
+  ```bash
+  $ git -C "$(brew --repo homebrew/core)" show a2f05fb0b2^:Formula/rmtrash.rb
+  class Rmtrash < Formula
+    desc "Move files to macOS's Trash"
+    homepage "http://www.nightproductions.net/cli.htm"
+    url "http://www.nightproductions.net/downloads/rmtrash_source.tar.gz"
+    version "0.3.3"
+    ...
   ```
 
 ## system settings

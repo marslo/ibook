@@ -27,7 +27,7 @@
 ```bash
 $ hostinfo
 Mach kernel version:
-	 Darwin Kernel Version 19.6.0: Mon Aug 31 22:12:52 PDT 2020; root:xnu-6153.141.2~1/RELEASE_X86_64
+   Darwin Kernel Version 19.6.0: Mon Aug 31 22:12:52 PDT 2020; root:xnu-6153.141.2~1/RELEASE_X86_64
 Kernel configured for up to 12 processors.
 6 processors are physically available.
 12 processors are logically available.
@@ -41,28 +41,28 @@ Load average: 2.72, Mach factor: 9.26
 ### [get human-readable vm_stat](https://apple.stackexchange.com/a/216657/254265)
 ```bash
 $ paste <(vm_stat | awk 'NR>1' | grep -o ".*:") <(for i in $(vm_stat | awk 'NR>1' | tr -d '.' | awk '{print $NF}'); do perl -e "print $i/1024" | awk '{printf "%0.2f", $0}'; echo; done) | column -s: -t
-Pages free                    	328.70
-Pages active                  	910.00
-Pages inactive                	973.38
-Pages speculative             	39.51
-Pages throttled               	0.00
-Pages wired down              	852.52
-Pages purgeable               	389.65
-"Translation faults"          	174323.38
-Pages copy-on-write           	7828.62
-Pages zero filled             	127404.04
-Pages reactivated             	3420.56
-Pages purged                  	6392.20
-File-backed pages             	656.69
-Anonymous pages               	1266.20
-Pages stored in compressor    	2536.76
-Pages occupied by compressor  	991.23
-Decompressions                	1555.85
-Compressions                  	8494.54
-Pageins                       	7799.75
-Pageouts                      	11.98
-Swapins                       	43.15
-Swapouts                      	48.46
+Pages free                      328.70
+Pages active                    910.00
+Pages inactive                  973.38
+Pages speculative               39.51
+Pages throttled                 0.00
+Pages wired down                852.52
+Pages purgeable                 389.65
+"Translation faults"            174323.38
+Pages copy-on-write             7828.62
+Pages zero filled               127404.04
+Pages reactivated               3420.56
+Pages purged                    6392.20
+File-backed pages               656.69
+Anonymous pages                 1266.20
+Pages stored in compressor      2536.76
+Pages occupied by compressor    991.23
+Decompressions                  1555.85
+Compressions                    8494.54
+Pageins                         7799.75
+Pageouts                        11.98
+Swapins                         43.15
+Swapouts                        48.46
 ```
 
 ### show system info
@@ -261,3 +261,48 @@ OR
 ```bash
 $ find $HOME -name '.DS_Store' -type f -delete
 ```
+
+## launchctl
+### create new plist
+```bash
+cat > ~/Library/LaunchAgents/i.marslo.updatedb.plist << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>i.marslo.updatedb</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>sudo</string>
+    <string>/usr/local/bin/gupdatedb</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardErrorPath</key>
+  <string>/Users/marslo/.marslo/log/i.marslo.updatedb.log</string>
+  <key>StandardOutPath</key>
+  <string>/Users/marslo/.marslo/log/i.marslo.updatedb.error.log</string>
+  <key>StartInterval</key>
+  <integer>300</integer>
+  <key>KeepAlive</key>
+  <true/>
+</dict>
+</plist>
+EOF
+```
+- check
+  ```bash
+  $ plutil ~/Library/LaunchAgents/i.marslo.updatedb.plist
+  /Users/marslo/Library/LaunchAgents/i.marslo.updatedb.plist: OK
+  ```
+- enable
+  ```bash
+  $ launchctl load ~/Library/LaunchAgents/i.marslo.updatedb.plist
+  $ launchctl list | grep updatedb
+  - 1 i.marslo.updatedb
+  ```
+- disable
+  ```bash
+  $ launchctl remove i.marslo.updatedb
+  ```
