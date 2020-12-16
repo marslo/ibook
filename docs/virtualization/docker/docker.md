@@ -20,7 +20,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## docker completion
-
 ### OSX
 ```bash
 bashComp="$(brew --prefix)/etc/bash_completion.d"
