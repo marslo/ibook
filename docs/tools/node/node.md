@@ -149,7 +149,6 @@ $ npm --version
 $ npm root -g
 /usr/local/lib/node_module
 
-
 $ npm i -g npm@latest
 removed 51 packages, and changed 197 packages in 4s
 2 packages are looking for funding
