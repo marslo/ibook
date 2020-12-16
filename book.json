@@ -36,7 +36,7 @@
     "anchor-navigation-ex",
     "expandable-chapters-small",
     "code",
-    "ace",
+    "-ace",
     "include-codeblock",
     "codeblock-filename",
     "codetabs",
