@@ -9,9 +9,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> reference
+> - [Boosting your kubectl productivity](https://learnk8s.io/blog/kubectl-productivity/)
+{% endhint %}
+
 ### [kubectl alias](https://learnk8s.io/blog/kubectl-productivity/)
 #### `__start_kubectl`
-
 ```bash
 $ echo 'source <(kubectl completion bash)' >> ~/.bashrc
 $ cat >> ~/.bashrc <<EOF

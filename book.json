@@ -36,16 +36,19 @@
     "anchor-navigation-ex",
     "expandable-chapters-small",
     "code",
+    "ace",
+    "include-codeblock",
     "codeblock-filename",
+    "codetabs",
+    "codesnippet",
+    "codegroup",
     "emphasize",
     "tbfed-pagefooter",
     "image-captions",
     "todo",
     "github-buttons",
     "hide-element",
-    "accordion",
-    "codetabs",
-    "codesnippet"
+    "accordion"
   ],
 
   "pluginsConfig": {
@@ -137,6 +140,16 @@
     },
     "code": {
       "copyButtons": true
+    },
+    "include-codeblock": {
+      "template": "ace",
+      "unindent": true,
+      "theme": "monokai"
+    },
+    "codegroup":{
+        "defaultTabName": "Code",
+        "tabNameSeperator": "::",
+        "rememberTabs": true
     },
     "favicon": {
       "shortcut": "assets/images/favicon.ico",

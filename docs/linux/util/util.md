@@ -207,6 +207,9 @@ text/plain
   ```bash
   $ shopt -s extdebug
 
+  $ declare -F _completion_loader
+  _completion_loader 2219 /usr/local/Cellar/bash-completion@2/2.11/share/bash-completion/bash_completion
+
   $ declare -F _docker
   _docker 5463 /usr/local/etc/bash_completion.d/docker
 
