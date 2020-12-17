@@ -36,12 +36,13 @@
     "anchor-navigation-ex",
     "expandable-chapters-small",
     "code",
-    "-ace",
-    "include-codeblock",
+    "-include-codeblock",
     "codeblock-filename",
     "codetabs",
     "codesnippet",
     "codegroup",
+    "-ace",
+    "-copy-code-button",
     "emphasize",
     "tbfed-pagefooter",
     "image-captions",
@@ -142,9 +143,9 @@
       "copyButtons": true
     },
     "include-codeblock": {
-      "template": "ace",
+      "template": "acefull",
       "unindent": true,
-      "theme": "monokai"
+      "theme": "solarized_dark"
     },
     "codegroup":{
         "defaultTabName": "Code",
