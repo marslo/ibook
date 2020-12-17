@@ -8,11 +8,19 @@
   - [upgrade](#upgrade)
 - [npm packages](#npm-packages)
   - [view details](#view-details)
+- [purge](#purge)
+  - [macOS](#macos)
 - [QnA](#qna)
   - [empty of `npm ls -g`](#empty-of-npm-ls--g)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+{% hint style='tip' %}
+> reference:
+> - [package.json](https://deleav.gitbooks.io/hellojs-gitbook/content/npmAndHexo/packagejson/)
+> - [NodeJs Quick Start](https://nodejs.dev/learn/introduction-to-nodejs)
+{% endhint %}
 
 ## npm configuration
 ### registry
