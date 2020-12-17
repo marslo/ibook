@@ -18,6 +18,8 @@
 - [flushed](#flushed)
   - [disk cache](#disk-cache)
 - [clean OSX native dot file](#clean-osx-native-dot-file)
+- [launchctl](#launchctl)
+  - [create new plist](#create-new-plist)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
