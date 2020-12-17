@@ -47,7 +47,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
---------
 
 ## Pythonic
 > Inspired from [what are same example of beautiful 'Pythonic' code?](https://www.quora.com/What-are-some-examples-of-beautiful-Pythonic-code) and [如何让你的Python代码更加pythonic?](http://www.pythontab.com/html/2015/pythonhexinbiancheng_1029/970.html)
@@ -265,11 +264,13 @@ is_palindrome = word.find(word[-1::-1])
   ```
 
 --
+
 ### Sum & Max & Min & Time
 - P:
+
   ```python
   numList = [1,2,3,4,5]
-  sum = sum(numList)  #sum = 15
+  sum = sum(numList)    #sum = 15
   maxNum = max(numList) #maxNum = 5
   minNum = min(numList) #minNum = 1
   from operator import mul

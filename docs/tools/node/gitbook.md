@@ -16,10 +16,27 @@ search:
   - [emoji](#emoji)
 - [Q&A](#qa)
   - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
+  - [`TypeError [ERR_INVALID_ARG_TYPE]` in `git init`](#typeerror-err_invalid_arg_type-in-git-init)
   - [`unexpected token: .`](#unexpected-token-)
-- [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='tip' %}
+reference:
+- [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
+- [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
+- [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
+- [emoji](https://gist.github.com/rxaviers/7360908)
+- [gitbook howto](https://coding-notes.readthedocs.io/en/latest/rst/dt/gitbook.html)
+- [gitbook 安装配置](http://gitbook.wiliam.me/)
+- [GitBook插件整理 - book.json](https://blog.csdn.net/qq_43514847/article/details/86598399)
+- [Gitbook常用插件简介](https://blog.csdn.net/qq_37149933/article/details/64170653)
+- [gitbook使用及book.json详细配置](https://blog.csdn.net/gongch0604/article/details/107494736)
+- [GitBookによるドキュメント作成](https://qiita.com/mebiusbox2/items/938af4b0d0bf7a4d3e33)
+
+useful plugins
+- [gitbook-plugin-fbqx](https://ymcatar.gitbooks.io/gitbook-test/content/testing_fbqx.html)
+{% endhint %}
 
 ## `gitbook-cli`
 ### installation
@@ -204,7 +221,7 @@ python
 
 - issue
   ```bash
-   $ gitbook serve
+  $ gitbook serve
   Live reload server started on port: 35729
   Press CTRL+C to quit ...
 
@@ -229,6 +246,36 @@ python
     62   // fs.stat = statFix(fs.stat)
     63   // fs.fstat = statFix(fs.fstat)
     64   // fs.lstat = statFix(fs.lstat)
+    ```
+
+### `TypeError [ERR_INVALID_ARG_TYPE]` in `git init`
+- issue
+  ```bash
+  $ gitbook init
+  warn: no summary file in this book
+  info: create README.md
+  info: create SUMMARY.md
+
+  TypeError [ERR_INVALID_ARG_TYPE]: The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received an instance of Promise
+  ```
+- solution: downgrade the nodejs to `12.x.x`
+  - [purge nodejs](../node.md#purge)
+    ```bash
+    $ brew uninstall node
+    $ brew doctor
+    $ brew cleanup --prune-prefix
+    ```
+  - re-install `node@12`
+    ```bash
+    $ brew install node@12
+    $ brew link node@12
+    $ cat >> ~/.bash_profile << EOF
+    NODE_HOME='/usr/local/opt/node@12'
+    LDFLAGS="-L${NODE_HOME}/lib ${LDFLAGS}"
+    CPPFLAGS="-I${NODE_HOME}/include ${CPPFLAGS}"
+    PATH=${NODE_HOME}/bin:$PATH
+    export NODE_HOME LDFLAGS CPPFLAGS PATH
+    EOF
     ```
 
 ### `unexpected token: .`
@@ -265,11 +312,3 @@ python
     {% endraw %}
     ```
     {% endraw %}
-
-## reference
-- [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
-- [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
-- [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
-- [emoji](https://gist.github.com/rxaviers/7360908)
-- [gitbook howto](https://coding-notes.readthedocs.io/en/latest/rst/dt/gitbook.html)
-- [gitbook 安装配置](http://gitbook.wiliam.me/)
