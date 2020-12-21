@@ -462,6 +462,25 @@ $ git push origin +cb46bdc^:master
 $ git checkout origin/<branch> -- <path/to/file>
 ```
 
+#### revert changes in submodule
+```bash
+$ git submodule update -f --init
+```
+
+- [or](https://stackoverflow.com/questions/10906554/how-do-i-revert-my-changes-to-a-git-submodule)
+  ```bash
+  $ git submodule foreach --recursive git reset --hard
+  ```
+- or
+  ```bash
+  $ git submodule update -f --recursive
+  ```
+- or
+  ```bash
+  $ git submodule foreach --recursive git reset --hard
+  $ git submodule update --recursive --init
+  ```
+
 #### [Git Reset vs Revert vs Checkout reference](https://www.atlassian.com/git/tutorials/resetting-checking-out-and-reverting)
 |     Command    | Scope        | Common use cases                                                     |
 |:--------------:|--------------|----------------------------------------------------------------------|
