@@ -15,6 +15,11 @@
   - [memory](#memory)
   - [swap usage](#swap-usage)
   - [show kernel version](#show-kernel-version)
+- [osx installation](#osx-installation)
+  - [download older version](#download-older-version)
+  - [create osx installer usb](#create-osx-installer-usb)
+  - [boot with macOS USB installer](#boot-with-macos-usb-installer)
+  - [Convert a MacOS Installer to ISO](#convert-a-macos-installer-to-iso)
 - [flushed](#flushed)
   - [disk cache](#disk-cache)
 - [clean OSX native dot file](#clean-osx-native-dot-file)
@@ -243,6 +248,90 @@ kern.osrevision: 199506
   $ uname -a
   Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
   ```
+
+## osx installation
+### [download older version](https://512pixels.net/2019/10/download-macos-installers-with-terminal/)
+{% hint style='tip' %}
+[How to Download Full MacOS Installers from Command Line](https://osxdaily.com/2020/04/13/how-download-full-macos-installer-terminal/)
+{% endhint %}
+
+```bash
+$ softwareupdate --fetch-full-installer
+```
+- or
+  ```bash
+  $ softwareupdate --fetch-full-installer --full-installer-version **.**.*
+
+  # i.e.:
+  $ softwareupdate --fetch-full-installer --full-installer-version 10.15
+  ```
+
+- MacOS Mojave 10.14.6 Installer
+  ```bash
+  $ softwareupdate --fetch-full-installer --full-installer-version 10.14.6
+  ```
+- MacOS Catalina 10.15.3 Installer
+  ```bash
+  $ softwareupdate --fetch-full-installer --full-installer-version 10.15.3
+  ```
+- MacOS High Sierra 10.13.6 Installer
+  ```bash
+  $ softwareupdate --fetch-full-installer --full-installer-version 10.13.6
+  ```
+
+### [create osx installer usb](https://osxdaily.com/2019/06/06/make-macos-catalina-beta-usb-boot-install-drive/)
+- for Catalina FINAL version
+  ```bash
+  $ sudo /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/UNTITLED && echo Catalina Boot Drive Created
+  ```
+- for Catalina BETA version
+  ```bash
+  $ sudo /Applications/Install\ macOS\ Catalina\ Beta.app/Contents/Resources/createinstallmedia --volume /Volumes/UNTITLED && echo Catalina Boot Drive Created
+  ```
+
+### boot with macOS USB installer
+- connect the macOS Catalina 10.15 beta install drive to to the Mac you want to install Catalina onto
+- reboot the Mac
+- immediately hold down the OPTION key upon boot, keep holding Option until you see the boot menu
+- choose the macOS Catalina 10.15 beta installer volume to boot from
+
+
+### [Convert a MacOS Installer to ISO](https://osxdaily.com/2020/07/20/how-convert-macos-installer-iso/)
+- download [MacOS Mojave installer](https://itunes.apple.com/us/app/macos-mojave/id1398502828?mt=12), or the [MacOS Catalina installer](https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12) (or the installer you wish to turn into an ISO) from the Mac App Store,  untill the “Install MacOS Mojave.app” or “Install MacOS Catalina.app” application is fully downloaded and within the /Applications folder, proceed
+
+- open the Terminal application, create a disk image DMG file via:
+```bash
+$ hdiutil create -o /tmp/Mojave -size 8500m -volname Mojave -layout SPUD -fs HFS+J
+```
+
+- mount the created DMG disk image via:
+```bash
+$ hdiutil attach /tmp/Mojave.dmg -noverify -mountpoint /Volumes/Mojave
+```
+
+- use createinstallmedia to create the macOS installer application on the mounted volume:
+```bash
+$ sudo /Applications/Install\ macOS\ Mojave.app/Contents/Resources/createinstallmedia --volume /Volumes/Mojave --nointeraction
+```
+
+- unmount the volume just created:
+```bash
+$ hdiutil detach /volumes/Install\ macOS\ Mojave
+```
+
+- convert the DMG disk image file to an ISO disk image file (technically a CDR file but it’s the same as an iso)
+```bash
+$ hdiutil convert /tmp/Mojave.dmg -format UDTO -o ~/Desktop/Mojave.cdr
+```
+
+- rename the CDR file extension to ISO to convert the CDR to ISO:
+```bash
+$ mv ~/Desktop/Mojave.cdr ~/Desktop/Mojave.iso
+```
+{% hint style='success' %}
+more info:
+[Convert ISO to VDI Virtual Box Image](https://osxdaily.com/2018/06/17/convert-iso-to-vdi-virtualbox-image/)
+{% endhint %}
 
 ## flushed
 ### disk cache
