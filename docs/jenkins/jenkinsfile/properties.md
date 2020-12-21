@@ -8,6 +8,16 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+{% hint style='tip' %}
+reference:
+- [Class ParametersAction](https://javadoc.jenkins-ci.org/hudson/model/ParametersAction.html)
+- [Class ParameterValue](https://javadoc.jenkins-ci.org/hudson/model/ParameterValue.html)
+- [parameters](https://www.jenkins.io/doc/pipeline/steps/pipeline-input-step/#input-wait-for-interactive-input)
+- [Parameterized System Groovy script](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
+- [How to retrieve Jenkins build parameters using the Groovy API?](https://stackoverflow.com/a/19564602/2940319)
+{% endhint %}
+
 ### parameters
 ```groovy
 properties([

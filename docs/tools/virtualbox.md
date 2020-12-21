@@ -1,0 +1,19 @@
+
+
+## [troubleshooting](https://www.virtualbox.org/manual/ch12.html)
+### collect debug report
+```bash
+$ VBoxBugReport
+Oracle VM VirtualBox Bug Report Tool 6.1.16
+(C) 2020 Oracle Corporation
+All rights reserved.
+
+  0% - collecting VBoxSVC.log...
+ 20% - collecting VBoxSVC.log.1...
+ 40% - collecting VirtualBox.xml...
+ 60% - collecting HostUsbDevices...
+ 80% - collecting HostUsbFilters...
+100% - compressing...
+
+Report was written to '2020-12-21-11-03-22-bugreport.tgz'
+```

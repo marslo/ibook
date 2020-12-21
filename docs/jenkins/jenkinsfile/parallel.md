@@ -8,6 +8,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+reference:
+- [Jobs In Parallel](https://www.jenkins.io/doc/pipeline/examples/#jobs-in-parallel)
+- [Parallel From List](https://www.jenkins.io/doc/pipeline/examples/#parallel-from-list)
+- [Parallel Multiple Nodes](https://www.jenkins.io/doc/pipeline/examples/#parallel-multiple-nodes)
+{% endhint %}
+
 ## parallel
 ### static
 ```groovy

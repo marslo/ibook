@@ -12,10 +12,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> reference:
-> - [Pipeline Examples](https://www.jenkins.io/doc/pipeline/examples/)
-> - [Jenkins Pipeline Syantx](https://kb.novaordis.com/index.php/Jenkins_Pipeline_Syntax)
-> - [Pipeline Steps Reference](https://www.jenkins.io/doc/pipeline/steps/)
+{% hint style='tip' %}
+reference:
+- [Pipeline Examples](https://www.jenkins.io/doc/pipeline/examples/)
+- [Jenkins Pipeline Syantx](https://kb.novaordis.com/index.php/Jenkins_Pipeline_Syntax)
+- [Pipeline Steps Reference](https://www.jenkins.io/doc/pipeline/steps/)
+{% endhint %}
 
 ## jenkins API
 ### update node name
