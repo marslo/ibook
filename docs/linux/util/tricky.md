@@ -10,13 +10,15 @@
   - [clear screen](#clear-screen)
   - [show TERM](#show-term)
   - [show terminal width](#show-terminal-width)
+  - [customized colorful output](#customized-colorful-output)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
+{% hint style='tip' %}
 > reference
 > - [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
+{% endhint %}
 
 ## save & restore screen
 ### `tput`
@@ -64,3 +66,10 @@ $ tput color
 ```bash
 $ tput cols
 ```
+
+### [customized colorful output](https://unix.stackexchange.com/a/163781/29178)
+```bash
+$ export GREP_COLORS="sl=0;33;49:ms=1;34;49"
+$ find /etc/ -type f | head | grep --color=always '^\|[^/]*$'
+```
+![customized color output](../../screenshot/colorful-tricky.png)
