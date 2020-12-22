@@ -23,16 +23,19 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+{% codetabs name="command", type="bash" -%}
+{%- language name="more details", type="bash" -%}
+{%- endcodetabs %}
+
 # SSL Cert
 ## Create Cert for server
 ### CA (root cert)
-
-    $ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048
-    $ openssl req -new -x509 -days 365 -key www.artifactory.mycompany.com-ca.key -sha256 -out www.artifactory.mycompany.com-ca.crt -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
-
-<details><summary>Click to check details</summary>
-<pre><code>$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048
-Generating RSA private key, 2048 bit long modulus
+{% codetabs name="command", type="bash" -%}
+$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048
+$ openssl req -new -x509 -days 365 -key www.artifactory.mycompany.com-ca.key -sha256 -out www.artifactory.mycompany.com-ca.crt -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
+{%- language name="more details", type="bash" -%}
+$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048 Generating RSA private key, 2048 bit long modulus
 ....................................................................+++
 ...................................................+++
 unable to write 'random state'
@@ -41,34 +44,29 @@ Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
 Verifying - Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
 $ openssl req -new -x509 -days 365 -key www.artifactory.mycompany.com-ca.key -sha256 -out www.artifactory.mycompany.com-ca.crt -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
 Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
-</code></pre>
-</details>
+{%- endcodetabs %}
 
 ### Cert for Server
-
-    $ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
-    $ openssl req -sha256 -new -key www.artifactory.mycompany.com-server.key -out www.artifactory.mycompany.com-server.csr -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
-
-<details><summary>Click to check details</summary>
-<pre><code>$ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
+{% codetabs name="command", type="bash" -%}
+$ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
+$ openssl req -sha256 -new -key www.artifactory.mycompany.com-server.key -out www.artifactory.mycompany.com-server.csr -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
+{%- language name="more details", type="bash" -%}
+$ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
 Generating RSA private key, 2048 bit long modulus
 ......................................................................+++
 ............................................................................................................................................................................................................................+++
 unable to write 'random state'
 e is 65537 (0x10001)
 $ openssl req -sha256 -new -key www.artifactory.mycompany.com-server.key -out www.artifactory.mycompany.com-server.csr -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
-</code></pre>
-</details>
+{%- endcodetabs %}
 
 ### Sign the server cert with CA
-
-    $ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
-    $ echo extendedKeyUsage = serverAuth >> extfile.cnf
-
-    $ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-server.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-server.crt -extfile extfile.cnf
-
-<details><summary>Click to check details</summary>
-<pre><code>$ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
+{% codetabs name="command", type="bash" -%}
+$ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
+$ echo extendedKeyUsage = serverAuth >> extfile.cnf
+$ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-server.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-server.crt -extfile extfile.cnf
+{%- language name="more details", type="bash" -%}
+$ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
 $ echo extendedKeyUsage = serverAuth >> extfile.cnf
 $ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-server.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-server.crt -extfile extfile.cnf
 Signature ok
@@ -80,18 +78,16 @@ unable to write 'random state'
 $ ls
 extfile.cnf                             www.artifactory.mycompany.com-ca.key      www.artifactory.mycompany.com-server.csr  www.srl
 www.artifactory.mycompany.com-ca.crt  www.artifactory.mycompany.com-server.crt  www.artifactory.mycompany.com-server.key
-</code></pre>
-</details>
+{%- endcodetabs %}
 
 ### Cert for Client
-
-    $ openssl genrsa -out www.artifactory.mycompany.com-client.key
-    $ openssl req -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com" -new -key www.artifactory.mycompany.com-client.key -out www.artifactory.mycompany.com-client.csr
-    $ echo extendedKeyUsage = clientAuth >> extfile.cnf
-    $ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-client.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-client.cert -extfile extfile.cnf
-
-<details><summary>Click to check details</summary>
-<pre><code>$ openssl genrsa -out www.artifactory.mycompany.com-client.key 2048
+{% codetabs name="command", type="bash" -%}
+$ openssl genrsa -out www.artifactory.mycompany.com-client.key
+$ openssl req -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com" -new -key www.artifactory.mycompany.com-client.key -out www.artifactory.mycompany.com-client.csr
+$ echo extendedKeyUsage = clientAuth >> extfile.cnf
+$ openssl x509 -req -days 365 -sha256 -in www.artifactory.mycompany.com-client.csr -CA www.artifactory.mycompany.com-ca.crt -CAkey www.artifactory.mycompany.com-ca.key -CAcreateserial -out www.artifactory.mycompany.com-client.cert -extfile extfile.cnf
+{%- language name="more details", type="bash" -%}
+$ openssl genrsa -out www.artifactory.mycompany.com-client.key 2048
 Generating RSA private key, 2048 bit long modulus
 ................................................+++
 .......................+++
@@ -112,21 +108,24 @@ subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompa
 Getting CA Private Key
 Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactor
 unable to write 'random state'
-</code></pre>
-</details>
+{%- endcodetabs %}
 
 ### Update the file perm
-
-    $ sudo chmod -v 0444 www.artifactory.mycompany.com-ca.crt www.artifactory.mycompany.com-server.crt client.cert
-    $ sudo chmod -v 0400 www.artifactory.mycompany.com-ca.key client.key www.artifactory.mycompany.com-server.key
+```bash
+$ sudo chmod -v 0444 www.artifactory.mycompany.com-ca.crt \
+                     www.artifactory.mycompany.com-server.crt \
+                     client.cert
+$ sudo chmod -v 0400 www.artifactory.mycompany.com-ca.key \
+                     client.key \
+                     www.artifactory.mycompany.com-server.key
+```
 
 ### Check certs
 #### crt
-
-    $ openssl x509 -noout -text -in www.artifactory.mycompany.com-server.crt
-
-<details><summary>openssl x509 ca.crt</summary>
-<pre><code>$ openssl x509 -noout -text -in www.artifactory.mycompany.com-ca.crt
+{% codetabs name="command", type="bash" -%}
+$ openssl x509 -noout -text -in www.artifactory.mycompany.com-server.crt
+{%- language name="openssl x509 ca.crt", type="bash" -%}
+$ openssl x509 -noout -text -in www.artifactory.mycompany.com-ca.crt
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -186,11 +185,9 @@ Certificate:
          96:ac:ed:cd:c1:0b:54:7d:a9:57:07:77:0c:6a:43:9e:4f:c0:
          6c:12:88:e8:cf:34:08:67:af:1c:2f:bb:49:54:1b:17:95:89:
          b3:2d:c9:5f
-</code></pre>
-</details>
 
-<details><summary>openssl x509 server.crt</summary>
-<pre><code>$ openssl x509 -noout -text -in www.artifactory.mycompany.com-server.crt
+{%- language name="openssl x509 server.crt", type="bash" -%}
+$ openssl x509 -noout -text -in www.artifactory.mycompany.com-server.crt
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -246,14 +243,13 @@ Certificate:
          a7:73:70:bc:59:89:7c:42:25:0b:cb:2f:b0:86:4a:46:56:f2:
          e9:d9:63:f1
 
-</code></pre>
-</details>
+{%- endcodetabs %}
 
 #### csr
-
-    $ openssl req -noout -text -in www.artifactory.mycompany.com-server.csr
-<details><summary>openss req</summary>
-<pre><code>$ openssl req -noout -text -in www.artifactory.mycompany.com-server.csr
+{% codetabs name="command", type="bash" -%}
+$ openssl req -noout -text -in www.artifactory.mycompany.com-server.csr
+{%- language name="openss req", type="bash" -%}
+$ openssl req -noout -text -in www.artifactory.mycompany.com-server.csr
 Certificate Request:
     Data:
         Version: 0 (0x0)
@@ -299,36 +295,32 @@ Certificate Request:
          2e:7f:8d:bf:44:29:83:fa:89:b3:b8:3c:13:98:20:76:6c:d3:
          67:ce:03:9e:15:ea:3e:9d:4b:cb:c2:78:ab:57:1d:b7:e8:9e:
          81:1b:b5:1f
-
-
-</code></pre>
-</details>
-
+{%- endcodetabs %}
 
 ## Certificate working with Nginx
-
-    $ grep ssl_certificate /etc/nginx/sites-enabled/artifactoryv2.conf
-    ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.crt;
-    ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.key;
+```bash
+$ grep ssl_certificate /etc/nginx/sites-enabled/artifactoryv2.conf
+ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.crt;
+ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.key;
+```
 
 ## Certificate working with Client
 ### Add certifactory in MacOS
-
-    $ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "/Users/marslo/Downloads/www.artifactory.mycompany.com-ca.crt"
+```bash
+$ sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "/Users/marslo/Downloads/www.artifactory.mycompany.com-ca.crt"
+```
 
 ### Find the added cert in MacOS
+{% codetabs name="command", type="bash" -%}
+$ security find-certificate -a -c <artifactory> -Z
+$ security find-certificate -a -c artifactor -Z | grep SHA-1
+SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
 
-    $ security find-certificate -a -c <artifactory> -Z
-    $ security find-certificate -a -c artifactor -Z | grep SHA-1
-    SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
-
-    $ security list-keychain
-        "/Users/marslo/Library/Keychains/login.keychain-db"
-        "/Library/Keychains/System.keychain"
-
-
-<details><summary>Click to check details</summary>
-<pre><code>$ security find-certificate -a -c artifactor -Z
+$ security list-keychain
+    "/Users/marslo/Library/Keychains/login.keychain-db"
+    "/Library/Keychains/System.keychain"
+{%- language name="more details", type="bash" -%}
+$ security find-certificate -a -c artifactor -Z
 SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
 keychain: "/Library/Keychains/System.keychain"
 version: 256
@@ -338,11 +330,11 @@ attributes:
     "cenc"<uint32>=0x00000003
     "ctyp"<uint32>=0x00000001
     "hpky"<blob>=0x2332BC619E518E9422305BAE688A7E8E53D2457C  "#2\274a\236Q\216\224"0[\256h\212~\216S\322E|"
-    "issu"<blob>=0x3081A3310B300906035504061302434E3110300E06035504080C075369636875616E3110300E06035504070C074368656E6764753110300E060355040A0C075068696C697073310C300A060355040B0C034344493128302606035504030C1F7077772E61727469666163746F72792E6364692E7068696C6970732E636F6D3126302406092A864886F70D01090116176D6172736C6F2E6A69616F407068696C6970732E636F6D  "0\201\2431\0130\011\006\003U\004\006\023\002CN1\0200\016\006\003U\004\010\014\007Sichuan1\0200\016\006\003U\004\007\014\007Chengdu1\0200\016\006\003U\004\012\014\007mycompany1\0140\012\006\003U\004\013\014\003CDI1(0&\006\003U\004\003\014\037www.artifactory.mycompany.com1&0$\006\011*\206H\206\367\015\001\011\001\026\027marslo.jiao@mycompany.com"
+    "issu"<blob>=0x3081A3310B*** "0\201\2431\0130..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..www.artifactory.mycompany.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
     "labl"<blob>="www.artifactory.mycompany.com"
     "skid"<blob>=0x2332BC619E518E9422305BAE688A7E8E53D2457C  "#2\274a\236Q\216\224"0[\256h\212~\216S\322E|"
     "snbr"<blob>=0x00D23054792B3142CE  "\000\3220Ty+1B\316"
-    "subj"<blob>=0x3081A3310B300906035504061302434E3110300E06035504080C075369636875616E3110300E06035504070C074368656E6764753110300E060355040A0C075068696C697073310C300A060355040B0C034344493128302606035504030C1F7077772E61727469666163746F72792E6364692E7068696C6970732E636F6D3126302406092A864886F70D01090116176D6172736C6F2E6A69616F407068696C6970732E636F6D  "0\201\2431\0130\011\006\003U\004\006\023\002CN1\0200\016\006\003U\004\010\014\007Sichuan1\0200\016\006\003U\004\007\014\007Chengdu1\0200\016\006\003U\004\012\014\007mycompany1\0140\012\006\003U\004\013\014\003CDI1(0&\006\003U\004\003\014\037www.artifactory.mycompany.com1&0$\006\011*\206H\206\367\015\001\011\001\026\027marslo.jiao@mycompany.com"
+    "subj"<blob>=0x3081A3310B***  "0\201\2431\0130..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..www.artifactory.mycompany.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
 
 $ security find-certificate -a -c artifactor -Z -p -m
 SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
@@ -372,152 +364,155 @@ nCqrytACBoo5eupluQQTD2vN6uWfWcXSBrLkw8urWWmqEeYISRLM1CkhK1nB3Lvm
 qX2WaKR7YXaKIalppYPVi/YITsA0ZGtllqztzcELVH2pVwd3DGpDnk/AbBKI6M80
 CGevHC+7SVQbF5WJsy3JXw==
 -----END CERTIFICATE-----
-</code></pre>
-</details>
-
+{%- endcodetabs %}
 
 ### Remove the cert in MacOS
-
-    $ sudo security delete-certificate -Z 915D019F0993F369C09D75C6B8DA201B8DE2636E
+```bash
+$ sudo security delete-certificate -Z 915D019F0993F369C09D75C6B8DA201B8DE2636E
+```
 
 ### Other methods
-<details><summary>Click to check details</summary>
-<li>Others 1:</li>
-<pre><code>$ cd /etc/nginx/
-$ sudo openssl genrsa -des3 -out server.key 1024
-$ sudo openssl req -new -key server.key -out server.csr
-$ sudo cp server.key{,.org}
-$ sudo cp server.csr{,.org}
-$ sudo openssl rsa -in server.key.org -out server.key
-$ sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
-</pre></code>
+- 1st:
+  {% codetabs name="command", type="bash" -%}
+  $ cd /etc/nginx/
+  $ sudo openssl genrsa -des3 -out server.key 1024
+  $ sudo openssl req -new -key server.key -out server.csr
+  $ sudo cp server.key{,.org}
+  $ sudo cp server.csr{,.org}
+  $ sudo openssl rsa -in server.key.org -out server.key
+  $ sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+  {%- language name="more details", type="bash" -%}
 
-<details><summary>Click to check details</summary>
-<pre><code>$ ls -Altrh
-total 80K
--rw-r--r--   1 root root 3.0K May  3  2017 win-utf
--rw-r--r--   1 root root  664 May  3  2017 uwsgi_params
--rw-r--r--   1 root root  636 May  3  2017 scgi_params
--rw-r--r--   1 root root  180 May  3  2017 proxy_params
--rw-r--r--   1 root root 1.5K May  3  2017 nginx.conf
--rw-r--r--   1 root root 3.9K May  3  2017 mime.types
--rw-r--r--   1 root root 2.2K May  3  2017 koi-win
--rw-r--r--   1 root root 2.8K May  3  2017 koi-utf
--rw-r--r--   1 root root 1007 May  3  2017 fastcgi_params
--rw-r--r--   1 root root 1.1K May  3  2017 fastcgi.conf
-drwxr-xr-x   2 root root 4.0K Jul 27 04:11 modules-available
-drwxr-xr-x   2 root root 4.0K Jul 27 04:11 conf.d
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-available
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 snippets
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-enabled
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 modules-enabled
-$ sudo openssl genrsa -des3 -out server.key 1024
-Generating RSA private key, 1024 bit long modulus
-.................................................................++++++
-......++++++
-e is 65537 (0x10001)
-Enter pass phrase for server.key: artifactory
-Verifying - Enter pass phrase for server.key: artifactory
+  $ ls -Altrh
+  total 80K
+  -rw-r--r--   1 root root 3.0K May  3  2017 win-utf
+  -rw-r--r--   1 root root  664 May  3  2017 uwsgi_params
+  -rw-r--r--   1 root root  636 May  3  2017 scgi_params
+  -rw-r--r--   1 root root  180 May  3  2017 proxy_params
+  -rw-r--r--   1 root root 1.5K May  3  2017 nginx.conf
+  -rw-r--r--   1 root root 3.9K May  3  2017 mime.types
+  -rw-r--r--   1 root root 2.2K May  3  2017 koi-win
+  -rw-r--r--   1 root root 2.8K May  3  2017 koi-utf
+  -rw-r--r--   1 root root 1007 May  3  2017 fastcgi_params
+  -rw-r--r--   1 root root 1.1K May  3  2017 fastcgi.conf
+  drwxr-xr-x   2 root root 4.0K Jul 27 04:11 modules-available
+  drwxr-xr-x   2 root root 4.0K Jul 27 04:11 conf.d
+  drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-available
+  drwxr-xr-x   2 root root 4.0K Dec 26 18:08 snippets
+  drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-enabled
+  drwxr-xr-x   2 root root 4.0K Dec 26 18:08 modules-enabled
+  $ sudo openssl genrsa -des3 -out server.key 1024
+  Generating RSA private key, 1024 bit long modulus
+  .................................................................++++++
+  ......++++++
+  e is 65537 (0x10001)
+  Enter pass phrase for server.key: artifactory
+  Verifying - Enter pass phrase for server.key: artifactory
 
-$ sudo openssl req -new -key server.key -out server.csr
-Enter pass phrase for server.key: artifactory
-You are about to be asked to enter information that will be incorporated into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
------
-Country Name (2 letter code) [AU]:CN
-State or Province Name (full name) [Some-State]:Sichuan
-Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
-Organizational Unit Name (eg, section) []:mycompany
-Common Name (e.g. server FQDN or YOUR name) []:docker-2.artifactory
-Email Address []:marslo.jiao@mycompany.com
+  $ sudo openssl req -new -key server.key -out server.csr
+  Enter pass phrase for server.key: artifactory
+  You are about to be asked to enter information that will be incorporated into your certificate request.
+  What you are about to enter is what is called a Distinguished Name or a DN.
+  There are quite a few fields but you can leave some blank
+  For some fields there will be a default value,
+  If you enter '.', the field will be left blank.
+  -----
+  Country Name (2 letter code) [AU]:CN
+  State or Province Name (full name) [Some-State]:Sichuan
+  Locality Name (eg, city) []:Chengdu
+  Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
+  Organizational Unit Name (eg, section) []:mycompany
+  Common Name (e.g. server FQDN or YOUR name) []:docker-2.artifactory
+  Email Address []:marslo.jiao@mycompany.com
 
-Please enter the following 'extra' attributes
-to be sent with your certificate request
-A challenge password []:artifactory
-An optional company name []:mycompany
+  Please enter the following 'extra' attributes
+  to be sent with your certificate request
+  A challenge password []:artifactory
+  An optional company name []:mycompany
 
-$ ls -Altrh
-total 80K
--rw-r--r-- 1 root root 3.0K May  3  2017 win-utf
--rw-r--r-- 1 root root  664 May  3  2017 uwsgi_params
--rw-r--r-- 1 root root  636 May  3  2017 scgi_params
--rw-r--r-- 1 root root  180 May  3  2017 proxy_params
--rw-r--r-- 1 root root 1.5K May  3  2017 nginx.conf
--rw-r--r-- 1 root root 3.9K May  3  2017 mime.types
--rw-r--r-- 1 root root 2.2K May  3  2017 koi-win
--rw-r--r-- 1 root root 2.8K May  3  2017 koi-utf
--rw-r--r-- 1 root root 1007 May  3  2017 fastcgi_params
--rw-r--r-- 1 root root 1.1K May  3  2017 fastcgi.conf
-drwxr-xr-x 2 root root 4.0K Jul 27 04:11 modules-available
-drwxr-xr-x 2 root root 4.0K Jul 27 04:11 conf.d
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-available
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 snippets
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-enabled
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 modules-enabled
--rw-r--r-- 1 root root  951 Dec 26 18:32 server.key
--rw-r--r-- 1 root root  785 Dec 26 18:36 server.csr
--rw-r--r-- 1 root root  951 Dec 26 18:38 server.key.org
--rw-r--r-- 1 root root  785 Dec 26 18:38 server.csr.org
+  $ ls -Altrh
+  total 80K
+  -rw-r--r-- 1 root root 3.0K May  3  2017 win-utf
+  -rw-r--r-- 1 root root  664 May  3  2017 uwsgi_params
+  -rw-r--r-- 1 root root  636 May  3  2017 scgi_params
+  -rw-r--r-- 1 root root  180 May  3  2017 proxy_params
+  -rw-r--r-- 1 root root 1.5K May  3  2017 nginx.conf
+  -rw-r--r-- 1 root root 3.9K May  3  2017 mime.types
+  -rw-r--r-- 1 root root 2.2K May  3  2017 koi-win
+  -rw-r--r-- 1 root root 2.8K May  3  2017 koi-utf
+  -rw-r--r-- 1 root root 1007 May  3  2017 fastcgi_params
+  -rw-r--r-- 1 root root 1.1K May  3  2017 fastcgi.conf
+  drwxr-xr-x 2 root root 4.0K Jul 27 04:11 modules-available
+  drwxr-xr-x 2 root root 4.0K Jul 27 04:11 conf.d
+  drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-available
+  drwxr-xr-x 2 root root 4.0K Dec 26 18:08 snippets
+  drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-enabled
+  drwxr-xr-x 2 root root 4.0K Dec 26 18:08 modules-enabled
+  -rw-r--r-- 1 root root  951 Dec 26 18:32 server.key
+  -rw-r--r-- 1 root root  785 Dec 26 18:36 server.csr
+  -rw-r--r-- 1 root root  951 Dec 26 18:38 server.key.org
+  -rw-r--r-- 1 root root  785 Dec 26 18:38 server.csr.org
 
-$ sudo openssl rsa -in server.key.org -out server.key
-Enter pass phrase for server.key.org:
-writing RSA key
+  $ sudo openssl rsa -in server.key.org -out server.key
+  Enter pass phrase for server.key.org:
+  writing RSA key
 
-$ sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
-Signature ok
-subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=mycompany/CN=docker-2.artifactory/emailAddress=marslo.jiao@mycompany.com
-Getting Private key
-</code></pre>
-</details>
+  $ sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+  Signature ok
+  subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=mycompany/CN=docker-2.artifactory/emailAddress=marslo.jiao@mycompany.com
+  Getting Private key
+  {%- endcodetabs %}
 
-<li>Others 2:</li>
-<pre><code>/etc/nginx$ sudo openssl req -newkey rsa:2048 -nodes -sha256 -keyout certs/www.artifactory.mycompany.com.key -x509 -days 365 -out certs/www.artifactory.mycompany.com.crt
-Generating a 2048 bit RSA private key
-........+++
-..............................................................+++
-writing new private key to 'certs/www.artifactory.mycompany.com.key'
------
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
------
-Country Name (2 letter code) [AU]:CN
-State or Province Name (full name) [Some-State]:Sichuan
-Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
-Organizational Unit Name (eg, section) []:mycompany
-Common Name (e.g. server FQDN or YOUR name) []:www.artifactory.mycompany.com
-Email Address []:marslo.jiao@mycompany.com
-</code></pre>
 
-<li><a href="https://www.digicert.com/easy-csr/openssl.htm">Other 3:</a></li>
+- 2nd:
+  ```bash
 
-<details><summary>genreate key and cert by one command</summary>
-<pre><code>$ openssl req -new -newkey rsa:2048 -nodes -out www_artifactory__mycompany_com.csr -keyout www_artifactory__mycompany_com.key -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
-</code></pre>
-</details>
+  /etc/nginx$ sudo openssl req -newkey rsa:2048 -nodes -sha256 -keyout certs/www.artifactory.mycompany.com.key -x509 -days 365 -out certs/www.artifactory.mycompany.com.crt
+  Generating a 2048 bit RSA private key
+  ........+++
+  ..............................................................+++
+  writing new private key to 'certs/www.artifactory.mycompany.com.key'
+  -----
+  You are about to be asked to enter information that will be incorporated
+  into your certificate request.
+  What you are about to enter is what is called a Distinguished Name or a DN.
+  There are quite a few fields but you can leave some blank
+  For some fields there will be a default value,
+  If you enter '.', the field will be left blank.
+  -----
+  Country Name (2 letter code) [AU]:CN
+  State or Province Name (full name) [Some-State]:Sichuan
+  Locality Name (eg, city) []:Chengdu
+  Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
+  Organizational Unit Name (eg, section) []:mycompany
+  Common Name (e.g. server FQDN or YOUR name) []:www.artifactory.mycompany.com
+  Email Address []:marslo.jiao@mycompany.com
+  ```
+  {% codetabs name="command", type="bash" -%}
+  {%- language name="more details", type="bash" -%}
+  {%- endcodetabs %}
 
-</details>
-
+- [3rd: genreate key and cert by one command](https://www.digicert.com/easy-csr/openssl.htm)
+  ```bash
+  $ openssl req -new \
+                -newkey rsa:2048 \
+                -nodes \
+                -out www_artifactory__mycompany_com.csr \
+                -keyout www_artifactory__mycompany_com.key \
+                -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
+  ```
 
 
 # Artifactory HTTPS
 
-    $ sudo openssl genrsa -des3 -out artifactorykey 2048
-    $ sudo openssl req -new -key artifactorykey -out artifactorycsr
-    $ sudo cp artifactorykey{,.org}
-    $ sudo openssl rsa -in artifactorykey.org -out artifactorykey
-    $ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactorykey -out artifactorycrt
-
-<details><summary>SSL with IP</summary>
-<pre><code>$ sudo openssl genrsa -des3 -out artifactorykey 2048
+{% codetabs name="command", type="bash" -%}
+$ sudo openssl genrsa -des3 -out artifactorykey 2048
+$ sudo openssl req -new -key artifactorykey -out artifactorycsr
+$ sudo cp artifactorykey{,.org}
+$ sudo openssl rsa -in artifactorykey.org -out artifactorykey
+$ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactorykey -out artifactorycrt
+{%- language name="SSL With Domain", type="bash" -%}
+$ sudo openssl genrsa -des3 -out artifactorykey 2048
 Generating RSA private key, 2048 bit long modulus
 .........................+++
 ........................................................................+++
@@ -609,11 +604,8 @@ Certificate:
          1d:88:b2:2c:eb:20:3e:bf:3b:4e:9b:ab:b7:4f:e8:14:a8:1a:
          33:50:e9:a8:24:3e:5e:2a:68:ea:fa:f3:12:30:94:8e:0f:0d:
          da:6c:17:60
-</code></pre>
-</details>
-
-<details><summary>SSL With Domain</summary>
-<pre><code>$ sudo openssl genrsa -des3 -out artifactorykey 2048
+{%- language name="SSL with IP", type="bash" -%}
+$ sudo openssl genrsa -des3 -out artifactorykey 2048
 Generating RSA private key, 2048 bit long modulus
 ........................+++
 .......................................+++
@@ -704,6 +696,4 @@ Certificate:
          5c:45:a0:23:ea:1d:84:16:24:3d:88:a0:12:20:61:7a:f8:bd:
          dc:0f:fb:26:c0:f3:2f:1f:66:7e:64:35:b6:45:05:c4:00:43:
          2d:18:da:a1
-</code></pre>
-</details>
-
+{%- endcodetabs %}
