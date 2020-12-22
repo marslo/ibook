@@ -18,10 +18,10 @@
     - [others](#others)
   - [Windows](#windows)
   - [Linux](#linux)
+    - [ubuntu](#ubuntu)
 - [Artifactory HTTPS](#artifactory-https)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style='tip' %}
 > reference:
@@ -35,42 +35,42 @@
 ## create cert for server
 ### ca (root cert)
 {% codetabs name="command", type="bash" -%}
-$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048
+$ openssl genrsa -aes256 -out ca.key 2048
 $ openssl req -new \
               -x509 \
               -sha256 \
               -days 365 \
-              -key www.artifactory.mycompany.com-ca.key \
-              -out www.artifactory.mycompany.com-ca.crt \
+              -key ca.key \
+              -out ca.crt \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
 {%- language name="more details", type="bash" -%}
-$ openssl genrsa -aes256 -out www.artifactory.mycompany.com-ca.key 2048 Generating RSA private key, 2048 bit long modulus
+$ openssl genrsa -aes256 -out ca.key 2048 Generating RSA private key, 2048 bit long modulus
 ....................................................................+++
 ...................................................+++
 unable to write 'random state'
 e is 65537 (0x10001)
-Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
-Verifying - Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+Enter pass phrase for ca.key:artifactory
+Verifying - Enter pass phrase for ca.key:artifactory
 $ openssl req -new \
               -x509 \
               -sha256 \
               -days 365 \
-              -key www.artifactory.mycompany.com-ca.key \
-              -out www.artifactory.mycompany.com-ca.crt \
+              -key ca.key \
+              -out ca.crt \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
-Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+Enter pass phrase for ca.key:artifactory
 {%- endcodetabs %}
 
 ### cert for server (csr)
 {% codetabs name="command", type="bash" -%}
-$ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
+$ openssl genrsa -out  server.key 2048
 $ openssl req -new\
               -sha256 \
-              -key www.artifactory.mycompany.com-server.key \
-              -out www.artifactory.mycompany.com-server.csr \
+              -key server.key \
+              -out server.csr \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
 {%- language name="more details", type="bash" -%}
-$ openssl genrsa -out  www.artifactory.mycompany.com-server.key 2048
+$ openssl genrsa -out  server.key 2048
 Generating RSA private key, 2048 bit long modulus
 ......................................................................+++
 ............................................................................................................................................................................................................................+++
@@ -78,8 +78,8 @@ unable to write 'random state'
 e is 65537 (0x10001)
 $ openssl req -new \
               -sha256 \
-              -key www.artifactory.mycompany.com-server.key \
-              -out www.artifactory.mycompany.com-server.csr \
+              -key server.key \
+              -out server.csr \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
 {%- endcodetabs %}
 
@@ -92,10 +92,10 @@ $ openssl x509 -req \
                -days 365 \
                -sha256 \
                -CAcreateserial \
-               -CA www.artifactory.mycompany.com-ca.crt \
-               -CAkey www.artifactory.mycompany.com-ca.key \
-               -in www.artifactory.mycompany.com-server.csr \
-               -out www.artifactory.mycompany.com-server.crt \
+               -CA ca.crt \
+               -CAkey ca.key \
+               -in server.csr \
+               -out server.crt \
                -extfile extfile.cnf
 {%- language name="more details", type="bash" -%}
 $ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
@@ -105,28 +105,28 @@ $ openssl x509 -req \
                -days 365 \
                -sha256 \
                -CAcreateserial \
-               -CA www.artifactory.mycompany.com-ca.crt \
-               -CAkey www.artifactory.mycompany.com-ca.key \
-               -in www.artifactory.mycompany.com-server.csr \
-               -out www.artifactory.mycompany.com-server.crt \
+               -CA ca.crt \
+               -CAkey ca.key \
+               -in server.csr \
+               -out server.crt \
                -extfile extfile.cnf
 Signature ok
 subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
 Getting CA Private Key
-Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactory
+Enter pass phrase for ca.key:artifactory
 unable to write 'random state'
 
 $ ls
-extfile.cnf                             www.artifactory.mycompany.com-ca.key      www.artifactory.mycompany.com-server.csr  www.srl
-www.artifactory.mycompany.com-ca.crt  www.artifactory.mycompany.com-server.crt  www.artifactory.mycompany.com-server.key
+extfile.cnf                             ca.key      server.csr  www.srl
+ca.crt  server.crt  server.key
 {%- endcodetabs %}
 
 ### generate cert for client (cert) and singed by CA
 {% codetabs name="command", type="bash" -%}
-$ openssl genrsa -out www.artifactory.mycompany.com-client.key
+$ openssl genrsa -out client.key
 $ openssl req -new \
-              -key www.artifactory.mycompany.com-client.key \
-              -out www.artifactory.mycompany.com-client.csr \
+              -key client.key \
+              -out client.csr \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
 
 $ echo extendedKeyUsage = clientAuth >> extfile.cnf
@@ -134,13 +134,13 @@ $ openssl x509 -req \
                -days 365 \
                -sha256 \
                -CAcreateserial \
-               -CA www.artifactory.mycompany.com-ca.crt \
-               -CAkey www.artifactory.mycompany.com-ca.key \
-               -in www.artifactory.mycompany.com-client.csr \
-               -out www.artifactory.mycompany.com-client.cert \
+               -CA ca.crt \
+               -CAkey ca.key \
+               -in client.csr \
+               -out client.cert \
                -extfile extfile.cnf
 {%- language name="more details", type="bash" -%}
-$ openssl genrsa -out www.artifactory.mycompany.com-client.key 2048
+$ openssl genrsa -out client.key 2048
 Generating RSA private key, 2048 bit long modulus
 ................................................+++
 .......................+++
@@ -149,8 +149,8 @@ e is 65537 (0x10001)
 
 $ openssl req -new \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com" \
-              -key www.artifactory.mycompany.com-client.key \
-              -out www.artifactory.mycompany.com-client.csr
+              -key client.key \
+              -out client.csr
 
 $ echo extendedKeyUsage = clientAuth >> extfile.cnf
 $ cat extfile.cnf
@@ -162,26 +162,26 @@ $ openssl x509 -req \
                -days 365 \
                -sha256 \
                -CAcreateserial \
-               -CA www.artifactory.mycompany.com-ca.crt \
-               -CAkey www.artifactory.mycompany.com-ca.key \
-               -in www.artifactory.mycompany.com-client.csr \
-               -out www.artifactory.mycompany.com-client.cert \
+               -CA ca.crt \
+               -CAkey ca.key \
+               -in client.csr \
+               -out client.cert \
                -extfile extfile.cnf
 Signature ok
 subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
 Getting CA Private Key
-Enter pass phrase for www.artifactory.mycompany.com-ca.key:artifactor
+Enter pass phrase for ca.key:artifactor
 unable to write 'random state'
 {%- endcodetabs %}
 
 ### Update the file perm
 ```bash
-$ sudo chmod -v 0444 www.artifactory.mycompany.com-ca.crt \
-                     www.artifactory.mycompany.com-server.crt \
+$ sudo chmod -v 0444 ca.crt \
+                     server.crt \
                      client.cert
-$ sudo chmod -v 0400 www.artifactory.mycompany.com-ca.key \
+$ sudo chmod -v 0400 ca.key \
                      client.key \
-                     www.artifactory.mycompany.com-server.key
+                     server.key
 ```
 
 ### verify
@@ -189,11 +189,11 @@ $ sudo chmod -v 0400 www.artifactory.mycompany.com-ca.key \
 {% codetabs name="command", type="bash" -%}
 $ openssl x509 -noout \
                -text \
-               -in www.artifactory.mycompany.com-server.crt
+               -in server.crt
 {%- language name="openssl x509 ca.crt", type="bash" -%}
 $ openssl x509 -noout \
                -text \
-               -in www.artifactory.mycompany.com-ca.crt
+               -in ca.crt
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -257,7 +257,7 @@ Certificate:
 {%- language name="openssl x509 server.crt", type="bash" -%}
 $ openssl x509 -noout \
                -text \
-               -in www.artifactory.mycompany.com-server.crt
+               -in server.crt
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -318,11 +318,11 @@ Certificate:
 {% codetabs name="command", type="bash" -%}
 $ openssl req -noout \
               -text \
-              -in www.artifactory.mycompany.com-server.csr
+              -in server.csr
 {%- language name="openss req", type="bash" -%}
 $ openssl req -noout \
               -text \
-              -in www.artifactory.mycompany.com-server.csr
+              -in server.csr
 Certificate Request:
     Data:
         Version: 0 (0x0)
@@ -373,8 +373,8 @@ Certificate Request:
 ## certificate in Nginx
 ```bash
 $ grep ssl_certificate /etc/nginx/sites-enabled/artifactoryv2.conf
-ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.crt;
-ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.key;
+ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/server.crt;
+ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/server.key;
 ```
 
 # manage certificate in OS (client)
@@ -384,7 +384,7 @@ ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/www.artifac
 $ sudo security add-trusted-cert -d \
                                  -r trustRoot \
                                  -k "/Library/Keychains/System.keychain" \
-                                 "/Users/marslo/Downloads/www.artifactory.mycompany.com-ca.crt"
+                                 "/Users/marslo/Downloads/ca.crt"
 ```
 
 ### search
@@ -598,6 +598,29 @@ Getting Private key
 
 ## Windows
 ## Linux
+### ubuntu
+- add
+  ```bash
+  $ sudo cp ca.crt /usr/local/share/ca-certificates/
+  $ ls -Altrh !$
+  ls -altrh /usr/local/share/ca-certificates/
+  total 12K
+  -rw-r--r-- 1 root root 1.5K Jan  3 16:03 ca.crt
+
+  $ sudo update-ca-certificates
+  Updating certificates in /etc/ssl/certs...
+  1 added, 0 removed; done.
+  Running hooks in /etc/ca-certificates/update.d...
+  done.
+
+  $ sudo systemctl restart docker.service
+  ```
+- remove
+  ```bash
+  $ sudo rm -rf /usr/local/share/ca-certificates/ca.crt
+  $ sudo update-ca-certificates --fresh
+  $ sudo systemctl restart docker.service
+  ```
 
 # Artifactory HTTPS
 
