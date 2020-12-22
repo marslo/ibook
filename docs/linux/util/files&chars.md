@@ -19,6 +19,7 @@
 - [All About {Curly Braces} In Bash](#all-about-curly-braces-in-bash)
 - [find and replace](#find-and-replace)
 - [Shell Parameter Expansion](#shell-parameter-expansion)
+- [find and copy](#find-and-copy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -357,4 +358,14 @@ $ echo ${x%c}
 aabbc
 $ echo ${x%%c}
 aabbc
+```
+
+### find and copy
+```bash
+source="/Users/marslo/test/logs"
+target="/Users/marslo/test/logs/targetet"
+
+while IFS= read -r -d '' logFile; do
+  cp "${logFile}" "${target}"
+done < <(find "${source}" -maxdepth 1 -name '*.log' -print0)
 ```
