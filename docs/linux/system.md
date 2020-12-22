@@ -283,13 +283,24 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 
 ```bash
 $ useradd -c "comments here" \
+          -m \
           -d "/home/devops" \
           -u 1000 \
           -g 1000 \
-          -m \
           -s /bin/bash \
           devops
 ```
+- or
+  ```bash
+  $ useradd --comment "comments here" \
+            --create-home \
+            --home-dir /home/devops \
+            --shell /bin/bash \
+            --uid 1000 \
+            --gid 1000 \
+            --user-group devops
+            devops
+  ```
 
 - full steps
   ```bash
