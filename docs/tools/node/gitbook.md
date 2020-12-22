@@ -180,22 +180,34 @@ warning
 > -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)
 
 #### code
+- gitbook.io
+  {% raw %}
+  ```
+  {% tabs %}
+  {% tab title="bash" %}
+  {% code title="filename: bash.sh" %}
+  # bash
+  {% endcode %}
+  {% endtab %}
 
-{% raw %}
-```
-{% tabs %}
-{% tab title="bash" %}
-{% code title="filename: bash.sh" %}
-# bash
-{% endcode %}
-{% endtab %}
+  {% tab title="python" %}
+  python
+  {% endtab %}
+  {% endtabs %}
+  ```
+  {% endraw %}
 
-{% tab title="python" %}
-python
-{% endtab %}
-{% endtabs %}
-```
-{% endraw %}
+- [gitbook-plugin-codetabs](https://www.npmjs.com/package/gitbook-plugin-codetabs)
+
+  {% raw %}
+  ```bash
+  {% codetabs name="this is bash", type="bash" -%}
+  # type="bash"
+  {%- language name="this is python", type="python" -%}
+  # type="python"
+  {%- endcodetabs %}
+  ```
+  {% endraw %}
 
 ### emoji
 > **reference**:
