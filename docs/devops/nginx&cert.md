@@ -389,14 +389,14 @@ Certificate Request:
 ```
 <!--endsec-->
 
-### cert working with Nginx
+## cert in Nginx
 ```bash
 $ grep ssl_certificate /etc/nginx/sites-enabled/artifactoryv2.conf
 ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.crt;
 ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/www.artifactory.mycompany.com-server.key;
 ```
 
-## certificate working with os
+## cert in os
 ### MacOS
 ##### add
 ```bash
