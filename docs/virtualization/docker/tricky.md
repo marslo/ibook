@@ -7,11 +7,9 @@
   - [osx](#osx)
 - [others](#others)
 - [complete_alias](#complete_alias)
-- [get tags from docker hub](#get-tags-from-docker-hub)
-  - [simple script for get tags](#simple-script-for-get-tags)
-  - [get current container ID](#get-current-container-id)
-  - [get volume from container ID](#get-volume-from-container-id)
-  - [mount volume in DinD](#mount-volume-in-dind)
+- [get tags](#get-tags)
+  - [from artifactory](#from-artifactory)
+  - [from docker hub](#from-docker-hub)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -132,7 +130,32 @@ $ sudo curl -sSLg https://raw.githubusercontent.com/cykerway/complete-alias/mast
   done < <(alias | grep -E 'docker|kubectl' | sed '/^alias /!d;s/^alias //;s/=.*$//')
   ```
 
-## get tags from docker hub
+## get tags
+### [from artifactory](https://www.jfrog.com/confluence/display/JFROG/Docker+Registry#DockerRegistry-ListingDockerImages)
+
+- [list repos](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ListDockerRepositories)
+  > example: the docker registry in artifactory named `docker`
+
+```bash
+$ curl -sS https://my.artifactory.com/v2/docker/_catalog | jq -r .repositories[]
+```
+- or
+  ```bash
+  $ curl -sS -X GET https://my.artifactory.com/artifactory/api/docker/docker/v2/_catalog | jq -r .repositories[]
+  ```
+
+- [list tags](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ListDockerTags)
+  > example: get tags from repo `devops/ubuntu`
+
+```bash
+$ curl -sS https://my.artifactory.com/artifactory/v2/docker/devops/ubuntu/tags/list [ | jq -r .tags[] ]
+```
+- or
+  ```bash
+  $ curl -sS -X GET https://my.artifactory.com/artifactory/api/docker/docker/v2/devops/ubuntu/tags/list
+  ```
+
+### from docker hub
 ```bash
 $ curl -sS 'https://hub.docker.com/v2/repositories/jenkins/jenkins/tags' \
       | jq --raw-output .results[].name
@@ -162,7 +185,7 @@ lts-centos
            | sort
     ```
 
-### simple script for get tags
+#### simple script for get tags
 ```bash
 #!/bin/sh
 #
@@ -181,7 +204,7 @@ for _r in $* ; do
 done
 ```
 
-### get current container ID
+#### get current container ID
 ```bash
 $ basename $(cat /proc/self/cpuset)
 ab8c1732f1a3fdb46b9f9a477f0fbcc1d23c6787d7532648242a76d6eb1e8b84
@@ -192,7 +215,7 @@ ab8c1732f1a3fdb46b9f9a477f0fbcc1d23c6787d7532648242a76d6eb1e8b84
   ab8c1732f1a3
   ```
 
-### [get volume from container ID](https://stackoverflow.com/a/30133768/2940319)
+#### [get volume from container ID](https://stackoverflow.com/a/30133768/2940319)
 {% raw %}
 ```bash
 $ docker inspect -f '{{ .Mounts }}' <container ID>
@@ -223,7 +246,7 @@ $ docker inspect -f '{{ .Mounts }}' <container ID>
   {% endraw %}
 
 
-### mount volume in DinD
+#### mount volume in DinD
 > reference:
 > - [Mounting Volumes in Sibling Containers with Gitlab CI](https://medium.com/@patrick.winters/mounting-volumes-in-sibling-containers-with-gitlab-ci-534e5edc4035)
 > - [Mount volumes from container (--volumes-from)](https://docs.docker.com/engine/reference/commandline/run/#mount-volumes-from-container---volumes-from)

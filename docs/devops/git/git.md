@@ -10,6 +10,7 @@ Git Command Study and practice
 - [git branch](#git-branch)
   - [create empty branch](#create-empty-branch)
   - [get branch name from reversion](#get-branch-name-from-reversion)
+  - [get upstream branch](#get-upstream-branch)
 - [git log](#git-log)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
@@ -42,10 +43,16 @@ Git Command Study and practice
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
 > reference:
+> - [git reference](https://git-scm.com/docs)
+> - [git cheatsheet](https://ndpsoftware.com/git-cheatsheet.html#loc=stash;)
+> - [git commands](https://git-scm.com/docs/git#_git_commands)
+> - [schacon/plumbing.md](https://gist.github.com/schacon/1153310)
 > - [git-tips/tips](https://github.com/git-tips/tips)
 > - [521xueweihan/git-tips](https://github.com/521xueweihan/git-tips)
 > - [CS Visualized: Useful Git Commands](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
+{% endhint %}
 
 ## Appoint
 ### [Git Alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.gitalias)
@@ -118,7 +125,6 @@ rlog    = "!bash -c 'while read branch; do \n\
     remotes/origin/master
   ```
   or
-
   ```bash
   $ git branch -r --contains a3879d3
   origin/master
@@ -129,6 +135,38 @@ rlog    = "!bash -c 'while read branch; do \n\
   $ git name-rev a3879d3
   a3879d3 master~12
   ```
+
+### get upstream branch
+- get current
+  ```bash
+  $ git rev-parse --abbrev-ref --symbolic-full-name @{u}
+  origin/marslo
+  ```
+  - or
+    ```bash
+    $ git for-each-ref --format='%(upstream)' $(git symbolic-ref -q HEAD)
+    refs/remotes/origin/marslo
+    ```
+  - or for `meta/config`
+    ```bash
+    $ git symbolic-ref -q HEAD
+    refs/heads/meta/config
+    $ git for-each-ref --format='%(upstream)' $(git symbolic-ref -q HEAD)
+    refs/remotes/origin/meta/config
+    $ git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
+    origin/meta/config
+    ```
+
+- get specific
+  ```bash
+  $ git rev-parse --abbrev-ref gh-pages@{upstream}
+  origin/gh-pages
+  ```
+  - or
+    ```bash
+    $ git for-each-ref --format='%(upstream:short)' $(git rev-parse --symbolic-full-name meta/config)
+    origin/meta/config
+    ```
 
 ## git log
 ### show files and status without comments
