@@ -409,16 +409,16 @@ http://www.baidu.com
 
 ## insert new line
 - insert right after the second match string
-{% codetabs name="original", type="bash" -%}
-DCR
-DCR
-DCR
-{%- language name="expected", type="bash" -%}
-DCR
-DCR
-check
-DCR
-{%- endcodetabs %}
+  {% codetabs name="original", type="bash" -%}
+  DCR
+  DCR
+  DCR
+  {%- language name="expected", type="bash" -%}
+  DCR
+  DCR
+  check
+  DCR
+  {%- endcodetabs %}
 
 ```bash
 $ echo -e "DCR\nDCR\nDCR" |awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'

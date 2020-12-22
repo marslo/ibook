@@ -8,12 +8,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
 > reference:
 > - [Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
 > - [Bash Colors](https://www.shellhacks.com/bash-colors/)
 > - [color grid](http://www.quut.com/berlin/ht/cgrid.html)
 > - [What color codes can I use in my PS1 prompt?](https://unix.stackexchange.com/a/124409/29178)
 > - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
+{% endhint %}
 
 ## scripts
 ### bash
