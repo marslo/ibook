@@ -16,8 +16,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 ## install from commandline
 ```bash
 $ hdiutil attach  VirtualBox-6.0.24-139119-OSX.dmg
@@ -31,6 +29,8 @@ $ usr/bin/sudo -E -- /usr/bin/env LOGNAME=marslo USER=marslo USERNAME=marslo \
 ```
 
 ## [uninstall](https://osxdaily.com/2019/01/25/uninstall-virtualbox-mac-completely/)
+[VirtualBox_Uninstall.tool)](./VirtualBox_Uninstall.tool)
+
 ![uninstall](../screenshot/vbox-uninstall.png)
 
 ## install vms
