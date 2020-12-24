@@ -175,12 +175,13 @@ $ DevToolsSecurity -enable
 
 ## system info
 - production version
+  > [issue in fetchScreen](https://github.com/KittyKatt/screenFetch/issues/692#issuecomment-726631900)
 
 ```bash
 $ sw_vers
-ProductName:    Mac OS X
-ProductVersion: 10.15
-BuildVersion:   19A602
+ProductName    : macOS
+ProductVersion : 11.1
+BuildVersion   : 20C69
 ```
 
   - [or](https://apple.stackexchange.com/a/368722/254265)
@@ -224,11 +225,58 @@ BuildVersion:   19A602
         Unique ID: 0x8020000005ac8514
   ```
 
+- grahics & display
+  ```bash
+  $ system_profiler SPDisplaysDataType
+  Graphics/Displays:
+
+      Intel UHD Graphics 630:
+
+        Chipset Model: Intel UHD Graphics 630
+        Type: GPU
+        Bus: Built-In
+        VRAM (Dynamic, Max): 1536 MB
+        Vendor: Intel
+        Device ID: 0x3e**
+        Revision ID: 0x00**
+        Automatic Graphics Switching: Supported
+        gMux Version: 5.0.0
+        Metal Family: Supported, Metal GPUFamily macOS 2
+        Displays:
+          Color LCD:
+            Display Type: Built-In Retina LCD
+            Resolution: 3072 x 1920 Retina
+            Framebuffer Depth: 24-Bit Color (ARGB8888)
+            Main Display: Yes
+            Mirror: Off
+            Online: Yes
+            Automatically Adjust Brightness: Yes
+            Connection Type: Internal
+
+      AMD Radeon Pro 5500M:
+
+        Chipset Model: AMD Radeon Pro 5500M
+        Type: GPU
+        Bus: PCIe
+        PCIe Lane Width: x8
+        VRAM (Total): 8 GB
+        Vendor: AMD (0x1002)
+        Device ID: 0x73**
+        Revision ID: 0x00**
+        ROM Revision: 113-******-***
+        VBIOS Version: 113-********-***
+        Option ROM Version: 113-********-***
+        EFI Driver Version: 01.A1.190
+        Automatic Graphics Switching: Supported
+        gMux Version: 5.0.0
+        Metal Family: Supported, Metal GPUFamily macOS 2
+  ```
+
 - cpu
 
   ```bash
   $ sysctl -n machdep.cpu.brand_string
-  Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+  Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
   ```
 
   - or
@@ -237,19 +285,21 @@ BuildVersion:   19A602
     machdep.cpu.max_basic: 22
     machdep.cpu.max_ext: 2147483656
     machdep.cpu.vendor: GenuineIntel
-    machdep.cpu.brand_string: Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
+    machdep.cpu.brand_string: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
     machdep.cpu.family: 6
     machdep.cpu.model: 158
+    machdep.cpu.extmodel: 9
     ...
     ```
 
 ## system
 ### setup hostname
 ```bash
-$ sudo scutil --set HostName [HOSTNAME]
-$ sudo scutil --set LocalHostName [HOSTNAME]
+$ HNAME='iMarsloPro'
+$ sudo scutil --set HostName "${HNAME}"
+$ sudo scutil --set LocalHostName "${HNAME}"
 # Optional
-$ sudo scutil --set ComputerName [HOSTNAME]
+$ sudo scutil --set ComputerName "${HNAME}"
 # Flush the DNS Cache
 $ dscacheutil -flushcache
 $ sudo shutdown -r now
