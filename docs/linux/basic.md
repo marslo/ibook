@@ -14,6 +14,8 @@
 - [Basic Commands](#basic-commands)
   - [`du`](#du)
   - [sed](#sed)
+  - [others](#others)
+    - [`you have new mail`](#you-have-new-mail)
 - [CentOS](#centos)
   - [Yum](#yum)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
@@ -300,6 +302,15 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
 ## sed
 > reference
 > - [50 `sed` Command Examples](https://linuxhint.com/50_sed_command_examples/)
+
+## others
+### `you have new mail`
+- [remove](https://apple.stackexchange.com/a/28747/254265)
+  ```bash
+  $ mail
+  ? delete *
+  ? q
+  ```
 
 # CentOS
 ## Yum

@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [change Mac default settings](#change-mac-default-settings)
+  - [disable the startup sounds](#disable-the-startup-sounds)
   - [Enable Key Repeat](#enable-key-repeat)
   - [Disable the .DS_Store file](#disable-the-ds_store-file)
   - [Enable the Hidden file](#enable-the-hidden-file)
@@ -13,12 +14,22 @@
   - [Disable Notification Center](#disable-notification-center)
   - [Disable the download apps security](#disable-the-download-apps-security)
   - [Disable the dashboard](#disable-the-dashboard)
+- [backup & restore](#backup--restore)
+  - [Moon](#moon)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 ## change Mac default settings
+### [disable the startup sounds](https://www.youtube.com/watch?v=_OjQIh4Ro5A)
+- disable
+  ```bash
+  $ sudo nvram StartupMute=%01
+  ```
+- enable
+  ```bash
+  $ sudo nvram StartupMute=%00
+  ```
+
 ### Enable Key Repeat
 ```bash
 $ defaults write -g ApplePressAndHoldEnabled -bool false
@@ -135,4 +146,16 @@ $ defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
 - re-enable the dashboard
   ```bash
   $ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
+  ```
+
+## backup & restore
+### [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)
+- backup
+  ```bash
+  $ defaults export com.manytricks.Moom ~/Desktop/Moom.plist
+  ```
+
+- restore
+  ```bash
+  $ defaults import com.manytricks.Moom ~/Desktop/Moom.plist
   ```
