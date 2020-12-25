@@ -4,11 +4,11 @@
 #   FileName : deploy.sh
 #     Author : marslo.jiao@gmail.com
 #    Created : 2020-09-27 22:03:34
-# LastChange : 2020-09-27 22:03:34
+# LastChange : 2020-12-25 23:32:24
 # =============================================================================
 
-target='.target_book'
-book='_book'
+target="$(git rev-parse --show-toplevel)/.target_book"
+book="$(git rev-parse --show-toplevel)/_book"
 branch='gh-pages'
 remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
 msg=$(git show HEAD --no-patch --format="%s")
@@ -113,6 +113,7 @@ function updateBook() {
 
 function doDeploy() {
   rebuiltToc
+
   if [ -d "${target}" ]; then
     updateRepo
   else
