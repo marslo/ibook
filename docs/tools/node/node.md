@@ -12,6 +12,7 @@
   - [macOS](#macos)
 - [QnA](#qna)
   - [empty of `npm ls -g`](#empty-of-npm-ls--g)
+  - [env: node: No such file or directory](#env-node-no-such-file-or-directory)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -207,4 +208,37 @@ $ npm ls -g
 ├── commitizen@4.2.1
 ├── diff-so-fancy@1.3.0
 ├── ...
+```
+
+### env: node: No such file or directory
+
+#### possible cause
+```bash
+   ╭─────────────────────────────────────────────────────────────────╮
+   │                                                                 │
+   │      New patch version of npm available! 6.14.8 → 6.14.10       │
+   │   Changelog: https://github.com/npm/cli/releases/tag/v6.14.10   │
+   │                Run npm install -g npm to update!                │
+   │                                                                 │
+   ╰─────────────────────────────────────────────────────────────────╯
+
+$ npm i -g npm
+/usr/local/bin/npx -> /usr/local/lib/node_modules/npm/bin/npx-cli.js
+/usr/local/bin/npm -> /usr/local/lib/node_modules/npm/bin/npm-cli.js
++ npm@6.14.10
+added 435 packages from 887 contributors in 4.481s
+```
+
+#### [solution](https://github.com/nvm-sh/nvm/issues/1702#issuecomment-444309875)
+```bash
+$ which node
+/usr/local/opt/node@12/bin/node
+
+$ sudo chown -R $(whoami) $(brew --prefix)/*
+
+$ brew link --overwrite node@12
+Linking /usr/local/Cellar/node@12/12.20.0... 3808 symlinks created
+
+If you need to have this software first in your PATH instead consider running:
+  echo 'export PATH="/usr/local/opt/node@12/bin:$PATH"' >> /Users/marslo/.bash_profile
 ```
