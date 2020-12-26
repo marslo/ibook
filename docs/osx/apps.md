@@ -25,6 +25,76 @@
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
+#### [homebrewCN](https://gitee.com/Busch/HomebrewCN)
+```bash
+$ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+```
+
+#### [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
+- official
+  ```bash
+  brew_source='https://github.com/Homebrew'
+  # brew 程序本身
+  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+
+  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+
+  brew update
+  ```
+
+- tsinghua (清华)
+  ```bash
+  brew_source='https://mirrors.tuna.tsinghua.edu.cn/git/homebrew'
+  # brew 程序本身
+  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+  ```
+- ustc (中科大)
+  ```bash
+  brew_source='https://mirrors.ustc.edu.cn'
+  # brew 程序本身
+  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+
+  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  ```
+- ali (阿里)
+  ```bash
+  brew_source='https://mirrors.aliyun.com/homebrew'
+  # brew 程序本身
+  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  ```
+
+- tencent
+  ```bash
+  brew_source='https://mirrors.cloud.tencent.com/homebrew'
+  # brew 程序本身
+  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+
+  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+  ```
+
+#### Homebrew Bottles
+> address:
+> - `https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles`
+> - `https://mirrors.ustc.edu.cn/homebrew-bottles`
+> - `https://mirrors.aliyun.com/homebrew/homebrew-bottles`
+> - `https://mirrors.cloud.tencent.com/homebrew-bottles`
+
+```bash
+$ export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.cloud.tencent.com/homebrew-bottles
+```
+
 ### Homebrew Caskroom Installation
 ```bash
 $ brew tap caskroom/versions
@@ -262,10 +332,10 @@ $ brew -v edit macvim-dev/macvim/macvim
   ```bash
   $ brew config
   HOMEBREW_VERSION: 2.6.0-211-g2c77a54
-  ORIGIN: https://github.com/Homebrew/brew
+  ORIGIN: ${brew_source}/brew
   HEAD: 2c77a540b522c2eee74af0745851167412adb83b
   Last commit: 68 minutes ago
-  Core tap ORIGIN: https://github.com/Homebrew/homebrew-core
+  Core tap ORIGIN: ${brew_source}/homebrew-core
   Core tap HEAD: 4fb418f9d1b35c372d82d0b49b0f1df9143be236
   Core tap last commit: 20 minutes ago
   Core tap branch: master
@@ -300,7 +370,7 @@ $ brew -v edit macvim-dev/macvim/macvim
   $ brew --repo homebrew/core
   /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
   ```
-- [cleanup](https://github.com/Homebrew/brew/issues/3784#issuecomment-364675767)
+- [cleanup](${brew_source}/brew/issues/3784#issuecomment-364675767)
   ```bash
   # Remove all cache files older than specified days
   $ brew cleanup --prune=1
@@ -519,6 +589,16 @@ $ npm install -g gitbook-summary
 - usage:
   ```bash
   $ book sm -d -t 'life is hard, make it easier'
+  ```
+
+#### npm-completion
+```bash
+$ npm i -g npm-completion
+```
+- usage
+  ```bash
+  $ PATH_TO_NPM_COMPLETION="/usr/local/lib/node_modules/npm-completion"
+  $ source $PATH_TO_NPM_COMPLETION/npm-completion.sh
   ```
 
 #### [reveal.js](https://github.com/hakimel/reveal.js)
