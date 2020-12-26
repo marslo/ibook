@@ -397,3 +397,16 @@ EOF
   ```bash
   $ launchctl remove i.marslo.updatedb
   ```
+
+## Q&A
+### `SUPreferenceManager: Failed to set object of class: __NSCFString`
+- issue:
+  ```bash
+  $ softwareupdate --fetch-full-installer
+  Downloading and installing com.apple.InstallAssistant.macOSBigSur installer
+  SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
+  SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
+  SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
+  Installing: 90.0%SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
+  Install failed with error: 0
+  ```

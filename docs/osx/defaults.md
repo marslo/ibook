@@ -20,6 +20,7 @@
   - [dock](#dock)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
+  - [vscode](#vscode)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -585,3 +586,17 @@ $ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
   ```bash
   $ defaults import com.manytricks.Moom ~/Desktop/Moom.plist
   ```
+
+### vscode
+#### [extension](https://superuser.com/a/1452176)
+- backup
+  ```bash
+  $ code --list-extensions >> vs_code_extensions_list.txt
+  ```
+- restore
+  ```bash
+  $ cat vs_code_extensions_list.txt | xargs -n 1 code --install-extension
+  ```
+
+#### [settings](https://superuser.com/a/1481920)
+- `$HOME/Library/Application Support/Code/User/settings.json`
