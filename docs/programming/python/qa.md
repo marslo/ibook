@@ -321,3 +321,13 @@ $ which -a pip3
   $ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   $ /usr/bin/python get-pip.py
   ```
+
+
+### [python install with `tcl-tk`](https://stackoverflow.com/a/60469243/2940319)
+```bash
+$ export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
+$ export LDFLAGS="-L/usr/local/opt/tcl-tk/lib"
+$ export CPPFLAGS="-I/usr/local/opt/tcl-tk/include"
+$ export PKG_CONFIG_PATH="/usr/local/opt/tcl-tk/lib/pkgconfig"
+$ brew reinstall python
+```
