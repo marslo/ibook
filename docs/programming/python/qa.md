@@ -6,6 +6,7 @@
   - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
   - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
   - [`No module named pip`](#no-module-named-pip)
+  - [python install with `tcl-tk`](#python-install-with-tcl-tk)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
