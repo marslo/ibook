@@ -15,6 +15,8 @@
   - [BackgroundMusic](#backgroundmusic)
   - [Mac CLI](#mac-cli)
   - [Others](#others)
+- [Q&A](#qa)
+  - [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -659,3 +661,47 @@ $ sudo gem install iStats -n /usr/local/bin
 
   For more stats run `istats extra` and follow the instructions.
   ```
+
+## Q&A
+### [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
+- issue
+  ```bash
+  Failed to connect to raw.githubusercontent.com port 443: Connection refused
+  ```
+- solution
+  ```bash
+  sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
+  ```
+  - checking host IP address via [https://www.ipaddress.com/](https://www.ipaddress.com/)
+
+- additional
+  > reference:
+  > - [DNS查询](http://tool.chinaz.com/dns/)
+  > - [iP或域名查询](https://site.ip138.com/)
+  > flush DNS via `sudo killall -HUP mDNSResponder`
+
+```bash
+sudo bash -c cat >> /etc/hosts << EOF
+# GitHub Start
+52.74.223.119     github.com
+192.30.253.119    gist.github.com
+54.169.195.247    api.github.com
+185.199.111.153   assets-cdn.github.com
+199.232.28.133    raw.githubusercontent.com
+# 199.232.96.133  raw.githubusercontent.com
+# 151.101.76.133  raw.githubusercontent.com
+151.101.76.133    gist.githubusercontent.com
+151.101.76.133    cloud.githubusercontent.com
+151.101.76.133    camo.githubusercontent.com
+151.101.76.133    avatars0.githubusercontent.com
+151.101.76.133    avatars1.githubusercontent.com
+151.101.76.133    avatars2.githubusercontent.com
+151.101.76.133    avatars3.githubusercontent.com
+151.101.76.133    avatars4.githubusercontent.com
+151.101.76.133    avatars5.githubusercontent.com
+151.101.76.133    avatars6.githubusercontent.com
+151.101.76.133    avatars7.githubusercontent.com
+151.101.76.133    avatars8.githubusercontent.com
+# GitHub End
+EOF
+```
