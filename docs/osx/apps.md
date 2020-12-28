@@ -15,6 +15,8 @@
   - [BackgroundMusic](#backgroundmusic)
   - [Mac CLI](#mac-cli)
   - [Others](#others)
+- [Q&A](#qa)
+  - [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -659,3 +661,15 @@ $ sudo gem install iStats -n /usr/local/bin
 
   For more stats run `istats extra` and follow the instructions.
   ```
+
+## Q&A
+### [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
+- issue
+  ```bash
+  Failed to connect to raw.githubusercontent.com port 443: Connection refused
+  ```
+- solution
+  ```bash
+  sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
+  ```
+  - checking host IP address via [https://www.ipaddress.com/](https://www.ipaddress.com/)

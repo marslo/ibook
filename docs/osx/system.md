@@ -25,6 +25,8 @@
 - [clean OSX native dot file](#clean-osx-native-dot-file)
 - [launchctl](#launchctl)
   - [create new plist](#create-new-plist)
+- [Q&A](#qa)
+  - [`SUPreferenceManager: Failed to set object of class: __NSCFString`](#supreferencemanager-failed-to-set-object-of-class-__nscfstring)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
