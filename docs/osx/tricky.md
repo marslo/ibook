@@ -5,8 +5,17 @@
 - [copy path](#copy-path)
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
-  - [create an app for script](#create-an-app-for-script)
-  - [add snippets for input](#add-snippets-for-input)
+- [create an app for script](#create-an-app-for-script)
+  - [get standalone commands for the script](#get-standalone-commands-for-the-script)
+  - [using Automator.app to create an app](#using-automatorapp-to-create-an-app)
+  - [edit `Contents/Info.plist`](#edit-contentsinfoplist)
+  - [create script to open the groovyConsole](#create-script-to-open-the-groovyconsole)
+  - [set the icon for new app](#set-the-icon-for-new-app)
+  - [move `groovyConsole.app` to `/Application`](#move-groovyconsoleapp-to-application)
+- [add snippets for input](#add-snippets-for-input)
+  - [enable Technical Symbols](#enable-technical-symbols)
+  - [And snippets](#and-snippets)
+  - [finally](#finally)
 - [others](#others)
   - [launch apps](#launch-apps)
   - [create image](#create-image)
@@ -16,6 +25,7 @@
   - [take screenshot after 3 sec](#take-screenshot-after-3-sec)
   - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
   - [show message on desktop](#show-message-on-desktop)
+  - [modify font in plist](#modify-font-in-plist)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -67,11 +77,11 @@ $ <cmd> | pbcopy
 
 ![copy path shortcut key](../screenshot/osx/copy-path-shortcut.png)
 
-### create an app for script
+## create an app for script
 > case: run `groovyConsole` from Spolite or Alfred
 > reference: [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
 
-#### get standalone commands for the script
+### get standalone commands for the script
 ```bash
 $ ps aux | grep groovyConsole | grep -v grep
 marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -Dgroovy.jaxb=jaxb -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
@@ -93,7 +103,7 @@ marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /
         --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
 ```
 
-#### using Automator.app to create an app
+### using Automator.app to create an app
 - Open **Automator.app** » **New** » **Application**
   ![Automator.app » select Applicaiton](../screenshot/osx/runable-app-1.png)
 - Select **Run Shell Script** » save to <name>.app with empty shell script
@@ -101,7 +111,7 @@ marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /
 
   ![Automator.app » save to an app](../screenshot/osx/runable-app-3.png)
 
-#### edit `Contents/Info.plist`
+### edit `Contents/Info.plist`
 ```bash
 $ vim groovyConsole.app/Contents/Info.plist
 ...
@@ -124,7 +134,7 @@ $ vim groovyConsole.app/Contents/Info.plist
   <string>com.apple.automator.groovyConsole</string>
   ```
 
-#### create script to open the groovyConsole
+### create script to open the groovyConsole
 ```bash
 $ touch groovyConsole.app/Contents/MacOS/groovyConsole
 
@@ -150,7 +160,7 @@ $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 - try validate via execute `groovyConsole.app/Contents/MacOS/groovyConsole` directly. to see whether if the groovyConsole will be opened.
   ![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
 
-#### set the icon for new app
+### set the icon for new app
 > optional
 
 ```bash
@@ -161,13 +171,13 @@ $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Re
   $ ln -sf /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources/groovy.icns
   ```
 
-#### move `groovyConsole.app` to `/Application`
+### move `groovyConsole.app` to `/Application`
 ```bash
 $ mv groovyConsole.app/ /Applications/
 ```
 
-### [add snippets for input](https://sspai.com/post/36203)
-#### enable Technical Symbols
+## [add snippets for input](https://sspai.com/post/36203)
+### enable Technical Symbols
 - Input Method ⇢ **Show emoji and symbols**
   ![show emoji & symbols](../screenshot/osx/snippets-0.png)
 
@@ -176,12 +186,12 @@ $ mv groovyConsole.app/ /Applications/
 
   ![technical symbols](../screenshot/osx/snippets-2.png)
 
-#### And snippets
+### And snippets
 - go to **System Preferences** ⇢ **Keyboard** ⇢ **Test**
 - Add snippets as below
   ![snippets](../screenshot/osx/snippets-3.png)
 
-#### finally
+### finally
 ![test-1](../screenshot/osx/snippets-4.png)
 ![test-2](../screenshot/osx/snippets-5.png)
 
@@ -280,3 +290,47 @@ $ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText
 ```bash
 $ sudo jamf displayMessage -message "Hello World!"
 ```
+
+### modify font in plist
+- original
+  ```bash
+  $ defaults read ~/Library/Preferences/groovy.console.ui.plist
+  {
+      "/groovy/console/ui/" =     {
+          autoClearOutput = true;
+          compilerPhase = 4;
+          currentFileChooserDir = "/Users/marslo/Desktop";
+          decompiledFontSize = 12;
+          fontSize = 18;
+          frameHeight = 600;
+          frameWidth = 800;
+          frameX = 198;
+          frameY = 201;
+          horizontalSplitterLocation = 100;
+          inputAreaHeight = 576;
+          inputAreaWidth = 1622;
+          outputAreaHeight = 354;
+          outputAreaWidth = 1676;
+          showClosureClasses = false;
+          showIndyBytecode = false;
+          showScriptClass = true;
+          showScriptFreeForm = false;
+          showScriptInOutput = false;
+          showTreeView = true;
+          threadInterrupt = true;
+          verticalSplitterLocation = 100;
+      };
+  }
+  ```
+
+  - [or](https://stackoverflow.com/a/56238780/2940319)
+    ```bash
+    $ /usr/libexec/PlistBuddy -c 'print ":/groovy/console/ui/:fontSize"' ~/Library/Preferences/groovy.console.ui.plist
+    18
+    ```
+- change
+  ```bash
+  $ /usr/libexec/PlistBuddy -c 'Set ":/groovy/console/ui/:fontSize" 24' ~/Library/Preferences/groovy.console.ui.plist
+  $ /usr/libexec/PlistBuddy -c 'Print ":/groovy/console/ui/:fontSize"' ~/Library/Preferences/groovy.console.ui.plist
+  24
+  ```
