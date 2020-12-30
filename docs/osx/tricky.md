@@ -26,6 +26,7 @@
   - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
   - [show message on desktop](#show-message-on-desktop)
   - [modify font in plist](#modify-font-in-plist)
+  - [show process details](#show-process-details)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -239,6 +240,25 @@ $ launchctl list
   $ diskutil list
   ```
 
+  - or [lsblk](https://command-not-found.com/lsblk)
+    ```bash
+    $ docker run cmd.cat/lsblk lsblk
+    NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+    vda    254:0    0  16G  0 disk
+    └─vda1 254:1    0  16G  0 part /etc/hosts
+    ```
+
+  - or [lshw](https://command-not-found.com/lshw)
+    ```bash
+    $ docker run cmd.cat/lshw lshw -class disk
+      *-virtio1
+           description: Virtual I/O device
+           physical id: 0
+           bus info: virtio@1
+           logical name: vda
+           configuration: driver=virtio_blk
+    ```
+
 - list the apfs info
   ```bash
   $ diskutil apfs list
@@ -265,6 +285,27 @@ $ launchctl list
   21:03:47  select       0.000004   privoxy
   ...
   ```
+
+#### [check usb](https://apple.stackexchange.com/a/170118/254265)
+```bash
+$ system_profiler SPUSBDataType
+```
+- or get xml format
+  ```bash
+  $ system_profiler -xml SPUSBDataType
+  ```
+- or
+  ```bash
+  $ ioreg -p IOUSB
+  ```
+- or
+  ```bash
+  $ ioreg -p IOUSB -w0 -l
+  ```
+  - or get device name
+    ```bash
+     $ ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*'
+    ```
 
 ### disable startup music
 ```bash
@@ -334,3 +375,6 @@ $ sudo jamf displayMessage -message "Hello World!"
   $ /usr/libexec/PlistBuddy -c 'Print ":/groovy/console/ui/:fontSize"' ~/Library/Preferences/groovy.console.ui.plist
   24
   ```
+
+### show process details
+![activity monitor](../screenshot/osx/activity-monitor.png)
