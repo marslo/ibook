@@ -19,3 +19,18 @@ manager.addBadge("/plugin/artifactory/images/artifactory-promote.png", "promoted
 - how to find it
 
 ![using icon from another plugin](../../screenshot/jenkins/badge.png)
+
+#### badge images
+- to generate the images
+  ```groovy
+  String png = 'aborted accept attribute blue clipboard computer-x computer copy dark-grey disabled document empty error fingerprint folder-delete folder freestyleproject gear2 graph grey health-00to19 health-20to39 health-40to59 health-60to79 health-80plus help installer light-grey lock monitor network nobuilt notepad orange-square package plugin red redo refresh search secure setting star-gold star system-log-out terminal user warning yellow'
+  png.split().each {
+    manager.createSummary("${it}.png").appendText("<b><code>${it}.png</code></pre>")
+  }
+  ```
+
+- dark theme
+![image for dark theme](../../screenshot/jenkins/postgroovy-darktheme-images.png)
+
+- [jenkins material theme](http://afonsof.com/jenkins-material-theme/)
+![images](../../screenshot/jenkins/postgroovy-default-images.png)
