@@ -12,6 +12,7 @@
 - [system](#system)
   - [setup hostname](#setup-hostname)
   - [disable guest user](#disable-guest-user)
+  - [enable root user](#enable-root-user)
   - [System Integrity Protection](#system-integrity-protection)
 - [app](#app)
   - [java](#java)
@@ -354,6 +355,9 @@ $ keychain='/Users/Guest/Library/Keychains/login.keychain'
 $ security create-keychain -p '' $keychain
 $ security login-keychain -s $keychain
 ```
+
+### [enable root user](https://support.apple.com/en-us/HT204012)
+![Enable Root User](../screenshot/osx/enable-root-user.png)
 
 ### [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
 ```bash
