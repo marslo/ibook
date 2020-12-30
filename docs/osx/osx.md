@@ -307,9 +307,52 @@ $ sudo shutdown -r now
 
 ### disable guest user
 ```bash
-$ dscl . delete /Users/Guest
+$ sudo dscl . delete /Users/Guest
 $ sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess -bool NO
 $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server AllowGuestAccess -bool NO
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool FALSE
+
+# remove Other
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool FALSE
+```
+- or
+  ```bash
+  $ sudo /usr/sbin/sysadminctl -deleteUse Guest
+  ```
+[check status](https://apple.stackexchange.com/a/402502/254265)
+```bash
+$ sysadminctl -guestAccount status
+2020-12-30 20:27:59.524 sysadminctl[45327:844298] Guest account disabled.
+$ sudo sysadminctl -guestAccount off
+2020-12-30 20:28:39.645 sysadminctl[45479:846930] Guest account is already disabled
+```
+
+- list all accounts
+  ```bash
+  $ dscl . list /Users
+  ```
+  or
+  ```bash
+  $ dscl . -list /Users GeneratedUID
+  ```
+  ![check which user is using the disk](../screenshot/osx/which-user-using-disk.png)
+
+  [or](https://apple.stackexchange.com/q/310308/254265)
+  ```bash
+  $ dscacheutil -q user
+  ```
+  - location of plists: `/var/db/dslocal/nodes/Default/users`
+
+#### create Guest and enable
+> scripts: https://github.com/sheagcraig/guestAccount/blob/master/guest_account
+
+```bash
+$ dscl . -create /Users/Guest
+
+# keychain
+$ keychain='/Users/Guest/Library/Keychains/login.keychain'
+$ security create-keychain -p '' $keychain
+$ security login-keychain -s $keychain
 ```
 
 ### [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
