@@ -17,6 +17,20 @@
 
 ![J-gJ](../../screenshot/vim/J-gJ.gif)
 
+### [search (in)sensitive](https://stackoverflow.com/a/2288438/2940319)
+> reference:
+> - [7. Ignoring case in a pattern](https://vimhelp.org/pattern.txt.html#%2F%5Cc)
+
+```bash
+:set ignorecase
+:set smartcase
+/example      " Case insensitive
+/Example      " Case sensitive
+/example\C    " Case sensitive
+/Example\c    " Case insensitive
+```
+![search-case-sensitive](../../screenshot/vim/search-ignoreCase.gif)
+
 ### [list all `filetype`](https://vi.stackexchange.com/a/14990/7389)
 ```
 :echo getcompletion('', 'filetype')
