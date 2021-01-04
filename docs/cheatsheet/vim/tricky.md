@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
+- [search (in)sensitive](#search-insensitive)
 - [list all `filetype`](#list-all-filetype)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
 - [Using vim as a man-page viewer under Unix](#using-vim-as-a-man-page-viewer-under-unix)

@@ -7,6 +7,7 @@
 * [cheatsheet](cheatsheet/good.md)
   * [vim](cheatsheet/vim/vim.md)
     * [tricky](cheatsheet/vim/tricky.md)
+    * [windows](cheatsheet/vim/windows.md)
     * [plugins](cheatsheet/vim/plugins.md)
   * [windows](cheatsheet/windows/windows.md)
     * [clsid](cheatsheet/windows/clsid.md)
