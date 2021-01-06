@@ -240,12 +240,95 @@ $ cat a | xargs
 1 2 3 4 5
 ```
 
-### Get the file inode
+### inode
 
+#### get inode of a file
 ```bash
 $ l -i a_b
 10224132 -rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a_b
 ```
+
+#### get inodes in a folder
+- [`stat`](https://unix.stackexchange.com/a/121836/29178)
+  ```bash
+  $ stat -c '%i' ~
+  686476
+  ```
+  equivalent to
+  ```bash
+  $ ls -id ~
+  686476 /Users/marslo
+  ```
+  - example
+    ```bash
+    $ ls -id  /local_storage/docker
+    2818591238 /local_storage/docker
+    ```
+
+- `ls`()
+  ```bash
+  $ ls /local_storage/docker -AiR1U |
+       sed -rn '/^[./]/{h;n;};G;
+           s|^ *([0-9][0-9]*)[^0-9][^/]*([~./].*):|\1:\2|p' |
+       sort -t : -uk1.1,1n |
+       cut -d: -f2 | sort -V |
+       uniq -c | sort -rn | head -n10
+       46 /Users/marslo/test/keepalived-2.0.18/lib
+       29 /Users/marslo/test
+       28 /Users/marslo/test/keepalived-2.0.18/doc/samples
+       27 /Users/marslo/test/jenkins/vars
+       23 /Users/marslo/test/keepalived-2.0.18
+       22 /Users/marslo/test/keepalived-2.0.18/doc/source
+       17 /Users/marslo/test/jenkins/jenkinsfile
+       16 /Users/marslo/test/autosquash/.git/objects
+       14 /Users/marslo/test/keepalived-2.0.18/keepalived/vrrp
+       14 /Users/marslo/test/jenkins/configs/etc/yum.repos.d
+  ```
+
+- `df`
+  ```bash
+   $ df -i
+  Filesystem                            Type   Inodes IUsed IFree IUse% Mounted on
+  /dev/disk1s5s1                        apfs     2.3G  555K  2.3G    1% /
+  /dev/disk1s4                          apfs     2.3G     2  2.3G    1% /System/Volumes/VM
+  /dev/disk1s2                          apfs     2.3G  1.2K  2.3G    1% /System/Volumes/Preboot
+  /dev/disk1s6                          apfs     2.3G    16  2.3G    1% /System/Volumes/Update
+  /Library/Input Methods/SogouInput.app nullfs   2.3G  1.8M  2.3G    1% /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/AppTranslocation/1E49F6C4-251F-443B-8D8A-86DA8F531F09
+  ```
+- [`du`](https://unix.stackexchange.com/a/117098/29178)
+  ```bash
+  $ sudo du --inodes -S ~ \
+         | sort -rh \
+         | sed -n '1,50{/^.\{71\}/s/^\(.\{30\}\).*\(.\{37\}\)$/\1...\2/;p}' \
+         | head -10
+  14994	/Users/marslo/Library/Co...icrosoft User Data/OneNote/15.0/cache
+  13453	/Users/marslo/Library/Gr...s/Main Profile/Files/S0/1/Attachments
+  4667	/Users/marslo/Library/Caches/Google/Chrome Canary/Default/Cache
+  4086	/Users/marslo/Library/Gro...ofiles/Marvell/Files/S0/1/Attachments
+  3912	/Users/marslo/Library/Con...476b0cb6d7b78ea9f492c743c1bdfa/Avatar
+  3359	/Users/marslo/Library/Con...6d7b78ea9f492c743c1bdfa/Stickers/File
+  3174	/Users/marslo/Library/App...versions/3.8.6/openssl/share/man/man3
+  3174	/Users/marslo/Library/App...6/openssl/share/doc/openssl/html/man3
+  3174	/Users/marslo/Library/App...versions/3.7.9/openssl/share/man/man3
+  3174	/Users/marslo/Library/App...9/openssl/share/doc/openssl/html/man3
+  ```
+
+#### check inode status
+```bash
+$ sudo tune2fs -l /dev/sdb1 | grep inode
+Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file uninit_bg dir_nlink extra_isize
+Free inodes:              234152632
+First inode:              11
+Journal inode:            8
+First orphan inode:       44171696
+Journal backup:           inode blocks
+```
+
+#### extend inode
+> reference:
+> - [Modifying the inode count for an ext2/ext3/ext4 file system](http://kb.ictbanking.net/article.php?id=693)
+> - [RHEL: Extending the maximum inode count on a ext2/ext3/ext4 filesystem](https://sites.google.com/site/syscookbook/rhel/rhel-fs-ext2_3_4-inode-count)
+
 
 ### [All About {Curly Braces} In Bash](https://www.linux.com/tutorials/all-about-curly-braces-bash/)
 

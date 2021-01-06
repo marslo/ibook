@@ -63,6 +63,25 @@ EOF
 ```
 
 ## LVM
+> reference:
+> - [CONFIGURING AND MANAGING LOGICAL VOLUMES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index)
+> - [CHAPTER 5. MODIFYING THE SIZE OF A LOGICAL VOLUME](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/assembly_modifying-logical-volume-size-configuring-and-managing-logical-volumes)
+
+### example
+- extends the logical volume /dev/myvg/homevol to 12 gigabytes
+  ```bash
+  $ sudo lvextend -L12G /dev/myvg/homevol
+  lvextend -- extending logical volume "/dev/myvg/homevol" to 12 GB
+  lvextend -- doing automatic backup of volume group "myvg"
+  lvextend -- logical volume "/dev/myvg/homevol" successfully extended
+  ```
+- adds another gigabyte to the logical volume /dev/myvg/homevol
+  ```bash
+  $ sudo lvextend -L+1G /dev/myvg/homevol
+  lvextend -- extending logical volume "/dev/myvg/homevol" to 13 GB
+  lvextend -- doing automatic backup of volume group "myvg"
+  lvextend -- logical volume "/dev/myvg/homevol" successfully extended
+  ```
 
 ### check status
 - `lsblk`
