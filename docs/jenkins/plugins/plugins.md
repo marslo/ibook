@@ -51,3 +51,4 @@
 - [ThinBackup](https://plugins.jenkins.io/thinBackup/)
 - [Sectioned View](https://plugins.jenkins.io/sectioned-view/)
 - [Parameterized Scheduler](https://plugins.jenkins.io/parameterized-scheduler/)
+- [Metrics](https://plugins.jenkins.io/metrics/)
