@@ -14,11 +14,19 @@
   - [list Container images filtering by Pod namespace](#list-container-images-filtering-by-pod-namespace)
   - [list Container images using a go-template instead of jsonpath](#list-container-images-using-a-go-template-instead-of-jsonpath)
   - [list all quota](#list-all-quota)
+  - [get apiservers](#get-apiservers)
+  - [get apiresources](#get-apiresources)
+  - [check etcd](#check-etcd)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
 ## [what is kubectl](https://learnk8s.io/blog/kubectl-productivity/#introduction-what-is-kubectl-)
 ![kubectl](../screenshot/k8s/k-1.svg.png)
+
+> reference:
+> - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
+{% endhint %}
 
 
 ## get
@@ -83,24 +91,29 @@ $ k get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}"
 - or
   ```bash
   $ k get pods --all-namespaces -o jsonpath="{..image}" |\
-  > tr -s '[[:space:]]' '\n' |\
-  > sort |\
-  > uniq -c
+    tr -s '[[:space:]]' '\n' |\
+    sort |\
+    uniq -c
   ```
 
 ### [list Container images filtering by Pod namespace](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-filtering-by-pod-namespace)
 ```bash
-$ k get pods --namespace kube-system -o jsonpath="{..image}"
+$ k -n kube-system get pods -o jsonpath="{..image}"
 ```
 
 ### [list Container images using a go-template instead of jsonpath](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-using-a-go-template-instead-of-jsonpath)
+{% raw %}
 ```bash
-$ k get pods --all-namespaces -o go-template --template="{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}"
+$ k get po --all-namespaces \
+           -o go-template \
+           --template="{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}"
 ```
+{% endraw %}
 
 - [or](https://stackoverflow.com/a/52736186/2940319)
   ```bash
-  $ k get deployment -o=jsonpath="{range .items[*]}{'\n'}{.metadata.name}{':\t'}{range .spec.template.spec.containers[*]}{.image}{', '}{end}{end}"
+  $ k get deploy \
+          -o=jsonpath="{range .items[*]}{'\n'}{.metadata.name}{':\t'}{range .spec.template.spec.containers[*]}{.image}{', '}{end}{end}"
   ```
 
 ### list all quota
@@ -109,4 +122,28 @@ $ for _i in $(k get ns --no-headers | awk -F' ' '{print $1}'); do
     echo ------------- ${_i} ------------
     k -n ${_i} describe quota
   done
+```
+
+### get apiservers
+```bash
+ $ k get --raw=/apis
+```
+
+### get apiresources
+- check available
+  ```bash
+  $ k api-resources
+  $ k api-versions
+  ```
+
+- check apiservices registered
+  ```bash
+  $ k get apiservices.apiregistration.k8s.io
+  $ k get apiservices.apiregistration.k8s.io v1beta1.metrics.k8s.io -o yaml
+  ```
+
+### check etcd
+```bash
+$ k get --raw=/healthz/etcd
+ok
 ```

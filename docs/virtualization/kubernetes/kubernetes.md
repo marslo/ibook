@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [explain](#explain)
 - [kubectl alias](#kubectl-alias)
 - [secrets](#secrets)
 - [token](#token)
@@ -12,7 +13,41 @@
 {% hint style='tip' %}
 > reference
 > - [Boosting your kubectl productivity](https://learnk8s.io/blog/kubectl-productivity/)
+> - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
+> - [8 Kubernetes Tips and Tricks](https://www.ibm.com/cloud/blog/8-kubernetes-tips-and-tricks)
 {% endhint %}
+
+### explain
+```bash
+$ kubectl explain hpa
+KIND:     HorizontalPodAutoscaler
+VERSION:  autoscaling/v1
+
+DESCRIPTION:
+     configuration of a horizontal pod autoscaler.
+
+FIELDS:
+   apiVersion	<string>
+   ...
+```
+
+- or
+  ```bash
+  $ kubectl explain configmap
+  KIND:     ConfigMap
+  VERSION:  v1
+
+  DESCRIPTION:
+       ConfigMap holds configuration data for pods to consume.
+
+  FIELDS:
+     apiVersion	<string>
+       APIVersion defines the versioned schema of this representation of an
+       object. Servers should convert recognized schemas to the latest internal
+       value, and may reject unrecognized values. More info:
+       https://git.k8s.io/community/contributors/devel/api-conventions.md#resources
+       ...
+  ```
 
 ### [kubectl alias](https://learnk8s.io/blog/kubectl-productivity/)
 #### `__start_kubectl`
