@@ -8,6 +8,7 @@
   - [disconnect the mount](#disconnect-the-mount)
   - [setup nfs mount by default server boot](#setup-nfs-mount-by-default-server-boot)
 - [LVM](#lvm)
+  - [example](#example)
   - [check status](#check-status)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

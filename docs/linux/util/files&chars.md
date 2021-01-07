@@ -15,7 +15,7 @@
 - [Format a file to a table](#format-a-file-to-a-table)
 - [Show last n lines in a file](#show-last-n-lines-in-a-file)
 - [Print a file into one line](#print-a-file-into-one-line)
-- [Get the file inode](#get-the-file-inode)
+- [inode](#inode)
 - [All About {Curly Braces} In Bash](#all-about-curly-braces-in-bash)
 - [find and replace](#find-and-replace)
 - [Shell Parameter Expansion](#shell-parameter-expansion)
