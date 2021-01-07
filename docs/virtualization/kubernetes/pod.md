@@ -8,6 +8,9 @@
   - [`--sort-by`](#--sort-by)
   - [List Pods name](#list-pods-name)
   - [List all Error Status pods](#list-all-error-status-pods)
+  - [get QOS](#get-qos)
+  - [get images running](#get-images-running)
+  - [show pods running](#show-pods-running)
 - [management](#management)
   - [restart po](#restart-po)
 - [others](#others)
@@ -150,6 +153,7 @@ devops-jenkins-659f4c6d44-d2w76
 ### [List all Error Status pods](https://stackoverflow.com/a/53327330/2940319)
 > reference:
 > - [Viewing, finding resources](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-finding-resources)
+> - [`kubectl get` should have a way to filter for advanced pods status](https://github.com/kubernetes/kubernetes/issues/49387)
 
 ```bash
 $ k -n <namespace> get po --field-selector status.phase=Failed
@@ -164,15 +168,95 @@ $ k -n <namespace> get po --field-selector status.phase=Failed
 $ k -n <namespace> get po --field-selector=status.phase!=Running
 ```
 
-[or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346573122)
-```bash
-$ k get po --all-namespaces -o json  | jq -r '.items[] | select(.status.phase != "Running" or ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 ) | .metadata.namespace + "/" + .metadata.name'
-```
-
 [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-504405180)
 ```bash
 $ k get po --all-namespaces --field-selector=status.phase!=Running,status.phase!=Succeeded
 ```
+
+[or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346573122)
+```bash
+$ k get po --all-namespaces -o json  \
+        | jq -r '.items[] \
+        | select(.status.phase != "Running" \
+                 or ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 \
+                ) \
+        | .metadata.namespace + "/" + .metadata.name'
+```
+
+[or all pods statuses only](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
+```bash
+$ k -n <namespace> get po -o=jsonpath='{.items[*].status.phase}'
+Running Running Running Running Running Running Running Running Running
+```
+
+### get QOS
+```bash
+$ k -n kube-system get po -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,QOS-CLASS:.status.qosClass
+NAME                                        NAMESPACE     QOS-CLASS
+coredns-59dd98b545-7t25l                    kube-system   Burstable
+coredns-59dd98b545-lnklx                    kube-system   Burstable
+coredns-59dd98b545-ltj5p                    kube-system   Burstable
+etcd-k8s-node01                             kube-system   BestEffort
+etcd-k8s-node02                             kube-system   BestEffort
+etcd-k8s-node03                             kube-system   BestEffort
+kube-apiserver-k8s-node01                   kube-system   Burstable
+kube-apiserver-k8s-node02                   kube-system   Burstable
+kube-apiserver-k8s-node03                   kube-system   Burstable
+kube-controller-manager-k8s-node01          kube-system   Burstable
+kube-controller-manager-k8s-node02          kube-system   Burstable
+kube-controller-manager-k8s-node03          kube-system   Burstable
+kube-flannel-ds-amd64-627bn                 kube-system   Guaranteed
+kube-flannel-ds-amd64-7hdqd                 kube-system   Guaranteed
+kube-flannel-ds-amd64-b4th7                 kube-system   Guaranteed
+...
+```
+
+### get images running
+```bash
+$ k4 -n <namespace> get po -o jsonpath="{..image}" | \
+     tr -s '[[:space:]]' '\n' | \
+     sort | \
+     uniq -c
+      2 gcr.io/kubernetes-helm/tiller:v2.14.3
+      6 k8s.gcr.io/coredns:1.2.2
+      6 k8s.gcr.io/etcd:3.2.24
+      6 k8s.gcr.io/kube-apiserver:v1.12.3
+      6 k8s.gcr.io/kube-controller-manager:v1.12.3
+     30 k8s.gcr.io/kube-proxy:v1.12.3
+      6 k8s.gcr.io/kube-scheduler:v1.12.3
+      4 k8s.gcr.io/metrics-server-amd64:v0.3.6
+     30 k8s.gcr.io/node-problem-detector:v0.8.1
+      2 kubernetesui/dashboard:v2.0.0-beta1
+      4 kubernetesui/metrics-scraper:v1.0.1
+     60 quay.io/coreos/flannel:v0.10.0-amd64
+```
+
+### show pods running
+```bash
+$ k -n <namespace> get po -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
+NAME                                        STATUS    NODE
+coredns-59dd98b545-7t25l                    Running   k8s-node01
+coredns-59dd98b545-lnklx                    Running   k8s-node02
+coredns-59dd98b545-ltj5p                    Running   k8s-node03
+...
+```
+
+#### sorting pods by nodeName
+```bash
+$ k -n <namespace> get po -o wide --sort-by="{.spec.nodeName}"
+```
+
+#### sort pods by restartCount
+```bash
+$ k -n <namespace> get po --sort-by="{.status.containerStatuses[:1].restartCount}"
+```
+
+#### get pods running in particular nodes
+{% raw %}
+```bash
+$ k -n <namespace> get po --template '{{range .items}}{{if eq .spec.nodeName "<nodeName>"}}{{.metadata.name}}{{"\n"}}{{end}}}{{end}}'
+```
+{% endraw %}
 
 ## management
 ### restart po
@@ -204,8 +288,14 @@ $ k -n <namespace> get po <po-name> -o yaml | k replace --force -f -
     $ k -n <namespace> scale deployment <name> --replicas=0 -n service
     ```
 
+
+
 ## others
 - get the first deploy name in namespace
   ```bash
   $ k -n <namespace> get deploy -o=jsonpath={.items[0].metadata.name}
+  ```
+- get all names
+  ```bash
+  $ k -n <namespace> get deploy -o=jsonpath='{.items[*].metadata.name}'
   ```
