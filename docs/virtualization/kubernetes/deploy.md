@@ -2,12 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-{% hint style='tip' %}
-> references:
-> - [10 Most Common Reasons Kubernetes Deployments Fail Part 1](https://kukulinski.com/10-most-common-reasons-kubernetes-deployments-fail-part-1/)
-> - [10 Most Common Reasons Kubernetes Deployments Fail Part 2](https://kukulinski.com/10-most-common-reasons-kubernetes-deployments-fail-part-2/)
-{% endhint %}
-
 - [get](#get)
 - [set](#set)
   - [update image](#update-image)
