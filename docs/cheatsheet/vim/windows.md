@@ -6,7 +6,7 @@
 - [resize](#resize)
   - [horizontal resize](#horizontal-resize)
   - [vertical resize](#vertical-resize)
-  - [quickfix](#quickfix)
+- [quickfix](#quickfix)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

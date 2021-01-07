@@ -7,6 +7,7 @@
   - [`--field-selector`](#--field-selector)
   - [`--sort-by`](#--sort-by)
   - [List Pods name](#list-pods-name)
+  - [List all Error Status pods](#list-all-error-status-pods)
 - [management](#management)
   - [restart po](#restart-po)
 - [others](#others)
@@ -146,6 +147,32 @@ devops-jenkins-659f4c6d44-d2w76
     kube-controller-manager-node03
     ```
 
+### [List all Error Status pods](https://stackoverflow.com/a/53327330/2940319)
+> reference:
+> - [Viewing, finding resources](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-finding-resources)
+
+```bash
+$ k -n <namespace> get po --field-selector status.phase=Failed
+```
+- delete all Error status pods
+  ```bash
+  $ k -n <namespace> delete pods --field-selector status.phase=Failed
+  ```
+
+[or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346746104)
+```bash
+$ k -n <namespace> get po --field-selector=status.phase!=Running
+```
+
+[or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346573122)
+```bash
+$ k get po --all-namespaces -o json  | jq -r '.items[] | select(.status.phase != "Running" or ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 ) | .metadata.namespace + "/" + .metadata.name'
+```
+
+[or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-504405180)
+```bash
+$ k get po --all-namespaces --field-selector=status.phase!=Running,status.phase!=Succeeded
+```
 
 ## management
 ### restart po
