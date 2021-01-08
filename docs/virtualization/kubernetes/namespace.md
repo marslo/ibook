@@ -5,6 +5,9 @@
 - [remove stuck namespace](#remove-stuck-namespace)
   - [check which item occupied the resource](#check-which-item-occupied-the-resource)
   - [remove challenge.certmanager](#remove-challengecertmanager)
+- [list](#list)
+  - [list all namespaces with name only](#list-all-namespaces-with-name-only)
+  - [list all quota in cluster](#list-all-quota-in-cluster)
 - [Reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -169,6 +172,31 @@ Events:        <none>
 $ k -n marslo-test edit challenges.certmanager.k8s.io  marslo-dashboard-2318568841-0 
 challenge.certmanager.k8s.io/marslo-dashboard-2318568841-0 edited
 ## manual remove the finalizer
+```
+
+## list
+### list all namespaces with name only
+```bash
+$ k get ns -o name
+```
+or
+```bash
+$ k get ns --no-headers -o name
+```
+
+### list all quota in cluster
+```bash
+while read ns; do
+  echo "~~~~~~~~~~~~ ${ns} ~~~~~~~~~~~~~"
+  k4 -n ${ns} describe quota
+done < <(k4 get ns -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+```
+or
+```bash
+$ while IFS= read -rd ' ' ns; do
+  echo "~~~> ${ns}"
+  k -n ${ns} describe quota
+done < <(k4 get ns -o jsonpath="{.items[*].metadata.name}"
 ```
 
 ## Reference
