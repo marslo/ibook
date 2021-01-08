@@ -206,38 +206,116 @@ $ launchctl list
 ### create image
 - create dmg image
   ```bash
-  $ hdiutil create -volname "Volume Name" -srcfolder /path/to/folder -ov diskimage.dmg
+  $ hdiutil create -volname "Volume Name" \
+                   -srcfolder /path/to/folder \
+                   -ov diskimage.dmg
   ```
 - create encrypted image
   ```bash
-  $ hdiutil create -encryption -stdinpass -volname "Volume Name" -srcfolder /path/to/folder -ov encrypted.dmg
+  $ hdiutil create -encryption \
+                   -stdinpass \
+                   -volname "Volume Name" \
+                   -srcfolder /path/to/folder \
+                   -ov encrypted.dmg
   ```
+
 - creaste dvd (for .iso, .img, .dmg)
   ```bash
   $ hdiutil burn /path/to/image_file
   ```
 
-### disk
-- check volumn info
+#### create disk image from volume
+```bash
+$ sudo hdiutil create ~/Desktop/<name>.dmg -srcdevice /dev/<disk-identifier>
+```
+- i.e.:
   ```bash
-  $ diskutil info <path/to/volumn>
+  $ sudo hdiutil create ~/Desktop/Lion.dmg -srcdevice /dev/disk2s4
   ```
-  - i.e.:
-    ```bash
-    $ diskutil info /Volumes/iMarsloOSX/
-       Device Identifier:         disk1s5
-       Device Node:               /dev/disk1s5
-       Whole:                     No
-       Part of Whole:             disk1
 
-       Volume Name:               iMarsloOSX
-       Mounted:                   Yes
-       Mount Point:               /
-    ```
+#### create disk image from a folder
+```bash
+$ hdiutil create <imagename>.dmg -volname "<name of volume>" -srcfolder /path/to/folder'
+```
+- i.e.:
+  ```bash
+  $ hdiutil create ~/Desktop/marsloTest.dmg -volname 'marslo test' -srcfolder ~/Desktop/marsloTest/
+  created: /Users/marslo/Desktop/marsloTest.dmg
+  ```
+  ![hdiutil create image](../screenshot/osx/hdiutil-create-image.png)
+
+- setup read & write dmg
+  ```bash
+  $ hdiutil create ~/Desktop/mTest.dmg \
+            -volname "Marslo Test" \
+            -srcfolder ~/Desktop/mTest \
+            -size 1g \
+            -format UDRW
+  ```
+
+#### create encrypted disk image
+```bash
+$ hdiutil create mEncrypted.dmg \
+                 -encryption \
+                 -size 1g \
+                 -volname "mEncrypted Disk Image" \
+                 -fs JHFS+ \
+                 -srcfolder /path/to/folder \
+
+Enter a new password to secure "mEncrypted.dmg":
+Re-enter new password:
+....
+created: /Users/marslo/Desktop/mEncrypted.dmg
+```
+
+![hdiutil create encrypted image](../screenshot/osx/hdiutil-create-encrypted.png)
+
+#### resize the disk image
+```bash
+$ hdiutil resize -size <new size> <imagename>.dmg
+```
+- i.e.:
+  ```bash
+  $ hdiutil resize -size 2g mEncrypted.dmg
+  ```
+
+#### restore disk images
+```bash
+$ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
+```
+
+### disk
+{% hint style='tip' %}
+> reference:
+> - [Disk Management From the Command-Line, Part 1](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-1)
+> - [Disk Management From the Command-Line, Part 2](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-2)
+> - [Disk Management From the Command-Line, Part 3](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-3)
+{% endhint %}
+
+#### check volumn info
+```bash
+$ diskutil info <path/to/volumn>
+```
+- i.e.:
+  ```bash
+  $ diskutil info /Volumes/iMarsloOSX/
+     Device Identifier:         disk1s5
+     Device Node:               /dev/disk1s5
+     Whole:                     No
+     Part of Whole:             disk1
+
+     Volume Name:               iMarsloOSX
+     Mounted:                   Yes
+     Mount Point:               /
+  ```
 
 - list disks and volumns
   ```bash
   $ diskutil list
+  ```
+  or
+  ```bash
+  $ diskutil list disk1
   ```
 
   - or [lsblk](https://command-not-found.com/lsblk)
@@ -259,31 +337,181 @@ $ launchctl list
            configuration: driver=virtio_blk
     ```
 
-- list the apfs info
+#### list the apfs info
+```bash
+$ diskutil apfs list
+APFS Container (1 found)
+|
++-- Container disk1 ********-****-****-****-************
+    ====================================================
+    APFS Container Reference:     disk1
+    Size (Capacity Ceiling):      250685575168 B (250.7 GB)
+    Capacity In Use By Volumes:   176258826240 B (176.3 GB) (70.3% used)
+    Capacity Not Allocated:       74426748928 B (74.4 GB) (29.7% free)
+    |
+    +-< Physical Store...>
+    |
+    +-> ...
+```
+
+#### check detail diskage usage
+```bash
+$ sudo fs_usage
+21:03:47  ioctl        0.000003   iTerm2
+21:03:47  ioctl        0.000003   iTerm2
+21:03:47  close        0.000031   privoxy
+21:03:47  select       0.000004   privoxy
+...
+```
+
+#### erase disk
+{% hint style='tip' %}
+| File System                 | Abbreviation |
+|:----------------------------|:------------:|
+| Mac OS Extended (Journaled) |    `JHFS+`   |
+| Mac OS Extended             |    `HFS+`    |
+| MS-DOS fat32                |    `FAT32`   |
+| ExFAT                       |    `ExFAT`   |
+
+details:
+```bash
+$ diskutil listFilesystems
+...
+-------------------------------------------------------------------------------
+PERSONALITY                     USER VISIBLE NAME
+-------------------------------------------------------------------------------
+Case-sensitive APFS             APFS (Case-sensitive)
+  (or) APFSX
+APFS                            APFS
+  (or) APFSI
+ExFAT                           ExFAT
+Free Space                      Free Space
+  (or) FREE
+MS-DOS                          MS-DOS (FAT)
+MS-DOS FAT12                    MS-DOS (FAT12)
+MS-DOS FAT16                    MS-DOS (FAT16)
+MS-DOS FAT32                    MS-DOS (FAT32)
+  (or) FAT32
+HFS+                            Mac OS Extended
+Case-sensitive HFS+             Mac OS Extended (Case-sensitive)
+  (or) HFSX
+Case-sensitive Journaled HFS+   Mac OS Extended (Case-sensitive, Journaled)
+  (or) JHFSX
+Journaled HFS+                  Mac OS Extended (Journaled)
+  (or) JHFS+
+UFSD_NTFS                       Microsoft NTFS
+```
+{% endhint %}
+
+- ExFAT
   ```bash
-  $ diskutil apfs list
-  APFS Container (1 found)
-  |
-  +-- Container disk1 ********-****-****-****-************
-      ====================================================
-      APFS Container Reference:     disk1
-      Size (Capacity Ceiling):      250685575168 B (250.7 GB)
-      Capacity In Use By Volumes:   176258826240 B (176.3 GB) (70.3% used)
-      Capacity Not Allocated:       74426748928 B (74.4 GB) (29.7% free)
-      |
-      +-< Physical Store...>
-      |
-      +-> ...
+  $ diskutil eraseDisk ExFAT iMarsloUSB /dev/disk2
+  Started erase on disk2
+  Unmounting disk
+  Creating the partition map
+  Waiting for partitions to activate
+  Formatting disk2s2 as ExFAT with name iMarsloUSB
+  Volume name      : iMarsloUSB
+  Partition offset : 411648 sectors (210763776 bytes)
+  Volume size      : 246534144 sectors (126225481728 bytes)
+  Bytes per sector : 512
+  Bytes per cluster: 131072
+  FAT offset       : 2048 sectors (1048576 bytes)
+  # FAT sectors    : 8192
+  Number of FATs   : 1
+  Cluster offset   : 10240 sectors (5242880 bytes)
+  # Clusters       : 962984
+  Volume Serial #  : 5ff81490
+  Bitmap start     : 2
+  Bitmap file size : 120373
+  Upcase start     : 3
+  Upcase file size : 5836
+  Root start       : 4
+  Mounting disk
+  Finished erase on disk2
+  ```
+  - check
+    ```bash
+    $ diskutil info disk2s1
+       Device Identifier:         disk2s1
+       Device Node:               /dev/disk2s1
+       Whole:                     No
+       Part of Whole:             disk2
+
+       Volume Name:               EFI
+       Mounted:                   No
+
+       Partition Type:            EFI
+       File System Personality:   MS-DOS FAT32
+       Type (Bundle):             msdos
+       Name (User Visible):       MS-DOS (FAT32)
+       ...
+       ...
+
+    $ diskutil info disk2s2
+       Device Identifier:         disk2s2
+       Device Node:               /dev/disk2s2
+       Whole:                     No
+       Part of Whole:             disk2
+
+       Volume Name:               iMarsloUSB
+       Mounted:                   Yes
+       Mount Point:               /Volumes/iMarsloUSB
+
+       Partition Type:            Microsoft Basic Data
+       File System Personality:   ExFAT
+       Type (Bundle):             exfat
+       Name (User Visible):       ExFAT
+       ...
+       ...
+    ```
+
+##### Verifying and Repairing Volumes
+```bash
+$ diskutil verifyVolume /Volumes/{volume name}
+$ diskutil repairVolume /Volumes/{volume name}
+```
+
+#### rename volume
+```bash
+$ diskutil rename "{current name of volume}" "{new name}"
+```
+
+#### Partitioning a Disk
+{% hint style='tip' %}
+> reference:
+> - `GPT`: GUID Partition Table
+> - `APM`: Apple Partition Map
+> - `MBR`: Master Boot Records
+{% hint %}
+
+```bash
+$ diskutil partitionDisk /dev/disk2 GPT JHFS+ New 0b
+```
+
+- multiple partitions
+  ```bash
+  $ diskutil partitionDisk /dev/disk2 GPT \
+             JHFS+ First 10g \
+             JHFS+ Second 10g \
+             JHFS+ Third 10g \
+             JHFS+ Fourth 10g \
+             JHFS+ Fifth 0b
+  ```
+- Splitting Partitions
+  ```bash
+  $ diskutil splitPartition /dev/disk2s6 \
+             JHFS+ Test 10GB \
+             JHFS+ Test2 0b
   ```
 
-- check detail diskage usage
+- Merging Partitions
   ```bash
-  $ sudo fs_usage
-  21:03:47  ioctl        0.000003   iTerm2
-  21:03:47  ioctl        0.000003   iTerm2
-  21:03:47  close        0.000031   privoxy
-  21:03:47  select       0.000004   privoxy
-  ...
+  $ diskutil mergePartitions JHFS+ NewName {first disk identifier in range} {last disk identifier in range}
+  ```
+  i.e.:
+  ```bash
+  $ diskutil mergePartitions JHFS+ NewName disk2s4 disk2s6
   ```
 
 #### [check usb](https://apple.stackexchange.com/a/170118/254265)
