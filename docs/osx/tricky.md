@@ -285,11 +285,13 @@ $ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
 ```
 
 ### disk
+
 {% hint style='tip' %}
 > reference:
 > - [Disk Management From the Command-Line, Part 1](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-1)
 > - [Disk Management From the Command-Line, Part 2](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-2)
 > - [Disk Management From the Command-Line, Part 3](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-3)
+
 {% endhint %}
 
 #### check volumn info
@@ -365,7 +367,9 @@ $ sudo fs_usage
 ```
 
 #### erase disk
+
 {% hint style='tip' %}
+
 | File System                 | Abbreviation |
 |:----------------------------|:------------:|
 | Mac OS Extended (Journaled) |    `JHFS+`   |
@@ -373,7 +377,6 @@ $ sudo fs_usage
 | MS-DOS fat32                |    `FAT32`   |
 | ExFAT                       |    `ExFAT`   |
 
-details:
 ```bash
 $ diskutil listFilesystems
 ...
@@ -401,6 +404,7 @@ Journaled HFS+                  Mac OS Extended (Journaled)
   (or) JHFS+
 UFSD_NTFS                       Microsoft NTFS
 ```
+
 {% endhint %}
 
 - ExFAT
@@ -468,22 +472,23 @@ UFSD_NTFS                       Microsoft NTFS
 
 ##### Verifying and Repairing Volumes
 ```bash
-$ diskutil verifyVolume /Volumes/{volume name}
-$ diskutil repairVolume /Volumes/{volume name}
+$ diskutil verifyVolume /Volumes/<volume name>
+$ diskutil repairVolume /Volumes/<volume name>
 ```
 
 #### rename volume
 ```bash
-$ diskutil rename "{current name of volume}" "{new name}"
+$ diskutil rename "<current name of volume>" "<new name>"
 ```
 
 #### Partitioning a Disk
+
 {% hint style='tip' %}
 > reference:
 > - `GPT`: GUID Partition Table
 > - `APM`: Apple Partition Map
 > - `MBR`: Master Boot Records
-{% hint %}
+{% endhint %}
 
 ```bash
 $ diskutil partitionDisk /dev/disk2 GPT JHFS+ New 0b
@@ -507,8 +512,13 @@ $ diskutil partitionDisk /dev/disk2 GPT JHFS+ New 0b
 
 - Merging Partitions
   ```bash
-  $ diskutil mergePartitions JHFS+ NewName {first disk identifier in range} {last disk identifier in range}
+  $ diskutil mergePartitions \
+             JHFS+ \
+             NewName \
+             <first disk identifier in range> \
+             <last disk identifier in range>
   ```
+
   i.e.:
   ```bash
   $ diskutil mergePartitions JHFS+ NewName disk2s4 disk2s6
