@@ -12,6 +12,10 @@
   - [modules re-installation](#modules-re-installation)
   - [`PYTHONPATH`](#pythonpath)
   - [`/usr/local/opt/python`](#usrlocaloptpython)
+- [extension](#extension)
+  - [clear windows](#clear-windows)
+- [python IDLE in MacOS Big Sur](#python-idle-in-macos-big-sur)
+  - [`IDLE quit unexpectedly`](#idle-quit-unexpectedly)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -190,3 +194,87 @@ $ export PYTHONUSERBASE="$(/usr/local/opt/python/libexec/bin/python -c 'import s
 $ export PYTHON3='/usr/local/opt/python/libexec/bin'
 $ export PATH="$PYTHONUSERBASE/bin:${PYTHON3}:$PATH"
 ```
+
+## extension
+### [clear windows](https://gist.github.com/tonidy/1175133)
+- download
+  ```bash
+  $ curl -o /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/idlelib/ClearWindow.py https://bugs.python.org/file14303/ClearWindow.py
+  ```
+- configure
+  ```bash
+  $ cat >> /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/idlelib/config-extensions.def < EOF
+
+  [ClearWindow]
+
+  enable=1
+  enable_editor=0
+  enable_shell=1
+  [ClearWindow_cfgBindings]
+  clear-window=<Command-Key-l>
+  EOF
+  ```
+
+## python IDLE in MacOS Big Sur
+### `IDLE quit unexpectedly`
+```bash
+Process:               Python [53851]
+Path:                  /usr/local/Cellar/python@3.9/3.9.1_5/IDLE 3.app/Contents/MacOS/Python
+Identifier:            org.python.IDLE
+Version:               3.9.1 (3.9.1)
+Code Type:             X86-64 (Native)
+Parent Process:        ??? [1]
+Responsible:           Python [53851]
+User ID:               501
+
+Date/Time:             2021-01-10 15:20:06.574 +0800
+OS Version:            macOS 11.1 (20C69)
+Report Version:        12
+Bridge OS Version:     5.1 (18P3030)
+Anonymous UUID:        AB6EE819-0314-4161-9650-FFE340DF84C8
+
+Application Specific Information:
+abort() called
+...
+```
+- root cause
+  ```bash
+  $ python
+  Python 3.9.1 (default, Jan  6 2021, 06:05:23)
+  [Clang 12.0.0 (clang-1200.0.32.28)] on darwin
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> import tkinter as tk
+  >>> print(tk.Tcl().eval('info patchlevel'))
+  8.5.9
+  >>> exit()
+  ```
+
+- using `https://www.python.org/ftp/python/3.9.1/python-3.9.1-macosx10.9.pkg`
+  ```bash
+  $ brew info tcl-tk | head -1
+  tcl-tk: stable 8.6.11 (bottled) [keg-only]
+
+  $ python
+  Python 3.9.1 (v3.9.1:1e5d33e9b9, Dec  7 2020, 12:10:52) 
+  [Clang 6.0 (clang-600.0.57)] on darwin
+  Type "help", "copyright", "credits" or "license()" for more information.
+  >>> import tkinter as tk
+  >>> print(tk.Tcl().eval('info patchlevel'))
+  8.6.8
+  ```
+
+  ![idle in mac big sur](../../screenshot/python/idle-mac-bigsur.png)
+
+- [more on tkinter](https://stackoverflow.com/a/60469203/2940319)
+  ```bash
+  >>> import tkinter
+  >>> tkinter.TclVersion, tkinter.TkVersion
+  (8.5, 8.5)
+  >>> tkinter._tester()
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  AttributeError: module 'tkinter' has no attribute '_tester'
+  >>> tkinter._test()
+  macOS 11 or later required !
+  Abort trap: 6
+  ```
