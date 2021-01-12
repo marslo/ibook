@@ -15,6 +15,7 @@
   - [get all failure builds in last 24 hours](#get-all-failure-builds-in-last-24-hours)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
+  - [setup next build number of particular job](#setup-next-build-number-of-particular-job)
 - [List plugins](#list-plugins)
   - [via api](#via-api)
   - [simple list](#simple-list)
@@ -205,6 +206,11 @@ Jenkins.instance.getAllItems(AbstractProject.class).each{ it->
         }
     }
 }
+```
+
+### setup next build number of particular job
+```groovy
+Jenkins.instance.getItemByFullName("/path/to/job").updateNextBuildNumber(n)
 ```
 
 ## List plugins
@@ -447,3 +453,4 @@ def stopJobs(job) {
   }
 }
 ```
+
