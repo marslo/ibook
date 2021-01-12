@@ -5,6 +5,7 @@
 - [jira](#jira)
   - [check fields](#check-fields)
   - [check attachment](#check-attachment)
+  - [generate OAuth consumer](#generate-oauth-consumer)
 - [confluence](#confluence)
   - [get info](#get-info)
   - [publish to confluence](#publish-to-confluence)
@@ -18,10 +19,13 @@
 > - [JIRA Server platform REST API reference](https://docs.atlassian.com/software/jira/docs/api/REST/7.6.1/)
 
 ## jira
+{% hint style='tip' %}
 ```bash
 $ jiraName='my.jira.com'
 $ jiraID='STORY-1'
 ```
+{% endhint %}
+
 ### check fields
 ```bash
 $ curl -s \
@@ -59,6 +63,14 @@ $ curl -s \
            | jq --raw-output .fields.attachment[].content \
            | xargs -I '{}' curl -sgOJL '{}'
     ```
+
+### [generate OAuth consumer](https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/)
+```bash
+$ openssl genrsa -out jira_privatekey.pem 1024
+$ openssl req -newkey rsa:1024 -x509 -key jira_privatekey.pem -out jira_publickey.cer -days 365
+$ openssl pkcs8 -topk8 -nocrypt -in jira_privatekey.pem -out jira_privatekey.pcks8
+$ openssl x509 -pubkey -noout -in jira_publickey.cer  > jira_publickey.pem
+```
 
 ## confluence
 ```bash
