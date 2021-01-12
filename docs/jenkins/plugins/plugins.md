@@ -4,6 +4,7 @@
 
 - [plugins](#plugins)
   - [recommended plugins](#recommended-plugins)
+  - [optinal](#optinal)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -26,25 +27,20 @@
 - [Pipeline Utility Steps](https://plugins.jenkins.io/pipeline-utility-steps/)
   - [Step reference](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/)
   - [Pipeline Steps Reference](https://www.jenkins.io/doc/pipeline/steps/)
-- [Pipeline Aggregator](https://plugins.jenkins.io/pipeline-aggregator-view/)
 - [Blue Ocean](https://plugins.jenkins.io/blueocean/)
 - [Copy Artifact](https://plugins.jenkins.io/copyartifact/)
 - [JUnit Plugin](https://plugins.jenkins.io/junit/)
 - [Build Trigger Badge Plugin](https://plugins.jenkins.io/buildtriggerbadge/)
 - [Groovy Postbuild](https://plugins.jenkins.io/groovy-postbuild/)
-- [Active Directory plugin](https://plugins.jenkins.io/active-directory/)
 - [Active Choices Plug-in](https://plugins.jenkins.io/uno-choice/)
 - [AnsiColor](https://plugins.jenkins.io/ansicolor/)
 - [Build Timestamp Plugin](https://plugins.jenkins.io/build-timestamp/)
-- [Delivery Pipeline Plugin](https://plugins.jenkins.io/delivery-pipeline-plugin/)
 - [Docker Pipeline](https://plugins.jenkins.io/docker-workflow/)
 - [Email Extension](https://plugins.jenkins.io/email-ext/)
 - [Environment Injector Plugin](https://plugins.jenkins.io/envinject/)
 - [Green Balls](https://plugins.jenkins.io/greenballs/)
 - [Job Configuration History Plugin](https://plugins.jenkins.io/jobConfigHistory/)
 - [Lockable Resources plugin](https://plugins.jenkins.io/lockable-resources/)
-- [JobFanIn](https://plugins.jenkins.io/job-fan-in/)
-- [Log Parser Plugin](https://plugins.jenkins.io/log-parser/)
 - [Matrix Authorization Strategy Plugin](https://plugins.jenkins.io/matrix-auth/)
 - [Monitoring](https://wiki.jenkins.io/display/JENKINS/Monitoring)
 - [Rebuilder](https://plugins.jenkins.io/rebuild/)
@@ -52,3 +48,10 @@
 - [Sectioned View](https://plugins.jenkins.io/sectioned-view/)
 - [Parameterized Scheduler](https://plugins.jenkins.io/parameterized-scheduler/)
 - [Metrics](https://plugins.jenkins.io/metrics/)
+
+### optinal
+- [JobFanIn](https://plugins.jenkins.io/job-fan-in/)
+- [Pipeline Aggregator](https://plugins.jenkins.io/pipeline-aggregator-view/)
+- [Active Directory plugin](https://plugins.jenkins.io/active-directory/)
+- [Delivery Pipeline Plugin](https://plugins.jenkins.io/delivery-pipeline-plugin/)
+- [Log Parser Plugin](https://plugins.jenkins.io/log-parser/)
