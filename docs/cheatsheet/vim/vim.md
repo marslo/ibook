@@ -23,3 +23,30 @@
   ```vim
   :scriptnames
   ```
+
+- [check customized completion](https://github.com/xavierd/clang_complete/issues/452#issuecomment-139872204)
+  ```vim
+  :set completefunc?
+  completefunc=youcompleteme#CompleteFunc
+  ```
+
+- show terminal type
+  ```vim
+  :TERM_PROGRAM
+  iTerm.app
+  ```
+
+- [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
+  ```vim
+  if index(['vim', 'c', 'cpp'], &filetype) != -1
+    echom "hello!"
+  endif
+  ```
+
+  [or](https://stackoverflow.com/a/29407473/2940319)
+  ```vim
+  let fts = ['c', 'cpp']
+  if index(fts, &filetype) == -1
+    " do stuff
+  endif
+  ```

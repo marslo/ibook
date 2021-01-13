@@ -23,6 +23,7 @@
     * [verification](cheatsheet/ssl/verification.md)
 * [devops](devops/adminTools.md)
   * [git](devops/git/git.md)
+    * [submodule](devops/git/submodule.md)
     * [eol](devops/git/eol.md)
     * [example](devops/git/example.md)
     * [gerrit](devops/git/gerrit.md)
