@@ -121,6 +121,7 @@
     * [gitbook](tools/node/gitbook.md)
     * [hexo](tools/node/hexo.md)
     * [github.page](tools/node/github.page.md)
+  * [microsoft office](tools/ms.md)
   * [virtualbox](tools/virtualbox.md)
   * [iterm2](tools/iterm2.md)
   * [Jira & Confluence](tools/atlassian.md)
