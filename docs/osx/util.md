@@ -22,9 +22,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> reference
+> - [Mac OS X Server Command-Line Administration](https://www.apple.com.cn/server/docs/Command_Line.pdf)
+{% endhint %}
 
 ## brew
-
 ### force the link and overwrite everything
 ```bash
 $ brew link --overwrite <formula>
@@ -415,6 +418,7 @@ $ scutil --proxy
   SSIDString = "Apple Network Guest";
   ...
   ```
+
 - get password
   ```bash
   $ sudo security find-generic-password -ga "Apple Network Guest"  | grep password\:
