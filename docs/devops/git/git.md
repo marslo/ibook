@@ -16,6 +16,8 @@ Git Command Study and practice
   - [show submodule changes](#show-submodule-changes)
   - [get change from `.git/objects`](#get-change-from-gitobjects)
   - [get change history for deleted files](#get-change-history-for-deleted-files)
+  - [by contents](#by-contents)
+  - [by message](#by-message)
 - [git rebase](#git-rebase)
   - [automatic edit by `git rebase -i`](#automatic-edit-by-git-rebase--i)
   - [auto rebaes](#auto-rebaes)
@@ -232,6 +234,21 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,,
   ```bash
   $ git log --follow <path/to/file>
   ```
+
+### [by contents](https://www.atlassian.com/git/tutorials/git-log#filtering-the-commit-history)
+```bash
+$ git log -S'add' --oneline  -3
+6f7877c2 update git for fetch more refs after cloned via --single-branch, and add tricky for vim
+30ce195e add jenkins plugin jira-steps
+913a7f29 update jenkins recommended plugins
+```
+
+### [by message](https://www.atlassian.com/git/tutorials/git-log#filtering-the-commit-history)
+```bash
+$ git log --grep='jira' --oneline 
+30ce195e add jenkins plugin jira-steps
+d17dd3aa add jira api
+```
 
 ## git rebase
 > about [`GIT_SEQUENCE_EDITOR`](https://stackoverflow.com/a/54970726/2940319)
