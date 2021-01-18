@@ -10,6 +10,7 @@
   - [create multiple commits](#create-multiple-commits)
   - [git commit](#git-commit)
   - [`.gitattributes`](#gitattributes)
+  - [git summaries](#git-summaries)
 - [scripts](#scripts)
   - [fetch merge all](#fetch-merge-all)
   - [gfall <branch>](#gfall-branch)
@@ -132,6 +133,115 @@ $ cat .gitattributes
 *             text=auto
 *.sh          eol=lf
 path/to/file  eol=lf
+```
+
+### git summaries
+#### get repo active days
+```bash
+$ git log --pretty='format: %ai' $1 |
+      cut -d ' ' -f 2 |
+      sort -r |
+      uniq |
+      awk '{ sum += 1 } END {print sum}'
+```
+
+#### get commit count
+- since particular commit
+  ```bash
+  $ git log --oneline <hash-id> |
+        wc -l |
+        tr -d ' '
+  635
+  ```
+- since the initial commit
+  ```bash
+  $ git log --oneline |
+        wc -l |
+        tr -d ' '
+  780
+  ```
+
+#### get all files count in the repo
+```bash
+$ git ls-files | wc -l | tr -d ' '
+```
+
+#### get contributors
+```bash
+$ git shortlog -n -s -e
+   110   marslo <marslo.jiao@gmail.com>
+    31   marslo <marslo@xxx.com>
+```
+
+[collection](https://github.com/tj/git-extras/blob/master/bin/git-summary#L81)
+```bash
+$ git shortlog -n -s -e |
+      awk ' {
+        sum += $1
+        if ($NF in emails) {
+            emails[$NF] += $1
+        } else {
+            email = $NF
+            emails[email] = $1
+            # set commits/email to empty
+            $1=$NF=""
+            sub(/^[[:space:]]+/, "", $0)
+            sub(/[[:space:]]+$/, "", $0)
+            name = $0
+            if (name in names) {
+                # when the same name is associated with existed email,
+                # merge the previous email into the later one.
+                emails[email] += emails[names[name]]
+                emails[names[name]] = 0
+            }
+            names[name] = email
+        }
+      } END {
+        for (name in names) {
+            email = names[name]
+            printf "%6d\t%s\n", emails[email], name
+      }
+    }'
+   141  marslo
+```
+
+#### format the author
+```bash
+$ git shortlog -n -s -e | awk '
+  { args[NR] = $0; sum += $0 }
+  END {
+    for (i = 1; i <= NR; ++i) {
+      printf "%s♪%2.1f%%\n", args[i], 100 * args[i] / sum
+    }
+  }
+  ' | column -t -s♪ | sed "s/\\\x09/\t/g"
+   110	marslo <marslo.jiao@gmail.com>  78.0%
+    31	marslo <marslo@xxx.com>         22.0%
+```
+
+#### show diff file only
+```bash
+$ git log --numstat --pretty="%H" --author=marslo HEAD~3..HEAD
+9fdb297ba0d2d51975e91d2b7e40fb5e96be4f5f
+
+8       1       docs/artifactory/artifactory.md
+095ec79c89d98831c0a485f55011bf81c6f712ad
+
+49      11      docs/linux/disk.md
+5       1       docs/osx/util.md
+f15a40c8dea2927db54570268aca4203cd50a416
+
+1       0       docs/SUMMARY.md
+-       -       docs/screenshot/tools/ms/outlook-keychain-1.png
+81      0       docs/tools/ms.md
+```
+
+#### repo age
+```bash
+$ git log --reverse --pretty=oneline --format="%ar" |
+      head -n 1 |
+      LC_ALL=C sed 's/ago//'
+4 months
 ```
 
 ## scripts

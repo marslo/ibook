@@ -13,6 +13,7 @@
   - [get particular job status](#get-particular-job-status)
   - [get build status](#get-build-status)
   - [get all failure builds in last 24 hours](#get-all-failure-builds-in-last-24-hours)
+  - [list all build history within 24 hours](#list-all-build-history-within-24-hours)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
   - [setup next build number of particular job](#setup-next-build-number-of-particular-job)
@@ -163,6 +164,24 @@ Calendar rightNow = Calendar.getInstance()
   }.sum().each{ job ->
     println "${job}"
   }
+```
+
+### [list all build history within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+```groovy
+String jobPattern = '<group name>/<job name>'
+def numberOfHoursBack = 1*24                    // day * 24 hours
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.contains(jobPattern)
+}.collect { Job job ->
+  println "~~~> job.fullName: ${job.fullName}"
+  def history = job.getBuilds().byTimestamp(System.currentTimeMillis()-numberOfHoursBack*60*60*1000, System.currentTimeMillis())
+    println """
+      ${job.fullName}: ${history.size()}
+      history: ${history}
+    """
+}
+println "DONE"
 ```
 
 ### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
