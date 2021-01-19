@@ -4,19 +4,13 @@
 
 - [Script Console](#script-console)
   - [usage](#usage)
-  - [examples](#examples)
+  - [basic usage](#basic-usage)
 - [jobs](#jobs)
-  - [list all Abstract Project](#list-all-abstract-project)
-  - [list all jobs and folders](#list-all-jobs-and-folders)
-  - [get name and classes](#get-name-and-classes)
-  - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
-  - [get particular job status](#get-particular-job-status)
   - [get build status](#get-build-status)
   - [get all failure builds in last 24 hours](#get-all-failure-builds-in-last-24-hours)
   - [list all build history within 24 hours](#list-all-build-history-within-24-hours)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
-  - [setup next build number of particular job](#setup-next-build-number-of-particular-job)
 - [List plugins](#list-plugins)
   - [via api](#via-api)
   - [simple list](#simple-list)
@@ -26,12 +20,21 @@
   - [automatic approval all pending](#automatic-approval-all-pending)
   - [disable the scriptApproval](#disable-the-scriptapproval)
 - [abort](#abort)
-  - [abort a job](#abort-a-job)
+  - [abort a build](#abort-a-build)
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
-  - [cancel queue builds(https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)](#cancel-queue-buildshttpsxanderxcompostcancel-all-queued-jenkins-jobs)
-  - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='tip' %}
+> reference:
+> - [samrocketman/jenkins-script-console-scripts](https://github.com/samrocketman/jenkins-script-console-scripts)
+> - [jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
+> - [cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
+> - [mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)
+> - [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
+> - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
+> - [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
+{% endhint %}
 
 
 ## [Script Console](https://www.jenkins.io/doc/book/managing/script-console/)
@@ -59,84 +62,42 @@
     r = requests.post('https://jenkins/scriptText', auth=('username', 'api-token'), data={'script': data})
     ```
 
-### examples
-- [CloudBees jenkins-scripts repository](https://github.com/cloudbees/jenkins-scripts)
-- [Jenkins CI jenkins-scripts repository](https://github.com/jenkinsci/jenkins-scripts)
-- [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
-- [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
-- [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
+### basic usage
+- setup timestampe (temporary)
+  ```groovy
+  System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles')
+  ```
 
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
-### list all Abstract Project
-  > Abstract Project: freestyle, maven, etc...
+> get more: [jobs & builds](./build.md)
 
-  ```groovy
-  Jenkins.instance.getAllItems(AbstractProject.class).each {
-    println it.fullName;
-  }
-```
-
-### list all jobs and folders
+### [get build status](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
-Jenkins.instance.getAllItems(AbstractItem.class).each {
-  println(it.fullName)
-};
-== result:
-marslo/marslo
-marslo/fs
-```
-
-### get name and classes
-```groovy
-Jenkins.instance.getAllItems(Job.class).each {
-  println it.name + " - " + it.class
-}
-
-== result
-marslo - class org.jenkinsci.plugins.workflow.job.WorkflowJob
-fs - class hudson.model.FreeStyleProject
-```
-
-### find all disabled projects/jobs
-```groovy
-jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class).findAll{ it -> it.disabled }.each {
-  println it.fullName;
-}
-```
-
-### get particular job status
-```groovy
-def job = Jenkins.instance.getItemByFullName('/<group-name>/<job-name>')
-println """
-  Last success : ${job.getLastSuccessfulBuild()}
-    All builds : ${job.getBuilds().collect{ it.getNumber()}}
-    Last build : ${job.getLastBuild()}
-   Is building : ${job.isBuilding()}
-"""
-```
-
-### get build status
-```groovy
-String jobPattern = '<group-name>/<job-name>'
+final String JOB_PATTERN = '<group>/<name>'
 Map<String, Map<String, String>> results = [:]
 int sum = 0
 
 Jenkins.instance.getAllItems( Job.class ).each { project ->
-  if ( project.fullName.contains(jobPattern) ) {
-    results."$project.fullName" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0 ]
+  if ( project.fullName.contains(JOB_PATTERN) ) {
+    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0 ]
     def build = project.getLastBuild()
     while ( build ) {
-      //println "$project.name;$build.id;$build.result"
-      results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-      build=build.getPreviousBuild()
+      // if job is building, then results."${project.fullName}"."${build.result}" will be null
+      if ( build.isBuilding() ) {
+        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
+      } else {
+        // println "$project.name;$build.id;$build.result"
+        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
+      }
+      build = build.getPreviousBuild()
     }
   }
 }
-results.each{ name, map ->
-  sum = map.values().sum()
-  println "${name}: ${sum} : "
-  map.each{ r, c ->
-    println "    ${r}: ${c}: \tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+results.each{ name, status ->
+  sum = status.values().sum()
+  println "${name} : ${sum} : "
+  status.each{ r, c ->
+    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
   }
 }
 "DONE"
@@ -150,38 +111,40 @@ import hudson.model.Run
 import java.util.Calendar
 import jenkins.model.Jenkins
 
-//24 hours in a day, 3600 seconds in 1 hour, 1000 milliseconds in 1 second
-  long time_in_millis = 24*3600*1000
+// 24 hours in a day, 3600 seconds in 1 hour, 1000 milliseconds in 1 second
+long time_in_millis = 24*3600*1000
 Calendar rightNow = Calendar.getInstance()
 
-  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-    !job.isBuilding()
-  }.collect { Job job ->
-    //find all matching items and return a list but if null then return an empty list
-    job.builds.findAll { Run run ->
-      job.lastBuild.result == Result.FAILURE && ((rightNow.getTimeInMillis() - run.getStartTimeInMillis()) <= time_in_millis)
-    } ?: []
-  }.sum().each{ job ->
-    println "${job}"
-  }
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  !job.isBuilding()
+}.collect { Job job ->
+  //find all matching items and return a list but if null then return an empty list
+  job.builds.findAll { Run run ->
+    job.lastBuild.result == Result.FAILURE && ((rightNow.getTimeInMillis() - run.getStartTimeInMillis()) <= time_in_millis)
+  } ?: []
+}.sum().each{ job ->
+  println "${job}"
+}
 ```
 
 ### [list all build history within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 ```groovy
-String jobPattern = '<group name>/<job name>'
-def numberOfHoursBack = 1*24                    // day * 24 hours
+String JOB_PATTERN      = '<group>/<job>'
+final long CURRENT_TIME = System.currentTimeMillis()
+final int BENCH_MARK    = 1*24*60*60*1000                    // days * hours * minutes * seconds * microseconds (1000)
 
 Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(jobPattern)
+  job.fullName.contains(JOB_PATTERN)
 }.collect { Job job ->
-  println "~~~> job.fullName: ${job.fullName}"
-  def history = job.getBuilds().byTimestamp(System.currentTimeMillis()-numberOfHoursBack*60*60*1000, System.currentTimeMillis())
+  def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
+  if ( history.size() > 0 ) {
     println """
-      ${job.fullName}: ${history.size()}
+      ${job.fullName}: ${history.size()}:
       history: ${history}
     """
+  }
 }
-println "DONE"
+"DONE"
 ```
 
 ### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
@@ -227,11 +190,6 @@ Jenkins.instance.getAllItems(AbstractProject.class).each{ it->
 }
 ```
 
-### setup next build number of particular job
-```groovy
-Jenkins.instance.getItemByFullName("/path/to/job").updateNextBuildNumber(n)
-```
-
 ## List plugins
 ### [via api](./api.md#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
@@ -254,10 +212,10 @@ println ""
 println "Plugins Dependency tree (...: dependencies; +++: dependants) :"
 println "======================="
 Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()}.each { plugin ->
-  println "${plugin.getShortName()}:${plugin.getVersion()} | ${plugin.getDisplayName()} "
-    println "+++ ${plugin.getDependants()}"
-    println "... ${plugin.getDependencies()}"
-    println ''
+  println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()} "
+  println "+++ ${plugin.getDependants()}"
+  println "... ${plugin.getDependencies()}"
+  println ''
 }
 ```
 
@@ -348,20 +306,20 @@ import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration
 import jenkins.model.GlobalConfiguration
 
 // disable Job DSL script approval
-  GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
+GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
   ```
 
 ## abort
-### [abort a job](https://stackoverflow.com/a/26306081/2940319)
-```bash
-  Jenkins.instance.getItemByFullName("JobName")
-.getBuildByNumber(JobNumber)
-  .finish(
-          hudson.model.Result.ABORTED,
-          new java.io.IOException("Aborting build")
-         );
-  ```
+### [abort a build](https://stackoverflow.com/a/26306081/2940319)
+```groovy
+Jenkins.instance.getItemByFullName("JobName")
+       .getBuildByNumber(JobNumber)
+       .finish(
+               hudson.model.Result.ABORTED,
+               new java.io.IOException("Aborting build")
+       )
+```
 
 ### [abort running builds if new one is running](https://stackoverflow.com/a/44326216/2940319)
   > reference:
@@ -370,21 +328,21 @@ GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
   > - [Aborting a build](https://www.jenkins.io/doc/book/using/aborting-a-build/)
   > - [Cancel queued builds and aborting executing builds using Groovy for Jenkins](https://stackoverflow.com/questions/12305244/cancel-queued-builds-and-aborting-executing-builds-using-groovy-for-jenkins)
 
-  ```groovy
-  import hudson.model.Result
-  import jenkins.model.CauseOfInterruption
+```groovy
+import hudson.model.Result
+import jenkins.model.CauseOfInterruption
 
-  //iterate through current project runs
-  build.getProject()._getRuns().iterator().each{ run ->
-    def exec = run.getExecutor()
-      //if the run is not a current build and it has executor (running) then stop it
-      if( run!=build && exec!=null ){
-        //prepare the cause of interruption
-        def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
-          exec.interrupt(Result.ABORTED, cause)
-      }
-  }
-  ```
+//iterate through current project runs
+build.getProject()._getRuns().iterator().each{ run ->
+  def exec = run.getExecutor()
+    //if the run is not a current build and it has executor (running) then stop it
+    if( run!=build && exec!=null ){
+      //prepare the cause of interruption
+      def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
+        exec.interrupt(Result.ABORTED, cause)
+    }
+}
+```
 - [or](https://stackoverflow.com/a/49901413/2940319)
   ```groovy
   import hudson.model.Result
@@ -411,65 +369,22 @@ GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
   ```
 
 - or: [cancel builds same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-  ```bash
+  ```groovy
   /*
-     Author: Isaac S Cohen
-     This script works with workflow to cancel other running builds for the same job
-     Use case: many build may go to QA, but only the build that is accepted is needed,
-     the other builds in the workflow should be aborted
-   */
+   Author: Isaac S Cohen
+   This script works with workflow to cancel other running builds for the same job
+   Use case: many build may go to QA, but only the build that is accepted is needed,
+   the other builds in the workflow should be aborted
+  */
 
-    def jobname = env.JOB_NAME
+  def jobname = env.JOB_NAME
   def buildnum = env.BUILD_NUMBER.toInteger()
 
   def job = Jenkins.instance.getItemByFullName(jobname)
-    for (build in job.builds) {
-      if (!build.isBuilding()) { continue; }
-      if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
-      build.doStop();
-    }
+  for (build in job.builds) {
+    if (!build.isBuilding()) { continue; }
+    if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
+    build.doStop();
+  }
   ```
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
-
-### cancel queue builds(https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
-```groovy
-Jenkins.instance.queue.clear()
-```
-
-### [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
-```groovy
-import java.util.ArrayList
-import hudson.model.*;
-import jenkins.model.Jenkins
-
-// Remove everything which is currently queued
-def q = Jenkins.instance.queue
-for (queued in Jenkins.instance.queue.items) {
-  q.cancel(queued.task)
-}
-
-// stop all the currently running jobs
-for (job in Jenkins.instance.items) {
-  stopJobs(job)
-}
-
-def stopJobs(job) {
-  if (job in com.cloudbees.hudson.plugins.folder.Folder) {
-    for (child in job.items) {
-      stopJobs(child)
-    }
-  } else if (job in org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject) {
-    for (child in job.items) {
-      stopJobs(child)
-    }
-  } else if (job in org.jenkinsci.plugins.workflow.job.WorkflowJob) {
-
-    if (job.isBuilding()) {
-      for (build in job.builds) {
-      build.doKill()
-      }
-    }
-  }
-}
-```
-
