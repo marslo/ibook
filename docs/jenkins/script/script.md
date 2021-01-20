@@ -73,7 +73,7 @@
 
 ### [get build status](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
-final String JOB_PATTERN = '<group>/<name>'
+final String JOB_PATTERN = '<group>[/<name>]'
 Map<String, Map<String, String>> results = [:]
 int sum = 0
 
@@ -95,7 +95,7 @@ Jenkins.instance.getAllItems( Job.class ).each { project ->
 }
 results.each{ name, status ->
   sum = status.values().sum()
-  println "${name} : ${sum} : "
+  println "\n${name} : ${sum} : "
   status.each{ r, c ->
     println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
   }
@@ -111,20 +111,18 @@ import hudson.model.Run
 import java.util.Calendar
 import jenkins.model.Jenkins
 
-// 24 hours in a day, 3600 seconds in 1 hour, 1000 milliseconds in 1 second
-long time_in_millis = 24*3600*1000
-Calendar rightNow = Calendar.getInstance()
+final Calendar RIGHT_NOW = Calendar.getInstance()
+final long BENCH_MARK    = 1*24*60*60*1000
+final String JOB_PATTERN = '<group>[/<name>]'
 
 Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  !job.isBuilding()
+  job.fullName.contains(JOB_PATTERN)
 }.collect { Job job ->
-  //find all matching items and return a list but if null then return an empty list
   job.builds.findAll { Run run ->
-    job.lastBuild.result == Result.FAILURE && ((rightNow.getTimeInMillis() - run.getStartTimeInMillis()) <= time_in_millis)
-  } ?: []
-}.sum().each{ job ->
-  println "${job}"
-}
+    run.result == Result.FAILURE &&
+    (RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis()) <= BENCH_MARK
+  }
+}.sum().join('\n')
 ```
 
 ### [list all build history within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
@@ -137,10 +135,10 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains(JOB_PATTERN)
 }.collect { Job job ->
   def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
-  if ( history.size() > 0 ) {
+  if ( history ) {
     println """
-      ${job.fullName}: ${history.size()}:
-      history: ${history}
+      ${job.fullName} : ${history.size()} :
+      history         : ${history}
     """
   }
 }
@@ -150,15 +148,15 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 ### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
 ```bash
 /*
-   We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
+ * We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
  */
-Jenkins.instance.getAllItems(Job).each(){ job -> job.isBuildable()
-  if (job.isBuilding()){
-    def myBuild= job.getLastBuild()
-      def runningSince= groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
-      if (runningSince.hours >= 24){
-        println job.name +"---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
-      }
+Jenkins.instance.getAllItems(Job).each() { job ->
+  if ( job.isBuilding() ) {
+    def myBuild = job.getLastBuild()
+    def runningSince= groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
+    if ( runningSince.hours >= 24 ) {
+      println job.name + "---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
+    }
   }
 }
 return null
@@ -172,21 +170,21 @@ return null
 import org.jvnet.hudson.plugins.shelveproject.ShelveProjectTask
 
 def daysBack=365;
-Jenkins.instance.getAllItems(AbstractProject.class).each{ it->
-  def lastBuild=it.getLastBuild()
-    if(lastBuild != null){
-      def back = Calendar.getInstance()
-        back.set(Calendar.DAY_OF_YEAR,back.get(Calendar.DAY_OF_YEAR)-daysBack)
-        if (lastBuild.getTime().compareTo(back.getTime()) < 0) {
-          println it.name + " was built over " + daysBack + " days ago: " + lastBuild.getTime()
-            if (it instanceof AbstractProject){
-              def spt=  new ShelveProjectTask(it)
-                Hudson.getInstance().getQueue().schedule(spt , 0 );
-            }else{
-              println it.name + " was not shelved----------- "
-            }
-        }
-    }
+Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
+  def lastBuild = it.getLastBuild()
+  if( lastBuild != null ) {
+    def back = Calendar.getInstance()
+      back.set( Calendar.DAY_OF_YEAR,back.get(Calendar.DAY_OF_YEAR) - daysBack )
+      if ( lastBuild.getTime().compareTo(back.getTime()) < 0 ) {
+        println it.name + " was built over " + daysBack + " days ago: " + lastBuild.getTime()
+          if ( it instanceof AbstractProject ){
+            def spt=  new ShelveProjectTask(it)
+            Hudson.getInstance().getQueue().schedule(spt , 0 );
+          } else {
+            println it.name + " was not shelved----------- "
+          }
+      }
+  }
 }
 ```
 
@@ -194,8 +192,8 @@ Jenkins.instance.getAllItems(AbstractProject.class).each{ it->
 ### [via api](./api.md#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
-Jenkins.instance.pluginManager.plugins.each{ plugin ->
-  println ("${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}")
+Jenkins.instance.pluginManager.plugins.each { plugin ->
+  println ( "${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}" )
 }
 ```
 
@@ -205,7 +203,7 @@ println "Jenkins Instance : " + Jenkins.getInstance().getComputer('').getHostNam
 println "Installed Plugins: "
 println "=================="
 Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()}.each { plugin ->
-  println "${plugin.getShortName()}:${plugin.getVersion()} | ${plugin.getDisplayName()} "
+    println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
 }
 
 println ""
@@ -235,49 +233,50 @@ Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().to
   println prettyPrint( toJson(alreadyApproved) )
   ```
 
-  - restore
-    ```bash
-    def scriptApproval = org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval.get()
+- restore
+  ```bash
+  def scriptApproval = org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval.get()
 
-    String[] signs = [
-      "method org.jenkinsci.plugins.workflow.steps.FlowInterruptedException getCauses",
-      "method org.jenkinsci.plugins.workflow.support.steps.input.Rejection getUser"
-    ]
+  String[] signs = [
+    "method org.jenkinsci.plugins.workflow.steps.FlowInterruptedException getCauses",
+    "method org.jenkinsci.plugins.workflow.support.steps.input.Rejection getUser"
+  ]
 
-    for( String sign : signs ) {
-      scriptApproval.approveSignature(sign)
+  for( String sign : signs ) {
+    scriptApproval.approveSignature(sign)
+  }
+
+  scriptApproval.save()
+  ```
+
+- [example](https://stackoverflow.com/a/55714171/2940319)
+  ```groovy
+  import java.lang.reflect.*;
+  import jenkins.model.Jenkins;
+  import jenkins.model.*;
+  import org.jenkinsci.plugins.scriptsecurity.scripts.*;
+  import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.*;
+  import static groovy.json.JsonOutput.*
+
+  scriptApproval = ScriptApproval.get()
+  alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
+  void approveSignature(String signature) {
+    if (!alreadyApproved.contains(signature)) {
+      scriptApproval.approveSignature(signature)
     }
+  }
 
-    scriptApproval.save()
-    ```
+  List scriptList = [
+    'method hudson.model.Job getLastSuccessfulBuild',
+    'method hudson.model.Node getNodeName'
+  ]
 
-  - [example](https://stackoverflow.com/a/55714171/2940319)
-    ```groovy
-    import java.lang.reflect.*;
-    import jenkins.model.Jenkins;
-    import jenkins.model.*;
-    import org.jenkinsci.plugins.scriptsecurity.scripts.*;
-    import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.*;
-    import static groovy.json.JsonOutput.*
-
-    scriptApproval = ScriptApproval.get()
-    alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
-      void approveSignature(String signature) {
-        if (!alreadyApproved.contains(signature)) {
-          scriptApproval.approveSignature(signature)
-        }
-      }
-
-    List scriptList = ['method hudson.model.Job getLastSuccessfulBuild', 'method hudson.model.Node getNodeName']
-
-    scriptList.each {
-      approveSignature(it)
-    }
-    scriptApproval.save()
-    ```
+  scriptList.each { approveSignature(it) }
+  scriptApproval.save()
+  ```
 
 ### automatic approval all pending
-  - [list pending scriptApproval](https://stackoverflow.com/a/55940005/2940319)
+- [list pending scriptApproval](https://stackoverflow.com/a/55940005/2940319)
   ```groovy
   import org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval
 
@@ -308,7 +307,7 @@ import jenkins.model.GlobalConfiguration
 // disable Job DSL script approval
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
-  ```
+```
 
 ## abort
 ### [abort a build](https://stackoverflow.com/a/26306081/2940319)
@@ -322,11 +321,11 @@ Jenkins.instance.getItemByFullName("JobName")
 ```
 
 ### [abort running builds if new one is running](https://stackoverflow.com/a/44326216/2940319)
-  > reference:
-  > - [Controlling the Flow with Stage, Lock, and Milestone](https://www.jenkins.io/blog/2016/10/16/stage-lock-milestone/)
-  > - [I have a stuck Pipeline and I can not stop it](https://support.cloudbees.com/hc/en-us/articles/360000913392-I-have-a-stuck-Pipeline-and-I-can-not-stop-it)
-  > - [Aborting a build](https://www.jenkins.io/doc/book/using/aborting-a-build/)
-  > - [Cancel queued builds and aborting executing builds using Groovy for Jenkins](https://stackoverflow.com/questions/12305244/cancel-queued-builds-and-aborting-executing-builds-using-groovy-for-jenkins)
+> reference:
+> - [Controlling the Flow with Stage, Lock, and Milestone](https://www.jenkins.io/blog/2016/10/16/stage-lock-milestone/)
+> - [I have a stuck Pipeline and I can not stop it](https://support.cloudbees.com/hc/en-us/articles/360000913392-I-have-a-stuck-Pipeline-and-I-can-not-stop-it)
+> - [Aborting a build](https://www.jenkins.io/doc/book/using/aborting-a-build/)
+> - [Cancel queued builds and aborting executing builds using Groovy for Jenkins](https://stackoverflow.com/questions/12305244/cancel-queued-builds-and-aborting-executing-builds-using-groovy-for-jenkins)
 
 ```groovy
 import hudson.model.Result
@@ -352,19 +351,19 @@ build.getProject()._getRuns().iterator().each{ run ->
   def abortPreviousBuilds() {
     Run previousBuild = currentBuild.rawBuild.getPreviousBuildInProgress()
 
-      while (previousBuild != null) {
-        if (previousBuild.isInProgress()) {
-          def executor = previousBuild.getExecutor()
-            if (executor != null) {
-              echo ">> Aborting older build #${previousBuild.number}"
-                executor.interrupt(Result.ABORTED, new UserInterruption(
-                                                                        "Aborted by newer build #${currentBuild.number}"
-                                                                       ))
-            }
-        }
-
-        previousBuild = previousBuild.getPreviousBuildInProgress()
+    while ( previousBuild != null ) {
+      if ( previousBuild.isInProgress() ) {
+        def executor = previousBuild.getExecutor()
+          if ( executor != null ) {
+            echo ">> Aborting older build #${previousBuild.number}"
+              executor.interrupt( Result.ABORTED,
+                                  new UserInterruption(
+                                    "Aborted by newer build #${currentBuild.number}"
+                                ))
+          }
       }
+      previousBuild = previousBuild.getPreviousBuildInProgress()
+    }
   }
   ```
 
@@ -380,10 +379,10 @@ build.getProject()._getRuns().iterator().each{ run ->
   def jobname = env.JOB_NAME
   def buildnum = env.BUILD_NUMBER.toInteger()
 
-  def job = Jenkins.instance.getItemByFullName(jobname)
-  for (build in job.builds) {
-    if (!build.isBuilding()) { continue; }
-    if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
+  def job = Jenkins.instance.getItemByFullName( jobname )
+  for ( build in job.builds ) {
+    if ( !build.isBuilding() ) { continue; }
+    if ( buildnum == build.getNumber().toInteger() ) { continue; println "equals" }
     build.doStop();
   }
   ```
