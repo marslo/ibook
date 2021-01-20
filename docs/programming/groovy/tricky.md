@@ -2,8 +2,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [common](#common)
   - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
   - [split and trim in string](#split-and-trim-in-string)
+  - [`indices` & `indexed()`](#indices--indexed)
   - [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
   - [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
   - [groupBy `List<List<String>>` to `Map<String, List>`](#groupby-listliststring-to-mapstring-list)
@@ -17,6 +19,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+## common
 ### get the first item if exists or null if empty
 ```groovy
 assert [:]?.find{true} == null
@@ -44,6 +47,37 @@ println (['a': '1'].find{ true }.getClass())
   ```
 
 
+### `indices` & `indexed()`
+```groovy
+def rows = ['foo', 'bar']
+println rows.indices
+println rows.indexed()
+
+===> result
+0..<2
+[0:foo, 1:bar]
+```
+
+- [usage](https://stackoverflow.com/a/34637213/2940319)
+  ```groovy
+  def userList = [
+    [name: 'user1', id:0, ip: '127.0.0.1'],
+    [name: 'user2', id:1, ip: '127.0.0.2'],
+    [name: 'user3', id:2, ip: '127.0.0.3']
+  ]
+  def rows = ['foo', 'bar']
+
+  println rows.indices.collect { index ->                   // Using indices
+    userList.find { it.id == index }
+  }
+  println rows.indexed().collect { index, item ->           // Using indexed()
+    userList.find { it.id == index }
+  }
+
+  ===> result
+  [[name:user1, id:0, ip:127.0.0.1], [name:user2, id:1, ip:127.0.0.2]]
+  [[name:user1, id:0, ip:127.0.0.1], [name:user2, id:1, ip:127.0.0.2]]
+  ```
 
 
 ### [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](https://stackoverflow.com/q/62466451/2940319)
