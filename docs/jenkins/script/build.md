@@ -292,7 +292,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }
 ```
 
-### get jobs status within 24 hours
+### [get jobs status within 24 hours](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
 final String JOB_PATTERN = '<group>'
 final long CURRENT_TIME  = System.currentTimeMillis()
@@ -338,7 +338,7 @@ import hudson.model.Run
 import java.util.Calendar
 import jenkins.model.Jenkins
 
-final Calendar RIGHT_NOW  = Calendar.getInstance()
+final Calendar RIGHT_NOW = Calendar.getInstance()
 final long BENCH_MARK    = 1*24*60*60*1000
 final String JOB_PATTERN = '<group>'
 
