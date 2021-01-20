@@ -146,12 +146,12 @@ Time periods are specified with a number and one of the following suffixes:
          -i \
          'https://my.artifactory.com/artifactory/api/search/aql' \
          -d 'items.find ({
-              "repo": "wukong-precommit-local",
-              "type" : "folder" ,
-              "depth" : "1",
-              "created" : { "$before" : "3days" }
-            }).sort({"$desc":["created"]}).limit(1)
-          '
+                          "repo": "proj-1-local",
+                          "type" : "folder" ,
+                          "depth" : "1",
+                          "created" : { "$before" : "3days" }
+                        }).sort({"$desc":["created"]}).limit(1)
+            '
   ```
 
   - or `-d @<filename>`
