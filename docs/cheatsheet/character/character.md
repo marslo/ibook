@@ -11,12 +11,18 @@
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
   - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
   - [Running multiple commands with xargs](#running-multiple-commands-with-xargs)
+  - [change](#change)
 - [`find`](#find)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
   - [`find` && `tar`](#find--tar)
   - [tar all and extra in remote](#tar-all-and-extra-in-remote)
   - [`exec` and `sed`](#exec-and-sed)
   - [find and rename](#find-and-rename)
+- [awk](#awk)
+  - [print chars and length](#print-chars-and-length)
+  - [summary all user used memory (`ps aux`)](#summary-all-user-used-memory-ps-aux)
+  - [calculate word count in a file](#calculate-word-count-in-a-file)
+  - [remove non-duplicated lines](#remove-non-duplicated-lines)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
 - [regex](#regex)
@@ -298,6 +304,53 @@ $ find . -maxdepth 1 ! -path . -type d -print0 \
   $ echo 'a b c' | xargs -n1 -p touch
   touch a ?...y
   ```
+- [or `fmt`](https://unix.stackexchange.com/a/170008/29178)
+  ```bash
+  $ echo 'a b c' | fmt -1
+  a
+  b
+  c
+  ```
+
+- [or `awk`](https://unix.stackexchange.com/a/169996/29178)
+  ```bash
+  $ echo 'a b c' | awk '{OFS=RS;$1=$1}1'
+  a
+  b
+  c
+  ```
+
+- or `tr`
+  ```bash
+  $ echo 'a b c' | tr -s ' ' '\n'
+  a
+  b
+  c
+  ```
+
+### [convert row to column](https://unix.stackexchange.com/a/169997/29178)
+```bash
+awk '{
+  for (i=1; i<=NF; i++) arr[i]= (arr[i]? arr[i] FS $i: $i) }
+  END{ for (i in arr) print arr[i]
+}' sample.txt
+```
+
+- result
+  ```bash
+  $ cat sample.txt
+  job salary
+  c++ 13
+  java 14
+  php 12
+
+  $ awk '{
+    for (i=1; i<=NF; i++) arr[i]= (arr[i]? arr[i] FS $i: $i) }
+    END{ for (i in arr) print arr[i]
+  }' sample.txt
+  job c++ java php
+  salary 13 14 12
+  ```
 
 #### ping multiple ips
 ```bash
@@ -380,6 +433,82 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
 ```bash
 $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
 ```
+
+## awk
+### print chars and length
+```bash
+$ awk '{ for(i=1; i<=NF; i++){print $i, length($i)} }' sample.txt
+```
+- or using while
+  ```bash
+  $ while IFS= read -r line; do
+    echo "${line}: ${#line}"
+  done < <(cat sample.txt | xargs -n1 echo)
+  ```
+
+### summary all user used memory (`ps aux`)
+```bash
+$ awk '{sum += $1} END {print sum}' < <(ps -u marslo -o pmem)
+```
+- or
+  ```bash
+  $ ps -u marslo -o pcpu,pmem,pid,command |
+       awk '{sum += $2} END {print sum}'
+  ```
+
+### calculate word count in a file
+```bash
+$ < sample.txt \
+    tr -s ' ' '\n' |
+    sort |
+    uniq -c |
+    awk '{print $2,$1}' |
+    sort -gk2
+```
+- or
+  ```bash
+  $ cat sample.txt |
+        xargs -n1 echo |
+        sort |
+        uniq -c |
+        awk '{print $2,$1}' |
+        sort -gk2
+  ```
+- or
+  ```bash
+  $ awk '{for(w=1;w<=NF;w++) print $w}' sample.txt |
+        sort |
+        uniq -c |
+        awk '{print $2,$1}' |
+        sort -gk2
+  ```
+
+### remove non-duplicated lines
+{% hint style='tip' %}
+> pre-condition
+> ```bash
+> $ cat sample.txt | xargs
+> a a b c d e e e f
+> ```
+{% endhint %}
+
+```bash
+$ awk '{print $1}' sample.txt | sort | uniq -cd | sort -g
+```
+
+- or
+  ```bash
+  $ awk '{arr[$1]++}END{for (key in arr){if (arr[key] > 1){print arr[key],key}}}' sample.txt
+  ```
+
+- [show only duplicated lines](https://superuser.com/a/1107659/112396)
+  ```bash
+  $ awk 'seen[$1]++' sample.txt
+  ```
+  - show only non-duplicated lines
+    ```bash
+    $ awk '!seen[$1]++' sample.txt
+    ```
 
 ## trim
 ### trim tailing chars
