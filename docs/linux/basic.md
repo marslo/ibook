@@ -247,6 +247,21 @@ t3	33
 t4	44
 ```
 
+- additional usage
+  ```bash
+  $ cat a | paste -d'\t' - - - -
+  a	b	c	d
+  e	f		
+  ```
+
+  or
+  ```bash
+  $ cat a | paste -d, - -
+  a,b
+  c,d
+  e,f
+  ```
+
 - `/dev/fd/63` is not a regular file
   ```bash
   $ more <( ls -l )
