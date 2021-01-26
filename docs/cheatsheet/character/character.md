@@ -11,7 +11,7 @@
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
   - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
   - [Running multiple commands with xargs](#running-multiple-commands-with-xargs)
-  - [change](#change)
+  - [convert row to column](#convert-row-to-column)
 - [`find`](#find)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
   - [`find` && `tar`](#find--tar)

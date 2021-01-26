@@ -11,6 +11,7 @@ Git Command Study and practice
   - [create empty branch](#create-empty-branch)
   - [get branch name from reversion](#get-branch-name-from-reversion)
   - [get upstream branch](#get-upstream-branch)
+  - [get local/remote branches](#get-localremote-branches)
 - [git log](#git-log)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
@@ -84,33 +85,34 @@ rlog    = "!bash -c 'while read branch; do \n\
     $ git push --force -u origin HEAD:<BRANCH_NAME>
     ```
 
-  - git alias [`~/.gitconfig.alias`](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/git/.gitconfig.alias):
+  - git alias [`.gitalias`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.gitalias#L120) :
     ```bash
     [alias]
     init-repo   = "!f() { \
-                      declare help=\"\"\"\
-                        USAGE: git init-repo <REMOTE_URL> [DEFAULT_BRANCH] [LOCAL_DIR] \n\
-                        OPT: \n\
-                            REMOTE_URL: mandatory \n\
-                            DEFAULT_BRANCH: optinal. default is 'master' \n\
-                            LOCAL_DIR: optional. default is current directory: '\"$(pwd)\"' \n\
-                      \"\"\"; \
-                      declare remoteURL=\"$1\"; \
-                      declare defaultBr='master'; \
-                      declare localDir='.'; \
-                      [ 2 -eq $# ] && defaultBr=\"$2\"; \
-                      [ 3 -eq $# ] && localDir=\"$3\"; \
-                      if [ 0 -eq $# ]; then \
-                        echo \"${help}\"; \
-                      else \
-                        [ -d ${localDir} ] || mkdir -p ${localDir}; \
-                        cd ${localDir} ; \
-                        git init && \
-                        git remote add origin ${remoteURL} && \
-                        git fetch --all --force --quiet && \
-                        git checkout -b ${defaultBr}; \
-                      fi \
-                    }; f"
+                          declare help=\"\"\"\
+                            USAGE: git init-repo <REMOTE_URL> [DEFAULT_BRANCH] [LOCAL_DIR] \n\
+                            OPT: \n\
+                                REMOTE_URL: mandatory \n\
+                                DEFAULT_BRANCH: optinal. default is 'master' \n\
+                                LOCAL_DIR: optional. default is current directory: '\"$(pwd)\"' \n\
+                          \"\"\"; \
+                          declare remoteURL=\"$1\"; \
+                          declare defaultBr='master'; \
+                          declare localDir='.'; \
+                          [ 2 -le $# ] && defaultBr=\"$2\"; \
+                          [ 3 -eq $# ] && localDir=\"$3\"; \
+                          if [ 0 -eq $# ] || [ 3 -lt $# ]; then \
+                            echo \"${help}\"; \
+                          else \
+                            [ -d ${localDir} ] || mkdir -p ${localDir}; \
+                            cd ${localDir} ; \
+                            git init && \
+                            git remote add origin ${remoteURL} && \
+                            git fetch --all --force --quiet && \
+                            git checkout -b ${defaultBr}; \
+                          fi \
+                        }; f \
+                  "
     ```
 
 ### get branch name from reversion
@@ -163,6 +165,16 @@ rlog    = "!bash -c 'while read branch; do \n\
     $ git for-each-ref --format='%(upstream:short)' $(git rev-parse --symbolic-full-name meta/config)
     origin/meta/config
     ```
+
+### [get local/remote branches](https://stackoverflow.com/a/40122019/2940319)
+- local
+  ```bash
+  $ git for-each-ref --format='%(refname:short)' refs/heads/
+  ```
+- remote
+  ```bash
+  $ git for-each-ref --format='%(refname:short)' refs/remotes/origin/
+  ```
 
 ## git log
 ### show files and status without comments
