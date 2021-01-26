@@ -8,10 +8,12 @@ Git Command Study and practice
 - [Appoint](#appoint)
   - [Git Alias](#git-alias)
 - [git branch](#git-branch)
+  - [get current branch](#get-current-branch)
   - [create empty branch](#create-empty-branch)
   - [get branch name from reversion](#get-branch-name-from-reversion)
   - [get upstream branch](#get-upstream-branch)
   - [get local/remote branches](#get-localremote-branches)
+  - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
 - [git log](#git-log)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
@@ -68,6 +70,31 @@ rlog    = "!bash -c 'while read branch; do \n\
 ```
 
 ## git branch
+### [get current branch](https://stackoverflow.com/a/19585361/2940319)
+```bash
+$ git branch --show-current
+```
+or
+```bash
+$ git rev-parse --abbrev-ref HEAD
+```
+or
+```bash
+$ git symbolic-ref --short HEAD
+```
+- or
+  ```bash
+  $ git symbolic-ref HEAD | sed -e "s/^refs\/heads\///"
+  ```
+- or
+  ```bash
+  $ git symbolic-ref --quiet --short HEAD || git rev-parse --short
+  ```
+[or](https://stackoverflow.com/a/33485172/2940319)
+```bash
+$ git name-rev --name-only HEAD
+```
+
 ### create empty branch
   - create an empty branch
     ```bash
@@ -154,6 +181,11 @@ rlog    = "!bash -c 'while read branch; do \n\
     $ git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
     origin/meta/config
     ```
+  [or](https://stackoverflow.com/a/49418399/2940319)
+  ```bash
+  $ git status -bsuno
+  ## master...origin/master
+  ```
 
 - get specific
   ```bash
@@ -174,6 +206,19 @@ rlog    = "!bash -c 'while read branch; do \n\
 - remote
   ```bash
   $ git for-each-ref --format='%(refname:short)' refs/remotes/origin/
+  ```
+
+### [sort local branch via `committerdate`](https://stackoverflow.com/a/5188364/2940319)
+```bash
+$ git for-each-ref --sort=-committerdate refs/heads/
+
+# Or using git branch (since version 2.7.0)
+$ git branch --sort=-committerdate  # DESC
+$ git branch --sort=committerdate   # ASC
+```
+- advanced usage
+  ```bash
+  $ git for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
   ```
 
 ## git log
