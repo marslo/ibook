@@ -36,6 +36,7 @@ Git Command Study and practice
   - [get difference between two branches](#get-difference-between-two-branches)
 - [tag](#tag)
   - [get distance between tags](#get-distance-between-tags)
+  - [show all tags for particular revision](#show-all-tags-for-particular-revision)
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout single branch](#checkout-single-branch)
@@ -605,6 +606,23 @@ $ git describe HEAD --tags
 or
   ```bash
   $ git describe HEAD --all --long
+  ```
+
+### [show all tags for particular revision](https://stackoverflow.com/a/37497511/2940319)
+```bash
+$ git tag --points-at <revision>
+```
+- get tags for `HEAD`:
+  ```bash
+  $ git tag --points-at HEAD
+  ```
+[or](https://stackoverflow.com/a/23394114/2940319)
+```bash
+$ git name-rev --tags --name-only $(git rev-parse <revision>)
+```
+- example
+  ```bash
+  $ git name-rev --tags --name-only $(git rev-parse HEAD)```
   ```
 
 ## checkout
