@@ -7,6 +7,7 @@
   - [Stop the current build](#stop-the-current-build)
   - [get current build info](#get-current-build-info)
   - [trigger downstream builds](#trigger-downstream-builds)
+  - [get changelogs](#get-changelogs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -26,13 +27,69 @@ if(!hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?
 ```
 
 ### Stop the current build
-#### stop current
+#### [stop current](https://devops.stackexchange.com/a/9545/3503)
 ```groovy
 // stop and show status to UNSTABLE
 if ( 'UNSTABLE' == currentBuild.result ) {
   currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
 }
 ```
+
+[or](https://stackoverflow.com/a/59062652/2940319)
+```groovy
+import hudson.model.Result
+import hudson.model.Run
+import jenkins.model.CauseOfInterruption
+
+println ">> Aborting older build #${previousBuild.number}"
+def cause = { "interrupted by build #${currentBuild.getId()}" as String } as CauseOfInterruption
+executor.interrupt(Result.ABORTED, cause)
+```
+- abort previous running build
+  ```groovy
+  import hudson.model.Result
+  import hudson.model.Run
+  import jenkins.model.CauseOfInterruption
+
+  def abortPreviousBuilds() {
+    Run previousBuild = currentBuild.getPreviousBuildInProgress()
+
+    while (previousBuild != null) {
+      if (previousBuild.isInProgress()) {
+        def executor = previousBuild.getExecutor()
+        if (executor != null) {
+          println ">> Aborting older build #${previousBuild.number}"
+          def cause = { "interrupted by build #${currentBuild.getId()}" as String } as CauseOfInterruption
+          executor.interrupt(Result.ABORTED, cause)
+        }
+      }
+      previousBuild = previousBuild.getPreviousBuildInProgress()
+    }
+  }
+  ```
+- [or Stopping Jenkins job in case newer one is started](https://stackoverflow.com/a/44326188/2940319)
+  ```groovy
+  import hudson.model.Result
+  import jenkins.model.CauseOfInterruption
+
+  //iterate through current project runs
+  build.getProject()._getRuns().each{id,run->
+    def exec = run.getExecutor()
+    //if the run is not a current build and it has executor (running) then stop it
+    if( run!=build && exec!=null ){
+      //prepare the cause of interruption
+      def cause = new CauseOfInterruption(){
+        public String getShortDescription(){
+          return "interrupted by build #${build.getId()}"
+        }
+      }
+      exec.interrupt(Result.ABORTED, cause)
+    }
+  }
+
+  //just for test do something long...
+  Thread.sleep(10000)
+  ```
 
 #### [stop all](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
@@ -129,3 +186,36 @@ timestamps { ansiColor('xterm') {
 ```
 
 ![build downstream jobs](../../screenshot/jenkins/trigger-downstream.png)
+
+### [get changelogs](https://support.cloudbees.com/hc/en-us/articles/217630098-How-to-access-Changelogs-in-a-Pipeline-Job-)
+```groovy
+def changeLogSets = currentBuild.changeSets
+for (int i = 0; i < changeLogSets.size(); i++) {
+  def entries = changeLogSets[i].items
+  for (int j = 0; j < entries.length; j++) {
+    def entry = entries[j]
+    echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+    def files = new ArrayList(entry.affectedFiles)
+    for (int k = 0; k < files.size(); k++) {
+      def file = files[k]
+      echo "  ${file.editType.name} ${file.path}"
+    }
+  }
+}
+```
+- [Pipeline Supporting APIs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Supporting+APIs+Plugin) older than `2.2`
+  ```groovy
+  def changeLogSets = currentBuild.rawBuild.changeSets
+  for (int i = 0; i < changeLogSets.size(); i++) {
+    def entries = changeLogSets[i].items
+    for (int j = 0; j < entries.length; j++) {
+      def entry = entries[j]
+      echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+      def files = new ArrayList(entry.affectedFiles)
+      for (int k = 0; k < files.size(); k++) {
+        def file = files[k]
+        echo "  ${file.editType.name} ${file.path}"
+      }
+    }
+  }
+  ```
