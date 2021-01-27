@@ -18,6 +18,7 @@
   - [tar all and extra in remote](#tar-all-and-extra-in-remote)
   - [`exec` and `sed`](#exec-and-sed)
   - [find and rename](#find-and-rename)
+  - [find and exclude](#find-and-exclude)
 - [awk](#awk)
   - [print chars and length](#print-chars-and-length)
   - [summary all user used memory (`ps aux`)](#summary-all-user-used-memory-ps-aux)
@@ -428,11 +429,19 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
          -exec sed -i 's/1.2.3./4.5.6./g' {} \; -print
   ```
 
-
 ### find and rename
 ```bash
 $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
 ```
+
+### [find and exclude](https://stackoverflow.com/a/60439808/2940319)
+```bash
+$ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and -not -regex ".*/(node_modules|vendor)/.*" 
+```
+- [or](https://stackoverflow.com/a/25113492/2940319)
+  ```bash
+  $ find . -regex-type posix-extended -regex ".*def/incoming.*|.*456/incoming.*" -prune -o -print 
+  ```
 
 ## awk
 ### print chars and length
