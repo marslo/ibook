@@ -5,6 +5,7 @@
 - [parameters](#parameters)
 - [active choice parameters](#active-choice-parameters)
 - [mixed parameters](#mixed-parameters)
+- [Jenkins 2.0 pipeline: Scripting active parameters for SCM](#jenkins-20-pipeline-scripting-active-parameters-for-scm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -22,10 +23,11 @@ reference:
 ```groovy
 properties([
   parameters([
-    string(defaultValue: '', name: 'stringParams', description: '', trim: false),
-    string(defaultValue: 'default', name: 'stringDefaultParams', description: '', trim: false),
-    choice(choices: ['a', 'b', 'c', 'd'], name: 'choiceParams', description: ''),
-    booleanParam(defaultValue: false, name: 'booleanParams', description: '')
+    string( defaultValue: '', name: 'stringParams', description: '', trim: false ),
+    string( defaultValue: 'default', name: 'stringDefaultParams', description: '', trim: false ),
+    validatingString( defaultValue: '', name: 'validatingString', regex: '.+', description: 'format: <code>.+</code>', failedValidationMessage: 'cannot be empty' ),
+    choice( choices: ['a', 'b', 'c', 'd'], name: 'choiceParams', description: '' ),
+    booleanParam( defaultValue: false, name: 'booleanParams', description: '' )
   ])
 ])
 ```
@@ -156,42 +158,135 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript
 
 newParams += [$class: 'StringParameterDefinition' , name: 'lastName'  , defaultValue: 'Joe' , description: '']
 newParams += [$class: 'StringParameterDefinition' , name: 'firstName' , defaultValue: 'Dan' , description: '']
-newParams += [$class: 'ChoiceParameter',
-              name: 'provinces',
-              choiceType: 'PT_SINGLE_SELECT',
-              script: [ $class: 'GroovyScript',
-                        script: ps,
-                        fallbackScript: fb
-              ],
-              description: ''
-             ]
-newParams += [$class: 'CascadeChoiceParameter',
-              name: 'cities',
-              referencedParameters: 'provinces',
-              choiceType: 'PT_CHECKBOX',
-              script: [ $class: 'GroovyScript',
-                        script: cs,
-                        fallbackScript: fb
-              ],
-              description: ''
-             ]
-newParams += [$class: 'BooleanParameterDefinition', name: 'notify', defaultValue: false, description: '']
-props += [$class: 'ParametersDefinitionProperty', parameterDefinitions: newParams]
-properties(
-  properties: props
-)
+newParams += [
+                   $class : 'ValidatingStringParameterDefinition',
+             defaultValue : '' ,
+              description : 'timestamps format: <code>YYMMDDHHMMSS</code>' ,
+  failedValidationMessage : 'Cannot be empty or failed by Regex validation !' ,
+                     name : 'timeStamps' ,
+                    regex : '\\d{2,4}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])(2[0-3]|[01][0-9])[0-5][0-9]\\d{0,2}'
+]
+newParams += [
+                $class : 'ChoiceParameter' ,
+                  name : 'provinces' ,
+            choiceType : 'PT_SINGLE_SELECT' ,
+                script : [
+                            $class : 'GroovyScript' ,
+                            script : ps ,
+                    fallbackScript : fb
+              ] ,
+           description : ''
+]
+newParams += [
+                $class : 'CascadeChoiceParameter' ,
+                  name : 'cities' ,
+  referencedParameters : 'provinces' ,
+            choiceType : 'PT_CHECKBOX' ,
+                script : [
+                            $class : 'GroovyScript' ,
+                            script : cs ,
+                    fallbackScript : fb
+                ] ,
+           description : ''
+]
+newParams += [$class: 'BooleanParameterDefinition' , name: 'notify' , defaultValue: false , description: '']
+
+props += [$class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams]
+properties( properties: props )
 
 podTemplate(cloud: 'DevOps Kubernetes') {
   node(POD_LABEL) {
     stage('run') {
       println """
-        lastName: ${params.lastName}
-        firstName: ${params.firstName}
-        provinces: ${params.provinces}
-        cities: ${params.cities}
-        notify: ${params.notify}
+          lastName : ${params.lastName}
+         firstName : ${params.firstName}
+         provinces : ${params.provinces}
+            cities : ${params.cities}
+            notify : ${params.notify}
+        timeStamps : ${params.timeStamps}
       """
-    }
+    } // stage
+  } // node
+} // podTemplate
+```
+
+### [Jenkins 2.0 pipeline: Scripting active parameters for SCM](https://technology.amis.nl/continuous-delivery/jenkins-2-0-pipeline-scripting-active-parameters-for-scm/)
+```groovy
+import groovy.transform.Field
+import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript
+
+@Field def props = []
+@Field def newParams = []
+
+node('mster') {
+  setNewProps()
+} // node
+
+void setNewProps() {
+  //Parameters are unknown at first load
+  try {
+    regenerateJob = (params.RegenerateJob == null) ? true : params.RegenerateJob
+  }
+  catch (MissingPropertyException e) {
+    regenerateJob = true
+  }
+
+  if (regenerateJob) {
+    def fb = new SecureGroovyScript("""return ['Script Error!']""", false)
+    def ps = new SecureGroovyScript("""return[ 'Gansu', 'Sichuan', 'Disabled:disabled' ]""", false )
+    def cs = new SecureGroovyScript("""#!groovy
+      Map citySets = [
+            Gansu : ['Lanzhou', 'Dingxi'] ,
+          Sichuan : ['Leshan', 'Guangyuan', 'Chengdu:selected'] ,
+         Disabled : ['notshow:selected']
+      ]
+      return citySets[provinces]
+    """, false)
+
+    println "Jenkins job ${env.JOB_NAME} gets updated."
+    currentBuild.displayName = "#" + Integer.toString(currentBuild.number) + ": Initialize job"
+
+    newParams += [$class: 'StringParameterDefinition' , name: 'lastName'  , defaultValue: 'Joe' , description: '']
+    newParams += [$class: 'StringParameterDefinition' , name: 'firstName' , defaultValue: 'Dan' , description: '']
+    newParams += [
+                       $class : 'ValidatingStringParameterDefinition',
+                         name : 'timeStamps' ,
+                  description : 'timestamps format: <code>YYMMDDHHMMSS</code>' ,
+      failedValidationMessage : 'Cannot be empty or failed by Regex validation !' ,
+                 defaultValue : '' ,
+                        regex : '\\d{2,4}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])(2[0-3]|[01][0-9])[0-5][0-9]\\d{0,2}'
+    ]
+    newParams += [
+                       $class : 'ChoiceParameter' ,
+                         name : 'provinces' ,
+                   choiceType : 'PT_SINGLE_SELECT' ,
+                       script : [
+                                   $class : 'GroovyScript' ,
+                                   script : ps ,
+                           fallbackScript : fb
+                       ] ,
+                  description : ''
+    ]
+    newParams += [
+                       $class : 'CascadeChoiceParameter' ,
+                         name : 'cities' ,
+         referencedParameters : 'provinces' ,
+                   choiceType : 'PT_CHECKBOX' ,
+                       script : [
+                                   $class : 'GroovyScript' ,
+                                   script : cs ,
+                           fallbackScript : fb
+                       ] ,
+                  description : ''
+    ]
+    newParams += [$class: 'BooleanParameterDefinition' , name: 'notify' , defaultValue: false , description: '']
+
+    props += [
+                $class : 'BuildDiscarderProperty',
+              strategy : [$class: 'LogRotator', daysToKeepStr: '30', artifactDaysToKeepStr: '1', artifactNumToKeepStr: '']
+    ]
+    props += [$class: 'ParametersDefinitionProperty', parameterDefinitions: newParams]
+    properties( properties: props )
   }
 }
 ```
