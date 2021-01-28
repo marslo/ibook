@@ -14,11 +14,11 @@
   sh "touch a.txt"
   def files = findFiles (glob: "**/*.txt")
   println """
-    name: ${files[0].name}
-    path: ${files[0].path}
-    directory: ${files[0].directory}
-    length: ${files[0].length}
-    lastModified: ${files[0].lastModified}
+            name : ${files[0].name}
+            path : ${files[0].path}
+       directory : ${files[0].directory}
+          length : ${files[0].length}
+    lastModified : ${files[0].lastModified}
   """
   ```
 - result
@@ -28,10 +28,9 @@
   [Pipeline] findFiles
   [Pipeline] echo
 
-        name: a.txt
-        path: a.txt
-        directory: false
-        length: 0
-        lastModified: 1605525397000
+                name : a.txt
+                path : a.txt
+           directory : false
+              length : 0
+        lastModified : 1605525397000
   ```
-
