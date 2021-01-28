@@ -6,6 +6,7 @@
   - [filter a list](#filter-a-list)
   - [filter in list via additional conditions](#filter-in-list-via-additional-conditions)
   - [return result instead of original list](#return-result-instead-of-original-list)
+  - [print 2D matrix](#print-2d-matrix)
 - [`Map`](#map)
   - [change Map in condition](#change-map-in-condition)
   - [filter via condition](#filter-via-condition)
@@ -53,6 +54,16 @@
 ```groovy
 [1, 2, 3, 4].findAll { ( it % 2 == 0 ) ? it / 2 : null }
 ===> [2, 4]
+```
+
+### print 2D matrix
+```groovy
+(1..255).collect { color ->
+  " █${color}█ "
+}.eachWithIndex{ c, idx ->
+  print c
+  if ( 4 == (idx+1)%6 ) { println '' }
+}
 ```
 
 ## `Map`

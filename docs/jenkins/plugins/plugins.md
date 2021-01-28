@@ -48,6 +48,7 @@
 - [Sectioned View](https://plugins.jenkins.io/sectioned-view/)
 - [Parameterized Scheduler](https://plugins.jenkins.io/parameterized-scheduler/)
 - [Metrics](https://plugins.jenkins.io/metrics/)
+- [Validating String Parameter](https://plugins.jenkins.io/validating-string-parameter/)
 
 ### optinal
 - [JobFanIn](https://plugins.jenkins.io/job-fan-in/)
