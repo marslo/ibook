@@ -18,6 +18,7 @@
   - [finally](#finally)
 - [others](#others)
   - [launch apps](#launch-apps)
+  - [extra pkg](#extra-pkg)
   - [create image](#create-image)
   - [disk](#disk)
   - [disable startup music](#disable-startup-music)
@@ -201,6 +202,11 @@ $ mv groovyConsole.app/ /Applications/
 ### launch apps
 ```bash
 $ launchctl list
+```
+
+### [extra pkg](https://apple.stackexchange.com/a/309591/254265)
+```bash
+$ xar -xvf foo.pkg
 ```
 
 ### create image
