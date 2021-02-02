@@ -18,6 +18,7 @@
   - [feedback assistant](#feedback-assistant)
   - [time machine](#time-machine)
   - [dock](#dock)
+  - [tricky for keyboards](#tricky-for-keyboards)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
   - [vscode](#vscode)
@@ -575,6 +576,13 @@ $ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
   $ defaults write com.apple.dock show-recents -bool false && killall Dock
   ```
 
+### [tricky for keyboards](https://blog.csdn.net/m290345792/article/details/110383724)
+```bash
+$ defaults write NSGlobalDomain ApplePressAndHoldEnabled -boolean false
+
+# or
+$ defaults write -g ApplePressAndHoldEnabled -bool false
+```
 
 ## backup & restore
 ### [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)
