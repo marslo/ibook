@@ -15,6 +15,7 @@
   - [memory](#memory)
   - [swap usage](#swap-usage)
   - [show kernel version](#show-kernel-version)
+  - [list printer status](#list-printer-status)
 - [osx installation](#osx-installation)
   - [download older version](#download-older-version)
   - [create osx installer usb](#create-osx-installer-usb)
@@ -250,6 +251,12 @@ kern.osrevision: 199506
   $ uname -a
   Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
   ```
+
+### [list printer status](https://unix.stackexchange.com/q/140009/29178)
+```bash
+$ lpstat -a
+printer-01 accepting requests since Wed Feb  3 16:40:50 2021
+```
 
 ## osx installation
 ### [download older version](https://512pixels.net/2019/10/download-macos-installers-with-terminal/)
