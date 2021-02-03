@@ -50,3 +50,4 @@
 - [Alfed](https://www.alfredapp.com/)
 - [Chrome Canary](https://www.google.com/chrome/canary/?platform=mac&standalone=1)
 - [Chromium](https://www.chromium.org/getting-involved/download-chromium)
+- [Karabiner-Elements](https://karabiner-elements.pqrs.org/) Saviour of MadCatz R.A.T in MacOS
