@@ -14,6 +14,7 @@
   - [disable guest user](#disable-guest-user)
   - [enable root user](#enable-root-user)
   - [System Integrity Protection](#system-integrity-protection)
+  - [disable/enable gatekeeper](#disableenable-gatekeeper)
 - [app](#app)
   - [java](#java)
 
@@ -427,6 +428,24 @@ $ chflags -R nouchg <PATH of folder>
   $ sudo chflags restricted Firefox.app
   $ /bin/ls -lO /Applications | grep firefox
   drwxr-xr-x   3 marslo  staff  restricted  96 Dec  7 03:14 Firefox.app
+  ```
+
+### [disable/enable gatekeeper](https://gist.github.com/boyvanamstel/2919778)
+- disable
+  ```bash
+  $ sudo spctl --master-disable
+  ```
+  ![disable gatekeeper](../screenshot/osx/spctl-gatekepper.png)
+
+- enable
+  ```bash
+  $ sudo spctl  --master-enable
+  ```
+
+- check status
+  ```bash
+  $ spctl --status
+  assessments disabled
   ```
 
 ## app
