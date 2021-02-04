@@ -8,6 +8,12 @@
   - [get current build info](#get-current-build-info)
   - [trigger downstream builds](#trigger-downstream-builds)
   - [get changelogs](#get-changelogs)
+- [stage and build](#stage-and-build)
+  - [`warnError`](#warnerror)
+  - [`catchError`](#catcherror)
+  - [`error`](#error)
+  - [`unstable`](#unstable)
+  - [get stage of a build](#get-stage-of-a-build)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -216,6 +222,119 @@ for (int i = 0; i < changeLogSets.size(); i++) {
         def file = files[k]
         echo "  ${file.editType.name} ${file.path}"
       }
+    }
+  }
+  ```
+
+## stage and build
+
+{% hint style='tip' %}
+> reference:
+> - [Jenkins Pipeline Stage Result Visualization Improvements](https://www.jenkins.io/blog/2019/07/05/jenkins-pipeline-stage-result-visualization-improvements/)
+> - [org.jenkinsci.plugins.workflow.steps.Step](https://javadoc.jenkins.io/plugin/workflow-step-api/org/jenkinsci/plugins/workflow/steps/Step.html)
+> - [/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/)
+> - [org.jenkinsci.plugins.workflow.steps.CatchErrorStep](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/CatchErrorStep.html)
+> - [org.jenkinsci.plugins.workflow.steps.WarnErrorStep](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/WarnErrorStep.html)
+> - [warnError: Catch error and set build and stage result to unstable](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#warnerror-catch-error-and-set-build-and-stage-result-to-unstable)
+> - [catchError: Catch error and set build result to failure](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#catcherror-catch-error-and-set-build-result-to-failure)
+> - [Set a stage status in Jenkins Pipelines](https://stackoverflow.com/a/64746938/2940319)
+> - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
+{% endhint %}
+
+### `warnError`
+```groovy
+node('master') {
+  warnError('Script failed!') {
+    sh('false')
+  }
+}
+```
+![warnError](../../screenshot/jenkins/warnError.png)
+
+### [`catchError`](https://issues.jenkins.io/browse/JENKINS-57826)
+```groovy
+stage('false') {
+  catchError(
+    buildResult : 'SUCCESS',
+        message : 'stage failed, but build succeed',
+    stageResult : 'FAILURE'
+  ){
+    sh label: env.STAGE_NAME,
+       script: 'exit 2'
+  }
+}
+```
+
+- or [just be simply](https://github.com/jenkinsci/github-autostatus-plugin/issues/47#issue-479506531):
+  ```groovy
+   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+     sh('false')
+   }
+  ```
+![catchError](../../screenshot/jenkins/catchError.png)
+
+- set unstable
+  ```groovy
+  catchError(message: 'script failed', buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+    sh('false')
+  }
+  ```
+- [catchError unstable](../../screenshot/jenkins/catchError-unstable.png)
+
+### [`error`](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#error-error-signal)
+> Signals an error. Useful if you want to conditionally abort some part of your program. You can also just `throw new Exception()`, but this step will avoid printing a stack trace
+
+```groovy
+error( 'failed the build' )
+```
+
+### [`unstable`](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#unstable-set-stage-result-to-unstable)
+> Prints a message to the log and sets the overall build result and the stage result to UNSTABLE. The message will also be associated with the stage result and may be shown in visualizations.
+
+```groovy
+unstable( 'unstable the build' )
+```
+
+### get stage of a build
+- get stage name
+  ```groovy
+  stage('build') {
+    println "${env.STAGE_NAME}"
+  }
+  ```
+- [get all stages of a build](https://stackoverflow.com/a/59854515/2940319)
+  ```groovy
+  WorkflowRun run = Jenkins.instance.getItemByFullName("####YOUR_JOB_NAME####")._getRuns()[0]
+  FlowExecution exec = run.getExecution()
+  PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor(run)
+  def flowNodes = visitor.getPipelineNodes()
+
+  for (Iterator iterator = flowNodes.iterator(); iterator.hasNext();) {
+    def node = iterator.next()
+    if (node.getType() == FlowNodeWrapper.NodeType.STAGE) {
+      String stageName = node.getDisplayName()
+      def stageResult = node.getStatus().getResult()
+
+      println "Result of stage ${stageName} is ${stageResult}"
+    }
+  }
+  ```
+  or
+  ```groovy
+  import org.jenkinsci.plugins.workflow.graph.FlowGraphWalker
+  import org.jenkinsci.plugins.workflow.graph.FlowNode
+
+  try {
+    // just for demo, a success step and a failure step
+    node {
+      sh 'true'
+      sh 'false'
+    }
+  } finally {
+    FlowGraphWalker walker = new FlowGraphWalker(currentBuild.rawBuild.getExecution())
+    for (FlowNode flowNode: walker) {
+      // do whatever you want with flowNode
+      echo flowNode.dump()
     }
   }
   ```

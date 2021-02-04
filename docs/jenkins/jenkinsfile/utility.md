@@ -4,6 +4,7 @@
 
 - [Pipeline Utility Steps](#pipeline-utility-steps)
   - [findFiles](#findfiles)
+  - [send mail with catch error](#send-mail-with-catch-error)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -34,3 +35,16 @@
               length : 0
         lastModified : 1605525397000
   ```
+
+### [send mail with catch error](https://github.com/jenkinsci/workflow-basic-steps-plugin/blob/master/CORE-STEPS.md#plain-catch-blocks)
+```groovy
+try {
+  sh 'might fail'
+  mail subject: 'all well', to: 'admin@somewhere', body: 'All well.'
+} catch (e) {
+  def w = new StringWriter()
+  e.printStackTrace(new PrintWriter(w))
+  mail subject: "failed with ${e.message}", to: 'admin@somewhere', body: "Failed: ${w}"
+  throw e
+}
+```
