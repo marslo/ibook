@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [string](#string)
+  - [substring](#substring)
 - [`list`](#list)
   - [filter a list](#filter-a-list)
   - [filter in list via additional conditions](#filter-in-list-via-additional-conditions)
@@ -20,6 +22,29 @@
 > reference:
 > - [Groovy Cheatsheet](https://onecompiler.com/cheatsheets/groovy)
 > - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
+
+## string
+### [substring](http://grails.asia/groovy-substring)
+- remove the last x chars
+  ```groovy
+  def removeSuffix( String str ) {
+    removeSuffix( str, 1 )
+  }
+
+  /**
+   * remove the last char of {@code str}
+   * @param str       the string will be removal the last char
+   * @param c         remove last {@code c} numbers chars
+  **/
+  def removeSuffix( String str, int c ) {
+    str.reverse().drop(c).reverse()
+  }
+  ```
+
+- [add char(s) in the end of string](https://dzone.com/articles/concatenate-strings-in-groovy)
+  ```groovy
+  str.concat('substr')
+  ```
 
 ## `list`
 ### filter a list

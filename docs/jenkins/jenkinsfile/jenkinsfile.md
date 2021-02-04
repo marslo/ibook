@@ -17,6 +17,7 @@ reference:
 - [Pipeline Examples](https://www.jenkins.io/doc/pipeline/examples/)
 - [Jenkins Pipeline Syantx](https://kb.novaordis.com/index.php/Jenkins_Pipeline_Syntax)
 - [Pipeline Steps Reference](https://www.jenkins.io/doc/pipeline/steps/)
+- [Pipeline Utility Steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#pipeline-utility-steps)
 {% endhint %}
 
 ## jenkins API
