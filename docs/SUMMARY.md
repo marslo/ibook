@@ -66,6 +66,7 @@
     * [kubectl](virtualization/kubernetes/kubectl.md)
       * [pod](virtualization/kubernetes/pod.md)
       * [deploy](virtualization/kubernetes/deploy.md)
+      * [replicasets](virtualization/kubernetes/replicaset.md)
     * [certificates](virtualization/kubernetes/certificates.md)
     * [monitor](virtualization/kubernetes/monitor.md)
     * [namespace](virtualization/kubernetes/namespace.md)
