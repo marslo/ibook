@@ -17,6 +17,7 @@
   - [And snippets](#and-snippets)
   - [finally](#finally)
 - [others](#others)
+  - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
   - [launch apps](#launch-apps)
   - [extra pkg](#extra-pkg)
   - [create image](#create-image)
@@ -199,6 +200,21 @@ $ mv groovyConsole.app/ /Applications/
 
 
 ## others
+### [turn off the screen without sleeping](https://apple.stackexchange.com/a/266103/254265)
+```bash
+$ pmset displaysleepnow
+```
+
+- sleep
+  ```bash
+  $ pmset sleepnow
+  ```
+
+- lock
+  ```bash
+  $ pmset lock
+  ```
+
 ### launch apps
 ```bash
 $ launchctl list
