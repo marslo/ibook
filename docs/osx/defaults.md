@@ -19,6 +19,7 @@
   - [time machine](#time-machine)
   - [dock](#dock)
   - [tricky for keyboards](#tricky-for-keyboards)
+  - [battery settings](#battery-settings)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
   - [vscode](#vscode)
@@ -583,6 +584,17 @@ $ defaults write NSGlobalDomain ApplePressAndHoldEnabled -boolean false
 # or
 $ defaults write -g ApplePressAndHoldEnabled -bool false
 ```
+
+### [battery settings](https://apple.stackexchange.com/a/35718/254265)
+- get display off timer
+  ```bash
+  $ pmset -g  | grep displaysleep
+  displaysleep         180
+  ```
+- set display off timer
+  ```bash
+  $ pmset -a displaysleep 30
+  ```
 
 ## backup & restore
 ### [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)
