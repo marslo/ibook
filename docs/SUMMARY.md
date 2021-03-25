@@ -59,6 +59,7 @@
     * [artifactory](jenkins/plugins/artifactory.md)
     * [jira-steps](jenkins/plugins/jira-steps.md)
     * [ansicolor](jenkins/plugins/ansicolor.md)
+    * [simple-theme](jenkins/plugins/simple-theme.md)
 * [virtualization](virtualization/virtualization.md)
   * [kubernetes](virtualization/kubernetes/kubernetes.md)
     * [kubeadm](virtualization/kubernetes/kubeadm/kubeadm.md)
