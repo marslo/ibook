@@ -14,7 +14,7 @@
   - [`error`](#error)
   - [`unstable`](#unstable)
   - [get stage of a build](#get-stage-of-a-build)
-- [Result](#result)
+- [Build Result](#build-result)
   - [isWorthThan](#isworththan)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -235,6 +235,7 @@ for (int i = 0; i < changeLogSets.size(); i++) {
 > - [Jenkins Pipeline Stage Result Visualization Improvements](https://www.jenkins.io/blog/2019/07/05/jenkins-pipeline-stage-result-visualization-improvements/)
 > - [org.jenkinsci.plugins.workflow.steps.Step](https://javadoc.jenkins.io/plugin/workflow-step-api/org/jenkinsci/plugins/workflow/steps/Step.html)
 > - [/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/)
+> - [pipeline-stage-step-plugin/blob/master/src/main/java/org/jenkinsci/plugins/workflow/support/steps/StageStep.java](https://github.com/jenkinsci/pipeline-stage-step-plugin/blob/master/src/main/java/org/jenkinsci/plugins/workflow/support/steps/StageStep.java)
 > - [org.jenkinsci.plugins.workflow.steps.CatchErrorStep](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/CatchErrorStep.html)
 > - [org.jenkinsci.plugins.workflow.steps.WarnErrorStep](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/WarnErrorStep.html)
 > - [warnError: Catch error and set build and stage result to unstable](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#warnerror-catch-error-and-set-build-and-stage-result-to-unstable)
@@ -341,9 +342,13 @@ unstable( 'unstable the build' )
   }
   ```
 
-## Result
-### [isWorthThan](https://javadoc.jenkins.io/hudson/model/class-use/Result.html)
+## Build Result
+> reference
+> - [How to manipulate the build result of a Jenkins pipeline job](https://stackoverflow.com/a/53731567/2940319)
+> - [How to set current build result in Pipeline](https://support.cloudbees.com/hc/en-us/articles/218554077-how-to-set-current-build-result-in-pipeline)
+> - [hudson.module.Result API](https://javadoc.jenkins.io/hudson/model/class-use/Result.html)
 
+### isWorthThan
 ```groovy
 import hudson.model.Result
 
