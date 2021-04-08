@@ -14,6 +14,8 @@
   - [`error`](#error)
   - [`unstable`](#unstable)
   - [get stage of a build](#get-stage-of-a-build)
+- [Result](#result)
+  - [isWorthThan](#isworththan)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -338,3 +340,26 @@ unstable( 'unstable the build' )
     }
   }
   ```
+
+## Result
+### [isWorthThan](https://javadoc.jenkins.io/hudson/model/class-use/Result.html)
+
+```groovy
+import hudson.model.Result
+
+ansiColor('xterm') {
+  List r = [ 'SUCCESS', 'UNSTABLE', 'FAILURE', 'NOT_BUILT', 'ABORTED' ]
+
+  r.each { b ->
+    println " ~~> ${b}"
+    Result base = Result.fromString(b)
+    ( r - b ).each { o ->
+      Result x = Result.fromString(o)
+      res = base.isWorseThan(x)
+      color.echo( "${res ? 'green' : 'red'}", "${base} isWorthThan ${x} : ${res}" )
+    }
+  }
+} // ansiColor
+```
+
+![Jenkins Result Status](../../screenshot/jenkins/Result.isWorthThan.png)
