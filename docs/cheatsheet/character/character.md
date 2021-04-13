@@ -26,6 +26,8 @@
   - [remove non-duplicated lines](#remove-non-duplicated-lines)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
+  - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
+  - [search and replace](#search-and-replace)
 - [regex](#regex)
   - [get URL](#get-url)
 - [insert new line](#insert-new-line)
@@ -536,6 +538,96 @@ $ awk '{print $1}' sample.txt | sort | uniq -cd | sort -g
   $ echo ${str:: -3}
   1234567
   ```
+
+### [remove leading & trailing whitespace](https://stackoverflow.com/a/11791508/2940319)
+```bash
+$ str="    aaaa    bbbb      "
+$ echo "$str" | sed 's:^ *::; s: *$::'
+
+# i.e.:
+$ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
+.aaaa bbbb.
+```
+
+- remove all spaces
+  ```bash
+  $ echo .${str// }.
+  .aaaabbbb.
+  ```
+
+- [remove leading space(s)](https://stackoverflow.com/a/7486606/2940319)
+  ```bash
+  $ echo .${str##+([[:space:]])}.
+  .aaaa bbbb .
+  ```
+
+- [remove leading space(s)](https://stackoverflow.com/a/7486606/2940319)
+  ```bash
+  $ echo .${str%%+([[:space:]])}.
+  . aaaa bbbb.
+  ```
+
+### [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
+> reference:
+> [shellcheck SC2001](https://github.com/koalaman/shellcheck/wiki/SC2001)
+>
+> ```bash
+> str='aa  bb      cc'
+> ```
+
+- `${variable//search/replace}`
+  ```bash
+  $ shopt -s extglob
+  $ echo ${str//+( )/|}
+  aa|bb|cc
+  ```
+
+  [or](https://stackoverflow.com/a/50259959/2940319)
+  ```bash
+  $ echo "${str//+([[:blank:]])/|}"
+  aa|bb|cc
+  ```
+
+- sed
+  ```bash
+  # DO NOT USE "${str}"
+  $ echo ${str} | sed 's: :|:g'
+  aa|bb|cc
+  ```
+
+  [or](https://stackoverflow.com/a/50260434/2940319)
+  ```bash
+  $ echo "$str" | sed 's:[ ][ ]*:|:g'
+  aa|bb|cc
+
+  # or
+  $ echo "$str" | sed 's:\s\s*:|:g'
+  aa|bb|cc
+echo "${string:0:$(( position - 1 ))}${replacement}${string:position}"
+  # or
+  $ sed 's:\s\s*:|:g' <<< "${str}"
+  aa|bb|cc
+  ```
+
+- [tr](https://stackoverflow.com/a/50259880/2940319)
+  ```bash
+  $ echo "$str" | tr -s ' ' '|'
+  aa|bb|cc
+  ```
+
+### [replace with position](https://stackoverflow.com/a/54680736/2940319)
+```bash
+$ string=aaaaa
+$ replacement=b
+$ position=3
+$ echo "${string:0:$(( position - 1 ))}${replacement}${string:position}"
+aabaa
+```
+or
+```bash
+$ echo "${string:0:position-1}${replacement}${string:position}"
+aabaa
+```
 
 ## regex
 
