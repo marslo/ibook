@@ -28,6 +28,7 @@
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
   - [search and replace](#search-and-replace)
+  - [replace with position](#replace-with-position)
 - [regex](#regex)
   - [get URL](#get-url)
 - [insert new line](#insert-new-line)
