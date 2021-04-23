@@ -243,8 +243,8 @@ if ( exitCode != 0 ) {
 ```groovy
 def envVars = ["GROOVY_HOME=/fake/path/groovy-3.0.7", "CLASSPATH=.:/fake/path/groovy-3.0.7/lib"]
 
-def proc = './run.sh'.execute(envVars, new File("."))
-proc.waitForProcessOutput(System.out, System.err)
+def proc = './run.sh'.execute( envVars, new File(".") )
+proc.waitForProcessOutput( System.out, System.err )
 int exitCode = proc.exitValue()
 
 println( (exitCode != 0) ? "exit with ${exitCode}" : '' )
@@ -261,11 +261,27 @@ println( (exitCode != 0) ? "exit with ${exitCode}" : '' )
 
 #### with system environment
 ```groovy
-def envVars = System.getenv().collect { k, v -> "$k=$v" }
+List envVars = System.getenv().collect { k, v -> "${k}=${v}" }
 
-def proc = "./run.sh".execute(envVars, new File("."))
-proc.waitForProcessOutput(System.out, System.err)
+def proc = "./run.sh".execute( envVars, new File(".") )
+proc.waitForProcessOutput( System.out, System.err )
 int exitCode = proc.exitValue()
 
 println( (exitCode != 0) ? "exit with ${exitCode}" : '' )
+```
+
+#### [with partular path](https://gist.github.com/katta/5465317)
+> reference:
+> - [groovy execute shell with environment and working dir](https://gist.github.com/katta/5465317#gistcomment-3717156)
+
+```groovy
+def command = "git log -1"
+def proc = command.execute( null, new File('/path/to/folder') )
+proc.waitFor()
+
+println """
+  ${proc.err.text ?: ''}
+  ${proc.in.text ?: ''}
+  Process exit code: ${proc.exitValue()}
+"""
 ```
