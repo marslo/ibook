@@ -15,6 +15,9 @@
   - [check whether if enum contains a given string](#check-whether-if-enum-contains-a-given-string)
   - [list all values in Enum](#list-all-values-in-enum)
   - [Convert String type to Enum](#convert-string-type-to-enum)
+- [run groovy from docker](#run-groovy-from-docker)
+- [others](#others)
+  - [groovy cli (args) with options](#groovy-cli-args-with-options)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -347,4 +350,94 @@ groovy:000> enum Choices {a1, a2, b1, b2}
 ===> true
 groovy:000> Choices.valueOf("a1").getClass()
 ===> class Choices
+```
+
+## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
+```bash
+$ docker run \
+         --rm \
+         -e hola=caracola \
+         -it \
+         groovy:latest groovy -e "System.getenv().each{ println it }"
+```
+
+- mount volume
+  ```bash
+  $ docker run \
+           --rm \
+           -v "$PWD":/home/marslo/scripts \
+           -w /home/marslo/scripts \
+           groovy:latest \
+           groovy DockerBasico.groovy -a
+  ```
+  - `DockerBasico.groovy`
+    ```groovy
+    if ( options.a ) {
+      println "------------------------------------------------------------------"
+      System.getenv().each{ println it }
+      println "------------------------------------------------------------------"
+    }
+    ```
+- with Json
+  ```bash
+  $ docker run \
+    --rm \
+    -v "$PWD":/home/marslo/scripts \
+    -w /home/marslo/scripts \
+    groovy:latest groovy DockerBasico.groovy -d
+  ```
+
+  - `DockerBasico.groovy`
+    {% hint style='tip' %}
+    > how to download the image via json
+    {% endhint %}
+
+    ```groovy
+    if( options.d ){
+      def json = new groovy.json.JsonSlurper().parse( new URL("https://dog.ceo/api/breed/hound/images/random")  )
+      if( json.status=='success' ){
+        new File('perrito.jpg').bytes =  new URL(json.message).bytes
+      }
+    }
+    ```
+
+## others
+### groovy cli (args) with options
+
+> reference:
+> - [groovy script 101 - Dockery Groovy (basic)](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
+
+```groovy
+def cli = new CliBuilder(usage: 'groovy DockerBasico.groovy]')
+
+cli.with {
+  h(longOpt: 'help',    'Usage Information \n', required: false)
+  a(longOpt: 'Hello','Al seleccionar "a" te saludara ', required: false)
+  d(longOpt: 'Dogs', 'Genera imagenes de perros', required:false)
+}
+
+def options = cli.parse(args)
+
+if ( !options || options.h ) {
+  cli.usage
+  return
+}
+
+//tag::hello[]
+if ( options.a ) {
+  println "------------------------------------------------------------------"
+  println "Hello"
+  System.getenv().each{ println it }
+  println "------------------------------------------------------------------"
+}
+//end::hello[]
+
+//tag::dogs[]
+if ( options.d ){
+  def json = new groovy.json.JsonSlurper().parse( new URL("https://dog.ceo/api/breed/hound/images/random")  )
+  if( json.status=='success' ){
+    new File('perrito.jpg').bytes =  new URL(json.message).bytes
+  }
+}
+//end::dogs[]
 ```
