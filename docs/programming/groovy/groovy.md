@@ -16,6 +16,10 @@
   - [find a `string` exists in a `list` of `Map`](#find-a-string-exists-in-a-list-of-map)
 - [elvis operator](#elvis-operator)
   - [if/elseif{if}/else](#ifelseififelse)
+- [execute shell commands in groovy](#execute-shell-commands-in-groovy)
+  - [Get STDERR & STDERR](#get-stderr--stderr)
+  - [Show output during the process](#show-output-during-the-process)
+  - [with environment](#with-environment)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -178,4 +182,90 @@ Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
               ? [ "${fruits}" : mode ]
               : println( 'basket CANNOT be empty while fruits is watermelon' )
            : null
+```
+
+## execute shell commands in groovy
+> reference
+> - [101 groovy script - Execute commands](https://groovy-lang.gitlab.io/101-scripts/basico/command_local-en.html)
+> - [Jenkins Groovy script to execute shell commands](https://stackoverflow.com/a/46488427/2940319)
+> - [java.lang.Process](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html)
+
+### Get STDERR & STDERR
+
+{% hint style='tip' %}
+> using `new StringBuffer()` or `new StringBuilder()`
+>
+> i.e.:
+> ```groovy
+> def stdout = new StringBuffer(), stderr = new StringBuffer()
+> def proc = "cmd".execute()
+> proc.waitForProcessOutput( stdout, stderr )
+> int exitCode = proc.exitValue()
+> println( (exitCode == 0) ? stdout : "exit with ${exitCode}. error: ${stderr}" )
+> ```
+{% endhint %}
+
+```groovy
+def stdout = new StringBuilder(), stderr = new StringBuilder()
+
+def proc = "ls /tmp/NoFile".execute()
+proc.consumeProcessOutput( stdout, stderr )
+proc.waitForOrKill( 1000 )
+
+int exitCode = proc.exitValue()
+println( ( exitCode == 0 ) ? stdout : "error with exit code ${exitCode}.\nSTDERR: ${stderr}" )
+```
+
+[or](https://stackoverflow.com/a/159270/2940319)
+```groovy
+def stdout = new StringBuilder(), stderr = new StringBuilder()
+def proc = 'ls /tmp/NoFile'.execute()
+proc.consumeProcesstdoutput( stdout, stderr )
+proc.waitForOrKill(1000)
+println( stdout ? "out> \n${stdout}" : '' + stderr ? "err> \n${stderr}" : '' )
+```
+
+### Show output during the process
+> using `System.out` and `System.err`
+
+```groovy
+def proc = "ls /tmp/NoFile".execute()
+proc.waitForProcessOutput( System.out, System.err )
+proc.waitForOrKill(1000)
+
+int exitCode = proc.exitValue()
+if ( exitCode != 0 ) {
+  println "error with exit code ${exitCode}."
+}
+```
+
+### [with environment](https://stackoverflow.com/a/159270/2940319)
+```groovy
+def envVars = ["GROOVY_HOME=/fake/path/groovy-3.0.7", "CLASSPATH=.:/fake/path/groovy-3.0.7/lib"]
+
+def proc = './run.sh'.execute(envVars, new File("."))
+proc.waitForProcessOutput(System.out, System.err)
+int exitCode = proc.exitValue()
+
+println( (exitCode != 0) ? "exit with ${exitCode}" : '' )
+```
+
+- `run.sh`
+  ```bash
+  env
+  echo ${GROOVY_HOME}
+  ```
+
+- result
+  ![execute with environemnt](../../screenshot/groovy/executeWithEnv.png)
+
+#### with system environment
+```groovy
+def envVars = System.getenv().collect { k, v -> "$k=$v" }
+
+def proc = "./run.sh".execute(envVars, new File("."))
+proc.waitForProcessOutput(System.out, System.err)
+int exitCode = proc.exitValue()
+
+println( (exitCode != 0) ? "exit with ${exitCode}" : '' )
 ```
