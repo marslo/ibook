@@ -129,6 +129,7 @@
   * [virtualbox](tools/virtualbox.md)
   * [iterm2](tools/iterm2.md)
   * [Jira & Confluence](tools/atlassian.md)
+  * [klocwork](tools/klocwork.md)
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
   * [app](tools/app.md)
