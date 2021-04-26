@@ -2,10 +2,19 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [initial a klocwork analysis](#initial-a-klocwork-analysis)
-- [full build analysis](#full-build-analysis)
-- [incremental build analysis](#incremental-build-analysis)
-- [load result from both windows and linux](#load-result-from-both-windows-and-linux)
+- [environment](#environment)
+  - [admin](#admin)
+- [analysis](#analysis)
+  - [initial a klocwork analysis](#initial-a-klocwork-analysis)
+  - [full build analysis](#full-build-analysis)
+  - [incremental build analysis](#incremental-build-analysis)
+  - [load result from both windows and linux](#load-result-from-both-windows-and-linux)
+- [authentication](#authentication)
+  - [get ltoken](#get-ltoken)
+- [api](#api)
+  - [list builds info from project](#list-builds-info-from-project)
+- [report](#report)
+  - [creating a report](#creating-a-report)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -21,20 +30,33 @@
 > - [examples](https://docs.roguewave.com/en/klocwork/current/understandingtheworkflow)
 > - [Klocwork - Knowledgebase](https://library.roguewave.com/display/SUPPORT/Klocwork+-+Knowledgebase)
 > - [C/C++ integration build analysis - Cheat sheet](https://docs.roguewave.com/en/klocwork/current/ccintegrationbuildanalysischeatsheet)
+> - [example about integrate with Jenkins](https://stackoverflow.com/questions/51731262/jenkins-declarative-pipeline-how-to-configure-the-klocwork-result-display-on-t)
+> - [最佳实践：Klocwork增量/VerifyCI检查](http://www.360doc.com/content/17/0430/08/30774303_649740396.shtml)
 {% endhint %}
+
+## environment
+> reference:
+> - [Install and Configure Klocwork cmd client](https://scmabhishek.wordpress.com/2016/07/04/install-and-configure-klocwork-cmd-client/)
+> - [User manual | Installation and Upgrade](https://manualzz.com/doc/44373012/installation-and-upgrade?__cf_chl_jschl_tk__=b7f12f6befde4217b2830af5cb69055d40841a0c-1619442763-0-AXJ6A-8dLrK6mjM4v5IvfVIbgptM2fMku23COnaWX2AXiowy0H1aVcEuRXfkHCy52vr0N6RqKejPmriTUTLIsGPCo9AldMujCF8gJflvp-uX-CiweHa5c3fP1KNvKgeOvVzhe-wBWDfbrJ0MyEvEks8cEHXjRj6cRnlP5ibFYByNE7jX3KXtH5tRZVr386HX0bcPCx5nyu_FgY-xEFCpuMmnEaP0Rhr_zeoQn85YrY61j7lGJAgnzdqgz1rC4ktkZ1i7ijdYgUTFNAFG_1_vQ4ox8Wj7hdab890-Tw-NtdrGoMoEq-4CeMxDEzlLYmFNNX1kM0EVJIv50J2v2H7GIdUNd_rV7y_wyhllUPbRe1COFvk1Ey7eAgsfJyKAW-Il6Z8NRlSaO-RdRcnZ6wpk2L2s6uuAzcNNWQM-8DiljKhGu9OT-FjeGtEXyBUxZPjY2LWF1k_fX2tb4S0GJGO7T09QPnlbAZa9VBFueEVeVSdzDocBByzn-BwknWpMr-dIJA)
+
+### admin
+> reference:
+> - [Admin Tools](https://developer.klocwork.com/products/insight)
+> - [Improving database performance](https://bullwhip.physio-control.com/documentation/help/concepts/improvingdatabaseperformance.htm)
+> - [Backing up Klocwork data](https://bullwhip.physio-control.com/documentation/help/concepts/backingupklocworkdata.htm)
 
 ## analysis
 > [issue severity](http://docs.klocwork.com/Insight-10.0/Issue_severity)
-  > 1 - Critical
-  > 2 - Error
-  > 3 - Warning
-  > 4 - Review
-  > 5 - Severity 5
-  > 6 - Severity 6
-  > 7 - Severity 7
-  > 8 - Severity 8
-  > 9 - Severity 9
-  > 10 - Severity 10
+> - 1 - Critical
+> - 2 - Error
+> - 3 - Warning
+> - 4 - Review
+> - 5 - Severity 5
+> - 6 - Severity 6
+> - 7 - Severity 7
+> - 8 - Severity 8
+> - 9 - Severity 9
+> - 10 - Severity 10
 
 ### [initial a klocwork analysis](https://docs.roguewave.com/en/klocwork/2020/runningyourfirstintegrationbuildanalysis1)
 > [sample code](http://cdn-devnet.klocwork.com/cbt/10.0/C_CPP_integration_build_analysis/samples/newProject.txt)
@@ -197,18 +219,22 @@ my.kw.com;443;marslo;abcdefg1234567*********************************************
 
 ## [api](https://docs.roguewave.com/en/klocwork/current/formattingrequeststotheapi1)
 > api url: http(s)://my.kw.com:443/review/api
->
-> details:
-> Klocwork Static Code Analysis Web API Reference
-> To access Web API send a POST request to http://ssdfw-klocwork.marvell.com/review/api with the following parameters:
+> reference:
+> - [Klocwork Web API cookbook](https://docs.roguewave.com/en/klocwork/current/klocworkwebapicookbook)
+> - [Klocwork Insight Web API cookbook](http://docs.klocwork.com/Insight-10.0/Klocwork_Insight_Web_API_cookbook)
+> - [Access control API examples](https://docs.roguewave.com/en/klocwork/2020/examples_webacl)
+> - [Issue and metric API examples](https://docs.roguewave.com/en/klocwork/2020/examples2)
+
+Klocwork Static Code Analysis Web API Reference
+> To access Web API send a POST request to http://my.kw.com/review/api with the following parameters:
   > user*     Klocwork user name
   > ltoken    kwauth login token
   > action*   action name
 >
 > builds
 > Retrieve the list of builds for a project.
-> Example: curl --data "action=builds&user=myself&project=my_project" http://ssdfw-klocwork.marvell.com/review/api
-  > project* project name
+> - Example: `curl --data "action=builds&user=myself&project=my_project" http://my.kw.com/review/api`
+>   - project* : project name
 
 ### list builds info from project
 > **`ltoek`** is got from `${KLOCWORK_LTOKEN}` file
@@ -222,11 +248,11 @@ my.kw.com;443;marslo;abcdefg1234567*********************************************
 
 - [via api](https://stackoverflow.com/a/28774031/2940319)
   ```bash
-  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://ssdfw-klocwork.marvell.com/review/api
+  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://my.kw.com/review/api
   ```
   - i.e.:
     ```bash
-    $ curl --data "action=builds&user=marslo&ltoken=abcd1234********************************************************&project=marslo-kw" https://ssdfw-klocwork.marvell.com:443/review/api
+    $ curl --data "action=builds&user=marslo&ltoken=abcd1234********************************************************&project=marslo-kw" https://my.kw.com:443/review/api
     {"id":3,"name":"build_3","date":1619437882164,"keepit":false}
     {"id":2,"name":"build_2","date":1619436216567,"keepit":false}
     {"id":1,"name":"build_1","date":1619434698145,"keepit":false}
@@ -247,16 +273,26 @@ my.kw.com;443;marslo;abcdefg1234567*********************************************
     ```
 
 #### [query only new issues](https://stackoverflow.com/a/28774031/2940319)
-> api details:
->
-> **search**
+> reference
+> - [Using the search API](https://bullwhip.physio-control.com/documentation/help/concepts/usingthesearchapi.htm)
+
+**search**
 > Retrieve the list of detected issues.
-> Example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://my.kw.com/review/api`
-> project* project name
-> query    search query, such as narrowing by file (for example, 'file:MyFile.c')
-> view     view name
-> limit    search result limit
-> summary  include summary record to output stream
+> - Example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://my.kw.com/review/api`
+>   - project* : project name
+>   - query    : search query, such as narrowing by file (for example, 'file:MyFile.c')
+>   - view     : view name
+>   - limit    : search result limit
+>   - summary  : include summary record to output stream
+
+{% hint style='tip' %}
+> [Searching in Klocwork Static Code Analysis](https://bullwhip.physio-control.com/documentation/help/concepts/searchinginklocworksca.htm#concept955):
+>
+> Note: You can only search by one build at a time. Other acceptable syntax:
+> - build:'123' - searches for build which contains substring '123'
+> - build:+123 - searches for build with name 123
+> - build:+'123string' - searches for build with name equal to '123string'
+{% endhint %}
 
 ```bash
 $ ltoken='abcd1234*****'
@@ -267,3 +303,6 @@ $ url='https://my.kw.com:443'
 $ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project}&query=${query}" ${url}/review/api |
      jq --raw-output .
 ```
+
+## report
+### [creating a report](https://docs.roguewave.com/en/klocwork/current/creatingareport)
