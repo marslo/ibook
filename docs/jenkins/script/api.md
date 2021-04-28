@@ -8,11 +8,17 @@
 - [list plugins](#list-plugins)
   - [using api (`curl`)](#using-api-curl)
   - [using cli](#using-cli)
+- [builds](#builds)
+  - [get particular build parameters](#get-particular-build-parameters)
+  - [get all parameters via Json format](#get-all-parameters-via-json-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > reference:
 > - [Example for Jenkins API](https://www.programcreek.com/java-api-examples/?action=search&ClassName=jenkins&submit=Search)
+> - [Remote access API](https://wiki.jenkins.io/display/JENKINS/Remote+access+API/)
+> - [How to build a job using the REST API and cURL?](https://support.cloudbees.com/hc/en-us/articles/218889337-How-to-build-a-job-using-the-REST-API-and-cURL-?page=64)
+> - [7 useful Jenkins Rest services](https://www.esentri.com/7-useful-jenkins-rest-services/)
 
 ## [execute Groovy script with an API call](https://support.cloudbees.com/hc/en-us/articles/217509228-Execute-Groovy-script-in-Jenkins-with-an-API-call)
 ```bash
@@ -31,10 +37,21 @@ $ curl -d "script=println 'this script works'" -v --user username:ApiToken http:
 | `BUILD_URL/kill` | hard kill a pipeline       |
 
 ## get builds information
+> reference:
+> - [USING JENKINS / HUDSON REMOTE API TO CHECK JOBS STATUS](http://blog.dahanne.net/2014/04/02/using-jenkins-hudson-remote-api-to-check-jobs-status/)
+> - [justlaputa/jenkins-api.md](https://gist.github.com/justlaputa/5634984)
+
 - [via job api](https://stackoverflow.com/a/25650246/2940319)
-```bash
-$ curl -sSLg http://jenkins:8080/job/my-job/api/json?tree=builds[id,number,duration,timestamp,builtOn]
-```
+  ```bash
+  $ curl -sSLg http://jenkins:8080/job/my-job/api/json?tree=builds[id,number,duration,timestamp,builtOn]
+  ```
+
+- get particular fields for all builds
+  > api format: `api/json?tree=allBuilds[Bartifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]`
+
+  ```bash
+  $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/api/json?tree=allBuilds[artifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]' | jq --raw-output .
+  ```
 
 ## list plugins
 ### [using api (`curl`)](https://stackoverflow.com/a/52836951/2940319)
@@ -44,6 +61,25 @@ $ curl -u<username>:<password> \
     | jq -r '.plugins[] | "\(.shortName):\(.version)"' \
     | sort
 ```
+- [or](https://stackoverflow.com/a/17241066/2940319)
+  ```bash
+  $ curl -s 'https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?pretty=1&tree=plugins\[shortName,longName,version\]'
+  {
+    "_class": "hudson.LocalPluginManager",
+    "plugins": [
+      {
+        "longName": "SSH Credentials Plugin",
+        "shortName": "ssh-credentials",
+        "version": "1.18.1"
+      },
+      {
+        "longName": "Configuration as Code Plugin",
+        "shortName": "configuration-as-code",
+        "version": "1.47"
+      },
+      ...
+  }
+  ```
 
 ### [using cli](https://stackoverflow.com/a/44979051/2940319)
 ```bash
@@ -81,3 +117,74 @@ plugins.each {println "${it.getShortName()}: ${it.getVersion()}"}
     ```bash
     $ ssh [-i <private-key>] [-l <user>] -p <port> JENKINS_URL groovy < = <script.groovy>
     ```
+
+## builds
+### get particular build parameters
+```bash
+$ curl -s https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/workflowRun/action/parameter[name="<param_name>"]/value
+```
+- remove xml tag
+  ```bash
+  $ curl -s 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/workflowRun/action/parameter\[name="tester"\]/value' |
+         sed -re 's:<[^>]+>([^<]+)<.*$:\1:'
+  ```
+- i.e.:
+  ```bash
+  $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/*/action/parameter[name=%22id%22]'
+  <parameter _class="hudson.model.StringParameterValue"><name>id</name><value>marslo</value></parameter>
+
+  $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/*/action/parameter[name=%22id%22]/value'
+  <value>marslo</value>
+
+  $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/*/action/parameter[name=%22id%22]/value' |
+         sed -re 's:<[^>]+>([^<]+)<.*$:\1:'
+  marslo
+  ```
+
+### get all parameters via Json format
+> api:
+> `https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]`
+
+```bash
+$ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]' | jq --raw-output '.actions[].parameters[]?'
+{
+  "_class": "hudson.model.StringParameterValue",
+  "name": "id",
+  "value": "marslo"
+}
+{
+  "_class": "hudson.model.StringParameterValue",
+  "name": "gender",
+  "value": "female"
+}
+```
+- [additional format](../../cheatsheet/character/json.md)
+  ```bash
+  $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]' | jq --raw-output '.actions[].parameters[]? | .name + "\t" + .value'
+  id	marslo
+  gender	female
+  ```
+
+> **jq tips**
+> - [remove empty line from output](https://stackoverflow.com/a/44289083/2940319)
+> i.e.:
+>   - original `jq --raw-output .actions[].parameters`
+>   - remove empty line: `jq --raw-output '[.actions[].parameters | select(length > 0) ]'`
+
+```bash
+$ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]' | jq --raw-output '[.actions[].parameters | select(length > 0)]'
+[
+  [
+    {
+      "_class": "hudson.model.StringParameterValue",
+      "name": "id",
+      "value": "marslo"
+    },
+    {
+      "_class": "hudson.model.StringParameterValue",
+      "name": "gender",
+      "value": "female"
+    }
+  ]
+]
+```

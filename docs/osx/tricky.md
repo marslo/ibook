@@ -17,6 +17,7 @@
   - [And snippets](#and-snippets)
   - [finally](#finally)
 - [others](#others)
+  - [shutdown mac via commands](#shutdown-mac-via-commands)
   - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
   - [launch apps](#launch-apps)
   - [extra pkg](#extra-pkg)
@@ -200,6 +201,11 @@ $ mv groovyConsole.app/ /Applications/
 
 
 ## others
+### shutdown mac via commands
+```bash
+$ osascript -e 'tell app 'loginwindow' to «event aevtrsdn»'
+```
+
 ### [turn off the screen without sleeping](https://apple.stackexchange.com/a/266103/254265)
 ```bash
 $ pmset displaysleepnow
