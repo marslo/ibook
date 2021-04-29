@@ -18,6 +18,9 @@
   - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [list all build history within 24 hours](#list-all-build-history-within-24-hours)
+  - [get build history times](#get-build-history-times)
+  - [get build parameters](#get-build-parameters)
+  - [get jobs status in certant timeslot](#get-jobs-status-in-certant-timeslot)
   - [get jobs status within 24 hours](#get-jobs-status-within-24-hours)
   - [get all builds failure in last 24 hours](#get-all-builds-failure-in-last-24-hours)
 
@@ -29,6 +32,13 @@
 > - [org.jenkinsci.plugins.workflow.job.WorkflowJob](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowJob.html)
 > - [org.jenkinsci.plugins.workflow.job.WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
 > - [hudson.model.AbstractProject<P,R>](https://javadoc.jenkins-ci.org/hudson/model/AbstractProject.html)
+> - [How to get details of Successful Jenkins build in last x days](https://stackoverflow.com/a/58320445/2940319)
+> - [`build.getAction(ParametersAction.class)`](https://stackoverflow.com/a/54924165/2940319)
+> - [Variables defined in groovy script always resolve to null](https://stackoverflow.com/a/22411076/2940319)
+> - [`build.buildVariableResolver.resolve`](https://stackoverflow.com/a/26545605/2940319)
+> - [groovy.lang.MissingPropertyException: No such property: jenkins for class: groovy.lang.Binding](https://stackoverflow.com/q/47064135/2940319)
+> - [Class BuildVariableResolver](https://javadoc.jenkins.io/plugin/plasticscm-plugin/index.html?com/codicesoftware/plugins/hudson/util/BuildVariableResolver.html)
+> - [batmat/get-jenkins-build-time.groovy](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 {% endhint %}
 
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
@@ -81,6 +91,7 @@ jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.P
   ```
 
 ### get single job
+> [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
 ```groovy
 def job = Jenkins.instance.getItemByFullName('<group>/<name>')
 println """
@@ -274,6 +285,9 @@ return null
 ```
 
 ### [list all build history within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+> reference:
+> - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
+
 ```groovy
 String JOB_PATTERN      = '<group>[/<name>]'                  // keywords
 final long CURRENT_TIME = System.currentTimeMillis()
@@ -291,6 +305,176 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   }
 }
 ```
+
+### [get build history times](https://stackoverflow.com/a/54947196/2940319)
+```groovy
+final String JOB_PATTERN = '<group>/<name>'                  // keywords
+
+Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+  job.fullName.contains( JOB_PATTERN )
+}.each { Job job ->
+  def build = job.getLastBuild()
+  println """
+                 build.getTime() : ${build.getTime()}
+         build.getTimeInMillis() : ${build.getTimeInMillis()}
+            build.getTimestamp() : ${build.getTimestamp()}
+    build.getStartTimeInMillis() : ${build.getStartTimeInMillis()}
+      build.getTimestampString() : ${build.getTimestampString()}
+     build.getTimestampString2() : ${build.getTimestampString2()}
+  """
+}
+```
+- result
+  ```
+                 build.getTime() : Thu Apr 29 04:08:08 PDT 2021
+         build.getTimeInMillis() : 1619694488799
+            build.getTimestamp() : java.util.GregorianCalendar[time=1619694488799,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="America/Los_Angeles",offset=-28800000,dstSavings=3600000,useDaylight=true,transitions=185,lastRule=java.util.SimpleTimeZone[id=America/Los_Angeles,offset=-28800000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=3,startMonth=2,startDay=8,startDayOfWeek=1,startTime=7200000,startTimeMode=0,endMode=3,endMonth=10,endDay=1,endDayOfWeek=1,endTime=7200000,endTimeMode=0]],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2021,MONTH=3,WEEK_OF_YEAR=18,WEEK_OF_MONTH=5,DAY_OF_MONTH=29,DAY_OF_YEAR=119,DAY_OF_WEEK=5,DAY_OF_WEEK_IN_MONTH=5,AM_PM=0,HOUR=4,HOUR_OF_DAY=4,MINUTE=8,SECOND=8,MILLISECOND=799,ZONE_OFFSET=-28800000,DST_OFFSET=3600000]
+    build.getStartTimeInMillis() : 1619694488807
+      build.getTimestampString() : 2 min 1 sec
+     build.getTimestampString2() : 2021-04-29T11:08:08Z
+  ```
+
+### [get build parameters](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
+> reference:
+> - [`build?.actions.find{ it instanceof ParametersAction }`](https://stackoverflow.com/a/38130496/2940319)
+> - [Jenkins & Groovy – accessing build parameters](https://rucialk.wordpress.com/2016/03/17/jenkins-groovy-accessing-build-parameters/)
+> - [Parameterized System Groovy script](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
+
+```groovy
+def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+job.getBuilds().each { Run build ->
+  String parameters = build?.actions.find{ it instanceof ParametersAction }?.parameters?.collectEntries {
+    [ it.name, it.value ]
+  }.collect { k, v -> "\t\t${k}\t: ${v}" }.join('\n')
+  println "#${build.getId()}: ${parameters}"
+}
+```
+- result
+  ```
+  #7: 		id	: marslo
+  		gender	: female
+  #6: 		id	: marslo
+  		gender	: female
+  #5: 		id	: marslo
+  		gender	: female
+  #4: 		id	: marslo
+  		gender	: female
+  #3: 		name	: marslo
+  		gender	: female
+  #2: 		name	: marslo
+  		gender	: female
+  #1:
+  ```
+
+- get particular value in each build
+  ```groovy
+  final String PARAM = 'id'
+  Map params = [:]
+
+  def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+  job.getBuilds().each { Run build ->
+    params."${build.getId()}" = build?.actions
+                                      .find{ it instanceof ParametersAction }?.parameters?.collectEntries {
+                                         [ it.name , it.value ]
+                                      }
+  }
+
+  println params.collect { k , v ->
+    "build #${k} ~~> ${v ? "${PARAM} : ${v.getOrDefault(PARAM, "No '${PARAM}' found")}" : 'No Params Found'}"
+  }.join('\n')
+  ```
+  - result
+    ```
+    build #7 ~~> id : marslo
+    build #6 ~~> id : marslo
+    build #5 ~~> id : marslo
+    build #4 ~~> id : marslo
+    build #3 ~~> id : No 'id' found
+    build #2 ~~> id : No 'id' found
+    build #1 ~~> No Params Found
+    ```
+
+- get only `String` type parameters
+  ```groovy
+  Map params = build?.getAction( ParametersAction.class )
+                     .parameters?.findAll{ it instanceof StringParameterValue }?.dump()
+
+  // or
+  Map params = build?.getAction( ParametersAction.class )
+                     .parameters?.findAll{ it instanceof StringParameterValue }?.collectEntries {
+                       [ it.name, it.value ]
+                     }
+
+  // or
+  Map params = build?.actions
+                     .find{ it instanceof ParametersAction }?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
+  ```
+
+### get jobs status in certant timeslot
+> find only `String` type parameters:
+> ```groovy
+>   Map params = build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
+> ```
+
+```bash
+import java.text.SimpleDateFormat
+import java.util.Date
+import static groovy.json.JsonOutput.*
+
+final String JOB_PATTERN = '<group>[/<name>]'                        // keywords
+final Map<String, String> PARAM = [ 'param_name' : 'param_value' ]
+Map<String, Map<String, String>> results = [:]
+
+SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" )
+final String START_DATE = '2021-04-26 00:00:00'
+final String END_DATE   = '2021-04-27 00:00:00'
+
+long start = simpleDateFormat.parse( START_DATE ).getTime()
+long end   = simpleDateFormat.parse( END_DATE ).getTime()
+
+Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+  job.fullName.contains( JOB_PATTERN )
+}.each { Job job ->
+  results."${job.fullName}" = [:]
+  job.getBuilds().byTimestamp( start, end ).each { Run build ->
+    Map params = build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.collectEntries {
+                   [ it.name, it.value ]
+                 }
+    results."${job.fullName}"."${build.getId()}" = [
+            'time' : build.getTime().toString() ,
+          'params' : params?.collect { k, v -> "${k} : ${v}"},
+      'paramsExist': params?.entrySet()?.containsAll( PARAM.entrySet() )
+    ]
+    if ( build.isBuilding() ) {
+      results."${job.fullName}"."${build.getId()}" << [ 'status' : 'INPROGRESS' ]
+    } else {
+      results."${job.fullName}"."${build.getId()}" << [ 'status' : build.getResult().toString() ]
+    }
+  }
+
+  println prettyPrint( toJson(results) )
+}
+
+int count = 0
+results.get( JOB_PATTERN ).each { k, v ->
+  if ( v.paramsExist ) {
+    count += 1
+    println """
+      #${k} : ${v.status} : ${v.time}
+              ${v.params}
+    """
+  }
+}
+
+println "total number: ${count}"
+"DONE"
+```
+
+- result:
+  ![filter build history via params](../../screenshot/jenkins/jenkins-filter-job-history-via-params.png)
+
+  ![filter build history via params details](../../screenshot/jenkins/jenkins-filter-job-history-via-params-2.png)
+
 
 ### [get jobs status within 24 hours](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
@@ -351,7 +535,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   }
 }.sum()
 ```
- 
+
 return Map structure:
 ```groovy
 import hudson.model.Job
