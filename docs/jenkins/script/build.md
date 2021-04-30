@@ -7,22 +7,25 @@
   - [list all jobs and folders](#list-all-jobs-and-folders)
   - [list all Abstract Project](#list-all-abstract-project)
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
-  - [get single job](#get-single-job)
+  - [get single job properties](#get-single-job-properties)
   - [get particular job status](#get-particular-job-status)
-- [build](#build)
-  - [setup next build number of particular job](#setup-next-build-number-of-particular-job)
-  - [abort a build](#abort-a-build)
-  - [get build status](#get-build-status)
-  - [get build time](#get-build-time)
-  - [cancel queue builds](#cancel-queue-builds)
-  - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
-  - [list all build history within 24 hours](#list-all-build-history-within-24-hours)
-  - [get build history times](#get-build-history-times)
+- [build](#build)
+  - [build number](#build-number)
+  - [stop builds](#stop-builds)
+  - [get build time](#get-build-time)
+  - [list all builds within 24 hours](#list-all-builds-within-24-hours)
+  - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
+  - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
+- [build parameters](#build-parameters)
   - [get build parameters](#get-build-parameters)
-  - [get jobs status in certant timeslot](#get-jobs-status-in-certant-timeslot)
-  - [get jobs status within 24 hours](#get-jobs-status-within-24-hours)
-  - [get all builds failure in last 24 hours](#get-all-builds-failure-in-last-24-hours)
+  - [get wanted parameter values in builds](#get-wanted-parameter-values-in-builds)
+  - [get only `String` type parameters](#get-only-string-type-parameters)
+- [build results](#build-results)
+  - [get all builds result percentage](#get-all-builds-result-percentage)
+  - [get build result percentage within 24 hours](#get-build-result-percentage-within-24-hours)
+  - [get build result during certain start-end time](#get-build-result-during-certain-start-end-time)
+  - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -48,28 +51,30 @@
 Jenkins.instance.getAllItems(Job.class).each {
   println it.name + " -> " + it.fullName + ' ~> ' + it.class
 }
-
-== result
-marslo - class org.jenkinsci.plugins.workflow.job.WorkflowJob
-fs - class hudson.model.FreeStyleProject
 ```
+- result
+  ```
+  marslo - class org.jenkinsci.plugins.workflow.job.WorkflowJob
+  fs - class hudson.model.FreeStyleProject
+  ```
 
 ### list all jobs and folders
 ```groovy
 Jenkins.instance.getAllItems(AbstractItem.class).each {
   println(it.fullName)
 }
-
-== result:
-marslo/marslo
-marslo/fs
 ```
+- result:
+  ```
+  marslo/marslo
+  marslo/fs
+  ```
 
 ### [list all Abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
 > Abstract Project: freestyle, maven, etc...
 
 ```groovy
-Jenkins.instance.getAllItems(AbstractProject.class).each {
+Jenkins.instance.getAllItems( AbstractProject.class ).each {
   println it.fullName
 }
 ```
@@ -90,8 +95,9 @@ jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.P
   }.collect { it.fullName }
   ```
 
-### get single job
+### get single job properties
 > [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
+
 ```groovy
 def job = Jenkins.instance.getItemByFullName('<group>/<name>')
 println """
@@ -109,84 +115,138 @@ println """
 def job = Jenkins.instance.getItemByFullName('<group>/<name>')
 println """
   Last success : ${job.getLastSuccessfulBuild()}
-    All builds : ${job.getBuilds().collect{ it.getNumber()}}
+    All builds : ${job.getBuilds().collect{ it.getNumber() }}
     Last build : ${job.getLastBuild()}
    Is building : ${job.isBuilding()}
 """
 ```
 
+### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
+> only for `lastBuild`.
+
+```bash
+/*
+   We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
+ */
+Jenkins.instance.getAllItems(Job).each(){ job -> job.isBuildable()
+  if (job.isBuilding()){
+    def myBuild= job.getLastBuild()
+      def runningSince = groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
+      if (runningSince.hours >= 24){
+        println job.name +"---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
+      }
+  }
+}
+return null
+```
+
 ## build
-### setup next build number of particular job
+### build number
+#### setup next build number
 ```groovy
 Jenkins.instance.getItemByFullName("/path/to/job").updateNextBuildNumber(n)
 ```
 
-### [abort a build](https://stackoverflow.com/a/26306081/2940319)
+### stop builds
+
+#### [abort single build](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
-Jenkins.instance.getItemByFullName("JobName")
-       .getBuildByNumber(JobNumber)
+final String JOB_NAME  = 'job_name'
+final int BUILD_NUMBER = job_number
+
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
        .finish(
                hudson.model.Result.ABORTED,
-               new java.io.IOException("Aborting build")
+               new java.io.IOException( "Aborting build" )
        )
 ```
 
-- or [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-  ```groovy
-  /*
-   Author: Isaac S Cohen
-   This script works with workflow to cancel other running builds for the same job
-   Use case: many build may go to QA, but only the build that is accepted is needed,
-   the other builds in the workflow should be aborted
-  */
-
-  def jobname = env.JOB_NAME
-  def buildnum = env.BUILD_NUMBER.toInteger()
-
-  def job = Jenkins.instance.getItemByFullName(jobname)
-  for (build in job.builds) {
-    if (!build.isBuilding()) { continue; }
-    if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
-    build.doStop();
-  }
-  ```
-
-### [get build status](https://stackoverflow.com/a/28039134/2940319)
+#### [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
 ```groovy
-final String JOB_PATTERN = '<group>/<name>'
-Map<String, Map<String, String>> results = [:]
-int sum = 0
+/*
+ Author: Isaac S Cohen
+ This script works with workflow to cancel other running builds for the same job
+ Use case: many build may go to QA, but only the build that is accepted is needed,
+ the other builds in the workflow should be aborted
+*/
 
-Jenkins.instance.getAllItems( Job.class ).each { project ->
-  if ( project.fullName.contains(JOB_PATTERN) ) {
-    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0 ]
-    def build = project.getLastBuild()
-    while ( build ) {
-      // if job is building, then results."${project.fullName}"."${build.result}" will be null
-      if ( build.isBuilding() ) {
-        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
-      } else {
-        // println "$project.name;$build.id;$build.result"
-        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-      }
-      build = build.getPreviousBuild()
+final String JOB_NAME  = env.JOB_NAME
+final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
+
+def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+for ( build in job.builds ) {
+  if ( !build.isBuilding() ) { continue; }
+  if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
+  build.doStop();
+}
+```
+
+#### [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
+> reference:
+> - [cancel queue builds](https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
+> ```groovy
+> Jenkins.instance.queue.clear()
+> ```
+
+```groovy
+import java.util.ArrayList
+import hudson.model.*;
+import jenkins.model.Jenkins
+
+// Remove everything which is currently queued
+def q = Jenkins.instance.queue
+for ( queued in Jenkins.instance.queue.items ) {
+  q.cancel( queued.task )
+}
+
+// stop all the currently running jobs
+for ( job in Jenkins.instance.items ) {
+  stopJobs(job)
+}
+
+def stopJobs( job ) {
+  if ( job in com.cloudbees.hudson.plugins.folder.Folder ) {
+    for ( child in job.items ) {
+      stopJobs( child )
+    }
+  } else if ( job in org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject ) {
+    for ( child in job.items ) {
+      stopJobs( child )
+    }
+  } else if ( job in org.jenkinsci.plugins.workflow.job.WorkflowJob && job.isBuilding() ) {
+    for ( build in job.builds ) {
+      build.doKill()
     }
   }
 }
-results.each{ name, status ->
-  sum = status.values().sum()
-  println "${name}: ${sum} : "
-  status.each{ r, c ->
-    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
-  }
-}
-"DONE"
 ```
-![build status](../../screenshot/jenkins/job-successful-failure-percentage.png)
 
 ### get build time
 > reference
 > - [Getting current timestamp in inline pipeline script using pipeline plugin of hudson](https://stackoverflow.com/a/55242657/2940319)
+> - [get Job && build by number for the Job and all related to time](https://stackoverflow.com/a/54947196/2940319)
+> reference:
+> - [convert milliseconds to date-time format](https://stackoverflow.com/a/45815290/2940319)
+> - [Date.format(String format)](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
+> ```groovy
+> final long NOW       = System.currentTimeMillis()
+> final int BENCH_MARK = 1*24*60*60*1000
+> println """
+>                                NOW : ${NOW}
+>                   NOW - BENCH_MARK : ${NOW - BENCH_MARK}
+>                 Date(NOW).format() : ${new Date(NOW).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
+>      Date(NOW-BENCH_MARK).format() : ${new Date(NOW - BENCH_MARK).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
+> """
+> - result:
+>   ```
+>                                NOW : 1619790803151
+>                   NOW - BENCH_MARK : 1619704403151
+>                 Date(NOW).format() : 2021-04-30T06:53:23.151Z
+>      Date(NOW-BENCH_MARK).format() : 2021-04-29T06:53:23.151Z
+>   ```
+> ```
 
 ```groovy
 import java.time.LocalDateTime
@@ -223,90 +283,11 @@ Jenkins.instance.getAllItems( Job.class ).each { job ->
 }
 "DONE"
 ```
-![get build start time](../../screenshot/jenkins/job-get-build-time.png)
+- result:
+  ![get build start time](../../screenshot/jenkins/job-get-build-time.png)
 
-### [cancel queue builds](https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
-```groovy
-Jenkins.instance.queue.clear()
-```
 
-### [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
-```groovy
-import java.util.ArrayList
-import hudson.model.*;
-import jenkins.model.Jenkins
-
-// Remove everything which is currently queued
-def q = Jenkins.instance.queue
-for (queued in Jenkins.instance.queue.items) {
-  q.cancel(queued.task)
-}
-
-// stop all the currently running jobs
-for (job in Jenkins.instance.items) {
-  stopJobs(job)
-}
-
-def stopJobs(job) {
-  if (job in com.cloudbees.hudson.plugins.folder.Folder) {
-    for (child in job.items) {
-      stopJobs(child)
-    }
-  } else if (job in org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject) {
-    for (child in job.items) {
-      stopJobs(child)
-    }
-  } else if (job in org.jenkinsci.plugins.workflow.job.WorkflowJob) {
-
-    if (job.isBuilding()) {
-      for (build in job.builds) {
-      build.doKill()
-      }
-    }
-  }
-}
-```
-
-### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
-```bash
-/*
-   We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
- */
-Jenkins.instance.getAllItems(Job).each(){ job -> job.isBuildable()
-  if (job.isBuilding()){
-    def myBuild= job.getLastBuild()
-      def runningSince = groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
-      if (runningSince.hours >= 24){
-        println job.name +"---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
-      }
-  }
-}
-return null
-```
-
-### [list all build history within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
-> reference:
-> - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
-
-```groovy
-String JOB_PATTERN      = '<group>[/<name>]'                  // keywords
-final long CURRENT_TIME = System.currentTimeMillis()
-final int BENCH_MARK    = 1*24*60*60*1000                     // days * hours * minutes * seconds * microseconds (1000)
-
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
-}.each { Job job ->
-  def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
-  if ( history ) {
-    println """
-      ~~> ${job.fullName} : ${history.size()} :
-          history         : ${history.join('\n\t\t\t    ')}
-    """
-  }
-}
-```
-
-### [get build history times](https://stackoverflow.com/a/54947196/2940319)
+**or** :
 ```groovy
 final String JOB_PATTERN = '<group>/<name>'                  // keywords
 
@@ -334,6 +315,140 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
      build.getTimestampString2() : 2021-04-29T11:08:08Z
   ```
 
+### [list all builds within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+> reference:
+> - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
+
+```groovy
+String JOB_PATTERN      = '<group>[/<name>]'                  // keywords
+final long CURRENT_TIME = System.currentTimeMillis()
+final int BENCH_MARK    = 1*24*60*60*1000                     // days * hours * minutes * seconds * microseconds (1000)
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.contains(JOB_PATTERN)
+}.each { Job job ->
+  def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
+  if ( history ) {
+    println """
+      ~~> ${job.fullName} : ${history.size()} :
+          history         : ${history.join('\n\t\t\t    ')}
+    """
+  }
+}
+```
+
+### [get last 24 hours failure builds](https://stackoverflow.com/a/60375862/2940319)
+```groovy
+import hudson.model.Job
+import hudson.model.Result
+import hudson.model.Run
+import java.util.Calendar
+import jenkins.model.Jenkins
+
+final Calendar RIGHT_NOW = Calendar.getInstance()
+final long BENCH_MARK    = 1*24*60*60*1000
+final String JOB_PATTERN = '<group>'
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.contains( JOB_PATTERN )
+}.collect { Job job ->
+  job.builds.findAll { Run run ->
+    run.result == Result.FAILURE &&
+    ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+  }
+}.sum()
+```
+
+### get last 24 hours failure builds via Map structure
+```groovy
+import hudson.model.Job
+import hudson.model.Result
+import hudson.model.Run
+import java.util.Calendar
+import jenkins.model.Jenkins
+import static groovy.json.JsonOutput.*
+
+final Calendar RIGHT_NOW  = Calendar.getInstance()
+final long BENCH_MARK    = 1*24*60*60*1000
+final String JOB_PATTERN = '<group>'
+
+Map results = [:]
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.contains(JOB_PATTERN)
+}.each { Job job ->
+  results.(job.fullName) = job.builds.findAll { Run run ->
+    !run.isBuilding() &&
+    run.result == Result.FAILURE &&
+    ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+  }.collectEntries { Run run ->
+    [ (run.id) : run.getAbsoluteUrl() ]
+  }
+}
+
+println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
+```
+
+- or
+  ```groovy
+  import hudson.model.Job
+  import hudson.model.Result
+  import hudson.model.Run
+  import jenkins.model.Jenkins
+  import static groovy.json.JsonOutput.*
+
+  final long CURRENT_TIME  = java.util.Calendar.getInstance().getTimeInMillis()
+  final long BENCH_MARK    = 1*24*60*60*1000
+  final String JOB_PATTERN = '<group>'
+  Map results = [:]
+
+  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+    job.fullName.contains(JOB_PATTERN)
+  }.each { Job job ->
+    results.(job.fullName) = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME ).findAll { Run run ->
+      !run.isBuilding() &&
+      run.result == Result.FAILURE
+    }.collectEntries { Run run ->
+      [ run.id, run.getAbsoluteUrl() ]
+    }
+  }
+
+  println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
+  ```
+
+- or
+  ```groovy
+  import hudson.model.Job
+  import hudson.model.Result
+  import hudson.model.Run
+  import jenkins.model.Jenkins
+  import static groovy.json.JsonOutput.*
+
+  final long CURRENT_TIME  = java.util.Calendar.getInstance().getTimeInMillis()
+  final long BENCH_MARK    = 1*24*60*60*1000
+  final String JOB_PATTERN = '<group>'
+  Map results = [:]
+
+  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+    job.fullName.contains(JOB_PATTERN)
+  }.each { Job job ->
+    def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
+    if( history ) {
+      results.(job.fullName) = history.findAll { Run run ->
+        !run.isBuilding() &&
+        run.result == Result.FAILURE
+      }.collectEntries { Run run ->
+        [ (run.id) : run.getAbsoluteUrl() ]
+      }
+    }
+  }
+
+  println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
+  ```
+
+
+## build parameters
+
 ### [get build parameters](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
 > reference:
 > - [`build?.actions.find{ it instanceof ParametersAction }`](https://stackoverflow.com/a/38130496/2940319)
@@ -351,69 +466,150 @@ job.getBuilds().each { Run build ->
 ```
 - result
   ```
-  #7: 		id	: marslo
-  		gender	: female
-  #6: 		id	: marslo
-  		gender	: female
-  #5: 		id	: marslo
-  		gender	: female
-  #4: 		id	: marslo
-  		gender	: female
-  #3: 		name	: marslo
-  		gender	: female
-  #2: 		name	: marslo
-  		gender	: female
+  #7:     id  : marslo
+      gender  : female
+  #6:     id  : marslo
+      gender  : female
+  #5:     id  : marslo
+      gender  : female
+  #4:     id  : marslo
+      gender  : female
+  #3:     name  : marslo
+      gender  : female
+  #2:     name  : marslo
+      gender  : female
   #1:
   ```
 
-- get particular value in each build
-  ```groovy
-  final String PARAM = 'id'
-  Map params = [:]
+### get wanted parameter values in builds
+```groovy
+final String PARAM = 'id'
+Map params = [:]
 
-  def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
-  job.getBuilds().each { Run build ->
-    params."${build.getId()}" = build?.actions
-                                      .find{ it instanceof ParametersAction }?.parameters?.collectEntries {
-                                         [ it.name , it.value ]
-                                      }
-  }
+def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+job.getBuilds().each { Run build ->
+  params."${build.getId()}" = build?.actions
+                                    .find{ it instanceof ParametersAction }?.parameters?.collectEntries {
+                                       [ it.name , it.value ]
+                                    }
+}
 
-  println params.collect { k , v ->
-    "build #${k} ~~> ${v ? "${PARAM} : ${v.getOrDefault(PARAM, "No '${PARAM}' found")}" : 'No Params Found'}"
-  }.join('\n')
+println params.collect { k , v ->
+  "build #${k} ~~> ${v ? "${PARAM} : ${v.getOrDefault(PARAM, "No '${PARAM}' found")}" : 'No Params Found'}"
+}.join('\n')
+```
+
+- result
   ```
-  - result
-    ```
-    build #7 ~~> id : marslo
-    build #6 ~~> id : marslo
-    build #5 ~~> id : marslo
-    build #4 ~~> id : marslo
-    build #3 ~~> id : No 'id' found
-    build #2 ~~> id : No 'id' found
-    build #1 ~~> No Params Found
-    ```
+  build #7 ~~> id : marslo
+  build #6 ~~> id : marslo
+  build #5 ~~> id : marslo
+  build #4 ~~> id : marslo
+  build #3 ~~> id : No 'id' found
+  build #2 ~~> id : No 'id' found
+  build #1 ~~> No Params Found
+  ```
 
-- get only `String` type parameters
+### get only `String` type parameters
+```groovy
+Map params = build?.getAction( ParametersAction.class )
+                   .parameters?.findAll{ it instanceof StringParameterValue }?.dump()
+```
+
+- or
   ```groovy
-  Map params = build?.getAction( ParametersAction.class )
-                     .parameters?.findAll{ it instanceof StringParameterValue }?.dump()
-
-  // or
   Map params = build?.getAction( ParametersAction.class )
                      .parameters?.findAll{ it instanceof StringParameterValue }?.collectEntries {
                        [ it.name, it.value ]
                      }
+  ```
 
-  // or
+- or
+  ```groovy
   Map params = build?.actions
                      .find{ it instanceof ParametersAction }?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
   ```
 
-### get jobs status in certant timeslot
+## build results
+
+### [get all builds result percentage](https://stackoverflow.com/a/28039134/2940319)
+```groovy
+final String JOB_PATTERN = '<group>/<name>'
+Map<String, Map<String, String>> results = [:]
+int sum = 0
+
+Jenkins.instance.getAllItems( Job.class ).each { project ->
+  if ( project.fullName.contains(JOB_PATTERN) ) {
+    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+    def build = project.getLastBuild()
+    while ( build ) {
+      // if job is building, then results."${project.fullName}"."${build.result}" will be null
+      if ( build.isBuilding() ) {
+        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
+      } else {
+        // println "$project.name;$build.id;$build.result"
+        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
+      }
+      build = build.getPreviousBuild()
+    }
+  }
+}
+results.each{ name, status ->
+  sum = status.values().sum()
+  println "${name}: ${sum} : "
+  status.each{ r, c ->
+    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+  }
+}
+"DONE"
+```
+- result
+  ![build status](../../screenshot/jenkins/job-successful-failure-percentage.png)
+
+### [get build result percentage within 24 hours](https://stackoverflow.com/a/28039134/2940319)
+```groovy
+final String JOB_PATTERN = '<group>'
+final long CURRENT_TIME  = System.currentTimeMillis()
+final int BENCH_MARK     = 1*24*60*60*1000
+
+Map<String, Map<String, String>> results = [:]
+int sum = 0
+
+Jenkins.instance.getAllItems( Job.class ).each { project ->
+  if ( project.fullName.contains(JOB_PATTERN) && project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
+    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+    def build = project.getLastBuild()
+
+    while ( build && (CURRENT_TIME - build.startTimeInMillis) <= BENCH_MARK ) {
+      if ( build.isBuilding() ) {
+        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
+      } else {
+        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
+      } // if job is building, then results."${project.fullName}"."${build.result}" will be null
+      build = build.getPreviousBuild()
+    } // traverse in the whole traverse builds
+
+  } // if there's builds within 24 hours
+}
+
+results.each{ name, status ->
+  sum = status.values().sum()
+  println "\n~~> ${name}: ${sum} : "
+  status.each{ r, c ->
+    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+  }
+}
+
+"DONE"
+```
+- result
+  ![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
+
+
+### get build result during certain start-end time
 > find only `String` type parameters:
 > ```groovy
->   Map params = build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
+> Map params = build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
 > ```
 
 ```bash
@@ -476,149 +672,78 @@ println "total number: ${count}"
   ![filter build history via params details](../../screenshot/jenkins/jenkins-filter-job-history-via-params-2.png)
 
 
-### [get jobs status within 24 hours](https://stackoverflow.com/a/28039134/2940319)
+### get builds result and percentage within certain start-end time
 ```groovy
-final String JOB_PATTERN = '<group>'
-final long CURRENT_TIME  = System.currentTimeMillis()
-final int BENCH_MARK     = 1*24*60*60*1000
+import java.util.Date
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import static groovy.json.JsonOutput.*
 
+DecimalFormat df = new DecimalFormat("0.00")
+SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" )
+
+final String JOB_PATTERN = '<group>[/<name>]'                         // project/job keywords
+final Map<String, String> PARAM = [ 'param_name' : 'param_value' ]    // setup PARAM as non-empty to list all wanted results
+// final Map<String, String> PARAM = [ : ]                            // setup PARAM as empty to list all results without params validation
+
+final long START
+final long END
 Map<String, Map<String, String>> results = [:]
-int sum = 0
+Map<String, Map<String, Integer>> status = [:]
 
-Jenkins.instance.getAllItems( Job.class ).each { project ->
-  if ( project.fullName.contains(JOB_PATTERN) && project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
-    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0 ]
-    def build = project.getLastBuild()
+final long NOW_TIME     = System.currentTimeMillis()
+final int BENCH_MARK    = 1*24*60*60*1000
+// final String START_TIME = '2021-04-26 00:00:00'
+// final String END_TIME   = '2021-04-29 00:00:00'
 
-    while ( build && (CURRENT_TIME - build.startTimeInMillis) <= BENCH_MARK ) {
-      if ( build.isBuilding() ) {
-        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
-      } else {
-        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-      } // if job is building, then results."${project.fullName}"."${build.result}" will be null
-      build = build.getPreviousBuild()
-    } // traverse in the whole traverse builds
-
-  } // if there's builds within 24 hours
+if ( NOW_TIME && BENCH_MARK ) {
+  START = NOW_TIME - BENCH_MARK
+  END   = NOW_TIME
+} else if ( START_TIME && END_TIME ) {
+  START = simpleDateFormat.parse( START_TIME ).getTime()
+  END   = simpleDateFormat.parse( END_TIME ).getTime()
+} else {
+  return
 }
 
-results.each{ name, status ->
-  sum = status.values().sum()
-  println "\n~~> ${name}: ${sum} : "
-  status.each{ r, c ->
-    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+  job.fullName.contains( JOB_PATTERN )
+}.each { Job job ->
+  results."${job.fullName}" = [:]
+  job.getBuilds().byTimestamp( START, END ).each { Run build ->
+    Map params = PARAM
+                  ? build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.collectEntries {
+                             [ it.name, it.value ]
+                           }
+                  : [:]
+    results."${job.fullName}"."${build.getId()}" = [
+            'time' : build.getTime().toString() ,
+          'params' : params ,
+      'paramsExist': params?.entrySet()?.containsAll( PARAM.entrySet() )
+    ]
+    if ( build.isBuilding() ) {
+      results."${job.fullName}"."${build.getId()}" << [ 'status' : 'INPROGRESS' ]
+    } else {
+      results."${job.fullName}"."${build.getId()}" << [ 'status' : build.getResult().toString() ]
+    }
+  }
+}
+
+results.each { name, values ->
+  status."${name}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+  Map wanted = values.findAll { k, v -> v.get('paramsExist') == true }
+  wanted.each { k, v -> status."${name}"."${v.status}" += 1 }
+
+  println "~~> ${name} : ${wanted.size()} : "
+  status."${name}".each { r, c ->
+    println r +
+            ' :\ttotal : ' + c +
+            ( c ? ( '\tpercentage : ' + (wanted.size() ? "${df.format(c * 100 / wanted.size())}%" : '0%') ) : '' ) + 
+            ( c ? '\n\t\tbuilds :\t' +  wanted.findAll { k, v -> v.get('status') == r }?.keySet()?.collect{ "#${it}" }.join(', ') + '\n': '' )
   }
 }
 
 "DONE"
 ```
-![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
-
-### [get all builds failure in last 24 hours](https://stackoverflow.com/a/60375862/2940319)
-```groovy
-import hudson.model.Job
-import hudson.model.Result
-import hudson.model.Run
-import java.util.Calendar
-import jenkins.model.Jenkins
-
-final Calendar RIGHT_NOW = Calendar.getInstance()
-final long BENCH_MARK    = 1*24*60*60*1000
-final String JOB_PATTERN = '<group>'
-
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
-}.collect { Job job ->
-  job.builds.findAll { Run run ->
-    run.result == Result.FAILURE &&
-    (RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis()) <= BENCH_MARK
-  }
-}.sum()
-```
-
-return Map structure:
-```groovy
-import hudson.model.Job
-import hudson.model.Result
-import hudson.model.Run
-import java.util.Calendar
-import jenkins.model.Jenkins
-import static groovy.json.JsonOutput.*
-
-final Calendar rightNow  = Calendar.getInstance()
-final long BENCH_MARK    = 1*24*60*60*1000
-final String JOB_PATTERN = '<group>'
-
-Map res = [:]
-
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
-}.each { Job job ->
-  res.(job.fullName) = job.builds.findAll { Run run ->
-    !run.isBuilding() &&
-    run.result == Result.FAILURE &&
-    (rightNow.getTimeInMillis() - run.getStartTimeInMillis()) <= BENCH_MARK
-  }.collectEntries { Run run ->
-    [ (run.id) : run.getAbsoluteUrl() ]
-  }
-}
-
-println prettyPrint( toJson(res.findAll{ !it.value.isEmpty() }) )
-```
-
-- or
-  ```groovy
-  import hudson.model.Job
-  import hudson.model.Result
-  import hudson.model.Run
-  import jenkins.model.Jenkins
-  import static groovy.json.JsonOutput.*
-
-  final long CURRENT_TIME  = java.util.Calendar.getInstance().getTimeInMillis()
-  final long BENCH_MARK    = 1*24*60*60*1000
-  final String JOB_PATTERN = '<group>'
-  Map res = [:]
-
-  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-    job.fullName.contains(JOB_PATTERN)
-  }.each { Job job ->
-    res.(job.fullName) = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME ).findAll { Run run ->
-      !run.isBuilding() &&
-      run.result == Result.FAILURE
-    }.collectEntries { Run run ->
-      [ run.id, run.getAbsoluteUrl() ]
-    }
-  }
-
-  println prettyPrint( toJson(res.findAll{ !it.value.isEmpty() }) )
-  ```
-
-- or
-  ```groovy
-  import hudson.model.Job
-  import hudson.model.Result
-  import hudson.model.Run
-  import jenkins.model.Jenkins
-  import static groovy.json.JsonOutput.*
-
-  final long CURRENT_TIME  = java.util.Calendar.getInstance().getTimeInMillis()
-  final long BENCH_MARK    = 1*24*60*60*1000
-  final String JOB_PATTERN = '<group>'
-  Map res = [:]
-
-  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-    job.fullName.contains(JOB_PATTERN)
-  }.each { Job job ->
-    def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
-    if( history ) {
-      res.(job.fullName) = history.findAll { Run run ->
-        !run.isBuilding() &&
-        run.result == Result.FAILURE
-      }.collectEntries { Run run ->
-        [ (run.id) : run.getAbsoluteUrl() ]
-      }
-    }
-  }
-
-  println prettyPrint( toJson(res.findAll{ !it.value.isEmpty() }) )
-  ```
+- result
+  ![build-history-with-status-and-percentage](../../screenshot/jenkins/build-history-with-status-and-percentage.png)
