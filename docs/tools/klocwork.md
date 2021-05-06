@@ -206,6 +206,38 @@
     $ kwadmin --url "http://my.kw.com/NotepadPlusPlus" load NotepadPlusPlus "~/npp/npp_tables"
     ```
 
+### [Using kwwrap plus kwinject to generate a build specification](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification)
+
+{% hint style='tip' %}
+> Note:
+> For [distributed builds](https://docs.roguewave.com/en/klocwork/current/runningadistributedklocworkccanalysis), you must run the following procedure on all build machines and merge the resultant build trace files.
+{% endhint %}
+
+* inserting the kwwrap command line before your compiler and linker names
+  ```c
+  CC = gcc
+  ```
+
+  convert to
+
+  ```c
+  CC = kwwrap -o <path_to_kwwrap_trace_file> gcc
+  ```
+* execute the build command
+* Convert the build trace into a build specification with [kwinject](https://docs.roguewave.com/en/klocwork/current/kwinject)
+  ```bash
+  $ kwinject --trace-in <path_to_kwwrap_trace_file> --output <path_to_kwinject_output_file>
+  ```
+  - i.e.:
+    ```bash
+    $ kwinject --trace-in C:/temp/kwwrap.trace --output C:Klocwork/temp/kwinject.out
+    ```
+
+#### [When editing the makefile is not an option](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification#Wheneditingthemakefileisnotanoption)
+- Using environment variables
+- Creating wrapper scripts
+- Use kwwrap with CMake
+
 ## authentication
 ### [get ltoken](https://docs.roguewave.com/en/klocwork/2020/klocworkltoken)
 ```bash
