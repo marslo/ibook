@@ -10,6 +10,9 @@
   - [`System.getenv()`](#systemgetenv)
   - [`sh 'env'` or `sh 'printenv'`](#sh-env-or-sh-printenv)
   - [`env.getEnvironment()` or `currentBuild.getRawBuild().getEnvironment()`](#envgetenvironment-or-currentbuildgetrawbuildgetenvironment)
+- [setup environment](#setup-environment)
+  - [using Groovy script](#using-groovy-script)
+  - [Creating Local Environment Variables](#creating-local-environment-variables)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
