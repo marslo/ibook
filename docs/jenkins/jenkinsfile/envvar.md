@@ -13,7 +13,10 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
+> references:
+> - [Jenkins Pipeline Environment Variables - The Definitive Guide](https://e.printstacktrace.blog/jenkins-pipeline-environment-variables-the-definitive-guide/)
+> - [Using environment variables in Jenkins pipelines - with examples](https://tomd.xyz/jenkins-env-vars/)
+> - [Jenkins Pipeline - set and use environment variables](https://code-maven.com/jenkins-pipeline-environment-variables)
 
 ## environment variables
 ### get current customized environment
@@ -116,3 +119,98 @@ println prettyPrint( toJson(env.getEnvironment()) )
       ...
   }
   ```
+
+## setup environment
+### [using Groovy script](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)
+```groovy
+import hudson.EnvVars;
+import hudson.slaves.EnvironmentVariablesNodeProperty;
+import hudson.slaves.NodeProperty;
+import hudson.slaves.NodePropertyDescriptor;
+import hudson.util.DescribableList;
+import jenkins.model.Jenkins;
+public createGlobalEnvironmentVariables(String key, String value){
+
+  Jenkins instance = Jenkins.getInstance();
+
+  DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = instance.getGlobalNodeProperties();
+  List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList = globalNodeProperties.getAll(EnvironmentVariablesNodeProperty.class);
+
+  EnvironmentVariablesNodeProperty newEnvVarsNodeProperty = null;
+  EnvVars envVars = null;
+
+  if ( envVarsNodePropertyList == null || envVarsNodePropertyList.size() == 0 ) {
+    newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+    globalNodeProperties.add(newEnvVarsNodeProperty);
+    envVars = newEnvVarsNodeProperty.getEnvVars();
+  } else {
+    envVars = envVarsNodePropertyList.get(0).getEnvVars();
+  }
+  envVars.put(key, value)
+  instance.save()
+
+}
+createGlobalEnvironmentVariables('Var1','Dummy')
+```
+
+### [Creating Local Environment Variables](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)
+- declarative pipeline
+  ```groovy
+  pipeline {
+    agent any
+    environment {
+      DISABLE_AUTH = 'true'                               //can be used in whole pipeline
+    }
+    stages {
+      stage(“Build”) {
+        steps {
+          echo env.DISABLE_AUTH
+        }
+      }
+    }
+  }
+  ```
+- scripted pipeline
+  ```groovy
+  node{
+    stage('Build') {
+      withEnv(["DISABLE_AUTH=true"]) {
+        echo env.DISABLE_AUTH
+      }
+    }
+  }
+```
+
+### [update Jenkins envvars in Jenkisnfile](https://stackoverflow.com/a/54945018)
+```groovy
+import jenkins.*
+import jenkins.model.*
+import hudson.*
+import hudson.model.*
+import hudson.slaves.*
+
+def updateEnvVar() {
+  script {
+    instance = Jenkins.getInstance()
+    globalNodeProperties = instance.getGlobalNodeProperties()
+    envVarsNodePropertyList = globalNodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+
+    newEnvVarsNodeProperty = null
+    envVars = null
+
+    if ( envVarsNodePropertyList == null || envVarsNodePropertyList.size() == 0 ) {
+      newEnvVarsNodeProperty = new hudson.slaves.EnvironmentVariablesNodeProperty();
+      globalNodeProperties.add(newEnvVarsNodeProperty);
+      envVars = newEnvVarsNodeProperty.getEnvVars();
+      envVars.put(NEW_VAR, "toto");
+    } else {
+      for (property in envVarsNodePropertyList) {
+        envVars = property.getEnvVars();
+        envVars.put("EXISTING_VAR","tata");
+      }
+    }
+
+    instance.save()
+  }
+}
+```
