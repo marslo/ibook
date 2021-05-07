@@ -22,6 +22,8 @@
 - [abort](#abort)
   - [abort a build](#abort-a-build)
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
+- [Managing Nodes](#managing-nodes)
+  - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -491,3 +493,145 @@ for (agent in jenkins.getNodes()) {
 println ("Number of Offline Nodes: " + numberOfflineNodes)
 println ("Number of Nodes: " + numberNodes)
 ```
+
+### [Create a Permanent Agent from Groovy Console](https://support.cloudbees.com/hc/en-us/articles/218154667-Create-a-Permanent-Agent-from-Groovy-Console?mobile_site=false)
+{% hint style='tip' %}
+> api:
+> - [hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
+> - [hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/verifiers/SshHostKeyVerificationStrategy.html)
+> - [hudson.slaves.DumbSlave](https://javadoc.jenkins-ci.org/hudson/slaves/DumbSlave.html)
+> - [hudson.slaves.ComputerLauncher](https://javadoc.jenkins-ci.org/hudson/slaves/ComputerLauncher.html)
+>
+{% endhint %}
+
+{% hint style='tip' %}
+> - useful libs:
+> ```
+> import jenkins.model.*
+> import hudson.slaves.*
+> import hudson.slaves.NodePropertyDescriptor;
+>
+> import hudson.plugins.sshslaves.*
+> import hudson.plugins.sshslaves.verifiers.*
+>
+> import hudson.model.*
+> import hudson.model.Node;
+> import hudson.model.Queue;
+> import hudson.model.queue.CauseOfBlockage;
+>
+> import hudson.slaves.EnvironmentVariablesNodeProperty.Entry;
+> import java.util.ArrayList;
+>
+> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.nodes.JobRestrictionProperty;
+> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.Messages;
+> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestriction;
+> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestrictionBlockageCause;
+>
+> import hudson.Extension;
+> import hudson.slaves.NodeProperty;
+> import org.kohsuke.stapler.DataBoundConstructor;
+> ```
+>
+> SSH host verification strategy:
+> ```groovy
+> new KnownHostsFileKeyVerificationStrategy() // Known hosts file Verification Strategy
+> new ManuallyProvidedKeyVerificationStrategy("<your-key-here>") // Manually provided key Verification Strategy
+> new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/) // Manually trusted key Verification Strategy
+> new NonVerifyingKeyVerificationStrategy() // Non verifying Verification Strategy
+> ```
+{% endhint %}
+
+```groovy
+import hudson.model.*
+import jenkins.model.*
+import hudson.slaves.*
+import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+import hudson.plugins.sshslaves.verifiers.*
+
+// Pick one of the strategies from the comments below this line
+// SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new KnownHostsFileKeyVerificationStrategy()
+    //= new KnownHostsFileKeyVerificationStrategy() // Known hosts file Verification Strategy
+    //= new ManuallyProvidedKeyVerificationStrategy("<your-key-here>") // Manually provided key Verification Strategy
+    //= new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/) // Manually trusted key Verification Strategy
+    //= new NonVerifyingKeyVerificationStrategy() // Non verifying Verification Strategy
+
+// Define a "Launch method": "Launch agents via SSH"
+ComputerLauncher launcher = new hudson.plugins.sshslaves.SSHLauncher(
+        "1.2.3.4",                                 // Host
+        22,                                        // Port
+        "MyCredentials",                           // Credentials
+        (String)null,                              // JVM Options
+        (String)null,                              // JavaPath
+        (String)null,                              // Prefix Start Agent Command
+        (String)null,                              // Suffix Start Agent Command
+        (Integer)null,                             // Connection Timeout in Seconds
+        (Integer)null,                             // Maximum Number of Retries
+        (Integer)null,                             // The number of seconds to wait between retries
+        new NonVerifyingKeyVerificationStrategy()  // Host Key Verification Strategy
+)
+
+// Define a "Permanent Agent"
+Slave agent = new DumbSlave(
+        "marslo-test",
+        "/home/devops",
+        launcher)
+agent.nodeDescription = "marslo test agent"
+agent.numExecutors = 1
+agent.labelString = ""
+agent.mode = Node.Mode.NORMAL
+agent.retentionStrategy = new RetentionStrategy.Always()
+
+List<Entry> env = new ArrayList<Entry>();
+env.add(new Entry("key1","value1"))
+env.add(new Entry("key2","value2"))
+EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
+
+agent.getNodeProperties().add(envPro)
+
+// Create a "Permanent Agent"
+Jenkins.instance.addNode(agent)
+
+return "Node has been created successfully."
+```
+
+- [or](https://groups.google.com/g/jenkinsci-users/c/JmVNQm47l8g)
+  ```groovy
+  import hudson.model.*
+  import jenkins.model.*
+  import hudson.slaves.*
+  import hudson.plugins.sshslaves.verifiers.*
+  import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+
+
+  List<Entry> env = new ArrayList<Entry>();
+  env.add(new Entry("key1","value1"))
+  env.add(new Entry("key2","value2"))
+  EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
+
+  Slave agent = new DumbSlave(
+    "marslo-test",        // name
+    "marslo test agent",  // description
+    "/home/devops",       // root dir
+    "1",                  // executor
+    Node.Mode.NORMAL,
+    "",                   // node label
+    new hudson.plugins.sshslaves.SSHLauncher(
+      "1.2.3.4",                                 // Host
+      22,                                        // Port
+      "MyCredentials",                           // Credentials
+      (String)null,                              // JVM Options
+      (String)null,                              // JavaPath
+      (String)null,                              // Prefix Start Agent Command
+      (String)null,                              // Suffix Start Agent Command
+      (Integer)null,                             // Connection Timeout in Seconds
+      (Integer)null,                             // Maximum Number of Retries
+      (Integer)null,                             // The number of seconds to wait between retries
+      new NonVerifyingKeyVerificationStrategy()  // Host Key Verification Strategy
+    ) ,
+    new RetentionStrategy.Always(),
+    new LinkedList()
+  )
+
+  agent.getNodeProperties().add(envPro)
+  Jenkins.instance.addNode(agent)
+  ```
