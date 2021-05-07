@@ -9,6 +9,7 @@
   - [full build analysis](#full-build-analysis)
   - [incremental build analysis](#incremental-build-analysis)
   - [load result from both windows and linux](#load-result-from-both-windows-and-linux)
+  - [Using kwwrap plus kwinject to generate a build specification](#using-kwwrap-plus-kwinject-to-generate-a-build-specification)
 - [authentication](#authentication)
   - [get ltoken](#get-ltoken)
 - [api](#api)
@@ -207,6 +208,10 @@
     ```
 
 ### [Using kwwrap plus kwinject to generate a build specification](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification)
+> reference:
+> - [Using a build trace to troubleshoot build specification problems](https://docs.roguewave.com/en/klocwork/current/usingabuildtracetotroubleshootbuildspecificationproblems#concept972)
+> - [Can I concatenate the results of more than one kwinject.out file?](https://developer.klocwork.com/community/forums/klocwork-insight/general-discussion/can-i-concatenate-results-more-one-kwinjectout)
+> - [Running a distributed analysis](https://bullwhip.physio-control.com/documentation/help/concepts/runningadistributedanalysis.htm)
 
 {% hint style='tip' %}
 > Note:
