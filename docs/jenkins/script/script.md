@@ -7,8 +7,7 @@
   - [basic usage](#basic-usage)
 - [jobs](#jobs)
   - [get build status](#get-build-status)
-  - [get all failure builds in last 24 hours](#get-all-failure-builds-in-last-24-hours)
-  - [list all build history within 24 hours](#list-all-build-history-within-24-hours)
+  - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
 - [List plugins](#list-plugins)
@@ -24,6 +23,7 @@
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
 - [Managing Nodes](#managing-nodes)
   - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
+  - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -73,96 +73,20 @@
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 > get more: [jobs & builds](./build.md)
 
-### [get build status](https://stackoverflow.com/a/28039134/2940319)
-```groovy
-final String JOB_PATTERN = '<group>[/<name>]'
-Map<String, Map<String, String>> results = [:]
-int sum = 0
+### get build status
+- [get all builds result percentage](./build.html#get-all-builds-result-percentage)
+- [get builds result percentage within 24 hours](./build.html#get-builds-result-percentage-within-24-hours)
+- [get builds result and percentage within certain start-end time](./build.html#get-builds-result-and-percentage-within-certain-start-end-time)
 
-Jenkins.instance.getAllItems( Job.class ).each { project ->
-  if ( project.fullName.contains(JOB_PATTERN) ) {
-    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0 ]
-    def build = project.getLastBuild()
-    while ( build ) {
-      // if job is building, then results."${project.fullName}"."${build.result}" will be null
-      if ( build.isBuilding() ) {
-        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
-      } else {
-        // println "$project.name;$build.id;$build.result"
-        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-      }
-      build = build.getPreviousBuild()
-    }
-  }
-}
-results.each{ name, status ->
-  sum = status.values().sum()
-  println "\n${name} : ${sum} : "
-  status.each{ r, c ->
-    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
-  }
-}
-"DONE"
-```
-
-### [get all failure builds in last 24 hours](https://stackoverflow.com/a/60375862/2940319)
-```groovy
-import hudson.model.Job
-import hudson.model.Result
-import hudson.model.Run
-import java.util.Calendar
-import jenkins.model.Jenkins
-
-final Calendar RIGHT_NOW = Calendar.getInstance()
-final long BENCH_MARK    = 1*24*60*60*1000
-final String JOB_PATTERN = '<group>[/<name>]'
-
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
-}.collect { Job job ->
-  job.builds.findAll { Run run ->
-    run.result == Result.FAILURE &&
-    (RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis()) <= BENCH_MARK
-  }
-}.sum().join('\n')
-```
-
-### [list all build history within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
-```groovy
-String JOB_PATTERN      = '<group>/<job>'
-final long CURRENT_TIME = System.currentTimeMillis()
-final int BENCH_MARK    = 1*24*60*60*1000                    // days * hours * minutes * seconds * microseconds (1000)
-
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
-}.collect { Job job ->
-  def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
-  if ( history ) {
-    println """
-      ${job.fullName} : ${history.size()} :
-      history         : ${history}
-    """
-  }
-}
-"DONE"
-```
+### get all builds status during certain start-end time
+- [list all builds within 24 hours](./build.html#list-all-builds-within-24-hours)
+- [get last 24 hours failure builds](./build.html#get-last-24-hours-failure-builds)
+- [get last 24 hours failure builds via Map structure](./build.html#get-last-24-hours-failure-builds-via-map-structure)
+- [get builds result during certain start-end time](./build.html#get-builds-result-during-certain-start-end-time)
+- [get builds result and percentage within certain start-end time](./build.html#get-builds-result-and-percentage-within-certain-start-end-time)
 
 ### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
-```bash
-/*
- * We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
- */
-Jenkins.instance.getAllItems(Job).each() { job ->
-  if ( job.isBuilding() ) {
-    def myBuild = job.getLastBuild()
-    def runningSince= groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
-    if ( runningSince.hours >= 24 ) {
-      println job.name + "---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
-    }
-  }
-}
-return null
-```
+- [list job which running for more than 24 hours](./build.html#list-all-builds-within-24-hours)
 
 ### [shelve jobs](https://support.cloudbees.com/hc/en-us/articles/236353928-Groovy-Scripts-To-Shelve-Jobs)
 ```groovy
@@ -505,39 +429,37 @@ println ("Number of Nodes: " + numberNodes)
 {% endhint %}
 
 {% hint style='tip' %}
-> - useful libs:
-> ```
-> import jenkins.model.*
-> import hudson.slaves.*
-> import hudson.slaves.NodePropertyDescriptor;
+> useful libs:
+> - `import jenkins.model.*`
+> - `import hudson.slaves.*`
+> - `import hudson.slaves.NodePropertyDescriptor`
+> - `import hudson.plugins.sshslaves.*`
+> - `import hudson.plugins.sshslaves.verifiers.*`
+> - `import hudson.model.*`
+> - `import hudson.model.Node`
+> - `import hudson.model.Queue`
+> - `import hudson.model.queue.CauseOfBlockage`
+> - `import hudson.slaves.EnvironmentVariablesNodeProperty.Entry`
+> - `import java.util.ArrayList`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.nodes.JobRestrictionProperty`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.Messages`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestriction`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestrictionBlockageCause`
+> - `import hudson.Extension`
+> - `import hudson.slaves.NodeProperty`
+> - `import org.kohsuke.stapler.DataBoundConstructor`
 >
-> import hudson.plugins.sshslaves.*
-> import hudson.plugins.sshslaves.verifiers.*
+> - SSH host verification strategy:
 >
-> import hudson.model.*
-> import hudson.model.Node;
-> import hudson.model.Queue;
-> import hudson.model.queue.CauseOfBlockage;
->
-> import hudson.slaves.EnvironmentVariablesNodeProperty.Entry;
-> import java.util.ArrayList;
->
-> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.nodes.JobRestrictionProperty;
-> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.Messages;
-> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestriction;
-> import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestrictionBlockageCause;
->
-> import hudson.Extension;
-> import hudson.slaves.NodeProperty;
-> import org.kohsuke.stapler.DataBoundConstructor;
-> ```
->
-> SSH host verification strategy:
 > ```groovy
-> new KnownHostsFileKeyVerificationStrategy() // Known hosts file Verification Strategy
-> new ManuallyProvidedKeyVerificationStrategy("<your-key-here>") // Manually provided key Verification Strategy
-> new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/) // Manually trusted key Verification Strategy
-> new NonVerifyingKeyVerificationStrategy() // Non verifying Verification Strategy
+> // Known hosts file Verification Strategy
+> new KnownHostsFileKeyVerificationStrategy()
+> // Manually provided key Verification Strategy
+> new ManuallyProvidedKeyVerificationStrategy("<your-key-here>")
+> // Manually trusted key Verification Strategy
+> new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/)
+> // Non verifying Verification Strategy
+> new NonVerifyingKeyVerificationStrategy()
 > ```
 {% endhint %}
 
@@ -602,31 +524,41 @@ return "Node has been created successfully."
   import hudson.plugins.sshslaves.verifiers.*
   import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
 
+  String name        = 'marslo-test'
+  String description = 'marslo test agent'
+  String rootDir     = '/home/marslo'
+  String nodeLabel   = ''
+  String ip          = '1.2.3.4'
+  String credential  = 'MyCredential'
+  Map envVars        = [
+    'key1' : 'value1',
+    'key2' : 'value2'
+  ]
+  SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new NonVerifyingKeyVerificationStrategy()
 
   List<Entry> env = new ArrayList<Entry>();
-  env.add(new Entry("key1","value1"))
-  env.add(new Entry("key2","value2"))
+  envVars.each { k, v -> env.add(new Entry(k, v)) }
   EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
 
   Slave agent = new DumbSlave(
-    "marslo-test",        // name
-    "marslo test agent",  // description
-    "/home/devops",       // root dir
-    "1",                  // executor
+    name,
+    description,
+    rootDir,
+    "1",
     Node.Mode.NORMAL,
-    "",                   // node label
+    nodeLabel,
     new hudson.plugins.sshslaves.SSHLauncher(
-      "1.2.3.4",                                 // Host
-      22,                                        // Port
-      "MyCredentials",                           // Credentials
-      (String)null,                              // JVM Options
-      (String)null,                              // JavaPath
-      (String)null,                              // Prefix Start Agent Command
-      (String)null,                              // Suffix Start Agent Command
-      (Integer)null,                             // Connection Timeout in Seconds
-      (Integer)null,                             // Maximum Number of Retries
-      (Integer)null,                             // The number of seconds to wait between retries
-      new NonVerifyingKeyVerificationStrategy()  // Host Key Verification Strategy
+      ip,                          // Host
+      22,                          // Port
+      credential,                  // Credentials
+      (String)null,                // JVM Options
+      (String)null,                // JavaPath
+      (String)null,                // Prefix Start Agent Command
+      (String)null,                // Suffix Start Agent Command
+      (Integer)null,               // Connection Timeout in Seconds
+      (Integer)null,               // Maximum Number of Retries
+      (Integer)null,               // The number of seconds to wait between retries
+      hostKeyVerificationStrategy  // Host Key Verification Strategy
     ) ,
     new RetentionStrategy.Always(),
     new LinkedList()

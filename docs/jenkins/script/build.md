@@ -23,8 +23,8 @@
   - [get only `String` type parameters](#get-only-string-type-parameters)
 - [build results](#build-results)
   - [get all builds result percentage](#get-all-builds-result-percentage)
-  - [get build result percentage within 24 hours](#get-build-result-percentage-within-24-hours)
-  - [get build result during certain start-end time](#get-build-result-during-certain-start-end-time)
+  - [get builds result percentage within 24 hours](#get-builds-result-percentage-within-24-hours)
+  - [get builds result during certain start-end time](#get-builds-result-during-certain-start-end-time)
   - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -566,7 +566,7 @@ results.each{ name, status ->
 - result
   ![build status](../../screenshot/jenkins/job-successful-failure-percentage.png)
 
-### [get build result percentage within 24 hours](https://stackoverflow.com/a/28039134/2940319)
+### [get builds result percentage within 24 hours](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
 final String JOB_PATTERN = '<group>'
 final long CURRENT_TIME  = System.currentTimeMillis()
@@ -606,7 +606,7 @@ results.each{ name, status ->
   ![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
 
 
-### get build result during certain start-end time
+### get builds result during certain start-end time
 > find only `String` type parameters:
 > ```groovy
 > Map params = build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
@@ -667,9 +667,8 @@ println "total number: ${count}"
 ```
 
 - result:
-  ![filter build history via params](../../screenshot/jenkins/jenkins-filter-job-history-via-params.png)
-
-  ![filter build history via params details](../../screenshot/jenkins/jenkins-filter-job-history-via-params-2.png)
+  ![filter build history via params](../../screenshot/jenkins/filter-job-history-via-params.png)
+  ![filter build history via params details](../../screenshot/jenkins/filter-job-history-via-params-2.png)
 
 
 ### get builds result and percentage within certain start-end time
@@ -679,7 +678,7 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import static groovy.json.JsonOutput.*
 
-DecimalFormat df = new DecimalFormat("0.00")
+DecimalFormat df = new DecimalFormat("0.00")                          // keep two decimal places
 SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" )
 
 final String JOB_PATTERN = '<group>[/<name>]'                         // project/job keywords
@@ -691,8 +690,16 @@ final long END
 Map<String, Map<String, String>> results = [:]
 Map<String, Map<String, Integer>> status = [:]
 
+// start-end time format for x days/hours/minutes ago
 final long NOW_TIME     = System.currentTimeMillis()
 final int BENCH_MARK    = 1*24*60*60*1000
+//                        | |  |  |   + milliseconds
+//                        | |  |  + seconds
+//                        | |  + minutes
+//                        | + housrs
+//                        + days
+
+// start-end time format for time-x to time-y
 // final String START_TIME = '2021-04-26 00:00:00'
 // final String END_TIME   = '2021-04-29 00:00:00'
 
