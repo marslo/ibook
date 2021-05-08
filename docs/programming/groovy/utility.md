@@ -7,6 +7,7 @@
   - [convert the Date to simpleDateFormat or timeInMillis](#convert-the-date-to-simpledateformat-or-timeinmillis)
   - [Java LocalDateTime with different format](#java-localdatetime-with-different-format)
   - [formatting the date](#formatting-the-date)
+  - [convert `Long` to `SimpleDateFormat`](#convert-long-to-simpledateformat)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -427,3 +428,30 @@ println """
     ISO_LOCAL_DATE_TIME : 2021-04-29T02:45:37.501
   ```
 
+
+### [convert `Long` to `SimpleDateFormat`](https://stackoverflow.com/a/12504608/2940319)
+> reference:
+> - [Parsing and Formatting Dates in Java](http://tutorials.jenkov.com/java-date-time/parsing-formatting-dates.html)
+> - [get Beijing Date time - Java java.util](http://www.java2s.com/example/java/java.util/get-beijing-date-time.html)
+
+```groovy
+import java.text.SimpleDateFormat
+
+Long x = 1086073200000
+SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy")
+simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"))
+
+Calendar calendar = Calendar.getInstance()
+calendar.setTimeInMillis(x)
+
+println x
+println calendar.getTime().getClass()
+println simpleDateFormat.format(calendar.getTime())
+```
+- result:
+  ```
+  Result
+  1086073200000
+  class java.util.Date
+  15:00:00 01/06/2004
+  ```

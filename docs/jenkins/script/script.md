@@ -27,6 +27,8 @@
 
 {% hint style='tip' %}
 > reference:
+> - [Script Console](https://www.jenkins.io/doc/book/managing/script-console/)
+> - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [samrocketman/jenkins-script-console-scripts](https://github.com/samrocketman/jenkins-script-console-scripts)
 > - [jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
 > - [cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
@@ -34,6 +36,7 @@
 > - [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
 > - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
 > - [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
+> - [mikejoh/jenkins-and-groovy-snippets.md](https://gist.github.com/mikejoh/9a721d1e6de7574059dcb8f851692be9)
 {% endhint %}
 
 
