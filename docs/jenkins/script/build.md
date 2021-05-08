@@ -223,6 +223,18 @@ def stopJobs( job ) {
 }
 ```
 
+#### [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
+> refernece:
+> - [cg-soft/explore.groovy](https://gist.github.com/cg-soft/4251ad83932340129925)
+
+```groovy
+def q = Jenkins.instance.queue
+q.items.each {
+  println("${it.task.name}:")
+  println("Parameters: ${it.params}")
+}
+```
+
 ### get build time
 > reference
 > - [Getting current timestamp in inline pipeline script using pipeline plugin of hudson](https://stackoverflow.com/a/55242657/2940319)
@@ -736,18 +748,21 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
   }
 }
 
+
+println simpleDateFormat.format(START) + ' ~ ' + simpleDateFormat.format(END) + ' :'
 results.each { name, values ->
   status."${name}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
   Map wanted = values.findAll { k, v -> v.get('paramsExist') == true }
   wanted.each { k, v -> status."${name}"."${v.status}" += 1 }
 
-  println "~~> ${name} : ${wanted.size()} : "
+  println "\n~~> ${name} : ${wanted.size()} : "
   status."${name}".each { r, c ->
-    println r +
-            ' :\ttotal : ' + c +
-            ( c ? ( '\tpercentage : ' + (wanted.size() ? "${df.format(c * 100 / wanted.size())}%" : '0%') ) : '' ) + 
-            ( c ? '\n\t\tbuilds :\t' +  wanted.findAll { k, v -> v.get('status') == r }?.keySet()?.collect{ "#${it}" }.join(', ') + '\n': '' )
-  }
+    if (c) {
+      println '\t\t' + r +
+              ' :\ttotal : ' + c +
+              '\tpercentage : ' + (wanted.size() ? "${df.format(c * 100 / wanted.size())}%" : '0%') + '\n' +
+              '\t\t\t\tbuilds :\t' +  wanted.findAll { k, v -> v.get('status') == r }?.keySet()?.collect{ "#${it}" }.join(', ')
+    }  // print only exists status
 }
 
 "DONE"
