@@ -10,6 +10,7 @@
   - [`System.getenv()`](#systemgetenv)
   - [`sh 'env'` or `sh 'printenv'`](#sh-env-or-sh-printenv)
   - [`env.getEnvironment()` or `currentBuild.getRawBuild().getEnvironment()`](#envgetenvironment-or-currentbuildgetrawbuildgetenvironment)
+  - [get builds environment](#get-builds-environment)
 - [setup environment](#setup-environment)
   - [using Groovy script](#using-groovy-script)
   - [Creating Local Environment Variables](#creating-local-environment-variables)
@@ -111,17 +112,44 @@ println prettyPrint( toJson(env.getEnvironment()) )
   // or
 
   {
-      "BUILD_DISPLAY_NAME": "#1335",
-      "BUILD_ID": "1335",
-      "BUILD_NUMBER": "1335",
-      "BUILD_TAG": "jenkins-marslo-sandbox-1335",
-      "BUILD_TIMESTAMP": "2021-05-07 00:26:40 PDT",
-      "CLASSPATH": "",
-      "HUDSON_HOME": "/var/jenkins_home",
-      "JOB_NAME": "marslo/sandbox",
-      ...
+    "BUILD_DISPLAY_NAME": "#1335",
+    "BUILD_ID": "1335",
+    "BUILD_NUMBER": "1335",
+    "BUILD_TAG": "jenkins-marslo-sandbox-1335",
+    "BUILD_TIMESTAMP": "2021-05-07 00:26:40 PDT",
+    "CLASSPATH": "",
+    "HUDSON_HOME": "/var/jenkins_home",
+    "JOB_NAME": "marslo/sandbox",
+    ...
   }
   ```
+
+### [get builds environment](https://stackoverflow.com/a/56472651/2940319)
+> references:
+> - [Access to build environment variables from a groovy script in a Jenkins build step (Windows)](https://stackoverflow.com/a/26428580/2940319)
+
+```groovy
+import hudson.model.*
+
+def build = Thread.currentThread().executable
+def myVar = build.getBuildVariables().get('myVar')
+```
+
+[or](https://stackoverflow.com/q/47098330/2940319)
+```groovy
+import hudson.slaves.EnvironmentVariablesNodeProperty
+import hudson.EnvVars
+import hudson.model.BuildableItem
+import hudson.model.Job
+import jenkins.model.*;
+
+
+jenkins = Jenkins.instance;
+EnvironmentVariablesNodeProperty prop = jenkins.getGlobalNodeProperties().get(EnvironmentVariablesNodeProperty.class)
+EnvVars env = prop.getEnvVars()
+
+println env['MY_VAR']
+```
 
 ## setup environment
 ### [using Groovy script](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)

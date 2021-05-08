@@ -2,6 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [basic](#basic)
+  - [Customizable Operators](#customizable-operators)
+  - [Special Operators](#special-operators)
 - [string](#string)
   - [substring](#substring)
 - [`list`](#list)
@@ -26,6 +29,31 @@
 > reference:
 > - [Groovy Cheatsheet](https://onecompiler.com/cheatsheets/groovy)
 > - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
+> - [http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf](http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf)
+
+## basic
+
+### Customizable Operators
+|    Operator    | Method          |
+|:--------------:|-----------------|
+|      `a + b`     | `a.plus(b)`     |
+|      `a - b`     | `a.minus(b)`    |
+|      `a * b`     | `a.multiply(b)` |
+|      `a / b`     | `a.div(b)`      |
+|      `a % b`     | `a.mod(b)`      |
+| `a++` or `++a` | `a.next()`      |
+
+### Special Operators
+|   Operator  | Meaning                                      | Name           |
+|:-----------:|----------------------------------------------|----------------|
+| `a ? b : c` | `if(a) b else c`                             | ternary if     |
+|   `a ?: b`  | ` a ? a : b`                                 | Elvis          |
+|    `a.?b`   | `( a==null ) ? a : a.b`                      | null safe      |
+|  `a(*list)` | `a(list[0], list[1], ...)`                   | spread         |
+| `list*.a()` | `[list[0].a, list[1].a, ...]`                | spread-out     |
+|    `a.&b`   | reference to method b in object a as closure | method closure |
+|  `a.@field` | direct field access                          | dot-at         |
+
 
 ## string
 ### [substring](http://grails.asia/groovy-substring)
