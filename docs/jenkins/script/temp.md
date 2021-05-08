@@ -10,15 +10,39 @@
 ```groovy
  def job = hudson.model.Hudson.instance.getItem('vega/tester')
  def paramsProp = job.getProperty(ParametersDefinitionProperty.class)
- def releaseTeamParameter = paramsProp.getParameterDefinitions().find { it.name == "tester" }       
+ def releaseTeamParameter = paramsProp.getParameterDefinitions().find { it.name == "tester" }
  return releaseTeamParameter.getChoices().toArray()
+```
+
+```groovy
+// https://stackoverflow.com/a/32704455/2940319
+import hudson.model.*
+
+// get current thread / Executor and current build
+def thr = Thread.currentThread()
+def build = thr?.executable
+
+// if you want the parameter by name ...
+def hardcoded_param = "FOOBAR"
+def resolver = build.buildVariableResolver
+def hardcoded_param_value = resolver.resolve(hardcoded_param)
+
+println "param ${hardcoded_param} value : ${hardcoded_param_value}"
+```
+
+```groovy
+// https://stackoverflow.com/a/47095584/2940319
+def build = this.getProperty('binding').getVariable('build')
+def listener = this.getProperty('binding').getVariable('listener')
+def env = build.getEnvironment(listener)
+println env.MY_VARIABLE
 ```
 
 ```groovy
 // https://github.com/pycontribs/jenkinsapi/issues/438
 job = Jenkins.get_job("sandbox")
 build = job.get_last_build()
-parameters = build.get_actions()['parameters'] 
+parameters = build.get_actions()['parameters']
 ```
 
 ```groovy
@@ -28,13 +52,13 @@ build.getActions(hudson.model.ParametersAction)
 
 // https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script
 import hudson.model.*
- 
+
 // get current thread / Executor
 def thr = Thread.currentThread()
 // get current build
 def build = thr?.executable
- 
- 
+
+
 // get parameters
 def parameters = build?.actions.find{ it instanceof ParametersAction }?.parameters
 parameters.each {
@@ -42,14 +66,14 @@ parameters.each {
    println it.dump()
    println "-" * 80
 }
- 
- 
+
+
 // ... or if you want the parameter by name ...
 def hardcoded_param = "FOOBAR"
 def resolver = build.buildVariableResolver
 def hardcoded_param_value = resolver.resolve(hardcoded_param)
- 
- 
+
+
 println "param ${hardcoded_param} value : ${hardcoded_param_value}"
 ```
 

@@ -2,32 +2,38 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Managing Nodes](#managing-nodes)
-  - [get information](#get-information)
+- [get information](#get-information)
   - [get ip address of node](#get-ip-address-of-node)
   - [get agent environment variable](#get-agent-environment-variable)
+  - [get a list of all Jenkins nodes assigned with label](#get-a-list-of-all-jenkins-nodes-assigned-with-label)
+- [Managing Nodes](#managing-nodes)
   - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
   - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
+  - [update agent label](#update-agent-label)
+  - [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](#jenkins-scriptsscriptlerdisableslavenodestartswithgroovy)
+  - [disable agent](#disable-agent)
+  - [delete agent](#delete-agent)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
-> references:
-> - [Display Information About Nodes](https://wiki.jenkins.io/display/JENKINS/Display+Information+About+Nodes)
-
-### get information
+## get information
 > API:
 > - [hudson.model.Computer](https://javadoc.jenkins-ci.org/hudson/model/Computer.html)
 > - [hudson.model.Node](https://javadoc.jenkins-ci.org/hudson/model/Node.html)
 > - [hudson.model.Slave](https://javadoc.jenkins.io/hudson/model/Slave.html)
 > - [hudson.slaves.DumbSlave](https://javadoc.jenkins.io/hudson/slaves/DumbSlave.html)
 >
-> References:
+> references:
+> - [Display Information About Nodes](https://wiki.jenkins.io/display/JENKINS/Display+Information+About+Nodes)
 > - [jenkins-scripts/scriptler/showAgentJavaVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/showAgentJavaVersion.groovy)
 > - [jenkins-scripts/scriptler/checkNodesLauncherVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkNodesLauncherVersion.groovy)
 > - [Skip Jenkins Pipeline Steps If Node Is Offline](https://stackoverflow.com/a/43065873/2940319)
+>
+> sample scripts:
 > - [jenkins-scripts/scriptler/findOfflineSlaves.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/findOfflineSlaves.groovy)
+> - [jenkins-scripts/scriptler/showAgentJavaVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/showAgentJavaVersion.groovy)
+> - [jenkins-scripts/scriptler/checkNodesLauncherVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkNodesLauncherVersion.groovy)
 
 {% hint 'info' %}
 > - `hudson.model.Computer` -> `hudson.model.Node` via [`computer.setNode()`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#setNode-hudson.model.Node-)
@@ -95,15 +101,22 @@
 import hudson.model.Computer.ListPossibleNames
 println jenkins.model
                .Jenkins.instance
-               .getNode(<agent_name>).computer
+               .getNode( '<agent_name>' ).computer
                .getChannel().call(new ListPossibleNames())
+```
+
+or
+```groovy
+println jenkins.model
+               .Jenkins.instance
+               .getNode( '<agent_name>' ).computer
+               .getHostName()
 ```
 
 [or](https://stackoverflow.com/a/14930330/2940319)
 ```groovy
 println InetAddress.localHost.hostAddress
 ```
-
 
 ### [get agent environment variable](https://stackoverflow.com/a/28076291/2940319)
 ```groovy
@@ -118,6 +131,32 @@ for (slave in jenkins.model.Jenkins.instance.slaves) {
 }
 ```
 
+### [get a list of all Jenkins nodes assigned with label](https://stackoverflow.com/a/64106569/2940319)
+```groovy
+def nodes = jenkins.model.Jenkins.get().computers
+                   .findAll{ it.node.labelString.contains(label) }
+                   .collect{ it.node.selfLabel.name }
+```
+
+- [or](https://stackoverflow.com/a/49625621/2940319)
+  ```groovy
+  @NonCPS
+  def hostNames(label) {
+    def nodes = []
+    jenkins.model.Jenkins.get.computers.each { c ->
+      if (c.node.labelString.contains(label)) {
+        nodes.add(c.node.selfLabel.name)
+      }
+    }
+    return nodes
+  }
+  ```
+- [or](https://stackoverflow.com/a/53429175/2940319)
+  ```groovy
+  Jenkins.instance.getLabel('my-label').getNodes().collect{ it.getNodeName() }
+  ```
+
+## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
 ### [Monitor and Restart Offline Agents](https://www.jenkins.io/doc/book/managing/nodes/)
 
 ```groovy
@@ -227,6 +266,10 @@ println ("Number of Nodes: " + numberNodes)
 > - [hudson.slaves.ComputerLauncher](https://javadoc.jenkins-ci.org/hudson/slaves/ComputerLauncher.html)
 >
 {% endhint %}
+
+> references:
+> - [jenkins-scripts/createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
+> - [GroovyJenkins/src/main/groovy/AddNodeToJenkins.groovy](https://github.com/MovingBlocks/GroovyJenkins/blob/master/src/main/groovy/AddNodeToJenkins.groovy)
 
 {% hint style='tip' %}
 > useful libs:
@@ -367,3 +410,46 @@ return "Node has been created successfully."
   agent.getNodeProperties().add(envPro)
   Jenkins.instance.addNode(agent)
   ```
+
+### update agent label
+> references:
+> - [Groovy script for modifying Jenkins nodes labels](https://stackoverflow.com/questions/62148298/groovy-script-for-modifying-jenkins-nodes-labels)
+
+- get label
+  ```groovy
+  def getLabel( String label ){
+    for ( node in jenkins.model.Jenkins.instance.nodes ) {
+      if ( node.getNodeName().toString().equals(label) ) {
+        return node.getLabelString()
+      }
+    }
+  }
+  ```
+  or
+  ```groovy
+  def getLabel( String label ){
+    jenkins.model.Jenkins.instance.nodes.find { it.getNodeName().toString().equals(label) }.getLabelString()
+  }
+  ```
+
+- update label
+  ```groovy
+  def updateLabel( String agent, String label ) {
+    def node = jenkins.model.Jenkins.instance.getNode( agent )
+    if ( node ) {
+      node.setLabelString(label)
+      node.save()
+    }
+  }
+  ```
+
+### [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/disableSlaveNodeStartsWith.groovy)
+
+### disable agent
+> references:
+> - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy) 
+
+
+### delete agent
+> references:
+> - [cloudbees/jenkins-scripts/deleteAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/deleteAgents.groovy)
