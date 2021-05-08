@@ -16,6 +16,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+> references:
+> - [Jenkins Features Controlled with System Properties ](https://www.jenkins.io/doc/book/managing/system-properties/)
 
 ## DSL
 ### [How do I access Pipeline DSLs from inside a Groovy class?](https://support.cloudbees.com/hc/en-us/articles/217736618-How-do-I-access-Pipeline-DSLs-from-inside-a-Groovy-class-)
