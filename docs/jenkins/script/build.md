@@ -749,7 +749,11 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
 }
 
 
-println simpleDateFormat.format(START) + ' ~ ' + simpleDateFormat.format(END) + ' :'
+println simpleDateFormat.format(START) +
+        ' ~ ' + simpleDateFormat.format(END) +
+        ' : ' + ( PARAM ? "for params : ${PARAM.collect{k ,v -> "${k} ~> ${v}"}.join(' ')}" : 'for all builds' ) +
+        ' :'
+
 results.each { name, values ->
   status."${name}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
   Map wanted = values.findAll { k, v -> v.get('paramsExist') == true }
@@ -768,4 +772,5 @@ results.each { name, values ->
 "DONE"
 ```
 - result
-  ![build-history-with-status-and-percentage](../../screenshot/jenkins/build-history-with-status-and-percentage.png)
+  ![build-history-with-status-and-percentage-for-params](../../screenshot/jenkins/build-history-with-status-and-percentage-for-params.png)
+  ![build-history-with-status-and-percentage-for-all-builds](../../screenshot/jenkins/build-history-with-status-and-percentage-for-all.png)
