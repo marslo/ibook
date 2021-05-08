@@ -5,6 +5,7 @@
 - [Script Console](#script-console)
   - [usage](#usage)
   - [basic usage](#basic-usage)
+  - [execute shell script in console](#execute-shell-script-in-console)
 - [jobs](#jobs)
   - [get build status](#get-build-status)
   - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
@@ -21,9 +22,6 @@
 - [abort](#abort)
   - [abort a build](#abort-a-build)
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
-- [Managing Nodes](#managing-nodes)
-  - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
-  - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -55,12 +53,13 @@
   - via api token
     ```bash
     $ curl --user 'username:api-token' --data-urlencode \
-      "script=$(< ./somescript.groovy)" https://jenkins/scriptText
+           "script=$(< ./somescript.groovy)" \
+           https://jenkins/scriptText
     ```
   - via python
     ```bash
     with open('somescript.groovy', 'r') as fd:
-        data = fd.read()
+      data = fd.read()
     r = requests.post('https://jenkins/scriptText', auth=('username', 'api-token'), data={'script': data})
     ```
 
@@ -68,6 +67,21 @@
 - setup timestampe (temporary)
   ```groovy
   System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles')
+  ```
+
+### execute shell script in console
+> reference:
+> [i.e.](https://www.jenkins.io/doc/book/managing/script-console/#run-scripts-from-controller-script-console-on-agents)
+
+```groovy
+println ("uname -a".execute().text)
+
+// or
+println ("printenv".execute().in.text)
+```
+- result
+  ```
+  Linux devops-jenkins-685cf57df9-znfs8 4.19.12-1.el7.elrepo.x86_64 #1 SMP Fri Dec 21 11:06:36 EST 2018 x86_64 GNU/Linux
   ```
 
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
@@ -314,256 +328,3 @@ build.getProject()._getRuns().iterator().each{ run ->
   ```
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
 
-## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
-> references:
-> - [Display Information About Nodes](https://wiki.jenkins.io/display/JENKINS/Display+Information+About+Nodes)
-
-### [Monitor and Restart Offline Agents](https://www.jenkins.io/doc/book/managing/nodes/)
-
-```groovy
-import hudson.node_monitors.*
-import hudson.slaves.*
-import java.util.concurrent.*
-
-jenkins = Jenkins.instance
-
-import javax.mail.internet.*;
-import javax.mail.*
-import javax.activation.*
-
-
-def sendMail (agent, cause) {
-
-  message = agent + " agent is down. Check http://JENKINS_HOSTNAME:JENKINS_PORT/computer/" + agent + "\nBecause " + cause
-  subject = agent + " agent is offline"
-  toAddress = "JENKINS_ADMIN@YOUR_DOMAIN"
-  fromAddress = "JENKINS@YOUR_DOMAIN"
-  host = "SMTP_SERVER"
-  port = "SMTP_PORT"
-
-  Properties mprops = new Properties();
-  mprops.setProperty("mail.transport.protocol","smtp");
-  mprops.setProperty("mail.host",host);
-  mprops.setProperty("mail.smtp.port",port);
-
-  Session lSession = Session.getDefaultInstance(mprops,null);
-  MimeMessage msg = new MimeMessage(lSession);
-
-
-  //tokenize out the recipients in case they came in as a list
-  StringTokenizer tok = new StringTokenizer(toAddress,";");
-  ArrayList emailTos = new ArrayList();
-  while(tok.hasMoreElements()) {
-    emailTos.add(new InternetAddress(tok.nextElement().toString()));
-  }
-  InternetAddress[] to = new InternetAddress[emailTos.size()];
-  to = (InternetAddress[]) emailTos.toArray(to);
-  msg.setRecipients(MimeMessage.RecipientType.TO,to);
-  InternetAddress fromAddr = new InternetAddress(fromAddress);
-  msg.setFrom(fromAddr);
-  msg.setFrom(new InternetAddress(fromAddress));
-  msg.setSubject(subject);
-  msg.setText(message)
-
-  Transport transporter = lSession.getTransport("smtp");
-  transporter.connect();
-  transporter.send(msg);
-}
-
-
-def getEnviron(computer) {
-  def env
-  def thread = Thread.start("Getting env from ${computer.name}", { env = computer.environment })
-  thread.join(2000)
-  if (thread.isAlive()) thread.interrupt()
-  env
-}
-
-def agentAccessible(computer) {
-  getEnviron(computer)?.get('PATH') != null
-}
-
-def numberOfflineNodes = 0
-def numberNodes = 0
-for (agent in jenkins.getNodes()) {
-  def computer = agent.computer
-  numberNodes ++
-  println ""
-  println "Checking computer ${computer.name}:"
-  def isOK = (agentAccessible(computer) && !computer.offline)
-  if (isOK) {
-    println "\t\tOK, got PATH back from agent ${computer.name}."
-    println('\tcomputer.isOffline: ' + computer.isOffline());
-    println('\tcomputer.isTemporarilyOffline: ' + computer.isTemporarilyOffline());
-    println('\tcomputer.getOfflineCause: ' + computer.getOfflineCause());
-    println('\tcomputer.offline: ' + computer.offline);
-  } else {
-    numberOfflineNodes ++
-    println "  ERROR: can't get PATH from agent ${computer.name}."
-    println('\tcomputer.isOffline: ' + computer.isOffline());
-    println('\tcomputer.isTemporarilyOffline: ' + computer.isTemporarilyOffline());
-    println('\tcomputer.getOfflineCause: ' + computer.getOfflineCause());
-    println('\tcomputer.offline: ' + computer.offline);
-    sendMail(computer.name, computer.getOfflineCause().toString())
-    if (computer.isTemporarilyOffline()) {
-      if (!computer.getOfflineCause().toString().contains("Disconnected by")) {
-        computer.setTemporarilyOffline(false, agent.getComputer().getOfflineCause())
-      }
-    } else {
-        computer.connect(true)
-    }
-  }
- }
-println ("Number of Offline Nodes: " + numberOfflineNodes)
-println ("Number of Nodes: " + numberNodes)
-```
-
-### [Create a Permanent Agent from Groovy Console](https://support.cloudbees.com/hc/en-us/articles/218154667-Create-a-Permanent-Agent-from-Groovy-Console?mobile_site=false)
-{% hint style='tip' %}
-> api:
-> - [hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
-> - [hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/verifiers/SshHostKeyVerificationStrategy.html)
-> - [hudson.slaves.DumbSlave](https://javadoc.jenkins-ci.org/hudson/slaves/DumbSlave.html)
-> - [hudson.slaves.ComputerLauncher](https://javadoc.jenkins-ci.org/hudson/slaves/ComputerLauncher.html)
->
-{% endhint %}
-
-{% hint style='tip' %}
-> useful libs:
-> - `import jenkins.model.*`
-> - `import hudson.slaves.*`
-> - `import hudson.slaves.NodePropertyDescriptor`
-> - `import hudson.plugins.sshslaves.*`
-> - `import hudson.plugins.sshslaves.verifiers.*`
-> - `import hudson.model.*`
-> - `import hudson.model.Node`
-> - `import hudson.model.Queue`
-> - `import hudson.model.queue.CauseOfBlockage`
-> - `import hudson.slaves.EnvironmentVariablesNodeProperty.Entry`
-> - `import java.util.ArrayList`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.nodes.JobRestrictionProperty`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.Messages`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestriction`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestrictionBlockageCause`
-> - `import hudson.Extension`
-> - `import hudson.slaves.NodeProperty`
-> - `import org.kohsuke.stapler.DataBoundConstructor`
->
-> - SSH host verification strategy:
->
-> ```groovy
-> // Known hosts file Verification Strategy
-> new KnownHostsFileKeyVerificationStrategy()
-> // Manually provided key Verification Strategy
-> new ManuallyProvidedKeyVerificationStrategy("<your-key-here>")
-> // Manually trusted key Verification Strategy
-> new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/)
-> // Non verifying Verification Strategy
-> new NonVerifyingKeyVerificationStrategy()
-> ```
-{% endhint %}
-
-```groovy
-import hudson.model.*
-import jenkins.model.*
-import hudson.slaves.*
-import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
-import hudson.plugins.sshslaves.verifiers.*
-
-// Pick one of the strategies from the comments below this line
-// SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new KnownHostsFileKeyVerificationStrategy()
-    //= new KnownHostsFileKeyVerificationStrategy() // Known hosts file Verification Strategy
-    //= new ManuallyProvidedKeyVerificationStrategy("<your-key-here>") // Manually provided key Verification Strategy
-    //= new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/) // Manually trusted key Verification Strategy
-    //= new NonVerifyingKeyVerificationStrategy() // Non verifying Verification Strategy
-
-// Define a "Launch method": "Launch agents via SSH"
-ComputerLauncher launcher = new hudson.plugins.sshslaves.SSHLauncher(
-        "1.2.3.4",                                 // Host
-        22,                                        // Port
-        "MyCredentials",                           // Credentials
-        (String)null,                              // JVM Options
-        (String)null,                              // JavaPath
-        (String)null,                              // Prefix Start Agent Command
-        (String)null,                              // Suffix Start Agent Command
-        (Integer)null,                             // Connection Timeout in Seconds
-        (Integer)null,                             // Maximum Number of Retries
-        (Integer)null,                             // The number of seconds to wait between retries
-        new NonVerifyingKeyVerificationStrategy()  // Host Key Verification Strategy
-)
-
-// Define a "Permanent Agent"
-Slave agent = new DumbSlave(
-        "marslo-test",
-        "/home/devops",
-        launcher)
-agent.nodeDescription = "marslo test agent"
-agent.numExecutors = 1
-agent.labelString = ""
-agent.mode = Node.Mode.NORMAL
-agent.retentionStrategy = new RetentionStrategy.Always()
-
-List<Entry> env = new ArrayList<Entry>();
-env.add(new Entry("key1","value1"))
-env.add(new Entry("key2","value2"))
-EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
-
-agent.getNodeProperties().add(envPro)
-
-// Create a "Permanent Agent"
-Jenkins.instance.addNode(agent)
-
-return "Node has been created successfully."
-```
-
-- [or](https://groups.google.com/g/jenkinsci-users/c/JmVNQm47l8g)
-  ```groovy
-  import hudson.model.*
-  import jenkins.model.*
-  import hudson.slaves.*
-  import hudson.plugins.sshslaves.verifiers.*
-  import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
-
-  String name        = 'marslo-test'
-  String description = 'marslo test agent'
-  String rootDir     = '/home/marslo'
-  String nodeLabel   = ''
-  String ip          = '1.2.3.4'
-  String credential  = 'MyCredential'
-  Map envVars        = [
-    'key1' : 'value1',
-    'key2' : 'value2'
-  ]
-  SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new NonVerifyingKeyVerificationStrategy()
-
-  List<Entry> env = new ArrayList<Entry>();
-  envVars.each { k, v -> env.add(new Entry(k, v)) }
-  EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
-
-  Slave agent = new DumbSlave(
-    name,
-    description,
-    rootDir,
-    "1",
-    Node.Mode.NORMAL,
-    nodeLabel,
-    new hudson.plugins.sshslaves.SSHLauncher(
-      ip,                          // Host
-      22,                          // Port
-      credential,                  // Credentials
-      (String)null,                // JVM Options
-      (String)null,                // JavaPath
-      (String)null,                // Prefix Start Agent Command
-      (String)null,                // Suffix Start Agent Command
-      (Integer)null,               // Connection Timeout in Seconds
-      (Integer)null,               // Maximum Number of Retries
-      (Integer)null,               // The number of seconds to wait between retries
-      hostKeyVerificationStrategy  // Host Key Verification Strategy
-    ) ,
-    new RetentionStrategy.Always(),
-    new LinkedList()
-  )
-
-  agent.getNodeProperties().add(envPro)
-  Jenkins.instance.addNode(agent)
-  ```

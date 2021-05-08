@@ -7,6 +7,7 @@
 - [findResult & findResults](#findresult--findresults)
 - [collect & collectMany](#collect--collectmany)
 - [collectEntries](#collectentries)
+- [grep](#grep)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -221,3 +222,21 @@ def hasValues(Map m, String key) {
 
 
 ### collectEntries
+
+### grep
+> references:
+> - [Groovy Goodness: the Grep Method](https://blog.mrhaki.com/2009/08/groovy-goodness-grep-method.html)
+> - [Is there any difference between Groovy's non-argument grep() and findAll() methods?](https://stackoverflow.com/a/10717598/2940319)
+
+```groovy
+['test', 12, 20, true].grep(String)
+```
+
+- alternatives
+  ```groovy
+  ['test', 12, 20, true].findAll { it.class.simpleName == 'String' }
+
+  // or
+  ['test', 12, 20, true].findAll { it instanceof String }
+  ```
+
