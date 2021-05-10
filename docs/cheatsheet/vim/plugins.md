@@ -21,7 +21,7 @@
   :Tabularize /<sep>/r1c1l0
   ```
 
-![tabularize](../../screenshot/vim/tabu.gif)
+  ![tabularize](../../screenshot/vim/tabularize/tabu.gif)
 
 ### [`Tabularize` on first matches](https://stackoverflow.com/a/11497961/2940319)
 - align the first `:`
@@ -32,6 +32,8 @@
   ```bash
   :Tabularize /:.*
   ```
+
+  ![tabularize-5](../../screenshot/vim/tabularize/tabularize-5.gif)
 
 - [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
   > only for default left-alignemnt. Not support customized right/middle alignment.
@@ -123,7 +125,7 @@
   ```
 
   or even better align
-  ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
+
   - `1,3Tabularize /,` or `'<,'>Tabularize /,`
     ```groovy
        isRunning : proc.getOrDefault( 'run'   , false )   ,
@@ -138,3 +140,5 @@
     runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
             type : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
+
+  ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
