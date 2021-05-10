@@ -4,6 +4,7 @@
 
 - [`Tabularize`](#tabularize)
   - [`Tabularize` on first matches](#tabularize-on-first-matches)
+  - [`Tabularize` on specific symbol](#tabularize-on-specific-symbol)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -39,3 +40,101 @@
   ```vim
   command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
   ```
+
+### [`Tabularize` on specific symbol](https://vi.stackexchange.com/a/12652/7389)
+> pre condition:
+> - align the first `:` and last matches `,` as below:
+> ```groovy
+> [
+>   isRunning : proc.getOrDefault( 'run' , false ) ,
+>   name : proc.getOrDefault( 'name' , '') ,
+>   runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+>   type : proc.type.split('^.*\\u00BB\\s*').last() ,
+> ]
+> ```
+
+#### first `:`
+> reference: via
+> - `/^[^;]*\zs:`
+> - `/^[^;]*\zs:/r1c1l0`
+> - `/^[^;]*/r1c1l0`
+
+- `/^[^:]*\zs:`
+  ```groovy
+  isRunning    : proc.getOrDefault( 'run' , false ) ,
+  name         : proc.getOrDefault( 'name' , '') ,
+  runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+  type         : proc.type.split('^.*\\u00BB\\s*').last() ,
+  ```
+  ![tabularize-1](../../screenshot/vim/tabularize/tabularize-1.gif)
+  ![tabularize-2](../../screenshot/vim/tabularize/tabularize-2.gif)
+
+- `/^[^:]*\zs/r1c1l0`
+  ```groovy
+     isRunning  : proc.getOrDefault( 'run' , false ) ,
+          name  : proc.getOrDefault( 'name' , '') ,
+  runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
+          type  : proc.type.split('^.*\\u00BB\\s*').last() ,
+  ```
+
+- `/^[^:]*\zs:/r1c1l0`
+  ```groovy
+     isRunning : proc.getOrDefault( 'run' , false ) ,
+          name : proc.getOrDefault( 'name' , '') ,
+  runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+          type : proc.type.split('^.*\\u00BB\\s*').last() ,
+  ```
+  ![tabularize-3](../../screenshot/vim/tabularize/tabularize-3.gif)
+
+- `/^[^:]*/r1c1l0`
+  ```groovy
+    isRunning   : proc.getOrDefault( 'run' , false ) ,
+      name      : proc.getOrDefault( 'name' , '') ,
+  runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
+      type      : proc.type.split('^.*\\u00BB\\s*').last() ,
+  ```
+
+- `/^[^:]*:/r1c1l0`:
+  ```groovy
+    isRunning :  proc.getOrDefault( 'run' , false ) ,
+      name :     proc.getOrDefault( 'name' , '') ,
+  runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+      type :     proc.type.split('^.*\\u00BB\\s*').last() ,
+  ```
+
+#### last `,`
+> tips:
+> - actually the pattern not matches with the final `,`, but matches with `)<.*> ,`
+>
+> **sample code**:
+> ```groovy
+>    isRunning : proc.getOrDefault( 'run' , false ) ,
+>         name : proc.getOrDefault( 'name' , '') ,
+> runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+>         type : proc.type.split('^.*\\u00BB\\s*').last() ,
+> ```
+
+- `/)[^,]*\zs,`
+  ```groovy
+     isRunning : proc.getOrDefault( 'run' , false )       ,
+          name : proc.getOrDefault( 'name' , '')          ,
+  runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
+          type : proc.type.split('^.*\\u00BB\\s*').last() ,
+  ```
+
+  or even better align
+  ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
+  - `1,3Tabularize /,` or `'<,'>Tabularize /,`
+    ```groovy
+       isRunning : proc.getOrDefault( 'run'   , false )   ,
+            name : proc.getOrDefault( 'name'  , '')       ,
+    runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+            type : proc.type.split('^.*\\u00BB\\s*').last() ,
+    ```
+  - `Tabularize /)[^,]*\zs,`
+    ```groovy
+       isRunning : proc.getOrDefault( 'run'   , false )     ,
+            name : proc.getOrDefault( 'name'  , '')         ,
+    runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
+            type : proc.type.split('^.*\\u00BB\\s*').last() ,
+    ```
