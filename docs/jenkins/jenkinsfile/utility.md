@@ -5,6 +5,7 @@
 - [Pipeline Utility Steps](#pipeline-utility-steps)
   - [findFiles](#findfiles)
   - [send mail with catch error](#send-mail-with-catch-error)
+  - [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -48,3 +49,24 @@ try {
   throw e
 }
 ```
+
+### tips
+#### java.io.NotSerializableException: groovy.lang.IntRange
+> refenrece:
+> - [Groovy Range Examples](http://grails.asia/groovy-range-examples)
+> - [Groovy For Loop Examples](http://grails.asia/groovy-for-loop-examples)
+
+- caused via
+  ```groovy
+  (1..5).each { println it }
+  ```
+
+- solution
+  - [`IntRange.flatten()`](https://stackoverflow.com/a/34881180/2940319)
+    ```groovy
+    (1..5).flatten().each { println it }
+    ```
+  - [`IntRange.toList()`](https://stackoverflow.com/a/55210625/2940319)
+    ```groovy
+    (1..5).toList().each { println it }
+    ```
