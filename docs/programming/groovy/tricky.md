@@ -171,9 +171,12 @@ println 'result: ' + result
 ```groovy
 String branch = 'dev/funcA/feature-1.0'
 def result = [:].withDefault { [] as Set }
-case_pool.findAll{ k, v -> branch.contains(k) }.collectMany{ k, v -> v.collect{ c, l ->
-    result[c].addAll(l)
-}}
+case_pool.findAll{ k, v -> branch.contains(k) }
+         .collectMany{ k, v ->
+            v.collect{ c, l ->
+              result[c].addAll(l)
+            }
+          }
 println 'result: ' + result
 ```
 
