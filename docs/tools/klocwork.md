@@ -16,6 +16,8 @@
   - [list builds info from project](#list-builds-info-from-project)
 - [report](#report)
   - [creating a report](#creating-a-report)
+- [CI](#ci)
+  - [Jenkinsfile](#jenkinsfile)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,10 +29,15 @@
 > - [Providing a build specification template for your developers](https://docs.roguewave.com/en/klocwork/2020/providingabuildspecificationtemplateforyourdevelopers)
 > - [Compiler options for kwbuildproject](https://docs.roguewave.com/en/klocwork/2020/compileroptionsforkwbuildproject#concept968)
 > - [Klocwork Jenkins CI plugin](https://docs.roguewave.com/en/klocwork/current/jenkinsci)
+> - [Synchronizing status changes and comments across projects](https://docs.roguewave.com/en/klocwork/current/synchronizingstatuschangesandcommentsacrossprojects)
 > - [Continuous integration and Klocwork analysis](https://docs.roguewave.com/en/klocwork/current/continuousintegration)
 > - [examples](https://docs.roguewave.com/en/klocwork/current/understandingtheworkflow)
 > - [Klocwork - Knowledgebase](https://library.roguewave.com/display/SUPPORT/Klocwork+-+Knowledgebase)
-> - [C/C++ integration build analysis - Cheat sheet](https://docs.roguewave.com/en/klocwork/current/ccintegrationbuildanalysischeatsheet)
+> - [Running the C and C++ integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningthecandcintegrationbuildanalysis)
+  > - [Running your first integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningyourfirstintegrationbuildanalysis1)
+  > - [Running your next integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningyournextintegrationbuildanalysis1)
+  > - [Creating a C/C++ build specification](https://docs.roguewave.com/en/klocwork/2020/creatingaccbuildspecification)
+  > - [C/C++ integration build analysis - Cheat sheet](https://docs.roguewave.com/en/klocwork/current/ccintegrationbuildanalysischeatsheet)
 > - [example about integrate with Jenkins](https://stackoverflow.com/questions/51731262/jenkins-declarative-pipeline-how-to-configure-the-klocwork-result-display-on-t)
 > - [最佳实践：Klocwork增量/VerifyCI检查](http://www.360doc.com/content/17/0430/08/30774303_649740396.shtml)
 {% endhint %}
@@ -39,6 +46,9 @@
 > reference:
 > - [Install and Configure Klocwork cmd client](https://scmabhishek.wordpress.com/2016/07/04/install-and-configure-klocwork-cmd-client/)
 > - [User manual | Installation and Upgrade](https://manualzz.com/doc/44373012/installation-and-upgrade?__cf_chl_jschl_tk__=b7f12f6befde4217b2830af5cb69055d40841a0c-1619442763-0-AXJ6A-8dLrK6mjM4v5IvfVIbgptM2fMku23COnaWX2AXiowy0H1aVcEuRXfkHCy52vr0N6RqKejPmriTUTLIsGPCo9AldMujCF8gJflvp-uX-CiweHa5c3fP1KNvKgeOvVzhe-wBWDfbrJ0MyEvEks8cEHXjRj6cRnlP5ibFYByNE7jX3KXtH5tRZVr386HX0bcPCx5nyu_FgY-xEFCpuMmnEaP0Rhr_zeoQn85YrY61j7lGJAgnzdqgz1rC4ktkZ1i7ijdYgUTFNAFG_1_vQ4ox8Wj7hdab890-Tw-NtdrGoMoEq-4CeMxDEzlLYmFNNX1kM0EVJIv50J2v2H7GIdUNd_rV7y_wyhllUPbRe1COFvk1Ey7eAgsfJyKAW-Il6Z8NRlSaO-RdRcnZ6wpk2L2s6uuAzcNNWQM-8DiljKhGu9OT-FjeGtEXyBUxZPjY2LWF1k_fX2tb4S0GJGO7T09QPnlbAZa9VBFueEVeVSdzDocBByzn-BwknWpMr-dIJA)
+> - [Klocwork Desktop for C/C++ project setup overview](https://docs.roguewave.com/en/klocwork/current/klocworkdesktopforccprojectsetupoverview)
+> - video: [Build integration for C/C++ projects](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
+> - [Useful resources](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
 
 ### admin
 > reference:
@@ -343,3 +353,61 @@ $ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project
 
 ## report
 ### [creating a report](https://docs.roguewave.com/en/klocwork/current/creatingareport)
+
+## CI
+> reference:
+> - [Klocwork Jenkins CI plugin](https://docs.roguewave.com/en/klocwork/2020/jenkinsci)
+> - [Continuous integration and Klocwork analysis](https://docs.roguewave.com/en/klocwork/2020/continuousintegration)
+> - [klocwork ci/cd best practice.pdf](https://www.perforce.com/sites/default/files/pdfs/ebook-klocwork-ci-cd-best-practices%20%281%29.pdf)
+
+
+### Jenkinsfile
+```groovy
+pipeline {
+   agent any
+
+   environment {
+        KLOCWORK_URL = "http://localhost:8080"
+        KLOCWORK_PROJECT = "zlib-pipeline"
+        KLOCWORK_LICENSE_HOST = "flexlm-server"
+        KLOCWORK_LICENSE_PORT = "27000"
+        KLOCWORK_LTOKEN = ""
+    }
+
+   stages {
+       stage('Get src from git') {
+             steps {
+                git 'https://github.com/madler/zlib.git'
+             }
+        }
+
+        stage('Klocwork Build') {
+             steps {
+
+                    klocworkBuildSpecGeneration([additionalOpts: '', buildCommand: 'c:\\dev\\zlib-git.bat', ignoreErrors: true, output: 'kwinject.out', tool: 'kwinject'])
+
+             }
+        }
+
+        stage('Klocwork Analysis') {
+            steps {
+                     klocworkIntegrationStep1([additionalOpts: '', buildSpec: 'kwinject.out', disableKwdeploy: true, duplicateFrom: '', enabledCreateProject: true, ignoreCompileErrors: true, importConfig: '', incrementalAnalysis:       false, tablesDir: 'kwtables'])
+
+             }
+          }
+
+          stage('Klocwork Db-load') {
+             steps {
+                     klocworkIntegrationStep2 reportConfig: [displayChart: true, query: 'status:Analyze'], serverConfig: [additionalOpts: '', buildName: '', tablesDir: 'kwtables']
+             }
+          }
+
+          stage('Build Failure Conditions') {
+             steps {
+                     klocworkFailureCondition([enableCiFailureCondition: true, failureConditionCiConfigs: [[withDiffList: true, diffFileList: 'my_list.txt', enableHTMLReporting: true, name: 'one', reportFile: '', threshold: '1',]]])
+
+             }
+          }
+   }
+}
+```
