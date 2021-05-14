@@ -16,8 +16,14 @@
   - [list all values in Enum](#list-all-values-in-enum)
   - [Convert String type to Enum](#convert-string-type-to-enum)
 - [run groovy from docker](#run-groovy-from-docker)
+- [MetaClass](#metaclass)
+  - [get supported methods](#get-supported-methods)
+  - [A Bit of metaClass DSL](#a-bit-of-metaclass-dsl)
+  - [get class name](#get-class-name)
+  - [dynamically call methods](#dynamically-call-methods)
 - [others](#others)
   - [groovy cli (args) with options](#groovy-cli-args-with-options)
+  - [Get variable value for its name](#get-variable-value-for-its-name)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -404,6 +410,78 @@ $ docker run \
     }
     ```
 
+## MetaClass
+### get supported methods
+```groovy
+String s = 'aa'
+println s.metaClass.methods.name
+```
+- result
+  ```
+  [equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait, charAt, codePointAt, codePointBefore, codePointCount, compareTo, compareToIgnoreCase, concat, contains, contentEquals, contentEquals, copyValueOf, copyValueOf, endsWith, equals, equalsIgnoreCase, format, format, getBytes, getBytes, getBytes, getBytes, getChars, hashCode, indexOf, indexOf, indexOf, indexOf, intern, isEmpty, join, join, lastIndexOf, lastIndexOf, lastIndexOf, lastIndexOf, length, matches, offsetByCodePoints, regionMatches, regionMatches, replace, replace, replaceAll, replaceFirst, split, split, startsWith, startsWith, subSequence, substring, substring, toCharArray, toLowerCase, toLowerCase, toString, toUpperCase, toUpperCase, trim, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf]
+  ```
+
+### [A Bit of metaClass DSL](https://blog.mrhaki.com/2009/11/groovy-goodness-bit-of-metaclass-dsl.html)
+```groovy
+String.metaClass {
+    or << { String s -> delegate.plus(' or ').plus(s) }
+    or << { List l -> delegate.findAll("(${l.join('|')})") }
+    and { String s -> delegate.plus(' and ').plus(s) }
+    'static' {
+        groovy { 'Yeah man!' }
+    }
+}
+ 
+assert 'Groovy or Java?' == ("Groovy" | "Java?")
+assert ['o', 'o', 'y'] == ("Groovy" | ['o', 'y'])
+assert 'Groovy and Java!' == ("Groovy" & "Java!")
+assert 'Yeah man!' == String.groovy()
+```
+
+### get class name
+```groovy
+Sting s = 'string'
+println s.metaClass.getTheClass()   // Class
+println s.getClass()                // Class
+println s.class.name                // String
+```
+- output
+```
+class java.lang.String
+class java.lang.String
+java.lang.String
+```
+
+### dynamically call methods
+> references:
+> - [Get variable dynamically](https://stackoverflow.com/questions/18594598/get-variable-dynamically)
+
+```groovy
+def doPrint( String platform, String string ) {
+ this."do${platform.toLowerCase().capitalize()}Print"( string )
+}
+
+def doLinuxPrint( String string ) {
+  println "from Linux: ${string}"
+}
+
+def doWindowsPrint( String string ) {
+  println "from Windows: ${string}"
+}
+
+def doDockerPrint( String string ) {
+  println "from Docker: ${string}"
+}
+
+doPrint( 'LINUX', 'awesome marslo!' )
+doPrint( 'dOCKER', 'awesome marslo!' )
+```
+- result
+  ```
+  from Linux: awesome marslo!
+  from Docker: awesome marslo!
+  ```
+
 ## others
 ### groovy cli (args) with options
 
@@ -443,4 +521,14 @@ if ( options.d ){
   }
 }
 //end::dogs[]
+```
+
+### [Get variable value for its name](https://stackoverflow.com/a/6356124/2940319)
+```groovy
+import groovy.text.SimpleTemplateEngine
+
+def binding = [ VAL1:'foo', VAL2:'bar' ]
+def template = 'hello ${VAL1}, please have a ${VAL2}'     // single quotes
+
+println new SimpleTemplateEngine().createTemplate( template ).make( binding ).toString()
 ```
