@@ -438,6 +438,20 @@ assert 'Groovy and Java!' == ("Groovy" & "Java!")
 assert 'Yeah man!' == String.groovy()
 ```
 
+- [metaClass with Closure](https://stackoverflow.com/a/3050218/2940319)
+  ```groovy
+  List.metaClass.eachUntilGreaterThanFive = { closure ->
+    for ( value in delegate ) {
+      if ( value  > 5 ) break
+      closure(value)
+    }
+  }
+
+  [1, 2, 3, 4, 5, 6, 7].eachUntilGreaterThanFive {
+    println it
+  }
+  ```
+
 ### get class name
 ```groovy
 Sting s = 'string'
