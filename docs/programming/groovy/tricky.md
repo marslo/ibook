@@ -10,6 +10,7 @@
   - [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
   - [groupBy `List<List<String>>` to `Map<String, List>`](#groupby-listliststring-to-mapstring-list)
   - [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
+  - [loop if not empty](#loop-if-not-empty)
   - [getField()](#getfield)
 - [enum](#enum)
   - [check whether if enum contains a given string](#check-whether-if-enum-contains-a-given-string)
@@ -257,7 +258,7 @@ def fuzzyFindAll( Map map, String keyword ) {
 ```groovy
 java.lang.System.identityHashCode( obj )
 ```
-example
+- example
   ```bash
   String s = 'abc'
   String x = s
@@ -272,7 +273,7 @@ example
   733591550
   ```
 
-example for `identityHashCode() and hashCode()`
+- example for `identityHashCode() and hashCode()`
   ```groovy
   String a = new String("hhh")
   String b = new String("hhh")
@@ -282,6 +283,18 @@ example for `identityHashCode() and hashCode()`
 
   println(a.hashCode())
   println(b.hashCode())
+  ```
+
+### loop if not empty
+```groovy
+[]?.each{ println it } ?: println( 'empty' )
+[:]?.each{ k, v -> println "${k} :: ${v}" } ?: println( 'empty' )
+```
+- details
+  ```groovy
+  assert [:]?.each{ k, v -> println "${k} :: ${v}" } == true
+              |                                      |
+              [:]                                    false
   ```
 
 ### getField()
