@@ -25,6 +25,7 @@
   - [with environment](#with-environment)
 - [Closures](#closures)
   - [Closure VS. Method](#closure-vs-method)
+  - [break from closure](#break-from-closure)
   - [Curry](#curry)
   - [Memoization](#memoization)
   - [Composition](#composition)
@@ -396,6 +397,26 @@ println """
     name.toLowerCase()
   }
   ```
+
+### [break from closure](https://stackoverflow.com/a/19414187/2940319)
+{% hint style='tip' %}
+> tips:
+> - `return` means continue
+> - `return true` means break the loop
+{% endhint %}
+
+```groovy
+def list = [1, 2, 3, 4, 5]
+list.any { element ->
+  if (element == 2)
+    return // continue
+
+  println element
+
+  if (element == 3)
+    return true // break
+}
+```
 
 ### Curry
 - left curry
