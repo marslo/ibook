@@ -28,7 +28,6 @@
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 {% endhint %}
 
-
 ## get
 > [output options](https://learnk8s.io/blog/kubectl-productivity/#3-use-the-custom-columns-output-format):
 > `-o custom-columns=<header>:<jsonpath>[,<header>:<jsonpath>]...`
@@ -80,9 +79,21 @@ $ k get pods --all-namespaces -o=jsonpath="{..image}" -l app=nginx
 
 - [or](https://learnk8s.io/blog/kubectl-productivity/#3-use-the-custom-columns-output-format)
   ```bash
-  $ k4 -n devops get po \
-    -> -o custom-columns='NAME:metadata.name,IMAGES:spec.containers[*].image'
+  $ k -n <namespace> get po \
+      -o custom-columns='NAME:metadata.name,IMAGES:spec.containers[*].image'
   ```
+
+- [or](https://stackoverflow.com/a/60038868/2940319)
+  {% raw %}
+  ```bash
+  $ k -n <namespace> get po <pod_name> -o jsonpath="{..containerID}"
+
+  # or
+  $ k -n <namespace> get po <pod_name> \
+      -o go-template \
+      --template="{{ range .status.containerStatuses }}{{ .containerID }}{{end}}"
+  ```
+  {% endraw %}
 
 ### [list all Container images in all namespaces](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-all-container-images-in-all-namespaces)
 ```bash
