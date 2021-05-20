@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [time & date](#time--date)
+- [show date with timezone](#show-date-with-timezone)
 - [download and extract](#download-and-extract)
 - [extract `jar`](#extract-jar)
 - [compress](#compress)
@@ -16,8 +17,16 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### time & date
-#### show cal
+### [show date with timezone](https://unix.stackexchange.com/a/48104/29178)
+```bash
+# with quotes
+$ TZ=':Asia/Shanghai' date
 
+# or without quotes
+$ TZ=America/Los_Angeles date
+```
+
+#### show cal
 ```bash
 $ cal -y | tr '\n' '|' | sed "s/^/ /;s/$/ /;s/ $(date +%e) / $(date +%e | sed 's/./#/g') /$(date +%m | sed s/^0//)" | tr '|' '\n'
                              2014
