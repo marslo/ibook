@@ -86,7 +86,36 @@
         ...
    ```
 
-- example for `Node` Object
+#### example for `Node` Object
+```groovy
+import hudson.slaves.*
+DumbSlave agent = jenkins.model.Jenkins.instance.getNode( 'marslo-test' )
+println """
+     display name : ${agent.getDisplayName()}
+        node name : ${agent.getNodeName()}
+      description : ${agent.getNodeDescription()}
+         executor : ${agent.getNumExecutors()}
+     label string : ${agent.getLabelString()}
+        node mode : ${agent.getMode()}
+  hold off launch : ${agent.isHoldOffLaunchUntilSave()}
+"""
+```
+- result
+  ```
+     display name : marslo-test
+        node name : marslo-test
+      description : marslo test agent offline
+         executor : 1
+     label string :
+        node mode : NORMAL
+  hold off launch : true
+  ```
+
+{% hint style='tip' %}
+> setup `hold off launch` via: `agent.holdOffLaunchUntilSave = true`
+{% endhint %}
+
+- `node` -> `computer`
   ```groovy
   String agent = 'marslo-test'
   Jenkins.instance.getNode(agent).toComputer().isOnline()
@@ -94,6 +123,16 @@
   or
   ```groovy
   hudson.model.Hudson.instance.getNode(agent).toComputer().isOnline()
+  ```
+  or get log
+  ```groovy
+  println jenkins.model.Jenkins.instance.getNode( 'marslo-test' ).toComputer().getLog()
+
+  // result
+  SSHLauncher{host='1.2.3.4', port=22, credentialsId='DevOpsSSHCredential', jvmOptions='', javaPath='', prefixStartSlaveCmd='', suffixStartSlaveCmd='', launchTimeoutSeconds=30, maxNumRetries=5, retryWaitTime=30, sshHostKeyVerificationStrategy=hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy, tcpNoDelay=true, trackCredentials=true}
+  [05/24/21 03:59:16] [SSH] Opening SSH connection to 1.2.3.4:22.
+  connect timed out
+  SSH Connection failed with IOException: "connect timed out", retrying in 30 seconds. There are 5 more retries left.
   ```
 
 ### [get ip address of node](https://stackoverflow.com/a/39752509/2940319)
@@ -447,7 +486,7 @@ return "Node has been created successfully."
 
 ### disable agent
 > references:
-> - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy) 
+> - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy)
 
 
 ### delete agent
