@@ -12,6 +12,8 @@
   - [update agent label](#update-agent-label)
   - [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](#jenkins-scriptsscriptlerdisableslavenodestartswithgroovy)
   - [disable agent](#disable-agent)
+  - [disconnect agent](#disconnect-agent)
+  - [offline agent](#offline-agent)
   - [delete agent](#delete-agent)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -488,6 +490,75 @@ return "Node has been created successfully."
 > references:
 > - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy)
 
+### disconnect agent
+{% hint style='tip' %}
+> reconnect:
+> - `agent.computer.connect( true  )`
+> - `jenkins.model.Jenkins.instance.getNode( name ).computer.connect( true )`
+>
+> reference:
+> - [awslabs/ec2-spot-jenkins-plugin](https://github.com/awslabs/ec2-spot-jenkins-plugin/blob/master/src/test/java/com/amazon/jenkins/ec2fleet/AutoResubmitIntegrationTest.java#L101) | [or](https://www.programcreek.com/java-api-examples/?api=hudson.slaves.OfflineCause)
+{% endhint %}
+
+```groovy
+import hudson.slaves.*
+
+String name = 'marslo-test'
+String cause = "disconnet the agent automatically via ${env.BUILD_URL}"
+
+DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
+
+if ( agent
+     &&
+     ! ['AbstractCloudComputer', 'AbstractCloudSlave'].contains(agent.computer?.class.superclass?.simpleName)
+     &&
+     ! (agent.computer instanceof jenkins.model.Jenkins.MasterComputer)
+   ) {
+    Boolean online = agent.computer.isOnline()
+    Boolean busy = agent.computer.countBusy() != 0
+    if( online && !busy ) {
+      agent.computer.disconnect( new OfflineCause.ChannelTermination(new UnsupportedOperationException(cause)) )
+    }
+}
+```
+
+
+### offline agent
+{% hint style='tip' %}
+> offline agent is normally for workspace cleanup
+>
+> reference:
+> - [codecentric/jenkins-scripts](https://github.com/codecentric/jenkins-scripts/blob/master/src/main/groovy/CleanupSlaveWorkspaces.groovy)
+> - [Display Information About Nodes](https://wiki.jenkins.io/display/jenkins/display+information+about+nodes)
+>
+> bring node online
+> `computer.setTemporarilyOffline( false, null )`
+{% endhint %}
+
+```groovy
+import hudson.slaves.*
+
+String name = 'marslo-test'
+String cause = "temporary offline for the agent workspace cleanup"
+
+DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
+
+if ( agent
+     &&
+     ! ['AbstractCloudComputer', 'AbstractCloudSlave'].contains(agent.computer?.class.superclass?.simpleName)
+     &&
+     ! (agent.computer instanceof jenkins.model.Jenkins.MasterComputer)
+   ) {
+    Boolean online = agent.computer.isOnline()
+    Boolean busy = agent.computer.countBusy() != 0
+
+    if( online && !busy ) {
+      agent.computer.setTemporarilyOffline( true,
+                                            new hudson.slaves.OfflineCause.ByCLI("disk cleanup on slave")
+                                          )
+    }
+}
+```
 
 ### delete agent
 > references:
