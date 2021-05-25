@@ -4,18 +4,25 @@
 
 - [Lockable Resource Manager](#lockable-resource-manager)
   - [get info](#get-info)
-    - [get all labels](#get-all-labels)
+    - [get all](#get-all)
     - [Get resource by label](#get-resource-by-label)
     - [if label validated](#if-label-validated)
     - [Get free number of label](#get-free-number-of-label)
     - [Get all resource](#get-all-resource)
   - [add or remove](#add-or-remove)
+  - [management](#management)
     - [remove by label (or name)](#remove-by-label-or-name)
     - [create new item](#create-new-item)
   - [reserve & unlock](#reserve--unlock)
     - [by cli](#by-cli)
     - [by api](#by-api)
     - [examples](#examples)
+  - [functions](#functions)
+    - [`isLabelExists`](#islabelexists)
+    - [`isResourceExists`](#isresourceexists)
+    - [get label by name](#get-label-by-name)
+    - [set Label](#set-label)
+    - [with Closure](#with-closure)
   - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -25,9 +32,34 @@
 
 ## get info
 
-### get all labels
+### get all
+#### all items information
 ```groovy
-import org.jenkins.plugins.lockableresources.LockableResourcesManager;
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
+
+LockableResourcesManager manager = new org.jenkins.plugins.lockableresources.LockableResourcesManager()
+// or LockableResourcesManager manager = org.jenkins.plugins.lockableresources.LockableResourcesManager.get()
+
+manager.getResources().each{ r ->
+  println """
+    ${r.name}: ${r.getClass()}
+              locked? : ${r.locked} : ${r.isLocked()}
+            reserved? : ${r.reserved} : ${r.isReserved()}
+                label : ${r.labels} : ${r.getLabels()}
+          description : ${r.description} : ${r.getDescription()}
+                queue : ${r.queueItemProject ?: ''}
+          reserved by : ${r.reservedBy ?: ''}
+                build : ${r.build ?: ''}
+       queuingStarted : ${r.queuingStarted ?: ''}
+       queuedContexts : ${r.queuedContexts ?: ''}
+
+"""
+}
+```
+
+#### labels
+```groovy
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
 
 stage('all label') {
   println '~~> all labels:'
@@ -35,20 +67,35 @@ stage('all label') {
 }
 ```
 
+#### resources
+```groovy
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
+println new LockableResourcesManager().getResources()
+```
+- or
+  ```groovy
+  println org.jenkins.plugins.lockableresources.LockableResourcesManager.get().getResources()
+  ```
+
 ### Get resource by label
 ```groovy
-import org.jenkins.plugins.lockableresources.LockableResourcesManager;
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
 
 stage('get label') {
   String l = 'my-label'
   println "~~> resources for ${l}:"
-  println new LockableResourcesManager().getResourcesWithLabel(l, null)
+  println new LockableResourcesManager().getResourcesWithLabel( l, null )
 }
 ```
+- or
+  ```groovy
+  import org.jenkins.plugins.lockableresources.LockableResourcesManager
+  println new LockableResourcesManager().getResourcesWithLabel( l, [:] )
+  ```
 
 ### if label validated
 ```groovy
-import org.jenkins.plugins.lockableresources.LockableResourcesManager;
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
 
 stage('does label validated') {
   String l = 'my-label'
@@ -59,7 +106,7 @@ stage('does label validated') {
 
 ### Get free number of label
 ```groovy
-import org.jenkins.plugins.lockableresources.LockableResourcesManager;
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
 
 stage('number of free') {
   String l = 'my-label'
@@ -81,6 +128,7 @@ stage('get all resoruces') {
 ```
 
 ## add or remove
+## management
 ### [remove by label (or name)](https://issues.jenkins-ci.org/browse/JENKINS-38906?focusedCommentId=353245&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-353245)
 
 ```groovy
@@ -102,6 +150,14 @@ stage('remove') {
     manager.save()
 }
 ```
+
+- [remove all](https://issues.jenkins.io/browse/JENKINS-38906?focusedCommentId=358692&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-358692)
+  ```groovy
+  String lockName = 'lock name'
+  def manager = org.jenkins.plugins.lockableresources.LockableResourcesManager.get()
+  manager.getResources().removeAll { r -> lockNames.contains(r.name) && !r.locked && !r.reserved }
+  manager.save()
+  ```
 
 ### create new item
 ```groovy
@@ -176,6 +232,98 @@ all_lockable_resources.each { r->
 
     }
   }
+}
+```
+
+## functions
+### `isLabelExists`
+```groovy
+def isLabelExists( String label ) {
+  org.jenkins.plugins
+     .lockableresources
+     .LockableResourcesManager
+     .get()
+     .getResources()
+     .findAll{ it.labels == label } != []
+}
+```
+- or
+  ```groovy
+  withManager{ manager ->
+    manager.getResources()
+           .findAll{ it.labels == label } != []
+  }
+  ```
+
+### `isResourceExists`
+```groovy
+def isResourceExists( String name ) {
+  org.jenkins.plugins
+     .lockableresources
+     .LockableResourcesManager
+     .get()
+     .getResources()
+     .findAll{ it.name == name } != []
+}
+```
+- or
+  ```groovy
+  withManager{ manager ->
+    manager.getResources()
+           .findAll{ it.name == name } != []
+  }
+  ```
+
+### get label by name
+```groovy
+def getLabelByName( String name ) {
+  org.jenkins.plugins
+     .lockableresources
+     .LockableResourcesManager
+     .get()
+     .getResources()
+     .findAll{ it.name == name }
+     .collect{ it.labels }
+     .join(' ')
+}
+```
+- or
+  ```groovy
+  withManager{ manager ->
+    manager.getResources()
+           .findAll{ it.name == name }
+           .collect{ it.labels }
+           .join(' ')
+  }
+  ```
+
+### set Label
+```groovy
+def setLabel( String name, String label, String description = '' ) {
+  LockableResourcesManager manager = LockableResourcesManager.get()
+  description = ( description ? "${description} | " : '' ) + "created by Jenkins job ${env.BUILD_URL} automatically"
+  if ( isResourceExists(name) ) {
+    util.showError( "ERROR: resource ${name} has already exists in resource pool. Exit..." )
+  } else {
+    manager.createResourceWithLabel( name, label )
+    manager.resources.findAll{ name == it.name }
+                          .each{ it.setDescription(description) }
+    manager.save()
+    if ( ! isResourceExists(name) ) util.showError( "ERROR: resource ${name} failed to be added in resource pool. Exit..." )
+  }
+}
+```
+
+### with Closure
+```groovy
+import org.jenkins.plugins.lockableresources.LockableResourcesManager
+
+def withManager( Closure body ) {
+  LockableResourcesManager manager = org.jenkins.plugins
+                                                .lockableresources
+                                                .LockableResourcesManager
+                                                .get()
+  body( manager )
 }
 ```
 
