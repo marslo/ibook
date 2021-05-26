@@ -197,6 +197,14 @@ def nodes = jenkins.model.Jenkins.get().computers
   Jenkins.instance.getLabel('my-label').getNodes().collect{ it.getNodeName() }
   ```
 
+### check how many cloud agent running
+```groovy
+println jenkins.model.Jenkins.instance.getNodes().findAll {
+  [ 'AbstractCloudSlave', 'AbstractCloudComputer' ].contains(it.class.superclass?.simpleName)
+}.size()
+```
+
+
 ## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
 ### [Monitor and Restart Offline Agents](https://www.jenkins.io/doc/book/managing/nodes/)
 
