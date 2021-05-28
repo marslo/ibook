@@ -204,6 +204,38 @@ println computer.allExecutors.collect {
   }
   ```
 
+- get label itself
+  > might helps: [Label Linked Jobs](https://plugins.jenkins.io/label-linked-jobs/)
+
+  ```groovy
+  jenkins.model.Jenkins.instance.getNode(name)?.computer?.allExecutors.each {
+    println it.currentWorkUnit.work.getClass()
+    println '.................'
+    println it.currentWorkUnit.work.label
+    println it.currentWorkUnit.work.runId
+    println '.................'
+    println it.currentWorkUnit?.context?.task?.label
+    println it.currentWorkUnit?.context?.task?.runId
+    println '.................'
+    println it.currentWorkUnit.work.getOwnerTask().getClass()
+    println it.currentWorkUnit.work.getOwnerTask().getFullDisplayName()
+    println '.................'
+  }
+  // result
+  class org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution$PlaceholderTask
+  .................
+  MY_AGENT_001
+  marslo/sandbox#6460
+  .................
+  MY_AGENT_001
+  marslo/sandbox#6460
+  .................
+  class org.jenkinsci.plugins.workflow.job.WorkflowJob
+  marslo » sandbox
+  .................
+  Result: [Thread[Executor #0 for MY_AGENT_001 : executing PlaceholderExecutable:ExecutorStepExecution.PlaceholderTask{runId=marslo/sandbox#6460,label=CI-WP-CD-RPI005,context=CpsStepContext[3:node]:Owner[marslo/sandbox/6460:marslo/sandbox #6460],cookie=null,auth=null},5,]]
+  ```
+
 #### get number of executor of agents
 ```groovy
 jenkins.model.Jenkins.instance.getNode(name)?.computer?.allExecutors?.size
