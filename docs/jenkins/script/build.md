@@ -12,6 +12,7 @@
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
 - [build](#build)
   - [build number](#build-number)
+  - [get changesets](#get-changesets)
   - [stop builds](#stop-builds)
   - [get build time](#get-build-time)
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
@@ -142,6 +143,22 @@ return null
 
 ## build
 ### build number
+#### get WorkflowRun by build number
+```groovy
+final String JOB_NAME  = 'marslo/sandbox'
+final int BUILD_NUMBER = 6458
+
+def build = Jenkins.instance
+                   .getItemByFullName( JOB_NAME )
+                   .getBuildByNumber( BUILD_NUMBER )
+```
+
+### get changesets
+```groovy
+println build.getChangeSets()
+println build.getCulprits()
+```
+
 #### setup next build number
 ```groovy
 Jenkins.instance.getItemByFullName("/path/to/job").updateNextBuildNumber(n)
