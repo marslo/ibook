@@ -434,6 +434,11 @@ println s.metaClass.methods.name
   [equals, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait, charAt, codePointAt, codePointBefore, codePointCount, compareTo, compareToIgnoreCase, concat, contains, contentEquals, contentEquals, copyValueOf, copyValueOf, endsWith, equals, equalsIgnoreCase, format, format, getBytes, getBytes, getBytes, getBytes, getChars, hashCode, indexOf, indexOf, indexOf, indexOf, intern, isEmpty, join, join, lastIndexOf, lastIndexOf, lastIndexOf, lastIndexOf, length, matches, offsetByCodePoints, regionMatches, regionMatches, replace, replace, replaceAll, replaceFirst, split, split, startsWith, startsWith, subSequence, substring, substring, toCharArray, toLowerCase, toLowerCase, toString, toUpperCase, toUpperCase, trim, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf, valueOf]
   ```
 
+- [or print by sort](https://stackoverflow.com/questions/40307037/how-to-get-a-list-of-running-jenkins-builds-via-groovy-script)
+  ```groovy
+  println <var>.metaClass.methods*.name.sort().unique()
+  ```
+
 ### [A Bit of metaClass DSL](https://blog.mrhaki.com/2009/11/groovy-goodness-bit-of-metaclass-dsl.html)
 ```groovy
 String.metaClass {
