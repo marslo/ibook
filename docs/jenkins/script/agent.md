@@ -3,9 +3,13 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get information](#get-information)
+  - [get all](#get-all)
+  - [`Computer` and `Node`](#computer-and-node)
+  - [get projects tied to agent](#get-projects-tied-to-agent)
   - [get ip address of node](#get-ip-address-of-node)
   - [get agent environment variable](#get-agent-environment-variable)
   - [get a list of all Jenkins nodes assigned with label](#get-a-list-of-all-jenkins-nodes-assigned-with-label)
+  - [check how many cloud agent running](#check-how-many-cloud-agent-running)
 - [Managing Nodes](#managing-nodes)
   - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
   - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
@@ -37,10 +41,38 @@
 > - [jenkins-scripts/scriptler/showAgentJavaVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/showAgentJavaVersion.groovy)
 > - [jenkins-scripts/scriptler/checkNodesLauncherVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkNodesLauncherVersion.groovy)
 
+### get all
+
+{% hint 'info' %}
+> get all agents including Jenkins master:
+> - `jenkins.model.Jenkins.instance.computers`
+> - `jenkins.model.Jenkins.instance.get().computers`
+{% endhint %}
+
+```groovy
+jenkins.model.Jenkins.instance.computers.each { agent ->
+  println "${agent.displayName} : ${agent.class} : ${agent.class.superclass}"
+  println "     >> is master : ${jenkins.model.Jenkins.MasterComputer.isInstance(agent)}"
+  println "     >> is cloud  : ${hudson.slaves.AbstractCloudComputer.isInstance(agent)} "
+}
+```
+
+or
+
+```groovy
+jenkins.model.Jenkins.instance.get().computers.each { agent ->
+  println "${agent.displayName} : ${agent.class} : ${agent.class.superclass}"
+  println "     >> is master : ${jenkins.model.Jenkins.MasterComputer.isInstance(agent)}"
+  println "     >> is cloud  : ${hudson.slaves.AbstractCloudComputer.isInstance(agent)} "
+}
+```
+
+### `Computer` and `Node`
 {% hint 'info' %}
 > - `hudson.model.Computer` -> `hudson.model.Node` via [`computer.setNode()`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#setNode-hudson.model.Node-)
 > - `hudson.model.Node` -> `hudson.model.Computer` via [`node.toComputer()`](https://javadoc.jenkins-ci.org/hudson/model/Node.html#toComputer--)
 {% endhint %}
+
 
 #### example for `Computer` Object
 - get description
@@ -136,6 +168,46 @@ println """
   connect timed out
   SSH Connection failed with IOException: "connect timed out", retrying in 30 seconds. There are 5 more retries left.
   ```
+
+### get projects tied to agent
+> reference:
+> - [`jenkins.model.Computer.allExecutors`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#getAllExecutors--)
+> - [`hudson.model.Executor.currentWorkUnit`](https://javadoc.jenkins-ci.org/hudson/model/Executor.html#getCurrentWorkUnit--)
+> - [`<SubTask> hudson.model.queue.WorkUnit.work`](https://javadoc.jenkins-ci.org/hudson/model/queue/WorkUnit.html#work)
+
+```groovy
+import hudson.model.*
+import jenkins.model.*
+import hudson.slaves.*
+
+String name = 'myagent'
+Computer computer = jenkins.model.Jenkins.instance.getNode(name)?.computer ?: null
+
+println computer.allExecutors.collect {
+  it.currentWorkUnit?.work?.runId ?: ''
+}.join(', ') ?: ''
+```
+- result
+  ![get project(s) via agent](../../screenshot/jenkins/get-tied-projects-via-agents.png)
+
+- or
+  ```groovy
+  println computer.getAllExecutors().collect {
+    it.getCurrentWorkUnit()?.work?.runId ?: ''
+  }
+  ```
+
+- or via [`<WorkUnitContext> hudson.model.queue.WorkUnit.context`](https://javadoc.jenkins-ci.org/hudson/model/queue/WorkUnit.html#context)
+  ```groovy
+  println computer.allExecutors.collect {
+    it.currentWorkUnit?.context?.task?.runId ?: ''
+  }
+  ```
+
+#### get number of executor of agents
+```groovy
+jenkins.model.Jenkins.instance.getNode(name)?.computer?.allExecutors?.size
+```
 
 ### [get ip address of node](https://stackoverflow.com/a/39752509/2940319)
 ```groovy
@@ -571,3 +643,54 @@ if ( agent
 ### delete agent
 > references:
 > - [cloudbees/jenkins-scripts/deleteAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/deleteAgents.groovy)
+
+```groovy
+def isAgentExists( String name ) {
+  jenkins.model.Jenkins.instance.getNodes().any { name == it.computer?.name }
+}
+
+def removeAgent( String name ) {
+  Boolean deleted = false
+  DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
+
+  if ( agent
+       &&
+       ! AbstractCloudComputer.isInstance( agent.computer )
+       &&
+       ! AbstractCloudSlave.isInstance( agent.computer )
+       &&
+       ! ( agent.computer instanceof jenkins.model.Jenkins.MasterComputer )
+  ) {
+    Boolean online = agent.computer.isOnline()
+    Boolean busy   = agent.computer.countBusy() != 0
+
+    if ( !busy ) {
+      println """
+        "${online ? ' offline and' : ''} remove agent ${name} :"
+           display name : ${agent.getDisplayName()}
+            description : ${agent.getNodeDescription()}
+               executor : ${agent.getNumExecutors()}
+              node mode : ${agent.getMode()}
+                online? : ${online}
+                  busy? : ${busy}
+         offline cause? : ${agent.computer.getOfflineCause()}
+      """
+      if ( online ) {
+        agent.computer.setTemporarilyOffline( true,
+                                              new hudson.slaves.OfflineCause.ByCLI('offline due to agent will be removed automatically')
+        )
+        Thread.sleep( 5*1000 )
+      }
+      agent.computer.doDoDelete()
+      deleted = ! isAgentExists( name )
+      println( "INFO: agent ${name} ${deleted ? 'has been successfully removed' : 'failed been removed'} from ${env.JENKINS_URL}computer")
+    } else {
+      println("WARN: the agent ${name} cannot be removed due to project is tie to it" )
+    }
+  } else {
+    println('WARN: cloud agent or Jenkins master cannot be removed!' )
+  }
+
+  return deleted
+}
+```
