@@ -170,11 +170,11 @@ warning
 {% endhint %}
 
 #### quote
-{% hint 'info' %}
+{% hint style='info' %}
 **Important info**: this *note* needs to be highlighted
 
 ```javascript
-{% hint 'info' %}
+{% hint style='info' %}
 **Important info**: this *note* needs to be highlighted
 {% endhint %}
 ```
