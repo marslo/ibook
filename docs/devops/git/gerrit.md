@@ -4,21 +4,31 @@
 
 - [.gitconfig](#gitconfig)
 - [refs/meta/config](#refsmetaconfig)
-- [useful refs](#useful-refs)
-- [restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push](#restriction-for-branches-feature1-feature2-and-master-for-only-allow-code-review-merge-forbidden-code-push)
-- [rules.pl](#rulespl)
-- [reference](#reference)
+  - [get project.config](#get-projectconfig)
+  - [publish to remote](#publish-to-remote)
+  - [update meta/config if remotes update](#update-metaconfig-if-remotes-update)
+  - [reset to remotes](#reset-to-remotes)
+  - [useful refs](#useful-refs)
+  - [restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push](#restriction-for-branches-feature1-feature2-and-master-for-only-allow-code-review-merge-forbidden-code-push)
+  - [rules.pl](#rulespl)
+- [api](#api)
+  - [basic usage](#basic-usage)
+  - [change](#change)
+  - [who approval the CR+2](#who-approval-the-cr2)
+  - [get all vote CR-2](#get-all-vote-cr-2)
+  - [who approval the V+1](#who-approval-the-v1)
+  - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### .gitconfig
+## .gitconfig
 ```bash
 $ git config --global gitreview.username <UserName>
 $ git config --global gitreview.remote origin
 ```
 
-### [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
-#### get project.config
+## [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
+### get project.config
 - clone the repo
   ```bash
   $ git clone <repo url>
@@ -38,7 +48,7 @@ $ git config --global gitreview.remote origin
   $ git checkout FETCH_HEAD
   ```
 
-#### publish to remote
+### publish to remote
 ```bash
 $ git add --all .
 $ git commit -m "<add your comments here>"
@@ -48,22 +58,20 @@ $ git commit -m "<add your comments here>"
   $ git push origin meta/config:meta/config
   ```
   or
-
   ```bash
   $ git push origin HEAD:refs/meta/config
   ```
-- submit review
 
+- submit review
   ```bash
   $ git push origin HEAD:refs/for/refs/meta/config
   ```
   or
-
   ```bash
   $ git push origin meta/config:refs/for/refs/meta/config
   ```
 
-#### update meta/config if remotes update
+### update meta/config if remotes update
 ```bash
 $ git fetch origin --force refs/meta/config:refs/remotes/origin/meta/config
 
@@ -72,7 +80,7 @@ $ git pull origin refs/meta/config
 $ git merge meta/config
 ```
 
-#### reset to remotes
+### reset to remotes
 ```bash
 $ git fetch origin --force refs/meta/config:refs/remotes/origin/meta/config
 $ git reset --hard remotes/origin/meta/config
@@ -86,41 +94,37 @@ refs/heads/sandbox/${username}/*
 ```
 
 #### its-jira:
-
 - for project specific
-
-```bash
-[commentlink "its-jira"]
-  match = ^[ \\t]*PROJECT-([0-9]{1,5}):
-  link = https://<jira-domain>:<jira-port>/browse/PROJECT-$1
-```
+  ```bash
+  [commentlink "its-jira"]
+    match = ^[ \\t]*PROJECT-([0-9]{1,5}):
+    link = https://<jira-domain>:<jira-port>/browse/PROJECT-$1
+  ```
 
 - for common setup
-
-```bash
-[plugin "its-jira"]
-  association = OPTIONAL
-  branch = ^refs/heads/.*
-  branch = ^refs/heads/stable-.*
-  commentOnChangeAbandoned = false
-  commentOnChangeCreated = true
-  commentOnChangeMerged = true
-  commentOnChangeRestored = false
-  commentOnCommentAdded = false
-  commentOnFirstLinkedPatchSetCreated = true
-  commentOnPatchSetCreated = false
-  commentOnRefUpdatedGitWeb = true
-  enabled = enforced
-[commentlink "its-jira"]
-  match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
-  link = https://<jira-domain>:<jira-port>/browse/$1
-[commentlink "changeid"]
-  match = (I[0-9a-f]{8,40})
-  link = "#/q/$1"
-```
+  ```bash
+  [plugin "its-jira"]
+    association = OPTIONAL
+    branch = ^refs/heads/.*
+    branch = ^refs/heads/stable-.*
+    commentOnChangeAbandoned = false
+    commentOnChangeCreated = true
+    commentOnChangeMerged = true
+    commentOnChangeRestored = false
+    commentOnCommentAdded = false
+    commentOnFirstLinkedPatchSetCreated = true
+    commentOnPatchSetCreated = false
+    commentOnRefUpdatedGitWeb = true
+    enabled = enforced
+  [commentlink "its-jira"]
+    match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
+    link = https://<jira-domain>:<jira-port>/browse/$1
+  [commentlink "changeid"]
+    match = (I[0-9a-f]{8,40})
+    link = "#/q/$1"
+  ```
 
 #### verified label
-
 ```bash
 [label "Verified"]
     function = MaxWithBlock
@@ -145,7 +149,6 @@ refs/heads/sandbox/${username}/*
 
 #### freeze `master` branch
 - `project.config`
-
   ```bash
   [access "refs/for/refs/heads/master"]
     push = block group user/Marslo Jiao (marslo)
@@ -157,8 +160,8 @@ refs/heads/sandbox/${username}/*
     pushMerge = block group user/Marslo Jiao (marslo)
     pushMerge = block group Registered Users
   ```
-- `groups`
 
+- `groups`
   ```bash
   ...
   global:Project-Owners      Project Owners
@@ -170,7 +173,6 @@ refs/heads/sandbox/${username}/*
 
 #### freeze multiple branches (`stable` & `release`) for the specific account
 - `project.config`
-
   ```bash
   [access "^refs/for/refs/heads/(stable|release)$"]
     push = block group Registered Users
@@ -182,8 +184,8 @@ refs/heads/sandbox/${username}/*
     push = +force group user/Marslo Jiao (marslo)
     pushMerge = group user/Marslo Jiao (marslo)
   ```
-- `groups`
 
+- `groups`
   ```bash
   ...
   global:Project-Owners      Project Owners
@@ -194,9 +196,7 @@ refs/heads/sandbox/${username}/*
   ```
 
 ### restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push
-
 - `project.config`
-
   ```bash
   [access "refs/*"]
     read = group Project Owners
@@ -215,7 +215,6 @@ refs/heads/sandbox/${username}/*
   ```
 
 - `groups`
-
   ```bash
   ...
   global:Project-Owners      Project Owners
@@ -226,8 +225,7 @@ refs/heads/sandbox/${username}/*
   ```
 
 #### example of `project.config`
-  - [project.config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
-
+- [project.config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
   ```bash
   [project]
     description = Gerrit Code Review
@@ -307,7 +305,6 @@ refs/heads/sandbox/${username}/*
   ```
 
 ### [rules.pl](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html)
-
 #### [submit by a non author](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#NonAuthorCodeReview)
 ```
 submit_rule(S) :-
@@ -387,6 +384,147 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
 ![mandatory check](../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png)
 
 ![mandatory check](../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png)
+
+## api
+{% hint 'info' %}
+> reference:
+> - [Gerrit Code Review - REST API Developers' Notes](https://gerrit-review.googlesource.com/Documentation/dev-rest-api.html)
+> - [Gerrit Code Review - REST API](https://gerrit-review.googlesource.com/Documentation/rest-api.html)
+{% endhint %}
+
+### [basic usage](https://gerrit-review.googlesource.com/Documentation/dev-rest-api.html#_basic_testing)
+- regular options
+  ```bash
+                                    a might means [a]pi
+                                      ⇡
+  $ curl -X PUT    http://domain.name/a/path/to/api/
+  $ curl -X POST   http://domain.name/a/path/to/api/
+  $ curl -X DELETE http://domain.name/a/path/to/api/
+  ```
+- sending data
+  - json
+    ```bash
+    $ curl -X PUT \
+           -d@testdata.txt \
+           --header "Content-Type: application/json" \
+           http://domain.name/a/path/to/api/
+    ```
+  - txt
+    ```bash
+    $ curl -X PUT \
+           --data-binary @testdata.txt \
+           --header "Content-Type: text/plain" \
+           http://domain.name/a/path/to/api/
+    ```
+- verifying header content
+  ```bash
+  $ curl -v -n -X DELETE http://domain.name/a/path/to/api/
+  ```
+
+### [change](https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html)
+- get change via change-id
+  ```bash
+  $ curl -X GET 'https://domina.name/a/changes/<change-id>'
+  ```
+- get change via commit-id
+  ```groovy
+  $ changeid=$(git show <commit-id> --no-patch --format="%s%n%n%b" | sed -nre 's!Change-Id: (.*$)!\1!p')
+  $ curl -X GET "https://domina.name/a/changes/${changeid}"
+  ```
+  or
+  ```bash
+  $ project=$(echo 'path/to/project' | sed 's:/:%2F:g')
+  $ branch='dev'
+  $ changeid=$(git show <commit-id> --no-patch --format="%s%n%n%b" | sed -nre 's!Change-Id: (.*$)!\1!p')
+  $ curl -X GET "https://domina.name/a/changes/${project}~${branch}~${changeid}"
+  ```
+
+### who approval the CR+2
+```bash
+$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+       tail -n +2 |
+       jq -r '.labels."Code-Review".approved.name'
+```
+
+### get all vote CR-2
+{% hint style='tip' %}
+- example output for `.labels.<tag>.all[]`
+```json
+{
+  "value": -2,
+  "date": "2021-05-31 07:57:14.000000000",
+  "permitted_voting_range": {
+    "min": -2,
+    "max": 2
+  },
+  "_account_id": 790,
+  "name": "Marslo Jiao",
+  "email": "marslo.jiao@gmail.com",
+  "username": "marslo"
+}
+{
+  "value": 0,
+  "permitted_voting_range": {
+    "min": -2,
+    "max": 2
+  },
+  "_account_id": 124,
+  "name": "John Doe",
+  "email": "john@gmail.com",
+  "username": "john"
+}
+```
+{% endhint %}
+
+> reference:
+> - [Select objects based on value of variable in object using jq](https://stackoverflow.com/a/64212172/2940319)
+> - [jq select or statement](https://stackoverflow.com/a/53451410/2940319)
+> - [How to select items in JQ based on value in array](https://stackoverflow.com/a/44867184/2940319)
+
+```bash
+$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+       tail -n +2 |
+       jq -r '.labels."Code-Review".all[] | select ( .value == -2 ) | .username'
+                                          ⠆ ⠇⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠇ ⠆
+                                          ⠆           ⇣             ⠆
+                                          ⠆  select ".value"== -2   ⠆
+                                          ⠆                         ⠆
+                                          ⇣                         ⇣
+                                         pipe                     pipe
+
+
+# or
+$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+       tail -n +2 |
+      jq -r '( .labels."Code-Review".all[] | select ( .value == -2 ) ).username'
+             ⠆                                                       ⠆
+             ⇣                                                       ⇣
+         expression                                              expression
+
+# or
+$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+       tail -n +2 |
+      jq -r '[ .labels."Code-Review".all[] | select ( .value == -2 ) ][].username'
+             ⠆                                                       ⠆
+             ⇣                                                       ⇣
+         expression                                              expression
+
+# or
+$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+       tail -n +2 |
+      jq -r '.labels."Code-Review".all[] | select ( .value == -2 )' |
+      jq -r .username                                               ⠆
+                                                                    ⇣
+                                                                   pipe
+```
+
+
+### who approval the V+1
+```bash
+$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+       tail -n +2 |
+       jq -r .labels.Verified.approved.username
+```
 
 ### reference
 - [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
