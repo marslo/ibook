@@ -43,7 +43,7 @@
 
 ### get all
 
-{% hint 'info' %}
+{% hint style='info' %}
 > get all agents including Jenkins master:
 > - `jenkins.model.Jenkins.instance.computers`
 > - `jenkins.model.Jenkins.instance.get().computers`
@@ -68,7 +68,7 @@ jenkins.model.Jenkins.instance.get().computers.each { agent ->
 ```
 
 ### `Computer` and `Node`
-{% hint 'info' %}
+{% hint style='info' %}
 > - `hudson.model.Computer` -> `hudson.model.Node` via [`computer.setNode()`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#setNode-hudson.model.Node-)
 > - `hudson.model.Node` -> `hudson.model.Computer` via [`node.toComputer()`](https://javadoc.jenkins-ci.org/hudson/model/Node.html#toComputer--)
 {% endhint %}

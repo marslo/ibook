@@ -443,6 +443,30 @@ $ echo ${x%%c}
 aabbc
 ```
 
+- [shell parameter expansion for string `replace`](https://stackoverflow.com/a/13210909/2940319)
+  {% hint style='tips' %}
+  > ** for bash only **
+  > usage:
+  > `${parameter/pattern/string}` replace the first occurrence of a pattern with a given string
+  > `${parameter//pattern/string}` replace all occurrences
+  >
+  > reference:
+  > - [the Bash Reference Manual, §3.5.3 "Shell Parameter Expansion"](https://www.gnu.org/software/bash/manual/bash.html#Shell-Parameter-Expansion)
+  > - not supported in all Unix Shells: [the Shell & Utilities volume, §2.6.2 "Parameter Expansion"](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02)
+  {% endhint %}
+
+  ```bash
+  $ message='The secret code is 12345'
+
+  # first occurrence replacement
+  $ echo "${message/[0-9]/X}"
+  The secret code is X2345
+
+  # all occurrences replacement
+  $ echo "${message//[0-9]/X}"
+  The secret code is XXXXX
+  ```
+
 ### find and copy
 ```bash
 source="/Users/marslo/test/logs"
