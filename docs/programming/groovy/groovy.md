@@ -11,6 +11,8 @@
   - [filter a list](#filter-a-list)
   - [filter in list via additional conditions](#filter-in-list-via-additional-conditions)
   - [return result instead of original list](#return-result-instead-of-original-list)
+  - [A List contains a sublist or not](#a-list-contains-a-sublist-or-not)
+  - [pickup item in list random](#pickup-item-in-list-random)
   - [print 2D matrix](#print-2d-matrix)
 - [`Map`](#map)
   - [change Map in condition](#change-map-in-condition)
@@ -152,6 +154,50 @@
 [1, 2, 3, 4].findAll { ( it % 2 == 0 ) ? it / 2 : null }
 ===> [2, 4]
 ```
+
+### a list contains a sublist or not
+```groovy
+List parent = [ '1', '2', '3', 'a', 'b' ]
+List sub    = [ 'a', '3' ]
+sub.every{ parent.contains(it) }
+```
+
+- or `containsAll`
+  ```groovy
+  List parent = [ '1', '2', '3', 'a', 'b' ]
+  List sub    = [ 'a', '3' ]
+  parent.containsAll(sub)
+  ```
+
+- ignore case
+  ```groovy
+  sub.every{ parent.collect{ it.toLowerCase() }.contains( it.toLowerCase() ) }
+  ```
+
+### [pickup item in list random](https://www.baeldung.com/java-random-list-element)
+- `Collections.shuffle`
+  ```groovy
+  List list = [ '1', '2', '3', 'a', 'b' ]
+  Collections.shuffle( list )
+  println list
+  println parent.first()
+
+  // result
+  [2, b, 3, 1, a]
+  2
+  ```
+
+- `Random().nextInt`
+  ```groovy
+  List list = [ '1', '2', '3', 'a', 'b' ]
+  Random random = new Random()
+  println list.get(random.nextInt(list.size()))
+  println list.get(random.nextInt(list.size()))
+
+  // result
+  // 1
+  // b
+  ```
 
 ### print 2D matrix
 ```groovy
