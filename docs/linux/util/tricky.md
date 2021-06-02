@@ -2,6 +2,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [show process bar](#show-process-bar)
+  - [dot](#dot)
+  - [with ▉ ▎ ▌ ▊](#with-%E2%96%89-%E2%96%8E-%E2%96%8C-%E2%96%8A)
+  - [by [###----]](#by-----)
+  - [with |\|/](#with-%5C)
 - [save & restore screen](#save--restore-screen)
   - [`tput`](#tput)
   - [`echo`](#echo)
@@ -19,6 +24,105 @@
 > reference
 > - [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
 {% endhint %}
+
+## show process bar
+{% hint style='tip' %}
+> reference:
+> - [How to add a progress bar to a shell script?](https://stackoverflow.com/questions/238073/how-to-add-a-progress-bar-to-a-shell-script)
+{% endhint %}
+
+### dot
+> reference:
+> - [colorful output : `c()`](https://raw.githubusercontent.com/ppo/bash-colors/master/bash-colors.sh)
+> - [`c()` can be also found in .marslorc](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.marslorc#L138)
+
+```bash
+while true; do
+  (( i++ == 0 )) && printf $(c sY)%-6s$(c) 'waiting ...' || printf $(c sY)%s$(c) '.'
+  sleep 1
+done
+```
+![waiting bar with dot](../../screenshot/shell/shell-waiting-process-dot.gif)
+
+### [with ▉ ▎ ▌ ▊](https://stackoverflow.com/a/65532561/2940319)
+> another:
+> - [A progress bar for the shell](https://ownyourbits.com/2017/07/16/a-progress-bar-for-the-shell/)
+
+```bash
+# Main function designed for quickly copying to another program
+progressBar() {
+  Bar=""                                  # Progress Bar / Volume level
+  Len=25                                  # Length of Progress Bar / Volume level
+  Div=4                                   # Divisor into Volume for # of blocks
+  Fill="▒"                                # Fill up to $Len
+  Arr=( "▉" "▎" "▌" "▊" )                 # UTF-8 left blocks: 7/8, 1/4, 1/2, 3/4
+
+  FullBlock=$((${1} / Div))               # Number of full blocks
+  PartBlock=$((${1} % Div))               # Size of partial block (array index)
+
+  while [[ $FullBlock -gt 0 ]]; do
+      Bar="$Bar${Arr[0]}"                 # Add 1 full block into Progress Bar
+      (( FullBlock-- ))                   # Decrement full blocks counter
+  done
+
+  # If remainder zero no partial block, else append character from array
+  if [[ $PartBlock -gt 0 ]]; then Bar="$Bar${Arr[$PartBlock]}"; fi
+
+  # Pad Progress Bar with fill character
+  while [[ "${#Bar}" -lt "$Len" ]]; do Bar="$Bar$Fill"; done
+
+  echo progress : "$1 $Bar"
+  exit 0                                  # Remove this line when copying into program
+} # progressBar
+
+Main () {
+  tput civis                              # Turn off cursor
+  for ((i=0; i<=100; i++)); do
+    CurrLevel=$(progressBar "$i")         # Generate progress bar 0 to 100
+    echo -ne "$CurrLevel"\\r              # Reprint overtop same line
+    sleep .04
+  done
+  echo -e \\n                             # Advance line to keep last progress
+  echo "$0 Done"
+  tput cnorm                              # Turn cursor back on
+} # Main
+
+Main "$@"
+```
+![progress bar with ▉ ▎ ▌ ▊](../../screenshot/shell/shell-waiting-progress-bar2.gif)
+
+### [by [###----]](https://stackoverflow.com/a/64932365/2940319)
+> another solution:
+> - [fearside/ProgressBar](https://github.com/fearside/ProgressBar/blob/master/progressbar.sh)
+
+```bash
+BAR='##############################'
+FILL='------------------------------'
+totalLines=100
+barLen=30
+count=0
+
+while [ ${count} -lt ${totalLines} ]; do
+  # update progress bar
+  count=$(( ${count}+ 1 ))
+  percent=$(( (${count} * 100 / ${totalLines} * 100)/ 100 ))
+  i=$(( ${percent} * ${barLen} / 100 ))
+  echo -ne "\r[${BAR:0:$i}${FILL:$i:barLen}] ${count}/${totalLines} (${percent}%)"
+  sleep .1
+done
+```
+![progress bar](../../screenshot/shell/shell-waiting-progress-bar3.gif)
+
+### [with |\|/](https://stackoverflow.com/a/3330834/2940319)
+```bash
+while :; do
+  for s in / - \\ \|
+    do printf "\r$s"
+    sleep .1
+  done
+done
+```
+![progress bar](../../screenshot/shell/shell-waiting-progress-bar4.gif)
 
 ## save & restore screen
 ### `tput`
