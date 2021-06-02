@@ -11,7 +11,7 @@
   - [filter a list](#filter-a-list)
   - [filter in list via additional conditions](#filter-in-list-via-additional-conditions)
   - [return result instead of original list](#return-result-instead-of-original-list)
-  - [A List contains a sublist or not](#a-list-contains-a-sublist-or-not)
+  - [a list contains a sublist or not](#a-list-contains-a-sublist-or-not)
   - [pickup item in list random](#pickup-item-in-list-random)
   - [print 2D matrix](#print-2d-matrix)
 - [`Map`](#map)
