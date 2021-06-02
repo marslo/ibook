@@ -8,10 +8,10 @@
   - [if label validated](#if-label-validated)
   - [Get free number of label](#get-free-number-of-label)
   - [Get all resource](#get-all-resource)
-- [add or remove](#add-or-remove)
 - [management](#management)
   - [remove by label (or name)](#remove-by-label-or-name)
   - [create new item](#create-new-item)
+  - [pickup qualified available resources randomly](#pickup-qualified-available-resources-randomly)
   - [change label by certain condition](#change-label-by-certain-condition)
 - [reserve & unlock](#reserve--unlock)
   - [by cli](#by-cli)
@@ -139,7 +139,6 @@ stage('get all resoruces') {
 }
 ```
 
-## add or remove
 ## management
 ### [remove by label (or name)](https://issues.jenkins-ci.org/browse/JENKINS-38906?focusedCommentId=353245&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-353245)
 
@@ -174,11 +173,74 @@ stage('remove') {
 ### create new item
 ```groovy
 stage('create') {
-    def manager = org.jenkins.plugins.lockableresources.LockableResourcesManager.get()
-    def myr = manager.createResourceWithLabel('marslo', 'marslo-label')
+  def manager = org.jenkins.plugins.lockableresources.LockableResourcesManager.get()
+  def myr = manager.createResourceWithLabel('marslo', 'marslo-label')
 }
 ```
+- or
+  ```groovy
+  import org.jenkins.plugins.lockableresources.*
 
+  stage('create') {
+    LockableResourcesManager manager = org.jenkins.plugins.lockableresources.LockableResourcesManager.get()
+    String name  = 'marslo'
+    String label = 'marslo-label'
+
+    manager.createResource( name )
+    manager.fromName(name).setLabels( label )
+    manager.fromName(name).setEphemeral( false )
+    manager.save()
+  }
+  ```
+
+### [pickup qualified available resources randomly](https://stackoverflow.com/a/67801738/2940319)
+{% hint style='tip' %}
+- reference:
+- [a list contains a sublist or not](../../programming/groovy/groovy.html#a-list-contains-a-sublist-or-not)
+
+**setup test labels**
+```groovy
+import org.jenkins.plugins.lockableresources.*
+
+LockableResourcesManager manager = org.jenkins
+                                      .plugins
+                                      .lockableresources
+                                      .LockableResourcesManager
+                                      .get()
+manager.createResourceWithLabel('marslo-test-1', 'windows,64bit,firefox')
+manager.createResourceWithLabel('marslo-test-2', 'CentOS,32bit,chrome')
+manager.createResourceWithLabel('marslo-test-3', 'RHEL,64bit,firefox')
+```
+
+**clean up environment**
+```groovy
+import org.jenkins.plugins.lockableresources.*
+
+LockableResourcesManager manager = org.jenkins
+                                      .plugins
+                                      .lockableresources
+                                      .LockableResourcesManager
+                                      .get()
+(1..3).each {
+  manager.resources.remove( manager.fromName("marslo-test-${it}") )
+}
+```
+{% endhint %}
+
+```groovy
+import org.jenkins.plugins.lockableresources.*
+
+LockableResourcesManager manager = org.jenkins.plugins.lockableresources.LockableResourcesManager.get()
+
+List criteria = [ '64bit', 'firefox' ]
+List all = manager.resources.findAll { r ->
+    !r.locked &&
+    !r.reserved &&
+    criteria.every{ c -> r.labels.split(',').collect{ it.toLowerCase() }.contains(c.toLowerCase()) }
+  }
+Collections.shuffle(all)
+println (all?.first() ?: '')
+```
 
 ### change label by certain condition
 {% hint style='tip' %}
