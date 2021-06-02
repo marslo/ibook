@@ -2,11 +2,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [show process bar](#show-process-bar)
-  - [dot](#dot)
-  - [with ▉ ▎ ▌ ▊](#with-%E2%96%89-%E2%96%8E-%E2%96%8C-%E2%96%8A)
-  - [by [###----]](#by-----)
-  - [with |\|/](#with-%5C)
+- [process bar](#process-bar)
+  - [with dot `.`](#with-dot-)
+  - [with `▉ ▎ ▌ ▊`](#with-%E2%96%89-%E2%96%8E-%E2%96%8C-%E2%96%8A)
+  - [with `[###----]`](#with-----)
+  - [with `|\|/`](#with-%5C)
 - [save & restore screen](#save--restore-screen)
   - [`tput`](#tput)
   - [`echo`](#echo)
@@ -20,18 +20,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-{% hint style='tip' %}
-> reference
-> - [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
-{% endhint %}
-
-## show process bar
+## process bar
 {% hint style='tip' %}
 > reference:
 > - [How to add a progress bar to a shell script?](https://stackoverflow.com/questions/238073/how-to-add-a-progress-bar-to-a-shell-script)
 {% endhint %}
 
-### dot
+### with dot `.`
 > reference:
 > - [colorful output : `c()`](https://raw.githubusercontent.com/ppo/bash-colors/master/bash-colors.sh)
 > - [`c()` can be also found in .marslorc](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.marslorc#L138)
@@ -44,7 +39,7 @@ done
 ```
 ![waiting bar with dot](../../screenshot/shell/shell-waiting-process-dot.gif)
 
-### [with ▉ ▎ ▌ ▊](https://stackoverflow.com/a/65532561/2940319)
+### [with `▉ ▎ ▌ ▊`](https://stackoverflow.com/a/65532561/2940319)
 > another:
 > - [A progress bar for the shell](https://ownyourbits.com/2017/07/16/a-progress-bar-for-the-shell/)
 
@@ -89,9 +84,9 @@ Main () {
 
 Main "$@"
 ```
-![progress bar with ▉ ▎ ▌ ▊](../../screenshot/shell/shell-waiting-progress-bar2.gif)
+![progress bar with `▎▌ ▊ ▉`](../../screenshot/shell/shell-waiting-progress-bar2.gif)
 
-### [by [###----]](https://stackoverflow.com/a/64932365/2940319)
+### [with `[###----]`](https://stackoverflow.com/a/64932365/2940319)
 > another solution:
 > - [fearside/ProgressBar](https://github.com/fearside/ProgressBar/blob/master/progressbar.sh)
 
@@ -111,9 +106,9 @@ while [ ${count} -lt ${totalLines} ]; do
   sleep .1
 done
 ```
-![progress bar](../../screenshot/shell/shell-waiting-progress-bar3.gif)
+![progress bar with `[###----]`](../../screenshot/shell/shell-waiting-progress-bar3.gif)
 
-### [with |\|/](https://stackoverflow.com/a/3330834/2940319)
+### [with `|\|/`](https://stackoverflow.com/a/3330834/2940319)
 ```bash
 while :; do
   for s in / - \\ \|
@@ -122,9 +117,14 @@ while :; do
   done
 done
 ```
-![progress bar](../../screenshot/shell/shell-waiting-progress-bar4.gif)
+![progress bar with `|\|/`](../../screenshot/shell/shell-waiting-progress-bar4.gif)
 
 ## save & restore screen
+{% hint style='tip' %}
+> reference
+> - [Terminal codes (ANSI/VT100) introduction](https://wiki.bash-hackers.org/scripting/terminalcodes)
+{% endhint %}
+
 ### `tput`
 - clear
   ```bash

@@ -30,7 +30,8 @@
 
 {% hint style='info' %}
 > reference:
-> - [javadoc](https://javadoc.jenkins.io/plugin/lockable-resources/org/jenkins/plugins/lockableresources/LockableResource.html)
+> - [org.jenkins.plugins.lockableresources.LockableResource](https://javadoc.jenkins.io/plugin/lockable-resources/org/jenkins/plugins/lockableresources/LockableResource.html)
+> - [javadoc index-all](https://javadoc.jenkins.io/plugin/lockable-resources/index-all.html)
 > - [configure-lockable-resources.groovy](https://gist.github.com/ansig/d7edafe38fbfc13c5b3cd15351849804)
 > - [collect-resources-data-for-graphite.groovy](https://gist.github.com/ansig/c9f2ac8e291d5dcb854d49f691f6c7e8)
 > - [LockableResourcesHelper.groovy](https://gist.github.com/glance-/aaa3c037757895798d4e1be5134bb843)
