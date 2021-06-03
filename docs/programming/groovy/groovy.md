@@ -13,6 +13,8 @@
   - [return result instead of original list](#return-result-instead-of-original-list)
   - [a list contains a sublist or not](#a-list-contains-a-sublist-or-not)
   - [pickup item in list random](#pickup-item-in-list-random)
+  - [replace item in list according reference Map](#replace-item-in-list-according-reference-map)
+  - [2D matrix conversion](#2d-matrix-conversion)
   - [print 2D matrix](#print-2d-matrix)
 - [`Map`](#map)
   - [change Map in condition](#change-map-in-condition)
@@ -26,8 +28,10 @@
   - [Show output during the process](#show-output-during-the-process)
   - [with environment](#with-environment)
 - [Closures](#closures)
+  - [explicit call VS. implicit call](#explicit-call-vs-implicit-call)
   - [Closure VS. Method](#closure-vs-method)
   - [break from closure](#break-from-closure)
+  - [composition](#composition)
   - [Curry](#curry)
   - [Memoization](#memoization)
   - [Composition](#composition)
@@ -183,8 +187,8 @@ sub.every{ parent.contains(it) }
   println parent.first()
 
   // result
-  [2, b, 3, 1, a]
-  2
+  // [2, b, 3, 1, a]
+  // 2
   ```
 
 - `Random().nextInt`
@@ -198,6 +202,74 @@ sub.every{ parent.contains(it) }
   // 1
   // b
   ```
+
+### [replace item in list according reference Map](https://stackoverflow.com/a/67818619/2940319)
+```groovy
+Map<String, String> reference = [
+  '1' : 'apple'  ,
+  '2' : 'banana' ,
+  '3' : 'pears'  ,
+  '4' : 'peach'
+]
+
+'I want 1 she wants 4'.tokenize(' ')
+                      .collect { references.get(it) ?: it }
+                      .join(' ')
+
+// result:
+// I want apple she wants peach
+```
+
+### 2D matrix conversion
+
+{% hint style='tip' %}
+**Objective** :
+> rows and columns conversion in 2D matrix `Map<String, List<String>>`
+> <p></p>
+> - original matrix:
+> ```groovy
+> [
+>   'foo' : [ 'a', 'b', 'c', 'd' ] ,
+>   'bar' : [ 'b', 'c', 'x', 'y' ] ,
+>   'baz' : [ 'd', 'x', 'y', 'z' ]
+> ]
+> ```
+> <p></p>
+> - after conversion:
+> ```groovy
+> [
+>   'a' : [ 'foo' ]         ,
+>   'b' : [ 'bar' , 'foo' ] ,
+>   'c' : [ 'bar' , 'foo' ] ,
+>   'd' : [ 'baz' , 'foo' ] ,
+>   'x' : [ 'bar' , 'baz' ] ,
+>   'y' : [ 'bar' , 'baz' ] ,
+>   'z' : [ 'baz' ]
+> ]
+
+**Inspired from [sboardwell/matrix-based-auth.groovy](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L96)
+```
+{% endhint %}
+
+```groovy
+Map<String, List<String>> after  = [:].withDefault { [].toSet() }
+Map<String, List<String>> matrix = [
+  'foo' : [ 'a', 'b', 'c', 'd' ] ,
+  'bar' : [ 'b', 'c', 'x', 'y' ] ,
+  'baz' : [ 'd', 'x', 'y', 'z' ]
+]
+
+Closure converter = { Map result, Map original ->
+  original.each { k, v -> result[k] += v }
+}
+
+matrix.collect{ k, v -> v.collect{ [ (it) : k ] } }
+      .flatten()
+      .each converter.curry(after)
+after
+```
+
+
 
 ### print 2D matrix
 ```groovy
@@ -407,6 +479,7 @@ println """
 > - [Groovy Goodness: Passing Closures to Methods](https://blog.mrhaki.com/2009/11/groovy-goodness-passing-closures-to.html)
 > - [Groovy Goodness: Closure Arguments](https://blog.mrhaki.com/2009/11/groovy-goodness-closure-arguments.html)
 > - [Groovy Goodness: Identity Closure](https://blog.mrhaki.com/2016/10/groovy-goodness-identity-closure.html)
+> - [实战 Groovy: 用 curry 过的闭包进行函数式编程](https://wizardforcel.gitbooks.io/ibm-j-pg/content/10.html)
 
 {% hint style='tip' %}
 > A closure definition follows this syntax:
@@ -421,6 +494,22 @@ println """
 > ```
 {% endhint %}
 
+### [explicit call VS. implicit call](https://wizardforcel.gitbooks.io/ibm-j-pg/content/9.html)
+> **closure** :
+> ```groovy
+> def multiply = { x, y -> return x * y }
+> ```
+
+#### explicit call
+```groovy
+multiply.call(3, 4)
+```
+
+#### implicit call
+```groovy
+multiply(3, 4)
+```
+
 ### [Closure VS. Method](https://www.baeldung.com/groovy-closures)
 > closures have benefits over regular methods and are a powerful feature of Groovy:
 > - We can pass a Closure as an argument to a method
@@ -432,7 +521,7 @@ println """
 
 - method
   ```groovy
-  def formatToLowerCase(name) {
+  def formatToLowerCase( String name ) {
     name.toLowerCase()
   }
   ```
@@ -464,6 +553,16 @@ list.any { element ->
 }
 ```
 
+### composition
+```groovy
+def multiply = { x, y -> return x * y }
+def triple = multiply.curry(3)
+def quadruple = multiply.curry(4)
+def composition = { f, g, x -> return f(g(x)) }
+def twelveTimes = composition.curry(triple, quadruple)      //  twelveTimes = { y -> composition { y -> 3*(4*y) } }
+def threeDozen = twelveTimes(3)
+```
+
 ### Curry
 - left curry
   ```groovy
@@ -475,6 +574,13 @@ list.any { element ->
   - result
   ```
   |\|/|\|/
+  ```
+
+- example
+  ```groovy
+  // closure
+  def multiply = { x, y -> return x * y }
+  def triple = multiply.curry(3)           // triple = { y -> return 3 * y }
   ```
 
 - others left curry
