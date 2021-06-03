@@ -11,7 +11,8 @@
   - [restart Jenkins instance](#restart-jenkins-instance)
 - [permission & authorization strategy](#permission--authorization-strategy)
   - [list all Jenkins supported permissions](#list-all-jenkins-supported-permissions)
-  - [get current authorization strategy](#get-current-authorization-strategy)
+  - [get current authorization strategy class](#get-current-authorization-strategy-class)
+  - [get current authorization and permissions info](#get-current-authorization-and-permissions-info)
   - [ProjectMatrixAuthorizationStrategy](#projectmatrixauthorizationstrategy)
   - [RoleBasedAuthorizationStrategy](#rolebasedauthorizationstrategy)
 
@@ -424,7 +425,32 @@ hudson.security.Permission.getAll().each { p ->
 }
 ```
 
-### get current authorization strategy
+- [better one](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027)
+  ```groovy
+  import hudson.security.GlobalMatrixAuthorizationStrategy
+  import hudson.security.Permission
+  import hudson.security.ProjectMatrixAuthorizationStrategy
+  import jenkins.model.Jenkins
+
+  String shortName( Permission p ) {
+    p.id.tokenize('.')[-2..-1].join(' ')
+        .replace('Hudson','Overall')
+        .replace('Computer', 'Agent')
+        .replace('Item', 'Job')
+        .replace('CredentialsProvider', 'Credentials')
+  }
+
+  Map<String, Permission> permissionIds = Permission.all.findAll { permission ->
+    List<String> nonConfigurablePerms = ['RunScripts', 'UploadPlugins', 'ConfigureUpdateCenter']
+    permission.enabled &&
+      !permission.id.startsWith('hudson.security.Permission') &&
+      !(true in nonConfigurablePerms.collect { permission.id.endsWith(it) })
+  }.collect { permission ->
+    [ (shortName(permission)): permission ]
+  }.sum()
+  ```
+
+### get current authorization strategy class
 ```groovy
 import hudson.model.*
 import hudson.security.*
@@ -436,6 +462,20 @@ println strategy.getClass()
 - result
   ```
   class hudson.security.ProjectMatrixAuthorizationStrategy
+  ```
+
+### get current authorization and permissions info
+```groovy
+Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
+  println "\n${p} :\n\t${u}"
+}
+```
+- or
+  ```groovy
+  Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
+    [ (p.id), u ]
+  }
+```
   ```
 
 ### ProjectMatrixAuthorizationStrategy

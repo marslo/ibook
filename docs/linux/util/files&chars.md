@@ -444,7 +444,7 @@ aabbc
 ```
 
 - [shell parameter expansion for string `replace`](https://stackoverflow.com/a/13210909/2940319)
-  {% hint style='tips' %}
+  {% hint style='tip' %}
   > ** for bash only **
   > usage:
   > `${parameter/pattern/string}` replace the first occurrence of a pattern with a given string
