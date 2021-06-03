@@ -28,7 +28,6 @@
   - [Show output during the process](#show-output-during-the-process)
   - [with environment](#with-environment)
 - [Closures](#closures)
-  - [explicit call VS. implicit call](#explicit-call-vs-implicit-call)
   - [Closure VS. Method](#closure-vs-method)
   - [break from closure](#break-from-closure)
   - [composition](#composition)
@@ -216,16 +215,49 @@ Map<String, String> reference = [
                       .collect { references.get(it) ?: it }
                       .join(' ')
 
-// result:
-// I want apple she wants peach
+// result: I want apple she wants peach
 ```
+
+- or keeping the `String` format
+  > reference for [`replaceAll("<regex>", "$0")`](https://stackoverflow.com/a/24397672/2940319)
+
+  ```groovy
+  'I like    1, she    likes    3.'
+      .replaceAll("[^\\w]", "_\$0")
+      .split('_')
+      .collect {
+          String c = it.trim()
+          reference.get(c) ? it.replace(c, reference.get(c)) : it
+       }
+      .join()
+
+  // result: I like    apple, she    likes    pears.
+  ```
+
+{% hint style='tip' %}
+**remove all punctuation from a String** :
+```groovy
+'I like 1,_,--__,,___ she        liks 2,,...'
+  .replaceAll("[^\\w\\s]|_", '')
+  // .replaceAll("\\s+", ' ')         // structure space if necessary
+===> I like 1 she        liks 2
+// ===> I like 1 she liks 2
+```
+- or keep only comma (and merge more if mutiple comma)
+  ```groovy
+  'I like 1,----,,|\\/, she        liks 2,,...'
+    .replaceAll("[^\\w\\s,]|_", '')
+    .replaceAll(',+', ',')
+  ===> I like 1, she        liks 2,
+  ```
+{% endhint %}
 
 ### 2D matrix conversion
 
 {% hint style='tip' %}
 **Objective** :
 > rows and columns conversion in 2D matrix `Map<String, List<String>>`
-> <p></p>
+>
 > - original matrix:
 > ```groovy
 > [
@@ -234,7 +266,7 @@ Map<String, String> reference = [
 >   'baz' : [ 'd', 'x', 'y', 'z' ]
 > ]
 > ```
-> <p></p>
+>
 > - after conversion:
 > ```groovy
 > [
@@ -246,9 +278,9 @@ Map<String, String> reference = [
 >   'y' : [ 'bar' , 'baz' ] ,
 >   'z' : [ 'baz' ]
 > ]
+> ```
 
-**Inspired from [sboardwell/matrix-based-auth.groovy](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L96)
-```
+**Inspired from [sboardwell/matrix-based-auth.groovy](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L96)**
 {% endhint %}
 
 ```groovy
@@ -344,31 +376,54 @@ Map<String, Map<String, String>> matrix = [
 ]
 
 assert isTargetExists( matrix, 'user', 'dev4' ) == false
-assert isTargetExists( matrix, 'release', 'huawei' ) == true
+assert isTargetExists( matrix, 'customer', 'huawei' ) == true
 ```
 
 ## elvis operator
 ### if/elseif{if}/else
+> condition:
+> - if `fruits` is 'apple' or 'orange', get pre-defined number `5` ( `number = 5` )
+> - if `fruits` is `watermelon`, get particular given `numbers`. `number` cannot be `null`
+
 ```groovy
 // by using if/elseif{if}/else
 Map option = [:]
 if ( [ 'apple', 'orange' ].contains(fruits) ) {
   option = [ "${fruits}" : '5' ]
 } else if ( [ 'watermelon' ].contains(fruits) ) {
-  if (mode) {
-    option = [ "${fruits}" : mode ]
+  if (number) {
+    option = [ "${fruits}" : number ]
   }
 } else {
-  println( 'basket CANNOT be empty while fruits is watermelon' )
+  println( 'ERROR: number CANNOT be empty while fruits is watermelon. Exit ...' )
 }
 
 // by using elvis operator
 Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
-           : ( [ 'watermelon' ].contains(fruits) ) ? ( mode )
-              ? [ "${fruits}" : mode ]
-              : println( 'basket CANNOT be empty while fruits is watermelon' )
-           : null
+           : ( [ 'watermelon' ].contains(fruits) ) ? ( number )
+              ? [ "${fruits}" : number ]
+              : println( 'ERROR: number CANNOT be empty while fruits is watermelon. Exit ...' )
+           : [:]
 ```
+
+- example
+  ```groovy
+  Closure option = { String fruits, String number = '' ->
+      ( [ 'apple', 'orange' ].contains(fruits) ) ? [ (fruits) : '5' ]
+      : ( [ 'watermelon' ].contains(fruits) ) ? ( number )
+        ? [ (fruits) : number ]
+        : println( 'ERROR: number CANNOT be empty while fruits is watermelon. Exit ...' )
+      : [:]
+  }
+
+  assert option('apple') == ['apple' : '5']
+  assert option('watermelon', '100') == [ 'watermelon' : '100' ]
+  ```
+{% hint style='tip' %}
+- using `[ "${fruits}" : '5' ]`, the class of key is `class org.codehaus.groovy.runtime.GStringImpl`
+- using `[ (fruits) : '5' ]`   , the class of key is `class java.lang.String`
+{% endhint %}
+
 
 ## execute shell commands in groovy
 > reference
@@ -487,28 +542,14 @@ println """
 >  { [closureParameters -> ] statements }
 > ```
 >
-> closure.call()
+> [closure.call()](https://wizardforcel.gitbooks.io/ibm-j-pg/content/9.html)
 > ```groovy
 > Closure clos = { println "Hello World" }
 > assert clos.call() == clos()
+>            |           + implicit call
+>            + explicit call
 > ```
 {% endhint %}
-
-### [explicit call VS. implicit call](https://wizardforcel.gitbooks.io/ibm-j-pg/content/9.html)
-> **closure** :
-> ```groovy
-> def multiply = { x, y -> return x * y }
-> ```
-
-#### explicit call
-```groovy
-multiply.call(3, 4)
-```
-
-#### implicit call
-```groovy
-multiply(3, 4)
-```
 
 ### [Closure VS. Method](https://www.baeldung.com/groovy-closures)
 > closures have benefits over regular methods and are a powerful feature of Groovy:
@@ -566,22 +607,21 @@ def threeDozen = twelveTimes(3)
 ### Curry
 - left curry
   ```groovy
+  def multiply = { x, y -> return x * y }
+  def triple = multiply.curry(3)           // triple = { y -> return 3 * y }
+  ```
+
+- example
+  ```groovy
   def nCopies = { int n, String... str -> str.join('')*n }
   def twice = nCopies.curry(2)
   println twice('|', '\\', '|', '/' )
   assert twice('|', '\\', '|', '/' ) == nCopies( 2, '|', '\\', '|', '/' )
   ```
   - result
-  ```
-  |\|/|\|/
-  ```
-
-- example
-  ```groovy
-  // closure
-  def multiply = { x, y -> return x * y }
-  def triple = multiply.curry(3)           // triple = { y -> return 3 * y }
-  ```
+    ```
+    |\|/|\|/
+    ```
 
 - others left curry
   ```groovy
@@ -603,9 +643,21 @@ def threeDozen = twelveTimes(3)
   assert twice(2) == nCopies( 2, '*-=*=-*' )
   ```
   - result
-  ```
-  *-=*=-**-=*=-*
-  ```
+    ```
+    *-=*=-**-=*=-*
+    ```
+
+{% hint style='tip' %}
+```groovy
+def nCopies = { int n, String str -> str*n }
+
+def twice   = nCopies.rcurry( '*-=*=-*' )
+def divider = nCopies.curry( 2 )
+
+assert nCopies( 2, '*-=*=-*' ) == twice( 2 )                // right curry
+assert nCopies( 2, '-.-.-.-' ) == divider( '-.-.-.-' )      // left  curry
+```
+{% endhint %}
 
 - index with curry
   ```groovy
@@ -622,9 +674,9 @@ def threeDozen = twelveTimes(3)
 
 ### Memoization
 
-- Fibonacci suite
 
 {% hint style='tip' %}
+**Fibonacci suite** :
 > - `fib(15)` == `fib(14)` + `fib(13)`
 > - `fib(14)` == `fib(13)` + `fib(12)`
 {% endhint %}
@@ -685,7 +737,7 @@ assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
     cl(input)
   }
 
-  def assertJava = {
+  Closure assertJava = {
     it == 'Java'
   }
 
@@ -695,6 +747,7 @@ assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
     it == 'Java'
   }
   ```
+
 - frequent usage
   ```groovy
   def on( String name, String dString = 'is' ) {
