@@ -21,7 +21,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-{% hint style="tips" %}
+{% hint style="tip" %}
 > jq online player:
 > - [https://jqplay.org](https://jqplay.org/)
 >
