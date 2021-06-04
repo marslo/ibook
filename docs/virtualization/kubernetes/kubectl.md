@@ -22,7 +22,7 @@
 
 {% hint style='tip' %}
 ## [what is kubectl](https://learnk8s.io/blog/kubectl-productivity/#introduction-what-is-kubectl-)
-![kubectl](../screenshot/k8s/k-1.svg.png)
+![kubectl](../../screenshot/k8s/k-1.svg.png)
 
 > reference:
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
@@ -101,9 +101,9 @@ $ k get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}"
 ```
 - or
   ```bash
-  $ k get pods --all-namespaces -o jsonpath="{..image}" |\
-    tr -s '[[:space:]]' '\n' |\
-    sort |\
+  $ k get pods --all-namespaces -o jsonpath="{..image}" |
+    tr -s '[[:space:]]' '\n' |
+    sort |
     uniq -c
   ```
 
