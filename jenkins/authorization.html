@@ -1,0 +1,2470 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>permission & authorizationStrategy · handbook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="marslo">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-prism/prism-solarizedlight.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-advanced-emoji/emoji-website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-flexible-alerts/style.css">
+                
+            
+                
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-sectionx/sectionx.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-hints/plugin-hints.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-anchor-navigation-ex/style/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-codeblock-filename/block.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-codetabs/codetabs.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-codegroup/code.group.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-emphasize/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-image-captions/image-captions.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-accordion/accordion.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+
+        
+    
+    
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="config/config.html" />
+    
+    
+    <link rel="prev" href="jenkins.html" />
+    
+
+    <style>
+    @media only screen and (max-width: 640px) {
+        .book-header .hidden-mobile {
+            display: none;
+        }
+    }
+    </style>
+    <script>
+        window["gitbook-plugin-github-buttons"] = {"buttons":[{"user":"marslo","repo":"ibook","type":"star","size":"small"}]};
+    </script>
+
+    
+        <link rel="shortcut icon" href='../assets/images/favicon.ico' type="image/x-icon">
+    
+    
+        <link rel="bookmark" href='../assets/images/favicon.ico' type="image/x-icon">
+    
+    
+        <link rel="apple-touch-icon" href='../assets/images/apple-touch-icon.png'>
+    
+    
+        
+        <link rel="apple-touch-icon" sizes="120x120" href="../assets/images/apple-touch-icon-120x120.png">
+        
+        <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon-180x180.png">
+        
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+    
+        
+        <li>
+            <a href="https://imarslo.github.io/" target="_blank" class="custom-link">I, Marslo</a>
+        </li>
+    
+    
+
+    
+    <li class="divider"></li>
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../artifactory/artifactory.html">
+            
+                <a href="../artifactory/artifactory.html">
+            
+                    
+                    artifactory
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../artifactory/api.html">
+            
+                <a href="../artifactory/api.html">
+            
+                    
+                    api
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../artifactory/cli.html">
+            
+                <a href="../artifactory/cli.html">
+            
+                    
+                    cli
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../artifactory/aql.html">
+            
+                <a href="../artifactory/aql.html">
+            
+                    
+                    aql
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../cheatsheet/good.html">
+            
+                <a href="../cheatsheet/good.html">
+            
+                    
+                    cheatsheet
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../cheatsheet/vim/vim.html">
+            
+                <a href="../cheatsheet/vim/vim.html">
+            
+                    
+                    vim
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="../cheatsheet/vim/tricky.html">
+            
+                <a href="../cheatsheet/vim/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.2" data-path="../cheatsheet/vim/windows.html">
+            
+                <a href="../cheatsheet/vim/windows.html">
+            
+                    
+                    windows
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.1.3" data-path="../cheatsheet/vim/plugins.html">
+            
+                <a href="../cheatsheet/vim/plugins.html">
+            
+                    
+                    plugins
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../cheatsheet/windows/windows.html">
+            
+                <a href="../cheatsheet/windows/windows.html">
+            
+                    
+                    windows
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1" data-path="../cheatsheet/windows/clsid.html">
+            
+                <a href="../cheatsheet/windows/clsid.html">
+            
+                    
+                    clsid
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.2" data-path="../cheatsheet/windows/env.html">
+            
+                <a href="../cheatsheet/windows/env.html">
+            
+                    
+                    env
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.3" data-path="../cheatsheet/windows/shell:folder.html">
+            
+                <a href="../cheatsheet/windows/shell:folder.html">
+            
+                    
+                    shell:folder
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../cheatsheet/character/character.html">
+            
+                <a href="../cheatsheet/character/character.html">
+            
+                    
+                    character
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="../cheatsheet/character/markdown.html">
+            
+                <a href="../cheatsheet/character/markdown.html">
+            
+                    
+                    markdown
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.2" data-path="../cheatsheet/character/json.html">
+            
+                <a href="../cheatsheet/character/json.html">
+            
+                    
+                    json
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.3" data-path="../cheatsheet/character/regex.html">
+            
+                <a href="../cheatsheet/character/regex.html">
+            
+                    
+                    regex
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../cheatsheet/havefun.html">
+            
+                <a href="../cheatsheet/havefun.html">
+            
+                    
+                    havefun
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../cheatsheet/media.html">
+            
+                <a href="../cheatsheet/media.html">
+            
+                    
+                    media
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../cheatsheet/osx.html">
+            
+                <a href="../cheatsheet/osx.html">
+            
+                    
+                    osx
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="../cheatsheet/ssl/ssl.html">
+            
+                <a href="../cheatsheet/ssl/ssl.html">
+            
+                    
+                    ssl
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.7.1" data-path="../cheatsheet/ssl/verification.html">
+            
+                <a href="../cheatsheet/ssl/verification.html">
+            
+                    
+                    verification
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../devops/adminTools.html">
+            
+                <a href="../devops/adminTools.html">
+            
+                    
+                    devops
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../devops/git/git.html">
+            
+                <a href="../devops/git/git.html">
+            
+                    
+                    git
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1" data-path="../devops/git/submodule.html">
+            
+                <a href="../devops/git/submodule.html">
+            
+                    
+                    submodule
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="../devops/git/eol.html">
+            
+                <a href="../devops/git/eol.html">
+            
+                    
+                    eol
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3" data-path="../devops/git/example.html">
+            
+                <a href="../devops/git/example.html">
+            
+                    
+                    example
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4" data-path="../devops/git/gerrit.html">
+            
+                <a href="../devops/git/gerrit.html">
+            
+                    
+                    gerrit
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.5" data-path="../devops/git/q&a.html">
+            
+                <a href="../devops/git/q&a.html">
+            
+                    
+                    q&a
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.6" data-path="../devops/git/tricky.html">
+            
+                <a href="../devops/git/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../devops/android.html">
+            
+                <a href="../devops/android.html">
+            
+                    
+                    android
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../devops/commonTools.html">
+            
+                <a href="../devops/commonTools.html">
+            
+                    
+                    commonTools
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../devops/compilation.html">
+            
+                <a href="../devops/compilation.html">
+            
+                    
+                    compilation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../devops/mobile.html">
+            
+                <a href="../devops/mobile.html">
+            
+                    
+                    mobile
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../devops/network.html">
+            
+                <a href="../devops/network.html">
+            
+                    
+                    network
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../devops/nginx&cert.html">
+            
+                <a href="../devops/nginx&cert.html">
+            
+                    
+                    nginx&cert
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../devops/ssh.html">
+            
+                <a href="../devops/ssh.html">
+            
+                    
+                    ssh
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="jenkins.html">
+            
+                <a href="jenkins.html">
+            
+                    
+                    jenkins
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.5.1" data-path="authorization.html">
+            
+                <a href="authorization.html">
+            
+                    
+                    permission & authorizationStrategy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="config/config.html">
+            
+                <a href="config/config.html">
+            
+                    
+                    config
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="config/windows.html">
+            
+                <a href="config/windows.html">
+            
+                    
+                    windows
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="jenkinsfile/jenkinsfile.html">
+            
+                <a href="jenkinsfile/jenkinsfile.html">
+            
+                    
+                    jenkinsfile
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="jenkinsfile/utility.html">
+            
+                <a href="jenkinsfile/utility.html">
+            
+                    
+                    utility
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="jenkinsfile/parallel.html">
+            
+                <a href="jenkinsfile/parallel.html">
+            
+                    
+                    parallel
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3" data-path="jenkinsfile/build.html">
+            
+                <a href="jenkinsfile/build.html">
+            
+                    
+                    build
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4" data-path="jenkinsfile/envvar.html">
+            
+                <a href="jenkinsfile/envvar.html">
+            
+                    
+                    envvar
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.5" data-path="jenkinsfile/properties.html">
+            
+                <a href="jenkinsfile/properties.html">
+            
+                    
+                    properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.6" data-path="jenkinsfile/trigger.html">
+            
+                <a href="jenkinsfile/trigger.html">
+            
+                    
+                    trigger
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.7" data-path="jenkinsfile/node.html">
+            
+                <a href="jenkinsfile/node.html">
+            
+                    
+                    node
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="script/script.html">
+            
+                <a href="script/script.html">
+            
+                    
+                    script
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.4.1" data-path="script/build.html">
+            
+                <a href="script/build.html">
+            
+                    
+                    jobs & builds
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.2" data-path="script/agent.html">
+            
+                <a href="script/agent.html">
+            
+                    
+                    agent
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.3" data-path="script/api.html">
+            
+                <a href="script/api.html">
+            
+                    
+                    api
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.4" data-path="script/cli.html">
+            
+                <a href="script/cli.html">
+            
+                    
+                    cli
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.5" data-path="script/tricky.html">
+            
+                <a href="script/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="plugins/plugins.html">
+            
+                <a href="plugins/plugins.html">
+            
+                    
+                    plugins
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="plugins/kubernetes.html">
+            
+                <a href="plugins/kubernetes.html">
+            
+                    
+                    kubernetes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.2" data-path="plugins/lockable-resource.html">
+            
+                <a href="plugins/lockable-resource.html">
+            
+                    
+                    lockable-resource
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="plugins/postbuild.html">
+            
+                <a href="plugins/postbuild.html">
+            
+                    
+                    postbuild
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.4" data-path="plugins/artifactory.html">
+            
+                <a href="plugins/artifactory.html">
+            
+                    
+                    artifactory
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.5" data-path="plugins/jira-steps.html">
+            
+                <a href="plugins/jira-steps.html">
+            
+                    
+                    jira-steps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.6" data-path="plugins/ansicolor.html">
+            
+                <a href="plugins/ansicolor.html">
+            
+                    
+                    ansicolor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.7" data-path="plugins/simple-theme.html">
+            
+                <a href="plugins/simple-theme.html">
+            
+                    
+                    simple-theme
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../virtualization/virtualization.html">
+            
+                <a href="../virtualization/virtualization.html">
+            
+                    
+                    virtualization
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../virtualization/kubernetes/kubernetes.html">
+            
+                <a href="../virtualization/kubernetes/kubernetes.html">
+            
+                    
+                    kubernetes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1.1" data-path="../virtualization/kubernetes/kubeadm/kubeadm.html">
+            
+                <a href="../virtualization/kubernetes/kubeadm/kubeadm.html">
+            
+                    
+                    kubeadm
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1.1.1" data-path="../virtualization/kubernetes/kubeadm/init.html">
+            
+                <a href="../virtualization/kubernetes/kubeadm/init.html">
+            
+                    
+                    init
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.2" data-path="../virtualization/kubernetes/kubectl.html">
+            
+                <a href="../virtualization/kubernetes/kubectl.html">
+            
+                    
+                    kubectl
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1.2.1" data-path="../virtualization/kubernetes/pod.html">
+            
+                <a href="../virtualization/kubernetes/pod.html">
+            
+                    
+                    pod
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.2.2" data-path="../virtualization/kubernetes/deploy.html">
+            
+                <a href="../virtualization/kubernetes/deploy.html">
+            
+                    
+                    deploy
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.2.3" data-path="../virtualization/kubernetes/replicaset.html">
+            
+                <a href="../virtualization/kubernetes/replicaset.html">
+            
+                    
+                    replicasets
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.3" data-path="../virtualization/kubernetes/certificates.html">
+            
+                <a href="../virtualization/kubernetes/certificates.html">
+            
+                    
+                    certificates
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.4" data-path="../virtualization/kubernetes/monitor.html">
+            
+                <a href="../virtualization/kubernetes/monitor.html">
+            
+                    
+                    monitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.5" data-path="../virtualization/kubernetes/namespace.html">
+            
+                <a href="../virtualization/kubernetes/namespace.html">
+            
+                    
+                    namespace
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.6" data-path="../virtualization/kubernetes/network.html">
+            
+                <a href="../virtualization/kubernetes/network.html">
+            
+                    
+                    network
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.7" data-path="../virtualization/kubernetes/events.html">
+            
+                <a href="../virtualization/kubernetes/events.html">
+            
+                    
+                    events
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.1.8" data-path="../virtualization/kubernetes/node.html">
+            
+                <a href="../virtualization/kubernetes/node.html">
+            
+                    
+                    node
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../virtualization/docker/docker.html">
+            
+                <a href="../virtualization/docker/docker.html">
+            
+                    
+                    docker
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.2.1" data-path="../virtualization/docker/tricky.html">
+            
+                <a href="../virtualization/docker/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../osx/osx.html">
+            
+                <a href="../osx/osx.html">
+            
+                    
+                    osx
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../osx/defaults.html">
+            
+                <a href="../osx/defaults.html">
+            
+                    
+                    defaults
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../osx/apps.html">
+            
+                <a href="../osx/apps.html">
+            
+                    
+                    apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../osx/util.html">
+            
+                <a href="../osx/util.html">
+            
+                    
+                    util
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../osx/system.html">
+            
+                <a href="../osx/system.html">
+            
+                    
+                    system
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../osx/tricky.html">
+            
+                <a href="../osx/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../linux/basic.html">
+            
+                <a href="../linux/basic.html">
+            
+                    
+                    linux
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../linux/util/util.html">
+            
+                <a href="../linux/util/util.html">
+            
+                    
+                    util
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1.1" data-path="../linux/util/date.html">
+            
+                <a href="../linux/util/date.html">
+            
+                    
+                    time & date
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.2" data-path="../linux/util/files&chars.html">
+            
+                <a href="../linux/util/files&chars.html">
+            
+                    
+                    files & chars
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.3" data-path="../linux/util/colors.html">
+            
+                <a href="../linux/util/colors.html">
+            
+                    
+                    colors & prompt
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.1.4" data-path="../linux/util/tricky.html">
+            
+                <a href="../linux/util/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../linux/disk.html">
+            
+                <a href="../linux/disk.html">
+            
+                    
+                    disk
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../linux/network.html">
+            
+                <a href="../linux/network.html">
+            
+                    
+                    network
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../linux/system.html">
+            
+                <a href="../linux/system.html">
+            
+                    
+                    system
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="../linux/ubuntu/ubuntu.html">
+            
+                <a href="../linux/ubuntu/ubuntu.html">
+            
+                    
+                    ubuntu
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.5.1" data-path="../linux/ubuntu/apps.html">
+            
+                <a href="../linux/ubuntu/apps.html">
+            
+                    
+                    apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5.2" data-path="../linux/ubuntu/installation.html">
+            
+                <a href="../linux/ubuntu/installation.html">
+            
+                    
+                    installation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5.3" data-path="../linux/ubuntu/repo.html">
+            
+                <a href="../linux/ubuntu/repo.html">
+            
+                    
+                    repo
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5.4" data-path="../linux/ubuntu/systemctl.html">
+            
+                <a href="../linux/ubuntu/systemctl.html">
+            
+                    
+                    systemctl
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5.5" data-path="../linux/ubuntu/x.html">
+            
+                <a href="../linux/ubuntu/x.html">
+            
+                    
+                    x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../programming/python/python.html">
+            
+                <a href="../programming/python/python.html">
+            
+                    
+                    programming
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../programming/groovy/groovy.html">
+            
+                <a href="../programming/groovy/groovy.html">
+            
+                    
+                    groovy
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1.1" data-path="../programming/groovy/groovydoc.html">
+            
+                <a href="../programming/groovy/groovydoc.html">
+            
+                    
+                    groovydoc
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.1.2" data-path="../programming/groovy/map.html">
+            
+                <a href="../programming/groovy/map.html">
+            
+                    
+                    map
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.1.3" data-path="../programming/groovy/utility.html">
+            
+                <a href="../programming/groovy/utility.html">
+            
+                    
+                    utility
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.1.4" data-path="../programming/groovy/tricky.html">
+            
+                <a href="../programming/groovy/tricky.html">
+            
+                    
+                    tricky
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../programming/python/python.html">
+            
+                <a href="../programming/python/python.html">
+            
+                    
+                    python
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.2.1" data-path="../programming/python/config.html">
+            
+                <a href="../programming/python/config.html">
+            
+                    
+                    config
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2.2" data-path="../programming/python/basic.html">
+            
+                <a href="../programming/python/basic.html">
+            
+                    
+                    basic
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2.3" data-path="../programming/python/list.html">
+            
+                <a href="../programming/python/list.html">
+            
+                    
+                    list
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2.4" data-path="../programming/python/pip.html">
+            
+                <a href="../programming/python/pip.html">
+            
+                    
+                    pip
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2.5" data-path="../programming/python/qa.html">
+            
+                <a href="../programming/python/qa.html">
+            
+                    
+                    q&a
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="../programming/others.html">
+            
+                <a href="../programming/others.html">
+            
+                    
+                    others
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="../programming/archive/archive.html">
+            
+                <a href="../programming/archive/archive.html">
+            
+                    
+                    archive
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.4.1" data-path="../programming/archive/angular/config.html">
+            
+                <a href="../programming/archive/angular/config.html">
+            
+                    
+                    angular
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4.2" data-path="../programming/archive/maven/">
+            
+                <a href="../programming/archive/maven/">
+            
+                    
+                    maven
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4.3" data-path="../programming/archive/mysql/installation/installDB.html">
+            
+                <a href="../programming/archive/mysql/installation/installDB.html">
+            
+                    
+                    mysql
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.4.3.1" data-path="../programming/archive/mysql/installation/installDB.html">
+            
+                <a href="../programming/archive/mysql/installation/installDB.html">
+            
+                    
+                    installation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.4.3.1.1" data-path="../programming/archive/mysql/installation/installDB.html">
+            
+                <a href="../programming/archive/mysql/installation/installDB.html">
+            
+                    
+                    installDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4.3.1.2" data-path="../programming/archive/mysql/installation/installFromSourceCode.html">
+            
+                <a href="../programming/archive/mysql/installation/installFromSourceCode.html">
+            
+                    
+                    installFromSourceCode
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4.3.1.3" data-path="../programming/archive/mysql/installation/secureInstation.html">
+            
+                <a href="../programming/archive/mysql/installation/secureInstation.html">
+            
+                    
+                    secureInstation
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4.3.2" data-path="../programming/archive/mysql/logs/cmakeLogs.md">
+            
+                <span>
+            
+                    
+                    logs
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4.4" data-path="../programming/archive/ruby/rubyInstallationBySourceCode.html">
+            
+                <a href="../programming/archive/ruby/rubyInstallationBySourceCode.html">
+            
+                    
+                    ruby
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.4.4.1" data-path="../programming/archive/ruby/rubyInstallationQ&A.html">
+            
+                <a href="../programming/archive/ruby/rubyInstallationQ&A.html">
+            
+                    
+                    rubyInstallationQ&A
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../tools/node/gitbook.html">
+            
+                <a href="../tools/node/gitbook.html">
+            
+                    
+                    tools
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../tools/node/node.html">
+            
+                <a href="../tools/node/node.html">
+            
+                    
+                    node & npm
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1.1" data-path="../tools/node/gitbook.html">
+            
+                <a href="../tools/node/gitbook.html">
+            
+                    
+                    gitbook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.1.2" data-path="../tools/node/hexo.html">
+            
+                <a href="../tools/node/hexo.html">
+            
+                    
+                    hexo
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.1.3" data-path="../tools/node/github.page.html">
+            
+                <a href="../tools/node/github.page.html">
+            
+                    
+                    github.page
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="../tools/ms.html">
+            
+                <a href="../tools/ms.html">
+            
+                    
+                    microsoft office
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../tools/virtualbox.html">
+            
+                <a href="../tools/virtualbox.html">
+            
+                    
+                    virtualbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../tools/iterm2.html">
+            
+                <a href="../tools/iterm2.html">
+            
+                    
+                    iterm2
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../tools/atlassian.html">
+            
+                <a href="../tools/atlassian.html">
+            
+                    
+                    Jira & Confluence
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.6" data-path="../tools/klocwork.html">
+            
+                <a href="../tools/klocwork.html">
+            
+                    
+                    klocwork
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.7" data-path="../tools/skype.html">
+            
+                <a href="../tools/skype.html">
+            
+                    
+                    skype
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.8" data-path="../tools/teamviewer.html">
+            
+                <a href="../tools/teamviewer.html">
+            
+                    
+                    teamviewer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.9" data-path="../tools/app.html">
+            
+                <a href="../tools/app.html">
+            
+                    
+                    app
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >permission & authorizationStrategy</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><ul><ul><li><span class="title-icon "></span><a href="#list-all-jenkins-supported-authorization-permissions"><b></b>list all Jenkins supported authorization permissions</a></li><li><span class="title-icon "></span><a href="#get-current-authorization-strategy-class"><b></b>get current authorization strategy class</a></li><li><span class="title-icon "></span><a href="#get-current-authorization-and-permissions-info"><b></b>get current authorization and permissions info</a></li><li><span class="title-icon "></span><a href="#projectmatrixauthorizationstrategy"><b></b>ProjectMatrixAuthorizationStrategy</a></li><li><span class="title-icon "></span><a href="#rolebasedauthorizationstrategy"><b></b>RoleBasedAuthorizationStrategy</a></li></ul></ul></ul></div><a href="#" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc" target="_blank">DocToc</a></em></p>
+<ul>
+<li><a href="#list-all-jenkins-supported-authorization-permissions">list all Jenkins supported authorization permissions</a></li>
+<li><a href="#get-current-authorization-strategy-class">get current authorization strategy class</a></li>
+<li><a href="#get-current-authorization-and-permissions-info">get current authorization and permissions info</a></li>
+<li><a href="#projectmatrixauthorizationstrategy">ProjectMatrixAuthorizationStrategy</a></li>
+<li><a href="#rolebasedauthorizationstrategy">RoleBasedAuthorizationStrategy</a></li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<blockquote>
+<p>reference:</p>
+<ul>
+<li><a href="https://javadoc.jenkins.io/hudson/security/Permission.html" target="_blank">hudson.security.Permission</a></li>
+<li><a href="https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/ProjectMatrixAuthorizationStrategy.html" target="_blank">hudson.security.ProjectMatrixAuthorizationStrategy</a></li>
+<li><a href="https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java" target="_blank">matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java</a></li>
+<li><a href="https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list" target="_blank">How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move</a></li>
+</ul>
+</blockquote>
+<h3 id="list-all-jenkins-supported-authorization-permissions"><a name="list-all-jenkins-supported-authorization-permissions" class="anchor-navigation-ex-anchor" href="#list-all-jenkins-supported-authorization-permissions"><i class="fa fa-link" aria-hidden="true"></i></a><a name="list-all-jenkins-supported-authorization-permissions" class="plugin-anchor" href="#list-all-jenkins-supported-authorization-permissions"><i class="fa fa-link" aria-hidden="true"></i></a><a href="https://stackoverflow.com/a/58035811/2940319" target="_blank">list all Jenkins supported authorization permissions</a></h3>
+<pre class="language-"><code class="lang-groovy">hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>Permission<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>each <span class="token punctuation">{</span> p <span class="token operator">-&gt;</span>
+  println <span class="token string">&quot;${p.name} :\n&quot;</span> <span class="token operator">+</span>
+          <span class="token string">&quot;\t${p.id} : ${p.description}&quot;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li><p><a href="https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027" target="_blank">better one</a></p>
+<pre class="language-"><code class="lang-groovy"><span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>GlobalMatrixAuthorizationStrategy
+<span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>Permission
+<span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>ProjectMatrixAuthorizationStrategy
+<span class="token keyword">import</span> jenkins<span class="token punctuation">.</span>model<span class="token punctuation">.</span>Jenkins
+
+String <span class="token function">shortName</span><span class="token punctuation">(</span> Permission p <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  p<span class="token punctuation">.</span>id<span class="token punctuation">.</span><span class="token function">tokenize</span><span class="token punctuation">(</span><span class="token string">&apos;.&apos;</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token operator">..</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">&apos; &apos;</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">&apos;Hudson&apos;</span><span class="token punctuation">,</span><span class="token string">&apos;Overall&apos;</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">&apos;Computer&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;Agent&apos;</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">&apos;Item&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;Job&apos;</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">&apos;CredentialsProvider&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;Credentials&apos;</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Permission<span class="token operator">&gt;</span> permissionIds <span class="token operator">=</span> Permission<span class="token punctuation">.</span>all<span class="token punctuation">.</span>findAll <span class="token punctuation">{</span> permission <span class="token operator">-&gt;</span>
+  List<span class="token operator">&lt;</span>String<span class="token operator">&gt;</span> nonConfigurablePerms <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">&apos;RunScripts&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;UploadPlugins&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;ConfigureUpdateCenter&apos;</span><span class="token punctuation">]</span>
+  permission<span class="token punctuation">.</span>enabled <span class="token operator">&amp;&amp;</span>
+    <span class="token operator">!</span>permission<span class="token punctuation">.</span>id<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">&apos;hudson.security.Permission&apos;</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+    <span class="token operator">!</span><span class="token punctuation">(</span><span class="token boolean">true</span> <span class="token keyword">in</span> nonConfigurablePerms<span class="token punctuation">.</span>collect <span class="token punctuation">{</span> permission<span class="token punctuation">.</span>id<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">.</span>collect <span class="token punctuation">{</span> permission <span class="token operator">-&gt;</span>
+  <span class="token punctuation">[</span> <span class="token punctuation">(</span><span class="token function">shortName</span><span class="token punctuation">(</span>permission<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span> permission <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+</li>
+</ul>
+<h3 id="get-current-authorization-strategy-class"><a name="get-current-authorization-strategy-class" class="anchor-navigation-ex-anchor" href="#get-current-authorization-strategy-class"><i class="fa fa-link" aria-hidden="true"></i></a><a name="get-current-authorization-strategy-class" class="plugin-anchor" href="#get-current-authorization-strategy-class"><i class="fa fa-link" aria-hidden="true"></i></a>get current authorization strategy class</h3>
+<pre class="language-"><code class="lang-groovy"><span class="token keyword">import</span> hudson<span class="token punctuation">.</span>model<span class="token punctuation">.</span>*
+<span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>*
+
+Hudson instance <span class="token operator">=</span> Jenkins<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> strategy <span class="token operator">=</span> instance<span class="token punctuation">.</span><span class="token function">getAuthorizationStrategy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+println strategy<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li>result<pre class="language-"><code>class hudson.security.ProjectMatrixAuthorizationStrategy
+</code></pre></li>
+</ul>
+<h3 id="get-current-authorization-and-permissions-info"><a name="get-current-authorization-and-permissions-info" class="anchor-navigation-ex-anchor" href="#get-current-authorization-and-permissions-info"><i class="fa fa-link" aria-hidden="true"></i></a><a name="get-current-authorization-and-permissions-info" class="plugin-anchor" href="#get-current-authorization-and-permissions-info"><i class="fa fa-link" aria-hidden="true"></i></a>get current authorization and permissions info</h3>
+<pre class="language-"><code class="lang-groovy">Jenkins<span class="token punctuation">.</span>instance<span class="token punctuation">.</span>authorizationStrategy<span class="token punctuation">.</span>grantedPermissions<span class="token punctuation">.</span>collect<span class="token punctuation">{</span> p<span class="token punctuation">,</span> u <span class="token operator">-&gt;</span>
+  println <span class="token string">&quot;\n${p} :\n\t${u}&quot;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>or<pre class="language-"><code class="lang-groovy">Jenkins<span class="token punctuation">.</span>instance<span class="token punctuation">.</span>authorizationStrategy<span class="token punctuation">.</span>grantedPermissions<span class="token punctuation">.</span>collect<span class="token punctuation">{</span> p<span class="token punctuation">,</span> u <span class="token operator">-&gt;</span>
+  <span class="token punctuation">[</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">,</span> u <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+```</li>
+</ul>
+<h3 id="projectmatrixauthorizationstrategy"><a name="projectmatrixauthorizationstrategy" class="anchor-navigation-ex-anchor" href="#projectmatrixauthorizationstrategy"><i class="fa fa-link" aria-hidden="true"></i></a><a name="projectmatrixauthorizationstrategy" class="plugin-anchor" href="#projectmatrixauthorizationstrategy"><i class="fa fa-link" aria-hidden="true"></i></a>ProjectMatrixAuthorizationStrategy</h3>
+<h4 id="create-new-instance"><a name="create-new-instance" class="anchor-navigation-ex-anchor" href="#create-new-instance"><i class="fa fa-link" aria-hidden="true"></i></a><a name="create-new-instance" class="plugin-anchor" href="#create-new-instance"><i class="fa fa-link" aria-hidden="true"></i></a>create new instance</h4>
+<ul>
+<li><p><code>new</code></p>
+<pre class="language-"><code class="lang-groovy"><span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>*
+ProjectMatrixAuthorizationStrategy authorizationStrategy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ProjectMatrixAuthorizationStrategy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+</li>
+<li><p><a href="https://stackoverflow.com/a/47486042/2940319" target="_blank">via <code>getAuthorizationStrategy</code></a></p>
+<pre class="language-"><code class="lang-groovy"><span class="token keyword">import</span> hudson<span class="token punctuation">.</span>model<span class="token punctuation">.</span>*
+<span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>*
+
+<span class="token keyword">def</span> strategy <span class="token operator">=</span> Jenkins<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getAuthorizationStrategy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> authorizationStrategy <span class="token operator">=</span> strategy<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+</li>
+<li><p>get groups list</p>
+<pre class="language-"><code class="lang-groovy"><span class="token keyword">import</span> hudson<span class="token punctuation">.</span>model<span class="token punctuation">.</span>*
+<span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>*
+
+ProjectMatrixAuthorizationStrategy authorizationStrategy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ProjectMatrixAuthorizationStrategy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+println authorizationStrategy<span class="token punctuation">.</span><span class="token function">getGroups</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+</li>
+</ul>
+<h3 id="rolebasedauthorizationstrategy"><a name="rolebasedauthorizationstrategy" class="anchor-navigation-ex-anchor" href="#rolebasedauthorizationstrategy"><i class="fa fa-link" aria-hidden="true"></i></a><a name="rolebasedauthorizationstrategy" class="plugin-anchor" href="#rolebasedauthorizationstrategy"><i class="fa fa-link" aria-hidden="true"></i></a>RoleBasedAuthorizationStrategy</h3>
+<h4 id="add-admin-user-to-all-permissions"><a name="add-admin-user-to-all-permissions" class="anchor-navigation-ex-anchor" href="#add-admin-user-to-all-permissions"><i class="fa fa-link" aria-hidden="true"></i></a><a name="add-admin-user-to-all-permissions" class="plugin-anchor" href="#add-admin-user-to-all-permissions"><i class="fa fa-link" aria-hidden="true"></i></a>add &apos;admin&apos; user to all permissions</h4>
+<pre class="language-"><code class="lang-groovy">  <span class="token keyword">import</span> hudson<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> jenkins<span class="token punctuation">.</span>model<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> com<span class="token punctuation">.</span>michelin<span class="token punctuation">.</span>cio<span class="token punctuation">.</span>hudson<span class="token punctuation">.</span>plugins<span class="token punctuation">.</span>rolestrategy<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> com<span class="token punctuation">.</span>synopsys<span class="token punctuation">.</span>arc<span class="token punctuation">.</span>jenkins<span class="token punctuation">.</span>plugins<span class="token punctuation">.</span>rolestrategy<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>logging<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> groovy<span class="token punctuation">.</span>json<span class="token punctuation">.</span>*
+
+  <span class="token keyword">import</span> jenkins<span class="token punctuation">.</span>*
+  <span class="token keyword">import</span> com<span class="token punctuation">.</span>michelin<span class="token punctuation">.</span>cio<span class="token punctuation">.</span>hudson<span class="token punctuation">.</span>plugins<span class="token punctuation">.</span>rolestrategy<span class="token punctuation">.</span>*
+
+  String admin <span class="token operator">=</span> <span class="token string">&apos;admin&apos;</span>
+
+  <span class="token comment">// Turn security on</span>
+  RoleBasedAuthorizationStrategy authorizationStrategy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RoleBasedAuthorizationStrategy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token comment">// ProjectMatrixAuthorizationStrategy authorizationStrategy = new ProjectMatrixAuthorizationStrategy()</span>
+  Jenkins<span class="token punctuation">.</span>instance<span class="token punctuation">.</span><span class="token function">setAuthorizationStrategy</span><span class="token punctuation">(</span>authorizationStrategy<span class="token punctuation">)</span>
+
+  Constructor<span class="token punctuation">[</span><span class="token punctuation">]</span> constrs <span class="token operator">=</span> Role<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getConstructors</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>Constructor<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">&gt;</span> c <span class="token punctuation">:</span> constrs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    c<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  Method assignRoleMethod <span class="token operator">=</span> RoleBasedAuthorizationStrategy<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getDeclaredMethod</span><span class="token punctuation">(</span> <span class="token string">&quot;assignRole&quot;</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> Role<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span>
+  assignRoleMethod<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span> <span class="token boolean">true</span> <span class="token punctuation">)</span>
+  Set<span class="token operator">&lt;</span>Permission<span class="token operator">&gt;</span> adminPermissions <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashSet</span><span class="token operator">&lt;</span>Permission<span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  hudson<span class="token punctuation">.</span>security<span class="token punctuation">.</span>Permission<span class="token punctuation">.</span><span class="token function">getAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span> adminPermissions<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>Permission<span class="token punctuation">.</span><span class="token function">fromId</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span> <span class="token punctuation">}</span>
+  Role adminRole <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Role</span><span class="token punctuation">(</span> admin<span class="token punctuation">,</span> adminPermissions <span class="token punctuation">)</span>
+  authorizationStrategy<span class="token punctuation">.</span><span class="token function">addRole</span><span class="token punctuation">(</span> RoleBasedAuthorizationStrategy<span class="token punctuation">.</span>GLOBAL<span class="token punctuation">,</span> adminRole <span class="token punctuation">)</span>
+</code></pre>
+<footer class="page-footer"><span class="copyright">Copyright &#xA9; marslo 2020-2021 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">Last Modified:
+2021-06-04 19:21:07
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="jenkins.html" class="navigation navigation-prev " aria-label="Previous page: jenkins">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="config/config.html" class="navigation navigation-next " aria-label="Next page: config">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"permission & authorizationStrategy","level":"1.5.1","depth":2,"next":{"title":"config","level":"1.5.2","depth":2,"path":"jenkins/config/config.md","ref":"jenkins/config/config.md","articles":[{"title":"windows","level":"1.5.2.1","depth":3,"path":"jenkins/config/windows.md","ref":"jenkins/config/windows.md","articles":[]}]},"previous":{"title":"jenkins","level":"1.5","depth":1,"path":"jenkins/jenkins.md","ref":"jenkins/jenkins.md","articles":[{"title":"permission & authorizationStrategy","level":"1.5.1","depth":2,"path":"jenkins/authorization.md","ref":"jenkins/authorization.md","articles":[]},{"title":"config","level":"1.5.2","depth":2,"path":"jenkins/config/config.md","ref":"jenkins/config/config.md","articles":[{"title":"windows","level":"1.5.2.1","depth":3,"path":"jenkins/config/windows.md","ref":"jenkins/config/windows.md","articles":[]}]},{"title":"jenkinsfile","level":"1.5.3","depth":2,"path":"jenkins/jenkinsfile/jenkinsfile.md","ref":"jenkins/jenkinsfile/jenkinsfile.md","articles":[{"title":"utility","level":"1.5.3.1","depth":3,"path":"jenkins/jenkinsfile/utility.md","ref":"jenkins/jenkinsfile/utility.md","articles":[]},{"title":"parallel","level":"1.5.3.2","depth":3,"path":"jenkins/jenkinsfile/parallel.md","ref":"jenkins/jenkinsfile/parallel.md","articles":[]},{"title":"build","level":"1.5.3.3","depth":3,"path":"jenkins/jenkinsfile/build.md","ref":"jenkins/jenkinsfile/build.md","articles":[]},{"title":"envvar","level":"1.5.3.4","depth":3,"path":"jenkins/jenkinsfile/envvar.md","ref":"jenkins/jenkinsfile/envvar.md","articles":[]},{"title":"properties","level":"1.5.3.5","depth":3,"path":"jenkins/jenkinsfile/properties.md","ref":"jenkins/jenkinsfile/properties.md","articles":[]},{"title":"trigger","level":"1.5.3.6","depth":3,"path":"jenkins/jenkinsfile/trigger.md","ref":"jenkins/jenkinsfile/trigger.md","articles":[]},{"title":"node","level":"1.5.3.7","depth":3,"path":"jenkins/jenkinsfile/node.md","ref":"jenkins/jenkinsfile/node.md","articles":[]}]},{"title":"script","level":"1.5.4","depth":2,"path":"jenkins/script/script.md","ref":"jenkins/script/script.md","articles":[{"title":"jobs & builds","level":"1.5.4.1","depth":3,"path":"jenkins/script/build.md","ref":"jenkins/script/build.md","articles":[]},{"title":"agent","level":"1.5.4.2","depth":3,"path":"jenkins/script/agent.md","ref":"jenkins/script/agent.md","articles":[]},{"title":"api","level":"1.5.4.3","depth":3,"path":"jenkins/script/api.md","ref":"jenkins/script/api.md","articles":[]},{"title":"cli","level":"1.5.4.4","depth":3,"path":"jenkins/script/cli.md","ref":"jenkins/script/cli.md","articles":[]},{"title":"tricky","level":"1.5.4.5","depth":3,"path":"jenkins/script/tricky.md","ref":"jenkins/script/tricky.md","articles":[]}]},{"title":"plugins","level":"1.5.5","depth":2,"path":"jenkins/plugins/plugins.md","ref":"jenkins/plugins/plugins.md","articles":[{"title":"kubernetes","level":"1.5.5.1","depth":3,"path":"jenkins/plugins/kubernetes.md","ref":"jenkins/plugins/kubernetes.md","articles":[]},{"title":"lockable-resource","level":"1.5.5.2","depth":3,"path":"jenkins/plugins/lockable-resource.md","ref":"jenkins/plugins/lockable-resource.md","articles":[]},{"title":"postbuild","level":"1.5.5.3","depth":3,"path":"jenkins/plugins/postbuild.md","ref":"jenkins/plugins/postbuild.md","articles":[]},{"title":"artifactory","level":"1.5.5.4","depth":3,"path":"jenkins/plugins/artifactory.md","ref":"jenkins/plugins/artifactory.md","articles":[]},{"title":"jira-steps","level":"1.5.5.5","depth":3,"path":"jenkins/plugins/jira-steps.md","ref":"jenkins/plugins/jira-steps.md","articles":[]},{"title":"ansicolor","level":"1.5.5.6","depth":3,"path":"jenkins/plugins/ansicolor.md","ref":"jenkins/plugins/ansicolor.md","articles":[]},{"title":"simple-theme","level":"1.5.5.7","depth":3,"path":"jenkins/plugins/simple-theme.md","ref":"jenkins/plugins/simple-theme.md","articles":[]}]}]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-livereload","search-plus","edit-link","-disqus","prism","advanced-emoji","anchors","splitter","favicon","todo","flexible-alerts","-sharing","sharing-plus","sectionx","hints","anchor-navigation-ex","expandable-chapters-small","code","-include-codeblock","codeblock-filename","codetabs","codesnippet","codegroup","-ace","-copy-code-button","emphasize","tbfed-pagefooter","image-captions","todo","github-buttons","hide-element","accordion"],"root":"./docs","styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright © marslo 2020-2021","modify_label":"Last Modified:","modify_format":"YYYY-MM-DD HH:mm:ss"},"prism":{"css":["prismjs/themes/prism-solarizedlight.css"]},"disqus":{"shortName":"mbooks"},"emphasize":{},"todo":{},"splitter":{},"accordion":{},"codetabs":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"hints":{"danger":"fa fa-exclamation-cicle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"code":{"copyButtons":true},"codesnippet":{},"hide-element":{"elements":[".gitbook-link"]},"codegroup":{"defaultTabName":"Code","rememberTabs":true,"tabNameSeperator":"::"},"fontsettings":{"theme":"white","family":"sans","size":1},"sectionx":{"tag":"b"},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"floatIcon":"fa fa-navicon","level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"printLog":false,"showGoTop":true,"showLevel":false},"favicon":{"shortcut":"assets/images/favicon.ico","bookmark":"assets/images/favicon.ico","appleTouch":"assets/images/apple-touch-icon.png","appleTouchMore":{"120x120":"assets/images/apple-touch-icon-120x120.png","180x180":"assets/images/apple-touch-icon-180x180.png"}},"codeblock-filename":{},"github-buttons":{"buttons":[{"user":"marslo","repo":"ibook","type":"star","size":"small"}]},"expandable-chapters-small":{},"flexible-alerts":{"danger":{"className":"danger","icon":"fa fa-ban","label":"Attention"},"note":{"className":"info","icon":"fa fa-info-circle","label":"Note"},"style":"flat","tip":{"className":"tip","icon":"fa fa-lightbulb-o","label":"Tip"},"warning":{"className":"warning","icon":"fa fa-exclamation-triangle","label":"Warning"}},"advanced-emoji":{"embedEmojis":false},"include-codeblock":{"template":"acefull","unindent":true,"theme":"solarized_dark"},"sharing":{"qq":false,"all":["facebook","google","twitter","weibo","instapaper","linkedin","pocket"],"douban":false,"facebook":false,"weibo":true,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":false,"messenger":false,"line":false,"vk":false,"pocket":false,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"edit-link":{"label":"Edit in Github","base":"https://github.com/marslo/ibook/edit/marslo"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"search-plus":{},"image-captions":{"caption":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","variable_name":"_pictures"}},"theme":"default","author":"marslo","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"_pictures":[{"backlink":"artifactory/artifactory.html#fig1.2.1","level":"1.2","list_caption":"Figure: allow temp && demo, and disallow sprint && weekly","alt":"allow temp && demo, and disallow sprint && weekly","nro":1,"url":"../screenshot/artifactory/repo-permission.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"allow temp && demo, and disallow sprint && weekly","attributes":{},"skip":false,"key":"1.2.1"},{"backlink":"cheatsheet/vim/tricky.html#fig1.3.1.1.1","level":"1.3.1.1","list_caption":"Figure: J-gJ","alt":"J-gJ","nro":2,"url":"../../screenshot/vim/J-gJ.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"J-gJ","attributes":{},"skip":false,"key":"1.3.1.1.1"},{"backlink":"cheatsheet/vim/tricky.html#fig1.3.1.1.2","level":"1.3.1.1","list_caption":"Figure: search-case-sensitive","alt":"search-case-sensitive","nro":3,"url":"../../screenshot/vim/search-ignoreCase.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"search-case-sensitive","attributes":{},"skip":false,"key":"1.3.1.1.2"},{"backlink":"cheatsheet/vim/windows.html#fig1.3.1.2.1","level":"1.3.1.2","list_caption":"Figure: resize","alt":"resize","nro":4,"url":"../../screenshot/vim/resize.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"resize","attributes":{},"skip":false,"key":"1.3.1.2.1"},{"backlink":"cheatsheet/vim/windows.html#fig1.3.1.2.2","level":"1.3.1.2","list_caption":"Figure: vertical resize","alt":"vertical resize","nro":5,"url":"../../screenshot/vim/resize-vertical.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vertical resize","attributes":{},"skip":false,"key":"1.3.1.2.2"},{"backlink":"cheatsheet/vim/windows.html#fig1.3.1.2.3","level":"1.3.1.2","list_caption":"Figure: quickfix windows","alt":"quickfix windows","nro":6,"url":"../../screenshot/vim/vimgrep-quckfix-window.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"quickfix windows","attributes":{},"skip":false,"key":"1.3.1.2.3"},{"backlink":"cheatsheet/vim/plugins.html#fig1.3.1.3.1","level":"1.3.1.3","list_caption":"Figure: tabularize","alt":"tabularize","nro":7,"url":"../../screenshot/vim/tabularize/tabu.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize","attributes":{},"skip":false,"key":"1.3.1.3.1"},{"backlink":"cheatsheet/vim/plugins.html#fig1.3.1.3.2","level":"1.3.1.3","list_caption":"Figure: tabularize-5","alt":"tabularize-5","nro":8,"url":"../../screenshot/vim/tabularize/tabularize-5.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-5","attributes":{},"skip":false,"key":"1.3.1.3.2"},{"backlink":"cheatsheet/vim/plugins.html#fig1.3.1.3.3","level":"1.3.1.3","list_caption":"Figure: tabularize-3","alt":"tabularize-3","nro":9,"url":"../../screenshot/vim/tabularize/tabularize-3.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-3","attributes":{},"skip":false,"key":"1.3.1.3.3"},{"backlink":"cheatsheet/vim/plugins.html#fig1.3.1.3.4","level":"1.3.1.3","list_caption":"Figure: tabularize-4","alt":"tabularize-4","nro":10,"url":"../../screenshot/vim/tabularize/tabularize-4.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-4","attributes":{},"skip":false,"key":"1.3.1.3.4"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.2.1","level":"1.3.2","list_caption":"Figure: new","alt":"new","nro":11,"url":"../../screenshot/win/cmd-admin-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"new","attributes":{},"skip":false,"key":"1.3.2.1"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.2.2","level":"1.3.2","list_caption":"Figure: new","alt":"new","nro":12,"url":"../../screenshot/win/cmd-admin-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"new","attributes":{},"skip":false,"key":"1.3.2.2"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.2.3","level":"1.3.2","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":13,"url":"../../screenshot/win/cmd-admin-3.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.2.3"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.2.4","level":"1.3.2","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":14,"url":"../../screenshot/win/cmd-admin-5.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.2.4"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.2.5","level":"1.3.2","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":15,"url":"../../screenshot/win/cmd-admin-6.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.2.5"},{"backlink":"cheatsheet/windows/windows.html#fig1.3.2.6","level":"1.3.2","list_caption":"Figure: cmdadm","alt":"cmdadm","nro":16,"url":"../../screenshot/win/cmd-admin-7.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"cmdadm","attributes":{},"skip":false,"key":"1.3.2.6"},{"backlink":"cheatsheet/media.html#fig1.3.5.1","level":"1.3.5","list_caption":"Figure: combine","alt":"combine","nro":17,"url":"../screenshot/ffmpeg-combine.jpg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"combine","attributes":{},"skip":false,"key":"1.3.5.1"},{"backlink":"cheatsheet/media.html#fig1.3.5.2","level":"1.3.5","list_caption":"Figure: magick","alt":"magick","nro":18,"url":"../screenshot/heic-1.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"magick","attributes":{},"skip":false,"key":"1.3.5.2"},{"backlink":"cheatsheet/osx.html#fig1.3.6.1","level":"1.3.6","list_caption":"Figure: system-info","alt":"system-info","nro":19,"url":"../screenshot/osx/system_info.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"system-info","attributes":{},"skip":false,"key":"1.3.6.1"},{"backlink":"devops/adminTools.html#fig1.4.1","level":"1.4","list_caption":"Figure: vnstat","alt":"vnstat","nro":20,"url":"../screenshot/vnstat.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vnstat","attributes":{},"skip":false,"key":"1.4.1"},{"backlink":"devops/adminTools.html#fig1.4.2","level":"1.4","list_caption":"Figure: ipcalc","alt":"ipcalc","nro":21,"url":"../screenshot/ipcalc.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ipcalc","attributes":{},"skip":false,"key":"1.4.2"},{"backlink":"devops/adminTools.html#fig1.4.3","level":"1.4","list_caption":"Figure: dstat","alt":"dstat","nro":22,"url":"../screenshot/dstat.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"dstat","attributes":{},"skip":false,"key":"1.4.3"},{"backlink":"devops/git/git.html#fig1.4.1.1","level":"1.4.1","list_caption":"Figure: git rebase and squash automatic","alt":"git rebase and squash automatic","nro":23,"url":"../../screenshot/git/gitrebase-isquash-auto.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git rebase and squash automatic","attributes":{},"skip":false,"key":"1.4.1.1"},{"backlink":"devops/git/git.html#fig1.4.1.2","level":"1.4.1","list_caption":"Figure: rebase -i --root","alt":"rebase -i --root","nro":24,"url":"../../screenshot/rebase-i-root.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"rebase -i --root","attributes":{},"skip":false,"key":"1.4.1.2"},{"backlink":"devops/git/eol.html#fig1.4.1.2.1","level":"1.4.1.2","list_caption":"Figure: git line ending setup","alt":"git line ending setup","nro":25,"url":"../../screenshot/git-eol.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git line ending setup","attributes":{},"skip":false,"key":"1.4.1.2.1"},{"backlink":"devops/git/gerrit.html#fig1.4.1.4.1","level":"1.4.1.4","list_caption":"Figure: non author cr","alt":"non author cr","nro":26,"url":"../../screenshot/gerrit/none-author-CR.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"non author cr","attributes":{},"skip":false,"key":"1.4.1.4.1"},{"backlink":"devops/git/gerrit.html#fig1.4.1.4.2","level":"1.4.1.4","list_caption":"Figure: optional-check","alt":"optional-check","nro":27,"url":"../../screenshot/gerrit/optional_ticket_check-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check","attributes":{},"skip":false,"key":"1.4.1.4.2"},{"backlink":"devops/git/gerrit.html#fig1.4.1.4.3","level":"1.4.1.4","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":28,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.4.1.4.3"},{"backlink":"devops/git/gerrit.html#fig1.4.1.4.4","level":"1.4.1.4","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":29,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.4.1.4.4"},{"backlink":"devops/git/gerrit.html#fig1.4.1.4.5","level":"1.4.1.4","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":30,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.4.1.4.5"},{"backlink":"devops/git/gerrit.html#fig1.4.1.4.6","level":"1.4.1.4","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":31,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.4.1.4.6"},{"backlink":"devops/network.html#fig1.4.6.1","level":"1.4.6","list_caption":"Figure: nmcli-1","alt":"nmcli-1","nro":32,"url":"../screenshot/nmcli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-1","attributes":{},"skip":false,"key":"1.4.6.1"},{"backlink":"devops/network.html#fig1.4.6.2","level":"1.4.6","list_caption":"Figure: nmcli-2","alt":"nmcli-2","nro":33,"url":"../screenshot/nmcli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-2","attributes":{},"skip":false,"key":"1.4.6.2"},{"backlink":"jenkins/jenkins.html#fig1.5.1","level":"1.5","list_caption":"Figure: jenkins crumb","alt":"jenkins crumb","nro":34,"url":"../screenshot/jenkins/jenkins-crumb.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins crumb","attributes":{},"skip":false,"key":"1.5.1"},{"backlink":"jenkins/config/windows.html#fig1.5.2.1.1","level":"1.5.2.1","list_caption":"Figure: config","alt":"config","nro":35,"url":"../../screenshot/jenkins/config/win-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"config","attributes":{},"skip":false,"key":"1.5.2.1.1"},{"backlink":"jenkins/config/windows.html#fig1.5.2.1.2","level":"1.5.2.1","list_caption":"Figure: start server manually","alt":"start server manually","nro":36,"url":"../../screenshot/jenkins/config/win-3.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"start server manually","attributes":{},"skip":false,"key":"1.5.2.1.2"},{"backlink":"jenkins/config/windows.html#fig1.5.2.1.3","level":"1.5.2.1","list_caption":"Figure: run as administrator","alt":"run as administrator","nro":37,"url":"../../screenshot/jenkins/config/win-6.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"run as administrator","attributes":{},"skip":false,"key":"1.5.2.1.3"},{"backlink":"jenkins/config/windows.html#fig1.5.2.1.4","level":"1.5.2.1","list_caption":"Figure: sc","alt":"sc","nro":38,"url":"../../screenshot/jenkins/config/win-7.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sc","attributes":{},"skip":false,"key":"1.5.2.1.4"},{"backlink":"jenkins/config/windows.html#fig1.5.2.1.5","level":"1.5.2.1","list_caption":"Figure: restart when anything abnormal","alt":"restart when anything abnormal","nro":39,"url":"../../screenshot/jenkins/config/win-8.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"restart when anything abnormal","attributes":{},"skip":false,"key":"1.5.2.1.5"},{"backlink":"jenkins/config/windows.html#fig1.5.2.1.6","level":"1.5.2.1","list_caption":"Figure: remove service","alt":"remove service","nro":40,"url":"../../screenshot/jenkins/config/win-9.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"remove service","attributes":{},"skip":false,"key":"1.5.2.1.6"},{"backlink":"jenkins/jenkinsfile/jenkinsfile.html#fig1.5.3.1","level":"1.5.3","list_caption":"Figure: customized display name","alt":"customized display name","nro":41,"url":"../../screenshot/jenkins/showDisplayName.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"customized display name","attributes":{},"skip":false,"key":"1.5.3.1"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.5.3.3.1","level":"1.5.3.3","list_caption":"Figure: build downstream jobs","alt":"build downstream jobs","nro":42,"url":"../../screenshot/jenkins/trigger-downstream.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"build downstream jobs","attributes":{},"skip":false,"key":"1.5.3.3.1"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.5.3.3.2","level":"1.5.3.3","list_caption":"Figure: warnError","alt":"warnError","nro":43,"url":"../../screenshot/jenkins/warnError.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"warnError","attributes":{},"skip":false,"key":"1.5.3.3.2"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.5.3.3.3","level":"1.5.3.3","list_caption":"Figure: catchError","alt":"catchError","nro":44,"url":"../../screenshot/jenkins/catchError.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"catchError","attributes":{},"skip":false,"key":"1.5.3.3.3"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.5.3.3.4","level":"1.5.3.3","list_caption":"Figure: Jenkins Result Status","alt":"Jenkins Result Status","nro":45,"url":"../../screenshot/jenkins/Result.isWorthThan.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Jenkins Result Status","attributes":{},"skip":false,"key":"1.5.3.3.4"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.5.3.5.1","level":"1.5.3.5","list_caption":"Figure: parameters","alt":"parameters","nro":46,"url":"../../screenshot/jenkins/properties-parameters.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"parameters","attributes":{},"skip":false,"key":"1.5.3.5.1"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.5.3.5.2","level":"1.5.3.5","list_caption":"Figure: active choice with mixed options","alt":"active choice with mixed options","nro":47,"url":"../../screenshot/jenkins/active_choice_mixed.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"active choice with mixed options","attributes":{},"skip":false,"key":"1.5.3.5.2"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.5.3.5.3","level":"1.5.3.5","list_caption":"Figure: active choice","alt":"active choice","nro":48,"url":"../../screenshot/jenkins/active_choice.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"active choice","attributes":{},"skip":false,"key":"1.5.3.5.3"},{"backlink":"jenkins/script/cli.html#fig1.5.4.4.1","level":"1.5.4.4","list_caption":"Figure: jenkins-cli-port","alt":"jenkins-cli-port","nro":49,"url":"../../screenshot/jenkins/jenkins-cli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-port","attributes":{},"skip":false,"key":"1.5.4.4.1"},{"backlink":"jenkins/script/cli.html#fig1.5.4.4.2","level":"1.5.4.4","list_caption":"Figure: jenkins-cli-ssh","alt":"jenkins-cli-ssh","nro":50,"url":"../../screenshot/jenkins/jenkins-cli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-ssh","attributes":{},"skip":false,"key":"1.5.4.4.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.5.1.1","level":"1.5.5.1","list_caption":"Figure: plugin-1","alt":"plugin-1","nro":51,"url":"../../screenshot/k8s-plugin-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-1","attributes":{},"skip":false,"key":"1.5.5.1.1"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.5.1.2","level":"1.5.5.1","list_caption":"Figure: plugin-2","alt":"plugin-2","nro":52,"url":"../../screenshot/k8s-plugin-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-2","attributes":{},"skip":false,"key":"1.5.5.1.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.5.1.3","level":"1.5.5.1","list_caption":"Figure: plugin-3","alt":"plugin-3","nro":53,"url":"../../screenshot/k8s-plugin-3.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-3","attributes":{},"skip":false,"key":"1.5.5.1.3"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.5.1.4","level":"1.5.5.1","list_caption":"Figure: plugin-4","alt":"plugin-4","nro":54,"url":"../../screenshot/k8s-plugin-4.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-4","attributes":{},"skip":false,"key":"1.5.5.1.4"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.5.5.1.5","level":"1.5.5.1","list_caption":"Figure: plugin-5","alt":"plugin-5","nro":55,"url":"../../screenshot/k8s-plugin-5.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-5","attributes":{},"skip":false,"key":"1.5.5.1.5"},{"backlink":"jenkins/plugins/postbuild.html#fig1.5.5.3.1","level":"1.5.5.3","list_caption":"Figure: using icon from another plugin","alt":"using icon from another plugin","nro":56,"url":"../../screenshot/jenkins/badge.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"using icon from another plugin","attributes":{},"skip":false,"key":"1.5.5.3.1"},{"backlink":"jenkins/plugins/ansicolor.html#fig1.5.5.6.1","level":"1.5.5.6","list_caption":"Figure: ansicolor 256 colors","alt":"ansicolor 256 colors","nro":57,"url":"../../screenshot/jenkins/ansicolor-256.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ansicolor 256 colors","attributes":{},"skip":false,"key":"1.5.5.6.1"},{"backlink":"jenkins/plugins/ansicolor.html#fig1.5.5.6.2","level":"1.5.5.6","list_caption":"Figure: ansicolor 256 with name","alt":"ansicolor 256 with name","nro":58,"url":"../../screenshot/jenkins/ansicolor-256-withname.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ansicolor 256 with name","attributes":{},"skip":false,"key":"1.5.5.6.2"},{"backlink":"virtualization/kubernetes/kubectl.html#fig1.6.1.2.1","level":"1.6.1.2","list_caption":"Figure: kubectl","alt":"kubectl","nro":59,"url":"../screenshot/k8s/k-1.svg.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"kubectl","attributes":{},"skip":false,"key":"1.6.1.2.1"},{"backlink":"virtualization/kubernetes/monitor.html#fig1.6.1.4.1","level":"1.6.1.4","list_caption":"Figure: grafana-315.gif","alt":"grafana-315.gif","nro":60,"url":"../screenshot/grafana-315.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"grafana-315.gif","attributes":{},"skip":false,"key":"1.6.1.4.1"},{"backlink":"osx/osx.html#fig1.7.1","level":"1.7","list_caption":"Figure: download cookies.txt","alt":"download cookies.txt","nro":61,"url":"../screenshot/cookies.txt-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"download cookies.txt","attributes":{},"skip":false,"key":"1.7.1"},{"backlink":"osx/osx.html#fig1.7.2","level":"1.7","list_caption":"Figure: copy link address","alt":"copy link address","nro":62,"url":"../screenshot/cookies.txt-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy link address","attributes":{},"skip":false,"key":"1.7.2"},{"backlink":"osx/osx.html#fig1.7.3","level":"1.7","list_caption":"Figure: check which user is using the disk","alt":"check which user is using the disk","nro":63,"url":"../screenshot/osx/which-user-using-disk.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"check which user is using the disk","attributes":{},"skip":false,"key":"1.7.3"},{"backlink":"osx/osx.html#fig1.7.4","level":"1.7","list_caption":"Figure: Enable Root User","alt":"Enable Root User","nro":64,"url":"../screenshot/osx/enable-root-user.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Enable Root User","attributes":{},"skip":false,"key":"1.7.4"},{"backlink":"osx/osx.html#fig1.7.5","level":"1.7","list_caption":"Figure: disable gatekeeper","alt":"disable gatekeeper","nro":65,"url":"../screenshot/osx/spctl-gatekepper.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"disable gatekeeper","attributes":{},"skip":false,"key":"1.7.5"},{"backlink":"osx/tricky.html#fig1.7.5.1","level":"1.7.5","list_caption":"Figure: option key","alt":"option key","nro":66,"url":"../screenshot/osx/copy-path-optional-key.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"option key","attributes":{},"skip":false,"key":"1.7.5.1"},{"backlink":"osx/tricky.html#fig1.7.5.2","level":"1.7.5","list_caption":"Figure: create quick action","alt":"create quick action","nro":67,"url":"../screenshot/osx/copy-path-service-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"create quick action","attributes":{},"skip":false,"key":"1.7.5.2"},{"backlink":"osx/tricky.html#fig1.7.5.3","level":"1.7.5","list_caption":"Figure: content menu","alt":"content menu","nro":68,"url":"../screenshot/osx/copy-path-service-2.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"content menu","attributes":{},"skip":false,"key":"1.7.5.3"},{"backlink":"osx/tricky.html#fig1.7.5.4","level":"1.7.5","list_caption":"Figure: copy path apple script","alt":"copy path apple script","nro":69,"url":"../screenshot/osx/copy-path-applescript.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path apple script","attributes":{},"skip":false,"key":"1.7.5.4"},{"backlink":"osx/tricky.html#fig1.7.5.5","level":"1.7.5","list_caption":"Figure: copy path shortcut key","alt":"copy path shortcut key","nro":70,"url":"../screenshot/osx/copy-path-shortcut.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path shortcut key","attributes":{},"skip":false,"key":"1.7.5.5"},{"backlink":"osx/tricky.html#fig1.7.5.6","level":"1.7.5","list_caption":"Figure: Automator.app » save to an app","alt":"Automator.app » save to an app","nro":71,"url":"../screenshot/osx/runable-app-3.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Automator.app » save to an app","attributes":{},"skip":false,"key":"1.7.5.6"},{"backlink":"osx/tricky.html#fig1.7.5.7","level":"1.7.5","list_caption":"Figure: technical symbols","alt":"technical symbols","nro":72,"url":"../screenshot/osx/snippets-2.png","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"technical symbols","attributes":{},"skip":false,"key":"1.7.5.7"},{"backlink":"osx/tricky.html#fig1.7.5.8","level":"1.7.5","list_caption":"Figure: hdiutil create image","alt":"hdiutil create image","nro":73,"url":"../screenshot/osx/hdiutil-create-image.png","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"hdiutil create image","attributes":{},"skip":false,"key":"1.7.5.8"},{"backlink":"osx/tricky.html#fig1.7.5.9","level":"1.7.5","list_caption":"Figure: hdiutil create encrypted image","alt":"hdiutil create encrypted image","nro":74,"url":"../screenshot/osx/hdiutil-create-encrypted.png","index":9,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"hdiutil create encrypted image","attributes":{},"skip":false,"key":"1.7.5.9"},{"backlink":"osx/tricky.html#fig1.7.5.10","level":"1.7.5","list_caption":"Figure: activity monitor","alt":"activity monitor","nro":75,"url":"../screenshot/osx/activity-monitor.png","index":10,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"activity monitor","attributes":{},"skip":false,"key":"1.7.5.10"},{"backlink":"linux/util/colors.html#fig1.8.1.3.1","level":"1.8.1.3","list_caption":"Figure: 256 colors","alt":"256 colors","nro":76,"url":"../../screenshot/ansi/ansicolor-256-0.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"256 colors","attributes":{},"skip":false,"key":"1.8.1.3.1"},{"backlink":"linux/util/colors.html#fig1.8.1.3.2","level":"1.8.1.3","list_caption":"Figure: 256 colors","alt":"256 colors","nro":77,"url":"../../screenshot/ansi/ansicolor-256-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"256 colors","attributes":{},"skip":false,"key":"1.8.1.3.2"},{"backlink":"linux/util/colors.html#fig1.8.1.3.3","level":"1.8.1.3","list_caption":"Figure: colors & formatting","alt":"colors & formatting","nro":78,"url":"../../screenshot/ansi/color-formatting.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"colors & formatting","attributes":{},"skip":false,"key":"1.8.1.3.3"},{"backlink":"linux/util/colors.html#fig1.8.1.3.4","level":"1.8.1.3","list_caption":"Figure: colors & formatting","alt":"colors & formatting","nro":79,"url":"../../screenshot/ansi/color-formatting-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"colors & formatting","attributes":{},"skip":false,"key":"1.8.1.3.4"},{"backlink":"linux/util/colors.html#fig1.8.1.3.5","level":"1.8.1.3","list_caption":"Figure: solarized colors","alt":"solarized colors","nro":80,"url":"../../screenshot/ansi/solarized-colors.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"solarized colors","attributes":{},"skip":false,"key":"1.8.1.3.5"},{"backlink":"linux/util/colors.html#fig1.8.1.3.6","level":"1.8.1.3","list_caption":"Figure: bash ps1","alt":"bash ps1","nro":81,"url":"../../screenshot/ansi/bash-ps1.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1","attributes":{},"skip":false,"key":"1.8.1.3.6"},{"backlink":"linux/util/colors.html#fig1.8.1.3.7","level":"1.8.1.3","list_caption":"Figure: bash ps1 in conditional","alt":"bash ps1 in conditional","nro":82,"url":"../../screenshot/ansi/bash-ps1-conditions.png","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1 in conditional","attributes":{},"skip":false,"key":"1.8.1.3.7"},{"backlink":"linux/util/colors.html#fig1.8.1.3.8","level":"1.8.1.3","list_caption":"Figure: bash ps1 right-prompt","alt":"bash ps1 right-prompt","nro":83,"url":"../../screenshot/ansi/bash-ps1-right-prompt.png","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1 right-prompt","attributes":{},"skip":false,"key":"1.8.1.3.8"},{"backlink":"linux/util/tricky.html#fig1.8.1.4.1","level":"1.8.1.4","list_caption":"Figure: waiting bar with dot","alt":"waiting bar with dot","nro":84,"url":"../../screenshot/shell/shell-waiting-process-dot.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"waiting bar with dot","attributes":{},"skip":false,"key":"1.8.1.4.1"},{"backlink":"linux/util/tricky.html#fig1.8.1.4.2","level":"1.8.1.4","list_caption":"Figure: progress bar with `▎▌ ▊ ▉`","alt":"progress bar with `▎▌ ▊ ▉`","nro":85,"url":"../../screenshot/shell/shell-waiting-progress-bar2.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `▎▌ ▊ ▉`","attributes":{},"skip":false,"key":"1.8.1.4.2"},{"backlink":"linux/util/tricky.html#fig1.8.1.4.3","level":"1.8.1.4","list_caption":"Figure: progress bar with `[###----]`","alt":"progress bar with `[###----]`","nro":86,"url":"../../screenshot/shell/shell-waiting-progress-bar3.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `[###----]`","attributes":{},"skip":false,"key":"1.8.1.4.3"},{"backlink":"linux/util/tricky.html#fig1.8.1.4.4","level":"1.8.1.4","list_caption":"Figure: progress bar with `|\\|/`","alt":"progress bar with `|\\|/`","nro":87,"url":"../../screenshot/shell/shell-waiting-progress-bar4.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `|\\|/`","attributes":{},"skip":false,"key":"1.8.1.4.4"},{"backlink":"linux/util/tricky.html#fig1.8.1.4.5","level":"1.8.1.4","list_caption":"Figure: customized color output","alt":"customized color output","nro":88,"url":"../../screenshot/colorful-tricky.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"customized color output","attributes":{},"skip":false,"key":"1.8.1.4.5"},{"backlink":"linux/ubuntu/installation.html#fig1.8.5.2.1","level":"1.8.5.2","list_caption":"Figure: ss-libev-service","alt":"ss-libev-service","nro":89,"url":"../../screenshot/ss/ss-libev-port.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-service","attributes":{},"skip":false,"key":"1.8.5.2.1"},{"backlink":"linux/ubuntu/installation.html#fig1.8.5.2.2","level":"1.8.5.2","list_caption":"Figure: ss-libev-client","alt":"ss-libev-client","nro":90,"url":"../../screenshot/ss/ss-libev-client.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-client","attributes":{},"skip":false,"key":"1.8.5.2.2"},{"backlink":"linux/ubuntu/x.html#fig1.8.5.5.1","level":"1.8.5.5","list_caption":"Figure: desktop styles","alt":"desktop styles","nro":91,"url":"screenshots/desktop-style-2.jpeg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"desktop styles","attributes":{},"skip":false,"key":"1.8.5.5.1"},{"backlink":"programming/python/config.html#fig1.9.2.1.1","level":"1.9.2.1","list_caption":"Figure: idle in mac big sur","alt":"idle in mac big sur","nro":92,"url":"../../screenshot/python/idle-mac-bigsur.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"idle in mac big sur","attributes":{},"skip":false,"key":"1.9.2.1.1"},{"backlink":"tools/virtualbox.html#fig1.10.3.1","level":"1.10.3","list_caption":"Figure: uninstall","alt":"uninstall","nro":93,"url":"../screenshot/vbox-uninstall.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"uninstall","attributes":{},"skip":false,"key":"1.10.3.1"},{"backlink":"tools/iterm2.html#fig1.10.4.1","level":"1.10.4","list_caption":"Figure: tabset list","alt":"tabset list","nro":94,"url":"../screenshot/iterm2/tabset-list-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabset list","attributes":{},"skip":false,"key":"1.10.4.1"},{"backlink":"tools/iterm2.html#fig1.10.4.2","level":"1.10.4","list_caption":"Figure: itit <string> c","alt":"itit <string> c","nro":95,"url":"../screenshot/iterm2/itit-c.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit <string> c","attributes":{},"skip":false,"key":"1.10.4.2"},{"backlink":"tools/iterm2.html#fig1.10.4.3","level":"1.10.4","list_caption":"Figure: itit string bc","alt":"itit string bc","nro":96,"url":"../screenshot/iterm2/itit-bc.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit string bc","attributes":{},"skip":false,"key":"1.10.4.3"},{"backlink":"tools/atlassian.html#fig1.10.5.1","level":"1.10.5","list_caption":"Figure: publish via api","alt":"publish via api","nro":97,"url":"../screenshot/publish-to-confluence.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"publish via api","attributes":{},"skip":false,"key":"1.10.5.1"}]},"title":"handbook","language":"en","output.name":"site","links":{"sidebar":{"I, Marslo":"https://imarslo.github.io/"}},"gitbook":"3.2.3","direction":"ltr"},"file":{"path":"jenkins/authorization.md","mtime":"2021-06-04T11:21:07.809Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-06-04T11:21:19.461Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-flexible-alerts/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sectionx/sectionx.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-codetabs/codetabs.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-codegroup/code.group.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github-buttons/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-hide-element/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-accordion/accordionSelector.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
