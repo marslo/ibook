@@ -79,6 +79,23 @@ Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
   ```
 
 ### ProjectMatrixAuthorizationStrategy
+#### grant permission to user
+```groovy
+import hudson.security.GlobalMatrixAuthorizationStrategy
+import hudson.security.Permission
+import hudson.security.ProjectMatrixAuthorizationStrategy
+import jenkins.model.Jenkins
+
+ProjectMatrixAuthorizationStrategy authorizationStrategy = new ProjectMatrixAuthorizationStrategy()
+String id   = 'hudson.model.Hudson.Administer'
+String user = 'marslo'
+authorizationStrategy.add( Permission.fromId(id), user )
+
+// save strategy
+Jenkins.instance.authorizationStrategy = authorizationStrategy
+Jenkins.instance.save()
+```
+
 #### create new instance
 - `new`
   ```groovy
@@ -94,6 +111,17 @@ Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
   def strategy = Jenkins.getInstance().getAuthorizationStrategy()
   def authorizationStrategy = strategy.class.newInstance()
   ```
+
+- [new instance from name](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L178)
+  ```groovy
+  String instanceName = 'hudson.security.ProjectMatrixAuthorizationStrategy'
+  def strategy = Class.forName(instanceName).newInstance()
+  println strategy.class
+  ```
+  - result
+    ```
+    class hudson.security.ProjectMatrixAuthorizationStrategy
+    ```
 
 - get groups list
   ```groovy
