@@ -25,6 +25,7 @@
 - [others](#others)
   - [groovy cli (args) with options](#groovy-cli-args-with-options)
   - [Get variable value for its name](#get-variable-value-for-its-name)
+  - [groovy.lang.Binding](#groovylangbinding)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -564,3 +565,46 @@ def template = 'hello ${VAL1}, please have a ${VAL2}'     // single quotes
 
 println new SimpleTemplateEngine().createTemplate( template ).make( binding ).toString()
 ```
+
+### [groovy.lang.Binding](https://docs.groovy-lang.org/latest/html/api/groovy/lang/Binding.html)
+- [`this.binding`](https://stackoverflow.com/a/293149/2940319)
+  > reference:
+  > - [Binding variables access in Groovy script's defined classes](https://stackoverflow.com/a/14380610/2940319)
+
+  ```groovy
+  baz = [ 'a':'b' ]
+  foo = "abc"
+  bar = "def"
+
+  println this.binding.hasVariable('baz')
+  this.binding.variables.each{ println "${it.key} : ${it.value}" }
+  ```
+  - result
+    ```
+    true
+    args : []
+    baz : [a:b]
+    foo : abc
+    bar : def
+    ```
+
+- [`new Binding()`](https://www.codota.com/code/java/classes/groovy.lang.Binding?snippet=5ce6f4b0e5946700041724ee)
+  ```groovy
+  String beans = 'aabbcc-beans-ddeeff'
+  Binding b = new Binding();
+  b.setVariable("beans", beans);
+  b.variables.each{ println "${it.key} : ${it.value}" }
+  ```
+
+- [`binding.setVariable()`](https://www.codota.com/code/java/classes/groovy.lang.Binding?snippet=5ce6d57ce594670004f99989)
+  ```groovy
+  m = [ 'a' : '1', 'b' : '2' ]
+  binding.setVariable("a", m)
+  this.binding.variables.each{ println "${it.key} : ${it.value}" }
+  ```
+  - result
+    ```
+    args : []
+    m : [a:1, b:2]
+    a : [a:1, b:2]
+    ```
