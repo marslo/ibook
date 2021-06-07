@@ -30,10 +30,9 @@
 - [Closures](#closures)
   - [Closure VS. Method](#closure-vs-method)
   - [break from closure](#break-from-closure)
-  - [composition](#composition)
   - [Curry](#curry)
   - [Memoization](#memoization)
-  - [Composition](#composition)
+  - [composition](#composition)
   - [Methods](#methods)
   - [tricky](#tricky)
 
@@ -604,16 +603,6 @@ list.any { element ->
 }
 ```
 
-### composition
-```groovy
-def multiply = { x, y -> return x * y }
-def triple = multiply.curry(3)
-def quadruple = multiply.curry(4)
-def composition = { f, g, x -> return f(g(x)) }
-def twelveTimes = composition.curry(triple, quadruple)      //  twelveTimes = { y -> composition { y -> 3*(4*y) } }
-def threeDozen = twelveTimes(3)
-```
-
 ### Curry
 - left curry
   ```groovy
@@ -712,7 +701,8 @@ assert nCopies( 2, '-.-.-.-' ) == divider( '-.-.-.-' )      // left  curry
   12586269025
   ```
 
-### Composition
+### composition
+#### double composition
 ```groovy
 def plus2  = { it + 2 }
 def times3 = { it * 3 }
@@ -738,6 +728,47 @@ assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
            + execute last                + execute first
 ```
 {% endhint %}
+
+- [example for recursive in List](https://stackoverflow.com/a/62804996/2940319)
+  ```groovy
+  def map1 = [a: 10, b:2, c:3]
+  def map2 = [b:3, c:2, d:5]
+  def maps = [map1, map2]
+
+  def process(def maps, Closure myLambda) {
+    maps.sum { it.keySet() }.collectEntries { key ->
+      [ key,
+        { x ->
+          x.subList(1, x.size()).inject(x[0], myLambda)
+        }(maps.findResults { it[key] })
+      ]
+    }
+  }
+
+  def sumResult  = process(maps) { a, b -> a + b }
+  def prodResult = process(maps) { a, b -> a * b }
+  def minResult  = process(maps) { a, b -> a < b ? a : b }
+
+  assert sumResult  == [a:10, b:5, c:5, d:5]
+  assert prodResult == [a:10, b:6, c:6, d:5]
+  assert minResult  == [a:10, b:2, c:2, d:5]
+  ```
+  - Resolution
+    ```groovy
+    assert [2,4,5].inject(1){ a, b -> a + b  }   == 12
+    assert [2,4,5].inject(1, { a, b -> a + b  }) == 12
+    ```
+
+
+#### triple composition
+```groovy
+def multiply = { x, y -> return x * y }
+def triple = multiply.curry(3)
+def quadruple = multiply.curry(4)
+def composition = { f, g, x -> return f(g(x)) }
+def twelveTimes = composition.curry(triple, quadruple)      //  twelveTimes = { y -> composition { y -> 3*(4*y) } }
+def threeDozen = twelveTimes(3)
+```
 
 
 ### Methods

@@ -17,6 +17,22 @@
 > - [matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java](https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java)
 > - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
 
+### [get securityRealm](https://stackoverflow.com/a/66606027/2940319)
+```groovy
+import hudson.security.*
+import jenkins.security.*
+import jenkins.model.Jenkins
+
+def jenkins = jenkins.model.Jenkins.getInstance()
+println jenkins.securityRealm
+println jenkins.authorizationStrategy
+
+
+// result
+// hudson.security.LDAPSecurityRealm@7d090e41
+// hudson.security.ProjectMatrixAuthorizationStrategy@6d51bb9d
+```
+
 ### [list all Jenkins supported authorization permissions](https://stackoverflow.com/a/58035811/2940319)
 ```groovy
 hudson.security.Permission.getAll().each { p ->
