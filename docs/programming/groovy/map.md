@@ -11,6 +11,22 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> refenrece:
+> - [Groovy Cookbook](https://e.printstacktrace.blog/groovy-cookbook/)
+> - [Groovy Cookbook: How to merge two maps in Groovy?](https://e.printstacktrace.blog/how-to-merge-two-maps-in-groovy/)
+{% endhint %}
+
+### merge two maps
+#### for `<String, List<String>>`
+```groovy
+Closure merger = { Map newMap, Map currentMap ->
+  currentMap.inject(newMap.clone()) { merged, entry ->
+    merged[entry.key] = merged.getOrDefault( entry.key, [] ) + entry.value
+    merged
+  }
+}
+```
 
 ### map withDefault
 {% hint style='tip' %}
@@ -49,6 +65,15 @@ assert newMap == [1:['a'], 2:['b','c']]
   /* Result: [1:[a], 2:[b, c]] */
   ```
 
+#### [merge maps](https://www.reddit.com/r/groovy/comments/htx1d9/how_to_merge_two_maps_in_groovy/fyk4xdg?utm_source=share&utm_medium=web2x&context=3)
+```groovy
+Map map1 = [x: 1, y: 2]
+Map map2 = [z: 3]
+Map merged = map1.withDefault(map2.&get)
+assert map1 == merged           // quit interesting
+assert 3 == merged.get('z')
+```
+
 ### get key or value from nested Map
 > insprired from :
 > - [How to find a map key by value of nested map in Groovy](https://stackoverflow.com/a/44829625/2940319)
@@ -69,7 +94,7 @@ findValueBelongsTo( 'v31' )  »  'k3'
 ```
 {% endhint %}
 
-find top key via sub-key:
+find parent key via sub-key:
 > <kbd>[try online](https://onecompiler.com/groovy/3wfvvc3p8)</kbd>
 
 ```groovy
@@ -89,7 +114,7 @@ def findKeyBelongsTo( Map map, String keyword ) {
   }
   ```
 
-find top key via sub-value:
+find parent key via sub-value:
 > <kbd>[try online](https://onecompiler.com/groovy/3wfvvjcnc)</kbd>
 
 ```groovy
@@ -198,11 +223,11 @@ def findValues( Map map, String keyword ) {
 - alternatives
   > <kbd>[try online](https://onecompiler.com/groovy/3wfvvv42h)</kbd>
 
-```groovy
-def hasValues(Map m, String key) {
-  m.containsKey(key) || m.find { k, v -> v instanceof Map && hasValues(v, key) }
-}
-```
+  ```groovy
+  def hasValues(Map m, String key) {
+    m.containsKey(key) || m.find { k, v -> v instanceof Map && hasValues(v, key) }
+  }
+  ```
 
   - result
     ```groovy
@@ -219,7 +244,6 @@ def hasValues(Map m, String key) {
     ```
 
 ### collect & collectMany
-
 
 ### collectEntries
 
@@ -239,4 +263,3 @@ def hasValues(Map m, String key) {
   // or
   ['test', 12, 20, true].findAll { it instanceof String }
   ```
-
