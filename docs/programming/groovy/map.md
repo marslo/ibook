@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [merge two maps](#merge-two-maps)
 - [map withDefault](#map-withdefault)
 - [get key or value from nested Map](#get-key-or-value-from-nested-map)
 - [findResult & findResults](#findresult--findresults)
