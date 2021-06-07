@@ -46,14 +46,24 @@
 
 ## basic
 ### Customizable Operators
-|    Operator    | Method          |
-|:--------------:|-----------------|
-|      `a + b`     | `a.plus(b)`     |
-|      `a - b`     | `a.minus(b)`    |
-|      `a * b`     | `a.multiply(b)` |
-|      `a / b`     | `a.div(b)`      |
-|      `a % b`     | `a.mod(b)`      |
-| `a++` or `++a` | `a.next()`      |
+| Operator         | Method            |
+| :--------------: | ----------------- |
+| `a + b`          | `a.plus(b)`       |
+| `a - b`          | `a.minus(b)`      |
+| `a * b`          | `a.multiply(b)`   |
+| `a / b`          | `a.div(b)`        |
+| `a % b`          | `a.mod(b)`        |
+| `a++` or `++a`   | `a.next()`        |
+
+{% hint style='tip' %}
+> ```groovy
+> assert [ a: true, b: false ]  +  [ a: false ] == [ a: false, b: false ]
+> assert [ a: true, b: false  ] << [ a: false ] == [ a: false, b: false ]
+> ```
+> - [difference `+`(plus) and `<<`(left shift)](https://stackoverflow.com/a/13326983/2940319) :
+>   - [`<<` is to add into left hand map](https://github.com/groovy/groovy-core/blob/GROOVY_2_4_X/src/main/org/codehaus/groovy/runtime/DefaultGroovyMethods.java#L12296)
+>   - [`+` it constructs a new Map based on the LHS`](https://github.com/groovy/groovy-core/blob/GROOVY_2_4_X/src/main/org/codehaus/groovy/runtime/DefaultGroovyMethods.java#L7433)
+{% endhint %}
 
 ### Special Operators
 |   Operator  | Meaning                                      | Name           |
