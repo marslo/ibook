@@ -38,7 +38,7 @@
   * [nginx&cert](devops/nginx&cert.md)
   * [ssh](devops/ssh.md)
 * [jenkins](jenkins/jenkins.md)
-  * [permission & authorizationStrategy](jenkins/authorization.md)
+  * [authorization strategy](jenkins/authorization.md)
   * [config](jenkins/config/config.md)
     * [windows](jenkins/config/windows.md)
   * [jenkinsfile](jenkins/jenkinsfile/jenkinsfile.md)
