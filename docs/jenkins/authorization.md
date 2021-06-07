@@ -33,18 +33,23 @@ hudson.security.Permission.getAll().each { p ->
   import jenkins.model.Jenkins
 
   String shortName( Permission p ) {
-    p.id.tokenize('.')[-2..-1].join(' ')
-        .replace('Hudson','Overall')
-        .replace('Computer', 'Agent')
-        .replace('Item', 'Job')
-        .replace('CredentialsProvider', 'Credentials')
+    Map<String, String> replacement = [
+                   'Hudson' : 'Overall' ,
+                 'Computer' : 'Agent'   ,
+                     'Item' : 'Job'     ,
+      'CredentialsProvider' : 'Credentials'
+    ]
+    p.id
+     .tokenize('.')[-2..-1]
+     .collect { replacement.get(it) ?: it }
+     .join(' ')
   }
 
   Map<String, Permission> permissionIds = Permission.all.findAll { permission ->
     List<String> nonConfigurablePerms = ['RunScripts', 'UploadPlugins', 'ConfigureUpdateCenter']
     permission.enabled &&
-      !permission.id.startsWith('hudson.security.Permission') &&
-      !(true in nonConfigurablePerms.collect { permission.id.endsWith(it) })
+      ! permission.id.startsWith('hudson.security.Permission') &&
+      ! nonConfigurablePerms.any { permission.id.endsWith(it) }
   }.collect { permission ->
     [ (shortName(permission)): permission ]
   }.sum()
@@ -64,7 +69,7 @@ println strategy.getClass()
   class hudson.security.ProjectMatrixAuthorizationStrategy
   ```
 
-### get current authorization and permissions info
+### get raw authorization and permissions info
 ```groovy
 Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
   println "\n${p} :\n\t${u}"
@@ -75,7 +80,6 @@ Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
   Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
     [ (p.id), u ]
   }
-```
   ```
 
 ### ProjectMatrixAuthorizationStrategy
@@ -134,36 +138,36 @@ Jenkins.instance.save()
 
 ### RoleBasedAuthorizationStrategy
 #### add 'admin' user to all permissions
-  ```groovy
-  import hudson.*
-  import hudson.security.*
-  import jenkins.model.*
-  import java.util.*
-  import com.michelin.cio.hudson.plugins.rolestrategy.*
-  import com.synopsys.arc.jenkins.plugins.rolestrategy.*
-  import java.lang.reflect.*
-  import java.util.logging.*
-  import groovy.json.*
+```groovy
+import hudson.*
+import hudson.security.*
+import jenkins.model.*
+import java.util.*
+import com.michelin.cio.hudson.plugins.rolestrategy.*
+import com.synopsys.arc.jenkins.plugins.rolestrategy.*
+import java.lang.reflect.*
+import java.util.logging.*
+import groovy.json.*
 
-  import jenkins.*
-  import com.michelin.cio.hudson.plugins.rolestrategy.*
+import jenkins.*
+import com.michelin.cio.hudson.plugins.rolestrategy.*
 
-  String admin = 'admin'
+String admin = 'admin'
 
-  // Turn security on
-  RoleBasedAuthorizationStrategy authorizationStrategy = new RoleBasedAuthorizationStrategy()
-  // ProjectMatrixAuthorizationStrategy authorizationStrategy = new ProjectMatrixAuthorizationStrategy()
-  Jenkins.instance.setAuthorizationStrategy(authorizationStrategy)
+// Turn security on
+RoleBasedAuthorizationStrategy authorizationStrategy = new RoleBasedAuthorizationStrategy()
+// ProjectMatrixAuthorizationStrategy authorizationStrategy = new ProjectMatrixAuthorizationStrategy()
+Jenkins.instance.setAuthorizationStrategy(authorizationStrategy)
 
-  Constructor[] constrs = Role.class.getConstructors()
-  for (Constructor<?> c : constrs) {
-    c.setAccessible(true)
-  }
+Constructor[] constrs = Role.class.getConstructors()
+for (Constructor<?> c : constrs) {
+  c.setAccessible(true)
+}
 
-  Method assignRoleMethod = RoleBasedAuthorizationStrategy.class.getDeclaredMethod( "assignRole", String.class, Role.class, String.class )
-  assignRoleMethod.setAccessible( true )
-  Set<Permission> adminPermissions = new HashSet<Permission>()
-  hudson.security.Permission.getAll(){ adminPermissions.add(Permission.fromId(it) }
-  Role adminRole = new Role( admin, adminPermissions )
-  authorizationStrategy.addRole( RoleBasedAuthorizationStrategy.GLOBAL, adminRole )
-  ```
+Method assignRoleMethod = RoleBasedAuthorizationStrategy.class.getDeclaredMethod( "assignRole", String.class, Role.class, String.class )
+assignRoleMethod.setAccessible( true )
+Set<Permission> adminPermissions = new HashSet<Permission>()
+hudson.security.Permission.getAll(){ adminPermissions.add(Permission.fromId(it) }
+Role adminRole = new Role( admin, adminPermissions )
+authorizationStrategy.addRole( RoleBasedAuthorizationStrategy.GLOBAL, adminRole )
+```
