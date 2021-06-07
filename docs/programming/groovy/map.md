@@ -29,6 +29,86 @@ Closure merger = { Map newMap, Map currentMap ->
 }
 ```
 
+#### [for `<String, Map<String, List<String>>>`](https://stackoverflow.com/a/38542819/2940319)
+```groovy
+def m1 = [ k1: [ l1: ['s1', 's2']]]
+def m2 = [ k1: [ l1: ['s3', 's4']], k2: [ l2: ['x1', 'x2']] ]
+def accumulator = [:].withDefault{ [:].withDefault{ [] } }
+Closure merger
+
+merger = { Map trg, Map m ->
+  m.each{ k, v ->
+    switch( v instanceof java.util.LinkedHashMap ){
+      case true  : merger trg[ k ], v ; break ;
+      case false : trg[ k ].addAll v  ; break ;
+    }
+  }
+}
+[ m1, m2 ].each merger.curry( accumulator )
+assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
+```
+
+#### [merge and sum](https://stackoverflow.com/a/62804996/2940319)
+{% hint style='tip' %}
+> preconditions:
+> ```groovy
+> Map<String, Integer> m1 = [ a : 10, b : 2, c : 3 ]
+> Map<String, Integer> m2 = [ b : 3,  c : 2, d : 5 ]
+> List<Map<String, Integer>> maps = [ m1, m2 ]
+> ```
+
+{% endhint %}
+- merge values into list
+  ```groovy
+  maps.sum { it.keySet() }.collectEntries { key ->
+    [key, maps.findResults { it[key] } ]
+  }
+
+  // result
+  // [a:[10], b:[2, 3], c:[3, 2], d:[5]]
+  ```
+- sum lists
+  ```groovy
+  def process( List maps ) {
+    maps.sum { it.keySet() }.collectEntries { key ->
+      [ key, maps.findResults { it[key] }.sum() ]
+    }
+  }
+  ```
+
+  or more elegant way via `Clousre`:
+  {% hint style='tip' %}
+  > ```groovy
+  > Closure getSum = { x -> x.sum() }
+  > getSum( [1,2,3,4] ) == 10
+  > ```
+  {% endhint %}
+
+  ```groovy
+  def process( List maps ) {
+    Closure getSum = { x -> x.sum() }
+    maps.sum { it.keySet() }.collectEntries { key ->
+      [ key, getSum(maps.findResults { it[key] }) ]
+    }
+  }
+  ```
+
+  which can be extended to:
+  ```groovy
+  def process( List maps, Closure closure ) {
+    maps.sum { it.keySet() }.collectEntries { key ->
+      [ key, closure(maps.findResults { it[key] }) ]
+    }
+  }
+
+  // merge maps and get sum
+  process(maps){ x -> x.sum() }                           // [a:10, b:5, c:5, d:5]
+  // merge maps and get product
+  process(maps){ x -> x.inject(1) { sum, n -> sum * n }   // [a:10, b:6, c:6, d:5]
+  // merge maps and get the biggest item
+  process(maps){ x -> x.inject(x[0]) { biggest, n -> biggest > n ? biggest : n } } // [a:10, b:3, c:3, d:5]
+  ```
+
 ### map withDefault
 {% hint style='tip' %}
 Objective:
