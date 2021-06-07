@@ -4,7 +4,7 @@
 
 - [list all Jenkins supported authorization permissions](#list-all-jenkins-supported-authorization-permissions)
 - [get current authorization strategy class](#get-current-authorization-strategy-class)
-- [get current authorization and permissions info](#get-current-authorization-and-permissions-info)
+- [get raw authorization and permissions info](#get-raw-authorization-and-permissions-info)
 - [ProjectMatrixAuthorizationStrategy](#projectmatrixauthorizationstrategy)
 - [RoleBasedAuthorizationStrategy](#rolebasedauthorizationstrategy)
 
@@ -99,6 +99,8 @@ authorizationStrategy.add( Permission.fromId(id), user )
 Jenkins.instance.authorizationStrategy = authorizationStrategy
 Jenkins.instance.save()
 ```
+
+#### [add new configurations according to Map structure](https://gist.github.com/marslo/8eef5efc667785aaf338395b636a609d)
 
 #### create new instance
 - `new`
