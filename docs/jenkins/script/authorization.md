@@ -2,11 +2,17 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [list all Jenkins supported authorization permissions](#list-all-jenkins-supported-authorization-permissions)
-- [get current authorization strategy class](#get-current-authorization-strategy-class)
-- [get raw authorization and permissions info](#get-raw-authorization-and-permissions-info)
-- [ProjectMatrixAuthorizationStrategy](#projectmatrixauthorizationstrategy)
-- [RoleBasedAuthorizationStrategy](#rolebasedauthorizationstrategy)
+- [security](#security)
+  - [get securityRealm](#get-securityrealm)
+- [authorization strategy](#authorization-strategy)
+  - [list all Jenkins supported authorization permissions](#list-all-jenkins-supported-authorization-permissions)
+  - [get current authorization strategy class](#get-current-authorization-strategy-class)
+  - [get raw authorization and permissions info](#get-raw-authorization-and-permissions-info)
+  - [ProjectMatrixAuthorizationStrategy](#projectmatrixauthorizationstrategy)
+  - [RoleBasedAuthorizationStrategy](#rolebasedauthorizationstrategy)
+- [crumb issuer](#crumb-issuer)
+  - [get crumb issuer](#get-crumb-issuer)
+  - [set crumb issuer](#set-crumb-issuer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
