@@ -344,24 +344,38 @@ EOF
 ### get crumb
 > [`jq` for multiple values](https://github.com/stedolan/jq/issues/785#issuecomment-101475408) and [another answer](https://github.com/stedolan/jq/issues/785#issuecomment-101842421)
 
-```bash
-$ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' \
-          | jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
-Jenkins-Crumb:8b87b6ed98ef923******
-```
-- [or](https://github.com/stedolan/jq/issues/785#issuecomment-574836419)
+- via groovy script
+  ```groovy
+  import hudson.security.csrf.DefaultCrumbIssuer
+
+  DefaultCrumbIssuer issuer = jenkins.model.Jenkins.instance.crumbIssuer
+  jenkinsCrumb = "${issuer.crumbRequestField}:${issuer.crumb}"
+  ```
+  - result
+    ```groovy
+    // println jenkinsCrumb
+    // Jenkins-Crumb:7248f4a5***********
+    ```
+
+- via api
   ```bash
   $ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' \
-            | jq -r '[.crumbRequestField, .crumb] | join(":")'
-  ```
-
-- [or](https://www.bbsmax.com/A/x9J2bBxgJ6/)
-  ```bash
-  $ curl -sSLg "http://${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"
+            | jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
   Jenkins-Crumb:8b87b6ed98ef923******
   ```
+  - [or](https://github.com/stedolan/jq/issues/785#issuecomment-574836419)
+    ```bash
+    $ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' \
+              | jq -r '[.crumbRequestField, .crumb] | join(":")'
+    ```
 
-![jenkins crumb](../screenshot/jenkins/jenkins-crumb.png)
+  - [or](https://www.bbsmax.com/A/x9J2bBxgJ6/)
+    ```bash
+    $ curl -sSLg "http://${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"
+    Jenkins-Crumb:8b87b6ed98ef923******
+    ```
+
+  ![jenkins crumb](../screenshot/jenkins/jenkins-crumb.png)
 
 ### visit API via crumb
 {% hint style='tip' %}
