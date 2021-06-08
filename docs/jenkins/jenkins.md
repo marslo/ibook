@@ -418,3 +418,29 @@ $ curl -X POST \
        http://jenkins.marslo.com/safeRestart
 ```
 
+
+## property
+### set property
+```groovy
+System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'Asia/Shanghai')
+System.setProperty('user.timezone', 'Asia/Shanghai')
+```
+
+- example
+  ```groovy
+  println(System.getProperty("user.timezone"));
+  System.setProperty("user.timezone", "Asia/Shanghai");
+  println(System.getProperty("user.timezone"))
+  ```
+
+
+- example for crumb issuers
+  ```groovy
+  System.setProperty("jenkins.model.Jenkins.crumbIssuerProxyCompatibility", 'true')
+  System.getProperty("jenkins.model.Jenkins.crumbIssuerProxyCompatibility")
+  ```
+- example for [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3)
+  ```groovy
+  System.setProperty("hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID", "true")
+  System.getProperty("hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID")
+  ```
