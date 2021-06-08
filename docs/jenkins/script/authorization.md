@@ -10,13 +10,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-> reference:
-> - [hudson.security.Permission](https://javadoc.jenkins.io/hudson/security/Permission.html)
-> - [hudson.security.ProjectMatrixAuthorizationStrategy](https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/ProjectMatrixAuthorizationStrategy.html)
-> - [matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java](https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java)
-> - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
-
+## security
 ### [get securityRealm](https://stackoverflow.com/a/66606027/2940319)
 ```groovy
 import hudson.security.*
@@ -32,6 +26,14 @@ println jenkins.authorizationStrategy
 // hudson.security.LDAPSecurityRealm@7d090e41
 // hudson.security.ProjectMatrixAuthorizationStrategy@6d51bb9d
 ```
+
+## authorization strategy
+
+> reference:
+> - [hudson.security.Permission](https://javadoc.jenkins.io/hudson/security/Permission.html)
+> - [hudson.security.ProjectMatrixAuthorizationStrategy](https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/ProjectMatrixAuthorizationStrategy.html)
+> - [matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java](https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java)
+> - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
 
 ### [list all Jenkins supported authorization permissions](https://stackoverflow.com/a/58035811/2940319)
 ```groovy
@@ -188,4 +190,29 @@ Set<Permission> adminPermissions = new HashSet<Permission>()
 hudson.security.Permission.getAll(){ adminPermissions.add(Permission.fromId(it) }
 Role adminRole = new Role( admin, adminPermissions )
 authorizationStrategy.addRole( RoleBasedAuthorizationStrategy.GLOBAL, adminRole )
+```
+
+## crumb issuer
+
+> reference:
+> - [hudson.security.csrf.CrumbIssuer](https://javadoc.jenkins.io/hudson/security/csrf/CrumbIssuer.html)
+> - [ivan-pinatti/jenkins-set-default-crumb-issuer.groovy](https://gist.github.com/ivan-pinatti/7d8a877aff42350f16fcb1eb094818d9)
+
+### get crumb issuer
+```groovy
+import hudson.security.csrf.DefaultCrumbIssuer
+
+DefaultCrumbIssuer issuer = jenkins.model.Jenkins.instance.crumbIssuer
+String jenkinsCrumb = "${issuer.crumbRequestField}:${issuer.crumb}"
+println jenkinsCrumb
+// Jenkins-Crumb:b8a9cd5***********
+```
+
+### set crumb issuer
+```groovy
+import jenkins.model.Jenkins
+
+Jenkins jenkins = jenkins.model.Jenkins.instance
+jenkins.setCrumbIssuer(new DefaultCrumbIssuer(true))
+jenkins.save()
 ```
