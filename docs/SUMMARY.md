@@ -63,6 +63,7 @@
     * [jira-steps](jenkins/plugins/jira-steps.md)
     * [ansicolor](jenkins/plugins/ansicolor.md)
     * [simple-theme](jenkins/plugins/simple-theme.md)
+    * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
 * [virtualization](virtualization/virtualization.md)
   * [kubernetes](virtualization/kubernetes/kubernetes.md)
     * [kubeadm](virtualization/kubernetes/kubeadm/kubeadm.md)
