@@ -32,3 +32,12 @@ Scripts could instead use an API token, which has not required a CSRF token (cru
   -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
   ```
 - via plugin [Strict Crumb Issuer](https://plugins.jenkins.io/strict-crumb-issuer)
+
+#### get crumberIssuer with script
+```groovy
+import org.jenkinsci.plugins.strictcrumbissuer.StrictCrumbIssuer
+
+StrictCrumbIssuer issuer = jenkins.model.Jenkins.instance.crumbIssuer
+String jenkinsCrumb = "${issuer.crumbRequestField}:${issuer.crumb}"
+println jenkinsCrumb
+```

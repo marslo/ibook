@@ -13,6 +13,7 @@
 - [crumb issuer](#crumb-issuer)
   - [get crumb issuer](#get-crumb-issuer)
   - [set crumb issuer](#set-crumb-issuer)
+  - [clean up all pending Async Resource Disposers items](#clean-up-all-pending-async-resource-disposers-items)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -221,4 +222,38 @@ import jenkins.model.Jenkins
 Jenkins jenkins = jenkins.model.Jenkins.instance
 jenkins.setCrumbIssuer(new DefaultCrumbIssuer(true))
 jenkins.save()
+```
+
+### clean up all pending Async Resource Disposers items
+```groovy
+import org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer
+import org.jenkinsci.plugins.strictcrumbissuer.StrictCrumbIssuer
+
+AsyncResourceDisposer disposer = AsyncResourceDisposer.get()
+StrictCrumbIssuer issuer = jenkins.model.Jenkins.instance.crumbIssuer
+String jenkinsCrumb = "${issuer.crumbRequestField}:${issuer.crumb}"
+String url = Jenkins.instance.rootUrl + disposer.url
+
+disposer.getBacklog().each { item ->
+  println "\n${item.id} : \t${url}/stopTracking/?id=${item.id} : \t${item.class.simpleName} : \n" +
+          "\t${item.getLastState().getDisplayName()} : \n" +
+          "\t${item.getDisposable().node} : ${item.getDisposable().path}\n" +
+          "\t${item.toString()}"
+  println "removeing ${item.id} : "
+  [ 'bash', '-c', 'curl -v -s ' +
+                       '-u <user>:<token> ' +
+                       '-X POST ' +
+                       "-H \"Content-Type: application/json\" " +
+                       "-H \"Accept: application/json\" " +
+                       "-H \"${jenkinsCrumb}\" " +
+                       "${url}/stopTracking/?id=${item.id} "
+  ].execute().with{
+    def stdout = new StringBuffer()
+    def stderr = new StringBuffer()
+    it.waitForProcessOutput( stdout, stderr )
+    println "EXIT CODE: ${it.exitValue()}"
+    println "ERROR: ${stderr}"
+    println "OUTPUT: ${stdout}"
+  }
+}
 ```
