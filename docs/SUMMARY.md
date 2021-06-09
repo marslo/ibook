@@ -51,7 +51,7 @@
   * [script](jenkins/script/script.md)
     * [jobs & builds](jenkins/script/build.md)
     * [agent](jenkins/script/agent.md)
-    * [authorization strategy](jenkins/script/authorization.md)
+    * [security & authorization](jenkins/script/authorization.md)
     * [api](jenkins/script/api.md)
     * [cli](jenkins/script/cli.md)
     * [tricky](jenkins/script/tricky.md)

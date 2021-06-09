@@ -359,7 +359,8 @@ EOF
 
 - via api
   ```bash
-  $ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' \
+  $ domain='jenkins.marslo.com'
+  $ curl -s "https://${domain}/crumbIssuer/api/json" \
             | jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
   Jenkins-Crumb:8b87b6ed98ef923******
   ```
@@ -418,8 +419,11 @@ $ curl -X POST \
        http://jenkins.marslo.com/safeRestart
 ```
 
-
 ## property
+> - [java.lang.System](https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty-java.lang.String-)
+> - [java.util.Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
+> - [jenkins.util.SystemProperties](https://javadoc.jenkins.io/jenkins/util/SystemProperties.html)
+
 ### set property
 ```groovy
 System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'Asia/Shanghai')
@@ -439,8 +443,21 @@ System.setProperty('user.timezone', 'Asia/Shanghai')
   System.setProperty("jenkins.model.Jenkins.crumbIssuerProxyCompatibility", 'true')
   System.getProperty("jenkins.model.Jenkins.crumbIssuerProxyCompatibility")
   ```
+
 - example for [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3)
   ```groovy
   System.setProperty("hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID", "true")
   System.getProperty("hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID")
   ```
+
+### get property
+- get all properties
+  ```groovy
+  System.getProperties()
+  ```
+
+{% hint style='tip' %}
+- get system environment
+- `System.getenv()`
+{% endhint %}
+

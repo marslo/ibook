@@ -99,6 +99,32 @@ done
 ### git commit
 #### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
 
+### git path
+#### get absolute root path
+```bash
+$ git rev-parse --show-toplevel
+```
+
+#### get relative root path
+```bash
+$ git rev-parse --show-cdup
+```
+
+#### get absolute root path inside submodules
+```bash
+$ git rev-parse --show-superproject-working-tree
+```
+
+#### get `.git` path
+```bash
+$ git rev-parse --git-dir
+```
+
+#### inside the work tree or not
+```bash
+$ git rev-parse --is-inside-work-tree
+```
+
 ### `.gitattributes`
 #### [Refreshing the repository after committing .gitattributes](https://www.droidship.com/posts/gitattributes/)
 > reference:
