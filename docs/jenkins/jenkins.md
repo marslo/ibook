@@ -5,7 +5,7 @@
 - [run Jenkins](#run-jenkins)
   - [in docker](#in-docker)
   - [in kubernetes](#in-kubernetes)
-- [crumb](#crumb)
+- [crumb issuer](#crumb-issuer)
   - [get crumb](#get-crumb)
   - [visit API via crumb](#visit-api-via-crumb)
   - [restart Jenkins instance](#restart-jenkins-instance)
@@ -333,8 +333,9 @@ EOF
             servicePort: 8080
   ```
 
-## crumb
+## crumb issuer
 > more info:
+> - [CSRF Protection Explained](https://support.cloudbees.com/hc/en-us/articles/219257077-CSRF-Protection-Explained)
 > - [Improved CSRF protection](https://jenkins.io/redirect/crumb-cannot-be-used-for-script)
 > - [CSRF Protection](https://www.jenkins.io/doc/book/using/remote-access-api/#RemoteaccessAPI-CSRFProtection)
 > - [Remote Access API](https://www.jenkins.io/doc/book/using/remote-access-api/)
@@ -353,50 +354,101 @@ EOF
   ```
   - result
     ```groovy
-    // println jenkinsCrumb
-    // Jenkins-Crumb:7248f4a5***********
+    println jenkinsCrumb
+    Jenkins-Crumb:7248f4a5***********
     ```
 
-- via api
+- via curl
+  {% hint style='tip' %}
   ```bash
   $ domain='jenkins.marslo.com'
-  $ curl -s "https://${domain}/crumbIssuer/api/json" \
-            | jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
+  $ curl -s "https://${domain}/crumbIssuer/api/json" |
+         jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
   Jenkins-Crumb:8b87b6ed98ef923******
   ```
-  - [or](https://github.com/stedolan/jq/issues/785#issuecomment-574836419)
-    ```bash
-    $ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' \
-              | jq -r '[.crumbRequestField, .crumb] | join(":")'
-    ```
+  [or](../cheatsheet/character/json.html#join)
+  ```bash
+  $ domain='jenkins.marslo.com'
+  $ curl -sSLg https://${domain}/crumbIssuer/api/json |
+         jq -r '.crumbRequestField + ":" + .crumb'
+  ```
 
-  - [or](https://www.bbsmax.com/A/x9J2bBxgJ6/)
-    ```bash
-    $ curl -sSLg "http://${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"
-    Jenkins-Crumb:8b87b6ed98ef923******
-    ```
+  [or](https://github.com/stedolan/jq/issues/785#issuecomment-574836419)
+  ```bash
+  $ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' |
+         jq -r '[.crumbRequestField, .crumb] | join(":")'
+  ```
 
-  ![jenkins crumb](../screenshot/jenkins/jenkins-crumb.png)
+  [or via xml](https://www.bbsmax.com/A/x9J2bBxgJ6/)
+  ```bash
+  $ curl -sSLg "http://${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"
+  Jenkins-Crumb:8b87b6ed98ef923******
+  ```
+  {% endhint %}
+
+![jenkins crumb](../screenshot/jenkins/jenkins-crumb.png)
+
+- via wget
+  ```bash
+  $ wget --user=admin \
+         --password=admin \
+         --auth-no-challenge \
+         -q \
+         --output-document \
+         - \
+         - 'http://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+  ```
+  - or via json api
+    ```bash
+    $ wget --user=admin \
+           --password=admin \
+           --auth-no-challenge \
+           -q \
+           --output-document \
+           - \
+           'https://ssdfw-devops-jenkins.marvell.com/crumbIssuer/api/json' |
+           jq -r '[.crumbRequestField, .crumb] | join(":")'
+    ```
 
 ### visit API via crumb
 {% hint style='tip' %}
 ```bash
 CRUMB=$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json | jq -r .crumb)
+FULL_CRUMB=$(curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')")
 ```
 {% endhint %}
 
 ```bash
 $ curl -H "Jenkins-Crumb:${CRUMB}" \
-          http://jenkins.marslo.com/job/marslo/job/sandbox/buildWithParameters \
-          -d 'cities=Lanzhou'
+          -d 'cities=Lanzhou' \
+          http://jenkins.marslo.com/job/marslo/job/sandbox/buildWithParameters
 ```
+- or
+  ```bash
+  $ domain='jenkins.marslo.com'
+  $ url="https://${domain}"
+  $ curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')" \
+            -d 'cities=Lanzhou' \
+            ${url}/job/marslo/job/sandbox/buildWithParameters
+  ```
+
 [or](https://www.jenkins.io/doc/book/using/remote-access-api/#RemoteaccessAPI-Submittingjobs)
 ```bash
 $ curl -H "Jenkins-Crumb:${CRUMB}" \
-          http://jenkins.marslo.com/job/marslo/job/sandbox/buildWithParameters \
           --data 'cities=Leshan,Chengdu' \
-          --data 'provinces=Sichuan'
+          --data 'provinces=Sichuan' \
+          http://jenkins.marslo.com/job/marslo/job/sandbox/buildWithParameters
 ```
+- or
+  ```bash
+  $ domain='jenkins.marslo.com'
+  $ url="https://${domain}"
+  $ curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')" \
+            --data 'cities=Leshan,Chengdu' \
+            --data 'provinces=Sichuan' \
+            ${url}/job/marslo/job/sandbox/buildWithParameters
+  ```
+
 #### [build a job using the REST API and cURL](https://support.cloudbees.com/hc/en-us/articles/218889337-How-to-build-a-job-using-the-REST-API-and-cURL-)
 ```bash
 $ curl -X POST http://developer:developer@localhost:8080/job/test/build
@@ -410,6 +462,7 @@ $ curl -X POST \
 {% hint style='tip' %}
 ```bash
 CRUMB=$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json | jq -r .crumb)
+FULL_CRUMB=$(curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')")
 ```
 {% endhint %}
 
@@ -418,46 +471,11 @@ $ curl -X POST \
        -H "Jenkins-Crumb:${CRUMB}" \
        http://jenkins.marslo.com/safeRestart
 ```
-
-## property
-> - [java.lang.System](https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty-java.lang.String-)
-> - [java.util.Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
-> - [jenkins.util.SystemProperties](https://javadoc.jenkins.io/jenkins/util/SystemProperties.html)
-
-### set property
-```groovy
-System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'Asia/Shanghai')
-System.setProperty('user.timezone', 'Asia/Shanghai')
-```
-
-- example
-  ```groovy
-  println(System.getProperty("user.timezone"));
-  System.setProperty("user.timezone", "Asia/Shanghai");
-  println(System.getProperty("user.timezone"))
+- or
+  ```bash
+  $ domain='jenkins.marslo.com'
+  $ url="https://${domain}"
+  $ curl -X POST \
+         -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')" \
+         ${url}/safeRestart
   ```
-
-
-- example for crumb issuers
-  ```groovy
-  System.setProperty("jenkins.model.Jenkins.crumbIssuerProxyCompatibility", 'true')
-  System.getProperty("jenkins.model.Jenkins.crumbIssuerProxyCompatibility")
-  ```
-
-- example for [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3)
-  ```groovy
-  System.setProperty("hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID", "true")
-  System.getProperty("hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID")
-  ```
-
-### get property
-- get all properties
-  ```groovy
-  System.getProperties()
-  ```
-
-{% hint style='tip' %}
-- get system environment
-- `System.getenv()`
-{% endhint %}
-

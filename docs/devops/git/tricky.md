@@ -9,6 +9,7 @@
   - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes)
   - [create multiple commits](#create-multiple-commits)
   - [git commit](#git-commit)
+  - [git path](#git-path)
   - [`.gitattributes`](#gitattributes)
   - [git summaries](#git-summaries)
 - [scripts](#scripts)
