@@ -16,16 +16,56 @@
 
 > reference:
 > - [Example for Jenkins API](https://www.programcreek.com/java-api-examples/?action=search&ClassName=jenkins&submit=Search)
+> - [CSRF Protection Explained](https://support.cloudbees.com/hc/en-us/articles/219257077-CSRF-Protection-Explained?mobile_site=false)
 > - [Remote access API](https://wiki.jenkins.io/display/JENKINS/Remote+access+API/)
 > - [How to build a job using the REST API and cURL?](https://support.cloudbees.com/hc/en-us/articles/218889337-How-to-build-a-job-using-the-REST-API-and-cURL-?page=64)
 > - [7 useful Jenkins Rest services](https://www.esentri.com/7-useful-jenkins-rest-services/)
 
+{% hint style='tip' %}
+> get crumb and sessoin :
+> - [with sessoin (cookie)](../plugins/crumbIssuer.md#working-with-session-after-21762-since-security-626)
+> ```bash
+> $ COOKIEJAR="$(mktemp)"
+> $ CRUMB=$(curl -u "admin:admin" \
+>              --cookie-jar "${COOKIEJAR}" \
+>              'https://jenkins.marslo.com/crumbIssuer/api/json' |
+>              jq -r '[.crumbRequestField, .crumb] | join(":")'
+>        )
+> ```
+> <p></p>
+> example for run `safeRestart` api :
+> ```bash
+> $ COOKIEJAR="$(mktemp)"
+> $ CRUMB=$(curl --cookie-jar "${COOKIEJAR}" \
+>                "https://jenkins.marslo.com/crumbIssuer/api/json" |
+>                jq -r '.crumbRequestField + ":" + .crumb'
+>          )
+> $ curl -v \
+>        -X POST \
+>        --cookie "${COOKIEJAR}" \
+>        -H "${CRUMB}" \
+>        -H "Content-Type: application/json" \
+>        -H "Accept: application/json"
+>        https://jenkins.marslo.com/safeRestart
+> ```
+{% endhint %}
+
 ## [execute Groovy script with an API call](https://support.cloudbees.com/hc/en-us/articles/217509228-Execute-Groovy-script-in-Jenkins-with-an-API-call)
 ```bash
-$ curl -d "script=$(cat /tmp/script.groovy)" -v --user username:ApiToken http://JENKINS_URL/scriptText
+$ curl -v \
+       --user username:ApiToken \
+       -d "script=$(cat /tmp/script.groovy)" \
+       --cookie "${COOKIEJAR}" \
+       -H "${CRUMB}" \
+       http://JENKINS_URL/scriptText
 
 # or
-$ curl -d "script=println 'this script works'" -v --user username:ApiToken http://JENKINS_URL/scriptText
+$ curl -v \
+       --user username:ApiToken \
+       -d "script=println 'this script works'" \
+       --cookie "${COOKIEJAR}" \
+       -H "${CRUMB}" \
+       http://JENKINS_URL/scriptText
 ```
 
 ## [stop build via api](https://www.jenkins.io/doc/book/using/aborting-a-build/)
@@ -43,27 +83,41 @@ $ curl -d "script=println 'this script works'" -v --user username:ApiToken http:
 
 - [via job api](https://stackoverflow.com/a/25650246/2940319)
   ```bash
-  $ curl -sSLg http://jenkins:8080/job/my-job/api/json?tree=builds[id,number,duration,timestamp,builtOn]
+  $ curl -sSLg \
+         --cookie "${COOKIEJAR}" \
+         -H "${CRUMB}" \
+         http://jenkins:8080/job/my-job/api/json?tree=builds[id,number,duration,timestamp,builtOn]
   ```
 
 - get particular fields for all builds
   > api format: `api/json?tree=allBuilds[Bartifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]`
 
   ```bash
-  $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/api/json?tree=allBuilds[artifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]' | jq --raw-output .
+  $ curl -s \
+        --globoff \
+        --cookie "${COOKIEJAR}" \
+        -H "${CRUMB}" \
+        'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/api/json?tree=allBuilds[artifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]' |
+        jq --raw-output .
   ```
 
 ## list plugins
 ### [using api (`curl`)](https://stackoverflow.com/a/52836951/2940319)
 ```bash
-$ curl -u<username>:<password> \
-    -s https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?depth=1 \
-    | jq -r '.plugins[] | "\(.shortName):\(.version)"' \
-    | sort
+$ curl -s \
+       -u<username>:<password> \
+       --cookie "${COOKIEJAR}" \
+       -H "${CRUMB}" \
+       https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?depth=1  |
+       jq -r '.plugins[] | "\(.shortName):\(.version)"' | 
+       sort
 ```
 - [or](https://stackoverflow.com/a/17241066/2940319)
   ```bash
-  $ curl -s 'https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?pretty=1&tree=plugins\[shortName,longName,version\]'
+  $ curl -s \
+         --cookie "${COOKIEJAR}" \
+         -H "${CRUMB}" \
+         'https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?pretty=1&tree=plugins\[shortName,longName,version\]'
   {
     "_class": "hudson.LocalPluginManager",
     "plugins": [

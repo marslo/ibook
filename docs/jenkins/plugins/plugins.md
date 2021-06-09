@@ -50,6 +50,7 @@
 - [Metrics](https://plugins.jenkins.io/metrics/)
 - [Validating String Parameter](https://plugins.jenkins.io/validating-string-parameter/)
 - [Strict Crumb Issuer Plugin](https://plugins.jenkins.io/strict-crumb-issuer/)
+  - due to [SECURITY-626](../plugins/crumbIssuer.html#improved-csrf-protection)
 
 ### optinal
 - [JobFanIn](https://plugins.jenkins.io/job-fan-in/)

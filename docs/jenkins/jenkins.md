@@ -359,67 +359,123 @@ EOF
     ```
 
 - via curl
-  {% hint style='tip' %}
   ```bash
   $ domain='jenkins.marslo.com'
-  $ curl -s "https://${domain}/crumbIssuer/api/json" |
+  $ COOKIEJAR="$(mktemp)"
+  $ curl -s \
+         --cookie-jar "${COOKIEJAR} \
+         https://${domain}/crumbIssuer/api/json |
          jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
   Jenkins-Crumb:8b87b6ed98ef923******
   ```
   [or](../cheatsheet/character/json.html#join)
   ```bash
   $ domain='jenkins.marslo.com'
-  $ curl -sSLg https://${domain}/crumbIssuer/api/json |
+  $ COOKIEJAR="$(mktemp)"
+  $ curl -sSLg \
+         --cookie-jar "${COOKIEJAR} \
+         https://${domain}/crumbIssuer/api/json |
          jq -r '.crumbRequestField + ":" + .crumb'
   ```
 
   [or](https://github.com/stedolan/jq/issues/785#issuecomment-574836419)
   ```bash
-  $ curl -s 'http://jenkins.marslo.com/crumbIssuer/api/json' |
+  $ COOKIEJAR="$(mktemp)"
+  $ curl -s \
+         --cookie-jar "${COOKIEJAR} \
+         http://jenkins.marslo.com/crumbIssuer/api/json |
          jq -r '[.crumbRequestField, .crumb] | join(":")'
   ```
 
   [or via xml](https://www.bbsmax.com/A/x9J2bBxgJ6/)
   ```bash
-  $ curl -sSLg "http://${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"
+  $ COOKIEJAR="$(mktemp)"
+  $ curl -sSLg \
+         --cookie-jar "${COOKIEJAR} \
+         "http://${JENKINS_URL}/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)"
   Jenkins-Crumb:8b87b6ed98ef923******
   ```
-  {% endhint %}
 
-![jenkins crumb](../screenshot/jenkins/jenkins-crumb.png)
+- via web page
+  ![jenkins crumb](../screenshot/jenkins/jenkins-crumb.png)
 
-- via wget
-  ```bash
-  $ wget --user=admin \
-         --password=admin \
-         --auth-no-challenge \
-         -q \
-         --output-document \
-         - \
-         - 'http://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
-  ```
-  - or via json api
+- [via wget](https://support.cloudbees.com/hc/en-us/articles/219257077-CSRF-Protection-Explained?mobile_site=false#usingwget)
+  - after jenkins [`2.176.2`](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)
     ```bash
+    # via xml api
+    $ COOKIEJAR="$(mktemp)"
+    $ wget --user=admin \
+           --password=admin \
+           --auth-no-challenge \
+           --save-cookies "${COOKIEJAR}" \
+           --keep-session-cookies \
+           -q \
+           --output-document \
+           - \
+           "https://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")"
+
+    # via json api
+    $ COOKIEJAR="$(mktemp)"
+    $ wget --user=admin \
+           --password=admin \
+           --auth-no-challenge \
+           --save-cookies "${COOKIEJAR}" \
+           --keep-session-cookies \
+           -q \
+           --output-document \
+           - \
+           'https://jenkins.marslo.com/crumbIssuer/api/json' |
+           jq -r '[.crumbRequestField, .crumb] | join(":")'
+    ```
+  - before jenkins [`2.176.2`](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)
+    ```bash
+    # via xml
     $ wget --user=admin \
            --password=admin \
            --auth-no-challenge \
            -q \
            --output-document \
            - \
-           'https://ssdfw-devops-jenkins.marvell.com/crumbIssuer/api/json' |
+           'http://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+    # via json
+    $ wget --user=admin \
+           --password=admin \
+           --auth-no-challenge \
+           -q \
+           --output-document \
+           - \
+           'https://jenkins.marslo.com/crumbIssuer/api/json' |
            jq -r '[.crumbRequestField, .crumb] | join(":")'
     ```
 
 ### visit API via crumb
 {% hint style='tip' %}
+**@Current after [`2.176.2`](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)**
 ```bash
-CRUMB=$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json | jq -r .crumb)
-FULL_CRUMB=$(curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')")
+COOKIEJAR="$(mktemp)"
+CRUMB=$(curl -u "admin:admin" \
+             --cookie-jar "${COOKIEJAR}" \
+             'https://jenkins.marslo.com/crumbIssuer/api/json' |
+             jq -r '[.crumbRequestField, .crumb] | join(":")'
+      )
+```
+
+@Dprecated before jenkins `2.176.2`
+```bash
+CRUMB="Jenkins-Crumb:$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json | jq -r .crumb)"
+# or
+CRUMB=$(curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')")
 ```
 {% endhint %}
 
 ```bash
-$ curl -H "Jenkins-Crumb:${CRUMB}" \
+$ COOKIEJAR="$(mktemp)"
+$ CRUMB=$(curl -u "admin:admin" \
+             --cookie-jar "${COOKIEJAR}" \
+             'https://jenkins.marslo.com/crumbIssuer/api/json' |
+             jq -r '[.crumbRequestField, .crumb] | join(":")'
+       )
+$ curl -H "${CRUMB}" \
           -d 'cities=Lanzhou' \
           http://jenkins.marslo.com/job/marslo/job/sandbox/buildWithParameters
 ```
@@ -427,7 +483,12 @@ $ curl -H "Jenkins-Crumb:${CRUMB}" \
   ```bash
   $ domain='jenkins.marslo.com'
   $ url="https://${domain}"
-  $ curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')" \
+  $ COOKIEJAR="$(mktemp)"
+  $ curl -H "$(curl -s \
+                    --cookie-jar "${COOKIEJAR}" \
+                    ${url}/crumbIssuer/api/json |
+                    jq -r '.crumbRequestField + ":" + .crumb' \
+              )" \
             -d 'cities=Lanzhou' \
             ${url}/job/marslo/job/sandbox/buildWithParameters
   ```
@@ -460,22 +521,35 @@ $ curl -X POST \
 
 ### [restart Jenkins instance](https://support.cloudbees.com/hc/en-us/articles/216118748-How-to-Start-Stop-or-Restart-your-Instance-)
 {% hint style='tip' %}
+**@Current after [`2.176.2`](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)**
 ```bash
-CRUMB=$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json | jq -r .crumb)
-FULL_CRUMB=$(curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')")
+COOKIEJAR="$(mktemp)"
+CRUMB=$(curl -u "admin:admin" \
+             --cookie-jar "${COOKIEJAR}" \
+             'https://jenkins.marslo.com/crumbIssuer/api/json' |
+             jq -r '[.crumbRequestField, .crumb] | join(":")'
+      )
+```
+
+@Dprecated before jenkins `2.176.2`
+```bash
+CRUMB="Jenkins-Crumb:$(curl -sSLg http://jenkins.marslo.com/crumbIssuer/api/json | jq -r .crumb)"
+# or
+CRUMB=$(curl -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')")
 ```
 {% endhint %}
 
 ```bash
 $ curl -X POST \
-       -H "Jenkins-Crumb:${CRUMB}" \
+       -H "${CRUMB}" \
        http://jenkins.marslo.com/safeRestart
 ```
 - or
   ```bash
   $ domain='jenkins.marslo.com'
   $ url="https://${domain}"
+  $ COOKIEJAR="$(mktemp)"
   $ curl -X POST \
-         -H "$(curl -s ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')" \
+         -H "$(curl -s --cookie-jar "${COOKIEJAR}" ${url}/crumbIssuer/api/json | jq -r '.crumbRequestField + ":" + .crumb')" \
          ${url}/safeRestart
   ```
