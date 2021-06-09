@@ -4,13 +4,14 @@
 
 - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
 - [search (in)sensitive](#search-insensitive)
+- [sort lines](#sort-lines)
 - [list all `filetype`](#list-all-filetype)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
 - [Using vim as a man-page viewer under Unix](#using-vim-as-a-man-page-viewer-under-unix)
+- [newline `\r`](#newline-%5Cr)
+- [vim regex](#vim-regex)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
 
 ### combine multiple lines with or without space
 - with space: `J`
@@ -31,6 +32,21 @@
 /Example\c    " Case insensitive
 ```
 ![search-case-sensitive](../../screenshot/vim/search-ignoreCase.gif)
+
+### [sort lines](https://vim.fandom.com/wiki/Sort_lines)
+> - [How to sort using visual blocks](https://vim.fandom.com/wiki/How_to_sort_using_visual_blocks)
+
+- sort
+  ```bash
+  :{range}sort
+  ```
+  ![sort lines](../../screenshot/vim/sort-lines.gif)
+
+- sort and unique
+  ```bash
+  :{range}sort u
+  ```
+  ![sort lines](../../screenshot/vim/sort-lines-unqiue.gif)
 
 ### [list all `filetype`](https://vi.stackexchange.com/a/14990/7389)
 ```
@@ -128,3 +144,16 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   hi manSubSectionStart term=NONE cterm=NONE gui=NONE ctermfg=black ctermbg=black guifg=navyblue guibg=navyblue
   hi manSubSection term=underline cterm=underline gui=underline ctermfg=green guifg=green
   ```
+
+### [newline `\r`](https://stackoverflow.com/a/71334/2940319)
+{% hint style='tip' %}
+- reference:
+  - [Why is \r a newline for Vim?](https://stackoverflow.com/a/73438/2940319)
+<p></p>
+- [Vim documentation: pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html#/%5Cr) :
+  - `\n` matches an end of line (newline)
+  - `\r` matches a carriage return (more precisely it’s treated as the input `CR`))
+{% endhint %}
+
+
+### [vim regex](http://vimregex.com/)
