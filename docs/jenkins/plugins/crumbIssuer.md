@@ -57,8 +57,15 @@ SERVER="http://localhost:8080"
 # File where web session cookie is saved
 COOKIEJAR="$(mktemp)"
 
-CRUMB=$(curl -u "admin:admin" --cookie-jar "$COOKIEJAR" "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")
-curl -X POST -u "admin:admin" --cookie "$COOKIEJAR" -H "$CRUMB" "$SERVER"/job/someJob/build
+CRUMB=$(curl -u "admin:admin" \
+             --cookie-jar "$COOKIEJAR" \
+             "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" \
+       )
+curl -X POST \
+     -u "admin:admin" \
+     --cookie "$COOKIEJAR" \
+     -H "$CRUMB" \
+     "$SERVER"/job/someJob/build
 ```
 
 #### via `wget`
@@ -67,8 +74,24 @@ SERVER="http://localhost:8080"
 # File where web session cookie is saved
 COOKIEJAR="$(mktemp)"
 
-CRUMB="$(wget --user=admin --password=admin --auth-no-challenge --save-cookies "$COOKIEJAR" --keep-session-cookies -q --output-document - "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")"
-wget --user=admin --password=admin --auth-no-challenge --load-cookies "$COOKIEJAR" --header="$CRUMB" --post-data="" -q "$SERVER"/job/someJob/build
+CRUMB="$(wget --user=admin \
+              --password=admin \
+              --auth-no-challenge \
+              --save-cookies "$COOKIEJAR" \
+              --keep-session-cookies \
+              -q \
+              --output-document \
+              - \
+              "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)"
+        )"
+wget --user=admin \
+     --password=admin \
+     --auth-no-challenge \
+     --load-cookies "$COOKIEJAR" \
+     --header="$CRUMB" \
+     --post-data="" \
+     -q \
+     "$SERVER"/job/someJob/build
 ```
 
 #### example
@@ -100,11 +123,11 @@ wget --user=admin --password=admin --auth-no-challenge --load-cookies "$COOKIEJA
 - with crumb and cookie
   ```bash
   $ COOKIEJAR="$(mktemp)"
-  $ CRUMB=$(curl -s \
+  $ CRUMB="$(curl -s \
                 --cookie-jar "${COOKIEJAR}" \
                 "https://jenkins.marslo.com/crumbIssuer/api/json" |
                 jq -r '.crumbRequestField + ":" + .crumb'
-           )
+           )"
   $ curl -v \
          -X POST \
          --cookie "${COOKIEJAR}" \

@@ -44,6 +44,12 @@ $ git submodule update --init
   ```
 
 ### working with submodule
+#### list submodules
+- [HEAD:.gitmodules](https://stackoverflow.com/a/41217484/2940319)
+  ```bash
+  $ git show HEAD:.gitmodules | git config --file - --list
+  ```
+
 #### pull from remote
 - update submodule only
   ```bash
