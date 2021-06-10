@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Mailing format](#mailing-format)
-- [start Jenkins in docker](#start-jenkins-in-docker)
+- [Properties in Jenkins Core for `JAVA_OPTS`](#properties-in-jenkins-core-for-java_opts)
 - [System Properties](#system-properties)
 - [Configuring HTTP](#configuring-http)
 - [Upgrading Jenkins](#upgrading-jenkins)
@@ -22,100 +22,58 @@
     ${BUILD_LOG, maxLines=8000, escapeHtml=true}
     ```
 
-### start Jenkins in docker
+### [Properties in Jenkins Core for `JAVA_OPTS`](https://www.jenkins.io/doc/book/managing/system-properties/#properties-in-jenkins-core)
+
+#### [Disabling CSRF Protection](https://www.jenkins.io/doc/book/security/csrf-protection/)
+> reference:
+> - [CSRF Protection](https://www.jenkins.io/doc/book/security/csrf-protection/)
+
 ```bash
-$ docker run \
-         --name jenkins \
-         --detach   \
-         --rm \
-         --network jenkins \
-         --env DOCKER_HOST=tcp://docker:2376   \
-         --env DOCKER_CERT_PATH=/certs/client \
-         --env DOCKER_TLS_VERIFY=1   \
-         --publish 8080:8080 \
-         --publish 50000:50000   \
-         --env JENKINS_ADMIN_ID=admin \
-         --env JENKINS_ADMIN_PW=admin \
-         --env JAVA_OPTS=" \
-                -XX:+UseG1GC \
-                -Xms8G  \
-                -Xmx16G \
-                -DsessionTimeout=1440 \
-                -DsessionEviction=43200 \
-                -Djava.awt.headless=true \
-                -Djenkins.ui.refresh=true \
-                -Divy.message.logger.level=4 \
-                -Dhudson.Main.development=true \
-                -Duser.timezone='Asia/Chongqing' \
-                -Dgroovy.grape.report.downloads=true \
-                -Djenkins.install.runSetupWizard=true \
-                -Dpermissive-script-security.enabled=true \
-                -Dhudson.footerURL=https://jenkins.marslo.com \
-                -Djenkins.slaves.NioChannelSelector.disabled=true \
-                -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=false \
-                -Dhudson.model.ParametersAction.keepUndefinedParameters=true \
-                -Djenkins.security.ClassFilterImpl.SUPPRESS_WHITELIST=true \
-                -Dhudson.security.ArtifactsPermission=true \
-                -Dhudson.security.LDAPSecurityRealm.groupSearch=true \
-                -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true \
-                -Dcom.cloudbees.workflow.rest.external.ChangeSetExt.resolveCommitAuthors=true \
-                -Dhudson.plugins.active_directory.ActiveDirectorySecurityRealm.forceLdaps=false \
-                -Dhudson.model.DirectoryBrowserSupport.CSP=\"sandbox allow-same-origin allow-scripts; default-src 'self'; script-src * 'unsafe-eval'; img-src *; style-src * 'unsafe-inline'; font-src *;\" \
-              " \
-         --env JNLP_PROTOCOL_OPTS="-Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=false" \
-         --volume /opt/JENKINS_HOME:/var/jenkins_home \
-         --volume /var/run/docker.sock:/var/run/docker.sock \
-         jenkins/jenkins:latest
+-Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true
 ```
 
-#### [Properties in Jenkins Core for `JAVA_OPTS`](https://www.jenkins.io/doc/book/managing/system-properties/#properties-in-jenkins-core)
+#### [CSRF protection tokens did not expire](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)
+> [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3) :
+> <p></p>
+> Scripts that obtain a crumb using the `/crumbIssuer/api` URL will now fail to perform actions protected from CSRF unless the scripts retain the web session ID in subsequent requests.
 
-- [Disabling CSRF Protection](https://www.jenkins.io/doc/book/security/csrf-protection/)
+```bash
+-Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
+```
 
-  > reference:
-  > - [CSRF Protection](https://www.jenkins.io/doc/book/security/csrf-protection/)
+#### [enable crumb proxy compatibility](https://issues.jenkins.io/browse/JENKINS-50767)
+```bash
+-Djenkins.model.Jenkins.crumbIssuerProxyCompatibility=true
+```
 
-  ```bash
-  -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true
-  ```
+#### [change workspace name](https://www.jenkins.io/doc/book/managing/system-properties/#jenkins-model-jenkins-workspacedirname)
+```bash
+# default
+-Djenkins.model.Jenkins.workspaceDirName='workspace'
+```
 
-- [CSRF protection tokens did not expire](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)
-  > [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3) :
-  > <p></p>
-  > Scripts that obtain a crumb using the `/crumbIssuer/api` URL will now fail to perform actions protected from CSRF unless the scripts retain the web session ID in subsequent requests.
+#### [workspace path](https://www.jenkins.io/doc/book/managing/system-properties/#jenkins-model-jenkins-workspacesdir)
+```bash
+# default
+-Djenkins.model.Jenkins.workspacesDir="${JENKINS_HOME}/workspace/${ITEM_FULL_NAME}"
+```
 
-  ```bash
-  -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
-  ```
-- [enable crumb proxy compatibility](https://issues.jenkins.io/browse/JENKINS-50767)
-  ```bash
-  -Djenkins.model.Jenkins.crumbIssuerProxyCompatibility=true
-  ```
-- [change workspace name](https://www.jenkins.io/doc/book/managing/system-properties/#jenkins-model-jenkins-workspacedirname)
-  ```bash
-  # default
-  -Djenkins.model.Jenkins.workspaceDirName='workspace'
-  ```
-- [workspace path](https://www.jenkins.io/doc/book/managing/system-properties/#jenkins-model-jenkins-workspacesdir)
-  ```bash
-  # default
-  -Djenkins.model.Jenkins.workspacesDir="${JENKINS_HOME}/workspace/${ITEM_FULL_NAME}"
-  ```
-- [a cache for UserDetails should be valid](https://issues.jenkins.io/browse/JENKINS-35493)
-  ```bash
-  # default 2 mins
-  -Djenkins.security.UserDetailsCache.EXPIRE_AFTER_WRITE_SEC=120
-  ```
-- [copyArtifacts v1.29 : JENKINS-14999 : Support for QueueItemAuthenticator](https://github.com/jenkinsci/copyartifact-plugin/pull/26/files)
-  ```bash
-  -Dhudson.security.ArtifactsPermission=true
-  ```
-- [Unauthorized view fragment access](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-534)
-  ```bash
-  # to disable the feature
-  -Djenkins.security.stapler.StaplerDispatchValidator.disabled=false
-  ```
+#### [a cache for UserDetails should be valid](https://issues.jenkins.io/browse/JENKINS-35493)
+```bash
+# default 2 mins
+-Djenkins.security.UserDetailsCache.EXPIRE_AFTER_WRITE_SEC=120
+```
 
+#### [copyArtifacts v1.29 : JENKINS-14999 : Support for QueueItemAuthenticator](https://github.com/jenkinsci/copyartifact-plugin/pull/26/files)
+```bash
+-Dhudson.security.ArtifactsPermission=true
+```
+
+#### [Unauthorized view fragment access](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-534)
+```bash
+# to disable the feature
+-Djenkins.security.stapler.StaplerDispatchValidator.disabled=false
+```
 
 ### [System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [java.lang.System](https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty-java.lang.String-)
@@ -128,20 +86,20 @@ $ docker run \
 System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'Asia/Shanghai')
 System.setProperty('user.timezone', 'Asia/Shanghai')
 ```
-- example
+- setup `user.timezone` in Jenkins
   ```groovy
   println( System.getProperty('user.timezone') );
   System.setProperty('user.timezone', 'Asia/Shanghai');
   println( System.getProperty('user.timezone') )
   ```
 
-- example for crumb issuers
+- enable crumb proxy compatibility
   ```groovy
   System.setProperty('jenkins.model.Jenkins.crumbIssuerProxyCompatibility', 'true')
   System.getProperty('jenkins.model.Jenkins.crumbIssuerProxyCompatibility')
   ```
 
-- example for [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3)
+- setup CSRF protection tokens did not expire for [SECURITY-626](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-3)
   ```groovy
   System.setProperty('hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID', 'true')
   System.getProperty('hudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID')
