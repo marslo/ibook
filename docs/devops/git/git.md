@@ -96,6 +96,38 @@ $ git symbolic-ref --short HEAD
 $ git name-rev --name-only HEAD
 ```
 
+#### [for detached branch](https://stackoverflow.com/a/19457164/2940319)
+```bash
+$ git st
+HEAD detached at d4beb6ac
+...
+
+$ git branch --no-color \
+             --remote \
+             --verbose \
+             --no-abbrev \
+             --contains |
+      sed -rne 's:^[^/]*/([^\ ]+).*$:\1:p'
+marslo/sandbox
+
+# or
+$ git branch --no-color \
+             --remote \
+             --verbose \
+             --no-abbrev \
+             --contains |
+      sed -rne 's:^[ \s]*origin/([^\ ]+).*$:\1:p'
+```
+- or
+  ```bash
+  $ git name-rev --name-only HEAD |
+        sed -rne 's:^[ \s]*([^\]+/){2}([^~]+).*$:\2:p'
+
+  # or
+  $ git name-rev --name-only HEAD |
+        sed -rne 's:^[ \s]*remotes/origin/([^~]+).*$:\1:p'
+  ```
+
 ### create empty branch
   - create an empty branch
     ```bash
