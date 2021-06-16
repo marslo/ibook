@@ -84,50 +84,52 @@ to add cert into Java for Java services (i.e.: Jenkins)
 > - [klasen/sslpoke](https://github.com/klasen/sslpoke)
 > - [Test of java SSL / keystore / cert setup](https://confluence.atlassian.com/download/attachments/117455/SSLPoke.java)
 >
-> ```java
-> // SSLPoke.java
-> import javax.net.ssl.SSLParameters;
-> import javax.net.ssl.SSLSocket;
-> import javax.net.ssl.SSLSocketFactory;
-> import java.io.*;
->
-> /** Establish a SSL connection to a host and port, writes a byte and
->  * prints the response. See
->  * http://confluence.atlassian.com/display/JIRA/Connecting+to+SSL+services
->  */
-> public class SSLPoke {
->     public static void main(String[] args) {
->         if (args.length != 2) {
->             System.out.println("Usage: "+SSLPoke.class.getName()+" <host> <port>");
->             System.exit(1);
->         }
->         try {
->             SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
->             SSLSocket sslsocket = (SSLSocket) sslsocketfactory.createSocket(args[0], Integer.parseInt(args[1]));
->
->             SSLParameters sslparams = new SSLParameters();
->             sslparams.setEndpointIdentificationAlgorithm("HTTPS");
->             sslsocket.setSSLParameters(sslparams);
->
->             InputStream in = sslsocket.getInputStream();
->             OutputStream out = sslsocket.getOutputStream();
->
->             // Write a test byte to get a reaction :)
->             out.write(1);
->
->             while (in.available() > 0) {
->                 System.out.print(in.read());
->             }
->             System.out.println("Successfully connected");
->
->         } catch (Exception exception) {
->             exception.printStackTrace();
->             System.exit(1);
->         }
->     }
-> }
-> ```
 {% endhint %}
+
+- `SSLPoke.java`
+  ```java
+  // SSLPoke.java
+  import javax.net.ssl.SSLParameters;
+  import javax.net.ssl.SSLSocket;
+  import javax.net.ssl.SSLSocketFactory;
+  import java.io.*;
+
+  /** Establish a SSL connection to a host and port, writes a byte and
+   * prints the response. See
+   * http://confluence.atlassian.com/display/JIRA/Connecting+to+SSL+services
+   */
+  public class SSLPoke {
+    public static void main(String[] args) {
+      if (args.length != 2) {
+        System.out.println("Usage: "+SSLPoke.class.getName()+" <host> <port>");
+        System.exit(1);
+      }
+      try {
+        SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+        SSLSocket sslsocket = (SSLSocket) sslsocketfactory.createSocket(args[0], Integer.parseInt(args[1]));
+
+        SSLParameters sslparams = new SSLParameters();
+        sslparams.setEndpointIdentificationAlgorithm("HTTPS");
+        sslsocket.setSSLParameters(sslparams);
+
+        InputStream in = sslsocket.getInputStream();
+        OutputStream out = sslsocket.getOutputStream();
+
+        // Write a test byte to get a reaction :)
+        out.write(1);
+
+        while (in.available() > 0) {
+          System.out.print(in.read());
+        }
+        System.out.println("Successfully connected");
+
+      } catch (Exception exception) {
+          exception.printStackTrace();
+          System.exit(1);
+      }
+    }
+  }
+```
 
 - extract cert from server:
   ```bash
@@ -148,21 +150,21 @@ to add cert into Java for Java services (i.e.: Jenkins)
 - positive test cert / keytool:
   ```bash
   java SSLPoke server 443
+
+  // you should get this:
+  // Successfully connected
   ```
-  - you should get this:
-  ```bash
-  Successfully connected
-  ```
+
 - import certificate into your local TrustStore
 
   > `-Djavax.net.ssl.trustStore` will override the default truststore (cacerts). copy the default one and then add cert and set it via `-Djavax.net.ssl.trustStore` so default CA won't be lost.
 
-```bash
-$ keytool -import -trustcacerts -storepass changeit -file "./class 1 root ca.cer" -alias C1_ROOT_CA -keystore ./LocalTrustStore
+  ```bash
+  $ keytool -import -trustcacerts -storepass changeit -file "./class 1 root ca.cer" -alias C1_ROOT_CA -keystore ./LocalTrustStore
 
-# use it in JAVA:
-$ java -Djavax.net.ssl.trustStore=./LocalTrustStore -jar SSLPoke.jar $HOST $PORT
-```
+  # use it in JAVA:
+  $ java -Djavax.net.ssl.trustStore=./LocalTrustStore -jar SSLPoke.jar $HOST $PORT
+  ```
 
 
 ### [InstallCert.java](https://github.com/escline/InstallCert)
