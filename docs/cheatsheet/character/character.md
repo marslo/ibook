@@ -29,6 +29,8 @@
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
   - [search and replace](#search-and-replace)
   - [replace with position](#replace-with-position)
+- [fold](#fold)
+  - [check the params valid](#check-the-params-valid)
 - [regex](#regex)
   - [get URL](#get-url)
 - [insert new line](#insert-new-line)

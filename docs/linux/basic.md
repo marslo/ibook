@@ -4,8 +4,6 @@
 
 - [character](#character)
   - [metacharacter](#metacharacter)
-- [Brace Expansion](#brace-expansion)
-  - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
 - [Process Substitution](#process-substitution)
   - [example: run script without download](#example-run-script-without-download)
   - [example: merge lines of file](#example-merge-lines-of-file)
@@ -95,12 +93,6 @@
 | `digit2>&digit1` | sh                   | Connect digit2 to digit1                      |
 | `digit>&-`       | sh                   | Close file digit                              |
 
-
-# [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
-## Scp Multipule Folder/File to Target Server
-```bash
-$ scp -r $(echo dir{1..10}) user@target.server:/target/server/path/
-```
 
 # [Process Substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
 > Process substitution is a form of redirection where the input or output of a process (some sequence of commands) appear as a temporary file.

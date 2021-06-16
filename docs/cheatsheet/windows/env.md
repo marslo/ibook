@@ -2,12 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [default [Windows Environment Variables] List (https://ss64.com/nt/syntax-variables.html)](#default-windows-environment-variables-list-httpsss64comntsyntax-variableshtml)
+- [default Windows Environment Variables List](#default-windows-environment-variables-list)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## default [Windows Environment Variables] List (https://ss64.com/nt/syntax-variables.html)
+## default [Windows Environment Variables List](https://ss64.com/nt/syntax-variables.html)
 | Variable                | Default value assuming the system drive is C:                                                                                                                                                 |
 | -                       | -                                                                                                                                                                                             |
 | ALLUSERSPROFILE         | `C:\ProgramData`                                                                                                                                                                              |
