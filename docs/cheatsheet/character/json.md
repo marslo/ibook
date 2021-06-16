@@ -63,20 +63,22 @@
 
 ### Slicing and Filtering
 
-| Description                      |                                                                       Command                                                                       |
-|:---------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------:|
-| All                              |                                                                       `jq .[]`                                                                      |
-| First                            |                                                                     `jq '.[0]'`                                                                     |
-| Range                            |                                                                    `jq '.[2:4]'`                                                                    |
-| First 3                          |                                                                     `jq '.[:3]'`                                                                    |
-| Last 2                           |                                                                    `jq '.[-2:]'`                                                                    |
-| Before Last                      |                                                                     `jq '.[-2]'`                                                                    |
-| Select array of int by value     |                                                              `jq 'map(select(. >= 2))'`                                                             |
-| Select array of objects by value |                                                      `jq '.[] ⎮ select(.id == "second")'`                                                      |
-| Select by type                   | `jq '.[] ⎮ numbers'`<br> ** with type been arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars ** |
-
+| Description                        | Command                                                                                                                                               |
+| :--------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------: |
+| All                                | `jq .[]`                                                                                                                                              |
+| First                              | `jq '.[0]'`                                                                                                                                           |
+| Range                              | `jq '.[2:4]'`                                                                                                                                         |
+| First 3                            | `jq '.[:3]'`                                                                                                                                          |
+| Last 2                             | `jq '.[-2:]'`                                                                                                                                         |
+| Before Last                        | `jq '.[-2]'`                                                                                                                                          |
+| Select array of int by value       | `jq 'map(select(. >= 2))'`                                                                                                                            |
+| Select array of objects by value   | `jq '.[] ⎮ select(.id == "second")'`                                                                                                                  |
+| Select by type                     | `jq '.[] ⎮ numbers'`<br> **with type been arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars **         |
 
 ## `join`
+> [to output multiple values on a single line](https://github.com/stedolan/jq/issues/785)
+> [join multiple values](https://github.com/stedolan/jq/issues/785#issuecomment-101842421https://github.com/stedolan/jq/issues/785#issuecomment-101842421)
+
 ```bash
 $ echo '{ "some": "thing", "json": "like" }' |
        jq -r '[.some, .json] | join(":")'
