@@ -70,7 +70,23 @@ rlog    = "!bash -c 'while read branch; do \n\
            done < <(git rev-parse --abbrev-ref HEAD) '"
 ```
 
-## git branch
+## commit
+### get commit id
+> the `<value>` can be:
+> - commit id
+> - branch name
+> - `HEAD`, `HEAD~n`, `HEAD^^`
+
+```bash
+$ git rev-parse <value>^{commit}
+```
+
+### get previous commit id
+```bash
+$ git rev-list --no-walk <commit-id>^
+```
+
+## branch
 ### [get current branch](https://stackoverflow.com/a/19585361/2940319)
 ```bash
 $ git branch --show-current
@@ -254,7 +270,7 @@ $ git branch --sort=committerdate   # ASC
   $ git for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
   ```
 
-## git log
+## log
 ### show files and status without comments
 ```bash
 $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
@@ -340,7 +356,7 @@ $ git log --grep='jira' --oneline
 d17dd3aa add jira api
 ```
 
-## git rebase
+## rebase
 > about [`GIT_SEQUENCE_EDITOR`](https://stackoverflow.com/a/54970726/2940319)
 > [git rebase in depth](https://git-rebase.io/)
 
@@ -428,7 +444,7 @@ $ EDITOR="sed -i -e 's/borken/broken/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/
   $ GIT_EDITOR="sed -i -e 's/kyewrod/keyword/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
   ```
 
-## git mv
+## mv
 ### case sensitive
 - error with regular `git mv`
   ```bash
@@ -616,7 +632,7 @@ And then change `pick` to `reword`
   $ git push origin +master
   ```
 
-## git diff
+## diff
 ### [get difference between two branches](https://til.hashrocket.com/posts/18139f4f20-list-different-commits-between-two-branches)
 ```bash
 $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/<dev>
@@ -654,14 +670,12 @@ $ git name-rev --tags --name-only $(git rev-parse <revision>)
 ```
 - example
   ```bash
-  $ git name-rev --tags --name-only $(git rev-parse HEAD)```
+  $ git name-rev --tags --name-only $(git rev-parse HEAD)
   ```
 
 ## checkout
-### checkout specific commit
+### [checkout specific commit](https://stackoverflow.com/a/3489576/2940319)
 ```bash
-# credit belongs to https://stackoverflow.com/a/3489576/2940319
-
 # make a new blank repository in the current directory
 git init
 

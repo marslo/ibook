@@ -630,6 +630,21 @@ $ echo "${string:0:position-1}${replacement}${string:position}"
 aabaa
 ```
 
+## fold
+### check the params valid
+{% hint style='tip' %}
+available params should be contained by 'iwfabcem'
+{% endhint %}
+
+```bash
+# case insensitive
+param=$( tr '[:upper:]' '[:lower:]' <<< "$1" )
+
+for _p in $(echo "${param}" | fold -w1); do
+  [[ ! 'iwfabcem' =~ ${_p} ]] && exits='yes' && break
+done
+```
+
 ## regex
 
 ### get URL
