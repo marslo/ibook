@@ -2,24 +2,30 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Shell Expansions](#shell-expansions)
+- [shell expansions](#shell-expansions)
+  - [word splitting](#word-splitting)
   - [Filename Expansion](#filename-expansion)
-- [Quoting](#quoting)
-- [Brace Expansion](#brace-expansion)
-  - [Scp Multipule Folder/File to Target Server](#scp-multipule-folderfile-to-target-server)
-  - [All About {Curly Braces} In Bash](#all-about-curly-braces-in-bash)
-  - [Fast copy or moving or something (Detials -> Brace Expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
+- [quoting](#quoting)
+- [brace expansion](#brace-expansion)
+  - [scp multipule folder/file to target server](#scp-multipule-folderfile-to-target-server)
+  - [all about {curly braces} in bash](#all-about-curly-braces-in-bash)
+  - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
   - [multiple directories creation](#multiple-directories-creation)
   - [copy a file to multipule folder](#copy-a-file-to-multipule-folder)
-- [The Set Builtin](#the-set-builtin)
+- [the set builtin](#the-set-builtin)
   - [show current status](#show-current-status)
   - [option name](#option-name)
+- [the shopt builtin](#the-shopt-builtin)
+  - [options](#options)
+  - [examples](#examples)
+- [event designators](#event-designators)
+  - [word designators](#word-designators)
+- [special parameters](#special-parameters)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
-## [Shell Expansions](https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html#Shell-Expansions)
+## [shell expansions](https://www.gnu.org/software/bash/manual/html_node/shell-expansions.html#shell-expansions)
 
 {% hint style='tip' %}
 references:
@@ -36,9 +42,13 @@ references:
     - [Pattern Matching](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
   - [Quote Removal](https://www.gnu.org/software/bash/manual/html_node/Quote-Removal.html)
 
-And:
-- [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-- [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
+- And:
+  - [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+  - [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
+
+- And
+  - [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html)
+    - [Chapter 3. The Bash environment](https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_02.html)
 {% endhint %}
 
 |            NAME           | EXAMPLE                                     |
@@ -46,13 +56,13 @@ And:
 |      Brace Expansion      | `echo a{d,c,b}e`                            |
 |      Tilde Expansion      | `~`                                         |
 | Shell Parameter Expansion | `string=01234567890abc; echo ${string:7:2}` |
-|    Command Substitution   | `$(command)` or `\`command\` `              |
+|    Command Substitution   | `$(command)` or <code>`command`</code>      |
 |    Arithmetic Expansion   | `$(( expression ))`                         |
 |    Process Substitution   | `<(list)` or `>(list)`                      |
 |       Word Splitting      | `$IFS`                                      |
 |     Filename Expansion    | `*`, `?` , `[..]`,...                       |
 
-### [word splitting]()
+### [word splitting](https://www.gnu.org/software/bash/manual/html_node/Word-Splitting.html)
 > due to 7 fields are spitted via `:` in /etc/passwd
 
 ```bash
@@ -61,11 +71,10 @@ read f1 f2 f3 f4 f5 f6 f7 < /etc/passwd
 ```
 
 ### [Filename Expansion](https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
-> Bash scans each word for the characters '*', '?', and '[', unless the -f option has been set
-
+> Bash scans each word for the characters `'*'`, `'?'`, and `'['`, unless the `-f` (`set -f`) option has been set
 
 | CONDITION                             | RESULT                                                                                            |
-| - | - |
+|---------------------------------------|---------------------------------------------------------------------------------------------------|
 | match found && `nullglob` disabled    | the word is regarded as a pattern                                                                 |
 | no match found && `nullglob` disabled | the word is left unchanged                                                                        |
 | no match found && `nullglob` set      | the word is removed                                                                               |
@@ -75,7 +84,7 @@ read f1 f2 f3 f4 f5 f6 f7 < /etc/passwd
 | `shopt -s dotglob`                    | `*` will including all `.*`. see [zip package with dot-file](good.html#zip-package-with-dot-file) |
 
 
-## [Quoting](https://www.gnu.org/software/bash/manual/html_node/Quoting.html#Quoting)
+## [quoting](https://www.gnu.org/software/bash/manual/html_node/quoting.html#quoting)
 > - [Difference between single and double quotes in Bash](https://stackoverflow.com/a/42082956/2940319)
 > - [ANSI-C quoting with $'' - GNU Bash Manual](https://www.gnu.org/software/bash/manual/html_node/ANSI_002dC-Quoting.html)
 > - [Locale translation with $"" - GNU Bash Manual](https://www.gnu.org/software/bash/manual/html_node/Locale-Translation.html#Locale-Translation)
@@ -114,14 +123,13 @@ arr=(apple)  # an indexed array with a single element
 | 21   | `$'!cmd'`                  | `!cmd`                  | history expansion character `'!'` is ignored inside ANSI-C quotes                                  |
 
 
-
-## [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
-### Scp Multipule Folder/File to Target Server
+## [brace expansion](https://www.gnu.org/software/bash/manual/html_node/brace-expansion.html)
+### scp multipule folder/file to target server
 ```bash
 $ scp -r $(echo dir{1..10}) user@target.server:/target/server/path/
 ```
 
-### [All About {Curly Braces} In Bash](https://www.linux.com/tutorials/all-about-curly-braces-bash/)
+### [all about {curly braces} in bash](https://www.linux.com/tutorials/all-about-curly-braces-bash/)
 ```bash
 $ echo 00{1..9} 0{10..99} 100
 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 019 020 021 022 023 024 025 026 027 028 029 030 031 032 033 034 035 036 037 038 039 040 041 042 043 044 045 046 047 048 049 050 051 052 053 054 055 056 057 058 059 060 061 062 063 064 065 066 067 068 069 070 071 072 073 074 075 076 077 078 079 080 081 082 083 084 085 086 087 088 089 090 091 092 093 094 095 096 097 098 099 100
@@ -144,7 +152,7 @@ $ echo {1..100..3}
 1 4 7 10 13 16 19 22 25 28 31 34 37 40 43 46 49 52 55 58 61 64 67 70 73 76 79 82 85 88 91 94 97 100
 ```
 
-### Fast copy or moving or something ([Detials](http://www.manpager.com/linux/man1/bash.1.html) -> Brace Expansion)
+### fast copy or moving or something ([detials](http://www.manpager.com/linux/man1/bash.1.html) -> brace expansion)
 - Example 1:
   ```bash
   $ ls | grep foo
@@ -205,17 +213,26 @@ $ echo dir1 dir2 dir3 | xargs -n 1 cp file1
 $ echo dir{1..10} | xargs -n 1 cp file1
 ```
 
-## [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+## [the set builtin](https://www.gnu.org/software/bash/manual/html_node/the-set-builtin.html)
 {% hint style='tip' %}
-reference:
+
+**reference**:
 - [Writing Robust Bash Shell Scripts](https://www.davidpashley.com/articles/writing-robust-shell-scripts/)
+- [用内置的set和shopt命令来设置bash的选项](https://blog.csdn.net/tonyyong90/article/details/105606638)
 
 **set**
-<p></p>
 ```
 set [--abefhkmnptuvxBCEHPT] [-o option-name] [argument …]
 set [+abefhkmnptuvxBCEHPT] [+o option-name] [argument …]
 ```
+
+- example
+```bash
+$ set | grep -e SHELLOPTS -e BASHOPTS
+BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
+SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
+```
+
 {% endhint %}
 
 
@@ -341,7 +358,7 @@ set [+abefhkmnptuvxBCEHPT] [+o option-name] [argument …]
 |      `vi`     | Use a vi-style line editing interface. This also affects the editing interface used for read `-e`.                                                                                                                 |
 |    `xtrace`   | Same as `-x`.                                                                                                                                                                                                      |
 
-## [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
+## [the shopt builtin](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
 {% hint style='tip' %}
 shopt
 ```bash
@@ -483,3 +500,104 @@ shopt [-pqsu] [-o] [optname …]
   $ shopt -q xpg_echo; echo $?
   1
   ```
+
+{% hint style='tip' %}
+**[set VS. shopt](https://unix.stackexchange.com/a/490474/29178)**
+```bash
+$ set | grep -e SHELLOPTS -e BASHOPTS
+BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
+SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
+
+$ set -o |  column -t | grep -v off
+braceexpand           on
+emacs                 on
+hashall               on
+histexpand            on
+history               on
+interactive-comments  on
+monitor               on
+ 
+$ shopt | column -t | grep -v off
+cdspell                  on
+checkwinsize             on
+cmdhist                  on
+complete_fullquote       on
+expand_aliases           on
+extglob                  on
+extquote                 on
+force_fignore            on
+globasciiranges          on
+histappend               on
+interactive_comments     on
+login_shell              on
+progcomp                 on
+promptvars               on
+sourcepath               on
+```
+{% endhint %}
+
+## [event designators](https://www.gnu.org/software/bash/manual/html_node/event-designators.html)
+
+|        option       | expression                                                                                               |
+|:-------------------:|----------------------------------------------------------------------------------------------------------|
+|         `!`         | start a history substitution                                                                             |
+|         `!n`        | refer to command line n                                                                                  |
+|        `!-n`        | refer to the command n lines back                                                                        |
+|         `!!`        | refer to the previous command                                                                            |
+|      `!string`      | refer to the most recent command preceding the current position in the history list starting with string |
+|    `!?string[?]`    | refer to the most recent command preceding the current position in the history list containing string.   |
+| `^string1^string2^` | `!!:s^string1^string2^` <br> quick substitution. repeat the last command, replacing string1 with string2 |
+|         `!#`        | the entire command line typed so far                                                                     |
+
+### [word designators](https://www.gnu.org/software/bash/manual/html_node/word-designators.html)
+
+|     option     | expression                                                                             |
+|:--------------:|----------------------------------------------------------------------------------------|
+|      `!!`      | designates the preceding command                                                       |
+| `!!:$` or `!$` | designates the last argument of the preceding command                                  |
+|     `!fi:2`    | designates the second argument of the most recent command starting with the letters fi |
+
+
+{% hint style='tip' %}
+**`$_` VS. `!$`**
+
+> reference:
+> - [Understand the meaning of `$_`](https://unix.stackexchange.com/a/280557/29178)
+
+-`$_`
+  - [bash variables](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html)
+  - if the invoking application doesn't pass a _ environment variable, the invoked bash shell will initialise $_ to the argv[0] it receives itself which could be bash
+  - i.e.
+    ```bash
+    $ env | grep '^_='
+    _=/usr/local/opt/coreutils/libexec/gnubin/env
+
+    # or
+    $ env bash -c 'echo "$_"'
+    /usr/local/opt/coreutils/libexec/gnubin/env
+    ```
+- `!$`
+  - [Word Designators](https://www.gnu.org/software/bash/manual/html_node/Word-Designators.html)
+  - equal to `!!:$`
+{% endhint %}
+
+## [special parameters](https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_02.html)
+
+| character | definition                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|:---------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    `$*`   | expands to the positional parameters, starting from one. when the expansion occurs within double quotes, it expands to a single word with the value of each parameter separated by the first character of the ifs special variable.                                                                                                                                                                                                            |
+|    `$@`   | expands to the positional parameters, starting from one. when the expansion occurs within double quotes, each parameter expands to a separate word.                                                                                                                                                                                                                                                                                            |
+|    `$#`   | expands to the number of positional parameters in decimal.                                                                                                                                                                                                                                                                                                                                                                                     |
+|    `$?`   | expands to the exit status of the most recently executed foreground pipeline.                                                                                                                                                                                                                                                                                                                                                                  |
+|    `$-`   | a hyphen expands to the current option flags as specified upon invocation, by the set built-in command, or those set by the shell itself (such as the -i).                                                                                                                                                                                                                                                                                     |
+|    `$$`   | expands to the process id of the shell.                                                                                                                                                                                                                                                                                                                                                                                                        |
+|    `$!`   | expands to the process id of the most recently executed background (asynchronous) command.                                                                                                                                                                                                                                                                                                                                                     |
+|    `$0`   | expands to the name of the shell or shell script.                                                                                                                                                                                                                                                                                                                                                                                              |
+|    `$_`   | the underscore variable is set at shell startup and contains the absolute file name of the shell or script being executed as passed in the argument list. <br>subsequently, it expands to the last argument to the previous command, after expansion. it is also set to the full pathname of each command executed and placed in the environment exported to that command. when checking mail, this parameter holds the name of the mail file. |
+
+{% hint style='tip' %}
+**`$*` vs. `$@`**:
+- The implementation of `"$*"` has always been a problem and realistically should have been replaced with the behavior of `"$@"`.
+- In almost every case where coders use `"$*"`, they mean `"$@"`.
+- `"$*"` Can cause bugs and even security holes in your software.
+{% endhint %}
