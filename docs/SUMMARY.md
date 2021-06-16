@@ -5,6 +5,7 @@
   * [cli](artifactory/cli.md)
   * [aql](artifactory/aql.md)
 * [cheatsheet](cheatsheet/good.md)
+  * [shell](cheatsheet/shell.md)
   * [vim](cheatsheet/vim/vim.md)
     * [tricky](cheatsheet/vim/tricky.md)
     * [windows](cheatsheet/vim/windows.md)
