@@ -16,6 +16,7 @@
   - [check whether if enum contains a given string](#check-whether-if-enum-contains-a-given-string)
   - [list all values in Enum](#list-all-values-in-enum)
   - [Convert String type to Enum](#convert-string-type-to-enum)
+  - [give Enums instance variables of their own type in Groovy](#give-enums-instance-variables-of-their-own-type-in-groovy)
 - [run groovy from docker](#run-groovy-from-docker)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
@@ -375,6 +376,68 @@ groovy:000> Choices.valueOf("a1").getClass()
 ===> class Choices
 ```
 
+### [give Enums instance variables of their own type in Groovy](https://stackoverflow.com/a/11302774/2940319)
+```groovy
+enum Direction {
+  North, South, East, West, Up, Down
+  private Direction opposite
+  Direction getOpposite() { opposite }
+
+  static {
+    def opposites = { d1, d2 -> d1.opposite = d2; d2.opposite = d1 }
+    opposites(North, South)
+    opposites(East, West)
+    opposites(Up, Down)
+  }
+}
+
+println Direction.South.getOpposite()
+println Direction.South.opposite
+Direction.values().each {
+  println "opposite of $it is $it.opposite"
+}
+```
+- result
+  ```groovy
+  North
+  North
+  opposite of North is South
+  opposite of South is North
+  opposite of East is West
+  opposite of West is East
+  opposite of Up is Down
+  opposite of Down is Up
+  Result: [North, South, East, West, Up, Down]
+  ```
+
+or [using the direction indexes on the enum to find the opposites](https://ideone.com/OPv1v)
+```groovy
+public enum Direction {
+  North(1), South(0), East(3), West(2), Up(5), Down(4)
+  private oppositeIndex
+  Direction getOpposite() {
+    values()[oppositeIndex]
+  }
+  Direction(oppositeIndex) {
+    this.oppositeIndex = oppositeIndex
+  }
+}
+
+println Direction.North.opposite
+```
+
+or [without the need of an extra field, just using the enum values' `ordinal()`](https://ideone.com/8J8lv)
+```groovy
+enum Direction {
+  North, South, East, West, Up, Down
+  Direction getOpposite() {
+    values()[ordinal() + ordinal() % 2 * -2 + 1]
+  }
+}
+
+println Direction.North.getOpposite()
+```
+
 ## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
 ```bash
 $ docker run \
@@ -450,7 +513,7 @@ String.metaClass {
         groovy { 'Yeah man!' }
     }
 }
- 
+
 assert 'Groovy or Java?' == ("Groovy" | "Java?")
 assert ['o', 'o', 'y'] == ("Groovy" | ['o', 'y'])
 assert 'Groovy and Java!' == ("Groovy" & "Java!")
