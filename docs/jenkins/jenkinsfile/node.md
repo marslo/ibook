@@ -38,6 +38,8 @@ ansiColor('xterm') { timestamps {
           jenkins: jnlp-inbound-agent
       spec:
         hostNetwork: true
+        nodeSelector:
+          <label_name>: "<value>"
         containers:
         - name: jnlp
           image: jenkins/inbound-agent:latest
@@ -82,6 +84,8 @@ ansiColor('xterm') { timestamps {
           jenkins: jnlp-inbound-agent
       spec:
         hostNetwork: true
+        nodeSelector:
+          <label_name>: "<value>"
         containers:
         - name: jnlp
           image: jenkins/inbound-agent:latest
@@ -106,7 +110,6 @@ ansiColor('xterm') { timestamps {
 }} // timestamp | ansiColor
 
 // vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
-
 ```
 
 ### with `POD_LABEL`
@@ -131,6 +134,8 @@ ansiColor('xterm') { timestamps {
           jenkins: jnlp-inbound-agent
       spec:
         hostNetwork: true
+        nodeSelector:
+          <label_name>: "<value>"
         containers:
         - name: jnlp
           image: jenkins/inbound-agent:latest
