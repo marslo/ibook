@@ -329,3 +329,25 @@ $ usermod -a -G adm,root,sudo,docker devops
   ```bash
   $ getent group
   ```
+
+#### remove user from group
+> - [How to Add or Remove a User from a Group in Linux](https://www.tecmint.com/add-or-remove-user-from-group-in-linux/)
+
+```bash
+$ gpasswd -d <account> <group>
+```
+
+- [`deluser`](http://manpages.ubuntu.com/manpages/trusty/man8/deluser.8.html) for ubunut
+  {% hint style='tip' %}
+  `deluser`, `delgroup` - remove a user or group from the system
+  > SYNOPSIS
+  >
+  >    deluser  [options]  [--force] [--remove-home] [--remove-all-files] [--backup] [--backup-to DIR] user
+  >    deluser --group [options] group
+  >    delgroup [options] [--only-if-empty] group
+  >    deluser [options] user group
+  {% endhint %}
+
+  ```bash
+  $ deluser <account> <group>
+  ```
