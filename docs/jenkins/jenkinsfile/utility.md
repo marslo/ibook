@@ -6,6 +6,7 @@
   - [findFiles](#findfiles)
   - [send mail with catch error](#send-mail-with-catch-error)
   - [tips](#tips)
+  - [DSL with groovy](#dsl-with-groovy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -70,3 +71,95 @@ try {
     ```groovy
     (1..5).toList().each { println it }
     ```
+
+### DSL with groovy
+{% hint style='info' %}
+**original DSL**:
+```groovy
+cleanWs(
+  deleteDirs: true,
+  disableDeferredWipeout: true,
+  notFailBuild: true,
+  patterns: [
+    [pattern: '*', type: 'INCLUDE'],
+    [pattern: 'a.txt', type: 'INCLUDE']
+  ]
+)
+```
+{% endhint %}
+
+- [Spread Operator](https://www.logicbig.com/tutorials/misc/groovy/spread-operator.html)
+  > [Groovy Goodness: the Spread Operato](https://blog.mrhaki.com/2009/09/groovy-goodness-spread-operator.html)
+
+  ```groovy
+  List p = [ 'a.txt', 'b.txt' ]
+
+  cleanWs(
+    deleteDirs: true,
+    disableDeferredWipeout: true,
+    notFailBuild: true,
+    patterns: [
+      *p.collect {
+        [pattern: "${it}", type: 'INCLUDE']
+      }
+    ]
+  )
+  ```
+
+- `List.collect`
+  ```groovy
+  List p = [ 'a.txt', 'b.txt' ]
+
+  cleanWs(
+    deleteDirs: true,
+    disableDeferredWipeout: true,
+    notFailBuild: true,
+    patterns: p.collect { [pattern: "${it}", type: 'INCLUDE'] }
+  )
+  ```
+
+- `with API`
+  ```groovy
+  import hudson.plugins.ws_cleanup.Pattern
+  import hudson.plugins.ws_cleanup.Pattern.PatternType
+
+  List p = [ 'a.txt', 'b.txt' ]
+
+  cleanWs(
+    deleteDirs: true,
+    disableDeferredWipeout: true,
+    notFailBuild: true,
+    patterns: p.collect { new Pattern(it, PatternType.INCLUDE) }
+  )
+  ```
+
+- pure API
+  > Javadoc:
+  > - [hudson.plugins.ws_cleanup.WsCleanup](https://javadoc.jenkins.io/plugin/ws-cleanup/hudson/plugins/ws_cleanup/WsCleanup.html)
+  > - [hudson.plugins.ws_cleanup.Pattern](https://javadoc.jenkins.io/plugin/ws-cleanup/hudson/plugins/ws_cleanup/Pattern.html)
+  > - [hudson.plugins.ws_cleanup.Pattern.PatternType](https://javadoc.jenkins.io/plugin/ws-cleanup/hudson/plugins/ws_cleanup/Pattern.PatternType.html)
+  > - [FilePath](https://javadoc.jenkins.io/hudson/FilePath.html)
+  > - [Launcher](https://javadoc.jenkins-ci.org/hudson/Launcher.html)
+  > - [TaskListener](https://javadoc.jenkins-ci.org/hudson/model/TaskListener.html)
+  >
+  > get `FilePath`
+  > - [Using FilePath to access workspace on slave in Jenkins pipeline](https://stackoverflow.com/a/42018578/2940319)
+
+  ```groovy
+  import hudson.plugins.ws_cleanup.WsCleanup
+  import hudson.plugins.ws_cleanup.Pattern
+  import hudson.plugins.ws_cleanup.Pattern.PatternType
+
+  List p = [ 'a.txt', 'b.txt' ]
+
+  WsCleanup wsc = new WsCleanup()
+  wsc.setDeleteDirs(true)
+  wsc.setDisableDeferredWipeout(true)
+  wsc.setNotFailBuild(true)
+  wsc.setPatterns(
+    p.each {
+      new Pattern( it, PatternType.INCLUDE )
+    }
+  )
+  wsc.perform( currentBuild.rawBuild, <FilePath>, <Launcher>, <TaskListener> ) // unfinished
+  ```
