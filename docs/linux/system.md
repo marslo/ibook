@@ -340,12 +340,11 @@ $ gpasswd -d <account> <group>
 - [`deluser`](http://manpages.ubuntu.com/manpages/trusty/man8/deluser.8.html) for ubunut
   {% hint style='tip' %}
   `deluser`, `delgroup` - remove a user or group from the system
-  > SYNOPSIS
-  >
-  >    deluser  [options]  [--force] [--remove-home] [--remove-all-files] [--backup] [--backup-to DIR] user
-  >    deluser --group [options] group
-  >    delgroup [options] [--only-if-empty] group
-  >    deluser [options] user group
+  > **SYNOPSIS**
+  > - deluser  [options]  [--force] [--remove-home] [--remove-all-files] [--backup] [--backup-to DIR] user
+  > - deluser --group [options] group
+  > - delgroup [options] [--only-if-empty] group
+  > - deluser [options] user group
   {% endhint %}
 
   ```bash
