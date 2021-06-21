@@ -331,3 +331,14 @@ build.getProject()._getRuns().iterator().each{ run ->
   ```
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
 
+
+## [using jenkins-core in groovy script via Grab](https://stackoverflow.com/a/38967175/2940319)
+> - [GrabResolver](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GrabResolver.html)
+> - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
+> - [kellyrob99/setupNewServer.groovy](https://gist.github.com/kellyrob99/1907283)
+
+```
+@GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
+@Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.9')
+import jenkins.model.Jenkins
+```
