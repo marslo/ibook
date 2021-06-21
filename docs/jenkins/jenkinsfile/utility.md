@@ -6,7 +6,7 @@
   - [findFiles](#findfiles)
   - [send mail with catch error](#send-mail-with-catch-error)
   - [tips](#tips)
-  - [DSL with groovy](#dsl-with-groovy)
+- [DSL with groovy](#dsl-with-groovy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -72,7 +72,7 @@ try {
     (1..5).toList().each { println it }
     ```
 
-### DSL with groovy
+## DSL with groovy
 {% hint style='info' %}
 **original DSL**:
 ```groovy
@@ -81,8 +81,8 @@ cleanWs(
   disableDeferredWipeout: true,
   notFailBuild: true,
   patterns: [
-    [pattern: '*', type: 'INCLUDE'],
-    [pattern: 'a.txt', type: 'INCLUDE']
+    [ pattern: 'b.txt', type: 'INCLUDE' ] ,
+    [ pattern: 'a.txt', type: 'INCLUDE' ]
   ]
 )
 ```
@@ -118,7 +118,7 @@ cleanWs(
   )
   ```
 
-- `with API`
+- with API
   ```groovy
   import hudson.plugins.ws_cleanup.Pattern
   import hudson.plugins.ws_cleanup.Pattern.PatternType
@@ -133,7 +133,7 @@ cleanWs(
   )
   ```
 
-- pure API
+- with pure API
   > Javadoc:
   > - [hudson.plugins.ws_cleanup.WsCleanup](https://javadoc.jenkins.io/plugin/ws-cleanup/hudson/plugins/ws_cleanup/WsCleanup.html)
   > - [hudson.plugins.ws_cleanup.Pattern](https://javadoc.jenkins.io/plugin/ws-cleanup/hudson/plugins/ws_cleanup/Pattern.html)
@@ -142,7 +142,8 @@ cleanWs(
   > - [Launcher](https://javadoc.jenkins-ci.org/hudson/Launcher.html)
   > - [TaskListener](https://javadoc.jenkins-ci.org/hudson/model/TaskListener.html)
   >
-  > get `FilePath`
+  >
+  > get `FilePath` :
   > - [Using FilePath to access workspace on slave in Jenkins pipeline](https://stackoverflow.com/a/42018578/2940319)
 
   ```groovy
@@ -161,5 +162,7 @@ cleanWs(
       new Pattern( it, PatternType.INCLUDE )
     }
   )
-  wsc.perform( currentBuild.rawBuild, <FilePath>, <Launcher>, <TaskListener> ) // unfinished
+
+  // unresolved
+  wsc.perform( currentBuild.rawBuild, <FilePath>, <Launcher>, <TaskListener> )
   ```
