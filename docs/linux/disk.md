@@ -4,7 +4,7 @@
 
 - [nfs](#nfs)
   - [mount a nfs](#mount-a-nfs)
-  - [check nfs mount](#check-nfs-mount)
+  - [check mount](#check-mount)
   - [disconnect the mount](#disconnect-the-mount)
   - [setup nfs mount by default server boot](#setup-nfs-mount-by-default-server-boot)
 - [LVM](#lvm)
@@ -48,7 +48,39 @@ $ sudo mount -t nfs 1.2.3.4:/a/b /mnt/mynfs
   $ apt-get install nfs-utils nfs-utils-lib
   ```
 
-### check nfs mount
+### check mount
+```bash
+$ cat /etc/mtab | grep /folder_name
+/dev/sdb1 /folder_name ext4 rw,seclabel,relatime,stripe=64 0 0
+```
+
+#### [Check if folder is a mounted remote filesystem](https://unix.stackexchange.com/a/72224/29178)
+```bash
+$ df -P -T /folder_name
+Filesystem     Type 1024-blocks     Used  Available Capacity Mounted on
+/dev/sdb1      ext4  744******* 658***** 699*******       1% /folder_name
+```
+
+- `df`
+  ```bash
+  $ df /local_storage
+  Filesystem      1K-blocks     Used  Available Use% Mounted on
+  /dev/sdb1      744******* 658***** 699*******   1% /folder_name
+  ```
+
+- `/etc/fstab`
+  ```bash
+  $ cat /etc/fstab
+  ```
+
+- [`findmnt`](https://www.tecmint.com/find-mounted-file-systems-in-linux/)
+  ```bash
+  $ findmnt --fstab /local_storage
+  TARGET         SOURCE    FSTYPE OPTIONS
+  /local_storage /dev/sdb1 ext4   defaults
+  ```
+
+#### check nfs mount
 ```bash
 $ df -h -F nfs [ | column -t ]
 $ mount | column -t | grep -E 'type.*nfs
