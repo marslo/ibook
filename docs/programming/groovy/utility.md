@@ -8,6 +8,9 @@
   - [Java LocalDateTime with different format](#java-localdatetime-with-different-format)
   - [formatting the date](#formatting-the-date)
   - [convert `Long` to `SimpleDateFormat`](#convert-long-to-simpledateformat)
+- [regex `Pattern` and `Matcher`](#regex-pattern-and-matcher)
+  - [matches to regex (return `Boolean`)](#matches-to-regex-return-boolean)
+  - [get all matches](#get-all-matches)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -455,3 +458,26 @@ println simpleDateFormat.format(calendar.getTime())
   class java.util.Date
   15:00:00 01/06/2004
   ```
+
+## regex `Pattern` and `Matcher`
+### matches to regex (return `Boolean`)
+```groovy
+String cpuset  = '/kubepods/burstable/pod59899be8/b60bf42d334be0eff64f325bad5b0ca4750119fbf8a7e80afa4e559040208ab3'
+String pattern = '^/kubepods/([^/]+/){2}(\\w{64})$'
+
+assert (cpuset =~ pattern).find()      == true
+assert (cpuset =~ pattern).lookingAt() == true
+assert (cpuset =~ pattern).matches()   == true
+```
+
+### get all matches
+```groovy
+String text = """
+This text contains some numbers like 1024
+or 256. Some of them are odd (like 3) or
+even (like 2).
+"""
+String pattern = '\\d+'
+
+assert (text =~ pattern).findAll() == [ '1024', '256', '3', '2' ]
+```

@@ -29,6 +29,8 @@
 
 ### gif
 - [GIF Brewery 3 by Gfycat](https://gfycat.com/gifbrewery)
+  > caches: `$HOME/Movies/GIF Brewery 3/*.mp4`
+
   - [cn](https://apps.apple.com/cn/app/gif-brewery-3-by-gfycat/id1081413713?l=en&mt=12)
   - [us](https://apps.apple.com/us/app/gif-brewery-3-by-gfycat/id1081413713?mt=12)
 - [LICEcap](https://www.cockos.com/licecap/)

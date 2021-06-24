@@ -3,18 +3,42 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [`Tabularize`](#tabularize)
+  - [including the `<sep>`](#including-the-sep)
+  - [align without `<sep>`](#align-without-sep)
   - [`Tabularize` on first matches](#tabularize-on-first-matches)
   - [`Tabularize` on specific symbol](#tabularize-on-specific-symbol)
+- [cheetsheet](#cheetsheet)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 
 ## [`Tabularize`](https://github.com/godlygeek/tabular)
+> - [Tabular cheatsheet](https://devhints.io/tabular)
+
+| specifier | comments                             |
+|:---------:|--------------------------------------|
+|   `l<N>`  | left-align (with N spaces padding)   |
+|   `r<N>`  | right-align (with N spaces padding)  |
+|   `c<N>`  | center-align (with N spaces padding) |
+
+{% hint style='tip' %}
+`:Tabularize /,/r1c1l0` means:
+* splitting fields on commas (`:`)
+* print everything before the first comma right aligned, then 1 space
+* then the comma center aligned, then 1 space,
+* then everything after the comma left aligned.
+{% endhint %}
+
+### including the `<sep>`
 - align to left
   ```bash
   :Tabularize /<sep>
   ```
+  - or
+    ```vim
+    :Tabularize /<sep>/l1
+    ```
 
 - align to center
   ```bash
@@ -22,6 +46,13 @@
   ```
 
   ![tabularize](../../screenshot/vim/tabularize/tabu.gif)
+
+### align without `<sep>`
+> [`help /zs`](https://vimhelp.org/pattern.txt.html#%2F%5Czs)
+
+```vim
+:Tabularize /<sep>\zs/<specifier>
+```
 
 ### [`Tabularize` on first matches](https://stackoverflow.com/a/11497961/2940319)
 - align the first `:`
@@ -142,3 +173,21 @@
     ```
 
   ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
+
+#### align with the N pattern
+> i.e.: the second match (`=`)
+> - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
+
+```vim
+: Tabularize /^\(.\{-}\zs=\)\{2}.*/
+```
+
+- for every 2rd matches
+  ```vim
+  : Tabularize /\(.\{-}\zs=\)\{2}.*/
+  ```
+
+## cheetsheet
+- [align with first space](https://stackoverflow.com/a/15915827/2940319) : `/^\s*\S\+\zs/l0c1l0`
+- [align the second `=` to left](https://stackoverflow.com/a/5424784/2940319) : `/^\(.\{-}\zs=\)\{2}/l1l0`
+  ![align with the 2nd matches](../../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
