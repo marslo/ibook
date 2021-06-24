@@ -102,7 +102,7 @@ $ docker run \
 ### login docker container as root
 ```bash
 $ docker run -d <image>:<tag>
-$ docker exec --privileged -u root -it <image-id> -- /bin/bash
+$ docker exec --privileged -u root -it <image-id> /bin/bash
 ```
 
 ## docker ps

@@ -33,7 +33,7 @@
 
 ### including the `<sep>`
 - align to left
-  ```bash
+  ```vim
   :Tabularize /<sep>
   ```
   - or
@@ -42,11 +42,11 @@
     ```
 
 - align to center
-  ```bash
+  ```vim
   :Tabularize /<sep>/r1c1l0
   ```
 
-  ![tabularize](../../screenshot/vim/tabularize/tabu.gif)
+  ![tabularize](../screenshot/vim/tabularize/tabu.gif)
 
 ### align without `<sep>`
 > [`help /zs`](https://vimhelp.org/pattern.txt.html#%2F%5Czs)
@@ -57,15 +57,15 @@
 
 ### [align on first matche](https://stackoverflow.com/a/11497961/2940319)
 - align the first `:`
-  ```bash
+  ```vim
   :Tabularize /^[^:]*\zs:
   ```
   [or](https://stackoverflow.com/a/23840400/2940319)
-  ```bash
+  ```vim
   :Tabularize /:.*
   ```
 
-  ![tabularize-5](../../screenshot/vim/tabularize/tabularize-5.gif)
+  ![tabularize-5](../screenshot/vim/tabularize/tabularize-5.gif)
 
 - [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
   > only for default left-alignemnt. Not support customized right/middle alignment.
@@ -84,7 +84,7 @@
              |
             `^` means start of the line
 ```
-![align with the 2nd matches](../../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
 
 - or with `\v` (very magic)
   > reference:
@@ -132,8 +132,8 @@
   runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
   type         : proc.type.split('^.*\\u00BB\\s*').last() ,
   ```
-  ![tabularize-1](../../screenshot/vim/tabularize/tabularize-1.gif)
-  ![tabularize-2](../../screenshot/vim/tabularize/tabularize-2.gif)
+  ![tabularize-1](../screenshot/vim/tabularize/tabularize-1.gif)
+  ![tabularize-2](../screenshot/vim/tabularize/tabularize-2.gif)
 
 - `/^[^:]*\zs/r1c1l0`
   ```groovy
@@ -150,7 +150,7 @@
   runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
           type : proc.type.split('^.*\\u00BB\\s*').last() ,
   ```
-  ![tabularize-3](../../screenshot/vim/tabularize/tabularize-3.gif)
+  ![tabularize-3](../screenshot/vim/tabularize/tabularize-3.gif)
 
 - `/^[^:]*/r1c1l0`
   ```groovy
@@ -205,9 +205,9 @@
             type : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
 
-  ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
+  ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
 
 ## cheetsheet
 - [align with first space](https://stackoverflow.com/a/15915827/2940319) : `/^\s*\S\+\zs/l0c1l0`
 - [align the second `=` to left](https://stackoverflow.com/a/5424784/2940319) : `/^\(.\{-}\zs=\)\{2}/l1l0`
-  ![align with the 2nd matches](../../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+  ![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
