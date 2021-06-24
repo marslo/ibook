@@ -45,7 +45,7 @@
 | <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>_</kbd> | maximum the window            |
 | `:wincmd _`                                   | maximum the window            |
 
-![resize](../../screenshot/vim/resize.gif)
+![resize](../screenshot/vim/resize.gif)
 
 ### vertical resize
 
@@ -63,11 +63,11 @@
 | <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>&#124;</kbd> | maximum the window              |
 | `:wincmd ⎮`                                        | maximum the window              |
 
-![vertical resize](../../screenshot/vim/resize-vertical.gif)
+![vertical resize](../screenshot/vim/resize-vertical.gif)
 
 ## [quickfix](http://vimdoc.sourceforge.net/htmldoc/quickfix.html)
 
-![quickfix windows](../../screenshot/vim/vimgrep-quckfix-window.gif)
+![quickfix windows](../screenshot/vim/vimgrep-quckfix-window.gif)
 
 - [Automatically fitting a quickfix window height](https://vim.fandom.com/wiki/Automatically_fitting_a_quickfix_window_height)
   ```

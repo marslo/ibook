@@ -18,7 +18,7 @@
 - with space: `J`
 - without space: `gJ`
 
-![J-gJ](../../screenshot/vim/J-gJ.gif)
+![J-gJ](../screenshot/vim/J-gJ.gif)
 
 ### [search (in)sensitive](https://stackoverflow.com/a/2288438/2940319)
 > reference:
@@ -34,7 +34,7 @@
 | `\cfoo` |       -      |      -      | foo Foo FOO |
 | `foo\C` |       -      |      -      | foo         |
 
-```bash
+```vim
 :set ignorecase
 :set smartcase
 /example      " Case insensitive
@@ -42,7 +42,7 @@
 /example\C    " Case sensitive
 /Example\c    " Case insensitive
 ```
-![search-case-sensitive](../../screenshot/vim/search-ignoreCase.gif)
+![search-case-sensitive](../screenshot/vim/search-ignoreCase.gif)
 
 #### search with `\V`
 
@@ -56,27 +56,27 @@
 > - [How to sort using visual blocks](https://vim.fandom.com/wiki/How_to_sort_using_visual_blocks)
 
 - sort
-  ```bash
+  ```vim
   :{range}sort
   ```
-  ![sort lines](../../screenshot/vim/sort-lines.gif)
+  ![sort lines](../screenshot/vim/sort-lines.gif)
 
 - sort and unique
-  ```bash
+  ```vim
   :{range}sort u
   ```
-  ![sort lines](../../screenshot/vim/sort-lines-unqiue.gif)
+  ![sort lines](../screenshot/vim/sort-lines-unqiue.gif)
 
 ### [list all `filetype`](https://vi.stackexchange.com/a/14990/7389)
 ```
 :echo getcompletion('', 'filetype')
 ```
 - or
-  ```bash
+  ```vim
   :echo getcompletion('c', 'filetype')
   ```
 - [or](https://vi.stackexchange.com/a/5782/7389) and use: `for f in GetFiletypes() | echo f | endfor`
-  ```bash
+  ```vim
   function! GetFiletypes()
     " Get a list of all the runtime directories by taking the value of that
     " option and splitting it using a comma as the separator.
@@ -106,7 +106,7 @@
 
 ### run vim commands in terminal
 {% hint style='tip' %}
-```bash
+```vim
 $ man vim
 ...
 OPTIONS
@@ -124,13 +124,13 @@ OPTIONS
 
 {% endhint %}
 
-```bash
+```vim
 $ vim -es -c "set ff? | q"
   fileformat=unix
 ```
 
 ### [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
-```bash
+```vim
 export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
     vim -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
     -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
@@ -232,13 +232,13 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   ```vim
   \(.\{-}\zsfoo\)\{3}
   ```
-  ![regex every third](../../screenshot/vim/regex/vim-regex-every3rd.gif)
+  ![regex every third](../screenshot/vim/regex/vim-regex-every3rd.gif)
 
 - the 3rd
   ```vim
   ^\(.\{-}\zsPATTERN\)\{3}
   ```
-  ![regex every third](../../screenshot/vim/regex/vim-regex-the3rd.gif)
+  ![regex every third](../screenshot/vim/regex/vim-regex-the3rd.gif)
 
 {% hint style='tip' %}
 [`\v`: the following chars in the pattern are "very magic"](https://vimhelp.org/pattern.txt.html#%2F%5Cv):
