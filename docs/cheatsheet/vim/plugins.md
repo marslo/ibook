@@ -7,6 +7,7 @@
   - [align without `<sep>`](#align-without-sep)
   - [`Tabularize` on first matches](#tabularize-on-first-matches)
   - [`Tabularize` on specific symbol](#tabularize-on-specific-symbol)
+  - [align with the N pattern](#align-with-the-n-pattern)
 - [cheetsheet](#cheetsheet)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -174,17 +175,35 @@
 
   ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
 
-#### align with the N pattern
+### align with the N pattern
 > i.e.: the second match (`=`)
 > - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
 
 ```vim
-: Tabularize /^\(.\{-}\zs=\)\{2}.*/
+:Tabularize /^\(.\{-}\zs=\)\{N}/
+             |
+            `^` means start of the line
 ```
 
-- for every 2rd matches
+- or with `\v` (very magic)
+  > reference:
+  > - [`:help \v`](https://vimhelp.org/pattern.txt.html#%2F%5Cv)
+  > - [vim pattern: overview of ordinary atoms](tricky.html#overview-of-ordinary-atoms)
+
   ```vim
-  : Tabularize /\(.\{-}\zs=\)\{2}.*/
+  :Tabularize /\v^(.{-}\zs\=){N}/<specifier>
+  ```
+
+- for every N matches
+  ```vim
+  : Tabularize /\(.\{-}\zs=\)\{N}/<specifier>
+               |
+               no `^` means every `{N}` matches
+  ```
+  or
+
+  ```vim
+  :Tabularize /\v(.{-}\zs\=){N}/<specifier>
   ```
 
 ## cheetsheet
