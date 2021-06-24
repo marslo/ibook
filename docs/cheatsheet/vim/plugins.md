@@ -5,9 +5,9 @@
 - [`Tabularize`](#tabularize)
   - [including the `<sep>`](#including-the-sep)
   - [align without `<sep>`](#align-without-sep)
-  - [`Tabularize` on first matches](#tabularize-on-first-matches)
-  - [`Tabularize` on specific symbol](#tabularize-on-specific-symbol)
+  - [align on first matche](#align-on-first-matche)
   - [align with the N pattern](#align-with-the-n-pattern)
+  - [align on specific symbol](#align-on-specific-symbol)
 - [cheetsheet](#cheetsheet)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -55,7 +55,7 @@
 :Tabularize /<sep>\zs/<specifier>
 ```
 
-### [`Tabularize` on first matches](https://stackoverflow.com/a/11497961/2940319)
+### [align on first matche](https://stackoverflow.com/a/11497961/2940319)
 - align the first `:`
   ```bash
   :Tabularize /^[^:]*\zs:
@@ -75,7 +75,39 @@
   command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
   ```
 
-### [`Tabularize` on specific symbol](https://vi.stackexchange.com/a/12652/7389)
+### align with the N pattern
+> i.e.: the second match (`=`)
+> - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
+
+```vim
+:Tabularize /^\(.\{-}\zs=\)\{N}/
+             |
+            `^` means start of the line
+```
+![align with the 2nd matches](../../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+
+- or with `\v` (very magic)
+  > reference:
+  > - [`:help \v`](https://vimhelp.org/pattern.txt.html#%2F%5Cv)
+  > - [vim pattern: overview of ordinary atoms](tricky.html#overview-of-ordinary-atoms)
+
+  ```vim
+  :Tabularize /\v^(.{-}\zs\=){N}/<specifier>
+  ```
+
+- for every N matches
+  ```vim
+  : Tabularize /\(.\{-}\zs=\)\{N}/<specifier>
+               |
+               no `^` means every `{N}` matches
+  ```
+  or
+
+  ```vim
+  :Tabularize /\v(.{-}\zs\=){N}/<specifier>
+  ```
+
+### [align on specific symbol](https://vi.stackexchange.com/a/12652/7389)
 > pre condition:
 > - align the first `:` and last matches `,` as below:
 > ```groovy
@@ -158,14 +190,14 @@
 
   or even better align
 
-  - `1,3Tabularize /,` or `'<,'>Tabularize /,`
+  - `:1,3Tabularize /,` or `:'<,'>Tabularize /,`
     ```groovy
        isRunning : proc.getOrDefault( 'run'   , false )   ,
             name : proc.getOrDefault( 'name'  , '')       ,
     runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
             type : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
-  - `Tabularize /)[^,]*\zs,`
+  - `:Tabularize /)[^,]*\zs,`
     ```groovy
        isRunning : proc.getOrDefault( 'run'   , false )     ,
             name : proc.getOrDefault( 'name'  , '')         ,
@@ -174,37 +206,6 @@
     ```
 
   ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
-
-### align with the N pattern
-> i.e.: the second match (`=`)
-> - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
-
-```vim
-:Tabularize /^\(.\{-}\zs=\)\{N}/
-             |
-            `^` means start of the line
-```
-
-- or with `\v` (very magic)
-  > reference:
-  > - [`:help \v`](https://vimhelp.org/pattern.txt.html#%2F%5Cv)
-  > - [vim pattern: overview of ordinary atoms](tricky.html#overview-of-ordinary-atoms)
-
-  ```vim
-  :Tabularize /\v^(.{-}\zs\=){N}/<specifier>
-  ```
-
-- for every N matches
-  ```vim
-  : Tabularize /\(.\{-}\zs=\)\{N}/<specifier>
-               |
-               no `^` means every `{N}` matches
-  ```
-  or
-
-  ```vim
-  :Tabularize /\v(.{-}\zs\=){N}/<specifier>
-  ```
 
 ## cheetsheet
 - [align with first space](https://stackoverflow.com/a/15915827/2940319) : `/^\s*\S\+\zs/l0c1l0`
