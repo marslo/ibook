@@ -375,9 +375,3 @@ build.getProject()._getRuns().iterator().each{ run ->
 @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.9')
 import jenkins.model.Jenkins
 ```
-
-
-
-assert (cpuset =~ pattern).find() == true  // == true
-assert (cpuset =~ pattern).lookingAt() == true // == true
-assert (cpuset =~ pattern).matches() == true //  = = false

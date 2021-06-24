@@ -10,6 +10,7 @@
 - [Using vim as a man-page viewer under Unix](#using-vim-as-a-man-page-viewer-under-unix)
 - [newline `\r`](#newline-%5Cr)
 - [vim regex](#vim-regex)
+- [vim pattern](#vim-pattern)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -175,6 +176,57 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 
 
 ### [vim regex](http://vimregex.com/)
+
+### [vim pattern](https://vimhelp.org/pattern.txt.html)
+> reference:
+> - [magic](https://vimhelp.org/pattern.txt.html#%2Fmagic)
+
+#### overview of multi items
+
+| pattern   | magic       | nomagic     | matches of the preceding atom                        |
+| :-------: | :---------: | :---------: | -----------------------------------------------------|
+| `/star`   | `*`         | `\*`        | 0 or more  &emsp; (as many as possible)              |
+| `/\+`     | `\+`        | `\+`        | 1 or more  &emsp; (as many as possible)              |
+| `/\=`     | `\=`        | `\=`        | 0 or 1     &emsp; (as many as possible)              |
+| `/\?`     | `\?`        | `\?`        | 0 or 1     &emsp; (as many as possible)              |
+| `/\{`     | `\{n,m}`    | `\{n,m}`    | n to m     &emsp; (as many as possible)              |
+|           | `\{n}`      | `\{n}`      | n          &emsp; exactly                            |
+|           | `\{n,}`     | `\{n,}`     | at least n &emsp; (as many as possible)              |
+|           | `\{,m}`     | `\{,m}`     | 0 to m     &emsp; (as many as possible)              |
+|           | `\{}`       | `\{}`       | 0 or more  &emsp; (as many as possible. same as `*`) |
+| `/\{-`    | `\{-n,m}`   | `\{-n,m}`   | n to m     &emsp; (as few as possible)               |
+|           | `\{-n}`     | `\{-n}`     | n    &emsp;&emsp; exactly                            |
+|           | `\{-n,}`    | `\{-n,}`    | at least n &emsp; (as few as possible)               |
+|           | `\{-,m}`    | `\{-,m}`    | 0 to m     &emsp; (as few as possible)               |
+|           | `\{-}`      | `\{-}`      | 0 or more  &emsp; (as few as possible)               |
+
+
+#### overview of ordinary atoms
+
+| pattern |  magic  | nomagic | matches                                         |
+|:-------:|:-------:|:-------:|-------------------------------------------------|
+|   `/^`  |   `^`   |   `^`   | start-of-line (at start of pattern) /zero-width |
+|  `/\^`  |   `\^`  |   `\^`  | literal '^'                                     |
+|  `/\_^` |  `\_^`  |  `\_^`  | start-of-line (used anywhere) /zero-width       |
+|  ` /$`  |   `$`   |   `$`   | end-of-line (at end of pattern) /zero-width     |
+|  `/\$`  |   `\$`  |   `\$`  | literal '$'                                     |
+|  `/\_$` |  `\_$`  |  `\_$`  | end-of-line (used anywhere) /zero-width         |
+|   `/.`  |   `.`   |   `\.`  | any single character (not an end-of-line)       |
+|  `/\_.` |  `\_.`  |  `\_.`  | any single character or end-of-line             |
+|  `/\<`  |   `\<`  |  `\< `  | beginning of a word /zero-width                 |
+|  `/\>`  |   `\>`  |  `\> `  | end of a word /zero-width                       |
+|  `/\zs` |  `\zs`  |  `\zs`  | anything, sets start of match                   |
+|  `/\ze` |  `\ze`  |  `\ze`  | anything, sets end of match                     |
+|  `/\%^` |  `\%^`  |  `\%^`  | beginning of file /zero-width<br> E71           |
+|  `/\%$` |  `\%$`  |  `\%$`  | end of file /zero-width                         |
+|  `/\%V` |  `\%V`  |  `\%V`  | inside Visual area /zero-width                  |
+|  `/\%#` |  `\%#`  |  `\%#`  | cursor position /zero-width                     |
+| `/\%'m` |  `\%'m` |  `\%'m` | mark m position /zero-width                     |
+|  `/\%l` | `\%23l` | `\%23l` | in line 23 /zero-width                          |
+|  `/\%c` | `\%23c` | `\%23c` | in column 23 /zero-width                        |
+|  `/\%v` | `\%23v` | `\%23v` | in virtual column 23 /zero-width                |
+
+
 #### [matches the N pattern](https://stackoverflow.com/a/5424784/2940319)
 - every 3rd
   ```vim
@@ -187,3 +239,11 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   ^\(.\{-}\zsPATTERN\)\{3}
   ```
   ![regex every third](../../screenshot/vim/regex/vim-regex-the3rd.gif)
+
+{% hint style='tip' %}
+[`\v`: the following chars in the pattern are "very magic"](https://vimhelp.org/pattern.txt.html#%2F%5Cv):
+- `^\(.\{-}\zsPATTERN\)\{N}` == > `\v^(.{-}\zsPATTERN){N}`
+- `^\(.\{-}\zs=\)\{N}`       == > `\v^(.{-}\zs\=){N}`
+
+NOTICE: after using `\v` the `=` should using `\=` instead
+{% endhint %}
