@@ -481,3 +481,15 @@ String pattern = '\\d+'
 
 assert (text =~ pattern).findAll() == [ '1024', '256', '3', '2' ]
 ```
+
+#### safely capture the matches
+```groovy
+String k8sPattern    = '^/kubepods/([^/]+/){2}(\\w{64})$'
+String dockerPattern = '^/docker/(\\w{64})$'
+String cpuset  = '/kubepods/burstable/pod59899be8/b60bf42d334be0eff64f325bad5b0ca4750119fbf8a7e80afa4e559040208ab3'
+int groupIndex = 0
+int index      = 1
+
+( cpuset =~ k8sPattern ).findAll()?.getAt(groupIndex)?.getAt(index) ?: null
+( cpuset =~ dockerPattern ).findAll()?.getAt(groupIndex)?.getAt(index) ?: null
+```
