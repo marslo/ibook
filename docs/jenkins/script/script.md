@@ -22,6 +22,9 @@
 - [abort](#abort)
   - [abort a build](#abort-a-build)
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
+- [shared libes](#shared-libes)
+  - [vars](#vars)
+  - [src](#src)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -332,7 +335,37 @@ build.getProject()._getRuns().iterator().each{ run ->
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
 
 
-## [using jenkins-core in groovy script via Grab](https://stackoverflow.com/a/38967175/2940319)
+## shared libes
+{% hint style='tip' %}
+> reference:
+> - []()
+{% endhint %}
+
+### vars
+- capture
+  ```groovy
+  def capture( String str, String pattern, int groupIndex, int index ) {
+    ( str =~ pattern ).findAll()?.getAt(groupIndex)?.getAt(index) ?: null
+  }
+
+  ```
+  - example : find out the current Container ID if the process running in a container
+    ```groovy
+    // cpuset: '/kubepods/burstable/pod59899be8-d4db-11eb-9a49-ac1f6b59c992/b60bf42d334be0eff64f325bad5b0ca4750119fbf8a7e80afa4e559040208ab3''
+    String cpuset = sh (
+      returnStdout: true,
+      script: "set +x; cat /proc/self/cpuset"
+    ).trim()
+    String dockerPattern = '^/docker/(\\w{64})$'
+    String k8sPattern    = '^/kubepods/([^/]+/){2}(\\w{64})$'
+
+    return capture( cpuset, k8sPattern ) ?: capture( cpuset, dockerPattern )
+    ```
+
+### src
+#### using Jenkins plugins in groovy scripts
+
+#### [using jenkins-core in groovy script via Grab](https://stackoverflow.com/a/38967175/2940319)
 > - [GrabResolver](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GrabResolver.html)
 > - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
 > - [kellyrob99/setupNewServer.groovy](https://gist.github.com/kellyrob99/1907283)
@@ -342,3 +375,9 @@ build.getProject()._getRuns().iterator().each{ run ->
 @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.9')
 import jenkins.model.Jenkins
 ```
+
+
+
+assert (cpuset =~ pattern).find() == true  // == true
+assert (cpuset =~ pattern).lookingAt() == true // == true
+assert (cpuset =~ pattern).matches() == true //  = = false

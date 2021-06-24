@@ -23,6 +23,16 @@
 > reference:
 > - [7. Ignoring case in a pattern](https://vimhelp.org/pattern.txt.html#%2F%5Cc)
 
+|   cmd   | `ignorecase` | `smartcase` | matches     |
+|:-------:|:------------:|:-----------:|-------------|
+|  `foo`  |     `off`    |      -      | foo         |
+|  `foo`  |     `on`     |      -      | foo Foo FOO |
+|  `foo`  |     `on`     |     `on`    | foo Foo FOO |
+|  `Foo`  |     `on`     |     `on`    | Foo         |
+|  `Foo`  |     `on`     |      -      | foo Foo FOO |
+| `\cfoo` |       -      |      -      | foo Foo FOO |
+| `foo\C` |       -      |      -      | foo         |
+
 ```bash
 :set ignorecase
 :set smartcase
@@ -32,6 +42,14 @@
 /Example\c    " Case insensitive
 ```
 ![search-case-sensitive](../../screenshot/vim/search-ignoreCase.gif)
+
+#### search with `\V`
+
+|     pattern    | result                                                                                                                                                                                                                                             |
+|:--------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  `/a.k.a<CR>`  | b<span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">ckward</span><br> <span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">.k.a</span> |
+| `/a\.k\.a<CR>` | backward<br> <span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">.k.a</span>                                                                                                                 |
+|  `/Va.k.a<CR>` | backward<br> <span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">.k.a</span>                                                                                                                 |
 
 ### [sort lines](https://vim.fandom.com/wiki/Sort_lines)
 > - [How to sort using visual blocks](https://vim.fandom.com/wiki/How_to_sort_using_visual_blocks)
@@ -157,3 +175,15 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 
 
 ### [vim regex](http://vimregex.com/)
+#### [matches the N pattern](https://stackoverflow.com/a/5424784/2940319)
+- every 3rd
+  ```vim
+  \(.\{-}\zsfoo\)\{3}
+  ```
+  ![regex every third](../../screenshot/vim/regex/vim-regex-every3rd.gif)
+
+- the 3rd
+  ```vim
+  ^\(.\{-}\zsPATTERN\)\{3}
+  ```
+  ![regex every third](../../screenshot/vim/regex/vim-regex-the3rd.gif)
