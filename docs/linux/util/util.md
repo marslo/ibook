@@ -13,6 +13,7 @@
     - [use parameter in `xargs`](#use-parameter-in-xargs)
     - [find out commands belongs to and come from](#find-out-commands-belongs-to-and-come-from)
     - [Get all google website](#get-all-google-website)
+  - [check linux window size](#check-linux-window-size)
 - [readline & bind](#readline--bind)
   - [get info](#get-info)
 
@@ -304,6 +305,17 @@ for detailed information.
 
 >>> Last update of whois database: Mon, 24 Feb 2014 17:24:05 UTC <<<
 ```
+
+## [check linux window size](https://askubuntu.com/a/1020938/92979)
+- check
+  ```bash
+  $ shopt | grep checkwinsize
+  checkwinsize   	on
+  ```
+- enable
+  ```bash
+  $ shopt -s checkwinsize
+  ```
 
 # readline & bind
 ## get info
