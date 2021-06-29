@@ -34,12 +34,13 @@
 > - [examples](https://docs.roguewave.com/en/klocwork/current/understandingtheworkflow)
 > - [Klocwork - Knowledgebase](https://library.roguewave.com/display/SUPPORT/Klocwork+-+Knowledgebase)
 > - [Running the C and C++ integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningthecandcintegrationbuildanalysis)
-  > - [Running your first integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningyourfirstintegrationbuildanalysis1)
-  > - [Running your next integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningyournextintegrationbuildanalysis1)
-  > - [Creating a C/C++ build specification](https://docs.roguewave.com/en/klocwork/2020/creatingaccbuildspecification)
-  > - [C/C++ integration build analysis - Cheat sheet](https://docs.roguewave.com/en/klocwork/current/ccintegrationbuildanalysischeatsheet)
+>   - [Running your first integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningyourfirstintegrationbuildanalysis1)
+>   - [Running your next integration build analysis](https://docs.roguewave.com/en/klocwork/current/runningyournextintegrationbuildanalysis1)
+>   - [Creating a C/C++ build specification](https://docs.roguewave.com/en/klocwork/2020/creatingaccbuildspecification)
+>   - [C/C++ integration build analysis - Cheat sheet](https://docs.roguewave.com/en/klocwork/current/ccintegrationbuildanalysischeatsheet)
 > - [example about integrate with Jenkins](https://stackoverflow.com/questions/51731262/jenkins-declarative-pipeline-how-to-configure-the-klocwork-result-display-on-t)
 > - [最佳实践：Klocwork增量/VerifyCI检查](http://www.360doc.com/content/17/0430/08/30774303_649740396.shtml)
+> - [Running a distributed Klocwork C/C++ analysis](https://bullwhip.physio-control.com/documentation/help/concepts/runningadistributedklocworkccanalysis.htm)
 {% endhint %}
 
 ## environment
@@ -48,6 +49,7 @@
 > - [User manual | Installation and Upgrade](https://manualzz.com/doc/44373012/installation-and-upgrade?__cf_chl_jschl_tk__=b7f12f6befde4217b2830af5cb69055d40841a0c-1619442763-0-AXJ6A-8dLrK6mjM4v5IvfVIbgptM2fMku23COnaWX2AXiowy0H1aVcEuRXfkHCy52vr0N6RqKejPmriTUTLIsGPCo9AldMujCF8gJflvp-uX-CiweHa5c3fP1KNvKgeOvVzhe-wBWDfbrJ0MyEvEks8cEHXjRj6cRnlP5ibFYByNE7jX3KXtH5tRZVr386HX0bcPCx5nyu_FgY-xEFCpuMmnEaP0Rhr_zeoQn85YrY61j7lGJAgnzdqgz1rC4ktkZ1i7ijdYgUTFNAFG_1_vQ4ox8Wj7hdab890-Tw-NtdrGoMoEq-4CeMxDEzlLYmFNNX1kM0EVJIv50J2v2H7GIdUNd_rV7y_wyhllUPbRe1COFvk1Ey7eAgsfJyKAW-Il6Z8NRlSaO-RdRcnZ6wpk2L2s6uuAzcNNWQM-8DiljKhGu9OT-FjeGtEXyBUxZPjY2LWF1k_fX2tb4S0GJGO7T09QPnlbAZa9VBFueEVeVSdzDocBByzn-BwknWpMr-dIJA)
 > - [Klocwork Desktop for C/C++ project setup overview](https://docs.roguewave.com/en/klocwork/current/klocworkdesktopforccprojectsetupoverview)
 > - video: [Build integration for C/C++ projects](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
+> - video: [Klocwork Demo](https://www.perforce.com/success/klocwork-demo)
 > - [Useful resources](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
 
 ### admin
@@ -55,6 +57,7 @@
 > - [Admin Tools](https://developer.klocwork.com/products/insight)
 > - [Improving database performance](https://bullwhip.physio-control.com/documentation/help/concepts/improvingdatabaseperformance.htm)
 > - [Backing up Klocwork data](https://bullwhip.physio-control.com/documentation/help/concepts/backingupklocworkdata.htm)
+> - [Build properties displayed by kwadmin](https://bullwhip.physio-control.com/documentation/help/concepts/buildpropertiesdisplayedbykwadmin.htm)
 
 ## analysis
 > [issue severity](http://docs.klocwork.com/Insight-10.0/Issue_severity)
@@ -102,6 +105,15 @@
     ```bash
     $ kwadmin --url "http://my.kw.com" load "NotepadPlusPlus" "~/npp/npp_tables"
     ```
+
+  - [debug for authentication issue](https://webcache.googleusercontent.com/search?q=cache:ZlMRAvROjswJ:https://developer.klocwork.com/community/forums/klocwork-general/admin-tools/non-interactive-authentication+&cd=1&hl=en&ct=clnk&gl=us)
+    ```bash
+    $ kwadmin --debug --url <Klocwork server url> list-projects
+    ```
+    - logout via
+      ```bash
+      $ kwauth --log-out
+      ```
 
 
 ### [full build analysis](https://docs.roguewave.com/en/klocwork/2020/runningyournextintegrationbuildanalysis1#Runningafullbuildanalysis)
@@ -299,7 +311,8 @@ Klocwork Static Code Analysis Web API Reference
   ```
   - i.e.:
     ```bash
-    $ curl --data "action=builds&user=marslo&ltoken=abcd1234********************************************************&project=marslo-kw" https://my.kw.com:443/review/api
+    $ curl --data "action=builds&user=marslo&ltoken=abcd1234****&project=marslo-kw" \
+           https://my.kw.com:443/review/api
     {"id":3,"name":"build_3","date":1619437882164,"keepit":false}
     {"id":2,"name":"build_2","date":1619436216567,"keepit":false}
     {"id":1,"name":"build_1","date":1619434698145,"keepit":false}
@@ -307,7 +320,7 @@ Klocwork Static Code Analysis Web API Reference
 
 - [via `kwadmin`](https://docs.roguewave.com/en/klocwork/current/kwadmin)
   ```bash
-  $ kwadmin --url https://my.kw.com:443  list-builds marslo-kw
+  $ kwadmin --url https://my.kw.com:443 list-builds marslo-kw
   build_1
   build_2
   build_3
@@ -347,8 +360,9 @@ $ username='marslo'
 $ project='marslo-kw'
 $ query='build:build_3 state:New'
 $ url='https://my.kw.com:443'
-$ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project}&query=${query}" ${url}/review/api |
-     jq --raw-output .
+$ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project}&query=${query}" \
+       ${url}/review/api |
+       jq --raw-output .
 ```
 
 ## report
@@ -358,56 +372,104 @@ $ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project
 > reference:
 > - [Klocwork Jenkins CI plugin](https://docs.roguewave.com/en/klocwork/2020/jenkinsci)
 > - [Continuous integration and Klocwork analysis](https://docs.roguewave.com/en/klocwork/2020/continuousintegration)
-> - [klocwork ci/cd best practice.pdf](https://www.perforce.com/sites/default/files/pdfs/ebook-klocwork-ci-cd-best-practices%20%281%29.pdf)
+> - Ebook: [klocwork ci/cd best practice.pdf](https://www.perforce.com/sites/default/files/pdfs/ebook-klocwork-ci-cd-best-practices%20%281%29.pdf)
+> - Video: [Add Static Code Analysis to Your CI/CD Pipelines](https://www.perforce.com/webinars/kw/add-static-code-analysis-to-ci-cd-pipelines)
 
 
-### Jenkinsfile
+### [Jenkinsfile](https://docs.roguewave.com/en/klocwork/2020/jenkinsci)
 ```groovy
 pipeline {
-   agent any
+  agent any
 
-   environment {
-        KLOCWORK_URL = "http://localhost:8080"
-        KLOCWORK_PROJECT = "zlib-pipeline"
-        KLOCWORK_LICENSE_HOST = "flexlm-server"
-        KLOCWORK_LICENSE_PORT = "27000"
-        KLOCWORK_LTOKEN = ""
-    }
+  environment {
+    KLOCWORK_URL = "http://localhost:8080"
+    KLOCWORK_PROJECT = "zlib-pipeline"
+    KLOCWORK_LICENSE_HOST = "flexlm-server"
+    KLOCWORK_LICENSE_PORT = "27000"
+    KLOCWORK_LTOKEN = ""
+  }
 
-   stages {
-       stage('Get src from git') {
-             steps {
-                git 'https://github.com/madler/zlib.git'
-             }
-        }
+  stages {
+    stage('Get src from git') {
+      steps {
+        git 'https://github.com/madler/zlib.git'
+      }
+    } // stage : clone code
 
-        stage('Klocwork Build') {
-             steps {
+    stage('Klocwork Build') {
+      steps {
+        klocworkBuildSpecGeneration([
+          additionalOpts: '',
+          buildCommand: 'c:\\dev\\zlib-git.bat',
+          ignoreErrors: true,
+          output: 'kwinject.out',
+          tool: 'kwinject'
+        ])
+      }
+    } // stage : klocwork build
 
-                    klocworkBuildSpecGeneration([additionalOpts: '', buildCommand: 'c:\\dev\\zlib-git.bat', ignoreErrors: true, output: 'kwinject.out', tool: 'kwinject'])
+    stage('Klocwork Analysis') {
+      steps {
+        klocworkIntegrationStep1([
+          additionalOpts: '',
+          buildSpec: 'kwinject.out',
+          disableKwdeploy: true,
+          duplicateFrom: '',
+          enabledCreateProject: true,
+          ignoreCompileErrors: true,
+          importConfig: '',
+          incrementalAnalysis:       false,
+          tablesDir: 'kwtables'
+        ])
+      }
+    } // stage : klocwork analysis
 
-             }
-        }
+    stage('Klocwork Db-load') {
+      steps {
+        klocworkIntegrationStep2 reportConfig: [
+                                   displayChart: true,
+                                   query: 'status:Analyze'
+                                 ],
+                                 serverConfig: [
+                                   additionalOpts: '',
+                                   buildName: '',
+                                   tablesDir: 'kwtables'
+                                 ]
+      }
+    } // stage : klocwork db-load
 
-        stage('Klocwork Analysis') {
-            steps {
-                     klocworkIntegrationStep1([additionalOpts: '', buildSpec: 'kwinject.out', disableKwdeploy: true, duplicateFrom: '', enabledCreateProject: true, ignoreCompileErrors: true, importConfig: '', incrementalAnalysis:       false, tablesDir: 'kwtables'])
-
-             }
-          }
-
-          stage('Klocwork Db-load') {
-             steps {
-                     klocworkIntegrationStep2 reportConfig: [displayChart: true, query: 'status:Analyze'], serverConfig: [additionalOpts: '', buildName: '', tablesDir: 'kwtables']
-             }
-          }
-
-          stage('Build Failure Conditions') {
-             steps {
-                     klocworkFailureCondition([enableCiFailureCondition: true, failureConditionCiConfigs: [[withDiffList: true, diffFileList: 'my_list.txt', enableHTMLReporting: true, name: 'one', reportFile: '', threshold: '1',]]])
-
-             }
-          }
-   }
-}
+    stage('Build Failure Conditions') {
+      steps {
+        klocworkFailureCondition([
+          enableCiFailureCondition: true,
+          failureConditionCiConfigs: [[
+            withDiffList: true,
+            diffFileList: 'my_list.txt',
+            enableHTMLReporting: true,
+            name: 'one',
+            reportFile: '',
+            threshold: '1',]]
+        ])
+      }
+    } // stage : build failure conditions
+  } // stages
+} // pipeline
 ```
+
+- [full static code analysis](https://www.perforce.com/webinars/kw/add-static-code-analysis-to-ci-cd-pipelines)
+  ```groovy
+  stage("full static code analysis") {
+    steps{
+      echo "performance integration analysis"
+      klocworkIntegrationStep1([
+        buildSpec: "${KLOCWORK_BUILDSPEC}",
+        tableDir: "${KLONWORK_TABLES}",
+        incrementalAnalysis : true,
+        ignoreCompileErrors: false,
+        importConfig : "",
+        additionalOpts: "--replace-path ${WORKSPACE}=workspace",
+        disableKwdeploy: true
+      ])
+    }
+  }
+  ```
