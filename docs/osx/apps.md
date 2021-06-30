@@ -17,6 +17,7 @@
   - [Others](#others)
 - [Q&A](#qa)
   - [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
+  - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -372,6 +373,7 @@ $ brew -v edit macvim-dev/macvim/macvim
   $ brew --repo homebrew/core
   /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
   ```
+
 - [cleanup](${brew_source}/brew/issues/3784#issuecomment-364675767)
   ```bash
   # Remove all cache files older than specified days
@@ -380,6 +382,7 @@ $ brew -v edit macvim-dev/macvim/macvim
   # remove all caches
   $ brew cleanup -s
   ```
+
 - check formula
   ```bash
   $ git -C "$(brew --repo homebrew/core)" show a2f05fb0b2^:Formula/rmtrash.rb
@@ -390,6 +393,17 @@ $ brew -v edit macvim-dev/macvim/macvim
     version "0.3.3"
     ...
   ```
+
+- [list the packages installed from taps](https://stackoverflow.com/a/44358788/2940319)
+  ```bash
+  $ brew tap-info --installed
+  ```
+
+  - [to get formula name](https://apple.stackexchange.com/a/392993/254265)
+    ```bash
+    $ brew tap-info macvim-dev/macvim --json | jq -r '.[]|(.formula_names[])'
+    macvim-dev/macvim/macvim
+    ```
 
 ## system settings
 
@@ -673,3 +687,66 @@ $ sudo gem install iStats -n /usr/local/bin
   sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
   ```
   - checking host IP address via [https://www.ipaddress.com/](https://www.ipaddress.com/)
+
+- additional
+  > reference:
+  > - [DNS查询](http://tool.chinaz.com/dns/)
+  > - [iP或域名查询](https://site.ip138.com/)
+  > flush DNS via `sudo killall -HUP mDNSResponder`
+
+```bash
+sudo bash -c cat >> /etc/hosts << EOF
+# GitHub Start
+52.74.223.119     github.com
+192.30.253.119    gist.github.com
+54.169.195.247    api.github.com
+185.199.111.153   assets-cdn.github.com
+199.232.28.133    raw.githubusercontent.com
+# 199.232.96.133  raw.githubusercontent.com
+# 151.101.76.133  raw.githubusercontent.com
+151.101.76.133    gist.githubusercontent.com
+151.101.76.133    cloud.githubusercontent.com
+151.101.76.133    camo.githubusercontent.com
+151.101.76.133    avatars0.githubusercontent.com
+151.101.76.133    avatars1.githubusercontent.com
+151.101.76.133    avatars2.githubusercontent.com
+151.101.76.133    avatars3.githubusercontent.com
+151.101.76.133    avatars4.githubusercontent.com
+151.101.76.133    avatars5.githubusercontent.com
+151.101.76.133    avatars6.githubusercontent.com
+151.101.76.133    avatars7.githubusercontent.com
+151.101.76.133    avatars8.githubusercontent.com
+# GitHub End
+EOF
+```
+
+### failure in `brew search` for cask formula
+- issue
+  ```bash
+  $ brew install --cask firefox-developer-edition
+  Error: Cask 'firefox-developer-edition' is unavailable: No Cask with this name exists.
+
+  $ brew search firefox
+  ==> Casks
+  firefox                                                                     multifirefox
+  ```
+
+- solution
+  ```bash
+  $ git -C $(brew --repo homebrew/cask-versions) st
+  On branch master
+  Your branch is up to date with 'origin/master'.
+
+  Changes not staged for commit:
+    (use "git add/rm <file>..." to update what will be committed)
+    (use "git restore <file>..." to discard changes in working directory)
+    deleted:    Casks/firefox-beta.rb
+    deleted:    Casks/firefox-developer-edition.rb
+    deleted:    Casks/firefox-esr.rb
+    deleted:    Casks/firefox-nightly.rb
+
+  no changes added to commit (use "git add" and/or "git commit -a")
+
+  $ git -C $(brew --repo homebrew/cask-versions) reset --hard
+  HEAD is now at 67d487bd6 Update dotnet-preview from 6.0.0-preview.4.21253.7,bab80210-ac54-44fa-bf41-7474c6371cf2:eadcd657b93e347d08bc33c59bd60835 to 6.0.0-preview.5.21301.5,c326f2e1-10ee-482e-9871-5fb8de7f7777:dda8203d3b58e56efeca4a7248cdea67 (#11293)
+  ```
