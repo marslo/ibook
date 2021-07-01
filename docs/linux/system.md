@@ -278,6 +278,13 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 ```
 
 ### user management
+#### [How To List Users and Groups on Linux](https://devconnected.com/how-to-list-users-and-groups-on-linux/)
+- `/etc/passwd`
+  ![list user in linux](../screenshot/linux/list-users-linux.png)
+
+- `/etc/group`
+  ![list group in linux](../screenshot/linux/etc-group-file.png)
+
 #### create new user in Ubuntu
 > create user `devops`
 

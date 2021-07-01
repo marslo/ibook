@@ -7,6 +7,7 @@
   - [check mount](#check-mount)
   - [disconnect the mount](#disconnect-the-mount)
   - [setup nfs mount by default server boot](#setup-nfs-mount-by-default-server-boot)
+  - [related configure](#related-configure)
 - [LVM](#lvm)
   - [example](#example)
   - [check status](#check-status)
@@ -20,17 +21,22 @@
 
 
 ## nfs
+{% hint style='tip' %}
 ```bash
 # example
 nfs server: 1.2.3.4
 sub-folder: /a/b
 mount to local: /mnt/mynfs
 ```
+{% endhint %}
 
 ### mount a nfs
 ```bash
 $ sudo mkdir -p /mnt/mynfs
 $ sudo mount -t nfs 1.2.3.4:/a/b /mnt/mynfs
+
+# or force using nfsversion 4
+$ sudo mount -t nfs -o nfsvers=4 1.2.3.4:/a/b /mnt/mynfs -vvv
 ```
 
 - [test if sub-folder exists in remote nfs server](https://www.tecmint.com/how-to-setup-nfs-server-in-linux/)
@@ -43,6 +49,8 @@ $ sudo mount -t nfs 1.2.3.4:/a/b /mnt/mynfs
   # centos
   $ yum install nfs-utils nfs-utils-lib
   $ yum install portmap (not required with NFSv4)
+
+  # for nfs4
 
   # ubuntu
   $ apt-get install nfs-utils nfs-utils-lib
@@ -87,6 +95,32 @@ $ mount | column -t | grep -E 'type.*nfs
 $ findmnt /mnt/mynfs
 ```
 
+#### check mount version
+{% hint style='tip' %}
+- [`nfsstat -c` will show you the NFS version actually being used](https://unix.stackexchange.com/a/185831/29178)
+- [`nfsstat -m` will show statistics on mounted NFS filesystems](https://unix.stackexchange.com/a/138999/29178)
+- `grep nfs /proc/mounts` equals `nfsstat -m`
+{% endhint %}
+
+```bash
+$ rpcinfo -p localhost
+  program vers proto   port  service
+   100000    4   tcp    111  portmapper
+   100000    3   tcp    111  portmapper
+   100000    2   tcp    111  portmapper
+   100000    4   udp    111  portmapper
+   100000    3   udp    111  portmapper
+   100000    2   udp    111  portmapper
+   100024    1   udp  38978  status
+   100024    1   tcp  36415  status
+   100021    1   udp  51669  nlockmgr
+   100021    3   udp  51669  nlockmgr
+   100021    4   udp  51669  nlockmgr
+   100021    1   tcp  42699  nlockmgr
+   100021    3   tcp  42699  nlockmgr
+   100021    4   tcp  42699  nlockmgr
+```
+
 ### disconnect the mount
 ```bash
 $ sudo umount /mnt/mynfs
@@ -98,6 +132,13 @@ $ sudo bash -c "cat > /etc/fstab" << EOF
 1.2.3.4:/a/b    /mnt/mynfs nfs default 0 0
 EOF
 ```
+
+### related configure
+- `/etc/fstab`
+- `/etc/nsswitch.conf`
+- `/etc/nfsmount.conf`
+- `/etc/nfs.conf`
+- `/proc/mounts`
 
 ## LVM
 > reference:
