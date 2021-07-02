@@ -2,24 +2,30 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [cmd admin](#cmd-admin)
-- [cmd admin without UAC check via Task Scheduler](#cmd-admin-without-uac-check-via-task-scheduler)
-- [lansettings](#lansettings)
-- [Desktop Icon Settings](#desktop-icon-settings)
-- [Notification Area Icons](#notification-area-icons)
-- [Personalization](#personalization)
-- [Screen Saver](#screen-saver)
-- [System](#system)
-- [System Icon](#system-icon)
+- [shortcuts](#shortcuts)
+  - [cmd admin](#cmd-admin)
+  - [cmd admin without UAC check via Task Scheduler](#cmd-admin-without-uac-check-via-task-scheduler)
+  - [lansettings](#lansettings)
+  - [Desktop Icon Settings](#desktop-icon-settings)
+  - [Notification Area Icons](#notification-area-icons)
+  - [Personalization](#personalization)
+  - [Screen Saver](#screen-saver)
+  - [System](#system)
+  - [System Icon](#system-icon)
+  - [user environment variables](#user-environment-variables)
+- [icons](#icons)
+- [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 {% hint style='tip' %}
-- reference :
+reference :
 - [Windows Start | Run commands](https://ss64.com/nt/run.html)
 - [List of Commands to Open Control Panel Items in Windows 10](https://www.tenforums.com/tutorials/86339-list-commands-open-control-panel-items-windows-10-a.html)
+
 {% endhint %}
 
+## shortcuts
 
 ### cmd admin
 {% hint style='tip' %}
@@ -29,20 +35,25 @@
 {% endhint %}
 
 - create shortcut by `New` -> `Shortcut`
-  ![new](../../screenshot/win/cmd-admin-1.png)
+
+  <img src="../../screenshot/win/cmd-admin-1.png" width="500">
 
 - insert commands
-  ![new](../../screenshot/win/cmd-admin-2.png)
+
+  <img src="../../screenshot/win/cmd-admin-2.png" width="500">
 
 - setup shortcut name
-  ![cmdadm](../../screenshot/win/cmd-admin-3.png)
+
+  <img src="../../screenshot/win/cmd-admin-3.png" width="500">
 
 - setup `Run as administrator` for the shortcut
-  ![cmdadm](../../screenshot/win/cmd-admin-5.png)
 
-- move shortcut to `Start Menu`
-  ![cmdadm](../../screenshot/win/cmd-admin-6.png)
+  <img src="../../screenshot/win/cmd-admin-5.png" width="600">
 
+- move shortcut to `Start Menu` :
+  <kbd>Ctrl</kbd> + <kbd>r</kbd> -> `shell:Programs`
+
+  <img src="../../screenshot/win/cmd-admin-6.png" width="400">
   ![cmdadm](../../screenshot/win/cmd-admin-7.png)
 
 
@@ -58,45 +69,69 @@
 - `Task Scheduler (Local)` -> `Create Task...`
   ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-1.png)
 
-- **General** Tab : -> Name: `RunAdminCMD` (or any you want) -> [x] `Run with highest privileges`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-2.png)
+- **General** Tab : -> Name: `RunAdminCMD` (or any you want) -> `[x] Run with highest privileges`
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-2.png" width="600">
 
 - **Conditions** Tab : -> [ ] `Start the task only if the computer is on AC power`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-3.png)
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-3.png" width="600">
 
 - **Actions** Tab : -> `New` -> **Browse Program/script:** -> select the path (i.e.: `C:\Windows\System32\cmd.exe`) -> `OK`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-4.png)
 
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-4-1.png)
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-4.png" width="600">
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-4-1.png" width="600">
+
+  or
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-4-2.png" width="600">
 
 - **Triggers** Tab : -> `New` -> **Begin the task:** : `At Startup` (or `At log on`) -> `OK`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-5.png)
 
-- **Settings** Tab : -> [ ] `Stop the task if runing longer than: 3 days` -> `OK`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-6.png)
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-5.png" width="600">
+
+- **Settings** Tab : -> `[ ] Stop the task if runing longer than: 3 days` -> `OK`
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-6.png" width="600">
 
 - `Save` and `Run`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-7.png)
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-7.png" width="400">
 
 #### shortcut setup
 - <kbd>right click</kbd> -> `New` -> `Shortcut`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-8.png)
 
-- **Type the location of the item:** : `schtasks /run /tn "<taskName>"` (i.e.: `schtasks /run /tn "RunAdminCMD"`) -> `Next`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-9.png)
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-8.png" width="360">
+
+- **Type the location of the item:** : `schtasks /run /tn "<taskName>"` -> `Next`
+  ```batch
+  schtasks /run /tn "<taskName>"
+  ```
+  - i.e.:
+    ```batch
+    schtasks /run /tn "RunAdminCMD"
+    ```
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-9.png" width="600">
 
 - **Type a name of this shortbut:** : any name you want (i.e.: `Command Prompt`) -> `Finish`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-10.png)
+
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-10.png" width="600">
 
 - <kbd>right click</kbd> the new shortcut -> `Properties` -> **Shortcut** Tab : `Change Icon`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-12.png)
 
-- **Look for icons in this file** : `%SystemRoot%\System32\imageres.dll`
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-13.png)
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-12.png" width="400">
+
+- **Look for icons in this file** :
+  ```batch
+  %SystemRoot%\System32\imageres.dll
+  ```
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-13.png" width="300">
 
 - put the shortcut to anywhere you want
 
-  ![cmdadm](../../screenshot/win/cmd-admin-without-uac/admin-cmd-14.png)
+  <img src="../../screenshot/win/cmd-admin-without-uac/admin-cmd-14.png" width="256">
 
 ### [lansettings](https://stackoverflow.com/a/3648396/2940319)
 - Internet Settings
@@ -161,13 +196,115 @@ or
 > explorer shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9} \SystemIcons,,0
 ```
 
-
 ### user environment variables
 ```batch
 rundll32.exe sysdm.cpl,EditEnvironmentVariables
 ```
 
-### reference
+## [icons](https://www.digitalcitizen.life/where-find-most-windows-10s-native-icons/)
+- `%SystemRoot%\System32\shell32.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-shell32.dll.png" width="300">
+
+- `%SystemRoot%\system32\imageres.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-imageres.dll.png" width="300">
+
+- `%systemroot%\system32\DeviceCenter.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-DeviceCenter.dll.png" width="300">
+
+- `%systemroot%\explorer.exe`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-explorer.exe.png" width="300">
+
+- `%systemroot%\system32\ddores.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-ddores.dll.png" width="300">
+
+- `%systemroot%\system32\mmcndmgr.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-mmcndmgr.dll.png" width="300">
+
+- `%systemroot%\system32\mmres.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-mmres.dll.png" width="300">
+
+- `%systemroot%\system32\netcenter.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-netcenter.dll.png" width="300">
+
+- `%systemroot%\system32\networkexplorer.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-networkexplorer.dll.png" width="300">
+
+- `%systemroot%\system32\pnidui.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-pnidui.dll.png" width="300">
+
+- `%systemroot%\system32\setupapi.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-setupapi.dll.png" width="300">
+
+- `%systemroot%\system32\compstui.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-compstui.dll.png" width="300">
+
+- `%systemroot%\system32\dsuiext.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-dsuiext.dll.png" width="300">
+
+- `%systemroot%\system32\mstscax.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-mstscax.dll.png" width="300">
+
+- `%systemroot%\system32\comres.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-comres.dll.png" width="300">
+
+- `%systemroot%\system32\mstsc.exe`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-mstsc.exe.png" width="300">
+
+- `%systemroot%\system32\actioncentercpl.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-actioncentercpl.dll.png" width="300">
+
+- `%systemroot%\system32\aclui.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-aclui.dll.png" width="300">
+
+- `%systemroot%\system32\autoplay.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-autoplay.dll.png" width="300">
+
+- `%systemroot%\system32\comctl32.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-comctl32.dll.png" width="300">
+
+- `%systemroot%\system32\xwizards.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-xwizards.dll.png" width="300">
+
+- `%systemroot%\system32\ncpa.cpl`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-ncpa.cpl.png" width="300">
+
+- `%systemroot%\system32\url.dll`
+
+  <img src="../../screenshot/win/shortcut-icons/icon-url.dll.png" width="300">
+
+- `%systemroot%\system32\pifmgr.dll`
+- `%systemroot%\system32\accessibilitycpl.dl`
+- `%systemroot%\system32\moricons.dll`
+- `%systemroot%system32\netshell.dll`
+- `%systemroot%\system32\sensorscpl.dll`
+- `%systemroot%\system32\wmploc.dll`
+- `%systemroot%\system32\wpdshext.dll`
+- `systemroot%\system32\ieframe.dll`
+- `%systemroot%\system32\wiashext.dll`
+
+## reference
 | Control Panel Item                               | `Commands`                                                                                                                                                                                 |
 |:-------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Add a Device wizard                              | `%windir%\System32\DevicePairingWizard.exe`                                                                                                                                                |
