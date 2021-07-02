@@ -31,6 +31,7 @@
 - [`shell`](#shell)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
   - [details](#details-1)
+- [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -353,3 +354,8 @@ Windows Registry Editor Version 5.00
 
 ### details
 [shell:folder](./shell:folder.md)
+
+## tricky
+#### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
+![windows step 1](../../screenshot/win/windows-service-security-1.png)
+![windows step 2](../../screenshot/win/windows-service-security-2.png)
