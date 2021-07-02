@@ -29,8 +29,8 @@
 | `shell:Administrative Tools`        | `%AppData%\Microsoft\Windows\Start Menu\Programs\Administrative Tools`                |
 | `shell:AppData`                     | `%AppData%`                                                                           |
 | `shell:Application Shortcuts`       | `%LocalAppData%\Microsoft\Windows\Application Shortcuts`                              |
-| `shell:AppsFolder`                  | Applications                                                                        |
-| `shell:AppUpdatesFolder`            | Installed Updates                                                                   |
+| `shell:AppsFolder`                  | Applications                                                                          |
+| `shell:AppUpdatesFolder`            | Installed Updates                                                                     |
 | `shell:Cache`                       | `%LocalAppData%\Microsoft\Windows\INetCache`                                          |
 | `shell:Camera Roll`                 | `%UserProfile%\Pictures\Camera Roll`                                                  |
 | `shell:CD Burning`                  | `%LocalAppData%\Microsoft\Windows\Burn\Burn`                                          |
@@ -44,7 +44,7 @@
 | `shell:CommonPictures`              | `%Public%\Pictures`                                                                   |
 | `shell:Common Programs`             | `%ProgramData%\Microsoft\Windows\Start Menu\Programs`                                 |
 | `shell:CommonRingtones`             | `%ProgramData%\Microsoft\Windows\Ringtones`                                           |
-| `shell:Common Start Menu`           | `%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup`                         |
+| `shell:Common Start Menu`           | `%ProgramData%\Microsoft\Windows\Start Menu\Programs`                                 |
 | `shell:Common Startup`              | `%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup`                         |
 | `shell:Common Templates`            | `%ProgramData%\Microsoft\Windows\Templates`                                           |
 | `shell:CommonVideo`                 | `%Public%\Videos`                                                                     |
@@ -56,32 +56,32 @@
 | `shell:Cookies\Low`                 | `%LocalAppData%\Microsoft\Windows\INetCookies\Low`                                    |
 | `shell:CredentialManager`           | `%AppData%\Microsoft\Credentials`                                                     |
 | `shell:CryptoKeys`                  | `%AppData%\Microsoft\Crypto`                                                          |
-| `shell:desktop`                     | Desktop                                                                             |
+| `shell:desktop`                     | Desktop                                                                               |
 | `shell:device Metadata Store`       | `%ProgramData%\Microsoft\Windows\DeviceMetadataStore`                                 |
-| `shell:documentsLibrary`            | Libraries\Documents                                                                 |
+| `shell:documentsLibrary`            | Libraries\Documents                                                                   |
 | `shell:downloads`                   | `%UserProfile%\Downloads`                                                             |
 | `shell:dpapiKeys`                   | `%AppData%\Microsoft\Protect`                                                         |
 | `shell:Favorites`                   | `%UserProfile%\Favorites`                                                             |
 | `shell:Fonts`                       | `%WinDir%\Fonts`                                                                      |
-| `shell:Games`                       | Games                                                                               |
+| `shell:Games`                       | Games                                                                                 |
 | `shell:GameTasks`                   | `%LocalAppData%\Microsoft\Windows\GameExplorer`                                       |
 | `shell:History`                     | `%LocalAppData%\Microsoft\Windows\History`                                            |
 | `shell:HomeGroupCurrentUserFolder`  | `Homegroup\{username}`                                                                |
-| `shell:HomeGroupFolder`             | Homegroup                                                                           |
+| `shell:HomeGroupFolder`             | Homegroup                                                                             |
 | `shell:ImplicitAppShortcuts`        | `%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\ImplicitAppShortcuts` |
-| `shell:InternetFolder`              | Internet Explorer                                                                   |
-| `shell:Libraries`                   | Libraries                                                                           |
+| `shell:InternetFolder`              | Internet Explorer                                                                     |
+| `shell:Libraries`                   | Libraries                                                                             |
 | `shell:Links`                       | `%UserProfile%\Links`                                                                 |
 | `shell:Local AppData`               | `%LocalAppData%`                                                                      |
 | `shell:LocalAppDataLow`             | `%UserProfile%\AppData\LocalLow`                                                      |
 | `shell:MusicLibrary`                | `Libraries\Music`                                                                     |
-| `shell:MyComputerFolder`            | This PC                                                                             |
+| `shell:MyComputerFolder`            | This PC                                                                               |
 | `shell:My Music`                    | `%UserProfile%\Music`                                                                 |
 | `shell:My Pictures`                 | `%UserProfile%\Pictures`                                                              |
 | `shell:My Video`                    | `%UserProfile%\Videos`                                                                |
 | `shell:NetHood`                     | `%AppData%\Microsoft\Windows\Network Shortcuts`                                       |
-| `shell:NetworkPlacesFolder`         | Network                                                                             |
-| `shell:OneDrive`                    | OneDrive                                                                            |
+| `shell:NetworkPlacesFolder`         | Network                                                                               |
+| `shell:OneDrive`                    | OneDrive                                                                              |
 | `shell:OneDriveCameraRoll`          | `%UserProfile%\OneDrive\Pictures\Camera Roll`                                         |
 | `shell:OneDriveDocuments`           | `%UserProfile%\OneDrive\Documents`                                                    |
 | `shell:OneDriveMusic`               | `%UserProfile%\OneDrive\Music`                                                        |
@@ -118,7 +118,7 @@
 | `shell:SearchTemplatesFolder`       | `%LocalAppData%\Microsoft\Windows\ConnectedSearch\Templates`                          |
 | `shell:SendTo`                      | `%AppData%\Microsoft\Windows\SendTo`                                                  |
 | `shell:Start Menu`                  | `%AppData%\Microsoft\Windows\Start Menu`                                              |
-| `shell:StartMenuAllPrograms`        | StartMenuAllPrograms                                                                |
+| `shell:StartMenuAllPrograms`        | StartMenuAllPrograms                                                                  |
 | `shell:Startup`                     | `%AppData%\Microsoft\Windows\Start Menu\Programs\Startup`                             |
 | `shell:SyncCenterFolder`            | `Control Panel\All Control Panel Items\Sync Center`                                   |
 | `shell:SyncResultsFolder`           | `Control Panel\All Control Panel Items\Sync Center\Sync Results`                      |
@@ -127,12 +127,12 @@
 | `shell:SystemCertificates`          | `%AppData%\Microsoft\SystemCertificates`                                              |
 | `shell:SystemX86`                   | `%WinDir%\SysWOW64`                                                                   |
 | `shell:Templates`                   | `%AppData%\Microsoft\Windows\Templates`                                               |
-| `shell:ThisPCDesktopFolder`         | Desktop                                                                             |
+| `shell:ThisPCDesktopFolder`         | Desktop                                                                               |
 | `shell:UsersFilesFolder`            | `%UserProfile%`                                                                       |
 | `shell:User Pinned`                 | `%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned`                      |
 | `shell:UserProfiles`                | `%HomeDrive%\Users`                                                                   |
 | `shell:UserProgramFiles`            | `%LocalAppData%\Programs`                                                             |
 | `shell:UserProgramFilesCommon`      | `%LocalAppData%\Programs\Common`                                                      |
-| `shell:UsersLibrariesFolder`        | Libraries                                                                           |
-| `shell:VideosLibrary`               | Libraries\Videos                                                                    |
+| `shell:UsersLibrariesFolder`        | Libraries                                                                             |
+| `shell:VideosLibrary`               | Libraries\Videos                                                                      |
 | `shell:Windows`                     | `%WinDir%`                                                                            |
