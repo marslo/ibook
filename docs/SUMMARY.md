@@ -7,6 +7,7 @@
 * [cheatsheet](cheatsheet/good.md)
   * [bash](cheatsheet/bash.md)
   * [windows](cheatsheet/windows/windows.md)
+    * [shortcut](cheatsheet/windows/shortcut.md)
     * [clsid](cheatsheet/windows/clsid.md)
     * [env](cheatsheet/windows/env.md)
     * [shell:folder](cheatsheet/windows/shell:folder.md)
