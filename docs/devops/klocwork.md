@@ -9,7 +9,8 @@
   - [full build analysis](#full-build-analysis)
   - [incremental build analysis](#incremental-build-analysis)
   - [load result from both windows and linux](#load-result-from-both-windows-and-linux)
-  - [Using kwwrap plus kwinject to generate a build specification](#using-kwwrap-plus-kwinject-to-generate-a-build-specification)
+  - [using kwwrap plus kwinject to generate a build specification](#using-kwwrap-plus-kwinject-to-generate-a-build-specification)
+  - [when editing the makefile is not an option](#when-editing-the-makefile-is-not-an-option)
 - [authentication](#authentication)
   - [get ltoken](#get-ltoken)
 - [api](#api)
@@ -229,7 +230,7 @@
     $ kwadmin --url "http://my.kw.com/NotepadPlusPlus" load NotepadPlusPlus "~/npp/npp_tables"
     ```
 
-### [Using kwwrap plus kwinject to generate a build specification](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification)
+### [using kwwrap plus kwinject to generate a build specification](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification)
 > reference:
 > - [Using a build trace to troubleshoot build specification problems](https://docs.roguewave.com/en/klocwork/current/usingabuildtracetotroubleshootbuildspecificationproblems#concept972)
 > - [Can I concatenate the results of more than one kwinject.out file?](https://developer.klocwork.com/community/forums/klocwork-insight/general-discussion/can-i-concatenate-results-more-one-kwinjectout)
@@ -240,30 +241,81 @@
 > For [distributed builds](https://docs.roguewave.com/en/klocwork/current/runningadistributedklocworkccanalysis), you must run the following procedure on all build machines and merge the resultant build trace files.
 {% endhint %}
 
-* inserting the kwwrap command line before your compiler and linker names
+1. inserting the kwwrap command line before your compiler and linker names
   ```c
   CC = gcc
   ```
-
   convert to
-
   ```c
   CC = kwwrap -o <path_to_kwwrap_trace_file> gcc
+  // or
+  CC = kwwrap -o <path_to_kwwrap_trace_file> $(command -v gcc)
   ```
-* execute the build command
-* Convert the build trace into a build specification with [kwinject](https://docs.roguewave.com/en/klocwork/current/kwinject)
+
+  or via [creating wrapper scripts](https://docs.roguewave.com/en/klocwork/2019/usingkwwrappluskwinjecttogenerateabuildspecification#Creatingwrapperscripts)
+
+1. execute the original build command
+1. Convert the build trace into a build specification with [kwinject](https://docs.roguewave.com/en/klocwork/current/kwinject)
   ```bash
-  $ kwinject --trace-in <path_to_kwwrap_trace_file> --output <path_to_kwinject_output_file>
+  $ kwinject --trace-in <path_to_kwwrap_trace_file> \
+             --output <path_to_kwinject_output_file>
   ```
   - i.e.:
     ```bash
-    $ kwinject --trace-in C:/temp/kwwrap.trace --output C:Klocwork/temp/kwinject.out
+    $ kwinject --trace-in C:/temp/kwwrap.trace \
+               --output C:/Klocwork/temp/kwinject.out
     ```
 
-#### [When editing the makefile is not an option](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification#Wheneditingthemakefileisnotanoption)
-- Using environment variables
-- Creating wrapper scripts
-- Use kwwrap with CMake
+### [when editing the makefile is not an option](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification#Wheneditingthemakefileisnotanoption)
+{% hint style='tip' %}
+> i.e.: <path_to_kwwrap_trace_file> is `/temp/kwwrap.trace`
+{% endhint %}
+
+#### [using environment variables](https://docs.roguewave.com/en/klocwork/2019/usingkwwrappluskwinjecttogenerateabuildspecification#Usingenvironmentvariables)
+1. create environment variables
+  ```bash
+  $ LDSHARED="kwwrap -o /temp/kwwrap.trace $(command -v gcc)"
+  $ CC="kwwrap -o /temp/kwwrap.trace $(command -v gcc)"
+  $ C++="kwwrap -o /temp/kwwrap.trace $(command -v g++)"
+  $ CMAKE="kwwrap -o /temp/kwwrap.trace $(command -v cmake)"
+  $ AR="kwwrap -o /temp/kwwrap.trace $(command -v ar) rc"
+  $ export CC C++ CMAKE AR LDSHARED
+  ```
+
+1. build with original command
+  ```bash
+  $ cmake
+  ```
+
+1. use kwwrap with CMake and generate the trace
+  ```bash
+  $ kwinject --trace-in /temp/kwwrap.trace --output kwinject.out
+  ```
+
+#### [using wrapper scripts](https://docs.roguewave.com/en/klocwork/2019/usingkwwrappluskwinjecttogenerateabuildspecification#Creatingwrapperscripts)
+1. creating wrapper scripts
+  ```bash
+  $ echo "kwwrap -r -o <path_to_kwwrap_trace_file> $(command -v gcc)" > $HOME/.hook/gcc
+  $ echo "kwwrap -r -o <path_to_kwwrap_trace_file> $(command -v g++)" > $HOME/.hook/g++
+  $ echo "kwwrap -r -o <path_to_kwwrap_trace_file> $(command -v cmake)" > $HOME/.hook/cmake
+  $ chmod +x $HOME/.hook/*
+  ```
+
+1. setup environment variables
+  ```bash
+  $ export KWWRAP_HOOKS_DIR="$HOME/.hook"
+  $ export PATH=${KWWRAP_HOOKS_DIR}:${PATH}
+  ```
+
+1. build with original command
+  ```bash
+  $ cmake # the original command
+  ```
+
+1. use kwwrap with CMake and generate the trace
+  ```bash
+  $ kwinject --trace-in /temp/kwwrap.trace --output kwinject.out
+  ```
 
 ## authentication
 ### [get ltoken](https://docs.roguewave.com/en/klocwork/2020/klocworkltoken)
