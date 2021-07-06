@@ -110,6 +110,7 @@ useful plugins
 ## gitbook format
 ### [hints](https://github.com/GitbookIO/plugin-hints)
 > [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
+> [Hints and Callouts](https://docs.gitbook.com/editing-content/markdown#hints-and-callouts)
 
 | styles  | code                                             |
 | -       | -                                                |
@@ -179,8 +180,8 @@ warning
 > reference:
 > -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)
 
-#### code
-- gitbook.io
+### code
+- [gitbook.io](https://docs.gitbook.com/editing-content/rich-content/with-command-palette#tabs)
   {% raw %}
   ```
   {% tabs %}
