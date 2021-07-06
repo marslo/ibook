@@ -104,7 +104,13 @@ function updateBook() {
     cd "${target}" || exit
 
     git add --all .
-    git commit -am "${msg}"
+    targetMsg=$(git show remotes/origin/gh-pages --no-patch --format="%s")
+    if [ "${targetMsg}" = "${msg}" ]; then
+      echo '~~> force push without create new commit: '
+      git commit --amend --no-edit
+    else
+      git commit -am "${msg}"
+    fi
     git push origin gh-pages --force
 
     popd || return
