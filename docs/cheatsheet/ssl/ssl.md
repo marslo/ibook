@@ -34,7 +34,10 @@
 # SSL Cert
 ## create cert for server
 ### ca (root cert)
-{% codetabs name="command", type="bash" -%}
+
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ openssl genrsa -aes256 -out ca.key 2048
 $ openssl req -new \
               -x509 \
@@ -43,7 +46,11 @@ $ openssl req -new \
               -key ca.key \
               -out ca.crt \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
-{%- language name="more details", type="bash" -%}
+```
+{% endtab %}
+
+{% tab title="more details" %}
+```bash
 $ openssl genrsa -aes256 -out ca.key 2048 Generating RSA private key, 2048 bit long modulus
 ....................................................................+++
 ...................................................+++
@@ -59,17 +66,26 @@ $ openssl req -new \
               -out ca.crt \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
 Enter pass phrase for ca.key:artifactory
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 ### cert for server (csr)
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
+
 $ openssl genrsa -out  server.key 2048
 $ openssl req -new\
               -sha256 \
               -key server.key \
               -out server.csr \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
-{%- language name="more details", type="bash" -%}
+```
+{% endtab %}
+
+{% tab title="more details" %}
+```bash
 $ openssl genrsa -out  server.key 2048
 Generating RSA private key, 2048 bit long modulus
 ......................................................................+++
@@ -81,10 +97,14 @@ $ openssl req -new \
               -key server.key \
               -out server.csr \
               -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 #### sign the server cert with CA
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
 $ echo extendedKeyUsage = serverAuth >> extfile.cnf
 
@@ -97,7 +117,10 @@ $ openssl x509 -req \
                -in server.csr \
                -out server.crt \
                -extfile extfile.cnf
-{%- language name="more details", type="bash" -%}
+```
+{% endtab %}
+{% tab title="more details" %}
+```bash
 $ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
 $ echo extendedKeyUsage = serverAuth >> extfile.cnf
 
@@ -119,10 +142,14 @@ unable to write 'random state'
 $ ls
 extfile.cnf                             ca.key      server.csr  www.srl
 ca.crt  server.crt  server.key
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 ### generate cert for client (cert) and singed by CA
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ openssl genrsa -out client.key
 $ openssl req -new \
               -key client.key \
@@ -139,7 +166,10 @@ $ openssl x509 -req \
                -in client.csr \
                -out client.cert \
                -extfile extfile.cnf
-{%- language name="more details", type="bash" -%}
+```
+{% endtab %}
+{% tab title="more details" %}
+```bash
 $ openssl genrsa -out client.key 2048
 Generating RSA private key, 2048 bit long modulus
 ................................................+++
@@ -172,7 +202,9 @@ subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompa
 Getting CA Private Key
 Enter pass phrase for ca.key:artifactor
 unable to write 'random state'
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 ### Update the file perm
 ```bash
@@ -186,11 +218,16 @@ $ sudo chmod -v 0400 ca.key \
 
 ### verify
 #### crt
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ openssl x509 -noout \
                -text \
                -in server.crt
-{%- language name="openssl x509 ca.crt", type="bash" -%}
+```
+{% endtab %}
+{% tab title="openssl x509 ca.crt" %}
+```bash
 $ openssl x509 -noout \
                -text \
                -in ca.crt
@@ -254,7 +291,10 @@ Certificate:
          6c:12:88:e8:cf:34:08:67:af:1c:2f:bb:49:54:1b:17:95:89:
          b3:2d:c9:5f
 
-{%- language name="openssl x509 server.crt", type="bash" -%}
+```
+{% endtab %}
+{% tab title="openssl x509 server.crt" %}
+```
 $ openssl x509 -noout \
                -text \
                -in server.crt
@@ -312,14 +352,21 @@ Certificate:
          fd:0d:75:48:81:3c:a5:bc:ce:c0:95:8c:8e:d3:8c:0f:0d:a3:
          a7:73:70:bc:59:89:7c:42:25:0b:cb:2f:b0:86:4a:46:56:f2:
          e9:d9:63:f1
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 #### csr
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ openssl req -noout \
               -text \
               -in server.csr
-{%- language name="openss req", type="bash" -%}
+```
+{% endtab %}
+{% tab title="openss req" %}
+```bash
 $ openssl req -noout \
               -text \
               -in server.csr
@@ -368,7 +415,9 @@ Certificate Request:
          2e:7f:8d:bf:44:29:83:fa:89:b3:b8:3c:13:98:20:76:6c:d3:
          67:ce:03:9e:15:ea:3e:9d:4b:cb:c2:78:ab:57:1d:b7:e8:9e:
          81:1b:b5:1f
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 ## certificate in Nginx
 ```bash
@@ -388,7 +437,9 @@ $ sudo security add-trusted-cert -d \
 ```
 
 ### search
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ security find-certificate -a -c <artifactory> -Z
 $ security find-certificate -a -c artifactor -Z | grep SHA-1
 SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
@@ -396,7 +447,10 @@ SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
 $ security list-keychain
     "/Users/marslo/Library/Keychains/login.keychain-db"
     "/Library/Keychains/System.keychain"
-{%- language name="more details", type="bash" -%}
+```
+{% endtab %}
+{% tab title="more details" %}
+```bash
 $ security find-certificate -a -c artifactor -Z
 SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
 keychain: "/Library/Keychains/System.keychain"
@@ -441,7 +495,9 @@ nCqrytACBoo5eupluQQTD2vN6uWfWcXSBrLkw8urWWmqEeYISRLM1CkhK1nB3Lvm
 qX2WaKR7YXaKIalppYPVi/YITsA0ZGtllqztzcELVH2pVwd3DGpDnk/AbBKI6M80
 CGevHC+7SVQbF5WJsy3JXw==
 -----END CERTIFICATE-----
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 ### remove
 ```bash
@@ -450,7 +506,9 @@ $ sudo security delete-certificate -Z 915D019F0993F369C09D75C6B8DA201B8DE2636E
 
 ### others
 - 1st:
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ cd /etc/nginx/
 $ sudo openssl genrsa -des3 -out server.key 1024
 $ sudo openssl req -new -key server.key -out server.csr
@@ -463,8 +521,10 @@ $ sudo openssl x509 -req \
                     -signkey server.key \
                     -in server.csr \
                     -out server.crt
-{%- language name="more details", type="bash" -%}
-
+```
+{% endtab %}
+{% tab title="more details" %}
+```bash
 $ ls -Altrh
 total 80K
 -rw-r--r--   1 root root 3.0K May  3  2017 win-utf
@@ -551,7 +611,9 @@ $ sudo openssl x509 -req \
 Signature ok
 subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=mycompany/CN=docker-2.artifactory/emailAddress=marslo.jiao@mycompany.com
 Getting Private key
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 
 - 2nd:
@@ -624,7 +686,9 @@ Getting Private key
 
 # Artifactory HTTPS
 
-{% codetabs name="command", type="bash" -%}
+{% tabs %}
+{% tab title="command" %}
+```bash
 $ sudo openssl genrsa -des3 -out artifactorykey 2048
 $ sudo openssl req -new -key artifactorykey -out artifactorycsr
 $ sudo cp artifactorykey{,.org}
@@ -728,7 +792,10 @@ Certificate:
          1d:88:b2:2c:eb:20:3e:bf:3b:4e:9b:ab:b7:4f:e8:14:a8:1a:
          33:50:e9:a8:24:3e:5e:2a:68:ea:fa:f3:12:30:94:8e:0f:0d:
          da:6c:17:60
-{%- language name="SSL with IP", type="bash" -%}
+```
+{% endtab %}
+{% tab title="SSL with IP" %}
+```bash
 $ sudo openssl genrsa -des3 -out artifactorykey 2048
 Generating RSA private key, 2048 bit long modulus
 ........................+++
@@ -828,4 +895,6 @@ Certificate:
          5c:45:a0:23:ea:1d:84:16:24:3d:88:a0:12:20:61:7a:f8:bd:
          dc:0f:fb:26:c0:f3:2f:1f:66:7e:64:35:b6:45:05:c4:00:43:
          2d:18:da:a1
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}

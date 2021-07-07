@@ -657,16 +657,23 @@ http://www.baidu.com
 
 ## insert new line
 - insert right after the second match string
-{% codetabs name="original", type="bash" -%}
+{% tabs %}
+{% tab title="original" %}
+```bash
 DCR
 DCR
 DCR
-{%- language name="expected", type="bash" -%}
+```
+{% endtab %}
+{% tab title="expected" %}
+```bash
 DCR
 DCR
 check
 DCR
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 ```bash
 $ echo -e "DCR\nDCR\nDCR" |awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
@@ -702,7 +709,9 @@ items.find ({
                       })
   EOF
   ```
-{% codetabs name="example", type="bash" -%}
+{% tabs %}
+{% tab title="example" %}
+```bash
 $ sed -e 's:^\s*::' <<-'EOF'
                       items.find ({
                         "repo": "${product}-${stg}-local",
@@ -717,7 +726,9 @@ items.find ({
 "depth" : "1",
 "created" : { "${opt}": "4mo" }
 })
-{%- endcodetabs %}
+```
+{% endtab %}
+{% endtabs %}
 
 
 ## cat
@@ -749,7 +760,9 @@ items.find ({
   > - [Bash - Removing white space from indented multiline strings](https://stackoverflow.com/questions/46537619/bash-removing-white-space-from-indented-multiline-strings)
   > - [How to avoid heredoc expanding variables? [duplicate]](https://stackoverflow.com/questions/27920806/how-to-avoid-heredoc-expanding-variables)
 
-{% codetabs name="<< -", type="bash" -%}
+{% tabs %}
+{% tab title="<< -" %}
+```bash
 $ cat -A sample.sh
 LANG=C tr a-z A-Z <<- END_TEXT$
 Here doc with <<$
@@ -765,7 +778,10 @@ HERE DOC WITH <<-
 THIS LINE BEGINS WITH A SINGLE TAB CHARACTER I.E 0X09  AS DOES THE NEXT LINE
 The intended end was before this line
 
-{%- language name="<<", type="bash" -%}
+```
+{% endtab %}
+{% tab title="<<" %}
+```bash
 $ cat -A sample.sh
 LANG=C tr a-z A-Z << END_TEXT$
 Here doc with <<$
@@ -783,5 +799,6 @@ HERE DOC WITH <<
 	END_TEXT
 
 ECHO THE INTENDED END WAS BEFORE THIS LINE
-{%- endcodetabs %}
-
+```
+{% endtab %}
+{% endtabs %}
