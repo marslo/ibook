@@ -39,6 +39,7 @@ Git Command Study and practice
   - [get difference between two branches](#get-difference-between-two-branches)
 - [tag](#tag)
   - [get distance between tags](#get-distance-between-tags)
+  - [get revision in particular branch](#get-revision-in-particular-branch)
   - [show all tags for particular revision](#show-all-tags-for-particular-revision)
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
@@ -658,6 +659,21 @@ or
   ```bash
   $ git describe HEAD --all --long
   ```
+
+### get revision in particular branch
+```
+$ git tag -l --sort='creatordate' --merged <branch>
+```
+
+#### get latest tag
+```
+$ git tag -l --sort='creatordate' --merged <branch> | tail -1
+```
+
+#### get revision from latest tag in particular branch
+```bash
+$ git rev-list -1 --no-patch $(git tag -l --sort='creatordate' --merged <branch> | tail -1)
+```
 
 ### [show all tags for particular revision](https://stackoverflow.com/a/37497511/2940319)
 ```bash
