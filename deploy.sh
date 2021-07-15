@@ -7,8 +7,9 @@
 # LastChange : 2020-12-25 23:32:24
 # =============================================================================
 
-target="$(git rev-parse --show-toplevel)/.target_book"
-book="$(git rev-parse --show-toplevel)/_book"
+root="$(git rev-parse --show-toplevel)"
+target="${root}/.target_book"
+book="${root}/_book"
 branch='gh-pages'
 remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
 msg=$(git show HEAD --no-patch --format="%s")
@@ -49,8 +50,9 @@ info="""
      $(c Y)commit message$(c) : ${msg}
 
   $(c M)NPM COMMANDS :$(c)
-      $(c Y)npm run clean$(c) : $(grep \"clean\" package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
-      $(c Y)npm run built$(c) : $(grep \"built\" package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run clean$(c)  : $(grep \"clean\" ${root}/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run built$(c)  : $(grep \"built\" ${root}/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run deploy$(c) : $(grep \"deploy\" ${root}/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
 """
 
 function help()
