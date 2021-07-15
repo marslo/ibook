@@ -13,6 +13,7 @@ search:
 - [gitbook format](#gitbook-format)
   - [hints](#hints)
   - [tab](#tab)
+  - [code](#code)
   - [emoji](#emoji)
 - [Q&A](#qa)
   - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)

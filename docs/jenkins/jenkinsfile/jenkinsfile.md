@@ -80,6 +80,11 @@
   ```
 
 ### raw build
+> reference:
+> - [org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper](https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html)
+> - [hudson.model.Build<P,B>](https://javadoc.jenkins-ci.org/hudson/model/Build.html)
+> - [hudson.model.Run<JobT,RunT>](https://javadoc.jenkins-ci.org/hudson/model/Run.html)
+
 ```groovy
 Map buildResult = [:]
 
@@ -90,24 +95,60 @@ node("master") {
   buildResult.each { println it }
 
   println """
-    ~~> "result" : ${buildResult.result}
-    ~~> "getBuildVariables()" : ${buildResult.getBuildVariables()}
-    ~~> "getBuildVariables().mytest" : ${buildResult.getBuildVariables().mytest}
-    ~~> "getRawBuild().getEnvVars()" : ${buildResult.getRawBuild().getEnvVars()}
-    ~~> "getRawBuild().getEnvironment()" : ${buildResult.getRawBuild.getEnvironment()}
-    ~~> "rawBuild.environment.RUN_CHANGES_DISPLAY_URL" : ${buildResult.rawBuild.environment.RUN_CHANGES_DISPLAY_URL}
-    ~~> "getBuildCauses()" : ${buildResult.getBuildCauses()}
-    ~~> "getChangeSets()" : ${buildResult.getChangeSets()}
-    ~~> "buildVariables["mytest"]" : ${buildResult.buildVariables["mytest"]}
-    ~~> "buildResult.rawBuild": ${buildResult.rawBuild}
-    ~~> "buildResult.rawBuild.log": ${buildResult.rawBuild.log}
+                                      "result" : ${buildResult.result}
+                         "getBuildVariables()" : ${buildResult.getBuildVariables()}
+                  "getBuildVariables().mytest" : ${buildResult.getBuildVariables().mytest}
+                  "getRawBuild().getEnvVars()" : ${buildResult.getRawBuild().getEnvVars()}
+              "getRawBuild().getEnvironment()" : ${buildResult.getRawBuild.getEnvironment()}
+                            "getBuildCauses()" : ${buildResult.getBuildCauses()}
+                             "getChangeSets()" : ${buildResult.getChangeSets()}
+                    "buildVariables["mytest"]" : ${buildResult.buildVariables["mytest"]}
+                        "buildResult.rawBuild" : ${buildResult.rawBuild}
+                    "buildResult.rawBuild.log" : ${buildResult.rawBuild.log}
+"rawBuild.environment.RUN_CHANGES_DISPLAY_URL" : ${buildResult.rawBuild.environment.RUN_CHANGES_DISPLAY_URL}
   """
 } // node
 ```
 
+#### get `changeSets`
+> reference:
+> - [hudson.scm.ChangeLogSet<T>](https://javadoc.jenkins.io/hudson/scm/ChangeLogSet.html)
+>   - [Interface ChangeLogSet.AffectedFile](https://javadoc.jenkins.io/hudson/scm/ChangeLogSet.AffectedFile.html)
+>   - [Class ChangeLogSet.Entry](https://javadoc.jenkins.io/hudson/scm/ChangeLogSet.Entry.html)
+> - [hudson.model.AbstractBuild<P,R>](https://javadoc.jenkins.io/hudson/model/AbstractBuild.html#getChangeSets--)
+> - [How to access Changelogs in a Pipeline Job?](https://support.cloudbees.com/hc/en-us/articles/217630098-How-to-access-Changelogs-in-a-Pipeline-Job-)
+> - [lsjostro/changesets.groovy](https://gist.github.com/lsjostro/3f410333ac90ecccfdc139079f585b3a)
+
+```groovy
+def res = [:]
+timestamps { ansiColor('xterm') {
+  node('master'){
+    cleanWs()
+    buildResult = build '/marslo/down'
+    if( currentBuild.rawBuild.changeSets.isEmpty() ) {
+      println "no new code committed"
+    } else {
+      buildResult.rawBuild.changeSets.each { cs ->
+        cs.items.each { item ->
+          println """
+            -----------------------------
+                  revision : ${item.commitId}
+                    author : ${item.author}
+                   message : ${item.msg}
+            affected files :
+              \t\t${item.affectedFiles.collect{ f -> f.editType.name + ' - ' + f.path }.join('\n\t\t\t\t')}
+          """
+        }
+      }
+    }
+  }
+}}
+```
+![get rawbuild changeset](../../screenshot/jenkins/get-rawbuild-changeset.png)
+
 ### [manager.build.result.isBetterThan](https://stackoverflow.com/a/26410694/2940319)
 ```groovy
-if(manager.build.result.isBetterThan(hudson.model.Result.UNSTABLE)) {
+if( manager.build.result.isBetterThan(hudson.model.Result.UNSTABLE) ) {
   def cmd = 'ssh -p 29418 $host gerrit review --verified +1 --code --review +2 --submit $GERRIT_CHANGE_NUMBER,$GERRIT_PATCHSET_NUMBER'
   cmd = manager.build.environment.expand(cmd)
   manager.listener.logger.println("Merge review: '$cmd'")
@@ -122,7 +163,8 @@ if(manager.build.result.isBetterThan(hudson.model.Result.UNSTABLE)) {
 ```groovy
 currentBuild.displayName = '#' + Integer.toString(currentBuild.number) + ' mytest'
 ```
-![customized display name](../../screenshot/jenkins/showDisplayName.png)
+
+<img src="../../screenshot/jenkins/showDisplayName.png" width="300" alt="customized display name" >
 
 ### description
 ```groovy
