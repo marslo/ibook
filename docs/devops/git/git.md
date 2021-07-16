@@ -28,13 +28,15 @@ Git Command Study and practice
   - [automatic edit by `git rebase -i`](#automatic-edit-by-git-rebase--i)
   - [auto rebaes](#auto-rebaes)
   - [fix typo in commits](#fix-typo-in-commits)
+- [undo](#undo)
+  - [delete after push](#delete-after-push)
+  - [change latest comments in local](#change-latest-comments-in-local)
+  - [change remote comments](#change-remote-comments)
+  - [change root comments](#change-root-comments)
 - [mv](#mv)
   - [case sensitive](#case-sensitive)
 - [clean](#clean)
   - [clean untracked directory and item in `.gitignore`](#clean-untracked-directory-and-item-in-gitignore)
-- [undo](#undo)
-  - [delete after push](#delete-after-push)
-  - [change latest comments in local](#change-latest-comments-in-local)
 - [diff](#diff)
   - [get difference between two branches](#get-difference-between-two-branches)
 - [tag](#tag)
@@ -448,60 +450,6 @@ $ EDITOR="sed -i -e 's/borken/broken/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/
   $ GIT_EDITOR="sed -i -e 's/kyewrod/keyword/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
   ```
 
-## mv
-### case sensitive
-- error with regular `git mv`
-  ```bash
-  $ git config --global core.ignorecase true
-  $ git mv Tig tig
-  fatal: renaming 'confs/home/Tig' failed: Invalid argument
-  ```
-
-- renmae
-  ```bash
-  $ git mv Tig temp
-  $ git aa
-  $ git mv temp tig
-  $ git aa
-  $ git st
-  On branch master
-  Your branch is up to date with 'origin/master'.
-
-  Changes to be committed:
-    (use "git restore --staged <file>..." to unstage)
-      renamed:    Tig/.tig/marslo.tigrc -> tig/.tig/marslo.tigrc
-      renamed:    Tig/.tigrc -> tig/.tigrc
-      renamed:    Tig/.tigrc_latest -> tig/.tigrc_latest
-      renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
-      renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
-  ```
-
-## clean
-### clean untracked directory and item in `.gitignore`
-```bash
-$ git clean -dfx
-```
-
-#### using `-f` twice if you really want to remove such a directory
-```bash
-$ git st
-On branch meta/config
-Your branch is based on 'origin/meta/config', but the upstream is gone.
-  (use "git branch --unset-upstream" to fixup)
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-    my-sbumodule/
-
-nothing added to commit but untracked files present (use "git add" to track)
-
-$ git clean -dfx
-Skipping repository my-submodule/
-
-$ git clean -dffx
-Removing my-submodule/
-```
-
 ## undo
 ### [delete after push](https://ncona.com/2011/07/how-to-delete-a-commit-in-git-local-and-remote/)
 #### delete only the latest commit
@@ -599,19 +547,11 @@ $ git commit --amend
   * e1d7a64 - update (7 hours ago) <marslo>
   ```
 
-#### change remote root comments
-```bash
-$ git rebase -i --root
-$ git push origin +<branch>
-```
-
-![rebase -i --root](../../screenshot/rebase-i-root.gif)
-
-#### change remote comments
+### change remote comments
 ```bash
 $ git rebase -i HEAD~<n>
-
 ```
+
 And then change `pick` to `reword`
 
 - example
@@ -635,6 +575,67 @@ And then change `pick` to `reword`
   # or
   $ git push origin +master
   ```
+
+### change root comments
+```bash
+$ git rebase -i --root
+$ git push origin +<branch>
+```
+![rebase -i --root](../../screenshot/git/rebase-i-root.gif)
+
+## mv
+### case sensitive
+- error with regular `git mv`
+  ```bash
+  $ git config --global core.ignorecase true
+  $ git mv Tig tig
+  fatal: renaming 'confs/home/Tig' failed: Invalid argument
+  ```
+
+- renmae
+  ```bash
+  $ git mv Tig temp
+  $ git aa
+  $ git mv temp tig
+  $ git aa
+  $ git st
+  On branch master
+  Your branch is up to date with 'origin/master'.
+
+  Changes to be committed:
+    (use "git restore --staged <file>..." to unstage)
+      renamed:    Tig/.tig/marslo.tigrc -> tig/.tig/marslo.tigrc
+      renamed:    Tig/.tigrc -> tig/.tigrc
+      renamed:    Tig/.tigrc_latest -> tig/.tigrc_latest
+      renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
+      renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
+  ```
+
+## clean
+### clean untracked directory and item in `.gitignore`
+```bash
+$ git clean -dfx
+```
+
+#### using `-f` twice if you really want to remove such a directory
+```bash
+$ git st
+On branch meta/config
+Your branch is based on 'origin/meta/config', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    my-sbumodule/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+$ git clean -dfx
+Skipping repository my-submodule/
+
+$ git clean -dffx
+Removing my-submodule/
+```
 
 ## diff
 ### [get difference between two branches](https://til.hashrocket.com/posts/18139f4f20-list-different-commits-between-two-branches)
