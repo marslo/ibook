@@ -9,6 +9,7 @@
 - [collect & collectMany](#collect--collectmany)
 - [collectEntries](#collectentries)
 - [grep](#grep)
+- [traverse](#traverse)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -344,3 +345,9 @@ def findValues( Map map, String keyword ) {
   // or
   ['test', 12, 20, true].findAll { it instanceof String }
   ```
+
+### traverse
+> references:
+> - [public void traverse(Map, Closure)](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/io/File.html#traverse(java.util.Map,%20groovy.lang.Closure))
+> - [Groovy Goodness: Traversing a Directory](https://blog.mrhaki.com/2010/04/groovy-goodness-traversing-directory.html)
+> - [more complex traversal techniques via `traverse` method](https://groovy-lang.org/groovy-dev-kit.html#_traversing_file_trees)

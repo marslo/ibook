@@ -43,6 +43,7 @@ Git Command Study and practice
   - [get distance between tags](#get-distance-between-tags)
   - [get revision in particular branch](#get-revision-in-particular-branch)
   - [show all tags for particular revision](#show-all-tags-for-particular-revision)
+  - [get tag and distance (depth)](#get-tag-and-distance-depth)
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout single branch](#checkout-single-branch)
@@ -357,7 +358,7 @@ $ git log -S'add' --oneline  -3
 
 ### [by message](https://www.atlassian.com/git/tutorials/git-log#filtering-the-commit-history)
 ```bash
-$ git log --grep='jira' --oneline 
+$ git log --grep='jira' --oneline
 30ce195e add jenkins plugin jira-steps
 d17dd3aa add jira api
 ```
@@ -667,8 +668,18 @@ $ git tag -l --sort='creatordate' --merged <branch>
 ```
 
 #### get latest tag
-```
+> references:
+> - [Get the most recent tag in git](https://jacobmckinney.com/posts/get-the-most-recent-tag-in-git/)
+
+```bash
 $ git tag -l --sort='creatordate' --merged <branch> | tail -1
+```
+
+or
+
+```bash
+# the command can be executed in .git folder (! -is-inside-work-tree)
+$ git describe --tags --abbrev=0 --always
 ```
 
 #### get revision from latest tag in particular branch
@@ -692,6 +703,46 @@ $ git name-rev --tags --name-only $(git rev-parse <revision>)
   ```bash
   $ git name-rev --tags --name-only $(git rev-parse HEAD)
   ```
+
+### get tag and distance (depth)
+> reference:
+> - [Why does git-describe prefix the commit ID with the letter 'g'?](https://stackoverflow.com/questions/23939214/why-does-git-describe-prefix-the-commit-id-with-the-letter-g)
+
+{% hint style='tip' %}
+man of `git-describe`:
+<p>
+The hash suffix is "-g" + an unambigous abbreviation for the tip commit of parent.
+<p>
+The length of the abbreviation scales as the repository grows, using the approximate number of objects in the repository and a bit of math around the birthday paradox, and defaults to a minimum of 7.
+{% endhint %}
+
+```bash
+$ git describe --long --tags
+v1.0.0-epsilon-2-g46b7ebb
+  |            |     + -g<has>
+  |            + distance (commits on top)
+  + tag name
+
+# or
+$ git describe --dirty --tags --long
+v1.0.0-epsilon-2-g46b7ebb
+|            | |  |
+ \___    ___/  |  + commit hash of the current commit
+      most     + commits on top
+     recent
+      tag
+```
+
+or `--all`
+```bash
+$ git describe --all --long
+```
+
+#### [to filter the tags](https://www.reddit.com/r/git/comments/hj6s0j/find_tags_with_git_describe_on_other_branches/?utm_source=share&utm_medium=web2x&context=3)
+```bash
+$ git describe --dirty --tags --long --match *nightly*
+nightly#82-2001310818-1765-gc18894b193
+```
 
 ## checkout
 ### [checkout specific commit](https://stackoverflow.com/a/3489576/2940319)
