@@ -163,10 +163,30 @@ if( manager.build.result.isBetterThan(hudson.model.Result.UNSTABLE) ) {
 ```groovy
 currentBuild.displayName = '#' + Integer.toString(currentBuild.number) + ' mytest'
 ```
-
 <img src="../../screenshot/jenkins/showDisplayName.png" width="300" alt="customized display name" >
+
 
 ### description
 ```groovy
 currentBuild.description = 'this is whitebox'
+```
+
+## exception
+### using [`hudson.AbortException`](https://javadoc.jenkins-ci.org/hudson/AbortException.html)
+```groovy
+import hudson.AbortException
+
+throw new AbortException( "throw aborted exception" )
+```
+
+### show catch message
+```groovy
+try {
+  throw new AbortException( "throw aborted exception" )
+} catch(e) {
+  def sw = new StringWriter()
+  e.printStackTrace( new PrintWriter(sw) )
+  println sw.toString()
+  // throw e                // if not throw error, the catch process will only print the error message
+}
 ```
