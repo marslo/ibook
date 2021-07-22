@@ -187,6 +187,7 @@
 
 ### load result from both windows and linux
 > [sample code](http://cdn-devnet.klocwork.com/cbt/10.0/C_CPP_integration_build_analysis/samples/Windows-Unix.txt)
+> [kwbuildproject](https://bullwhip.physio-control.com/documentation/help/reference/kwbuildproject.htm)
 
 - create an integration project on kw server via command line
   ```bash
@@ -216,7 +217,16 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://my.kw.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" "~/npp/npp.out"
+    $ kwbuildproject --url "http://my.kw.com/NotepadPlusPlus" \
+                     --tables-directory "~/npp/npp_tables" \
+                     "~/npp/npp.out"
+    ```
+  - [load multiple specification](https://bullwhip.physio-control.com/documentation/help/reference/kwbuildproject.htm)
+    ```bash
+    $ kwbuildproject --tables-directory <dir> \
+                     [--url http://<klocwork_server_host>:<klocwork_server_port>/<server_project>] \
+                     [<other_options>] \
+                     <build_specification_1> [<build_specification_2>...]
     ```
 
 - load the database on windows
@@ -227,7 +237,9 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://my.kw.com/NotepadPlusPlus" load NotepadPlusPlus "~/npp/npp_tables"
+    $ kwadmin --url "http://my.kw.com/NotepadPlusPlus" \
+              load NotepadPlusPlus \
+              "~/npp/npp_tables"
     ```
 
 ### [using kwwrap plus kwinject to generate a build specification](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification)
@@ -426,7 +438,6 @@ $ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project
 > - [Continuous integration and Klocwork analysis](https://docs.roguewave.com/en/klocwork/2020/continuousintegration)
 > - Ebook: [klocwork ci/cd best practice.pdf](https://www.perforce.com/sites/default/files/pdfs/ebook-klocwork-ci-cd-best-practices%20%281%29.pdf)
 > - Video: [Add Static Code Analysis to Your CI/CD Pipelines](https://www.perforce.com/webinars/kw/add-static-code-analysis-to-ci-cd-pipelines)
-
 
 ### [Jenkinsfile](https://docs.roguewave.com/en/klocwork/2020/jenkinsci)
 ```groovy

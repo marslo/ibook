@@ -9,6 +9,9 @@
 - [customized build](#customized-build)
   - [display name](#display-name)
   - [description](#description)
+- [exception](#exception)
+  - [using `hudson.AbortException`](#using-hudsonabortexception)
+  - [show catch message](#show-catch-message)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
