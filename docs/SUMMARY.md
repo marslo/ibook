@@ -109,6 +109,7 @@
   * [groovy](programming/groovy/groovy.md)
     * [groovydoc](programming/groovy/groovydoc.md)
     * [map](programming/groovy/map.md)
+    * [enum](programming/groovy/enum.md)
     * [utility](programming/groovy/utility.md)
     * [tricky](programming/groovy/tricky.md)
   * [python](programming/python/python.md)
