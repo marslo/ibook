@@ -12,11 +12,6 @@
   - [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
   - [loop if not empty](#loop-if-not-empty)
   - [getField()](#getfield)
-- [enum](#enum)
-  - [check whether if enum contains a given string](#check-whether-if-enum-contains-a-given-string)
-  - [list all values in Enum](#list-all-values-in-enum)
-  - [Convert String type to Enum](#convert-string-type-to-enum)
-  - [give Enums instance variables of their own type in Groovy](#give-enums-instance-variables-of-their-own-type-in-groovy)
 - [run groovy from docker](#run-groovy-from-docker)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
@@ -27,6 +22,10 @@
   - [groovy cli (args) with options](#groovy-cli-args-with-options)
   - [Get variable value for its name](#get-variable-value-for-its-name)
   - [groovy.lang.Binding](#groovylangbinding)
+- [load groovy file](#load-groovy-file)
+  - [`GroovyShell()`](#groovyshell)
+  - [`GroovyClassLoader()`](#groovyclassloader)
+  - [metaClass](#metaclass)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -132,74 +131,63 @@ result:
 </table>
 
 
-|  <div style="width:50%"> original map structure</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | wanted result                                                                                                                                                                                  |
-| : --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | : --                                                                                                                                                                                           |
-| Map&#60;String, List&#60;String&#62;&#62; case_pool = [<br> &nbsp;&nbsp;dev : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['devA'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['devB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['devC']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;'dev/funcA/feature' : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcA : ['performanceA', 'feature']<br> &nbsp;&nbsp;],<br> &nbsp;&nbsp;staging : [<br> &nbsp;&nbsp;&nbsp;&nbsp;funcB : ['stgB'] ,<br> &nbsp;&nbsp;&nbsp;&nbsp;funcC : ['stgC']<br> &nbsp;&nbsp;]<br> ] | String branch = 'dev/funcA/feature-1.0'<br> <br> // will final get result of: <br> // " 'dev' + 'dev/funcA' + 'dev/funcA/feature' ":<br> [<br> &nbsp;&nbsp;funcA: [ "devA", "performanceA", "feature" ],<br> &nbsp;&nbsp;funcB: [ "devB" ],<br> &nbsp;&nbsp;funcC: [ "devC" ]<br> ] |
-
-
-
 - original map structure:
-
-```groovy
-Map<String, List<String>> case_pool = [
-  dev : [
-    funcA : ['devA'] ,
-    funcB : ['devB'] ,
-    funcC : ['devC']
-  ],
-  'dev/funcA' : [
-    funcA : ['performanceA']
-  ],
-  'dev/funcA/feature' : [
-    funcA : ['performanceA', 'feature']
-  ],
-  staging : [
-   funcB : ['stgB'] ,
-   funcC : ['stgC']
+  ```groovy
+  Map<String, List<String>> case_pool = [
+    dev : [
+      funcA : ['devA'] ,
+      funcB : ['devB'] ,
+      funcC : ['devC']
+    ],
+    'dev/funcA' : [
+      funcA : ['performanceA']
+    ],
+    'dev/funcA/feature' : [
+      funcA : ['performanceA', 'feature']
+    ],
+    staging : [
+     funcB : ['stgB'] ,
+     funcC : ['stgC']
+    ]
   ]
-]
-```
+  ```
 
 - method 1st: by using loop
-
-```groovy
-String branch = 'dev/funcA/feature-1.0'
-def result = [:].withDefault { [] as Set }
-case_pool.keySet().each {
-  if ( branch.contains(it) ) {
-    case_pool.get(it).each { k, v ->
-      result[k].addAll(v)
+  ```groovy
+  String branch = 'dev/funcA/feature-1.0'
+  def result = [:].withDefault { [] as Set }
+  case_pool.keySet().each {
+    if ( branch.contains(it) ) {
+      case_pool.get(it).each { k, v ->
+        result[k].addAll(v)
+      }
     }
   }
-}
-println 'result: ' + result
-```
+  println 'result: ' + result
+  ```
 
 - method 2nd: by using closure
-
-```groovy
-String branch = 'dev/funcA/feature-1.0'
-def result = [:].withDefault { [] as Set }
-case_pool.findAll{ k, v -> branch.contains(k) }
-         .collectMany{ k, v ->
-            v.collect{ c, l ->
-              result[c].addAll(l)
+  ```groovy
+  String branch = 'dev/funcA/feature-1.0'
+  def result = [:].withDefault { [] as Set }
+  case_pool.findAll{ k, v -> branch.contains(k) }
+           .collectMany{ k, v ->
+              v.collect{ c, l ->
+                result[c].addAll(l)
+              }
             }
-          }
-println 'result: ' + result
-```
+  println 'result: ' + result
+  ```
 
 - method 3rd: by using closure elegantly
-
-```groovy
-def result = case_pool.inject([:].withDefault { [] as Set }) { result, key, value ->
-  if (branch.contains(key)) {
-    value.each { k, v -> result[k] += v }
-  }; result
-}
-println 'result: ' + result
-```
-
+  ```groovy
+  def result = case_pool.inject([:].withDefault { [] as Set }) { result, key, value ->
+    if (branch.contains(key)) {
+      value.each { k, v -> result[k] += v }
+    }; result
+  }
+  println 'result: ' + result
+  ```
 
 ### fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`
 ```groovy
@@ -280,11 +268,8 @@ java.lang.System.identityHashCode( obj )
   String a = new String("hhh")
   String b = new String("hhh")
 
-  println(System.identityHashCode(a))
-  println(System.identityHashCode(b))
-
-  println(a.hashCode())
-  println(b.hashCode())
+  assert System.identityHashCode(a) != System.identityHashCode(b)
+  assert a.hashCode() == b.hashCode()
   ```
 
 ### loop if not empty
@@ -303,139 +288,6 @@ java.lang.System.identityHashCode( obj )
 ```groovy
 groovy:000 > 'aaa'.getClass().getFields()
 ===> [public static final java.util.Comparator java.lang.String.CASE_INSENSITIVE_ORDER]
-```
-
-## enum
-> precondition:
-> ```groovy
-> enum Choices {a1, a2, b1, b2}
-> ```
-
-### [check whether if enum contains a given string](https://stackoverflow.com/a/51068456/2940319)
-```groovy
-assert Arrays.asList(Choices.values()).toString().contains("a9") == false
-assert Arrays.asList(Choices.values()).toString().contains("a1") == true
-```
-- [or](https://stackoverflow.com/a/37611080/2940319)
-  ```groovy
-  assert Arrays.stream(Choices.values()).anyMatch((t) -> t.name().equals("a1")) == true
-  ```
-- or
-  ```bash
-  assert Choices.values()*.name().contains('a1') == true
-  assert Choices.values()*.name().contains('a9') == false
-  ```
-- [or](https://stackoverflow.com/a/10171194/2940319)
-  ```bash
-  public enum Choices {
-    a1, a2, b1, b2;
-
-    public static boolean contains(String s) {
-      try {
-        Choices.valueOf(s);
-        return true;
-      } catch (Exception e) {
-        return false;
-      }
-    }
-  }
-
-  Choices.contains('a1')
-  ```
-
-- or
-  ```groovy
-  public enum Choices {
-    a1, a2, b1, b2;
-
-    public static boolean contains(String str) {
-      return Arrays.asList(Choices.values()).toString().contains(str)
-    }
-  }
-  assert Choices.contains('a1') == true
-  ```
-
-### [list all values in Enum](https://stackoverflow.com/a/15436799/2940319)
-```bash
-groovy:000> enum Choices {a1, a2, b1, b2}
-===> true
-groovy:000> println Choices.values()
-[a1, a2, b1, b2]
-===> null
-```
-- or
-  ```groovy
-  List<String> enumValues = Arrays.asList( Choices.values() )
-  ```
-
-### Convert String type to Enum
-```bash
-groovy:000> enum Choices {a1, a2, b1, b2}
-===> true
-groovy:000> Choices.valueOf("a1").getClass()
-===> class Choices
-```
-
-### [give Enums instance variables of their own type in Groovy](https://stackoverflow.com/a/11302774/2940319)
-```groovy
-enum Direction {
-  North, South, East, West, Up, Down
-  private Direction opposite
-  Direction getOpposite() { opposite }
-
-  static {
-    def opposites = { d1, d2 -> d1.opposite = d2; d2.opposite = d1 }
-    opposites(North, South)
-    opposites(East, West)
-    opposites(Up, Down)
-  }
-}
-
-println Direction.South.getOpposite()
-println Direction.South.opposite
-Direction.values().each {
-  println "opposite of $it is $it.opposite"
-}
-```
-- result
-  ```groovy
-  North
-  North
-  opposite of North is South
-  opposite of South is North
-  opposite of East is West
-  opposite of West is East
-  opposite of Up is Down
-  opposite of Down is Up
-  Result: [North, South, East, West, Up, Down]
-  ```
-
-or [using the direction indexes on the enum to find the opposites](https://ideone.com/OPv1v)
-```groovy
-public enum Direction {
-  North(1), South(0), East(3), West(2), Up(5), Down(4)
-  private oppositeIndex
-  Direction getOpposite() {
-    values()[oppositeIndex]
-  }
-  Direction(oppositeIndex) {
-    this.oppositeIndex = oppositeIndex
-  }
-}
-
-println Direction.North.opposite
-```
-
-or [without the need of an extra field, just using the enum values' `ordinal()`](https://ideone.com/8J8lv)
-```groovy
-enum Direction {
-  North, South, East, West, Up, Down
-  Direction getOpposite() {
-    values()[ordinal() + ordinal() % 2 * -2 + 1]
-  }
-}
-
-println Direction.North.getOpposite()
 ```
 
 ## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
@@ -671,3 +523,133 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
     m : [a:1, b:2]
     a : [a:1, b:2]
     ```
+
+## load groovy file
+{% hint style='tip' %}
+> **sample.groovy**:
+>
+> ```
+> #!/usr/bin/env groovy
+> import groovy.transform.Field
+>
+> @Field final Map<String, Map<String, String>> SAMPLE = [
+>   k1 : [ 'k11' : 'v11' ] ,
+>   k2 : [ 'k21' : 'v21', 'k22' : 'v22' ]
+> ]
+> ```
+{% endhint %}
+
+> references:
+> - [Integrating Groovy in a Java application](http://docs.groovy-lang.org/latest/html/documentation/guide-integrating.html#_groovy_integration_mechanisms)
+> - [GroovyShell](http://docs.groovy-lang.org/latest/html/documentation/guide-integrating.html#integ-groovyshell)
+> - [GroovyClassLoader](http://docs.groovy-lang.org/latest/html/documentation/guide-integrating.html#groovyclassloader)
+
+### [`GroovyShell()`](https://stackoverflow.com/a/46330456/2940319)
+- ` new GroovyShell().parse(new File('/path/to/file'))`
+  ```groovy
+  Object sample = new GroovyShell().parse(new File('/path/to/sample.groovy'))
+  println """
+    sample.getClass() : ${sample.getClass()}
+     sample.SAMPLE.k1 : ${sample.SAMPLE.k1}
+  """
+  ```
+  - result
+    ```groovy
+      sample.getClass() : class sample
+       sample.SAMPLE.k1 : [k11:v11]
+    ```
+
+- [`Object.with{}`](https://stackoverflow.com/a/9006034/2940319)
+  ```groovy
+  Object sample = new GroovyShell().parse(new File('/path/to/sample.groovy'))
+  sample.with{
+    println SAMPLE
+    println SAMPLE.k1
+  }
+  ```
+  - result
+    ```groovy
+    [k1:[k11:v11], k2:[k21:v21, k22:v22]]
+    [k11:v11]
+    ```
+
+### [`GroovyClassLoader()`](https://stackoverflow.com/a/15904699/2940319)
+- `new GroovyClassLoader().parseClass("/path/to/sample.groovy" as File)`
+  ```groovy
+  Class clazz = new GroovyClassLoader().parseClass("/path/to/sample.groovy" as File)
+  println """
+               clazz.getClass() : ${clazz.getClass()}
+     clazz.newInstance().SAMPLE : ${clazz.newInstance().SAMPLE}
+  """
+  ```
+  - result
+    ```groovy
+               clazz.getClass() : class java.lang.Class
+     clazz.newInstance().SAMPLE : [k1:[k11:v11], k2:[k21:v21, k22:v22]]
+    ```
+
+- [`this.class.classLoader.parseClass(new File("/path/to/sample.groovy"))`](https://stackoverflow.com/a/20229953/2940319)
+  ```groovy
+  Class myClazz = this.class.classLoader.parseClass(new File("/Users/marslo/Desktop/sample.groovy"))
+  println """
+             myClazz.getClass() : ${myClazz.getClass()}
+   myClazz.newInstance().SAMPLE : ${myClazz.newInstance().SAMPLE}
+  """
+  ```
+  - result
+    ```groovy
+               myClazz.getClass() : class java.lang.Class
+     myClazz.newInstance().SAMPLE : [k1:[k11:v11], k2:[k21:v21, k22:v22]]
+    ```
+
+- `new GroovyClassLoader(getClass().getClassLoader()).parseClass(new File("/path/to/sample.groovy"))`
+  ```groovy
+  Class gClass = new GroovyClassLoader(getClass().getClassLoader()).parseClass(new File("/path/to/sample.groovy"));
+  println """
+              gClass.getClass() : ${gClass.getClass()}
+    gClass.newInstance().SAMPLE : ${gClass.newInstance().SAMPLE}
+  """
+  ```
+  - result
+    ```groovy
+              gClass.getClass() : class java.lang.Class
+    gClass.newInstance().SAMPLE : [k1:[k11:v11], k2:[k21:v21, k22:v22]]
+    ```
+
+### metaClass
+```groovy
+Object sample = new GroovyShell().parse(new File('/path/to/sample.groovy'))
+println sample.metaClass.hasProperty(sample, 'SAMPLE').type
+println sample.metaClass.hasProperty(sample, 'SAMPLE').name
+```
+- result
+  ```groovy
+  interface java.util.Map
+  SAMPLE
+  ```
+
+or
+
+```groovy
+Class clazz = new GroovyClassLoader().parseClass("/path/to/sample.groovy" as File)
+println clazz.metaClass.hasProperty(clazz, 'SAMPLE').dump()
+```
+- result
+  ```groovy
+  <org.codehaus.groovy.reflection.CachedField@6b915a64 field=final java.util.Map sample.SAMPLE madeAccessible=true name=SAMPLE type=interface java.util.Map>
+  ```
+
+#### [more](https://stackoverflow.com/a/52361714/2940319)
+```groovy
+def importScript(def scriptFile) {
+  def script = new GroovyShell().parse(new File(scriptFile))
+    script.metaClass.methods.each {
+      if (it.declaringClass.getTheClass() == script.class && ! it.name.contains('$') && it.name != 'main' && it.name != 'run') {
+      this.metaClass."$it.name" = script.&"$it.name"
+    }
+  }
+}
+
+importScript('File1.groovy')
+method()
+```
