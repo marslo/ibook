@@ -13,6 +13,7 @@ reference:
 - [Jobs In Parallel](https://www.jenkins.io/doc/pipeline/examples/#jobs-in-parallel)
 - [Parallel From List](https://www.jenkins.io/doc/pipeline/examples/#parallel-from-list)
 - [Parallel Multiple Nodes](https://www.jenkins.io/doc/pipeline/examples/#parallel-multiple-nodes)
+- [Trigger Job On All Nodes](https://www.jenkins.io/doc/pipeline/examples/#trigger-job-on-all-nodes)
 {% endhint %}
 
 ## parallel
