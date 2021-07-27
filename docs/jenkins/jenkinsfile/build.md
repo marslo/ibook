@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [build & current build](#build--current-build)
+  - [get all current build parameters](#get-all-current-build-parameters)
   - [check previous build status](#check-previous-build-status)
   - [Stop the current build](#stop-the-current-build)
   - [get current build info](#get-current-build-info)
@@ -20,6 +21,22 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## build & current build
+### [get all current build parameters](https://stackoverflow.com/a/38130496/2940319)
+```groovy
+import hudson.model.*
+
+timestamps { ansiColor('xterm') {
+  node('master') {
+    def parameters = currentBuild.rawBuild?.actions.find{ it instanceof ParametersAction }?.parameters
+    parameters.each {
+      println "parameter ${it.name}:"
+      println it.dump()
+      println "-" * 80
+    }
+  }
+}}
+```
+
 ### [check previous build status](https://support.cloudbees.com/hc/en-us/articles/230922188-Pipeline-How-can-I-check-previous-build-status-in-a-Pipeline-Script-)
 > useful info:
 > ```groovy
