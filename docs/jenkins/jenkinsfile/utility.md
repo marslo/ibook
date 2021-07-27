@@ -6,6 +6,9 @@
   - [findFiles](#findfiles)
   - [send mail with catch error](#send-mail-with-catch-error)
   - [tips](#tips)
+  - [Evaluate a Groovy source file into the Pipeline script](#evaluate-a-groovy-source-file-into-the-pipeline-script)
+  - [load a constant](#load-a-constant)
+  - [extend the pipeline](#extend-the-pipeline)
 - [DSL with groovy](#dsl-with-groovy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -71,6 +74,90 @@ try {
     ```groovy
     (1..5).toList().each { println it }
     ```
+
+
+### [Evaluate a Groovy source file into the Pipeline script](https://www.jenkins.io/doc/pipeline/steps/workflow-cps/#load-evaluate-a-groovy-source-file-into-the-pipeline-script)
+> references:
+> - [Load From File](https://www.jenkins.io/doc/pipeline/examples/#load-from-file)
+
+### load a constant
+> see also [groovy metaClass](../../programming/groovy/tricky.html#load-groovy-file)
+
+#### groovy file ( `constant.groovy` )
+```groovy
+@Field final Map<String, Map<String, String>> FOO = [
+  'k1' : [ 'k11' : 'v11' ],
+  'k2' : [ 'k21' : 'v21', 'k22' : 'v22' ]
+]
+```
+
+#### Jenkinsfile
+```groovy
+Object matrix = load( '/path/to/constant.groovy' )
+if ( matrix.metaClass.hasProperty(matrix, 'FOO') ) {
+  println """
+       matrix.FOO : ${matrix.FOO}
+    matrix.FOO.k1 : ${matrix.FOO.k1}
+      matrix.type : ${matrix.metaClass.hasProperty(matrix, 'FOO').type}
+  """
+}
+```
+- result
+  ```groovy
+       matrix.FOO : [k1:[k11:v11], k2:[k21:v21, k22:v22]]
+    matrix.FOO.k1 : [k11:v11]
+      matrix.type : interface java.util.Map
+  ```
+
+### extend the pipeline
+
+#### groovy script ( `builtInStage.groovy` )
+```groovy
+String str = "this is string A"
+
+def stageA( String path ) {
+  stage('scenario A') { println path }
+}
+
+def stageB() {
+  stage('scenario B') { println str }
+}
+
+def stageC() {
+  stage('scenario C') {
+    String strC = "this is string C"
+    sh "echo ${strC}"
+    println strC
+  }
+}
+
+def runAllStages( String basePath ) {
+  stageA( basePath )
+  stageB()
+  stageC()
+}
+
+return this
+```
+
+#### Jenkinsfile
+```groovy
+node('master') {
+  stage( 'download code' ) {
+    echo 'prepare'
+    sh "cat ${WORKSPACE}/builtInStage.groovy"
+  }
+
+  test = load "builtInStage.groovy"
+  test.runAllStages( "${WORKSPACE}/mypath" )
+
+  stage( 'publish' ) {
+    echo 'done!'
+  }
+}
+```
+- stage view
+  ![built-in stages](../../screenshot/jenkins/builtInStage.png)
 
 ## DSL with groovy
 {% hint style='info' %}
