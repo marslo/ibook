@@ -12,6 +12,7 @@
   - [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
   - [loop if not empty](#loop-if-not-empty)
   - [getField()](#getfield)
+  - [generate the random String](#generate-the-random-string)
 - [run groovy from docker](#run-groovy-from-docker)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
@@ -289,6 +290,22 @@ java.lang.System.identityHashCode( obj )
 groovy:000 > 'aaa'.getClass().getFields()
 ===> [public static final java.util.Comparator java.lang.String.CASE_INSENSITIVE_ORDER]
 ```
+
+### generate the random String
+```groovy
+String alphabet = (('a'..'z') + ('A'..'Z') + ('0'..'9')).join()
+println new Random().with { (1..8).collect { alphabet[ nextInt( alphabet.length() ) ] }.join() }
+```
+- [or](https://newbedev.com/groovy-generate-random-string-from-given-character-set)
+  ```groovy
+  Closure generator = { String alphabet, int n ->
+    new Random().with {
+      (1..n).collect { alphabet[ nextInt( alphabet.length() ) ] }.join()
+    }
+  }
+  String charset = (('A'..'Z')+('0'..'9')+('a'..'z')).join()
+  randomValue = generator( charset, 15 )
+  ```
 
 ## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
 ```bash
