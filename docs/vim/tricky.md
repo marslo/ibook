@@ -7,10 +7,12 @@
 - [sort lines](#sort-lines)
 - [list all `filetype`](#list-all-filetype)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
+- [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
 - [Using vim as a man-page viewer under Unix](#using-vim-as-a-man-page-viewer-under-unix)
 - [newline `\r`](#newline-%5Cr)
 - [vim regex](#vim-regex)
 - [vim pattern](#vim-pattern)
+- [run command in multiple buffers](#run-command-in-multiple-buffers)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -105,36 +107,46 @@
   ```
 
 ### run vim commands in terminal
-{% hint style='tip' %}
-```vim
-$ man vim
-...
-OPTIONS
-  +{command}
-  -c {command}
-             {command} will be executed after the first file has been read.  {command} is interpreted
-             as an Ex command.  If the {command} contains spaces it must be enclosed in double quotes
-             (this depends on the shell that is used).  Example: Vim "+set si" main.c
-             Note: You can use up to 10 "+" or "-c" commands.
-
-  --cmd {command}
-             Like using "-c", but the command is executed just before processing any vimrc file.  You
-             can use up to 10 of these commands, independently from "-c" commands.
-```
-
-{% endhint %}
+> ```vim
+> $ man vim
+> ...
+> OPTIONS
+>   +{command}
+>   -c {command}
+>              {command} will be executed after the first file has been read.  {command} is interpreted
+>              as an Ex command.  If the {command} contains spaces it must be enclosed in double quotes
+>              (this depends on the shell that is used).  Example: Vim "+set si" main.c
+>              Note: You can use up to 10 "+" or "-c" commands.
+>
+>   --cmd {command}
+>              Like using "-c", but the command is executed just before processing any vimrc file.  You
+>              can use up to 10 of these commands, independently from "-c" commands.
+> ```
 
 ```vim
 $ vim -es -c "set ff? | q"
   fileformat=unix
 ```
 
+### [vim open file and go to specific function or linenumber](https://www.cyberciti.biz/faq/linux-unix-command-open-file-linenumber-function/)
+```bash
+$ vim +commandHere filename
+
+# or
+$ vim +linenumber filename
+```
+
+- [without fold](https://stackoverflow.com/a/10392451/2940319)
+  ```bash
+  $ vim +linenumber filename -c 'normal zR'
+  ```
+
 ### [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
 ```vim
 export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
-    vim -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
-    -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
-    -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
+       vim -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
+       -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
+       -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
 ```
 
 - additional highlight
@@ -247,3 +259,30 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 
 NOTICE: after using `\v` the `=` should using `\=` instead
 {% endhint %}
+
+### [run command in multiple buffers](https://vim.fandom.com/wiki/Run_a_command_in_multiple_buffers)
+{% hint style='tip' %}
+**related commands**:
+- `:argdo` : all files in argument list
+- `:bufdo` : all buffers
+- `:tabdo` : all tabs
+- `:windo` : all windows
+
+**reference**:
+- [Search and replace in multiple buffers](https://vim.fandom.com/wiki/Search_and_replace_in_multiple_buffers)
+{% endhint %}
+
+```vim
+:bufdo <command>
+```
+
+- replace
+  ```vim
+  # regular
+  :%s/<str>/<str_new>/ge
+
+  # for all buffers
+  :bufdo %s/<str>/<str_new>/ge | update
+  ```
+
+- force the `bufdo` to continue without saving files via `:bufdo!`
