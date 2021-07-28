@@ -12,6 +12,7 @@
   - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
   - [multiple directories creation](#multiple-directories-creation)
   - [copy a file to multipule folder](#copy-a-file-to-multipule-folder)
+- [the eval builtin](#the-eval-builtin)
 - [the set builtin](#the-set-builtin)
   - [show current status](#show-current-status)
   - [option name](#option-name)
@@ -213,7 +214,58 @@ $ echo dir1 dir2 dir3 | xargs -n 1 cp file1
 $ echo dir{1..10} | xargs -n 1 cp file1
 ```
 
-## [the set builtin](https://www.gnu.org/software/bash/manual/html_node/the-set-builtin.html)
+## the eval builtin
+{% hint style='tip' %}
+
+**eval** — **construct command by concatenating arguments**
+
+**reference**:
+> - [Bash eval command](https://linuxhint.com/bash_eval_command/)
+> - [functions / eval (source, CPAN)](https://perldoc.perl.org/functions/eval)
+> - [What is the “eval” command in bash?](https://unix.stackexchange.com/a/23117/29178)
+{% endhint %}
+
+- example
+  - without `eval`:
+    ```bash
+    $ foo='ls | less'
+    $ $foo
+    ls: cannot access '|': No such file or directory
+    ls: cannot access 'less': No such file or directory
+    ```
+  - with `eval`:
+    ```bash
+    $ foo='ls | less'
+    $ eval $foo
+    Applications
+    Library
+    System
+    Users
+    ...
+    ```
+
+- example
+  ```bash
+  $ x=10
+  $ y=x
+  $ foo='$'$x
+  $ echo $foo
+  $x
+
+  # with eval
+  $ eval foo='$'$x         # with eval
+  $ echo $foo
+  10
+
+  # or
+  $ foo=\$$x
+  $ eval echo $foo          # with eval
+  10
+  $ echo $foo
+  $x
+  ```
+
+## [the set builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 {% hint style='tip' %}
 
 **reference**:
