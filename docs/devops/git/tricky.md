@@ -16,6 +16,10 @@
   - [fetch merge all](#fetch-merge-all)
   - [gfall <branch>](#gfall-branch)
   - [iGitOpt](#igitopt)
+- [effort](#effort)
+  - [`--stat`](#--stat)
+  - [`--numstat`](#--numstat)
+  - [`--shortstat`](#--shortstat)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -242,8 +246,8 @@ $ git shortlog -n -s -e | awk '
     }
   }
   ' | column -t -s♪ | sed "s/\\\x09/\t/g"
-   110	marslo <marslo.jiao@gmail.com>  78.0%
-    31	marslo <marslo@xxx.com>         22.0%
+   110  marslo <marslo.jiao@gmail.com>  78.0%
+    31  marslo <marslo@xxx.com>         22.0%
 ```
 
 #### show diff file only
@@ -297,3 +301,78 @@ $ cat ~/.gitconfig
 
 ### iGitOpt
 - [ig.sh](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/bin/ig.sh)
+
+## effort
+> references:
+> - [tj/git-extras](https://github.com/tj/git-extras)
+> - [How can I calculate the number of lines changed between two commits in Git?](https://stackoverflow.com/questions/2528111/how-can-i-calculate-the-number-of-lines-changed-between-two-commits-in-git)
+
+### `--stat`
+```bash
+$ git diff --stat HEAD^ HEAD
+ docs/programming/groovy/groovy.md |  1 +
+ docs/vim/tricky.md                | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 61 insertions(+), 21 deletions(-)
+```
+
+- [for particular account](https://stackoverflow.com/a/2528129/2940319)
+  ```bash
+  $ git --no-pager diff --author='marslo' --stat HEAD^ HEAD
+   docs/programming/groovy/groovy.md |  1 +
+   docs/vim/tricky.md                | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
+   2 files changed, 61 insertions(+), 21 deletions(-)
+  ```
+
+### `--numstat`
+```bash
+$ git --no-pager log --numstat --author="marslo" HEAD^..HEAD
+commit c361ddf2687319f978bb4ec0069b4b996607615f (HEAD -> marslo, origin/marslo)
+Author: marslo <marslo.jiao@gmail.com>
+Date:   Wed Jul 28 22:21:03 2021 +0800
+
+    add bufdo for vim
+
+1   0   docs/programming/groovy/groovy.md
+60  21  docs/vim/tricky.md
+```
+
+- for total count of changes
+  ```bash
+  $ git log --numstat --pretty="%H" --author="marslo" HEAD^..HEAD |
+        awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
+  +61, -21
+  ```
+
+- or [for pretty format](https://stackoverflow.com/a/63501669/2940319)
+  ```bash
+  $ git log HEAD^..HEAD --numstat --pretty="%H" |
+        awk 'NF==3 {added+=$1; deleted+=$2} NF==1 {commit++} END {printf("total lines added: +%d\ntotal lines deleted: -%d\ntotal commits: %d\n", added, deleted, commit)}'
+  total lines added: +61
+  total lines deleted: -21
+  total commits: 1
+  ```
+
+- [or](https://stackoverflow.com/a/61945239/2940319)
+  ```bash
+  $ git log --numstat --format="" HEAD^..HEAD |
+        awk '{files += 1}{ins += $1}{del += $2} END{print "total: "files" files, "ins" insertions(+) "del" deletions(-)"}'
+  total: 2 files, 61 insertions(+) 21 deletions(-)
+  ```
+
+  [git alias](https://stackoverflow.com/a/61945239/2940319)
+  ```bash
+  [alias]
+  summary = "!git log --numstat --format=\"\" \"$@\" | awk '{files += 1}{ins += $1}{del += $2} END{print \"total: \"files\" files, \"ins\" insertions(+) \"del\" deletions(-)\"}' #"
+  ```
+
+### [`--shortstat`](https://stackoverflow.com/a/41307958/2940319)
+```bash
+$ git diff --shortstat HEAD^..HEAD
+ 2 files changed, 61 insertions(+), 21 deletions(-)
+```
+
+- or [check for multiple commits](https://stackoverflow.com/a/53338858/2940319)
+  ```bash
+  $ git diff  $(git log -5 --pretty=format:"%h" | tail -1) --shortstat
+   7 files changed, 253 insertions(+), 24 deletions(-)
+  ```
