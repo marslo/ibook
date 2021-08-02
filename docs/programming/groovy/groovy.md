@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [basic](#basic)
+  - [Program structure](#program-structure)
   - [Customizable Operators](#customizable-operators)
   - [Special Operators](#special-operators)
 - [string](#string)
