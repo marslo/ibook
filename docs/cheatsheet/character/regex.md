@@ -8,6 +8,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+> references:
+> - [cheat-sheet for password crackers](https://www.unix-ninja.com/p/A_cheat-sheet_for_password_crackers)
 
 ### matches if exits
 > samples:

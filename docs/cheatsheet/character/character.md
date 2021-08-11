@@ -24,6 +24,7 @@
   - [summary all user used memory (`ps aux`)](#summary-all-user-used-memory-ps-aux)
   - [calculate word count in a file](#calculate-word-count-in-a-file)
   - [remove non-duplicated lines](#remove-non-duplicated-lines)
+  - [show matched values](#show-matched-values)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -523,6 +524,37 @@ $ awk '{print $1}' sample.txt | sort | uniq -cd | sort -g
     ```bash
     $ awk '!seen[$1]++' sample.txt
     ```
+
+### [show matched values]()
+> - [Comparison Operators](https://www.gnu.org/software/gawk/manual/html_node/Comparison-Operators.html)
+> - [Regular Expressions](http://www.math.utah.edu/docs/info/gawk_5.html)
+> - [How to check the checksum through commandline?](https://stackoverflow.com/a/21956985/2940319)
+
+- find distrib name from `/etc/lsb-release`
+  ```bash
+  $ awk -F= '$1 == "DISTRIB_ID" {print $2;}' /etc/lsb-release
+  Ubuntu
+
+  # or
+  $ awk -F= '$1=="ID" {print $2;}' /etc/os-release
+  ubuntu
+  ```
+
+- find multiple matches
+  ```bash
+  $ awk -F= '$1 ~ /DISTRIB_ID|DISTRIB_RELEASE/ {print $2;}' /etc/lsb-release
+  Ubuntu
+  18.04
+  ```
+
+- return `true` or `false` according to matches result
+  ```bash
+  $ standard='2cf1b1652a5b268ec80717ef33fef111'
+  $ md5sum ~/.bashrc | awk '$1 != "${standard}" {exit 1}'
+
+  # or
+  $ md5sum ~/.bashrc | awk '$1 == "${standard}" {print "true"}'
+  ```
 
 ## trim
 ### trim tailing chars
