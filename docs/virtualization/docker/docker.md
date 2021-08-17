@@ -2,6 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [docker internals](#docker-internals)
+  - [cgoups](#cgoups)
+  - [namespace](#namespace)
 - [docker completion](#docker-completion)
   - [OSX](#osx)
 - [docker build](#docker-build)
