@@ -119,6 +119,21 @@ $ git symbolic-ref --short HEAD
 $ git name-rev --name-only HEAD
 ```
 
+#### [list branch ordered via most recent update](https://stackoverflow.com/a/5188364/2940319)
+- for local branches
+  ```bash
+  $ git for-each-ref --sort=-committerdate refs/heads
+  ```
+- for remote
+  ```bash
+  $ git for-each-ref --sort=-committerdate refs/remotes
+  ```
+
+- [sort `git branch` by default](https://stackoverflow.com/a/33163401/2940319)
+  ```bash
+  $ git config --global branch.sort -committerdate
+  ```
+
 #### [for detached branch](https://stackoverflow.com/a/19457164/2940319)
 ```bash
 $ git st

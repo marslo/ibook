@@ -137,11 +137,13 @@ $ sudo curl -sSLg https://raw.githubusercontent.com/cykerway/complete-alias/mast
   > example: the docker registry in artifactory named `docker`
 
 ```bash
-$ curl -sS https://my.artifactory.com/v2/docker/_catalog | jq -r .repositories[]
+$ curl -sS https://my.artifactory.com/v2/docker/_catalog |
+       jq -r .repositories[]
 ```
 - or
   ```bash
-  $ curl -sS -X GET https://my.artifactory.com/artifactory/api/docker/docker/v2/_catalog | jq -r .repositories[]
+  $ curl -sS -X GET https://my.artifactory.com/artifactory/api/docker/docker/v2/_catalog |
+         jq -r .repositories[]
   ```
 
 - [list tags](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ListDockerTags)
@@ -157,8 +159,8 @@ $ curl -sS https://my.artifactory.com/artifactory/v2/docker/devops/ubuntu/tags/l
 
 ### from docker hub
 ```bash
-$ curl -sS 'https://hub.docker.com/v2/repositories/jenkins/jenkins/tags' \
-      | jq --raw-output .results[].name
+$ curl -sS 'https://hub.docker.com/v2/repositories/jenkins/jenkins/tags' |
+       jq --raw-output .results[].name
 
 jdk8-openj9-windowsservercore-1809
 jdk11-hotspot-windowsservercore-1809
@@ -174,15 +176,15 @@ lts-centos
 
 - [get more](https://forums.docker.com/t/fetching-docker-image-tags-with-created-time-and-digest/85357)
   ```bash
-  $ curl -sS 'https://hub.docker.com/v2/repositories/jenkins/jenkins/tags?page_size=100&ordering=last_updated' \
-        | jq --raw-output .results[].name
-        | sort
+  $ curl -sS 'https://hub.docker.com/v2/repositories/jenkins/jenkins/tags?page_size=100&ordering=last_updated' |
+         jq --raw-output .results[].name |
+         sort
   ```
   - or
     ```bash
-    $ curl -sS https://hub.docker.com/v2/repositories/jenkins/jenkins/tags?page=2 \
-           | jq '."results"[]["name"]' \
-           | sort
+    $ curl -sS https://hub.docker.com/v2/repositories/jenkins/jenkins/tags?page=2 |
+           jq '."results"[]["name"]' |
+           sort
     ```
 
 #### simple script for get tags
@@ -195,12 +197,12 @@ lts-centos
 #   $ docker-show-repo-tags.sh ubuntu centos
 
 for _r in $* ; do
-  curl -s -S "https://registry.hub.docker.com/v2/repositories/library/$_r/tags/" | \
-    sed -e 's/,/,\n/g' -e 's/\[/\[\n/g' | \
-    grep '"name"' | \
-    awk -F\" '{print $4;}' | \
-    sort -fu | \
-    sed -e "s/^/${_r}:/"
+  curl -sS "https://registry.hub.docker.com/v2/repositories/library/$_r/tags/" |
+       sed -e 's/,/,\n/g' -e 's/\[/\[\n/g' |
+       grep '"name"' |
+       awk -F\" '{print $4;}' |
+       sort -fu |
+       sed -e "s/^/${_r}:/"
 done
 ```
 
@@ -224,7 +226,8 @@ $ docker inspect -f '{{ .Mounts }}' <container ID>
 
 - or
   ```bash
-  $ docker inspect <container ID> | grep volume
+  $ docker inspect <container ID> |
+           grep volume
   ```
 
 - [or get all](https://stackoverflow.com/a/63448756/2940319)
@@ -236,12 +239,14 @@ $ docker inspect -f '{{ .Mounts }}' <container ID>
 
 - [or](https://stackoverflow.com/a/62285540/2940319)
   ```bash
-  $ docker inspect <container ID> | jq --raw-output .[].Mounts
+  $ docker inspect <container ID> |
+           jq --raw-output .[].Mounts
   ```
 - [or](https://stackoverflow.com/a/47014770/2940319)
   {% raw %}
   ```bash
-  $ docker ps -q | xargs docker container inspect -f '{{ .Name }} {{ .HostConfig.Binds }}'
+  $ docker ps -q |
+           xargs docker container inspect -f '{{ .Name }} {{ .HostConfig.Binds }}'
   ```
   {% endraw %}
 

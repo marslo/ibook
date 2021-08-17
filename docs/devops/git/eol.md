@@ -13,6 +13,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> references:
+> - [git-config - Get and set repository or global options](https://git-scm.com/docs/git-config)
+> - [git config](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config)
+> - [Git config](https://www.w3docs.com/learn-git/git-config.html)
+
 ## theory
 ### [list eol in repo](https://stackoverflow.com/a/21822812/2940319)
 ```bash
