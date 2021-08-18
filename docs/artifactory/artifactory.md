@@ -15,6 +15,7 @@
 > - [How to enable verbose log on JVM Garbage Collection](https://jfrog.com/knowledge-base/how-to-enable-verbose-log-on-jvm-garbage-collection/)
 >   - JAVA_OPTIONS:
 >     `-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:/path/to/file/gc.log`
+
 {% endhint %}
 
 ## reference

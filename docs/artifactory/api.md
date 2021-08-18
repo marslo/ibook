@@ -5,15 +5,17 @@
 - [variable](#variable)
 - [repo](#repo)
   - [check repo exists](#check-repo-exists)
+  - [get all repos](#get-all-repos)
+  - [get all local repos](#get-all-local-repos)
+  - [get repo size](#get-repo-size)
 - [Build Info](#build-info)
   - [List all timestamps in ${buildName}](#list-all-timestamps-in-buildname)
   - [List specific build-info](#list-specific-build-info)
   - [filter `"buildInfo.env.JOB_NAME"` in all builds](#filter-buildinfoenvjob_name-in-all-builds)
-- [delete all in `my-repo` 4 weeks ago](#delete-all-in-my-repo-4-weeks-ago)
-- [trash can](#trash-can)
-  - [empty trash can](#empty-trash-can)
-  - [list items in trash can](#list-items-in-trash-can)
-- [builds rotation by `api/build/retention`](#builds-rotation-by-apibuildretention)
+- [cleanup](#cleanup)
+  - [delete all in `my-repo` 4 weeks ago](#delete-all-in-my-repo-4-weeks-ago)
+  - [trash can](#trash-can)
+  - [builds rotation via `api/build/retention`](#builds-rotation-via-apibuildretention)
 - [promote](#promote)
   - [property](#property)
   - [search](#search)
@@ -36,10 +38,68 @@ $ curlOpt="-s -g --netrc-file ~/.marslo/.netrc"
 ### check repo exists
 ```bash
 $ /usr/bin/curl ${curlOpt} \
-                -X GET "${rtUrl}/api/repositories" \
-                | jq .[].key \
-                | grep "${repo}"
+                -X GET "${rtUrl}/api/repositories" |
+                jq .[].key |
+                grep "${repo}"
 ```
+
+### get all repos
+{% hint style='tip' %}
+> [`api/repositories`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-GetRepositories)
+
+{% endhint %}
+
+```bash
+$ curl -sSg \
+       -X GET \
+       https://my.artifactory.com/artifactory/api/repositories |
+       jq -r '.[] | .type + " ~> " + .key'
+LOCAL ~> local-repo
+REMOTE ~> remote-repo
+VIRTUAL ~> virtual-repo
+...
+```
+
+### get all local repos
+```bash
+$ curl -sSg \
+       -X GET \
+       https://my.artifactory.com/artifactory/api/repositories |
+       jq -r '.[] | select(.type == "LOCAL") | .key'
+```
+
+- get all virtual repos
+  ```bash
+  $ curl -sSg \
+         -X GET \
+         https://my.artifactory.com/artifactory/api/repositories |
+         jq -r '.[] | select(.type == "VIRTUAL") | .key'
+  ```
+
+- get all remote repos
+  ```bash
+  $ curl -sSg \
+         -X GET \
+         https://my.artifactory.com/artifactory/api/repositories |
+         jq -r '.[] | select(.type == "REMOTE") | .key'
+  ```
+
+### get repo size
+{% hint style='tip' %}
+> [`api/storageinfo`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-GetStorageSummaryInfo)
+
+{% endhint %}
+
+- get storage summary
+  {% hint style='tip' %}
+  including:
+  - `binariesSummary`
+  - `fileStoreSummary`
+  - `repositoriesSummaryList`
+  {% endhint %}
+
+  ```bash
+  ```
 
 ## Build Info
 ### List all timestamps in ${buildName}
@@ -111,8 +171,9 @@ done
   ]
   ```
 
+## cleanup
 
-## delete all in `my-repo` 4 weeks ago
+### delete all in `my-repo` 4 weeks ago
 - `find.aql`
   ```bash
   $ cat find.aql
@@ -125,6 +186,7 @@ done
     }
   })
   ```
+
 - delete artifacts and buildinfo
   ```bash
   rtURL='https://my.artifactory.com/artifactory'
@@ -141,8 +203,8 @@ done
   done
   ```
 
-## trash can
-### empty trash can
+### trash can
+#### empty trash can
 ```bash
 $ curl -s \
        -g \
@@ -151,7 +213,7 @@ $ curl -s \
        "${rtUrl}/api/trash/empty"
 ```
 
-### list items in trash can
+#### list items in trash can
 ```bash
 $ curl -s \
        -g \
@@ -160,7 +222,7 @@ $ curl -s \
        "${rtURL}/api/storage/auto-trashcan" | jq .children[].uri
 ```
 
-## [builds rotation by `api/build/retention`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ControlBuildRetention)
+### [builds rotation via `api/build/retention`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ControlBuildRetention)
 
 ```bash
 $ date -d 'now - 2 months' +%s%3N
