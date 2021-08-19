@@ -13,6 +13,7 @@
     * [shell:folder](cheatsheet/windows/shell:folder.md)
   * [character](cheatsheet/character/character.md)
     * [awk](cheatsheet/character/awk.md)
+    * [sed](cheatsheet/character/sed.md)
     * [markdown](cheatsheet/character/markdown.md)
     * [json](cheatsheet/character/json.md)
     * [regex](cheatsheet/character/regex.md)
