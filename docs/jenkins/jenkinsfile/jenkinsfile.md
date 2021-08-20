@@ -115,6 +115,7 @@ node("master") {
 
 #### get `changeSets`
 > reference:
+> - [hudson.plugins.git.GitChangeSet](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitChangeSet.html)
 > - [hudson.scm.ChangeLogSet<T>](https://javadoc.jenkins.io/hudson/scm/ChangeLogSet.html)
 >   - [Interface ChangeLogSet.AffectedFile](https://javadoc.jenkins.io/hudson/scm/ChangeLogSet.AffectedFile.html)
 >   - [Class ChangeLogSet.Entry](https://javadoc.jenkins.io/hudson/scm/ChangeLogSet.Entry.html)
@@ -148,6 +149,18 @@ timestamps { ansiColor('xterm') {
 }}
 ```
 ![get rawbuild changeset](../../screenshot/jenkins/get-rawbuild-changeset.png)
+
+- via api
+  ```bash
+  $ curl -sSg \
+         https://my.jenkins.com/job/<group>/job/<pipeline>/<buildId>/api/json |
+         jq -r .changeSets[]
+
+  # or
+
+  $ curl -sSg \
+         https://my.jenkins.com/job/<group>/job/<pipeline>/<buildId>/api/json?depth=100&&tree=changeSets[*[*]]
+  ```
 
 ### [manager.build.result.isBetterThan](https://stackoverflow.com/a/26410694/2940319)
 ```groovy

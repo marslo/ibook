@@ -111,12 +111,24 @@ System.setProperty('user.timezone', 'Asia/Shanghai')
   System.getProperties()
   ```
 
+- or
+  ```groovy
+  System.getProperties().each { k, v ->
+    println " >>> ${k} ~> ${v} "
+  }
+  ```
+
 {% hint style='tip' %}
 **get system environment** :
 - `System.getenv()`
+  ```groovy
+  System.getenv().each { k, v ->
+    println " >>> ${k} ~> ${v} "
+  }
+  ```
 <p></p>
 i.e.:
-```bash
+```groovy
 System.getenv().JAVA_OPTS
 ```
 {% endhint %}

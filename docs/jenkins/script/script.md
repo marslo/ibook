@@ -138,29 +138,47 @@ Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
 ### [via api](./api.md#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
-Jenkins.instance.pluginManager.plugins.each { plugin ->
-  println ( "${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}" )
-}
+Jenkins.instance
+       .pluginManager
+       .plugins
+       .each { plugin ->
+         println ( "${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}" )
+       }
 ```
 
 ### [List plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)
 ```groovy
-println "Jenkins Instance : " + Jenkins.getInstance().getComputer('').getHostName() + " - " + Jenkins.getInstance().getRootUrl()
-println "Installed Plugins: "
-println "=================="
-Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()}.each { plugin ->
-    println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
-}
+def jenkins = Jenkins.instance
 
-println ""
-println "Plugins Dependency tree (...: dependencies; +++: dependants) :"
-println "======================="
-Jenkins.instance.pluginManager.plugins.sort(false) { a, b -> a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()}.each { plugin ->
-  println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()} "
-  println "+++ ${plugin.getDependants()}"
-  println "... ${plugin.getDependencies()}"
-  println ''
-}
+println """
+  Jenkins Instance : ${jenkins.getComputer('').hostName} + ${jenkins.rootUrl}
+  Installed Plugins:
+  ==================
+"""
+jenkins.pluginManager
+       .plugins
+       .sort(false) { a, b ->
+         a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+       }.each { plugin ->
+          println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
+       }
+
+println """
+  Plugins Dependency tree (...: dependencies; +++: dependants) :
+  =======================
+"""
+jenkins.pluginManager
+       .plugins
+       .sort(false) { a, b ->
+         a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+       }.each { plugin ->
+         println """
+           ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
+           +++ ${plugin.getDependants()}
+           ... ${plugin.getDependencies()}
+
+         """
+       }
 ```
 
 ## scriptApproval
@@ -260,9 +278,9 @@ GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
 ```groovy
 Jenkins.instance.getItemByFullName("JobName")
        .getBuildByNumber(JobNumber)
-       .finish(
-               hudson.model.Result.ABORTED,
-               new java.io.IOException("Aborting build")
+       .finish (
+         hudson.model.Result.ABORTED,
+         new java.io.IOException("Aborting build")
        )
 ```
 
@@ -281,10 +299,10 @@ import jenkins.model.CauseOfInterruption
 build.getProject()._getRuns().iterator().each{ run ->
   def exec = run.getExecutor()
     //if the run is not a current build and it has executor (running) then stop it
-    if( run!=build && exec!=null ){
+    if( run != build && exec != null ){
       //prepare the cause of interruption
       def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
-        exec.interrupt(Result.ABORTED, cause)
+      exec.interrupt(Result.ABORTED, cause)
     }
 }
 ```
@@ -329,7 +347,7 @@ build.getProject()._getRuns().iterator().each{ run ->
   for ( build in job.builds ) {
     if ( !build.isBuilding() ) { continue; }
     if ( buildnum == build.getNumber().toInteger() ) { continue; println "equals" }
-    build.doStop();
+    build.doStop()
   }
   ```
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
