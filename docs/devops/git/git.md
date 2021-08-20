@@ -17,6 +17,7 @@ Git Command Study and practice
   - [get upstream branch](#get-upstream-branch)
   - [get local/remote branches](#get-localremote-branches)
   - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
+  - [change head](#change-head)
 - [log](#log)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
@@ -290,6 +291,33 @@ $ git branch --sort=committerdate   # ASC
 - advanced usage
   ```bash
   $ git for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+  ```
+
+### [change head](https://stackoverflow.com/a/60102988/2940319)
+> reference:
+> - [warning: ignoring broken ref refs/remotes/origin/HEAD](https://stackoverflow.com/a/45867333/2940319)
+
+- check refs
+  ```bash
+  $ git status
+  warning: ignoring broken ref refs/remotes/origin/HEAD
+
+  $ git symbolic-ref refs/remotes/origin/HEAD
+  refs/remotes/origin/new_master
+  ```
+- fix warning
+  ```bash
+  $ git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/new_master
+  ```
+or
+  ```bash
+  $ git remote set-head origin --delete
+  $ git remote set-head origin --auto
+  ```
+or
+  ```bash
+  $ git fetch --all --force
+  $ git remote set-head origin refs/remotes/origin/new_master
   ```
 
 ## log

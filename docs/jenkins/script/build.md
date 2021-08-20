@@ -13,6 +13,8 @@
 - [build](#build)
   - [build number](#build-number)
   - [get changesets](#get-changesets)
+  - [get SCM info](#get-scm-info)
+  - [get culprits](#get-culprits)
   - [stop builds](#stop-builds)
   - [get build time](#get-build-time)
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
@@ -43,6 +45,11 @@
 > - [groovy.lang.MissingPropertyException: No such property: jenkins for class: groovy.lang.Binding](https://stackoverflow.com/q/47064135/2940319)
 > - [Class BuildVariableResolver](https://javadoc.jenkins.io/plugin/plasticscm-plugin/index.html?com/codicesoftware/plugins/hudson/util/BuildVariableResolver.html)
 > - [batmat/get-jenkins-build-time.groovy](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+> source code:
+> - [WorkflowRun.java](https://github.com/jenkinsci/workflow-job-plugin/blob/master/src/main/java/org/jenkinsci/plugins/workflow/job/WorkflowRun.java)
+> - [AbstractBuild.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/AbstractBuild.java)
+> - [GitSCM.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/hudson/plugins/git/GitSCM.java)
+> - [GitChangeSetList.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/hudson/plugins/git/GitChangeSetList.java)
 {% endhint %}
 
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
@@ -154,10 +161,121 @@ def build = Jenkins.instance
 ```
 
 ### get changesets
+
+#### code clone via
+```bash
+checkout([
+  $class: 'GitSCM',
+  branches: [[ name: 'refs/heads/sandbox' ]],
+  browser: [
+    $class: 'GitWeb',
+    repoUrl: 'https://my.gerrit.com/path/to/repo'
+  ],
+  userRemoteConfigs: [[
+      credentialsId: 'SSHCredential',
+      url: 'git://my.gerrit.com/path/to/repo.git'
+  ]]
+])
+```
+
+{% hint style='tip' %}
+> references:
+> - [hudson.plugins.git.GitChangeSet](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitChangeSet.html)
+> - [hudson.plugins.git.GitChangeSetList](https://javadoc.jenkins.io/plugin/git/index.html?hudson/plugins/git/GitChangeSetList.html)
+> - [jenkins.plugins.git.AbstractGitSCMSource](https://javadoc.jenkins.io/plugin/git/index.html?hudson/plugins/git/GitChangeSetList.html)
+> - [hudson.model.AbstractBuild<P,R>](https://javadoc.jenkins.io/hudson/model/AbstractBuild.html#getChangeSets--)
+> - [get changeset in Jenkisnfile](../jenkinsfile/jenkinsfile.html#get-changesets)
+
+{% endhint %}
 ```groovy
-println build.getChangeSets()
+Jenkins.instance
+     .getItemByFullName('/marslo/up')
+     .getBuildByNumber(195)
+     .changeSets
+     .each {
+        it.items.each { i ->
+          println """
+           \n-----------------------------\n
+                     paths : ${i.paths}
+             parent commit : ${i.parentCommit}
+                  commitId : ${i.commitId} : ${i.revision}
+                    author : ${i.author}
+                authorName : ${i.authorName}
+               authorEmail : ${i.authorEmail}
+             committerTime : ${i.committerTime}
+                   message : ${i.msg}
+                   repoUrl : ${it.browser?.repoUrl ?: ''}
+            affected files :
+              \t\t${i.affectedFiles.collect{ f -> f.editType.name + ' : ' + f.path }.join('\n\t\t\t\t')}
+          """
+        }
+     }
+```
+
+#### get repo url
+> [hudson.scm.SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html#getBrowser--)
+
+```groovy
+def job = Jenkins.instance
+               .getItemByFullName('/path/to/pipeline')
+               .getBuildByNumber(n)
+
+job.changeSets
+   .each {
+     it.items.each { i ->
+       println """
+         \n-----------------------------\n
+          repoUrl : ${ it.browser.repoUrl }
+          repoUrl : ${ job.SCMs.collect { s -> s.browser?.repoUrl }.findAll().join() }
+              url : ${ job.SCMs.collect { s -> s.browser?.url }.findAll().join() }
+      ormalizeUrl : ${ job.SCMs.collect { s -> s.browser?.normalizeUrl } }
+      absoluteUrl : ${ job.SCMs.collect { s -> s.browser?.getChangeSetLink(i) }.findAll().join() }
+         commitId : ${i.commitId} : ${i.revision}
+       """
+     }
+   }
+```
+- result
+  ```bash
+  -----------------------------
+
+            repoUrl : https://my.gerrit.com/admin/repos/sandbox
+            repoUrl : https://my.gerrit.com/admin/repos/sandbox
+                url : https://my.gerrit.com/admin/repos/sandbox
+        ormalizeUrl : [null, false]
+        absoluteUrl : https://my.gerrit.com/admin/repos/sandbox?a=commit&h=095e4470964ee8ca6ab50ceea7acf88094dc08d4
+           commitId : 095e4470964ee8ca6ab50ceea7acf88094dc08d4 : 095e4470964ee8ca6ab50ceea7acf88094dc08d4
+  ```
+
+### get SCM info
+{% hint style='tip' %}
+> references:
+> - [hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
+> - [hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
+> - [Poll SCM and Timer triggers include "Changes" for a Pipeline for any/all Shared Libraries](https://issues.jenkins.io/browse/JENKINS-41497)
+
+{% endhint %}
+```groovy
+Jenkins.instance
+       .getItemByFullName('/path/to/pipeline')
+       .getBuildByNumber(n)
+       .SCMs
+       .each {
+         println """
+           .......................
+               repoUrl : ${it.userRemoteConfigs.url.join(',')}
+               remotes : ${it.userRemoteConfigs.name.join(',')}
+              branches : ${it.branches.join(',')}
+           .......................
+         """
+       }
+```
+
+### get culprits
+```groovy
 println build.getCulprits()
 ```
+
 
 #### setup next build number
 ```groovy

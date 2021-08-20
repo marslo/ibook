@@ -278,6 +278,8 @@ $ docker run \
 
   {% hint style='tip' %}
   > more on [Properties in Jenkins Core for `JAVA_OPTS`](config/config.html#properties-in-jenkins-core-for-javaopts)
+  > - [encoding](https://stackoverflow.com/a/60419856/2940319)
+  > - [How locale setting can break unicode/UTF-8 in Java/Tomcat](https://www.jvmhost.com/articles/locale-breaks-unicode-utf-8-java-tomcat/)
   {% endhint %}
 
   ```bash
@@ -297,6 +299,8 @@ $ docker run \
                   -XX:+UseG1GC \
                   -Xms8G  \
                   -Xmx16G \
+                  -Dfile.encoding=UTF-8 \
+                  -Dsun.jnu.encoding=utf-8 \
                   -DsessionTimeout=1440 \
                   -DsessionEviction=43200 \
                   -Djava.awt.headless=true \
@@ -446,20 +450,22 @@ spec:
                      -Xmx10240m
                      -XX:PermSize=2048m
                      -XX:MaxPermSize=10240m
-                     -Duser.timezone='Asia/Chongqing' \
-                     -Dhudson.model.DirectoryBrowserSupport.CSP="sandbox allow-same-origin allow-scripts; default-src 'self'; script-src * 'unsafe-eval'; img-src *; style-src * 'unsafe-inline'; font-src *;"
+                     -DsessionTimeout=1440
+                     -DsessionEviction=43200
+                     -Djava.awt.headless=true
+                     -Divy.message.logger.level=4
+                     -Dfile.encoding=UTF-8
+                     -Dsun.jnu.encoding=utf-8
+                     -Duser.timezone='Asia/Chongqing'
+                     -Djenkins.install.runSetupWizard=true
+                     -Dpermissive-script-security.enabled=true
                      -Djenkins.slaves.NioChannelSelector.disabled=true
                      -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=false
-                     -Djava.awt.headless=true
                      -Djenkins.security.ClassFilterImpl.SUPPRESS_WHITELIST=true
                      -Dhudson.model.ParametersAction.keepUndefinedParameters=true
                      -Dcom.cloudbees.workflow.rest.external.ChangeSetExt.resolveCommitAuthors=true
-                     -Djenkins.install.runSetupWizard=true
-                     -Dpermissive-script-security.enabled=true
-                     -DsessionTimeout=1440
-                     -DsessionEviction=43200
-                     -Divy.message.logger.level=4
                      -Dhudson.plugins.active_directory.ActiveDirectorySecurityRealm.forceLdaps=false
+                     -Dhudson.model.DirectoryBrowserSupport.CSP="sandbox allow-same-origin allow-scripts; default-src 'self'; script-src * 'unsafe-eval'; img-src *; style-src * 'unsafe-inline'; font-src *;"
             - name: JNLP_PROTOCOL_OPTS
               value: -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=false
           ports:

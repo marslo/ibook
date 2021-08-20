@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [.gitconfig](#gitconfig)
+  - [default groups](#default-groups)
 - [refs/meta/config](#refsmetaconfig)
   - [get project.config](#get-projectconfig)
   - [publish to remote](#publish-to-remote)
@@ -26,6 +27,16 @@
 $ git config --global gitreview.username <UserName>
 $ git config --global gitreview.remote origin
 ```
+
+### [default groups](https://github.com/bpollack/gerrit/blob/master/Documentation/access-control.txt)
+> - [Gerrit Code Review - Access Controls](https://git.eclipse.org/r/Documentation/access-control.html#non-interactive_users)
+
+* Administrators
+* Anonymous Users
+* Change Owner
+* Non-Interactive Users
+* Project Owners
+* Registered Users
 
 ## [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
 ### get project.config
