@@ -10,6 +10,7 @@
 - [logout](#logout)
 - [about `whatis`](#about-whatis)
 - [user management](#user-management)
+- [system encoding](#system-encoding)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -356,4 +357,65 @@ $ gpasswd -d <account> <group>
 
   ```bash
   $ deluser <account> <group>
+  ```
+
+### system encoding
+{% hint style='tip' %}
+> references:
+> - [How to Change or Set System Locales in Linux](https://www.tecmint.com/set-system-locales-in-linux/)
+>   - `/etc/default/locale` – on Ubuntu/Debian
+>   - `/etc/locale.conf` – on CentOS/RHEL
+> - [Unicode characters in console logs do not print correctly in Workflow builds](https://issues.jenkins.io/browse/JENKINS-31096?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&showAll=true)
+> - [Locale](https://help.ubuntu.com/community/Locale)
+> - [How to set up a clean UTF-8 environment in Linux](https://perlgeek.de/en/article/set-up-a-clean-utf8-environment)
+>
+>
+> important files:
+> - `/etc/default/locale`
+> - `/etc/locale.gen`
+> - `/etc/environment`
+> - `/usr/share/locales`
+> - `/var/lib/locales/supported.d/local`
+> - `/usr/local/share/i18n/SUPPORTED`
+> - `/usr/share/i18n/SUPPORTED`
+
+{% endhint %}
+
+#### setup via environment
+```bash
+$ sudo bash -c 'cat >> /etc/bash.bashrc' << EOF
+export LANG=en_US.UTF-8
+export LANGUAGE=$LANG
+export LC_COLLATE=$LANG
+export LC_CTYPE=$LANG
+export LC_MESSAGES=$LANG
+export LC_MONETARY=$LANG
+export LC_NUMERIC=$LANG
+export LC_TIME=$LANG
+export LC_ALL=$LANG
+EOF
+
+$ source /etc/bash.bashrc
+```
+
+#### setup via `locale` command
+```bash
+$ apt-get install -y locales
+
+$ sudo locale-gen en_US.UTF-8
+$ sudo update-locale LANG=en_US.UTF-8
+$ source /etc/default/locale
+
+# or
+
+$ sudo dpkg-reconfigure locales
+# or
+$ sudo localectl set-locale LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8
+```
+- setup environment files
+  ```bash
+  $ sudo bash -c 'cat >> /etc/environment' << EOF
+  LANG="en_US.UTF-8"
+  LANGUAGE="en_US:en:en_US:en"
+  EOF
   ```
