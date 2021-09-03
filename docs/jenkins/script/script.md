@@ -160,7 +160,7 @@ jenkins.pluginManager
        .sort(false) { a, b ->
          a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
        }.each { plugin ->
-          println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
+         println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
        }
 
 println """
@@ -296,10 +296,10 @@ import hudson.model.Result
 import jenkins.model.CauseOfInterruption
 
 //iterate through current project runs
-build.getProject()._getRuns().iterator().each{ run ->
+build.getProject()._getRuns().iterator().each { run ->
   def exec = run.getExecutor()
     //if the run is not a current build and it has executor (running) then stop it
-    if( run != build && exec != null ){
+    if( run != build && exec != null ) {
       //prepare the cause of interruption
       def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
       exec.interrupt(Result.ABORTED, cause)
@@ -356,7 +356,8 @@ build.getProject()._getRuns().iterator().each{ run ->
 ## shared libes
 {% hint style='tip' %}
 > reference:
-> - []()
+> - [Jenkins Shared Libraries Workshop](https://www.slideshare.net/roidelapluie/jenkins-shared-libraries-workshop)
+> - [Extending with Shared Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/)
 {% endhint %}
 
 ### vars
@@ -371,8 +372,8 @@ build.getProject()._getRuns().iterator().each{ run ->
     ```groovy
     // cpuset: '/kubepods/burstable/pod59899be8-d4db-11eb-9a49-ac1f6b59c992/b60bf42d334be0eff64f325bad5b0ca4750119fbf8a7e80afa4e559040208ab3''
     String cpuset = sh (
-      returnStdout: true,
-      script: "set +x; cat /proc/self/cpuset"
+      returnStdout : true ,
+            script : "set +x; cat /proc/self/cpuset"
     ).trim()
     String dockerPattern = '^/docker/(\\w{64})$'
     String k8sPattern    = '^/kubepods/([^/]+/){2}(\\w{64})$'
