@@ -11,6 +11,7 @@
 - [regex `Pattern` and `Matcher`](#regex-pattern-and-matcher)
   - [matches to regex (return `Boolean`)](#matches-to-regex-return-boolean)
   - [get all matches](#get-all-matches)
+- [unicode](#unicode)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

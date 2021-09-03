@@ -189,36 +189,76 @@ checkout([
 {% endhint %}
 ```groovy
 Jenkins.instance
-     .getItemByFullName('/marslo/up')
-     .getBuildByNumber(195)
-     .changeSets
-     .each {
-        it.items.each { i ->
-          println """
-           \n-----------------------------\n
-                     paths : ${i.paths}
-             parent commit : ${i.parentCommit}
-                  commitId : ${i.commitId} : ${i.revision}
-                    author : ${i.author}
-                authorName : ${i.authorName}
-               authorEmail : ${i.authorEmail}
-             committerTime : ${i.committerTime}
-                   message : ${i.msg}
-                   repoUrl : ${it.browser?.repoUrl ?: ''}
-            affected files :
-              \t\t${i.affectedFiles.collect{ f -> f.editType.name + ' : ' + f.path }.join('\n\t\t\t\t')}
-          """
-        }
-     }
+       .getItemByFullName('/marslo/up')
+       .getBuildByNumber(195)
+       .changeSets
+       .each {
+         it.items.each { i ->
+           println """
+             \n-----------------------------\n
+                      paths : ${i.paths}
+              parent commit : ${i.parentCommit}
+                   commitId : ${i.commitId} : ${i.revision}
+                     author : ${i.author}
+                 authorName : ${i.authorName}
+                authorEmail : ${i.authorEmail}
+              committerTime : ${i.committerTime}
+                    message : ${i.msg}
+                    repoUrl : ${it.browser?.repoUrl ?: ''}
+             affected files :
+               \t\t${i.affectedFiles.collect{ f -> f.editType.name + ' : ' + f.path }.join('\n\t\t\t\t')}
+           """
+         }
+       }
 ```
+
+- get changeSets to `List<Map<String, String>>`:
+  ```groovy
+  def getChangeSets( String name, int nubmer ) {
+    Jenkins.instance
+           .getItemByFullName( name )
+           .getBuildByNumber( number )
+           .changeSets
+  }
+
+  def changeSetsEntry( def changeSets ) {
+    List<Map<String, String>> changeSetsEntry = []
+    changeSets.collect { it.items.collect { i ->
+      changeSetsEntry += [
+        'parentCommit'  : i.parentCommit      ,
+        'commitId'      : i.commitId          ,
+        'revision'      : i.revision          ,
+        'author'        : i.author.toString() ,
+        'authorName'    : i.authorName        ,
+        'authorEmail'   : i.authorEmail       ,
+        'committerTime' : i.committerTime     ,
+        'msgAnnotated'  : i.msg               ,
+        'affectedFiles' : i.affectedFiles.collect{ f -> ['editType' : f.editType.name, 'path' : f.path ] }
+      ]
+    }}
+    return changeSetsEntry
+  }
+
+  // testing
+  List<Map<String, String>> totalChangeSets = []
+  totalChangeSets += changeSetsEntry( getChangeSets('/path/to/pipeline', 123) )
+  totalChangeSets += changeSetsEntry( getChangeSets('/path/to/pipeline', 456) )
+  totalChangeSets.each {
+    println """
+      it.getClass()
+      it.author
+      it.commitId
+    """
+  }
+  ```
 
 #### get repo url
 > [hudson.scm.SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html#getBrowser--)
 
 ```groovy
 def job = Jenkins.instance
-               .getItemByFullName('/path/to/pipeline')
-               .getBuildByNumber(n)
+                 .getItemByFullName('/path/to/pipeline')
+                 .getBuildByNumber(n)
 
 job.changeSets
    .each {
@@ -293,8 +333,8 @@ Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( BUILD_NUMBER )
        .finish(
-               hudson.model.Result.ABORTED,
-               new java.io.IOException( "Aborting build" )
+         hudson.model.Result.ABORTED,
+         new java.io.IOException( "Aborting build" )
        )
 ```
 
@@ -312,9 +352,9 @@ final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
 
 def job = Jenkins.instance.getItemByFullName( JOB_NAME )
 for ( build in job.builds ) {
-  if ( !build.isBuilding() ) { continue; }
+  if ( !build.isBuilding() ) { continue }
   if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
-  build.doStop();
+  build.doStop()
 }
 ```
 
@@ -327,7 +367,7 @@ for ( build in job.builds ) {
 
 ```groovy
 import java.util.ArrayList
-import hudson.model.*;
+import hudson.model.*
 import jenkins.model.Jenkins
 
 // Remove everything which is currently queued
@@ -433,7 +473,6 @@ Jenkins.instance.getAllItems( Job.class ).each { job ->
 - result:
   ![get build start time](../../screenshot/jenkins/job-get-build-time.png)
 
-
 **or** :
 ```groovy
 final String JOB_PATTERN = '<group>/<name>'                  // keywords
@@ -452,6 +491,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
   """
 }
 ```
+
 - result
   ```
                  build.getTime() : Thu Apr 29 04:08:08 PDT 2021
