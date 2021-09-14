@@ -20,6 +20,7 @@
   - [format](#format)
 - [docker rmi](#docker-rmi)
 - [docker rm](#docker-rm)
+- [docker stats](#docker-stats)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -281,3 +282,17 @@ $ docker ps -aq --no-trunc
     ```bash
     $ docker rm $(docker ps -aq --filter "status=exited")
     ```
+
+## docker stats
+{% hint style='tip' %}
+> reference:
+> - [Monitor the Resource Usage of Docker Containers](https://www.cloudsavvyit.com/13715/how-to-monitor-the-resource-usage-of-docker-containers/)
+> - [See Memory and CPU Usage for All Your Docker Containers](https://dev.to/rubberduck/how-to-see-memory-and-cpu-usage-for-all-your-docker-containers)
+
+{% endhint %}
+
+```bash
+$ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+```
+
+![docker status](../../screenshot/docker-stat-resource-1.gif)

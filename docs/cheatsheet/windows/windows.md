@@ -21,6 +21,8 @@
   - [issue about `"profile.d\Active"' is not recognized as an internal or external command`](#issue-about-profiled%5Cactive-is-not-recognized-as-an-internal-or-external-command)
 - [`shell`](#shell)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
+  - [debug in powershell](#debug-in-powershell)
+  - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
   - [details](#details-1)
 - [tricky](#tricky)
 
@@ -255,6 +257,55 @@ Windows Registry Editor Version 5.00
   > shell:Common Startup
   ```
 
+### debug in powershell
+> references:
+> - [Set-PSDebug](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/set-psdebug?view=powershell-7.1)
+> - [Troubleshoot by Using Set-PSDebug](https://devblogs.microsoft.com/scripting/troubleshoot-by-using-set-psdebug/)
+
+```powershell
+> Set-PSDebug -Trace 2
+```
+
+### show all environment variables
+```powershell
+Write-Host "System Environment: "
+Get-ChildItem -Path Env:
+```
+
+### setup environment via config file by powershell
+> references:
+> - [Set-Content](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-content?view=powershell-7.1)
+
+```powershell
+PS C:\> cat .\test.txt
+TEST_A=aa
+TEST_B=bb
+
+PS C:\> cat .\test.txt | ForEach-Object {
+>>     $name, $value = $_ -split '=', 2
+>>     Set-Content env:\"$name" $value
+>> }
+```
+
+- example
+  ```
+  PS C:\> Get-Content -Path .\test.txt | Foreach-Object {
+  >>   $name, $value = $_ -split '=', 2
+  >>   echo "`n>>> $name ~> $value"
+  >>   Set-Content env:\"$name" $value
+  >>   Get-ChildItem Env:\"$name"
+  >> }
+
+  >>> TEST_A ~> aa
+
+  Name                           Value
+  ----                           -----
+  TEST_A                         aa
+
+  >>> TEST_B ~> bb
+  TEST_B                         bb
+  ```
+
 ### details
 [shell:folder](./shell:folder.md)
 
@@ -262,3 +313,4 @@ Windows Registry Editor Version 5.00
 #### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
 ![windows step 1](../../screenshot/win/windows-service-security-1.png)
 ![windows step 2](../../screenshot/win/windows-service-security-2.png)
+

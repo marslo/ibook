@@ -22,7 +22,7 @@
 
 ### Linux
 ```bash
-$ dpkg -L docker-ce-cli |grep completion
+$ dpkg -L docker-ce-cli | grep completion
 /usr/share/bash-completion
 /usr/share/bash-completion/completions
 /usr/share/bash-completion/completions/docker
@@ -57,8 +57,9 @@ done < <(alias | grep docker | sed '/^alias /!d;s/^alias //;s/=.*$//')
   _docker is a function
   _docker ()
   {
-      local previous_extglob_setting=$(shopt -p extglob);
-      shopt -s extglob;
+    local previous_extglob_setting=$(shopt -p extglob);
+    shopt -s extglob;
+  }
   ```
 
 ### [osx](https://gist.github.com/rkuzsma/4f8c1354a9ea67fb3ca915b50e131d1c)
