@@ -696,6 +696,9 @@ $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/
   ```
 
 ## tag
+> reference :
+> - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
+
 ### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
 ```bash
 $ git describe HEAD --tags
@@ -713,6 +716,7 @@ $ git tag -l --sort='creatordate' --merged <branch>
 #### get latest tag
 > references:
 > - [Get the most recent tag in git](https://jacobmckinney.com/posts/get-the-most-recent-tag-in-git/)
+> - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
 
 ```bash
 $ git tag -l --sort='creatordate' --merged <branch> | tail -1
@@ -724,6 +728,49 @@ or
 # the command can be executed in .git folder (! -is-inside-work-tree)
 $ git describe --tags --abbrev=0 --always
 ```
+
+or
+
+```bash
+$ git for-each-ref --sort=taggerdate \
+                   --format '%(tag)' \
+                   refs/tags |
+      tail -1
+```
+- to get verbose output
+  ```bash
+  $ git for-each-ref --sort=taggerdate \
+                     --format '%(tag) %(taggerdate:raw) %(taggername) %(subject)' \
+                     refs/tags
+  ```
+  - or
+    ```bash
+    $ git for-each-ref --sort=taggerdate \
+                       --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' \
+                       refs/tags |
+          awk 'BEGIN { FS = "_,,,_"  } ; { printf "%-20s %-18s %-25s %s\n", $2, $1, $4, $3  }'
+    ```
+  - or
+    ```bash
+    $ git log --tags \
+              --simplify-by-decoration \
+              --pretty="format:%ai %d" |
+          sort
+    ```
+  - or formatted date
+    ```bash
+    $ git for-each-ref --sort=taggerdate \
+                       --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' \
+                       refs/tags |
+          awk 'BEGIN { FS = "_,,,_"  } ; { t=strftime("%Y-%m-%d  %H:%M",$2); printf "%-20s %-18s %-25s %s\n", t, $1, $4, $3  }'
+    ```
+  - or git alias
+    ```bash
+    tags = !"git for-each-ref \
+                 --sort=taggerdate \
+                 --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' refs/tags \
+                 | awk 'BEGIN { FS = \"_,,,_\"  } ; { t=strftime(\"%Y-%m-%d  %H:%M\",$2); printf \"%-20s %-18s %-25s %s\\n\", t, $1, $4, $3  }'"
+    ```
 
 #### get revision from latest tag in particular branch
 ```bash

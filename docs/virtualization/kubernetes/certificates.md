@@ -309,15 +309,16 @@ $ sudo kubeadm --config kubeadm-conf.yaml init phase kubeconfig all
 ```
 
 - setup `~/.kube/config`
-  | configuration file | path      |
-  | :-          :      | : -     : |
-  | `config`           | `~/.kube` |
-
   ```bash
   $ sudo cp /etc/kubernetes/admin.conf ~/.kube/config
   $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
   $ sudo chmod 644 $HOME/.kube/config
   ```
+
+| configuration file | path      |
+|:------------------:|:---------:|
+| `config`           | `~/.kube` |
+
 
 ### Restart the master components
 ```bash
