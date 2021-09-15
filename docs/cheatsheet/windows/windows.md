@@ -22,6 +22,7 @@
 - [`shell`](#shell)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
   - [debug in powershell](#debug-in-powershell)
+  - [show all environment variables](#show-all-environment-variables)
   - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
   - [details](#details-1)
 - [tricky](#tricky)

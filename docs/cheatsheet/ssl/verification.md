@@ -20,6 +20,10 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> check in [kubernetes certifactes as well](../../virtualization/kubernetes/certificates.html)
+
+{% endhint %}
 
 # verify local cert
 ## `s_client`

@@ -374,6 +374,9 @@ round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
 ```
 
 ## `find`
+> reference:
+> - [Everything CLI: FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
+
 ### cat config file in all `.git` folder
 - `xargs` && `cat`
   ```bash

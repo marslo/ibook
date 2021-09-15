@@ -6,6 +6,8 @@
 - [Video](#video)
   - [Get Audio from video](#get-audio-from-video)
   - [Convert flv to mp4](#convert-flv-to-mp4)
+  - [convert png to mp4](#convert-png-to-mp4)
+  - [scale the media(https://www.everythingcli.org/convert-pdf-to-mp4/)](#scale-the-mediahttpswwweverythingcliorgconvert-pdf-to-mp4)
   - [Combine video and audio](#combine-video-and-audio)
 - [Image](#image)
   - [convert webp to png](#convert-webp-to-png)
@@ -28,25 +30,53 @@ $ ffmpeg -i source.mpg -f s16le -acodec pcm_s16le audio.raw
 ```bash
 $ ffmpeg -i name.flv -qscale 0 name.mp4
 ```
+
+### [convert png to mp4](https://www.everythingcli.org/convert-pdf-to-mp4/)
+{% hint style='tip' %}
+> options:
+> - `pic-%02d.png`: Read all images from the current folder with the prefix pic-, a following number of 2 digits (%02d) and an ending of .png
+> - `-r 1/5` : Displays each image for 5 seconds
+> - `r 30` : Output framerate of 30 fps.
+> - `-c:v libx264` : Output video codec: h264
+> - `pix_fmt yuv420p` : YUV pixel format
+
+{% endhint %}
+
+```bash
+$ ffmpeg -r 1/5 -i pic-%02d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+```
+
+### scale the media(https://www.everythingcli.org/convert-pdf-to-mp4/)
+```bash
+$ ffmpeg -i out.mp4 -vf scale=-1:720 out_720p.mp4
+```
+
 #### convert to 5 mins (300 sec)
 ```bash
 $ ffmpeg -i name.mp4 -ss 0 -t 300 name-5m.mp4
 ```
+
 #### sequence convert (every 5 mins ~> 300 secs)
 - first 5 mins (0 ~> 300)
-
-```bash
-$ ffmpeg -i name.mp4 -ss 0 -t 300 name-5m-1.mp4
-```
+  ```bash
+  $ ffmpeg -i name.mp4 -ss 0 -t 300 name-5m-1.mp4
+  ```
 - second 5 mins (300*1 ~> 300)
-
-```bash
-$ ffmpeg -i name.mp4 -ss 300 -t 300 name-5m-2.mp4
-```
+  ```bash
+  $ ffmpeg -i name.mp4 -ss 300 -t 300 name-5m-2.mp4
+  ```
 - third 5 mins (300*2 ~> 300)
+  ```bash
+  $ ffmpeg -i name.mp4 -ss 600 -t 300 name-5m-3.mp4
+  ```
+
+#### [convert pdf to png](https://www.everythingcli.org/convert-pdf-to-mp4/)
+{% hint style='tip' %}
+- `-density 400` : Set the horizontal resolution of the image
+{% endhint %}
 
 ```bash
-$ ffmpeg -i name.mp4 -ss 600 -t 300 name-5m-3.mp4
+$ convert -density 400 input.pdf pic.png
 ```
 
 ### Combine video and audio
