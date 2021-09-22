@@ -331,7 +331,7 @@ $ sudo kill -s SIGHUP $(pidof kube-scheduler)
   ```bash
   $ for i in kube-apiserver kube-controller-manager kube-scheduler; do
       sudo kill -s SIGHUP $(pidof ${i})
-      done
+    done
   ```
 
 ### restart kubelet service
@@ -359,13 +359,13 @@ $ sudo systemctl restart kubelet
 ### verify
   - kubernetes api (`load.balance.ip.address:6443`)
   ```bash
-  $ echo -n \
-    | openssl s_client -connect x.x.x.x:6443 2>&1 \
-    | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
-    | openssl x509 -text -noout \
-    | grep Not
-          Not Before: Sep 17 07:51:58 2019 GMT
-          Not After : Sep 21 09:09:00 2021 GMT
+  $ echo -n |
+    -> openssl s_client -connect x.x.x.:6443 2>&1 |
+    -> sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' |
+    -> openssl x509 -text -noout |
+    -> grep Not
+              Not Before: Sep 17 07:51:58 2019 GMT
+              Not After : Sep 21 09:09:00 2021 GMT
   ```
 
 ## renew working node

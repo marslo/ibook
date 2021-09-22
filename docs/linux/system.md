@@ -11,6 +11,7 @@
 - [about `whatis`](#about-whatis)
 - [user management](#user-management)
 - [system encoding](#system-encoding)
+- [Q&A](#qa)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -419,3 +420,29 @@ $ sudo localectl set-locale LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8
   LANGUAGE="en_US:en:en_US:en"
   EOF
   ```
+
+### Q&A
+
+#### yum issue after python upgrade to 3.x
+> references:
+> - [CentOS 7升级Python到3.6.6后yum出错问题解决总结](https://www.cnblogs.com/kerrycode/p/11553470.html)
+> - [yum upgrading error](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/#post6071710)
+
+- issue
+  ```bash
+  SyntaxError: invalid syntax
+    File "/usr/libexec/urlgrabber-ext-down", line 28
+      except OSError, e:
+                    ^
+  ```
+
+- solution
+  ```bash
+  $ sed -r '1s/^(.*python)$/\12/g' -i /usr/libexec/urlgrabber-ext-down
+  ```
+
+  - or change shebang from `#! /usr/bin/python` to `#! /usr/bin/python2`
+    ```bash
+    $ vim /usr/libexec/urlgrabber-ext-down
+    ... change '#! /usr/bin/python' to  '#! /usr/bin/python2'
+    ```
