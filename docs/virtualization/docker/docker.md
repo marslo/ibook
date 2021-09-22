@@ -12,6 +12,7 @@
   - [run into dind](#run-into-dind)
   - [run to override ENTRYPOINT](#run-to-override-entrypoint)
   - [runtime options with memory, cpus, and gpus](#runtime-options-with-memory-cpus-and-gpus)
+  - [run with always restart](#run-with-always-restart)
 - [docker exec](#docker-exec)
   - [login docker container as root](#login-docker-container-as-root)
 - [docker ps](#docker-ps)
@@ -158,6 +159,27 @@ $ docker run \
            docker:dind
   ```
 
+
+### run with always restart
+{% hint style='tip' %}
+> `docker: Conflicting options: --restart and --rm.`
+{% endhint %}
+
+```bash
+$ docker run \
+         -d \
+         --name ss-libev \
+         --restart=always \
+         -p 8443:8443 \
+         -p 8443:8443/udp \
+         -v /etc/shadowsocks-libev:/etc/shadowsocks-libev \
+         teddysun/shadowsocks-libev
+```
+
+- visit via
+  ```bash
+  $ docker exec -it ss-libev /bin/sh
+  ```
 
 ## docker exec
 ### login docker container as root
