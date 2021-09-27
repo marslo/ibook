@@ -39,6 +39,18 @@
 > - [10 Awk Tips, Tricks and Pitfalls](https://catonmat.net/ten-awk-tips-tricks-and-pitfalls)
 > - [FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
 
+## encryption
+### `base64`
+```bash
+$ echo "marslo" | base64 -w0
+bWFyc2xvCg==
+```
+- decryption
+  ```bash
+  $ echo "bWFyc2xvCg==" | base64 --decode
+  marslo
+  ```
+
 ## get line after the pattern
 ```bash
 $ cat a.txt
