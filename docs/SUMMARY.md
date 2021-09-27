@@ -21,6 +21,7 @@
   * [media](cheatsheet/media.md)
   * [osx](cheatsheet/osx.md)
   * [ssl](cheatsheet/ssl/ssl.md)
+    * [keystore](cheatsheet/ssl/keystore.md)
     * [verification](cheatsheet/ssl/verification.md)
 * [vim](vim/vim.md)
   * [tricky](vim/tricky.md)
