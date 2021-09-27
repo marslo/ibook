@@ -5,6 +5,7 @@
 - [filter via `--field-selector`](#filter-via---field-selector)
   - [list all `Failed` pods](#list-all-failed-pods)
   - [filter via Node Name](#filter-via-node-name)
+  - [filter via json](#filter-via-json)
 - [sort via `--sort-by`](#sort-via---sort-by)
   - [sorting pods by nodeName](#sorting-pods-by-nodename)
   - [sort pods by restartCount](#sort-pods-by-restartcount)
@@ -26,6 +27,13 @@
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='tip' %}
+> references:
+> - [Pod Lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+> - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/_print/)
+> - [Field Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/)
+{% endhint %}
 
 ## [filter via `--field-selector`](https://stackoverflow.com/a/50811992/2940319)
 ### list all `Failed` pods
@@ -65,6 +73,12 @@ devops-jenkins-659f4c6d44-d2w76   1/1     Running   0          2d22h   **.***.*.
          --key apiserver.key \
          https://<server>:<port>/api/v1/namespaces/<namespace>/pods?fieldSelector=spec.nodeName%3Dsomenodename
   ```
+
+### [filter via json](https://gist.github.com/so0k/42313dbb3b547a0f51a547bb968696ba)
+```bash
+$ kubectl get po -o json |
+          jq -r '.items | sort_by(.spec.nodeName)[] | [.spec.nodeName,.metadata.name] | @tsv'
+```
 
 ## [sort via `--sort-by`](https://stackoverflow.com/a/39235513/2940319)
 
@@ -257,8 +271,7 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 
 - [list via `-o custom-columns=":metadata.name"`](https://stackoverflow.com/a/52691455/2940319)
   ```bash
-  $ k -n kube-system get pods -o custom-columns=":metadata.name" |
-    head
+  $ k -n kube-system get pods -o custom-columns=":metadata.name" | head
   coredns-c7ddbcccb-5cj5z
   coredns-c7ddbcccb-lxsw6
   coredns-c7ddbcccb-prjfk
@@ -292,6 +305,29 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
     kube-apiserver-node01
     kube-controller-manager-node03
     ```
+- [List all Container images in all namespaces](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/)
+  ```bash
+  $ kubectl get pods \
+            --all-namespaces \
+            -o jsonpath="{.items[*].spec.containers[*].image}" |
+            tr -s '[[:space:]]' '\n' |
+            sort |
+            uniq -c
+  ```
+  - or
+    ```bash
+    $ kubectl get pods \
+              --all-namespaces \
+              -o jsonpath="{.items[*].spec.containers[*].image}"
+    ```
+
+- [List Container images by Pod](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod)
+  ```bash
+  $ kubectl get pods \
+            --all-namespaces \
+            -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' |
+            sort
+  ```
 
 ## QOS
 ```bash
@@ -328,6 +364,16 @@ devops-jenkins-659f4c6d44-d2w76
 ```
 
 ### restart po
+> reference:
+> - [Restarting Kubernetes Pods](https://phoenixnap.com/kb/how-to-restart-kubernetes-pods)
+> - [How to Restarting Kubernetes Pods](https://www.cloudytuts.com/tutorials/kubernetes/how-to-restarting-kubernetes-pods/)
+
+{% hint style='tip' %}
+> for kubernetes version 1.15+
+> `kubectl -n <namespace> rollout restart deployment <name>`
+
+{% endhint %}
+
 ```bash
 $ k -n <namespace> get po <po-name> -o yaml | k replace --force -f -
 ```
@@ -353,7 +399,7 @@ $ k -n <namespace> get po <po-name> -o yaml | k replace --force -f -
   ```
   - or
     ```bash
-    $ k -n <namespace> scale deployment <name> --replicas=0 -n service
+    $ k -n <namespace> scale deployment <name> --replicas=0
     ```
 
 ## others
