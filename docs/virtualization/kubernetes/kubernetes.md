@@ -93,9 +93,9 @@ $ source ~/.bashrc
 - by command
   ```bash
   $ kubectl create secret tls my-certs \
-      --key .devops/certs/server.key \
-      --cert .devops/certs/server.crt \
-      -n ingress-nginx
+            --key .devops/certs/server.key \
+            --cert .devops/certs/server.crt \
+            -n ingress-nginx
   ```
 
 - by yaml
@@ -107,8 +107,9 @@ $ source ~/.bashrc
     name: mytest-cert
     namespace: ingress-nginx
   data:
-    tls.crt: $(cat $HOME/.devops/certs/server.csr | base64 | tr -d '\n')
-    tls.key: $(cat $HOME/.devops/certs/server.key | base64 | tr -d '\n')" | k apply -f -
+    tls.crt: $(cat $HOME/.devops/certs/server.csr | base64 -w0)
+    tls.key: $(cat $HOME/.devops/certs/server.key | base64 -w0)" |
+  k apply -f -
   ```
 
 #### duplicate secrets to the other ns

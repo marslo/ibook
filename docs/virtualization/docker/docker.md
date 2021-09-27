@@ -22,12 +22,13 @@
 - [docker rmi](#docker-rmi)
 - [docker rm](#docker-rm)
 - [docker stats](#docker-stats)
+- [docker inspect](#docker-inspect)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > reference:
 > - [Docker 学习笔记](https://blog.opskumu.com/docker.html)
-> - [Understanding the Docker Internals](https://medium.com/@BeNitinAgarwal/understanding-the-docker-internals-7ccb052ce9fe)
+> - [Understanding the Docker Internals](https://medium.com/%40BeNitinAgarwal/undersanding-the-docker-internals-7ccb052ce9fe)
 > - [Ideas for a cgroups UI](https://mairin.wordpress.com/2011/05/13/ideas-for-a-cgroups-ui/)
 
 ## docker internals
@@ -313,8 +314,27 @@ $ docker ps -aq --no-trunc
 
 {% endhint %}
 
+{% raw %}
 ```bash
 $ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 ```
+{% endraw %}
 
 ![docker status](../../screenshot/docker-stat-resource-1.gif)
+
+## docker inspect
+> reference:
+> - [See full command of running/stopped container in Docker](https://stackoverflow.com/a/27380853/2940319)
+
+{% raw %}
+```bash
+$ docker inspect -f "{{.Path}} {{.Args}} ({{.Id}})" $(docker ps -a -q)
+```
+{% endraw %}
+
+- or list <name> only
+  {% raw %}
+  ```bash
+  $ docker inspect <name> -f "{{.Path}} {{.Args}} ({{.Id}})"
+  ```
+  {% endraw %}

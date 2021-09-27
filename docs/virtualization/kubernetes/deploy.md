@@ -18,11 +18,40 @@
   ```
 
 ## set
+> reference:
+> - [Updating a Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment)
+> - [Rolling Back a Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment)
+
+#### format
+```bash
+$ kubectl -n <namespace> \
+          set image \
+          deploy <deploy_name> \
+          <container_name>=<image_path> \
+          [--record=true] \
+          [kubernetes.io/change-cause="update cause"]
+
+# check history
+$ kubectl -n <namespace> \
+          rollout history \
+          deploy <deploy_name>
+
+# revert
+$ kubectl -n <namespace> \
+          rollout undo \
+          deploy <deploy_name> \
+          --to-revision=<version>
+```
+
 ### update image
 ```bash
 $ k -n devops set image deployments/devops-jenkins devops-jenkins=jenkins/jenkins:2.200
 deployment.extensions/devops-jenkins image updated
+
+# or
+$ k -n devops set image deploy devops-jenkins devops-jenkins=jenkins/jenkins:2.200
 ```
+
 - result
   ```bash
   $ k -n devops get pods -w

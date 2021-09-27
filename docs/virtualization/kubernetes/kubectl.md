@@ -22,6 +22,8 @@
 
 {% hint style='tip' %}
 ## [what is kubectl](https://learnk8s.io/blog/kubectl-productivity/#introduction-what-is-kubectl-)
+- [kubectl](https://kubernetes.io/docs/reference/kubectl/)
+
 ![kubectl](../../screenshot/k8s/k-1.svg.png)
 
 > reference:
