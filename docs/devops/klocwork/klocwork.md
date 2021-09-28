@@ -3,7 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [environment](#environment)
-  - [admin](#admin)
 - [analysis](#analysis)
   - [initial a klocwork analysis](#initial-a-klocwork-analysis)
   - [full build analysis](#full-build-analysis)
@@ -42,6 +41,7 @@
 > - [example about integrate with Jenkins](https://stackoverflow.com/questions/51731262/jenkins-declarative-pipeline-how-to-configure-the-klocwork-result-display-on-t)
 > - [最佳实践：Klocwork增量/VerifyCI检查](http://www.360doc.com/content/17/0430/08/30774303_649740396.shtml)
 > - [Running a distributed Klocwork C/C++ analysis](https://bullwhip.physio-control.com/documentation/help/concepts/runningadistributedklocworkccanalysis.htm)
+> - [Security Best Practices + Klocwork](https://www.perforce.com/blog/kw/security-best-practices)
 {% endhint %}
 
 ## environment
@@ -52,13 +52,6 @@
 > - video: [Build integration for C/C++ projects](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
 > - video: [Klocwork Demo](https://www.perforce.com/success/klocwork-demo)
 > - [Useful resources](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
-
-### admin
-> reference:
-> - [Admin Tools](https://developer.klocwork.com/products/insight)
-> - [Improving database performance](https://bullwhip.physio-control.com/documentation/help/concepts/improvingdatabaseperformance.htm)
-> - [Backing up Klocwork data](https://bullwhip.physio-control.com/documentation/help/concepts/backingupklocworkdata.htm)
-> - [Build properties displayed by kwadmin](https://bullwhip.physio-control.com/documentation/help/concepts/buildpropertiesdisplayedbykwadmin.htm)
 
 ## analysis
 > [issue severity](http://docs.klocwork.com/Insight-10.0/Issue_severity)
