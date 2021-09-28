@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [encryption](#encryption)
+  - [`base64`](#base64)
 - [get line after the pattern](#get-line-after-the-pattern)
 - [get certain Line between 2 matched patterns](#get-certain-line-between-2-matched-patterns)
   - [working with empty line](#working-with-empty-line)
