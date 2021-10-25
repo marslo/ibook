@@ -5,6 +5,7 @@
 - [process](#process)
   - [get the list of programs (`wmic`)](#get-the-list-of-programs-wmic)
   - [`ps auxf`](#ps-auxf)
+  - [stop service & process via powershell](#stop-service--process-via-powershell)
 - [CLSID](#clsid)
   - [usage](#usage)
   - [details](#details)
@@ -19,12 +20,12 @@
   - [Fingerprint Pro](#fingerprint-pro)
   - [Enable Gadgets](#enable-gadgets)
   - [issue about `"profile.d\Active"' is not recognized as an internal or external command`](#issue-about-profiled%5Cactive-is-not-recognized-as-an-internal-or-external-command)
+  - [stop windows beep](#stop-windows-beep)
 - [`shell`](#shell)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
   - [debug in powershell](#debug-in-powershell)
   - [show all environment variables](#show-all-environment-variables)
   - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
-  - [details](#details-1)
 - [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -63,6 +64,79 @@ Microsoft Office OneNote MUI (English) 2010                              14.0.60
   services.exe                   108 Services                   0      7,776 K
   lsass.exe                       96 Services                   0     22,176 K
   ```
+
+### stop service & process via powershell
+> reference:
+> - [Restart docker Windows 10 command line](https://stackoverflow.com/a/57560043/2940319)
+
+- get service:
+  ```powershell
+  PS > Get-Service | Where-Object {$_.name -ilike "*docker*" -and $_.Status -ieq "Running"}
+
+  Status   Name               DisplayName
+  ------   ----               -----------
+  Running  docker             Docker Engine
+
+  # or
+
+  PS > Get-Service | Where-Object {$_.name -ilike "*docker*" -and $_.Status -ieq "Running"}
+
+  Status   Name               DisplayName
+  ------   ----               -----------
+  Running  docker             Docker Engine
+  ```
+
+- stop service:
+  ```powershell
+  PS > foreach($svc in (Get-Service | Where-Object {$_.name -ilike "*docker*" -and $_.Status -ieq "Running"}))
+       {
+         $svc | Stop-Service -ErrorAction Continue -Confirm:$false -Force
+       }
+
+  # or
+  PS > Stop-Service docker -ErrorAction Continue -Confirm:$false -Force
+  ```
+
+- get process
+  ```powershell
+  PS > Get-Process | Where-Object {$_.Name -ilike "*docker*"}
+
+  Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+  -------  ------    -----      -----     ------     --  -- -----------
+      644      43   175288      56388     475.31   5080   0 dockerd
+  ```
+
+- stop process
+  ```powershell
+  PS > Get-Process | Where-Object {$_.Name -ilike "*docker*"} | Stop-Process -ErrorAction Continue -Confirm:$false -Force
+  ```
+
+#### restart docker service & process
+  ```powershell
+  PS > Stop-Service docker -ErrorAction Continue -Confirm:$false -Force
+  PS > Get-Process | Where-Object {$_.Name -ilike "*docker*"} | Stop-Process -ErrorAction Continue -Confirm:$false -Force
+  PS > Start-Service docker
+  PS > Get-Process | Where-Object {$_.Name -ilike "*docker*"}
+
+  Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+  -------  ------    -----      -----     ------     --  -- -----------
+      371      26   142736      46460       1.06   5828   0 dockerd
+  ```
+
+#### restart via batch
+> reference:
+> - [Restart docker Windows 10 command line](https://stackoverflow.com/a/55212066/2940319)
+
+```batch
+> net stop docker
+> net stop com.docker.service
+> taskkill /IM "dockerd.exe" /F
+> taskkill /IM "Docker for Windows.exe" /F
+> net start docker
+> net start com.docker.service
+> "c:\program files\docker\docker\Docker for Windows.exe"
+```
+
 ## [CLSID](https://www.tenforums.com/tutorials/3123-clsid-key-guid-shortcuts-list-windows-10-a.html)
 > reference [CLSID Key (GUID) Shortcuts List for Windows 10](https://www.tenforums.com/tutorials/3123-clsid-key-guid-shortcuts-list-windows-10-a.html)
 > http://www.klapac.funsite.cz/mediawiki/index.php?title=List_of_Windows_10_CLSID_Key_(GUID)_Shortcuts
@@ -91,17 +165,17 @@ $ reg add HKCU\Environment /v HOME /t REG_EXPAND_SZ /d ^%USERPROFILE^%
 ### PuTTy
 - Backup PuTTy sessions
   ```batch
-  C:> regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
+  > regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
   ```
 
 - Launchy PuTTy session as shortcut
   ```batch
-  C:> [PuTTy.exe] -load [SessionName]
+  > [PuTTy.exe] -load [SessionName]
   ```
 
 - Backup PuTTy session
   ```batch
-  C:> regedit /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
+  > regedit /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
   ```
 
 ### [disable screensaver](https://gist.github.com/Otiel/8d15d21593b481c1e525500762db52ba)
@@ -245,8 +319,21 @@ Windows Registry Editor Version 5.00
   $ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d "@CHCP 65001>nul" /f
   ```
 
+### stop windows beep
+> references:
+> - [How to disable PC Speaker beep sound in Windows 10]()https://winaero.com/how-to-disable-pc-speaker-beep-sound-in-windows-10/
+> - [How to disable System Beep in Windows 10](https://www.thewindowsclub.com/disable-system-beep-windows-7-8)
+
+```batch
+> net stop beep
+> sc config beep start= disabled
+```
+
 ## `shell`
 ### <kbd>win</kbd> + <kbd>r</kbd>
+> references:
+> - [shell:folder](./shell-folder.html)
+
 - appfolder
   ```batch
   > shell:appfolder
@@ -306,9 +393,6 @@ PS C:\> cat .\test.txt | ForEach-Object {
   >>> TEST_B ~> bb
   TEST_B                         bb
   ```
-
-### details
-[shell:folder](./shell:folder.md)
 
 ## tricky
 #### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
