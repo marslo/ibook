@@ -9,6 +9,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> reference:
+> - [vim:tip](https://vim.fandom.com/wiki/Category:VimTip)
+> - [Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
+> - [Search for visually selected text](https://vim.fandom.com/wiki/Search_for_visually_selected_text)
+
+{% endhint %}
+
 
 ### check where vim executable package
 ```vim
@@ -36,6 +44,15 @@
   ```vim
   :TERM_PROGRAM
   iTerm.app
+  ```
+
+- show printable non-ASCII characters
+  > reference:
+  > - [VIM学习笔记 非可见字符(Listchars)](https://zhuanlan.zhihu.com/p/25801800)
+
+  ```vim
+  " for listchars
+  :digraphs
   ```
 
 - [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)

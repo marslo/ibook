@@ -5,6 +5,8 @@
 - [firefox](#firefox)
   - [restart firefox](#restart-firefox)
   - [customized firefox style](#customized-firefox-style)
+- [chrome](#chrome)
+  - [shortcut](#shortcut)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -114,3 +116,7 @@ about:restartrequired
     background: rgba(65, 85, 145, 0.4) !important;
   }
   ```
+
+## chrome
+### shortcut
+- <kbd>shift</kbd> + <kbd>w</kbd> : move tab to new windows

@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [move between windws](#move-between-windws)
+- [move between windows](#move-between-windows)
 - [resize](#resize)
   - [horizontal resize](#horizontal-resize)
   - [vertical resize](#vertical-resize)
@@ -15,7 +15,7 @@
 > - [windows.txt](https://vimhelp.org/windows.txt.html)
 {% endhint %}
 
-## move between windws
+## move between windows
 | commands    | shortcut                                      |
 | :---:       | :---:                                         |
 | `:wincmd l` | <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>l</kbd> |
