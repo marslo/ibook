@@ -10,7 +10,7 @@
     * [shortcut](cheatsheet/windows/shortcut.md)
     * [clsid](cheatsheet/windows/clsid.md)
     * [env](cheatsheet/windows/env.md)
-    * [shell:folder](cheatsheet/windows/shell:folder.md)
+    * [shell:folder](cheatsheet/windows/shell-folder.md)
   * [character](cheatsheet/character/character.md)
     * [awk](cheatsheet/character/awk.md)
     * [sed](cheatsheet/character/sed.md)
