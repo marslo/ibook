@@ -551,6 +551,12 @@ $ openssl req -subj "/O=system:masters/CN=kubernetes-admin" \
               -out marslo.csr
 ```
 
+- or
+  ```bash
+  $ openssl genrsa -out marslo.key 2048
+  $ openssl req -new -key marslo.key -out marslo.csr -subj "/O=system:masters/CN=kubernetes-admin"
+  ```
+
 ### signing the key
 ```bash
 $ sudo openssl x509 -req \
