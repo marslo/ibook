@@ -18,7 +18,7 @@
     - [pfx](#pfx)
 - [renew kubeconfig only](#renew-kubeconfig-only)
   - [environment check](#environment-check)
-  - [renew kubeconfig](#renew-kubeconfig-1)
+  - [renew data in kubeconfig](#renew-data-in-kubeconfig)
     - [generate the new cert](#generate-the-new-cert)
     - [signing the key](#signing-the-key)
     - [update kubeconfig](#update-kubeconfig)
@@ -50,9 +50,9 @@
 
 - crt for kubernetes
   ```bash
-  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
-         | egrep -v 'ca.crt$' \
-         | xargs -L 1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep After'
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+         egrep -v 'ca.crt$' |
+         xargs -L 1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep After'
   bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep After
               Not After : Sep 16 07:51:58 2020 GMT
   bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep After
@@ -63,16 +63,16 @@
 
   or
   ```bash
-  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
-         | egrep -v 'ca.crt$' \
-         | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+         egrep -v 'ca.crt$' |
+         xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
   ```
 
   or
   ```bash
-  $ ls -1 /etc/kubernetes/pki/*.crt \
-         | grep -Ev 'ca.crt$' \
-         | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+  $ ls -1 /etc/kubernetes/pki/*.crt |
+         grep -Ev 'ca.crt$' |
+         xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
   ```
 
 - [pem for extend etcd](https://stackoverflow.com/a/21297927/2940319)
@@ -93,9 +93,9 @@
 
   or
   ```bash
-  $ find /etc/etcd/ssl/ -type f -name '*.pem' \
-         | egrep -v '*-key.pem$' \
-         | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+  $ find /etc/etcd/ssl/ -type f -name '*.pem' |
+         egrep -v '*-key.pem$' |
+         xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
   bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/ca.pem
   notAfter=Sep  8 10:44:00 2024 GMT
   bash -c openssl x509 -enddate -noout -in /etc/etcd/ssl/client.pem
@@ -108,9 +108,9 @@
 
   or
   ```bash
-  $ ls -1 /etc/etcd/ssl/*.pem \
-         | grep -Ev '\-key.pem$' \
-         | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+  $ ls -1 /etc/etcd/ssl/*.pem |
+          grep -Ev '\-key.pem$' |
+          xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
   ```
 
 ### backup
@@ -134,14 +134,14 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
   or
   ```bash
   $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-    -> sudo rm -rf /etc/kubernetes/pki/${i}.{key,crt};
-    -> done
+      sudo rm -rf /etc/kubernetes/pki/${i}.{key,crt};
+    done
   ```
 
 - kubeconfig
   ```bash
   $ for i in admin kubelet controller-manager scheduler; do
-    sudo mv /etc/kubernetes/${i}.conf{,.orig};
+      sudo mv /etc/kubernetes/${i}.conf{,.orig};
     done
   ```
 
@@ -158,8 +158,8 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
     or
     ```bash
     $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-      -> sudo cp ~/k8s-cert-expired/${i}.{key,crt} /etc/kubernetes/pki/
-      -> done
+        sudo cp ~/k8s-cert-expired/${i}.{key,crt} /etc/kubernetes/pki/
+      done
     ```
 
   - `/etc/kubernetes/*.conf`
@@ -207,7 +207,7 @@ $ sudo cp -r /var/lib/kubelet/config.yaml{,.orig}
 ```bash
 $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
    sudo kubeadm alpha certs renew ${i}
-   done
+  done
 certificate for serving the Kubernetes API renewed
 certificate for the API server to connect to kubelet renewed
 certificate for the front proxy client renewed
@@ -217,8 +217,8 @@ certificate for the front proxy client renewed
 or
 ```bash
 $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-   sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
-   done
+    sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
+  done
 certificate for serving the Kubernetes API renewed
 certificate for the API server to connect to kubelet renewed
 certificate for the front proxy client renewed
@@ -227,8 +227,8 @@ certificate for the front proxy client renewed
 or
 ```bash
 $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
-   sudo kubeadm alpha certs renew ${i} --config=kubeadm-conf.yaml
-   done
+    sudo kubeadm alpha certs renew ${i} --config=kubeadm-conf.yaml
+  done
 certificate for serving the Kubernetes API renewed
 certificate for the API server to connect to kubelet renewed
 certificate for the front proxy client renewed
@@ -246,14 +246,14 @@ certificate for the front proxy client renewed
                  --rsync-path='sudo rsync' \
                  root@${leadIP}:"/etc/kubernetes/pki/${pkg}" \
                  /etc/kubernetes/pki/
-      done
+    done
   ```
 
 - verify
   ```bash
-  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
-             | egrep -v 'ca.crt$' \
-             | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+             egrep -v 'ca.crt$' |
+             xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
   bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver.crt
   notAfter=Sep 18 12:10:31 2021 GMT
   bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver-kubelet-client.crt
@@ -264,8 +264,8 @@ certificate for the front proxy client renewed
 
   or
   ```bash
-  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
-         | xargs -L 1 -t -i bash -c 'openssl x509 -in {} -noout -text |grep "Not "'
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+         xargs -L 1 -t -i bash -c 'openssl x509 -in {} -noout -text |grep "Not "'
   bash -c openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -text |grep "Not "
               Not Before: Sep 17 07:51:58 2019 GMT
               Not After : Sep 14 07:51:58 2029 GMT
@@ -368,10 +368,10 @@ $ sudo systemctl restart kubelet
   - kubernetes api (`load.balance.ip.address:6443`)
   ```bash
   $ echo -n |
-    -> openssl s_client -connect x.x.x.:6443 2>&1 |
-    -> sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' |
-    -> openssl x509 -text -noout |
-    -> grep Not
+         openssl s_client -connect x.x.x.:6443 2>&1 |
+         sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' |
+         openssl x509 -text -noout |
+         grep Not
               Not Before: Sep 17 07:51:58 2019 GMT
               Not After : Sep 21 09:09:00 2021 GMT
   ```
@@ -386,9 +386,9 @@ $ sudo cp -r /var/lib/kubelet/pki{,.orig}
 
 ### restart `kubelet`
 ```bash
-sudo rm -rf /var/lib/kubelet/pki/*
-sudo systemctl restart kubelet
-sudo systemctl status kubelet.service
+$ sudo rm -rf /var/lib/kubelet/pki/*
+$ sudo systemctl restart kubelet
+$ sudo systemctl status kubelet.service
 ```
 
 ## certificates generation
@@ -477,7 +477,69 @@ ca.crt  cert.pfx  client.crt  client.key
           Subject: O=system:masters, CN=kubernetes-admin
   ```
 
-## renew kubeconfig
+## renew data in kubeconfig
+
+{% hint style='tip' %}
+> subjects:
+> - config:
+>   - `controller-manager.conf` : `Subject: CN=system:kube-controller-manager`
+>   - `admin.conf` : `Subject: O=system:masters, CN=kubernetes-admin`
+>   - `scheduler.conf` : `Subject: O=system:masters, CN=system:kube-scheduler`
+>   - `kubelet.conf` : `Subject: O=system:nodes, CN=system:node:kubernetes-master01` ( `CN=system:node:<HOSTNAME>` )
+> - certs:
+>   - `front-proxy-client.crt` : `Subject: CN=front-proxy-client`
+>   - `server.crt` : `Subject: CN=kubernetes-master01` ( `CN=<HOSTNAME>` )
+>   - `peer.crt` : `Subject: CN=kubernetes-master01` ( `CN=<HOSTNAME>` )
+>   - `healthcheck-client.crt` : `Subject: O=system:masters, CN=kube-etcd-healthcheck-client`
+>   - `apiserver.crt` : `Subject: CN=kube-apiserver`
+>   - `apiserver-kubelet-client.crt` : `Subject: O=system:masters, CN=kube-apiserver-kubelet-client`
+>   - `apiserver-etcd-client.crt` : `Subject: O=system:masters, CN=kube-apiserver-etcd-client`
+{% endhint %}
+
+- details:
+  - conf:
+    ```bash
+    $ find /etc/kubernetes/ -type f -name "*.conf" -print |
+           grep -Ev 'kubelet.conf$' |
+           xargs -L1 -t -i bash -c "sudo grep 'client-certificate-data' {} \
+                                         | awk '{print \$2}' \
+                                         | base64 -d \
+                                         | openssl x509 -noout -text \
+                                         | grep --color=always Subject\: \
+                                   "
+    bash -c sudo grep 'client-certificate-data' /etc/kubernetes/controller-manager.conf | awk '{print $2}' | base64 -d | openssl x509 -noout -text | grep --color=always Subject\:
+            Subject: CN=system:kube-controller-manager
+    bash -c sudo grep 'client-certificate-data' /etc/kubernetes/admin.conf | awk '{print $2}' | base64 -d | openssl x509 -noout -text | grep --color=always Subject\:
+            Subject: O=system:masters, CN=kubernetes-admin
+    bash -c sudo grep 'client-certificate-data' /etc/kubernetes/scheduler.conf | awk '{print $2}' | base64 -d | openssl x509 -noout -text | grep --color=always Subject\:
+            Subject: O=system:masters, CN=system:kube-scheduler
+
+    $ sudo openssl x509 -in $(sudo grep 'client-certificate' /etc/kubernetes/kubelet.conf |
+           awk '{print $2}') -text -noout | grep --color=always Subject\:
+            Subject: O=system:nodes, CN=system:node:kubernetes-master01
+    ```
+
+  - certs
+    ```bash
+    $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+          grep -Ev 'ca.crt$' |
+          xargs -L1 -t -i bash -c 'openssl x509 -noout -text -in {} | grep --color=always Subject\:'
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep --color=always Subject\:
+            Subject: CN=front-proxy-client
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/server.crt | grep --color=always Subject\:
+            Subject: CN=kubernetes-master01
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/peer.crt | grep --color=always Subject\:
+            Subject: CN=kubernetes-master01
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/healthcheck-client.crt | grep --color=always Subject\:
+    ubject: O=system:masters, CN=kube-apiserver-etcd-client
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep --color=always Subject\:
+            Subject: CN=kube-apiserver
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep --color=always Subject\:
+            Subject: O=system:masters, CN=kube-apiserver-kubelet-client
+    bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-etcd-client.crt | grep --color=always Subject\:
+            Subject: O=system:masters, CN=kube-apiserver-etcd-client
+    ```
+
 ### generate the new cert
 ```bash
 $ openssl req -subj "/O=system:masters/CN=kubernetes-admin" \
