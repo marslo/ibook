@@ -2,19 +2,26 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [renew master](#renew-master)
-  - [check info](#check-info)
-  - [backup](#backup)
-  - [renew cert](#renew-cert)
-  - [renew kubeconfig](#renew-kubeconfig)
-  - [Restart the master components](#restart-the-master-components)
-  - [restart kubelet service](#restart-kubelet-service)
-  - [verify](#verify)
-- [renew working node](#renew-working-node)
-  - [backup](#backup-1)
-  - [restart `kubelet`](#restart-kubelet)
-- [certificates generation](#certificates-generation)
-  - [pfx](#pfx)
+- [renew certs and kubeconfig](#renew-certs-and-kubeconfig)
+  - [renew master](#renew-master)
+    - [check info](#check-info)
+    - [backup](#backup)
+    - [renew cert](#renew-cert)
+    - [renew kubeconfig](#renew-kubeconfig)
+    - [Restart the master components](#restart-the-master-components)
+    - [restart kubelet service](#restart-kubelet-service)
+    - [verify](#verify)
+  - [renew working node](#renew-working-node)
+    - [backup](#backup-1)
+    - [restart `kubelet`](#restart-kubelet)
+  - [certificates generation](#certificates-generation)
+    - [pfx](#pfx)
+- [renew kubeconfig only](#renew-kubeconfig-only)
+  - [environment check](#environment-check)
+  - [renew kubeconfig](#renew-kubeconfig-1)
+    - [generate the new cert](#generate-the-new-cert)
+    - [signing the key](#signing-the-key)
+    - [update kubeconfig](#update-kubeconfig)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -24,6 +31,7 @@
 >
 > stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
 
+# renew certs and kubeconfig
 ## renew master
 > reference:
 > - [Renewing Kubernetes 1.14.x cluster certificates](https://www.ibm.com/support/knowledgecenter/SSCKRH_1.0.3/platform/t_certificate_renewal_k14.html)
@@ -246,11 +254,11 @@ certificate for the front proxy client renewed
   $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
              | egrep -v 'ca.crt$' \
              | xargs -L 1 -t  -i bash -c 'openssl x509 -enddate -noout -in {}'
-  bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver.crt 
+  bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver.crt
   notAfter=Sep 18 12:10:31 2021 GMT
-  bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver-kubelet-client.crt 
+  bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/apiserver-kubelet-client.crt
   notAfter=Sep 18 12:10:31 2021 GMT
-  bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/front-proxy-client.crt 
+  bash -c openssl x509 -enddate -noout -in /etc/kubernetes/pki/front-proxy-client.crt
   notAfter=Sep 18 12:10:31 2021 GMT
   ```
 
@@ -258,19 +266,19 @@ certificate for the front proxy client renewed
   ```bash
   $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print \
          | xargs -L 1 -t -i bash -c 'openssl x509 -in {} -noout -text |grep "Not "'
-  bash -c openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -text |grep "Not " 
+  bash -c openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -text |grep "Not "
               Not Before: Sep 17 07:51:58 2019 GMT
               Not After : Sep 14 07:51:58 2029 GMT
-  bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-ca.crt -noout -text |grep "Not " 
+  bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-ca.crt -noout -text |grep "Not "
               Not Before: Sep 17 07:52:00 2019 GMT
               Not After : Sep 14 07:52:00 2029 GMT
-  bash -c openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -text |grep "Not " 
+  bash -c openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -text |grep "Not "
               Not Before: Sep 17 07:51:58 2019 GMT
               Not After : Sep 18 12:10:31 2021 GMT
-  bash -c openssl x509 -in /etc/kubernetes/pki/apiserver-kubelet-client.crt -noout -text |grep "Not " 
+  bash -c openssl x509 -in /etc/kubernetes/pki/apiserver-kubelet-client.crt -noout -text |grep "Not "
               Not Before: Sep 17 07:51:58 2019 GMT
               Not After : Sep 18 12:10:31 2021 GMT
-  bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-client.crt -noout -text |grep "Not " 
+  bash -c openssl x509 -in /etc/kubernetes/pki/front-proxy-client.crt -noout -text |grep "Not "
               Not Before: Sep 17 07:52:00 2019 GMT
               Not After : Sep 18 12:10:31 2021 GMT
   ```
@@ -320,7 +328,7 @@ $ sudo kubeadm --config kubeadm-conf.yaml init phase kubeconfig all
 | `config`           | `~/.kube` |
 
 
-### Restart the master components
+### [Restart the master components](https://stackoverflow.com/a/62911194)
 ```bash
 $ sudo kill -s SIGHUP $(pidof kube-apiserver)
 $ sudo kill -s SIGHUP $(pidof kube-controller-manager)
@@ -399,8 +407,161 @@ $ ls
 ca.crt  cert.pfx  client.crt  client.key
 ```
 
-## reference
+# renew kubeconfig only
+## environment check
+- kubectl version
+  ```bash
+  $ kubectl version --short
+  Client Version: v1.12.3
+  Server Version: v1.12.3
+  ```
+
+- certs
+  ```bash
+  $ find /etc/kubernetes/pki/ -type f -name "*.crt" -print |
+         egrep -v 'ca.crt$' |
+         xargs -L 1 -t  -i bash -c 'openssl x509 -noout -text -in {} | grep After'
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/front-proxy-client.crt | grep Not
+              Not After : May 28 11:48:39 2022 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/server.crt | grep Not
+              Not After : May 28 11:48:40 2022 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/peer.crt | grep Not
+              Not After : May 28 11:48:41 2022 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/etcd/healthcheck-client.crt | grep Not
+              Not After : May 28 11:48:40 2022 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep Not
+              Not After : May 28 11:48:37 2022 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-kubelet-client.crt | grep Not
+              Not After : May 28 11:48:38 2022 GMT
+  bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-etcd-client.crt | grep Not
+              Not After : May 28 11:48:42 2022 GMT
+  ```
+
+- `kubectl config view`
+  ```bash
+  $ kubectl config view
+  apiVersion: v1
+  clusters:
+  - cluster:
+      certificate-authority-data: DATA+OMITTED
+      server: https://1.2.3.4:1234
+    name: kubernetes
+  contexts:
+  - context:
+      cluster: kubernetes
+      user: kubernetes-admin
+    name: kubernetes-admin@kubernetes
+  current-context: kubernetes-admin@kubernetes
+  kind: Config
+  preferences: {}
+  users:
+  - name: kubernetes-admin
+    user:
+      client-certificate-data: REDACTED
+      client-key-data: REDACTED
+  ```
+
+- kubeconfig
+  ```bash
+  $ kubectl --kubeconfig=config get namespace
+  error: the server doesn't have a resource type "namespace"
+
+  $ sudo grep 'client-certificate-data' $HOME/.kube/config |
+         awk '{print $2}' |
+         base64 -d |
+         openssl x509 -text -noout |
+         grep -E 'Not|Subject:'
+
+              Not Before: Dec  8 05:43:01 2020 GMT
+              Not After : Dec  8 05:43:01 2021 GMT
+          Subject: O=system:masters, CN=kubernetes-admin
+  ```
+
+## renew kubeconfig
+### generate the new cert
+```bash
+$ openssl req -subj "/O=system:masters/CN=kubernetes-admin" \
+              -new \
+              -newkey rsa:2048 \
+              -nodes \
+              -out marslo.csr \
+              -keyout marslo.key  \
+              -out marslo.csr
+```
+
+### signing the key
+```bash
+$ sudo openssl x509 -req \
+                    -in marslo.csr \
+                    -CA /etc/kubernetes/pki/ca.crt \
+                    -CAkey /etc/kubernetes/pki/ca.key \
+                    -CAcreateserial \
+                    -out marslo.crt \
+                    -days 365 \
+                    -sha256
+```
+- result
+  ```bash
+  $ ls -Altrh . /etc/kubernetes/pki/ca*
+  -rw------- 1 root root 1.7K Dec  6  2018 ca.key
+  -rw-r--r-- 1 root root 1.1K Dec  6  2018 ca.crt
+  -rw-r--r-- 1 root root   17 Dec 15 01:31 ca.srl
+
+  $ ls -Altrh ./
+  -rw-rw-r-- 1 devops devops 1.7K Dec 15 01:31 marslo.key
+  -rw-rw-r-- 1 devops devops  936 Dec 15 01:31 marslo.csr
+  -rw-r--r-- 1 root   root   1021 Dec 15 01:31 marslo.crt
+
+  $ sudo openssl x509 -in marslo.crt -text -noout | grep -E 'Subject:|Not'
+              Not Before: Dec 15 09:31:55 2021 GMT
+              Not After : Dec 15 09:31:55 2022 GMT
+          Subject: O=system:masters, CN=kubernetes-admin
+  ```
+
+### update kubeconfig
+#### copy config
+```bash
+$ cp ~/.kube/config config
+
+$ kubectl --kubeconfig=config get ns
+error: You must be logged in to the server (Unauthorized)
+```
+
+#### via `kubectl config`
+```bash
+$ kubectl config set-credentials kubernetes-admin \
+                 --embed-certs=true \
+                 --certificate-authority=/etc/kubernetes/pki/ca.crt \
+                 --client-certificate=./marslo.crt \
+                 --client-key=./marslo.key \
+                 --kubeconfig=config
+
+$ kubectl config set-context kubernetes-admin@kubernetes \
+                 --cluster=kubernetes \
+                 --user=kubernetes-admin
+```
+
+#### manual update via `base64`
+```bash
+$ sed -re "s/(.*client-certificate-data:)(.*)$/\1 $(cat marslo.crt | base64 -w0)/g" -i config
+$ sed -re "s/(.*client-key-data:)(.*)$/\1 $(cat marslo.key| base64 -w0)/g" -i config
+```
+
+#### vaildate
+```bash
+$ kubectl --kubeconfig=config get ns | grep kube
+kube-public            Active   3y10d
+kube-system            Active   3y10d
+```
+
+# reference
 - [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
 - [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
 - [Bootstrapping Kubernetes Clusters with kubeadm](https://codefarm.me/2019/01/28/bootstrapping-kubernetes-clusters-with-kubeadm/)
 - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+- [Renewing Kubernetes cluster certificates 1.0.2](https://www.ibm.com/docs/en/fci/1.0.2?topic=kubernetes-renewing-cluster-certificates)
+- [Renewing Kubernetes cluster certificates 1.1.0](https://www.ibm.com/docs/en/fci/1.1.0?topic=kubernetes-renewing-cluster-certificates)
+- [Renewing Kubernetes 1.10.x cluster certificates](https://www.ibm.com/docs/en/fci/1.0.3?topic=kubernetes-renewing-110x-cluster-certificates)
+- [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
+- [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
+- [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
