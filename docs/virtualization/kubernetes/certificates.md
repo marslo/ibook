@@ -394,10 +394,15 @@ $ sudo systemctl status kubelet.service
 ## certificates generation
 ### pfx
 ```bash
-$ cat ~/.kube/config | grep certificate-authority-data | awk '{print $2}' | base64 -d > ca.crt
-$ cat ~/.kube/config | grep client-certificate-data | awk '{print $2}' | base64 -d > client.crt
-$ cat ~/.kube/config | grep client-key-data | awk '{print $2}' | base64 -d > client.key
-
+$ grep certificate-authority-data ~/.kube/config |
+       awk '{print $2}' |
+       base64 -d > ca.crt
+$ grep client-certificate-data ~/.kube/config |
+       awk '{print $2}' |
+       base64 -d > client.crt
+$ grep client-key-data ~/.kube/config |
+       awk '{print $2}' |
+       base64 -d > client.key
 
 $ openssl pkcs12 -export -out cert.pfx -inkey client.key -in client.crt -certfile ca.crt
 Enter Export Password: marslo
@@ -437,8 +442,21 @@ ca.crt  cert.pfx  client.crt  client.key
               Not After : May 28 11:48:42 2022 GMT
   ```
 
-- `kubectl config view`
+- [`kubectl config view`](https://networkandcode.github.io/kubernetes/2020/03/16/cluster-admin.html)
   ```bash
+  $ kubectl config get-contexts
+  CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+  *         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin
+
+  $ kubectl config current-context
+  kubernetes-admin@kubernetes
+
+  $ kubectl config view -o jsonpath={.contexts}; echo
+  [map[name:kubernetes-admin@kubernetes context:map[user:kubernetes-admin cluster:kubernetes]]]
+
+  $ kubectl config view -o jsonpath={.users}; echo
+  [map[name:kubernetes-admin user:map[client-certificate-data:REDACTED client-key-data:REDACTED]]]
+
   $ kubectl config view
   apiVersion: v1
   clusters:
@@ -478,6 +496,9 @@ ca.crt  cert.pfx  client.crt  client.key
   ```
 
 ## renew data in kubeconfig
+> references:
+> - [Configure certificates for user accounts](https://kubernetes.io/docs/setup/best-practices/certificates/#configure-certificates-for-user-accounts)
+> - [kubernetes > about the cluster-admin cluster role binding](https://networkandcode.github.io/kubernetes/2020/03/16/cluster-admin.html)
 
 {% hint style='tip' %}
 > subjects:
@@ -497,8 +518,22 @@ ca.crt  cert.pfx  client.crt  client.key
 {% endhint %}
 
 - details:
+
+  > reference:
+  > - [Get user and group from current-context](https://stackoverflow.com/questions/61157272/what-role-and-rolebinding-is-kubectl-associated-to)
+
   - conf:
     ```bash
+    # current kubeconfig context
+    $ kubectl config view --raw -o json |
+              jq ".users[] | select(.name==\"$(kubectl config view -o jsonpath='{.users[].name}')\")" |
+              jq -r '.user["client-certificate-data"]' |
+              base64 -d |
+              openssl x509 -text |
+              grep "Subject:"
+            Subject: O=system:masters, CN=kubernetes-admin
+
+    # for all confs
     $ find /etc/kubernetes/ -type f -name "*.conf" -print |
            grep -Ev 'kubelet.conf$' |
            xargs -L1 -t -i bash -c "sudo grep 'client-certificate-data' {} \
@@ -538,6 +573,17 @@ ca.crt  cert.pfx  client.crt  client.key
             Subject: O=system:masters, CN=kube-apiserver-kubelet-client
     bash -c openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver-etcd-client.crt | grep --color=always Subject\:
             Subject: O=system:masters, CN=kube-apiserver-etcd-client
+    ```
+
+  - about `system:masters`
+    ```bash
+    $ kubectl get clusterrolebinding cluster-admin -o yaml
+    $ kubectl get clusterrolebinding cluster-admin -o json | jq -r .subjects[0].name
+    system:masters
+
+    $ kubectl get clusterrolebindings -o json |
+              jq -r '.items[] | select(.subjects[0].kind=="Group") | select(.subjects[0].name=="system:masters") | .metadata.name'
+    cluster-admin
     ```
 
 ### generate the new cert
@@ -595,7 +641,38 @@ $ kubectl --kubeconfig=config get ns
 error: You must be logged in to the server (Unauthorized)
 ```
 
+#### [via `kubeadm alpha` to renew all config](https://www.cnblogs.com/justmine/p/11314843.html)
+
+- kubernetes older version ( 1.15- )
+  ```bash
+  $ sudo mkdir -p /etc/kubernetes/config.backup
+  $ sudo mv /etc/kuberetens/*.conf /etc/kubernetes/config.backup
+  $ sudo kubeadm alpha phase kubeconfig all
+  ```
+
+  - renew all certs
+    ```bash
+    $ sudo mkdir -p /etc/kubernetes/pki/backups
+    $ for _i in apiserver front-proxy-client healthcheck-client server peer; do
+        sudo mv /etc/kubernetes/pki/${_i}.* /etc/kubernetes/pki/backups
+      done
+    $ sudo kubeadm alpha phase certs all
+    ```
+
+- v1.15+
+  ```bash
+  $ sudo kubeadm alpha certs renew all
+  ```
+
+  - renew all certs
+    ```bash
+    $ sudo kubeadm alpha certs renew all
+    ```
+
 #### via `kubectl config`
+> reference:
+> - [kubectlp-command#config](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#config)
+
 ```bash
 $ kubectl config set-credentials kubernetes-admin \
                  --embed-certs=true \
@@ -633,3 +710,7 @@ kube-system            Active   3y10d
 - [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
 - [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
 - [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
+- [K8S 集群中的认证、授权与 kubeconfig](http://www.xuyasong.com/?p=2054)
+- [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
+- [Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+- [Kubernetes – KUBECONFIG and Context](https://theithollow.com/2019/02/11/kubernetes-kubeconfig-and-context/)

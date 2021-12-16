@@ -201,3 +201,7 @@ $ for i in {2..3}; do
         master0${i}:${etcdSSLPath}/
 done
 ```
+
+## references
+- [使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+- [Creating a cluster with kubeadm v1.21](https://v1-21.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
