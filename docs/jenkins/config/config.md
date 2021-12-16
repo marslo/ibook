@@ -24,6 +24,14 @@
 
 ### [Properties in Jenkins Core for `JAVA_OPTS`](https://www.jenkins.io/doc/book/managing/system-properties/#properties-in-jenkins-core)
 
+
+#### disable the 
+```xml
+<useSecurity>true</useSecurity>
+<authorizationStrategy class="hudson.security.AuthorizationStrategy$Unsecured"/>
+<securityRealm class="hudson.security.SecurityRealm$None"/>
+```
+
 #### [Disabling CSRF Protection](https://www.jenkins.io/doc/book/security/csrf-protection/)
 > reference:
 > - [CSRF Protection](https://www.jenkins.io/doc/book/security/csrf-protection/)
