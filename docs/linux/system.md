@@ -191,6 +191,35 @@ $ sudo bash -c "/usr/bin/sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc
 $ curl ifconfig.me
 ```
 
+#### [CONFINED AND UNCONFINED USERS](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-targeted_policy-confined_and_unconfined_users)
+> references:
+> - [SELinux笔记](https://my.oschina.net/u/589241/blog/2050011)
+> - [SELinux/Users and logins](https://wiki.gentoo.org/wiki/SELinux/Users_and_logins)
+
+- installation
+  ```bash
+  $ yum -y install setools-console
+  ```
+- setup for exiting account
+  ```bash
+  $ semanage login -a -s staff_u <account>
+
+  # or
+  $ semanage login -a -s staff_u -r s0-s0:c0.c100 <account>
+  ```
+- Modifying an existing mapping
+  ```bash
+  $ semanage login -m -s sysadm_u <account>
+  ```
+- delete a mapping
+  ```bash
+  $ semanage login -d <account>
+  ```
+- list mappings
+  ```bash
+  $ semanage user -l
+  ```
+
 ### check hardware
 #### check CPU support 64 bit or not
 ```bash
