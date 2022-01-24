@@ -24,6 +24,23 @@
 > - [Installing from local packages](https://pip.pypa.io/en/stable/user_guide/#installing-from-local-packages)
 > - [pip list](https://pip.pypa.io/en/stable/reference/pip_list/)
 
+## [installation via source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
+- basic environment prepare
+  ```bash
+  $ sudo dnf install gcc openssl-devel bzip2-devel libffi-devel
+  ```
+- download source code
+  ```bash
+  $ curl -O https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz
+  $ tar xzf Python-3.8.3.tgz
+  ```
+- compile and install
+  ```bash
+  $ cd Python-3.8.3
+  $ sudo ./configure --enable-optimizations
+  $ sudo make altinstall
+  ```
+
 ## environment in MacOS
 ### [setup default python](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
 ```bash
@@ -255,7 +272,7 @@ abort() called
   tcl-tk: stable 8.6.11 (bottled) [keg-only]
 
   $ python
-  Python 3.9.1 (v3.9.1:1e5d33e9b9, Dec  7 2020, 12:10:52) 
+  Python 3.9.1 (v3.9.1:1e5d33e9b9, Dec  7 2020, 12:10:52)
   [Clang 6.0 (clang-600.0.57)] on darwin
   Type "help", "copyright", "credits" or "license()" for more information.
   >>> import tkinter as tk
