@@ -39,13 +39,21 @@ useful plugins
 - [gitbook-plugin-fbqx](https://ymcatar.gitbooks.io/gitbook-test/content/testing_fbqx.html)
 {% endhint %}
 
+
 ## `gitbook-cli`
 ### installation
 
 - install
   ```bash
+  # mac
   $ brew install node
-  $ npm i -g gitbook-cli [--save-dev]
+
+  # RHEL8 (https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-centos-8)
+  $ sudo dnf module list nodejs
+  $ sudo dnf module enable nodejs:12
+  $ sudo dnf install nodejs
+
+  $ sudo npm i -g gitbook-cli [--save-dev]
   ```
 
 - verify
@@ -107,6 +115,20 @@ useful plugins
 
     Error: Couldn't locate plugins "search-plus, simple-page-toc, github, github-buttons, prism, prism-themes, advanced-emoji, anchors, include-codeblock, ace, emphasize, katex, splitter, mermaid-gb3, tbfed-pagefooter, sectionx, local-video, anchor-navigation-ex, favicon, todo, alerts, include-csv, puml, sharing-plus, image-captions, donate, toggle-chapters, navigator, downloadpdf", Run 'gitbook install' to install plugins from registry.
     ```
+
+#### gitbook install with proxy
+> references:
+> - [tbook install is not working when via proxy #33](https://github.com/GitbookIO/gitbook-cli/issues/33)
+
+{% hint style='tip' %}
+> Gitbook uses npmi, which requires npm-global, and npm-global further requires the currently installed npm on your machine.
+{% endhint %}
+
+```bash
+$ npm config set strict-ssl false
+$ npm config set proxy $http_proxy -g
+$ npm config set https-proxy $https_proxy -g
+```
 
 ## gitbook format
 ### [hints](https://github.com/GitbookIO/plugin-hints)
@@ -226,7 +248,6 @@ warning
 | :u7121:            | `:u7121:`            |
 | :white_check_mark: | `:white_check_mark:` |
 | :four_leaf_clover: | `:four_leaf_clover:` |
-
 
 ## Q&A
 ### `if (cb) cb.apply(this, arguments)`
