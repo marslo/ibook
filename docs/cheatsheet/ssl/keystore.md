@@ -14,7 +14,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
 {% hint style='tip' %}
 > references:
 > - [keytool - Key and Certificate Management Tool](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/keytool.html)
@@ -32,6 +31,8 @@
 > - [The Most Common Java Keytool Keystore Commands](https://www.sslshopper.com/article-most-common-java-keytool-keystore-commands.html)
 > - [Error unable to find valid certification path](https://discuss.elastic.co/t/error-unable-to-find-valid-certification-path/122304)
 > - [Java Keytool - Create Keystore](https://support.globalsign.com/digital-certificates/digital-certificate-installation/java-keytool-create-keystore)
+> - [ARTIFACTORY: How to Resolve an “unable to find valid certification path to requested target” Error](https://jfrog.com/knowledge-base/how-to-resolve-unable-to-find-valid-certification-path-to-requested-target-error/)
+> - [Working with Certificates and SSL](https://docs.oracle.com/cd/E19830-01/819-4712/ablqw/index.html)
 
 {% endhint %}
 

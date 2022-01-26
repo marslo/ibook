@@ -77,22 +77,22 @@ $ curl -sSg \
   ```
 
   - get all virtual repos, and repo name starts with '<project>'
-		```bash
-		$ curl -sSg \
-					-X GET https://my.artifactory.com/artifactory/api/repositories |
-					jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
-		```
-	- get defaultDeployRepo for all virutal repos who named starts with '<project>'
     ```bash
-		$ for i in $(curl -sSg \
-											-XGET https://my.artifactory.com/artifactory/api/repositories |
-											jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
-			); do
-				echo "${i} : "
-				curl -sSg --netrc-file /home/marslo/.marslo/.netrc -XGET https://my.artifactory.com/artifactory/api/repositories/${i} |
-						jq .defaultDeploymentRepo
-				echo ' '
-			done
+    $ curl -sSg \
+          -X GET https://my.artifactory.com/artifactory/api/repositories |
+          jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
+    ```
+  - get defaultDeployRepo for all virutal repos who named starts with '<project>'
+    ```bash
+    $ for i in $(curl -sSg \
+                      -XGET https://my.artifactory.com/artifactory/api/repositories |
+                      jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
+      ); do
+        echo "${i} : "
+        curl -sSg --netrc-file /home/marslo/.marslo/.netrc -XGET https://my.artifactory.com/artifactory/api/repositories/${i} |
+            jq .defaultDeploymentRepo
+        echo ' '
+      done
     ```
 
 - get all remote repos
