@@ -5,6 +5,7 @@
 - [reference](#reference)
   - [integration with pipeline](#integration-with-pipeline)
   - [aql](#aql)
+  - [Artifactory SSL Certification](#artifactory-ssl-certification)
 - [configuration](#configuration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

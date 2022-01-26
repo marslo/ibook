@@ -89,8 +89,10 @@ $ curl -sSg \
                       jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
       ); do
         echo "${i} : "
-        curl -sSg --netrc-file /home/marslo/.marslo/.netrc -XGET https://my.artifactory.com/artifactory/api/repositories/${i} |
-            jq .defaultDeploymentRepo
+        curl -sSg \
+             --netrc-file /home/marslo/.marslo/.netrc \
+             -XGET https://my.artifactory.com/artifactory/api/repositories/${i} |
+          jq .defaultDeploymentRepo
         echo ' '
       done
     ```
