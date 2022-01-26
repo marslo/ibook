@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [installation via source code](#installation-via-source-code)
 - [environment in MacOS](#environment-in-macos)
   - [setup default python](#setup-default-python)
   - [`pip.conf`](#pipconf)
