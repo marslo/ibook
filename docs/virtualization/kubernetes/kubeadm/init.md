@@ -4,6 +4,7 @@
 
 - [certificate](#certificate)
   - [extend etcd](#extend-etcd)
+- [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

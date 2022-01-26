@@ -27,7 +27,7 @@
     "anchors",
     "splitter",
     "favicon",
-    "todo",
+    "- todo",
     "flexible-alerts",
     "-sharing",
     "sharing-plus",
@@ -46,7 +46,6 @@
     "emphasize",
     "tbfed-pagefooter",
     "image-captions",
-    "todo",
     "github-buttons",
     "hide-element",
     "accordion"
