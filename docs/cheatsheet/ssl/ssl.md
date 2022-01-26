@@ -25,6 +25,9 @@
 
 {% hint style='tip' %}
 > reference:
+> - [* cheatsheet: Check SSL Certificate with OpenSSL](https://www.howtouselinux.com/post/openssl-command-to-generate-view-check-certificate)
+> - [* cheatsheet: Check SSL Certificate Chain with OpenSSL Examples](https://www.howtouselinux.com/post/certificate-chain)
+> - [Understanding X509 Certificate with Openssl Command](https://www.howtouselinux.com/post/understanding-x509-certificate-with-openssl-command)
 > - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
 > - [generating SSL Certificates](https://github.com/nats-io/nats-operator/issues/119#issuecomment-462538507)
 > - [sethvargo/create-certs.sh](https://gist.github.com/sethvargo/81227d2316207b7bd110df328d83fad8)
@@ -377,6 +380,120 @@ ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/server.crt;
 ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/server.key;
 ```
 
+# cheatsheet
+### generate private key and csr
+```bash
+$ openssl genrsa -out privateKey.key 2048
+$ openssl req -new -key privateKey.key -out CSR.csr
+
+# or
+$ openssl req -out CSR.csr \
+              -new -newkey rsa:2048 \
+              -nodes \
+              -keyout privateKey.key \
+              -subj "/C=US/ST=Florida/L=Saint Petersburg/O=Your Company, Inc./OU=IT/CN=yourdomain.com"
+```
+
+{% hint style='tip' %}
+need to input the following info to generate CSR :
+- ``Country Name``: 2-digit country code where our organization is legally located.
+- ``State/Province``: Write the full name of the state where the organization is legally located.
+- ``City``: Write the full name of the city where our organization is legally located.
+- ``Organization Name``: Write the legal name of our organization.
+- ``Organization Unit``: Name of the department
+- ``Common Name``: Fully Qualified Domain Name
+{% endhint %}
+
+### generate a self-signed certificate
+```bash
+$ openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out certificate.crt
+```
+
+### check ssl certificate
+- check private key info
+  ```bash
+  $ openssl rsa -text -in privateKey.key -noout
+  ```
+- check csr info
+  ```bash
+  $ openssl req -text -in CSR.csr -noout
+  ```
+- view ssl certificate info
+  ```bash
+  $ openssl x509 -text -in certificate.crt -noout
+  ```
+
+### check who has issued the ssl certificate
+```bash
+$ echo -n |
+       openssl s_client -connect <domain.com>:<port> 2>/dev/null |
+       openssl x509 -noout -issuer
+```
+
+### check whom the ssl certificate is issued to
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509 -noout -subject
+```
+
+### check for what dates the ssl certificate is valid
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509 -noout -dates
+notBefore=Sep  8 00:00:00 2021 GMT
+notAfter=Aug 18 23:59:59 2022 GMT
+```
+
+### show multiple informations
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509 -noout -dates -subject -issuer
+```
+
+### show fingerprint
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509 -noout -fingerprint
+```
+
+### extract all information from the ssl certificate (decoded)
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509 -noout -text
+```
+
+### show the ssl certificate
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+```
+
+### check ssl certificate expiration date
+```bash
+$ echo -n |
+       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl x509 -noout -dates
+# or
+$ openssl x509 -enddate -noout -in /path/to/name.pem
+```
+
+### verifying the keys match
+```bash
+$ openssl pkey -pubout -in privateKey.key | openssl sha256
+# or
+$ openssl req -pubkey -in CSR.csr -noout | openssl sha256
+# or
+$ openssl x509 -pubkey -in certificate.crt -noout | openssl sha256
+```
 # manage certificate in OS (client)
 ## OSX
 ### add

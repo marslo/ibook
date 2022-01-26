@@ -56,6 +56,67 @@
   ```
 <!--endsec-->
 
+### Artifactory SSL Certification
+> - [ARTIFACTORY: How to Resolve an “unable to find valid certification path to requested target” Error](https://jfrog.com/knowledge-base/how-to-resolve-unable-to-find-valid-certification-path-to-requested-target-error/)
+> - [Using TLS Certificates as a Client](https://www.jfrog.com/confluence/display/JFROG/Using+TLS+Certificates+as+a+Client)
+> - [Working with Certificates and SSL](https://docs.oracle.com/cd/E19830-01/819-4712/ablqw/index.html)
+> - [ibook : ssl/keystore](../cheatsheet/ssl/keystore.html)
+
+#### get remote cert
+```bash
+$ openssl s_client -showcerts -connect <domain.com>:<port>
+
+#i.e.
+$ echo -n |
+       openssl s_client -connect <domain.com>:<port> -debug |
+       sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > <domain>.crt
+# or
+$ keytool -printcert \
+          -rfc \
+          -sslserver <domain.com>:<port> > <domain>.crt
+# or
+# https://www.howtouselinux.com/post/openssl-command-to-generate-view-check-certificate
+$ echo -n |
+       openssl s_client \
+              [-servername <domain.com>] \
+              -connect <domain.com>:<port> 2>/dev/null |
+       openssl x509
+```
+
+{% hint style='tip' %}
+if `issue (i:)` is the same as `subject (s:)`. Therefore, this is the root certificat.
+i.e. :
+{% endhint %}
+
+```bash
+$ openssl s_client -connect cdn.redhat.com:443 -showcerts < /dev/null
+Certificate chain
+ 0 s:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = cdn.redhat.com
+   i:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Red Hat Entitlement Operations Authority, emailAddress = ca-support@redhat.com
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+ 1 s:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Red Hat Entitlement Operations Authority, emailAddress = ca-support@redhat.com
+   i:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+ 2 s:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
+   i:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
+```
+
+#### import to truststore
+```bash
+$ sudo keytool -importcert \
+               -keystore /usr/local/java/jdk1.8.0_60/jre/lib/security/cacerts \
+               -storepass changeit \
+               -file <domain>.crt \
+               -alias "<domain>-crt"
+```
+
 ## configuration
 #### allow partial folder in particular repo
 ![allow temp && demo, and disallow sprint && weekly](../screenshot/artifactory/repo-permission.png)
