@@ -80,6 +80,16 @@ $ kubectl get po -o json |
           jq -r '.items | sort_by(.spec.nodeName)[] | [.spec.nodeName,.metadata.name] | @tsv'
 ```
 
+### list pod details for failure pods
+```bash
+$ ns='my-namespace'
+$ keyword='tester'
+$ for p in $(k -n ${ns} get po --field-selector status.phase=Failed -o=name | /bin/grep ${keyword}); do
+    echo "--- ${p} --- ";
+    k -n ${ns} describe ${p} | grep -E 'Annotations|Status|Reason|Message';
+done
+```
+
 ## [sort via `--sort-by`](https://stackoverflow.com/a/39235513/2940319)
 
 ### sorting pods by nodeName
