@@ -23,6 +23,9 @@
 - [docker rm](#docker-rm)
 - [docker stats](#docker-stats)
 - [docker inspect](#docker-inspect)
+- [docker proxy](#docker-proxy)
+  - [docker build proxy](#docker-build-proxy)
+  - [docker pull proxy](#docker-pull-proxy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -338,3 +341,49 @@ $ docker inspect -f "{{.Path}} {{.Args}} ({{.Id}})" $(docker ps -a -q)
   $ docker inspect <name> -f "{{.Path}} {{.Args}} ({{.Id}})"
   ```
   {% endraw %}
+
+## docker proxy
+### [docker build proxy](https://docs.docker.com/network/proxy/)
+```bash
+$ mkdir -p ~/.docker
+$ cat > ~/.docker/config.json << EFO
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://proxy.exmaple.com:80",
+     "httpsProxy": "http://proxy.example.com:443",
+     "ftpProxy": "http://proxy.example.com:443",
+     "noProxy": "*.test.example.com,.example2.com,127.0.0.0/8"
+   }
+ }
+}
+EOF
+```
+
+- or via [`--build-arg`](https://dev.to/zyfa/setup-the-proxy-for-dockerfile-building--4jc8):
+  ```bash
+  $ docker build \
+           --build-arg http_proxy=http://proxy.example.com:80 \
+           --build-arg https_proxy=http://proxy.example.com:443 \
+          .
+  ```
+
+### [docker pull proxy](https://docs.docker.com/config/daemon/systemd/)
+```bash
+# for rootless mode
+$ mkdir -p ~/.config/systemd/user/docker.service.d/
+# or regular mode
+$ sudo mkdir -p /etc/systemd/system/docker.service.d
+
+$ sudo bash -c "cat > /etc/systemd/system/docker.service.d" << EOF
+[Service]
+Environment="HTTP_PROXY=http://proxy.example.com:80"
+Environment="HTTPS_PROXY=https://proxy.example.com:443"
+Environment="NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp"
+EOF
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+```

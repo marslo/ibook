@@ -6,6 +6,7 @@
   - [list all `Failed` pods](#list-all-failed-pods)
   - [filter via Node Name](#filter-via-node-name)
   - [filter via json](#filter-via-json)
+  - [list pod details for failure pods](#list-pod-details-for-failure-pods)
 - [sort via `--sort-by`](#sort-via---sort-by)
   - [sorting pods by nodeName](#sorting-pods-by-nodename)
   - [sort pods by restartCount](#sort-pods-by-restartcount)
