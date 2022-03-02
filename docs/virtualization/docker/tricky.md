@@ -263,3 +263,65 @@ $ cid=$(basename $(cat /proc/self/cpuset))
 $ VOLUME_OPTION="--volumes-from ${cid}:rw"
 $ docker run <...> ${VOLUME_OPTION}
 ```
+
+## [Docker-EE installtion in windows server](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
+> references:
+> - [Get started: Prep Windows for containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server)
+
+```powershell
+> Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+> Install-Package -Name docker -ProviderName DockerMsftProvider
+> Restart-Computer -Force
+>
+```
+- check
+  ```powershell
+  > Get-Package -Name Docker -ProviderName DockerMsftProvider
+  > Find-Package -Name Docker -ProviderName DockerMsftProvider
+  ```
+- upgrade
+  ```powershell
+  > Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
+  > Start-Service Docker
+  ```
+- pull and run windows image
+  ```powershell
+  > docker pull mcr.microsoft.com/dotnet/samples:dotnetapp-nanoserver-2009
+  > docker run mcr.microsoft.com/dotnet/samples:dotnetapp-nanoserver-2009
+  ```
+
+### [run linux container in windows server 2019](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
+- uninstall current docker-ee
+  ```powershell
+  > Uninstall-Package -Name docker -ProviderName DockerMSFTProvider
+  ```
+
+- enable Nested Virtualization by using Linux Virtual Machine running on Hyper-V.
+  ```powershell
+  > Get-VM WinContainerHost | Set-VMProcessor -ExposeVirtualizationExtensions $true
+  ```
+
+- install pre build docker-ee
+  ```powershell
+  > Install-Module DockerProvider
+  > Install-Package Docker -ProviderName DockerProvider -RequiredVersion preview
+  ```
+
+- Enable LinuxKit system for running Linux containers
+  ```powershell
+  [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "1", "Machine")
+  ```
+  - to Switch back to running Windows containers
+    ```powershell
+    [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "$null", "Machine")
+    ```
+
+- restart docker service
+  ```powershell```
+  > Restart-Service docker
+  ```
+
+- check
+  ```powershell
+  > docker run -it --rm ubuntu /bin/bash
+  ```
