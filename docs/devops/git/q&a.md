@@ -173,3 +173,22 @@ make: *** [credential-store.o] Error 1
 ```bash
 $ sudo yum install glibc-devel
 ```
+
+## others
+### diff-highlight: command not found
+- ubuntu
+  ```bash
+  $ dpkg -L git | grep diff-highlight
+  ```
+- centos/rhel
+  ```bash
+  $ rpm -ql git | grep diff-highlight
+  ```
+- arch
+  ```bash
+  $ pacman -Ql git | grep diff-highlight
+  ```
+
+```bash
+$ sudo ln -sf /path/to/diff-highlight /usr/bin/diff-highlight
+```
