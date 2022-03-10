@@ -16,6 +16,7 @@
     - [restart `kubelet`](#restart-kubelet)
   - [certificates generation](#certificates-generation)
     - [pfx](#pfx)
+  - [renew certs in v1.12.3](#renew-certs-in-v1123)
 - [renew kubeconfig only](#renew-kubeconfig-only)
   - [environment check](#environment-check)
   - [renew data in kubeconfig](#renew-data-in-kubeconfig)
@@ -411,6 +412,26 @@ Verifying - Enter Export Password: marslo
 $ ls
 ca.crt  cert.pfx  client.crt  client.key
 ```
+## renew certs in v1.12.3
+```bash
+$ kubeadm alpha phase certs [commands]
+```
+
+- Available Commands are:
+  - `all`                      Generates all PKI assets necessary to establish the control plane
+  - `apiserver`                Generates the certificate for serving the kubernetes API
+  - `apiserver-etcd-client`    Generates the client apiserver uses to access etcd
+  - `apiserver-kubelet-client` Generates the Client certificate for the API server to connect to kubelet
+  - `ca`                       Generates the self-signed kubernetes CA to provision identities for other kuberenets components
+  - `etcd-ca`                  Generates the self-signed CA to provision identities for etcd
+  - `etcd-healthcheck-client`  Generates the client certificate for liveness probes to healtcheck etcd
+  - `etcd-peer`                Generates the credentials for etcd nodes to communicate with each other
+  - `etcd-server`              Generates the certificate for serving etcd
+  - `front-proxy-ca`           Generates the self-signed CA to provision identities for front proxy
+  - `front-proxy-client`       Generates the client for the front proxy
+  - `renew`                    Renews certificates for a Kubernetes cluster
+  - `sa`                       Generates a private key for signing service account tokens along with its public key
+
 
 # renew kubeconfig only
 ## environment check

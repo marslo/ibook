@@ -10,6 +10,8 @@
 - [get tags](#get-tags)
   - [from artifactory](#from-artifactory)
   - [from docker hub](#from-docker-hub)
+- [Docker-EE installtion in windows server](#docker-ee-installtion-in-windows-server)
+  - [run linux container in windows server 2019](#run-linux-container-in-windows-server-2019)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
