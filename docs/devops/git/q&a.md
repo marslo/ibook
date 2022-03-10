@@ -12,6 +12,8 @@
   - [docbook2x-texi](#docbook2x-texi)
   - [xmlto](#xmlto)
   - [gnu/stubs-64.h](#gnustubs-64h)
+- [others](#others)
+  - [diff-highlight: command not found](#diff-highlight-command-not-found)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
