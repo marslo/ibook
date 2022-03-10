@@ -82,7 +82,8 @@ function rebuiltToc() {
 function updateRepo() {
   if [ "$(git rev-parse remotes/origin/${branch})" != "$(git -C ${target} rev-parse HEAD)" ]; then
     git -C "${target}" fetch origin --force "${branch}"
-    git -C "${target}" rebase -v refs/remotes/origin/${branch}
+    # git -C "${target}" rebase -v refs/remotes/origin/${branch}
+    git -C "${target}" reset --hard refs/remotes/origin/${branch}
   fi
 }
 
