@@ -309,6 +309,83 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 ```
 
 ### user management
+#### [sssd to use LDAP](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/configuring-sssd-to-use-ldap-and-require-tls-authentication_configuring-authentication-and-authorization-in-rhela)
+> references:
+> - [understanding sssd and its benefits](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/understanding-sssd-and-its-benefits_configuring-authentication-and-authorization-in-rhel)
+> - [additional configuration for identity and authentication providers](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/assembly_additional-configuration-for-identity-and-authentication-providers_configuring-authentication-and-authorization-in-rhel#proc_adjusting-how-sssd-interprets-full-user-names_assembly_additional-configuration-for-identity-and-authentication-providers)
+> - [sssd client-side view](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/assembly_sssd-client-side-view_configuring-authentication-and-authorization-in-rhel)
+> - [Configuring an LDAP Client to use SSSD](https://docs.oracle.com/cd/E37670_01/E41138/html/ol_sssd_ldap.html)
+> - [`/etc/sssd/sssd.conf` sample](https://github.com/marslo/iDevOps/blob/master/centos/sssd/sssd.conf)
+> - [Troubleshooting SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/trouble)
+
+- add user name
+  ```bash
+  $ sss_override user-add username -n secondary-username
+
+  # verification
+  $ id secondary-username
+  # display the override
+  $ sss_override user-show user-name
+  ```
+
+- override the uid
+  ```bash
+  # check current uid
+  $ id -u username
+
+  # overwride
+  $ sss_override user-add username -u new-UID
+  $ sss_cache --users
+  $ systemctl restart sssd
+  ```
+
+- override the gid
+  ```bash
+  # check current gid
+  $ id -g username
+
+  # override
+  $ sss_override user-add username -u new-GID
+  $ sss_cache --users
+  $ systemctl restart sssd
+  ```
+
+- override the home directory
+  ```bash
+  # check current home directory
+  $ getent passwd username
+
+  # override
+  $ sss_override user-add username -h /new/home/directory
+  $ systemctl restart sssd
+  ```
+
+- override the shell attribute
+  ```bash
+  # check current
+  $ getent passwd username
+
+  # override
+  $ sss_override user-add username -s /new/shell
+  $ systemctl restart sssd
+  ```
+
+- backup and restore
+  ```bash
+  # export
+  $ sss_override user-export user-export.bak
+  $ sss_override group-export group-export.bak
+
+  # restore
+  $ sss_override user-import user-import.bak
+  $ sss_override group-import group-import.bak
+  ```
+
+- list all override
+  ```bash
+  $ sss_override user-find
+  ```
+
 #### [How To List Users and Groups on Linux](https://devconnected.com/how-to-list-users-and-groups-on-linux/)
 - `/etc/passwd`
   ![list user in linux](../screenshot/linux/list-users-linux.png)
