@@ -2,14 +2,37 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Repo Sources](#repo-sources)
-- [Package Search](#package-search)
-- [Installation](#installation)
+- [basic environment](#basic-environment)
+  - [Ubuntu](#ubuntu)
+  - [CentOS/RHEL](#centosrhel)
+- [tricky](#tricky)
+  - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
+  - [show defualt kubeadm config](#show-defualt-kubeadm-config)
+  - [kubeadm join](#kubeadm-join)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Repo Sources
+## basic environment
+### Ubuntu
+#### basic
+```bash
+$ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+$ sudo usermod -a -G root "$(whoami)"
+$ sudo usermod -a -G adm "$(whoami)"
+$ sudo usermod -a -G sudo "$(whoami)"
+
+$ [ -f /etc/sysctl.conf ] && sudo mv /etc/sysctl.conf{,.bak.${TIMESTAMPE}}
+
+$ sudo bash -c "cat >> /etc/sysctl.conf" << EOF
+net.ipv4.ip_forward=1
+net.bridge.bridge-nf-call-iptables=1
+net.bridge.bridge-nf-call-ip6tables=1
+EOF
+```
+
+#### repo sources
 ```bash
 $ cat /etc/apt/sources.list
 deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful main restricted
@@ -32,61 +55,23 @@ deb [arch=amd64] http://www.artifactory.mycompany.com/artifactory/debian-remote-
 # deb [arch=amd64] https://download.docker.com/linux/ubuntu artful edge
 ```
 
-
-## Package Search
+#### package Search
 ```bash
 $ apt-cache search kub
-python-magnumclient - client library for Magnum API - Python 2.x
-python-magnumclient-doc - client library for Magnum API - doc
-flannel - Etcd backed network fabric for containers
-golang-github-kubernetes-gengo-dev - Library for generating code based on Go files
-kubrick - game based on Rubik's Cube
-kubuntu-debug-installer - Debug package installer for Kubuntu
-kubuntu-debug-installer-dbg - Debug package installer for Kubuntu - debug symbols
-kubuntu-desktop - Kubuntu Plasma Desktop/Netbook system
-kubuntu-docs - kubuntu system documentation
-kubuntu-driver-manager - Driver Manager for Kubuntu
-kubuntu-driver-manager-dbg - Driver Manager for Kubuntu -- debug symbols
-kubuntu-full - Full Kubuntu Plasma Desktop/Netbook system
-kubuntu-notification-helper - Kubuntu system notification helper
-kubuntu-notification-helper-dbg - Kubuntu Notification Helper debugging symbols
-kubuntu-patched-l10n - Fake package containing absolutely nothing
-kubuntu-settings-desktop - Settings and artwork for the Kubuntu (Desktop)
-kubuntu-wallpapers-artful - Kubuntu 17.10 Wallpapers
-kubuntu-web-shortcuts - web shortcuts for Kubuntu, Ubuntu, Launchpad
-ldm-kubuntu-theme - Kubuntu theme for the LTSP Display Manager
-libkubuntu-dbg - library for Kubuntu platform integration - debugging files
-libkubuntu-dev - library for Kubuntu platform integration - development files
-libkubuntu1 - library for Kubuntu platform integration
-magnum-api - OpenStack containers as a service
-magnum-common - OpenStack containers as a service - API server
-magnum-conductor - OpenStack containers as a service - conductor
-mecab-jumandic - Juman dictionary compiled for Mecab (deprecated)
-mecab-jumandic-utf8 - Juman dictionary encoded in UTF-8 compiled for Mecab
-plymouth-theme-kubuntu-logo - graphical boot animation and logger - kubuntu-logo theme
-plymouth-theme-kubuntu-text - graphical boot animation and logger - kubuntu-text theme
-python-k8sclient - Kubernetes API Python client code - Python 2.7
-python-k8sclient-doc - Kubernetes API Python client code - doc
-python-magnum - OpenStack containers as a service - Python library
-python3-k8sclient - Kubernetes API Python client code - Python 3.x
-python3-magnumclient - client library for Magnum API - Python 3.x
-ruby-kubeclient - client for Kubernetes REST api
-salt-formula-kubernetes - Salt formula for Kubernetes
-texlive-games - TeX Live: Games typesetting
-ubiquity-slideshow-kubuntu - Ubiquity slideshow for Kubuntu
-uck - Tool to customize official Ubuntu Live CDs
-unity-scope-home - Home scope that aggregates results from multiple scopes
-kubuntu-restricted-addons - Commonly used restricted packages for Kubuntu
-kubuntu-restricted-extras - Commonly used media codecs and fonts for Kubuntu
+...
 kubeadm - Kubernetes Cluster Bootstrapping Tool
 kubectl - Kubernetes Command Line Tool
 kubelet - Kubernetes Node Agent
 kubernetes-cni - Kubernetes CNI
 ```
 
-## Installation
+#### installation
 ```bash
-$ sudo apt install kubeadm
+$ sudo apt install kubeadm=1.10.0-00 -y
+# or
+$ sudo apt install kubeadm=1.10.0-00 kubectl=1.10.0-00 kubelet=1.10.0-00 -y
+# or
+$ sudo apt install kubeadm -y
 Reading package lists... Done
 Building dependency tree
 Reading state information... Done
@@ -97,7 +82,6 @@ The following NEW packages will be installed:
 0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
 Need to get 57.1 MB of archives.
 After this operation, 411 MB of additional disk space will be used.
-Do you want to continue? [Y/n]
 Get:1 http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful/main amd64 ebtables amd64 2.0.10.4-3.5ubuntu2 [80.0 kB]
 Get:2 http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful/main amd64 ethtool amd64 1:4.8-1 [109 kB]
 Get:3 http://www.artifactory.mycompany.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubernetes-cni amd64 0.6.0-00 [5,910 kB]
@@ -145,10 +129,153 @@ Created symlink /etc/systemd/system/multi-user.target.wants/kubelet.service → 
 Setting up kubeadm (1.10.0-00) ...
 Processing triggers for systemd (234-2ubuntu12.3) ...
 Processing triggers for ureadahead (0.100.0-20) ...
-devops@devops-kubernetes-master:/etc/apt$
 ```
 
+- hold the automatic upgrade
+  ```bash
+  $ sudo apt-mark hold kubeadm
+  $ sudo apt-mark hold kubelet
+  $ sudo apt-mark hold kubectl
+
+  # check
+  $  dpkg -l | grep ^h
+  # or
+  $ apt-mark showhold
+  ```
+
+### CentOS/RHEL
+#### basic environment
+```bash
+$ sudo systemctl stop firewalld
+$ sudo systemctl disable firewalld
+$ sudo systemctl mask firewalld
+$ sudo systemctl is-enabled firewalld
+$ sudo systemctl is-active firewalld
+$ sudo firewall-cmd --state
+
+$ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
+$ sudo swapoff -a
+
+$ sudo setenforce 0
+$ sudo bash -c "sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc/selinux/config"
+$ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
+
+$ sudo modprobe br_netfilter
+$ sudo sysctl net.bridge.bridge-nf-call-iptables=1
+$ sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
+
+$ sudo bash -c "cat >  /etc/sysctl.d/k8s.conf" << EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+$ sudo sysctl --system
+$ lsmod | grep br_netfilter
+```
+
+#### installation
+```bash
+$ sudo bash -c 'cat > /etc/yum.repos.d/kubernetes.repo' <<EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+$ sudo yum clean all
+$ sudo yum makecache
+$ sudo yum install -y yum-utils \
+                      device-mapper-persistent-data \
+                      lvm2 \
+                      bash-completion*
+
+$ sudo yum search --showduplicates docker-ce | grep 18\.09
+$ sudo yum search --showduplicates kubeadm | grep 1\.15\.3
+
+$ sudo yum install -y \
+       docker-ce-18.09.9-3.el7.x86_64 \
+       docker-ce-cli-18.09.9-3.el7.x86_64 \
+       containerd.io
+
+$ sudo yum install -y \
+       kubeadm-1.15.3-0.x86_64 \
+       kubectl-1.15.3-0.x86_64 \
+       kubelet-1.15.3-0.x86_64 \
+       --disableexcludes=kubernetes
+
+$ sudo bash -c "echo 'source <(kubectl completion bash)' >> /etc/bashrc"
+$ sudo usermod -a -G root,admheel,docker $(whoami)
+$ sudo systemctl enable --now docker
+$ sudo systemctl enable --now kubelet
+```
+- version lock
+  ```bash
+  $ sudo yum versionlock docker-ce
+  $ sudo yum versionlock docker-ce-cli
+  $ sudo yum versionlock kubeadm
+  $ sudo yum versionlock kubelet
+  $ sudo yum versionlock kubectl
+  $ sudo yum versionlock kubernetes-cni
+  $ sudo yum versionlock list
+  ```
+
+## tricky
+### [show default `KubeletConfiguration`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#configure-kubelets-using-kubeadm)
+```bash
+$ sudo kubeadm config print init-defaults --component-configs KubeletConfiguration
+$ sudo kubeadm config print init-defaults --component-configs KubeProxyConfiguration
+
+# v1.12.3
+$ sudo kubeadm config print-defaults
+```
+
+### show defualt kubeadm config
+```bash
+$ sudo kubeadm config view
+```
+
+### kubeadm join
+
+> [!TIP]
+> reference:
+> - [kubeadm join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
+
+- normal commands
+  ```bash
+  $ sudo kubeadm token create --print-join-command
+
+  # or
+  $ sudo kubeadm token create --print-join-command --ttl=0
+
+  # list
+  $ sudo kubeadm token list
+  ```
+
+- [Token-based discovery with CA pinning](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
+  ```bash
+  $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt |
+            openssl rsa -pubin -outform der 2>/dev/null |
+            openssl dgst -sha256 -hex |
+            sed 's/^.* //'
+  ```
+  - for worker nodes
+    ```bash
+    $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef 1.2.3.4:6443
+    ```
+  - for control-plane nodes
+    ```bash
+    $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
+    ```
+
+
+
 ## reference
+- [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
+- [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+- [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
+- [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
 - [Kubernetes Recovery from Master Failure with Kubeadm](https://codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
 - [1 - Kubernetes Objects](https://codefarm.me/2019/02/22/kubernetes-crash-course-1/)
 - [2 - Kubernetes Pods](https://codefarm.me/2019/03/04/kubernetes-crash-course-2/)

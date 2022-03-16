@@ -24,6 +24,10 @@
     - [signing the key](#signing-the-key)
     - [update kubeconfig](#update-kubeconfig)
 - [reference](#reference)
+  - [Required certificates:](#required-certificates)
+  - [Certificate paths](#certificate-paths)
+  - [Configure certificates for user accounts](#configure-certificates-for-user-accounts)
+  - [files are used as follows](#files-are-used-as-follows)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -721,17 +725,80 @@ kube-system            Active   3y10d
 ```
 
 # reference
-- [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
-- [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
-- [Bootstrapping Kubernetes Clusters with kubeadm](https://codefarm.me/2019/01/28/bootstrapping-kubernetes-clusters-with-kubeadm/)
-- [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
-- [Renewing Kubernetes cluster certificates 1.0.2](https://www.ibm.com/docs/en/fci/1.0.2?topic=kubernetes-renewing-cluster-certificates)
-- [Renewing Kubernetes cluster certificates 1.1.0](https://www.ibm.com/docs/en/fci/1.1.0?topic=kubernetes-renewing-cluster-certificates)
-- [Renewing Kubernetes 1.10.x cluster certificates](https://www.ibm.com/docs/en/fci/1.0.3?topic=kubernetes-renewing-110x-cluster-certificates)
-- [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
-- [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
-- [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
-- [K8S 集群中的认证、授权与 kubeconfig](http://www.xuyasong.com/?p=2054)
-- [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
-- [Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
-- [Kubernetes – KUBECONFIG and Context](https://theithollow.com/2019/02/11/kubernetes-kubeconfig-and-context/)
+
+> [!TIP]
+> reference:
+> - [* Kubernetes中的证书工作机制](https://blog.51cto.com/u_15127645/4342894)
+> - [证书](https://kubernetes.io/zh/docs/tasks/administer-cluster/certificates/)
+> - [Certificates](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+> - [Generate self-signed certificates](https://coreos.com/os/docs/latest/generate-self-signed-certificates.html)
+> - [Certification authority root certificate expiry and renewal](https://serverfault.com/a/308100)
+> - [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
+> - [CUSTOM CERTIFICATE AUTHORITY](https://choria.io/docs/configuration/custom_ca/)
+> - [CONFIGURING ETCD RBAC](https://docs.projectcalico.org/reference/etcd-rbac/)
+> - [Certificate Authority with CFSSL](https://jite.eu/2019/2/6/ca-with-cfssl/)
+> - [Deploy a secure etcd cluster](https://pcocc.readthedocs.io/en/latest/deps/etcd-production.html)
+> - [K8S Cluster tls Certificate Management](https://programmer.group/k8s-cluster-tls-certificate-management.html)
+> - [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
+> - [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
+> - [Bootstrapping Kubernetes Clusters with kubeadm](https://codefarm.me/2019/01/28/bootstrapping-kubernetes-clusters-with-kubeadm/)
+> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+> - [Renewing Kubernetes cluster certificates 1.0.2](https://www.ibm.com/docs/en/fci/1.0.2?topic=kubernetes-renewing-cluster-certificates)
+> - [Renewing Kubernetes cluster certificates 1.1.0](https://www.ibm.com/docs/en/fci/1.1.0?topic=kubernetes-renewing-cluster-certificates)
+> - [Renewing Kubernetes 1.10.x cluster certificates](https://www.ibm.com/docs/en/fci/1.0.3?topic=kubernetes-renewing-110x-cluster-certificates)
+> - [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
+> - [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
+> - [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
+> - [K8S 集群中的认证、授权与 kubeconfig](http://www.xuyasong.com/?p=2054)
+> - [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
+> - [Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+> - [Kubernetes – KUBECONFIG and Context](https://theithollow.com/2019/02/11/kubernetes-kubeconfig-and-context/)
+
+## Required certificates:
+
+| Default CN                    | Parent CA                 | O (in Subject) | kind           | hosts (SAN)                                 |
+| :--:                          | :--:                      | :--:           | :--:           | :--:                                        |
+| kube-etcd                     | etcd-ca                   | -              | server, client | <hostname>, <Host_IP>, localhost, 127.0.0.1 |
+| kube-etcd-peer                | etcd-ca                   | -              | server, client | <hostname>, <Host_IP>, localhost, 127.0.0.1 |
+| kube-etcd-healthcheck-client  | etcd-ca                   | -              | client         | -                                           |
+| kube-apiserver-etcd-client    | etcd-ca                   | system:masters | client         | -                                           |
+| kube-apiserver                | kubernetes-ca             | -              | server         | <hostname>, <Host_IP>, <advertise_IP>, [1]  |
+| kube-apiserver-kubelet-client | kubernetes-ca             | system:masters | client         | -                                           |
+| front-proxy-client            | kubernetes-front-proxy-ca | -              | client         | -                                           |
+
+## [Certificate paths](https://kubernetes.io/docs/setup/best-practices/certificates/#certificate-paths)
+| Default CN                    | recommended key path         | recommended cert path        | command                 | key argument               | cert argument                                                 |
+| :--:                          | :--:                         | :--:                         | :--:                    | :--:                       | :--:                                                          |
+| etcd-ca                       | etcd/ca.key                  | etcd/ca.crt                  | kube-apiserver          | -                          | --etcd-cafile                                                 |
+| kube-apiserver-etcd-client    | apiserver-etcd-client.key    | apiserver-etcd-client.crt    | kube-apiserver          | --etcd-keyfile             | --etcd-certfile                                               |
+| kubernetes-ca                 | ca.key                       | ca.crt                       | kube-apiserver          | -                          | --client-ca-file                                              |
+| kubernetes-ca                 | ca.key                       | ca.crt                       | kube-controller-manager | --cluster-signing-key-file | --client-ca-file, --root-ca-file, --cluster-signing-cert-file |
+| kube-apiserver                | apiserver.key                | apiserver.crt                | kube-apiserver          | --tls-private-key-file     | --tls-cert-file                                               |
+| kube-apiserver-kubelet-client | apiserver-kubelet-client.key | apiserver-kubelet-client.crt | kube-apiserver          | --kubelet-client-key       | --kubelet-client-certificate                                  |
+| front-proxy-ca                | front-proxy-ca.key           | front-proxy-ca.crt           | kube-apiserver          | -                          | --requestheader-client-ca-file                                |
+| front-proxy-ca                | front-proxy-ca.key           | front-proxy-ca.crt           | kube-controller-manager | -                          | --requestheader-client-ca-file                                |
+| front-proxy-client            | front-proxy-client.key       | front-proxy-client.crt       | kube-apiserver          | --proxy-client-key-file    | --proxy-client-cert-file                                      |
+| etcd-ca                       | etcd/ca.key                  | etcd/ca.crt                  | etcd                    | -                          | --trusted-ca-file, --peer-trusted-ca-file                     |
+| kube-etcd                     | etcd/server.key              | etcd/server.crt              | etcd                    | --key-file                 | --cert-file                                                   |
+| kube-etcd-peer                | etcd/peer.key                | etcd/peer.crt                | etcd                    | --peer-key-file            | --peer-cert-file                                              |
+| etcd-ca                       |                              | etcd/ca.crt                  | etcdctl                 | -                          | --cacert                                                      |
+| kube-etcd-healthcheck-client  | etcd/healthcheck-client.key  | etcd/healthcheck-client.crt  | etcdctl                 | --key                      | --cert                                                        |
+
+## [Configure certificates for user accounts](https://kubernetes.io/docs/setup/best-practices/certificates/#configure-certificates-for-user-accounts)
+
+| filename                | credential name            | Default CN                        | O (in Subject) |
+| :--:                    | :--:                       | :--:                              | :--:           |
+| admin.conf              | default-admin              | kubernetes-admin                  | system:masters |
+| kubelet.conf            | default-auth               | system:node:<nodeName> (see note) | system:nodes   |
+| controller-manager.conf | default-controller-manager | system:kube-controller-manager    | -              |
+| scheduler.conf          | default-scheduler          | system:kube-scheduler             | -              |
+
+## files are used as follows
+| filename                | command                 | comment                                                             |
+| :--:                    | :--:                    | :--:                                                                |
+| admin.conf              | kubectl                 | Configures administrator user for the cluster                       |
+| kubelet.conf            | kubelet                 | One required for each node in the cluster.                          |
+| controller-manager.conf | kube-controller-manager | Must be added to manifest in manifests/kube-controller-manager.yaml |
+| scheduler.conf          | kube-scheduler          | Must be added to manifest in manifests/kube-scheduler.yaml          |
+
