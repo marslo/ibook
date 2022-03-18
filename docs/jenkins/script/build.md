@@ -29,6 +29,9 @@
   - [get builds result percentage within 24 hours](#get-builds-result-percentage-within-24-hours)
   - [get builds result during certain start-end time](#get-builds-result-during-certain-start-end-time)
   - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
+- [build stage](#build-stage)
+  - [show build stages details](#show-build-stages-details)
+  - [get parent stage ID](#get-parent-stage-id)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -129,6 +132,55 @@ println """
 """
 ```
 
+### [Find Jenkins projects that build periodically](https://support.cloudbees.com/hc/en-us/articles/360032285111-Find-Jenkins-projects-that-build-periodically)
+
+- example 1:
+  ```groovy
+  import hudson.model.*
+  import hudson.triggers.*
+  TriggerDescriptor TIMER_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie(TimerTrigger.class)
+
+  for(item in Jenkins.instance.getAllItems(Job))
+  {
+    def timertrigger = item.getTriggers().get(TIMER_TRIGGER_DESCRIPTOR)
+    if (timertrigger) {
+      if (item.class.canonicalName == "hudson.model.FreeStyleProject") {
+        item.removeTrigger(TIMER_TRIGGER_DESCRIPTOR)
+        println(item.name + " Build periodically disabled");
+      }
+      else {
+        println(item.name + " Build periodically remains enabled; not as Freestyle project");
+      }
+    }
+  }
+  ```
+
+- example 2:
+  ```groovy
+  Jenkins.instance.getAllItems(Job).each{
+    def jobBuilds=it.getBuilds()
+
+        // Check the last build only
+        jobBuilds[0].each { build ->
+          def runningSince = groovy.time.TimeCategory.minus( new Date(), build.getTime() )
+          def currentStatus = build.buildStatusSummary.message
+          def cause = build.getCauses()[0] //we keep the cause
+
+        //triggered by a user
+        def user = cause instanceof Cause.UserIdCause? cause.getUserId():null;
+
+        if( !user ) {
+          println "[AUTOMATION] ${build}"
+        }
+        else
+        {
+          println "[${user}] ${build}"
+        }
+      }
+  }
+  return
+  ```
+
 ### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
 > only for `lastBuild`.
 
@@ -159,11 +211,34 @@ def build = Jenkins.instance
                    .getItemByFullName( JOB_NAME )
                    .getBuildByNumber( BUILD_NUMBER )
 ```
+#### get builds of a job
+```groovy
+WorkflowJob job = Jenkins.instance.getItemByFullName( '/marslo/sandbox/test' )
+RunList runList = job.getBuilds()
+
+println """
+                  all builds : ${job.getBuildsAsMap().collect{ k, v -> k }}
+                build exists : ${job.getBuilds().collect { it.id }.contains( 25.toString() )}
+
+             completedOnly() : ${runList.completedOnly().collect{ it.id }}
+               failureOnly() : ${runList.failureOnly().collect{ it.id }}
+              getLastBuild() : ${runList.getLastBuild()}
+             getFirstBuild() : ${runList.getFirstBuild()}
+
+     getLastCompletedBuild() : ${job.getLastCompletedBuild()}
+        getLastFailedBuild() : ${job.getLastFailedBuild()}
+        getLastStableBuild() : ${job.getLastStableBuild()}
+    getLastSuccessfulBuild() : ${job.getLastSuccessfulBuild()}
+      getLastUnstableBuild() : ${job.getLastUnstableBuild()}
+  getLastUnsuccessfulBuild() : ${job.getLastUnsuccessfulBuild()}
+                 isInQueue() : ${job.isInQueue()}
+"""
+```
 
 ### get changesets
 
 #### code clone via
-```bash
+```groovy
 checkout([
   $class: 'GitSCM',
   branches: [[ name: 'refs/heads/sandbox' ]],
@@ -409,6 +484,37 @@ q.items.each {
   println("Parameters: ${it.params}")
 }
 ```
+
+#### [list all queue tasks and blocked reason](https://support.cloudbees.com/hc/en-us/articles/360051376772-How-can-I-purge-clean-the-build-queue-)
+```groovy
+Jenkins.instance.queue.items.each {
+  println """
+                   getId : ${it.getId()}
+             isBuildable : ${it.isBuildable()}
+      getFullDisplayName : ${it.task.getFullDisplayName()}
+          getDisplayName : ${it.task.getDisplayName()}
+       isConcurrentBuild : ${it.task.isConcurrentBuild()}
+          getAffinityKey : ${it.task.getAffinityKey()}
+                  getUrl : ${it.task.getUrl()}
+           getWhyBlocked : ${it.task.getWhyBlocked()}
+    getCauseOfBlockage() : ${it.task.getCauseOfBlockage()}
+  """
+  // println it.task.metaClass.methods*.name.sort().unique()
+}
+```
+
+- result:
+  ```bash
+                   getId : 80210
+             isBuildable : false
+      getFullDisplayName : marslo » sandbox » test
+          getDisplayName : test
+       isConcurrentBuild : false
+          getAffinityKey : marslo » sandbox » test
+                  getUrl : job/marslo/job/sandbox/job/test/
+           getWhyBlocked : Build #27 is already in progress (ETA: 3 min 28 sec)
+    getCauseOfBlockage() : Build #27 is already in progress (ETA: 3 min 28 sec)
+  ```
 
 ### get build time
 > reference
@@ -949,3 +1055,168 @@ results.each { name, values ->
 - result
   ![build-history-with-status-and-percentage-for-params](../../screenshot/jenkins/build-history-with-status-and-percentage-for-params.png)
   ![build-history-with-status-and-percentage-for-all-builds](../../screenshot/jenkins/build-history-with-status-and-percentage-for-all.png)
+
+## build stage
+> references:
+> - [Access Stage results in Workflow/ Pipeline plugin](https://stackoverflow.com/a/59854515/2940319)
+> - [pipeline中任务分段日志获取](https://gingkoleaf.github.io/2019/10/22/jenkins/jenkins-pipeline-stage-log/)
+> - [GuillaumeSmaha/build-stages-status.groovy](https://gist.github.com/GuillaumeSmaha/fdef2088f7415c60adf95d44073c3c88)
+> - [Access Stage name during the build in Jenkins pipeline](https://stackoverflow.com/a/45224119/2940319)
+> - [jenkinsci/plugins/workflow/cps/FlowDurabilityTest.java](https://github.com/jenkinsci/workflow-cps-plugin/blob/master/src/test/java/org/jenkinsci/plugins/workflow/cps/FlowDurabilityTest.java#L273)
+
+### show build stages details
+```groovy
+import org.jenkinsci.plugins.workflow.job.*
+import org.jenkinsci.plugins.workflow.flow.*
+import io.jenkins.blueocean.rest.impl.pipeline.*
+import org.jenkinsci.plugins.workflow.cps.*
+mport org.jenkinsci.plugins.workflow.graph.FlowNode;
+
+final String JOB_NAME  = '/marslo/sandbox'
+final int BUILD_NUMBER = 17
+
+WorkflowRun run = Jenkins.instance
+                   .getItemByFullName( JOB_NAME )
+                   .getBuildByNumber( BUILD_NUMBER )
+PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor(run)
+List<FlowNodeWrapper> flowNodes = visitor.getPipelineNodes()
+
+
+flowNodes.each {
+  println """
+    ${it.getDisplayName()} :
+                          getRun() : ${it.getRun()}
+                         getResult : ${it.status.getResult()}
+                          getState : ${it.status.getState()}
+                           getType : ${it.getType()}
+                             getId : ${it.getId()}
+                          isActive : ${it.node.active}
+                         searchUrl : ${it.node.getSearchUrl()}
+                            getUrl : ${Jenkins.instance.getRootUrl() + it.node.getUrl()}
+                         iconColor : ${it.node.getIconColor()}
+  """
+// println """
+//                         getError : ${it.node.getError()}
+//                        getAction : ${it.node.getActions()}
+//           getDisplayFunctionName : ${it.node.getDisplayFunctionName()}
+//               getTypeDisplayName : ${it.node.getTypeDisplayName()}
+//              getTypeFunctionName : ${it.node.getTypeFunctionName()}
+//   it.node.metaClass.methods.name : ${it.node.metaClass.methods*.name.sort().unique()}
+//                    it.getClass() : ${it.getClass()}
+// """
+  println "                       parents : " + it.getParents().collect { p ->
+    [
+        'name' : p.displayName,
+      'status' : p.status.getResult(),
+          'id' : p.id,
+      'active' : p.node.active
+    ]
+  }.flatten()
+  println '--------------'
+}
+```
+
+- result
+  ![build-stage-details](../../screenshot/jenkins/build-stage-details.png)
+
+### get parent stage ID
+```groovy
+import org.jenkinsci.plugins.workflow.job.*
+import org.jenkinsci.plugins.workflow.flow.*
+import org.jenkinsci.plugins.workflow.cps.*
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
+import io.jenkins.blueocean.rest.impl.pipeline.*
+import io.jenkins.blueocean.rest.model.*
+import io.jenkins.blueocean.rest.model.BlueRun.*
+
+def withFlowNodes( String name, int buildNumber, Closure body ) {
+  WorkflowRun run = Jenkins.instance
+                           .getItemByFullName( name )
+                           .getBuildByNumber( buildNumber )
+  PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor( run )
+  List<FlowNodeWrapper> flowNodes  = visitor.getPipelineNodes()
+
+  body( flowNodes )
+}
+
+def isStageFinished( String keyword, String job, int buildNumber, String type = 'parallel' ) {
+  withFlowNodes ( job, buildNumber ) { flowNodes ->
+
+    List<String> parentIds = flowNodes.findAll {
+                               it.displayName.startsWith(keyword) && it.getType() == FlowNodeWrapper.NodeType.valueOf( type.toUpperCase() )
+                             }.collectMany { it.parents.collect{ p -> p.id } }.unique()
+    flowNodes.findAll { parentIds.contains( it.id ) }.every { it.status.getState() == BlueRun.BlueRunState.FINISHED }
+
+  } // withFlowNodes
+}
+```
+
+### get stage build status via parent stage name
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.*
+import org.jenkinsci.plugins.workflow.flow.*
+import org.jenkinsci.plugins.workflow.cps.*
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
+import io.jenkins.blueocean.rest.impl.pipeline.*
+import io.jenkins.blueocean.rest.model.*
+import io.jenkins.blueocean.rest.model.BlueRun.*
+
+@NonCPS
+def on( String job, int buildNumber ) {
+  [
+    isBuilding : { ->
+      isBuilding( job, buildNumber )
+    }
+    stageStatus : { String keyword, String type = 'parallel', String parentStage = 'Parallel' ->
+      stageStatus ( keyword, job, buildNumber, type, parentStage )
+    }
+  ]
+}
+
+Boolean isBuilding( String job, int buildNumber ) {
+  Jenkins.instance
+         .getItemByFullName( job )
+         .getBuildByNumber( buildNumber )
+         .isInProgress()
+}
+
+def withFlowNodes( String name, int buildNumber, Closure body ) {
+  WorkflowRun run = Jenkins.instance
+                           .getItemByFullName( name )
+                           .getBuildByNumber( buildNumber )
+  PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor( run )
+  List<FlowNodeWrapper> flowNodes  = visitor.getPipelineNodes()
+
+  body( flowNodes )
+}
+
+def stageStatus( String keyword ,
+                 String job ,
+                 int buildNumber ,
+                 String type = 'parallel' ,
+                 String parentStage = 'Parallel'
+) {
+
+  if ( ! isBuilding(job, buildNumber) ) {
+    println( "pipeline ${job} #${buildNumber} haven't started yet" )
+    return false
+  }
+
+  withFlowNodes ( job, buildNumber ) { flowNodes ->
+    List<String> parentIds = flowNodes.findAll {
+                               it.displayName.startsWith(keyword) && it.getType() == FlowNodeWrapper.NodeType.valueOf( type.toUpperCase() )
+                             }.collectMany { it.parents.findAll { p -> p.displayName == parentStage }
+                                                       .collect { p -> p.id }
+                             }.unique()
+
+    return parentIds
+        ? flowNodes.findAll { parentIds.contains( it.id ) }.collect { it.status.getState() }
+        : false
+  } // withFlowNodes
+
+}
+
+// call
+on( BUILD_NAME, BUILD_NUMBER ).stageStatus( stageName )
+```
