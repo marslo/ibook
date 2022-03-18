@@ -6,6 +6,7 @@
 - [map withDefault](#map-withdefault)
 - [get key or value from nested Map](#get-key-or-value-from-nested-map)
 - [findResult & findResults](#findresult--findresults)
+- [inject](#inject)
 - [collect & collectMany](#collect--collectmany)
 - [collectEntries](#collectentries)
 - [grep](#grep)
@@ -324,6 +325,17 @@ def findValues( Map map, String keyword ) {
      * ~~> hasValues( m, 'aaaa' ) : false
     **/
     ```
+
+### inject
+
+- [Join Elements to a String](https://blog.mrhaki.com/2009/10/groovy-goodness-join-elements-to-string.html)
+  ```groovy
+	def map = [q: 'groovy', maxResult: 10, start: 0, format: 'xml']
+	def params = map.inject([]) { result, entry ->
+		result << "${entry.key}=${URLEncoder.encode(entry.value.toString())}"
+	}.join('&')
+	assert 'q=groovy&maxResult=10&start=0&format=xml' == params
+  ```
 
 ### collect & collectMany
 
