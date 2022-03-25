@@ -9,6 +9,7 @@
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
   - [get single job properties](#get-single-job-properties)
   - [get particular job status](#get-particular-job-status)
+  - [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
 - [build](#build)
   - [build number](#build-number)
@@ -32,6 +33,7 @@
 - [build stage](#build-stage)
   - [show build stages details](#show-build-stages-details)
   - [get parent stage ID](#get-parent-stage-id)
+  - [get stage build status via parent stage name](#get-stage-build-status-via-parent-stage-name)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
