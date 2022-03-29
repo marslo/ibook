@@ -19,6 +19,27 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [docker with proxy](#docker-with-proxy)
+  - [ocker pull](#ocker-pull)
+  - [docker build](#docker-build)
+  - [docker build with GPG key proxy](#docker-build-with-gpg-key-proxy)
+- [command-line auto completion](#command-line-auto-completion)
+  - [Linux](#linux)
+  - [osx](#osx)
+- [others](#others)
+- [complete_alias](#complete_alias)
+- [get tags](#get-tags)
+  - [from artifactory](#from-artifactory)
+  - [from docker hub](#from-docker-hub)
+- [Docker-EE installtion in windows server](#docker-ee-installtion-in-windows-server)
+  - [run linux container in windows server 2019](#run-linux-container-in-windows-server-2019)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## docker with proxy
 
 ### [ocker pull](https://www.thegeekdiary.com/how-to-configure-docker-to-use-proxy/)
@@ -362,25 +383,67 @@ $ docker run <...> ${VOLUME_OPTION}
 ```
 
 ## [Docker-EE installtion in windows server](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
+
 > references:
 > - [Get started: Prep Windows for containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server)
+> - [Install Docker Enterprise Edition for Windows Server](https://docker-docs.netlify.app/install/windows/docker-ee/)
+> - [basic settings: Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
+> - [Use a script to install Docker EE](https://docs.docker.com.zh.xy2401.com/v17.12/install/windows/docker-ee/#optional-make-sure-you-have-all-required-updates)
+> - [Remote Management of a Windows Docker Host](https://docs.microsoft.com/en-us/virtualization/windowscontainers/management/manage_remotehost)
 
 ```powershell
 > Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
 > Install-Package -Name docker -ProviderName DockerMsftProvider
 > Restart-Computer -Force
->
+
+# or
+> Install-Module DockerMsftProvider -Force
+> Install-Package Docker -ProviderName DockerMsftProvider -Force
+> Restart-Computer
 ```
+
+![install-docker-ee-in-windows-server](../../screenshot/docker-ee-windows-server.png)
+
+- install specific docker version
+  ```powershell
+  > Install-Package -Name docker -ProviderName DockerMsftProvider -Force -RequiredVersion 17.06.2-ee-5
+  ```
+
 - check
   ```powershell
   > Get-Package -Name Docker -ProviderName DockerMsftProvider
   > Find-Package -Name Docker -ProviderName DockerMsftProvider
   ```
+
 - upgrade
   ```powershell
   > Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
   > Start-Service Docker
   ```
+
+- [uninstall](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon)
+  ```powershell
+  > Uninstall-Package -Name docker -ProviderName DockerMsftProvider
+  > Uninstall-Module -Name DockerMsftProvider
+
+  # get package via
+  > Get-PackageProvider -Name *Docker*
+  ```
+
+- [Clean up Docker data and system components](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#clean-up-docker-data-and-system-components)
+  ```powrshell
+  > Get-HNSNetwork | Remove-HNSNetwork
+  > Get-ContainerNetwork | Remove-ContainerNetwork
+  > Remove-Item "C:\ProgramData\Docker" -Recurse
+
+  # close Hyper-V
+  > Remove-WindowsFeature Containers
+  > Remove-WindowsFeature Hyper-V
+
+  # reboot
+  > Restart-Computer -Force
+  ```
+
 - pull and run windows image
   ```powershell
   > docker pull mcr.microsoft.com/dotnet/samples:dotnetapp-nanoserver-2009
