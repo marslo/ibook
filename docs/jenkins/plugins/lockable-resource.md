@@ -197,7 +197,7 @@ stage('create') {
 ### [pickup qualified available resources randomly](https://stackoverflow.com/a/67801738/2940319)
 {% hint style='tip' %}
 - reference:
-- [a list contains a sublist or not](../../programming/groovy/groovy.html#a-list-contains-a-sublist-or-not)
+- [imarslo : a list contains a sublist or not](../../programming/groovy/groovy.html#a-list-contains-a-sublist-or-not)
 
 **setup test labels**
 ```groovy

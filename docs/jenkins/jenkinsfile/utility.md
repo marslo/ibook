@@ -83,7 +83,7 @@ try {
 > - [Load From File](https://www.jenkins.io/doc/pipeline/examples/#load-from-file)
 
 ### load a constant
-> see also [groovy metaClass](../../programming/groovy/tricky.html#load-groovy-file)
+> see also [imarslo : groovy metaClass](../../programming/groovy/tricky.html#load-groovy-file)
 
 #### groovy file ( `constant.groovy` )
 ```groovy
