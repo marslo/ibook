@@ -172,9 +172,9 @@ v1
 
 ### `select`
 > refrence
-> - [jq tips: remove emtpy line](https://stackoverflow.com/a/44289083/2940319)
-> - [example on jenkins api analysis](../../jenkins/script/api.html#get-all-parameters-via-json-format)
-> - [example on gerrit api analysis](../../devops/git/gerrit.html#get-all-vote-cr-2)
+> - [imarslo : example on jenkins api analysis](../../jenkins/script/api.html#get-all-parameters-via-json-format)
+> - [imarslo : example on gerrit api analysis](../../devops/git/gerrit.html#get-all-vote-cr-2)
+> - [jq tips : remove emtpy line](https://stackoverflow.com/a/44289083/2940319)
 
 ```bash
 $ echo "[1,5,3,0,7]" |
@@ -198,8 +198,8 @@ $ echo '''[{"id": "first", "val": 1}, {"id": "second", "val": 2}]''' |
 
 ### `contains`
 > reference:
-> - [example on artifactory api analysis](../../artifactory/api.html#filter-buildinfoenvjobname-in-all-builds)
-> - [example on list Error pods in kuberetnes](../../virtualization/kubernetes/pod.html#list-all-error-status-pods)
+> - [imarslo : example on artifactory api analysis](../../artifactory/api.html#filter-buildinfoenvjobname-in-all-builds)
+> - [imarslo : example on list Error pods in kuberetnes](../../virtualization/kubernetes/pod.html#list-all-error-status-pods)
 
 ```bash
 $ echo '''[{"id": "first", "val": 1}, {"id": "second", "val": 2},  {"id": "second-one", "val": 3}]''' |

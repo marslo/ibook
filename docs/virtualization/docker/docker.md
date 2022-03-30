@@ -35,14 +35,14 @@
 > - [Ideas for a cgroups UI](https://mairin.wordpress.com/2011/05/13/ideas-for-a-cgroups-ui/)
 
 ## docker internals
-![docker internals](../../screenshot/docker-internals.png)
+![docker internals](../../screenshot/docker/docker-internals.p/ng)
 
 ### cgoups
-![docker cgoups](../../screenshot/docker-cgroup.png)
+![docker cgoups](../../screenshot/docker/docker-cgroup.png)
 
 
 ### namespace
-![docker namespace](../../screenshot/docker-namespace.png)
+![docker namespace](../../screenshot/docker/docker-namespace.png)
 
 ## docker completion
 ### OSX
@@ -323,7 +323,7 @@ $ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 ```
 {% endraw %}
 
-![docker status](../../screenshot/docker-stat-resource-1.gif)
+![docker status](../../screenshot/docker/docker-stat-resource-1.gif)
 
 ## docker inspect
 > reference:
