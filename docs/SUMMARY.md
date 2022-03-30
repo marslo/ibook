@@ -88,6 +88,7 @@
     * [node](virtualization/kubernetes/node.md)
   * [docker](virtualization/docker/docker.md)
     * [tricky](virtualization/docker/tricky.md)
+    * [windows](virtualization/docker/windows.md)
 * [osx](osx/osx.md)
   * [defaults](osx/defaults.md)
   * [apps](osx/apps.md)
