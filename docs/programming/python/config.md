@@ -119,7 +119,45 @@ $ python -vvEsS -c "import sys; print sys.path"
 
   $ /usr/local/bin/python3.9 -c 'import site; print(site.USER_BASE)'
   /Users/marslo/Library/Python/3.9
+
+	$ /usr/local/bin/python3.9 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
+	/usr/lib/python3.6/site-packages
   ```
+
+- check in ubuntu
+  > references:
+	> - [How do I find the location of my Python site-packages directory](https://stackoverflow.com/a/46071447/2940319)
+
+	```bash
+	$ /usr/local/bin/python3.6 -m site --user-site
+	/home/marslo/.local/lib/python3.6/site-packages
+
+	$ /usr/local/bin/python3.6 -c 'import site; print(site.getsitepackages())'
+	['/usr/local/lib64/python3.6/site-packages', '/usr/local/lib/python3.6/site-packages', '/usr/lib64/python3.6/site-packages', '/usr/lib/python3.6/site-packages']
+
+	$ python3.6 -m site
+	sys.path = [
+			'/home/marslo',
+			'/usr/lib64/python36.zip',
+			'/usr/lib64/python3.6',
+			'/usr/lib64/python3.6/lib-dynload',
+			'/usr/local/lib/python3.6/site-packages',
+			'/usr/lib64/python3.6/site-packages',
+			'/usr/lib/python3.6/site-packages',
+	]
+	USER_BASE: '/home/marslo/.local' (exists)
+	USER_SITE: '/home/marslo/.local/lib/python3.6/site-packages' (doesn't exist)
+	ENABLE_USER_SITE: True
+	```
+
+	- check particular lib
+		```bash
+		$ python -c "import os as _; print(_.__file__)"
+		/usr/lib64/python3.6/os.py
+
+		$ python -c "import setuptools as _; print(_.__path__)"
+		['/usr/lib/python3.6/site-packages/setuptools']
+		```
 
 ### multiple versions
 #### get current working version
