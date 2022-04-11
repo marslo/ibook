@@ -6,7 +6,8 @@
   - [get name and classes](#get-name-and-classes)
   - [list all jobs and folders](#list-all-jobs-and-folders)
   - [list all Abstract Project](#list-all-abstract-project)
-  - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
+  - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
+  - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
   - [get single job properties](#get-single-job-properties)
   - [get particular job status](#get-particular-job-status)
   - [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
@@ -92,21 +93,62 @@ Jenkins.instance.getAllItems( AbstractProject.class ).each {
 }
 ```
 
-### find all disabled projects/jobs
+### disable all particular projects jobs
 ```groovy
-jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class).findAll{ it ->
-  it.disabled
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+
+Jenkins.instance.getAllItems(Job.class).findAll {
+  projects.any { p -> it.fullName.contains(p) }
 }.each {
-  println it.fullName;
+  println "~~> ${it.fullName}"
+  it.disabled = true
+  it.save()
 }
+```
+
+### undo disable jobs in particular projects
+```groovy
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+
+Jenkins.instance.getAllItems(Job.class).findAll {
+  it.disabled && projects.any{ p -> it.fullName.contains(p) }
+}.each {
+  println "~~> ${it.fullName}"
+  it.disabled = false
+  it.save()
+}
+```
+
+#### find all disabled projects/jobs
+```groovy
+Jenkins.instance
+			 .getAllItems( Job.class )
+			 .findAll { it.disabled }
+			 .collect { it.fullName }
 ```
 
 - or
   ```groovy
-  jenkins.model.Jenkins.instance.getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class).findAll{ it ->
-    it.disabled
-  }.collect { it.fullName }
+  jenkins.model
+         .Jenkins
+         .instance
+         .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
+         .findAll{ it.disabled }
+				 .each {
+           println it.fullName;
+         }
   ```
+
+- or
+  ```groovy
+  jenkins.model
+         .Jenkins
+         .instance
+         .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
+         .findAll{ it.disabled }
+         .collect { it.fullName }
+  ```
+
 
 ### get single job properties
 > [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
