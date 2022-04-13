@@ -44,6 +44,13 @@
 ### namespace
 ![docker namespace](../../screenshot/docker/docker-namespace.png)
 
+### docker daemon
+> references:
+> - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/)
+> - [Configure and troubleshoot the Docker daemon](https://docs.docker.com/config/daemon/)
+> - [Set Up Docker with TLS](https://www.labkey.org/Documentation/wiki-page.view?name=dockerTLS)
+> - [How to Configure Docker daemon with a configuration file?](https://www.devopsschool.com/blog/how-to-configure-docker-daemon-with-a-configuration-file/)
+
 ## docker completion
 ### OSX
 ```bash

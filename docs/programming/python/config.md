@@ -2,7 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [installation via source code](#installation-via-source-code)
+- [installation](#installation)
+  - [installation via source code](#installation-via-source-code)
 - [environment in MacOS](#environment-in-macos)
   - [setup default python](#setup-default-python)
   - [`pip.conf`](#pipconf)
@@ -25,22 +26,39 @@
 > - [Installing from local packages](https://pip.pypa.io/en/stable/user_guide/#installing-from-local-packages)
 > - [pip list](https://pip.pypa.io/en/stable/reference/pip_list/)
 
-## [installation via source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
+## installation
+### [installation via source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
 - basic environment prepare
   ```bash
   $ sudo dnf install gcc openssl-devel bzip2-devel libffi-devel
   ```
+  - [or](https://linuxize.com/post/how-to-install-python-3-8-on-centos-8/)
+    ```bash
+    $ sudo dnf groupinstall 'development tools'
+    $ sudo dnf install bzip2-devel expat-devel gdbm-devel \
+               ncurses-devel openssl-devel readline-devel wget \
+               sqlite-devel tk-devel xz-devel zlib-devel libffi-devel
+    ```
+
 - download source code
   ```bash
   $ curl -O https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz
   $ tar xzf Python-3.8.3.tgz
   ```
+
 - compile and install
   ```bash
   $ cd Python-3.8.3
   $ sudo ./configure --enable-optimizations
+  $ sudo make -j 12
   $ sudo make altinstall
   ```
+
+- setup
+  ```bash
+  $ sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 99
+  ```
+
 
 ## environment in MacOS
 ### [setup default python](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
@@ -120,44 +138,44 @@ $ python -vvEsS -c "import sys; print sys.path"
   $ /usr/local/bin/python3.9 -c 'import site; print(site.USER_BASE)'
   /Users/marslo/Library/Python/3.9
 
-	$ /usr/local/bin/python3.9 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
-	/usr/lib/python3.6/site-packages
+  $ /usr/local/bin/python3.9 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
+  /usr/lib/python3.6/site-packages
   ```
 
 - check in ubuntu
   > references:
-	> - [How do I find the location of my Python site-packages directory](https://stackoverflow.com/a/46071447/2940319)
+  > - [How do I find the location of my Python site-packages directory](https://stackoverflow.com/a/46071447/2940319)
 
-	```bash
-	$ /usr/local/bin/python3.6 -m site --user-site
-	/home/marslo/.local/lib/python3.6/site-packages
+  ```bash
+  $ /usr/local/bin/python3.6 -m site --user-site
+  /home/marslo/.local/lib/python3.6/site-packages
 
-	$ /usr/local/bin/python3.6 -c 'import site; print(site.getsitepackages())'
-	['/usr/local/lib64/python3.6/site-packages', '/usr/local/lib/python3.6/site-packages', '/usr/lib64/python3.6/site-packages', '/usr/lib/python3.6/site-packages']
+  $ /usr/local/bin/python3.6 -c 'import site; print(site.getsitepackages())'
+  ['/usr/local/lib64/python3.6/site-packages', '/usr/local/lib/python3.6/site-packages', '/usr/lib64/python3.6/site-packages', '/usr/lib/python3.6/site-packages']
 
-	$ python3.6 -m site
-	sys.path = [
-			'/home/marslo',
-			'/usr/lib64/python36.zip',
-			'/usr/lib64/python3.6',
-			'/usr/lib64/python3.6/lib-dynload',
-			'/usr/local/lib/python3.6/site-packages',
-			'/usr/lib64/python3.6/site-packages',
-			'/usr/lib/python3.6/site-packages',
-	]
-	USER_BASE: '/home/marslo/.local' (exists)
-	USER_SITE: '/home/marslo/.local/lib/python3.6/site-packages' (doesn't exist)
-	ENABLE_USER_SITE: True
-	```
+  $ python3.6 -m site
+  sys.path = [
+      '/home/marslo',
+      '/usr/lib64/python36.zip',
+      '/usr/lib64/python3.6',
+      '/usr/lib64/python3.6/lib-dynload',
+      '/usr/local/lib/python3.6/site-packages',
+      '/usr/lib64/python3.6/site-packages',
+      '/usr/lib/python3.6/site-packages',
+  ]
+  USER_BASE: '/home/marslo/.local' (exists)
+  USER_SITE: '/home/marslo/.local/lib/python3.6/site-packages' (doesn't exist)
+  ENABLE_USER_SITE: True
+  ```
 
-	- check particular lib
-		```bash
-		$ python -c "import os as _; print(_.__file__)"
-		/usr/lib64/python3.6/os.py
+  - check particular lib
+    ```bash
+    $ python -c "import os as _; print(_.__file__)"
+    /usr/lib64/python3.6/os.py
 
-		$ python -c "import setuptools as _; print(_.__path__)"
-		['/usr/lib/python3.6/site-packages/setuptools']
-		```
+    $ python -c "import setuptools as _; print(_.__path__)"
+    ['/usr/lib/python3.6/site-packages/setuptools']
+    ```
 
 ### multiple versions
 #### get current working version
