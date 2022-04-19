@@ -88,3 +88,7 @@ $ pip config set global.proxy http://proxy.example.com:80
 ```bash
 $ pip install --proxy http://proxy.example.com:80 git-review
 ```
+
+### proxy for ssh
+```bash
+```

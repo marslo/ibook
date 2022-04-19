@@ -5,6 +5,7 @@
 - [docker internals](#docker-internals)
   - [cgoups](#cgoups)
   - [namespace](#namespace)
+  - [docker daemon](#docker-daemon)
 - [docker completion](#docker-completion)
   - [OSX](#osx)
 - [docker build](#docker-build)

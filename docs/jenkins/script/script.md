@@ -25,6 +25,7 @@
 - [shared libes](#shared-libes)
   - [vars](#vars)
   - [src](#src)
+- [Asynchronous resource disposer](#asynchronous-resource-disposer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -394,3 +395,45 @@ build.getProject()._getRuns().iterator().each { run ->
 @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.9')
 import jenkins.model.Jenkins
 ```
+
+## [Asynchronous resource disposer](https://plugins.jenkins.io/resource-disposer)
+```groovy
+import org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer
+
+AsyncResourceDisposer disposer = AsyncResourceDisposer.get()
+  println """
+    getDisplayName : ${disposer.getDisplayName()}
+       isActivated : ${disposer.isActivated()}
+  """
+
+disposer.getBacklog().each {
+  println """
+            getId : ${it.getId()}
+    getRegistered : ${it.getRegistered()}
+             node : ${it.getDisposable().node}
+             path : ${it.getDisposable().path}
+     getLastState : ${it.getLastState().getDisplayName()}
+  """
+}
+
+// disposer.getBacklog().each { disposer.dispose( it.getDisposable() ) }
+```
+- result
+  ```groovy
+      getDisplayName : Asynchronous resource disposer
+         isActivated : true
+
+              getId : 889006714
+      getRegistered : Mon Apr 18 19:19:30 PDT 2022
+               node : worknode_021
+               path : /home/devops/workspace/marslo/testing_ws-cleanup_1650334769689
+       getLastState : Unable to delete '/home/devops/workspace/marslo/testing_ws-cleanup_1650334769689'. Tried 3 times (of a maximum of 3) waiting 0.1 sec between attempts. (Discarded 33 additional exceptions)
+
+              getId : 167234646
+      getRegistered : Sun Apr 17 13:07:47 PDT 2022
+               node : worknode_013
+               path : /home/devops/workspace/marslo/testing_ws-cleanup_1650226067115
+       getLastState : Unable to delete '/home/devops/workspace/marslo/testing_ws-cleanup_1650226067115'. Tried 3 times (of a maximum of 3) waiting 0.1 sec between attempts. (Discarded 32 additional exceptions)
+
+       ...
+  ```
