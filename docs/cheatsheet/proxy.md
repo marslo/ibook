@@ -6,6 +6,8 @@
 - [proxy for yum](#proxy-for-yum)
 - [proxy for docker](#proxy-for-docker)
 - [proxy for pip](#proxy-for-pip)
+- [proxy for ssh](#proxy-for-ssh)
+- [proxy for git](#proxy-for-git)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -91,4 +93,39 @@ $ pip install --proxy http://proxy.example.com:80 git-review
 
 ### proxy for ssh
 ```bash
+$ cat ~/.ssh/config
+Host  github.com
+      User                my.account@mail.com
+      ServerAliveInterval 60
+      Hostname            ssh.github.com
+      Port                443
+      ProxyCommand        nc -X connect -x proxy.example.com:80 %h %p
 ```
+
+- usage for git
+  ```bash
+  $ cat ~/.gitconfig
+  ...
+  [url "git@ssh.github.com"]
+    insteadOf   = git@github.com
+  [url "git@ssh.github.com:"]
+    insteadOf   = https://github.com/
+  [htttp]
+    sslVerify = false
+    # sslVersion = tlsv1.1
+    # sslVersion = tlsv1.2
+    # sslVersion = tlsv1.3
+  ```
+
+### proxy for git
+```bash
+$ cat ~/.gitconfig
+[http]
+  proxy = http://proxy.example.com:80
+[https]
+  proxy = http://proxy.example.com:80
+[http "https://chromium.googlesource.com"]
+  proxy = http://proxy.example.com:80
+[http "https://github.com"]
+  proxy = http://proxy.example.com:80
+ ```
