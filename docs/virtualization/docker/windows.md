@@ -9,6 +9,8 @@
 - [Hyper-V](#hyper-v)
   - [installation](#installation)
   - [Windows Docker Container Hyper-V Isolation](#windows-docker-container-hyper-v-isolation)
+- [Q&A](#qa)
+  - [could not read CA certificate](#could-not-read-ca-certificate)
 - [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -97,7 +99,7 @@
 Invoke-WebRequest -UseBasicParsing -OutFile docker-18.09.5.zip https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.5.zip
 # Stop Docker service
 Stop-Service docker
-    
+
 # Extract the archive.
 Expand-Archive docker-18.09.5.zip -DestinationPath $Env:ProgramFiles -Force
 
@@ -262,6 +264,26 @@ Docker                    18.09                 Docker           Contains Docker
 # check
 > get-process -Name vmwp
 ```
+
+## Q&A
+### [could not read CA certificate](https://github.com/docker/for-win/issues/1746)
+- solution
+  ```powershell
+  [Environment]::SetEnvironmentVariable("DOCKER_CERT_PATH", $null, "User")
+  [Environment]::SetEnvironmentVariable("DOCKER_HOST", $null, "User")
+  [Environment]::SetEnvironmentVariable("DOCKER_MACHINE_NAME", $null, "User")
+  [Environment]::SetEnvironmentVariable("DOCKER_TLS_VERIFY", $null, "User")
+  [Environment]::SetEnvironmentVariable("DOCKER_TOOLBOX_INSTALL_PATH", $null, "User")
+  ```
+
+- or
+  ```batch
+  SET DOCKER_CERT_PATH= $null, "User"
+  SET DOCKER_HOST= $null, "User"
+  SET DOCKER_MACHINE_NAME= $null, "User"
+  SET DOCKER_TLS_VERIFY= $null, "User"
+  SET DOCKER_TOOLBOX_INSTALL_PATH= $null, "User"
+  ```
 
 ## references
 > - [Support policy for Windows Server containers in on-premises scenarios](https://docs.microsoft.com/en-us/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios)

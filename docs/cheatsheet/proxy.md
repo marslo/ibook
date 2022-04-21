@@ -77,9 +77,9 @@ $ sudo systemctl restart docker
 ### proxy for pip
 
 > [!TIP]
-> MS Windows: `%APPDATA%\pip\pip.ini`
-> MacOS: `$HOME/Library/Application Support/pip/pip.conf`
-> Unix: `$HOME/.config/pip/pip.conf`
+> - MS Windows: `%APPDATA%\pip\pip.ini`
+> - MacOS: `$HOME/Library/Application Support/pip/pip.conf`
+> - Unix: `$HOME/.config/pip/pip.conf`
 
 #### setup [via command line](https://stackoverflow.com/a/69568878/2940319)
 ```bash
