@@ -852,6 +852,37 @@ git fetch origin <sha1-of-commit-of-interest>
 git reset --hard FETCH_HEAD
 ```
 
+### checkout particular commit and submodules
+[!TIP]
+> references:
+> - [How to checkout old git commit including all submodules recursively?](https://stackoverflow.com/a/15124462/2940319)
+> - [nicktoumpelis/repo-rinse.sh](https://gist.github.com/nicktoumpelis/11214362)
+
+```bash
+$ git checkout --recurse-submodules
+```
+
+- or
+  ```bash
+  # [optional] create new branch
+  $ git branch <branch-name> <commit-id>
+  $ git checkout <branch-name>
+
+  $ git checkout <commit-id>
+
+  $ git submodule init                 # optional
+  $ git submodule update --recursive
+  ```
+
+- [or](https://gist.github.com/nicktoumpelis/11214362)
+  ```bash
+  $ git clean -xfd
+  $ git submodule foreach --recursive git clean -xfd
+  $ git reset --hard
+  $ git submodule foreach --recursive git reset --hard
+  $ git submodule update --init --recursive
+  ```
+
 ### checkout single branch
 ```bash
 $ git clone --single-branch --branch <branch name> url://to/source/repository [target dir]
