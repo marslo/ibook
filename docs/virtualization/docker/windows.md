@@ -20,6 +20,7 @@
 
 #### installation
 > references:
+> - [* Install Docker Engine - Enterprise on Windows Servers](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
 > - [Docker-EE installtion in windows server](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
 > - [Get started: Prep Windows for containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server)
 > - [Install Docker Enterprise Edition for Windows Server](https://docker-docs.netlify.app/install/windows/docker-ee/)
@@ -58,16 +59,35 @@
   Docker                         20.10.9          DockerDefault    Contains docker-ee for use with Windows Server.
   ```
 
+- update DockerMsftProvider
+  ```powershell
+  > Update-Module DockerMsftProvider
+  ```
+
 - upgrade
   ```powershell
   > Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
   > Start-Service Docker
   ```
+  - or to particular version
+    ```powershell
+    > Install-Package -Name docker -ProviderName DockerMsftProvider -RequiredVersion 18.09 -Update -Force
+    ```
 
 - [uninstall](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon)
   ```powershell
+  # clean docker images and processes
+  > docker swarm leave --force
+  > docker rm -f $(docker ps --all --quiet)
+  > docker system prune --all --volumes
+
+  # uninstall
   > Uninstall-Package -Name docker -ProviderName DockerMsftProvider
   > Uninstall-Module -Name DockerMsftProvider
+
+  # clean up the network and filesystem
+  > Get-HNSNetwork | Remove-HNSNetwork
+  > Remove-Item -Path "C:\ProgramData\Docker" -Recurse -Force
 
   # get package via
   > Get-PackageProvider -Name *Docker*
@@ -194,7 +214,37 @@ Docker                    18.09                 Docker           Contains Docker
 ```
 
 ### tricky
-- [run linux container in windows server 2019](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
+#### running linux container in windows server
+
+- [by enable experimental features in docker daemon.conf](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
+  - Set LCOW_SUPPORTED Variable to 1 for enabled
+    ```powershell
+    > [Environment]::SetEnvironmentVariable(“LCOW_SUPPORTED”, “1”, “Machine”)
+    ```
+
+  - Enable Experimental Features in Docker daemon.conf
+    ```powershell
+    > $configfile = @"
+    {
+        “experimental”: true
+    }
+    "@
+
+    > $configfile|Out-File -FilePath C:\ProgramData\docker\config\daemon.json -Encoding ascii -Force
+    ```
+
+  - deploy LCOW for it to run
+    ```powershell
+    > Invoke-WebRequest -Uri “https://github.com/linuxkit/lcow/releases/download/v4.14.35-v0.3.9/release.zip&#8221; -UseBasicParsing -OutFile release.zip
+    > Expand-Archive release.zip -DestinationPath “$Env:ProgramFiles\Linux Containers\.”
+    ```
+
+  - make Linux containers the Default
+    ```powershell
+    > [Environment]::SetEnvironmentVariable(“LCOW_API_PLATFORM_IF_OMITTED”, “linux”, “Machine”)
+    ```
+
+- [by pre build docker-ee](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
   - uninstall current docker-ee
     ```powershell
     > Uninstall-Package -Name docker -ProviderName DockerMSFTProvider
@@ -213,49 +263,74 @@ Docker                    18.09                 Docker           Contains Docker
 
   - Enable LinuxKit system for running Linux containers
     ```powershell
-    [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "1", "Machine")
+    > [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "1", "Machine")
     ```
+
     - to Switch back to running Windows containers
       ```powershell
-      [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "$null", "Machine")
+      > [Environment]::SetEnvironmentVariable("LCOW_SUPPORTED", "$null", "Machine")
       ```
 
-  - restart docker service
-    ```powershell```
-    > Restart-Service docker
-    ```
-
-  - check
-    ```powershell
-    > docker run -it --rm ubuntu /bin/bash
-    ```
-
-- [FIPS 140-2 cryptographic module support](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
-  ```batch
-  > [System.Environment]::SetEnvironmentVariable("DOCKER_FIPS", "1", "Machine")
-
-  # regedit
-  Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa\FipsAlgorithmPolicy\" -Name "Enabled" -Value "1"
-
-  > net stop docker
-  > net start docker
-
-  # check
-  > docker info
-  ...
-  Labels:
-    com.docker.security.fips=enabled
-  ...
+- restart docker service
+  ```powershell
+  > Restart-Service docker
   ```
+
+- check
+  ```powershell
+  > docker run -it --rm ubuntu /bin/bash
+  ```
+
+#### [FIPS 140-2 cryptographic module support](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
+```powershell
+> [System.Environment]::SetEnvironmentVariable("DOCKER_FIPS", "1", "Machine")
+
+# regedit
+> Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa\FipsAlgorithmPolicy\" -Name "Enabled" -Value "1"
+
+> net stop docker
+> net start docker
+
+# check
+> docker info
+...
+Labels:
+  com.docker.security.fips=enabled
+...
+```
 
 ## Hyper-V
+
+[!TIP]
+> - [* Hyper-V Technology Overview](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-technology-overview)
+> - [* Install the Hyper-V role on Windows Server](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/install-the-hyper-v-role-on-windows-server)
+> - [* Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
+> - [System requirements for Hyper-V on Windows Server](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/system-requirements-for-hyper-v-on-windows#general-requirements)
+> - [* Create Virtual Machine with Hyper-V on Windows 10](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/create-virtual-machine)
+
 ### installation
 
+[!TIP]
+If you're connected locally to the server, run the command without `-ComputerName <computer_name>`.
+
 - via commands
-  ```powershell
-  > Install-WindowsFeature -Name Hyper-V -IncludeManagementTools -Restart
-  ```
+```powershell
+> Install-WindowsFeature -Name Hyper-V [-ComputerName <computer_name>] -IncludeManagementTools -Restart
+```
+  - check
+    ```powershell
+    > Get-WindowsFeature -ComputerName <computer_name>
+    ```
 - manually
+  1. In **Server Manager**, on the **Manage menu**, click `Add Roles and Features`.
+  1. On the Before you begin page, verify that your destination server and network environment are prepared for the role and feature you want to install. Click `Next`.
+  1. On the Select installation type page, select `Role-based` or `feature-based` installation and then click `Next`.
+  1. On the Select destination server page, select a server from the server pool and then click Next.
+  1. On the Select server roles page, select `Hyper-V`.
+  1. To add the tools that you use to create and manage virtual machines, click `Add Features`. On the Features page, click `Next`.
+  1. On the Create Virtual Switches page, Virtual Machine Migration page, and Default Stores page, select the appropriate options.
+  1. On the Confirm installation selections page, select `Restart the destination server automatically if required`, and then click `Install`.
+  1. When installation is finished, verify that Hyper-V installed correctly. Open the All Servers page in Server Manager and select a server on which you installed Hyper-V. Check the Roles and Features tile on the page for the selected server.
 
 ### [Windows Docker Container Hyper-V Isolation](https://www.virtualizationhowto.com/2020/12/install-docker-in-windows-server-2019/)
 ```powershell
@@ -288,7 +363,6 @@ Docker                    18.09                 Docker           Contains Docker
 ## references
 > - [Support policy for Windows Server containers in on-premises scenarios](https://docs.microsoft.com/en-us/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios)
 > - [Windows container requirements](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/system-requirements)
-> - [System requirements for Hyper-V on Windows Server](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/system-requirements-for-hyper-v-on-windows#general-requirements)
 > - [Install Docker in Windows Server 2019](https://www.virtualizationhowto.com/2020/12/install-docker-in-windows-server-2019/)
 > - [Docker PowerShell Scripts for Local Development](https://geoffhudik.com/tech/2019/05/27/docker-powershell-scripts-for-local-development/)
 >   - [* docker-restart-attempt.ps1](https://gist.github.com/thnk2wn/32ce1ad47882bd5b1c43e19cbf8f37f4)

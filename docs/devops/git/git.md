@@ -47,6 +47,7 @@ Git Command Study and practice
   - [get tag and distance (depth)](#get-tag-and-distance-depth)
 - [checkout](#checkout)
   - [checkout specific commit](#checkout-specific-commit)
+  - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
