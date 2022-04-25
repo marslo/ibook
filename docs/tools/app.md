@@ -50,6 +50,8 @@
 - [iStat Menus](https://bjango.com/mac/istatmenus/)
 - [Moon](https://manytricks.com/moom/)
 - [Alfed](https://www.alfredapp.com/)
+  - backup:
+    - `user path`: `$HOME/Library/Application Support/Alfred`
 - [Chrome Canary](https://www.google.com/chrome/canary/?platform=mac&standalone=1)
   - [chrome extension downloader](https://chrome-extension-downloader.com/)
 - [Chromium](https://www.chromium.org/getting-involved/download-chromium)
