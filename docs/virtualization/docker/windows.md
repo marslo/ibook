@@ -114,8 +114,10 @@
   > docker run mcr.microsoft.com/dotnet/samples:dotnetapp-nanoserver-2009
   ```
 
-#### [Use a script to install docker-ee](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
+<!--sec data-title="Use a script to install docker-ee" data-id="section0" data-show=true data-collapse=true ces-->
 ```powershell
+# inspired from http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html
+
 # On an online machine, download the zip file.
 Invoke-WebRequest -UseBasicParsing -OutFile docker-18.09.5.zip https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.5.zip
 # Stop Docker service
@@ -147,6 +149,7 @@ dockerd --register-service
 # Start the Docker service.
 Start-Service docker
 ```
+<!--endsec-->
 
 - check
 
@@ -302,7 +305,7 @@ Labels:
 
 ## Hyper-V
 
-[!TIP]
+> [!TIP]
 > - [* Hyper-V Technology Overview](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-technology-overview)
 > - [* Install the Hyper-V role on Windows Server](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/install-the-hyper-v-role-on-windows-server)
 > - [* Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
@@ -311,8 +314,8 @@ Labels:
 
 ### installation
 
-[!TIP]
-If you're connected locally to the server, run the command without `-ComputerName <computer_name>`.
+> [!TIP]
+> If you're connected locally to the server, run the command without `-ComputerName <computer_name>`.
 
 - via commands
 ```powershell
