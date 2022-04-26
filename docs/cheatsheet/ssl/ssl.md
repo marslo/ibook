@@ -10,6 +10,9 @@
     - [Update the file perm](#update-the-file-perm)
     - [verify](#verify)
   - [certificate in Nginx](#certificate-in-nginx)
+  - [get remote server certs](#get-remote-server-certs)
+    - [keytool](#keytool)
+    - [openssl](#openssl)
 - [cheatsheet](#cheatsheet)
     - [generate private key and csr](#generate-private-key-and-csr)
     - [generate a self-signed certificate](#generate-a-self-signed-certificate)
@@ -393,6 +396,50 @@ ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/server.crt;
 ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/server.key;
 ```
 
+## get remote server certs
+
+> [!TIP]
+> references:
+> - [*imarslo : get cert from domain](./keystore.html#get-cert-from-domain)
+> - [* Checking A Remote Certificate Chain With OpenSSL](https://langui.sh/2009/03/14/checking-a-remote-certificate-chain-with-openssl/)
+> - [Using openssl to get the certificate from a server](https://stackoverflow.com/a/7886248/2940319)
+> - [SSL Certificate Verification](https://curl.se/docs/sslcerts.html)
+
+### keytool
+```bash
+$ keytool -printcert \
+          -rfc \
+          -sslserver <domain.com>:<port> \
+          > cacert.crt
+```
+- check
+  ```bash
+  # convert to pem
+  $ openssl x509 -inform PEM -in cacert.crt -out outcert.pem -text
+
+  # or
+  $ openssl x509 \
+            -in cacert.crt \
+            -noout \
+            -text
+  ```
+
+### openssl
+```bash
+$ echo |
+  openssl s_client -showcerts \
+                   -servername <domain.com> \
+                   -connect <domain.com>:<port> 2>/dev/null |
+  sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
+  > cacert.crt
+```
+- check
+  ```bash
+  $ keytool -printcert \
+            -v \
+            -file cacert.crt
+  ```
+
 # cheatsheet
 ### generate private key and csr
 ```bash
@@ -419,41 +466,59 @@ need to input the following info to generate CSR :
 
 ### generate a self-signed certificate
 ```bash
-$ openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out certificate.crt
+$ openssl req -x509 \
+              -sha256 \
+              -nodes \
+              -days 365 \
+              -newkey rsa:2048 \
+              -keyout privateKey.key \
+              -out certificate.crt
 ```
 
 ### check ssl certificate
 - check private key info
   ```bash
-  $ openssl rsa -text -in privateKey.key -noout
+  $ openssl rsa -text \
+                -in privateKey.key \
+                -noout
   ```
 - check csr info
   ```bash
-  $ openssl req -text -in CSR.csr -noout
+  $ openssl req -text \
+                -in CSR.csr \
+                -noout
   ```
 - view ssl certificate info
   ```bash
-  $ openssl x509 -text -in certificate.crt -noout
+  $ openssl x509 -text \
+                 -in certificate.crt \
+                 -noout
   ```
 
 ### check who has issued the ssl certificate
 ```bash
 $ echo -n |
-       openssl s_client -connect <domain.com>:<port> 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -issuer
 ```
 
 ### check whom the ssl certificate is issued to
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -subject
 ```
 
 ### check for what dates the ssl certificate is valid
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -dates
 notBefore=Sep  8 00:00:00 2021 GMT
 notAfter=Aug 18 23:59:59 2022 GMT
@@ -462,28 +527,36 @@ notAfter=Aug 18 23:59:59 2022 GMT
 ### show multiple informations
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -dates -subject -issuer
 ```
 
 ### show fingerprint
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -fingerprint
 ```
 
 ### extract all information from the ssl certificate (decoded)
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -text
 ```
 
 ### show the ssl certificate
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509
 -----BEGIN CERTIFICATE-----
 ...
@@ -493,8 +566,11 @@ $ echo -n |
 ### check ssl certificate expiration date
 ```bash
 $ echo -n |
-       openssl s_client -connect msi-sldap.marvell.com:636 2>/dev/null |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
        openssl x509 -noout -dates
+
 # or
 $ openssl x509 -enddate -noout -in /path/to/name.pem
 ```
@@ -507,6 +583,7 @@ $ openssl req -pubkey -in CSR.csr -noout | openssl sha256
 # or
 $ openssl x509 -pubkey -in certificate.crt -noout | openssl sha256
 ```
+
 # manage certificate in OS (client)
 ## OSX
 ### add
