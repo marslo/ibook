@@ -102,6 +102,11 @@ Host  github.com
       ProxyCommand        nc -X connect -x proxy.example.com:80 %h %p
 ```
 
+- for socks5
+  ```bash
+  ProxyCommand        nc -X 5 -x proxy.example.com:80 %h %p
+  ```
+
 - usage for git
   ```bash
   $ cat ~/.gitconfig
@@ -119,13 +124,28 @@ Host  github.com
 
 ### proxy for git
 ```bash
-$ cat ~/.gitconfig
-[http]
-  proxy = http://proxy.example.com:80
-[https]
-  proxy = http://proxy.example.com:80
-[http "https://chromium.googlesource.com"]
-  proxy = http://proxy.example.com:80
-[http "https://github.com"]
-  proxy = http://proxy.example.com:80
- ```
+$ git config --global https.proxy 'http://127.0.0.1:8001'   # using privoxy convert socks to http
+$ git config --global http.proxy 'http://127.0.0.1:8001'
+```
+
+- or
+  ```bash
+  $ cat ~/.gitconfig
+  [http]
+    proxy = http://proxy.example.com:80
+  [https]
+    proxy = http://proxy.example.com:80
+  [http "https://chromium.googlesource.com"]
+    proxy = http://proxy.example.com:80
+  [http "https://github.com"]
+    proxy = http://proxy.example.com:80
+   ```
+
+ - [for socks5](https://github.com/521xueweihan/git-tips#git-%E9%85%8D%E7%BD%AE-http-%E5%92%8C-socks-%E4%BB%A3%E7%90%86)
+ 
+  ```bash
+  $ git config --global socks.proxy "proxy.example.com:80"
+
+  # or
+  $ git config --global socks.proxy "socks5://proxy.example.com:80"
+  ```
