@@ -9,6 +9,7 @@
 - [proxy for ssh](#proxy-for-ssh)
 - [proxy for git](#proxy-for-git)
 - [proxy for npm](#proxy-for-npm)
+- [proxy for ssl](#proxy-for-ssl)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -175,3 +176,9 @@ $ npm config set strict-ssl false
   proxy=http://proxy.example.com:80/
   https-proxy=http://proxy.example.com:80/
   ```
+
+### [proxy for ssl](https://curl.se/docs/sslcerts.html)
+
+> HTTPS proxy
+> Since version 7.52.0, curl can do HTTPS to the proxy separately from the connection to the server. This TLS connection is handled separately from the server connection so instead of --insecure and --cacert to control the certificate verification, you use --proxy-insecure and --proxy-cacert. With these options, you make sure that the TLS connection and the trust of the proxy can be kept totally separate from the TLS connection to the server.
+
