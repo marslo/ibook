@@ -14,6 +14,7 @@
   - [gnu/stubs-64.h](#gnustubs-64h)
 - [others](#others)
   - [diff-highlight: command not found](#diff-highlight-command-not-found)
+  - [error: RPC failed](#error-rpc-failed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -193,4 +194,17 @@ $ sudo yum install glibc-devel
 
 ```bash
 $ sudo ln -sf /path/to/diff-highlight /usr/bin/diff-highlight
+```
+
+### error: RPC failed
+
+> [!TIP]
+> `error: RPC failed; curl 92 LibreSSL SSL_read: error:02FFF03C:system library:func(4095):Operation timed out`
+                                                                                            > 
+> references:
+> - [Git push getting failed. error: RPC failed; curl 56 LibreSSL SSL_read: SSL_ERROR_SYSCALL, errno 60](https://stackoverflow.com/a/56067918/2940319)
+
+```bash
+$ git config [--global] http.postBuffer 524288000
+$ git config [--global] http.sslVerify false
 ```

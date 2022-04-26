@@ -112,14 +112,16 @@ Host  github.com
   $ cat ~/.gitconfig
   ...
   [url "git@ssh.github.com"]
-    insteadOf   = git@github.com
+    insteadOf    = git@github.com
   [url "git@ssh.github.com:"]
-    insteadOf   = https://github.com/
-  [htttp]
-    sslVerify = false
+    insteadOf    = https://github.com/
+  [http]
+    sslVerify    = false
+    postBuffer   = 524288000
     # sslVersion = tlsv1.1
     # sslVersion = tlsv1.2
     # sslVersion = tlsv1.3
+  ...
   ```
 
 ### proxy for git
