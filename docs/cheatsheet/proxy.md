@@ -8,6 +8,7 @@
 - [proxy for pip](#proxy-for-pip)
 - [proxy for ssh](#proxy-for-ssh)
 - [proxy for git](#proxy-for-git)
+- [proxy for npm](#proxy-for-npm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -126,8 +127,8 @@ Host  github.com
 
 ### proxy for git
 ```bash
-$ git config --global https.proxy 'http://127.0.0.1:8001'   # using privoxy convert socks to http
-$ git config --global http.proxy 'http://127.0.0.1:8001'
+$ git config --global https.proxy 'http://127.0.0.1:80'   # using privoxy convert socks to http
+$ git config --global http.proxy 'http://127.0.0.1:80'
 ```
 
 - or
@@ -144,10 +145,33 @@ $ git config --global http.proxy 'http://127.0.0.1:8001'
    ```
 
  - [for socks5](https://github.com/521xueweihan/git-tips#git-%E9%85%8D%E7%BD%AE-http-%E5%92%8C-socks-%E4%BB%A3%E7%90%86)
- 
+
   ```bash
   $ git config --global socks.proxy "proxy.example.com:80"
 
   # or
   $ git config --global socks.proxy "socks5://proxy.example.com:80"
+  ```
+
+### proxy for npm
+> references:
+> - [npm config](https://docs.npmjs.com/cli/v8/using-npm/config)
+> - [Is there a way to make npm install (the command) to work behind proxy?](https://stackoverflow.com/a/10304317/2940319)
+> - [How to fix SSL certificate error when running Npm on Windows?](https://stackoverflow.com/a/54538095/2940319)
+
+```bash
+$ npm config set proxy http://proxy.example.com:80/
+$ npm config set https-proxy http://proxy.example.com:80/
+$ npm config set noproxy '127.0.0.1,my.noproxy.com'
+
+# optional
+$ npm config set strict-ssl false
+```
+
+- or
+  ```bash
+  $ cat ~/.npmrc
+  strict-ssl=false
+  proxy=http://proxy.example.com:80/
+  https-proxy=http://proxy.example.com:80/
   ```
