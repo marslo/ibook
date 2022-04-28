@@ -354,7 +354,14 @@ $ curl -s \
 ```
 
 ## deploy
-### deploy single artifacts
+### [deploy single artifacts](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-Example-DeployinganArtifact)
+```bash
+$ curl -gsSL \
+       --netrc-file ~/.marslo/.netrc \
+       -XPUT \
+       "https://artifactory.domain.com/artifactory/<repo-name>/<path/to/file.txt>" \
+       -T <artifacts>.txt
+```
 
 ### [deploy bundle artifact](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifactsfromArchive)
 ```bash
