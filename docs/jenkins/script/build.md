@@ -605,7 +605,7 @@ println """
 """
 
 Jenkins.instance.getAllItems( Job.class ).each { job ->
-  if ( job.fullName.contains(JOB_PATTERN) ) {
+  if ( job.fullName.contains( JOB_PATTERN ) ) {
     def build = job.getLastBuild()
     println """
       ~~> ${job.getFullName()} : ${build.getId()} :
@@ -662,7 +662,7 @@ final long CURRENT_TIME = System.currentTimeMillis()
 final int BENCH_MARK    = 1*24*60*60*1000                     // days * hours * minutes * seconds * microseconds (1000)
 
 Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
+  job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
   if ( history ) {
@@ -712,7 +712,7 @@ final String JOB_PATTERN = '<group>'
 Map results = [:]
 
 Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains(JOB_PATTERN)
+  job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   results.(job.fullName) = job.builds.findAll { Run run ->
     !run.isBuilding() &&
@@ -740,7 +740,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   Map results = [:]
 
   Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-    job.fullName.contains(JOB_PATTERN)
+    job.fullName.contains( JOB_PATTERN )
   }.each { Job job ->
     results.(job.fullName) = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME ).findAll { Run run ->
       !run.isBuilding() &&
@@ -1006,6 +1006,35 @@ println "total number: ${count}"
 - result:
   ![filter build history via params](../../screenshot/jenkins/filter-job-history-via-params.png)
   ![filter build history via params details](../../screenshot/jenkins/filter-job-history-via-params-2.png)
+
+
+### list all running builds
+```groovy
+import static groovy.json.JsonOutput.*
+
+final String JOB_PATTERN                 = '<group>[/<name>]'                         // project/job keywords
+Map<String, Map<String, String>> results = [:]
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.contains( JOB_PATTERN )
+}.each { Job job ->
+  results.(job.fullName) = job.builds.findAll { Run run ->
+    run.isBuilding()                                                                  // or `run.result.equals(null)`
+  }.collectEntries { Run run ->
+    [ (run.id) : run.getAbsoluteUrl() ]
+  }
+}
+
+results.findAll{ !it.value.isEmpty() }
+       .each { name, builds ->
+         println """
+           ~~> ${name} : ${builds.size()}
+                ${builds.collect{ "#${it.key} : ${it.value}" }.join('\n' + ' '*16)}
+         """
+       }
+
+"DONE"
+```
 
 
 ### get builds result and percentage within certain start-end time
