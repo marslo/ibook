@@ -149,38 +149,65 @@ Jenkins.instance
 
 ### [List plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)
 ```groovy
-def jenkins = Jenkins.instance
+def plugins = Jenkins.instance
+                     .pluginManager
+                     .plugins
+                     .sort(false) { a, b ->
+                       a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+                     }
 
-println """
-  Jenkins Instance : ${jenkins.getComputer('').hostName} + ${jenkins.rootUrl}
-  Installed Plugins:
-  ==================
-"""
-jenkins.pluginManager
-       .plugins
-       .sort(false) { a, b ->
-         a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
-       }.each { plugin ->
-         println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
-       }
+println "Jenkins Instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
+        "Installed Plugins:\n" +
+        "=================="
+plugins.each { plugin ->
+  println "  ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}"
+}
 
-println """
-  Plugins Dependency tree (...: dependencies; +++: dependants) :
-  =======================
-"""
-jenkins.pluginManager
-       .plugins
-       .sort(false) { a, b ->
-         a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
-       }.each { plugin ->
-         println """
-           ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
-           +++ ${plugin.getDependants()}
-           ... ${plugin.getDependencies()}
+println "\nPlugins Dependency tree (...: dependencies; +++: dependants) :\n" +
+        "======================="
+plugins.each { plugin ->
+  println """
+    ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
+    +++ ${plugin.getDependants()}
+    ... ${plugin.getDependencies()}
 
-         """
-       }
+  """
+}
 ```
+- or
+  ```groovy
+  def jenkins = Jenkins.instance
+
+  println """
+    Jenkins Instance : ${jenkins.getComputer('').hostName} + ${jenkins.rootUrl}
+    Installed Plugins:
+    ==================
+  """
+  jenkins.pluginManager
+         .plugins
+         .sort(false) { a, b ->
+           a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+         }.each { plugin ->
+           println "${plugin.getShortName()}: ${plugin.getVersion()} | ${plugin.getDisplayName()}"
+         }
+
+  println """
+    Plugins Dependency tree (...: dependencies; +++: dependants) :
+    =======================
+  """
+  jenkins.pluginManager
+         .plugins
+         .sort(false) { a, b ->
+           a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+         }.each { plugin ->
+           println """
+             ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
+             +++ ${plugin.getDependants()}
+             ... ${plugin.getDependencies()}
+
+           """
+         }
+  ```
 
 ## scriptApproval
 ### backup & restore all scriptApproval items

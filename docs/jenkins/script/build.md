@@ -30,6 +30,7 @@
   - [get all builds result percentage](#get-all-builds-result-percentage)
   - [get builds result percentage within 24 hours](#get-builds-result-percentage-within-24-hours)
   - [get builds result during certain start-end time](#get-builds-result-during-certain-start-end-time)
+  - [list all running builds](#list-all-running-builds)
   - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
 - [build stage](#build-stage)
   - [show build stages details](#show-build-stages-details)
