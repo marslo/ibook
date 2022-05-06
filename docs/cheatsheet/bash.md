@@ -7,6 +7,7 @@
   - [Filename Expansion](#filename-expansion)
 - [quoting](#quoting)
 - [brace expansion](#brace-expansion)
+  - [segmented continuous](#segmented-continuous)
   - [scp multipule folder/file to target server](#scp-multipule-folderfile-to-target-server)
   - [all about {curly braces} in bash](#all-about-curly-braces-in-bash)
   - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
@@ -125,6 +126,13 @@ arr=(apple)  # an indexed array with a single element
 
 
 ## [brace expansion](https://www.gnu.org/software/bash/manual/html_node/brace-expansion.html)
+### [segmented continuous](https://stackoverflow.com/a/44429171/2940319)
+```bash
+# exclude 7 from 1-10
+$ echo test-{{1..6},{8..10}}
+test-1 test-2 test-3 test-4 test-5 test-6 test-8 test-9 test-10
+```
+
 ### scp multipule folder/file to target server
 ```bash
 $ scp -r $(echo dir{1..10}) user@target.server:/target/server/path/
@@ -411,6 +419,7 @@ SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:moni
 |    `xtrace`   | Same as `-x`.                                                                                                                                                                                                      |
 
 ## [the shopt builtin](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
+
 {% hint style='tip' %}
 shopt
 ```bash
