@@ -835,6 +835,35 @@ $ git describe --dirty --tags --long --match *nightly*
 nightly#82-2001310818-1765-gc18894b193
 ```
 
+#### [sort git tags by ascending and descending semver](https://andy-carter.com/blog/sort-git-tags-by-ascending-and-descending-semver)
+
+> [!TIP]
+> prepend "-" to reverse sort order.
+> - ascending  : `--sort=<type>`
+> - descending : `--sort=-<type>`
+>
+> references:
+> - [How to sort git tags by version string order of form rc-X.Y.Z.W?](https://stackoverflow.com/a/22634649/2940319)
+> - [How can I list all tags in my Git repository by the date they were created?](https://stackoverflow.com/a/6270112/2940319)
+> - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
+
+- via `v:refname` or `version:refname`
+- by created data
+  ```bash
+  $ git for-each-ref --sort=creatordate --format='%(refname) %(creatordate)' refs/tags
+
+  # or
+  $ git tag --format='%(creatordate:short)%09%(refname:strip=2)' --sort=creatordate
+
+  # or
+  $ git for-each-ref --sort=taggerdate --format='%(tag) %(taggerdate) %(taggername) %(subject)' refs/tags
+
+  # much better
+  $ git for-each-ref --sort=taggerdate \
+                     --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' refs/tags |
+        awk 'BEGIN { FS = "_,,,_"  } ; { t=strftime("%Y-%m-%d  %H:%M",$2); printf "%-20s %-18s %-25s %s\n", t, $1, $4, $3  }'
+  ```
+
 ## checkout
 ### [checkout specific commit](https://stackoverflow.com/a/3489576/2940319)
 ```bash

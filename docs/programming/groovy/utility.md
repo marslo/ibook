@@ -18,6 +18,9 @@
 
 ## time
 
+> [!TIP]
+> [Java SimpleDateFormat](https://jenkov.com/tutorials/java-internationalization/simpledateformat.html)
+
 ### get current time
 ```groovy
 import java.util.Calendar
@@ -439,26 +442,49 @@ println """
 > - [get Beijing Date time - Java java.util](http://www.java2s.com/example/java/java.util/get-beijing-date-time.html)
 
 ```groovy
+import java.util.Date
 import java.text.SimpleDateFormat
 
 Long x = 1086073200000
 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy")
 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"))
 
-Calendar calendar = Calendar.getInstance()
-calendar.setTimeInMillis(x)
-
-println x
-println calendar.getTime().getClass()
-println simpleDateFormat.format(calendar.getTime())
+println """
+       x : ${x}
+  x data : ${simpleDateFormat.format( new Date(x) )}
+  0 data : ${simpleDateFormat.format( new Date(0) )}
+"""
 ```
-- result:
+- result
+  ```groovy
+         x : 1086073200000
+    x data : 15:00:00 01/06/2004
+    0 data : 08:00:00 01/01/1970
   ```
-  Result
-  1086073200000
-  class java.util.Date
-  15:00:00 01/06/2004
+
+- or via `java.util.Calendar`
+  ```groovy
+  import java.text.SimpleDateFormat
+  import java.util.Calendar
+
+  Long x = 1086073200000
+  SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy")
+  simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"))
+
+  Calendar calendar = Calendar.getInstance()
+  calendar.setTimeInMillis(x)
+
+  println x
+  println calendar.getTime().getClass()
+  println simpleDateFormat.format(calendar.getTime())
   ```
+  - result:
+    ```
+    Result
+    1086073200000
+    class java.util.Date
+    15:00:00 01/06/2004
+    ```
 
 ## regex `Pattern` and `Matcher`
 ### matches to regex (return `Boolean`)
