@@ -49,6 +49,8 @@ Git Command Study and practice
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
+- [for-each-ref](#for-each-ref)
+  - [format](#format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -61,6 +63,8 @@ Git Command Study and practice
 > - [git-tips/tips](https://github.com/git-tips/tips)
 > - [521xueweihan/git-tips](https://github.com/521xueweihan/git-tips)
 > - [CS Visualized: Useful Git Commands](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
+> - [10.8 Git Internals - Environment Variables](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
+> - [GitHub Flow Like a Pro with these 13 Git Aliases](http://haacked.com/archive/2014/07/28/github-flow-aliases/)
 {% endhint %}
 
 ## Appoint
@@ -69,9 +73,9 @@ Git Command Study and practice
 br      = branch
 co      = checkout
 coa     = commit --amend --no-edit
-pl      = !git --no-pager log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative --max-count=3
-pls     = log --color --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
-fpl     = log --color --graph --pretty=tformat:'%Cred%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=relative
+pl      = !git --no-pager log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative --max-count=3
+pls     = log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative
+fpl     = log --color --graph --pretty=tformat:'%C(red)%H%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative
 fl      = log -p --graph --color --graph
 rlog    = "!bash -c 'while read branch; do \n\
              git fetch --all --force; \n\
@@ -931,3 +935,133 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 
   $ git afr 'sandbox/marslo/*'
   ```
+
+## for-each-ref
+### format
+
+#### date
+
+> [!TIP]
+> references:
+> - [Specification for syntax of git dates](https://stackoverflow.com/a/14025405/2940319)
+> - [strftime](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strftime-wcsftime-strftime-l-wcsftime-l?redirectedfrom=MSDN&view=msvc-170)
+> - [strftime](http://www.cplusplus.com/reference/ctime/strftime/)
+>
+> format:
+> - `relative`
+> - `local`
+> - `default`
+> - `iso` ( or `iso8601` )
+> - `rfc` ( or `rfc2822` )
+> - `short`
+> - `raw`
+> - `format:%Y-%m-%d %I:%M %p`
+>
+> strftime :
+> - `%a` :     Abbreviated weekday name
+> - `%A` :     Full weekday name
+> - `%b` :     Abbreviated month name
+> - `%B` :     Full month name
+> - `%c` :     Date and time representation appropriate for locale
+> - `%d` :     Day of month as decimal number (01 – 31)
+> - `%H` :     Hour in 24-hour format (00 – 23)
+> - `%I` :     Hour in 12-hour format (01 – 12)
+> - `%j` :     Day of year as decimal number (001 – 366)
+> - `%m` :     Month as decimal number (01 – 12)
+> - `%M` :     Minute as decimal number (00 – 59)
+> - `%p` :     Current locale's A.M./P.M. indicator for 12-hour clock
+> - `%S` :     Second as decimal number (00 – 59)
+> - `%U` :     Week of year as decimal number, with Sunday as first day of week (00 – 53)
+> - `%w` :     Weekday as decimal number (0 – 6; Sunday is 0)
+> - `%W` :     Week of year as decimal number, with Monday as first day of week (00 – 53)
+> - `%x` :     Date representation for current locale
+> - `%X` :     Time representation for current locale
+> - `%y` :     Year without century, as decimal number (00 – 99)
+> - `%Y` :     Year with century, as decimal number
+> - `%%` :     Percent sign
+> - `%z`, `%Z` : Either the time-zone name or time zone abbreviation, depending on registry settings
+
+- how to use
+  ```bash
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate)'
+  Mon Aug 30 21:50:57 2021 +0800
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:relative)'
+  9 months ago
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:raw)'
+  1630331457 +0800
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:iso)'
+  2021-08-30 21:50:57 +0800
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:rfc)'
+  Mon, 30 Aug 2021 21:50:57 +0800
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:local)'
+  Mon Aug 30 21:50:57 2021
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:format:%Y-%m-%d %I:%M %p)'
+  2021-08-30 09:50 PM
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(committerdate:format:%Y-%m-%d %H:%M:%S)'
+  2021-08-30 21:50:57
+  ```
+
+#### color
+
+> [!TIP]
+> usage:
+> - `%(color:<color_name>)`
+> - `%(color:reset)`
+
+- example
+  ```bash
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(color:yellow)%(committerdate:iso)%(color:reset)' \
+                     --color
+  =always
+  2021-08-30 21:50:57 +0800
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(color:blue)%(committerdate:iso)%(color:reset)' \
+                     --color=always
+  2021-08-30 21:50:57 +0800
+  ```
+
+#### condition
+
+> [!TIP]
+> - `%(if)...%(then)...%(else)...%(end)`
+> - `%(align:<number>,left) ... %(end)`
+
+- example
+  ```bash
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(if)%(committerdate)%(then)%(committerdate:format:%Y-%m-%d %I:%M %p)%(else)%(taggerdate:format:%Y-%m-%d %I:%M %p)%(end)'
+  2021-08-30 09:50 PM
+
+  $ git for-each-ref --sort=-taggerdate refs/tags \
+                     --format='%(align:left,50)[%(objecttype) : %(refname:short)]%(end) (%(committerdate:format:%Y-%m-%d %H:%M)) <%(committername)>' \
+                     --color \
+                     --count=10
+  [commit : sandbox/marslo/tag-1]              (2021-08-30 21:50) <marslo>
+  ```
+
+
+#### alias
+```bash
+[alias]
+  # [p]retty [t]ag
+  pt          = "!git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(align:left,38)%(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset)%(end) %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M)%(else)%(committerdate:format:%Y-%m-%d %H:%M)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color --count=10"
+  pts         = "!git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset) - %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M)%(else)%(committerdate:format:%Y-%m-%d %H:%M)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color"
+```
+
