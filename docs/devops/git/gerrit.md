@@ -404,30 +404,73 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
 {% endhint %}
 
 ### [basic usage](https://gerrit-review.googlesource.com/Documentation/dev-rest-api.html#_basic_testing)
-- regular options
+#### regular options
+```bash
+                                  a might means [a]pi
+                                    ⇡
+$ curl -X PUT    http://domain.name/a/path/to/api/
+$ curl -X POST   http://domain.name/a/path/to/api/
+$ curl -X DELETE http://domain.name/a/path/to/api/
+```
+
+#### sending data
+- json with file
   ```bash
-                                    a might means [a]pi
-                                      ⇡
-  $ curl -X PUT    http://domain.name/a/path/to/api/
-  $ curl -X POST   http://domain.name/a/path/to/api/
-  $ curl -X DELETE http://domain.name/a/path/to/api/
+  $ curl -X PUT \
+         -d@testdata.json \
+         --header "Content-Type: application/json" \
+         http://domain.name/a/path/to/api/
   ```
-- sending data
-  - json
-    ```bash
-    $ curl -X PUT \
-           -d@testdata.txt \
-           --header "Content-Type: application/json" \
-           http://domain.name/a/path/to/api/
-    ```
-  - txt
-    ```bash
-    $ curl -X PUT \
-           --data-binary @testdata.txt \
-           --header "Content-Type: text/plain" \
-           http://domain.name/a/path/to/api/
-    ```
-- verifying header content
+
+- json with string
+  ```bash
+  $ curl -X POST \
+         -H "Content-Type: application/json" https://domain.name/a/changes/<number>/move \
+         -d '{ "destination_branch" : "target/branch/name" }'
+  )]}'
+  {
+    "id": "marslo-project~target%2Fbranch%2Fname~Id90057ab632eb93be2fa9128a9d624664008cb4a",
+    "project": "marslo-project",
+    "branch": "target/branch/name",
+    "hashtags": [],
+    "change_id": "Id90057ab632eb93be2fa9128a9d624664008cb4a",
+    "subject": "marslo: testing api move",
+    "status": "NEW",
+    "created": "2022-01-21 05:21:25.000000000",
+    "updated": "2022-05-17 06:56:37.000000000",
+    "submit_type": "FAST_FORWARD_ONLY",
+    "mergeable": false,
+    "insertions": 8,
+    "deletions": 8,
+    "unresolved_comment_count": 0,
+    "has_review_started": true,
+    "_number": 94490,
+    "owner": {
+      "_account_id": 790
+    },
+    "requirements": []
+  }
+
+  # or
+  $ curl -X POST \
+         -H "Content-Type: application/json" https://domain.name/a/changes/<number>/move \
+         -d '{
+              "destination_branch" : "target/branch/name"
+         }' |
+    tail -n +2 |
+    jq -r .branch
+  ```
+
+- txt
+  ```bash
+  $ curl -X PUT \
+         --data-binary @testdata.txt \
+         --header "Content-Type: text/plain" \
+         http://domain.name/a/path/to/api/
+  ```
+
+
+#### verifying header content
   ```bash
   $ curl -v -n -X DELETE http://domain.name/a/path/to/api/
   ```
@@ -437,6 +480,7 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
   ```bash
   $ curl -X GET 'https://domina.name/a/changes/<change-id>'
   ```
+
 - get change via commit-id
   ```groovy
   $ changeid=$(git show <commit-id> --no-patch --format="%s%n%n%b" | sed -nre 's!Change-Id: (.*$)!\1!p')
@@ -496,10 +540,10 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r '.labels."Code-Review".all[] | select ( .value == -2 ) | .username'
-                                          ⠆ ⠇⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠇ ⠆
-                                          ⠆           ⇣             ⠆
-                                          ⠆  select ".value"== -2   ⠆
-                                          ⠆                         ⠆
+                                          : |⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂| :
+                                          :           ⇣             :
+                                          :  select ".value"== -2   :
+                                          :                         :
                                           ⇣                         ⇣
                                          pipe                     pipe
 
@@ -508,7 +552,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
       jq -r '( .labels."Code-Review".all[] | select ( .value == -2 ) ).username'
-             ⠆                                                       ⠆
+             :                                                       :
              ⇣                                                       ⇣
          expression                                              expression
 
@@ -516,7 +560,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
       jq -r '[ .labels."Code-Review".all[] | select ( .value == -2 ) ][].username'
-             ⠆                                                       ⠆
+             :                                                       :
              ⇣                                                       ⇣
          expression                                              expression
 
@@ -524,7 +568,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
       jq -r '.labels."Code-Review".all[] | select ( .value == -2 )' |
-      jq -r .username                                               ⠆
+      jq -r .username                                               :
                                                                     ⇣
                                                                    pipe
 ```
