@@ -159,6 +159,20 @@ refs/heads/sandbox/${username}/*
 ```
 
 #### freeze `master` branch
+
+> [!TIP]
+> One quirk is that the shortest possible pattern expansion must be a valid ref name<br>
+> thus `^refs/heads/.*/name` will fail because `refs/heads//name` is not a valid reference<br>
+> but `^refs/heads/.+/name` will work.
+
+
+About the `refs/for` namespace
+> [!TIP]
+> references:<br>
+> - [what is the use refs/for/refs/* in gerrit?](https://stackoverflow.com/a/54551260/2940319)
+> <br>
+> `refs/for/*` syntax is just a short name for `refs/for/refs/*`:
+
 - `project.config`
   ```bash
   [access "refs/for/refs/heads/master"]
@@ -195,6 +209,24 @@ refs/heads/sandbox/${username}/*
     push = +force group user/Marslo Jiao (marslo)
     pushMerge = group user/Marslo Jiao (marslo)
   ```
+
+  - or using `exclusiveGroupPermissions`
+    ```config
+    [access "^refs/heads/backup/(master|dev|staging|stable)/.+$"]
+           exclusiveGroupPermissions = create delete push pushMerge
+           create = group Project Owners
+           create = block group Registered Users
+           delete = block group Registered Users
+           push = block group Registered Users
+           pushMerge = block group Registered Users
+    [access "^refs/for/refs/heads/backup/(master|dev|staging|stable)/.+$"]
+           exclusiveGroupPermissions = addPatchSet create push pushMerge submit
+           addPatchSet = block group Registered Users
+           create = block group Registered Users
+           push = block group Registered Users
+           pushMerge = block group Registered Users
+           submit = block group Registered Users
+    ```
 
 - `groups`
   ```bash
@@ -583,8 +615,12 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 
 ### reference
 - [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
+- [Gerrit Code Review - Access Controls](https://gerrit-review.googlesource.com/Documentation/access-control.html#_project_access_control_lists)
 - [Gerrit Code Review - Uploading Changes](https://www.gerritcodereview.com/user-upload.html)
+- [The refs/for namespace](https://gerrit-review.googlesource.com/Documentation/concept-refs-for-namespace.html)
 - [gerrit/gerrit/refs/meta/config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config)
 - [gerrit 权限控制](https://blog.csdn.net/chenjh213/article/details/50571190)
 - [its-jira plugin md](https://gerrit.googlesource.com/plugins/its-jira/+/refs/heads/stable-3.0/src/main/resources/Documentation/config.md)
 - [Rule base configuration](https://review.opendev.org/plugins/its-storyboard/Documentation/config-rulebase-common.html)
+- [Gerrit push not working. Remote rejected, prohibited by gerrit](https://stackoverflow.com/a/31297860/2940319)
+- [Gerrit Code Review - Project Configuration File Format](https://gerrit-review.googlesource.com/Documentation/config-project-config.html)
