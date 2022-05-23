@@ -2,28 +2,28 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Homebrew](#homebrew)
-  - [Homebrew Installation](#homebrew-installation)
-  - [Homebrew Caskroom Installation](#homebrew-caskroom-installation)
-  - [Package Installation](#package-installation)
+- [homebrew](#homebrew)
+  - [homebrew installation](#homebrew-installation)
+  - [homebrew caskroom installation](#homebrew-caskroom-installation)
+  - [package installation](#package-installation)
   - [check formula config files](#check-formula-config-files)
   - [brew debug](#brew-debug)
   - [tricky](#tricky)
 - [system settings](#system-settings)
 - [accessory](#accessory)
   - [iTerm2](#iterm2)
-  - [BackgroundMusic](#backgroundmusic)
-  - [Mac CLI](#mac-cli)
-  - [Others](#others)
-- [Q&A](#qa)
+  - [backgroundmusic](#backgroundmusic)
+  - [mac cli](#mac-cli)
+  - [others](#others)
+- [q&a](#qa)
   - [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## Homebrew
-### Homebrew Installation
+## homebrew
+### homebrew installation
 ```bash
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
@@ -58,6 +58,7 @@ $ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homeb
   git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
   git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
   ```
+
 - ustc (中科大)
   ```bash
   brew_source='https://mirrors.ustc.edu.cn'
@@ -67,6 +68,7 @@ $ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homeb
   git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
   git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
   ```
+
 - ali (阿里)
   ```bash
   brew_source='https://mirrors.aliyun.com/homebrew'
@@ -87,7 +89,7 @@ $ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homeb
   git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
   ```
 
-#### Homebrew Bottles
+#### homebrew bottles
 > address:
 > - `https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles`
 > - `https://mirrors.ustc.edu.cn/homebrew-bottles`
@@ -98,7 +100,7 @@ $ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homeb
 $ export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.cloud.tencent.com/homebrew-bottles
 ```
 
-### Homebrew Caskroom Installation
+### homebrew caskroom installation
 ```bash
 $ brew tap caskroom/versions
 
@@ -149,7 +151,7 @@ $ brew cu --all
   $ brew upgrade --cask --greedy
   ```
 
-### Package Installation
+### package installation
 > reference:
 > - [Homebrew Formulae - macvim](https://formulae.brew.sh/formula/macvim)
 > - [MacVim](https://macvim-dev.github.io/macvim/)
@@ -405,6 +407,18 @@ $ brew -v edit macvim-dev/macvim/macvim
     macvim-dev/macvim/macvim
     ```
 
+- [manual download and install from local](https://apple.stackexchange.com/a/361603/254265)
+  ```bash
+  # download manually due to proxy issue
+  $ curl -O https://downloads.sourceforge.net/gptfdisk/gdisk-1.0.9.pkg
+  $ mv gdisk-1.0.9.pkg $(brew --cache -s gdisk)
+  ```
+
+  - check <formula> local cache path
+    ```bash
+    $ brew --cache -s <formula>
+    ```
+
 ## system settings
 
 #### [GNU Coreutils](http://en.wikipedia.org/wiki/GNU_Core_Utilities)
@@ -496,7 +510,7 @@ $ mas list
 419330170 Moom (3.2.10)
 ```
 
-#### Alternative list
+#### alternative list
 ```bash
 $ find /Applications/*.app/Contents/_MASReceipt/receipt -maxdepth 4 -print | sed 's#.app/Contents/_MASReceipt/receipt#.app#g; s#/Applications/##'
 Alfred.app
@@ -519,7 +533,7 @@ pwSafe.app
   ```
 - [more settings](../../tools/iterm2.md)
 
-### [BackgroundMusic](https://github.com/kyleneideck/BackgroundMusic)
+### [backgroundmusic](https://github.com/kyleneideck/BackgroundMusic)
 ```bash
 $ (set -eo pipefail; URL='https://github.com/kyleneideck/BackgroundMusic/archive/master.tar.gz'; \
     cd $(mktemp -d); echo Downloading $URL to $(pwd); curl -qfL# $URL | gzcat - | tar x && \
@@ -552,7 +566,7 @@ $ (set -eo pipefail; URL='https://github.com/kyleneideck/BackgroundMusic/archive
   Done.
   ```
 
-### [Mac CLI](https://github.com/guarinogabriel/Mac-CLI)
+### [mac cli](https://github.com/guarinogabriel/Mac-CLI)
 ```bash
 $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/marslo/mac-cli/master/mac-cli/tools/install)"
 ```
@@ -568,7 +582,7 @@ $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/marslo/mac-cli/master/ma
        4.2 Mbps ↓
   ```
 
-### Others
+### others
 #### [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
 ```bash
 $ npm i -g --save markdown-toc --verbose
@@ -676,7 +690,7 @@ $ sudo gem install iStats -n /usr/local/bin
   For more stats run `istats extra` and follow the instructions.
   ```
 
-## Q&A
+## q&a
 ### [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
 - issue
   ```bash
