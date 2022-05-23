@@ -154,7 +154,7 @@ $ diff <(ls ibook) <(ls mbook)
 3a5
 > node_modules
 
-$ diff <(sleep 4; date) <(sleep 5; date) 
+$ diff <(sleep 4; date) <(sleep 5; date)
 1c1
 < Tue Dec 15 22:48:31 CST 2020
 ---
@@ -243,7 +243,7 @@ t4	44
   ```bash
   $ cat a | paste -d'\t' - - - -
   a	b	c	d
-  e	f		
+  e	f
   ```
 
   or
@@ -305,6 +305,59 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
   or
   $ find [PATH] -type f -printf "%s %p\n" | sort -rn | head -n 5
   ```
+
+- [sort result via human-readable format](https://www.redhat.com/sysadmin/sort-du-output)
+  ```bash
+  $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
+  ```
+
+  - [or](https://unix.stackexchange.com/a/197821/29178)
+    ```bash
+    $ du -sk * | sort -g | awk '{
+
+        numBytes = $1 * 1024;
+        numUnits = split("B K M G T P", unit);
+        num = numBytes;
+        iUnit = 0;
+
+        while(num >= 1024 && iUnit + 1 < numUnits) {
+            num = num / 1024;
+            iUnit++;
+        }
+
+        $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]);
+        print $0;
+
+    }'
+
+    # or in one-line
+    $ du -sk * | sort -g | awk '{ numBytes = $1 * 1024; numUnits = split("B K M G T P", unit); num = numBytes; iUnit = 0; while(num >= 1024 && iUnit + 1 < numUnits) { num = num / 1024; iUnit++; } $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]); print $0; }'
+    ```
+
+  - [or](https://unix.stackexchange.com/a/4701/29178)
+    ```bash
+    #! /usr/bin/env bash
+    ducks () {
+        du -cks -x | sort -n | while read size fname; do
+            for unit in k M G T P E Z Y; do
+                if [ $size -lt 1024 ]; then
+                    echo -e "${size}${unit}\t${fname}"
+                    break
+                fi
+                size=$((size/1024))
+            done
+        done
+    }
+    ducks > .ducks && tail .ducks
+    ```
+
+  - [or](https://unix.stackexchange.com/a/27102/29178)
+    ```bash
+    $ du -k ./* |
+         sort -nr |
+         awk '{ split("KB,MB,GB",size,","); }
+              { x = 1;while ($1 >= 1024) {$1 = $1 / 1024;x = x + 1} $1 = sprintf("%-4.2f%s", $1, size[x]); print $0; }'
+    ```
 
 ## sed
 > reference
