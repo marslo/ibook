@@ -132,16 +132,19 @@ $ npm config set https-proxy $https_proxy -g
 
 ## gitbook format
 ### [hints](https://github.com/GitbookIO/plugin-hints)
-> [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
-> [Hints and Callouts](https://docs.gitbook.com/editing-content/markdown#hints-and-callouts)
 
-| styles  | code                                             |
-| -       | -                                                |
-| info    | `{% hint style='info' %}`<br> `{% endhint %}`    |
-| tip     | `{% hint style='tip' %}`<br> `{% endhint %}`     |
-| danger  | `{% hint style='danger' %}`<br> `{% endhint %}`  |
-| warning | `{% hint style='warning' %}`<br> `{% endhint %}` |
-| success | `{% hint style='success' %}`<br> `{% endhint %}` |
+> references:
+> - [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
+> - [Hints and Callouts](https://docs.gitbook.com/editing-content/markdown#hints-and-callouts)
+
+
+| styles  | code                                                                                       |
+| :-:     | -                                                                                          |
+| info    | {% raw %}`{% hint style='info' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}    |
+| tip     | {% raw %}`{% hint style='tip' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}     |
+| danger  | {% raw %}`{% hint style='danger' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}  |
+| warning | {% raw %}`{% hint style='warning' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %} |
+| success | {% raw %}`{% hint style='success' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %} |
 
 
 #### success
@@ -163,6 +166,14 @@ info
 ```
 {% endhint %}
 
+- or via `[!TIP]`
+
+  > [!TIP]
+  > {% raw %}
+  > > [!TIP]
+  > > tip <br>
+  > > tip <br>
+  > {% endraw %}
 
 #### danger
 {% hint style='danger' %}
@@ -197,9 +208,10 @@ warning
 ### tab
 
 > [!TIP]
-> this function only for native [gitbook.io](https://www.gitbook.com/)
+> this function only for native [gitbook.io](https://www.gitbook.com/) <br>
 > example:
 > - [imarslo : kubernetes certicates](../../virtualization/kubernetes/certificates.html#check-info)
+> <br>
 > reference:
 > -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)
 
