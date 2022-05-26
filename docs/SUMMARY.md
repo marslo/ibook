@@ -150,3 +150,4 @@
   * [skype](tools/skype.md)
   * [teamviewer](tools/teamviewer.md)
   * [app](tools/app.md)
+  * [others](tools/others.md)
