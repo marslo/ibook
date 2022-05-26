@@ -4,6 +4,7 @@
 
 - [shadowsocks service](#shadowsocks-service)
   - [CentOS](#centos)
+- [copy artical content from csdn](#copy-artical-content-from-csdn)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -44,3 +45,22 @@ $ sudo yum install -y git
   $ sudo yum install http://opensource.wandisco.com/centos/6/git/x86_64/wandisco-git-release-6-1.noarch.rpm
   $ sudo yum install -y git
   ```
+
+## copy artical content from csdn
+1. download html to local
+1. [remove auto-switch to homepage function in html](https://blog.csdn.net/danshiming/article/details/124651989)
+  ```html
+  <div style="display:none;">
+    <img src="https://blog.csdn.net/su2231595742/article/details/124182312" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);">
+  </div>
+  ```
+  - or
+    ```html
+    <div style="display:none;">
+      <img src="https://blog.csdn.net/potato123232/article/details/118926834" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);">
+    </div>
+    ```
+1. remove all `*.js` ( and might be all `*.css` )
+1. [open the html in MS Word](https://blog.csdn.net/xue0zhi1qiang3/article/details/103865926)
+
+bingo!
