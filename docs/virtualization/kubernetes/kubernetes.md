@@ -140,6 +140,10 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
 ```
 
 ### [tear down](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down)
+
+> [!TIP]
+> - [How to completely uninstall kubernetes](https://stackoverflow.com/a/71503087/2940319)
+
 - ubuntu
   ```bash
   $ kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
@@ -175,29 +179,49 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
   ```bash
   $ kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
   $ kubectl delete node <node name>
-  $ sudo kubeadm reset
 
+  $ sudo kubeadm reset
   $ docker system prune -a -f
+
+  $ systemctl stop kubelet
+  $ systemctl disable kubelet
+  $ systemctl stop docker
+  $ systemctl disable docker
+
+  $ sudo ifconfig cni0 down
+  $ sudo ifconfig flannel.1 down
+  $ sudo ifconfig docker0 down
+
   $ sudo yum versionlock delete docker-ce
   $ sudo yum versionlock delete docker-ce-cli
   $ sudo yum versionlock delete kubeadm
   $ sudo yum versionlock delete kubelet
   $ sudo yum versionlock delete kubectl
   $ sudo yum versionlock delete kubernetes-cni
-
   $ sudo yum remove -y docker-ce docker-ce-cli containerd.io kubectl kubeadm kubelet kubernetes-cni
+  $ sudo yum autormeove
 
-  $ rm -rf /home/devops/.kube
+  $ rm -rf /home/devops/.kube/
+  $ sudo rm -rf /etc/cni
+  $ sudo rm -rf /etc/kubernetes/
+  $ sudo rm -rf /etc/docker/
+
+  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/kubelet.service 
+  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/docker.service
+  $ sudo rm -rf /usr/lib/systemd/system/docker.service
+  $ sudo rm -rf /usr/lib/systemd/system/kubelet.service.d/
+
+  $ sudo rm -rf /usr/libexec/docker/
+  $ sudo rm -rf /usr/libexec/kubernetes/
+
+  $ sudo rm -rf /var/lib/etcd/               # optional
+  $ sudo rm -rf /var/lib/kubelet/
+  $ sudo rm -rf /var/lib/dockershim/
+  $ sudo rm -rf /var/lib/yum/repos/x86_64/7/kubernetes/
   $ sudo rm -rf /var/log/pods/
   $ sudo rm -rf /var/log/containers/
-  $ sudo rm -rf /etc/kubernetes/
-  $ sudo rm -rf /var/lib/yum/repos/x86_64/7/kubernetes
-  $ sudo rm -rf /usr/libexec/kubernetes
+  $ sudo rm -rf /var/run/docker.sock
   $ sudo rm -rf /var/cache/yum/x86_64/7/kubernetes
-  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/kubelet.service
-  $ sudo rm -rf /usr/lib/systemd/system/kubelet.service.d
-  $ sudo rm -rf /var/lib/kubelet
-  $ sudo rm -rf /usr/libexec/kubernetes
 
   $ sudo yum clean all
   $ sudo rm -rf /var/cache/yum
