@@ -4,8 +4,12 @@
 
 - [encryption](#encryption)
   - [`base64`](#base64)
+- [single line VS. multiple lines](#single-line-vs-multiple-lines)
+  - [execute commands from file](#execute-commands-from-file)
 - [get line after the pattern](#get-line-after-the-pattern)
 - [get certain Line between 2 matched patterns](#get-certain-line-between-2-matched-patterns)
+  - [awk](#awk)
+  - [sed](#sed)
   - [working with empty line](#working-with-empty-line)
 - [`xargs`](#xargs)
   - [multiple move](#multiple-move)
@@ -53,6 +57,105 @@ bWFyc2xvCg==
   marslo
   ```
 
+## single line VS. multiple lines
+
+> [!TIP]
+> ```bash
+> $ echo 'a b c'
+> a b c
+> ```
+
+- `xargs -n<x>`
+  ```bash
+  $ echo 'a b c' | xargs -n1
+  a
+  b
+  c
+
+  $ echo {a..c}.{1..2} | xargs -n1 | xargs -I{} echo -{}-
+  -a.1-
+  -a.2-
+  -b.1-
+  -b.2-
+  -c.1-
+  -c.2-
+  ```
+
+- [`fmt`](https://unix.stackexchange.com/a/170008/29178)
+  ```bash
+  $ echo 'a b c' | fmt -1
+  a
+  b
+  c
+
+  $ echo {a..c}.{1..2} | fmt -1 | xargs -I{} echo -{}-
+  -a.1-
+  -a.2-
+  -b.1-
+  -b.2-
+  -c.1-
+  -c.2-
+  ```
+
+- [`awk`](https://unix.stackexchange.com/a/169996/29178)
+  ```bash
+  $ echo 'a b c' | awk '{OFS=RS;$1=$1}1'
+  a
+  b
+  c
+  ```
+
+- `tr`
+  ```bash
+  $ echo 'a b c' | tr -s ' ' '\n'
+  a
+  b
+  c
+  ```
+
+- [`printf`](https://unix.stackexchange.com/a/428312/29178)
+  ```bash
+  $ printf '%s\n' a b c
+  a
+  b
+  c
+  ```
+
+### execute commands from file
+- [create files](https://linuxize.com/post/linux-xargs-command/)
+
+  > [!TIP]
+  > - precondition <br>
+  >   ```bash
+  >   $ cat a.txt
+  >   a b c
+  >   ```
+
+  ```bash
+  $ echo 'a b c' | xargs -n1 -t touch
+  touch a
+  touch b
+  touch c
+
+  $ echo 'a b c' | xargs -n1 -p touch
+  touch a?...y
+  touch b?...y
+  touch c?...y
+  ```
+
+  > ```bash
+  > -t, --verbose
+  >           Print the command line on the standard error output before executing it.
+  > -p, --interactive
+  >           Prompt  the  user  about  whether to run each command line and read a line from the terminal.
+  >           Only run the command line if the response starts with `y' or `Y'.  Implies -t.
+  > -I replace-str
+  >           Replace occurrences of replace-str in the initial-arguments with names read from standard in-
+  >           put.  Also, unquoted blanks do not terminate input items; instead the separator is  the  new-
+  >           line character.  Implies -x and -L 1.
+  > ```
+
+
 ## get line after the pattern
 ```bash
 $ cat a.txt
@@ -75,29 +178,28 @@ $ cat a.txt
   5e
   ```
 
-  or
-  ```bash
-  $ cat a.txt | awk '/^3c$/ {s=NR;next} s && NR<=s+2'
-  4d
-  5e
-  ```
+  - or
+    ```bash
+    $ cat a.txt | awk '/^3c$/ {s=NR;next} s && NR<=s+2'
+    4d
+    5e
+    ```
 
-  or
-  ```bash
-  $ cat a.txt | awk '{if(a-->0){print;next}} /3c/{a=2}'
-  4d
-  5e
-  ```
+  - or
+    ```bash
+    $ cat a.txt | awk '{if(a-->0){print;next}} /3c/{a=2}'
+    4d
+    5e
+    ```
 
-  or get second column of next line of pattern
-  ```bash
-  $ awk '/my.company.com$/{getline; print}' ~/.marslo/.netrc
-  login marslo
+  - or get second column of next line of pattern
+    ```bash
+    $ awk '/my.company.com$/{getline; print}' ~/.marslo/.netrc
+    login marslo
 
-  $ awk '/my.company.com$/{getline; print $2}' ~/.marslo/.netrc
-  marslo
-  ```
-
+    $ awk '/my.company.com$/{getline; print $2}' ~/.marslo/.netrc
+    marslo
+    ```
 
 - sed
   ```bash
@@ -133,42 +235,44 @@ $ cat a.txt
 11k
 ```
 
-- awk
-  - include pattern
-    ```bash
-    $ cat a.txt | awk '/3c/,/8h/'
-    3c
-    4d
-    5e
-    6f
-    7g
-    8h
-    ```
-- sed
-  - don't include pattern
-    ```bash
-    $ cat a.txt | sed '1,/3c/d;/8h/,$d'
-    4d
-    5e
-    6f
-    7g
+### awk
+- include pattern
+  ```bash
+  $ cat a.txt | awk '/3c/,/8h/'
+  3c
+  4d
+  5e
+  6f
+  7g
+  8h
+  ```
 
-    $ cat a.txt | sed '/3c/,/8h/!d;//d'
-    4d
-    5e
-    6f
-    7g
-    ```
-  - include the pattern
-    ```bash
-    $ cat a.txt | sed -n '/3c/,/8h/p'
-    3c
-    4d
-    5e
-    6f
-    7g
-    8h
-    ```
+### sed
+- don't include pattern
+  ```bash
+  $ cat a.txt | sed '1,/3c/d;/8h/,$d'
+  4d
+  5e
+  6f
+  7g
+
+  $ cat a.txt | sed '/3c/,/8h/!d;//d'
+  4d
+  5e
+  6f
+  7g
+  ```
+
+- include the pattern
+  ```bash
+  $ cat a.txt | sed -n '/3c/,/8h/p'
+  3c
+  4d
+  5e
+  6f
+  7g
+  8h
+  ```
 
 ### working with empty line
 ```bash
@@ -232,7 +336,9 @@ $ git log --format="%H %P" | xargs -L 1 git diff
 ```
 
 ### [Running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
-> precondition:
+
+> [!TIP]
+> precondition:<br>
 > ```bash
 > $ cat a.txt
 > a b c
@@ -264,84 +370,25 @@ command 2: ###this is a comment
   ```bash
   $ cat a.txt | xargs -I @@ bash -c "$myCommandWithDifferentQuotes" -- @@
   ```
+
 - [or](https://stackoverflow.com/a/6959074/2940319)
   ```bash
   $ while read stuff; do
-    ->   echo "command 1: $stuff";
-    ->   echo 'will you do the fandango?';
-    ->   echo "command 2: $stuff";
-    ->   echo
-    -> done < a.txt
+      echo "command 1: $stuff";
+      echo 'will you do the fandango?';
+      echo "command 2: $stuff";
+      echo
+    done < a.txt
   ```
 
 #### compress sub-folders
 ```bash
-$ find . -maxdepth 1 ! -path . -type d -print0 \
-       | xargs -0 -I @@ bash -c '{ \
-           tar caf "@@.tar.lzop" "@@" \
-           && echo Completed compressing directory "@@" ; \
-         }'
+$ find . -maxdepth 1 ! -path . -type d -print0 |
+       xargs -0 -I @@ bash -c '{ \
+         tar caf "@@.tar.lzop" "@@" \
+         && echo Completed compressing directory "@@" ; \
+       }'
 ```
-
-#### execute commands from file
-- [create files](https://linuxize.com/post/linux-xargs-command/)
-  > ```bash
-  > -t, --verbose
-  >           Print the command line on the standard error output before executing it.
-  > -p, --interactive
-  >           Prompt  the  user  about  whether to run each command line and read a line from the terminal.
-  >           Only run the command line if the response starts with `y' or `Y'.  Implies -t.
-  > -I replace-str
-  >           Replace occurrences of replace-str in the initial-arguments with names read from standard in-
-  >           put.  Also, unquoted blanks do not terminate input items; instead the separator is  the  new-
-  >           line character.  Implies -x and -L 1.
-  > ```
-  >
-
-  > precondition
-  > ```bash
-  > $ cat a.txt
-  > a b c
-  > ```
-
-  ```bash
-  $ echo 'a b c'
-  a b c
-  $ echo 'a b c' | xargs -n1
-  a
-  b
-  c
-
-  $ echo 'a b c' | xargs -n1 -t touch
-  touch a
-  touch b
-  touch c
-  $ echo 'a b c' | xargs -n1 -p touch
-  touch a ?...y
-  ```
-- [or `fmt`](https://unix.stackexchange.com/a/170008/29178)
-  ```bash
-  $ echo 'a b c' | fmt -1
-  a
-  b
-  c
-  ```
-
-- [or `awk`](https://unix.stackexchange.com/a/169996/29178)
-  ```bash
-  $ echo 'a b c' | awk '{OFS=RS;$1=$1}1'
-  a
-  b
-  c
-  ```
-
-- or `tr`
-  ```bash
-  $ echo 'a b c' | tr -s ' ' '\n'
-  a
-  b
-  c
-  ```
 
 ### [convert row to column](https://unix.stackexchange.com/a/169997/29178)
 ```bash
