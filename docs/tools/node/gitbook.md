@@ -169,11 +169,11 @@ info
 - or via `[!TIP]`
 
   > [!TIP]
-  > {% raw %}
+  > ```javascript
   > > [!TIP]
   > > tip <br>
   > > tip <br>
-  > {% endraw %}
+  > ```
 
 #### danger
 {% hint style='danger' %}

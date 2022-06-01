@@ -14,8 +14,9 @@
 
 
 > reference:
-> - [Confluence REST API examples](https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/)
-> - [Jira REST API examples](https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/)
+> - [* Confluence REST API examples](https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/)
+> - [* Jira REST API examples](https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/)
+> - [Confluence Server REST API](https://developer.atlassian.com/server/confluence/confluence-server-rest-api/)
 > - [JIRA Server platform REST API reference](https://docs.atlassian.com/software/jira/docs/api/REST/7.6.1/)
 
 ## jira
