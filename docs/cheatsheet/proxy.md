@@ -4,6 +4,7 @@
 
 - [proxy for bash](#proxy-for-bash)
 - [proxy for yum](#proxy-for-yum)
+- [proxy for apt](#proxy-for-apt)
 - [proxy for docker](#proxy-for-docker)
 - [proxy for pip](#proxy-for-pip)
 - [proxy for ssh](#proxy-for-ssh)
@@ -31,6 +32,18 @@ export https_proxy=http://proxy.example.com:80/
 $ cat /etc/yum.conf
 [main]
 proxy=http://proxy.example.com:80
+```
+
+### proxy for apt
+
+> [!TIP]
+> [imarlso : APT Configuration](../devops/commonTools.html#apt-configuration)
+
+```bash
+$ cat /etc/apt/apt.conf
+Acquire::http::Proxy "http://proxy.example.com:80";
+Acquire::https::Proxy "http://proxy.example.com:80";
+Acquire::ftp::Proxy "http://proxy.example.com:80";
 ```
 
 ### proxy for docker

@@ -13,6 +13,7 @@
 - [commands](#commands)
 - [bash](#bash)
 - [ldapsearch](#ldapsearch)
+- [installation alternatives](#installation-alternatives)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -382,4 +383,29 @@ $ ldapsearch \
       -w 'user1password' \
       -E 'pr=1000/noprompt' \
       CN='DL-mydomaindis-group'
+  ```
+
+### installation alternatives
+- install
+  ```bash
+  $ sudo update-alternatives --install /usr/bin/java java /opt/java/jdk1.8.0_121/bin/java 999
+  $ sudo update-alternatives --auto java
+  $ sudo update-alternatives --install /usr/bin/javac javac /opt/java/jdk1.8.0_121/bin/javac 999
+  $ sudo update-alternatives --auto javac
+  ```
+
+- modify
+  ```bash
+  $ ls -altrh $(which -a nc)
+  lrwxrwxrwx 1 root root 22 Jun  1 04:02 /usr/bin/nc -> /etc/alternatives/nmap
+
+  $ sudo alternatives --config nmap
+  There are 2 programs which provide 'nmap'.
+
+    Selection    Command
+  -----------------------------------------------
+  *+ 1           /usr/bin/netcat
+     2           /usr/bin/ncat
+
+  Enter to keep the current selection[+], or type selection number: 1
   ```

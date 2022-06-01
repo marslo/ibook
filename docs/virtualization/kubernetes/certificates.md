@@ -15,10 +15,10 @@
     - [sync to redundant masters](#sync-to-redundant-masters)
     - [restart kubelet](#restart-kubelet)
   - [v1.15.3](#v1153)
-    - [renew certificate](#renew-certificate)
+    - [renew certificates](#renew-certificates-1)
     - [sync to redundant masters](#sync-to-redundant-masters-1)
     - [renew kubeconfig](#renew-kubeconfig-1)
-    - [Restart the master components](#restart-the-master-components)
+    - [restart the master components](#restart-the-master-components)
     - [restart kubelet service](#restart-kubelet-service)
     - [verify](#verify)
   - [renew work node](#renew-work-node)
@@ -29,8 +29,8 @@
 - [renew kubeconfig only](#renew-kubeconfig-only)
   - [basic environment](#basic-environment)
   - [renew kubeconfig](#renew-kubeconfig-2)
-    - [generate the new certificate](#generate-the-new-certificate)
-    - [signing the certificate](#signing-the-certificate)
+    - [generate new certificate (csr)](#generate-new-certificate-csr)
+    - [signing the certificate via `ca.crt`](#signing-the-certificate-via-cacrt)
     - [renew via `kubeadm alpha`](#renew-via-kubeadm-alpha)
     - [renew via `kubectl config`](#renew-via-kubectl-config)
     - [renew via `base64` manually](#renew-via-base64-manually)
@@ -189,6 +189,60 @@ TBD
 ```bash
 $ sudo kubeadm [--config kubeadm.yaml] alpha phase certs renew [commands]
 ```
+
+<div class="alert alert-success hints-alert">
+  <div class="hints-icon">
+  <i class="fa fa-mortar-board"></i>
+  </div>
+  <div class="hints-container">
+  <blockquote>
+    <h4>Available Commands:</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>commands</th>
+          <th>comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>all</code></td>
+          <td>renew all available certificates</td>
+        </tr>
+        <tr>
+          <td><code>apiserver</code></td>
+          <td>Generates the certificate for serving the kubernetes API</td>
+        </tr>
+        <tr>
+          <td><code>apiserver-etcd-client</code></td>
+          <td>Generates the client apiserver uses to access etcd</td>
+        </tr>
+        <tr>
+          <td><code>apiserver-kubelet-client</code></td>
+          <td>Generates the Client certificate for the API server to connect to kubelet</td>
+        </tr>
+        <tr>
+          <td><code>front-proxy-client</code></td>
+          <td>Generates the client for the front proxy</td>
+        </tr>
+        <tr>
+          <td><code>etcd-healthcheck-client</code></td>
+          <td>Generates the client certificate for liveness probes to healtcheck etcd</td>
+        </tr>
+        <tr>
+          <td><code>etcd-peer</code></td>
+          <td>Generates the credentials for etcd nodes to communicate with each other</td>
+        </tr>
+        <tr>
+          <td><code>etcd-server</code></td>
+          <td>Generates the certificate for serving etcd</td>
+        </tr>
+      </tbody>
+    </table>
+  </blockquote>
+  </div>
+</div>
+
 - i.e.
   ```bash
   $ sudo kubeadm --config ~/kubeadm.yaml alpha phase certs renew all
@@ -206,38 +260,83 @@ $ sudo kubeadm [--config kubeadm.yaml] alpha phase certs renew [commands]
          xargs -I{} bash -c "sudo kuabeadm --config ~/kubeadm.yaml alpha phase certs renew {}"
   ```
 
-> [!TIP]
-> - Available Commands: <br>
->   - `all`                      : renew all available certificates
->   - `apiserver`                : Generates the certificate for serving the kubernetes API
->   - `apiserver-etcd-client`    : Generates the client apiserver uses to access etcd
->   - `apiserver-kubelet-client` : Generates the Client certificate for the API server to connect to kubelet
->   - `front-proxy-client`       : Generates the client for the front proxy
->   - `etcd-healthcheck-client`  : Generates the client certificate for liveness probes to healtcheck etcd
->   - `etcd-peer`                : Generates the credentials for etcd nodes to communicate with each other
->   - `etcd-server`              : Generates the certificate for serving etcd
-
-
 #### generate new certificates
 ```bash
 $ sudo kubeadm [--config kubeadm.yaml] alpha phase certs [commands]
 ```
 
-> [!TIP]
-> Available Commands are: <br>
-> - `all`                      : Generates all PKI assets necessary to establish the control plane
-> - `apiserver`                : Generates the certificate for serving the kubernetes API
-> - `apiserver-etcd-client`    : Generates the client apiserver uses to access etcd
-> - `apiserver-kubelet-client` : Generates the Client certificate for the API server to connect to kubelet
-> - `ca`                       : Generates the self-signed kubernetes CA to provision identities for other kuberenets components
-> - `etcd-ca`                  : Generates the self-signed CA to provision identities for etcd
-> - `etcd-healthcheck-client`  : Generates the client certificate for liveness probes to healtcheck etcd
-> - `etcd-peer`                : Generates the credentials for etcd nodes to communicate with each other
-> - `etcd-server`              : Generates the certificate for serving etcd
-> - `front-proxy-ca`           : Generates the self-signed CA to provision identities for front proxy
-> - `front-proxy-client`       : Generates the client for the front proxy
-> - `sa`                       : Generates a private key for signing service account tokens along with its public key
-> - `renew`                    : Renews certificates for a Kubernetes cluster
+<div class="alert alert-success hints-alert">
+  <div class="hints-icon">
+  <i class="fa fa-mortar-board"></i>
+  </div>
+  <div class="hints-container">
+  <blockquote>
+    <table>
+      <thead>
+        <tr>
+        <th>commands</th>
+        <th>comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>all</code></td>
+          <td>Generates all PKI assets necessary to establish the control plane</td>
+        </tr>
+        <tr>
+          <td><code>apiserver</code></td>
+          <td>Generates the certificate for serving the kubernetes API</td>
+        </tr>
+        <tr>
+          <td><code>apiserver-etcd-client</code></td>
+          <td>Generates the client apiserver uses to access etcd</td>
+        </tr>
+        <tr>
+          <td><code>apiserver-kubelet-client</code></td>
+          <td>Generates the Client certificate for the API server to connect to kubelet</td>
+        </tr>
+        <tr>
+          <td><code>ca</code></td>
+          <td>Generates the self-signed kubernetes CA to provision identities for other kuberenets components</td>
+        </tr>
+        <tr>
+          <td><code>etcd-ca</code></td>
+          <td>Generates the self-signed CA to provision identities for etcd</td>
+        </tr>
+        <tr>
+          <td><code>etcd-healthcheck-client</code></td>
+          <td>Generates the client certificate for liveness probes to healtcheck etcd</td>
+        </tr>
+        <tr>
+          <td><code>etcd-peer</code></td>
+          <td>Generates the credentials for etcd nodes to communicate with each other</td>
+        </tr>
+        <tr>
+          <td><code>etcd-server</code></td>
+          <td>Generates the certificate for serving etcd</td>
+        </tr>
+        <tr>
+          <td><code>front-proxy-ca</code></td>
+          <td>Generates the self-signed CA to provision identities for front proxy</td>
+        </tr>
+        <tr>
+          <td><code>front-proxy-client</code></td>
+          <td>Generates the client for the front proxy</td>
+        </tr>
+        <tr>
+          <td><code>sa</code></td>
+          <td>Generates a private key for signing service account tokens along with its public key</td>
+        </tr>
+        <tr>
+          <td><code>renew</code></td>
+          <td>Renews certificates for a Kubernetes cluster</td>
+        </tr>
+      </tbody>
+    </table>
+  </blockquote>
+  </div>
+</div>
+
 
 - re-generate `/etc/kubernetes/pki/etcd/*.crt` for modify `X509 Subject Alternative Name`:
   ```bash
@@ -278,14 +377,51 @@ $ echo {admin,controller-manager,kubelet,scheduler} |
        xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yaml alpha phase kubeconfig {}"
 ```
 
-> [!TIP]
-> Available Commands: <br>
-> - `all`                : Generates all kubeconfig files necessary to establish the control plane and the admin kubeconfig file
-> - `admin`              : Generates a kubeconfig file for the admin to use and for kubeadm itself
-> - `controller-manager` : Generates a kubeconfig file for the controller manager to use
-> - `kubelet`            : Generates a kubeconfig file for the kubelet to use. Please note that this should be used *only* for bootstrapping purposes
-> - `scheduler`          : Generates a kubeconfig file for the scheduler to use
-> - `user`               : Outputs a kubeconfig file for an additional user
+<div class="alert alert-success hints-alert">
+  <div class="hints-icon">
+  <i class="fa fa-mortar-board"></i>
+  </div>
+  <div class="hints-container">
+  <blockquote>
+    <h4>Available Commands:</h4>
+    <table>
+      <thead>
+        <tr>
+        <th>commands</th>
+        <th>comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>all</code></td>
+          <td>Generates all kubeconfig files necessary to establish the control plane and the admin kubeconfig file</td>
+        </tr>
+        <tr>
+          <td><code>admin</code></td>
+          <td>Generates a kubeconfig file for the admin to use and for kubeadm itself</td>
+        </tr>
+        <tr>
+          <td><code>controller_manager</code></td>
+          <td>Generates a kubeconfig file for the controller manager to use</td>
+        </tr>
+        <tr>
+          <td><code>kubelet</code></td>
+          <td>Generates a kubeconfig file for the kubelet to use. Please note that this should be used *only* for bootstrapping purposes</td>
+        </tr>
+        <tr>
+          <td><code>scheduler</code></td>
+          <td>Generates a kubeconfig file for the scheduler to use</td>
+        </tr>
+        <tr>
+          <td><code>user</code></td>
+          <td>Outputs a kubeconfig file for an additional user</td>
+        </tr>
+      </tbody>
+    </table>
+  </blockquote>
+  </div>
+</div>
+
 
 #### update `~/.kube/config`
 ```bash
@@ -348,7 +484,7 @@ $ sudo systemctl --no-pager -l status kubelet
 > - [Kubernetes v1.15 - Administration with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/_print/)
 
 > [!TIP]
->[external etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) <br>
+> for [external etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) <br>
 >
 > ```bash
 > $ kubectl version --short
@@ -356,44 +492,44 @@ $ sudo systemctl --no-pager -l status kubelet
 > Server Version: v1.15.3
 > ```
 
-### renew certificate
+### renew certificates
 
 > [!TIP]
-> *major master* is the master node bind with load balance ip. <br>
+> in **major master**
+> <br>
+> NOTE: *major master* is the master node bind with load balance ip.
+> <br>
 > the key master node picked by keepalived. check it by using:
 > ```bash
 > ip a s "${interface}" | sed -rn 's|\W*inet[^6]\W*([0-9\.]{7,15}).*$|\1|p'
 > ```
-
+> <br>
 > references:
 > - [kubeadm-conf.yaml](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/init/kubeadm-conf.yaml)
 
-> [!NOTE]
-> renew cert in **major master**
-
-  <table>
-    <thead>
-      <tr>
-        <th style="text-align:center">certificate files</th>
-        <th style="text-align:center">path</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="text-align:left">
-          <ul>
-            <li><code>apiserver.crt</code></li>
-            <li><code>apiserver.key</code></li>
-            <li><code>apiserver-kubelet-client.crt</code></li>
-            <li><code>apiserver-kubelet-client.key</code></li>
-            <li><code>front-proxy-client.crt</code></li>
-            <li><code>front-proxy-client.key</code></li>
-          </ul>
-        </td>
-        <td style="text-align:center"><code>/etc/kubernetes/pki</code></td>
-      </tr>
-    </tbody>
-  </table>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:center">certificate files</th>
+      <th style="text-align:center">path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align:left">
+        <ul>
+          <li><code>apiserver.crt</code></li>
+          <li><code>apiserver.key</code></li>
+          <li><code>apiserver-kubelet-client.crt</code></li>
+          <li><code>apiserver-kubelet-client.key</code></li>
+          <li><code>front-proxy-client.crt</code></li>
+          <li><code>front-proxy-client.key</code></li>
+        </ul>
+      </td>
+      <td style="text-align:center"><code>/etc/kubernetes/pki</code></td>
+    </tr>
+  </tbody>
+</table>
 
 ```bash
 $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
@@ -508,7 +644,7 @@ $ sudo chmod 644 $HOME/.kube/config
 | `config`           | `~/.kube` |
 
 
-### [Restart the master components](https://stackoverflow.com/a/62911194)
+### [restart the master components](https://stackoverflow.com/a/62911194)
 ```bash
 $ sudo kill -s SIGHUP $(pidof kube-apiserver)
 $ sudo kill -s SIGHUP $(pidof kube-controller-manager)
@@ -682,24 +818,88 @@ ca.crt  cert.pfx  client.crt  client.key
 > - [Configure certificates for user accounts](https://kubernetes.io/docs/setup/best-practices/certificates/#configure-certificates-for-user-accounts)
 > - [kubernetes > about the cluster-admin cluster role binding](https://networkandcode.github.io/kubernetes/2020/03/16/cluster-admin.html)
 
-{% hint style='tip' %}
-> subjects:
-> - config:
->   - `controller-manager.conf` : `Subject: CN=system:kube-controller-manager`
->   - `admin.conf` : `Subject: O=system:masters, CN=kubernetes-admin`
->   - `scheduler.conf` : `Subject: O=system:masters, CN=system:kube-scheduler`
->   - `kubelet.conf` : `Subject: O=system:nodes, CN=system:node:kubernetes-master01` ( `CN=system:node:<HOSTNAME>` )
-> - certs:
->   - `front-proxy-client.crt` : `Subject: CN=front-proxy-client`
->   - `server.crt` : `Subject: CN=kubernetes-master01` ( `CN=<HOSTNAME>` )
->   - `peer.crt` : `Subject: CN=kubernetes-master01` ( `CN=<HOSTNAME>` )
->   - `healthcheck-client.crt` : `Subject: O=system:masters, CN=kube-etcd-healthcheck-client`
->   - `apiserver.crt` : `Subject: CN=kube-apiserver`
->   - `apiserver-kubelet-client.crt` : `Subject: O=system:masters, CN=kube-apiserver-kubelet-client`
->   - `apiserver-etcd-client.crt` : `Subject: O=system:masters, CN=kube-apiserver-etcd-client`
-{% endhint %}
 
-### generate the new certificate
+<div class="alert alert-success hints-alert">
+  <div class="hints-icon">
+  <i class="fa fa-mortar-board"></i>
+  </div>
+  <div class="hints-container">
+  <blockquote>
+
+    <h4>Subjects:</h4>
+    <h5>configuration files</h5>
+    <table>
+      <thead>
+        <tr>
+        <th>config</th>
+        <th>subject</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>controller-manager.conf</code></td>
+          <td><code>Subject: CN=system:kube-contdoller-manager</code></td>
+        </tr>
+        <tr>
+          <td><code>admin.conf</code></td>
+          <td><code>Subject: O=system:masters, CN=kubernetes-admin</code></td>
+        </tr>
+        <tr>
+          <td><code>scheduler.conf</code></td>
+          <td><code>Subject: O=system:masters, CN=system:kube-scheduler</code></td>
+        </tr>
+        <tr>
+          <td><code>kubelet.conf</code></td>
+          <td><code>Subject: O=system:nodes, CN=system:node:kubernetes-master01 ( CN=system:node:<HOSTNAME> )</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <h5>configuration files</h5>
+    <table>
+      <thead>
+        <tr>
+        <th>certs</th>
+        <th>subject</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>front-proxy-client.crt</code></td>
+          <td><code>Subject: CN=front-proxy-client</code></td>
+        </tr>
+        <tr>
+          <td><code>server.crt</code></td>
+          <td><code>Subject: CN=kubernetes-master01</code> ( <code>CN=HOSTNAME</code> )</td>
+        </tr>
+        <tr>
+          <td><code>peer.crt</code></td>
+          <td><code>Subject: CN=kubernetes-master01</code> ( <code>CN=HOSTNAME</code> )</td>
+        </tr>
+        <tr>
+          <td><code>healthcheck-client.crt</code></td>
+          <td><code>Subject: O=system:masters, CN=kube-etcd-healthcheck-client</code></td>
+        </tr>
+        <tr>
+          <td><code>apiserver.crt</code></td>
+          <td><code>Subject: CN=kube-apiserver</code></td>
+        </tr>
+        <tr>
+          <td><code>apiserver-kubelet-client.crt</code></td>
+          <td><code>Subject: O=system:masters, CN=kube-apiserver-kubelet-client</code></td>
+        </tr>
+        <tr>
+          <td><code>apiserver-etcd-client.crt</code></td>
+          <td><code>Subject: O=system:masters, CN=kube-apiserver-etcd-client</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </blockquote>
+  </div>
+</div>
+
+### generate new certificate (csr)
 ```bash
 $ openssl req -subj "/O=system:masters/CN=kubernetes-admin" \
               -new \
@@ -716,7 +916,7 @@ $ openssl req -subj "/O=system:masters/CN=kubernetes-admin" \
   $ openssl req -new -key marslo.key -out marslo.csr -subj "/O=system:masters/CN=kubernetes-admin"
   ```
 
-### signing the certificate
+### signing the certificate via `ca.crt`
 ```bash
 $ sudo openssl x509 -req \
                     -in marslo.csr \
@@ -916,48 +1116,49 @@ kube-system            Active   3y10d
 
 ## Required certificates:
 
-| Default CN                    | Parent CA                 | O (in Subject) | kind           | hosts (SAN)                                 |
-| :--:                          | :--:                      | :--:           | :--:           | :--:                                        |
-| kube-etcd                     | etcd-ca                   | -              | server, client | `hostname`, `Host_IP`, localhost, 127.0.0.1 |
-| kube-etcd-peer                | etcd-ca                   | -              | server, client | `hostname`, `Host_IP`, localhost, 127.0.0.1 |
-| kube-etcd-healthcheck-client  | etcd-ca                   | -              | client         | -                                           |
-| kube-apiserver-etcd-client    | etcd-ca                   | system:masters | client         | -                                           |
-| kube-apiserver                | kubernetes-ca             | -              | server         | `hostname`, `Host_IP`, `advertise_IP`, [1]  |
-| kube-apiserver-kubelet-client | kubernetes-ca             | system:masters | client         | -                                           |
-| front-proxy-client            | kubernetes-front-proxy-ca | -              | client         | -                                           |
+| Default CN                      |         Parent CA         |  O (in Subject)  |      kind      |                         hosts (SAN)                         |
+|:--------------------------------|:-------------------------:|:----------------:|:--------------:|:-----------------------------------------------------------:|
+| `kube-etcd`                     |          etcd-ca          |         -        | server, client | `hostname` <br> `Host_IP` <br> `localhost` <br> `127.0.0.1` |
+| `kube-etcd-peer`                |          etcd-ca          |         -        | server, client | `hostname` <br> `Host_IP` <br> `localhost` <br> `127.0.0.1` |
+| `kube-etcd-healthcheck-client`  |          etcd-ca          |         -        |     client     |                              -                              |
+| `kube-apiserver-etcd-client`    |          etcd-ca          | `system:masters` |     client     |                              -                              |
+| `kube-apiserver`                |       kubernetes-ca       |         -        |     server     |          `hostname`, `Host_IP`, `advertise_IP`, [1]         |
+| `kube-apiserver-kubelet-client` |       kubernetes-ca       | `system:masters` |     client     |                              -                              |
+| `front-proxy-client`            | kubernetes-front-proxy-ca |         -        |     client     |                              -                              |
 
 ## [Certificate paths](https://kubernetes.io/docs/setup/best-practices/certificates/#certificate-paths)
-| Default CN                    | recommended key path         | recommended cert path        | command                 | key argument               | cert argument                                                 |
-| :--:                          | :--:                         | :--:                         | :--:                    | :--:                       | :--:                                                          |
-| etcd-ca                       | etcd/ca.key                  | etcd/ca.crt                  | kube-apiserver          | -                          | --etcd-cafile                                                 |
-| kube-apiserver-etcd-client    | apiserver-etcd-client.key    | apiserver-etcd-client.crt    | kube-apiserver          | --etcd-keyfile             | --etcd-certfile                                               |
-| kubernetes-ca                 | ca.key                       | ca.crt                       | kube-apiserver          | -                          | --client-ca-file                                              |
-| kubernetes-ca                 | ca.key                       | ca.crt                       | kube-controller-manager | --cluster-signing-key-file | --client-ca-file, --root-ca-file, --cluster-signing-cert-file |
-| kube-apiserver                | apiserver.key                | apiserver.crt                | kube-apiserver          | --tls-private-key-file     | --tls-cert-file                                               |
-| kube-apiserver-kubelet-client | apiserver-kubelet-client.key | apiserver-kubelet-client.crt | kube-apiserver          | --kubelet-client-key       | --kubelet-client-certificate                                  |
-| front-proxy-ca                | front-proxy-ca.key           | front-proxy-ca.crt           | kube-apiserver          | -                          | --requestheader-client-ca-file                                |
-| front-proxy-ca                | front-proxy-ca.key           | front-proxy-ca.crt           | kube-controller-manager | -                          | --requestheader-client-ca-file                                |
-| front-proxy-client            | front-proxy-client.key       | front-proxy-client.crt       | kube-apiserver          | --proxy-client-key-file    | --proxy-client-cert-file                                      |
-| etcd-ca                       | etcd/ca.key                  | etcd/ca.crt                  | etcd                    | -                          | --trusted-ca-file, --peer-trusted-ca-file                     |
-| kube-etcd                     | etcd/server.key              | etcd/server.crt              | etcd                    | --key-file                 | --cert-file                                                   |
-| kube-etcd-peer                | etcd/peer.key                | etcd/peer.crt                | etcd                    | --peer-key-file            | --peer-cert-file                                              |
-| etcd-ca                       |                              | etcd/ca.crt                  | etcdctl                 | -                          | --cacert                                                      |
-| kube-etcd-healthcheck-client  | etcd/healthcheck-client.key  | etcd/healthcheck-client.crt  | etcdctl                 | --key                      | --cert                                                        |
+
+| Default CN                      | recommended key path           | recommended cert path          | command                   | key argument                 | cert argument                                                               |
+|:--------------------------------|:-------------------------------|--------------------------------|---------------------------|------------------------------|-----------------------------------------------------------------------------|
+| `etcd-ca`                       | `etcd/ca.key`                  | `etcd/ca.crt`                  | `kube-apiserver`          | -                            | `--etcd-cafile`                                                             |
+| `kube-apiserver-etcd-client`    | `apiserver-etcd-client.key`    | `apiserver-etcd-client.crt`    | `kube-apiserver`          | `--etcd-keyfile`             | `--etcd-certfile`                                                           |
+| `kubernetes-ca`                 | `ca.key`                       | `ca.crt`                       | `kube-apiserver`          | -                            | `--client-ca-file`                                                          |
+| `kubernetes-ca`                 | `ca.key`                       | `ca.crt`                       | `kube-controller-manager` | `--cluster-signing-key-file` | `--client-ca-file` <br> `--root-ca-file` <br> `--cluster-signing-cert-file` |
+| `kube-apiserver`                | `apiserver.key`                | `apiserver.crt`                | `kube-apiserver`          | `--tls-private-key-file`     | `--tls-cert-file`                                                           |
+| `kube-apiserver-kubelet-client` | `apiserver-kubelet-client.key` | `apiserver-kubelet-client.crt` | `kube-apiserver`          | `--kubelet-client-key`       | `--kubelet-client-certificate`                                              |
+| `front-proxy-ca`                | `front-proxy-ca.key`           | `front-proxy-ca.crt`           | `kube-apiserver`          | -                            | `--requestheader-client-ca-file`                                            |
+| `front-proxy-ca`                | `front-proxy-ca.key`           | `front-proxy-ca.crt`           | `kube-controller-manager` | -                            | `--requestheader-client-ca-file`                                            |
+| `front-proxy-client`            | `front-proxy-client.key`       | `front-proxy-client.crt`       | `kube-apiserver`          | `--proxy-client-key-file`    | `--proxy-client-cert-file`                                                  |
+| `etcd-ca`                       | `etcd/ca.key`                  | `etcd/ca.crt`                  | `etcd`                    | -                            | `--trusted-ca-file` <br> `--peer-trusted-ca-file`                           |
+| `kube-etcd`                     | `etcd/server.key`              | `etcd/server.crt`              | `etcd`                    | `--key-file`                 | `--cert-file`                                                               |
+| `kube-etcd-peer`                | `etcd/peer.key`                | `etcd/peer.crt`                | `etcd`                    | `--peer-key-file`            | `--peer-cert-file`                                                          |
+| `etcd-ca`                       | -                              | `etcd/ca.crt`                  | `etcdctl`                 | -                            | `--cacert`                                                                  |
+| `kube-etcd-healthcheck-client`  | `etcd/healthcheck-client.key`  | `etcd/healthcheck-client.crt`  | `etcdctl`                 | `--key`                      | `--cert`                                                                    |
 
 ## [Configure certificates for user accounts](https://kubernetes.io/docs/setup/best-practices/certificates/#configure-certificates-for-user-accounts)
 
-| filename                | credential name            | Default CN                        | O (in Subject) |
-| :--:                    | :--:                       | :--:                              | :--:           |
-| admin.conf              | default-admin              | kubernetes-admin                  | system:masters |
-| kubelet.conf            | default-auth               | system:node:`nodeName` (see note) | system:nodes   |
-| controller-manager.conf | default-controller-manager | system:kube-controller-manager    | -              |
-| scheduler.conf          | default-scheduler          | system:kube-scheduler             | -              |
+| filename                  | credential name            | Default CN                          |  O (in Subject)  |
+|:--------------------------|----------------------------|-------------------------------------|:----------------:|
+| `admin.conf`              | default-admin              | `kubernetes-admin`                  | `system:masters` |
+| `kubelet.conf`            | default-auth               | `system:node:<nodeName>` (see note) |  `system:nodes`  |
+| `controller-manager.conf` | default-controller-manager | `system:kube-controller-manager`    |         -        |
+| `scheduler.conf`          | default-scheduler          | `system:kube-scheduler`             |         -        |
 
 ## files are used as follows
-| filename                | command                 | comment                                                             |
-| :--:                    | :--:                    | :--:                                                                |
-| admin.conf              | kubectl                 | Configures administrator user for the cluster                       |
-| kubelet.conf            | kubelet                 | One required for each node in the cluster.                          |
-| controller-manager.conf | kube-controller-manager | Must be added to manifest in manifests/kube-controller-manager.yaml |
-| scheduler.conf          | kube-scheduler          | Must be added to manifest in manifests/kube-scheduler.yaml          |
+| filename                    | command                     | comment                                                               |
+| :-------------------------- | :-------------------------: | --------------------------------------------------------------------- |
+| `admin.conf`                | `kubectl`                   | Configures administrator user for the cluster                         |
+| `kubelet.conf`              | `kubelet`                   | One required for each node in the cluster.                            |
+| `controller-manager.conf`   | `kube-controller-manager`   | Must be added to manifest in manifests/kube-controller-manager.yaml   |
+| `scheduler.conf`            | `kube-scheduler`            | Must be added to manifest in manifests/kube-scheduler.yaml            |
 
