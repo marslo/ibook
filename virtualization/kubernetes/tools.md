@@ -40,3 +40,4 @@ $ etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt \
 > [!TIP]
 > references:
 > - [Grafana Loki Concise Tutorial](https://www.sobyte.net/post/2021-10/grafana-loki-usage/)
+> - [Grafana CLI](https://grafana.com/docs/grafana/latest/administration/cli)
