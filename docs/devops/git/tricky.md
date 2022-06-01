@@ -383,17 +383,17 @@ $ git diff --shortstat HEAD^..HEAD
 
 ## [debug](https://www.shellhacks.com/git-verbose-mode-debug-fatal-errors/)
 ### Git Debug Options
-|           Option           | Description                                                                                                                 |
-|:--------------------------:|:----------------------------------------------------------------------------------------------------------------------------|
-|       GIT_TRACE=true       | Enable general trace messages                                                                                               |
-|    GIT_CURL_VERBOSE=true   | Print HTTP headers (similar to curl -v)                                                                                     |
-| GIT_SSH_COMMAND="ssh -vvv" | Print SSH debug messages (similar to ssh -vvv)                                                                              |
-| GIT_TRACE_PACK_ACCESS=true | Enable trace messages for all accesses to any packs                                                                         |
-|    GIT_TRACE_PACKET=true   | Enable trace messages for all packets coming in or out of a given program                                                   |
-|   GIT_TRACE_PACKFILE=true  | Enable tracing of packfiles sent or received by a given program                                                             |
-| GIT_TRACE_PERFORMANCE=true | Enable performance related trace messages                                                                                   |
-|    GIT_TRACE_SETUP=true    | Enable trace messages printing the .git, working tree and current working directory after Git has completed its setup phase |
-|   GIT_TRACE_SHALLOW=true   | Enable trace messages that can help debugging fetching/cloning of shallow repositories                                      |
+| Option                       | Description                                                                                                                   |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| `GIT_TRACE=true`             | Enable general trace messages                                                                                                 |
+| `GIT_CURL_VERBOSE=true`      | Print HTTP headers (similar to `curl -v`)                                                                                     |
+| `GIT_SSH_COMMAND="ssh -vvv"` | Print SSH debug messages (similar to `ssh -vvv`)                                                                              |
+| `GIT_TRACE_PACK_ACCESS=true` | Enable trace messages for all accesses to any packs                                                                           |
+| `GIT_TRACE_PACKET=true`      | Enable trace messages for all packets coming in or out of a given program                                                     |
+| `GIT_TRACE_PACKFILE=true`    | Enable tracing of packfiles sent or received by a given program                                                               |
+| `GIT_TRACE_PERFORMANCE=true` | Enable performance related trace messages                                                                                     |
+| `GIT_TRACE_SETUP=true`       | Enable trace messages printing the .git, working tree and current working directory after Git has completed its setup phase   |
+| `GIT_TRACE_SHALLOW=true`     | Enable trace messages that can help debugging fetching/cloning of shallow repositories                                        |
 
 
 ### Linux
