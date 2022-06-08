@@ -117,10 +117,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="namespace.html" />
+    <link rel="next" href="../docker/docker.html" />
     
     
-    <link rel="prev" href="certificates.html" />
+    <link rel="prev" href="tools.html" />
     
 
     <style>
@@ -1363,20 +1363,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.7.1.5" data-path="monitor.html">
-            
-                <a href="monitor.html">
-            
-                    
-                    monitor
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7.1.6" data-path="namespace.html">
+        <li class="chapter " data-level="1.7.1.5" data-path="namespace.html">
             
                 <a href="namespace.html">
             
@@ -1389,7 +1376,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.1.7" data-path="network.html">
+        <li class="chapter " data-level="1.7.1.6" data-path="network.html">
             
                 <a href="network.html">
             
@@ -1402,7 +1389,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.1.8" data-path="events.html">
+        <li class="chapter " data-level="1.7.1.7" data-path="events.html">
             
                 <a href="events.html">
             
@@ -1415,7 +1402,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.1.9" data-path="node.html">
+        <li class="chapter " data-level="1.7.1.8" data-path="node.html">
             
                 <a href="node.html">
             
@@ -1428,7 +1415,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7.1.10" data-path="tools.html">
+        <li class="chapter " data-level="1.7.1.9" data-path="tools.html">
             
                 <a href="tools.html">
             
@@ -1438,6 +1425,25 @@
                 </a>
             
 
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.7.1.9.1" data-path="monitor.html">
+            
+                <a href="monitor.html">
+            
+                    
+                    monitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -2412,39 +2418,67 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><ul><li><span class="title-icon "></span><a href="#grafana"><b></b>Grafana</a></li><ul><li><span class="title-icon "></span><a href="#reset-password"><b></b>reset password</a></li><li><span class="title-icon "></span><a href="#environment"><b></b>Environment</a></li><li><span class="title-icon "></span><a href="#setup"><b></b>Setup</a></li><li><span class="title-icon "></span><a href="#configure"><b></b>configure</a></li></ul><li><span class="title-icon "></span><a href="#reference"><b></b>Reference</a></li><li><span class="title-icon "></span><a href="#code-pool"><b></b>Code Pool</a></li></ul></ul></div><a href="#" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><!-- START doctoc generated TOC please keep comment here to allow auto update -->
+                                <div id="anchor-navigation-ex-navbar"><i class="fa fa-navicon"></i><ul><ul><li><span class="title-icon "></span><a href="#grafana"><b></b>grafana</a></li><ul><li><span class="title-icon "></span><a href="#environment"><b></b>environment</a></li><li><span class="title-icon "></span><a href="#setup"><b></b>setup</a></li><li><span class="title-icon "></span><a href="#kubernetes-cluster-monitoring"><b></b>kubernetes cluster monitoring</a></li><li><span class="title-icon "></span><a href="#api"><b></b>api</a></li></ul><li><span class="title-icon "></span><a href="#code-pool"><b></b>code pool</a></li></ul></ul></div><a href="#" id="anchorNavigationExGoTop"><i class="fa fa-arrow-up"></i></a><!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <p><strong>Table of Contents</strong>  <em>generated with <a href="https://github.com/thlorenz/doctoc" target="_blank">DocToc</a></em></p>
 <ul>
-<li><a href="#grafana">Grafana</a><ul>
-<li><a href="#reset-password">reset password</a></li>
-<li><a href="#environment">Environment</a></li>
-<li><a href="#setup">Setup</a></li>
-<li><a href="#configure">configure</a></li>
+<li><a href="#grafana">grafana</a><ul>
+<li><a href="#environment">environment</a></li>
+<li><a href="#setup">setup</a></li>
+<li><a href="#kubernetes-cluster-monitoring">kubernetes cluster monitoring</a></li>
+<li><a href="#api">api</a></li>
 </ul>
 </li>
-<li><a href="#reference">Reference</a></li>
-<li><a href="#code-pool">Code Pool</a></li>
+<li><a href="#code-pool">code pool</a></li>
 </ul>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-<h2 id="grafana"><a name="grafana" class="anchor-navigation-ex-anchor" href="#grafana"><i class="fa fa-link" aria-hidden="true"></i></a><a name="grafana" class="plugin-anchor" href="#grafana"><i class="fa fa-link" aria-hidden="true"></i></a>Grafana</h2>
-<h3 id="reset-password"><a name="reset-password" class="anchor-navigation-ex-anchor" href="#reset-password"><i class="fa fa-link" aria-hidden="true"></i></a><a name="reset-password" class="plugin-anchor" href="#reset-password"><i class="fa fa-link" aria-hidden="true"></i></a><a href="https://grafana.com/docs/grafana/latest/administration/cli/" target="_blank">reset password</a></h3>
-<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> -X PUT -H <span class="token string">&quot;Content-Type: application/json&quot;</span> -d <span class="token string">&apos;{
-  &quot;oldPassword&quot;: &quot;admin&quot;,
-  &quot;newPassword&quot;: &quot;newpass&quot;,
-  &quot;confirmNew&quot;: &quot;newpass&quot;
-}&apos;</span> http://admin:admin@<span class="token operator">&lt;</span>your_grafana_host<span class="token operator">&gt;</span>:3000/api/user/password
+<h2 id="grafana"><a name="grafana" class="anchor-navigation-ex-anchor" href="#grafana"><i class="fa fa-link" aria-hidden="true"></i></a><a name="grafana" class="plugin-anchor" href="#grafana"><i class="fa fa-link" aria-hidden="true"></i></a>grafana</h2>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><blockquote>
+<p>references:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=aB0TagEzTAw" target="_blank">* Setting Up Kubernetes Dashboard</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/#deploy-grafana-enterprise-on-kubernetes" target="_blank">* Deploy Grafana Enterprise on Kubernetes</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/installation/kubernetes/" target="_blank">* Deploy Grafana on Kubernetes</a></li>
+<li><a href="https://grafana.com/docs/grafana-cloud/kubernetes/integration-kubernetes/?pg=blog&amp;plcmt=body-txt" target="_blank">* Kubernetes Integration</a></li>
+<li><a href="https://community.grafana.com/t/install-plugin-from-dockerfile/2603/5" target="_blank">* Install plugin from dockerfile</a></li>
+<li><a href="https://github.com/grafana/grafana-docker/blob/master/Dockerfile" target="_blank">* grafana/grafana-docker</a></li>
+<li><a href="https://medium.com/@fcgravalos/scaling-out-grafana-with-kubernetes-and-aws-62745257df10" target="_blank">Scaling out Grafana with Kubernetes and AWS</a></li>
+<li><a href="https://devopscube.com/setup-grafana-kubernetes/" target="_blank">How To Setup Grafana On Kubernetes</a></li>
+<li><a href="https://medium.com/htc-research-engineering-blog/monitoring-kubernetes-clusters-with-grafana-e2a413febefd" target="_blank">Monitoring Kubernetes Clusters with Grafana</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/administration/configure-docker/" target="_blank">Configure a Grafana Docker image</a></li>
+<li><a href="https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#configure-with-environment-variables" target="_blank">Configure Grafana</a></li>
+<li><a href="https://www.bookstack.cn/read/grafana-v6.2/f54c77073729e6c9.md" target="_blank">Grafana 6.2 documentation : Installing using Docker</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/installation/restart-grafana/" target="_blank">Restart Grafana</a></li>
+<li><a href="https://www.sobyte.net/post/2021-10/grafana-loki-usage/" target="_blank">Grafana Loki Concise Tutorial</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/administration/cli" target="_blank">Grafana CLI</a></li>
+</ul>
+</blockquote>
+</div></div></p>
+<h3 id="environment"><a name="environment" class="anchor-navigation-ex-anchor" href="#environment"><i class="fa fa-link" aria-hidden="true"></i></a><a name="environment" class="plugin-anchor" href="#environment"><i class="fa fa-link" aria-hidden="true"></i></a>environment</h3>
+<blockquote>
+<p>[!TIP]</p>
+<ul>
+<li><a href="https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#override-configuration-with-environment-variables" target="_blank">reference</a>
+Do not use environment variables to add new configuration settings. Instead, use environmental variables to override existing options.
+<p>
+To override an option:<pre class="language-"><code class="lang-bash">GF_<span class="token operator">&lt;</span>SectionName<span class="token operator">&gt;</span>_<span class="token operator">&lt;</span>KeyName<span class="token operator">&gt;</span>
 </code></pre>
-<h3 id="environment"><a name="environment" class="anchor-navigation-ex-anchor" href="#environment"><i class="fa fa-link" aria-hidden="true"></i></a><a name="environment" class="plugin-anchor" href="#environment"><i class="fa fa-link" aria-hidden="true"></i></a>Environment</h3>
+</p><p>
+If you need to specify the version of a plugin, then you can add it to the <code>GF_INSTALL_PLUGINS</code> environment variable.
+Otherwise, the latest is used. For example:<pre class="language-"><code class="lang-bash">-e <span class="token string">&quot;GF_INSTALL_PLUGINS=grafana-clock-panel 1.0.1,grafana-simple-json-datasource 1.3.5&quot;</span>
+</code></pre>
+</p></li>
+</ul>
+</blockquote>
 <pre class="language-"><code class="lang-bash"><span class="token comment"># for pvc</span>
 kubems-01 ~ $ <span class="token function">mkdir</span> -p /opt/grafana/plugins
-kubems-01 ~ $ <span class="token function">sudo</span> chwon -R <span class="token number">472</span>:472 <span class="token variable">$_</span>
+kubems-01 ~ $ <span class="token function">sudo</span> <span class="token function">chown</span> -R <span class="token number">472</span>:472 <span class="token variable">$_</span>
 
 <span class="token comment"># https://grafana.com/docs/grafana/latest/installation/docker/#migration-from-a-previous-version-of-the-docker-container-to-5-1-or-later</span>
 <span class="token comment"># 104:104 for version &lt; 5.1</span>
 </code></pre>
 <ul>
-<li><a href="https://grafana.com/docs/grafana/latest/installation/docker/#user-id-changes" target="_blank">User ID changes</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/installation/docker/#user-id-changes" target="_blank">user id changes</a></li>
 </ul>
 <table>
 <thead>
@@ -2467,226 +2501,392 @@ kubems-01 ~ $ <span class="token function">sudo</span> chwon -R <span class="tok
 </tr>
 </tbody>
 </table>
-<h3 id="setup"><a name="setup" class="anchor-navigation-ex-anchor" href="#setup"><i class="fa fa-link" aria-hidden="true"></i></a><a name="setup" class="plugin-anchor" href="#setup"><i class="fa fa-link" aria-hidden="true"></i></a>Setup</h3>
 <ul>
-<li>ns<pre class="language-"><code class="lang-bash">  $ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> EOF <span class="token operator">|</span> k apply -f -
-  ---
-  kind: Namespace
-  apiVersion: v1
-  metadata:
+<li>path</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>SETTING</th>
+<th>DEFAULT VALUE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GF_PATHS_CONFIG</code></td>
+<td><code>/etc/grafana/grafana.ini</code></td>
+</tr>
+<tr>
+<td><code>GF_PATHS_DATA</code></td>
+<td><code>/var/lib/grafana</code></td>
+</tr>
+<tr>
+<td><code>GF_PATHS_HOME</code></td>
+<td><code>/usr/share/grafana</code></td>
+</tr>
+<tr>
+<td><code>GF_PATHS_LOGS</code></td>
+<td><code>/var/log/grafana</code></td>
+</tr>
+<tr>
+<td><code>GF_PATHS_PLUGINS</code></td>
+<td><code>/var/lib/grafana/plugins</code></td>
+</tr>
+<tr>
+<td><code>GF_PATHS_PROVISIONING</code></td>
+<td><code>/etc/grafana/provisioning</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>environment</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>ENVIRONMENT VARIABLE</th>
+<th>EXAMPLE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GF_INSTALL_PLUGINS</code></td>
+<td><code>grafana-kubernetes-app,grafana-piechart-panel,http://my.com/plugin.zip</code></td>
+</tr>
+<tr>
+<td><code>GF_PATHS_PLUGINS</code></td>
+<td><code>/data/grafana/plugins</code></td>
+</tr>
+<tr>
+<td><code>GF_SERVER_ROOT_URL</code></td>
+<td><code>https://my.grafana.com</code></td>
+</tr>
+<tr>
+<td><code>GF_SECURITY_ADMIN_PASSWORD</code></td>
+<td><code>admin</code></td>
+</tr>
+<tr>
+<td><code>GF_DEFAULT_INSTANCE_NAME</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>GF_SECURITY_ADMIN_USER</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>GF_DATABASE_TYPE</code></td>
+<td><code>mysql</code></td>
+</tr>
+<tr>
+<td><code>GF_DATABASE_HOST</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="setup"><a name="setup" class="anchor-navigation-ex-anchor" href="#setup"><i class="fa fa-link" aria-hidden="true"></i></a><a name="setup" class="plugin-anchor" href="#setup"><i class="fa fa-link" aria-hidden="true"></i></a>setup</h3>
+<ul>
+<li><p>ns</p>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> <span class="token string">EOF<span class="token bash punctuation"> <span class="token operator">|</span> k apply -f -</span>
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: kubernetes-dashboard
+  labels:
     name: kubernetes-dashboard
-    labels:
-      name: kubernetes-dashboard
-  EOF
+EOF</span>
 </code></pre>
 </li>
 <li><p>sa</p>
-<pre class="language-"><code class="lang-bash">  $ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> EOF <span class="token operator">|</span> k apply -f -
-  ---
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    labels:
-      k8s-app: grafana
-    name: grafana-admin
-    namespace: kubernetes-dashboard
-  ---
-  apiVersion: rbac.authorization.k8s.io/v1beta1
-  kind: ClusterRoleBinding
-  metadata:
-    name: grafana-admin
-    labels:
-      k8s-app: grafana
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
-    name: cluster-admin
-  subjects:
-  - kind: ServiceAccount
-    name: grafana
-    namespace: kubernetes-dashboard
-  EOF
+<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> <span class="token string">EOF<span class="token bash punctuation"> <span class="token operator">|</span> k apply -f -</span>
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    k8s-app: grafana
+  name: grafana-admin
+  namespace: kubernetes-dashboard
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: grafana-admin
+  labels:
+    k8s-app: grafana
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: grafana
+  namespace: kubernetes-dashboard
+EOF</span>
 </code></pre>
 </li>
 <li><p>pv &amp; pvc</p>
-<pre class="language-"><code class="lang-bash">  $ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> EOF <span class="token operator">|</span> k apply -f -
-  ---
-  kind: PersistentVolume
-  apiVersion: v1
-  metadata:
-    name: grafana
-    labels:
-      type: <span class="token builtin class-name">local</span>
-  spec:
-    storageClassName: manual
-    capacity:
-      storage: 2Gi
-    accessModes:
-      - ReadWriteMany
-    hostPath:
-      path: <span class="token string">&quot;/opt/grafana&quot;</span>
-
-  ---
-  kind: PersistentVolumeClaim
-  apiVersion: v1
-  metadata:
-    name: grafana
-    namespace: kubernetes-dashboard
-  spec:
-    accessModes:
+<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> <span class="token string">EOF<span class="token bash punctuation"> <span class="token operator">|</span> k apply -f -</span>
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: grafana
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
     - ReadWriteMany
-    resources:
-      requests:
-        storage: 2Gi
-    storageClassName: <span class="token string">&quot;manual&quot;</span>
-    volumeName: grafana
-  EOF
+  hostPath:
+    path: &quot;/opt/grafana&quot;
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: grafana
+  namespace: kubernetes-dashboard
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: &quot;manual&quot;
+  volumeName: grafana
+EOF</span>
 </code></pre>
 </li>
-<li>deploy<pre class="language-"><code class="lang-bash">  $ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> EOF <span class="token operator">|</span> k apply -f -
-  ---
-  apiVersion: extensions/v1beta1
-  kind: Deployment
-  metadata:
-    name: grafana
-    namespace: kubernetes-dashboard
-    labels:
-      app: grafana
-      component: core
-  spec:
-    replicas: <span class="token number">1</span>
-    strategy:
-      rollingUpdate:
-        maxSurge: <span class="token number">25</span>%
-        maxUnavailable: <span class="token number">25</span>%
-      type: RollingUpdate
-    template:
-      metadata:
-        labels:
-          app: grafana
-          component: core
-      spec:
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                  - kubems-01
-        containers:
-        - image: grafana/grafana
-          name: grafana
-          imagePullPolicy: IfNotPresent
-          resources:
-            <span class="token comment"># keep request = limit to keep this container in guaranteed class</span>
-            limits:
-              cpu: 512m
-              memory: 512Mi
-            requests:
-              cpu: 256m
-              memory: 256Mi
-          env:
-            <span class="token comment"># The following env variables set up basic auth twith the default admin user and admin password.</span>
-            - name: GF_SERVER_DOMAIN
-              value: <span class="token string">&quot;grafana.marslo.com&quot;</span>
-            - name: GF_SECURITY_ADMIN_PASSWORD
-              value: <span class="token string">&quot;mypasswd&quot;</span>
-            - name: GF_INSTALL_PLUGINS
-              value: <span class="token string">&quot;grafana-kubernetes-app&quot;</span>
-            - name: GF_SERVER_ROOT_URL
-              value: <span class="token string">&quot;/&quot;</span>
-            - name: GF_AUTH_BASIC_ENABLED
-              value: <span class="token string">&quot;true&quot;</span>
-            - name: GF_AUTH_ANONYMOUS_ENABLED
-              value: <span class="token string">&quot;false&quot;</span>
-          readinessProbe:
-            httpGet:
-              path: /login
-              port: <span class="token number">3000</span>
-          volumeMounts:
-          - name: grafana-persistent-storage
-            mountPath: /var/lib/grafana
-        restartPolicy: Always
-        terminationGracePeriodSeconds: <span class="token number">30</span>
-        serviceAccountName: grafana
-        volumes:
+<li><p>deploy</p>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> <span class="token string">EOF<span class="token bash punctuation"> <span class="token operator">|</span> k apply -f -</span>
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: kubernetes-dashboard
+  labels:
+    app: grafana
+    component: core
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: grafana
+        component: core
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - kubems-01
+      containers:
+      - image: grafana/grafana
+        name: grafana
+        imagePullPolicy: IfNotPresent
+        resources:
+          # keep request = limit to keep this container in guaranteed class
+          limits:
+            cpu: 512m
+            memory: 512Mi
+          requests:
+            cpu: 256m
+            memory: 256Mi
+        env:
+          # The following env variables set up basic auth twith the default admin user and admin password.
+          - name: GF_SERVER_DOMAIN
+            value: &quot;grafana.marslo.com&quot;
+          - name: GF_SECURITY_ADMIN_PASSWORD
+            value: &quot;mypasswd&quot;
+          - name: GF_INSTALL_PLUGINS
+            value: &quot;grafana-kubernetes-app&quot;
+          - name: GF_SERVER_ROOT_URL
+            value: &quot;/&quot;
+          - name: GF_AUTH_BASIC_ENABLED
+            value: &quot;true&quot;
+          - name: GF_AUTH_ANONYMOUS_ENABLED
+            value: &quot;false&quot;
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 3000
+        volumeMounts:
         - name: grafana-persistent-storage
-          persistentVolumeClaim:
-            claimName: grafana
-  EOF
+          mountPath: /var/lib/grafana
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: grafana
+      volumes:
+      - name: grafana-persistent-storage
+        persistentVolumeClaim:
+          claimName: grafana
+EOF</span>
 </code></pre>
 </li>
-<li>svc<pre class="language-"><code class="lang-bash">  $ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> EOF <span class="token operator">|</span> k apply -f -
-  ---
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: grafana
-    namespace: kubernetes-dashboard
-    labels:
-      app: grafana
-      component: core
-  spec:
-    type: CluslterIP
-    ports:
-      - name: http
-        port: <span class="token number">3000</span>
-        protocol: TCP
-    selector:
-      app: grafana
-      component: core
-  EOF
+<li><p>svc</p>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> <span class="token string">EOF<span class="token bash punctuation"> <span class="token operator">|</span> k apply -f -</span>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: kubernetes-dashboard
+  labels:
+    app: grafana
+    component: core
+spec:
+  type: CluslterIP
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+  selector:
+    app: grafana
+    component: core
+EOF</span>
 </code></pre>
 </li>
-<li>ing<pre class="language-"><code class="lang-bash">  $ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> EOF <span class="token operator">|</span> k apply -f -
-  apiVersion: extensions/v1beta1
-  kind: Ingress
-  metadata:
-      name: grafana
-      namespace: kubernetes-dashboard
-  spec:
-      rules:
-      - host: grafana.marslo.com
-       http:
-         paths:
-         - path: /
-           backend:
-            serviceName: grafana
-            servicePort: http
-      tls:
-      - hosts:
-        - grafana.marslo.com
-        secretName: marslo-cert
-  EOF
+<li><p>ingress</p>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> <span class="token operator">&lt;&lt;</span> <span class="token string">EOF<span class="token bash punctuation"> <span class="token operator">|</span> k apply -f -</span>
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: kubernetes-dashboard
+spec:
+  rules:
+  - host: grafana.marslo.com
+   http:
+     paths:
+     - path: /
+       backend:
+        serviceName: grafana
+        servicePort: http
+  tls:
+  - hosts:
+    - grafana.marslo.com
+    secretName: marslo-cert
+EOF</span>
 </code></pre>
 </li>
 </ul>
-<h3 id="configure"><a name="configure" class="anchor-navigation-ex-anchor" href="#configure"><i class="fa fa-link" aria-hidden="true"></i></a><a name="configure" class="plugin-anchor" href="#configure"><i class="fa fa-link" aria-hidden="true"></i></a>configure</h3>
-<h4 id="grafana-kubernetes-app"><a name="grafana-kubernetes-app" class="anchor-navigation-ex-anchor" href="#grafana-kubernetes-app"><i class="fa fa-link" aria-hidden="true"></i></a><a name="grafana-kubernetes-app" class="plugin-anchor" href="#grafana-kubernetes-app"><i class="fa fa-link" aria-hidden="true"></i></a><code>grafana-kubernetes-app</code></h4>
-<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> ~/.kube/config <span class="token operator">|</span> <span class="token function">grep</span> certificate-authority-data <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">&apos;{print $2}&apos;</span> <span class="token operator">|</span> base64 -d
+<h3 id="kubernetes-cluster-monitoring"><a name="kubernetes-cluster-monitoring" class="anchor-navigation-ex-anchor" href="#kubernetes-cluster-monitoring"><i class="fa fa-link" aria-hidden="true"></i></a><a name="kubernetes-cluster-monitoring" class="plugin-anchor" href="#kubernetes-cluster-monitoring"><i class="fa fa-link" aria-hidden="true"></i></a>kubernetes cluster monitoring</h3>
+<ul>
+<li><p><a href="https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app/" target="_blank">devopsprodigy-kubegraf-app</a></p>
+<ul>
+<li><p>install via <code>grafana-cli</code></p>
+<pre class="language-"><code class="lang-bash">$ grafana-cli plugins <span class="token function">install</span> devopsprodigy-kubegraf-app
+</code></pre>
+</li>
+<li><p>setup sa and cluster role</p>
+<pre class="language-"><code class="lang-bash">$ kubectl create ns kubegraf
+$ kubectl apply -f https://raw.githubusercontent.com/devopsprodigy/kubegraf/master/kubernetes/serviceaccount.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/devopsprodigy/kubegraf/master/kubernetes/clusterrole.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/devopsprodigy/kubegraf/master/kubernetes/clusterrolebinding.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/devopsprodigy/kubegraf/master/kubernetes/secret.yaml
+</code></pre>
+</li>
+<li><p>create private certificate</p>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><pre class="language-"><code>copy `/etc/kubernetes/pki/grafana-kubegraf.crt` to all masters
+</code></pre></div></div></p>
+<pre class="language-"><code class="lang-bash">$ openssl genrsa -out ~/grafana-kubegraf.key <span class="token number">2048</span>
+$ openssl req -new -key ~/grafana-kubegraf.key -out ~/grafana-kubegraf.csr -subj <span class="token string">&quot;/CN=grafana-kubegraf/O=monitoring&quot;</span>
+$ openssl x509 -req -in ~/grafana-kubegraf.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -out /etc/kubernetes/pki/grafana-kubegraf.crt -CAcreateserial
+</code></pre>
+<ul>
+<li>get token<pre class="language-"><code class="lang-bash">$ kubectl get secret grafana-kubegraf-secret -o <span class="token assign-left variable">jsonpath</span><span class="token operator">=</span><span class="token punctuation">{</span>.data.token<span class="token punctuation">}</span> -n kubegraf <span class="token operator">|</span> base64 -d
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="https://grafana.com/grafana/plugins/grafana-kubernetes-app/" target="_blank">grafana-kubernetes-app</a></p>
+<p><div class="alert alert-success hints-alert"><div class="hints-icon"><i class="fa fa-mortar-board"></i></div><div class="hints-container"><p>  @deprecated</p>
+</div></div></p>
+<ul>
+<li>install via <code>grafana-cli</code><pre class="language-"><code class="lang-bash">$ grafana-cli plugins <span class="token function">install</span> kubernetes-app
+</code></pre>
+</li>
+<li>setup<pre class="language-"><code class="lang-bash">$ <span class="token function">cat</span> ~/.kube/config <span class="token operator">|</span> <span class="token function">grep</span> certificate-authority-data <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">&apos;{print $2}&apos;</span> <span class="token operator">|</span> base64 -d
 $ <span class="token function">cat</span> ~/.kube/config <span class="token operator">|</span> <span class="token function">grep</span> client-certificate-data <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">&apos;{print $2}&apos;</span> <span class="token operator">|</span> base64 -d
 $ <span class="token function">cat</span> ~/.kube/config <span class="token operator">|</span> <span class="token function">grep</span> client-key-data <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">&apos;{print $2}&apos;</span> <span class="token operator">|</span> base64 -d
 </code></pre>
-<p><img src="../screenshot/grafana-plugin-1.gif" alt="grafana-plugin-1.gif">
-<img src="../screenshot/grafana-plugin-2.gif" alt="grafana-plugin-2.gif"></p>
-<h4 id="dashboard-315"><a name="dashboard-315" class="anchor-navigation-ex-anchor" href="#dashboard-315"><i class="fa fa-link" aria-hidden="true"></i></a><a name="dashboard-315" class="plugin-anchor" href="#dashboard-315"><i class="fa fa-link" aria-hidden="true"></i></a>dashboard (315)</h4>
-<figure id="fig1.7.1.5.1"><img src="../screenshot/grafana-315.gif" alt="grafana-315.gif"><figcaption>1.7.1.5.1 -- grafana-315.gif</figcaption></figure>
-<h2 id="reference"><a name="reference" class="anchor-navigation-ex-anchor" href="#reference"><i class="fa fa-link" aria-hidden="true"></i></a><a name="reference" class="plugin-anchor" href="#reference"><i class="fa fa-link" aria-hidden="true"></i></a>Reference</h2>
-<ul>
-<li><a href="https://medium.com/@fcgravalos/scaling-out-grafana-with-kubernetes-and-aws-62745257df10" target="_blank">Scaling out Grafana with Kubernetes and AWS</a></li>
-<li><a href="https://devopscube.com/setup-grafana-kubernetes/" target="_blank">How To Setup Grafana On Kubernetes</a></li>
-<li><a href="https://medium.com/htc-research-engineering-blog/monitoring-kubernetes-clusters-with-grafana-e2a413febefd" target="_blank">Monitoring Kubernetes Clusters with Grafana</a></li>
+</li>
 </ul>
-<h2 id="code-pool"><a name="code-pool" class="anchor-navigation-ex-anchor" href="#code-pool"><i class="fa fa-link" aria-hidden="true"></i></a><a name="code-pool" class="plugin-anchor" href="#code-pool"><i class="fa fa-link" aria-hidden="true"></i></a>Code Pool</h2>
+</li>
+</ul>
+<figure id="fig1.7.1.9.1.1"><img src="../../screenshot/k8s/grafana-plugin-1.gif" alt="grafana-plugin-1.gif"><figcaption>1.7.1.9.1.1 -- grafana-plugin-1.gif</figcaption></figure>
+<h4 id="dashboard-315"><a name="dashboard-315" class="anchor-navigation-ex-anchor" href="#dashboard-315"><i class="fa fa-link" aria-hidden="true"></i></a><a name="dashboard-315" class="plugin-anchor" href="#dashboard-315"><i class="fa fa-link" aria-hidden="true"></i></a>dashboard (315)</h4>
+<figure id="fig1.7.1.9.1.2"><img src="../../screenshot/k8s/grafana-315.gif" alt="grafana-315.gif"><figcaption>1.7.1.9.1.2 -- grafana-315.gif</figcaption></figure>
+<h3 id="api"><a name="api" class="anchor-navigation-ex-anchor" href="#api"><i class="fa fa-link" aria-hidden="true"></i></a><a name="api" class="plugin-anchor" href="#api"><i class="fa fa-link" aria-hidden="true"></i></a>api</h3>
+<blockquote>
+<p>references:</p>
+<ul>
+<li><a href="https://community.grafana.com/t/grafana-docker-and-data-persistence/33702/2" target="_blank">Grafana Docker and data persistence</a></li>
+</ul>
+</blockquote>
+<h4 id="reset-password"><a name="reset-password" class="anchor-navigation-ex-anchor" href="#reset-password"><i class="fa fa-link" aria-hidden="true"></i></a><a name="reset-password" class="plugin-anchor" href="#reset-password"><i class="fa fa-link" aria-hidden="true"></i></a><a href="https://grafana.com/docs/grafana/latest/administration/cli/" target="_blank">reset password</a></h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> -X PUT -H <span class="token string">&quot;Content-Type: application/json&quot;</span> -d <span class="token string">&apos;{
+  &quot;oldPassword&quot;: &quot;admin&quot;,
+  &quot;newPassword&quot;: &quot;newpass&quot;,
+  &quot;confirmNew&quot;: &quot;newpass&quot;
+}&apos;</span> http://admin:admin@<span class="token operator">&lt;</span>your_grafana_host<span class="token operator">&gt;</span>:3000/api/user/password
+</code></pre>
+<h4 id="set-grafana-admin-password"><a name="set-grafana-admin-password" class="anchor-navigation-ex-anchor" href="#set-grafana-admin-password"><i class="fa fa-link" aria-hidden="true"></i></a><a name="set-grafana-admin-password" class="plugin-anchor" href="#set-grafana-admin-password"><i class="fa fa-link" aria-hidden="true"></i></a>set grafana admin password</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">docker</span> <span class="token builtin class-name">exec</span> -t grafana <span class="token punctuation">\</span>
+              <span class="token function">bash</span> -c <span class="token string">&apos;grafana-cli --homepath /usr/share/grafana admin reset-admin-password &quot;{{ grafana_passwd }}&quot;&apos;</span>
+</code></pre>
+<h4 id="check-if-grafana-can-be-accessed"><a name="check-if-grafana-can-be-accessed" class="anchor-navigation-ex-anchor" href="#check-if-grafana-can-be-accessed"><i class="fa fa-link" aria-hidden="true"></i></a><a name="check-if-grafana-can-be-accessed" class="plugin-anchor" href="#check-if-grafana-can-be-accessed"><i class="fa fa-link" aria-hidden="true"></i></a>check if grafana can be accessed</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> -s http://localhost:3000/api/org <span class="token punctuation">\</span>
+       -u <span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_user <span class="token punctuation">}</span><span class="token punctuation">}</span>:<span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_passwd <span class="token punctuation">}</span><span class="token punctuation">}</span>
+</code></pre>
+<h4 id="create-datasoure-in-grafana"><a name="create-datasoure-in-grafana" class="anchor-navigation-ex-anchor" href="#create-datasoure-in-grafana"><i class="fa fa-link" aria-hidden="true"></i></a><a name="create-datasoure-in-grafana" class="plugin-anchor" href="#create-datasoure-in-grafana"><i class="fa fa-link" aria-hidden="true"></i></a>create datasoure in grafana</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> -L <span class="token punctuation">\</span>
+       --header <span class="token string">&apos;Content-Type: application/json&apos;</span> <span class="token punctuation">\</span>
+       --header <span class="token string">&apos;Accept: application/json&apos;</span> <span class="token punctuation">\</span>
+       -d@//docker_data/grafana_conf/grafanacfg.output http://localhost:3000/api/datasources <span class="token punctuation">\</span>
+       -u <span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_user <span class="token punctuation">}</span><span class="token punctuation">}</span>:<span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_passwd <span class="token punctuation">}</span><span class="token punctuation">}</span>
+</code></pre>
+<h4 id="create-telegrafhost-dashboard-in-grafana-using-jsonfile"><a name="create-telegrafhost-dashboard-in-grafana-using-jsonfile" class="anchor-navigation-ex-anchor" href="#create-telegrafhost-dashboard-in-grafana-using-jsonfile"><i class="fa fa-link" aria-hidden="true"></i></a><a name="create-telegrafhost-dashboard-in-grafana-using-jsonfile" class="plugin-anchor" href="#create-telegrafhost-dashboard-in-grafana-using-jsonfile"><i class="fa fa-link" aria-hidden="true"></i></a>create TelegrafHost dashboard in grafana using jsonfile</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> -L <span class="token punctuation">\</span>
+       --header <span class="token string">&apos;Content-Type: application/json&apos;</span> <span class="token punctuation">\</span>
+       --header <span class="token string">&apos;Accept: application/json&apos;</span> <span class="token punctuation">\</span>
+       -d@/home/Configfiles/dashboards/TelegrafHostMetrics.json http://localhost:3000/api/dashboards/db <span class="token punctuation">\</span>
+       -u <span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_user <span class="token punctuation">}</span><span class="token punctuation">}</span>:<span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_passwd <span class="token punctuation">}</span><span class="token punctuation">}</span>
+</code></pre>
+<h4 id="create-dockermetrics-dashboard-in-grafana-using-jsonfile"><a name="create-dockermetrics-dashboard-in-grafana-using-jsonfile" class="anchor-navigation-ex-anchor" href="#create-dockermetrics-dashboard-in-grafana-using-jsonfile"><i class="fa fa-link" aria-hidden="true"></i></a><a name="create-dockermetrics-dashboard-in-grafana-using-jsonfile" class="plugin-anchor" href="#create-dockermetrics-dashboard-in-grafana-using-jsonfile"><i class="fa fa-link" aria-hidden="true"></i></a>create DockerMetrics dashboard in grafana using jsonfile</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> --header <span class="token string">&apos;Content-Type: application/json&apos;</span> <span class="token punctuation">\</span>
+       --header <span class="token string">&apos;Accept: application/json&apos;</span> <span class="token punctuation">\</span>
+       -d@/home/Configfiles/dashboards/DockerMetricsperContainer.json http://localhost:3000/api/dashboards/db <span class="token punctuation">\</span>
+       -u <span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_user <span class="token punctuation">}</span><span class="token punctuation">}</span>:<span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_passwd <span class="token punctuation">}</span><span class="token punctuation">}</span>
+</code></pre>
+<h4 id="create-jvm-dashboard-in-grafana-using-jsonfile"><a name="create-jvm-dashboard-in-grafana-using-jsonfile" class="anchor-navigation-ex-anchor" href="#create-jvm-dashboard-in-grafana-using-jsonfile"><i class="fa fa-link" aria-hidden="true"></i></a><a name="create-jvm-dashboard-in-grafana-using-jsonfile" class="plugin-anchor" href="#create-jvm-dashboard-in-grafana-using-jsonfile"><i class="fa fa-link" aria-hidden="true"></i></a>create JVM dashboard in grafana using jsonfile</h4>
+<pre class="language-"><code class="lang-bash">$ <span class="token function">curl</span> --header <span class="token string">&apos;Content-Type: application/json&apos;</span> <span class="token punctuation">\</span>
+       --header <span class="token string">&apos;Accept: application/json&apos;</span> <span class="token punctuation">\</span>
+       -d@/home/Configfiles/dashboards/jvm-metrics-jolokia-2_rev1.json http://localhost:3000/api/dashboards/db <span class="token punctuation">\</span>
+       -u <span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_user <span class="token punctuation">}</span><span class="token punctuation">}</span>:<span class="token punctuation">{</span><span class="token punctuation">{</span> grafana_passwd <span class="token punctuation">}</span><span class="token punctuation">}</span>
+</code></pre>
+<h2 id="code-pool"><a name="code-pool" class="anchor-navigation-ex-anchor" href="#code-pool"><i class="fa fa-link" aria-hidden="true"></i></a><a name="code-pool" class="plugin-anchor" href="#code-pool"><i class="fa fa-link" aria-hidden="true"></i></a>code pool</h2>
 <ul>
 <li><a href="https://github.com/kubeless/kubeless/tree/master/manifests/monitoring" target="_blank">kubeless/manifests/monitoring</a></li>
 <li><a href="https://github.com/coreos/kube-prometheus/tree/master/manifests" target="_blank">kube-prometheus/manifests</a></li>
 <li><a href="https://github.com/rootsongjc/kubernetes-handbook/tree/master/manifests/prometheus" target="_blank">kubernetes-handbook/manifests/prometheus</a></li>
 </ul>
 <footer class="page-footer"><span class="copyright">Copyright &#xA9; marslo 2020-2021 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">Last Modified:
-2022-06-08 20:51:45
+2022-06-08 22:29:36
 </span></footer>
                                 
                                 </section>
@@ -2714,12 +2914,12 @@ $ <span class="token function">cat</span> ~/.kube/config <span class="token oper
 
             
                 
-                <a href="certificates.html" class="navigation navigation-prev " aria-label="Previous page: certificates">
+                <a href="tools.html" class="navigation navigation-prev " aria-label="Previous page: tools">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="namespace.html" class="navigation navigation-next " aria-label="Next page: namespace">
+                <a href="../docker/docker.html" class="navigation navigation-next " aria-label="Next page: docker">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2730,7 +2930,7 @@ $ <span class="token function">cat</span> ~/.kube/config <span class="token oper
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"monitor","level":"1.7.1.5","depth":3,"next":{"title":"namespace","level":"1.7.1.6","depth":3,"path":"virtualization/kubernetes/namespace.md","ref":"virtualization/kubernetes/namespace.md","articles":[]},"previous":{"title":"certificates","level":"1.7.1.4","depth":3,"path":"virtualization/kubernetes/certificates.md","ref":"virtualization/kubernetes/certificates.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-livereload","search-plus","edit-link","-disqus","prism","advanced-emoji","anchors","splitter","favicon","- todo","flexible-alerts","-sharing","sharing-plus","sectionx","hints","anchor-navigation-ex","expandable-chapters-small","code","-include-codeblock","codeblock-filename","codetabs","codesnippet","codegroup","-ace","-copy-code-button","emphasize","tbfed-pagefooter","image-captions","github-buttons","hide-element","accordion"],"root":"./docs","styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright © marslo 2020-2021","modify_label":"Last Modified:","modify_format":"YYYY-MM-DD HH:mm:ss"},"prism":{"css":["prismjs/themes/prism-solarizedlight.css"]},"disqus":{"shortName":"mbooks"},"emphasize":{},"splitter":{},"accordion":{},"codetabs":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"hints":{"danger":"fa fa-exclamation-cicle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"code":{"copyButtons":true},"codesnippet":{},"hide-element":{"elements":[".gitbook-link"]},"codegroup":{"defaultTabName":"Code","rememberTabs":true,"tabNameSeperator":"::"},"fontsettings":{"theme":"white","family":"sans","size":1},"sectionx":{"tag":"b"},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"floatIcon":"fa fa-navicon","level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"printLog":false,"showGoTop":true,"showLevel":false},"favicon":{"shortcut":"assets/images/favicon.ico","bookmark":"assets/images/favicon.ico","appleTouch":"assets/images/apple-touch-icon.png","appleTouchMore":{"120x120":"assets/images/apple-touch-icon-120x120.png","180x180":"assets/images/apple-touch-icon-180x180.png"}},"codeblock-filename":{},"github-buttons":{"buttons":[{"user":"marslo","repo":"ibook","type":"star","size":"small"}]},"expandable-chapters-small":{},"flexible-alerts":{"danger":{"className":"danger","icon":"fa fa-ban","label":"Attention"},"note":{"className":"info","icon":"fa fa-info-circle","label":"Note"},"style":"flat","tip":{"className":"tip","icon":"fa fa-lightbulb-o","label":"Tip"},"warning":{"className":"warning","icon":"fa fa-exclamation-triangle","label":"Warning"}},"advanced-emoji":{"embedEmojis":false},"include-codeblock":{"template":"acefull","unindent":true,"theme":"solarized_dark"},"sharing":{"qq":false,"all":["facebook","google","twitter","weibo","instapaper","linkedin","pocket"],"douban":false,"facebook":false,"weibo":true,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":false,"messenger":false,"line":false,"vk":false,"pocket":false,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"edit-link":{"label":"Edit in Github","base":"https://github.com/marslo/ibook/edit/marslo"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"search-plus":{},"image-captions":{"caption":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","variable_name":"_pictures"}},"theme":"default","author":"marslo","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"_pictures":[{"backlink":"artifactory/artifactory.html#fig1.2.1","level":"1.2","list_caption":"Figure: allow temp && demo, and disallow sprint && weekly","alt":"allow temp && demo, and disallow sprint && weekly","nro":1,"url":"../screenshot/artifactory/repo-permission.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"allow temp && demo, and disallow sprint && weekly","attributes":{},"skip":false,"key":"1.2.1"},{"backlink":"cheatsheet/media.html#fig1.3.5.1","level":"1.3.5","list_caption":"Figure: combine","alt":"combine","nro":2,"url":"../screenshot/ffmpeg-combine.jpg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"combine","attributes":{},"skip":false,"key":"1.3.5.1"},{"backlink":"cheatsheet/media.html#fig1.3.5.2","level":"1.3.5","list_caption":"Figure: magick","alt":"magick","nro":3,"url":"../screenshot/heic-1.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"magick","attributes":{},"skip":false,"key":"1.3.5.2"},{"backlink":"cheatsheet/osx.html#fig1.3.6.1","level":"1.3.6","list_caption":"Figure: system-info","alt":"system-info","nro":4,"url":"../screenshot/osx/system_info.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"system-info","attributes":{},"skip":false,"key":"1.3.6.1"},{"backlink":"vim/tricky.html#fig1.4.1.1","level":"1.4.1","list_caption":"Figure: J-gJ","alt":"J-gJ","nro":5,"url":"../screenshot/vim/J-gJ.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"J-gJ","attributes":{},"skip":false,"key":"1.4.1.1"},{"backlink":"vim/tricky.html#fig1.4.1.2","level":"1.4.1","list_caption":"Figure: search-case-sensitive","alt":"search-case-sensitive","nro":6,"url":"../screenshot/vim/search-ignoreCase.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"search-case-sensitive","attributes":{},"skip":false,"key":"1.4.1.2"},{"backlink":"vim/tricky.html#fig1.4.1.3","level":"1.4.1","list_caption":"Figure: sort lines","alt":"sort lines","nro":7,"url":"../screenshot/vim/sort-lines.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sort lines","attributes":{},"skip":false,"key":"1.4.1.3"},{"backlink":"vim/tricky.html#fig1.4.1.4","level":"1.4.1","list_caption":"Figure: sort lines","alt":"sort lines","nro":8,"url":"../screenshot/vim/sort-lines-unqiue.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sort lines","attributes":{},"skip":false,"key":"1.4.1.4"},{"backlink":"vim/tricky.html#fig1.4.1.5","level":"1.4.1","list_caption":"Figure: regex every third","alt":"regex every third","nro":9,"url":"../screenshot/vim/regex/vim-regex-every3rd.gif","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"regex every third","attributes":{},"skip":false,"key":"1.4.1.5"},{"backlink":"vim/tricky.html#fig1.4.1.6","level":"1.4.1","list_caption":"Figure: regex every third","alt":"regex every third","nro":10,"url":"../screenshot/vim/regex/vim-regex-the3rd.gif","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"regex every third","attributes":{},"skip":false,"key":"1.4.1.6"},{"backlink":"vim/windows.html#fig1.4.2.1","level":"1.4.2","list_caption":"Figure: resize","alt":"resize","nro":11,"url":"../screenshot/vim/resize.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"resize","attributes":{},"skip":false,"key":"1.4.2.1"},{"backlink":"vim/windows.html#fig1.4.2.2","level":"1.4.2","list_caption":"Figure: vertical resize","alt":"vertical resize","nro":12,"url":"../screenshot/vim/resize-vertical.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vertical resize","attributes":{},"skip":false,"key":"1.4.2.2"},{"backlink":"vim/windows.html#fig1.4.2.3","level":"1.4.2","list_caption":"Figure: quickfix windows","alt":"quickfix windows","nro":13,"url":"../screenshot/vim/vimgrep-quckfix-window.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"quickfix windows","attributes":{},"skip":false,"key":"1.4.2.3"},{"backlink":"vim/plugins.html#fig1.4.3.1","level":"1.4.3","list_caption":"Figure: tabularize","alt":"tabularize","nro":14,"url":"../screenshot/vim/tabularize/tabu.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize","attributes":{},"skip":false,"key":"1.4.3.1"},{"backlink":"vim/plugins.html#fig1.4.3.2","level":"1.4.3","list_caption":"Figure: tabularize-5","alt":"tabularize-5","nro":15,"url":"../screenshot/vim/tabularize/tabularize-5.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-5","attributes":{},"skip":false,"key":"1.4.3.2"},{"backlink":"vim/plugins.html#fig1.4.3.3","level":"1.4.3","list_caption":"Figure: align with the 2nd matches","alt":"align with the 2nd matches","nro":16,"url":"../screenshot/vim/tabularize/tabularize-the2ndmatches.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"align with the 2nd matches","attributes":{},"skip":false,"key":"1.4.3.3"},{"backlink":"vim/plugins.html#fig1.4.3.4","level":"1.4.3","list_caption":"Figure: tabularize-3","alt":"tabularize-3","nro":17,"url":"../screenshot/vim/tabularize/tabularize-3.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-3","attributes":{},"skip":false,"key":"1.4.3.4"},{"backlink":"vim/plugins.html#fig1.4.3.5","level":"1.4.3","list_caption":"Figure: tabularize-4","alt":"tabularize-4","nro":18,"url":"../screenshot/vim/tabularize/tabularize-4.gif","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-4","attributes":{},"skip":false,"key":"1.4.3.5"},{"backlink":"devops/adminTools.html#fig1.5.1","level":"1.5","list_caption":"Figure: vnstat","alt":"vnstat","nro":19,"url":"../screenshot/vnstat.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vnstat","attributes":{},"skip":false,"key":"1.5.1"},{"backlink":"devops/adminTools.html#fig1.5.2","level":"1.5","list_caption":"Figure: ipcalc","alt":"ipcalc","nro":20,"url":"../screenshot/ipcalc.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ipcalc","attributes":{},"skip":false,"key":"1.5.2"},{"backlink":"devops/adminTools.html#fig1.5.3","level":"1.5","list_caption":"Figure: dstat","alt":"dstat","nro":21,"url":"../screenshot/dstat.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"dstat","attributes":{},"skip":false,"key":"1.5.3"},{"backlink":"devops/git/git.html#fig1.5.1.1","level":"1.5.1","list_caption":"Figure: git rebase and squash automatic","alt":"git rebase and squash automatic","nro":22,"url":"../../screenshot/git/gitrebase-isquash-auto.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git rebase and squash automatic","attributes":{},"skip":false,"key":"1.5.1.1"},{"backlink":"devops/git/git.html#fig1.5.1.2","level":"1.5.1","list_caption":"Figure: rebase -i --root","alt":"rebase -i --root","nro":23,"url":"../../screenshot/git/rebase-i-root.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"rebase -i --root","attributes":{},"skip":false,"key":"1.5.1.2"},{"backlink":"devops/git/eol.html#fig1.5.1.2.1","level":"1.5.1.2","list_caption":"Figure: git line ending setup","alt":"git line ending setup","nro":24,"url":"../../screenshot/git-eol.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git line ending setup","attributes":{},"skip":false,"key":"1.5.1.2.1"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.1","level":"1.5.1.4","list_caption":"Figure: non author cr","alt":"non author cr","nro":25,"url":"../../screenshot/gerrit/none-author-CR.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"non author cr","attributes":{},"skip":false,"key":"1.5.1.4.1"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.2","level":"1.5.1.4","list_caption":"Figure: optional-check","alt":"optional-check","nro":26,"url":"../../screenshot/gerrit/optional_ticket_check-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check","attributes":{},"skip":false,"key":"1.5.1.4.2"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.3","level":"1.5.1.4","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":27,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.5.1.4.3"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.4","level":"1.5.1.4","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":28,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.5.1.4.4"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.5","level":"1.5.1.4","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":29,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.5.1.4.5"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.6","level":"1.5.1.4","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":30,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.5.1.4.6"},{"backlink":"devops/network.html#fig1.5.6.1","level":"1.5.6","list_caption":"Figure: nmcli-1","alt":"nmcli-1","nro":31,"url":"../screenshot/nmcli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-1","attributes":{},"skip":false,"key":"1.5.6.1"},{"backlink":"devops/network.html#fig1.5.6.2","level":"1.5.6","list_caption":"Figure: nmcli-2","alt":"nmcli-2","nro":32,"url":"../screenshot/nmcli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-2","attributes":{},"skip":false,"key":"1.5.6.2"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.1","level":"1.6.1.1","list_caption":"Figure: config","alt":"config","nro":33,"url":"../../screenshot/jenkins/config/win-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"config","attributes":{},"skip":false,"key":"1.6.1.1.1"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.2","level":"1.6.1.1","list_caption":"Figure: start server manually","alt":"start server manually","nro":34,"url":"../../screenshot/jenkins/config/win-3.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"start server manually","attributes":{},"skip":false,"key":"1.6.1.1.2"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.3","level":"1.6.1.1","list_caption":"Figure: run as administrator","alt":"run as administrator","nro":35,"url":"../../screenshot/jenkins/config/win-6.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"run as administrator","attributes":{},"skip":false,"key":"1.6.1.1.3"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.4","level":"1.6.1.1","list_caption":"Figure: sc","alt":"sc","nro":36,"url":"../../screenshot/jenkins/config/win-7.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sc","attributes":{},"skip":false,"key":"1.6.1.1.4"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.5","level":"1.6.1.1","list_caption":"Figure: restart when anything abnormal","alt":"restart when anything abnormal","nro":37,"url":"../../screenshot/jenkins/config/win-8.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"restart when anything abnormal","attributes":{},"skip":false,"key":"1.6.1.1.5"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.6","level":"1.6.1.1","list_caption":"Figure: remove service","alt":"remove service","nro":38,"url":"../../screenshot/jenkins/config/win-9.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"remove service","attributes":{},"skip":false,"key":"1.6.1.1.6"},{"backlink":"jenkins/jenkinsfile/jenkinsfile.html#fig1.6.2.1","level":"1.6.2","list_caption":"Figure: get rawbuild changeset","alt":"get rawbuild changeset","nro":39,"url":"../../screenshot/jenkins/get-rawbuild-changeset.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"get rawbuild changeset","attributes":{},"skip":false,"key":"1.6.2.1"},{"backlink":"jenkins/jenkinsfile/jenkinsfile.html#fig1.6.2.2","level":"1.6.2","list_caption":"Figure: customized display name","alt":"customized display name","nro":40,"url":"../../screenshot/jenkins/showDisplayName.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"customized display name","attributes":{},"skip":false,"key":"1.6.2.2"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.1","level":"1.6.2.3","list_caption":"Figure: build downstream jobs","alt":"build downstream jobs","nro":41,"url":"../../screenshot/jenkins/trigger-downstream.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"build downstream jobs","attributes":{},"skip":false,"key":"1.6.2.3.1"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.2","level":"1.6.2.3","list_caption":"Figure: warnError","alt":"warnError","nro":42,"url":"../../screenshot/jenkins/warnError.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"warnError","attributes":{},"skip":false,"key":"1.6.2.3.2"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.3","level":"1.6.2.3","list_caption":"Figure: catchError","alt":"catchError","nro":43,"url":"../../screenshot/jenkins/catchError.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"catchError","attributes":{},"skip":false,"key":"1.6.2.3.3"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.4","level":"1.6.2.3","list_caption":"Figure: Jenkins Result Status","alt":"Jenkins Result Status","nro":44,"url":"../../screenshot/jenkins/Result.isWorthThan.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Jenkins Result Status","attributes":{},"skip":false,"key":"1.6.2.3.4"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.6.2.5.1","level":"1.6.2.5","list_caption":"Figure: parameters","alt":"parameters","nro":45,"url":"../../screenshot/jenkins/properties-parameters.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"parameters","attributes":{},"skip":false,"key":"1.6.2.5.1"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.6.2.5.2","level":"1.6.2.5","list_caption":"Figure: active choice with mixed options","alt":"active choice with mixed options","nro":46,"url":"../../screenshot/jenkins/active_choice_mixed.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"active choice with mixed options","attributes":{},"skip":false,"key":"1.6.2.5.2"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.6.2.5.3","level":"1.6.2.5","list_caption":"Figure: active choice","alt":"active choice","nro":47,"url":"../../screenshot/jenkins/active_choice.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"active choice","attributes":{},"skip":false,"key":"1.6.2.5.3"},{"backlink":"jenkins/script/cli.html#fig1.6.3.5.1","level":"1.6.3.5","list_caption":"Figure: jenkins-cli-port","alt":"jenkins-cli-port","nro":48,"url":"../../screenshot/jenkins/jenkins-cli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-port","attributes":{},"skip":false,"key":"1.6.3.5.1"},{"backlink":"jenkins/script/cli.html#fig1.6.3.5.2","level":"1.6.3.5","list_caption":"Figure: jenkins-cli-ssh","alt":"jenkins-cli-ssh","nro":49,"url":"../../screenshot/jenkins/jenkins-cli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-ssh","attributes":{},"skip":false,"key":"1.6.3.5.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.1","level":"1.6.4.1","list_caption":"Figure: plugin-1","alt":"plugin-1","nro":50,"url":"../../screenshot/k8s-plugin-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-1","attributes":{},"skip":false,"key":"1.6.4.1.1"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.2","level":"1.6.4.1","list_caption":"Figure: plugin-2","alt":"plugin-2","nro":51,"url":"../../screenshot/k8s-plugin-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-2","attributes":{},"skip":false,"key":"1.6.4.1.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.3","level":"1.6.4.1","list_caption":"Figure: plugin-3","alt":"plugin-3","nro":52,"url":"../../screenshot/k8s-plugin-3.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-3","attributes":{},"skip":false,"key":"1.6.4.1.3"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.4","level":"1.6.4.1","list_caption":"Figure: plugin-4","alt":"plugin-4","nro":53,"url":"../../screenshot/k8s-plugin-4.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-4","attributes":{},"skip":false,"key":"1.6.4.1.4"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.5","level":"1.6.4.1","list_caption":"Figure: plugin-5","alt":"plugin-5","nro":54,"url":"../../screenshot/k8s-plugin-5.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-5","attributes":{},"skip":false,"key":"1.6.4.1.5"},{"backlink":"jenkins/plugins/postbuild.html#fig1.6.4.3.1","level":"1.6.4.3","list_caption":"Figure: using icon from another plugin","alt":"using icon from another plugin","nro":55,"url":"../../screenshot/jenkins/badge.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"using icon from another plugin","attributes":{},"skip":false,"key":"1.6.4.3.1"},{"backlink":"jenkins/plugins/ansicolor.html#fig1.6.4.6.1","level":"1.6.4.6","list_caption":"Figure: ansicolor 256 colors","alt":"ansicolor 256 colors","nro":56,"url":"../../screenshot/jenkins/ansicolor-256.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ansicolor 256 colors","attributes":{},"skip":false,"key":"1.6.4.6.1"},{"backlink":"jenkins/plugins/ansicolor.html#fig1.6.4.6.2","level":"1.6.4.6","list_caption":"Figure: ansicolor 256 with name","alt":"ansicolor 256 with name","nro":57,"url":"../../screenshot/jenkins/ansicolor-256-withname.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ansicolor 256 with name","attributes":{},"skip":false,"key":"1.6.4.6.2"},{"backlink":"jenkins/plugins/crumbIssuer.html#fig1.6.4.8.1","level":"1.6.4.8","list_caption":"Figure: enable/disable crumb compatibility","alt":"enable/disable crumb compatibility","nro":58,"url":"../../screenshot/jenkins/crumbIssuer-enable.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"enable/disable crumb compatibility","attributes":{},"skip":false,"key":"1.6.4.8.1"},{"backlink":"virtualization/kubernetes/kubectl.html#fig1.7.1.2.1","level":"1.7.1.2","list_caption":"Figure: kubectl","alt":"kubectl","nro":59,"url":"../../screenshot/k8s/k-1.svg.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"kubectl","attributes":{},"skip":false,"key":"1.7.1.2.1"},{"backlink":"virtualization/kubernetes/monitor.html#fig1.7.1.5.1","level":"1.7.1.5","list_caption":"Figure: grafana-315.gif","alt":"grafana-315.gif","nro":60,"url":"../screenshot/grafana-315.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"grafana-315.gif","attributes":{},"skip":false,"key":"1.7.1.5.1"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.1","level":"1.7.2","list_caption":"Figure: docker internals","alt":"docker internals","nro":61,"url":"../../screenshot/docker/docker-internals.p/ng","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker internals","attributes":{},"skip":false,"key":"1.7.2.1"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.2","level":"1.7.2","list_caption":"Figure: docker cgoups","alt":"docker cgoups","nro":62,"url":"../../screenshot/docker/docker-cgroup.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker cgoups","attributes":{},"skip":false,"key":"1.7.2.2"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.3","level":"1.7.2","list_caption":"Figure: docker namespace","alt":"docker namespace","nro":63,"url":"../../screenshot/docker/docker-namespace.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker namespace","attributes":{},"skip":false,"key":"1.7.2.3"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.4","level":"1.7.2","list_caption":"Figure: docker status","alt":"docker status","nro":64,"url":"../../screenshot/docker/docker-stat-resource-1.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker status","attributes":{},"skip":false,"key":"1.7.2.4"},{"backlink":"virtualization/docker/windows.html#fig1.7.2.1.1","level":"1.7.2.1","list_caption":"Figure: install-docker-ee-in-windows-server","alt":"install-docker-ee-in-windows-server","nro":65,"url":"../../screenshot/docker/docker-ee-windows-server.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"install-docker-ee-in-windows-server","attributes":{},"skip":false,"key":"1.7.2.1.1"},{"backlink":"osx/osx.html#fig1.8.1","level":"1.8","list_caption":"Figure: download cookies.txt","alt":"download cookies.txt","nro":66,"url":"../screenshot/cookies.txt-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"download cookies.txt","attributes":{},"skip":false,"key":"1.8.1"},{"backlink":"osx/osx.html#fig1.8.2","level":"1.8","list_caption":"Figure: copy link address","alt":"copy link address","nro":67,"url":"../screenshot/cookies.txt-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy link address","attributes":{},"skip":false,"key":"1.8.2"},{"backlink":"osx/osx.html#fig1.8.3","level":"1.8","list_caption":"Figure: check which user is using the disk","alt":"check which user is using the disk","nro":68,"url":"../screenshot/osx/which-user-using-disk.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"check which user is using the disk","attributes":{},"skip":false,"key":"1.8.3"},{"backlink":"osx/osx.html#fig1.8.4","level":"1.8","list_caption":"Figure: Enable Root User","alt":"Enable Root User","nro":69,"url":"../screenshot/osx/enable-root-user.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Enable Root User","attributes":{},"skip":false,"key":"1.8.4"},{"backlink":"osx/osx.html#fig1.8.5","level":"1.8","list_caption":"Figure: disable gatekeeper","alt":"disable gatekeeper","nro":70,"url":"../screenshot/osx/spctl-gatekepper.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"disable gatekeeper","attributes":{},"skip":false,"key":"1.8.5"},{"backlink":"osx/tricky.html#fig1.8.6.1","level":"1.8.6","list_caption":"Figure: option key","alt":"option key","nro":71,"url":"../screenshot/osx/copy-path-optional-key.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"option key","attributes":{},"skip":false,"key":"1.8.6.1"},{"backlink":"osx/tricky.html#fig1.8.6.2","level":"1.8.6","list_caption":"Figure: create quick action","alt":"create quick action","nro":72,"url":"../screenshot/osx/copy-path-service-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"create quick action","attributes":{},"skip":false,"key":"1.8.6.2"},{"backlink":"osx/tricky.html#fig1.8.6.3","level":"1.8.6","list_caption":"Figure: content menu","alt":"content menu","nro":73,"url":"../screenshot/osx/copy-path-service-2.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"content menu","attributes":{},"skip":false,"key":"1.8.6.3"},{"backlink":"osx/tricky.html#fig1.8.6.4","level":"1.8.6","list_caption":"Figure: copy path apple script","alt":"copy path apple script","nro":74,"url":"../screenshot/osx/copy-path-applescript.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path apple script","attributes":{},"skip":false,"key":"1.8.6.4"},{"backlink":"osx/tricky.html#fig1.8.6.5","level":"1.8.6","list_caption":"Figure: copy path shortcut key","alt":"copy path shortcut key","nro":75,"url":"../screenshot/osx/copy-path-shortcut.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path shortcut key","attributes":{},"skip":false,"key":"1.8.6.5"},{"backlink":"osx/tricky.html#fig1.8.6.6","level":"1.8.6","list_caption":"Figure: Automator.app » save to an app","alt":"Automator.app » save to an app","nro":76,"url":"../screenshot/osx/runable-app-3.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Automator.app » save to an app","attributes":{},"skip":false,"key":"1.8.6.6"},{"backlink":"osx/tricky.html#fig1.8.6.7","level":"1.8.6","list_caption":"Figure: technical symbols","alt":"technical symbols","nro":77,"url":"../screenshot/osx/snippets-2.png","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"technical symbols","attributes":{},"skip":false,"key":"1.8.6.7"},{"backlink":"osx/tricky.html#fig1.8.6.8","level":"1.8.6","list_caption":"Figure: hdiutil create image","alt":"hdiutil create image","nro":78,"url":"../screenshot/osx/hdiutil-create-image.png","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"hdiutil create image","attributes":{},"skip":false,"key":"1.8.6.8"},{"backlink":"osx/tricky.html#fig1.8.6.9","level":"1.8.6","list_caption":"Figure: hdiutil create encrypted image","alt":"hdiutil create encrypted image","nro":79,"url":"../screenshot/osx/hdiutil-create-encrypted.png","index":9,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"hdiutil create encrypted image","attributes":{},"skip":false,"key":"1.8.6.9"},{"backlink":"osx/tricky.html#fig1.8.6.10","level":"1.8.6","list_caption":"Figure: activity monitor","alt":"activity monitor","nro":80,"url":"../screenshot/osx/activity-monitor.png","index":10,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"activity monitor","attributes":{},"skip":false,"key":"1.8.6.10"},{"backlink":"linux/util/colors.html#fig1.9.1.3.1","level":"1.9.1.3","list_caption":"Figure: 256 colors","alt":"256 colors","nro":81,"url":"../../screenshot/ansi/ansicolor-256-0.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"256 colors","attributes":{},"skip":false,"key":"1.9.1.3.1"},{"backlink":"linux/util/colors.html#fig1.9.1.3.2","level":"1.9.1.3","list_caption":"Figure: 256 colors","alt":"256 colors","nro":82,"url":"../../screenshot/ansi/ansicolor-256-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"256 colors","attributes":{},"skip":false,"key":"1.9.1.3.2"},{"backlink":"linux/util/colors.html#fig1.9.1.3.3","level":"1.9.1.3","list_caption":"Figure: colors & formatting","alt":"colors & formatting","nro":83,"url":"../../screenshot/ansi/color-formatting.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"colors & formatting","attributes":{},"skip":false,"key":"1.9.1.3.3"},{"backlink":"linux/util/colors.html#fig1.9.1.3.4","level":"1.9.1.3","list_caption":"Figure: colors & formatting","alt":"colors & formatting","nro":84,"url":"../../screenshot/ansi/color-formatting-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"colors & formatting","attributes":{},"skip":false,"key":"1.9.1.3.4"},{"backlink":"linux/util/colors.html#fig1.9.1.3.5","level":"1.9.1.3","list_caption":"Figure: solarized colors","alt":"solarized colors","nro":85,"url":"../../screenshot/ansi/solarized-colors.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"solarized colors","attributes":{},"skip":false,"key":"1.9.1.3.5"},{"backlink":"linux/util/colors.html#fig1.9.1.3.6","level":"1.9.1.3","list_caption":"Figure: bash ps1","alt":"bash ps1","nro":86,"url":"../../screenshot/ansi/bash-ps1.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1","attributes":{},"skip":false,"key":"1.9.1.3.6"},{"backlink":"linux/util/colors.html#fig1.9.1.3.7","level":"1.9.1.3","list_caption":"Figure: bash ps1 in conditional","alt":"bash ps1 in conditional","nro":87,"url":"../../screenshot/ansi/bash-ps1-conditions.png","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1 in conditional","attributes":{},"skip":false,"key":"1.9.1.3.7"},{"backlink":"linux/util/colors.html#fig1.9.1.3.8","level":"1.9.1.3","list_caption":"Figure: bash ps1 right-prompt","alt":"bash ps1 right-prompt","nro":88,"url":"../../screenshot/ansi/bash-ps1-right-prompt.png","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1 right-prompt","attributes":{},"skip":false,"key":"1.9.1.3.8"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.1","level":"1.9.1.4","list_caption":"Figure: waiting bar with dot","alt":"waiting bar with dot","nro":89,"url":"../../screenshot/shell/shell-waiting-process-dot.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"waiting bar with dot","attributes":{},"skip":false,"key":"1.9.1.4.1"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.2","level":"1.9.1.4","list_caption":"Figure: progress bar with `▎▌ ▊ ▉`","alt":"progress bar with `▎▌ ▊ ▉`","nro":90,"url":"../../screenshot/shell/shell-waiting-progress-bar2.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `▎▌ ▊ ▉`","attributes":{},"skip":false,"key":"1.9.1.4.2"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.3","level":"1.9.1.4","list_caption":"Figure: progress bar with `[###----]`","alt":"progress bar with `[###----]`","nro":91,"url":"../../screenshot/shell/shell-waiting-progress-bar3.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `[###----]`","attributes":{},"skip":false,"key":"1.9.1.4.3"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.4","level":"1.9.1.4","list_caption":"Figure: progress bar with `|\\|/`","alt":"progress bar with `|\\|/`","nro":92,"url":"../../screenshot/shell/shell-waiting-progress-bar4.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `|\\|/`","attributes":{},"skip":false,"key":"1.9.1.4.4"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.5","level":"1.9.1.4","list_caption":"Figure: customized color output","alt":"customized color output","nro":93,"url":"../../screenshot/colorful-tricky.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"customized color output","attributes":{},"skip":false,"key":"1.9.1.4.5"},{"backlink":"linux/ubuntu/installation.html#fig1.9.5.2.1","level":"1.9.5.2","list_caption":"Figure: ss-libev-service","alt":"ss-libev-service","nro":94,"url":"../../screenshot/ss/ss-libev-port.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-service","attributes":{},"skip":false,"key":"1.9.5.2.1"},{"backlink":"linux/ubuntu/installation.html#fig1.9.5.2.2","level":"1.9.5.2","list_caption":"Figure: ss-libev-client","alt":"ss-libev-client","nro":95,"url":"../../screenshot/ss/ss-libev-client.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-client","attributes":{},"skip":false,"key":"1.9.5.2.2"},{"backlink":"linux/ubuntu/x.html#fig1.9.5.5.1","level":"1.9.5.5","list_caption":"Figure: desktop styles","alt":"desktop styles","nro":96,"url":"screenshots/desktop-style-2.jpeg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"desktop styles","attributes":{},"skip":false,"key":"1.9.5.5.1"},{"backlink":"programming/python/config.html#fig1.10.2.1.1","level":"1.10.2.1","list_caption":"Figure: idle in mac big sur","alt":"idle in mac big sur","nro":97,"url":"../../screenshot/python/idle-mac-bigsur.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"idle in mac big sur","attributes":{},"skip":false,"key":"1.10.2.1.1"},{"backlink":"tools/node/github.page.html#fig1.11.1.3.1","level":"1.11.1.3","list_caption":"Figure: read password from keychain via `/usr/bin/security`","alt":"read password from keychain via `/usr/bin/security`","nro":98,"url":"../../screenshot/git/git-keychain-token.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"read password from keychain via `/usr/bin/security`","attributes":{},"skip":false,"key":"1.11.1.3.1"},{"backlink":"tools/virtualbox.html#fig1.11.3.1","level":"1.11.3","list_caption":"Figure: uninstall","alt":"uninstall","nro":99,"url":"../screenshot/vbox-uninstall.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"uninstall","attributes":{},"skip":false,"key":"1.11.3.1"},{"backlink":"tools/iterm2.html#fig1.11.4.1","level":"1.11.4","list_caption":"Figure: tabset list","alt":"tabset list","nro":100,"url":"../screenshot/iterm2/tabset-list-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabset list","attributes":{},"skip":false,"key":"1.11.4.1"},{"backlink":"tools/iterm2.html#fig1.11.4.2","level":"1.11.4","list_caption":"Figure: itit <string> c","alt":"itit <string> c","nro":101,"url":"../screenshot/iterm2/itit-c.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit <string> c","attributes":{},"skip":false,"key":"1.11.4.2"},{"backlink":"tools/iterm2.html#fig1.11.4.3","level":"1.11.4","list_caption":"Figure: itit string bc","alt":"itit string bc","nro":102,"url":"../screenshot/iterm2/itit-bc.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit string bc","attributes":{},"skip":false,"key":"1.11.4.3"},{"backlink":"tools/atlassian.html#fig1.11.5.1","level":"1.11.5","list_caption":"Figure: publish via api","alt":"publish via api","nro":103,"url":"../screenshot/publish-to-confluence.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"publish via api","attributes":{},"skip":false,"key":"1.11.5.1"}]},"title":"ibook","language":"en","output.name":"site","links":{"sidebar":{"I, Marslo":"https://imarslo.github.io/"}},"gitbook":"3.2.3","direction":"ltr"},"file":{"path":"virtualization/kubernetes/monitor.md","mtime":"2022-06-08T12:51:45.934Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-06-08T12:52:10.337Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"monitor","level":"1.7.1.9.1","depth":4,"next":{"title":"docker","level":"1.7.2","depth":2,"path":"virtualization/docker/docker.md","ref":"virtualization/docker/docker.md","articles":[{"title":"windows","level":"1.7.2.1","depth":3,"path":"virtualization/docker/windows.md","ref":"virtualization/docker/windows.md","articles":[]},{"title":"tricky","level":"1.7.2.2","depth":3,"path":"virtualization/docker/tricky.md","ref":"virtualization/docker/tricky.md","articles":[]}]},"previous":{"title":"tools","level":"1.7.1.9","depth":3,"path":"virtualization/kubernetes/tools.md","ref":"virtualization/kubernetes/tools.md","articles":[{"title":"monitor","level":"1.7.1.9.1","depth":4,"path":"virtualization/kubernetes/monitor.md","ref":"virtualization/kubernetes/monitor.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","-highlight","-livereload","search-plus","edit-link","-disqus","prism","advanced-emoji","anchors","splitter","favicon","- todo","flexible-alerts","-sharing","sharing-plus","sectionx","hints","anchor-navigation-ex","expandable-chapters-small","code","-include-codeblock","codeblock-filename","codetabs","codesnippet","codegroup","-ace","-copy-code-button","emphasize","tbfed-pagefooter","image-captions","github-buttons","hide-element","accordion"],"root":"./docs","styles":{"website":"styles/website.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright © marslo 2020-2021","modify_label":"Last Modified:","modify_format":"YYYY-MM-DD HH:mm:ss"},"prism":{"css":["prismjs/themes/prism-solarizedlight.css"]},"disqus":{"shortName":"mbooks"},"emphasize":{},"splitter":{},"accordion":{},"codetabs":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"hints":{"danger":"fa fa-exclamation-cicle","info":"fa fa-info-circle","tip":"fa fa-mortar-board","working":"fa fa-wrench"},"code":{"copyButtons":true},"codesnippet":{},"hide-element":{"elements":[".gitbook-link"]},"codegroup":{"defaultTabName":"Code","rememberTabs":true,"tabNameSeperator":"::"},"fontsettings":{"theme":"white","family":"sans","size":1},"sectionx":{"tag":"b"},"anchor-navigation-ex":{"associatedWithSummary":true,"float":{"floatIcon":"fa fa-navicon","level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"mode":"float","multipleH1":true,"pageTop":{"level1Icon":"fa fa-hand-o-right","level2Icon":"fa fa-hand-o-right","level3Icon":"fa fa-hand-o-right","showLevelIcon":false},"printLog":false,"showGoTop":true,"showLevel":false},"favicon":{"shortcut":"assets/images/favicon.ico","bookmark":"assets/images/favicon.ico","appleTouch":"assets/images/apple-touch-icon.png","appleTouchMore":{"120x120":"assets/images/apple-touch-icon-120x120.png","180x180":"assets/images/apple-touch-icon-180x180.png"}},"codeblock-filename":{},"github-buttons":{"buttons":[{"user":"marslo","repo":"ibook","type":"star","size":"small"}]},"expandable-chapters-small":{},"flexible-alerts":{"danger":{"className":"danger","icon":"fa fa-ban","label":"Attention"},"note":{"className":"info","icon":"fa fa-info-circle","label":"Note"},"style":"flat","tip":{"className":"tip","icon":"fa fa-lightbulb-o","label":"Tip"},"warning":{"className":"warning","icon":"fa fa-exclamation-triangle","label":"Warning"}},"advanced-emoji":{"embedEmojis":false},"include-codeblock":{"template":"acefull","unindent":true,"theme":"solarized_dark"},"sharing":{"qq":false,"all":["facebook","google","twitter","weibo","instapaper","linkedin","pocket"],"douban":false,"facebook":false,"weibo":true,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":false,"messenger":false,"line":false,"vk":false,"pocket":false,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"edit-link":{"label":"Edit in Github","base":"https://github.com/marslo/ibook/edit/marslo"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{},"search-plus":{},"image-captions":{"caption":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","variable_name":"_pictures"}},"theme":"default","author":"marslo","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"_pictures":[{"backlink":"artifactory/artifactory.html#fig1.2.1","level":"1.2","list_caption":"Figure: allow temp && demo, and disallow sprint && weekly","alt":"allow temp && demo, and disallow sprint && weekly","nro":1,"url":"../screenshot/artifactory/repo-permission.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"allow temp && demo, and disallow sprint && weekly","attributes":{},"skip":false,"key":"1.2.1"},{"backlink":"cheatsheet/media.html#fig1.3.5.1","level":"1.3.5","list_caption":"Figure: combine","alt":"combine","nro":2,"url":"../screenshot/ffmpeg-combine.jpg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"combine","attributes":{},"skip":false,"key":"1.3.5.1"},{"backlink":"cheatsheet/media.html#fig1.3.5.2","level":"1.3.5","list_caption":"Figure: magick","alt":"magick","nro":3,"url":"../screenshot/heic-1.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"magick","attributes":{},"skip":false,"key":"1.3.5.2"},{"backlink":"cheatsheet/osx.html#fig1.3.6.1","level":"1.3.6","list_caption":"Figure: system-info","alt":"system-info","nro":4,"url":"../screenshot/osx/system_info.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"system-info","attributes":{},"skip":false,"key":"1.3.6.1"},{"backlink":"vim/tricky.html#fig1.4.1.1","level":"1.4.1","list_caption":"Figure: J-gJ","alt":"J-gJ","nro":5,"url":"../screenshot/vim/J-gJ.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"J-gJ","attributes":{},"skip":false,"key":"1.4.1.1"},{"backlink":"vim/tricky.html#fig1.4.1.2","level":"1.4.1","list_caption":"Figure: search-case-sensitive","alt":"search-case-sensitive","nro":6,"url":"../screenshot/vim/search-ignoreCase.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"search-case-sensitive","attributes":{},"skip":false,"key":"1.4.1.2"},{"backlink":"vim/tricky.html#fig1.4.1.3","level":"1.4.1","list_caption":"Figure: sort lines","alt":"sort lines","nro":7,"url":"../screenshot/vim/sort-lines.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sort lines","attributes":{},"skip":false,"key":"1.4.1.3"},{"backlink":"vim/tricky.html#fig1.4.1.4","level":"1.4.1","list_caption":"Figure: sort lines","alt":"sort lines","nro":8,"url":"../screenshot/vim/sort-lines-unqiue.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sort lines","attributes":{},"skip":false,"key":"1.4.1.4"},{"backlink":"vim/tricky.html#fig1.4.1.5","level":"1.4.1","list_caption":"Figure: regex every third","alt":"regex every third","nro":9,"url":"../screenshot/vim/regex/vim-regex-every3rd.gif","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"regex every third","attributes":{},"skip":false,"key":"1.4.1.5"},{"backlink":"vim/tricky.html#fig1.4.1.6","level":"1.4.1","list_caption":"Figure: regex every third","alt":"regex every third","nro":10,"url":"../screenshot/vim/regex/vim-regex-the3rd.gif","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"regex every third","attributes":{},"skip":false,"key":"1.4.1.6"},{"backlink":"vim/windows.html#fig1.4.2.1","level":"1.4.2","list_caption":"Figure: resize","alt":"resize","nro":11,"url":"../screenshot/vim/resize.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"resize","attributes":{},"skip":false,"key":"1.4.2.1"},{"backlink":"vim/windows.html#fig1.4.2.2","level":"1.4.2","list_caption":"Figure: vertical resize","alt":"vertical resize","nro":12,"url":"../screenshot/vim/resize-vertical.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vertical resize","attributes":{},"skip":false,"key":"1.4.2.2"},{"backlink":"vim/windows.html#fig1.4.2.3","level":"1.4.2","list_caption":"Figure: quickfix windows","alt":"quickfix windows","nro":13,"url":"../screenshot/vim/vimgrep-quckfix-window.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"quickfix windows","attributes":{},"skip":false,"key":"1.4.2.3"},{"backlink":"vim/plugins.html#fig1.4.3.1","level":"1.4.3","list_caption":"Figure: tabularize","alt":"tabularize","nro":14,"url":"../screenshot/vim/tabularize/tabu.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize","attributes":{},"skip":false,"key":"1.4.3.1"},{"backlink":"vim/plugins.html#fig1.4.3.2","level":"1.4.3","list_caption":"Figure: tabularize-5","alt":"tabularize-5","nro":15,"url":"../screenshot/vim/tabularize/tabularize-5.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-5","attributes":{},"skip":false,"key":"1.4.3.2"},{"backlink":"vim/plugins.html#fig1.4.3.3","level":"1.4.3","list_caption":"Figure: align with the 2nd matches","alt":"align with the 2nd matches","nro":16,"url":"../screenshot/vim/tabularize/tabularize-the2ndmatches.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"align with the 2nd matches","attributes":{},"skip":false,"key":"1.4.3.3"},{"backlink":"vim/plugins.html#fig1.4.3.4","level":"1.4.3","list_caption":"Figure: tabularize-3","alt":"tabularize-3","nro":17,"url":"../screenshot/vim/tabularize/tabularize-3.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-3","attributes":{},"skip":false,"key":"1.4.3.4"},{"backlink":"vim/plugins.html#fig1.4.3.5","level":"1.4.3","list_caption":"Figure: tabularize-4","alt":"tabularize-4","nro":18,"url":"../screenshot/vim/tabularize/tabularize-4.gif","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabularize-4","attributes":{},"skip":false,"key":"1.4.3.5"},{"backlink":"devops/adminTools.html#fig1.5.1","level":"1.5","list_caption":"Figure: vnstat","alt":"vnstat","nro":19,"url":"../screenshot/vnstat.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"vnstat","attributes":{},"skip":false,"key":"1.5.1"},{"backlink":"devops/adminTools.html#fig1.5.2","level":"1.5","list_caption":"Figure: ipcalc","alt":"ipcalc","nro":20,"url":"../screenshot/ipcalc.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ipcalc","attributes":{},"skip":false,"key":"1.5.2"},{"backlink":"devops/adminTools.html#fig1.5.3","level":"1.5","list_caption":"Figure: dstat","alt":"dstat","nro":21,"url":"../screenshot/dstat.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"dstat","attributes":{},"skip":false,"key":"1.5.3"},{"backlink":"devops/git/git.html#fig1.5.1.1","level":"1.5.1","list_caption":"Figure: git rebase and squash automatic","alt":"git rebase and squash automatic","nro":22,"url":"../../screenshot/git/gitrebase-isquash-auto.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git rebase and squash automatic","attributes":{},"skip":false,"key":"1.5.1.1"},{"backlink":"devops/git/git.html#fig1.5.1.2","level":"1.5.1","list_caption":"Figure: rebase -i --root","alt":"rebase -i --root","nro":23,"url":"../../screenshot/git/rebase-i-root.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"rebase -i --root","attributes":{},"skip":false,"key":"1.5.1.2"},{"backlink":"devops/git/eol.html#fig1.5.1.2.1","level":"1.5.1.2","list_caption":"Figure: git line ending setup","alt":"git line ending setup","nro":24,"url":"../../screenshot/git-eol.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"git line ending setup","attributes":{},"skip":false,"key":"1.5.1.2.1"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.1","level":"1.5.1.4","list_caption":"Figure: non author cr","alt":"non author cr","nro":25,"url":"../../screenshot/gerrit/none-author-CR.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"non author cr","attributes":{},"skip":false,"key":"1.5.1.4.1"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.2","level":"1.5.1.4","list_caption":"Figure: optional-check","alt":"optional-check","nro":26,"url":"../../screenshot/gerrit/optional_ticket_check-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check","attributes":{},"skip":false,"key":"1.5.1.4.2"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.3","level":"1.5.1.4","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":27,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.5.1.4.3"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.4","level":"1.5.1.4","list_caption":"Figure: optional-check-autovote","alt":"optional-check-autovote","nro":28,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"optional-check-autovote","attributes":{},"skip":false,"key":"1.5.1.4.4"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.5","level":"1.5.1.4","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":29,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-1.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.5.1.4.5"},{"backlink":"devops/git/gerrit.html#fig1.5.1.4.6","level":"1.5.1.4","list_caption":"Figure: mandatory check","alt":"mandatory check","nro":30,"url":"../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"mandatory check","attributes":{},"skip":false,"key":"1.5.1.4.6"},{"backlink":"devops/network.html#fig1.5.6.1","level":"1.5.6","list_caption":"Figure: nmcli-1","alt":"nmcli-1","nro":31,"url":"../screenshot/nmcli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-1","attributes":{},"skip":false,"key":"1.5.6.1"},{"backlink":"devops/network.html#fig1.5.6.2","level":"1.5.6","list_caption":"Figure: nmcli-2","alt":"nmcli-2","nro":32,"url":"../screenshot/nmcli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"nmcli-2","attributes":{},"skip":false,"key":"1.5.6.2"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.1","level":"1.6.1.1","list_caption":"Figure: config","alt":"config","nro":33,"url":"../../screenshot/jenkins/config/win-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"config","attributes":{},"skip":false,"key":"1.6.1.1.1"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.2","level":"1.6.1.1","list_caption":"Figure: start server manually","alt":"start server manually","nro":34,"url":"../../screenshot/jenkins/config/win-3.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"start server manually","attributes":{},"skip":false,"key":"1.6.1.1.2"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.3","level":"1.6.1.1","list_caption":"Figure: run as administrator","alt":"run as administrator","nro":35,"url":"../../screenshot/jenkins/config/win-6.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"run as administrator","attributes":{},"skip":false,"key":"1.6.1.1.3"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.4","level":"1.6.1.1","list_caption":"Figure: sc","alt":"sc","nro":36,"url":"../../screenshot/jenkins/config/win-7.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"sc","attributes":{},"skip":false,"key":"1.6.1.1.4"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.5","level":"1.6.1.1","list_caption":"Figure: restart when anything abnormal","alt":"restart when anything abnormal","nro":37,"url":"../../screenshot/jenkins/config/win-8.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"restart when anything abnormal","attributes":{},"skip":false,"key":"1.6.1.1.5"},{"backlink":"jenkins/config/windows.html#fig1.6.1.1.6","level":"1.6.1.1","list_caption":"Figure: remove service","alt":"remove service","nro":38,"url":"../../screenshot/jenkins/config/win-9.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"remove service","attributes":{},"skip":false,"key":"1.6.1.1.6"},{"backlink":"jenkins/jenkinsfile/jenkinsfile.html#fig1.6.2.1","level":"1.6.2","list_caption":"Figure: get rawbuild changeset","alt":"get rawbuild changeset","nro":39,"url":"../../screenshot/jenkins/get-rawbuild-changeset.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"get rawbuild changeset","attributes":{},"skip":false,"key":"1.6.2.1"},{"backlink":"jenkins/jenkinsfile/jenkinsfile.html#fig1.6.2.2","level":"1.6.2","list_caption":"Figure: customized display name","alt":"customized display name","nro":40,"url":"../../screenshot/jenkins/showDisplayName.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"customized display name","attributes":{},"skip":false,"key":"1.6.2.2"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.1","level":"1.6.2.3","list_caption":"Figure: build downstream jobs","alt":"build downstream jobs","nro":41,"url":"../../screenshot/jenkins/trigger-downstream.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"build downstream jobs","attributes":{},"skip":false,"key":"1.6.2.3.1"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.2","level":"1.6.2.3","list_caption":"Figure: warnError","alt":"warnError","nro":42,"url":"../../screenshot/jenkins/warnError.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"warnError","attributes":{},"skip":false,"key":"1.6.2.3.2"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.3","level":"1.6.2.3","list_caption":"Figure: catchError","alt":"catchError","nro":43,"url":"../../screenshot/jenkins/catchError.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"catchError","attributes":{},"skip":false,"key":"1.6.2.3.3"},{"backlink":"jenkins/jenkinsfile/build.html#fig1.6.2.3.4","level":"1.6.2.3","list_caption":"Figure: Jenkins Result Status","alt":"Jenkins Result Status","nro":44,"url":"../../screenshot/jenkins/Result.isWorthThan.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Jenkins Result Status","attributes":{},"skip":false,"key":"1.6.2.3.4"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.6.2.5.1","level":"1.6.2.5","list_caption":"Figure: parameters","alt":"parameters","nro":45,"url":"../../screenshot/jenkins/properties-parameters.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"parameters","attributes":{},"skip":false,"key":"1.6.2.5.1"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.6.2.5.2","level":"1.6.2.5","list_caption":"Figure: active choice with mixed options","alt":"active choice with mixed options","nro":46,"url":"../../screenshot/jenkins/active_choice_mixed.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"active choice with mixed options","attributes":{},"skip":false,"key":"1.6.2.5.2"},{"backlink":"jenkins/jenkinsfile/properties.html#fig1.6.2.5.3","level":"1.6.2.5","list_caption":"Figure: active choice","alt":"active choice","nro":47,"url":"../../screenshot/jenkins/active_choice.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"active choice","attributes":{},"skip":false,"key":"1.6.2.5.3"},{"backlink":"jenkins/script/cli.html#fig1.6.3.5.1","level":"1.6.3.5","list_caption":"Figure: jenkins-cli-port","alt":"jenkins-cli-port","nro":48,"url":"../../screenshot/jenkins/jenkins-cli-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-port","attributes":{},"skip":false,"key":"1.6.3.5.1"},{"backlink":"jenkins/script/cli.html#fig1.6.3.5.2","level":"1.6.3.5","list_caption":"Figure: jenkins-cli-ssh","alt":"jenkins-cli-ssh","nro":49,"url":"../../screenshot/jenkins/jenkins-cli-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"jenkins-cli-ssh","attributes":{},"skip":false,"key":"1.6.3.5.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.1","level":"1.6.4.1","list_caption":"Figure: plugin-1","alt":"plugin-1","nro":50,"url":"../../screenshot/k8s-plugin-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-1","attributes":{},"skip":false,"key":"1.6.4.1.1"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.2","level":"1.6.4.1","list_caption":"Figure: plugin-2","alt":"plugin-2","nro":51,"url":"../../screenshot/k8s-plugin-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-2","attributes":{},"skip":false,"key":"1.6.4.1.2"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.3","level":"1.6.4.1","list_caption":"Figure: plugin-3","alt":"plugin-3","nro":52,"url":"../../screenshot/k8s-plugin-3.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-3","attributes":{},"skip":false,"key":"1.6.4.1.3"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.4","level":"1.6.4.1","list_caption":"Figure: plugin-4","alt":"plugin-4","nro":53,"url":"../../screenshot/k8s-plugin-4.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-4","attributes":{},"skip":false,"key":"1.6.4.1.4"},{"backlink":"jenkins/plugins/kubernetes.html#fig1.6.4.1.5","level":"1.6.4.1","list_caption":"Figure: plugin-5","alt":"plugin-5","nro":54,"url":"../../screenshot/k8s-plugin-5.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"plugin-5","attributes":{},"skip":false,"key":"1.6.4.1.5"},{"backlink":"jenkins/plugins/postbuild.html#fig1.6.4.3.1","level":"1.6.4.3","list_caption":"Figure: using icon from another plugin","alt":"using icon from another plugin","nro":55,"url":"../../screenshot/jenkins/badge.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"using icon from another plugin","attributes":{},"skip":false,"key":"1.6.4.3.1"},{"backlink":"jenkins/plugins/ansicolor.html#fig1.6.4.6.1","level":"1.6.4.6","list_caption":"Figure: ansicolor 256 colors","alt":"ansicolor 256 colors","nro":56,"url":"../../screenshot/jenkins/ansicolor-256.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ansicolor 256 colors","attributes":{},"skip":false,"key":"1.6.4.6.1"},{"backlink":"jenkins/plugins/ansicolor.html#fig1.6.4.6.2","level":"1.6.4.6","list_caption":"Figure: ansicolor 256 with name","alt":"ansicolor 256 with name","nro":57,"url":"../../screenshot/jenkins/ansicolor-256-withname.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ansicolor 256 with name","attributes":{},"skip":false,"key":"1.6.4.6.2"},{"backlink":"jenkins/plugins/crumbIssuer.html#fig1.6.4.8.1","level":"1.6.4.8","list_caption":"Figure: enable/disable crumb compatibility","alt":"enable/disable crumb compatibility","nro":58,"url":"../../screenshot/jenkins/crumbIssuer-enable.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"enable/disable crumb compatibility","attributes":{},"skip":false,"key":"1.6.4.8.1"},{"backlink":"virtualization/kubernetes/kubernetes.html#fig1.7.1.1","level":"1.7.1","list_caption":"Figure: kubernetes orchestration control panel","alt":"kubernetes orchestration control panel","nro":59,"url":"../../screenshot/k8s/kubernetes-control-plane.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"kubernetes orchestration control panel","attributes":{},"skip":false,"key":"1.7.1.1"},{"backlink":"virtualization/kubernetes/kubernetes.html#fig1.7.1.2","level":"1.7.1","list_caption":"Figure: kubernetes technology","alt":"kubernetes technology","nro":60,"url":"../../screenshot/k8s/kubernetes-architecture.jpeg","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"kubernetes technology","attributes":{},"skip":false,"key":"1.7.1.2"},{"backlink":"virtualization/kubernetes/kubectl.html#fig1.7.1.2.1","level":"1.7.1.2","list_caption":"Figure: kubectl","alt":"kubectl","nro":61,"url":"../../screenshot/k8s/k-1.svg.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"kubectl","attributes":{},"skip":false,"key":"1.7.1.2.1"},{"backlink":"virtualization/kubernetes/monitor.html#fig1.7.1.9.1.1","level":"1.7.1.9.1","list_caption":"Figure: grafana-plugin-1.gif","alt":"grafana-plugin-1.gif","nro":62,"url":"../../screenshot/k8s/grafana-plugin-1.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"grafana-plugin-1.gif","attributes":{},"skip":false,"key":"1.7.1.9.1.1"},{"backlink":"virtualization/kubernetes/monitor.html#fig1.7.1.9.1.2","level":"1.7.1.9.1","list_caption":"Figure: grafana-315.gif","alt":"grafana-315.gif","nro":63,"url":"../../screenshot/k8s/grafana-315.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"grafana-315.gif","attributes":{},"skip":false,"key":"1.7.1.9.1.2"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.1","level":"1.7.2","list_caption":"Figure: docker internals","alt":"docker internals","nro":64,"url":"../../screenshot/docker/docker-internals.p/ng","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker internals","attributes":{},"skip":false,"key":"1.7.2.1"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.2","level":"1.7.2","list_caption":"Figure: docker cgoups","alt":"docker cgoups","nro":65,"url":"../../screenshot/docker/docker-cgroup.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker cgoups","attributes":{},"skip":false,"key":"1.7.2.2"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.3","level":"1.7.2","list_caption":"Figure: docker namespace","alt":"docker namespace","nro":66,"url":"../../screenshot/docker/docker-namespace.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker namespace","attributes":{},"skip":false,"key":"1.7.2.3"},{"backlink":"virtualization/docker/docker.html#fig1.7.2.4","level":"1.7.2","list_caption":"Figure: docker status","alt":"docker status","nro":67,"url":"../../screenshot/docker/docker-stat-resource-1.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"docker status","attributes":{},"skip":false,"key":"1.7.2.4"},{"backlink":"virtualization/docker/windows.html#fig1.7.2.1.1","level":"1.7.2.1","list_caption":"Figure: install-docker-ee-in-windows-server","alt":"install-docker-ee-in-windows-server","nro":68,"url":"../../screenshot/docker/docker-ee-windows-server.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"install-docker-ee-in-windows-server","attributes":{},"skip":false,"key":"1.7.2.1.1"},{"backlink":"osx/osx.html#fig1.8.1","level":"1.8","list_caption":"Figure: download cookies.txt","alt":"download cookies.txt","nro":69,"url":"../screenshot/cookies.txt-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"download cookies.txt","attributes":{},"skip":false,"key":"1.8.1"},{"backlink":"osx/osx.html#fig1.8.2","level":"1.8","list_caption":"Figure: copy link address","alt":"copy link address","nro":70,"url":"../screenshot/cookies.txt-2.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy link address","attributes":{},"skip":false,"key":"1.8.2"},{"backlink":"osx/osx.html#fig1.8.3","level":"1.8","list_caption":"Figure: check which user is using the disk","alt":"check which user is using the disk","nro":71,"url":"../screenshot/osx/which-user-using-disk.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"check which user is using the disk","attributes":{},"skip":false,"key":"1.8.3"},{"backlink":"osx/osx.html#fig1.8.4","level":"1.8","list_caption":"Figure: Enable Root User","alt":"Enable Root User","nro":72,"url":"../screenshot/osx/enable-root-user.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Enable Root User","attributes":{},"skip":false,"key":"1.8.4"},{"backlink":"osx/osx.html#fig1.8.5","level":"1.8","list_caption":"Figure: disable gatekeeper","alt":"disable gatekeeper","nro":73,"url":"../screenshot/osx/spctl-gatekepper.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"disable gatekeeper","attributes":{},"skip":false,"key":"1.8.5"},{"backlink":"osx/tricky.html#fig1.8.6.1","level":"1.8.6","list_caption":"Figure: option key","alt":"option key","nro":74,"url":"../screenshot/osx/copy-path-optional-key.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"option key","attributes":{},"skip":false,"key":"1.8.6.1"},{"backlink":"osx/tricky.html#fig1.8.6.2","level":"1.8.6","list_caption":"Figure: create quick action","alt":"create quick action","nro":75,"url":"../screenshot/osx/copy-path-service-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"create quick action","attributes":{},"skip":false,"key":"1.8.6.2"},{"backlink":"osx/tricky.html#fig1.8.6.3","level":"1.8.6","list_caption":"Figure: content menu","alt":"content menu","nro":76,"url":"../screenshot/osx/copy-path-service-2.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"content menu","attributes":{},"skip":false,"key":"1.8.6.3"},{"backlink":"osx/tricky.html#fig1.8.6.4","level":"1.8.6","list_caption":"Figure: copy path apple script","alt":"copy path apple script","nro":77,"url":"../screenshot/osx/copy-path-applescript.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path apple script","attributes":{},"skip":false,"key":"1.8.6.4"},{"backlink":"osx/tricky.html#fig1.8.6.5","level":"1.8.6","list_caption":"Figure: copy path shortcut key","alt":"copy path shortcut key","nro":78,"url":"../screenshot/osx/copy-path-shortcut.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"copy path shortcut key","attributes":{},"skip":false,"key":"1.8.6.5"},{"backlink":"osx/tricky.html#fig1.8.6.6","level":"1.8.6","list_caption":"Figure: Automator.app » save to an app","alt":"Automator.app » save to an app","nro":79,"url":"../screenshot/osx/runable-app-3.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"Automator.app » save to an app","attributes":{},"skip":false,"key":"1.8.6.6"},{"backlink":"osx/tricky.html#fig1.8.6.7","level":"1.8.6","list_caption":"Figure: technical symbols","alt":"technical symbols","nro":80,"url":"../screenshot/osx/snippets-2.png","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"technical symbols","attributes":{},"skip":false,"key":"1.8.6.7"},{"backlink":"osx/tricky.html#fig1.8.6.8","level":"1.8.6","list_caption":"Figure: hdiutil create image","alt":"hdiutil create image","nro":81,"url":"../screenshot/osx/hdiutil-create-image.png","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"hdiutil create image","attributes":{},"skip":false,"key":"1.8.6.8"},{"backlink":"osx/tricky.html#fig1.8.6.9","level":"1.8.6","list_caption":"Figure: hdiutil create encrypted image","alt":"hdiutil create encrypted image","nro":82,"url":"../screenshot/osx/hdiutil-create-encrypted.png","index":9,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"hdiutil create encrypted image","attributes":{},"skip":false,"key":"1.8.6.9"},{"backlink":"osx/tricky.html#fig1.8.6.10","level":"1.8.6","list_caption":"Figure: activity monitor","alt":"activity monitor","nro":83,"url":"../screenshot/osx/activity-monitor.png","index":10,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"activity monitor","attributes":{},"skip":false,"key":"1.8.6.10"},{"backlink":"linux/util/colors.html#fig1.9.1.3.1","level":"1.9.1.3","list_caption":"Figure: 256 colors","alt":"256 colors","nro":84,"url":"../../screenshot/ansi/ansicolor-256-0.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"256 colors","attributes":{},"skip":false,"key":"1.9.1.3.1"},{"backlink":"linux/util/colors.html#fig1.9.1.3.2","level":"1.9.1.3","list_caption":"Figure: 256 colors","alt":"256 colors","nro":85,"url":"../../screenshot/ansi/ansicolor-256-1.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"256 colors","attributes":{},"skip":false,"key":"1.9.1.3.2"},{"backlink":"linux/util/colors.html#fig1.9.1.3.3","level":"1.9.1.3","list_caption":"Figure: colors & formatting","alt":"colors & formatting","nro":86,"url":"../../screenshot/ansi/color-formatting.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"colors & formatting","attributes":{},"skip":false,"key":"1.9.1.3.3"},{"backlink":"linux/util/colors.html#fig1.9.1.3.4","level":"1.9.1.3","list_caption":"Figure: colors & formatting","alt":"colors & formatting","nro":87,"url":"../../screenshot/ansi/color-formatting-2.png","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"colors & formatting","attributes":{},"skip":false,"key":"1.9.1.3.4"},{"backlink":"linux/util/colors.html#fig1.9.1.3.5","level":"1.9.1.3","list_caption":"Figure: solarized colors","alt":"solarized colors","nro":88,"url":"../../screenshot/ansi/solarized-colors.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"solarized colors","attributes":{},"skip":false,"key":"1.9.1.3.5"},{"backlink":"linux/util/colors.html#fig1.9.1.3.6","level":"1.9.1.3","list_caption":"Figure: bash ps1","alt":"bash ps1","nro":89,"url":"../../screenshot/ansi/bash-ps1.png","index":6,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1","attributes":{},"skip":false,"key":"1.9.1.3.6"},{"backlink":"linux/util/colors.html#fig1.9.1.3.7","level":"1.9.1.3","list_caption":"Figure: bash ps1 in conditional","alt":"bash ps1 in conditional","nro":90,"url":"../../screenshot/ansi/bash-ps1-conditions.png","index":7,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1 in conditional","attributes":{},"skip":false,"key":"1.9.1.3.7"},{"backlink":"linux/util/colors.html#fig1.9.1.3.8","level":"1.9.1.3","list_caption":"Figure: bash ps1 right-prompt","alt":"bash ps1 right-prompt","nro":91,"url":"../../screenshot/ansi/bash-ps1-right-prompt.png","index":8,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"bash ps1 right-prompt","attributes":{},"skip":false,"key":"1.9.1.3.8"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.1","level":"1.9.1.4","list_caption":"Figure: waiting bar with dot","alt":"waiting bar with dot","nro":92,"url":"../../screenshot/shell/shell-waiting-process-dot.gif","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"waiting bar with dot","attributes":{},"skip":false,"key":"1.9.1.4.1"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.2","level":"1.9.1.4","list_caption":"Figure: progress bar with `▎▌ ▊ ▉`","alt":"progress bar with `▎▌ ▊ ▉`","nro":93,"url":"../../screenshot/shell/shell-waiting-progress-bar2.gif","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `▎▌ ▊ ▉`","attributes":{},"skip":false,"key":"1.9.1.4.2"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.3","level":"1.9.1.4","list_caption":"Figure: progress bar with `[###----]`","alt":"progress bar with `[###----]`","nro":94,"url":"../../screenshot/shell/shell-waiting-progress-bar3.gif","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `[###----]`","attributes":{},"skip":false,"key":"1.9.1.4.3"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.4","level":"1.9.1.4","list_caption":"Figure: progress bar with `|\\|/`","alt":"progress bar with `|\\|/`","nro":95,"url":"../../screenshot/shell/shell-waiting-progress-bar4.gif","index":4,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"progress bar with `|\\|/`","attributes":{},"skip":false,"key":"1.9.1.4.4"},{"backlink":"linux/util/tricky.html#fig1.9.1.4.5","level":"1.9.1.4","list_caption":"Figure: customized color output","alt":"customized color output","nro":96,"url":"../../screenshot/colorful-tricky.png","index":5,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"customized color output","attributes":{},"skip":false,"key":"1.9.1.4.5"},{"backlink":"linux/ubuntu/installation.html#fig1.9.5.2.1","level":"1.9.5.2","list_caption":"Figure: ss-libev-service","alt":"ss-libev-service","nro":97,"url":"../../screenshot/ss/ss-libev-port.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-service","attributes":{},"skip":false,"key":"1.9.5.2.1"},{"backlink":"linux/ubuntu/installation.html#fig1.9.5.2.2","level":"1.9.5.2","list_caption":"Figure: ss-libev-client","alt":"ss-libev-client","nro":98,"url":"../../screenshot/ss/ss-libev-client.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"ss-libev-client","attributes":{},"skip":false,"key":"1.9.5.2.2"},{"backlink":"linux/ubuntu/x.html#fig1.9.5.5.1","level":"1.9.5.5","list_caption":"Figure: desktop styles","alt":"desktop styles","nro":99,"url":"screenshots/desktop-style-2.jpeg","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"desktop styles","attributes":{},"skip":false,"key":"1.9.5.5.1"},{"backlink":"programming/python/config.html#fig1.10.2.1.1","level":"1.10.2.1","list_caption":"Figure: idle in mac big sur","alt":"idle in mac big sur","nro":100,"url":"../../screenshot/python/idle-mac-bigsur.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"idle in mac big sur","attributes":{},"skip":false,"key":"1.10.2.1.1"},{"backlink":"tools/node/github.page.html#fig1.11.1.3.1","level":"1.11.1.3","list_caption":"Figure: read password from keychain via `/usr/bin/security`","alt":"read password from keychain via `/usr/bin/security`","nro":101,"url":"../../screenshot/git/git-keychain-token.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"read password from keychain via `/usr/bin/security`","attributes":{},"skip":false,"key":"1.11.1.3.1"},{"backlink":"tools/virtualbox.html#fig1.11.3.1","level":"1.11.3","list_caption":"Figure: uninstall","alt":"uninstall","nro":102,"url":"../screenshot/vbox-uninstall.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"uninstall","attributes":{},"skip":false,"key":"1.11.3.1"},{"backlink":"tools/iterm2.html#fig1.11.4.1","level":"1.11.4","list_caption":"Figure: tabset list","alt":"tabset list","nro":103,"url":"../screenshot/iterm2/tabset-list-1.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"tabset list","attributes":{},"skip":false,"key":"1.11.4.1"},{"backlink":"tools/iterm2.html#fig1.11.4.2","level":"1.11.4","list_caption":"Figure: itit <string> c","alt":"itit <string> c","nro":104,"url":"../screenshot/iterm2/itit-c.png","index":2,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit <string> c","attributes":{},"skip":false,"key":"1.11.4.2"},{"backlink":"tools/iterm2.html#fig1.11.4.3","level":"1.11.4","list_caption":"Figure: itit string bc","alt":"itit string bc","nro":105,"url":"../screenshot/iterm2/itit-bc.png","index":3,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"itit string bc","attributes":{},"skip":false,"key":"1.11.4.3"},{"backlink":"tools/atlassian.html#fig1.11.5.1","level":"1.11.5","list_caption":"Figure: publish via api","alt":"publish via api","nro":106,"url":"../screenshot/publish-to-confluence.png","index":1,"caption_template":"_PAGE_LEVEL_._PAGE_IMAGE_NUMBER_ -- _CAPTION_","label":"publish via api","attributes":{},"skip":false,"key":"1.11.5.1"}]},"title":"ibook","language":"en","output.name":"site","links":{"sidebar":{"I, Marslo":"https://imarslo.github.io/"}},"gitbook":"3.2.3","direction":"ltr"},"file":{"path":"virtualization/kubernetes/monitor.md","mtime":"2022-06-08T14:29:36.938Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-06-08T14:30:01.875Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
