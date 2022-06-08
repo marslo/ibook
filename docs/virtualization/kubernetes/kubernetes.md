@@ -12,10 +12,18 @@
 
 {% hint style='tip' %}
 > reference
+> - [* Kubernetes 中文指南/云原生应用架构实战手册](https://jimmysong.io/kubernetes-handbook/)
+> - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
+> - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
+> - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)
 > - [Boosting your kubectl productivity](https://learnk8s.io/blog/kubectl-productivity/)
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 > - [8 Kubernetes Tips and Tricks](https://www.ibm.com/cloud/blog/8-kubernetes-tips-and-tricks)
 {% endhint %}
+
+![kubernetes orchestration control panel](../../screenshot/k8s/kubernetes-control-plane.png)
+
+![kubernetes technology](../../screenshot/k8s/kubernetes-architecture.jpeg)
 
 ### explain
 ```bash

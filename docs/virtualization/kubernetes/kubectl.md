@@ -7,6 +7,7 @@
   - [get all](#get-all)
   - [get cluster status](#get-cluster-status)
   - [get po](#get-po)
+  - [get all images](#get-all-images)
 - [list](#list)
   - [list image from a single deploy](#list-image-from-a-single-deploy)
   - [list Container images by Pod](#list-container-images-by-pod)
@@ -61,6 +62,31 @@ etcd-0               Healthy   {"health":"true"}
   NAME              IMAGES
   jenkins   jenkins/jenkins:2.187
   ```
+
+- [get where pods are running](https://faun.pub/kubectl-commands-cheatsheet-43ce8f13adfb)
+  ```bash
+  $ kubectl get pod -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName \
+                    --all-namespaces
+  ```
+
+- sort pods by nodeName
+  ```bash
+  $ kubectl get pods -o wide --sort-by="{.spec.nodeName}"
+  ```
+
+- sort by restart count
+  ```bash
+  $ kubectl get pods --sort-by="{.status.containerStatuses[:1].restartCount}"
+  ```
+
+### [get all images]()
+```bash
+$ kubectl get pods --all-namespaces \
+                   -o jsonpath="{..image}" |
+          tr -s '[[:space:]]' '\n' |
+          sort |
+          uniq -c
+```
 
 ## list
 ### list image from a single deploy
