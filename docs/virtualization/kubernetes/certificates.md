@@ -51,6 +51,7 @@
 > references:
 > - [Renew a Kubernetes certificate with a 10-year expiration date](https://www.sobyte.net/post/2021-10/update-k8s-10y-expire-certs/)
 > - stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
+> - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 > <br>
 > regenerate the kubeadm.yaml
 > ```bash
