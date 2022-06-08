@@ -87,6 +87,7 @@
     * [network](virtualization/kubernetes/network.md)
     * [events](virtualization/kubernetes/events.md)
     * [node](virtualization/kubernetes/node.md)
+    * [tools](virtualization/kubernetes/tools.md)
   * [docker](virtualization/docker/docker.md)
     * [windows](virtualization/docker/windows.md)
     * [tricky](virtualization/docker/tricky.md)

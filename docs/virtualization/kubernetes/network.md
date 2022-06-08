@@ -24,20 +24,22 @@
 
 ## devops-kubernetes-02
 ### /etc/network/interface
+```bash
+$ cat /etc/network/interfaces
+auto lo
+iface lo inet loopback
 
-    $ cat /etc/network/interfaces
-    auto lo
-    iface lo inet loopback
+auto eno1
+iface eno1 inet static
+  address 130.147.180.86
+  netmask 255.255.255.192
+  gateway 130.147.180.65
+  dns-nameservers 130.147.236.5 161.92.35.78
+  dns-search cn-132.lan.mycompany.com
+```
 
-    auto eno1
-    iface eno1 inet static
-      address 130.147.180.86
-      netmask 255.255.255.192
-      gateway 130.147.180.65
-      dns-nameservers 130.147.236.5 161.92.35.78
-      dns-search cn-132.lan.mycompany.com
-
-<details><summary>Click to check details</summary>
+<details><summary> » <code>/etc/network/interfaces</code></summary>
+# interfaces(5) file used by ifup(8) and ifdown(8)
 <pre><code>$ cat /etc/network/interfaces
 # interfaces(5) file used by ifup(8) and ifdown(8)
 auto lo
@@ -65,10 +67,11 @@ auto eno3
 </details>
 
 ### network info
+```bash
+$ nmcli [-p] d[evice] show <interface>
+```
 
-    $ nmcli [-p] d[evice] show <interface>
-
-<details><summary>Click to check details</summary>
+<details><summary> » Click here to check details</summary>
 <pre><code>$ nmcli -p d show eno1
 ===============================================================================
                              Device details (eno1)
@@ -275,115 +278,117 @@ IP6.GATEWAY:                            --
 </details>
 
 ### Route Details
-
-    $ route -n
-    Kernel IP routing table
-    Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-    0.0.0.0         192.168.10.1    0.0.0.0         UG    100    0        0 eno3
-    42.99.164.34    130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
-    130.140.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    130.145.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    130.146.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    130.147.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    130.147.180.64  0.0.0.0         255.255.255.192 U     0      0        0 eno1
-    130.147.236.5   130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
-    137.55.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    140.207.91.234  130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
-    161.83.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    161.84.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    161.85.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    161.88.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    161.91.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    161.92.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    161.92.35.78    130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
-    169.254.0.0     0.0.0.0         255.255.0.0     U     1000   0        0 eno1
-    180.166.223.190 130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
-    185.46.212.34   130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
-    185.166.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
-    192.168.10.0    0.0.0.0         255.255.254.0   U     100    0        0 eno3
+```bash
+$ route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.10.1    0.0.0.0         UG    100    0        0 eno3
+42.99.164.34    130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
+130.140.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
+130.145.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
+130.146.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
+130.147.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
+130.147.180.64  0.0.0.0         255.255.255.192 U     0      0        0 eno1
+130.147.236.5   130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
+137.55.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+140.207.91.234  130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
+161.83.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+161.84.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+161.85.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+161.88.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+161.91.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+161.92.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eno1
+161.92.35.78    130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
+169.254.0.0     0.0.0.0         255.255.0.0     U     1000   0        0 eno1
+180.166.223.190 130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
+185.46.212.34   130.147.180.65  255.255.255.255 UGH   0      0        0 eno1
+185.166.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eno1
+192.168.10.0    0.0.0.0         255.255.254.0   U     100    0        0 eno3
+```
 
 ## devops-kubernetes-03
+```bash
+$ ifconfig en1
+en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+ether 6c:96:cf:f2:01:0a
+inet6 fe80::81d:93a6:a4d4:32c2%en1 prefixlen 64 secured scopeid 0x6
+inet 192.168.10.124 netmask 0xfffffe00 broadcast 192.168.11.255
+nd6 options=201<PERFORMNUD,DAD>
+media: autoselect
+status: active
 
-    $ ifconfig en1
-    en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-    ether 6c:96:cf:f2:01:0a
-    inet6 fe80::81d:93a6:a4d4:32c2%en1 prefixlen 64 secured scopeid 0x6
-    inet 192.168.10.124 netmask 0xfffffe00 broadcast 192.168.11.255
-    nd6 options=201<PERFORMNUD,DAD>
-    media: autoselect
-    status: active
-
-    $ ifconfig en0
-    en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-    options=10b<RXCSUM,TXCSUM,VLAN_HWTAGGING,AV>
-    ether 78:7b:8a:bc:c2:3c
-    inet6 fe80::1843:dfe3:4c35:c38%en0 prefixlen 64 secured scopeid 0x5
-    inet 130.147.182.248 netmask 0xfffffe00 broadcast 130.147.183.255
-    nd6 options=201<PERFORMNUD,DAD>
-    media: autoselect (100baseTX <full-duplex>)
-    status: active
+$ ifconfig en0
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+options=10b<RXCSUM,TXCSUM,VLAN_HWTAGGING,AV>
+ether 78:7b:8a:bc:c2:3c
+inet6 fe80::1843:dfe3:4c35:c38%en0 prefixlen 64 secured scopeid 0x5
+inet 130.147.182.248 netmask 0xfffffe00 broadcast 130.147.183.255
+nd6 options=201<PERFORMNUD,DAD>
+media: autoselect (100baseTX <full-duplex>)
+status: active
 
 
-    $ ifconfig
-    lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
-    options=1203<RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP>
-    inet 127.0.0.1 netmask 0xff000000
-    inet6 ::1 prefixlen 128
-    inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1
-    nd6 options=201<PERFORMNUD,DAD>
-    gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
-    stf0: flags=0<> mtu 1280
-    XHC20: flags=0<> mtu 0
-    en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-    options=10b<RXCSUM,TXCSUM,VLAN_HWTAGGING,AV>
-    ether 78:7b:8a:bc:c2:3c
-    inet6 fe80::1843:dfe3:4c35:c38%en0 prefixlen 64 secured scopeid 0x5
-    inet 130.147.182.248 netmask 0xfffffe00 broadcast 130.147.183.255
-    nd6 options=201<PERFORMNUD,DAD>
-    media: autoselect (100baseTX <full-duplex>)
-    status: active
-    en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-    ether 6c:96:cf:f2:01:0a
-    inet6 fe80::81d:93a6:a4d4:32c2%en1 prefixlen 64 secured scopeid 0x6
-    inet 192.168.10.124 netmask 0xfffffe00 broadcast 192.168.11.255
-    nd6 options=201<PERFORMNUD,DAD>
-    media: autoselect
-    status: active
-    en2: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
-    options=60<TSO4,TSO6>
-    ether 2a:00:02:31:1e:a0
-    media: autoselect <full-duplex>
-    status: inactive
-    en3: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
-    options=60<TSO4,TSO6>
-    ether 2a:00:02:31:1e:a1
-    media: autoselect <full-duplex>
-    status: inactive
-    bridge0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-    options=63<RXCSUM,TXCSUM,TSO4,TSO6>
-    ether 2a:00:02:31:1e:a0
-    Configuration:
-      id 0:0:0:0:0:0 priority 0 hellotime 0 fwddelay 0
-      maxage 0 holdcnt 0 proto stp maxaddr 100 timeout 1200
-      root id 0:0:0:0:0:0 priority 0 ifcost 0 port 0
-      ipfilter disabled flags 0x2
-    member: en2 flags=3<LEARNING,DISCOVER>
-            ifmaxaddr 0 port 7 priority 0 path cost 0
-    member: en3 flags=3<LEARNING,DISCOVER>
-            ifmaxaddr 0 port 8 priority 0 path cost 0
-    nd6 options=201<PERFORMNUD,DAD>
-    media: <unknown type>
-    status: inactive
-    p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
-    ether 0e:96:cf:f2:01:0a
-    media: autoselect
-    status: inactive
-    awdl0: flags=8943<UP,BROADCAST,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1484
-    ether 6e:66:62:10:bb:fa
-    inet6 fe80::6c66:62ff:fe10:bbfa%awdl0 prefixlen 64 scopeid 0xb
-    nd6 options=201<PERFORMNUD,DAD>
-    media: autoselect
-    status: active
-    utun0: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 2000
-    inet6 fe80::2c33:8275:3276:346f%utun0 prefixlen 64 scopeid 0xc
-    nd6 options=201<PERFORMNUD,DAD>
+$ ifconfig
+lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
+options=1203<RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP>
+inet 127.0.0.1 netmask 0xff000000
+inet6 ::1 prefixlen 128
+inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1
+nd6 options=201<PERFORMNUD,DAD>
+gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
+stf0: flags=0<> mtu 1280
+XHC20: flags=0<> mtu 0
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+options=10b<RXCSUM,TXCSUM,VLAN_HWTAGGING,AV>
+ether 78:7b:8a:bc:c2:3c
+inet6 fe80::1843:dfe3:4c35:c38%en0 prefixlen 64 secured scopeid 0x5
+inet 130.147.182.248 netmask 0xfffffe00 broadcast 130.147.183.255
+nd6 options=201<PERFORMNUD,DAD>
+media: autoselect (100baseTX <full-duplex>)
+status: active
+en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+ether 6c:96:cf:f2:01:0a
+inet6 fe80::81d:93a6:a4d4:32c2%en1 prefixlen 64 secured scopeid 0x6
+inet 192.168.10.124 netmask 0xfffffe00 broadcast 192.168.11.255
+nd6 options=201<PERFORMNUD,DAD>
+media: autoselect
+status: active
+en2: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+options=60<TSO4,TSO6>
+ether 2a:00:02:31:1e:a0
+media: autoselect <full-duplex>
+status: inactive
+en3: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+options=60<TSO4,TSO6>
+ether 2a:00:02:31:1e:a1
+media: autoselect <full-duplex>
+status: inactive
+bridge0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+options=63<RXCSUM,TXCSUM,TSO4,TSO6>
+ether 2a:00:02:31:1e:a0
+Configuration:
+  id 0:0:0:0:0:0 priority 0 hellotime 0 fwddelay 0
+  maxage 0 holdcnt 0 proto stp maxaddr 100 timeout 1200
+  root id 0:0:0:0:0:0 priority 0 ifcost 0 port 0
+  ipfilter disabled flags 0x2
+member: en2 flags=3<LEARNING,DISCOVER>
+        ifmaxaddr 0 port 7 priority 0 path cost 0
+member: en3 flags=3<LEARNING,DISCOVER>
+        ifmaxaddr 0 port 8 priority 0 path cost 0
+nd6 options=201<PERFORMNUD,DAD>
+media: <unknown type>
+status: inactive
+p2p0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 2304
+ether 0e:96:cf:f2:01:0a
+media: autoselect
+status: inactive
+awdl0: flags=8943<UP,BROADCAST,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1484
+ether 6e:66:62:10:bb:fa
+inet6 fe80::6c66:62ff:fe10:bbfa%awdl0 prefixlen 64 scopeid 0xb
+nd6 options=201<PERFORMNUD,DAD>
+media: autoselect
+status: active
+utun0: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 2000
+inet6 fe80::2c33:8275:3276:346f%utun0 prefixlen 64 scopeid 0xc
+nd6 options=201<PERFORMNUD,DAD>
+```
