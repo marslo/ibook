@@ -12,6 +12,8 @@
 - [DSL with groovy](#dsl-with-groovy)
 - [others](#others)
   - [handle api](#handle-api)
+- [withCredentials](#withcredentials)
+  - [push with ssh private credentials](#push-with-ssh-private-credentials)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -281,3 +283,37 @@ if ( bodyText.find('Safari') ) {
     println 'Found Safari user'
 }
 ```
+
+
+## withCredentials
+### push with ssh private credentials
+
+{% hint style='tip' %}
+> references:
+> - [Git Credentials Binding for sh, bat, powershell](https://www.jenkins.io/blog/2021/08/19/git-credentials-binding-work-report/)
+> - [Git credentials binding for sh, bat, and powershell ](https://www.jenkins.io/projects/gsoc/2021/projects/git-credentials-binding/#git-ssh-private-key-binding)
+> - [Is it possible to Git merge / push using Jenkins pipeline](https://stackoverflow.com/a/57731191/2940319)
+> - [Pipeline - Equivalent to Git Publisher](https://support.cloudbees.com/hc/en-us/articles/360027646491-Pipeline-Equivalent-to-Git-Publisher)
+{% endhint %}
+
+
+> [!NOTE]
+> If for any particular reason, the push must be done using a different method the URL needs to be configured accordingly: <br>
+> - `git config url.git@github.com/.insteadOf https://github.com/` : if the checkout was done through HTTPS but push must be done using SSH
+> - `git config url.https://github.com/.insteadOf git@github.com/` : if the checkout was done through SSH but push must be done using HTTPS
+
+```groovy
+withCredentials([ sshUserPrivateKey(
+                       credentialsId : 'GITSSHPRIVATEKEY',
+                     keyFileVariable : 'SSHKEY',
+                    usernameVariable : 'USERNAME'
+                  )
+]) {
+  sh """
+    GIT_SSH_COMMAND = "ssh -i $SSH_KEY -o User=${USERNAME} -o StrictHostKeyChecking=no"
+    git push origin <local-branch>:<remote-branch>
+  """
+}
+
+```
+
