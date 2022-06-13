@@ -3,21 +3,44 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [time & date](#time--date)
-- [show date with timezone](#show-date-with-timezone)
+  - [show date with timezone](#show-date-with-timezone)
+  - [show cal](#show-cal)
+  - [synchronize date and time with a server over ssh (Inspired from commandlinefu.com)](#synchronize-date-and-time-with-a-server-over-ssh-inspired-from-commandlinefucom)
 - [download and extract](#download-and-extract)
-- [extract `jar`](#extract-jar)
+  - [check file without extract](#check-file-without-extract)
+  - [extract `jar`](#extract-jar)
 - [compress](#compress)
+  - [zip package with dot-file](#zip-package-with-dot-file)
+  - [remove dot-file without `skipping '..' '.'` issue](#remove-dot-file-without-skipping---issue)
 - [get cookie from firefox](#get-cookie-from-firefox)
 - [echo 256 colors](#echo-256-colors)
 - [directory diff](#directory-diff)
 - [commands](#commands)
+  - [PWD's secrets](#pwds-secrets)
+  - [list the command beginning with](#list-the-command-beginning-with)
+  - [searching for commands without knowing their exact names](#searching-for-commands-without-knowing-their-exact-names)
+- [batch commands](#batch-commands)
+  - [rename](#rename)
+  - [batch move](#batch-move)
+  - [batch copy](#batch-copy)
 - [bash](#bash)
+  - [bash alias](#bash-alias)
 - [ldapsearch](#ldapsearch)
+  - [search specific user](#search-specific-user)
+  - [search `DN` field of particular user (`user2`)](#search-dn-field-of-particular-user-user2)
+  - [filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)](#filter-all-samaccountname-uid-and-uidnumber-under-base-dn-oupersondcmydomaindccom)
+  - [filter particular group](#filter-particular-group)
 - [installation alternatives](#installation-alternatives)
+- [others](#others)
+  - [show some command periodically](#show-some-command-periodically)
+  - [clear](#clear)
+  - [use less as tail -f](#use-less-as-tail--f)
+- [authentication](#authentication)
+  - [Special Characters in Usernames and Passwords](#special-characters-in-usernames-and-passwords)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### time & date
+## time & date
 ### [show date with timezone](https://unix.stackexchange.com/a/48104/29178)
 ```bash
 # with quotes
@@ -27,7 +50,7 @@ $ TZ=':Asia/Shanghai' date
 $ TZ=America/Los_Angeles date
 ```
 
-#### show cal
+### show cal
 ```bash
 $ cal -y | tr '\n' '|' | sed "s/^/ /;s/$/ /;s/ $(date +%e) / $(date +%e | sed 's/./#/g') /$(date +%m | sed s/^0//)" | tr '|' '\n'
                              2014
@@ -68,12 +91,12 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
                       30
 ```
 
-#### synchronize date and time with a server over ssh (Inspired from [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
+### synchronize date and time with a server over ssh (Inspired from [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
 ```bash
 $ date --set="$(ssh [username]@[sshserver] date)"
 ```
 
-### download and extract
+## download and extract
 - `*.gz`
   ```bash
   $ wget -O - http://example.com/a.gz | tar xz
@@ -106,7 +129,7 @@ $ date --set="$(ssh [username]@[sshserver] date)"
            | tar xzf - -C '/opt/java'
     ```
 
-#### check file without extract
+### check file without extract
 ```bash
 $ tar -Oxvf myfile.tgz path/to/my.sh | less
 ```
@@ -121,8 +144,8 @@ $ unzip <jar-name>.jar -d <target-folder>
   $ zip -d <jar-name>.jar <path/to/file.txt>
   ```
 
-### compress
-#### zip package with dot-file
+## compress
+### zip package with dot-file
 - `.[^.]*`
   ```bash
   $ zip name.zip * .[^.]*'
@@ -139,7 +162,7 @@ $ unzip <jar-name>.jar -d <target-folder>
   $ zip -r name.zip .
   ```
 
-#### remove dot-file without `skipping '..' '.'` issue
+### remove dot-file without `skipping '..' '.'` issue
 - [`shopt -s dotglob`](https://unix.stackexchange.com/a/289393/29179)
     ```bash
     $ shopt -s dotglob
@@ -162,25 +185,25 @@ $ unzip <jar-name>.jar -d <target-folder>
     $ rm [-rf] .??*
     ```
 
-### get cookie from firefox
+## get cookie from firefox
 ```bash
 $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
 ```
 
-### echo 256 colors
+## echo 256 colors
 ```bash
 $ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
 # or
 $ yes "$(seq 1 255)" | while read i; do printf "\x1b[48;5;${i}m\n"; sleep .01; done
 ```
 
-### directory diff
+## directory diff
 ```bash
 diff --suppress-common-lines -y <(cd path_to_dir1; find .|sort) <(cd path_to_dir2; find .|sort)
 ```
 
-### commands
-#### PWD's secrets
+## commands
+### PWD's secrets
 ```bash
 $ l | grep bc
 lrwxrwxrwx 1 marslo marslo   37 Mar  4 00:25 bc -> /home/marslo/Tools/Git/BrowserConfig//
@@ -191,7 +214,7 @@ $ pwd -P
 /home/marslo/Tools/Git/BrowserConfig
 ```
 
-#### list the command beginning with
+### list the command beginning with
 ```bash
 $ compgen -c "system-config-"
 system-config-authentication
@@ -214,7 +237,7 @@ system-config-services
 system-config-users
 ```
 
-#### searching for commands without knowing their exact names
+### searching for commands without knowing their exact names
 ```bash
 $ apropos editor | head
 Git::SVN::Editor (3pm) - commit driver for "git svn set-tree" and dcommit
@@ -229,12 +252,8 @@ ex (1)               - Vi IMproved, a programmers text editor
 gedit (1)            - text editor for the GNOME Desktop
 ```
 
-#### show some command periodically
-```bash
-$ whatch --interval 1 ls -alt
-```
-
-#### rename
+## batch commands
+### rename
 ```bash
 $ l
 total 4.0K
@@ -246,23 +265,17 @@ total 4.0K
 -rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a_b
 ```
 
-#### clear
-```bash
-$ printf "\ec"
-```
+### batch move
 
-#### use less as tail -f
-```bash
-$ less +F <filename>
-```
-
-#### batch move
-> ` -I replace-str`
+{% hint style='tip' %}
+> `-I replace-str`
+{% endhint %}
 
 ```bash
 $ mkdir backup-folder && ls | grep -Ze ".*rar" | xargs -d '\n' -I {} mv {} backup-folder
 ```
-#### batch copy
+
+### batch copy
 > reference:
 > - [Hack 22. Xargs Command Examples](https://linux.101hacks.com/linux-commands/xargs-command-examples/)
 
@@ -270,9 +283,9 @@ $ mkdir backup-folder && ls | grep -Ze ".*rar" | xargs -d '\n' -I {} mv {} backu
 $ ls -1 a/b/* 11 12 | xargs cp -t copy-target-folder/
 ```
 
-### bash
+## bash
 
-#### [bash alias](https://askubuntu.com/a/871435)
+### [bash alias](https://askubuntu.com/a/871435)
 ```bash
 $ echo ${BASH_ALIASES[ls]}
 ls --color=always
@@ -289,7 +302,7 @@ ls --color=always
   $ bash -i --rcfile="$HOME/.marslo/.imarslo"
   ```
 
-### ldapsearch
+## ldapsearch
 > reference:
 > - [ldapsearch Examples](https://docs.oracle.com/cd/E19693-01/819-0997/auto45/index.html)
 > - [The ldapsearch Tool](https://docs.oracle.com/cd/E19850-01/816-6400-10/lsearch.html)
@@ -306,7 +319,7 @@ ls --color=always
 > SAMAccountName uid uidNumber                  # Show only these attributes
 > ```
 
-#### search specific user
+### search specific user
 > Info :
 > - ldap url         : `ldaps://ldap.mydomain.com:636`
 > - base search base : `dc=mydomain,dc=com`
@@ -335,7 +348,7 @@ $ ldapsearch \
       CN='user2'
   ```
 
-#### search `DN` field of particular user (`user2`)
+### search `DN` field of particular user (`user2`)
 ```bash
 $ ldapsearch \
     [-LLL \]
@@ -347,7 +360,8 @@ $ ldapsearch \
     CN='user2' \
     DN
 ```
-#### filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)
+
+### filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)
 ```bash
 $ ldapsearch \
     -LLL \
@@ -361,7 +375,7 @@ $ ldapsearch \
     SAMAccountName uid uidNumber DN
 ```
 
-#### filter particular group
+### filter particular group
 ```bash
 $ ldapsearch \
     -x \
@@ -385,7 +399,7 @@ $ ldapsearch \
       CN='DL-mydomaindis-group'
   ```
 
-### installation alternatives
+## installation alternatives
 - install
   ```bash
   $ sudo update-alternatives --install /usr/bin/java java /opt/java/jdk1.8.0_121/bin/java 999
@@ -409,3 +423,64 @@ $ ldapsearch \
 
   Enter to keep the current selection[+], or type selection number: 1
   ```
+
+## others
+### show some command periodically
+```bash
+$ watch --interval 1 ls -alt
+```
+- watch with pipe
+  ```bash
+  $ watch -n 1 'ls -Altrh | grep <keywords>'
+  ```
+
+### clear
+```bash
+$ printf "\ec"
+```
+
+### use less as tail -f
+```bash
+$ less +F <filename>
+```
+
+## authentication
+### [Special Characters in Usernames and Passwords](https://zencoder.support.brightcove.com/general-information/special-characters-usernames-and-passwords.html)
+
+{% hint style='tip' %}
+> references:
+> - [percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding)
+{% endhint %}
+
+
+|   CHARACTERS   | PERCENT-ENCODED |
+|:--------------:|:---------------:|
+|       `]`      |      `%5B`      |
+|       `[`      |      `%5D`      |
+|       `?`      |      `%3F`      |
+|       `/`      |      `%2F`      |
+|       `<`      |      `%3C`      |
+|       `~`      |      `%7E`      |
+|       `#`      |      `%23`      |
+|       ```      |      `%6D`      |
+|       `!`      |      `%21`      |
+|       `@`      |      `%40`      |
+|       `$`      |      `%24`      |
+|       `%`      |      `%25`      |
+|       `^`      |      `%5E`      |
+|       `&`      |      `%26`      |
+|       `*`      |      `%2A`      |
+|       `(`      |      `%28`      |
+|       `)`      |      `%29`      |
+|       `+`      |      `%2B`      |
+|       `=`      |      `%3D`      |
+|       `}`      |      `%7D`      |
+| <code>`</code> |      `%7C`      |
+|       `:`      |      `%3A`      |
+|       `"`      |      `%22`      |
+|       `;`      |      `%3B`      |
+|       `'`      |      `%27`      |
+|       `,`      |      `%2C`      |
+|       `>`      |      `%3E`      |
+|       `{`      |      `%7B`      |
+|     `space`    |      `%20`      |
