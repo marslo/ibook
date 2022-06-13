@@ -17,6 +17,7 @@
   - [clear windows](#clear-windows)
 - [python IDLE in MacOS Big Sur](#python-idle-in-macos-big-sur)
   - [`IDLE quit unexpectedly`](#idle-quit-unexpectedly)
+  - [Python may not be configured for Tk](#python-may-not-be-configured-for-tk)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -412,4 +413,47 @@ abort() called
   >>> tkinter._test()
   macOS 11 or later required !
   Abort trap: 6
+  ```
+
+### Python may not be configured for Tk
+```bash
+$ python
+Python 3.10.4 (main, Apr 26 2022, 19:42:59) [Clang 13.1.6 (clang-1316.0.21.2)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import tkinter as tk
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/local/Cellar/python@3.10/3.10.4/Frameworks/Python.framework/Versions/3.10/lib/python3.10/tkinter/__init__.py", line 37, in <module>
+    import _tkinter # If this fails your Python may not be configured for Tk
+ModuleNotFoundError: No module named '_tkinter'
+```
+
+- solution
+  ```bash
+  $ brew info python@3.10
+  python@3.10: stable 3.10.4 (bottled) [keg-only]
+  ... ...
+  tkinter is no longer included with this formula, but it is available separately:
+    brew install python-tk@3.10
+  ... ...
+
+  $ brew install python-tk@3.10
+  ==> Downloading https://ghcr.io/v2/homebrew/core/python-tk/3.10/manifests/3.10.4
+######################################################################## 100.0%
+  ==> Downloading https://ghcr.io/v2/homebrew/core/python-tk/3.10/blobs/sha256:6a937be1fd531589ef7f9b4d971cb91ee7549d99f7f1aaf97f0fc3c0911f1c5d
+  ==> Downloading from https://pkg-containers.githubusercontent.com/ghcr1/blobs/sha256:6a937be1fd531589ef7f9b4d971cb91ee7549d99f7f1aaf97f0fc3c0911f1c5d?s
+######################################################################## 100.0%
+  ==> Pouring python-tk@3.10--3.10.4.monterey.bottle.tar.gz
+  ==> Caveats
+  python-tk@3.10 is keg-only, which means it was not symlinked into /usr/local,
+  because this is an alternate version of another formula.
+
+  ==> Summary
+  ☕️ 🐸  /usr/local/Cellar/python-tk@3.10/3.10.4: 5 files, 132.6KB
+  ==> Running `brew cleanup python-tk@3.10`...
+  Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+  Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+
+  $ brew reinstall python@3.10
+  ... ...
   ```
