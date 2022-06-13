@@ -5,15 +5,14 @@
 - [installation](#installation)
   - [installation via source code](#installation-via-source-code)
 - [environment in MacOS](#environment-in-macos)
-  - [setup default python](#setup-default-python)
   - [`pip.conf`](#pipconf)
   - [list python path](#list-python-path)
   - [python libs](#python-libs)
   - [multiple versions](#multiple-versions)
 - [version change](#version-change)
+  - [setup default python](#setup-default-python)
   - [modules re-installation](#modules-re-installation)
   - [`PYTHONPATH`](#pythonpath)
-  - [`/usr/local/opt/python`](#usrlocaloptpython)
 - [extension](#extension)
   - [clear windows](#clear-windows)
 - [python IDLE in MacOS Big Sur](#python-idle-in-macos-big-sur)
@@ -27,6 +26,7 @@
 > - [pip list](https://pip.pypa.io/en/stable/reference/pip_list/)
 
 ## installation
+
 ### [installation via source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
 - basic environment prepare
   ```bash
@@ -59,29 +59,42 @@
   $ sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 99
   ```
 
-
 ## environment in MacOS
-### [setup default python](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
-```bash
-$ defaults write com.apple.versioner.python Version 3.8
-```
 ### `pip.conf`
-- user: `~/.pip/pip.conf`
+
+{% hint style='tip' %}
+> `pip.conf` load priority
+> - MacOS : `/Library/Application Support/pip/pip.conf` > `~/.config/pip/pip.conf` > `~/.pip/pip.conf`
+{% endhint %}
+
+- user: `~/.pip/pip.conf` & `~/.config/pip/pip.conf`
 - global: `/Library/Application Support/pip/pip.conf`
 - list config:
   ```bash
-  $ pip config list
+  $ pip config list [ -v ]
   global.index-url='https://repo.my.com/artifactory/api/pypi/tools/simple'
   ```
+  - details
+    ```bash
+    $ pip config list -v
+    For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
+    For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
+    For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
+    For variant 'site', will try loading '/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/pip.conf'
+    global.extra-index-url='https://my.artifactory.com/artifactory/api/pypi/myPrivate'
+    global.index-url='https://my.artifactory.com/artifactory/api/pypi/pypi/simple'
+    ```
 
 - [`PIP_CONF_FILE`](https://pip.pypa.io/en/stable/user_guide/#configuration)
   ```bash
   $ export PIP_CONFIG_FILE=/path/to/pip.conf
   ```
+
 - upgrade all outdated modules
   ```bash
   $ pip install --upgrade --user $(pip list --outdated | sed 1,2d | awk '{print $1}' | xargs)
   ```
+
   - with exclude
     ```bash
     $ pip3.9 install --upgrade --user $(pip3.9 list --outdated | sed 1,2d | awk '{print $1}' | grep -vw 'docker\|rich')
@@ -95,6 +108,7 @@ $ python -vvEsS -c "import sys; print sys.path"
 ```
 
 ### python libs
+#### MacOS
 - global
  ```bash
   $ ls -ld /usr/local/lib/python*/
@@ -106,21 +120,21 @@ $ python -vvEsS -c "import sys; print sys.path"
   $ ls -ld /Library/Python/2.7/site-packages/
   drwxr-xr-x 9 root wheel 288 Aug  6 18:16 /Library/Python/2.7/site-packages/
  ```
- - or
-  ```bash
-    $ ls $(brew --prefix)/lib/python*
-    /usr/local/lib/python2.7:
-    site-packages
+  - or
+    ```bash
+      $ ls $(brew --prefix)/lib/python*
+      /usr/local/lib/python2.7:
+      site-packages
 
-    /usr/local/lib/python3.7:
-    site-packages
+      /usr/local/lib/python3.7:
+      site-packages
 
-    /usr/local/lib/python3.8:
-    site-packages
+      /usr/local/lib/python3.8:
+      site-packages
 
-    /usr/local/lib/python3.9:
-    site-packages
-  ```
+      /usr/local/lib/python3.9:
+      site-packages
+    ```
 
 - local
   ```bash
@@ -130,52 +144,53 @@ $ python -vvEsS -c "import sys; print sys.path"
   drwx------ 5 marslo staff 160 Oct 27 19:24 /Users/marslo/Library/Python/3.8/
   drwx------ 5 marslo staff 160 Oct 27 19:24 /Users/marslo/Library/Python/3.9/
   ```
-- how to check
-  ```bash
-  $ /usr/bin/python -c 'import site; print(site.USER_BASE)'
-  /Users/marslo/Library/Python/2.7
 
-  $ /usr/local/bin/python3.9 -c 'import site; print(site.USER_BASE)'
-  /Users/marslo/Library/Python/3.9
-
-  $ /usr/local/bin/python3.9 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
-  /usr/lib/python3.6/site-packages
-  ```
-
-- check in ubuntu
-  > references:
-  > - [How do I find the location of my Python site-packages directory](https://stackoverflow.com/a/46071447/2940319)
-
-  ```bash
-  $ /usr/local/bin/python3.6 -m site --user-site
-  /home/marslo/.local/lib/python3.6/site-packages
-
-  $ /usr/local/bin/python3.6 -c 'import site; print(site.getsitepackages())'
-  ['/usr/local/lib64/python3.6/site-packages', '/usr/local/lib/python3.6/site-packages', '/usr/lib64/python3.6/site-packages', '/usr/lib/python3.6/site-packages']
-
-  $ python3.6 -m site
-  sys.path = [
-      '/home/marslo',
-      '/usr/lib64/python36.zip',
-      '/usr/lib64/python3.6',
-      '/usr/lib64/python3.6/lib-dynload',
-      '/usr/local/lib/python3.6/site-packages',
-      '/usr/lib64/python3.6/site-packages',
-      '/usr/lib/python3.6/site-packages',
-  ]
-  USER_BASE: '/home/marslo/.local' (exists)
-  USER_SITE: '/home/marslo/.local/lib/python3.6/site-packages' (doesn't exist)
-  ENABLE_USER_SITE: True
-  ```
-
-  - check particular lib
+  - example:
     ```bash
-    $ python -c "import os as _; print(_.__file__)"
-    /usr/lib64/python3.6/os.py
+    $ /usr/bin/python -c 'import site; print(site.USER_BASE)'
+    /Users/marslo/Library/Python/2.7
 
-    $ python -c "import setuptools as _; print(_.__path__)"
-    ['/usr/lib/python3.6/site-packages/setuptools']
+    $ /usr/local/bin/python3.9 -c 'import site; print(site.USER_BASE)'
+    /Users/marslo/Library/Python/3.9
+
+    $ /usr/local/bin/python3.6 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])'
+    /usr/lib/python3.6/site-packages
     ```
+
+#### linux
+> references:
+> - [How do I find the location of my Python site-packages directory](https://stackoverflow.com/a/46071447/2940319)
+
+```bash
+$ /usr/local/bin/python3.6 -m site --user-site
+/home/marslo/.local/lib/python3.6/site-packages
+
+$ /usr/local/bin/python3.6 -c 'import site; print(site.getsitepackages())'
+['/usr/local/lib64/python3.6/site-packages', '/usr/local/lib/python3.6/site-packages', '/usr/lib64/python3.6/site-packages', '/usr/lib/python3.6/site-packages']
+
+$ python3.6 -m site
+sys.path = [
+    '/home/marslo',
+    '/usr/lib64/python36.zip',
+    '/usr/lib64/python3.6',
+    '/usr/lib64/python3.6/lib-dynload',
+    '/usr/local/lib/python3.6/site-packages',
+    '/usr/lib64/python3.6/site-packages',
+    '/usr/lib/python3.6/site-packages',
+]
+USER_BASE: '/home/marslo/.local' (exists)
+USER_SITE: '/home/marslo/.local/lib/python3.6/site-packages' (doesn't exist)
+ENABLE_USER_SITE: True
+```
+
+- check particular lib
+  ```bash
+  $ python -c "import os as _; print(_.__file__)"
+  /usr/lib64/python3.6/os.py
+
+  $ python -c "import setuptools as _; print(_.__path__)"
+  ['/usr/lib/python3.6/site-packages/setuptools']
+  ```
 
 ### multiple versions
 #### get current working version
@@ -240,33 +255,78 @@ $ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.t
     ```
 
 ## version change
-> change default python from `3.8` to `3.9`
+
+{% hint style='tip' %}
+> change default python from `3.9` to `3.10`
+{% endhint %}
+
+### setup default python
+- via `ln`
+  ```bash
+  $ unlink /usr/local/opt/python
+  $ ln -sf /usr/local/Cellar/python@3.10/3.10.4 /usr/local/opt/python
+
+  $ unlink /usr/local/bin/python
+  $ ln -sf /usr/local/Cellar/python@3.10/3.10.4/bin/python3.10 /usr/local/bin/python3
+  $ ln -sf /usr/local/Cellar/python@3.10/3.10.4/bin/python3.10 /usr/local/bin/python
+
+  $ export PYTHONUSERBASE="$(/usr/local/opt/python/libexec/bin/python -c 'import site; print(site.USER_BASE)')"
+  $ export PYTHON3='/usr/local/opt/python/libexec/bin'
+  $ export PATH="$PYTHONUSERBASE/bin:${PYTHON3}:$PATH"
+  ```
+
+- via [`brew link`](https://stackoverflow.com/a/61560541/2940319)
+  ```bash
+  $ brew link python3 python@3.10 --overwrite
+  ```
+  - example
+    ```bash
+    $ python3 --version
+    Python 3.9.13
+
+    $ brew link python3 python@3.10 --overwrite
+    Warning: Already linked: /usr/local/Cellar/python@3.9/3.9.13_1
+    To relink, run:
+      brew unlink python@3.9 && brew link python@3.9
+    Linking /usr/local/Cellar/python@3.10/3.10.4... 24 symlinks created.
+
+    If you need to have this software first in your PATH instead consider running:
+      echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> /Users/marslo/.bash_profile
+
+    $ python3 --version
+    Python 3.10.4
+    ```
+
+- via [`default`](https://github.com/Homebrew/homebrew-cask/issues/52128#issuecomment-424680522)
+  ```bash
+  $ defaults write com.apple.versioner.python Version 3.8
+  ```
+  - get default version
+    ```bash
+    $ defaults read com.apple.versioner.python Version
+    ```
+  - example
+    ```bash
+    $ defaults read com.apple.versioner.python Version
+    3.9
+
+    $ defaults write com.apple.versioner.python Version 3.10
+
+    $ defaults read com.apple.versioner.python Version
+    3.10
+    ```
 
 ### modules re-installation
 ```bash
-$ /usr/local/bin/python3.8 -m pip freeze > pip3.8-requirements.txt
-$ sudo -H /usr/local/bin/python3.9 -m pip install --pre -r pip3.8-requirements.txt
+$ /usr/local/bin/python3.9 -m pip freeze > pip3.9-requirements.txt
+$ sudo -H /usr/local/bin/python3.10 -m pip install --pre -r pip3.9-requirements.txt
 ```
 
 ### `PYTHONPATH`
 ```bash
-$ export PYTHONPATH="/usr/local/lib/python3.8/site-packages:$PYTHONPATH"
+$ export PYTHONPATH="/usr/local/lib/python3.9/site-packages"
     ⇣⇣
-$ export PYTHONPATH="/usr/local/lib/python3.9/site-packages:$PYTHONPATH"
-```
-
-### `/usr/local/opt/python`
-```bash
-$ unlink /usr/local/opt/python
-$ ln -sf /usr/local/Cellar/python@3.9/3.9.0 /usr/local/opt/python
-
-$ unlink /usr/local/bin/python
-$ ln -sf /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9 /usr/local/bin/python3
-$ ln -sf /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9 /usr/local/bin/python
-
-$ export PYTHONUSERBASE="$(/usr/local/opt/python/libexec/bin/python -c 'import site; print(site.USER_BASE)')"
-$ export PYTHON3='/usr/local/opt/python/libexec/bin'
-$ export PATH="$PYTHONUSERBASE/bin:${PYTHON3}:$PATH"
+$ export PYTHONPATH="/usr/local/lib/python3.10/site-packages"
 ```
 
 ## extension
@@ -311,6 +371,7 @@ Application Specific Information:
 abort() called
 ...
 ```
+
 - root cause
   ```bash
   $ python
