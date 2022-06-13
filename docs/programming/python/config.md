@@ -3,9 +3,11 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [installation](#installation)
+  - [command completion](#command-completion)
   - [installation via source code](#installation-via-source-code)
 - [environment in MacOS](#environment-in-macos)
   - [`pip.conf`](#pipconf)
+  - [pip config file](#pip-config-file)
   - [list python path](#list-python-path)
   - [python libs](#python-libs)
   - [multiple versions](#multiple-versions)
@@ -27,6 +29,19 @@
 > - [pip list](https://pip.pypa.io/en/stable/reference/pip_list/)
 
 ## installation
+
+### [command completion](https://pip.pypa.io/en/stable/user_guide/#command-completion)
+```bash
+$ python -m pip completion --bash >> ~/.bashrc
+```
+- or
+  ```bash
+  $ python -m pip completion --bash >> ~/.profile
+  ```
+- or
+  ```bash
+  $ eval "`pip completion --bash`"
+  ```
 
 ### [installation via source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
 - basic environment prepare
@@ -100,6 +115,62 @@
     ```bash
     $ pip3.9 install --upgrade --user $(pip3.9 list --outdated | sed 1,2d | awk '{print $1}' | grep -vw 'docker\|rich')
     ```
+
+### [pip config file](https://pip.pypa.io/en/stable/topics/configuration/#pip-config-file)
+- naming
+  ```
+  [global]
+  timeout = 60
+  index-url = https://download.zope.org/ppix
+  ```
+
+- per-command section
+  ```
+  [global]
+  timeout = 60
+
+  [freeze]
+  timeout = 10
+  ```
+
+- boolean options
+  ```
+  [install]
+  ignore-installed = true
+  no-dependencies = yes
+  ```
+  - add
+    ```
+    [global]
+    no-cache-dir = false
+
+    [install]
+    no-compile = no
+    no-warn-script-location = false
+    ```
+
+- repeatable options
+  ```
+  [global]
+  quiet = 0
+  verbose = 2
+  ```
+
+- format: on multiple lines
+  ```
+  [global]
+  find-links =
+      http://download.example.com
+
+  [install]
+  find-links =
+      http://mirror1.example.com
+      http://mirror2.example.com
+
+  trusted-host =
+      mirror1.example.com
+      mirror2.example.com
+  ```
 
 ### [list python path](https://github.com/Homebrew/legacy-homebrew/issues/31873#issuecomment-53532229)
 ```bash

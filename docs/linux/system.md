@@ -309,7 +309,7 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 ```
 
 ### user management
-#### [sssd to use LDAP](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/configuring-sssd-to-use-ldap-and-require-tls-authentication_configuring-authentication-and-authorization-in-rhela)
+#### [sssd to use LDAP](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/configuring-sssd-to-use-ldap-and-require-tls-authentication_configuring-authentication-and-authorization-in-rhel)
 
 > references:
 > - [understanding sssd and its benefits](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/understanding-sssd-and-its-benefits_configuring-authentication-and-authorization-in-rhel)
@@ -386,6 +386,28 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 - list all override
   ```bash
   $ sss_override user-find
+  ```
+
+- [create sssd config](https://serverfault.com/a/749305/129815)
+
+  {% hint style='tip' %}
+  After this in `/etc/sssd/sssd.conf` file
+  Specify `ldap_default_bind_dn` and `ldap_default_authtok` as default bind dn and password respectively, this depends upon your ldap setup.
+  {% endhint %}
+
+  ```bash
+  $ authconfig --enablesssd \
+               --enablesssdauth \
+               --enablelocauthorize \
+               --enableldap \
+               --enableldapauth \
+               --ldapserver=ldap://ipaserver.example.com:389 \
+               --disableldaptls \
+               --ldapbasedn=dc=example,dc=com \
+               --enablerfc2307bis \
+               --enablemkhomedir \
+               --enablecachecreds \
+               --update
   ```
 
 #### [How To List Users and Groups on Linux](https://devconnected.com/how-to-list-users-and-groups-on-linux/)
