@@ -310,6 +310,7 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 
 ### user management
 #### [sssd to use LDAP](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/configuring-sssd-to-use-ldap-and-require-tls-authentication_configuring-authentication-and-authorization-in-rhela)
+
 > references:
 > - [understanding sssd and its benefits](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/understanding-sssd-and-its-benefits_configuring-authentication-and-authorization-in-rhel)
 > - [additional configuration for identity and authentication providers](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/assembly_additional-configuration-for-identity-and-authentication-providers_configuring-authentication-and-authorization-in-rhel#proc_adjusting-how-sssd-interprets-full-user-names_assembly_additional-configuration-for-identity-and-authentication-providers)
@@ -317,6 +318,7 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 > - [Configuring an LDAP Client to use SSSD](https://docs.oracle.com/cd/E37670_01/E41138/html/ol_sssd_ldap.html)
 > - [`/etc/sssd/sssd.conf` sample](https://github.com/marslo/iDevOps/blob/master/centos/sssd/sssd.conf)
 > - [Troubleshooting SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/trouble)
+> - [Linux user authentication with SSSD / LDAP](https://aws.nz/best-practice/sssd-ldap/)
 
 - add user name
   ```bash
@@ -345,7 +347,7 @@ whereis (1)          - locate the binary, source, and manual page files for a co
   $ id -g username
 
   # override
-  $ sss_override user-add username -u new-GID
+  $ sss_override user-add username -g new-GID
   $ sss_cache --users
   $ systemctl restart sssd
   ```
