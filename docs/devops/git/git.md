@@ -5,8 +5,9 @@ Git Command Study and practice
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Appoint](#appoint)
-  - [Git Alias](#git-alias)
+- [appoint](#appoint)
+  - [git alias](#git-alias)
+  - [specifying ranges](#specifying-ranges)
 - [commit](#commit)
   - [get commit id](#get-commit-id)
   - [get previous commit id](#get-previous-commit-id)
@@ -68,8 +69,8 @@ Git Command Study and practice
 > - [gitglossary(7) Manual Page](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/gitglossary.html)
 {% endhint %}
 
-## Appoint
-### [Git Alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.gitalias)
+## appoint
+### [git alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.gitalias)
 ```bash
 br      = branch
 co      = checkout
@@ -83,6 +84,29 @@ rlog    = "!bash -c 'while read branch; do \n\
              git pl remotes/origin/$branch; \n\
            done < <(git rev-parse --abbrev-ref HEAD) '"
 ```
+
+### [specifying ranges](https://git-scm.com/docs/gitrevisions#_specifying_ranges)
+
+{% hint style='tip' %}
+> references:
+> - [gitrevisions](https://git-scm.com/docs/gitrevisions)
+> - [First master absolute commit referencing...](https://blog.git-init.com/relative-vs-absolute-references-in-git/)
+{% endhint %}
+
+<img src="../../screenshot/git/relative-ancestors-1.png" width="666">
+<figcaption>using tilde (~) and caret (^) combined</figcaption>
+
+- commit exclusions
+  - `^<rev>` (caret) notation : <br>
+    To exclude commits reachable from a commit, a prefix `^` notation is used.<br>
+    E.g. `^r1 r2` means commits reachable from r2 but exclude the ones reachable from r1 (i.e. r1 and its ancestors)
+
+- dotted range notations
+  - `..` (two-dot) range notation
+    - `r1..r2` : commits that are reachable from r2 excluding those that are reachable from r1 by `^r1 r2`
+  - `...` (three-dot) symmetric difference notation
+    - `r1...r2` : called symmetric difference of r1 and r2<br>
+                  It is the set of commits that are reachable from either one of r1 (left side) or r2 (right side) but not from both
 
 ## commit
 ### get commit id
