@@ -5,9 +5,10 @@
 - [tricky](#tricky)
   - [get current branch](#get-current-branch)
   - [get previous branch](#get-previous-branch)
-  - [commits](#commits)
+  - [quick push to current branch](#quick-push-to-current-branch)
   - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes)
   - [create multiple commits](#create-multiple-commits)
+  - [revision](#revision)
   - [git commit](#git-commit)
   - [git path](#git-path)
   - [`.gitattributes`](#gitattributes)
@@ -28,25 +29,49 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## tricky
+
+{% hint style='tip' %}
+> references:
+> - [git-tips/tips](https://github.com/git-tips/tips)
+> - [git 的奇技淫巧](https://github.com/521xueweihan/git-tips)
+> - [k88hudson/git-flight-rules](https://github.com/k88hudson/git-flight-rules/blob/master/README.md)
+> - [git飞行规则(flight rules)](https://github.com/k88hudson/git-flight-rules/blob/master/README_zh-CN.md)
+> - [firstaidgit.io](https://firstaidgit.io/)
+> - [unixorn/git-extra-commands](https://github.com/unixorn/git-extra-commands)
+> - [tj/git-extras](https://github.com/tj/git-extras)
+{% endhint %}
+
 ### get current branch
 ```bash
-$ git br
+$ git branch
   sandbox/marslo
 * master
 ```
-- `sed`
+- [`branch`](https://git-scm.com/docs/git-branch)
   ```bash
+  $ git branch --show-current
+
+  # or
+  $ git branch --show
+
+  # or
   $ git branch | sed -ne 's:^\*\s*\(.*\)$:\1:p'
   master
   ```
 
-- `symbolic-ref`
+- [`symbolic-ref`](https://git-scm.com/docs/git-symbolic-ref)
   ```bash
   $ git symbolic-ref --short HEAD
   master
 
   $ git symbolic-ref HEAD
   refs/heads/master
+  ```
+
+- [`name-rev`](https://git-scm.com/docs/git-name-rev)
+  ```bash
+  $ git name-rev --name-only HEAD
+  remotes/origin/master
   ```
 
 - `describe`
@@ -66,6 +91,7 @@ or
 $ git describe --all $(git rev-parse @{-1})
 heads/sandbox/marslo/291
 ```
+
 #### [checkout to previous branch](https://stackoverflow.com/a/7207542/2940319)
 ```bash
 $ git checkout -
@@ -78,13 +104,33 @@ $ git checkout -
 #### quick diff with previous branch
 ```bash
 $ git diff ..@{-1}
+
+# or
+$ git diff @..@{-1}
+
+# or
+$ git diff HEAD..@{-1}
 ```
 
-### commits
-  - the first commit
-    ```bash
-    $ git rev-list --max-parents=0 HEAD
-    ```
+### quick push to current branch
+
+{% hint style='tip' %}
+- `@`
+```bash
+@ alone is a shortcut for HEAD.
+```
+
+> references:
+> - [gitrevisions(7) Manual Page](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
+{% endhint %}
+
+
+```bash
+$ git push origin @
+
+# or
+$ git push origin HEAD
+```
 
 ### [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](https://help.github.com/en/github/using-git/configuring-git-to-handle-line-endings)
 ```bash
@@ -98,15 +144,22 @@ $ git add --all -u --renormalize .
 
 ### [create multiple commits](https://git-rebase.io/)
 ```bash
-for c in {0..10}; do
-  echo "$c" >>squash.txt
-  git add squash.txt
-  git commit -m"Add '$c' to squash.txt"
+$ for c in {0..10}; do
+    echo "$c" >> squash.txt
+    git add squash.txt
+    git commit -m "add '${c}' to squash.txt"
 done
+```
+
+### revision
+#### the first revision
+```bash
+$ git rev-list --max-parents=0 HEAD
 ```
 
 ### git commit
 #### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
+
 
 ### git path
 #### get absolute root path
