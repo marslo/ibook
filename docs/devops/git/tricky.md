@@ -17,10 +17,7 @@
   - [fetch merge all](#fetch-merge-all)
   - [gfall <branch>](#gfall-branch)
   - [iGitOpt](#igitopt)
-- [effort](#effort)
-  - [`--stat`](#--stat)
-  - [`--numstat`](#--numstat)
-  - [`--shortstat`](#--shortstat)
+  - [effort](#effort)
 - [others](#others)
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
@@ -363,12 +360,12 @@ $ cat ~/.gitconfig
 ### iGitOpt
 - [ig.sh](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/bin/ig.sh)
 
-## effort
+### effort
 > references:
 > - [tj/git-extras](https://github.com/tj/git-extras)
 > - [How can I calculate the number of lines changed between two commits in Git?](https://stackoverflow.com/questions/2528111/how-can-i-calculate-the-number-of-lines-changed-between-two-commits-in-git)
 
-### `--stat`
+#### `--stat`
 ```bash
 $ git diff --stat HEAD^ HEAD
  docs/programming/groovy/groovy.md |  1 +
@@ -384,7 +381,7 @@ $ git diff --stat HEAD^ HEAD
    2 files changed, 61 insertions(+), 21 deletions(-)
   ```
 
-### `--numstat`
+#### `--numstat`
 ```bash
 $ git --no-pager log --numstat --author="marslo" HEAD^..HEAD
 commit c361ddf2687319f978bb4ec0069b4b996607615f (HEAD -> marslo, origin/marslo)
@@ -426,7 +423,7 @@ Date:   Wed Jul 28 22:21:03 2021 +0800
   summary = "!git log --numstat --format=\"\" \"$@\" | awk '{files += 1}{ins += $1}{del += $2} END{print \"total: \"files\" files, \"ins\" insertions(+) \"del\" deletions(-)\"}' #"
   ```
 
-### [`--shortstat`](https://stackoverflow.com/a/41307958/2940319)
+#### [`--shortstat`](https://stackoverflow.com/a/41307958/2940319)
 ```bash
 $ git diff --shortstat HEAD^..HEAD
  2 files changed, 61 insertions(+), 21 deletions(-)

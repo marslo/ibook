@@ -5,10 +5,10 @@
 - [shadowsocks service](#shadowsocks-service)
   - [CentOS](#centos)
 - [copy artical content from csdn](#copy-artical-content-from-csdn)
+- [color picker](#color-picker)
+  - [iterm2-tab-set](#iterm2-tab-set)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
 
 
 ## [shadowsocks service](https://github.com/shadowsocks/shadowsocks/tree/master)
@@ -23,7 +23,6 @@ $ sudo yum -y groupinstall "Development Tools"
 $ sudo yum -y install python3-pip       # optional
 $ sudo -H python3 -m pip install --upgrade pip
 ```
-
 
 #### git
 ```bash
@@ -64,3 +63,40 @@ $ sudo yum install -y git
 1. [open the html in MS Word](https://blog.csdn.net/xue0zhi1qiang3/article/details/103865926)
 
 bingo!
+
+## color picker
+
+{% hint style='tip' %}
+> references:
+> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
+> - [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
+{% endhint %}
+
+### [iterm2-tab-set](https://www.npmjs.com/package/iterm2-tab-set)
+- installation
+  ```bash
+  $ npm i iterm2-tab-set
+  ```
+- usage
+  ```bash
+  $ tabset --pick
+  ```
+
+  ![tabset --pick](../../screenshot/osx/tabset--pick.png)
+
+  ```bash
+  function cpick ()
+  {
+    if test tabset; then
+      rgb=$(tabset -p | sed -nr "s:.*rgb\(([^)]+)\).*$:\1:p");
+      hexc=$(for c in $(echo "${rgb}" | sed -re 's:,: :g'); do printf '%02x' "$c"; done);
+      echo -e """\t$rgb ~~> $hexc""";
+    fi
+  }
+  ```
+
+  - result
+    ```bash
+    $ cpick
+      125,199,53 ~~> 7dc735
+    ```

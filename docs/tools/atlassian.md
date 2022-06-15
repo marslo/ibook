@@ -31,24 +31,24 @@ $ jiraID='STORY-1'
 ```bash
 $ curl -s \
        -k \
-       -X GET https://${jiraName}/rest/api/2/issue/${jiraID} \
-       | jq --raw-output
+       -X GET https://${jiraName}/rest/api/2/issue/${jiraID} |
+       jq --raw-output
 ```
 ### check attachment
 - check attachment ID
   ```bash
   $ curl -s \
          -k \
-         -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment \
-         | jq --raw-output .fields.attachment[].id
+         -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment |
+         jq --raw-output .fields.attachment[].id
   ```
 
 - get attachments download url
   ```bash
   $ curl -s \
          -k \
-         -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment \
-         | jq --raw-output .fields.attachment[].content
+         -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment |
+         jq --raw-output .fields.attachment[].content
   ```
 
   - download all attachments in Jira
@@ -60,9 +60,9 @@ $ curl -s \
     ```bash
     $ curl -s \
            -k \
-           -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment \
-           | jq --raw-output .fields.attachment[].content \
-           | xargs -I '{}' curl -sgOJL '{}'
+           -X GET https://${jiraName}/rest/api/2/issue/${jiraID}?fields=attachment |
+           jq --raw-output .fields.attachment[].content |
+           xargs -I '{}' curl -sgOJL '{}'
     ```
 
 ### [generate OAuth consumer](https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/)

@@ -31,7 +31,7 @@ $ usr/bin/sudo -E -- /usr/bin/env LOGNAME=marslo USER=marslo USERNAME=marslo \
 ## [uninstall](https://osxdaily.com/2019/01/25/uninstall-virtualbox-mac-completely/)
 [VirtualBox_Uninstall.tool)](./VirtualBox_Uninstall.tool)
 
-![uninstall](../screenshot/vbox-uninstall.png)
+![uninstall](../../screenshot/vbox-uninstall.png)
 
 ## install vms
 ### [Run Windows 10 on Mac with VirtualBox for Mac OS X](https://osxdaily.com/2015/03/25/install-run-windows-10-mac-virtualbox-os-x/)

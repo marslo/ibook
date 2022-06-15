@@ -11,7 +11,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
 ## firefox
 ### [restart firefox](https://www.msftnext.com/how-to-restart-firefox-without-closing-tabs/)
 ```
