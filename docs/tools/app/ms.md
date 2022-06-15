@@ -9,7 +9,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
 {% hint style='tip' %}
 > reference:
 > - [pbowden-msft/Unlicense](https://github.com/pbowden-msft/Unlicense/blob/master/Unlicense)
