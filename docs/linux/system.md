@@ -24,7 +24,6 @@
   - [local user](#local-user)
   - [local group](#local-group)
   - [logout](#logout)
-  - [view users password properties in linux](#view-users-password-properties-in-linux)
   - [others](#others)
 - [system encoding](#system-encoding)
   - [setup via environment](#setup-via-environment)

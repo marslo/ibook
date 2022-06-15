@@ -12,6 +12,10 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> references:
+> - [awk printf](http://kb.ictbanking.net/article.php?id=688)
+{% endhint %}
 
 ### split
 ```bash
