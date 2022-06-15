@@ -21,6 +21,9 @@
   - [`--stat`](#--stat)
   - [`--numstat`](#--numstat)
   - [`--shortstat`](#--shortstat)
+- [others](#others)
+  - [alias](#alias)
+  - [check help in previw.app](#check-help-in-previwapp)
 - [debug](#debug)
   - [Git Debug Options](#git-debug-options)
   - [Linux](#linux)
@@ -39,6 +42,7 @@
 > - [firstaidgit.io](https://firstaidgit.io/)
 > - [unixorn/git-extra-commands](https://github.com/unixorn/git-extra-commands)
 > - [tj/git-extras](https://github.com/tj/git-extras)
+> - [shell tricks: one git alias to rule them all](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
 {% endhint %}
 
 ### get current branch
@@ -433,6 +437,128 @@ $ git diff --shortstat HEAD^..HEAD
   $ git diff  $(git log -5 --pretty=format:"%h" | tail -1) --shortstat
    7 files changed, 253 insertions(+), 24 deletions(-)
   ```
+
+## others
+
+### alias
+
+{% hint style='tip' %}
+> references:
+> - [putermancer/.gitconfig](https://gist.github.com/putermancer/841286/5bffd46cb2a1b6fbe385a16f8bc1ce14ec45ebb7)
+> - [List Git aliases](https://stackoverflow.com/a/48697231/2940319)
+> - [Shell Tricks: One Git Alias to Rule Them All](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
+> - [automatic documentation of gitconfig aliases using sed or awk](https://stackoverflow.com/q/53841043/2940319)
+> - [git config alias escaping](https://stackoverflow.com/questions/38057261/git-config-alias-escaping/39616600#39616600)
+{% endhint %}
+
+#### show git alias
+
+{% hint style='tip' %}
+```bash
+$ git --list-cmds=alias
+
+# or
+$ git config --get-regexp '^alias\.'
+```
+{% endhint %}
+
+```
+[alias]
+  # https://stackoverflow.com/q/53841043/2940319
+  ### show [g]it alia[s]
+  as         = "! bash -c '''grep --no-group-separator -A1 -e \"^\\s*###\" \"$HOME\"/.marslo/.gitalias | \n\
+                              awk \"END{if((NR%2))print p}!(NR%2){print\\$0p}{p=\\$0}\" | \n\
+                              sed -re \"s/( =)(.*)(###)/*/g\" | \n\
+                              sed -re \"s:[][]::g\" | \n\
+                              awk -F* \"{printf \\\"\\033[1;33m%-20s\\033[0m » \\033[0;34m%s\\033[0m\\n\\\", \\$1, \\$2}\" | \n\
+                              sort \n\
+                           '''"
+```
+
+- [or](https://gist.github.com/putermancer/841286/5bffd46cb2a1b6fbe385a16f8bc1ce14ec45ebb7)
+  ```
+  [alias]
+    alias = "!sh -c '[ $# = 2 ] && git config --global alias.\"$1\" \"$2\" && exit 0 || [ $# = 1 ] && [ $1 = \"--list\" ] && git config --list | grep \"alias\\.\" | sed \"s/^alias\\.\\([^=]*\\)=\\(.*\\).*/\\1@@@@=>@@@@\\2/\" | sort | column -ts \"@@@@\" && exit 0 || echo \"usage: git alias <new alias> <original command>\\n       git alias --list\" >&2 && exit 1' -"
+  ```
+
+- [or](https://stackoverflow.com/a/48697231/2940319)
+  ```
+  [alias]
+    aliases = !git config --get-regexp ^alias\\. | sed -e s/^alias.// -e s/\\ /\\ $(printf \"\\043\")--\\>\\ / | column -t -s $(printf \"\\043\")
+  ```
+
+- [or](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
+  ```
+  $ git config --global --get-regexp alias |
+        awk -v nr=2 '{sub(/^alias\./,"")}; \
+                     { printf "\033[31m%_10s\033[1;37m", $1}; \
+                     {sep=FS}; \
+                     {for (x=nr; x<=NF; x++) \
+                     { printf "%s%s", sep, $x; }; \
+                     print "\033[0;39m"}'
+  ```
+
+  - `finda`
+    ```
+    [alias]
+      finda = "!grepalias() { git config --global --get-regexp alias | grep -i \"$1\" | awk -v nr=2 '{sub(/^alias\\./,\"\")};{printf \"\\033[31m%_10s\\033[1;37m\", $1};{sep=FS};{for (x=nr; x<=NF; x++) {printf \"%s%s\", sep, $x; }; print \"\\033[0;39m\"}'; }; grepalias"
+    ```
+
+- or [`show-cmd`](https://stackoverflow.com/a/62772985/2940319)
+  ```
+  [alias]
+      show-cmd = "!f() { \
+          sep="㊣" ;\
+          name=${1:-alias};\
+          echo -n -e '\\033[48;2;255;255;01m' ;\
+          echo -n -e '\\033[38;2;255;0;01m' ;\
+          echo "$name"; \
+          echo -n -e '\\033[m' ;\
+          git config --get-regexp ^$name\\..*$2+ | \
+          cut -c 1-40 | \
+          sed -e s/^$name.// \
+          -e s/\\ /\\ $(printf $sep)--\\>\\ / | \
+          column -t -s $(printf $sep) | \
+          sort -k 1 ;\
+      }; f"
+  ```
+
+#### ls
+
+{% hint style='tip' %}
+> references:
+> - [putermancer/.gitconfig](https://gist.github.com/putermancer/841286/5bffd46cb2a1b6fbe385a16f8bc1ce14ec45ebb7)
+> - [taxilian/.gitconfig](https://gist.github.com/taxilian/1338308)
+{% endhint %}
+
+```
+[alias]
+  ls           = "!git status -suno"
+  ls-modified  = "!git status --porcelain -uno | awk 'match($1, /M/) {print $2}'"
+  ls-added     = "!git status --porcelain -uno | awk 'match($1, /A/) {print $2}'"
+  ls-deleted   = "!git status --porcelain -uno | awk 'match($1, /D/) {print $2}'"
+  ls-renamed   = "!git status --porcelain -uno | awk 'match($1, /R/) {print $2}'"
+  ls-copied    = "!git status --porcelain -uno | awk 'match($1, /C/) {print $2}'"
+  ls-updated   = "!git status --porcelain -uno | awk 'match($1, /U/) {print $2}'"
+  ls-staged    = "!git status --porcelain -uno | grep -P '^[MA]' | awk '{ print $2 }'"
+  ls-untracked = "!git status --porcelain -uall | awk '$1 == \"??\" {print $2}'"
+```
+
+#### git alias escaping
+```
+[alias]
+  # https://stackoverflow.com/a/39616600/2940319
+  # Quote / unquote a sh command, converting it to / from a git alias string
+  quote-string = "!read -r l; printf \\\"!; printf %s \"$l\" | sed 's/\\([\\\"]\\)/\\\\\\1/g'; printf \" #\\\"\\n\" #"
+  quote-string-undo = "!read -r l; printf %s \"$l\" | sed 's/\\\\\\([\\\"]\\)/\\1/g'; printf \"\\n\" #"
+```
+
+### [check help in previw.app](https://brettterpstra.com/2014/08/05/shell-tricks-man-pages/)
+```bash
+$ MANWIDTH=80 MANPAGER='col -bx' git help rev-parse |
+              groff -P-pa4 -Tps -mandoc -c |
+              open -f -a Preview.app
+```
 
 ## [debug](https://www.shellhacks.com/git-verbose-mode-debug-fatal-errors/)
 ### Git Debug Options
