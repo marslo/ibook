@@ -52,6 +52,7 @@ Git Command Study and practice
   - [checkout single branch](#checkout-single-branch)
 - [for-each-ref](#for-each-ref)
   - [format](#format)
+  - [date format](#date-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -149,21 +150,6 @@ $ git symbolic-ref --short HEAD
 ```bash
 $ git name-rev --name-only HEAD
 ```
-
-#### [list branch ordered via most recent update](https://stackoverflow.com/a/5188364/2940319)
-- for local branches
-  ```bash
-  $ git for-each-ref --sort=-committerdate refs/heads
-  ```
-- for remote
-  ```bash
-  $ git for-each-ref --sort=-committerdate refs/remotes
-  ```
-
-- [sort `git branch` by default](https://stackoverflow.com/a/33163401/2940319)
-  ```bash
-  $ git config --global branch.sort -committerdate
-  ```
 
 #### [for detached branch](https://stackoverflow.com/a/19457164/2940319)
 ```bash
@@ -311,6 +297,17 @@ $ git branch --no-color \
   ```
 
 ### [sort local branch via `committerdate`](https://stackoverflow.com/a/5188364/2940319)
+
+
+{% hint style='tip' %}
+> references:
+> - [How can I get a list of Git branches, ordered by most recent commit?](https://stackoverflow.com/q/5188320/2940319)
+> - [sort `git branch` by default](https://stackoverflow.com/a/33163401/2940319)
+> ```bash
+> $ git config --global branch.sort -committerdate
+> ```
+{% endhint %}
+
 ```bash
 $ git for-each-ref --sort=-committerdate refs/heads/
 
@@ -318,10 +315,69 @@ $ git for-each-ref --sort=-committerdate refs/heads/
 $ git branch --sort=-committerdate  # DESC
 $ git branch --sort=committerdate   # ASC
 ```
+
 - advanced usage
   ```bash
-  $ git for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+  $ git for-each-ref \
+        --sort=-committerdate \
+        refs/heads/ \
+        --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
   ```
+
+- for remote
+  ```bash
+  $ git for-each-ref --sort=-committerdate refs/remotes
+  ```
+
+- [more on git tips](https://chromium.googlesource.com/chromium/src.git/+/HEAD/docs/git_tips.md)
+  ```bash
+  git-list-branches-by-date() {
+    local current_branch=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
+    local normal_text=$(echo -ne '\E[0m')
+    local yellow_text=$(echo -ne '\E[0;33m')
+    local yellow_bg=$(echo -ne '\E[7;33m')
+    git for-each-ref --sort=-committerdate \
+        --format=$'  %(refname:short)  \
+            \t%(committerdate:short)\t%(authorname)\t%(objectname:short)' \
+            refs/heads \
+        | column -t -s $'\t' -n \
+        | sed -E "s:^  (${current_branch}) :* ${yellow_bg}\1${normal_text} :" \
+        | sed -E "s:^  ([^ ]+):  ${yellow_text}\1${normal_text}:"
+  }
+  ```
+
+#### git alias()
+```bash
+[alias]
+  sb          = "! git branch --sort=-committerdate --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset) - %(color:yellow)%(refname:short)%(color:reset) - %(subject) %(color:bold green)(%(committerdate:relative))%(color:reset) %(color:blue)<%(authorname)>%(color:reset)' --color=always"
+  recent      = "! f() { \
+                        declare help=\"USAGE: git recent [remotes|tags] [count]\"; \
+                        declare refs; \
+                        declare count; \
+                        if [ 2 -lt $# ]; then \
+                          echo \"${help}\"; \
+                          exit 1; \
+                        else \
+                          if [ 'remotes' = \"$1\" ]; then \
+                            refs='refs/remotes/origin'; \
+                          elif [ 'tags' = \"$1\" ]; then \
+                            refs='refs/tags'; \
+                          elif [ 1 -eq $# ]; then \
+                            count=$1; \
+                          fi; \
+                          if [ 2 -eq $# ]; then \
+                            count=$2; \
+                          fi; \
+                        fi; \
+                        git for-each-ref \
+                            --sort=-committerdate \
+                            ${refs:='refs/heads'} \
+                            --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) %(color:green)(%(committerdate:relative))%(color:reset)' \
+                            --color=always \
+                            --count=${count:=5}; \
+                    }; f \
+                "
+```
 
 ### [change head](https://stackoverflow.com/a/60102988/2940319)
 > reference:
@@ -962,9 +1018,160 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
   ```
 
 ## for-each-ref
+
 ### format
 
-#### date
+{% hint style='tip' %}
+> - `(subject)`           : `"the subject line"`
+> - `%(subject:sanitize)` : `"the-subject-line"`
+{% endhint %}
+
+
+> [!TIP]
+> - [field names](https://git-scm.com/docs/git-for-each-ref#_field_names)
+> - [git/t/t6300-for-each-ref.sh](https://github.com/git/git/blob/c25fba986bfc737d775430d290b93136d390e067/t/t6300-for-each-ref.sh#L79-L216)
+> <br>
+> - field names:
+>   - head :
+>     - `refname:`                 -> `refs/heads/master`
+>     - `refname:short`            -> `master`
+>     - `refname:lstrip=1`         -> `heads/master`
+>     - `refname:lstrip=2`         -> `master`
+>     - `refname:lstrip=-1`        -> `master`
+>     - `refname:lstrip=-2`        -> `heads/master`
+>     - `refname:rstrip=1`         -> `refs/heads`
+>     - `refname:rstrip=2`         -> `refs`
+>     - `refname:rstrip=-1`        -> `refs`
+>     - `refname:rstrip=-2`        -> `refs/heads`
+>     - `refname:strip=1`          -> `heads/master`
+>     - `refname:strip=2`          -> `master`
+>     - `refname:strip=-1`         -> `master`
+>     - `refname:strip=-2`         -> `heads/master`
+>     - `upstream`                 -> `refs/remotes/origin/master`
+>     - `upstream:short`           -> `origin/master`
+>     - `upstream:lstrip=2`        -> `origin/master`
+>     - `upstream:lstrip=-2`       -> `origin/master`
+>     - `upstream:rstrip=2`        -> `refs/remotes`
+>     - `upstream:rstrip=-2`       -> `refs/remotes`
+>     - `upstream:strip=2`         -> `origin/master`
+>     - `upstream:strip=-2`        -> `origin/master`
+>     - `push`                     -> `refs/remotes/myfork/master`
+>     - `push:short`               -> `myfork/master`
+>     - `push:lstrip=1`            -> `remotes/myfork/master`
+>     - `push:lstrip=-1`           -> `master`
+>     - `push:rstrip=1`            -> `refs/remotes/myfork`
+>     - `push:rstrip=-1`           -> `refs`
+>     - `push:strip=1`             -> `remotes/myfork/master`
+>     - `push:strip=-1`            -> `master`
+>     - `objecttype`               -> `commit`
+>     - `objectsize`               -> `$((131 + hexlen))`
+>     - `objectsize:disk`          -> `$disklen`
+>     - `deltabase`                -> `$ZERO_OID`
+>     - `parent`                   -> `''`
+>     - `parent:short`             -> `''`
+>     - `parent:short=1`           -> `''`
+>     - `parent:short=10`          -> `''`
+>     - `numparent`                -> `0`
+>     - `object`                   -> `''`
+>     - `type`                     -> `''`
+>     - `'*objectname'`            -> `''`
+>     - `'*objecttype'`            -> `''`
+>     - `author`                   -> `'A U Thor <author@example.com> 1151968724 +0200'`
+>     - `authorname`               -> `'A U Thor'`
+>     - `authoremail`              -> `'<author@example.com>'`
+>     - `authoremail:trim`         -> `'author@example.com'`
+>     - `authoremail:localpart`    -> `'author'`
+>     - `tag`                      -> `''`
+>     - `tagger`                   -> `''`
+>     - `taggername`               -> `''`
+>     - `taggeremail`              -> `''`
+>     - `taggeremail:trim`         -> `''`
+>     - `taggeremail:localpart`    -> `''`
+>     - `taggerdate`               -> `''`
+>     - `subject`                  -> `'Initial'`
+>     - `subject:sanitize`         -> `'Initial'`
+>     - `contents:subject`         -> `'Initial'`
+>     - `body`                     -> `''`
+>     - `contents:body`            -> `''`
+>     - `contents:signature`       -> `''`
+>     - `contents`                 -> `'Initial'`
+>     - `HEAD`                     -> `'*'`
+>     - `objectname`               -> `$(git rev-parse refs/heads/master)`
+>     - `objectname:short`         -> `$(git rev-parse --short refs/heads/master)`
+>     - `objectname:short=1`       -> `$(git rev-parse --short=1 refs/heads/master)`
+>     - `objectname:short=10`      -> `$(git rev-parse --short=10 refs/heads/master)`
+>     - `tree`                     -> `$(git rev-parse refs/heads/master^{tree})`
+>     - `tree:short`               -> `$(git rev-parse --short refs/heads/master^{tree})`
+>     - `tree:short=1`             -> `$(git rev-parse --short=1 refs/heads/master^{tree})`
+>     - `tree:short=10`            -> `$(git rev-parse --short=10 refs/heads/master^{tree})`
+>     - `authordate`               -> `'Tue Jul 4 01:18:44 2006 +0200'`
+>     - `committer`                -> `'C O Mitter <committer@example.com> 1151968723 +0200'`
+>     - `committername`            -> `'C O Mitter'`
+>     - `committeremail`           -> `'<committer@example.com>'`
+>     - `committeremail:trim`      -> `'committer@example.com'`
+>     - `committeremail:localpart` -> `'committer'`
+>     - `committerdate`            -> `'Tue Jul 4 01:18:43 2006 +0200'`
+>     - `objectname:short=1`       -> `$(git rev-parse --short=1 refs/heads/master)`
+>     - `objectname:short=10`      -> `$(git rev-parse --short=10 refs/heads/master)`
+>     - `creator`                  -> `'C O Mitter <committer@example.com> 1151968723 +0200'`
+>     - `creatordate`              -> `'Tue Jul 4 01:18:43 2006 +0200'`
+> <br>
+>   - tags:
+>     - `refname`                  -> `refs/tags/testtag`
+>     - `refname:short`            -> `testtag`
+>     - `upstream`                 -> `''`
+>     - `push`                     -> `''`
+>     - `objecttype`               -> `tag`
+>     - `objectsize`               -> `$((114 + hexlen))`
+>     - `objectsize:disk`          -> `$disklen`
+>     - `'*objectsize:disk'`       -> `$disklen`
+>     - `deltabase`                -> `$ZERO_OID`
+>     - `'*deltabase'`             -> `$ZERO_OID`
+>     - `tree`                     -> `''`
+>     - `tree:short`               -> `''`
+>     - `tree:short=1`             -> `''`
+>     - `tree:short=10`            -> `''`
+>     - `parent`                   -> `''`
+>     - `parent:short`             -> `''`
+>     - `parent:short=1`           -> `''`
+>     - `parent:short=10`          -> `''`
+>     - `numparent`                -> `''`
+>     - `type`                     -> `'commit'`
+>     - `'*objecttype'`            -> `'commit'`
+>     - `author`                   -> `''`
+>     - `authorname`               -> `''`
+>     - `authoremail`              -> `''`
+>     - `authoremail:trim`         -> `''`
+>     - `authoremail:localpart`    -> `''`
+>     - `authordate`               -> `''`
+>     - `committer`                -> `''`
+>     - `committername`            -> `''`
+>     - `committeremail`           -> `''`
+>     - `committeremail:trim`      -> `''`
+>     - `committeremail:localpart` -> `''`
+>     - `committerdate`            -> `''`
+>     - `tag`                      -> `'testtag'`
+>     - `body`                     -> `''`
+>     - `contents:body`            -> `''`
+>     - `contents:signature`       -> `''`
+>     - `contents`                 -> `'Tagging at 1151968727``
+>     - `object`                   -> `$(git rev-parse refs/tags/testtag^0)`
+>     - `objectname`               -> `$(git rev-parse refs/tags/testtag)`
+>     - `objectname:short`         -> `$(git rev-parse --short refs/tags/testtag)`
+>     - `'*objectname'`            -> `$(git rev-parse refs/tags/testtag^{})`
+>     - `tagger`                   -> `'C O Mitter <committer@example.com> 1151968725 +0200'`
+>     - `taggername`               -> `'C O Mitter'`
+>     - `taggeremail`              -> `'<committer@example.com>'`
+>     - `taggeremail:trim`         -> `'committer@example.com'`
+>     - `taggeremail:localpart`    -> `'committer'`
+>     - `taggerdate`               -> `'Tue Jul 4 01:18:45 2006 +0200'`
+>     - `creator`                  -> `'C O Mitter <committer@example.com> 1151968725 +0200'`
+>     - `creatordate`              -> `'Tue Jul 4 01:18:45 2006 +0200'`
+>     - `subject`                  -> `'Tagging at 1151968727'`
+>     - `subject:sanitize`         -> `'Tagging-at-1151968727'`
+>     - `contents:subject`         -> `'Tagging at 1151968727'`
+
+### date format
 
 > [!TIP]
 > references:
