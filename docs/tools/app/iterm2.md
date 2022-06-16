@@ -37,12 +37,11 @@ $ echo "<color-name>" >> ~/.marslo/.colors
 
 #### get color hex (for [`it2setcolor`](https://github.com/gnachman/iterm2-website/blob/master/source/utilities/it2setcolor))
 
-{% hint style='tip' %}
+> [!TIP]
 > download original csscolor.js if necessory:
 > ```bash
 > $ curl -fsSL -O https://raw.githubusercontent.com/jonathaneunice/iterm2-tab-set/master/csscolors.js
 > ```
-{% endhint %}
 
 ```bash
 $ while read -r i; do
