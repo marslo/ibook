@@ -63,6 +63,7 @@
 > - [Deploy a secure etcd cluster](https://pcocc.readthedocs.io/en/latest/deps/etcd-production.html)
 > - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 > - [Creating Highly Available Clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
+> - [Etcd Backup And Restore In Kubernetes: Step By Step](https://k21academy.com/docker-kubernetes/etcd-backup-restore-in-k8s-step-by-step/)
 {% endhint %}
 
 

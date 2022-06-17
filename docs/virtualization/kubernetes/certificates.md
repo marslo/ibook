@@ -21,6 +21,8 @@
     - [restart the master components](#restart-the-master-components)
     - [restart kubelet service](#restart-kubelet-service)
     - [verify](#verify)
+  - [extend X509v3 Subject Alternative Name in `apiserver.crt`](#extend-x509v3-subject-alternative-name-in-apiservercrt)
+    - [using new certificate for apiserver](#using-new-certificate-for-apiserver)
   - [renew work node](#renew-work-node)
     - [backup](#backup-1)
     - [restart `kubelet`](#restart-kubelet)
@@ -56,6 +58,12 @@
 > - stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
 > - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 > - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+> - [Dashboard使用自定义证书](https://blog.csdn.net/chenleiking/article/details/81488028)
+> - [Custom certificates on Kubernetes](https://www.ibm.com/docs/en/api-connect/10.0.1.x?topic=environment-custom-certificates-kubernetes)
+>   - [How to Generate a Self-Signed Certificate for Kubernetes](https://phoenixnap.com/kb/kubernetes-ssl-certificates)
+> - [Certificates in a Kubernetes environment](https://www.ibm.com/docs/en/api-connect/10.0.1.x?topic=deployment-certificates-in-kubernetes-environment)
+> - [Creating Self Signed Certificates on Kubernetes](https://tech.paulcz.net/blog/creating-self-signed-certs-on-kubernetes/)
+> - [Cluster TLS using OpenSSL](https://github.com/coreos/coreos-kubernetes/blob/master/Documentation/openssl.md)
 > <br>
 > - regenerate the kubeadm.yaml
 >   ```bash
@@ -698,6 +706,64 @@ $ echo -n |
             Not After : Sep 21 09:09:00 2021 GMT
 ```
 
+## [extend X509v3 Subject Alternative Name in `apiserver.crt`](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
+```bash
+$ ssh master02
+
+//生成2048位的密钥对
+$ openssl genrsa -out apiserver-master02.key 2048
+
+//生成证书签署请求文件
+$ sudo openssl req -new \
+                   -key apiserver-master02.key \
+                   -subj "/CN=kube-apiserver," \
+                   -out apiserver-master02.csr
+
+// 编辑apiserver-master02.ext文件，内容如下：
+$ cat apiserver-master02.ext
+subjectAltName = DNS:master02,DNS:kubernetes,DNS:kubernetes.default,DNS:kubernetes.default.svc, DNS:kubernetes.default.svc.cluster.local, IP:10.96.0.1, IP:10.24.138.208
+
+// 使用ca.key和ca.crt签署上述请求
+$ sudo openssl x509 -req \
+                    -in apiserver-master02.csr \
+                    -CA /etc/kubernetes/pki/ca.crt \
+                    -CAkey /etc/kubernetes/pki/ca.key \
+                    -CAcreateserial \
+                    -out apiserver-master02.crt \
+                    -days 365 \
+                    -extfile apiserver-master02.ext
+Signature ok
+subject=/CN=10.24.138.208
+Getting CA Private Key
+
+//查看新生成的证书：
+$ sudo openssl x509 -noout -text -in apiserver-master02.crt
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 16019625340257831745 (0xde51245f10ea0b41)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=kubernetes
+        Validity
+            Not Before: May 12 08:40:40 2017 GMT
+            Not After : May 12 08:40:40 2018 GMT
+        Subject: CN=kube-apiserver,
+        Subject Public Key Info:
+            ... ...
+        X509v3 extensions:
+            X509v3 Subject Alternative Name:
+                DNS:master02, DNS:kubernetes, DNS:kubernetes.default, DNS:kubernetes.default.svc, DNS:kubernetes.default.svc.cluster.local, IP Address:10.96.0.1, IP Address:10.24.138.208
+```
+
+### using new certificate for apiserver
+```bash
+$ sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml
+..
+- --tls-cert-file=/etc/kubernetes/pki/apiserver-master02.crt
+- --tls-private-key-file=/etc/kubernetes/pki/apiserver-master02.key
+..
+```
+
 ## renew work node
 ### backup
 ```bash
@@ -1105,7 +1171,6 @@ kube-system            Active   3y10d
 > - [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
 > - [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
 > - [Bootstrapping Kubernetes Clusters with kubeadm](https://codefarm.me/2019/01/28/bootstrapping-kubernetes-clusters-with-kubeadm/)
-> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
 > - [how to renew the certificate when apiserver cert expired?](https://github.com/kubernetes/kubeadm/issues/581#issuecomment-421477139)
 > - [Can not access my kubernetes cluster even if all my server certificates are valid](https://stackoverflow.com/a/52964957)
 > - [The Cluster API Book](https://cluster-api.sigs.k8s.io/tasks/certs/generate-kubeconfig.html)
@@ -1115,7 +1180,6 @@ kube-system            Active   3y10d
 > - [Kubernetes – KUBECONFIG and Context](https://theithollow.com/2019/02/11/kubernetes-kubeconfig-and-context/)
 > - [The connection to the server x.x.x.:6443 was refused - did you specify the right host or port? Kubernetes](https://stackoverflow.com/a/65409311/2940319)
 > - [Troubleshooting kubectl Error: The connection to the server x.x.x.x:6443 was refused – did you specify the right host or port?](https://www.thegeekdiary.com/troubleshooting-kubectl-error-the-connection-to-the-server-x-x-x-x6443-was-refused-did-you-specify-the-right-host-or-port/)
-> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
 
 ## Required certificates:
 

@@ -9,7 +9,7 @@
     - [keepalive](#keepalive)
   - [extend etcd](#extend-etcd)
     - [configuration](#configuration)
-    - [generate cert for CA and Client](#generate-cert-for-ca-and-client)
+    - [ca and client certs](#ca-and-client-certs)
     - [peer](#peer)
     - [enable etcd service](#enable-etcd-service)
     - [HAProxy](#haproxy)
@@ -18,6 +18,7 @@
     - [init master](#init-master)
     - [sync PKI](#sync-pki)
   - [references](#references)
+    - [Set up a High Availability etcd Cluster with kubeadm](#set-up-a-high-availability-etcd-cluster-with-kubeadm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -67,7 +68,7 @@ $ sudo chmod +x /usr/local/bin/cfssl*
 ### etcd
 ```bash
 $ curl -sSL ${etcdDownloadUrl}/${etcdVer}/etcd-${etcdVer}-linux-amd64.tar.gz |
- |  |  |  sudo tar -xzv --strip-components=1 -C /usr/local/bin/
+            sudo tar -xzv --strip-components=1 -C /usr/local/bin/
 ```
 
 ### keepalive
@@ -137,16 +138,25 @@ $ sudo systemctl start keepalived.service
 
 > [!TIP]
 > setup certificate in **major master**
->
 
-| File       | Description                                                         |
-| :-:        | :-:                                                                 |
-| ca.csr     | The signing request that the Root will sign                         |
-| ca.pem     | The unsigned intermediate so it’s useless, you can discard this one |
-| ca-key.pem | The private key for your CA, do not lose this or share it           |
+
+|     FILE     | DESCRIPTION                                                         |
+|:------------:|---------------------------------------------------------------------|
+|   `ca.csr`   | The signing request that the Root will sign                         |
+|   `ca.pem`   | The unsigned intermediate so it’s useless, you can discard this one |
+| `ca-key.pem` | The private key for your CA, do not lose this or share it           |
 
 
 ### configuration
+
+{% hint style='tip' %}
+> generate the default json file:
+> ```bash
+> $ cfssl print-defaults config > ca-config.json
+> $ cfssl print-defaults csr > ca-csr.json
+> ```
+{% endhint %}
+
 - `ca-config.json`
   ```bash
   master01 $ sudo bash -c 'cat > ${etcdSSLPath}/ca-config.json' << EOF
@@ -214,7 +224,7 @@ $ sudo systemctl start keepalived.service
   EOF
   ```
 
-### generate cert for CA and Client
+### ca and client certs
 ```bash
 $ cd ${etcdSSLPath}
 
@@ -240,6 +250,7 @@ $ sudo /usr/local/bin/cfssl gencert \
   master01 $ ls
   ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem  client.csr  client.json  client-key.pem  client.pem
   ```
+
 - check expired time
   ```bash
   $ openssl x509 -in ca.pem -text -noout | grep -w Not
@@ -600,14 +611,147 @@ $ sudo rm -rf /etc/kubernetes/pki/apiserver*
 
 
 ## references
-- [belloHAKubeCluster.sh](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/belloHAKubeCluster.sh)
-- [kube-up.sh](https://github.com/kubernetes/kubernetes/blob/master/cluster/kube-up.sh)
-- [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
-- [Configuring each kubelet in your cluster using kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
-- [Creating a cluster with kubeadm v1.21](https://v1-21.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-- [使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-- [一步步打造基于Kubeadm的高可用Kubernetes集群-第一部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part1/)
-- [一步步打造基于Kubeadm的高可用Kubernetes集群-第二部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
-- [以Kubeadm方式安装的Kubernetes集群的探索](https://tonybai.com/2017/01/24/explore-kubernetes-cluster-installed-by-kubeadm/)
-- [使用Kubeadm搭建Kubernetes HA（1.10.1）](https://blog.csdn.net/chenleiking/article/details/80136449)
-- [使用Kubeadm + HAProxy + Keepalived部署高可用Kubernetes集群](https://blog.csdn.net/chenleiking/article/details/84841394)
+
+{% hint style='tip' %}
+> - [belloHAKubeCluster.sh](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/belloHAKubeCluster.sh)
+> - [kube-up.sh](https://github.com/kubernetes/kubernetes/blob/master/cluster/kube-up.sh)
+> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [Configuring each kubelet in your cluster using kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
+> - [Creating a cluster with kubeadm v1.21](https://v1-21.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - [使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第一部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part1/)
+> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第二部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
+> - [以Kubeadm方式安装的Kubernetes集群的探索](https://tonybai.com/2017/01/24/explore-kubernetes-cluster-installed-by-kubeadm/)
+> - [使用Kubeadm搭建Kubernetes HA（1.10.1）](https://blog.csdn.net/chenleiking/article/details/80136449)
+> - [使用Kubeadm + HAProxy + Keepalived部署高可用Kubernetes集群](https://blog.csdn.net/chenleiking/article/details/84841394)
+> - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
+> - [Customizing components with the kubeadm API](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)
+> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [Considerations for large clusters](https://kubernetes.io/docs/setup/best-practices/cluster-large/)
+> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+{% endhint %}
+
+
+### [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+```bash
+# Update HOST0, HOST1 and HOST2 with the IPs of your hosts
+export HOST0=10.0.0.6
+export HOST1=10.0.0.7
+export HOST2=10.0.0.8
+
+# Update NAME0, NAME1 and NAME2 with the hostnames of your hosts
+export NAME0="infra0"
+export NAME1="infra1"
+export NAME2="infra2"
+
+# Create temp directories to store files that will end up on other hosts.
+mkdir -p /tmp/${HOST0}/ /tmp/${HOST1}/ /tmp/${HOST2}/
+
+HOSTS=(${HOST0} ${HOST1} ${HOST2})
+NAMES=(${NAME0} ${NAME1} ${NAME2})
+
+for i in "${!HOSTS[@]}"; do
+HOST=${HOSTS[$i]}
+NAME=${NAMES[$i]}
+cat << EOF > /tmp/${HOST}/kubeadmcfg.yaml
+---
+apiVersion: "kubeadm.k8s.io/v1beta3"
+kind: InitConfiguration
+nodeRegistration:
+    name: ${NAME}
+localAPIEndpoint:
+    advertiseAddress: ${HOST}
+---
+apiVersion: "kubeadm.k8s.io/v1beta3"
+kind: ClusterConfiguration
+etcd:
+    local:
+        serverCertSANs:
+        - "${HOST}"
+        peerCertSANs:
+        - "${HOST}"
+        extraArgs:
+            initial-cluster: ${NAMES[0]}=https://${HOSTS[0]}:2380,${NAMES[1]}=https://${HOSTS[1]}:2380,${NAMES[2]}=https://${HOSTS[2]}:2380
+            initial-cluster-state: new
+            name: ${NAME}
+            listen-peer-urls: https://${HOST}:2380
+            listen-client-urls: https://${HOST}:2379
+            advertise-client-urls: https://${HOST}:2379
+            initial-advertise-peer-urls: https://${HOST}:2380
+EOF
+done
+```
+
+- Generate the certificate authority
+
+  > [!TIP]
+  > to generate:
+  > - `/etc/kubernetes/pki/etcd/ca.crt`
+  > - `/etc/kubernetes/pki/etcd/ca.key`
+
+
+  ```bash
+  $ kubeadm init phase certs etcd-ca
+  ```
+
+- Create certificates for each member
+  ```bash
+  kubeadm init phase certs etcd-server --config=/tmp/${HOST2}/kubeadmcfg.yaml
+  kubeadm init phase certs etcd-peer --config=/tmp/${HOST2}/kubeadmcfg.yaml
+  kubeadm init phase certs etcd-healthcheck-client --config=/tmp/${HOST2}/kubeadmcfg.yaml
+  kubeadm init phase certs apiserver-etcd-client --config=/tmp/${HOST2}/kubeadmcfg.yaml
+  cp -R /etc/kubernetes/pki /tmp/${HOST2}/
+  # cleanup non-reusable certificates
+  find /etc/kubernetes/pki -not -name ca.crt -not -name ca.key -type f -delete
+
+  kubeadm init phase certs etcd-server --config=/tmp/${HOST1}/kubeadmcfg.yaml
+  kubeadm init phase certs etcd-peer --config=/tmp/${HOST1}/kubeadmcfg.yaml
+  kubeadm init phase certs etcd-healthcheck-client --config=/tmp/${HOST1}/kubeadmcfg.yaml
+  kubeadm init phase certs apiserver-etcd-client --config=/tmp/${HOST1}/kubeadmcfg.yaml
+  cp -R /etc/kubernetes/pki /tmp/${HOST1}/
+  find /etc/kubernetes/pki -not -name ca.crt -not -name ca.key -type f -delete
+
+  kubeadm init phase certs etcd-server --config=/tmp/${HOST0}/kubeadmcfg.yaml
+  kubeadm init phase certs etcd-peer --config=/tmp/${HOST0}/kubeadmcfg.yaml
+  kubeadm init phase certs etcd-healthcheck-client --config=/tmp/${HOST0}/kubeadmcfg.yaml
+  kubeadm init phase certs apiserver-etcd-client --config=/tmp/${HOST0}/kubeadmcfg.yaml
+  # No need to move the certs because they are for HOST0
+
+  # clean up certs that should not be copied off this host
+  find /tmp/${HOST2} -name ca.key -type f -delete
+  find /tmp/${HOST1} -name ca.key -type f -delete
+  ```
+
+- Copy certificates and kubeadm configs
+  ```bash
+  USER=ubuntu
+  HOST=${HOST1}
+  scp -r /tmp/${HOST}/* ${USER}@${HOST}:
+  ssh ${USER}@${HOST}
+  USER@HOST $ sudo -Es
+  root@HOST $ chown -R root:root pki
+  root@HOST $ mv pki /etc/kubernetes/
+  ```
+
+- Create the static pod manifests
+  ```bash
+  root@HOST0 $ kubeadm init phase etcd local --config=/tmp/${HOST0}/kubeadmcfg.yaml
+  root@HOST1 $ kubeadm init phase etcd local --config=$HOME/kubeadmcfg.yaml
+  root@HOST2 $ kubeadm init phase etcd local --config=$HOME/kubeadmcfg.yaml
+  ```
+- [Optional]: Check the cluster health
+  ```bash
+  docker run --rm -it \
+             --net host \
+             -v /etc/kubernetes:/etc/kubernetes k8s.gcr.io/etcd:${ETCD_TAG} etcdctl \
+             --cert /etc/kubernetes/pki/etcd/peer.crt \
+             --key /etc/kubernetes/pki/etcd/peer.key \
+             --cacert /etc/kubernetes/pki/etcd/ca.crt \
+             --endpoints https://${HOST0}:2379 \
+             endpoint health \
+             --cluster
+  ...
+  https://[HOST0 IP]:2379 is healthy: successfully committed proposal: took = 16.283339ms
+  https://[HOST1 IP]:2379 is healthy: successfully committed proposal: took = 19.44402ms
+  https://[HOST2 IP]:2379 is healthy: successfully committed proposal: took = 35.926451ms
+  ```

@@ -17,6 +17,9 @@
 > [!TIP]
 > - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
 > - [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) certificates located in : `/etc/kubernetes/pki/etcd`
+> - [Proposal for a highly available control plane configuration for ‘kubeadm’ deployments](https://docs.google.com/document/d/1lH9OKkFZMSqXCApmSXemEDuy9qlINdm5MfWWGrK3JYc/edit#heading=h.y7gwwlt138dt)
+> - [Proposal for kubeadm self-hosted HA deployment](https://docs.google.com/document/d/1P3oUJ_kdaRSTlGONujadGBpYegjn4RjBNZLHZ4zU7lI/edit#heading=h.yhn2qqumird1)
+> - [kubeadm upgrades / self-hosting / HA v1.8 implementation working group](https://docs.google.com/document/d/16CEsBSSGm3sMpvB_cFnKnqqi1OxhIcyX3lVwBpIyMHc/edit#heading=h.w7i4ksrweimp)
 
 
 ## tools

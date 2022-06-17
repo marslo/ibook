@@ -91,6 +91,36 @@ println ("printenv".execute().in.text)
   Linux devops-jenkins-685cf57df9-znfs8 4.19.12-1.el7.elrepo.x86_64 #1 SMP Fri Dec 21 11:06:36 EST 2018 x86_64 GNU/Linux
   ```
 
+#### modify log level
+
+{% hint style='tip' %}
+> references:
+> - [How to change the default or package log levels](https://support.cloudbees.com/hc/en-us/articles/115003914391-How-to-change-the-default-or-package-log-levels)
+> - [Configure Loggers for Jenkins](https://support.cloudbees.com/hc/en-us/articles/115002626172-Configure-Loggers-for-Jenkins)
+> - [Disable HttpClient logging](https://stackoverflow.com/a/61128260/2940319)
+> - [Viewing logs](https://www.jenkins.io/doc/book/system-administration/viewing-logs/)
+{% endhint %}
+
+```groovy
+System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "error");
+System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "error");
+System.setProperty("log4j.logger.org.apache.http", "error");
+System.setProperty("log4j.logger.org.apache.http.wire", "error");
+System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "error");
+```
+- check log level
+  ```groovy
+  println System.getProperty("org.apache.commons.logging.Log");
+  println System.getProperty("org.apache.commons.logging.simplelog.showdatetime");
+  println System.getProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header");
+  println System.getProperty("org.apache.commons.logging.simplelog.log.org.apache.http");
+  println System.getProperty("log4j.logger.org.apache.http");
+  println System.getProperty("log4j.logger.org.apache.http.wire");
+  println System.getProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient");
+  ```
+
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 > get more: [jobs & builds](./build.md)
 
