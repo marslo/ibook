@@ -47,16 +47,21 @@
 > [!TIP]
 > - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
 > - [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) certificates located in : `/etc/kubernetes/pki/etcd`
-> <br>
+
+{% hint style='tip' %}
 > references:
+> - [Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+> - [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
 > - [Renew a Kubernetes certificate with a 10-year expiration date](https://www.sobyte.net/post/2021-10/update-k8s-10y-expire-certs/)
 > - stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
 > - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
 > <br>
-> regenerate the kubeadm.yaml
-> ```bash
-> $ sudo kubeadm config view
-> ```
+> - regenerate the kubeadm.yaml
+>   ```bash
+>   $ sudo kubeadm config view
+>   ```
+{% endhint %}
 
 # renew both certificates and kubeconfig
 ## check info
@@ -1095,9 +1100,7 @@ kube-system            Active   3y10d
 > - [Certification authority root certificate expiry and renewal](https://serverfault.com/a/308100)
 > - [Certificates](https://kubernetes.io/docs/concepts/cluster-administration/certificates/)
 > - [CUSTOM CERTIFICATE AUTHORITY](https://choria.io/docs/configuration/custom_ca/)
-> - [CONFIGURING ETCD RBAC](https://docs.projectcalico.org/reference/etcd-rbac/)
 > - [Certificate Authority with CFSSL](https://jite.eu/2019/2/6/ca-with-cfssl/)
-> - [Deploy a secure etcd cluster](https://pcocc.readthedocs.io/en/latest/deps/etcd-production.html)
 > - [K8S Cluster tls Certificate Management](https://programmer.group/k8s-cluster-tls-certificate-management.html)
 > - [Access Kubernetes API with Client Certificates](https://codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
 > - [Public-key cryptography and X.509](https://codefarm.me/2019/01/31/public-key-cryptography-and-x509/)
@@ -1113,7 +1116,6 @@ kube-system            Active   3y10d
 > - [The connection to the server x.x.x.:6443 was refused - did you specify the right host or port? Kubernetes](https://stackoverflow.com/a/65409311/2940319)
 > - [Troubleshooting kubectl Error: The connection to the server x.x.x.x:6443 was refused – did you specify the right host or port?](https://www.thegeekdiary.com/troubleshooting-kubectl-error-the-connection-to-the-server-x-x-x-x6443-was-refused-did-you-specify-the-right-host-or-port/)
 > - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
-> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 
 ## Required certificates:
 

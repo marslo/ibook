@@ -48,6 +48,7 @@
 > - [generating SSL Certificates](https://github.com/nats-io/nats-operator/issues/119#issuecomment-462538507)
 > - [sethvargo/create-certs.sh](https://gist.github.com/sethvargo/81227d2316207b7bd110df328d83fad8)
 > - [How can I add a private key to my keychain?](https://apple.stackexchange.com/a/9011/254265)
+> - [Kubernetes Authentication and Authorization with X509 client certificates](https://medium.com/@sureshpalemoni/kubernetes-authentication-and-authorization-with-x509-client-certificates-edbc3517c10)
 {% endhint %}
 
 # SSL Cert
