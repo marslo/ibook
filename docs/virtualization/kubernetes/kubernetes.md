@@ -19,6 +19,7 @@
 > - [Boosting your kubectl productivity](https://learnk8s.io/blog/kubectl-productivity/)
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 > - [8 Kubernetes Tips and Tricks](https://www.ibm.com/cloud/blog/8-kubernetes-tips-and-tricks)
+> - [Linux namespace简介](https://blog.csdn.net/chenleiking/article/details/87915185)
 {% endhint %}
 
 ![kubernetes orchestration control panel](../../screenshot/k8s/kubernetes-control-plane.png)

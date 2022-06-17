@@ -228,8 +228,23 @@ $ sudo kubeadm config print init-defaults --component-configs KubeletConfigurati
 $ sudo kubeadm config print init-defaults --component-configs KubeProxyConfiguration
 
 # v1.12.3
+$ sudo kubeadm config print-default
 $ sudo kubeadm config print-defaults
+$ sudo kubeadm config print-defaults --api-objects [apis]
 ```
+
+{% hint style='tip' %}
+```bash
+[apis]
+  Available values: [ InitConfiguration
+                      ClusterConfiguration
+                      JoinConfiguration
+                      KubeProxyConfiguration
+                      KubeletConfiguration
+                      MasterConfiguration
+  ]
+```
+{% endhint %}
 
 ### show defualt kubeadm config
 ```bash
