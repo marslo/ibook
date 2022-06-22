@@ -130,6 +130,16 @@ $ pip install --proxy http://proxy.example.com:80 git-review
 ### proxy for ssh
 #### nc
 ```bash
+$ ssh -vT \
+      -o "ProxyCommand=nc -X connect -x proxy.example.com:80 %h %p" \
+      -p 22 \
+      ssh://remote.git.com
+# or
+$ ssh -vT \
+      -o "ProxyCommand=netcat -X connect -x proxy.example.com:80 %h %p" \
+      -p 22 \
+      ssh://remote.git.com
+
 $ cat ~/.ssh/config
 Host  github.com
       User                my.account@mail.com
@@ -143,9 +153,15 @@ Host  github.com
   ProxyCommand        nc -X 5 -x proxy.example.com:80 %h %p
   ```
 
-
 #### corkscrew
 ```bash
+$ brew install corkscrew
+
+$ ssh -vT \
+      -o "ProxyCommand=corkscrew proxy.example.com 80 %h %p" \
+      -p 22 \
+      ssh://remote.git.com
+
 $ cat ~/.ssh/config
 Host  github.com
       User                my.account@mail.com
@@ -158,6 +174,11 @@ Host  github.com
 #### [ncat](https://nmap.org/)
 ```bash
 $ brew install nmap
+
+$ ssh -vT \
+      -o "ProxyCommand=ncat --proxy proxy.example.com:80 --proxy-type http %h %p" \
+      -p 22 \
+      ssh://remote.git.com
 
 $ cat ~/.ssh/config
 Host  github.com
@@ -175,6 +196,11 @@ Host  github.com
 #### [connect](https://github.com/gotoh/ssh-connect)
 ```bash
 $ brew install connect
+
+$ ssh -vT \
+      -o "ProxyCommand=connect -H proxy.example.com:80 %h %p" \
+      -p 22 \
+      ssh://remote.git.com
 
 $ cat ~/.ssh/config
 Host  github.com
@@ -206,7 +232,7 @@ $ git config --global http.proxy 'http://127.0.0.1:80'
     proxy = http://proxy.example.com:80
   [http "https://github.com"]
     proxy = http://proxy.example.com:80
-   ```
+  ```
 
 - [for socks5](https://github.com/521xueweihan/git-tips#git-%E9%85%8D%E7%BD%AE-http-%E5%92%8C-socks-%E4%BB%A3%E7%90%86)
   ```bash

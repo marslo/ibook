@@ -7,6 +7,7 @@
   - [get XML](#get-xml)
   - [get `http_code` or `response_code`](#get-http_code-or-response_code)
   - [get `size_download`](#get-size_download)
+  - [get time](#get-time)
 - [post](#post)
   - [post JSON data using Curl](#post-json-data-using-curl)
   - [post a file using Curl](#post-a-file-using-curl)
@@ -37,7 +38,9 @@
   - [convert to php code](#convert-to-php-code)
   - [convert to http request](#convert-to-http-request)
 - [12 Essential Curl Commands for Linux, Windows and macOS](#12-essential-curl-commands-for-linux-windows-and-macos)
-- [Top 20 Curl Flags](#top-20-curl-flags)
+- [references](#references)
+  - [Top 20 Curl Flags](#top-20-curl-flags)
+  - [write-out](#write-out)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -78,6 +81,32 @@ $ curl -s -o /dev/null -w "%{http_code}" https://github.com
 ### [get `size_download`](https://superuser.com/a/1257030/112396)
 ```bash
 $ curl -R -s -S -w "\nhttp: %{http_code}. size: %{size_download}\n" -o /dev/null https://github.com
+```
+
+### [get time](https://www.shellhacks.com/check-website-response-time-linux-command-line/)
+```bash
+$ curl -s \
+       -w 'results: \n
+           Lookup time:\t%{time_namelookup}
+           Connect time:\t%{time_connect}
+           PreXfer time:\t%{time_pretransfer}
+           StartXfer time:\t%{time_starttransfer}
+           AppCon time:\t%{time_appconnect}
+           Redirect time:\t%{time_redirect}\n
+           Total time:\t%{time_total}\n' \
+       -o /deve/null \
+       https://github.com
+
+results: 
+
+         Lookup time: 0.001288
+         Connect time:  0.001617
+         PreXfer time:  0.080264
+         StartXfer time:  0.119895
+         AppCon time: 0.080165
+         Redirect time: 0.000000
+
+         Total time:  0.120600
 ```
 
 ## post
@@ -300,7 +329,8 @@ $ curl https://reqbin.com/echo/get/json \
   $ curl -b "name1=value1; name2=value2" https://reqbin.com
   ```
 
-## [Top 20 Curl Flags](https://reqbin.com/req/c-skhwmiil/curl-flags-example)
+## references
+### [Top 20 Curl Flags](https://reqbin.com/req/c-skhwmiil/curl-flags-example)
 
 |         Flags        | Description                                                         | Syntax                                                 |
 |:--------------------:|---------------------------------------------------------------------|--------------------------------------------------------|
@@ -324,3 +354,15 @@ $ curl https://reqbin.com/echo/get/json \
 |         `-D`         | Save the HTTP headers that the site sends back                      | `curl -D [URL]`                                        |
 | `-A or --user-agent` | Set User-Agent string                                               | `curl -A "value" [URL]`                                |
 |         `-C`         | Resume an interrupted or intentionally stopped download             | `curl -C [OFFSET] -O [URL]`                            |
+
+
+### write-out
+
+| Option                                | Description                                                                                                                                                                                                                                             |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lookup time (`time_namelookup`)       | The time, in seconds, it took from the start until the name resolving was completed                                                                                                                                                                     |
+| Connect time (`time_connect`)         | The time, in seconds, it took from the start until the TCP connect to the remote host was completed                                                                                                                                                     |
+| PreXfer time (`time_pretransfer`)     | The time, in seconds, it took from the start until the file transfer was just about to begin. This includes all ‘pre-transfer’ commands and negotiations that are specific to the particular protocol(s) involved                                       |
+| StartXfer time (`time_starttransfer`) | The time, in seconds, it took from the start until the first byte was just about to be transferred. This includes ‘time_pretransfer’ and also the time the server needed to calculate the result                                                        |
+| AppCon time (`time_appconnect`)       | The time, in seconds, it took from the start until the SSL/SSH/etc connect/handshake to the remote host was completed (Added in 7.19.0)                                                                                                                 |
+| Redirect time (`time_redirect`)       | The time, in seconds, it took for all redirection steps include name lookup, connect, pretransfer and transfer before the final transaction was started. ‘time_redirect’ shows the complete execution time for multiple redirections. (Added in 7.12.3) |
