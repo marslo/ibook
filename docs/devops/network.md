@@ -444,7 +444,7 @@ $ ifstat -n -i en7
   ```
 
 ### [nmcli](https://askubuntu.com/a/461831/92979)
-![nmcli-1](../screenshot/nmcli-1.png)
+![nmcli-1](../screenshot/linux/nmcli-1.png)
 
 - show available wifi
   ```bash
@@ -468,7 +468,7 @@ $ ifstat -n -i en7
           HCB               Infra  1     195 Mbit/s  19      ▂___  WPA2 802.1X
   ```
 
-![nmcli-2](../screenshot/nmcli-2.png)
+![nmcli-2](../screenshot/linux/nmcli-2.png)
 
 - show saved wifi list
   ```bash
@@ -480,5 +480,5 @@ $ ifstat -n -i en7
   ```
 
 ### nmtui
-![nmtui-1](../screenshot/nmtui-1.png)
-![nmtui-2](../screenshot/nmtui-2.png)
+![nmtui-1](../screenshot/linux/nmtui-1.png)
+![nmtui-2](../screenshot/linux/nmtui-2.png)

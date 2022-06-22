@@ -115,17 +115,17 @@ $ openssl pkcs12 -export \
     * `Add` -> `Jenkins`
     * **Kind**: `Certificate`
 
-![plugin-1](../../screenshot/k8s-plugin-1.png)
+![plugin-1](../../screenshot/jenkins/k8s-plugin-1.png)
 
-![plugin-2](../../screenshot/k8s-plugin-2.png)
+![plugin-2](../../screenshot/jenkins/k8s-plugin-2.png)
 
-![plugin-3](../../screenshot/k8s-plugin-3.png)
+![plugin-3](../../screenshot/jenkins/k8s-plugin-3.png)
 
-![plugin-4](../../screenshot/k8s-plugin-4.png)
+![plugin-4](../../screenshot/jenkins/k8s-plugin-4.png)
 
 * Setup in Jenkins
 
-![plugin-5](../../screenshot/k8s-plugin-5.png)
+![plugin-5](../../screenshot/jenkins/k8s-plugin-5.png)
 
 
 ### using kubeconfig for remote cluster credential

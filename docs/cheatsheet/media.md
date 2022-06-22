@@ -83,7 +83,7 @@ $ convert -density 400 input.pdf pic.png
 ```bash
 $ ffmpeg -i <origin-video> -i <origin-audio> -c copy -map 0:0 -map 1:0 -shortest <new-video>
 ```
-![combine](../screenshot/ffmpeg-combine.jpg)
+![combine](../screenshot/osx/ffmpeg-combine.jpg)
 
 ## Image
 ### [convert webp to png](http://tutorialshares.com/converting-webp-images-with-the-command-line/)
@@ -111,7 +111,7 @@ $ qlmanage -t -s 1000 -o . k-1.svg
 
 ### convert HEIC/HEIF to PNG
 
-![magick](../screenshot/heic-1.gif)
+![magick](../screenshot/osx/heic-1.gif)
 
 ```bash
 $ brew install imagemagick --with-libheif
