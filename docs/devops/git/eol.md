@@ -43,7 +43,7 @@ crlf->lf    lf->crlf     crlf->lf       \             /          \
 ```
 
 #### set in GUI
-![git line ending setup](../../screenshot/git-eol.png)
+![git line ending setup](../../screenshot/git/git-eol.png)
 - checkout Windows-style, commit Unix-style line endings:
 ```bash
 $ git config --global core.autocrlf true

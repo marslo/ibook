@@ -176,4 +176,4 @@ $ tput cols
 $ export GREP_COLORS="sl=0;33;49:ms=1;34;49"
 $ find /etc/ -type f | head | grep --color=always '^\|[^/]*$'
 ```
-![customized color output](../../screenshot/colorful-tricky.png)
+![customized color output](../../screenshot/linux/colorful-tricky.png)

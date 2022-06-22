@@ -5,7 +5,8 @@
 - [grafana](#grafana)
   - [environment](#environment)
   - [setup](#setup)
-  - [kubernetes cluster monitoring](#kubernetes-cluster-monitoring)
+  - [dashboard](#dashboard)
+  - [grafana settings](#grafana-settings)
   - [api](#api)
 - [code pool](#code-pool)
 
@@ -30,6 +31,9 @@
 > - [Restart Grafana](https://grafana.com/docs/grafana/latest/installation/restart-grafana/)
 > - [Grafana Loki Concise Tutorial](https://www.sobyte.net/post/2021-10/grafana-loki-usage/)
 > - [Grafana CLI](https://grafana.com/docs/grafana/latest/administration/cli)
+> - [* Prometheus data source](https://grafana.com/docs/grafana/latest/datasources/prometheus/)
+> - [* GRAFANA SUPPORT FOR PROMETHEUS](https://prometheus.io/docs/visualization/grafana/)
+> - [* Create Grafana Dashboards with Prometheus Metrics](https://www.programmingwithwolfgang.com/create-grafana-dashboards-with-prometheus-metrics)
 {% endhint %}
 
 
@@ -299,7 +303,9 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
   EOF
   ```
 
-### kubernetes cluster monitoring
+### dashboard
+
+#### kubernetes cluster monitoring
 - [devopsprodigy-kubegraf-app](https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app/)
   - install via `grafana-cli`
     ```bash
@@ -350,10 +356,83 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 ![grafana-plugin-1.gif](../../screenshot/k8s/grafana-plugin-1.gif)
 
-#### dashboard (315)
 
-![grafana-315.gif](../../screenshot/k8s/grafana-315.gif)
 
+{% hint style='tip' %}
+> references:
+> - [Dashboards](https://grafana.com/grafana/dashboards/)
+> - [Monitor Kubernetes easily with Grafana](https://grafana.com/solutions/kubernetes/monitor/?pg=dashboards&plcmt=featured-dashboard-1)
+> - [Export and import](https://grafana.com/docs/grafana/v7.5/dashboards/export-import/#export-and-import)
+> - [Create Grafana Dashboards with Prometheus Metrics](https://www.programmingwithwolfgang.com/create-grafana-dashboards-with-prometheus-metrics)
+{% endhint %}
+
+#### cluster
+- [*`315` - Kubernetes cluster monitoring (via Prometheus)](https://grafana.com/grafana/dashboards/315-kubernetes-cluster-monitoring-via-prometheus/)
+
+  ![grafana-315.gif](../../screenshot/k8s/grafana-315.gif)
+
+- [*`8588` - Kubernetes Deployment Statefulset Daemonset metrics](https://grafana.com/grafana/dashboards/8588)
+- [`6417` - Kubernetes Cluster (Prometheus)](https://grafana.com/grafana/dashboards/6417)
+- [`3662` - Prometheus 2.0 Overview](https://grafana.com/grafana/dashboards/3662)
+
+
+#### node
+- [*`1860` - Node Exporter Full](https://grafana.com/grafana/dashboards/1860)
+- [*`6287` - Host Overview](https://grafana.com/grafana/dashboards/6287)
+- [*`10242` - Node Exporter Full with Node Name](https://grafana.com/grafana/dashboards/10242)
+
+#### namespace
+- [*`9809` - Kubernetes Namespace Resources](https://grafana.com/grafana/dashboards/9809)
+
+#### pod
+- [*`747` - Kubernetes Pod Metrics ](https://grafana.com/grafana/dashboards/747)
+- [*`6336` - Kubernetes Pods](https://grafana.com/grafana/dashboards/6336)
+
+#### jenkins
+- [`9524` - a Jenkins performance and health overview for jenkinsci/prometheus-plugin](https://grafana.com/grafana/dashboards/9524)
+- [`9964` - Jenkins: Performance and Health Overview](https://grafana.com/grafana/dashboards/9964)
+
+
+
+
+
+
+
+
+
+### grafana settings
+
+- cluster
+  ```
+  label_values(kube_pod_info, cluster)
+  ```
+  - or
+    ```
+    label_values(node_cpu_seconds_total, cluster)
+    ```
+- instance
+  ```
+  label_values(apiserver_request_total{job="apiserver"}, instance)
+  ```
+
+- node
+  ```
+  label_values(kube_node_info{cluster="$cluster"}, node)
+  ```
+  - or
+    ```
+    label_values(kubernetes_io_hostname)
+    ```
+
+- namespace
+  ```
+  label_values(kube_pod_info{cluster="$cluster"}, namespace)
+  ```
+
+- pod
+  ```
+  label_values(kube_pod_info{cluster="$cluster", namespace="$namespace"}, pod)
+  ```
 
 ### api
 
