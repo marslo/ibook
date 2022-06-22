@@ -15,6 +15,16 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> references:
+> - [How to Use Netcat Commands: Examples and Cheat Sheets](https://www.varonis.com/blog/netcat-commands)
+> - [SSH Tunneling and Proxying](https://www.baeldung.com/linux/ssh-tunneling-and-proxying)
+> - [bryanpkc/corkscrew](https://github.com/bryanpkc/corkscrew)
+> - [nc / netcat](https://ss64.com/osx/nc.html)
+> - [gotoh/ssh-connect](https://github.com/gotoh/ssh-connect)
+> - [larryhou/connect-proxy](https://github.com/larryhou/connect-proxy)
+{% endhint %}
+
 ### proxy for bash
 ```bash
 # global settings
@@ -118,6 +128,7 @@ $ pip install --proxy http://proxy.example.com:80 git-review
 ```
 
 ### proxy for ssh
+#### nc
 ```bash
 $ cat ~/.ssh/config
 Host  github.com
@@ -127,27 +138,55 @@ Host  github.com
       Port                443
       ProxyCommand        nc -X connect -x proxy.example.com:80 %h %p
 ```
-
 - for socks5
   ```bash
   ProxyCommand        nc -X 5 -x proxy.example.com:80 %h %p
   ```
 
-- usage for git
+
+#### corkscrew
+```bash
+$ cat ~/.ssh/config
+Host  github.com
+      User                my.account@mail.com
+      ServerAliveInterval 60
+      Hostname            ssh.github.com
+      Port                443
+      ProxyCommand        corkscrew proxy.example.com 80 %h %p
+```
+
+#### [ncat](https://nmap.org/)
+```bash
+$ brew install nmap
+
+$ cat ~/.ssh/config
+Host  github.com
+      User                my.account@mail.com
+      ServerAliveInterval 60
+      Hostname            ssh.github.com
+      Port                443
+      ProxyCommand        ncat --proxy proxy.example.com:80 --proxy-type http %h %p
+```
+- for socks5
   ```bash
-  $ cat ~/.gitconfig
-  ...
-  [url "git@ssh.github.com"]
-    insteadOf    = git@github.com
-  [url "git@ssh.github.com:"]
-    insteadOf    = https://github.com/
-  [http]
-    sslVerify    = false
-    postBuffer   = 524288000
-    # sslVersion = tlsv1.1
-    # sslVersion = tlsv1.2
-    # sslVersion = tlsv1.3
-  ...
+  ProxyCommand        ncat --proxy proxy.example.com:80 --proxy-type socks5 %h %p
+  ```
+
+#### [connect](https://github.com/gotoh/ssh-connect)
+```bash
+$ brew install connect
+
+$ cat ~/.ssh/config
+Host  github.com
+      User                my.account@mail.com
+      ServerAliveInterval 60
+      Hostname            ssh.github.com
+      Port                443
+      ProxyCommand        connect -H proxy.example.com:80 %h %p
+```
+- for socks5
+  ```bash
+  ProxyCommand        connect -S proxy.example.com:80 %h %p
   ```
 
 ### proxy for git
@@ -169,13 +208,29 @@ $ git config --global http.proxy 'http://127.0.0.1:80'
     proxy = http://proxy.example.com:80
    ```
 
- - [for socks5](https://github.com/521xueweihan/git-tips#git-%E9%85%8D%E7%BD%AE-http-%E5%92%8C-socks-%E4%BB%A3%E7%90%86)
-
+- [for socks5](https://github.com/521xueweihan/git-tips#git-%E9%85%8D%E7%BD%AE-http-%E5%92%8C-socks-%E4%BB%A3%E7%90%86)
   ```bash
   $ git config --global socks.proxy "proxy.example.com:80"
 
   # or
   $ git config --global socks.proxy "socks5://proxy.example.com:80"
+  ```
+
+- additional usage
+  ```bash
+  $ cat ~/.gitconfig
+  ...
+  [url "git@ssh.github.com"]
+    insteadOf    = git@github.com
+  [url "git@ssh.github.com:"]
+    insteadOf    = https://github.com/
+  [http]
+    sslVerify    = false
+    postBuffer   = 524288000
+    # sslVersion = tlsv1.1
+    # sslVersion = tlsv1.2
+    # sslVersion = tlsv1.3
+  ...
   ```
 
 ### proxy for npm
@@ -203,6 +258,7 @@ $ npm config set strict-ssl false
 
 ### [proxy for ssl](https://curl.se/docs/sslcerts.html)
 
+> [!TIP]
 > HTTPS proxy
-> Since version 7.52.0, curl can do HTTPS to the proxy separately from the connection to the server. This TLS connection is handled separately from the server connection so instead of --insecure and --cacert to control the certificate verification, you use --proxy-insecure and --proxy-cacert. With these options, you make sure that the TLS connection and the trust of the proxy can be kept totally separate from the TLS connection to the server.
+> Since version 7.52.0, curl can do HTTPS to the proxy separately from the connection to the server. This TLS connection is handled separately from the server connection so instead of `--insecure` and `--cacert` to control the certificate verification, you use `--proxy-insecure` and `--proxy-cacert`. With these options, you make sure that the TLS connection and the trust of the proxy can be kept totally separate from the TLS connection to the server.
 
