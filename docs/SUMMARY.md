@@ -24,6 +24,7 @@
     * [keystore](cheatsheet/ssl/keystore.md)
     * [verification](cheatsheet/ssl/verification.md)
   * [proxy](cheatsheet/proxy.md)
+  * [curl](cheatsheet/curl.md)
 * [vim](vim/vim.md)
   * [tricky](vim/tricky.md)
   * [windows](vim/windows.md)

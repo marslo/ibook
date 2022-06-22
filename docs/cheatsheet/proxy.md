@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [proxy for bash](#proxy-for-bash)
+- [proxy for curl](#proxy-for-curl)
 - [proxy for yum](#proxy-for-yum)
 - [proxy for apt](#proxy-for-apt)
 - [proxy for docker](#proxy-for-docker)
@@ -26,6 +27,16 @@ $ cat ~/.bashrc
 export http_proxy=http://proxy.example.com:80/
 export https_proxy=http://proxy.example.com:80/
 ```
+
+### proxy for curl
+```bash
+$ curl -x http://proxy.example.com:80 <https://target.server.com>
+```
+
+- to get head only
+  ```bash
+  $ curl -kvI -x http://proxy.example.com:80 <https://target.server.com>
+  ```
 
 ### proxy for yum
 ```bash
