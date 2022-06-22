@@ -2,48 +2,48 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-  - [Pythonic](#pythonic)
-    - [zip/unzip](#zipunzip)
-    - [in](#in)
-    - [dict & counter](#dict--counter)
-    - [enumerate](#enumerate)
-    - [import local module](#import-local-module)
-    - [args & kwargs](#args--kwargs)
-    - [itertools](#itertools)
-    - [one-line python code](#one-line-python-code)
-    - [slice](#slice)
-    - [Chain Compare](#chain-compare)
-    - [Boolean](#boolean)
-    - [Reverse](#reverse)
-    - [Join in list](#join-in-list)
-    - [Sum & Max & Min & Time](#sum--max--min--time)
-- [sum = 15 maxNum = 5 minNum = 1 prod = 120](#sum--15-maxnum--5-minnum--1-prod--120)
-    - [Default Dict](#default-dict)
-    - [if...else...](#ifelse)
-    - [Ternary Operator](#ternary-operator)
-    - [dict & zip](#dict--zip)
-  - [hidden features](#hidden-features)
-    - [numbers](#numbers)
-    - [string](#string)
-    - [args](#args)
-    - [Conditional Assignment](#conditional-assignment)
-    - [list & dics](#list--dics)
-    - [generator & iteration](#generator--iteration)
-    - [statement](#statement)
-    - [funcs](#funcs)
-    - [class & module](#class--module)
-    - [Others](#others)
-  - [PEP8 -- Style Guide for Python Code](#pep8----style-guide-for-python-code)
-    - [Indentation](#indentation)
-    - [Maximum Line Length](#maximum-line-length)
-    - [Should a Line break before or after a binary operator?](#should-a-line-break-before-or-after-a-binary-operator)
-    - [imports](#imports)
-    - [module Level dunder names](#module-level-dunder-names)
-    - [whitespace in expressions and statements](#whitespace-in-expressions-and-statements)
-    - [other recommendations](#other-recommendations)
-    - [documentation strings](#documentation-strings)
-    - [Programming Recommendations](#programming-recommendations)
-  - [PEP8 Error/Warning Code](#pep8-errorwarning-code)
+- [Pythonic](#pythonic)
+  - [zip/unzip](#zipunzip)
+  - [in](#in)
+  - [dict & counter](#dict--counter)
+  - [enumerate](#enumerate)
+  - [import local module](#import-local-module)
+  - [args & kwargs](#args--kwargs)
+  - [itertools](#itertools)
+  - [one-line python code](#one-line-python-code)
+  - [slice](#slice)
+  - [chain compare](#chain-compare)
+  - [boolean](#boolean)
+  - [reverse](#reverse)
+  - [join in list](#join-in-list)
+  - [sum & max & min & time](#sum--max--min--time)
+  - [list comprehensions](#list-comprehensions)
+  - [default dict](#default-dict)
+  - [if...else...](#ifelse)
+  - [ternary operator](#ternary-operator)
+  - [dict & zip](#dict--zip)
+- [hidden features](#hidden-features)
+  - [numbers](#numbers)
+  - [string](#string)
+  - [args](#args)
+  - [conditional assignment](#conditional-assignment)
+  - [list & dics](#list--dics)
+  - [generator & iteration](#generator--iteration)
+  - [statement](#statement)
+  - [funcs](#funcs)
+  - [class & module](#class--module)
+  - [Others](#others)
+- [PEP8 -- Style Guide for Python Code](#pep8----style-guide-for-python-code)
+  - [Indentation](#indentation)
+  - [Maximum Line Length](#maximum-line-length)
+  - [Should a Line break before or after a binary operator?](#should-a-line-break-before-or-after-a-binary-operator)
+  - [imports](#imports)
+  - [module Level dunder names](#module-level-dunder-names)
+  - [whitespace in expressions and statements](#whitespace-in-expressions-and-statements)
+  - [other recommendations](#other-recommendations)
+  - [documentation strings](#documentation-strings)
+  - [Programming Recommendations](#programming-recommendations)
+- [PEP8 Error/Warning Code](#pep8-errorwarning-code)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -182,9 +182,8 @@ is_palindrome = word.find(word[-1::-1])
 ```
 
 
-### Chain Compare
+### chain compare
 - P:
-
   ```python
   a = 3
   b = 1
@@ -193,7 +192,6 @@ is_palindrome = word.find(word[-1::-1])
   ```
 
 - NP:
-
   ```python
   a = 3
   b = 1
@@ -201,7 +199,7 @@ is_palindrome = word.find(word[-1::-1])
   ```
 
 
-### Boolean
+### boolean
 - P:
   ```python
   name = 'Tim'
@@ -213,21 +211,17 @@ is_palindrome = word.find(word[-1::-1])
   ```
 
 - NP:
-
   ```python
   if name != '' and len(langs) > 0 and info != {}:
     print('All True!') #All True!
   ```
 
-
-### Reverse
-
+### reverse
 - P:
   ```python
   def reverse_str( s ):
     return s[::-1]
   ```
-
 
 - NP:
   ```python
@@ -238,8 +232,7 @@ is_palindrome = word.find(word[-1::-1])
     return t
   ```
 
-
-### Join in list
+### join in list
 - P:
   ```python
   strList = ["Python", "is", "good"]
@@ -255,11 +248,8 @@ is_palindrome = word.find(word[-1::-1])
   #最后还有个多余空格
   ```
 
-
-
-### Sum & Max & Min & Time
+### sum & max & min & time
 - P:
-
   ```python
   numList = [1,2,3,4,5]
   sum = sum(numList)    #sum = 15
@@ -270,7 +260,6 @@ is_palindrome = word.find(word[-1::-1])
   ```
 
 - NP:
-
   ```python
   sum = 0
   maxNum = -float('inf')
@@ -283,11 +272,10 @@ is_palindrome = word.find(word[-1::-1])
       minNum = num
     sum += num
     prod *= num
-# sum = 15 maxNum = 5 minNum = 1 prod = 120
+  # sum = 15 maxNum = 5 minNum = 1 prod = 120
   ```
 
-
-### List Comprehensions
+### list comprehensions
 - P:
   ```python
   l = [x*x for x in range(10) if x % 3 == 0]
@@ -303,8 +291,7 @@ is_palindrome = word.find(word[-1::-1])
   # l = [0, 9, 36, 81]
   ```
 
-
-### Default Dict
+### default dict
 - P:
   ```python
   dic = {'name':'Tim', 'age':23}
@@ -347,8 +334,7 @@ is_palindrome = word.find(word[-1::-1])
   # can not find 5!
   ```
 
-
-### Ternary Operator
+### ternary operator
 - P:
   ```python
   a = 3
@@ -575,8 +561,8 @@ draw_point(*point_foo)
 draw_point(**point_bar)
 ```
 
-### Conditional Assignment
-#### Ternary operator
+### conditional assignment
+#### ternary operator
 ```python
 >>> 'ham' if True else 'spam'
 'ham'
@@ -679,8 +665,11 @@ x = 3 if (y == 1) else 2
 ```
 
 #### set comprehensions
+
+{% hint style='tip' %}
 > [wiki](https://en.wikipedia.org/wiki/List_comprehension#Set_comprehension)
 > [manual](https://docs.python.org/dev/reference/expressions.html?highlight=comprehensions#set-displays)
+{% endhint %}
 
 ```python
 >>> {i**2 for i in range(5)}
@@ -767,7 +756,7 @@ zip(*a)
   >>> [(1, "spam"), (2, "ham"), (3, "eggs")]
   ```
 
-#### Generate List
+#### generate list
 ```python
 >>> from functools import partial
 >>> bound_func = partial(range, 0, 10)
