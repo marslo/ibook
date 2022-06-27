@@ -7,6 +7,7 @@
   - [namespace](#namespace)
   - [docker daemon](#docker-daemon)
 - [docker completion](#docker-completion)
+  - [Linux](#linux)
   - [OSX](#osx)
 - [docker build](#docker-build)
 - [docker run](#docker-run)
@@ -53,6 +54,45 @@
 > - [How to Configure Docker daemon with a configuration file?](https://www.devopsschool.com/blog/how-to-configure-docker-daemon-with-a-configuration-file/)
 
 ## docker completion
+
+{% hint style='tip' %}
+> references:
+> - [command-line completion](https://docs.docker.com/compose/completion/)
+{% endhint %}
+
+### [Linux](https://stackoverflow.com/a/34350381/2940319)
+```bash
+$ curl -fsSL https://raw.githubusercontent.com/docker/cli/master/contrib/completion/bash/docker \
+       -o /etc/bash_completion.d/docker
+```
+
+- load completion
+  ```bash
+  $ grep 'bash_completion' /etc/bashrc
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    source /usr/share/bash-completion/bash_completion
+  fi
+
+  $ cat /usr/share/bash-completion/bash_completion
+  ...
+  2070 # source compat completion directory definitions
+  2071 compat_dir=${BASH_COMPLETION_COMPAT_DIR:-/etc/bash_completion.d}
+  2072 if [[ -d $compat_dir && -r $compat_dir && -x $compat_dir ]]; then
+  2073     for i in "$compat_dir"/*; do
+  2074         [[ ${i##*/} != @($_backup_glob|Makefile*|$_blacklist_glob) \
+  2075             && -f $i && -r $i ]] && . "$i"
+  2076     done
+  2077 fi
+  2078 unset compat_dir i _blacklist_glob
+  2079
+  2080 # source user completion file
+  2081 user_completion=${BASH_COMPLETION_USER_FILE:-~/.bash_completion}
+  2082 [[ ${BASH_SOURCE[0]} != $user_completion && -r $user_completion ]] \
+  2083     && . $user_completion
+  2084 unset user_completion
+  ...
+  ```
+
 ### OSX
 ```bash
 bashComp="$(brew --prefix)/etc/bash_completion.d"
@@ -77,8 +117,8 @@ if command -v brew > /dev/null; then
   [ -f "${bashComp2}" ] && source "${bashComp2}";
 fi
 EOF
-
 ```
+
 - result
   ```bash
   $ complete -p d
