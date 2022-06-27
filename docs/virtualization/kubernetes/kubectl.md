@@ -79,6 +79,21 @@ etcd-0               Healthy   {"health":"true"}
   $ kubectl get pods --sort-by="{.status.containerStatuses[:1].restartCount}"
   ```
 
+- sort by age
+  ```bash
+  $ kubectl get replicasets -o wide --sort-by=.metadata.creationTimestamp
+  ```
+  - [or](https://discuss.kubernetes.io/t/get-pods-descending-sorted-from-age/5545/2)
+    ```bash
+    $ kubectl get pods --sort-by=.status.startTime
+    ```
+  - [or](https://stackoverflow.com/a/66015183/2940319)
+    ```bash
+    $ kubectl get pods --field-selector=status.phase=Pending \
+                       --sort-by=.metadata.creationTimestamp |
+              awk 'match($5,/^[1-5]d/) {print $0}'
+    ```
+
 ### [get all images]()
 ```bash
 $ kubectl get pods --all-namespaces \
