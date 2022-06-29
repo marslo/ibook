@@ -13,7 +13,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
 > [!TIP]
 > - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
 > - [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) certificates located in : `/etc/kubernetes/pki/etcd`
@@ -37,6 +36,12 @@ $ curl -fsSL https://github.com/etcd-io/etcd/releases/download/v3.3.15/etcd-v3.3
 ```
 
 ### keepalived
+
+{% hint style='tip' %}
+> references:
+> - [Step 26 - KeepAliveD](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-5/)
+{% endhint %}
+
 ```bash
 $ mkdir -p ~/temp
 $ sudo mkdir -p /etc/keepalived/

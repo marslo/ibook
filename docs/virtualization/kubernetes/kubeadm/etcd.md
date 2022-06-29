@@ -8,63 +8,74 @@
   - [configuration](#configuration)
     - [enable service](#enable-service)
   - [verify](#verify)
+- [stacked etcd](#stacked-etcd)
+  - [configuration](#configuration-1)
+  - [operate](#operate)
+    - [debug into stacked etcd cluster](#debug-into-stacked-etcd-cluster)
+    - [replacing a failed etcd member](#replacing-a-failed-etcd-member)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
-
-{% hint style='tip' %}
-- [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
-![extenal etcd](../../../screenshot/k8s/kubeadm-ha-topology-external-etcd.svg.png)
-
-> You need:
-> - Three or more machines that meet kubeadm's minimum requirements for the control-plane nodes. Having an odd number of control plane nodes can help with leader selection in the case of machine or zone failure.
->   - including a container runtime, already set up and working
-> - Three or more machines that meet kubeadm's minimum requirements for the workers
->   - including a container runtime, already set up and working
-> - Full network connectivity between all machines in the cluster (public or private network)
-> - Superuser privileges on all machines using sudo
->   - You can use a different tool; this guide uses sudo in the examples.
-> - SSH access from one device to all nodes in the system
-> - kubeadm and kubelet already installed on all machines.
->
-> And you also need:
-> - Three or more additional machines, that will become etcd cluster members. Having an odd number of members in the etcd cluster is a requirement for achieving optimal voting quorum.
->   - These machines again need to have kubeadm and kubelet installed.
->   - These machines also require a container runtime, that is already set up and working.
->
-> See External etcd topology for context.
-
-- [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) certificates located in : `/etc/kubernetes/pki/etcd`
-![stacked etcd](../../../screenshot/k8s/kubeadm-ha-topology-stacked-etcd.svg.png)
-
-> You need:
-> - Three or more machines that meet kubeadm's minimum requirements for the control-plane nodes. Having an odd number of control plane nodes can help with leader selection in the case of machine or zone failure.
->   - including a container runtime, already set up and working
-> - Three or more machines that meet kubeadm's minimum requirements for the workers
->   - including a container runtime, already set up and working
-> - Full network connectivity between all machines in the cluster (public or private network)
-> - Superuser privileges on all machines using sudo
->   - You can use a different tool; this guide uses sudo in the examples.
-> - SSH access from one device to all nodes in the system
-> - kubeadm and kubelet already installed on all machines.
->
-> See Stacked etcd topology for context.
-
-{% endhint %}
-
 {% hint style='tip' %}
 > references:
-> - [Clustering Guide](https://etcd.io/docs/v2.3/clustering/)
+> - [clustering guide](https://etcd.io/docs/v2.3/clustering/)
 > - [clustering.md](https://github.com/etcd-io/etcd/blob/release-3.4/Documentation/op-guide/clustering.md)
-> - [Setting up Etcd Cluster with TLS Authentication Enabled](https://medium.com/nirman-tech-blog/setting-up-etcd-cluster-with-tls-authentication-enabled-49c44e4151bb)
-> - [CONFIGURING ETCD RBAC](https://docs.projectcalico.org/reference/etcd-rbac/)
-> - [Deploy a secure etcd cluster](https://pcocc.readthedocs.io/en/latest/deps/etcd-production.html)
-> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
-> - [Creating Highly Available Clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
-> - [Etcd Backup And Restore In Kubernetes: Step By Step](https://k21academy.com/docker-kubernetes/etcd-backup-restore-in-k8s-step-by-step/)
+> - [setting up etcd cluster with tls authentication enabled](https://medium.com/nirman-tech-blog/setting-up-etcd-cluster-with-tls-authentication-enabled-49c44e4151bb)
+> - [configuring etcd rbac](https://docs.projectcalico.org/reference/etcd-rbac/)
+> - [deploy a secure etcd cluster](https://pcocc.readthedocs.io/en/latest/deps/etcd-production.html)
+> - [set up a high availability etcd cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [creating highly available clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
+> - [etcd backup and restore in kubernetes: step by step](https://k21academy.com/docker-kubernetes/etcd-backup-restore-in-k8s-step-by-step/)
+> - [operating etcd clusters for kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd)
+> - [operating etcd clusters for kubernetes](https://pwittrock.github.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+> - [understand how the etcd cluster is configured](https://docs.bitnami.com/kubernetes/infrastructure/etcd/get-started/understand-default-configuration/)
+> - [tutorial: set up a secure and highly available etcd cluster](https://thenewstack.io/tutorial-set-up-a-secure-and-highly-available-etcd-cluster/)
+> - [runtime reconfiguration](https://etcd.io/docs/v3.3/op-guide/runtime-configuration/)
+> - [* configuration flags](https://etcd.io/docs/v3.3/op-guide/configuration/)
+>   - [etcd.conf.yml.sample](https://github.com/etcd-io/etcd/blob/release-3.4/etcd.conf.yml.sample)
 {% endhint %}
+
+- [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
+
+  ![extenal etcd](../../../screenshot/k8s/kubeadm-ha-topology-external-etcd.svg.png)
+
+  > [!TIP]
+  > You need:
+  > - Three or more machines that meet kubeadm's minimum requirements for the control-plane nodes. Having an odd number of control plane nodes can help with leader selection in the case of machine or zone failure.
+  >   - including a container runtime, already set up and working
+  > - Three or more machines that meet kubeadm's minimum requirements for the workers
+  >   - including a container runtime, already set up and working
+  > - Full network connectivity between all machines in the cluster (public or private network)
+  > - Superuser privileges on all machines using sudo
+  >   - You can use a different tool; this guide uses sudo in the examples.
+  > - SSH access from one device to all nodes in the system
+  > - kubeadm and kubelet already installed on all machines.
+  >
+  > And you also need:
+  > - Three or more additional machines, that will become etcd cluster members. Having an odd number of members in the etcd cluster is a requirement for achieving optimal voting quorum.
+  >   - These machines again need to have kubeadm and kubelet installed.
+  >   - These machines also require a container runtime, that is already set up and working.
+  >
+  > See External etcd topology for context.
+
+- [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) certificates located in : `/etc/kubernetes/pki/etcd`
+
+  ![stacked etcd](../../../screenshot/k8s/kubeadm-ha-topology-stacked-etcd.svg.png)
+
+  > [!TIP]
+  > You need:
+  > - Three or more machines that meet kubeadm's minimum requirements for the control-plane nodes. Having an odd number of control plane nodes can help with leader selection in the case of machine or zone failure.
+  >   - including a container runtime, already set up and working
+  > - Three or more machines that meet kubeadm's minimum requirements for the workers
+  >   - including a container runtime, already set up and working
+  > - Full network connectivity between all machines in the cluster (public or private network)
+  > - Superuser privileges on all machines using sudo
+  >   - You can use a different tool; this guide uses sudo in the examples.
+  > - SSH access from one device to all nodes in the system
+  > - kubeadm and kubelet already installed on all machines.
+  >
+  > See Stacked etcd topology for context.
 
 
 # extenal etcd
@@ -299,3 +310,137 @@ $ sudo /usr/local/bin/etcdctl --ca-file /etc/etcd/ssl/ca.pem \
   member e295a3c1654e*** is healthy: got healthy result from https://192.168.100.202:2379
   cluster is healthy
   ```
+
+# stacked etcd
+
+## configuration
+```bash
+$ sudo cat /etc/kubernetes/manifests/etcd.yaml
+```
+
+## operate
+### debug into stacked etcd cluster
+
+{% hint style='tip' %}
+references:
+> - [replacing a failed etcd member](https://docs.openshift.com/container-platform/3.11/admin_guide/assembly_replace-etcd-member.html)
+> It is recommended to back up this directory to an off-cluster location before removing the contents. <br>
+> You can remove this backup after a successful restore
+> <br>
+> ```bash
+> $ sudo rm -rf /var/lib/etcd/*
+>
+> # or
+> $ sudo mv /var/lib/etcd/member{,.backup}
+> ```
+{% endhint %}
+
+```bash
+$ docker run -it \
+             -v /var/lib/etcd:/var/lib/etcd \
+             -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd \
+             -p 2380:2380 \
+             -p 2379:2379 \
+             --network=host \
+             k8s.gcr.io/etcd:3.2.24
+
+$ etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt \
+          --cert-file /etc/kubernetes/pki/etcd/peer.crt \
+          --key-file /etc/kubernetes/pki/etcd/peer.key \
+          -endpoints=https://10.0.0.1:2379,https://10.0.0.2:2379,https://10.0.0.3:2379 \
+          member list
+```
+
+- more
+  ```bash
+  $ etcdctl member list
+  $ etcdctl member remove <id>
+
+  # peerURL using port 2380 by default. clientURL using 2379 by default
+  $ etcdctl member add <hostname> <peerURL:2380>
+
+  $ etcdctl member update <id> <peerURL:2380>
+  ```
+
+- add [tag `--initial-cluster-state=existing`](https://etcd.io/docs/v3.3/op-guide/configuration/) in `/etc/kubernetes/manifests/etcd.yaml`
+  ```bash
+  $ sudo cat /etc/kubernetes/manifests/etcd.yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    ...
+  spec:
+    containers:
+    - command:
+      - etcd
+      - --advertise-client-urls=https://10.0.0.2:2379
+      - --initial-advertise-peer-urls=https://10.0.0.2:2380
+      - --initial-cluster=member1=https://10.0.0.1:2380,member3=https://10.0.0.3:2380,member2=https://10.0.0.2:2380
+      - --listen-client-urls=https://10.0.0.2:2379
+      - --listen-peer-urls=https://10.0.0.2:2380
+      - --name=member2
+      - --cert-file=/etc/kubernetes/pki/etcd/server.crt
+      - --client-cert-auth=true
+      - --data-dir=/var/lib/etcd
+      - --key-file=/etc/kubernetes/pki/etcd/server.key
+      - --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt
+      - --peer-client-cert-auth=true
+      - --peer-key-file=/etc/kubernetes/pki/etcd/peer.key
+      - --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+      - --snapshot-count=10000
+      - --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+      - --initial-cluster-state=existing
+      image: k8s.gcr.io/etcd:3.2.24
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - /bin/sh
+          - -ec
+          - ETCDCTL_API=3 etcdctl --endpoints=https://10.0.0.1:2379,https://10.0.0.2:2379,https://10.0.0.3:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key get foo
+  ...
+  ```
+
+### [replacing a failed etcd member](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#replacing-a-failed-etcd-member)
+
+> [!TIP]
+> consider a three-member etcd cluster. Let the URLs be:
+> - `member1=http://10.0.0.1`
+> - `member2=http://10.0.0.2`
+> - `member3=http://10.0.0.3`
+> When `member1` fails, replace it with `member4=http://10.0.0.4`.
+
+* get member id of failed member
+  ```bash
+  $ etcdctl --endpoints=http://10.0.0.2,http://10.0.0.3 member list
+
+  8211f1d0f64f3269, started, member1, http://10.0.0.1:2380, http://10.0.0.1:2379
+  91bc3c398fb3c146, started, member2, http://10.0.0.2:2380, http://10.0.0.2:2379
+  fd422379fda50e48, started, member3, http://10.0.0.3:2380, http://10.0.0.3:2379
+  ```
+
+* remove failed member
+  ```bash
+  $ etcdctl member remove 8211f1d0f64f3269
+  Removed member 8211f1d0f64f3269 from cluster
+  ```
+
+* add new members
+  ```bash
+  $ etcdctl member add member4 --peer-urls=http://10.0.0.4:2380
+  Member 2be1eb8f84b7f63e added to cluster ef37ad9dc622a7c4
+  ```
+
+* start new member with IP
+  ```bash
+  $ export ETCD_NAME="member4"
+  $ export ETCD_INITIAL_CLUSTER="member2=http://10.0.0.2:2380,member3=http://10.0.0.3:2380,member4=http://10.0.0.4:2380"
+  $ export ETCD_INITIAL_CLUSTER_STATE=existing
+  $ etcd [flags]
+  ```
+
+* additional options
+
+  > [!TIP]
+  > - Update the `--etcd-servers` flag for the Kubernetes API servers to make Kubernetes aware of the configuration changes, then restart the Kubernetes API servers.
+  > - Update the load balancer configuration if a load balancer is used in the deployment.

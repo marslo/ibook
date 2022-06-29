@@ -34,6 +34,7 @@
 > - [Pod Lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 > - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/_print/)
 > - [Field Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/)
+> - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 {% endhint %}
 
 ## [filter via `--field-selector`](https://stackoverflow.com/a/50811992/2940319)
