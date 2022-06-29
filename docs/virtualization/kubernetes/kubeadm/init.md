@@ -2,7 +2,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [HA Cluster](#ha-cluster)
+- [kubeadm init](#kubeadm-init)
+  - [synopsis](#synopsis)
+  - [options](#options)
+  - [init workflow](#init-workflow)
+- [ha cluster step by step](#ha-cluster-step-by-step)
   - [basic environment](#basic-environment)
     - [cfssl](#cfssl)
     - [etcd](#etcd)
@@ -13,16 +17,159 @@
     - [peer](#peer)
     - [enable etcd service](#enable-etcd-service)
     - [HAProxy](#haproxy)
-  - [kubeadm init](#kubeadm-init)
+  - [kubeadm init](#kubeadm-init-1)
     - [kubeadm-conf.yaml](#kubeadm-confyaml)
     - [init master](#init-master)
     - [sync PKI](#sync-pki)
-  - [references](#references)
-    - [Set up a High Availability etcd Cluster with kubeadm](#set-up-a-high-availability-etcd-cluster-with-kubeadm)
+  - [sample](#sample)
+    - [set up a high availability etcd cluster with kubeadm](#set-up-a-high-availability-etcd-cluster-with-kubeadm)
+- [tips](#tips)
+  - [kubeadm init](#kubeadm-init-2)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# HA Cluster
+{% hint style='tip' %}
+> references:
+> - [belloHAKubeCluster.sh](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/belloHAKubeCluster.sh)
+> - [kube-up.sh](https://github.com/kubernetes/kubernetes/blob/master/cluster/kube-up.sh)
+> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [Configuring each kubelet in your cluster using kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
+> - [Creating a cluster with kubeadm v1.21](https://v1-21.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - [使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第一部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part1/)
+> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第二部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
+> - [以Kubeadm方式安装的Kubernetes集群的探索](https://tonybai.com/2017/01/24/explore-kubernetes-cluster-installed-by-kubeadm/)
+> - [使用Kubeadm搭建Kubernetes HA（1.10.1）](https://blog.csdn.net/chenleiking/article/details/80136449)
+> - [使用Kubeadm + HAProxy + Keepalived部署高可用Kubernetes集群](https://blog.csdn.net/chenleiking/article/details/84841394)
+> - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
+> - [Customizing components with the kubeadm API](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)
+> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [Considerations for large clusters](https://kubernetes.io/docs/setup/best-practices/cluster-large/)
+> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
+> - [* kubeadm init](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init)
+> - [creating a cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - * setup on-prem kubernetes
+>   - [part 1](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-1/)
+>   - [part 2](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-2/)
+>   - [part 3](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-3/)
+>   - [part 4](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-4/)
+>   - [part 5](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-5/)
+{% endhint %}
+
+# kubeadm init
+## [synopsis](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#synopsis)
+```
+preflight                    Run pre-flight checks
+certs                        Certificate generation
+  /ca                          Generate the self-signed Kubernetes CA to provision identities for other Kubernetes components
+  /apiserver                   Generate the certificate for serving the Kubernetes API
+  /apiserver-kubelet-client    Generate the certificate for the API server to connect to kubelet
+  /front-proxy-ca              Generate the self-signed CA to provision identities for front proxy
+  /front-proxy-client          Generate the certificate for the front proxy client
+  /etcd-ca                     Generate the self-signed CA to provision identities for etcd
+  /etcd-server                 Generate the certificate for serving etcd
+  /etcd-peer                   Generate the certificate for etcd nodes to communicate with each other
+  /etcd-healthcheck-client     Generate the certificate for liveness probes to healthcheck etcd
+  /apiserver-etcd-client       Generate the certificate the apiserver uses to access etcd
+  /sa                          Generate a private key for signing service account tokens along with its public key
+kubeconfig                   Generate all kubeconfig files necessary to establish the control plane and the admin kubeconfig file
+  /admin                       Generate a kubeconfig file for the admin to use and for kubeadm itself
+  /kubelet                     Generate a kubeconfig file for the kubelet to use *only* for cluster bootstrapping purposes
+  /controller-manager          Generate a kubeconfig file for the controller manager to use
+  /scheduler                   Generate a kubeconfig file for the scheduler to use
+kubelet-start                Write kubelet settings and (re)start the kubelet
+control-plane                Generate all static Pod manifest files necessary to establish the control plane
+  /apiserver                   Generates the kube-apiserver static Pod manifest
+  /controller-manager          Generates the kube-controller-manager static Pod manifest
+  /scheduler                   Generates the kube-scheduler static Pod manifest
+etcd                         Generate static Pod manifest file for local etcd
+  /local                       Generate the static Pod manifest file for a local, single-node local etcd instance
+upload-config                Upload the kubeadm and kubelet configuration to a ConfigMap
+  /kubeadm                     Upload the kubeadm ClusterConfiguration to a ConfigMap
+  /kubelet                     Upload the kubelet component config to a ConfigMap
+upload-certs                 Upload certificates to kubeadm-certs
+mark-control-plane           Mark a node as a control-plane
+bootstrap-token              Generates bootstrap tokens used to join a node to a cluster
+kubelet-finalize             Updates settings relevant to the kubelet after TLS bootstrap
+  /experimental-cert-rotation  Enable kubelet client certificate rotation
+addon                        Install required addons for passing conformance tests
+  /coredns                     Install the CoreDNS addon to a Kubernetes cluster
+  /kube-proxy                  Install the kube-proxy addon to a Kubernetes cluster
+```
+
+## [options](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#options)
+- `--apiserver-advertise-address string`
+- `--apiserver-bind-port int32`     Default: 6443
+- `--apiserver-cert-extra-sans strings`
+- `--cert-dir string`     Default: "/etc/kubernetes/pki"
+- `--certificate-key string`
+- `--config string`
+- `--control-plane-endpoint string`
+- `--cri-socket string`
+- `--dry-run`
+- `--feature-gates string` : A set of key=value pairs that describe feature gates for various features
+  - `PublicKeysECDSA=true|false` (ALPHA - default=false)
+  - `RootlessControlPlane=true|false` (ALPHA - default=false)
+  - `UnversionedKubeletConfigMap=true|false` (BETA - default=true)
+- `-h`, `--help`
+- `--ignore-preflight-errors strings`
+- `--image-repository string`     Default: "k8s.gcr.io"
+- `--kubernetes-version string`     Default: "stable-1"
+- `--node-name string`
+- `--patches string`
+- `--pod-network-cidr string`
+- `--service-cidr string`     Default: "10.96.0.0/12"
+- `--service-dns-domain string`     Default: "cluster.local"
+- `--skip-certificate-key-print`
+- `--skip-phases strings`
+- `--skip-token-print`
+- `--token string`
+- `--token-ttl duration`     Default: 24h0m0s
+- `--upload-certs`
+- `--rootfs string`
+
+## [init workflow](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#kubeadm-init-workflow-internal-design)
+1. [preflight checks](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#preflight-checks)
+1. [generate the necessary certificates](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#generate-the-necessary-certificates)
+1. [generate kubeconfig files for control plane components](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#generate-kubeconfig-files-for-control-plane-components)
+1. [generate static pod manifests for control plane components](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#generate-static-pod-manifests-for-control-plane-components)
+  * api server
+  * controller-manager
+  * scheduler
+
+  > [!TIP]
+  > kubeadm writes static Pod manifest files for control plane components to `/etc/kubernetes/manifests`
+  > static pod manifest generation for control plane components can be invoked individually with the [`kubeadm init phase control-plane all`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-control-plane) command
+  >
+  > references:
+  > - [using custom images](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#custom-images)
+
+1. [generate static pod manifest for local etcd](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#generate-static-pod-manifest-for-local-etcd)
+1. [wait for the control plane to come up](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#wait-for-the-control-plane-to-come-up)
+
+  > [!TIP]
+  > kubeadm waits (upto 4m0s) until `localhost:6443/healthz` (kube-apiserver liveness) returns `ok`. However in order to detect deadlock conditions, kubeadm fails fast if `localhost:10255/healthz` (kubelet liveness) or `localhost:10255/healthz/syncloop` (kubelet readiness) don't return `ok` within 40s and 60s respectively.
+
+1. [save the kubeadm clusterconfiguration in a configmap for later reference](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#save-the-kubeadm-clusterconfiguration-in-a-configmap-for-later-reference)
+1. [mark the node as control-plane](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#mark-the-node-as-control-plane)
+
+  > [!TIP]
+  > Please note that:
+  > - The `node-role.kubernetes.io/master` taint is deprecated and will be removed in **kubeadm version 1.25**
+  > - Mark control-plane phase phase can be invoked individually with the [`kubeadm init phase mark-control-plane`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-mark-control-plane) command
+
+1. [configure tls-bootstrapping for node joining](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#configure-tls-bootstrapping-for-node-joining)
+  * [create a bootstrap token](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#create-a-bootstrap-token)
+  * [allow joining nodes to call csr api](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#allow-joining-nodes-to-call-csr-api)
+  * [Setup auto approval for new bootstrap tokens](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#setup-auto-approval-for-new-bootstrap-tokens)
+  * [setup nodes certificate rotation with auto approval](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#setup-nodes-certificate-rotation-with-auto-approval)
+  * [create the public cluster-info configmap](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#create-the-public-cluster-info-configmap)
+1. [install addons](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#install-addons)
+  * [proxy](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#proxy)
+  * [dns](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#dns)
+
+
+# ha cluster step by step
 
 > [!TIP]
 > ```bash
@@ -72,6 +219,12 @@ $ curl -sSL ${etcdDownloadUrl}/${etcdVer}/etcd-${etcdVer}-linux-amd64.tar.gz |
 ```
 
 ### keepalive
+
+{% hint style='tip' %}
+> references:
+> - [Step 26 - KeepAliveD](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-5/)
+{% endhint %}
+
 ```bash
 $ mkdir -p ~/temp
 $ sudo mkdir -p /etc/keepalived/
@@ -137,7 +290,7 @@ $ sudo systemctl start keepalived.service
   ```
 
 > [!TIP]
-> setup certificate in **major master**
+> setup certificate in **primary control plane node**
 
 
 |     FILE     | DESCRIPTION                                                         |
@@ -275,10 +428,10 @@ $ sudo /usr/local/bin/cfssl gencert \
 #### copy certs
 
 > [!TIP]
-> copy ected certificates to **following masters**
+> copy ected certificates to **peer control nodes**
 
 ```bash
-# running in major master
+# running in primary control plane node
 $ for i in {2..3}; do
   ssh master0${i} 'sudo mkdir -p ${etcdSSLPath}'
   for pkg in ca-config.json  ca-key.pem  ca.pem  client-key.pem  client.pem; do
@@ -289,7 +442,7 @@ $ for i in {2..3}; do
   done
 done
 
-# or running in following master one by one
+# or running in peer control nodes one by one
 $ for pkg in ca-config.json  ca-key.pem  ca.pem  client-key.pem  client.pem; do
   sudo rsync -avzrlpgoDP \
              --rsync-path='sudo rsync' \
@@ -328,7 +481,7 @@ $ sudo /usr/local/bin/cfssl gencert \
        -profile=peer config.json |
        sudo /usr/local/bin/cfssljson -bare peer
 
-# in following masters
+# in peer control nodes
 $ ls
 ca-config.json  ca.pem          client.pem   peer.csr      peer.pem    server-key.pem
 ca-key.pem      client-key.pem  config.json  peer-key.pem  server.csr  server.pem
@@ -576,7 +729,7 @@ EOF
 ### init master
 
 > [!TIP]
-> init master in major master ONLY
+> init master in **primary control plane node** ONLY
 
 ```bash
 $ sudo modprobe br_netfilter
@@ -596,7 +749,7 @@ $ sudo chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
 ### sync PKI
 
 > [!TIP]
-> sync PKI in following masters ONLY
+> sync PKI in **peer control nodes** ONLY
 
 ```bash
 $ for pkg in '*.key' '*.crt' '*.pub'; do
@@ -609,30 +762,8 @@ $ sudo rm -rf /etc/kubernetes/pki/apiserver*
 # sudo cp -r /root/etcd* /etc/kubernetes/pki/
 ```
 
-
-## references
-
-{% hint style='tip' %}
-> - [belloHAKubeCluster.sh](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/belloHAKubeCluster.sh)
-> - [kube-up.sh](https://github.com/kubernetes/kubernetes/blob/master/cluster/kube-up.sh)
-> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
-> - [Configuring each kubelet in your cluster using kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
-> - [Creating a cluster with kubeadm v1.21](https://v1-21.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-> - [使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第一部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part1/)
-> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第二部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
-> - [以Kubeadm方式安装的Kubernetes集群的探索](https://tonybai.com/2017/01/24/explore-kubernetes-cluster-installed-by-kubeadm/)
-> - [使用Kubeadm搭建Kubernetes HA（1.10.1）](https://blog.csdn.net/chenleiking/article/details/80136449)
-> - [使用Kubeadm + HAProxy + Keepalived部署高可用Kubernetes集群](https://blog.csdn.net/chenleiking/article/details/84841394)
-> - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
-> - [Customizing components with the kubeadm API](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)
-> - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
-> - [Considerations for large clusters](https://kubernetes.io/docs/setup/best-practices/cluster-large/)
-> - [PKI certificates and requirements](https://kubernetes.io/docs/setup/best-practices/certificates/)
-{% endhint %}
-
-
-### [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+## sample
+### [set up a high availability etcd cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 ```bash
 # Update HOST0, HOST1 and HOST2 with the IPs of your hosts
 export HOST0=10.0.0.6
@@ -733,7 +864,7 @@ done
   root@HOST $ mv pki /etc/kubernetes/
   ```
 
-- Create the static pod manifests
+- create the static pod manifests
   ```bash
   root@HOST0 $ kubeadm init phase etcd local --config=/tmp/${HOST0}/kubeadmcfg.yaml
   root@HOST1 $ kubeadm init phase etcd local --config=$HOME/kubeadmcfg.yaml
@@ -754,4 +885,145 @@ done
   https://[HOST0 IP]:2379 is healthy: successfully committed proposal: took = 16.283339ms
   https://[HOST1 IP]:2379 is healthy: successfully committed proposal: took = 19.44402ms
   https://[HOST2 IP]:2379 is healthy: successfully committed proposal: took = 35.926451ms
+  ```
+
+# tips
+
+## kubeadm init
+
+> [!TIP]
+> `kubeadm init` also exposes a flag called `--skip-phases` that can be used to skip certain phases.
+> The flag accepts a list of phase names and the names can be taken from the above ordered list.
+> ```bash
+> $ sudo kubeadm init phase control-plane all --config=configfile.yaml
+> $ sudo kubeadm init phase etcd local --config=configfile.yaml
+>
+> # you can now modify the control plane and etcd manifest files
+> $ sudo kubeadm init --skip-phases=control-plane,etcd --config=configfile.yaml
+> ```
+
+#### [kubeadm init phase control-plane](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-control-plane)
+- control plane
+  ```bash
+  $ kubeadm init phase control-plane [flags]
+  ```
+- all
+  ```bash
+  $ kubeadm init phase control-plane all [flags] [--config config.yaml]
+  ```
+- apiserver
+  ```bash
+  $ kubeadm init phase control-plane apiserver [flags]
+  ```
+
+  > [!TIP]
+  > options:
+  > - `-h`, `--help`
+  > - `--apiserver-advertise-address <string>`
+  > - `--apiserver-bind-port <int32>`     Default: `6443`
+  > - `--apiserver-extra-args <comma-separated 'key=value' pairs>`
+  > - `--cert-dir <string>`               Default: `"/etc/kubernetes/pki"`
+  > - `--config <string>`
+  > - `--control-plane-endpoint <string>`
+  > - `--dry-run`
+  > - `--feature-gates <string>`
+  > - `--image-repository <string>`       Default: `"k8s.gcr.io"`
+  > - `--kubernetes-version <string>`     Default: `"stable-1"`
+  > - `--patches <string>`
+  > - `--service-cidr <string>`           Default: `"10.96.0.0/12"`
+  > - `--rootfs <string>`
+
+- controller-manager
+  ```bash
+  $ kubeadm init phase control-plane controller-manager [flags]
+  ```
+
+  > [!TIP]
+  > options:
+  > - `-h`, `--help`
+  > - `--cert-dir <string>`               Default: `"/etc/kubernetes/pki"`
+  > - `--config <string>`
+  > - `--apiserver-extra-args <comma-separated 'key=value' pairs>`
+  > - `--dry-run`
+  > - `--image-repository <string>`       Default: `"k8s.gcr.io"`
+  > - `--kubernetes-version <string>`     Default: `"stable-1"`
+  > - `--patches <string>`
+  > - `--pod-network-cidr <string>`
+  > - `--rootfs <string>`
+
+- scheduler
+  ```bash
+  $ kubeadm init phase control-plane scheduler [flags]
+  ```
+
+  > [!TIP]
+  > options:
+  > - `-h`, `--help`
+  > - `--cert-dir <string>`               Default: `"/etc/kubernetes/pki"`
+  > - `--config <string>`
+  > - `--dry-run`
+  > - `--image-repository <string>`       Default: `"k8s.gcr.io"`
+  > - `--kubernetes-version <string>`     Default: `"stable-1"`
+  > - `--patches <string>`
+  > - `--scheduler-extra-args <comma-separated 'key=value' pairs>`
+  > - `--rootfs <string>`
+
+
+#### [kubeadm init phase etcd](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-etcd)
+- etcd
+  ```bash
+  $ kubeadm init phase etcd [flags]
+  ```
+- local
+  ```bash
+  $ kubeadm init phase etcd local [flags]
+  ```
+
+  > [!TIP]
+  > options:
+  > - `-h`, `--help`
+  > - `--cert-dir <string>`               Default: `"/etc/kubernetes/pki"`
+  > - `--config <string>`
+  > - `--image-repository <string>`       Default: `"k8s.gcr.io"`
+  > - `--patches <string>`
+  > - `--rootfs <string>`
+
+#### [kubeadm init phase upload-config](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-upload-certs)
+```bash
+$ kubeadm init phase upload-certs [flags]
+```
+
+> [!TIP]
+> options:
+> - `-h`, `--help`
+> - `--certificate-key <string>`
+> - `--config <string>`
+> - `--kubeconfig <string>`     Default: `"/etc/kubernetes/admin.conf"`
+> - `--skip-certificate-key-print`
+> - `--upload-certs`
+> - `--rootfs <string>`
+
+
+#### [kubeadm init phase mark-control-plane](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-mark-control-plane)
+```bash
+$ kubeadm init phase mark-control-plane [flags] [--config config.yaml] [--node-name myNode]
+```
+
+#### [kubeadm init phase bootstrap-token](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-mark-control-plane)
+```bash
+$ kubeadm init phase bootstrap-token [flags] [--kubeconfig <string>] [--config <string>] [--skip-token-print]
+```
+
+#### [kubeadm init phase kubelet-finalize](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-kubelet-finalize-all)
+- kubelet-finalize
+  ```bash
+  $ kubeadm init phase kubelet-finalize [flags]
+  ```
+- kubelet-finalize-all
+  ```bash
+  $ kubeadm init phase kubelet-finalize all [flags] [--cert-dir /etc/kubernetes/pki] [--config <string>]
+  ```
+- kubelet-finalize-cert-rotation
+  ```bash
+  $ kubeadm init phase kubelet-finalize experimental-cert-rotation [flags] [--cert-dir /etc/kubernetes/pki] [--config <string>]
   ```

@@ -14,6 +14,7 @@
 {% hint style='tip' %}
 references:
 > - [The kubelet drop-in file for systemd](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd)
+> - [Kubelet Configuration (v1beta1)](https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/)
 {% endhint %}
 
 
@@ -40,7 +41,7 @@ references:
 
 > [!TIP]
 > references: <br>
-> - [kubelet flag](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/) 
+> - [kubelet flag](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/)
 >   - `--root-dir` string     Default: `/var/lib/kubelet`
 
 ### [change kubelet root dir](https://stackoverflow.com/a/53228571/2940319)
@@ -56,6 +57,7 @@ $ systemctl daemon-reload
 $ systemctl enable kubelet --now
 $ systemctl start kubelet
 ```
+
 - [or add `KUBELET_EXTRA_ARGS`](https://stackoverflow.com/a/46065250/2940319) :
   ```bash
   $ cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf

@@ -12,8 +12,47 @@
 {% hint style='tip' %}
 > references:
 > - [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
+> - [* one-page api reference for kubernetes v1.24](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/)
+> - [* Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/)
+> - [* API Access Control](https://kubernetes.io/docs/reference/access-authn-authz/)
+> - [using api](https://kubernetes.io/docs/reference/using-api/)
+> - [customizing components with the kubeadm api](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)
+>   - [workload resources](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/)
+>     - Pod
+>     - PodTemplate
+>     - ReplicationController
+>     - ReplicaSet
+>     - Deployment
+>     - StatefulSet
+>     - ControllerRevision
+>     - DaemonSet
+>     - Job
+>     - CronJob
+>     - HorizontalPodAutoscaler
+>     - PriorityClass
+>   - [service resources](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/)
+>     - Service
+>     - Endpoints
+>     - EndpointSlice
+>     - Ingress
+>     - IngressClass
+>   - [config and storage resources](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/)
+>   - [authentication resources](https://kubernetes.io/docs/reference/kubernetes-api/authentication-resources/)
+>   - [authorization resources](https://kubernetes.io/docs/reference/kubernetes-api/authorization-resources/)
+>   - [policy resources](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/)
+>   - [cluster resources](https://kubernetes.io/docs/reference/kubernetes-api/cluster-resources/)
+>     - Node
+>     - Namespace
+>     - Event
+>     - APIService
+>     - Lease
+>     - RuntimeClass
+>     - FlowSchema v1beta2
+>     - PriorityLevelConfiguration v1beta2
+>     - Binding
+>     - ComponentStatus
+>   - [common definitions](https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/)
 {% endhint %}
-
 
 
 > [!NOTE]

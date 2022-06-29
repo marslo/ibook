@@ -94,7 +94,7 @@ etcd-0               Healthy   {"health":"true"}
               awk 'match($5,/^[1-5]d/) {print $0}'
     ```
 
-### [get all images]()
+### get all images
 ```bash
 $ kubectl get pods --all-namespaces \
                    -o jsonpath="{..image}" |

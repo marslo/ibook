@@ -6,12 +6,31 @@
   - [Ubuntu](#ubuntu)
   - [CentOS/RHEL](#centosrhel)
 - [tricky](#tricky)
+  - [list images](#list-images)
+  - [get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
   - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
   - [show defualt kubeadm config](#show-defualt-kubeadm-config)
   - [kubeadm join](#kubeadm-join)
-- [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='tip' %}
+> reference :
+> - [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
+> - [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
+> - [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
+> - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
+> - [Kubernetes Recovery from Master Failure with Kubeadm](https://codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
+> - [1 - Kubernetes Objects](https://codefarm.me/2019/02/22/kubernetes-crash-course-1/)
+> - [2 - Kubernetes Pods](https://codefarm.me/2019/03/04/kubernetes-crash-course-2/)
+> - [3 - Kubernetes Services and Ingress](https://codefarm.me/2019/03/04/kubernetes-crash-course-3/)
+> - [4 - Kubernetes Storage](https://codefarm.me/2019/03/25/kubernetes-crash-course-4/)
+> - [authenticating with bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/)
+> - [kubernetes/design-proposals-archive](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md)
+> - [design-proposals-archive/cluster-lifecycle/cluster-deployment.md](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/cluster-deployment.md)
+{% endhint %}
+
 
 ## basic environment
 ### Ubuntu
@@ -31,6 +50,21 @@ net.bridge.bridge-nf-call-iptables=1
 net.bridge.bridge-nf-call-ip6tables=1
 EOF
 ```
+
+- [or network setup](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-1/)
+  ```bash
+  SYSCTLDIRECTIVES='net.bridge.bridge-nf-call-iptables net.ipv4.conf.all.forwarding net.ipv4.conf.default.forwarding net.ipv4.ip_forward'
+
+  for directive in ${SYSCTLDIRECTIVES}; do
+    if cat /etc/sysctl.d/99-sysctl.conf | grep -q "${directive}"; then
+      echo "Directive ${directive} is loaded"
+    else
+      echo "${directive}=1" >> /etc/sysctl.d/99-sysctl.conf
+    fi
+  done
+
+  sysctl -p /etc/sysctl.d/99-sysctl.conf
+  ```
 
 #### repo sources
 ```bash
@@ -222,6 +256,50 @@ $ sudo systemctl enable --now kubelet
   ```
 
 ## tricky
+
+{% hint style='tip' %}
+> references:
+> - [`kubeadm config`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/)
+>   - [`kubeadm config print [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-print)
+>   - [`kubeadm config print init-defaults [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-print-init-defaults)
+>   - [`kubeadm config print join-defaults [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-print-join-defaults)
+>   - [`kubeadm config migrate [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-migrate)
+>   - [`kubeadm config images list [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-images-list)
+>   - [`kubeadm config images pull [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-images-pull)
+{% endhint %}
+
+### [list images](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#custom-images)
+```bash
+$ kubeadm config images list
+I0629 03:32:46.532520   66831 version.go:236] remote version is much newer: v1.24.2; falling back to: stable-1.12
+k8s.gcr.io/kube-apiserver:v1.12.10
+k8s.gcr.io/kube-controller-manager:v1.12.10
+k8s.gcr.io/kube-scheduler:v1.12.10
+k8s.gcr.io/kube-proxy:v1.12.10
+k8s.gcr.io/pause:3.1
+k8s.gcr.io/etcd:3.2.24
+k8s.gcr.io/coredns:1.2.2
+
+# or
+$ kubeadm config images list --config=config.yaml
+
+# to pull images
+$ kubeadm config images pull [--config=config.yaml]
+```
+
+### [get or modify kubeadm.yaml](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#save-the-kubeadm-clusterconfiguration-in-a-configmap-for-later-reference)
+
+> [!TIP]
+> kubeadm saves the configuration passed to `kubeadm init` in a ConfigMap named `kubeadm-config` under `kube-system` namespace.
+> This will ensure that kubeadm actions executed in future (e.g `kubeadm upgrade`) will be able to determine the actual/current cluster state and make new decisions based on that data.
+> Please note that:
+> - Before saving the `ClusterConfiguration`, sensitive information like the token is stripped from the configuration
+> - Upload of control plane node configuration can be invoked individually with the [`kubeadm init phase upload-config`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-upload-config) command
+
+```bash
+$ k -n kube-system get cm kubeadm-config -o yaml
+```
+
 ### [show default `KubeletConfiguration`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#configure-kubelets-using-kubeadm)
 ```bash
 $ sudo kubeadm config print init-defaults --component-configs KubeletConfiguration
@@ -247,8 +325,16 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
 {% endhint %}
 
 ### show defualt kubeadm config
+
+{% hint style='tip' %}
+[imarslo: get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
+{% endhint %}
+
 ```bash
 $ sudo kubeadm config view
+
+# or
+$ kubectl -n kube-system get cm kubeadm-config -o yaml
 ```
 
 ### kubeadm join
@@ -283,16 +369,3 @@ $ sudo kubeadm config view
     ```bash
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
     ```
-
-
-
-## reference
-- [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
-- [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-- [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
-- [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
-- [Kubernetes Recovery from Master Failure with Kubeadm](https://codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
-- [1 - Kubernetes Objects](https://codefarm.me/2019/02/22/kubernetes-crash-course-1/)
-- [2 - Kubernetes Pods](https://codefarm.me/2019/03/04/kubernetes-crash-course-2/)
-- [3 - Kubernetes Services and Ingress](https://codefarm.me/2019/03/04/kubernetes-crash-course-3/)
-- [4 - Kubernetes Storage](https://codefarm.me/2019/03/25/kubernetes-crash-course-4/)
