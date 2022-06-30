@@ -6,22 +6,6 @@
   - [Program structure](#program-structure)
   - [Customizable Operators](#customizable-operators)
   - [Special Operators](#special-operators)
-- [string](#string)
-  - [substring](#substring)
-- [`list`](#list)
-  - [filter a list](#filter-a-list)
-  - [filter in list via additional conditions](#filter-in-list-via-additional-conditions)
-  - [return result instead of original list](#return-result-instead-of-original-list)
-  - [a list contains a sublist or not](#a-list-contains-a-sublist-or-not)
-  - [pickup item in list random](#pickup-item-in-list-random)
-  - [replace item in list according reference Map](#replace-item-in-list-according-reference-map)
-  - [2D matrix conversion](#2d-matrix-conversion)
-  - [print 2D matrix](#print-2d-matrix)
-- [`Map`](#map)
-  - [change Map in condition](#change-map-in-condition)
-  - [filter via condition](#filter-via-condition)
-  - [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
-  - [find a `string` exists in a `list` of `Map`](#find-a-string-exists-in-a-list-of-map)
 - [elvis operator](#elvis-operator)
   - [if/elseif{if}/else](#ifelseififelse)
 - [execute shell commands in groovy](#execute-shell-commands-in-groovy)
@@ -31,7 +15,7 @@
 - [Closures](#closures)
   - [Closure VS. Method](#closure-vs-method)
   - [break from closure](#break-from-closure)
-  - [Curry](#curry)
+  - [curry](#curry)
   - [Memoization](#memoization)
   - [composition](#composition)
   - [Methods](#methods)
@@ -41,12 +25,13 @@
 
 {% hint style='tip' %}
 > reference:
-> - [Groovy Cheatsheet](https://onecompiler.com/cheatsheets/groovy)
+> - [groovy cheatsheet](https://onecompiler.com/cheatsheets/groovy)
 > - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
 > - [http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf](http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf)
 > - [Groovy Scripting Reference](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/index.html)
 >   - [groovy basics](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-basics.html#groovy-basics)
 >   - [groovy tips and techniques](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-tips-and-techniques.html#groovy-tips-and-techniques)
+> - [Syntax](https://groovy-lang.org/syntax.html)
 {% endhint %}
 
 ## basic
@@ -116,285 +101,6 @@
   // [Bob is 42, Julia is 35]
   ```
 
-## string
-### [substring](http://grails.asia/groovy-substring)
-- remove the last x chars
-  ```groovy
-  def removeSuffix( String str ) {
-    removeSuffix( str, 1 )
-  }
-
-  /**
-   * remove the last char of {@code str}
-   * @param str       the string will be removal the last char
-   * @param c         remove last {@code c} numbers chars
-  **/
-  def removeSuffix( String str, int c ) {
-    str.reverse().drop(c).reverse()
-  }
-  ```
-
-- [add char(s) in the end of string](https://dzone.com/articles/concatenate-strings-in-groovy)
-  ```groovy
-  str.concat('substr')
-  ```
-
-## `list`
-### filter a list
-```groovy
-[ 'baz1', 'baz2', 'baz3', 'abz1', 'zba2', 'bza3' ].findAll { it.contains 'baz' }
-===> [baz1, baz2, baz3]
-```
-
-- [or](https://stackoverflow.com/a/27058389/2940319)
-  ```groovy
-  [['r':3],['r':5],['r':6],['r':11],['r':10]].findAll { (1..10).contains(it.r) }
-  ===> [[r:3], [r:5], [r:6], [r:10]]
-  ```
-
-### [filter in list via additional conditions](https://stackoverflow.com/a/19791838/2940319)
-```groovy
-[
-  [ id : 1 , age : 1 , weight : 25 ] ,
-  [ id : 2 , age : 2 , weight : 20 ] ,
-  [ id : 3 , age : 3 , weight : 25 ]
-].findAll {
-   it.age in [ 2, 3 ] || it.weight in [ 20, 25 ]
-}.id
-===> [1,2,3]
-```
-
-### [return result instead of original list](https://stackoverflow.com/a/20973116/2940319)
-```groovy
-[1, 2, 3, 4].findResults { ( it % 2 == 0 ) ? it / 2 : null }
-===> [1, 2] ~> [2/2, 4/2]
-```
-```groovy
-[1, 2, 3, 4].findAll { ( it % 2 == 0 ) ? it / 2 : null }
-===> [2, 4]
-```
-
-### a list contains a sublist or not
-```groovy
-List parent = [ '1', '2', '3', 'a', 'b' ]
-List sub    = [ 'a', '3' ]
-sub.every{ parent.contains(it) }
-```
-
-- or `containsAll`
-  ```groovy
-  List parent = [ '1', '2', '3', 'a', 'b' ]
-  List sub    = [ 'a', '3' ]
-  parent.containsAll(sub)
-  ```
-
-- ignore case
-  ```groovy
-  sub.every{ parent.collect{ it.toLowerCase() }.contains( it.toLowerCase() ) }
-  ```
-
-### [pickup item in list random](https://www.baeldung.com/java-random-list-element)
-- `Collections.shuffle`
-  ```groovy
-  List list = [ '1', '2', '3', 'a', 'b' ]
-  Collections.shuffle( list )
-  println list
-  println parent.first()
-
-  // result
-  // [2, b, 3, 1, a]
-  // 2
-  ```
-
-- `Random().nextInt`
-  ```groovy
-  List list = [ '1', '2', '3', 'a', 'b' ]
-  Random random = new Random()
-  println list.get(random.nextInt(list.size()))
-  println list.get(random.nextInt(list.size()))
-
-  // result
-  // 1
-  // b
-  ```
-
-### [replace item in list according reference Map](https://stackoverflow.com/a/67818619/2940319)
-```groovy
-Map<String, String> reference = [
-  '1' : 'apple'  ,
-  '2' : 'banana' ,
-  '3' : 'pears'  ,
-  '4' : 'peach'
-]
-
-'I want 1 she wants 4'.tokenize(' ')
-                      .collect { references.get(it) ?: it }
-                      .join(' ')
-
-// result: I want apple she wants peach
-```
-
-- or keeping the `String` format
-  > reference for [`replaceAll("<regex>", "$0")`](https://stackoverflow.com/a/24397672/2940319)
-
-  ```groovy
-  'I like    1, she    likes    3.'
-      .replaceAll("[^\\w]", "_\$0")
-      .split('_')
-      .collect {
-          String c = it.trim()
-          reference.get(c) ? it.replace(c, reference.get(c)) : it
-       }
-      .join()
-
-  // result: I like    apple, she    likes    pears.
-  ```
-
-{% hint style='tip' %}
-**remove all punctuation from a String** :
-```groovy
-'I like 1,_,--__,,___ she        liks 2,,...'
-  .replaceAll("[^\\w\\s]|_", '')
-  // .replaceAll("\\s+", ' ')         // structure space if necessary
-===> I like 1 she        liks 2
-// ===> I like 1 she liks 2
-```
-- or keep only comma (and merge more if mutiple comma)
-  ```groovy
-  'I like 1,----,,|\\/, she        liks 2,,...'
-    .replaceAll("[^\\w\\s,]|_", '')
-    .replaceAll(',+', ',')
-  ===> I like 1, she        liks 2,
-  ```
-{% endhint %}
-
-### 2D matrix conversion
-
-{% hint style='tip' %}
-**Objective** :
-> rows and columns conversion in 2D matrix `Map<String, List<String>>`
->
-> - original matrix:
-> ```groovy
-> [
->   'foo' : [ 'a', 'b', 'c', 'd' ] ,
->   'bar' : [ 'b', 'c', 'x', 'y' ] ,
->   'baz' : [ 'd', 'x', 'y', 'z' ]
-> ]
-> ```
->
-> - after conversion:
-> ```groovy
-> [
->   'a' : [ 'foo' ]         ,
->   'b' : [ 'bar' , 'foo' ] ,
->   'c' : [ 'bar' , 'foo' ] ,
->   'd' : [ 'baz' , 'foo' ] ,
->   'x' : [ 'bar' , 'baz' ] ,
->   'y' : [ 'bar' , 'baz' ] ,
->   'z' : [ 'baz' ]
-> ]
-> ```
-
-**Inspired from [sboardwell/matrix-based-auth.groovy](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L96)**
-{% endhint %}
-
-```groovy
-Map<String, List<String>> after  = [:].withDefault { [].toSet() }
-Map<String, List<String>> matrix = [
-  'foo' : [ 'a', 'b', 'c', 'd' ] ,
-  'bar' : [ 'b', 'c', 'x', 'y' ] ,
-  'baz' : [ 'd', 'x', 'y', 'z' ]
-]
-
-Closure converter = { Map result, Map original ->
-  original.each { k, v -> result[k] += v }
-}
-
-matrix.collect{ k, v -> v.collect{ [ (it) : k ] } }
-      .flatten()
-      .each converter.curry(after)
-after
-```
-
-
-
-### print 2D matrix
-```groovy
-(1..255).collect { color ->
-  " █${color}█ "
-}.eachWithIndex{ c, idx ->
-  print c
-  if ( 4 == (idx+1)%6 ) { println '' }
-}
-```
-
-## `Map`
-### [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
-```groovy
-[ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ "${it.key}" : 4 ] : it }
-===> [a:1, b:4, c:4]
-```
-- or `[ it.key, 4 ]`
-  ```groovy
-  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ it.key, 4 ] : it }
-  ```
-- or `[ (it.key) : 4 ]`
-  ```groovy
-  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ (it.key) : 4 ] : it }
-  ```
-
-### filter via condition
-```groovy
-[ 'a': 1, 'b': 2, 'c': 3 ].findAll{ it.value > 1 }.collectEntries { [ it.key, 4 ] }
-===> [b:4, c:4]
-```
-
-### find a `string` in a nested `Map` by using recursive function
-```groovy
-def hasValue( Map m, String value ) {
-  m.containsValue(value) || m.values().find { v -> v instanceof Map && hasValue(v, value) }
-}
-```
-
-- another version
-  > inspired by [stackoverflow: How to search value by key from Map as well as Nested Map](https://stackoverflow.com/a/39749720/2940319)
-
-```groovy
-def hasValue( Map m, String value ) {
-  if ( m.containsValue(value) ) return m.containsValue(value)
-  m.findResult { k, v -> v instanceof Map ? hasValue(v, value) : null }
-}
-```
-
-### find a `string` exists in a `list` of `Map`
-```groovy
-def isTargetExists( Map m, String subKey, String value ) {
-  def map = m.findAll { it.value instanceof Map }.collect { it.key }
-  return m.subMap(map).any { k, v -> v.get(subKey, []).contains(value) }
-}
-
-Map<String, Map<String, String>> matrix = [
-  dev : [
-    user: ['dev1', 'dev2', 'dev3'] ,
-    passwd: '123456',
-    customer: ['yahoo', 'bing']
-  ] ,
-  staging : [
-    user: ['stg1', 'stg2', 'stg3'] ,
-    passwd: 'abcdefg' ,
-    customer: ['google', 'huawei']
-  ] ,
-  prod : [
-    user: ['prod1', 'prod2', 'prod3'] ,
-    passwd: 'a1b2c3d4'
-  ]
-]
-
-assert isTargetExists( matrix, 'user', 'dev4' ) == false
-assert isTargetExists( matrix, 'customer', 'huawei' ) == true
-```
-
 ## elvis operator
 ### if/elseif{if}/else
 
@@ -402,7 +108,7 @@ assert isTargetExists( matrix, 'customer', 'huawei' ) == true
 > references:
 > - [5.3. Elvis operator](https://groovy-lang.org/operators.html#_elvis_operator)
 > - [Groovy Goodness: The Elvis Assignment Operator](https://blog.mrhaki.com/2020/02/groovy-goodness-elvis-assignment.html)
-
+>
 > usage
 > - `?:` ( existing Elvis operator )
 >   ```groovy
@@ -415,7 +121,6 @@ assert isTargetExists( matrix, 'customer', 'huawei' ) == true
 >   atomicNumber ?= 2           // new Elvis assignment shorthand
 >   ```
 {% endhint %}
-
 
 > condition:
 > - if `fruits` is 'apple' or 'orange', get pre-defined number `5` ( `number = 5` )
@@ -455,10 +160,11 @@ Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
   assert option('apple') == ['apple' : '5']
   assert option('watermelon', '100') == [ 'watermelon' : '100' ]
   ```
-{% hint style='tip' %}
-- using `[ "${fruits}" : '5' ]`, the class of key is `class org.codehaus.groovy.runtime.GStringImpl`
-- using `[ (fruits) : '5' ]`   , the class of key is `class java.lang.String`
-{% endhint %}
+
+  {% hint style='tip' %}
+  > - using `[ "${fruits}" : '5' ]`, the class of key is `class org.codehaus.groovy.runtime.GStringImpl`
+  > - using `[ (fruits) : '5' ]`   , the class of key is `class java.lang.String`
+  {% endhint %}
 
 
 ## execute shell commands in groovy
@@ -469,7 +175,7 @@ Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
 
 ### Get STDERR & STDERR
 
-{% hint style='tip' %}
+> [!TIP]
 > using `new StringBuffer()` or `new StringBuilder()`
 >
 > i.e.:
@@ -480,7 +186,6 @@ Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
 > int exitCode = proc.exitValue()
 > println( (exitCode == 0) ? stdout : "exit with ${exitCode}. error: ${stderr}" )
 > ```
-{% endhint %}
 
 ```groovy
 def stdout = new StringBuilder(), stderr = new StringBuilder()
@@ -503,7 +208,10 @@ println( stdout ? "out> \n${stdout}" : '' + stderr ? "err> \n${stderr}" : '' )
 ```
 
 ### Show output during the process
+
+{% hint style='tip' %}
 > using `System.out` and `System.err`
+{% endhint %}
 
 ```groovy
 def proc = "ls /tmp/NoFile".execute()
@@ -630,7 +338,7 @@ list.any { element ->
 }
 ```
 
-### Curry
+### curry
 - left curry
   ```groovy
   def multiply = { x, y -> return x * y }
@@ -673,17 +381,16 @@ list.any { element ->
     *-=*=-**-=*=-*
     ```
 
-{% hint style='tip' %}
-```groovy
-def nCopies = { int n, String str -> str*n }
-
-def twice   = nCopies.rcurry( '*-=*=-*' )
-def divider = nCopies.curry( 2 )
-
-assert nCopies( 2, '*-=*=-*' ) == twice( 2 )                // right curry
-assert nCopies( 2, '-.-.-.-' ) == divider( '-.-.-.-' )      // left  curry
-```
-{% endhint %}
+  > [!TIP]
+  > ```groovy
+  > def nCopies = { int n, String str -> str*n }
+  >
+  > def twice   = nCopies.rcurry( '*-=*=-*' )
+  > def divider = nCopies.curry( 2 )
+  >
+  > assert nCopies( 2, '*-=*=-*' ) == twice( 2 )                // right curry
+  > assert nCopies( 2, '-.-.-.-' ) == divider( '-.-.-.-' )      // left  curry
+  > ```
 
 - index with curry
   ```groovy
@@ -700,7 +407,6 @@ assert nCopies( 2, '-.-.-.-' ) == divider( '-.-.-.-' )      // left  curry
 
 ### Memoization
 
-
 {% hint style='tip' %}
 **Fibonacci suite** :
 > - `fib(15)` == `fib(14)` + `fib(13)`
@@ -716,6 +422,7 @@ assert nCopies( 2, '-.-.-.-' ) == divider( '-.-.-.-' )      // left  curry
   // result
   55
   ```
+
 - fast
   > tips: `Closures.memoize()`
 
@@ -749,10 +456,10 @@ assert plus2times3(3) == times3(plus2(3))
 ```
 
 {% hint style='tip' %}
-```groovy
-assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
-           |        + execute first      |       + execute last
-           + execute last                + execute first
+> ```groovy
+> assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
+>            |        + execute first      |       + execute last
+>            + execute last                + execute first
 ```
 {% endhint %}
 
@@ -786,7 +493,6 @@ assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
     assert [2,4,5].inject(1, { a, b -> a + b  }) == 12
     ```
 
-
 #### triple composition
 ```groovy
 def multiply = { x, y -> return x * y }
@@ -796,7 +502,6 @@ def composition = { f, g, x -> return f(g(x)) }
 def twelveTimes = composition.curry(triple, quadruple)      //  twelveTimes = { y -> composition { y -> 3*(4*y) } }
 def threeDozen = twelveTimes(3)
 ```
-
 
 ### Methods
 - various method to call closure
@@ -868,18 +573,18 @@ def threeDozen = twelveTimes(3)
   ```
 
 ### tricky
-- `this`
-  ```groovy
-  class Enclosing {
-    void run() {
-      def whatIsThisObject = { getThisObject() }
-      assert whatIsThisObject() == this
+#### `this`
+```groovy
+class Enclosing {
+  void run() {
+    def whatIsThisObject = { getThisObject() }
+    assert whatIsThisObject() == this
 
-      def whatIsThis = { this }
-      assert whatIsThis() == this
-    }
+    def whatIsThis = { this }
+    assert whatIsThis() == this
   }
+}
 
-  Enclosing e = new Enclosing()
-  e.run()
-  ```
+Enclosing e = new Enclosing()
+e.run()
+```

@@ -2,12 +2,26 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Cmake Logs:](#cmake-logs)
+- [cmake logs:](#cmake-logs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Cmake Logs:
-<pre><code># cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DDEFAULT_CHARSET=gbk -DDEFAULT_COLLATION=gbk_chinese_ci -DENABLED_LOCAL_INFILE=ON -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_COMMENT="Marslo edition" -DMYSQL_UNIX_ADDR=/tmp/mysqld.sock -DWITH_DEBUG=0 -DMYSQL_TCP_PORT=3306
+## cmake logs:
+```bash
+$ cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DDEFAULT_CHARSET=gbk -DDEFAULT_COLLATION=gbk_chinese_ci -DENABLED_LOCAL_INFILE=ON -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_COMMENT="Marslo edition" -DMYSQL_UNIX_ADDR=/tmp/mysqld.sock -DWITH_DEBUG=0 -DMYSQL_TCP_PORT=3306
+
+# or
+$ cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+          -DDEFAULT_CHARSET=gbk \
+          -DDEFAULT_COLLATION=gbk_chinese_ci \
+          -DENABLED_LOCAL_INFILE=ON \
+          -DWITH_INNOBASE_STORAGE_ENGINE=1 \
+          -DWITH_FEDERATED_STORAGE_ENGINE=1 \
+          -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+          -DWITH_COMMENT="Marslo edition" \
+          -DMYSQL_UNIX_ADDR=/tmp/mysqld.sock \
+          -DWITH_DEBUG=0 \
+          -DMYSQL_TCP_PORT=3306
 -- Running cmake version 2.8.11.2
 -- Configuring with MAX_INDEXES = 64U
 -- Looking for SHM_HUGETLB
@@ -510,4 +524,4 @@ Warning: Bison executable not found in PATH
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/marslo/Tools/Software/MySql/mysql-5.7.3-m13
-</code></pre>
+```

@@ -2,6 +2,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [change Map in condition](#change-map-in-condition)
+- [filter via condition](#filter-via-condition)
+- [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
+- [find a `string` exists in a `list` of `Map`](#find-a-string-exists-in-a-list-of-map)
 - [merge two maps](#merge-two-maps)
 - [map withDefault](#map-withdefault)
 - [get key or value from nested Map](#get-key-or-value-from-nested-map)
@@ -19,6 +23,72 @@
 > - [Groovy Cookbook](https://e.printstacktrace.blog/groovy-cookbook/)
 > - [Groovy Cookbook: How to merge two maps in Groovy?](https://e.printstacktrace.blog/how-to-merge-two-maps-in-groovy/)
 {% endhint %}
+
+### [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
+```groovy
+[ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ "${it.key}" : 4 ] : it }
+===> [a:1, b:4, c:4]
+```
+- or `[ it.key, 4 ]`
+  ```groovy
+  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ it.key, 4 ] : it }
+  ```
+- or `[ (it.key) : 4 ]`
+  ```groovy
+  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ (it.key) : 4 ] : it }
+  ```
+
+### filter via condition
+```groovy
+[ 'a': 1, 'b': 2, 'c': 3 ].findAll{ it.value > 1 }.collectEntries { [ it.key, 4 ] }
+===> [b:4, c:4]
+```
+
+### find a `string` in a nested `Map` by using recursive function
+```groovy
+def hasValue( Map m, String value ) {
+  m.containsValue(value) || m.values().find { v -> v instanceof Map && hasValue(v, value) }
+}
+```
+
+- another version
+  > inspired by [stackoverflow: How to search value by key from Map as well as Nested Map](https://stackoverflow.com/a/39749720/2940319)
+
+```groovy
+def hasValue( Map m, String value ) {
+  if ( m.containsValue(value) ) return m.containsValue(value)
+  m.findResult { k, v -> v instanceof Map ? hasValue(v, value) : null }
+}
+```
+
+### find a `string` exists in a `list` of `Map`
+```groovy
+def isTargetExists( Map m, String subKey, String value ) {
+  def map = m.findAll { it.value instanceof Map }.collect { it.key }
+  return m.subMap(map).any { k, v -> v.get(subKey, []).contains(value) }
+}
+
+Map<String, Map<String, String>> matrix = [
+  dev : [
+    user: ['dev1', 'dev2', 'dev3'] ,
+    passwd: '123456',
+    customer: ['yahoo', 'bing']
+  ] ,
+  staging : [
+    user: ['stg1', 'stg2', 'stg3'] ,
+    passwd: 'abcdefg' ,
+    customer: ['google', 'huawei']
+  ] ,
+  prod : [
+    user: ['prod1', 'prod2', 'prod3'] ,
+    passwd: 'a1b2c3d4'
+  ]
+]
+
+assert isTargetExists( matrix, 'user', 'dev4' ) == false
+assert isTargetExists( matrix, 'customer', 'huawei' ) == true
+```
+
 
 ### merge two maps
 #### for `<String, List<String>>`
