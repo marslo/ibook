@@ -2,43 +2,46 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Download NodeJs](#download-nodejs)
-- [Install `yo`](#install-yo)
-- [Install compass by `gem`](#install-compass-by-gem)
-- [Install `Angular`](#install-angular)
-- [Startup server](#startup-server)
+- [download nodejs](#download-nodejs)
+- [install `yo`](#install-yo)
+- [install compass by `gem`](#install-compass-by-gem)
+- [install `angular`](#install-angular)
+- [startup server](#startup-server)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### Download NodeJs
-- For 64bit
-    <pre><code>┌─ (marslo@MarsloJiao ~) ->
-    └─ $ wget http://nodejs.org/dist/v0.10.29/node-v0.10.29-linux-x64.tar.gz
-    </code></pre>
+### download nodejs
+- for 64bit
+  ```bash
+  $ wget http://nodejs.org/dist/v0.10.29/node-v0.10.29-linux-x64.tar.gz
+  ```
 
-- For 32bit
-    <pre><code>┌─ (marslo@MarsloJiao ~) ->
-    └─ $ wget http://nodejs.org/dist/v0.10.29/node-v0.10.29-linux-x86.tar.gz
-    </code></pre>
+- for 32bit
+  ```bash
+  $ wget http://nodejs.org/dist/v0.10.29/node-v0.10.29-linux-x86.tar.gz
+  ```
 
-### Install `yo`
-    ┌─ (marslo@MarsloJiao ~) ->
-    └─ $ sudo npm install -g yo
-    
-### Install compass by `gem`
-    ┌─ (marslo@MarsloJiao ~) ->
-    └─ $ sudo gem install compass
+### install `yo`
+```bash
+$ sudo npm install -g yo
+```
 
-- [The solution](https://github.com/Marslo/MyBlog/blob/master/Programming/Ruby/RubyInstallationQ&A.md#libyaml-0so2--psychso) for `kernel_require.rb:55:in `require': libyaml-0.so.2: cannot open shared object file: No such file or directory - /../../psych.so (LoadError)`
-    
-### Install `Angular`
-    ┌─ (marslo@MarsloJiao ~/client) ->
-    └─ $ npm install generator-angular
-    ┌─ (marslo@MarsloJiao ~/client) ->
-    └─ $ yo angular
-    ┌─ (marslo@MarsloJiao ~/client) ->
-    └─ $ bower install
-    
-### Startup server
-    ┌─ (marslo@MarsloJiao ~/client) ->
-    └─ $ grunt serve
+### install compass by `gem`
+
+> - [The solution](https://github.com/Marslo/MyBlog/blob/master/Programming/Ruby/RubyInstallationQ&A.md#libyaml-0so2--psychso) for `kernel_require.rb:55:in `require': libyaml-0.so.2: cannot open shared object file: No such file or directory - /../../psych.so (LoadError)`
+
+```bash
+$ sudo gem install compass
+```
+
+### install `angular`
+```bash
+$ npm install generator-angular
+$ yo angular
+$ bower install
+```
+
+### startup server
+```bash
+$ grunt serve
+```
