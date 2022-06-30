@@ -39,10 +39,15 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
 > reference:
 > - [Groovy Cheatsheet](https://onecompiler.com/cheatsheets/groovy)
 > - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
 > - [http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf](http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf)
+> - [Groovy Scripting Reference](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/index.html)
+>   - [groovy basics](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-basics.html#groovy-basics)
+>   - [groovy tips and techniques](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-tips-and-techniques.html#groovy-tips-and-techniques)
+{% endhint %}
 
 ## basic
 ### [Program structure](https://groovy-lang.org/structure.html)
@@ -392,6 +397,26 @@ assert isTargetExists( matrix, 'customer', 'huawei' ) == true
 
 ## elvis operator
 ### if/elseif{if}/else
+
+{% hint style='tip' %}
+> references:
+> - [5.3. Elvis operator](https://groovy-lang.org/operators.html#_elvis_operator)
+> - [Groovy Goodness: The Elvis Assignment Operator](https://blog.mrhaki.com/2020/02/groovy-goodness-elvis-assignment.html)
+
+> usage
+> - `?:` ( existing Elvis operator )
+>   ```groovy
+>   displayName = user.name ? user.name : 'Anonymous'
+>   displayName = user.name ?: 'Anonymous'
+>   ```
+> - `?=` ( new elvis assignment shorthand )
+>   ```groovy
+>   name = name ?: 'Hydrogen'   // existing Elvis operator
+>   atomicNumber ?= 2           // new Elvis assignment shorthand
+>   ```
+{% endhint %}
+
+
 > condition:
 > - if `fruits` is 'apple' or 'orange', get pre-defined number `5` ( `number = 5` )
 > - if `fruits` is `watermelon`, get particular given `numbers`. `number` cannot be `null`
