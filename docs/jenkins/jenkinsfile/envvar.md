@@ -17,10 +17,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+
 > references:
 > - [Jenkins Pipeline Environment Variables - The Definitive Guide](https://e.printstacktrace.blog/jenkins-pipeline-environment-variables-the-definitive-guide/)
 > - [Using environment variables in Jenkins pipelines - with examples](https://tomd.xyz/jenkins-env-vars/)
 > - [Jenkins Pipeline - set and use environment variables](https://code-maven.com/jenkins-pipeline-environment-variables)
+{% endhint %}
 
 ## environment variables
 ### get current customized environment
@@ -95,7 +98,7 @@ sh 'printenv | sort'
 ### `env.getEnvironment()` or `currentBuild.getRawBuild().getEnvironment()`
 
 {% hint style='tip' %}
-pure Jenkins job's environment variables (and parameters)
+> pure Jenkins job's environment variables (and parameters)
 {% endhint %}
 
 ```groovy
@@ -125,8 +128,11 @@ println prettyPrint( toJson(env.getEnvironment()) )
   ```
 
 ### [get builds environment](https://stackoverflow.com/a/56472651/2940319)
+
+{% hint style='tip' %}
 > references:
 > - [Access to build environment variables from a groovy script in a Jenkins build step (Windows)](https://stackoverflow.com/a/26428580/2940319)
+{% endhint %}
 
 ```groovy
 import hudson.model.*
@@ -143,16 +149,16 @@ import hudson.model.BuildableItem
 import hudson.model.Job
 import jenkins.model.*;
 
-
 jenkins = Jenkins.instance;
-EnvironmentVariablesNodeProperty prop = jenkins.getGlobalNodeProperties().get(EnvironmentVariablesNodeProperty.class)
+EnvironmentVariablesNodeProperty prop = jenkins.getGlobalNodeProperties()
+                                               .get(EnvironmentVariablesNodeProperty.class)
 EnvVars env = prop.getEnvVars()
 
 println env['MY_VAR']
 ```
 
 ## setup environment
-### [using Groovy script](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)
+### [using groovy script](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)
 ```groovy
 import hudson.EnvVars;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
@@ -160,6 +166,7 @@ import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
 import jenkins.model.Jenkins;
+
 public createGlobalEnvironmentVariables(String key, String value){
 
   Jenkins instance = Jenkins.getInstance();
@@ -184,7 +191,7 @@ public createGlobalEnvironmentVariables(String key, String value){
 createGlobalEnvironmentVariables('Var1','Dummy')
 ```
 
-### [Creating Local Environment Variables](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)
+### [creating local environment variables](https://www.lambdatest.com/blog/set-jenkins-pipeline-environment-variables-list/)
 - declarative pipeline
   ```groovy
   pipeline {

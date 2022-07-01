@@ -31,11 +31,20 @@
 - [applications](#applications)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
+  - [ls: Argument list too long](#ls-argument-list-too-long)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> drop caches
+> ```bash
+> $ sudo bash -c "echo 3 > /proc/sys/vm/drop_caches"
+> ```
+{% endhint %}
+
 ## system info
+
 ### hardware
 ```bash
 $ sudo dmidecode -s
@@ -749,3 +758,27 @@ $ gnome-terminal --geometry=123x42+0+0
     $ vim /usr/libexec/urlgrabber-ext-down
     ... change '#! /usr/bin/python' to  '#! /usr/bin/python2'
     ```
+
+### ls: Argument list too long
+
+{% hint style='tip' %}
+> references:
+> - [Argument list too long for ls](https://unix.stackexchange.com/a/38962/29178)
+> - [setup ulimit](https://unix.stackexchange.com/a/45584/29178)
+> - [How to avoid the limit in a shell](https://www.in-ulm.de/~mascheck/various/argmax/#avoid)
+{% endhint %}
+
+#### check the limit
+```bash
+$ getconf ARG_MAX
+```
+
+#### setup `ulimit`
+```bash
+$ ulimit -s
+8192
+
+$ ulimit -s 65536
+$ ulimit -s
+65536
+```
