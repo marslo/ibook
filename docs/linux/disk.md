@@ -140,6 +140,31 @@ EOF
 - `/etc/nfs.conf`
 - `/proc/mounts`
 
+### check NFS performance
+
+{% hint style='tip' %}
+> references:
+> - [Using nfsstat and nfsiostat to troubleshoot NFS performance issues on Linux](https://www.redhat.com/sysadmin/using-nfsstat-nfsiostat)
+> - [NFS poor write performance](https://serverfault.com/questions/682000/nfs-poor-write-performance)
+> - [Analyzing Linux NFS server performance](https://serverfault.com/questions/38756/analyzing-linux-nfs-server-performance)
+{% endhint %}
+
+- commands
+  - `nfsstat`
+  - `nfsiostat`
+  - [collectl](http://collectl.sourceforge.net/)
+    - `collectl -sjmf -oT`
+    - `collectl -sn --verbose -oT`
+    - `collectl -sJ -oTm`
+  - [`tshark -R nfs -i eth0`](https://serverfault.com/a/38893/129815)
+  - [`nfswatch`](http://nfswatch.sourceforge.net)
+  - `netstat -plaute | grep nfs`
+  - `watch -d "netstat -plaute | grep nfs | sort -k 4,5"`
+  - `iostat -mx <delay in sec.> <devices>`
+  - [`sudo fio --randrepeat=1 --ioengine=libaio --direct=0 --gtod_reduce=1 --name=test1 --filename=/media/ramdisk/test --bs=4k --iodepth=64 --size=4G --readwrite=randrw --rwmixread=75`](https://serverfault.com/a/938554/129815)
+  - [`time dd if=/dev/zero of=/mnt/nfs/testfile bs=16k count=128k`](https://serverfault.com/a/324489/129815)
+  - [`iozone -aRcU /mnt/nfs/ -f /mnt/nfs/testfile > logfile`](https://serverfault.com/a/324489/129815)
+
 ## LVM
 > reference:
 > - [CONFIGURING AND MANAGING LOGICAL VOLUMES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index)
