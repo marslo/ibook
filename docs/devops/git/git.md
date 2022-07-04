@@ -1,4 +1,4 @@
-Git Command Study and practice
+git command study and practice
 =======
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -50,9 +50,12 @@ Git Command Study and practice
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
-  - [git blame](#git-blame)
-- [for-each-ref](#for-each-ref)
+- [git blame](#git-blame)
+  - [blame in line range](#blame-in-line-range)
   - [format](#format)
+  - [tricky](#tricky)
+- [for-each-ref](#for-each-ref)
+  - [format](#format-1)
   - [date format](#date-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -60,6 +63,7 @@ Git Command Study and practice
 {% hint style='tip' %}
 > reference:
 > - [git reference](https://git-scm.com/docs)
+> - [* 🌳🚀 CS Visualized: Useful Git Commands](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
 > - [git cheatsheet](https://ndpsoftware.com/git-cheatsheet.html#loc=stash;)
 > - [git commands](https://git-scm.com/docs/git#_git_commands)
 > - [schacon/plumbing.md](https://gist.github.com/schacon/1153310)
@@ -95,6 +99,12 @@ rlog    = "!bash -c 'while read branch; do \n\
 > - [First master absolute commit referencing...](https://blog.git-init.com/relative-vs-absolute-references-in-git/)
 {% endhint %}
 
+<img src="../../screenshot/git/gif-git-reflog.gif" width="666">
+<figcaption><code>git reflog</code></figcaption>
+
+<img src="../../screenshot/git/gif-git-reflog-reset.gif" width="666">
+<figcaption><code>git reflog reset</code></figcaption>
+
 <img src="../../screenshot/git/relative-ancestors-1.png" width="666">
 <figcaption>using tilde (~) and caret (^) combined</figcaption>
 
@@ -107,11 +117,12 @@ rlog    = "!bash -c 'while read branch; do \n\
   - `..` (two-dot) range notation
     - `r1..r2` : commits that are reachable from r2 excluding those that are reachable from r1 by `^r1 r2`
   - `...` (three-dot) symmetric difference notation
-    - `r1...r2` : called symmetric difference of r1 and r2<br>
-                  It is the set of commits that are reachable from either one of r1 (left side) or r2 (right side) but not from both
+    - `r1...r2` : called symmetric difference of r1 and r2<br>It is the set of commits that are reachable from either one of r1 (left side) or r2 (right side) but not from both
+
 
 ## commit
 ### get commit id
+
 > the `<value>` can be:
 > - commit id
 > - branch name
@@ -179,7 +190,7 @@ $ git branch --no-color \
   $ git name-rev --name-only HEAD |
         sed -rne 's:^[ \s]*([^\]+/){2}([^~]+).*$:\2:p'
 
-  # or
+ # or
   $ git name-rev --name-only HEAD |
         sed -rne 's:^[ \s]*remotes/origin/([^~]+).*$:\1:p'
   ```
@@ -494,8 +505,16 @@ d17dd3aa add jira api
 ```
 
 ## rebase
-> about [`GIT_SEQUENCE_EDITOR`](https://stackoverflow.com/a/54970726/2940319)
-> [git rebase in depth](https://git-rebase.io/)
+
+> [!TIP]
+> - about [`GIT_SEQUENCE_EDITOR`](https://stackoverflow.com/a/54970726/2940319)
+> - [git rebase in depth](https://git-rebase.io/)
+
+![`git rebase`](../../screenshot/git/gif-git-rebase.gif)
+
+![drop : `git rebase -i`](../../screenshot/git/gif-git-rebase--i-drop.gif)
+
+![squash : `git rebase -i`](../../screenshot/git/gif-git-rebase--i-squash.gif)
 
 ### automatic edit by `git rebase -i`
 > inspired from [.gitconfig](https://github.com/brauliobo/gitconfig/blob/master/configs/.gitconfig#L220) & [Is there a way to squash a number of commits non-interactively?](https://stackoverflow.com/a/28789332/2940319)
@@ -644,6 +663,7 @@ $ git submodule update -f --init
   ```
 
 #### [Git Reset vs Revert vs Checkout reference](https://www.atlassian.com/git/tutorials/resetting-checking-out-and-reverting)
+
 |     Command    | Scope        | Common use cases                                                     |
 |:--------------:|--------------|----------------------------------------------------------------------|
 |   `git reset`  | Commit-level | Discard commits in a private branch or throw away uncommited changes |
@@ -652,6 +672,22 @@ $ git submodule update -f --init
 | `git checkout` | File-level   | Discard changes in the working directory                             |
 |  `git revert`  | Commit-level | Undo commits in a public branch                                      |
 |  `git revert`  | File-level   | (N/A)                                                                |
+
+- `git reset` via `git reflog`
+
+  ![`git reflog reset`](../../screenshot/git/gif-git-reflog-reset.gif)
+
+- `git reset --hard`
+
+  ![git reset --hard](../../screenshot/git/gif-git-reset---hard.gif)
+
+- `git reset --soft`
+
+  ![git reset --hard](../../screenshot/git/gif-git-reset---soft.gif)
+
+- `git revert`
+
+  ![git revert](../../screenshot/git/gif-git-revert.gif)
 
 ### change latest comments in local
 ```bash
@@ -714,6 +750,7 @@ $ git push origin +<branch>
 ```
 ![rebase -i --root](../../screenshot/git/rebase-i-root.gif)
 
+
 ## mv
 ### case sensitive
 - error with regular `git mv`
@@ -773,6 +810,7 @@ Removing my-submodule/
 ```bash
 $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/<dev>
 ```
+
 - [or](https://stackoverflow.com/a/20419458/2940319)
   ```bash
   $ git rev-list --reverse \
@@ -969,7 +1007,8 @@ git reset --hard FETCH_HEAD
 ```
 
 ### checkout particular commit and submodules
-[!TIP]
+
+> [!TIP]
 > references:
 > - [How to checkout old git commit including all submodules recursively?](https://stackoverflow.com/a/15124462/2940319)
 > - [nicktoumpelis/repo-rinse.sh](https://gist.github.com/nicktoumpelis/11214362)
@@ -1018,8 +1057,8 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
   $ git afr 'sandbox/marslo/*'
   ```
 
-### git blame
-#### blame in line range
+## blame
+### blame in line range
 - `-L <start>,<end>`
   ```bash
   $ git blame -L 1,3 README.md
@@ -1059,7 +1098,7 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
   * 38327ea - update (2 years, 10 months ago) <marslo>
   ```
 
-#### format
+### format
 - `-s`
   ```bash
   $ git blame -s README.md | head -2
@@ -1098,7 +1137,7 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 - `--date`
 
   > [!TIP]
-  > check : [imarslo : date format](./git.html#date-format)
+  > check : [imarslo : date format](#date-format)
   > setup global in `~/.gitconfig` :
   > ```
   > [blame]
@@ -1177,7 +1216,7 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 
   ![git blame color by age](../../screenshot/git/git-blame---color-by-age.png)
 
-#### tricky
+### tricky
 - `--since`
   ```bash
   $ git blame --since=3.weeks -- foo
