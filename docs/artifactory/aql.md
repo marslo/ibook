@@ -18,21 +18,21 @@ AQL supports specifying time intervals for queries using relative time. In other
 Relative time is specified using the following two operators:
 
 | operators | paraphrase                                                                  |
-| :--:      | --                                                                          |
-| $before   | The query is run over complete period up to specified time.                 |
-| $last     | The query is run over period from the specified time until the query is run |
+|:---------:|-----------------------------------------------------------------------------|
+|  $before  | The query is run over complete period up to specified time.                 |
+|   $last   | The query is run over period from the specified time until the query is run |
 
 Time periods are specified with a number and one of the following suffixes:
 
-| time period    | suffixes          |
-| :------------: | :---------------: |
-| milliseconds   | "mills", "ms"     |
-| seconds        | "seconds", "s"    |
-| minutes        | "minutes"         |
-| days           | "days", "d"       |
-| weeks          | "weeks", "w"      |
-| months         | "months", "mo"    |
-| years          | "years", "y"      |
+|  time period | suffixes       |
+|:------------:|:--------------:|
+| milliseconds | "mills", "ms"  |
+|    seconds   | "seconds", "s" |
+|    minutes   | "minutes"      |
+|     days     | "days", "d"    |
+|     weeks    | "weeks", "w"   |
+|    months    | "months", "mo" |
+|     years    | "years", "y"   |
 
 
 ### find items (folder) some times ago by aql

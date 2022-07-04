@@ -12,8 +12,8 @@
   - [`env.getEnvironment()` or `currentBuild.getRawBuild().getEnvironment()`](#envgetenvironment-or-currentbuildgetrawbuildgetenvironment)
   - [get builds environment](#get-builds-environment)
 - [setup environment](#setup-environment)
-  - [using Groovy script](#using-groovy-script)
-  - [Creating Local Environment Variables](#creating-local-environment-variables)
+  - [using groovy script](#using-groovy-script)
+  - [creating local environment variables](#creating-local-environment-variables)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
