@@ -8,6 +8,7 @@
   - [disconnect the mount](#disconnect-the-mount)
   - [setup nfs mount by default server boot](#setup-nfs-mount-by-default-server-boot)
   - [related configure](#related-configure)
+  - [check NFS performance](#check-nfs-performance)
 - [LVM](#lvm)
   - [example](#example)
   - [check status](#check-status)

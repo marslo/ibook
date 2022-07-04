@@ -50,6 +50,7 @@ Git Command Study and practice
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
+  - [git blame](#git-blame)
 - [for-each-ref](#for-each-ref)
   - [format](#format)
   - [date format](#date-format)
@@ -1015,6 +1016,174 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
     afr = !bash -c 'git config --add remote.origin.fetch "+refs/heads/$1:refs/remotes/origin/$1"'
 
   $ git afr 'sandbox/marslo/*'
+  ```
+
+### git blame
+#### blame in line range
+- `-L <start>,<end>`
+  ```bash
+  $ git blame -L 1,3 README.md
+  a03bebd23 (marslo Nov 2 2020       1) ---
+  a03bebd23 (marslo Nov 2 2020       2) disqus: false
+  a03bebd23 (marslo Nov 2 2020       3) ---
+
+  $ git blame -L 1,+3 README.md
+  a03bebd23 (marslo Nov 2 2020       1) ---
+  a03bebd23 (marslo Nov 2 2020       2) disqus: false
+  a03bebd23 (marslo Nov 2 2020       3) ---
+  ```
+
+- `-L :<funcname>`
+  ```bash
+  $ git blame -L :pkgInstallation belloHAKubeCluster.sh
+  38327eac (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac (marslo 2019-09-17 22:10:53 +0800 622)   dockerInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 623)   k8sInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 624)   cfsslInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 625)   etcdInstallation
+  bdfe4340 (marslo 2019-09-23 16:35:08 +0800 626)   helmInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 627) }
+  38327eac (marslo 2019-09-17 22:10:53 +0800 628)
+
+  # or
+  $ git blame -L '/pkgInstallation/,+3' belloHAKubeCluster.sh
+  38327eac (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac (marslo 2019-09-17 22:10:53 +0800 622)   dockerInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 623)   k8sInstallation
+  ```
+
+- by keywords ( `git log -S` )
+  ```bash
+  $ git pls -S pkgInstallation belloHAKubeCluster.sh
+  ...
+  * 38327ea - update (2 years, 10 months ago) <marslo>
+  ```
+
+#### format
+- `-s`
+  ```bash
+  $ git blame -s README.md | head -2
+  a03bebd23  1) ---
+  a03bebd23  2) disqus: false
+  ```
+
+- `-n`, `--show-number`
+  ```bash
+  $ git blame -n -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+  38327eac 553 (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  ```
+
+- `-f`, `--show-name`
+  ```bash
+  $ git blame -f -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+  38327eac kubernetes/belloHAKubeCluster.sh (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  ```
+
+- `-e`, `--show-email`
+
+  > [!TIP]
+  > This can also be controlled via the blame.showEmail config option.
+
+  ```bash
+  $ git blame -e -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+  38327eac (<marslo@marvell.com> 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  ```
+
+- `-l`
+  ```bash
+  $ git blame -l -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+  38327eac9b01d57c13d1865d58d822a81717d60f (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  ```
+
+- `--date`
+
+  > [!TIP]
+  > check : [imarslo : date format](./git.html#date-format)
+  > setup global in `~/.gitconfig` :
+  > ```
+  > [blame]
+  >   date="format:%Y-%m-%d %H:%M:%S %p"
+  > ```
+
+  ```bash
+  $ for i in iso iso-strict relative local rfc short raw human unix 'format:%c' '"format:%Y-%m-%d %H:%M:%S"'; do
+      cmd="git blame --date=${i} -L '/pkgInstallation/,+1' belloHAKubeCluster.sh";
+      echo ${cmd}; eval ${cmd}; echo "";
+    done
+
+    git blame --date=iso -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+
+    git blame --date=iso-strict -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 2019-09-17T22:10:53+08:00 621) function pkgInstallation() {
+
+    git blame --date=relative -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 2 years, 10 months ago 621) function pkgInstallation() {
+
+    git blame --date=local -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo Tue Sep 17 22:10:53 2019       621) function pkgInstallation() {
+
+    git blame --date=rfc -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo Tue, 17 Sep 2019 22:10:53 +0800 621) function pkgInstallation() {
+
+    git blame --date=short -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 2019-09-17 621) function pkgInstallation() {
+
+    git blame --date=raw -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 1568729453 +0800 621) function pkgInstallation() {
+
+    git blame --date=human -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo Sep 17 2019      621) function pkgInstallation() {
+
+    git blame --date=unix -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 1568729453 621) function pkgInstallation() {
+
+    git blame --date=format:%c -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo Tue Sep 17 22:10:53 2019 621) function pkgInstallation() {
+
+    git blame --date="format:%Y-%m-%d %H:%M:%S" -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
+    38327eac (marslo 2019-09-17 22:10:53 621) function pkgInstallation() {
+  ```
+
+- `--color-lines`
+
+  > [!TIP]
+  > references:
+  > - [color.blame.repeatedLines](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorblamerepeatedLines)
+  >
+  > example:
+  > ```git
+  > [color "blame"]
+  >   repeatedLines = 130
+  > ```
+
+  ![git blame color by lines](../../screenshot/git/git-blame---color-lines.png)
+
+- `--color-by-age`
+
+  > [!TIP]
+  > references:
+  > - [color.blame.highlightRecent](https://git-scm.com/docs/git-config#Documentation/git-config.txt-colorblamehighlightRecent)
+  > - [BuonOmo/.gitconfig](https://gist.github.com/BuonOmo/ce45b51d0cefe949fd0c536a4a60f000)
+  >
+  > example:
+  > ```git
+  > [color "blame"]
+  >   highlightRecent = 239, 20 month ago, 240, 18 month ago, 241, 16 month ago, 242, 14 month ago, 243, 12 month ago, 244, 10 month ago, 245, 8 month ago, 246, 6 month ago, 247, 4 month ago, 131, 3 month ago, 137, 2 month ago, 172, 1 month ago, 167, 3 weeks ago, 166, 2 weeks ago, 203, 1 week ago, 202
+  > // others
+  > [color "blame"]
+  >   highlightRecent = 237, 20 month ago, 238, 19 month ago, 239, 18 month ago, 240, 17 month ago, 241, 16 month ago, 242, 15 month ago, 243, 14 month ago, 244, 13 month ago, 245, 12 month ago, 246, 11 month ago, 247, 10 month ago, 248, 9 month ago, 249, 8 month ago, 250, 7 month ago, 251, 6 month ago, 252, 5 month ago, 253, 4 month ago, 254, 3 month ago, 231, 2 month ago, 230, 1 month ago, 229, 3 weeks ago, 228, 2 weeks ago, 227, 1 week ago, 226
+  > ```
+
+  ![git blame color by age](../../screenshot/git/git-blame---color-by-age.png)
+
+#### tricky
+- `--since`
+  ```bash
+  $ git blame --since=3.weeks -- foo
+
+  # or
+  $ git blame v2.6.18.. -- foo
   ```
 
 ## for-each-ref
