@@ -19,11 +19,17 @@
   - [disconnect agent](#disconnect-agent)
   - [offline agent](#offline-agent)
   - [delete agent](#delete-agent)
+- [monitor](#monitor)
+  - [for jenkins master](#for-jenkins-master)
+  - [send alerts](#send-alerts)
+  - [for jenkins agents](#for-jenkins-agents)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 ## get information
+
+{% hint style='tip' %}
 > API:
 > - [hudson.model.Computer](https://javadoc.jenkins-ci.org/hudson/model/Computer.html)
 > - [hudson.model.Node](https://javadoc.jenkins-ci.org/hudson/model/Node.html)
@@ -40,6 +46,11 @@
 > - [jenkins-scripts/scriptler/findOfflineSlaves.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/findOfflineSlaves.groovy)
 > - [jenkins-scripts/scriptler/showAgentJavaVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/showAgentJavaVersion.groovy)
 > - [jenkins-scripts/scriptler/checkNodesLauncherVersion.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkNodesLauncherVersion.groovy)
+> - [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
+> - [Jenkins : Display Tools Location on All Nodes](https://wiki.jenkins.io/display/JENKINS/Display-Tools-Location-on-All-Nodes.html)
+> - [Jenkins : Display Information About Nodes](https://wiki.jenkins.io/display/JENKINS/Display-Information-About-Nodes.html)
+
+{% endhint %}
 
 ### get all
 
@@ -724,5 +735,307 @@ def removeAgent( String name ) {
   }
 
   return deleted
+}
+```
+
+## [monitor](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
+
+{% hint style='tip' %}
+> references:
+> - [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
+> - [Jenkins : Display monitors status](https://wiki.jenkins.io/display/JENKINS/Display-monitors-status.html)
+{% endhint %}
+
+
+### for jenkins master
+
+#### execute gc
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+before = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+System.gc();
+after = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+println I18N.getFormattedString("ramasse_miette_execute", Math.round((before - after) / 1024));
+```
+
+#### display http sessions
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+println SessionListener.getSessionCount() + " sessions:";
+sessions = SessionListener.getAllSessionsInformations();
+for (session in sessions) {
+    println session;
+}
+```
+
+#### display a simple threads dump
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+java = new JavaInformations(Parameters.getServletContext(), true);
+threads = java.getThreadInformationsList();
+println threads.size() + " threads (" + java.activeThreadCount + " http threads active):";
+for (thread in threads) {
+  println "";
+  println thread;
+  for (s in thread.getStackTrace())
+    println "    " + s;
+}
+```
+
+#### display deadlocked threads
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+java = new JavaInformations(Parameters.getServletContext(), true);
+threads = java.getThreadInformationsList();
+deadlocked = new java.util.ArrayList();
+for (thread in threads) {
+  if (thread.deadlocked)
+    deadlocked.add(thread);
+}
+println deadlocked.size() + " deadlocked threads / " + threads.size() + " threads (" + java.activeThreadCount + " http threads active)";
+for (thread in deadlocked) {
+  println "";
+  println thread;
+  for (s in thread.getStackTrace())
+    println "    " + s;
+}
+```
+
+#### display some memory data
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+memory = new MemoryInformations();
+println "\nused memory:\n    " + Math.round(memory.usedMemory / 1024 / 1024) + " Mb";
+println "\nmax memory:\n    " + Math.round(memory.maxMemory / 1024 / 1024) + " Mb";
+println "\nused perm gen:\n    " + Math.round(memory.usedPermGen / 1024 / 1024) + " Mb";
+println "\nmax perm gen:\n    " + Math.round(memory.maxPermGen / 1024 / 1024) + " Mb";
+println "\nused non heap:\n    " +       Math.round(memory.usedNonHeapMemory / 1024 / 1024) + " Mb";
+println "\nused physical memory:\n    " +       Math.round(memory.usedPhysicalMemorySize / 1024 / 1024) + " Mb";
+println "\nused swap space:\n    " +       Math.round(memory.usedSwapSpaceSize / 1024 / 1024) + " Mb";
+```
+
+#### display some jvm data
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+java = new JavaInformations(Parameters.getServletContext(), true);
+println "\nsessions count:\n    "            + java.sessionCount;
+println "\nactive HTTP threads count:\n    " + java.activeThreadCount;
+println "\nthreads count:\n    "             + java.threadCount;
+println "\nsystem load average:\n    "       + java.systemLoadAverage;
+println "\nsystem cpu load:\n    "           + java.systemCpuLoad; // since 1.59
+println "\navailable processors:\n    "      + java.availableProcessors;
+println "\nhost:\n    "                      + java.host;
+println "\nos:\n    "                        + java.os;
+println "\njava version:\n    "              + java.javaVersion;
+println "\njvm version:\n    "               + java.jvmVersion;
+println "\npid:\n    "                       + java.pid;
+println "\nserver info:\n    "               + java.serverInfo;
+println "\ncontext path:\n    "              + java.contextPath;
+println "\nstart date:\n    "                + java.startDate;
+println "\nfree disk space in Jenkins directory:\n    " + Math.round(java.freeDiskSpaceInTemp / 1024 / 1024) + " Mb";
+```
+
+#### display heap histogram (object instances per class)
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+classes = VirtualMachine.createHeapHistogram().getHeapHistogram();
+println "class    instances    bytes    source";
+println "=====================================";
+for ( c in classes ) {
+  println c.name + "    " + c.instancesCount + "    " + c.bytes + "    " + c.source;
+}
+```
+
+#### take a heap dump
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+if (System.getProperty("java.vendor").contains("IBM")) {
+  Action.HEAP_DUMP.ibmHeapDump();
+  println I18N.getString("heap_dump_genere_ibm");
+} else {
+  heapDumpPath = Action.HEAP_DUMP.heapDump().getPath();
+  println I18N.getFormattedString("heap_dump_genere", heapDumpPath);
+}
+```
+
+#### display some MBean attribute value
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+exampleAttribute = "java.lang:type=OperatingSystem.ProcessCpuTime";
+println exampleAttribute + " = " + MBeans.getConvertedAttributes(exampleAttribute);
+Display stats of builds and build steps having mean time greater than severe threshold
+(By default, severe threshold = 2 x stddev of all durations and warning threshold = 1 x stddev)
+
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+buildCounter = CounterRunListener.getBuildCounter();
+aggreg = new CounterRequestAggregation(buildCounter);
+for ( request in aggreg.getRequests() ) {
+  if ( request.getMean() >= aggreg.getSevereThreshold()
+       || request.getCpuTimeMean() >= aggreg.getSevereThreshold() ) {
+      println( request.getName()
+               + ", hits=" + request.getHits()
+               + ", mean=" + request.getMean()
+               + ", max=" + request.getMaximum()
+               + ", stddev=" + request.getStandardDeviation()
+               + ", cpuTimeMean=" + request.getCpuTimeMean()
+               + ", systemErrorPercentage=" + request.getSystemErrorPercentage()
+      );
+   }
+}
+```
+
+### send alerts
+
+> [!TIP]
+> suppose that you want to check:
+> - every 15 minutes on the Jenkins master,
+> - if the system load average is above 50
+> - if the active HTTP threads count is above 100
+> - if there are deadlocked threads
+> - if there are less than 10 Gb free disk space left:
+> by:
+> - create a freestyle job in jenkins by clicking "New Item".
+> - check "build periodically" and write a schedule, "*/15 * * * *" for example.
+> - add a build step "execute system groovy script" and write a script
+>
+> <br>
+> or any script with monitoring values in this page
+> - add a post-build action "E-mail Notification" and write your email in "Recipients".
+> - you can also configure "Discard old builds" and write a description.
+> - save.
+> - click "Build now" to test it.
+
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+java = new JavaInformations(Parameters.getServletContext(), true);
+memory = java.memoryInformations;
+println "used memory = " + Math.round(memory.usedMemory / 1024 / 1024) + " Mb";
+println "active HTTP threads count = " + java.activeThreadCount;
+println "system load average = " + java.systemLoadAverage;
+println "free disk space in Jenkins directory = " + Math.round(java.freeDiskSpaceInTemp / 1024 / 1024) + " Mb";
+
+threads = java.getThreadInformationsList();
+deadlocked = new java.util.ArrayList();
+for (thread in threads) {
+  if (thread.deadlocked)
+    deadlocked.add(thread);
+}
+println deadlocked.size() + " deadlocked threads / " + threads.size() + " threads";
+for (thread in deadlocked) {
+  println "";
+  println thread;
+  for (s in thread.getStackTrace())
+    println "    " + s;
+}
+
+if (java.systemLoadAverage > 50) throw new Exception("Alert for Jenkins: systemLoadAverage is " + java.systemLoadAverage);
+if (java.activeThreadCount > 100) throw new Exception("Alert for Jenkins: activeThreadCount is " + java.activeThreadCount);
+if (deadlocked.size() > 0) throw new Exception("Alert for Jenkins: " + deadlocked.size() + " deadlocked threads");
+if (java.freeDiskSpaceInTemp / 1024 / 1024 < 10000) throw new Exception("Alert for Jenkins: only " + Math.round(java.freeDiskSpaceInTemp / 1024 / 1024) + " Mb free disk space left");
+```
+
+### for jenkins agents
+#### display jvm data, memory data, deadlocked threads by node
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+String nodeName = null ; // null for all nodes, not null for a particular node
+Map mapByNodeName = new RemoteCallHelper(nodeName).collectJavaInformationsListByName();
+for (node in mapByNodeName.keySet()) {
+  java = mapByNodeName.get(node);
+  println "\nNode:\n  " + node;
+
+  println "\nsessions count:\n    " + java.sessionCount;
+  println "\nactive HTTP threads count:\n    " + java.activeThreadCount;
+  println "\nthreads count:\n    " + java.threadCount;
+  println "\nsystem load average:\n    " + java.systemLoadAverage;
+  println "\nsystem cpu load:\n    " + java.systemCpuLoad; // since 1.59
+  println "\navailable processors:\n    " + java.availableProcessors;
+  println "\nhost:\n    " + java.host;
+  println "\nos:\n    " + java.os;
+  println "\njava version:\n    " + java.javaVersion;
+  println "\njvm version:\n    " + java.jvmVersion;
+  println "\npid:\n    " + java.pid;
+  println "\nserver info:\n    " + java.serverInfo;
+  println "\ncontext path:\n    " + java.contextPath;
+  println "\nstart date:\n    " + java.startDate;
+  println "";
+
+  memory = java.memoryInformations;
+  println "\nused memory:\n    " + Math.round(memory.usedMemory / 1024 / 1024) + " Mb";
+  println "\nmax memory:\n    " + Math.round(memory.maxMemory / 1024 / 1024) + " Mb";
+  println "\nused perm gen:\n    " + Math.round(memory.usedPermGen / 1024 / 1024) + " Mb";
+  println "\nmax perm gen:\n    " + Math.round(memory.maxPermGen / 1024 / 1024) + " Mb";
+  println "\nused non heap:\n    " +       Math.round(memory.usedNonHeapMemory / 1024 / 1024) + " Mb";
+  println "\nused physical memory:\n    " +       Math.round(memory.usedPhysicalMemorySize / 1024 / 1024) + " Mb";
+  println "\nused swap space:\n    " +       Math.round(memory.usedSwapSpaceSize / 1024 / 1024) + " Mb";
+  println "";
+
+  threads = java.getThreadInformationsList();
+  deadlocked = new java.util.ArrayList();
+  for (thread in threads) {
+    if (thread.deadlocked)
+      deadlocked.add(thread);
+  }
+  println deadlocked.size() + " deadlocked threads / " + threads.size() + " threads (" + java.activeThreadCount + " threads active)";
+  for (thread in deadlocked) {
+    println "";
+    println thread;
+    for (s in thread.getStackTrace())
+      println "    " + s;
+  }
+  println "";
+
+  println "*************************************************************";
+  println "";
+}
+```
+
+#### display some mbean attributes values by node
+```groovy
+import net.bull.javamelody.*;
+import net.bull.javamelody.internal.model.*;
+import net.bull.javamelody.internal.common.*;
+
+String exampleAttributes = "java.lang:type=OperatingSystem.ProcessCpuTime|java.lang:type=Memory.HeapMemoryUsage";
+String nodeName = null;         // null for all nodes, not null for a particular node
+List values = new RemoteCallHelper(nodeName).collectJmxValues(exampleAttributes);
+for (String value in values) {
+  println exampleAttributes + " = " + value;
 }
 ```

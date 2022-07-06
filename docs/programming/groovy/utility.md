@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [time](#time)
+  - [current timestamp](#current-timestamp)
   - [get current time](#get-current-time)
   - [convert the Date to simpleDateFormat or timeInMillis](#convert-the-date-to-simpledateformat-or-timeinmillis)
   - [Java LocalDateTime with different format](#java-localdatetime-with-different-format)
@@ -19,7 +20,18 @@
 ## time
 
 > [!TIP]
-> [Java SimpleDateFormat](https://jenkov.com/tutorials/java-internationalization/simpledateformat.html)
+> references:
+> - [Java SimpleDateFormat](https://jenkov.com/tutorials/java-internationalization/simpledateformat.html)
+>
+> usage in jenkins
+> - [imarslo: get build time](../../jenkins/script/build.html#get-build-time)
+
+### current timestamp
+```groovy
+new Date().format( 'YYYYMMddHHmmss' )
+
+// result : 20220706171701
+```
 
 ### get current time
 ```groovy
@@ -229,17 +241,18 @@ println """
            getNano : ${localDateTime.getNano()}
 """
 ```
-- result
-```
-      localDateTime : 2021-05-01T00:00
-    localNewFormat : 2021-05-01 00:00:00 AM
 
-           getYear : 2021
-      getDayOfYear : 121
-      getDayOfWeek : SATURDAY
-     getDayOfMonth : 1
-           getNano : 0
-```
+- result
+  ```
+        localDateTime : 2021-05-01T00:00
+      localNewFormat : 2021-05-01 00:00:00 AM
+
+             getYear : 2021
+        getDayOfYear : 121
+        getDayOfWeek : SATURDAY
+       getDayOfMonth : 1
+             getNano : 0
+  ```
 
 #### additional plus or minus for localDateTime
 
@@ -399,10 +412,9 @@ println """
 | `]`      | optional section end         |                |                                                  |
 | `#`      | reserved for future use      |                |                                                  |
 | `{`      | reserved for future use      |                |                                                  |
-| `}`      | reserved for future use      |                |                                                  |
+| `}`      | reserved for future use      |                | .                                                |
 
 {% endhint %}
-
 
 
 ```groovy
@@ -487,6 +499,12 @@ println """
     ```
 
 ## regex `Pattern` and `Matcher`
+
+{% hint style='tip' %}
+> references:
+> - [java.util.regex](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Matcher.html)
+{% endhint %}
+
 ### matches to regex (return `Boolean`)
 ```groovy
 String cpuset  = '/kubepods/burstable/pod59899be8/b60bf42d334be0eff64f325bad5b0ca4750119fbf8a7e80afa4e559040208ab3'
@@ -517,7 +535,7 @@ String cpuset  = '/kubepods/burstable/pod59899be8/b60bf42d334be0eff64f325bad5b0c
 int groupIndex = 0
 int index      = 1
 
-( cpuset =~ k8sPattern ).findAll()?.getAt(groupIndex)?.getAt(index) ?: null
+( cpuset =~ k8sPattern ).findAll()?.getAt(groupIndex)?.getAt(index)    ?: null
 ( cpuset =~ dockerPattern ).findAll()?.getAt(groupIndex)?.getAt(index) ?: null
 ```
 

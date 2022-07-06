@@ -36,11 +36,14 @@ println jenkins.authorizationStrategy
 
 ## authorization strategy
 
+{% hint style='tip' %}
 > reference:
 > - [hudson.security.Permission](https://javadoc.jenkins.io/hudson/security/Permission.html)
 > - [hudson.security.ProjectMatrixAuthorizationStrategy](https://javadoc.jenkins.io/plugin/matrix-auth/hudson/security/ProjectMatrixAuthorizationStrategy.html)
 > - [matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java](https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java)
 > - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
+> - [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
+{% endhint %}
 
 ### [list all Jenkins supported authorization permissions](https://stackoverflow.com/a/58035811/2940319)
 ```groovy

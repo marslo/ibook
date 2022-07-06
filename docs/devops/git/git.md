@@ -50,7 +50,7 @@ git command study and practice
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
-- [git blame](#git-blame)
+- [blame](#blame)
   - [blame in line range](#blame-in-line-range)
   - [format](#format)
   - [tricky](#tricky)

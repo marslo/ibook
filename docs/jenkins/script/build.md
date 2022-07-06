@@ -5,9 +5,8 @@
 - [jobs](#jobs)
   - [get name and classes](#get-name-and-classes)
   - [list all jobs and folders](#list-all-jobs-and-folders)
-  - [list all Abstract Project](#list-all-abstract-project)
-  - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
-  - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
+  - [list all abstract Project](#list-all-abstract-project)
+  - [disable and enable jobs](#disable-and-enable-jobs)
   - [get single job properties](#get-single-job-properties)
   - [get particular job status](#get-particular-job-status)
   - [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
@@ -24,8 +23,10 @@
   - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
 - [build parameters](#build-parameters)
   - [get build parameters](#get-build-parameters)
+  - [get builds parameters](#get-builds-parameters)
   - [get wanted parameter values in builds](#get-wanted-parameter-values-in-builds)
   - [get only `String` type parameters](#get-only-string-type-parameters)
+  - [retrieving parameters and triggering another build](#retrieving-parameters-and-triggering-another-build)
 - [build results](#build-results)
   - [get all builds result percentage](#get-all-builds-result-percentage)
   - [get builds result percentage within 24 hours](#get-builds-result-percentage-within-24-hours)
@@ -57,6 +58,14 @@
 > - [AbstractBuild.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/AbstractBuild.java)
 > - [GitSCM.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/hudson/plugins/git/GitSCM.java)
 > - [GitChangeSetList.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/hudson/plugins/git/GitChangeSetList.java)
+> sample code:
+> - [Jenkins : Failed Jobs](https://wiki.jenkins.io/display/JENKINS/Failed-Jobs.html)
+> - [Jenkins : Enable Timestamper plugin on all jobs](https://wiki.jenkins.io/display/JENKINS/Enable-Timestamper-plugin-on-all-jobs.html)
+> - [Jenkins : Display timer triggers](https://wiki.jenkins.io/display/JENKINS/Display-timer-triggers.html)
+> - [Jenkins : Display the number of jobs using SCM Polling from Freestyle, Pipeline and Maven](https://wiki.jenkins.io/display/JENKINS/138454178.html)
+> - [Jenkins : Delete workspace for all disabled jobs](https://wiki.jenkins.io/display/JENKINS/Delete-workspace-for-all-disabled-jobs.html)
+> - [Jenkins : Delete .tmp files left in workspace-files](https://wiki.jenkins.io/display/JENKINS/Delete-.tmp-files-left-in-workspace-files.html)
+> - [Jenkins : Change publish over SSH configuration](https://wiki.jenkins.io/display/JENKINS/Change-publish-over-SSH-configuration.html)
 {% endhint %}
 
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
@@ -85,8 +94,11 @@ Jenkins.instance.getAllItems(AbstractItem.class).each {
   marslo/fs
   ```
 
-### [list all Abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
+### [list all abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
+
+{% hint style='tip' %}
 > Abstract Project: freestyle, maven, etc...
+{% endhint %}
 
 ```groovy
 Jenkins.instance.getAllItems( AbstractProject.class ).each {
@@ -94,12 +106,13 @@ Jenkins.instance.getAllItems( AbstractProject.class ).each {
 }
 ```
 
-### disable all particular projects jobs
+### disable and enable jobs
+#### disable all particular projects jobs
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
 Jenkins.instance.getAllItems(Job.class).findAll {
-  projects.any { p -> it.fullName.contains(p) }
+  projects.any { p -> it.fullName.startsWith(p) }
 }.each {
   println "~~> ${it.fullName}"
   it.disabled = true
@@ -107,12 +120,12 @@ Jenkins.instance.getAllItems(Job.class).findAll {
 }
 ```
 
-### undo disable jobs in particular projects
+#### undo disable jobs in particular projects
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
 Jenkins.instance.getAllItems(Job.class).findAll {
-  it.disabled && projects.any{ p -> it.fullName.contains(p) }
+  it.disabled && projects.any{ p -> it.fullName.startsWith(p) }
 }.each {
   println "~~> ${it.fullName}"
   it.disabled = false
@@ -123,9 +136,9 @@ Jenkins.instance.getAllItems(Job.class).findAll {
 #### find all disabled projects/jobs
 ```groovy
 Jenkins.instance
-			 .getAllItems( Job.class )
-			 .findAll { it.disabled }
-			 .collect { it.fullName }
+       .getAllItems( Job.class )
+       .findAll { it.disabled }
+       .collect { it.fullName }
 ```
 
 - or
@@ -135,7 +148,7 @@ Jenkins.instance
          .instance
          .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
          .findAll{ it.disabled }
-				 .each {
+         .each {
            println it.fullName;
          }
   ```
@@ -246,6 +259,14 @@ return null
 ```
 
 ## build
+
+{% hint style='tip' %}
+> references:
+> - [Jenkins : Find builds currently running that has been executing for more than N seconds](https://wiki.jenkins.io/display/JENKINS/Find-builds-currently-running-that-has-been-executing-for-more-than-N-seconds.html)
+> - [Jenkins : Display list of projects that were built more than 1 day ago](https://wiki.jenkins.io/display/JENKINS/Display-list-of-projects-that-were-built-more-than-1-day-ago..html)
+> - [Jenkins : Display jobs group by the build steps they use](https://wiki.jenkins.io/display/JENKINS/Display-jobs-group-by-the-build-steps-they-use.html)
+{% endhint %}
+
 ### build number
 #### get WorkflowRun by build number
 ```groovy
@@ -305,8 +326,8 @@ checkout([
 > - [jenkins.plugins.git.AbstractGitSCMSource](https://javadoc.jenkins.io/plugin/git/index.html?hudson/plugins/git/GitChangeSetList.html)
 > - [hudson.model.AbstractBuild<P,R>](https://javadoc.jenkins.io/hudson/model/AbstractBuild.html#getChangeSets--)
 > - [get changeset in Jenkisnfile](../jenkinsfile/jenkinsfile.html#get-changesets)
-
 {% endhint %}
+
 ```groovy
 Jenkins.instance
        .getItemByFullName('/marslo/up')
@@ -562,12 +583,20 @@ Jenkins.instance.queue.items.each {
   ```
 
 ### get build time
-> reference
+
+{% hint style='tip' %}
+> more details can be found in
+> - [imarslo: groovy programming -> utility](../../programming/groovy/utility.html#time)
+{% endhint %}
+
+> [!TIP]
+> reference :
 > - [Getting current timestamp in inline pipeline script using pipeline plugin of hudson](https://stackoverflow.com/a/55242657/2940319)
 > - [get Job && build by number for the Job and all related to time](https://stackoverflow.com/a/54947196/2940319)
-> reference:
 > - [convert milliseconds to date-time format](https://stackoverflow.com/a/45815290/2940319)
 > - [Date.format(String format)](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
+> <br>
+>
 > ```groovy
 > final long NOW       = System.currentTimeMillis()
 > final int BENCH_MARK = 1*24*60*60*1000
@@ -577,6 +606,8 @@ Jenkins.instance.queue.items.each {
 >                 Date(NOW).format() : ${new Date(NOW).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
 >      Date(NOW-BENCH_MARK).format() : ${new Date(NOW - BENCH_MARK).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
 > """
+> ```
+>
 > - result:
 >   ```
 >                                NOW : 1619790803151
@@ -584,7 +615,6 @@ Jenkins.instance.queue.items.each {
 >                 Date(NOW).format() : 2021-04-30T06:53:23.151Z
 >      Date(NOW-BENCH_MARK).format() : 2021-04-29T06:53:23.151Z
 >   ```
-> ```
 
 ```groovy
 import java.time.LocalDateTime
@@ -788,10 +818,14 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
 ## build parameters
 
 ### [get build parameters](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
+
+{% hint style='tip' %}
 > reference:
 > - [`build?.actions.find{ it instanceof ParametersAction }`](https://stackoverflow.com/a/38130496/2940319)
 > - [Jenkins & Groovy – accessing build parameters](https://rucialk.wordpress.com/2016/03/17/jenkins-groovy-accessing-build-parameters/)
 > - [Parameterized System Groovy script](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
+> - [Jenkins : Display job parameters](https://wiki.jenkins.io/display/JENKINS/Display+job+parameters)
+{% endhint %}
 
 ```groovy
 def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
@@ -818,6 +852,59 @@ job.getBuilds().each { Run build ->
       gender  : female
   #1:
   ```
+
+- [or](https://wiki.jenkins.io/display/JENKINS/Display+job+parameters) by using [Job Parameter Summary Plugin](https://wiki.jenkins.io/display/JENKINS/Job-Parameter-Summary-Plugin.html)
+  ```groovy
+  import hudson.model.*
+
+  for( item in Hudson.instance.items ) {
+    prop = item.getProperty( ParametersDefinitionProperty.class )
+    if( prop != null ) {
+      println( "--- Parameters for " + item.name + " ---" )
+      for( param in prop.getParameterDefinitions() ) {
+        try {
+          println( param.name + " " + param.defaultValue )
+        }
+        catch( Exception e ) {
+          println( param.name )
+        }
+      }
+      println()
+    }
+  }
+  ```
+
+  - result
+    ```
+    --- Parameters for GRA-00-UploadIntoClearCase ---
+    ONCSDAP1_USER jdoe
+    ONCSDAP1_PASSWORD
+    GRA_ZIP_NAME GRA_Delivery_r.2.0.0_28-5_impl.zip
+    GRA_RELEASE n.28
+
+    --- Parameters for IN8-03-DeployXnetWebAppToRecette ---
+    STOP_START_AS
+    ```
+
+### get builds parameters
+
+> [!TIP]
+> running following snippet in Jenkinsfile
+
+```groovy
+params.each { param ->
+  println " ~~> '${param.key.trim()}' -> '${param.value}' "
+}
+```
+- or : [Jenkins : Parameterized System Groovy script](https://wiki.jenkins.io/display/JENKINS/Parameterized-System-Groovy-script.html)
+  ```groovy
+  def parameters = currentBuild.rawBuild?.actions.find{ it instanceof ParametersAction }?.parameters
+  parameters.each {
+    println " ~~> ${it.name} -> ${it.value} -> ${it.description ?: ''} "
+    println "-" * 20
+  }
+  ```
+
 
 ### get wanted parameter values in builds
 ```groovy
@@ -867,6 +954,47 @@ Map params = build?.getAction( ParametersAction.class )
   Map params = build?.actions
                      .find{ it instanceof ParametersAction }?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
   ```
+
+### [retrieving parameters and triggering another build](https://wiki.jenkins.io/display/JENKINS/Groovy-plugin.html)
+```groovy
+import hudson.model.*
+import hudson.AbortException
+import hudson.console.HyperlinkNote
+import java.util.concurrent.CancellationException
+
+// Retrieve parameters of the current build
+def foo = build.buildVariableResolver.resolve("FOO")
+println "FOO=$foo"
+
+// Start another job
+def job = Hudson.instance.getJob('MyJobName')
+def anotherBuild
+try {
+    def params = [
+      new StringParameterValue('FOO', foo),
+    ]
+    def future = job.scheduleBuild2(0, new Cause.UpstreamCause(build), new ParametersAction(params))
+    println "Waiting for the completion of " + HyperlinkNote.encodeTo('/' + job.url, job.fullDisplayName)
+    anotherBuild = future.get()
+} catch (CancellationException x) {
+    throw new AbortException("${job.fullDisplayName} aborted.")
+}
+println HyperlinkNote.encodeTo('/' + anotherBuild.url, anotherBuild.fullDisplayName) + " completed. Result was " + anotherBuild.result
+
+// Check that it succeeded
+build.result = anotherBuild.result
+if (anotherBuild.result != Result.SUCCESS && anotherBuild.result != Result.UNSTABLE) {
+    // We abort this build right here and now.
+    throw new AbortException("${anotherBuild.fullDisplayName} failed.")
+}
+
+// Do something with the output.
+// On the contrary to Parameterized Trigger Plugin, you may now do something from that other build instance.
+// Like the parsing the build log (see http://javadoc.jenkins-ci.org/hudson/model/FreeStyleBuild.html )
+// You probably may also wish to update the current job's environment.
+build.addAction(new ParametersAction(new StringParameterValue('BAR', '3')))
+```
+
 
 ## build results
 
