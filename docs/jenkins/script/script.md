@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Script Console](#script-console)
+- [script console](#script-console)
   - [usage](#usage)
   - [basic usage](#basic-usage)
   - [execute shell script in console](#execute-shell-script-in-console)
@@ -11,8 +11,8 @@
   - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
-- [List plugins](#list-plugins)
-  - [via api](#via-api)
+- [list plugins](#list-plugins)
+  - [via api : imarslo : list plugins](#via-api--imarslo--list-plugins)
   - [simple list](#simple-list)
   - [List plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
@@ -22,10 +22,13 @@
 - [abort](#abort)
   - [abort a build](#abort-a-build)
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
-- [shared libes](#shared-libes)
+- [logRotator](#logrotator)
+  - [show logRotator](#show-logrotator)
+- [shared libs](#shared-libs)
   - [vars](#vars)
   - [src](#src)
 - [Asynchronous resource disposer](#asynchronous-resource-disposer)
+- [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -41,10 +44,12 @@
 > - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
 > - [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
 > - [mikejoh/jenkins-and-groovy-snippets.md](https://gist.github.com/mikejoh/9a721d1e6de7574059dcb8f851692be9)
+> - [Jenkins : Jenkins Script Console](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
+> - [Jenkins : Use Jenkins](https://wiki.jenkins.io/display/JENKINS/Use-Jenkins.html)
 {% endhint %}
 
 
-## [Script Console](https://www.jenkins.io/doc/book/managing/script-console/)
+## [script console](https://www.jenkins.io/doc/book/managing/script-console/)
 ### usage
 - remote access
   ```bash
@@ -53,6 +58,7 @@
   # or to get output as a plain text result (no HTML)
   $ curl -d "script=<your_script_here>" https://jenkins/scriptText
   ```
+
 - curl submitting groovy file
   ```bash
   $ curl --data-urlencode "script=$(< ./somescript.groovy)" https://jenkins/scriptText
@@ -77,6 +83,8 @@
   ```
 
 ### execute shell script in console
+
+> [!TIP]
 > reference:
 > [i.e.](https://www.jenkins.io/doc/book/managing/script-console/#run-scripts-from-controller-script-console-on-agents)
 
@@ -122,7 +130,9 @@ System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.
   ```
 
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
-> get more: [jobs & builds](./build.md)
+
+> [!TIP]
+> get more: [imarslo :jobs & builds](./build.html)
 
 ### get build status
 - [get all builds result percentage](./build.html#get-all-builds-result-percentage)
@@ -165,8 +175,8 @@ Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
 }
 ```
 
-## List plugins
-### [via api](./api.md#list-plugins)
+## list plugins
+### via api : [imarslo : list plugins](./api.html#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
 Jenkins.instance
@@ -204,6 +214,7 @@ plugins.each { plugin ->
   """
 }
 ```
+
 - or
   ```groovy
   def jenkins = Jenkins.instance
@@ -240,6 +251,13 @@ plugins.each { plugin ->
   ```
 
 ## scriptApproval
+
+
+{% hint style='tip' %}
+> references:
+> - [Class ScriptApproval](https://javadoc.jenkins.io/plugin/script-security/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.html)
+{% endhint %}
+
 ### backup & restore all scriptApproval items
 - backup
   ```groovy
@@ -303,24 +321,26 @@ plugins.each { plugin ->
   import org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval
 
   ScriptApproval scriptApproval = ScriptApproval.get()
-  scriptApproval.pendingScripts.each {
-    scriptApproval.approveScript(it.hash)
-  }
+  scriptApproval.pendingScripts.each { scriptApproval.approveScript( it.hash ) }
   ```
 
-- [Job DSL support for ScriptApproval](https://issues.jenkins-ci.org/browse/JENKINS-31201?focusedCommentId=285330&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-285330)
+- [job dsl support for scriptapproval](https://issues.jenkins-ci.org/browse/JENKINS-31201?focusedCommentId=285330&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-285330)
   ```groovy
   import jenkins.model.Jenkins
 
-  def scriptApproval = Jenkins.instance.getExtensionList('org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval')[0]
-  def hashesToApprove = scriptApproval.pendingScripts.findAll{ it.script.startsWith(approvalPrefix) }.collect{ it.getHash() }
-  hashesToApprove.each {
-    scriptApproval.approveScript(it)
-  }
+  def scriptApproval = Jenkins.instance
+                              .getExtensionList('org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval')[0]
+  def hashesToApprove = scriptApproval.pendingScripts
+                                      .findAll{ it.script.startsWith(approvalPrefix) }
+                                      .collect{ it.getHash() }
+  hashesToApprove.each { scriptApproval.approveScript( it ) }
   ```
 
 ### [disable the scriptApproval](https://stackoverflow.com/a/49372857/2940319)
-> file: `$JENKINS_HOME/init.groovy.d/disable-script-security.groovy`
+
+> [!TIP]
+> @Deprcated
+> - file: `$JENKINS_HOME/init.groovy.d/disable-script-security.groovy`
 
 ```groovy
 import javaposse.jobdsl.plugin.GlobalJobDslSecurityConfiguration
@@ -411,7 +431,50 @@ build.getProject()._getRuns().iterator().each { run ->
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
 
 
-## shared libes
+## logRotator
+
+{% hint style='tip' %}
+> references:
+> - [Class LogRotator](https://javadoc.jenkins.io/hudson/tasks/LogRotator.html)
+> - [Jenkins : Manually run log rotation on all jobs](https://wiki.jenkins.io/display/JENKINS/Manually-run-log-rotation-on-all-jobs.html)
+> - [jenkins/core/src/main/java/hudson/tasks/LogRotator.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/tasks/LogRotator.java)
+{% endhint %}
+
+### show logRotator
+```groovy
+List<String> projects = [ 'project' ]
+
+Jenkins.instance.getAllItems(Job.class).findAll {
+  projects.any { p -> it.fullName.startsWith(p) }
+}.each {
+  println """
+    ~~> ${it.fullName} :
+
+            artifactDaysToKeep : ${it.logRotator?.artifactDaysToKeep    ?: '' }
+         artifactDaysToKeepStr : ${it.logRotator?.artifactDaysToKeepStr ?: '' }
+             artifactNumToKeep : ${it.logRotator?.artifactNumToKeep     ?: '' }
+          artifactNumToKeepStr : ${it.logRotator?.artifactNumToKeepStr  ?: '' }
+                    daysToKeep : ${it.logRotator?.daysToKeep            ?: '' }
+                 daysToKeepStr : ${it.logRotator?.daysToKeepStr         ?: '' }
+                     numToKeep : ${it.logRotator?.numToKeep             ?: '' }
+                  numToKeepStr : ${it.logRotator?.numToKeepStr          ?: '' }
+
+    --------------------------------------------------------------------------------
+
+       getArtifactDaysToKeep() : ${it.logRotator?.getArtifactDaysToKeep()    ?: '' }
+    getArtifactDaysToKeepStr() : ${it.logRotator?.getArtifactDaysToKeepStr() ?: '' }
+        getArtifactNumToKeep() : ${it.logRotator?.getArtifactNumToKeep()     ?: '' }
+     getArtifactNumToKeepStr() : ${it.logRotator?.getArtifactNumToKeepStr()  ?: '' }
+               getDaysToKeep() : ${it.logRotator?.getDaysToKeep()            ?: '' }
+            getDaysToKeepStr() : ${it.logRotator?.getDaysToKeepStr()         ?: '' }
+                getNumToKeep() : ${it.logRotator?.getNumToKeep()             ?: '' }
+             getNumToKeepStr() : ${it.logRotator?.getNumToKeepStr()          ?: '' }
+
+  """
+}
+```
+
+## shared libs
 {% hint style='tip' %}
 > reference:
 > - [Jenkins Shared Libraries Workshop](https://www.slideshare.net/roidelapluie/jenkins-shared-libraries-workshop)
@@ -494,3 +557,11 @@ disposer.getBacklog().each {
 
        ...
   ```
+
+## [others](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
+- [Jenkins : Monitor and Restart Offline Slaves](https://wiki.jenkins.io/display/JENKINS/Monitor-and-Restart-Offline-Slaves.html)
+- [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
+- [Jenkins : Printing a list of credentials and their IDs](https://wiki.jenkins.io/display/JENKINS/Printing-a-list-of-credentials-and-their-IDs.html)
+- [Jenkins : Wipe workspaces for a set of jobs on all nodes](https://wiki.jenkins.io/display/JENKINS/Wipe-workspaces-for-a-set-of-jobs-on-all-nodes.html)
+- [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
+- [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
