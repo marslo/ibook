@@ -214,25 +214,28 @@ $ cat a.txt
   ```
 
 ## get certain Line between 2 matched patterns
+
 > reference:
 > - [How to print lines between two patterns, inclusive or exclusive (in sed, AWK or Perl)?](https://stackoverflow.com/a/58568587/2940319)
 > - [Print lines between PAT1 and PAT2](https://stackoverflow.com/a/55773449/2940319)
 > - [How to select lines between two marker patterns which may occur multiple times with awk/sed](https://stackoverflow.com/a/17988834/2940319)
 > - [Print lines between (and excluding) two patterns](https://unix.stackexchange.com/a/430154/29178)
 
-```bash
-$ cat a.txt
-1a
-2b
-3c        * (begining)
-4d
-5e
-6f
-7g
-8h        * (end)
-9i
-10j
-11k
+> [!TIP]
+> sample data:
+> ```bash
+> $ cat a.txt
+> 1a
+> 2b
+> 3c        * (begining)
+> 4d
+> 5e
+> 6f
+> 7g
+> 8h        * (end)
+> 9i
+> 10j
+> 11k
 ```
 
 ### awk
@@ -248,8 +251,31 @@ $ cat a.txt
   ```
 
 ### sed
-- don't include pattern
+- include all patterns
   ```bash
+  $ cat a.txt | sed -n '/3c/,/8h/p'
+  3c
+  4d
+  5e
+  6f
+  7g
+  8h
+  ```
+
+- exclude both patterns
+  ```bash
+  $ sed -n '/3c/,/8h/{//!p;}' a.txt
+  4d
+  5e
+  6f
+  7g
+
+  $ sed -n '/3c/,/8h/{/3c/!{/8h/!p}}' a.txt
+  4d
+  5e
+  6f
+  7g
+
   $ cat a.txt | sed '1,/3c/d;/8h/,$d'
   4d
   5e
@@ -263,10 +289,16 @@ $ cat a.txt
   7g
   ```
 
-- include the pattern
+- exclude single pattern
   ```bash
-  $ cat a.txt | sed -n '/3c/,/8h/p'
+  $ sed -n '/3c/,/8h/{/8h/!p}' a.txt
   3c
+  4d
+  5e
+  6f
+  7g
+
+  $ sed -n '/3c/,/8h/{/3c/!p}' a.txt
   4d
   5e
   6f
@@ -500,11 +532,11 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
 
 ### [find and exclude](https://stackoverflow.com/a/60439808/2940319)
 ```bash
-$ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and -not -regex ".*/(node_modules|vendor)/.*" 
+$ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and -not -regex ".*/(node_modules|vendor)/.*"
 ```
 - [or](https://stackoverflow.com/a/25113492/2940319)
   ```bash
-  $ find . -regex-type posix-extended -regex ".*def/incoming.*|.*456/incoming.*" -prune -o -print 
+  $ find . -regex-type posix-extended -regex ".*def/incoming.*|.*456/incoming.*" -prune -o -print
   ```
 
 ## trim
