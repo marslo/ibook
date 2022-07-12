@@ -26,6 +26,7 @@
   * [proxy](cheatsheet/proxy.md)
   * [curl](cheatsheet/curl.md)
 * [vim](vim/vim.md)
+  * [install](vim/install.md)
   * [tricky](vim/tricky.md)
   * [windows](vim/windows.md)
   * [plugins](vim/plugins.md)
