@@ -245,6 +245,18 @@ for (int i = 0; i < changeLogSets.size(); i++) {
   }
   ```
 
+### others
+- [`Thread.currentThread().executable`](https://stackoverflow.com/a/26730819/2940319)
+  ```groovy
+  import hudson.model.*
+
+  def build = Thread.currentThread().executable
+  def buildNumber = build.number
+  def workspace   = build.getEnvVars()["WORKSPACE"]'
+  def jobname     = build.getEnvVars()["JOB_NAME"]
+  ...
+  ```
+
 ## stage and build
 
 {% hint style='tip' %}
