@@ -15,7 +15,7 @@
 properties([
   // every 6 hours
   pipelineTriggers([
-      pollSCM( ignorePostCommitHooks: true, scmpoll_spec: 'H H/6 * * *' )
+    pollSCM( ignorePostCommitHooks: true, scmpoll_spec: 'H H/6 * * *' )
   ])
 ])
 ```
@@ -31,7 +31,7 @@ properties([
 - declarative:
   ```groovy
   triggers {
-      pollSCM ignorePostCommitHooks: true, scmpoll_spec: 'H H * * *'
+    pollSCM ignorePostCommitHooks: true, scmpoll_spec: 'H H * * *'
   }
   ```
 
@@ -52,34 +52,62 @@ properties([
 ```
 
 ### triggered by
+
+{% hint style='tip' %}
+> references:
 > - [gitlab](https://stackoverflow.com/a/55366682/2940319)
+> - [CauseAction.class](https://javadoc.jenkins.io/hudson/model/CauseAction.html)
+> - [source code : yet-another-build-visualizer-plugin](https://www.programcreek.com/java-api-examples/?code=jenkinsci%2Fyet-another-build-visualizer-plugin%2Fyet-another-build-visualizer-plugin-master%2Fsrc%2Fmain%2Fjava%2Fcom%2Faxis%2Fsystem%2Fjenkins%2Fplugins%2Fdownstream%2Fyabv%2FBuildFlowAction.java)
+{% endhint %}
 
 - gitlab
   ```groovy
   currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData()
+
   // or
   commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
   ```
 
 - get build cause
   ```groovy
-  def build = currentBuild.rawBuild
-  println build.getCauses().collect { it.getClass().getCanonicalName().tokenize('.').last() }
+  import hudson.model.Cause.UserIdCause
+  import org.jenkinsci.plugins.workflow.job.WorkflowRun
+
+  workflowRun build = currentBuild.rawBuild
+
+  println build.getCauses().collect { it.getClass().getCanonicalName() }
+  println build.getCauses().collect { it.getClass().getCanonicalName() }.collect { it.tokenize('.').last() }
 
   println """
-    cause: ${build.getCauses().toString()}
-    cause.getClass(): ${build.getCauses().getClass()} : ${build.getCauses().getClass().getCanonicalName()}
-    build.getCause(hudson.model.Cause.UserIdCause.class): ${build.getCause(hudson.model.Cause.UserIdCause.class)}
+    cause                               : ${build.getCauses().toString()}
+    cause.getClass()                    : ${build.getCauses().getClass()} : ${build.getCauses().getClass().getCanonicalName()}
+    build.getCause( UserIdCause.class ) : ${build.getCause( UserIdCause.class )}
   """
   ```
+  - console output
+    ```
+    [Pipeline] echo
+    [hudson.model.Cause.UserIdCause]
+    [Pipeline] echo
+    [UserIdCause]
+    [Pipeline] echo
+
+        cause                               : [hudson.model.Cause$UserIdCause@bf8cb337]
+        cause.getClass()                    : class java.util.Collections$UnmodifiableRandomAccessList : java.util.Collections.UnmodifiableRandomAccessList
+        build.getCause( UserIdCause.class ) : hudson.model.Cause$UserIdCause@bf8cb337 
+    ```
+
 - get user id if triggered by manually
   ```groovy
-  def build = currentBuild.rawBuild
-  if ( build.getCause(hudson.model.Cause.UserIdCause.class) ) {
+  import hudson.model.Cause.UserIdCause
+  import org.jenkinsci.plugins.workflow.job.WorkflowRun
+
+  workflowRun build = currentBuild.rawBuild
+  if ( build.getCause(UserIdCause.class) ) {
     println """
-      username: ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserName()}
-      id: ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserId()}
-      mail: ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserId()}@domain.com
+      username : ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserName()}
+      id       : ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserId()}
+      mail     : ${build.getCause(hudson.model.Cause.UserIdCause.class).getUserId()}@domain.com
     """
   }
   ```
@@ -90,9 +118,29 @@ properties([
 
     if ( build.getCause(UserIdCause.class) ) {
       println """
-        username: ${build.getCause(UserIdCause.class).getUserName()}
-        id: ${build.getCause(UserIdCause.class).getUserId()}
-        mail: ${build.getCause(UserIdCause.class).getUserId()}@domain.com
+        username : ${build.getCause(UserIdCause.class).getUserName()}
+        id       : ${build.getCause(UserIdCause.class).getUserId()}
+        mail     : ${build.getCause(UserIdCause.class).getUserId()}@domain.com
       """
     }
     ```
+
+- get causedby
+  ```groovy
+  import org.jenkinsci.plugins.workflow.job.WorkflowRun
+  import hudson.model.Cause.*
+  import hudson.triggers.TimerTrigger.TimerTriggerCause
+  import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+  import org.jenkinsci.plugins.parameterizedscheduler.ParameterizedTimerTriggerCause
+
+  def getCasuedBy( workflowRun build = currentBuild.rawBuild ) {
+      CauseAction causeAction = currentBuild.rawBuild.getAction(CauseAction.class)
+      causeAction.getCauses().each { Cause cause ->
+        if ( cause instanceof Cause.UpstreamCause            ) println ( 'by upstream'                  )
+        if ( cause instanceof Cause.UserIdCause              ) println ( 'by user'                      )
+        if ( cause instanceof ReplayCause                    ) println ( 'by reply'                     )
+        if ( cause instanceof TimerTriggerCause              ) println ( 'by timer'                     )
+        if ( cause instanceof ParameterizedTimerTriggerCause ) println ( 'by ParameterizedTimerTrigger' )
+      }
+  }
+  ```
