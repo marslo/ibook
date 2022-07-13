@@ -5,6 +5,8 @@
 - [OSX](#osx)
   - [installation](#installation)
   - [Q&A](#qa)
+- [Ubuntu](#ubuntu)
+- [windows](#windows)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

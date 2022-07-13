@@ -2,22 +2,23 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Pipeline Utility Steps](#pipeline-utility-steps)
+- [pipeline utility steps](#pipeline-utility-steps)
   - [findFiles](#findfiles)
   - [send mail with catch error](#send-mail-with-catch-error)
   - [tips](#tips)
   - [Evaluate a Groovy source file into the Pipeline script](#evaluate-a-groovy-source-file-into-the-pipeline-script)
   - [load a constant](#load-a-constant)
   - [extend the pipeline](#extend-the-pipeline)
-- [DSL with groovy](#dsl-with-groovy)
+- [dsl with groovy](#dsl-with-groovy)
 - [others](#others)
   - [handle api](#handle-api)
+  - [running in temporaray folders](#running-in-temporaray-folders)
 - [withCredentials](#withcredentials)
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## [Pipeline Utility Steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/)
+## [pipeline utility steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/)
 ### findFiles
 - jenkinsfile
   ```groovy
@@ -163,7 +164,7 @@ node('master') {
 - stage view
   ![built-in stages](../../screenshot/jenkins/builtInStage.png)
 
-## DSL with groovy
+## dsl with groovy
 {% hint style='info' %}
 **original DSL**:
 ```groovy
@@ -284,6 +285,48 @@ if ( bodyText.find('Safari') ) {
 }
 ```
 
+### running in temporaray folders
+- using [`pwd(temp:true)`](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#pwd-determine-current-directory)
+  ```groovy
+  node ( 'built-in' ) {
+    dir( pwd('tmp':true) ) {
+      sh """
+        pwd
+        ls -altrh
+      """
+    } //dir
+  } // node
+  ```
+  - console output
+    ```
+    16:13:46  + pwd
+    16:13:46  /home/devops/workspace/marslo/sandbox/func@tmp
+    16:13:46  + ls -altrh
+    16:13:46  total 0
+    16:13:46  drwxr-xr-x 4 devops devops 42 Jul 13 08:13 ..
+    16:13:46  drwxr-xr-x 3 devops devops 19 Jul 13 08:13 .
+    ```
+
+- using `System.currentTimeMillis()`
+  ```groovy
+  node ( 'built-in' ) {
+    dir( System.currentTimeMillis().toString() ) {
+      sh """
+        pwd
+        ls -altrh
+      """
+    } //dir
+  } // node
+  ```
+  - console output
+    ```
+    16:26:14  + pwd
+    16:26:14  /home/devops/workspace/marslo/sandbox/func/1657700773771
+    16:26:14  + ls -altrh
+    16:26:14  total 0
+    16:26:14  drwxr-xr-x 2 devops devops  6 Jul 13 08:26 .
+    16:26:14  drwxr-xr-x 4 devops devops 52 Jul 13 08:26 ..
+    ```
 
 ## withCredentials
 ### push with ssh private credentials
