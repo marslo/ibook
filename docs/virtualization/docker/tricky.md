@@ -14,6 +14,11 @@
 - [get tags](#get-tags)
   - [from artifactory](#from-artifactory)
   - [from docker hub](#from-docker-hub)
+- [run inside windows docker image](#run-inside-windows-docker-image)
+  - [add contents](#add-contents)
+  - [get contents](#get-contents)
+  - [list item](#list-item)
+  - [execute](#execute)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -358,4 +363,53 @@ $ docker inspect -f '{{ .Mounts }}' <container ID>
 $ cid=$(basename $(cat /proc/self/cpuset))
 $ VOLUME_OPTION="--volumes-from ${cid}:rw"
 $ docker run <...> ${VOLUME_OPTION}
+```
+
+## run inside windows docker image
+### add contents
+```powershell
+> docker exec [-w 'C:\workspace'] <docker-id> powershell "Set-Content -Path '_cmd.ps1' -Value 'python --version'"
+```
+
+- for multiple line contents
+  ```powershell
+  > docker exec [-w 'C:\workspace'] <docker-id>' powershell "Set-Content -Path .\test.py -Value '# content of test_sample.py
+  >> def func(x):
+  >>     return x + 1
+  >>
+  >>
+  >> def test_answer():
+  >>     assert func(4) == 5'"
+  ```
+
+### get contents
+```powershell
+> docker exec [-w 'C:\workspace'] <docker-id> powershell "Get-Content '_cmd.ps1'"
+```
+
+- equivalent `tail -f`
+  ```powershell
+  > docker exec [-w 'C:\workspace'] <docker-id> powershell "Get-Content '_cmd.ps1' -Wait"
+  ```
+
+- equivalent `tail -10`
+  ```powershell
+  > docker exec [-w 'C:\workspace'] <docker-id> powershell "Get-Content '_cmd.ps1' -Tail 10"
+  ```
+
+### list item
+```powershell
+> docker exec [-w 'C:\workspace'] <docker-id> powershell Get-ChildItem .
+> docker exec [-w 'C:\workspace'] <docker-id> powershell Get-ChildItem ..\
+```
+
+### execute
+```powershell
+> docker exec [-w 'C:\workspace'] <docker-id> powershell .\_cmd.ps1
+
+# or
+> docker exec [-w 'C:\workspace'] <docker-id> powershell "Invoke-Expression '.\_cmd.ps1' > log.txt"
+
+# or redirect via `Out-File`
+> docker exec [-w 'C:\workspace'] <docker-id> powershell "Invoke-Expression '.\_cmd.ps1' | Out-File -FilePath log.txt"
 ```
