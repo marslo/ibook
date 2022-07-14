@@ -215,7 +215,11 @@ done
   repo='my-repo'
   curlOpt= '-s -g --netrc-file ~/.marslo/.netrc'
 
-  for _i in $(curl ${curlOpt} -X POST ${curlOpt} ${rtURL}/api/search/aql -T find.aql | jq --raw-output .results[].name); do
+  for _i in $(curl ${curlOpt} \
+                   -X POST ${rtURL}/api/search/aql \
+                   -T find.aql |
+              jq --raw-output .results[].name \
+  ); do
     curl ${curlOpt} -X DELETE "${rtURL}/${repo}/${_i}"
     curl ${curlOpt} -X DELETE "${rtURL}/api/build/${cibuild}?buildNumbers=${_i}&artifacts=1"
 

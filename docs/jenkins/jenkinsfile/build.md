@@ -9,6 +9,7 @@
   - [get current build info](#get-current-build-info)
   - [trigger downstream builds](#trigger-downstream-builds)
   - [get changelogs](#get-changelogs)
+  - [others](#others)
 - [stage and build](#stage-and-build)
   - [`warnError`](#warnerror)
   - [`catchError`](#catcherror)
