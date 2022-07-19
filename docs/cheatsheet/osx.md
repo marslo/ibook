@@ -9,7 +9,7 @@
     - [Setup Bash as default SHELL](#setup-bash-as-default-shell)
     - [Disable Guest User](#disable-guest-user)
     - [Go to Hidden path in Finder](#go-to-hidden-path-in-finder)
-    - [ReIndex Spotilght](#reindex-spotilght)
+    - [ReIndex Spotlight](#reindex-spotlight)
     - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
     - [Copy path from finder](#copy-path-from-finder)
   - [System Integrity Protection](#system-integrity-protection)
@@ -111,12 +111,22 @@ $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.ser
 
 <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>
 
-### ReIndex Spotilght
+### ReIndex Spotlight
 ```bash
 $ sudo mdutil -i on /
 $ sudo mdutil -E /
 $ sudo mdutil -E /Volumes/marslo/
 ```
+
+- [or](https://www.macrumors.com/how-to/rebuild-spotlight-search-index-on-mac/)
+  ```bash
+  $ sudo dutil -i off /
+  $ sudo rm -rf /.Spotlight-V100
+  $ sudo rm -rf /.Spotlight-V200
+  $ sudo mdutil -i on /
+  $ sudo mdutil -E /
+  $ sudo mdutil -E /Volumes/marslo/
+  ```
 
 ### copy STDOUT into clipboard
 > refer to: [osx/tricky](../osx/tricky.md#copy-stdout-into-clipboard)
