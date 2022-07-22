@@ -20,6 +20,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> references:
+> - [Mac keyboard shortcuts](https://support.apple.com/en-us/HT201236)
+{% endhint %}
+
 ## xcode
 ### downlaod xcode by wget
 * get cookies.txt
