@@ -2,13 +2,46 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [upgrading jenkins](#upgrading-jenkins)
+- [agent](#agent)
 - [Mailing format](#mailing-format)
 - [Properties in Jenkins Core for `JAVA_OPTS`](#properties-in-jenkins-core-for-java_opts)
 - [System Properties](#system-properties)
 - [Configuring HTTP](#configuring-http)
-- [Upgrading Jenkins](#upgrading-jenkins)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+### [upgrading jenkins](https://www.jenkins.io/blog/2018/03/15/jep-200-lts/#upgrading-jenkins)
+#### [jenkins 2.357 requires Java 11](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
+
+{% hint style='tip' %}
+> Beginning with Jenkins 2.357 (released on June 28, 2022) and the forthcoming September LTS release, Jenkins requires Java 11.
+> Additionally, beginning with Jenkins 2.355 (released on June 14, 2022) and Jenkins 2.346.1 LTS (released on June 22, 2022), Jenkins supports Java 17.
+> Plugins have already been prepared in JENKINS-68446. Use the Plugin Manager to upgrade all plugins before and after upgrading to Jenkins 2.357.
+>
+> refrences:
+> - [Upgrading Jenkins Java version from 8 to 11](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/)
+>   - [JVM version on agents](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/#jvm-version-on-agents)
+> - [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
+> - [Downloading and running Jenkins in Docker](https://www.jenkins.io/doc/book/installing/docker/#downloading-and-running-jenkins-in-docker)
+> - [Prepare Jenkins for Support](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support)
+>   - [JVM Recommended Arguments](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support#_jvm_recommended_arguments)
+> - [Upgrading to Java 11 or 17](https://www.jenkins.io/blog/2022/06/28/require-java-11/#upgrading-to-java-11-or-17)
+{% endhint %}
+
+
+### agent
+
+{% hint style='tip' %}
+> [ssh agent](https://github.com/jenkinsci/docker-ssh-agent) dockerfile
+> - [JVM 11 for windows](https://github.com/jenkinsci/docker-ssh-agent/tree/master/11/windows)
+>   - [windowsservercore-ltsc2019](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/windows/nanoserver-ltsc2019/Dockerfile)
+>   - [nanoserver-ltsc2019](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/windows/windowsservercore-ltsc2019/Dockerfile)
+> - [alpine](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/alpine/Dockerfile)
+> - [bullseye](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/bullseye/Dockerfile)
+{% endhint %}
+
 
 ### Mailing format
 - Show the logs after building
@@ -25,7 +58,7 @@
 ### [Properties in Jenkins Core for `JAVA_OPTS`](https://www.jenkins.io/doc/book/managing/system-properties/#properties-in-jenkins-core)
 
 
-#### disable the 
+#### disable the
 ```xml
 <useSecurity>true</useSecurity>
 <authorizationStrategy class="hudson.security.AuthorizationStrategy$Unsecured"/>
@@ -173,5 +206,3 @@ System.getenv().JAVA_OPTS
 | `org.jenkinsci.remoting.nio.NioChannelHub.disabled`                          | false                    | 2.62.3 | TODO               | JENKINS-39290              |
 | `org.jenkinsci.remoting.engine.JnlpAgentEndpointResolver.protocolNamesToTry` | false                    | TODO   | TODO               | JENKINS-41730              |
 
-
-### [Upgrading Jenkins](https://www.jenkins.io/blog/2018/03/15/jep-200-lts/#upgrading-jenkins)
