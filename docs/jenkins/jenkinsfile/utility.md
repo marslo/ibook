@@ -15,6 +15,7 @@
   - [running in temporaray folders](#running-in-temporaray-folders)
 - [withCredentials](#withcredentials)
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
+  - [ssh-agent()](#ssh-agent)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -329,6 +330,17 @@ if ( bodyText.find('Safari') ) {
     ```
 
 ## withCredentials
+{% hint style='tip' %}
+references:
+> - [JENKINS-47514 : Special characters in password are not escaped properly in git plugin's withCredentials](https://issues.jenkins.io/browse/JENKINS-47514)
+> <p></p>
+> Both `gitUsernamePassword` and `gitSshPrivateKey` bindings depend on the Credential Plugin to retrieve user’s credential using the Credentials API.
+> Git SSH Private Key Binding
+> The gitSshPrivateKey implementation provides git authentication support over SSH protocol using private key and passphrase credentials of a user. The binding uses two git specific environment variables depending upon the minimum CLI-git version
+> - `GIT_SSH_COMMAND` - If version is greater than or equal to 2.3, then the GIT_SSH_COMMAND environment variable provides the ssh command including necessary options which are: path to the private key and host key checking, to authenticate and connect to the git server without using an executable script.
+> - `SSH_ASKPASS` - If version is less than 2.3, an executable script is attached to the variable which provides the ssh command including necessary options which are: path to the private key and host key checking, to authenticate and connect to the git server
+{% endhint %}
+
 ### push with ssh private credentials
 
 {% hint style='tip' %}
@@ -337,6 +349,17 @@ if ( bodyText.find('Safari') ) {
 > - [Git credentials binding for sh, bat, and powershell ](https://www.jenkins.io/projects/gsoc/2021/projects/git-credentials-binding/#git-ssh-private-key-binding)
 > - [Is it possible to Git merge / push using Jenkins pipeline](https://stackoverflow.com/a/57731191/2940319)
 > - [Pipeline - Equivalent to Git Publisher](https://support.cloudbees.com/hc/en-us/articles/360027646491-Pipeline-Equivalent-to-Git-Publisher)
+> - [Git from Jenkins pipeline is using wrong SSH private key to push back into Git repository](https://stackoverflow.com/a/66800070/2940319)
+> - [Credentials Binding Plugin](https://www.jenkins.io/doc/pipeline/steps/credentials-binding/)
+>
+> for username & password by `gitUsernamePassword` :
+> ```groovy
+> withCredentials([
+>   gitUsernamePassword( credentialsId: 'my-credentials-id', gitToolName: 'git-tool' )
+> ]) {
+>   bat 'git submodule update --init --recursive'
+> }
+> ```
 {% endhint %}
 
 
@@ -344,6 +367,24 @@ if ( bodyText.find('Safari') ) {
 > If for any particular reason, the push must be done using a different method the URL needs to be configured accordingly: <br>
 > - `git config url.git@github.com/.insteadOf https://github.com/` : if the checkout was done through HTTPS but push must be done using SSH
 > - `git config url.https://github.com/.insteadOf git@github.com/` : if the checkout was done through SSH but push must be done using HTTPS
+> escaping characters in the ECHO commands of the askpass script:
+> ```bash
+> .replace("%", "%%")
+> .replace("^", "^^")
+> .replace("&", "^&")
+> .replace("<", "^<")
+> .replace(">", "^>")
+> .replace("|", "^|")
+> .replace("'", "^'")
+> .replace("`", "^`")
+> .replace(",", "^,")
+> .replace(";", "^;")
+> .replace("=", "^=")
+> .replace("(", "^(")
+> .replace(")", "^)")
+> .replace("!", "^!")
+> .replace("\"", "^\"")
+> ```
 
 ```groovy
 withCredentials([ sshUserPrivateKey(
@@ -357,6 +398,24 @@ withCredentials([ sshUserPrivateKey(
     git push origin <local-branch>:<remote-branch>
   """
 }
-
 ```
 
+### ssh-agent()
+
+{% hint style='tip' %}
+> references:
+> - [How is your Jenkins 'master' configured for SSH push in the Jenkinsfile? #5](https://github.com/docker-archive/jenkins-pipeline-scripts/issues/5#issuecomment-508510149)
+> - [Use ssh credentials in jenkins pipeline with ssh, scp or sftp](https://stackoverflow.com/a/44391234/2940319)
+{% endhint %}
+
+- sample code
+  ```groovy
+  steps {
+    sshagent (credentials: ['jenkins-generated-ssh-key']) {
+      sh("""
+        git tag ${props['DATE_TAG']}
+        git push --tags
+      """)
+    }
+  }
+  ```
