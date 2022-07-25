@@ -168,10 +168,14 @@ Map option = ( [ 'apple', 'orange' ].contains(fruits) ) ? [ "${fruits}" : '5' ]
 
 
 ## execute shell commands in groovy
+
+{% hint style='tip' %}
 > reference
 > - [101 groovy script - Execute commands](https://groovy-lang.gitlab.io/101-scripts/basico/command_local-en.html)
 > - [Jenkins Groovy script to execute shell commands](https://stackoverflow.com/a/46488427/2940319)
 > - [java.lang.Process](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Process.html)
+> - [gist: Run shell command in groovy](https://gist.github.com/remen/31e798670783261c8a93)
+{% endhint %}
 
 ### Get STDERR & STDERR
 

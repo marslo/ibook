@@ -11,6 +11,16 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> references:
+> [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+>
+> to get groovy version:
+> ```groovy
+> println GroovySystem.version
+> ```
+{% endhint %}
+
 
 ### [upgrading jenkins](https://www.jenkins.io/blog/2018/03/15/jep-200-lts/#upgrading-jenkins)
 #### [jenkins 2.357 requires Java 11](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
@@ -30,6 +40,151 @@
 > - [Upgrading to Java 11 or 17](https://www.jenkins.io/blog/2022/06/28/require-java-11/#upgrading-to-java-11-or-17)
 {% endhint %}
 
+- get Java version from Jenkins master
+  ```groovy
+  println " >> jenkins.rootUrl: ${Jenkins.instance.rootUrl} "
+  println " >> jenkins.version: ${Jenkins.instance.version} "
+  System.getProperties().findAll { k, v ->
+    k.toLowerCase().contains( 'java' )
+  }.each { k, v ->
+    println " >>> ${k} ~> ${v} "
+  }
+
+  "DONE"
+  ```
+
+  - result
+  ```
+     >> jenkins.rootUrl: https://my-dev.jenkins.com/
+     >> jenkins.version: 2.360
+     >>> java.specification.version ~> 11
+     >>> java.runtime.version ~> 11.0.15+10
+     >>> java.class.path ~> /usr/share/jenkins/jenkins.war
+     >>> java.vm.vendor ~> Eclipse Adoptium
+     >>> javamelody.maven-repositories ~> /var/jenkins_home/.m2/repository,http://repo1.maven.org/maven2,http://repo.jenkins-ci.org/public
+     >>> java.runtime.name ~> OpenJDK Runtime Environment
+     >>> javamelody.gzip-compression-disabled ~> true
+     >>> java.vendor.url ~> https://adoptium.net/
+     >>> javamelody.About Monitoring ~> https://plugins.jenkins.io/monitoring/
+     >>> java.vm.specification.version ~> 11
+     >>> java.vm.name ~> OpenJDK 64-Bit Server VM
+     >>> java.vendor.version ~> Temurin-11.0.15+10
+     >>> javamelody.http-transform-pattern ~> /\d+/|(?<=/static/|/adjuncts/|/bound/)[\w\-]+|(?<=/ws/|/user/|/testReport/|/javadoc/|/site/|/violations/file/|/cobertura/).+|(?<=/job/).+(?=/descriptorByName/)
+     >>> sun.java.launcher ~> SUN_STANDARD
+     >>> sun.java.command ~> /usr/share/jenkins/jenkins.war
+     >>> java.vendor.url.bug ~> https://github.com/adoptium/adoptium-support/issues
+     >>> javamelody.system-actions-enabled ~> true
+     >>> java.io.tmpdir ~> /tmp
+     >>> javamelody.storage-directory ~> //var/jenkins_home/monitoring
+     >>> java.version ~> 11.0.15
+     >>> javamelody.custom-reports ~> Jenkins Info,About Monitoring
+     >>> java.specification.vendor ~> Oracle Corporation
+     >>> java.vm.specification.name ~> Java Virtual Machine Specification
+     >>> java.awt.printerjob ~> sun.print.PSPrinterJob
+     >>> java.version.date ~> 2022-04-19
+     >>> java.home ~> /opt/java/openjdk
+     >>> java.vm.compressedOopsMode ~> Zero based
+     >>> java.library.path ~> /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+     >>> java.specification.name ~> Java Platform API Specification
+     >>> java.vm.specification.vendor ~> Oracle Corporation
+     >>> java.vm.info ~> mixed mode
+     >>> java.vendor ~> Eclipse Adoptium
+     >>> java.vm.version ~> 11.0.15+10
+     >>> java.awt.graphicsenv ~> sun.awt.X11GraphicsEnvironment
+     >>> java.awt.headless ~> true
+     >>> javamelody.csrf-protection-enabled ~> true
+     >>> java.class.version ~> 55.0
+     >>> javamelody.Jenkins Info ~> /systemInfo
+     >>> javamelody.no-database ~> true
+    Result: DONE
+  ```
+
+- get Java version from Jenkins agent
+
+  ```groovy
+  println " >> jenkins.rootUrl: ${Jenkins.instance.rootUrl}"
+  println " >> jenkins.version: ${Jenkins.instance.version}"
+
+  Jenkins.instance.nodes.each { agent ->
+    println " >> agent: ${agent.displayName}"
+    agent.computer.getSystemProperties().findAll{ k, v ->
+      k.toLowerCase().contains( 'java' )
+    }.each { k, v ->
+      println " ~~> ${k} -> ${v}"
+    }
+  }
+  ```
+  - result
+    ```
+    >> jenkins.rootUrl: https://my-dev.jenkins.com/
+    >> jenkins.version: 2.360
+    >> agent: yaml-15-x946w-s48xb-jqkn0
+    ~~> java.awt.graphicsenv -> sun.awt.X11GraphicsEnvironment
+    ~~> java.awt.printerjob -> sun.print.PSPrinterJob
+    ~~> java.class.path -> /usr/share/jenkins/slave.jar
+    ~~> java.class.version -> 55.0
+    ~~> java.home -> /usr/lib/jvm/java-11-openjdk-amd64
+    ~~> java.io.tmpdir -> /tmp
+    ~~> java.library.path -> /usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+    ~~> java.runtime.name -> OpenJDK Runtime Environment
+    ~~> java.runtime.version -> 11.0.15+10-Ubuntu-0ubuntu0.18.04.1
+    ~~> java.specification.name -> Java Platform API Specification
+    ~~> java.specification.vendor -> Oracle Corporation
+    ~~> java.specification.version -> 11
+    ~~> java.vendor -> Private Build
+    ~~> java.vendor.url -> Unknown
+    ~~> java.vendor.url.bug -> Unknown
+    ~~> java.version -> 11.0.15
+    ~~> java.version.date -> 2022-04-19
+    ~~> java.vm.compressedOopsMode -> Zero based
+    ~~> java.vm.info -> mixed mode, sharing
+    ~~> java.vm.name -> OpenJDK 64-Bit Server VM
+    ~~> java.vm.specification.name -> Java Virtual Machine Specification
+    ~~> java.vm.specification.vendor -> Oracle Corporation
+    ~~> java.vm.specification.version -> 11
+    ~~> java.vm.vendor -> Private Build
+    ~~> java.vm.version -> 11.0.15+10-Ubuntu-0ubuntu0.18.04.1
+    ~~> javamelody.no-database -> true
+    ~~> sun.java.command -> hudson.remoting.jnlp.Main -headless -tunnel 1.2.3.4:12345 -url https://my-dev.jenkins.com/ -workDir /home/devops ae62043877285d6ba763f254ce041f64674ce2c4768d9872621af0ea65c07b2d yaml-15-x946w-s48xb-jqkn0
+    ~~> sun.java.launcher -> SUN_STANDARD
+    Result: [KubernetesSlave name: yaml-15-x946w-s48xb-jqkn0]
+    ```
+
+- or via `RemotingDiagnostics`
+  ```groovy
+  import hudson.util.RemotingDiagnostics
+  import jenkins.model.Jenkins
+
+  println " >> jenkins.rootUrl: ${Jenkins.instance.rootUrl}"
+  println " >> jenkins.version: ${Jenkins.instance.version}"
+
+  String result
+  String javaVersion = """
+    def stdout = new StringBuffer()
+    def stderr = new StringBuffer()
+    "java -version".execute().waitForProcessOutput( stdout, stderr )
+    println stderr
+  """
+
+  Jenkins.instance.nodes.each { agent ->
+    println ">> agent: ${agent.displayName}"
+    result = RemotingDiagnostics.executeGroovy( javaVersion.trim(), agent.channel )
+                    .tokenize( '\n' )
+                    .collect{ "\t${it}" }
+                    .join( '\n' )
+  }
+  println ">>> java version: \n${result}"
+  ```
+  - result
+    ```
+    >> jenkins.rootUrl: https://my-dev.jenkins.com/
+    >> jenkins.version: 2.360
+    >> agent: yaml-15-x946w-s48xb-jqkn0
+    >>> java version:
+      openjdk version "11.0.15" 2022-04-19
+      OpenJDK Runtime Environment (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1)
+      OpenJDK 64-Bit Server VM (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1, mixed mode, sharing)
+    ```
 
 ### agent
 
@@ -205,4 +360,3 @@ System.getenv().JAVA_OPTS
 | `${PROTOCOL_FULLY_QUALIFIED_NAME}.disabled`                                  | false                    | 2.59   | 2.4                | JENKINS-34819              |
 | `org.jenkinsci.remoting.nio.NioChannelHub.disabled`                          | false                    | 2.62.3 | TODO               | JENKINS-39290              |
 | `org.jenkinsci.remoting.engine.JnlpAgentEndpointResolver.protocolNamesToTry` | false                    | TODO   | TODO               | JENKINS-41730              |
-

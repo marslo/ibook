@@ -16,11 +16,10 @@
 
 ## highlight output
 
-{% hint style='tip' %}
+>[!TIP]
 > references:
 > - [Colorized grep -- viewing the entire file with highlighted matches](https://stackoverflow.com/questions/981601/colorized-grep-viewing-the-entire-file-with-highlighted-matches)
 > - [Highlight text similar to grep, but don't filter out text [duplicate]](https://stackoverflow.com/questions/7393906/highlight-text-similar-to-grep-but-dont-filter-out-text)
-{% endhint %}
 
 
 ### [ack](https://metacpan.org/pod/ack)
@@ -49,9 +48,8 @@ $ command | egrep --color=always 'pattern|$'
 
 ### [highlight](http://www.andre-simon.de/doku/highlight/en/highlight.php)
 
-{% hint style='tip' %}
+> [!TIP]
 > Highlight was designed to offer a flexible but easy to use syntax highlighter for several output formats. Instead of hardcoding syntax or colouring information, all relevant data is stored in configuration scripts. These scripts may be altered or enhanced with plug-in scripts.
-{% endhint %}
 
 ```bash
 $ highlight -i git.groovy -o git.groovy.html --syntax groovy --inline-css --include-style --line-numbers
@@ -59,9 +57,8 @@ $ highlight -i git.groovy -o git.groovy.html --syntax groovy --inline-css --incl
 
 ### [ccat](https://github.com/owenthereal/ccat)
 
-{% hint style='tip' %}
+> [!TIP]
 > ccat is the colorizing cat. It works similar to cat but displays content with syntax highlighting.
-{% endhint %}
 
 ```bash
 $ ccat /path/to/file.groovy

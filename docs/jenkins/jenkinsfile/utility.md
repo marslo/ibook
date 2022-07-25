@@ -394,13 +394,14 @@ withCredentials([ sshUserPrivateKey(
                   )
 ]) {
   sh """
-    GIT_SSH_COMMAND = "ssh -i $SSH_KEY -o User=${USERNAME} -o StrictHostKeyChecking=no"
+    GIT_SSH_COMMAND="ssh -i ${SSHKEY} -o User=${USERNAME} -o StrictHostKeyChecking=no" \
+    git ls-remote <repoUrl> --heads
     git push origin <local-branch>:<remote-branch>
   """
 }
 ```
 
-### ssh-agent()
+### ssh-agent(https://plugins.jenkins.io/ssh-agent)
 
 {% hint style='tip' %}
 > references:

@@ -369,6 +369,7 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
   ```bash
   $ mail
   ? delete *
+  No applicable messages.
   ? q
   ```
 
