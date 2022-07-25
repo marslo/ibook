@@ -37,8 +37,8 @@
 > - [Script Console](https://www.jenkins.io/doc/book/managing/script-console/)
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [samrocketman/jenkins-script-console-scripts](https://github.com/samrocketman/jenkins-script-console-scripts)
-> - [jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
-> - [cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
+> - [* jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
+> - [* cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
 > - [mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)
 > - [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
 > - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
@@ -48,6 +48,17 @@
 > - [Jenkins : Use Jenkins](https://wiki.jenkins.io/display/JENKINS/Use-Jenkins.html)
 {% endhint %}
 
+> [!TIP]
+> to list methods on a class instance:
+> ```groovy
+> thing.metaClass.methods*.name.sort().unique()
+> ```
+> to determine a class from an instance:
+> ```groovy
+> thing.class
+> // or
+> thing.getClass()
+> ```
 
 ## [script console](https://www.jenkins.io/doc/book/managing/script-console/)
 ### usage
