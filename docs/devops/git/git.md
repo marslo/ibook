@@ -1237,7 +1237,13 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 
 > [!TIP]
 > - [field names](https://git-scm.com/docs/git-for-each-ref#_field_names)
+> - [foramtting]()https://git-scm.com/docs/git-for-each-ref/2.21.0#Documentation/git-for-each-ref.txt---formatltformatgt
 > - [git/t/t6300-for-each-ref.sh](https://github.com/git/git/blob/c25fba986bfc737d775430d290b93136d390e067/t/t6300-for-each-ref.sh#L79-L216)
+> <br>
+> - format:
+>   - `%00`                        -> `\0` (NUL)
+>   - `%09`                        -> `\t` (tab)
+>   - `%0a`                        -> `\n` (LF)
 > <br>
 > - field names:
 >   - head :
@@ -1500,8 +1506,11 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 #### alias
 ```bash
 [alias]
-  # [p]retty [t]ag
+  ### [p]retty [t]ag
   pt          = "!git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(align:left,38)%(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset)%(end) %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M)%(else)%(committerdate:format:%Y-%m-%d %H:%M)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color --count=10"
   pts         = "!git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset) - %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M)%(else)%(committerdate:format:%Y-%m-%d %H:%M)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color"
-```
 
+  ### [p]retty [b]ranch
+  pb          = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color --count=10"
+  pbs         = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color"
+```

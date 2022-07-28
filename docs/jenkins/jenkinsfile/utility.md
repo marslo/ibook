@@ -15,7 +15,7 @@
   - [running in temporaray folders](#running-in-temporaray-folders)
 - [withCredentials](#withcredentials)
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
-  - [ssh-agent()](#ssh-agent)
+  - [ssh-agent(https://plugins.jenkins.io/ssh-agent)](#ssh-agenthttpspluginsjenkinsiossh-agent)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
