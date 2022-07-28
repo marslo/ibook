@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2039,SC1078,SC1079,SC2015
+# shellcheck disable=SC1078,SC1079,SC2015,SC2216
 # =============================================================================
 #   FileName : deploy.sh
 #     Author : marslo.jiao@gmail.com
@@ -11,8 +11,9 @@ root="$(git rev-parse --show-toplevel)"
 target="${root}/.target_book"
 book="${root}/_book"
 branch='gh-pages'
-remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
-msg=$(git show HEAD --no-patch --format="%s")
+# remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
+remotes=$(git remote get-url origin)
+msg=$(git --no-pager show HEAD --no-patch --format="%s")
 
 # References:
 #  - [WAOW! Complete explanations](https://stackoverflow.com/a/28938235/101831)
@@ -27,17 +28,17 @@ usage="""$(c B)deploy.sh - to quickly deploy _book/* into gh-pages branch $(c)
 \nUSAGE:
 \t$(c sG)$ $0 [help] [function name]$(c)
 \nNOTICE:
-\tAdd command $(c Y)'built'$(c) in ./package.json as below:
+\tadd command $(c Y)'built'$(c) in ./package.json as below:
 \t\t$(c u){$(c)
 \t\t$(c u)  \"scripts\": {$(c)
 \t\t$(c u)    \"built\": \"gitbook install && gitbook build\",$(c)
 \t\t$(c u)  }$(c)
 \t\t$(c u)}$(c)
-\n\tMore details can be found by $(c Y)$ $0 info$(c)
+\n\tmore details can be found by $(c Y)$ $0 info$(c)
 \nEXAMPLE:
-\n\tDeploy _book into remote repository gh-pages branch:
+\n\tdeploy _book into remote repository gh-pages branch:
 \t\t$(c Y)$ $0 doDeploy$(c)
-\n\tShow current information:
+\n\tshow current information:
 \t\t$(c Y)$ $0 info$(c)
 \nINDEPENDENT FUNCTION NAME:
 """
@@ -50,9 +51,9 @@ info="""
      $(c Y)commit message$(c) : ${msg}
 
   $(c M)NPM COMMANDS :$(c)
-      $(c Y)npm run clean$(c)  : $(grep \"clean\" ${root}/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
-      $(c Y)npm run built$(c)  : $(grep \"built\" ${root}/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
-      $(c Y)npm run deploy$(c) : $(grep \"deploy\" ${root}/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run clean$(c)  : $(grep \"clean\"  "${root}"/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run built$(c)  : $(grep \"built\"  "${root}"/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
+      $(c Y)npm run deploy$(c) : $(grep \"deploy\" "${root}"/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
 """
 
 function help()
@@ -73,14 +74,14 @@ function build() {
 }
 
 function rebuiltToc() {
-  find $(git rev-parse --show-toplevel)/docs \
+  find "$(git rev-parse --show-toplevel)"/docs \
        -iname '*.md' \
        -not -path '**/SUMMARY.md' \
        -exec doctoc --github --maxlevel 3 {} \;
 }
 
 function updateRepo() {
-  if [ "$(git rev-parse remotes/origin/${branch})" != "$(git -C ${target} rev-parse HEAD)" ]; then
+  if [ """$(git rev-parse remotes/origin/"${branch}")""" != """$(git -C "${target}" rev-parse HEAD)""" ]; then
     git -C "${target}" fetch origin --force "${branch}"
     # git -C "${target}" rebase -v refs/remotes/origin/${branch}
     git -C "${target}" reset --hard refs/remotes/origin/${branch}
@@ -93,16 +94,15 @@ function cloneRepo() {
 
 function updateBook() {
   pushd .
-  cd $(git rev-parse --show-toplevel)
-  npm run built
+  cd "$(git rev-parse --show-toplevel)" || return
 
-  if [ $? -ne 0 ]; then
+  if ! npm run built; then
     echo "ERROR: FAILED on gitbook build. Exiting."
     popd || return
     exit 1
   else
-    yes | rm -rf ${target}/*
-    yes | cp -rf ${book}/* ${target}/
+    yes | rm -rf "${target:?}"/*
+    yes | cp -rf "${book}"/* "${target}"/
 
     cd "${target}" || exit
 
@@ -132,7 +132,7 @@ function doDeploy() {
   updateBook
 }
 
-if [ "$1" = "help" ]; then
+if [ "$1" = "help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
   help
 else
   # if no parameters, then run all of default installation and configuration
