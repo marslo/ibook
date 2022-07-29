@@ -13,6 +13,7 @@
 - [others](#others)
   - [handle api](#handle-api)
   - [running in temporaray folders](#running-in-temporaray-folders)
+  - [check git branch exists in local repo](#check-git-branch-exists-in-local-repo)
 - [withCredentials](#withcredentials)
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
   - [ssh-agent(https://plugins.jenkins.io/ssh-agent)](#ssh-agenthttpspluginsjenkinsiossh-agent)
@@ -24,7 +25,7 @@
 - jenkinsfile
   ```groovy
   sh "touch a.txt"
-  def files = findFiles (glob: "**/*.txt")
+  def files = findFiles ( glob: "**/*.txt" )
   println """
             name : ${files[0].name}
             path : ${files[0].path}
@@ -329,7 +330,65 @@ if ( bodyText.find('Safari') ) {
     16:26:14  drwxr-xr-x 4 devops devops 52 Jul 13 08:26 ..
     ```
 
+### check git branch exists in local repo
+```groovy
+/**
+ * check whether if the git refs exists in local repo or not
+ *
+ * @param name         the git base references, can be branch name or revision or tag or pointer refs ( i.e. {@code HEAD}, {@code FETCH_HEAD}, ... )
+ * @param type         the references type. can be {@code [ heads | tags | refs ]}. revision will be considered as {@code refs}
+ * @param dir          the local repo location. using current directory by default
+ * @param verbose      whether or not to show debug information
+**/
+Boolean hasLocalReference( String name          ,
+                           String type = 'refs' ,
+                           String dir  = pwd()  ,
+                           Boolean verbose = true
+) {
+  if ( ! [ 'heads', 'tags', 'refs' ].contains(type) ) println( "ERROR: invalid type ! available type : 'heads', 'tags' or 'refs'" )
+  if ( verbose ) println ( "~~> check whether if ${type} : '${name}' exists in local repository : '${dir}'" )
+  String refs = [ 'heads', 'tags' ].contains(type) ? "refs/${type}/${name}" : name
+  sh ( returnStatus : true ,
+       script : """
+         set -x ;
+         [ -d "${dir}" ] && \
+         git -C "${dir}" rev-parse --is-inside-work-tree >/dev/null 2>&1 && \
+         git -C "${dir}" cat-file -e ${refs}
+       """
+  ) == 0
+}
+```
+
+- or via `show-ref`
+  ```groovy
+  /**
+   * check whether if the branch exists in local repository
+   *
+   * @param name         the branch name will be checked
+   * @param type         to using {@code refs/${type}} to check branch or tags in local
+   * @param dir          the local repo location. using current directory by default
+   * @param verbose      whether or not to show debug information
+  **/
+  Boolean hasLocalBranch ( String name        ,
+                           String type        ,
+                           String dir = pwd() ,
+                           Boolean verbose = true
+  ) {
+    if ( ! [ 'heads', 'tags' ].contains(type) ) util.showError( "ERROR: invalid type! available type : 'heads' or 'tags'" )
+    if ( verbose ) color.echo( LOGGER_COLOR, "~~> check whether if ${refName(type)} : '${name}' exists in local repository : '${dir}'" )
+    sh ( returnStatus : true ,
+         script : """
+           set +x;
+           [ -d "${dir}" ] && \
+           git -C "${dir}" rev-parse --is-inside-work-tree >/dev/null 2>&1 && \
+           git -C '${dir}' show-ref --quiet refs/${type}/${name}
+         """
+    ) == 0
+  } // hasLocalBranch
+  ```
+
 ## withCredentials
+
 {% hint style='tip' %}
 references:
 > - [JENKINS-47514 : Special characters in password are not escaped properly in git plugin's withCredentials](https://issues.jenkins.io/browse/JENKINS-47514)
@@ -395,11 +454,38 @@ withCredentials([ sshUserPrivateKey(
 ]) {
   sh """
     GIT_SSH_COMMAND="ssh -i ${SSHKEY} -o User=${USERNAME} -o StrictHostKeyChecking=no" \
-    git ls-remote <repoUrl> --heads
+    git ls-remote <repoUrl> --heads \
     git push origin <local-branch>:<remote-branch>
   """
 }
 ```
+
+- or
+  ```groovy
+  def withSSHCredential( String credential, Boolean verbose = true ) {
+      [
+        run : { command ->
+          if ( verbose ) println ( "~~> run '${command}' with credential ${credential} :" )
+          withCredentials([ sshUserPrivateKey(
+                                 credentialsId : credentialsId ,
+                               keyFileVariable : 'SSHKEY'      ,
+                              usernameVariable : 'USERNAME'
+                            )
+          ]) {
+            String sshCommand = "GIT_SSH_COMMAND=\"ssh -i '${SSHKEY}'   " +
+                                                      "-l '${USERNAME}' " +
+                                                      "-o StrictHostKeyChecking=no" +
+                                                '"'
+            sh ( returnStatus : true ,
+                       script : """ set +x -e ; ${sshCommand} ${command} """
+            ) == 0
+          } // sshUserPrivateKey
+        } // run
+      ]
+  } // withCredential
+
+  // withSSHCredential( 'credentialID' ).run( 'git ls-remote git@github.com:sample/repo.git' )
+  ```
 
 ### ssh-agent(https://plugins.jenkins.io/ssh-agent)
 
