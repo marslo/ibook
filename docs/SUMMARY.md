@@ -15,6 +15,7 @@
     * [awk](cheatsheet/character/awk.md)
     * [sed](cheatsheet/character/sed.md)
     * [markdown](cheatsheet/character/markdown.md)
+    * [html](cheatsheet/character/html.md)
     * [json](cheatsheet/character/json.md)
     * [regex](cheatsheet/character/regex.md)
   * [havefun](cheatsheet/havefun.md)

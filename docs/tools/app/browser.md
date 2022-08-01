@@ -24,12 +24,12 @@ about:restartrequired
 > - [Aris-t2/CustomCSSforFx](https://github.com/Aris-t2/CustomCSSforFx/tree/master/classic)
 
 - Steps:
-  - Open your currently active [profile folder](http://kb.mozillazine.org/Profile_folder#Folders)
-  - Create a new folder named chrome
-  - Create a desktop shortcut (alias) to the chrome folder for easier future access
-  - Make sure your OS is set to show you file extensions like .txt and .css
-  - Create a new text file inside the chrome folder named [userChrome.css](http://kb.mozillazine.org/UserChrome.css)
-  - Change a preference in Firefox so it looks for your files at startup (in Firefox 69+)
+  - open your currently active [profile folder](http://kb.mozillazine.org/Profile_folder#Folders)
+  - create a new folder named chrome
+  - create a desktop shortcut (alias) to the chrome folder for easier future access
+  - make sure your OS is set to show you file extensions like .txt and .css
+  - create a new text file inside the chrome folder named [userChrome.css](http://kb.mozillazine.org/UserChrome.css)
+  - change a preference in Firefox so it looks for your files at startup (in Firefox 69+)
 
 - [Unlock custom CSS usage in Firefox 69 and newer](https://github.com/Aris-t2/CustomCSSforFx#unlock-custom-css-usage-in-firefox-69-and-newer)
   - `about:config`
@@ -55,12 +55,12 @@ about:restartrequired
   }
   ```
 
-- [Take Out Blue On Top Of Tab](https://support.mozilla.org/en-US/questions/1290337)
+- [take out blue on top of tab](https://support.mozilla.org/en-US/questions/1290337)
   ```css
   .tab-line { display: none !important; }
   ```
 
-- [Is there any way to disable the blue line on top of the currently selected tab?](https://www.reddit.com/r/firefox/comments/7745x4/is_there_any_way_to_disable_the_blue_line_on_top/)
+- [is there any way to disable the blue line on top of the currently selected tab?](https://www.reddit.com/r/firefox/comments/7745x4/is_there_any_way_to_disable_the_blue_line_on_top/)
   ```css
   #TabsToolbar .tabbrowser-tab[selected] .tab-line {
       display: none !important;
@@ -118,4 +118,12 @@ about:restartrequired
 
 ## chrome
 ### shortcut
-- <kbd>shift</kbd> + <kbd>w</kbd> : move tab to new windows
+
+>[!TIP]
+> references:
+> - [Keyboard shortcut to pull Google Chrome tab into its own window](https://superuser.com/a/745584/112396)
+> - [duplicate tab in same window](https://superuser.com/a/1501694/112396)
+
+- <kbd>shift</kbd> + <kbd>w</kbd> : move tab to new windows by using Vimium
+- <kbd>cmd</kbd>+<kbd>l</kbd> -> <kbd>shift</kbd>+<kbd>enter</kbd> : duplicate tab to new window
+- <kbd>cmd</kbd>+<kbd>l</kbd> -> <kbd>opt</kbd>+<kbd>enter</kbd> : duplicate tab to same window
