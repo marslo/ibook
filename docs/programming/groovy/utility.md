@@ -22,15 +22,58 @@
 > [!TIP]
 > references:
 > - [Java SimpleDateFormat](https://jenkov.com/tutorials/java-internationalization/simpledateformat.html)
+> - [Class SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
+> - [Class Date](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
+> - [Class TimeZone](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html)
+> - [Class SimpleDateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/SimpleDateFormat.html)
+> - [Class DateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DateFormat.html)
 >
 > usage in jenkins
 > - [imarslo: get build time](../../jenkins/script/build.html#get-build-time)
 
 ### current timestamp
 ```groovy
+// 20220706171701
 new Date().format( 'YYYYMMddHHmmss' )
 
-// result : 20220706171701
+// Tuesday 02 August 2022 20:33:11.967 +0800
+new Date().format( 'EEEEE dd MMMMM yyyy HH:mm:ss.SSS Z' )
+
+// Tuesday 02 August 2022 20:35:21.565 +0800, 214 days, week 32
+new Date().format( 'EEEEE dd MMMMM yyyy HH:mm:ss.SSS Z, DD' ) + ' days, week ' + new Date().format( 'w' )
+```
+
+
+### data parse
+```groovy
+String oldFormat = '04-DEC-2012'
+Date date = Date.parse( 'dd-MMM-yyyy', oldFormat )
+assert date.format( 'M-d-yyyy' ) == '12-4-2012'
+
+
+// or
+Date date = Date.parse( 'HH:mm:ss dd-MMM-yyyy, Z', '00:00:00 04-DEC-2022, -0800')
+// Sunday 04 12-4-2022 00:00:00, PST
+date.format( 'EEEEE dd M-d-yyyy HH:mm:ss, z', timezone=TimeZone.getTimeZone('PST') )
+// Sunday 04 12-4-2022 03:00:00, EST
+date.format( 'EEEEE dd M-d-yyyy HH:mm:ss, z', timezone=TimeZone.getTimeZone('EST') )
+// Sunday 04 12-4-2022 08:00:00, UTC
+date.format( 'EEEEE dd M-d-yyyy HH:mm:ss, z', timezone=TimeZone.getTimeZone('UTC') )
+// Sunday 04 12-4-2022 16:00:00, +0800
+date.format( 'EEEEE dd M-d-yyyy HH:mm:ss, Z', timezone=TimeZone.getTimeZone('Asia/Shanghai') )
+// Sunday 04 12-4-2022 16:00:00, CST
+date.format( 'EEEEE dd M-d-yyyy HH:mm:ss, z', timezone=TimeZone.getTimeZone('Asia/Shanghai') )
+
+
+// oneline parse
+// Sun Dec 11 00:00:00 CST 2011
+Date.parse('yyyy-MM-dd hh:MM:SS', '2012-12-11 00:00:00').format('E MMM dd HH:mm:ss z yyyy')
+```
+
+
+### get available timezone
+```groovy
+java.util.TimeZone.getAvailableIDs()
 ```
 
 ### get current time
