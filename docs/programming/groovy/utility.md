@@ -4,6 +4,8 @@
 
 - [time](#time)
   - [current timestamp](#current-timestamp)
+  - [data parse](#data-parse)
+  - [get available timezone](#get-available-timezone)
   - [get current time](#get-current-time)
   - [convert the Date to simpleDateFormat or timeInMillis](#convert-the-date-to-simpledateformat-or-timeinmillis)
   - [Java LocalDateTime with different format](#java-localdatetime-with-different-format)
