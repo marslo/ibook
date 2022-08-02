@@ -33,6 +33,7 @@
   - [get builds result during certain start-end time](#get-builds-result-during-certain-start-end-time)
   - [list all running builds](#list-all-running-builds)
   - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
+  - [check whether if log kepet](#check-whether-if-log-kepet)
 - [build stage](#build-stage)
   - [show build stages details](#show-build-stages-details)
   - [get parent stage ID](#get-parent-stage-id)
@@ -1257,6 +1258,14 @@ results.each { name, values ->
 - result
   ![build-history-with-status-and-percentage-for-params](../../screenshot/jenkins/build-history-with-status-and-percentage-for-params.png)
   ![build-history-with-status-and-percentage-for-all-builds](../../screenshot/jenkins/build-history-with-status-and-percentage-for-all.png)
+
+
+### check whether if log kepet
+```groovy
+def job = Jenkins.getInstance().getItemByFullName( '/sandbox/job' )
+job.builds.findAll { Run run -> run.isKeepLog() }
+          .collect { Run run -> run.id }
+```
 
 ## build stage
 > references:

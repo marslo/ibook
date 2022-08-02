@@ -36,6 +36,7 @@
 > - [Docker 学习笔记](https://blog.opskumu.com/docker.html)
 > - [Understanding the Docker Internals](https://medium.com/%40BeNitinAgarwal/undersanding-the-docker-internals-7ccb052ce9fe)
 > - [Ideas for a cgroups UI](https://mairin.wordpress.com/2011/05/13/ideas-for-a-cgroups-ui/)
+> - [Configure Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#defining-a-liveness-command)
 
 ## docker internals
 ![docker internals](../../screenshot/docker/docker-internals.p/ng)

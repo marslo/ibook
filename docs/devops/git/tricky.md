@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [tricky](#tricky)
+  - [quick edit gitocnfig](#quick-edit-gitocnfig)
   - [get current branch](#get-current-branch)
   - [get previous branch](#get-previous-branch)
   - [quick push to current branch](#quick-push-to-current-branch)
@@ -41,6 +42,14 @@
 > - [tj/git-extras](https://github.com/tj/git-extras)
 > - [shell tricks: one git alias to rule them all](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
 {% endhint %}
+
+### quick edit gitocnfig
+```bash
+$ git config --edit --global
+
+# quick repalce config
+$ git config --global --replace-all core.pager cat
+```
 
 ### get current branch
 ```bash
