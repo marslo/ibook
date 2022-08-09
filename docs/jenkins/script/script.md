@@ -6,6 +6,7 @@
   - [usage](#usage)
   - [basic usage](#basic-usage)
   - [execute shell script in console](#execute-shell-script-in-console)
+- [jenkins system](#jenkins-system)
 - [jobs](#jobs)
   - [get build status](#get-build-status)
   - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
@@ -139,6 +140,30 @@ System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.
   println System.getProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient");
   ```
 
+## jenkins system
+
+{% hint style='tip' %}
+> references:
+> - [AnalogJ/you-dont-know-jenkins-init](https://github.com/AnalogJ/you-dont-know-jenkins-init)
+> - [3003.plugin-pipeline-library.groovy](https://github.com/AnalogJ/you-dont-know-jenkins-init/blob/master/3003.plugin-pipeline-library.groovy)
+{% endhint %}
+
+```groovy
+import jenkins.model.*;
+import org.jenkinsci.main.modules.sshd.*;
+
+def instance = Jenkins.instance
+instance.setDisableRememberMe( false )
+instance.setNumExecutors( 2 )
+instance.setSystemMessage( '<h2>welcome to the Jenkins Master</h2>' )
+instance.setRawBuildsDir()
+instance.save()
+
+def sshd = SSHD.get()
+sshd.setPort( 12345 )
+sshd.save()
+```
+
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 
 > [!TIP]
@@ -266,6 +291,8 @@ plugins.each { plugin ->
 {% hint style='tip' %}
 > references:
 > - [Class ScriptApproval](https://javadoc.jenkins.io/plugin/script-security/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.html)
+> - [ScriptApproval.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.java)
+> - [SecureGroovyScript.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/sandbox/groovy/SecureGroovyScript.java)
 {% endhint %}
 
 ### backup & restore all scriptApproval items
@@ -331,11 +358,11 @@ plugins.each { plugin ->
 
 - Jenkinsfile
   ```groovy
-#!/usr/bin/env groovy
+  #!/usr/bin/env groovy
 
-import org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval
+  import org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval
 
-timestamps { ansiColor('xterm') {
+  timestamps { ansiColor('xterm') {
 
     def requester = currentBuild.rawBuild.getCause(UserIdCause.class)?.getUserId() ?: 'jenkins'
     final List<String> description = []
@@ -378,7 +405,9 @@ timestamps { ansiColor('xterm') {
       }
 
     } catch(e) {
-      errors.echoStackTrace(e)
+      def sw = new StringWriter()
+      e.printStackTrace( new PrintWriter(sw) )
+      echo sw.toString()
       throw e
     } finally {
       if ( description ) {
@@ -388,10 +417,9 @@ timestamps { ansiColor('xterm') {
       }
     } // try/catch/finally
 
-}} // ansiColor | timestamps
+  }} // ansiColor | timestamps
 
-// vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
-
+  // vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
   ```
 
 ### automatic approval all pending
