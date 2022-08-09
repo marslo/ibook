@@ -17,7 +17,6 @@
   - [List plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
   - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)
-  - [automatic approval all pending](#automatic-approval-all-pending)
   - [disable the scriptApproval](#disable-the-scriptapproval)
 - [abort](#abort)
   - [abort a build](#abort-a-build)
@@ -309,21 +308,90 @@ plugins.each { plugin ->
   import org.jenkinsci.plugins.scriptsecurity.sandbox.whitelists.*;
   import static groovy.json.JsonOutput.*
 
-  scriptApproval = ScriptApproval.get()
-  alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
-  void approveSignature(String signature) {
-    if (!alreadyApproved.contains(signature)) {
-      scriptApproval.approveSignature(signature)
-    }
+  ScriptApproval scriptApproval = ScriptApproval.get()
+  HashSet<String> alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
+
+  Closure approveSignature = { String signature ->
+    if ( ! alreadyApproved?.contains(signature) ) scriptApproval.approveSignature( signature )
   }
 
-  List scriptList = [
-    'method hudson.model.Job getLastSuccessfulBuild',
-    'method hudson.model.Node getNodeName'
-  ]
-
-  scriptList.each { approveSignature(it) }
+  [
+      "field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval\$PendingSignature dangerous"        ,
+      "field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval\$PendingSignature signature"        ,
+      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval\$PendingThing getContext"          ,
+      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval approveSignature java.lang.String" ,
+      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingScripts"                 ,
+      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingSignatures"              ,
+      "staticMethod org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval get"                         ,
+      "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods flatten java.util.Set"                  ,
+      "method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild"
+  ].each { approveSignature(it) }
   scriptApproval.save()
+  ```
+
+- Jenkinsfile
+  ```groovy
+#!/usr/bin/env groovy
+
+import org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval
+
+timestamps { ansiColor('xterm') {
+
+    def requester = currentBuild.rawBuild.getCause(UserIdCause.class)?.getUserId() ?: 'jenkins'
+    final List<String> description = []
+
+    try {
+
+      ScriptApproval scriptApproval = ScriptApproval.get()
+      final LinkedHashSet<String> pendingScripts   = new HashSet<>(Arrays.asList( scriptApproval.getPendingScripts() )).flatten()
+      final LinkedHashSet<String> pendingSignature = new HashSet<>(Arrays.asList( scriptApproval.getPendingSignatures() )).flatten()
+
+      if ( ! pendingScripts && ! pendingSignature ) {
+        currentBuild.description = 'NOT_BUILT: nothing can be approved'
+        currentBuild.rawBuild.executor.interrupt(Result.NOT_BUILT)
+      }
+
+      if ( pendingScripts ) {
+        println "scripts pending approval ..."
+        pendingScripts.collect().each { ps ->
+          String log = "${ps.context.user}@${ps.context.psem.fullName} : ${ps.hash} ( ${ps.language.class.simpleName} )"
+          description << log
+          println "~~> ${log}. scripts: \n ${ps.script}"
+          scriptApproval.approveScript( ps.hash )
+        }
+        scriptApproval.save()
+      } // pendingScripts
+
+      if ( pendingSignature ) {
+        println "signatures pending approval ..."
+        pendingSignature.collect().each { ps ->
+          String signature = ps.signature
+          if ( ! ps.dangerous ) {
+            description << signature
+            println "~~> '${signature}'"
+            scriptApproval.approveSignature( signature )
+          } else {
+            println "~~> '${signature}' is too dangerous to be approval automatically. contact with Jenkins administrator."
+          }
+          scriptApproval.save()
+        }
+      }
+
+    } catch(e) {
+      errors.echoStackTrace(e)
+      throw e
+    } finally {
+      if ( description ) {
+        currentBuild.description = "@${requesterId} " +
+                                   "${buildResults.isSuccess(currentBuild.currentResult) ? 'successful' : 'failed to'} " +
+                                   "approved : '${description.join('; ')}'"
+      }
+    } // try/catch/finally
+
+}} // ansiColor | timestamps
+
+// vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
+
   ```
 
 ### automatic approval all pending
