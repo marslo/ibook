@@ -39,15 +39,18 @@ timestamps { ansiColor('xterm') {
 ```
 
 ### [check previous build status](https://support.cloudbees.com/hc/en-us/articles/230922188-Pipeline-How-can-I-check-previous-build-status-in-a-Pipeline-Script-)
+
+{% hint style='tip' %}
 > useful info:
 > ```groovy
 > method hudson.model.Run getPreviousBuild
 > method hudson.model.Run getResult
 > method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild
 > ```
+{% endhint %}
 
 ```groovy
-if(!hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?.getResult())) {
+if( ! hudson.model.Result.SUCCESS.equals(currentBuild.rawBuild.getPreviousBuild()?.getResult()) ) {
   echo "last build failed"
 }
 ```
@@ -60,17 +63,31 @@ if ( 'UNSTABLE' == currentBuild.result ) {
   currentBuild.getRawBuild().getExecutor().interrupt(Result.UNSTABLE)
 }
 ```
+- or
+  ```groovy
+  // stop and show status to NOT_BUILT
+  if ( 'ABORTED' == currentBuild.result ) {
+    currentBuild.rawBuild.executor.interrupt( Result.NOT_BUILT )
+  }
+  ```
 
-[or](https://stackoverflow.com/a/59062652/2940319)
-```groovy
-import hudson.model.Result
-import hudson.model.Run
-import jenkins.model.CauseOfInterruption
+- [or](https://stackoverflow.com/a/59062652/2940319)
+  ```groovy
+  import hudson.model.Result
+  import hudson.model.Run
+  import jenkins.model.CauseOfInterruption
 
-println ">> Aborting older build #${previousBuild.number}"
-def cause = { "interrupted by build #${currentBuild.getId()}" as String } as CauseOfInterruption
-executor.interrupt(Result.ABORTED, cause)
-```
+  Run previousBuild = currentBuild.getPreviousBuildInProgress()
+  while ( previousBuild ) {
+    if ( previousBuild.isInProgress() && previousBuild.getExecutor() ) {
+      println ">> aborting previous build #${previousBuild.number}"
+      def cause = { "interrupted by build #${currentBuild.getId()}" as String } as CauseOfInterruption
+      previousBuild.getExecutor().interrupt( Result.ABORTED, cause )
+    }
+    previousBuilds = currentBuild.getPreviousBuildInProgress()
+  }
+  ```
+
 - abort previous running build
   ```groovy
   import hudson.model.Result
@@ -93,23 +110,24 @@ executor.interrupt(Result.ABORTED, cause)
     }
   }
   ```
+
 - [or Stopping Jenkins job in case newer one is started](https://stackoverflow.com/a/44326188/2940319)
   ```groovy
   import hudson.model.Result
   import jenkins.model.CauseOfInterruption
 
   //iterate through current project runs
-  build.getProject()._getRuns().each{id,run->
+  build.getProject()._getRuns().each { id, run ->
     def exec = run.getExecutor()
     //if the run is not a current build and it has executor (running) then stop it
-    if( run!=build && exec!=null ){
+    if( run!=build && exec!=null ) {
       //prepare the cause of interruption
-      def cause = new CauseOfInterruption(){
-        public String getShortDescription(){
+      def cause = new CauseOfInterruption() {
+        public String getShortDescription() {
           return "interrupted by build #${build.getId()}"
         }
       }
-      exec.interrupt(Result.ABORTED, cause)
+      exec.interrupt( Result.ABORTED, cause )
     }
   }
 
@@ -133,6 +151,8 @@ Jenkins.instance.getItemByFullName("JobName")
 ```
 
 ### get current build info
+
+> [!TIP]
 > reference:
 > - [How to get Jenkins build job details?](https://medium.com/faun/how-to-get-jenkins-build-job-details-b8c918087030)
 
@@ -140,6 +160,10 @@ Jenkins.instance.getItemByFullName("JobName")
 ```groovy
 Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
 ```
+- get previous build number
+  ```groovy
+  currentBuild.previousBuild.number
+  ```
 
 #### get build id of lastSuccessfulBuild
 - get via api
@@ -153,12 +177,13 @@ Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toIn
 
 - get via `Jenkins.instance.getItemByFullName(env.JOB_NAME)`
   ```groovy
-  println Jenkins.instance.getItemByFullName(env.JOB_NAME).lastSuccessfulBuild.number
+  Jenkins.instance.getItemByFullName(env.JOB_NAME).lastSuccessfulBuild.number
   ```
-  - get last build id
-    ```groovy
-    println Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
-    ```
+
+- get last build id
+  ```groovy
+  Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toInteger()
+  ```
 
 ### trigger downstream builds
 ```groovy

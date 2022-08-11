@@ -29,6 +29,7 @@
   - [vars](#vars)
   - [src](#src)
 - [Asynchronous resource disposer](#asynchronous-resource-disposer)
+- [exception](#exception)
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -422,6 +423,27 @@ plugins.each { plugin ->
   // vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
   ```
 
+  - automatic approval
+    ```groovy
+    // libs.groovy
+    def autoAccept( Closure body ) {
+      try {
+        body()
+      } catch ( org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException e ) {
+        String msg = "NOT_BUILT : interrupted by approval scripts or signature"
+        def cause = { msg as String } as CauseOfInterruption
+        currentBuild.rawBuild.executor.interrupt( Result.NOT_BUILT, cause )
+        currentBuild.description = msg
+        build wait: false, job: '/marslo/scriptApproval'
+      }
+    }
+
+    // jenkinsfile
+    libs.autoAccept() {
+      ...content...
+    }
+    ```
+
 ### automatic approval all pending
 - [list pending scriptApproval](https://stackoverflow.com/a/55940005/2940319)
   ```groovy
@@ -664,6 +686,13 @@ disposer.getBacklog().each {
 
        ...
   ```
+
+## exception
+
+{% hint style='tip' %}
+> referencs:
+> - [Class Throwable](https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html)
+{% endhint %}
 
 ## [others](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
 - [Jenkins : Monitor and Restart Offline Slaves](https://wiki.jenkins.io/display/JENKINS/Monitor-and-Restart-Offline-Slaves.html)
