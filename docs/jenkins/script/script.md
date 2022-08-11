@@ -18,6 +18,7 @@
   - [List plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
   - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)
+  - [automatic approval all pending](#automatic-approval-all-pending)
   - [disable the scriptApproval](#disable-the-scriptapproval)
 - [abort](#abort)
   - [abort a build](#abort-a-build)
@@ -287,7 +288,6 @@ plugins.each { plugin ->
 
 ## scriptApproval
 
-
 {% hint style='tip' %}
 > references:
 > - [Class ScriptApproval](https://javadoc.jenkins.io/plugin/script-security/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.html)
@@ -307,7 +307,7 @@ plugins.each { plugin ->
 
   scriptApproval = ScriptApproval.get()
   alreadyApproved = new HashSet<>(Arrays.asList(scriptApproval.getApprovedSignatures()))
-  println prettyPrint( toJson(alreadyApproved) )
+  println prettyPrint( toJson(alreadyApproved.sort()) )
   ```
 
 - restore
@@ -315,12 +315,12 @@ plugins.each { plugin ->
   def scriptApproval = org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval.get()
 
   String[] signs = [
-    "method org.jenkinsci.plugins.workflow.steps.FlowInterruptedException getCauses",
-    "method org.jenkinsci.plugins.workflow.support.steps.input.Rejection getUser"
+    'method org.jenkinsci.plugins.workflow.steps.FlowInterruptedException getCauses' ,
+    'method org.jenkinsci.plugins.workflow.support.steps.input.Rejection getUser'
   ]
 
   for( String sign : signs ) {
-    scriptApproval.approveSignature(sign)
+    scriptApproval.approveSignature( sign )
   }
 
   scriptApproval.save()
@@ -343,16 +343,16 @@ plugins.each { plugin ->
   }
 
   [
-      "field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval\$PendingSignature dangerous"        ,
-      "field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval\$PendingSignature signature"        ,
-      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval\$PendingThing getContext"          ,
-      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval approveSignature java.lang.String" ,
-      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingScripts"                 ,
-      "method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingSignatures"              ,
-      "staticMethod org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval get"                         ,
-      "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods flatten java.util.Set"                  ,
-      "method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild"
-  ].each { approveSignature(it) }
+      'field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingSignature dangerous'         ,
+      'field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingSignature signature'         ,
+      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingThing getContext'           ,
+      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval approveSignature java.lang.String' ,
+      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingScripts'                 ,
+      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingSignatures'              ,
+      'staticMethod org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval get'                         ,
+      'staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods flatten java.util.Set'                  ,
+      'method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild'
+  ].each { println "~~> ${it}"; approveSignature(it) }
   scriptApproval.save()
   ```
 
@@ -375,11 +375,11 @@ plugins.each { plugin ->
 
       if ( ! pendingScripts && ! pendingSignature ) {
         currentBuild.description = 'NOT_BUILT: nothing can be approved'
-        currentBuild.rawBuild.executor.interrupt(Result.NOT_BUILT)
+        currentBuild.rawBuild.executor.interrupt( Result.NOT_BUILT )
       }
 
       if ( pendingScripts ) {
-        println "scripts pending approval ..."
+        println 'scripts pending approval ...'
         pendingScripts.collect().each { ps ->
           String log = "${ps.context.user}@${ps.context.psem.fullName} : ${ps.hash} ( ${ps.language.class.simpleName} )"
           description << log
@@ -390,7 +390,7 @@ plugins.each { plugin ->
       } // pendingScripts
 
       if ( pendingSignature ) {
-        println "signatures pending approval ..."
+        println 'signatures pending approval ...'
         pendingSignature.collect().each { ps ->
           String signature = ps.signature
           if ( ! ps.dangerous ) {

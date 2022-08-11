@@ -268,7 +268,13 @@ return null
 > - [Jenkins : Display jobs group by the build steps they use](https://wiki.jenkins.io/display/JENKINS/Display-jobs-group-by-the-build-steps-they-use.html)
 {% endhint %}
 
+[!TIP]
+> `currentBuild.rawBuild` == `WorkFlowRun`
+> which : `JENKINS.INSTANCE.GETITEMBYFULLNAME( JOB_NAME ).GETBUILDBYNUMBER( BUILD_NUMBER )` == `currentBuild.rawBuild`
+
+
 ### build number
+
 #### get WorkflowRun by build number
 ```groovy
 final String JOB_NAME  = 'marslo/sandbox'
@@ -278,8 +284,12 @@ def build = Jenkins.instance
                    .getItemByFullName( JOB_NAME )
                    .getBuildByNumber( BUILD_NUMBER )
 ```
+
 #### get builds of a job
 ```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import hudson.util.RunList
+
 WorkflowJob job = Jenkins.instance.getItemByFullName( '/marslo/sandbox/test' )
 RunList runList = job.getBuilds()
 
@@ -299,8 +309,28 @@ println """
       getLastUnstableBuild() : ${job.getLastUnstableBuild()}
   getLastUnsuccessfulBuild() : ${job.getLastUnsuccessfulBuild()}
                  isInQueue() : ${job.isInQueue()}
+           getActions.causes : ${runList.collect{ run -> run.id + ': ' + run.getActions( jenkins.model.InterruptedBuildAction.class ).causes.flatten().collect{ it.class.simpleName } }}
 """
 ```
+- result:
+  ```
+                     all builds : [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+                  build exists : true
+
+               completedOnly() : [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+                 failureOnly() : [42, 41, 40, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+                getLastBuild() : marslo/abort #42
+               getFirstBuild() : marslo/abort #1
+
+       getLastCompletedBuild() : marslo/abort #42
+          getLastFailedBuild() : marslo/abort #32
+          getLastStableBuild() : marslo/abort #39
+      getLastSuccessfulBuild() : marslo/abort #39
+        getLastUnstableBuild() : null
+    getLastUnsuccessfulBuild() : marslo/abort #42
+                   isInQueue() : false
+             getActions.causes : [42: [ExceededTimeout], 41: [ExceededTimeout], 40: [ExceededTimeout], 36: [ExceededTimeout], 35: [ExceededTimeout], 34: [ExceededTimeout], 33: [ExceededTimeout], 32: [], 31: [], 30: [ExceededTimeout], 29: [], 28: [], 27: [], 26: [], 24: [], 23: [], 22: [ExceededTimeout], 21: [], 20: [], 19: [ExceededTimeout], 18: [ExceededTimeout], 17: [], 16: [], 15: [], 14: [], 13: [], 12: [], 11: [], 10: [ExceededTimeout], 9: [ExceededTimeout], 8: [UserInterruption], 7: [ExceededTimeout], 6: [UserInterruption], 5: [UserInterruption], 4: [ExceededTimeout], 3: [ExceededTimeout], 2: [UserInterruption], 1: [ExceededTimeout]]
+  ```
 
 ### get changesets
 
@@ -395,7 +425,11 @@ Jenkins.instance
   ```
 
 #### get repo url
-> [hudson.scm.SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html#getBrowser--)
+
+{% hint style='tip' %}
+> references:
+> - [hudson.scm.SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html#getBrowser--)
+{% endhint %}
 
 ```groovy
 def job = Jenkins.instance
@@ -430,13 +464,14 @@ job.changeSets
   ```
 
 ### get SCM info
+
 {% hint style='tip' %}
 > references:
 > - [hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
 > - [hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
 > - [Poll SCM and Timer triggers include "Changes" for a Pipeline for any/all Shared Libraries](https://issues.jenkins.io/browse/JENKINS-41497)
-
 {% endhint %}
+
 ```groovy
 Jenkins.instance
        .getItemByFullName('/path/to/pipeline')
@@ -458,11 +493,88 @@ Jenkins.instance
 println build.getCulprits()
 ```
 
-
 #### setup next build number
 ```groovy
-Jenkins.instance.getItemByFullName("/path/to/job").updateNextBuildNumber(n)
+Jenkins.instance
+       .getItemByFullName("/path/to/job")
+       .updateNextBuildNumber(n)
 ```
+
+#### get builds abort cause
+```groovy
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
+       .getActions( jenkins.model.InterruptedBuildAction.class )
+       .causes
+       .flatten()
+```
+
+- check builds aborted by timer
+  ```groovy
+  import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+
+  Jenkins.instance
+         .getItemByFullName( JOB_NAME )
+         .getBuildByNumber( BUILD_NUMBER )
+         .getActions( jenkins.model.InterruptedBuildAction.class )
+         .causes
+         .flatten()
+         .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
+  ```
+
+  - or
+    ```groovy
+    import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+    import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+    WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+    job.builds.findAll { Run run ->
+      BUILD_NUMBER.toString() == run.id
+    }.collect { Run run -> run.getActions( jenkins.model.InterruptedBuildAction.class )
+                              .causes
+                              .flatten()
+                              .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
+    }
+    ```
+
+#### get all abort causes
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+job.builds.findAll { Run run ->
+  run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
+}.collect{ Run run ->
+  List c = run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
+  "#${run.id} : ${c.flatten().collect{ it.class.simpleName }.first()}"
+}.join('\n')
+```
+
+- result
+  ```
+  #42 : ExceededTimeout
+  #41 : ExceededTimeout
+  #40 : ExceededTimeout
+  #36 : ExceededTimeout
+  #35 : ExceededTimeout
+  #34 : ExceededTimeout
+  #33 : ExceededTimeout
+  #30 : ExceededTimeout
+  #22 : ExceededTimeout
+  #19 : ExceededTimeout
+  #18 : ExceededTimeout
+  #10 : ExceededTimeout
+  #9 : ExceededTimeout
+  #8 : UserInterruption
+  #7 : ExceededTimeout
+  #6 : UserInterruption
+  #5 : UserInterruption
+  #4 : ExceededTimeout
+  #3 : ExceededTimeout
+  #2 : UserInterruption
+  #1 : ExceededTimeout
+  ```
 
 ### stop builds
 
