@@ -9,7 +9,8 @@
   - [Evaluate a Groovy source file into the Pipeline script](#evaluate-a-groovy-source-file-into-the-pipeline-script)
   - [load a constant](#load-a-constant)
   - [extend the pipeline](#extend-the-pipeline)
-- [dsl with groovy](#dsl-with-groovy)
+  - [timeout](#timeout)
+- [DSL](#dsl)
 - [others](#others)
   - [handle api](#handle-api)
   - [running in temporaray folders](#running-in-temporaray-folders)
@@ -166,7 +167,61 @@ node('master') {
 - stage view
   ![built-in stages](../../screenshot/jenkins/builtInStage.png)
 
-## dsl with groovy
+
+### timeout
+
+{% hint style='tip' %}
+> references:
+> - [plain-catch-blocks](https://github.com/jenkinsci/workflow-basic-steps-plugin/blob/master/CORE-STEPS.md#plain-catch-blocks)
+> - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
+> - [Class TimeoutStepExecution](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.html)
+> - [Class org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution.ExceededTimeout](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.ExceededTimeout.html)
+> - [Class CauseOfInterruption.UserInterruption](https://javadoc.jenkins.io/jenkins/model/CauseOfInterruption.UserInterruption.html)
+> - [Class User](https://javadoc.jenkins.io/hudson/model/User.html)
+> - [TimeoutStepExecution.java](https://github.com/jenkinsci/workflow-basic-steps-plugin/blob/master/src/main/java/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.java)
+{% endhint %}
+
+
+#### sample jenkins pipeline
+```groovy
+import jenkins.model.CauseOfInterruption
+import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+
+stage( 'wating' ) {
+  catchError( buildResult: 'SUCCESS', stageResult: 'ABORTED' ) {
+
+    try {
+
+      timeout( time: 5, unit: 'SECONDS' ) { sleep( time: 10, unit: 'SECONDS' ) }
+
+    } catch ( org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e ) {
+
+      String msg
+      if ( e.causes[0] instanceof TimeoutStepExecution.ExceededTimeout ) {
+        msg = 'aborted by timeout'
+      } else if ( e.causes[0] instanceof CauseOfInterruption.UserInterruption ) {
+        User user = e.causes[0]?.user
+        println "${user.fullName} : ${user.absoluteUrl}"
+        msg = "aborted by user : ${user.displayName} [ ${user.id} ]"
+      }
+      println "${msg}"
+      currentBuild.description = msg
+      throw e
+
+    } catch ( Throwable e ) {
+
+      def sw = new StringWriter()
+      e.printStackTrace(new PrintWriter(sw))
+      println sw.toString()
+      throw e
+
+    } // try | catch
+  } // catchError
+} // stage
+```
+
+## DSL
+
 {% hint style='info' %}
 **original DSL**:
 ```groovy
