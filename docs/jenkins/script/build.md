@@ -13,9 +13,11 @@
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
 - [build](#build)
   - [build number](#build-number)
+  - [get console output](#get-console-output)
   - [get changesets](#get-changesets)
   - [get SCM info](#get-scm-info)
   - [get culprits](#get-culprits)
+  - [get builds abort cause](#get-builds-abort-cause)
   - [stop builds](#stop-builds)
   - [get build time](#get-build-time)
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
@@ -268,9 +270,10 @@ return null
 > - [Jenkins : Display jobs group by the build steps they use](https://wiki.jenkins.io/display/JENKINS/Display-jobs-group-by-the-build-steps-they-use.html)
 {% endhint %}
 
-[!TIP]
-> `currentBuild.rawBuild` == `WorkFlowRun`
-> which : `JENKINS.INSTANCE.GETITEMBYFULLNAME( JOB_NAME ).GETBUILDBYNUMBER( BUILD_NUMBER )` == `currentBuild.rawBuild`
+> [!TIP]
+> references:
+> - `currentBuild.class` == [Class RunWrapper](https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html)
+> - `currentBuild.rawBuild.class` == `Jenkins.instance.getItemByFullName(String).getBuildByNumber(int).class` == [Class WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
 
 
 ### build number
@@ -331,6 +334,23 @@ println """
                    isInQueue() : false
              getActions.causes : [42: [ExceededTimeout], 41: [ExceededTimeout], 40: [ExceededTimeout], 36: [ExceededTimeout], 35: [ExceededTimeout], 34: [ExceededTimeout], 33: [ExceededTimeout], 32: [], 31: [], 30: [ExceededTimeout], 29: [], 28: [], 27: [], 26: [], 24: [], 23: [], 22: [ExceededTimeout], 21: [], 20: [], 19: [ExceededTimeout], 18: [ExceededTimeout], 17: [], 16: [], 15: [], 14: [], 13: [], 12: [], 11: [], 10: [ExceededTimeout], 9: [ExceededTimeout], 8: [UserInterruption], 7: [ExceededTimeout], 6: [UserInterruption], 5: [UserInterruption], 4: [ExceededTimeout], 3: [ExceededTimeout], 2: [UserInterruption], 1: [ExceededTimeout]]
   ```
+
+### get console output
+
+{% hint style='tip' %}
+> references:
+> - [org.kohsuke.stapler.framework.io.LargeText](https://javadoc.jenkins.io/component/stapler/org/kohsuke/stapler/framework/io/LargeText.html)
+> - [How To Read Console Output In Jenkins During Build](https://automationscript.com/how-to-read-console-output-in-jenkins-pipeline/)
+> - [[FIXED] Jenkins console output not in realtime](https://www.javafixing.com/2022/02/fixed-jenkins-console-output-not-in.html)
+{% endhint %}
+
+```groovy
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
+       .logFile
+       .text
+```
 
 ### get changesets
 
@@ -500,7 +520,19 @@ Jenkins.instance
        .updateNextBuildNumber(n)
 ```
 
-#### get builds abort cause
+### get builds abort cause
+
+{% hint style='tip' %}
+> references:
+> - [FlowInterruptedException cause is not available in post condition](https://issues.jenkins.io/browse/JENKINS-62257)
+>   - `org.jenkinsci.plugins.workflow.support.steps.build.BuildTriggerCancelledCause`
+>   - `org.jenkinsci.plugins.workflow.support.steps.build.DownstreamFailureCause`
+> - [Halt a jenkins pipeline job early](https://stackoverflow.com/a/43889224/2940319)
+> - [Thread.getAllStackTraces()](https://stackoverflow.com/a/26306081/2940319)
+> - [Pipeline: How to add an input step, with timeout, that continues if timeout is reached, using a default value](https://support.cloudbees.com/hc/en-us/articles/226554067-Pipeline-How-to-add-an-input-step-with-timeout-that-continues-if-timeout-is-reached-using-a-default-value)
+> - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
+{% endhint %}
+
 ```groovy
 Jenkins.instance
        .getItemByFullName( JOB_NAME )
@@ -938,16 +970,21 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
 > - [Jenkins & Groovy – accessing build parameters](https://rucialk.wordpress.com/2016/03/17/jenkins-groovy-accessing-build-parameters/)
 > - [Parameterized System Groovy script](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
 > - [Jenkins : Display job parameters](https://wiki.jenkins.io/display/JENKINS/Display+job+parameters)
+> - [Let users specify any kind of parameters when creating a job from a pipeline template and handle them in the job created](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/let-users-specify-any-kind-of-parameters-when-creating-a-job-from-a-pipeline-template-and-handle-them-in-the-job-created)
+> - [GenericBuild.groovy](https://github.com/root-project/jenkins-pipelines/blob/master/src/cern/root/pipeline/GenericBuild.groovy)
 {% endhint %}
 
 ```groovy
-def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
-job.getBuilds().each { Run build ->
-  String parameters = build?.actions.find{ it instanceof ParametersAction }?.parameters?.collectEntries {
+def job = Jenkins.getInstance().getItemByFullName( '/marlso/sandbox' )
+job.builds.each { Run run ->
+  String parameters = run?.getAction(ParametersAction.class)?.parameters?.collectEntries {
     [ it.name, it.value ]
-  }.collect { k, v -> "\t\t${k}\t: ${v}" }.join('\n')
-  println "#${build.getId()}: ${parameters}"
+  }.collect { k, v -> "\t\t${k}\t: ${v}" }
+   .join('\n')
+  println "#${run.id}: ${parameters}"
 }
+
+"DONE"
 ```
 - result
   ```
@@ -966,13 +1003,25 @@ job.getBuilds().each { Run build ->
   #1:
   ```
 
+- or via `action instanceof ParametersAction`
+  ```groovy
+  def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+  job.getBuilds().each { Run build ->
+    String parameters = build?.actions.find{ it instanceof ParametersAction }?.parameters?.collectEntries {
+      [ it.name, it.value ]
+    }.collect { k, v -> "\t\t${k}\t: ${v}" }
+     .join('\n')
+    println "#${build.getId()}: ${parameters}"
+  }
+  ```
+
 - [or](https://wiki.jenkins.io/display/JENKINS/Display+job+parameters) by using [Job Parameter Summary Plugin](https://wiki.jenkins.io/display/JENKINS/Job-Parameter-Summary-Plugin.html)
   ```groovy
   import hudson.model.*
 
   for( item in Hudson.instance.items ) {
     prop = item.getProperty( ParametersDefinitionProperty.class )
-    if( prop != null ) {
+    if( prop ) {
       println( "--- Parameters for " + item.name + " ---" )
       for( param in prop.getParameterDefinitions() ) {
         try {
@@ -1011,12 +1060,16 @@ params.each { param ->
 ```
 - or : [Jenkins : Parameterized System Groovy script](https://wiki.jenkins.io/display/JENKINS/Parameterized-System-Groovy-script.html)
   ```groovy
-  def parameters = currentBuild.rawBuild?.actions.find{ it instanceof ParametersAction }?.parameters
+  def parameters = currentBuild.rawBuild?.getActions(ParametersAction.class)?.parameters
   parameters.each {
     println " ~~> ${it.name} -> ${it.value} -> ${it.description ?: ''} "
     println "-" * 20
   }
   ```
+  - or
+    ```groovy
+    def parameters = currentBuild.rawBuild?.actions.find{ it instanceof ParametersAction }?.parameters
+    ```
 
 
 ### get wanted parameter values in builds
@@ -1026,10 +1079,9 @@ Map params = [:]
 
 def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
 job.getBuilds().each { Run build ->
-  params."${build.getId()}" = build?.actions
-                                    .find{ it instanceof ParametersAction }?.parameters?.collectEntries {
-                                       [ it.name , it.value ]
-                                    }
+  params."${build.getId()}" = build?.getActions(ParametersAction.class)?.parameters?.collectEntries {
+                                [ it.name , it.value ]
+                              }
 }
 
 println params.collect { k , v ->
@@ -1186,6 +1238,8 @@ results.each{ name, status ->
 
 
 ### get builds result during certain start-end time
+
+> [!TIP]
 > find only `String` type parameters:
 > ```groovy
 > Map params = build?.getAction( ParametersAction.class )?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()

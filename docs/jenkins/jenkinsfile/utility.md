@@ -198,15 +198,16 @@ stage( 'wating' ) {
 
       String msg
       if ( e.causes[0] instanceof TimeoutStepExecution.ExceededTimeout ) {
-        msg = 'aborted by timeout'
+        msg = 'NOT_BUILT: aborted by timeout'
+        currentBuild.result = 'NOT_BUILT'
       } else if ( e.causes[0] instanceof CauseOfInterruption.UserInterruption ) {
         User user = e.causes[0]?.user
         println "${user.fullName} : ${user.absoluteUrl}"
-        msg = "aborted by user : ${user.displayName} [ ${user.id} ]"
+        msg = "ABORTED : by user : ${user.displayName} [ ${user.id} ]"
+        currentBuild.result = 'ABORTED'
       }
       println "${msg}"
       currentBuild.description = msg
-      throw e
 
     } catch ( Throwable e ) {
 
@@ -216,8 +217,30 @@ stage( 'wating' ) {
       throw e
 
     } // try | catch
+
   } // catchError
 } // stage
+```
+
+#### get previous build abort
+
+> [!TIP]
+> - see also [iMarslo : get builds abort cause](../script/build.html#get-builds-abort-cause)
+
+```groovy
+// jenksinfile
+println libs.isTimeout( env.JOB_NAME, currentBuild.previousBuild.number )
+
+// libs.groovy
+Boolean isTimeout( String name, int nubmer ) {
+  Jenkins.instance
+         .getItemByFullName( name )
+         .getBuildByNumber( nubmer )
+         .getActions( jenkins.model.InterruptedBuildAction.class )
+         .causes
+         .flatten()
+         .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
+}
 ```
 
 ## DSL
