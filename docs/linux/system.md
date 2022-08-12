@@ -23,6 +23,7 @@
   - [sssd to use LDAP](#sssd-to-use-ldap)
   - [local user](#local-user)
   - [local group](#local-group)
+  - [get gid](#get-gid)
   - [logout](#logout)
   - [others](#others)
 - [system encoding](#system-encoding)
@@ -341,95 +342,106 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 > - [`/etc/sssd/sssd.conf` sample](https://github.com/marslo/iDevOps/blob/master/centos/sssd/sssd.conf)
 > - [Troubleshooting SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/trouble)
 > - [Linux user authentication with SSSD / LDAP](https://aws.nz/best-practice/sssd-ldap/)
+> - [man sss_override](https://jhrozek.fedorapeople.org/sssd/1.13.3/man/sss_override.8.html)
+> - [7.6. SSSD Client-side Views](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd-client-side-views)
 {% endhint %}
 
 #### add user name
 ```bash
-$ sss_override user-add username -n secondary-username
+$ sudo /usr/sbin/sss_override user-add <username> -n secondary-username
 
 # verification
 $ id secondary-username
 # display the override
-$ sss_override user-show user-name
+$ sudo /usr/sbin/sss_override user-show user-name
 ```
 
 #### override the uid
 ```bash
 # check current uid
-$ id -u username
+$ id -u <username>
 
 # overwride
-$ sss_override user-add <username> -u <new-uid>
-$ sss_cache --users
+$ sudo /usr/sbin/sss_override user-add <username> -u <new-uid>
+$ sudo /usr/sbin/sss_cache --users
 # or
-$ sss_cache --user <username>
-$ systemctl restart sssd
+$ sudo /usr/sbin/sss_cache --user <username>
+$ sudo systemctl restart sssd
 ```
 
 #### override the gid
 ```bash
 # check current gid
-$ id -g username
+$ id -g <username>
+# or
+$ sudo lid -g <group_name>
 
 # override
-$ sss_override user-add <username> -g <new-gid>
-$ sss_cache --users
-$ sss_cache --user <username>
-$ systemctl restart sssd
+$ sudo /usr/sbin/sss_override user-add <username> -g <new-gid>
+$ sudo /usr/sbin/sss_cache --users
+$ sudo /usr/sbin/sss_cache --user <username>
+$ sudo systemctl restart sssd
 ```
 
 #### override the home directory
 ```bash
 # check current home directory
-$ getent passwd username
+$ getent passwd <username>
 
 # override
-$ sss_override user-add username -h /new/home/directory
-$ systemctl restart sssd
+$ sudo /usr/sbin/sss_override user-add <username> -h /new/home/directory
+$ sudo systemctl restart sssd
 ```
 
 #### override the shell attribute
 ```bash
 # check current
-$ getent passwd username
+$ getent passwd <username>
 
 # override
-$ sss_override user-add username -s /new/shell
-$ systemctl restart sssd
+$ sudo /usr/sbin/sss_override user-add <username> -s /new/shell
+$ sudo systemctl restart sssd
 ```
 
 #### [managing the sssd cache](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sssd-cache#sssd-cache-purge)
 ```bash
 # clear the cache and update all records
-$ sudo sss_cache [-E|--everything]
+$ sudo /usr/sbin/sss_cache [-E|--everything]
 
 # clear invalidates cache entries for all user records
-$ sudo sss_cache [-U|--users]
+$ sudo /usr/sbin/sss_cache [-U|--users]
 
 # clear all cached entries for a particular domain
-$ sudo sss_cache [-E|--everything] [-d|--domain] <ldap_name>
+$ sudo /usr/sbin/sss_cache [-E|--everything] [-d|--domain] <ldap_name>
 
 # purge the records for that specific account and leave the rest of the cache intact
-$ sudo sss_cache [-u|--user] <username>
+$ sudo /usr/sbin/sss_cache [-u|--user] <username>
 
 # invalidates the cache entry for the specified group
-$ sudo sss_cache [-g|--group] <groupname>
+$ sudo /usr/sbin/sss_cache [-g|--group] <groupname>
+```
+
+#### remove account
+```bash
+$ sudo sss_override user-del --debug 1-9 <username>
+$ sudo /usr/sbin/sss_cache --everything
+$ sudo systemctl restart sssd
 ```
 
 #### backup and restore
 ```bash
 # export
-$ sss_override user-export user-export.bak
-$ sss_override group-export group-export.bak
+$ /usr/sbin/sss_override user-export user-export.bak
+$ /usr/sbin/sss_override group-export group-export.bak
 
 # restore
-$ sss_override user-import user-import.bak
-$ sss_override group-import group-import.bak
+$ /usr/sbin/sss_override user-import user-import.bak
+$ /usr/sbin/sss_override group-import group-import.bak
 ```
 
 #### list all override
 ```bash
-$ sss_override user-find
+$ /usr/sbin/sss_override user-find
 ```
 #### [create sssd config](https://serverfault.com/a/749305/129815)
 
@@ -519,6 +531,7 @@ $ useradd -c "comments here" \
   ```
 
 #### [`deluser`](http://manpages.ubuntu.com/manpages/trusty/man8/deluser.8.html) for ubunut
+
 {% hint style='tip' %}
 `deluser`, `delgroup` - remove a user or group from the system
 > **SYNOPSIS**
@@ -551,6 +564,11 @@ $ deluser <account> <group>
 #### [list all groups](https://www.howtogeek.com/50787/add-a-user-to-a-group-or-second-group-on-linux/)
 ```bash
 $ getent group
+```
+
+### get gid
+```bash
+$ sudo lid -g <group_name>
 ```
 
 #### create group with random gid
