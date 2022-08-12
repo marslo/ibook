@@ -20,8 +20,8 @@ _book
 
 ## https://github.com/GitbookIO/gitbook/blob/master/.gitignore
 # Logs
-logs
-*.log
+# logs
+# *.log
 
 # Runtime data
 pids

@@ -343,8 +343,44 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 > - [Troubleshooting SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/trouble)
 > - [Linux user authentication with SSSD / LDAP](https://aws.nz/best-practice/sssd-ldap/)
 > - [man sss_override](https://jhrozek.fedorapeople.org/sssd/1.13.3/man/sss_override.8.html)
-> - [7.6. SSSD Client-side Views](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd-client-side-views)
+> - [Setting Password Expiry](https://access.redhat.com/articles/3027531)
+> - [Chapter 7. Configuring SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd)
+>   - [7.5. Configuring System Services for SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/configuring_services)
+>   - [7.5.2. Configuring Services: PAM](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/configuring_services#Configuration_Options-PAM_Configuration_Options)
+>   - [7.6. SSSD Client-side Views](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system-level_authentication_guide/sssd-client-side-views)
+> - [13.2. Using and Caching Credentials with SSSD](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sssd-introduction#doc-wrapper)
+>   - [13.2.2. Setting up the sssd.conf File](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/about-sssd-conf)
+>   - [13.2.23. Creating Domains: Primary Server and Backup Servers](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sect-configuring_failover)
+>   - [13.2.22. Creating Domains: Access Control](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sect-config-sssd-domain-access)
+>   - [13.2.28. Managing the SSSD Cache](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sssd-cache)
 {% endhint %}
+
+#### check user
+```bash
+$ sudo sssctl user-checks <username>
+user: marslo
+action: acct
+service: system-auth
+
+SSSD nss user lookup result:
+ - user name: marslo
+ - user id: 33637
+ - group id: 40048
+ - gecos: Marslo Jiao (Marslo Jiao)
+ - home directory: /home/marslo
+ - shell: /bin/bash
+
+InfoPipe operation failed. Check that SSSD is running and the InfoPipe responder is enabled. Make sure 'ifp' is listed in the 'services' option in sssd.conf.InfoPipe User lookup with [marslo] failed.
+testing pam_acct_mgmt
+
+pam_acct_mgmt: Success
+
+PAM Environment:
+ - no env -
+
+# or
+$ getent passwd -s sss marslo
+```
 
 #### add user name
 ```bash
@@ -373,6 +409,8 @@ $ sudo systemctl restart sssd
 ```bash
 # check current gid
 $ id -g <username>
+# or
+$ id -nG <username>
 # or
 $ sudo lid -g <group_name>
 
@@ -422,11 +460,31 @@ $ sudo /usr/sbin/sss_cache [-g|--group] <groupname>
 ```
 
 #### remove account
+
+{% hint style='tip' %}
+> references:
+> - [How do you cleanup after deleting an LDAP user on RHEL 7?](https://unix.stackexchange.com/a/538885/29178)
+{% endhint %}
+
 ```bash
-$ sudo sss_override user-del --debug 1-9 <username>
+$ sudo sss_override user-del [--debug 1..9] <username>
 $ sudo /usr/sbin/sss_cache --everything
 $ sudo systemctl restart sssd
 ```
+
+- or
+  ```bash
+  # get info
+  $ loginctl
+
+  # logout
+  $ loginctl kill-user <username>
+  $ sudo /usr/sbin/sss_cache -u <username>
+  $ loginctl terminate-user <username>
+  $ sudo pkill -u <username>
+  $ systemctl restart sssd
+  $ systemctl restart accounts-daemon
+  ```
 
 #### backup and restore
 ```bash
@@ -446,11 +504,33 @@ $ /usr/sbin/sss_override user-find
 #### [create sssd config](https://serverfault.com/a/749305/129815)
 
 {% hint style='tip' %}
-After this in `/etc/sssd/sssd.conf` file
-Specify `ldap_default_bind_dn` and `ldap_default_authtok` as default bind dn and password respectively, this depends upon your ldap setup.
+> After this in `/etc/sssd/sssd.conf` file
+> Specify `ldap_default_bind_dn` and `ldap_default_authtok` as default bind dn and password respectively, this depends upon your ldap setup.
+> <br>
+> - references:
+> - [Chapter 13. Configuring Authentication](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/ch-configuring_authentication)
 {% endhint %}
 
 ```bash
+# optional
+$ yum install -y sssd \
+                 realmd \
+                 oddjob \
+                 oddjob-mkhomedir \
+                 adcli \
+                 samba-common \
+                 samba-common-tools \
+                 krb5-workstation \
+                 openldap-clients \
+                 policycoreutils-python \
+                 authselect-compat \
+                 ntpdate \
+                 ntp
+$ authselect select sssd
+$ authselect select sssd with-mkhomedir
+$ systemctl enable oddjobd.service
+$ systemctl start oddjobd.service
+
 $ authconfig --enablesssd \
              --enablesssdauth \
              --enablelocauthorize \
@@ -464,6 +544,51 @@ $ authconfig --enablesssd \
              --enablecachecreds \
              --update
 ```
+
+#### others
+
+{% hint style='tip' %}
+> references:
+> - [2.2. PAM Configuration Files](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/managing_smart_cards/pam_configuration_files)
+> - [Chapter 4. Hardening Your System with Tools and Services](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/chap-hardening_your_system_with_tools_and_services)
+> - [21.2.2. Mounting NFS File Systems using autofs](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/4/html/system_administration_guide/mounting_nfs_file_systems-mounting_nfs_file_systems_using_autofs)
+> - [13.2.28. Managing the SSSD Cache](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sssd-cache)
+{% endhint %}
+
+- config files
+
+  | file                        | comments                                     |
+  | --------------------------- | -------------------------------------------- |
+  | `/etc/krb5.keytab`          | host keytab file                             |
+  | `/etc/nsswitch.conf`        | Name Service Switch (NSS) configuration file |
+  | `/etc/sssd/sssd.conf`       | sssd configure file                          |
+  | `/etc/auto.master`          | mount NFS                                    |
+  | `/etc/pam.d/password-auth`  | PAM module                                   |
+  | `/etc/pam.d/system-auth`    | PAM module                                   |
+  | `/var/lib/sss/db/*`         | sssd cache                                   |
+  | `/etc/security/access.conf` | local login access control table             |
+
+- [discovery domain](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/windows_integration_guide/realmd-domain)
+  ```bash
+  $ realm discover my.com [--server-software=active-directory]
+  my.com
+    type: kerberos
+    realm-name: MY.COM
+    domain-name: my.com
+    configured: no
+    server-software: active-directory
+    client-software: sssd
+    required-package: oddjob
+    required-package: oddjob-mkhomedir
+    required-package: sssd
+    required-package: adcli
+    required-package: samba-common-tools
+  ```
+
+- join the system
+  ```bash
+  $ realm join <my.domain> -U <account> [--membership-software=samba] [--verbose] [--install]
+  ```
 
 ### local user
 
@@ -606,11 +731,10 @@ $ sudo groupadd -g <gid> <group_name>
 
 #### create group with existing gid
 
-{% hint style='tip' %}
-```bash
--o (--non-unique) option the groupadd command allows you to create a group with non-unique GID
-```
-{% endhint %}
+> [!TIP]
+> ```bash
+> -o (--non-unique) option the groupadd command allows you to create a group with non-unique GID
+> ```
 
 ```bash
 $ sudo groupadd -o -g <new_gid> <group_name>
@@ -623,7 +747,8 @@ $ sudo groupmod -g <gid> <group_name>
 
 #### add user into group
 ```bash
-$ usermod -a -G adm,root,sudo,docker devops
+$ usermod -a -G adm,root,docker devops
+$ usermod -a -G sudo devops
 ```
 
 #### remove user from group
@@ -652,6 +777,15 @@ $ pkill -KILL -u ${useranme}
   marslo   pts/1        2022-06-14 05:58   .         50162 (192.168.1.1)
   ```
 
+- [or : `loginctl`](https://unix.stackexchange.com/a/538885/29178)
+  ```bash
+  # get login details
+  $ loginctl
+
+  # logout
+  $ loginctl kill-user <username>
+  ```
+
 ### others
 
 #### [view users password properties in linux](https://www.2daygeek.com/understanding-linux-etc-shadow-file-format/)
@@ -678,6 +812,7 @@ Number of days of warning before password expires : 7
 | `$6` | SHA-512 Algorithm     |
 
 ## system encoding
+
 {% hint style='tip' %}
 > references:
 > - [How to Change or Set System Locales in Linux](https://www.tecmint.com/set-system-locales-in-linux/)
