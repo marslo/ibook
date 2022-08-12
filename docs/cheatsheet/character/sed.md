@@ -12,9 +12,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### execute multiple sed commands
+
 {% hint style='tip' %}
--e command
-       Append the editing commands specified by the command argument to the list of commands.
+> ```bash
+> -e command
+>        Append the editing commands specified by the command argument to the list of commands.
+> ```
+> references:
+> - [50 `sed` Command Examples](https://linuxhint.com/50_sed_command_examples/)
 {% endhint %}
 
 #### example : show only root and nobody in `/etc/passwd`

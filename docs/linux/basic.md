@@ -4,18 +4,20 @@
 
 - [character](#character)
   - [metacharacter](#metacharacter)
-- [Process Substitution](#process-substitution)
+- [process substitution](#process-substitution)
   - [example: run script without download](#example-run-script-without-download)
   - [example: merge lines of file](#example-merge-lines-of-file)
     - [nstalling tools via running random scripts from unknown sites](#nstalling-tools-via-running-random-scripts-from-unknown-sites)
   - [`strace`](#strace)
-- [Basic Commands](#basic-commands)
+- [basic commands](#basic-commands)
   - [`du`](#du)
-  - [sed](#sed)
+  - [sort](#sort)
+    - [sort result via human-readable format](#sort-result-via-human-readable-format)
   - [others](#others)
     - [`you have new mail`](#you-have-new-mail)
-- [CentOS](#centos)
-  - [Yum](#yum)
+- [centos](#centos)
+  - [yum](#yum)
+    - [enable or disable repo](#enable-or-disable-repo)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -94,16 +96,18 @@
 | `digit>&-`       | sh                   | Close file digit                              |
 
 
-# [Process Substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
+# [process substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
+
+> [!TIP]
 > Process substitution is a form of redirection where the input or output of a process (some sequence of commands) appear as a temporary file.
 > reference:
-> - [Chapter 23. Process Substitution](https://tldp.org/LDP/abs/html/process-sub.html)
+> - [chapter 23. process substitution](https://tldp.org/LDP/abs/html/process-sub.html)
 > Command list enclosed within parentheses
 > ```bash
 > >(command_list)
 > <(command_list)
 > ```
-> Process substitution uses /dev/fd/<n> files to send the results of the process(es) within parentheses to another process. [1]
+> Process substitution uses `/dev/fd/<n>` files to send the results of the process(es) within parentheses to another process. [1]
 
 ```bash
 $ while read branch; do
@@ -169,19 +173,19 @@ $ bash < <(wget -qO - https://raw.githubusercontent.com/ubports/unity8-desktop-i
   ```bash
   $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
   ```
-  or
-  ```bash
-  $ curl -so - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
-    ```
+  - or
+    ```bash
+    $ curl -so - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
+      ```
 
 - [via wget](http://alvinalexander.com/linux/unix-linux-crontab-every-minute-hour-day-syntax/)
   ```bash
   $ python < <(wget -O - -q -t 1 https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
   ```
-  or
-  ```bash
-  $ wget -qO - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
-  ```
+  - or
+    ```bash
+    $ wget -qO - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
+    ```
 
 - [or](https://github.com/giampaolo/psutil/blob/master/scripts/meminfo.py)
   ```bash
@@ -284,7 +288,7 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
 ## `strace`
 > reference [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
 
-# Basic Commands
+# basic commands
 ## `du`
 - top biggest directories under _[path]_
   ```bash
@@ -302,66 +306,63 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
   ```bash
   $ find -type f -exec du -Sh {} + | sort -rh | head -n 5
 
-  or
+  # or
   $ find [PATH] -type f -printf "%s %p\n" | sort -rn | head -n 5
   ```
 
-- [sort result via human-readable format](https://www.redhat.com/sysadmin/sort-du-output)
+## sort
+### [sort result via human-readable format](https://www.redhat.com/sysadmin/sort-du-output)
+```bash
+$ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
+```
+
+- [or](https://unix.stackexchange.com/a/197821/29178)
   ```bash
-  $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
+  $ du -sk * | sort -g | awk '{
+
+      numBytes = $1 * 1024;
+      numUnits = split("B K M G T P", unit);
+      num = numBytes;
+      iUnit = 0;
+
+      while(num >= 1024 && iUnit + 1 < numUnits) {
+          num = num / 1024;
+          iUnit++;
+      }
+
+      $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]);
+      print $0;
+
+  }'
+
+  # or in one-line
+  $ du -sk * | sort -g | awk '{ numBytes = $1 * 1024; numUnits = split("B K M G T P", unit); num = numBytes; iUnit = 0; while(num >= 1024 && iUnit + 1 < numUnits) { num = num / 1024; iUnit++; } $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]); print $0; }'
   ```
 
-  - [or](https://unix.stackexchange.com/a/197821/29178)
-    ```bash
-    $ du -sk * | sort -g | awk '{
+- [or](https://unix.stackexchange.com/a/4701/29178)
+  ```bash
+  #! /usr/bin/env bash
+  ducks () {
+      du -cks -x | sort -n | while read size fname; do
+          for unit in k M G T P E Z Y; do
+              if [ $size -lt 1024 ]; then
+                  echo -e "${size}${unit}\t${fname}"
+                  break
+              fi
+              size=$((size/1024))
+          done
+      done
+  }
+  ducks > .ducks && tail .ducks
+  ```
 
-        numBytes = $1 * 1024;
-        numUnits = split("B K M G T P", unit);
-        num = numBytes;
-        iUnit = 0;
-
-        while(num >= 1024 && iUnit + 1 < numUnits) {
-            num = num / 1024;
-            iUnit++;
-        }
-
-        $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]);
-        print $0;
-
-    }'
-
-    # or in one-line
-    $ du -sk * | sort -g | awk '{ numBytes = $1 * 1024; numUnits = split("B K M G T P", unit); num = numBytes; iUnit = 0; while(num >= 1024 && iUnit + 1 < numUnits) { num = num / 1024; iUnit++; } $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]); print $0; }'
-    ```
-
-  - [or](https://unix.stackexchange.com/a/4701/29178)
-    ```bash
-    #! /usr/bin/env bash
-    ducks () {
-        du -cks -x | sort -n | while read size fname; do
-            for unit in k M G T P E Z Y; do
-                if [ $size -lt 1024 ]; then
-                    echo -e "${size}${unit}\t${fname}"
-                    break
-                fi
-                size=$((size/1024))
-            done
-        done
-    }
-    ducks > .ducks && tail .ducks
-    ```
-
-  - [or](https://unix.stackexchange.com/a/27102/29178)
-    ```bash
-    $ du -k ./* |
-         sort -nr |
-         awk '{ split("KB,MB,GB",size,","); }
-              { x = 1;while ($1 >= 1024) {$1 = $1 / 1024;x = x + 1} $1 = sprintf("%-4.2f%s", $1, size[x]); print $0; }'
-    ```
-
-## sed
-> reference
-> - [50 `sed` Command Examples](https://linuxhint.com/50_sed_command_examples/)
+- [or](https://unix.stackexchange.com/a/27102/29178)
+  ```bash
+  $ du -k ./* |
+       sort -nr |
+       awk '{ split("KB,MB,GB",size,","); }
+            { x = 1;while ($1 >= 1024) {$1 = $1 / 1024;x = x + 1} $1 = sprintf("%-4.2f%s", $1, size[x]); print $0; }'
+  ```
 
 ## others
 ### `you have new mail`
@@ -373,25 +374,33 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
   ? q
   ```
 
-# CentOS
-## Yum
+# centos
+## yum
+### enable or disable repo
+```bash
+# enable
+$ sudo yum config-manager --set-enabled PowerTools
+
+# disable
+$ sudo yum config-manager --set-disabled PowerTools
+```
+
 ### `File "/usr/libexec/urlgrabber-ext-down", line 28`
-- Error
+- error
   ```bash
   File "/usr/libexec/urlgrabber-ext-down", line 28
   except OSError, e:
                 ^
   ```
 
-- Solution
+- solution
   ```bash
   $ sudo update-alternatives --remove python /usr/bin/python3
   $ realpath /usr/bin/python
   /usr/bin/python2.7
   ```
 
-OR
-
+ - or
   ```bash
   $ sudo update-alternatives --config python
 
@@ -406,7 +415,7 @@ OR
   Enter to keep the current selection[+], or type selection number: 3
   ```
 
-- [Reason](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/)
+- [reason](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/)
   ```bash
   $ ls -l /usr/bin/python*
   lrwxrwxrwx 1 root root    24 Jul 10 02:29 /usr/bin/python -> /etc/alternatives/python
@@ -418,7 +427,7 @@ OR
 
   $ ls -altrh /etc/alternatives/python
   lrwxrwxrwx 1 root root 16 Jul 10 02:29 /etc/alternatives/python -> /usr/bin/python3
-    ```
+  ```
 
 - reference
   - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
