@@ -2,19 +2,37 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [SSH Tricky](#ssh-tricky)
-  - [Generate SSH Key](#generate-ssh-key)
-  - [Add into agent](#add-into-agent)
-  - [Performance](#performance)
-  - [Get Public Key from Private Key](#get-public-key-from-private-key)
-  - [Disable Login Password](#disable-login-password)
-  - [Force Use Password](#force-use-password)
-  - [Get FingerPrinter from Private Key](#get-fingerprinter-from-private-key)
-  - [SSH with OpenSSL](#ssh-with-openssl)
-- [SSH With Proxy](#ssh-with-proxy)
-  - [Using Command Directly](#using-command-directly)
-  - [Using Configure file](#using-configure-file)
-- [Debug Git by SSH](#debug-git-by-ssh)
+- [ssh key](#ssh-key)
+  - [generate ssh key](#generate-ssh-key)
+  - [get servers public key](#get-servers-public-key)
+  - [add ssh key into agent](#add-ssh-key-into-agent)
+  - [get public key from private key](#get-public-key-from-private-key)
+  - [verify public and private key pair](#verify-public-and-private-key-pair)
+  - [generate new passphrase](#generate-new-passphrase)
+  - [get fingerprinter](#get-fingerprinter)
+  - [with openssl](#with-openssl)
+  - [keys performance](#keys-performance)
+- [ssh](#ssh)
+  - [force use password](#force-use-password)
+  - [ssh and tar](#ssh-and-tar)
+  - [with proxy](#with-proxy)
+    - [using command directly](#using-command-directly)
+- [ssh tunnel](#ssh-tunnel)
+  - [two servers](#two-servers)
+  - [three serves](#three-serves)
+- [config](#config)
+  - [ssh config](#ssh-config)
+  - [sshd_config](#sshd_config)
+    - [banner and motd](#banner-and-motd)
+    - [disable login password](#disable-login-password)
+    - [disallow grou to use password](#disallow-grou-to-use-password)
+    - [disallowing user to use tcp forwarding](#disallowing-user-to-use-tcp-forwarding)
+    - [displaying a special banner for users not in the staff group](#displaying-a-special-banner-for-users-not-in-the-staff-group)
+    - [allowing root login from host rootallowed.example.com](#allowing-root-login-from-host-rootallowedexamplecom)
+    - [allowing anyone to use gatewayports from the local net](#allowing-anyone-to-use-gatewayports-from-the-local-net)
+- [duebug](#duebug)
+  - [debug git](#debug-git)
+  - [debug ssh](#debug-ssh)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -30,9 +48,8 @@
 > - [ssh key](https://wiki.archlinux.org/index.php/SSH_keys)
 {% endhint %}
 
-# SSH Tricky
-## [Generate SSH Key](https://gist.githubusercontent.com/risan/7c84941067171cef79944978f42b77c6/raw/4c14ef4d660ec84ba48af88c534b7a15439a643d/generate-ed25519-ssh-key.sh)
-
+# ssh key
+## [generate ssh key](https://gist.githubusercontent.com/risan/7c84941067171cef79944978f42b77c6/raw/4c14ef4d660ec84ba48af88c534b7a15439a643d/generate-ed25519-ssh-key.sh)
 ```bash
 $ keyname='marslo@china'
 
@@ -43,8 +60,16 @@ $ ssh-keygen -t rsa -b 4096 -f "~/.ssh/${keyname}" -C "${keyname}" -P "" -q
 $ ssh-keygen -t ed25519 -o -a 100 -C "${keyname}" -f "~/.ssh/${keyname}" -P '' -q
 ```
 
-## Add into agent
+## get servers public key
+```bash
+$ ssh-keyscan -H www.server.com
 
+# or
+$ ssh-keyscan -p 29418 -t rsa www.server.com
+$ ssh-keyscan -p 29418 -t rsa www.server.com >> ~/.ssh/known_hosts
+```
+
+## add ssh key into agent
 ```bash
 $ ssh-add ~/.ssh/${keyname}
 
@@ -58,8 +83,45 @@ SSH_AGENT_PID=25377; export SSH_AGENT_PID;
 echo Agent pid 25377;
 ```
 
-## Performance
+## get public key from private key
+```bash
+$ ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+```
 
+## [verify public and private key pair](https://serverfault.com/a/426429/129815)
+```bash
+$ diff [-qs] <( ssh-keygen -y -e -f "/path/to/private" ) \
+             <( ssh-keygen -y -e -f "/path/to/public.pub" )
+```
+
+## generate new passphrase
+```bash
+$ ssh-keygen -p -f /path/to/private
+```
+
+## get fingerprinter
+* sha256:
+  ```bash
+  $ ssh-keygen -l -f ~/.ssh/id_rsa
+
+  # or
+  $ ssh-keygen -l -f ~/.ssh/id_rsa.pub
+  ```
+
+* md5:
+  ```bash
+  $ ssh-keygen -E md5 -l -f ~/.ssh/id_rsa
+
+  # or
+  $ ssh-keygen -E md5 -l -f ~/.ssh/id_rsa.pub
+  ```
+
+## with openssl
+```bash
+$ openssl pkey -in ~/.ssh/ec2/primary.pem -pubout -outform DER | openssl md5 -c
+```
+
+## keys performance
 ```bash
 $ openssl speed rsa1024 rsa2048 dsa1024 dsa2048
 Doing 1024 bit private rsa's for 10s: 91211 1024 bit private RSA's in 9.97s
@@ -82,20 +144,183 @@ dsa 1024 bits 0.000118s 0.000091s   8487.3  10965.4
 dsa 2048 bits 0.000333s 0.000301s   3004.0   3326.9
 ```
 
-## Get Public Key from Private Key
 
+# ssh
+## force use password
 ```bash
-$ ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+$ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@target.server
 ```
 
-## Disable Login Password
+## [ssh and tar](https://superuser.com/a/116031/112396)
+```bash
+$ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -
 
+# or the z-flag to tar does compression
+tar cfz - . | ssh otherhost "cd /mydir; tar xvzf -
+# or use -C to ssh
+tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
+```
+
+## with proxy
+### using command directly
+* Linux:
+  ```bash
+  $ ssh -o 'ProxyCommand nc -x proxy.url.com proxy-port %h %p' -vT user@target.server
+
+  # or
+  $ ssh -o 'ProxyCommand corkscrew proxy.url.com proxy-port %h %p' -vT user@target.server
+  ```
+
+* windows:
+  * git for windows
+    ```bash
+    $ ssh -o 'ProxyCommand connect -H http://proxy.url.com:proxy-port %h %p' user@target.server
+    ```
+
+  * cygwin
+    ```bash
+    $ apt-cyg install corkscrew
+    $ ssh -o 'ProxyCommand corkscrew proxy.url.com proxy-port %h %p' user@target.server
+
+    # or
+    $ apt-cyg install nc
+    $ ssh -o 'ProxyCommand nc -X connect -x proxy.url.com:proxy-port %h %p' -vT git@github.com
+    ```
+
+# ssh tunnel
+
+> [!TIP]
+> - key point:
+>   - `-L` : `<--`
+>   - `-R` : `-->`
+> - basic command line
+> ```bash
+> ssh -Nf -L <localhost/localip>:<local_port>:<target>:<target_port> <to-be-mapping/localhost>
+> ```
+> - usage:
+>   - `1 -> [2 ->] 3` : `ssh host2:port2:host3:port3 host1:port1`
+>   - if ignore `host2`. default using local.host
+
+## two servers
+
+{% hint style='tip' %}
+<h4>in jumper</h4>
+{% endhint %}
+
+> [!TIP]
+> purpose:
+> ```bash
+> local:22 <-- jumper:6666
+> ```
+
+```bash
+# -L : <--
+$ ssh user@jumper.server
+$ ssh -Nf -L [jumper.server:]6666:my.server:22 root@my.server
+
+# verify
+$ sudo netstat -an | grep 6666
+tcp 0 0 jumper.ip:6666 0.0.0.0:* LISTEN
+tcp 0 0 127.0.0.1:6666 0.0.0.0:* LISTEN
+tcp 0 0 ::1:6666 :::* LISTEN
+```
+
+## three serves
+
+{% hint style='tip' %}
+<h4>in jumper</h4>
+> purpose:
+> ```basah
+> local:6666 <--- jumper:6666 <--- remote:6666`
+> ```
+{% endhint %}
+
+```bash
+# -R : -->
+$ ssh user@jumper
+$ ssh -Nf -R [jumper:]6666:local:6666 root@remote
+
+# verify
+## in remote
+$ ssh root@remote
+$ scp -P 6666 root@localhost:/remote/path/file /local/path
+## in local
+$ scp -P 6666 /local/path/file root@localhost:/remote/path/file
+
+$ ssh user@jumper
+jumper: ~> ps awwx | grep ssh|grep 6666
+17549 ? Ss 0:00 ssh -Nf -L 6666:remote:22 root@remote
+18740 ? Ss 3:50 ssh -Nf -R 6666:local:6666 root@remote
+```
+
+# config
+## ssh config
+```bash
+$ cat ~/.ssh/config
+HOST  *
+      LogLevel              ERROR
+      HostkeyAlgorithms     +ssh-rsa
+      # PubkeyAcceptedAlgorithms +ssh-rsa
+      GSSAPIAuthentication  no
+      StrictHostKeyChecking no
+      UserKnownHostsFile    /dev/null
+      IdentityFile ~/.ssh/id_ed25519
+      IdentityFile ~/.ssh/id_rsa         # keep the older key if necessary
+
+Include config.d/*
+
+Host  github.com
+      User                  marslo.jiao@gmail.com
+      Hostname              ssh.github.com
+      IdentityFile          /C/Marslo/my@key
+      IdentitiesOnly        yes
+      Port                  443
+      # ProxyCommand        nc -X connect -x proxy.com:8080 %h %p
+      # ProxyCommand        /usr/bin/nc -X 5 -x 127.0.0.1:1087 %h %p
+      # ProxyCommand        /usr/local/bin/corkscrew 127.0.0.1 1087 %h %p
+```
+
+## sshd_config
+
+{% hint style='tip' %}
+> references:
+> - [Three locks for your SSH door](https://developer.ibm.com/articles/au-sshlocks/)
+> - [保护 SSH 的三把锁](https://blogger.lshell.com/2015/09/ssh.html)
+> - [7 Default OpenSSH Security Options You Should Change in /etc/ssh/sshd_config](https://www.thegeekstuff.com/2011/05/openssh-options/)
+> - [sshd_config (4)](https://docs.oracle.com/cd/E86824_01/html/E54775/sshd-config-4.html)
+{% endhint %}
+
+> [!TIP]
+> - disable Root Login : `PermitRootLogin`
+> - allow only specific users or groups : `AllowUsers`, `AllowGroups`
+> - deny specific users or groups : `DenyUsers`, `DenyGroups`
+> - change sshd port number : `Port`
+> - change login grace time : `LoginGraceTime`
+> - Restrict the Interface (IP Address) to Login : `ListenAddress`
+> - disconnect ssh when no activity : `ClientAliveInterval`
+
+### banner and motd
+
+> [!TIP]
+> files:
+> - `/etc/pam.d/sshd` : `session    optional     pam_motd.so` : `/usr/lib64/security/pam_motd.so`
+> - `/etc/motd`
+> - `/etc/ssh/sshd_config` : `Banner /path/to/banner`
+
+- [force disable all banner or motd](https://askubuntu.com/a/1175798/92979)
+  ```bash
+  $ ssh user@host
+  $ touch ~/.hushlogin
+  ```
+
+### disable login password
 ```bash
 $ cat /etc/ssh/sshd_config
 ChallengeResponseAuthentication no
 PasswordAuthentication no
 UsePAM no
 ```
+
 - scripts:
   ```bash
   TIMESTAMPE=$(date +"%Y%m%d%H%M%S")
@@ -108,7 +333,7 @@ UsePAM no
   sudo bash -c '/bin/sed -i -e "s:^\(PasswordAuthentication.*$\):# \1:" ${SSHDFILE}'
 
   if ! grep 'Add my marslo' ${SSHDFILE} > /dev/null 2>&1; then
-      sudo bash -c "cat >> ${SSHDFILE}" << EOF
+    sudo bash -c "cat >> ${SSHDFILE}" << EOF
 
       # Add my marslo
       PermitRootLogin no
@@ -117,104 +342,59 @@ UsePAM no
       PasswordAuthentication no
       PrintMotd yes
       Banner /etc/ssh/server.banner
-      EOF
+    EOF
   fi
   ```
 
-## Force Use Password
+
+### disallow grou to use password
+
+> [!TIP]
+> - Directive 'UsePAM' is not allowed within a Match block
+> - Directive 'ChallengeResponseAuthentication' is not allowed within a Match block
+> - Directive 'PrintMotd' is not allowed within a Match block
+> - Directive 'LoginGraceTime' is not allowed within a Match block
 
 ```bash
-$ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@target.server
+if ! grep 'Add my marslo' ${SSHDFILE} > /dev/null 2>&1; then
+  sudo bash -c "cat >> ${SSHDFILE}" << EOF
+
+    # Add my marslo
+    Match Group storage-ff
+      PasswordAuthentication no
+      Banner /etc/ssh/server.banner
+      MaxAuthTries 3
+      ClientAliveInterval 600       # 60*10 secs
+  EOF
+fi
 ```
 
-## Get FingerPrinter from Private Key
-* SHA256:
-  ```bash
-  $ ssh-keygen -l -f ~/.ssh/id_rsa
-  # or
-  $ ssh-keygen -l -f ~/.ssh/id_rsa.pub
-  ```
-
-* MD5:
-  ```bash
-  $ ssh-keygen -E md5 -l -f ~/.ssh/id_rsa
-
-  # or
-  $ ssh-keygen -E md5 -l -f ~/.ssh/id_rsa.pub
-  ```
-
-## SSH with OpenSSL
-
-```bash
-$ openssl pkey -in ~/.ssh/ec2/primary.pem -pubout -outform DER | openssl md5 -c
+### disallowing user to use tcp forwarding
+```less
+Match User testuser
+  AllowTcpForwarding no
 ```
 
-# SSH With Proxy
-## Using Command Directly
-* Linux:
-
-```bash
-$ ssh -o 'ProxyCommand nc -x proxy.url.com proxy-port %h %p' -vT user@target.server
-# or
-$ ssh -o 'ProxyCommand corkscrew proxy.url.com proxy-port %h %p' -vT user@target.server
+### displaying a special banner for users not in the staff group
+```less
+Match Group *,!staff
+  Banner /etc/banner.text
 ```
 
-* Windows:
-  * Git for Windows
-    ```bash
-    $ ssh -o 'ProxyCommand connect -H http://proxy.url.com:proxy-port %h %p' user@target.server
-    ```
-
-  * Cygwin
-    ```bash
-    $ apt-cyg install corkscrew
-    $ ssh -o 'ProxyCommand corkscrew proxy.url.com proxy-port %h %p' user@target.server
-
-    # OR
-
-    $ apt-cyg install nc
-    $ ssh -o 'ProxyCommand nc -X connect -x proxy.url.com:proxy-port %h %p' -vT git@github.com
-    ```
-
-## Using Configure file
-```bash
-$ cat ~/.ssh/config
-HOST  *
-      GSSAPIAuthentication no
-      StrictHostKeyChecking no
-      # UserKnownHostsFile /dev/null
-      IdentityFile ~/.ssh/id_ed25519
-      IdentityFile ~/.ssh/id_rsa # keep the older key if necessary
-
-Host  github.com
-      Hostname          github.com
-      User              marslo.jiao@gmail.com
-      IdentityFile      /C/Marslo/my@key
-      ProxyCommand      connect -H http://127.0.0.1:8000 %h %p
-      IdentitiesOnly    yes
+### allowing root login from host rootallowed.example.com
+```less
+Match Host rootallowed.example.com
+  PermitRootLogin yes
 ```
 
-OR
-
-```bash
-$ cat ~/.ssh/config
-HOST  *
-      GSSAPIAuthentication no
-      StrictHostKeyChecking no
-      # UserKnownHostsFile /dev/null
-      IdentityFile ~/.ssh/id_ed25519
-      IdentityFile ~/.ssh/id_rsa # keep the older key if necessary
-
-Host  github.com
-      Hostname              github.com
-      User                  marslo.jiao@gmail.com
-      IdentityFile          /C/Marslo/my@key
-      ProxyCommand          nc -X connect -x proxy.url.com:proxy-port %h %p
-      IdentitiesOnly        yes
-      ServerAliveInterval   10                      # Optional
+### allowing anyone to use gatewayports from the local net
+```less
+Match Address 192.168.0.0/24
+  GatewayPorts yes
 ```
 
-# Debug Git by SSH
+# duebug
+## debug git
 - GIT_SSH_COMMAND
   ```bash
   $ GIT_SSH_COMMAND="ssh -vvT" git clone git@github.com:Marslo/myblog.git
@@ -266,4 +446,26 @@ Host  github.com
   00:30:45.024687 git.c:440               trace: built-in: git rev-parse --sq --prefix  --
   00:30:45.031664 git.c:440               trace: built-in: git diff-files --ignore-submodules=dirty --raw --
   nothing to commit, working tree clean
+  ```
+
+## debug ssh
+
+{% hint style='tip' %}
+> references:
+> - [OpenSSH Test Mode](https://www.cyberciti.biz/tips/checking-openssh-sshd-configuration-syntax-errors.html)
+> - [OpenSSH Tip: Check Syntax Errors before Restarting SSHD Server](https://www.cyberciti.biz/tips/checking-openssh-sshd-configuration-syntax-errors.html)
+> - [How to check SSH server's configuration validity](https://www.simplified.guide/ssh/test-config)
+{% endhint %}
+
+- debug mode
+  ```bash
+  $ sudo /usr/sbin/sshd -d [-d] [-d]
+  ```
+- test mode
+  ```bash
+  # -T : extended test mode
+  $ sudo /usr/sbin/sshd -T [-f /path/to/sshd_config]
+
+  # -t : test mode
+  $ sudo /usr/sbin/sshd -t [-f /path/to/sshd_config]
   ```
