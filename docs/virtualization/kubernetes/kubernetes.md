@@ -260,9 +260,12 @@ $ source ~/.bashrc
   ```
 
 ### duplicate secrets to the other ns
+
+{% hint style='tip' %}
 > reference:
 > - [others](https://github.com/jetstack/cert-manager/issues/494)
 > - [Pro-Tip – Copying Kubernetes Secrets Between Namespaces](https://www.revsys.com/tidbits/copying-kubernetes-secrets-between-namespaces/)
+{% endhint %}
 
 ```bash
 $ k -n ingress-nginx get secrets my-certs -o yaml --export | k apply -n devops -f -

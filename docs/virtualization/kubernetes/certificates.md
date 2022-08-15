@@ -2,6 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [show secrets tls.crt](#show-secrets-tlscrt)
+  - [show server.crt](#show-servercrt)
+  - [show ca.crt](#show-cacrt)
 - [renew both certificates and kubeconfig](#renew-both-certificates-and-kubeconfig)
   - [check info](#check-info)
     - [crt](#crt)
@@ -70,6 +73,40 @@
 >   $ sudo kubeadm config view
 >   ```
 {% endhint %}
+
+# show secrets tls.crt
+
+> [!TIP]
+> references:
+> - [Quick Tip: SSL Cert Expiry from Kubernetes Secrets](https://syvarth.com/post/ssl-cert-expiry-kubernetes-secret)
+
+## show server.crt
+```bash
+$ k -n kube-system \
+       get secrets my-tls \
+       -o yaml
+       -o "jsonpath={.data['tls\.crt']}" |
+    base64 -d -w0 |
+    sed '/-----END CERTIFICATE-----/q' |
+    openssl x509 -text -noout |
+    grep 'Not'
+            Not Before: Sep 14 00:00:00 2021 GMT
+            Not After : Aug 18 23:59:59 2022 GM
+```
+
+## show ca.crt
+```bash
+$ k -n kube-system \
+       get secrets my-tls \
+       -o yaml
+       -o "jsonpath={.data['tls\.crt']}" |
+    base64 -d -w0 |
+    awk '/-BEGIN CERTIFICATE-/ && c++, /-END CERTIFICATE-/' |
+    openssl x509 -text -noout |
+    grep 'Not'
+            Not Before: Apr 14 00:00:00 2021 GMT
+            Not After : Apr 13 23:59:59 2031 GMT
+```
 
 # renew both certificates and kubeconfig
 ## check info

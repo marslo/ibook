@@ -15,6 +15,9 @@
 - [ssh](#ssh)
   - [force use password](#force-use-password)
   - [ssh and tar](#ssh-and-tar)
+    - [copy multiple files to remote server](#copy-multiple-files-to-remote-server)
+    - [`find` && `tar`](#find--tar)
+    - [tar all and extra in remote](#tar-all-and-extra-in-remote)
   - [with proxy](#with-proxy)
     - [using command directly](#using-command-directly)
 - [ssh tunnel](#ssh-tunnel)
@@ -152,13 +155,52 @@ $ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@targe
 ```
 
 ## [ssh and tar](https://superuser.com/a/116031/112396)
+
+### [copy multiple files to remote server](https://superuser.com/a/116031/112396)
 ```bash
 $ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -
+```
 
-# or the z-flag to tar does compression
-tar cfz - . | ssh otherhost "cd /mydir; tar xvzf -
-# or use -C to ssh
-tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
+### `find` && `tar`
+- backup all `config.xml` in JENKINS_HOME
+  ```bash
+  $ find ${JENKINS_HOME}/jobs \
+         -maxdepth 2 \
+         -name config\.xml \
+         -type f -print |
+    tar czf ~/config.xml.tar.gz --files-from -
+  ```
+
+- back build history
+  ```bash
+  $ find ${JENKINS_HOME}/jobs \
+         -name builds \
+         -prune -o \
+         -type f \
+         -print |
+    tar czf ~/m.tar.gz --files-from -
+  ```
+
+### tar all and extra in remote
+```bash
+# ssh -C
+#    no `-z`      `-C`
+#       |           |
+#       v           v
+$ tar cf - . | ssh -C hostname "cd ~/.marslo/test/; tar xvf -"
+Warning: Permanently added '10.69.78.40' (ECDSA) to the list of known hosts.
+./
+./temp/
+./a/
+./a/a.txt
+./c/
+./b/
+
+# tar z-flag
+#     `-z`       no `-C`
+#       |          |
+#       v          v
+$ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
 ```
 
 ## with proxy

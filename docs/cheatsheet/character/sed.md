@@ -8,19 +8,19 @@
 - [delete](#delete)
 - [substitute](#substitute)
 - [get matched pattern](#get-matched-pattern)
+- [get first matching patten](#get-first-matching-patten)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ### execute multiple sed commands
 
-{% hint style='tip' %}
+> [!TIP]
 > ```bash
 > -e command
 >        Append the editing commands specified by the command argument to the list of commands.
 > ```
 > references:
 > - [50 `sed` Command Examples](https://linuxhint.com/50_sed_command_examples/)
-{% endhint %}
 
 #### example : show only root and nobody in `/etc/passwd`
 - `-e` :
@@ -204,3 +204,68 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
 <104>,Anand Ram,Developer
 <105>,Jane Miller,Sales Manager
 ```
+
+### get first matching patten
+
+> [!TIP]
+> sample.crt
+> ```bash
+> $ cat sample.crt
+> -----BEGIN CERTIFICATE-----
+> first paragraph
+> -----END CERTIFICATE-----
+> -----BEGIN CERTIFICATE-----
+> second paragraph
+> -----END CERTIFICATE-----
+> ```
+
+- regular pattern
+  ```bash
+  $ cat sample.crt | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p'
+  -----BEGIN CERTIFICATE-----
+  first paragraph
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  second paragraph
+  -----END CERTIFICATE-----
+
+  # or for short
+  $ cat sample.crt | sed -ne '/-BEGIN/,/-END/p'
+  -----BEGIN CERTIFICATE-----
+  first paragraph
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  second paragraph
+  -----END CERTIFICATE-----
+  ```
+
+- get first
+
+  > [!TIP]
+  > - [How to print the text between the first occurence of a pair of strings? [duplicate]](https://unix.stackexchange.com/a/362068/29178)
+  > - [How to select first occurrence between two patterns including them](https://unix.stackexchange.com/a/180729/29178)
+
+  ```bash
+  $ cat sample.crt | sed -n '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p; /-END CERTIFICATE-/q'
+  -----BEGIN CERTIFICATE-----
+  first paragraph
+  -----END CERTIFICATE-----
+
+  # or `-d`
+  $ cat sample.crt | sed '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/!d; /-END CERTIFICATE-/q'
+  -----BEGIN CERTIFICATE-----
+  first paragraph
+  -----END CERTIFICATE-----
+
+  # or for short
+  $ cat sample.crt | sed '/-END CERTIFICATE-/q'
+  -----BEGIN CERTIFICATE-----
+  first paragraph
+  -----END CERTIFICATE-----
+
+  # or
+  $ cat sample.crt | sed '/-END/q'
+  -----BEGIN CERTIFICATE-----
+  first paragraph
+  -----END CERTIFICATE-----
+  ```

@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [convert row to column](#convert-row-to-column)
 - [split](#split)
 - [print chars and length](#print-chars-and-length)
 - [summary all user used memory (`ps aux`)](#summary-all-user-used-memory-ps-aux)
@@ -16,6 +17,30 @@
 > references:
 > - [awk printf](http://kb.ictbanking.net/article.php?id=688)
 {% endhint %}
+
+### [convert row to column](https://unix.stackexchange.com/a/169997/29178)
+
+> [!TIP]
+> ```bash
+> $ cat sample.txt
+> job salary
+> c++ 13
+> java 14
+> php 12
+> ```
+
+```bash
+awk '{
+  for (i=1; i<=NF; i++) arr[i]= (arr[i]? arr[i] FS $i: $i) }
+  END{ for (i in arr) print arr[i]
+}' sample.txt
+```
+
+- result
+  ```bash
+  job c++ java php
+  salary 13 14 12
+  ```
 
 ### split
 ```bash
@@ -143,3 +168,4 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
   # or
   $ md5sum ~/.bashrc | awk '$1 == "${standard}" {print "true"}'
   ```
+
