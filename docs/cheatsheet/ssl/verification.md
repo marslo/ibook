@@ -13,6 +13,7 @@
     - [InstallCert.java](#installcertjava)
 - [verify remote cert](#verify-remote-cert)
   - [openssl & s_client](#openssl--s_client)
+    - [verify certs](#verify-certs)
   - [curl](#curl-1)
   - [keytool](#keytool)
   - [nmap](#nmap)
@@ -200,6 +201,7 @@ $ javac InstallCert.java
   ```
 
 # verify remote cert
+
 {% hint style="tip" %}
 > reference:
 > - [Checking A Remote Certificate Chain With OpenSSL](https://langui.sh/2009/03/14/checking-a-remote-certificate-chain-with-openssl/)
@@ -210,15 +212,6 @@ $ javac InstallCert.java
 ```bash
 $ openssl s_client -showcerts -connect www.domain.com:443
 ```
-or
-
-```bash
-$ echo | openssl s_client -showcerts \
-                          -servername www.domain.com \
-                          -connect www.domain.com:443 2>/dev/null |
-         openssl x509 -inform pem -noout -text
-```
-
 - or
   ```bash
   $ openssl s_client -showcerts \
@@ -254,6 +247,21 @@ $ echo | openssl s_client -showcerts \
                    -connect www.domain.com:443 2>/dev/null |
            openssl x509 -noout -enddate
   notAfter=Nov 28 23:59:59 2020 GMT
+  ```
+
+### verify certs
+```bash
+$ echo | openssl s_client -showcerts \
+                          -servername www.domain.com \
+                          -connect www.domain.com:443 2>/dev/null |
+         openssl x509 -inform pem -noout -text
+```
+
+- get ssl only
+  ```bash
+  $ echo | openssl s_client -showcerts \
+                            -connect www.domain.com:443 2>/dev/null |
+                            sed -n '/BEGIN.*-/,/END.*-/p'
   ```
 
 ## curl

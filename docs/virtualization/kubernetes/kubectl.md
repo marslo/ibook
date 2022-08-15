@@ -178,6 +178,15 @@ $ for _i in $(k get ns --no-headers | awk -F' ' '{print $1}'); do
   done
 ```
 
+### check api server healthy
+```bash
+$ kubectl get apiservice
+```
+- delete apiservers
+  ```bash
+  $ kubectl delete apiservice v1beta1.metrics.k8s.io
+  ```
+
 ### get apiservers
 ```bash
  $ k get --raw=/apis

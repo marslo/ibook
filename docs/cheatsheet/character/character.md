@@ -11,20 +11,20 @@
   - [awk](#awk)
   - [sed](#sed)
   - [working with empty line](#working-with-empty-line)
+  - [get first matching pattern](#get-first-matching-pattern)
+  - [get second matching pattern](#get-second-matching-pattern)
 - [`xargs`](#xargs)
   - [multiple move](#multiple-move)
   - [subset of arguments](#subset-of-arguments)
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
   - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
   - [Running multiple commands with xargs](#running-multiple-commands-with-xargs)
-  - [convert row to column](#convert-row-to-column)
 - [`find`](#find)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
-  - [`find` && `tar`](#find--tar)
-  - [tar all and extra in remote](#tar-all-and-extra-in-remote)
   - [`exec` and `sed`](#exec-and-sed)
   - [find and rename](#find-and-rename)
   - [find and exclude](#find-and-exclude)
+  - [`find` && `tar`](#find--tar)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -33,7 +33,6 @@
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
 - [regex](#regex)
-  - [get URL](#get-url)
 - [insert new line](#insert-new-line)
 - [write a file without indent space](#write-a-file-without-indent-space)
 - [cat](#cat)
@@ -329,10 +328,110 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 6f
 ```
 
+### get first matching pattern
+
+{% hint style='tip' %}
+> references:
+> - [How to select first occurrence between two patterns including them](https://unix.stackexchange.com/q/180663/29178)
+{% endhint %}
+
+> [!TIP]
+> ```bash
+> $ cat sample.crt
+> -----BEGIN CERTIFICATE-----
+> first paragraph
+> -----END CERTIFICATE-----
+> -----BEGIN CERTIFICATE-----
+> second paragraph
+> -----END CERTIFICATE-----
+> ```
+
+#### sed
+```bash
+$ cat sample.crt | sed '/-END CERTIFICATE-/q'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+
+# or `-n /../p`
+#                     `-n`                                         `p`
+#                      |                                            |
+#                      v                                            v
+$ cat sample.crt | sed -n '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p; /-END CERTIFICATE-/q'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+
+# or `/../!d`
+#                   no `-n`                                     `!d`
+#                     |                                           |
+#                     v                                           v
+$ cat sample.crt | sed '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/!d; /-END CERTIFICATE-/q'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+```
+
+#### awk
+```bash
+$ cat sample.crt | awk '/-BEGIN CERTIFICATE-/{a=1}; a; /-END CERTIFICATE-/{exit}'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+
+# or
+$ cat sample.crt | awk '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/ {print} /-END CERTIFICATE-/ {exit}'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+
+# or
+$ cat sample.crt | awk '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/ {print;f=1} f&&/-END CERTIFICATE-/ {exit}'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+
+# or
+$ cat sample.crt | awk '/-BEGIN CERTIFICATE-/ {f=1} /-END CERTIFICATE-/ {f=0;print;exit} f'
+-----BEGIN CERTIFICATE-----
+first paragraph
+-----END CERTIFICATE-----
+```
+
+### get second matching pattern
+
+{% hint style='tip' %}
+> references:
+> - [Copying second occurrence pattern to a new file in sed](https://unix.stackexchange.com/a/435278/29178)
+{% endhint %}
+
+> [!TIP]
+> ```bash
+> $ cat sample.crt
+> -----BEGIN CERTIFICATE-----
+> first paragraph
+> -----END CERTIFICATE-----
+> -----BEGIN CERTIFICATE-----
+> second paragraph
+> -----END CERTIFICATE-----
+> ```
+
+```bash
+$ cat sample.crt | awk '/-BEGIN CERTIFICATE-/ && c++, /-END CERTIFICATE-/'
+-----BEGIN CERTIFICATE-----
+second paragraph
+-----END CERTIFICATE-----
+```
+
 ## `xargs`
+
+{% hint style='tip' %}
+> `-I{}` == `-i`
 > references:
 > - [xargs](https://en.wikipedia.org/wiki/Xargs)
 > - [Running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
+{% endhint %}
+
 
 ### [multiple move](https://en.wikipedia.org/wiki/Xargs#Placement_of_arguments)
 ```bash
@@ -356,6 +455,8 @@ $ echo {0..9} | xargs -n 2
 ```
 
 ### sort all shell script by line number
+
+> [!TIP]
 > [Pipe `xargs` into `find`](http://xion.io/post/code/shell-xargs-into-find.html)
 
 ```bash
@@ -422,31 +523,15 @@ $ find . -maxdepth 1 ! -path . -type d -print0 |
        }'
 ```
 
-### [convert row to column](https://unix.stackexchange.com/a/169997/29178)
-```bash
-awk '{
-  for (i=1; i<=NF; i++) arr[i]= (arr[i]? arr[i] FS $i: $i) }
-  END{ for (i in arr) print arr[i]
-}' sample.txt
-```
-
-- result
-  ```bash
-  $ cat sample.txt
-  job salary
-  c++ 13
-  java 14
-  php 12
-
-  $ awk '{
-    for (i=1; i<=NF; i++) arr[i]= (arr[i]? arr[i] FS $i: $i) }
-    END{ for (i in arr) print arr[i]
-  }' sample.txt
-  job c++ java php
-  salary 13 14 12
-  ```
-
 #### ping multiple ips
+
+> [!TIP]
+> ```bash
+>  -a file, --arg-file=file
+>        Read items from file instead of standard input.  If you use this option, stdin remains unchanged  when
+>        commands are run.  Otherwise, stdin is redirected from /dev/null.
+> ```
+
 ```bash
 $ cat a.txt
 8.8.8.8
@@ -481,40 +566,6 @@ round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
   $ find . -type d -name '.git' -exec cat {}/config \;
   ```
 
-### `find` && `tar`
-- backup all `config.xml` in JENKINS_HOME
-  ```bash
-  $ find ${JENKINS_HOME}/jobs -maxdepth 2 -name config\.xml -type f -print | tar czf ~/config.xml.tar.gz --files-from -
-  ```
-
-- back build history
-  ```bash
-  $ find ${JENKINS_HOME}/jobs -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
-  ```
-
-### tar all and extra in remote
-```bash
-# ssh -C
-$ tar cf - . | ssh -C hostname "cd ~/.marslo/test/; tar xvf -"
-Warning: Permanently added '10.69.78.40' (ECDSA) to the list of known hosts.
-./
-./temp/
-./a/
-./a/a.txt
-./c/
-./b/
-```
-
-or
-```bash
-# tar z-flag
-$ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
-```
-- [copy multiple files to remote server](https://superuser.com/a/116031/112396)
-  ```bash
-  $ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -
-  ```
-
 ### `exec` and `sed`
 - change bunches ip address
   ```bash
@@ -538,6 +589,22 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
   ```bash
   $ find . -regex-type posix-extended -regex ".*def/incoming.*|.*456/incoming.*" -prune -o -print
   ```
+
+### `find` && `tar`
+
+> [!TIP]
+> more can be found in [imarslo : find and tar](../../devops/ssh.html#ssh-and-tar)
+
+- backup all `config.xml` in JENKINS_HOME
+  ```bash
+  $ find ${JENKINS_HOME}/jobs -maxdepth 2 -name config\.xml -type f -print | tar czf ~/config.xml.tar.gz --files-from -
+  ```
+
+- back build history
+  ```bash
+  $ find ${JENKINS_HOME}/jobs -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
+  ```
+
 
 ## trim
 ### trim tailing chars
@@ -664,11 +731,6 @@ done
 
 ## regex
 
-### get URL
-```bash
-$ echo http://www.baidu.com | awk '{for(i=1;i<=NF;i++){if($i~/^(http|ftp):\/\//)print $i}}'
-http://www.baidu.com
-```
 
 ## insert new line
 - insert right after the second match string
@@ -684,7 +746,7 @@ DCR
 {%- endcodetabs %}
 
 ```bash
-$ echo -e "DCR\nDCR\nDCR" |awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
+$ echo -e "DCR\nDCR\nDCR" | awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
 ```
 
 ## write a file without indent space
@@ -717,6 +779,7 @@ items.find ({
                       })
   EOF
   ```
+
 {% codetabs name="example", type="bash" -%}
 $ sed -e 's:^\s*::' <<-'EOF'
                       items.find ({

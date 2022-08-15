@@ -15,17 +15,15 @@
   - [get the oldest pod](#get-the-oldest-pod)
   - [sort via created time](#sort-via-created-time)
 - [list](#list)
-  - [List Error Status pods](#list-error-status-pods)
-  - [list and delete all Error status pods](#list-and-delete-all-error-status-pods)
+  - [list error status pods](#list-error-status-pods)
   - [list all pods statuses only](#list-all-pods-statuses-only)
   - [list running images](#list-running-images)
   - [list running pods](#list-running-pods)
-  - [List Pods name](#list-pods-name)
-- [QOS](#qos)
+  - [output](#output)
+  - [jsonpath](#jsonpath)
 - [management](#management)
   - [execute in pod](#execute-in-pod)
   - [restart po](#restart-po)
-- [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -135,21 +133,32 @@ $ k -n <namespace> get pods \
 ```
 
 ## list
-### [List Error Status pods](https://stackoverflow.com/a/53327330/2940319)
+
+### [list error status pods](https://stackoverflow.com/a/53327330/2940319)
+
+{% hint style='tip' %}
 > reference:
 > - [Viewing, finding resources](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-finding-resources)
 > - [`kubectl get` should have a way to filter for advanced pods status](https://github.com/kubernetes/kubernetes/issues/49387)
+{% endhint %}
 
 ```bash
 $ k -n <namespace> get po \
     --field-selector status.phase=Failed
 ```
 
-### list and delete all Error status pods
+#### list and delete all error status pods
 ```bash
-$ k -n <namespace> delete po \
-    --field-selector status.phase=Failed
+$ for i in $(k get po --no-headers --all-namespaces --field-selector status.phase=Failed -o=custom-columns=NAMESPACE:.metadata.namespace | sort -u); do
+    k -n $i delete po --field-selector status.phase=Failed --force --grace-period=0
+  done
 ```
+
+- or
+  ```bash
+  $ k -n <namespace> delete po \
+      --field-selector status.phase=Failed
+  ```
 
 - [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346746104)
   ```bash
@@ -211,30 +220,54 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 ...
 ```
 
-### List Pods name
-> [Inspired from here](https://stackoverflow.com/a/51612372/2940319)
+### output
 
-- `-o name`
-  ```bash
-  $ k -n kube-system get pods -o name |
+{% hint style='tip' %}
+> references:
+> - [Inspired from here](https://stackoverflow.com/a/51612372/2940319)
+> - [Kubectl - Introduce "custom-columns" variant to add additional columns to output](https://github.com/kubernetes/kubernetes/issues/98368#issuecomment-767298880)
+{% endhint %}
+
+#### `-o name`
+```bash
+$ k -n kube-system get pods -o name |
+  head
+pod/coredns-c7ddbcccb-5cj5z
+pod/coredns-c7ddbcccb-lxsw6
+pod/coredns-c7ddbcccb-prjfk
+pod/etcd-node03
+pod/etcd-node04
+pod/etcd-node01
+pod/kube-apiserver-node03
+pod/kube-apiserver-node04
+pod/kube-apiserver-node01
+pod/kube-controller-manager-node03
+```
+
+#### `--template`
+{% raw %}
+```bash
+$ k -n kube-system get pods \
+    -o go-template \
+    --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
     head
-  pod/coredns-c7ddbcccb-5cj5z
-  pod/coredns-c7ddbcccb-lxsw6
-  pod/coredns-c7ddbcccb-prjfk
-  pod/etcd-node03
-  pod/etcd-node04
-  pod/etcd-node01
-  pod/kube-apiserver-node03
-  pod/kube-apiserver-node04
-  pod/kube-apiserver-node01
-  pod/kube-controller-manager-node03
-  ```
+coredns-c7ddbcccb-5cj5z
+coredns-c7ddbcccb-lxsw6
+coredns-c7ddbcccb-prjfk
+etcd-node03
+etcd-node04
+etcd-node01
+kube-apiserver-node03
+kube-apiserver-node04
+kube-apiserver-node01
+kube-controller-manager-node03
+```
+{% endraw %}
 
-- `--template`
+- or
   {% raw %}
   ```bash
   $ k -n kube-system get pods \
-      -o go-template \
       --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
       head
   coredns-c7ddbcccb-5cj5z
@@ -250,26 +283,22 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
   ```
   {% endraw %}
 
-  - or
-    {% raw %}
-    ```bash
-    $ k -n kube-system get pods \
-        --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
-        head
-    coredns-c7ddbcccb-5cj5z
-    coredns-c7ddbcccb-lxsw6
-    coredns-c7ddbcccb-prjfk
-    etcd-node03
-    etcd-node04
-    etcd-node01
-    kube-apiserver-node03
-    kube-apiserver-node04
-    kube-apiserver-node01
-    kube-controller-manager-node03
-    ```
-    {% endraw %}
+#### custom-columns
+- `Name:.metadata.name`
+  ```bash
+  $ k get po --all-namespaces \
+             -o=custom-columns=NAMESPACE:.metadata.namespace
+  ```
+- `NODE:.spec.nodeName`
+- `IPS:status.podIPs`
+- `PHASE:.status.phase`
+- `RESTARTS:RESTART:.status.containerStatuses[0].restartCount`
+- `IMAGE:.spec.containers[0].image`
+- `CREATED:.metadata.creationTimestamp`
+- `LABELS:.metadata.labels`
+- `QOS-CLASS:.status.qosClass`
 
-- [list all images running in particular namespace](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#formatting-output)
+##### [list all images running in particular namespace](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#formatting-output)
   ```bash
   $ k -n <namespace> get po \
       --output=custom-columns="NAME:.metadata.name,IMAGE:.spec.containers[*].image"
@@ -277,71 +306,24 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 
   - list all images exclude `'k8s.gcr.io/coredns:1.6.2'`
     ```bash
-    $ k get pods -A \
-                 -o=custom-columns='DATA:spec.containers[?(@.image!="k8s.gcr.io/coredns:1.6.2")].image'
+    $ k --all-namespaces get pods \
+        -o=custom-columns='DATA:spec.containers[?(@.image!="k8s.gcr.io/coredns:1.6.2")].image'
     ```
 
-- [list via `-o custom-columns=":metadata.name"`](https://stackoverflow.com/a/52691455/2940319)
-  ```bash
-  $ k -n kube-system get pods -o custom-columns=":metadata.name" | head
-  coredns-c7ddbcccb-5cj5z
-  coredns-c7ddbcccb-lxsw6
-  coredns-c7ddbcccb-prjfk
-  etcd-node03
-  etcd-node04
-  etcd-node01
-  kube-apiserver-node03
-  kube-apiserver-node04
-  kube-apiserver-node01
-  ```
-
-- list via `jsonpath={.items..metadata.name}`
-  ```bash
-  $ k -n kube-system get po \
-      --output=jsonpath={.items..metadata.name}
-  coredns-c7ddbcccb-5cj5z coredns-c7ddbcccb-lxsw6 coredns-c7ddbcccb-prjfk ...
-  ```
-  - or
-    ```bash
-    $ k -n kube-system get po \
-        -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
-        head -10
-    coredns-c7ddbcccb-5cj5z
-    coredns-c7ddbcccb-lxsw6
-    coredns-c7ddbcccb-prjfk
-    etcd-node03
-    etcd-node04
-    etcd-node01
-    kube-apiserver-node03
-    kube-apiserver-node04
-    kube-apiserver-node01
-    kube-controller-manager-node03
-    ```
-- [List all Container images in all namespaces](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/)
-  ```bash
-  $ kubectl get pods \
-            --all-namespaces \
-            -o jsonpath="{.items[*].spec.containers[*].image}" |
-            tr -s '[[:space:]]' '\n' |
-            sort |
-            uniq -c
-  ```
-  - or
-    ```bash
-    $ kubectl get pods \
-              --all-namespaces \
-              -o jsonpath="{.items[*].spec.containers[*].image}"
-    ```
-
-- [List Container images by Pod](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod)
-  ```bash
-  $ kubectl get pods \
-            --all-namespaces \
-            -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' |
-            sort
-  ```
-
-## QOS
+##### [list via `-o custom-columns=":metadata.name"`](https://stackoverflow.com/a/52691455/2940319)
+```bash
+$ k -n kube-system get pods -o custom-columns=":metadata.name" | head
+coredns-c7ddbcccb-5cj5z
+coredns-c7ddbcccb-lxsw6
+coredns-c7ddbcccb-prjfk
+etcd-node03
+etcd-node04
+etcd-node01
+kube-apiserver-node03
+kube-apiserver-node04
+kube-apiserver-node01
+```
+##### QOS
 ```bash
 $ k -n kube-system get po \
     -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,QOS-CLASS:.status.qosClass
@@ -364,6 +346,67 @@ kube-flannel-ds-amd64-b4th7                 kube-system   Guaranteed
 ...
 ```
 
+### jsonpath
+
+#### get the first deploy name in namespace
+```bash
+$ k -n <namespace> get deploy \
+    -o=jsonpath={.items[0].metadata.name}
+```
+#### get all deploy names
+```bash
+$ k -n <namespace> get deploy \
+    -o=jsonpath='{.items[*].metadata.name}'
+```
+
+#### `item.metadata.name`
+- list via `jsonpath={.items..metadata.name}`
+  ```bash
+  $ k -n kube-system get po \
+      --output=jsonpath={.items..metadata.name}
+  coredns-c7ddbcccb-5cj5z coredns-c7ddbcccb-lxsw6 coredns-c7ddbcccb-prjfk ...
+  ```
+  - or
+    ```bash
+    $ k -n kube-system get po \
+        -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
+        head -10
+    coredns-c7ddbcccb-5cj5z
+    coredns-c7ddbcccb-lxsw6
+    coredns-c7ddbcccb-prjfk
+    etcd-node03
+    etcd-node04
+    etcd-node01
+    kube-apiserver-node03
+    kube-apiserver-node04
+    kube-apiserver-node01
+    kube-controller-manager-node03
+    ```
+
+#### [list all container images in all namespaces](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/)
+```bash
+$ kubectl get pods \
+          --all-namespaces \
+          -o jsonpath="{.items[*].spec.containers[*].image}" |
+          tr -s '[[:space:]]' '\n' |
+          sort |
+          uniq -c
+```
+- or
+  ```bash
+  $ kubectl get pods \
+            --all-namespaces \
+            -o jsonpath="{.items[*].spec.containers[*].image}"
+  ```
+
+#### [list container images by pod](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod)
+  ```bash
+  $ kubectl get pods \
+            --all-namespaces \
+            -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' |
+            sort
+  ```
+
 ## management
 
 ### execute in pod
@@ -376,14 +419,13 @@ devops-jenkins-659f4c6d44-d2w76
 ```
 
 ### restart po
+
+{% hint style='tip' %}
 > reference:
 > - [Restarting Kubernetes Pods](https://phoenixnap.com/kb/how-to-restart-kubernetes-pods)
 > - [How to Restarting Kubernetes Pods](https://www.cloudytuts.com/tutorials/kubernetes/how-to-restarting-kubernetes-pods/)
-
-{% hint style='tip' %}
 > for kubernetes version 1.15+
 > `kubectl -n <namespace> rollout restart deployment <name>`
-
 {% endhint %}
 
 ```bash
@@ -413,15 +455,3 @@ $ k -n <namespace> get po <po-name> -o yaml | k replace --force -f -
     ```bash
     $ k -n <namespace> scale deployment <name> --replicas=0
     ```
-
-## others
-- get the first deploy name in namespace
-  ```bash
-  $ k -n <namespace> get deploy \
-      -o=jsonpath={.items[0].metadata.name}
-  ```
-- get all deploy names
-  ```bash
-  $ k -n <namespace> get deploy \
-      -o=jsonpath='{.items[*].metadata.name}'
-  ```
