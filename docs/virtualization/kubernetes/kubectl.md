@@ -15,6 +15,7 @@
   - [list Container images filtering by Pod namespace](#list-container-images-filtering-by-pod-namespace)
   - [list Container images using a go-template instead of jsonpath](#list-container-images-using-a-go-template-instead-of-jsonpath)
   - [list all quota](#list-all-quota)
+  - [check api server healthy](#check-api-server-healthy)
   - [get apiservers](#get-apiservers)
   - [get apiresources](#get-apiresources)
   - [check etcd](#check-etcd)

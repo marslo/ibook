@@ -323,6 +323,33 @@
   ```
 
 ## authentication
+
+> [!TIP]
+> references:
+> - [Authentication using the ltoken](https://analyst.phyzdev.net/documentation/help/concepts/klocworkltoken.htm)
+> <br>
+> Failing authentication if host name is not found<br>
+> You can enable kwauth to fail authentication in the case where the server host name was not found in the certificate CN or Subject Alternative Name by setting the verifyCertificate option to true. Enabling this results in the following error message if the host name cannot be found: <br>
+> ```
+> Unable to authenticate using SSL with <url>
+> ```
+> To set this value to true, create a 'client_config.xml' file in your {client_tools_install_folder}\config\ folder (if it does not already exist). The file must contain the following:
+> ```xml
+> <?xml version="1.0" encoding="UTF-8"?>
+>    <params>
+>      <host resolveHost="false" verifyCertificate="true"/>
+>    </params>
+> ```
+> Note that setting `resolveHost="false"` is not mandatory, but doing so can prevent the Klocwork Server from resolving the wrong FQDN as the Server will use whatever host you specify in a remote server URL.
+
+{% hint style='tip' %}
+> `ltoken` is used to authenticate users with tools such as kwbuildproject:
+> - Windows:C:\Users\<user_name>\.klocwork\ltoken
+> - Unix:~/.klocwork/ltoken
+> - Mac:~/.klocwork/ltoken
+> If there is no ltoken file in your .klocwork directory, run kwauth to generate the file.
+{% endhint %}
+
 ### [get ltoken](https://docs.roguewave.com/en/klocwork/2020/klocworkltoken)
 ```bash
 $ export KLOCWORK_LTOKEN=/home/marslo/.klocwork/ltoken
