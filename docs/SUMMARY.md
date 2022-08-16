@@ -94,6 +94,7 @@
     * [api](virtualization/kubernetes/api.md)
     * [tools](virtualization/kubernetes/tools.md)
       * [monitor](virtualization/kubernetes/monitor.md)
+    * [q&a](virtualization/kubernetes/qa.md)
   * [docker](virtualization/docker/docker.md)
     * [windows](virtualization/docker/windows.md)
     * [tricky](virtualization/docker/tricky.md)
