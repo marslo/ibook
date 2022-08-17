@@ -401,7 +401,8 @@ ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/server.key;
 
 > [!TIP]
 > references:
-> - [*imarslo : get cert from domain](./keystore.html#get-cert-from-domain)
+> - [* imarslo : get cert from domain](./keystore.html#get-cert-from-domain)
+> - [* imarslo : get first matching pattern](../character/character.html#get-first-matching-pattern)
 > - [* Checking A Remote Certificate Chain With OpenSSL](https://langui.sh/2009/03/14/checking-a-remote-certificate-chain-with-openssl/)
 > - [Using openssl to get the certificate from a server](https://stackoverflow.com/a/7886248/2940319)
 > - [SSL Certificate Verification](https://curl.se/docs/sslcerts.html)
@@ -433,6 +434,14 @@ $ echo |
                    -connect <domain.com>:<port> 2>/dev/null |
   sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' \
   > cacert.crt
+
+# or
+$ echo | openssl s_client \
+                 -showcerts \
+                 -connect <domain.com>:<port> 2>/dev/null |
+         sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p; /-END CERTIFICATE-/q' |
+         openssl x509 -text -noout |
+         grep Not
 ```
 - check
   ```bash
