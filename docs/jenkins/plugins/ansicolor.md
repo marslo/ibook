@@ -4,9 +4,10 @@
 
 - [println 256 colors](#println-256-colors)
 - [color matrix libs](#color-matrix-libs)
+- [customized colors](#customized-colors)
+  - [xterm](#xterm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 
 ## println 256 colors
@@ -70,54 +71,68 @@ import groovy.transform.Field
  * on<Color>      <color> as background
 **/
 @Field final Map<String, String> COLOR_MATRIX = [
-         black : '\033[0;38;5;0m'   ,
-           red : '\033[0;38;5;1m'   ,
-         green : '\033[0;38;5;2m'   ,
-        yellow : '\033[0;38;5;3m'   ,
-          blue : '\033[0;38;5;4m'   ,
-       magenta : '\033[0;38;5;5m'   ,
-          cyan : '\033[0;38;5;6m'   ,
-         white : '\033[0;38;5;7m'   ,
-          gray : '\033[0;38;5;8m'   ,
-     lightGray : '\033[0;38;5;244m' ,
-        orange : '\033[0;38;5;208m' ,
-         brRed : '\033[0;38;5;9m'   ,
-       brGreen : '\033[0;38;5;10m'  ,
-      brYellow : '\033[0;38;5;11m'  ,
-        brBlue : '\033[0;38;5;12m'  ,
-     brMagenta : '\033[0;38;5;13m'  ,
-        brCyan : '\033[0;38;5;14m'  ,
-       brWhite : '\033[0;38;5;15m'  ,
-       onBlack : '\033[0;48;5;0m'   ,
-         onRed : '\033[0;48;5;1m'   ,
-       onGreen : '\033[0;48;5;2m'   ,
-      onYellow : '\033[0;48;5;3m'   ,
-        onBlue : '\033[0;48;5;4m'   ,
-     onMagenta : '\033[0;48;5;5m'   ,
-        onCyan : '\033[0;48;5;6m'   ,
-       onWhite : '\033[0;48;5;7m'   ,
-        onGray : '\033[0;48;5;8m'   ,
-   onLightGray : '\033[0;48;5;244m' ,
-      onOrange : '\033[0;48;5;208m' ,
-     boldBlack : '\033[1;38;5;0m'   ,
-       boldRed : '\033[1;38;5;1m'   ,
-     boldGreen : '\033[1;38;5;2m'   ,
-    boldYellow : '\033[1;38;5;3m'   ,
-      boldBlue : '\033[1;38;5;4m'   ,
-   boldMagenta : '\033[1;38;5;5m'   ,
-      boldCyan : '\033[1;38;5;6m'   ,
-     boldWhite : '\033[1;38;5;7m'   ,
-      boldGray : '\033[1;38;5;8m'   ,
-       itBlack : '\033[3;38;5;0m'   ,
-         itRed : '\033[3;38;5;1m'   ,
-       itGreen : '\033[3;38;5;2m'   ,
-      itYellow : '\033[3;38;5;3m'   ,
-        itBlue : '\033[3;38;5;4m'   ,
-     itMagenta : '\033[3;38;5;5m'   ,
-        itCyan : '\033[3;38;5;6m'   ,
-       itWhite : '\033[3;38;5;7m'   ,
-        itGray : '\033[3;38;5;8m'   ,
-           ESC : '\033[0m'
+          black : '\033[0;38;5;0m'   ,
+            red : '\033[0;38;5;1m'   ,
+          green : '\033[0;38;5;2m'   ,
+      darkGreen : '\033[0;38;5;022m' ,
+         yellow : '\033[0;38;5;3m'   ,
+           blue : '\033[0;38;5;4m'   ,
+        magenta : '\033[0;38;5;5m'   ,
+           cyan : '\033[0;38;5;6m'   ,
+          white : '\033[0;38;5;7m'   ,
+           gray : '\033[0;38;5;8m'   ,
+      lightGray : '\033[0;38;5;244m' ,
+         orange : '\033[0;38;5;208m' ,
+         orchid : '\033[0;38;5;207m' ,
+           gold : '\033[0;38;5;178m' ,
+    greenYellow : '\033[0;38;5;154m' ,
+     appleGreen : '\033[0;38;5;190m' ,
+          brRed : '\033[0;38;5;9m'   ,
+      boldGreen : '\033[1;38;5;10m'  ,
+  boldDarkGreen : '\033[1;38;5;022m' ,
+        brGreen : '\033[0;38;5;10m'  ,
+       brYellow : '\033[0;38;5;11m'  ,
+         brBlue : '\033[0;38;5;12m'  ,
+      brMagenta : '\033[0;38;5;13m'  ,
+         brCyan : '\033[0;38;5;14m'  ,
+        brWhite : '\033[0;38;5;15m'  ,
+        onBlack : '\033[0;48;5;0m'   ,
+          onRed : '\033[0;48;5;1m'   ,
+        onGreen : '\033[0;48;5;2m'   ,
+    onDarkGreen : '\033[0;48;5;022m' ,
+       onYellow : '\033[0;48;5;3m'   ,
+         onBlue : '\033[0;48;5;4m'   ,
+      onMagenta : '\033[0;48;5;5m'   ,
+         onCyan : '\033[0;48;5;6m'   ,
+        onWhite : '\033[0;48;5;7m'   ,
+         onGray : '\033[0;48;5;8m'   ,
+    onLightGray : '\033[0;48;5;244m' ,
+       onOrange : '\033[0;48;5;208m' ,
+       onOrchid : '\033[0;48;5;207m' ,
+      boldBlack : '\033[1;38;5;0m'   ,
+        boldRed : '\033[1;38;5;1m'   ,
+      boldGreen : '\033[1;38;5;2m'   ,
+  boldDarkGreen : '\033[1;38;5;022m' ,
+     boldYellow : '\033[1;38;5;3m'   ,
+       boldBlue : '\033[1;38;5;4m'   ,
+    boldMagenta : '\033[1;38;5;5m'   ,
+       boldCyan : '\033[1;38;5;6m'   ,
+      boldWhite : '\033[1;38;5;7m'   ,
+       boldGray : '\033[1;38;5;8m'   ,
+        itBlack : '\033[3;38;5;0m'   ,
+          itRed : '\033[3;38;5;1m'   ,
+        itGreen : '\033[3;38;5;2m'   ,
+    itDarkGreen : '\033[3;38;5;022m' ,
+       itYellow : '\033[3;38;5;3m'   ,
+         itBlue : '\033[3;38;5;4m'   ,
+      itMagenta : '\033[3;38;5;5m'   ,
+         itCyan : '\033[3;38;5;6m'   ,
+        itWhite : '\033[3;38;5;7m'   ,
+         itGray : '\033[3;38;5;8m'   ,
+    itLightGray : '\033[3;38;5;244m' ,
+       itOrange : '\033[3;38;5;208m' ,
+       itOrchid : '\033[3;38;5;207m' ,
+            ESC : '\033[0m'
 ]
 
 def show( String color, String str ) {
@@ -132,23 +147,101 @@ def show( String color, String str ) {
   ```groovy
   import groovy.transform.Field
   @Field final Map<String, String> COLOR_MATRIX = [
-          black : '\u001B[30m' ,
-            red : '\u001B[31m' ,
-          green : '\u001B[32m' ,
-         yellow : '\u001B[33m' ,
-           blue : '\u001B[34m' ,
-        magenta : '\u001B[35m' ,
-           cyan : '\u001B[36m' ,
-          white : '\u001B[37m' ,
-        brblack : '\u001B[90m' ,
-          brred : '\u001B[91m' ,
-        brgreen : '\u001B[92m' ,
-       bryellow : '\u001B[93m' ,
-         brblue : '\u001B[94m' ,
-      brmagenta : '\u001B[95m' ,
-         brcyan : '\u001B[96m' ,
-        brwhite : '\u001B[97m' ,
-           gray : '\u001B[90m' ,
-            ESC : '\u001B[0m'
+          black : '\033[0;38;5;0m'   ,
+            red : '\033[0;38;5;1m'   ,
+          green : '\033[0;38;5;2m'   ,
+      darkGreen : '\033[0;38;5;022m' ,
+         yellow : '\033[0;38;5;3m'   ,
+           blue : '\033[0;38;5;4m'   ,
+        magenta : '\033[0;38;5;5m'   ,
+           cyan : '\033[0;38;5;6m'   ,
+          white : '\033[0;38;5;7m'   ,
+           gray : '\033[0;38;5;8m'   ,
+      lightGray : '\033[0;38;5;244m' ,
+         orange : '\033[0;38;5;208m' ,
+         orchid : '\033[0;38;5;207m' ,
+           gold : '\033[0;38;5;178m' ,
+    greenYellow : '\033[0;38;5;154m' ,
+     appleGreen : '\033[0;38;5;190m' ,
+          brRed : '\033[0;38;5;9m'   ,
+      boldGreen : '\033[1;38;5;10m'  ,
+  boldDarkGreen : '\033[1;38;5;022m' ,
+        brGreen : '\033[0;38;5;10m'  ,
+       brYellow : '\033[0;38;5;11m'  ,
+         brBlue : '\033[0;38;5;12m'  ,
+      brMagenta : '\033[0;38;5;13m'  ,
+         brCyan : '\033[0;38;5;14m'  ,
+        brWhite : '\033[0;38;5;15m'  ,
+        onBlack : '\033[0;48;5;0m'   ,
+          onRed : '\033[0;48;5;1m'   ,
+        onGreen : '\033[0;48;5;2m'   ,
+    onDarkGreen : '\033[0;48;5;022m' ,
+       onYellow : '\033[0;48;5;3m'   ,
+         onBlue : '\033[0;48;5;4m'   ,
+      onMagenta : '\033[0;48;5;5m'   ,
+         onCyan : '\033[0;48;5;6m'   ,
+        onWhite : '\033[0;48;5;7m'   ,
+         onGray : '\033[0;48;5;8m'   ,
+    onLightGray : '\033[0;48;5;244m' ,
+       onOrange : '\033[0;48;5;208m' ,
+       onOrchid : '\033[0;48;5;207m' ,
+      boldBlack : '\033[1;38;5;0m'   ,
+        boldRed : '\033[1;38;5;1m'   ,
+      boldGreen : '\033[1;38;5;2m'   ,
+  boldDarkGreen : '\033[1;38;5;022m' ,
+     boldYellow : '\033[1;38;5;3m'   ,
+       boldBlue : '\033[1;38;5;4m'   ,
+    boldMagenta : '\033[1;38;5;5m'   ,
+       boldCyan : '\033[1;38;5;6m'   ,
+      boldWhite : '\033[1;38;5;7m'   ,
+       boldGray : '\033[1;38;5;8m'   ,
+        itBlack : '\033[3;38;5;0m'   ,
+          itRed : '\033[3;38;5;1m'   ,
+        itGreen : '\033[3;38;5;2m'   ,
+    itDarkGreen : '\033[3;38;5;022m' ,
+       itYellow : '\033[3;38;5;3m'   ,
+         itBlue : '\033[3;38;5;4m'   ,
+      itMagenta : '\033[3;38;5;5m'   ,
+         itCyan : '\033[3;38;5;6m'   ,
+        itWhite : '\033[3;38;5;7m'   ,
+         itGray : '\033[3;38;5;8m'   ,
+    itLightGray : '\033[3;38;5;244m' ,
+       itOrange : '\033[3;38;5;208m' ,
+       itOrchid : '\033[3;38;5;207m' ,
+            ESC : '\033[0m'
   ]
   ```
+
+## customized colors
+### xterm
+
+|   name  |   color   |   bright  |
+|:-------:|:---------:|:---------:|
+|  black  | `#000000` | `#4C4C4C` |
+|   red   | `#CD0000` | `#FF0000` |
+|  green  | `#4C8045` | `#84A729` |
+|  yellow | `#FFCF00` | `#FFFF5F` |
+|   blue  | `#1E90FF` | `#4682B4` |
+| megenta | `#CD00CD` | `#FF00FF` |
+|   cyan  | `#5a9196` | `#6CB2B9` |
+|  white  | `#E5E5E5` | `#FFFFFF` |
+
+
+> [!TIP]
+> references:
+> - [AnsiColorMap.java](https://github.com/jenkinsci/ansicolor-plugin/blob/master/src/main/java/hudson/plugins/ansicolor/AnsiColorMap.java#L45)
+>
+> ---
+>
+> original settings:
+>
+> |   name  |   color   |   bright  |
+> |:-------:|:---------:|:---------:|
+> |  black  | `#000000` | `#4C4C4C` |
+> |   red   | `#CD0000` | `#FF0000` |
+> |  green  | `#00CD00` | `#00FF00` |
+> |  yellow | `#CDCD00` | `#FFFF00` |
+> |   blue  | `#1E90FF` | `#4682B4` |
+> | megenta | `#CD00CD` | `#FF00FF` |
+> |   cyan  | `#00CDCD` | `#00FFFF` |
+> |  white  | `#E5E5E5` | `#FFFFFF` |

@@ -94,7 +94,7 @@ $ keytool -printcert \
 ## add crt into Java keystore
 
 > [!TIP]
-> [imarslo : get remote server certs](./ssl.html#get-remote-server-certs)
+> [imarslo: get remote server certs](./ssl.html#get-remote-server-certs)
 
 ### generate a certificate
 ```bash

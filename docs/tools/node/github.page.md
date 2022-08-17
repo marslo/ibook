@@ -90,7 +90,7 @@ $ security delete-internet-password -l github.com
   ```
 
 - read password
-  > [imarslo : read password in osx](../../osx/util.html#get-wifi-password)
+  > [imarslo: read password in osx](../../osx/util.html#get-wifi-password)
 
   ```bash
    $ sudo security find-internet-password -ws github.com [-a <account@mail.com>]

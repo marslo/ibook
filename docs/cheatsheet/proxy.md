@@ -70,7 +70,7 @@ Acquire::ftp::Proxy "http://proxy.example.com:80";
 ### proxy for docker
 
 > [!TIP]
-> details can be found in [imarslo : docker proxy](../virtualization/docker/docker.html#docker-proxy)
+> details can be found in [imarslo: docker proxy](../virtualization/docker/docker.html#docker-proxy)
 
 #### for docker build
 ```json

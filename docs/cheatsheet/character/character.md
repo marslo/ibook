@@ -593,7 +593,7 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
 ### `find` && `tar`
 
 > [!TIP]
-> more can be found in [imarslo : find and tar](../../devops/ssh.html#ssh-and-tar)
+> more can be found in [imarslo: find and tar](../../devops/ssh.html#ssh-and-tar)
 
 - backup all `config.xml` in JENKINS_HOME
   ```bash

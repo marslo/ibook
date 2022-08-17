@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Highly Recommanded](#highly-recommanded)
+- [highly recommanded](#highly-recommanded)
 - [Video](#video)
   - [Get Audio from video](#get-audio-from-video)
   - [Convert flv to mp4](#convert-flv-to-mp4)

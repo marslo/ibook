@@ -37,7 +37,7 @@ Time periods are specified with a number and one of the following suffixes:
 
 ### find items (folder) some times ago by aql
 - e.g. find root folder && 4 weeks ago (by using `-T, --upload-file`)
-  > [imarslo : write a file without indent space](../cheatsheet/character/character.html#write-a-file-without-indent-space)
+  > [imarslo: write a file without indent space](../cheatsheet/character/character.html#write-a-file-without-indent-space)
 
   ```bash
   $ cat find.aql

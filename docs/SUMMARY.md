@@ -20,7 +20,7 @@
     * [regex](cheatsheet/character/regex.md)
   * [havefun](cheatsheet/havefun.md)
   * [media](cheatsheet/media.md)
-  * [colors & prompt](cheatsheet/colors.md)
+  * [colors](cheatsheet/colors.md)
   * [osx](cheatsheet/osx.md)
   * [ssl](cheatsheet/ssl/ssl.md)
     * [keystore](cheatsheet/ssl/keystore.md)

@@ -15,6 +15,10 @@
 #### pick colors
 
 {% hint style='tip' %}
+> references:
+> - [Digital Color Meter.app](https://support.apple.com/guide/digital-color-meter/welcome/mac)
+> - [iterm2-tab-set](https://www.npmjs.com/package/iterm2-tab-set)
+> - [System Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12)
 > using : `tabset --list`
 {% endhint %}
 
