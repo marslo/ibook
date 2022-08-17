@@ -84,7 +84,7 @@
 ```bash
 $ k -n kube-system \
        get secrets my-tls \
-       -o yaml
+       -o yaml \
        -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
     sed '/-----END CERTIFICATE-----/q' |
@@ -98,7 +98,7 @@ $ k -n kube-system \
 ```bash
 $ k -n kube-system \
        get secrets my-tls \
-       -o yaml
+       -o yaml \
        -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
     awk '/-BEGIN CERTIFICATE-/ && c++, /-END CERTIFICATE-/' |

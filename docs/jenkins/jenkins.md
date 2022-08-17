@@ -51,7 +51,7 @@
          jq -r '[.crumbRequestField, .crumb] | "\(.[0]):\(.[1])"'
   Jenkins-Crumb:8b87b6ed98ef923******
   ```
-  - [imarslo : or json cheatsheet](../cheatsheet/character/json.html#join)
+  - or [imarslo : json cheatsheet](../cheatsheet/character/json.html#join)
     ```bash
     $ domain='jenkins.marslo.com'
     $ COOKIEJAR="$(mktemp)"

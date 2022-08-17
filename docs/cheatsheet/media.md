@@ -17,7 +17,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Highly Recommanded
+## highly recommanded
 [cmd.to](https://cmd.to/fm)
 
 ## Video
@@ -105,9 +105,28 @@ $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 ```
 
 ### convert svg to png
-```bash
-$ qlmanage -t -s 1000 -o . k-1.svg
-```
+
+{% hint style='tip' %}
+> references:
+> - [Command-line application for converting SVG to PNG on Mac OS X](https://superuser.com/a/142082/112396)
+> - ["Bake" an SVG image into a PNG at a given resolution? [closed]](https://superuser.com/a/516112/112396)
+> - [Converting large SVG to PNG file](https://superuser.com/a/569235/112396)
+{% endhint %}
+
+- qlmanage
+  ```bash
+  $ qlmanage -t -s 1000 -o . k-1.svg
+  ```
+
+- convert
+  ```bash
+  $ convert -resize 128x128 input.svg output.png
+
+  # or
+  $ convert -density 500 -resize 128x128 input.svg output.png
+  $ convert -density 1200 -resize 10000x10000 your.svg your.png
+  $ convert -background none -size 1024x1024 infile.svg outfile.png
+  ```
 
 ### convert HEIC/HEIF to PNG
 
