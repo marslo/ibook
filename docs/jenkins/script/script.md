@@ -13,7 +13,7 @@
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
   - [shelve jobs](#shelve-jobs)
 - [list plugins](#list-plugins)
-  - [via api : imarslo : list plugins](#via-api--imarslo--list-plugins)
+  - [via api : imarslo: list plugins](#via-api--imarslo-list-plugins)
   - [simple list](#simple-list)
   - [List plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
@@ -169,7 +169,7 @@ sshd.save()
 ## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 
 > [!TIP]
-> get more: [imarslo :jobs & builds](./build.html)
+> get more: [imarslo: jobs & builds](./build.html)
 
 ### get build status
 - [get all builds result percentage](./build.html#get-all-builds-result-percentage)
@@ -213,7 +213,7 @@ Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
 ```
 
 ## list plugins
-### via api : [imarslo : list plugins](./api.html#list-plugins)
+### via api : [imarslo: list plugins](./api.html#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
 Jenkins.instance

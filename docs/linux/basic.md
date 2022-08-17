@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [prompt](#prompt)
 - [character](#character)
   - [metacharacter](#metacharacter)
 - [process substitution](#process-substitution)
@@ -30,6 +31,59 @@
 > - download pdf from [here](https://tldp.org/LDP/abs/abs-guide.pdf) or [here](http://www.linux-france.org/lug/ploug/doc/abs-guide.pdf)
 > - [Perform tab-completion for aliases in Bash](https://brbsix.github.io/2015/11/23/perform-tab-completion-for-aliases-in-bash/)
 {% endhint %}
+
+# prompt
+
+{% hint style='tip' %}
+> reference:
+> - [* imarslo: color](../cheatsheet/colors.html)
+> - [Bash/Prompt customization](https://wiki.archlinux.org/index.php/Bash/Prompt_customization)
+> - [Colors using tput](https://wiki.bash-hackers.org/scripting/terminalcodes#colors_using_tput)
+> - [What color codes can I use in my PS1 prompt?](https://unix.stackexchange.com/a/124409/29178)
+{% endhint %}
+
+```bash
+PS1="\[$(tput setaf 0)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 1)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 2)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 3)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 4)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 5)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 6)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 7)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 8)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 9)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 10)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 11)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 12)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 13)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 14)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 15)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 16)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 17)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 18)\]my prompt\[$(tput sgr0)\]> "
+```
+![bash ps1](../../screenshot/ansi/bash-ps1.png)
+
+- or
+  ```bash
+  $ DEFAULT="\[$(tput setaf 3)\]"         # or '\[\033[1;38;5;3m\]'     or '\[\e[1;33m\]'
+  $ ifDEFAULT='\[\e[1\;33m\]'             # or '\[\033[1\;38\;5\;3m\]'
+  $ ifRED='\[\e[1\;31m\]'                 # or '\[\033[1\;38\;5\;1m\]'
+  $ PS1="${DEFAULT}my prompt${RESET} \$( if [ \$? != 0 ]; then echo -e ${ifRED}\\$; else echo -e ${ifDEFAULT}\\$; fi) ${RESET}"
+  ```
+  ![bash ps1 in conditional](../../screenshot/ansi/bash-ps1-conditions.png)
+
+- right prompt
+  ```
+  rightprompt()
+  {
+    printf "%*s" $COLUMNS "right prompt"
+  }
+  PS1='\[$(tput sc; rightprompt; tput rc)\]left prompt > '
+  ```
+  ![bash ps1 right-prompt](../../screenshot/ansi/bash-ps1-right-prompt.png)
+
 
 # character
 ## [metacharacter](https://www.grymoire.com/Unix/Quote.html)

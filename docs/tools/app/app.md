@@ -56,3 +56,4 @@
   - [chrome extension downloader](https://chrome-extension-downloader.com/)
 - [Chromium](https://www.chromium.org/getting-involved/download-chromium)
 - [Karabiner-Elements](https://karabiner-elements.pqrs.org/) Saviour of MadCatz R.A.T in MacOS
+- [System Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12)

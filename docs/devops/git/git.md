@@ -1137,7 +1137,7 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 - `--date`
 
   > [!TIP]
-  > check : [imarslo : date format](#date-format)
+  > check : [imarslo: date format](#date-format)
   > setup global in `~/.gitconfig` :
   > ```
   > [blame]

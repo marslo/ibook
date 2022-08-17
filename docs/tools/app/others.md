@@ -69,7 +69,7 @@ bingo!
 
 {% hint style='tip' %}
 > references:
-> - [* imarslo : colors](../../linux/util/colors.html)
+> - [* imarslo: colors](../../linux/util/colors.html)
 > - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
 > - [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
 {% endhint %}

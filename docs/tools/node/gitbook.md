@@ -210,7 +210,7 @@ warning
 > [!TIP]
 > this function only for native [gitbook.io](https://www.gitbook.com/) <br>
 > example:
-> - [imarslo : kubernetes certicates](../../virtualization/kubernetes/certificates.html#check-info)
+> - [imarslo: kubernetes certicates](../../virtualization/kubernetes/certificates.html#check-info)
 > <br>
 > reference:
 > -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)

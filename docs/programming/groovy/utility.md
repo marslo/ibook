@@ -30,8 +30,11 @@
 > - [Class SimpleDateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/SimpleDateFormat.html)
 > - [Class DateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DateFormat.html)
 >
+> ---
+>
 > usage in jenkins
-> - [imarslo: get build time](../../jenkins/script/build.html#get-build-time)
+> - [* imarslo: get build time](../../jenkins/script/build.html#get-build-time)
+> - [* imarslo: linux date](../../linux/util/date.html)
 
 ### current timestamp
 ```groovy

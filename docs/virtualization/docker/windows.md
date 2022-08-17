@@ -153,7 +153,7 @@ Start-Service docker
 
 - check
 
-  > - [imarslo : stop service & process via powershell](../../cheatsheet/windows/windows.html#stop-service--process-via-powershell)
+  > - [imarslo: stop service & process via powershell](../../cheatsheet/windows/windows.html#stop-service--process-via-powershell)
   > - [powershell : Get-Service](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-service?view=powershell-7.2)
 
   ```powershell

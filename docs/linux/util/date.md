@@ -19,14 +19,20 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
+{% hint style='tip' %}
+> references:
+> - [* imarslo: groovy time ](../../programming/groovy/utility.html#time)
+> - [https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time):
+{% endhint %}
 
 ## date
-
 ### epoch
-> [https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time):
+
+{% hint style='tip' %}
+> references:
 > - It is the number of seconds that have elapsed since the Unix epoch, minus leap seconds; the Unix epoch is 00:00:00 UTC on 1 January 1970
-> [What is epoch time?](https://www.epochconverter.com/)
+> - [What is epoch time?](https://www.epochconverter.com/)
+{% endhint %}
 
 ```bash
 $ date -u -d '1970-01-01 00:00:00' '+Normal: %F %T %:z%nUnix: %s'
@@ -52,11 +58,12 @@ $ date '+%s'
 
 ### timestamps
 ### format
-> `yyyy-MM-dd'T'HH:mm:ss.SSSZ`
->
-> `yyyy-MM-dd'T'HH:mm:ss`
 
-| Date Format Option | Meaning                                           |      Example Output     |
+> [!TIP]
+> - `yyyy-MM-dd'T'HH:mm:ss.SSSZ`
+> - `yyyy-MM-dd'T'HH:mm:ss`
+
+| DATE FORMAT OPTION | MEANING                                           |      EXAMPLE OUTPUT     |
 |:------------------:|:--------------------------------------------------|:-----------------------:|
 |     `date +%c`     | locale’s date time                                | Sat May 9 11:49:47 2020 |
 |     `date +%x`     | locale’s date                                     |         05/09/20        |
@@ -131,24 +138,26 @@ $ date '+%s'
   ```
 
 ### IOS 8601
-> | dates                      | example                                                 |
-> | :-:                        | :-                                                      |
-> | YYYY                       | 2015                                                    |
-> | YYYY-MM                    | 2015-12                                                 |
-> | YYYY-MM-DD                 | 2015-12-11                                              |
-> | YYYY-MM-DD'T'hh:mmTZD      | 2015-12-11T20:28+01:00 or 2015-12-11T19:28Z             |
-> | YYYY-MM-DD'T'hh:mm:ssTZD   | 2015-12-11T20:28:30+01:00 or 2015-12-11T19:28:30Z       |
+
+> |           FORMAT           | EXAMPLE                                                 |
+> |:--------------------------:|---------------------------------------------------------|
+> |            YYYY            | 2015                                                    |
+> |           YYYY-MM          | 2015-12                                                 |
+> |         YYYY-MM-DD         | 2015-12-11                                              |
+> |    YYYY-MM-DD'T'hh:mmTZD   | 2015-12-11T20:28+01:00 or 2015-12-11T19:28Z             |
+> |  YYYY-MM-DD'T'hh:mm:ssTZD  | 2015-12-11T20:28:30+01:00 or 2015-12-11T19:28:30Z       |
 > | YYYY-MM-DD'T'hh:mm:ss.sTZD | 2015-12-11T20:28:30.45+01:00 or 2015-12-11T19:28:30.45Z |
 >
+> ---
 > where:
-> YYYY = four-digit year
-> MM = two-digit month (01=January, etc.)
-> DD = two-digit day of month (01 through 31)
-> hh = two digits of hour (00 through 23) (am/pm NOT allowed)
-> mm = two digits of minute (00 through 59)
-> ss = two digits of second (00 through 59)
-> s = one or more digits representing a decimal fraction of a second (i.e. milliseconds)
-> TZD = time zone designator (Z or +hh:mm or -hh:mm)
+> - `YYYY` = four-digit year
+> - `MM` = two-digit month (01=January, etc.)
+> - `DD` = two-digit day of month (01 through 31)
+> - `hh` = two digits of hour (00 through 23) (am/pm NOT allowed)
+> - `mm` = two digits of minute (00 through 59)
+> - `ss` = two digits of second (00 through 59)
+> - `s` = one or more digits representing a decimal fraction of a second (i.e. milliseconds)
+> - `TZD` = time zone designator (Z or +hh:mm or -hh:mm)
 
 ```bash
 $ date -I
@@ -208,32 +217,34 @@ CST
 ```
 
 ### Common formats
+
 > [Shell command: date](https://renenyffenegger.ch/notes/Linux/shell/commands/date)
 > [Most common Bash date commands for timestamping](https://zxq9.com/archives/795)
 
-| Format/result                     | Command                         | Output                            |
-| :-------------------------------: | :-----------------------------: | : ------------------------------: |
-| `YYYY-MM-DD`                      | `date -I`                       | 2020-10-09                        |
-| `YYYY-MM-DD_hh:mm:ss`             | `date +%F_%T`                   | 2020-10-09_16:48:45               |
-| `YYYYMMDD_hhmmss`                 | `date +%Y%m%d_%H%M%S`           | 20201009_164845                   |
-| `YYYYMMDD_hhmmss (UTC version)`   | `date --utc +%Y%m%d_%H%M%SZ`    | 20201009_084845Z                  |
-| `YYYYMMDD_hhmmss (with local TZ)` | `date +%Y%m%d_%H%M%S%Z`         | 20201009_164845CST                |
-| `YYYYMMSShhmmss`                  | `date +%Y%m%d%H%M%S`            | 20201009164845                    |
-| `YYYYMMSShhmmssnnnnnnnnn`         | `date +%Y%m%d%H%M%S%N`          | 20201009164845495302000           |
-| `YYMMDD_hhmmss`                   | `date +%y%m%d_%H%M%S`           | 201009_164845                     |
-| `Seconds since UNIX epoch:`       | `date +%s`                      | 1602233325                        |
-| `Nanoseconds only:`               | `date +%N`                      | 505337000                         |
-| `Nanoseconds since UNIX epoch:`   | `date +%s%N`                    | 1602233325508581000               |
-| `Nanoseconds since UNIX epoch:`   | `date +%s%3N`                   | 1602233325508                     |
-| `ISO8601 UTC timestamp`           | `date --utc +%FT%TZ`            | 2020-10-09T08:48:45Z              |
-| `ISO8601 UTC timestamp`           | `date --utc +%FT%T%Z`           | 2020-10-09T08:48:45UTC            |
-| `ISO8601 UTC timestamp + ms`      | `date --utc +%FT%T.%3NZ`        | 2020-10-09T08:48:45.517Z          |
-| `ISO8601 UTC timestamp + ms`      | `date --utc +%FT%T.%3N%Z`       | 2020-10-09T08:48:45.520UTC        |
-| `ISO8601 Local TZ timestamp`      | `date +%FT%T%Z`                 | 2020-10-09T16:48:45CST            |
-| `YYYY-MM-DD (Short day)`          | `date +%F\(%a\)`                | 2020-10-09(Fri)                   |
-| `YYYY-MM-DD (Long day)`           | `date +%F\(%A\)`                | 2020-10-09(Friday)                |
+|           FORMAT/RESULT           | COMMAND                      | OUTPUT                     |
+|:---------------------------------:|:-----------------------------|----------------------------|
+|            `YYYY-MM-DD`           | `date -I`                    | 2020-10-09                 |
+|       `YYYY-MM-DD_hh:mm:ss`       | `date +%F_%T`                | 2020-10-09_16:48:45        |
+|         `YYYYMMDD_hhmmss`         | `date +%Y%m%d_%H%M%S`        | 20201009_164845            |
+|  `YYYYMMDD_hhmmss (UTC version)`  | `date --utc +%Y%m%d_%H%M%SZ` | 20201009_084845Z           |
+| `YYYYMMDD_hhmmss (with local TZ)` | `date +%Y%m%d_%H%M%S%Z`      | 20201009_164845CST         |
+|          `YYYYMMSShhmmss`         | `date +%Y%m%d%H%M%S`         | 20201009164845             |
+|     `YYYYMMSShhmmssnnnnnnnnn`     | `date +%Y%m%d%H%M%S%N`       | 20201009164845495302000    |
+|          `YYMMDD_hhmmss`          | `date +%y%m%d_%H%M%S`        | 201009_164845              |
+|    `Seconds since UNIX epoch:`    | `date +%s`                   | 1602233325                 |
+|        `Nanoseconds only:`        | `date +%N`                   | 505337000                  |
+|  `Nanoseconds since UNIX epoch:`  | `date +%s%N`                 | 1602233325508581000        |
+|  `Nanoseconds since UNIX epoch:`  | `date +%s%3N`                | 1602233325508              |
+|      `ISO8601 UTC timestamp`      | `date --utc +%FT%TZ`         | 2020-10-09T08:48:45Z       |
+|      `ISO8601 UTC timestamp`      | `date --utc +%FT%T%Z`        | 2020-10-09T08:48:45UTC     |
+|    `ISO8601 UTC timestamp + ms`   | `date --utc +%FT%T.%3NZ`     | 2020-10-09T08:48:45.517Z   |
+|    `ISO8601 UTC timestamp + ms`   | `date --utc +%FT%T.%3N%Z`    | 2020-10-09T08:48:45.520UTC |
+|    `ISO8601 Local TZ timestamp`   | `date +%FT%T%Z`              | 2020-10-09T16:48:45CST     |
+|      `YYYY-MM-DD (Short day)`     | `date +%F\(%a\)`             | 2020-10-09(Fri)            |
+|      `YYYY-MM-DD (Long day)`      | `date +%F\(%A\)`             | 2020-10-09(Friday)         |
 
 ## convert
+
 > ```bash
 > $ date +"%Y-%m-%dT%H:%M:%SZ"
 > 2020-10-09T17:16:37Z
@@ -244,7 +255,6 @@ CST
 > $ date -d $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 > Fri Oct  9 17:16:37 CST 2020
 > ```
-
 
 |  Human-readable time |      Seconds     |
 |:--------------------:|:----------------:|
@@ -282,7 +292,8 @@ Fri Oct  9 09:18:17 UTC 2020
 ```
 
 - convert epoch with milliseconds
-> [Convert unix timestamp to hh:mm:ss:SSS (where SSS is milliseconds)](https://unix.stackexchange.com/a/265956/29178)
+
+  > [Convert unix timestamp to hh:mm:ss:SSS (where SSS is milliseconds)](https://unix.stackexchange.com/a/265956/29178)
 
   ```bash
   d=$(date +%s%3N)
@@ -290,14 +301,14 @@ Fri Oct  9 09:18:17 UTC 2020
   ms=${d#"$s"}
   date -d "@$s" +"%F %T.$ms %z"
   ```
-  result
-  ```bash
-  2020-10-09 18:28:34.534 +0800
+  - result
+    ```bash
+    2020-10-09 18:28:34.534 +0800
 
-  d: 1602239314534
-  s: 1602239314
-  ms: 534
-  ```
+    d: 1602239314534
+    s: 1602239314
+    ms: 534
+    ```
 
 ### calculate time different
 ```bash
@@ -339,7 +350,7 @@ $ printf "%d days %(%H hours %M minutes %S seconds)T\n" $((seconds/86400)) $seco
 18544 days 18 hours 35 minutes 48 seconds
 ```
 
-#### [Simple one-liner](https://stackoverflow.com/a/39452629/2940319)
+#### [simple one-liner](https://stackoverflow.com/a/39452629/2940319)
 ```bash
 $ secs=259200
 $ printf '%dh:%dm:%ds\n' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))
@@ -387,6 +398,8 @@ $ awk -v t=$(( $(date -d $(date +"%Y-%m-%dT%H:%M:%SZ") +%s) - $(date -d $(date +
 ```
 
 ### transfer date format
+
+> [!TIP]
 > ```bash
 > $ date +'%Y%m%d%H%M%S'
 > 20201009184852
