@@ -247,7 +247,8 @@ findValueBelongsTo( 'v31' )  »  'k3'
 ```
 {% endhint %}
 
-find parent key via sub-key:
+#### find parent key via sub-key:
+
 > <kbd>[try online](https://onecompiler.com/groovy/3wfvvc3p8)</kbd>
 
 ```groovy
@@ -256,7 +257,7 @@ def findKeyBelongsTo( Map map, String keyword ) {
 }
 ```
 
-- find in nested map recursively (according to key):
+- find in nested map recursively :
   ```groovy
   def findKeyBelongsTo( Map map, String keyword ) {
     map.findResult { k, v ->
@@ -267,8 +268,12 @@ def findKeyBelongsTo( Map map, String keyword ) {
   }
   ```
 
-find parent key via sub-value:
+#### find value belongs to which key
+
+{% hint style='tip' %}
+> find parent key via sub-value:
 > <kbd>[try online](https://onecompiler.com/groovy/3wfvvjcnc)</kbd>
+{% endhint %}
 
 ```groovy
 def findValueBelongsTo( Map map, String keyword ) {
@@ -287,10 +292,62 @@ def findValueBelongsTo( Map map, String keyword ) {
   }
   ```
 
+- find in mixed map & list object recursively :
+
+  > [!TIP]
+  > ```groovy
+  > Map<String, String> LOGGER = [
+  >        info : [ 'info', 'i' ],
+  >    warnning : [ 'warning' , 'warn', [ 'key' : 'value' ] , 'w' ] ,
+  >       error : [ 'error', 'err', 'e']
+  > ]
+  > ⇣⇣
+  > assert 'info'    == findValueBelongsTo( LOGGER , 'i'     )
+  > assert 'warning' == findValueBelongsTo( LOGGER , 'value' )
+  > assert 'error'   == findValueBelongsTo( LOGGER , 'err'   )
+  > ```
+  > - find in mixed map & list:
+  > <kbd>[try online](https://onecompiler.com/groovy/3ydft7jfw)</kbd>
+
+  ```groovy
+  def findValueBelongsTo = { Map map, String keyword ->
+    map.find { k, v ->
+      v instanceof Map
+        ? v.containsKey( keyword ) ? k : findValueBelongsTo(v, keyword)
+        : v.contains( keyword ) ?: v.any{ it instanceof Map }
+                                   ? findValueBelongsTo( v.findAll{ it instanceof Map }.inject([:]) { i, m ->  m << i; m }, keyword)
+                                   : [:]
+
+    }?.key ?: null
+  }
+  ```
+
+- find in mixed map & list object recursively with Closure:
+
+  > [!TIP]
+  > `call()` will be abnormal in recursive calls in Closure
+
+  ```groovy
+  Closure findValueBelongsTo
+  findValueBelongsTo = { Map map, String keyword ->
+    map.find { k, v ->
+      v instanceof Map
+        ? v.containsKey( keyword ) ? k : findValueBelongsTo( v, keyword )
+        : v.contains( keyword ) ?: v.any{ it instanceof Map }
+                                    ? findValueBelongsTo( v.findAll{ it instanceof Map }.inject([:]) { i, m ->  m << i; m }, keyword)
+                                    : [:]
+
+    }?.key ?: null
+  }
+  ```
+
 ### findResult & findResults
+
+{% hint style='tip' %}
 > reference:
 > - [FindResults and FindResult Methods of Groovy](https://www.tothenew.com/blog/findresults-and-findresult-methods-of-groovy/)
 > - [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
+{% endhint %}
 
 - collect: return all result (with null)
   ```bash

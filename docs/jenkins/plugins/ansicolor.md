@@ -220,7 +220,7 @@ def show( String color, String str ) {
 |  black  | `#000000` | `#4C4C4C` |
 |   red   | `#CD0000` | `#FF0000` |
 |  green  | `#4C8045` | `#84A729` |
-|  yellow | `#FFCF00` | `#FFFF5F` |
+|  yellow | `#F1BD3F` | `#F2C867` |
 |   blue  | `#1E90FF` | `#4682B4` |
 | megenta | `#CD00CD` | `#FF00FF` |
 |   cyan  | `#5a9196` | `#6CB2B9` |
