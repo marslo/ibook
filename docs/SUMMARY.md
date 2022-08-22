@@ -19,6 +19,7 @@
     * [json](cheatsheet/character/json.md)
     * [regex](cheatsheet/character/regex.md)
   * [osx](cheatsheet/osx.md)
+  * [tricky](cheatsheet/tricky.md)
   * [curl](cheatsheet/curl.md)
   * [ssl](cheatsheet/ssl/ssl.md)
     * [keystore](cheatsheet/ssl/keystore.md)
