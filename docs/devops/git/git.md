@@ -638,6 +638,43 @@ $ git push origin +cb46bdc^:master
   $ git push [--force] origin +master
   ```
 
+#### revert deleted branches
+
+> [!TIP]
+> references:
+> - [Can I recover a branch after its deletion in Git?](https://stackoverflow.com/a/72428070/2940319)
+> - [How to Restore a Deleted Branch or Commit with Git Reflog](https://rewind.com/blog/how-to-restore-deleted-branch-commit-git-reflog/)
+> - [How to restore a deleted branch](https://confluence.atlassian.com/bbkb/how-to-restore-a-deleted-branch-765757540.html)
+
+```bash
+# find the HEAD of deleted branch
+$ git log --graph --decorate $(git rev-list -g --all)
+
+$ git checkout <sha>
+$ git checkout -b /branch/name
+```
+
+- or find out recent actions
+  ```bash
+  $ git reflog --no-abbrev
+  ```
+
+- or find all losts
+  ```bash
+  $ git fsck --full \
+             --no-reflogs \
+             --unreachable \
+             --lost-found |
+        grep commit |
+        cut -d\  -f3 |
+        xargs -n 1 git log -n 1 --pretty=oneline
+  ```
+
+- show diff
+  ```bash
+  $ git log -p <sha>
+  ```
+
 #### revert single file to remotes
 ```bash
 $ git checkout origin/<branch> -- <path/to/file>
