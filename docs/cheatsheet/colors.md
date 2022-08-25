@@ -6,6 +6,10 @@
 - [xterm 256 colors](#xterm-256-colors)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
+- [man page colors](#man-page-colors)
+  - [settings](#settings)
+  - [using vim as man pager](#using-vim-as-man-pager)
+  - [ansicolor issues in man page](#ansicolor-issues-in-man-page)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -458,3 +462,131 @@
 |      253     |             grey_85<br>Grey85            | `#dadada` | rgb(218,218,218) | hsl(0,0%,85%)     |  `\e[38;5;253m` |
 |      254     |             grey_89<br>Grey89            | `#e4e4e4` | rgb(228,228,228) | hsl(0,0%,89%)     |  `\e[38;5;254m` |
 |      255     |             grey_93<br>Grey93            | `#eeeeee` | rgb(238,238,238) | hsl(0,0%,93%)     |  `\e[38;5;255m` |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## man page colors
+
+{% hint style='tip' %}
+> references:
+> - [Bug 666587 - Some man pages include partial escape codes in output when piped or redirected](https://bugzilla.redhat.com/show_bug.cgi?id=666587)
+> - [Bug 81003 - xman displays terminal control sequences](https://bugzilla.redhat.com/show_bug.cgi?id=81003)
+> - [How to install man pages on CentOS Linux 6/7/8](https://www.cyberciti.biz/faq/how-to-install-man-pages-on-a-centos-linux-6-7/)
+> - [Using Color with less](https://www.howtogeek.com/683134/how-to-display-man-pages-in-color-on-linux/)
+> - [Colors in Man Pages](https://unix.stackexchange.com/a/147)
+> - [How to View Colored Man Pages in Linux?](https://www.geeksforgeeks.org/how-to-view-colored-man-pages-in-linux/)
+> - [Documentation on LESS_TERMCAP_* variables?](https://unix.stackexchange.com/a/108840)
+{% endhint %}
+
+### settings
+- printf
+  ```bash
+  # The color of man page
+  export LESS_TERMCAP_mb=$(printf "\\e[1;31m")         # begin blinding
+  export LESS_TERMCAP_md=$(printf "\\e[1;31m")         # begin bold
+  export LESS_TERMCAP_me=$(printf "\\e[0m")            # end mode
+  export LESS_TERMCAP_se=$(printf "\\e[0m")            # end stadout-mode
+  export LESS_TERMCAP_so=$(printf "\\e[1;44;33m")      # begin stadout-mode - info box
+  export LESS_TERMCAP_so=$(printf "\\e[1;33m")      # begin stadout-mode - info box
+  export LESS_TERMCAP_ue=$(printf "\\e[0m")            # end underline
+  export LESS_TERMCAP_us=$(printf "\\e[1;32m")         # begin underline
+  export GROFF_NO_SGR=1         # For Konsole and Gnome-terminal
+  export LESS='-eirMXR'
+  export SYSTEMD_LESS=FRXMK
+  export MANPAGER='less -s -M +Gg'
+  ```
+
+- tput
+  ```bash
+  export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
+  export LESS_TERMCAP_md=$(tput bold; tput setaf 6) # cyan
+  export LESS_TERMCAP_me=$(tput sgr0)
+  export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4) # yellow on blue
+  export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+  export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7) # white
+  export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+  export LESS_TERMCAP_mr=$(tput rev)
+  export LESS_TERMCAP_mh=$(tput dim)
+  export LESS_TERMCAP_ZN=$(tput ssubm)
+  export LESS_TERMCAP_ZV=$(tput rsubm)
+  export LESS_TERMCAP_ZO=$(tput ssupm)
+  export LESS_TERMCAP_ZW=$(tput rsupm)
+  export GROFF_NO_SGR=1         # For Konsole and Gnome-terminal
+```
+
+- $'\e'
+  ```bash
+  export LESS_TERMCAP_mb=$'\e[01;31m'       # begin blinking
+  export LESS_TERMCAP_md=$'\e[01;37m'       # begin bold
+  export LESS_TERMCAP_me=$'\e[0m'           # end all mode like so, us, mb, md, mr
+  export LESS_TERMCAP_se=$'\e[0m'           # end standout-mode
+  export LESS_TERMCAP_so=$'\e[45;93m'       # start standout mode
+  export LESS_TERMCAP_ue=$'\e[0m'           # end underline
+  export LESS_TERMCAP_us=$'\e[4;93m'        # start underlining
+  ```
+
+### using vim as man pager
+
+> [!TIP]
+> - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
+
+```bash
+export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
+    vim -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
+    -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
+    -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
+```
+
+### ansicolor issues in man page
+- error
+  ```bash
+  1mNAME0m       <-- BAD
+         man - an interface to the on-line reference manuals
+
+  1mSYNOPSIS0m   <-- BAD
+         1mman  22m[1m-C  4m22mfile24m]  [1m-d22m]  [1m-D22m]  <-- BAD
+  ```
+
+- solution
+  ```bash
+  $ yum install man-pages man-db man
+
+  # or
+  $ sudo yum update man-pages man-db man
+  ```
