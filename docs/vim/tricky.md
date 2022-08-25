@@ -13,6 +13,7 @@
 - [vim regex](#vim-regex)
 - [vim pattern](#vim-pattern)
 - [run command in multiple buffers](#run-command-in-multiple-buffers)
+- [disable vim beep](#disable-vim-beep)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -286,3 +287,10 @@ NOTICE: after using `\v` the `=` should using `\=` instead
   ```
 
 - force the `bufdo` to continue without saving files via `:bufdo!`
+
+### disable vim beep
+```vim
+# ~/.vimrc
+set noerrorbells novisualbell visualbell                            " ┐ Turn off
+set t_vb=                                                           " ┘ error/normal beep/flash
+```
