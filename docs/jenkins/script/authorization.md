@@ -14,6 +14,13 @@
   - [get crumb issuer](#get-crumb-issuer)
   - [set crumb issuer](#set-crumb-issuer)
   - [clean up all pending Async Resource Disposers items](#clean-up-all-pending-async-resource-disposers-items)
+- [credential](#credential)
+  - [get list all credentials](#get-list-all-credentials)
+  - [StandardUsernamePasswordCredentials](#standardusernamepasswordcredentials)
+  - [BasicSSHUserPrivateKey](#basicsshuserprivatekey)
+  - [CertificateCredentials](#certificatecredentials)
+  - [SystemCredentialsProvider](#systemcredentialsprovider)
+  - [encrypt/decrypt password](#encryptdecrypt-password)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -260,3 +267,260 @@ disposer.getBacklog().each { item ->
   }
 }
 ```
+
+## credential
+
+{% hint style='tip' %}
+> references:
+> - [* Setting Jenkins Credentials with Groovy](https://nickcharlton.net/posts/setting-jenkins-credentials-with-groovy.html)
+> - [* menski/jenkins-decrypt.py](https://gist.github.com/menski/8f9980999ed43246b9b2)
+> - [* addCredentials : hayderimran7/Jenkins_ssh_groovy.md](https://gist.github.com/hayderimran7/d6ab8a6a770cb970349e)
+> - [* Jenkins Credentials Store Access via Groovy](https://stackoverflow.com/a/35215587/2940319)
+> - [* Adding Google Service Account Credentials by a groovy script](https://stackoverflow.com/a/66553315/2940319)
+> - [* Fetch the domain for each credential returned in a job template.](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/fetch-the-domain-for-each-credential-returned-in-a-job-template)
+> - [Extension Points defined in Credentials Plugin](https://www.jenkins.io/doc/developer/extensions/credentials/)
+> - [CredentialsProvider.java](https://github.com/jenkinsci/credentials-plugin/blob/master/src/main/java/com/cloudbees/plugins/credentials/CredentialsProvider.java)
+> - [Jenkins Pipelines: How to use withCredentials() from a shared-variable script](https://stackoverflow.com/a/54927543/2940319)
+> - [Jenkins Credentials Store Access via Groovy](https://stackoverflow.com/questions/35205665/jenkins-credentials-store-access-via-groovy)
+> - [How to get android signing certificate back from jenkins plugin](https://stackoverflow.com/questions/56167802/how-to-get-android-signing-certificate-back-from-jenkins-plugin)
+> - [Go Decrypt Jenkins](https://www.thesubtlety.com/post/go-decrypt-jenkins/)
+> - [* Jenkins: Decrypting all passwords in credentials.xml (via Jenkins execution console)](https://stackoverflow.com/a/56047194/2940319)
+> - [How to get android signing certificate back from jenkins plugin](https://stackoverflow.com/a/56290348/2940319)
+> - [bstapes/jenkins-decrypt](https://github.com/bstapes/jenkins-decrypt)
+> - [* tuxfight3r/jenkins-decrypt.groovy](https://gist.github.com/tuxfight3r/eca9442ff76649b057ab)
+> - [* How to decrypt Jenkins passwords from credentials.xml?](https://devops.stackexchange.com/a/8692/3503)
+{% endhint %}
+
+> [!TIP]
+> something else :
+> - [kubernetes-credentials-provider-plugin](https://jenkinsci.github.io/kubernetes-credentials-provider-plugin/examples/)
+>
+> api :
+> - [com.cloudbees.plugins.credentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/Credentials.html)
+>   - [CertificateCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/CertificateCredentials.html)
+>   - [DomainRestrictedCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/domains/DomainRestrictedCredentials.html)
+>   - [IdCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/IdCredentials.html)
+>   - [PasswordCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/PasswordCredentials.html)
+>   - [StandardCertificateCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/StandardCertificateCredentials.html)
+>   - [StandardCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/StandardCredentials.html)
+>   - [StandardUsernameCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/StandardUsernameCredentials.html)
+>   - [StandardUsernamePasswordCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/StandardUsernamePasswordCredentials.html)
+>   - [UsernameCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/UsernameCredentials.html)
+>   - [UsernamePasswordCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/UsernamePasswordCredentials.html)
+
+### get list all credentials
+```groovy
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey;
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+
+CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
+                   .sort{ it.id }
+                   .each{
+                     switch( it.class.simpleName ) {
+                       case 'BasicSSHUserPrivateKey' :
+                         println """
+                                                               id : ${it.id}
+                                                            scope : ${it.scope}
+                                                         username : ${it.username}
+                                                      description : ${it.description}
+                                          privateKeysLastModified : ${it.privateKeysLastModified}
+                                                   usernameSecret : ${it.usernameSecret ?: 'false'}
+                                                      privateKeys : ${it.privateKeys.join('\n')}
+                          """
+                         break;
+
+                       case 'CertificateCredentialsImpl' :
+                          println """
+                                                               id : ${it.id}
+                                                            scope : ${it.scope}
+                                                         password : ${it.password}
+                                                      description : ${it.description}
+                                                    keyStore.type : ${it.keyStore.type}
+                                     keyStoreSource.keyStoreBytes : ${it.keyStoreSource.keyStoreBytes}
+                             keyStoreSource.uploadedKeystoreBytes : ${it.keyStoreSource.uploadedKeystoreBytes}
+
+                                                       properties : ${it.properties}
+                                              properties.password : ${it.properties.password}
+                                         properties.passwordEmpty : ${it.properties.passwordEmpty}
+                                         properties.keyStore.type : ${it.properties.keyStore.type}
+                          """
+                         break;
+                       case 'StringCredentialsImpl' :
+                         println """
+                                                               id : ${it.id}
+                                                           secret : ${it.secret}
+                                                      description : ${it.description}
+                                                            scope : ${it.scope}
+                        """
+                         break;
+
+                       case 'UsernamePasswordCredentialsImpl' :
+                         println """
+                                                               id : ${it.id}
+                                                         username : ${it.username}
+                                                         password : ${it.password}
+                                                      description : ${it.description}
+                                                   usernameSecret : ${it.usernameSecret ?: 'false'}
+                         """
+                         break;
+                     }
+                   }
+```
+
+- [or](https://devops.stackexchange.com/a/8692/3503)
+  ```groovy
+  import com.cloudbees.plugins.credentials.CredentialsProvider
+  import com.cloudbees.plugins.credentials.Credentials
+  import com.cloudbees.plugins.credentials.domains.Domain
+  import jenkins.model.Jenkins
+  def indent = { String text, int indentationCount ->
+    def replacement = "\t" * indentationCount
+    text.replaceAll("(?m)^", replacement)
+  }
+
+  Jenkins.get().allItems().collectMany{ CredentialsProvider.lookupStores(it).toList()}.unique().forEach { store ->
+    Map<Domain, List<Credentials>> domainCreds = [:]
+    store.domains.each { domainCreds.put(it, store.getCredentials(it))}
+    if (domainCreds.collectMany{ it.value}.empty) {
+      return
+    }
+    def shortenedClassName = store.getClass().name.substring(store.getClass().name.lastIndexOf(".") + 1)
+    println "Credentials for store context: ${store.contextDisplayName}, of type $shortenedClassName"
+    domainCreds.forEach { domain , creds ->
+      println indent("Domain: ${domain.name}", 1)
+      creds.each { cred ->
+        cred.properties.each { prop, val ->
+          println indent("$prop = \"$val\"", 2)
+        }
+        println indent("-----------------------", 2)
+      }
+    }
+  }
+  ```
+
+### StandardUsernamePasswordCredentials
+```groovy
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+
+List<StandardUsernamePasswordCredentials> creds = CredentialsProvider.lookupCredentials(
+  StandardUsernamePasswordCredentials.class,
+  jenkins.model.Jenkins.instance
+)
+
+creds.sort{it.id}.each {
+  println """
+                id : ${it.id}
+          username : ${it.username}
+          password : ${it.password}
+       description : ${it.description}
+    usernameSecret : ${it.usernameSecret ?: 'false'}
+  """
+}
+
+"DONE"
+```
+
+### BasicSSHUserPrivateKey
+```groovy
+import com.cloudbees.plugins.credentials.common.StandardCredentials;
+import com.cloudbees.plugins.credentials.CredentialsProvider;
+import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey
+import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey;
+
+List<BasicSSHUserPrivateKey> creds = CredentialsProvider.lookupCredentials(
+  SSHUserPrivateKey.class ,                         // or BasicSSHUserPrivateKey.class
+  jenkins.model.Jenkins.instance
+).sort{ it.id }
+ .each {
+    println """
+                        id  : ${it.id}
+                      scope : ${it.scope}
+                  username  : ${it.username}
+               description  : ${it.description}
+    privateKeysLastModified : ${it.privateKeysLastModified}
+            usernameSecret  : ${it.usernameSecret ?: 'false'}
+               privateKeys  : ${it.privateKeys.join('\n')}
+    """
+ }
+```
+
+### CertificateCredentials
+```groovy
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.common.CertificateCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.SecretBytes
+import com.cloudbees.plugins.credentials.impl.CertificateCredentialsImpl
+
+CredentialsProvider.lookupCredentials(
+  CertificateCredentials.class,
+  jenkins.model.Jenkins.instance
+).sort{ it.id }
+ .each {
+    SecretBytes secretKey = it.properties.keyStoreSource.uploadedKeystoreBytes
+    println """
+                       id : ${it.id}
+                 password : ${it.password}
+              description : ${it.description}
+                    scope : ${it.scope}
+            keyStore.type : ${it.properties.keyStore.type}
+      SecretBytes.decrypt : ${SecretBytes.decrypt(it.keyStoreSource.keyStoreBytes)}
+           encryptedValue : ${hudson.util.Secret.fromString(secretKey.toString()).encryptedValue}
+                plainData : ${new String(SecretBytes.fromString(secretKey.toString()).getPlainData(), "ASCII")}
+    """
+}
+
+"DONE"
+```
+
+### SystemCredentialsProvider
+```groovy
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+
+SystemCredentialsProvider systemCredentialsProvider = jenkins.model.Jenkins.instance.getExtensionList(
+  'com.cloudbees.plugins.credentials.SystemCredentialsProvider'
+).first()
+
+systemCredentialsProvider.credentials.each {
+  println """
+             id : ${it.id}
+    description : ${it.description}
+          scope : ${it.scope}
+         secret : ${it.secret}
+  """
+}
+```
+
+### encrypt/decrypt password
+```groovy
+import hudson.util.Secret
+
+String original  = 'marslo'
+Secret secret    = Secret.fromString( original )
+String encrypted = secret.getEncryptedValue()
+Secret decrypted = Secret.decrypt( encrypted )
+
+println """
+   original : ${original}
+  encrypted : ${encrypted}
+  decrypted : ${decrypted}
+"""
+
+//   original : marslo
+//  encrypted : {AQAAABAAAAAQyF78QAdq9bWCAeUi1VdYO7cB0CfG29KrvwZUU506zig=}
+//  decrypted : marslo
+
+```
+- or
+  ```groovy
+  println hudson.util.Secret.fromString('marslo').getEncryptedValue()
+  println hudson.util.Secret.decrypt( hudson.util.Secret.fromString('marslo').getEncryptedValue() 
+
+  // {AQAAABAAAAAQfwTdrtsFbS2MyOOA3kuO01p21CsVsSIpZg9FE1TMlMQ=}
+  // marslo
+  ```
