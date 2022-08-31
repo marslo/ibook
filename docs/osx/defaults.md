@@ -196,6 +196,12 @@ $ defaults write NSGlobalDomain InitialKeyRepeat -int 12
 
 ### utilities
 #### avoid install resource validation
+
+{% hint style='tip' %}
+> references:
+> - [How to fix: This is an application downloaded from the Internet. Are you sure you want to open it?](https://www.idownloadblog.com/2017/04/20/fix-application-from-internet-gatekeeper/)
+{% endhint %}
+
 ```bash
 $ sudo spctl --master-disable
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false

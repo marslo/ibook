@@ -78,6 +78,7 @@
     * [artifactory](jenkins/plugins/artifactory.md)
     * [jira-steps](jenkins/plugins/jira-steps.md)
     * [ansicolor](jenkins/plugins/ansicolor.md)
+    * [shared-libs](jenkins/plugins/shared-libs.md)
     * [simple-theme](jenkins/plugins/simple-theme.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
 * [virtualization](virtualization/virtualization.md)
