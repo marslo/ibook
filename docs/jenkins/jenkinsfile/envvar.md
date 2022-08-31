@@ -23,6 +23,7 @@
 > - [Jenkins Pipeline Environment Variables - The Definitive Guide](https://e.printstacktrace.blog/jenkins-pipeline-environment-variables-the-definitive-guide/)
 > - [Using environment variables in Jenkins pipelines - with examples](https://tomd.xyz/jenkins-env-vars/)
 > - [Jenkins Pipeline - set and use environment variables](https://code-maven.com/jenkins-pipeline-environment-variables)
+> - [Pipeline - Build failed due to MissingPropertyException: No such property: env](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/pipeline-build-failed-due-to-no-such-property-env)
 {% endhint %}
 
 ## environment variables
@@ -44,6 +45,7 @@ println currentBuild.getPreviousBuild().getBuildVariables()?.MY_ENV
 
 ## global environment
 ### `System.getenv()`
+
 {% hint style='tip' %}
 To get the Jenkins Global environment variables
 {% endhint %}
@@ -69,7 +71,7 @@ System.getenv().collect { k, v -> "$k=$v" }.join('\n>>> ')
 ### `sh 'env'` or `sh 'printenv'`
 
 {% hint style='tip' %}
-running script in agent, so the result is the agent system environment variables + job itself variables (i.e: params and ${env.JENKINS_xxx})
+> running script in agent, so the result is the agent system environment variables + job itself variables (i.e: params and ${env.JENKINS_xxx})
 {% endhint %}
 
 ```groovy
@@ -99,6 +101,9 @@ sh 'printenv | sort'
 
 {% hint style='tip' %}
 > pure Jenkins job's environment variables (and parameters)
+> <br>
+> references:
+> - [Retrieve all properties of env in Jenkinsfile](https://stackoverflow.com/questions/36836806/retrieve-all-properties-of-env-in-jenkinsfile)
 {% endhint %}
 
 ```groovy
