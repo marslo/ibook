@@ -29,6 +29,7 @@
 - [system encoding](#system-encoding)
   - [setup via environment](#setup-via-environment)
   - [setup via `locale` command](#setup-via-locale-command)
+  - [locales](#locales)
 - [applications](#applications)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
@@ -830,6 +831,9 @@ Number of days of warning before password expires : 7
 > - [Unicode characters in console logs do not print correctly in Workflow builds](https://issues.jenkins.io/browse/JENKINS-31096?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&showAll=true)
 > - [Locale](https://help.ubuntu.com/community/Locale)
 > - [How to set up a clean UTF-8 environment in Linux](https://perlgeek.de/en/article/set-up-a-clean-utf8-environment)
+> - ["Locale" issue on Linux CentOS & RHEL](https://blog.nashcom.de/nashcomblog.nsf/dx/locale-issue-on-linux-centos-rhel.htm)
+> - [Chapter 43. Using langpacks](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/assembly_using-langpacks_configuring-basic-system-settings)
+> - [How to add additional language support in CentOS/RHEL](https://www.thegeekdiary.com/how-to-add-additional-language-support-in-centos-rhel/)
 >
 >
 > important files:
@@ -860,6 +864,28 @@ EOF
 $ source /etc/bash.bashrc
 ```
 
+- check locale for account
+  ```bash
+  $ sudo su -l -c locale <account>
+
+  # i.e.:
+  $ sudo su -l -c locale marslo
+  LANG=en_US.UTF-8
+  LC_CTYPE="en_US.UTF-8"
+  LC_NUMERIC="en_US.UTF-8"
+  LC_TIME="en_US.UTF-8"
+  LC_COLLATE="en_US.UTF-8"
+  LC_MONETARY="en_US.UTF-8"
+  LC_MESSAGES="en_US.UTF-8"
+  LC_PAPER="en_US.UTF-8"
+  LC_NAME="en_US.UTF-8"
+  LC_ADDRESS="en_US.UTF-8"
+  LC_TELEPHONE="en_US.UTF-8"
+  LC_MEASUREMENT="en_US.UTF-8"
+  LC_IDENTIFICATION="en_US.UTF-8"
+  LC_ALL=en_US.UTF-8
+  ```
+
 ### setup via `locale` command
 ```bash
 $ apt-get install -y locales
@@ -880,6 +906,93 @@ $ sudo localectl set-locale LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8
   LANG="en_US.UTF-8"
   LANGUAGE="en_US:en:en_US:en"
   EOF
+  ```
+
+### locales
+#### CentOS8
+
+##### installation
+> references:
+> - [* Locale](https://wiki.archlinux.org/title/locale)
+> - [How to Fix “Failed to set locale, defaulting to C.UTF-8” in CentOS 8](https://www.tecmint.com/fix-failed-to-set-locale-defaulting-to-c-utf-8-in-centos/)
+> - [How do I change my locale to UTF-8 in CentOS?](https://serverfault.com/a/275411)
+> - [Set System Locale](https://www.server-world.info/en/note?os=CentOS_8&p=locale)
+> - [How to Change or Set System Locales in Linux?](https://www.geeksforgeeks.org/how-to-change-or-set-system-locales-in-linux/)
+> - [How To Install rxvt-unicode-terminfo on CentOS 8](https://installati.one/centos/8/rxvt-unicode-terminfo/)
+>
+>
+> `locale.conf` files support the following environment variables.
+> - `LANG`
+> - `LANGUAGE`
+> - `LC_ADDRESS`
+> - `LC_COLLATE`
+> - `LC_CTYPE`
+> - `LC_IDENTIFICATION`
+> - `LC_MEASUREMENT`
+> - `LC_MESSAGES`
+> - `LC_MONETARY`
+> - `LC_NAME`
+> - `LC_NUMERIC`
+> - `LC_PAPER`
+> - `LC_TELEPHONE`
+> - `LC_TIME`
+
+```bash
+$ sudo dnf install -y langpacks-en glibc-all-langpacks glibc-langpack-en glibc-langpack-zh
+$ sudo localectl set-locale LANG=en_US.UTF-8
+$ sudo localectl set-locale LANG=en_US.utf8
+
+# option
+$ sudo localedef -c -f UTF-8 -i en_US en_US.UTF-8
+```
+
+- check
+  ```bash
+  $ locale
+  LANG=en_US.UTF-8
+  LC_CTYPE="en_US.UTF-8"
+  LC_NUMERIC="en_US.UTF-8"
+  LC_TIME="en_US.UTF-8"
+  LC_COLLATE="en_US.UTF-8"
+  LC_MONETARY="en_US.UTF-8"
+  LC_MESSAGES="en_US.UTF-8"
+  LC_PAPER="en_US.UTF-8"
+  LC_NAME="en_US.UTF-8"
+  LC_ADDRESS="en_US.UTF-8"
+  LC_TELEPHONE="en_US.UTF-8"
+  LC_MEASUREMENT="en_US.UTF-8"
+  LC_IDENTIFICATION="en_US.UTF-8"
+  LC_ALL=en_US.UTF-8
+
+  $ localectl status
+     System Locale: LANG=en_US.UTF-8
+         VC Keymap: us
+        X11 Layout: us
+
+  $ localectl [--no-pager] list-locales
+  ```
+
+- more options
+  ```bash
+  $ yum list available | grep glibc-langpack
+  ```
+#### get infomation
+```bash
+$ locale -k LC_TIME
+$ locale -k LC_TELEPHONE
+$ locale -k LC_PAPER
+
+# list all
+$ locale -a
+
+# or
+$ localedef --list-archive
+```
+
+- print out terminfo descriptions
+  ```bash
+  $ infocmp
+  $ sudo yum install *terminfo
   ```
 
 ## applications
