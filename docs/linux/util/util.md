@@ -16,9 +16,6 @@
   - [check linux window size](#check-linux-window-size)
 - [readline & bind](#readline--bind)
   - [get info](#get-info)
-- [locales](#locales)
-  - [CentOS8](#centos8)
-    - [installation](#installation)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -339,48 +336,3 @@ for detailed information.
     set keymap vi-command
     "\ee": emacs-editing-mode
     ```
-
-# locales
-## CentOS8
-
-### installation
-> references:
-> - [How to Fix “Failed to set locale, defaulting to C.UTF-8” in CentOS 8](https://www.tecmint.com/fix-failed-to-set-locale-defaulting-to-c-utf-8-in-centos/)
-> - [How do I change my locale to UTF-8 in CentOS?](https://serverfault.com/a/275411)
-
-```bash
-$ sudo dnf install -y langpacks-en glibc-all-langpacks glibc-langpack-en glibc-langpack-zh
-$ sudo localectl set-locale LANG=en_US.UTF-8
-
-# option
-$ sudo localedef -c -f UTF-8 -i en_US en_US.UTF-8
-```
-
-- check
-  ```bash
-  $ locale
-  LANG=en_US.UTF-8
-  LC_CTYPE="en_US.UTF-8"
-  LC_NUMERIC="en_US.UTF-8"
-  LC_TIME="en_US.UTF-8"
-  LC_COLLATE="en_US.UTF-8"
-  LC_MONETARY="en_US.UTF-8"
-  LC_MESSAGES="en_US.UTF-8"
-  LC_PAPER="en_US.UTF-8"
-  LC_NAME="en_US.UTF-8"
-  LC_ADDRESS="en_US.UTF-8"
-  LC_TELEPHONE="en_US.UTF-8"
-  LC_MEASUREMENT="en_US.UTF-8"
-  LC_IDENTIFICATION="en_US.UTF-8"
-  LC_ALL=en_US.UTF-8
-
-  $ localectl status
-     System Locale: LANG=en_US.UTF-8
-         VC Keymap: us
-        X11 Layout: us
-  ```
-
-- more options
-  ```bash
-  $ yum list available | grep glibc-langpack
-  ```
