@@ -8,7 +8,6 @@
   - [check brew configure file](#check-brew-configure-file)
   - [whatprovide alternatives](#whatprovide-alternatives)
   - [tricky](#tricky)
-  - [rpm & dpkg & brew](#rpm--dpkg--brew)
   - [brew command](#brew-command)
 - [network](#network)
   - [show network information](#show-network-information)
@@ -172,17 +171,6 @@ mode: 755
     cairo -> fontconfig  freetype  gdbm  gettext  glib  libffi  libpng  lzo  openssl@1.1  pcre  pixman  python@3.8  readline  sqlite  xz
     ...
     ```
-
-### rpm & dpkg & brew
-| rpm                                                           | dpkg                                                                                           | brew                                                       |
-|---------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------|
-| `rpm -qa`                                                     | `dpkg -l`                                                                                      | `brew list`                                                |
-| `rpm -ql sofrwareanme`                                        | `dpkg -L softwarename` <br> `dpkg --listfiles softwarename` <br> `dpkg-qurery -L softwarename` | `brew list softwarename` <br> `brew ls --verbose software` |
-| `rpm -qf /path/to/file` <br> `yum whatprovides /path/to/file` | `dpkg -S /path/to/file`                                                                        |                                                            |
-| `rpm -qip pkgfile.rpm` <br> `rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb` <br> `dpkg -c pkgfile.deb`                                               |                                                            |
-| `rpm -q softwarename` <br> `rpm -qi softwarename`             | `dpkg -l softwarename` <br> `dpkg -s softwarename <br> dpkg -p softwarename`                   | `brew info softwarename`                                   |
-| `rpm -e softwarename`                                         | `dpkg -r softwarename` <br> `dpkg -P softwareanme`                                             | `brew uninstall softwarename`                              |
-
 
 ### brew command
 | command                                  | description                                                                                                |

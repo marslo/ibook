@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [rpm & dpkg & brew](#rpm--dpkg--brew)
 - [prompt](#prompt)
 - [character](#character)
   - [metacharacter](#metacharacter)
@@ -19,7 +20,11 @@
 - [centos](#centos)
   - [yum](#yum)
     - [enable or disable repo](#enable-or-disable-repo)
+    - [yum group](#yum-group)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
+- [tricky](#tricky)
+  - [unicode](#unicode)
+  - [search manual page](#search-manual-page)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -31,6 +36,18 @@
 > - download pdf from [here](https://tldp.org/LDP/abs/abs-guide.pdf) or [here](http://www.linux-france.org/lug/ploug/doc/abs-guide.pdf)
 > - [Perform tab-completion for aliases in Bash](https://brbsix.github.io/2015/11/23/perform-tab-completion-for-aliases-in-bash/)
 {% endhint %}
+
+# rpm & dpkg & brew
+| rpm                                                           | dpkg                                                                                           | brew                                                       |
+|---------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| `rpm -qa`                                                     | `dpkg -l`                                                                                      | `brew list`                                                |
+| `rpm -ql sofrwareanme`                                        | `dpkg -L softwarename` <br> `dpkg --listfiles softwarename` <br> `dpkg-qurery -L softwarename` | `brew list softwarename` <br> `brew ls --verbose software` |
+| `rpm -qf /path/to/file` <br> `yum whatprovides /path/to/file` | `dpkg -S /path/to/file`                                                                        |                                                            |
+| `rpm -qip pkgfile.rpm` <br> `rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb` <br> `dpkg -c pkgfile.deb`                                               |                                                            |
+| `rpm -q softwarename` <br> `rpm -qi softwarename`             | `dpkg -l softwarename` <br> `dpkg -s softwarename <br> dpkg -p softwarename`                   | `brew info softwarename`                                   |
+| `rpm -e softwarename`                                         | `dpkg -r softwarename` <br> `dpkg -P softwareanme`                                             | `brew uninstall softwarename`                              |
+
+
 
 # prompt
 
@@ -419,6 +436,7 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
   ```
 
 ## others
+
 ### `you have new mail`
 - [remove](https://apple.stackexchange.com/a/28747/254265)
   ```bash
@@ -430,6 +448,15 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 
 # centos
 ## yum
+
+{% hint style='tip' %}
+> references:
+> - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
+> - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
+> - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
+> - [How to Find Out Top Directories and Files (Disk Space) in Linux](https://www.tecmint.com/find-top-large-directories-and-files-sizes-in-linux/)
+{% endhint %}
+
 ### enable or disable repo
 ```bash
 # enable
@@ -439,7 +466,25 @@ $ sudo yum config-manager --set-enabled PowerTools
 $ sudo yum config-manager --set-disabled PowerTools
 ```
 
+### yum group
+
+{% hint style='tip' %}
+> references:
+> - [2.5 Yum Groups](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_yum_groups.html)
+> - [How to install a group of packages with yum on Red Hat Enterprise Linux?](https://access.redhat.com/solutions/15815)
+{% endhint %}
+
+```bash
+$ yum grouplist
+$ yum group hidden
+$ yum groupinfo <groupName>
+$ yum groupinstall <groupName>
+$ yum groupupdate <groupName>
+$ yum groupremove <groupName>
+```
+
 ### `File "/usr/libexec/urlgrabber-ext-down", line 28`
+
 - error
   ```bash
   File "/usr/libexec/urlgrabber-ext-down", line 28
@@ -483,8 +528,129 @@ $ sudo yum config-manager --set-disabled PowerTools
   lrwxrwxrwx 1 root root 16 Jul 10 02:29 /etc/alternatives/python -> /usr/bin/python3
   ```
 
-- reference
-  - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
-  - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
-  - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
-  - [How to Find Out Top Directories and Files (Disk Space) in Linux](https://www.tecmint.com/find-top-large-directories-and-files-sizes-in-linux/)
+# tricky
+
+{% hint style='tip' %}
+> references:
+> - [Searching the manual pages](https://help.ubuntu.com/community/UsingTheTerminal#Searching_the_manual_pages)
+> - [How To Readline](https://help.ubuntu.com/community/HowToReadline)
+> - [Commandline Howto](https://help.ubuntu.com/community/CommandlineHowto)
+> - [Advanced Commandline Howto](https://help.ubuntu.com/community/AdvancedCommandlineHowto)
+{% endhint %}
+
+## unicode
+
+{% hint style='tip' %}
+> references:
+> - [How do you echo a 4-digit Unicode character in Bash?](https://stackoverflow.com/q/602912/2940319)
+> - [centos locale utf-8](https://unix.stackexchange.com/a/25237/29178)
+> - [How can I make iconv replace the input file with the converted output?](https://unix.stackexchange.com/q/10241/29178)
+>
+>
+> Your description is vague. Either your terminal does not support Unicode, or you're editing a file that's in latin1 (= iso-8859-1).
+> On a bash or zsh shell, with `LC_CTYPE=en_US.UTF-8`, run `echo $'\xc3a9'`. If you see `é`, your terminal supports UTF-8. If you see `Ã©`, your terminal is showing latin1.
+{% endhint %}
+> ```bash
+> $ echo $'\xc3a9'
+> a9
+> ```
+
+```bash
+$ echo $'\xe2\x98\xa0'
+☠
+$ echo $'(U+2620) \U02620' | xxd
+00000000: 2855 2b32 3632 3029 20e2 98a0 0a         (U+2620) ....
+
+# test
+for (( i=0x2500; i<0x2600; i++ )); do
+    UnicodePointToUtf8 $i
+    [ "$(( i+1 & 0x1f ))" != 0 ] || echo ""
+done
+─━│┃┄┅┆┇┈┉┊┋┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟
+┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿
+╀╁╂╃╄╅╆╇╈╉╊╋╌╍╎╏═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟
+╠╡╢╣╤╥╦╧╨╩╪╫╬╭╮╯╰╱╲╳╴╵╶╷╸╹╺╻╼╽╾╿
+▀▁▂▃▄▅▆▇█▉▊▋▌▍▎▏▐░▒▓▔▕▖▗▘▙▚▛▜▝▞▟
+■□▢▣▤▥▦▧▨▩▪▫▬▭▮▯▰▱▲△▴▵▶▷▸▹►▻▼▽▾▿
+◀◁◂◃◄◅◆◇◈◉◊○◌◍◎●◐◑◒◓◔◕◖◗◘◙◚◛◜◝◞◟
+◠◡◢◣◤◥◦◧◨◩◪◫◬◭◮◯◰◱◲◳◴◵◶◷◸◹◺◻◼◽◾◿
+
+## test harness
+for (( i=0x2500; i<0x2600; i++ )); do
+    unichr $i
+done
+─━│┃┄┅┆┇┈┉┊┋┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿╀╁╂╃╄╅╆╇╈╉╊╋╌╍╎╏═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬╭╮╯╰╱╲╳╴╵╶╷╸╹╺╻╼╽╾╿▀▁▂▃▄▅▆▇█▉▊▋▌▍▎▏▐░▒▓▔▕▖▗▘▙▚▛▜▝▞▟■□▢▣▤▥▦▧▨▩▪▫▬▭▮▯▰▱▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅◆◇◈◉◊○◌◍◎●◐◑◒◓◔◕◖◗◘◙◚◛◜◝◞◟◠◡◢◣◤◥◦◧◨◩◪◫◬◭◮◯◰◱◲◳◴◵◶◷◸◹◺◻◼◽◾◿
+
+# https://stackoverflow.com/a/55639328/2940319
+$ echo -e "\U1F304"
+�
+$ echo -e "�" | hexdump -C
+00000000  f0 9f 8c 84 0a                                    |.....|
+00000005
+```
+
+- [unicode to utf8](https://stackoverflow.com/a/59040037/2940319)
+  ```bash
+  UnicodePointToUtf8()
+  {
+      local x="$1"               # ok if '0x2620'
+      x=${x/\\u/0x}              # '\u2620' -> '0x2620'
+      x=${x/U+/0x}; x=${x/u+/0x} # 'U-2620' -> '0x2620'
+      x=$((x)) # from hex to decimal
+      local y=$x n=0
+      [ $x -ge 0 ] || return 1
+      while [ $y -gt 0 ]; do y=$((y>>1)); n=$((n+1)); done
+      if [ $n -le 7 ]; then       # 7
+          y=$x
+      elif [ $n -le 11 ]; then    # 5+6
+          y=" $(( ((x>> 6)&0x1F)+0xC0 )) \
+              $(( (x&0x3F)+0x80 ))"
+      elif [ $n -le 16 ]; then    # 4+6+6
+          y=" $(( ((x>>12)&0x0F)+0xE0 )) \
+              $(( ((x>> 6)&0x3F)+0x80 )) \
+              $(( (x&0x3F)+0x80 ))"
+      else                        # 3+6+6+6
+          y=" $(( ((x>>18)&0x07)+0xF0 )) \
+              $(( ((x>>12)&0x3F)+0x80 )) \
+              $(( ((x>> 6)&0x3F)+0x80 )) \
+              $(( (x&0x3F)+0x80 ))"
+      fi
+      printf -v y '\\x%x' $y
+      echo -n -e $y
+  }
+  ```
+
+- [unichr](https://stackoverflow.com/a/16509364/2940319)
+  ```bash
+  fast_chr() {
+      local __octal
+      local __char
+      printf -v __octal '%03o' $1
+      printf -v __char \\$__octal
+      REPLY=$__char
+  }
+
+  function unichr {
+      local c=$1  # Ordinal of char
+      local l=0   # Byte ctr
+      local o=63  # Ceiling
+      local p=128 # Accum. bits
+      local s=''  # Output string
+
+      (( c < 0x80 )) && { fast_chr "$c"; echo -n "$REPLY"; return; }
+
+      while (( c > o )); do
+          fast_chr $(( t = 0x80 | c & 0x3f ))
+          s="$REPLY$s"
+          (( c >>= 6, l++, p += o+1, o>>=1 ))
+      done
+
+      fast_chr $(( t = p | c ))
+      echo -n "$REPLY$s"
+  }
+  ```
+
+
+## search manual page
+- `whatis -r <string>`
+- `apropos -r <string>`

@@ -30,6 +30,9 @@
   - [setup via environment](#setup-via-environment)
   - [setup via `locale` command](#setup-via-locale-command)
   - [locales](#locales)
+  - [langpacks](#langpacks)
+- [terminal info](#terminal-info)
+  - [list info](#list-info)
 - [applications](#applications)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
@@ -39,6 +42,10 @@
 
 
 {% hint style='tip' %}
+> references:
+> - [Environment Variables](https://help.ubuntu.com/community/EnvironmentVariables#The_LANGUAGE_priority_list)
+>
+>
 > drop caches
 > ```bash
 > $ sudo bash -c "echo 3 > /proc/sys/vm/drop_caches"
@@ -509,6 +516,7 @@ $ /usr/sbin/sss_override group-import group-import.bak
 ```bash
 $ /usr/sbin/sss_override user-find
 ```
+
 #### [create sssd config](https://serverfault.com/a/749305/129815)
 
 {% hint style='tip' %}
@@ -825,6 +833,7 @@ Number of days of warning before password expires : 7
 
 {% hint style='tip' %}
 > references:
+> - [Locale setting variables](https://help.ubuntu.com/community/EnvironmentVariables#Locale_setting_variables)
 > - [How to Change or Set System Locales in Linux](https://www.tecmint.com/set-system-locales-in-linux/)
 >   - `/etc/default/locale` – on Ubuntu/Debian
 >   - `/etc/locale.conf` – on CentOS/RHEL
@@ -940,7 +949,9 @@ $ sudo localectl set-locale LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8
 ```bash
 $ sudo dnf install -y langpacks-en glibc-all-langpacks glibc-langpack-en glibc-langpack-zh
 $ sudo localectl set-locale LANG=en_US.UTF-8
-$ sudo localectl set-locale LANG=en_US.utf8
+
+# or
+$ sudo localectl set-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en:C:es_E
 
 # option
 $ sudo localedef -c -f UTF-8 -i en_US en_US.UTF-8
@@ -966,6 +977,7 @@ $ sudo localedef -c -f UTF-8 -i en_US en_US.UTF-8
 
   $ localectl status
      System Locale: LANG=en_US.UTF-8
+                    LANGUAGE=en_US:en:C:es_ES
          VC Keymap: us
         X11 Layout: us
 
@@ -976,6 +988,7 @@ $ sudo localedef -c -f UTF-8 -i en_US en_US.UTF-8
   ```bash
   $ yum list available | grep glibc-langpack
   ```
+
 #### get infomation
 ```bash
 $ locale -k LC_TIME
@@ -990,10 +1003,77 @@ $ localedef --list-archive
 ```
 
 - print out terminfo descriptions
+
+  > references:
+  > - [Why do I see the unicode character è when I type Alt-h in my xterm on CentOS?](https://superuser.com/a/783941/112396)
+
   ```bash
   $ infocmp
+  $ tput rmm
   $ sudo yum install *terminfo
   ```
+
+### langpacks
+
+{% hint style='tip' %}
+> references:
+> - [Language families, language family groups, subgroups of languages](http://www.italiantechnicaltranslations.com/language-family-groups.htm)
+> - [How to add additional language support in CentOS/RHEL](https://www.thegeekdiary.com/how-to-add-additional-language-support-in-centos-rhel/)
+> - [Chapter 43. Using langpacks](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/assembly_using-langpacks_configuring-basic-system-settings#removing-language-support_working-with-langpacks)
+> - ["Locale" issue on Linux CentOS & RHEL](https://blog.nashcom.de/nashcomblog.nsf/dx/locale-issue-on-linux-centos-rhel.htm)
+> - [How to Fix “Failed to set locale, defaulting to C.UTF-8” in CentOS 8](https://www.tecmint.com/fix-failed-to-set-locale-defaulting-to-c-utf-8-in-centose)
+> - [The LANGUAGE priority list](https://help.ubuntu.com/community/EnvironmentVariables#The_LANGUAGE_priority_list)
+{% endhint %}
+
+#### list
+```bash
+$ sudo yum list langpacks-*
+$ sudo yum list installed langpacks*
+$ sudo yum list available langpacks*
+$ sudo yum repoquery --whatsupplements langpacks-<locale_code>
+```
+
+#### install
+```bash
+$ sudo yum install langpacks-<locale_code>
+# i.e.:
+$ sudo yum install -y langpacks-en langpacks-en_GB langpacks-zh_CN
+
+# or saving disk space by using glibc-langpack-<locale_code>
+$ sudo yum install -y glibc-common glibc-all-langpacks
+# or
+$ sudo yum install -y *langpacks
+# or
+$ sudo yum install -y glibc-minimal-langpack
+# or
+$ sudo yum install -y glibc-langpack-en
+```
+
+- chinese
+  ```bash
+  $ sudo yum groupinstall "Chinese Support"
+  ```
+
+## terminal info
+
+{% hint style='tip' %}
+> references:
+> - [man terminfo](https://invisible-island.net/ncurses/man/terminfo.5.html)
+> - [man infocmp](https://invisible-island.net/ncurses/man/infocmp.1m.html)
+> - [man term](https://invisible-island.net/ncurses/man/term.7.html)
+> - [man tset](https://invisible-island.net/ncurses/man/tset.1.html)
+> - [stty](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/stty.html)
+> - [tty](https://www.freebsd.org/cgi/man.cgi?query=tty&apropos=0&sektion=4&manpath=SunOS+4.1.3&arch=default&format=html)
+> - [ttys](https://www.freebsd.org/cgi/man.cgi?query=ttys&apropos=0&sektion=5&manpath=SunOS+4.1.3&arch=default&format=html)
+> - [How To Install rxvt-unicode-terminfo on CentOS 8](https://installati.one/centos/8/rxvt-unicode-terminfo/)
+{% endhint %}
+
+### list info
+```bash
+$ terminfo -f
+$ terminfo -W
+```
+
 
 ## applications
 #### sogou Pinyin input method
