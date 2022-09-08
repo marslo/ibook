@@ -35,6 +35,7 @@ git command study and practice
   - [change latest comments in local](#change-latest-comments-in-local)
   - [change remote comments](#change-remote-comments)
   - [change root comments](#change-root-comments)
+  - [change author and committer](#change-author-and-committer)
 - [mv](#mv)
   - [case sensitive](#case-sensitive)
 - [clean](#clean)
@@ -419,6 +420,13 @@ or
   ```
 
 ## log
+### short stat
+```bash
+$ git log --show-signature
+# or
+$ git log --shortstat
+```
+
 ### show files and status without comments
 ```bash
 $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
@@ -469,20 +477,20 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,,
   $ git log --all --full-history -- <path/to/file>
   ```
 
-  [or](https://stackoverflow.com/a/60993503/2940319)
-  ```bash
-  $ git log --all --full-history --online -- <path/to/file>
-  ```
+  - [or](https://stackoverflow.com/a/60993503/2940319)
+    ```bash
+    $ git log --all --full-history --online -- <path/to/file>
+    ```
 
-  [or](https://stackoverflow.com/a/42582877/2940319)
-  ```bash
-  $ git log --oneline --follow -- <path/to/file>
-  ```
+  - [or](https://stackoverflow.com/a/42582877/2940319)
+    ```bash
+    $ git log --oneline --follow -- <path/to/file>
+    ```
 
-  or
-  ```bash
-  $ git log --diff-filter=D --summary | find "delete" | grep <filename>
-  ```
+  - or
+    ```bash
+    $ git log --diff-filter=D --summary | find "delete" | grep <filename>
+    ```
 
 - [`--follow`](https://stackoverflow.com/a/36561814/2940319)
   ```bash
@@ -787,6 +795,56 @@ $ git push origin +<branch>
 ```
 ![rebase -i --root](../../screenshot/git/rebase-i-root.gif)
 
+### change author and committer
+- [rebase and amend](https://stackoverflow.com/a/3042512/2940319)
+  - go to interactive mode
+    ```bash
+    $ git config --local user.name "name"
+    $ git config --local user.email "name@email.com"
+    $ git rebase -i <sha>
+    ```
+  - modify `pick` to `edit`
+  - amend one by one
+    ```
+    $ git commit --amend --no-edit --only --author="name<name@email.com>"
+    # or
+    $ git commit --amend --no-edit --date="$(git log -n 1 --format=%aD)" --reset-author
+
+    $ git rebase --continue
+    ```
+
+- [git replace](https://stackoverflow.com/a/28845565/2940319)
+
+- [rebase --onto](https://stackoverflow.com/a/72430533/2940319)
+
+  > [!TIP]
+  > see also
+  > - [rebase onto <sha>](https://stackoverflow.com/a/51114838/2940319)
+  > ```bash
+  > [alias]
+  >     reauthor = !bash -c 'git rebase --onto $1 --exec \"git commit --amend --author=$2\" $1' --
+  > ```
+
+  ```bash
+  $ git config --local user.name "name"
+  $ git config --local user.email "<name@email.com>"
+  $ git rebase --no-edit \
+               --onto HEAD~9 \
+               --exec 'GIT_COMMITTER_DATE="$(git log -n 1 --format=%aD)" \
+                       git commit --amend \
+                                  --date="$(git log -n 1 --format=%aD)"' \
+                                  --author="name<name@email.com>" \           # or --reset-author
+                       HEAD~9
+  ```
+
+#### check commits with author
+```bash
+# get commits by name
+$ git log --oneline --author="name"
+
+# get commits by email
+$ git log --oneline --author="<name@email.com>"
+```
 
 ## mv
 ### case sensitive
