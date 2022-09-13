@@ -20,6 +20,7 @@ git command study and practice
   - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
   - [change head](#change-head)
 - [log](#log)
+  - [short stat](#short-stat)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
   - [get change from `.git/objects`](#get-change-from-gitobjects)

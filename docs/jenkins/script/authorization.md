@@ -15,7 +15,7 @@
   - [set crumb issuer](#set-crumb-issuer)
   - [clean up all pending Async Resource Disposers items](#clean-up-all-pending-async-resource-disposers-items)
 - [credential](#credential)
-  - [get list all credentials](#get-list-all-credentials)
+  - [list all credentials](#list-all-credentials)
   - [StandardUsernamePasswordCredentials](#standardusernamepasswordcredentials)
   - [BasicSSHUserPrivateKey](#basicsshuserprivatekey)
   - [CertificateCredentials](#certificatecredentials)
@@ -308,7 +308,7 @@ disposer.getBacklog().each { item ->
 >   - [UsernameCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/UsernameCredentials.html)
 >   - [UsernamePasswordCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/UsernamePasswordCredentials.html)
 
-### get list all credentials
+### list all credentials
 ```groovy
 import com.cloudbees.plugins.credentials.common.StandardCredentials
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
@@ -322,6 +322,7 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                      switch( it.class.simpleName ) {
                        case 'BasicSSHUserPrivateKey' :
                          println """
+                                                             type : ${it.class.simpleName}
                                                                id : ${it.id}
                                                             scope : ${it.scope}
                                                          username : ${it.username}
@@ -334,6 +335,7 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
 
                        case 'CertificateCredentialsImpl' :
                           println """
+                                                             type : ${it.class.simpleName}
                                                                id : ${it.id}
                                                             scope : ${it.scope}
                                                          password : ${it.password}
@@ -350,6 +352,7 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                          break;
                        case 'StringCredentialsImpl' :
                          println """
+                                                             type : ${it.class.simpleName}
                                                                id : ${it.id}
                                                            secret : ${it.secret}
                                                       description : ${it.description}
@@ -359,6 +362,7 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
 
                        case 'UsernamePasswordCredentialsImpl' :
                          println """
+                                                             type : ${it.class.simpleName}
                                                                id : ${it.id}
                                                          username : ${it.username}
                                                          password : ${it.password}
