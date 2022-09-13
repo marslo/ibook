@@ -27,7 +27,106 @@
 > - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
 > - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
 > - [xterm 256color chart.svg](https://commons.wikimedia.org/wiki/File:Xterm_256color_chart.svg)
+> - [Modifying the color of grep](https://askubuntu.com/a/1042242/92979)
 {% endhint %}
+
+> [!TIP]
+> - foreground colors
+>   ```
+>   ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+>   ┃ ### ┃ GNOME Terminal          ┃ xterm                   ┃ non-GUI TTY           ┃
+>   ┡━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+>   │  39 │ «reset this color»      │ «reset this color»      │ «reset this color»    │
+>   ├─────┼─────────────────────────┼─────────────────────────┼───────────────────────┤
+>   │  30 │ very dark grey          │ black                   │ black                 │
+>   │  31 │ dull red                │ red                     │ light red             │
+>   │  32 │ dull green              │ light green             │ light green           │
+>   │  33 │ dull yellow             │ yellow                  │ yellow                │
+>   │  34 │ greyish blue            │ dark blue               │ sky blue              │
+>   │  35 │ dull purple             │ purple                  │ purple                │
+>   │  36 │ teal                    │ cyan                    │ cyan                  │
+>   │  37 │ light grey              │ light grey              │ light grey            │
+>   ├─────┼─────────────────────────┼─────────────────────────┼───────────────────────┤
+>   │  90 │ dark grey               │ dull grey               │ dull grey             │
+>   │  91 │ red                     │ bright red              │ bright red            │
+>   │  92 │ lime green              │ bright green            │ bright green          │
+>   │  93 │ yellow                  │ bright yellow           │ pure yellow           │
+>   │  94 │ light greyish blue      │ dull blue               │ deep blue             │
+>   │  95 │ light purple            │ magenta                 │ magenta               │
+>   │  96 │ cyan                    │ bright cyan             │ bright cyan           │
+>   │  97 │ off white               │ white                   │ white                 │
+>   ├─────┴──────┬──────────────────┴─────────────────────────┴───────────────────────┤
+>   │ 38;2;ʀ;ɢ;ʙ │ replace ʀ, ɢ, and ʙ with RGB values from 0 to 255                  │
+>   │            │   for closest supported color (non-GUI TTY has only 16 colors!)    │
+>   │ 38;5;ɴ     │ replace ɴ with value from 256-color chart below                    │
+>   │            │   for closest supported color (non-GUI TTY has only 16 colors!)    │
+>   └────────────┴────────────────────────────────────────────────────────────────────┘
+>   ```
+> - background colors
+>  ```
+>  ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+>  ┃ ### ┃ GNOME Terminal          ┃ xterm                   ┃ non-GUI TTY           ┃
+>  ┡━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+>  │  49 │ «reset this color»      │ «reset this color»      │ «reset this color»    │
+>  ├─────┼─────────────────────────┼─────────────────────────┼───────────────────────┤
+>  │  40 │ very dark grey          │ black                   │ black                 │
+>  │  41 │ dull red                │ red                     │ light red             │
+>  │  42 │ dull green              │ light green             │ light green           │
+>  │  43 │ dull yellow             │ yellow                  │ yellow                │
+>  │  44 │ greyish blue            │ dark blue               │ sky blue              │
+>  │  45 │ dull purple             │ purple                  │ purple                │
+>  │  46 │ teal                    │ cyan                    │ cyan                  │
+>  │  47 │ light grey              │ light grey              │ light grey            │
+>  ├─────┼─────────────────────────┼─────────────────────────┼╶╴╶╴╶╴╶╴╶╴╶╴╶╴╶╴╶╴╶╴╶╴╶┤
+>  │ 100 │ dark grey               │ dull grey               │ black                 │
+>  │ 101 │ red                     │ bright red              │ light red             │
+>  │ 102 │ lime green              │ bright green            │ light green           │
+>  │ 103 │ yellow                  │ bright yellow           │ yellow                │
+>  │ 104 │ light greyish blue      │ dull blue               │ sky blue              │
+>  │ 105 │ light purple            │ magenta                 │ purple                │
+>  │ 106 │ cyan                    │ bright cyan             │ cyan                  │
+>  │ 107 │ off white               │ white                   │ light grey            │
+>  ├─────┴──────┬──────────────────┴─────────────────────────┴───────────────────────┤
+>  │ 48;2;ʀ;ɢ;ʙ │ replace ʀ, ɢ, and ʙ with RGB values from 0 to 255                  │
+>  │            │   for closest supported color (non-GUI TTY has only 8 colors!)     │
+>  │ 48;5;ɴ     │ replace ɴ with value from 256-color chart below                    │
+>  │            │   for closest supported color (non-GUI TTY has only 8 colors!)     │
+>  └────────────┴────────────────────────────────────────────────────────────────────┘
+>  ```
+> - text styling
+>   ```
+>   ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
+>   ┃ ### ┃ GNOME Terminal          ┃ xterm                   ┃ non-GUI TTY           ┃
+>   ┡━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
+>   │     │ «reset style+colors»    │ «reset style+colors»    │ «reset style+colors»  │
+>   │   0 │ «reset style+colors»    │ «reset style+colors»    │ «reset style+colors»  │
+>   ├─────┼─────────────────────────┼─────────────────────────┼───────────────────────┤
+>   │   1 │ +bold, +brighter color  │ +bold, +brighter color  │ +brighter color,      │
+>   │     │                         │                         │   -forced grey        │
+>   │   2 │ +fainter color          │ +fainter color          │ +forced grey          │
+>   │   3 │ +italic                 │ +italic                 │ +forced green         │
+>   │     │                         │                         │   ● overrides 2 and 4 │
+>   │   4 │ +underline              │ +underline              │ +forced cyan          │
+>   │     │                         │                         │   ● overrides 2       │
+>   │   5 │ «no effect»             │ +blink                  │ «no effect»           │
+>   │   7 │ +invert colors          │ +invert colors          │ +invert colors        │
+>   │   8 │ +invisible              │ +invisible              │ «no effect»           │
+>   │     │                         │   ● underline appears   │                       │
+>   │   9 │ +strikethrough          │ +strikethrough          │ «no effect»           │
+>   ├─────┼─────────────────────────┤                         ├───────────────────────┤
+>   │  21 │ -bold, -brighter color, │ +double underline       │ -brighter color,      │
+>   │     │   -fainter color        ├─────────────────────────┤   -forced grey        │
+>   │  22 │ -bold, -brighter color, │ -bold, -brighter color, │ -brighter color,      │
+>   │     │   -fainter color        │   -fainter color        │   -forced grey        │
+>   │  23 │ -italic                 │ -italic                 │ -forced green         │
+>   │  24 │ -underline              │ -underline,             │ -forced cyan          │
+>   │     │                         │   -double underline     │                       │
+>   │  25 │ «no effect»             │ -blink                  │ «no effect»           │
+>   │  27 │ -invert colors          │ -invert colors          │ -invert colors        │
+>   │  28 │ -invisible              │ -invisible              │ «no effect»           │
+>   │  29 │ -strikethrough          │ -strikethrough          │ «no effect»           │
+>   └─────┴─────────────────────────┴─────────────────────────┴───────────────────────┘
+>   ```
 
 ## ansicolors
 - 256 colors

@@ -26,6 +26,9 @@
 - [captin](https://captin.mystrikingly.com/)
 - [Carnac](http://carnackeys.com/)      ⇠ for windows
 
+- keyboard customized
+  - [Karabiner-Elements](https://karabiner-elements.pqrs.org/)
+
 
 ### gif
 - [GIF Brewery 3 by Gfycat](https://gfycat.com/gifbrewery)

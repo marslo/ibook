@@ -21,6 +21,11 @@
 > - [CSRF Protection](https://www.jenkins.io/doc/book/using/remote-access-api/#RemoteaccessAPI-CSRFProtection)
 > - [Remote Access API](https://www.jenkins.io/doc/book/using/remote-access-api/)
 > - [Jenkins REST API example using crumb](https://gist.github.com/dasgoll/455522f09cb963872f64e23bb58804b2)
+> - [About the Jenkins infrastructure project](https://www.jenkins.io/projects/infrastructure/#jenkins)
+> - [jenkins on jenkins](https://github.com/jenkins-infra/documentation/blob/main/ci.adoc#jenkins-on-jenkins)
+> - [ci.jenkins.io](https://ci.jenkins.io/)
+>   - [azure.ci.jenkins.io.yaml](https://github.com/jenkins-infra/jenkins-infra/blob/production/hieradata/clients/azure.ci.jenkins.io.yaml)
+>   - [trusted-ci.yaml](https://github.com/jenkins-infra/jenkins-infra/blob/production/hieradata/clients/trusted-ci.yaml)
 {% endhint %}
 
 ### get crumb
