@@ -25,13 +25,23 @@
 
 {% hint style='tip' %}
 > reference:
-> - [groovy cheatsheet](https://onecompiler.com/cheatsheets/groovy)
-> - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
-> - [http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf](http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf)
-> - [Groovy Scripting Reference](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/index.html)
+> - [* Groovy Scripting Reference](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/index.html)
 >   - [groovy basics](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-basics.html#groovy-basics)
 >   - [groovy tips and techniques](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-tips-and-techniques.html#groovy-tips-and-techniques)
+> - [* groovy cheatsheet](https://onecompiler.com/cheatsheets/groovy)
+> - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
+> - [http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf](http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf)
 > - [Syntax](https://groovy-lang.org/syntax.html)
+> - [Java SE Specifications download](https://docs.oracle.com/javase/specs/)
+>   - The Java Language Specification, Java SE 19 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se19/jls19.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se19/html/index.html)
+>   - The Java Language Specification, Java SE 18 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se18/jls18.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se18/html/index.html)
+>   - The Java Language Specification, Java SE 17 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se17/jls17.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se17/html/index.html)
+>   - The Java Language Specification, Java SE 16 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se16/jls16.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se16/html/index.html)
+>   - The Java Language Specification, Java SE 15 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se15/jls15.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se15/html/index.html)
+>   - The Java Language Specification, Java SE 14 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se14/jls14.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se14/html/index.html)
+>   - The Java Language Specification, Java SE 13 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se13/jls13.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se13/html/index.html)
+>   - The Java Language Specification, Java SE 12 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se12/jls12.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se12/html/index.html)
+>   - The Java Language Specification, Java SE 11 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se12/jls11.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se11/html/index.html)
 {% endhint %}
 
 ## basic
