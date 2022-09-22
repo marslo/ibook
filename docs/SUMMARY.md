@@ -126,7 +126,7 @@
     * [repo](linux/ubuntu/repo.md)
     * [systemctl](linux/ubuntu/systemctl.md)
     * [x](linux/ubuntu/x.md)
-* [programming](programming/python/python.md))
+* [programming](programming/groovy/groovy.md)
   * [groovy](programming/groovy/groovy.md)
     * [groovydoc](programming/groovy/groovydoc.md)
     * [map](programming/groovy/map.md)
