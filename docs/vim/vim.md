@@ -14,13 +14,22 @@
 > - [vim:tip](https://vim.fandom.com/wiki/Category:VimTip)
 > - [Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
 > - [Search for visually selected text](https://vim.fandom.com/wiki/Search_for_visually_selected_text)
-
+> - [Mastering Vim Grammar](https://irian.to/blogs/mastering-vim-grammar/)
+> - [Syntax highlighting is extremely slow when scrolling up in recent version (v8.0.1599) #2712](https://github.com/vim/vim/issues/2712)
+>  - [Slow vim in huge projects](https://www.reddit.com/r/vim/comments/ng59kz/slow_vim_in_huge_projects/)
 {% endhint %}
-
 
 ### check where vim executable package
 ```vim
 :echo v:progpath
+```
+
+### [check vimdoc with keyword](https://www.reddit.com/r/vim/comments/ng59kz/comment/gyrceos/?utm_source=share&utm_medium=web2x&context=3)
+```vim
+:helpgrep <keyword>
+
+" i.e.
+:helpgrep slow
 ```
 
 [or](https://stackoverflow.com/a/48858718/2940319)

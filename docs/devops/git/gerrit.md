@@ -624,3 +624,4 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 - [Rule base configuration](https://review.opendev.org/plugins/its-storyboard/Documentation/config-rulebase-common.html)
 - [Gerrit push not working. Remote rejected, prohibited by gerrit](https://stackoverflow.com/a/31297860/2940319)
 - [Gerrit Code Review - Project Configuration File Format](https://gerrit-review.googlesource.com/Documentation/config-project-config.html)
+- [Review UI](https://gerrit-review.googlesource.com/Documentation/user-review-ui.html)

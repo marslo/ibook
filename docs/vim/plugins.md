@@ -17,6 +17,11 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> references:
+> - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
+{% endhint %}
+
 
 ## [`Tabularize`](https://github.com/godlygeek/tabular)
 
