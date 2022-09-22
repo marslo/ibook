@@ -4,9 +4,10 @@
 
 - [OSX](#osx)
   - [installation](#installation)
-  - [Q&A](#qa)
-- [Ubuntu](#ubuntu)
+- [ubuntu](#ubuntu)
 - [windows](#windows)
+- [plugins](#plugins)
+  - [tabnine](#tabnine)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -118,7 +119,12 @@ $ make && sudo make install
   > - `/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Headers/Carbon.h`
 
 
-### Q&A
+## ubuntu
+## windows
+
+## plugins
+### tabnine
+
 - `YouCompleteMe unavailable: module 'collections' has no attribute 'Mapping'`
 
   > [!TIP]
@@ -129,6 +135,8 @@ $ make && sudo make install
   > ```bash
   > $ python --version
   > Python 3.10.4
+  > $ python-config --configdir
+  > /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10/config-3.10-darwin
   > ```
 
   - solution
@@ -138,7 +146,7 @@ $ make && sudo make install
 
     # mandatory
     $ cd ~/.vim/bundle/tabnine-vim
-    $ git co python3
+    $ git checkout python3
     $ find . -name "*.pyc" -delete
     $ python3 install.py
     Searching Python 3.10 libraries...
@@ -151,7 +159,3 @@ $ make && sudo make install
 
 - `Killed: 9`
   - by enable `--enable-cscope`
-
-
-## Ubuntu
-## windows
