@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [check where vim executable package](#check-where-vim-executable-package)
+- [check vimdoc with keyword](#check-vimdoc-with-keyword)
 - [tricky](#tricky)
 - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
 - [Switching case of characters](#switching-case-of-characters)
