@@ -11,6 +11,17 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> references:
+> - [CSS Selector Reference](https://www.w3schools.com/cssref/css_selectors.asp)
+> - [CSS Selectors](https://www.w3schools.com/css/css_selectors.asp)
+> - [Understand ‘+’, ‘>’ and ‘~’ symbols in CSS Selector](https://techbrij.com/css-selector-adjacent-child-sibling)
+> - [10 CSS3 Properties You Need to Be Familiar With](https://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048)
+> - [CSS: Cascading Style Sheets](https://developer.mozilla.org/en-US/docs/Web/CSS)
+>   - [:is()](https://developer.mozilla.org/en-US/docs/Web/CSS/:is)
+> - [A list of Font Awesome icons and their CSS content values](https://astronautweb.co/snippet/font-awesome/)
+{% endhint %}
+
 ## firefox
 ### [restart firefox](https://www.msftnext.com/how-to-restart-firefox-without-closing-tabs/)
 ```
