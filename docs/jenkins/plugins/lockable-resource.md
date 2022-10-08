@@ -195,38 +195,38 @@ stage('create') {
   ```
 
 ### [pickup qualified available resources randomly](https://stackoverflow.com/a/67801738/2940319)
-{% hint style='tip' %}
-- reference:
-- [imarslo: a list contains a sublist or not](../../programming/groovy/groovy.html#a-list-contains-a-sublist-or-not)
 
-**setup test labels**
-```groovy
-import org.jenkins.plugins.lockableresources.*
-
-LockableResourcesManager manager = org.jenkins
-                                      .plugins
-                                      .lockableresources
-                                      .LockableResourcesManager
-                                      .get()
-manager.createResourceWithLabel('marslo-test-1', 'windows,64bit,firefox')
-manager.createResourceWithLabel('marslo-test-2', 'CentOS,32bit,chrome')
-manager.createResourceWithLabel('marslo-test-3', 'RHEL,64bit,firefox')
-```
-
-**clean up environment**
-```groovy
-import org.jenkins.plugins.lockableresources.*
-
-LockableResourcesManager manager = org.jenkins
-                                      .plugins
-                                      .lockableresources
-                                      .LockableResourcesManager
-                                      .get()
-(1..3).each {
-  manager.resources.remove( manager.fromName("marslo-test-${it}") )
-}
-```
-{% endhint %}
+> [!TIP]
+> - reference:
+> - [imarslo: a list contains a sublist or not](../../programming/groovy/groovy.html#a-list-contains-a-sublist-or-not)
+>
+> **setup test labels**
+> ```groovy
+> import org.jenkins.plugins.lockableresources.*
+>
+> LockableResourcesManager manager = org.jenkins
+>                                       .plugins
+>                                       .lockableresources
+>                                       .LockableResourcesManager
+>                                       .get()
+> manager.createResourceWithLabel('marslo-test-1', 'windows,64bit,firefox')
+> manager.createResourceWithLabel('marslo-test-2', 'CentOS,32bit,chrome')
+> manager.createResourceWithLabel('marslo-test-3', 'RHEL,64bit,firefox')
+> ```
+>
+> **clean up environment**
+> ```groovy
+> import org.jenkins.plugins.lockableresources.*
+>
+> LockableResourcesManager manager = org.jenkins
+>                                       .plugins
+>                                       .lockableresources
+>                                       .LockableResourcesManager
+>                                       .get()
+> (1..3).each {
+>   manager.resources.remove( manager.fromName("marslo-test-${it}") )
+> }
+> ```
 
 ```groovy
 import org.jenkins.plugins.lockableresources.*

@@ -4,6 +4,7 @@
 
 - [crumb issuer](#crumb-issuer)
   - [using style in Jenkins](#using-style-in-jenkins)
+  - [Viewing Jenkins Jobs' Configuration as XML](#viewing-jenkins-jobs-configuration-as-xml)
   - [get crumb](#get-crumb)
   - [visit API via crumb](#visit-api-via-crumb)
   - [restart Jenkins instance](#restart-jenkins-instance)
@@ -38,7 +39,17 @@
 > - [bootstrap components](https://getbootstrap.com/docs/4.0/components/alerts/)
 > - [bootstrap utilities](https://getbootstrap.com/docs/4.0/utilities/borders/)
 >   - [bootstrap colors](https://getbootstrap.com/docs/4.0/utilities/colors/)
+> - [The Curious Case of the Slow Jenkins Job](https://marcesher.com/2017/06/27/the-curious-case-of-the-slow-jenkins-job/)
 {% endhint %}
+
+
+### [Viewing Jenkins Jobs' Configuration as XML](https://www.jvt.me/posts/2019/11/29/jenkins-config-xml/)
+1. install [Job Configuration History](https://plugins.jenkins.io/jobConfigHistory/)
+2. open in browser:
+   ```bash
+   Job URL:   http://localhost:8080/job/production-deploy/
+   Conig URL: http://localhost:8080/job/production-deploy/config.xml
+   ```
 
 #### alert
 

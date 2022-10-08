@@ -877,9 +877,23 @@ $ git log --oneline --author="<name@email.com>"
 
 ## clean
 ### clean untracked directory and item in `.gitignore`
+
+{% hint style='tip' %}
+> [gitignore.io](https://gitignore.io)
+{% endhint %}
+
 ```bash
 $ git clean -dfx
 ```
+
+- quick generate .gitignore
+  ```bash
+  # show result
+  $ curl -skL https://www.gitignore.io/api/groovy
+
+  # download
+  $ curl -skL https://www.toptal.com/developers/gitignore/api/groovy,java,python,go -o .gitignore
+  ```
 
 #### using `-f` twice if you really want to remove such a directory
 ```bash

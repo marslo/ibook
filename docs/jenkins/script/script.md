@@ -11,6 +11,7 @@
   - [get build status](#get-build-status)
   - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
+  - [get workspace](#get-workspace)
   - [shelve jobs](#shelve-jobs)
 - [list plugins](#list-plugins)
   - [via api : imarslo: list plugins](#via-api--imarslo-list-plugins)
@@ -28,7 +29,7 @@
 - [shared libs](#shared-libs)
   - [vars](#vars)
   - [src](#src)
-- [Asynchronous resource disposer](#asynchronous-resource-disposer)
+- [asynchronous resource disposer](#asynchronous-resource-disposer)
 - [exception](#exception)
 - [others](#others)
 
@@ -185,6 +186,16 @@ sshd.save()
 
 ### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
 - [list job which running for more than 24 hours](./build.html#list-all-builds-within-24-hours)
+
+### [get workspace](https://github.com/jenkinsci/job-dsl-plugin/blob/master/docs/User-Power-Moves.md#list-the-files-in-a-jenkins-jobs-workspace)
+```groovy
+hudson.FilePath workspace = hudson.model.Executor.currentExecutor().getCurrentWorkspace()
+```
+
+- [get absolute path](https://github.com/jenkinsci/job-dsl-plugin/wiki/Job-DSL-Commands#script-location)
+  ```groovy
+  println("script directory: ${new File(__FILE__).parent.absolutePath}")
+  ```
 
 ### [shelve jobs](https://support.cloudbees.com/hc/en-us/articles/236353928-Groovy-Scripts-To-Shelve-Jobs)
 ```groovy
@@ -344,16 +355,17 @@ plugins.each { plugin ->
   }
 
   [
-      'field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingSignature dangerous'         ,
-      'field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingSignature signature'         ,
-      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingThing getContext'           ,
-      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval approveSignature java.lang.String' ,
-      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingScripts'                 ,
-      'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingSignatures'              ,
-      'staticMethod org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval get'                         ,
-      'staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods flatten java.util.Set'                  ,
-      'method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild'
+    'field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingSignature dangerous'         ,
+    'field org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingSignature signature'         ,
+    'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval$PendingThing getContext'           ,
+    'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval approveSignature java.lang.String' ,
+    'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingScripts'                 ,
+    'method org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval getPendingSignatures'              ,
+    'staticMethod org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval get'                         ,
+    'staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods flatten java.util.Set'                  ,
+    'method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild'
   ].each { println "~~> ${it}"; approveSignature(it) }
+
   scriptApproval.save()
   ```
 
@@ -462,7 +474,7 @@ plugins.each { plugin ->
   def hashesToApprove = scriptApproval.pendingScripts
                                       .findAll{ it.script.startsWith(approvalPrefix) }
                                       .collect{ it.getHash() }
-  hashesToApprove.each { scriptApproval.approveScript( it ) }
+  hashesToApprove.each { scriptApproval.approveScript(it) }
   ```
 
 ### [disable the scriptApproval](https://stackoverflow.com/a/49372857/2940319)
@@ -502,15 +514,15 @@ Jenkins.instance.getItemByFullName("JobName")
 import hudson.model.Result
 import jenkins.model.CauseOfInterruption
 
-//iterate through current project runs
+// iterate through current project runs
 build.getProject()._getRuns().iterator().each { run ->
   def exec = run.getExecutor()
-    //if the run is not a current build and it has executor (running) then stop it
-    if( run != build && exec != null ) {
-      //prepare the cause of interruption
-      def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
-      exec.interrupt(Result.ABORTED, cause)
-    }
+  // if the run is not a current build and it has executor (running) then stop it
+  if( run != build && exec != null ) {
+    // prepare the cause of interruption
+    def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
+    exec.interrupt(Result.ABORTED, cause)
+  }
 }
 ```
 - [or](https://stackoverflow.com/a/49901413/2940319)
@@ -540,14 +552,14 @@ build.getProject()._getRuns().iterator().each { run ->
 
 - or: [cancel builds same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
   ```groovy
-  /*
-   Author: Isaac S Cohen
-   This script works with workflow to cancel other running builds for the same job
-   Use case: many build may go to QA, but only the build that is accepted is needed,
-   the other builds in the workflow should be aborted
-  */
+  /**
+   * Author: Isaac S Cohen
+   * This script works with workflow to cancel other running builds for the same job
+   * Use case: many build may go to QA, but only the build that is accepted is needed,
+   * the other builds in the workflow should be aborted
+  **/
 
-  def jobname = env.JOB_NAME
+  def jobname  = env.JOB_NAME
   def buildnum = env.BUILD_NUMBER.toInteger()
 
   def job = Jenkins.instance.getItemByFullName( jobname )
@@ -557,6 +569,7 @@ build.getProject()._getRuns().iterator().each { run ->
     build.doStop()
   }
   ```
+
 - or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
 
 
@@ -604,6 +617,7 @@ Jenkins.instance.getAllItems(Job.class).findAll {
 ```
 
 ## shared libs
+
 {% hint style='tip' %}
 > reference:
 > - [Jenkins Shared Libraries Workshop](https://www.slideshare.net/roidelapluie/jenkins-shared-libraries-workshop)
@@ -639,13 +653,13 @@ Jenkins.instance.getAllItems(Job.class).findAll {
 > - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
 > - [kellyrob99/setupNewServer.groovy](https://gist.github.com/kellyrob99/1907283)
 
-```
+```groovy
 @GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
 @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.9')
 import jenkins.model.Jenkins
 ```
 
-## [Asynchronous resource disposer](https://plugins.jenkins.io/resource-disposer)
+## [asynchronous resource disposer](https://plugins.jenkins.io/resource-disposer)
 ```groovy
 import org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer
 

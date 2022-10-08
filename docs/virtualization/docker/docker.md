@@ -32,11 +32,17 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
 > reference:
 > - [Docker 学习笔记](https://blog.opskumu.com/docker.html)
 > - [Understanding the Docker Internals](https://medium.com/%40BeNitinAgarwal/undersanding-the-docker-internals-7ccb052ce9fe)
 > - [Ideas for a cgroups UI](https://mairin.wordpress.com/2011/05/13/ideas-for-a-cgroups-ui/)
 > - [Configure Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#defining-a-liveness-command)
+> - [Docker for Windows: Deploying a docker-compose app to local Kubernetes](https://marcesher.com/2018/03/28/docker-for-windows-deploying-a-docker-compose-app-to-local-kubernetes/)
+> - [Windows for Linux Nerds](https://blog.jessfraz.com/post/windows-for-linux-nerds/)
+> - [Running Docker on WSL2 without Docker Desktop](https://technotes.adelerhof.eu/wsl/docker_on_wsl2/)
+> - [Copy Docker repositories](https://technotes.adelerhof.eu/post/migrate_docker/)
+{% endhint %}
 
 ## docker internals
 ![docker internals](../../screenshot/docker/docker-internals.p/ng)

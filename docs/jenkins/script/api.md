@@ -77,6 +77,8 @@ $ curl -v \
 | `BUILD_URL/kill` | hard kill a pipeline       |
 
 ## get builds information
+
+> [!TIP]
 > reference:
 > - [USING JENKINS / HUDSON REMOTE API TO CHECK JOBS STATUS](http://blog.dahanne.net/2014/04/02/using-jenkins-hudson-remote-api-to-check-jobs-status/)
 > - [justlaputa/jenkins-api.md](https://gist.github.com/justlaputa/5634984)
@@ -90,15 +92,17 @@ $ curl -v \
   ```
 
 - get particular fields for all builds
+
+  > [!TIP]
   > api format: `api/json?tree=allBuilds[Bartifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]`
 
   ```bash
   $ curl -s \
-        --globoff \
-        --cookie "${COOKIEJAR}" \
-        -H "${CRUMB}" \
-        'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/api/json?tree=allBuilds[artifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]' |
-        jq --raw-output .
+         --globoff \
+         --cookie "${COOKIEJAR}" \
+         -H "${CRUMB}" \
+         'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/api/json?tree=allBuilds[artifact,description,building,displayName,duration,estimatedDuration,fullDisplayName,id,number,queueId,result,timestamp,url]' |
+         jq --raw-output .
   ```
 
 ## list plugins
@@ -109,9 +113,10 @@ $ curl -s \
        --cookie "${COOKIEJAR}" \
        -H "${CRUMB}" \
        https://<JENKINS_DOMAIN_NAME>/pluginManager/api/json?depth=1  |
-       jq -r '.plugins[] | "\(.shortName):\(.version)"' | 
+       jq -r '.plugins[] | "\(.shortName):\(.version)"' |
        sort
 ```
+
 - [or](https://stackoverflow.com/a/17241066/2940319)
   ```bash
   $ curl -s \
@@ -182,6 +187,7 @@ $ curl -s https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/
   $ curl -s 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/workflowRun/action/parameter\[name="tester"\]/value' |
          sed -re 's:<[^>]+>([^<]+)<.*$:\1:'
   ```
+
 - i.e.:
   ```bash
   $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/*/action/parameter[name=%22id%22]'
@@ -196,6 +202,8 @@ $ curl -s https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/
   ```
 
 ### get all parameters via Json format
+
+> [!TIP]
 > api:
 > `https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]`
 
@@ -212,6 +220,7 @@ $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/
   "value": "female"
 }
 ```
+
 - [additional format](../../cheatsheet/character/json.md)
   ```bash
   $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]' | jq --raw-output '.actions[].parameters[]? | .name + "\t" + .value'
@@ -219,6 +228,7 @@ $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/
   gender	female
   ```
 
+> [!TIP]
 > **jq tips**
 > - [remove empty line from output](https://stackoverflow.com/a/44289083/2940319)
 > i.e.:
