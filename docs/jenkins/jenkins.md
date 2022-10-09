@@ -22,7 +22,7 @@
 1. install [Job Configuration History](https://plugins.jenkins.io/jobConfigHistory/)
 2. open in browser:
   ```bash
-    job url : http: //localhost:8080/job/<job-name>/
+  job url   : http: //localhost:8080/job/<job-name>/
   conig url : http: //localhost:8080/job/<job-name>/config.xml
   ```
 
@@ -30,7 +30,9 @@
 
 {% hint style='tip' %}
 > references:
-> - [bootstrap.min.css](https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css)
+> - [bootstrap.min.css 4.x](https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css)
+> - [bootstrap.min.css 5.x](https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css)
+>   - [Bootstrap Alerts](https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-alerts.php)
 > - [docs.min.css](https://getbootstrap.com/docs/4.0/assets/css/docs.min.css)
 > - [bootstrap components](https://getbootstrap.com/docs/4.0/components/alerts/)
 > - [bootstrap utilities](https://getbootstrap.com/docs/4.0/utilities/borders/)
@@ -50,7 +52,7 @@
 > </head>
 > ```
 
-- alert
+- bootstrap alert 4.0
   ![alert css](../screenshot/jenkins/description-alert-css.png)
 
 - callout
@@ -58,6 +60,61 @@
 
 #### alert
 
+<!--sec data-title="bootstrap-alert 5.x" data-id="section0" data-show=true data-collapse=true ces-->
+> [!TIP]
+> ```css
+> .alert{ --bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius) }
+> .alert-heading{ color:inherit }
+> .alert-link{ font-weight:700 }
+>
+> .fade{ transition:opacity .15s linear }
+> .fade:not(.show){ opacity:0 }
+>
+> .btn-close{ box-sizing:content-box;width:1em;height:1em;padding:.25em .25em;color:#000;background:transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;border:0;border-radius:.375rem;opacity:.5 }
+> .btn-close:hover{ color:#000;text-decoration:none;opacity:.75 }
+> .btn-close:focus{ outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25);opacity:1 }
+> .btn-close.disabled,.btn-close:disabled{ pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none;opacity:.25 }
+> .btn-close-white{ filter:invert(1) grayscale(100%) brightness(200%) }
+>
+> .alert-dismissible{ padding-right:3rem }
+> .alert-dismissible .btn-close{ position:absolute;top:0;right:0;z-index:2;padding:1.25rem 1rem }
+>
+> .alert-primary{ --bs-alert-color:#084298;--bs-alert-bg:#cfe2ff;--bs-alert-border-color:#b6d4fe }
+> .alert-primary .alert-link{ color:#06357a }
+>
+> .alert-secondary{ --bs-alert-color:#41464b;--bs-alert-bg:#e2e3e5;--bs-alert-border-color:#d3d6d8 }
+> .alert-secondary .alert-link{ color:#34383c }
+>
+> .alert-success{ --bs-alert-color:#0f5132;--bs-alert-bg:#d1e7dd;--bs-alert-border-color:#badbcc }
+> .alert-success .alert-link{ color:#0c4128 }
+>
+> .alert-info{ --bs-alert-color:#055160;--bs-alert-bg:#cff4fc;--bs-alert-border-color:#b6effb }
+> .alert-info .alert-link{ color:#04414d }
+>
+> .alert-warning{ --bs-alert-color:#664d03;--bs-alert-bg:#fff3cd;--bs-alert-border-color:#ffecb5 }
+> .alert-warning .alert-link{ color:#523e02 }
+>
+> .alert-danger{ --bs-alert-color:#842029;--bs-alert-bg:#f8d7da;--bs-alert-border-color:#f5c2c7 }
+> .alert-danger .alert-link{ color:#6a1a21 }
+>
+> .alert-light{ --bs-alert-color:#636464;--bs-alert-bg:#fefefe;--bs-alert-border-color:#fdfdfe }
+> .alert-light .alert-link{ color:#4f5050 }
+>
+> .alert-dark{ --bs-alert-color:#141619;--bs-alert-bg:#d3d3d4;--bs-alert-border-color:#bcbebf }
+> .alert-dark .alert-link{ color:#101214 }
+> ```
+>
+> - template
+>   ```html
+>   <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem;">
+>     <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">X Alert !</h4>
+>     This is a x alert with <a href="#" style="font-weight:700">an example link</a>. Give it a click if you like.
+>   </div>
+>   ```
+<!--endsec-->
+
+
+<!--sec data-title="bootstrap-alert 4.x" data-id="section1" data-show=true data-collapse=true ces-->
 > [!TIP]
 > ```css
 > .alert{ position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem }
@@ -99,30 +156,70 @@
 > .alert-dark hr{ border-top-color:#b9bbbe }
 > .alert-dark .alert-link{ color:#040505 }
 > ```
+>
+> - template
+>   ```html
+>   <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem;">
+>     <h4 style="color:inherit">X Alter !</h4>
+>     This is a x alert with <a href="#" style="">an example link</a>. Give it a click if you like.
+>   </div>
+>   ```
+<!--endsec-->
 
 - warning
-  ```html
-  <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#856404; background-color:#fff3cd; border-color:#ffeeba">
-    <h4 style="color:inherit">WARNING Alert !</h4>
-    This is a warning alert with <a href="#" style="color:#533f03">an example link</a>. Give it a click if you like.
-  </div>
-  ```
-
-  - original
+  - 5.x
     ```html
-    <div class="alert alert-warning" role="alert">
-      <h4 class="alert-heading">Warning Alert !</h4>
-      This is a warning alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+    <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; -bs-alert-color:#664d03;--bs-alert-bg:#fff3cd;--bs-alert-border-color:#ffecb5">
+      <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Warning Alert !</h4>
+      This is a warning alert with <a href="#" style="font-weight:700; color:#523e02">an example link</a>. Give it a click if you like.
     </div>
     ```
+    - original
+      ```html
+      <div class="alert alert-warning alert-dismissible fade show">
+        <h4 class="alert-heading">Warning Alert !</h4>
+        This is a warning alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
 
-- successful
-  ```html
-  <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#155724; background-color:#d4edda; border-color:#c3e6cb">
-    <h4 style="color:inherit">Success Alert !</h4>
-    This is a success alert with <a href="#" style="color:#0b2e13">an example link</a>. Give it a click if you like.
-  </div>
-  ```
+  - 4.x
+    ```html
+    <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#856404; background-color:#fff3cd; border-color:#ffeeba">
+      <h4 style="color:inherit">WARNING Alert !</h4>
+      This is a warning alert with <a href="#" style="color:#533f03">an example link</a>. Give it a click if you like.
+    </div>
+    ```
+    - original
+      ```html
+      <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Warning Alert !</h4>
+        This is a warning alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
+
+- success
+  - 5.0
+    ```html
+    <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#0f5132;--bs-alert-bg:#d1e7dd;--bs-alert-border-color:#badbcc">
+      <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Success Alert !</h4>
+      This is a success alert with <a href="#" style="font-weight:700; color:#0c4128">an example link</a>. Give it a click if you like.
+    </div>
+    ```
+    - original
+      ```html
+      <div class="alert alert-success alert-dismissible fade show">
+        <h4 class="alert-heading">Success Alert !</h4>
+        This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
+
+  - 4.0
+    ```html
+    <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#155724; background-color:#d4edda; border-color:#c3e6cb">
+      <h4 style="color:inherit">Success Alert !</h4>
+      This is a success alert with <a href="#" style="color:#0b2e13">an example link</a>. Give it a click if you like.
+    </div>
+    ```
 
   - original
     ```html
@@ -133,36 +230,82 @@
     ```
 
 - danger
-  ```html
-  <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#721c24; background-color:#f8d7da; border-color:#f5c6cb">
-    <h4 style="color:inherit">Danger Alter !</h4>
-    This is a danger alert with <a href="#" style="color:#491217">an example link</a>. Give it a click if you like.
-  </div>
-  ```
-
-  - original
+  - 5.x
     ```html
-    <div class="alert alert-danger" role="alert">
-      <h4 class="alert-heading">Danger Alert !</h4>
-      This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+    <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#842029;--bs-alert-bg:#f8d7da;--bs-alert-border-color:#f5c2c7">
+      <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Danger Alert !</h4>
+      This is a danger alert with <a href="#" style="font-weight:700; color:#6a1a21">an example link</a>. Give it a click if you like.
     </div>
     ```
+    - original
+      ```html
+      <div class="alert alert-danger alert-dismissible fade show">
+        <h4 class="alert-heading">Danger Alert !</h4>
+        This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
+
+  - 4.x
+    ```html
+    <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#721c24; background-color:#f8d7da; border-color:#f5c6cb">
+      <h4 style="color:inherit">Danger Alter !</h4>
+      This is a danger alert with <a href="#" style="color:#491217">an example link</a>. Give it a click if you like.
+    </div>
+    ```
+    - original
+      ```html
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Danger Alert !</h4>
+        This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
 
 - primary
-  ```html
-  <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#004085; background-color:#cce5ff; border-color:#b8daff">
-    <h4 style="color:inherit">Primary Alert !</h4>
-    This is a primary alert with <a href="#" style="color:#002752">an example link</a>. Give it a click if you like.
-  </div>
-  ```
-
-  - original
+  - 5.x
     ```html
-    <div class="alert alert-primary" role="alert">
-      <h4 class="alert-heading">Primary Alert !</h4>
-      This is a primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+    <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#084298;--bs-alert-bg:#cfe2ff;--bs-alert-border-color:#b6d4fe">
+      <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Primary Alert !</h4>
+      This is a primary alert with <a href="#" style="font-weight:700; color:#06357a">an example link</a>. Give it a click if you like.
     </div>
     ```
+    - original
+      ```html
+      <div class="alert alert-primary alert-dismissible fade show">
+        <h4 class="alert-heading">Primary Alert !</h4>
+        This is a primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
+
+  - 4.x
+    ```html
+    <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#004085; background-color:#cce5ff; border-color:#b8daff">
+      <h4 style="color:inherit">Primary Alert !</h4>
+      This is a primary alert with <a href="#" style="color:#002752">an example link</a>. Give it a click if you like.
+    </div>
+    ```
+    - original
+      ```html
+      <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading">Primary Alert !</h4>
+        This is a primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
+
+- info
+  - 5.x
+    ```html
+    <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#055160;--bs-alert-bg:#cff4fc;--bs-alert-border-color:#b6effb">
+      <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Info Alert !</h4>
+      This is a info alert with <a href="#" style="font-weight:700; color:#04414d">an example link</a>. Give it a click if you like.
+    </div>
+    ```
+    - original
+      ```html
+      <div class="alert alert-info alert-dismissible fade show">
+        <h4 class="alert-heading">Info Alert !</h4>
+        This is a info alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+      </div>
+      ```
 
 #### callout
 
