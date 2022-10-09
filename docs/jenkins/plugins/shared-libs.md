@@ -40,6 +40,7 @@
   - `+refs/pull/*:refs/remotes/@{remote}/pr/*`
   - `+refs/heads/*:refs/remotes/@{remote}/*`
 
+![gerrit libs](../../screenshot/jenkins/gerrit-libs.png)
 
 #### gerrit
 ```groovy
@@ -85,5 +86,3 @@ library (
   ])
 )
 ```
-
-
