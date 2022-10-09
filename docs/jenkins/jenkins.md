@@ -42,15 +42,29 @@
 {% endhint %}
 
 > [!NOTE|style:callout]
-> - using in html
-> ```html
-> <head>
-> <link href="https://getbootstrap.com/docs/4.0/assets/css/docs.min.css" rel="stylesheet" id="bootstrap-css">
-> <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-> <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-> </head>
-> ```
+> - bootstrap 4.x
+>   ```html
+>   <head>
+>   <link href="https://getbootstrap.com/docs/4.0/assets/css/docs.min.css" rel="stylesheet" id="bootstrap-css">
+>   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+>   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+>   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+>   </head>
+>   ```
+>
+> - [bootstap 5.x](https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-get-started.php)
+>   ```html
+>   <head>
+>       <meta charset="utf-8">
+>       <meta name="viewport" content="width=device-width, initial-scale=1">
+>       <!-- Bootstrap CSS -->
+>       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+>   </head>
+>   <body>
+>       <!-- Bootstrap JS Bundle with Popper -->
+>       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+>   </body>
+>   ```
 
 - bootstrap alert 4.x
   ![bootstrap 4.x alert css](../screenshot/jenkins/description-bootstrap-4.x-alert-css.png)
@@ -61,10 +75,10 @@
 - callout
   ![callout css](../screenshot/jenkins/description-callout-css.png)
 
-#### alert
+
+#### bootstrap alert
 
 <!--sec data-title="bootstrap-alert 5.x" data-id="section0" data-show=true data-collapse=true ces-->
-> [!TIP]
 > ```css
 > .alert{ --bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius) }
 > .alert-heading{ color:inherit }
@@ -117,8 +131,84 @@
 <!--endsec-->
 
 
-<!--sec data-title="bootstrap-alert 4.x" data-id="section1" data-show=true data-collapse=true ces-->
-> [!TIP]
+<!--sec data-title="bootstrap 5.x :root" data-id="section1" data-show=true data-collapse=true ces-->
+
+![bootstrap 5.x root colors](../screenshot/jenkins/bootstrap-5.x-root-colors.png)
+
+> ```css
+> :root{
+>   --bs-blue:#0d6efd;
+>   --bs-indigo:#6610f2;
+>   --bs-purple:#6f42c1;
+>   --bs-pink:#d63384;
+>   --bs-red:#dc3545;
+>   --bs-orange:#fd7e14;
+>   --bs-yellow:#ffc107;
+>   --bs-green:#198754;
+>   --bs-teal:#20c997;
+>   --bs-cyan:#0dcaf0;
+>   --bs-black:#000;
+>   --bs-white:#fff;
+>   --bs-gray:#6c757d;
+>   --bs-gray-dark:#343a40;
+>   --bs-gray-100:#f8f9fa;
+>   --bs-gray-200:#e9ecef;
+>   --bs-gray-300:#dee2e6;
+>   --bs-gray-400:#ced4da;
+>   --bs-gray-500:#adb5bd;
+>   --bs-gray-600:#6c757d;
+>   --bs-gray-700:#495057;
+>   --bs-gray-800:#343a40;
+>   --bs-gray-900:#212529;
+>   --bs-primary:#0d6efd;
+>   --bs-secondary:#6c757d;
+>   --bs-success:#198754;
+>   --bs-info:#0dcaf0;
+>   --bs-warning:#ffc107;
+>   --bs-danger:#dc3545;
+>   --bs-light:#f8f9fa;
+>   --bs-dark:#212529;
+>   --bs-primary-rgb:13,110,253;
+>   --bs-secondary-rgb:108,117,125;
+>   --bs-success-rgb:25,135,84;
+>   --bs-info-rgb:13,202,240;
+>   --bs-warning-rgb:255,193,7;
+>   --bs-danger-rgb:220,53,69;
+>   --bs-light-rgb:248,249,250;
+>   --bs-dark-rgb:33,37,41;
+>   --bs-white-rgb:255,255,255;
+>   --bs-black-rgb:0,0,0;
+>   --bs-body-color-rgb:33,37,41;
+>   --bs-body-bg-rgb:255,255,255;
+>   --bs-font-sans-serif:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+>   --bs-font-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+>   --bs-gradient:linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+>   --bs-body-font-family:var(--bs-font-sans-serif);
+>   --bs-body-font-size:1rem;
+>   --bs-body-font-weight:400;
+>   --bs-body-line-height:1.5;
+>   --bs-body-color:#212529;
+>   --bs-body-bg:#fff;
+>   --bs-border-width:1px;
+>   --bs-border-style:solid;
+>   --bs-border-color:#dee2e6;
+>   --bs-border-color-translucent:rgba(0, 0, 0, 0.175);
+>   --bs-border-radius:0.375rem;
+>   --bs-border-radius-sm:0.25rem;
+>   --bs-border-radius-lg:0.5rem;
+>   --bs-border-radius-xl:1rem;
+>   --bs-border-radius-2xl:2rem;
+>   --bs-border-radius-pill:50rem;
+>   --bs-link-color:#0d6efd;
+>   --bs-link-hover-color:#0a58ca;
+>   --bs-code-color:#d63384;
+>   --bs-highlight-bg:#fff3cd
+> }
+> ```
+<!--endsec-->
+
+
+<!--sec data-title="bootstrap-alert 4.x" data-id="section2" data-show=true data-collapse=true ces-->
 > ```css
 > .alert{ position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem }
 > .alert-heading{ color:inherit }
@@ -368,7 +458,9 @@
 > - [How TO - Callout Message](https://www.w3schools.com/HOWTO/howto_js_callout.asp)
 {% endhint %}
 
-> [!TIP]
+
+
+<!--sec data-title="callout css" data-id="section3" data-show=true data-collapse=true ces-->
 > ```css
 > .bd-callout { padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem }
 > .bd-callout h4 { margin-top: 0; margin-bottom: .25rem }
@@ -395,6 +487,7 @@
 > .bd-callout-default{ border-left-color: #6c757d }
 > .bd-callout-default h4 { color: #6c757d }
 > ```
+<!--endsec-->
 
 - default
   ```html
