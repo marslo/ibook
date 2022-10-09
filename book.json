@@ -172,7 +172,12 @@
       "elements": [".gitbook-link"]
     },
     "flexible-alerts": {
-      "style": "flat"
+      "style": "flat",
+      "comment": {
+        "label": "Comment",
+        "icon": "fa fa-comments",
+        "className": "info"
+      }
     },
     "expandable-chapters-small":{}
   }
