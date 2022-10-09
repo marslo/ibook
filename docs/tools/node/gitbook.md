@@ -7,7 +7,7 @@ search:
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [`gitbook-cli`](#gitbook-cli)
+- [gitbook-cli](#gitbook-cli)
   - [installation](#installation)
   - [initial `book.json`](#initial-bookjson)
 - [gitbook format](#gitbook-format)
@@ -15,6 +15,8 @@ search:
   - [tab](#tab)
   - [code](#code)
   - [emoji](#emoji)
+- [plugins](#plugins)
+  - [Flexible Alerts](#flexible-alerts)
 - [Q&A](#qa)
   - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
   - [`TypeError [ERR_INVALID_ARG_TYPE]` in `git init`](#typeerror-err_invalid_arg_type-in-git-init)
@@ -23,24 +25,28 @@ search:
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 {% hint style='tip' %}
-reference:
-- [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
-- [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
-- [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
-- [emoji](https://gist.github.com/rxaviers/7360908)
-- [gitbook howto](https://coding-notes.readthedocs.io/en/latest/rst/dt/gitbook.html)
-- [gitbook 安装配置](http://gitbook.wiliam.me/)
-- [GitBook插件整理 - book.json](https://blog.csdn.net/qq_43514847/article/details/86598399)
-- [Gitbook常用插件简介](https://blog.csdn.net/qq_37149933/article/details/64170653)
-- [gitbook使用及book.json详细配置](https://blog.csdn.net/gongch0604/article/details/107494736)
-- [GitBookによるドキュメント作成](https://qiita.com/mebiusbox2/items/938af4b0d0bf7a4d3e33)
-
-useful plugins
-- [gitbook-plugin-fbqx](https://ymcatar.gitbooks.io/gitbook-test/content/testing_fbqx.html)
+> reference:
+> - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
+> - [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
+> - [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
+> - [emoji](https://gist.github.com/rxaviers/7360908)
+> - [gitbook howto](https://coding-notes.readthedocs.io/en/latest/rst/dt/gitbook.html)
+> - [gitbook 安装配置](http://gitbook.wiliam.me/)
+> - [GitBook插件整理 - book.json](https://blog.csdn.net/qq_43514847/article/details/86598399)
+> - [Gitbook常用插件简介](https://blog.csdn.net/qq_37149933/article/details/64170653)
+> - [gitbook使用及book.json详细配置](https://blog.csdn.net/gongch0604/article/details/107494736)
+> - [GitBookによるドキュメント作成](https://qiita.com/mebiusbox2/items/938af4b0d0bf7a4d3e33)
+>
+> useful plugins
+> - [gitbook-plugin-fbqx](https://ymcatar.gitbooks.io/gitbook-test/content/testing_fbqx.html)
+>
+> resources:
+> - [FontAwesome](https://fontawesome.com/)
+> - [Google Font](https://fonts.google.com/)
+> - [Google Icon](https://fonts.google.com/icons)
 {% endhint %}
 
-
-## `gitbook-cli`
+## gitbook-cli
 ### installation
 
 - install
@@ -207,10 +213,11 @@ warning
 
 ### tab
 
-> [!TIP]
+> [!TIP|style:flat|icon:fa fa-bullhorn]
 > this function only for native [gitbook.io](https://www.gitbook.com/) <br>
 > example:
 > - [imarslo: kubernetes certicates](../../virtualization/kubernetes/certificates.html#check-info)
+> <br>
 > <br>
 > reference:
 > -[Templating](https://gitbookio.gitbooks.io/documentation/content/format/templating.html)
@@ -261,8 +268,53 @@ warning
 | :white_check_mark: | `:white_check_mark:` |
 | :four_leaf_clover: | `:four_leaf_clover:` |
 
+## plugins
+### Flexible Alerts
+
+> [!TIP]
+> references:
+> - [npm: docsify-plugin-flexible-alerts](https://www.npmjs.com/package/docsify-plugin-flexible-alerts)
+> - [fzankl/docsify-plugin-flexible-alerts](https://github.com/fzankl/docsify-plugin-flexible-alerts)
+
+#### setup
+> [!NOTE|style:callout|label:book.json|icon:fa fa-bullhorn]
+> - **book.json**:
+>   ```json
+>   {
+>     "plugins": [
+>       "flexible-alerts"
+>     ],
+>     "pluginsConfig": {
+>       "flexible-alerts": {
+>         "style": "callout",
+>         "comment": {
+>           "label": "Comment",
+>           "icon": "fa fa-comments",
+>           "className": "info"
+>         }
+>       }
+>     }
+>   }
+>   ```
+>
+> - And then installed via
+>   ```bash
+>   $ gitbook install
+>   # or package.json: { "scripts": { "built": "gitbook build --log=debug --debug" } }
+>   $ npm run built
+>   ```
+
+#### usage
+```markdown
+> [!TIP|style:flat|label:My own heading|iconVisibility:hidden]
+> An alert of type 'tip' using alert specific style 'flat' which overrides global style 'callout'.
+> In addition, this alert uses an own heading and hides specific icon.
+```
+
 ## Q&A
 ### `if (cb) cb.apply(this, arguments)`
+
+> [!NOTE|style:callout]
 > **reference**:
 > - [How I fixed a "cb.apply is not a function" error while using Gitbook](https://flaviocopes.com/cb-apply-not-a-function/)
 
