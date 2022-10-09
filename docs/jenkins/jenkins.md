@@ -21,54 +21,80 @@
 ### [Viewing Jenkins Jobs' Configuration as XML](https://www.jvt.me/posts/2019/11/29/jenkins-config-xml/)
 1. install [Job Configuration History](https://plugins.jenkins.io/jobConfigHistory/)
 2. open in browser:
-   ```bash
-   Job URL:   http://localhost:8080/job/<job-name>/
-   Conig URL: http://localhost:8080/job/<job-name>/config.xml
-   ```
+  ```bash
+    job url : http: //localhost:8080/job/<job-name>/
+  conig url : http: //localhost:8080/job/<job-name>/config.xml
+  ```
 
 ### using style in Jenkins
 
 {% hint style='tip' %}
 > references:
 > - [bootstrap.min.css](https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css)
+> - [docs.min.css](https://getbootstrap.com/docs/4.0/assets/css/docs.min.css)
 > - [bootstrap components](https://getbootstrap.com/docs/4.0/components/alerts/)
 > - [bootstrap utilities](https://getbootstrap.com/docs/4.0/utilities/borders/)
 >   - [bootstrap colors](https://getbootstrap.com/docs/4.0/utilities/colors/)
 > - [The Curious Case of the Slow Jenkins Job](https://marcesher.com/2017/06/27/the-curious-case-of-the-slow-jenkins-job/)
+> - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
 {% endhint %}
 
-#### alert
+> [!NOTE|style:callout]
+> - using in html
+> ```html
+> <head>
+> <link href="https://getbootstrap.com/docs/4.0/assets/css/docs.min.css" rel="stylesheet" id="bootstrap-css">
+> <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+> <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+> </head>
+> ```
 
-![description css](../screenshot/jenkins/description-css.png)
+- alert
+  ![alert css](../screenshot/jenkins/description-alert-css.png)
+
+- callout
+  ![callout css](../screenshot/jenkins/description-callout-css.png)
+
+#### alert
 
 > [!TIP]
 > ```css
 > .alert{ position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem }
 > .alert-heading{ color:inherit }
 > .alert-link{ font-weight:700 }
+>
 > .alert-dismissible{ padding-right:4rem }
 > .alert-dismissible .close{ position:absolute; top:0; right:0; padding:.75rem 1.25rem; color:inherit }
+>
 > .alert-primary{ color:#004085; background-color:#cce5ff; border-color:#b8daff }
 > .alert-primary hr{ border-top-color:#9fcdff }
 > .alert-primary .alert-link{ color:#002752 }
+>
 > .alert-secondary{ color:#383d41; background-color:#e2e3e5; border-color:#d6d8db }
 > .alert-secondary hr{ border-top-color:#c8cbcf }
 > .alert-secondary .alert-link{ color:#202326 }
+>
 > .alert-success{ color:#155724; background-color:#d4edda; border-color:#c3e6cb }
 > .alert-success hr{ border-top-color:#b1dfbb }
 > .alert-success .alert-link{ color:#0b2e13 }
+>
 > .alert-info{ color:#0c5460; background-color:#d1ecf1; border-color:#bee5eb }
 > .alert-info hr{ border-top-color:#abdde5 }
 > .alert-info .alert-link{ color:#062c33 }
+>
 > .alert-warning{ color:#856404; background-color:#fff3cd; border-color:#ffeeba }
 > .alert-warning hr{ border-top-color:#ffe8a1 }
 > .alert-warning .alert-link{ color:#533f03 }
+>
 > .alert-danger{ color:#721c24; background-color:#f8d7da; border-color:#f5c6cb }
 > .alert-danger hr{ border-top-color:#f1b0b7 }
 > .alert-danger .alert-link{ color:#491217 }
+>
 > .alert-light{ color:#818182; background-color:#fefefe; border-color:#fdfdfe }
 > .alert-light hr{ border-top-color:#ececf6 }
 > .alert-light .alert-link{ color:#686868 }
+>
 > .alert-dark{ color:#1b1e21; background-color:#d6d8d9; border-color:#c6c8ca }
 > .alert-dark hr{ border-top-color:#b9bbbe }
 > .alert-dark .alert-link{ color:#040505 }
@@ -77,7 +103,7 @@
 - warning
   ```html
   <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#856404; background-color:#fff3cd; border-color:#ffeeba">
-    <h4 style="color:inherit">Well done!</h4>
+    <h4 style="color:inherit">WARNING Alert !</h4>
     This is a warning alert with <a href="#" style="color:#533f03">an example link</a>. Give it a click if you like.
   </div>
   ```
@@ -85,7 +111,7 @@
   - original
     ```html
     <div class="alert alert-warning" role="alert">
-      <h4 class="alert-heading">Well done!</h4>
+      <h4 class="alert-heading">Warning Alert !</h4>
       This is a warning alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
     </div>
     ```
@@ -93,7 +119,7 @@
 - successful
   ```html
   <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#155724; background-color:#d4edda; border-color:#c3e6cb">
-    <h4 style="color:inherit">Well done!</h4>
+    <h4 style="color:inherit">Success Alert !</h4>
     This is a success alert with <a href="#" style="color:#0b2e13">an example link</a>. Give it a click if you like.
   </div>
   ```
@@ -101,16 +127,15 @@
   - original
     ```html
     <div class="alert alert-success" role="alert">
-      <h4 class="alert-heading">Well done!</h4>
+      <h4 class="alert-heading">Success Alert !</h4>
       This is a success alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
     </div>
     ```
 
-
 - danger
   ```html
   <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#721c24; background-color:#f8d7da; border-color:#f5c6cb">
-    <h4 style="color:inherit">Well done!</h4>
+    <h4 style="color:inherit">Danger Alter !</h4>
     This is a danger alert with <a href="#" style="color:#491217">an example link</a>. Give it a click if you like.
   </div>
   ```
@@ -118,7 +143,7 @@
   - original
     ```html
     <div class="alert alert-danger" role="alert">
-      <h4 class="alert-heading">Well done!</h4>
+      <h4 class="alert-heading">Danger Alert !</h4>
       This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
     </div>
     ```
@@ -126,7 +151,7 @@
 - primary
   ```html
   <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#004085; background-color:#cce5ff; border-color:#b8daff">
-    <h4 style="color:inherit">Well done!</h4>
+    <h4 style="color:inherit">Primary Alert !</h4>
     This is a primary alert with <a href="#" style="color:#002752">an example link</a>. Give it a click if you like.
   </div>
   ```
@@ -134,10 +159,141 @@
   - original
     ```html
     <div class="alert alert-primary" role="alert">
-      <h4 class="alert-heading">Well done!</h4>
+      <h4 class="alert-heading">Primary Alert !</h4>
       This is a primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
     </div>
     ```
+
+#### callout
+
+{% hint style='tip' %}
+> references:
+> - ["Bootstrap Calllouts"](https://bootsnipp.com/snippets/yNK5E)
+> - [Bootstrap Callouts](https://codepen.io/superjaberwocky/pen/rLKxOa)
+> - [mikeblum/callout.css](https://gist.github.com/mikeblum/aaffe654fc4f5a74c3b8b313fb43b2eb)
+> - [docs.min.css](https://getbootstrap.com/docs/4.0/assets/css/docs.min.css)
+> - [Callouts](https://rdmd.readme.io/docs/callouts)
+> - [How TO - Callout Message](https://www.w3schools.com/HOWTO/howto_js_callout.asp)
+{% endhint %}
+
+> [!TIP]
+> ```css
+> .bd-callout { padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem }
+> .bd-callout h4 { margin-top: 0; margin-bottom: .25rem }
+>
+> .bd-callout p:last-child { margin-bottom: 0 }
+> .bd-callout code { border-radius: .25rem }
+> .bd-callout+.bd-callout { margin-top: -.25rem }
+>
+> .bd-callout-info { border-left-color: #5bc0de }
+> .bd-callout-info h4 { color: #5bc0de }
+>
+> .bd-callout-warning { border-left-color: #f0ad4e }
+> .bd-callout-warning h4 { color: #f0ad4e }
+>
+> .bd-callout-danger { border-left-color: #d9534f }
+> .bd-callout-danger h4 { color: #d9534f }
+>
+> .bd-callout-primary{ border-left-color: #007bff }
+> .bd-callout-primary h4 { color: #007bff }
+>
+> .bd-callout-success{ border-left-color: #28a745 }
+> .bd-callout-success h4 { color: #28a745 }
+>
+> .bd-callout-default{ border-left-color: #6c757d }
+> .bd-callout-default h4 { color: #6c757d }
+> ```
+
+- default
+  ```html
+  <div style="display: block; padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: 0.25rem; border-radius: 0.25rem; border-left-color: #6c757d;">
+    <h4 style="margin-top: 0; margin-bottom: 0.25rem; color: #6c757d;">Default Callout</h4>
+    This is a default callout.
+  </div>
+  ```
+  - original
+    ```html
+    <div class="bd-callout bd-callout-default">
+      <h4>Default Callout</h4>
+      This is a default callout.
+    </div>
+    ```
+
+- primary
+  ```html
+  <div style="display: block; padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem; border-left-color: #007bff">
+    <h4 style="margin-top: 0; margin-bottom: 0.25rem; color: #007bff">Primary Callout</h4>
+    This is a primary callout.
+  </div>
+  ```
+  - original
+    ```html
+    <div class="bd-callout bd-callout-primary">
+      <h4>Primary Callout</h4>
+      This is a primary callout.
+    </div>
+    ```
+
+- warning
+  ```html
+  <div style="display: block; padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem; border-left-color: #f0ad4e">
+    <h4 style="margin-top: 0; margin-bottom: 0.25rem; color: #f0ad4e">Warning Callout</h4>
+    This is a warning callout.
+  </div>
+  ```
+  - original
+    ```html
+    <div class="bd-callout bd-callout-warning">
+      <h4>Warning Callout</h4>
+      This is a warning callout.
+    </div>
+    ```
+
+- danger
+  ```html
+  <div style="display: block; padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem; border-left-color: #d9534f">
+    <h4 style="margin-top: 0; margin-bottom: 0.25rem; color: #d9534f">Danger Callout</h4>
+    This is a danger callout.
+  </div>
+  ```
+  - original
+    ```html
+    <div class="bd-callout bd-callout-danger">
+      <h4>Danger Callout</h4>
+      This is a danger callout.
+    </div>
+    ```
+
+- succeed
+  ```html
+  <div style="display: block; padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem; border-left-color: #28a745">
+    <h4 style="margin-top: 0; margin-bottom: 0.25rem; color: #28a745">Succeed Callout</h4>
+    This is a succeed callout.
+  </div>
+  ```
+  - original
+    ```html
+    <div class="bd-callout bd-callout-success">
+      <h4>Success Callout</h4>
+      This is a success callout.
+    </div>
+    ```
+
+- info
+  ```html
+  <div style="display: block; padding: 1.25rem; margin-top: 1.25rem; margin-bottom: 1.25rem; border: 1px solid #eee; border-left-width: .25rem; border-radius: .25rem; border-left-color: #5bc0de">
+    <h4 style="margin-top: 0; margin-bottom: 0.25rem; color: #5bc0de">Info Callout</h4>
+    This is info callout.
+  </div>
+  ```
+  - original
+    ```html
+    <div class="bd-callout bd-callout-info">
+      <h4>Info Callout</h4>
+      This is an info callout.
+    </div>
+    ```
+
 
 ## crumb issuer
 
