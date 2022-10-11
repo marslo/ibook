@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [bootstrap](#bootstrap)
+  - [using boostrap sytles](#using-boostrap-sytles)
+- [alert](#alert)
+  - [bootstrap alert](#bootstrap-alert)
+  - [callout](#callout)
+- [kbd](#kbd)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 ## bootstrap
@@ -15,16 +27,7 @@
 > - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
 {% endhint %}
 
-
-## styles
-
-### alert
-{% hint style='tip' %}
-> references:
-> - [The Curious Case of the Slow Jenkins Job](https://marcesher.com/2017/06/27/the-curious-case-of-the-slow-jenkins-job/)
-> - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
-{% endhint %}
-
+### using boostrap sytles
 
 > [!NOTE|style:callout]
 > - bootstrap 4.x
@@ -51,17 +54,68 @@
 >   </body>
 >   ```
 
+- 4.x
+  ```html
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+      <title>Hello, world!</title>
+    </head>
+    <body>
+      <h1>Hello, world!</h1>
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+  </html>
+  ```
+
+- 5.x
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>original bootstrap 5.x alert</title>
+      <!-- Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  </head>
+  <body>
+      <h1>Hello, world!</h1>
+      <!-- Bootstrap JS Bundle with Popper -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+  </html>
+  ```
+
+
+## alert
+
+{% hint style='tip' %}
+> references:
+> - [The Curious Case of the Slow Jenkins Job](https://marcesher.com/2017/06/27/the-curious-case-of-the-slow-jenkins-job/)
+> - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
+{% endhint %}
+
+
+### bootstrap alert
+
 - bootstrap alert 4.x
-  ![bootstrap 4.x alert css](../screenshot/jenkins/description-bootstrap-4.x-alert-css.png)
+  ![alert css](../screenshot/jenkins/description-bootstrap-4.x-alert-css.png)
 
 - bootstrap alert 5.x
-  ![bootstrap 5.x alert css](../screenshot/jenkins/description-bootstrap-5.x-alert-css.png)
-
-- callout
-  ![callout css](../screenshot/jenkins/description-callout-css.png)
-
-
-#### bootstrap alert
+  ![alert css](../screenshot/jenkins/description-bootstrap-5.x-alert-css.png)
 
 <!--sec data-title="bootstrap-alert 5.x" data-id="section0" data-show=true data-collapse=true ces-->
 > ```css
@@ -444,6 +498,8 @@
 {% endhint %}
 
 
+- callout
+  ![callout css](../screenshot/jenkins/description-callout-css.png)
 
 <!--sec data-title="callout css" data-id="section3" data-show=true data-collapse=true ces-->
 > ```css
@@ -564,7 +620,7 @@
     </div>
     ```
 
-### kbd
+## kbd
 {% hint style='info' %}
 > references:
 > - [Nice effect with the KBD tag](https://www.rgagnon.com/jsdetails/js-nice-effect-the-KBD-tag.html)
@@ -576,7 +632,7 @@
 kbd {
   margin: 0px 0.1em;
   padding: 0.1em 0.6em;
-  border-radius: 1em;
+  border-radius: 3px;
   border: 1px solid #ccc;
   color: #333;
   line-height: 1.4;
@@ -592,7 +648,41 @@ kbd {
 }
 ```
 
+- [bootstrap kbd](https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css)
+  ```css
+  kbd {
+    font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    font-size:1em;
+    padding:.2rem .4rem;
+    font-size:87.5%;
+    color:#fff;
+    background-color:#212529;
+    border-radius:.2rem
+  }
+  kbd kbd {
+    padding:0;
+    font-size:100%;
+    font-weight:700;
+  }
+  ```
+
+- or
+  ```css
+  kbd {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #fff;
+    background-color: #333;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 -1px 0 rgb(0 0 0 / 25%);
+    box-shadow: inset 0 -1px 0 rgb(0 0 0 / 25%);
+  }
+  ```
+
 - or for html
   ```html
-  <a href="#" style="margin: 0px 0.1em;padding: 0.1em 0.6em;border-radius: 1em;border: 1px solid #ccc;color: #333;line-height: 1.4;font-size: 12px;display: inline-block;box-shadow: 0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #ffffff;background-color: rgb(247, 247, 247);text-shadow: 0 1px 0 #fff;">button</a>
+  <a href="#" style="margin:0px 0.1em;padding:0.1em 0.6em;border-radius:3px;border:1px solid #ccc;color:#333;line-height:1.4;font-size:12px;display:inline-block;box-shadow:0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #ffffff;background-color:rgb(247, 247, 247);text-shadow:0 1px 0 #fff;">button</a>
+
+  <!-- or -->
+  <a href="#" style="margin:0px 0.1em;padding:0.1em 0.6em;border-radius:3px;border:1px solid #ccc;box-shadow:0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #ffffff;text-shadow:0 1px 0 #fff;line-height:1.4;font-size:12.0px;background-color:rgb(247,247,247);display:inline-block;color:rgb(51,51,51);">click me</a>
   ```
