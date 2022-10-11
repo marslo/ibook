@@ -14,18 +14,23 @@
 
 
 ## theme
+
+> [!NOTE|style:callout|label:references|icon:fa fa-bullhorn]
 > reference:
 > - [github.com » github.page](https://docs.github.com/en/github/working-with-github-pages)
 > - theme
->   [jekyll-themes.com](https://jekyll-themes.com/)
->   [jekyllthemes.io](https://jekyllthemes.io/)
->   [jekyllthemes.org](http://jekyllthemes.org/)
->   [jamstackthemes.dev](https://jamstackthemes.dev/ssg/jekyll/)
->   [Solar](https://jekyll-themes.com/solar/)
->   [DevJoural](https://hemang.dev/DevJournal/)
+>   - [jekyll-themes.com](https://jekyll-themes.com/)
+>   - [jekyllthemes.io](https://jekyllthemes.io/)
+>   - [jekyllthemes.org](http://jekyllthemes.org/)
+>   - [jamstackthemes.dev](https://jamstackthemes.dev/ssg/jekyll/)
+>   - [Solar](https://jekyll-themes.com/solar/)
+>   - [DevJoural](https://hemang.dev/DevJournal/)
 
 ### `jekyll`
+
+> [!NOTE|style:callout|label:jekyll|icon:fa fa-bullhorn]
 > - [jellky usage](https://kbroman.org/simple_site/pages/local_test.html)
+> - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
 
 - install
   ```bash
@@ -51,9 +56,14 @@
   ```
 
 ## `gh-pages`
-> reference [How to build and deploy a React app to Github pages in less than 5 minutes](https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14)
+
+> [!NOTE|style:callout|label:gh-pages|icon:fa fa-bullhorn]
+> reference:
+> - [How to build and deploy a React app to Github pages in less than 5 minutes](https://medium.com/mobile-web-dev/how-to-build-and-deploy-a-react-app-to-github-pages-in-less-than-5-minutes-d6c4ffd30f14)
 
 ## [Please use a personal access token instead](https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/)
+
+> [!NOTE|style:callout|icon:fa fa-bullhorn]
 > references:
 > - [Authentication token format updates are generally available](https://github.blog/changelog/2021-03-31-authentication-token-format-updates-are-generally-available/)
 > - [Creating a personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
@@ -90,15 +100,17 @@ $ security delete-internet-password -l github.com
   ```
 
 - read password
-  > [imarslo: read password in osx](../../osx/util.html#get-wifi-password)
+
+  > [!NOTE|style:callout|icon:fa fa-bullhorn]
+  > [* imarslo: read password in osx](../../osx/util.html#get-wifi-password)
 
   ```bash
    $ sudo security find-internet-password -ws github.com [-a <account@mail.com>]
   ```
 
-  or read all information
-  ```bash
-  $ sudo security find-internet-password -gs github.com
-  ```
-![read password from keychain via `/usr/bin/security`](../../screenshot/git/git-keychain-token.png)
+  - or read all information
+    ```bash
+    $ sudo security find-internet-password -gs github.com
+    ```
 
+![read password from keychain via `/usr/bin/security`](../../screenshot/git/git-keychain-token.png)
