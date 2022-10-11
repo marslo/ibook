@@ -30,15 +30,15 @@
 
 {% hint style='tip' %}
 > references:
-> - [* imarslo: css alert](../tools/node/css.html)
+> - [* imarslo: css alert](../tools/css.html#alert)
 > - [The Curious Case of the Slow Jenkins Job](https://marcesher.com/2017/06/27/the-curious-case-of-the-slow-jenkins-job/)
 > - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
 {% endhint %}
 
-- bootstrap alert
+- [bootstrap alert](../tools/css.html#bootstrap-alert)
   ![bootstrap 5.x alert css](../screenshot/jenkins/description-bootstrap-5.x-alert-css.png)
 
-- callout
+- [callout](../tools/css.html#callout)
   ![callout css](../screenshot/jenkins/description-callout-css.png)
 
 - success
