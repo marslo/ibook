@@ -16,7 +16,29 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## tricky
+## basic
+
+### CPS
+
+{% hint style='tip' %}
+> references:
+> - [Configuring Content Security Policy](https://www.jenkins.io/doc/book/security/configuring-content-security-policy/)
+> - [Rendering User Content](https://www.jenkins.io/doc/book/security/user-content/)
+> - [How to Serve Resources from Jenkins](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-serve-resources-from-jenkins)
+> - [Content Security Policy (CSP) for Web Report](https://kb.froglogic.com/squish/integrations/jenkins/content-security-policy-csp-web-report/)
+> - [Unable to embed Jenkins page into an iframe. How to fix it?](http://help.collab.net/index.jsp?topic=/teamforge820/faq/embedjenkinsintoiframe.html)
+{% endhint %}
+
+
+The default rule set results in the following:
+- No JavaScript allowed at all
+- No plugins (object/embed) allowed
+- No inline CSS, or CSS from other sites allowed
+- No images from other sites allowed
+- No frames allowed
+- No web fonts allowed
+- No XHR/AJAX allowed
+
 
 ### [Viewing Jenkins Jobs' Configuration as XML](https://www.jvt.me/posts/2019/11/29/jenkins-config-xml/)
 1. install [Job Configuration History](https://plugins.jenkins.io/jobConfigHistory/)
@@ -32,7 +54,6 @@
 > references:
 > - [* imarslo: css alert](../tools/css.html#alert)
 > - [The Curious Case of the Slow Jenkins Job](https://marcesher.com/2017/06/27/the-curious-case-of-the-slow-jenkins-job/)
-> - [Jekyll Doc Theme 6.0: Alert](https://idratherbewriting.com/documentation-theme-jekyll/mydoc_alerts.html)
 {% endhint %}
 
 - [bootstrap alert](../tools/css.html#bootstrap-alert)
