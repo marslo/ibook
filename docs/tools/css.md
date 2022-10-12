@@ -8,6 +8,7 @@
   - [bootstrap alert](#bootstrap-alert)
   - [callout](#callout)
 - [kbd](#kbd)
+- [font](#font)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -686,3 +687,25 @@ kbd {
   <!-- or -->
   <a href="#" style="margin:0px 0.1em;padding:0.1em 0.6em;border-radius:3px;border:1px solid #ccc;box-shadow:0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #ffffff;text-shadow:0 1px 0 #fff;line-height:1.4;font-size:12.0px;background-color:rgb(247,247,247);display:inline-block;color:rgb(51,51,51);">click me</a>
   ```
+
+## font
+
+{% hint style='tip' %}
+> references:
+> - best fonts for developer
+>   - [Monaco](https://github.com/marslo/mytools/blob/master/others/fonts/monospace/monaco.ttf)
+>   - [Comic Mono](https://github.com/dtinth/comic-mono-font)
+>   - [Comic Shanns](https://github.com/shannpersand/comic-shanns)
+>   - [Cascadia Code](https://github.com/microsoft/cascadia-code/releases)
+>   - [monofur](https://github.com/marslo/mytools/blob/master/others/fonts/monospace/monofur.ttf)
+>   - [Andale Mono](https://github.com/marslo/mytools/blob/master/others/fonts/monospace/andalemono.ttf)
+>   - [Menlo](https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Menlo-Regular.ttf)
+>   - [Ubuntu Mono](https://design.ubuntu.com/font/)
+>   - [Consolas](https://github.com/marslo/mytools/blob/master/others/fonts/monospace/CONSOLA.TTF)
+>
+> - find fonts via image
+>   - [WhatTheFont Font](https://www.myfonts.com/pages/whatthefont)
+>   - [font matcherator](https://www.fontspring.com/matcherator)
+>   - [Identify Fonts](https://www.fontsquirrel.com/matcherator)
+>   - [font finder](https://www.whatfontis.com/)
+{% endhint %}
