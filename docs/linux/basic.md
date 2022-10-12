@@ -57,6 +57,8 @@
 > - [Bash/Prompt customization](https://wiki.archlinux.org/index.php/Bash/Prompt_customization)
 > - [Colors using tput](https://wiki.bash-hackers.org/scripting/terminalcodes#colors_using_tput)
 > - [What color codes can I use in my PS1 prompt?](https://unix.stackexchange.com/a/124409/29178)
+> - [joseluisq/terminal-git-branch-name.md](https://gist.github.com/joseluisq/1e96c54fa4e1e5647940)
+> - [How to show git branch in terminal and change terminal colours](https://www.stijit.com/engineering/show-git-branch-colours-terminal-mac.html)
 {% endhint %}
 
 ```bash

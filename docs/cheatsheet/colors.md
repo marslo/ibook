@@ -20,6 +20,8 @@
 > - [* XTerm Color Cheat Sheet](https://www.tweaking4all.com/software/linux-software/xterm-color-cheat-sheet/)
 > - [* Color names](https://proplot.readthedocs.io/en/stable/colors.html)
 > - [* Web colors](https://www.wikiwand.com/en/Web_colors)
+> - [* colors.sh](https://buildpy.readthedocs.io/en/latest/modules/core.html)
+> - [* fromhex() & tohex()](https://unix.stackexchange.com/a/269085/29178)
 > - [256 Foreground and Background Colors - Full Chart](https://pypi.org/project/colored/)
 > - [Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
 > - [Bash Colors](https://www.shellhacks.com/bash-colors/)
