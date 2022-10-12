@@ -2,7 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [tricky](#tricky)
+- [basic](#basic)
+  - [CPS](#cps)
   - [Viewing Jenkins Jobs' Configuration as XML](#viewing-jenkins-jobs-configuration-as-xml)
   - [using style in Jenkins](#using-style-in-jenkins)
 - [crumb issuer](#crumb-issuer)
