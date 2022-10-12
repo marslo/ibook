@@ -19,6 +19,7 @@
   - [get all vote CR-2](#get-all-vote-cr-2)
   - [who approval the V+1](#who-approval-the-v1)
   - [reference](#reference)
+- [css for code block](#css-for-code-block)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -625,3 +626,41 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 - [Gerrit push not working. Remote rejected, prohibited by gerrit](https://stackoverflow.com/a/31297860/2940319)
 - [Gerrit Code Review - Project Configuration File Format](https://gerrit-review.googlesource.com/Documentation/config-project-config.html)
 - [Review UI](https://gerrit-review.googlesource.com/Documentation/user-review-ui.html)
+
+## css for code block
+```css
+.gr-formatted-text-0 gr-linked-text.pre.gr-formatted-text,
+gr-linked-text[class*="pre"], gr-linked-text[class*="pre"] #output {
+  font-family: "Comic Mono", "Monaco", "Menlo", "Andale Mono", "Ubuntu Mono", "monofur" !important;
+  font-size: 16px !important;
+}
+.gr-formatted-text-0 gr-linked-text.pre.gr-formatted-text,
+gr-linked-text[class*="pre"] {
+  color: #e8dbb6 !important;
+  background: #272727 !important;
+  border-radius: .75em !important;
+  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+  overflow: auto;
+  display: block;
+  padding: 10px;
+  margin: 0px;
+}
+```
+
+- gruvbox
+  - background : `#272727`
+  - front-color: `#e8dbb6`
+
+  ![gruvbox code block](../../screenshot/gerrit/gerrit-code-block-gruvbox.png)
+
+- ubunut
+  - background : `#3a122e`
+  - front-color: `#eee`
+
+  ![ubuntu code block](../../screenshot/gerrit/gerrit-code-block-ubuntu.png)
+
+- solarized
+  - background : `#0d2a34`
+  - front-color: `#869395`
+
+  ![solarized code block](../../screenshot/gerrit/gerrit-code-block-solarized.png)
