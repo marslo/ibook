@@ -17,6 +17,7 @@
   - [And snippets](#and-snippets)
   - [finally](#finally)
 - [others](#others)
+  - [install font via command](#install-font-via-command)
   - [shutdown mac via commands](#shutdown-mac-via-commands)
   - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
   - [launch apps](#launch-apps)
@@ -201,6 +202,20 @@ $ mv groovyConsole.app/ /Applications/
 
 
 ## others
+
+### [install font via command](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)
+```bash
+$ curl --create-dirs \
+       -O \
+       --output-dir ~/.fonts \
+       https://dtinth.github.io/comic-mono-font/ComicMono.ttf && \
+  curl --create-dirs \
+       -O \
+       --output-dir ~/.fonts \
+       https://dtinth.github.io/comic-mono-font/ComicMono-Bold.ttf &&
+  fc-cache -f -v
+```
+
 ### shutdown mac via commands
 ```bash
 $ osascript -e 'tell app 'loginwindow' to «event aevtrsdn»'

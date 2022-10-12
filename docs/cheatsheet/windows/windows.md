@@ -330,6 +330,15 @@ Windows Registry Editor Version 5.00
 ```
 
 ## `shell`
+
+{% hint style='tip' %}
+> references:
+> - [What is Windows Terminal?](https://learn.microsoft.com/en-us/windows/terminal/?source=recommendations)
+> - [Appearance profile settings in Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/profile-appearance?source=recommendations)
+> - [Windows Terminal tips and tricks](https://learn.microsoft.com/en-us/windows/terminal/tips-and-tricks?source=recommendations)
+> - [Theme settings in Windows Terminal ([Preview](https://apps.microsoft.com/store/detail/windows-terminal-preview/9N8G5RFZ9XK3))](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/themes?source=recommendations)
+{% endhint %}
+
 ### <kbd>win</kbd> + <kbd>r</kbd>
 > references:
 > - [shell:folder](./shell-folder.html)
