@@ -8,7 +8,12 @@
 
 ## Generate Groovy API doc from command line
 
-> credit belongs to [HOW-TO Documenting Groovy with Groovydoc](https://www.javaworld.com/article/2074120/documenting-groovy-with-groovydoc.html)
+{% hint style='tip' %}
+> credit belongs to
+> - [HOW-TO Documenting Groovy with Groovydoc](https://www.javaworld.com/article/2074120/documenting-groovy-with-groovydoc.html)
+> references:
+> - [Documentation Comment Specification for the Standard Doclet (JDK 17)](https://docs.oracle.com/en/java/javase/17/docs/specs/javadoc/doc-comment-spec.html#link)
+{% endhint %}
 
 ```bash
 $ groovydoc -classpath /usr/local/Cellar/groovy/3.0.1/libexec/lib/ \
