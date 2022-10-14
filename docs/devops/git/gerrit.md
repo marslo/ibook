@@ -636,13 +636,13 @@ gr-linked-text[class*="pre"], gr-linked-text[class*="pre"] #output {
 }
 .gr-formatted-text-0 gr-linked-text.pre.gr-formatted-text,
 gr-linked-text[class*="pre"] {
-  color: #e8dbb6 !important;
+  color: #c8c8c8 !important;
   background: #272727 !important;
   border-radius: .75em !important;
   box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
   overflow: auto;
   display: block;
-  padding: 10px;
+  padding: 12px 12px 1px 12px;
   margin: 0px;
 }
 ```
