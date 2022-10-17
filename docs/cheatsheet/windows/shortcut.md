@@ -3,6 +3,8 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [shortcuts](#shortcuts)
+  - [windows terminal](#windows-terminal)
+  - [ubuntu 18.04](#ubuntu-1804)
   - [cmd admin](#cmd-admin)
   - [cmd admin without UAC check via Task Scheduler](#cmd-admin-without-uac-check-via-task-scheduler)
   - [lansettings](#lansettings)
@@ -26,6 +28,32 @@ reference :
 {% endhint %}
 
 ## shortcuts
+
+> [!TIP]
+> windows apps location: `%LocalAppData%\Microsoft\WindowsApps`
+
+### [windows terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701)
+
+{% hint style='tip' %}
+> reference :
+> - [8 Ways to Open the Windows Terminal in Windows 11](https://www.makeuseof.com/windows-11-open-windows-terminal/)
+{% endhint %}
+
+- insert commands
+  ```batch
+  %LocalAppData%\Microsoft\WindowsApps\wt.exe
+  ```
+
+- [icon](https://github.com/microsoft/terminal/blob/main/res/terminal.ico)
+
+
+### ubuntu 18.04
+
+- insert commands
+  ```batch
+  %LocalAppData%\Microsoft\WindowsApps\ubuntu1804.exe
+  ```
+
 
 ### cmd admin
 {% hint style='tip' %}
