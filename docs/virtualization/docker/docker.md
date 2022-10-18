@@ -12,7 +12,7 @@
 - [docker build](#docker-build)
 - [docker run](#docker-run)
   - [run into dind](#run-into-dind)
-  - [run to override ENTRYPOINT](#run-to-override-entrypoint)
+  - [run to override entrypoint](#run-to-override-entrypoint)
   - [runtime options with memory, cpus, and gpus](#runtime-options-with-memory-cpus-and-gpus)
   - [run with always restart](#run-with-always-restart)
 - [docker exec](#docker-exec)
@@ -45,7 +45,7 @@
 {% endhint %}
 
 ## docker internals
-![docker internals](../../screenshot/docker/docker-internals.p/ng)
+![docker internals](../../screenshot/docker/docker-internals.png)
 
 ### cgoups
 ![docker cgoups](../../screenshot/docker/docker-cgroup.png)
@@ -170,7 +170,7 @@ $ ubuntu@01acbffd94ec:~$ docker --version
 Docker version 18.06.1-ce, build e68fc7a
 ```
 
-### run to override ENTRYPOINT
+### run to override entrypoint
 ```bash
 $ docker run \
          --name marslo \
