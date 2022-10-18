@@ -42,6 +42,9 @@
 >   - `--disable-darwin` will make `-clipboard`
 
 ```bash
+# optional
+$ NPROC=$(getconf _NPROCESSORS_ONLN)
+
 $ make distclean && make clean
 $ ./configure --enable-rubyinterp \
               --enable-python3interp \
@@ -60,7 +63,7 @@ $ ./configure --enable-rubyinterp \
               --with-compiledby="marslo <marslo.jiao@gmail.com>" \
               --enable-fail-if-missing
 
-$ make && sudo make install
+$ make [-j${NPROC}] && sudo make install
 ```
 
 - additonal options

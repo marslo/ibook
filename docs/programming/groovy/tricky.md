@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [common](#common)
+  - [String](#string)
   - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
   - [split and trim in string](#split-and-trim-in-string)
   - [`indices` & `indexed()`](#indices--indexed)
@@ -31,7 +32,36 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> reference:
+> - [Groovy Cookbook](https://e.printstacktrace.blog/groovy-cookbook/)
+>   - [Three Groovy String methods that will make your life Groovier!](https://e.printstacktrace.blog/groovy-string-methods-that-will-make-your-life-groovier/)
+>   - [Groovy: split string and avoid getting IndexOutOfBoundsException](https://e.printstacktrace.blog/groovy-split-string-and-avoid-getting-index-out-of-bounds-exception/)
+{% endhint %}
+
+
 ## common
+
+### String
+```groovy
+println " HEADER ".center(50, "-")
+println "Number".padRight(20)      + ": 20"
+println "Name".padRight(20)        + ": John Doe"
+println "Address".padRight(20)     + ": 34 Some Street, London"
+println "Subscriber".padRight(20)  + ": YES"
+println "Expired".padRight(20)     + ": NO"
+```
+
+- result
+  ```
+  --------------------- HEADER ---------------------
+  Number              : 20
+  Name                : John Doe
+  Address             : 34 Some Street, London
+  Subscriber          : YES
+  Expired             : NO
+  ```
+
 ### get the first item if exists or null if empty
 ```groovy
 assert [:]?.find{true} == null
