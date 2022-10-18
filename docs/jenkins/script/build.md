@@ -13,6 +13,7 @@
   - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
 - [build](#build)
   - [build number](#build-number)
+  - [get build cause](#get-build-cause)
   - [get console output](#get-console-output)
   - [get changesets](#get-changesets)
   - [get SCM info](#get-scm-info)
@@ -263,6 +264,11 @@ return null
 
 ## build
 
+> [!TIP]
+> references:
+> - `currentBuild.class` == [Class RunWrapper](https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html)
+> - `currentBuild.rawBuild.class` == `Jenkins.instance.getItemByFullName(String).getBuildByNumber(int).class` == [Class WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
+
 {% hint style='tip' %}
 > references:
 > - [Jenkins : Find builds currently running that has been executing for more than N seconds](https://wiki.jenkins.io/display/JENKINS/Find-builds-currently-running-that-has-been-executing-for-more-than-N-seconds.html)
@@ -270,11 +276,22 @@ return null
 > - [Jenkins : Display jobs group by the build steps they use](https://wiki.jenkins.io/display/JENKINS/Display-jobs-group-by-the-build-steps-they-use.html)
 {% endhint %}
 
-> [!TIP]
-> references:
-> - `currentBuild.class` == [Class RunWrapper](https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html)
-> - `currentBuild.rawBuild.class` == `Jenkins.instance.getItemByFullName(String).getBuildByNumber(int).class` == [Class WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
-
+> [!TIP|style:flat|label:get builds|icon:fa fa-bullhorn]
+> - inherited from `hudson.model.Job` :
+>   - `WorkflowJob.getBuilds()` : `[marslo/sandbox #2, marslo/sandbox #1]`
+>   - `WorkflowJob.getBuildsAsMap()` : `[2:marslo/sandbox #2, 1:marslo/sandbox #1]`
+>   - `WorkflowJob.getLastFailedBuild()` : get last failed build
+>   - `WorkflowJob.getLastStableBuild()` : get last stable build
+>   - `WorkflowJob.getLastSuccessfulBuild()` : get last successful build
+>   - `WorkflowJob.getLastUnstableBuild()` : get last unstalbe build
+>   - `WorkflowJob.getLastUnsuccessfulBuild()` : get last unsuccessful build
+>   - `WorkflowJob.getLastCompletedBuild()` : get last completed only build
+> - from `org.jenkinsci.plugins.workflow.job.WorkflowJob` :
+>   - `WorkflowJob.getBuildByNumber(int n)` : get specific build by number
+>   - `WorkflowJob.getFirstBuild()` : get first build
+>   - `WorkflowJob.getLastBuild()` : get last build
+>   - `WorkflowJob.getNearestBuild(int n)` : gets the youngest build #m that satisfies n<=m.
+>   - `WorkflowJob.getNearestOldBuild(int n)` : gets the latest build #m that satisfies m<=n.
 
 ### build number
 
@@ -333,6 +350,45 @@ println """
     getLastUnsuccessfulBuild() : marslo/abort #42
                    isInQueue() : false
              getActions.causes : [42: [ExceededTimeout], 41: [ExceededTimeout], 40: [ExceededTimeout], 36: [ExceededTimeout], 35: [ExceededTimeout], 34: [ExceededTimeout], 33: [ExceededTimeout], 32: [], 31: [], 30: [ExceededTimeout], 29: [], 28: [], 27: [], 26: [], 24: [], 23: [], 22: [ExceededTimeout], 21: [], 20: [], 19: [ExceededTimeout], 18: [ExceededTimeout], 17: [], 16: [], 15: [], 14: [], 13: [], 12: [], 11: [], 10: [ExceededTimeout], 9: [ExceededTimeout], 8: [UserInterruption], 7: [ExceededTimeout], 6: [UserInterruption], 5: [UserInterruption], 4: [ExceededTimeout], 3: [ExceededTimeout], 2: [UserInterruption], 1: [ExceededTimeout]]
+  ```
+
+### get build cause
+```groovy
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+Jenkins.instance.getAllItems( Job.class ).findAll {
+  projects.any { p -> it.fullName.startsWith(p) }
+}.each {
+  println it.name + "\t -> " + it.fullName + "\t ~> " +
+          ( it.getLastBuild()?.getCauses()?.collect { it.getClass().getCanonicalName() }?.join(', ') ?: 'no build' )
+}
+
+"DONE"
+```
+- result
+  ```
+  user-trigger -> marslo/user-trigger ~> hudson.model.Cause.UserIdCause
+  sandbox      -> marslo/sandbox      ~> hudson.model.Cause.UserIdCause, org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+  whitebox     -> marslo/whitebox     ~> org.jenkinsci.plugins.workflow.support.steps.build.BuildUpstreamCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
+  replay       -> marslo/reply        ~> org.jenkinsci.plugins.workflow.cps.replay.ReplayCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
+  no-build     -> marslo/no-build     ~> no build
+  rebuild      -> marslo/rebuild      ~> org.jenkinsci.plugins.workflow.cps.replay.ReplayCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
+  upstream     -> marslo/upstream     ~> org.jenkinsci.plugins.workflow.support.steps.build.BuildUpstreamCause
+  Result: DONE
+  ```
+
+- or
+  ```groovy
+  List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+  Jenkins.instance.getAllItems( Job.class ).findAll {
+    projects.any { p -> it.fullName.startsWith(p) }
+  }.each {
+    println it.name + "\t -> " +
+            it.fullName + " :\n\t\t" +
+            (
+              it.getLastBuild()?.getCauses()?.collect { it.getClass().getCanonicalName() }.join('\n\t\t') ?: 'no-builds'
+            )
+  }
+  "DONE"
   ```
 
 ### get console output
