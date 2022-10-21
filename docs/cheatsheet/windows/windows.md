@@ -22,6 +22,7 @@
   - [issue about `"profile.d\Active"' is not recognized as an internal or external command`](#issue-about-profiled%5Cactive-is-not-recognized-as-an-internal-or-external-command)
   - [stop windows beep](#stop-windows-beep)
 - [`shell`](#shell)
+  - [utf-8 in windows terminal](#utf-8-in-windows-terminal)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
   - [debug in powershell](#debug-in-powershell)
   - [show all environment variables](#show-all-environment-variables)
@@ -338,6 +339,20 @@ Windows Registry Editor Version 5.00
 > - [Windows Terminal tips and tricks](https://learn.microsoft.com/en-us/windows/terminal/tips-and-tricks?source=recommendations)
 > - [Theme settings in Windows Terminal ([Preview](https://apps.microsoft.com/store/detail/windows-terminal-preview/9N8G5RFZ9XK3))](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/themes?source=recommendations)
 {% endhint %}
+
+### utf-8 in windows terminal
+
+> [!TIP]
+> - references:
+> - [Use UTF-8 code pages in Windows apps](https://learn.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page)
+> - [Using UTF-8 in the Windows Terminal](https://akr.am/blog/posts/using-utf-8-in-the-windows-terminal)
+> - [Using UTF-8 Encoding (CHCP 65001) in Command Prompt / Windows Powershell (Windows 10)](https://stackoverflow.com/a/57134096/2940319)
+> - [Terminal should force pseudoconsole host into UTF-8 codepage by default #1802](https://github.com/microsoft/terminal/issues/1802#issuecomment-508960470)
+> - [How to use unicode characters in Windows command line?](https://stackoverflow.com/a/33475373/2940319)
+> - [Change default code page of Windows console to UTF-8](https://superuser.com/a/269857/112396)
+
+![windows terminal utf-8](../../screenshot/win/wt-utf-8.png)
+
 
 ### <kbd>win</kbd> + <kbd>r</kbd>
 > references:
