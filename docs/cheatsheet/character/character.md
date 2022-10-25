@@ -667,7 +667,7 @@ $ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
   aa|bb|cc
   ```
 
-  [or](https://stackoverflow.com/a/50259959/2940319)
+- [or](https://stackoverflow.com/a/50259959/2940319)
   ```bash
   $ echo "${str//+([[:blank:]])/|}"
   aa|bb|cc
