@@ -172,6 +172,12 @@ $ tput cols
 ```
 
 ### [customized colorful output](https://unix.stackexchange.com/a/163781/29178)
+
+{% hint style='tip' %}
+> references:
+> - [imarslo: highlight output](../../cheatsheet/tricky.html#highlight-output)
+{% endhint %}
+
 ```bash
 $ export GREP_COLORS="sl=0;33;49:ms=1;34;49"
 $ find /etc/ -type f | head | grep --color=always '^\|[^/]*$'
