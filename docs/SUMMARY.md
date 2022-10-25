@@ -6,7 +6,7 @@
   * [aql](artifactory/aql.md)
 * [cheatsheet](cheatsheet/good.md)
   * [bash](cheatsheet/bash/bash.md)
-    * [coding standard](cheatsheet/bash/coding.md)
+    * [syntactic sugar](cheatsheet/bash/sugar.md)
   * [windows](cheatsheet/windows/windows.md)
     * [shortcut](cheatsheet/windows/shortcut.md)
     * [clsid](cheatsheet/windows/clsid.md)
