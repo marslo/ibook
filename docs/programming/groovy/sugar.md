@@ -62,6 +62,12 @@ println "Expired".padRight(20)     + ": NO"
   Expired             : NO
   ```
 
+#### substring for integers
+```groovy
+String str = 'abc12'
+assert 'abc' == "${str - ~/\d+\s*/}"
+```
+
 ### get the first item if exists or null if empty
 ```groovy
 assert [:]?.find{true} == null

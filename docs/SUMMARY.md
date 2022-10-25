@@ -135,7 +135,7 @@
     * [string](programming/groovy/string.md)
     * [enum](programming/groovy/enum.md)
     * [utility](programming/groovy/utility.md)
-    * [tricky](programming/groovy/tricky.md)
+    * [syntactic sugar](programming/groovy/sugar.md)
   * [python](programming/python/python.md)
     * [config](programming/python/config.md)
     * [basic](programming/python/basic.md)
