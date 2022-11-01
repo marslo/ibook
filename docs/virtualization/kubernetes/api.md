@@ -7,10 +7,9 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
-
 {% hint style='tip' %}
 > references:
+> - [* Kubernetes API Basics - Resources, Kinds, and Objects](https://iximiuz.com/en/posts/kubernetes-api-structure-and-terminology/)
 > - [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
 > - [* one-page api reference for kubernetes v1.24](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/)
 > - [* Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/)
@@ -91,6 +90,9 @@
 >   - are created automatically when the Kubernetes service has type LoadBalancer
 >   - use UDP/TCP only
 >   - implementation varies by cloud provider.
+
+
+![kubernetes API structure](../../screenshot/k8s/kube-api-structure-3000-opt.png)
 
 ## acess cluster
 ```bash
