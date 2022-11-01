@@ -82,10 +82,10 @@
 
 ## show server.crt
 ```bash
-$ k -n kube-system \
-       get secrets my-tls \
-       -o yaml \
-       -o "jsonpath={.data['tls\.crt']}" |
+$ kubectl -n kube-system \
+          get secrets my-tls \
+          -o yaml \
+          -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
     sed '/-----END CERTIFICATE-----/q' |
     openssl x509 -text -noout |
@@ -96,10 +96,10 @@ $ k -n kube-system \
 
 ## show ca.crt
 ```bash
-$ k -n kube-system \
-       get secrets my-tls \
-       -o yaml \
-       -o "jsonpath={.data['tls\.crt']}" |
+$ kubectl -n kube-system \
+          get secrets my-tls \
+          -o yaml \
+          -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
     awk '/-BEGIN CERTIFICATE-/ && c++, /-END CERTIFICATE-/' |
     openssl x509 -text -noout |

@@ -103,7 +103,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 ### setup
 - ns
   ```bash
-  $ cat << EOF | k apply -f -
+  $ cat << EOF | kubectl apply -f -
   ---
   kind: Namespace
   apiVersion: v1
@@ -116,7 +116,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 - sa
   ```bash
-  $ cat << EOF | k apply -f -
+  $ cat << EOF | kubectl apply -f -
   ---
   apiVersion: v1
   kind: ServiceAccount
@@ -145,7 +145,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 - pv & pvc
   ```bash
-  $ cat << EOF | k apply -f -
+  $ cat << EOF | kubectl apply -f -
   ---
   kind: PersistentVolume
   apiVersion: v1
@@ -180,7 +180,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 - deploy
   ```bash
-  $ cat << EOF | k apply -f -
+  $ cat << EOF | kubectl apply -f -
   ---
   apiVersion: extensions/v1beta1
   kind: Deployment
@@ -257,7 +257,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 - svc
   ```bash
-  $ cat << EOF | k apply -f -
+  $ cat << EOF | kubectl apply -f -
   ---
   apiVersion: v1
   kind: Service
@@ -281,7 +281,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 - ingress
   ```bash
-  $ cat << EOF | k apply -f -
+  $ cat << EOF | kubectl apply -f -
   apiVersion: extensions/v1beta1
   kind: Ingress
   metadata:

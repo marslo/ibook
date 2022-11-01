@@ -18,5 +18,5 @@ $ kubectl get events --field-selector type=Warning --all-namespaces --sort-by='{
 
 ### list particular events
 ```bash
-$ k get event --field-selector=involvedObject.name =foo -w
+$ kubectl get event --field-selector=involvedObject.name =foo -w
 ```

@@ -256,7 +256,7 @@ $ source ~/.bashrc
   data:
     tls.crt: $(cat $HOME/.devops/certs/server.csr | base64 -w0)
     tls.key: $(cat $HOME/.devops/certs/server.key | base64 -w0)" |
-  k apply -f -
+  kubectl apply -f -
   ```
 
 ### duplicate secrets to the other ns
@@ -268,7 +268,7 @@ $ source ~/.bashrc
 {% endhint %}
 
 ```bash
-$ k -n ingress-nginx get secrets my-certs -o yaml --export | k apply -n devops -f -
+$ kubectl -n ingress-nginx get secrets my-certs -o yaml --export | kubectl apply -n devops -f -
 ```
 
 ## token

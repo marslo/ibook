@@ -16,24 +16,24 @@
 
 ## list node with label
 ```bash
-$ k get no -l <label>=<value>
+$ kubectl get node-l <label>=<value>
 ```
 
 ### update label of node
 ```bash
-$ k label no <node-name> <label>=<value> [--overwrite]
+$ kubectl label node<node-name> <label>=<value> [--overwrite]
 ```
 
 ## show
 ### show with labels
 ```bash
-$ k get no --show-labels
+$ kubectl get node--show-labels
 ```
 
 ### show particular labels
 - `-label-columns`
   ```bash
-  $ k get no --label-columns <label-name>
+  $ kubectl get node--label-columns <label-name>
   ```
   - e.g.:
     ```bash
@@ -50,12 +50,12 @@ $ k get no --show-labels
     ```
 - `-l`
   ```bash
-  $ k get no --show-labels -l node-role.kubernetes.io/master
+  $ kubectl get node--show-labels -l node-role.kubernetes.io/master
   ```
 
 ### show with particular columns
 ```bash
-$ k get no -o custom-columns=NAME:.metadata.name,VER:.status.nodeInfo.kubeletVersion
+$ kubectl get node-o custom-columns=NAME:.metadata.name,VER:.status.nodeInfo.kubeletVersion
 NAME          VER
 k8s-node01    v1.12.3
 k8s-node02    v1.12.3
@@ -65,17 +65,17 @@ k8s-node03    v1.12.3
 
 ### show only scheduled nodes
 ```bash
-$ k get no \
-        --output 'jsonpath={range $.items[*]}{.metadata.name} {.spec.taints[*].effect}{"\n"}{end}' \
-        | awk '!/NoSchedule/{print $1}'
+$ kubectl get node\
+        --output 'jsonpath={range $.items[*]}{.metadata.name} {.spec.taints[*].effect}{"\n"}{end}' |
+        awk '!/NoSchedule/{print $1}'
 ```
 
 ## sort
 ### sort via kubelet version
 ```bash
-$ k get node --sort-by={.status.nodeInfo.kubeletVersion}
+$ kubectl get node --sort-by={.status.nodeInfo.kubeletVersion}
 ```
 - or
   ```bash
-  $ k get nodes --sort-by={.metadata.labels."kubernetes\.io\/role"}
+  $ kubectl get nodes --sort-by={.metadata.labels."kubernetes\.io\/role"}
   ```
