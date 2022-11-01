@@ -38,13 +38,13 @@
 ## [filter via `--field-selector`](https://stackoverflow.com/a/50811992/2940319)
 ### list all `Failed` pods
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     --field-selector status.phase=Failed
 ```
 
 ### filter via Node Name
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     [-o wide] \
     --field-selector spec.nodeName=master-node01
 NAME                              READY   STATUS    RESTARTS   AGE     IP            NODE            NOMINATED NODE   READINESS GATES
@@ -53,7 +53,7 @@ devops-jenkins-659f4c6d44-d2w76   1/1     Running   0          2d22h   **.***.*.
 
 - filter all pods running in particular node
   ```bash
-  $ k --all-namespaces get po \
+  $ kubectl --all-namespaces get po \
       [-o wide] \
       --field-selector spec.nodeName=<node_name>
   ```
@@ -61,7 +61,7 @@ devops-jenkins-659f4c6d44-d2w76   1/1     Running   0          2d22h   **.***.*.
 - filter all pods running in particular node via `--template`
   {% raw %}
   ```bash
-  $ k -n <namespace> get po \
+  $ kubectl -n <namespace> get po \
       --template '{{range .items}}{{if eq .spec.nodeName "<nodeName>"}}{{.metadata.name}}{{"\n"}}{{end}}}{{end}}'
   ```
   {% endraw %}
@@ -84,9 +84,9 @@ $ kubectl get po -o json |
 ```bash
 $ ns='my-namespace'
 $ keyword='tester'
-$ for p in $(k -n ${ns} get po --field-selector status.phase=Failed -o=name | /bin/grep ${keyword}); do
+$ for p in $(kubectl -n ${ns} get po --field-selector status.phase=Failed -o=name | /bin/grep ${keyword}); do
     echo "--- ${p} --- ";
-    k -n ${ns} describe ${p} | grep -E 'Annotations|Status|Reason|Message';
+    kubectl -n ${ns} describe ${p} | grep -E 'Annotations|Status|Reason|Message';
 done
 ```
 
@@ -94,24 +94,24 @@ done
 
 ### sorting pods by nodeName
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     -o wide \
     --sort-by="{.spec.nodeName}"
 ```
 
 ### sort pods by restartCount
 ```bash
-$ k -n <namespace> get po --sort-by="{.status.containerStatuses[:1].restartCount}"
+$ kubectl -n <namespace> get po --sort-by="{.status.containerStatuses[:1].restartCount}"
 ```
 
 ### sort by restart count
 ```bash
-$ k -n <namespace> get pods --sort-by=.status.containerStatuses[0].restartCount
+$ kubectl -n <namespace> get pods --sort-by=.status.containerStatuses[0].restartCount
 ```
 
 ### sort via start time
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     --sort-by=.status.startTime
 ```
 
@@ -121,14 +121,14 @@ $ k -n <namespace> get po \
 {% endhint %}
 
 ```bash
-$ k -n <namepsace> get pods \
+$ kubectl -n <namepsace> get pods \
     --sort-by=.metadata.creationTimestamp \
     -o jsonpath='{.items[-1:].metadata.name}'
 ```
 
 ### sort via created time
 ```bash
-$ k -n <namespace> get pods \
+$ kubectl -n <namespace> get pods \
     --sort-by=.metadata.creationTimestamp
 ```
 
@@ -143,38 +143,38 @@ $ k -n <namespace> get pods \
 {% endhint %}
 
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     --field-selector status.phase=Failed
 ```
 
 #### list and delete all error status pods
 ```bash
-$ for i in $(k get po --no-headers --all-namespaces --field-selector status.phase=Failed -o=custom-columns=NAMESPACE:.metadata.namespace | sort -u); do
-    k -n $i delete po --field-selector status.phase=Failed --force --grace-period=0
+$ for i in $(kubectl get po --no-headers --all-namespaces --field-selector status.phase=Failed -o=custom-columns=NAMESPACE:.metadata.namespace | sort -u); do
+    kubectl -n $i delete po --field-selector status.phase=Failed --force --grace-period=0
   done
 ```
 
 - or
   ```bash
-  $ k -n <namespace> delete po \
+  $ kubectl -n <namespace> delete po \
       --field-selector status.phase=Failed
   ```
 
 - [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346746104)
   ```bash
-  $ k -n <namespace> get po \
+  $ kubectl -n <namespace> get po \
       --field-selector=status.phase!=Running
   ```
 
 - [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-504405180)
   ```bash
-  $ k --all-namespaces get po \
-      --field-selector=status.phase!=Running,status.phase!=Succeeded
+  $ kubectl --all-namespaces get po \
+            --field-selector=status.phase!=Running,status.phase!=Succeeded
   ```
 
 - [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346573122)
   ```bash
-  $ k get po --all-namespaces -o json  \
+  $ kubectl get po --all-namespaces -o json  \
           | jq -r '.items[] \
           | select(.status.phase != "Running" \
                    or ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 \
@@ -184,7 +184,7 @@ $ for i in $(k get po --no-headers --all-namespaces --field-selector status.phas
 
 ### [list all pods statuses only](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     -o=jsonpath='{.items[*].status.phase}'
 Running Running Running Running Running Running Running Running Running
 ```
@@ -211,7 +211,7 @@ $ k4 -n <namespace> get po -o jsonpath="{..image}" |
 
 ### list running pods
 ```bash
-$ k -n <namespace> get po \
+$ kubectl -n <namespace> get po \
     -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
 NAME                                        STATUS    NODE
 coredns-59dd98b545-7t25l                    Running   k8s-node01
@@ -230,7 +230,7 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 
 #### `-o name`
 ```bash
-$ k -n kube-system get pods -o name |
+$ kubectl -n kube-system get pods -o name |
   head
 pod/coredns-c7ddbcccb-5cj5z
 pod/coredns-c7ddbcccb-lxsw6
@@ -247,7 +247,7 @@ pod/kube-controller-manager-node03
 #### `--template`
 {% raw %}
 ```bash
-$ k -n kube-system get pods \
+$ kubectl -n kube-system get pods \
     -o go-template \
     --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
     head
@@ -267,7 +267,7 @@ kube-controller-manager-node03
 - or
   {% raw %}
   ```bash
-  $ k -n kube-system get pods \
+  $ kubectl -n kube-system get pods \
       --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
       head
   coredns-c7ddbcccb-5cj5z
@@ -286,7 +286,7 @@ kube-controller-manager-node03
 #### custom-columns
 - `Name:.metadata.name`
   ```bash
-  $ k get po --all-namespaces \
+  $ kubectl get po --all-namespaces \
              -o=custom-columns=NAMESPACE:.metadata.namespace
   ```
 - `NODE:.spec.nodeName`
@@ -300,19 +300,19 @@ kube-controller-manager-node03
 
 ##### [list all images running in particular namespace](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#formatting-output)
   ```bash
-  $ k -n <namespace> get po \
-      --output=custom-columns="NAME:.metadata.name,IMAGE:.spec.containers[*].image"
+  $ kubectl -n <namespace> get po \
+            --output=custom-columns="NAME:.metadata.name,IMAGE:.spec.containers[*].image"
   ```
 
   - list all images exclude `'k8s.gcr.io/coredns:1.6.2'`
     ```bash
-    $ k --all-namespaces get pods \
-        -o=custom-columns='DATA:spec.containers[?(@.image!="k8s.gcr.io/coredns:1.6.2")].image'
+    $ kubectl --all-namespaces get pods \
+              -o=custom-columns='DATA:spec.containers[?(@.image!="k8s.gcr.io/coredns:1.6.2")].image'
     ```
 
 ##### [list via `-o custom-columns=":metadata.name"`](https://stackoverflow.com/a/52691455/2940319)
 ```bash
-$ k -n kube-system get pods -o custom-columns=":metadata.name" | head
+$ kubectl -n kube-system get pods -o custom-columns=":metadata.name" | head
 coredns-c7ddbcccb-5cj5z
 coredns-c7ddbcccb-lxsw6
 coredns-c7ddbcccb-prjfk
@@ -325,7 +325,7 @@ kube-apiserver-node01
 ```
 ##### QOS
 ```bash
-$ k -n kube-system get po \
+$ kubectl -n kube-system get po \
     -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,QOS-CLASS:.status.qosClass
 NAME                                        NAMESPACE     QOS-CLASS
 coredns-59dd98b545-7t25l                    kube-system   Burstable
@@ -350,25 +350,25 @@ kube-flannel-ds-amd64-b4th7                 kube-system   Guaranteed
 
 #### get the first deploy name in namespace
 ```bash
-$ k -n <namespace> get deploy \
+$ kubectl -n <namespace> get deploy \
     -o=jsonpath={.items[0].metadata.name}
 ```
 #### get all deploy names
 ```bash
-$ k -n <namespace> get deploy \
+$ kubectl -n <namespace> get deploy \
     -o=jsonpath='{.items[*].metadata.name}'
 ```
 
 #### `item.metadata.name`
 - list via `jsonpath={.items..metadata.name}`
   ```bash
-  $ k -n kube-system get po \
+  $ kubectl -n kube-system get po \
       --output=jsonpath={.items..metadata.name}
   coredns-c7ddbcccb-5cj5z coredns-c7ddbcccb-lxsw6 coredns-c7ddbcccb-prjfk ...
   ```
   - or
     ```bash
-    $ k -n kube-system get po \
+    $ kubectl -n kube-system get po \
         -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
         head -10
     coredns-c7ddbcccb-5cj5z
@@ -411,7 +411,7 @@ $ kubectl get pods \
 
 ### execute in pod
 ```bash
-$ k -n devops exec -it devops-jenkins-659f4c6d44-d2w76 -- /bin/bash
+$ kubectl -n devops exec -it devops-jenkins-659f4c6d44-d2w76 -- /bin/bash
 jenkins@devops-jenkins-659f4c6d44-d2w76:/$ echo $HOME
 /var/jenkins_home
 jenkins@devops-jenkins-659f4c6d44-d2w76:/$ hostname
@@ -429,11 +429,11 @@ devops-jenkins-659f4c6d44-d2w76
 {% endhint %}
 
 ```bash
-$ k -n <namespace> get po <po-name> -o yaml | k replace --force -f -
+$ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
 ```
 - result
   ```bash
-  $ k -n <namespace> get po -w
+  $ kubectl -n <namespace> get po -w
   NAME                   READY    STATUS    RESTARTS   AGE
   mypo-659f4c6d44-72hb5   1/1     Running   0          47h
   mypo-659f4c6d44-72hb5   1/1     Terminating   0          47h
@@ -453,5 +453,5 @@ $ k -n <namespace> get po <po-name> -o yaml | k replace --force -f -
   ```
   - or
     ```bash
-    $ k -n <namespace> scale deployment <name> --replicas=0
+    $ kubectl -n <namespace> scale deployment <name> --replicas=0
     ```

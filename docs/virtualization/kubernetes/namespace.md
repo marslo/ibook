@@ -2,15 +2,38 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [create namespace](#create-namespace)
 - [remove stuck namespace](#remove-stuck-namespace)
   - [check which item occupied the resource](#check-which-item-occupied-the-resource)
   - [remove challenge.certmanager](#remove-challengecertmanager)
 - [list](#list)
   - [list all namespaces with name only](#list-all-namespaces-with-name-only)
   - [list all quota in cluster](#list-all-quota-in-cluster)
-- [Reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='info' %}
+> Reference:
+> - [deleting namespace stuck at "Terminating" state](https://github.com/kubernetes/kubernetes/issues/60807#issuecomment-408599873)
+> - [A namespace is stuck in the Terminating state](https://www.ibm.com/docs/en/cloud-private/3.2.0?topic=console-namespace-is-stuck-in-terminating-state)
+{% endhint %}
+
+## create namespace
+```bash
+$ cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: <name>
+  labels:
+    name: <name>
+EOF
+```
+- or
+  ```bash
+  $ kaubectl create namespace <name>
+  $ kubectl label namespace <name> name=<name> --overwrite
+  ```
 
 ## remove stuck namespace
 ### check which item occupied the resource
@@ -44,7 +67,7 @@ default   1         2y351d
   done
   ```
 
-  <!--sec data-title="api resoureces" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="api resoureces results" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   ----- configmaps ------
   No resources found.
@@ -129,23 +152,24 @@ default   1         2y351d
 ### remove challenge.certmanager
 
 ```bash
-$ k -n marslo-test delete challenges.certmanager.k8s.io  marslo-dashboard-2318568841-0 --force --grace-period=0
+$ kubectl -n marslo-test delete challenges.certmanager.k8s.io marslo-dashboard-2318568841-0 \
+          --force --grace-period=0
 warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
 challenge.certmanager.k8s.io "marslo-dashboard-2318568841-0" force deleted
 ####
 stuck
 ####
 
-$ k get ns
+$ kubectl get ns
 NAME                   STATUS        AGE
 cert-manager           Active        103d
 ...
 marslo-test            Terminating   103d
 ...
 
-$ k delete namespace cert-manager
+$ kubectl delete namespace cert-manager
 
-$ k -n marslo-test describe challenges.certmanager.k8s.io
+$ kubectl -n marslo-test describe challenges.certmanager.k8s.io
 Name:         marslo-dashboard-2318568841-0
 Namespace:    marslo-test
 Labels:       acme.cert-manager.io/order-name=marslo-dashboard-2318568841
@@ -187,13 +211,13 @@ Spec:
 Status:
   Presented:   true
   Processing:  true
-  Reason:      Waiting for http-01 challenge propagation: failed to perform self check GET request 'http://marslo-dashboard.mycompany.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY': Get http://marslo-dashboard.mycompany.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY: dial tcp: lookup marslo-dashboard.mycompany.com on 10.96.0.10:53: no such host
+  Reason:      Waiting for http-01 challenge propagation: failed to perform self checkubectl get request 'http://marslo-dashboard.mycompany.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY': Get http://marslo-dashboard.mycompany.com/.well-known/acme-challenge/cq9ofBV9ugv0zdf6ZMoPtFJjhuNrg17hVbAzQK1t2HY: dial tcp: lookup marslo-dashboard.mycompany.com on 10.96.0.10:53: no such host
   State:       pending
 Events:        <none>
 
 
 ## inspired from https://github.com/jetstack/cert-manager/issues/1582#issuecomment-515354712
-$ k -n marslo-test edit challenges.certmanager.k8s.io  marslo-dashboard-2318568841-0
+$ kubectl -n marslo-test edit challenges.certmanager.k8s.io  marslo-dashboard-2318568841-0
 challenge.certmanager.k8s.io/marslo-dashboard-2318568841-0 edited
 ## manual remove the finalizer
 ```
@@ -205,27 +229,24 @@ $ kubectl get ns -o custom-columns=":metadata.name" --no-headers
 ```
 - or
   ```bash
-  $ k get ns -o name
+  $ kubectl get ns -o name
   ```
 - or
   ```bash
-  $ k get ns --no-headers -o name
+  $ kubectl get ns --no-headers -o name
   ```
 
 ### list all quota in cluster
 ```bash
-while read ns; do
-  echo "~~~~~~~~~~~~ ${ns} ~~~~~~~~~~~~~"
-  k4 -n ${ns} describe quota
-done < <(k4 get ns -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+$ while read ns; do
+    echo "~~~~~~~~~~~~ ${ns} ~~~~~~~~~~~~~"
+    kubectl -n ${ns} describe quota
+  done < <(kubectl get ns -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
 ```
-or
-```bash
-$ while IFS= read -rd ' ' ns; do
-  echo "~~~> ${ns}"
-  k -n ${ns} describe quota
-done < <(k4 get ns -o jsonpath="{.items[*].metadata.name}"
-```
-
-## Reference
-- [deleting namespace stuck at "Terminating" state](https://github.com/kubernetes/kubernetes/issues/60807#issuecomment-408599873)
+- or
+  ```bash
+  $ while IFS= read -rd ' ' ns; do
+      echo "~~~> ${ns}"
+      kubectl -n ${ns} describe quota
+    done < <(kubectl get ns -o jsonpath="{.items[*].metadata.name}"
+  ```
