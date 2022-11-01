@@ -16,91 +16,115 @@
 ### check which item occupied the resource
 
 ```bash
-$ myns='marslo-test'
-$ for _i in $(kubectl api-resources --verbs=list --namespaced -o name); do
-  echo ----- ${_i} ------
-  kubectl get -n ${myns} ${_i}
-done
+$ ns='marslo-test'
+$ for _r in $(kubectl api-resources --verbs=list --namespaced -o name); do
+    if [[ 'No resources found.' != "$(kubectl get -n ${ns} ${_r} 2>&1 >/dev/null)" ]]; then
+      echo "---- ${_r} ----"
+      kubectl get -n ${ns} ${_r}
+    fi
+  done
 
-# result:
------ configmaps ------
-No resources found.
------ endpoints ------
-No resources found.
------ events ------
-No resources found.
------ limitranges ------
-No resources found.
------ persistentvolumeclaims ------
-No resources found.
------ pods ------
-No resources found.
------ podtemplates ------
-No resources found.
------ replicationcontrollers ------
-No resources found.
------ resourcequotas ------
-No resources found.
------ secrets ------
-No resources found.
------ serviceaccounts ------
-No resources found.
------ services ------
-No resources found.
------ controllerrevisions.apps ------
-No resources found.
------ daemonsets.apps ------
-No resources found.
------ deployments.apps ------
-No resources found.
------ replicasets.apps ------
-No resources found.
------ statefulsets.apps ------
-No resources found.
------ horizontalpodautoscalers.autoscaling ------
-No resources found.
------ cronjobs.batch ------
-No resources found.
------ jobs.batch ------
-No resources found.
------ certificaterequests.certmanager.k8s.io ------
-No resources found.
------ certificates.certmanager.k8s.io ------
-No resources found.
------ challenges.certmanager.k8s.io ------
-NAME                            STATE     DOMAIN                         AGE
-marslo-dashboard-2318568841-0   pending   marslo-dashboard.mycompany.com   72m
------ issuers.certmanager.k8s.io ------
-No resources found.
------ orders.certmanager.k8s.io ------
-No resources found.
------ leases.coordination.k8s.io ------
-No resources found.
------ events.events.k8s.io ------
-No resources found.
------ daemonsets.extensions ------
-No resources found.
------ deployments.extensions ------
-No resources found.
------ ingresses.extensions ------
-No resources found.
------ networkpolicies.extensions ------
-No resources found.
------ replicasets.extensions ------
-No resources found.
------ pods.metrics.k8s.io ------
-No resources found.
------ ingresses.networking.k8s.io ------
-No resources found.
------ networkpolicies.networking.k8s.io ------
-No resources found.
------ poddisruptionbudgets.policy ------
-No resources found.
------ rolebindings.rbac.authorization.k8s.io ------
-No resources found.
------ roles.rbac.authorization.k8s.io ------
-No resources found.
+---- resourcequotas ----
+NAME                     CREATED AT
+builder-resource-quota   2019-11-15T17:12:52Z
+---- secrets ----
+NAME                  TYPE                                  DATA   AGE
+default-token-l4s96   kubernetes.io/service-account-token   3      2y351d
+---- serviceaccounts ----
+NAME      SECRETS   AGE
+default   1         2y351d
 ```
+
+- or
+  ```bash
+  $ myns='marslo-test'
+  $ for _i in $(kubectl api-resources --verbs=list --namespaced -o name); do
+    echo ----- ${_i} ------
+    kubectl get -n ${myns} ${_i}
+  done
+  ```
+
+  <!--sec data-title="api resoureces" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  ----- configmaps ------
+  No resources found.
+  ----- endpoints ------
+  No resources found.
+  ----- events ------
+  No resources found.
+  ----- limitranges ------
+  No resources found.
+  ----- persistentvolumeclaims ------
+  No resources found.
+  ----- pods ------
+  No resources found.
+  ----- podtemplates ------
+  No resources found.
+  ----- replicationcontrollers ------
+  No resources found.
+  ----- resourcequotas ------
+  No resources found.
+  ----- secrets ------
+  No resources found.
+  ----- serviceaccounts ------
+  No resources found.
+  ----- services ------
+  No resources found.
+  ----- controllerrevisions.apps ------
+  No resources found.
+  ----- daemonsets.apps ------
+  No resources found.
+  ----- deployments.apps ------
+  No resources found.
+  ----- replicasets.apps ------
+  No resources found.
+  ----- statefulsets.apps ------
+  No resources found.
+  ----- horizontalpodautoscalers.autoscaling ------
+  No resources found.
+  ----- cronjobs.batch ------
+  No resources found.
+  ----- jobs.batch ------
+  No resources found.
+  ----- certificaterequests.certmanager.k8s.io ------
+  No resources found.
+  ----- certificates.certmanager.k8s.io ------
+  No resources found.
+  ----- challenges.certmanager.k8s.io ------
+  NAME                            STATE     DOMAIN                         AGE
+  marslo-dashboard-2318568841-0   pending   marslo-dashboard.mycompany.com   72m
+  ----- issuers.certmanager.k8s.io ------
+  No resources found.
+  ----- orders.certmanager.k8s.io ------
+  No resources found.
+  ----- leases.coordination.k8s.io ------
+  No resources found.
+  ----- events.events.k8s.io ------
+  No resources found.
+  ----- daemonsets.extensions ------
+  No resources found.
+  ----- deployments.extensions ------
+  No resources found.
+  ----- ingresses.extensions ------
+  No resources found.
+  ----- networkpolicies.extensions ------
+  No resources found.
+  ----- replicasets.extensions ------
+  No resources found.
+  ----- pods.metrics.k8s.io ------
+  No resources found.
+  ----- ingresses.networking.k8s.io ------
+  No resources found.
+  ----- networkpolicies.networking.k8s.io ------
+  No resources found.
+  ----- poddisruptionbudgets.policy ------
+  No resources found.
+  ----- rolebindings.rbac.authorization.k8s.io ------
+  No resources found.
+  ----- roles.rbac.authorization.k8s.io ------
+  No resources found.
+  ```
+  <!--endsec-->
 
 ### remove challenge.certmanager
 
@@ -169,7 +193,7 @@ Events:        <none>
 
 
 ## inspired from https://github.com/jetstack/cert-manager/issues/1582#issuecomment-515354712
-$ k -n marslo-test edit challenges.certmanager.k8s.io  marslo-dashboard-2318568841-0 
+$ k -n marslo-test edit challenges.certmanager.k8s.io  marslo-dashboard-2318568841-0
 challenge.certmanager.k8s.io/marslo-dashboard-2318568841-0 edited
 ## manual remove the finalizer
 ```
@@ -177,12 +201,16 @@ challenge.certmanager.k8s.io/marslo-dashboard-2318568841-0 edited
 ## list
 ### list all namespaces with name only
 ```bash
-$ k get ns -o name
+$ kubectl get ns -o custom-columns=":metadata.name" --no-headers
 ```
-or
-```bash
-$ k get ns --no-headers -o name
-```
+- or
+  ```bash
+  $ k get ns -o name
+  ```
+- or
+  ```bash
+  $ k get ns --no-headers -o name
+  ```
 
 ### list all quota in cluster
 ```bash
