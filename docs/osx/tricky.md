@@ -31,6 +31,7 @@
   - [show message on desktop](#show-message-on-desktop)
   - [modify font in plist](#modify-font-in-plist)
   - [show process details](#show-process-details)
+  - [launch iOS simulator](#launch-ios-simulator)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -659,3 +660,22 @@ $ sudo jamf displayMessage -message "Hello World!"
 
 ### show process details
 ![activity monitor](../screenshot/osx/activity-monitor.png)
+
+### [launch iOS simulator](https://medium.com/@abrisad_it/how-to-launch-ios-simulator-and-android-emulator-on-mac-cd198295532e)
+```bash
+$ xcrun simctl list
+$ open -a Simulator --args -CurrentDeviceUDID <your device UDID>
+```
+- install the application on the device
+  ```bash
+  $ xcrun simctl install <your device UDID> <path to application bundle>
+  $ xcrun simctl launch <your device UDID> <app bundle identifier>
+  ```
+  - or
+    ```bash
+    $ open -a Simulator.app
+    ```
+  - or
+    ```bash
+    $ open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
+    ```
