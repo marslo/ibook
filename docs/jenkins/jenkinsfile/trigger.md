@@ -51,22 +51,20 @@ properties([
 ])
 ```
 
-### triggered by
+## triggered by
 
 {% hint style='tip' %}
 > references:
 > - [gitlab](https://stackoverflow.com/a/55366682/2940319)
 > - [CauseAction.class](https://javadoc.jenkins.io/hudson/model/CauseAction.html)
+>   - [Cause.UpstreamCause](https://javadoc.jenkins-ci.org/hudson/model/Cause.UpstreamCause.html)
+>   - [Cause.UserIdCause](https://javadoc.jenkins.io/hudson/model/Cause.UserIdCause.html)
+>   - [RebuildCause](https://javadoc.jenkins.io/plugin/rebuild/com/sonyericsson/rebuild/RebuildCause.html)
+>   - [ReplayCause](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/replay/ReplayCause.html)
+>   - [TimerTrigger.TimerTriggerCause](https://javadoc.jenkins.io/hudson/triggers/TimerTrigger.TimerTriggerCause.html)
+>   - [ParameterizedTimerTriggerCause](https://javadoc.jenkins.io/plugin/parameterized-scheduler/org/jenkinsci/plugins/parameterizedscheduler/ParameterizedTimerTriggerCause.html)
 > - [source code : yet-another-build-visualizer-plugin](https://www.programcreek.com/java-api-examples/?code=jenkinsci%2Fyet-another-build-visualizer-plugin%2Fyet-another-build-visualizer-plugin-master%2Fsrc%2Fmain%2Fjava%2Fcom%2Faxis%2Fsystem%2Fjenkins%2Fplugins%2Fdownstream%2Fyabv%2FBuildFlowAction.java)
 {% endhint %}
-
-- gitlab
-  ```groovy
-  currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData()
-
-  // or
-  commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
-  ```
 
 - get build cause
   ```groovy
@@ -94,7 +92,7 @@ properties([
 
         cause                               : [hudson.model.Cause$UserIdCause@bf8cb337]
         cause.getClass()                    : class java.util.Collections$UnmodifiableRandomAccessList : java.util.Collections.UnmodifiableRandomAccessList
-        build.getCause( UserIdCause.class ) : hudson.model.Cause$UserIdCause@bf8cb337 
+        build.getCause( UserIdCause.class ) : hudson.model.Cause$UserIdCause@bf8cb337
     ```
 
 - get user id if triggered by manually
@@ -132,6 +130,8 @@ properties([
   import hudson.triggers.TimerTrigger.TimerTriggerCause
   import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
   import org.jenkinsci.plugins.parameterizedscheduler.ParameterizedTimerTriggerCause
+  import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+  import com.sonyericsson.rebuild.RebuildCause
 
   def getCasuedBy( workflowRun build = currentBuild.rawBuild ) {
       CauseAction causeAction = currentBuild.rawBuild.getAction(CauseAction.class)
@@ -139,8 +139,50 @@ properties([
         if ( cause instanceof Cause.UpstreamCause            ) println ( 'by upstream'                  )
         if ( cause instanceof Cause.UserIdCause              ) println ( 'by user'                      )
         if ( cause instanceof ReplayCause                    ) println ( 'by reply'                     )
+        if ( cause instanceof RebuildCause                   ) println ( 'by rebuild'                   )
         if ( cause instanceof TimerTriggerCause              ) println ( 'by timer'                     )
         if ( cause instanceof ParameterizedTimerTriggerCause ) println ( 'by ParameterizedTimerTrigger' )
       }
   }
   ```
+- gitlab
+
+  <!--sec data-title="gitlab cause" data-id="section1" data-show=true data-collapse=true ces-->
+  ```groovy
+  currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData()
+  // or
+  commit = currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData().getLastCommit()
+  ```
+  <!--endsec-->
+
+
+### libs
+```groovy
+import hudson.model.Cause.*
+import hudson.triggers.TimerTrigger.TimerTriggerCause
+import org.jenkinsci.plugins.parameterizedscheduler.ParameterizedTimerTriggerCause
+import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+import com.sonyericsson.rebuild.RebuildCause
+
+Boolean byCron( WorkflowRun build = currentBuild.rawBuild ) {
+  build.getCause( TimerTriggerCause.class ) && true
+}
+Boolean byParameterizedCron( WorkflowRun build = currentBuild.rawBuild ) {
+  build.getCause( ParameterizedTimerTriggerCause.class ) && true
+}
+Boolean byTimer( WorkflowRun build = currentBuild.rawBuild ) {
+  byCron( build ) || byParameterizedCron( build )
+}
+Boolean byUpstream( WorkflowRun build = currentBuild.rawBuild ) {
+  build.getCause( Cause.UpstreamCause.class ) && true
+}
+Boolean byUserId( WorkflowRun build = currentBuild.rawBuild ) {
+  build.getCause( Cause.UserIdCause.class ) && true
+}
+Boolean byReplay( WorkflowRun build = currentBuild.rawBuild ) {
+  byUserId( build ) && build.getCause( ReplayCause.class )
+}
+Boolean byRebuild( WorkflowRun build = currentBuild.rawBuild ) {
+  byUserId( build ) && build.getCause( RebuildCause.class )
+}
+```

@@ -410,7 +410,7 @@ Jenkins.instance
 
 ### get changesets
 
-#### code clone via
+#### code clone via DSL
 ```groovy
 checkout([
   $class: 'GitSCM',
@@ -538,6 +538,45 @@ job.changeSets
         absoluteUrl : https://my.gerrit.com/admin/repos/sandbox?a=commit&h=095e4470964ee8ca6ab50ceea7acf88094dc08d4
            commitId : 095e4470964ee8ca6ab50ceea7acf88094dc08d4 : 095e4470964ee8ca6ab50ceea7acf88094dc08d4
   ```
+
+### get build cause
+
+{% hint style='tip' %}
+> references:
+> - [Cause.UpstreamCause](https://javadoc.jenkins-ci.org/hudson/model/Cause.UpstreamCause.html)
+> - [Cause.UserIdCause](https://javadoc.jenkins.io/hudson/model/Cause.UserIdCause.html)
+> - [RebuildCause](https://javadoc.jenkins.io/plugin/rebuild/com/sonyericsson/rebuild/RebuildCause.html)
+> - [ReplayCause](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/replay/ReplayCause.html)
+> - [TimerTrigger.TimerTriggerCause](https://javadoc.jenkins.io/hudson/triggers/TimerTrigger.TimerTriggerCause.html)
+> - [ParameterizedTimerTriggerCause](https://javadoc.jenkins.io/plugin/parameterized-scheduler/org/jenkinsci/plugins/parameterizedscheduler/ParameterizedTimerTriggerCause.html)
+> see also
+> - [imarslo: jenkinsfile/triggered by](../jenkinsfile/trigger.html#triggered-by)
+{% endhint %}
+
+```groovy
+import org.jenkinsci.plugins.parameterizedscheduler.ParameterizedTimerTriggerCause
+import hudson.model.Cause.UpstreamCause
+import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+import com.sonyericsson.rebuild.RebuildCause
+import hudson.model.Cause.UserIdCause
+import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
+
+WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/job' )
+RunList builds  = job.getBuilds()
+
+builds.each { build ->
+  println build.number
+  println build.getCauses()
+  println build.getCauses().collect { it.getClass().getCanonicalName() }
+  println "byUser        : ${build.getCause( UserIdCause.class  ) && true        }"
+  println "byRebuild     : ${build.getCause( RebuildCause.class ) && true        }"
+  println "byReplay      : ${build.getCause( ReplayCause.class  ) && true        }"
+  println "byUpstream    : ${build.getCause( Cause.UpstreamCause.class ) && true }"
+  println "byGerritCause : ${build.getCause( GerritCause.class ) && true         }"
+}
+
+"DONE"
+```
 
 ### get SCM info
 
