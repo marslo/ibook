@@ -5,7 +5,9 @@
 - [trigger](#trigger)
   - [poll SCM](#poll-scm)
   - [`parameterizedCron`](#parameterizedcron)
-  - [triggered by](#triggered-by)
+- [triggered by](#triggered-by)
+  - [libs](#libs)
+  - [GerritCause](#gerritcause)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -147,7 +149,7 @@ properties([
   ```
 - gitlab
 
-  <!--sec data-title="gitlab cause" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="gitlab cause" data-id="section0" data-show=true data-collapse=true ces-->
   ```groovy
   currentBuild.rawBuild.getCause(com.dabsquared.gitlabjenkins.cause.GitLabWebHookCause).getData()
   // or
@@ -186,3 +188,8 @@ Boolean byRebuild( WorkflowRun build = currentBuild.rawBuild ) {
   byUserId( build ) && build.getCause( RebuildCause.class )
 }
 ```
+
+### GerritCause
+{% hint style='tip' %}
+> check [imarslo : GerritCause](../script/build.html#gerritcause)
+{% endhint %}
