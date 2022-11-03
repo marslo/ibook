@@ -24,6 +24,8 @@
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
   - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
   - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
+- [build cause](#build-cause)
+  - [GerritCause](#gerritcause)
 - [build parameters](#build-parameters)
   - [get build parameters](#get-build-parameters)
   - [get builds parameters](#get-builds-parameters)
@@ -539,45 +541,6 @@ job.changeSets
            commitId : 095e4470964ee8ca6ab50ceea7acf88094dc08d4 : 095e4470964ee8ca6ab50ceea7acf88094dc08d4
   ```
 
-### get build cause
-
-{% hint style='tip' %}
-> references:
-> - [Cause.UpstreamCause](https://javadoc.jenkins-ci.org/hudson/model/Cause.UpstreamCause.html)
-> - [Cause.UserIdCause](https://javadoc.jenkins.io/hudson/model/Cause.UserIdCause.html)
-> - [RebuildCause](https://javadoc.jenkins.io/plugin/rebuild/com/sonyericsson/rebuild/RebuildCause.html)
-> - [ReplayCause](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/replay/ReplayCause.html)
-> - [TimerTrigger.TimerTriggerCause](https://javadoc.jenkins.io/hudson/triggers/TimerTrigger.TimerTriggerCause.html)
-> - [ParameterizedTimerTriggerCause](https://javadoc.jenkins.io/plugin/parameterized-scheduler/org/jenkinsci/plugins/parameterizedscheduler/ParameterizedTimerTriggerCause.html)
-> see also
-> - [imarslo: jenkinsfile/triggered by](../jenkinsfile/trigger.html#triggered-by)
-{% endhint %}
-
-```groovy
-import org.jenkinsci.plugins.parameterizedscheduler.ParameterizedTimerTriggerCause
-import hudson.model.Cause.UpstreamCause
-import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
-import com.sonyericsson.rebuild.RebuildCause
-import hudson.model.Cause.UserIdCause
-import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
-
-WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/job' )
-RunList builds  = job.getBuilds()
-
-builds.each { build ->
-  println build.number
-  println build.getCauses()
-  println build.getCauses().collect { it.getClass().getCanonicalName() }
-  println "byUser        : ${build.getCause( UserIdCause.class  ) && true        }"
-  println "byRebuild     : ${build.getCause( RebuildCause.class ) && true        }"
-  println "byReplay      : ${build.getCause( ReplayCause.class  ) && true        }"
-  println "byUpstream    : ${build.getCause( Cause.UpstreamCause.class ) && true }"
-  println "byGerritCause : ${build.getCause( GerritCause.class ) && true         }"
-}
-
-"DONE"
-```
-
 ### get SCM info
 
 {% hint style='tip' %}
@@ -1054,6 +1017,174 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   ```
 
+
+
+## build cause
+
+{% hint style='tip' %}
+> references:
+> - [Cause.UpstreamCause](https://javadoc.jenkins-ci.org/hudson/model/Cause.UpstreamCause.html)
+> - [Cause.UserIdCause](https://javadoc.jenkins.io/hudson/model/Cause.UserIdCause.html)
+> - [RebuildCause](https://javadoc.jenkins.io/plugin/rebuild/com/sonyericsson/rebuild/RebuildCause.html)
+> - [ReplayCause](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/replay/ReplayCause.html)
+> - [TimerTrigger.TimerTriggerCause](https://javadoc.jenkins.io/hudson/triggers/TimerTrigger.TimerTriggerCause.html)
+> - [ParameterizedTimerTriggerCause](https://javadoc.jenkins.io/plugin/parameterized-scheduler/org/jenkinsci/plugins/parameterizedscheduler/ParameterizedTimerTriggerCause.html)
+> see also
+> - [imarslo: jenkinsfile/triggered by](../jenkinsfile/trigger.html#triggered-by)
+{% endhint %}
+
+```groovy
+import org.jenkinsci.plugins.parameterizedscheduler.ParameterizedTimerTriggerCause
+import hudson.model.Cause.UpstreamCause
+import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+import com.sonyericsson.rebuild.RebuildCause
+import hudson.model.Cause.UserIdCause
+import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
+
+WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/job' )
+RunList builds  = job.getBuilds()
+
+builds.each { build ->
+  println build.number
+  println build.getCauses()
+  println build.getCauses().collect { it.getClass().getCanonicalName() }
+  println "byUser        : ${build.getCause( UserIdCause.class  ) && true        }"
+  println "byRebuild     : ${build.getCause( RebuildCause.class ) && true        }"
+  println "byReplay      : ${build.getCause( ReplayCause.class  ) && true        }"
+  println "byUpstream    : ${build.getCause( Cause.UpstreamCause.class ) && true }"
+  println "byGerritCause : ${build.getCause( GerritCause.class ) && true         }"
+}
+
+"DONE"
+```
+
+### GerritCause
+{% hint style='tip' %}
+> references:
+> - [gerrit-events/Change.java](https://github.com/sonyxperiadev/gerrit-events/blob/master/src/main/java/com/sonymobile/tools/gerrit/gerritevents/dto/attr/Change.java)
+> - [gerrit-events/GerritTriggeredEvent.java](https://github.com/sonyxperiadev/gerrit-events/blob/master/src/main/java/com/sonymobile/tools/gerrit/gerritevents/dto/events/GerritTriggeredEvent.java)
+> - [gerrit-events/Provider.java](https://github.com/sonyxperiadev/gerrit-events/blob/master/src/main/java/com/sonymobile/tools/gerrit/gerritevents/dto/attr/Provider.java)
+>
+> APIs:
+> - [All Classes](https://javadoc.jenkins.io/plugin/gerrit-trigger/allclasses.html)
+> - [GerritCause](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/hudsontrigger/GerritCause.html)
+> - [GerritUserCause](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/hudsontrigger/GerritUserCause.html)
+> - [GerritManualCause](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/hudsontrigger/GerritManualCause.html)
+> - [ManualPatchsetCreated](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/events/ManualPatchsetCreated.html)
+> - [TriggerContext](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/hudsontrigger/data/TriggerContext.html)
+> - [ManualTriggerAction](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/hudsontrigger/actions/manual/ManualTriggerAction.html)
+> - [GerritEventLifecycleListener](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/events/lifecycle/GerritEventLifecycleListener.html)
+> - [GerritProject](https://javadoc.jenkins.io/plugin/gerrit-trigger/com/sonyericsson/hudson/plugins/gerrit/trigger/hudsontrigger/data/GerritProject.html)
+{% endhint %}
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import hudson.util.RunList
+import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
+import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritUserCause
+import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritManualCause
+import com.sonymobile.tools.gerrit.gerritevents.dto.events.CommentAdded
+import com.sonymobile.tools.gerrit.gerritevents.dto.events.RefUpdated
+import com.sonymobile.tools.gerrit.gerritevents.dto.events.PatchsetCreated
+
+WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/pipeline' )
+RunList builds  = job.getBuilds()
+
+builds.each { build ->
+  if ( build.getCause( GerritCause.class ) && true ) {
+    println build.number
+    println "context           : ${build.getCause( GerritCause.class ).getContext()}"
+    println "  build number    : ${build.getCause( GerritCause.class ).getContext().getThisBuild().getBuildNumber().toString()}"
+    println "  project name    : ${build.getCause( GerritCause.class ).getContext().getThisBuild().getProjectId()}"
+    println "description       : ${build.getCause( GerritCause.class ).getShortDescription()}"
+    println "url               : ${build.getCause( GerritCause.class ).getUrl()}"
+    println "events            : ${build.getCause( GerritCause.class ).getEvent().getClass()}"
+    println "  byCommentAdded  : " +
+            ( build.getCause(GerritCause.class).getEvent() instanceof CommentAdded ).toString()
+    println "  byRefUpdated    : " +
+            ( build.getCause(GerritCause.class).getEvent() instanceof RefUpdated ).toString()
+    println "  byPathUpdated   : " +
+            ( build.getCause(GerritCause.class).getEvent() instanceof PatchsetCreated).toString()
+    println "  server hostname : " +
+            build.getCause( GerritCause.class ).getEvent().getProvider().host
+    println "  server port     : " +
+            build.getCause( GerritCause.class ).getEvent().getProvider().port
+    println "  server version  : " +
+            build.getCause( GerritCause.class ).getEvent().getProvider().version
+    println '.'*10
+    println "userCause?        : ${build.getCause( GerritUserCause.class ) && true}"
+    if (build.getCause( GerritUserCause.class ) && true) {
+      println "  comments        : " +
+              build.getCause( GerritUserCause.class )?.getEvent().comment
+      println "  approvals       : " +
+              build.getCause( GerritUserCause.class )?.getEvent().approvals
+      println "  change          : " +
+              build.getCause( GerritUserCause.class )?.getEvent().change
+      println "  usernmae        : " +
+              build.getCause( GerritUserCause.class )?.getUserName()
+      println "  description     : " +
+              build.getCause( GerritUserCause.class )?.getShortGerritDescription()
+      println "  changer account : " +
+              build.getCause( GerritUserCause.class )?.getEvent().getAccount().name
+      println "  changer email   : " +
+              build.getCause( GerritUserCause.class )?.getEvent().getAccount().email
+    }
+    println '.'*10
+    println "manualCause?      : ${build.getCause( GerritManualCause.class ) && true}"
+    println '~'*30
+  }
+}
+
+"DONE"
+```
+
+  <!--sec data-title="Result" data-id="section1" data-show=true data-collapse=true ces-->
+  ```
+  10121
+  context           : com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.TriggerContext@6fbdc2a5
+    build number    : 10121
+    project name    : /path/to/project
+  description       : Retriggered by user marslo for Gerrit: https://my.gerrit.com/c/my/project/+/72667
+  url               : https://my.gerrit.com/c/my/project/+/72667
+  events            : class com.sonymobile.tools.gerrit.gerritevents.dto.events.CommentAdded
+    byCommentAdded  : true
+    byRefUpdated    : false
+    byPathUpdated   : false
+    server hostname : my.gerrit.com
+    server port     : 29418
+    server version  : 2.16.27-RP-1.10.1.1
+  ..........
+  userCause?        : true
+    comments        : Patch Set 104: Code-Review+2
+    approvals       : [Approval: Verified 0, Approval: Code-Review 2]
+    change          : Change-Id for #72667: I68e47b094e142a63cec7c698094320d79f5350f8
+    usernmae        : marslo
+    description     : Retriggered by user marslo for Gerrit: https://my.gerrit.com/c/my/project/+/72667
+    changer account : Marslo Jiao
+    changer email   : marslo@marvell.com
+  ..........
+  manualCause?      : false
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  10120
+  context           : com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.TriggerContext@26ab2c12
+    build number    : 10120
+    project name    : /path/to/project
+  description       : Triggered by Gerrit: https://my.gerrit.com/c/my/project/+/123069
+  url               : https://my.gerrit.com/c/my/project/+/123069
+  events            : class com.sonymobile.tools.gerrit.gerritevents.dto.events.CommentAdded
+    byCommentAdded  : true
+    byRefUpdated    : false
+    byPathUpdated   : false
+    server hostname : my.gerrit.com
+    server port     : 29418
+    server version  : 2.16.27-RP-1.10.1.1
+  ..........
+  userCause?        : false
+  ..........
+  manualCause?      : false
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ```
+  <!--endsec-->
 
 ## build parameters
 
