@@ -382,8 +382,12 @@ $ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 ![docker status](../../screenshot/docker/docker-stat-resource-1.gif)
 
 ## docker inspect
+
+{% hint style='tip' %}
 > reference:
 > - [See full command of running/stopped container in Docker](https://stackoverflow.com/a/27380853/2940319)
+> - [Docker remove <none> TAG images](https://stackoverflow.com/a/33913711/2940319)
+{% endhint %}
 
 {% raw %}
 ```bash
@@ -397,6 +401,14 @@ $ docker inspect -f "{{.Path}} {{.Args}} ({{.Id}})" $(docker ps -a -q)
   $ docker inspect <name> -f "{{.Path}} {{.Args}} ({{.Id}})"
   ```
   {% endraw %}
+
+### [check repo tag](https://stackoverflow.com/a/33913711/2940319)
+
+{% raw %}
+```bash
+$ docker images -q -a | xargs docker inspect --format='{{.Id}}{{range $rt := .RepoTags}} {{$rt}} {{end}}'
+```
+{% endraw %}
 
 ## docker proxy
 ### [docker build proxy](https://docs.docker.com/network/proxy/)
