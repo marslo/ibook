@@ -44,6 +44,16 @@
 >   - The Java Language Specification, Java SE 11 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se12/jls11.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se11/html/index.html)
 {% endhint %}
 
+> [!TIP]
+> [Java Tutorial](https://jenkov.com/tutorials/java/index.html) :
+> - [Java Exception Handling](https://jenkov.com/tutorials/java-exception-handling/index.html)
+> - [Java Tips, How-tos etc](https://jenkov.com/tutorials/java-howto/index.html)
+> - [Java JSON Tutorial](https://jenkov.com/tutorials/java-json/index.html)
+> - [Java Logging](https://jenkov.com/tutorials/java-logging/index.html)
+> - [Java Performance](https://jenkov.com/tutorials/java-performance/index.html)
+> - [Java Regex - Java Regular Expressions](https://jenkov.com/tutorials/java-regex/index.html)
+> - [Java Unit Testing](https://jenkov.com/tutorials/java-unit-testing/index.html)
+
 ## basic
 ### [Program structure](https://groovy-lang.org/structure.html)
 ### Customizable Operators

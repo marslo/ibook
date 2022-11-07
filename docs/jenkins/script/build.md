@@ -15,6 +15,7 @@
     - [setup next build number](#setup-next-build-number)
   - [get build time](#get-build-time)
   - [sort last build](#sort-last-build)
+    - [sort all buildable jobs](#sort-all-buildable-jobs)
 - [list builds](#list-builds)
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
   - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
@@ -353,7 +354,7 @@ Jenkins.instance
 
 {% hint style='tip' %}
 > more details can be found in
-> - [imarslo: groovy programming -> utility](../../programming/groovy/utility.html#time)
+> - [imarslo: groovy programming -> time](../../programming/groovy/time.html)
 {% endhint %}
 
 > [!TIP]
@@ -457,13 +458,13 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
 > - [Date.format(String format)](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html#format(java.lang.String))
 > - [Convert milliseconds to yyyy-MM-dd date-time format in Groovy](https://stackoverflow.com/a/45815290/2940319)
 > - [java.util.Date](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
-> - [* imarslo : groovy/utility/time](../../programming/groovy/utility.html#time)
+> - [* imarslo : groovy/time](../../programming/groovy/time.html)
 > details:
 > ```
 > java.util.Date                                           : job.getLastBuild()?.getTime()
 > java.lang.Long                                           : job.getLastBuild()?.getTimeInMillis()
-> Data.getTime()      : java.util.Date -> java.lang.Long   : job.getLastBuild()?.getTime()          -> job.getLastBuild()?.getTime().getTime()
-> Data.format(String) : java.lang.Long -> java.lang.String : job.getLastBuild()?.getTimeInMillis()  -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")
+> Date.getTime()      : java.util.Date -> java.lang.Long   : job.getLastBuild()?.getTime()          -> job.getLastBuild()?.getTime().getTime()
+> Date.format(String) : java.lang.Long -> java.lang.String : job.getLastBuild()?.getTimeInMillis()  -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")
 > ```
 > example:
 > ```groovy
@@ -485,7 +486,7 @@ Jenkins.instance
        .getAllItems(Job.class)
        .findAll { projects.any { p -> it.fullName.startsWith(p) } }
        .collectEntries {[ (it.fullName) : it.getLastBuild()?.getTime() ]}
-       .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Data to timeToMillis
+       .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Date to timeToMillis
        .each { println "${it.key.padRight(30)} ~> ${it.value}" }
 
 "DONE"
@@ -507,7 +508,7 @@ Jenkins.instance
        .getAllItems( org.jenkinsci.plugins.workflow.job.WorkflowJob.class )
        .findAll { it.isBuildable() }
        .collectEntries {[ (it.fullName + ' #' + it.getLastBuild()?.id) : it.getLastBuild()?.getTime() ]}
-       .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Data to timeToMillis
+       .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Date to timeToMillis
        .each { println "${it.key.padRight(40)} ~> ${it.value}" }
 
 "DONE"
