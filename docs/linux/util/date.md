@@ -21,7 +21,7 @@
 
 {% hint style='tip' %}
 > references:
-> - [* imarslo: groovy time ](../../programming/groovy/utility.html#time)
+> - [* imarslo: groovy time ](../../programming/groovy/time.html)
 > - [https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time):
 {% endhint %}
 

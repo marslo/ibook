@@ -11,12 +11,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 ## theme
 
 > [!NOTE|style:callout|label:references|icon:fa fa-bullhorn]
 > reference:
+> - [Getting started with GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages)
 > - [github.com » github.page](https://docs.github.com/en/github/working-with-github-pages)
 > - theme
 >   - [jekyll-themes.com](https://jekyll-themes.com/)
