@@ -349,10 +349,26 @@ $ docker ps -aq --no-trunc
   $ docker images -q -f "dangling=true" | xargs docker rmi -f --no-trunc
   ```
 
-  [or](https://stackoverflow.com/a/59933159/2940319)
+- [or](https://stackoverflow.com/a/59933159/2940319)
   ```bash
   $ docker image prune --filter="dangling=true"
   ```
+
+### docker rmi for keywords
+```bash
+$ name='jenkins'
+$ tag='2.361.3-lts'
+$ if docker images ${name}:${tag} --format \"{{.Tag}}\" >/dev/null ; then
+    for imageId in $(docker images ${name} --format \"{{.Tag}}\\t{{.ID}}\" |
+                            grep --color=none --fixed-strings ${tag} |
+                            awk '{print \$NF}' |
+                            uniq);
+    do
+      docker rmi ${name}:${tag} ;
+      docker rmi -f ${imageId} ;
+    done ;
+  fi
+```
 
 ## docker rm
 - [remove all stopped container](https://stackoverflow.com/a/61866643/2940319)
