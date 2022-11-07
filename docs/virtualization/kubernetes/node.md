@@ -2,13 +2,14 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [list node with label](#list-node -with-label)
+- [list node with label](#list-node-with-label)
   - [update label of node](#update-label-of-node)
 - [show](#show)
   - [show with labels](#show-with-labels)
   - [show particular labels](#show-particular-labels)
   - [show with particular columns](#show-with-particular-columns)
   - [show only scheduled nodes](#show-only-scheduled-nodes)
+- [cleanup label](#cleanup-label)
 - [sort](#sort)
   - [sort via kubelet version](#sort-via-kubelet-version)
 

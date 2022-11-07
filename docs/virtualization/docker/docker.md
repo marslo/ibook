@@ -25,6 +25,7 @@
 - [docker rm](#docker-rm)
 - [docker stats](#docker-stats)
 - [docker inspect](#docker-inspect)
+  - [check repo tag](#check-repo-tag)
 - [docker proxy](#docker-proxy)
   - [docker build proxy](#docker-build-proxy)
   - [docker pull proxy](#docker-pull-proxy)
