@@ -6,7 +6,6 @@
   - [build number](#build-number)
     - [get WorkflowRun by build number](#get-workflowrun-by-build-number)
     - [get builds of a job](#get-builds-of-a-job)
-  - [get build cause](#get-build-cause)
   - [get console output](#get-console-output)
   - [get changesets](#get-changesets)
     - [code clone via DSL](#code-clone-via-dsl)
@@ -14,21 +13,23 @@
   - [get SCM info](#get-scm-info)
   - [get culprits](#get-culprits)
     - [setup next build number](#setup-next-build-number)
-  - [get builds abort cause](#get-builds-abort-cause)
-    - [get all abort causes](#get-all-abort-causes)
-  - [stop builds](#stop-builds)
-    - [abort single build](#abort-single-build)
-    - [[cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)](#cancel-builds-in-same-jobhttpsrawgithubusercontentcomcloudbeesjenkins-scriptsmastercancel-builds-same-jobgroovy)
-    - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
-    - [get queue jobs parameters](#get-queue-jobs-parameters)
-    - [list all queue tasks and blocked reason](#list-all-queue-tasks-and-blocked-reason)
   - [get build time](#get-build-time)
   - [sort last build](#sort-last-build)
+- [list builds](#list-builds)
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
   - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
   - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
+- [stop builds](#stop-builds)
+  - [abort single build](#abort-single-build)
+  - [[cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)](#cancel-builds-in-same-jobhttpsrawgithubusercontentcomcloudbeesjenkins-scriptsmastercancel-builds-same-jobgroovy)
+  - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
+  - [get queue jobs parameters](#get-queue-jobs-parameters)
+  - [list all queue tasks and blocked reason](#list-all-queue-tasks-and-blocked-reason)
 - [build cause](#build-cause)
+  - [get build cause](#get-build-cause)
   - [GerritCause](#gerritcause)
+  - [get builds abort cause](#get-builds-abort-cause)
+    - [get all abort causes](#get-all-abort-causes)
 - [build parameters](#build-parameters)
   - [get build parameters](#get-build-parameters)
   - [get builds parameters](#get-builds-parameters)
@@ -161,45 +162,6 @@ println """
     getLastUnsuccessfulBuild() : marslo/abort #42
                    isInQueue() : false
              getActions.causes : [42: [ExceededTimeout], 41: [ExceededTimeout], 40: [ExceededTimeout], 36: [ExceededTimeout], 35: [ExceededTimeout], 34: [ExceededTimeout], 33: [ExceededTimeout], 32: [], 31: [], 30: [ExceededTimeout], 29: [], 28: [], 27: [], 26: [], 24: [], 23: [], 22: [ExceededTimeout], 21: [], 20: [], 19: [ExceededTimeout], 18: [ExceededTimeout], 17: [], 16: [], 15: [], 14: [], 13: [], 12: [], 11: [], 10: [ExceededTimeout], 9: [ExceededTimeout], 8: [UserInterruption], 7: [ExceededTimeout], 6: [UserInterruption], 5: [UserInterruption], 4: [ExceededTimeout], 3: [ExceededTimeout], 2: [UserInterruption], 1: [ExceededTimeout]]
-  ```
-
-## get build cause
-```groovy
-List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
-Jenkins.instance.getAllItems( Job.class ).findAll {
-  projects.any { p -> it.fullName.startsWith(p) }
-}.each {
-  println it.name + "\t -> " + it.fullName + "\t ~> " +
-          ( it.getLastBuild()?.getCauses()?.collect { it.getClass().getCanonicalName() }?.join(', ') ?: 'no build' )
-}
-
-"DONE"
-```
-- result
-  ```
-  user-trigger -> marslo/user-trigger ~> hudson.model.Cause.UserIdCause
-  sandbox      -> marslo/sandbox      ~> hudson.model.Cause.UserIdCause, org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
-  whitebox     -> marslo/whitebox     ~> org.jenkinsci.plugins.workflow.support.steps.build.BuildUpstreamCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
-  replay       -> marslo/reply        ~> org.jenkinsci.plugins.workflow.cps.replay.ReplayCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
-  no-build     -> marslo/no-build     ~> no build
-  rebuild      -> marslo/rebuild      ~> org.jenkinsci.plugins.workflow.cps.replay.ReplayCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
-  upstream     -> marslo/upstream     ~> org.jenkinsci.plugins.workflow.support.steps.build.BuildUpstreamCause
-  Result: DONE
-  ```
-
-- or
-  ```groovy
-  List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
-  Jenkins.instance.getAllItems( Job.class ).findAll {
-    projects.any { p -> it.fullName.startsWith(p) }
-  }.each {
-    println it.name + "\t -> " +
-            it.fullName + " :\n\t\t" +
-            (
-              it.getLastBuild()?.getCauses()?.collect { it.getClass().getCanonicalName() }.join('\n\t\t') ?: 'no-builds'
-            )
-  }
-  "DONE"
   ```
 
 ## get console output
@@ -387,213 +349,6 @@ Jenkins.instance
        .updateNextBuildNumber(n)
 ```
 
-## get builds abort cause
-
-{% hint style='tip' %}
-> references:
-> - [FlowInterruptedException cause is not available in post condition](https://issues.jenkins.io/browse/JENKINS-62257)
->   - `org.jenkinsci.plugins.workflow.support.steps.build.BuildTriggerCancelledCause`
->   - `org.jenkinsci.plugins.workflow.support.steps.build.DownstreamFailureCause`
-> - [Halt a jenkins pipeline job early](https://stackoverflow.com/a/43889224/2940319)
-> - [Thread.getAllStackTraces()](https://stackoverflow.com/a/26306081/2940319)
-> - [Pipeline: How to add an input step, with timeout, that continues if timeout is reached, using a default value](https://support.cloudbees.com/hc/en-us/articles/226554067-Pipeline-How-to-add-an-input-step-with-timeout-that-continues-if-timeout-is-reached-using-a-default-value)
-> - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
-{% endhint %}
-
-```groovy
-Jenkins.instance
-       .getItemByFullName( JOB_NAME )
-       .getBuildByNumber( BUILD_NUMBER )
-       .getActions( jenkins.model.InterruptedBuildAction.class )
-       .causes
-       .flatten()
-```
-
-- check builds aborted by timer
-  ```groovy
-  import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
-
-  Jenkins.instance
-         .getItemByFullName( JOB_NAME )
-         .getBuildByNumber( BUILD_NUMBER )
-         .getActions( jenkins.model.InterruptedBuildAction.class )
-         .causes
-         .flatten()
-         .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
-  ```
-
-  - or
-    ```groovy
-    import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
-    import org.jenkinsci.plugins.workflow.job.WorkflowJob
-
-    WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
-    job.builds.findAll { Run run ->
-      BUILD_NUMBER.toString() == run.id
-    }.collect { Run run -> run.getActions( jenkins.model.InterruptedBuildAction.class )
-                              .causes
-                              .flatten()
-                              .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
-    }
-    ```
-
-### get all abort causes
-```groovy
-import org.jenkinsci.plugins.workflow.job.WorkflowJob
-
-WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
-job.builds.findAll { Run run ->
-  run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
-}.collect{ Run run ->
-  List c = run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
-  "#${run.id} : ${c.flatten().collect{ it.class.simpleName }.first()}"
-}.join('\n')
-```
-
-- result
-  ```
-  #42 : ExceededTimeout
-  #41 : ExceededTimeout
-  #40 : ExceededTimeout
-  #36 : ExceededTimeout
-  #35 : ExceededTimeout
-  #34 : ExceededTimeout
-  #33 : ExceededTimeout
-  #30 : ExceededTimeout
-  #22 : ExceededTimeout
-  #19 : ExceededTimeout
-  #18 : ExceededTimeout
-  #10 : ExceededTimeout
-  #9 : ExceededTimeout
-  #8 : UserInterruption
-  #7 : ExceededTimeout
-  #6 : UserInterruption
-  #5 : UserInterruption
-  #4 : ExceededTimeout
-  #3 : ExceededTimeout
-  #2 : UserInterruption
-  #1 : ExceededTimeout
-  ```
-
-## stop builds
-
-### [abort single build](https://stackoverflow.com/a/26306081/2940319)
-```groovy
-final String JOB_NAME  = 'job_name'
-final int BUILD_NUMBER = job_number
-
-Jenkins.instance
-       .getItemByFullName( JOB_NAME )
-       .getBuildByNumber( BUILD_NUMBER )
-       .finish(
-         hudson.model.Result.ABORTED,
-         new java.io.IOException( "Aborting build" )
-       )
-```
-
-### [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-```groovy
-/*
- Author: Isaac S Cohen
- This script works with workflow to cancel other running builds for the same job
- Use case: many build may go to QA, but only the build that is accepted is needed,
- the other builds in the workflow should be aborted
-*/
-
-final String JOB_NAME  = env.JOB_NAME
-final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
-
-def job = Jenkins.instance.getItemByFullName( JOB_NAME )
-for ( build in job.builds ) {
-  if ( !build.isBuilding() ) { continue }
-  if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
-  build.doStop()
-}
-```
-
-### [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
-> reference:
-> - [cancel queue builds](https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
-> ```groovy
-> Jenkins.instance.queue.clear()
-> ```
-
-```groovy
-import java.util.ArrayList
-import hudson.model.*
-import jenkins.model.Jenkins
-
-// Remove everything which is currently queued
-def q = Jenkins.instance.queue
-for ( queued in Jenkins.instance.queue.items ) {
-  q.cancel( queued.task )
-}
-
-// stop all the currently running jobs
-for ( job in Jenkins.instance.items ) {
-  stopJobs(job)
-}
-
-def stopJobs( job ) {
-  if ( job in com.cloudbees.hudson.plugins.folder.Folder ) {
-    for ( child in job.items ) {
-      stopJobs( child )
-    }
-  } else if ( job in org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject ) {
-    for ( child in job.items ) {
-      stopJobs( child )
-    }
-  } else if ( job in org.jenkinsci.plugins.workflow.job.WorkflowJob && job.isBuilding() ) {
-    for ( build in job.builds ) {
-      build.doKill()
-    }
-  }
-}
-```
-
-### [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
-> refernece:
-> - [cg-soft/explore.groovy](https://gist.github.com/cg-soft/4251ad83932340129925)
-
-```groovy
-def q = Jenkins.instance.queue
-q.items.each {
-  println("${it.task.name}:")
-  println("Parameters: ${it.params}")
-}
-```
-
-### [list all queue tasks and blocked reason](https://support.cloudbees.com/hc/en-us/articles/360051376772-How-can-I-purge-clean-the-build-queue-)
-```groovy
-Jenkins.instance.queue.items.each {
-  println """
-                   getId : ${it.getId()}
-             isBuildable : ${it.isBuildable()}
-      getFullDisplayName : ${it.task.getFullDisplayName()}
-          getDisplayName : ${it.task.getDisplayName()}
-       isConcurrentBuild : ${it.task.isConcurrentBuild()}
-          getAffinityKey : ${it.task.getAffinityKey()}
-                  getUrl : ${it.task.getUrl()}
-           getWhyBlocked : ${it.task.getWhyBlocked()}
-    getCauseOfBlockage() : ${it.task.getCauseOfBlockage()}
-  """
-  // println it.task.metaClass.methods*.name.sort().unique()
-}
-```
-
-- result:
-  ```bash
-                   getId : 80210
-             isBuildable : false
-      getFullDisplayName : marslo » sandbox » test
-          getDisplayName : test
-       isConcurrentBuild : false
-          getAffinityKey : marslo » sandbox » test
-                  getUrl : job/marslo/job/sandbox/job/test/
-           getWhyBlocked : Build #27 is already in progress (ETA: 3 min 28 sec)
-    getCauseOfBlockage() : Build #27 is already in progress (ETA: 3 min 28 sec)
-  ```
-
 ## get build time
 
 {% hint style='tip' %}
@@ -705,10 +460,10 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
 > - [* imarslo : groovy/utility/time](../../programming/groovy/utility.html#time)
 > details:
 > ```
-> `java.util.Date`     :                                       `job.getLastBuild()?.getTime()`
-> `java.lang.Long`     :                                       `job.getLastBuild()?.getTimeInMillis()`
-> `Data.getTime()      : java.util.Date -> java.lang.Long`   : `job.getLastBuild()?.getTime() -> job.getLastBuild()?.getTime().getTime()`
-> `Data.format(String) : java.lang.Long -> java.lang.String` : `job.getLastBuild()?.getTimeInMillis() -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")`
+> java.util.Date                                           : job.getLastBuild()?.getTime()
+> java.lang.Long                                           : job.getLastBuild()?.getTimeInMillis()
+> Data.getTime()      : java.util.Date -> java.lang.Long   : job.getLastBuild()?.getTime()          -> job.getLastBuild()?.getTime().getTime()
+> Data.format(String) : java.lang.Long -> java.lang.String : job.getLastBuild()?.getTimeInMillis()  -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")
 > ```
 > example:
 > ```groovy
@@ -726,7 +481,8 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-Jenkins.instance.getAllItems(Job.class)
+Jenkins.instance
+       .getAllItems(Job.class)
        .findAll { projects.any { p -> it.fullName.startsWith(p) } }
        .collectEntries {[ (it.fullName) : it.getLastBuild()?.getTime() ]}
        .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Data to timeToMillis
@@ -738,20 +494,26 @@ Jenkins.instance.getAllItems(Job.class)
 - result
   ```
   marslo/dangling                ~> Fri Nov 04 02:28:14 PDT 2022
-  marslo/causedby                ~> Thu Nov 03 06:17:12 PDT 2022
-  marslo/vega/compiler           ~> Thu Nov 03 05:11:11 PDT 2022
-  marslo/seeds                   ~> Sat Oct 08 05:06:01 PDT 2022
-  marslo/rt                      ~> Fri Sep 16 10:56:51 PDT 2022
-  marslo/fs-seeds                ~> Fri Sep 02 02:27:24 PDT 2022
-  marslo/devops-libs             ~> Thu Sep 01 21:24:02 PDT 2022
-  marslo/scriptApproval          ~> Wed Aug 31 07:47:10 PDT 2022
   marslo/abort                   ~> Thu Aug 11 06:28:00 PDT 2022
-  marslo/RejectedAccessException ~> Thu Aug 11 05:58:53 PDT 2022
   marslo/dump                    ~> Thu Aug 11 01:29:39 PDT 2022
   marslo/agent                   ~> Tue Aug 09 06:19:43 PDT 2022
   marslo/docker                  ~> null
   Result: DONE
   ```
+
+### sort all buildable jobs
+```groovy
+Jenkins.instance
+       .getAllItems( org.jenkinsci.plugins.workflow.job.WorkflowJob.class )
+       .findAll { it.isBuildable() }
+       .collectEntries {[ (it.fullName + ' #' + it.getLastBuild()?.id) : it.getLastBuild()?.getTime() ]}
+       .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Data to timeToMillis
+       .each { println "${it.key.padRight(40)} ~> ${it.value}" }
+
+"DONE"
+```
+
+# list builds
 
 ## [list all builds within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 > reference:
@@ -816,7 +578,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   results.(job.fullName) = job.builds.findAll { Run run ->
-    !run.isBuilding() &&
+    ! run.isBuilding() &&
     run.result == Result.FAILURE &&
     ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
   }.collectEntries { Run run ->
@@ -844,7 +606,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
     job.fullName.contains( JOB_PATTERN )
   }.each { Job job ->
     results.(job.fullName) = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME ).findAll { Run run ->
-      !run.isBuilding() &&
+      ! run.isBuilding() &&
       run.result == Result.FAILURE
     }.collectEntries { Run run ->
       [ run.id, run.getAbsoluteUrl() ]
@@ -884,6 +646,126 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   ```
 
+# stop builds
+
+## [abort single build](https://stackoverflow.com/a/26306081/2940319)
+```groovy
+final String JOB_NAME  = 'job_name'
+final int BUILD_NUMBER = job_number
+
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
+       .finish(
+         hudson.model.Result.ABORTED,
+         new java.io.IOException( "Aborting build" )
+       )
+```
+
+## [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
+```groovy
+/*
+ Author: Isaac S Cohen
+ This script works with workflow to cancel other running builds for the same job
+ Use case: many build may go to QA, but only the build that is accepted is needed,
+ the other builds in the workflow should be aborted
+*/
+
+final String JOB_NAME  = env.JOB_NAME
+final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
+
+def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+for ( build in job.builds ) {
+  if ( !build.isBuilding() ) { continue }
+  if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
+  build.doStop()
+}
+```
+
+## [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
+
+> [!TIP]
+> reference:
+> - [cancel queue builds](https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
+> ```groovy
+> Jenkins.instance.queue.clear()
+> ```
+
+```groovy
+import java.util.ArrayList
+import hudson.model.*
+import jenkins.model.Jenkins
+
+// Remove everything which is currently queued
+def q = Jenkins.instance.queue
+for ( queued in Jenkins.instance.queue.items ) {
+  q.cancel( queued.task )
+}
+
+// stop all the currently running jobs
+for ( job in Jenkins.instance.items ) {
+  stopJobs(job)
+}
+
+def stopJobs( job ) {
+  if ( job in com.cloudbees.hudson.plugins.folder.Folder ) {
+    for ( child in job.items ) {
+      stopJobs( child )
+    }
+  } else if ( job in org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject ) {
+    for ( child in job.items ) {
+      stopJobs( child )
+    }
+  } else if ( job in org.jenkinsci.plugins.workflow.job.WorkflowJob && job.isBuilding() ) {
+    for ( build in job.builds ) {
+      build.doKill()
+    }
+  }
+}
+```
+
+## [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
+> refernece:
+> - [cg-soft/explore.groovy](https://gist.github.com/cg-soft/4251ad83932340129925)
+
+```groovy
+def q = Jenkins.instance.queue
+q.items.each {
+  println("${it.task.name}:")
+  println("Parameters: ${it.params}")
+}
+```
+
+## [list all queue tasks and blocked reason](https://support.cloudbees.com/hc/en-us/articles/360051376772-How-can-I-purge-clean-the-build-queue-)
+```groovy
+Jenkins.instance.queue.items.each {
+  println """
+                   getId : ${it.getId()}
+             isBuildable : ${it.isBuildable()}
+      getFullDisplayName : ${it.task.getFullDisplayName()}
+          getDisplayName : ${it.task.getDisplayName()}
+       isConcurrentBuild : ${it.task.isConcurrentBuild()}
+          getAffinityKey : ${it.task.getAffinityKey()}
+                  getUrl : ${it.task.getUrl()}
+           getWhyBlocked : ${it.task.getWhyBlocked()}
+    getCauseOfBlockage() : ${it.task.getCauseOfBlockage()}
+  """
+  // println it.task.metaClass.methods*.name.sort().unique()
+}
+```
+
+- result:
+  ```bash
+                   getId : 80210
+             isBuildable : false
+      getFullDisplayName : marslo » sandbox » test
+          getDisplayName : test
+       isConcurrentBuild : false
+          getAffinityKey : marslo » sandbox » test
+                  getUrl : job/marslo/job/sandbox/job/test/
+           getWhyBlocked : Build #27 is already in progress (ETA: 3 min 28 sec)
+    getCauseOfBlockage() : Build #27 is already in progress (ETA: 3 min 28 sec)
+  ```
 
 
 # build cause
@@ -924,6 +806,46 @@ builds.each { build ->
 
 "DONE"
 ```
+
+## get build cause
+```groovy
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+Jenkins.instance.getAllItems( Job.class ).findAll {
+  projects.any { p -> it.fullName.startsWith(p) }
+}.each {
+  println it.name + "\t -> " + it.fullName + "\t ~> " +
+          ( it.getLastBuild()?.getCauses()?.collect { it.getClass().getCanonicalName() }?.join(', ') ?: 'no build' )
+}
+
+"DONE"
+```
+- result
+  ```
+  user-trigger -> marslo/user-trigger ~> hudson.model.Cause.UserIdCause
+  sandbox      -> marslo/sandbox      ~> hudson.model.Cause.UserIdCause, org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
+  whitebox     -> marslo/whitebox     ~> org.jenkinsci.plugins.workflow.support.steps.build.BuildUpstreamCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
+  replay       -> marslo/reply        ~> org.jenkinsci.plugins.workflow.cps.replay.ReplayCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
+  no-build     -> marslo/no-build     ~> no build
+  rebuild      -> marslo/rebuild      ~> org.jenkinsci.plugins.workflow.cps.replay.ReplayCause, hudson.model.Cause.UserIdCause, com.sonyericsson.rebuild.RebuildCause
+  upstream     -> marslo/upstream     ~> org.jenkinsci.plugins.workflow.support.steps.build.BuildUpstreamCause
+  Result: DONE
+  ```
+
+- or
+  ```groovy
+  List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+  Jenkins.instance.getAllItems( Job.class ).findAll {
+    projects.any { p -> it.fullName.startsWith(p) }
+  }.each {
+    println it.name + "\t -> " +
+            it.fullName + " :\n\t\t" +
+            (
+              it.getLastBuild()?.getCauses()?.collect { it.getClass().getCanonicalName() }.join('\n\t\t') ?: 'no-builds'
+            )
+  }
+  "DONE"
+  ```
+
 
 ## GerritCause
 {% hint style='tip' %}
@@ -1052,6 +974,95 @@ builds.each { build ->
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ```
   <!--endsec-->
+
+## get builds abort cause
+
+{% hint style='tip' %}
+> references:
+> - [FlowInterruptedException cause is not available in post condition](https://issues.jenkins.io/browse/JENKINS-62257)
+>   - `org.jenkinsci.plugins.workflow.support.steps.build.BuildTriggerCancelledCause`
+>   - `org.jenkinsci.plugins.workflow.support.steps.build.DownstreamFailureCause`
+> - [Halt a jenkins pipeline job early](https://stackoverflow.com/a/43889224/2940319)
+> - [Thread.getAllStackTraces()](https://stackoverflow.com/a/26306081/2940319)
+> - [Pipeline: How to add an input step, with timeout, that continues if timeout is reached, using a default value](https://support.cloudbees.com/hc/en-us/articles/226554067-Pipeline-How-to-add-an-input-step-with-timeout-that-continues-if-timeout-is-reached-using-a-default-value)
+> - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
+{% endhint %}
+
+```groovy
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
+       .getActions( jenkins.model.InterruptedBuildAction.class )
+       .causes
+       .flatten()
+```
+
+- check builds aborted by timer
+  ```groovy
+  import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+
+  Jenkins.instance
+         .getItemByFullName( JOB_NAME )
+         .getBuildByNumber( BUILD_NUMBER )
+         .getActions( jenkins.model.InterruptedBuildAction.class )
+         .causes
+         .flatten()
+         .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
+  ```
+
+  - or
+    ```groovy
+    import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+    import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+    WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+    job.builds.findAll { Run run ->
+      BUILD_NUMBER.toString() == run.id
+    }.collect { Run run -> run.getActions( jenkins.model.InterruptedBuildAction.class )
+                              .causes
+                              .flatten()
+                              .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
+    }
+    ```
+
+### get all abort causes
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+job.builds.findAll { Run run ->
+  run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
+}.collect{ Run run ->
+  List c = run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
+  "#${run.id} : ${c.flatten().collect{ it.class.simpleName }.first()}"
+}.join('\n')
+```
+
+- result
+  ```
+  #42 : ExceededTimeout
+  #41 : ExceededTimeout
+  #40 : ExceededTimeout
+  #36 : ExceededTimeout
+  #35 : ExceededTimeout
+  #34 : ExceededTimeout
+  #33 : ExceededTimeout
+  #30 : ExceededTimeout
+  #22 : ExceededTimeout
+  #19 : ExceededTimeout
+  #18 : ExceededTimeout
+  #10 : ExceededTimeout
+  #9 : ExceededTimeout
+  #8 : UserInterruption
+  #7 : ExceededTimeout
+  #6 : UserInterruption
+  #5 : UserInterruption
+  #4 : ExceededTimeout
+  #3 : ExceededTimeout
+  #2 : UserInterruption
+  #1 : ExceededTimeout
+  ```
+
 
 # build parameters
 
