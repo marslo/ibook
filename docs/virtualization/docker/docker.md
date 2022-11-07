@@ -22,6 +22,7 @@
   - [filter](#filter)
   - [format](#format)
 - [docker rmi](#docker-rmi)
+  - [docker rmi for keywords](#docker-rmi-for-keywords)
 - [docker rm](#docker-rm)
 - [docker stats](#docker-stats)
 - [docker inspect](#docker-inspect)

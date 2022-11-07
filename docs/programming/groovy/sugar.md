@@ -4,6 +4,7 @@
 
 - [common](#common)
   - [String](#string)
+  - [Boolean](#boolean)
   - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
   - [split and trim in string](#split-and-trim-in-string)
   - [`indices` & `indexed()`](#indices--indexed)
@@ -30,7 +31,6 @@
   - [metaClass](#metaclass)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style='tip' %}
 > reference:
@@ -61,6 +61,30 @@ println "Expired".padRight(20)     + ": NO"
   Subscriber          : YES
   Expired             : NO
   ```
+
+### Boolean
+
+{% hint style='tip' %}
+> usage scenarios:
+> ```groovy
+> Boolean doMap( Map m ) { return true|false }
+> if ( map ) {
+>   doMap( map )
+> } else {
+>   return true
+> }
+>
+> ==> map ? doMap(map) : true
+>
+> ==> ! map || doMap(map)
+> ```
+>
+> <kbd>[try online](https://onecompiler.com/groovy/3yn95j3ge)</kbd>
+{% endhint %}
+
+```groovy
+assert ( true ? foo() : true ) == ( ! true || foo() )
+```
 
 #### substring for integers
 ```groovy
