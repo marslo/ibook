@@ -200,6 +200,8 @@ println """
   ```
 
 ## [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
+
+> [!TIP]
 > only for `lastBuild`.
 
 ```bash
@@ -211,7 +213,7 @@ Jenkins.instance.getAllItems( Job )
                 .each { job ->
                   def myBuild= job.getLastBuild()
                   def runningSince = groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
-                  if (runningSince.hours >= 24){
+                  if ( runningSince.hours >= 24 ){
                     println job.name +"---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
                   }
                 }

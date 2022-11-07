@@ -4,14 +4,26 @@
 
 - [build](#build)
   - [build number](#build-number)
+    - [get WorkflowRun by build number](#get-workflowrun-by-build-number)
+    - [get builds of a job](#get-builds-of-a-job)
   - [get build cause](#get-build-cause)
   - [get console output](#get-console-output)
   - [get changesets](#get-changesets)
+    - [code clone via DSL](#code-clone-via-dsl)
+    - [get repo url](#get-repo-url)
   - [get SCM info](#get-scm-info)
   - [get culprits](#get-culprits)
+    - [setup next build number](#setup-next-build-number)
   - [get builds abort cause](#get-builds-abort-cause)
+    - [get all abort causes](#get-all-abort-causes)
   - [stop builds](#stop-builds)
+    - [abort single build](#abort-single-build)
+    - [[cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)](#cancel-builds-in-same-jobhttpsrawgithubusercontentcomcloudbeesjenkins-scriptsmastercancel-builds-same-jobgroovy)
+    - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
+    - [get queue jobs parameters](#get-queue-jobs-parameters)
+    - [list all queue tasks and blocked reason](#list-all-queue-tasks-and-blocked-reason)
   - [get build time](#get-build-time)
+  - [sort last build](#sort-last-build)
   - [list all builds within 24 hours](#list-all-builds-within-24-hours)
   - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
   - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
@@ -61,7 +73,7 @@
 > - [Jenkins : Change publish over SSH configuration](https://wiki.jenkins.io/display/JENKINS/Change-publish-over-SSH-configuration.html)
 {% endhint %}
 
-## build
+# build
 
 > [!TIP]
 > references:
@@ -92,9 +104,9 @@
 >   - `WorkflowJob.getNearestBuild(int n)` : gets the youngest build #m that satisfies n<=m.
 >   - `WorkflowJob.getNearestOldBuild(int n)` : gets the latest build #m that satisfies m<=n.
 
-### build number
+## build number
 
-#### get WorkflowRun by build number
+### get WorkflowRun by build number
 ```groovy
 final String JOB_NAME  = 'marslo/sandbox'
 final int BUILD_NUMBER = 6458
@@ -104,7 +116,7 @@ def build = Jenkins.instance
                    .getBuildByNumber( BUILD_NUMBER )
 ```
 
-#### get builds of a job
+### get builds of a job
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 import hudson.util.RunList
@@ -151,7 +163,7 @@ println """
              getActions.causes : [42: [ExceededTimeout], 41: [ExceededTimeout], 40: [ExceededTimeout], 36: [ExceededTimeout], 35: [ExceededTimeout], 34: [ExceededTimeout], 33: [ExceededTimeout], 32: [], 31: [], 30: [ExceededTimeout], 29: [], 28: [], 27: [], 26: [], 24: [], 23: [], 22: [ExceededTimeout], 21: [], 20: [], 19: [ExceededTimeout], 18: [ExceededTimeout], 17: [], 16: [], 15: [], 14: [], 13: [], 12: [], 11: [], 10: [ExceededTimeout], 9: [ExceededTimeout], 8: [UserInterruption], 7: [ExceededTimeout], 6: [UserInterruption], 5: [UserInterruption], 4: [ExceededTimeout], 3: [ExceededTimeout], 2: [UserInterruption], 1: [ExceededTimeout]]
   ```
 
-### get build cause
+## get build cause
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 Jenkins.instance.getAllItems( Job.class ).findAll {
@@ -190,7 +202,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
   "DONE"
   ```
 
-### get console output
+## get console output
 
 {% hint style='tip' %}
 > references:
@@ -207,9 +219,9 @@ Jenkins.instance
        .text
 ```
 
-### get changesets
+## get changesets
 
-#### code clone via DSL
+### code clone via DSL
 ```groovy
 checkout([
   $class: 'GitSCM',
@@ -299,7 +311,7 @@ Jenkins.instance
   }
   ```
 
-#### get repo url
+### get repo url
 
 {% hint style='tip' %}
 > references:
@@ -338,7 +350,7 @@ job.changeSets
            commitId : 095e4470964ee8ca6ab50ceea7acf88094dc08d4 : 095e4470964ee8ca6ab50ceea7acf88094dc08d4
   ```
 
-### get SCM info
+## get SCM info
 
 {% hint style='tip' %}
 > references:
@@ -363,19 +375,19 @@ Jenkins.instance
        }
 ```
 
-### get culprits
+## get culprits
 ```groovy
 println build.getCulprits()
 ```
 
-#### setup next build number
+### setup next build number
 ```groovy
 Jenkins.instance
        .getItemByFullName("/path/to/job")
        .updateNextBuildNumber(n)
 ```
 
-### get builds abort cause
+## get builds abort cause
 
 {% hint style='tip' %}
 > references:
@@ -425,7 +437,7 @@ Jenkins.instance
     }
     ```
 
-#### get all abort causes
+### get all abort causes
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
@@ -463,9 +475,9 @@ job.builds.findAll { Run run ->
   #1 : ExceededTimeout
   ```
 
-### stop builds
+## stop builds
 
-#### [abort single build](https://stackoverflow.com/a/26306081/2940319)
+### [abort single build](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
 final String JOB_NAME  = 'job_name'
 final int BUILD_NUMBER = job_number
@@ -479,7 +491,7 @@ Jenkins.instance
        )
 ```
 
-#### [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
+### [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
 ```groovy
 /*
  Author: Isaac S Cohen
@@ -499,7 +511,7 @@ for ( build in job.builds ) {
 }
 ```
 
-#### [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
+### [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
 > reference:
 > - [cancel queue builds](https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
 > ```groovy
@@ -539,7 +551,7 @@ def stopJobs( job ) {
 }
 ```
 
-#### [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
+### [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
 > refernece:
 > - [cg-soft/explore.groovy](https://gist.github.com/cg-soft/4251ad83932340129925)
 
@@ -551,7 +563,7 @@ q.items.each {
 }
 ```
 
-#### [list all queue tasks and blocked reason](https://support.cloudbees.com/hc/en-us/articles/360051376772-How-can-I-purge-clean-the-build-queue-)
+### [list all queue tasks and blocked reason](https://support.cloudbees.com/hc/en-us/articles/360051376772-How-can-I-purge-clean-the-build-queue-)
 ```groovy
 Jenkins.instance.queue.items.each {
   println """
@@ -582,7 +594,7 @@ Jenkins.instance.queue.items.each {
     getCauseOfBlockage() : Build #27 is already in progress (ETA: 3 min 28 sec)
   ```
 
-### get build time
+## get build time
 
 {% hint style='tip' %}
 > more details can be found in
@@ -683,7 +695,65 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
      build.getTimestampString2() : 2021-04-29T11:08:08Z
   ```
 
-### [list all builds within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+## sort last build
+
+> [!TIP]
+> references:
+> - [Date.format(String format)](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html#format(java.lang.String))
+> - [Convert milliseconds to yyyy-MM-dd date-time format in Groovy](https://stackoverflow.com/a/45815290/2940319)
+> - [java.util.Date](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
+> - [* imarslo : groovy/utility/time](../../programming/groovy/utility.html#time)
+> details:
+> ```
+> `java.util.Date`     :                                       `job.getLastBuild()?.getTime()`
+> `java.lang.Long`     :                                       `job.getLastBuild()?.getTimeInMillis()`
+> `Data.getTime()      : java.util.Date -> java.lang.Long`   : `job.getLastBuild()?.getTime() -> job.getLastBuild()?.getTime().getTime()`
+> `Data.format(String) : java.lang.Long -> java.lang.String` : `job.getLastBuild()?.getTimeInMillis() -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")`
+> ```
+> example:
+> ```groovy
+> println "${job.getLastBuild()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getClass()}"
+> println "${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")} ~> ${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?.getClass()}"
+> println "${job.getLastBuild()?.getTimeInMillis()} ~> ${job.getLastBuild()?.getTimeInMillis()?.getClass()}"
+> println "${job.getLastBuild()?.getTime()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getTime()?.getClass()}"
+> -- result --
+> Thu Aug 11 06:28:00 PDT 2022 ~> class java.util.Date
+> 2022-08-11T06:28:00.220Z ~> class java.lang.String
+> 1660224480220 ~> class java.lang.Long
+> 1660224480220 ~> class java.lang.Long
+> ```
+
+```groovy
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+
+Jenkins.instance.getAllItems(Job.class)
+       .findAll { projects.any { p -> it.fullName.startsWith(p) } }
+       .collectEntries {[ (it.fullName) : it.getLastBuild()?.getTime() ]}
+       .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Data to timeToMillis
+       .each { println "${it.key.padRight(30)} ~> ${it.value}" }
+
+"DONE"
+```
+
+- result
+  ```
+  marslo/dangling                ~> Fri Nov 04 02:28:14 PDT 2022
+  marslo/causedby                ~> Thu Nov 03 06:17:12 PDT 2022
+  marslo/vega/compiler           ~> Thu Nov 03 05:11:11 PDT 2022
+  marslo/seeds                   ~> Sat Oct 08 05:06:01 PDT 2022
+  marslo/rt                      ~> Fri Sep 16 10:56:51 PDT 2022
+  marslo/fs-seeds                ~> Fri Sep 02 02:27:24 PDT 2022
+  marslo/devops-libs             ~> Thu Sep 01 21:24:02 PDT 2022
+  marslo/scriptApproval          ~> Wed Aug 31 07:47:10 PDT 2022
+  marslo/abort                   ~> Thu Aug 11 06:28:00 PDT 2022
+  marslo/RejectedAccessException ~> Thu Aug 11 05:58:53 PDT 2022
+  marslo/dump                    ~> Thu Aug 11 01:29:39 PDT 2022
+  marslo/agent                   ~> Tue Aug 09 06:19:43 PDT 2022
+  marslo/docker                  ~> null
+  Result: DONE
+  ```
+
+## [list all builds within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 > reference:
 > - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
 
@@ -705,7 +775,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }
 ```
 
-### [get last 24 hours failure builds](https://stackoverflow.com/a/60375862/2940319)
+## [get last 24 hours failure builds](https://stackoverflow.com/a/60375862/2940319)
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
@@ -727,7 +797,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }.sum()
 ```
 
-### get last 24 hours failure builds via Map structure
+## get last 24 hours failure builds via Map structure
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
@@ -816,7 +886,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
 
 
 
-## build cause
+# build cause
 
 {% hint style='tip' %}
 > references:
@@ -855,7 +925,7 @@ builds.each { build ->
 "DONE"
 ```
 
-### GerritCause
+## GerritCause
 {% hint style='tip' %}
 > references:
 > - [gerrit-events/Change.java](https://github.com/sonyxperiadev/gerrit-events/blob/master/src/main/java/com/sonymobile/tools/gerrit/gerritevents/dto/attr/Change.java)
@@ -983,9 +1053,9 @@ builds.each { build ->
   ```
   <!--endsec-->
 
-## build parameters
+# build parameters
 
-### [get build parameters](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
+## [get build parameters](https://wiki.jenkins.io/display/JENKINS/Parameterized+System+Groovy+script)
 
 {% hint style='tip' %}
 > reference:
@@ -1071,7 +1141,7 @@ job.builds.each { Run run ->
     STOP_START_AS
     ```
 
-### get builds parameters
+## get builds parameters
 
 > [!TIP]
 > running following snippet in Jenkinsfile
@@ -1095,7 +1165,7 @@ params.each { param ->
     ```
 
 
-### get wanted parameter values in builds
+## get wanted parameter values in builds
 ```groovy
 final String PARAM = 'id'
 Map params = [:]
@@ -1123,7 +1193,7 @@ println params.collect { k , v ->
   build #1 ~~> No Params Found
   ```
 
-### get only `String` type parameters
+## get only `String` type parameters
 ```groovy
 Map params = build?.getAction( ParametersAction.class )
                    .parameters?.findAll{ it instanceof StringParameterValue }?.dump()
@@ -1143,7 +1213,7 @@ Map params = build?.getAction( ParametersAction.class )
                      .find{ it instanceof ParametersAction }?.parameters?.findAll{ it instanceof StringParameterValue }?.dump()
   ```
 
-### [retrieving parameters and triggering another build](https://wiki.jenkins.io/display/JENKINS/Groovy-plugin.html)
+## [retrieving parameters and triggering another build](https://wiki.jenkins.io/display/JENKINS/Groovy-plugin.html)
 ```groovy
 import hudson.model.*
 import hudson.AbortException
@@ -1184,9 +1254,9 @@ build.addAction(new ParametersAction(new StringParameterValue('BAR', '3')))
 ```
 
 
-## build results
+# build results
 
-### [get all builds result percentage](https://stackoverflow.com/a/28039134/2940319)
+## [get all builds result percentage](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
 final String JOB_PATTERN = '<group>/<name>'
 Map<String, Map<String, String>> results = [:]
@@ -1220,7 +1290,7 @@ results.each{ name, status ->
 - result
   ![build status](../../screenshot/jenkins/job-successful-failure-percentage.png)
 
-### [get builds result percentage within 24 hours](https://stackoverflow.com/a/28039134/2940319)
+## [get builds result percentage within 24 hours](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
 final String JOB_PATTERN = '<group>'
 final long CURRENT_TIME  = System.currentTimeMillis()
@@ -1260,7 +1330,7 @@ results.each{ name, status ->
   ![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
 
 
-### get builds result during certain start-end time
+## get builds result during certain start-end time
 
 > [!TIP]
 > find only `String` type parameters:
@@ -1327,7 +1397,7 @@ println "total number: ${count}"
   ![filter build history via params details](../../screenshot/jenkins/filter-job-history-via-params-2.png)
 
 
-### list all running builds
+## list all running builds
 ```groovy
 import static groovy.json.JsonOutput.*
 
@@ -1356,7 +1426,7 @@ results.findAll{ !it.value.isEmpty() }
 ```
 
 
-### get builds result and percentage within certain start-end time
+## get builds result and percentage within certain start-end time
 ```groovy
 import java.util.Date
 import java.text.DecimalFormat
@@ -1449,14 +1519,14 @@ results.each { name, values ->
   ![build-history-with-status-and-percentage-for-all-builds](../../screenshot/jenkins/build-history-with-status-and-percentage-for-all.png)
 
 
-### check whether if log kepet
+## check whether if log kepet
 ```groovy
 def job = Jenkins.getInstance().getItemByFullName( '/sandbox/job' )
 job.builds.findAll { Run run -> run.isKeepLog() }
           .collect { Run run -> run.id }
 ```
 
-## build stage
+# build stage
 > references:
 > - [Access Stage results in Workflow/ Pipeline plugin](https://stackoverflow.com/a/59854515/2940319)
 > - [pipeline中任务分段日志获取](https://gingkoleaf.github.io/2019/10/22/jenkins/jenkins-pipeline-stage-log/)
@@ -1464,7 +1534,7 @@ job.builds.findAll { Run run -> run.isKeepLog() }
 > - [Access Stage name during the build in Jenkins pipeline](https://stackoverflow.com/a/45224119/2940319)
 > - [jenkinsci/plugins/workflow/cps/FlowDurabilityTest.java](https://github.com/jenkinsci/workflow-cps-plugin/blob/master/src/test/java/org/jenkinsci/plugins/workflow/cps/FlowDurabilityTest.java#L273)
 
-### show build stages details
+## show build stages details
 ```groovy
 import org.jenkinsci.plugins.workflow.job.*
 import org.jenkinsci.plugins.workflow.flow.*
@@ -1519,7 +1589,7 @@ flowNodes.each {
 - result
   ![build-stage-details](../../screenshot/jenkins/build-stage-details.png)
 
-### get parent stage ID
+## get parent stage ID
 ```groovy
 import org.jenkinsci.plugins.workflow.job.*
 import org.jenkinsci.plugins.workflow.flow.*
@@ -1551,7 +1621,7 @@ def isStageFinished( String keyword, String job, int buildNumber, String type = 
 }
 ```
 
-### get stage build status via parent stage name
+## get stage build status via parent stage name
 
 ```groovy
 import org.jenkinsci.plugins.workflow.job.*
