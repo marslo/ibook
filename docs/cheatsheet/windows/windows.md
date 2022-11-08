@@ -2,6 +2,18 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [system information](#system-information)
+  - [manufacturer](#manufacturer)
+  - [serial number](#serial-number)
+  - [product name](#product-name)
+  - [uuid](#uuid)
+  - [system slot](#system-slot)
+  - [cpu](#cpu)
+  - [os](#os)
+  - [system sensor status](#system-sensor-status)
+  - [memory](#memory)
+  - [disk](#disk)
+  - [mac address](#mac-address)
 - [process](#process)
   - [get the list of programs (`wmic`)](#get-the-list-of-programs-wmic)
   - [`ps auxf`](#ps-auxf)
@@ -31,9 +43,318 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+{% hint style='info' %}
 > reference:
 > - [windows commandline](https://www.windows-commandline.com/)
 > - [TenForums](https://www.tenforums.com/)
+{% endhint %}
+
+## system information
+
+{% hint style='info' %}
+> - [20 Useful wmic command examples in Windows | Cheat Sheet](https://www.cyberithub.com/20-useful-wmic-command-examples-in-windows-cheat-sheet/)
+> - [MS-DOS and Windows command line wmic command](https://www.computerhope.com/wmic.htm)
+> - [Find The Manufacturer, Model, Name And System Type Using The Command Prompt](https://support.4it.com.au/article/find-manufacturer-model-name-system-type-using-command-prompt/)
+> - [How to Find Your Windows 10 PC Hardware and System Specs](https://www.groovypost.com/howto/find-your-windows-10-computers-hardware-and-system-specs/)
+> - [How to get full PC memory specs (speed, size, type, part number, form factor) on Windows 10](https://www.windowscentral.com/how-get-full-memory-specs-speed-size-type-part-number-form-factor-windows-10)
+> - [4 Ways to Find Number of Cores in your CPU on Windows 10](https://www.top-password.com/blog/find-number-of-cores-in-your-cpu-on-windows-10/)
+> - [View Disk Properties and LUN Information in Windows](https://support.purestorage.com/Solutions/Microsoft_Platform_Guide/Multipath-IO_and_Storage_Settings/View_Disk_Properties_and_LUN_Information_in_Windows)
+> - [Get mac address from command line (CMD)](https://www.windows-commandline.com/get-mac-address-command-line/)
+> - [How to check a PC's hard drive model, serial number, firmware version, and more using Command Prompt](https://www.windowscentral.com/how-check-hard-drive-model-serial-number-firmware-version-and-more-using-command-prompt)
+{% endhint %}
+
+> [!TIP]
+> memorychip
+> - supported types
+>   | id |       type       |
+>   |:--:|:----------------:|
+>   |  0 |      Unknown     |
+>   |  1 |       Other      |
+>   |  2 |       DRAM       |
+>   |  3 | Synchronous DRAM |
+>   |  4 |    Cache DRAM    |
+>   |  5 |        EDO       |
+>   |  6 |       EDRAM      |
+>   |  7 |       VRAM       |
+>   |  8 |       SRAM       |
+>   |  9 |        RAM       |
+>   | 10 |        ROM       |
+>   | 11 |       Flash      |
+>   | 12 |      EEPROM      |
+>   | 13 |      FEPROM      |
+>   | 14 |       EPROM      |
+>   | 15 |       CDRAM      |
+>   | 16 |       3DRAM      |
+>   | 17 |       SDRAM      |
+>   | 18 |       SGRAM      |
+>   | 19 |       RDRAM      |
+>   | 20 |        DDR       |
+>   | 21 |       DDR2       |
+>   | 22 |   DDR2 FB-DIMM   |
+>   | 24 |       DDR3       |
+>   | 25 |       FBD2       |
+>   | 26 |       DDR4       |
+>
+> - supported form factors
+>   | id |     form    |
+>   |:--:|:-----------:|
+>   |  0 |   Unknown   |
+>   |  1 |    Other    |
+>   |  2 |     SIP     |
+>   |  3 |     DIP     |
+>   |  4 |     ZIP     |
+>   |  5 |     SOJ
+>   |  6 | Proprietary |
+>   |  7 |     SIMM    |
+>   |  8 |     DIMM    |
+>   |  9 |     TSOP    |
+>   | 10 |     PGA     |
+>   | 11 |     RIMM    |
+>   | 12 |    SODIMM   |
+>   | 13 |    SRIMM    |
+>   | 14 |     SMD     |
+>   | 15 |     SSMP    |
+>   | 16 |     QFP     |
+>   | 17 |     TQFP    |
+>   | 18 |     SOIC    |
+>   | 19 |     LCC     |
+>   | 20 |     PLCC    |
+>   | 21 |     BGA     |
+>   | 22 |    FPBGA    |
+>   | 23 |     LGA     |
+>   | 24 |   FB-DIMM   |
+
+```batch
+> wmic computersystem
+AdminPasswordStatus  AutomaticManagedPagefile  AutomaticResetBootOption  AutomaticResetCapability  BootOptionOnLimit  BootOptionOnWatchDog  BootROMSupported  BootStatus                      BootupState  Caption    ChassisBootupState  ChassisSKUNumber  CreationClassName     CurrentTimeZone  DaylightInEffect  Description       DNSHostName  Domain       DomainRole  EnableDaylightSavingsTime  FrontPanelResetStatus  HypervisorPresent  InfraredSupported  InitialLoadInfo  InstallDate  KeyboardPasswordStatus  LastLoadInfo  Manufacturer  Model              Name       NameFormat  NetworkServerModeEnabled  NumberOfLogicalProcessors  NumberOfProcessors  OEMLogoBitmap  OEMStringArray                                                             PartOfDomain  PauseAfterReset  PCSystemType  PCSystemTypeEx  PowerManagementCapabilities  PowerManagementSupported  PowerOnPasswordStatus  PowerState  PowerSupplyState  PrimaryOwnerContact  PrimaryOwnerName  ResetCapability  ResetCount  ResetLimit  Roles                                               Status  SupportContactDescription  SystemFamily    SystemSKUNumber  SystemStartupDelay  SystemStartupOptions  SystemStartupSetting  SystemType    ThermalState  TotalPhysicalMemory  UserName  WakeUpType  Workgroup
+3                    TRUE                      TRUE                      TRUE                                                               TRUE              {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}  Normal boot  MY-WINDOWS 3                   Default string    Win32_ComputerSystem  480                                AT/AT COMPATIBLE  MY-WINDOWS   computer.com 3           TRUE                       3                      FALSE              FALSE                                            3                                     Supermicro    SYS-1028U-E1CRTP+  MY-COMUTER             TRUE                      32                         2                                  {"Intel Haswell/Wellsburg/Grantley", "Supermicro motherboard-X10 Series"}  TRUE          -1               4             4                                                                      3                      0           3                                      Windows User      1                -1          -1          {"LM_Workstation", "LM_Server", "NT", "Server_NT"}  OK                                 Default string  Default string                                                                   x64-based PC  3             120139976704                   6
+
+REM computer system product
+> wmic csproduct
+Caption                  Description              IdentifyingNumber  Name               SKUNumber  UUID                                  Vendor      Version
+Computer System Product  Computer System Product  S2xxxxxxxxxxxxx    SYS-xxxxU-Exxxxx+             00000000-0000-0000-0000-0xxxxxxxxxxx  Supermicro  0123456789
+
+> wmic bios
+BiosCharacteristics                                                          BIOSVersion                                                  BuildNumber  Caption                                     CodeSet  CurrentLanguage  Description                                 EmbeddedControllerMajorVersion  EmbeddedControllerMinorVersion  IdentificationCode  InstallableLanguages  InstallDate  LanguageEdition  ListOfLanguages  Manufacturer              Name                                        OtherTargetOS  PrimaryBIOS  ReleaseDate                SerialNumber     SMBIOSBIOSVersion  SMBIOSMajorVersion  SMBIOSMinorVersion  SMBIOSPresent  SoftwareElementID                           SoftwareElementState  Status  SystemBiosMajorVersion  SystemBiosMinorVersion  TargetOperatingSystem  Version
+{7, 11, 12, 15, 16, 17, 19, 23, 24, 25, 26, 27, 28, 29, 32, 33, 40, 42, 43}  {"- 1072009", "BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B"}               BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B                            BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B  255                             255                                                                                                                      American Megatrends Inc.  BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B                 TRUE         20180608000000.000000+000  Sxxxxxxxxxxxxx2  3.1                3                   0                   TRUE           BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B  3                     OK      5                       6                       0                      - 1072009
+
+
+> wmic cpu
+AddressWidth  Architecture  AssetTag  Availability  Caption                               Characteristics  ConfigManagerErrorCode  ConfigManagerUserConfig  CpuStatus  CreationClassName  CurrentClockSpeed  CurrentVoltage  DataWidth  Description                           DeviceID  ErrorCleared  ErrorDescription  ExtClock  Family  InstallDate  L2CacheSize  L2CacheSpeed  L3CacheSize  L3CacheSpeed  LastErrorCode  Level  LoadPercentage  Manufacturer  MaxClockSpeed  Name                                       NumberOfCores  NumberOfEnabledCore  NumberOfLogicalProcessors  OtherFamilyDescription  PartNumber  PNPDeviceID  PowerManagementCapabilities  PowerManagementSupported  ProcessorId       ProcessorType  Revision  Role  SecondLevelAddressTranslationExtensions  SerialNumber  SocketDesignation  Status  StatusInfo  Stepping  SystemCreationClassName  SystemName  ThreadCount  UniqueId  UpgradeMethod  Version  VirtualizationFirmwareEnabled  VMMonitorModeExtensions  VoltageCaps
+64            9                       3             Intel64 Family 6 Model 79 Stepping 1  252                                                               1          Win32_Processor    1200               18              64         Intel64 Family 6 Model 79 Stepping 1  CPU0                                      100       179                  2048                       25600        0                            6      2               GenuineIntel  3201           Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz  8              8                    16                                                                                                       FALSE                     BFEBFBFF000406F1  3              20225     CPU   TRUE                                                   CPU1               OK      3                     Win32_ComputerSystem     MY-COMUTER  16                     43                      TRUE                           TRUE
+64            9                       3             Intel64 Family 6 Model 79 Stepping 1  252                                                               1          Win32_Processor    1200               18              64         Intel64 Family 6 Model 79 Stepping 1  CPU1                                      100       179                  2048                       25600        0                            6      1               GenuineIntel  3201           Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz  8              8                    16                                                                                                       FALSE                     BFEBFBFF000406F1  3              20225     CPU   TRUE                                                   CPU2               OK      3                     Win32_ComputerSystem     MY-COMUTER  16                     43                      TRUE                           TRUE
+
+> wmic os
+BootDevice               BuildNumber  BuildType            Caption                                 CodeSet  CountryCode  CreationClassName      CSCreationClassName   CSDVersion  CSName     CurrentTimeZone  DataExecutionPrevention_32BitApplications  DataExecutionPrevention_Available  DataExecutionPrevention_Drivers  DataExecutionPrevention_SupportPolicy  Debug  Description  Distributed  EncryptionLevel  ForegroundApplicationBoost  FreePhysicalMemory  FreeSpaceInPagingFiles  FreeVirtualMemory  InstallDate                LargeSystemCache  LastBootUpTime             LocalDateTime              Locale  Manufacturer           MaxNumberOfProcesses  MaxProcessMemorySize  MUILanguages  Name                                                                            NumberOfLicensedUsers  NumberOfProcesses  NumberOfUsers  OperatingSystemSKU  Organization  OSArchitecture  OSLanguage  OSProductSuite  OSType  OtherTypeDescription  PAEEnabled  PlusProductID  PlusVersionNumber  PortableOperatingSystem  Primary  ProductType  RegisteredUser  SerialNumber             ServicePackMajorVersion  ServicePackMinorVersion  SizeStoredInPagingFiles  Status  SuiteMask  SystemDevice             SystemDirectory      SystemDrive  TotalSwapSpaceSize  TotalVirtualMemorySize  TotalVisibleMemorySize  Version     WindowsDirectory
+\Device\HarddiskVolume2  14393        Multiprocessor Free  Microsoft Windows Server 2016 Standard  1252     1            Win32_OperatingSystem  Win32_ComputerSystem              MY-COMUTER 480              TRUE                                       TRUE                               TRUE                             3                                      FALSE               FALSE        256              2                           104318100           16628652                123960128          20190906144511.000000+480                    20220910175932.131994+480  20221108192010.474000+480  0409    Microsoft Corporation  4294967295            137438953344          {"en-US"}     Microsoft Windows Server 2016 Standard|C:\Windows|\Device\Harddisk0\Partition3  0                      90                 11             7                                 64-bit          1033        272             18                                                                          FALSE                    TRUE     3            Windows User    003xx-6xxxx-00000-AAxxx  0                        0                        16777216                 OK      272        \Device\HarddiskVolume3  C:\Windows\system32  C:                               134101412               117324196               10.0.14393  C:\Windows
+
+> wmic memorychip list
+BankLabel                Capacity     DataWidth  Description      DeviceLocator  FormFactor  HotSwappable  InstallDate  InterleaveDataDepth  InterleavePosition  Manufacturer  MemoryType  Model  Name             OtherIdentifyingInfo  PartNumber          PositionInRow  PoweredOn  Removable  Replaceable  SerialNumber  SKU  Speed  Status  Tag                 TotalWidth  TypeDetail  Version
+P0_Node0_Channel0_Dimm0  17179869184  64         Physical Memory  P1-DIMMA1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D698284           2667           Physical Memory 0   72          128
+P0_Node0_Channel1_Dimm0  17179869184  64         Physical Memory  P1-DIMMB1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D69C62D           2667           Physical Memory 3   72          128
+P0_Node0_Channel2_Dimm0  17179869184  64         Physical Memory  P1-DIMMC1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D6975D6           2667           Physical Memory 6   72          128
+P0_Node0_Channel3_Dimm0  17179869184  64         Physical Memory  P1-DIMMD1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D697650           2667           Physical Memory 9   72          128
+P1_Node1_Channel1_Dimm0  17179869184  64         Physical Memory  P2-DIMMF1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D696E47           2667           Physical Memory 15  72          128
+P1_Node1_Channel2_Dimm0  17179869184  64         Physical Memory  P2-DIMMG1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D69C141           2667           Physical Memory 18  72          128
+P1_Node1_Channel3_Dimm0  17179869184  64         Physical Memory  P2-DIMMH1      8                                      0                    0                   Micron        0                  Physical Memory                        18ASF2G72PDZ-2G6E1  1                                                 1D69BD45           2667           Physical Memory 21  72          128
+
+> wmic diskdrive list
+Availability  BytesPerSector  Capabilities  CapabilityDescriptions                 CompressionMethod  ConfigManagerErrorCode  ConfigManagerUserConfig  DefaultBlockSize  Description  DeviceID            ErrorCleared  ErrorDescription  ErrorMethodology  Index  InstallDate  InterfaceType  LastErrorCode  Manufacturer            MaxBlockSize  MaxMediaSize  MediaLoaded  MediaType              MinBlockSize  Model                           Name                NeedsCleaning  NumberOfMediaSupported  Partitions  PNPDeviceID                                           PowerManagementCapabilities  PowerManagementSupported  SCSIBus  SCSILogicalUnit  SCSIPort  SCSITargetId  SectorsPerTrack  Signature  Size           Status  StatusInfo  SystemName  TotalCylinders  TotalHeads  TotalSectors  TotalTracks  TracksPerCylinder
+              512             {3, 4}        {"Random Access", "Supports Writing"}                     0                       FALSE                                      Disk drive   \\.\PHYSICALDRIVE1                                                    1                   SCSI                          (Standard disk drives)                              TRUE         Fixed hard disk media                AVAGO SMC3108 SCSI Disk Device  \\.\PHYSICALDRIVE1                                         2           SCSI\DISK&VEN_AVAGO&PROD_SMC3108\5&1xxxxxxxxxxxxxxx0                                                         1        0                0         1             63                          7679261237760  OK                  MY-COMPUTER 933617          255         14998557105   238072335    255
+              512             {3, 4}        {"Random Access", "Supports Writing"}                     0                       FALSE                                      Disk drive   \\.\PHYSICALDRIVE0                                                    0                   SCSI                          (Standard disk drives)                              TRUE         Fixed hard disk media                AVAGO SMC3108 SCSI Disk Device  \\.\PHYSICALDRIVE0                                         3           SCSI\DISK&VEN_AVAGO&PROD_SMC3108\5&1xxxxxxxxxxxxxxx0                                                         1        0                0         0             38               745584     239511336960   OK                  MY-COMPUTER 117242          105         467795580     12310410     105
+
+```
+
+- or <kbd>ctrl</kbd> + <kbd>r</kbd> -> `msinfo32`
+
+  [msinfo32](../../screenshot/win/msinfo32.png)
+
+### manufacturer
+```batch
+> wmic computersystem get manufacturer
+Manufacturer
+Supermicro
+```
+
+### serial number
+```batch
+> wmic bios get serialnumber
+SerialNumber
+Sxxxxxxxxxxxxx2
+```
+
+### product name
+```batch
+> wmic computersystem get model,name,manufacturer,systemtype
+```
+
+### uuid
+```batch
+> wmic csproduct get uuid
+UUID
+00000000-0000-0000-0000-0xxxxxxxxxxx
+```
+
+### system slot
+```batch
+> wmic systemslot get slotdesignation,currentusage,description,status
+CurrentUsage  Description  SlotDesignation                    Status
+4             System Slot  RSC-R1UW-2E16  SLOT1 PCI-E X16     OK
+3             System Slot  RSC-R1UW-2E16  SLOT2 PCI-E X16     OK
+3             System Slot  RSC-R1UW-E8R   SLOT1 PCI-E X8      OK
+4             System Slot  AOC-URN2-i4GXS SLOT1 PCI-E 3.0 X8  OK
+```
+
+### cpu
+```batch
+> wmic cpu get DeviceID,NumberOfCores,NumberOfLogicalProcessors,Manufacturer,Name,ProcessorId
+DeviceID  Manufacturer  Name                                       NumberOfCores  NumberOfLogicalProcessors  ProcessorId
+CPU0      GenuineIntel  Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz  8              16                         BFEBFBFF000406F1
+CPU1      GenuineIntel  Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz  8              16                         BFEBFBFF000406F1
+
+REM or
+> wmic cpu get SocketDesignation, NumberOfCores, NumberOfLogicalProcessors /Format:List
+NumberOfCores=8
+NumberOfLogicalProcessors=16
+SocketDesignation=CPU1
+
+NumberOfCores=8
+NumberOfLogicalProcessors=16
+SocketDesignation=CPU2
+
+REM or
+> echo %NUMBER_OF_PROCESSORS%
+32
+```
+
+- or
+  ```powershell
+  > Get-WmiObject –class Win32_processor | ft NumberOfCores,NumberOfLogicalProcessors
+
+  NumberOfCores NumberOfLogicalProcessors
+  ------------- -------------------------
+              8                        16
+  ```
+
+### os
+```batch
+> wmic os get Caption,CodeSet,Manufacturer,OSArchitecture,SerialNumber
+Caption                                 CodeSet  Manufacturer           OSArchitecture  SerialNumber
+Microsoft Windows Server 2016 Standard  1252     Microsoft Corporation  64-bit          003xx-6xxxx-00000-AAxxx
+```
+
+### system sensor status
+```batch
+> wmic temperature get deviceid,name,status
+```
+
+### memory
+```batch
+> wmic memphysical
+Caption                CreationClassName          Depth  Description            Height  HotSwappable  InstallDate  Location  Manufacturer  MaxCapacity  MaxCapacityEx  MemoryDevices  MemoryErrorCorrection  Model  Name                   OtherIdentifyingInfo  PartNumber  PoweredOn  Removable  Replaceable  SerialNumber  SKU  Status  Tag                      Use  Version  Weight  Width
+Physical Memory Array  Win32_PhysicalMemoryArray         Physical Memory Array                                     3                       805306368    805306368      12             6                             Physical Memory Array                                                                                                  Physical Memory Array 0  3
+Physical Memory Array  Win32_PhysicalMemoryArray         Physical Memory Array                                     3                       805306368    805306368      12             6                             Physical Memory Array                                                                                                  Physical Memory Array 1  3
+
+> systeminfo | findstr /C:"Total Physical Memory"
+Total Physical Memory:     114,574 MB
+
+> wmic computersystem get TotalPhysicalMemory
+TotalPhysicalMemory
+120139976704
+
+> wmic os get TotalVirtualMemorySize, TotalVisibleMemorySize, FreePhysicalMemory, FreeVirtualMemory, MaxProcessMemorySize
+FreePhysicalMemory  FreeVirtualMemory  MaxProcessMemorySize  TotalVirtualMemorySize  TotalVisibleMemorySize
+104338016           123980828          137438953344          134101412               117324196
+```
+
+### disk
+```batch
+> wmic diskdrive get model,index,firmwareRevision,status,interfaceType,totalHeads,totalTracks,totalCylinders,totalSectors,partitions
+FirmwareRevision  Index  InterfaceType  Model                           Partitions  Status  TotalCylinders  TotalHeads  TotalSectors  TotalTracks
+4.68              1      SCSI           AVAGO SMC3108 SCSI Disk Device  2           OK      933617          255         14998557105   238072335
+4.68              0      SCSI           AVAGO SMC3108 SCSI Disk Device  3           OK      117242          105         467795580     12310410
+```
+
+- via diskpart
+  ```batch
+  > diskpart
+
+  DISKPART> list volume
+
+    Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+    ----------  ---  -----------  -----  ----------  -------  ---------  --------
+    Volume 0     E   New Volume   NTFS   Simple      7151 GB  Healthy
+    Volume 1         System Rese  NTFS   Partition    500 MB  Healthy    System
+    Volume 2     C                NTFS   Partition    221 GB  Healthy    Boot
+
+  DISKPART> list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online          223 GB      0 B
+  Disk 1    Online         7151 GB      0 B   *    *
+
+  DISKPART> select disk 0
+  Disk 0 is now the selected disk.
+
+  DISKPART> detail disk
+  AVAGO SMC3108 SCSI Disk Device
+  Disk ID: 000B6070
+  Type   : RAID
+  Status : Online
+  Path   : 1
+  Target : 0
+  LUN ID : 0
+  Location Path : PCIROOT(0)#PCI(0200)#PCI(0000)#RAID(P01T00L00)
+  Current Read-only State : No
+  Read-only  : No
+  Boot Disk  : Yes
+  Pagefile Disk  : Yes
+  Hibernation File Disk  : No
+  Crashdump Disk  : Yes
+  Clustered Disk  : No
+
+    Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+    ----------  ---  -----------  -----  ----------  -------  ---------  --------
+    Volume 1         System Rese  NTFS   Partition    500 MB  Healthy    System
+    Volume 2     C                NTFS   Partition    221 GB  Healthy    Boot
+
+  DISKPART> select disk 1
+  Disk 1 is now the selected disk.
+
+  DISKPART> detail disk
+  AVAGO SMC3108 SCSI Disk Device
+  Disk ID: {057A21CC-17C6-45E2-893C-D68B128CAD35}
+  Type   : RAID
+  Status : Online
+  Path   : 1
+  Target : 1
+  LUN ID : 0
+  Location Path : PCIROOT(0)#PCI(0200)#PCI(0000)#RAID(P01T01L00)
+  Current Read-only State : No
+  Read-only  : No
+  Boot Disk  : No
+  Pagefile Disk  : No
+  Hibernation File Disk  : No
+  Crashdump Disk  : No
+  Clustered Disk  : No
+
+    Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+    ----------  ---  -----------  -----  ----------  -------  ---------  --------
+    Volume 0     E   New Volume   NTFS   Simple      7151 GB  Healthy
+  ```
+
+### mac address
+```batch
+> getmac
+
+Physical Address    Transport Name
+=================== ==========================================================
+AC-xx-xx-xx-xx-xx   Media disconnected
+N/A                 Hardware not present
+0C-xx-xx-xx-xx-xx   \Device\Tcpip_{BxxxxxxA-3xx1-4xxF-8xx5-3xxxxxxxxxxA}
+```
 
 ## process
 ### get the list of programs (`wmic`)

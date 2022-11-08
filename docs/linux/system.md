@@ -44,7 +44,7 @@
 {% hint style='tip' %}
 > references:
 > - [Environment Variables](https://help.ubuntu.com/community/EnvironmentVariables#The_LANGUAGE_priority_list)
->
+> - [16 Commands to Check Hardware Information on Linux](https://www.binarytides.com/linux-commands-hardware-info/)
 >
 > drop caches
 > ```bash
