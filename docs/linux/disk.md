@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [check status](#check-status)
 - [nfs](#nfs)
   - [mount a nfs](#mount-a-nfs)
   - [check mount](#check-mount)
@@ -11,7 +12,6 @@
   - [check NFS performance](#check-nfs-performance)
 - [LVM](#lvm)
   - [example](#example)
-  - [check status](#check-status)
 - [ios](#ios)
   - [mount ios](#mount-ios)
 - [performance](#performance)
@@ -19,6 +19,24 @@
   - [`sar`](#sar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## check status
+- `$ lsblk`
+- `$ ncdu`
+- `$ pvs`
+- `$ lvs`
+- `$ vgs`
+- `$ pvscan`
+- `$ lvscan`
+- `$ pvdisplay`
+- `$ vgdisplay`
+- `$ lvdisplay`
+- `$ fdisk -l`
+- `$ sfdisk  -l -uM`
+- `$ lshw -class disk`
+- `$ hwinfo --block --short`
+- `$ cat /proc/partitions`
+- `$ sudo blkid`
 
 
 ## nfs
@@ -186,21 +204,6 @@ EOF
   lvextend -- doing automatic backup of volume group "myvg"
   lvextend -- logical volume "/dev/myvg/homevol" successfully extended
   ```
-
-### check status
-- `lsblk`
-- `pvs`
-- `lvs`
-- `vgs`
-- `pvscan`
-- `lvscan`
-- `pvdisplay`
-- `vgdisplay`
-- `lvdisplay`
-- `fdisk -l`
-- `sfdisk  -l -uM`
-- `lshw -class disk`
-- `hwinfo --block --short`
 
 ## ios
 ### [mount ios](https://www.tecmint.com/how-to-mount-and-unmount-an-iso-image-in-linux/)
