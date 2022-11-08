@@ -3,9 +3,12 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [system info](#system-info)
+  - [os](#os)
   - [hardware](#hardware)
   - [cpu](#cpu)
   - [memory](#memory)
+  - [bios](#bios)
+  - [disk](#disk)
   - [network](#network)
   - [environment variables](#environment-variables)
 - [set system info](#set-system-info)
@@ -45,6 +48,9 @@
 > references:
 > - [Environment Variables](https://help.ubuntu.com/community/EnvironmentVariables#The_LANGUAGE_priority_list)
 > - [16 Commands to Check Hardware Information on Linux](https://www.binarytides.com/linux-commands-hardware-info/)
+> - [Using Commands to Display System Information](https://docs.oracle.com/cd/E19455-01/805-7229/6j6q8svf4/index.html)
+> - [30 Useful Linux Commands for System Administrators](https://www.tecmint.com/useful-linux-commands-for-system-administrators/)
+> - [90 Linux Commands frequently used by Linux Sysadmins](https://haydenjames.io/90-linux-commands-frequently-used-by-linux-sysadmins/)
 >
 > drop caches
 > ```bash
@@ -54,10 +60,84 @@
 
 ## system info
 
+> [!TIP]
+> list info
+> - `hwinfo`
+> - `lshw`
+> - `lscpu`
+> - `lsmem`
+> - `lspci`
+> - `lsscsi`
+> - `lsusb`
+> - `inxi`
+> - `lsblk`
+> - `lsof`
+> - `ncdu` - a disk utility for Unix systems
+> - `fdisk`
+> - `blkid` - command-line utility to locate/print block device attributes
+> - `mount`
+> - `free`
+> - `dmidecode`
+> - `hdparm`
+> - `lstopo-no-graphics`
+> - `hwloc-ls`
+> - `/proc`
+>   - `/proc/cpuinfo`
+>   - `/proc/meminfo`
+>   - `/proc/version`
+>   - `/proc/scsi/scsi`
+>   - `/proc/partitions`
+> performance & analysis
+> - [* imarslo : adminTools](../devops/adminTools.html)
+> - `vmstat` - shows system memory, processes, interrupts, paging, block I/O, and CPU info
+> - `iostat` - for storage I/O statistics.
+> - `iotop` - interactive I/O viewer. Get an overview of storage r/w activity
+> - `netstat` – for network statistics
+> - `iftop` - network traffic viewer
+> - `nload` - a super simple, command-line network interface monitoring tool
+> - `mtr` - network diagnostic tool
+> - `dig` - DNS lookup utility tool
+> - `nethogs` - network traffic analyzer
+> - `apropos` - search man page names and descriptions
+> - `fsck` - tool for checking the consistency of a file system
+> - `vnstat`
+> - `dstat`
+> - `sar`
+> - `nethogs` - network traffic analyzer
+
+### os
+```bash
+$ lsb_release -a
+LSB Version    : :core-4.1-amd64:core-4.1-noarch
+Distributor ID : CentOS
+Description    : CentOS Linux release 7.9.2009 (Core)
+Release        : 7.9.2009
+Codename       : Core
+
+$ uname  -a
+Linux my-computer 3.10.0-1160.42.2.el7.x86_64 #1 SMP Tue Sep 7 14:49:57 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+
+$ cat /etc/centos-release
+CentOS Linux release 7.9.2009 (Core)
+```
+
 ### hardware
 ```bash
 $ sudo dmidecode -s
 ```
+
+- [portable hardware locality](https://www.open-mpi.org/projects/hwloc/)
+
+  > [!TIP]
+  > - [lstopo command in Linux](https://iq.opengenus.org/lstopo-in-linux/)
+
+  ```bash
+  $ sudo yum install -y hwloc
+  $ lstopo-no-graphics
+  $ hwloc-ls
+  $ hwloc-info
+  $ lstopo-no-graphics -p
+  ```
 
 #### system information
 ```bash
@@ -142,7 +222,23 @@ On-line CPU(s) list:   0-3
 ....
 ```
 
+#### cpu info
+```bash
+$ sudo dmidecode -t processor
+
+// or
+$ sudo lshw -C cpu
+```
+
 ### memory
+#### memory information
+```bash
+$ sudo dmidecode -t memory
+
+// or
+$ sudo lshw -C memory
+```
+
 #### print memory only
 ```bash
 $ ps -o comm,%mem,args -u marslo | more
@@ -159,6 +255,55 @@ upstart-file-br  0.0 upstart-file-bridge --daemon --user
 ibus-daemon      0.1 /usr/bin/ibus-daemon --daemonize --xim
 ....
 ```
+
+### bios
+```bash
+$ sudo dmidecode -t bios
+```
+
+### disk
+
+```bash
+$ hwinfo --disk --only /dev/sda
+192: SCSI 20.0: 10600 Disk
+  [Created at block.245]
+  Unique ID: R7kM.qzo5k6MLsu5
+  Parent ID: svHJ.VbV94345RfA
+  SysFS ID: /class/block/sda
+  SysFS BusID: 0:2:0:0
+  SysFS Device Link: /devices/pci0000:00/0000:00:02.0/0000:03:00.0/host0/target0:2:0/0:2:0:0
+  Hardware Class: disk
+  Model: "AVAGO SMC3108"
+  Vendor: "AVAGO"
+  Device: "SMC3108"
+  Revision: "4.68"
+  Driver: "megaraid_sas", "sd"
+  Driver Modules: "megaraid_sas"
+  Device File: /dev/sda (/dev/sg1)
+  Device Files: /dev/sda, /dev/disk/by-id/scsi-360030480243a18012424538006708dc9, /dev/disk/by-id/wwn-0x60030480243a18012424538006708dc9, /dev/disk/by-path/pci-0000:03:00.0-scsi-0:2:0:0
+  Device Number: block 8:0-8:15 (char 21:1)
+  BIOS id: 0x80
+  Drive status: no medium
+  Config Status: cfg=new, avail=yes, need=no, active=unknown
+  Attached to: #37 (RAID bus controller)
+```
+
+#### check status
+- `$ lsblk`
+- `$ pvs`
+- `$ lvs`
+- `$ vgs`
+- `$ pvscan`
+- `$ lvscan`
+- `$ pvdisplay`
+- `$ vgdisplay`
+- `$ lvdisplay`
+- `$ fdisk -l`
+- `$ sfdisk  -l -uM`
+- `$ lshw -class disk`
+- `$ hwinfo --block --short`
+- `$ cat /proc/partitions`
+- `$ sudo hdparm -i /dev/sda`
 
 ### network
 #### network speed
