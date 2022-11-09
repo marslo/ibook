@@ -54,6 +54,8 @@
 > - [50 UNIX / Linux Sysadmin Tutorials](https://www.thegeekstuff.com/2010/12/50-unix-linux-sysadmin-tutorials/)
 > - [50 Most Frequently Used UNIX / Linux Commands (With Examples)](https://www.thegeekstuff.com/2010/11/50-linux-commands/)
 > - [Top 25 Best Linux Performance Monitoring and Debugging Tools](https://www.thegeekstuff.com/2011/12/linux-performance-monitoring-tools/)
+> - [dmidecode – A Best Tool to Get System Hardware Information on Linux](https://www.2daygeek.com/dmidecode-command-find-get-check-linux-system-hardware-information/)
+> - [17 Ways to check size of physical memory (RAM) in Linux](https://www.2daygeek.com/easy-ways-to-check-size-of-physical-memory-ram-in-linux/)
 >
 > drop caches
 > ```bash
@@ -65,6 +67,7 @@
 
 > [!TIP]
 > list info
+> - `glances`
 > - `hwinfo`
 > - `lshw`
 > - `lscpu`
@@ -302,6 +305,15 @@ $ sudo lshw -C cpu
 
 # or
 $ sudo dmidecode -t 4 | egrep -i "Designation|Intel|core|thread"
+
+# or
+$ inxi -C
+CPU:
+  Info: 2x 8-core model: Intel Xeon E5-2667 v4 bits: 64 type: MT MCP SMP cache: L2: 2x 2 MiB (4 MiB)
+  Speed (MHz): avg: 1324 min/max: 1200/3600 cores: 1: 1202 2: 1202 3: 1251 4: 1200 5: 1201
+    6: 1376 7: 1260 8: 1205 9: 1203 10: 1202 11: 1201 12: 1201 13: 1201 14: 1202 15: 1201 16: 1202
+    17: 1200 18: 1200 19: 1600 20: 1199 21: 1201 22: 1287 23: 1892 24: 1201 25: 1200 26: 1201
+    27: 3200 28: 1200 29: 1200 30: 1701 31: 1201 32: 1200
 ```
 
 ### memory
@@ -311,6 +323,7 @@ $ sudo dmidecode -t 4 | egrep -i "Designation|Intel|core|thread"
 > - [Find Out the Total Physical Memory (RAM) on Linux](https://www.baeldung.com/linux/total-physical-memory)
 > - [17 Ways to check size of physical memory (RAM) in Linux](https://www.2daygeek.com/easy-ways-to-check-size-of-physical-memory-ram-in-linux/)
 > - [free – A standard command to check memory usage statistics in Linux](https://www.2daygeek.com/free-command-to-check-memory-usage-statistics-in-linux/)
+> - [nmon – A Nifty Tool To Monitor System Resources On Linux](https://www.2daygeek.com/nmon-system-performance-monitor-system-resources-on-linux/)
 >
 > - RAM: Random Access Memory is a temporary memory. This information will go away when the computer is turned off.
 > - ROM: Read Only Memory is permanent memory, that holds the data even if the system is switched off.
@@ -318,8 +331,26 @@ $ sudo dmidecode -t 4 | egrep -i "Designation|Intel|core|thread"
 
 #### list total memory
 ```bash
+$ hwinfo --memory | grep 'Memory Size'
+  Memory Size: 128 GB
+
 $ sudo lshw -short | grep 'System Memory'
 /0/2c                           memory         128GiB System Memor
+
+$ vmstat -s -S M | egrep -ie 'total memory'
+       128817 M total memory
+
+$ vmstat -s | grep "total memory"
+    131909608 K total memory
+
+$ vmstat -s | awk '{print $1 / 1024 / 1024}' | head -1
+125.799
+
+$ inxi -F | grep "Memory"
+  Processes: 414 Uptime: 87d 17h 40m Memory: 125.8 GiB used: 27.21 GiB (21.6%) Init: systemd
+
+$ sudo dmidecode -t memory | grep  Size: | grep -v "No Module Installed" | awk '{sum+=$2}END{print sum}'
+131072
 
 $ egrep 'MemTotal|MemFree|MemAvailable' /proc/meminfo
 MemTotal:       131909608 kB
@@ -327,6 +358,11 @@ MemFree:        95760488 kB
 MemAvailable:   104355708 kB
 
 $ vmstat -s
+```
+
+#### list only installed RAM modules
+```bash
+$ sudo dmidecode -t memory | grep  Size: | grep -v "No Module Installed"
 ```
 
 #### memory information
@@ -370,6 +406,11 @@ $ free -h -s 5
 
 # or
 $ vmstat -w
+
+# or
+$ dmesg | grep "Memory"
+[    0.995127] Memory: 131882904K/134101416K available (12300K kernel code, 2504K rwdata, 3684K rodata, 2340K init, 3240K bss, 2218512K reserved, 0K cma-reserved)
+[    1.139890] x86/mm: Memory block size: 2048MB
 ```
 
 ### bios
@@ -378,7 +419,6 @@ $ sudo dmidecode -t bios
 ```
 
 ### disk
-
 ```bash
 $ hwinfo --disk --only /dev/sda
 192: SCSI 20.0: 10600 Disk
