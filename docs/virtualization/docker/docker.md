@@ -6,6 +6,7 @@
   - [cgoups](#cgoups)
   - [namespace](#namespace)
   - [docker daemon](#docker-daemon)
+- [enable tcp port 2375 for external connection to docker](#enable-tcp-port-2375-for-external-connection-to-docker)
 - [docker completion](#docker-completion)
   - [Linux](#linux)
   - [OSX](#osx)
@@ -52,16 +53,63 @@
 ### cgoups
 ![docker cgoups](../../screenshot/docker/docker-cgroup.png)
 
-
 ### namespace
 ![docker namespace](../../screenshot/docker/docker-namespace.png)
 
 ### docker daemon
+
+> [!TIP]
 > references:
 > - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/)
 > - [Configure and troubleshoot the Docker daemon](https://docs.docker.com/config/daemon/)
 > - [Set Up Docker with TLS](https://www.labkey.org/Documentation/wiki-page.view?name=dockerTLS)
 > - [How to Configure Docker daemon with a configuration file?](https://www.devopsschool.com/blog/how-to-configure-docker-daemon-with-a-configuration-file/)
+
+## [enable tcp port 2375 for external connection to docker](https://gist.github.com/styblope/dc55e0ad2a9848f2cc3307d4819d819f)
+
+{% hint style='tip' %}
+> references:
+> - [* Configure where the Docker daemon listens for connections](https://docs.docker.com/engine/install/linux-postinstall/#configure-where-the-docker-daemon-listens-for-connections)
+> - [* styblope/docker-api-port.md](https://gist.github.com/styblope/dc55e0ad2a9848f2cc3307d4819d819f)
+> - [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script)
+> - [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
+> - [Docker security : Docker daemon attack surface](https://docs.docker.com/engine/security/#docker-daemon-attack-surface)
+{% endhint %}
+
+```bash
+$ cat /etc/docker/daemon.json
+{
+  "hosts": ["unix:///var/run/docker.sock", "tcp://127.0.0.1:2375"]
+}
+
+$ sudo systemctl edit docker.service
+# or
+$ cat /etc/systemd/system/docker.service.d/override.conf
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://127.0.0.1:2375 [--config-file /etc/docker/daemon.json]
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker.service
+
+# result
+$ sudo netstat -lntp | grep dockerd
+tcp6       0      0 :::2375                 :::*                    LISTEN      5649/dockerd
+```
+
+- or modify in `/lib/systemd/system/docker.service`
+  ```bash
+  # Replacing this line:
+  ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+  # With this line:
+  ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock [--tls=false]
+  ```
+
+- or via `socat`
+  ```bash
+  exec socat -d TCP-LISTEN:2375,fork UNIX-CONNECT:/var/run/docker.sock
+  ```
 
 ## docker completion
 
