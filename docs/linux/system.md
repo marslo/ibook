@@ -51,6 +51,9 @@
 > - [Using Commands to Display System Information](https://docs.oracle.com/cd/E19455-01/805-7229/6j6q8svf4/index.html)
 > - [30 Useful Linux Commands for System Administrators](https://www.tecmint.com/useful-linux-commands-for-system-administrators/)
 > - [90 Linux Commands frequently used by Linux Sysadmins](https://haydenjames.io/90-linux-commands-frequently-used-by-linux-sysadmins/)
+> - [50 UNIX / Linux Sysadmin Tutorials](https://www.thegeekstuff.com/2010/12/50-unix-linux-sysadmin-tutorials/)
+> - [50 Most Frequently Used UNIX / Linux Commands (With Examples)](https://www.thegeekstuff.com/2010/11/50-linux-commands/)
+> - [Top 25 Best Linux Performance Monitoring and Debugging Tools](https://www.thegeekstuff.com/2011/12/linux-performance-monitoring-tools/)
 >
 > drop caches
 > ```bash
@@ -102,8 +105,32 @@
 > - `fsck` - tool for checking the consistency of a file system
 > - `vnstat`
 > - `dstat`
+> - `mpstat`
+> - `ss` - socket statistics
 > - `sar`
 > - `nethogs` - network traffic analyzer
+
+{% hint style='info' %}
+> lshw Classes
+> - `address`
+> - `bridge`
+> - `bus`
+> - `communication`
+> - `disk`
+> - `display`
+> - `generic`
+> - `input`
+> - `memory`
+> - `multimedia`
+> - `network`
+> - `power`
+> - `printer`
+> - `processor`
+> - `storage`
+> - `system`
+> - `tape`
+> - `volume`
+{% endhint %}
 
 ### os
 ```bash
@@ -198,20 +225,64 @@ $ sudo dmidecode | grep -i uuid | awk '{print $2}' | tr '[:upper:]' '[:lower:]'
 
 ### cpu
 
+{% hint style='tip' %}
+> references:
+> - [How to know number of cores of a system in Linux?](https://unix.stackexchange.com/a/279354/29178)
+> - [How to find out the number of CPU & Cores of your Linux machine](https://www.ryadel.com/en/cpu-cores-threads-number-linux-centos-virtual-machine/)
+{% endhint %}
+
 #### [cpu cores](https://www.ryadel.com/en/cpu-cores-threads-number-linux-centos-virtual-machine/)
 ```bash
 $ cat /proc/cpuinfo | egrep "core id|physical id" | tr -d "\n" | sed s/physical/\\nphysical/g | grep -v ^$ | sort | uniq | wc -l
 36
+
+# or
+$ grep -c processor /proc/cpuinfo
+32
+
+# or
+$ nproc --all
+32
+
+# or
+$ getconf _NPROCESSORS_ONLN
+32
+
+# or
+$ cat /sys/devices/system/cpu/present
+0-31
+
+# or CPUs = Threads per core X cores per socket X socket
+$ lscpu | grep -E '^Thread|^Core|^Socket|^CPU\('
+CPU(s):                32
+Thread(s) per core:    2
+Core(s) per socket:    8
+Socket(s):             2
+
+# or
+$ sudo dmidecode -t 4 | grep -E 'Socket Designation|Count'
+  Socket Designation: CPU1
+  Core Count: 8
+  Thread Count: 16
+  Socket Designation: CPU2
+  Core Count: 8
+  Thread Count: 16
 ```
+
+- others
+  ```bash
+  $ lscpu --all --extended
+  $ lscpu --all --parse=CPU,SOCKET,CORE | grep -v '^#'
+  ```
 
 #### check CPU support 64 bit or not
 ```bash
-$ sudo dmidecode --type=processor | grep -i -A 1 charac
+$ sudo dmidecode --type=processor | grep -i -A 1 Characteristics
     Characteristics:
             64-bit capable
 ```
 
-#### cat /etc/cpuinfo
+#### `cat /proc/cpuinfo`
 ```bash
 $ lscpu
 Architecture:          i686
@@ -226,17 +297,54 @@ On-line CPU(s) list:   0-3
 ```bash
 $ sudo dmidecode -t processor
 
-// or
+# or
 $ sudo lshw -C cpu
+
+# or
+$ sudo dmidecode -t 4 | egrep -i "Designation|Intel|core|thread"
 ```
 
 ### memory
+
+{% hint style='tip' %}
+> references:
+> - [Find Out the Total Physical Memory (RAM) on Linux](https://www.baeldung.com/linux/total-physical-memory)
+> - [17 Ways to check size of physical memory (RAM) in Linux](https://www.2daygeek.com/easy-ways-to-check-size-of-physical-memory-ram-in-linux/)
+> - [free – A standard command to check memory usage statistics in Linux](https://www.2daygeek.com/free-command-to-check-memory-usage-statistics-in-linux/)
+>
+> - RAM: Random Access Memory is a temporary memory. This information will go away when the computer is turned off.
+> - ROM: Read Only Memory is permanent memory, that holds the data even if the system is switched off.
+{% endhint %}
+
+#### list total memory
+```bash
+$ sudo lshw -short | grep 'System Memory'
+/0/2c                           memory         128GiB System Memor
+
+$ egrep 'MemTotal|MemFree|MemAvailable' /proc/meminfo
+MemTotal:       131909608 kB
+MemFree:        95760488 kB
+MemAvailable:   104355708 kB
+
+$ vmstat -s
+```
+
 #### memory information
 ```bash
 $ sudo dmidecode -t memory
 
-// or
+# or
 $ sudo lshw -C memory
+$ sudo lshw -short -class memory
+
+# Physical Memory Array
+$ sudo dmidecode --type 16
+
+# get Memory Device
+$ sudo dmidecode --type 17
+
+# Memory Array Mapped Address
+$ sudo dmidecode --type 19
 ```
 
 #### print memory only
@@ -254,6 +362,14 @@ upstart-dbus-br  0.0 upstart-dbus-bridge --daemon --system --user --bus-name sys
 upstart-file-br  0.0 upstart-file-bridge --daemon --user
 ibus-daemon      0.1 /usr/bin/ibus-daemon --daemonize --xim
 ....
+```
+
+#### check memory in time
+```bash
+$ free -h -s 5
+
+# or
+$ vmstat -w
 ```
 
 ### bios
@@ -306,6 +422,27 @@ $ hwinfo --disk --only /dev/sda
 - `$ sudo hdparm -i /dev/sda`
 
 ### network
+
+#### get network cards
+```bash
+$ sudo lshw -short -class network
+H/W path            Device        Class          Description
+============================================================
+/0/100/1/0          enp1s0f0      network        I350 Gigabit Network Connection
+/0/100/1/0.1        enp1s0f1      network        I350 Gigabit Network Connection
+/0/100/1.1/0        enp2s0f0      network        Ethernet Controller X710 for 10GbE SFP+
+/0/100/1.1/0.1      enp2s0f1      network        Ethernet Controller X710 for 10GbE SFP+
+/0/2/0              enp131s0f0    network        Ethernet Controller 10-Gigabit X540-AT2
+/0/2/0.1            enp131s0f1    network        Ethernet Controller 10-Gigabit X540-AT2
+/3                  veth8c9c4570  network        Ethernet interface
+/4                  flannel.1     network        Ethernet interface
+/5                  veth8d141a78  network        Ethernet interface
+/6                  veth3cc4bf19  network        Ethernet interface
+/7                  cni0          network        Ethernet interface
+/8                  docker0       network        Ethernet interface
+/9                  veth179b5dab  network        Ethernet interface
+```
+
 #### network speed
 ```bash
 $ ifstat -n -i en7
