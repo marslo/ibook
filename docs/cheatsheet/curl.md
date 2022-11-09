@@ -78,6 +78,12 @@ $ curl -s -o /dev/null -w "%{http_code}" https://github.com
   response: '200'
   ```
 
+- or
+  ```bash
+  $ curl -sSgL -X GET https://github.com/fake/url | sed -nre 's!^.*"status"\s*:\s*([0-9]+).*$!\1!gp'
+  404
+  ```
+
 ### [get `size_download`](https://superuser.com/a/1257030/112396)
 ```bash
 $ curl -R -s -S -w "\nhttp: %{http_code}. size: %{size_download}\n" -o /dev/null https://github.com
@@ -97,7 +103,7 @@ $ curl -s \
        -o /deve/null \
        https://github.com
 
-results: 
+results:
 
          Lookup time: 0.001288
          Connect time:  0.001617
