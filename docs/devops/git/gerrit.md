@@ -30,14 +30,32 @@ $ git config --global gitreview.remote origin
 ```
 
 ### [default groups](https://github.com/bpollack/gerrit/blob/master/Documentation/access-control.txt)
+
+> [!TIP]
 > - [Gerrit Code Review - Access Controls](https://git.eclipse.org/r/Documentation/access-control.html#non-interactive_users)
 
-* Administrators
-* Anonymous Users
-* Change Owner
-* Non-Interactive Users
-* Project Owners
-* Registered Users
+- System Groups
+  - Anonymous Users
+  - Change Owner
+  - Project Owners
+  - Registered Users
+
+- Predefined Groups
+  - Administrators
+  - Non-Interactive Users
+  - Service Users
+
+
+#### Special references
+
+* `refs/changes/*`
+* `refs/meta/config`
+* `refs/meta/dashboards/*`
+* `refs/notes/review`
+
+#### Magic references
+
+* `refs/for/<branch ref>`
 
 ## [refs/meta/config](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#_the_refs_meta_config_namespace)
 ### get project.config
@@ -78,10 +96,10 @@ $ git commit -m "<add your comments here>"
   ```bash
   $ git push origin HEAD:refs/for/refs/meta/config
   ```
-  or
-  ```bash
-  $ git push origin meta/config:refs/for/refs/meta/config
-  ```
+  - or
+    ```bash
+    $ git push origin meta/config:refs/for/refs/meta/config
+    ```
 
 ### update meta/config if remotes update
 ```bash
@@ -348,8 +366,14 @@ About the `refs/for` namespace
     push = group gerrit-tricium-admins
   ```
 
-### [rules.pl](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html)
-#### [submit by a non author](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#NonAuthorCodeReview)
+## [rules.pl](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html)
+
+### [submit by a non author](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#NonAuthorCodeReview)
+
+> [!TIP]
+> check also:
+> - [Exclude author from gerrit review](https://stackoverflow.com/a/47887713/2940319)
+
 ```
 submit_rule(S) :-
     gerrit:default_submit(X),
@@ -366,8 +390,18 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
 ```
 ![non author cr](../../screenshot/gerrit/none-author-CR.png)
 
-#### [ticket check](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#_example_7_make_change_submittable_if_commit_message_starts_with_fix)
-> check also: [Prolog Gerrit - validate label if commit message contains a specific string](https://stackoverflow.com/q/27295382/2940319)
+- by `project.config`
+  ```config
+  [access "refs/*"]
+    label-Code-Review = block -2..+2 group Change Owner
+    exclusiveGroupPermissions = label-Code-Review
+  ```
+
+### [ticket check](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#_example_7_make_change_submittable_if_commit_message_starts_with_fix)
+
+> [!TIP]
+> check also:
+> - [Prolog Gerrit - validate label if commit message contains a specific string](https://stackoverflow.com/q/27295382/2940319)
 
 - optional validation
   ```

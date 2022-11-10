@@ -97,6 +97,39 @@ $ sudo netstat -lntp | grep dockerd
 tcp6       0      0 :::2375                 :::*                    LISTEN      5649/dockerd
 ```
 
+- result
+  ```bash
+  $ sudo cat /etc/docker/daemon.json
+  {
+    "hosts": ["unix:///var/run/docker.sock", "fd://", "tcp://0.0.0.0:2375"]
+  }
+
+  $ sudo cat /etc/systemd/system/docker.service.d/docker.conf
+  [Service]
+  ExecStart=
+  ExecStart=/usr/bin/dockerd
+
+  $ docker -H tcp://0.0.0.0:2376 pull ubuntu:18.04
+  18.04: Pulling from library/ubuntu
+  a404e5416296: Pull complete
+  Digest: sha256:ca70a834041dd1bf16cc38dfcd24f0888ec4fa431e09f3344f354cf8d1724499
+  Status: Downloaded newer image for ubuntu:18.04
+  ```
+  - verify
+    ```bash
+    $ ip -4 a s en1
+    5: en1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+        inet x.x.x.x/24 brd x.x.x.255 scope global noprefixroute en1
+           valid_lft forever preferred_lft forever
+
+    $ nc -zv <target.ip.address> 2375
+    Connection to target.ip.address 2375 port [tcp/*] succeeded!
+
+    $ docker -H tcp://<target.ip.address>:2375 images
+    REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+    ubuntu       18.04     71eaf13299f4   2 weeks ago   63.1MB
+    ```
+
 - or modify in `/lib/systemd/system/docker.service`
   ```bash
   # Replacing this line:
