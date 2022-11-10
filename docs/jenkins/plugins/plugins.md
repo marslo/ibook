@@ -5,6 +5,7 @@
 - [plugins](#plugins)
   - [recommended plugins](#recommended-plugins)
   - [optinal](#optinal)
+  - [CloudBees](#cloudbees)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

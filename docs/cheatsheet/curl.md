@@ -6,6 +6,7 @@
   - [get JSON](#get-json)
   - [get XML](#get-xml)
   - [get `http_code` or `response_code`](#get-http_code-or-response_code)
+  - [get `http_code` for multiple urls](#get-http_code-for-multiple-urls)
   - [get `size_download`](#get-size_download)
   - [get time](#get-time)
 - [post](#post)
@@ -44,13 +45,65 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
-
-
 {% hint style='tip' %}
 > references:
 > - [online rest & soap api testing tool : curl](https://reqbin.com/curl)
+> - [curl.1 the man page](https://curl.se/docs/manpage.html)
+>
+> available %-symbols:
+> - `content_type`
+> - `curl_version`
+> - `errormsg`
+> - `exitcode`
+> - `filename_effective`
+> - `ftp_entry_path`
+> - `http_code` - The numerical response code that was found in the last retrieved HTTP(S) or FTP(s) transfer
+> - `http_connect`
+> - `http_version`
+> - `json`
+> - `local_ip`
+> - `local_port`
+> - `method`
+> - `num_connects`
+> - `num_headers`
+> - `num_redirects`
+> - `proxy_ssl_verify_result`
+> - `redirect_url`
+> - `referer`
+> - `remote_ip`
+> - `remote_port`
+> - `response_code` - The numerical response code that was found in the last transfer (formerly known as `http_code`)
+> - `scheme`
+> - `size_download`
+> - `size_header`
+> - `size_request`
+> - `size_upload`
+> - `speed_download`
+> - `speed_upload`
+> - `ssl_verify_result`
+> - `stderr`
+> - `stdout`
+> - `time_appconnect`
+> - `time_connect`
+> - `time_namelookup`
+> - `time_pretransfer`
+> - `time_redirect`
+> - `time_starttransfer`
+> - `time_total`
+> - `url`
+> - `url_effective`
+> - `urlnum`
+>
+> - get via
+>   ```bash
+>   $ curl -sSLg \
+>          -k \
+>          -o /dev/null \
+>          -w "%{json}" \
+>          https://domain.name.com |
+>     jq -r 'keys[]' |
+>     sort
+>   ```
 {% endhint %}
 
 ## get
@@ -83,6 +136,31 @@ $ curl -s -o /dev/null -w "%{http_code}" https://github.com
   $ curl -sSgL -X GET https://github.com/fake/url | sed -nre 's!^.*"status"\s*:\s*([0-9]+).*$!\1!gp'
   404
   ```
+
+### get `http_code` for multiple urls
+```bash
+$ xargs -n1 curl -sk -o /dev/null -w '%{http_code} ' < <(echo "https://1.domain.com https://2.domain.com")
+
+# i.e.:
+$ xargs -n1 curl -sk -o /dev/null -w '%{http_code} ' < <(echo "https://stackoverflow.com/questions/3110444/ https://stackoverflow.com/questions/3110444/")
+301 301
+```
+
+- or
+  ```bash
+  $ echo "https://1.domain.com
+  https://2.domain.com
+  " > urls.txt
+  $ xargs -n1 curl -sk -o /dev/null -w '%{http_code} ' < urls.txt
+  ```
+
+- or
+  ```bash
+  $ curl -sSgL -X GET https://1.domain.com https://2.domain.com | sed -nre 's!^.*"status"\s*:\s*([0-9]+).*$!\1!gp'
+  404
+  200
+  ```
+
 
 ### [get `size_download`](https://superuser.com/a/1257030/112396)
 ```bash
