@@ -75,6 +75,7 @@
     * [tricky](jenkins/script/tricky.md)
   * [plugins](jenkins/plugins/plugins.md)
     * [kubernetes](jenkins/plugins/kubernetes.md)
+    * [docker](jenkins/plugins/docker.md)
     * [lockable-resource](jenkins/plugins/lockable-resource.md)
     * [postbuild](jenkins/plugins/postbuild.md)
     * [artifactory](jenkins/plugins/artifactory.md)

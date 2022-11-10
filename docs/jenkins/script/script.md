@@ -96,6 +96,12 @@
   System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles')
   ```
 
+### extend built-in node executor
+```groovy
+import jenkins.model.*
+Jenkins.instance.setNumExecutors(5)
+```
+
 ### execute shell script in console
 
 > [!TIP]

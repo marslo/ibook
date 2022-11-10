@@ -23,11 +23,21 @@
 
 {% hint style='tip' %}
 > references:
+> - [Jenkins Pipelines Generator](https://jenkinspipelinegenerator.octopus.com/#/)
 > - [Configuring Content Security Policy](https://www.jenkins.io/doc/book/security/configuring-content-security-policy/)
 > - [Rendering User Content](https://www.jenkins.io/doc/book/security/user-content/)
 > - [How to Serve Resources from Jenkins](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-serve-resources-from-jenkins)
 > - [Content Security Policy (CSP) for Web Report](https://kb.froglogic.com/squish/integrations/jenkins/content-security-policy-csp-web-report/)
 > - [Unable to embed Jenkins page into an iframe. How to fix it?](http://help.collab.net/index.jsp?topic=/teamforge820/faq/embedjenkinsintoiframe.html)
+> - [Continuous Integration series](https://octopus.com/blog/tag/CI%20Series)
+>   - [Multi-environment deployments with Jenkins and Octopus](https://octopus.com/blog/multi-environment-deployments-jenkins)
+>   - [Deploying to Amazon EKS with Docker and Jenkins](https://octopus.com/blog/jenkins-eks-ecr-deployment)
+>   - [Building a Docker image in Jenkinsfile and publishing to ECR](https://octopus.com/blog/jenkins-docker-ecr)
+>   - [Deploying to Amazon EKS with Docker and Jenkins](https://octopus.com/blog/jenkins-eks-ecr-deployment)
+>   - [Jenkins security tips](https://octopus.com/blog/jenkins-security-tips)
+>   - [How to install a Jenkins instance with Helm](https://octopus.com/blog/jenkins-helm-install-guide)
+>   - [How to install Jenkins on Docker](https://octopus.com/blog/jenkins-docker-install-guide)
+>   - [Using dynamic build agents to automate scaling in Jenkins](https://octopus.com/blog/jenkins-dynamic-build-agents)
 {% endhint %}
 
 
@@ -346,10 +356,12 @@ $ curl -X POST \
 
 {% hint style='tip' %}
 > refernce:
+> - [How to install Jenkins on Docker](https://octopus.com/blog/jenkins-docker-install-guide)
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [-Dhudson.security.ArtifactsPermission=true](https://github.com/jenkinsci/docker/issues/202#issuecomment-244321911)
 > - [remoting configuration](https://github.com/jenkinsci/remoting/blob/master/docs/configuration.md)
 > - [IMPORTANT JENKINS COMMAND](https://rajeevtechblog.wordpress.com/2018/09/28/important-jenkins-command/)
+> - [unable to deactivate CSRF via JCasC](https://github.com/jenkinsci/configuration-as-code-plugin/issues/1184)
 {% endhint %}
 
 ### in docker
@@ -371,11 +383,10 @@ $ docker run \
 
 - docker run with `JAVA_OPTS`
 
-  {% hint style='tip' %}
+  > [!TIP]
   > more on [Properties in Jenkins Core for `JAVA_OPTS`](config/config.html#properties-in-jenkins-core-for-javaopts)
   > - [encoding](https://stackoverflow.com/a/60419856/2940319)
   > - [How locale setting can break unicode/UTF-8 in Java/Tomcat](https://www.jvmhost.com/articles/locale-breaks-unicode-utf-8-java-tomcat/)
-  {% endhint %}
 
   ```bash
   $ docker run \
@@ -423,6 +434,39 @@ $ docker run \
            --volume /var/run/docker.sock:/var/run/docker.sock \
            jenkins/jenkins:latest
   ```
+
+#### backup the docker volume
+```bash
+$ docker run --rm \
+             -v jenkins_home:/var/jenkins_home \
+             -v $(pwd):/backup \
+             ubuntu \
+             tar cvf /backup/backup.tar /var/jenkins_home
+```
+
+#### running docker images as services
+```bash
+$ cat /etc/systemd/system/docker-jenkins.service
+
+[Unit]
+Description=Jenkins
+
+[Service]
+SyslogIdentifier=docker-jenkins
+ExecStartPre=-/usr/bin/docker create -m 0b -p 8080:8080 -p 50000:50000 --restart=always --name jenkins jenkins/jenkins:lts-jdk11
+ExecStart=/usr/bin/docker start -a jenkins
+ExecStop=-/usr/bin/docker stop --time=0 jenkins
+
+[Install]
+WantedBy=multi-user.target
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable docker-jenkins
+$ sudo systemctl start docker-jenkins
+
+# check log
+$ sudo journalctl -u docker-jenkins -f
+```
 
 ### in kubernetes
 
@@ -688,3 +732,137 @@ EOF
             serviceName: jenkins
             servicePort: 8080
   ```
+
+### via helm
+
+> [!TIP]
+> - [How to install a Jenkins instance with Helm](https://octopus.com/blog/jenkins-helm-install-guide)
+> - [OctopusSamples/jenkins-complete-image](https://github.com/OctopusSamples/jenkins-complete-image)
+
+```bash
+$ helm repo add jenkins https://charts.jenkins.io
+$ helm repo update
+
+$ helm upgrade --install myjenkins jenkins/jenkins
+
+$ kubectl exec --namespace default \
+               -it svc/myjenkins \
+               -c jenkins -- /bin/cat /run/secrets/chart-admin-password && echo
+```
+
+#### forward port
+```bash
+$ kubectl --namespace default port-forward svc/myjenkins 8080:8080
+```
+
+#### show Load Balancer
+```bash
+$ helm show values jenkins/jenkins
+...
+controller:
+  serviceType: LoadBalancer
+...
+```
+
+#### upgrade
+```bash
+$ helm upgrade --install -f values.yaml myjenkins jenkins/jenkins
+```
+
+#### get info
+```bash
+$ kubectl get svc --namespace default myjenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}"
+a84aa6226d6e5496882cfafdd6564a35-901117307.us-west-1.elb.amazonaws.com
+
+$ kubectl get pods
+NAME                                     READY   STATUS              RESTARTS   AGE
+java-9-k0hmj-vcvdz-wknh4                 0/1     ContainerCreating   0          1s
+myjenkins-0                              2/2     Running             0          49m
+```
+
+#### customizing
+
+##### installing additional plugins
+```yaml
+...
+controller:
+    additionalPlugins:
+    - octopusdeploy:3.1.6
+...
+```
+
+##### customizing jenkins docker image
+```yaml
+...
+controller:
+  image: "docker.io/mcasperson/myjenkins"
+  tag: "latest"
+  installPlugins: false
+...
+```
+
+##### adding jenkins agents
+```yaml
+...
+agent:
+  podName: default
+  customJenkinsLabels: default
+  resources:
+    limits:
+      cpu: "1"
+      memory: "2048Mi"
+...
+```
+
+- defines a second pod template
+  ```yaml
+  ...
+  agent:
+    podName: default
+    customJenkinsLabels: default
+    resources:
+      limits:
+        cpu: "1"
+        memory: "2048Mi"
+  additionalAgents:
+    maven:
+      podName: maven
+      customJenkinsLabels: maven
+      image: jenkins/jnlp-agent-maven
+      tag: latest
+  ...
+  ```
+  - jenkinsfile
+    ```groovy
+    pipeline {
+      agent {
+          kubernetes {
+              inheritFrom 'maven'
+          }
+      }
+      // ...
+    }
+    ```
+
+#### backup jenkins home
+```bash
+$ kubectl exec -c jenkins myjenkins-0 -- tar czf /tmp/backup.tar.gz /var/jenkins_home
+$ kubectl cp -c jenkins myjenkins-0:/tmp/backup.tar.gz ./backup.tar.gz
+```
+
+## build Jenkins docker image
+
+> [!TIP]
+> - [jenkins-complete-image/Dockerfile](https://github.com/OctopusSamples/jenkins-complete-image/blob/main/Dockerfile)
+
+```dockerfile
+FROM jenkins/jenkins:lts-jdk11
+USER root
+RUN apt update && \
+    apt install -y --no-install-recommends gnupg curl ca-certificates apt-transport-https && \
+    curl -sSfL https://apt.octopus.com/public.key | apt-key add - && \
+    sh -c "echo deb https://apt.octopus.com/ stable main > /etc/apt/sources.list.d/octopus.com.list" && \
+    apt update && apt install -y octopuscli
+RUN jenkins-plugin-cli --plugins octopusdeploy:3.1.6 kubernetes:1.29.2 workflow-aggregator:2.6 git:4.7.1 configuration-as-code:1.52
+USER jenkins
+```
