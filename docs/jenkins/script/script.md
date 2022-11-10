@@ -5,6 +5,7 @@
 - [script console](#script-console)
   - [usage](#usage)
   - [basic usage](#basic-usage)
+  - [extend built-in node executor](#extend-built-in-node-executor)
   - [execute shell script in console](#execute-shell-script-in-console)
 - [jenkins system](#jenkins-system)
 - [jobs](#jobs)

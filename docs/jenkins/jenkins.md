@@ -13,6 +13,8 @@
 - [run Jenkins](#run-jenkins)
   - [in docker](#in-docker)
   - [in kubernetes](#in-kubernetes)
+  - [via helm](#via-helm)
+- [build Jenkins docker image](#build-jenkins-docker-image)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
