@@ -22,6 +22,7 @@
 > - [Pipeline Steps Reference](https://www.jenkins.io/doc/pipeline/steps/)
 > - [Pipeline Utility Steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#pipeline-utility-steps)
 > - [Jenkins Pipeline Cookbook](https://e.printstacktrace.blog/jenkins-pipeline-cookbook/)
+> - [Class Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true)
 {% endhint %}
 
 ## jenkins API

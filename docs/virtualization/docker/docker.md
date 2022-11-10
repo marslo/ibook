@@ -45,6 +45,7 @@
 > - [Windows for Linux Nerds](https://blog.jessfraz.com/post/windows-for-linux-nerds/)
 > - [Running Docker on WSL2 without Docker Desktop](https://technotes.adelerhof.eu/wsl/docker_on_wsl2/)
 > - [Copy Docker repositories](https://technotes.adelerhof.eu/post/migrate_docker/)
+> - [Docker storage drivers](https://docs.docker.com/storage/storagedriver/select-storage-driver/)
 {% endhint %}
 
 ## docker internals
@@ -71,6 +72,11 @@
 > references:
 > - [* Configure where the Docker daemon listens for connections](https://docs.docker.com/engine/install/linux-postinstall/#configure-where-the-docker-daemon-listens-for-connections)
 > - [* styblope/docker-api-port.md](https://gist.github.com/styblope/dc55e0ad2a9848f2cc3307d4819d819f)
+> - [* Configure the daemon](https://docs.docker.com/config/daemon/)
+>   - [Configure and troubleshoot the Docker daemon](https://docs.docker.com/config/daemon/)
+>   - [Control Docker with systemd](https://docs.docker.com/config/daemon/systemd/)
+>   - [Configure the daemon for IPv6](https://docs.docker.com/config/daemon/ipv6/)
+>   - [Docker and iptables](https://docs.docker.com/network/iptables/)
 > - [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script)
 > - [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
 > - [Docker security : Docker daemon attack surface](https://docs.docker.com/engine/security/#docker-daemon-attack-surface)

@@ -49,6 +49,7 @@
 - [Parameterized Scheduler](https://plugins.jenkins.io/parameterized-scheduler/)
 - [Metrics](https://plugins.jenkins.io/metrics/)
 - [Validating String Parameter](https://plugins.jenkins.io/validating-string-parameter/)
+- [Klocwork Analysis](https://plugins.jenkins.io/klocwork/)
 - [Strict Crumb Issuer Plugin](https://plugins.jenkins.io/strict-crumb-issuer/)
   - due to [SECURITY-626](../plugins/crumbIssuer.html#improved-csrf-protection)
 
@@ -58,3 +59,11 @@
 - [Active Directory plugin](https://plugins.jenkins.io/active-directory/)
 - [Delivery Pipeline Plugin](https://plugins.jenkins.io/delivery-pipeline-plugin/)
 - [Log Parser Plugin](https://plugins.jenkins.io/log-parser/)
+
+### [CloudBees](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/)
+- [CloudBees Template plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/template)
+- [Folders Plus plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/folders-plus)
+- [Jenkins Health Advisor by CloudBees](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/cloudbees-jenkins-advisor)
+- [CloudBees Monitoring Plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/monitoring)
+- [CloudBees Plugin Usage Analyzer plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/plugin-usage)
+-

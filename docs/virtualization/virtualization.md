@@ -7,6 +7,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> references:
+> - [Checking Kubernetes pod CPU and memory](https://octopus.com/blog/kubernetes-pod-cpu-memory)
+> - [Bulk deletion of Kubernetes resources](https://octopus.com/blog/deleting-kubernetes-resources)
+{% endhint %}
 
 
 ## SSL Certificate
