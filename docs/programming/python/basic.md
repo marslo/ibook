@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [version capatibility](#version-capatibility)
 - [environment](#environment)
   - [list included modules](#list-included-modules)
   - [list lib paths](#list-lib-paths)
@@ -14,6 +15,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+## version capatibility
+
+#### Supported Ubuntu and Python Versions
+- Ubuntu 18.04 (bionic) Python2.3 - Python 2.6, Python 3.1 - Python 3.5, Python3.7 - Python3.11
+- Ubuntu 20.04 (focal) Python3.5 - Python3.7, Python3.9 - Python3.11
+- Ubuntu 22.04 (jammy) Python3.7 - Python3.9, Python3.11
+- Note: Python2.7 (all), Python 3.6 (bionic), Python 3.8 (focal), Python 3.10 (jammy) are not provided by deadsnakes as upstream ubuntu provides those packages.
 
 
 ## environment
