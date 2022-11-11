@@ -2,22 +2,28 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [jobs](#jobs)
-  - [get name and classes](#get-name-and-classes)
-  - [list all jobs and folders](#list-all-jobs-and-folders)
-  - [list all abstract Project](#list-all-abstract-project)
-  - [disable and enable jobs](#disable-and-enable-jobs)
-    - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
-    - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
-    - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
-  - [get single job properties](#get-single-job-properties)
-  - [get particular job status](#get-particular-job-status)
-  - [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
-  - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
+- [get name and classes](#get-name-and-classes)
+- [list all jobs and folders](#list-all-jobs-and-folders)
+- [list all pipeline jobs](#list-all-pipeline-jobs)
+- [list all abstract Project](#list-all-abstract-project)
+- [disable and enable jobs](#disable-and-enable-jobs)
+  - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
+  - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
+  - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
+- [get pipeline definitions](#get-pipeline-definitions)
+  - [get pipeline scriptPath](#get-pipeline-scriptpath)
+  - [get pipeline scm definition](#get-pipeline-scm-definition)
+  - [get pipeline bare script](#get-pipeline-bare-script)
+- [get single job properties](#get-single-job-properties)
+- [get particular job status](#get-particular-job-status)
+- [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
+- [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 {% hint style='tip' %}
+> reference:
+> - [groovy to list all jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 > javadoc
 > - [org.jenkinsci.plugins.workflow.job.WorkflowJob](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowJob.html)
 > - [hudson.model.AbstractProject<P,R>](https://javadoc.jenkins-ci.org/hudson/model/AbstractProject.html)
@@ -27,8 +33,6 @@
 > - [Jenkins : Failed Jobs](https://wiki.jenkins.io/display/JENKINS/Failed-Jobs.html)
 {% endhint %}
 
-
-# [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
 
 ## get name and classes
 ```groovy
@@ -53,6 +57,15 @@ Jenkins.instance.getAllItems(AbstractItem.class).each {
   marslo/marslo
   marslo/fs
   ```
+
+## list all pipeline jobs
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Jenkins.instance.getAllItems(WorkflowJob.class) {
+   println it.fullName
+}
+```
 
 ## [list all abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
 
@@ -123,6 +136,77 @@ Jenkins.instance
          .collect { it.fullName }
   ```
 
+## get pipeline definitions
+> [!TIP]
+> - [How to get the pipeline configuration field 'Script Path' when executing the Jenkinsfile?](https://stackoverflow.com/a/50022871/2940319)
+> - [Groovy script to get Jenkins pipeline's script path](https://stackoverflow.com/a/70728550/2940319)
+> - [WorkflowDefinitionContext.groovy](https://github.com/jenkinsci/job-dsl-plugin/blob/master/job-dsl-core/src/main/groovy/javaposse/jobdsl/dsl/helpers/workflow/WorkflowDefinitionContext.groovy)
+> - [BuildConfigToJobMapper.java](https://github.com/openshift/jenkins-sync-plugin/blob/master/src/main/java/io/fabric8/jenkins/openshiftsync/BuildConfigToJobMapper.java)
+
+### get pipeline scriptPath
+
+> [!TIP]
+> - [Class CpsScmFlowDefinition](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/CpsScmFlowDefinition.html)
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+}.each {
+  println it.fullName.toString().padRight(30) + ' ~> ' + it?.definition?.getScriptPath()
+}
+
+"DONE"
+
+-- result --
+marslo/sandbox/sandbox         ~> jenkins/jenkinsfile/sandbox.Jenkinsfile
+marlso/sandbox/dump            ~> jenkins/jenkinsfile/dump.Jenkinsfile
+...
+```
+
+### get pipeline scm definition
+
+> [!TIP]
+> - [Class SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html)
+> - [Class hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
+> - [Class org.eclipse.jgit.transport.RemoteConfig](https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/transport/RemoteConfig.html)
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+}.each {
+  println it.fullName.toString().padRight(30) +
+          (it.definition?.scm?.branches?.join() ?: '').padRight(30) +
+          it.definition?.scm?.repositories?.collect{ it.getURIs() }?.flatten()?.join()
+}
+
+"DONE"
+
+-- result --
+marslo/sandbox/sandbox        */main                        git://github.com:marslo/pipelines
+marslo/sandbox/dump           */dev                         git://github.com:marslo/pipelines
+...
+```
+
+### get pipeline bare script
+
+> [!TIP]
+> - [Class CpsFlowDefinition](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/CpsFlowDefinition.html)
+
+```bash
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
+}.each {
+  println it.fullName.toString().padRight(30) + ' ~> ' + it?.definition?.getScript()
+}
+
+"DONE"
+```
 
 ## get single job properties
 > [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
