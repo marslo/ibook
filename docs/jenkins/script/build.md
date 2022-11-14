@@ -7,6 +7,7 @@
     - [get WorkflowRun by build number](#get-workflowrun-by-build-number)
     - [get builds of a job](#get-builds-of-a-job)
   - [get console output](#get-console-output)
+  - [check whether if log kept](#check-whether-if-log-kept)
   - [get changesets](#get-changesets)
     - [code clone via DSL](#code-clone-via-dsl)
     - [get repo url](#get-repo-url)
@@ -43,7 +44,6 @@
   - [get builds result during certain start-end time](#get-builds-result-during-certain-start-end-time)
   - [list all running builds](#list-all-running-builds)
   - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
-  - [check whether if log kepet](#check-whether-if-log-kepet)
 - [build stage](#build-stage)
   - [show build stages details](#show-build-stages-details)
   - [get parent stage ID](#get-parent-stage-id)
@@ -147,7 +147,7 @@ println """
 ```
 - result:
   ```
-                     all builds : [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+                    all builds : [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
                   build exists : true
 
                completedOnly() : [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
@@ -182,6 +182,34 @@ Jenkins.instance
        .text
 ```
 
+## check whether if log kept
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+workflowJob job = Jenkins.getInstance().getItemByFullName( '/sandbox/job' )
+job.builds.findAll { Run run -> run.isKeepLog() }
+          .collect { Run run -> run.id }
+```
+
+- or
+  ```groovy
+  List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+
+  Jenkins.instance
+         .getAllItems( Job.class )
+         .findAll { projects.any { p -> it.fullName.startsWith(p) } }
+         .collectEntries {[
+            ( it.fullName.toString() ) : it.builds.findAll { Run run -> run.isKeepLog() }
+                                                  .collect { Run run -> run.id }
+         ]}
+         .findAll { it.value }
+         .each { k, v ->
+            println "~~> ${k}:\n\t#${v.join('\n\t#')}"
+         }
+  "DONE"
+  ```
+
+
 ## get changesets
 
 ### code clone via DSL
@@ -211,8 +239,8 @@ checkout([
 
 ```groovy
 Jenkins.instance
-       .getItemByFullName('/marslo/up')
-       .getBuildByNumber(195)
+       .getItemByFullName( '/marslo/up' )
+       .getBuildByNumber( 195 )
        .changeSets
        .each {
          it.items.each { i ->
@@ -283,8 +311,8 @@ Jenkins.instance
 
 ```groovy
 def job = Jenkins.instance
-                 .getItemByFullName('/path/to/pipeline')
-                 .getBuildByNumber(n)
+                 .getItemByFullName( '/path/to/pipeline' )
+                 .getBuildByNumber( n )
 
 job.changeSets
    .each {
@@ -324,8 +352,8 @@ job.changeSets
 
 ```groovy
 Jenkins.instance
-       .getItemByFullName('/path/to/pipeline')
-       .getBuildByNumber(n)
+       .getItemByFullName( '/path/to/pipeline' )
+       .getBuildByNumber( n )
        .SCMs
        .each {
          println """
@@ -346,8 +374,8 @@ println build.getCulprits()
 ### setup next build number
 ```groovy
 Jenkins.instance
-       .getItemByFullName("/path/to/job")
-       .updateNextBuildNumber(n)
+       .getItemByFullName( '/path/to/job' )
+       .updateNextBuildNumber( n )
 ```
 
 ## get build time
@@ -483,7 +511,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
 Jenkins.instance
-       .getAllItems(Job.class)
+       .getAllItems( Job.class )
        .findAll { projects.any { p -> it.fullName.startsWith(p) } }
        .collectEntries {[ (it.fullName) : it.getLastBuild()?.getTime() ]}
        .sort() { a, b -> b.value?.getTime() <=> a.value?.getTime() }           // Date to timeToMillis
@@ -1437,7 +1465,6 @@ results.findAll{ !it.value.isEmpty() }
 "DONE"
 ```
 
-
 ## get builds result and percentage within certain start-end time
 ```groovy
 import java.util.Date
@@ -1530,13 +1557,6 @@ results.each { name, values ->
   ![build-history-with-status-and-percentage-for-params](../../screenshot/jenkins/build-history-with-status-and-percentage-for-params.png)
   ![build-history-with-status-and-percentage-for-all-builds](../../screenshot/jenkins/build-history-with-status-and-percentage-for-all.png)
 
-
-## check whether if log kepet
-```groovy
-def job = Jenkins.getInstance().getItemByFullName( '/sandbox/job' )
-job.builds.findAll { Run run -> run.isKeepLog() }
-          .collect { Run run -> run.id }
-```
 
 # build stage
 > references:
