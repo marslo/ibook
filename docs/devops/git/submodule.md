@@ -2,17 +2,27 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [git submodule](#git-submodule)
-  - [init submodule](#init-submodule)
-  - [update submodule](#update-submodule)
-  - [revert changes in submodule](#revert-changes-in-submodule)
-  - [working with submodule](#working-with-submodule)
-  - [remove submodule](#remove-submodule)
+- [init submodule](#init-submodule)
+- [update submodule](#update-submodule)
+- [revert changes in submodule](#revert-changes-in-submodule)
+- [submodule update history](#submodule-update-history)
+- [list submodules](#list-submodules)
+  - [HEAD:.gitmodules](#headgitmodules)
+  - [get name](#get-name)
+  - [get path](#get-path)
+  - [get url](#get-url)
+  - [get branch](#get-branch)
+- [working with submodule](#working-with-submodule)
+  - [pull from remote](#pull-from-remote)
+  - [push to remote](#push-to-remote)
+- [remove submodule](#remove-submodule)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
 > reference:
+> - [Git Submodules](http://bijanebrahimi.github.io/blog/git-submodules.html)
+> - [git-submodule - Initialize, update or inspect submodules](https://git-scm.com/docs/git-submodule)
 > - [gitmodules - Defining submodule properties](https://git-scm.com/docs/gitmodules)
 > - [Gerrit Code Review - Superproject subscription to submodules updates](https://gerrit-review.googlesource.com/Documentation/user-submodules.html)https://gerrit-review.googlesource.com/Documentation/user-submodules.html
 
@@ -30,23 +40,47 @@ $ git submodule update --remote
 ```
 
 ## [revert changes in submodule](https://stackoverflow.com/a/27415757/2940319)
+
+{% hint style='info' %}
+> references:
+> - [How do I revert my changes to a git submodule?](https://stackoverflow.com/a/62792847/2940319)
+> - [nicktoumpelis/repo-rinse.sh](https://gist.github.com/nicktoumpelis/11214362)
+{% endhint %}
+
 ```bash
 $ git submodule deinit -f .
 $ git submodule update --init
 ```
 
-- [or](https://stackoverflow.com/a/62792847/2940319)
-  > [or](https://gist.github.com/nicktoumpelis/11214362)
+- or
   ```bash
   $ git submodule foreach --recursive git clean -dffx
   $ git submodule foreach --recursive git reset --hard
   ```
+
+## submodule update history
+
+{% hint style='info' %}
+> references:
+> - [Git - View history for a specific submodule with corresponding hashes](https://stackoverflow.com/a/42073934/2940319)
+{% endhint %}
+
+```bash
+$ git log --oneline [--name-only] -- /path/to/submodule
+
+# list all
+$ git config --blob HEAD:.gitmodules --get-regexp path |
+  awk '{print $NF}' |
+  xargs -I{} bash -c "echo -e \"\\n~~> {}:\"; git log -1 --oneline -- {}"
+```
 
 ## list submodules
 
 > [!TIP]
 > references:
 > - [git plumbing command to get submodule remote](https://stackoverflow.com/a/41217484/2940319)
+> - [Get submodule hash from bare repository](https://stackoverflow.com/a/30329683/2940319)
+> - [How to make shallow git submodules?](https://stackoverflow.com/a/17692710/2940319)
 >
 > example:
 > ```bash
@@ -62,9 +96,21 @@ $ git config --blob HEAD:.gitmodules --list
 $ git show HEAD:.gitmodules | git config --file - --list
 ```
 
+- get dynamic refs
+  ```bash
+  $ git cat-file -p <refs>:.gitmodules
+
+  # or
+  $ git show -p <refs>:.gitmodules
+  ```
+
 ### get name
 ```bash
 $ git submodule foreach --quiet 'echo $name'
+
+# or
+$ git submodule foreach --quiet 'echo $name' |
+  xargs -I{} bash -c "git ls-tree -z -d HEAD -- {}; echo ''"
 ```
 
 ### get path
@@ -134,13 +180,20 @@ $ git config --blob HEAD:.gitmodules --get-regexp branch
   $ git push origin $(git rev-parse --abbrev-ref HEAD)
   ```
 
-
 ## remove submodule
+
+{% hint style='info' %}
+> references:
+> - [How do I remove a submodule?](https://stackoverflow.com/a/74331589/2940319)
+> - [The best way to remove a submodule from git](https://stackoverflow.com/a/70530218/2940319)
+{% endhint %}
+
 ```bash
-$ git rm --cached <SubmoudleName>
-$ rm -rf <SubmodulePath>
-$ rm -rf .gitmodules
-$ rm -rf .git/modules/<SubmoduleName>
-$ vim .git/config
+$ git submodule deinit -f <submoduleName>                              ### operational
+$ git rm --cached <submoduleName>
+$ rm -rf <submodulePath>
+$ rm -rf .git/modules/<submoduleName>
+$ git config -f .gitmodules --remove-section submodule.<submoduleName> ### or $ rm -rf .gitmodules
+$ git config -f .git/config --remove-section submodule.<submoduleName> ### or $ vim .git/config
 ```
 
