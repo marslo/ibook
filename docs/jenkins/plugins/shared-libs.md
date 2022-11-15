@@ -2,7 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [usage](#usage)
+  - [load implicitly](#load-implicitly)
+  - [load dynamically](#load-dynamically)
 - [gerrit refspecs](#gerrit-refspecs)
+  - [gerrit](#gerrit)
+  - [git](#git)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
