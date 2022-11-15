@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [redirect](#redirect)
+  - [show stdout but redirect all to file](#show-stdout-but-redirect-all-to-file)
 - [time & date](#time--date)
   - [show date with timezone](#show-date-with-timezone)
   - [show cal](#show-cal)
@@ -39,6 +41,62 @@
   - [Special Characters in Usernames and Passwords](#special-characters-in-usernames-and-passwords)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## redirect
+
+### show stdout but redirect all to file
+
+> [!NOTE]
+> references:
+> - [redirect overview](https://askubuntu.com/a/731237)
+>   ```bash
+>             || visible in terminal ||   visible in file   || existing
+>     Syntax  ||  StdOut  |  StdErr  ||  StdOut  |  StdErr  ||   file
+>   ==========++==========+==========++==========+==========++===========
+>       >     ||    no    |   yes    ||   yes    |    no    || overwrite
+>       >>    ||    no    |   yes    ||   yes    |    no    ||  append
+>             ||          |          ||          |          ||
+>      2>     ||   yes    |    no    ||    no    |   yes    || overwrite
+>      2>>    ||   yes    |    no    ||    no    |   yes    ||  append
+>             ||          |          ||          |          ||
+>      &>     ||    no    |    no    ||   yes    |   yes    || overwrite
+>      &>>    ||    no    |    no    ||   yes    |   yes    ||  append
+>             ||          |          ||          |          ||
+>    | tee    ||   yes    |   yes    ||   yes    |    no    || overwrite
+>    | tee -a ||   yes    |   yes    ||   yes    |    no    ||  append
+>             ||          |          ||          |          ||
+>    n.e. (*) ||   yes    |   yes    ||    no    |   yes    || overwrite
+>    n.e. (*) ||   yes    |   yes    ||    no    |   yes    ||  append
+>             ||          |          ||          |          ||
+>   |& tee    ||   yes    |   yes    ||   yes    |   yes    || overwrite
+>   |& tee -a ||   yes    |   yes    ||   yes    |   yes    ||  append
+>   ```
+> - [Redirect terminal output to file](https://askubuntu.com/a/1046032/92979)
+> - [Bash: Redirect stdout and stderr](https://csatlas.com/bash-redirect-stdout-stderr/)
+> - [show Command Output Redirection.pdf](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/fundamentals/configuration/xe-3se/cat3650/fundamentals-xe-3se-3650-book/cf-shw-cmd-out-redirect.pdf)
+> - [3.6 Redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html)
+
+```bash
+$ bash -c "echo a;bahs;echo b;bhas" >>file 2> >( tee -a file >&2 )
+bash: line 1: bahs: command not found
+bash: line 1: bhas: command not found
+
+$ cat file
+a
+bash: line 1: bahs: command not found
+b
+bash: line 1: bhas: command not found
+```
+
+- or
+  ```bash
+  $ bash -c "set -e; echo a;bahs;echo b;bhas" >>cmd.out 2> >( tee -a cmd.out >&2 )
+  bash: line 1: bahs: command not found
+
+  $ cat cmd.out
+  a
+  bash: line 1: bahs: command not found
+  ```
 
 ## time & date
 ### [show date with timezone](https://unix.stackexchange.com/a/48104/29178)
