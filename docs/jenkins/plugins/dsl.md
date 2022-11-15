@@ -17,6 +17,7 @@
 >   - [Talks and Blog Posts](https://github.com/jenkinsci/job-dsl-plugin/wiki/Talks-and-Blog-Posts)
 >   - [Real World Examples](https://github.com/jenkinsci/job-dsl-plugin/wiki/Real-World-Examples)
 >   - [Testing DSL Scripts](https://github.com/jenkinsci/job-dsl-plugin/wiki/Testing-DSL-Scripts)
+> - [* jenkins-pipeline-library/jobs/devops/seed.groovy](https://github.com/AckeeDevOps/jenkins-pipeline-library/blob/master/jobs/devops/seed.groovy)
 > - [* Jenkins DSL seed job](https://technotes.adelerhof.eu/jenkins/jenkins-dsl-seed-job/)
 > - [Jenkins Tutorial](https://www.happycoders.eu/?s=Jenkins+Tutorial)
 >   - [* Jenkins Tutorial: Implementing a Seed Job](https://www.happycoders.eu/devops/jenkins-tutorial-implementing-seed-job/)

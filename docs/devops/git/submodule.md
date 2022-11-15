@@ -11,26 +11,25 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## git submodule
+> [!TIP]
 > reference:
 > - [gitmodules - Defining submodule properties](https://git-scm.com/docs/gitmodules)
 > - [Gerrit Code Review - Superproject subscription to submodules updates](https://gerrit-review.googlesource.com/Documentation/user-submodules.html)https://gerrit-review.googlesource.com/Documentation/user-submodules.html
 
-### init submodule
+## init submodule
 ```bash
 $ git submodule add -b <BranchName> <SubRepoUrl> <NameInSuper>
 $ git submodule init
 $ git submodule update --init
 ```
 
-### update submodule
+## update submodule
 ```bash
 $ git config -f .gitmodules submodule.<SubmoduleNameInSuperRepo>.branch <NewBranchName>
 $ git submodule update --remote
 ```
 
-### [revert changes in submodule](https://stackoverflow.com/a/27415757/2940319)
+## [revert changes in submodule](https://stackoverflow.com/a/27415757/2940319)
 ```bash
 $ git submodule deinit -f .
 $ git submodule update --init
@@ -43,14 +42,67 @@ $ git submodule update --init
   $ git submodule foreach --recursive git reset --hard
   ```
 
-### working with submodule
-#### list submodules
-- [HEAD:.gitmodules](https://stackoverflow.com/a/41217484/2940319)
-  ```bash
-  $ git show HEAD:.gitmodules | git config --file - --list
-  ```
+## list submodules
 
-#### pull from remote
+> [!TIP]
+> references:
+> - [git plumbing command to get submodule remote](https://stackoverflow.com/a/41217484/2940319)
+>
+> example:
+> ```bash
+> $ git config --blob HEAD:.gitmodules --get-regexp [url|branch|path]
+> # or
+> $ git config --blob HEAD:.gitmodules --get-regexp ^submodule.\(.+\).\(path\|url\|branch\)
+> ```
+
+### [HEAD:.gitmodules](https://stackoverflow.com/a/41217484/2940319)
+```bash
+$ git config --blob HEAD:.gitmodules --list
+# or
+$ git show HEAD:.gitmodules | git config --file - --list
+```
+
+### get name
+```bash
+$ git submodule foreach --quiet 'echo $name'
+```
+
+### get path
+```bash
+$ git show HEAD:.gitmodules | git config --file - --get-regexp path
+
+# or
+$ git --no-pager config \
+      --file \$(git rev-parse --show-toplevel)/.gitmodules \
+      --get-regexp ^submodule.\\(.+\\).path
+```
+
+### get url
+```bash
+$ git show HEAD:.gitmodules | git config --file - --get-regexp url
+
+# or
+$ git --no-pager config \
+      --file \$(git rev-parse --show-toplevel)/.gitmodules \
+      --get-regexp ^submodule.\\(.+\\).url
+
+# or
+$ git submodule foreach -q git config remote.origin.url
+
+# or
+$ find .git/modules/ -name config -exec grep url {} \;
+
+# or
+$ git config --list | grep -E ^submodule.*.url
+```
+
+### get branch
+```bash
+$ git config --blob HEAD:.gitmodules --get-regexp branch
+```
+
+## working with submodule
+### pull from remote
 - update submodule only
   ```bash
   $ git submodule update --remote --recursive --force --rebase
@@ -60,7 +112,7 @@ $ git submodule update --init
   $ git pull [--rebase] --recurse-submodules
   ```
 
-#### push to remote
+### push to remote
 - push submodule only
   ```bash
   $ cd <SubFolder>
@@ -83,7 +135,7 @@ $ git submodule update --init
   ```
 
 
-### remove submodule
+## remove submodule
 ```bash
 $ git rm --cached <SubmoudleName>
 $ rm -rf <SubmodulePath>

@@ -6,7 +6,32 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### gerrit refspecs
+> [!TIP]
+> references:
+> - [* jenkins-pipeline-library/src/cloudflare/Caching.groovy](https://github.com/AckeeDevOps/jenkins-pipeline-library/blob/master/src/cloudflare/Caching.groovy)
+
+## usage
+### load implicitly
+```groovy
+@Library( 'library-name' ) _
+@Library( 'library-name@library-version' ) _
+
+// or load multiple
+@Library([ 'library-name', 'library-name' ]) _
+```
+
+### load dynamically
+```groovy
+library identifier: 'library-name@library-version',
+        retriever: modernSCM([
+                 $class : 'GitSCMSource',
+                 remote : 'library-git-url',
+          credentialsId : 'git-credentials'
+        ])
+```
+
+
+## gerrit refspecs
 
 {% hint style='tip' %}
 > references:
@@ -42,21 +67,19 @@
 
 ![gerrit libs](../../screenshot/jenkins/gerrit-libs.png)
 
-#### gerrit
+### gerrit
 ```groovy
 library (
   identifier : "mylibs@" + GERRIT_REFSPEC,
    retriever : modernSCM (
-    gerrit( traits: [
-              [
-                $class: 'RefSpecsSCMSourceTrait',
-                templates: [
-                  [ value: '+refs/heads/*:refs/remotes/@{remote}/*'   ] ,
-                  [ value: '+refs/changes/*:refs/changes/*'           ] ,
-                  [ value: '+refs/changes/*:refs/remotes/@{remote}/*' ]
-                ]
+    gerrit( traits: [[
+              $class: 'RefSpecsSCMSourceTrait',
+              templates: [
+                [ value: '+refs/heads/*:refs/remotes/@{remote}/*'   ] ,
+                [ value: '+refs/changes/*:refs/changes/*'           ] ,
+                [ value: '+refs/changes/*:refs/remotes/@{remote}/*' ]
               ]
-            ],
+            ]],
             credentialsId: 'SSH_CREDENTIAL',
             remote: 'ssh://account@my.gerrit.com:29418/jenkins/libs'
     )
@@ -64,7 +87,7 @@ library (
 ) _
 ```
 
-#### git
+### git
 ```groovy
 library (
   identifier : 'devops-libs',
