@@ -3,17 +3,18 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [build](#build)
-  - [build number](#build-number)
+  - [get build](#get-build)
     - [get WorkflowRun by build number](#get-workflowrun-by-build-number)
-    - [get builds of a job](#get-builds-of-a-job)
-  - [get console output](#get-console-output)
-  - [check whether if log kept](#check-whether-if-log-kept)
-  - [get changesets](#get-changesets)
-    - [code clone via DSL](#code-clone-via-dsl)
-    - [get repo url](#get-repo-url)
-  - [get SCM info](#get-scm-info)
-  - [get culprits](#get-culprits)
+    - [get build details](#get-build-details)
+    - [get culprits](#get-culprits)
     - [setup next build number](#setup-next-build-number)
+  - [build log](#build-log)
+    - [get console output](#get-console-output)
+    - [check whether if log kept](#check-whether-if-log-kept)
+  - [build changesets](#build-changesets)
+    - [code clone via DSL](#code-clone-via-dsl)
+  - [get SCM info](#get-scm-info)
+    - [get repo url](#get-repo-url)
   - [get build time](#get-build-time)
   - [sort last build](#sort-last-build)
     - [sort all buildable jobs](#sort-all-buildable-jobs)
@@ -28,9 +29,13 @@
   - [get queue jobs parameters](#get-queue-jobs-parameters)
   - [list all queue tasks and blocked reason](#list-all-queue-tasks-and-blocked-reason)
 - [build cause](#build-cause)
-  - [get build cause](#get-build-cause)
-  - [GerritCause](#gerritcause)
-  - [get builds abort cause](#get-builds-abort-cause)
+  - [trigger casue](#trigger-casue)
+    - [get build cause](#get-build-cause)
+    - [details on `Cause.UserIdCause`](#details-on-causeuseridcause)
+    - [GerritCause](#gerritcause)
+  - [abort cause](#abort-cause)
+    - [builds aborted by timeout](#builds-aborted-by-timeout)
+    - [abort by userId `CauseOfInterruption.UserInterruption`](#abort-by-userid-causeofinterruptionuserinterruption)
     - [get all abort causes](#get-all-abort-causes)
 - [build parameters](#build-parameters)
   - [get build parameters](#get-build-parameters)
@@ -73,6 +78,9 @@
 > - [Jenkins : Delete workspace for all disabled jobs](https://wiki.jenkins.io/display/JENKINS/Delete-workspace-for-all-disabled-jobs.html)
 > - [Jenkins : Delete .tmp files left in workspace-files](https://wiki.jenkins.io/display/JENKINS/Delete-.tmp-files-left-in-workspace-files.html)
 > - [Jenkins : Change publish over SSH configuration](https://wiki.jenkins.io/display/JENKINS/Change-publish-over-SSH-configuration.html)
+> references:
+> - [jenkins.model.BuildDiscarder](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarder/)
+> - [jenkins.model.BuildDiscarderProperty](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarderProperty/)
 {% endhint %}
 
 # build
@@ -106,7 +114,7 @@
 >   - `WorkflowJob.getNearestBuild(int n)` : gets the youngest build #m that satisfies n<=m.
 >   - `WorkflowJob.getNearestOldBuild(int n)` : gets the latest build #m that satisfies m<=n.
 
-## build number
+## get build
 
 ### get WorkflowRun by build number
 ```groovy
@@ -118,7 +126,7 @@ def build = Jenkins.instance
                    .getBuildByNumber( BUILD_NUMBER )
 ```
 
-### get builds of a job
+### get build details
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 import hudson.util.RunList
@@ -165,13 +173,27 @@ println """
              getActions.causes : [42: [ExceededTimeout], 41: [ExceededTimeout], 40: [ExceededTimeout], 36: [ExceededTimeout], 35: [ExceededTimeout], 34: [ExceededTimeout], 33: [ExceededTimeout], 32: [], 31: [], 30: [ExceededTimeout], 29: [], 28: [], 27: [], 26: [], 24: [], 23: [], 22: [ExceededTimeout], 21: [], 20: [], 19: [ExceededTimeout], 18: [ExceededTimeout], 17: [], 16: [], 15: [], 14: [], 13: [], 12: [], 11: [], 10: [ExceededTimeout], 9: [ExceededTimeout], 8: [UserInterruption], 7: [ExceededTimeout], 6: [UserInterruption], 5: [UserInterruption], 4: [ExceededTimeout], 3: [ExceededTimeout], 2: [UserInterruption], 1: [ExceededTimeout]]
   ```
 
-## get console output
+### get culprits
+```groovy
+println build.getCulprits()
+```
+
+### setup next build number
+```groovy
+Jenkins.instance
+       .getItemByFullName( '/path/to/job' )
+       .updateNextBuildNumber( n )
+```
+
+## build log
+### get console output
 
 {% hint style='tip' %}
 > references:
 > - [org.kohsuke.stapler.framework.io.LargeText](https://javadoc.jenkins.io/component/stapler/org/kohsuke/stapler/framework/io/LargeText.html)
 > - [How To Read Console Output In Jenkins During Build](https://automationscript.com/how-to-read-console-output-in-jenkins-pipeline/)
 > - [[FIXED] Jenkins console output not in realtime](https://www.javafixing.com/2022/02/fixed-jenkins-console-output-not-in.html)
+> - [How To Read Console Output In Jenkins During Build](https://automationscript.com/how-to-read-console-output-in-jenkins-pipeline)
 {% endhint %}
 
 ```groovy
@@ -182,7 +204,7 @@ Jenkins.instance
        .text
 ```
 
-## check whether if log kept
+### check whether if log kept
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
@@ -209,8 +231,7 @@ job.builds.findAll { Run run -> run.isKeepLog() }
   "DONE"
   ```
 
-
-## get changesets
+## build changesets
 
 ### code clone via DSL
 ```groovy
@@ -302,6 +323,33 @@ Jenkins.instance
   }
   ```
 
+## get SCM info
+
+{% hint style='tip' %}
+> references:
+> - [jenkins.triggers.SCMTriggerItem](https://programtalk.com/java-api-usage-examples/jenkins.triggers.SCMTriggerItem/)
+> - [hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
+> - [hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
+> - [Poll SCM and Timer triggers include "Changes" for a Pipeline for any/all Shared Libraries](https://issues.jenkins.io/browse/JENKINS-41497)
+> - [jenkins.scm.SCMCheckoutStrategy](https://programtalk.com/java-api-usage-examples/jenkins.scm.SCMCheckoutStrategy/)
+{% endhint %}
+
+```groovy
+Jenkins.instance
+       .getItemByFullName( '/path/to/pipeline' )
+       .getBuildByNumber( n )
+       .SCMs
+       .each {
+         println """
+           .......................
+               repoUrl : ${it.userRemoteConfigs.url.join(',')}
+               remotes : ${it.userRemoteConfigs.name.join(',')}
+              branches : ${it.branches.join(',')}
+           .......................
+         """
+       }
+```
+
 ### get repo url
 
 {% hint style='tip' %}
@@ -341,42 +389,6 @@ job.changeSets
            commitId : 095e4470964ee8ca6ab50ceea7acf88094dc08d4 : 095e4470964ee8ca6ab50ceea7acf88094dc08d4
   ```
 
-## get SCM info
-
-{% hint style='tip' %}
-> references:
-> - [hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
-> - [hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
-> - [Poll SCM and Timer triggers include "Changes" for a Pipeline for any/all Shared Libraries](https://issues.jenkins.io/browse/JENKINS-41497)
-{% endhint %}
-
-```groovy
-Jenkins.instance
-       .getItemByFullName( '/path/to/pipeline' )
-       .getBuildByNumber( n )
-       .SCMs
-       .each {
-         println """
-           .......................
-               repoUrl : ${it.userRemoteConfigs.url.join(',')}
-               remotes : ${it.userRemoteConfigs.name.join(',')}
-              branches : ${it.branches.join(',')}
-           .......................
-         """
-       }
-```
-
-## get culprits
-```groovy
-println build.getCulprits()
-```
-
-### setup next build number
-```groovy
-Jenkins.instance
-       .getItemByFullName( '/path/to/job' )
-       .updateNextBuildNumber( n )
-```
 
 ## get build time
 
@@ -799,6 +811,8 @@ Jenkins.instance.queue.items.each {
 
 # build cause
 
+## trigger casue
+
 {% hint style='tip' %}
 > references:
 > - [Cause.UpstreamCause](https://javadoc.jenkins-ci.org/hudson/model/Cause.UpstreamCause.html)
@@ -836,7 +850,7 @@ builds.each { build ->
 "DONE"
 ```
 
-## get build cause
+### get build cause
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 Jenkins.instance.getAllItems( Job.class ).findAll {
@@ -875,8 +889,24 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
   "DONE"
   ```
 
+### details on `Cause.UserIdCause`
+```groovy
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( JOB_NUMBER )
+       .getActions( hudson.model.CauseAction.class )
+       .causes
+       .flatten()
+       .each { c ->
+          println c.userId
+          println c.getUserName()
+          println c.getShortDescription()
+          println c.getUserUrl()
+       }
+```
 
-## GerritCause
+
+### GerritCause
 {% hint style='tip' %}
 > references:
 > - [gerrit-events/Change.java](https://github.com/sonyxperiadev/gerrit-events/blob/master/src/main/java/com/sonymobile/tools/gerrit/gerritevents/dto/attr/Change.java)
@@ -1004,7 +1034,7 @@ builds.each { build ->
   ```
   <!--endsec-->
 
-## get builds abort cause
+## abort cause
 
 {% hint style='tip' %}
 > references:
@@ -1015,6 +1045,10 @@ builds.each { build ->
 > - [Thread.getAllStackTraces()](https://stackoverflow.com/a/26306081/2940319)
 > - [Pipeline: How to add an input step, with timeout, that continues if timeout is reached, using a default value](https://support.cloudbees.com/hc/en-us/articles/226554067-Pipeline-How-to-add-an-input-step-with-timeout-that-continues-if-timeout-is-reached-using-a-default-value)
 > - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
+> - [Pipeline retry operation doesn't retry when there is a timeout inside of it](https://issues.jenkins.io/browse/JENKINS-51454)
+> - [jenkins.model.InterruptedBuildAction](https://programtalk.com/java-api-usage-examples/jenkins.model.InterruptedBuildAction/)
+> - [Class InterruptedBuildAction](https://javadoc.jenkins.io/jenkins/model/InterruptedBuildAction.html)
+> - [Cancelling of concurrent pipeline run due to milestone wrongly claims that user aborted via FlowInterruptedException#actualInterruption](https://issues.jenkins.io/browse/JENKINS-67067)
 {% endhint %}
 
 ```groovy
@@ -1026,33 +1060,72 @@ Jenkins.instance
        .flatten()
 ```
 
-- check builds aborted by timer
+### builds aborted by timeout
+```groovy
+import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
+       .getActions( jenkins.model.InterruptedBuildAction.class )
+       .causes
+       .flatten()
+       .any { it instanceof TimeoutStepExecution.ExceededTimeout }
+```
+
+- or
   ```groovy
   import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
+  import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+  WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+  job.builds.findAll { Run run ->
+    BUILD_NUMBER.toString() == run.id
+  }.collect { Run run -> run.getActions( jenkins.model.InterruptedBuildAction.class )
+                            .causes
+                            .flatten()
+                            .any { it instanceof TimeoutStepExecution.ExceededTimeout }
+  }
+  ```
+
+### abort by userId `CauseOfInterruption.UserInterruption`
+```groovy
+import org.jenkinsci.plugins.workflow.support.steps.build.BuildTriggerCancelledCause
+import jenkins.model.CauseOfInterruption
+
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuildByNumber( BUILD_NUMBER )
+       .getActions( jenkins.model.InterruptedBuildAction.class )
+       .causes
+       .flatten()
+       .any { c ->
+                  [ CauseOfInterruption.UserInterruption, BuildTriggerCancelledCause ].any {
+                    it.isAssignableFrom( c.getClass() )
+                  }
+            }
+```
+
+- get user details
+  ```bash
+  import jenkins.model.CauseOfInterruption
 
   Jenkins.instance
-         .getItemByFullName( JOB_NAME )
-         .getBuildByNumber( BUILD_NUMBER )
+         .getItemByFullName( '/marslo/sandbox/abort' )
+         .getBuildByNumber(159)
          .getActions( jenkins.model.InterruptedBuildAction.class )
          .causes
          .flatten()
-         .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
+         .findAll { c -> [ CauseOfInterruption.UserInterruption ].any { it.isAssignableFrom(c.getClass()) } }
+         .each { c ->
+           User user = c.user
+           println c.getShortDescription()
+           println "${user.fullName} : ${user.absoluteUrl}"
+           currentBuild.description = 'ABORTED by user : <a href="${user.absoluteUrl}">' +
+                                      "${user.displayName} [ ${user.id} ]</a>"
+           currentBuild.result = 'NOT_BUILT'
+         }
   ```
-
-  - or
-    ```groovy
-    import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
-    import org.jenkinsci.plugins.workflow.job.WorkflowJob
-
-    WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
-    job.builds.findAll { Run run ->
-      BUILD_NUMBER.toString() == run.id
-    }.collect { Run run -> run.getActions( jenkins.model.InterruptedBuildAction.class )
-                              .causes
-                              .flatten()
-                              .any{ it instanceof TimeoutStepExecution.ExceededTimeout }
-    }
-    ```
 
 ### get all abort causes
 ```groovy
@@ -1322,7 +1395,7 @@ results.each{ name, status ->
   sum = status.values().sum()
   println "${name}: ${sum} : "
   status.each{ r, c ->
-    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+    println "\t${r.padRight(11)}: ${c.toString().padRight(10)}: percentage: " + (sum ? "${c * 100 / sum}%" : '0%')
   }
 }
 "DONE"
@@ -1360,7 +1433,7 @@ results.each{ name, status ->
   sum = status.values().sum()
   println "\n~~> ${name}: ${sum} : "
   status.each{ r, c ->
-    println "\t${r}: ${c}: \t\tpercentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+    println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " + (sum ? "${c * 100 / sum}%" : '0%')
   }
 }
 

@@ -4,7 +4,7 @@
 
 - [script console](#script-console)
   - [usage](#usage)
-  - [basic usage](#basic-usage)
+  - [setup system (temporary)](#setup-system-temporary)
   - [extend built-in node executor](#extend-built-in-node-executor)
   - [execute shell script in console](#execute-shell-script-in-console)
 - [jenkins system](#jenkins-system)
@@ -50,6 +50,9 @@
 > - [mikejoh/jenkins-and-groovy-snippets.md](https://gist.github.com/mikejoh/9a721d1e6de7574059dcb8f851692be9)
 > - [Jenkins : Jenkins Script Console](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
 > - [Jenkins : Use Jenkins](https://wiki.jenkins.io/display/JENKINS/Use-Jenkins.html)
+> - [Java API Usage Example](https://programtalk.com/java-api-usage-examples/?api=jenkins)
+>   - [jenkins.model.Jenkins](https://programtalk.com/java-api-usage-examples/jenkins.model.Jenkins/)
+>   - [jenkins.model.BuildDiscarder](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarder/)
 {% endhint %}
 
 > [!TIP]
@@ -91,11 +94,17 @@
     r = requests.post('https://jenkins/scriptText', auth=('username', 'api-token'), data={'script': data})
     ```
 
-### basic usage
-- setup timestampe (temporary)
+### setup system (temporary)
+- timestampe
   ```groovy
   System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles')
   ```
+
+- [shell step aborts](https://issues.jenkins.io/browse/JENKINS-48300)
+  ```groovy
+  System.setProperty("org.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL", 36000)
+  ```
+
 
 ### extend built-in node executor
 ```groovy
@@ -107,7 +116,7 @@ Jenkins.instance.setNumExecutors(5)
 
 > [!TIP]
 > reference:
-> [i.e.](https://www.jenkins.io/doc/book/managing/script-console/#run-scripts-from-controller-script-console-on-agents)
+> - [Run scripts from controller Script Console on agents](https://www.jenkins.io/doc/book/managing/script-console/#run-scripts-from-controller-script-console-on-agents)
 
 ```groovy
 println ("uname -a".execute().text)
@@ -312,6 +321,7 @@ plugins.each { plugin ->
 > - [Class ScriptApproval](https://javadoc.jenkins.io/plugin/script-security/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.html)
 > - [ScriptApproval.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.java)
 > - [SecureGroovyScript.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/sandbox/groovy/SecureGroovyScript.java)
+> - [jenkins.model.CauseOfInterruption](https://programtalk.com/java-api-usage-examples/jenkins.model.CauseOfInterruption/)
 {% endhint %}
 
 ### backup & restore all scriptApproval items
