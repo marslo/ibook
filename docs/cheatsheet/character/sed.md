@@ -3,16 +3,31 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [execute multiple sed commands](#execute-multiple-sed-commands)
+  - [example : show only root and nobody in `/etc/passwd`](#example--show-only-root-and-nobody-in-etcpasswd)
 - [range](#range)
+  - [specific line](#specific-line)
+  - [until empty line](#until-empty-line)
+  - [n~m range](#nm-range)
+  - [pattern matches range](#pattern-matches-range)
 - [print](#print)
+  - [print all lines](#print-all-lines)
+  - [range print](#range-print)
+  - [print matched pattern](#print-matched-pattern)
 - [delete](#delete)
+  - [delete all](#delete-all)
+  - [range delete](#range-delete)
+  - [conditional delete](#conditional-delete)
 - [substitute](#substitute)
+  - [substitute-flags](#substitute-flags)
+  - [multiple replaces](#multiple-replaces)
 - [get matched pattern](#get-matched-pattern)
+  - [`&`](#)
+  - [substitution grouping](#substitution-grouping)
 - [get first matching patten](#get-first-matching-patten)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### execute multiple sed commands
+## execute multiple sed commands
 
 > [!TIP]
 > ```bash
@@ -22,7 +37,7 @@
 > references:
 > - [50 `sed` Command Examples](https://linuxhint.com/50_sed_command_examples/)
 
-#### example : show only root and nobody in `/etc/passwd`
+### example : show only root and nobody in `/etc/passwd`
 - `-e` :
   ```bash
   $ sed -n -e '/^root/p' -e '/^nobody/p' /etc/passwd
@@ -40,11 +55,44 @@
   root:*:0:0:System Administrator:/var/root:/bin/sh
   ```
 
-### range
-#### specific line
+## range
+### specific line
 - 2nd line : `N <opt>`
 
-#### range
+### until empty line
+
+{% hint style='tip' %}
+> references:
+> - [Remove everything before a blank line using sed](https://stackoverflow.com/a/30632744/2940319)
+> - [Remove empty line before a pattern using sed](https://stackoverflow.com/questions/65039344/remove-empty-line-before-a-pattern-using-sed)
+> - [Grep starting from a fixed text, until the first blank line](https://unix.stackexchange.com/a/318596/29178)
+> - [Delete unknown number of lines from * until blank line](https://unix.stackexchange.com/a/303839/29178)
+> - [remove only the first blank line sed](https://unix.stackexchange.com/a/75432/29178)
+> - [Use sed to insert text before two blank lines](https://unix.stackexchange.com/questions/647991/use-sed-to-insert-text-before-two-blank-lines)
+> - [htop output to human readable file](https://stackoverflow.com/questions/17534591/htop-output-to-human-readable-file)
+> - [$HOME/.toprc](https://unix.stackexchange.com/a/86591/29178)
+{% endhint %}
+
+```bash
+$ top -bn1 | sed -n '0,/^\s*$/p'
+top - 03:41:45 up 258 days, 19:05,  1 user,  load average: 2.33, 0.92, 0.95
+Tasks: 856 total,   2 running, 447 sleeping,   0 stopped,  36 zombie
+%Cpu(s):  0.3 us,  0.4 sy,  0.0 ni, 99.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 52802012+total, 11152644+free, 24536944 used, 39195673+buff/cache
+KiB Swap:        0 total,        0 free,        0 used. 49137280+avail Mem
+
+```
+- or
+  ```bash
+  $ top -bn1 | sed -e '/^$/Q'
+  top - 03:45:55 up 258 days, 19:09,  1 user,  load average: 0.17, 0.51, 0.77
+  Tasks: 857 total,   2 running, 448 sleeping,   0 stopped,  36 zombie
+  %Cpu(s):  0.1 us,  0.4 sy,  0.0 ni, 99.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+  KiB Mem : 52802012+total, 11151089+free, 24546520 used, 39196272+buff/cache
+  KiB Swap:        0 total,        0 free,        0 used. 49136291+avail Mem
+  ```
+
+### n~m range
 - n~m lines : `n,m <opt>`
 - n to end lines : `n,$ <opt>`
 - m lines starting with n : `n, +m <opt>`
@@ -59,11 +107,23 @@
   |  `2~3`  | `2,5,8,11,...` | start from `2`, print every `3` lines |
 
 
-#### pattern matches range
+### pattern matches range
 - between `pattern_1` to `pattern_2` : `/pattern_1/,/pattern_2/ <opt>`
+- first line to `pattern_2` : `0,/pattern_2/ <opt>`
 
-### print
-#### print all lines
+#### from pattern to first empty line
+```bash
+$ top -bn1 | sed -n '/^top.*/,/^\s*$/p'
+top - 03:49:02 up 258 days, 19:13,  1 user,  load average: 0.43, 0.41, 0.68
+Tasks: 853 total,   1 running, 448 sleeping,   0 stopped,  36 zombie
+%Cpu(s):  0.3 us,  0.4 sy,  0.0 ni, 99.3 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem : 52802012+total, 11150942+free, 24543500 used, 39196720+buff/cache
+KiB Swap:        0 total,        0 free,        0 used. 49136582+avail Mem
+
+```
+
+## print
+### print all lines
 - print every line twice
   ```bash
   $ sed 'p' employee.txt
@@ -80,7 +140,7 @@
   ```
 - print all lines : `$ sed -n 'p' employee.txt`
 
-#### range print
+### range print
 - print the 2nd line  : `$ sed -n '2 p' employee.txt`
 - `n,m` range
   - print 1~4 lines : `$ sed -n '1,4 p' employee.txt`
@@ -91,7 +151,7 @@
 
 - `+` ( `n, +m` ) : `sed -n 'n,+m p' employee.txt`
 
-#### print matched pattern
+### print matched pattern
 - find pattern to the end :
   ```bash
   $ sed -n '/Raj/,$ p' employee.txt
@@ -121,23 +181,23 @@
   104,Anand Ram,Developer
   ```
 
-### delete
-#### delete all
+## delete
+### delete all
 ```bash
 $ sed 'd' employee.txt
 ```
 
-#### range delete
+### range delete
 - delete the 2nd line : `$ sed '2 d' /path/to/file`
 - delete between `1` and `4` lines : `$ sed '1,4 d' /path/to/file`
 
-#### conditional delete
+### conditional delete
 - delete all empty lines: `$ sed '/^$/ d' /path/to/file`
 - delete all comment lines :  `$ sed '/^#/ d' /path/to/file`
 
-### substitute
+## substitute
 
-#### substitute-flags
+### substitute-flags
 
 |    flag   | comments         |
 |:---------:|------------------|
@@ -148,7 +208,7 @@ $ sed 'd' employee.txt
 |    `w`    | write flag       |
 |    `e`    | execute flag     |
 
-#### multiple replaces
+### multiple replaces
 ```bash
 $ sed '{
     s/Developer/IT Manager/
@@ -161,9 +221,9 @@ $ sed '{
 105,Jane Miller,Sales Director
 ```
 
-### get matched pattern
+## get matched pattern
 
-#### `&`
+### `&`
 {% hint style='tip' %}
 When & is used in the replacement-string, it replaces it with whatever text matched the original-string or the regular-expression.
 {% endhint %}
@@ -177,7 +237,7 @@ $ sed 's/^[0-9][0-9][0-9]/<&>/g' employee.txt
 <105>,Jane Miller,Sales Manager
 ```
 
-#### substitution grouping
+### substitution grouping
 ```bash
 $ sed 's/^\([0-9][0-9][0-9]\).*/<\1>/g' employee.txt
 <101>
@@ -205,7 +265,7 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
 <105>,Jane Miller,Sales Manager
 ```
 
-### get first matching patten
+## get first matching patten
 
 > [!TIP]
 > sample.crt

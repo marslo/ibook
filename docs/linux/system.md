@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [system info](#system-info)
+- [hardware spec](#hardware-spec)
   - [os](#os)
   - [hardware](#hardware)
   - [cpu](#cpu)
@@ -11,6 +11,9 @@
   - [disk](#disk)
   - [network](#network)
   - [environment variables](#environment-variables)
+- [get system info](#get-system-info)
+  - [top](#top)
+  - [ps](#ps)
 - [set system info](#set-system-info)
   - [clear duplicated PATH](#clear-duplicated-path)
   - [set dns for ubuntu](#set-dns-for-ubuntu)
@@ -43,6 +46,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+![linux memory management](../screenshot/linux/linux-memory-management-1.jpg)
 
 {% hint style='tip' %}
 > references:
@@ -56,6 +60,12 @@
 > - [Top 25 Best Linux Performance Monitoring and Debugging Tools](https://www.thegeekstuff.com/2011/12/linux-performance-monitoring-tools/)
 > - [dmidecode – A Best Tool to Get System Hardware Information on Linux](https://www.2daygeek.com/dmidecode-command-find-get-check-linux-system-hardware-information/)
 > - [17 Ways to check size of physical memory (RAM) in Linux](https://www.2daygeek.com/easy-ways-to-check-size-of-physical-memory-ram-in-linux/)
+> - [Top 15 tools to monitor disk IO performance with examples](https://www.golinuxcloud.com/monitor-disk-io-performance-statistics-linux/)
+> - [Tutorial: Beginners guide on linux memory management](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/)
+>   - [Buffers vs Page cache](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/#Buffers_vs_Page_cache)
+>   - [Understanding Dirty Page](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/#Understanding_Dirty_Page)
+>   - [Understanding Active and Inactive Memory](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/#Understanding_Active_and_Inactive_Memory)
+>   - [Different types of swapping scenarios and risks](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/#Different_types_of_swapping_scenarios_and_risks)
 >
 > drop caches
 > ```bash
@@ -63,7 +73,7 @@
 > ```
 {% endhint %}
 
-## system info
+## hardware spec
 
 > [!TIP]
 > list info
@@ -520,6 +530,65 @@ $ echo src::${PATH} | awk 'BEGIN{pwd=ENVIRON["PWD"];RS=":";FS="\n"}!$1{$1=pwd}$1
 OR
 $ echo "${PATH//:/$'\n'}"
 ```
+
+## get system info
+
+{% hint style='tip' %}
+> references:
+> - [Shell script to check top memory & cpu consuming process in Linux](https://www.golinuxcloud.com/check-top-memory-cpu-consuming-process-script/)
+{% endhint %}
+
+### top
+- batch mode
+
+  > [!TIP]
+  > references:
+  > - [`top -n1 d2`](https://serverfault.com/a/626909)
+  > - [How to Save Top Command Output to a File](https://www.tecmint.com/save-top-command-output-to-a-file/)
+
+  ```bash
+  $ top -bn1
+
+  # or
+  $ top -n 1 d 2
+  ```
+
+  - get only summary of top command
+    ```bash
+    $ top -bn1 | sed -n '/^top.*/,/^\s*$/p'
+
+    ## or
+    $ top -bn1 | sed -e '/^$/Q'
+    ```
+
+### ps
+
+> [!TIP]
+> references:
+> - [Command to check top CPU consuming process](https://www.golinuxcloud.com/check-top-memory-cpu-consuming-process-script/)
+
+- cpu
+  ```bash
+  $ ps -eocomm,pcpu | egrep -v '(0.0)|(%CPU)'
+  systemd          0.2
+  rcu_sched        0.2
+  sshd             0.5
+  java             8.2
+  java             0.6
+  dockerd         16.1
+  docker-containe  0.6
+  ...
+  ```
+
+- memory
+  ```bash
+  $ ps -eocomm,pmem | egrep -v '(0.0)|(%MEM)'
+  java             0.1
+  java             0.1
+  java             0.8
+  gvfs-udisks2-vo  0.1
+  kube-apiserver   0.1
+  ```
 
 ## set system info
 ### clear duplicated PATH
