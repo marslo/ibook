@@ -49,6 +49,8 @@
 > - [Transparent Multi-hop SSH](http://sshmenu.sourceforge.net/articles/transparent-mulithop.html)
 > - [SSH via HTTP proxy in OSX](http://www.perkin.org.uk/posts/ssh-via-http-proxy-in-osx.html)
 > - [ssh key](https://wiki.archlinux.org/index.php/SSH_keys)
+> - [6 ssh authentication methods to secure connection (sshd_config)](https://www.golinuxcloud.com/openssh-authentication-methods-sshd-config/)
+> - [8 ways to prevent brute force SSH attacks in Linux (CentOS/RHEL 7)](https://www.golinuxcloud.com/prevent-brute-force-ssh-attacks-centos-linux/)
 {% endhint %}
 
 # ssh key

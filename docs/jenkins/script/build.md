@@ -909,7 +909,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
                          ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
                        }.collectEntries { Run run ->
                          [
-                           (run.id) : run.getCauses()?.collect { it.getClass().getSimpleName() }?.join(', ')
+                           (run.id) : run.getCauses()?.collect { it.getClass().getSimpleName() }?.join(' -> ')
                          ]
                        }
 
@@ -933,9 +933,9 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
     BuildUpstreamCause :
       122
       123
-    BuildUpstreamCause, UserIdCause, RebuildCause :
+    BuildUpstreamCause ->  UserIdCause ->  RebuildCause :
       124
-    UserIdCause, ReplayCause :
+    UserIdCause ->  ReplayCause :
       125
   Result: DONE
   ```
