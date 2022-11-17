@@ -31,6 +31,7 @@
 - [build cause](#build-cause)
   - [trigger casue](#trigger-casue)
     - [get build cause](#get-build-cause)
+    - [get builds cause (within 24 hours)](#get-builds-cause-within-24-hours)
     - [details on `Cause.UserIdCause`](#details-on-causeuseridcause)
     - [GerritCause](#gerritcause)
   - [abort cause](#abort-cause)
@@ -887,6 +888,56 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
             )
   }
   "DONE"
+  ```
+
+### get builds cause (within 24 hours)
+```groovy
+import hudson.model.Job
+import hudson.model.Run
+import java.util.Calendar
+import jenkins.model.Jenkins
+
+final List<String> PROJECTS = [ 'project-1' ]
+final long BENCH_MARK       = 1*24*60*60*1000
+final Calendar RIGHT_NOW    = Calendar.getInstance()
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  PROJECTS.any { job.fullName.startsWith(it) }
+}.collectEntries { Job job ->
+  [
+    ( job.fullName ) : job.builds.findAll { Run run ->
+                         ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+                       }.collectEntries { Run run ->
+                         [
+                           (run.id) : run.getCauses()?.collect { it.getClass().getSimpleName() }?.join(', ')
+                         ]
+                       }
+
+  ]
+}.collectEntries { k, v ->
+  [
+    (k) : v.groupBy( {it.value} )
+           .collectEntries{ x, y -> [ (x) : y.keySet() ] }
+  ]
+}.each{ k, v ->
+  println "~~> ${k} : ${v.values().flatten().size()}"
+  println v.collect { "\t${it.key} : \n\t\t${it.value.join('\n\t\t')}" }.join('\n')
+}
+
+"DONE"
+```
+
+- result
+  ```groovy
+  ~~> project-1 : 4
+    BuildUpstreamCause :
+      122
+      123
+    BuildUpstreamCause, UserIdCause, RebuildCause :
+      124
+    UserIdCause, ReplayCause :
+      125
+  Result: DONE
   ```
 
 ### details on `Cause.UserIdCause`
