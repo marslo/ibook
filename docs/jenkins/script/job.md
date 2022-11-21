@@ -2,10 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [get name and classes](#get-name-and-classes)
-- [list all jobs and folders](#list-all-jobs-and-folders)
-- [list all pipeline jobs](#list-all-pipeline-jobs)
-- [list all abstract Project](#list-all-abstract-project)
+- [list items](#list-items)
+  - [get name and classes](#get-name-and-classes)
+  - [list all jobs and folders](#list-all-jobs-and-folders)
+  - [list all pipeline jobs](#list-all-pipeline-jobs)
+  - [list all abstract Project](#list-all-abstract-project)
+  - [list all folders](#list-all-folders)
 - [disable and enable jobs](#disable-and-enable-jobs)
   - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
   - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
@@ -28,6 +30,7 @@
 > javadoc
 > - [org.jenkinsci.plugins.workflow.job.WorkflowJob](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowJob.html)
 > - [hudson.model.AbstractProject<P,R>](https://javadoc.jenkins-ci.org/hudson/model/AbstractProject.html)
+> - [com.cloudbees.hudson.plugins.folder.Folder](https://javadoc.jenkins.io/plugin/cloudbees-folder/com/cloudbees/hudson/plugins/folder/Folder.html)
 >
 > source code:
 > - [AbstractBuild.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/AbstractBuild.java)
@@ -37,9 +40,10 @@
 {% endhint %}
 
 
-## get name and classes
+## list items
+### get name and classes
 ```groovy
-Jenkins.instance.getAllItems(Job.class).each {
+Jenkins.instance.getAllItems( Job.class ).each {
   println it.name + " -> " + it.fullName + ' ~> ' + it.class
 }
 ```
@@ -49,9 +53,9 @@ Jenkins.instance.getAllItems(Job.class).each {
   fs - class hudson.model.FreeStyleProject
   ```
 
-## list all jobs and folders
+### list all jobs and folders
 ```groovy
-Jenkins.instance.getAllItems(AbstractItem.class).each {
+Jenkins.instance.getAllItems( AbstractItem.class ).each {
   println(it.fullName)
 }
 ```
@@ -61,16 +65,16 @@ Jenkins.instance.getAllItems(AbstractItem.class).each {
   marslo/fs
   ```
 
-## list all pipeline jobs
+### list all pipeline jobs
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-Jenkins.instance.getAllItems(WorkflowJob.class) {
+Jenkins.instance.getAllItems( WorkflowJob.class ).each {
    println it.fullName
 }
 ```
 
-## [list all abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
+### [list all abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
 
 {% hint style='tip' %}
 > Abstract Project: freestyle, maven, etc...
@@ -79,6 +83,15 @@ Jenkins.instance.getAllItems(WorkflowJob.class) {
 ```groovy
 Jenkins.instance.getAllItems( AbstractProject.class ).each {
   println it.fullName
+}
+```
+
+### list all folders
+```groovy
+import com.cloudbees.hudson.plugins.folder.Folder
+
+Jenkins.instance.getAllItems( Folder.class ).each {
+  println it.fullName + ' ~> ' + it.getClass()
 }
 ```
 
