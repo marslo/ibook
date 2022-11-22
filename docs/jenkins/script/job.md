@@ -207,6 +207,28 @@ marslo/sandbox/dump           */dev                         git://github.com:mar
 ...
 ```
 
+#### check pipeline not get from particular branche
+
+> [!TIP]
+> - [hudson.plugins.git.BranchSpec](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/BranchSpec.html)
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+String branch = 'develop'
+
+Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+}.findAll {
+  ! it.definition?.scm?.branches?.any{ it.getName().contains(branch) }
+}.each {
+  println it.fullName.toString().padRight(30) +
+          it.definition?.scm?.branches?.collect{ it.getName() }?.join(', ')
+}
+
+"DONE"
+```
+
 ### get pipeline bare script
 
 > [!TIP]
