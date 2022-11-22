@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get](#get)
+  - [get image](#get-image)
 - [set](#set)
   - [update image](#update-image)
   - [setup limits for deploy via command line](#setup-limits-for-deploy-via-command-line)
@@ -16,6 +17,12 @@
   NAME             READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS       IMAGES                  SELECTOR
   devops-jenkins   1/1     1            1           408d   devops-jenkins   jenkins/jenkins:2.199   app=devops-jenkins
   ```
+
+### get image
+```bash
+$ k -n jenkins get deploy jenkins -o jsonpath="{..image}"
+jenkins/jenkins:2.346.2-lts
+```
 
 ## set
 > reference:
