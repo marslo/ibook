@@ -40,6 +40,10 @@
 >   - [How to install a Jenkins instance with Helm](https://octopus.com/blog/jenkins-helm-install-guide)
 >   - [How to install Jenkins on Docker](https://octopus.com/blog/jenkins-docker-install-guide)
 >   - [Using dynamic build agents to automate scaling in Jenkins](https://octopus.com/blog/jenkins-dynamic-build-agents)
+>
+> Jenkins & Python
+> - [Setting Jenkins CI for python application](https://mdyzma.github.io/2017/10/14/python-app-and-jenkins/)
+> - [Jenkins and Python](https://www.jenkins.io/solutions/python/)
 {% endhint %}
 
 
