@@ -38,6 +38,15 @@
 > - [Prepare Jenkins for Support](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support)
 >   - [JVM Recommended Arguments](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support#_jvm_recommended_arguments)
 > - [Upgrading to Java 11 or 17](https://www.jenkins.io/blog/2022/06/28/require-java-11/#upgrading-to-java-11-or-17)
+> - [Setting JVM Options for Application Servers](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/v56/setting-jvm-options-application)
+>   ```
+>   -Xms1024m
+>   -Xmx2048m
+>   -XX:PermSize=32m
+>   -XX:MaxPermSize=512m
+>   -Xss2m
+>   ```
+> - [Java Documentations](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/installing/Post_Installation_Steps.htm)
 {% endhint %}
 
 - get Java version from Jenkins master

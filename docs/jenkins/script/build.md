@@ -19,7 +19,7 @@
   - [sort last build](#sort-last-build)
     - [sort all buildable jobs](#sort-all-buildable-jobs)
 - [list builds](#list-builds)
-  - [list all builds within 24 hours](#list-all-builds-within-24-hours)
+  - [list all builds byTimestamp ( within 24 hours )](#list-all-builds-bytimestamp--within-24-hours-)
   - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
   - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
 - [stop builds](#stop-builds)
@@ -557,9 +557,17 @@ Jenkins.instance
 
 # list builds
 
-## [list all builds within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+## [list all builds byTimestamp ( within 24 hours )](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+
+> [!TIP]
 > reference:
+> - [hudson.util.RunList<R>](https://javadoc.jenkins.io/hudson/util/RunList.html)
 > - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
+> - [`public RunList<R> byTimestamp(long start, long end)`](https://javadoc.jenkins.io/hudson/util/RunList.html#byTimestamp(long,long))
+>   ```
+>   Filter the list by timestamp. s<=e.
+>   Warning: this method mutates the original list and then returns it.
+>   ```
 
 ```groovy
 String JOB_PATTERN      = '<group>[/<name>]'                  // keywords
