@@ -95,6 +95,10 @@
     ```
 
 ### setup system (temporary)
+
+> [!TIP]
+> - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+
 - timestampe
   ```groovy
   System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles')

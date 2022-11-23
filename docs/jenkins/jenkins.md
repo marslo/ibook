@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [basic](#basic)
+  - [Java requirements](#java-requirements)
   - [CPS](#cps)
   - [Viewing Jenkins Jobs' Configuration as XML](#viewing-jenkins-jobs-configuration-as-xml)
   - [using style in Jenkins](#using-style-in-jenkins)
@@ -15,11 +16,21 @@
   - [in kubernetes](#in-kubernetes)
   - [via helm](#via-helm)
 - [build Jenkins docker image](#build-jenkins-docker-image)
+- [run Jenkins API out of Jenkins](#run-jenkins-api-out-of-jenkins)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 ## basic
+
+### [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
+
+> Jenkins requires Java 11 or 17 since Jenkins 2.357 and LTS 2.361.1. [Read more about this in the announcement blog post](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
+> - [Jenkins requires Java 11 or newer](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
+>
+> proxy
+> - [Setting JVM Options for Application Servers](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/v56/setting-jvm-options-application)
+> - [ava HotSpot VM Command-Line Options](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/clopts001.html)
 
 ### CPS
 
@@ -44,6 +55,13 @@
 > Jenkins & Python
 > - [Setting Jenkins CI for python application](https://mdyzma.github.io/2017/10/14/python-app-and-jenkins/)
 > - [Jenkins and Python](https://www.jenkins.io/solutions/python/)
+>
+> others
+> - [Where to download hudson library?](https://stackoverflow.com/questions/42225586/where-to-download-hudson-library)
+> - [Hooking into the Jenkins (Hudson) API, Part 1](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-1.html)
+> - [Hooking into the Jenkins (Hudson) API, Part 2](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-2.html)
+> - [How to import the class hudson outside jenkins?](https://coderanch.com/t/733088/languages/import-class-hudson-jenkins)
+> - [org.jenkins-ci.main » jenkins-core](https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core)
 {% endhint %}
 
 
@@ -872,3 +890,42 @@ RUN apt update && \
 RUN jenkins-plugin-cli --plugins octopusdeploy:3.1.6 kubernetes:1.29.2 workflow-aggregator:2.6 git:4.7.1 configuration-as-code:1.52
 USER jenkins
 ```
+
+## run Jenkins API out of Jenkins
+
+{% hint style='tip' %}
+> references:
+> - [maven central](https://search.maven.org/)
+> - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
+> - [Hooking into the Jenkins (Hudson) API, Part 1](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-1.html)
+> - [Hooking into the Jenkins (Hudson) API, Part 2](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-2.html)
+> - [Where to download hudson library?](https://stackoverflow.com/questions/42225586/where-to-download-hudson-library)
+> - [XmlPullParserException thrown when trying to run groovy script from within a Jenkins job](https://stackoverflow.com/questions/60546574/xmlpullparserexception-thrown-when-trying-to-run-groovy-script-from-within-a-jen)
+> - [How do I Import a Jenkins plugins in Groovyscript?](https://stackoverflow.com/questions/25733960/how-do-i-import-a-jenkins-plugins-in-groovyscript)
+> - [How to import the jenkins-api in Groovy?](https://stackoverflow.com/questions/55016767/how-to-import-the-jenkins-api-in-groovy)
+> - [What are the Java arguments for proxy authorization?](https://access.redhat.com/solutions/1278523)
+>
+> - javadoc
+>   - [Package hudson.util](https://javadoc.jenkins.io/hudson/util/package-summary.html)
+>   - [Package hudson.model](https://javadoc.jenkins-ci.org/hudson/model/package-summary.html)
+> - [mvnrepository.com](https://mvnrepository.com/)
+>   - [org.eclipse.hudson.main » hudson-core](https://mvnrepository.com/artifact/org.eclipse.hudson.main/hudson-core)
+>   - [org.jenkins-ci.main » jenkins-core](https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core)
+> - [maven.glassfish.org](https://maven.glassfish.org/content/groups/public/)
+> - [repo.jenkins-ci.org](https://repo.jenkins-ci.org/public/)
+{% endhint %}
+
+```groovy
+@GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
+@Grapes([
+        @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.167')
+])
+
+import hudson.model.*
+```
+
+- [or](https://stackoverflow.com/a/55018829/2940319)
+  ```groovy
+  @GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
+  @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.377')
+  ```
