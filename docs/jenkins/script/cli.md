@@ -20,6 +20,9 @@
 > - [Jenkins Area Meetup - Hacking on Jenkins Internals - Jenkins Script Console](https://www.youtube.com/watch?v=T1x2kCGRY1w)
 > - [Write Groovy scripts for Jenkins with code completion](https://www.mdoninger.de/2011/11/07/write-groovy-scripts-for-jenkins-with-code-completion.html)
 > - [Example Groovy scripts](https://www.jenkins.io/doc/book/managing/script-console/#example-groovy-scripts)
+> - [Jenkins Startup logs show builds migrated by the RunIdMigrator](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/jenkins-startup-logs-show-runidmigrator-logs)
+> - [How to create a job using the REST API and cURL?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-create-a-job-using-the-rest-api-and-curl)
+> - [Creating node with the REST API](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/creating-node-with-the-rest-api)
 {% endhint %}
 
 

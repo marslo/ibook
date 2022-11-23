@@ -24,6 +24,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 {% hint style='tip' %}
+> download
+> - [apach software foundatin distribution directory](https://dlcdn.apache.org/)
+> - [groovy](https://dlcdn.apache.org/groovy/)
+>   - [2.4.21](https://dlcdn.apache.org/groovy/2.4.21/)
+>   - [2.5.19](https://dlcdn.apache.org/groovy/2.5.19/)
+>   - [3.0.13](https://dlcdn.apache.org/groovy/3.0.13/)
+>   - [4.0.6](https://dlcdn.apache.org/groovy/4.0.6/)
+> <br>
 > reference:
 > - [* Groovy Language Documentation](https://docs.groovy-lang.org/latest/html/documentation)
 > - [* Groovy Scripting Reference](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/index.html)
@@ -35,6 +43,7 @@
 > - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
 > - [http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf](http://www.cheat-sheets.org/saved-copy/rc015-groovy_online.pdf)
 > - [Syntax](https://groovy-lang.org/syntax.html)
+> - [Five Cool Things You Can Do With Groovy Scripts](http://www.kellyrob99.com/blog/2011/12/04/five-cool-things-you-can-do-with-groovy-scripts/)
 > - [Java SE Specifications download](https://docs.oracle.com/javase/specs/)
 >   - The Java Language Specification, Java SE 19 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se19/jls19.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se19/html/index.html)
 >   - The Java Language Specification, Java SE 18 Edition : [pdf](https://docs.oracle.com/javase/specs/jls/se18/jls18.pdf) | [html](https://docs.oracle.com/javase/specs/jls/se18/html/index.html)

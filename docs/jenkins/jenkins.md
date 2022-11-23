@@ -17,6 +17,7 @@
   - [via helm](#via-helm)
 - [build Jenkins docker image](#build-jenkins-docker-image)
 - [run Jenkins API out of Jenkins](#run-jenkins-api-out-of-jenkins)
+  - [jenkins-core](#jenkins-core)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -62,6 +63,9 @@
 > - [Hooking into the Jenkins (Hudson) API, Part 2](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-2.html)
 > - [How to import the class hudson outside jenkins?](https://coderanch.com/t/733088/languages/import-class-hudson-jenkins)
 > - [org.jenkins-ci.main » jenkins-core](https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core)
+>
+> war packages
+> - [Jenkins Custom WAR Packager](https://hub.docker.com/r/jenkins/custom-war-packager)
 {% endhint %}
 
 
@@ -895,30 +899,51 @@ USER jenkins
 
 {% hint style='tip' %}
 > references:
-> - [maven central](https://search.maven.org/)
 > - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
 > - [Hooking into the Jenkins (Hudson) API, Part 1](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-1.html)
 > - [Hooking into the Jenkins (Hudson) API, Part 2](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-2.html)
+>   - [kellyrob99/Jenkins-api-tour](https://github.com/kellyrob99/Jenkins-api-tour/)
 > - [Where to download hudson library?](https://stackoverflow.com/questions/42225586/where-to-download-hudson-library)
 > - [XmlPullParserException thrown when trying to run groovy script from within a Jenkins job](https://stackoverflow.com/questions/60546574/xmlpullparserexception-thrown-when-trying-to-run-groovy-script-from-within-a-jen)
 > - [How do I Import a Jenkins plugins in Groovyscript?](https://stackoverflow.com/questions/25733960/how-do-i-import-a-jenkins-plugins-in-groovyscript)
 > - [How to import the jenkins-api in Groovy?](https://stackoverflow.com/questions/55016767/how-to-import-the-jenkins-api-in-groovy)
 > - [What are the Java arguments for proxy authorization?](https://access.redhat.com/solutions/1278523)
->
+> - [Jenkins API - how to trigger a Jenbkins job programmatically](https://www.lenar.io/jenkins-api-trigger-job/)
+> - [Dependencies and Class Loading](https://www.jenkins.io/doc/developer/plugin-development/dependencies-and-class-loading/)
+> <br>
 > - javadoc
 >   - [Package hudson.util](https://javadoc.jenkins.io/hudson/util/package-summary.html)
 >   - [Package hudson.model](https://javadoc.jenkins-ci.org/hudson/model/package-summary.html)
+> <br>
 > - [mvnrepository.com](https://mvnrepository.com/)
 >   - [org.eclipse.hudson.main » hudson-core](https://mvnrepository.com/artifact/org.eclipse.hudson.main/hudson-core)
 >   - [org.jenkins-ci.main » jenkins-core](https://mvnrepository.com/artifact/org.jenkins-ci.main/jenkins-core)
+>   - Pipeline: Job : [org.jenkins-ci.plugins.workflow » workflow-job](https://mvnrepository.com/artifact/org.jenkins-ci.plugins.workflow/workflow-job?repo=jenkins-incrementals)
+>   - Pipeline: Groovy : [org.jenkins-ci.plugins.workflow » workflow-cps](https://mvnrepository.com/artifact/org.jenkins-ci.plugins.workflow/workflow-cps)
+>   - Pipeline: API : [org.jenkins-ci.plugins.workflow » workflow-api](https://mvnrepository.com/artifact/org.jenkins-ci.plugins.workflow/workflow-api)
+>   - Pipeline: Nodes and Processes : [org.jenkins-ci.plugins.workflow » workflow-durable-task-step](https://mvnrepository.com/artifact/org.jenkins-ci.plugins.workflow/workflow-durable-task-step?repo=jenkins-releases)
+>   - Pipeline: Parent : [org.jenkins-ci.plugins.workflow » workflow-pom](https://mvnrepository.com/artifact/org.jenkins-ci.plugins.workflow/workflow-pom)
+>   - RESTEasy JAX RS Implementation : [org.jboss.resteasy » resteasy-jaxrs](https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jaxrs)
+>   - RESTEasy Jackson 2 Provider : [org.jboss.resteasy » resteasy-jackson2-provider](https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider)
+>   - [javax/ws/rs](https://herd.ceylon-lang.org/maven/1/javax/ws/rs/2.0.1)
+>     - JAX RS API : [javax.ws.rs » javax.ws.rs](https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs?repo=springio-plugins-release)
+> - [maven central](https://search.maven.org/)
 > - [maven.glassfish.org](https://maven.glassfish.org/content/groups/public/)
 > - [repo.jenkins-ci.org](https://repo.jenkins-ci.org/public/)
+>
+> <br>
+> - source code
+>   - [jenkins/core/src/main/java/jenkins/model/Jenkins.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/jenkins/model/Jenkins.java)
+>
+> <br>
+> - more
+>   - [JAX-RS](https://access.redhat.com/documentation/ko-kr/red_hat_jboss_enterprise_application_platform/7.3/html/developing_web_services_applications/developing_jax_rs_web_services)
 {% endhint %}
 
 ```groovy
-@GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
+@GrabResolver(name='jenkins', root='https://repo.jenkins-ci.org/public/')
 @Grapes([
-        @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.167')
+  @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.167')
 ])
 
 import hudson.model.*
@@ -926,6 +951,40 @@ import hudson.model.*
 
 - [or](https://stackoverflow.com/a/55018829/2940319)
   ```groovy
-  @GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
+  @GrabResolver(name='jenkins', root='https://repo.jenkins-ci.org/public/')
   @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.377')
   ```
+
+### jenkins-core
+```groovy
+@GrabResolver(name='jenkins', root='https://repo.jenkins-ci.org/releases')
+@Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.377')
+
+import hudson.Util
+
+println Util.XS_DATETIME_FORMATTER.format( new Date() )
+```
+
+- result
+  ```groovy
+  2022-11-23T13:39:34Z
+  ```
+
+#### `org.jenkinsci.plugins.workflow`
+```groovy
+
+@GrabResolver(name='jenkins', root='https://repo.jenkins-ci.org/releases')
+@Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.377')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-job', version='1255.vd1de92199f0f')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-basic-steps', version='991.v43d80fea_ff66', scope='test')
+
+import jenkins.model.Jenkins
+import hudson.model.Job
+import hudson.Util
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+String rootUrl = 'https://ssdfw-devops-jenkins.marvell.com'
+
+Map<String, WorkflowJob> jobs = jenkins.getJobs()
+println jobs
+```
