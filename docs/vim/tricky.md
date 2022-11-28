@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [show path of current file](#show-path-of-current-file)
 - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
 - [search (in)sensitive](#search-insensitive)
 - [sort lines](#sort-lines)
@@ -16,6 +17,28 @@
 - [disable vim beep](#disable-vim-beep)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+### show path of current file
+
+> [!TIP]
+> references:
+> - [How can I see the full path of the current file?](https://vi.stackexchange.com/a/1885/7389)
+> - [vimtip : Get the name of the current file](https://vim.fandom.com/wiki/Get_the_name_of_the_current_file)
+> - [How to find out which file is currently opened in vim?](https://unix.stackexchange.com/a/104902/29178)
+
+| COMMANDS                  | RESULT                                   | EXPLAIN                                                            |
+|---------------------------|------------------------------------------|--------------------------------------------------------------------|
+| `:echo @%`                | `tricky.md`                              | directory/name of file (relative to the current working directory) |
+| `:echo expand('%:t')`     | `tricky.md`                              | name of file ('tail')                                              |
+| `:echo expand('%:p')`     | `/Users/marslo/ibook/docs/vim/tricky.md` | full path                                                          |
+| `:echo expand('%:p:h')`   | `/Users/marslo/ibook/docs/vim`           | directory containing file ('head')                                 |
+| `:echo expand('%:p:h:t')` | `vim`                                    | direct folder name                                                 |
+| `:echo expand('%:r')`     | `tricky`                                 | name of file less one extension ('root')                           |
+| `:echo expand('%:e')`     | `md`                                     | name of file's extension ('extension')                             |
+
+- others
+  - <kbd>ctrl</kbd> + <kbd>g</kbd>
+  - `:f`
 
 ### combine multiple lines with or without space
 - with space: `J`
