@@ -61,6 +61,7 @@
 > - [dmidecode – A Best Tool to Get System Hardware Information on Linux](https://www.2daygeek.com/dmidecode-command-find-get-check-linux-system-hardware-information/)
 > - [17 Ways to check size of physical memory (RAM) in Linux](https://www.2daygeek.com/easy-ways-to-check-size-of-physical-memory-ram-in-linux/)
 > - [Top 15 tools to monitor disk IO performance with examples](https://www.golinuxcloud.com/monitor-disk-io-performance-statistics-linux/)
+> - [How To Find Linux System Details Using inxi](https://ostechnix.com/how-to-find-your-system-details-using-inxi/)
 > - [Tutorial: Beginners guide on linux memory management](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/)
 >   - [Buffers vs Page cache](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/#Buffers_vs_Page_cache)
 >   - [Understanding Dirty Page](https://www.golinuxcloud.com/tutorial-linux-memory-management-overview/#Understanding_Dirty_Page)
@@ -85,7 +86,7 @@
 > - `lspci`
 > - `lsscsi`
 > - `lsusb`
-> - `inxi`
+> - `inxi` ( `inxi --recommends`, `inxi -F|--full` )
 > - `lsblk`
 > - `lsof`
 > - `ncdu` - a disk utility for Unix systems
@@ -181,12 +182,15 @@ $ sudo dmidecode -s
 
 #### system information
 ```bash
-$ sudo dmidecode | grep -A3 '^System Information'
-    System Information
-            Manufacturer: HPE
-            Product Name: ProLiant DL380 Gen10
-        Version: Not Specified
-# or
+$ sudo dmidecode | grep -A5 '^System Information'
+  System Information
+    Manufacturer: HPE
+    Product Name: ProLiant DL380 Gen10
+    Version: Not Specified
+    Serial Number: S*************0
+    UUID: 0******0-0**0-0**0-0**0-3**********e
+
+# or Display System [M]anufacture
 $ inxi -M
     Machine:   Type: Server Mobo: HPE model: ProLiant DL380 Gen10 serial: <root required> UEFI: HPE v: U30
                date: 06/15/2018
