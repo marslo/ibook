@@ -169,6 +169,7 @@ System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.
 > references:
 > - [AnalogJ/you-dont-know-jenkins-init](https://github.com/AnalogJ/you-dont-know-jenkins-init)
 > - [3003.plugin-pipeline-library.groovy](https://github.com/AnalogJ/you-dont-know-jenkins-init/blob/master/3003.plugin-pipeline-library.groovy)
+> - [Using Hudson/Features controlled by system properties](https://wiki.eclipse.org/Using_Hudson/Features_controlled_by_system_properties)
 {% endhint %}
 
 ```groovy
@@ -253,6 +254,17 @@ Jenkins.instance
        .each { plugin ->
          println ( "${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}" )
        }
+```
+
+### [with delegate to Servlet container security realm](https://www.jenkins.io/doc/book/security/access-control/permissions/)
+```groovy
+ExtensionList.lookup( UnprotectedRootAction ).each {
+  println String.format( "URL: '%s/' provided by '%s' in '%s'",
+                         it.urlName,
+                         Jenkins.get().pluginManager.whichPlugin(it.class)?.shortName?:"Jenkins Core",
+                         it.class.name
+          )
+}
 ```
 
 ### [List plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)

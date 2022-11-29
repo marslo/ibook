@@ -9,6 +9,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+## configure file
+- `JENKINS_HOME/org.codefirst.SimpleThemeDecorator.xml`
 
 ## Q&A
 ### [workaround for in-progress image float layer out](https://github.com/afonsof/jenkins-material-theme/issues/183#issuecomment-806518351)
