@@ -523,8 +523,22 @@ println """
 - or
   ```groovy
   println hudson.util.Secret.fromString('marslo').getEncryptedValue()
-  println hudson.util.Secret.decrypt( hudson.util.Secret.fromString('marslo').getEncryptedValue() 
+  println hudson.util.Secret.decrypt( hudson.util.Secret.fromString('marslo').getEncryptedValue()
 
   // {AQAAABAAAAAQfwTdrtsFbS2MyOOA3kuO01p21CsVsSIpZg9FE1TMlMQ=}
   // marslo
   ```
+
+## tricky
+
+### [Access granted with Overall/SystemRead](https://www.jenkins.io/doc/book/security/access-control/permissions/#access-granted-with-overallsystemread)
+
+{% hint style='tip' %}
+This permission can be enabled by setting [the system property jenkins.security.SystemReadPermission](https://www.jenkins.io/doc/book/managing/system-properties/#jenkins-security-systemreadpermission) to true or installing the [Extended Read Permission](https://plugins.jenkins.io/extended-read-permission) plugin.
+{% endhint %}
+
+### [Access granted with Overall/Manage](https://www.jenkins.io/doc/book/security/access-control/permissions/#access-granted-with-overallmanage)
+
+{% hint style='tip' %}
+This permission can be enabled by setting [the system property jenkins.security.ManagePermission to true](https://www.jenkins.io/doc/book/managing/system-properties/#jenkins-security-managepermission) or installing [the Overall/Manage permission enabler](https://plugins.jenkins.io/manage-permission) plugin.
+{% endhint %}
