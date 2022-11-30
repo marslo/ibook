@@ -28,6 +28,9 @@ search:
 > reference:
 > - [gitbook 简明教程](http://www.chengweiyang.cn/gitbook/)
 > - [gitbook 入门教程](https://yuzeshan.gitbooks.io/gitbook-studying/content/)
+> - [Gitbook 打造的 Gitbook 说明文档](https://www.mapull.com/gitbook/default/)
+>   - [基础命令](https://www.mapull.com/gitbook/comscore/basic/command.html)
+>   - [第一本电子书](https://www.mapull.com/gitbook/comscore/basic/hello.html)
 > - [book.json](http://www.chengweiyang.cn/gitbook/customize/book.json.html)
 > - [emoji](https://gist.github.com/rxaviers/7360908)
 > - [gitbook howto](https://coding-notes.readthedocs.io/en/latest/rst/dt/gitbook.html)
@@ -39,6 +42,45 @@ search:
 >
 > useful plugins
 > - [gitbook-plugin-fbqx](https://ymcatar.gitbooks.io/gitbook-test/content/testing_fbqx.html)
+> - alert:
+>   - `gitbook-plugin-alerts`
+>   - `gitbook-plugin-flexible-alerts`
+> - Anchors:
+>   - `gitbook-plugin-anchors`
+>   - `gitbook-plugin-anchor-navigation-ex`
+>   - `gitbook-plugin-back-to-top-button`
+> - toggle-chapters:
+>   - `gitbook-plugin-chapter-fold`
+>   - `gitbook-plugin-expandable-chapters`
+> - code:
+>   - `gitbook-plugin-code`
+>   - `gitbook-plugin-copy-code-button`
+> - fold
+>   - `gitbook-plugin-expandable-chapters-small`
+> - favicon
+>   - `gitbook-plugin-favicon`
+> - github:
+>   - `gitbook-plugin-github`
+>   - `gitbook-plugin-github-buttons`
+> - Tbfed-pagefooter:
+>   - `gitbook-plugin-tbfed-pagefooter`
+> - Prism:
+>   - `gitbook-plugin-prism`
+> - search:
+>   - `gitbook-plugin-search-plus`
+>   - `gitbook-plugin-search-pro`
+> - Sectionx:
+>   - `gitbook-plugin-sectionx`
+> - sharing:
+>   - `gitbook-plugin-sharing-plus`
+> - Splitter:
+>   - `gitbook-plugin-splitter`
+> - toc :
+>   - `gitbook-plugin-atoc`
+>   - `gitbook-plugin-simple-page-toc`
+> - versions-select:
+>   - `gitbook-plugin-versions-select`
+> - [others](https://www.mapull.com/gitbook/comscore/custom/plugin/other/)
 >
 > resources:
 > - [FontAwesome](https://fontawesome.com/)
@@ -322,6 +364,7 @@ warning
 > references:
 > - [npm: docsify-plugin-flexible-alerts](https://www.npmjs.com/package/docsify-plugin-flexible-alerts)
 > - [fzankl/docsify-plugin-flexible-alerts](https://github.com/fzankl/docsify-plugin-flexible-alerts)
+> - [Gitbook book.json 配置文件](https://www.mapull.com/gitbook/comscore/others/book.html)
 
 #### setup
 > [!NOTE|style:callout|label:book.json|icon:fa fa-bullhorn]

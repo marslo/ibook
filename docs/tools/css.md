@@ -10,7 +10,7 @@
 - [kbd](#kbd)
 - [font](#font)
 - [selector](#selector)
-  - [multiple conditions](#multiple-conditions)
+  - [attribute selectors](#attribute-selectors)
   - [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -20,6 +20,7 @@
 
 {% hint style='tip' %}
 > references:
+> - [CSS: Cascading Style Sheets](https://developer.mozilla.org/en-US/docs/Web/CSS)
 > - [bootstrap.min.css 4.x](https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css)
 > - [bootstrap.min.css 5.x](https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css)
 >   - [Bootstrap Alerts](https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-alerts.php)
@@ -746,27 +747,82 @@ kbd {
 >     - [`:where()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:where)
 >     - [`:has()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:has)
 
-### multiple conditions
-- sample code
-  ```css
-  .dh-tl-tl {}
-  .dh-tl-tr {}
-  .dh-tl-br {}
-  .dh-tl-bl {}
-  .dh-tr-tl {}
-  ...
-  .dh-br-tl {}
-  ...
-  .dh-bl-tl {}
-  ...
+### attribute selectors
+- `[attr]`
+   Represents elements with an attribute name of attr.
+
+- `[attr=value]`
+   Represents elements with an attribute name of attr whose value is exactly value.
+
+- `[attr~=value]`
+   Represents elements with an attribute name of attr whose value is a whitespace-separated list of words, one of which is exactly value.
+
+- `[attr|=value]`
+   Represents elements with an attribute name of attr whose value can be exactly value or can begin with value immediately followed by a hyphen, - (U+002D). It is often used for language subcode matches.
+
+- `[attr^=value]`
+   Represents elements with an attribute name of attr whose value is prefixed (preceded) by value.
+
+- `[attr$=value]`
+   Represents elements with an attribute name of attr whose value is suffixed (followed) by value.
+
+- `[attr*=value]`
+   Represents elements with an attribute name of attr whose value contains at least one occurrence of value within the string.
+
+- example
+  ```html
+  <ul>
+    <li><a href="#internal">Internal link</a></li>
+    <li><a href="http://example.com">Example link</a></li>
+    <li><a href="#InSensitive">Insensitive internal link</a></li>
+    <li><a href="http://example.org">Example org link</a></li>
+    <li><a href="https://example.org">Example https org link</a></li>
+  </ul>
   ```
-- elegant way
+
   ```css
-  [class^="dh-"][class$="-tl"] { color: red;    }
-  [class^="dh"][class$="-tr"]  { color: orange; }
-  [class^="dh"][class$="-bl"]  { color: green;  }
-  [class^="dh"][class$="-br"]  { color: blue;   }
+  a { color: blue; }
+
+  /* Internal links, beginning with "#" */
+  a[href^="#"] { background-color: gold; }
+
+  /* Links with "example" anywhere in the URL */
+  a[href*="example"] { background-color: silver; }
+
+  /* Links with "insensitive" anywhere in the URL, regardless of capitalization */
+  a[href*="insensitive" i] { color: cyan; }
+
+  /* Links with "cAsE" anywhere in the URL, with matching capitalization */
+  a[href*="cAsE" s] { color: pink; }
+
+  /* Links that end in ".org" */
+  a[href$=".org"] { color: red; }
+
+  /* Links that start with "https" and end in ".org" */
+  a[href^="https"][href$=".org"] { color: green; }
   ```
+
+- another example
+  - sample code
+    ```css
+    .dh-tl-tl {}
+    .dh-tl-tr {}
+    .dh-tl-br {}
+    .dh-tl-bl {}
+    .dh-tr-tl {}
+    ...
+    .dh-br-tl {}
+    ...
+    .dh-bl-tl {}
+    ...
+    ```
+  - elegant way
+    ```css
+    [class^="dh-"][class$="-tl"] { color: red;    }
+    [class^="dh"][class$="-tr"]  { color: orange; }
+    [class^="dh"][class$="-bl"]  { color: green;  }
+    [class^="dh"][class$="-br"]  { color: blue;   }
+    ```
 
 ### references
 

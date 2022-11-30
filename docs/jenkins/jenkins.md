@@ -28,6 +28,7 @@
 > - [Jenkins Tutorials](https://www.youtube.com/playlist?list=PLvBBnHmZuNQJeznYL2F-MpZYBUeLIXYEe)
 > - [Jenkins Plugin Developer Series](https://www.youtube.com/playlist?list=PLvBBnHmZuNQIb4p2t69dgMQyGbzb8qr4T)
 > - [Jenkins X](https://www.youtube.com/playlist?list=PLvBBnHmZuNQJxNWu6X-5pqpAxRCQEWRGn)
+> - [CloudBees CI](https://docs.cloudbees.com/docs/cloudbees-ci/latest/)
 {% endhint %}
 
 ## basic
