@@ -1068,7 +1068,7 @@ builds.each { build ->
     usernmae        : marslo
     description     : Retriggered by user marslo for Gerrit: https://my.gerrit.com/c/my/project/+/72667
     changer account : Marslo Jiao
-    changer email   : marslo@marvell.com
+    changer email   : marslo@gmail.com
   ..........
   manualCause?      : false
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

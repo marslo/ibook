@@ -7,9 +7,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+## kwauth doesn't properly set HTTP/1.1 header
 
+> [!NOTE]
+> - [Limitations](https://docs.roguewave.com/en/klocwork/2021/kwlimitations)
+> - [kwlimitations](https://analyst.phyzdev.net/documentation/help/concepts/kwlimitations.htm)
+> - [Authentication using the ltoken](https://analyst.phyzdev.net/documentation/help/concepts/klocworkltoken.htm)
 
-## [kwauth doesn't properly set HTTP/1.1 header](https://ssd-titania-fw-klocwork.marvell.com/documentation/help/en-us/concepts/kwlimitations.htm)
 
 > [!TIP]
 > Sometimes when the Klocwork Server IP address is associated with multiple host names or located behind a reverse proxy, kwauth does not properly resolve the FDQN of the Klocwork Server.
@@ -20,5 +24,8 @@
 > ```
 > The file must have the following structure:
 > ```bash
-> <?xml version="1.0" encoding="UTF-8"?><params>   <host resolveHost="false" /></params>
+> <?xml version="1.0" encoding="UTF-8"?>
+> <params>
+>   <host resolveHost="false" />
+> </params>
 > ```
