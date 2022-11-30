@@ -1235,7 +1235,7 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 
   ```bash
   $ git blame -e -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-  38327eac (<marslo@marvell.com> 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac (<marslo@gmail.com> 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
   ```
 
 - `-l`

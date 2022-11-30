@@ -908,6 +908,11 @@ USER jenkins
 
 {% hint style='tip' %}
 > references:
+> - [* Jenkins API](https://www.lixin.help/2022/05/07/Jenkins-Api.html)
+> - [* Jenkins API - how to trigger a Jenbkins job programmatically](https://www.lenar.io/jenkins-api-trigger-job/)
+> - [* Jenkins REST Plugin](https://www.jenkins.io/projects/gsoc/2020/project-ideas/jenkins-rest-plugin/)
+>   - [jenkinsci/java-client-api](https://github.com/jenkinsci/java-client-api)
+>   - [cdancy/jenkins-rest](https://github.com/cdancy/jenkins-rest)
 > - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
 > - [Hooking into the Jenkins (Hudson) API, Part 1](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-1.html)
 > - [Hooking into the Jenkins (Hudson) API, Part 2](https://www.javacodegeeks.com/2012/08/hooking-into-jenkins-hudson-api-part-2.html)
@@ -917,7 +922,6 @@ USER jenkins
 > - [How do I Import a Jenkins plugins in Groovyscript?](https://stackoverflow.com/questions/25733960/how-do-i-import-a-jenkins-plugins-in-groovyscript)
 > - [How to import the jenkins-api in Groovy?](https://stackoverflow.com/questions/55016767/how-to-import-the-jenkins-api-in-groovy)
 > - [What are the Java arguments for proxy authorization?](https://access.redhat.com/solutions/1278523)
-> - [Jenkins API - how to trigger a Jenbkins job programmatically](https://www.lenar.io/jenkins-api-trigger-job/)
 > - [Dependencies and Class Loading](https://www.jenkins.io/doc/developer/plugin-development/dependencies-and-class-loading/)
 > <br>
 > - javadoc
@@ -936,15 +940,14 @@ USER jenkins
 >   - RESTEasy Jackson 2 Provider : [org.jboss.resteasy » resteasy-jackson2-provider](https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-jackson2-provider)
 >   - [javax/ws/rs](https://herd.ceylon-lang.org/maven/1/javax/ws/rs/2.0.1)
 >     - JAX RS API : [javax.ws.rs » javax.ws.rs](https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs?repo=springio-plugins-release)
+> - [com/clarolab](https://repo1.maven.org/maven2/com/clarolab/)
 > - [maven central](https://search.maven.org/)
 > - [maven.glassfish.org](https://maven.glassfish.org/content/groups/public/)
 > - [repo.jenkins-ci.org](https://repo.jenkins-ci.org/public/)
 >
-> <br>
 > - source code
 >   - [jenkins/core/src/main/java/jenkins/model/Jenkins.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/jenkins/model/Jenkins.java)
 >
-> <br>
 > - more
 >   - [JAX-RS](https://access.redhat.com/documentation/ko-kr/red_hat_jboss_enterprise_application_platform/7.3/html/developing_web_services_applications/developing_jax_rs_web_services)
 {% endhint %}
@@ -981,19 +984,61 @@ println Util.XS_DATETIME_FORMATTER.format( new Date() )
 
 #### `org.jenkinsci.plugins.workflow`
 ```groovy
-
+// Groovy Version: 3.0.13 JVM: 11.0.15.1
 @GrabResolver(name='jenkins', root='https://repo.jenkins-ci.org/releases')
 @Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.377')
-@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-job', version='1255.vd1de92199f0f')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-job', version='1254.v3f64639b_11dd')
 @Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-basic-steps', version='991.v43d80fea_ff66', scope='test')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-api', version='1192.v2d0deb_19d212')
 
 import jenkins.model.Jenkins
 import hudson.model.Job
 import hudson.Util
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import org.jenkinsci.plugins.workflow.flow.BlockableResume
 
-String rootUrl = 'https://ssdfw-devops-jenkins.marvell.com'
+String rootUrl = 'https://my.jenkins.com'
 
 Map<String, WorkflowJob> jobs = jenkins.getJobs()
 println jobs
+
+// output
+// Caught: groovy.lang.MissingPropertyException: No such property: jenkins for class: jenkins-job
+```
+
+#### [`com.cdancy.jenkins.rest.JenkinsClient`](https://github.com/cdancy/jenkins-rest)
+
+```groovy
+@GrabResolver(name='jenkins', root='https://repo.jenkins-ci.org/releases')
+@Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.377')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-api', version='1200.v8005c684b_a_c6')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-job', version='1254.v3f64639b_11dd')
+@Grab(group='org.jenkins-ci.plugins.workflow', module='workflow-step-api', version='639.v6eca_cd8c04a_a_')
+@Grab(group='javax.ws', module='rs', version='2.0.1')
+@Grab(group='io.github.cdancy', module='jenkins-rest', version='1.0.2')
+
+import jenkins.model.Jenkins
+import hudson.Util
+import hudson.model.Job
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+import com.cdancy.jenkins.rest.JenkinsClient
+
+String jenkinsUrl = 'https://my.jenkins.com'
+String userName   = 'admin'
+String password   = 'admin'
+
+JenkinsClient client = JenkinsClient.builder()
+                                    .endPoint( jenkinsUrl )
+                                    .credentials( "${userName}:${password}" )
+                                    .build();
+println client.getClass()
+println client.api().systemApi().systemInfo().getClass()
+println client.api().getClass()
+
+// Groovy Version: 3.0.13 JVM: 11.0.15.1
+// output
+// class com.cdancy.jenkins.rest.JenkinsClient
+// class com.cdancy.jenkins.rest.domain.system.AutoValue_SystemInfo
+// class com.sun.proxy.$Proxy68
 ```
