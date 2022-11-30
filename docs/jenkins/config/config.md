@@ -206,6 +206,10 @@
 > - [bullseye](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/bullseye/Dockerfile)
 {% endhint %}
 
+```bash
+$ sudo update-alternatives --remove java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+```
+
 
 ### Mailing format
 - Show the logs after building

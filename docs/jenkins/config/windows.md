@@ -23,6 +23,8 @@
 > - [Launch inbound agent via Windows Scheduler](https://www.jenkins.io/doc/book/managing/nodes/#launch-inbound-agent-via-windows-scheduler)
 > - [installing a jenkins agent on windows (via winsw)](https://www.jenkins.io/doc/book/managing/nodes/#installing-a-jenkins-agent-on-windows)
 >   - [Jenkins Tutorials : how to install jenkins agent on windows](https://www.youtube.com/watch?v=N8AQTlHoBKc)
+> - [How to install Windows agents as a service?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-install-windows-agents-as-a-service)
+> - [Managing agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-admin-guide/agents)
 > others
 > - [Upgrading Jenkins Java version from 8 to 11](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/#java-web-start)
 > - [Jenkins Remoting](https://www.jenkins.io/projects/remoting/)
@@ -339,9 +341,11 @@ EOF
 
 > **[!TIP] tips on xml label**
 > - `<onfailure action="restart" />`:
+>
 >   ![onfailure action="restart"](../../screenshot/jenkins/config/winsw-service-resrart.png)
 >
 > - `<download from="https://my.jenkins.com.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>`:
+>
 >   `2022-11-30 06:31:38,022 INFO  - Downloading: https://my.jenkins.com/jnlpJars/agent.jar to J:\jenkins\agent.jar. failOnError=False`
 
 
