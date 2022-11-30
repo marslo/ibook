@@ -22,6 +22,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+{% hint style='tip' %}
+> references:
+> - [CloudBeesTV](https://www.youtube.com/@CloudBeesTV)
+> - [Jenkins Tutorials](https://www.youtube.com/playlist?list=PLvBBnHmZuNQJeznYL2F-MpZYBUeLIXYEe)
+> - [Jenkins Plugin Developer Series](https://www.youtube.com/playlist?list=PLvBBnHmZuNQIb4p2t69dgMQyGbzb8qr4T)
+> - [Jenkins X](https://www.youtube.com/playlist?list=PLvBBnHmZuNQJxNWu6X-5pqpAxRCQEWRGn)
+{% endhint %}
+
 ## basic
 
 ### [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)

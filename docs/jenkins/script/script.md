@@ -17,6 +17,7 @@
 - [list plugins](#list-plugins)
   - [via api : imarslo: list plugins](#via-api--imarslo-list-plugins)
   - [simple list](#simple-list)
+  - [with delegate to Servlet container security realm](#with-delegate-to-servlet-container-security-realm)
   - [List plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
   - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)

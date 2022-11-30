@@ -141,20 +141,21 @@ $ npm config set https-proxy $https_proxy -g
 
 > [!TIP]
 > references:
+> - [Alerts](https://www.mapull.com/gitbook/comscore/custom/plugin/common/alerts.html)
 > - [hints](https://github.com/GitbookIO/plugin-hints)
 > - [gitbook-plugin-flexible-alerts](https://www.npmjs.com/package/gitbook-plugin-flexible-alerts-static)
 > - [Simran-B/gitbook-plugin-callouts](https://github.com/Simran-B/gitbook-plugin-callouts)
 > - [Hints and Callouts](https://docs.gitbook.com/editing-content/markdown#hints-and-callouts)
 
 
-|   styles  | code                                                                                       | gitbook-plugin-flexible-alerts     |
-|:---------:|:-------------------------------------------------------------------------------------------|:-----------------------------------|
-|    info   | {% raw %}`{% hint style='info' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}    | {% raw %}>[!NOTE]{% endraw %}      |
-|    tip    | {% raw %}`{% hint style='tip' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}     | {% raw %}>[!TIP]{% endraw %}       |
-|   danger  | {% raw %}`{% hint style='danger' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}  | -                                  |
-|  warning  | {% raw %}`{% hint style='warning' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %} | {% raw %}>[!WARNING]{% endraw %}   |
-|  success  | {% raw %}`{% hint style='success' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %} | -                                  |
-| attention | -                                                                                          | {% raw %}>[!ATTENTION]{% endraw %} |
+|   styles  | code                                                                                       | gitbook-plugin-flexible-alerts    |
+|:---------:|:-------------------------------------------------------------------------------------------|:----------------------------------|
+|    info   | {% raw %}`{% hint style='info' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}    | {% raw %}> [!NOTE]{% endraw %}    |
+|    tip    | {% raw %}`{% hint style='tip' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}     | {% raw %}> [!TIP]{% endraw %}     |
+|   danger  | {% raw %}`{% hint style='danger' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}  | -                                 |
+|  warning  | {% raw %}`{% hint style='warning' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %} | {% raw %}> [!WARNING]{% endraw %} |
+|  success  | {% raw %}`{% hint style='success' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %} | -                                 |
+| attention | -                                                                                          | {% raw %}> [!DANGER]{% endraw %}  |
 
 
 #### success

@@ -21,6 +21,9 @@
   - [CertificateCredentials](#certificatecredentials)
   - [SystemCredentialsProvider](#systemcredentialsprovider)
   - [encrypt/decrypt password](#encryptdecrypt-password)
+- [tricky](#tricky)
+  - [Access granted with Overall/SystemRead](#access-granted-with-overallsystemread)
+  - [Access granted with Overall/Manage](#access-granted-with-overallmanage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
