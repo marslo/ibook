@@ -153,6 +153,7 @@ Start-Service docker
 
 - check
 
+  > [!NOTE]
   > - [imarslo: stop service & process via powershell](../../cheatsheet/windows/windows.html#stop-service--process-via-powershell)
   > - [powershell : Get-Service](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-service?view=powershell-7.2)
 
@@ -313,14 +314,15 @@ Labels:
 > - [* Create Virtual Machine with Hyper-V on Windows 10](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/create-virtual-machine)
 
 ### installation
+#### in windows servers
 
 > [!TIP]
 > If you're connected locally to the server, run the command without `-ComputerName <computer_name>`.
 
 - via commands
-```powershell
-> Install-WindowsFeature -Name Hyper-V [-ComputerName <computer_name>] -IncludeManagementTools -Restart
-```
+  ```powershell
+  > Install-WindowsFeature -Name Hyper-V [-ComputerName <computer_name>] -IncludeManagementTools -Restart
+  ```
   - check
     ```powershell
     > Get-WindowsFeature -ComputerName <computer_name>
@@ -335,6 +337,48 @@ Labels:
   1. On the Create Virtual Switches page, Virtual Machine Migration page, and Default Stores page, select the appropriate options.
   1. On the Confirm installation selections page, select `Restart the destination server automatically if required`, and then click `Install`.
   1. When installation is finished, verify that Hyper-V installed correctly. Open the All Servers page in Server Manager and select a server on which you installed Hyper-V. Check the Roles and Features tile on the page for the selected server.
+
+#### in windows 10
+
+> [!NOTE]
+> references:
+> - [Enable-WindowsOptionalFeature](https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature?view=windowsserver2022-ps)
+> - [Hyper-V on Windows 10](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/)
+>   - [Install Hyper-V on Windows 10](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
+>   - [Create Virtual Machine with Hyper-V on Windows 10](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/create-virtual-machine?source=recommendations)
+>   - [Create a Virtual Machine with Hyper-V on Windows 10 Creators Update](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/quick-create-virtual-machine)
+> - [Remotely manage Hyper-V](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/dn632582(v=ws.11))
+> - [DISM Technical Reference](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
+
+- via powershell
+  ```powershell
+  > Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+  ```
+
+  - check
+    ```powershell
+    > Get-WindowsOptionalFeature -Online [| Where-Object {$_.State -eq "Enabled"}] [| format-table]
+    ```
+    ![windows optional feature](../../screenshot/docker/hyper-v-win10-ps-table.png)
+
+- via cmd and dism
+  ```batch
+  > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V
+  ```
+
+- via manually
+
+  1. <kbd>win</kbd> -> **Apps and Features**
+  1. select **Programs and Features**
+  1. select **Turn Windows Features on or off**
+  1. Select **Hyper-V** and click **OK**
+
+  ![enable hyper-v in settings](../../screenshot/docker/hyper-v-win10-via-settings.png)
+
+- others
+  - shortcut located in : `shell:Common Administrative Tools` ( `C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools` )
+  - Hyper-V Quick Create : `%ProgramFiles%\Hyper-V\VMCreate.exe`
+  - Hyper-V Manager : `%windir%\System32\mmc.exe "%windir%\System32\virtmgmt.msc"`
 
 ### [Windows Docker Container Hyper-V Isolation](https://www.virtualizationhowto.com/2020/12/install-docker-in-windows-server-2019/)
 ```powershell
