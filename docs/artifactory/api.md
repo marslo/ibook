@@ -3,6 +3,8 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [variable](#variable)
+- [list](#list)
+  - [list subfolders in 1st depth](#list-subfolders-in-1st-depth)
 - [repo](#repo)
   - [check repo exists](#check-repo-exists)
   - [get all repos](#get-all-repos)
@@ -32,6 +34,22 @@ $ repoName='my-repo'
 $ buildName='my - repo'
 $ buildNumber=12345
 $ curlOpt="-s -g --netrc-file ~/.marslo/.netrc"
+```
+
+## list
+### list subfolders in 1st depth
+
+> [!TIP]
+> references:
+> - [File List](https://www.jfrog.com/confluence/display/RTF6X/Artifactory+REST+API#ArtifactoryRESTAPI-FileList)
+>   ```bash
+>   Usage: GET /api/storage/{repoKey}/{folder-path}?list[&deep=0/1][&depth=n][&listFolders=0/1][&mdTimestamps=0/1][&includeRootPath=0/1]
+>   ```
+
+```bash
+$ /usr/bin/curl ${curlOpt} \
+                -X GET "${rtUrl}/api/storage/${repoName}-local?list&deep=1&listFolders=1&depth=1" |
+                jq -r '.files[].uri | split("/")[1])'
 ```
 
 ## repo
