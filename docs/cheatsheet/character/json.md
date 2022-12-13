@@ -7,6 +7,8 @@
   - [Dealing with json objects](#dealing-with-json-objects)
   - [Slicing and Filtering](#slicing-and-filtering)
 - [`join`](#join)
+- [split](#split)
+- [replacing](#replacing)
 - [space in the key](#space-in-the-key)
 - [builtin operators](#builtin-operators)
   - [`debug`](#debug)
@@ -36,6 +38,11 @@
 > - [jq: Cannot iterate over number / string and number cannot be added](https://markhneedham.com/blog/2015/11/24/jq-cannot-iterate-over-number-string-and-number-cannot-be-added/)
 > - [Guide to Linux jq Command for JSON Processing](https://www.baeldung.com/linux/jq-command-json)
 > - [Reshaping JSON with jq](https://programminghistorian.org/en/lessons/json-and-jq)
+> - [* jq cheat sheet](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/)
+>   - [Replacing a missing or null property](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/#replacing-a-missing-or-null-property)
+>   - [Replacing substrings in a string](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/#replacing-substrings-in-a-string)
+
+
 {% endhint %}
 
 ## basic
@@ -74,11 +81,14 @@
 | First 3                            | `jq '.[:3]'`                                                                                                                                          |
 | Last 2                             | `jq '.[-2:]'`                                                                                                                                         |
 | Before Last                        | `jq '.[-2]'`                                                                                                                                          |
+| split                              | `jq '.[] ⎮ split("/")[1]'`                                                                                                                            |
 | Select array of int by value       | `jq 'map(select(. >= 2))'`                                                                                                                            |
 | Select array of objects by value   | `jq '.[] ⎮ select(.id == "second")'`                                                                                                                  |
 | Select by type                     | `jq '.[] ⎮ numbers'`<br> **with type been arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars **         |
 
 ## `join`
+
+> [!TIP]
 > [to output multiple values on a single line](https://github.com/stedolan/jq/issues/785)
 > [join multiple values](https://github.com/stedolan/jq/issues/785#issuecomment-101842421https://github.com/stedolan/jq/issues/785#issuecomment-101842421)
 
@@ -116,7 +126,7 @@ thing,like
   v1,v2,v3
   ```
 
-[or](https://stackoverflow.com/a/31791436/2940319) with `.first` and `.last`
+- [or](https://stackoverflow.com/a/31791436/2940319) with `.first` and `.last`
   ```bash
   $ echo '{ "users": [ { "first": "Stevie", "last": "Wonder" }, { "first": "Michael", "last": "Jackson" } ] }' |
          jq -r '.users[] | .first + " " + .last'
@@ -135,6 +145,77 @@ thing,like
   Stevie 1
   Michael 2
   ```
+
+## split
+
+> [!TIP]
+> references:
+> - [remove a substring from a string](https://stackoverflow.com/a/72064504/2940319)
+> - [`split(str)`](https://stedolan.github.io/jq/manual/#split(str))
+>   - Splits an input string on the separator argument.
+>   - [example](https://jqplay.org/jq?q=split(%22%2C%20%22)&j=%22a%2C%20b%2Cc%2Cd%2C%20e%2C%20%22)
+>     ```
+>     jq 'split(", ")'
+>     Input "a, b,c,d, e, "
+>     Output  ["a","b,c,d","e",""]
+>     ```
+
+
+```bash
+$ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri'
+/1
+/2
+/3
+
+$ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri | split("/")[1]'
+1
+2
+3
+```
+
+- <kbd>[try online](https://jqplay.org/s/qwK5LX4ptX8)</kbd>
+  ```bash
+  $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq '.[].uri | split("/")[]'
+  ""
+  "1"
+  ""
+  "2"
+  ""
+  "3"
+  $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri | split("/")'
+  [
+    "",
+    "1"
+  ]
+  [
+    "",
+    "2"
+  ]
+  [
+    "",
+    "3"
+  ]
+  ```
+
+## replacing
+
+> [!TIP]
+> references:
+> - [Replacing substrings in a string](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/#replacing-substrings-in-a-string)
+> - [`sub(regex; tostring)`, `sub(regex; string; flags)`](https://stedolan.github.io/jq/manual/#sub(regex;tostring)sub(regex;string;flags))
+>   - Emit the string obtained by replacing the first match of regex in the input string with `tostring`, after interpolation. `tostring` should be a jq string, and may contain references to named captures. The named captures are, in effect, presented as a JSON object (as constructed by capture) to `tostring`, so a reference to a captured variable named "x" would take the form: "(.x)".
+
+```bash
+$ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri'
+/1
+/2
+/3
+
+$ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri | sub("/"; "")'
+1
+2
+3
+```
 
 ## space in the key
 ```bash
@@ -305,7 +386,7 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
   ```bash
   $ echo '{ "some": "thing", "json": "like" }' \
          | jq -r '[.some, .json] | @tsv'
-  thing	like
+  thing like
   ```
 
 ### `from_entries`
