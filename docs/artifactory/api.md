@@ -124,12 +124,13 @@ $ curl -sSg \
   ```
 
 ### get repo size
+
 {% hint style='tip' %}
 > [`api/storageinfo`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-GetStorageSummaryInfo)
-
 {% endhint %}
 
 - get storage summary
+
   {% hint style='tip' %}
   including:
   - `binariesSummary`
@@ -138,15 +139,44 @@ $ curl -sSg \
   {% endhint %}
 
   ```bash
+  $ curl -s \
+         -XGET \
+         https://${rtUrl}/artifactory/api/storageinfo |
+         jq '[.binariesSummary, .fileStoreSummary][]'
+  {
+    "binariesCount": "10,959",
+    "binariesSize": "167.36 GB",
+    "artifactsSize": "349.80 GB",
+    "optimization": "47.85%",
+    "itemsCount": "30,700",
+    "artifactsCount": "20,547"
+  }
+  {
+    "storageType": "file-system",
+    "storageDirectory": "/opt/jfrog/artifactory/data/filestore",
+    "totalSpace": "25.34 TB",
+    "usedSpace": "10.41 TB (41.09%)",
+    "freeSpace": "14.93 TB (58.91%)"
+  }
   ```
 
-## Build Info
-### List all timestamps in ${buildName}
+## build info
+
+### list all build-info id
+```bash
+$ curl -s \
+       --netrc-file ~/.marslo/.netrc \
+       -X GET ${rtUrl}/api/build/${buildName} |
+       jq -r '.buildsNumbers[].uri | split("/")[1]' |
+       sort -Vr
+```
+
+### list all timestamps in ${buildName}
 
 ```bash
 $ curl -s \
        --netrc-file ~/.marslo/.netrc \
-       -X GET ${rtUrl}/api/build/${buildsNumbers} \
+       -X GET ${rtUrl}/api/build/${buildName} \
        | jq .buildsNumbers[].started
 ```
 
@@ -154,14 +184,14 @@ $ curl -s \
 ```bash
 $ curl -s \
        --netrc-file ~/.marslo/.netrc \
-       -X GET ${rtUrl}/api/build/${buildNazme}/${buildNumber}
+       -X GET ${rtUrl}/api/build/${buildName}/${buildNumber}
 ```
 
 - get start timestampe
   ```bash
   $ curl -s \
          --netrc-file ~/.marslo/.netrc \
-         -X GET ${rtUrl}/api/build/${buildNazme}/${buildNumber} \
+         -X GET ${rtUrl}/api/build/${buildName}/${buildNumber} \
          | jq .buildInfo.started
   "2020-09-30T02:38:32.264-0700"
   ```
@@ -176,6 +206,7 @@ $ for i in $(curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?
     echo ''
   done
 ```
+
 or
 ```bash
 #!/usr/bin/env bash
