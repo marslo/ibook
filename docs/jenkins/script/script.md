@@ -54,6 +54,7 @@
 > - [Java API Usage Example](https://programtalk.com/java-api-usage-examples/?api=jenkins)
 >   - [jenkins.model.Jenkins](https://programtalk.com/java-api-usage-examples/jenkins.model.Jenkins/)
 >   - [jenkins.model.BuildDiscarder](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarder/)
+> - [I have a stuck Pipeline and I can not stop it](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/troubleshooting-guides/i-have-a-stuck-pipeline-and-i-can-not-stop-it)
 {% endhint %}
 
 > [!TIP]
