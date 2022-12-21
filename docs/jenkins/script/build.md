@@ -1704,7 +1704,7 @@ import org.jenkinsci.plugins.workflow.job.*
 import org.jenkinsci.plugins.workflow.flow.*
 import io.jenkins.blueocean.rest.impl.pipeline.*
 import org.jenkinsci.plugins.workflow.cps.*
-mport org.jenkinsci.plugins.workflow.graph.FlowNode;
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
 
 final String JOB_NAME  = '/marslo/sandbox'
 final int BUILD_NUMBER = 17

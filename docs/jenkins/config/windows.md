@@ -392,7 +392,7 @@ J:\jenkins> jenkins-agent.exe install
 2022-11-30 06:09:59,907 INFO  - Installing service 'jenkins (jenkins)'...
 2022-11-30 06:10:00,033 INFO  - Service 'jenkins (jenkins)' was installed successfully.
 
-J:\jenkins>sc query jenkins
+J:\jenkins> sc query jenkins
 SERVICE_NAME: jenkins
         TYPE               : 10  WIN32_OWN_PROCESS
         STATE              : 1  STOPPED

@@ -9,6 +9,7 @@
   - [highlight](#highlight)
   - [ccat](#ccat)
   - [others](#others)
+- [downlaods](#downlaods)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -73,3 +74,18 @@ $ ccat --palette
 ### others
 - [dev-shell-essentials](https://github.com/kepkin/dev-shell-essentials)
 
+
+## downlaods
+
+> [!TIP]
+> references:
+> - [terrorgum.com](https://terrorgum.com/tfox/books/)
+>   - [Bash Cookbook](https://terrorgum.com/tfox/books/bashcookbook.pdf)
+>   - [Becoming the Hacker](https://terrorgum.com/tfox/books/becomingthehacker.pdf)
+>   - [Deep Learning Revolution](https://terrorgum.com/tfox/books/deeplearningrevolution.pdf)
+>   - [linux basics for hackers.pdf](https://terrorgum.com/tfox/books/linuxbasicsforhackers.pdf)
+>   - [Linux In Nutshell.pdf](https://terrorgum.com/tfox/books/linuxinanutshell.pdf)
+> - [pdfprof.com](https://www.pdfprof.com/)
+>   - [Advanced Bash-Scripting Guide](https://tldp.org/LDP/abs/abs-guide.pdf)
+>   - [Linux Bash Shell Cheat Sheet](https://oit.ua.edu/wp-content/uploads/2020/12/Linux_bash_cheat_sheet-1.pdf)
+> - [dye784/collection](https://github.com/dye784/collection)
