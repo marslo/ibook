@@ -367,6 +367,20 @@ println new Random().with { (1..8).collect { alphabet[ nextInt( alphabet.length(
   randomValue = generator( charset, 15 )
   ```
 
+### [dynamic method names](https://docs.groovy-lang.org/latest/html/documentation/#_dynamic_method_names)
+```groovy
+def codecs = classes.findAll { it.name.endsWith('Codec') }
+
+codecs.each { codec ->
+    Object.metaClass."encodeAs${codec.name-'Codec'}" = { codec.newInstance().encode(delegate) }
+    Object.metaClass."decodeFrom${codec.name-'Codec'}" = { codec.newInstance().decode(delegate) }
+}
+
+
+def html = '<html><body>hello</body></html>'
+assert '<html><body>hello</body></html>' == html.encodeAsHTML()
+```
+
 ## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
 ```bash
 $ docker run \
@@ -417,6 +431,34 @@ $ docker run \
     ```
 
 ## MetaClass
+
+> [!NOTE]
+> references:
+> - [GroovyObject Methods](https://docs.groovy-lang.org/latest/html/documentation/#_groovyobject_methods)
+> - [Overriding Static invokeMethod](https://docs.groovy-lang.org/latest/html/documentation/#_overriding_static_invokemethod)
+> - [Extending Interfaces](https://docs.groovy-lang.org/latest/html/documentation/#_extending_interfaces)
+
+```bash
+class Stuff {
+   def invokeMe() { "foo" }
+}
+
+Stuff.metaClass.invokeMethod = { String name, args ->
+   def metaMethod = Stuff.metaClass.getMetaMethod(name, args)
+   def result
+   if(metaMethod) result = metaMethod.invoke(delegate,args)
+   else {
+      result = "bar"
+   }
+   result
+}
+
+def stf = new Stuff()
+
+assert "foo" == stf.invokeMe()
+assert "bar" == stf.doStuff()
+```
+
 ### get supported methods
 ```groovy
 String s = 'aa'
