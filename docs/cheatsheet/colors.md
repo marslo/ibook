@@ -180,6 +180,11 @@
 
 
 ## ansicolors
+
+> [!NOTE]
+> references:
+> - [How to have multiple colors in a Windows batch file?](https://stackoverflow.com/a/69924820/2940319)
+
 - 256 colors
   ```bash
   function 256color() {
