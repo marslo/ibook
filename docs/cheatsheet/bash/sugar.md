@@ -8,6 +8,7 @@
 - [compound comparison](#compound-comparison)
   - [SC2155](#sc2155)
   - [SC2155](#sc2155-1)
+  - [escape code](#escape-code)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

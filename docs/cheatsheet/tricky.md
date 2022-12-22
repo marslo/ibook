@@ -9,10 +9,10 @@
   - [highlight](#highlight)
   - [ccat](#ccat)
   - [others](#others)
+  - [remove highlight](#remove-highlight)
 - [downlaods](#downlaods)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 
 ## highlight output
@@ -21,6 +21,7 @@
 > references:
 > - [Colorized grep -- viewing the entire file with highlighted matches](https://stackoverflow.com/questions/981601/colorized-grep-viewing-the-entire-file-with-highlighted-matches)
 > - [Highlight text similar to grep, but don't filter out text [duplicate]](https://stackoverflow.com/questions/7393906/highlight-text-similar-to-grep-but-dont-filter-out-text)
+> - [kilobyte/colorized-logs](https://github.com/kilobyte/colorized-logs)
 
 
 ### [ack](https://metacpan.org/pod/ack)
@@ -73,6 +74,43 @@ $ ccat --palette
 
 ### others
 - [dev-shell-essentials](https://github.com/kepkin/dev-shell-essentials)
+
+### remove highlight
+
+> [!TIP]
+> references:
+> - [Removing colors from output](https://stackoverflow.com/a/18000433/2940319)
+
+```bash
+$ <cmd> | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"
+
+# or
+$ alias decolorize='sed -r "s/\\x1B\\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"'
+$ command | decolorize
+```
+
+- tips
+  ```bash
+  $ git br -a | cat -A
+  * ^[[1;32mmarslo^[[m$
+    ^[[31mremotes/origin/marslo^[[m$
+    ^[[31mremotes/origin/gh-pages^[[m$
+    ^[[31mremotes/origin/gitbook^[[m$
+    ^[[31mremotes/origin/master^[[m$
+    ^[[33mgh-pages^[[m$
+    ^[[33mmaster^[[m$
+    ^[[31mremotes/origin/sample^[[m$
+
+  $ git br -a | decolorize | cat -A
+  * marslo$
+    remotes/origin/marslo$
+    remotes/origin/gh-pages$
+    remotes/origin/gitbook$
+    remotes/origin/master$
+    gh-pages$
+    master$
+    remotes/origin/sample$
+  ```
 
 
 ## downlaods
