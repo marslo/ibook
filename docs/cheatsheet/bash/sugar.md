@@ -42,7 +42,7 @@
 {% endhint %}
 
 | EXPR         | DESCRIPTION                                           |
-|--------------|-------------------------------------------------------|
+| - | - |
 | `$@`         | <pre><code>           p1 p2 p3 p4 p5 p6 </code></pre> |
 | `${@: 0}`    | <pre><code> ./args.sh p1 p2 p3 p4 p5 p6 </code></pre> |
 | `${@: 1}`    | <pre><code>           p1 p2 p3 p4 p5 p6 </code></pre> |
@@ -60,7 +60,7 @@
 {% endhint %}
 
 | EXPR                               | DESCRIPTION                                                |
-|------------------------------------|------------------------------------------------------------|
+| - | - |
 | `${#string}`                       | length                                                     |
 | `${string:position}`               | substring, or positional parameter with `$*` and `$#`      |
 | `${string:position:length}`        | substring                                                  |
@@ -102,3 +102,24 @@
   foo="$(mycmd)"
   export foo
   ```
+
+### escape code
+
+> [!TIP]
+> references:
+> - [Color Codes, Escapes & Languages](https://gist.github.com/Prakasaka/219fe5695beeb4d6311583e79933a009?permalink_comment_id=4086771#gistcomment-4086771)
+> - [Escape codes](https://smallbasic.github.io/pages/escape.html)
+> - [Escape sequences](https://perldoc.perl.org/perlre#Escape-sequences)
+> - [Quote and Quote-like Operators](https://perldoc.perl.org/perlop#Quote-and-Quote-like-Operators)
+
+| ESCAPE CODE | LANGUAGE               | DESCRIPTION  |
+|:-----------:|:-----------------------|--------------|
+|    `\x1b`   | Node.js                | hex char     |
+|   `\x1b `   | Node.js w/ TS          | hex char     |
+|   `\u001b`  | Python                 | hex char     |
+|    `\033`   | GNU Cpp                | octal char   |
+|    `\033`   | ANSI C                 | octal char   |
+|    `\033`   | POSIX-compliant shells | octal char   |
+|     `\e`    | Bash                   | -            |
+|    `\c[`    | -                      | control char |
+
