@@ -15,6 +15,7 @@
   - [loop if not empty](#loop-if-not-empty)
   - [getField()](#getfield)
   - [generate the random String](#generate-the-random-string)
+  - [dynamic method names](#dynamic-method-names)
 - [run groovy from docker](#run-groovy-from-docker)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
