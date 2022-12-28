@@ -194,6 +194,10 @@ Host  github.com
   ```
 
 #### [connect](https://github.com/gotoh/ssh-connect)
+
+> [!NOTE]
+> applicable to git for windows
+
 ```bash
 $ brew install connect
 
@@ -210,16 +214,29 @@ Host  github.com
       Port                443
       ProxyCommand        connect -H proxy.example.com:80 %h %p
 ```
+
 - for socks5
   ```bash
   ProxyCommand        connect -S proxy.example.com:80 %h %p
   ```
 
 ### proxy for git
+
+> [!TIP]
+> references:
+> - [evantoli/GitConfigHttpProxy.md](https://gist.github.com/evantoli/f8c23a37eb3558ab8765)
+
 ```bash
 $ git config --global https.proxy 'http://127.0.0.1:80'   # using privoxy convert socks to http
 $ git config --global http.proxy 'http://127.0.0.1:80'
+$ git config --global http.sslVerify false                # unable to access '...': Unknown SSL protocol error in connection to ...:443
 ```
+
+- for specific url
+  ```bash
+  $ git config --global http.https://github.com http://proxy.example.com:80
+  $ git config --global http.https://chromium.googlesource.com http://proxy.example.com:80
+  ```
 
 - or
   ```bash
@@ -257,6 +274,20 @@ $ git config --global http.proxy 'http://127.0.0.1:80'
     # sslVersion = tlsv1.2
     # sslVersion = tlsv1.3
   ...
+  ```
+
+- show current configure
+  ```bash
+  $ git config --global --get-regexp http.*
+  ```
+
+- unset
+  ```bash
+  $ git config --global --unset http.proxy
+  $ git config --global --unset http.https://github.com
+
+  $ git config --global --unset http.sslVerify
+  $ git config --global --unset http.https://domain.com.sslVerify
   ```
 
 ### proxy for npm
