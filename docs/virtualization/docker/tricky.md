@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [docker with proxy](#docker-with-proxy)
-  - [ocker pull](#ocker-pull)
+  - [docker pull](#docker-pull)
   - [docker build](#docker-build)
   - [docker build with GPG key proxy](#docker-build-with-gpg-key-proxy)
 - [command-line auto completion](#command-line-auto-completion)
@@ -22,16 +22,15 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 ## docker with proxy
-
-### [ocker pull](https://www.thegeekdiary.com/how-to-configure-docker-to-use-proxy/)
+### [docker pull](https://www.thegeekdiary.com/how-to-configure-docker-to-use-proxy/)
 ```bash
 $ sudo mkdir -p /etc/systemd/system/docker.service.d
 $ cat /etc/systemd/system/docker.service.d/http-proxy.conf
 [Service]
-Environment="HTTPS_PROXY=http://my.proxy.com:80"
-Environment="HTTP_PROXY=http://my.proxy.com:80"
+Environment="HTTPS_PROXY=http://proxy.example.com:80"
+Environment="HTTP_PROXY=http://proxy.example.com:80"
+Environment="ALL_PROXY=http://proxy.example.com:80"
 systemctl daemon-reload;systemctl start docker
 
 $ sudo systemctl daemon-reload
@@ -39,53 +38,85 @@ $ sudo systemctl restart docker
 
 # verify
 $ systemctl show docker --property Environment
-Environment=HTTPS_PROXY=http://my.proxy.com:80 HTTP_PROXY=http://my.proxy.com:80
+Environment=HTTPS_PROXY=http://proxy.example.com:80 HTTP_PROXY=http://proxy.example.com:80 ALL_PROXY=http://proxy.example.com:80
 ```
 
 - for socks5
-	```bash
-	$ [ ! -d /etc/systemd/system/docker.service.d ] && sudo mkdir -p /etc/systemd/system/docker.service.d
-	$ sudo bash -c "cat > /etc/systemd/system/docker.service.d/socks5-proxy.conf" << EOF
-	[Service]
-	Environment="ALL_PROXY=socks5://my.proxy.com:80"
-	Environment="NO_PROXY=localhost,127.0.0.1,130.147.0.0/16,130.145.0.0/16"
-	EOF
+  ```bash
+  $ [ ! -d /etc/systemd/system/docker.service.d ] && sudo mkdir -p /etc/systemd/system/docker.service.d
+  $ sudo bash -c "cat > /etc/systemd/system/docker.service.d/socks5-proxy.conf" << EOF
+  [Service]
+  Environment="ALL_PROXY=socks5://proxy.example.com:80"
+  Environment="NO_PROXY=localhost,127.0.0.1,130.147.0.0/16,130.145.0.0/16"
+  EOF
 
-	$ sudo systemctl daemon-reload
-	$ sudo systemctl enable docker.service
-	$ sudo systemctl restart docker.service
-	```
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl enable docker.service
+  $ sudo systemctl restart docker.service
+  ```
+
+- [or](https://docs.docker.com/config/daemon/systemd/)
+  ```bash
+  # for rootless mode
+  $ mkdir -p ~/.config/systemd/user/docker.service.d/
+  # or regular mode
+  $ sudo mkdir -p /etc/systemd/system/docker.service.d
+
+  $ sudo bash -c "cat > /etc/systemd/system/docker.service.d" << EOF
+  [Service]
+  Environment="HTTP_PROXY=http://proxy.example.com:80"
+  Environment="HTTPS_PROXY=https://proxy.example.com:443"
+  Environment="NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp"
+  EOF
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restart docker
+
+  # verify
+  $ systemctl show docker --property Environment
+  Environment=HTTP_PROXY=http://proxy.example.com:80 HTTPS_PROXY=http://proxy.example.com:443 NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp
+  ```
 
 ### [docker build](https://docs.docker.com/network/proxy/)
 ```bash
-$ cat ~/.docker/config.json
+$ mkdir -p ~/.docker
+$ cat > ~/.docker/config.json << EFO
 {
  "proxies":
  {
    "default":
    {
-     "httpProxy": "http://my.proxy.com:80",
-     "httpsProxy": "http://my.proxy.com:80",
-     "allProxy": "http://my.proxy.com:80",
+     "httpProxy": "http://proxy.example.com:80",
+     "httpsProxy": "http://proxy.example.com:80",
+     "allProxy": "http://proxy.example.com:80",
      "noProxy": "*.test.example.com,.example2.com,127.0.0.0/8"
    }
  }
 }
+EOF
 ```
+
+- or via [`--build-arg`](https://dev.to/zyfa/setup-the-proxy-for-dockerfile-building--4jc8):
+  ```bash
+  $ docker build \
+           --build-arg http_proxy=http://proxy.example.com:80 \
+           --build-arg https_proxy=http://proxy.example.com:443 \
+          .
+  ```
 
 - details
 
-| Variable	  | Dockerfile example	| docker run example |
-| : -- : | : -- : | : -- : |
-| HTTP_PROXY	| ENV HTTP_PROXY="http://my.proxy.com:80"	| --env HTTP_PROXY="http://my.proxy.com:80" |
-| HTTPS_PROXY	| ENV HTTPS_PROXY="https://my.proxy.com:80"	| --env HTTPS_PROXY="https://my.proxy.com:80" |
-| FTP_PROXY	  | ENV FTP_PROXY="ftp://my.proxy.com:80"	| --env FTP_PROXY="ftp://my.proxy.com:80" |
-| NO_PROXY	  | ENV NO_PROXY="*.test.example.com,.example2.com"	| --env NO_PROXY="*.test.example.com,.example2.com,127.0.0.0/8" |
+  |   Variable  | Dockerfile example                              | docker run example                                            |
+  |:-----------:|:------------------------------------------------|---------------------------------------------------------------|
+  |  HTTP_PROXY | ENV HTTP_PROXY="http://proxy.example.com:80"         | --env HTTP_PROXY="http://proxy.example.com:80"                     |
+  | HTTPS_PROXY | ENV HTTPS_PROXY="https://proxy.example.com:80"       | --env HTTPS_PROXY="https://proxy.example.com:80"                   |
+  |  FTP_PROXY  | ENV FTP_PROXY="ftp://proxy.example.com:80"           | --env FTP_PROXY="ftp://proxy.example.com:80"                       |
+  |   NO_PROXY  | ENV NO_PROXY="*.test.example.com,.example2.com" | --env NO_PROXY="*.test.example.com,.example2.com,127.0.0.0/8" |
 
 
 ### docker build with GPG key proxy
 - without proxy
-	```dockerfile
+  ```dockerfile
   ...
   gpg --batch \
       --keyserver https://keyserver.ubuntu.com:80 \
@@ -94,28 +125,30 @@ $ cat ~/.docker/config.json
 
   # result
   gpg: keyserver receive failed: Connection timed out
-	```
+  ```
 
 - GPG with proxy
   ```dockerfile
   ...
-  apt-key adv --keyserver-options http-proxy=http://my.proxy.com:80 \
+  apt-key adv --keyserver-options http-proxy=http://proxy.example.com:80 \
               --keyserver hkp://keyserver.ubuntu.com:80 \
               --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
   ...
 
   # result
-	Executing: /tmp/apt-key-gpghome.uegAG54mKu/gpg.1.sh --keyserver-options http-proxy=http://my.proxy.com:80 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-	gpg: key A6A19B38D3D831EF: 2 signatures not checked due to missing keys
-	gpg: key A6A19B38D3D831EF: public key "Xamarin Public Jenkins (auto-signing) <releng@xamarin.com>" imported
-	gpg: Total number processed: 1
-	gpg:               imported: 1
-	gpg: keybox '/tmp/tmp.jad0qVCQ6v/pubring.kbx' created
-	gpg: WARNING: nothing exported
-	Warning: apt-key output should not be parsed (stdout is not a terminal)
+  Executing: /tmp/apt-key-gpghome.uegAG54mKu/gpg.1.sh --keyserver-options http-proxy=http://proxy.example.com:80 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  gpg: key A6A19B38D3D831EF: 2 signatures not checked due to missing keys
+  gpg: key A6A19B38D3D831EF: public key "Xamarin Public Jenkins (auto-signing) <releng@xamarin.com>" imported
+  gpg: Total number processed: 1
+  gpg:               imported: 1
+  gpg: keybox '/tmp/tmp.jad0qVCQ6v/pubring.kbx' created
+  gpg: WARNING: nothing exported
+  Warning: apt-key output should not be parsed (stdout is not a terminal)
   ```
 
 ## command-line auto completion
+
+> [!TIP]
 > reference:
 > - [Enable Docker command-line auto completion in bash on Centos/Ubuntu](https://ismailyenigul.medium.com/enable-docker-command-line-auto-completion-in-bash-on-centos-ubuntu-5f1ac999a8a6)
 > - [completion/bash/docker](https://github.com/docker/docker-ce/blob/master/components/cli/contrib/completion/bash/docker)
