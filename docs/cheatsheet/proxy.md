@@ -7,10 +7,19 @@
 - [proxy for yum](#proxy-for-yum)
 - [proxy for apt](#proxy-for-apt)
 - [proxy for docker](#proxy-for-docker)
+  - [for docker build](#for-docker-build)
+  - [for docker pull](#for-docker-pull)
 - [proxy for pip](#proxy-for-pip)
+  - [setup via command line](#setup-via-command-line)
+  - [using directly](#using-directly)
 - [proxy for ssh](#proxy-for-ssh)
+  - [nc](#nc)
+  - [corkscrew](#corkscrew)
+  - [ncat](#ncat)
+  - [connect](#connect)
 - [proxy for git](#proxy-for-git)
 - [proxy for npm](#proxy-for-npm)
+- [proxy for nc](#proxy-for-nc)
 - [proxy for ssl](#proxy-for-ssl)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -25,7 +34,7 @@
 > - [larryhou/connect-proxy](https://github.com/larryhou/connect-proxy)
 {% endhint %}
 
-### proxy for bash
+## proxy for bash
 ```bash
 # global settings
 $ cat /etc/bashrc
@@ -38,7 +47,7 @@ export http_proxy=http://proxy.example.com:80/
 export https_proxy=http://proxy.example.com:80/
 ```
 
-### proxy for curl
+## proxy for curl
 ```bash
 $ curl -x http://proxy.example.com:80 <https://target.server.com>
 ```
@@ -48,14 +57,14 @@ $ curl -x http://proxy.example.com:80 <https://target.server.com>
   $ curl -kvI -x http://proxy.example.com:80 <https://target.server.com>
   ```
 
-### proxy for yum
+## proxy for yum
 ```bash
 $ cat /etc/yum.conf
 [main]
 proxy=http://proxy.example.com:80
 ```
 
-### proxy for apt
+## proxy for apt
 
 > [!TIP]
 > [imarlso : APT Configuration](../devops/commonTools.html#apt-configuration)
@@ -67,14 +76,16 @@ Acquire::https::Proxy "http://proxy.example.com:80";
 Acquire::ftp::Proxy "http://proxy.example.com:80";
 ```
 
-### proxy for docker
+## proxy for docker
 
 > [!TIP]
-> details can be found in [imarslo: docker proxy](../virtualization/docker/docker.html#docker-proxy)
+> [imarslo : docker proxy](../virtualization/docker/tricks.html#docker-with-proxy)
 
-#### for docker build
+### for docker build
+
 ```json
-$ cat ~/.docker/config.json
+$ mkdir -p ~/.docker
+$ cat > ~/.docker/config.json << EFO
 {
         "proxies": {
                 "default": {
@@ -83,6 +94,7 @@ $ cat ~/.docker/config.json
                 }
         }
 }
+EOF
 ```
 
 - or via cmd directly
@@ -92,7 +104,7 @@ $ cat ~/.docker/config.json
            --build-arg https_proxy=http://proxy.example.com:443 \
   ```
 
-#### for docker pull
+### for docker pull
 ```bash
 # for rootless mode
 $ mkdir -p ~/.config/systemd/user/docker.service.d/
@@ -108,27 +120,31 @@ EOF
 
 $ sudo systemctl daemon-reload
 $ sudo systemctl restart docker
+
+# verify
+$ systemctl show docker --property Environment
+Environment=HTTPS_PROXY=http://proxy.example.com:443 HTTP_PROXY=http://proxy.example.com:80 NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp
 ```
 
-### proxy for pip
+## proxy for pip
 
 > [!TIP]
 > - MS Windows: `%APPDATA%\pip\pip.ini`
 > - MacOS: `$HOME/Library/Application Support/pip/pip.conf`
 > - Unix: `$HOME/.config/pip/pip.conf`
 
-#### setup [via command line](https://stackoverflow.com/a/69568878/2940319)
+### setup [via command line](https://stackoverflow.com/a/69568878/2940319)
 ```bash
 $ pip config set global.proxy http://proxy.example.com:80
 ```
 
-#### using directly
+### using directly
 ```bash
 $ pip install --proxy http://proxy.example.com:80 git-review
 ```
 
-### proxy for ssh
-#### nc
+## proxy for ssh
+### nc
 ```bash
 $ ssh -vT \
       -o "ProxyCommand=nc -X connect -x proxy.example.com:80 %h %p" \
@@ -153,7 +169,7 @@ Host  github.com
   ProxyCommand        nc -X 5 -x proxy.example.com:80 %h %p
   ```
 
-#### corkscrew
+### corkscrew
 ```bash
 $ brew install corkscrew
 
@@ -171,7 +187,7 @@ Host  github.com
       ProxyCommand        corkscrew proxy.example.com 80 %h %p
 ```
 
-#### [ncat](https://nmap.org/)
+### [ncat](https://nmap.org/)
 ```bash
 $ brew install nmap
 
@@ -193,7 +209,7 @@ Host  github.com
   ProxyCommand        ncat --proxy proxy.example.com:80 --proxy-type socks5 %h %p
   ```
 
-#### [connect](https://github.com/gotoh/ssh-connect)
+### [connect](https://github.com/gotoh/ssh-connect)
 
 > [!NOTE]
 > applicable to git for windows
@@ -220,7 +236,7 @@ Host  github.com
   ProxyCommand        connect -S proxy.example.com:80 %h %p
   ```
 
-### proxy for git
+## proxy for git
 
 > [!TIP]
 > references:
@@ -290,7 +306,9 @@ $ git config --global http.sslVerify false                # unable to access '..
   $ git config --global --unset http.https://domain.com.sslVerify
   ```
 
-### proxy for npm
+## proxy for npm
+
+> [!NOTE]
 > references:
 > - [npm config](https://docs.npmjs.com/cli/v8/using-npm/config)
 > - [Is there a way to make npm install (the command) to work behind proxy?](https://stackoverflow.com/a/10304317/2940319)
@@ -313,9 +331,31 @@ $ npm config set strict-ssl false
   https-proxy=http://proxy.example.com:80/
   ```
 
-### [proxy for ssl](https://curl.se/docs/sslcerts.html)
+## proxy for nc
 
-> [!TIP]
+> [!NOTE]
+> ```bash
+> -X proxy_version
+          Requests that nc should use the specified protocol when talking to the proxy server.
+          Supported protocols are:
+          - “4” (SOCKS v.4)
+          - “5” (SOCKS v.5)
+          - “connect” (HTTPS proxy)
+          If the protocol is not specified, SOCKS version 5 is used.
+> ```
+
+```bash
+# with proxy
+$ nc -zv -X connect -x proxy.example.com:80 google.com 443
+nc: Proxy error: "HTTP/1.1 200 Connection established"
+
+# without proxy
+$ nc -zv google.com 443
+nc: connectx to google.com port 443 (tcp) failed: Operation timed out
+```
+
+## [proxy for ssl](https://curl.se/docs/sslcerts.html)
+
+> [!NOTE]
 > HTTPS proxy
 > Since version 7.52.0, curl can do HTTPS to the proxy separately from the connection to the server. This TLS connection is handled separately from the server connection so instead of `--insecure` and `--cacert` to control the certificate verification, you use `--proxy-insecure` and `--proxy-cacert`. With these options, you make sure that the TLS connection and the trust of the proxy can be kept totally separate from the TLS connection to the server.
-
