@@ -10,7 +10,7 @@
   - [Linux](#linux)
   - [osx](#osx)
 - [others](#others)
-- [complete_alias](#complete_alias)
+- [complete alias](#complete-alias)
 - [get tags](#get-tags)
   - [from artifactory](#from-artifactory)
   - [from docker hub](#from-docker-hub)
@@ -243,7 +243,7 @@ $ ln -sf '/Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-co
   complete -D -F _completion_loader
   ```
 
-## [complete_alias](https://github.com/cykerway/complete-alias)
+## [complete alias](https://github.com/cykerway/complete-alias)
 ```bash
 # for Linux
 $ sudo curl -sSLg https://raw.githubusercontent.com/cykerway/complete-alias/master/complete_alias \

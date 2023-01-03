@@ -85,7 +85,7 @@ Acquire::ftp::Proxy "http://proxy.example.com:80";
 
 ```json
 $ mkdir -p ~/.docker
-$ cat > ~/.docker/config.json << EFO
+$ cat > ~/.docker/config.json << EOF
 {
         "proxies": {
                 "default": {
@@ -336,13 +336,17 @@ $ npm config set strict-ssl false
 > [!NOTE]
 > ```bash
 > -X proxy_version
-          Requests that nc should use the specified protocol when talking to the proxy server.
-          Supported protocols are:
-          - “4” (SOCKS v.4)
-          - “5” (SOCKS v.5)
-          - “connect” (HTTPS proxy)
-          If the protocol is not specified, SOCKS version 5 is used.
+>         Requests that nc should use the specified protocol when talking to the proxy server.
+>         Supported protocols are:
+>         - “4” (SOCKS v.4)
+>         - “5” (SOCKS v.5)
+>         - “connect” (HTTPS proxy)
+>         If the protocol is not specified, SOCKS version 5 is used.
 > ```
+> - additional
+>   ```bash
+>   -T protocols=all
+>   ```
 
 ```bash
 # with proxy
