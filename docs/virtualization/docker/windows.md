@@ -95,7 +95,7 @@
   ```
 
 - [Clean up Docker data and system components](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#clean-up-docker-data-and-system-components)
-  ```powrshell
+  ```powershell
   > Get-HNSNetwork | Remove-HNSNetwork
   > Get-ContainerNetwork | Remove-ContainerNetwork
   > Remove-Item "C:\ProgramData\Docker" -Recurse

@@ -232,7 +232,7 @@ About the `refs/for` namespace
   ```
 
   - or using `exclusiveGroupPermissions`
-    ```config
+    ```editorconfig
     [access "^refs/heads/backup/(master|dev|staging|stable)/.+$"]
            exclusiveGroupPermissions = create delete push pushMerge
            create = group Project Owners
@@ -393,7 +393,7 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
 ![non author cr](../../screenshot/gerrit/none-author-CR.png)
 
 - by `project.config`
-  ```config
+  ```editorconfig
   [access "refs/*"]
     label-Code-Review = block -2..+2 group Change Owner
     exclusiveGroupPermissions = label-Code-Review

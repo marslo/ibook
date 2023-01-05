@@ -14,7 +14,7 @@
 > - [JDK Script Friendly URLs](https://www.oracle.com/java/technologies/jdk-script-friendly-urls/)
 {% endhint %}
 
-```dockerfile
+```docker
 ENV JAVA_PKG=https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz \
     JAVA_HOME=/usr/java/jdk-17
 

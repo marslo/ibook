@@ -274,7 +274,7 @@ tcp 0 0 ::1:6666 :::* LISTEN
 {% hint style='tip' %}
 <h4>in jumper</h4>
 > purpose:
-> ```basah
+> ```bash
 > local:6666 <--- jumper:6666 <--- remote:6666`
 > ```
 {% endhint %}

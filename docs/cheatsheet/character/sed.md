@@ -30,6 +30,27 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!NOTE]
+> references:
+> - [character classes](https://unix.stackexchange.com/a/102021/29178)
+>
+>
+> | character      | regular expression | explanation                        |
+> | -------------- | ------------------ | ---------------------------------- |
+> | `[[:alnum:]]`  | `[A-Za-z0-9]`      | Alphanumeric characters            |
+> | `[[:alpha:]]`  | `[A-Za-z]`         | Alphabetic characters              |
+> | `[[:blank:]]`  | `[ \t]`            | Space or tab characters only       |
+> | `[[:cntrl:]]`  | `[\x00-\x1F\x7F]`  | Control characters                 |
+> | `[[:digit:]]`  | `[0-9]`            | Numeric characters                 |
+> | `[[:graph:]]`  | `[!-~]`            | Printable and visible characters   |
+> | `[[:lower:]]`  | `[a-z]`            | Lower-case alphabetic characters   |
+> | `[[:print:]]`  | `[ -~]`            | Printable (non-Control) characters |
+> | `[[:punct:]]`  | `[!-/:-@[-`{-~]`   | Punctuation characters             |
+> | `[[:space:]]`  | `[ \t\v\f\n\r]`    | All whitespace chars               |
+> | `[[:upper:]]`  | `[A-Z]`            | Upper-case alphabetic characters   |
+> | `[[:xdigit:]]` | `[0-9a-fA-F]`      | Hexadecimal digit characters       |
+
+
 ## execute multiple sed commands
 
 > [!TIP]
@@ -44,6 +65,13 @@
 - `-e` :
   ```bash
   $ sed -n -e '/^root/p' -e '/^nobody/p' /etc/passwd
+  nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false
+  root:*:0:0:System Administrator:/var/root:/bin/sh
+  ```
+
+- `;` :
+  ```bash
+  $ sed -n -e '/^root/p;/^nobody/p' /etc/passwd
   nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false
   root:*:0:0:System Administrator:/var/root:/bin/sh
   ```

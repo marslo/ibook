@@ -17,7 +17,7 @@
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
 - [pipe and stdin](#pipe-and-stdin)
   - [read stdin from pipe](#read-stdin-from-pipe)
-  - [`read -r var` or `read -r -d\0 var`](#read--r-var-or-read--r--d%5C0-var)
+  - [`read -r var`](#read--r-var)
 - [builtin](#builtin)
   - [eval builtin](#eval-builtin)
   - [set builtin](#set-builtin)
@@ -31,6 +31,10 @@
 - [special parameters](#special-parameters)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!NOTE]
+> references:
+> - [Bash scripting cheatsheet](https://devhints.io/bash)
 
 ## [alias](https://askubuntu.com/a/871435)
 ```bash
@@ -52,27 +56,28 @@ ls --color=always
 ## [shell expansions](https://www.gnu.org/software/bash/manual/html_node/shell-expansions.html#shell-expansions)
 
 {% hint style='tip' %}
-references:
-- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html#SEC_Contents)
-- [Bash Reference Manual ZH](https://yiyibooks.cn/Phiix/bash_reference_manual/bash%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3.html)
-  - [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
-  - [Tilde Expansion](https://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html)
-  - [Shell Parameter Expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
-  - [Command Substitution](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
-  - [Arithmetic Expansion](https://www.gnu.org/software/bash/manual/html_node/Arithmetic-Expansion.html)
-  - [Process Substitution](https://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html)
-  - [Word Splitting](https://www.gnu.org/software/bash/manual/html_node/Word-Splitting.html)
-  - [Filename Expansion](https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
-    - [Pattern Matching](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
-  - [Quote Removal](https://www.gnu.org/software/bash/manual/html_node/Quote-Removal.html)
-
-- And:
-  - [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-  - [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
-
-- And
-  - [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html)
-    - [Chapter 3. The Bash environment](https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_02.html)
+> references:
+> - [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html#SEC_Contents)
+> - [Bash Reference Manual ZH](https://yiyibooks.cn/Phiix/bash_reference_manual/bash%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3.html)
+>   - [Brace Expansion](https://www.gnu.org/software/bash/manual/html_node/Brace-Expansion.html)
+>   - [Tilde Expansion](https://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html)
+>   - [Shell Parameter Expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+>   - [Command Substitution](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
+>   - [Arithmetic Expansion](https://www.gnu.org/software/bash/manual/html_node/Arithmetic-Expansion.html)
+>   - [Process Substitution](https://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html)
+>   - [Word Splitting](https://www.gnu.org/software/bash/manual/html_node/Word-Splitting.html)
+>   - [Filename Expansion](https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
+>     - [Pattern Matching](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
+>   - [Quote Removal](https://www.gnu.org/software/bash/manual/html_node/Quote-Removal.html)
+> - [Parameter expansion](https://wiki.bash-hackers.org/syntax/pe#substring_removal)
+>
+> - And:
+>   - [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+>   - [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
+>
+> - And
+>   - [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html)
+>     - [Chapter 3. The Bash environment](https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_02.html)
 {% endhint %}
 
 |            NAME           | EXAMPLE                                     |
@@ -263,6 +268,13 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 > - [Bash: Assign output of pipe to a variable](https://unix.stackexchange.com/q/338000/29178)
 > - [read](https://ss64.com/bash/read.html)
 > - [How To Use The Bash read Command](https://phoenixnap.com/kb/bash-read)
+> - [$IFS](https://bash.cyberciti.biz/guide/$IFS)
+>   ```bash
+>   IFS Effect On The Values of "$@" And "$*":
+>   $@ and $* are special command line arguments shell variables.
+>   The $@ holds list of all arguments passed to the script.
+>   The $* holds list of all arguments passed to the script.
+>   ```
 {% endhint %}
 
 > [!TIP]
@@ -270,24 +282,22 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 > # with IFS
 > $ echo '   hello  world   ' | { IFS='' read msg; echo "${msg}"; } | tr ' ' '.'
 > ...hello..world...
+> $ echo '   hello  world   ' | { IFS='' read msg; echo "${msg}" | sed -e 's/^[[:blank:]]*//;s/[[:blank:]]*$//'; } | tr ' ' '.'
+> hello..world
 >
 > # without IFS
 > $ echo '   hello  world   ' | { read msg; echo "${msg}"; } | tr ' ' '.'
 > hello..world
 > ```
 
-### `read -r var` or `read -r -d\0 var`
+### `read -r var`
 - script as command line
   ```bash
   $ cat trim.sh
   #!/usr/bin/env bash
 
   trim() {
-    # shellcheck disable=SC2124
-    local str="$@"
-    str=${str##+([[:space:]])}
-    str=${str%%+([[:space:]])}
-    echo -n "${str}"
+    echo "$@" | sed -e 's/^[[:blank:]]*//;s/[[:blank:]]*$//'
   }
 
   IFS='' read -r myvar
@@ -295,11 +305,12 @@ $ echo dir{1..10} | xargs -n 1 cp file1
   ```
   - result
     ```bash
+    $ IFS=''
     $ s='   aa  bb   '
-    $ echo "-${s}-"                                                   # -   aa  bb   -
-    $ echo "-$(echo "${s}" | trim)-"                                  # -aa  bb-
-    $ echo "-$(echo " a | b | c " | awk -F'|' '{print $2}')-"         # - b -
-    $ echo "-$(echo " a | b | c " | awk -F'|' '{print $2}' | trim)-"  # -b-
+    $ echo "${s}" | tr ' ' '.'                                              # ...aa..bb...
+    $ echo "${s}" | ./trim.sh | tr ' ' '.'                                  # aa..bb
+    $ echo " a | b | c " | awk -F'|' '{print $2}' | tr ' ' '.'              # .b.
+    $ echo " a | b | c " | awk -F'|' '{print $2}' | ./trim.sh | tr ' ' '.'  # b
     ```
 
 - running inside the script
@@ -308,21 +319,19 @@ $ echo dir{1..10} | xargs -n 1 cp file1
   #!/usr/bin/env bash
 
   trim() {
-    IFS='' read -r -d\0 str
-    str=${str##+([[:space:]])}
-    str=${str%%+([[:space:]])}
-    echo -n "${str}"
+    IFS='' read -r str
+    echo "${str}" | sed -e 's/^[[:blank:]]*//;s/[[:blank:]]*$//'
   }
 
   s='   aa  bb   '
-  echo "-${s}-"
-  echo "-$(echo "${s}" | trim)-"
+  echo "${s}" | tr ' ' '.'
+  echo "${s}" | trim | tr ' ' '.'
   ```
   - result
     ```bash
     $ ./example.sh
-    -   aa  bb   -
-    -aa  bb-
+    ...aa..bb...
+    aa..bb
     ```
 
 ## builtin
