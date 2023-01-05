@@ -91,6 +91,13 @@ hudson.security.Permission.getAll().each { p ->
   }.collect { permission ->
     [ (shortName(permission)): permission ]
   }.sum()
+
+  // show result
+  println permissionIds.collect {
+    it.key + ' : ' + it.value.id
+  }.join ('\n')
+
+  'DONE'
   ```
 
 ### get current authorization strategy class
@@ -101,23 +108,26 @@ import hudson.security.*
 Hudson instance = Jenkins.getInstance()
 def strategy = instance.getAuthorizationStrategy()
 println strategy.getClass()
+
+// result
+// class hudson.security.ProjectMatrixAuthorizationStrategy
 ```
-- result
-  ```
-  class hudson.security.ProjectMatrixAuthorizationStrategy
-  ```
 
 ### get raw authorization and permissions info
 ```groovy
-Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
-  println "\n${p} :\n\t${u}"
-}
+Jenkins.instance
+       .authorizationStrategy
+       .grantedPermissions.collect{ p, u ->
+          println "\n${p} :\n\t${u}"
+        }
 ```
 - or
   ```groovy
-  Jenkins.instance.authorizationStrategy.grantedPermissions.collect{ p, u ->
-    [ (p.id), u ]
-  }
+  Jenkins.instance
+         .authorizationStrategy
+         .grantedPermissions.collect{ p, u ->
+            [ (p.id), u ]
+          }
   ```
 
 ### ProjectMatrixAuthorizationStrategy
@@ -161,11 +171,10 @@ Jenkins.instance.save()
   String instanceName = 'hudson.security.ProjectMatrixAuthorizationStrategy'
   def strategy = Class.forName(instanceName).newInstance()
   println strategy.class
+
+  // result
+  // class hudson.security.ProjectMatrixAuthorizationStrategy
   ```
-  - result
-    ```
-    class hudson.security.ProjectMatrixAuthorizationStrategy
-    ```
 
 - get groups list
   ```groovy
@@ -225,6 +234,7 @@ import hudson.security.csrf.DefaultCrumbIssuer
 DefaultCrumbIssuer issuer = jenkins.model.Jenkins.instance.crumbIssuer
 String jenkinsCrumb = "${issuer.crumbRequestField}:${issuer.crumb}"
 println jenkinsCrumb
+
 // Jenkins-Crumb:b8a9cd5***********
 ```
 

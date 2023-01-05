@@ -23,7 +23,10 @@
 - [get matched pattern](#get-matched-pattern)
   - [`&`](#)
   - [substitution grouping](#substitution-grouping)
-- [get first matching patten](#get-first-matching-patten)
+- [cheatsheet](#cheatsheet)
+  - [get first matching patten ( for `CERTIFICATE` )](#get-first-matching-patten--for-certificate-)
+  - [remove both '#' and empty lines](#remove-both--and-empty-lines)
+  - [show `top` summary](#show-top-summary)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -265,7 +268,18 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
 <105>,Jane Miller,Sales Manager
 ```
 
-## get first matching patten
+## cheatsheet
+
+{% hint style='tip' %}
+> reference:
+> - [Sed cheatsheet](https://quickref.me/sed)
+> - [ssstonebraker/sed cheatsheet](https://gist.github.com/ssstonebraker/6140154)
+> - [sed Cheat Sheet](https://lzone.de/cheat-sheet/sed)
+> - [Erik's Cheat Sheet : sed](http://eriklievaart.com/cheat/linux/shell/sed.html)
+> - [cheatsheet_sed.pdf](https://au-bio-bootcamp.github.io/cheatsheet_sed.pdf)
+{% endhint %}
+
+### get first matching patten ( for `CERTIFICATE` )
 
 > [!TIP]
 > sample.crt
@@ -328,4 +342,64 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
   -----BEGIN CERTIFICATE-----
   first paragraph
   -----END CERTIFICATE-----
+  ```
+
+
+### remove both '#' and empty lines
+```bash
+$ .. | sed -r '/^(#.*)$/d' | sed -r '/^\s*$/d'
+
+# or
+$ .. | sed -r '/^(#.*)$/d;/^\s*$/d'
+
+# or
+$ .. | sed -r '/(^#.*)|(^\s*)$/d'
+```
+
+- example
+  ```bash
+  $ ldapsearch CN=marslo DN | sed -r '/^(#.*)$/d;/^\s*$/d'
+  dn: CN=marslo,OU=Workers,DC=company,DC=com
+  ```
+
+### show `top` summary
+
+> [!NOTE]
+> see [sed until empty line](#until-empty-line)
+
+- contains empty line
+  ```bash
+  $ top -bn1 | sed -n '0,/^\s*$/p'
+  top - 03:41:45 up 258 days, 19:05,  1 user,  load average: 2.33, 0.92, 0.95
+  Tasks: 856 total,   2 running, 447 sleeping,   0 stopped,  36 zombie
+  %Cpu(s):  0.3 us,  0.4 sy,  0.0 ni, 99.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+  KiB Mem : 52802012+total, 11152644+free, 24536944 used, 39195673+buff/cache
+  KiB Swap:        0 total,        0 free,        0 used. 49137280+avail Mem
+
+  ```
+
+- without empty line
+
+  > [!TIP]
+  > references:
+  > - [Exiting with "q" and "d" - SED Tutorial](https://www.linkedin.com/learning/sed-essential-training/exiting-with-q-and-d)
+  >
+  > manual:
+  > - The "q" command prints the current line again in less the -n flag was used on the command line and exits the script completely
+  >
+  > ```bash
+  > q[exit-code]
+  >   (quit) Exit sed without processing any more commands or input.
+  >
+  > Q[exit-code]
+  >   (quit) This command is the same as q, but will not print the contents of pattern space. Like q, it provides the ability to return an exit code to the caller.
+  > ```
+
+  ```bash
+  $ top -bn1 | sed -e '/^$/Q'
+  top - 03:45:55 up 258 days, 19:09,  1 user,  load average: 0.17, 0.51, 0.77
+  Tasks: 857 total,   2 running, 448 sleeping,   0 stopped,  36 zombie
+  %Cpu(s):  0.1 us,  0.4 sy,  0.0 ni, 99.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+  KiB Mem : 52802012+total, 11151089+free, 24546520 used, 39196272+buff/cache
+  KiB Swap:        0 total,        0 free,        0 used. 49136291+avail Mem
   ```
