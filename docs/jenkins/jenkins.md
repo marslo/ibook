@@ -892,7 +892,7 @@ $ kubectl cp -c jenkins myjenkins-0:/tmp/backup.tar.gz ./backup.tar.gz
 > [!TIP]
 > - [jenkins-complete-image/Dockerfile](https://github.com/OctopusSamples/jenkins-complete-image/blob/main/Dockerfile)
 
-```dockerfile
+```docker
 FROM jenkins/jenkins:lts-jdk11
 USER root
 RUN apt update && \

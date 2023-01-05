@@ -116,7 +116,7 @@ EOF
 
 ### docker build with GPG key proxy
 - without proxy
-  ```dockerfile
+  ```docker
   ...
   gpg --batch \
       --keyserver https://keyserver.ubuntu.com:80 \
@@ -128,7 +128,7 @@ EOF
   ```
 
 - GPG with proxy
-  ```dockerfile
+  ```docker
   ...
   apt-key adv --keyserver-options http-proxy=http://proxy.example.com:80 \
               --keyserver hkp://keyserver.ubuntu.com:80 \
