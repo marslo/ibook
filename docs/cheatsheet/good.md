@@ -32,6 +32,7 @@
   - [search `DN` field of particular user (`user2`)](#search-dn-field-of-particular-user-user2)
   - [filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)](#filter-all-samaccountname-uid-and-uidnumber-under-base-dn-oupersondcmydomaindccom)
   - [filter particular group](#filter-particular-group)
+- [netcat and nmap-ncat](#netcat-and-nmap-ncat)
 - [installation alternatives](#installation-alternatives)
 - [others](#others)
   - [show some command periodically](#show-some-command-periodically)
@@ -455,6 +456,50 @@ $ ldapsearch \
       -w 'user1password' \
       -E 'pr=1000/noprompt' \
       CN='DL-mydomaindis-group'
+  ```
+
+## netcat and nmap-ncat
+
+- install
+  ```bash
+  $ sudo yum -y install epel-release [yum-utils]
+  $ sudo yum update -y
+  $ yum list | grep netcat
+  netcat.x86_64      1.219-2.el8       @epel
+  $ sudo yum install -y netcat.x86_64
+
+  # check
+  $ sudo yum repolist
+  ```
+
+- check
+  ```bash
+  # by using netcat
+  $ nc -zv google.com 443
+  Connection to google.com (142.251.214.142) 443 port [tcp/https] succeeded!
+
+  # by using nact
+  $ ncat -zv google.com 443
+  Ncat: Version 7.70 ( https://nmap.org/ncat )
+  Ncat: Connected to 142.251.214.142:443.
+  Ncat: 0 bytes sent, 0 bytes received in 0.07 seconds.
+  ```
+
+- check package
+  ```bash
+  $ rpm -ql netcat.x86_64
+  /usr/bin/nc
+  /usr/bin/netcat
+  /usr/lib/.build-id
+  /usr/lib/.build-id/f3
+  /usr/lib/.build-id/f3/3de6290429f99a8d8f5fe646a93bcc952dafdd
+  /usr/share/man/man1/nc.1.gz
+  /usr/share/man/man1/netcat.1.gz
+
+  $ rpm -ql nmap-ncat.x86_64
+  /usr/bin/nc
+  /usr/bin/ncat
+  ...
   ```
 
 ## installation alternatives
