@@ -9,8 +9,13 @@
   - [highlight](#highlight)
   - [ccat](#ccat)
   - [others](#others)
-  - [remove highlight](#remove-highlight)
-- [downlaods](#downlaods)
+- [remove highlight](#remove-highlight)
+- [alias](#alias)
+  - [`bash -<parameter>`](#bash--parameter)
+- [get cookie from firefox](#get-cookie-from-firefox)
+- [authentication](#authentication)
+  - [Special Characters in Usernames and Passwords](#special-characters-in-usernames-and-passwords)
+- [downlaods bookmark](#downlaods-bookmark)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -75,7 +80,7 @@ $ ccat --palette
 ### others
 - [dev-shell-essentials](https://github.com/kepkin/dev-shell-essentials)
 
-### remove highlight
+## remove highlight
 
 > [!TIP]
 > references:
@@ -112,8 +117,71 @@ $ command | decolorize
     remotes/origin/sample$
   ```
 
+## [alias](https://askubuntu.com/a/871435)
+```bash
+$ echo ${BASH_ALIASES[ls]}
+ls --color=always
+```
 
-## downlaods
+### [`bash -<parameter>`](https://unix.stackexchange.com/a/38363/29178)
+- get bash login log ( for rc script debug )
+  ```bash
+  $ bash -l -v
+  ```
+
+- run with only one startup file ( for sharing accounts )
+  ```bash
+  $ bash -i --rcfile="$HOME/.marslo/.imarslo"
+  ```
+
+## get cookie from firefox
+```bash
+$ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
+```
+
+## authentication
+### [Special Characters in Usernames and Passwords](https://zencoder.support.brightcove.com/general-information/special-characters-usernames-and-passwords.html)
+
+{% hint style='tip' %}
+> references:
+> - [percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding)
+{% endhint %}
+
+
+|   CHARACTERS   | PERCENT-ENCODED |
+|:--------------:|:---------------:|
+|       `]`      |      `%5B`      |
+|       `[`      |      `%5D`      |
+|       `?`      |      `%3F`      |
+|       `/`      |      `%2F`      |
+|       `<`      |      `%3C`      |
+|       `~`      |      `%7E`      |
+|       `#`      |      `%23`      |
+|       ```      |      `%6D`      |
+|       `!`      |      `%21`      |
+|       `@`      |      `%40`      |
+|       `$`      |      `%24`      |
+|       `%`      |      `%25`      |
+|       `^`      |      `%5E`      |
+|       `&`      |      `%26`      |
+|       `*`      |      `%2A`      |
+|       `(`      |      `%28`      |
+|       `)`      |      `%29`      |
+|       `+`      |      `%2B`      |
+|       `=`      |      `%3D`      |
+|       `}`      |      `%7D`      |
+| <code>`</code> |      `%7C`      |
+|       `:`      |      `%3A`      |
+|       `"`      |      `%22`      |
+|       `;`      |      `%3B`      |
+|       `'`      |      `%27`      |
+|       `,`      |      `%2C`      |
+|       `>`      |      `%3E`      |
+|       `{`      |      `%7B`      |
+|     `space`    |      `%20`      |
+
+
+## downlaods bookmark
 
 > [!TIP]
 > references:

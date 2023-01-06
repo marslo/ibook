@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [alias](#alias)
+  - [`bash -<parameter>`](#bash--parameter)
 - [shell expansions](#shell-expansions)
   - [word splitting](#word-splitting)
   - [Filename Expansion](#filename-expansion)
@@ -12,7 +14,7 @@
   - [all about {curly braces} in bash](#all-about-curly-braces-in-bash)
   - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
   - [multiple directories creation](#multiple-directories-creation)
-  - [copy a file to multipule folder](#copy-a-file-to-multipule-folder)
+  - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
 - [the eval builtin](#the-eval-builtin)
 - [the set builtin](#the-set-builtin)
   - [show current status](#show-current-status)
@@ -26,6 +28,22 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## [alias](https://askubuntu.com/a/871435)
+```bash
+$ echo ${BASH_ALIASES[ls]}
+ls --color=always
+```
+
+### [`bash -<parameter>`](https://unix.stackexchange.com/a/38363/29178)
+- get bash login log ( for rc script debug )
+  ```bash
+  $ bash -l -v
+  ```
+
+- run with only one startup file ( for sharing accounts )
+  ```bash
+  $ bash -i --rcfile="$HOME/.marslo/.imarslo"
+  ```
 
 ## [shell expansions](https://www.gnu.org/software/bash/manual/html_node/shell-expansions.html#shell-expansions)
 
@@ -215,16 +233,17 @@ $ mkdir -p `date '+%y%m%d'`/{1,2,3}
 $ mkdir -p $USER/{1,2,3}
 ```
 
-### copy a file to multipule folder
+### copy single file to multipule folders
 ```bash
 $ echo dir1 dir2 dir3 | xargs -n 1 cp file1
-# OR
+
+# or
 $ echo dir{1..10} | xargs -n 1 cp file1
 ```
 
 ## the eval builtin
-{% hint style='tip' %}
 
+{% hint style='tip' %}
 **eval** — **construct command by concatenating arguments**
 
 **reference**:
@@ -274,26 +293,24 @@ $ echo dir{1..10} | xargs -n 1 cp file1
   ```
 
 ## [the set builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-{% hint style='tip' %}
 
-**reference**:
-- [Writing Robust Bash Shell Scripts](https://www.davidpashley.com/articles/writing-robust-shell-scripts/)
-- [用内置的set和shopt命令来设置bash的选项](https://blog.csdn.net/tonyyong90/article/details/105606638)
-
-**set**
-```
-set [--abefhkmnptuvxBCEHPT] [-o option-name] [argument …]
-set [+abefhkmnptuvxBCEHPT] [+o option-name] [argument …]
-```
-
-- example
-```bash
-$ set | grep -e SHELLOPTS -e BASHOPTS
-BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
-SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
-```
-
-{% endhint %}
+> [!NOTE]
+> **reference**:
+> - [Writing Robust Bash Shell Scripts](https://www.davidpashley.com/articles/writing-robust-shell-scripts/)
+> - [用内置的set和shopt命令来设置bash的选项](https://blog.csdn.net/tonyyong90/article/details/105606638)
+>
+> **set**
+>   ```
+>   set [--abefhkmnptuvxBCEHPT] [-o option-name] [argument …]
+>   set [+abefhkmnptuvxBCEHPT] [+o option-name] [argument …]
+>   ```
+>
+> - example
+>   ```bash
+>   $ set | grep -e SHELLOPTS -e BASHOPTS
+>   BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
+>   SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
+>   ```
 
 
 |      OPTION      | EXPLANATION                                                                                                  |
@@ -577,7 +594,7 @@ histexpand            on
 history               on
 interactive-comments  on
 monitor               on
- 
+
 $ shopt | column -t | grep -v off
 cdspell                  on
 checkwinsize             on

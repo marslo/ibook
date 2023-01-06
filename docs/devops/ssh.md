@@ -404,11 +404,11 @@ if ! grep 'Add my marslo' ${SSHDFILE} > /dev/null 2>&1; then
   sudo bash -c "cat >> ${SSHDFILE}" << EOF
 
     # Add my marslo
-    Match Group storage-ff
-      PasswordAuthentication no
-      Banner /etc/ssh/server.banner
-      MaxAuthTries 3
-      ClientAliveInterval 600       # 60*10 secs
+    Match Group devops
+                PasswordAuthentication no
+                Banner /etc/ssh/server.banner
+                MaxAuthTries 3
+                ClientAliveInterval 600       # 60*10 secs
   EOF
 fi
 ```
@@ -416,7 +416,7 @@ fi
 ### disallowing user to use tcp forwarding
 ```less
 Match User testuser
-  AllowTcpForwarding no
+           AllowTcpForwarding no
 ```
 
 ### displaying a special banner for users not in the staff group

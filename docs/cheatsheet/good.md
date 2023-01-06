@@ -7,39 +7,35 @@
 - [time & date](#time--date)
   - [show date with timezone](#show-date-with-timezone)
   - [show cal](#show-cal)
-  - [synchronize date and time with a server over ssh (Inspired from commandlinefu.com)](#synchronize-date-and-time-with-a-server-over-ssh-inspired-from-commandlinefucom)
+  - [synchronize date and time with another server over ssh](#synchronize-date-and-time-with-another-server-over-ssh)
 - [download and extract](#download-and-extract)
   - [check file without extract](#check-file-without-extract)
   - [extract `jar`](#extract-jar)
 - [compress](#compress)
   - [zip package with dot-file](#zip-package-with-dot-file)
   - [remove dot-file without `skipping '..' '.'` issue](#remove-dot-file-without-skipping---issue)
-- [get cookie from firefox](#get-cookie-from-firefox)
 - [echo 256 colors](#echo-256-colors)
-- [directory diff](#directory-diff)
 - [commands](#commands)
   - [PWD's secrets](#pwds-secrets)
-  - [list the command beginning with](#list-the-command-beginning-with)
-  - [searching for commands without knowing their exact names](#searching-for-commands-without-knowing-their-exact-names)
+  - [list the command startsWith](#list-the-command-startswith)
+  - [fuzzy find for commands](#fuzzy-find-for-commands)
 - [batch commands](#batch-commands)
-  - [rename](#rename)
+  - [batch rename](#batch-rename)
   - [batch move](#batch-move)
   - [batch copy](#batch-copy)
-- [bash](#bash)
-  - [bash alias](#bash-alias)
+  - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
 - [ldapsearch](#ldapsearch)
   - [search specific user](#search-specific-user)
   - [search `DN` field of particular user (`user2`)](#search-dn-field-of-particular-user-user2)
-  - [filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)](#filter-all-samaccountname-uid-and-uidnumber-under-base-dn-oupersondcmydomaindccom)
+  - [filter all `SAMAccountName`, `uid` and `uidNumber` only](#filter-all-samaccountname-uid-and-uidnumber-only)
   - [filter particular group](#filter-particular-group)
-- [netcat and nmap-ncat](#netcat-and-nmap-ncat)
-- [installation alternatives](#installation-alternatives)
 - [others](#others)
+  - [directory diff](#directory-diff)
   - [show some command periodically](#show-some-command-periodically)
   - [clear](#clear)
   - [use less as tail -f](#use-less-as-tail--f)
-- [authentication](#authentication)
-  - [Special Characters in Usernames and Passwords](#special-characters-in-usernames-and-passwords)
+  - [netcat & nmap-ncat](#netcat--nmap-ncat)
+  - [alternatives & update-alternatives](#alternatives--update-alternatives)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -150,7 +146,12 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
                       30
 ```
 
-### synchronize date and time with a server over ssh (Inspired from [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
+### synchronize date and time with another server over ssh
+
+> [!NOTE]
+> inspired from
+> - [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
+
 ```bash
 $ date --set="$(ssh [username]@[sshserver] date)"
 ```
@@ -244,21 +245,17 @@ $ unzip <jar-name>.jar -d <target-folder>
     $ rm [-rf] .??*
     ```
 
-## get cookie from firefox
-```bash
-$ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
-```
-
 ## echo 256 colors
+
+> [!TIP]
+> see also:
+> - [imarslo : cheatsheet/colors](colors.html)
+> - [imarslo : cheatsheet/tricky.html#highlight-output](tricky.html#highlight-output)
+
 ```bash
 $ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
 # or
 $ yes "$(seq 1 255)" | while read i; do printf "\x1b[48;5;${i}m\n"; sleep .01; done
-```
-
-## directory diff
-```bash
-diff --suppress-common-lines -y <(cd path_to_dir1; find .|sort) <(cd path_to_dir2; find .|sort)
 ```
 
 ## commands
@@ -273,7 +270,7 @@ $ pwd -P
 /home/marslo/Tools/Git/BrowserConfig
 ```
 
-### list the command beginning with
+### list the command startsWith
 ```bash
 $ compgen -c "system-config-"
 system-config-authentication
@@ -296,7 +293,7 @@ system-config-services
 system-config-users
 ```
 
-### searching for commands without knowing their exact names
+### fuzzy find for commands
 ```bash
 $ apropos editor | head
 Git::SVN::Editor (3pm) - commit driver for "git svn set-tree" and dcommit
@@ -312,7 +309,7 @@ gedit (1)            - text editor for the GNOME Desktop
 ```
 
 ## batch commands
-### rename
+### batch rename
 ```bash
 $ l
 total 4.0K
@@ -342,26 +339,17 @@ $ mkdir backup-folder && ls | grep -Ze ".*rar" | xargs -d '\n' -I {} mv {} backu
 $ ls -1 a/b/* 11 12 | xargs cp -t copy-target-folder/
 ```
 
-## bash
-
-### [bash alias](https://askubuntu.com/a/871435)
+### copy single file to multipule folders
 ```bash
-$ echo ${BASH_ALIASES[ls]}
-ls --color=always
+$ echo dir1 dir2 dir3 | xargs -n 1 cp file1
+
+# or
+$ echo dir{1..10} | xargs -n 1 cp file1
 ```
 
-#### [`bash -<parameter>`](https://unix.stackexchange.com/a/38363/29178)
-- get bash login log
-  ```bash
-  $ bash -l -v
-  ```
-
-- run with only one startup file
-  ```bash
-  $ bash -i --rcfile="$HOME/.marslo/.imarslo"
-  ```
-
 ## ldapsearch
+
+> [!NOTE]
 > reference:
 > - [ldapsearch Examples](https://docs.oracle.com/cd/E19693-01/819-0997/auto45/index.html)
 > - [The ldapsearch Tool](https://docs.oracle.com/cd/E19850-01/816-6400-10/lsearch.html)
@@ -379,6 +367,8 @@ ls --color=always
 > ```
 
 ### search specific user
+
+> [!NOTE]
 > Info :
 > - ldap url         : `ldaps://ldap.mydomain.com:636`
 > - base search base : `dc=mydomain,dc=com`
@@ -420,7 +410,11 @@ $ ldapsearch \
     DN
 ```
 
-### filter all `SAMAccountName`, `uid` and `uidNumber` under base DN (`OU=Person,DC=mydomain,DC=com`)
+### filter all `SAMAccountName`, `uid` and `uidNumber` only
+
+> [!TIP]i
+> filter base on base DN (`OU=Person,DC=mydomain,DC=com`)
+
 ```bash
 $ ldapsearch \
     -LLL \
@@ -446,7 +440,7 @@ $ ldapsearch \
     '(&(objectClass=group)(CN=*))'
 ```
 
-- search particular group (`cn=DL-mydomaindis-group`)
+- search particular group (`cn=DL-name-group`)
   ```bash
   $ ldapsearch \
       -x \
@@ -455,10 +449,35 @@ $ ldapsearch \
       -D 'user1' \
       -w 'user1password' \
       -E 'pr=1000/noprompt' \
-      CN='DL-mydomaindis-group'
+      CN='DL-name-group'
   ```
 
-## netcat and nmap-ncat
+## others
+### directory diff
+```bash
+$ diff --suppress-common-lines -y <(cd path_to_dir1; find .|sort) <(cd path_to_dir2; find .|sort)
+```
+
+### show some command periodically
+```bash
+$ watch --interval 1 ls -alt
+```
+- watch with pipe
+  ```bash
+  $ watch -n 1 'ls -Altrh | grep <keywords>'
+  ```
+
+### clear
+```bash
+$ printf "\ec"
+```
+
+### use less as tail -f
+```bash
+$ less +F <filename>
+```
+
+### netcat & nmap-ncat
 
 - install
   ```bash
@@ -502,7 +521,7 @@ $ ldapsearch \
   ...
   ```
 
-## installation alternatives
+### alternatives & update-alternatives
 - install
   ```bash
   $ sudo update-alternatives --install /usr/bin/java java /opt/java/jdk1.8.0_121/bin/java 999
@@ -526,64 +545,3 @@ $ ldapsearch \
 
   Enter to keep the current selection[+], or type selection number: 1
   ```
-
-## others
-### show some command periodically
-```bash
-$ watch --interval 1 ls -alt
-```
-- watch with pipe
-  ```bash
-  $ watch -n 1 'ls -Altrh | grep <keywords>'
-  ```
-
-### clear
-```bash
-$ printf "\ec"
-```
-
-### use less as tail -f
-```bash
-$ less +F <filename>
-```
-
-## authentication
-### [Special Characters in Usernames and Passwords](https://zencoder.support.brightcove.com/general-information/special-characters-usernames-and-passwords.html)
-
-{% hint style='tip' %}
-> references:
-> - [percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding)
-{% endhint %}
-
-
-|   CHARACTERS   | PERCENT-ENCODED |
-|:--------------:|:---------------:|
-|       `]`      |      `%5B`      |
-|       `[`      |      `%5D`      |
-|       `?`      |      `%3F`      |
-|       `/`      |      `%2F`      |
-|       `<`      |      `%3C`      |
-|       `~`      |      `%7E`      |
-|       `#`      |      `%23`      |
-|       ```      |      `%6D`      |
-|       `!`      |      `%21`      |
-|       `@`      |      `%40`      |
-|       `$`      |      `%24`      |
-|       `%`      |      `%25`      |
-|       `^`      |      `%5E`      |
-|       `&`      |      `%26`      |
-|       `*`      |      `%2A`      |
-|       `(`      |      `%28`      |
-|       `)`      |      `%29`      |
-|       `+`      |      `%2B`      |
-|       `=`      |      `%3D`      |
-|       `}`      |      `%7D`      |
-| <code>`</code> |      `%7C`      |
-|       `:`      |      `%3A`      |
-|       `"`      |      `%22`      |
-|       `;`      |      `%3B`      |
-|       `'`      |      `%27`      |
-|       `,`      |      `%2C`      |
-|       `>`      |      `%3E`      |
-|       `{`      |      `%7B`      |
-|     `space`    |      `%20`      |
