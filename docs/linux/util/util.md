@@ -19,11 +19,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Utils
+# utils
 ## shell paramters
 ### pass self parameters to another script
-> objective:
-> `$ ./b.sh a b c d` -> `$ ./a.sh a b c d`
+> - objective:
+>   `$ ./b.sh 1 2 3 4 5` -> `$ ./a.sh 2 3 4 5`
 
 - b.sh
   ```bash
@@ -65,45 +65,45 @@
 
 - result
   ```bash
-  $ ./b.sh a b c d e
+  $ ./b.sh 1 2 3 4 5
 
   b.sh:
-    $1: a
+    $1: 1
     $#: 5
-    $@: a b c d e
-    ${@: -1}: e
-    ${@: -2}: d e
-    ${@: -3}: d e
-    ${@: -$(( $#-1 ))}: b c d e
-    $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-) : b c d e
+    $@: 1 2 3 4 5
+    ${@: -1}: 5
+    ${@: -2}: 4 5
+    ${@: -3}: 4 5
+    ${@: -$(( $#-1 ))}: 2 3 4 5
+    $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-) : 2 3 4 5
 
   '~~> ./a.sh "${@: -1}"': ~~~> ./a.sh e:
   a.sh:
-    $1: e
+    $1: 5
     $#: 1
-    $@: e
-    ${@: --1}: e
+    $@: 5
+    ${@: --1}: 5
 
-  '~~> ./a.sh $(echo '${@: -1}' | cut -d' ' -f1-)': ~~~> ./a.sh e:
+  '~~> ./a.sh $(echo '${@: -1}' | cut -d' ' -f1-)': ~~~> ./a.sh 5:
   a.sh:
-    $1: e
+    $1: 5
     $#: 1
-    $@: e
-    ${@: --1}: e
+    $@: 5
+    ${@: --1}: 5
 
-  '~~> ./a.sh "${@: -4}"': ~~~> ./a.sh b c d e:
+  '~~> ./a.sh "${@: -4}"': ~~~> ./a.sh 2 3 4 5:
   a.sh:
     $1: b
     $#: 4
-    $@: b c d e
-    ${@: -2}: d e
+    $@: 2 3 4 5
+    ${@: -2}: 4 5
 
-  '~~> ./a.sh $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-)': ~~~> ./a.sh b c d e
+  '~~> ./a.sh $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-)': ~~~> ./a.sh 2 3 4 5
   a.sh:
-    $1: b
+    $1: 2
     $#: 4
-    $@: b c d e
-    ${@: -2}: d e
+    $@: 2 3 4 5
+    ${@: -2}: 4 5
   ```
 
 ### getopts with long option
