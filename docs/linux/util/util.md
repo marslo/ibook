@@ -16,6 +16,8 @@
   - [check linux window size](#check-linux-window-size)
 - [readline & bind](#readline--bind)
   - [get info](#get-info)
+- [others](#others)
+  - [enable cockpit in Centos8](#enable-cockpit-in-centos8)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -310,7 +312,7 @@ for detailed information.
 - check
   ```bash
   $ shopt | grep checkwinsize
-  checkwinsize   	on
+  checkwinsize    on
   ```
 - enable
   ```bash
@@ -336,3 +338,10 @@ for detailed information.
     set keymap vi-command
     "\ee": emacs-editing-mode
     ```
+
+# others
+## enable cockpit in Centos8
+```bash
+$ sudo systemctl enable --now cockpit.socket
+Created symlink /etc/systemd/system/sockets.target.wants/cockpit.socket → /usr/lib/systemd/system/cockpit.socket.
+```
