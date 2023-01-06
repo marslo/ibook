@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Utils](#utils)
+- [utils](#utils)
   - [shell paramters](#shell-paramters)
     - [pass self parameters to another script](#pass-self-parameters-to-another-script)
     - [getopts with long option](#getopts-with-long-option)

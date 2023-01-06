@@ -350,6 +350,8 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 ## ldapsearch
 
 > [!NOTE]
+> enhaanced script
+> - [marslo/mytools](https://github.com/marslo/mytools/blob/master/itool/ldapsearch)
 > reference:
 > - [ldapsearch Examples](https://docs.oracle.com/cd/E19693-01/819-0997/auto45/index.html)
 > - [The ldapsearch Tool](https://docs.oracle.com/cd/E19850-01/816-6400-10/lsearch.html)
