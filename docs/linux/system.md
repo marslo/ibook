@@ -43,6 +43,8 @@
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
   - [ls: Argument list too long](#ls-argument-list-too-long)
+- [others](#others-1)
+  - [cockpit](#cockpit)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1532,3 +1534,66 @@ $ ulimit -s 65536
 $ ulimit -s
 65536
 ```
+
+
+## others
+### cockpit
+```bash
+$ sudo systemctl enable --now cockpit.socket
+Created symlink /etc/systemd/system/sockets.target.wants/cockpit.socket → /usr/lib/systemd/system/cockpit.socket.
+
+# visit via http://<ip.address>:9090
+```
+
+- disable
+  ```bash
+  $ sudo systemctl stop cockpit.socket
+  $ sudo systemctl disable cockpit.socket
+  ```
+
+- motd
+  - [disable via `cockpit-ws`](https://serverok.in/centos-8-disable-activate-the-web-console)
+    ```bash
+    $ sudo yum remove -y cockpit-ws
+    ```
+  - disable in hard way
+    ```bash
+    $ sudo ln -sfn /dev/null /etc/motd.d/cockpit
+
+    # details
+    # https://serverok.in/centos-8-disable-activate-the-web-console#comment-35367
+    $ cat /etc/issue.d/cockpit.issue                // issue shows before login
+    $ cat /etc/motd.d/cockpit                       // moted shows after login
+
+    $ la /etc/motd.d/cockpit
+    lrwxrwxrwx. 1 root root 17 Mar 15  2021 /etc/motd.d/cockpit -> /run/cockpit/motd
+    $ la /etc/issue.d/cockpit.issue
+    lrwxrwxrwx. 1 root root 17 Mar 15  2021 /etc/issue.d/cockpit.issue -> /run/cockpit/motd
+    $ la /run/cockpit/motd
+    lrwxrwxrwx. 1 root root 11 Jan  6 03:11 /run/cockpit/motd -> active.motd
+    $ la /run/cockpit/active.motd
+    -rw-r-----. 1 root wheel 80 Jan  6 03:11 /run/cockpit/active.motd
+    ```
+
+- package info
+ ```bash
+  $ sudo yum search cockpit
+  cockpit.x86_64 : Web Console for Linux servers
+
+  $ sudo yum list installed | grep cockpit
+  cockpit.x86_64                                     251.1-1.el8                                   @baseos
+  cockpit-bridge.x86_64                              251.1-1.el8                                   @baseos
+  cockpit-packagekit.noarch                          251.1-1.el8                                   @appstream
+  cockpit-podman.noarch                              33-1.module_el8.5.0+890+6b136101              @appstream
+  cockpit-storaged.noarch                            251.1-1.el8                                   @appstream
+  cockpit-system.noarch                              251.1-1.el8                                   @baseos
+  cockpit-ws.x86_64                                  251.1-1.el8                                   @baseos
+
+  $ rpm -ql cockpit-ws.x86_64
+  /etc/cockpit
+  /etc/cockpit/ws-certs.d
+  /etc/issue.d/cockpit.issue
+  /etc/motd.d/cockpit                 // for moted
+  /etc/pam.d/cockpit
+  ...
+  ```
