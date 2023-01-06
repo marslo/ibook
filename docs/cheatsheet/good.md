@@ -26,8 +26,8 @@
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
 - [ldapsearch](#ldapsearch)
   - [search specific user](#search-specific-user)
-  - [search `DN` field of particular user (`user2`)](#search-dn-field-of-particular-user-user2)
-  - [filter all `SAMAccountName`, `uid` and `uidNumber` only](#filter-all-samaccountname-uid-and-uidnumber-only)
+  - [filter `DN` field only](#filter-dn-field-only)
+  - [filter `SAMAccountName`, `uid` and `uidNumber` only](#filter-samaccountname-uid-and-uidnumber-only)
   - [filter particular group](#filter-particular-group)
 - [others](#others)
   - [directory diff](#directory-diff)
@@ -369,11 +369,28 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 ### search specific user
 
 > [!NOTE]
-> Info :
+> info :
 > - ldap url         : `ldaps://ldap.mydomain.com:636`
 > - base search base : `dc=mydomain,dc=com`
 > - login user       : `user1` / `user1password`
 > - search           : `user2`
+>
+> [remove `#refldaps://..`](character/sed.html#remove-both--and-empty-lines)
+> - remove `#.*`
+>   ```bash
+>   $ ldapsearch ... | sed -r '/^(#.*)$/d'
+>   ```
+> - remove empty lines
+>   ```bash
+>   $ ldapsearch ... | sed -r '/^\s*$/d'
+>   ```
+> - remove all
+>   ```bash
+>   $ ldapsearch ... | sed -r '/^(#.*)$/d;/^\s*$/d'
+>
+>   # or
+>   $ ldapsearch ... | sed -r '/(^#.*)|(^\s*)$/d'
+>   ```
 
 ```bash
 $ ldapsearch \
@@ -397,7 +414,7 @@ $ ldapsearch \
       CN='user2'
   ```
 
-### search `DN` field of particular user (`user2`)
+### filter `DN` field only
 ```bash
 $ ldapsearch \
     [-LLL \]
@@ -410,9 +427,9 @@ $ ldapsearch \
     DN
 ```
 
-### filter all `SAMAccountName`, `uid` and `uidNumber` only
+### filter `SAMAccountName`, `uid` and `uidNumber` only
 
-> [!TIP]i
+> [!TIP]
 > filter base on base DN (`OU=Person,DC=mydomain,DC=com`)
 
 ```bash
