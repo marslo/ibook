@@ -15,11 +15,11 @@
   - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
   - [multiple directories creation](#multiple-directories-creation)
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
-- [the eval builtin](#the-eval-builtin)
-- [the set builtin](#the-set-builtin)
+- [eval builtin](#eval-builtin)
+- [set builtin](#set-builtin)
   - [show current status](#show-current-status)
   - [option name](#option-name)
-- [the shopt builtin](#the-shopt-builtin)
+- [shopt builtin](#shopt-builtin)
   - [options](#options)
   - [examples](#examples)
 - [event designators](#event-designators)
@@ -46,6 +46,25 @@ ls --color=always
   ```
 
 ## [shell expansions](https://www.gnu.org/software/bash/manual/html_node/shell-expansions.html#shell-expansions)
+
+> [!TIP]
+> check the shopt on/off
+> - off
+>   ```bash
+>   $ shopt -u extglob
+>   $ shopt extglob
+>   extglob         off
+>   $ echo $?
+>   1
+>   ```
+> - on
+>   ```bash
+>   $ shopt -s extglob
+>   $ shopt extglob
+>   extglob         on
+>   $ echo $?
+>   0
+>   ```
 
 {% hint style='tip' %}
 references:
@@ -241,7 +260,7 @@ $ echo dir1 dir2 dir3 | xargs -n 1 cp file1
 $ echo dir{1..10} | xargs -n 1 cp file1
 ```
 
-## the eval builtin
+## eval builtin
 
 {% hint style='tip' %}
 **eval** — **construct command by concatenating arguments**
@@ -292,7 +311,7 @@ $ echo dir{1..10} | xargs -n 1 cp file1
   $x
   ```
 
-## [the set builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+## [set builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 
 > [!NOTE]
 > **reference**:
@@ -435,7 +454,7 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 |      `vi`     | Use a vi-style line editing interface. This also affects the editing interface used for read `-e`.                                                                                                                 |
 |    `xtrace`   | Same as `-x`.                                                                                                                                                                                                      |
 
-## [the shopt builtin](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
+## [shopt builtin](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
 
 {% hint style='tip' %}
 shopt
