@@ -6,7 +6,7 @@
   - [`bash -<parameter>`](#bash--parameter)
 - [shell expansions](#shell-expansions)
   - [word splitting](#word-splitting)
-  - [Filename Expansion](#filename-expansion)
+  - [filename expansion](#filename-expansion)
 - [quoting](#quoting)
 - [brace expansion](#brace-expansion)
   - [segmented continuous](#segmented-continuous)
@@ -15,11 +15,15 @@
   - [fast copy or moving or something (detials -> brace expansion)](#fast-copy-or-moving-or-something-detials---brace-expansion)
   - [multiple directories creation](#multiple-directories-creation)
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
-- [eval builtin](#eval-builtin)
-- [set builtin](#set-builtin)
+- [pipe and stdin](#pipe-and-stdin)
+  - [read stdin from pipe](#read-stdin-from-pipe)
+  - [`read -r var` or `read -r -d\0 var`](#read--r-var-or-read--r--d%5C0-var)
+- [builtin](#builtin)
+  - [eval builtin](#eval-builtin)
+  - [set builtin](#set-builtin)
   - [show current status](#show-current-status)
   - [option name](#option-name)
-- [shopt builtin](#shopt-builtin)
+  - [shopt builtin](#shopt-builtin)
   - [options](#options)
   - [examples](#examples)
 - [event designators](#event-designators)
@@ -46,25 +50,6 @@ ls --color=always
   ```
 
 ## [shell expansions](https://www.gnu.org/software/bash/manual/html_node/shell-expansions.html#shell-expansions)
-
-> [!TIP]
-> check the shopt on/off
-> - off
->   ```bash
->   $ shopt -u extglob
->   $ shopt extglob
->   extglob         off
->   $ echo $?
->   1
->   ```
-> - on
->   ```bash
->   $ shopt -s extglob
->   $ shopt extglob
->   extglob         on
->   $ echo $?
->   0
->   ```
 
 {% hint style='tip' %}
 references:
@@ -109,18 +94,18 @@ IFS=':'
 read f1 f2 f3 f4 f5 f6 f7 < /etc/passwd
 ```
 
-### [Filename Expansion](https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
+### [filename expansion](https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
 > Bash scans each word for the characters `'*'`, `'?'`, and `'['`, unless the `-f` (`set -f`) option has been set
 
-| CONDITION                             | RESULT                                                                                            |
-|---------------------------------------|---------------------------------------------------------------------------------------------------|
-| match found && `nullglob` disabled    | the word is regarded as a pattern                                                                 |
-| no match found && `nullglob` disabled | the word is left unchanged                                                                        |
-| no match found && `nullglob` set      | the word is removed                                                                               |
-| no match found && `failglob` set      | show error msg and cmd won't be exectued                                                          |
-| `nocaseglob` enabled                  | patten match case insensitive                                                                     |
-| `set -o noglob` or `set -f`           | `*` will not be expanded                                                                          |
-| `shopt -s dotglob`                    | `*` will including all `.*`. see [zip package with dot-file](good.html#zip-package-with-dot-file) |
+| CONDITION                             | RESULT                                                                                               |
+|---------------------------------------|------------------------------------------------------------------------------------------------------|
+| match found && `nullglob` disabled    | the word is regarded as a pattern                                                                    |
+| no match found && `nullglob` disabled | the word is left unchanged                                                                           |
+| no match found && `nullglob` set      | the word is removed                                                                                  |
+| no match found && `failglob` set      | show error msg and cmd won't be exectued                                                             |
+| `nocaseglob` enabled                  | patten match case insensitive                                                                        |
+| `set -o noglob` or `set -f`           | `*` will not be expanded                                                                             |
+| `shopt -s dotglob`                    | `*` will including all `.*`. see [zip package with dot-file](../good.html#zip-package-with-dot-file) |
 
 
 ## [quoting](https://www.gnu.org/software/bash/manual/html_node/quoting.html#quoting)
@@ -260,7 +245,88 @@ $ echo dir1 dir2 dir3 | xargs -n 1 cp file1
 $ echo dir{1..10} | xargs -n 1 cp file1
 ```
 
-## eval builtin
+## pipe and stdin
+
+### read stdin from pipe
+
+{% hint style='tip' %}
+> references:
+> - [How to read mutliline input from stdin into variable and how to print one out in shell(sh,bash)?](https://stackoverflow.com/q/212965/2940319)
+>   - [`read`](https://stackoverflow.com/a/69184102/2940319)
+>   - [`/dev/stdin`](https://stackoverflow.com/a/47343371/2940319)
+>   - [`cat`](https://stackoverflow.com/a/212987/2940319)
+>   - [`tee`](https://stackoverflow.com/a/22064369/2940319)
+> - [In a bash function, how do I get stdin into a variable](https://stackoverflow.com/a/65065987/2940319)
+> - [TIL: Reading stdin to a BASH variable](https://dev.to/jeremyckahn/til-reading-stdin-to-a-bash-variable-1kln)
+> - [Pipe Output to Bash Function](https://www.baeldung.com/linux/pipe-output-to-function)
+> - [Guide to Stream Redirections in Linux](https://www.baeldung.com/linux/stream-redirections)
+> - [Bash: Assign output of pipe to a variable](https://unix.stackexchange.com/q/338000/29178)
+> - [read](https://ss64.com/bash/read.html)
+> - [How To Use The Bash read Command](https://phoenixnap.com/kb/bash-read)
+{% endhint %}
+
+> [!TIP]
+> ```bash
+> # with IFS
+> $ echo '   hello  world   ' | { IFS='' read msg; echo "${msg}"; } | tr ' ' '.'
+> ...hello..world...
+>
+> # without IFS
+> $ echo '   hello  world   ' | { read msg; echo "${msg}"; } | tr ' ' '.'
+> hello..world
+> ```
+
+### `read -r var` or `read -r -d\0 var`
+- script as command line
+  ```bash
+  $ cat trim.sh
+  #!/usr/bin/env bash
+
+  trim() {
+    # shellcheck disable=SC2124
+    local str="$@"
+    str=${str##+([[:space:]])}
+    str=${str%%+([[:space:]])}
+    echo -n "${str}"
+  }
+
+  IFS='' read -r myvar
+  trim "${myvar}"
+  ```
+  - result
+    ```bash
+    $ s='   aa  bb   '
+    $ echo "-${s}-"                                                   # -   aa  bb   -
+    $ echo "-$(echo "${s}" | trim)-"                                  # -aa  bb-
+    $ echo "-$(echo " a | b | c " | awk -F'|' '{print $2}')-"         # - b -
+    $ echo "-$(echo " a | b | c " | awk -F'|' '{print $2}' | trim)-"  # -b-
+    ```
+
+- running inside the script
+  ```bash
+  $ cat example.sh
+  #!/usr/bin/env bash
+
+  trim() {
+    IFS='' read -r -d\0 str
+    str=${str##+([[:space:]])}
+    str=${str%%+([[:space:]])}
+    echo -n "${str}"
+  }
+
+  s='   aa  bb   '
+  echo "-${s}-"
+  echo "-$(echo "${s}" | trim)-"
+  ```
+  - result
+    ```bash
+    $ ./example.sh
+    -   aa  bb   -
+    -aa  bb-
+    ```
+
+## builtin
+### eval builtin
 
 {% hint style='tip' %}
 **eval** — **construct command by concatenating arguments**
@@ -311,7 +377,7 @@ $ echo dir{1..10} | xargs -n 1 cp file1
   $x
   ```
 
-## [set builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+### [set builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 
 > [!NOTE]
 > **reference**:
@@ -454,7 +520,26 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 |      `vi`     | Use a vi-style line editing interface. This also affects the editing interface used for read `-e`.                                                                                                                 |
 |    `xtrace`   | Same as `-x`.                                                                                                                                                                                                      |
 
-## [shopt builtin](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
+### [shopt builtin](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
+
+> [!TIP]
+> check the shopt on/off
+> - off
+>   ```bash
+>   $ shopt -u extglob
+>   $ shopt extglob
+>   extglob         off
+>   $ echo $?
+>   1
+>   ```
+> - on
+>   ```bash
+>   $ shopt -s extglob
+>   $ shopt extglob
+>   extglob         on
+>   $ echo $?
+>   0
+>   ```
 
 {% hint style='tip' %}
 shopt
