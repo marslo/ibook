@@ -20,6 +20,8 @@
   - [BasicSSHUserPrivateKey](#basicsshuserprivatekey)
   - [CertificateCredentials](#certificatecredentials)
   - [SystemCredentialsProvider](#systemcredentialsprovider)
+  - [VaultUsernamePasswordCredential](#vaultusernamepasswordcredential)
+  - [VaultAppRoleCredential](#vaultapprolecredential)
   - [encrypt/decrypt password](#encryptdecrypt-password)
 - [tricky](#tricky)
   - [Access granted with Overall/SystemRead](#access-granted-with-overallsystemread)
@@ -320,6 +322,7 @@ disposer.getBacklog().each { item ->
 >   - [StandardUsernamePasswordCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/StandardUsernamePasswordCredentials.html)
 >   - [UsernameCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/UsernameCredentials.html)
 >   - [UsernamePasswordCredentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/common/UsernamePasswordCredentials.html)
+>   - [VaultUsernamePasswordCredential](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
 
 ### list all credentials
 ```groovy
@@ -328,6 +331,8 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey;
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredential
+import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
 
 CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
                    .sort{ it.id }
@@ -381,6 +386,32 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                                                          password : ${it.password}
                                                       description : ${it.description}
                                                    usernameSecret : ${it.usernameSecret ?: 'false'}
+                         """
+                         break;
+
+                       case 'VaultUsernamePasswordCredentialImpl' :
+                         println """
+                                                             type : ${it.class.simpleName}
+                                                              id  : ${it.id}
+                                                            scope : ${it.scope}
+                                                        username  : ${it.username}
+                                                         password : ${it.password}
+                                                             path : ${it.path}
+                                                     description  : ${it.description}
+                                                  usernameSecret  : ${it.usernameSecret ?: 'false'}
+                         """
+                         break;
+
+                       case 'VaultAppRoleCredential':
+                         println """
+                                                             type : ${it.class.simpleName}
+                                                               id : ${it.id}
+                                                           roleId : ${it.roleId}
+                                                         secretId : ${it.secretId}
+                                                             path : ${it.path}
+                                                        namespace : ${it.namespace}
+                                                            scope : ${it.scope}
+                                                      description : ${it.description}
                          """
                          break;
                      }
@@ -511,6 +542,54 @@ systemCredentialsProvider.credentials.each {
          secret : ${it.secret}
   """
 }
+```
+
+### VaultUsernamePasswordCredential
+```groovy
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredential
+
+List<VaultUsernamePasswordCredential> creds = CredentialsProvider.lookupCredentials(
+  VaultUsernamePasswordCredential.class ,
+  jenkins.model.Jenkins.instance
+).sort{ it.id }
+.each {
+    println """
+                        id  : ${it.id}
+                      scope : ${it.scope}
+                  username  : ${it.username}
+                   password : ${it.password}
+                       path : ${it.path}
+               description  : ${it.description}
+            usernameSecret  : ${it.usernameSecret ?: 'false'}
+    """
+ }
+```
+
+### VaultAppRoleCredential
+```groovy
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
+
+List<VaultAppRoleCredential> creds = CredentialsProvider.lookupCredentials(
+  VaultAppRoleCredential.class ,
+  jenkins.model.Jenkins.instance
+).sort{ it.id }
+.each {
+    println """
+                        id  : ${it.id}
+                   secretId : ${it.secretId}
+                     roleId : ${it.roleId}
+                       path : ${it.path}
+                  namespace : ${it.namespace}
+                      scope : ${it.scope}
+                description : ${it.description}
+    """
+ }
 ```
 
 ### encrypt/decrypt password
