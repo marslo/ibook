@@ -12,14 +12,32 @@
   - [create a virtual machine with powershell by Hyper-V](#create-a-virtual-machine-with-powershell-by-hyper-v)
 - [Q&A](#qa)
   - [could not read CA certificate](#could-not-read-ca-certificate)
-- [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+{% hint style='tip' %}
+> references:
+> - [Support policy for Windows Server containers in on-premises scenarios](https://docs.microsoft.com/en-us/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios)
+> - [Windows container requirements](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/system-requirements)
+> - [Install Docker in Windows Server 2019](https://www.virtualizationhowto.com/2020/12/install-docker-in-windows-server-2019/)
+> - [Docker PowerShell Scripts for Local Development](https://geoffhudik.com/tech/2019/05/27/docker-powershell-scripts-for-local-development/)
+>   - [* docker-restart-attempt.ps1](https://gist.github.com/thnk2wn/32ce1ad47882bd5b1c43e19cbf8f37f4)
+>   - [docker-cloud-config-start.ps1](https://gist.github.com/thnk2wn/3222627b1cb3796c70277e7edda4a036)
+>   - [run-prep.ps1](https://gist.github.com/thnk2wn/32e8bb9c68857a4b05183a33f43e2846)
+>   - [docker-mysql-start.ps1](https://gist.github.com/thnk2wn/85a599be930c7bca54fb3463f158a3a8)
+>   - [docker-rabbitmq-start.ps1](https://gist.github.com/thnk2wn/4bdc9e7d42df50197b53485d880f2a83)
+>   - [docker-redis-start.ps1](https://gist.github.com/thnk2wn/32ce1ad47882bd5b1c43e19cbf8f37f4)
+>   - [eureka-start.ps1](https://gist.github.com/thnk2wn/ad1e1dbfa5c4c96d6ca59a72a00e45c9)
+>   - [eureka-wait.ps1](https://gist.github.com/thnk2wn/5366a34a71c8fcfd5e3d14722dc02975)
+{% endhint %}
 
 ## docker
 ### docker-ee
 
 #### installation
+
+> [!NOTE]
 > references:
 > - [* Install Docker Engine - Enterprise on Windows Servers](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
 > - [Docker-EE installtion in windows server](https://computingforgeeks.com/how-to-run-docker-containers-on-windows-server-2019/)
@@ -65,15 +83,26 @@
   > Update-Module DockerMsftProvider
   ```
 
-- upgrade
+- upgrade to latest version
   ```powershell
   > Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
+    Name                           Version          Source           Summary
+    ----                           -------          ------           -------
+    Docker                         20.10.9          DockerDefault    Contains Docker EE for use with Windows Server.
+  > Get-Package -Name Docker -ProviderName DockerMsftProvider
+    Name                           Version          Source                           ProviderName
+    ----                           -------          ------                           ------------
+    docker                         20.10.9          DockerDefault                    DockerMsftProvider
+  > docker --version
+    Docker version 20.10.9, build 591094d
+
   > Start-Service Docker
   ```
-  - or to particular version
-    ```powershell
-    > Install-Package -Name docker -ProviderName DockerMsftProvider -RequiredVersion 18.09 -Update -Force
-    ```
+
+- or to particular version
+  ```powershell
+  > Install-Package -Name docker -ProviderName DockerMsftProvider -RequiredVersion 18.09 -Update -Force
+  ```
 
 - [uninstall](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon)
   ```powershell
@@ -219,6 +248,41 @@ Docker                    18.09                 Docker           Contains Docker
 ```
 
 ### tricky
+
+#### update `daemon.json` for docker-ee
+```powershell
+> $configfile = @"
+{
+  "tls": false,
+  "hosts": ["tcp://0.0.0.0:2376", "npipe://"],
+  "debug": true,
+  "data-root": "E:\\docker_home",
+  "storage-opts": []
+}
+"@
+
+> $configfile | Out-File -FilePath C:\ProgramData\docker\config\daemon.json -Encoding ascii -Force
+> Start-Service Docker
+
+# or
+> Restart-Service Docker
+```
+- verify
+  ```powershell
+  > docker info
+  ...
+  Docker Root Dir: E:\docker_home
+  ...
+  WARNING: API is accessible on http://0.0.0.0:2376 without encryption.
+           Access to the remote API is equivalent to root access on the host. Refer
+           to the 'Docker daemon attack surface' section in the documentation for
+           more information: https://docs.docker.com/go/attack-surface/
+
+  > docker -H tcp://localhost:2376 images
+  REPOSITORY          TAG                    IMAGE ID       CREATED         SIZE
+  hello-world         nanoserver             e33d37034c87   33 hours ago    258MB
+  ```
+
 #### running linux container in windows server
 
 - [by enable experimental features in docker daemon.conf](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
@@ -227,15 +291,15 @@ Docker                    18.09                 Docker           Contains Docker
     > [Environment]::SetEnvironmentVariable(“LCOW_SUPPORTED”, “1”, “Machine”)
     ```
 
-  - Enable Experimental Features in Docker daemon.conf
+  - enable experimental features in docker `daemon.conf`
     ```powershell
     > $configfile = @"
     {
-        “experimental”: true
+        "experimental": true
     }
     "@
 
-    > $configfile|Out-File -FilePath C:\ProgramData\docker\config\daemon.json -Encoding ascii -Force
+    > $configfile | Out-File -FilePath C:\ProgramData\docker\config\daemon.json -Encoding ascii -Force
     ```
 
   - deploy LCOW for it to run
@@ -428,17 +492,3 @@ Set-VMFirmware -VMName $VMName -FirstBootDevice $DVDDrive
   SET DOCKER_TLS_VERIFY= $null, "User"
   SET DOCKER_TOOLBOX_INSTALL_PATH= $null, "User"
   ```
-
-## references
-> - [Support policy for Windows Server containers in on-premises scenarios](https://docs.microsoft.com/en-us/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios)
-> - [Windows container requirements](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/system-requirements)
-> - [Install Docker in Windows Server 2019](https://www.virtualizationhowto.com/2020/12/install-docker-in-windows-server-2019/)
-> - [Docker PowerShell Scripts for Local Development](https://geoffhudik.com/tech/2019/05/27/docker-powershell-scripts-for-local-development/)
->   - [* docker-restart-attempt.ps1](https://gist.github.com/thnk2wn/32ce1ad47882bd5b1c43e19cbf8f37f4)
->   - [docker-cloud-config-start.ps1](https://gist.github.com/thnk2wn/3222627b1cb3796c70277e7edda4a036)
->   - [run-prep.ps1](https://gist.github.com/thnk2wn/32e8bb9c68857a4b05183a33f43e2846)
->   - [docker-mysql-start.ps1](https://gist.github.com/thnk2wn/85a599be930c7bca54fb3463f158a3a8)
->   - [docker-rabbitmq-start.ps1](https://gist.github.com/thnk2wn/4bdc9e7d42df50197b53485d880f2a83)
->   - [docker-redis-start.ps1](https://gist.github.com/thnk2wn/32ce1ad47882bd5b1c43e19cbf8f37f4)
->   - [eureka-start.ps1](https://gist.github.com/thnk2wn/ad1e1dbfa5c4c96d6ca59a72a00e45c9)
->   - [eureka-wait.ps1](https://gist.github.com/thnk2wn/5366a34a71c8fcfd5e3d14722dc02975)
