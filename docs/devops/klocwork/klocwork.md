@@ -42,6 +42,10 @@
 > - [最佳实践：Klocwork增量/VerifyCI检查](http://www.360doc.com/content/17/0430/08/30774303_649740396.shtml)
 > - [Running a distributed Klocwork C/C++ analysis](https://bullwhip.physio-control.com/documentation/help/concepts/runningadistributedklocworkccanalysis.htm)
 > - [Security Best Practices + Klocwork](https://www.perforce.com/blog/kw/security-best-practices)
+> - [Integrating Static Code Analysis and Defect Tracking.pdf](https://is.muni.cz/th/i4jzl/MT.pdf)
+> - [klocwork 2020](https://docs.roguewave.com/en/klocwork/2020/)
+>   - [Setting up Klocwork with Containers (Linux)](https://docs.roguewave.com/en/klocwork/2020/setupkwcontainers)
+>   - [Limitations](https://docs.roguewave.com/en/klocwork/2021/kwlimitations)
 {% endhint %}
 
 ## environment

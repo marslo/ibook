@@ -28,6 +28,14 @@
 
 {% hint style='tip' %}
 > reference:
+> - command line references:
+>   - [kwadmin](https://help.klocwork.com/current/en-us/reference/kwadmin.htm)
+>   - [Kwagent](https://help.klocwork.com/current/en-us/reference/kwagent.htm)
+>   - [Kwauth](https://help.klocwork.com/current/en-us/reference/kwauth.htm)
+>   - [Kwcheck](https://help.klocwork.com/current/en-us/reference/kwcheck.htm)
+>   - [Kwciagent](https://help.klocwork.com/current/en-us/reference/kwciagent.htm)
+>   - [Kwinject](https://help.klocwork.com/current/en-us/reference/kwinject.htm)
+>   - [Kwwrap](https://help.klocwork.com/current/en-us/reference/kwwrap.htm)
 > - [kwadmin](https://bullwhip.physio-control.com/documentation/help/reference/kwadmin.htm)
 > - [Reference for integration project and build properties](https://docs.roguewave.com/en/klocwork/current/referenceforintegrationprojectandbuildproperties)
 > - [Build properties displayed by kwadmin](https://bullwhip.physio-control.com/documentation/help/concepts/buildpropertiesdisplayedbykwadmin.htm)
@@ -75,7 +83,10 @@ $ kwadmin get-project-properties <project_name>
 $ kwadmin set-project-property <project_name> <property> <value>
 ```
 
-- change [`Issue grouping`](https://docs.roguewave.com/en/klocwork/current/issuegrouping)
+- change [`Issue grouping`](https://help.klocwork.com/current/en-us/concepts/issuegrouping.htm)
+
+  > previous url : [issue grouping](https://docs.roguewave.com/en/klocwork/current/issuegrouping)
+
   ```bash
   $ kwadmin set-project-property <sample> grouping_on_default false
   ```
