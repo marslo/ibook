@@ -35,6 +35,7 @@
 
 ### [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
 
+> [!NOTE]
 > Jenkins requires Java 11 or 17 since Jenkins 2.357 and LTS 2.361.1. [Read more about this in the announcement blog post](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
 > - [Jenkins requires Java 11 or newer](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
 >

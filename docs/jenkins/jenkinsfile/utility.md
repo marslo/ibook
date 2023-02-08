@@ -148,7 +148,7 @@ def runAllStages( String basePath ) {
 return this
 ```
 
-#### Jenkinsfile
+#### jenkinsfile
 ```groovy
 node('master') {
   stage( 'download code' ) {
