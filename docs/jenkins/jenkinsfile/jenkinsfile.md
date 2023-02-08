@@ -19,10 +19,15 @@
 > reference:
 > - [Pipeline Examples](https://www.jenkins.io/doc/pipeline/examples/)
 > - [Jenkins Pipeline Syantx](https://kb.novaordis.com/index.php/Jenkins_Pipeline_Syntax)
+> - [Jenkins Pipeline Cookbook](https://e.printstacktrace.blog/jenkins-pipeline-cookbook/)
 > - [Pipeline Steps Reference](https://www.jenkins.io/doc/pipeline/steps/)
+>   - [org.jenkinsci.plugins.workflow.steps](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/package-summary.html)
 > - [Pipeline Utility Steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#pipeline-utility-steps)
 > - [Jenkins Pipeline Cookbook](https://e.printstacktrace.blog/jenkins-pipeline-cookbook/)
-> - [Class Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true)
+> - [Class Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
+>   - [Class TimeoutStepExecution](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.html)
+>   - [Class TimeoutStepExecution.ExceededTimeout](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.ExceededTimeout.html)
+>   - [TimeoutStepExecution.java](https://github.com/jenkinsci/workflow-basic-steps-plugin/blob/master/src/main/java/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.java)
 {% endhint %}
 
 ## jenkins API
@@ -189,6 +194,12 @@ currentBuild.description = 'this is whitebox'
 ```
 
 ## exception
+
+> [!TIP]
+> references:
+> - [Class Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
+> - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
+
 ### using [`hudson.AbortException`](https://javadoc.jenkins-ci.org/hudson/AbortException.html)
 ```groovy
 import hudson.AbortException
