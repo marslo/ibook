@@ -2,38 +2,43 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [String](#string)
-  - [convert](#convert)
-    - [`capitalize`](#capitalize)
-    - [uncapitalize](#uncapitalize)
-    - [`toLowerCase`](#tolowercase)
-    - [`toUpperCase`](#touppercase)
-  - [substring](#substring)
-    - [string indexing](#string-indexing)
-    - [`minus`](#minus)
-    - [`take`](#take)
-    - [`takeRight`](#takeright)
-    - [`takeAfter`](#takeafter)
-    - [`takeBefore`](#takebefore)
-    - [`takeBetween`](#takebetween)
-    - [`takeWhile`](#takewhile)
-    - [drop](#drop)
-    - [dropWhile](#dropwhile)
-    - [`tr`](#tr)
-    - [tricky](#tricky)
-  - [comparation](#comparation)
-    - [`equalsIgnoreCase`](#equalsignorecase)
-    - [`compareToIgnoreCase`](#comparetoignorecase)
-  - [repalce](#repalce)
-    - [`reverse`](#reverse)
-    - [`replaceAll`](#replaceall)
-    - [`replaceFirst`](#replacefirst)
-  - [strip](#strip)
-    - [`stripIndent()`](#stripindent)
-    - [`stripMargin()`](#stripmargin)
-  - [show](#show)
-    - [expand](#expand)
-    - [unexpand](#unexpand)
+- [convert](#convert)
+  - [`capitalize`](#capitalize)
+  - [uncapitalize](#uncapitalize)
+  - [`toLowerCase`](#tolowercase)
+  - [`toUpperCase`](#touppercase)
+- [substring](#substring)
+  - [string indexing](#string-indexing)
+  - [`minus`](#minus)
+  - [`take`](#take)
+  - [`takeRight`](#takeright)
+  - [`takeAfter`](#takeafter)
+  - [`takeBefore`](#takebefore)
+  - [`takeBetween`](#takebetween)
+  - [`takeWhile`](#takewhile)
+  - [drop](#drop)
+  - [dropWhile](#dropwhile)
+  - [`tr`](#tr)
+  - [tricky](#tricky)
+- [comparation](#comparation)
+  - [`equalsIgnoreCase`](#equalsignorecase)
+  - [`compareToIgnoreCase`](#comparetoignorecase)
+- [repalce](#repalce)
+  - [`reverse`](#reverse)
+  - [`replaceAll`](#replaceall)
+  - [`replaceFirst`](#replacefirst)
+- [trim](#trim)
+  - [`stripIndent()`](#stripindent)
+  - [`stripMargin()`](#stripmargin)
+- [show](#show)
+  - [expand](#expand)
+  - [unexpand](#unexpand)
+- [pad](#pad)
+  - [padRright](#padrright)
+  - [center](#center)
+- [size](#size)
+  - [count](#count)
+  - [size](#size-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -362,3 +367,19 @@ assert 11 == 'Hello world'.size()
 assert 11 == 'Hello world'.length()
 ```
 
+## random
+
+> [!TIP]
+> check also in [* imarslo : generate the random String](sugar.html#generate-the-random-string)
+>
+> references:
+> - [How to generate a random password in Groovy?](https://e.printstacktrace.blog/how-to-generate-random-password-in-groovy/)
+
+### shuffled
+```groovy
+('0'..'z').shuffled().take(10).join()
+```
+- for number and chars only
+  ```groovy
+  (('a'..'z')+('A'..'Z')+(0..9)).shuffled().take(10).join()
+  ```

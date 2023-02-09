@@ -353,6 +353,10 @@ groovy:000 > 'aaa'.getClass().getFields()
 ```
 
 ### generate the random String
+
+> [!NOTE]
+> check also in [* imarslo : random](string.html#random)
+
 ```groovy
 String alphabet = (('a'..'z') + ('A'..'Z') + ('0'..'9')).join()
 println new Random().with { (1..8).collect { alphabet[ nextInt( alphabet.length() ) ] }.join() }

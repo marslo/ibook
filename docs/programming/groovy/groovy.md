@@ -38,6 +38,7 @@
 >   - [groovy basics](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-basics.html#groovy-basics)
 >   - [groovy tips and techniques](https://docs.oracle.com/en/cloud/saas/applications-common/21d/cgsac/groovy-tips-and-techniques.html#groovy-tips-and-techniques)
 > - [* groovy cheatsheet](https://onecompiler.com/cheatsheets/groovy)
+> - [* Groovy Cookbook](https://e.printstacktrace.blog/groovy-cookbook/)
 > - [* varargs in Groovy](https://docs.groovy-lang.org/latest/html/documentation/#_varargs)
 > - [varargs : Variable Arguments (Varargs) in Java](https://www.geeksforgeeks.org/variable-arguments-varargs-in-java/)
 > - <kbd>[online compiler](https://onecompiler.com/groovy)</kbd>
