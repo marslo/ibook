@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [common](#common)
-  - [String](#string)
+  - [multiple assignment](#multiple-assignment)
   - [Boolean](#boolean)
   - [get the first item if exists or null if empty](#get-the-first-item-if-exists-or-null-if-empty)
   - [split and trim in string](#split-and-trim-in-string)
@@ -43,24 +43,43 @@
 
 ## common
 
-### String
+### multiple assignment
+
+> [!TIP]
+> references:
+> - [Groovy: split string and avoid getting IndexOutOfBoundsException](https://e.printstacktrace.blog/groovy-split-string-and-avoid-getting-index-out-of-bounds-exception/)
+
 ```groovy
-println " HEADER ".center(50, "-")
-println "Number".padRight(20)      + ": 20"
-println "Name".padRight(20)        + ": John Doe"
-println "Address".padRight(20)     + ": 34 Some Street, London"
-println "Subscriber".padRight(20)  + ": YES"
-println "Expired".padRight(20)     + ": NO"
+'''1;Joe Doe;joedoe@example.com
+2;Mark Doe
+3;Clark Doe;clarkdoe@example.com;2
+'''.eachLine{ line ->
+  def (id, name, email, sibling) = line.tokenize(';')
+  println """
+         id : ${id}
+       name : ${name}
+      email : ${email}
+    sibling : ${sibling}
+  """
+}
 ```
 
 - result
-  ```
-  --------------------- HEADER ---------------------
-  Number              : 20
-  Name                : John Doe
-  Address             : 34 Some Street, London
-  Subscriber          : YES
-  Expired             : NO
+  ```groovy
+           id : 1
+         name : Joe Doe
+        email : joedoe@example.com
+      sibling : null
+
+           id : 2
+         name : Mark Doe
+        email : null
+      sibling : null
+
+           id : 3
+         name : Clark Doe
+        email : clarkdoe@example.com
+      sibling : 2
   ```
 
 ### Boolean
