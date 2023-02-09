@@ -13,6 +13,8 @@
 - [multiply in list](#multiply-in-list)
 - [sum the content of 2 list in groovy](#sum-the-content-of-2-list-in-groovy)
 - [remove empty item in a list](#remove-empty-item-in-a-list)
+- [intersect & disjoint](#intersect--disjoint)
+- [orders](#orders)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -344,7 +346,6 @@ List b = [ '1', '2' ]
 // Result: [[a, 1], [b, 2]]
 ```
 
-
 ### remove empty item in a list
 
 {% hint style='tip' %}
@@ -376,3 +377,28 @@ groovy:000> [ [], [ 'a', 'b' ], [ '1' ] ].findAll()
   groovy:000> [ null, 'a', 'b' ].grep()
   ===> [a, b]
   ```
+
+### intersect & disjoint
+
+> [!NOTE]
+> references:
+> - [Groovy Goodness: Intersect Collections](https://blog.mrhaki.com/2010/03/groovy-goodness-intersect-collections.html)
+
+```groovy
+List l1 = [ 'a', 'b', 'c' ]
+List l2 = [ 'b', 'c', 'd' ]
+List l3 = [ '1', '2', 'd' ]
+
+assert [ 'b', 'c' ] == l1.intersect(l2)
+assert ! l1.disjoint(l2)
+assert l1.disjoint(l3)
+```
+
+### orders
+
+#### `sort`
+#### `swap`
+```groovy
+List l = [ '1', '2', '3' ]
+assert [ '3', '1', '2' ] == l.swap(2, 1).swap(1, 0)
+```

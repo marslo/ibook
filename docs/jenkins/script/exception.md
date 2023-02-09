@@ -49,6 +49,7 @@ e.message          // java.io.IOException: Unexpected termination of the channel
 {% hint style='tip' %}
 > references:
 > - Class org.jenkinsci.plugins.workflow.support.steps.AgentOfflineException
+> - [How to retry a Jenkins Pipeline stage with an agent condition](https://stackoverflow.com/a/73632214/2940319)
 {% endhint %}
 
 #### after fully initialized
