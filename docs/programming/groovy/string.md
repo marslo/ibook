@@ -4,20 +4,14 @@
 
 - [convert](#convert)
   - [`capitalize`](#capitalize)
-  - [uncapitalize](#uncapitalize)
+  - [`uncapitalize`](#uncapitalize)
   - [`toLowerCase`](#tolowercase)
   - [`toUpperCase`](#touppercase)
 - [substring](#substring)
   - [string indexing](#string-indexing)
   - [`minus`](#minus)
   - [`take`](#take)
-  - [`takeRight`](#takeright)
-  - [`takeAfter`](#takeafter)
-  - [`takeBefore`](#takebefore)
-  - [`takeBetween`](#takebetween)
-  - [`takeWhile`](#takewhile)
-  - [drop](#drop)
-  - [dropWhile](#dropwhile)
+  - [`drop`](#drop)
   - [`tr`](#tr)
   - [tricky](#tricky)
 - [comparation](#comparation)
@@ -30,15 +24,16 @@
 - [trim](#trim)
   - [`stripIndent()`](#stripindent)
   - [`stripMargin()`](#stripmargin)
-- [show](#show)
-  - [expand](#expand)
-  - [unexpand](#unexpand)
-- [pad](#pad)
-  - [padRright](#padrright)
-  - [center](#center)
+- [output format](#output-format)
+  - [`expand`](#expand)
+  - [`unexpand`](#unexpand)
+  - [`padRright`](#padrright)
+  - [`center`](#center)
 - [size](#size)
-  - [count](#count)
-  - [size](#size-1)
+  - [`count`](#count)
+  - [`size`](#size)
+- [random](#random)
+  - [`shuffled`](#shuffled)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -64,7 +59,7 @@
 assert 'Groovy' == 'groovy'.capitalize()
 ```
 
-### uncapitalize
+### `uncapitalize`
 ```groovy
 assert 'groovy'      == 'Groovy'.uncapitalize()
 assert 'hello World' == 'Hello World'.uncapitalize()
@@ -107,7 +102,7 @@ assert 'Gr'  == 'Groovy'.take(2)
 assert 'Gro' == 'Groovy'.take(3)
 ```
 
-### `takeRight`
+#### `takeRight`
 
 > [!TIP]
 > returns the last num elements from this CharSequence.
@@ -118,20 +113,19 @@ assert 'y'   == 'Groovy'.takeRight( 1 )
 assert 'ovy' == 'Groovy'.takeRight( 3 )
 ```
 
-
-### `takeAfter`
+#### `takeAfter`
 ```groovy
 assert ' development. Groovy team' == 'Groovy development. Groovy team'.takeAfter( 'Groovy' )
 assert 'team'                      == 'Groovy development. Groovy team'.takeAfter( ' Groovy ' )
 ```
 
-### `takeBefore`
+#### `takeBefore`
 ```groovy
 assert 'Groovy '            == 'Groovy development. Groovy team'.takeBefore( 'development' )
 assert 'Groovy development' == 'Groovy development. Groovy team'.takeBefore( '. Groovy ' )
 ```
 
-### `takeBetween`
+#### `takeBetween`
 ```groovy
 assert ' development. ' == 'Groovy development. Groovy team'.takeBetween( 'Groovy' )
 assert 'marslo'         == 'name = "marslo"'.takeBetween( '"' )
@@ -141,7 +135,7 @@ assert '10'  == "t1='10' ms, t2='100' ms".takeBetween( "'", 0 )
 assert '100' == "t1='10' ms, t2='100' ms".takeBetween( "'", 1 )
 ```
 
-### `takeWhile`
+#### `takeWhile`
 
 > [!TIP]
 > returns the longest prefix of this CharSequence where each element passed to the given closure evaluates to true.
@@ -152,13 +146,13 @@ assert 'G'  == 'Groovy'.takeWhile{ it < 'a'  }
 assert 'Gr' == 'Groovy'.takeWhile{ it != 'o' }
 ```
 
-### drop
+### `drop`
 ```groovy
 assert 'ovY' == 'GroovY'.drop(3)
 assert ''    == 'GroovY'.drop(10)
 ```
 
-### dropWhile
+#### `dropWhile`
 
 > [!TIP]
 > create **a suffix** of the given CharSequence by dropping as many characters as possible from the front of the original CharSequence such that calling the given closure condition evaluates to true when passed each of the dropped characters.
@@ -241,7 +235,6 @@ assert 'FOO-FOO-' == 'foobar-FooBar-'.replaceAll("(([fF][oO]{2})[bB]ar)", { x, y
 //   z is the second string in the matched group
 ```
 
-
 ### `replaceFirst`
 
 > [!TIP]
@@ -302,21 +295,20 @@ try{
   ```
 
 
-## show
-### expand
+## output format
+### `expand`
 ```groovy
 assert 'Groovy  Grails  Griffon'     == 'Groovy\tGrails\tGriffon'.expand()
 assert 'Groovy    Grails    Griffon' == 'Groovy\tGrails\tGriffon'.expand(10)
 ```
 
-### unexpand
+### `unexpand`
 ```groovy
 assert 'Groovy\tGrails\tGriffon' == 'Groovy  Grails  Griffon'.unexpand()
 assert 'Groovy\tGrails\tGriffon' == 'Groovy    Grails    Griffon'.unexpand(10)
 ```
 
-## pad
-### padRright
+### `padRright`
 ```groovy
 println 'world******'.padRight(15) + 'hello'
 println 'world'.padRight(15) + 'hello'
@@ -336,7 +328,7 @@ println 'world'.padRight(15) + 'hello'
   // world..........hello
   ```
 
-### center
+### `center`
 ```groovy
 println " HEADER ".center(50, "-")
 println "Number:".padRight(20)      + "20"
@@ -355,13 +347,13 @@ println "Expired:".padRight(20)     + "NO"
 ```
 
 ## size
-### count
+### `count`
 ```groovy
 assert 2 == 'Hello world'.count('o')
 assert 2 == 'Hello worlld'.count('ll')
 ```
 
-### size
+### `size`
 ```groovy
 assert 11 == 'Hello world'.size()
 assert 11 == 'Hello world'.length()
@@ -374,8 +366,11 @@ assert 11 == 'Hello world'.length()
 >
 > references:
 > - [How to generate a random password in Groovy?](https://e.printstacktrace.blog/how-to-generate-random-password-in-groovy/)
+>
+> NOTE:
+> - `shuffled()` supports for Groovy 3+
 
-### shuffled
+### `shuffled`
 ```groovy
 ('0'..'z').shuffled().take(10).join()
 ```
