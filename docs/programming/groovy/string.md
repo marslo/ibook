@@ -38,8 +38,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-# String
-
 {% hint style='tip' %}
 > references:
 > - java.lang.Object:
@@ -51,6 +49,8 @@
 >   - [StringGroovyMethods](http://docs.groovy-lang.org/2.4.7/html/gapi/org/codehaus/groovy/runtime/StringGroovyMethods.html)
 > - [Strip indent in Groovy multiline strings](https://stackoverflow.com/a/56188273/2940319)
 > - [Is there an operator that can trim indentation in multi-line string?](https://stackoverflow.com/a/22280879/2940319)
+> - [Class StringGroovyMethods](http://docs.groovy-lang.org/docs/groovy-2.4.1/html/gapi/org/codehaus/groovy/runtime/StringGroovyMethods.html)
+> - [Three Groovy String methods that will make your life Groovier!](https://e.printstacktrace.blog/groovy-string-methods-that-will-make-your-life-groovier/)
 {% endhint %}
 
 ## convert
@@ -85,9 +85,15 @@ assert '67'  == '1234567'[-2..-1]
 
 ### `minus`
 ```groovy
-assert 'Hello ' == "Hello World".minus( 'World' )
-assert ' World' == "Hello World".minus( 'Hello' )
+assert 'Hello ' == 'Hello World'.minus( 'World' )
+assert ' World' == 'Hello World'.minus( 'Hello' )
 ```
+
+- or
+  ```groovy
+  assert 'Hello ' == 'Hello World' - 'World'
+  assert ' World' == 'Hello World' - 'Hello'
+  ```
 
 ### `take`
 ```groovy
@@ -245,8 +251,7 @@ assert '1-FISH, two fish' == 'one fish, two fish'.replaceFirst(/([a-z]{3})\s([a-
 assert '1-FISH, 2-FISH'   == 'one fish, two fish'.replaceAll(/([a-z]{3})\s([a-z]{4})/)   { [one:1, two:2][it[1]] + '-' + it[2].toUpperCase() }
 ```
 
-
-## strip
+## trim
 ### `stripIndent()`
 ```groovy
 """
@@ -304,3 +309,56 @@ assert 'Groovy    Grails    Griffon' == 'Groovy\tGrails\tGriffon'.expand(10)
 assert 'Groovy\tGrails\tGriffon' == 'Groovy  Grails  Griffon'.unexpand()
 assert 'Groovy\tGrails\tGriffon' == 'Groovy    Grails    Griffon'.unexpand(10)
 ```
+
+## pad
+### padRright
+```groovy
+println 'world******'.padRight(15) + 'hello'
+println 'world'.padRight(15) + 'hello'
+
+// result
+// world******    hello
+// world          hello
+```
+
+- or
+  ```groovy
+  println 'world******'.padRight(15, '.') + 'hello'
+  println 'world'.padRight(15, '.') + 'hello'
+
+  // result
+  // world******....hello
+  // world..........hello
+  ```
+
+### center
+```groovy
+println " HEADER ".center(50, "-")
+println "Number:".padRight(20)      + "20"
+println "Name:".padRight(20)        + "John Doe"
+println "Address:".padRight(20)     + "34 Some Street, London"
+println "Subscriber:".padRight(20)  + "YES"
+println "Expired:".padRight(20)     + "NO"
+
+// result
+// --------------------- HEADER ---------------------
+// Number:             20
+// Name:               John Doe
+// Address:            34 Some Street, London
+// Subscriber:         YES
+// Expired:            NO
+```
+
+## size
+### count
+```groovy
+assert 2 == 'Hello world'.count('o')
+assert 2 == 'Hello worlld'.count('ll')
+```
+
+### size
+```groovy
+assert 11 == 'Hello world'.size()
+assert 11 == 'Hello world'.length()
+```
+
