@@ -44,7 +44,7 @@
     * [gerrit](devops/git/gerrit.md)
     * [q&a](devops/git/q&a.md)
     * [tricky](devops/git/tricky.md)
-    * [statistics](devops/git/contribution.md)
+    * [statistics](devops/git/statistics.md)
   * [android](devops/android.md)
   * [commonTools](devops/commonTools.md)
   * [compilation](devops/compilation.md)
