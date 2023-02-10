@@ -3,9 +3,10 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [utils](#utils)
-  - [shell paramters](#shell-paramters)
-    - [pass self parameters to another script](#pass-self-parameters-to-another-script)
-    - [getopts with long option](#getopts-with-long-option)
+  - [padRight](#padright)
+    - [theory](#theory)
+    - [padRight](#padright-1)
+    - [example](#example)
   - [Network](#network)
     - [Get Interface by command](#get-interface-by-command)
     - [get ipv4 address](#get-ipv4-address)
@@ -20,148 +21,117 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # utils
-## shell paramters
-### pass self parameters to another script
-> - objective:
->   `$ ./b.sh 1 2 3 4 5` -> `$ ./a.sh 2 3 4 5`
+## padRight
 
-- b.sh
+> [!NOTE]
+> references:
+> - [Padding characters in printf](https://stackoverflow.com/questions/4409399/padding-characters-in-printf)
+
+### theory
+- `printf`
   ```bash
-  #!/bin/bash
-  echo """
-  b.sh:
-    \$1: "$1"
-    \$#: "$#"
-    \$@: "$@"
-    \${@: -1}: ${@: -1}
-    \${@: -2}: ${@: -2}
-    \${@: -3}: ${@: -2}
-    \${@: -\$(( \$#-1 ))}: ${@: -$(( $#-1 ))}
-    \$(echo '\${@: -\$(( \$#-1 ))}' | cut -d' ' -f1-) : $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)
-  """
-  echo -e "\n'~~> ./a.sh \"\${@: -1}\"': ~~~> ./a.sh ${@: -1}:"
-  ./a.sh "${@: -1}"
+  $ printf "%-50s%s\n" '123456'  '[STATUS]'
+  123456                                            [STATUS]
+  $ printf "%-50s%s\n" '1234567890'  '[STATUS]'
+  1234567890                                        [STATUS]
 
-  echo -e "\n'~~> ./a.sh \$(echo '\${@: -1}' | cut -d' ' -f1-)': ~~~> ./a.sh $(echo "${@: -1}" | cut -d' ' -f1-):"
-  ./a.sh $(echo "${@: -1}" | cut -d' ' -f1-)
-
-  echo -e "\n'~~> ./a.sh \"\${@: -4}\"': ~~~> ./a.sh ${@: -4}:"
-  ./a.sh "${@: -4}"
-
-  echo -e "\n'~~> ./a.sh \$(echo '\${@: -\$(( \$#-1 ))}' | cut -d' ' -f1-)': ~~~> ./a.sh $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)"
-  ./a.sh $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)
+  $ printf "%-50s%s\n" '123456~'  '~[STATUS]' | tr ' ~' '. '
+  123456 ........................................... [STATUS]
+  $ printf "%-50s%s\n" '1234567980~'  '~[STATUS]' | tr ' ~' '. '
+  1234567980 ....................................... [STATUS]
   ```
 
-- a.sh
+- [`${var:length}`](https://stackoverflow.com/a/4411098/2940319)
   ```bash
-  echo """
-  a.sh:
-    \$1: "$1"
-    \$#: "$#"
-    \$@: "$@"
-    \${@: -$(( $#-2 ))}: ${@: -$(( $#-2 ))}
-  """
+  $ str1='123456'
+  $ str2='1234567890'
+  $ line=$(printf '%0.1s' "."{1..40})
+  # or
+  $ line='----------------------------------------'
+
+  # check length via ${#<var>}
+  $ echo ${#str1}           # 6  ( length )
+  $ echo ${#str2}           # 10 ( length )
+  $ echo ${#line}           # 40 ( length )
+
+  # echo line with line-length - string-length via ${var:length}
+  $ echo ${line}            # ----------------------------------------
+  $ echo ${line:6}          # ----------------------------------
+
+  $ echo -e "${str1} [up] \n${str2} [down]" |
+    while read str status; do
+      printf "%s %s %s\n" "${str}" "${line:${#str}}" "${status}";
+    done
+  123456 ---------------------------------- [up]
+  1234567890 ------------------------------ [down]
   ```
 
-- result
-  ```bash
-  $ ./b.sh 1 2 3 4 5
+### padRight
 
-  b.sh:
-    $1: 1
-    $#: 5
-    $@: 1 2 3 4 5
-    ${@: -1}: 5
-    ${@: -2}: 4 5
-    ${@: -3}: 4 5
-    ${@: -$(( $#-1 ))}: 2 3 4 5
-    $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-) : 2 3 4 5
+> [!NOTE]
+> references:
+> - [ascii](http://defindit.com/ascii.html)
+>
+> |  ascii | character |
+> |:------:|:---------:|
+> | `\x2b` |    `+`    |
+> | `\x2c` |    `,`    |
+> | `\x2d` |    `-`    |
+> | `\x2e` |    `.`    |
+> | `\x3d` |    `=`    |
+> | `\x5e` |    `^`    |
+> | `\x5f` |    `_`    |
 
-  '~~> ./a.sh "${@: -1}"': ~~~> ./a.sh e:
-  a.sh:
-    $1: 5
-    $#: 1
-    $@: 5
-    ${@: --1}: 5
 
-  '~~> ./a.sh $(echo '${@: -1}' | cut -d' ' -f1-)': ~~~> ./a.sh 5:
-  a.sh:
-    $1: 5
-    $#: 1
-    $@: 5
-    ${@: --1}: 5
-
-  '~~> ./a.sh "${@: -4}"': ~~~> ./a.sh 2 3 4 5:
-  a.sh:
-    $1: b
-    $#: 4
-    $@: 2 3 4 5
-    ${@: -2}: 4 5
-
-  '~~> ./a.sh $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-)': ~~~> ./a.sh 2 3 4 5
-  a.sh:
-    $1: 2
-    $#: 4
-    $@: 2 3 4 5
-    ${@: -2}: 4 5
-  ```
-
-### getopts with long option
 ```bash
-#!/bin/bash
-# shellcheck disable=SC1079,SC1078
+function padRight() {
+  IFS=':' read -r param value length
+  padlength=${length:-40}
+  pad=$(printf '\x2e%.0s' $(seq "${padlength}"))
+  printf "%s %s %s\n" "${param}" "${pad:${#param}}" "${value}"
+}
 
-usage="""USAGE
-\t$0\t[-h|--help] [-c|--clean] [-t|--tag <tag>] [-i|--image <image>]
-\t\t\t[-v|--ver <new-version>] [-n|--name <name>]
-\t\t\t[-p|--prop <key=value>]
-"""
+echo '1234 : abc'              | padRight
+echo '1234567890 : efg'        | padRight
+echo '1234567890 : [bar] : 30' | padRight
+echo '123 : [foo] : 30'        | padRight
 
-while test -n "$1"; do
-    case "$1" in
-      -c | --clean ) clean=true ; shift   ;;
-      -t | --tag   ) tag=$2     ; shift 2 ;;
-      -i | --image ) image=$2   ; shift 2 ;;
-      -v | --ver   ) ver=$2     ; shift 2 ;;
-      -n | --name  ) name=$2    ; shift 2 ;;
-      -p | --prop  ) prop=$2    ; shift 2 ;;
-      -h | --help | * ) echo -e "${usage}"; exit 0 ;;
-    esac
-done
-
-echo """
-  clean : ${clean}
-    tag : ${tag}
-  image : ${image}
-    ver : ${ver}
-   name : ${name}
-   prop : ${prop}
-"""
+# result :
+# 1234  ...................................  abc
+# 1234567890  .............................  efg
+# 1234567890  ...................  [bar]
+# 123  ..........................  [foo]
 ```
-- result
+
+### example
+```bash
+pad=$(printf '%0.1s' "-"{1..60})
+padlength=40
+string2='bbbbbbb'
+for string1 in a aa aaaa aaaaaaaa; do
+  printf '%s' "$string1"
+  printf '%*.*s' 0 $((padlength - ${#string1} - ${#string2} )) "$pad"
+  printf '%s\n' "$string2"
+  string2=${string2:1}
+done
+```
+
+- or
   ```bash
-  $ ./longopts.sh -h
-  USAGE
-    ./longopts.sh [-h|--help] [-c|--clean] [-t|--tag <tag>] [-i|--image <image>]
-                  [-v|--ver <new-version>] [-n|--name <name>]
-                  [-p|--prop <key=value>]
+  while read PROC_NAME STATUS; do
+    printf "%-50s%s\n" "$PROC_NAME~" "~[$STATUS]" | tr ' ~' '- '
+  done << EOT
+  JBoss DOWN
+  GlassFish UP
+  VeryLongProcessName UP
+  EOT
 
-  $ ./longopts.sh -c
-    clean : true
-      tag :
-    image :
-      ver :
-     name :
-     prop :
-
-  $ ./longopts.sh -c -t 'ttt' -i 'iii' --ver '1.1.1' --name 'name'
-    clean : true
-      tag : ttt
-    image : iii
-      ver : 1.1.1
-     name : name
-     prop :
+  # result
+  # JBoss -------------------------------------------- [DOWN]
+  # GlassFish ---------------------------------------- [UP]
+  # VeryLongProcessName ------------------------------ [UP]
   ```
+
 
 ## Network
 ### Get Interface by command
