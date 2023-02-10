@@ -4,6 +4,7 @@
 
 - [pass self parameters to another script](#pass-self-parameters-to-another-script)
 - [getopts with long option](#getopts-with-long-option)
+  - [additional params on `--`](#additional-params-on---)
 - [shift](#shift)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -98,7 +99,7 @@
 
 ## getopts with long option
 ```bash
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC1079,SC1078
 
 usage="""USAGE
@@ -153,7 +154,58 @@ echo """
      prop :
   ```
 
+### additional params on `--`
+```bash
+#!/usr/bin/env bash
+# shellcheck disable=SC2051,SC2086
+
+VERBOSE=false
+DEBUG=false
+MEMORY=
+AOPT=
+while true; do
+  case "$1" in
+    -v | --verbose ) VERBOSE=true ; shift   ;;
+    -d | --debug   ) DEBUG=true   ; shift   ;;
+    -m | --memory  ) MEMORY="$2"  ; shift 2 ;;
+    --             ) shift        ; AOPT=$@  ;  break ;;
+    *              ) break                  ;;
+  esac
+done
+
+echo """
+  VERBOSE       : ${VERBOSE}
+  DEBUG         : ${DEBUG}
+  MEMORY        : ${MEMORY}
+  AOPT          : ${AOPT}
+"""
+
+# example
+$ ./param.sh -v -m '256Gi' -- --author 'marslo'
+  VERBOSE       : true
+  DEBUG         : false
+  MEMORY        : 256Gi
+  AOPT          : --author marslo
+
+$ ./param.sh -v -- -m '256Gi' --author 'marslo'
+  VERBOSE       : true
+  DEBUG         : false
+  MEMORY        :
+  AOPT          : -m 256Gi --author marslo
+```
+
 
 ## shift
-  :xa
+```bash
+until [ -z "$1" ]; do # Until all parameters used up
+  echo "\$@  : $@ "; shift ;
+done
 
+# result
+$ ./shift.sh 1 2 3 4 5
+$@  : 1 2 3 4 5
+$@  : 2 3 4 5
+$@  : 3 4 5
+$@  : 4 5
+$@  : 5
+```
