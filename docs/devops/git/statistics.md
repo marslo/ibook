@@ -11,10 +11,10 @@
   - [total changes](#total-changes)
   - [user changes](#user-changes)
 - [tools](#tools)
+  - [git-stat](#git-stat)
   - [git-stats](#git-stats)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 
 {% hint style='tip' %}
@@ -137,6 +137,15 @@ $ git log "${GIT_OPT}" --author='marslo' --numstat  --pretty=tformat: |
 
 
 ## tools
+### git-stat
+
+> [!NOTE]
+> - download from [github.com/marslo/mytools](https://github.com/marslo/mytools/blob/master/itool/git-stat)
+> - usage:
+>   ![git stat --help](../../screenshot/git/git-stat-help.png)
+> - example:
+>   ![git stat --help](../../screenshot/git/git-stat-result.png)
+
 ### git-stats
 ```bash
 $ export NODE_TLS_REJECT_UNAUTHORIZED=0
