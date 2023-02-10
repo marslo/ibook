@@ -127,6 +127,7 @@
   * [util](linux/util/util.md)
     * [time & date](linux/util/date.md)
     * [files & chars](linux/util/files&chars.md)
+    * [params](linux/util/params.md)
     * [tricky](linux/util/tricky.md)
   * [disk](linux/disk.md)
   * [network](linux/network.md)
@@ -180,3 +181,4 @@
     * [skype](tools/app/skype.md)
     * [teamviewer](tools/app/teamviewer.md)
     * [others](tools/app/others.md)
+* [english](english/symbols.md)
