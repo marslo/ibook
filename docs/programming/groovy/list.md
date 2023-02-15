@@ -29,6 +29,7 @@
   - [2D matrix conversions](#2d-matrix-conversions)
 - [show](#show)
   - [print 2D matrix](#print-2d-matrix)
+  - [`indexed`](#indexed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

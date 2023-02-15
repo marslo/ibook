@@ -12,14 +12,6 @@
   - [Get STDERR & STDERR](#get-stderr--stderr)
   - [Show output during the process](#show-output-during-the-process)
   - [with environment](#with-environment)
-- [Closures](#closures)
-  - [Closure VS. Method](#closure-vs-method)
-  - [break from closure](#break-from-closure)
-  - [curry](#curry)
-  - [Memoization](#memoization)
-  - [composition](#composition)
-  - [Methods](#methods)
-  - [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
