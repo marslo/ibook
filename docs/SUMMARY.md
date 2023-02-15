@@ -144,6 +144,7 @@
     * [map](programming/groovy/map.md)
     * [list](programming/groovy/list.md)
     * [string](programming/groovy/string.md)
+    * [closure](programming/groovy/closure.md)
     * [enum](programming/groovy/enum.md)
     * [time](programming/groovy/time.md)
     * [utility](programming/groovy/utility.md)

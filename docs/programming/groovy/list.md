@@ -482,3 +482,27 @@ after
   if ( 4 == (idx+1)%6 ) { println '' }
 }
 ```
+
+### `indexed`
+
+> [!NOTE]
+> references:
+> - [Groovy Goodness: Combine Elements Iterable with Index](https://blog.mrhaki.com/2015/03/groovy-goodness-combine-elements.html)
+>
+> summarize:
+> - `list.withIndex()` : `List<List<Object, int>>`
+> - `list.indexed()` : `Map<int, Object>`
+
+```groovy
+[ 'a', 'b', 'c', 'd' ].indexed()
+// [0:'a', 1:'b', 2:'c', 3:'d']
+
+[ 'a', 'b', 'c', 'd' ].indexed(1)
+// [1:'a', 2:'b', 3:'c', 4:'d']
+
+[3, 20, 10, 2, 1].withIndex()
+// [[3, 0], [20, 1], [10, 2], [2, 3], [1, 4]]
+
+('a'..'d').withIndex(1)
+// [['a', 1], ['b', 2], ['c', 3], ['d', 4]]
+```
