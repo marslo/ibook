@@ -10,6 +10,7 @@ git command study and practice
   - [specifying ranges](#specifying-ranges)
 - [commit](#commit)
   - [get commit id](#get-commit-id)
+  - [get abbrev commit ids](#get-abbrev-commit-ids)
   - [get previous commit id](#get-previous-commit-id)
   - [get next commit id](#get-next-commit-id)
 - [branch](#branch)
@@ -134,6 +135,31 @@ rlog    = "!bash -c 'while read branch; do \n\
 
 ```bash
 $ git rev-parse <value>^{commit}
+```
+
+### get abbrev commit ids
+
+> [!NOTE]
+> references:
+> - [`--abbrev-commit`](https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---abbrev-commit)
+>
+> format:
+> - `%H` : commit hash
+> - `%h` : abbreviated commit hash
+
+```bash
+$ git rev-list HEAD -n 3 --abbrev=11 --abbrev-commit
+446c656814d
+e747154df34
+22d0ee9b131
+
+# or via `git log`
+$ git log -n 3 --format='%h' --abbrev=11
+# or
+$ git log -3 --format='%h' --abbrev=11
+446c656814
+e747154df3
+22d0ee9b13
 ```
 
 ### get previous commit id

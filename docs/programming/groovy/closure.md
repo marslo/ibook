@@ -1,3 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Closure VS. Method](#closure-vs-method)
+- [break from closure](#break-from-closure)
+- [curry](#curry)
+- [Memoization](#memoization)
+- [composition](#composition)
+- [Methods](#methods)
+- [delegate](#delegate)
+- [tricky](#tricky)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 
 
