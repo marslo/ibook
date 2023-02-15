@@ -566,6 +566,31 @@ $ MANWIDTH=80 MANPAGER='col -bx' git help rev-parse |
               open -f -a Preview.app
 ```
 
+### [disk size](https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt)
+```bash
+# reachable objects
+$ git rev-list --disk-usage --objects --all
+
+# plus reflogs
+$ git rev-list --disk-usage --objects --all --reflog
+
+# total disk size used
+$ du -c .git/objects/pack/*.pack .git/objects/??/*
+# alternative to du: add up "size" and "size-pack" fields
+$ git count-objects -v
+
+# report the disk size of each branch
+$ git for-each-ref --format='%(refname)' |
+  while read branch; do
+    size=$(git rev-list --disk-usage --objects HEAD..$branch)
+    echo "$size $branch"
+  done |
+  sort -n
+
+# compare the on-disk size of branches in one group of refs, excluding another
+$ git rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
+```
+
 ## [debug](https://www.shellhacks.com/git-verbose-mode-debug-fatal-errors/)
 ### Git Debug Options
 | Option                       | Description                                                                                                                   |
