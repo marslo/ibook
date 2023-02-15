@@ -139,6 +139,16 @@ $ git rev-parse <value>^{commit}
 $ git rev-list --no-walk <commit-id>^
 ```
 
+### get next commit id
+
+> [!NOTE]
+> references:
+> - [xueliu/version-up.sh](https://gist.github.com/xueliu/e8dfacf22a4be0f7be58a27f094cadbe)
+
+```bash
+$ git rev-list --no-walk <commmit-id>..HEAD | tail -1
+```
+
 ## branch
 ### [get current branch](https://stackoverflow.com/a/19585361/2940319)
 ```bash
@@ -931,14 +941,30 @@ $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/
   ```
 
 ## tag
+
 > reference :
-> - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
+> - [git like a pro: sort git tags by date](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
+> - [How do you achieve a numeric versioning scheme with Git?](https://softwareengineering.stackexchange.com/a/141986/56124)
+
+### discribe
+```bash
+$ git describe --tags --long <revision>
+
+# v2.5-0-gdeadbee
+# ^    ^ ^^
+# |    | ||
+# |    | |'-- SHA of HEAD (first seven chars)
+# |    | '--- "g" is for git
+# |    '----- distance : number of commits since last tag
+# |
+# '---------- last tag name
+```
 
 ### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
 ```bash
 $ git describe HEAD --tags
 ```
-or
+- or
   ```bash
   $ git describe HEAD --all --long
   ```
