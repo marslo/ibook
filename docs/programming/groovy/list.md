@@ -18,6 +18,7 @@
   - [multiply in multiple lists](#multiply-in-multiple-lists)
 - [orders](#orders)
   - [`sort`](#sort)
+  - [sort with descending order](#sort-with-descending-order)
   - [`swap`](#swap)
 - [conversion or restruction](#conversion-or-restruction)
   - [`toSpreadMap` to Map](#tospreadmap-to-map)
@@ -32,6 +33,11 @@
   - [`indexed`](#indexed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='tip' %}
+> references:
+> - [Groovy List Processing Cheat Sheet](https://blogs.apache.org/groovy/entry/groovy-list-processing-cheat-sheet)
+{% endhint %}
 
 ## init
 ```groovy
@@ -288,6 +294,34 @@ def listsMultiply( List... lists ) {
 ```groovy
 [ '3', '1', '2' ].sort()
 // [ '1', '2', '3' ]
+```
+
+### sort with descending order
+
+> [!NOTE]
+> references:
+> - [sorting map values in descending order with groovy](https://stackoverflow.com/a/25676601/2940319)
+
+```groovy
+[ 'a', 'b', 'c' ].reverse().indexed(1).sort{ - it.key }.collect{ "${it.key} : ${it.value}" }.join('\n')
+// 3 : a
+// 2 : b
+// 1 : c
+
+# or via comapreTo ( <=> )
+[ 'a', 'b', 'c' ].reverse().indexed(1).sort{ a, b -> b.key.compareTo(a.key) }.collect{ "${it.key} : ${it.value}" }.join('\n')
+// 3 : a
+// 2 : b
+// 1 : c
+
+# or via getAt( -1..0 )
+[ 'a', 'b', 'c' ].reverse().indexed(1).collect{ "${it.key} : ${it.value}" }.getAt( -1..0 ).join('\n')
+// 3 : a
+// 2 : b
+// 1 : c
+
+# or via reverseEach
+[ 'a', 'b', 'c' ].reverseEach{ println it }
 ```
 
 ### `swap`
