@@ -22,6 +22,7 @@
 - [others](#others)
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
+  - [disk size](#disk-size)
 - [debug](#debug)
   - [Git Debug Options](#git-debug-options)
   - [Linux](#linux)

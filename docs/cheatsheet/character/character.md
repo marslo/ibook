@@ -4,13 +4,18 @@
 
 - [encryption](#encryption)
   - [`base64`](#base64)
-- [single line VS. multiple lines](#single-line-vs-multiple-lines)
-  - [execute commands from file](#execute-commands-from-file)
-- [get line after the pattern](#get-line-after-the-pattern)
-- [get certain Line between 2 matched patterns](#get-certain-line-between-2-matched-patterns)
+- [conversion](#conversion)
+  - [single line to multiple lines](#single-line-to-multiple-lines)
+- [show](#show)
+  - [align](#align)
+- [combinations](#combinations)
+  - [combine every 2 lines](#combine-every-2-lines)
+  - [combine every 3 lines](#combine-every-3-lines)
+- [get next line by the pattern](#get-next-line-by-the-pattern)
+- [get lines in 2 patterns](#get-lines-in-2-patterns)
   - [awk](#awk)
   - [sed](#sed)
-  - [working with empty line](#working-with-empty-line)
+  - [with empty line](#with-empty-line)
   - [get first matching pattern](#get-first-matching-pattern)
   - [get second matching pattern](#get-second-matching-pattern)
 - [`xargs`](#xargs)
@@ -55,8 +60,9 @@ bWFyc2xvCg==
   $ echo "bWFyc2xvCg==" | base64 --decode
   marslo
   ```
+## conversion
 
-## single line VS. multiple lines
+### single line to multiple lines
 
 > [!TIP]
 > ```bash
@@ -98,7 +104,7 @@ bWFyc2xvCg==
 
 - [`awk`](https://unix.stackexchange.com/a/169996/29178)
   ```bash
-  $ echo 'a b c' | awk '{OFS=RS;$1=$1}1'
+  $ echo 'a b c' | awk '{ OFS=RS; $1=$1 }1'
   a
   b
   c
@@ -120,7 +126,7 @@ bWFyc2xvCg==
   c
   ```
 
-### execute commands from file
+#### execute commands from file
 - [create files](https://linuxize.com/post/linux-xargs-command/)
 
   > [!TIP]
@@ -154,8 +160,141 @@ bWFyc2xvCg==
   >           line character.  Implies -x and -L 1.
   > ```
 
+## show
+### align
+```bash
+# right-align
+$ printf  _"%10s"_ "foobar"
+_    foobar_
 
-## get line after the pattern
+# left-align
+$ printf  _"%-10s"_ "foobar"
+_foobar    _
+```
+
+## combinations
+
+### combine every 2 lines
+
+> [!NOTE]
+> references:
+> - [How to merge every two lines into one from the command line?](https://stackoverflow.com/q/9605232/2940319)
+> - [Automatic documentation of gitconfig aliases using sed or awk](https://stackoverflow.com/a/53841117/2940319)
+>
+> sample output
+> ```bash
+> $ echo -e "1\na\n2\nb\n3\nc
+> 1
+> a
+> 2
+> b
+> 3
+> c
+> ```
+>
+> also using for sed output :
+> ```bash
+> $ git --no-pager log -3 --no-color | sed -nr 's!^commit\s*(.+)$!\1!p; s!^\s*Change-Id:\s*(.*$)!\1!p'
+> d9a9adfb591bb129d6b1af9532fea0fcf069b176
+> I5d99e9ccd4edbba608e7da70e575fd6bd091ce42
+> 7aed870eeb203336e5e29b03714905f28ec3e60d
+> Ie3b4d5fd09a43385a44282a2e6961e220ae6293a
+> 09a652f7c78f416da7a561451ed274f930c27dec
+> I244d2fec5d25e453fd30d08d1c75c16143b7f7a3
+> ```
+
+- xargs
+  ```bash
+  $ echo -e "1\na\n2\nb\n3\nc" | xargs -n2 -d'\n'
+  1 a
+  2 b
+  3 c
+  ```
+
+- paste
+  ```bash
+  $ echo -e "1\na\n2\nb\n3\nc" | paste -s -d',\n'
+  1,a
+  2,b
+  3,c
+
+  $ echo -e "1\na\n2\nb\n3\nc" | paste -d " "  - -
+  1 a
+  2 b
+  3 c
+  ```
+
+- sed
+  ```bash
+  $ echo -e "1\na\n2\nb\n3\nc" | sed 'N;s/\n/ : /'
+  1 : a
+  2 : b
+  3 : c
+  ```
+
+- awk
+  ```bash
+  $ echo -e "1\na\n2\nb\n3\nc" | awk '{ key=$0; getline; print key " : " $0; }'
+  1 : a
+  2 : b
+  3 : c
+
+  # or
+  $ echo -e "1\na\n2\nb\n3\nc" | awk 'ORS=NR%2?FS:RS'
+  1 a
+  2 b
+  3 c
+
+  # or
+  $ echo -e "1\na\n2\nb\n3\nc" | awk 'NR%2{ printf "%s : ",$0;next; }1'
+  1 : a
+  2 : b
+  3 : c
+
+  # or
+  $ echo -e "1\na\n2\nb\n3\nc" | awk '{
+                                        if ( NR%2 != 0 ) line=$0; else { printf("%s : %s\n", line, $0); line=""; }
+                                      } END {
+                                        if ( length(line) ) print line;
+                                      }'
+  1 : a
+  2 : b
+  3 : c
+  ```
+
+- while
+  ```bash
+  $ echo -e "1\na\n2\nb\n3\nc" | while read line1; do read line2; echo "$line1 : $line2"; done
+  1 : a
+  2 : b
+  3 : c
+  ```
+
+### combine every 3 lines
+- paste
+  ```bash
+  # or every 3 lines
+  $ echo -e "1\na\n2\nb\n3\nc" | paste -d ' '  - - -
+  1 a 2
+  b 3 c
+  ```
+
+- awk
+  ```bash
+  $ echo -e "1\na\n2\nb\n3\nc" | awk 'NR%3{ printf "%s : ",$0;next; }1'
+  1 : a : 2
+  b : 3 : c
+  ```
+
+- xargs
+  ```bash
+  $ echo {1..9} | fmt -1 | xargs -n3
+  1 2 3
+  4 5 6
+  7 8 9
+  ```
+
+## get next line by the pattern
 ```bash
 $ cat a.txt
 1a
@@ -212,13 +351,16 @@ $ cat a.txt
   5e
   ```
 
-## get certain Line between 2 matched patterns
+## get lines in 2 patterns
 
 > reference:
 > - [How to print lines between two patterns, inclusive or exclusive (in sed, AWK or Perl)?](https://stackoverflow.com/a/58568587/2940319)
 > - [Print lines between PAT1 and PAT2](https://stackoverflow.com/a/55773449/2940319)
 > - [How to select lines between two marker patterns which may occur multiple times with awk/sed](https://stackoverflow.com/a/17988834/2940319)
 > - [Print lines between (and excluding) two patterns](https://unix.stackexchange.com/a/430154/29178)
+>
+> use case:
+> - [* imarslo : get first matching patten ( for CERTIFICATE )](./sed.html#get-first-matching-patten--for-certificate-)
 
 > [!TIP]
 > sample data:
@@ -226,7 +368,7 @@ $ cat a.txt
 > $ cat a.txt
 > 1a
 > 2b
-> 3c        * (begining)
+> 3c        * (start)
 > 4d
 > 5e
 > 6f
@@ -305,12 +447,16 @@ $ cat a.txt
   8h
   ```
 
-### working with empty line
+### with empty line
+
+> [!NOTE]
+> use case : [* imarslo : show `top` summary](./sed.html#show-top-summary)
+
 ```bash
 $ cat a.txt
 1a
 2b
-3c      * (begining)
+3c      * (start)
 4d
 5e
 6f
@@ -551,6 +697,11 @@ PING 1.1.1.1 (1.1.1.1): 56 data bytes
 round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
 ```
 
+- or
+  ```bash
+  $ echo domain-{1..4}.com | fmt -1 | xargs -L1 ping -c1 -t1 -W0
+  ```
+
 ## `find`
 > reference:
 > - [Everything CLI: FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
@@ -652,6 +803,13 @@ $ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
   . aaaa bbbb.
   ```
 
+- function in pip
+  ```bash
+  function trim() { IFS='' read -r str; echo "${str}" | sed -e 's/^[[:blank:]]*//;s/[[:blank:]]*$//'; }
+  $ echo ..$(echo "   aaa     bbb   " | trim)..
+  ..aaa bbb..
+  ```
+
 ### [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
 > reference:
 > [shellcheck SC2001](https://github.com/koalaman/shellcheck/wiki/SC2001)
@@ -716,6 +874,7 @@ aabaa
 
 ## fold
 ### check the params valid
+
 {% hint style='tip' %}
 available params should be contained by 'iwfabcem'
 {% endhint %}
@@ -857,8 +1016,8 @@ $ bash sample.sh
 sample.sh: line 7: warning: here-document at line 1 delimited by end-of-file (wanted `END_TEXT')
 HERE DOC WITH <<
  A SINGLE SPACE CHARACTER (I.E. 0X20 )  IS AT THE BEGINNING OF THIS LINE
-	THIS LINE BEGINS WITH A SINGLE TAB CHARACTER I.E 0X09 AS DOES THE NEXT LINE
-	END_TEXT
+  THIS LINE BEGINS WITH A SINGLE TAB CHARACTER I.E 0X09 AS DOES THE NEXT LINE
+  END_TEXT
 
 ECHO THE INTENDED END WAS BEFORE THIS LINE
 {%- endcodetabs %}

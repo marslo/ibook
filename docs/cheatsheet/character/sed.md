@@ -305,21 +305,24 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
 > - [sed Cheat Sheet](https://lzone.de/cheat-sheet/sed)
 > - [Erik's Cheat Sheet : sed](http://eriklievaart.com/cheat/linux/shell/sed.html)
 > - [cheatsheet_sed.pdf](https://au-bio-bootcamp.github.io/cheatsheet_sed.pdf)
+>
+> more samples:
+> - [* imarslo : get lines between 2 matched patterns](./character.html#get-lines-between-2-matched-patterns)
 {% endhint %}
 
 ### get first matching patten ( for `CERTIFICATE` )
 
 > [!TIP]
-> sample.crt
-> ```bash
-> $ cat sample.crt
-> -----BEGIN CERTIFICATE-----
-> first paragraph
-> -----END CERTIFICATE-----
-> -----BEGIN CERTIFICATE-----
-> second paragraph
-> -----END CERTIFICATE-----
-> ```
+> - sample.crt
+>   ```bash
+>   $ cat sample.crt
+>   -----BEGIN CERTIFICATE-----
+>   first paragraph
+>   -----END CERTIFICATE-----
+>   -----BEGIN CERTIFICATE-----
+>   second paragraph
+>   -----END CERTIFICATE-----
+>   ```
 
 - regular pattern
   ```bash
@@ -346,14 +349,24 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
   > [!TIP]
   > - [How to print the text between the first occurence of a pair of strings? [duplicate]](https://unix.stackexchange.com/a/362068/29178)
   > - [How to select first occurrence between two patterns including them](https://unix.stackexchange.com/a/180729/29178)
+  >
+  > more :
+  > - [* imarslo : get second matching pattern](./character.html#get-second-matching-pattern)
 
   ```bash
+  # or `-n /../p`
+  #                     `-n`                                         `p`
+  #                       |                                           |
+  #                       v                                           v
   $ cat sample.crt | sed -n '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p; /-END CERTIFICATE-/q'
   -----BEGIN CERTIFICATE-----
   first paragraph
   -----END CERTIFICATE-----
 
-  # or `-d`
+  # or `/../!d`
+  #                   no `-n`                                     `!d`
+  #                     |                                           |
+  #                     v                                           v
   $ cat sample.crt | sed '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/!d; /-END CERTIFICATE-/q'
   -----BEGIN CERTIFICATE-----
   first paragraph
@@ -371,7 +384,6 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
   first paragraph
   -----END CERTIFICATE-----
   ```
-
 
 ### remove both '#' and empty lines
 ```bash

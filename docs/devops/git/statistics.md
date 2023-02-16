@@ -74,16 +74,26 @@ $ git rev-list HEAD ${GIT_OPT} --author='marslo' --count
 
 > [!NOTE]
 > references:
-> - [GIT contribution per author (lines)](https://stackoverflow.com/a/25480975/2940319)
+> - [git contribution per author (lines)](https://stackoverflow.com/a/25480975/2940319)
+> - [escaping alias commands in a gitconfig files](https://stackoverflow.com/q/7804170/2940319)
 
 ### full history
 ```bash
 $ git ls-files -z |
-  xargs -0n1 git blame -w |
-  perl -n -e '/^.*?\((.*?)\s+[\d]{4}/; print $1,"\n"' |
-  sort -f |
-  uniq -c |
-  sort -n
+      xargs -0n1 git blame -w |
+      perl -n -e '/^.*?\((.*?)\s+[\d]{4}/; print $1,"\n"' |
+      sort -f |
+      uniq -c |
+      sort -nr
+
+# or using sed instead of perl
+$ git ls-files -z |
+      xargs -0n1 git blame -w -C |
+      sed -r 's/^[^(]+\((.*) [0-9]{4}-.*/\1/' |
+      sed -r 's/ +$//' |
+      sort -f |
+      uniq -c |
+      sort -nr
 ```
 
 ### total changes
