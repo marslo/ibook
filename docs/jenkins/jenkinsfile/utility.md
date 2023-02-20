@@ -18,6 +18,7 @@
 - [withCredentials](#withcredentials)
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
   - [ssh-agent(https://plugins.jenkins.io/ssh-agent)](#ssh-agenthttpspluginsjenkinsiossh-agent)
+- [code clone](#code-clone)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -584,3 +585,54 @@ withCredentials([ sshUserPrivateKey(
     }
   }
   ```
+
+## code clone
+```groovy
+String repo     = 'https://github.com/sample-code'
+String branch   = 'develop'
+String refsepc  = "+refs/heads/${branch}:/remotes/origin/${branch}"
+String revision = 'abcdefg' // or 'HEAD'
+
+try {
+  checkout([
+    $class: 'GitSCM',
+    branches: [[ name: revision ]],
+    extensions: [
+                  [
+                           $class  : 'CloneOption',
+                     honorRefspec  : true,
+                           noTags  : false,
+                        reference  : '',
+                          shallow  : false
+                  ],
+                  [
+                            $class : 'AuthorInChangelog'
+                  ]
+    ],
+    userRemoteConfigs: [[
+      credentialsId  : <credential_id> ,
+            refspec  : branch ,
+                url  : repo
+    ]]
+  ])
+} catch ( Exception e ) {
+  def sw = new StringWriter()
+  e.printStackTrace( new PrintWriter(sw) )
+  echo sw.toString()
+
+  if ( e instanceof java.lang.NullPointerException ) {
+    error ( "${repo} CANNOT be found !")
+  } else if ( e instanceof hudson.AbortException ) {
+    println ( "failed to clone repo ${repo}\n${e.message}" )
+    if ( 'determineRevisionToBuild' == e.stackTrace.collect { it.methodName }.first() ) {
+      error ( "'${revision}' cannot be found in refs : '${branch}' ! provide correct revision number or branch name." + "<br>${e.message}" )
+    }
+    if ( 'retrieveChanges' == e.stackTrace.collect { it.methodName }.first() ) {
+      error ( "'${branch}' or '${revision}' cannot be found in ${repo} !<br>${e.message}" )
+    }
+  }
+
+  throw e
+}
+```
+
