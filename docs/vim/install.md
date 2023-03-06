@@ -222,6 +222,8 @@ $ ./configure --with-features=huge \
               --enable-nls \
               --with-macarchs=x86_64 \
               --with-compiledby="marslo <marslo.jiao@gmail.com>" \
+              --prefix=/usr/local/vim \
+              --exec-prefix=/usr/local/vim \
               --enable-fail-if-missing
 
 ## ... build ...
