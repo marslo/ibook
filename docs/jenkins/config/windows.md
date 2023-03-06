@@ -25,6 +25,7 @@
 >   - [Jenkins Tutorials : how to install jenkins agent on windows](https://www.youtube.com/watch?v=N8AQTlHoBKc)
 > - [How to install Windows agents as a service?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-install-windows-agents-as-a-service)
 > - [Managing agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-admin-guide/agents)
+> - [* enable open-ssh in windows : Configure Cygwin’s port of OpenSSH](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-admin-guide/agents#_microsoft_windows)
 > others
 > - [Upgrading Jenkins Java version from 8 to 11](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/#java-web-start)
 > - [Jenkins Remoting](https://www.jenkins.io/projects/remoting/)

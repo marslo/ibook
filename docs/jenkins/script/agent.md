@@ -9,7 +9,12 @@
   - [get ip address of node](#get-ip-address-of-node)
   - [get agent environment variable](#get-agent-environment-variable)
   - [get a list of all Jenkins nodes assigned with label](#get-a-list-of-all-jenkins-nodes-assigned-with-label)
+- [cloud agents](#cloud-agents)
   - [check how many cloud agent running](#check-how-many-cloud-agent-running)
+  - [KubernetesComputer](#kubernetescomputer)
+- [executor](#executor)
+  - [to `WorkUnit` and `SubTask` ( `ExecutorStepExecution.PlaceholderTask` )](#to-workunit-and-subtask--executorstepexecutionplaceholdertask-)
+  - [to `Computer`](#to-computer)
 - [Managing Nodes](#managing-nodes)
   - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
   - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
@@ -25,6 +30,15 @@
   - [for jenkins agents](#for-jenkins-agents)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+{% hint style='tip' %}
+> references:
+> - [SSH Agents leak "Computer.threadPoolForRemoting" threads](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/ssh-agents-leak-computer-threadpoolforremoting-threads)
+>   - [JENKINS-27514: Core - Thread spikes in Computer.threadPoolForRemoting leading to eventual server OOM](https://issues.jenkins.io/browse/JENKINS-27514)
+>   - [JENKINS-19465: Slave hangs while being launched](https://issues.jenkins.io/browse/JENKINS-19465)
+> - [CloudBees: Managing agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-admin-guide/agents#static-agents)
+{% endhint %}
 
 
 ## get information
@@ -56,7 +70,7 @@
 
 {% hint style='info' %}
 > get all agents including Jenkins master:
-> - `jenkins.model.Jenkins.instance.computers`
+> - [`jenkins.model.Jenkins.instance.computers`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html)
 > - `jenkins.model.Jenkins.instance.get().computers`
 {% endhint %}
 
@@ -165,10 +179,12 @@ println """
   String agent = 'marslo-test'
   Jenkins.instance.getNode(agent).toComputer().isOnline()
   ```
+
   or
   ```groovy
   hudson.model.Hudson.instance.getNode(agent).toComputer().isOnline()
   ```
+
   or get log
   ```groovy
   println jenkins.model.Jenkins.instance.getNode( 'marslo-test' ).toComputer().getLog()
@@ -181,6 +197,7 @@ println """
   ```
 
 ### get projects tied to agent
+
 > reference:
 > - [`jenkins.model.Computer.allExecutors`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#getAllExecutors--)
 > - [`hudson.model.Executor.currentWorkUnit`](https://javadoc.jenkins-ci.org/hudson/model/Executor.html#getCurrentWorkUnit--)
@@ -193,29 +210,28 @@ import hudson.slaves.*
 
 String name = 'myagent'
 Computer computer = jenkins.model.Jenkins.instance.getNode(name)?.computer ?: null
-
-println computer.allExecutors.collect {
-  it.currentWorkUnit?.work?.runId ?: ''
-}.join(', ') ?: ''
+println computer.allExecutors.collect { it.currentWorkUnit?.work?.runId ?: '' }.join(', ') ?: ''
 ```
 - result
   ![get project(s) via agent](../../screenshot/jenkins/get-tied-projects-via-agents.png)
 
 - or
   ```groovy
-  println computer.getAllExecutors().collect {
-    it.getCurrentWorkUnit()?.work?.runId ?: ''
-  }
+  println computer.getAllExecutors().collect { it.getCurrentWorkUnit()?.work?.runId ?: '' }
   ```
 
 - or via [`<WorkUnitContext> hudson.model.queue.WorkUnit.context`](https://javadoc.jenkins-ci.org/hudson/model/queue/WorkUnit.html#context)
   ```groovy
-  println computer.allExecutors.collect {
-    it.currentWorkUnit?.context?.task?.runId ?: ''
-  }
+  println computer.allExecutors.collect { it.currentWorkUnit?.context?.task?.runId ?: '' }
   ```
 
-- get label itself
+- get running job from label
+
+  > [!TIP]
+  > solution:
+  > - `hudson.model.Executor` -> `hudson.model.queue.WorkUnit` -> `org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution$PlaceholderTask`
+  > - `hudson.model.Executor` -> `hudson.model.queue.WorkUnit` -> `hudson.model.queue.WorkUnitContext` -> `org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution$PlaceholderTask`
+  >
   > might helps: [Label Linked Jobs](https://plugins.jenkins.io/label-linked-jobs/)
 
   ```groovy
@@ -255,6 +271,7 @@ jenkins.model.Jenkins.instance.getNode(name)?.computer?.allExecutors?.size
 ### [get ip address of node](https://stackoverflow.com/a/39752509/2940319)
 ```groovy
 import hudson.model.Computer.ListPossibleNames
+
 println jenkins.model
                .Jenkins.instance
                .getNode( '<agent_name>' ).computer
@@ -274,13 +291,30 @@ println jenkins.model
 println InetAddress.localHost.hostAddress
 ```
 
-### [get agent environment variable](https://stackoverflow.com/a/28076291/2940319)
+### get agent environment variable
 ```groovy
-for (slave in jenkins.model.Jenkins.instance.slaves) {
-  println(slave.name + ": ")
+import hudson.slaves.EnvironmentVariablesNodeProperty
+
+jenkins.model.Jenkins.instance.slaves.each { agent ->
+  List props = agent.nodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+  if ( props ) {
+    println """
+       name : ${agent.name} :
+      props : ${props.collect{ prop -> prop.envVars.collect { "${it.key} ~> ${it.value}" } }.flatten().join(', ')}
+    """
+  }
+}
+
+"DONE"
+```
+
+[or](https://stackoverflow.com/a/28076291/2940319)
+```groovy
+for ( slave in jenkins.model.Jenkins.instance.slaves ) {
+  println( slave.name + ": " )
   def props = slave.nodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
-  for (prop in props) {
-    for (envvar in prop.envVars) {
+  for ( prop in props ) {
+    for ( envvar in prop.envVars ) {
       println envvar.key + " -> " + envvar.value
     }
   }
@@ -312,12 +346,135 @@ def nodes = jenkins.model.Jenkins.get().computers
   Jenkins.instance.getLabel('my-label').getNodes().collect{ it.getNodeName() }
   ```
 
+## cloud agents
+
 ### check how many cloud agent running
 ```groovy
 println jenkins.model.Jenkins.instance.getNodes().findAll {
   [ 'AbstractCloudSlave', 'AbstractCloudComputer' ].contains(it.class.superclass?.simpleName)
 }.size()
 ```
+
+### KubernetesComputer
+
+> [!NOTE]
+> references:
+> - [org.csanchez.jenkins.plugins.kubernetes.KubernetesComputer](https://javadoc.jenkins.io/plugin/kubernetes/org/csanchez/jenkins/plugins/kubernetes/KubernetesComputer.html)
+> - io.fabric8.kubernetes.api.model.Container
+>   - [1.0.28](https://www.javadoc.io/doc/io.fabric8/kubernetes-model/1.0.28/io/fabric8/kubernetes/api/model/Container.html)
+>   - [2.0.4](https://www.javadoc.io/doc/io.fabric8/kubernetes-model/2.0.4/io/fabric8/kubernetes/api/model/Container.html)
+>   - [4.9.2](https://www.javadoc.io/doc/io.fabric8/kubernetes-model/4.9.2/io/fabric8/kubernetes/api/model/Container.html)
+> - [io.fabric8.kubernetes.api.model.ResourceRequirements](https://www.javadoc.io/static/io.fabric8/kubernetes-model/1.0.28/io/fabric8/kubernetes/api/model/ResourceRequirements.html)
+> - [io.fabric8.kubernetes.api.model.EnvVar](https://www.javadoc.io/static/io.fabric8/kubernetes-model/1.0.28/io/fabric8/kubernetes/api/model/EnvVar.html)
+> - [io.fabric8.kubernetes.api.model.ResourceRequirements](https://www.javadoc.io/static/io.fabric8/kubernetes-model/1.0.28/io/fabric8/kubernetes/api/model/ResourceRequirements.html)
+> - [io.fabric8.kubernetes.api.model.ContainerPort](https://www.javadoc.io/static/io.fabric8/kubernetes-model/2.0.4/io/fabric8/kubernetes/api/model/ContainerPort.html)
+
+```groovy
+import org.csanchez.jenkins.plugins.kubernetes.KubernetesComputer
+import io.fabric8.kubernetes.api.model.Container
+import io.fabric8.kubernetes.api.model.EnvVar
+import io.fabric8.kubernetes.api.model.VolumeMount
+
+String sep    = ' ' * 16
+String subsep = ' ' * 20
+
+jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComputer && it.isOnline()}.each { computer ->
+  println """
+         name : ${computer.getDisplayName()}
+       images : ${computer.getContainers().collect{ it.image }.join(', ')}
+           os : ${computer.getOSDescription()}
+  isJnlpAgent : ${computer.isJnlpAgent()}
+         jobs : ${computer.allExecutors.collect { it.currentWorkUnit?.work?.runId ?: '' }.join(', ') ?: ''}
+          env : ${computer.containers.collect{ it.getEnv() }.flatten().collect{ "${it.name} : ${it.value}" }.join( '\n' + sep )}
+    resources : limits :
+                    ${computer.containers.collect{ it.getResources().getLimits() }?.first().collect{ "${it.key} : ${it.value}"}.join( '\n' + subsep ) ?: ''}
+                requests :
+                    ${computer.containers.collect{ it.getResources().getRequests() }?.first().collect{ "${it.key} : ${it.value}"}.join( '\n' + subsep ) ?: ''}
+       volume : ${computer.containers.collect { it.getVolumeMounts() }.flatten().collect{ "${it.name} : ${it.mountPath}" }.join( '\n' + sep )}
+     commands : ${computer.containers.collect{ it.getCommand() }.join(', ')}
+         agrs : ${computer.containers.collect{ it.getArgs() }.join(', ')}
+   workingDir : ${computer.containers.collect{ it.getWorkingDir() }.join()}
+      message : ${computer.containers.collect{ it.getTerminationMessagePath()}.join()}
+  isLaunching : ${computer.isLaunching()}
+     isOnline : ${computer.isOnline()}
+  """
+}
+```
+
+- result
+  ```
+         name : jenkins-sample-job-381-fcql9-j2mp9
+       images : artifactory.sample.com/docker/jnlp:2.0.2-py38-bionic
+           os : Unix
+  isJnlpAgent : true
+         jobs : sample-job#381
+          env : JENKINS_SECRET : 43406803cb55dc7457242e08232c9e762cfb68e08157485e31d2c1fff4624d72
+                JENKINS_TUNNEL : 10.69.78.73:30380
+                JENKINS_AGENT_NAME : jenkins-sample-job-381-fcql9-j2mp9
+                JENKINS_NAME : jenkins-sample-job-381-fcql9-j2mp9
+                JENKINS_AGENT_WORKDIR : /home/devops
+                JENKINS_URL : https://jenkins.sample.com/
+    resources : limits :
+                    cpu : 1
+                    ephemeral-storage : 500Mi
+                    memory : 1Gi
+                requests :
+                    cpu : 500m
+                    ephemeral-storage : 50Mi
+                    memory : 512Mi
+       volume : workspace-volume : /home/devops
+                default-token-m6bqf : /var/run/secrets/kubernetes.io/serviceaccount
+     commands : []
+         agrs : []
+   workingDir : /home/devops
+      message : /dev/termination-log
+  isLaunching : false
+     isOnline : true
+  ```
+
+## executor
+
+> reference:
+> - [`hudson.model.Executor`](https://javadoc.jenkins-ci.org/hudson/model/Executor.html)
+> - [`jenkins.model.Computer.allExecutors`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#getAllExecutors--)
+> - [`hudson.model.Executor.currentWorkUnit`](https://javadoc.jenkins-ci.org/hudson/model/Executor.html#getCurrentWorkUnit--)
+> - [`<SubTask> hudson.model.queue.WorkUnit.work`](https://javadoc.jenkins-ci.org/hudson/model/queue/WorkUnit.html#work)
+
+### to `WorkUnit` and `SubTask` ( `ExecutorStepExecution.PlaceholderTask` )
+```groovy
+Jenkins.instance.computers.findAll { computer ->
+  '<agentName>' == computer.name
+}.collect { it.executors }
+ .flatten()
+ .each { e ->
+   println e                      // class hudson.model.Executor
+   println e.currentWorkUnit      // hudson.model.queue.WorkUnit
+   println e.currentWorkUnit.work // org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution$PlaceholderTask
+ }
+```
+- result
+  ```
+  e                              :  Thread[Executor #0 for jenkins-sandbox-sample-11998-r16jc-nj9fc : executing PlaceholderExecutable:ExecutorStepExecution.PlaceholderTask{runId=sandbox/sample#11998,label=jenkins-sandbox-sample-11998,context=CpsStepContext[10:node]:Owner[sandbox/sample/11998:sandbox/sample #11998],cookie=null,auth=null},5,]
+  e.currentWorkUnit              :  hudson.model.queue.WorkUnit@5e2236a4[work=part of sandbox » sample #11998]
+  e.currentWorkUnit.work         :  ExecutorStepExecution.PlaceholderTask{runId=sandbox/sample#11998,label=jenkins-sandbox-sample-11998-r16jc-nj9fc,context=CpsStepContext[10:node]:Owner[sandbox/sample/11998:sandbox/sample #11998],cookie=80f25325-1b41-48fc-89aa-5b81e8288c5f,auth=null}
+  ```
+
+### to `Computer`
+```groovy
+Jenkins.instance.computers.findAll { computer ->
+  '<agentName>' == computer.name
+}.collect { it.executors }
+ .flatten()
+ .each { e ->
+   println e                      // class hudson.model.Executor
+   println e.owner                // class org.csanchez.jenkins.plugins.kubernetes.KubernetesComputer
+ }
+```
+- result
+  ```groovy
+  e                              :  Thread[Executor #0 for jenkins-sandbox-sample-11998-r16jc-nj9fc : executing PlaceholderExecutable:ExecutorStepExecution.PlaceholderTask{runId=sandbox/sample#11998,label=jenkins-sandbox-sample-11998,context=CpsStepContext[10:node]:Owner[sandbox/sample/11998:sandbox/sample #11998],cookie=null,auth=null},5,]
+  owner                          :  KubernetesComputer name: jenkins-sandbox-sample-11998-r16jc-nj9fc agent: null
+  ```
 
 
 ## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
