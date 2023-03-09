@@ -4,8 +4,9 @@
 
 - [configure files](#configure-files)
   - [`short-name-aliases.conf`](#short-name-aliasesconf)
+  - [`storage.conf`](#storageconf)
 - [rootless mode](#rootless-mode)
-  - [enable pull](#enable-pull)
+  - [enable `rootless_storage_path`](#enable-rootless_storage_path)
   - [enable `kernel.unprivileged_userns_clone`](#enable-kernelunprivileged_userns_clone)
   - [setup `subuid` and `subgid`](#setup-subuid-and-subgid)
   - [propagate changes to subuid and subgid](#propagate-changes-to-subuid-and-subgid)
@@ -34,28 +35,72 @@
 | -                            | `containers.conf` | `/usr/share/containers/containers.conf` | `$HOME/.config/containers/containers.conf` |
 
 
-### `short-name-aliases.conf`
-```bash
-$ cat $HOME/.cache/containers/short-name-aliases.conf
-[aliases]
-  "jenkins/jenkins" = "docker.io/jenkins/jenkins"
-```
+- `short-name-aliases.conf`
+  ```b;ash
+  $ cat $HOME/.cache/containers/short-name-aliases.conf
+  [aliases]
+    "jenkins/jenkins" = "docker.io/jenkins/jenkins"
+  ```
 
-### `storage.conf`
-```bash
-# original version
-$ cat /etc/containers/storage.conf |  sed -e '/^#/ d' -e '/^$/ d'
-[storage]
-driver = "overlay"
-runroot = "/run/containers/storage"
-graphroot = "/var/lib/containers/storage"
-[storage.options]
-additionalimagestores = [
-]
-[storage.options.overlay]
-mountopt = "nodev,metacopy=on"
-[storage.options.thinpool]
-```
+- `storage.conf`
+  ```bash
+  # original version
+  $ cat /etc/containers/storage.conf |  sed -e '/^#/ d' -e '/^$/ d'
+  [storage]
+  driver = "overlay"
+  runroot = "/run/containers/storage"
+  graphroot = "/var/lib/containers/storage"
+  [storage.options]
+  additionalimagestores = [
+  ]
+  [storage.options.overlay]
+  mountopt = "nodev,metacopy=on"
+  [storage.options.thinpool]
+  ```
+
+- `registries.conf`
+  ```bash
+  $ cat /etc/containers/registries.conf |  sed -e '/^#/ d' -e '/^$/ d'
+  unqualified-search-registries = ["registry.fedoraproject.org", "registry.access.redhat.com", "registry.centos.org", "docker.io"]
+  short-name-mode = "permissive"
+  ```
+
+- `policy.json`
+  ```bash
+  $ cat /etc/containers/policy.json
+  {
+      "default": [
+          {
+              "type": "insecureAcceptAnything"
+          }
+      ],
+      "transports": {
+          "docker": {
+        "registry.access.redhat.com": [
+      {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+      }
+        ],
+        "registry.redhat.io": [
+      {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+      }
+        ]
+    },
+          "docker-daemon": {
+        "": [
+      {
+          "type": "insecureAcceptAnything"
+      }
+        ]
+    }
+      }
+  }
+  ```
 
 ## rootless mode
 ### enable `rootless_storage_path`
