@@ -3,8 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [configure files](#configure-files)
-  - [`short-name-aliases.conf`](#short-name-aliasesconf)
-  - [`storage.conf`](#storageconf)
 - [rootless mode](#rootless-mode)
   - [enable `rootless_storage_path`](#enable-rootless_storage_path)
   - [enable `kernel.unprivileged_userns_clone`](#enable-kernelunprivileged_userns_clone)
@@ -76,28 +74,28 @@
       ],
       "transports": {
           "docker": {
-        "registry.access.redhat.com": [
-      {
-          "type": "signedBy",
-          "keyType": "GPGKeys",
-          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
-      }
-        ],
-        "registry.redhat.io": [
-      {
-          "type": "signedBy",
-          "keyType": "GPGKeys",
-          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
-      }
-        ]
-    },
+              "registry.access.redhat.com": [
+                  {
+                      "type": "signedBy",
+                      "keyType": "GPGKeys",
+                      "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+                  }
+              ],
+              "registry.redhat.io": [
+                  {
+                      "type": "signedBy",
+                      "keyType": "GPGKeys",
+                      "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+                  }
+              ]
+          },
           "docker-daemon": {
-        "": [
-      {
-          "type": "insecureAcceptAnything"
-      }
-        ]
-    }
+              "": [
+                  {
+                      "type": "insecureAcceptAnything"
+                  }
+              ]
+          }
       }
   }
   ```
