@@ -20,6 +20,8 @@
 - [docker inspect](#docker-inspect)
 - [docker proxy](#docker-proxy)
 - [check docker layer](#check-docker-layer)
+- [docker pull](#docker-pull)
+  - [`manifest.v2+json`](#manifestv2json)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -343,3 +345,28 @@ ad080923604a        7 months ago        /bin/sh -c #(nop)  CMD ["bash"]         
 <missing>           7 months ago        /bin/sh -c #(nop) ADD file:40290d9a94ae76c35…   63.1MB
 ```
 
+
+## docker pull
+
+> [!TIP]
+> references:
+> - [Image Manifest Version 2, Schema 1](https://docs.docker.com/registry/spec/manifest-v2-1/)
+> - [Image Manifest Version 2, Schema 2](https://docs.docker.com/registry/spec/manifest-v2-2/)
+> - [Update deprecated schema image manifest version 2, v1 images](https://docs.docker.com/registry/spec/deprecated-schema-v1/)
+> - [Docker Engine 19.03 release notes](https://docs.docker.com/engine/release-notes/19.03/)
+
+### `manifest.v2+json`
+
+> [!NOTE]
+> mediaType in manifest should be 'application/vnd.docker.distribution.manifest.v2+json' not 'application/vnd.oci.image.manifest.v1+json'
+
+- docker version
+  ```bash
+  $ docker -v
+  Docker version 19.03.2, build 6a30dfc
+  ```
+- [solution](https://docs.docker.com/registry/spec/deprecated-schema-v1/#update-to-image-manifest-version-2-schema-2)
+
+  > [!TIP]
+  > One way to upgrade an image from image manifest version 2, schema 1 to schema 2 is to `docker pull` the image and then `docker push` the image with a current version of Docker. Doing so will automatically convert the image to use the latest image manifest specification.
+  > Converting an image to image manifest version 2, schema 2 converts the manifest format, but does not update the contents within the image. Images using manifest version 2, schema 1 may contain unpatched vulnerabilities. We recommend looking for an alternative image or rebuilding it.
