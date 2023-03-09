@@ -20,8 +20,9 @@
 - [docker inspect](#docker-inspect)
 - [docker proxy](#docker-proxy)
 - [check docker layer](#check-docker-layer)
-- [docker pull](#docker-pull)
+- [media type](#media-type)
   - [`manifest.v2+json`](#manifestv2json)
+  - [sample json](#sample-json)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -346,7 +347,7 @@ ad080923604a        7 months ago        /bin/sh -c #(nop)  CMD ["bash"]         
 ```
 
 
-## docker pull
+## media type
 
 > [!TIP]
 > references:
@@ -371,3 +372,157 @@ ad080923604a        7 months ago        /bin/sh -c #(nop)  CMD ["bash"]         
   > [!TIP]
   > One way to upgrade an image from image manifest version 2, schema 1 to schema 2 is to `docker pull` the image and then `docker push` the image with a current version of Docker. Doing so will automatically convert the image to use the latest image manifest specification.
   > Converting an image to image manifest version 2, schema 2 converts the manifest format, but does not update the contents within the image. Images using manifest version 2, schema 1 may contain unpatched vulnerabilities. We recommend looking for an alternative image or rebuilding it.
+  >
+
+### sample json
+
+<!--sec data-title="application/vnd.docker.distribution.manifest.v2+json" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ docker manifest inspect artifactory.sample.com/docker/devops/jenkins:2.387.1-lts
+WARN[0000] Conmon at /usr/libexec/podman/conmon invalid: outdated conmon version
+WARN[0000] Warning! The manifest type application/vnd.docker.distribution.manifest.v2+json is not a manifest list but a single image.
+{
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+    "config": {
+        "mediaType": "application/vnd.docker.container.image.v1+json",
+        "size": 13129,
+        "digest": "sha256:d5ed2ceef0ec08e9044ebb39812f211d64dbcdfce775cc6b0460ca289193416f"
+    },
+    "layers": [
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 55045922,
+            "digest": "sha256:32fb02163b6bb519a30f909008e852354dae10bdfd6b34190dbdfe8f15403ea0"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 51628196,
+            "digest": "sha256:c09d5e9e1188f3fff7a4f8c3c7c330fde5184cba1c6f0c92526b8b7bd0ac7c26"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 8929986,
+            "digest": "sha256:a56533012712c1db623da3e5e9c2d0276301c82db0a2e7a82debfb57e5d916f2"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 1244,
+            "digest": "sha256:7936e107ffe73b406a0d02edf9bb02b983534d803bb06fd03dc38dac4b6cfe2a"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 189,
+            "digest": "sha256:3ca683058265b99b65bbc69b9e8fa4c46e830db35aad614706200e6cf0c30d8a"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 98119982,
+            "digest": "sha256:c2ecd304b4b84ef6154bd85e13360f0b015e39057a329698617ce0a53ed6cf32"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 202,
+            "digest": "sha256:be3512d810d65f00f28af0885e2f30833263ee061528e20c7fee21664f1572b8"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 5841675,
+            "digest": "sha256:56b37d7c2a7a3c93fd013cb1ad5652f8cea3910ecc0274d73064bba27ab57864"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 76925753,
+            "digest": "sha256:99ed1e723e52507ce2d615e1682d673c3ffcec5f5b68c266db70d829ef4be208"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 1932,
+            "digest": "sha256:256db5485b1399ecbd58c2558388fc9a4ff1caaaeacbdfe23127c7f13b1ee98b"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 1170,
+            "digest": "sha256:ee8c7eaf5e6bd8c45e503756da48e80137def6765017148ce9f2af66ce97244b"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 374,
+            "digest": "sha256:509f66c2f3174642f0eb3e3b2e8a70da698f613042ec65f525c476afe0b6b7d5"
+        },
+        {
+            "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+            "size": 271,
+            "digest": "sha256:820296a845d636be13276fdf3bdae7fdf2ac00d401182632d1ab450e26353674"
+        }
+    ]
+}
+```
+<!--endsec-->
+
+<!--sec data-title="application/vnd.docker.distribution.manifest.list.v2+json" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ docker manifest inspect docker.io/jenkins/jenkins:2.387.1-lts
+WARN[0000] Conmon at /usr/libexec/podman/conmon invalid: outdated conmon version
+{
+    "schemaVersion": 2,
+    "mediaType": "application/vnd.docker.distribution.manifest.list.v2+json",
+    "manifests": [
+        {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 2765,
+            "digest": "sha256:005fcb5c3017ef120d0d9d8d8925e9248ff6e2cf2b5e18b527b01459c7b2b3f4",
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        },
+        {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 2765,
+            "digest": "sha256:023fd7da56df685064940ff19c03c835e5fc3643ced00cc2bd792e2379cad2c3",
+            "platform": {
+                "architecture": "arm64",
+                "os": "linux"
+            }
+        },
+        {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 2765,
+            "digest": "sha256:4b5c14cabb880c1080ac6d07bcefb379fbf31f821556073205ac28f14ed55cf2",
+            "platform": {
+                "architecture": "s390x",
+                "os": "linux"
+            }
+        },
+        {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 566,
+            "digest": "sha256:797e205c02212b0ee424969f3441dd23fca9a1157add0211e5f63eab440254ea",
+            "platform": {
+                "architecture": "unknown",
+                "os": "unknown"
+            }
+        },
+        {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 566,
+            "digest": "sha256:150e17c6e040dcb86dbb29144a330a4c48be97949bc74ba270796b8bda419b49",
+            "platform": {
+                "architecture": "unknown",
+                "os": "unknown"
+            }
+        },
+        {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "size": 566,
+            "digest": "sha256:d4dcd45f608ade71e0c6d4ac68ff8aa4f34826f8181d2e18797101c55eb6ea77",
+            "platform": {
+                "architecture": "unknown",
+                "os": "unknown"
+            }
+        }
+    ]
+}
+```
+<!--endsec-->
