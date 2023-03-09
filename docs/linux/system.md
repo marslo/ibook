@@ -28,6 +28,7 @@
 - [user management](#user-management)
   - [sssd to use LDAP](#sssd-to-use-ldap)
   - [local user](#local-user)
+  - [`subuid` & `subgid`](#subuid--subgid)
   - [local group](#local-group)
   - [get gid](#get-gid)
   - [logout](#logout)
