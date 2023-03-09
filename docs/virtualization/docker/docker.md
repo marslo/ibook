@@ -350,10 +350,11 @@ ad080923604a        7 months ago        /bin/sh -c #(nop)  CMD ["bash"]         
 
 > [!TIP]
 > references:
-> - [Image Manifest Version 2, Schema 1](https://docs.docker.com/registry/spec/manifest-v2-1/)
-> - [Image Manifest Version 2, Schema 2](https://docs.docker.com/registry/spec/manifest-v2-2/)
-> - [Update deprecated schema image manifest version 2, v1 images](https://docs.docker.com/registry/spec/deprecated-schema-v1/)
-> - [Docker Engine 19.03 release notes](https://docs.docker.com/engine/release-notes/19.03/)
+> - [image manifest version 2, schema 1](https://docs.docker.com/registry/spec/manifest-v2-1/)
+> - [image manifest version 2, schema 2](https://docs.docker.com/registry/spec/manifest-v2-2/)
+> - [update deprecated schema image manifest version 2, v1 images](https://docs.docker.com/registry/spec/deprecated-schema-v1/)
+> - [docker engine 19.03 release notes](https://docs.docker.com/engine/release-notes/19.03/)
+> - [what is a docker image manifest?](https://www.howtogeek.com/devops/what-is-a-docker-image-manifest/)
 
 ### `manifest.v2+json`
 

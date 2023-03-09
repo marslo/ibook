@@ -6,6 +6,7 @@
 - [nfs](#nfs)
   - [mount a nfs](#mount-a-nfs)
   - [check mount](#check-mount)
+  - [check remote mount version](#check-remote-mount-version)
   - [disconnect the mount](#disconnect-the-mount)
   - [setup nfs mount by default server boot](#setup-nfs-mount-by-default-server-boot)
   - [related configure](#related-configure)
@@ -140,6 +141,14 @@ $ rpcinfo -p localhost
    100021    4   tcp  42699  nlockmgr
 ```
 
+### check remote mount version
+```bash
+$ rpcinfo 1.2.3.4 | egrep "service|nfs"
+   program version netid     address          service    owner
+    100003    3    udp       1.2.3.4.8.1      nfs
+    100003    3    tcp       1.2.3.4.8.1      nfs
+```
+
 ### disconnect the mount
 ```bash
 $ sudo umount /mnt/mynfs
@@ -217,7 +226,7 @@ $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_6
 ### `iostat`
 ```bash
 $ iostat -x -d 1
-Linux 3.10.0-957.27.2.el7.x86_64 (dc5-ssdfwtst3) 	01/15/2021 	_x86_64_	(4 CPU)
+Linux 3.10.0-957.27.2.el7.x86_64 (dc5-ssdfwtst3)  01/15/2021  _x86_64_  (4 CPU)
 
 Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
 sda               0.00     0.09    0.07   13.91     6.83    81.26    12.61     0.01    0.93   11.40    0.88   0.38   0.53
@@ -228,7 +237,7 @@ dm-1              0.00     0.00    0.00    0.00     0.00     0.00    52.91     0
 ### `sar`
 ```bash
 $ sar -bdp 1
-Linux 3.10.0-957.27.2.el7.x86_64 (dc5-ssdfwtst3) 	01/15/2021 	_x86_64_	(4 CPU)
+Linux 3.10.0-957.27.2.el7.x86_64 (dc5-ssdfwtst3)  01/15/2021  _x86_64_  (4 CPU)
 
 05:44:20 AM       tps      rtps      wtps   bread/s   bwrtn/s
 05:44:21 AM    863.00    863.00      0.00  47048.00      0.00
