@@ -1007,6 +1007,23 @@ $ authconfig --enablesssd \
 
 ### local user
 
+### `subuid` & `subgid`
+
+> [!NOTE]
+> references:
+> - [Podman](https://docs.podman.io/en/latest/markdown/podman.1.html#rootless-mode)
+
+```bash
+# rootless mode
+$ sudo usermod --add-subuids 10000-75535 USERNAME
+$ sudo usermod --add-subgids 10000-75535 USERNAME
+
+# or
+$ echo USERNAME:10000:65536 >> /etc/subuid
+$ echo USERNAME:10000:65536 >> /etc/subgid
+```
+
+
 {% hint style='tip' %}
 > references:
 > - [how to list users and groups on linux](https://devconnected.com/how-to-list-users-and-groups-on-linux/)
@@ -1133,7 +1150,7 @@ $ sudo groupadd <group_name>
   # or
   $ sed -nr "s/^${gname}:x:([0-9]+):.*/\1/p" /etc/group
   # or
-  $ grep "^${gname}" /etc/group|cut -d: -f3
+  $ grep "^${gname}" /etc/group | cut -d: -f3
 
   # and finally remove the group
   $ sudo groupdel ${gname}
@@ -1162,8 +1179,8 @@ $ sudo groupmod -g <gid> <group_name>
 
 #### add user into group
 ```bash
-$ usermod -a -G adm,root,docker devops
-$ usermod -a -G sudo devops
+$ sudo usermod -a -G adm,root,docker devops
+$ sudo usermod -a -G sudo devops
 ```
 
 #### remove user from group
