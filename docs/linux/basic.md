@@ -21,6 +21,7 @@
   - [yum](#yum)
     - [enable or disable repo](#enable-or-disable-repo)
     - [yum group](#yum-group)
+    - [tools installation](#tools-installation)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
 - [tricky](#tricky)
   - [unicode](#unicode)
@@ -310,17 +311,17 @@ $ cat b
 44
 
 $ paste <(cat a) <(cat b)
-t1	11
-t2	22
-t3	33
-t4	44
+t1  11
+t2  22
+t3  33
+t4  44
 ```
 
 - additional usage
   ```bash
   $ cat a | paste -d'\t' - - - -
-  a	b	c	d
-  e	f
+  a b c d
+  e f
   ```
 
   or
@@ -484,6 +485,27 @@ $ yum groupinstall <groupName>
 $ yum groupupdate <groupName>
 $ yum groupremove <groupName>
 ```
+
+### tools installation
+- epel
+
+  > [!TIP]
+  > references:
+  > - [How To enable the EPEL Repository on RHEL 8 / CentOS 8 Linux](https://linuxconfig.org/redhat-8-epel-install-guide)
+  > - [Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
+
+  ```bash
+  # install via package
+  $ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+  # install via cmd
+  $ sudo yum install -y epel-release yum-utils
+  ```
+
+- check what's package repo can provide
+  ```
+  $ dnf repository-packages epel list
+  ```
 
 ### `File "/usr/libexec/urlgrabber-ext-down", line 28`
 
