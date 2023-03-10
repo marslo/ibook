@@ -476,7 +476,7 @@ $ hwinfo --disk --only /dev/sda
 - `$ lshw -class disk`
 - `$ hwinfo --block --short`
 - `$ cat /proc/partitions`
-- `$ sudo hdparm -i /dev/sda`
+- `$ sudo hdparm -I /dev/sda`
 
 ### network
 

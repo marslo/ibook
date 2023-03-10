@@ -18,6 +18,8 @@
 - [performance](#performance)
   - [`iostat`](#iostat)
   - [`sar`](#sar)
+  - [hdparm](#hdparm)
+  - [dd](#dd)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -247,3 +249,47 @@ Linux 3.10.0-957.27.2.el7.x86_64 (dc5-ssdfwtst3)  01/15/2021  _x86_64_  (4 CPU)
 05:44:21 AM centos-root    863.00  47048.00      0.00     54.52      2.88      3.33      0.16     14.20
 05:44:21 AM centos-swap      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
 ```
+
+### hdparm
+
+> [!NOTE]
+> hdparm - get/set SATA/IDE device parameters
+>
+> references:
+> - [Linux and Unix Test Disk I/O Performance With dd Command](https://www.cyberciti.biz/faq/howto-linux-unix-test-disk-performance-with-dd-command/)
+> - [hdparm Command Examples in Linux](https://www.thegeekdiary.com/hdparm-command-examples-in-linux/)
+> - [hdparm command in Linux with Examples](https://www.geeksforgeeks.org/hdparm-command-in-linux-with-examples/)
+
+```bash
+$ sudo hdparm -Tt /dev/sda3
+/dev/sda3:
+ Timing cached reads:   15900 MB in  1.99 seconds = 7978.64 MB/sec
+ Timing buffered disk reads: 1796 MB in  3.00 seconds = 598.17 MB/sec
+
+$ sudo hdparm -Tt /dev/sda3
+/dev/sda3:
+ Timing cached reads:   18924 MB in  1.98 seconds = 9539.84 MB/sec
+ Timing buffered disk reads: 102 MB in 12.88 seconds =   7.92 MB/sec
+```
+
+### dd
+
+> [!NOTE]
+> references:
+> - [Linux and Unix Test Disk I/O Performance With dd Command](https://www.cyberciti.biz/faq/howto-linux-unix-test-disk-performance-with-dd-command/)
+
+```bash
+$ flush
+$ echo 3 | sudo tee /proc/sys/vm/drop_caches
+$ time dd if=/path/to/bigfile of=/dev/null bs=8k
+```
+
+- write speed
+  ```bash
+  $ dd if=/dev/zero of=/tmp/test1.img bs=1G count=1 oflag=dsync
+  ```
+- server latency time
+  ```bash
+  $ dd if=/dev/zero of=/tmp/test2.img bs=512 count=1000 oflag=dsync
+  ```
+
