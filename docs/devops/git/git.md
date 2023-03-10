@@ -44,6 +44,7 @@ git command study and practice
 - [clean](#clean)
   - [clean untracked directory and item in `.gitignore`](#clean-untracked-directory-and-item-in-gitignore)
 - [diff](#diff)
+  - [`diff-highlight`](#diff-highlight)
   - [get difference between two branches](#get-difference-between-two-branches)
 - [tag](#tag)
   - [discribe](#discribe)
