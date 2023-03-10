@@ -21,6 +21,8 @@
 - [proxy for npm](#proxy-for-npm)
 - [proxy for nc](#proxy-for-nc)
 - [proxy for ssl](#proxy-for-ssl)
+- [Q&A](#qa)
+  - [nc : `nc: Proxy error: "HTTP/1.1 200 Connection established"`](#nc--nc-proxy-error-http11-200-connection-established)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -363,3 +365,36 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
 > [!NOTE]
 > HTTPS proxy
 > Since version 7.52.0, curl can do HTTPS to the proxy separately from the connection to the server. This TLS connection is handled separately from the server connection so instead of `--insecure` and `--cacert` to control the certificate verification, you use `--proxy-insecure` and `--proxy-cacert`. With these options, you make sure that the TLS connection and the trust of the proxy can be kept totally separate from the TLS connection to the server.
+
+## Q&A
+### nc : `nc: Proxy error: "HTTP/1.1 200 Connection established"`
+- issue
+  ```bash
+  $ nc -X connect -x 127.0.0.1:8080 -zv git.sample.com 22
+  nc: Proxy error: "HTTP/1.1 200 Connection established"
+  ```
+
+- solution
+  ```bash
+  $ corkscrew 127.0.0.1 8080 git.sample.com 22
+  SSH-2.0-GerritCodeReview_2.16.27-RP-1.10.2.4 (SSHD-CORE-2.0.0)
+  ^C
+
+  $ ncat --proxy 127.0.0.1:1087 --proxy-type http vgitcentral.marvell.com 29418
+  SSH-2.0-GerritCodeReview_2.16.27-RP-1.10.2.4 (SSHD-CORE-2.0.0)
+  ^C
+
+  $ cat ~/.ssh/config
+    Host  git.sample.com
+          Hostname              git.sample.com
+          User                  marslo
+          Port                  22
+          StrictHostKeyChecking no
+          UserKnownHostsFile    ~/.ssh/known_hosts
+          ProxyCommand          corkscrew 127.0.0.1 8080 %h %p
+          # or
+          ProxyCommand          ncat --proxy 127.0.0.1:8080 --proxy-type http %h %p
+
+  # verify in ssh
+  $ ssh -vT -o "ProxyCommand=corkscrew 127.0.0.1 8080 %h %p" -p 22 git.sample.com
+  ```
