@@ -954,6 +954,23 @@ Removing my-submodule/
 ```
 
 ## diff
+### `diff-highlight`
+
+> [!NOTE]
+> references:
+> - [How to improve git's diff highlighting?](https://stackoverflow.com/a/55891251/2940319)
+> - [git and diff-highlight](https://michaelheap.com/git-and-diff-highlight/)
+
+```bash
+# centos8
+$ rpm -ql git | grep diff-highlight
+/usr/share/git-core/contrib/diff-highlight
+# or ubuntu
+$ dpkg -L git | grep diff-highlight
+
+$ sudo ln -sf /usr/share/git-core/contrib/diff-highlight /usr/local/bin/diff-highlight
+```
+
 ### [get difference between two branches](https://til.hashrocket.com/posts/18139f4f20-list-different-commits-between-two-branches)
 ```bash
 $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/<dev>
