@@ -526,7 +526,7 @@ $ yum groupremove <groupName>
   /usr/bin/python2.7
   ```
 
- - or
+- or
   ```bash
   $ sudo update-alternatives --config python
 
