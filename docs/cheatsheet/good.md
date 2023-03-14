@@ -498,9 +498,17 @@ $ less +F <filename>
 
 ### netcat & nmap-ncat
 
+> [!NOTE]
+> references:
+> - [* imarslo : epel](../linux/basic.html#tools-installation)
+
 - install
   ```bash
   $ sudo yum -y install epel-release [yum-utils]
+  # or via url
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
   $ sudo yum update -y
   $ yum list | grep netcat
   netcat.x86_64      1.219-2.el8       @epel
@@ -508,6 +516,23 @@ $ less +F <filename>
 
   # check
   $ sudo yum repolist
+  ```
+
+- switch with nmap & netcat
+  ```bash
+  $ ls -altrh /usr/local/bin/nc
+  lrwxrwxrwx 1 root root 22 Mar 14 03:14 /usr/local/bin/nc -> /etc/alternatives/nmap
+
+  $ sudo update-alternatives --config nmap
+
+  There are 2 programs which provide 'nmap'.
+
+    Selection    Command
+  -----------------------------------------------
+  *+ 1           /usr/bin/ncat
+     2           /usr/bin/netcat
+
+  Enter to keep the current selection[+], or type selection number: 2
   ```
 
 - check
