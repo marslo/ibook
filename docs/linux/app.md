@@ -65,10 +65,18 @@ $ curl -4 icanhazip.com
 ### shadowsocks
 #### server
 ```bash
+# ubuntu
 $ sudo apt install m2crypto git python-pip
-$ pip install --upgrade pip
-$ pip install git+https://github.com/shadowsocks/shadowsocks.git@master
+# centos
+$ sudo yum install m2crypto git python3-pip
 
+$ pip install --upgrade pip
+# or
+$ pip3 install --upgrade pip
+# or
+$ sudo /usr/bin/python3 -m pip install --upgrade pip
+
+$ pip install git+https://github.com/shadowsocks/shadowsocks.git@master
 $ sudo ln -sf /home/marslo/.local/bin/ssserver /usr/local/bin/ssserver
 ```
 

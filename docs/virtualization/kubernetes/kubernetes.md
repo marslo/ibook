@@ -37,6 +37,7 @@
 > - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
 > - [* Scheduling, Preemption and Eviction](https://kubernetes.io/docs/concepts/scheduling-eviction/_print/)
 > - [* Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+> - [* Administer a Cluster](https://kubernetes.io/docs/tasks/administer-cluster/)
 > - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
 > - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
 > - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)
@@ -174,7 +175,7 @@ DESCRIPTION:
      configuration of a horizontal pod autoscaler.
 
 FIELDS:
-   apiVersion	<string>
+   apiVersion <string>
    ...
 ```
 
@@ -188,7 +189,7 @@ FIELDS:
        ConfigMap holds configuration data for pods to consume.
 
   FIELDS:
-     apiVersion	<string>
+     apiVersion <string>
        APIVersion defines the versioned schema of this representation of an
        object. Servers should convert recognized schemas to the latest internal
        value, and may reject unrecognized values. More info:
