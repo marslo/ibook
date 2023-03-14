@@ -3,6 +3,10 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [what is kubectl](#what-is-kubectl)
+- [install](#install)
+  - [osx](#osx)
+  - [linux](#linux)
+  - [windows](#windows)
 - [get](#get)
   - [get all](#get-all)
   - [get cluster status](#get-cluster-status)
@@ -31,6 +35,106 @@
 > reference:
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 {% endhint %}
+
+## install
+
+> [!NOTE]
+> references:
+> - [install and set up kubectl](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/)
+>   - [install and set up kubectl on macos](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+>   - [install and set up kubectl on linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+>   - [install and set up kubectl on windows](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
+> - [Amazon EKS.pdf](https://docs.aws.amazon.com/pdfs/eks/latest/userguide/eks-ug.pdf)
+>   - [installing or updating kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+>
+> info:
+> ```bash
+> $ uname | awk '{print tolower($0)}'
+> darwin
+> $ curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt
+> v1.26.2
+> ```
+
+```bash
+$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/$(uname | awk '{print tolower($0)}')/amd64/kubectl
+$ chmod +x ./kubectl
+$ sudo mv ./kubectl /usr/local/bin/kubectl
+
+# verify
+$ kubectl version --client --short
+Flag --short has been deprecated, and will be removed in the future. The --short output will become the default.
+Client Version: v1.25.3
+Kustomize Version: v4.5.
+```
+- kubectl-convert
+
+  > [!NOTE]
+  > A plugin for Kubernetes command-line tool kubectl, which allows you to convert manifests between different API versions. This can be particularly helpful to migrate manifests to a non-deprecated api version with newer Kubernetes release.
+
+  ```bash
+  # intel
+  $ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl-convert"
+  # apple silicon
+  $ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl-convert"
+
+  $ chmod +x ./kubectl-convert
+  $ sudo mv ./kubectl-convert /usr/local/bin/kubectl-convert
+  $ sudo chown root: /usr/local/bin/kubectl-convert
+  ```
+
+- sha256 check
+  ```bash
+  $ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/$(uname | awk '{print tolower($0)}')/amd64/kubectl
+  $ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/$(uname | awk '{print tolower($0)}')/amd64/kubectl.sha256
+  $ echo "$(cat kubectl.sha256)  kubectl" | shasum -a 256 --check
+  ```
+
+### osx
+```bash
+# intel
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
+
+# apple silicon
+$ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl"
+
+# or via brew
+$ brew install kubectl
+```
+
+#### completion
+
+> [!NOTE]
+> The Homebrew installation of bash-completion v2 sources all the files in the `BASH_COMPLETION_COMPAT_DIR` directory, that's why the latter two methods work
+
+```
+$ brew install bash-completion           # Bash 3.2
+$ brew install bash-completion@2         # Bash 4.1+
+$ kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
+```
+
+### linux
+```bash
+$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/$(uname | awk '{print tolower($0)}')/amd64/kubectl
+$ chmod +x ./kubectl
+$ sudo mv ./kubectl /usr/local/bin/kubectl
+```
+
+#### completion
+```bash
+$ echo 'source <(kubectl completion bash)' >> ~/.bash_profile
+$ kubectl completion bash > /usr/local/etc/bash_completion.d/kubectl
+$ echo 'alias k=kubectl' >> ~/.bash_profile
+$ echo 'complete -o default -F __start_kubectl k' >> ~/.bash_profile
+```
+
+### windows
+```bash
+> choco install kubernetes-cli
+
+> cd %USERPROFILE%
+> mkdir .kube
+> touch .kube/config
+```
 
 ## get
 
