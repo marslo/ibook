@@ -495,11 +495,14 @@ $ yum groupremove <groupName>
   > - [Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
 
   ```bash
-  # install via package
-  $ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+  # install from url
+  # centos 7
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  # centos 8
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 
   # install via cmd
-  $ sudo yum install -y epel-release yum-utils
+  $ sudo yum [re]install -y epel-release yum-utils
   ```
 
 - check what's package repo can provide
