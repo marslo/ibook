@@ -133,6 +133,10 @@ E..GP....._.
 
 ### netcat
 
+> [!NOTE]
+> references:
+> - [the netcat command in linux](https://www.baeldung.com/linux/netcat-command)
+
 - check particular port
   ```bash
   $ nc -zv 127.0.0.1 22
@@ -153,3 +157,62 @@ E..GP....._.
   nc: connectx to 127.0.0.1 port 28 (tcp) failed: Connection refused
   ```
 
+
+- running simple web server
+  ```bash
+  $ cat > index.html <<<EOF
+  <!DOCTYPE html>
+  <html>
+      <head>
+          <title>Simple Netcat Server</title>
+      </head>
+      <body>
+          <h1>Welcome to simple netcat server!<h1>
+      </body>
+      </body>
+  <html>
+  EOF
+
+  $ echo -e "HTTP/1.1 200 OK\n\n$(cat index.html)" | nc -l 1234
+  ```
+
+- or getting more
+  ```bash
+  $ while true; do echo -e "HTTP/1.1 200 OK\n\n$(cat index.html)" | nc -l -w 1 1234; done
+  GET / HTTP/1.1
+  Host: localhost:1234
+  Connection: keep-alive
+  sec-ch-ua: "Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"
+  sec-ch-ua-mobile: ?0
+  sec-ch-ua-platform: "macOS"
+  Upgrade-Insecure-Requests: 1
+  User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+  Sec-Fetch-Site: none
+  Sec-Fetch-Mode: navigate
+  Sec-Fetch-User: ?1
+  Sec-Fetch-Dest: document
+  Accept-Encoding: gzip, deflate, br
+  Accept-Language: en,zh-CN;q=0.9,zh;q=0.8,en-US;q=0.7
+
+  GET /favicon.ico HTTP/1.1
+  Host: localhost:1234
+  Connection: keep-alive
+  sec-ch-ua: "Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"
+  sec-ch-ua-mobile: ?0
+  User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36
+  sec-ch-ua-platform: "macOS"
+  Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+  Sec-Fetch-Site: same-origin
+  Sec-Fetch-Mode: no-cors
+  Sec-Fetch-Dest: image
+  Referer: http://localhost:1234/
+  Accept-Encoding: gzip, deflate, br
+  Accept-Language: en,zh-CN;q=0.9,zh;q=0.8,en-US;q=0.7
+
+  ...
+  ```
+
+  ![netcat web service](../screenshot/linux/netcat-1234-html.png)
+
+- [reverse proxy with netcat](https://www.baeldung.com/linux/netcat-command#reverse-proxy-with-netcat)
