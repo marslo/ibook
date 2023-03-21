@@ -8,10 +8,18 @@
   - [defining contexts](#defining-contexts)
   - [use contexts](#use-contexts)
 - [OpenID Connect ( OIDC )](#openid-connect--oidc-)
+- [Configure Access to Multiple Clusters](#configure-access-to-multiple-clusters)
+  - [Create a second configuration file](#create-a-second-configuration-file)
+  - [Clean up](#clean-up)
+  - [with Proxy](#with-proxy)
+- [get info](#get-info)
+  - [basic view](#basic-view)
+  - [server IP by cluster name](#server-ip-by-cluster-name)
+  - [get user](#get-user)
+  - [get password](#get-password)
+  - [get key](#get-key)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
 
 
 {% hint style='info' %}
@@ -26,6 +34,9 @@
 >
 > others:
 > - [Introducing kubectl](https://kubebyexample.com/learning-paths/application-development-kubernetes/lesson-1-running-containerized-applications)
+>
+> more usage:
+> - [imarslo : kubectl config view](./certificates.html#basic-environment)
 {% endhint %}
 
 ## step by step
@@ -303,20 +314,103 @@ kubectl config use-context kubernetes-staging
   ```
 
 ### [with Proxy](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#proxy)
+
+> [!NOTE]
+> references:
+> - [cheatsheet : Kubectl context and configuration](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-context-and-configuration)
+
 ```bash
-apiVersion: v1
-kind: Config
+$ kubectl config set-cluster <my-cluster-name> --proxy-url=<my-proxy-url>
 
-clusters:
-- cluster:
-    proxy-url: http://proxy.example.org:3128
-    server: https://k8s.example.org/k8s/clusters/c-xxyyzz
-  name: development
+# i.e.
+$ kubectl config set-cluster development --proxy-url=http://proxy.example.com:3128
+```
+- result
+  ```bash
+  apiVersion: v1
+  kind: Config
 
-users:
-- name: developer
+  clusters:
+  - cluster:
+      proxy-url: http://proxy.example.org:3128
+      server: https://k8s.example.org/k8s/clusters/c-xxyyzz
+    name: development
 
-contexts:
-- context:
-  name: development
+  users:
+  - name: developer
+
+  contexts:
+  - context:
+    name: development
+  ```
+
+## get info
+
+> [!INFO]
+> references:
+> - [jsonpath support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
+> - [JSONPath 支持](https://kubernetes.io/zh-cn/docs/reference/kubectl/jsonpath/)
+
+### basic view
+- get contexts list
+  ```bash
+  $ kubectl config --kubeconfig=config-demo get-contexts
+  CURRENT   NAME           CLUSTER       AUTHINFO       NAMESPACE
+  *         dev-frontend   development   developer      frontend
+            dev-storage    development   developer      storage
+            exp-test       test          experimenter   default
+  ```
+- get current context
+  ```bash
+  $ kubectl config --kubeconfig=config-demo current-context
+  dev-frontend
+  ```
+
+- get clusters
+  ```bash
+  $ kubectl config --kubeconfig=config-demo get-clusters
+  NAME
+  development
+  test
+  ```
+
+- get users
+  ```bash
+  $ kubectl config --kubeconfig=config-demo get-users
+  NAME
+  developer
+  experimenter
+  ```
+
+### server IP by cluster name
+```bash
+$ kubectl config --kubeconfig=config-demo view -o jsonpath="{.clusters[*].name}"
+development test
+
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.clusters[?(@.name == "development")].cluster.server}'
+https://1.2.3.4
+```
+
+### get user
+```bash
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[*].name}'
+developer experimenter
+```
+
+### get password
+```bash
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "experimenter")]}'
+{"name":"experimenter","user":{"password":"some-password","username":"exp"}}
+
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "experimenter")].user.password}'
+some-password
+```
+
+### get key
+```bash
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")]}'
+{"name":"developer","user":{"client-certificate":"fake-cert-file","client-key":"fake-key-seefile"}}
+
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")].user.client-key}'
+fake-key-seefile
 ```
