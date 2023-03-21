@@ -11,6 +11,7 @@
 - [download and extract](#download-and-extract)
   - [check file without extract](#check-file-without-extract)
   - [extract `jar`](#extract-jar)
+  - [recursive download](#recursive-download)
 - [compress](#compress)
   - [zip package with dot-file](#zip-package-with-dot-file)
   - [remove dot-file without `skipping '..' '.'` issue](#remove-dot-file-without-skipping---issue)
@@ -202,6 +203,107 @@ $ unzip <jar-name>.jar -d <target-folder>
 - Delete files from JAR without unzip
   ```bash
   $ zip -d <jar-name>.jar <path/to/file.txt>
+  ```
+
+### [recursive download](https://www.gnu.org/software/wget/manual/html_node/Recursive-Download.html#Recursive-Download)
+
+> [!TIP]
+> references:
+> - [download a directory and subdirectories using wget](https://www.baeldung.com/linux/wget-download-directory-subdirectories)
+> - [wget(1) - Linux man page](https://linux.die.net/man/1/wget)
+>
+> params shortcuts :
+>
+> | short params | long params             |
+> |:------------:|-------------------------|
+> |     `-r`     | `--recursive`           |
+> |     `-m`     | `--mirror`              |
+> |     `-l`     | `--level`               |
+> |     `-k`     | `--convert-links`       |
+> |     `-K`     | `--backup-converted`    |
+> |     `-P`     | `--directory-prefix`    |
+> |     `-nv`    | `--no-verbose`          |
+> |     `-nc`    | `--no-clobber`          |
+> |     `-nd`    | `--no-directories`      |
+> |     `-nH`    | `--no-host-directories` |
+> |     `-np`    | `--no-parent`           |
+> |     `-x`     | `--force-directories`   |
+> |     `-b`     | `--background`          |
+> |     `-v`     | `--verbose`             |
+> |     `-p`     | `--page-requisites`     |
+
+```bash
+$ wget --recursive                       \     # -r
+       --user=admin                      \
+       --password=admin                  \     # --ask-password
+       --auth-no-challenge               \     # optional
+       --no-host-directories             \     # -nH
+       --no-parent                       \     # -np
+       --reject '*.html*'                \
+       --directory-prefix=./             \     # -P
+       --include-directories=local-dir   \     # -I
+  http://example.com/remote-dir
+
+# or
+$ wget --recursive                                   \    # -r
+       --no-parent                                   \    # -np : will not crawl links in folders above the base of the URL
+       --convert-links                               \    # -k  : convert links with the domain name to relative and uncrawled to absolute
+       --random-wait --wait 3 --no-http-keep-alive   \    #       do not get banned
+       --no-host-directories                         \    # -nH : do not create folders with the domain name
+       --execute robots=off --user-agent=Mozilla/5.0 \    #       I AM A HUMAN!!!
+       --level=inf --accept '*'                      \    # -l  : do not limit to 5 levels or common file formats
+       --reject="index.html*"                        \    #       use this option if you need an exact mirror
+       --cut-dirs=0                                  \    #       replace 0 with the number of folders in the path, 0 for the whole domain
+  $URL
+```
+
+- mirror whole website
+  ```bash
+  $ wget -m https://www.baeldung.com/
+  ```
+
+#### download directly
+```bash
+$ wget -r -np -nH --cut-dirs=1 https://www.baeldung.com/linux
+# or
+$ wget -r --no-parent --no-host-directories --cut-dirs=1 https://www.baeldung.com/linux
+```
+
+- with level
+  ```bash
+  $ wget -r -np -l 2 https://www.baeldung.com/linux/
+  # or
+  $ wget -r --no-parent --level=2 https://www.baeldung.com/linux/
+  ```
+
+- with credentials
+  - `.wgetrc`
+    ```bash
+    $ cat ~/.wgetrc
+    user=admin
+    password=admin
+    ```
+  - from cmd
+    ```bash
+    $ wget --user=admin --password=admin
+
+    # or
+    $ wget --user=admin --ask-password
+    Password for user 'admin': admin
+    ```
+  - ignore credentials
+    ```bash
+    $ wget --no-check-certificate
+    ```
+
+- converting links for local viewing
+  ```bash
+  $ wget -r --no-parent --convert-links https://www.baeldung.com/linux/category/web
+  ```
+
+- switching off robot exclusion
+  ```bash
+  $ wget -r --level=1 --no-parent --convert-links -e robots=off -U="Mozilla"
   ```
 
 ## compress
