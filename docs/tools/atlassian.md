@@ -9,6 +9,7 @@
 - [confluence](#confluence)
   - [get info](#get-info)
   - [publish to confluence](#publish-to-confluence)
+  - [plugins](#plugins)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -139,5 +140,17 @@ $ curl -s \
        https://${confluenceName}/rest/api/content/${pageID}
 ```
 - result
+  ![publish via api](../screenshot/publish-to-confluence.png)
 
-![publish via api](../screenshot/publish-to-confluence.png)
+
+### plugins
+#### [Multiexcerpt](https://marketplace.atlassian.com/apps/169/multiexcerpt?tab=overview&hosting=cloud)
+
+- create excerpt
+  ![create multiexcerpt](../screenshot/tools/jira/jira-plugin-Multiexcerpt-create.png)
+
+- include excerpt
+  ![include excerpt](../screenshot/tools/jira/jira-plugin-Multiexcerpt-include-setting.png)
+
+- result
+  ![include excerpt](../screenshot/tools/jira/jira-plugin-Multiexcerpt-include-result.png)
