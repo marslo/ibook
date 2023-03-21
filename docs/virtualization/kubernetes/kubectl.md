@@ -34,6 +34,7 @@
 {% hint style='info' %}
 > reference:
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
+> - [使用 kubectl 管理 Secret](https://kubernetes.io/zh-cn/docs/tasks/configmap-secret/managing-secret-using-kubectl/)
 {% endhint %}
 
 ## install
