@@ -37,6 +37,7 @@ reference :
 {% hint style='tip' %}
 > reference :
 > - [8 Ways to Open the Windows Terminal in Windows 11](https://www.makeuseof.com/windows-11-open-windows-terminal/)
+> - [PNG to ICO Converter](https://convertio.co/png-ico/)
 {% endhint %}
 
 - insert commands
@@ -45,6 +46,7 @@ reference :
   ```
 
 - [icon](https://github.com/microsoft/terminal/blob/main/res/terminal.ico)
+- [download terminal.ico](../../screenshot/win/terminal.ico)
 
 
 ### ubuntu 18.04
@@ -53,6 +55,9 @@ reference :
   ```batch
   %LocalAppData%\Microsoft\WindowsApps\ubuntu1804.exe
   ```
+
+- [icon](https://help.ubuntu.com/community/Icons)
+- [download ubuntu.ico](../../screenshot/ubuntu/ubuntu.ico)
 
 
 ### cmd admin
