@@ -40,7 +40,9 @@
   - [show all environment variables](#show-all-environment-variables)
   - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
 - [tricky](#tricky)
+  - [Internet Explorer Enhanced Security Configuration is enabled](#internet-explorer-enhanced-security-configuration-is-enabled)
   - [powershell plugins](#powershell-plugins)
+  - [openssh for windows](#openssh-for-windows)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -65,66 +67,68 @@
 > - [How to check a PC's hard drive model, serial number, firmware version, and more using Command Prompt](https://www.windowscentral.com/how-check-hard-drive-model-serial-number-firmware-version-and-more-using-command-prompt)
 {% endhint %}
 
-> [!TIP]
-> memorychip
-> - supported types
->   | id |       type       |
->   |:--:|:----------------:|
->   |  0 |      Unknown     |
->   |  1 |       Other      |
->   |  2 |       DRAM       |
->   |  3 | Synchronous DRAM |
->   |  4 |    Cache DRAM    |
->   |  5 |        EDO       |
->   |  6 |       EDRAM      |
->   |  7 |       VRAM       |
->   |  8 |       SRAM       |
->   |  9 |        RAM       |
->   | 10 |        ROM       |
->   | 11 |       Flash      |
->   | 12 |      EEPROM      |
->   | 13 |      FEPROM      |
->   | 14 |       EPROM      |
->   | 15 |       CDRAM      |
->   | 16 |       3DRAM      |
->   | 17 |       SDRAM      |
->   | 18 |       SGRAM      |
->   | 19 |       RDRAM      |
->   | 20 |        DDR       |
->   | 21 |       DDR2       |
->   | 22 |   DDR2 FB-DIMM   |
->   | 24 |       DDR3       |
->   | 25 |       FBD2       |
->   | 26 |       DDR4       |
+> [!TIP|label:memorychip]
 >
-> - supported form factors
->   | id |     form    |
->   |:--:|:-----------:|
->   |  0 |   Unknown   |
->   |  1 |    Other    |
->   |  2 |     SIP     |
->   |  3 |     DIP     |
->   |  4 |     ZIP     |
->   |  5 |     SOJ
->   |  6 | Proprietary |
->   |  7 |     SIMM    |
->   |  8 |     DIMM    |
->   |  9 |     TSOP    |
->   | 10 |     PGA     |
->   | 11 |     RIMM    |
->   | 12 |    SODIMM   |
->   | 13 |    SRIMM    |
->   | 14 |     SMD     |
->   | 15 |     SSMP    |
->   | 16 |     QFP     |
->   | 17 |     TQFP    |
->   | 18 |     SOIC    |
->   | 19 |     LCC     |
->   | 20 |     PLCC    |
->   | 21 |     BGA     |
->   | 22 |    FPBGA    |
->   | 23 |     LGA     |
->   | 24 |   FB-DIMM   |
+> - supported types:
+>
+> | id |       type       |
+> |:--:|:----------------:|
+> |  0 |      Unknown     |
+> |  1 |       Other      |
+> |  2 |       DRAM       |
+> |  3 | Synchronous DRAM |
+> |  4 |    Cache DRAM    |
+> |  5 |        EDO       |
+> |  6 |       EDRAM      |
+> |  7 |       VRAM       |
+> |  8 |       SRAM       |
+> |  9 |        RAM       |
+> | 10 |        ROM       |
+> | 11 |       Flash      |
+> | 12 |      EEPROM      |
+> | 13 |      FEPROM      |
+> | 14 |       EPROM      |
+> | 15 |       CDRAM      |
+> | 16 |       3DRAM      |
+> | 17 |       SDRAM      |
+> | 18 |       SGRAM      |
+> | 19 |       RDRAM      |
+> | 20 |        DDR       |
+> | 21 |       DDR2       |
+> | 22 |   DDR2 FB-DIMM   |
+> | 24 |       DDR3       |
+> | 25 |       FBD2       |
+> | 26 |       DDR4       |
+>
+> - supported form factors:
+>
+> | id |     form    |
+> |:--:|:-----------:|
+> |  0 |   Unknown   |
+> |  1 |    Other    |
+> |  2 |     SIP     |
+> |  3 |     DIP     |
+> |  4 |     ZIP     |
+> |  5 |     SOJ
+> |  6 | Proprietary |
+> |  7 |     SIMM    |
+> |  8 |     DIMM    |
+> |  9 |     TSOP    |
+> | 10 |     PGA     |
+> | 11 |     RIMM    |
+> | 12 |    SODIMM   |
+> | 13 |    SRIMM    |
+> | 14 |     SMD     |
+> | 15 |     SSMP    |
+> | 16 |     QFP     |
+> | 17 |     TQFP    |
+> | 18 |     SOIC    |
+> | 19 |     LCC     |
+> | 20 |     PLCC    |
+> | 21 |     BGA     |
+> | 22 |    FPBGA    |
+> | 23 |     LGA     |
+> | 24 |   FB-DIMM   |
 
 ```batch
 > wmic computersystem
@@ -741,7 +745,7 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ```
 
 ## tricky
-#### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
+### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
 ![windows step 1](../../screenshot/win/windows-service-security-1.png)
 ![windows step 2](../../screenshot/win/windows-service-security-2.png)
 
@@ -757,3 +761,71 @@ PS C:\> cat .\test.txt | ForEach-Object {
 # 3. 安装 oh-my-posh 包，让你的命令行更酷炫、优雅
 > Install-Module oh-my-posh -Scope CurrentUser
 ```
+
+### [openssh for windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell)
+
+> [!TIP]
+> references:
+> - [* Get started with OpenSSH for Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell)
+> - [OpenSSH for Windows overview](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_overview?source=recommendations)
+> - [OpenSSH Server configuration for Windows Server and Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration?source=recommendations)
+> - [Tutorial: SSH in Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/tutorials/ssh?source=recommendations)
+> - [[Solved] Add-WindowsCapability failed. Error code = 0x800f0954 – RSAT Fix](https://thesysadminchannel.com/solved-add-windowscapability-failed-error-code-0x800f0954-rsat-fix/)
+
+- pre-check
+  ```powershell
+  > (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+  True
+  ```
+
+- check openssh versions
+  ```powershell
+  > Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
+
+  Name  : OpenSSH.Client~~~~0.0.1.0
+  State : NotPresent
+
+  Name  : OpenSSH.Server~~~~0.0.1.0
+  State : NotPresent
+  ```
+
+- install client and server
+  ```powershell
+  > Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+  > Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+  ```
+
+- start services
+  ```powershell
+  # Start the sshd service
+  > Start-Service sshd
+
+  # OPTIONAL but recommended:
+  > Set-Service -Name sshd -StartupType 'Automatic'
+
+  # Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
+  > if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
+      Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
+      New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+    } else {
+      Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
+    }
+  ```
+
+- connect via ssh
+  ```powershell
+  > ssh domain\username@servername
+  ```
+
+- uninstall
+  ```powershell
+  # Uninstall the OpenSSH Client
+  > Remove-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+
+  # Uninstall the OpenSSH Server
+  > Remove-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+  ```
+
+#### Q&A
+- `Error code = 0x800f0954`
+  - [[Solved] Add-WindowsCapability failed. Error code = 0x800f0954 – RSAT Fix](https://thesysadminchannel.com/solved-add-windowscapability-failed-error-code-0x800f0954-rsat-fix/)
