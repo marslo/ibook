@@ -8,6 +8,7 @@
   * [bash](cheatsheet/bash/bash.md)
     * [syntactic sugar](cheatsheet/bash/sugar.md)
   * [windows](cheatsheet/windows/windows.md)
+    * [wsl](cheatsheet/windows/wsl.md)
     * [shortcut](cheatsheet/windows/shortcut.md)
     * [clsid](cheatsheet/windows/clsid.md)
     * [env](cheatsheet/windows/env.md)

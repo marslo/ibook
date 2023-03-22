@@ -40,6 +40,7 @@
   - [show all environment variables](#show-all-environment-variables)
   - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
 - [tricky](#tricky)
+  - [powershell plugins](#powershell-plugins)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -744,3 +745,15 @@ PS C:\> cat .\test.txt | ForEach-Object {
 ![windows step 1](../../screenshot/win/windows-service-security-1.png)
 ![windows step 2](../../screenshot/win/windows-service-security-2.png)
 
+
+### [powershell plugins](https://zhuanlan.zhihu.com/p/439437013)
+```powershell
+# 1. 安装 PSReadline 包，该插件可以让命令行很好用，类似 zsh
+> Install-Module -Name PSReadLine  -Scope CurrentUser -Force
+
+# 2. 安装 posh-git 包，让你的 git 更好用
+> Install-Module posh-git  -Scope CurrentUser
+
+# 3. 安装 oh-my-posh 包，让你的命令行更酷炫、优雅
+> Install-Module oh-my-posh -Scope CurrentUser
+```
