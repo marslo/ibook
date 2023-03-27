@@ -26,6 +26,8 @@
   - [abort single build](#abort-single-build)
   - [[cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)](#cancel-builds-in-same-jobhttpsrawgithubusercontentcomcloudbeesjenkins-scriptsmastercancel-builds-same-jobgroovy)
   - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
+    - [kill all running builds](#kill-all-running-builds)
+    - [kill all running builds started in 24 hours](#kill-all-running-builds-started-in-24-hours)
   - [get queue jobs parameters](#get-queue-jobs-parameters)
   - [list all queue tasks and blocked reason](#list-all-queue-tasks-and-blocked-reason)
 - [build cause](#build-cause)
@@ -698,6 +700,14 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
 
 # stop builds
 
+> [!TIP]
+> stop all queued jobs:
+> ```groovy
+> Jenkins.instance.queue.clear()
+> ```
+> - [If your build isn’t aborting](https://www.jenkins.io/doc/book/using/aborting-a-build/)
+>   - visit : https://<jenkins.domain.com>/threadDump
+
 ## [abort single build](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
 final String JOB_NAME  = 'job_name'
@@ -710,26 +720,6 @@ Jenkins.instance
          hudson.model.Result.ABORTED,
          new java.io.IOException( "Aborting build" )
        )
-```
-
-## [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-```groovy
-/*
- Author: Isaac S Cohen
- This script works with workflow to cancel other running builds for the same job
- Use case: many build may go to QA, but only the build that is accepted is needed,
- the other builds in the workflow should be aborted
-*/
-
-final String JOB_NAME  = env.JOB_NAME
-final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
-
-def job = Jenkins.instance.getItemByFullName( JOB_NAME )
-for ( build in job.builds ) {
-  if ( !build.isBuilding() ) { continue }
-  if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
-  build.doStop()
-}
 ```
 
 ## [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
@@ -773,6 +763,104 @@ def stopJobs( job ) {
   }
 }
 ```
+
+## stop all running builds
+```groovy
+import hudson.model.Job
+import hudson.model.Result
+import hudson.model.Run
+import java.util.Calendar
+import jenkins.model.Jenkins
+
+final Calendar RIGHT_NOW = Calendar.getInstance()
+final String JOB_PATTERN = '<group>/<name>'
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.startsWith( JOB_PATTERN )
+}.collect { Job job ->
+  job.builds.findAll { Run run -> run.isBuilding() }
+            .collect { Run run ->
+                           run.setDescription( '<b>aborted by Jenkins restart</b><br>' + run.getDescription() )
+                           // or run.doStop(), run.doTerm(), run.doKill()
+                           run.finish(
+                                       hudson.model.Result.ABORTED,
+                                       new java.io.IOException( "aborted by Jenkins restart" )
+                                     )
+            }
+}
+```
+
+### [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
+```groovy
+/*
+ Author: Isaac S Cohen
+ This script works with workflow to cancel other running builds for the same job
+ Use case: many build may go to QA, but only the build that is accepted is needed,
+ the other builds in the workflow should be aborted
+*/
+
+final String JOB_NAME  = env.JOB_NAME
+final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
+
+def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+for ( build in job.builds ) {
+  if ( !build.isBuilding() ) { continue }
+  if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
+  build.doStop()
+}
+```
+
+## stop all running builds started in 24 hours
+```groovy
+import hudson.model.Job
+import hudson.model.Result
+import hudson.model.Run
+import java.util.Calendar
+import jenkins.model.Jenkins
+
+final Calendar RIGHT_NOW = Calendar.getInstance()
+final long BENCH_MARK    = 1*24*60*60*1000
+final String JOB_PATTERN = '<group>/<name>'
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.startsWith( JOB_PATTERN )
+}.collect { Job job ->
+  job.builds.findAll { Run run ->
+                           run.isBuilding() &&
+                           ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+            }
+            .collect { Run run ->
+                           run.setDescription( '<b>aborted by Jenkins restart</b><br>' + run.getDescription() )
+                           run.finish(
+                                       hudson.model.Result.ABORTED,
+                                       new java.io.IOException( "aborted by Jenkins restart" )
+                                     )
+            }
+}
+```
+
+- get all running builds within 24 hours
+
+  ```groovy
+  import hudson.model.Job
+  import hudson.model.Result
+  import hudson.model.Run
+  import java.util.Calendar
+  import jenkins.model.Jenkins
+
+  final Calendar RIGHT_NOW = Calendar.getInstance()
+  final long BENCH_MARK    = 1*24*60*60*1000
+  final String JOB_PATTERN = '<group>/<name>'
+
+  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+    job.fullName.startsWith( JOB_PATTERN )
+  }.collect { Job job ->
+    job.builds.findAll { Run run ->
+      run.isBuilding() &&
+      ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+    }
+  }.sum()
+  ```
 
 ## [get queue jobs parameters](https://stackoverflow.com/a/32912802/2940319)
 > refernece:
