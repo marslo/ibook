@@ -34,7 +34,7 @@
 
 
 - `short-name-aliases.conf`
-  ```b;ash
+  ```bash
   $ cat $HOME/.cache/containers/short-name-aliases.conf
   [aliases]
     "jenkins/jenkins" = "docker.io/jenkins/jenkins"
