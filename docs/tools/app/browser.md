@@ -138,3 +138,17 @@ about:restartrequired
 - <kbd>shift</kbd> + <kbd>w</kbd> : move tab to new windows by using Vimium
 - <kbd>cmd</kbd>+<kbd>l</kbd> -> <kbd>shift</kbd>+<kbd>enter</kbd> : duplicate tab to new window
 - <kbd>cmd</kbd>+<kbd>l</kbd> -> <kbd>opt</kbd>+<kbd>enter</kbd> : duplicate tab to same window
+
+### download
+
+> [!NOTE]
+> references:
+> - [Google Chrome Older Versions Download](https://www.slimjet.com/chrome/google-chrome-old-version.php)
+> - [How to Download and Install Google Chrome On Mac OS](https://www.youtube.com/watch?v=BhmmLG_ZvGI)
+
+- download standalone version via : https://www.google.com/chrome/?standalone=1
+- download for OSX : https://www.google.com/chrome/?platform=mac
+  - standalone for OSX : https://www.google.com/chrome/?platform=mac&standalone=1
+- download for linux : https://www.google.com/chrome/?platform=linux
+  - standalone for linux : https://www.google.com/chrome/?platform=linux&standalone=1
+

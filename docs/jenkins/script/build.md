@@ -19,15 +19,15 @@
   - [sort last build](#sort-last-build)
     - [sort all buildable jobs](#sort-all-buildable-jobs)
 - [list builds](#list-builds)
+  - [list all running builds](#list-all-running-builds)
   - [list all builds byTimestamp ( within 24 hours )](#list-all-builds-bytimestamp--within-24-hours-)
   - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
   - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
 - [stop builds](#stop-builds)
   - [abort single build](#abort-single-build)
-  - [[cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)](#cancel-builds-in-same-jobhttpsrawgithubusercontentcomcloudbeesjenkins-scriptsmastercancel-builds-same-jobgroovy)
   - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
-    - [kill all running builds](#kill-all-running-builds)
-    - [kill all running builds started in 24 hours](#kill-all-running-builds-started-in-24-hours)
+  - [stop all running builds](#stop-all-running-builds)
+  - [stop all running builds started in 24 hours](#stop-all-running-builds-started-in-24-hours)
   - [get queue jobs parameters](#get-queue-jobs-parameters)
   - [list all queue tasks and blocked reason](#list-all-queue-tasks-and-blocked-reason)
 - [build cause](#build-cause)
@@ -50,7 +50,7 @@
   - [get all builds result percentage](#get-all-builds-result-percentage)
   - [get builds result percentage within 24 hours](#get-builds-result-percentage-within-24-hours)
   - [get builds result during certain start-end time](#get-builds-result-during-certain-start-end-time)
-  - [list all running builds](#list-all-running-builds)
+  - [list all running builds](#list-all-running-builds-1)
   - [get builds result and percentage within certain start-end time](#get-builds-result-and-percentage-within-certain-start-end-time)
 - [build stage](#build-stage)
   - [show build stages details](#show-build-stages-details)
@@ -559,6 +559,25 @@ Jenkins.instance
 
 # list builds
 
+## list all running builds
+```groovy
+import hudson.model.Job
+import hudson.model.Result
+import hudson.model.Run
+import jenkins.model.Jenkins
+
+final String JOB_PATTERN = '<group>/<name>'
+
+Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  job.fullName.startsWith( JOB_PATTERN )
+}.collectEntries { Job job ->
+  [ ( job.fullName ) : job.builds.findAll { Run run -> run.isBuilding() }.collect { Run run -> run.id } ]
+}.findAll{ it.value }
+ .each { println "${it.key} : ${it.value.size()} :\n\t#${it.value.join(', #')}\n" }
+
+"DONE"
+```
+
 ## [list all builds byTimestamp ( within 24 hours )](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 
 > [!TIP]
@@ -790,25 +809,25 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }
 ```
 
-### [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-```groovy
-/*
- Author: Isaac S Cohen
- This script works with workflow to cancel other running builds for the same job
- Use case: many build may go to QA, but only the build that is accepted is needed,
- the other builds in the workflow should be aborted
-*/
+- or [cancel builds in same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
+  ```groovy
+  /*
+   Author: Isaac S Cohen
+   This script works with workflow to cancel other running builds for the same job
+   Use case: many build may go to QA, but only the build that is accepted is needed,
+   the other builds in the workflow should be aborted
+  */
 
-final String JOB_NAME  = env.JOB_NAME
-final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
+  final String JOB_NAME  = env.JOB_NAME
+  final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
 
-def job = Jenkins.instance.getItemByFullName( JOB_NAME )
-for ( build in job.builds ) {
-  if ( !build.isBuilding() ) { continue }
-  if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
-  build.doStop()
-}
-```
+  def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+  for ( build in job.builds ) {
+    if ( !build.isBuilding() ) { continue }
+    if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
+    build.doStop()
+  }
+  ```
 
 ## stop all running builds started in 24 hours
 ```groovy
