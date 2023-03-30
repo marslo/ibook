@@ -7,10 +7,10 @@
   - [initialization](#initialization)
 - [check](#check)
 - [others](#others)
+- [Q&A](#qa)
+  - [`Error: 0x80040326`](#error-0x80040326)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
 
 {% hint style='tip' %}
 > references:
@@ -22,6 +22,7 @@
 > - [在 Windows 10 上安装 Hyper-V](https://learn.microsoft.com/zh-cn/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
 > - [Set up a WSL development environment](https://learn.microsoft.com/en-us/windows/wsl/setup/environment?source=recommendations)
 > - [Install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+> - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
 >
 > windows terminal:
 > - [Windows Terminal 下载，美化，完整配置](https://zhuanlan.zhihu.com/p/439437013)
@@ -100,7 +101,6 @@
   This application requires the Windows Subsystem for Linux Optional Component.
   The system may need to be restarted so the changes can take effect.
   ```
-
 
 ## start up WSL
 - download
@@ -288,3 +288,28 @@
   }
   Set-Alias -Name getip6 -Value Get-IPv6Routes
   ```
+
+## Q&A
+### `Error: 0x80040326`
+- issue
+  ```bash
+  Error: 0x80040326
+  Error code: Wsl/Service/CreateInstance/0x80040326
+  ```
+
+  ![0x80040326](../../screenshot/win/wsl/wsl-0x80040326.png)
+
+- solution
+  ```powershell
+  # start powershell with administrator
+
+  > wsl --update
+  Checking for updates.
+  Updating Windows Subsystem for Linux...
+  > wsl --shutdown
+  > wsl -d ubuntu
+  To run a command as administrator (user "root"), use "sudo <command>".
+  See "man sudo_root" for details.
+  ```
+
+  ![0x80040326](../../screenshot/win/wsl/wsl-0x80040326-update-shutdown.png)
