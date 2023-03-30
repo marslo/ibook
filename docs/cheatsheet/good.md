@@ -603,6 +603,7 @@ $ less +F <filename>
 > [!NOTE]
 > references:
 > - [* imarslo : epel](../linux/basic.html#tools-installation)
+> - [* imarslo : adminTools - nc](../devops/adminTools.html#netcat)
 
 - install
   ```bash
