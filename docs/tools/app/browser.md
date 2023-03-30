@@ -7,6 +7,7 @@
   - [customized firefox style](#customized-firefox-style)
 - [chrome](#chrome)
   - [shortcut](#shortcut)
+  - [download](#download)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
