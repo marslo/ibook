@@ -436,30 +436,230 @@ $ sudo dmidecode -t bios
 ```
 
 ### disk
-```bash
-$ hwinfo --disk --only /dev/sda
-192: SCSI 20.0: 10600 Disk
-  [Created at block.245]
-  Unique ID: R7kM.qzo5k6MLsu5
-  Parent ID: svHJ.VbV94345RfA
-  SysFS ID: /class/block/sda
-  SysFS BusID: 0:2:0:0
-  SysFS Device Link: /devices/pci0000:00/0000:00:02.0/0000:03:00.0/host0/target0:2:0/0:2:0:0
-  Hardware Class: disk
-  Model: "AVAGO SMC3108"
-  Vendor: "AVAGO"
-  Device: "SMC3108"
-  Revision: "4.68"
-  Driver: "megaraid_sas", "sd"
-  Driver Modules: "megaraid_sas"
-  Device File: /dev/sda (/dev/sg1)
-  Device Files: /dev/sda, /dev/disk/by-id/scsi-360030480243a18012424538006708dc9, /dev/disk/by-id/wwn-0x60030480243a18012424538006708dc9, /dev/disk/by-path/pci-0000:03:00.0-scsi-0:2:0:0
-  Device Number: block 8:0-8:15 (char 21:1)
-  BIOS id: 0x80
-  Drive status: no medium
-  Config Status: cfg=new, avail=yes, need=no, active=unknown
-  Attached to: #37 (RAID bus controller)
-```
+- `hwinfo`
+  ```bash
+  $ hwinfo --disk --only /dev/sda
+  192: SCSI 20.0: 10600 Disk
+    [Created at block.245]
+    Unique ID: R7kM.qzo5k6MLsu5
+    Parent ID: svHJ.VbV94345RfA
+    SysFS ID: /class/block/sda
+    SysFS BusID: 0:2:0:0
+    SysFS Device Link: /devices/pci0000:00/0000:00:02.0/0000:03:00.0/host0/target0:2:0/0:2:0:0
+    Hardware Class: disk
+    Model: "AVAGO SMC3108"
+    Vendor: "AVAGO"
+    Device: "SMC3108"
+    Revision: "4.68"
+    Driver: "megaraid_sas", "sd"
+    Driver Modules: "megaraid_sas"
+    Device File: /dev/sda (/dev/sg1)
+    Device Files: /dev/sda, /dev/disk/by-id/scsi-360030480243a18012424538006708dc9, /dev/disk/by-id/wwn-0x60030480243a18012424538006708dc9, /dev/disk/by-path/pci-0000:03:00.0-scsi-0:2:0:0
+    Device Number: block 8:0-8:15 (char 21:1)
+    BIOS id: 0x80
+    Drive status: no medium
+    Config Status: cfg=new, avail=yes, need=no, active=unknown
+    Attached to: #37 (RAID bus controller)
+  ```
+
+#### disk type
+
+> [!INFO]
+> Check disk interface types
+> - Advanced technology attachment (`ATA`)
+> - Integrated Drive Electronics (`IDE`)
+> - Serial ATA (`SATA`)
+> - Small Computer system interface (`SCSI`)
+> - Serial attached SCSI (`SAS`)
+> - Fibre Channel
+
+- `lsblk`
+  ```bash
+  $ lsblk -do name,tran
+  NAME TRAN
+  sdb  sas
+  sdc  sas
+  ```
+
+- `lshw`
+  ```bash
+  $ sudo lshw -c storage -c disk
+    ...
+    *-sas
+         description: Serial Attached SCSI controller
+         product: Smart Storage PQI 12G SAS/PCIe 3
+         vendor: Adaptec
+         physical id: 0
+         bus info: pci@0000:5c:00.0
+         logical name: scsi1
+         version: 01
+         width: 64 bits
+         clock: 33MHz
+         capabilities: sas pm msix pciexpress bus_master cap_list
+         configuration: driver=smartpqi latency=0
+         resources: irq:32 memory:e9100000-e9107fff ioport:8000(size=256)
+       *-disk:0
+            description: SCSI Disk                            # SCSC
+            product: LOGICAL VOLUME
+            vendor: HPE
+            physical id: 1.0.0
+            bus info: scsi@1:1.0.0
+            logical name: /dev/sdb
+            version: 1.99
+            serial: P************C
+            size: 1788GiB (1920GB)
+            capabilities: 15000rpm gpt-1.00 partitioned partitioned:gpt
+            configuration: ansiversion=5 guid=eda10475-9cdb-44cd-8dbd-28bf482b0e25 logicalsectorsize=512 sectorsize=4096
+  ```
+
+- `hdparm`
+  ```bash
+  $ sudo hdparm -I /dev/sdb
+
+  /dev/sdb:
+  SG_IO: bad/missing sense data, sb[]:  7***
+
+  ATA device, with non-removable media
+  Standards:
+    Likely used: 1
+  Configuration:
+    Logical   max current
+    cylinders 0 0
+    heads   0 0
+    sectors/track 0 0
+    --
+    Logical/Physical Sector size:           512 bytes
+    device size with M = 1024*1024:           0 MBytes
+    device size with M = 1000*1000:           0 MBytes
+    cache/buffer size  = unknown
+  Capabilities:
+    IORDY not likely
+    Cannot perform double-word IO
+    R/W multiple sector transfer: not supported
+    DMA: not supported
+    PIO: pio0
+  ```
+
+- SSD or HHD
+
+  > [!INFO]
+  > - `0`: SSD
+  > - `1`: HHD
+  > references:
+  > - [7 easy methods to check disk type (HDD or SSD) in Linux](https://www.golinuxcloud.com/check-disk-type-linux/)
+  > - [How To Find If The Disk Is SSD Or HDD In Linux](https://ostechnix.com/how-to-find-if-the-disk-is-ssd-or-hdd-in-linux/)
+
+  - check rotational
+    ```bash
+    # HHD
+    $ cat /sys/block/sd*/queue/rotational
+    1
+    1
+
+    # SSD
+    $ lsscsi
+    [0:0:0:0]    disk    Generic- SD/MMC CRW       1.00  /dev/sda
+    [1:0:0:0]    enclosu HPE      Smart Adapter    1.99  -
+    [1:1:0:0]    disk    HPE      LOGICAL VOLUME   1.99  /dev/sdb
+    [1:1:0:1]    disk    HPE      LOGICAL VOLUME   1.99  /dev/sdc
+    [1:2:0:0]    storage HPE      P408i-a SR Gen10 1.99  -
+    [devops@dc5-ssdfw11 ~]$ cat /sys/block/sd*/queue/rotational
+    1
+    0
+    0
+    ```
+  - `lsblk`
+    ```bash
+    ## SSD
+    $ lsblk -d -o name,rota
+    NAME ROTA
+    sdb     0
+    sdc     0
+
+    # or
+    ## SSD
+    $ lsblk -d -e 7 -o NAME,ROTA,DISC-MAX,MODEL
+    NAME ROTA DISC-MAX MODEL
+    sdb     0       0B LOGICAL VOLUME
+    sdc     0       0B LOGICAL VOLUME
+    ## HHD
+    $ lsblk -d -e 7 -o NAME,ROTA,DISC-MAX,MODEL
+    NAME ROTA DISC-MAX MODEL
+    sdb     1       0B SMC3108
+    sda     1       0B SMC3108
+    ```
+
+  - `smartctl` ( `$ yum install smartmontools` )
+    ```bash
+    $ sudo smartctl -a /dev/sdb1
+    smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.12-1.el7.elrepo.x86_64] (local build)
+    Copyright (C) 2002-18, Bruce Allen, Christian Franke, www.smartmontools.org
+
+    === START OF INFORMATION SECTION ===
+    Vendor:               AVAGO
+    Product:              SMC3108
+    Revision:             4.68
+    Compliance:           SPC-3
+    User Capacity:        7,679,267,307,520 bytes [7.67 TB]
+    Logical block size:   512 bytes
+    Physical block size:  4096 bytes
+    Logical Unit id:      0x60030480243a7b0124d58c0646f9617d
+    Serial number:        007d61f946068cd524017b3a24800403
+    Device type:          disk
+    Local Time is:        Thu Mar 30 10:51:52 2023 PDT
+    SMART support is:     Unavailable - device lacks SMART capability.
+
+    === START OF READ SMART DATA SECTION ===
+    Current Drive Temperature:     0 C
+    Drive Trip Temperature:        0 C
+
+    ## SSD
+    $ sudo smartctl -a /dev/sdc
+    smartctl 6.6 2017-11-05 r4594 [x86_64-linux-4.18.0-193.28.1.el8_2.x86_64] (local build)
+    Copyright (C) 2002-17, Bruce Allen, Christian Franke, www.smartmontools.org
+
+    === START OF INFORMATION SECTION ===
+    Vendor:               HPE
+    Product:              LOGICAL VOLUME
+    Revision:             1.99
+    User Capacity:        1,920,349,855,744 bytes [1.92 TB]
+    Logical block size:   512 bytes
+    Rotation Rate:        Solid State Device                          # SSD
+    Logical Unit id:      0x600508b1001c5be1882c0a4afb83c8ec
+    Serial number:        P************C
+    Device type:          disk
+    Local Time is:        Thu Mar 30 10:53:12 2023 PDT
+    SMART support is:     Available - device has SMART capability.
+    SMART support is:     Enabled
+    Temperature Warning:  Disabled or Not Supported
+
+    === START OF READ SMART DATA SECTION ===
+    SMART Health Status: OK
+    Current Drive Temperature:     0 C
+    Drive Trip Temperature:        0 C
+    ```
+
+  - `/proc/scsi/scsi`
+    ```bash
+    ## SSD
+    $ cat /proc/scsi/scsi
+    Attached devices:
+    Host: scsi0 Channel: 00 Id: 00 Lun: 00
+      Vendor: Generic- Model: SD/MMC CRW       Rev: 1.00
+      Type:   Direct-Access                    ANSI  SCSI revision: 06
+    Host: scsi1 Channel: 00 Id: 00 Lun: 00
+      Vendor: HPE      Model: Smart Adapter    Rev: 1.99
+      Type:   Enclosure                        ANSI  SCSI revision: 05
+    Host: scsi1 Channel: 01 Id: 00 Lun: 00
+      Vendor: HPE      Model: LOGICAL VOLUME   Rev: 1.99
+      Type:   Direct-Access                    ANSI  SCSI revision: 05
+    Host: scsi1 Channel: 01 Id: 00 Lun: 01
+      Vendor: HPE      Model: LOGICAL VOLUME   Rev: 1.99
+      Type:   Direct-Access                    ANSI  SCSI revision: 05
+    Host: scsi1 Channel: 02 Id: 00 Lun: 00
+      Vendor: HPE      Model: P408i-a SR Gen10 Rev: 1.99
+      Type:   RAID                             ANSI  SCSI revision: 05
+    ```
 
 #### check status
 - `$ lsblk`
