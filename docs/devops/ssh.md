@@ -22,7 +22,11 @@
     - [using command directly](#using-command-directly)
 - [ssh tunnel](#ssh-tunnel)
   - [two servers](#two-servers)
+    - [`-L`](#-l)
+    - [`-R`](#-r)
   - [three serves](#three-serves)
+    - [scenario 1](#scenario-1)
+    - [scenario 2](#scenario-2)
 - [config](#config)
   - [ssh config](#ssh-config)
   - [sshd_config](#sshd_config)
@@ -233,10 +237,17 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
 
 # ssh tunnel
 
+{% hint style='tip' %}
+> references:
+> - [ssh端口转发(跳板机)实战详解](https://zhuanlan.zhihu.com/p/469638489)
+> - [SSH 通过跳板机直接访问内网机器](https://zhuanlan.zhihu.com/p/74193910)
+{% endhint %}
+
 > [!TIP]
 > - key point:
 >   - `-L` : `<--`
 >   - `-R` : `-->`
+>
 > - basic command line
 > ```bash
 > ssh -Nf -L <localhost/localip>:<local_port>:<target>:<target_port> <to-be-mapping/localhost>
@@ -247,15 +258,17 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
 
 ## two servers
 
+### `-L`
+
 {% hint style='tip' %}
 <h4>in jumper</h4>
 {% endhint %}
 
 > [!TIP]
-> purpose:
-> ```bash
-> local:22 <-- jumper:6666
-> ```
+> - purpose:
+>   ```bash
+>   local:22 --> jumper:6666
+>   ```
 
 ```bash
 # -L : <--
@@ -269,14 +282,54 @@ tcp 0 0 127.0.0.1:6666 0.0.0.0:* LISTEN
 tcp 0 0 ::1:6666 :::* LISTEN
 ```
 
+### `-R`
+
+> [!TIP]
+> - status:
+>   ```bash
+>                  current status
+>                       |
+>                       v
+>          mymac:22 <--------- jumper:22
+>
+>    purpose:  |                  ^
+>              + ---------------> +
+>   ```
+
+```bash
+# login to jumper first via GUI
+                         destination
+                             |
+                             v
+<jumper> $ ssh -Nf -R 6666:<mymac>:22 marslo@<mymac>
+<jumper> $ ps auxfww | grep ssh | grep -v grep
+marslo    2281  0.0  0.0  11716  4064 ?        Ss   19:55   0:00      \_ ssh -Nf -R 6666:<my.pc.ip>:22 marslo@<my.pc.ip>
+<jumper> $ sudo netstat -anp | grep ssh
+tcp        0      0 <jumper>:46176    <mymac>:22        ESTABLISHED 2281/ssh
+
+# verify in <mymac>
+<mymac> $ netstat -an | grep 6666
+tcp4       0      0  127.0.0.1.6666         *.*                    LISTEN
+tcp6       0      0  ::1.6666               *.*                    LISTEN
+
+<mymac> $ ssh -p 7777 localhost
+## or
+<mymac> $ cat ~/.ssh/config
+Host  jumper
+      Hostname              localhost
+      Port                  7777
+<mymac> $ ssh jumper
+```
+
 ## three serves
 
+### scenario 1
 {% hint style='tip' %}
 <h4>in jumper</h4>
-> purpose:
-> ```bash
-> local:6666 <--- jumper:6666 <--- remote:6666`
-> ```
+> - purpose:
+>   ```bash
+>   local:6666 <--- jumper:6666 <--- remote:6666`
+>   ```
 {% endhint %}
 
 ```bash
@@ -292,9 +345,41 @@ $ scp -P 6666 root@localhost:/remote/path/file /local/path
 $ scp -P 6666 /local/path/file root@localhost:/remote/path/file
 
 $ ssh user@jumper
-jumper: ~> ps awwx | grep ssh|grep 6666
+<jumper> $ ps awwx | grep ssh | grep 6666
 17549 ? Ss 0:00 ssh -Nf -L 6666:remote:22 root@remote
 18740 ? Ss 3:50 ssh -Nf -R 6666:local:6666 root@remote
+```
+
+### scenario 2
+
+> [!TIP]
+> - details :
+>   ```bash
+>                       current status
+>                       --------------
+>                      |              |
+>
+>             mymac  <----  jumper  ----> destination
+>
+>               |                             ^
+>   wants:      v                             |
+>                -------------->--------------
+>                      visit directly
+>   ```
+
+```bash
+# login to jumper
+<jumper> $ ssh -Nf -R7777:<destination>:22 marslo@<mymac>
+<jumper> $ ps auxfww | grep ssh | grep -v grep
+marslo      41  0.0  0.0  11716  5832 ?        Ss   21:51   0:00      \_ ssh -Nf -R7777:<destination>:22 marslo@<my.mac.ip>
+
+# verify in mymac
+<mymac> $ ssh -p 7777 localhost       # localhost in <mymac> == <destination>
+<mymac> $ netstat -an | grep 7777
+tcp6       0      0  ::1.7777               ::1.65371              ESTABLISHED
+tcp6       0      0  ::1.65371              ::1.7777               ESTABLISHED
+tcp4       0      0  127.0.0.1.7777         *.*                    LISTEN
+tcp6       0      0  ::1.7777               *.*                    LISTEN
 ```
 
 # config
@@ -304,12 +389,12 @@ $ cat ~/.ssh/config
 HOST  *
       LogLevel              ERROR
       HostkeyAlgorithms     +ssh-rsa
-      # PubkeyAcceptedAlgorithms +ssh-rsa
       GSSAPIAuthentication  no
       StrictHostKeyChecking no
       UserKnownHostsFile    /dev/null
-      IdentityFile ~/.ssh/id_ed25519
-      IdentityFile ~/.ssh/id_rsa         # keep the older key if necessary
+      IdentityFile          ~/.ssh/id_ed25519
+      IdentityFile          ~/.ssh/id_rsa         # keep the older key if necessary
+      # PubkeyAcceptedAlgorithms +ssh-rsa
 
 Include config.d/*
 
