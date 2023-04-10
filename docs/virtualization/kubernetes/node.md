@@ -15,6 +15,22 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## list node names
+```bash
+$ kubectl get no --no-headers -o=custom-columns=NAME:.metadata.name
+
+# or
+$ kubectl get nodes -o 'jsonpath={.items[*].metadata.name} | fmt -1
+```
+
+### list nodes metrcs
+```bash
+$ kubectl get no --no-headers -o=custom-columns=NAME:.metadata.name | xargs -I {} sh -c 'echo   {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '
+
+# alias
+$ alias util='kubectl get no --no-headers -o=custom-columns=NAME:.metadata.name | fmt -1 | xargs -I {} sh -c '\''echo   {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''
+```
+
 ## list node with label
 ```bash
 $ kubectl get node -l <label>=<value>
