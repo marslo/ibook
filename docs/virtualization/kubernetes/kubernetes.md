@@ -9,6 +9,7 @@
 - [ports and protocols](#ports-and-protocols)
   - [contol plane](#contol-plane)
   - [worker node(s)](#worker-nodes)
+- [jsonpath](#jsonpath)
 - [options](#options)
   - [explain](#explain)
 - [kubectl alias](#kubectl-alias)
@@ -163,6 +164,15 @@
 |----------|-----------|-------------|---------------------------------------------------------------------------------------|---------------------|
 | TCP      | Inbound   | 10250       | Kubelet API                                                                           | Self, Control plane |
 | TCP      | Inbound   | 30000-32767 | [NodePort Services](https://kubernetes.io/docs/concepts/services-networking/service/) | All                 |
+
+
+## jsonpath
+
+> [!NOTE]
+> references:
+> - [JSONPath Support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
+> - [how to make kubectl jsonpath output on separate lines](https://downey.io/notes/dev/kubectl-jsonpath-new-lines/)
+
 
 ## options
 ### explain
