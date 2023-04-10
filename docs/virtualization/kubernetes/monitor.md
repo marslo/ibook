@@ -26,6 +26,7 @@
 > - [kube-state-metrics | Tutorial, Setup, and Examples](https://www.containiq.com/post/kube-state-metrics)
 > - [Installing Kubernetes Metric Server](https://docs.apinizer.com/installing-kubernetes-metric-server-16810589.html)
 > - [Part-1: Setup Prometheus, Kube State metrics and Integrate Grafana with Kubernetes](https://blog.devops.dev/part-1-setup-prometheus-kube-state-metrics-and-integrate-grafana-with-kubernetes-6c21f60d167f)
+> - [K8s资源限制设置limit未设置request会导致request默认等于limit造成资源浪费](https://github.com/Ouyangan/coding-roadmap/issues/16)
 >
 >
 > code pool
@@ -533,6 +534,7 @@ $ curl --header 'Content-Type: application/json' \
 - [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics)
 - [node_exporter](https://github.com/prometheus/node_exporter)
 - [alertmanager](https://github.com/prometheus/alertmanager)
+- [kube-resource-explorer](https://github.com/dpetzold/kube-resource-explorer/)
 
 
 ## metric server

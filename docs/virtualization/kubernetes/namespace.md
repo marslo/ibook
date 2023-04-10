@@ -41,6 +41,9 @@ EOF
 > [!NOTE]
 > references:
 > - [Unable to Delete a Project or Namespace in OCP](https://access.redhat.com/solutions/4165791)
+> - [Kubernetes Namespaces stuck in Terminating status](https://stackoverflow.com/a/62959634/2940319)
+> - [Namespace "stuck" as Terminating, How I removed it](https://stackoverflow.com/a/57726448/2940319)
+> - [How to fix Kubernetes namespaces stuck in the terminating state](https://www.redhat.com/sysadmin/troubleshooting-terminating-namespaces)
 
 ```bash
 $ ns='marslo-test'
@@ -61,6 +64,12 @@ default-token-l4s96   kubernetes.io/service-account-token   3      2y351d
 NAME      SECRETS   AGE
 default   1         2y351d
 ```
+
+- or
+  ```bash
+  $ export NAMESPACE="monitoring"
+  $ kubectl get namespace $NAMESPACE -o json  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/$NAMESPACE/finalize -f -
+  ```
 
 - or
   ```bash
