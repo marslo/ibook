@@ -1733,15 +1733,122 @@ $ gnome-terminal --geometry=123x42+0+0
 
 {% hint style='tip' %}
 > references:
+> - [* "Argument list too long": Beyond Arguments and Limitations](https://www.linuxjournal.com/article/6060)
+> - [* ARG_MAX, maximum length of arguments for a new process](https://www.in-ulm.de/~mascheck/various/argmax)
+>   - [How to avoid the limit in a shell](https://www.in-ulm.de/~mascheck/various/argmax/#avoid)
+> - [* Configuring HugePages for Oracle on Linux (x86-64)](https://oracle-base.com/articles/linux/configuring-huge-pages-for-oracle-on-linux-64)
+> - [* Chapter 36. Configuring huge pages](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/monitoring_and_managing_system_status_and_performance/configuring-huge-pages_monitoring-and-managing-system-status-and-performance)
+>   - [14.7. Configuring Huge Pages in Red Hat Enterprise Linux 4 or 5](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/tuning_and_optimizing_red_hat_enterprise_linux_for_oracle_9i_and_10g_databases/sect-oracle_9i_and_10g_tuning_guide-large_memory_optimization_big_pages_and_huge_pages-configuring_huge_pages_in_red_hat_enterprise_linux_4_or_5)
+> - ["Argument list too long": How do I deal with it, without changing my command?](https://unix.stackexchange.com/a/45584/29178)
 > - [Argument list too long for ls](https://unix.stackexchange.com/a/38962/29178)
 > - [setup ulimit](https://unix.stackexchange.com/a/45584/29178)
 > - [How to avoid the limit in a shell](https://www.in-ulm.de/~mascheck/various/argmax/#avoid)
+> - [Increasing number of huge pages exhausted memory](https://superuser.com/a/1327823/112396)
+> - [3 easy steps to configure hugepages in RHEL/CentOS 7/8](https://www.golinuxcloud.com/configure-hugepages-vm-nr-hugepages-red-hat-7/)
+> - [Bug 1364332 - systemd --user does not load limits from /etc/security/limits.d/](https://bugzilla.redhat.com/show_bug.cgi?id=1364332)
+> - [How to Increase Number of Open Files Limit in Linux](https://www.tecmint.com/increase-set-open-file-limits-in-linux/)
 {% endhint %}
+
+> [!NOTE]
+> config files
+> - `/etc/sysctl.conf`
+> - `/etc/system`
+> - `/etc/security/limits.conf`
+>   ```bash
+>   #Each line describes a limit for a user in the form:
+>   #
+>   #<domain>        <type>  <item>  <value>
+>   #
+>   #Where:
+>   #<domain> can be:
+>   #        - a user name
+>   #        - a group name, with @group syntax
+>   #        - the wildcard *, for default entry
+>   #        - the wildcard %, can be also used with %group syntax,
+>   #                 for maxlogin limit
+>   ```
+> - `/etc/limits.conf`
+> - `/etc/security/limits.d/*.conf`
+>   - `/etc/security/limits.d/99-nproc-devops.conf`
+>
+> all modifications requires **logout** and **login** again
+> ```bash
+> $ sudo pkill -u <username>
+> ```
 
 #### check the limit
 ```bash
 $ getconf ARG_MAX
+2097152
+
+# or
+$ echo $(( $(ulimit -s)*1024 / 4 ))
+2097152
+
+# check all
+$ ulimit -a
+core file size          (blocks, -c) unlimited
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 320869
+max locked memory       (kbytes, -l) 16384
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 320869
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+
+# or
+$ grep Huge /proc/meminfo
+AnonHugePages:     43008 kB
+ShmemHugePages:        0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
 ```
+
+- check page size
+  ```bash
+  $ cat /proc/sys/vm/nr_hugepages
+  0
+  # modify
+  $ echo 17290 > /proc/sys/vm/nr_hugepages
+
+  # or
+  $ grep Hugepagesize /proc/meminfo
+  Hugepagesize:       2048 kB
+  ```
+
+- [grub](https://www.golinuxcloud.com/configure-hugepages-vm-nr-hugepages-red-hat-7/#comment-26988)
+  ```bash
+  ## centos7
+  $ grep GRUB_CMDLINE_LINUX /etc/default/grub
+  GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet"
+  # append `default_hugepagesz=1G` to GRUB_CMDLINE_LINUX
+  GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet default_hugepagesz=1G"
+
+  ## centos8
+  $ grep kernelopts /boot/grub2/grubenv
+  kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
+  # append default_hugepagesz=1G to kernelopts
+  kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet default_hugepagesz=1G
+  ```
+  - rebuid bios & efi
+    ```bash
+    # for bios booting
+    $ sudo grub2-mkconfig -o /boot/grub/grub.cfg
+    # for efi booting
+    $ sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+    ```
 
 #### setup `ulimit`
 ```bash
@@ -1751,6 +1858,49 @@ $ ulimit -s
 $ ulimit -s 65536
 $ ulimit -s
 65536
+```
+
+- via `limits.d`
+  ```bash
+  $ cat /etc/security/limits.d/99-nproc-devops.conf
+  devops soft    nproc    32768
+  devops soft    nofile 65535
+  ```
+
+#### modify open file
+```bash
+# via sysctl
+$ sudo sysctl -w fs.file-max=500000
+fs.file-max = 500000
+$ cat /proc/sys/fs/file-max
+500000
+
+# or via sysctl.conf
+$ echo 'fs.file-max = 500000' >> /etc/sysctl.conf
+
+# or via ulimit
+$ ulimit -Sn 5000
+#         |
+#         v
+#  soft open file
+$ ulimit -Hn 50000
+#         |
+#         v
+#  hard open file
+
+# or
+$ cat /etc/security/limits.conf
+* hard nofile 50000
+* soft nofile 5000
+```
+
+#### setup for particular group
+```bash
+# setup for group `marslo` and `docker`
+$ cat /etc/security/limits.conf
+...
+@marslo   - nofile    65535
+@docker   - nofile    65535
 ```
 
 
