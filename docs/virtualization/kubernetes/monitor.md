@@ -507,6 +507,10 @@ $ curl --header 'Content-Type: application/json' \
 {% endraw %}
 
 
+## add-ons
+- [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics)
+
+
 ## code pool
 - [kubeless/manifests/monitoring](https://github.com/kubeless/kubeless/tree/master/manifests/monitoring)
 - [kube-prometheus/manifests](https://github.com/coreos/kube-prometheus/tree/master/manifests)

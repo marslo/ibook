@@ -38,6 +38,10 @@ EOF
 ## remove stuck namespace
 ### check which item occupied the resource
 
+> [!NOTE]
+> references:
+> - [Unable to Delete a Project or Namespace in OCP](https://access.redhat.com/solutions/4165791)
+
 ```bash
 $ ns='marslo-test'
 $ for _r in $(kubectl api-resources --verbs=list --namespaced -o name); do
@@ -163,6 +167,18 @@ default   1         2y351d
       kubectl -n ${myns} get ${_i}
     fi
   done
+  ```
+
+- oneline
+  ```bash
+  $ kubectl api-resources  --namespaced=true -o name |
+    xargs -n 1 -I {} bash -c "echo \"----- {} -----\"; kubectl get -n ${myns} {};"
+
+  # --ignore-not-found
+  # -t, --verbose
+  #               Print the command line on the standard error output before executing it
+  $ kubectl api-resources  --namespaced=true -o name |
+    xargs -t -n 1 kubectl get --show-kind --ignore-not-found -n ${myns}
   ```
 
 ### remove challenge.certmanager
