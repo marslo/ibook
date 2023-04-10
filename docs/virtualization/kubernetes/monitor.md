@@ -8,9 +8,31 @@
   - [dashboard](#dashboard)
   - [grafana settings](#grafana-settings)
   - [api](#api)
-- [code pool](#code-pool)
+- [add-ons](#add-ons)
+- [metric server](#metric-server)
+  - [sample yaml](#sample-yaml)
+- [kube-state-metrics](#kube-state-metrics)
+  - [installation](#installation)
+- [scripts](#scripts)
+  - [node resources](#node-resources)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!NOTE]
+> references:
+> - [MONITORING LINUX HOST METRICS WITH THE NODE EXPORTER](https://prometheus.io/docs/guides/node-exporter/)
+> - [Kubernetes Resources(四) - Metrics Server 安裝](https://ithelp.ithome.com.tw/articles/10297449)
+> - [Prometheus 5 - Node Exporter & Kube State Metrics](https://ithelp.ithome.com.tw/articles/10225912)
+> - [kube-state-metrics | Tutorial, Setup, and Examples](https://www.containiq.com/post/kube-state-metrics)
+> - [Installing Kubernetes Metric Server](https://docs.apinizer.com/installing-kubernetes-metric-server-16810589.html)
+> - [Part-1: Setup Prometheus, Kube State metrics and Integrate Grafana with Kubernetes](https://blog.devops.dev/part-1-setup-prometheus-kube-state-metrics-and-integrate-grafana-with-kubernetes-6c21f60d167f)
+>
+>
+> code pool
+> - [kubeless/manifests/monitoring](https://github.com/kubeless/kubeless/tree/master/manifests/monitoring)
+> - [kube-prometheus/manifests](https://github.com/coreos/kube-prometheus/tree/master/manifests)
+> - [kubernetes-handbook/manifests/prometheus](https://github.com/rootsongjc/kubernetes-handbook/tree/master/manifests/prometheus)
+
 
 ## grafana
 
@@ -509,9 +531,273 @@ $ curl --header 'Content-Type: application/json' \
 
 ## add-ons
 - [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics)
+- [node_exporter](https://github.com/prometheus/node_exporter)
+- [alertmanager](https://github.com/prometheus/alertmanager)
 
 
-## code pool
-- [kubeless/manifests/monitoring](https://github.com/kubeless/kubeless/tree/master/manifests/monitoring)
-- [kube-prometheus/manifests](https://github.com/coreos/kube-prometheus/tree/master/manifests)
-- [kubernetes-handbook/manifests/prometheus](https://github.com/rootsongjc/kubernetes-handbook/tree/master/manifests/prometheus)
+## metric server
+
+### sample yaml
+
+<!--sec data-title="metrics.yaml" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: metrics-server
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    k8s-app: metrics-server
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+  name: system:aggregated-metrics-reader
+rules:
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - pods
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: system:metrics-server
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes/metrics
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: metrics-server-auth-reader
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: extension-apiserver-authentication-reader
+subjects:
+- kind: ServiceAccount
+  name: metrics-server
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: metrics-server:system:auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: metrics-server
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: system:metrics-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:metrics-server
+subjects:
+- kind: ServiceAccount
+  name: metrics-server
+  namespace: kube-system
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: metrics-server
+  namespace: kube-system
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: https
+  selector:
+    k8s-app: metrics-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: metrics-server
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: metrics-server
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        k8s-app: metrics-server
+    spec:
+      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --kubelet-insecure-tls
+        - --metric-resolution=15s
+        image: registry.k8s.io/metrics-server/metrics-server:v0.6.3
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /livez
+            port: https
+            scheme: HTTPS
+          periodSeconds: 10
+        name: metrics-server
+        ports:
+        - containerPort: 4443
+          name: https
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readyz
+            port: https
+            scheme: HTTPS
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-dir
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-cluster-critical
+      serviceAccountName: metrics-server
+      volumes:
+      - emptyDir: {}
+        name: tmp-dir
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  labels:
+    k8s-app: metrics-server
+  name: v1beta1.metrics.k8s.io
+spec:
+  group: metrics.k8s.io
+  groupPriorityMinimum: 100
+  insecureSkipTLSVerify: true
+  service:
+    name: metrics-server
+    namespace: kube-system
+  version: v1beta1
+  versionPriority: 100
+```
+<!--endsec-->
+
+
+## kube-state-metrics
+
+> [!INFO]
+> references:
+> - [kube-state-metrics | Tutorial, Setup, and Examples](https://www.containiq.com/post/kube-state-metrics)
+> - [kube-state-metrics Helm Chart](https://artifacthub.io/packages/helm/prometheus-community/kube-state-metrics)
+> - [How To Setup Kube State Metrics on Kubernetes](https://devopscube.com/setup-kube-state-metrics/)
+
+### installation
+```bash
+$ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+$ helm repo update
+$ helm install kube-state-metrics prometheus-community/kube-state-metrics
+
+# others
+$ helm show values prometheus-community/kube-state-metrics
+$ helm install -f config.yaml kube-state-metrics prometheus-community/kube-state-metrics
+
+$ kubectl port-forward svc/kube-state-metrics 8080:8080
+$ curl 127.0.0.1:8080/metrics | grep kube_node_status_capacity
+
+# cost considerations
+# values.yaml
+metricAllowlist:
+ - kube_node_info
+ - kube_job_status_active
+```
+
+## scripts
+### [node resources](https://github.com/kubernetes/kubernetes/issues/17512#issuecomment-304069458)
+```bash
+$ cat bin/node-resources.sh
+#!/bin/bash
+set -euo pipefail
+
+echo -e "Iterating...\n"
+
+nodes=$(kubectl get node --no-headers -o custom-columns=NAME:.metadata.name)
+
+for node in $nodes; do
+  echo "Node: $node"
+  kubectl describe node "$node" | sed '1,/Non-terminated Pods/d'
+  echo
+done
+```
+
+- one-line
+  ```bash
+  $ kubectl get nodes |
+            awk '{print $1}' |
+            xargs -I {} sh -c 'echo  {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '
+
+  # alias
+  $ alias util='kubectl get nodes | awk '\''{print $1}'\'' | xargs -I {} sh -c '\''echo   {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''
+  # or
+  $ alias util='kubectl get nodes -o 'jsonpath={.items[*].metadata.name} | fmt -1 | xargs -I {} sh -c '\''echo   {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''
+  # or
+  $ alias util='kubectl get no --no-headers -o=custom-columns=NAME:.metadata.name | xargs -I {} sh -c '\''echo   {} ; kubectl describe node {} | grep Allocated -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo '\'''
+  ```
