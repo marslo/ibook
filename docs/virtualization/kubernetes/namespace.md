@@ -149,6 +149,22 @@ default   1         2y351d
   ```
   <!--endsec-->
 
+
+- or list only available resources
+  ```bash
+  #!/usr/bin/env bash
+
+  myns='marslo-test'
+  for _i in $(kubectl api-resources --verbs=list --namespaced -o name); do
+    if [[ "$(kubectl -n ${myns} get ${_i} 2>&1)" = No* ]]; then
+      :
+    else
+      echo ----- ${_i} ------
+      kubectl -n ${myns} get ${_i}
+    fi
+  done
+  ```
+
 ### remove challenge.certmanager
 
 ```bash
