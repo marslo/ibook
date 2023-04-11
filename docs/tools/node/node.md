@@ -10,7 +10,9 @@
   - [view details](#view-details)
 - [purge](#purge)
   - [macOS](#macos)
-- [QnA](#qna)
+- [tips](#tips)
+  - [nvm](#nvm)
+- [Q&A](#qa)
   - [empty of `npm ls -g`](#empty-of-npm-ls--g)
   - [env: node: No such file or directory](#env-node-no-such-file-or-directory)
 
@@ -109,7 +111,14 @@ brew doctor
 brew cleanup --prune-prefix
 ```
 
-## QnA
+## tips
+### nvm
+```bash
+$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
+$ nvm install v12
+```
+
+## Q&A
 ### empty of `npm ls -g`
 ```bash
 $ npm ls -g

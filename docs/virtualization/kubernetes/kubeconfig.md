@@ -14,10 +14,11 @@
   - [with Proxy](#with-proxy)
 - [get info](#get-info)
   - [basic view](#basic-view)
-  - [server IP by cluster name](#server-ip-by-cluster-name)
+  - [server IP](#server-ip)
   - [get user](#get-user)
   - [get password](#get-password)
   - [get key](#get-key)
+- [have fun](#have-fun)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -382,14 +383,50 @@ $ kubectl config set-cluster development --proxy-url=http://proxy.example.com:31
   experimenter
   ```
 
-### server IP by cluster name
+### server IP
+#### by cluster name
 ```bash
+# get all cluster name
 $ kubectl config --kubeconfig=config-demo view -o jsonpath="{.clusters[*].name}"
 development test
 
-$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.clusters[?(@.name == "development")].cluster.server}'
+$ kubectl config --kubeconfig=config-demo view \
+                 -o jsonpath='{.clusters[?(@.name == "development")].cluster.server}'
 https://1.2.3.4
 ```
+
+#### current in-use via `--minify`
+
+> [!NOTE]
+> ```bash
+> --minify=false:
+>          Remove all information not used by current-context from the output
+> ```
+
+```bash
+$ kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'
+https://1.2.3.4
+# or
+$ kubectl config view --minify -o jsonpath="{.clusters[].cluster.server}"
+https://1.2.3.4
+
+# more info
+$ kubectl config view --minify -o jsonpath="{.clusters[*].name}"
+development
+# or
+$ kubectl config view --minify -o jsonpath="{.clusters[].name}"
+development
+```
+
+#### current in-use via `current-context`
+```bash
+# or get current cluster IP
+$ kubectl config --kubeconfig=config-demo current-context
+development
+$ kubectl config --kubeconfig=config-demo view \
+                 -o jsonpath="{.clusters[?(@.name == \"$(kubectl config --kubeconfig=config-demo current-context)\")].cluster.server}"
+```
+
 
 ### get user
 ```bash
@@ -410,7 +447,42 @@ some-password
 ```bash
 $ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")]}'
 {"name":"developer","user":{"client-certificate":"fake-cert-file","client-key":"fake-key-seefile"}}
-
+# or via base64 decoding
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")]}' | base64 -d
+    --minify=false:
+  Remove all information not used by current-context from the output
 $ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")].user.client-key}'
 fake-key-seefile
+# or via base64 decoding
+$ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")].user.client-key}' | base64 -d
 ```
+
+## have fun
+- [view config details](https://stackoverflow.com/a/53403859/2940319)
+  ```bash
+  exec >/tmp/output &&
+  CONTEXT_NAME=kubernetes-admin@kubernetes \
+  CONTEXT_CLUSTER=$(kubectl config view -o=jsonpath="{.contexts[?(@.name==\"${CONTEXT_NAME}\")].context.cluster}") \
+  CONTEXT_USER=$(kubectl config view -o=jsonpath="{.contexts[?(@.name==\"${CONTEXT_NAME}\")].context.user}") && \
+  echo "[" && \
+  kubectl config view -o=json | jq -j --arg CONTEXT_NAME "$CONTEXT_NAME" '.contexts[] | select(.name==$CONTEXT_NAME)' && \
+  echo "," && \
+  kubectl config view -o=json | jq -j --arg CONTEXT_CLUSTER "$CONTEXT_CLUSTER" '.clusters[] | select(.name==$CONTEXT_CLUSTER)' && \
+  echo "," && \
+  kubectl config view -o=json | jq -j --arg CONTEXT_USER "$CONTEXT_USER" '.users[] | select(.name==$CONTEXT_USER)' && \
+  echo -e "\n]\n" && \
+  exec >/dev/tty && \
+  cat /tmp/output | jq && \
+  rm -rf /tmp/output
+  ```
+
+  - [or](https://stackoverflow.com/a/53403319/2940319)
+    ```bash
+    $ kubectl config view -o json |
+      jq '. as $o
+            | ."current-context" as $current_context_name
+            | $o.contexts[] | select(.name == $current_context_name) as $context
+            | $o.clusters[] | select(.name == $context.context.cluster) as $cluster
+            | $o.users[] | select(.name == $context.context.user) as $user
+            | {"current-context-name": $current_context_name, context: $context, cluster: $cluster, user: $user}'
+    ```

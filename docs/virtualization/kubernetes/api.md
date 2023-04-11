@@ -96,27 +96,35 @@
 
 ## acess cluster
 ```bash
-$ APISERVER=$(kubectl config view --minify | grep server | cut -f 2- -d ":" | tr -d " ")
-$ TOKEN=$(kubectl describe secret default-token | grep -E '^token' | cut -f2 -d':' | tr -d " ")
+$ APISERVER=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+# or get via cluster name of `kubernetes-staging`
+$ APISERVER=$(kubectl config view -o jsonpath='{.clusters[?(@.name == "kubernetes-staging")].cluster.server}')
+
+$ TOKEN=$(kubectl get secret default-token -o jsonpath='{.data.token}' | base64 --decode)
 $ curl ${APISERVER}/api --header "Authorization: Bearer ${TOKEN}" --insecure
-{
-  "kind": "APIVersions",
-  "versions": [
-    "v1"
-  ],
-  "serverAddressByClientCIDRs": [
-    {
-      "clientCIDR": "0.0.0.0/0",
-      "serverAddress": "<master.ip>:6443"
-    }
-  ]
-}
 ```
 
-- using jsonpath
+- or
   ```bash
+  $ APISERVER=$(kubectl config view --minify | grep server | cut -f 2- -d ":" | tr -d " ")
+  # or via jsonpath
   $ APISERVER=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
-  $ TOKEN=$(kubectl get secret default-token -o jsonpath='{.data.token}' | base64 --decode)
+  # or get via cluster name of `kubernetes-staging`
+  $ APISERVER=$(kubectl config view -o jsonpath='{.clusters[?(@.name == "kubernetes-staging")].cluster.server}')
+
+  $ TOKEN=$(kubectl describe secret default-token | grep -E '^token' | cut -f2 -d':' | tr -d " ")
   $ curl ${APISERVER}/api --header "Authorization: Bearer ${TOKEN}" --insecure
+  {
+    "kind": "APIVersions",
+    "versions": [
+      "v1"
+    ],
+    "serverAddressByClientCIDRs": [
+      {
+        "clientCIDR": "0.0.0.0/0",
+        "serverAddress": "<master.ip>:6443"
+      }
+    ]
+  }
   ```
 
