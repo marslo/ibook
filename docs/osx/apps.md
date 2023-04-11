@@ -5,7 +5,8 @@
 - [homebrew](#homebrew)
   - [homebrew installation](#homebrew-installation)
   - [homebrew caskroom installation](#homebrew-caskroom-installation)
-  - [package installation](#package-installation)
+  - [install](#install)
+  - [reinstall/downgrade](#reinstalldowngrade)
   - [check formula config files](#check-formula-config-files)
   - [brew debug](#brew-debug)
   - [tricky](#tricky)
@@ -151,18 +152,20 @@ $ brew cu --all
   $ brew upgrade --cask --greedy
   ```
 
-### package installation
+### install
+
+> [!NOTE]
 > reference:
 > - [Homebrew Formulae - macvim](https://formulae.brew.sh/formula/macvim)
 > - [MacVim](https://macvim-dev.github.io/macvim/)
 >
-> more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/blob/master/osx/belloMyOSX.sh#L429)
-> ```bash
-> systemlist="imagemagick coreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof trash"
-> regularlist="wget tmux corkscrew tig ifstat binutils diffutils gawk gnutls gzip less file-formula stow telnet iproute2mac ctags jshon colordiff tree vifm p7zip git mas htop watch jfrog-cli-go youtube-dl etcd mas figlet screenfetch glances bash-completion@2 dos2unix nmap rename renameutils pipenv inetutils hadolint"
-> regularheadlist="shellcheck bats jq gradle-completion git-flow"
-> gnulist="gnu-sed gnu-tar gnu-which grep ed findutils gnu-indent"
-> ```
+> - more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/blob/master/osx/belloMyOSX.sh#L429)
+>   ```bash
+>   systemlist="imagemagick coreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof trash"
+>   regularlist="wget tmux corkscrew tig ifstat binutils diffutils gawk gnutls gzip less file-formula stow telnet iproute2mac ctags jshon colordiff tree vifm p7zip git mas htop watch jfrog-cli-go youtube-dl etcd mas figlet screenfetch glances bash-completion@2 dos2unix nmap rename renameutils pipenv inetutils hadolint"
+>   regularheadlist="shellcheck bats jq gradle-completion git-flow"
+>   gnulist="gnu-sed gnu-tar gnu-which grep ed findutils gnu-indent"
+>   ```
 
 ```bash
 # utils
@@ -198,6 +201,8 @@ $ brew install less --with-pcre
   ```
 
 - `brew upgrade` ignore specific formulas
+
+> [!NOTE]
 > [Ignore formula on brew upgrade](https://stackoverflow.com/a/48995512/2940319)
 
 ```bash
@@ -218,19 +223,239 @@ nmap 7.80_1 -> 7.90
 imagemagick 7.0.10-31 -> 7.0.10-34
 ...
 ```
-  - unpin
+
+- unpin
   ```bash
   $ brew unpin macvim
   $ brew list --pinned
   ```
 
-#### Spotlight Error
+### reinstall/downgrade
+
+> [!NOTE|label:references]
+> - [Install icu4c version 63 with Homebrew](https://stackoverflow.com/a/55828190/2940319)
+> - [Finding the right version of the formula](https://blog.sandipb.net/2021/09/02/installing-a-specific-version-of-a-homebrew-formula/)
+> - [Homebrew install specific version of formula?](https://stackoverflow.com/a/67399779/2940319)
+> - [homebrew - how to install older versions](https://stackoverflow.com/a/46306176/2940319)
+>
+> - error log in node@12.22 after `icu4c` upgraded from 71.1 to 72.1:
+>   ```bash
+>   dyld[43773]: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.71.dylib
+>     Referenced from: <57CC95E2-F00F-30F7-9252-4671B72F7B9E> /usr/local/Cellar/node@12/12.22.12_1/bin/node
+>     Reason: tried: '/usr/local/opt/icu4c/lib/libicui18n.71.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/opt/icu4c/lib/libicui18n.71.dylib' (no such file), '/usr/local/opt/icu4c/lib/libicui18n.71.dylib' (no such file), '/usr/local/lib/libicui18n.71.dylib' (no such file), '/usr/lib/libicui18n.71.dylib' (no such file, not in dyld cache), '/usr/local/Cellar/icu4c/72.1/lib/libicui18n.71.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/usr/local/Cellar/icu4c/72.1/lib/libicui18n.71.dylib' (no such file), '/usr/local/Cellar/icu4c/72.1/lib/libicui18n.71.dylib' (no such file), '/usr/local/lib/libicui18n.71.dylib' (no such file), '/usr/lib/libicui18n.71.dylib' (no such file, not in dyld cache)
+>   ```
+
+#### get formula folder
+```bash
+$ cd $(brew --repo homebrew/core)
+
+# or
+$ cd $(brew --prefix)/Homebrew/Library/Taps/homebrew/homebrew-core/Formula   # intel
+$ cd $(brew --prefix)/Library/Taps/homebrew/homebrew-core/Formula            # m1
+
+# or
+$ hcore="$(brew --repo homebrew/core)"
+$ alias git="git -C ${hcore}"
+```
+
+#### get proper revision
+- from git history
+  ```bash
+  $ git log --oneline -5 --follow icu4c.rb
+  11249c583b5 icu4c: update 72.1 bottle.
+  025d9d1deaf icu4c 72.1
+  e3317b86c11 (icu4c-71.1) icu4c: update 71.1 bottle.                 # proper version
+  54fb3277728 icu4c: update 71.1 bottle.
+  c013b416f31 icu4c: update homepage url
+
+  $ git rev-parse e3317b86c11
+  e3317b86c11c644e88c762e03eb7b310c3337587
+  ```
+
+- via `brew extract`
+  ```bash
+  $ brew extract --force --version=71.1 icu4c homebrew/cask
+  ==> Searching repository history
+  ==> Writing formula for icu4c from revision e3317b8 to:           # `e3317b8` is the revision
+  /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask/Formula/icu4c@71.1.rb
+
+  $ git -C $(brew --repo homebrew/core) rev-parse e3317b8
+  e3317b86c11c644e88c762e03eb7b310c3337587
+  ```
+
+#### reinstall
+
+> [!NOTE]
+> - without auto update : `HOMEBREW_NO_AUTO_UPDATE=1`
+> - without install dependents : `HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1`
+>
+> ```bash
+> $ brew install --help
+>
+> Unless `HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK` is set, `brew upgrade` or `brew
+> reinstall` will be run for outdated dependents and dependents with broken
+> linkage, respectively.
+>
+> Unless `HOMEBREW_NO_INSTALL_CLEANUP` is set, `brew cleanup` will then be run for
+> the installed formulae or, every 30 days, for all formulae.
+>
+> Unless `HOMEBREW_NO_INSTALL_UPGRADE` is set, `brew install` formula will
+> upgrade formula if it is already installed but outdated.
+> ```
+
+
+- via fully-qualified name
+  ```bash
+  $ brew --cache --force-bottle icu4c@71.1
+  Error: Formulae found in multiple taps:
+         * homebrew/cask/icu4c@71.1
+         * marslo/icu4c-71-1/icu4c@71.1
+  Please use the fully-qualified name (e.g. homebrew/cask/icu4c@71.1) to refer to the formula.
+
+  $ HOMEBREW_NO_AUTO_UPDATE=1 brew install homebrew/cask/icu4c@71.1
+  ==> Fetching homebrew/cask/icu4c@71.1
+  ==> Downloading https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz
+  Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/ff9ece63f455ff1d6aa066340111e22abfc72c249a7f3d1e492ffef111cb0752--icu4c-71_1-src.tgz
+  ==> Installing icu4c@71.1 from homebrew/cask
+  ...
+  ```
+
+  <!--sec data-title="installation full log" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  $ HOMEBREW_NO_AUTO_UPDATE=1 brew install homebrew/cask/icu4c@71.1
+  ==> Fetching homebrew/cask/icu4c@71.1
+  ==> Downloading https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz
+  Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/ff9ece63f455ff1d6aa066340111e22abfc72c249a7f3d1e492ffef111cb0752--icu4c-71_1-src.tgz
+  ==> Installing icu4c@71.1 from homebrew/cask
+  ==> ./configure --prefix=/usr/local/Cellar/icu4c@71.1/71.1 --disable-samples --disable-tests --enable-static --with-library-bits=64
+  ==> make
+  ==> make install
+  ==> Caveats
+  icu4c@71.1 is keg-only, which means it was not symlinked into /usr/local,
+  because macOS provides libicucore.dylib (but nothing else).
+
+  If you need to have icu4c@71.1 first in your PATH, run:
+    echo 'export PATH="/usr/local/opt/icu4c@71.1/bin:$PATH"' >> /Users/marslo/.bash_profile
+    echo 'export PATH="/usr/local/opt/icu4c@71.1/sbin:$PATH"' >> /Users/marslo/.bash_profile
+
+  For compilers to find icu4c@71.1 you may need to set:
+    export LDFLAGS="-L/usr/local/opt/icu4c@71.1/lib"
+    export CPPFLAGS="-I/usr/local/opt/icu4c@71.1/include"
+
+  For pkg-config to find icu4c@71.1 you may need to set:
+    export PKG_CONFIG_PATH="/usr/local/opt/icu4c@71.1/lib/pkgconfig"
+  ==> Summary
+  ☕️ 🐸  /usr/local/Cellar/icu4c@71.1/71.1: 262 files, 76.2MB, built in 2 minutes 44 seconds
+  ==> Running `brew cleanup icu4c@71.1`...
+  Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+  Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+  ```
+  <!--endsec-->
+
+- via url
+
+  > [!INFO]
+  > url should be : `https://raw.githubusercontent.com/Homebrew/homebrew-core/<git-revision>/Formula/<formula-name>.rb`
+
+  ```bash
+  $ HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 \
+    HOMEBREW_NO_AUTO_UPDATE=1 \
+    brew reinstall https://raw.githubusercontent.com/Homebrew/homebrew-core/e3317b86c11c644e88c762e03eb7b310c3337587/Formula/icu4c.rb
+  ```
+
+- via local cache
+    ```bash
+    $ git log -p -G url.*icu4c -- Formula/icu4c.rb | grep -e ^commit -e https://github.com
+    -  url "https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz"
+    +  url "https://github.com/unicode-org/icu/releases/download/release-72-1/icu4c-72_1-src.tgz"
+    -  url "https://github.com/unicode-org/icu/releases/download/release-70-1/icu4c-70_1-src.tgz"
+    +  url "https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz"
+    -  url "https://github.com/unicode-org/icu/releases/download/release-69-1/icu4c-69_1-src.tgz"
+    +  url "https://github.com/unicode-org/icu/releases/download/release-70-1/icu4c-70_1-src.tgz"
+       ...
+
+    $ curl -O "https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz"
+    $ mv icu4c-71_1-src.tgz $(brew --cache -s icu4c)
+    $ HOMEBREW_NO_AUTO_UPDATE=1 brew install -f $(brew --cache -s icu4c)
+    ```
+
+- via new tap
+
+  > [!TIP]
+  > references:
+  > - [Install specific git version on MacOS using brew](https://stackoverflow.com/a/69549488/2940319)
+
+  - setup environment (tap)
+    ```bash
+    $ brew tap-new marslo/icu4c-71-1
+    Initialized empty Git repository in /usr/local/Homebrew/Library/Taps/marslo/homebrew-icu4c-71-1/.git/
+    .git/hooks/post-commit: line 8: git-stats: command not found
+    [main (root-commit) ed01d30] Create marslo/icu4c-71-1 tap
+     3 files changed, 90 insertions(+)
+     create mode 100644 .github/workflows/publish.yml
+     create mode 100644 .github/workflows/tests.yml
+     create mode 100644 README.md
+    ==> Created marslo/icu4c-71-1
+    /usr/local/Homebrew/Library/Taps/marslo/homebrew-icu4c-71-1
+
+    # extract
+    $ brew extract --version=71.1 icu4c marslo/icu4c-71-1
+    ==> Searching repository history
+    ==> Writing formula for icu4c from revision e3317b8 to:
+    /usr/local/Homebrew/Library/Taps/marslo/homebrew-icu4c-71-1/Formula/icu4c@71.1.rb
+    ```
+
+  - install
+    ```bash
+    $ brew search /icu4c/
+    ==> Formulae
+    homebrew/cask/icu4c@71.1                       icu4c ✔                                        marslo/icu4c-71-1/icu4c@71.1
+
+    $ HOMEBREW_NO_AUTO_UPDATE=1 brew install marslo/icu4c-71-1/icu4c@71.1
+    ```
+
+- via formula file (.rb)
+  ```bash
+  $ git checkout -b icu4c-71.1 e3317b86c11
+
+  $ HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 HOMEBREW_NO_AUTO_UPDATE=1 brew reinstall ./icu4c.rb
+  Error: Failed to load cask: ./icu4c.rb
+  Cask 'icu4c' is unreadable: wrong constant name #<Class:0x00007f7a52b2d4e0>
+  Warning: Treating ./icu4c.rb as a formula.
+  ==> Fetching icu4c
+  ==> Downloading https://ghcr.io/v2/homebrew/core/icu4c/manifests/71.1
+  Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/afc80f921cbba7963984e5d24567fbff5b3ba72dfc409cbf7c7f02ccaf0bebab--icu4c-71.1.bottle_manifest.json
+  ==> Downloading https://ghcr.io/v2/homebrew/core/icu4c/blobs/sha256:012f882f239863200f0f87150541ea695d609aa14c14a390909d249352ae51f9
+  Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/f0134d8542652b3e26e7a482164caededc27b5ff5925270efdb6f268467f51ae--icu4c--71.1.ventura.bottle.tar.gz
+  ==> Reinstalling icu4c
+  Warning: icu4c 72.1 is available and more recent than version 71.1.
+  ==> Pouring icu4c--71.1.ventura.bottle.tar.gz
+  ☕️ 🐸  /usr/local/Cellar/icu4c/71.1: 262 files, 76.2MB
+  ==> Running `brew cleanup icu4c`...
+  Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+  Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+  Removing: /Users/marslo/Library/Caches/Homebrew/icu4c--71.1... (28.2MB)
+  Warning: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK is set: not checking for outdated
+  dependents or dependents with broken linkage!
+
+  # revert formula branch
+  $ git checkout master
+  ```
+
+- pin formula
+  ```bash
+  $ brew pin icu4c
+  $ brew list --pinned
+  icu4c
+  ```
+
+#### spotlight error
 ```bash
 $ xattr -dr com.apple.quarantine MacVim.app
 $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr/local/opt/macvim/MacVim.app" at POSIX file "/Applications"'
 ```
 
-- Warning
+- warning
   ```bash
   $ brew linkapps macvim
   Warning: `brew linkapps` has been deprecated and will eventually be removed!
@@ -243,7 +468,7 @@ $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr
   Linked 1 app to /Applications
   ```
 
-- macvim build install from sourcode
+  <!--sec data-title="macvim build install from sourcode" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
   $ brew install --HEAD macvim-dev/macvim/macvim
   ==> Installing macvim from macvim-dev/macvim
@@ -286,6 +511,7 @@ $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr
   ==> PATH=/usr/local/Cellar/gettext/0.19.8.1/bin:$PATH MSGFMT=/usr/local/Cellar/gettext/0.19.8.1/bin/msgfmt INSTALL_DATA=install FILEMOD=644 LOCALEDIR=../../src/MacVim/build/Release/MacVim.app/Contents/Resources/vim/runtime/lang make -C src/po install
   🍺  /usr/local/Cellar/macvim/HEAD-4bf1de8: 2,183 files, 39.7MB, built in 1 minute 13 seconds
   ```
+  <!--endsec-->
 
 ### check formula config files
 ```bash
@@ -361,7 +587,11 @@ $ brew -v edit macvim-dev/macvim/macvim
   ```
 
 ### tricky
-- get info
+
+> [!NOTE|label:references]
+> - [Tips and Tricks](https://docs.brew.sh/Tips-N%27-Tricks#installing-previous-versions-of-formulae)
+
+- pathes
   ```bash
   $ brew --repository
   /usr/local/Homebrew
@@ -399,12 +629,25 @@ $ brew -v edit macvim-dev/macvim/macvim
 - [list the packages installed from taps](https://stackoverflow.com/a/44358788/2940319)
   ```bash
   $ brew tap-info --installed
+
+  # or
+  $ brew info $(brew list) | grep '^From:' | sort
+  # or
+  $ brew leaves | xargs brew info | grep '^From:'
   ```
 
   - [to get formula name](https://apple.stackexchange.com/a/392993/254265)
     ```bash
     $ brew tap-info macvim-dev/macvim --json | jq -r '.[]|(.formula_names[])'
     macvim-dev/macvim/macvim
+
+    # or
+    $ brew tap                                             # get tap name
+    $ TAP='homebrew/cask'
+    $ brew tap-info $TAP --json | jq -r '.[]|(.cask_tokens[])'
+    $ brew tap-info $TAP --json | jq -r '.[]|(.cask_tokens[])' | grep whatsapp
+    homebrew/cask/chatmate-for-whatsapp
+    homebrew/cask/whatsapp
     ```
 
 - [manual download and install from local](https://apple.stackexchange.com/a/361603/254265)
