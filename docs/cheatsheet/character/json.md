@@ -7,8 +7,9 @@
   - [Dealing with json objects](#dealing-with-json-objects)
   - [Slicing and Filtering](#slicing-and-filtering)
 - [`join`](#join)
-- [split](#split)
-- [replacing](#replacing)
+- [`as`](#as)
+- [`split`](#split)
+- [`replacing`](#replacing)
 - [space in the key](#space-in-the-key)
 - [builtin operators](#builtin-operators)
   - [`debug`](#debug)
@@ -19,6 +20,7 @@
   - [`to_entries`](#to_entries)
   - [`from_entries`](#from_entries)
   - [`with_entries`](#with_entries)
+  - [`to_entries`](#to_entries-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -41,12 +43,9 @@
 > - [* jq cheat sheet](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/)
 >   - [Replacing a missing or null property](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/#replacing-a-missing-or-null-property)
 >   - [Replacing substrings in a string](https://developer.zendesk.com/documentation/integration-services/developer-guide/jq-cheat-sheet/#replacing-substrings-in-a-string)
-
-
 {% endhint %}
 
 ## basic
-
 ### syntax for jq
 
 |  Syntax  | Description                                                            |
@@ -58,7 +57,7 @@
 |    `+`   | Concatenate or Add                                                     |
 |    `-`   | Difference of sets or Substract                                        |
 | `length` | Size of selected element                                               |
-| `⎮` | Pipes are used to chain commands in a similar fashion than bash        |
+|    `⎮`   | Pipes are used to chain commands in a similar fashion than bash        |
 
 
 
@@ -89,8 +88,9 @@
 ## `join`
 
 > [!TIP]
-> [to output multiple values on a single line](https://github.com/stedolan/jq/issues/785)
-> [join multiple values](https://github.com/stedolan/jq/issues/785#issuecomment-101842421https://github.com/stedolan/jq/issues/785#issuecomment-101842421)
+> references:
+> - [to output multiple values on a single line](https://github.com/stedolan/jq/issues/785)
+> - [join multiple values](https://github.com/stedolan/jq/issues/785#issuecomment-101842421https://github.com/stedolan/jq/issues/785#issuecomment-101842421)
 
 ```bash
 $ echo '{ "some": "thing", "json": "like" }' |
@@ -146,7 +146,19 @@ thing,like
   Michael 2
   ```
 
-## split
+## `as`
+
+> [!NOTE|label:references]
+> - [jq: filter input based on if key ends with specified string](https://stackoverflow.com/a/48904944/2940319)
+
+```bash
+$ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
+       jq -r '. as $o | keys_unsorted[] | select(endswith("/")) | $o[.]'
+marslo
+18
+```
+
+## `split`
 
 > [!TIP]
 > references:
@@ -159,7 +171,6 @@ thing,like
 >     Input "a, b,c,d, e, "
 >     Output  ["a","b,c,d","e",""]
 >     ```
-
 
 ```bash
 $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri'
@@ -197,7 +208,7 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri | sp
   ]
   ```
 
-## replacing
+## `replacing`
 
 > [!TIP]
 > references:
@@ -225,6 +236,8 @@ v1
 ```
 
 ## builtin operators
+
+> [!NOTE]
 > reference:
 > - [jq manual - Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
 
@@ -390,6 +403,8 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
   ```
 
 ### `from_entries`
+
+
 ```bash
 $ echo '[{"key":"a", "value":1}, {"key":"b", "value":2}]' |
        jq -r from_entries
@@ -407,4 +422,54 @@ $ echo '{"a": 1, "b": 2}' |
   "KEY_a": 1,
   "KEY_b": 2
 }
+
 ```
+
+### `to_entries`
+
+> [!NOTE]
+> references:
+> - [jq: filter input based on if key ends with specified string](https://stackoverflow.com/a/48906860/2940319)
+
+```bash
+# original
+$ echo '{ "name" : "marslo" }' | jq -r
+{
+  "name": "marslo"
+}
+# `to_entries[]`
+$ echo '{ "name" : "marslo" }' | jq -r 'to_entries[]'
+{
+  "key": "name",
+  "value": "marslo"
+}
+```
+
+- to_entries and select
+  ```bash
+  # orignal
+  $ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' | jq -r
+  {
+    "name/": "marslo",                 # wants value if key ends with '/'
+    "age/": "18",                      # wants value if key ends with '/'
+    "citizenship": "china"
+  }
+
+  # select
+  $ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
+         jq -r 'to_entries[] | select(.key|endswith("/")) '
+  {
+    "key": "name/",
+    "value": "marslo"
+  }
+  {
+    "key": "age/",
+    "value": "18"
+  }
+
+  # get `.value` after selected
+  $ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
+         jq -r 'to_entries[] | select(.key|endswith("/")) | .value'
+  marslo
+  18
+  ```
