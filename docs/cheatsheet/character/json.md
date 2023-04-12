@@ -63,11 +63,11 @@
 
 ### Dealing with json objects
 
-| Description                |                 Command                 |
-|:---------------------------|:---------------------------------------:|
-| Display all keys           |               `jq 'keys'`               |
-| Adds + 1 to all items      |          `jq 'map_values(.+1)'`         |
-| Delete a key               |             `jq 'del(.foo)'`            |
+| Description                |               Command              |
+|:---------------------------|:----------------------------------:|
+| Display all keys           |             `jq 'keys'`            |
+| Adds + 1 to all items      |       `jq 'map_values(.+1)'`       |
+| Delete a key               |          `jq 'del(.foo)'`          |
 | Convert an object to array | `to_entries ⎮ map([.key, .value])` |
 
 ### Slicing and Filtering
@@ -85,7 +85,7 @@
 | Select array of objects by value   | `jq '.[] ⎮ select(.id == "second")'`                                                                                                                  |
 | Select by type                     | `jq '.[] ⎮ numbers'`<br> **with type been arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars **         |
 
-## `join`
+## join
 
 > [!TIP]
 > references:
@@ -146,19 +146,7 @@ thing,like
   Michael 2
   ```
 
-## `as`
-
-> [!NOTE|label:references]
-> - [jq: filter input based on if key ends with specified string](https://stackoverflow.com/a/48904944/2940319)
-
-```bash
-$ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
-       jq -r '. as $o | keys_unsorted[] | select(endswith("/")) | $o[.]'
-marslo
-18
-```
-
-## `split`
+## split
 
 > [!TIP]
 > references:
@@ -208,7 +196,7 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri | sp
   ]
   ```
 
-## `replacing`
+## replacing
 
 > [!TIP]
 > references:
@@ -241,7 +229,7 @@ v1
 > reference:
 > - [jq manual - Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
 
-### `debug`
+### debug
 - without `debug`
   ```bash
   $ echo '''[{"id": "first", "val": 1}, {"id": "second", "val": 2},  {"id": "SECOND", "val": 3}]'''  |
@@ -267,7 +255,7 @@ v1
   }
   ```
 
-### `select`
+### select
 > refrence
 > - [imarslo: example on jenkins api analysis](../../jenkins/script/api.html#get-all-parameters-via-json-format)
 > - [imarslo: example on gerrit api analysis](../../devops/git/gerrit.html#get-all-vote-cr-2)
@@ -293,7 +281,7 @@ $ echo '''[{"id": "first", "val": 1}, {"id": "second", "val": 2}]''' |
 }
 ```
 
-### `contains`
+### contains
 > reference:
 > - [imarslo: example on artifactory api analysis](../../artifactory/api.html#filter-buildinfoenvjobname-in-all-builds)
 > - [imarslo: example on list Error pods in kuberetnes](../../virtualization/kubernetes/pod.html#list-all-error-status-pods)
@@ -366,8 +354,27 @@ $ echo '''[{"id": "first", "val": 1}, {"id": "second", "val": 2},  {"id": "SECON
 }
 ```
 
-### [`to_entries`](https://github.com/stedolan/jq/issues/785#issuecomment-604557510)
+### [to_entries[]](https://github.com/stedolan/jq/issues/785#issuecomment-604557510)
+
+> [!NOTE]
+> references:
+> - [jq: filter input based on if key ends with specified string](https://stackoverflow.com/a/48906860/2940319)
+
 ```bash
+# original
+$ echo '{ "name" : "marslo" }' | jq -r
+{
+  "name": "marslo"
+}
+
+# `to_entries[]`
+$ echo '{ "name" : "marslo" }' | jq -r 'to_entries[]'
+{
+  "key": "name",
+  "value": "marslo"
+}
+
+# or `to_entries`
 $ echo '{"a": 1, "b": 2}' | jq -r to_entries
 [
   {
@@ -380,6 +387,7 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
   }
 ]
 ```
+
 - example to get `key` and `value`
   ```bash
   $ echo '{ "some": "thing", "json": "like" }' \
@@ -388,62 +396,19 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
   json    like
   ```
 
-  or
-  ```bash
-  $ echo '{ "some": "thing", "json": "like" }' \
-         | jq -r '[.some, .json] | @csv'
-  "thing","like"
-  ```
+  - or output format to `@csv`
+    ```bash
+    $ echo '{ "some": "thing", "json": "like" }' |
+           jq -r '[.some, .json] | @csv'
+    "thing","like"
+    ```
 
-  or
-  ```bash
-  $ echo '{ "some": "thing", "json": "like" }' \
-         | jq -r '[.some, .json] | @tsv'
-  thing like
-  ```
-
-### `from_entries`
-
-
-```bash
-$ echo '[{"key":"a", "value":1}, {"key":"b", "value":2}]' |
-       jq -r from_entries
-{
-  "a": 1,
-  "b": 2
-}
-```
-
-### `with_entries`
-```bash
-$ echo '{"a": 1, "b": 2}' |
-       jq 'with_entries(.key |= "KEY_" + .)'
-{
-  "KEY_a": 1,
-  "KEY_b": 2
-}
-
-```
-
-### `to_entries`
-
-> [!NOTE]
-> references:
-> - [jq: filter input based on if key ends with specified string](https://stackoverflow.com/a/48906860/2940319)
-
-```bash
-# original
-$ echo '{ "name" : "marslo" }' | jq -r
-{
-  "name": "marslo"
-}
-# `to_entries[]`
-$ echo '{ "name" : "marslo" }' | jq -r 'to_entries[]'
-{
-  "key": "name",
-  "value": "marslo"
-}
-```
+  - or output format to `@tsv`
+    ```bash
+    $ echo '{ "some": "thing", "json": "like" }' |
+           jq -r '[.some, .json] | @tsv'
+    thing like
+    ```
 
 - to_entries and select
   ```bash
@@ -473,3 +438,36 @@ $ echo '{ "name" : "marslo" }' | jq -r 'to_entries[]'
   marslo
   18
   ```
+
+### from_entries
+```bash
+$ echo '[{"key":"a", "value":1}, {"key":"b", "value":2}]' |
+       jq -r from_entries
+{
+  "a": 1,
+  "b": 2
+}
+```
+
+### with_entries
+```bash
+$ echo '{"a": 1, "b": 2}' |
+       jq 'with_entries(.key |= "KEY_" + .)'
+{
+  "KEY_a": 1,
+  "KEY_b": 2
+}
+```
+
+### as
+
+> [!NOTE|label:references]
+> - [jq: filter input based on if key ends with specified string](https://stackoverflow.com/a/48904944/2940319)
+
+```bash
+$ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
+       jq -r '. as $o | keys_unsorted[] | select(endswith("/")) | $o[.]'
+marslo
+18
+```
+

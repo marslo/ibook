@@ -789,6 +789,8 @@ PS C:\> cat .\test.txt | ForEach-Object {
   State : NotPresent
   ```
 
+  ![check openssh version](../../screenshot/win/powershell/windows-ssh-2.png)
+
 - install client and server
   ```powershell
   > Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
