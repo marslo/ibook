@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [list node names](#list-node-names)
+  - [list all Ready nodes](#list-all-ready-nodes)
   - [list nodes metrcs](#list-nodes-metrcs)
 - [with status](#with-status)
 - [list node with label](#list-node-with-label)
@@ -25,6 +26,64 @@ $ kubectl get no --no-headers -o=custom-columns=NAME:.metadata.name
 # or
 $ kubectl get nodes -o 'jsonpath={.items[*].metadata.name} | fmt -1
 ```
+
+### list all Ready nodes
+
+> [!NOTE|label:references:]
+> - [* JSONPath to list all nodes in ready state except the ones which are tainted?](https://stackoverflow.com/a/66931164/2940319)
+> - [* list node status with jq](https://stackoverflow.com/a/58710967/2940319)
+> - [Kubectl Get Nodes: Why and How to Use It](https://loft.sh/blog/kubectl-get-nodes-why-and-how-to-use-it/)
+> - [Checking Kubernetes node status](https://www.ibm.com/docs/en/mvi/1.1.1?topic=environment-checking-kubernetes-node-status)
+> - [Viewing and finding resources](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-and-finding-resources)
+>   ```bash
+>   # Check which nodes are ready
+>   $ JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' \
+>     && kubectl get nodes -o jsonpath="$JSONPATH" | grep "Ready=True"
+>   ```
+>
+> - see also
+>   - [* imarslo : list all ready pods](./pod.html#list-all-ready-pods)
+
+```bash
+$ kubectl get nodes -o json | jq -r '.items[] | select(.spec.taints|not) | select(.status.conditions[].reason=="KubeletReady" and .status.conditions[].status=="True") | .metadata.name'
+node-vm1
+node1
+node10
+node11
+node15
+node4
+node6
+node8
+node9
+```
+
+- list status
+  ```bash
+  $ kubectl get nodes -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.status.conditions[?(@.type=="Ready")].status} {"\t"} {.spec.taints[].effect} {"\n"} {end}' | awk '$2=="True"' | awk '$3 != "NoSchedule"'
+    node-vm1    True
+    node1       True
+    node10      True
+    node11      True
+    node15      True
+    node4       True
+    node6       True
+    node8       True
+    node9       True
+
+  $ kubectl get nodes -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.status.conditions[?(@.type=="Ready")].status} {"\t"} {.spec.taints[].effect} {"\n"} {end}' | awk '$2=="True"'
+    node-vm1    True
+    node1       True
+    node10      True
+    node11      True
+    node15      True
+    node2       True    NoSchedule
+    node3       True    NoSchedule
+    node4       True
+    node5       True    NoSchedule
+    node6       True
+    node8       True
+    node9       True
+  ```
 
 ### list nodes metrcs
 
@@ -138,47 +197,63 @@ $ kubectl describe nodes | sed -n '/^Allocated /,/^Events:/ { /^  [^(]/ p; } ; /
 ## with status
 
 ```bash
-$ kubectl get nodes -o jsonpath="{range .items[*]}{@.metadata.name}: {range @.status.conditions[4]}{@.type}; {\"\n\"}{end}{end}";
-cd-ssdfw2: DiskPressure;
-cd-ssdfw4: Ready;
-dc5-ssdfw-vm1: Ready;
-dc5-ssdfw1: DiskPressure;
-dc5-ssdfw10: DiskPressure;
-dc5-ssdfw11: DiskPressure;
-dc5-ssdfw15: DiskPressure;
-dc5-ssdfw2: DiskPressure;
-dc5-ssdfw3: DiskPressure;
-dc5-ssdfw4: DiskPressure;
-dc5-ssdfw5: DiskPressure;
-dc5-ssdfw6: DiskPressure;
-dc5-ssdfw8: DiskPressure;
-dc5-ssdfw9: DiskPressure;
-sh-ssdfw1: DiskPressure;
-sh-ssdfw2: DiskPressure;
-sh-ssdfw3: DiskPressure;
-sh-ssdfw4: DiskPressure;
-
-# or
-$ kubectl get nodes -o jsonpath="{range .items[*]}{@.metadata.name}:{range @.status.conditions[4]}{@.type}={@.status}; {\"\n\"}{end}{end}"
-cd-ssdfw2:DiskPressure=Unknown;
-cd-ssdfw4:Ready=Unknown;
-dc5-ssdfw-vm1:Ready=True;
-dc5-ssdfw1:DiskPressure=False;
-dc5-ssdfw10:DiskPressure=False;
-dc5-ssdfw11:DiskPressure=False;
-dc5-ssdfw15:DiskPressure=False;
-dc5-ssdfw2:DiskPressure=False;
-dc5-ssdfw3:DiskPressure=False;
-dc5-ssdfw4:DiskPressure=False;
-dc5-ssdfw5:DiskPressure=False;
-dc5-ssdfw6:DiskPressure=False;
-dc5-ssdfw8:DiskPressure=False;
-dc5-ssdfw9:DiskPressure=False;
-sh-ssdfw1:DiskPressure=Unknown;
-sh-ssdfw2:DiskPressure=Unknown;
-sh-ssdfw3:DiskPressure=Unknown;
-sh-ssdfw4:DiskPressure=Unknown;
+$ kubectl get nodes -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.status.conditions[?(@.type=="Ready")].status} {"\t"} {.spec.taints[].effect} {"\n"} {end}'
+  node-vm1    True
+  node1       True
+  node10      True
+  node11      True
+  node12      Unknown   NoSchedule
+  node13      Unknown   NoSchedule
+  node14      Unknown   NoSchedule
+  node15      True
+  node16      Unknown   NoSchedule
+  node17      Unknown   NoSchedule
+  node2       True      NoSchedule
+  node3       True      NoSchedule
+  node4       True
+  node5       True      NoSchedule
+  node6       True
+  node7       Unknown   NoSchedule
+  node8       True
+  node9       True
 ```
+
+- list all status
+  ```bash
+  $ kubectl get nodes -o jsonpath="{range .items[*]} {\"\n\"} {@.metadata.name} :{\"\n\"} {\"\t\"}{range @.status.conditions[*]}{@.type}={@.status} {\"\n\t\"} {end}{end}"
+
+  node1 :
+    ReadonlyFilesystem=False
+    KernelDeadlock=False
+    OutOfDisk=False
+    MemoryPressure=False
+    DiskPressure=False
+    PIDPressure=False
+    Ready=True
+
+  node2 :
+    ReadonlyFilesystem=False
+    KernelDeadlock=False
+    OutOfDisk=Unknown
+    MemoryPressure=Unknown
+    DiskPressure=Unknown
+    PIDPressure=False
+    Ready=Unknown
+
+  node4 :
+    OutOfDisk=Unknown
+    MemoryPressure=Unknown
+    DiskPressure=Unknown
+    PIDPressure=False
+    Ready=Unknown
+
+  node-vm1 :
+    OutOfDisk=False
+    MemoryPressure=False
+    DiskPressure=False
+    PIDPressure=False
+    Ready=True
+  ```
 
 ## list node with label
 ```bash

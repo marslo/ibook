@@ -15,6 +15,7 @@
   - [get the oldest pod](#get-the-oldest-pod)
   - [sort via created time](#sort-via-created-time)
 - [list](#list)
+  - [list all ready pods](#list-all-ready-pods)
   - [list error status pods](#list-error-status-pods)
   - [list all pods statuses only](#list-all-pods-statuses-only)
   - [list running images](#list-running-images)
@@ -29,11 +30,22 @@
 
 {% hint style='tip' %}
 > references:
-> - [Pod Lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+> - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+> - [* Pod Lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle)
 > - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/_print/)
 > - [Field Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/)
-> - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 {% endhint %}
+
+
+> [!NOTE|label:pod phase]
+>
+> |   VALUE   | DESCRIPTION                                                                                                                      |
+> |:---------:|----------------------------------------------------------------------------------------------------------------------------------|
+> |  Pending  | The Pod has been accepted by the Kubernetes cluster, but one or more of the containers has not been set up and made ready to run |
+> |  Running  | The Pod has been bound to a node, and all of the containers have been created                                                    |
+> | Succeeded | All containers in the Pod have terminated in success, and will not be restarted.                                                 |
+> |   Failed  | All containers in the Pod have terminated, and at least one container has terminated in failure                                  |
+> |  Unknown  | For some reason the state of the Pod could not be obtained                                                                       |
 
 ## [filter via `--field-selector`](https://stackoverflow.com/a/50811992/2940319)
 ### list all `Failed` pods
@@ -62,7 +74,7 @@ devops-jenkins-659f4c6d44-d2w76   1/1     Running   0          2d22h   **.***.*.
   {% raw %}
   ```bash
   $ kubectl -n <namespace> get po \
-      --template '{{range .items}}{{if eq .spec.nodeName "<nodeName>"}}{{.metadata.name}}{{"\n"}}{{end}}}{{end}}'
+            --template '{{range .items}}{{if eq .spec.nodeName "<nodeName>"}}{{.metadata.name}}{{"\n"}}{{end}}}{{end}}'
   ```
   {% endraw %}
 
@@ -116,8 +128,9 @@ $ kubectl -n <namespace> get po \
 ```
 
 ### get the oldest pod
+
 {% hint style="tip" %}
-`-1:` means the last in the list
+> `-1:` means the last in the list
 {% endhint %}
 
 ```bash
@@ -133,6 +146,28 @@ $ kubectl -n <namespace> get pods \
 ```
 
 ## list
+
+### [list all ready pods](https://stackoverflow.com/a/58993242/2940319)
+
+> [!NOTE|label:references]
+> - [* imarslo : list all ready nodes](./node.html#list-all-ready-nodes)
+
+```bash
+$ kubectl get pods --all-namespaces -o json |
+          jq -r '.items[] | select(.status.phase = "Ready" or ([ .status.conditions[] | select(.type == "Ready") ] | length ) == 1 ) | .metadata.namespace + "\t" + .metadata.name'
+```
+
+- [list all `ImagePullBackOff` pods](https://stackoverflow.com/a/57222958/2940319)
+
+  > [!NOTE|label:references]
+  > - [How can I view pods with kubectl and filter based on having a status of ImagePullBackOff?](https://stackoverflow.com/a/57222793/2940319)
+
+  ```bash
+  $ kubectl get pod --all-namespaces -o=json | jq '.items[]|select(any( .status.containerStatuses[]; .state.waiting.reason=="ImagePullBackOff"))|.metadata.name'
+
+  # or
+  $ kubectl get pod --all-namespaces -o jsonpath='{.items[?(@.status.containerStatuses[*].state.waiting.reason=="ImagePullBackOff")].metadata.name}'
+  ```
 
 ### [list error status pods](https://stackoverflow.com/a/53327330/2940319)
 
@@ -219,6 +254,30 @@ coredns-59dd98b545-lnklx                    Running   k8s-node02
 coredns-59dd98b545-ltj5p                    Running   k8s-node03
 ...
 ```
+
+### [list pods on nodes](https://stackoverflow.com/a/39235513/2940319)
+
+- specific nodes
+  ```bash
+  $ kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=<node>
+  ```
+
+- all nodes
+  ```bash
+  $ kubectl get pods -o wide --sort-by="{.spec.nodeName}"
+  ```
+
+  - via label filter
+    ```bash
+    $ for n in $(kubectl get nodes -l your_label_key=your_label_value --no-headers | cut -d " " -f1); do
+        kubectl get pods --all-namespaces  --no-headers --field-selector spec.nodeName=${n}
+      done
+    ```
+
+  - via API
+    ```bash
+    $ curl --cacert ca.crt --cert apiserver.crt --key apiserver.key  https://<server>:<port>/api/v1/namespaces/<namespace>/pods?fieldSelector=spec.nodeName%3Dsomenodename
+    ```
 
 ### output
 

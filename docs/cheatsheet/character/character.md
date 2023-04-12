@@ -23,7 +23,8 @@
   - [subset of arguments](#subset-of-arguments)
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
   - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
-  - [Running multiple commands with xargs](#running-multiple-commands-with-xargs)
+  - [running multiple commands with xargs](#running-multiple-commands-with-xargs)
+  - [read by char](#read-by-char)
 - [`find`](#find)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
   - [`exec` and `sed`](#exec-and-sed)
@@ -575,7 +576,7 @@ second paragraph
 > `-I{}` == `-i`
 > references:
 > - [xargs](https://en.wikipedia.org/wiki/Xargs)
-> - [Running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
+> - [running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
 {% endhint %}
 
 
@@ -614,7 +615,7 @@ $ find . -name "*.sh" | xargs wc -l | sort -hr
 $ git log --format="%H %P" | xargs -L 1 git diff
 ```
 
-### [Running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
+### [running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
 
 > [!TIP]
 > precondition:<br>
@@ -701,6 +702,12 @@ round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
   ```bash
   $ echo domain-{1..4}.com | fmt -1 | xargs -L1 ping -c1 -t1 -W0
   ```
+
+### [read by char](https://stackoverflow.com/a/28800844/2940319)
+```bash
+$ printf 'mark spitz' | while read -r -n1 c; do printf "[%c]" "$c"; done
+[m][a][r][k][][s][p][i][t][z]
+```
 
 ## `find`
 > reference:
@@ -811,12 +818,14 @@ $ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
   ```
 
 ### [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
-> reference:
-> [shellcheck SC2001](https://github.com/koalaman/shellcheck/wiki/SC2001)
+
+> [!NOTE|label:reference]
+> - [shellcheck SC2001](https://github.com/koalaman/shellcheck/wiki/SC2001)
 >
-> ```bash
-> str='aa  bb      cc'
-> ```
+> - sample code:
+>   ```bash
+>   str='aa  bb      cc'
+>   ```
 
 - `${variable//search/replace}`
   ```bash
