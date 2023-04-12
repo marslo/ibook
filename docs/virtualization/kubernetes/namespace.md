@@ -15,9 +15,10 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 {% hint style='info' %}
-> Reference:
+> reference:
 > - [deleting namespace stuck at "Terminating" state](https://github.com/kubernetes/kubernetes/issues/60807#issuecomment-408599873)
 > - [A namespace is stuck in the Terminating state](https://www.ibm.com/docs/en/cloud-private/3.2.0?topic=console-namespace-is-stuck-in-terminating-state)
+> - [How to fix Kubernetes namespaces stuck in the terminating state](https://www.redhat.com/sysadmin/troubleshooting-terminating-namespaces)
 {% endhint %}
 
 ## create namespace
@@ -68,6 +69,10 @@ default   1         2y351d
 ```
 
 - [or modify `spec.finalizers`](https://stackoverflow.com/a/75434699/2940319)
+
+  > [!NOTE|label:references]
+  > - [There is no way to force delete Namespaces with invalid finalizers](https://github.com/kubernetes/kubernetes/issues/77086)
+
   ```bash
   # to modify `"finalizers": [ "kubernet" ]` to `"finalizers": []`
   $ export NAMESPACE="monitoring"
@@ -205,6 +210,22 @@ $ kubectl delete pods -n <namespace> --all
   $ kubectl delete po $(kubectl -n <namespace> get po -o jsonpath='{range .items[*]}{.metadata.name} ') \
             --force --grace-period=0 \
             -n <namespace>
+  ```
+
+- [or](https://gist.github.com/zparnold/0e72d7d3563da2704b900e3b953a8229)
+  ```bash
+  $ kubectl get pods --all-namespaces |
+            grep Evicted |
+            awk '{print $2 " --namespace=" $1}' |
+            xargs kubectl delete pod
+  ```
+
+- [or](https://gist.github.com/zparnold/0e72d7d3563da2704b900e3b953a8229?permalink_comment_id=4280677#gistcomment-4280677)
+  ```bash
+  $ kubectl get pods --all-namespaces |
+            grep -E OutOfcpu\|Evicted\|Completed\|OOMKilled\|Error\|ContainerStatusUnknown |
+            awk '{print "kubectl delete po " $2 " -n " $1 }' |
+            bash
   ```
 
 #### [delete in all namespaces](https://stackoverflow.com/a/72655667/2940319)

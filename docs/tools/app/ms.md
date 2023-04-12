@@ -2,9 +2,13 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [office](#office)
 - [outlook](#outlook)
-- [ms office](#ms-office)
-- [logs](#logs)
+  - [profiles](#profiles)
+- [word](#word)
+  - [logs](#logs)
+- [excel](#excel)
+  - [shortcuts](#shortcuts)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -79,18 +83,37 @@ $ ls -1d ~/Library/Group\ Containers/UBF8T346G9.*/
   ```
 
 ## word
+
+> [!TIP|label:references]
+> - [office软件出现输入字延迟，点击延迟的现象](https://blog.csdn.net/A_zhangpengjie/article/details/107465113)
+> - [* Show document content (text animation, drawings and text boxes) in Word](https://www.extendoffice.com/documents/word/946-word-show-text-animation-drawing-text-boxes.html#a2)
+> - [How to disable the smooth moving cursor in Office 2016](https://www.dedoimedo.com/computers/office-2016-smooth-cursor-disable.html)
+> - [Typing Animation - Unbelievably annoying and can't turn off](https://answers.microsoft.com/en-us/msoffice/forum/all/typing-animation-unbelievably-annoying-and-cant/d011514a-c915-474a-90df-27649386bc4f)
+> - [How to Disable the Typing Animation Feature in Office 2013](https://www.howtogeek.com/161826/how-to-disable-the-typing-animation-feature-in-office-2013/)
+> - [How to Disable the Typing Animation in Office 2016 or Office 2013](https://www.laptopmag.com/articles/office-2013-typing-animation-disable)
+
+
 ### logs
 - word: `~/Library/Containers/com.microsoft.Word /Data/Library/Caches/Microsoft/uls/ Com.microsoft.Word /logs`
   ```bash
   $ tail -f ~/Library/Containers/com.microsoft.Word/Data/Library/Caches/Microsoft/uls/com.microsoft.Word/logs/apple-device-log-20210114-2301.log
   ```
 
+### disable animations
+```batch
+> cat DisableAnimations.reg
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\Graphics]
+"DisableAnimations"=dword:00000001
+```
 ## excel
 ### shortcuts
 
 > [!NOTE|label:references:]
 > - [Excel Shortcuts “Cheat Sheet”](https://www.wallstreetprep.com/knowledge/excel-shortcuts/)
 > - [Excel Shortcuts PC Mac](https://corporatefinanceinstitute.com/resources/excel/excel-shortcuts-pc-mac/)
+> - [三种方法，教你在Excel里面给字体添加删除线](https://zhuanlan.zhihu.com/p/46124552)
 
 |              SHORTCUT             | PURPOSE          |
 |:---------------------------------:|------------------|
