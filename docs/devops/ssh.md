@@ -40,6 +40,8 @@
 - [duebug](#duebug)
   - [debug git](#debug-git)
   - [debug ssh](#debug-ssh)
+  - [tips](#tips)
+    - [disconnect](#disconnect)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -609,7 +611,7 @@ Match Address 192.168.0.0/24
 > references:
 > - [Linux / UNIX kill unresponsive hung SSH session](https://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/)
 > - [Kill an unresponsive ssh session without closing the terminal](https://unix.stackexchange.com/a/621066/29178)
->
+> - [How to kill or disconnect hung ssh session in Linux](https://www.golinuxcloud.com/kill-disconnect-hung-ssh-session-linux/)
 
 ```bash
 $ <Enter>
