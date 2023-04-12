@@ -4,6 +4,7 @@
 
 - [list node names](#list-node-names)
   - [list nodes metrcs](#list-nodes-metrcs)
+- [with status](#with-status)
 - [list node with label](#list-node-with-label)
   - [update label of node](#update-label-of-node)
 - [show](#show)
@@ -133,6 +134,51 @@ $ kubectl describe nodes | sed -n '/^Allocated /,/^Events:/ { /^  [^(]/ p; } ; /
     echo "Average usage (requests) : ${avg_percent_cpu}% CPU, ${avg_percent_mem}% memory."
   }
   ```
+
+## with status
+
+```bash
+$ kubectl get nodes -o jsonpath="{range .items[*]}{@.metadata.name}: {range @.status.conditions[4]}{@.type}; {\"\n\"}{end}{end}";
+cd-ssdfw2: DiskPressure;
+cd-ssdfw4: Ready;
+dc5-ssdfw-vm1: Ready;
+dc5-ssdfw1: DiskPressure;
+dc5-ssdfw10: DiskPressure;
+dc5-ssdfw11: DiskPressure;
+dc5-ssdfw15: DiskPressure;
+dc5-ssdfw2: DiskPressure;
+dc5-ssdfw3: DiskPressure;
+dc5-ssdfw4: DiskPressure;
+dc5-ssdfw5: DiskPressure;
+dc5-ssdfw6: DiskPressure;
+dc5-ssdfw8: DiskPressure;
+dc5-ssdfw9: DiskPressure;
+sh-ssdfw1: DiskPressure;
+sh-ssdfw2: DiskPressure;
+sh-ssdfw3: DiskPressure;
+sh-ssdfw4: DiskPressure;
+
+# or
+$ kubectl get nodes -o jsonpath="{range .items[*]}{@.metadata.name}:{range @.status.conditions[4]}{@.type}={@.status}; {\"\n\"}{end}{end}"
+cd-ssdfw2:DiskPressure=Unknown;
+cd-ssdfw4:Ready=Unknown;
+dc5-ssdfw-vm1:Ready=True;
+dc5-ssdfw1:DiskPressure=False;
+dc5-ssdfw10:DiskPressure=False;
+dc5-ssdfw11:DiskPressure=False;
+dc5-ssdfw15:DiskPressure=False;
+dc5-ssdfw2:DiskPressure=False;
+dc5-ssdfw3:DiskPressure=False;
+dc5-ssdfw4:DiskPressure=False;
+dc5-ssdfw5:DiskPressure=False;
+dc5-ssdfw6:DiskPressure=False;
+dc5-ssdfw8:DiskPressure=False;
+dc5-ssdfw9:DiskPressure=False;
+sh-ssdfw1:DiskPressure=Unknown;
+sh-ssdfw2:DiskPressure=Unknown;
+sh-ssdfw3:DiskPressure=Unknown;
+sh-ssdfw4:DiskPressure=Unknown;
+```
 
 ## list node with label
 ```bash
