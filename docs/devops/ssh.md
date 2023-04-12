@@ -598,3 +598,32 @@ Match Address 192.168.0.0/24
   # -t : test mode
   $ sudo /usr/sbin/sshd -t [-f /path/to/sshd_config]
   ```
+
+## tips
+
+### disconnect
+
+> [!TIP]
+> <kbd>Enter</kbd> + <kbd>~</kbd> + <kbd>.</kbd> + <kbd>Enter</kbd>
+>
+> references:
+> - [Linux / UNIX kill unresponsive hung SSH session](https://www.cyberciti.biz/faq/openssh-linux-unix-osx-kill-hung-ssh-session/)
+> - [Kill an unresponsive ssh session without closing the terminal](https://unix.stackexchange.com/a/621066/29178)
+>
+
+```bash
+$ <Enter>
+$ ~?
+Supported escape sequences:
+ ~.   - terminate connection (and any multiplexed sessions)
+ ~B   - send a BREAK to the remote system
+ ~C   - open a command line
+ ~R   - request rekey
+ ~V/v - decrease/increase verbosity (LogLevel)
+ ~^Z  - suspend ssh
+ ~#   - list forwarded connections
+ ~&   - background ssh (when waiting for connections to terminate)
+ ~?   - this message
+ ~~   - send the escape character by typing it twice
+(Note that escapes are only recognized immediately after newline.)
+```
