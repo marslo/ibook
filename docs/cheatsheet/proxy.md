@@ -23,6 +23,7 @@
 - [proxy for ssl](#proxy-for-ssl)
 - [Q&A](#qa)
   - [nc : `nc: Proxy error: "HTTP/1.1 200 Connection established"`](#nc--nc-proxy-error-http11-200-connection-established)
+- [proxy with kubeconfig](#proxy-with-kubeconfig)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -68,8 +69,8 @@ proxy=http://proxy.example.com:80
 
 ## proxy for apt
 
-> [!TIP]
-> [imarlso : APT Configuration](../devops/commonTools.html#apt-configuration)
+> [!TIP|label:see also]
+> - [* imarlso : APT Configuration](../devops/commonTools.html#apt-configuration)
 
 ```bash
 $ cat /etc/apt/apt.conf
@@ -80,8 +81,8 @@ Acquire::ftp::Proxy "http://proxy.example.com:80";
 
 ## proxy for docker
 
-> [!TIP]
-> [imarslo : docker proxy](../virtualization/docker/tricks.html#docker-with-proxy)
+> [!TIP|label:see also]
+> - [* imarslo : docker proxy](../virtualization/docker/tricks.html#docker-with-proxy)
 
 ### for docker build
 
@@ -130,7 +131,7 @@ Environment=HTTPS_PROXY=http://proxy.example.com:443 HTTP_PROXY=http://proxy.exa
 
 ## proxy for pip
 
-> [!TIP]
+> [!TIP|label:paths]
 > - MS Windows: `%APPDATA%\pip\pip.ini`
 > - MacOS: `$HOME/Library/Application Support/pip/pip.conf`
 > - Unix: `$HOME/.config/pip/pip.conf`
@@ -240,8 +241,7 @@ Host  github.com
 
 ## proxy for git
 
-> [!TIP]
-> references:
+> [!NOTE|label:references]
 > - [evantoli/GitConfigHttpProxy.md](https://gist.github.com/evantoli/f8c23a37eb3558ab8765)
 
 ```bash
@@ -310,8 +310,7 @@ $ git config --global http.sslVerify false                # unable to access '..
 
 ## proxy for npm
 
-> [!NOTE]
-> references:
+> [!NOTE|label:referencs]
 > - [npm config](https://docs.npmjs.com/cli/v8/using-npm/config)
 > - [Is there a way to make npm install (the command) to work behind proxy?](https://stackoverflow.com/a/10304317/2940319)
 > - [How to fix SSL certificate error when running Npm on Windows?](https://stackoverflow.com/a/54538095/2940319)
@@ -335,7 +334,7 @@ $ npm config set strict-ssl false
 
 ## proxy for nc
 
-> [!NOTE]
+> [!NOTE|label:manual page]
 > ```bash
 > -X proxy_version
 >         Requests that nc should use the specified protocol when talking to the proxy server.
@@ -362,8 +361,7 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
 
 ## [proxy for ssl](https://curl.se/docs/sslcerts.html)
 
-> [!NOTE]
-> HTTPS proxy
+> [!NOTE|label:https proxy]
 > Since version 7.52.0, curl can do HTTPS to the proxy separately from the connection to the server. This TLS connection is handled separately from the server connection so instead of `--insecure` and `--cacert` to control the certificate verification, you use `--proxy-insecure` and `--proxy-cacert`. With these options, you make sure that the TLS connection and the trust of the proxy can be kept totally separate from the TLS connection to the server.
 
 ## Q&A
@@ -398,3 +396,15 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
   # verify in ssh
   $ ssh -vT -o "ProxyCommand=corkscrew 127.0.0.1 8080 %h %p" -p 22 git.sample.com
   ```
+
+## proxy with kubeconfig
+
+> [!NOTE|label:see also]
+> - [* imarslo : Kubectl context and configuration](../virtualization/kubernetes/kubeconfig.html#with-proxy)
+
+```bash
+$ kubectl config set-cluster <my-cluster-name> --proxy-url=<my-proxy-url>
+
+# i.e.
+$ kubectl config set-cluster development --proxy-url=http://proxy.example.com:8080
+```
