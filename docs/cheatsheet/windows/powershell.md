@@ -2,10 +2,19 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [check current user is Admin](#check-current-user-is-admin)
 - [echo](#echo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+### check current user is Admin
+```powershell
+> (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+True
+```
+
+![check current permissions](../../screenshot/win/powershell/windows-ssh-1.png)
 
 
 ### echo
