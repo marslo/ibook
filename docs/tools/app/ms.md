@@ -36,27 +36,25 @@
 > - [How to troubleshoot issues that you encounter when you sign in to Office apps for Mac, iPad, iPhone, or iPod Touch when using Active Directory Federation Services](https://support.microsoft.com/en-us/office/how-to-troubleshoot-issues-that-you-encounter-when-you-sign-in-to-office-apps-for-mac-ipad-iphone-or-ipod-touch-when-using-active-directory-federation-services-e44357b4-c9c4-4580-a946-ef5dabdb98cd?ui=en-us&rs=en-us&ad=us)
 {% endhint %}
 
-### outlook
-- [profile](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_outlook-mso_mac-mso_365hp/where-is-the-microsoft-database-utility-in-mac/205f7e0a-153d-40dc-bafe-23485bedda01)
-  ```bash
-  $ ls ~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/
-  ```
-
-- [reset outlook profile](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_outlook-mso_mac-mso_o365b/how-to-create-new-profile-in-outlook-for-mac/7af4acf5-7f02-486b-9d6c-ae9f6f941ea8)
-  ```bash
-  $ open "/Applications/Microsoft Outlook.app/Contents/SharedSupport/Outlook Profile Manager.app"
-  ```
-
-### ms office
+## office
 #### [uninstall completely](https://answers.microsoft.com/en-us/msoffice/forum/all/microsoftoffice161618081201installerpkg-download/09eb6c6b-8615-4c6e-93cf-4bba4f7dcac3)
-  > If you still meet the issue, I suggest you try the following steps and resign into Office to check the result:
-  > Navigated to Library folder and open Group Containers. Ctrl+click each of these folders if present, and Move to Trash.
-  > ```bash
-  > UBF8T346G9.ms
-  > UBF8T346G9.Office
-  > UBF8T346G9.OfficeOsfWebHost
-  > ```
-  > Warning: Outlook data will be removed when you move the three folders listed in this step to Trash. You should back up these folders before you delete them.
+
+> If you still meet the issue, I suggest you try the following steps and resign into Office to check the result:
+> Navigated to Library folder and open Group Containers. Ctrl+click each of these folders if present, and Move to Trash.
+> ```bash
+> UBF8T346G9.ms
+> UBF8T346G9.Office
+> UBF8T346G9.OfficeOsfWebHost
+> ```
+> Warning: Outlook data will be removed when you move the three folders listed in this step to Trash. You should back up these folders before you delete them.
+
+{% hint style='tip' %}
+> references:
+> - [pbowden-msft/Unlicense](https://github.com/pbowden-msft/Unlicense/blob/master/Unlicense)
+> - [[FIX] Error When Opening Word or Outlook on Mac (EXC_BAD_INSTRUCTION)](https://appuals.com/exc_bad_instruction/)
+> - [How to remove Office license files on a Mac](https://support.microsoft.com/en-us/office/how-to-remove-office-license-files-on-a-mac-b032c0f6-a431-4dad-83a9-6b727c03b193)
+> - [Having problems with Office and Outlook for Mac 2016 (Sept/Oct 2017)](https://www.itguyswa.com.au/problems-with-outlook-for-mac-2016-solved/)
+{% endhint %}
 
 ```bash
 $ ls -1d ~/Library/Group\ Containers/UBF8T346G9.*/
@@ -68,13 +66,33 @@ $ ls -1d ~/Library/Group\ Containers/UBF8T346G9.*/
 /Users/marslo/Library/Group Containers/UBF8T346G9.ms/
 ```
 
-- [pbowden-msft/Unlicense](https://github.com/pbowden-msft/Unlicense/blob/master/Unlicense)
-- [[FIX] Error When Opening Word or Outlook on Mac (EXC_BAD_INSTRUCTION)](https://appuals.com/exc_bad_instruction/)
-- [How to remove Office license files on a Mac](https://support.microsoft.com/en-us/office/how-to-remove-office-license-files-on-a-mac-b032c0f6-a431-4dad-83a9-6b727c03b193)
-- [Having problems with Office and Outlook for Mac 2016 (Sept/Oct 2017)](https://www.itguyswa.com.au/problems-with-outlook-for-mac-2016-solved/)
+## outlook
+### profiles
+- [profile](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_outlook-mso_mac-mso_365hp/where-is-the-microsoft-database-utility-in-mac/205f7e0a-153d-40dc-bafe-23485bedda01)
+  ```bash
+  $ ls ~/Library/Group Containers/UBF8T346G9.Office/Outlook/Outlook 15 Profiles/
+  ```
 
+- [reset outlook profile](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_outlook-mso_mac-mso_o365b/how-to-create-new-profile-in-outlook-for-mac/7af4acf5-7f02-486b-9d6c-ae9f6f941ea8)
+  ```bash
+  $ open "/Applications/Microsoft Outlook.app/Contents/SharedSupport/Outlook Profile Manager.app"
+  ```
+
+## word
 ### logs
 - word: `~/Library/Containers/com.microsoft.Word /Data/Library/Caches/Microsoft/uls/ Com.microsoft.Word /logs`
   ```bash
   $ tail -f ~/Library/Containers/com.microsoft.Word/Data/Library/Caches/Microsoft/uls/com.microsoft.Word/logs/apple-device-log-20210114-2301.log
   ```
+
+## excel
+### shortcuts
+
+> [!NOTE|label:references:]
+> - [Excel Shortcuts “Cheat Sheet”](https://www.wallstreetprep.com/knowledge/excel-shortcuts/)
+> - [Excel Shortcuts PC Mac](https://corporatefinanceinstitute.com/resources/excel/excel-shortcuts-pc-mac/)
+
+|              SHORTCUT             | PURPOSE          |
+|:---------------------------------:|------------------|
+| <kbd>control</kbd> + <kbd>5</kbd> | strikethrough    |
+| <kbd>command</kbd> + <kbd>1</kbd> | Open Format Cells |
