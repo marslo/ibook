@@ -8,6 +8,7 @@
     - [get build details](#get-build-details)
     - [get culprits](#get-culprits)
     - [setup next build number](#setup-next-build-number)
+  - [delete multiple builds](#delete-multiple-builds)
   - [build log](#build-log)
     - [get console output](#get-console-output)
     - [check whether if log kept](#check-whether-if-log-kept)
@@ -202,7 +203,7 @@ final int END_BUILD      = project.getLastCompletedBuild().getId().toInteger()
 
 - setup next build number if necessary
   ```groovy
-  Jenkins.instance.getItemByFullName( JOB_PATTERN ).updateNextBuildNumber( START_BUILD )
+  Jenkins.instance.getItemByFullName( JOB_PATTERN ).updateNextBuildNumber( START_BUILD+1 )
   ```
 
 ## build log
