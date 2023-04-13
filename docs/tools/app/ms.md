@@ -7,6 +7,7 @@
   - [profiles](#profiles)
 - [word](#word)
   - [logs](#logs)
+  - [disable animations](#disable-animations)
 - [excel](#excel)
   - [shortcuts](#shortcuts)
 
@@ -107,6 +108,7 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\Graphics]
 "DisableAnimations"=dword:00000001
 ```
+
 ## excel
 ### shortcuts
 
