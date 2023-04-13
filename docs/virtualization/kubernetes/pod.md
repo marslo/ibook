@@ -20,6 +20,7 @@
   - [list all pods statuses only](#list-all-pods-statuses-only)
   - [list running images](#list-running-images)
   - [list running pods](#list-running-pods)
+  - [list pods on nodes](#list-pods-on-nodes)
   - [output](#output)
   - [jsonpath](#jsonpath)
 - [management](#management)
