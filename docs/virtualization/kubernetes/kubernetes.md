@@ -33,12 +33,14 @@
 {% hint style='tip' %}
 > reference
 > - [* Glossary](https://kubernetes.io/docs/reference/glossary/?fundamental=true)
+> - [* 在 CentOS 上部署 Kubernetes 集群](https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html)
 > - [* Kubernetes 中文指南/云原生应用架构实战手册](https://jimmysong.io/kubernetes-handbook/)
 > - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 > - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
 > - [* Scheduling, Preemption and Eviction](https://kubernetes.io/docs/concepts/scheduling-eviction/_print/)
 > - [* Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 > - [* Administer a Cluster](https://kubernetes.io/docs/tasks/administer-cluster/)
+> - [* Kubernetes概念辨析](https://cloud-atlas.readthedocs.io/zh_CN/latest/kubernetes/concepts/index.html)
 > - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
 > - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
 > - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)

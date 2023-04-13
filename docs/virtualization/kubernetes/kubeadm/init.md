@@ -36,11 +36,12 @@
 > - [Configuring each kubelet in your cluster using kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
 > - [Creating a cluster with kubeadm v1.21](https://v1-21.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
 > - [使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第一部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part1/)
-> - [一步步打造基于Kubeadm的高可用Kubernetes集群-第二部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
-> - [以Kubeadm方式安装的Kubernetes集群的探索](https://tonybai.com/2017/01/24/explore-kubernetes-cluster-installed-by-kubeadm/)
-> - [使用Kubeadm搭建Kubernetes HA（1.10.1）](https://blog.csdn.net/chenleiking/article/details/80136449)
-> - [使用Kubeadm + HAProxy + Keepalived部署高可用Kubernetes集群](https://blog.csdn.net/chenleiking/article/details/84841394)
+> - [* 一步步打造基于Kubeadm的高可用Kubernetes集群-第一部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part1/)
+> - [* 一步步打造基于Kubeadm的高可用Kubernetes集群-第二部分](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
+> - [* 以Kubeadm方式安装的Kubernetes集群的探索](https://tonybai.com/2017/01/24/explore-kubernetes-cluster-installed-by-kubeadm/)
+> - [* 使用Kubeadm搭建Kubernetes HA（1.10.1）](https://blog.csdn.net/chenleiking/article/details/80136449)
+> - [* 使用Kubeadm + HAProxy + Keepalived部署高可用Kubernetes集群](https://blog.csdn.net/chenleiking/article/details/84841394)
+> - [* 在 CentOS 上部署 Kubernetes 集群](https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html)
 > - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
 > - [Customizing components with the kubeadm API](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)
 > - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
@@ -54,6 +55,11 @@
 >   - [part 3](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-3/)
 >   - [part 4](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-4/)
 >   - [part 5](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-5/)
+> - certificate
+>   - [* etcd集群TLS设置](https://cloud-atlas.readthedocs.io/zh_CN/latest/kubernetes/deploy/etcd/etcd_tls.html)
+>   - [* Setting up Etcd Cluster with TLS Authentication Enabled](https://medium.com/nirman-tech-blog/setting-up-etcd-cluster-with-tls-authentication-enabled-49c44e4151bb)
+>   - [Generate self-signed certificates](https://github.com/coreos/docs/blob/master/os/generate-self-signed-certificates.md)
+>   - [* 创建 TLS 证书和秘钥](https://jimmysong.io/kubernetes-handbook/practice/create-tls-and-secret-key.html)
 {% endhint %}
 
 # kubeadm init
@@ -211,6 +217,99 @@ $ sudo bash -c "curl -o /usr/local/bin/cfssl ${cfsslDownloadUrl}/cfssl_linux-amd
 $ sudo bash -c "curl -o /usr/local/bin/cfssljson ${cfsslDownloadUrl}/cfssljson_linux-amd64"
 $ sudo chmod +x /usr/local/bin/cfssl*
 ```
+
+- cfssl in osx
+
+  > [!NOTE|label:references:]
+  > - [go: Download and install](https://go.dev/doc/install)
+  > - [cfssl](https://github.com/cloudflare/cfssl)
+  > - [SettingGOPATH](https://github.com/golang/go/wiki/SettingGOPATH)
+  > - [GOBIN not set: cannot run go install](https://stackoverflow.com/a/60464581/2940319)
+  >  - `GOPATH` : `$ go env -w GOPATH=/path/to`
+  >  - `GOBIN` : `$ go env -w GOBIN=/path/to/bin`
+
+  ```bash
+  $ git clone git@github.com:cloudflare/cfssl.git && cd cfssl
+  $ make
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/cfssl ./cmd/cfssl
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/cfssl-bundle ./cmd/cfssl-bundle
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/cfssl-certinfo ./cmd/cfssl-certinfo
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/cfssl-newkey ./cmd/cfssl-newkey
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/cfssl-scan ./cmd/cfssl-scan
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/cfssljson ./cmd/cfssljson
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/mkbundle ./cmd/mkbundle
+  go build -ldflags "-s -w -X github.com/cloudflare/cfssl/cli/version.version=1.6.4" -o bin/multirootca ./cmd/multirootca
+  $ ls bin/
+  cfssl  cfssl-bundle  cfssl-certinfo  cfssl-newkey  cfssl-scan  cfssljson  mkbundle  multirootca
+
+  # using `~/go/bin` by default
+  $ go env -w GOPATH=/usr/local
+
+  $ make install
+  go install ./cmd/cfssl
+  go install ./cmd/cfssl-bundle
+  go install ./cmd/cfssl-certinfo
+  go install ./cmd/cfssl-newkey
+  go install ./cmd/cfssl-scan
+  go install ./cmd/cfssljson
+  go install ./cmd/mkbundle
+  go install ./cmd/multirootca
+  $ ls -altrh /usr/local/bin
+  -rwxr-xr-x    1 marslo staff  21M Apr 13 22:36 cfssl
+  -rwxr-xr-x    1 marslo staff  14M Apr 13 22:36 cfssl-bundle
+  -rwxr-xr-x    1 marslo staff  18M Apr 13 22:36 cfssl-certinfo
+  -rwxr-xr-x    1 marslo staff  14M Apr 13 22:36 cfssl-newkey
+  -rwxr-xr-x    1 marslo staff  14M Apr 13 22:36 cfssl-scan
+  -rwxr-xr-x    1 marslo staff  11M Apr 13 22:36 cfssljson
+  -rwxr-xr-x    1 marslo staff 6.9M Apr 13 22:36 mkbundle
+  -rwxr-xr-x    1 marslo staff  21M Apr 13 22:36 multirootca
+  ```
+
+
+  <!--sec data-title="go env" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ go env
+  GO111MODULE=""
+  GOARCH="amd64"
+  GOBIN=""
+  GOCACHE="/Users/marslo/Library/Caches/go-build"
+  GOENV="/Users/marslo/Library/Application Support/go/env"
+  GOEXE=""
+  GOEXPERIMENT=""
+  GOFLAGS=""
+  GOHOSTARCH="amd64"
+  GOHOSTOS="darwin"
+  GOINSECURE=""
+  GOMODCACHE="/usr/local/pkg/mod"
+  GONOPROXY=""
+  GONOSUMDB=""
+  GOOS="darwin"
+  GOPATH="/usr/local"
+  GOPRIVATE=""
+  GOPROXY="https://proxy.golang.org,direct"
+  GOROOT="/usr/local/Cellar/go/1.19.4/libexec"
+  GOSUMDB="sum.golang.org"
+  GOTMPDIR=""
+  GOTOOLDIR="/usr/local/Cellar/go/1.19.4/libexec/pkg/tool/darwin_amd64"
+  GOVCS=""
+  GOVERSION="go1.19.4"
+  GCCGO="gccgo"
+  GOAMD64="v1"
+  AR="ar"
+  CC="clang"
+  CXX="clang++"
+  CGO_ENABLED="1"
+  GOMOD="/Users/marslo/iMarslo/tools/git/utils/kubernetes/cfssl/go.mod"
+  GOWORK=""
+  CGO_CFLAGS="-g -O2"
+  CGO_CPPFLAGS=""
+  CGO_CXXFLAGS="-g -O2"
+  CGO_FFLAGS="-g -O2"
+  CGO_LDFLAGS="-g -O2"
+  PKG_CONFIG="pkg-config"
+  GOGCCFLAGS="-fPIC -arch x86_64 -m64 -pthread -fno-caret-diagnostics -Qunused-arguments -fmessage-length=0 -fdebug-prefix-map=/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/go-build3539971251=/tmp/go-build -gno-record-gcc-switches -fno-common"
+  ```
+  <!--endsec-->
 
 ### etcd
 ```bash
