@@ -26,6 +26,7 @@
   - [running multiple commands with xargs](#running-multiple-commands-with-xargs)
   - [read by char](#read-by-char)
 - [`find`](#find)
+  - [output file name only](#output-file-name-only)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
   - [`exec` and `sed`](#exec-and-sed)
   - [find and rename](#find-and-rename)
@@ -710,8 +711,46 @@ $ printf 'mark spitz' | while read -r -n1 c; do printf "[%c]" "$c"; done
 ```
 
 ## `find`
-> reference:
+
+> [!NOTE|label:reference:]
 > - [Everything CLI: FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
+> - [How to get only names from find command without path](https://superuser.com/a/559827/112396)
+
+### output file name only
+```bash
+# has `./` by default
+$ find . -type f
+./cfssl-scan
+./cfssl-certinfo
+./cfssl-bundle
+./cfssl
+./cfssl-newkey
+./multirootca
+./mkbundle
+./cfssljson
+
+# to show filename only by `-exec basename`
+$ find . -type f -exec basename {} -print \;
+cfssl-scan
+cfssl-certinfo
+cfssl-bundle
+cfssl
+cfssl-newkey
+multirootca
+mkbundle
+cfssljson
+
+# or
+$ find . -type f -execdir basename {} ';'
+cfssl-scan
+cfssl-certinfo
+cfssl-bundle
+cfssl
+cfssl-newkey
+multirootca
+mkbundle
+cfssljson
+```
 
 ### cat config file in all `.git` folder
 - `xargs` && `cat`

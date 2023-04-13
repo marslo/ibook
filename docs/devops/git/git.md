@@ -21,6 +21,8 @@ git command study and practice
   - [get local/remote branches](#get-localremote-branches)
   - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
   - [change head](#change-head)
+- [status](#status)
+  - [list ignored](#list-ignored)
 - [log](#log)
   - [short stat](#short-stat)
   - [show files and status without comments](#show-files-and-status-without-comments)
@@ -458,6 +460,125 @@ or
   $ git fetch --all --force
   $ git remote set-head origin refs/remotes/origin/new_master
   ```
+
+## status
+### list ignored
+
+> [!NOTE|label:references:]
+> - [Git command to show which specific files are ignored by .gitignore](https://stackoverflow.com/q/466764/2940319)
+> - [Is there a way to tell git-status to ignore the effects of .gitignore files?](https://stackoverflow.com/q/2994612/2940319)
+>   - [git update-index](https://stackoverflow.com/a/1818975/2940319)
+>   - [ignoring files](https://gitready.com/beginner/2009/01/19/ignoring-files.html)
+> - [How can I stop .gitignore from appearing in the list of untracked files?](https://stackoverflow.com/a/39841950/2940319)
+
+- `status`
+  ```bash
+  $ git status --ignored
+  On branch master
+  Your branch is up to date with 'origin/master'.
+
+  Ignored files:
+    (use "git add -f <file>..." to include in what will be committed)
+    bin/
+
+  nothing to commit, working tree clean
+
+  # short status
+  $ git status --ignored --short
+  !! bin/
+
+  $ git status --porcelain --ignored
+  !! bin/
+
+  $ git st --ignored --untracked-files=all
+  ## master...origin/master
+  !! bin/cfssl
+  !! bin/cfssl-bundle
+  !! bin/cfssl-certinfo
+  !! bin/cfssl-newkey
+  !! bin/cfssl-scan
+  !! bin/cfssljson
+  !! bin/mkbundle
+  !! bin/multirootca
+  ```
+
+- `check-ignore`
+  ```bash
+  $ git check-ignore *
+  bin
+
+  $ git check-ignore -v *
+  .gitignore:4:bin  bin
+
+  $ git check-ignore -v $(find . -type f -print)
+  .gitignore:4:bin  ./bin/cfssl-scan
+  .gitignore:4:bin  ./bin/cfssl-certinfo
+  .gitignore:4:bin  ./bin/cfssl-bundle
+  .gitignore:4:bin  ./bin/cfssl
+  .gitignore:4:bin  ./bin/cfssl-newkey
+  .gitignore:4:bin  ./bin/multirootca
+  .gitignore:4:bin  ./bin/mkbundle
+  .gitignore:4:bin  ./bin/cfssljso
+
+  $ find . -not -path './.git/*' | git check-ignore --stdin
+  ./bin
+  ./bin/cfssl-scan
+  ./bin/cfssl-certinfo
+  ./bin/cfssl-bundle
+  ./bin/cfssl
+  ./bin/cfssl-newkey
+  ./bin/multirootca
+  ./bin/mkbundle
+  ./bin/cfssljson
+
+  $ find . -path ./.git -prune -o -print | git check-ignore --no-index --stdin --verbose
+  .gitignore:4:bin  ./bin
+  .gitignore:4:bin  ./bin/cfssl-scan
+  .gitignore:4:bin  ./bin/cfssl-certinfo
+  .gitignore:4:bin  ./bin/cfssl-bundle
+  .gitignore:4:bin  ./bin/cfssl
+  .gitignore:4:bin  ./bin/cfssl-newkey
+  .gitignore:4:bin  ./bin/multirootca
+  .gitignore:4:bin  ./bin/mkbundle
+  .gitignore:4:bin  ./bin/cfssljson
+  ```
+
+- `ls-files`
+  ```bash
+  $ git ls-files --others --ignored --exclude-standard
+  # or
+  $ git ls-files -o -i --exclude-standard
+  bin/cfssl
+  bin/cfssl-bundle
+  bin/cfssl-certinfo
+  bin/cfssl-newkey
+  bin/cfssl-scan
+  bin/cfssljson
+  bin/mkbundle
+  bin/multirootca
+
+  # or list only directories
+  $ git ls-files --others --ignored --exclude-standard --directory
+  bin/
+
+  # or from `.gitignore` file
+  $ git ls-files --ignored --others --exclude-from=.gitignore
+  bin/cfssl
+  bin/cfssl-bundle
+  bin/cfssl-certinfo
+  bin/cfssl-newkey
+  bin/cfssl-scan
+  bin/cfssljson
+  bin/mkbundle
+  bin/multirootca
+  ```
+
+- `clean`
+  ```bash
+  $ git clean -ndX
+  Would remove bin/
+  ```
+
 
 ## log
 ### short stat
