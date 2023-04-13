@@ -25,6 +25,7 @@
 
 {% hint style='info' %}
 > references:
+> - [* 创建 kubeconfig 文件](https://jimmysong.io/kubernetes-handbook/practice/create-kubeconfig.html)
 > - [创建k8s context](https://www.cnblogs.com/tiny1987/p/12018080.html)
 > - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 > - [Organizing Cluster Access Using kubeconfig Files](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)

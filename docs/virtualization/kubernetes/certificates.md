@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [generic](#generic)
 - [show secrets tls.crt](#show-secrets-tlscrt)
   - [show server.crt](#show-servercrt)
   - [show ca.crt](#show-cacrt)
@@ -55,6 +56,7 @@
 
 {% hint style='tip' %}
 > references:
+> - [* 创建 TLS 证书和秘钥](https://jimmysong.io/kubernetes-handbook/practice/create-tls-and-secret-key.html)
 > - [Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
 > - [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
 > - [Renew a Kubernetes certificate with a 10-year expiration date](https://www.sobyte.net/post/2021-10/update-k8s-10y-expire-certs/)
@@ -73,6 +75,29 @@
 >   $ sudo kubeadm config view
 >   ```
 {% endhint %}
+
+# generic
+
+- certificates for CA
+  - `ca-key.pem`
+  - `ca.pem`
+  - `kubernetes-key.pem`
+  - `kubernetes.pem`
+  - `kube-proxy.pem`
+  - `kube-proxy-key.pem`
+  - `admin.pem`
+  - `admin-key.pem`
+
+- certificate component
+
+  |          SERVICES         | CERTIFICATES                                     |
+  |:-------------------------:|--------------------------------------------------|
+  |           `etcd`          | `ca.pem`, `kubernetes-key.pem`, `kubernetes.pem` |
+  |      `kube-apiserver`     | `ca.pem`, `kubernetes-key.pem`, `kubernetes.pem` |
+  |         `kubelet`         | `ca.pem`                                         |
+  |        `kube-proxy`       | `ca.pem`, `kube-proxy-key.pem`, `kube-proxy.pem` |
+  |         `kubectl`         | `ca.pem`, `admin-key.pem`, `admin.pem`           |
+  | `kube-controller-manager` | `ca-key.pem`, `ca.pem`                           |
 
 # show secrets tls.crt
 

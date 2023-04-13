@@ -10,16 +10,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
-
 {% hint style='info' %}
 > referecens:
 > - [Managing Secrets using kubectl](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/)
 >   - [Managing Secrets using Configuration File](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-config-file/)
 >   - [Managing Secrets using Kustomize](https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kustomize/)
 {% endhint %}
-
 
 ## create secret
 ### use raw data
