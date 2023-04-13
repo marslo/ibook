@@ -181,6 +181,7 @@
     * [github.page](tools/node/github.page.md)
   * [app](tools/app/app.md)
     * [microsoft office](tools/app/ms.md)
+    * [vscode](tools/app/vscode.md)
     * [virtualbox](tools/app/virtualbox.md)
     * [iterm2](tools/app/iterm2.md)
     * [browser](tools/app/browser.md)
