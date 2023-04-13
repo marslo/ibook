@@ -188,6 +188,23 @@ Jenkins.instance
        .updateNextBuildNumber( n )
 ```
 
+## delete multiple builds
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+final String JOB_PATTERN = '<group>/<job>'
+WorkflowJob project      = Jenkins.instance.getItemByFullName( JOB_PATTERN )
+final int START_BUILD    = <build-id>
+final int END_BUILD      = project.getLastCompletedBuild().getId().toInteger()
+
+( START_BUILD..END_BUILD ).each { project.getBuildByNumber( it ).delete() }
+```
+
+- setup next build number if necessary
+  ```groovy
+  Jenkins.instance.getItemByFullName( JOB_PATTERN ).updateNextBuildNumber( START_BUILD )
+  ```
+
 ## build log
 ### get console output
 
