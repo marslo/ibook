@@ -72,7 +72,7 @@
 > references:
 > - [ascii](http://defindit.com/ascii.html)
 >
-> |  ascii | character |
+> |  ASCII | CHARACTER |
 > |:------:|:---------:|
 > | `\x2b` |    `+`    |
 > | `\x2c` |    `,`    |
