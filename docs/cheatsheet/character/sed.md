@@ -35,8 +35,8 @@
 > - [character classes](https://unix.stackexchange.com/a/102021/29178)
 >
 >
-> | character      | regular expression | explanation                        |
-> | -------------- | ------------------ | ---------------------------------- |
+> |   CHARACTER    | REGULAR EXPRESSION | EXPLANATION                        |
+> |:--------------:|:-------------------|------------------------------------|
 > | `[[:alnum:]]`  | `[A-Za-z0-9]`      | Alphanumeric characters            |
 > | `[[:alpha:]]`  | `[A-Za-z]`         | Alphabetic characters              |
 > | `[[:blank:]]`  | `[ \t]`            | Space or tab characters only       |

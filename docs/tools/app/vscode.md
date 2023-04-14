@@ -7,6 +7,7 @@
 - [plugins](#plugins)
   - [Settings Sync](#settings-sync)
   - [vim](#vim)
+- [shortcut](#shortcut)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -19,27 +20,14 @@
 
 ## basic
 
-- settings.json
-
-  |    OS   | LOCATION                                                    |
-  |:-------:|-------------------------------------------------------------|
-  | windows | `%APPDATA%\Code\User\settings.json`                         |
-  |  linux  | `$HOME/.config/Code/User/settings.json`                     |
-  |   osx   | `$HOME/Library/Application Support/Code/User/settings.json` |
-
-- shortcuts
-  - [mac.pdf](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf)
-  - [linux.pdf](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-linux.pdf)
-  - [windows.pdf](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf)
-
-  - accepted keys
-
-    | PLATFORM | MODIFIERS                          |
-    |:--------:|------------------------------------|
-    |   macOS  | `Ctrl+`, `Shift+`, `Alt+`, `Cmd+`  |
-    |  Windows | `Ctrl+`, `Shift+`, `Alt+`, `Win+`  |
-    |   Linux  | `Ctrl+`, `Shift+`, `Alt+`, `Meta+` |
-
+> [!TIP|label:`settings.json`]
+>
+>
+> |    OS   | LOCATION                                                    |
+> |:-------:|-------------------------------------------------------------|
+> | windows | `%APPDATA%\Code\User\settings.json`                         |
+> |  linux  | `$HOME/.config/Code/User/settings.json`                     |
+> |   osx   | `$HOME/Library/Application Support/Code/User/settings.json` |
 
 ## config
 
@@ -85,3 +73,49 @@
   "vim.incsearch": true,
   "vim.hlsearch": true,
   ```
+
+## shortcut
+
+> [!NOTE|label:references:]
+> - [mac.pdf](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf)
+> - [linux.pdf](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-linux.pdf)
+> - [windows.pdf](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf)
+> - keys
+>   - <kbd>⌃</kbd> : `control`
+>   - <kbd>⌘</kbd> : `command`
+>   - <kbd>⇧</kbd> : `shift`
+>   - <kbd>⌥</kbd> : `option`
+>
+> - accepted keys:
+>
+> | PLATFORM | MODIFIERS                          |
+> |:--------:|------------------------------------|
+> |   macOS  | `Ctrl+`, `Shift+`, `Alt+`, `Cmd+`  |
+> |  Windows | `Ctrl+`, `Shift+`, `Alt+`, `Win+`  |
+> |   Linux  | `Ctrl+`, `Shift+`, `Alt+`, `Meta+` |
+
+
+|          SHORTCUT         |          KEY          | DESCRIPTION                   |
+|:-------------------------:|:---------------------:|-------------------------------|
+|      shift + cmd + p      |       ⇧ + ⌘ + p       | open command palette          |
+|          cmd + p          |         ⌘ + p         | go to file                    |
+|   shift + ctrl + &#x60;   |     ⇧ + ⌘ + &#x60;    | new terminal                  |
+|          ctrl + b         |         ⌃ + b         | toggle sidebar visibility     |
+|          ctrl + r         |         ⌃ + r         | open recently                 |
+|          cmd + j          |         ⌘ + j         | toggle terminal panel         |
+|          cmd + ,          |         ⌘ + ,         | open settings                 |
+|      shift + cmd + e      |       ⇧ + ⌘ + e       | open explorer view            |
+|      shift + cmd + f      |       ⇧ + ⌘ + f       | open search view              |
+|      shift + cmd + v      |       ⇧ + ⌘ + v       | open markdown preview         |
+|         cmd + k, v        |        ⌘ + k, v       | open markdown preview to side |
+|      shift + cmd + g      |       ⇧ + ⌘ + g       | open source control view      |
+|      shift + cmd + x      |       ⇧ + ⌘ + x       | open extensions view          |
+|      shift + cmd + o      |       ⇧ + ⌘ + o       | go to symbol                  |
+|      shift + cmd + m      |       ⇧ + ⌘ + m       | show problem panel            |
+|      shift + cmd + y      |       ⇧ + ⌘ + y       | show debug console panel      |
+|      shift + cmd + u      |       ⇧ + ⌘ + u       | show output  panel            |
+|          ctrl + ^         |         ⌃ + ^         | show terminal panel           |
+| cmd + k + 0 / cmd + k + j | ⌘ + k + 0 / ⌘ + k + j | fold/unfold all methods       |
+|       alt + cmd + o       |       ⌥ + ⌘ + o       | connect to ...                |
+|       alt + cmd + r       |       ⌥ + ⌘ + r       | reveal in finder              |
+|       alt + cmd + c       |       ⌥ + ⌘ + c       | copy path                     |
