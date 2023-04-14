@@ -214,7 +214,7 @@ $ unzip <jar-name>.jar -d <target-folder>
 >
 > params shortcuts :
 >
-> | short params | long params             |
+> | SHORT PARAMS | LONG PARAMS             |
 > |:------------:|-------------------------|
 > |     `-r`     | `--recursive`           |
 > |     `-m`     | `--mirror`              |
