@@ -215,7 +215,7 @@ def show( String color, String str ) {
 ## customized colors
 ### xterm
 
-|   name  |   color   |   bright  |
+|   NAME  |   COLOR   |   BRIGHT  |
 |:-------:|:---------:|:---------:|
 |  black  | `#000000` | `#4C4C4C` |
 |   red   | `#CD0000` | `#FF0000` |
@@ -235,7 +235,7 @@ def show( String color, String str ) {
 >
 > original settings:
 >
-> |   name  |   color   |   bright  |
+> |   NAME  |   COLOR   |   BRIGHT  |
 > |:-------:|:---------:|:---------:|
 > |  black  | `#000000` | `#4C4C4C` |
 > |   red   | `#CD0000` | `#FF0000` |

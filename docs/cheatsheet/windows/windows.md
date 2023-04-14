@@ -71,7 +71,7 @@
 >
 > - supported types:
 >
-> | id |       type       |
+> | ID |       TYPE       |
 > |:--:|:----------------:|
 > |  0 |      Unknown     |
 > |  1 |       Other      |
@@ -102,7 +102,7 @@
 >
 > - supported form factors:
 >
-> | id |     form    |
+> | ID |     FORM    |
 > |:--:|:-----------:|
 > |  0 |   Unknown   |
 > |  1 |    Other    |
