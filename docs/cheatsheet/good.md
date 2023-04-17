@@ -365,6 +365,11 @@ $ yes "$(seq 1 255)" | while read i; do printf "\x1b[48;5;${i}m\n"; sleep .01; d
 ## commands
 
 ### `ls`
+
+> [!TIP|label:references]
+> - [Why *not* parse `ls` (and what to do instead)?](https://unix.stackexchange.com/q/128985/29178)
+> - [Why you shouldn't parse the output of ls(1)](http://mywiki.wooledge.org/ParsingLs)
+
 - list numeric names
 
   > [!NOTE|label:references:]

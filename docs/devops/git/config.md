@@ -12,14 +12,16 @@
 {% hint style='tip' %}
 > references:
 > - [8.1 Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)
+> - [Improving cross-subsystem git workflow: The different git configuration files](https://www.onwebsecurity.com/tag/git.html)
+> - [git config](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config)
 {% endhint %}
 
 ## location
 
 > [!NOTE|label:locations]
 > - [Where system, global and local Git config files on Windows and Ubuntu Linux are](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Where-system-global-and-local-Windows-Git-config-files-are-saved)
+> - [Where do the settings in my Git configuration come from?](https://stackoverflow.com/q/17756753/2940319)
 > - [git on Windows - location of configuration files](https://www.onwebsecurity.com/configuration/git-on-windows-location-of-global-configuration-file.html)
-> 0
 
 
 |      SCOPE     | WINDOWS                                     | UNIX-LIKE                      |
@@ -51,6 +53,15 @@
   /usr/local/etc/gitconfig
   ```
 
+- edit config file
+  ```bash
+  $ git config --edit --system
+  $ git config --edit --global
+
+  # or
+  $ sudo git -c core.editor=ls\ -al config --system --edit
+  ```
+
 ## list
 
 - list all with scope
@@ -78,6 +89,13 @@
     ```bash
     $ git config --list --system
     ```
+
+### get from all configure
+```bash
+$ git config --show-origin --show-scope --get-all user.name
+global   file:/Users/marslo/.gitconfig   marslo
+local    file:.git/config    marslo
+```
 
 
 ## default configuration
