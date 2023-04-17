@@ -71,11 +71,11 @@ ls --color=always
 >   - [Quote Removal](https://www.gnu.org/software/bash/manual/html_node/Quote-Removal.html)
 > - [Parameter expansion](https://wiki.bash-hackers.org/syntax/pe#substring_removal)
 >
-> - And:
+> - and:
 >   - [The Set Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 >   - [The Shopt Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html)
 >
-> - And
+> - and
 >   - [Bash Guide for Beginners](https://tldp.org/LDP/Bash-Beginners-Guide/html/index.html)
 >     - [Chapter 3. The Bash environment](https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_02.html)
 {% endhint %}
@@ -549,6 +549,18 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 >   $ echo $?
 >   0
 >   ```
+>
+> check without output
+> - on
+>   ```bash
+>   $ shopt -q extglob; echo $?
+>   0
+>   ```
+> - off
+>   ```bash
+>   $ shopt -q failglob; echo $?
+>   1
+>   ```
 
 {% hint style='tip' %}
 shopt
@@ -693,39 +705,40 @@ shopt [-pqsu] [-o] [optname …]
   ```
 
 {% hint style='tip' %}
-**[set VS. shopt](https://unix.stackexchange.com/a/490474/29178)**
-```bash
-$ set | grep -e SHELLOPTS -e BASHOPTS
-BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
-SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
-
-$ set -o |  column -t | grep -v off
-braceexpand           on
-emacs                 on
-hashall               on
-histexpand            on
-history               on
-interactive-comments  on
-monitor               on
-
-$ shopt | column -t | grep -v off
-cdspell                  on
-checkwinsize             on
-cmdhist                  on
-complete_fullquote       on
-expand_aliases           on
-extglob                  on
-extquote                 on
-force_fignore            on
-globasciiranges          on
-histappend               on
-interactive_comments     on
-login_shell              on
-progcomp                 on
-promptvars               on
-sourcepath               on
-```
+> **[set VS. shopt](https://unix.stackexchange.com/a/490474/29178)**
+> ```bash
+> $ set | grep -e SHELLOPTS -e BASHOPTS
+> BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
+> SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
+>
+> $ set -o |  column -t | grep -v off
+> braceexpand           on
+> emacs                 on
+> hashall               on
+> histexpand            on
+> history               on
+> interactive-comments  on
+> monitor               on
+>
+> $ shopt | column -t | grep -v off
+> cdspell                  on
+> checkwinsize             on
+> cmdhist                  on
+> complete_fullquote       on
+> expand_aliases           on
+> extglob                  on
+> extquote                 on
+> force_fignore            on
+> globasciiranges          on
+> histappend               on
+> interactive_comments     on
+> login_shell              on
+> progcomp                 on
+> promptvars               on
+> sourcepath               on
+> ```
 {% endhint %}
+
 
 ## [event designators](https://www.gnu.org/software/bash/manual/html_node/event-designators.html)
 
