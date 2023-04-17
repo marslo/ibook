@@ -40,6 +40,7 @@
   * [windows](vim/windows.md)
 * [devops](devops/adminTools.md)
   * [git](devops/git/git.md)
+    * [config](devops/git/config.md)
     * [alias](devops/git/alias.md)
     * [submodule](devops/git/submodule.md)
     * [eol](devops/git/eol.md)

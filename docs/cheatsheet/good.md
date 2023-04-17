@@ -17,11 +17,13 @@
   - [remove dot-file without `skipping '..' '.'` issue](#remove-dot-file-without-skipping---issue)
 - [echo 256 colors](#echo-256-colors)
 - [commands](#commands)
+  - [`ls`](#ls)
   - [PWD's secrets](#pwds-secrets)
   - [list the command startsWith](#list-the-command-startswith)
   - [fuzzy find for commands](#fuzzy-find-for-commands)
 - [batch commands](#batch-commands)
   - [batch rename](#batch-rename)
+  - [xargs rename](#xargs-rename)
   - [batch move](#batch-move)
   - [batch copy](#batch-copy)
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
@@ -361,6 +363,21 @@ $ yes "$(seq 1 255)" | while read i; do printf "\x1b[48;5;${i}m\n"; sleep .01; d
 ```
 
 ## commands
+
+### `ls`
+- list numeric names
+
+  > [!NOTE|label:references:]
+  > - [How can I get files with numeric names using ls command?](https://superuser.com/q/716001/112396)
+
+  ```bash
+  $ ls git-[[:digit:]]*.png
+  git-0.png  git-1.png  git-2.png  git-3.png  git-4.png  git-5.png
+
+  $ ls git-+([0-9])*.png
+  git-0.png  git-1.png  git-2.png  git-3.png  git-4.png  git-5.png
+  ```
+
 ### PWD's secrets
 ```bash
 $ l | grep bc
