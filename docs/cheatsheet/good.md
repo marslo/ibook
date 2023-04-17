@@ -423,6 +423,21 @@ total 4.0K
 -rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a_b
 ```
 
+### xargs rename
+```bash
+$ shopt -s extglob
+$ ls git-+([0-9])*.png
+git-0.png  git-1.png  git-2.png  git-3.png  git-4.png  git-5.png
+
+$ ls --color=none git-+([0-9])*.png | xargs rename -v 's/git-/git-for-windows-/'
+'git-0.png' renamed to 'git-for-windows-0.png'
+'git-1.png' renamed to 'git-for-windows-1.png'
+'git-2.png' renamed to 'git-for-windows-2.png'
+'git-3.png' renamed to 'git-for-windows-3.png'
+'git-4.png' renamed to 'git-for-windows-4.png'
+'git-5.png' renamed to 'git-for-windows-5.png'
+```
+
 ### batch move
 
 {% hint style='tip' %}
