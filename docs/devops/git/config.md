@@ -5,6 +5,7 @@
 - [location](#location)
   - [get locations](#get-locations)
 - [list](#list)
+  - [get from all configure](#get-from-all-configure)
 - [default configuration](#default-configuration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -14,6 +15,8 @@
 > - [8.1 Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration)
 > - [Improving cross-subsystem git workflow: The different git configuration files](https://www.onwebsecurity.com/tag/git.html)
 > - [git config](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config)
+> - [git-config - Get and set repository or global options](https://git-scm.com/docs/git-config)
+> - [Git config](https://www.w3docs.com/learn-git/git-config.html)
 {% endhint %}
 
 ## location
@@ -24,13 +27,13 @@
 > - [git on Windows - location of configuration files](https://www.onwebsecurity.com/configuration/git-on-windows-location-of-global-configuration-file.html)
 
 
-|      SCOPE     | WINDOWS                                     | UNIX-LIKE                      |
-|:--------------:|---------------------------------------------|--------------------------------|
-|     system     | `<install-path>\etc\gitconfig`              | `<install-path>/etc/gitconfig` |
-| system example | `%LOCALAPPDATA%\Programs\Git\etc\gitconfig` | `/usr/local/etc/gitconfig`     |
-|     global     | `%USERPROFILE%\.gitconfig`                  | `$HOME/.gitconfig`             |
-|      local     | `<git-repo>\.git\config`                    | `<git-repo>/.git/config`       |
-|    portable    | `%PROGRAMDATA%\Git\config`                  | -                              |
+|      SCOPE     | WINDOWS                                     | UNIX-LIKE                  |
+|:--------------:|---------------------------------------------|----------------------------|
+|     system     | `<GIT_DIR>\etc\gitconfig`                   | `<GIT_DIR>/etc/gitconfig`  |
+| system example | `%LOCALAPPDATA%\Programs\Git\etc\gitconfig` | `/usr/local/etc/gitconfig` |
+|     global     | `%USERPROFILE%\.gitconfig`                  | `$HOME/.gitconfig`         |
+|      local     | `<git-repo>\.git\config`                    | `<git-repo>/.git/config`   |
+|    portable    | `%PROGRAMDATA%\Git\config`                  | -                          |
 
 ### get locations
 - windows
@@ -67,27 +70,45 @@
 - list all with scope
   ```bash
   $ git config --list --show-scope
+  system  credential.helper=osxkeychain
+  system  core.ignorecase=false
+  system  filter.lfs.clean=git-lfs clean -- %f
   ```
 
 - list origin
   ```bash
   $ git config --list --show-origin --show-scope
+  system  file:/usr/local/etc/gitconfig credential.helper=osxkeychain
+  system  file:/usr/local/etc/gitconfig core.ignorecase=false
+  system  file:/usr/local/etc/gitconfig filter.lfs.clean=git-lfs clean -- %f
   ```
 
 - list single scope only
   - list local only
     ```bash
     $ git config --list --local
+    core.repositoryformatversion=0
+    core.filemode=true
+    core.bare=false
     ```
 
   - list global
     ```bash
     $ git config --list --global
+    user.name=marslo
+    user.email=marslo@gmail.com
+    push.default=matching
     ```
 
   - list system
     ```bash
     $ git config --list --system
+    credential.helper=osxkeychain
+    core.ignorecase=false
+    filter.lfs.clean=git-lfs clean -- %f
+    filter.lfs.smudge=git-lfs smudge -- %f
+    filter.lfs.process=git-lfs filter-process
+    filter.lfs.required=true
     ```
 
 ### get from all configure
@@ -97,11 +118,8 @@ global   file:/Users/marslo/.gitconfig   marslo
 local    file:.git/config    marslo
 ```
 
-
 ## default configuration
 - `core.editor`
-
-  ![core.editor](../../screenshot/git/git-for-windows-2.png)
 
   - use vim ( the ubiqutos text editor ) as Git's default editor
     ```bash
@@ -109,10 +127,9 @@ local    file:.git/config    marslo
     vim
     ```
 
+  ![core.editor](../../screenshot/git/git-for-windows-2.png)
+
 - `init.defaultBranch`
-
-  ![core.editor](../../screenshot/git/git-for-windows-3.png)
-
 
   - override the default branch name for new repositories
     ```bash
@@ -120,10 +137,10 @@ local    file:.git/config    marslo
     development
     ```
 
+  ![core.editor](../../screenshot/git/git-for-windows-3.png)
+
+
 - `core.autocrlf`
-
-  ![core.editor](../../screenshot/git/git-for-windows-6.png)
-
   - checkout windows-style, commit unix-style line endings
     ```bash
     $ git config --get core.autocrlf
@@ -140,19 +157,17 @@ local    file:.git/config    marslo
     false
     ```
 
+  ![core.editor](../../screenshot/git/git-for-windows-6.png)
 
 - `pull.rebase`
-
-  ![core.editor](../../screenshot/git/git-for-windows-8.png)
-
   ```bash
   $ git config --get pull.rebase
   true
   ```
 
-- `core.fscache` & `core.symlinks`
+  ![core.editor](../../screenshot/git/git-for-windows-8.png)
 
-  ![core.editor](../../screenshot/git/git-for-windows-10.png)
+- `core.fscache` & `core.symlinks`
 
   - enable file system caching
     ```bash
@@ -166,12 +181,15 @@ local    file:.git/config    marslo
     true
     ```
 
-- `core.fsmonitor`
+  ![core.editor](../../screenshot/git/git-for-windows-10.png)
 
-  ![core.editor](../../screenshot/git/git-for-windows-11.png)
+- `core.fsmonitor`
 
   - enable experimental built-in file system monitor
     ```bash
     $ git config --get core.fsmonitor
     true
     ```
+
+  ![core.editor](../../screenshot/git/git-for-windows-11.png)
+
