@@ -574,12 +574,42 @@ second paragraph
 ## `xargs`
 
 {% hint style='tip' %}
-> `-I{}` == `-i`
 > references:
 > - [xargs](https://en.wikipedia.org/wiki/Xargs)
 > - [running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
+> - [Xargs Command in Linux](https://linuxize.com/post/linux-xargs-command/)
+> - [How to Use the Linux xargs Command](https://phoenixnap.com/kb/xargs-command)
+> - [xargs - Construct an argument list and run a command](https://www.ibm.com/docs/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.bpxa500/xargs.htm)
+> <br>
+> - tips:
+>   - `--delimiter=delim`, `-d delim`
+>   - `-I{}` == `-i`
+>   - `-n max-args`, `--max-args=max-args`
+>   - `-t`, `--verbose`
 {% endhint %}
 
+
+### complex comamnds with xargs
+
+> [!NOTE|label:references:]
+> - [using xargs with output piped to awk throws syntax error](https://stackoverflow.com/a/61665869/2940319)
+> - [How to use xarg (or awk or sed) to run each line of screen output as a command exactly as displayed?](https://stackoverflow.com/a/73455367/2940319)
+
+```bash
+$ echo ip1 ip2 ip3 ... |
+       fmt -1 |
+       xargs -i printf 'echo -e "\\n..... {} ....."; /sbin/ping -t1 -c1 -W0 {} | sed "/^$/d"\n' |
+       xargs -d\\n -n1 bash -c
+
+# so xargs will execute : `echo -e "\n..... {} ....."; /sbin/ping -t1 -c1 -W0 {} | sed "/^$/d"` one by one
+```
+
+- or [using `$@`](https://stackoverflow.com/a/73455367/2940319)
+  ```bash
+  $ echo ip1 ip2 ip3 ... |
+         fmt -1 |
+         xargs -n1 bash -c 'echo -e "\n...... $@ ......"; /sbin/ping -t1 -c1 -W0 "$@" | sed '/^$/d'' _
+  ```
 
 ### [multiple move](https://en.wikipedia.org/wiki/Xargs#Placement_of_arguments)
 ```bash
