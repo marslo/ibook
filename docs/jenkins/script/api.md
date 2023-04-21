@@ -22,33 +22,36 @@
 > - [7 useful Jenkins Rest services](https://www.esentri.com/7-useful-jenkins-rest-services/)
 
 {% hint style='tip' %}
-> get crumb and sessoin :
+> **to get crumb and sessoin :**
+> - [imarslo : crumb issuer](./authorization.html#crumb-issuer)
+> - [imarslo : script console](./script.html#script-console)
 > - [with sessoin (cookie)](../plugins/crumbIssuer.md#working-with-session-after-21762-since-security-626)
-> ```bash
-> $ COOKIEJAR="$(mktemp)"
-> $ CRUMB=$(curl -u "admin:admin" \
->              --cookie-jar "${COOKIEJAR}" \
->              'https://jenkins.marslo.com/crumbIssuer/api/json' |
->              jq -r '[.crumbRequestField, .crumb] | join(":")'
->        )
-> ```
-> <p></p>
-> example for run `safeRestart` api :
-> ```bash
-> $ COOKIEJAR="$(mktemp)"
-> $ CRUMB=$(curl --cookie-jar "${COOKIEJAR}" \
->                "https://jenkins.marslo.com/crumbIssuer/api/json" |
->                jq -r '.crumbRequestField + ":" + .crumb'
+>   ```bash
+>   $ COOKIEJAR="$(mktemp)"
+>   $ CRUMB=$(curl -u "admin:admin" \
+>                --cookie-jar "${COOKIEJAR}" \
+>                'https://jenkins.marslo.com/crumbIssuer/api/json' |
+>                jq -r '[.crumbRequestField, .crumb] | join(":")'
 >          )
-> $ curl -v \
->        -X POST \
->        --cookie "${COOKIEJAR}" \
->        -H "${CRUMB}" \
->        -H "Content-Type: application/json" \
->        -H "Accept: application/json"
->        https://jenkins.marslo.com/safeRestart
-> ```
+>   ```
 {% endhint %}
+
+## safeRestart via API
+```bash
+$ SERVER='https://localhost:443'
+$ COOKIEJAR="$(mktemp)"
+$ CRUMB=$(curl --cookie-jar "${COOKIEJAR}" \
+              "https://${SERVER}/crumbIssuer/api/json" |
+              jq -r '.crumbRequestField + ":" + .crumb'
+        )
+$ curl -v \
+      -X POST \
+      --cookie "${COOKIEJAR}" \
+      -H "${CRUMB}" \
+      -H "Content-Type: application/json" \
+      -H "Accept: application/json"
+      https://${SERVER}/safeRestart
+```
 
 ## [execute Groovy script with an API call](https://support.cloudbees.com/hc/en-us/articles/217509228-Execute-Groovy-script-in-Jenkins-with-an-API-call)
 ```bash
@@ -224,8 +227,8 @@ $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/
 - [additional format](../../cheatsheet/character/json.md)
   ```bash
   $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]' | jq --raw-output '.actions[].parameters[]? | .name + "\t" + .value'
-  id	marslo
-  gender	female
+  id  marslo
+  gender  female
   ```
 
 > [!TIP]
