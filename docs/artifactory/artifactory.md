@@ -119,5 +119,11 @@ $ sudo keytool -importcert \
 ```
 
 ## configuration
-#### allow partial folder in particular repo
+### allow partial folder in particular repo
 ![allow temp && demo, and disallow sprint && weekly](../screenshot/artifactory/repo-permission.png)
+
+### [access token](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-tokens)
+#### [generating expirable tokens](https://jfrog.com/help/r/jfrog-platform-administration-documentation/generating-expirable-tokens)
+- from version 7.21.1, this can be specified by setting the `token.max-expiry` parameter in the `$JFROG_HOME/artifactory/var/etc/artifactory/access.config.yml` file ( prior to version 7.21.1, the parameter to set was `artifactory.access.token.non.admin.max.expires.in` ).
+- if the `token.max-expiry` is equal to 0 (which is the default), there is no limitation to the token expiry. However, if the maximum expiry is greater than 0, the user cannot create a non-expirable token.
+- the `token.max-expiry` parameter must be set to a value higher than the `token.default-expiry` parameter value.
