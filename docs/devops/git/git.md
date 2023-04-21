@@ -25,6 +25,7 @@ git command study and practice
   - [list ignored](#list-ignored)
 - [log](#log)
   - [short stat](#short-stat)
+  - [show renamed status](#show-renamed-status)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
   - [get change from `.git/objects`](#get-change-from-gitobjects)
