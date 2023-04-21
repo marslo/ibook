@@ -78,7 +78,7 @@
 > - [CSRF Protection Explained](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/csrf-protection-explained)
 >   - if you authenticate your API calls with a username and a user API token then a crumb is not required from Jenkins 2.96
 >
-> - [to get CSRF crumb via curl](authorization.html#get-crumb-via-cmd)
+> - [to get CSRF crumb via curl](./authorization.html#get-crumb-via-cmd)
 >   ```bash
 >   $ SERVER="https://localhost:8080"
 >   $ COOKIEJAR="$(mktemp)"
@@ -88,6 +88,31 @@
 >          -u "admin:admin" \
 >          --cookie "$COOKIEJAR" \
 >          -H "$CRUMB" \
+>          https://${SERVER}/scriptText
+>   ```
+> - [or](./api.html#execute-groovy-script-with-an-api-call)
+>   ```bash
+>   $ SERVER="https://localhost:8080"
+>   $ COOKIEJAR="$(mktemp)"
+>   $ CRUMB=$(curl -u "admin:admin" \
+>                  --cookie-jar "${COOKIEJAR}" \
+>                  'https://${SERVER}/crumbIssuer/api/json' |
+>                  jq -r '[.crumbRequestField, .crumb] | join(":")'
+>            )
+>   # verify
+>   $ echo $CRUMB
+>   Jenkins-Crumb:c11dc*******************************************************e463
+>   $ curl -d "script=System.getProperties()" \
+>          -u "admin:admin" \
+>          -s \
+>          --cookie "$COOKIEJAR" \
+>          -H "$CRUMB" \
+>          https://${SERVER}/scriptText
+>   $ curl --data-urlencode "script=$(< ./script.groovy)" \
+>          -s \
+>          --netrc-file ~/.netrc \
+>          --cookie "${COOKIEJAR}" \
+>          -H "${CRUMB}" \
 >          https://${SERVER}/scriptText
 >   ```
 
