@@ -14,6 +14,7 @@
   - [get crumb issuer](#get-crumb-issuer)
   - [set crumb issuer](#set-crumb-issuer)
   - [clean up all pending Async Resource Disposers items](#clean-up-all-pending-async-resource-disposers-items)
+  - [get crumb via cmd](#get-crumb-via-cmd)
 - [credential](#credential)
   - [list all credentials](#list-all-credentials)
   - [StandardUsernamePasswordCredentials](#standardusernamepasswordcredentials)
@@ -119,17 +120,16 @@ println strategy.getClass()
 ```groovy
 Jenkins.instance
        .authorizationStrategy
-       .grantedPermissions.collect{ p, u ->
-          println "\n${p} :\n\t${u}"
-        }
+       .grantedPermissions
+       .collect{ p, u -> [ (p.id), u ] }
+
 ```
 - or
   ```groovy
   Jenkins.instance
          .authorizationStrategy
-         .grantedPermissions.collect{ p, u ->
-            [ (p.id), u ]
-          }
+         .grantedPermissions
+         .each { p, u -> println "\n${p} :\n\t${u}" }
   ```
 
 ### ProjectMatrixAuthorizationStrategy
@@ -282,6 +282,52 @@ disposer.getBacklog().each { item ->
   }
 }
 ```
+
+### get crumb via cmd
+
+> [!TIP|local:references:]
+> - [CSRF Protection Explained](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/csrf-protection-explained)
+
+- curl
+  ```bash
+  # after 2.176.2
+  $ SERVER="https://localhost:8080"
+  $ COOKIEJAR="$(mktemp)"
+  $ CRUMB=$(curl -u "admin:admin" -s --cookie-jar "$COOKIEJAR" "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")
+
+  # verify
+  $ echo $CRUMB
+  Jenkins-Crumb:786**********************************************************932
+
+  # trigger a build
+  $ curl -X POST \
+         -u "admin:admin" \
+         --cookie "$COOKIEJAR" \
+         -H "$CRUMB" \
+         https://${SERVER}/job/sandbox/build
+
+  # to run script
+  $ curl -d "script=System.getProperties()" \
+         -u "admin:admin" \
+         --cookie "$COOKIEJAR" \
+         -H "$CRUMB" \
+         https://${SERVER}/scriptText
+  ```
+
+- via wget
+  ```bash
+  # after 2.176.2
+  $ SERVER="https://localhost:8080"
+  $ COOKIEJAR="$(mktemp)"
+  $ CRUMB="$(wget --quiet --user=admin --password=admin --auth-no-challenge --save-cookies "$COOKIEJAR" --keep-session-cookies -q --output-document - "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")"
+  $ wget --user=admin --password=admin \
+         --auth-no-challenge \
+         --load-cookies "$COOKIEJAR" \
+         --header="$CRUMB" \
+         --post-data="" \
+         --quiet \
+         "$SERVER"/job/someJob/build
+  ```
 
 ## credential
 
