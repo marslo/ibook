@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [safeRestart via API](#saferestart-via-api)
 - [execute Groovy script with an API call](#execute-groovy-script-with-an-api-call)
 - [stop build via api](#stop-build-via-api)
 - [get builds information](#get-builds-information)
@@ -27,12 +28,13 @@
 > - [imarslo : script console](./script.html#script-console)
 > - [with sessoin (cookie)](../plugins/crumbIssuer.md#working-with-session-after-21762-since-security-626)
 >   ```bash
+>   $ SERVER='https://localhost:443'
 >   $ COOKIEJAR="$(mktemp)"
 >   $ CRUMB=$(curl -u "admin:admin" \
->                --cookie-jar "${COOKIEJAR}" \
->                'https://jenkins.marslo.com/crumbIssuer/api/json' |
->                jq -r '[.crumbRequestField, .crumb] | join(":")'
->          )
+>                  --cookie-jar "${COOKIEJAR}" \
+>                  'https://${SERVER}/crumbIssuer/api/json' |
+>                  jq -r '[.crumbRequestField, .crumb] | join(":")'
+>            )
 >   ```
 {% endhint %}
 
@@ -41,9 +43,9 @@
 $ SERVER='https://localhost:443'
 $ COOKIEJAR="$(mktemp)"
 $ CRUMB=$(curl --cookie-jar "${COOKIEJAR}" \
-              "https://${SERVER}/crumbIssuer/api/json" |
-              jq -r '.crumbRequestField + ":" + .crumb'
-        )
+               "https://${SERVER}/crumbIssuer/api/json" |
+               jq -r '.crumbRequestField + ":" + .crumb'
+         )
 $ curl -v \
       -X POST \
       --cookie "${COOKIEJAR}" \

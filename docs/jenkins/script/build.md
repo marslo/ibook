@@ -1559,27 +1559,29 @@ final String JOB_PATTERN = '<group>/<name>'
 Map<String, Map<String, String>> results = [:]
 int sum = 0
 
-Jenkins.instance.getAllItems( Job.class ).each { project ->
-  if ( project.fullName.contains(JOB_PATTERN) ) {
-    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
-    def build = project.getLastBuild()
-    while ( build ) {
-      // if job is building, then results."${project.fullName}"."${build.result}" will be null
-      if ( build.isBuilding() ) {
-        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
-      } else {
-        // println "$project.name;$build.id;$build.result"
-        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-      }
-      build = build.getPreviousBuild()
+Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+  project.fullName.contains( JOB_PATTERN )
+  // or
+  // project.fullName.startsWith( JOB_PATTERN )
+}.each { project ->
+  results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+  def build = project.getLastBuild()
+  while ( build ) {
+    // if job is building, then results."${project.fullName}"."${build.result}" will be null
+    if ( build.isBuilding() ) {
+      results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
+    } else {
+      // println "$project.name;$build.id;$build.result"
+      results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
     }
+    build = build.getPreviousBuild()
   }
 }
 results.each{ name, status ->
   sum = status.values().sum()
   println "${name}: ${sum} : "
   status.each{ r, c ->
-    println "\t${r.padRight(11)}: ${c.toString().padRight(10)}: percentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+    if ( c ) println "\t${r.padRight(11)}: ${c.toString().padRight(10)}: percentage: " + (sum ? "${c * 100 / sum}%" : '0%')
   }
 }
 "DONE"
@@ -1596,8 +1598,12 @@ final int BENCH_MARK     = 1*24*60*60*1000
 Map<String, Map<String, String>> results = [:]
 int sum = 0
 
-Jenkins.instance.getAllItems( Job.class ).each { project ->
-  if ( project.fullName.contains(JOB_PATTERN) && project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
+Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+  project.fullName.startsWith( JOB_PATTERN )
+  // or
+  // project.fullName.contains( JOB_PATTERN )
+}.each { project ->
+  if ( project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
     results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
     def build = project.getLastBuild()
 
@@ -1617,7 +1623,8 @@ results.each{ name, status ->
   sum = status.values().sum()
   println "\n~~> ${name}: ${sum} : "
   status.each{ r, c ->
-    println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " + (sum ? "${c * 100 / sum}%" : '0%')
+    if ( c ) println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " +
+                     ( sum ? "${c * 100 / sum}%" : '0%' )
   }
 }
 
