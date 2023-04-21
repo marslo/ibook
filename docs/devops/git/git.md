@@ -588,6 +588,14 @@ $ git log --show-signature
 $ git log --shortstat
 ```
 
+### show renamed status
+```bash
+$ git log -M --summary | grep rename
+
+# or
+$ git log -M --summary | grep -E '^\s*rename.*{.*=>.*}'
+```
+
 ### show files and status without comments
 ```bash
 $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"

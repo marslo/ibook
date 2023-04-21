@@ -19,6 +19,7 @@
   - [get first matching pattern](#get-first-matching-pattern)
   - [get second matching pattern](#get-second-matching-pattern)
 - [`xargs`](#xargs)
+  - [complex comamnds with xargs](#complex-comamnds-with-xargs)
   - [multiple move](#multiple-move)
   - [subset of arguments](#subset-of-arguments)
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
