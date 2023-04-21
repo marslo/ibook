@@ -72,6 +72,10 @@
 
 ## [script console](https://www.jenkins.io/doc/book/managing/script-console/)
 ### usage
+
+> [!TIP]
+> API token is necessary
+
 - remote access
   ```bash
   $ curl -d "script=<your_script_here>" https://jenkins/script
@@ -86,7 +90,8 @@
   ```
   - via api token
     ```bash
-    $ curl --user 'username:api-token' --data-urlencode \
+    $ curl --user 'username:api-token' \
+           --data-urlencode \
            "script=$(< ./somescript.groovy)" \
            https://jenkins/scriptText
     ```
@@ -99,8 +104,9 @@
 
 ### setup system (temporary)
 
-> [!TIP]
+> [!TIP|label:references:]
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+> - [Configuring Content Security Policy](https://www.jenkins.io/doc/book/security/configuring-content-security-policy/)
 
 - timestampe
   ```groovy
@@ -112,6 +118,25 @@
   System.setProperty("org.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL", 36000)
   ```
 
+- to clear property
+  ```groovy
+  System.clearProperty("hudson.model.DirectoryBrowserSupport.CSP")
+  ```
+
+- to get property
+  ```groovy
+  System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+  ```
+
+- to get all properties
+  ```groovy
+  System.getProperties()
+
+  // or
+  System.getProperties().sort().collectEntries{[ (it.key), (it.value) ]}
+  System.getProperties().sort().each { println "${it.key} ~> ${it.value}" }
+  System.getProperties().sort().collect{ "${it.key} ~> ${it.value}" }.join('\n')
+  ```
 
 ### extend built-in node executor
 ```groovy
@@ -121,8 +146,7 @@ Jenkins.instance.setNumExecutors(5)
 
 ### execute shell script in console
 
-> [!TIP]
-> reference:
+> [!TIP|label:references:]
 > - [Run scripts from controller Script Console on agents](https://www.jenkins.io/doc/book/managing/script-console/#run-scripts-from-controller-script-console-on-agents)
 
 ```groovy
@@ -131,9 +155,104 @@ println ("uname -a".execute().text)
 // or
 println ("printenv".execute().in.text)
 ```
+
 - result
   ```
   Linux devops-jenkins-685cf57df9-znfs8 4.19.12-1.el7.elrepo.x86_64 #1 SMP Fri Dec 21 11:06:36 EST 2018 x86_64 GNU/Linux
+  ```
+
+- or
+  ```groovy
+  import hudson.util.RemotingDiagnostics
+  import jenkins.model.Jenkins
+
+  String agentName = 'your agent name'
+  //groovy script you want executed on an agent
+  groovy_script = '''
+  println System.getenv("PATH")
+  println "uname -a".execute().text
+  '''.trim()
+
+  String result
+  Jenkins.instance.slaves.find { agent ->
+      agent.name == agentName
+  }.with { agent ->
+      result = RemotingDiagnostics.executeGroovy(groovy_script, agent.channel)
+  }
+  println result
+  ```
+
+### read & write files
+```groovy
+// write
+new File('/tmp/file.txt').withWriter('UTF-8') { writer ->
+  try {
+    writer << 'hello world\n'
+  } finally {
+    writer.close()
+  }
+}
+
+// read
+new File('/tmp/file.txt').text
+```
+
+- write file in agent
+  ```groovy
+  import hudson.FilePath
+  import hudson.remoting.Channel
+  import jenkins.model.Jenkins
+
+  String agentName = 'some-agent'
+  String filePath = '/tmp/file.txt'
+
+  Channel agentChannel = Jenkins.instance.slaves.find { agent ->
+      agent.name == agentName
+  }.channel
+
+  new FilePath(agentChannel, filePath).write().with { os ->
+      try {
+          os << 'hello world\n'
+      } finally {
+          os.close()
+      }
+  }
+  ```
+
+- read file from an agent
+  ```groovy
+  import hudson.FilePath
+  import hudson.remoting.Channel
+  import jenkins.model.Jenkins
+
+  import java.io.BufferedReader
+  import java.io.InputStreamReader
+  import java.nio.charset.StandardCharsets
+  import java.util.stream.Collectors
+
+  String agentName = 'some-agent'
+  String filePath = '/tmp/file.txt'
+
+  Channel agentChannel = Jenkins.instance.slaves.find { agent ->
+      agent.name == agentName
+  }.channel
+
+  String fileContents = ''
+  new FilePath(agentChannel, filePath).read().with { is ->
+      try {
+          fileContents = new BufferedReader(
+              new InputStreamReader(is, StandardCharsets.UTF_8))
+                  .lines()
+                  .collect(Collectors.joining("\n"))
+      } finally {
+          is.close()
+      }
+  }
+
+  // print contents of the file from the agent
+  println '==='
+  println(fileContents)
+  println '==='
   ```
 
 #### modify log level
