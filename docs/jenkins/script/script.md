@@ -7,6 +7,7 @@
   - [setup system (temporary)](#setup-system-temporary)
   - [extend built-in node executor](#extend-built-in-node-executor)
   - [execute shell script in console](#execute-shell-script-in-console)
+  - [read & write files](#read--write-files)
 - [jenkins system](#jenkins-system)
 - [jobs](#jobs)
   - [get build status](#get-build-status)
@@ -74,7 +75,21 @@
 ### usage
 
 > [!TIP]
-> API token is necessary
+> - [CSRF Protection Explained](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/csrf-protection-explained)
+>   - if you authenticate your API calls with a username and a user API token then a crumb is not required from Jenkins 2.96
+>
+> - [to get CSRF crumb via curl](authorization.html#get-crumb-via-cmd)
+>   ```bash
+>   $ SERVER="https://localhost:8080"
+>   $ COOKIEJAR="$(mktemp)"
+>   $ CRUMB=$(curl -u "admin:admin" -s --cookie-jar "$COOKIEJAR" "$SERVER/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)")
+>   # to run script via curl
+>   $ curl -d "script=System.getProperties()" \
+>          -u "admin:admin" \
+>          --cookie "$COOKIEJAR" \
+>          -H "$CRUMB" \
+>          https://${SERVER}/scriptText
+>   ```
 
 - remote access
   ```bash
