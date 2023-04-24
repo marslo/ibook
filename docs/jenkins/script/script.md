@@ -9,32 +9,23 @@
   - [execute shell script in console](#execute-shell-script-in-console)
   - [read & write files](#read--write-files)
 - [jenkins system](#jenkins-system)
-- [jobs](#jobs)
-  - [get build status](#get-build-status)
+- [jobs & builds](#jobs--builds)
+  - [list build status with percentage](#list-build-status-with-percentage)
   - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
-  - [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
+  - [list builds which running for more than 24 hours](#list-builds-which-running-for-more-than-24-hours)
   - [get workspace](#get-workspace)
   - [shelve jobs](#shelve-jobs)
-- [list plugins](#list-plugins)
+- [plugins](#plugins)
   - [via api : imarslo: list plugins](#via-api--imarslo-list-plugins)
   - [simple list](#simple-list)
   - [with delegate to Servlet container security realm](#with-delegate-to-servlet-container-security-realm)
-  - [List plugin and dependencies](#list-plugin-and-dependencies)
+  - [list plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
   - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)
   - [automatic approval all pending](#automatic-approval-all-pending)
   - [disable the scriptApproval](#disable-the-scriptapproval)
-- [abort](#abort)
-  - [abort a build](#abort-a-build)
-  - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
 - [logRotator](#logrotator)
   - [show logRotator](#show-logrotator)
-- [shared libs](#shared-libs)
-  - [vars](#vars)
-  - [src](#src)
-- [asynchronous resource disposer](#asynchronous-resource-disposer)
-- [exception](#exception)
-- [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -57,6 +48,13 @@
 >   - [jenkins.model.BuildDiscarder](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarder/)
 >   - [org.jenkinsci.plugins.workflow.steps](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/package-summary.html)
 > - [I have a stuck Pipeline and I can not stop it](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/troubleshooting-guides/i-have-a-stuck-pipeline-and-i-can-not-stop-it)
+> - [others](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
+>  - [Jenkins : Monitor and Restart Offline Slaves](https://wiki.jenkins.io/display/JENKINS/Monitor-and-Restart-Offline-Slaves.html)
+>  - [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
+>  - [Jenkins : Printing a list of credentials and their IDs](https://wiki.jenkins.io/display/JENKINS/Printing-a-list-of-credentials-and-their-IDs.html)
+>  - [Jenkins : Wipe workspaces for a set of jobs on all nodes](https://wiki.jenkins.io/display/JENKINS/Wipe-workspaces-for-a-set-of-jobs-on-all-nodes.html)
+>  - [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
+>  - [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
 {% endhint %}
 
 > [!TIP]
@@ -247,15 +245,15 @@ new File('/tmp/file.txt').text
   String filePath = '/tmp/file.txt'
 
   Channel agentChannel = Jenkins.instance.slaves.find { agent ->
-      agent.name == agentName
+    agent.name == agentName
   }.channel
 
   new FilePath(agentChannel, filePath).write().with { os ->
-      try {
-          os << 'hello world\n'
-      } finally {
-          os.close()
-      }
+    try {
+      os << 'hello world\n'
+    } finally {
+      os.close()
+    }
   }
   ```
 
@@ -273,21 +271,20 @@ new File('/tmp/file.txt').text
   String agentName = 'some-agent'
   String filePath = '/tmp/file.txt'
 
-  Channel agentChannel = Jenkins.instance.slaves.find { agent ->
-      agent.name == agentName
-  }.channel
+  Channel agentChannel = Jenkins.instance.slaves.find { it.name == agentName }.channel
 
   String fileContents = ''
   new FilePath(agentChannel, filePath).read().with { is ->
-      try {
-          fileContents = new BufferedReader(
-              new InputStreamReader(is, StandardCharsets.UTF_8))
-                  .lines()
-                  .collect(Collectors.joining("\n"))
-      } finally {
-          is.close()
-      }
-  }
+    try {
+      fileContents = new BufferedReader(
+                       new InputStreamReader(is, StandardCharsets.UTF_8))
+                          .lines()
+                          .collect(Collectors.joining("\n")
+                     )
+    } finally {
+      is.close()
+    }
+  } // with
 
   // print contents of the file from the agent
   println '==='
@@ -350,12 +347,13 @@ sshd.setPort( 12345 )
 sshd.save()
 ```
 
-## [jobs](https://support.cloudbees.com/hc/en-us/articles/226941767-Groovy-to-list-all-jobs)
+## jobs & builds
 
-> [!TIP]
-> get more: [imarslo: jobs & builds](./build.html)
+> [!TIP|label:get more:]
+> - [* imarslo : jobs](./job.html)
+> - [* imarslo : builds](./build.html)
 
-### get build status
+### list build status with percentage
 - [get all builds result percentage](./build.html#get-all-builds-result-percentage)
 - [get builds result percentage within 24 hours](./build.html#get-builds-result-percentage-within-24-hours)
 - [get builds result and percentage within certain start-end time](./build.html#get-builds-result-and-percentage-within-certain-start-end-time)
@@ -367,8 +365,13 @@ sshd.save()
 - [get builds result during certain start-end time](./build.html#get-builds-result-during-certain-start-end-time)
 - [get builds result and percentage within certain start-end time](./build.html#get-builds-result-and-percentage-within-certain-start-end-time)
 
-### [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
+### [list builds which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
 - [list job which running for more than 24 hours](./build.html#list-all-builds-within-24-hours)
+- [get last 24 hours failure builds](./build.html#get-last-24-hours-failure-builds)
+- [get last 24 hours failure builds via Map structure](./build.html#get-last-24-hours-failure-builds-via-map-structure)
+- [get builds result percentage within 24 hours](./build.html#get-builds-result-percentage-within-24-hours)
+- [get builds result during certain start-end time](./build.html#get-builds-result-during-certain-start-end-time)
+- [get builds result and percentage within certain start-end time](./build.html#get-builds-result-and-percentage-within-certain-start-end-time)
 
 ### [get workspace](https://github.com/jenkinsci/job-dsl-plugin/blob/master/docs/User-Power-Moves.md#list-the-files-in-a-jenkins-jobs-workspace)
 ```groovy
@@ -406,7 +409,7 @@ Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
 }
 ```
 
-## list plugins
+## plugins
 ### via api : [imarslo: list plugins](./api.html#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
@@ -429,7 +432,7 @@ ExtensionList.lookup( UnprotectedRootAction ).each {
 }
 ```
 
-### [List plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)
+### [list plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)
 ```groovy
 def plugins = Jenkins.instance
                      .pluginManager
@@ -438,14 +441,14 @@ def plugins = Jenkins.instance
                        a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
                      }
 
-println "Jenkins Instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
-        "Installed Plugins:\n" +
+println "jenkins instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
+        "installed plugins:\n" +
         "=================="
 plugins.each { plugin ->
   println "  ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}"
 }
 
-println "\nPlugins Dependency tree (...: dependencies; +++: dependants) :\n" +
+println "\nplugins dependency tree (...: dependencies; +++: dependants) :\n" +
         "======================="
 plugins.each { plugin ->
   println """
@@ -674,8 +677,7 @@ plugins.each { plugin ->
 
 ### [disable the scriptApproval](https://stackoverflow.com/a/49372857/2940319)
 
-> [!TIP]
-> @Deprcated
+> [!NOTE|label:@deprecated]
 > - file: `$JENKINS_HOME/init.groovy.d/disable-script-security.groovy`
 
 ```groovy
@@ -686,87 +688,6 @@ import jenkins.model.GlobalConfiguration
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
 ```
-
-## abort
-### [abort a build](https://stackoverflow.com/a/26306081/2940319)
-```groovy
-Jenkins.instance.getItemByFullName("JobName")
-       .getBuildByNumber(JobNumber)
-       .finish (
-         hudson.model.Result.ABORTED,
-         new java.io.IOException("Aborting build")
-       )
-```
-
-### [abort running builds if new one is running](https://stackoverflow.com/a/44326216/2940319)
-> reference:
-> - [Controlling the Flow with Stage, Lock, and Milestone](https://www.jenkins.io/blog/2016/10/16/stage-lock-milestone/)
-> - [I have a stuck Pipeline and I can not stop it](https://support.cloudbees.com/hc/en-us/articles/360000913392-I-have-a-stuck-Pipeline-and-I-can-not-stop-it)
-> - [Aborting a build](https://www.jenkins.io/doc/book/using/aborting-a-build/)
-> - [Cancel queued builds and aborting executing builds using Groovy for Jenkins](https://stackoverflow.com/questions/12305244/cancel-queued-builds-and-aborting-executing-builds-using-groovy-for-jenkins)
-
-```groovy
-import hudson.model.Result
-import jenkins.model.CauseOfInterruption
-
-// iterate through current project runs
-build.getProject()._getRuns().iterator().each { run ->
-  def exec = run.getExecutor()
-  // if the run is not a current build and it has executor (running) then stop it
-  if( run != build && exec != null ) {
-    // prepare the cause of interruption
-    def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
-    exec.interrupt(Result.ABORTED, cause)
-  }
-}
-```
-- [or](https://stackoverflow.com/a/49901413/2940319)
-  ```groovy
-  import hudson.model.Result
-  import hudson.model.Run
-  import jenkins.model.CauseOfInterruption.UserInterruption
-
-  def abortPreviousBuilds() {
-    Run previousBuild = currentBuild.rawBuild.getPreviousBuildInProgress()
-
-    while ( previousBuild != null ) {
-      if ( previousBuild.isInProgress() ) {
-        def executor = previousBuild.getExecutor()
-          if ( executor != null ) {
-            echo ">> Aborting older build #${previousBuild.number}"
-              executor.interrupt( Result.ABORTED,
-                                  new UserInterruption(
-                                    "Aborted by newer build #${currentBuild.number}"
-                                ))
-          }
-      }
-      previousBuild = previousBuild.getPreviousBuildInProgress()
-    }
-  }
-  ```
-
-- or: [cancel builds same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-  ```groovy
-  /**
-   * Author: Isaac S Cohen
-   * This script works with workflow to cancel other running builds for the same job
-   * Use case: many build may go to QA, but only the build that is accepted is needed,
-   * the other builds in the workflow should be aborted
-  **/
-
-  def jobname  = env.JOB_NAME
-  def buildnum = env.BUILD_NUMBER.toInteger()
-
-  def job = Jenkins.instance.getItemByFullName( jobname )
-  for ( build in job.builds ) {
-    if ( !build.isBuilding() ) { continue; }
-    if ( buildnum == build.getNumber().toInteger() ) { continue; println "equals" }
-    build.doStop()
-  }
-  ```
-
-- or: [Properly Stop Only Running Pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
-
 
 ## logRotator
 
@@ -810,103 +731,3 @@ Jenkins.instance.getAllItems(Job.class).findAll {
   """
 }
 ```
-
-## shared libs
-
-{% hint style='tip' %}
-> reference:
-> - [Jenkins Shared Libraries Workshop](https://www.slideshare.net/roidelapluie/jenkins-shared-libraries-workshop)
-> - [Extending with Shared Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/)
-{% endhint %}
-
-### vars
-- capture
-  ```groovy
-  def capture( String str, String pattern, int groupIndex, int index ) {
-    ( str =~ pattern ).findAll()?.getAt(groupIndex)?.getAt(index) ?: null
-  }
-
-  ```
-  - example : find out the current Container ID if the process running in a container
-    ```groovy
-    // cpuset: '/kubepods/burstable/pod59899be8-d4db-11eb-9a49-ac1f6b59c992/b60bf42d334be0eff64f325bad5b0ca4750119fbf8a7e80afa4e559040208ab3''
-    String cpuset = sh (
-      returnStdout : true ,
-            script : "set +x; cat /proc/self/cpuset"
-    ).trim()
-    String dockerPattern = '^/docker/(\\w{64})$'
-    String k8sPattern    = '^/kubepods/([^/]+/){2}(\\w{64})$'
-
-    return capture( cpuset, k8sPattern ) ?: capture( cpuset, dockerPattern )
-    ```
-
-### src
-#### using Jenkins plugins in groovy scripts
-
-#### [using jenkins-core in groovy script via Grab](https://stackoverflow.com/a/38967175/2940319)
-> - [GrabResolver](http://docs.groovy-lang.org/latest/html/api/groovy/lang/GrabResolver.html)
-> - [Dependency management with Grape](http://docs.groovy-lang.org/latest/html/documentation/grape.html)
-> - [kellyrob99/setupNewServer.groovy](https://gist.github.com/kellyrob99/1907283)
-
-```groovy
-@GrabResolver(name='jenkins', root='http://repo.jenkins-ci.org/public/')
-@Grab(group='org.jenkins-ci.main', module='jenkins-core', version='2.9')
-import jenkins.model.Jenkins
-```
-
-## [asynchronous resource disposer](https://plugins.jenkins.io/resource-disposer)
-```groovy
-import org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer
-
-AsyncResourceDisposer disposer = AsyncResourceDisposer.get()
-  println """
-    getDisplayName : ${disposer.getDisplayName()}
-       isActivated : ${disposer.isActivated()}
-  """
-
-disposer.getBacklog().each {
-  println """
-            getId : ${it.getId()}
-    getRegistered : ${it.getRegistered()}
-             node : ${it.getDisposable().node}
-             path : ${it.getDisposable().path}
-     getLastState : ${it.getLastState().getDisplayName()}
-  """
-}
-
-// disposer.getBacklog().each { disposer.dispose( it.getDisposable() ) }
-```
-- result
-  ```groovy
-      getDisplayName : Asynchronous resource disposer
-         isActivated : true
-
-              getId : 889006714
-      getRegistered : Mon Apr 18 19:19:30 PDT 2022
-               node : worknode_021
-               path : /home/devops/workspace/marslo/testing_ws-cleanup_1650334769689
-       getLastState : Unable to delete '/home/devops/workspace/marslo/testing_ws-cleanup_1650334769689'. Tried 3 times (of a maximum of 3) waiting 0.1 sec between attempts. (Discarded 33 additional exceptions)
-
-              getId : 167234646
-      getRegistered : Sun Apr 17 13:07:47 PDT 2022
-               node : worknode_013
-               path : /home/devops/workspace/marslo/testing_ws-cleanup_1650226067115
-       getLastState : Unable to delete '/home/devops/workspace/marslo/testing_ws-cleanup_1650226067115'. Tried 3 times (of a maximum of 3) waiting 0.1 sec between attempts. (Discarded 32 additional exceptions)
-
-       ...
-  ```
-
-## exception
-
-{% hint style='tip' %}
-> referencs:
-> - [Class Throwable](https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html)
-{% endhint %}
-
-## [others](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
-- [Jenkins : Monitor and Restart Offline Slaves](https://wiki.jenkins.io/display/JENKINS/Monitor-and-Restart-Offline-Slaves.html)
-- [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
-- [Jenkins : Printing a list of credentials and their IDs](https://wiki.jenkins.io/display/JENKINS/Printing-a-list-of-credentials-and-their-IDs.html)
-- [Jenkins : Wipe workspaces for a set of jobs on all nodes](https://wiki.jenkins.io/display/JENKINS/Wipe-workspaces-for-a-set-of-jobs-on-all-nodes.html)
-- [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
-- [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)

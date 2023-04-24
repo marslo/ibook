@@ -74,6 +74,7 @@
   * [script](jenkins/script/script.md)
     * [job](jenkins/script/job.md)
     * [build](jenkins/script/build.md)
+    * [stage](jenkins/script/stage.md)
     * [agent](jenkins/script/agent.md)
     * [security & authorization](jenkins/script/authorization.md)
     * [exception](jenkins/script/exception.md)
