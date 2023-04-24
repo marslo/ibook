@@ -13,6 +13,7 @@
 {% hint style='tip' %}
 > references:
 > - [Class java.lang.Throwable](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html)
+> - [Class Throwable](https://docs.oracle.com/javase/7/docs/api/java/lang/Throwable.html)
 > - [* Java Custom Exceptions and Best Practices](https://howtodoinjava.com/java/exception-handling/best-practices-for-for-exception-handling/)
 {% endhint %}
 
