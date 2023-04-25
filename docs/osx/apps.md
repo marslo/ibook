@@ -5,7 +5,9 @@
 - [homebrew](#homebrew)
   - [homebrew installation](#homebrew-installation)
   - [homebrew caskroom installation](#homebrew-caskroom-installation)
+  - [list formula](#list-formula)
   - [install](#install)
+  - [batch install](#batch-install)
   - [reinstall/downgrade](#reinstalldowngrade)
   - [check formula config files](#check-formula-config-files)
   - [brew debug](#brew-debug)
@@ -17,7 +19,7 @@
   - [mac cli](#mac-cli)
   - [others](#others)
 - [q&a](#qa)
-  - [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
+  - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -152,6 +154,79 @@ $ brew cu --all
   $ brew upgrade --cask --greedy
   ```
 
+### list formula
+
+> [!NOTE|references:]
+> - `brew leaves` shows you all top-level packages; packages that are not dependencies
+
+- list all
+  ```bash
+  $ list leaves
+
+  # or
+  $ brew leaves --installed-on-request
+  ```
+
+- list all packages with dependencies
+  ```bash
+  $ brew deps --tree --installed
+  ack
+
+  adns
+
+  aften
+
+  aom
+  ├── jpeg-xl
+  │   ├── brotli
+  │   ├── giflib
+  │   ├── highway
+  │   ├── imath
+  │   ├── jpeg-turbo
+  │   ├── libpng
+  │   ├── little-cms2
+  │   │   ├── jpeg-turbo
+  │   │   └── libtiff
+  │   │       ├── jpeg-turbo
+  │   │       └── zstd
+  │   │           ├── lz4
+  │   │           └── xz
+  ...
+  ```
+
+- list all formula size
+  ```bash
+  $ brew list --formula |
+              xargs -n1 -P8 -I {} \
+              sh -c "
+                  brew info {} | \
+                  grep -E '[0-9]* files, ' | \
+                  sed 's/^.*[0-9]* files, \(.*\)).*$/{} \1/'
+              " |
+              sort -h -r -k2 - |
+              column -t
+
+  ghc                    1.8GB
+  ghc@8.6                1.3GB
+  go                     629.9MB
+  openjdk                322.6MB
+  binutils               165.0MB
+  ghostscript            151.9MB
+  ...
+  ```
+
+- list all formula descriptions
+  ```bash
+  $ brew leaves | xargs -n1 brew desc --eval-all
+  ack: Search tool like grep, but optimized for programmers
+  adns: C/C++ resolver library and DNS resolver utilities
+  autoconf-archive: Collection of over 500 reusable autoconf macros
+  automake: Tool for generating GNU Standards-compliant Makefiles
+  bash-completion: Programmable completion for Bash 3.2
+  bash-completion@2: Programmable completion for Bash 4.2+
+  ...
+  ```
+
 ### install
 
 > [!NOTE]
@@ -202,33 +277,48 @@ $ brew install less --with-pcre
 
 - `brew upgrade` ignore specific formulas
 
-> [!NOTE]
-> [Ignore formula on brew upgrade](https://stackoverflow.com/a/48995512/2940319)
+  > [!NOTE]
+  > - [Ignore formula on brew upgrade](https://stackoverflow.com/a/48995512/2940319)
 
-```bash
-$ brew pin macvim
-$ brew list --pinned
-macvim
+  ```bash
+  $ brew pin macvim
+  $ brew list --pinned
+  macvim
 
-$ brew upgrade
-Updating Homebrew...
-Error: Not upgrading 1 pinned package:
-macvim HEAD-caf7642_1
-==> Upgrading 6 outdated packages:
-ghostscript 9.53.2 -> 9.53.3
-groovy 3.0.5 -> 3.0.6
-node 14.12.0 -> 14.13.1
-unbound 1.11.0 -> 1.12.0
-nmap 7.80_1 -> 7.90
-imagemagick 7.0.10-31 -> 7.0.10-34
-...
-```
+  $ brew upgrade
+  Updating Homebrew...
+  Error: Not upgrading 1 pinned package:
+  macvim HEAD-caf7642_1
+  ==> Upgrading 6 outdated packages:
+  ghostscript 9.53.2 -> 9.53.3
+  groovy 3.0.5 -> 3.0.6
+  node 14.12.0 -> 14.13.1
+  unbound 1.11.0 -> 1.12.0
+  nmap 7.80_1 -> 7.90
+  imagemagick 7.0.10-31 -> 7.0.10-34
+  ...
+  ```
 
 - unpin
   ```bash
   $ brew unpin macvim
   $ brew list --pinned
   ```
+
+### batch install
+
+> [!NOTE|label:references:]
+> - [List of all packages installed using Homebrew](https://apple.stackexchange.com/a/101092/254265)
+
+```bash
+$ xargs brew install < list.txt
+```
+
+- [make backup](https://apple.stackexchange.com/a/322371/254265)
+  ```bash
+  $ brew leaves > list.txt
+  ```
+
 
 ### reinstall/downgrade
 
@@ -893,7 +983,7 @@ $ npm i -g gnomon
 
 - usage
   ```bash
-  $ ping  127.0.0.1 | gnomon
+  $ ping 127.0.0.1 | gnomon
      0.0066s   PING 127.0.0.1 (127.0.0.1): 56 data bytes
      0.8694s   18:13:43.219648 64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.048 ms
      0.9999s   18:13:44.221333 64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.116 ms
@@ -934,14 +1024,14 @@ $ sudo gem install iStats -n /usr/local/bin
   ```
 
 ## q&a
-### [`Failed to connect to raw.githubusercontent.com port 443: Connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
+### [`failed to connect to raw.githubusercontent.com port 443: connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
 - issue
   ```bash
-  Failed to connect to raw.githubusercontent.com port 443: Connection refused
+  failed to connect to raw.githubusercontent.com port 443: connection refused
   ```
 - solution
   ```bash
-  sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
+  $ sudo bash -c " echo '199.232.28.133 raw.githubusercontent.com' >> /etc/hosts"
   ```
   - checking host IP address via [https://www.ipaddress.com/](https://www.ipaddress.com/)
 

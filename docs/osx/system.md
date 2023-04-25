@@ -23,6 +23,7 @@
   - [Convert a MacOS Installer to ISO](#convert-a-macos-installer-to-iso)
 - [flushed](#flushed)
   - [disk cache](#disk-cache)
+  - [flush DNS](#flush-dns)
 - [clean OSX native dot file](#clean-osx-native-dot-file)
 - [launchctl](#launchctl)
   - [create new plist](#create-new-plist)
@@ -348,6 +349,11 @@ more info:
 $ sudo purge
 ```
 
+### flush DNS
+```bash
+$ sudo killall -HUP mDNSResponder
+```
+
 ## clean OSX native dot file
 ```bash
 $ dot_clean -mvp <path>
@@ -357,10 +363,28 @@ $ dot_clean -mvp <path>
   $ sudo dot_clean -mvp /
   ```
 
-OR
-```bash
-$ find $HOME -name '.DS_Store' -type f -delete
-```
+- or
+  ```bash
+  $ find $HOME -name '.DS_Store' -type f -delete
+
+  # or
+  $ find / -name '._*' -type f -delete
+
+  # or
+  $ find / -name '._*' -type f -size -4k -delete
+  ```
+
+- or [disable indexing](https://apple.stackexchange.com/a/39751/254265)
+  ```bash
+  $ sudo mdutil -i off /Volumes/<diskName>
+  ```
+
+- or all-in-all actions
+  ```bash
+  $ sudo defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+  $ sudo mdutil -i off /Volumes/<FS NAME>
+  $ sudo rm -rf .{DS_Store,fseventsd,Spotlight-V*,Trashes}
+  ```
 
 ## launchctl
 ### create new plist
