@@ -207,7 +207,7 @@ $ sudo spctl --master-disable
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 ```
 
-#### disable the .DS_Store file
+#### disable the `.DS_Store` file
 ```bash
 $ defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 ```
@@ -215,6 +215,15 @@ $ defaults write com.apple.desktopservices DSDontWriteNetworkStores true
   ```bash
   $ defaults write com.apple.desktopservices DSDontWriteNetworkStores false
   ```
+
+- [more details](https://apple.stackexchange.com/a/208495/254265)
+  - `.DS_Store` – The name of a file in the Apple OS X operating system for storing custom attributes of a folder such as the position of icons or the choice of a background image (Read more)
+  - `.Spotlight-V100` – This file holds information to speed up the 'Spotlight Search' feature. Deleting would simply force this information to be re-indexed if you performed another Spotlight Search for an item in this folder.
+  - `.apDisk` – This file holds information about shared folders and can be safely removed as it will be automatically re-created if Apple needs it.
+  - `.VolumeIcon.icns` – This file is used to store the icon of the volume (USB device) if the volume uses a custom icon and not the default icon. If you want the device to continue using this default icon, or if the folder/device you want to clean contains an application, you might want to keep this file in your system. As a side note, if you wanted to create a custom icon for your device you could create/download an .icns file and rename it .VolumeIcon.icns and place in your folder/device.
+  - `.fseventsd` – This file is used as a buffer for the File System Events daemon. If you are using a program that is monitoring this folder/device, this file might be used to store temporary data.
+  - `.Trash` & `.Trashes` – These folders are used to hold deleted items the same way that the 'Trash' icon from the dock works. If you don't need this feature on your folder/device, you can clean this folder to save space.
+  - `.TemporaryItems` – This file is used by the OS to hold temporary data when files are being copied/moved/appended. If you are running any programs that are accessing the folder/device you want to clean, and you aren't copying or moving any files, then this file can simply hold old data for caching.
 
 #### show battery percent
 ```bash
@@ -234,7 +243,7 @@ $ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenteru
 $ killall NotificationCenter
 ```
 
-#### Are you sure you want to open this application?
+#### are you sure you want to open this application?
 ```bash
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 ```
