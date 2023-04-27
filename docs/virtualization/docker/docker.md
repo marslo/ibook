@@ -64,6 +64,8 @@
 > - [* Configure where the Docker daemon listens for connections](https://docs.docker.com/engine/install/linux-postinstall/#configure-where-the-docker-daemon-listens-for-connections)
 > - [* styblope/docker-api-port.md](https://gist.github.com/styblope/dc55e0ad2a9848f2cc3307d4819d819f)
 > - [* Configure the daemon](https://docs.docker.com/config/daemon/)
+>   - [Configure remote access for Docker daemon](https://docs.docker.com/config/daemon/remote-access/)
+>   - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/)
 >   - [Configure and troubleshoot the Docker daemon](https://docs.docker.com/config/daemon/)
 >   - [Control Docker with systemd](https://docs.docker.com/config/daemon/systemd/)
 >   - [Configure the daemon for IPv6](https://docs.docker.com/config/daemon/ipv6/)
@@ -73,26 +75,53 @@
 > - [Docker security : Docker daemon attack surface](https://docs.docker.com/engine/security/#docker-daemon-attack-surface)
 {% endhint %}
 
+
+> [!TIP]
+> - to check service
+>   ```bash
+>   $ sudo systemd-analyze verify <name.service>
+>   ```
+> - enable service if necessary
+>   ```bash
+>   $ sudo systemctl enable containerd.service
+>   Created symlink /etc/systemd/system/multi-user.target.wants/containerd.service → /usr/lib/systemd/system/containerd.service
+>   ```
+
 ```bash
-$ cat /etc/docker/daemon.json
-{
-  "hosts": ["unix:///var/run/docker.sock", "tcp://127.0.0.1:2375"]
-}
-
-$ sudo systemctl edit docker.service
-# or
-$ cat /etc/systemd/system/docker.service.d/override.conf
-[Service]
-ExecStart=
-ExecStart=/usr/bin/dockerd -H fd:// -H tcp://127.0.0.1:2375 [--config-file /etc/docker/daemon.json]
-
-$ sudo systemctl daemon-reload
-$ sudo systemctl restart docker.service
-
-# result
-$ sudo netstat -lntp | grep dockerd
-tcp6       0      0 :::2375                 :::*                    LISTEN      5649/dockerd
+# prepare
+$ sudo systemctl stop docker.service
+$ sudo systemctl stop docker.socket
 ```
+
+- via `daemon.json`
+  ```bash
+  $ cat /etc/docker/daemon.json
+  {
+    "hosts": ["unix:///var/run/docker.sock", "tcp://127.0.0.1:2375"]
+  }
+  # or
+  $ cat /etc/docker/daemon.json
+  {
+    "hosts": ["unix:///var/run/docker.sock", "fd://", "tcp://127.0.0.1:2375"]
+  }
+
+  $ sudo systemctl edit docker.service
+  ```
+
+- via `override.conf`
+  ```bash
+  $ cat /etc/systemd/system/docker.service.d/override.conf
+  [Service]
+  ExecStart=
+  ExecStart=/usr/bin/dockerd -H fd:// -H tcp://127.0.0.1:2375 [--containerd=/run/containerd/containerd.sock] [--config-file /etc/docker/daemon.json]
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restart docker.service
+
+  # result
+  $ sudo netstat -lntp | grep dockerd
+  tcp6       0      0 :::2375                 :::*                    LISTEN      5649/dockerd
+  ```
 
 - result
   ```bash
@@ -131,6 +160,9 @@ tcp6       0      0 :::2375                 :::*                    LISTEN      
   ```bash
   # Replacing this line:
   ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+  #                          |      |
+  #                           ------
+  #                       remove `-H fd://`
 
   # With this line:
   ExecStart=/usr/bin/dockerd --containerd=/run/containerd/containerd.sock [--tls=false]
@@ -140,6 +172,62 @@ tcp6       0      0 :::2375                 :::*                    LISTEN      
   ```bash
   exec socat -d TCP-LISTEN:2375,fork UNIX-CONNECT:/var/run/docker.sock
   ```
+
+<!--sec data-title="cat /usr/lib/systemd/system/docker.service" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ sudo cat /usr/lib/systemd/system/docker.service
+[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network-online.target docker.socket firewalld.service containerd.service time-set.target
+Wants=network-online.target containerd.service
+Requires=docker.socket
+
+[Service]
+Type=notify
+# the default is not to use systemd for cgroups because the delegate issues still
+# exists and systemd currently does not support the cgroup feature set required
+# for containers run by docker
+#         remove if enable remote access in /etc/docker/daemon.json
+#                           ---+--
+#                          |      |
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutStartSec=0
+RestartSec=2
+Restart=always
+
+# Note that StartLimit* options were moved from "Service" to "Unit" in systemd 229.
+# Both the old, and new location are accepted by systemd 229 and up, so using the old location
+# to make them work for either version of systemd.
+StartLimitBurst=3
+
+# Note that StartLimitInterval was renamed to StartLimitIntervalSec in systemd 230.
+# Both the old, and new name are accepted by systemd 230 and up, so using the old name to make
+# this option work for either version of systemd.
+StartLimitInterval=60s
+
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+
+# Comment TasksMax if your systemd version does not support it.
+# Only systemd 226 and above support this option.
+TasksMax=infinity
+
+# set delegate yes so that systemd does not reset the cgroups of docker containers
+Delegate=yes
+
+# kill only the docker process, not all processes in the cgroup
+KillMode=process
+OOMScoreAdjust=-500
+
+[Install]
+WantedBy=multi-user.target
+```
+<!--endsec-->
 
 ## docker completion
 
