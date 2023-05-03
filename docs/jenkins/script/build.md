@@ -11,6 +11,7 @@
   - [build log](#build-log)
     - [get console output](#get-console-output)
     - [check whether if log kept](#check-whether-if-log-kept)
+    - [check last N logs](#check-last-n-logs)
   - [build changesets](#build-changesets)
     - [code clone via DSL](#code-clone-via-dsl)
   - [get SCM info](#get-scm-info)
@@ -232,6 +233,41 @@ job.builds.findAll { Run run -> run.isKeepLog() }
          }
   "DONE"
   ```
+
+### check last N logs
+
+> [!NOTE|label:original log:]
+> ```log
+> 21:19:37  Running on Jenkins in /var/jenkins_home/workspace/marslo/desc
+> [Pipeline] {
+> [Pipeline] sh
+> 21:19:37  + sleep 10
+> 21:19:47
+> 21:19:47  real  0m10.003s
+> 21:19:47  user  0m0.000s
+> 21:19:47  sys   0m0.003s
+> [Pipeline] }
+> [Pipeline] // node
+> [Pipeline] }
+> 21:19:47
+> [Pipeline] // ansiColor
+> [Pipeline] }
+> [Pipeline] // timestamps
+> [Pipeline] End of Pipeline
+> Finished: SUCCESS
+> ```
+
+```groovy
+Jenkins.instance.getItemByFullName( <JOB_PATTERN> )
+                .getBuildByNumber( <BUILD_NUMBER> )
+                .getLog( 30 )
+                .find{ it.contains('real\t') }
+                .split( '\t' )
+                .last()
+                .trim()
+
+// Result: 0m10.003s
+```
 
 ## build changesets
 
