@@ -7,8 +7,9 @@
   - [initialization](#initialization)
 - [check](#check)
 - [others](#others)
-- [Q&A](#qa)
+- [q&a](#qa)
   - [`Error: 0x80040326`](#error-0x80040326)
+  - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -289,7 +290,7 @@
   Set-Alias -Name getip6 -Value Get-IPv6Routes
   ```
 
-## Q&A
+## q&a
 ### `Error: 0x80040326`
 - issue
   ```bash
@@ -313,3 +314,20 @@
   ```
 
   ![0x80040326](../../screenshot/win/wsl/wsl-0x80040326-update-shutdown.png)
+
+### run-detectors: unable to find an interpreter
+
+> [!INFO|label:references:]
+> - [Interop Issue: unable to find interpreter for launching Windows .exe files using Interop](https://github.com/microsoft/WSL/issues/5466#issuecomment-695155716)
+> - [gabrielelana/vim-markdown](https://github.com/microsoft/WSL/issues/8531)
+
+```bash
+# execute in wsl2
+sudo update-binfmts --disable cli
+```
+
+- more
+  ```bash
+  $ mount | grep binfmt_misc
+  binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,relatime)
+  ```
