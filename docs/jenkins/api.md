@@ -208,8 +208,7 @@ $ curl -s https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/xml?xpath=/
 
 ### get all parameters via Json format
 
-> [!TIP]
-> api:
+> [!TIP|label:api:]
 > `https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/json?tree=actions[parameters[*]]`
 
 ```bash
@@ -233,8 +232,7 @@ $ curl -s --globoff 'https://<JENKINS_DOMAIN_NAME>/job/<jobname>/<buildnum>/api/
   gender  female
   ```
 
-> [!TIP]
-> **jq tips**
+> [!TIP|label:jq tips:]
 > - [remove empty line from output](https://stackoverflow.com/a/44289083/2940319)
 > i.e.:
 >   - original `jq --raw-output .actions[].parameters`
