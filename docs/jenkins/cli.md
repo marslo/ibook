@@ -60,13 +60,13 @@ spec:
 ...
 ```
 
-![jenkins-cli-port](../../screenshot/jenkins/jenkins-cli-1.png)
+![jenkins-cli-port](../screenshot/jenkins/jenkins-cli-1.png)
 
 
 ### [ssh](https://www.jenkins.io/doc/book/managing/cli/)
 * Jenkins config
 
-![jenkins-cli-ssh](../../screenshot/jenkins/jenkins-cli-2.png)
+![jenkins-cli-ssh](../screenshot/jenkins/jenkins-cli-2.png)
 
 * `~/.ssh/config`
 ```bash

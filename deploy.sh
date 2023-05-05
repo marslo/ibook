@@ -9,6 +9,7 @@
 
 root="$(git rev-parse --show-toplevel)"
 target="${root}/.target_book"
+modules="${root}/node_modules"
 book="${root}/_book"
 branch='gh-pages'
 # remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
@@ -56,8 +57,7 @@ info="""
       $(c Y)npm run deploy$(c) : $(grep \"deploy\" "${root}"/package.json  | sed -n -re 's/.*:\W*"([^"]+)".*$/\1/p')
 """
 
-function help()
-{
+function help() {
   echo -e "${usage}"
   # ${GREP} '^function' $0 | sed -re "s:^function([^(.]*).*$:\t\1:g"
   declare -F -p | sed -re "s:^.*-f(.*)$:\t\1:g"
@@ -71,6 +71,10 @@ function build() {
   [ -d ./node_modules ] && rm -rf ./node_modules
   [ -d ./_book ] && rm -rf ./_book
   npm run built
+}
+
+function installModules() {
+  [[ -d "${modules}" ]] || gitbook install
 }
 
 function rebuiltToc() {
@@ -121,6 +125,7 @@ function updateBook() {
 }
 
 function doDeploy() {
+  installModules
   rebuiltToc
 
   if [ -d "${target}" ]; then
