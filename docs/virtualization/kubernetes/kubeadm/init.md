@@ -25,6 +25,7 @@
     - [set up a high availability etcd cluster with kubeadm](#set-up-a-high-availability-etcd-cluster-with-kubeadm)
 - [tips](#tips)
   - [kubeadm init](#kubeadm-init-2)
+- [tear down](#tear-down)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1126,3 +1127,46 @@ $ kubeadm init phase bootstrap-token [flags] [--kubeconfig <string>] [--config <
   ```bash
   $ kubeadm init phase kubelet-finalize experimental-cert-rotation [flags] [--cert-dir /etc/kubernetes/pki] [--config <string>]
   ```
+
+# tear down
+```bash
+$ kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
+$ kubectl delete node <node name>
+
+$ sudo kubeadm  reset
+[preflight] Running pre-flight checks.
+[reset] Stopping the kubelet service.
+[reset] Unmounting mounted directories in "/var/lib/kubelet"
+[reset] Removing kubernetes-managed containers.
+[reset] Deleting contents of stateful directories: [/var/lib/kubelet /etc/cni/net.d /var/lib/dockershim /var/run/kubernetes /var/lib/etcd]
+[reset] Deleting contents of config directories: [/etc/kubernetes/manifests /etc/kubernetes/pki]
+[reset] Deleting files: [/etc/kubernetes/admin.conf /etc/kubernetes/kubelet.conf /etc/kubernetes/bootstrap-kubelet.conf /etc/kubernetes/controller-manager.conf /etc/kubernetes/scheduler.conf]
+
+$ sudo systemctl stop kubelet
+$ sudo systemctl stop docker
+$ sudo systemctl disable --now kubelet
+$ sudo systemctl disable --now docker
+
+$ docker system prune -a -f
+
+$ sudo ifconfig cni0 down
+$ sudo ifconfig flannel.1 down
+$ sudo rm -rf /etc/kubernetes/
+$ sudo rm -rf /var/lib/cni/
+$ sudo rm -rf /var/lib/kubelet/*
+$ sudo rm -rf /etc/cni/net.d
+$ sudo rm -rf /etc/cni/
+
+$ rm -rf ~/.kube/
+
+$ sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
+$ sudo apt-get autoremove
+
+$ sudo iptables -P INPUT ACCEPT
+$ sudo iptables -P FORWARD ACCEPT
+$ sudo iptables -P OUTPUT ACCEPT
+$ sudo iptables -t nat -F
+$ sudo iptables -t mangle -F
+$ sudo iptables -F
+$ sudo iptables -X
+```

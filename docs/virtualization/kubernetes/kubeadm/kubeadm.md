@@ -16,6 +16,7 @@
 
 {% hint style='tip' %}
 > reference :
+> - [* install tools](https://kubernetes.io/docs/tasks/tools/)
 > - [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
 > - [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
 > - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
@@ -179,6 +180,27 @@ Processing triggers for ureadahead (0.100.0-20) ...
 
 ### CentOS/RHEL
 #### basic environment
+
+> [!NOTE]
+> - [How to install Kubernetes cluster on CentOS 8](https://upcloud.com/resources/tutorials/install-kubernetes-cluster-centos-8)
+> - open necessary ports used by kubernetes
+>   ```bash
+>   $ firewall-cmd --zone=public --permanent --add-port={6443,2379,2380,10250,10251,10252}/tcp
+>   $ firewall-cmd --zone=public --permanent --add-port={10250,30000-32767}/tcp
+>   ```
+> - allow docker access from another node
+>   ```bash
+>   $ firewall-cmd --zone=public --permanent --add-rich-rule 'rule family=ipv4 source address=worker-IP-address/32 accept'
+>   ```
+> - allow access to the host’s localhost from the docker container
+>   ```bash
+>   $ firewall-cmd --zone=public --permanent --add-rich-rule 'rule family=ipv4 source address=172.17.0.0/16 accept'
+>   ```
+> - make the changes permanent
+>   ```bash
+>   $ firewall-cmd --reload
+>   ```
+
 ```bash
 $ sudo systemctl stop firewalld
 $ sudo systemctl disable firewalld
@@ -244,6 +266,7 @@ $ sudo usermod -a -G root,adm,wheel,docker $(whoami)
 $ sudo systemctl enable --now docker
 $ sudo systemctl enable --now kubelet
 ```
+
 - version lock
   ```bash
   $ sudo yum versionlock docker-ce
