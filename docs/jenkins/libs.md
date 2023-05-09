@@ -11,11 +11,9 @@
 
 ## shared libs
 
-{% hint style='tip' %}
-> reference:
+> [!TIP|label:references:]
 > - [Jenkins Shared Libraries Workshop](https://www.slideshare.net/roidelapluie/jenkins-shared-libraries-workshop)
 > - [Extending with Shared Libraries](https://www.jenkins.io/doc/book/pipeline/shared-libraries/)
-{% endhint %}
 
 ### vars
 - capture

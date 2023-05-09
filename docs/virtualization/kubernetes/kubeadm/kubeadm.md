@@ -240,7 +240,7 @@ $ sudo yum install -y \
        --disableexcludes=kubernetes
 
 $ sudo bash -c "echo 'source <(kubectl completion bash)' >> /etc/bashrc"
-$ sudo usermod -a -G root,admheel,docker $(whoami)
+$ sudo usermod -a -G root,adm,wheel,docker $(whoami)
 $ sudo systemctl enable --now docker
 $ sudo systemctl enable --now kubelet
 ```
@@ -253,6 +253,35 @@ $ sudo systemctl enable --now kubelet
   $ sudo yum versionlock kubectl
   $ sudo yum versionlock kubernetes-cni
   $ sudo yum versionlock list
+
+  # or
+  $ grep exclude /etc/yum.repos.d/kubernetes.repo
+  exclude=kubelet kubeadm kubectl kubernetes-cni cri-tools
+  ```
+
+  - full repo files
+    ```
+    $ cat /etc/yum.repos.d/kubernetes.repo
+    [kubernetes]
+    name=Kubernetes
+    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+    enabled=1
+    gpgcheck=1
+    gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    exclude=kubelet kubeadm kubectl kubernetes-cni cri-tools
+    ```
+
+- pre-pull
+  ```bash
+  $ kubeadm config images pull
+  I0508 20:24:29.967938  317181 version.go:236] remote version is much newer: v1.27.1; falling back to: stable-1.12
+  [config/images] Pulled k8s.gcr.io/kube-apiserver:v1.12.10
+  [config/images] Pulled k8s.gcr.io/kube-controller-manager:v1.12.10
+  [config/images] Pulled k8s.gcr.io/kube-scheduler:v1.12.10
+  [config/images] Pulled k8s.gcr.io/kube-proxy:v1.12.10
+  [config/images] Pulled k8s.gcr.io/pause:3.1
+  [config/images] Pulled k8s.gcr.io/etcd:3.2.24
+  [config/images] Pulled k8s.gcr.io/coredns:1.2.2
   ```
 
 ## tricky
