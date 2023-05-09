@@ -33,6 +33,7 @@
 {% hint style='tip' %}
 > reference
 > - [* Glossary](https://kubernetes.io/docs/reference/glossary/?fundamental=true)
+> - [* Install Kubernetes Cluster on Centos 8 With Kubeadm and CRI-O](https://tayeh.me/posts/install-kubernetes-cluster-on-centos-8-with-kubeadm-crio/)
 > - [* 在 CentOS 上部署 Kubernetes 集群](https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html)
 > - [* Kubernetes 中文指南/云原生应用架构实战手册](https://jimmysong.io/kubernetes-handbook/)
 > - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
@@ -41,6 +42,8 @@
 > - [* Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 > - [* Administer a Cluster](https://kubernetes.io/docs/tasks/administer-cluster/)
 > - [* Kubernetes概念辨析](https://cloud-atlas.readthedocs.io/zh_CN/latest/kubernetes/concepts/index.html)
+> - [* Step by step installation of 3-nodes Kubernetes Cluster on CentOS 8](https://akyriako.medium.com/how-to-install-a-kubernetes-cluster-on-centos-8-1f9c5acd9c0e)
+> - [* KUBERNETES INSTALLATION ON CENTOS 8](https://www.topcoder.com/thrive/articles/kubernetes-installation-on-centos-8)
 > - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
 > - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
 > - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)
@@ -389,4 +392,5 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
   $ sudo yum clean all
   $ sudo rm -rf /var/cache/yum
   $ sudo yum makecache
+  $ sudo yum check-update
   ```

@@ -5,6 +5,7 @@
 - [basic environment](#basic-environment)
   - [Ubuntu](#ubuntu)
   - [CentOS/RHEL](#centosrhel)
+  - [Q&A](#qa)
 - [tricky](#tricky)
   - [list images](#list-images)
   - [get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
@@ -93,6 +94,7 @@ deb [arch=amd64] http://www.artifactory.mycompany.com/artifactory/debian-remote-
 #### package Search
 ```bash
 $ apt-cache search kub
+
 ...
 kubeadm - Kubernetes Cluster Bootstrapping Tool
 kubectl - Kubernetes Command Line Tool
@@ -242,6 +244,7 @@ EOF
 
 $ sudo yum clean all
 $ sudo yum makecache
+$ sudo yum check-update
 $ sudo yum install -y yum-utils \
                       device-mapper-persistent-data \
                       lvm2 \
@@ -305,6 +308,39 @@ $ sudo systemctl enable --now kubelet
   [config/images] Pulled k8s.gcr.io/pause:3.1
   [config/images] Pulled k8s.gcr.io/etcd:3.2.24
   [config/images] Pulled k8s.gcr.io/coredns:1.2.2
+  ```
+
+### Q&A
+#### [problem with installed package podman](https://forums.docker.com/t/problem-with-installed-package-podman/116529/2)
+
+- issue
+  ```bash
+  $ sudo yum install docker-ce-19.03.15-3.el8 docker-ce-cli-19.03.15-3.el8 containerd.io docker-buildx-plugin docker-compose-plugin
+  Docker CE Stable - x86_64                                                              272 kB/s |  43 kB     00:00
+  Error:
+   Problem 1: problem with installed package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64
+    - package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
+    - package podman-3.3.1-9.module_el8.5.0+988+b1f0b741.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
+    - package containerd.io-1.6.21-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+    - package containerd.io-1.6.21-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+    - package containerd.io-1.6.21-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.2-1.module_el8.5.0+911+f19012f9.x86_64
+    - package containerd.io-1.6.21-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.2-1.module_el8.5.0+911+f19012f9.x86_64
+    - cannot install the best candidate for the job
+    - package runc-1.0.0-66.rc10.module_el8.5.0+1004+c00a74f5.x86_64 is filtered out by modular filtering
+    - package runc-1.0.0-72.rc92.module_el8.5.0+1006+8d0e68a2.x86_64 is filtered out by modular filtering
+   Problem 2: problem with installed package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64
+    - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+    ...
+    - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+    - package buildah-1.22.3-2.module_el8.5.0+911+f19012f9.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+    - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+    ...
+  ```
+- [solution : remove podman](https://www.ibm.com/docs/en/eam/4.2?topic=questions-troubleshooting-tips#uninstall_podman)
+  ```bash
+  $ yum remove buildah skopeo podman containers-common atomic-registries docker container-tools
+  $ rm -rf /etc/containers/* /var/lib/containers/* /etc/docker /etc/subuid* /etc/subgid*
+  $ cd ~ && rm -rf /.local/share/containers/
   ```
 
 ## tricky

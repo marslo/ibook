@@ -15,6 +15,7 @@
   - [get the oldest pod](#get-the-oldest-pod)
   - [sort via created time](#sort-via-created-time)
 - [list](#list)
+  - [list pod with nodename](#list-pod-with-nodename)
   - [list all ready pods](#list-all-ready-pods)
   - [list error status pods](#list-error-status-pods)
   - [list all pods statuses only](#list-all-pods-statuses-only)
@@ -147,6 +148,25 @@ $ kubectl -n <namespace> get pods \
 ```
 
 ## list
+
+### list pod with nodename
+- filter
+  ```bash
+  $ kubectl get po --all-namespaces -o wide --field-selector spec.nodeName=<nodeName>
+  ```
+- [list](https://stackoverflow.com/a/64047982/2940319)
+  ```bash
+  $ kubectl get pods --all-namespaces --output 'jsonpath={range .items[*]}{.spec.nodeName}{"\t"}{.metadata.namespace}{"\t"}{.metadata.name}{"\n"}{end}
+  ```
+- [or list with custom-columns](https://stackoverflow.com/a/48983984/2940319)
+  ```bash
+  $ kubectl get pod -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName --all-namespaces
+  ```
+
+- [list nodeName with podIP](https://stackoverflow.com/a/48983623/2940319)
+  ```bash
+  $ kubectl get pod --all-namespaces -o json | jq '.items[] | .spec.nodeName + " " + .status.podIP'
+  ```
 
 ### [list all ready pods](https://stackoverflow.com/a/58993242/2940319)
 

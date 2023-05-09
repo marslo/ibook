@@ -222,7 +222,7 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 }.findAll {
   ! it.definition?.scm?.branches?.any{ it.getName().contains(branch) }
 }.each {
-  println it.fullName.toString().padRight(30) +
+  println it.fullName.toString().padRight(50) + ' : ' +
           it.definition?.scm?.branches?.collect{ it.getName() }?.join(', ')
 }
 
