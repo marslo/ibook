@@ -9,6 +9,7 @@
 
 {% hint style='tip' %}
 > references:
+> - [* Interacting directly with the API](https://kubebyexample.com/learning-paths/operator-framework/kubernetes-api-fundamentals/interacting-directly-api)
 > - [* Kubernetes API Basics - Resources, Kinds, and Objects](https://iximiuz.com/en/posts/kubernetes-api-structure-and-terminology/)
 > - [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
 > - [* one-page api reference for kubernetes v1.24](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/)
