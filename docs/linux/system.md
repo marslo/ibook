@@ -33,6 +33,10 @@
   - [get gid](#get-gid)
   - [logout](#logout)
   - [others](#others)
+- [service](#service)
+  - [enable/disable service](#enabledisable-service)
+  - [start/stop service](#startstop-service)
+  - [check log](#check-log)
 - [system encoding](#system-encoding)
   - [setup via environment](#setup-via-environment)
   - [setup via `locale` command](#setup-via-locale-command)
@@ -1372,17 +1376,31 @@ $ sudo groupadd -g <gid> <group_name>
 ```bash
 $ sudo groupadd -o -g <new_gid> <group_name>
 ```
+- create group with password
+  ```bash
+  $ groupadd -p secretpassword writers
+  ```
+
+- add system group
+
+  > [!NOTE|label:`-r` or `--system  `]
+
+  ```bash
+  $ groupadd -r hardwareteam
+  $ groupadd --system hardwareteam
+  ```
 
 #### modify gid
 ```bash
-$ sudo groupmod -g <gid> <group_name>
+$ sudo groupmod -o -g <gid> <group_name>
 ```
 
 #### add user into group
 ```bash
-$ sudo usermod -a -G adm,root,docker devops
+$ sudo usermod -a -G adm,root,docker,wheel devops
 $ sudo usermod -a -G sudo devops
 ```
+
 
 #### remove user from group
 
@@ -1443,6 +1461,39 @@ Number of days of warning before password expires : 7
 | `$4` | NT hashing algorithm  |
 | `$5` | SHA-256 Algorithm     |
 | `$6` | SHA-512 Algorithm     |
+
+
+## service
+
+### enable/disable service
+```bash
+$ sudo systemctl enable --now kubelet
+Created symlink /etc/systemd/system/multi-user.target.wants/kubelet.service → /etc/systemd/system/kubelet.service
+$ sudo systemctl disable --now docker
+```
+
+#### check service enable or not
+```bash
+$ sudo systemctl is-enabled firewalld
+$ sudo systemctl is-active firewalld
+```
+
+- or
+  ```bash
+  $ sudo firewall-cmd --state
+  not running
+  ```
+
+### start/stop service
+```bash
+$ sudo system start <service>
+$ sudo system stop <service>
+```
+
+### check log
+```bash
+$ journalctl -u docker -f
+```
 
 ## system encoding
 
