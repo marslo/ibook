@@ -11,6 +11,7 @@
 - [add-ons](#add-ons)
 - [metric server](#metric-server)
   - [sample yaml](#sample-yaml)
+  - [q&a](#qa)
 - [kube-state-metrics](#kube-state-metrics)
   - [installation](#installation)
 - [scripts](#scripts)
@@ -539,6 +540,10 @@ $ curl --header 'Content-Type: application/json' \
 
 ## metric server
 
+> [!NOTE|label:references:]
+> - [kubernetes-sigs/metrics-server](https://github.com/kubernetes-sigs/metrics-server)
+> - [metrics-server-deployment.yaml](https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/metrics-server/metrics-server-deployment.yaml)
+
 ### sample yaml
 
 <!--sec data-title="metrics.yaml" data-id="section0" data-show=true data-collapse=true ces-->
@@ -742,6 +747,64 @@ spec:
   versionPriority: 100
 ```
 <!--endsec-->
+
+
+### q&a
+```bash
+$ curl -k https://ssdfw-k8s-api.marvell.com:16443/api/v1/model/metrics/
+{
+  "kind": "Status",
+  "apiVersion": "v1",
+  "metadata": {
+
+  },
+  "status": "Failure",
+  "message": "model \"metrics\" is forbidden: User \"system:anonymous\" cannot get resource \"model\" in API group \"\" at the cluster scope",
+  "reason": "Forbidden",
+  "details": {
+    "name": "metrics",
+    "kind": "model"
+  },
+  "code": 403
+}
+
+$ kubectl get --raw "/apis/metrics.k8s.io/v1beta1/pods"
+Error from server (ServiceUnavailable): the server is currently unable to handle the request
+
+$ kubectl top node
+Error from server (ServiceUnavailable): the server is currently unable to handle the request (get nodes.metrics.k8s.io)
+
+$ kubectl describe apiservice v1beta1.metrics.k8s.io
+Name:         v1beta1.metrics.k8s.io
+Namespace:
+Labels:       k8s-app=metrics-server
+Annotations:  kubectl.kubernetes.io/last-applied-configuration:
+                {"apiVersion":"apiregistration.k8s.io/v1","kind":"APIService","metadata":{"annotations":{},"labels":{"k8s-app":"metrics-server"},"name":"v...
+API Version:  apiregistration.k8s.io/v1
+Kind:         APIService
+Metadata:
+  Creation Timestamp:  2023-05-10T03:35:06Z
+  Resource Version:    404029923
+  Self Link:           /apis/apiregistration.k8s.io/v1/apiservices/v1beta1.metrics.k8s.io
+  UID:                 a7f6a96d-eee3-11ed-9c0f-b883034b82d0
+Spec:
+  Group:                     metrics.k8s.io
+  Group Priority Minimum:    100
+  Insecure Skip TLS Verify:  true
+  Service:
+    Name:            metrics-server
+    Namespace:       kube-system
+  Version:           v1beta1
+  Version Priority:  100
+Status:
+  Conditions:
+    Last Transition Time:  2023-05-10T03:35:06Z
+    Message:               endpoints for service/metrics-server in "kube-system" have no addresses
+    Reason:                MissingEndpoints
+    Status:                False
+    Type:                  Available
+Events:                    <none>
+```
 
 
 ## kube-state-metrics
