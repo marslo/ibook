@@ -12,12 +12,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-{% hint style='tip' %}
-> reference:
+{% hint style='info' %}
+> [!NOTE|label:reference:]
 > - [How to enable verbose log on JVM Garbage Collection](https://jfrog.com/knowledge-base/how-to-enable-verbose-log-on-jvm-garbage-collection/)
 >   - JAVA_OPTIONS:
->     `-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:/path/to/file/gc.log`
+>     ```
+>     -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:/path/to/file/gc.log
+>     ```
 
 {% endhint %}
 
@@ -86,30 +87,29 @@ $ echo -n |
        openssl x509
 ```
 
-{% hint style='tip' %}
-if `issue (i:)` is the same as `subject (s:)`. Therefore, this is the root certificat.
-i.e. :
-{% endhint %}
-
-```bash
-$ openssl s_client -connect cdn.redhat.com:443 -showcerts < /dev/null
-Certificate chain
- 0 s:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = cdn.redhat.com
-   i:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Red Hat Entitlement Operations Authority, emailAddress = ca-support@redhat.com
------BEGIN CERTIFICATE-----
-...
------END CERTIFICATE-----
- 1 s:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Red Hat Entitlement Operations Authority, emailAddress = ca-support@redhat.com
-   i:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
------BEGIN CERTIFICATE-----
-...
------END CERTIFICATE-----
- 2 s:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
-   i:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
------BEGIN CERTIFICATE-----
-...
------END CERTIFICATE-----
-```
+> [!NOTE]
+> if `issue (i:)` is the same as `subject (s:)`. Therefore, this is the root certificat.
+> i.e. :
+>
+> ```bash
+> $ openssl s_client -connect cdn.redhat.com:443 -showcerts < /dev/null
+> Certificate chain
+>  0 s:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = cdn.redhat.com
+>    i:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Red Hat Entitlement Operations Authority, emailAddress = ca-support@redhat.com
+> -----BEGIN CERTIFICATE-----
+> ...
+> -----END CERTIFICATE-----
+>  1 s:C = US, ST = North Carolina, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Red Hat Entitlement Operations Authority, emailAddress = ca-support@redhat.com
+>    i:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
+> -----BEGIN CERTIFICATE-----
+> ...
+> -----END CERTIFICATE-----
+>  2 s:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
+>    i:C = US, ST = North Carolina, L = Raleigh, O = "Red Hat, Inc.", OU = Red Hat Network, CN = Entitlement Master CA, emailAddress = ca-support@redhat.com
+> -----BEGIN CERTIFICATE-----
+> ...
+> -----END CERTIFICATE-----
+> ```
 
 #### import to truststore
 ```bash

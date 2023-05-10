@@ -167,8 +167,7 @@ $ podman system migrate
 
 - [solution](https://discussion.fedoraproject.org/t/run-podman-as-non-root-gives-file-permission-errors/8506/19)
 
-  > [!INFO]
-  > references:
+  > [!INFO|label:references:]
   > - [podman info, error creating tmpdir: mkdir /run/user/1007: permission denied](https://www.goglides.dev/bkpandey/error-creating-tmpdir-mkdir-runuser1007-permission-denied-443k)
   > - [`loginctl enable-linger my_ci_user`](https://github.com/containers/podman/issues/9002#issuecomment-762399572)
   > - [containers terminate on shell logout](https://wiki.archlinux.org/title/Podman#Containers_terminate_on_shell_logout)
