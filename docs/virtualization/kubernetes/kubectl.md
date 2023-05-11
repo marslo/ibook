@@ -325,3 +325,14 @@ $ kubectl get apiservice
 $ kubectl get --raw=/healthz/etcd
 ok
 ```
+
+## apply
+- [`edit-last-applied`](https://www.mankier.com/1/kubectl-apply-edit-last-applied)
+
+  ```bash
+  # Edit the last-applied-configuration annotations by type/name in YAML
+  kubectl apply edit-last-applied deployment/nginx
+
+  # Edit the last-applied-configuration annotations by file in JSON
+  kubectl apply edit-last-applied -f deploy.yaml -o json
+  ```
