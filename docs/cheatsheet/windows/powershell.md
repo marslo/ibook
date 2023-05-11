@@ -146,6 +146,35 @@ True
 # or
 > winget list
 ```
+
+- or search via keywords
+	```powershell
+  PS C:\Users\marslo> Get-AppxPackage -Name *edge*
+  Name              : Microsoft.MicrosoftEdgeDevToolsClient
+  Publisher         : CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+  Architecture      : Neutral
+  ResourceId        : neutral
+  Version           : 1000.19041.1023.0
+  PackageFullName   : Microsoft.MicrosoftEdgeDevToolsClient_1000.19041.1023.0_neutral_neutral_8wekyb3d8bbwe
+  InstallLocation   : C:\Windows\SystemApps\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe
+  IsFramework       : False
+  PackageFamilyName : Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe
+  PublisherId       : 8wekyb3d8bbwe
+  IsResourcePackage : False
+  IsBundle          : False
+  IsDevelopmentMode : False
+  NonRemovable      : True
+  IsPartiallyStaged : False
+  SignatureKind     : System
+  Status            : Ok
+
+  # or
+  > winget list chrome
+  Name          Id            Version       Source
+  -------------------------------------------------
+  Google Chrome Google.Chrome 113.0.5672.93 winget
+  ```
+
 - or
   ```powershell
   Get-AppxPackage | Get-AppxPackageManifest |
@@ -239,6 +268,7 @@ True
 {% hint style='info' %}
 > references:
 > - [Windows 10 - Search bar not allowing me to type](https://answers.microsoft.com/en-us/windows/forum/all/windows-10-search-bar-not-allowing-me-to-type/9fe73ae6-2da7-4e59-8aa1-d9518a58781b)
+> - [Troubleshoot Windows Search performance](https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/windows-search-performance-issues?source=recommendations#defragment-the-index-database)
 {% endhint %}
 
 ```powershell
