@@ -3,6 +3,8 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [upgrading jenkins](#upgrading-jenkins)
+- [java configuration](#java-configuration)
+- [threadDump](#threaddump)
 - [agent](#agent)
 - [Mailing format](#mailing-format)
 - [Properties in Jenkins Core for `JAVA_OPTS`](#properties-in-jenkins-core-for-java_opts)
@@ -35,7 +37,7 @@
 >   - [JVM version on agents](https://www.jenkins.io/doc/administration/requirements/upgrade-java-guidelines/#jvm-version-on-agents)
 > - [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
 > - [Downloading and running Jenkins in Docker](https://www.jenkins.io/doc/book/installing/docker/#downloading-and-running-jenkins-in-docker)
-> - [Prepare Jenkins for Support](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support)
+> - [** Prepare Jenkins for Support](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support)
 >   - [JVM Recommended Arguments](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support#_jvm_recommended_arguments)
 > - [Upgrading to Java 11 or 17](https://www.jenkins.io/blog/2022/06/28/require-java-11/#upgrading-to-java-11-or-17)
 > - [Setting JVM Options for Application Servers](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/v56/setting-jvm-options-application)
@@ -194,6 +196,149 @@
       OpenJDK Runtime Environment (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1)
       OpenJDK 64-Bit Server VM (build 11.0.15+10-Ubuntu-0ubuntu0.18.04.1, mixed mode, sharing)
     ```
+
+### java configuration
+
+> [!TIP|label:official recommended]
+> - [** A. Java Configuration](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/prepare-jenkins-for-support)
+> - [** Memory problem: 'unable to create new native thread'](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/memory-problem-unable-to-create-new-native-thread)
+> - [* Too many open files](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/too-many-open-files)
+> - [* Supported Java 8 arguments](https://docs.cloudbees.com/docs/cloudbees-ci/latest/jvm-troubleshooting/#java8-arguments)
+> - [* Supported Java 11 arguments](https://docs.cloudbees.com/docs/cloudbees-ci/latest/jvm-troubleshooting/#java11-arguments)
+> - [** Java Heap settings Best Practice](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/best-practices/jvm-memory-settings-best-practice)
+>   - [Minimum and maximum heap sizes](https://docs.cloudbees.com/docs/cloudbees-ci/latest/jvm-troubleshooting/#_minimum_and_maximum_heap_sizes)
+> - [Enterprise JVM Administration and Jenkins Performance](https://www.cloudbees.com/blog/enterprise-jvm-administration-and-jenkins-performance)
+> - [CloudBees Jenkins JVM troubleshooting](https://docs.cloudbees.com/docs/cloudbees-ci/latest/jvm-troubleshooting/#_heap_size)
+> - [How to Troubleshoot and Address Jenkins Startup Performances](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/troubleshooting-guides/jenkins-startup-performances)
+> - [How to generate a thread dump?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-generate-a-thread-dump)
+> - [Jenkins : Obtaining a thread dump](https://wiki.jenkins.io/display/JENKINS/Obtaining+a+thread+dump)
+> - [Required Data: Jenkins Hang Issue On Linux](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/required-data/required-data-hang-issue-on-linux-cjp)
+> - [Upgrading to Jenkins 2.176.2 : Improved CSRF protection](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-2)
+
+- java 11
+
+  > [!NOTE]
+  > - Omitting `-XX:+UnlockDiagnosticVMOptions` or `-XX:+UnlockExperimentalVMOptions` might cause your instance to fail to startup.
+  > - To increase GC logs to a longer period of time, we suggest
+  >   - increasing the value of the arguments `-Xlog` option `filecount=2` and/or `filesize=100M`
+  >   - and as ultimate option use `file=${LOGDIR}/gc-%t.log` instead of `file=${LOGDIR}/gc.log`.
+  >   - With the parameter `%t`, the JVM create a new set of GC files each time that the instance is restarted.
+  >     It is well known that when the GC log folder gets big enough in terms of size, the support bundle might produce performance issues in the instance given that it needs to compress all of them.
+
+  ```bash
+  -XX:+AlwaysPreTouch
+  -XX:+HeapDumpOnOutOfMemoryError
+  -XX:HeapDumpPath=${LOGDIR}
+  -XX:+UseG1GC
+  -XX:+UseStringDeduplication
+  -XX:+ParallelRefProcEnabled
+  -XX:+DisableExplicitGC
+  -XX:+UnlockDiagnosticVMOptions
+  -XX:+UnlockExperimentalVMOptions
+  -Xlog:gc*=info,gc+heap=debug,gc+ref*=debug,gc+ergo*=trace,gc+age*=trace:file=${LOGDIR}/gc.log:utctime,pid,level,tags:filecount=2,filesize=100M
+  -XX:ErrorFile=${LOGDIR}/hs_err_%p.log
+  -XX:+LogVMOutput
+  -XX:LogFile=${LOGDIR}/jvm.log
+  # Heap setting for CloudBees CI on modern cloud platforms:
+  #   -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=50.0
+  # Heap setting for CloudBees CI on traditional platforms:
+  #   Heap Size `-Xmx` and `-Xms` should be set to the same value, and determined by following the above section "JVM Heap Size"
+  ```
+
+- java 8
+
+  > [!NOTE]
+  > - To increase GC logs to a longer period of time, we suggest
+  >   - increasing the value of the arguments `-XX:GCLogFileSize` and `-XX:NumberOfGCLogFiles`
+  >   - and as ultimate option use `-Xloggc:${LOGDIR}/gc-%t.log` instead of `-Xloggc:${LOGDIR}/gc.log`.
+  >   - With the parameter `%t`, the JVM create a new set of GC files each time that the instance is restarted.
+  >     It is well known that when the GC log folder gets big enough in terms of size, the support bundle might produce performance issues in the instance given that it needs to compress all of them.
+
+  ```bash
+  -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
+  -Djenkins.model.Jenkins.logStartupPerformance=true
+  -Xms192G
+  -Xmx192G
+  -XX:+AlwaysPreTouch
+  -XX:+HeapDumpOnOutOfMemoryError
+  -XX:HeapDumpPath=/var/jenkins_home/logs
+  -XX:+UseG1GC
+  -XX:+UseStringDeduplication
+  -XX:+ParallelRefProcEnabled
+  -XX:+DisableExplicitGC
+  -XX:+UnlockDiagnosticVMOptions
+  -XX:+UnlockExperimentalVMOptions
+  -verbose:gc
+  -XX:+PrintGC
+  -XX:+PrintGCDetails
+  -XX:ErrorFile=/var/jenkins_home/logs/hs_err_%p.log
+  -XX:+LogVMOutput
+  -XX:LogFile=/var/jenkins_home/logs/jvm.log
+  -XX:InitialRAMPercentage=50.0
+  -XX:MaxRAMPercentage=50.0
+  -Xlog:gc*=info,gc+heap=debug,gc+ref*=debug,gc+ergo*=trace,gc+age*=trace:file=/var/jenkins_home/logs/gc-%t.log:utctime,pid,level,tags:filecount=2,filesize=100M
+  ```
+
+  - [more info](https://github.com/docker-library/openjdk/issues/350#issuecomment-525066155)
+    ```bash
+    $ docker run --rm openjdk:8-jre java -XX:MaxRAMPercentage=75 -help 2>&1 | head
+    Improperly specified VM option 'MaxRAMPercentage=75'
+    Error: Could not create the Java Virtual Machine.
+    Error: A fatal exception has occurred. Program will exit.
+    $ docker run --rm openjdk:8-jre java -XX:MaxRAMPercentage=75.0 -help 2>&1 | head
+    Usage: java [-options] class [args...]
+               (to execute a class)
+       or  java [-options] -jar jarfile [args...]
+               (to execute a jar file)
+    where options include:
+        -d32    use a 32-bit data model if available
+        -d64    use a 64-bit data model if available
+        -server   to select the "server" VM
+                      The default VM is server,
+                      because you are running on a server-class machine.
+    ```
+
+  <!--sec data-title="doc for <<[-]word" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  -XX:+AlwaysPreTouch
+  -XX:+HeapDumpOnOutOfMemoryError
+  -XX:HeapDumpPath=${LOGDIR}
+  -XX:+UseG1GC
+  -XX:+UseStringDeduplication
+  -XX:+ParallelRefProcEnabled
+  -XX:+DisableExplicitGC
+  -XX:+UnlockDiagnosticVMOptions
+  -XX:+UnlockExperimentalVMOptions
+  -verbose:gc
+  -Xloggc:${LOGDIR}/gc.log
+  -XX:NumberOfGCLogFiles=2
+  -XX:+UseGCLogFileRotation
+  -XX:GCLogFileSize=100m
+  -XX:+PrintGC
+  -XX:+PrintGCDateStamps
+  -XX:+PrintGCDetails
+  -XX:+PrintHeapAtGC
+  -XX:+PrintGCCause
+  -XX:+PrintTenuringDistribution
+  -XX:+PrintReferenceGC
+  -XX:+PrintAdaptiveSizePolicy
+  -XX:ErrorFile=${LOGDIR}/hs_err_%p.log
+  -XX:+LogVMOutput
+  -XX:LogFile=${LOGDIR}/jvm.log
+  # Heap setting for CloudBees CI on modern cloud platforms:
+  #   -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=50.0
+  # Heap setting for CloudBees CI on traditional platforms:
+  #   Heap Size `-Xmx` and `-Xms` should be set to the same value, and determined by following the above section "JVM Heap Size"
+  ```
+  <!--endsec-->
+
+### threadDump
+
+> [!NOTE]
+> - visit via GUI: https://<hostname>.domain.com/threadDump
+> - [Using Thread Dumps](https://docs.oracle.com/cd/E13150_01/jrockit_jvm/jrockit/geninfo/diagnos/using_threaddumps.html)
+> - [How to generate a thread dump?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/how-to-generate-a-thread-dump)
+> - [Jenkins : Obtaining a thread dump](https://wiki.jenkins.io/display/JENKINS/Obtaining+a+thread+dump)
 
 ### agent
 
