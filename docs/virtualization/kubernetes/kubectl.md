@@ -23,6 +23,9 @@
   - [get apiservers](#get-apiservers)
   - [get apiresources](#get-apiresources)
   - [check etcd](#check-etcd)
+- [output format](#output-format)
+- [apply](#apply)
+- [rollback](#rollback)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -326,7 +329,20 @@ $ kubectl get --raw=/healthz/etcd
 ok
 ```
 
+## output format
+
+> [!NOTE|label:references:]
+> - [Kubectl output options](https://gist.github.com/so0k/42313dbb3b547a0f51a547bb968696ba)
+> - [Getting Custom Output From Kubectl With Examples](https://technekey.com/customizing-the-kubectl-output/)
+
 ## apply
+
+> [!NOTE|label:referenecs]
+> - [kube apply](https://www.mankier.com/1/kubectl-apply)
+> - [Declarative Management of Kubernetes Objects Using Configuration Files](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/declarative-config/)
+> - [Understanding the Kubectl Apply Command](https://luispreciado.blog/posts/kubernetes/core-concepts/kubectl-apply)
+> - [How kubectl apply command works?](https://technos.medium.com/how-kubectl-apply-command-works-d092121056d3)
+
 - [`edit-last-applied`](https://www.mankier.com/1/kubectl-apply-edit-last-applied)
 
   ```bash
@@ -336,3 +352,9 @@ ok
   # Edit the last-applied-configuration annotations by file in JSON
   kubectl apply edit-last-applied -f deploy.yaml -o json
   ```
+
+## rollback
+
+> [!NOTE|label:references:]
+> -[** How do you rollback deployments in Kubernetes?](https://learnk8s.io/kubernetes-rollbacks)
+

@@ -148,11 +148,16 @@ $ docker images -q -a | xargs docker inspect --format='{{.Id}}{{range $rt := .Re
 > reference:
 > - [Monitor the Resource Usage of Docker Containers](https://www.cloudsavvyit.com/13715/how-to-monitor-the-resource-usage-of-docker-containers/)
 > - [See Memory and CPU Usage for All Your Docker Containers](https://dev.to/rubberduck/how-to-see-memory-and-cpu-usage-for-all-your-docker-containers)
+> - [How to See Memory and CPU Usage for All Your Docker Containers (on CentOS 6)](https://dev.to/rubberduck/how-to-see-memory-and-cpu-usage-for-all-your-docker-containers)
+> - [How to Monitor the Resource Usage of Docker Containers](https://www.howtogeek.com/devops/how-to-monitor-the-resource-usage-of-docker-containers/)
 {% endhint %}
 
 {% raw %}
 ```bash
-$ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+$ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" <CONTAINER_ID>
+
+# or show all
+$ docker ps -q | xargs  docker stats --no-stream
 ```
 {% endraw %}
 

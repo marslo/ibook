@@ -84,6 +84,12 @@ function rebuiltToc() {
        -exec doctoc --github --maxlevel 3 {} \;
 }
 
+function rePush(){
+  git add --all $(git rev-parse --show-toplevel)
+  git commit --amend --no-edit
+  git push -u --force origin $(git rev-parse --abbrev-ref HEAD)
+}
+
 function updateRepo() {
   if [ """$(git rev-parse remotes/origin/"${branch}")""" != """$(git -C "${target}" rev-parse HEAD)""" ]; then
     git -C "${target}" fetch origin --force "${branch}"
@@ -127,6 +133,7 @@ function updateBook() {
 function doDeploy() {
   installModules
   rebuiltToc
+  rePush
 
   if [ -d "${target}" ]; then
     updateRepo
