@@ -27,6 +27,10 @@
 - [management](#management)
   - [execute in pod](#execute-in-pod)
   - [restart po](#restart-po)
+- [resource managemenet](#resource-managemenet)
+  - [resource management for pods and containers](#resource-management-for-pods-and-containers)
+  - [assign cpu resources to containers and pods](#assign-cpu-resources-to-containers-and-pods)
+  - [managing kubernetes resource limits](#managing-kubernetes-resource-limits)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -535,3 +539,10 @@ $ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
     ```bash
     $ kubectl -n <namespace> scale deployment <name> --replicas=0
     ```
+
+## resource managemenet
+
+### [resource management for pods and containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+### [assign cpu resources to containers and pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/)
+### [managing kubernetes resource limits](https://www.densify.com/kubernetes-tools/kubernetes-resource-limits/)
+
