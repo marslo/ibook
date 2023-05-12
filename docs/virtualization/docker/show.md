@@ -11,11 +11,13 @@
   - [get full container ID](#get-full-container-id)
   - [check repo tag](#check-repo-tag)
 - [docker stats](#docker-stats)
+- [docker system](#docker-system)
+  - [df](#df)
+  - [events](#events)
+  - [prune](#prune)
 - [ps format](#ps-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
 
 ## docker inspect
 
@@ -163,6 +165,36 @@ $ docker ps -q | xargs  docker stats --no-stream
 
 ![docker status](../../screenshot/docker/docker-stat-resource-1.gif)
 
+
+## docker system
+### [df](https://docs.docker.com/engine/reference/commandline/system_df/)
+```bash
+$ docker system df
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          5         1         9.81GB    8.384GB (85%)
+Containers      1         0         0B        0B
+Local Volumes   4449      4         172.2GB   156.7GB (90%)
+Build Cache     0         0         0B        0B
+```
+
+### [events](https://docs.docker.com/engine/reference/commandline/system_events/)
+```bash
+$ docker system events --since '24h'
+```
+
+### [prune](https://docs.docker.com/engine/reference/commandline/system_prune/)
+```bash
+$ docker system prune --all
+WARNING! This will remove:
+        - all stopped containers
+        - all networks not used by at least one container
+        - all dangling images
+        - all build cache
+Are you sure you want to continue? [y/N] y
+
+# prune volume only
+$ docker system prune --volumes
+```
 
 ## [ps format](https://docs.docker.com/engine/reference/commandline/ps/#formatting)
 - id and command

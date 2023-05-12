@@ -37,6 +37,7 @@
 > - [Running Docker on WSL2 without Docker Desktop](https://technotes.adelerhof.eu/wsl/docker_on_wsl2/)
 > - [Copy Docker repositories](https://technotes.adelerhof.eu/post/migrate_docker/)
 > - [Docker storage drivers](https://docs.docker.com/storage/storagedriver/select-storage-driver/)
+> - [About storage drivers](https://docs.docker.com/storage/storagedriver/)
 {% endhint %}
 
 ## docker internals
