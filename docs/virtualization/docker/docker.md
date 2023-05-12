@@ -29,6 +29,7 @@
 {% hint style='tip' %}
 > reference:
 > - [Docker 学习笔记](https://blog.opskumu.com/docker.html)
+> - [什么是 Docker](https://yeasy.gitbook.io/docker_practice/introduction/what)
 > - [Understanding the Docker Internals](https://medium.com/%40BeNitinAgarwal/undersanding-the-docker-internals-7ccb052ce9fe)
 > - [Ideas for a cgroups UI](https://mairin.wordpress.com/2011/05/13/ideas-for-a-cgroups-ui/)
 > - [Configure Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#defining-a-liveness-command)
@@ -38,6 +39,7 @@
 > - [Copy Docker repositories](https://technotes.adelerhof.eu/post/migrate_docker/)
 > - [Docker storage drivers](https://docs.docker.com/storage/storagedriver/select-storage-driver/)
 > - [About storage drivers](https://docs.docker.com/storage/storagedriver/)
+> - [Docker In Docker](https://blog.mafeifan.com/DevOps/Docker/Docker-%E5%AD%A6%E4%B9%A0%E7%B3%BB%E5%88%9727-Docker-in-Docker.html#docker-in-docker)
 {% endhint %}
 
 ## docker internals
@@ -365,6 +367,11 @@ $ docker ps -aq --no-trunc
   {%endraw%}
 
 ### [filter](https://docs.docker.com/engine/reference/commandline/ps/#filtering)
+- [via name](https://stackoverflow.com/a/34497614/2940319)
+  ```bash
+  $ docker ps -aqf "name=mycontainer"
+  77745046363d
+  ```
 - filter with image
   ```bash
   $ docker ps -a --no-trunc --filter ancestor='busybox:latest'

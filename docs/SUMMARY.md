@@ -117,6 +117,7 @@
       * [monitor](virtualization/kubernetes/monitor.md)
   * [docker](virtualization/docker/docker.md)
     * [run & exec](virtualization/docker/run.exec.md)
+    * [voume](virtualization/docker/volume.md)
     * [remove](virtualization/docker/remove.md)
     * [show info](virtualization/docker/show.md)
     * [dockerfile](virtualization/docker/dockerfile.md)

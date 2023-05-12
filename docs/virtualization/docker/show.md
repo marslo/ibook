@@ -197,6 +197,13 @@ $ docker system prune --volumes
 ```
 
 ## [ps format](https://docs.docker.com/engine/reference/commandline/ps/#formatting)
+
+{% raw %}
+```bash
+$ docker ps -a --format 'CONTAINER ID : {{.ID}} | Name: {{.Names}} | Image:  {{.Image}} |  Ports: {{.Ports}}'
+```
+{% endraw %}
+
 - id and command
 
   {% raw %}
