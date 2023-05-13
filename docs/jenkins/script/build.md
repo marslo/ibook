@@ -21,9 +21,10 @@
     - [sort all buildable jobs](#sort-all-buildable-jobs)
 - [list builds](#list-builds)
   - [list all running builds](#list-all-running-builds)
-  - [list all builds byTimestamp ( within 24 hours )](#list-all-builds-bytimestamp--within-24-hours-)
-  - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
-  - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
+  - [list builds via job pattern](#list-builds-via-job-pattern)
+    - [list all builds byTimestamp ( within 24 hours )](#list-all-builds-bytimestamp--within-24-hours-)
+    - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
+    - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
 - [stop builds](#stop-builds)
   - [abort single build](#abort-single-build)
   - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
@@ -596,6 +597,16 @@ Jenkins.instance
 
 ## list all running builds
 ```groovy
+jenkins.model.Jenkins.instance.computers
+             .collect { it.executors }
+             .flatten()
+             .findAll { it.isBusy() }
+             .collect { it.currentExecutable.parentExecutable }
+```
+
+
+## list builds via job pattern
+```groovy
 import hudson.model.Job
 import hudson.model.Result
 import hudson.model.Run
@@ -613,10 +624,9 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 "DONE"
 ```
 
-## [list all builds byTimestamp ( within 24 hours )](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+### [list all builds byTimestamp ( within 24 hours )](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 
-> [!TIP]
-> reference:
+> [!TIP|label:references:]
 > - [hudson.util.RunList<R>](https://javadoc.jenkins.io/hudson/util/RunList.html)
 > - [List Jenkins job build detials for last one year along with the user who triggered the build](https://stackoverflow.com/a/64509896/2940319)
 > - [`public RunList<R> byTimestamp(long start, long end)`](https://javadoc.jenkins.io/hudson/util/RunList.html#byTimestamp(long,long))
@@ -643,7 +653,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }
 ```
 
-## [get last 24 hours failure builds](https://stackoverflow.com/a/60375862/2940319)
+### [get last 24 hours failure builds](https://stackoverflow.com/a/60375862/2940319)
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
@@ -665,7 +675,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }.sum()
 ```
 
-## get last 24 hours failure builds via Map structure
+### get last 24 hours failure builds via Map structure
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
@@ -755,17 +765,24 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
 # stop builds
 
 > [!TIP]
-> stop all queued jobs:
-> ```groovy
-> Jenkins.instance.queue.clear()
-> ```
+> - stop all queued jobs:
+>   ```groovy
+>   jenkins.model.Jenkins.instance.queue.clear()
+>   ```
+> - stop all running builds ( in executor ) : [* imarslo : force interrupt executors](./agent.html#force-interrupt-executors)
+>   ```bash
+>   jenkins.model.Jenkins.instance
+>                        .computers.collect { c -> c.executors }
+>                        .collectMany { it.findAll{ it.isBusy() } }
+>                        .each { it.interrupt() }
+>   ```
 > - [If your build isn’t aborting](https://www.jenkins.io/doc/book/using/aborting-a-build/)
 >   - visit : https://<jenkins.domain.com>/threadDump
 
 ## [abort single build](https://stackoverflow.com/a/26306081/2940319)
 ```groovy
-final String JOB_NAME  = 'job_name'
-final int BUILD_NUMBER = job_number
+final String JOB_NAME      = env.JOB_NAME
+final Integer BUILD_NUMBER = env.BUILD_NUMBER
 
 Jenkins.instance
        .getItemByFullName( JOB_NAME )
@@ -835,13 +852,13 @@ build.getProject()._getRuns().iterator().each { run ->
    * the other builds in the workflow should be aborted
   **/
 
-  def jobname  = env.JOB_NAME
-  def buildnum = env.BUILD_NUMBER.toInteger()
+  def JOB_NAME     = env.JOB_NAME
+  int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
 
-  def job = Jenkins.instance.getItemByFullName( jobname )
+  def job = Jenkins.instance.getItemByFullName( JOB_NAME )
   for ( build in job.builds ) {
     if ( !build.isBuilding() ) { continue; }
-    if ( buildnum == build.getNumber().toInteger() ) { continue; println "equals" }
+    if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
     build.doStop()
   }
   ```

@@ -13,6 +13,10 @@
   - [check how many cloud agent running](#check-how-many-cloud-agent-running)
   - [KubernetesComputer](#kubernetescomputer)
 - [executor](#executor)
+  - [basic usage](#basic-usage)
+  - [stop all running builds via WorkflowRun](#stop-all-running-builds-via-workflowrun)
+  - [force interrupt executors](#force-interrupt-executors)
+  - [to `WorkflowRun`](#to-workflowrun)
   - [to `WorkUnit` and `SubTask` ( `ExecutorStepExecution.PlaceholderTask` )](#to-workunit-and-subtask--executorstepexecutionplaceholdertask-)
   - [to `Computer`](#to-computer)
 - [Managing Nodes](#managing-nodes)
@@ -439,10 +443,165 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
 > - [`jenkins.model.Computer.allExecutors`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#getAllExecutors--)
 > - [`hudson.model.Executor.currentWorkUnit`](https://javadoc.jenkins-ci.org/hudson/model/Executor.html#getCurrentWorkUnit--)
 > - [`<SubTask> hudson.model.queue.WorkUnit.work`](https://javadoc.jenkins-ci.org/hudson/model/queue/WorkUnit.html#work)
+> - [Interface Queue.Executable](https://javadoc.jenkins-ci.org/hudson/model/Queue.Executable.html)
 
+> [!NOTE|label:getParentExecutable]
+> ```bash
+> @CheckForNull default Queue.Executable getParentExecutable()
+>
+> An umbrella executable (such as a Run) of which this is one part. Some invariants:
+>   - `getParent().getOwnerTask() == getParent()` || `getParentExecutable().getParent() == getParent().getOwnerTask()`
+>   - `getParent().getOwnerExecutable() == null`  || `getParentExecutable() == getParent().getOwnerExecutable()`
+>
+> Returns:
+>    a distinct executable (never this, unlike the default of SubTask.getOwnerTask()!); or null if this executable was already at top level
+>
+> See Also:
+>   SubTask.getOwnerExecutable()
+> ```
+
+### basic usage
+```groovy
+List<List<hudson.model.Executor>> executors = Jenkins.instance.computers.collect {c -> c.executors}
+println executors.collect{ e -> e.collect{ it.getClass() } }
+
+// Result:
+// [[class hudson.model.Executor, class hudson.model.Executor], [class hudson.model.Executor]]
+```
+
+#### features
+```groovy
+
+jenkins.model.Jenkins.instance
+                     .computers.collect { c -> c.executors }
+                     .collectMany { e -> e.findAll{ it.isBusy() } }
+                     .each{ e ->
+                        println '\n>> e.owenr:'
+                        println "\te.owner : ${e.owner}"
+                        println "\te.owner.countBusy : ${e.owner.countBusy()}"
+                        println "\te.owner.countExecutors : ${e.owner.countExecutors()}"
+                        println "\te.owner.log :   ${e.owner.log.split('\n').join('\n\t\t\t')}"
+
+                        println '\n>> e.status:'
+                        println "\te.isBusy() : ${e.isBusy()}"
+                        println "\te.isIdle() : ${e.isIdle()}"
+                        println "\te.isLikelyStuck() : ${e.isLikelyStuck()}"
+                        println "\te.isParking() : ${e.isParking()}"
+
+                        println '\n>> e.currentWorkUnit.work:'
+                        println "\tfullDisplayName : ${e.currentWorkUnit.work.fullDisplayName}"
+                        println "\trunId: ${e.currentWorkUnit.work.runId}"
+                        println "\tlabel: ${e.currentWorkUnit.work.label}"
+                        println "\townerTask : ${e.currentWorkUnit.work.ownerTask}"
+                        println "\tgetResourceList() : ${e.currentWorkUnit.work.getResourceList()}"
+                        println "\tisBuildBlocked() : ${e.currentWorkUnit.work.isBuildBlocked()}"
+                        println "\tisConcurrentBuild() : ${e.currentWorkUnit.work.isConcurrentBuild()}"
+                        println "\tisContinued() : ${e.currentWorkUnit.work.isContinued()}"
+
+                        println "\n>> e.currentExecutable:"
+                        println "\turl : ${e.currentExecutable?.url}"
+                        println "\tnumber : ${e.currentExecutable?.number}"
+                        println "\testimatedDuration : ${e.currentExecutable?.estimatedDuration}"
+                        println "\tfullDisplayName : ${e.currentExecutable?.fullDisplayName}"
+
+                        println "\n>> e.currentExecutable.parentExecutable:"
+                        println "\tcurrentExecutable.parentExecutable: ${e.currentExecutable.parentExecutable.getClass()}"
+
+                        println "\n>> e.currentWorkUnit.work.ownerTask:"
+                        println "\townerTask : ${e.currentWorkUnit.work.ownerTask.getClass()}"
+                     }
+```
+
+- result
+  ```bash
+  >> e.owenr:
+    e.owner : KubernetesComputer name: jenkins-yaml-31-51jcr-wclf1 agent: KubernetesSlave name: jenkins-yaml-31-51jcr-wclf1
+    e.owner.countBusy : 1
+    e.owner.countExecutors : 1
+    e.owner.log :   Inbound agent connected from 10.244.13.0/10.244.13.0:33584
+                    Remoting version: 4.13
+                    Launcher: KubernetesLauncher
+                    Communication Protocol: JNLP4-connect
+                    This is a Unix agent
+                    Agent successfully connected and online
+
+  >> e.status:
+    e.isBusy() : true
+    e.isIdle() : false
+    e.isLikelyStuck() : false
+    e.isParking() : false
+
+  >> e.currentWorkUnit.work:
+    fullDisplayName : yaml #31 (show info)
+    runId: yaml#31
+    label: jenkins-yaml-31-51jcr-wclf1
+    ownerTask : org.jenkinsci.plugins.workflow.job.WorkflowJob@775876ce[yaml]
+    getResourceList() : {}
+    isBuildBlocked() : false
+    isConcurrentBuild() : false
+    isContinued() : true
+
+  >> e.currentExecutable:
+    url : job/yaml/31/
+    number : 31
+    estimatedDuration : 17227
+    fullDisplayName : yaml #31 (show info)
+
+  >> e.currentExecutable.parentExecutable:
+    currentExecutable.parentExecutable: class org.jenkinsci.plugins.workflow.job.WorkflowRun
+
+  >> e.currentWorkUnit.work.ownerTask:
+    ownerTask : class org.jenkinsci.plugins.workflow.job.WorkflowJob
+  ```
+
+### stop all running builds via WorkflowRun
+
+> [!NOTE]
+> - using `WorkflowRun.finish` might cause issue : https://stackoverflow.com/q/75651552/2940319
+
+```groovy
+List<List<hudson.model.Executor>> executors = Jenkins.instance.computers.collect { c -> c.executors }
+List<hudson.model.Executor> busyExecutors   = Jenkins.instance.computers.collect { c -> c.executors }.collectMany { it.findAll{ it.isBusy() } }
+
+busyExecutors.each {
+  org.jenkinsci.plugins.workflow.job.WorkflowRun run = it?.currentExecutable?.parentExecutable
+  run.setDescription( '<b>aborted by Jenkins restart</b><br>' )
+  run.finish( hudson.model.Result.NOT_BUILT, new java.io.IOException( "aborted by Jenkins restart" ) )
+}
+```
+
+### force interrupt executors
+```groovy
+List<List<hudson.model.Executor>> executors = Jenkins.instance.computers.collect { c -> c.executors }
+List<hudson.model.Executor> busyExecutors   = Jenkins.instance.computers.collect { c -> c.executors }.collectMany { it.findAll{ it.isBusy() } }
+busyExecutors.each { it.interrupt() }
+
+// or simply in one line
+jenkins.model.Jenkins.instance
+                     .computers.collect { c -> c.executors }
+                     .collectMany { it.findAll{ it.isBusy() } }
+                     .each { it.interrupt() }
+```
+
+### to [`WorkflowRun`](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
+
+> [!NOTE|label:basic concept]
+> `Computer` -> `Executor` -> `ExecutorStepExecution$PlaceholderTask$PlaceholderExecutable` -> `WorkflowRun`
+>
+
+```bash
+jenkins.model.Jenkins.instance
+                     .computers.collect { c -> c.executors }                 // all executors
+                     .collectMany { it.findAll{ it.isBusy() } }              // running executors
+                     .collectMany {[
+                        it?.getClass(),                                      // Executor
+                        it?.currentExecutable?.getClass(),                   // org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution$PlaceholderTask$PlaceholderExecutable
+                        it?.currentExecutable?.parentExecutable?.getClass()  // org.jenkinsci.plugins.workflow.job.WorkflowRun
+                     ]}
+```
 ### to `WorkUnit` and `SubTask` ( `ExecutorStepExecution.PlaceholderTask` )
 ```groovy
-Jenkins.instance.computers.findAll { computer ->
+jenkins.model.Jenkins.instance.computers.findAll { computer ->
   '<agentName>' == computer.name
 }.collect { it.executors }
  .flatten()
@@ -475,7 +634,6 @@ Jenkins.instance.computers.findAll { computer ->
   e                              :  Thread[Executor #0 for jenkins-sandbox-sample-11998-r16jc-nj9fc : executing PlaceholderExecutable:ExecutorStepExecution.PlaceholderTask{runId=sandbox/sample#11998,label=jenkins-sandbox-sample-11998,context=CpsStepContext[10:node]:Owner[sandbox/sample/11998:sandbox/sample #11998],cookie=null,auth=null},5,]
   owner                          :  KubernetesComputer name: jenkins-sandbox-sample-11998-r16jc-nj9fc agent: null
   ```
-
 
 ## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
 ### [Monitor and Restart Offline Agents](https://www.jenkins.io/doc/book/managing/nodes/)
