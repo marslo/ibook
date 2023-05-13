@@ -7,6 +7,7 @@
   - [list nodes metrcs](#list-nodes-metrcs)
 - [with status](#with-status)
 - [list node with label](#list-node-with-label)
+  - [list node with multiple labels](#list-node-with-multiple-labels)
   - [update label of node](#update-label-of-node)
 - [show](#show)
   - [show with labels](#show-with-labels)
@@ -18,6 +19,12 @@
   - [sort via kubelet version](#sort-via-kubelet-version)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+{% hint style='tip' %}
+> references:
+> - [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
+{% endhint %}
+
 
 ## list node names
 ```bash
@@ -258,6 +265,26 @@ $ kubectl get nodes -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.sta
 ## list node with label
 ```bash
 $ kubectl get node -l <label>=<value>
+```
+
+### [list node with multiple labels](https://stackoverflow.com/a/68479227/2940319)
+
+> [!TIP|label:tips:]
+> - [* LIST and WATCH filtering](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#list-and-watch-filtering)
+
+```bash
+$ kubectl get node --selector <label>=<value>,<label>=<value>
+
+# or
+$ kubectl get node -l '<label> in (<value>), <label> in (<value>)'
+
+# or for same label, different values
+$ kubectl get node -l '<label> in (<value_1>, <value_2>)'
+# i.e.:
+$ kubectl get pods -l 'environment in (production, qa)'
+
+# or `notin`
+$ kubectl get node -l '<label> notin (<value>)'
 ```
 
 ### update label of node
