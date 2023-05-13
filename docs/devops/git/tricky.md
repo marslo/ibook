@@ -4,6 +4,7 @@
 
 - [tricky](#tricky)
   - [quick edit gitocnfig](#quick-edit-gitocnfig)
+  - [create git patch](#create-git-patch)
   - [get current branch](#get-current-branch)
   - [get previous branch](#get-previous-branch)
   - [quick push to current branch](#quick-push-to-current-branch)
@@ -50,6 +51,15 @@ $ git config --edit --global
 
 # quick repalce config
 $ git config --global --replace-all core.pager cat
+```
+
+### create git patch
+```bash
+$ git diff --no-color HEAD^..HEAD > <name>.patch
+
+# or
+$ git format-patch HEAD^^           # create 3 patch files automatically
+$ git format-patch -1 <revision>    # create 1 patch file only
 ```
 
 ### get current branch
