@@ -171,35 +171,41 @@ $ sudo pip install genpac
     ...
     ```
     - service
-        ```bash
-        $ sudo /etc/init.d/shadowsocks-libev start
-        $ sudo /etc/init.d/shadowsocks-libev stop
-        $ sudo /etc/init.d/shadowsocks-libev restart
-        $ sudo /etc/init.d/shadowsocks-libev status
-        ```
+      ```bash
+      $ sudo /etc/init.d/shadowsocks-libev start
+      $ sudo /etc/init.d/shadowsocks-libev stop
+      $ sudo /etc/init.d/shadowsocks-libev restart
+      $ sudo /etc/init.d/shadowsocks-libev status
+      Shadowsocks-libev (pid 903) is running...
+      ```
     - config
-        ```bash
-        $ /etc/shadowsocks-libev/config.json
-        {
-            "server":"0.0.0.0",
-            "server_port": 1111,
-            "password":"mypassword",
-            "timeout":300,
-            "user":"nobody",                  // optinal
-            "method":"aes-256-cfb",
-            "fast_open":false,
-            "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
-            "mode":"tcp_and_udp",
-            "plugin":"obfs-server",
-            "plugin_opts":"obfs=http"
-        }
-        ```
+      ```bash
+      $ /etc/shadowsocks-libev/config.json
+      {
+          "server":"0.0.0.0",
+          "server_port": 1111,
+          "password":"mypassword",
+          "timeout":300,
+          "user":"nobody",                  // optinal
+          "method":"aes-256-cfb",
+          "fast_open":false,
+          "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
+          "mode":"tcp_and_udp",
+          "plugin":"obfs-server",
+          "plugin_opts":"obfs=http"
+      }
+      ```
 
 - check status
-    ```bash
-    $ sudo lsof -i:1111
-    $ sudo netstatus -tunpla | grep 1111
-    ```
+  ```bash
+  $ sudo lsof -i:1111
+  COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+  ss-server 903 nobody    8u  IPv4  20522      0t0  UDP *:1111
+  obfs-serv 909   root    7u  IPv4  20649      0t0  TCP *:1111 (LISTEN)
+  $ sudo netstatus -tunpla | grep 1111
+  tcp        0      0 0.0.0.0:1111            0.0.0.0:*               LISTEN      909/obfs-server
+  udp        0      0 0.0.0.0:1111            0.0.0.0:*                           903/ss-server
+  ```
 
 ![ss-libev-service](../../screenshot/ss/ss-libev-port.png)
 
