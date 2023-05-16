@@ -809,8 +809,7 @@ Events:                    <none>
 
 ## kube-state-metrics
 
-> [!INFO]
-> references:
+> [!INFO|label:references:]
 > - [kube-state-metrics | Tutorial, Setup, and Examples](https://www.containiq.com/post/kube-state-metrics)
 > - [kube-state-metrics Helm Chart](https://artifacthub.io/packages/helm/prometheus-community/kube-state-metrics)
 > - [How To Setup Kube State Metrics on Kubernetes](https://devopscube.com/setup-kube-state-metrics/)
