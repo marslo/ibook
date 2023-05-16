@@ -3,7 +3,9 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [get into](#get-into)
-  - [get IP address by hostname](#get-ip-address-by-hostname)
+  - [get interface by command](#get-interface-by-command)
+  - [get ipv4 address](#get-ipv4-address)
+  - [get ip address by hostname](#get-ip-address-by-hostname)
   - [get active interface](#get-active-interface)
   - [get active IP address](#get-active-ip-address)
   - [get active Mac address](#get-active-mac-address)
@@ -22,31 +24,46 @@
 
 ## get into
 
-### get IP address by hostname
+> [!NOTE|label:references:]
+> - [* imarslo : osx/network](../osx/network.md)
+
+### get interface by command
+```bash
+interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+# or get the route to github
+interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
+```
+
+### get ipv4 address
+```bash
+ipAddr=$(ip a s "${interface}" | sed -rn 's|.*inet ([0-9\.]{7,15})/[0-9]{2} brd.*$|\1|p')
+```
+
+### get ip address by hostname
 - [`ping` & `sed`](https://unix.stackexchange.com/a/45246/29178)
-    ```bash
-    $ ping -q -c 1 -t 1 github.com | sed -n -re 's:^PING.*\(([0-9\.]{7,15})\).*$:\1:p'
-    ```
+  ```bash
+  $ ping -q -c 1 -t 1 github.com | sed -n -re 's:^PING.*\(([0-9\.]{7,15})\).*$:\1:p'
+  ```
 
 - [`dig`](https://unix.stackexchange.com/a/20793/29178)
-    ```bash
-    $ dig +short github.com
+  ```bash
+  $ dig +short github.com
 
-    # or
-    $ dig github.com | awk '/^;; ANSWER SECTION:$/ { getline ; print $5 }'
-    ```
+  # or
+  $ dig github.com | awk '/^;; ANSWER SECTION:$/ { getline ; print $5 }'
+  ```
 
 - `nslookup`
-    ```bash
-    $ nslookup github.com | awk '/Name:/{getline; print $2;}'
-    ```
+  ```bash
+  $ nslookup github.com | awk '/Name:/{getline; print $2;}'
+  ```
 
 ### get active interface
 ```bash
-interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+$ interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
 
 # or get the route to github
-interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
+$ interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
 ```
 
 ### get active IP address
@@ -160,14 +177,14 @@ Nmap done: 1 IP address (1 host up) scanned in 0.29 second
   ```bash
   $ sudo nmap [-sT] -p 9100,515,631 -oG - 192.168.1.0/23
   # Nmap 7.91 scan initiated Wed Feb  3 16:44:20 2021 as: nmap -p 9100,515,631 -oG - 192.168.1.0/23
-  Host: 192.168.1.1 ()	Status: Up
-  Host: 192.168.1.1 ()	Ports: 515/closed/tcp//printer///, 631/closed/tcp//ipp///, 9100/closed/tcp//jetdirect///
-  Host: 192.168.1.13 ()	Status: Up
-  Host: 192.168.1.13 ()	Ports: 515/open/tcp//printer///, 631/open/tcp//ipp///, 9100/open/tcp//jetdirect///
-  Host: 192.168.1.1 ()	Status: Up
-  Host: 192.168.1.1 ()	Ports: 515/closed/tcp//printer///, 631/closed/tcp//ipp///, 9100/closed/tcp//jetdirect///
-  Host: 192.168.1.254 ()	Status: Up
-  Host: 192.168.1.254 ()	Ports: 515/filtered/tcp//printer///, 631/filtered/tcp//ipp///, 9100/filtered/tcp//jetdirect///
+  Host: 192.168.1.1 ()  Status: Up
+  Host: 192.168.1.1 ()  Ports: 515/closed/tcp//printer///, 631/closed/tcp//ipp///, 9100/closed/tcp//jetdirect///
+  Host: 192.168.1.13 () Status: Up
+  Host: 192.168.1.13 () Ports: 515/open/tcp//printer///, 631/open/tcp//ipp///, 9100/open/tcp//jetdirect///
+  Host: 192.168.1.1 ()  Status: Up
+  Host: 192.168.1.1 ()  Ports: 515/closed/tcp//printer///, 631/closed/tcp//ipp///, 9100/closed/tcp//jetdirect///
+  Host: 192.168.1.254 ()  Status: Up
+  Host: 192.168.1.254 ()  Ports: 515/filtered/tcp//printer///, 631/filtered/tcp//ipp///, 9100/filtered/tcp//jetdirect///
   # Nmap done at Wed Feb  3 16:44:28 2021 -- 512 IP addresses (4 hosts up) scanned in 8.37 seconds
   ```
 

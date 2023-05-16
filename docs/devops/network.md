@@ -242,7 +242,7 @@ Non-authoritative answer:
 Name:   pww.gitlab.cdi.mycompany.com
 Address: 130.147.219.15
 
-$ $ ip route get 130.147.219.15
+$ ip route get 130.147.219.15
 130.147.219.15 dev eno1 src 130.147.182.240 uid 1000
     cache
 

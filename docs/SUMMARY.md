@@ -129,6 +129,7 @@
   * [apps](osx/apps.md)
   * [util](osx/util.md)
   * [system](osx/system.md)
+  * [network](osx/network.md)
   * [script](osx/script.md)
   * [tricky](osx/tricky.md)
 * [linux](linux/basic.md)
