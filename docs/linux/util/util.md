@@ -7,9 +7,6 @@
     - [theory](#theory)
     - [padRight](#padright-1)
     - [example](#example)
-  - [Network](#network)
-    - [Get Interface by command](#get-interface-by-command)
-    - [get ipv4 address](#get-ipv4-address)
   - [system command](#system-command)
     - [use parameter in `xargs`](#use-parameter-in-xargs)
     - [find out commands belongs to and come from](#find-out-commands-belongs-to-and-come-from)
@@ -132,19 +129,6 @@ done
   # VeryLongProcessName ------------------------------ [UP]
   ```
 
-
-## Network
-### Get Interface by command
-```bash
-interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
-# or get the route to github
-interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
-```
-
-### get ipv4 address
-```bash
-ipAddr=$(ip a s "${interface}" | sed -rn 's|.*inet ([0-9\.]{7,15})/[0-9]{2} brd.*$|\1|p')
-```
 ## system command
 ### [use parameter in `xargs`](https://unix.stackexchange.com/a/100972/29178)
 ```bash
