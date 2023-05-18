@@ -16,6 +16,7 @@ references:
 > - [The kubelet drop-in file for systemd](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd)
 > - [Kubelet Configuration (v1beta1)](https://kubernetes.io/docs/reference/config-api/kubelet-config.v1beta1/)
 > - [* Install and Set Up kubectl on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+> - [how to change kubelet working dir to somewhere else](https://stackoverflow.com/a/53228571/2940319)
 {% endhint %}
 
 

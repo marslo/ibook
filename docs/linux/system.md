@@ -282,6 +282,14 @@ CPU(s):                32
 Thread(s) per core:    2
 Core(s) per socket:    8
 Socket(s):             2
+$ lscpu | grep --color=none -E '^(Thread|Core|Socket|CPU\(|NUMA|Model\ name)'
+CPU(s):              128
+Thread(s) per core:  2
+Core(s) per socket:  64
+Socket(s):           1
+NUMA node(s):        1
+Model name:          AMD EPYC 7742 64-Core Processor
+NUMA node0 CPU(s):   0-127
 
 # or
 $ sudo dmidecode -t 4 | grep -E 'Socket Designation|Count'
