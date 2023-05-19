@@ -5,6 +5,8 @@
 - [hooks](#hooks)
 - [jenkins](#jenkins)
   - [branch](#branch)
+- [actions](#actions)
+- [apps](#apps)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -59,3 +61,67 @@
 ### branch
 - `+refs/pull/*:refs/remotes/origin/pr/*`
 - `+refs/heads/*:refs/remotes/origin/*`
+
+## actions
+
+> [!NOTE|label:references]
+> - [marketplace](https://github.com/marketplace)
+> - [First interaction](https://github.com/marketplace/actions/first-interaction)
+> - [github-action-auto-format](https://github.com/marketplace/actions/github-action-auto-format)
+>   - [cloudposse/github-action-auto-release](https://github.com/cloudposse/github-action-auto-release)
+> - [jenkins](https://github.com/marketplace?page=2&q=jenkins&query=jenkins+&type=actions)
+>   - [Setup Jenkins](https://github.com/marketplace/actions/setup-jenkins)
+>     - [test.yml](https://github.com/snow-actions/setup-jenkins/blob/main/.github/workflows/test.yml)
+>     - [jenkins.yaml](https://github.com/snow-actions/setup-jenkins/blob/main/test-resources/jenkins.yaml)
+>   - [Jenkins-Action](https://github.com/marketplace/actions/jenkins-action)
+>   - [Build Jenkins jobs](https://github.com/marketplace/actions/build-jenkins-jobs)
+>   - [Trigger a Jenkins Job](https://github.com/marketplace/actions/trigger-a-jenkins-job)
+>   - [TriggerJenkinsBuild](https://github.com/marketplace/actions/triggerjenkinsbuild)
+>   - [Run jenkins jobs](https://github.com/marketplace/actions/run-jenkins-jobs)
+>   - [GitHub Actions Linting](https://github.com/marketplace/actions/github-actions-linting)
+>   - [jenkins-action-parametrized](https://github.com/marketplace/actions/jenkins-action-parametrized)
+>   - [Jenkins Job Builder](https://github.com/marketplace/actions/jenkins-job-builder)
+>   - [jenkins-job-action](https://github.com/marketplace/actions/jenkins-job-action)
+>   - [Trigger Jenkins Job and Return Result](https://github.com/marketplace/actions/trigger-jenkins-job-and-return-result)
+>   - [Run Jenkins Job with Build Result](https://github.com/marketplace/actions/run-jenkins-job-with-build-result)
+>   - [Run Jenkins Job and get build result](https://github.com/marketplace/actions/run-jenkins-job-and-get-build-result)
+>     - [halilsafakkilic/jenkins-action](https://github.com/halilsafakkilic/jenkins-action)
+> - git
+>   - [Commit Message Checker for pull request](https://github.com/marketplace/actions/commit-message-checker-for-pull-request)
+>   - [Check Commit Message](https://github.com/marketplace/actions/check-commit-message)
+>   - [Git matching commits](https://github.com/marketplace/actions/git-matching-commits)
+>   - [Git matching commits](https://github.com/marketplace/actions/git-matching-commits)
+>   - [Commit Message Checker for pull request](https://github.com/marketplace/actions/commit-message-checker-for-pull-request)
+>   - [GS Commit Message Checker](https://github.com/marketplace/actions/gs-commit-message-checker)
+>   - [Git Commit Data](https://github.com/marketplace/actions/git-commit-data)
+>   - [Generate semver](https://github.com/marketplace/actions/generate-semver)
+> - [pre-commit](https://github.com/marketplace/actions/pre-commit)
+>   - [pre-commit ci](https://pre-commit.ci/)
+> - utillity
+>   - [Upload a Build Artifact](https://github.com/marketplace/actions/upload-a-build-artifact)
+>   - [Download a Build Artifact](https://github.com/marketplace/actions/download-a-build-artifact)
+>   - [GitHub API Request](https://github.com/marketplace/actions/github-api-request)
+>   - [Checkout](https://github.com/marketplace/actions/checkout)
+>   - [Configure GitHub Pages](https://github.com/marketplace/actions/configure-github-pages)
+>   - [GitHub API Request](https://github.com/marketplace/actions/github-api-request)
+>   - [GitHub Script](https://github.com/marketplace/actions/github-script)
+>   - [Git Version](https://github.com/marketplace/actions/git-version)
+>   - [Load available actions](https://github.com/marketplace/actions/load-available-actions)
+>   - [Secret output](https://github.com/marketplace/actions/secret-output)
+>   - [Ansible Publish](https://github.com/marketplace/actions/ansible-publish)
+>   - [Jira Add Comment](https://github.com/marketplace/actions/jira-add-comment)
+>   - [Setup Jira](https://github.com/marketplace/actions/setup-jira)
+>   - [Release-Notes-Preview](https://github.com/marketplace/actions/release-notes-preview)
+>   - [Trigger CircleCI Pipeline](https://github.com/marketplace/actions/trigger-circleci-pipeline)
+>   - [Deploy Helm to EKS](https://github.com/marketplace/actions/deploy-helm-to-eks)
+>   - [Docker Build Tag Publish](https://github.com/marketplace/actions/docker-build-tag-publish)
+>   - [Deploy Helm to EKS](https://github.com/marketplace/actions/deploy-helm-to-eks)
+>   - [Kubectl tool installer](https://github.com/marketplace/actions/kubectl-tool-installer)
+>   - [Kubernetes Set Context](https://github.com/marketplace/actions/kubernetes-set-context)
+>   - [Helm tool installer](https://github.com/marketplace/actions/helm-tool-installer)
+
+## apps
+
+> [!NOTE|label:references:]
+> - [Slack + GitHub](https://github.com/marketplace/slack-github)
+> - [CommitCheck](https://github.com/marketplace/commitcheck)
