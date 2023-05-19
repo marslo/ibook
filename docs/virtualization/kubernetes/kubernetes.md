@@ -4,15 +4,35 @@
 
 - [Core design principles](#core-design-principles)
   - [Constants and well-known values and paths](#constants-and-well-known-values-and-paths)
+    - [`/etc/kubernetes/manifests`](#etckubernetesmanifests)
+    - [`/etc/kubernetes`](#etckubernetes)
+    - [names of certificates and key files](#names-of-certificates-and-key-files)
   - [API server](#api-server)
+    - [static Pod manifest](#static-pod-manifest)
+    - [other api server flags](#other-api-server-flags)
   - [controller manager](#controller-manager)
+    - [static Pod manifest](#static-pod-manifest-1)
+    - [other flags](#other-flags)
 - [ports and protocols](#ports-and-protocols)
   - [contol plane](#contol-plane)
   - [worker node(s)](#worker-nodes)
+- [[architecture](#architecture)
+  - [control pannel](#control-pannel)
+    - [kube-apiserver](#kube-apiserver)
+    - [etcd](#etcd)
+    - [kube-scheduler](#kube-scheduler)
+    - [controller manager](#controller-manager-1)
+    - [ccm : cloud controller manager](#ccm--cloud-controller-manager)
+  - [work node](#work-node)
+    - [kubelet](#kubelet)
+    - [kube proxy](#kube-proxy)
+    - [cri-o : container runtime](#cri-o--container-runtime)
 - [jsonpath](#jsonpath)
 - [options](#options)
   - [explain](#explain)
 - [kubectl alias](#kubectl-alias)
+    - [`__start_kubectl`](#__start_kubectl)
+    - [`_complete_alias`](#_complete_alias)
 - [secrets](#secrets)
   - [create secrets](#create-secrets)
   - [duplicate secrets to the other ns](#duplicate-secrets-to-the-other-ns)
@@ -55,6 +75,9 @@
 > - [* best practices](https://kubernetes.io/docs/setup/best-practices/_print/)
 > - [12 Kubernetes Configuration Best Practices](https://cloud.redhat.com/blog/12-kubernetes-configuration-best-practices)
 > - [Best Kubernetes Certifications for 2023 [Ranked]](https://devopscube.com/best-kubernetes-certifications/)
+> - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
+> - Kubernetes Architecture
+>   - [Kubernetes Architecture Explained [Comprehensive Guide]](https://devopscube.com/kubernetes-architecture-explained/)
 {% endhint %}
 
 ![kubernetes orchestration control panel](../../screenshot/k8s/kubernetes-control-plane.png)
@@ -62,10 +85,10 @@
 ![kubernetes technology](../../screenshot/k8s/kubernetes-architecture.jpeg)
 
 
-## [Core design principles](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
-### [Constants and well-known values and paths](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#constants-and-well-known-values-and-paths)
+# [Core design principles](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
+## [Constants and well-known values and paths](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#constants-and-well-known-values-and-paths)
 
-#### `/etc/kubernetes/manifests`
+### `/etc/kubernetes/manifests`
 
 > [!TIP]
 > `/etc/kubernetes/manifests` as the path where kubelet should look for static Pod manifests. Names of static Pod manifests are:
@@ -74,16 +97,17 @@
 > - `kube-controller-manager.yaml`
 > - `kube-scheduler.yaml`
 
-#### `/etc/kubernetes`
+### `/etc/kubernetes`
 
 > [!TIP]
+> - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
 > `/etc/kubernetes/` as the path where kubeconfig files with identities for control plane components are stored. Names of kubeconfig files are:
 > - `kubelet.conf` (bootstrap-kubelet.conf during TLS bootstrap)
 > - `controller-manager.conf`
 > - `scheduler.conf`
 > - `admin.conf` for the cluster admin and kubeadm itself
 
-#### names of certificates and key files
+### names of certificates and key files
 
 > [!TIP]
 > - `ca.crt`, `ca.key` for the Kubernetes certificate authority
@@ -93,9 +117,9 @@
 > - `front-proxy-ca.crt`, `front-proxy-ca.key` for the front proxy certificate authority
 > - `front-proxy-client.crt`, `front-proxy-client.key` for the front proxy client
 
-### [API server](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#api-server)
+## [API server](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#api-server)
 
-#### [static Pod manifest](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+### [static Pod manifest](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 
 > [!TIP]
 > - `apiserver-advertise-address` and `apiserver-bind-port` to bind to; if not provided, those value defaults to the IP address of the default network interface on the machine and port `6443`
@@ -104,7 +128,7 @@
 >   - if an external etcd server is not be provided, a local etcd will be used ( via host network )
 > - If a cloud provider is specified, the corresponding `--cloud-provider` is configured, together with the `--cloud-config` path if such file exists (this is experimental, alpha and will be removed in a future version)
 
-#### other api server flags
+### other api server flags
 
 - `--insecure-port=0` to avoid insecure connections to the api server
 - `--enable-bootstrap-token-auth=true` to enable the BootstrapTokenAuthenticator authentication module. See TLS Bootstrapping for more details
@@ -135,16 +159,17 @@
   - `--requestheader-extra-headers-prefix=X-Remote-Extra-`
   - `--requestheader-allowed-names=front-proxy-client`
 
-### [controller manager](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#controller-manager)
+## [controller manager](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#controller-manager)
 
-#### [static Pod manifest]((https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+### [static Pod manifest](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+
 > [!TIP]
 > - If kubeadm is invoked specifying a `--pod-network-cidr`, the subnet manager feature required for some CNI network plugins is enabled by setting:
 >   - `--allocate-node-cidrs=true`
 >   - `--cluster-cidr` and `--node-cidr-mask-size` flags according to the given CIDR
 > - If a cloud provider is specified, the corresponding `--cloud-provider` is specified, together with the `--cloud-config` path if such configuration file exists (this is experimental, alpha and will be removed in a future version)
 
-#### other flags
+### other flags
 - `--controllers` enabling all the default controllers plus `BootstrapSigner` and `TokenCleaner` controllers for TLS bootstrap. See TLS Bootstrapping for more details
 - `--use-service-account-credentials` to true
 - Flags for using certificates generated in previous steps:
@@ -153,26 +178,58 @@
   - `--cluster-signing-key-file` to `ca.key`, if External CA mode is disabled, otherwise to `""`
   - `--service-account-private-key-file` to sa.key
 
-## [ports and protocols](https://kubernetes.io/docs/reference/ports-and-protocols/)
-### contol plane
+# [ports and protocols](https://kubernetes.io/docs/reference/ports-and-protocols/)
+## contol plane
 
-| Protocol | Direction | Port Range | Purpose                 | Used By              |
-|----------|-----------|------------|-------------------------|----------------------|
-| TCP      | Inbound   | 6443       | Kubernetes API server   | All                  |
-| TCP      | Inbound   | 2379-2380  | etcd server client API  | kube-apiserver, etcd |
-| TCP      | Inbound   | 10250      | Kubelet API             | Self, Control plane  |
-| TCP      | Inbound   | 10259      | kube-scheduler          | Self                 |
-| TCP      | Inbound   | 10257      | kube-controller-manager | Self                 |
-
-
-### worker node(s)
-| Protocol | Direction | Port Range  | Purpose                                                                               | Used By             |
-|----------|-----------|-------------|---------------------------------------------------------------------------------------|---------------------|
-| TCP      | Inbound   | 10250       | Kubelet API                                                                           | Self, Control plane |
-| TCP      | Inbound   | 30000-32767 | [NodePort Services](https://kubernetes.io/docs/concepts/services-networking/service/) | All                 |
+| PROTOCOL | DIRECTION | PORT RANGE  | PURPOSE                 | USED BY              |
+|----------|-----------|-------------|-------------------------|----------------------|
+| TCP      | Inbound   | `6443`      | Kubernetes API server   | All                  |
+| TCP      | Inbound   | `2379-2380` | etcd server client API  | kube-apiserver, etcd |
+| TCP      | Inbound   | `10250`     | Kubelet API             | Self, Control plane  |
+| TCP      | Inbound   | `10259`     | kube-scheduler          | Self                 |
+| TCP      | Inbound   | `10257`     | kube-controller-manager | Self                 |
 
 
-## jsonpath
+## worker node(s)
+| PROTOCOL | DIRECTION | PORT RANGE    | PURPOSE                                                                               | USED BY             |
+|----------|-----------|---------------|---------------------------------------------------------------------------------------|---------------------|
+| TCP      | Inbound   | `10250`       | Kubelet API                                                                           | Self, Control plane |
+| TCP      | Inbound   | `30000-32767` | [NodePort Services](https://kubernetes.io/docs/concepts/services-networking/service/) | All                 |
+
+
+# [architecture](https://devopscube.com/kubernetes-architecture-explained/)
+
+![Kubernetes Architecture](../../screenshot/k8s/kubernetes-architecture_k8s-architecture.drawio-1.png)
+
+## control pannel
+
+### kube-apiserver
+![Kubernetes Architecture : kube-apiserver](../../screenshot/k8s/kubernetes-architecture_kube-api-server.drawio-1.png)
+
+### etcd
+![Kubernetes Architecture : etcd](../../screenshot/k8s/kubernetes-architecture_etcd.png)
+
+### kube-scheduler
+![Kubernetes Architecture : kube-scheduler](../../screenshot/k8s/kubernetes-architecture_kube-scheduler.png)
+
+### controller manager
+![Kubernetes Architecture : kube conntroller manager](../../screenshot/k8s/kubernetes-architecture_Kube-controller-manager.png)
+
+### ccm : cloud controller manager
+![Kubernetes Architecture : ccm](../../screenshot/k8s/kubernetes-architecture_ccm.png)
+
+## work node
+### kubelet
+![Kubernetes Architecture : kubelet](../../screenshot/k8s/kubernetes-architecture_kubelet.png)
+
+### kube proxy
+![Kubernetes Architecture : kube-proxy](../../screenshot/k8s/kubernetes-architecture_kube-proxy.png)
+
+### cri-o : container runtime
+![Kubernetes Architecture : cri-o](../../screenshot/k8s/kubernetes-architecture_cri-o.png)
+
+
+# jsonpath
 
 > [!NOTE]
 > references:
@@ -180,8 +237,8 @@
 > - [how to make kubectl jsonpath output on separate lines](https://downey.io/notes/dev/kubectl-jsonpath-new-lines/)
 
 
-## options
-### explain
+# options
+## explain
 ```bash
 $ kubectl explain hpa
 KIND:     HorizontalPodAutoscaler
@@ -213,8 +270,8 @@ FIELDS:
        ...
   ```
 
-## [kubectl alias](https://learnk8s.io/blog/kubectl-productivity/)
-#### `__start_kubectl`
+# [kubectl alias](https://learnk8s.io/blog/kubectl-productivity/)
+### `__start_kubectl`
 ```bash
 $ echo 'source <(kubectl completion bash)' >> ~/.bashrc
 $ cat >> ~/.bashrc <<EOF
@@ -230,9 +287,9 @@ EOF
 $ source ~/.bashrc
 ```
 
-#### `_complete_alias`
+### `_complete_alias`
 ```bash
-# download bash_completion.sh for kubectl
+ download bash_completion.sh for kubectl
 $ curl -fsSL https://raw.githubusercontent.com/cykerway/complete-alias/master/bash_completion.sh > ~/.bash_completion.sh
 $ chmod +x !$
 
@@ -252,8 +309,8 @@ EOF
 $ source ~/.bashrc
 ```
 
-## secrets
-### create secrets
+# secrets
+## create secrets
 - by command
   ```bash
   $ kubectl create secret tls my-certs \
@@ -276,7 +333,7 @@ $ source ~/.bashrc
   kubectl apply -f -
   ```
 
-### duplicate secrets to the other ns
+## duplicate secrets to the other ns
 
 {% hint style='tip' %}
 > reference:
@@ -288,8 +345,8 @@ $ source ~/.bashrc
 $ kubectl -n ingress-nginx get secrets my-certs -o yaml --export | kubectl apply -n devops -f -
 ```
 
-## token
-### check token
+# token
+## check token
 ```bash
 $ sudo kubeadm token list
 TOKEN                     TTL         EXPIRES                     USAGES                   DESCRIPTION   EXTRA GROUPS
@@ -297,7 +354,7 @@ bop765.brol9nsrw820gmbi   <forever>   <never>                     authentication
 khhfwa.jvkvrpiknx4o6ffy   19h         2018-07-13T11:37:43+08:00   authentication,signing   <none>        system:bootstrappers:kubeadm:default-node-token
 ```
 
-### generate token
+## generate token
 ```bash
 $ sudo kubeadm token create --print-join-command
 kubeadm join 192.168.1.100:6443 --token lhb1ln.oj0fqwgd1yl7l9xp --discovery-token-ca-cert-hash sha256:cba8df87dcb70c83c19af72c02e4886fcc7b0cf05319084751e6ece688443bde
@@ -306,7 +363,7 @@ $ sudo kubeadm token create --print-join-command --ttl=0
 kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-token-ca-cert-hash sha256:c8650c56faf72b8bf71c576f0d13f44c93bea2d21d4329c64bb97cba439af5c3
 ```
 
-## [tear down](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down)
+# [tear down](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down)
 
 > [!TIP]
 > - [How to completely uninstall kubernetes](https://stackoverflow.com/a/71503087/2940319)

@@ -5,7 +5,7 @@
 - [basic environment](#basic-environment)
   - [Ubuntu](#ubuntu)
   - [CentOS/RHEL](#centosrhel)
-  - [Q&A](#qa)
+  - [q&a](#qa)
 - [tricky](#tricky)
   - [list images](#list-images)
   - [get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
@@ -14,6 +14,8 @@
   - [kubeadm join](#kubeadm-join)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+![how kubeadm init](../../../screenshot/k8s/Kubeadm-init.png)
 
 {% hint style='tip' %}
 > reference :
@@ -33,7 +35,6 @@
 > - [design-proposals-archive/cluster-lifecycle/cluster-deployment.md](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/cluster-deployment.md)
 > - [How to Upgrade Kubernetes Cluster Using Kubeadm?](https://devopscube.com/upgrade-kubernetes-cluster-kubeadm/)
 {% endhint %}
-
 
 ## basic environment
 ### Ubuntu
@@ -311,7 +312,7 @@ $ sudo systemctl enable --now kubelet
   [config/images] Pulled k8s.gcr.io/coredns:1.2.2
   ```
 
-### Q&A
+### q&a
 #### [problem with installed package podman](https://forums.docker.com/t/problem-with-installed-package-podman/116529/2)
 
 - issue
@@ -386,7 +387,7 @@ $ kubeadm config images pull [--config=config.yaml]
 > - Upload of control plane node configuration can be invoked individually with the [`kubeadm init phase upload-config`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-upload-config) command
 
 ```bash
-$ k -n kube-system get cm kubeadm-config -o yaml
+$ kubectl -n kube-system get cm kubeadm-config -o yaml
 ```
 
 ### [show default `KubeletConfiguration`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#configure-kubelets-using-kubeadm)
@@ -416,7 +417,7 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
 ### show defualt kubeadm config
 
 {% hint style='tip' %}
-[imarslo: get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
+[* imarslo : get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
 {% endhint %}
 
 ```bash
@@ -443,7 +444,7 @@ $ kubectl -n kube-system get cm kubeadm-config -o yaml
   $ sudo kubeadm token list
   ```
 
-- [Token-based discovery with CA pinning](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
+- [token-based discovery with CA pinning](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
   ```bash
   $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt |
             openssl rsa -pubin -outform der 2>/dev/null |
