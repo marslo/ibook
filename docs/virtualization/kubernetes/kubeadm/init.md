@@ -29,6 +29,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+![How To Setup Kubernetes Cluster Using Kubeadm](../../../screenshot/k8s/Kubeadm-init.png)
+
 {% hint style='tip' %}
 > references:
 > - [* Install Kubernetes Cluster on Centos 8 With Kubeadm and CRI-O](https://tayeh.me/posts/install-kubernetes-cluster-on-centos-8-with-kubeadm-crio/)
@@ -62,6 +64,8 @@
 >   - [* Setting up Etcd Cluster with TLS Authentication Enabled](https://medium.com/nirman-tech-blog/setting-up-etcd-cluster-with-tls-authentication-enabled-49c44e4151bb)
 >   - [Generate self-signed certificates](https://github.com/coreos/docs/blob/master/os/generate-self-signed-certificates.md)
 >   - [* 创建 TLS 证书和秘钥](https://jimmysong.io/kubernetes-handbook/practice/create-tls-and-secret-key.html)
+> - [CRI-O : How To Setup Kubernetes Cluster Using Kubeadm](https://devopscube.com/setup-kubernetes-cluster-kubeadm/)
+>
 {% endhint %}
 
 # kubeadm init

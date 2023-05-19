@@ -54,6 +54,7 @@
 > - [Well-Known Labels, Annotations and Taints](https://kubernetes.io/docs/reference/labels-annotations-taints)
 > - [* best practices](https://kubernetes.io/docs/setup/best-practices/_print/)
 > - [12 Kubernetes Configuration Best Practices](https://cloud.redhat.com/blog/12-kubernetes-configuration-best-practices)
+> - [Best Kubernetes Certifications for 2023 [Ranked]](https://devopscube.com/best-kubernetes-certifications/)
 {% endhint %}
 
 ![kubernetes orchestration control panel](../../screenshot/k8s/kubernetes-control-plane.png)
