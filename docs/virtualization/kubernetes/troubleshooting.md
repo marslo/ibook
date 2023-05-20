@@ -8,13 +8,19 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 ## check log
+
+> [!NOTE|label:references:]
+> - [Kubernetes Logging Tutorial For Beginners](https://devopscube.com/kubernetes-logging-tutorial/)
+
+
 ### system logs
 
 ```bash
 $ journalctl -u <service> -f
+
+# or
+$ journalctl -u kubelet -o cat
 
 # or
 $ sudo systemctl status <service> -l --no-pager

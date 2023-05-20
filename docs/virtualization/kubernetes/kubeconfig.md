@@ -18,6 +18,7 @@
   - [get user](#get-user)
   - [get password](#get-password)
   - [get key](#get-key)
+- [kubeadm-cfg.yml](#kubeadm-cfgyml)
 - [have fun](#have-fun)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -456,6 +457,15 @@ $ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == 
 fake-key-seefile
 # or via base64 decoding
 $ kubectl config --kubeconfig=config-demo view -o jsonpath='{.users[?(@.name == "developer")].user.client-key}' | base64 -d
+```
+
+## kubeadm-cfg.yml
+
+> [!NOTE|label:references:]
+> - [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/#kubeconfig-additional-users)
+
+```bash
+$ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
 ```
 
 ## have fun

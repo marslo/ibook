@@ -5,6 +5,13 @@
 - [etcd](#etcd)
   - [check healthy](#check-healthy)
   - [re-add etcd](#re-add-etcd)
+- [network](#network)
+  - [ingress](#ingress)
+- [jobs](#jobs)
+- [valut](#valut)
+- [eks](#eks)
+- [others](#others)
+  - [How To Create Kubernetes YAML Manifests Quickly](#how-to-create-kubernetes-yaml-manifests-quickly)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -60,3 +67,35 @@ $ etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt \
           -endpoints=https://<master3IP>:2379,https://<master2IP>:2379,https://<master1IP>:2379 \
           member add <master3Hostname> https://<master3IP>:2380
 ```
+
+## network
+### ingress
+
+![ingress architecture](../../screenshot/k8s/k8s-ing-architecture-full.png)
+
+- traffic flow
+  ![ingress](../../screenshot/k8s/k8s-ingress-traffic-flow.png)
+
+> [!NOTE|label:references:]
+> - [Kubernetes Ingress Tutorial For Beginners](https://devopscube.com/kubernetes-ingress-tutorial/)
+
+
+## jobs
+
+> [!NOTE|label:references:]
+> - [How To Create Kubernetes Jobs and Cronjobs – Getting Started Guide](https://devopscube.com/create-kubernetes-jobs-cron-jobs/)
+
+
+## valut
+
+> [!NOTE|label:references:]
+> - [How to Setup Vault in Kubernetes- Beginners Tutorial](https://devopscube.com/vault-in-kubernetes/)
+
+## eks
+
+> [!NOTE|label:references:]
+> - [How to Create AWS EKS Cluster Using eksctl](https://devopscube.com/create-aws-eks-cluster-eksctl/)
+
+
+## others
+### [How To Create Kubernetes YAML Manifests Quickly](https://devopscube.com/create-kubernetes-yaml/)

@@ -16,7 +16,7 @@
 - [ports and protocols](#ports-and-protocols)
   - [contol plane](#contol-plane)
   - [worker node(s)](#worker-nodes)
-- [[architecture](#architecture)
+- [architecture](#architecture)
   - [control pannel](#control-pannel)
     - [kube-apiserver](#kube-apiserver)
     - [etcd](#etcd)
@@ -78,6 +78,16 @@
 > - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
 > - Kubernetes Architecture
 >   - [Kubernetes Architecture Explained [Comprehensive Guide]](https://devopscube.com/kubernetes-architecture-explained/)
+> - [* How to Access Kubernetes API Server](https://blog.codefarm.me/2021/12/18/access-kubernetes/)
+>
+> resources:
+> - [Free Kubernetes Ebook: Kubernetes up and running](https://devopscube.com/free-kubernetes-ebook/)
+> - [How to Learn Kubernetes (Complete Roadmap & Resources)](https://devopscube.com/learn-kubernetes-complete-roadmap/)
+> - [kelseyhightower/kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
+> - [* Kubernetes Tutorials For Beginners: 43 Comprehensive Guides](https://devopscube.com/kubernetes-tutorials-beginners/)
+> - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
+> - [Kubernetes Learning Resources](https://devopscube.com/kubernetes/)
+> - [Kubernetes Documentation/Tasks](https://kubernetes.io/docs/tasks/)
 {% endhint %}
 
 ![kubernetes orchestration control panel](../../screenshot/k8s/kubernetes-control-plane.png)

@@ -31,6 +31,7 @@
   - [resource management for pods and containers](#resource-management-for-pods-and-containers)
   - [assign cpu resources to containers and pods](#assign-cpu-resources-to-containers-and-pods)
   - [managing kubernetes resource limits](#managing-kubernetes-resource-limits)
+- [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -40,6 +41,8 @@
 > - [* Pod Lifecycle](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle)
 > - [Pods](https://kubernetes.io/docs/concepts/workloads/pods/_print/)
 > - [Field Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/)
+> - [Kubernetes Daemonset: A Comprehensive Guide](https://devopscube.com/kubernetes-daemonset/)
+> - [Kubernetes Pod Priority, PriorityClass, and Preemption Explained](https://devopscube.com/pod-priorityclass-preemption/)
 {% endhint %}
 
 
@@ -546,3 +549,8 @@ $ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
 ### [assign cpu resources to containers and pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/)
 ### [managing kubernetes resource limits](https://www.densify.com/kubernetes-tools/kubernetes-resource-limits/)
 
+
+## troubleshooting
+
+> [!NOTE|label:references:]
+> - [How To Troubleshoot Kubernetes Pods: Beginners Guide](https://devopscube.com/troubleshoot-kubernetes-pods/)

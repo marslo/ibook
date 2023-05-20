@@ -57,7 +57,8 @@
 {% hint style='tip' %}
 > references:
 > - [* 创建 TLS 证书和秘钥](https://jimmysong.io/kubernetes-handbook/practice/create-tls-and-secret-key.html)
-> - [Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+> - [* Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+> - [* Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
 > - [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
 > - [Renew a Kubernetes certificate with a 10-year expiration date](https://www.sobyte.net/post/2021-10/update-k8s-10y-expire-certs/)
 > - stacked CA mode can found from [Certificate Management with kubeadm](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/)
@@ -68,13 +69,15 @@
 >   - [How to Generate a Self-Signed Certificate for Kubernetes](https://phoenixnap.com/kb/kubernetes-ssl-certificates)
 > - [Certificates in a Kubernetes environment](https://www.ibm.com/docs/en/api-connect/10.0.1.x?topic=deployment-certificates-in-kubernetes-environment)
 > - [Creating Self Signed Certificates on Kubernetes](https://tech.paulcz.net/blog/creating-self-signed-certs-on-kubernetes/)
-> - [Cluster TLS using OpenSSL](https://github.com/coreos/coreos-kubernetes/blob/master/Documentation/openssl.md)
+> - [How To Configure Ingress TLS/SSL Certificates in Kubernetes](https://devopscube.com/configure-ingress-tls-kubernetes/)
 > <br>
-> - regenerate the kubeadm.yaml
+> - regenerate the kubeadm.yml
 >   ```bash
 >   $ sudo kubeadm config view
 >   ```
 {% endhint %}
+
+![certificates](../../screenshot/k8s/k8s-cert-architecture.png)
 
 # generic
 
@@ -89,6 +92,7 @@
   - `admin-key.pem`
 
 - certificate component
+
 
   |          SERVICES         | CERTIFICATES                                     |
   |:-------------------------:|--------------------------------------------------|
@@ -248,6 +252,10 @@ TBD
 ## v1.12.3
 
 > [!TIP]
+> - [where I can find kubeadm-config.yaml on my kubernetes cluster](where I can find kubeadm-config.yaml on my kubernetes cluster)
+> - [Kubernetes by kubeadm config yamls](https://medium.com/@kosta709/kubernetes-by-kubeadm-config-yamls-94e2ee11244)
+> - [kubeadm – How to “upgrade” (update) your configuration](https://blog.honosoft.com/2020/01/31/kubeadm-how-to-upgrade-update-your-configuration/)
+> <p>
 > for [stacked etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#stacked-etcd-topology) <br>
 >
 > ```bash
@@ -263,7 +271,9 @@ TBD
 
 ### renew certificates
 ```bash
-$ sudo kubeadm [--config kubeadm.yaml] alpha phase certs renew [commands]
+# get target cluster kubeadm-cfg.yml
+$ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
+$ sudo kubeadm [--config kubeadm.yml] alpha phase certs renew [commands]
 ```
 
 <div class="alert alert-success hints-alert">
@@ -321,24 +331,29 @@ $ sudo kubeadm [--config kubeadm.yaml] alpha phase certs renew [commands]
 
 - i.e.
   ```bash
-  $ sudo kubeadm --config ~/kubeadm.yaml alpha phase certs renew all
+  # get target cluster kubeadm-cfg.yml
+  $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
+  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs renew all
 
   # or
+  $ sudo kuabeadm --config ~/kubeadm.yml alpha phase certs renew etcd-server
+  $ sudo kuabeadm --config ~/kubeadm.yml alpha phase certs renew apiserver-kubelet-client
+  $ sudo kuabeadm --config ~/kubeadm.yml alpha phase certs renew front-proxy-client
 
   # for /etc/kubernetes/pki/*.crt
   $ echo {apiserver,apiserver-kubelet-client,front-proxy-client} |
          fmt -1 |
-         xargs -I{} bash -c "sudo kuabeadm --config ~/kubeadm.yaml alpha phase certs renew {}"
+         xargs -I{} bash -c "sudo kuabeadm --config ~/kubeadm.yml alpha phase certs renew {}"
 
   # for /etc/kubernetes/pki/etcd/*.crt
   $ echo {etcd-server,etcd-peer,etcd-healthcheck-client} |
          fmt -1 |
-         xargs -I{} bash -c "sudo kuabeadm --config ~/kubeadm.yaml alpha phase certs renew {}"
+         xargs -I{} bash -c "sudo kuabeadm --config ~/kubeadm.yml alpha phase certs renew {}"
   ```
 
 #### generate new certificates
 ```bash
-$ sudo kubeadm [--config kubeadm.yaml] alpha phase certs [commands]
+$ sudo kubeadm [--config kubeadm.yml] alpha phase certs [commands]
 ```
 
 <div class="alert alert-success hints-alert">
@@ -416,14 +431,14 @@ $ sudo kubeadm [--config kubeadm.yaml] alpha phase certs [commands]
 
 - re-generate `/etc/kubernetes/pki/etcd/*.crt` for modify `X509 Subject Alternative Name`:
   ```bash
-  $ sudo kubeadm --config ~/kubeadm.yaml alpha phase certs etcd-server
-  $ sudo kubeadm --config ~/kubeadm.yaml alpha phase certs etcd-peer
-  $ sudo kubeadm --config ~/kubeadm.yaml alpha phase certs etcd-healthcheck-client
+  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-server
+  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-peer
+  $ sudo kubeadm --config ~/kubeadm.yml alpha phase certs etcd-healthcheck-client
 
   # or
   $ echo {etcd-server,etcd-peer,etcd-healthcheck-client} |
          fmt -1 |
-         xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yaml alpha phase certs {}"
+         xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase certs {}"
   ```
 
   - check `X509 Subject Alternative Name`
@@ -435,12 +450,12 @@ $ sudo kubeadm [--config kubeadm.yaml] alpha phase certs [commands]
 ```bash
 # clean all config in /etc/kubenernets/*.conf, i.e.:
 # echo {admin,controller-manager,kubelet,scheduler} | fmt -1 | xargs -I{} bash -c "sudo rm -rf {}.conf"
-$ sudo kubeadm [--config ~/kubeadm.yaml] alpha phase kubeconfig [commands]
+$ sudo kubeadm [--config ~/kubeadm.yml] alpha phase kubeconfig [commands]
 ```
 
 #### renew all kubeconfig
 ```bash
-$ sudo kubeadm --config ~/kubeadm.yaml alpha phase kubeconfig all
+$ sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig all
 [endpoint] WARNING: port specified in controlPlaneEndpoint overrides bindPort in the controlplane address
 [kubeconfig] Wrote KubeConfig file to disk: "/etc/kubernetes/admin.conf"
 [kubeconfig] Wrote KubeConfig file to disk: "/etc/kubernetes/kubelet.conf"
@@ -450,7 +465,7 @@ $ sudo kubeadm --config ~/kubeadm.yaml alpha phase kubeconfig all
 # or
 $ echo {admin,controller-manager,kubelet,scheduler} |
        fmt -1 |
-       xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yaml alpha phase kubeconfig {}"
+       xargs -I{} bash -c "sudo kubeadm --config ~/kubeadm.yml alpha phase kubeconfig {}"
 ```
 
 <div class="alert alert-success hints-alert">
@@ -586,8 +601,8 @@ $ sudo systemctl --no-pager -l status kubelet
 <table>
   <thead>
     <tr>
-      <th style="text-align:center">certificate files</th>
-      <th style="text-align:center">path</th>
+      <th style="text-align:center">CERTIFICATE FILES</th>
+      <th style="text-align:center">PATH</th>
     </tr>
   </thead>
   <tbody>
@@ -608,6 +623,10 @@ $ sudo systemctl --no-pager -l status kubelet
 </table>
 
 ```bash
+$ echo 'apiserver apiserver-kubelet-client front-proxy-client' |
+       xargs -t -n1 sudo kubeadm alpha certs renew
+
+# or
 $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
    sudo kubeadm alpha certs renew ${i}
   done
@@ -618,6 +637,10 @@ certificate for the front proxy client renewed
 
 - or
   ```bash
+  $ echo 'apiserver apiserver-kubelet-client front-proxy-client' |
+       xargs -t -n1 sudo kubeadm --config kubeadm.yml alpha certs renew
+
+  # or
   $ for i in apiserver apiserver-kubelet-client front-proxy-client; do
       sudo kubeadm --config kubeadm-conf.yaml alpha certs renew ${i}
     done
@@ -680,8 +703,8 @@ $ for pkg in '*.key' '*.crt' '*.pub'; do
 <table>
   <thead>
     <tr style="text-align:center">
-      <th style="text-align:center">config files</th>
-      <th style="text-align:center">path</th>
+      <th style="text-align:center">CONFIG FILES</th>
+      <th style="text-align:center">PATH</th>
     </tr>
   </thead>
   <tbody>
@@ -1092,26 +1115,26 @@ $ sudo openssl x509 -req \
 
 - 1.15-
   ```bash
-  $ sudo kubeadm [--config ~/kubeadm.yaml] alpha phase kubeconfig all
+  $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase kubeconfig all
   ```
 
   - renew all certs
     ```bash
-    $ sudo kubeadm [--config ~/kubeadm.yaml] alpha phase certs renew all
+    $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase certs renew all
     ```
   - re-generate all certs
     ```bash
-    $ sudo kubeadm [--config ~/kubeadm.yaml] alpha phase certs all
+    $ sudo kubeadm [--config ~/kubeadm.yml] alpha phase certs all
     ```
 
 - v1.15+
   ```bash
-  $ sudo kubeadm [--config ~/kubeadm.yaml] alpha certs renew all
+  $ sudo kubeadm [--config ~/kubeadm.yml] alpha certs renew all
   ```
 
   - renew all certs
     ```bash
-    $ sudo kubeadm [--config ~/kubeadm.yaml] alpha certs renew all
+    $ sudo kubeadm [--config ~/kubeadm.yml] alpha certs renew all
     ```
 
 ### renew via `kubectl config`

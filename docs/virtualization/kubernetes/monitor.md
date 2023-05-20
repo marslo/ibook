@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [prometheus](#prometheus)
+  - [prometheus architecture](#prometheus-architecture)
 - [grafana](#grafana)
   - [environment](#environment)
   - [setup](#setup)
@@ -19,8 +21,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references]
 > - [MONITORING LINUX HOST METRICS WITH THE NODE EXPORTER](https://prometheus.io/docs/guides/node-exporter/)
 > - [Kubernetes Resources(四) - Metrics Server 安裝](https://ithelp.ithome.com.tw/articles/10297449)
 > - [Prometheus 5 - Node Exporter & Kube State Metrics](https://ithelp.ithome.com.tw/articles/10225912)
@@ -28,6 +29,7 @@
 > - [Installing Kubernetes Metric Server](https://docs.apinizer.com/installing-kubernetes-metric-server-16810589.html)
 > - [Part-1: Setup Prometheus, Kube State metrics and Integrate Grafana with Kubernetes](https://blog.devops.dev/part-1-setup-prometheus-kube-state-metrics-and-integrate-grafana-with-kubernetes-6c21f60d167f)
 > - [K8s资源限制设置limit未设置request会导致request默认等于limit造成资源浪费](https://github.com/Ouyangan/coding-roadmap/issues/16)
+> - [* How to Setup Prometheus Monitoring On Kubernetes Cluster](https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/)
 >
 >
 > code pool
@@ -35,6 +37,10 @@
 > - [kube-prometheus/manifests](https://github.com/coreos/kube-prometheus/tree/master/manifests)
 > - [kubernetes-handbook/manifests/prometheus](https://github.com/rootsongjc/kubernetes-handbook/tree/master/manifests/prometheus)
 
+## prometheus
+
+### [prometheus architecture](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-6/)
+![prometheus architecture](../../screenshot/k8s/prometheus-architecture.png)
 
 ## grafana
 
@@ -47,7 +53,6 @@
 > - [* Install plugin from dockerfile](https://community.grafana.com/t/install-plugin-from-dockerfile/2603/5)
 > - [* grafana/grafana-docker](https://github.com/grafana/grafana-docker/blob/master/Dockerfile)
 > - [Scaling out Grafana with Kubernetes and AWS](https://medium.com/@fcgravalos/scaling-out-grafana-with-kubernetes-and-aws-62745257df10)
-> - [How To Setup Grafana On Kubernetes](https://devopscube.com/setup-grafana-kubernetes/)
 > - [Monitoring Kubernetes Clusters with Grafana](https://medium.com/htc-research-engineering-blog/monitoring-kubernetes-clusters-with-grafana-e2a413febefd)
 > - [Configure a Grafana Docker image](https://grafana.com/docs/grafana/latest/administration/configure-docker/)
 > - [Configure Grafana](https://grafana.com/docs/grafana/next/setup-grafana/configure-grafana/#configure-with-environment-variables)
@@ -58,6 +63,10 @@
 > - [* Prometheus data source](https://grafana.com/docs/grafana/latest/datasources/prometheus/)
 > - [* GRAFANA SUPPORT FOR PROMETHEUS](https://prometheus.io/docs/visualization/grafana/)
 > - [* Create Grafana Dashboards with Prometheus Metrics](https://www.programmingwithwolfgang.com/create-grafana-dashboards-with-prometheus-metrics)
+> <p>
+> how to:
+> - [How To Setup Grafana On Kubernetes](https://devopscube.com/setup-grafana-kubernetes/)
+> - [How To Setup Kube State Metrics on Kubernetes](https://devopscube.com/setup-kube-state-metrics/)
 {% endhint %}
 
 
