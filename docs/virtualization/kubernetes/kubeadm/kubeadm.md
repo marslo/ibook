@@ -8,9 +8,9 @@
   - [q&a](#qa)
 - [tricky](#tricky)
   - [list images](#list-images)
-  - [get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
+  - [get or modify kubeadm-cfg.yml](#get-or-modify-kubeadm-cfgyml)
   - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
-  - [show defualt kubeadm config](#show-defualt-kubeadm-config)
+  - [show default kubeadm config](#show-default-kubeadm-config)
   - [kubeadm join](#kubeadm-join)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -25,16 +25,28 @@
 > - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
 > - [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
 > - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
-> - [Kubernetes Recovery from Master Failure with Kubeadm](https://codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
-> - [1 - Kubernetes Objects](https://codefarm.me/2019/02/22/kubernetes-crash-course-1/)
-> - [2 - Kubernetes Pods](https://codefarm.me/2019/03/04/kubernetes-crash-course-2/)
-> - [3 - Kubernetes Services and Ingress](https://codefarm.me/2019/03/04/kubernetes-crash-course-3/)
-> - [4 - Kubernetes Storage](https://codefarm.me/2019/03/25/kubernetes-crash-course-4/)
+> - [* codefarm](https://blog.codefarm.me/category/#kubernetes)
+>   - [Kubernetes Recovery from Master Failure with Kubeadm](https://blog.codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
+>   - [1 - Kubernetes Objects](https://blog.codefarm.me/2019/02/22/kubernetes-crash-course-1/)
+>   - [2 - Kubernetes Pods](https://blog.codefarm.me/2019/03/04/kubernetes-crash-course-2/)
+>   - [3 - Kubernetes Services and Ingress](https://blog.codefarm.me/2019/03/04/kubernetes-crash-course-3/)
+>   - [4 - Kubernetes Storage](https://blog.codefarm.me/2019/03/25/kubernetes-crash-course-4/)
+>   - [5 - Kubernetes StatefulSet](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-5/)
+>   - [6 - Kubernetes Monitoring](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-6/)
 > - [authenticating with bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/)
 > - [kubernetes/design-proposals-archive](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md)
 > - [design-proposals-archive/cluster-lifecycle/cluster-deployment.md](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/cluster-deployment.md)
 > - [How to Upgrade Kubernetes Cluster Using Kubeadm?](https://devopscube.com/upgrade-kubernetes-cluster-kubeadm/)
 {% endhint %}
+
+> [!NOTE|label:references:]
+> - [* Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+>   - [easyrsa](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#easyrsa)
+>   - [openssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#openssl)
+>   - [cfssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#cfssl)
+> - [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
+> - [* Manual Rotation of CA Certificates](https://kubernetes.io/docs/tasks/tls/manual-rotation-of-ca-certificates/)
+
 
 ## basic environment
 ### Ubuntu
@@ -371,13 +383,13 @@ k8s.gcr.io/etcd:3.2.24
 k8s.gcr.io/coredns:1.2.2
 
 # or
-$ kubeadm config images list --config=config.yaml
+$ kubeadm config images list --config=kubeadm.yml
 
 # to pull images
-$ kubeadm config images pull [--config=config.yaml]
+$ kubeadm config images pull [--config=kubeadm.yml]
 ```
 
-### [get or modify kubeadm.yaml](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#save-the-kubeadm-clusterconfiguration-in-a-configmap-for-later-reference)
+### [get or modify kubeadm-cfg.yml](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#save-the-kubeadm-clusterconfiguration-in-a-configmap-for-later-reference)
 
 > [!TIP]
 > kubeadm saves the configuration passed to `kubeadm init` in a ConfigMap named `kubeadm-config` under `kube-system` namespace.
@@ -385,9 +397,15 @@ $ kubeadm config images pull [--config=config.yaml]
 > Please note that:
 > - Before saving the `ClusterConfiguration`, sensitive information like the token is stripped from the configuration
 > - Upload of control plane node configuration can be invoked individually with the [`kubeadm init phase upload-config`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-upload-config) command
+> <p>
+> <p>
+> [**get `kubeadm-cfg.yml`**](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/#kubeconfig-additional-users)
+> ```bash
+> $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
+> ```
 
 ```bash
-$ kubectl -n kube-system get cm kubeadm-config -o yaml
+$ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
 ```
 
 ### [show default `KubeletConfiguration`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#configure-kubelets-using-kubeadm)
@@ -414,10 +432,13 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
 ```
 {% endhint %}
 
-### show defualt kubeadm config
+### show default kubeadm config
 
 {% hint style='tip' %}
-[* imarslo : get or modify kubeadm.yaml](#get-or-modify-kubeadmyaml)
+> - [* imarslo : get or modify kubeadm-cfg.yml](#get-or-modify-kubeadmyaml)
+>   ```bash
+>   $ kubectl get cm kubeadm-config -n kube-system -o yaml
+>   ```
 {% endhint %}
 
 ```bash
@@ -425,6 +446,8 @@ $ sudo kubeadm config view
 
 # or
 $ kubectl -n kube-system get cm kubeadm-config -o yaml
+# or
+$ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfiguration}"
 ```
 
 ### kubeadm join

@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [SSL Cert](#ssl-cert)
+- [ssl cert](#ssl-cert)
   - [create cert for server](#create-cert-for-server)
     - [ca (root cert)](#ca-root-cert)
     - [cert for server (csr)](#cert-for-server-csr)
@@ -39,6 +39,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!TIP|label:see also]
+> - [* imarslo : kubernetes/certificates](../../virtualization/kubernetes/certificates.html#generate-new-certificate-csr)
+> - [* k8s: Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+>   - [easyrsa](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#easyrsa)
+>   - [openssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#openssl)
+>   - [cfssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#cfssl)
+> - [* 手动生成证书](https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/certificates/)
+
 {% hint style='tip' %}
 > reference:
 > - [* cheatsheet: Check SSL Certificate with OpenSSL](https://www.howtouselinux.com/post/openssl-command-to-generate-view-check-certificate)
@@ -49,9 +57,11 @@
 > - [sethvargo/create-certs.sh](https://gist.github.com/sethvargo/81227d2316207b7bd110df328d83fad8)
 > - [How can I add a private key to my keychain?](https://apple.stackexchange.com/a/9011/254265)
 > - [Kubernetes Authentication and Authorization with X509 client certificates](https://medium.com/@sureshpalemoni/kubernetes-authentication-and-authorization-with-x509-client-certificates-edbc3517c10)
+> - [Proactively Handling Certificate Expiration With ssl-cert-check](https://prefetch.net/articles/checkcertificate.html)
+>   - [Matty9191/ssl-cert-check](https://github.com/Matty9191/ssl-cert-check)
 {% endhint %}
 
-# SSL Cert
+# ssl cert
 ## create cert for server
 ### ca (root cert)
 {% codetabs name="command", type="bash" -%}

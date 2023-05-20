@@ -3,12 +3,18 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [acess cluster](#acess-cluster)
+  - [access cluster with cacert](#access-cluster-with-cacert)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 {% hint style='tip' %}
 > references:
+> - [* Access Clusters Using the Kubernetes API](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
+> - [The Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/)
+> - [The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750)
+> - [* How to Access Kubernetes API Server](https://blog.codefarm.me/2021/12/18/access-kubernetes/)
+> - [* Access Kubernetes API with Client Certificates](https://blog.codefarm.me/2019/02/01/access-kubernetes-api-with-client-certificates/)
 > - [* Interacting directly with the API](https://kubebyexample.com/learning-paths/operator-framework/kubernetes-api-fundamentals/interacting-directly-api)
 > - [* Kubernetes API Basics - Resources, Kinds, and Objects](https://iximiuz.com/en/posts/kubernetes-api-structure-and-terminology/)
 > - [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
@@ -95,6 +101,34 @@
 
 ![kubernetes API structure](../../screenshot/k8s/kube-api-structure-3000-opt.png)
 
+> [!NOTE|label:tips:]
+> - get server
+>   ```bash
+>   $ server=$(kubectl config view -ojsonpath="{.clusters[*].cluster.server}")
+>   ```
+> - get default sa name
+>   ```bash
+>   $ name=$(kubectl get sa -n default default -ojsonpath="{.secrets[].name}")
+>   ```
+>
+> - get token
+>   ```bash
+>   $ token=$(kubectl get secrets -n default $(kubectl get sa -n default default -ojsonpath="{.secrets[].name}") -o jsonpath="{.data.token}" | base64 -d)
+>   ```
+> - get cacert
+>   ```bash
+>   $ cacert=$(kubectl config view --raw -ojsonpath="{.clusters[].cluster.certificate-authority-data}" | base64 -d)
+>   ```
+> - [curl HEAD](https://datatracker.ietf.org/doc/html/rfc6750)
+>   ```bash
+>   -H "Authorization: Bearer $token"
+>   ```
+>
+> - API path
+>   ```bash
+>   $ ${server}/api/
+>   ```
+
 ## acess cluster
 ```bash
 $ APISERVER=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
@@ -129,3 +163,9 @@ $ curl ${APISERVER}/api --header "Authorization: Bearer ${TOKEN}" --insecure
   }
   ```
 
+### [access cluster with cacert](https://blog.codefarm.me/2021/12/18/access-kubernetes/)
+```bash
+$ curl --include \
+       --cacert <(kubectl config view --raw -ojsonpath="{.clusters[].cluster.certificate-authority-data}" | base64 -d) \
+       ${server}/api/ -H "Authorization: Bearer $token"
+```

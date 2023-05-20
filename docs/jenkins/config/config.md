@@ -10,6 +10,7 @@
 - [Properties in Jenkins Core for `JAVA_OPTS`](#properties-in-jenkins-core-for-java_opts)
 - [System Properties](#system-properties)
 - [Configuring HTTP](#configuring-http)
+- [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -518,3 +519,11 @@ System.getenv().JAVA_OPTS
 | `${PROTOCOL_FULLY_QUALIFIED_NAME}.disabled`                                  | false                    | 2.59   | 2.4                | JENKINS-34819              |
 | `org.jenkinsci.remoting.nio.NioChannelHub.disabled`                          | false                    | 2.62.3 | TODO               | JENKINS-39290              |
 | `org.jenkinsci.remoting.engine.JnlpAgentEndpointResolver.protocolNamesToTry` | false                    | TODO   | TODO               | JENKINS-41730              |
+
+
+### tips
+
+- [Add Users to Jenkins with "Allow users to sign up" Disabled](https://stackoverflow.com/a/12365640/2940319)
+  ```bash
+  $JENKINS_URL/securityRealm/addUser
+  ```
