@@ -47,7 +47,6 @@ $ git config --global gitreview.remote origin
   - Non-Interactive Users
   - Service Users
 
-
 #### Special references
 
 * `refs/changes/*`

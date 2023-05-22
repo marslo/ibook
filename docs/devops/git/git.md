@@ -64,6 +64,7 @@ git command study and practice
   - [format](#format)
   - [tricky](#tricky)
 - [for-each-ref](#for-each-ref)
+  - [get refs days ago](#get-refs-days-ago)
   - [format](#format-1)
   - [date format](#date-format)
 
@@ -1280,7 +1281,7 @@ nightly#82-2001310818-1765-gc18894b193
 >
 > references:
 > - [How to sort git tags by version string order of form rc-X.Y.Z.W?](https://stackoverflow.com/a/22634649/2940319)
-> - [How can I list all tags in my Git repository by the date they were created?](https://stackoverflow.com/a/6270112/2940319)
+> - [How can I list all tags in my Git repository by the date they were created?](https://stackoverflow.com/a/test70112/2940319)
 > - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
 
 - via `v:refname` or `version:refname`
@@ -1322,8 +1323,8 @@ git reset --hard FETCH_HEAD
 
 > [!TIP]
 > references:
-> - [How to checkout old git commit including all submodules recursively?](https://stackoverflow.com/a/15124462/2940319)
-> - [nicktoumpelis/repo-rinse.sh](https://gist.github.com/nicktoumpelis/11214362)
+> - [How to checkout old git commit including all submodules recursively?](https://stackoverflow.com/a/151244test/2940319)
+> - [nicktoumpelis/repo-rinse.sh](https://gist.github.com/nicktoumpelis/112143test)
 
 ```bash
 $ git checkout --recurse-submodules
@@ -1341,7 +1342,7 @@ $ git checkout --recurse-submodules
   $ git submodule update --recursive
   ```
 
-- [or](https://gist.github.com/nicktoumpelis/11214362)
+- [or](https://gist.github.com/nicktoumpelis/112143test)
   ```bash
   $ git clean -xfd
   $ git submodule foreach --recursive git clean -xfd
@@ -1387,20 +1388,20 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 - `-L :<funcname>`
   ```bash
   $ git blame -L :pkgInstallation belloHAKubeCluster.sh
-  38327eac (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
-  38327eac (marslo 2019-09-17 22:10:53 +0800 622)   dockerInstallation
-  38327eac (marslo 2019-09-17 22:10:53 +0800 623)   k8sInstallation
-  38327eac (marslo 2019-09-17 22:10:53 +0800 624)   cfsslInstallation
-  38327eac (marslo 2019-09-17 22:10:53 +0800 625)   etcdInstallation
-  bdfe4340 (marslo 2019-09-23 16:35:08 +0800 626)   helmInstallation
-  38327eac (marslo 2019-09-17 22:10:53 +0800 627) }
-  38327eac (marslo 2019-09-17 22:10:53 +0800 628)
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test2)   dockerInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test3)   k8sInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test4)   cfsslInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test5)   etcdInstallation
+  bdfe4340 (marslo 2019-09-23 16:35:08 +0800 test6)   helmInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test7) }
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test8)
 
   # or
   $ git blame -L '/pkgInstallation/,+3' belloHAKubeCluster.sh
-  38327eac (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
-  38327eac (marslo 2019-09-17 22:10:53 +0800 622)   dockerInstallation
-  38327eac (marslo 2019-09-17 22:10:53 +0800 623)   k8sInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test2)   dockerInstallation
+  38327eac (marslo 2019-09-17 22:10:53 +0800 test3)   k8sInstallation
   ```
 
 - by keywords ( `git log -S` )
@@ -1421,13 +1422,13 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 - `-n`, `--show-number`
   ```bash
   $ git blame -n -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-  38327eac 553 (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac 553 (marslo 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
   ```
 
 - `-f`, `--show-name`
   ```bash
   $ git blame -f -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-  38327eac kubernetes/belloHAKubeCluster.sh (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac kubernetes/belloHAKubeCluster.sh (marslo 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
   ```
 
 - `-e`, `--show-email`
@@ -1437,13 +1438,13 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
 
   ```bash
   $ git blame -e -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-  38327eac (<marslo@gmail.com> 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac (<marslo@gmail.com> 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
   ```
 
 - `-l`
   ```bash
   $ git blame -l -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-  38327eac9b01d57c13d1865d58d822a81717d60f (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+  38327eac9b01d57c13d1865d58d822a81717d60f (marslo 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
   ```
 
 - `--date`
@@ -1463,37 +1464,37 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
     done
 
     git blame --date=iso -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 2019-09-17 22:10:53 +0800 621) function pkgInstallation() {
+    38327eac (marslo 2019-09-17 22:10:53 +0800 test1) function pkgInstallation() {
 
     git blame --date=iso-strict -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 2019-09-17T22:10:53+08:00 621) function pkgInstallation() {
+    38327eac (marslo 2019-09-17T22:10:53+08:00 test1) function pkgInstallation() {
 
     git blame --date=relative -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 2 years, 10 months ago 621) function pkgInstallation() {
+    38327eac (marslo 2 years, 10 months ago test1) function pkgInstallation() {
 
     git blame --date=local -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo Tue Sep 17 22:10:53 2019       621) function pkgInstallation() {
+    38327eac (marslo Tue Sep 17 22:10:53 2019       test1) function pkgInstallation() {
 
     git blame --date=rfc -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo Tue, 17 Sep 2019 22:10:53 +0800 621) function pkgInstallation() {
+    38327eac (marslo Tue, 17 Sep 2019 22:10:53 +0800 test1) function pkgInstallation() {
 
     git blame --date=short -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 2019-09-17 621) function pkgInstallation() {
+    38327eac (marslo 2019-09-17 test1) function pkgInstallation() {
 
     git blame --date=raw -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 1568729453 +0800 621) function pkgInstallation() {
+    38327eac (marslo 1568729453 +0800 test1) function pkgInstallation() {
 
     git blame --date=human -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo Sep 17 2019      621) function pkgInstallation() {
+    38327eac (marslo Sep 17 2019      test1) function pkgInstallation() {
 
     git blame --date=unix -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 1568729453 621) function pkgInstallation() {
+    38327eac (marslo 1568729453 test1) function pkgInstallation() {
 
     git blame --date=format:%c -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo Tue Sep 17 22:10:53 2019 621) function pkgInstallation() {
+    38327eac (marslo Tue Sep 17 22:10:53 2019 test1) function pkgInstallation() {
 
     git blame --date="format:%Y-%m-%d %H:%M:%S" -L '/pkgInstallation/,+1' belloHAKubeCluster.sh
-    38327eac (marslo 2019-09-17 22:10:53 621) function pkgInstallation() {
+    38327eac (marslo 2019-09-17 22:10:53 test1) function pkgInstallation() {
   ```
 
 - `--color-lines`
@@ -1538,6 +1539,70 @@ $ git clone --single-branch --branch <branch name> url://to/source/repository [t
   ```
 
 ## for-each-ref
+
+### get refs days ago
+```bash
+while read revision branch commitDate; do
+  benchmark=$(date +%s --date="1 year ago")
+  # echo "benchmark: $benchmark"
+  if [[ commitDate -le benchmark ]]; then
+    git for-each-ref ${branch} --format='%(refname:short) - %(align:right,20)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(end)'
+  fi
+done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --format='%(objectname) %(refname) %(committerdate:unix)')
+```
+- to archive
+  ```bash
+  $ git push origin refs/remotes/origin/sandbox/marslo/test:refs/remotes/archive/sandbox/marslo/test
+  Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+  remote: Processing changes: refs: 1, done
+  remote: GitMS - update replicated.
+  To ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
+   * [new reference]     origin/sandbox/marslo/test -> archive/sandbox/marslo/test
+  ```
+
+- [to delete](https://superuser.com/a/601486/112396)
+  ```
+  # delete local refs
+  $ git update-ref -d refs/remotes/origin/sandbox/marslo/test -m 'already archived in refs/remotes/archive/sandbox/marslo/test'
+  # delete remote refs
+  $ git push . :refs/remotes/origin/sandbox/marslo/test
+
+  # or delete without `refs/remotes/`
+  $ git push origin --delete archive/sandbox/marslo/test
+  $ git push origin --delete origin/sandbox/marslo/test
+  ```
+
+  - delete via `origin` will get issue `internal server error`
+    ```bash
+    $ git push origin --force :refs/remotes/origin/sandbox/marslo/test
+    remote: Processing changes: refs: 1, done
+    remote: error: ref update is a no-op: DELETE: 0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 refs/remotes/origin/sandbox/marslo/test
+    To ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
+     ! [remote rejected]   origin/sandbox/marslo/test (internal server error)
+    error: failed to push some refs to 'ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins'
+    ```
+
+- to retrive
+  ```bash
+  # fetch single ref
+  $ git fetch origin refs/remotes/archive/sandbox/marslo/test
+  From ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
+   * remote-tracking branch archive/sandbox/marslo/test -> FETCH_HEAD
+  $ git checkout FETCH_HEAD
+  HEAD is now at 749bd27d test
+
+  # fetch all ref
+  $ git fetch origin refs/remotes/archive/*:refs/archive/*
+  remote: Counting objects: 4507, done
+  remote: Finding sources: 100% (57/57)
+  remote: Total 57 (delta 20), reused 49 (delta 20)
+  Unpacking objects: 100% (57/57), 14.52 KiB | 424.00 KiB/s, done.
+  From ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
+   * [new ref]           archive/sandbox/marslo/test       -> refs/archive/sandbox/marslo/test
+   * [new ref]           archive/sandbox/marslo/sandbox    -> refs/archive/sandbox/marslo/sandbox
+   * [new ref]           archive/sandbox/marslo/sample     -> refs/archive/sandbox/marslo/sample
+  ```
+
 
 ### format
 
