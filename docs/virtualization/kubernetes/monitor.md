@@ -552,6 +552,7 @@ $ curl --header 'Content-Type: application/json' \
 > [!NOTE|label:references:]
 > - [kubernetes-sigs/metrics-server](https://github.com/kubernetes-sigs/metrics-server)
 > - [metrics-server-deployment.yaml](https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/metrics-server/metrics-server-deployment.yaml)
+> - [Kubernetes metrics | Error from server (ServiceUnavailable) | Quick 2 fixes](https://www.linuxsysadmins.com/service-unavailable-kubernetes-metrics/)
 
 ### sample yaml
 

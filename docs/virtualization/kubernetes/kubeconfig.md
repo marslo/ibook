@@ -49,6 +49,14 @@
 $ kubectl config set-cluster my-cluster --server=127.0.0.1:8087
 ```
 
+#### [modify server](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_config_set-cluster/)
+```bash
+$ kubectl config set-cluster NAME --server=https://10.69.114.92:6443
+
+# or
+$ kubectl config set-cluster $(kubectl config current-context) --server=https://10.69.114.92:6443
+```
+
 ### defining users
 - using token
   ```bash
