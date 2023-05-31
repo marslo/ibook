@@ -23,7 +23,7 @@ timestamps { ansiColor('xterm') {
   parallel([
     'k1 \u00BB v1': {
       stage( 'build k1' ) {
-        node("master") {
+        node( 'controller' ) {
           println "KEY= k1, VALUE=v1"
           sleep 3
         } // node
@@ -31,7 +31,7 @@ timestamps { ansiColor('xterm') {
     },
     'k2 \u00BB v2': {
       stage( 'build k2' ) {
-        node("master") {
+        node( 'controller' ) {
           println "KEY= k2, VALUE=v2"
           sleep 3
         } // node
@@ -39,7 +39,7 @@ timestamps { ansiColor('xterm') {
     },
     'k3 \u00BB v3': {
       stage( 'build k3' ) {
-        node("master") {
+        node('controller') {
           println "KEY= k3, VALUE=v3"
           sleep 3
         } // node
@@ -60,16 +60,16 @@ timestamps { ansiColor('xterm') {
     "k3": "v3",
   ]
   data.each { k ,v ->
-    worker["${k} \u00BB ${v}"] = {
-      stage("build ${k}") {
-        node("master") {
+    worker[ "${k} \u00BB ${v}" ] = {
+      stage( "build ${k}" ) {
+        node( 'controller' ) {
           println """
             ---------------
             "KEY=${k} VALUE=${v}"
             ---------------
           """
           sleep 3
-        } // node : master
+        } // node : controller
       } // stage
     } // work
   }

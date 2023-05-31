@@ -2,12 +2,33 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [get URL](#get-url)
-- [matches if exits](#matches-if-exits)
-- [match any exclude keywords](#match-any-exclude-keywords)
+- [special chars](#special-chars)
+- [samples](#samples)
+  - [get URL](#get-url)
+  - [matches if exits](#matches-if-exits)
+  - [not matche a word](#not-matche-a-word)
+  - [not matches multiple keywords](#not-matches-multiple-keywords)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> references:
+> - [Regular expression syntax cheat sheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet)
+> - [Regular Expressions Reference Table of Contents](https://www.regular-expressions.info/refflavors.html)
+{% endhint %}
+
+
+## special chars
+
+| CHARACTER | COMMENTS             |
+|:---------:|----------------------|
+|    `?:`   | non capturing group  |
+|    `?=`   | positive look ahead  |
+|    `?!`   | negative look ahead  |
+|   `?<=`   | positive look behind |
+|   `?<!`   | negative look behind |
+
+## samples
 
 ### get URL
 ```bash
@@ -19,7 +40,8 @@ http://www.baidu.com
 > - [cheat-sheet for password crackers](https://www.unix-ninja.com/p/A_cheat-sheet_for_password_crackers)
 
 ### matches if exits
-> samples:
+
+> [!NOTE|label:samples:]
 > ```
 > ✔️   keyword.baz.com
 > ✔️   string-keyword.baz.com
@@ -31,8 +53,21 @@ http://www.baidu.com
 ^.*keyword(?:-staging)?\.[^\]+\.com
 ```
 
-### match any exclude keywords
-> samples:
+### [not matche a word](https://stackoverflow.com/a/67431898/2940319)
+
+> [!NOTE|label:samples:]
+> ```
+> ❌ /etc/kubernetes/config.backup/config.backup.20220303/admin.conf
+> ✔️  /etc/kubernetes/pki/admin.conf
+> ```
+
+```bash
+^((?!backup).)+(admin|kubelet)\.conf$
+```
+
+### not matches multiple keywords
+
+> [!NOTE|label:samples:]
 > ```
 > ❌ foo-jenkins.domain.com
 > ❌ foo-jenkins.domain.com/Monitor/

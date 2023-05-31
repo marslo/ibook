@@ -176,11 +176,9 @@ _foobar    _
 ```
 
 ## combinations
-
 ### combine every 2 lines
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [How to merge every two lines into one from the command line?](https://stackoverflow.com/q/9605232/2940319)
 > - [Automatic documentation of gitconfig aliases using sed or awk](https://stackoverflow.com/a/53841117/2940319)
 >

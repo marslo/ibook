@@ -554,3 +554,25 @@ $ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
 
 > [!NOTE|label:references:]
 > - [How To Troubleshoot Kubernetes Pods: Beginners Guide](https://devopscube.com/troubleshoot-kubernetes-pods/)
+
+- [simple pods](https://tonybai.com/2017/05/15/setup-a-ha-kubernetes-cluster-based-on-kubeadm-part2/)
+  ```yaml
+  # run-nginx.yml
+
+  apiVersion: extensions/v1beta1
+  kind: Deploy
+  metadata:
+    name: my-nginx
+  spec:
+    replicas: 2
+    template:
+      metadata:
+        labels:
+          run: my-ngxin
+      spec:
+        containers:
+        - name: my-nginx
+          image: nginx:1.10.1
+          ports:
+          - containerPort: 80
+  ```

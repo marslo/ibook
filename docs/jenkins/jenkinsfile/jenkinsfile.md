@@ -65,7 +65,7 @@
   String curProject     = env.JOB_NAME
   String curBuildNumber = env.BUILD_NUMBER
 
-  node("master") {
+  node( 'controller' ) {
     try{
       stage("reserve node") {
         node("${params.tmNode}") {
@@ -97,7 +97,7 @@
 ```groovy
 Map buildResult = [:]
 
-node("master") {
+node( 'controller' ) {
   buildResult = build job: '/marslo/artifactory-lib',
                       propagate: true,
                       wait: true
@@ -132,7 +132,7 @@ node("master") {
 ```groovy
 def res = [:]
 timestamps { ansiColor('xterm') {
-  node('master'){
+  node( 'controller' ){
     cleanWs()
     buildResult = build '/marslo/down'
     if( currentBuild.rawBuild.changeSets.isEmpty() ) {

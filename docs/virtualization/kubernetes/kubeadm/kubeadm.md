@@ -18,10 +18,16 @@
 ![how kubeadm init](../../../screenshot/k8s/Kubeadm-init.png)
 
 {% hint style='tip' %}
-> reference :
+> scripts:
+> - [mritd/shell_scripts](https://github.com/mritd/shell_scripts/tree/master)
+>   - [init_ubuntu.sh](https://github.com/mritd/shell_scripts/blob/master/init_ubuntu.sh)
+> installation:
 > - [* install tools](https://kubernetes.io/docs/tasks/tools/)
 > - [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
 > - [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+> - [* kubeadm 搭建 HA kubernetes 集群](https://mritd.com/2020/01/21/set-up-kubernetes-ha-cluster-by-kubeadm/)
+>   - [Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
+> - [* kubeadm Configuration (v1beta3)](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
 > - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
 > - [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
 > - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
@@ -37,6 +43,13 @@
 > - [kubernetes/design-proposals-archive](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md)
 > - [design-proposals-archive/cluster-lifecycle/cluster-deployment.md](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/cluster-deployment.md)
 > - [How to Upgrade Kubernetes Cluster Using Kubeadm?](https://devopscube.com/upgrade-kubernetes-cluster-kubeadm/)
+> upgrade:
+> - [Upgrading kubeadm clusters](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+> - [kubeadm 集群升级](https://mritd.com/2020/01/21/how-to-upgrade-kubeadm-cluster/)
+>   ```bash
+>   $ kubeadm upgrade plan --config /etc/kubernetes/kubeadm.yaml
+>   ```
+
 {% endhint %}
 
 > [!NOTE|label:references:]

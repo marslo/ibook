@@ -19,6 +19,7 @@
 > references:
 > - [podman](https://docs.podman.io/en/latest/markdown/podman.1.html)
 > - [Podman](https://wiki.archlinux.org/title/Podman)
+> - [Kubernetes 切换到 Containerd](https://mritd.com/2021/05/29/use-containerd-with-kubernetes/)
 {% endhint %}
 
 

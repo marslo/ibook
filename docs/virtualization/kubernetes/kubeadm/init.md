@@ -19,7 +19,7 @@
     - [HAProxy](#haproxy)
   - [kubeadm init](#kubeadm-init-1)
     - [kubeadm-conf.yaml](#kubeadm-confyaml)
-    - [init master](#init-master)
+    - [init controller](#init-controller)
     - [sync PKI](#sync-pki)
   - [sample](#sample)
     - [set up a high availability etcd cluster with kubeadm](#set-up-a-high-availability-etcd-cluster-with-kubeadm)
@@ -34,7 +34,8 @@
 {% hint style='tip' %}
 > references:
 > - [* Install Kubernetes Cluster on Centos 8 With Kubeadm and CRI-O](https://tayeh.me/posts/install-kubernetes-cluster-on-centos-8-with-kubeadm-crio/)
-> - [belloHAKubeCluster.sh](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/belloHAKubeCluster.sh)
+> - [* imarslo : belloHAKubeCluster.sh](https://raw.githubusercontent.com/marslo/mytools/master/kubernetes/belloHAKubeCluster.sh)
+> - [手动档搭建 Kubernetes HA 集群](https://mritd.com/2017/07/21/set-up-kubernetes-ha-cluster-by-binary/)
 > - [kube-up.sh](https://github.com/kubernetes/kubernetes/blob/master/cluster/kube-up.sh)
 > - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 > - [Configuring each kubelet in your cluster using kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
@@ -64,6 +65,7 @@
 >   - [* Setting up Etcd Cluster with TLS Authentication Enabled](https://medium.com/nirman-tech-blog/setting-up-etcd-cluster-with-tls-authentication-enabled-49c44e4151bb)
 >   - [Generate self-signed certificates](https://github.com/coreos/docs/blob/master/os/generate-self-signed-certificates.md)
 >   - [* 创建 TLS 证书和秘钥](https://jimmysong.io/kubernetes-handbook/practice/create-tls-and-secret-key.html)
+>   - [* kubernetes学习记录（9）—— 集群基于CA签名的安全设置](https://cloud.tencent.com/developer/article/1008770?areaSource=106001.1)
 > - [CRI-O : How To Setup Kubernetes Cluster Using Kubeadm](https://devopscube.com/setup-kubernetes-cluster-kubeadm/)
 > - configuration
 >   - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
@@ -188,18 +190,18 @@ addon                        Install required addons for passing conformance tes
 > [!TIP]
 > ```bash
 > # hostname
-> master01Name='master01'
-> master02Name='master02'
-> master03Name='master03'
+> controller01Name='controller01'
+> controller02Name='controller02'
+> controller03Name='controller03'
 >
 > # ipaddress
-> master01IP='192.168.100.200'
-> master01IP='192.168.100.201'
-> master01IP='192.168.100.202'
+> controller01IP='192.168.100.200'
+> controller01IP='192.168.100.201'
+> controller01IP='192.168.100.202'
 > virtualIP='192.168.100.250'
 >
-> leadIP="${master01IP}"
-> leadName="${master01Name}"
+> leadIP="${controller01IP}"
+> leadName="${controller01Name}"
 >
 > k8sVer='v1.15.3'
 > cfsslDownloadUrl='https://pkg.cfssl.org/R1.2'
@@ -207,7 +209,7 @@ addon                        Install required addons for passing conformance tes
 > etcdVer='v3.3.15'
 > etcdDownloadUrl='https://github.com/etcd-io/etcd/releases/download'
 > etcdSSLPath='/etc/etcd/ssl'
-> etcdInitialCluster="${master01Name}=https://${master01IP}:2380,${master02Name}=https://${master02IP}:2380,${master03Name}=https://${master03IP}:2380"
+> etcdInitialCluster="${controller01Name}=https://${controller01IP}:2380,${controller02Name}=https://${controller02IP}:2380,${controller03Name}=https://${controller03IP}:2380"
 >
 > keepaliveVer='2.0.18'
 > haproxyVer='2.0.6'
@@ -419,7 +421,7 @@ $ sudo systemctl start keepalived.service
 
 - `ca-config.json`
   ```bash
-  master01 $ sudo bash -c 'cat > ${etcdSSLPath}/ca-config.json' << EOF
+  controller01 $ sudo bash -c 'cat > ${etcdSSLPath}/ca-config.json' << EOF
   {
       "signing": {
           "default": {
@@ -460,7 +462,7 @@ $ sudo systemctl start keepalived.service
 
 - CA
   ```bash
-  master01 $ sudo bash -c 'cat > ${etcdSSLPath}/ca-csr.json' << EOF
+  controller01 $ sudo bash -c 'cat > ${etcdSSLPath}/ca-csr.json' << EOF
   {
       "CN": "etcd",
       "key": {
@@ -473,7 +475,7 @@ $ sudo systemctl start keepalived.service
 
 - client
   ```bash
-  master01 $ sudo bash -c 'cat > ${etcdSSLPath}/client.json' << EOF
+  controller01 $ sudo bash -c 'cat > ${etcdSSLPath}/client.json' << EOF
   {
       "CN": "client",
       "key": {
@@ -504,10 +506,10 @@ $ sudo /usr/local/bin/cfssl gencert \
 
 - result
   ```bash
-  master01 $ ls
+  controller01 $ ls
   ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem
   ...
-  master01 $ ls
+  controller01 $ ls
   ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem  client.csr  client.json  client-key.pem  client.pem
   ```
 
@@ -593,6 +595,26 @@ $ ls
 ca-config.json  ca.pem          client.pem   peer.csr      peer.pem    server-key.pem
 ca-key.pem      client-key.pem  config.json  peer-key.pem  server.csr  server.pem
 ```
+
+- [or](https://kubernetes.io/zh-cn/docs/tasks/tls/managing-tls-in-a-cluster/) ( just example )
+  ```bash
+  $ cat <<EOF | cfssl genkey - | cfssljson -bare server
+  {
+    "hosts": [
+      "my-svc.my-namespace.svc.cluster.local",
+      "my-pod.my-namespace.pod.cluster.local",
+      "192.0.2.24",
+      "10.0.34.2"
+    ],
+    "CN": "my-pod.my-namespace.pod.cluster.local",
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    }
+  }
+  EOF
+  ```
+
 
 ### enable etcd service
 
@@ -767,9 +789,9 @@ backend kubernetes-apiserver
     balance     roundrobin
     option      tcplog
     option      tcp-check
-    server      ${master01Name}    ${master01IP}:6443 check
-    server      ${master02Name}    ${master02IP}:6443 check
-    server      ${master03Name}    ${master03IP}:6443 check
+    server      ${controller01Name}    ${controller01IP}:6443 check
+    server      ${controller02Name}    ${controller02IP}:6443 check
+    server      ${controller03Name}    ${controller03IP}:6443 check
 
 #---------------------------------------------------------------------
 # collection haproxy statistics message
@@ -833,10 +855,10 @@ clusterName: "dc5tst-cluster"
 EOF
 ```
 
-### init master
+### init controller
 
 > [!TIP]
-> init master in **primary control plane node** ONLY
+> init controller in **primary control plane node** ONLY
 
 ```bash
 $ sudo modprobe br_netfilter
@@ -856,17 +878,24 @@ $ sudo chown "$(id -u)":"$(id -g)" "$HOME/.kube/config"
 ### sync PKI
 
 > [!TIP]
-> sync PKI in **peer control nodes** ONLY
+> sync PKI in **peer controller nodes** ONLY
 
 ```bash
+$ find /etc/kubernetes/pki -type f -regextype posix-extended -regex '^.+/pki/[^/]+\.(key|crt|pub)$' -print
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
+# or
+$ find /etc/kubernetes/pki/ -type f -regex '^.*\.\(key\|crt\|pub\)$' -print |
+       xargs -L1 -t -i bash -c 'sudo rsync -avzrlpgoDP -e "ssh -q -i $HOME/.ssh/id_ed25519" --rsync-path='sudo rsync' devops@<majorController>:{} {}'
+# or
 $ for pkg in '*.key' '*.crt' '*.pub'; do
   sudo rsync -avzrlpgoDP \
              --rsync-path='sudo rsync' \
              root@${leadIP}:"/etc/kubernetes/pki/${pkg}" \
              /etc/kubernetes/pki/
 done
+
 $ sudo rm -rf /etc/kubernetes/pki/apiserver*
-# sudo cp -r /root/etcd* /etc/kubernetes/pki/
+$ sudo cp -r /root/etcd* /etc/kubernetes/pki/
 ```
 
 ## sample
@@ -960,7 +989,7 @@ done
   find /tmp/${HOST1} -name ca.key -type f -delete
   ```
 
-- Copy certificates and kubeadm configs
+- copy certificates and kubeadm configs
   ```bash
   USER=ubuntu
   HOST=${HOST1}
@@ -977,7 +1006,7 @@ done
   root@HOST1 $ kubeadm init phase etcd local --config=$HOME/kubeadmcfg.yaml
   root@HOST2 $ kubeadm init phase etcd local --config=$HOME/kubeadmcfg.yaml
   ```
-- [Optional]: Check the cluster health
+- [optional]: check the cluster health
   ```bash
   docker run --rm -it \
              --net host \

@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-  - [devops-kubernetes-master](#devops-kubernetes-master)
+  - [devops-kubernetes-controller](#devops-kubernetes-controller)
   - [devops-kubernetes-02](#devops-kubernetes-02)
     - [/etc/network/interface](#etcnetworkinterface)
 - [iface eno3 inet dhcp](#iface-eno3-inet-dhcp)
@@ -19,8 +19,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## devops-kubernetes-master
+{% hint style='info' %}
+> references:
+> - [Traefik 另类的服务暴露方式](https://mritd.com/2018/05/24/kubernetes-traefik-service-exposure/)
+{% endhint %}
 
+
+## devops-kubernetes-controller
 
 ## devops-kubernetes-02
 ### /etc/network/interface
