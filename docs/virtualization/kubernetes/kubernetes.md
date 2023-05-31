@@ -52,6 +52,7 @@
 
 {% hint style='tip' %}
 > reference
+> - [* Play with Kubernetes](https://labs.play-with-k8s.com/)
 > - [* Glossary](https://kubernetes.io/docs/reference/glossary/?fundamental=true)
 > - [* Install Kubernetes Cluster on Centos 8 With Kubeadm and CRI-O](https://tayeh.me/posts/install-kubernetes-cluster-on-centos-8-with-kubeadm-crio/)
 > - [* 在 CentOS 上部署 Kubernetes 集群](https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html)
@@ -64,6 +65,7 @@
 > - [* Kubernetes概念辨析](https://cloud-atlas.readthedocs.io/zh_CN/latest/kubernetes/concepts/index.html)
 > - [* Step by step installation of 3-nodes Kubernetes Cluster on CentOS 8](https://akyriako.medium.com/how-to-install-a-kubernetes-cluster-on-centos-8-1f9c5acd9c0e)
 > - [* KUBERNETES INSTALLATION ON CENTOS 8](https://www.topcoder.com/thrive/articles/kubernetes-installation-on-centos-8)
+> - [* Reference > Configuration APIs](https://kubernetes.io/docs/reference/config-api/)
 > - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
 > - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
 > - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)

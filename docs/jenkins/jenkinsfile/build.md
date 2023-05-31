@@ -27,7 +27,7 @@
 import hudson.model.*
 
 timestamps { ansiColor('xterm') {
-  node('master') {
+  node('controller') {
     def parameters = currentBuild.rawBuild?.actions.find{ it instanceof ParametersAction }?.parameters
     parameters.each {
       println "parameter ${it.name}:"
@@ -188,8 +188,8 @@ Jenkins.instance.getItemByFullName(env.JOB_NAME).getLastBuild().getNumber().toIn
 ### trigger downstream builds
 ```groovy
 timestamps { ansiColor('xterm') {
-  node('master') {
-    stage('trigger downstream') {
+  node( 'controller' ) {
+    stage( 'trigger downstream' ) {
       buildRes = build job: '/marslo/downstream',
                        propagate: false,
                        parameters: [
@@ -205,7 +205,7 @@ timestamps { ansiColor('xterm') {
       println log
 
     } // stage : trigger downstream
-  } // node : master
+  } // node : controller
 }} // ansiColor | timestamps
 ```
 
@@ -214,7 +214,7 @@ timestamps { ansiColor('xterm') {
 
 ```groovy
 timestamps { ansiColor('xterm') {
-  podTemplate(cloud: 'DevOps Kubernetes') { node(POD_LABEL) {
+  podTemplate( cloud: 'DevOps Kubernetes' ) { node( POD_LABEL ) {
     List<ParameterValue> newParams = [
       [$class: 'StringParameterValue' , name: 'lastName'  , value: 'Jiao'    ] ,
       [$class: 'StringParameterValue' , name: 'firstName' , value: 'Marslo'  ] ,
@@ -241,13 +241,13 @@ timestamps { ansiColor('xterm') {
 ### [get changelogs](https://support.cloudbees.com/hc/en-us/articles/217630098-How-to-access-Changelogs-in-a-Pipeline-Job-)
 ```groovy
 def changeLogSets = currentBuild.changeSets
-for (int i = 0; i < changeLogSets.size(); i++) {
+for ( int i = 0; i < changeLogSets.size(); i++ ) {
   def entries = changeLogSets[i].items
-  for (int j = 0; j < entries.length; j++) {
+  for ( int j = 0; j < entries.length; j++ ) {
     def entry = entries[j]
     echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
     def files = new ArrayList(entry.affectedFiles)
-    for (int k = 0; k < files.size(); k++) {
+    for ( int k = 0; k < files.size(); k++ ) {
       def file = files[k]
       echo "  ${file.editType.name} ${file.path}"
     }
@@ -257,13 +257,13 @@ for (int i = 0; i < changeLogSets.size(); i++) {
 - [Pipeline Supporting APIs Plugin](https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Supporting+APIs+Plugin) older than `2.2`
   ```groovy
   def changeLogSets = currentBuild.rawBuild.changeSets
-  for (int i = 0; i < changeLogSets.size(); i++) {
+  for ( int i = 0; i < changeLogSets.size(); i++ ) {
     def entries = changeLogSets[i].items
-    for (int j = 0; j < entries.length; j++) {
+    for ( int j = 0; j < entries.length; j++ ) {
       def entry = entries[j]
       echo "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
       def files = new ArrayList(entry.affectedFiles)
-      for (int k = 0; k < files.size(); k++) {
+      for ( int k = 0; k < files.size(); k++ ) {
         def file = files[k]
         echo "  ${file.editType.name} ${file.path}"
       }
@@ -301,9 +301,9 @@ for (int i = 0; i < changeLogSets.size(); i++) {
 
 ### `warnError`
 ```groovy
-node('master') {
-  warnError('Script failed!') {
-    sh('false')
+node( 'controller' ) {
+  warnError( 'Script failed!' ) {
+    sh( 'false' )
   }
 }
 ```
@@ -311,7 +311,7 @@ node('master') {
 
 ### [`catchError`](https://issues.jenkins.io/browse/JENKINS-57826)
 ```groovy
-stage('false') {
+stage( 'false' ) {
   catchError(
     buildResult : 'SUCCESS',
         message : 'stage failed, but build succeed',
@@ -325,16 +325,16 @@ stage('false') {
 
 - or [just be simply](https://github.com/jenkinsci/github-autostatus-plugin/issues/47#issue-479506531):
   ```groovy
-   catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-     sh('false')
+   catchError( buildResult: 'SUCCESS', stageResult: 'FAILURE' ) {
+     sh( 'false' )
    }
   ```
 ![catchError](../../screenshot/jenkins/catchError.png)
 
 - set unstable
   ```groovy
-  catchError(message: 'script failed', buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-    sh('false')
+  catchError( message: 'script failed', buildResult: 'UNSTABLE', stageResult: 'UNSTABLE' ) {
+    sh( 'false' )
   }
   ```
 - [catchError unstable](../../screenshot/jenkins/catchError-unstable.png)
@@ -356,7 +356,7 @@ unstable( 'unstable the build' )
 ### get stage of a build
 - get stage name
   ```groovy
-  stage('build') {
+  stage( 'build' ) {
     println "${env.STAGE_NAME}"
   }
   ```
@@ -407,7 +407,7 @@ unstable( 'unstable the build' )
 ```groovy
 import hudson.model.Result
 
-ansiColor('xterm') {
+ansiColor( 'xterm' ) {
   List r = [ 'SUCCESS', 'UNSTABLE', 'FAILURE', 'NOT_BUILT', 'ABORTED' ]
 
   r.each { b ->

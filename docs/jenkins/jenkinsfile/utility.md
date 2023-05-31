@@ -151,7 +151,7 @@ return this
 
 #### jenkinsfile
 ```groovy
-node('master') {
+node('controller') {
   stage( 'download code' ) {
     echo 'prepare'
     sh "cat ${WORKSPACE}/builtInStage.groovy"
@@ -570,7 +570,7 @@ withCredentials([ sshUserPrivateKey(
 
 {% hint style='tip' %}
 > references:
-> - [How is your Jenkins 'master' configured for SSH push in the Jenkinsfile? #5](https://github.com/docker-archive/jenkins-pipeline-scripts/issues/5#issuecomment-508510149)
+> - [How is your Jenkins 'controller' configured for SSH push in the Jenkinsfile? #5](https://github.com/docker-archive/jenkins-pipeline-scripts/issues/5#issuecomment-508510149)
 > - [Use ssh credentials in jenkins pipeline with ssh, scp or sftp](https://stackoverflow.com/a/44391234/2940319)
 {% endhint %}
 

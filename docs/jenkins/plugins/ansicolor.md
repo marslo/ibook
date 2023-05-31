@@ -12,7 +12,7 @@
 
 ## println 256 colors
 ```groovy
-ansiColor('xterm') { node('master') {
+ansiColor('xterm') { node('controller') {
   List matrix = []
   List line = []
   [38, 48].collect { fgbg ->
@@ -34,7 +34,7 @@ ansiColor('xterm') { node('master') {
 
 - or
   ```groovy
-  ansiColor('xterm') { node('master') {
+  ansiColor('xterm') { node('controller') {
       List matrix = []
       List line = []
 
