@@ -1380,10 +1380,21 @@ $ sudo groupadd -g <gid> <group_name>
 > ```bash
 > -o (--non-unique) option the groupadd command allows you to create a group with non-unique GID
 > ```
+>
+> **troubleshooting**
+> - issue:
+>   ```
+>   /usr/bin/id: cannot find name for group ID xxxx
+>   ```
+> - solution
+>   ```bash
+>   $ groupadd --gid <GID> <GROUP_NAME>
+>   ```
 
 ```bash
 $ sudo groupadd -o -g <new_gid> <group_name>
 ```
+
 - create group with password
   ```bash
   $ groupadd -p secretpassword writers

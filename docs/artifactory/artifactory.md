@@ -12,15 +12,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-{% hint style='info' %}
 > [!NOTE|label:reference:]
 > - [How to enable verbose log on JVM Garbage Collection](https://jfrog.com/knowledge-base/how-to-enable-verbose-log-on-jvm-garbage-collection/)
 >   - JAVA_OPTIONS:
 >     ```
 >     -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:/path/to/file/gc.log
 >     ```
-
-{% endhint %}
 
 ## reference
 ### integration with pipeline
