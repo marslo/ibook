@@ -8,30 +8,62 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
+> [!TIP|label:get sizer dynamically]
+> ```groovy
+> Closure sizer = { long size ->
+>   List units    = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ]
+>   String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
+>   double bits   = size
+>   units.eachWithIndex { unit, index ->
+>     if ( bits < 1024 ) return
+>     bits   = bits / 1024
+>     result = "${bits.round(2)} ${units.get(index+1)}"
+>   }
+>   result
+> }
+> ```
 
 ## monitor
 
 > [!NOTE|label:references:]
 > - [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring+Scripts)
 > - [Monitoring dashboard for Jenkins memory usage analysis.](https://medium.com/@maheshd7878/monitoring-dashboard-for-jenkins-memory-usage-analysis-31f4a70285b5)
+> - [Documentation of JavaMelody](https://github.com/javamelody/javamelody/wiki/UserGuide)
+> - [Class index](https://javadoc.io/doc/net.bull.javamelody/javamelody-core/1.68.1/index-all.html)
+>   - [Class JavaInformations](https://javadoc.io/static/net.bull.javamelody/javamelody-core/1.68.1/net/bull/javamelody/internal/model/JavaInformations.html)
+>   - [Class MemoryInformations](https://javadoc.io/static/net.bull.javamelody/javamelody-core/1.68.1/net/bull/javamelody/internal/model/MemoryInformations.html)
 
 ### monitor for controller
 
 - memory
   ```groovy
+
   import net.bull.javamelody.*
   import net.bull.javamelody.internal.model.*
   import net.bull.javamelody.internal.common.*
 
+  Closure sizer = { long size ->
+    List units    = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ]
+    String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
+    double bits   = size
+    units.eachWithIndex { unit, index ->
+      if ( bits < 1024 ) return
+      bits   = bits / 1024
+      result = "${bits.round(2)} ${units.get(index+1)}"
+    }
+    result
+  }
+
   memory = new MemoryInformations()
-  println "\nused memory:\n "          + Math.round(memory.usedMemory / 1024 / 1024)             + " Mb"
-  println "\nmax memory:\n "           + Math.round(memory.maxMemory / 1024 / 1024)              + " Mb"
-  println "\nused perm gen:\n "        + Math.round(memory.usedPermGen / 1024 / 1024)            + " Mb"
-  println "\nmax perm gen:\n "         + Math.round(memory.maxPermGen / 1024 / 1024)             + " Mb"
-  println "\nused non heap:\n "        + Math.round(memory.usedNonHeapMemory / 1024 / 1024)      + " Mb"
-  println "\nused physical memory:\n " + Math.round(memory.usedPhysicalMemorySize / 1024 / 1024) + " Mb"
-  println "\nused swap space:\n "      + Math.round(memory.usedSwapSpaceSize / 1024 / 1024)      + " Mb"
+  println """
+             used memory : ${sizer(memory.usedMemory)}
+              max memory : ${sizer(memory.maxMemory)}
+           used perm gen : ${sizer(memory.usedPermGen)}
+            max perm gen : ${sizer(memory.maxPermGen)}
+           used non heap : ${sizer(memory.usedNonHeapMemory)}
+    used physical memory : ${sizer(memory.usedPhysicalMemorySize)}
+         used swap space : ${sizer(memory.usedSwapSpaceSize)}
+  """
   ```
 
 - http sessions
@@ -202,10 +234,12 @@
   import net.bull.javamelody.*
   import net.bull.javamelody.internal.model.*
   import net.bull.javamelody.internal.common.*
+
   before = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
   System.gc()
   after = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
-  println I18N.getFormattedString("ramasse_miette_execute", Math.round((before - after) / 1024))
+
+  println I18N.getFormattedString( "ramasse_miette_execute", Math.round((before - after) / 1024) )
   ```
 
 - alerts
@@ -214,14 +248,26 @@
   import net.bull.javamelody.internal.model.*
   import net.bull.javamelody.internal.common.*
 
+  Closure sizer = { long size ->
+    List units    = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ]
+    double bits   = size
+    String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
+    units.eachWithIndex { unit, index ->
+      if ( bits < 1024 ) return
+      bits   = bits / 1024
+      result = "${bits.round(2)} ${units.get(index+1)}"
+    }
+    result
+  }
+
   java = new JavaInformations(Parameters.getServletContext(), true)
   memory = java.memoryInformations
 
   println """
-                             used memory = ${Math.round(memory.usedMemory / 1024 / 1024)} Mb
+                             used memory = ${sizer(memory.usedMemory)}
                active HTTP threads count = ${java.activeThreadCount}
                      system load average = ${java.systemLoadAverage}
-    free disk space in Jenkins directory = ${Math.round(java.freeDiskSpaceInTemp / 1024 / 1024)} Mb
+    free disk space in Jenkins directory = ${sizer(java.freeDiskSpaceInTemp)}
   """
 
   threads = java.getThreadInformationsList()
@@ -250,8 +296,20 @@
   import net.bull.javamelody.internal.model.*
   import net.bull.javamelody.internal.common.*
 
+  Closure sizer = { long size ->
+    List units    = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ]
+    String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
+    double bits   = size
+    units.eachWithIndex { unit, index ->
+      if ( bits < 1024 ) return
+      bits   = bits / 1024
+      result = "${bits.round(2)} ${units.get(index+1)}"
+    }
+    result
+  }
+
   // null for all nodes, not null for a particular node
-  String nodeName = null
+  String nodeName   = null
   Map mapByNodeName = new RemoteCallHelper(nodeName).collectJavaInformationsListByName()
 
   mapByNodeName.keySet().each { node ->
@@ -276,13 +334,13 @@
 
     memory = java.memoryInformations
     println """
-                      used memory : ${Math.round(memory.usedMemory / 1024 / 1024)} MB
-                       max memory : ${Math.round(memory.maxMemory / 1024 / 1024)} MB
-                    used perm gen : ${Math.round(memory.usedPermGen / 1024 / 1024)} MB
-                     max perm gen : ${Math.round(memory.maxPermGen / 1024 / 1024)} MB
-                    used non heap : ${Math.round(memory.usedNonHeapMemory / 1024 / 1024)} MB
-             used physical memory : ${Math.round(memory.usedPhysicalMemorySize / 1024 / 1024)} MB
-                  used swap space : ${Math.round(memory.usedSwapSpaceSize / 1024 / 1024)} MB
+                      used memory : ${sizer(memory.usedMemory)}
+                       max memory : ${sizer(memory.maxMemory)}
+                    used perm gen : ${sizer(memory.usedPermGen)}
+                     max perm gen : ${sizer(memory.maxPermGen)}
+                    used non heap : ${sizer(memory.usedNonHeapMemory)}
+             used physical memory : ${sizer(memory.usedPhysicalMemorySize)}
+                  used swap space : ${sizer(memory.usedSwapSpaceSize)}
     """
 
     threads = java.getThreadInformationsList()
