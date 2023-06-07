@@ -403,6 +403,50 @@ $ curl -X POST \
 > - [unable to deactivate CSRF via JCasC](https://github.com/jenkinsci/configuration-as-code-plugin/issues/1184)
 {% endhint %}
 
+> [!TIP|label: latest jdk11 JAVA_OPT:]
+> ```bash
+> -Duser.timezone='America/Los_Angeles'
+> -Dhudson.model.DirectoryBrowserSupport.CSP=""
+> -Djenkins.slaves.NioChannelSelector.disabled=true
+> -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=false
+> -Djava.awt.headless=true
+> -Djenkins.security.ClassFilterImpl.SUPPRESS_WHITELIST=true
+> -Dhudson.model.ParametersAction.keepUndefinedParameters=true
+> -Dcom.cloudbees.workflow.rest.external.ChangeSetExt.resolveCommitAuthors=true
+> -Djenkins.install.runSetupWizard=true
+> -Dpermissive-script-security.enabled=true
+> -DsessionTimeout=1440
+> -DsessionEviction=43200
+> -Dgroovy.grape.report.downloads=true
+> -Divy.message.logger.level=4
+> -Dhudson.plugins.active_directory.ActiveDirectorySecurityRealm.forceLdaps=false
+> -Dfile.encoding=UTF-8
+> -Dsun.jnu.encoding=utf-8
+> -Djenkins.model.Jenkins.logStartupPerformance=true
+> -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true
+> -Xms192g
+> -Xmx192g
+> -XX:+AlwaysPreTouch
+> -XX:+HeapDumpOnOutOfMemoryError
+> -XX:+UseG1GC
+> -XX:+UseStringDeduplication
+> -XX:+UseCompressedClassPointers
+> -XX:+UseCompressedOops
+> -XX:+ParallelRefProcEnabled
+> -XX:+UnlockDiagnosticVMOptions
+> -XX:+UnlockExperimentalVMOptions
+> -XX:G1NewSizePercent=20
+> -XX:+PrintGC
+> -XX:+PrintGCDetails
+> -XX:+LogVMOutput
+> -XX:InitialRAMPercentage=50.0
+> -XX:MaxRAMPercentage=50.0
+> -XX:HeapDumpPath=/var/jenkins_home/logs
+> -XX:ErrorFile=/var/jenkins_home/logs/hs_err_%p.log
+> -XX:LogFile=/var/jenkins_home/logs/jvm.log
+> -Xlog:gc*=info,gc+heap=debug,gc+ref*=debug,gc+ergo*=trace,gc+age*=trace:file=/var/jenkins_home/logs/gc-%t.log:utctime,pid,level,tags:filecount=2,filesize=100M
+> ```
+
 ### in docker
 ```bash
 $ docker run \
