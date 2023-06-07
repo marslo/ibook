@@ -14,6 +14,7 @@
   - [KubernetesComputer](#kubernetescomputer)
 - [executor](#executor)
   - [basic usage](#basic-usage)
+  - [get executor status](#get-executor-status)
   - [stop all running builds via WorkflowRun](#stop-all-running-builds-via-workflowrun)
   - [force interrupt executors](#force-interrupt-executors)
   - [to `WorkflowRun`](#to-workflowrun)
@@ -468,6 +469,40 @@ println executors.collect{ e -> e.collect{ it.getClass() } }
 // Result:
 // [[class hudson.model.Executor, class hudson.model.Executor], [class hudson.model.Executor]]
 ```
+
+### [get executor status](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/count-active-jobs.groovy)
+```groovy
+import jenkins.model.Jenkins
+
+int active_builds      = 0
+int inactive_executors = 0
+
+Jenkins.instance.slaves.findAll { agent ->
+  ! agent.computer.isOffline()
+}.each { agent ->
+  def executors = agent.computer.executors
+  executors.each { executor ->
+    if ( executor.isBusy() ) {
+      active_builds++
+    } else {
+      inactive_executors++
+    }
+  }
+}
+
+println """
+           Queue : ${Jenkins.instance.queue.items.size()}
+          Active : ${active_builds}
+  Free executors : ${inactive_executors}
+"""
+```
+
+- result
+  ```groovy
+             Queue : 0
+            Active : 10
+    Free executors : 100
+  ```
 
 #### features
 ```groovy

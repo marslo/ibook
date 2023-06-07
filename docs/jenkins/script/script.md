@@ -34,6 +34,7 @@
 > - [Script Console](https://www.jenkins.io/doc/book/managing/script-console/)
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [samrocketman/jenkins-script-console-scripts](https://github.com/samrocketman/jenkins-script-console-scripts)
+>   - [monitor and slack](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/monitor-agent-queue.groovy)
 > - [* jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
 > - [* cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
 > - [mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)

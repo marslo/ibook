@@ -68,10 +68,10 @@ agent.labelString = "agent-node-label"
 agent.mode = Node.Mode.NORMAL
 agent.retentionStrategy = new RetentionStrategy.Always()
 
-List<Entry> env = new ArrayList<Entry>();
+List<Entry> env = new ArrayList<Entry>()
 env.add(new Entry("key1","value1"))
 env.add(new Entry("key2","value2"))
-EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
+EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env)
 
 agent.getNodeProperties().add(envPro)
 
@@ -117,7 +117,7 @@ import java.util.concurrent.*
 
 jenkins = Jenkins.instance
 
-import javax.mail.internet.*;
+import javax.mail.internet.*
 import javax.mail.*
 import javax.activation.*
 
@@ -131,33 +131,33 @@ def sendMail (agent, cause) {
  host = "SMTP_SERVER"
  port = "SMTP_PORT"
 
- Properties mprops = new Properties();
- mprops.setProperty("mail.transport.protocol","smtp");
- mprops.setProperty("mail.host",host);
- mprops.setProperty("mail.smtp.port",port);
+ Properties mprops = new Properties()
+ mprops.setProperty("mail.transport.protocol","smtp")
+ mprops.setProperty("mail.host",host)
+ mprops.setProperty("mail.smtp.port",port)
 
- Session lSession = Session.getDefaultInstance(mprops,null);
- MimeMessage msg = new MimeMessage(lSession);
+ Session lSession = Session.getDefaultInstance(mprops,null)
+ MimeMessage msg = new MimeMessage(lSession)
 
 
  //tokenize out the recipients in case they came in as a list
- StringTokenizer tok = new StringTokenizer(toAddress,";");
- ArrayList emailTos = new ArrayList();
+ StringTokenizer tok = new StringTokenizer(toAddress,";")
+ ArrayList emailTos = new ArrayList()
  while(tok.hasMoreElements()) {
-   emailTos.add(new InternetAddress(tok.nextElement().toString()));
+   emailTos.add(new InternetAddress(tok.nextElement().toString()))
  }
- InternetAddress[] to = new InternetAddress[emailTos.size()];
- to = (InternetAddress[]) emailTos.toArray(to);
- msg.setRecipients(MimeMessage.RecipientType.TO,to);
- InternetAddress fromAddr = new InternetAddress(fromAddress);
- msg.setFrom(fromAddr);
- msg.setFrom(new InternetAddress(fromAddress));
- msg.setSubject(subject);
+ InternetAddress[] to = new InternetAddress[emailTos.size()]
+ to = (InternetAddress[]) emailTos.toArray(to)
+ msg.setRecipients(MimeMessage.RecipientType.TO,to)
+ InternetAddress fromAddr = new InternetAddress(fromAddress)
+ msg.setFrom(fromAddr)
+ msg.setFrom(new InternetAddress(fromAddress))
+ msg.setSubject(subject)
  msg.setText(message)
 
- Transport transporter = lSession.getTransport("smtp");
- transporter.connect();
- transporter.send(msg);
+ Transport transporter = lSession.getTransport("smtp")
+ transporter.connect()
+ transporter.send(msg)
 }
 
 def getEnviron(computer) {
@@ -182,17 +182,17 @@ for (agent in jenkins.getNodes()) {
    def isOK = (agentAccessible(computer) && !computer.offline)
    if (isOK) {
      println "\t\tOK, got PATH back from slave ${computer.name}."
-     println('\tcomputer.isOffline: ' + slave.getComputer().isOffline());
-     println('\tcomputer.isTemporarilyOffline: ' + slave.getComputer().isTemporarilyOffline());
-     println('\tcomputer.getOfflineCause: ' + slave.getComputer().getOfflineCause());
-     println('\tcomputer.offline: ' + computer.offline);
+     println('\tcomputer.isOffline: ' + slave.getComputer().isOffline())
+     println('\tcomputer.isTemporarilyOffline: ' + slave.getComputer().isTemporarilyOffline())
+     println('\tcomputer.getOfflineCause: ' + slave.getComputer().getOfflineCause())
+     println('\tcomputer.offline: ' + computer.offline)
    } else {
      numberOfflineNodes ++
      println "  ERROR: can't get PATH from agent ${computer.name}."
-     println('\tcomputer.isOffline: ' + agent.getComputer().isOffline());
-     println('\tcomputer.isTemporarilyOffline: ' + agent.getComputer().isTemporarilyOffline());
-     println('\tcomputer.getOfflineCause: ' + agent.getComputer().getOfflineCause());
-     println('\tcomputer.offline: ' + computer.offline);
+     println('\tcomputer.isOffline: ' + agent.getComputer().isOffline())
+     println('\tcomputer.isTemporarilyOffline: ' + agent.getComputer().isTemporarilyOffline())
+     println('\tcomputer.getOfflineCause: ' + agent.getComputer().getOfflineCause())
+     println('\tcomputer.offline: ' + computer.offline)
      sendMail(computer.name, agent.getComputer().getOfflineCause().toString())
      if (agent.getComputer().isTemporarilyOffline()) {
        if (!agent.getComputer().getOfflineCause().toString().contains("Disconnected by")) {
@@ -218,7 +218,7 @@ def exec(cmd) {
     .start()
     process.outputStream.close()
     process.inputStream.eachLine {println it}
-  process.waitFor();
+  process.waitFor()
   return process.exitValue()
 }
 

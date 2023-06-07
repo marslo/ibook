@@ -79,6 +79,7 @@
     * [agent](jenkins/script/agent.md)
     * [security & authorization](jenkins/script/authorization.md)
     * [exception](jenkins/script/exception.md)
+    * [monitor](jenkins/script/monitor.md)
     * [tricky](jenkins/script/tricky.md)
   * [api](jenkins/api.md)
   * [cli](jenkins/cli.md)
