@@ -65,10 +65,11 @@
 $ keyname='marslo@china'
 
 # rsa4096
-$ ssh-keygen -t rsa -b 4096 -f "~/.ssh/${keyname}" -C "${keyname}" -P "" -q
+$ ssh-keygen -t rsa -b 4096 -f ~/.ssh/${keyname} -C "${keyname}" -P "" -q
 
 # ed25519
-$ ssh-keygen -t ed25519 -o -a 100 -C "${keyname}" -f "~/.ssh/${keyname}" -P '' -q
+$ ssh-keygen -t ed25519 -C "${keyname}" -f ~/.ssh/${keyname} -P '' -q
+$ ssh-keygen -t ed25519 -o -a 100 -C "${keyname}" -f ~/.ssh/${keyname} -P '' -q
 ```
 
 ## get servers public key
@@ -101,8 +102,8 @@ $ ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
 
 ## [verify public and private key pair](https://serverfault.com/a/426429/129815)
 ```bash
-$ diff [-qs] <( ssh-keygen -y -e -f "/path/to/private" ) \
-             <( ssh-keygen -y -e -f "/path/to/public.pub" )
+$ diff [-qs] <( ssh-keygen -y -e -f /path/to/private ) \
+             <( ssh-keygen -y -e -f /path/to/public.pub )
 ```
 
 ## generate new passphrase
@@ -155,7 +156,6 @@ dsa 1024 bits 0.000118s 0.000091s   8487.3  10965.4
 dsa 2048 bits 0.000333s 0.000301s   3004.0   3326.9
 ```
 
-
 # ssh
 ## force use password
 ```bash
@@ -163,7 +163,6 @@ $ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@targe
 ```
 
 ## [ssh and tar](https://superuser.com/a/116031/112396)
-
 ### [copy multiple files to remote server](https://superuser.com/a/116031/112396)
 ```bash
 $ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -

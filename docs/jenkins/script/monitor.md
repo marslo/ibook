@@ -12,8 +12,8 @@
 > ```groovy
 > Closure sizer = { long size ->
 >   List units    = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ]
->   String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
 >   double bits   = size
+>   String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
 >   units.eachWithIndex { unit, index ->
 >     if ( bits < 1024 ) return
 >     bits   = bits / 1024
@@ -44,8 +44,8 @@
 
   Closure sizer = { long size ->
     List units    = [ 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' ]
-    String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
     double bits   = size
+    String result = bits > 0 ? "${bits.round(2)} bytes" : '0'
     units.eachWithIndex { unit, index ->
       if ( bits < 1024 ) return
       bits   = bits / 1024
