@@ -45,6 +45,9 @@
 - [terminal info](#terminal-info)
   - [list info](#list-info)
 - [applications](#applications)
+  - [disable lock screen in CentOS 8](#disable-lock-screen-in-centos-8)
+  - [sogou Pinyin input method](#sogou-pinyin-input-method)
+  - [specified terminal size](#specified-terminal-size)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
   - [ls: Argument list too long](#ls-argument-list-too-long)
@@ -1761,7 +1764,41 @@ $ terminfo -W
 
 
 ## applications
-#### sogou Pinyin input method
+
+### disable lock screen in CentOS 8
+- manually
+  - `Applications` -> `Settings` -> `Poswer Manager` -> `Display`
+  - `Applications` -> `Settings` -> `Screensaver` -> `Lock Screen`
+
+- [cmd](https://superuser.com/a/869078/112396)
+  ```bash
+  $ xset s off
+  $ xset s noblank
+  # disable the power management using dpms to power monitor down
+  $ xset -dpms
+  ```
+
+- via script
+  ```bash
+  #!/bin/sh
+  export DISPLAY=:0.0
+  xset s off
+  xset s noblank
+  xset -dpms
+  ```
+
+#### [automatically lock the screen when idle](https://superuser.com/a/908067/112396)
+
+> [!NOTE|label:references:]
+> - [How can I automatically lock the screen when idle in CentOS? (3 Solutions!!)](https://www.youtube.com/watch?v=tJM2Goc_OhE)
+> - [Disabling the GNOME automatic screen locking](https://docs.stg.fedoraproject.org/en-US/quick-docs/disabling-automatic-screenlock/)
+
+```bash
+$ gconftool-2 --type int  --set /desktop/gnome/session/idle_delay 1
+$ gconftool-2 --type bool --set /desktop/gnome/lockdown/disable_lock_screen false
+```
+
+### sogou Pinyin input method
 ```bash
 $ sudo add-apt-repository ppa:fcitx-team/nightly
 $ sudo apt-get update
@@ -1769,7 +1806,7 @@ $ sudo apt-get install fcitx-sogoupinyin
 $ # sudo apt-get remove ibus
 ```
 
-#### specified terminal size
+### specified terminal size
 ```bash
 $ gnome-terminal --geometry=123x42+0+0
 ```
