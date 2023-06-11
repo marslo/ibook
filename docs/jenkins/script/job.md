@@ -8,6 +8,7 @@
   - [list all pipeline jobs](#list-all-pipeline-jobs)
   - [list all abstract Project](#list-all-abstract-project)
   - [list all folders](#list-all-folders)
+  - [list deactive jobs](#list-deactive-jobs)
 - [disable and enable jobs](#disable-and-enable-jobs)
   - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
   - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
@@ -92,6 +93,22 @@ import com.cloudbees.hudson.plugins.folder.Folder
 
 Jenkins.instance.getAllItems( Folder.class ).each {
   println it.fullName + ' ~> ' + it.getClass()
+}
+```
+
+### list deactive jobs
+
+> [!NOTE]
+> List jobs haven't been built in 6 months
+
+```groovy
+final long CURRENT_TIME  = System.currentTimeMillis()
+final long BENCH_MARK    = 6*30*24*60*60
+
+Jenkins.instance.getAllItems( Job.class ).collect { project ->
+  project.getLastBuild()
+}.findAll { build ->
+  build && ( CURRENT_TIME - build.startTimeInMillis ) / 1000 > BENCH_MARK
 }
 ```
 
