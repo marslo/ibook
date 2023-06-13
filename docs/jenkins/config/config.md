@@ -16,12 +16,19 @@
 
 {% hint style='tip' %}
 > references:
-> [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+> - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+> - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
+> - [Quick and Simple — How to Setup Jenkins Distributed (Master-Slave) Build on Kubernetes](https://medium.com/swlh/quick-and-simple-how-to-setup-jenkins-distributed-master-slave-build-on-kubernetes-37f3d76aae7d)
 >
-> to get groovy version:
-> ```groovy
-> println GroovySystem.version
-> ```
+> - to get groovy version:
+>   ```groovy
+>   println GroovySystem.version
+>   ```
+> - [official yml](https://www.jenkins.io/doc/book/installing/kubernetes/)
+>   - [jenkins-sa.yaml](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-sa.yaml)
+>   - [jenkins-volume.yaml](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-volume.yaml)
+>   - [jenkins-deployment.yaml](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-deployment.yaml)
+>   - [jenkins-service.yaml](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-service.yaml)
 {% endhint %}
 
 
@@ -527,3 +534,87 @@ System.getenv().JAVA_OPTS
   ```bash
   $JENKINS_URL/securityRealm/addUser
   ```
+
+- sa.yml
+
+  > [!NOTE|label:references:]
+  > - [How To Setup Jenkins On Kubernetes Cluster – Beginners Guide](https://devopscube.com/setup-jenkins-on-kubernetes-cluster/)
+  > - [How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
+
+  - sample 1
+    ```yaml
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: jenkins-admin
+    rules:
+      - apiGroups: [""]
+        resources: ["*"]
+        verbs: ["*"]
+
+    ---
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: jenkins-admin
+      namespace: devops-tools
+
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: jenkins-admin
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: jenkins-admin
+    subjects:
+    - kind: ServiceAccount
+      name: jenkins-admin
+      namespace: devops-tools
+    ```
+
+  - sample 2
+    ```yaml
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: jenkins-admin
+      namespace: devops-tools
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      name: jenkins
+      namespace: devops-tools
+      labels:
+        "app.kubernetes.io/name": 'jenkins'
+    rules:
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["create","delete","get","list","patch","update","watch"]
+    - apiGroups: [""]
+      resources: ["pods/exec"]
+      verbs: ["create","delete","get","list","patch","update","watch"]
+    - apiGroups: [""]
+      resources: ["pods/log"]
+      verbs: ["get","list","watch"]
+    - apiGroups: [""]
+      resources: ["secrets"]
+      verbs: ["get"]
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: jenkins-role-binding
+      namespace: devops-tools
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: jenkins
+    subjects:
+    - kind: ServiceAccount
+      name: jenkins-admin
+      namespace: devops-tools
+    ```

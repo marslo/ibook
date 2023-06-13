@@ -203,6 +203,7 @@ $ helm repo update
 > - [Helm插件指南](https://www.coderdocument.com/docs/helm/v2/using_helm/plugins.html)
 > - [在Helm和Tiller间使用SSL](https://www.coderdocument.com/docs/helm/v2/using_helm/tls_ssl_for_helm_and_tiller.html)
 > - [helm 命令](https://www.coderdocument.com/docs/helm/v2/helm_commands/helm.html)
+> - [jenkins/value.yaml](https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml)
 
 ### install Jenkins
 ```bash
