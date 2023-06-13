@@ -19,12 +19,13 @@
 > - [Jenkins Kubernetes Plugin: Using the plugin in your pipelines](https://www.moogsoft.com/blog/jenkins-kubernetes-plugin-using-the-plugin-in-your-pipelines/)
 > - [Create Kubernetes Service Accounts and Kubeconfigs](https://docs.armory.io/armory-enterprise/armory-admin/manual-service-account/)
 > - [Setup Jenkins Pipeline and Blue Ocean in Kubernetes](https://hustakin.github.io/bestpractice/setup-jenkins-pipeline-in-kubernetes/)
+> - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
 {% endhint %}
 
 ### namespace
 #### namespace
 ```bash
-$ cat << EOF | k apply -f -
+$ cat << EOF | kubectl apply -f -
   ---
   apiVersion: v1
   kind: Namespace
@@ -36,7 +37,7 @@ namespace/jenkins created
 
 #### quota
 ```bash
-$ cat << EOF | k apply -f -
+$ cat << EOF | kubectl apply -f -
   apiVersion: v1
   kind: ResourceQuota
   metadata:
@@ -52,18 +53,142 @@ EOF
 resourcequota/jenkins-quota edited
 ```
 
+#### sa.yml
+
+- [jenkins.io](https://www.jenkins.io/doc/book/installing/kubernetes/)
+  ```yaml
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: jenkins-admin
+    rules:
+      - apiGroups: [""]
+        resources: ["*"]
+        verbs: ["*"]
+    ---
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: jenkins-admin
+      namespace: devops-tools
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: jenkins-admin
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: jenkins-admin
+    subjects:
+    - kind: ServiceAccount
+      name: jenkins-admin
+      namespace: devops-tools
+  ```
+- [or](https://devopscube.com/jenkins-build-agents-kubernetes/)
+  ```yaml
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: jenkins-admin
+    namespace: devops-tools
+  ---
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    name: jenkins
+    namespace: devops-tools
+    labels:
+      "app.kubernetes.io/name": 'jenkins'
+  rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create","delete","get","list","patch","update","watch"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create","delete","get","list","patch","update","watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get","list","watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  ---
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: jenkins-role-binding
+    namespace: devops-tools
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: jenkins
+  subjects:
+  - kind: ServiceAccount
+    name: jenkins-admin
+    namespace: devops-tools
+  ```
+
+- [grant more permissions via RoleBinding](https://hustakin.github.io/bestpractice/setup-jenkins-pipeline-in-kubernetes/)
+  ```yaml
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: jenkins
+    namespace: devops
+  ---
+  kind: ClusterRole
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  metadata:
+    name: jenkins
+  rules:
+    - apiGroups: ["extensions", "apps"]
+      resources: ["deployments"]
+      verbs: ["create", "delete", "get", "list", "watch", "patch", "update"]
+    - apiGroups: [""]
+      resources: ["services"]
+      verbs: ["create", "delete", "get", "list", "watch", "patch", "update"]
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["create","delete","get","list","patch","update","watch"]
+    - apiGroups: [""]
+      resources: ["pods/exec"]
+      verbs: ["create","delete","get","list","patch","update","watch"]
+    - apiGroups: [""]
+      resources: ["pods/log"]
+      verbs: ["get","list","watch"]
+    - apiGroups: [""]
+      resources: ["secrets"]
+      verbs: ["get"]
+  ---
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  kind: ClusterRoleBinding
+  metadata:
+    name: jenkins
+    namespace: devops
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: jenkins
+  subjects:
+    - kind: ServiceAccount
+      name: jenkins
+      namespace: devops
+  ```
+
 ### generate credentials for pfx
 #### ca.crt
 ```bash
-$ grep certificate-authority-data ~/.kube/config | awk -F': ' '{print $NF}' |  base64 -d > ca.crt
+$ grep certificate-authority-data ~/.kube/config | awkubectl -F': ' '{print $NF}' |  base64 -d > ca.crt
 # OR
 $ sudo cat /etc/kubernetes/pki/ca.crt
 ```
 
 #### client.crt & client.key
 ```bash
-$ grep client-certificate-data ~/.kube/config | awk -F': ' '{print $NF}' |  base64 -d > client.crt
-$ grep client-key-data ~/.kube/config | awk -F': ' '{print $NF}' |  base64 -d > client.key
+$ grep client-certificate-data ~/.kube/config | awkubectl -F': ' '{print $NF}' |  base64 -d > client.crt
+$ grep client-key-data ~/.kube/config | awkubectl -F': ' '{print $NF}' |  base64 -d > client.key
 ```
 
 #### cert.pfx
@@ -85,15 +210,15 @@ $ openssl pkcs12 -export -out cert.pfx -inkey client.key -in client.crt -certfil
 ```bash
 $ cat ~/.kube/config \
       | grep certificate-authority-data \
-      | awk '{print $2}' \
+      | awkubectl '{print $2}' \
       | base64 -d > ca.crt
 $ cat ~/.kube/config \
       | grep client-certificate-data \
-      | awk '{print $2}' \
+      | awkubectl '{print $2}' \
       | base64 -d > client.crt
 $ cat ~/.kube/config \
       | grep client-key-data \
-      | awk '{print $2}' \
+      | awkubectl '{print $2}' \
       | base64 -d > client.key
 $ openssl pkcs12 -export \
                  -out cert.pfx \
@@ -104,7 +229,12 @@ $ openssl pkcs12 -export \
 ```
 
 ### configure in jenkins
-* Go to `Manage Jenkins` -> `Configure System` or `Manage Jenkins` -> `Manage Nodes and Clouds` -> `Configure Clouds`
+
+> [!NOTE]
+> - url
+>   - by default: `http://<service-name>.<namespace>.svc.cluster.local:8080`
+
+* `Manage Jenkins` -> `Configure System` or `Manage Jenkins` -> `Manage Nodes and Clouds` -> `Configure Clouds`
 * `Add a new Cloud` -> `Kuberentes`
   * `Name`: <Anything you want>
   * `Kubernetes URL`:
@@ -115,17 +245,17 @@ $ openssl pkcs12 -export \
     * `Add` -> `Jenkins`
     * **Kind**: `Certificate`
 
-![plugin-1](../../screenshot/jenkins/k8s-plugin-1.png)
+  ![plugin-1](../../screenshot/jenkins/k8s-plugin-1.png)
 
-![plugin-2](../../screenshot/jenkins/k8s-plugin-2.png)
+  ![plugin-2](../../screenshot/jenkins/k8s-plugin-2.png)
 
-![plugin-3](../../screenshot/jenkins/k8s-plugin-3.png)
+  ![plugin-3](../../screenshot/jenkins/k8s-plugin-3.png)
 
-![plugin-4](../../screenshot/jenkins/k8s-plugin-4.png)
+  ![plugin-4](../../screenshot/jenkins/k8s-plugin-4.png)
 
-* Setup in Jenkins
+* setup in jenkins
 
-![plugin-5](../../screenshot/jenkins/k8s-plugin-5.png)
+  ![plugin-5](../../screenshot/jenkins/k8s-plugin-5.png)
 
 
 ### using kubeconfig for remote cluster credential
@@ -140,23 +270,23 @@ $ openssl pkcs12 -export \
 
 #### get Kubernetes URL
 ```bash
-$ k config view --minify | sed -n -re 's/^.*server: (https.*)$/\1/p'
+$ kubectl config view --minify | sed -n -re 's/^.*server: (https.*)$/\1/p'
 ```
 
 - [or](https://gist.github.com/miry/9fbb8947510294c25285bda2a6e11900#gistcomment-2952487)
   ```bash
-  $ k config view --minify --raw --output 'jsonpath={..cluster.server}'
+  $ kubectl config view --minify --raw --output 'jsonpath={..cluster.server}'
   ```
 
 #### generate CA
 
 {% hint style='tip' %}
-the content can be also found in `kubernetes-master:/etc/kubernetes/pki/ca.crt`
+> the content can be also found in `kubernetes-master:/etc/kubernetes/pki/ca.crt`
 {% endhint %}
 
 ```bash
-$ k -n jenkins get secret \
-              $(k -n jenkins get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
+$ kubectl -n jenkins get secret \
+              $(kubectl -n jenkins get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
               -o jsonpath={.data.'ca\.crt'} \
               | base64 --decode
 ```
@@ -164,36 +294,37 @@ $ k -n jenkins get secret \
   ```bash
   $ cat ~/.kube/config \
         | grep certificate-authority-data \
-        | awk '{print $2}' \
+        | awkubectl '{print $2}' \
         | base64 -d > ca.crt
   ```
 
 #### Generate token in kubernetes
+
 {% hint style='tip' %}
-```bash
-$ namespace='devops'
-$ serviceAccount='jenkins-admin'
-$ alias k='kubectl'
-```
+> ```bash
+> $ namespace='devops'
+> $ serviceAccount='jenkins-admin'
+> $ alias k='kubectl'
+> ```
 {% endhint %}
 
 - setup sa
   ```bash
-  $ k -n jenkins create sa jenkins-admin
-  $ k -n jenkins create rolebinding jenkins-admin-binding \
+  $ kubectl -n jenkins create sa jenkins-admin
+  $ kubectl -n jenkins create rolebinding jenkins-admin-binding \
                        --clusterrole=cluster-admin \
                        --serviceaccount=devops:jenkins-admin
   ```
 - get token
   {% raw %}
   ```bash
-  $ k -n jenkins \
+  $ kubectl -n jenkins \
          get sa jenkins-admin \
          -o go-template \
          --template='{{range .secrets}}{{.name}}{{"\n"}}{{end}}'
   jenkins-admin-token-kshsh
 
-  $ k -n jenkins \
+  $ kubectl -n jenkins \
          get secrets jenkins-admin-token-kshsh \
          -o go-template \
          --template '{{index .data "token"}}' \
@@ -202,61 +333,71 @@ $ alias k='kubectl'
   ```
   {% endraw %}
 
-  more info
-  ```bash
-  $ k get secret -n jenkins
-  NAME                        TYPE                                  DATA   AGE
-  default-token-8k7vj         kubernetes.io/service-account-token   3      27m
-  jenkins-admin-token-9r8pt   kubernetes.io/service-account-token   3      21m
+  - more info
+    ```bash
+    $ kubectl get secret -n jenkins
+    NAME                        TYPE                                  DATA   AGE
+    default-token-8k7vj         kubernetes.io/service-account-token   3      27m
+    jenkins-admin-token-9r8pt   kubernetes.io/service-account-token   3      21m
 
-  $ k -n jenkins get rolebinding
-  NAME                    AGE
-  jenkins-admin-binding   15m
-  $ k -n jenkins describe rolebinding jenkins-admin-binding
-  Name:         jenkins-admin-binding
-  Labels:       <none>
-  Annotations:  <none>
-  Role:
-    Kind:  ClusterRole
-    Name:  cluster-admin
-  Subjects:
-    Kind            Name           Namespace
-    ----            ----           ---------
-    ServiceAccount  jenkins-admin  jenkins
+    $ kubectl -n jenkins get rolebinding
+    NAME                    AGE
+    jenkins-admin-binding   15m
+    $ kubectl -n jenkins describe rolebinding jenkins-admin-binding
+    Name:         jenkins-admin-binding
+    Labels:       <none>
+    Annotations:  <none>
+    Role:
+      Kind:  ClusterRole
+      Name:  cluster-admin
+    Subjects:
+      Kind            Name           Namespace
+      ----            ----           ---------
+      ServiceAccount  jenkins-admin  jenkins
 
-  $ k describe clusterrolebindings jenkins-admin-cluster-binding
-  Name:         jenkins-admin-cluster-binding
-  Labels:       <none>
-  Annotations:  <none>
-  Role:
-    Kind:  ClusterRole
-    Name:  cluster-admin
-  Subjects:
-    Kind            Name           Namespace
-    ----            ----           ---------
-    ServiceAccount  jenkins-admin  jenkins
-  ```
+    $ kubectl describe clusterrolebindings jenkins-admin-cluster-binding
+    Name:         jenkins-admin-cluster-binding
+    Labels:       <none>
+    Annotations:  <none>
+    Role:
+      Kind:  ClusterRole
+      Name:  cluster-admin
+    Subjects:
+      Kind            Name           Namespace
+      ----            ----           ---------
+      ServiceAccount  jenkins-admin  jenkins
+    ```
 
   - [or](https://support.cloudbees.com/hc/en-us/articles/360038636511-Kubernetes-Plugin-Authenticate-with-a-ServiceAccount-to-a-remote-cluster)
     ```bash
-    $ k -n jenkins \
+    $ kubectl -n jenkins \
         get secret \
-        $(k -n jenkins get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
+        $(kubectl -n jenkins get sa jenkins-admin -o jsonpath={.secrets[0].name}) \
         -o jsonpath={.data.token} \
         | base64 --decode
     ```
   - [or](https://stackoverflow.com/a/48853727/2940319)
-  {% raw %}
-  ```bash
-  $ k -n jenkins \
-         get sa jenkins-admin \
-         --template='{{range .secrets}}{{ .name }} {{end}}' \
-         | xargs -n 1 k -n jenkins get secret \
-                        --template='{{ if .data.token }}{{ .data.token }}{{end}}' \
-                        | head -n 1 \
-                        | base64 -d -
-  ```
-  {% endraw %}
+    {% raw %}
+    ```bash
+    $ kubectl -n jenkins \
+           get sa jenkins-admin \
+           --template='{{range .secrets}}{{ .name }} {{end}}' \
+           | xargs -n 1 kubectl -n jenkins get secret \
+                          --template='{{ if .data.token }}{{ .data.token }}{{end}}' \
+                          | head -n 1 \
+                          | base64 -d -
+    ```
+    {% endraw %}
+
+  - [or](https://devopscube.com/jenkins-build-agents-kubernetes/)
+    ```bash
+    # sa='jenkins-admin'
+    $ kubectl -n jenkins \
+                 get secrets \
+                 $(kubectl -n jenkins get sa ${sa} -o=jsonpath='{.secrets[0].name}') \
+                 -o=jsonpath='{.data.token}' |
+              base64 -d
+    ```
 
 #### setup in Jenkins
 - credential setup
@@ -420,31 +561,76 @@ subjects:
     name: spinnaker-service-account         # Should match service account name, above
   ```
 
-### Q&A
-- [Kubernetes agents are failing with `SocketTimeoutException: connect timed out`](https://support.cloudbees.com/hc/en-us/articles/360038066231-Kubernetes-agents-are-failing-with-SocketTimeoutException-connect-timed-out-)
+- or [details rules in role binding](https://devopscube.com/jenkins-build-agents-kubernetes/)
+  ```yaml
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: jenkins-admin
+    namespace: devops-tools
+  ---
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    name: jenkins
+    namespace: devops-tools
+    labels:
+      "app.kubernetes.io/name": 'jenkins'
+  rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create","delete","get","list","patch","update","watch"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create","delete","get","list","patch","update","watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get","list","watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  ---
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: jenkins-role-binding
+    namespace: devops-tools
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: Role
+    name: jenkins
+  subjects:
+  - kind: ServiceAccount
+    name: jenkins-admin
+    namespace: devops-tools
+  ```
 
-- [Message: pods is forbidden: User "system:serviceaccount:jenkins:jenkins-admin" cannot list resource "pods" in API group](https://github.com/helm/charts/issues/1092#issuecomment-303292037)
-  > solution:
-  > - [lachie83/jenkins-service-account](https://gist.github.com/lachie83/17c1fff4eb58cf75c5fb11a4957a64d2)
-  > - [see also](https://stackoverflow.com/a/59605326/2940319)
-  > - [chukaofili/k8s-dashboard-admin-user.yaml](https://gist.github.com/chukaofili/9e94d966e73566eba5abdca7ccb067e6#file-k8s-dashboard-admin-user-yaml)
+### Q&A
+
+> [!NOTE]
+> - [Kubernetes agents are failing with `SocketTimeoutException: connect timed out`](https://support.cloudbees.com/hc/en-us/articles/360038066231-Kubernetes-agents-are-failing-with-SocketTimeoutException-connect-timed-out-)
+> - [Message: pods is forbidden: User "system:serviceaccount:jenkins:jenkins-admin" cannot list resource "pods" in API group](https://github.com/helm/charts/issues/1092#issuecomment-303292037)
+>   solution:
+>   - [lachie83/jenkins-service-account](https://gist.github.com/lachie83/17c1fff4eb58cf75c5fb11a4957a64d2)
+>   - [see also](https://stackoverflow.com/a/59605326/2940319)
+>   - [chukaofili/k8s-dashboard-admin-user.yaml](https://gist.github.com/chukaofili/9e94d966e73566eba5abdca7ccb067e6#file-k8s-dashboard-admin-user-yaml)
 
 ```bash
-$ k -n <namespace> create rolebinding <sa>-binding \
-                          --clusterrole=cluster-admin \
-                          --serviceaccount=<namespace>:<sa>
-$ k create clusterrolebinding jenkins-admin-cluster-binding \
-                              --clusterrole cluster-admin \
-                              --serviceaccount=<namespace>:jenkins-admin
+$ kubectl -n <namespace> create rolebinding <sa>-binding \
+                                --clusterrole=cluster-admin \
+                                --serviceaccount=<namespace>:<sa>
+$ kubectl create clusterrolebinding jenkins-admin-cluster-binding \
+                                    --clusterrole cluster-admin \
+                                    --serviceaccount=<namespace>:jenkins-admin
 ```
   - thinking
     ```bash
-    $ k -n jenkins auth can-i list pods --as jenkins-admin
+    $ kubectl -n jenkins auth can-i list pods --as jenkins-admin
     no
 
-    $ k -n jenkins auth can-i list pods --as jenkins-admin-binding
+    $ kubectl -n jenkins auth can-i list pods --as jenkins-admin-binding
     no
 
-    $ k -n jenkins auth can-i list pods --as jenkins-admin-cluster-binding
+    $ kubectl -n jenkins auth can-i list pods --as jenkins-admin-cluster-binding
     no
     ```

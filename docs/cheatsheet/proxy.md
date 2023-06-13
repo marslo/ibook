@@ -470,23 +470,53 @@ $ kubectl config set-cluster development --proxy-url=http://proxy.example.com:80
 > - [How can we configure the .pac proxy to git](https://github.com/desktop/desktop/issues/5516#issuecomment-417357195)
 > - [otahi/pacproxy](https://github.com/otahi/pacproxy)
 
-```batch
-$ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" | find AutoConfigURL
-    AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
+- [add/modify](https://stackoverflow.com/a/27160821/2940319)
+  ```batch
+  > reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1
+  > reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d name:port
+  > reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyUser /t REG_SZ /d username
+  > reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyPass /t REG_SZ /d password
+  > netsh winhttp import proxy source=ie
+  ```
 
-REM full list
-$ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings"
+- [or](https://stackoverflow.com/a/57613619/2940319)
+  ```batch
+  > netsh winhttp set proxy proxy-server="socks=localhost:9090" bypass-list="localhost"
 
-HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings
-    CertificateRevocation    REG_DWORD    0x1
-    DisableCachingOfSSLPages    REG_DWORD    0x0
-    IE5_UA_Backup_Flag    REG_SZ    5.0
-    PrivacyAdvanced    REG_DWORD    0x1
-    SecureProtocols    REG_DWORD    0x800
-    User Agent    REG_SZ    Mozilla/5.0 (compatible; MSIE 9.0; Win32)
-    SecureProtocolsUpdated    REG_DWORD    0x1
-    EnableNegotiate    REG_DWORD    0x1
-    ProxyEnable    REG_DWORD    0x0
-    MigrateProxy    REG_DWORD    0x1
-    AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
-```
+  REM show
+  > netsh winhttp show proxy
+
+  REM reset
+  > netsh winhttp reset proxy
+  ```
+
+- [or](https://stackoverflow.com/q/61575646/2940319)
+  ```batch
+  > netsh winhttp set proxy 127.0.0.1:1080
+  > netsh winhttp set proxy proxy-server="socks=127.0.0.1:9150" bypass-list="127.0.0.1"
+  > netsh winhttp set proxy proxy-server="socks=localhost:9150" bypass-list="localhost"
+  > netsh winhttp set proxy proxy-server="http=127.0.0.1:1080"  bypass-list="127.0.0.1"
+  > netsh winhttp set proxy proxy-server="https=127.0.0.1:1080" bypass-list="127.0.0.1"
+  ```
+
+- check
+  ```batch
+  $ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" | find AutoConfigURL
+      AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
+
+  REM full list
+  $ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings"
+
+  HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings
+      CertificateRevocation    REG_DWORD    0x1
+      DisableCachingOfSSLPages    REG_DWORD    0x0
+      IE5_UA_Backup_Flag    REG_SZ    5.0
+      PrivacyAdvanced    REG_DWORD    0x1
+      SecureProtocols    REG_DWORD    0x800
+      User Agent    REG_SZ    Mozilla/5.0 (compatible; MSIE 9.0; Win32)
+      SecureProtocolsUpdated    REG_DWORD    0x1
+      EnableNegotiate    REG_DWORD    0x1
+      ProxyEnable    REG_DWORD    0x0
+      MigrateProxy    REG_DWORD    0x1
+      AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
+  ```
