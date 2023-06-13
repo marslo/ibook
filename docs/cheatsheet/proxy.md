@@ -248,6 +248,7 @@ Host  github.com
 
 > [!NOTE]
 > - [he socat Command in Linux](https://www.baeldung.com/linux/socat-command)
+> - [sit/gitproxy-socat](https://gist.github.com/sit/49288)
 
 ## proxy for git
 

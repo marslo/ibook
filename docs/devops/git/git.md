@@ -67,6 +67,7 @@ git command study and practice
   - [get refs days ago](#get-refs-days-ago)
   - [format](#format-1)
   - [date format](#date-format)
+- [how to debug](#how-to-debug)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1891,3 +1892,27 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
   pb          = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color --count=10"
   pbs         = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color"
 ```
+
+
+## how to debug
+
+> [!NOTE|label:references:]
+> - [`GIT_TRACE_CURL=1` or `GIT_CURL_VERBOSE=1`](https://stackoverflow.com/a/38285866/2940319)
+> - [`GIT_TRACE2_PERF_BRIEF=1` and `GIT_TRACE2_PERF=~/log.perf`](https://stackoverflow.com/a/74332242/2940319)
+> - [`GIT_TRACE` or `GIT_TR2`](https://stackoverflow.com/a/56094711/2940319)
+> - [How can I debug git/git-shell related problems?](https://stackoverflow.com/a/38706495/2940319)
+>   - `GIT_TRACE` for general traces,
+>   - `GIT_TRACE_PACK_ACCESS` for tracing of packfile access,
+>   - `GIT_TRACE_PACKET` for packet-level tracing for network operations,
+>   - `GIT_TRACE_PERFORMANCE` for logging the performance data,
+>   - `GIT_TRACE_SETUP` for information about discovering the repository and environment it’s interacting with,
+>   - `GIT_MERGE_VERBOSITY` for debugging recursive merge strategy (values: 0-5),
+>   - `GIT_CURL_VERBOSE` for logging all curl messages (equivalent to `curl -v`),
+>   - `GIT_TRACE_SHALLOW` for debugging fetching/cloning of shallow repositories.
+
+- i.e.
+  ```bash
+  $ set -x;
+  $ GIT_TRACE=2 GIT_CURL_VERBOSE=2 GIT_TRACE_PERFORMANCE=2 GIT_TRACE_PACK_ACCESS=2 GIT_TRACE_PACKET=2 GIT_TRACE_PACKFILE=2 GIT_TRACE_SETUP=2 GIT_TRACE_SHALLOW=2 git pull origin master -v -v;
+  $ set +x
+  ```
