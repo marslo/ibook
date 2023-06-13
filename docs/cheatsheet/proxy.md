@@ -17,13 +17,18 @@
   - [corkscrew](#corkscrew)
   - [ncat](#ncat)
   - [connect](#connect)
+  - [socat](#socat)
 - [proxy for git](#proxy-for-git)
+  - [http.proxy and https.proxy](#httpproxy-and-httpsproxy)
+  - [core.gitproxy](#coregitproxy)
+  - [core.sshCommand](#coresshcommand)
 - [proxy for npm](#proxy-for-npm)
 - [proxy for nc](#proxy-for-nc)
 - [proxy for ssl](#proxy-for-ssl)
 - [Q&A](#qa)
   - [nc : `nc: Proxy error: "HTTP/1.1 200 Connection established"`](#nc--nc-proxy-error-http11-200-connection-established)
 - [proxy with kubeconfig](#proxy-with-kubeconfig)
+- [proxy with windows](#proxy-with-windows)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -239,15 +244,44 @@ Host  github.com
   ProxyCommand        connect -S proxy.example.com:80 %h %p
   ```
 
+### [socat](http://www.dest-unreach.org/socat/)
+
+> [!NOTE]
+> - [he socat Command in Linux](https://www.baeldung.com/linux/socat-command)
+
 ## proxy for git
 
 > [!NOTE|label:references]
 > - [evantoli/GitConfigHttpProxy.md](https://gist.github.com/evantoli/f8c23a37eb3558ab8765)
+> - [Using git with a proxy](https://elinux.org/Using_git_with_a_proxy)
+> - [yougg/proxy.md](https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64)
+> - [evantoli/GitConfigHttpProxy.md](https://gist.github.com/evantoli/f8c23a37eb3558ab8765)
+> - [Tutorial: how to use git through a proxy](http://cms-sw.github.io/tutorial-proxy.html)
+> - [cms-sw/cms-git-tools](https://github.com/cms-sw/cms-git-tools/blob/master/git-proxy)
+> - no ssl verify:
+>   - `set GIT_SSL_NO_VERIFY=true`
+>   - `echo http{,s} | fmt -1 | xargs -i git config --global {}.sslVerify=false`
+> - how to debug:
+>   - [https](https://stackoverflow.com/a/128198/2940319) : `GIT_CURL_VERBOSE=1 git ...` or [`GIT_TRACE_CURL=true git ...`](https://stackoverflow.com/a/38285866/2940319)
+>   - ssh : `GIT_SSH_COMMAND='ssh -v' git ...` or `git -c sshCommand='ssh -v' ...`
+> - [core.gitproxy](https://gist.github.com/coin8086/7228b177221f6db913933021ac33bb92)
+>   ```bash
+>   A "proxy command" to execute (as command host port) instead of establishing direct connection to the
+>   remote server when using the Git protocol for fetching. If the variable value is in the
+>   "COMMAND for DOMAIN" format, the command is applied only on hostnames ending with the specified
+>   domain string. This variable may be set multiple times and is matched in the given order; the first
+>   match wins.
+>
+>   Can be overridden by the GIT_PROXY_COMMAND environment variable (which always applies universally,
+>   without the special "for" handling).
+>   ```
 
+### http.proxy and https.proxy
 ```bash
-$ git config --global https.proxy 'http://127.0.0.1:80'   # using privoxy convert socks to http
-$ git config --global http.proxy 'http://127.0.0.1:80'
-$ git config --global http.sslVerify false                # unable to access '...': Unknown SSL protocol error in connection to ...:443
+$ git config --global https.proxy 'http://proxy.example.com:80'   # using privoxy convert socks to http
+$ git config --global http.proxy  'http://proxy.example.com:80'
+$ git config --global https.sslVerify false                       # unable to access '...': Unknown SSL protocol error in connection to ...:443
+$ git config --global http.sslVerify false                        # unable to access '...': Unknown SSL protocol error in connection to ...:443
 ```
 
 - for specific url
@@ -297,6 +331,7 @@ $ git config --global http.sslVerify false                # unable to access '..
 - show current configure
   ```bash
   $ git config --global --get-regexp http.*
+  $ git config --global --get-regexp .*proxy.*
   ```
 
 - unset
@@ -307,6 +342,25 @@ $ git config --global http.sslVerify false                # unable to access '..
   $ git config --global --unset http.sslVerify
   $ git config --global --unset http.https://domain.com.sslVerify
   ```
+
+### core.gitproxy
+```bash
+$ git config --global core.gitproxy https://proxy.example.com:80
+$ git config --global url.git://github.com/.insteadOf git@github.com:
+```
+
+### core.sshCommand
+
+> [!NOTE]
+> - [core.sshCommand](https://stackoverflow.com/a/38474137/2940319) since 26 Jun 2016 [commit 3c8ede3](https://github.com/git/git/commit/3c8ede3ff312134e84d1b23a309cd7d2a7c98e9c)
+> > A new configuration variable `core.sshCommand` has been added to specify what value for `GIT_SSH_COMMAND` to use per repository.
+
+```bash
+$ git config --global core.sshCommand "ssh -v -o 'ProxyCommand=connect -H proxy.example.com:80 %h %p'"
+
+# or
+$ git -c core.sshCommand "ssh -v -o 'ProxyCommand=commect -H proxy.example.com:80 %h %p'" clone git@github.com/marslo/ibook.git
+```
 
 ## proxy for npm
 
@@ -407,4 +461,31 @@ $ kubectl config set-cluster <my-cluster-name> --proxy-url=<my-proxy-url>
 
 # i.e.
 $ kubectl config set-cluster development --proxy-url=http://proxy.example.com:8080
+```
+
+## proxy with windows
+
+> [!NOTE]
+> - [How can we configure the .pac proxy to git](https://github.com/desktop/desktop/issues/5516#issuecomment-417357195)
+> - [otahi/pacproxy](https://github.com/otahi/pacproxy)
+
+```batch
+$ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" | find AutoConfigURL
+    AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
+
+REM full list
+$ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings"
+
+HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings
+    CertificateRevocation    REG_DWORD    0x1
+    DisableCachingOfSSLPages    REG_DWORD    0x0
+    IE5_UA_Backup_Flag    REG_SZ    5.0
+    PrivacyAdvanced    REG_DWORD    0x1
+    SecureProtocols    REG_DWORD    0x800
+    User Agent    REG_SZ    Mozilla/5.0 (compatible; MSIE 9.0; Win32)
+    SecureProtocolsUpdated    REG_DWORD    0x1
+    EnableNegotiate    REG_DWORD    0x1
+    ProxyEnable    REG_DWORD    0x0
+    MigrateProxy    REG_DWORD    0x1
+    AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
 ```

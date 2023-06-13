@@ -462,9 +462,8 @@ $ ls --color=none git-+([0-9])*.png | xargs rename -v 's/git-/git-for-windows-/'
 
 ### batch move
 
-{% hint style='tip' %}
+> [!NOTE]
 > `-I replace-str`
-{% endhint %}
 
 ```bash
 $ mkdir backup-folder && ls | grep -Ze ".*rar" | xargs -d '\n' -I {} mv {} backup-folder

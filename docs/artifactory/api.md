@@ -63,10 +63,9 @@ $ /usr/bin/curl ${curlOpt} \
 ```
 
 ### get all repos
-{% hint style='tip' %}
-> [`api/repositories`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-GetRepositories)
 
-{% endhint %}
+> [!NOTE]
+> [`api/repositories`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-GetRepositories)
 
 ```bash
 $ curl -sSg \
@@ -126,18 +125,16 @@ $ curl -sSg \
 
 ### get repo size
 
-{% hint style='tip' %}
+> [!NOTE]
 > [`api/storageinfo`](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-GetStorageSummaryInfo)
-{% endhint %}
 
 - get storage summary
 
-  {% hint style='tip' %}
-  including:
-  - `binariesSummary`
-  - `fileStoreSummary`
-  - `repositoriesSummaryList`
-  {% endhint %}
+  > [!NOTE]
+  > including:
+  > - `binariesSummary`
+  > - `fileStoreSummary`
+  > - `repositoriesSummaryList`
 
   ```bash
   $ curl -s \
