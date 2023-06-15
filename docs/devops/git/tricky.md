@@ -24,10 +24,6 @@
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
   - [disk size](#disk-size)
-- [debug](#debug)
-  - [Git Debug Options](#git-debug-options)
-  - [Linux](#linux)
-  - [windows](#windows)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -602,43 +598,6 @@ $ git for-each-ref --format='%(refname)' |
 $ git rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
 ```
 
-## [debug](https://www.shellhacks.com/git-verbose-mode-debug-fatal-errors/)
-### Git Debug Options
-| Option                       | Description                                                                                                                   |
-| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------- |
-| `GIT_TRACE=true`             | Enable general trace messages                                                                                                 |
-| `GIT_CURL_VERBOSE=true`      | Print HTTP headers (similar to `curl -v`)                                                                                     |
-| `GIT_SSH_COMMAND="ssh -vvv"` | Print SSH debug messages (similar to `ssh -vvv`)                                                                              |
-| `GIT_TRACE_PACK_ACCESS=true` | Enable trace messages for all accesses to any packs                                                                           |
-| `GIT_TRACE_PACKET=true`      | Enable trace messages for all packets coming in or out of a given program                                                     |
-| `GIT_TRACE_PACKFILE=true`    | Enable tracing of packfiles sent or received by a given program                                                               |
-| `GIT_TRACE_PERFORMANCE=true` | Enable performance related trace messages                                                                                     |
-| `GIT_TRACE_SETUP=true`       | Enable trace messages printing the .git, working tree and current working directory after Git has completed its setup phase   |
-| `GIT_TRACE_SHALLOW=true`     | Enable trace messages that can help debugging fetching/cloning of shallow repositories                                        |
 
 
-### Linux
-```bash
-$ GIT_TRACE=true \
-  GIT_CURL_VERBOSE=true \
-  GIT_SSH_COMMAND="ssh -vvv" \
-  GIT_TRACE_PACK_ACCESS=true \
-  GIT_TRACE_PACKET=true \
-  GIT_TRACE_PACKFILE=true \
-  GIT_TRACE_PERFORMANCE=true \
-  GIT_TRACE_SETUP=true \
-  GIT_TRACE_SHALLOW=true \
-  <git command here>
-```
-- or
-  ```bash
-  $ GIT_SSH_COMMAND='ssh -vvT' <git command here>
-  ```
 
-### windows
-```batch
-C:\> set GIT_TRACE=true
-C:\> set GIT_CURL_VERBOSE=true
-C:\> set GIT_SSH_COMMAND=ssh -vvv
-C:\> <git command here>
-```

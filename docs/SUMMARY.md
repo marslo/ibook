@@ -47,7 +47,7 @@
     * [example](devops/git/example.md)
     * [gerrit](devops/git/gerrit.md)
     * [github](devops/git/github.md)
-    * [q&a](devops/git/q&a.md)
+    * [troubleshooting](devops/git/troubleshooting.md)
     * [tricky](devops/git/tricky.md)
     * [statistics](devops/git/statistics.md)
   * [android](devops/android.md)
