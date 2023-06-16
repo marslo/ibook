@@ -153,3 +153,6 @@ about:restartrequired
 - download for linux : https://www.google.com/chrome/?platform=linux
   - standalone for linux : https://www.google.com/chrome/?platform=linux&standalone=1
 
+## Chromium
+- download page : https://download-chromium.appspot.com
+- download for OSX : https://download-chromium.appspot.com/?platform=Mac&type=snapshots
