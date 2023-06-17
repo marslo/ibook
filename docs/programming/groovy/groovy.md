@@ -6,6 +6,8 @@
   - [Program structure](#program-structure)
   - [Customizable Operators](#customizable-operators)
   - [Special Operators](#special-operators)
+- [method and class](#method-and-class)
+  - [Named parameters](#named-parameters)
 - [elvis operator](#elvis-operator)
   - [if/elseif{if}/else](#ifelseififelse)
 - [execute shell commands in groovy](#execute-shell-commands-in-groovy)
@@ -125,6 +127,32 @@
   // result
   // [Bob is 42, Julia is 35]
   ```
+
+## method and class
+
+> [!NOTE]
+> - [Class members](http://groovy-lang.org/objectorientation.html#_class_members)
+>   - [Positional parameters](http://groovy-lang.org/objectorientation.html#_positional_parameters)
+>   - [Named parameters](http://groovy-lang.org/objectorientation.html#_named_parameters)
+> - [Varargs](http://groovy-lang.org/objectorientation.html#_varargs)
+
+### [Named parameters](http://docs.groovy-lang.org/latest/html/documentation/#_named_parameters_2)
+```groovy
+def foo ( Map m ) {
+  println "${m.name} : ${m.age}"
+}
+
+assert foo( name: 'marslo', age: '18' ) == 'marslo : 18'
+```
+
+#### [Mixing named and positional parameters](http://docs.groovy-lang.org/latest/html/documentation/#_mixing_named_and_positional_parameters)
+```groovy
+def foo ( Map m, Integer i ) {
+  println "${m.name} : ${m.age} : ${i}"
+}
+
+assert foo( name: 'marslo', age: '18', 123 ) == 'marslo : 18 : 123'
+```
 
 ## elvis operator
 ### if/elseif{if}/else
