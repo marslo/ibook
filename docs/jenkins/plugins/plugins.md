@@ -67,4 +67,3 @@
 - [Jenkins Health Advisor by CloudBees](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/cloudbees-jenkins-advisor)
 - [CloudBees Monitoring Plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/monitoring)
 - [CloudBees Plugin Usage Analyzer plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/plugin-usage)
--

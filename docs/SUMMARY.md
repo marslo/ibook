@@ -96,6 +96,7 @@
     * [job-dsl](jenkins/plugins/dsl.md)
     * [simple-theme](jenkins/plugins/simple-theme.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
+    * [tricky](jenkins/plugins/tricky.md)
 * [virtualization](virtualization/virtualization.md)
   * [kubernetes](virtualization/kubernetes/kubernetes.md)
     * [kubeadm](virtualization/kubernetes/kubeadm/kubeadm.md)
