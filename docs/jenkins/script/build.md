@@ -1344,6 +1344,8 @@ import org.jenkinsci.plugins.workflow.cps.replay.ReplayCause
 import com.sonyericsson.rebuild.RebuildCause
 import hudson.model.Cause.UserIdCause
 import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import hudson.util.RunList
 
 WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/job' )
 RunList builds  = job.getBuilds()
