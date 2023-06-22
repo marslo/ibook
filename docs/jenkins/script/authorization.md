@@ -377,8 +377,6 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey;
 import com.cloudbees.plugins.credentials.SystemCredentialsProvider
-import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredential
-import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
 
 CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
                    .sort{ it.id }
@@ -434,35 +432,103 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                                                    usernameSecret : ${it.usernameSecret ?: 'false'}
                          """
                          break;
-
-                       case 'VaultUsernamePasswordCredentialImpl' :
-                         println """
-                                                             type : ${it.class.simpleName}
-                                                              id  : ${it.id}
-                                                            scope : ${it.scope}
-                                                        username  : ${it.username}
-                                                         password : ${it.password}
-                                                             path : ${it.path}
-                                                     description  : ${it.description}
-                                                  usernameSecret  : ${it.usernameSecret ?: 'false'}
-                         """
-                         break;
-
-                       case 'VaultAppRoleCredential':
-                         println """
-                                                             type : ${it.class.simpleName}
-                                                               id : ${it.id}
-                                                           roleId : ${it.roleId}
-                                                         secretId : ${it.secretId}
-                                                             path : ${it.path}
-                                                        namespace : ${it.namespace}
-                                                            scope : ${it.scope}
-                                                      description : ${it.description}
-                         """
-                         break;
                      }
                    }
 ```
+
+- with valut
+  ```groovy
+  import com.cloudbees.plugins.credentials.common.StandardCredentials
+  import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials
+  import com.cloudbees.plugins.credentials.CredentialsProvider
+  import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey;
+  import com.cloudbees.plugins.credentials.SystemCredentialsProvider
+  import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredential
+  import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
+
+  CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
+                     .sort{ it.id }
+                     .each{
+                       switch( it.class.simpleName ) {
+                         case 'BasicSSHUserPrivateKey' :
+                           println """
+                                                               type : ${it.class.simpleName}
+                                                                 id : ${it.id}
+                                                              scope : ${it.scope}
+                                                           username : ${it.username}
+                                                        description : ${it.description}
+                                            privateKeysLastModified : ${it.privateKeysLastModified}
+                                                     usernameSecret : ${it.usernameSecret ?: 'false'}
+                                                        privateKeys : ${it.privateKeys.join('\n')}
+                            """
+                           break;
+
+                         case 'CertificateCredentialsImpl' :
+                            println """
+                                                               type : ${it.class.simpleName}
+                                                                 id : ${it.id}
+                                                              scope : ${it.scope}
+                                                           password : ${it.password}
+                                                        description : ${it.description}
+                                                      keyStore.type : ${it.keyStore.type}
+                                       keyStoreSource.keyStoreBytes : ${it.keyStoreSource.keyStoreBytes}
+                               keyStoreSource.uploadedKeystoreBytes : ${it.keyStoreSource.uploadedKeystoreBytes}
+
+                                                         properties : ${it.properties}
+                                                properties.password : ${it.properties.password}
+                                           properties.passwordEmpty : ${it.properties.passwordEmpty}
+                                           properties.keyStore.type : ${it.properties.keyStore.type}
+                            """
+                           break;
+                         case 'StringCredentialsImpl' :
+                           println """
+                                                               type : ${it.class.simpleName}
+                                                                 id : ${it.id}
+                                                             secret : ${it.secret}
+                                                        description : ${it.description}
+                                                              scope : ${it.scope}
+                          """
+                           break;
+
+                         case 'UsernamePasswordCredentialsImpl' :
+                           println """
+                                                               type : ${it.class.simpleName}
+                                                                 id : ${it.id}
+                                                           username : ${it.username}
+                                                           password : ${it.password}
+                                                        description : ${it.description}
+                                                     usernameSecret : ${it.usernameSecret ?: 'false'}
+                           """
+                           break;
+
+                         case 'VaultUsernamePasswordCredentialImpl' :
+                           println """
+                                                               type : ${it.class.simpleName}
+                                                                id  : ${it.id}
+                                                              scope : ${it.scope}
+                                                          username  : ${it.username}
+                                                           password : ${it.password}
+                                                               path : ${it.path}
+                                                       description  : ${it.description}
+                                                    usernameSecret  : ${it.usernameSecret ?: 'false'}
+                           """
+                           break;
+
+                         case 'VaultAppRoleCredential':
+                           println """
+                                                               type : ${it.class.simpleName}
+                                                                 id : ${it.id}
+                                                             roleId : ${it.roleId}
+                                                           secretId : ${it.secretId}
+                                                               path : ${it.path}
+                                                          namespace : ${it.namespace}
+                                                              scope : ${it.scope}
+                                                        description : ${it.description}
+                           """
+                           break;
+                       }
+                     }
+  ```
 
 - [or](https://devops.stackexchange.com/a/8692/3503)
   ```groovy

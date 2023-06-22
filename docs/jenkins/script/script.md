@@ -411,7 +411,7 @@ Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
 ```
 
 ## plugins
-### via api : [imarslo: list plugins](./api.html#list-plugins)
+### via api : [imarslo: list plugins](../api.html#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
 Jenkins.instance
@@ -433,33 +433,118 @@ ExtensionList.lookup( UnprotectedRootAction ).each {
 }
 ```
 
-### [list plugin and dependencies](https://stackoverflow.com/a/56864983/2940319)
+### list plugin and dependencies
+
 ```groovy
-def plugins = Jenkins.instance
-                     .pluginManager
-                     .plugins
-                     .sort(false) { a, b ->
-                       a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
-                     }
-
-println "jenkins instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
-        "installed plugins:\n" +
-        "=================="
-plugins.each { plugin ->
-  println "  ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}"
-}
-
-println "\nplugins dependency tree (...: dependencies; +++: dependants) :\n" +
-        "======================="
-plugins.each { plugin ->
-  println """
-    ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
-    +++ ${plugin.getDependants()}
-    ... ${plugin.getDependencies()}
-
-  """
-}
+println Jenkins.instance.pluginManager.plugins
+               .sort(false) { a, b ->
+                                a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+                            }
+               .collect { plugin ->
+                            "~~> ${plugin.shortName} : ${plugin.version} : ${plugin.displayName}" +
+                            ( plugin.dependants   ? "\n\t+++ ${plugin.dependants.join('\n\t+++ ')}"   : '' )  +
+                            ( plugin.dependencies ? "\n\t... ${plugin.dependencies.join('\n\t... ')}" : '' )
+                        }
+               .join('\n')
 ```
+
+- get specific plugin dependencies
+  ```groovy
+  List<String> keywords = [ 'jsch' ]
+
+  println Jenkins.instance.pluginManager.plugins
+                 .findAll { plugin -> keywords.any { it == plugin.shortName } }
+                 .sort(false) { a, b ->
+                                  a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+                              }
+                 .collect { plugin ->
+                              "~~> ${plugin.shortName} : ${plugin.version} : ${plugin.displayName}" +
+                              ( plugin.dependants   ? "\n\t+++ ${plugin.dependants.join('\n\t+++ ')}"   : '' )  +
+                              ( plugin.dependencies ? "\n\t... ${plugin.dependencies.join('\n\t... ')}" : '' )
+                          }
+                 .join('\n')
+  ```
+
+- get dependency tree
+  ```groovy
+  import hudson.PluginWrapper
+
+  def getDependencyTree( String keyword, Integer benchmark = 2, Integer index = 0 ) {
+    String prefix        = index ? '\t' + "|\t"*(index-1) + "|... " : ''
+    PluginWrapper plugin = jenkins.model.Jenkins.instance.pluginManager.plugins.find { keyword == it.shortName }
+    List dependencies    = plugin.collect { it.dependencies }.flatten() ?: []
+
+    println prefix + "${plugin.shortName} ( ${plugin.version} )"
+
+    if ( dependencies && benchmark != index ) {
+      dependencies.collect{ it.shortName }.each { getDependencyTree (it, benchmark, index+1) }
+    }
+  }
+
+  getDependencyTree( 'jsch', 100 )
+
+  "DONE"
+  ```
+
+  - result
+    ```groovy
+    jsch ( 0.2.8-65.v052c39de79b_2 )
+        |... ssh-credentials ( 305.v8f4381501156 )
+        |   |... credentials ( 1254.vb_96f366e7b_a_d )
+        |   |   |... structs ( 324.va_f5d6774f3a_d )
+        |   |   |   |... javax-activation-api ( 1.2.0-6 )
+        |   |   |   |... javax-mail-api ( 1.6.2-9 )
+        |   |   |   |   |... javax-activation-api ( 1.2.0-6 )
+        |   |   |   |... instance-identity ( 173.va_37c494ec4e5 )
+        |   |   |   |   |... bouncycastle-api ( 2.28 )
+        |   |   |... configuration-as-code ( 1647.ve39ca_b_829b_42 )
+        |   |   |   |... caffeine-api ( 3.1.6-115.vb_8b_b_328e59d8 )
+        |   |   |   |... commons-text-api ( 1.10.0-36.vc008c8fcda_7b_ )
+        |   |   |   |   |... commons-lang3-api ( 3.12.0-36.vd97de6465d5b_ )
+        |   |   |   |   |   |... javax-activation-api ( 1.2.0-6 )
+        |   |   |   |   |   |... javax-mail-api ( 1.6.2-9 )
+        |   |   |   |   |   |   |... javax-activation-api ( 1.2.0-6 )
+        |   |   |   |   |   |... instance-identity ( 173.va_37c494ec4e5 )
+        |   |   |   |   |   |   |... bouncycastle-api ( 2.28 )
+        |   |   |   |... snakeyaml-api ( 1.33-95.va_b_a_e3e47b_fa_4 )
+        |   |... trilead-api ( 2.84.v72119de229b_7 )
+        |   |... instance-identity ( 173.va_37c494ec4e5 )
+        |   |   |... bouncycastle-api ( 2.28 )
+        |... trilead-api ( 2.84.v72119de229b_7 )
+        |... javax-activation-api ( 1.2.0-6 )
+        |... javax-mail-api ( 1.6.2-9 )
+        |   |... javax-activation-api ( 1.2.0-6 )
+        |... instance-identity ( 173.va_37c494ec4e5 )
+        |   |... bouncycastle-api ( 2.28 )
+    ```
+
+- [others](https://stackoverflow.com/a/56864983/2940319)
+  ```groovy
+  def plugins = Jenkins.instance
+                       .pluginManager
+                       .plugins
+                       .sort(false) { a, b ->
+                         a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+                       }
+
+  println "jenkins instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
+          "installed plugins:\n" +
+          "=================="
+  plugins.each { plugin ->
+    println "  ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}"
+  }
+
+  println "\nplugins dependency tree (...: dependencies; +++: dependants) :\n" +
+          "======================="
+  plugins.each { plugin ->
+    println """
+      ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
+      +++ ${plugin.getDependants()}
+      ... ${plugin.getDependencies()}
+
+    """
+  }
+  ```
 
 - or
   ```groovy
