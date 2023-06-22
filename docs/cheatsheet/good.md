@@ -75,6 +75,14 @@
 > - [Bash: Redirect stdout and stderr](https://csatlas.com/bash-redirect-stdout-stderr/)
 > - [show Command Output Redirection.pdf](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/fundamentals/configuration/xe-3se/cat3650/fundamentals-xe-3se-3650-book/cf-shw-cmd-out-redirect.pdf)
 > - [3.6 Redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html)
+>
+> tips:
+> - echo to stderr
+>   ```bash
+>   $ echo 'abcdefg' >/dev/null
+>   $ echo 'abcdefg' >/dev/null >&2
+>   abcdefg
+>   ```
 
 ```bash
 $ bash -c "echo a;bahs;echo b;bhas" >>file 2> >( tee -a file >&2 )
@@ -87,6 +95,21 @@ bash: line 1: bahs: command not found
 b
 bash: line 1: bhas: command not found
 ```
+
+- stderr output with filter
+  ```bash
+  $ bash -c "echo a;bahs;echo b;bhas" >>file 2> >( tee -a file 2>&1 | grep -v bahs >&2 )
+  bash: line 1: bhas: command not found
+  # or
+  $ rm -rf file; bash -c "echo a;bahs;echo b;bhas" >>file 2> >( tee -a file | grep -v bahs >&2 )
+  bash: line 1: bhas: command not found
+
+  $ cat file
+  a
+  bash: line 1: bahs: command not found
+  b
+  bash: line 1: bhas: command not found
+  ```
 
 - or
   ```bash
