@@ -17,6 +17,7 @@
   - [get pipeline scriptPath](#get-pipeline-scriptpath)
   - [get pipeline scm definition](#get-pipeline-scm-definition)
   - [get pipeline bare script](#get-pipeline-bare-script)
+- [get logRotator](#get-logrotator)
 - [get single job properties](#get-single-job-properties)
 - [get particular job status](#get-particular-job-status)
 - [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
@@ -235,7 +236,8 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob
 String branch = 'develop'
 
 Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
-  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition &&
+  ! ( it.definition.scm instanceof hudson.scm.NullSCM )
 }.findAll {
   ! it.definition?.scm?.branches?.any{ it.getName().contains(branch) }
 }.each {
@@ -258,6 +260,25 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
   it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
 }.each {
   println it.fullName.toString().padRight(30) + ' ~> ' + it?.definition?.getScript()
+}
+
+"DONE"
+```
+
+## get logRotator
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import hudson.tasks.LogRotator
+
+String JOB_PATTERN = 'pattern'
+
+Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.fullName.startsWith( JOB_PATTERN ) && it.buildDiscarder
+}.each { job ->
+  LogRotator discarder = job.buildDiscarder
+  println job.fullName.toString().padRight(30) + ' : ' +
+          "builds=(${discarder.daysToKeep} days, ${discarder.numToKeep} total) " +
+          "artifacts=(${discarder.artifactDaysToKeep} days, ${discarder.artifactNumToKeep} total)"
 }
 
 "DONE"

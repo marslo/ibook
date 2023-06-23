@@ -14,6 +14,10 @@
   - [Get STDERR & STDERR](#get-stderr--stderr)
   - [Show output during the process](#show-output-during-the-process)
   - [with environment](#with-environment)
+- [groovyConsole](#groovyconsole)
+  - [environment](#environment)
+  - [get console details](#get-console-details)
+  - [font](#font)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -327,3 +331,227 @@ println """
   Process exit code: ${proc.exitValue()}
 """
 ```
+
+## groovyConsole
+
+### environment
+
+> [!NOTE]
+> - [`System.setProperty("file.encoding","UTF-8")`](https://stackoverflow.com/a/14987992/2940319)
+> - [font setup for groovyConsole](https://stackoverflow.com/a/7435514/2940319)
+> - [Groovy console](https://docs.microfocus.com/OMi/10.62/Content/OMi/ExtGuide/Groovy/GroovyConsole.htm)
+
+```batch
+> setx JAVA_OPT '-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8'
+> setx GROOVY_OPT '-Dfile.encoding=UTF-8'
+> setx JAVA_TOOL_OPTIONS '-Dfile.encoding=UTF-8'
+```
+
+### get console details
+- [charset](https://stackoverflow.com/a/31644153/2940319)
+  ```groovy
+  import java.nio.charset.Charset
+
+  System.out.println( String.format("file.encoding: %s", System.getProperty("file.encoding")) );
+  System.out.println( String.format("defaultCharset: %s", Charset.defaultCharset().name()) );
+  ```
+
+  - result
+  ```
+  file.encoding: UTF-8
+  defaultCharset: UTF-8
+  ```
+
+### font
+
+> [!NOTE|label:references:]
+> - [GROOVY-6303: Add ability to use a different font for the input/output area of Groovy Console](https://issues.apache.org/jira/browse/GROOVY-6303)
+>   - windows : add `font/Name` into `HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\groovy\console\ui`
+>     ```batch
+>     > REG ADD "HKCU\SOFTWARE\JavaSoft\Prefs\groovy\console\ui" /v "font/Name" /t REG_SZ /d "Monaco" /f
+>     ```
+>   - linux : add `fontName` into `~/.java/.userPrefs/groovy/ui/prefs.xml`
+>   - macox : add `fontName` into `~/Library/Preferences/com.apple.java.JavaPreferences.plist`
+> - [Groovy Goodness: Customize Groovy Console Visual Output](https://blog.mrhaki.com/2011/10/groovy-goodness-customize-groovy.html)
+
+- check font
+  ```groovy
+  javax.swing.UIManager.getLookAndFeelDefaults()
+
+  // or
+  javax.swing.UIManager.getLookAndFeelDefaults().each {
+    println "... ${it.key} : ${it.value}"
+  }
+  ```
+
+- [or](https://stackoverflow.com/a/18259107/2940319)
+  ```groovy
+  import java.awt.Font
+  for (Map.Entry<Object, Object> entry : javax.swing.UIManager.getDefaults().entrySet()) {
+      Object key = entry.getKey();
+      Object value = javax.swing.UIManager.get(key);
+      if (value != null && value instanceof javax.swing.plaf.FontUIResource) {
+        println ".. ${key} : ${value}"
+      }
+  }
+  ```
+
+  <!--sec data-title="result" data-id="section0" data-show=true data-collapse=true ces-->
+  ```groovy
+  .. FormattedTextField.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. MenuItem.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. InternalFrame.titleFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. RadioButton.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. RadioButton.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. OptionPane.buttonFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ToolTip.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. FormattedTextField.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Panel.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. RadioButtonMenuItem.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. OptionPane.messageFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. PopupMenu.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. CheckBoxMenuItem.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. MenuItem.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. CheckBoxMenuItem.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. RadioButtonMenuItem.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. RadioButtonMenuItem.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TabbedPane.smallFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Panel.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. OptionPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. EditorPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Label.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ComboBox.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Button.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. MenuBar.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Tree.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Tree.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ToolBar.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Button.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ComboBox.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Label.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. EditorPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Menu.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TextArea.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TextField.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Spinner.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. CheckBoxMenuItem.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Spinner.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TextField.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. IconButton.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. InternalFrame.titleFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. OptionPane.messageFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Menu.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Menu.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ToolBar.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TitledBorder.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Menu.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. FileChooser.listFont : javax.swing.plaf.FontUIResource[family=Segoe UI,name=Segoe UI,style=plain,size=12]
+  .. ToolTip.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TitledBorder.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. OptionPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. MenuBar.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TextArea.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. OptionPane.buttonFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. CheckBoxMenuItem.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. InternalFrame.optionDialogTitleFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. InternalFrame.paletteTitleFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Table.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. CheckBox.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. List.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ToggleButton.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ScrollPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ScrollPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ToggleButton.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. List.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ColorChooser.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. CheckBox.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ColorChooser.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Table.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. MenuItem.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TableHeader.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TextPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Viewport.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ProgressBar.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. PasswordField.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TabbedPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Slider.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Slider.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TabbedPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. RadioButtonMenuItem.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. PasswordField.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. ProgressBar.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TableHeader.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. TextPane.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. MenuItem.acceleratorFont : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. Viewport.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  .. PopupMenu.font : javax.swing.plaf.FontUIResource[family=Dialog,name=Monaco,style=plain,size=14]
+  ```
+  <!--endsec-->
+
+- modify font
+
+```groovy
+import javax.swing.plaf.FontUIResource
+import javax.swing.UIManager
+import java.awt.Font
+
+UIManager.put("Panel.font", new FontUIResource(new Font ("Monaco", Font.PLAIN, 16)));
+```
+
+- [other options](https://stackoverflow.com/a/50126292/2940319)
+
+  > [!NOTE|label:references:]
+  > - [Swing UIManager Keys](https://thebadprogrammer.com/swing-uimanager-keys/)
+
+  <!--sec data-title="other options" data-id="section1" data-show=true data-collapse=true ces-->
+  ```groovy
+  private void setFont(FontUIResource myFont) {
+      UIManager.put("CheckBoxMenuItem.acceleratorFont", myFont);
+      UIManager.put("Button.font", myFont);
+      UIManager.put("ToggleButton.font", myFont);
+      UIManager.put("RadioButton.font", myFont);
+      UIManager.put("CheckBox.font", myFont);
+      UIManager.put("ColorChooser.font", myFont);
+      UIManager.put("ComboBox.font", myFont);
+      UIManager.put("Label.font", myFont);
+      UIManager.put("List.font", myFont);
+      UIManager.put("MenuBar.font", myFont);
+      UIManager.put("Menu.acceleratorFont", myFont);
+      UIManager.put("RadioButtonMenuItem.acceleratorFont", myFont);
+      UIManager.put("MenuItem.acceleratorFont", myFont);
+      UIManager.put("MenuItem.font", myFont);
+      UIManager.put("RadioButtonMenuItem.font", myFont);
+      UIManager.put("CheckBoxMenuItem.font", myFont);
+      UIManager.put("OptionPane.buttonFont", myFont);
+      UIManager.put("OptionPane.messageFont", myFont);
+      UIManager.put("Menu.font", myFont);
+      UIManager.put("PopupMenu.font", myFont);
+      UIManager.put("OptionPane.font", myFont);
+      UIManager.put("Panel.font", myFont);
+      UIManager.put("ProgressBar.font", myFont);
+      UIManager.put("ScrollPane.font", myFont);
+      UIManager.put("Viewport.font", myFont);
+      UIManager.put("TabbedPane.font", myFont);
+      UIManager.put("Slider.font", myFont);
+      UIManager.put("Table.font", myFont);
+      UIManager.put("TableHeader.font", myFont);
+      UIManager.put("TextField.font", myFont);
+      UIManager.put("Spinner.font", myFont);
+      UIManager.put("PasswordField.font", myFont);
+      UIManager.put("TextArea.font", myFont);
+      UIManager.put("TextPane.font", myFont);
+      UIManager.put("EditorPane.font", myFont);
+      UIManager.put("TabbedPane.smallFont", myFont);
+      UIManager.put("TitledBorder.font", myFont);
+      UIManager.put("ToolBar.font", myFont);
+      UIManager.put("ToolTip.font", myFont);
+      UIManager.put("Tree.font", myFont);
+      UIManager.put("FormattedTextField.font", myFont);
+      UIManager.put("IconButton.font", myFont);
+      UIManager.put("InternalFrame.optionDialogTitleFont", myFont);
+      UIManager.put("InternalFrame.paletteTitleFont", myFont);
+      UIManager.put("InternalFrame.titleFont", myFont);
+  }
+  setFont(new FontUIResource(new Font("Monaco", Font.PLAIN, 14)));
+  ```
+  <!--endsec-->
