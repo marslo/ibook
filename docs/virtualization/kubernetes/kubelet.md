@@ -27,7 +27,18 @@ references:
 
 ## [configuration files](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
 ### systemd
-- service configure : `/etc/systemd/system/kubelet.service.d/10-kubeadm.conf`
+- service configure :
+  - v1.12.3: `/etc/systemd/system/kubelet.service.d/10-kubeadm.conf`
+  - v1.9.16: `/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf`
+  - check via:
+    ```bash
+    $ sudo systemctl status kubelet.service
+    ● kubelet.service - kubelet: The Kubernetes Node Agent
+       Loaded: loaded (/usr/local/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+      Drop-In: /usr/lib/systemd/system/kubelet.service.d
+               └─10-kubeadm.conf
+       Active: active (running) since Fri 2023-06-23 17:04:07 PDT; 7min ago
+    ```
 - environment file : `/etc/sysconfig/kubelet`
 
 ### kubelet

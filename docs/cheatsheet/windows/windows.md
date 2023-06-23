@@ -764,8 +764,7 @@ PS C:\> cat .\test.txt | ForEach-Object {
 
 ### [openssh for windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell)
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [* Get started with OpenSSH for Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell)
 > - [OpenSSH for Windows overview](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_overview?source=recommendations)
 > - [OpenSSH Server configuration for Windows Server and Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration?source=recommendations)
@@ -796,6 +795,40 @@ PS C:\> cat .\test.txt | ForEach-Object {
   > Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
   > Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
   ```
+
+  - for error `0x800f0954`:
+    ```powershell
+    # Set Windows Update Server Key to 0
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 0
+
+    # Set Disable Windows Update Access to 0
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ -Name DisableWindowsUpdateAccess -Value 0
+
+    # Restart Windows Update Service
+    > Restart-Service -Name wuauserv -Force
+    ```
+
+  - or full process
+    ```powershell
+    # Set Windows Update Server Key to 0
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 0
+
+    # Set Disable Windows Update Access to 0
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ -Name DisableWindowsUpdateAccess -Value 0
+
+    # Restart Windows Update Service
+    > Restart-Service -Name wuauserv -Force
+
+    # Install OpenSSH
+    > dism /online /Add-Capability /CapabilityName:OpenSSH.Client~~~~0.0.1.0
+
+    # Set Necessary Windows Update Server Key to 1
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 1
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -Name DisableWindowsUpdateAccess -Value 1
+
+    # Restart Windows Update Service
+    > Restart-Service -Name wuauserv -Force
+    ```
 
 - start services
   ```powershell

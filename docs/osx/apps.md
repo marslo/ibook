@@ -402,12 +402,16 @@ $ alias git="git -C ${hcore}"
          * marslo/icu4c-71-1/icu4c@71.1
   Please use the fully-qualified name (e.g. homebrew/cask/icu4c@71.1) to refer to the formula.
 
+  # will be installed in /usr/local/Cellar/icu4c@71.1
   $ HOMEBREW_NO_AUTO_UPDATE=1 brew install homebrew/cask/icu4c@71.1
   ==> Fetching homebrew/cask/icu4c@71.1
   ==> Downloading https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz
   Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/ff9ece63f455ff1d6aa066340111e22abfc72c249a7f3d1e492ffef111cb0752--icu4c-71_1-src.tgz
   ==> Installing icu4c@71.1 from homebrew/cask
   ...
+
+  # mapping libs
+  $ ln -sf /usr/local/Cellar/icu4c@71.1/71.1/lib/*.dylib /usr/local/lib/
   ```
 
   <!--sec data-title="installation full log" data-id="section0" data-show=true data-collapse=true ces-->
@@ -445,7 +449,7 @@ $ alias git="git -C ${hcore}"
 - via url
 
   > [!INFO]
-  > url should be : `https://raw.githubusercontent.com/Homebrew/homebrew-core/<git-revision>/Formula/<formula-name>.rb`
+  > - url should be : `https://raw.githubusercontent.com/Homebrew/homebrew-core/<git-revision>/Formula/<formula-name>.rb`
 
   ```bash
   $ HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 \
@@ -471,8 +475,7 @@ $ alias git="git -C ${hcore}"
 
 - via new tap
 
-  > [!TIP]
-  > references:
+  > [!TIP|label:references:]
   > - [Install specific git version on MacOS using brew](https://stackoverflow.com/a/69549488/2940319)
 
   - setup environment (tap)
@@ -501,8 +504,71 @@ $ alias git="git -C ${hcore}"
     ==> Formulae
     homebrew/cask/icu4c@71.1                       icu4c ✔                                        marslo/icu4c-71-1/icu4c@71.1
 
-    $ HOMEBREW_NO_AUTO_UPDATE=1 brew install marslo/icu4c-71-1/icu4c@71.1
+    # will be installed in /usr/local/Cellar/icu4c@71.1
+    $ HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 HOMEBREW_NO_AUTO_UPDATE=1 brew install marslo/icu4c-71-1/icu4c@71.1
+
+    # mapping libs : https://stackoverflow.com/a/55024755/2940319
+    $ ln -sf /usr/local/Cellar/icu4c@71.1/71.1/lib/*.dylib /usr/local/lib/
+
+    # verify
+    $ ls -Altrh /usr/local/lib | grep icu4c
+    lrwxr-xr-x   1 marslo admin   59 Jun 26 15:34 libicudata.71.1.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicudata.71.1.dylib
+    lrwxr-xr-x   1 marslo admin   57 Jun 26 15:34 libicudata.71.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicudata.71.dylib
+    lrwxr-xr-x   1 marslo admin   54 Jun 26 15:34 libicudata.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicudata.dylib
+    lrwxr-xr-x   1 marslo admin   59 Jun 26 15:34 libicui18n.71.1.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicui18n.71.1.dylib
+    lrwxr-xr-x   1 marslo admin   57 Jun 26 15:34 libicui18n.71.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicui18n.71.dylib
+    lrwxr-xr-x   1 marslo admin   54 Jun 26 15:34 libicui18n.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicui18n.dylib
+    lrwxr-xr-x   1 marslo admin   57 Jun 26 15:34 libicuio.71.1.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuio.71.1.dylib
+    lrwxr-xr-x   1 marslo admin   55 Jun 26 15:34 libicuio.71.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuio.71.dylib
+    lrwxr-xr-x   1 marslo admin   52 Jun 26 15:34 libicuio.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuio.dylib
+    lrwxr-xr-x   1 marslo admin   59 Jun 26 15:34 libicutest.71.1.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicutest.71.1.dylib
+    lrwxr-xr-x   1 marslo admin   57 Jun 26 15:34 libicutest.71.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicutest.71.dylib
+    lrwxr-xr-x   1 marslo admin   54 Jun 26 15:34 libicutest.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicutest.dylib
+    lrwxr-xr-x   1 marslo admin   57 Jun 26 15:34 libicutu.71.1.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicutu.71.1.dylib
+    lrwxr-xr-x   1 marslo admin   55 Jun 26 15:34 libicutu.71.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicutu.71.dylib
+    lrwxr-xr-x   1 marslo admin   52 Jun 26 15:34 libicutu.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicutu.dylib
+    lrwxr-xr-x   1 marslo admin   57 Jun 26 15:34 libicuuc.71.1.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuuc.71.1.dylib
+    lrwxr-xr-x   1 marslo admin   55 Jun 26 15:34 libicuuc.71.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuuc.71.dylib
+    lrwxr-xr-x   1 marslo admin   52 Jun 26 15:34 libicuuc.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuuc.dylib
     ```
+
+    <!--sec data-title="result" data-id="section2" data-show=true data-collapse=true ces-->
+    ```bash
+    ==> Fetching marslo/icu4c-71-1/icu4c@71.1
+    ==> Downloading https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz
+    ==> Downloading from https://objects.githubusercontent.com/github-production-release-asset-2e65be/49244766/6a045371-02a9-431c-81b8-be6721ce
+    #################################################################################################################################### 100.0%
+    ==> Reinstalling marslo/icu4c-71-1/icu4c@71.1
+    Warning: Your Xcode (14.1) is outdated.
+    Please update to Xcode 14.3 (or delete it).
+    Xcode can be updated from the App Store.
+
+    ==> ./configure --prefix=/usr/local/Cellar/icu4c@71.1/71.1 --disable-samples --disable-tests --enable-static --with-library-bits=64
+    ==> make
+    ==> make install
+    ==> Caveats
+    icu4c@71.1 is keg-only, which means it was not symlinked into /usr/local,
+    because macOS provides libicucore.dylib (but nothing else).
+
+    If you need to have icu4c@71.1 first in your PATH, run:
+      echo 'export PATH="/usr/local/opt/icu4c@71.1/bin:$PATH"' >> /Users/marslo/.bash_profile
+      echo 'export PATH="/usr/local/opt/icu4c@71.1/sbin:$PATH"' >> /Users/marslo/.bash_profile
+
+    For compilers to find icu4c@71.1 you may need to set:
+      export LDFLAGS="-L/usr/local/opt/icu4c@71.1/lib"
+      export CPPFLAGS="-I/usr/local/opt/icu4c@71.1/include"
+
+    For pkg-config to find icu4c@71.1 you may need to set:
+      export PKG_CONFIG_PATH="/usr/local/opt/icu4c@71.1/lib/pkgconfig"
+    ==> Summary
+    ☕️ 🐸  /usr/local/Cellar/icu4c@71.1/71.1: 262 files, 76.2MB, built in 2 minutes 55 seconds
+    ==> Running `brew cleanup icu4c@71.1`...
+    Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+    Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+    Warning: HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK is set: not checking for outdated
+    dependents or dependents with broken linkage!
+    ```
+    <!--endsec-->
 
 - via formula file (.rb)
   ```bash
