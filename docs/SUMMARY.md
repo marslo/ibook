@@ -50,6 +50,7 @@
     * [troubleshooting](devops/git/troubleshooting.md)
     * [tricky](devops/git/tricky.md)
     * [statistics](devops/git/statistics.md)
+  * [ansible](devops/ansible.md)
   * [android](devops/android.md)
   * [commonTools](devops/commonTools.md)
   * [compilation](devops/compilation.md)

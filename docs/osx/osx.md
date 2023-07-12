@@ -2,21 +2,22 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [xcode](#xcode)
-  - [downlaod xcode by wget](#downlaod-xcode-by-wget)
-  - [Appendix](#appendix)
-  - [accpet license from cmd](#accpet-license-from-cmd)
-  - [commandline tools and compoents](#commandline-tools-and-compoents)
-  - [enable dev mode](#enable-dev-mode)
 - [system info](#system-info)
 - [system](#system)
   - [setup hostname](#setup-hostname)
   - [disable guest user](#disable-guest-user)
   - [enable root user](#enable-root-user)
-  - [System Integrity Protection](#system-integrity-protection)
+  - [system integrity protection](#system-integrity-protection)
   - [disable/enable gatekeeper](#disableenable-gatekeeper)
-- [app](#app)
+- [apps](#apps)
   - [java](#java)
+- [xcode](#xcode)
+  - [downlaod xcode by wget](#downlaod-xcode-by-wget)
+  - [developer tools](#developer-tools)
+  - [appendix](#appendix)
+  - [accpet license from cmd](#accpet-license-from-cmd)
+  - [commandline tools and compoents](#commandline-tools-and-compoents)
+  - [enable dev mode](#enable-dev-mode)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -25,171 +26,18 @@
 > - [Mac keyboard shortcuts](https://support.apple.com/en-us/HT201236)
 {% endhint %}
 
-## xcode
-### downlaod xcode by wget
-* get cookies.txt
-  * install google chrome extension from [official website](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en)
-  * login [developer.apple.com](https://developer.apple.com/download/more/)
-  * select cookies.txt and download
-
-![download cookies.txt](../screenshot/cookies.txt-1.png)
-
-* get xcode download url and right click and select **Copy Link Address**:
-
-![copy link address](../screenshot/cookies.txt-2.png)
-
-* download xcode (inspired from [here](https://stackoverflow.com/a/4089758/2940319) and [here](https://stackoverflow.com/a/46020878/2940319))
-  ```bash
-  $ wget --cookies=on \
-         --load-cookies=cookies.txt \
-         --keep-session-cookies \
-         --save-cookies=cookies.txt \
-         https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
-  ```
-  * exmaple
-    ```bash
-    $ wget --cookies=on \
-    >          --load-cookies=cookies.txt \
-    >          --keep-session-cookies \
-    >          --save-cookies=cookies.txt \
-    >          https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
-    --2019-10-15 07:55:18--  https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
-    Resolving download.developer.apple.com (download.developer.apple.com)... 17.253.17.207, 17.253.17.211
-    Connecting to download.developer.apple.com (download.developer.apple.com)|17.253.17.207|:443... connected.
-    HTTP request sent, awaiting response... 200 OK
-    Length: 7805079698 (7.3G) [application/octet-stream]
-    Saving to: ‘Xcode_11.2_beta_2.xip’
-
-    100%[===========================================================================================================>] 7,805,079,698  112MB/s   in 70s
-
-    2019-10-15 07:53:07 (106 MB/s) - ‘Xcode_11.2_beta_2.xip’ saved [7805079698/7805079698]
-
-    $ ls -altrh Xcode_11.2_beta_2.xip
-    -rw-rw-r-- 1 devops devops 7.3G Oct  9 13:27 Xcode_11.2_beta_2.xip
-    ```
-
-### Appendix
-#### xcode
-| xcode       | url                                                                                            |
-| ----------- | ---------------------------------------------------------------------------------------------- |
-| 12.3 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_12.3_beta/Xcode_12.3_beta.xip`     |
-| 12.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_12.2/Xcode_12.2.xip`               |
-| 12.2beta2   | `https://download.developer.apple.com/Developer_Tools/Xcode_12.2_beta_2/Xcode_12.2_beta_2.xip` |
-| 12.0.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_12.0.1/Xcode_12.0.1.xip`           |
-| 12 beta 5   | `https://download.developer.apple.com/Developer_Tools/Xcode_12_beta_5/Xcode_12_beta_5.xip`     |
-| 11.6        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.6/Xcode_11.6.xip`               |
-| 11.5 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta_2/Xcode_11.5_beta_2.xip` |
-| 11.5 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta/Xcode_11.5_beta.xip`     |
-| 11.4.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4.1/Xcode_11.4.1.xip`           |
-| 11.4        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4/Xcode_11.4.xip`               |
-| 11.4 beta 3 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_3/Xcode_11.4_beta_3.xip` |
-| 11.4 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_2/Xcode_11.4_beta_2.xip` |
-| 11.4 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta/Xcode_11.4_beta.xip`     |
-| 11.3.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.3.1/Xcode_11.3.1.xip`           |
-| 11.2 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip` |
-| 11.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.1/Xcode_11.1.xip`               |
-| 11.2 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta/Xcode_11.2_beta.xip`     |
-| 11          | `https://download.developer.apple.com/Developer_Tools/Xcode_11/Xcode_11.xip`                   |
-| 10.3        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.3/Xcode_10.3.xip`               |
-| 10.2.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2.1/Xcode_10.2.1.xip`           |
-| 10.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2/Xcode_10.2.xip`               |
-| 10.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.1/Xcode_10.1.xip`               |
-
-#### command line tool
-| command line tool    | url                                                                                                                                                            |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 12.3 beta            | `https://download.developer.apple.com/Developer_Tools/Xcode_12.3_beta/Xcode_12.3_beta.xip`                                                                     |
-| 12.2                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12.2/Command_Line_Tools_for_Xcode_12.2.dmg`                                 |
-| 12.0                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12/Command_Line_Tools_for_Xcode_12.dmg`                                     |
-| 11.4.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4.1/Command_Line_Tools_for_Xcode_11.4.1.dmg`                             |
-| 11.4                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4/Command_Line_Tools_for_Xcode_11.4.dmg`                                 |
-| 11.4 beta 3          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_3/Command_Line_Tools_for_Xcode_11.4_beta_3.dmg`                   |
-| 11.4 beta 2          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_2/Command_Line_Tools_for_Xcode_11.4_beta_2.dmg`                   |
-| 11.3.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.3.1/Command_Line_Tools_for_Xcode_11.3.1.dmg`                             |
-| 11.2 beta 2          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta_2/Command_Line_Tools_for_Xcode_11.2_beta_2.dmg`                   |
-| 11.1                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg`                       |
-| 11                   | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11/Command_Line_Tools_for_Xcode_11.dmg`                                     |
-| 10.3                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.3/Command_Line_Tools_macOS_10.14_for_Xcode_10.3.dmg`         |
-| 10.2.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg` |
-| 10.2                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.dmg`         |
-| 10.1 for macOS 10.14 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg`         |
-| 10.1 for macOS 10.13 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.13_for_Xcode_10.1/Command_Line_Tools_macOS_10.13_for_Xcode_10.1.dmg`         |
-
-#### additional tools
-| additional tool      | url                                                                                                                                                            |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 11.4                 | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4/Additional_Tools_for_Xcode_11.4.dmg`                                     |
-| 11.4 beta 2          | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4_beta_2/Additional_Tools_for_Xcode_11.4_beta_2.dmg`                       |
-| 11                   | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11/Additional_Tools_for_Xcode_11.dmg`                                         |
-| 10.1                 | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_10.1/Additional_Tools_for_Xcode_10.1.dmg`                                     |
-
-* [additional info](https://stackoverflow.com/a/44390183/2940319)
-
-### accpet license from cmd
-```bash
-$ sudo xcodebuild -license accept
-```
-
-### commandline tools and compoents
-- installation
-  ```bash
-  $ xcode-select -p
-
-  $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
-      sudo installer -pkg "$pkg" -target /;
-  done
-  ```
-- upgrade
-  ```bash
-  $ softwareupdate --all --install --force
-  ```
-  or
-  ```bash
-  $ sudo rm -rf /Library/Developer/CommandLineTools
-  $ sudo xcode-select --install
-  ```
-
-  [more details](https://stackoverflow.com/a/44234214/2940319)
-  ```bash
-  $ defaults read /Library/Preferences/com.apple.SoftwareUpdate
-  {
-      AutomaticallyInstallMacOSUpdates = 1;
-      LastAttemptBuildVersion = "10.15.7 (19H2)";
-      LastAttemptSystemVersion = "10.15.7 (19H2)";
-      LastBackgroundSuccessfulDate = "2020-10-10 06:15:40 +0000";
-      LastCatalogChangeDate = "2020-10-10 14:13:29 +0000";
-      LastFullSuccessfulDate = "2020-10-10 14:14:38 +0000";
-      LastRecommendedMajorOSBundleIdentifier = "";
-      LastRecommendedUpdatesAvailable = 0;
-      LastResultCode = 2;
-      LastSessionSuccessful = 1;
-      LastSuccessfulDate = "2020-10-10 14:14:38 +0000";
-      LastUpdatesAvailable = 0;
-      PrimaryLanguages =     (
-          "en-CN",
-          en
-      );
-      RecommendedUpdates =     (
-      );
-      SkipLocalCDN = 0;
-  }
-  ```
-
-### enable dev mode
-```bash
-$ DevToolsSecurity -enable
-```
-
 ## system info
 - production version
+
+  > [!NOTE]
   > [issue in fetchScreen](https://github.com/KittyKatt/screenFetch/issues/692#issuecomment-726631900)
 
-```bash
-$ sw_vers
-ProductName    : macOS
-ProductVersion : 11.1
-BuildVersion   : 20C69
-```
+  ```bash
+  $ sw_vers
+  ProductName    : macOS
+  ProductVersion : 11.1
+  BuildVersion   : 20C69
+  ```
 
   - [or](https://apple.stackexchange.com/a/368722/254265)
     ```bash
@@ -280,7 +128,6 @@ BuildVersion   : 20C69
   ```
 
 - cpu
-
   ```bash
   $ sysctl -n machdep.cpu.brand_string
   Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
@@ -326,31 +173,36 @@ $ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_
   ```bash
   $ sudo /usr/sbin/sysadminctl -deleteUse Guest
   ```
-[check status](https://apple.stackexchange.com/a/402502/254265)
-```bash
-$ sysadminctl -guestAccount status
-2020-12-30 20:27:59.524 sysadminctl[45327:844298] Guest account disabled.
-$ sudo sysadminctl -guestAccount off
-2020-12-30 20:28:39.645 sysadminctl[45479:846930] Guest account is already disabled
-```
+
+- [check status](https://apple.stackexchange.com/a/402502/254265)
+  ```bash
+  $ sysadminctl -guestAccount status
+  2020-12-30 20:27:59.524 sysadminctl[45327:844298] Guest account disabled.
+  $ sudo sysadminctl -guestAccount off
+  2020-12-30 20:28:39.645 sysadminctl[45479:846930] Guest account is already disabled
+  ```
 
 - list all accounts
+
+  > [!TIP]
+  > location of plists: `/var/db/dslocal/nodes/Default/users`
+
   ```bash
   $ dscl . list /Users
-  ```
-  or
-  ```bash
+
+  # or
   $ dscl . -list /Users GeneratedUID
   ```
   ![check which user is using the disk](../screenshot/osx/which-user-using-disk.png)
 
-  [or](https://apple.stackexchange.com/q/310308/254265)
-  ```bash
-  $ dscacheutil -q user
-  ```
-  - location of plists: `/var/db/dslocal/nodes/Default/users`
+  - [or](https://apple.stackexchange.com/q/310308/254265)
+    ```bash
+    $ dscacheutil -q user
+    ```
 
 #### create Guest and enable
+
+> [!NOTE]
 > scripts: https://github.com/sheagcraig/guestAccount/blob/master/guest_account
 
 ```bash
@@ -365,7 +217,7 @@ $ security login-keychain -s $keychain
 ### [enable root user](https://support.apple.com/en-us/HT204012)
 ![Enable Root User](../screenshot/osx/enable-root-user.png)
 
-### [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
+### [system integrity protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
 ```bash
 $ csrutil disable
 Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
@@ -395,7 +247,7 @@ $ sudo chflags restricted /usr/local
    Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.
   ```
 
-#### [Remove file lock (uchg) flag](https://superuser.com/a/40754/112396)
+#### [remove file lock (uchg) flag](https://superuser.com/a/40754/112396)
 ```bash
 $ chflags -R nouchg *
 # or
@@ -453,9 +305,187 @@ $ chflags -R nouchg <PATH of folder>
   assessments disabled
   ```
 
-## app
+## apps
 ### java
 - setup java home
   ```bash
   $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
   ```
+
+## xcode
+### downlaod xcode by wget
+* get cookies.txt
+  * install google chrome extension from [official website](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en)
+  * login [developer.apple.com](https://developer.apple.com/download/more/)
+  * select cookies.txt and download
+
+  ![download cookies.txt](../screenshot/cookies.txt-1.png)
+
+* get xcode download url and right click and select **Copy Link Address**:
+
+  ![copy link address](../screenshot/cookies.txt-2.png)
+
+* download xcode (inspired from [here](https://stackoverflow.com/a/4089758/2940319) and [here](https://stackoverflow.com/a/46020878/2940319))
+  ```bash
+  $ wget --cookies=on \
+         --load-cookies=cookies.txt \
+         --keep-session-cookies \
+         --save-cookies=cookies.txt \
+         https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
+  ```
+  * exmaple
+    ```bash
+    $ wget --cookies=on \
+    >          --load-cookies=cookies.txt \
+    >          --keep-session-cookies \
+    >          --save-cookies=cookies.txt \
+    >          https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
+    --2019-10-15 07:55:18--  https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
+    Resolving download.developer.apple.com (download.developer.apple.com)... 17.253.17.207, 17.253.17.211
+    Connecting to download.developer.apple.com (download.developer.apple.com)|17.253.17.207|:443... connected.
+    HTTP request sent, awaiting response... 200 OK
+    Length: 7805079698 (7.3G) [application/octet-stream]
+    Saving to: ‘Xcode_11.2_beta_2.xip’
+
+    100%[===========================================================================================================>] 7,805,079,698  112MB/s   in 70s
+
+    2019-10-15 07:53:07 (106 MB/s) - ‘Xcode_11.2_beta_2.xip’ saved [7805079698/7805079698]
+
+    $ ls -altrh Xcode_11.2_beta_2.xip
+    -rw-rw-r-- 1 devops devops 7.3G Oct  9 13:27 Xcode_11.2_beta_2.xip
+    ```
+
+### developer tools
+
+> [!NOTE]
+> - [Install Ansible on Mac OSX](https://hvops.com/articles/ansible-mac-osx/)
+
+```bash
+$ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+```
+
+- already installed
+  ```bash
+  $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+  package-id: com.apple.pkg.CLTools_Executables
+  version: 14.3.1.0.1.1683849156
+  volume: /
+  location: /
+  install-time: 1688011857
+  ```
+- not been installed
+  ```bash
+  $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+  No receipt for 'com.apple.pkg.CLTools_Executables' found at '/'.
+  ```
+
+### appendix
+#### xcode
+| XCODE       | URL                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| 12.3 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_12.3_beta/Xcode_12.3_beta.xip`     |
+| 12.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_12.2/Xcode_12.2.xip`               |
+| 12.2beta2   | `https://download.developer.apple.com/Developer_Tools/Xcode_12.2_beta_2/Xcode_12.2_beta_2.xip` |
+| 12.0.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_12.0.1/Xcode_12.0.1.xip`           |
+| 12 beta 5   | `https://download.developer.apple.com/Developer_Tools/Xcode_12_beta_5/Xcode_12_beta_5.xip`     |
+| 11.6        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.6/Xcode_11.6.xip`               |
+| 11.5 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta_2/Xcode_11.5_beta_2.xip` |
+| 11.5 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.5_beta/Xcode_11.5_beta.xip`     |
+| 11.4.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4.1/Xcode_11.4.1.xip`           |
+| 11.4        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4/Xcode_11.4.xip`               |
+| 11.4 beta 3 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_3/Xcode_11.4_beta_3.xip` |
+| 11.4 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta_2/Xcode_11.4_beta_2.xip` |
+| 11.4 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.4_beta/Xcode_11.4_beta.xip`     |
+| 11.3.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_11.3.1/Xcode_11.3.1.xip`           |
+| 11.2 beta 2 | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip` |
+| 11.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_11.1/Xcode_11.1.xip`               |
+| 11.2 beta   | `https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta/Xcode_11.2_beta.xip`     |
+| 11          | `https://download.developer.apple.com/Developer_Tools/Xcode_11/Xcode_11.xip`                   |
+| 10.3        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.3/Xcode_10.3.xip`               |
+| 10.2.1      | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2.1/Xcode_10.2.1.xip`           |
+| 10.2        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.2/Xcode_10.2.xip`               |
+| 10.1        | `https://download.developer.apple.com/Developer_Tools/Xcode_10.1/Xcode_10.1.xip`               |
+
+#### command line tool
+| COMMAND LINE TOOL    | URL                                                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 12.3 beta            | `https://download.developer.apple.com/Developer_Tools/Xcode_12.3_beta/Xcode_12.3_beta.xip`                                                                     |
+| 12.2                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12.2/Command_Line_Tools_for_Xcode_12.2.dmg`                                 |
+| 12.0                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_12/Command_Line_Tools_for_Xcode_12.dmg`                                     |
+| 11.4.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4.1/Command_Line_Tools_for_Xcode_11.4.1.dmg`                             |
+| 11.4                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4/Command_Line_Tools_for_Xcode_11.4.dmg`                                 |
+| 11.4 beta 3          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_3/Command_Line_Tools_for_Xcode_11.4_beta_3.dmg`                   |
+| 11.4 beta 2          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.4_beta_2/Command_Line_Tools_for_Xcode_11.4_beta_2.dmg`                   |
+| 11.3.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.3.1/Command_Line_Tools_for_Xcode_11.3.1.dmg`                             |
+| 11.2 beta 2          | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta_2/Command_Line_Tools_for_Xcode_11.2_beta_2.dmg`                   |
+| 11.1                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11.2_beta/Command_Line_Tools_for_Xcode_11.2_beta.dmg`                       |
+| 11                   | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_for_Xcode_11/Command_Line_Tools_for_Xcode_11.dmg`                                     |
+| 10.3                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.3/Command_Line_Tools_macOS_10.14_for_Xcode_10.3.dmg`         |
+| 10.2.1               | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.1.dmg` |
+| 10.2                 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.2/Command_Line_Tools_macOS_10.14_for_Xcode_10.2.dmg`         |
+| 10.1 for macOS 10.14 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.14_for_Xcode_10.1/Command_Line_Tools_macOS_10.14_for_Xcode_10.1.dmg`         |
+| 10.1 for macOS 10.13 | `https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.13_for_Xcode_10.1/Command_Line_Tools_macOS_10.13_for_Xcode_10.1.dmg`         |
+
+#### additional tools
+| ADDITIONAL TOOL      | URL                                                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 11.4                 | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4/Additional_Tools_for_Xcode_11.4.dmg`                                     |
+| 11.4 beta 2          | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11.4_beta_2/Additional_Tools_for_Xcode_11.4_beta_2.dmg`                       |
+| 11                   | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_11/Additional_Tools_for_Xcode_11.dmg`                                         |
+| 10.1                 | `https://download.developer.apple.com/Developer_Tools/Additional_Tools_for_Xcode_10.1/Additional_Tools_for_Xcode_10.1.dmg`                                     |
+
+* [additional info](https://stackoverflow.com/a/44390183/2940319)
+
+### accpet license from cmd
+```bash
+$ sudo xcodebuild -license accept
+```
+
+### commandline tools and compoents
+- installation
+  ```bash
+  $ xcode-select -p
+
+  $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
+      sudo installer -pkg "$pkg" -target /;
+  done
+  ```
+- upgrade
+  ```bash
+  $ softwareupdate --all --install --force
+
+  # or
+  $ sudo rm -rf /Library/Developer/CommandLineTools
+  $ sudo xcode-select --install
+  ```
+
+  [more details](https://stackoverflow.com/a/44234214/2940319)
+  ```bash
+  $ defaults read /Library/Preferences/com.apple.SoftwareUpdate
+  {
+      AutomaticallyInstallMacOSUpdates = 1;
+      LastAttemptBuildVersion = "10.15.7 (19H2)";
+      LastAttemptSystemVersion = "10.15.7 (19H2)";
+      LastBackgroundSuccessfulDate = "2020-10-10 06:15:40 +0000";
+      LastCatalogChangeDate = "2020-10-10 14:13:29 +0000";
+      LastFullSuccessfulDate = "2020-10-10 14:14:38 +0000";
+      LastRecommendedMajorOSBundleIdentifier = "";
+      LastRecommendedUpdatesAvailable = 0;
+      LastResultCode = 2;
+      LastSessionSuccessful = 1;
+      LastSuccessfulDate = "2020-10-10 14:14:38 +0000";
+      LastUpdatesAvailable = 0;
+      PrimaryLanguages =     (
+          "en-CN",
+          en
+      );
+      RecommendedUpdates =     (
+      );
+      SkipLocalCDN = 0;
+  }
+  ```
+
+### enable dev mode
+```bash
+$ DevToolsSecurity -enable
+```

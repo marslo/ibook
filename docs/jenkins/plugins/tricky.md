@@ -8,11 +8,11 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-
 ## downgrade
 ### jsch
 
 > [!NOTE]
+> - [JENKINS-71273: Gerrit Trigger fails to connect Gerrit 2.14 - com.jcraft.jsch.JSchException: verify: false](https://issues.jenkins.io/browse/JENKINS-71273)
 > - [Nicola Beghin](https://stackoverflow.com/questions/72743823/public-key-authentication-fails-with-jsch-but-work-with-openssh-with-the-same-ke#comment133364530_72771323)
 > - [Public key authentication fails with JSch but work with OpenSSH with the same key](https://stackoverflow.com/questions/72743823/public-key-authentication-fails-with-jsch-but-work-with-openssh-with-the-same-ke/72771323#comment133364530_72771323)
 > - api

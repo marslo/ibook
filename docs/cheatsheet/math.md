@@ -8,6 +8,7 @@
   - [bc](#bc)
   - [jq](#jq)
   - [`$(())`](#)
+- [sum from file](#sum-from-file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -15,8 +16,7 @@
 
 ## sum
 
-> [!INFO]
-> references:
+> [!INFO|label:references:]
 > - [Shell command to sum integers, one per line?](https://stackoverflow.com/a/25245025/2940319)
 > - [Summing a List of Numbers](https://www.oreilly.com/library/view/bash-cookbook/0596526784/ch07s13.html)
 
@@ -52,10 +52,10 @@ $ ls -l | awk '{sum += $5} END {print sum}'
 14676
 ```
 
+
 ### datamash
 
-> [!TIP]
-> reference:
+> [!TIP|label:reference:]
 > - [Shell command to sum integers, one per line?](https://stackoverflow.com/a/55392673/2940319)
 
 ```bash
@@ -64,21 +64,23 @@ $ seq 10 | datamash sum 1
 ```
 
 ### bc
-```bash
-$ seq 10 | paste -sd+ -
-1+2+3+4+5+6+7+8+9+10
 
-$ seq 10 | paste -sd+ - | bc
-55
-```
-
-- [or](https://stackoverflow.com/a/23835376/2940319)
+- [paste + bc](https://stackoverflow.com/a/20437994/2940319)
   ```bash
-  $ seq 10 | xargs printf "- - %s" | xargs  | bc
+  $ seq 10 | paste -sd+ -
+  1+2+3+4+5+6+7+8+9+10
+
+  $ seq 10 | paste -sd+ - | bc
   55
   ```
 
-- [or](https://stackoverflow.com/a/453325/2940319)
+- [xargs + bc](https://stackoverflow.com/a/23835376/2940319)
+  ```bash
+  $ seq 10 | xargs printf "- - %s" | xargs | bc
+  55
+  ```
+
+- [sed + bc](https://stackoverflow.com/a/453325/2940319)
   ```bash
   $ seq 10 | sed 's/^/.+/' | bc
   1
@@ -93,7 +95,7 @@ $ seq 10 | paste -sd+ - | bc
   55
   ```
 
-### jq
+### [jq](https://stackoverflow.com/a/34118894/2940319)
 ```bash
 $ seq 10 | jq -s 'add'
 55
@@ -111,3 +113,45 @@ $ echo $(( $(seq 10 | tr "\n" "+") 0 ))
 # or from file
 $ echo $(( $( tr "\n" "+"  < /tmp/test) 0 ))
 ```
+
+## sum from file
+
+> [!NOTE|label:sample file:]
+> ```bash
+> $ cat numbers.txt
+> 73.27
+> 218.38
+> 14.15
+> 9.18
+> 16.60
+> ```
+> - [How can I quickly sum all numbers in a file?](https://stackoverflow.com/q/2702564/2940319)
+
+- [awk](https://stackoverflow.com/a/2702577/2940319)
+  ```bash
+
+  $ awk '{ sum += $1 } END { print sum }' numbers.txt
+  331.58
+  ```
+
+- [paste && bc](https://stackoverflow.com/a/20437994/2940319)
+  ```bash
+  $ paste -sd+ numbers.txt
+  73.27+218.38+14.15+9.18+16.60
+
+  $ paste -sd+ numbers.txt | bc
+  331.58
+  ```
+
+  - Σn where 1<=n<=100000
+    ```bash
+    $ seq 100000 | paste -sd+ | bc -l
+    5000050000
+    ```
+
+- [jq](https://stackoverflow.com/a/34118894/2940319)
+  ```bash
+  $ paste -sd' ' numbers.txt | jq -s add
+  331.58
+  ```
+

@@ -222,6 +222,11 @@
 > - [Jenkins : Obtaining a thread dump](https://wiki.jenkins.io/display/JENKINS/Obtaining+a+thread+dump)
 > - [Required Data: Jenkins Hang Issue On Linux](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/required-data/required-data-hang-issue-on-linux-cjp)
 > - [Upgrading to Jenkins 2.176.2 : Improved CSRF protection](https://www.jenkins.io/doc/upgrade-guide/2.176/#upgrading-to-jenkins-lts-2-176-2)
+> - [JENKINS-71273: Gerrit Trigger fails to connect Gerrit 2.14 - com.jcraft.jsch.JSchException: verify: false](https://issues.jenkins.io/browse/JENKINS-71273)
+>   ```bash
+>   -Djsch.client_pubkey="ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa"
+>   -Djsch.server_host_key="ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa"
+>   ```
 
 - java 11
 
