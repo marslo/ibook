@@ -95,11 +95,15 @@ function updateRepo() {
     git -C "${target}" fetch origin --force "${branch}"
     # git -C "${target}" rebase -v refs/remotes/origin/${branch}
     git -C "${target}" reset --hard refs/remotes/origin/${branch}
+    git -C "${target}" config user.email 'marslo.jiao@gmail.com'
+    git -C "${target}" config user.name  'marslo'
   fi
 }
 
 function cloneRepo() {
   git clone --single-branch --branch "${branch}" https://github.com/marslo/ibook.git "${target}"
+  git config user.email 'marslo.jiao@gmail.com'
+  git config user.name  'marslo'
 }
 
 function updateBook() {

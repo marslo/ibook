@@ -18,6 +18,8 @@
   - [accpet license from cmd](#accpet-license-from-cmd)
   - [commandline tools and compoents](#commandline-tools-and-compoents)
   - [enable dev mode](#enable-dev-mode)
+- [security](#security)
+  - [backup security](#backup-security)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -489,3 +491,21 @@ $ sudo xcodebuild -license accept
 ```bash
 $ DevToolsSecurity -enable
 ```
+
+## security
+### backup security
+
+> [!NOTE|label:references:]
+> - [How to make Python use CA certificates from Mac OS TrustStore?](https://stackoverflow.com/a/72053605/2940319)
+
+- export
+  ```bash
+  $ security export -t certs -f pemseq -k /System/Library/Keychains/SystemRootCertificates.keychain -o bundleCA.pem
+  $ security export -t certs -f pemseq -k /Library/Keychains/System.keychain -o selfSignedCAbundle.pem
+  ```
+
+- merge
+  ```bash
+  $ cat bundleCA.pem selfSignedCAbundle.pem >> allCAbundle.pem
+  $ export REQUESTS_CA_BUNDLE=/path/to/allCAbundle.pem
+  ```
