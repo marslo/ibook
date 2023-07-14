@@ -2,7 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [install](#install)
+- [environment](#environment)
+  - [install](#install)
   - [upgrade](#upgrade)
   - [completion](#completion)
 - [ansible-vault](#ansible-vault)
@@ -12,6 +13,7 @@
   - [encrypt](#encrypt)
   - [decrypt](#decrypt)
   - [view](#view)
+- [ansible-galaxy](#ansible-galaxy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +29,18 @@
 >   - [Tips and tricks](https://docs.ansible.com/ansible/3/user_guide/playbooks_best_practices.html#tip-for-variables-and-vaults)
 > - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
 
-## install
+## environment
+
+```bash
+$ sudo dnf install wget yum-utils make gcc openssl-devel bzip2-devel libffi-devel zlib-devel
+$ sudo dnf groupinstall 'development tools
+$ sudo dnf -y install epel-release
+$ sudo dnf install python39
+$ sudo update-alternatives --config python
+$ sudo update-alternatives --config python3
+```
+
+### install
 ```bash
 $ python -m pip install --user ansible
 ```
@@ -78,8 +91,6 @@ EOF
 
 > [!NOTE]
 > - [Encrypting content with Ansible Vault](https://docs.ansible.com/ansible/3/user_guide/vault.html)
-
-
 
 ### [encrypted files](https://docs.ansible.com/ansible/3/user_guide/vault.html#creating-encrypted-files)
 ```bash
@@ -149,3 +160,139 @@ $ ansible-vault decrypt
 ```bash
 $ ansible-vault view
 ```
+
+## ansible-galaxy
+
+> [!NOTE|label:references:]
+> - [* Kubernetes Collection for Ansible](https://galaxy.ansible.com/kubernetes/core)
+>   - [ansible-collections/kubernetes.core](https://github.com/ansible-collections/kubernetes.core)
+>   - [kubernetes.core.k8s](https://github.com/ansible-collections/kubernetes.core/blob/main/docs/kubernetes.core.k8s_inventory.rst)
+> - [kubernetes.core](https://galaxy.ansible.com/kubernetes/core)
+>   - [kubernetes.core.k8s](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/k8s_module.html#ansible-collections-kubernetes-core-k8s-module)
+> - [Collections in the Kubernetes Namespace](https://docs.ansible.com/ansible/latest/collections/kubernetes/index.html)
+> - [Kubernetes.Core](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/index.html#plugins-in-kubernetes-core)
+> - [installing roles and collections from the same requirements.yml file](https://docs.ansible.com/ansible/latest/galaxy/user_guide.html#installing-roles-and-collections-from-the-same-requirements-yml-file)
+> - [helm – Manages Kubernetes packages with the Helm package manager](https://docs.ansible.com/ansible/2.9/modules/helm_module.html)
+> - [The Inside Playbook](https://www.ansible.com/blog)
+>   - [Creating Kubernetes Dynamic Inventories with kubernetes.core Modules](https://www.ansible.com/blog/creating-kubernetes-dynamic-inventories-with-kubernetes.core-modules)
+>   - [* Automating Helm using Ansible](https://www.ansible.com/blog/automating-helm-using-ansible)
+>   - [k8s_taint](https://www.ansible.com/blog/whats-new-in-the-ansible-content-collection-for-kubernetes-2.3)
+>   - [Kubernetes Meets Event-Driven Ansible](https://www.ansible.com/blog/kubernetes-meets-event-driven-ansible)
+
+```bash
+$ ansible-galaxy collection install kubernetes.core
+
+# or
+$ ansible-galaxy install -r requirements.yml
+```
+
+- [example](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/helm_module.html#examples)
+
+  <!--sec data-title="deploy prometheus and grafana via ansbile+helm" data-id="section0" data-show=true data-collapse=true ces-->
+  {% raw %}
+  ```bash
+  - name: Deploy latest version of Prometheus chart inside monitoring namespace (and create it)
+    kubernetes.core.helm:
+      name: test
+      chart_ref: stable/prometheus
+      release_namespace: monitoring
+      create_namespace: true
+
+  # From repository
+  - name: Add stable chart repo
+    kubernetes.core.helm_repository:
+      name: stable
+      repo_url: "https://kubernetes.github.io/ingress-nginx"
+
+  - name: Deploy latest version of Grafana chart inside monitoring namespace with values
+    kubernetes.core.helm:
+      name: test
+      chart_ref: stable/grafana
+      release_namespace: monitoring
+      values:
+        replicas: 2
+
+  - name: Deploy Grafana chart on 5.0.12 with values loaded from template
+    kubernetes.core.helm:
+      name: test
+      chart_ref: stable/grafana
+      chart_version: 5.0.12
+      values: "{{ lookup('template', 'somefile.yaml') | from_yaml }}"
+
+  - name: Deploy Grafana chart using values files on target
+    kubernetes.core.helm:
+      name: test
+      chart_ref: stable/grafana
+      release_namespace: monitoring
+      values_files:
+        - /path/to/values.yaml
+
+  - name: Remove test release and waiting suppression ending
+    kubernetes.core.helm:
+      name: test
+      state: absent
+      wait: true
+
+  - name: Separately update the repository cache
+    kubernetes.core.helm:
+      name: dummy
+      namespace: kube-system
+      state: absent
+      update_repo_cache: true
+
+  - name: Deploy Grafana chart using set values on target
+    kubernetes.core.helm:
+      name: test
+      chart_ref: stable/grafana
+      release_namespace: monitoring
+      set_values:
+        - value: phase=prod
+          value_type: string
+
+  # From git
+  - name: Git clone stable repo on HEAD
+    ansible.builtin.git:
+      repo: "http://github.com/helm/charts.git"
+      dest: /tmp/helm_repo
+
+  - name: Deploy Grafana chart from local path
+    kubernetes.core.helm:
+      name: test
+      chart_ref: /tmp/helm_repo/stable/grafana
+      release_namespace: monitoring
+
+  # From url
+  - name: Deploy Grafana chart on 5.6.0 from url
+    kubernetes.core.helm:
+      name: test
+      chart_ref: "https://github.com/grafana/helm-charts/releases/download/grafana-5.6.0/grafana-5.6.0.tgz"
+      release_namespace: monitoring
+
+  # Using complex Values
+  - name: Deploy new-relic client chart
+    kubernetes.core.helm:
+      name: newrelic-bundle
+      chart_ref: newrelic/nri-bundle
+      release_namespace: default
+      force: True
+      wait: True
+      replace: True
+      update_repo_cache: True
+      disable_hook: True
+      values:
+        global:
+          licenseKey: "{{ nr_license_key }}"
+          cluster: "{{ site_name }}"
+        newrelic-infrastructure:
+          privileged: True
+        ksm:
+          enabled: True
+        prometheus:
+          enabled: True
+        kubeEvents:
+          enabled: True
+        logging:
+          enabled: True
+  ```
+  {% endraw %}
+  <!--endsec-->
