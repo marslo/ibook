@@ -3,6 +3,8 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [install](#install)
+  - [upgrade](#upgrade)
+  - [completion](#completion)
 - [ansible-vault](#ansible-vault)
   - [encrypted files](#encrypted-files)
   - [prompt for the password](#prompt-for-the-password)
@@ -29,6 +31,48 @@
 ```bash
 $ python -m pip install --user ansible
 ```
+
+- install for development
+  ```bash
+  $ python -m pip install --user https://github.com/ansible/ansible/archive/devel.tar.gz
+  ```
+
+### upgrade
+```bash
+$ python -m pip install --user --upgrade ansible
+```
+
+### [completion](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#adding-ansible-command-shell-completion)
+```bash
+$ python -m pip install --user argcomplete
+$ cat >> ~/.bashrc << EOF
+  command -v ansible > /dev/null && eval $(register-python-argcomplete ansible)
+                                 && eval $(register-python-argcomplete ansible-config)
+                                 && eval $(register-python-argcomplete ansible-console)
+                                 && eval $(register-python-argcomplete ansible-doc)
+                                 && eval $(register-python-argcomplete ansible-galaxy)
+                                 && eval $(register-python-argcomplete ansible-inventory)
+                                 && eval $(register-python-argcomplete ansible-playbook)
+                                 && eval $(register-python-argcomplete ansible-pull)
+                                 && eval $(register-python-argcomplete ansible-vault)
+EOF
+```
+
+- [completion.bash](https://github.com/dysosmus/ansible-completion)
+  ```bash
+  $ mkdir -p ~/.marslo/.completion
+  $ git clone git@github.com:dysosmus/ansible-completion.git ~/.marslo/.completion/ansible-completion
+
+  $ cat >> ~/.bashrc << EOF
+  [ -d '~/.marslo/.completion/ansible-completion' ] && source <( cat ~/.marslo/.completion/ansible-completion/*.bash )
+  EOF
+  ```
+
+  - or via `ln`
+    ```bash
+    $ ls -1 --color=none /path/to/ansible-completion/*.bash |
+         xargs -t -I{} bash -c "ln -svf {} /usr/local/share/bash-completion/completions/\$(basename {} | awk -F'.' '{print \$1}')"
+    ```
 
 ## ansible-vault
 
