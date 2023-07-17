@@ -311,7 +311,7 @@
                       because you are running on a server-class machine.
     ```
 
-  <!--sec data-title="doc for <<[-]word" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="doc for JAVA_OPT" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   -XX:+AlwaysPreTouch
   -XX:+HeapDumpOnOutOfMemoryError
