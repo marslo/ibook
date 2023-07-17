@@ -26,6 +26,12 @@ $ curl https://bootstrap.pypa.io/get-pip.py | python3.2
 # or
 $ curl https://bootstrap.pypa.io/get-pip.py | python - 'pip==8.0.0'
 ```
+
+- python3.6
+  ```bash
+  $ python3 < <(curl -s https://bootstrap.pypa.io/pip/3.6/get-pip.py)
+  ```
+
 - [example](https://pip.pypa.io/en/stable/installing/#installing-with-get-pip-py)
   ```bash
   $ python get-pip.py --no-index --find-links=/local/copies

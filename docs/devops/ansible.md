@@ -14,6 +14,7 @@
   - [decrypt](#decrypt)
   - [view](#view)
 - [ansible-galaxy](#ansible-galaxy)
+- [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,6 +28,7 @@
 >   - [Protecting sensitive data with Ansible vault](https://docs.ansible.com/ansible/latest/vault_guide/index.html)
 >   - [* Ansible Vault](https://docs.ansible.com/ansible/2.8/user_guide/vault.html)
 >   - [Tips and tricks](https://docs.ansible.com/ansible/3/user_guide/playbooks_best_practices.html#tip-for-variables-and-vaults)
+>   - [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)
 > - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
 
 ## environment
@@ -93,7 +95,36 @@ EOF
 > - [Encrypting content with Ansible Vault](https://docs.ansible.com/ansible/3/user_guide/vault.html)
 
 ### [encrypted files](https://docs.ansible.com/ansible/3/user_guide/vault.html#creating-encrypted-files)
+
+> [!NOTE|label:references:]
+> - [Why should text files end with a newline?](https://stackoverflow.com/q/729692/2940319)
+> - [Removing a newline character at the end of a file](https://stackoverflow.com/a/27274234/2940319)
+>   ```bash
+>   $ truncate -s -1 /path/to/yaml
+>   ```
+> - [sed solution](https://stackoverflow.com/a/63777386/2940319)
+>   ```bash
+>   $ sed -z s/.$// pw.txt | od -c
+>   0000000   a   b   c
+>   0000003
+>   ```
+> - [printf solution](https://stackoverflow.com/a/12148703/2940319)
+>   ```bash
+>   $ printf %s "$(< pw.txt)" | od -c
+>   0000000   a   b   c
+>   0000003
+>   ```
+>
+> - [head solution](https://stackoverflow.com/a/12579554/2940319)
+>   ```bash
+>   $ head -c -1 pw.txt | od -c
+>   0000000   a   b   c  \n   e   f   g
+>   0000007
+>   ```
+
 ```bash
+$ truncate -s -1 foo.yml
+
 $ ansible-vault create --vault-id @prompt foo.yml
 New vault password (default):
 Confirm new vault password (default):
@@ -126,39 +157,73 @@ $ANSIBLE_VAULT;1.1;AES256
 
 > [!TIP]
 > via `--vault-id @prompt`
+>
+> <br>
+> - [How to see special characters?](https://www.unix.com/unix-for-dummies-questions-and-answers/151193-how-see-special-characters.html)
+> - be aware of the `echo` will automatically appending the `\n` in the end of the line:
+>   ```bash
+>   $ echo 'abc' | od -c
+>   0000000   a   b   c  \n
+>   0000004
+>   ```
+> - with `echo -n`
+>   ```bash
+>   $ echo -n 'abc' | od -c
+>   0000000   a   b   c
+>   0000003
+>   ```
 
 ```bash
-$ ansible-vault encrypt_string 'Test123!' --vault-id @prompt
+$ echo -n 'Test123!' | ansible-vault encrypt_string --vault-id @prompt
 New vault password (default):
 Confirm new vault password (default):
+Reading plaintext input from stdin. (ctrl-d to end input, twice if your content does not already have a newline)
+
 Encryption successful
 !vault |
           $ANSIBLE_VAULT;1.1;AES256
-          39336533303637306662623236393539353531376334343333356564393861613837643939373236
-          3734656435313762383534396637636662653633323537380a633634373761646635323564373239
-          65643866343561363461656165653433656338373638646437306133346134376464393761633133
-          3064386166383237630a386366333132396364343062663735646136343432643063326139366436
-          6434
+          62306630653236616438653236353135623936626332636337396432346235376364386233363938
+          3930663634396138373139643031396433386339353634640a323938323431356330323363353335
+          61636134636539326539623665393261643462396239653864313861393761633762313161386464
+          3166333136366465370a323765386238646539613438333334633434613533373565326464383836
+          6464
 ```
+
+- or
+  ```bash
+  $ ansible-vault encrypt_string
+  New Vault password:
+  Confirm New Vault password:
+  Reading plaintext input from stdin. (ctrl-d to end input, twice if your content does not already have a newline)
+  abc^D                          # ctrl-d twice
+  Encryption successful
+  !vault |
+            $ANSIBLE_VAULT;1.1;AES256
+            39323234633365393633306135386362373463356636633937336236643763616232383832396333
+            3136343265346534306638343738363435393964353262330a313331323161653832656365336331
+            36356564653565613664666631346434306366666163393463633030363732336436346364613638
+            3038303934366166320a633064326333623062663362343031633065333138313762353534643530
+            633
+  ```
 
 ### reset key
 ```bash
-$ ansible-vault rekey
+$ ansible-vault rekey --vault-id @prompt /path/to/file
 ```
 
 ### encrypt
 ```bash
-$ ansible-vault encrypt
+$ ansible-vault encrypt --vault-id @prompt /path/to/file
 ```
 
 ### decrypt
 ```bash
-$ ansible-vault decrypt
+$ ansible-vault decrypt --vault-id @prompt /path/to/file
 ```
 
 ### view
 ```bash
-$ ansible-vault view
+$ ansible-vault view --vault-id @prompt /path/to/file
 ```
 
 ## ansible-galaxy
@@ -296,3 +361,13 @@ $ ansible-galaxy install -r requirements.yml
   ```
   {% endraw %}
   <!--endsec-->
+
+## troubleshooting
+- [generate the final yaml via `ansible.builtin.template`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)
+  ```yaml
+  # in tasks/main.yaml
+  - name: Template a file to local
+    ansible.builtin.template:
+      src: file_in_template.yaml
+      dest: /local/path/to/yaml
+  ```

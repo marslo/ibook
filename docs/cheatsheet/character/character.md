@@ -38,6 +38,7 @@
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
   - [search and replace](#search-and-replace)
   - [replace with position](#replace-with-position)
+  - [remove the ending '\n'](#remove-the-ending-%5Cn)
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
 - [regex](#regex)
@@ -943,11 +944,85 @@ $ position=3
 $ echo "${string:0:$(( position - 1 ))}${replacement}${string:position}"
 aabaa
 ```
-or
-```bash
-$ echo "${string:0:position-1}${replacement}${string:position}"
-aabaa
-```
+- or
+  ```bash
+  $ echo "${string:0:position-1}${replacement}${string:position}"
+  aabaa
+  ```
+
+### remove the ending '\n'
+
+> [!NOTE|label:references:]
+> - [Why should text files end with a newline?](https://stackoverflow.com/q/729692/2940319)
+> - original file
+>   ```bash
+>   $ cat foo.txt
+>   abc
+>   efg
+>
+>   $ cat -A foo.txt
+>   abc$
+>   efg$
+>
+>   $ cat foo.txt | od -c
+>   0000000   a   b   c  \n   e   f   g  \n
+>   0000010
+>   ```
+
+- [truncate](https://stackoverflow.com/a/27274234/2940319)
+  ```bash
+  $ truncate -s -1 foo.txt
+  $ od -c foo.txt
+  0000000   a   b   c  \n   e   f   g
+  0000007
+  ```
+
+- [sed](https://stackoverflow.com/a/63777386/2940319)
+  ```bash
+  $ sed -z s/.$// foo.txt | od -c
+  0000000   a   b   c  \n   e   f   g
+  0000007
+
+  $ sed -z s/\\n$// foo.txt | od -c
+  0000000   a   b   c  \n   e   f   g
+  0000007
+
+  $ sed -z 's/\n$//' foo.txt | od -c
+  0000000   a   b   c  \n   e   f   g
+  0000007
+  ```
+
+- [printf](https://stackoverflow.com/a/12148703/2940319)
+  ```bash
+  $ printf %s "$(< foo.txt)" | od -c
+  0000000   a   b   c  \n   e   f   g
+  0000007
+  ```
+
+- [head](https://stackoverflow.com/a/12579554/2940319)
+  ```bash
+  $ head -c -1 foo.txt | od -c
+  0000000   a   b   c  \n   e   f   g
+  0000007
+  ```
+
+- [vim](https://stackoverflow.com/a/16114535/2940319)
+  ```bash
+  $ od -c foo.txt
+  0000000   a   b   c  \n   e   f   g  \n
+  0000010
+
+  $ vim -c "set binary noeol" -c "wq" foo.txt
+  $ od -c foo.txt
+  0000000   a   b   c  \n   e   f   g
+  0000007
+
+  # or : https://stackoverflow.com/a/39627416/2940319
+  $ vim -c "set noendofline nofixendofline" -c "wq" foo.txt
+  $ od -c foo.txt
+  0000000   a   b   c  \n   e   f   g
+  0000007
+  ```
 
 ## fold
 ### check the params valid
