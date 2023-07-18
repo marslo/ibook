@@ -761,7 +761,7 @@ spec:
 
 ### q&a
 ```bash
-$ curl -k https://ssdfw-k8s-api.marvell.com:16443/api/v1/model/metrics/
+$ curl -k https://api.server.com:6443/api/v1/model/metrics/
 {
   "kind": "Status",
   "apiVersion": "v1",

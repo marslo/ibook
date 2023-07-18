@@ -14,6 +14,7 @@
   - [decrypt](#decrypt)
   - [view](#view)
 - [ansible-galaxy](#ansible-galaxy)
+- [ansible-playbook](#ansible-playbook)
 - [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -361,6 +362,20 @@ $ ansible-galaxy install -r requirements.yml
   ```
   {% endraw %}
   <!--endsec-->
+
+## ansible-playbook
+
+> [!NOTE|label:references:]
+> - [passwordless via environment variables](https://docs.ansible.com/archive/ansible/2.5/user_guide/playbooks_vault.html)
+
+```bash
+# without password
+$ export ANSIBLE_VAULT_PASSWORD_FILE=/path/to/password.txt
+$ ansible-playbook -i hosts /path/to/yaml
+
+# with password
+$ ansible-playbook -i hosts /path/to/yaml --vault-id @prompt
+```
 
 ## troubleshooting
 - [generate the final yaml via `ansible.builtin.template`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)

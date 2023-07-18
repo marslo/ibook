@@ -6,6 +6,7 @@
   - [defining clusters](#defining-clusters)
   - [defining users](#defining-users)
   - [defining contexts](#defining-contexts)
+  - [setup default namespace](#setup-default-namespace)
   - [use contexts](#use-contexts)
 - [OpenID Connect ( OIDC )](#openid-connect--oidc-)
 - [Configure Access to Multiple Clusters](#configure-access-to-multiple-clusters)
@@ -81,6 +82,11 @@ $ kubectl config set-context --cluster=my-cluster --user=my-user
   ```bash
   $ kubectl config set-context my-context --cluster=my-cluster --user=my-user --namespace=redhat-dev
   ```
+
+### [setup default namespace](https://www.cloudytuts.com/tutorials/kubernetes/how-to-set-default-kubernetes-namespace/)
+```bash
+$ kubectl config set-context --current --namespace=<my_namespace>
+```
 
 ### use contexts
 ```bash
