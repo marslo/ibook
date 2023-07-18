@@ -5,9 +5,11 @@
 - [install](#install)
   - [helm3](#helm3)
   - [helm2](#helm2)
+  - [install plugin](#install-plugin)
 - [configuration](#configuration)
   - [init](#init)
   - [add repo](#add-repo)
+  - [default credential](#default-credential)
 - [usage](#usage)
   - [install Jenkins](#install-jenkins)
 - [otheres](#otheres)
@@ -167,6 +169,12 @@ $ while read -r _i; do
   done < <(echo helm tiller)
 ```
 
+### install plugin
+```bash
+$ echo '-k' >> ~/.curlrc
+$ helm plugin install https://github.com/databus23/helm-diff
+```
+
 ## configuration
 
 ### init
@@ -190,8 +198,22 @@ $ helm repo update
 
 - search
   ```bash
+  $ helm repo update
   $ helm search repo jenkins
   ```
+
+### [default credential](https://opensource.com/article/19/6/jenkins-admin-password-helm-kubernetes)
+
+```bash
+$ kubectl get secrets <secret_name> \
+              --namespace <namespace> \
+              -o jsonpath="{.data.jenkins-admin-password}" |
+          base64 --decode
+$ kubectl get secrets <secret_name> \
+              --namespace <namespace> \
+              -o jsonpath="{.data.jenkins-admin-user}" |
+          base64 --decode
+```
 
 ## usage
 
@@ -223,11 +245,42 @@ $ helm search repo jenkins
 NAME            CHART VERSION APP VERSION DESCRIPTION
 jenkins/jenkins 4.3.24        2.401.1     Jenkins - Build great things at any scale! The ...
 
-
 $ helm show values jenkins/jenkins
+
+$ helm --version=4.4.1 upgrade -i --reset-values -f=/path/to/yaml.yml staging-jenkins jenkins/jenkins
 ```
 
-<!--sec data-title="helm help" data-id="section2" data-show=true data-collapse=true ces-->
+<!--sec data-title="stdout" data-id="section3" data-show=true data-collapse=true ces-->
+```bash
+STDOUT:
+
+Release "staging-jenkins" has been upgraded. Happy Helming!
+NAME: staging-jenkins
+LAST DEPLOYED: Tue Jul 18 19:21:46 2023
+NAMESPACE: devops
+STATUS: deployed
+REVISION: 21
+NOTES:
+1. Get your 'admin' user password by running:
+  kubectl exec --namespace devops -it svc/staging-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+2. Get the Jenkins URL to visit by running these commands in the same shell:
+  echo http://127.0.0.1:8080
+  kubectl --namespace devops port-forward svc/staging-jenkins 8080:8080
+3. Login with the password from step 1 and the username: admin
+4. Configure security realm and authorization strategy
+5. Use Jenkins Configuration as Code by specifying configScripts in your values.yaml file, see documentation: http://127.0.0.1:8080/configuration-as-code and examples: https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
+
+For more information on running Jenkins on Kubernetes, visit:
+https://cloud.google.com/solutions/jenkins-on-container-engine
+
+For more information about Jenkins Configuration as Code, visit:
+https://jenkins.io/projects/jcasc/
+
+NOTE: Consider using a custom image with pre-installed plugins
+```
+<!--endsec-->
+
+<!--sec data-title="helm help" data-id="section3" data-show=true data-collapse=true ces-->
 ```bash
 $ helm show values jenkins/jenkins
 # Default values for jenkins.

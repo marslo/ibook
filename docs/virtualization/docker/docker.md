@@ -373,9 +373,16 @@ $ docker ps -aq --no-trunc
   77745046363d
   ```
 - filter with image
+
+  {% raw %}
   ```bash
   $ docker ps -a --no-trunc --filter ancestor='busybox:latest'
+
+  # for jenkins/jenkins
+  $ docker ps -a --filter ancestor=jenkins/jenkins:2.401.2-lts-jdk11 --format "{{.ID}}"
   ```
+  {%endraw%}
+
 - filter with exit code
   ```bash
   $ docker ps -a --filter 'exited=0'
