@@ -11,6 +11,7 @@
   - [solution](#solution)
 - [execute groovysh](#execute-groovysh)
   - [execute the script via https](#execute-the-script-via-https)
+- [execute cil via kubectl](#execute-cil-via-kubectl)
 - [man cli](#man-cli)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -215,6 +216,22 @@ file.separator ~> /
       data = fd.read()
   r = requests.post('https://jenkins/scriptText', auth=('username', 'api-token'), data={'script': data})
   ```
+
+## execute cil via kubectl
+
+> [!TIP|label:references:]
+> - [Secrets handling in Kubernetes - A Jenkins story](https://verifa.io/blog/secrets-handling-in-kubernetes-a-jenkins-story/)
+
+```bash
+$ kubectl exec -it po/jenkins-0 -c jenkins -- bash -c
+    'echo \'println(hudson.util.Secret.fromString("test").getEncryptedValue())'
+    | java -jar /var/jenkins_home/war/WEB-INF/lib/cli-2.303.1.jar
+    s http://0.0.0.0:8080
+    auth Admin:$(cat /run/secrets/chart-admin-password)
+    groovy = '
+{AQAAABAAAAAQGiN0B2weIsYfpg0LqBbM7WSBn9+zSBcH4OXyYpaVVig=}
+$
+```
 
 ## man cli
 
