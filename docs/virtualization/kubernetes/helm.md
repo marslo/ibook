@@ -221,6 +221,7 @@ $ kubectl get secrets <secret_name> \
 > - [* Helm3 快速入门](https://www.zhaowenyu.com/helm-doc/usage/quickstart-helm3.html)
 > - [* Helm 文件](https://www.zhaowenyu.com/helm-doc/files/)
 > - [* Helm Chart 模板](https://www.zhaowenyu.com/helm-doc/chart/)
+> - [* Secrets handling in Kubernetes - A Jenkins story](https://verifa.io/blog/secrets-handling-in-kubernetes-a-jenkins-story/)
 > - [使用Helm](https://www.coderdocument.com/docs/helm/v2/using_helm/using_helm.html)
 > - [Helm插件指南](https://www.coderdocument.com/docs/helm/v2/using_helm/plugins.html)
 > - [在Helm和Tiller间使用SSL](https://www.coderdocument.com/docs/helm/v2/using_helm/tls_ssl_for_helm_and_tiller.html)
