@@ -137,6 +137,11 @@ $ curl -s -o /dev/null -w "%{http_code}" https://github.com
   404
   ```
 
+- [or](https://superuser.com/a/1444693/112396)
+  ```bash
+  $ curl http://www.example.org -o >(cat >&1) -w "%{http_code}\n" 1>&2
+  ```
+
 ### get `http_code` for multiple urls
 ```bash
 $ xargs -n1 curl -sk -o /dev/null -w '%{http_code} ' < <(echo "https://1.domain.com https://2.domain.com")

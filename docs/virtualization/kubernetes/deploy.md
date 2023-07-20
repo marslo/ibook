@@ -7,6 +7,7 @@
 - [set](#set)
   - [update image](#update-image)
   - [setup limits for deploy via command line](#setup-limits-for-deploy-via-command-line)
+- [replicas](#replicas)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -100,4 +101,9 @@ $ k run <name> \
     --tty \
     --limits='cpu=50m,memory=128Mi' \
     --requests='cpu=50m,memory=128Mi'
+```
+
+## replicas
+```bash
+$ kubectl scale deploy <deploy_name>
 ```

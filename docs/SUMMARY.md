@@ -51,6 +51,7 @@
     * [tricky](devops/git/tricky.md)
     * [statistics](devops/git/statistics.md)
   * [ansible](devops/ansible.md)
+  * [vault](devops/vault.md)
   * [android](devops/android.md)
   * [commonTools](devops/commonTools.md)
   * [compilation](devops/compilation.md)

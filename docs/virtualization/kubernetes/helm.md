@@ -12,6 +12,7 @@
   - [default credential](#default-credential)
 - [usage](#usage)
   - [install Jenkins](#install-jenkins)
+  - [check](#check)
 - [otheres](#otheres)
   - [helm is compatible](#helm-is-compatible)
 
@@ -222,11 +223,13 @@ $ kubectl get secrets <secret_name> \
 > - [* Helm 文件](https://www.zhaowenyu.com/helm-doc/files/)
 > - [* Helm Chart 模板](https://www.zhaowenyu.com/helm-doc/chart/)
 > - [* Secrets handling in Kubernetes - A Jenkins story](https://verifa.io/blog/secrets-handling-in-kubernetes-a-jenkins-story/)
+> - [Configuration with Kubernetes and Jenkins Part 1: Secrets](https://ralphmcneal.com/how-to-provision-kubernetes-secrets-with-jenkins/)
 > - [使用Helm](https://www.coderdocument.com/docs/helm/v2/using_helm/using_helm.html)
 > - [Helm插件指南](https://www.coderdocument.com/docs/helm/v2/using_helm/plugins.html)
 > - [在Helm和Tiller间使用SSL](https://www.coderdocument.com/docs/helm/v2/using_helm/tls_ssl_for_helm_and_tiller.html)
 > - [helm 命令](https://www.coderdocument.com/docs/helm/v2/helm_commands/helm.html)
 > - [jenkins/value.yaml](https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml)
+> - [[stable/jenkins] Better support for Configuration as Code Plugin (JCasC)](https://github.com/helm/charts/issues/16931)
 
 ### install Jenkins
 ```bash
@@ -249,6 +252,23 @@ jenkins/jenkins 4.3.24        2.401.1     Jenkins - Build great things at any sc
 $ helm show values jenkins/jenkins
 
 $ helm --version=4.4.1 upgrade -i --reset-values -f=/path/to/yaml.yml staging-jenkins jenkins/jenkins
+```
+
+### check
+```bash
+$ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[*].name}'
+jenkins config-reload
+
+$ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[?(@.name=="jenkins")].image}'
+jenkins/jenkins:2.401.2-lts-jdk11
+
+$ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[*].image}'
+jenkins/jenkins:2.401.2-lts-jdk11 kiwigrid/k8s-sidecar:1.24.4
+
+# format:
+# --as=system:serviceaccount:<namespace>:<serviceaccount>
+$ kubectl --as=system:serviceaccount:sms-fw-devops-ci:staging-jenkins auth can-i get configmap/staging-jenkins-jcasc
+yes
 ```
 
 <!--sec data-title="stdout" data-id="section3" data-show=true data-collapse=true ces-->

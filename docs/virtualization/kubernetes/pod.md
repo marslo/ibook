@@ -14,6 +14,9 @@
   - [sort via start time](#sort-via-start-time)
   - [get the oldest pod](#get-the-oldest-pod)
   - [sort via created time](#sort-via-created-time)
+- [run & create](#run--create)
+  - [pod](#pod)
+  - [deploy](#deploy)
 - [list](#list)
   - [list pod with nodename](#list-pod-with-nodename)
   - [list all ready pods](#list-all-ready-pods)
@@ -153,6 +156,39 @@ $ kubectl -n <namepsace> get pods \
 $ kubectl -n <namespace> get pods \
     --sort-by=.metadata.creationTimestamp
 ```
+
+## run & create
+
+### pod
+```bash
+$ kubectl run debug --image=busybox -- sleep infinity
+pod/debug created
+
+$ kubectl get pod
+NAME    READY   STATUS    RESTARTS   AGE
+debug   1/1     Running   0          6s
+
+# delete
+$ kubectl delete pod/debug
+pod "debug" deleted
+```
+
+### deploy
+```bash
+$ kubectl create deployment nginx --image=nginx --replicas=2
+deployment.apps/nginx created
+
+$ kubectl get pod
+NAME                     READY   STATUS    RESTARTS   AGE
+nginx-6799fc88d8-6clhp   1/1     Running   0          9s
+nginx-6799fc88d8-cjz56   1/1     Running   0          9s
+
+# delete
+$ kubectl delete deployment nginx
+deployment.apps "nginx" deleted
+```
+
+
 
 ## list
 
