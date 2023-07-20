@@ -623,3 +623,37 @@ System.getenv().JAVA_OPTS
       name: jenkins-admin
       namespace: devops-tools
     ```
+
+
+- ssl
+
+  > [!NOTE|label:references:]
+  > - [SSL Certificates Troubleshooting](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/troubleshooting-guides/ssl-certificates-troubleshooting)
+  > - [How to install a new SSL certificate on Traditional Platforms?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-install-a-new-ssl-certificate)
+  > - [jenkins-scripts/scriptler/checkSSLConnection.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkSSLConnection.groovy)
+
+  ```bash
+
+  $ kubectl exec -it devops-jenkins-0 -- /bin/bash
+  $ jrunscript -Djavax.net.ssl.trustStore=/opt/java/openjdk/lib/security/cacerts -Djavax.net.ssl.trustStorePassword=changeit -e "println(new java.net.URL(\"https://k8s-api.example.com:16443\").openConnection().getResponseCode())"
+  Warning: Nashorn engine is planned to be removed from a future JDK release
+  java.lang.RuntimeException: javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+    at jdk.scripting.nashorn/jdk.nashorn.internal.runtime.ScriptRuntime.apply(ScriptRuntime.java:531)
+    ...
+
+  $ mkdir -p /var/jenkins_home/cacerts-share
+  $ cp /opt/java/openjdk/lib/security/cacerts /var/jenkins_home/cacerts-share/cacerts
+  $ chmod 644 /var/jenkins_home/cacerts-share/cacerts
+  $ keytool -import -noprompt -trustcacerts -alias k8s-api -keystore /var/jenkins_home/cacerts-share/cacerts -file /run/secrets/additional/devops_kubernetes_api.crt -storepass changeit
+  Certificate was added to keystore
+  $ jrunscript -Djavax.net.ssl.trustStore=/var/jenkins_home/cacerts-share/cacerts -Djavax.net.ssl.trustStorePassword=changeit -e "println(new java.net.URL(\"https://k8s-api.example.com:16443\").openConnection().getResponseCode())"
+  Warning: Nashorn engine is planned to be removed from a future JDK release
+  403
+  ```
+
+  - full step
+    ```bash
+    $ keytool -printcert -rfc -sslserver ssdfw-k8s-api.marvell.com:16443 > /run/secrets/additional/devops_kubernetes_api.crt
+    # or
+    $ echo -n | openssl s_client -connect ssdfw-k8s-api.marvell.com:16443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /run/secrets/additional/devops_kubernetes_api.crt
+    ```
