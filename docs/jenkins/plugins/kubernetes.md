@@ -8,6 +8,7 @@
 - [configure in jenkins](#configure-in-jenkins)
 - [using kubeconfig for remote cluster credential](#using-kubeconfig-for-remote-cluster-credential)
 - [using ClusterRoleBinding](#using-clusterrolebinding)
+- [pull with credentials](#pull-with-credentials)
 - [Q&A](#qa)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -15,11 +16,15 @@
 
 {% hint style='tip' %}
 > references:
+> - [podTempate](https://plugins.jenkins.io/kubernetes/#plugin-content-pod-template)
 > - [Jenkins Kubernetes Plugin: Running Agents In Other Clusters](https://www.moogsoft.com/blog/jenkins-kubernetes-plugin-running-agents-in-other-clusters/)
 > - [Jenkins Kubernetes Plugin: Using the plugin in your pipelines](https://www.moogsoft.com/blog/jenkins-kubernetes-plugin-using-the-plugin-in-your-pipelines/)
 > - [Create Kubernetes Service Accounts and Kubeconfigs](https://docs.armory.io/armory-enterprise/armory-admin/manual-service-account/)
 > - [Setup Jenkins Pipeline and Blue Ocean in Kubernetes](https://hustakin.github.io/bestpractice/setup-jenkins-pipeline-in-kubernetes/)
 > - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
+> - [Pull an Image from a Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+> - [从私有仓库拉取镜像](https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/pull-image-private-registry/)
+> - [How to access webSockets for Jenkins inbound agents?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-access-websockets-for-jenkins-inbound-agents)
 {% endhint %}
 
 ### namespace
@@ -603,6 +608,87 @@ subjects:
   - kind: ServiceAccount
     name: jenkins-admin
     namespace: devops-tools
+  ```
+
+### pull with credentials
+
+> [!NOTE|label:references:]
+> - [Pull an Image from a Private Registry](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
+> - [从私有仓库拉取镜像](https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/pull-image-private-registry/)
+> - [为特定名称空间创建 imagePullSecrets](https://www.ibm.com/docs/zh/cloud-private/3.1.2?topic=images-creating-imagepullsecrets-specific-namespace)
+
+- in kubernetes
+  ```bash
+  # create secrets in namespace
+
+  ## via ~/.docker/config.json
+  $ kubectl -n devfops create secret generic image-pull-secrets \
+            --from-file=.dockerconfigjson=.docker/config.json \
+            --type=kubernetes.io/dockerconfigjson
+
+  ## via cmd
+  $ kubectl -n devops create secret docker-registry image-pull-secrets \
+            --docker-server=artifactory.example.com \
+            --docker-username=devops \
+            --docker-password=password \
+            --docker-email=devops@example.com
+
+  # check result
+  $ kubectl -n devop get secret image-pull-secrets \
+            -o jsonpath="{.data.\.dockerconfigjson}" |
+    base64 -d
+  ```
+
+- copy secrets to all namespaces
+  ```bash
+  # copy
+  $ kubectl get ns -o custom-columns=":metadata.name" --no-headers |
+            xargs -t -i bash -c "echo -e \"\\n-- {} --\"; kubectl -n devops get secrets image-pull-secrets -o yaml --export | kubectl apply -n {} -f -"
+
+  # check
+  $ kubectl get secrets --all-namespaces  | grep image-pull-secrets
+  ```
+
+- in podTemplate
+  ```yaml
+  podTemplate( cloud: 'Staging Kubernetes',
+               label: env.BUILD_TAG ,
+               name: env.BUILD_TAG,
+               showRawYaml: true,
+               namespace: 'devops',
+               yaml: """
+                 apiVersion: v1
+                 kind: Pod
+                 spec:
+                   hostNetwork: true
+                   nodeSelector:
+                     kubernetes.io/hostname: "staging-node-1"
+                   imagePullSecrets:
+                   - name: "image-pull-secrets"             # secrets name here
+                   containers:
+                   - name: jnlp
+                     image: 'artifactory.example.com/docker/sandbox:bionic'
+                     workingDir: '/home/devops'
+                     resources:
+                       limits:
+                         memory: "1024Mi"
+                         cpu: "512m"
+                       requests:
+                         memory: "512Mi"
+                         cpu: "256m"
+               """
+  ) { node( env.BUILD_TAG ) { container('jnlp') {
+      stage('show info') {
+        sh """
+          id
+          whoami
+          echo ${WORKSPACE}
+          realpath ${WORKSPACE}
+        """
+        println POD_CONTAINER
+      }
+    }}
+  }
   ```
 
 ### Q&A
