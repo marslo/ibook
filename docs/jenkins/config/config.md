@@ -19,6 +19,7 @@
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 > - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
 > - [Quick and Simple — How to Setup Jenkins Distributed (Master-Slave) Build on Kubernetes](https://medium.com/swlh/quick-and-simple-how-to-setup-jenkins-distributed-master-slave-build-on-kubernetes-37f3d76aae7d)
+> - [[stable/jenkins] Add Custom Trusted CA certificates](https://github.com/helm/charts/issues/23374)
 >
 > - to get groovy version:
 >   ```groovy
@@ -30,7 +31,6 @@
 >   - [jenkins-deployment.yaml](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-deployment.yaml)
 >   - [jenkins-service.yaml](https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-service.yaml)
 {% endhint %}
-
 
 ### [upgrading jenkins](https://www.jenkins.io/blog/2018/03/15/jep-200-lts/#upgrading-jenkins)
 #### [jenkins 2.357 requires Java 11](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
@@ -362,6 +362,8 @@
 >   - [nanoserver-ltsc2019](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/windows/windowsservercore-ltsc2019/Dockerfile)
 > - [alpine](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/alpine/Dockerfile)
 > - [bullseye](https://github.com/jenkinsci/docker-ssh-agent/blob/master/11/bullseye/Dockerfile)
+> - [Launching inbound TCP agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/launch-inbound-agents)
+> - [Connecting inbound agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/configure-ports-jnlp-agents)
 {% endhint %}
 
 ```bash
@@ -631,6 +633,8 @@ System.getenv().JAVA_OPTS
   > - [SSL Certificates Troubleshooting](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/troubleshooting-guides/ssl-certificates-troubleshooting)
   > - [How to install a new SSL certificate on Traditional Platforms?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-install-a-new-ssl-certificate)
   > - [jenkins-scripts/scriptler/checkSSLConnection.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkSSLConnection.groovy)
+  > - [JAVA_OPT: Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+
 
   ```bash
 
