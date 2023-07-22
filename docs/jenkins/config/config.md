@@ -20,6 +20,9 @@
 > - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
 > - [Quick and Simple — How to Setup Jenkins Distributed (Master-Slave) Build on Kubernetes](https://medium.com/swlh/quick-and-simple-how-to-setup-jenkins-distributed-master-slave-build-on-kubernetes-37f3d76aae7d)
 > - [[stable/jenkins] Add Custom Trusted CA certificates](https://github.com/helm/charts/issues/23374)
+> - [How to install a Jenkins instance with Helm](https://octopus.com/blog/jenkins-helm-install-guide)
+> - [helm-charts/charts/jenkins/README.md](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/README.md)
+> - [docker/README.md](https://github.com/jenkinsci/docker/blob/master/README.md#setting-update-centers)
 >
 > - to get groovy version:
 >   ```groovy

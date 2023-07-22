@@ -1,309 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [install](#install)
-  - [helm3](#helm3)
-  - [helm2](#helm2)
-  - [install plugin](#install-plugin)
-- [configuration](#configuration)
-  - [init](#init)
-  - [add repo](#add-repo)
-  - [default credential](#default-credential)
-- [usage](#usage)
-  - [install Jenkins](#install-jenkins)
-  - [check](#check)
-- [otheres](#otheres)
-  - [helm is compatible](#helm-is-compatible)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-{% hint style='info' %}
-> references:
-> - [* How To Install Helm 3 For Kubernetes](https://devopscube.com/install-configure-helm-kubernetes/)
-> - [* How to Create a Helm Chart [Comprehensive Beginners Guide]](https://devopscube.com/create-helm-chart/)
-{% endhint %}
-
-## [install](https://v2.helm.sh/docs/using_helm/#installing-helm)
-
-> [!NOTE|label:references:]
-> - [安装Helm](https://www.coderdocument.com/docs/helm/v2/using_helm/installing_helm.html#anzhuangtiller)
-
-### helm3
-```bash
-$ curl -kL https://git.io/get_helm.sh | bash
-
-# or
-$ bash <(curl -k -fsSL https://git.io/get_helm.sh)
-# or
-$ bash <(curl -k -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3)
-```
-
-<!--sec data-title="helm version" data-id="section0" data-show=true data-collapse=true ces-->
-```bash
-$ helm version
-version.BuildInfo{Version:"v3.12.0", GitCommit:"c9f554d75773799f72ceef38c51210f1842a1dea", GitTreeState:"clean", GoVersion:"go1.20.3"}
-```
-<!--endsec-->
-
-<!--sec data-title="helm help" data-id="section1" data-show=true data-collapse=true ces-->
-```bash
-$ helm --help
-The Kubernetes package manager
-
-Common actions for Helm:
-
-- helm search:    search for charts
-- helm pull:      download a chart to your local directory to view
-- helm install:   upload the chart to Kubernetes
-- helm list:      list releases of charts
-
-Environment variables:
-
-| Name                               | Description                                                                                       |
-|------------------------------------|---------------------------------------------------------------------------------------------------|
-| $HELM_CACHE_HOME                   | set an alternative location for storing cached files.                                             |
-| $HELM_CONFIG_HOME                  | set an alternative location for storing Helm configuration.                                       |
-| $HELM_DATA_HOME                    | set an alternative location for storing Helm data.                                                |
-| $HELM_DEBUG                        | indicate whether or not Helm is running in Debug mode                                             |
-| $HELM_DRIVER                       | set the backend storage driver. Values are: configmap, secret, memory, sql.                       |
-| $HELM_DRIVER_SQL_CONNECTION_STRING | set the connection string the SQL storage driver should use.                                      |
-| $HELM_MAX_HISTORY                  | set the maximum number of helm release history.                                                   |
-| $HELM_NAMESPACE                    | set the namespace used for the helm operations.                                                   |
-| $HELM_NO_PLUGINS                   | disable plugins. Set HELM_NO_PLUGINS=1 to disable plugins.                                        |
-| $HELM_PLUGINS                      | set the path to the plugins directory                                                             |
-| $HELM_REGISTRY_CONFIG              | set the path to the registry config file.                                                         |
-| $HELM_REPOSITORY_CACHE             | set the path to the repository cache directory                                                    |
-| $HELM_REPOSITORY_CONFIG            | set the path to the repositories file.                                                            |
-| $KUBECONFIG                        | set an alternative Kubernetes configuration file (default "~/.kube/config")                       |
-| $HELM_KUBEAPISERVER                | set the Kubernetes API Server Endpoint for authentication                                         |
-| $HELM_KUBECAFILE                   | set the Kubernetes certificate authority file.                                                    |
-| $HELM_KUBEASGROUPS                 | set the Groups to use for impersonation using a comma-separated list.                             |
-| $HELM_KUBEASUSER                   | set the Username to impersonate for the operation.                                                |
-| $HELM_KUBECONTEXT                  | set the name of the kubeconfig context.                                                           |
-| $HELM_KUBETOKEN                    | set the Bearer KubeToken used for authentication.                                                 |
-| $HELM_KUBEINSECURE_SKIP_TLS_VERIFY | indicate if the Kubernetes API server's certificate validation should be skipped (insecure)       |
-| $HELM_KUBETLS_SERVER_NAME          | set the server name used to validate the Kubernetes API server certificate                        |
-| $HELM_BURST_LIMIT                  | set the default burst limit in the case the server contains many CRDs (default 100, -1 to disable)|
-
-Helm stores cache, configuration, and data based on the following configuration order:
-  $ curl -fsSL \
-      https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz \
-      | sudo tar -xzv --strip-components=1 -C /usr/local/bin/
-
-  $ while read -r _i; do
-      sudo chmod +x "/usr/local/bin/${_i}"
-  done < <(echo helm tiller)
-- If a HELM_*_HOME environment variable is set, it will be used
-- Otherwise, on systems supporting the XDG base directory specification, the XDG variables will be used
-- When no other location is set a default location will be used based on the operating system
-
-By default, the default directories depend on the Operating System. The defaults are listed below:
-
-| Operating System | Cache Path                | Configuration Path             | Data Path               |
-|------------------|---------------------------|--------------------------------|-------------------------|
-| Linux            | $HOME/.cache/helm         | $HOME/.config/helm             | $HOME/.local/share/helm |
-| macOS            | $HOME/Library/Caches/helm | $HOME/Library/Preferences/helm | $HOME/Library/helm      |
-| Windows          | %TEMP%\helm               | %APPDATA%\helm                 | %APPDATA%\helm          |
-
-Usage:
-  helm [command]
-
-Available Commands:
-  completion  generate autocompletion scripts for the specified shell
-  create      create a new chart with the given name
-  dependency  manage a chart's dependencies
-  env         helm client environment information
-  get         download extended information of a named release
-  help        Help about any command
-  history     fetch release history
-  install     install a chart
-  lint        examine a chart for possible issues
-  list        list releases
-  package     package a chart directory into a chart archive
-  plugin      install, list, or uninstall Helm plugins
-  pull        download a chart from a repository and (optionally) unpack it in local directory
-  push        push a chart to remote
-  registry    login to or logout from a registry
-  repo        add, list, remove, update, and index chart repositories
-  rollback    roll back a release to a previous revision
-  search      search for a keyword in charts
-  show        show information of a chart
-  status      display the status of the named release
-  template    locally render templates
-  test        run tests for a release
-  uninstall   uninstall a release
-  upgrade     upgrade a release
-  verify      verify that a chart at the given path has been signed and is valid
-  version     print the client version information
-
-Flags:
-      --burst-limit int                 client-side default throttling limit (default 100)
-      --debug                           enable verbose output
-  -h, --help                            help for helm
-      --kube-apiserver string           the address and the port for the Kubernetes API server
-      --kube-as-group stringArray       group to impersonate for the operation, this flag can be repeated to specify multiple groups.
-      --kube-as-user string             username to impersonate for the operation
-      --kube-ca-file string             the certificate authority file for the Kubernetes API server connection
-      --kube-context string             name of the kubeconfig context to use
-      --kube-insecure-skip-tls-verify   if true, the Kubernetes API server's certificate will not be checked for validity. This will make your HTTPS connections insecure
-      --kube-tls-server-name string     server name to use for Kubernetes API server certificate validation. If it is not provided, the hostname used to contact the server is used
-      --kube-token string               bearer token used for authentication
-      --kubeconfig string               path to the kubeconfig file
-  -n, --namespace string                namespace scope for this request
-      --registry-config string          path to the registry config file (default "/home/marslo/.config/helm/registry/config.json")
-      --repository-cache string         path to the file containing cached repository indexes (default "/home/marslo/.cache/helm/repository")
-      --repository-config string        path to the file containing repository names and URLs (default "/home/marslo/.config/helm/repositories.yaml")
-
-Use "helm [command] --help" for more information about a command.
-```
-<!--endsec-->
-
-### helm2
-```bash
-$ curl -fsSL \
-       https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz |
-       sudo tar -xzv --strip-components=1 -C /usr/local/bin/
-
-$ while read -r _i; do
-    sudo chmod +x "/usr/local/bin/${_i}"
-  done < <(echo helm tiller)
-```
-
-### install plugin
-```bash
-$ echo '-k' >> ~/.curlrc
-$ helm plugin install https://github.com/databus23/helm-diff
-```
-
-## configuration
-
-### init
-
-> [!TIP|label:NOT suitable for helm3]
-
-```bash
-$ helm init
-$ helm init --client-only
-
-$ kubectl create serviceaccount -n kube-system tiller
-$ kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-$ kubectl patch deploy -n kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-```
-
-### [add repo](https://github.com/jenkinsci/helm-charts)
-```bash
-$ helm repo add jenkins https://charts.jenkins.io
-$ helm repo update
-```
-
-- search
-  ```bash
-  $ helm repo update
-  $ helm search repo jenkins
-  ```
-
-### [default credential](https://opensource.com/article/19/6/jenkins-admin-password-helm-kubernetes)
-
-```bash
-$ kubectl get secrets <secret_name> \
-              --namespace <namespace> \
-              -o jsonpath="{.data.jenkins-admin-password}" |
-          base64 --decode
-$ kubectl get secrets <secret_name> \
-              --namespace <namespace> \
-              -o jsonpath="{.data.jenkins-admin-user}" |
-          base64 --decode
-```
-
-## usage
-
-> [!NOTE|label:references:]
-> - [* Helm3 快速入门](https://www.zhaowenyu.com/helm-doc/usage/quickstart-helm3.html)
-> - [* Helm 文件](https://www.zhaowenyu.com/helm-doc/files/)
-> - [* Helm Chart 模板](https://www.zhaowenyu.com/helm-doc/chart/)
-> - [* Secrets handling in Kubernetes - A Jenkins story](https://verifa.io/blog/secrets-handling-in-kubernetes-a-jenkins-story/)
-> - [Configuration with Kubernetes and Jenkins Part 1: Secrets](https://ralphmcneal.com/how-to-provision-kubernetes-secrets-with-jenkins/)
-> - [使用Helm](https://www.coderdocument.com/docs/helm/v2/using_helm/using_helm.html)
-> - [Helm插件指南](https://www.coderdocument.com/docs/helm/v2/using_helm/plugins.html)
-> - [在Helm和Tiller间使用SSL](https://www.coderdocument.com/docs/helm/v2/using_helm/tls_ssl_for_helm_and_tiller.html)
-> - [helm 命令](https://www.coderdocument.com/docs/helm/v2/helm_commands/helm.html)
-> - [jenkins/value.yaml](https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml)
-> - [[stable/jenkins] Better support for Configuration as Code Plugin (JCasC)](https://github.com/helm/charts/issues/16931)
-
-### install Jenkins
-```bash
-$ helm repo add jenkins https://charts.jenkins.io
-"jenkins" has been added to your repositories
-
-$ helm repo update
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "jenkins" chart repository
-Update Complete. ⎈Happy Helming!⎈
-
-$ helm repo list
-NAME    URL
-jenkins https://charts.jenkins.io
-
-$ helm search repo jenkins
-NAME            CHART VERSION APP VERSION DESCRIPTION
-jenkins/jenkins 4.3.24        2.401.1     Jenkins - Build great things at any scale! The ...
-
-$ helm show values jenkins/jenkins
-
-$ helm --version=4.4.1 upgrade -i --reset-values -f=/path/to/yaml.yml staging-jenkins jenkins/jenkins
-```
-
-### check
-```bash
-$ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[*].name}'
-jenkins config-reload
-
-$ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[?(@.name=="jenkins")].image}'
-jenkins/jenkins:2.401.2-lts-jdk11
-
-$ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[*].image}'
-jenkins/jenkins:2.401.2-lts-jdk11 kiwigrid/k8s-sidecar:1.24.4
-
-# format:
-# --as=system:serviceaccount:<namespace>:<serviceaccount>
-$ kubectl --as=system:serviceaccount:sms-fw-devops-ci:staging-jenkins auth can-i get configmap/staging-jenkins-jcasc
-yes
-```
-
-<!--sec data-title="stdout" data-id="section2" data-show=true data-collapse=true ces-->
-```bash
-STDOUT:
-
-Release "staging-jenkins" has been upgraded. Happy Helming!
-NAME: staging-jenkins
-LAST DEPLOYED: Tue Jul 18 19:21:46 2023
-NAMESPACE: devops
-STATUS: deployed
-REVISION: 21
-NOTES:
-1. Get your 'admin' user password by running:
-  kubectl exec --namespace devops -it svc/staging-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
-2. Get the Jenkins URL to visit by running these commands in the same shell:
-  echo http://127.0.0.1:8080
-  kubectl --namespace devops port-forward svc/staging-jenkins 8080:8080
-3. Login with the password from step 1 and the username: admin
-4. Configure security realm and authorization strategy
-5. Use Jenkins Configuration as Code by specifying configScripts in your values.yaml file, see documentation: http://127.0.0.1:8080/configuration-as-code and examples: https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
-
-For more information on running Jenkins on Kubernetes, visit:
-https://cloud.google.com/solutions/jenkins-on-container-engine
-
-For more information about Jenkins Configuration as Code, visit:
-https://jenkins.io/projects/jcasc/
-
-NOTE: Consider using a custom image with pre-installed plugins
-```
-<!--endsec-->
-
-<!--sec data-title="helm help" data-id="section3" data-show=true data-collapse=true ces-->
-```bash
-$ helm show values jenkins/jenkins
 # Default values for jenkins.
 # This is a YAML-formatted file.
 # Declare name/value pairs to be passed into your templates.
@@ -319,13 +13,16 @@ $ helm show values jenkins/jenkins
 # ref: https://github.com/kubernetes/dns/blob/master/docs/specification.md
 clusterZone: "cluster.local"
 
+# The URL of the Kubernetes API server
+kubernetesURL: "https://kubernetes.default"
+
 renderHelmLabels: true
 
 controller:
   # Used for label app.kubernetes.io/component
   componentName: "jenkins-controller"
   image: "jenkins/jenkins"
-  # tag: "2.401.1-jdk11"
+  # tag: "2.401.2-jdk11"
   tagLabel: jdk11
   imagePullPolicy: "Always"
   imagePullSecretName:
@@ -547,10 +244,10 @@ controller:
 
   # List of plugins to be install during Jenkins controller start
   installPlugins:
-    - kubernetes:3900.va_dce992317b_4
+    - kubernetes:3937.vd7b_82db_e347b_
     - workflow-aggregator:596.v8c21c963d92d
-    - git:5.0.0
-    - configuration-as-code:1625.v27444588cc3d
+    - git:5.1.0
+    - configuration-as-code:1647.ve39ca_b_829b_42
 
   # Set to false to download the minimum required version of all dependencies.
   installLatestPlugins: true
@@ -669,7 +366,7 @@ controller:
       # jcasc changes will cause a reboot and will only be applied at the subsequent start-up.  Auto-reload uses the
       # http://<jenkins_url>/reload-configuration-as-code endpoint to reapply config when changes to the configScripts are detected.
       enabled: true
-      image: kiwigrid/k8s-sidecar:1.23.1
+      image: kiwigrid/k8s-sidecar:1.24.4
       imagePullPolicy: IfNotPresent
       resources: {}
         #   limits:
@@ -931,8 +628,10 @@ agent:
   kubernetesReadTimeout: 15
   maxRequestsPerHostStr: "32"
   namespace:
+  # private registry for agent image
+  jnlpregistry:
   image: "jenkins/inbound-agent"
-  tag: "3107.v665000b_51092-5"
+  tag: "3107.v665000b_51092-15"
   workingDir: "/home/jenkins/agent"
   nodeUsageMode: "NORMAL"
   customJenkinsLabels: []
@@ -952,6 +651,13 @@ agent:
     limits:
       cpu: "512m"
       memory: "512Mi"
+  livenessProbe: {}
+#    execArgs: "cat /tmp/healthy"
+#    failureThreshold: 3
+#    initialDelaySeconds: 0
+#    periodSeconds: 10
+#    successThreshold: 1
+#    timeoutSeconds: 1
   # You may want to change this to true while testing a new image
   alwaysPullImage: false
   # Controls how agent pods are retained after the Jenkins build completes
@@ -1279,41 +985,4 @@ helmtest:
     # Bash Automated Testing System (BATS)
     image: "bats/bats"
     tag: "1.9.0"
-```
-<!--endsec-->
 
-
-## otheres
-### [helm is compatible](https://helm.sh/docs/topics/version_skew/)
-
-| HELM VERSION | SUPPORTED KUBERNETES VERSIONS |
-|--------------|-------------------------------|
-| `3.11.x`     | `1.26.x` - `1.23.x`           |
-| `3.10.x`     | `1.25.x` - `1.22.x`           |
-| `3.9.x`      | `1.24.x` - `1.21.x`           |
-| `3.8.x`      | `1.23.x` - `1.20.x`           |
-| `3.7.x`      | `1.22.x` - `1.19.x`           |
-| `3.6.x`      | `1.21.x` - `1.18.x`           |
-| `3.5.x`      | `1.20.x` - `1.17.x`           |
-| `3.4.x`      | `1.19.x` - `1.16.x`           |
-| `3.3.x`      | `1.18.x` - `1.15.x`           |
-| `3.2.x`      | `1.18.x` - `1.15.x`           |
-| `3.1.x`      | `1.17.x` - `1.14.x`           |
-| `3.0.x`      | `1.16.x` - `1.13.x`           |
-| `2.16.x`     | `1.16.x` - `1.15.x`           |
-| `2.15.x`     | `1.15.x` - `1.14.x`           |
-| `2.14.x`     | `1.14.x` - `1.13.x`           |
-| `2.13.x`     | `1.13.x` - `1.12.x`           |
-| `2.12.x`     | `1.12.x` - `1.11.x`           |
-| `2.11.x`     | `1.11.x` - `1.10.x`           |
-| `2.10.x`     | `1.10.x` - `1.9.x`            |
-| `2.9.x`      | `1.10.x` - `1.9.x`            |
-| `2.8.x`      | `1.9.x` - `1.8.x`             |
-| `2.7.x`      | `1.8.x` - `1.7.x`             |
-| `2.6.x`      | `1.7.x` - `1.6.x`             |
-| `2.5.x`      | `1.6.x` - `1.5.x`             |
-| `2.4.x`      | `1.6.x` - `1.5.x`             |
-| `2.3.x`      | `1.5.x` - `1.4.x`             |
-| `2.2.x`      | `1.5.x` - `1.4.x`             |
-| `2.1.x`      | `1.5.x` - `1.4.x`             |
-| `2.0.x`      | `1.4.x` - `1.3.x`             |

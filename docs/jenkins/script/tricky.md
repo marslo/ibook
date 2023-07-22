@@ -331,3 +331,92 @@ config.save()
         secret: 'super secret'
         token: 'my token'
   ```
+
+- [install plugin](https://gist.github.com/whittlec/6112643)
+  ```groovy
+  for (plugin in ["ant",
+      "artifactdeployer",
+      "build-failure-analyzer",
+      "build-name-setter",
+      "build-pipeline-plugin",
+      "build-timeout",
+      "claim",
+      "clone-workspace-scm",
+      "cobertura",
+      "collapsing-console-sections",
+      "conditional-buildstep",
+      "configurationslicing",
+      "copy-to-slave",
+      "credentials",
+      "cvs",
+      "disk-usage",
+      "ec2",
+      "email-ext",
+      "external-monitor-job",
+      "git",
+      "git-client",
+      "global-build-stats",
+      "gravatar",
+      "groovy-postbuild",
+      "javadoc",
+      "jobConfigHistory",
+      "ldap",
+      "mailer",
+      "mask-passwords",
+      "maven-plugin",
+      "openid",
+      "pam-auth",
+      "parameterized-trigger",
+      "run-condition",
+      "shelve-project-plugin",
+      "ssh-credentials",
+      "ssh-slaves",
+      "subversion",
+      "svn-release-mgr",
+      "token-macro",
+      "translation",
+      "view-job-filters",
+      "ws-cleanup"]) {
+    e = Hudson.instance.updateCenter.getPlugin(plugin).deploy().get().getError()
+    if (e != null)
+      println e.message
+  }
+  ```
+  - [or](https://stackoverflow.com/a/59057166/2940319)
+    ```bash
+    import jenkins.model.*
+    import java.util.logging.Logger
+
+    def logger = Logger.getLogger("")
+    def installed = false
+    def initialized = false
+
+    def pluginParameter="gitlab-plugin hipchat swarm"
+    def plugins =pluginParameter.split()
+    logger.info("" + plugins)
+    def instance =Jenkins.getInstance()
+    def pm = instance.getPluginManager()
+    def uc =instance.getUpdateCenter()
+    uc.updateAllSites()
+
+    plugins.each {   logger.info("Checking " + it)   if
+    (!pm.getPlugin(it)) {
+        logger.info("Looking UpdateCenter for " + it)
+        if (!initialized) {
+          uc.updateAllSites()
+          initialized = true
+        }
+        def plugin = uc.getPlugin(it)
+        if (plugin) {
+          logger.info("Installing " + it)
+            plugin.deploy()
+          installed = true
+        }   } }
+
+    if (installed)
+       {
+          logger.info("Plugins installed, initializing a   restart!")
+           instance.save()
+           instance.doSafeRestart()
+     }
+    ```
