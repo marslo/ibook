@@ -97,6 +97,7 @@
     * [shared-libs](jenkins/plugins/shared-libs.md)
     * [job-dsl](jenkins/plugins/dsl.md)
     * [simple-theme](jenkins/plugins/simple-theme.md)
+    * [build-timeline](jenkins/plugins/build-timeline.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
     * [tricky](jenkins/plugins/tricky.md)
 * [virtualization](virtualization/virtualization.md)

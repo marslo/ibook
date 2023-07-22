@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [upload via api](#upload-via-api)
 - [plugins](#plugins)
   - [recommended plugins](#recommended-plugins)
   - [optinal](#optinal)
@@ -14,7 +15,32 @@
 > - [plugin index](https://plugins.jenkins.io/)
 > - [Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)
 > - [Pipeline Best Practices](https://www.jenkins.io/doc/book/pipeline/pipeline-best-practices/)
+> - [jenkinsci/plugin-installation-manager-tool](https://github.com/jenkinsci/plugin-installation-manager-tool)
+> - [jenkinsci/docker/install-plugins.sh](https://github.com/jenkinsci/docker/blob/84c43c1a84c2c71da3e96a59b319700ba2dbeddf/install-plugins.sh)
+> - [gitops-playground/scripts/jenkins/plugins/download-plugins.sh](https://github.com/cloudogu/gitops-playground/blob/97ed0964cc1713abf0765a9fbe149f07e1f295c2/scripts/jenkins/plugins/download-plugins.sh)
+> - [gitops-playground/scripts/jenkins/init-jenkins.sh](https://github.com/cloudogu/gitops-playground/blob/d41094a7927f91cb05aaa40b35b5410719ed1e8b/scripts/jenkins/init-jenkins.sh#L98-L104)
+> - [jenkins/core/src/main/java/hudson/PluginManager.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/PluginManager.java)
+> - [* How to Install Jenkins Plugins From Command Line Using the Jenkins CLI](https://www.youtube.com/watch?v=bTFMvXIkNIg)
+> - [hoesler/install_jenkins_plugin.sh](https://gist.github.com/hoesler/ed289c9c7f18190b2411e3f2286e23c3)
 {% endhint %}
+
+## [upload via api](https://stackoverflow.com/a/69014736/2940319)
+```bash
+$ curl -i -F file=@plugin.hpi http://${JENKINS_URL}/pluginManager/uploadPlugin
+
+# via CLI
+$ ssh ${JENKINS_URL} install-plugin https://artifactory.example.com/jenkins/plugins/pipeline-timeline.hpi
+Installing a plugin from https://artifactory.example.com/jenkins/plugins/pipeline-timeline.hpi
+
+# via [plugin-installation-manager-tool](https://github.com/jenkinsci/plugin-installation-manager-tool)
+$ java -jar jenkins-plugin-manager-$version.jar \
+       --plugin-download-directory pluginsFolder \
+       --plugin-file plugins.yml \
+       --war jenkins.war
+```
+
+- other apis
+  - [`pluginManager/installNecessaryPlugins`](https://issues.jenkins.io/browse/JENKINS-32793)
 
 ## plugins
 ### recommended plugins
