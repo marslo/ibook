@@ -15,6 +15,11 @@
   - [view](#view)
 - [ansible-galaxy](#ansible-galaxy)
 - [ansible-playbook](#ansible-playbook)
+  - [tags](#tags)
+- [ansible-config](#ansible-config)
+  - [get all default](#get-all-default)
+- [plugin](#plugin)
+  - [lookup](#lookup)
 - [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -402,6 +407,140 @@ $ ansible-playbook -i hosts /path/to/yaml
 # with password
 $ ansible-playbook -i hosts /path/to/yaml --vault-id @prompt
 ```
+
+### tags
+
+> [!NOTE|label:references]
+> - [Special tags: always and never](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_tags.html#special-tags-always-and-never)
+> - [Use Ansible tags to save time on playbook runs](https://www.redhat.com/sysadmin/ansible-tags-fast-playbook-runs)
+
+#### never
+```yaml
+$ cat sample.yaml
+---
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+
+    - name: Hello tag example
+      debug:
+        msg: "Hello!"
+      tags:
+        - hello
+
+    - name: No tag example
+      debug:
+        msg: "How are you?"
+
+    - name: Goodbye tag example
+      debug:
+        msg: "Goodbye!"
+      tags:
+        - goodbye
+        - never                        # will not be executed unless using `--tags goodbye`
+```
+
+- result
+  ```bash
+  $ ansible-playbook sample.yaml
+
+  PLAY [localhost] *************************************************************************
+  TASK [Hello tag example] *****************************************************************
+  ok: [localhost] => {
+      "msg": "Hello!"
+  }
+
+  TASK [No tag example] ********************************************************************
+  ok: [localhost] => {
+      "msg": "How are you?"
+  }
+
+  PLAY RECAP *******************************************************************************
+  localhost           : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+  ```
+
+- result with `--tags`
+  ```bash
+  $ ansible-playbook sample.yaml --tags goodbye
+
+  PLAY [localhost] *************************************************************************
+
+  TASK [Goodbye tag example] ***************************************************************
+  ok: [localhost] => {
+      "msg": "Goodbye!"
+  }
+
+  PLAY RECAP *******************************************************************************
+  localhost           : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+  ```
+
+## [ansible-config](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#inventory-unparsed-warning)
+
+> [!NOTE|label:referencs:]
+> - [v2.4 Configuration file](https://docs.ansible.com/archive/ansible/2.4/intro_configuration.html)
+
+### get all default
+```bash
+$ ansible-config init --disabled -t all
+```
+
+- disable localhost warning
+  ```bash
+  $ cat ansible.cfg
+  [defaults]
+  localhost_warning=false
+  ```
+
+## plugin
+### [lookup](https://docs.ansible.com/ansible/latest/plugins/lookup.html)
+
+> [!NOTE|label:references:]
+> - [自动化运维 | Ansible lookup](http://www.manongjc.com/detail/57-jamkqmdgyzomkhf.html)
+> - sample code
+>   {% raw %}
+>   ```bash
+>   $ ls --color=none lookup* | xargs -n1 -t cat
+>   cat lookup-content.txt
+>   hello world
+>
+>   cat lookup.yaml
+>   ---
+>   - hosts: localhost
+>     tasks:
+>     vars:
+>        contents: "{{ lookup('file', '/home/marslo/iMarslo/study/code/ansible/lookup-content.txt')}}"
+>     tasks:
+>        - debug: msg="the content of file lookup-content.txt is {{contents}}"
+>   ```
+>   {% endraw %}
+
+```bash
+$ ansible-playbook lookup.yaml
+PLAY [localhost] *************************************************************************
+
+TASK [Gathering Facts] *******************************************************************
+Monday 24 July 2023  17:43:51 -0700 (0:00:00.007)       0:00:00.007 ***********
+ok: [localhost]
+
+TASK [debug] *****************************************************************************
+Monday 24 July 2023  17:43:51 -0700 (0:00:00.935)       0:00:00.943 ***********
+ok: [localhost] => {}
+
+MSG:
+
+the content of file lookup-content.txt is hello world
+
+PLAY RECAP *******************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+Monday 24 July 2023  17:43:52 -0700 (0:00:00.030)       0:00:00.974 ***********
+===============================================================================
+Gathering Facts ------------------------------------------------------------------- 0.94s
+debug ----------------------------------------------------------------------------- 0.03s
+```
+
+
 
 ## troubleshooting
 - [generate the final yaml via `ansible.builtin.template`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)

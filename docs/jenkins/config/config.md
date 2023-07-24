@@ -23,6 +23,7 @@
 > - [How to install a Jenkins instance with Helm](https://octopus.com/blog/jenkins-helm-install-guide)
 > - [helm-charts/charts/jenkins/README.md](https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/README.md)
 > - [docker/README.md](https://github.com/jenkinsci/docker/blob/master/README.md#setting-update-centers)
+> - [InfoSec812/pipeline-libraries.groovy](https://gist.github.com/InfoSec812/079f80147bcc34f0a9544e1d5567a05c)
 >
 > - to get groovy version:
 >   ```groovy
