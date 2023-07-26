@@ -43,6 +43,11 @@
 >   - [JENKINS-27514: Core - Thread spikes in Computer.threadPoolForRemoting leading to eventual server OOM](https://issues.jenkins.io/browse/JENKINS-27514)
 >   - [JENKINS-19465: Slave hangs while being launched](https://issues.jenkins.io/browse/JENKINS-19465)
 > - [CloudBees: Managing agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-admin-guide/agents#static-agents)
+> - [CloudBees: Create a Permanent Agent from Groovy Console](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/create-agent-node-from-groovy)
+>   - [DumbSlave](https://javadoc.jenkins-ci.org/hudson/slaves/DumbSlave.html)
+>   - [JNLPLauncher](https://javadoc.jenkins.io/hudson/slaves/JNLPLauncher.html)
+> - [Create a new Jenkins node, and run your Jenkins agent as a service](https://www.jenkins.io/blog/2022/12/27/run-jenkins-agent-as-a-service/)
+> - [WebSocket](https://www.jenkins.io/blog/2020/02/02/web-socket/)
 {% endhint %}
 
 
