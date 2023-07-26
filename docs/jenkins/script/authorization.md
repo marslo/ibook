@@ -23,6 +23,7 @@
   - [SystemCredentialsProvider](#systemcredentialsprovider)
   - [VaultUsernamePasswordCredential](#vaultusernamepasswordcredential)
   - [VaultAppRoleCredential](#vaultapprolecredential)
+  - [VaultSSHUserPrivateKeyImpl](#vaultsshuserprivatekeyimpl)
   - [encrypt/decrypt password](#encryptdecrypt-password)
 - [tricky](#tricky)
   - [Access granted with Overall/SystemRead](#access-granted-with-overallsystemread)
@@ -445,6 +446,7 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
   import com.cloudbees.plugins.credentials.SystemCredentialsProvider
   import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredential
   import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
+  import com.datapipe.jenkins.vault.credentials.common.VaultSSHUserPrivateKeyImpl
 
   CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
                      .sort{ it.id }
@@ -526,6 +528,23 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                                                         description : ${it.description}
                            """
                            break;
+
+                         case 'VaultSSHUserPrivateKeyImpl':
+                           println """
+                                                               type : ${it.class.simpleName}
+                                                                 id : ${it.id}
+                                                              scope : ${it.scope}
+                                                        description : ${it.description}
+                                                     usernameSecret : ${it.usernameSecret ?: 'false'}
+                                                        usernameKey : ${it.usernameKey}
+                                                           username : ${it.username}
+                                                      privateKeyKey : ${it.privateKeyKey}
+                                                        privateKeys : ${it.privateKeys.join('\n')}
+                                                      passphraseKey : ${it.passphraseKey}
+                                                         passphrase : ${ it.passphrase}
+                           """
+                           break;
+
                        }
                      }
   ```
@@ -667,16 +686,17 @@ List<VaultUsernamePasswordCredential> creds = CredentialsProvider.lookupCredenti
   VaultUsernamePasswordCredential.class ,
   jenkins.model.Jenkins.instance
 ).sort{ it.id }
-.each {
-    println """
-                        id  : ${it.id}
-                      scope : ${it.scope}
-                  username  : ${it.username}
-                   password : ${it.password}
-                       path : ${it.path}
-               description  : ${it.description}
-            usernameSecret  : ${it.usernameSecret ?: 'false'}
-    """
+
+creds.each {
+  println """
+                id  : ${it.id}
+              scope : ${it.scope}
+          username  : ${it.username}
+           password : ${it.password}
+               path : ${it.path}
+       description  : ${it.description}
+    usernameSecret  : ${it.usernameSecret ?: 'false'}
+  """
  }
 ```
 
@@ -691,17 +711,46 @@ List<VaultAppRoleCredential> creds = CredentialsProvider.lookupCredentials(
   VaultAppRoleCredential.class ,
   jenkins.model.Jenkins.instance
 ).sort{ it.id }
-.each {
-    println """
-                        id  : ${it.id}
-                   secretId : ${it.secretId}
-                     roleId : ${it.roleId}
-                       path : ${it.path}
-                  namespace : ${it.namespace}
-                      scope : ${it.scope}
-                description : ${it.description}
-    """
+
+creds.each {
+  println """
+            id  : ${it.id}
+       secretId : ${it.secretId}
+         roleId : ${it.roleId}
+           path : ${it.path}
+      namespace : ${it.namespace}
+          scope : ${it.scope}
+    description : ${it.description}
+  """
  }
+```
+
+### [VaultSSHUserPrivateKeyImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultSSHUserPrivateKeyImpl.html)
+```bash
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.datapipe.jenkins.vault.credentials.common.VaultSSHUserPrivateKeyImpl
+
+List<VaultSSHUserPrivateKeyImpl> creds = CredentialsProvider.lookupCredentials(
+  VaultSSHUserPrivateKeyImpl.class,
+  jenkins.model.Jenkins.instance
+).sort{ it.id }
+
+creds.each {
+  println """
+               type : ${it.class.simpleName}
+                 id : ${it.id}
+              scope : ${it.scope}
+        description : ${it.description}
+     usernameSecret : ${it.usernameSecret ?: 'false'}
+        usernameKey : ${it.usernameKey}
+           username : ${it.username}
+      privateKeyKey : ${it.privateKeyKey}
+        privateKeys : ${it.privateKeys.collect{ it.trim() }}
+         privateKey : ${it.privateKey}
+      passphraseKey : ${it.passphraseKey}
+         passphrase : ${ it.passphrase}
+  """
+}
 ```
 
 ### encrypt/decrypt password
