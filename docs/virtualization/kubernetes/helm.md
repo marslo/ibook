@@ -13,6 +13,7 @@
 - [usage](#usage)
   - [install Jenkins](#install-jenkins)
   - [check](#check)
+  - [helm show](#helm-show)
 - [otheres](#otheres)
   - [helm is compatible](#helm-is-compatible)
 
@@ -250,8 +251,12 @@ NAME            CHART VERSION APP VERSION DESCRIPTION
 jenkins/jenkins 4.3.24        2.401.1     Jenkins - Build great things at any scale! The ...
 
 $ helm show values jenkins/jenkins
+$ helm show chart  jenkins/jenkins
+$ helm show readme jenkins/jenkins
+# or
+$ helm show all jenkins/jenkins
 
-$ helm --version=4.4.1 upgrade -i --reset-values -f=/path/to/yaml.yml staging-jenkins jenkins/jenkins
+$ helm --version=4.4.1 upgrade -i --reset-values -f=/path/to/value.yml staging-jenkins jenkins/jenkins
 ```
 
 ### check
@@ -1282,6 +1287,64 @@ helmtest:
 ```
 <!--endsec-->
 
+### [helm show](https://helm.sh/docs/helm/helm_show/)
+- chart
+  ```bash
+  $ helm show chart jenkins/jenkins
+  annotations:
+    artifacthub.io/category: integration-delivery
+    artifacthub.io/images: |
+      - name: jenkins
+        image: jenkins/jenkins:2.401.2-jdk11
+      - name: k8s-sidecar
+        image: kiwigrid/k8s-sidecar:1.24.4
+      - name: inbound-agent
+        image: jenkins/inbound-agent:3107.v665000b_51092-15
+      - name: backup
+        image: maorfr/kube-tasks:0.2.0
+    artifacthub.io/license: Apache-2.0
+    artifacthub.io/links: |
+      - name: Chart Source
+        url: https://github.com/jenkinsci/helm-charts/tree/main/charts/jenkins
+      - name: Jenkins
+        url: https://www.jenkins.io/
+      - name: support
+        url: https://github.com/jenkinsci/helm-charts/issues
+  apiVersion: v2
+  appVersion: 2.401.2
+  description: Jenkins - Build great things at any scale! The leading open source automation
+    server, Jenkins provides hundreds of plugins to support building, deploying and
+    automating any project.
+  home: https://jenkins.io/
+  icon: https://get.jenkins.io/art/jenkins-logo/logo.svg
+  keywords:
+  - jenkins
+  - ci
+  - devops
+  maintainers:
+  - email: maor.friedman@redhat.com
+    name: maorfr
+  - email: mail@torstenwalter.de
+    name: torstenwalter
+  - email: garridomota@gmail.com
+    name: mogaal
+  - email: wmcdona89@gmail.com
+    name: wmcdona89
+  - email: timjacomb1@gmail.com
+    name: timja
+  name: jenkins
+  sources:
+  - https://github.com/jenkinsci/jenkins
+  - https://github.com/jenkinsci/docker-inbound-agent
+  - https://github.com/maorfr/kube-tasks
+  - https://github.com/jenkinsci/configuration-as-code-plugin
+  version: 4.4.1
+  ```
+
+- values
+  ```bash
+  $ helm show values jenkins/jenkins
+  ```
 
 ## otheres
 ### [helm is compatible](https://helm.sh/docs/topics/version_skew/)
