@@ -35,6 +35,7 @@
   - [assign cpu resources to containers and pods](#assign-cpu-resources-to-containers-and-pods)
   - [managing kubernetes resource limits](#managing-kubernetes-resource-limits)
 - [troubleshooting](#troubleshooting)
+  - [debug svc](#debug-svc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -161,8 +162,15 @@ $ kubectl -n <namespace> get pods \
 
 ### pod
 ```bash
+# create and login
+$ kubectl run debug --image=busybox -it --rm
+# create and sleep
 $ kubectl run debug --image=busybox -- sleep infinity
 pod/debug created
+# created with specific nodeSelector
+$ kubectl run debug \
+              --image=busybox \
+              --overrides='{"spec": { "nodeSelector": {"kubernetes.io/hostname": "k8s-node-01"} }}'
 
 $ kubectl get pod
 NAME    READY   STATUS    RESTARTS   AGE
@@ -171,7 +179,11 @@ debug   1/1     Running   0          6s
 # delete
 $ kubectl delete pod/debug
 pod "debug" deleted
+
+# attach
+$ kubectl attach debug -c debug -it
 ```
+
 
 ### deploy
 ```bash
@@ -353,8 +365,7 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 
 #### `-o name`
 ```bash
-$ kubectl -n kube-system get pods -o name |
-  head
+$ kubectl -n kube-system get pods -o name | head
 pod/coredns-c7ddbcccb-5cj5z
 pod/coredns-c7ddbcccb-lxsw6
 pod/coredns-c7ddbcccb-prjfk
@@ -371,9 +382,9 @@ pod/kube-controller-manager-node03
 {% raw %}
 ```bash
 $ kubectl -n kube-system get pods \
-    -o go-template \
-    --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
-    head
+          -o go-template \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
+          head
 coredns-c7ddbcccb-5cj5z
 coredns-c7ddbcccb-lxsw6
 coredns-c7ddbcccb-prjfk
@@ -391,8 +402,8 @@ kube-controller-manager-node03
   {% raw %}
   ```bash
   $ kubectl -n kube-system get pods \
-      --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
-      head
+            --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' |
+            head
   coredns-c7ddbcccb-5cj5z
   coredns-c7ddbcccb-lxsw6
   coredns-c7ddbcccb-prjfk
@@ -410,7 +421,7 @@ kube-controller-manager-node03
 - `Name:.metadata.name`
   ```bash
   $ kubectl get po --all-namespaces \
-             -o=custom-columns=NAMESPACE:.metadata.namespace
+                   -o=custom-columns=NAMESPACE:.metadata.namespace
   ```
 - `NODE:.spec.nodeName`
 - `IPS:status.podIPs`
@@ -449,7 +460,7 @@ kube-apiserver-node01
 ##### QOS
 ```bash
 $ kubectl -n kube-system get po \
-    -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,QOS-CLASS:.status.qosClass
+          -o custom-columns=NAME:.metadata.name,NAMESPACE:.metadata.namespace,QOS-CLASS:.status.qosClass
 NAME                                        NAMESPACE     QOS-CLASS
 coredns-59dd98b545-7t25l                    kube-system   Burstable
 coredns-59dd98b545-lnklx                    kube-system   Burstable
@@ -474,26 +485,26 @@ kube-flannel-ds-amd64-b4th7                 kube-system   Guaranteed
 #### get the first deploy name in namespace
 ```bash
 $ kubectl -n <namespace> get deploy \
-    -o=jsonpath={.items[0].metadata.name}
+          -o=jsonpath={.items[0].metadata.name}
 ```
 #### get all deploy names
 ```bash
 $ kubectl -n <namespace> get deploy \
-    -o=jsonpath='{.items[*].metadata.name}'
+          -o=jsonpath='{.items[*].metadata.name}'
 ```
 
 #### `item.metadata.name`
 - list via `jsonpath={.items..metadata.name}`
   ```bash
   $ kubectl -n kube-system get po \
-      --output=jsonpath={.items..metadata.name}
+            --output=jsonpath={.items..metadata.name}
   coredns-c7ddbcccb-5cj5z coredns-c7ddbcccb-lxsw6 coredns-c7ddbcccb-prjfk ...
   ```
   - or
     ```bash
     $ kubectl -n kube-system get po \
-        -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
-        head -10
+              -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
+              head -10
     coredns-c7ddbcccb-5cj5z
     coredns-c7ddbcccb-lxsw6
     coredns-c7ddbcccb-prjfk
@@ -612,3 +623,52 @@ $ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
           ports:
           - containerPort: 80
   ```
+
+- kubectl run
+  ```bash
+  $ kubectl run ubuntu-marslo \
+                --image=ubuntu:18.04 \
+                --overrides='{"spec": { "nodeSelector": {"kubernetes.io/hostname": "k8s-node-01"}}}' \
+                -- sleep infinity
+
+  # or
+  $ kubectl run ubuntu-marslo \
+                --image=ubuntu:18.04 \
+                --overrides='{"spec": { "nodeSelector": {"kubernetes.io/hostname": "k8s-node-01"}}}' \
+                -it \
+                --rm
+  ```
+
+### debug svc
+
+> [!NOTE|labels:referencds:]
+> - [DNS for Services and Pods](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+> - svc in cluster can be visit via
+>   - `CLUSTER-IP`
+>   - `<svc-name>.<namespace>.svc.cluster.local`
+
+```bash
+# current svc
+$ kubectl get svc
+NAME      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)              AGE
+jenkins   ClusterIP   10.111.230.13   <none>        8080/TCP,30338/TCP   18h
+
+# create new pod
+$ kubectl run ubuntu-marslo \
+              --image=ubuntu:18.04 \
+              --overrides='{"spec": { "nodeSelector": {"kubernetes.io/hostname": "k8s-node-01"}}}' \
+              -it \
+              --rm
+
+# check DNS
+<ubuntu-marslo> $ cat /etc/resolv.conf
+nameserver 10.96.0.10
+search devops.svc.cluster.local svc.cluster.local cluster.local marvell.com
+options ndots:5
+
+# debug
+$ nc -zv jenkins.devops.svc.cluster.local 30338
+$ nc -zv 10.111.230.13                    30338
+$ ssh -l marslo -p 30338 -i ~/.ssh/id_rsa jenkins.devops.svc.cluster.local list-plugins
+$ ssh -l marslo -p 30338 -i ~/.ssh/id_rsa 10.111.230.13                    list-plugins
+```
