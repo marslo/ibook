@@ -363,8 +363,8 @@ $ kubectl config set-cluster development --proxy-url=http://proxy.example.com:31
 
 ## get info
 
-> [!INFO]
-> references:
+> [!INFO|label:references:]
+> - [* imarslo : jsonpath](./pod.html#jsonpath)
 > - [jsonpath support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
 > - [JSONPath 支持](https://kubernetes.io/zh-cn/docs/reference/kubectl/jsonpath/)
 

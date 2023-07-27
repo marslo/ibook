@@ -19,6 +19,7 @@
 > - [Mastering Vim Grammar](https://irian.to/blogs/mastering-vim-grammar/)
 > - [Syntax highlighting is extremely slow when scrolling up in recent version (v8.0.1599) #2712](https://github.com/vim/vim/issues/2712)
 >  - [Slow vim in huge projects](https://www.reddit.com/r/vim/comments/ng59kz/slow_vim_in_huge_projects/)
+> - [Setting up Vim for YAML editing](https://www.arthurkoziel.com/setting-up-vim-for-yaml/)
 {% endhint %}
 
 ### check python enabled

@@ -3,15 +3,39 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [debug services](#debug-services)
+  - [get podIp](#get-podip)
 - [check log](#check-log)
   - [system logs](#system-logs)
   - [pod logs](#pod-logs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!TIP]
+> - [Troubleshooting Applications](https://kubernetes.io/docs/tasks/debug/debug-application/)
+>   - [Debug Pods](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
+>   - [Debug Service](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+>   - [Debug a StatefulSet](https://kubernetes.io/docs/tasks/debug/debug-application/debug-statefulset/)
+>   - [Determine the Reason for Pod Failure](https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/)
+>   - [Debug Init Containers](https://kubernetes.io/docs/tasks/debug/debug-application/debug-init-containers/)
+>   - [Debug Running Pods](https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/)
+>   - [Get a Shell to a Running Container](https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/)
+> - [Troubleshooting Clusters](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
+>   - [Resource metrics pipeline](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/)
+>   - [Tools for Monitoring Resources](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/)
+>   - [Monitor Node Health](https://kubernetes.io/docs/tasks/debug/debug-cluster/monitor-node-health/)
+>   - [Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
+>   - [Debugging Kubernetes Nodes With Kubectl](https://kubernetes.io/docs/tasks/debug/debug-cluster/kubectl-node-debug/)
+>   - [Developing and debugging services locally using telepresence](https://kubernetes.io/docs/tasks/debug/debug-cluster/local-debugging/)
+>   - [Auditing](https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/)
+>   - [Windows debugging tips](https://kubernetes.io/docs/tasks/debug/debug-cluster/windows/)
+> - [Communicate Between Containers in the Same Pod Using a Shared Volume](https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/)
+> - [Translate a Docker Compose File to Kubernetes Resources](https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/)
+
+
 ## debug services
 
 > [!NOTE|label:reference:]
+> - [How to Debug a Kubernetes Service Effectively](https://blog.getambassador.io/how-to-debug-a-kubernetes-service-effectively-3d4eff0b221a)
 > - [Debug Services](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
 > - [Access Services Running on Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster-services/)
 > - [DNS for Services and Pods](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
@@ -48,6 +72,13 @@ $ ssh -l marslo -p 30338 -i ~/.ssh/id_rsa jenkins.devops.svc.cluster.local list-
 $ ssh -l marslo -p 30338 -i ~/.ssh/id_rsa 10.111.230.13                    list-plugins
 ```
 
+### get podIp
+```bash
+$ kubectl get pods \
+              -l app=hostnames \
+              -o go-template='{{range .items}}{{.status.podIP}}{{"\n"}}{{end}}'
+```
+
 ## check log
 
 > [!NOTE|label:references:]
@@ -76,3 +107,4 @@ $ sudo systemctl status <service> -l --no-pager
 ```bash
 $ kubectl logs pod <pod_name> --all-containers
 ```
+

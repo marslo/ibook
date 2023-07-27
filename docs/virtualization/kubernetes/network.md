@@ -2,19 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-  - [devops-kubernetes-controller](#devops-kubernetes-controller)
-  - [devops-kubernetes-02](#devops-kubernetes-02)
-    - [/etc/network/interface](#etcnetworkinterface)
-- [iface eno3 inet dhcp](#iface-eno3-inet-dhcp)
-- [auto eno3](#auto-eno3)
-- [iface eno3 inet static](#iface-eno3-inet-static)
-- [address 192.168.11.121](#address-19216811121)
-- [netmask 255.255.254.0](#netmask-2552552540)
-- [gateway 192.168.10.1](#gateway-192168101)
-- [dns-nameservers 61.139.2.69 218.6.200.139](#dns-nameservers-61139269-2186200139)
-    - [network info](#network-info)
-    - [Route Details](#route-details)
-  - [devops-kubernetes-03](#devops-kubernetes-03)
+- [devops-kubernetes-controller](#devops-kubernetes-controller)
+- [devops-kubernetes-02](#devops-kubernetes-02)
+  - [/etc/network/interface](#etcnetworkinterface)
+  - [network info](#network-info)
+  - [Route Details](#route-details)
+- [devops-kubernetes-03](#devops-kubernetes-03)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -43,9 +36,9 @@ iface eno1 inet static
   dns-search cn-132.lan.mycompany.com
 ```
 
-<details><summary> » <code>/etc/network/interfaces</code></summary>
-# interfaces(5) file used by ifup(8) and ifdown(8)
-<pre><code>$ cat /etc/network/interfaces
+<!--sec data-title=">> /etc/network/interfaces" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ cat /etc/network/interfaces
 # interfaces(5) file used by ifup(8) and ifdown(8)
 auto lo
 iface lo inet loopback
@@ -68,16 +61,18 @@ auto eno3
   # netmask 255.255.254.0
   # gateway 192.168.10.1
   # dns-nameservers 61.139.2.69 218.6.200.139
-</code></pre>
-</details>
+```
+<!--endsec-->
 
 ### network info
 ```bash
 $ nmcli [-p] d[evice] show <interface>
 ```
 
-<details><summary> » Click here to check details</summary>
-<pre><code>$ nmcli -p d show eno1
+
+<!--sec data-title=">> Click here to check details" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ nmcli -p d show eno1
 ===============================================================================
                              Device details (eno1)
 ===============================================================================
@@ -279,8 +274,9 @@ IP4.GATEWAY:                            --
 IP6.ADDRESS[1]:                         ::1/128
 IP6.GATEWAY:                            --
 -------------------------------------------------------------------------------
-</code></pre>
-</details>
+```
+<!--endsec-->
+
 
 ### Route Details
 ```bash
@@ -312,6 +308,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 ```
 
 ## devops-kubernetes-03
+
 ```bash
 $ ifconfig en1
 en1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
@@ -331,9 +328,11 @@ inet 130.147.182.248 netmask 0xfffffe00 broadcast 130.147.183.255
 nd6 options=201<PERFORMNUD,DAD>
 media: autoselect (100baseTX <full-duplex>)
 status: active
+```
 
-
-$ ifconfig
+<details>
+<summary><code>ifconfig</code></summary>
+<pre><code>$ ifconfig
 lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
 options=1203<RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP>
 inet 127.0.0.1 netmask 0xff000000
@@ -396,4 +395,5 @@ status: active
 utun0: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 2000
 inet6 fe80::2c33:8275:3276:346f%utun0 prefixlen 64 scopeid 0xc
 nd6 options=201<PERFORMNUD,DAD>
-```
+</code></pre>
+</details>
