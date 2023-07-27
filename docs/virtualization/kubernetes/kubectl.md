@@ -36,6 +36,8 @@
 
 {% hint style='info' %}
 > reference:
+> - [* Cheatsheet - Kubectl](https://dockerlabs.collabnix.com/kubernetes/cheatsheets/kubectl.html)
+> - [* kubectl cheatsheet](https://kapeli.com/cheat_sheets/Kubernetes.docset/Contents/Resources/Documents/index)
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 > - [使用 kubectl 管理 Secret](https://kubernetes.io/zh-cn/docs/tasks/configmap-secret/managing-secret-using-kubectl/)
 > - [JSONPath Support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
@@ -342,6 +344,20 @@ ok
 > - [Declarative Management of Kubernetes Objects Using Configuration Files](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/declarative-config/)
 > - [Understanding the Kubectl Apply Command](https://luispreciado.blog/posts/kubernetes/core-concepts/kubectl-apply)
 > - [How kubectl apply command works?](https://technos.medium.com/how-kubectl-apply-command-works-d092121056d3)
+
+- oneline cmd
+  ```bash
+  $ cat << EOF | kubectl create -f -
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: mysecret
+  type: Opaque
+  data:
+    password: $(echo "admin" | base64)
+    username: $(echo "1f2d1e2e67df" | base64)
+  EOF
+  ```
 
 - [`edit-last-applied`](https://www.mankier.com/1/kubectl-apply-edit-last-applied)
 

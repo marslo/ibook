@@ -10,6 +10,7 @@
 
 {% hint style='tip' %}
 > references:
+> - [* Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/)
 > - [* Access Clusters Using the Kubernetes API](https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/)
 > - [The Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/)
 > - [The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750)
@@ -19,7 +20,6 @@
 > - [* Kubernetes API Basics - Resources, Kinds, and Objects](https://iximiuz.com/en/posts/kubernetes-api-structure-and-terminology/)
 > - [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
 > - [* one-page api reference for kubernetes v1.24](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/)
-> - [* Kubernetes API](https://kubernetes.io/docs/reference/kubernetes-api/)
 > - [* API Access Control](https://kubernetes.io/docs/reference/access-authn-authz/)
 > - [using api](https://kubernetes.io/docs/reference/using-api/)
 > - [customizing components with the kubeadm api](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)

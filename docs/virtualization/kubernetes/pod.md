@@ -17,6 +17,7 @@
 - [run & create](#run--create)
   - [pod](#pod)
   - [deploy](#deploy)
+  - [svc](#svc)
 - [list](#list)
   - [list pod with nodename](#list-pod-with-nodename)
   - [list all ready pods](#list-all-ready-pods)
@@ -161,6 +162,7 @@ $ kubectl -n <namespace> get pods \
 ## run & create
 
 ### pod
+
 ```bash
 # create and login
 $ kubectl run debug --image=busybox -it --rm
@@ -181,14 +183,21 @@ $ kubectl delete pod/debug
 pod "debug" deleted
 
 # attach
+$ kubectl attach <pod-name> -c <container-name> -it
+# i.e.:
 $ kubectl attach debug -c debug -it
 ```
 
-
 ### deploy
 ```bash
+# format
+$ kubectl create deployment <name> --image=<image:tag> [--replicas=n]
+# i.e.:
 $ kubectl create deployment nginx --image=nginx --replicas=2
 deployment.apps/nginx created
+
+# optional
+$ kubectl scale deployment nginx --replicas=3
 
 $ kubectl get pod
 NAME                     READY   STATUS    RESTARTS   AGE
@@ -200,7 +209,10 @@ $ kubectl delete deployment nginx
 deployment.apps "nginx" deleted
 ```
 
-
+### svc
+```bash
+$ kubectl expose deployment <name> --port=80 --target-port=9376
+```
 
 ## list
 
@@ -211,16 +223,23 @@ deployment.apps "nginx" deleted
   ```
 - [list](https://stackoverflow.com/a/64047982/2940319)
   ```bash
-  $ kubectl get pods --all-namespaces --output 'jsonpath={range .items[*]}{.spec.nodeName}{"\t"}{.metadata.namespace}{"\t"}{.metadata.name}{"\n"}{end}
+  $ kubectl get pods \
+                --all-namespaces \
+                --output 'jsonpath={range .items[*]}{.spec.nodeName}{"\t"}{.metadata.namespace}{"\t"}{.metadata.name}{"\n"}{end}
   ```
 - [or list with custom-columns](https://stackoverflow.com/a/48983984/2940319)
   ```bash
-  $ kubectl get pod -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName --all-namespaces
+  $ kubectl get pod \
+                --all-namespaces
+                -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName \
   ```
 
 - [list nodeName with podIP](https://stackoverflow.com/a/48983623/2940319)
   ```bash
-  $ kubectl get pod --all-namespaces -o json | jq '.items[] | .spec.nodeName + " " + .status.podIP'
+  $ kubectl get pod \
+                --all-namespaces \
+                -o json |
+                jq '.items[] | .spec.nodeName + " " + .status.podIP'
   ```
 
 ### [list all ready pods](https://stackoverflow.com/a/58993242/2940319)
@@ -239,10 +258,13 @@ $ kubectl get pods --all-namespaces -o json |
   > - [How can I view pods with kubectl and filter based on having a status of ImagePullBackOff?](https://stackoverflow.com/a/57222793/2940319)
 
   ```bash
-  $ kubectl get pod --all-namespaces -o=json | jq '.items[]|select(any( .status.containerStatuses[]; .state.waiting.reason=="ImagePullBackOff"))|.metadata.name'
+  $ kubectl get pod --all-namespaces \
+                    -o=json |
+                    jq '.items[]|select(any( .status.containerStatuses[]; .state.waiting.reason=="ImagePullBackOff"))|.metadata.name'
 
   # or
-  $ kubectl get pod --all-namespaces -o jsonpath='{.items[?(@.status.containerStatuses[*].state.waiting.reason=="ImagePullBackOff")].metadata.name}'
+  $ kubectl get pod --all-namespaces \
+                    -o jsonpath='{.items[?(@.status.containerStatuses[*].state.waiting.reason=="ImagePullBackOff")].metadata.name}'
   ```
 
 ### [list error status pods](https://stackoverflow.com/a/53327330/2940319)
@@ -255,7 +277,7 @@ $ kubectl get pods --all-namespaces -o json |
 
 ```bash
 $ kubectl -n <namespace> get po \
-    --field-selector status.phase=Failed
+          --field-selector status.phase=Failed
 ```
 
 #### list and delete all error status pods
@@ -268,13 +290,13 @@ $ for i in $(kubectl get po --no-headers --all-namespaces --field-selector statu
 - or
   ```bash
   $ kubectl -n <namespace> delete po \
-      --field-selector status.phase=Failed
+            --field-selector status.phase=Failed
   ```
 
 - [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-346746104)
   ```bash
   $ kubectl -n <namespace> get po \
-      --field-selector=status.phase!=Running
+            --field-selector=status.phase!=Running
   ```
 
 - [or](https://github.com/kubernetes/kubernetes/issues/49387#issuecomment-504405180)
@@ -296,7 +318,7 @@ $ for i in $(kubectl get po --no-headers --all-namespaces --field-selector statu
 ### [list all pods statuses only](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 ```bash
 $ kubectl -n <namespace> get po \
-    -o=jsonpath='{.items[*].status.phase}'
+          -o=jsonpath='{.items[*].status.phase}'
 Running Running Running Running Running Running Running Running Running
 ```
 
@@ -323,7 +345,7 @@ $ k4 -n <namespace> get po -o jsonpath="{..image}" |
 ### list running pods
 ```bash
 $ kubectl -n <namespace> get po \
-    -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
+          -o=custom-columns=NAME:.metadata.name,STATUS:.status.phase,NODE:.spec.nodeName
 NAME                                        STATUS    NODE
 coredns-59dd98b545-7t25l                    Running   k8s-node01
 coredns-59dd98b545-lnklx                    Running   k8s-node02
@@ -335,12 +357,15 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 
 - specific nodes
   ```bash
-  $ kubectl get pods --all-namespaces -o wide --field-selector spec.nodeName=<node>
+  $ kubectl get pods --all-namespaces \
+                     -o wide \
+                     --field-selector spec.nodeName=<node>
   ```
 
 - all nodes
   ```bash
-  $ kubectl get pods -o wide --sort-by="{.spec.nodeName}"
+  $ kubectl get pods -o wide \
+                     --sort-by="{.spec.nodeName}"
   ```
 
   - via label filter
@@ -352,7 +377,10 @@ coredns-59dd98b545-ltj5p                    Running   k8s-node03
 
   - via API
     ```bash
-    $ curl --cacert ca.crt --cert apiserver.crt --key apiserver.key  https://<server>:<port>/api/v1/namespaces/<namespace>/pods?fieldSelector=spec.nodeName%3Dsomenodename
+    $ curl --cacert ca.crt \
+           --cert apiserver.crt \
+           --key apiserver.key \
+           https://<server>:<port>/api/v1/namespaces/<namespace>/pods?fieldSelector=spec.nodeName%3Dsomenodename
     ```
 
 ### output
@@ -457,6 +485,7 @@ kube-apiserver-node03
 kube-apiserver-node04
 kube-apiserver-node01
 ```
+
 ##### QOS
 ```bash
 $ kubectl -n kube-system get po \
@@ -482,28 +511,42 @@ kube-flannel-ds-amd64-b4th7                 kube-system   Guaranteed
 
 ### jsonpath
 
+#### get port enabled in pod
+```bash
+$ kubectl get po jenkins-0 -o jsonpath='{.spec.containers[*].ports[*]}'
+{"containerPort":8080,"name":"http","protocol":"TCP"} {"containerPort":50000,"name":"agent-listener","protocol":"TCP"} {"containerPort":50017,"name":"sshd-listener","protocol":"TCP"}
+
+# or
+$ k get po jenkins-0 -o jsonpath="{range .spec.containers[*].ports[*]}{@.*}{'\n'}{end}" | column -t
+http            8080   TCP
+agent-listener  50000  TCP
+sshd-listener   50017  TCP
+```
+
+#### [get podIP](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
+```bash
+$ kubectl get po <pod-name> -o go-template='{{range .items}}{{.status.podIP}}{{"\n"}}{{end}}'
+10.244.140.106
+```
+
 #### get the first deploy name in namespace
 ```bash
-$ kubectl -n <namespace> get deploy \
-          -o=jsonpath={.items[0].metadata.name}
+$ kubectl -n <namespace> get deploy -o=jsonpath={.items[0].metadata.name}
 ```
 #### get all deploy names
 ```bash
-$ kubectl -n <namespace> get deploy \
-          -o=jsonpath='{.items[*].metadata.name}'
+$ kubectl -n <namespace> get deploy -o=jsonpath='{.items[*].metadata.name}'
 ```
 
 #### `item.metadata.name`
 - list via `jsonpath={.items..metadata.name}`
   ```bash
-  $ kubectl -n kube-system get po \
-            --output=jsonpath={.items..metadata.name}
+  $ kubectl -n kube-system get po --output=jsonpath={.items..metadata.name}
   coredns-c7ddbcccb-5cj5z coredns-c7ddbcccb-lxsw6 coredns-c7ddbcccb-prjfk ...
   ```
   - or
     ```bash
-    $ kubectl -n kube-system get po \
-              -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
+    $ kubectl -n kube-system get po -o jsonpath="{range .items[*]}{@.metadata.name}{'\n'}{end}" |
               head -10
     coredns-c7ddbcccb-5cj5z
     coredns-c7ddbcccb-lxsw6
@@ -520,25 +563,25 @@ $ kubectl -n <namespace> get deploy \
 #### [list all container images in all namespaces](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/)
 ```bash
 $ kubectl get pods \
-          --all-namespaces \
-          -o jsonpath="{.items[*].spec.containers[*].image}" |
-          tr -s '[[:space:]]' '\n' |
-          sort |
-          uniq -c
+              --all-namespaces \
+              -o jsonpath="{.items[*].spec.containers[*].image}" |
+              tr -s '[[:space:]]' '\n' |
+              sort |
+              uniq -c
 ```
 - or
   ```bash
   $ kubectl get pods \
-            --all-namespaces \
-            -o jsonpath="{.items[*].spec.containers[*].image}"
+                --all-namespaces \
+                -o jsonpath="{.items[*].spec.containers[*].image}"
   ```
 
 #### [list container images by pod](https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod)
   ```bash
   $ kubectl get pods \
-            --all-namespaces \
-            -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' |
-            sort
+                --all-namespaces \
+                -o=jsonpath='{range .items[*]}{"\n"}{.metadata.name}{":\t"}{range .spec.containers[*]}{.image}{", "}{end}{end}' |
+                sort
   ```
 
 ## management
