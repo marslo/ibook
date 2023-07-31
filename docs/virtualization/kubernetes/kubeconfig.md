@@ -105,6 +105,21 @@ $ kubectl config use-context my-context
   ```
 
 ## OpenID Connect ( OIDC )
+
+> [!NOTE|label:references:]
+> - [Option 1 - OIDC Authenticator](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#option-1-oidc-authenticator)
+>   ```bash
+>   $ kubectl config set-credentials USER_NAME \
+>             --auth-provider=oidc \
+>             --auth-provider-arg=idp-issuer-url=( issuer url ) \
+>             --auth-provider-arg=client-id=( your client id ) \
+>             --auth-provider-arg=client-secret=( your client secret ) \
+>             --auth-provider-arg=refresh-token=( your refresh token ) \
+>             --auth-provider-arg=idp-certificate-authority=( path to your ca certificate ) \
+>             --auth-provider-arg=id-token=( your id_token )
+>   ```
+
+
 ```bash
 echo "-----BEGIN CERTIFICATE-----
 ....
