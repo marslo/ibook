@@ -638,6 +638,60 @@
         periodSeconds: 5
   ```
 
+- [ClusterRole](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
+  ```yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    name: impersonator
+  rules:
+  - apiGroups: [""]
+    resources: ["users", "groups", "serviceaccounts"]
+    verbs: ["impersonate"]
+
+  # or
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    name: scopes-and-uid-impersonator
+  rules:
+  # Can set "Impersonate-Extra-scopes" header and the "Impersonate-Uid" header.
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["userextras/scopes", "uids"]
+    verbs: ["impersonate"]
+
+  # or
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    name: limited-impersonator
+  rules:
+  # Can impersonate the user "jane.doe@example.com"
+  - apiGroups: [""]
+    resources: ["users"]
+    verbs: ["impersonate"]
+    resourceNames: ["jane.doe@example.com"]
+
+  # Can impersonate the groups "developers" and "admins"
+  - apiGroups: [""]
+    resources: ["groups"]
+    verbs: ["impersonate"]
+    resourceNames: ["developers","admins"]
+
+  # Can impersonate the extras field "scopes" with the values "view" and "development"
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["userextras/scopes"]
+    verbs: ["impersonate"]
+    resourceNames: ["view", "development"]
+
+  # Can impersonate the uid "06f6ce97-e2c5-4ab8-7ba5-7654dd08d52b"
+  - apiGroups: ["authentication.k8s.io"]
+    resources: ["uids"]
+    verbs: ["impersonate"]
+    resourceNames: ["06f6ce97-e2c5-4ab8-7ba5-7654dd08d52b"]
+  ```
+
+
 ### [Using set commands to modify objects before creation](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/imperative-command/#using-set-commands-to-modify-objects-before-creation)
 ```bash
 $ kubectl create service clusterip my-svc --clusterip="None" -o yaml --dry-run=client |
