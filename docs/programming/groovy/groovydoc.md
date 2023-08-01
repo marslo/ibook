@@ -13,6 +13,11 @@
 > - [HOW-TO Documenting Groovy with Groovydoc](https://www.javaworld.com/article/2074120/documenting-groovy-with-groovydoc.html)
 > references:
 > - [Documentation Comment Specification for the Standard Doclet (JDK 17)](https://docs.oracle.com/en/java/javase/17/docs/specs/javadoc/doc-comment-spec.html#link)
+> references:
+> - [javadoc - The Java API Documentation Generator](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html#version)
+> - [How and When To Deprecate APIs](https://docs.oracle.com/javase/7/docs/technotes/guides/javadoc/deprecation/deprecation.html)
+> - [How to Write Doc Comments for the Javadoc Tool](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html)
+> - [Chapter 10. Documentation with Javadoc](http://www.drjava.org/docs/user/ch10.html#:~:text=For%20example%2C%20most%20Javadoc%20comments,a%20description%20of%20that%20parameter.)
 {% endhint %}
 
 ```bash
