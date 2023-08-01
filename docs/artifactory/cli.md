@@ -3,8 +3,11 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [CLI setup](#cli-setup)
+  - [completion](#completion)
 - [Environment Variables](#environment-variables)
-- [CLI for jFrog Artifactory](#cli-for-jfrog-artifactory)
+  - [jf options](#jf-options)
+  - [CLI](#cli)
+- [CLI](#cli-1)
   - [configuration](#configuration)
   - [ping](#ping)
   - [discarding old builds from artifactory](#discarding-old-builds-from-artifactory)
@@ -16,7 +19,8 @@
 ## CLI setup
 
 > [!NOTE|label:reference:]
-> - [Artifactory CLI](https://jfrog.com/help/r/jfrog-cli/jfrog-cli?tocId=BuJVcwbkUARNwOvFl9CuRg)
+> - [* JFrog CLI v2](https://jfrog.com/help/r/jfrog-cli/jfrog-cli-v2)
+> - [* Artifactory CLI](https://jfrog.com/help/r/jfrog-cli/jfrog-cli?tocId=BuJVcwbkUARNwOvFl9CuRg)
 > - [* Get Cli](https://jfrog.com/getcli/)
 > - [JFrog CLI](https://www.jfrog.com/confluence/display/CLI/JFrog+CLI)
 > - [INSTALL JFROG CLI](https://jfrog.com/getcli/)
@@ -103,7 +107,45 @@
 <!--endsec-->
 
 
+### completion
+- bash
+  ```bash
+  $ jf completion bash --install
+  ```
+
+- zsh
+  ```bash
+  $ jf completion zsh --install
+  ```
+
+- Oh My Zsh
+  ```bash
+  plugins=(git mvn npm sdk jfrog)
+  ```
+
+- fish
+  ```bash
+  $ jf completion fish --install
+  ```
+
 ## Environment Variables
+
+### [jf options](https://jfrog.com/help/r/jfrog-cli/environment-variables?tocId=Wrf0qmhAPWtQ7XAWK8~zgw)
+
+| VARIABLE NAME              | DEFAULT             | SUPPORTED                        |
+| -------------------------- | ------------------- | -------------------------------- |
+| `JFROG_CLI_LOG_LEVEL`      | `INFO`              | `DEBUG`, `INFO`, `WARN`, `ERROR` |
+| `JFROG_CLI_LOG_TIMESTAMP`  | `TIME`              | `TIME`, `DATE_AND_TIME`, `OFF`   |
+| `JFROG_CLI_HOME_DIR`       | `~/.jfrog`          | -                                |
+| `JFROG_CLI_TEMP_DIR`       | -                   | -                                |
+| `JFROG_CLI_PLUGINS_SERVER` | -                   | -                                |
+| `JFROG_CLI_PLUGINS_REPO`   | `jfrog-cli-plugins` | -                                |
+| `JFROG_CLI_RELEASES_REPO`  | -                   | -                                |
+| `JFROG_CLI_SERVER_ID`      | -                   | -                                |
+| `CI`                       | `false`             | -                                |
+
+
+### CLI
 
 | VARIABLE NAME                                | DEFAULT                             |
 | -------------------------------------------- | ----------------------------------- |
@@ -119,7 +161,7 @@
 | `JFROG_CLI_ENV_EXCLUDE`                      | `*password*;*secret*;*key*;*token*` |
 | `JFROG_CLI_TRANSITIVE_DOWNLOAD_EXPERIMENTAL` | `false`                             |
 
-## CLI for jFrog Artifactory
+## CLI
 > reference:
 > - [CLI for JFrog Artifactory](https://www.jfrog.com/confluence/display/CLI/CLI+for+JFrog+Artifactory)
 
