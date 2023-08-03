@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [install via source](#install-via-source)
+  - [curl-config](#curl-config)
 - [get](#get)
   - [get JSON](#get-json)
   - [get XML](#get-xml)
@@ -247,6 +248,42 @@
 
   $ curl --help all
   ```
+
+### [curl-config](https://curl.se/libcurl/using/)
+
+> [!NOTE|label:references:]
+> - [curl-config.1 -- man page](https://curl.se/libcurl/using/curl-config.html)
+
+```bash
+$ curl-config --libs
+-L/usr/local/Cellar/curl/8.2.1/lib -lcurl
+
+$ curl-config --feature
+AsynchDNS
+GSS-API
+HSTS
+HTTP2
+HTTPS-proxy
+IDN
+IPv6
+Kerberos
+Largefile
+MultiSSL
+NTLM
+NTLM_WB
+SPNEGO
+SSL
+TLS-SRP
+UnixSockets
+alt-svc
+brotli
+libz
+threadsafe
+zstd
+
+$ curl-config --cflags
+-I/usr/local/Cellar/curl/8.2.1/include
+```
 
 ## get
 ### [get JSON](https://reqbin.com/req/c-vdhoummp/curl-get-json-example)
