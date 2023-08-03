@@ -2,14 +2,102 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [AQL](#aql)
-  - [Relative Time Operators](#relative-time-operators)
-  - [find items (folder) some times ago by aql](#find-items-folder-some-times-ago-by-aql)
+- [syntax](#syntax)
+  - [Entities and Fields](#entities-and-fields)
+  - [Comparison Operators](#comparison-operators)
+- [relative time operators](#relative-time-operators)
+- [find in files by name/pattern](#find-in-files-by-namepattern)
+- [find items (folder) some times ago by aql](#find-items-folder-some-times-ago-by-aql)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## AQL
-### [Relative Time Operators](https://www.jfrog.com/confluence/display/RTF/Artifactory+Query+Language#ArtifactoryQueryLanguage-RelativeTimeOperators)
+
+> [!TIP|label:references:]
+> - [jfrog/artifactory-scripts](https://github.com/jfrog/artifactory-scripts)
+
+## syntax
+### [Entities and Fields](https://jfrog.com/help/r/jfrog-artifactory-documentation/artifactory-query-language)
+
+| DOMAIN           | FIELD NAME           | TYPE   |
+| ---------------- | -------------------- | ------ |
+| item             | repo                 | String |
+| item             | path                 | String |
+| item             | name                 | String |
+| item             | created              | Date   |
+| item             | modified             | Date   |
+| item             | updated              | Date   |
+| item             | created_by           | String |
+| item             | modified_by          | String |
+| item             | type                 | Enum   |
+| item             | depth                | Int    |
+| item             | original_md5         | String |
+| item             | actual_md5           | String |
+| item             | original_sha1        | String |
+| item             | actual_sha1          | String |
+| item             | sha256               | String |
+| item             | size                 | Long   |
+| item             | virtual_repos        | String |
+| entry            | name                 | String |
+| entry            | path                 | String |
+| promotion        | created              | String |
+| promotion        | created_by           | String |
+| promotion        | status               | String |
+| promotion        | repo                 | String |
+| promotion        | comment              | String |
+| promotion        | user                 | String |
+| build            | url                  | String |
+| build            | name                 | String |
+| build            | number               | String |
+| build            | created              | Date   |
+| build            | created_by           | String |
+| build            | modified             | Date   |
+| build            | modified_by          | String |
+| build            | Started              | Date   |
+| property         | key                  | String |
+| property         | value                | String |
+| stat             | downloaded           | Date   |
+| stat             | downloads            | Int    |
+| stat             | downloaded_by        | String |
+| stat             | remote_downloads     | Int    |
+| stat             | remote_downloaded    | Date   |
+| stat             | remote_downloaded_by | String |
+| stat             | remote_origin        | String |
+| stat             | remote_path          | String |
+| artifact         | name                 | String |
+| artifact         | type                 | String |
+| artifact         | sha1                 | String |
+| artifact         | md5                  | String |
+| module           | name                 | String |
+| dependency       | name                 | String |
+| dependency       | scope                | String |
+| dependency       | type                 | String |
+| dependency       | sha1                 | String |
+| dependency       | md5                  | String |
+| release          | name                 | String |
+| release          | version              | String |
+| release          | status               | String |
+| release          | created              | String |
+| release          | signature            | String |
+| release_artifact | path                 | String |
+
+
+### [Comparison Operators](https://jfrog.com/help/r/jfrog-artifactory-documentation/artifactory-query-language)
+
+| OPERATOR  | TYPES                     |
+| --- | --- |
+| `$ne`     | `string, date, int, long` |
+| `$eq`     | `string, date, int, long` |
+| `$gt`     | `string, date, int, long` |
+| `$gte`    | `string, date, int, long` |
+| `$lt`     | `string, date, int, long` |
+| `$lte`    | `string, date, int, long` |
+| `$match`  | `string, date, int, long` |
+| `$nmatch` | `string, date, int, long` |
+
+
+## [relative time operators](https://www.jfrog.com/confluence/display/RTF/Artifactory+Query+Language#ArtifactoryQueryLanguage-RelativeTimeOperators)
+
+> [!NOTE|label:references:]
 > - [aqlCleanup.groovy](https://github.com/JFrog/artifactory-scripts/blob/master/cleanup/aqlCleanup.groovy)
 > - [Advanced Cleanup Using Artifactory Query Language (AQL)](https://jfrog.com/blog/advanced-cleanup-using-artifactory-query-language-aql/)
 
@@ -17,14 +105,14 @@ AQL supports specifying time intervals for queries using relative time. In other
 
 Relative time is specified using the following two operators:
 
-| operators | paraphrase                                                                  |
-|:---------:|-----------------------------------------------------------------------------|
-|  $before  | The query is run over complete period up to specified time.                 |
-|   $last   | The query is run over period from the specified time until the query is run |
+| OPERATORS   | PARAPHRASE                                                                    |
+| :---------: | ----------------------------------------------------------------------------- |
+| `$before`   | The query is run over complete period up to specified time.                   |
+| `$last`     | The query is run over period from the specified time until the query is run   |
 
 Time periods are specified with a number and one of the following suffixes:
 
-|  time period | suffixes       |
+|  TIME PERIOD | SUFFIXES       |
 |:------------:|:--------------:|
 | milliseconds | "mills", "ms"  |
 |    seconds   | "seconds", "s" |
@@ -35,8 +123,103 @@ Time periods are specified with a number and one of the following suffixes:
 |     years    | "years", "y"   |
 
 
-### find items (folder) some times ago by aql
-- e.g. find root folder && 4 weeks ago (by using `-T, --upload-file`)
+## find in files by name/pattern
+
+- running via `curl -d`
+  ```bash
+  $ curl -s -u ${account}:${password} \
+         -X POST "${RT_URL}/artifactory/api/search/aql" \
+         -H 'content-type: text/plain' \
+         -d 'items.find ({
+              "path" : { "\$ne" : "." },
+              "\$or" : [{
+                "\$and" : [{
+                  "repo" : "${repo}",
+                  "path" : { "\$match": "${path}" } ,
+                  "name" : { "\$match": "${name}" }
+                }]
+              },
+              { "\$and" : [{
+                    "repo" : "${repo}",
+                    "path" : { "\$match" : "${path}/*" } ,
+                    "name" : { "\$match" : "${name}"}
+                }]
+              }]
+            }).include( "name", "repo", "path", "actual_md5", "actual_sha1", "size", "type", "property" )
+         '
+  ```
+
+- running via `curl -T`
+  ```bash
+  $ cat find.aql
+  tems.find ({
+    "path" : { "$ne" : "." },
+    "repo" : "rt-repo",
+    "$or" : [{
+      "$and" : [{
+        "path" : { "$match": "path/to/folder" } ,
+        "name" : { "$match": "name.zip" }
+      }]
+    },
+    { "$and" : [{
+          "path" : { "$match" : "path/to/folder/*" } ,
+          "name" : { "$match" : "name.zip"}
+      }]
+    }]
+  }).include( "name", "repo", "path", "actual_md5", "actual_sha1", "size", "type", "property" )
+
+  $ curl -s -u "${account}":"${password}" \
+            -XPOST \
+            "${RT_URL}/artifactory/api/search/aql" \
+            -T find.aql
+  ```
+
+- in same repo
+  ```bash
+  $ cat find.aql
+  tems.find ({
+    "path" : { "$ne" : "." },
+    "repo" : "rt-repo",
+    "$or" : [{
+      "$and" : [{
+        "path" : { "$match": "path/to/folder" } ,
+        "name" : { "$match": "name.zip" }
+      }]
+    },
+    { "$and" : [{
+          "path" : { "$match" : "path/to/folder/*" } ,
+          "name" : { "$match" : "name.zip"}
+      }]
+    }]
+  }).include( "name", "repo", "path", "actual_md5", "actual_sha1", "size", "type", "property" )
+  ```
+
+- in different repo
+  ```bash
+  $ cat find.aql
+  tems.find ({
+    "path" : { "$ne" : "." },
+    "$or" : [{
+      "$and" : [{
+        "repo" : "rt-repo-1",
+        "path" : { "$match": "path/to/folder/*" } ,
+        "name" : { "$match": "name.txt" }
+      }]
+    },
+    { "$and" : [{
+          "repo" : "rt-repo-2",
+          "path" : { "$match" : "path/to/folder/*" } ,
+          "name" : { "$match" : "name.txt"}
+      }]
+    }]
+  }).include( "name", "repo", "path", "actual_md5", "actual_sha1", "size", "type", "property" )
+  ```
+
+## find items (folder) some times ago by aql
+
+- find root folder && 4 weeks ago (by using `-T, --upload-file`)
+
+  > [!NOTE]
   > [imarslo: write a file without indent space](../cheatsheet/character/character.html#write-a-file-without-indent-space)
 
   ```bash
