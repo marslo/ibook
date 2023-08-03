@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [install via source](#install-via-source)
 - [get](#get)
   - [get JSON](#get-json)
   - [get XML](#get-xml)
@@ -105,6 +106,142 @@
 >     sort
 >   ```
 {% endhint %}
+
+## install via source
+
+> [!NOTE|label:references:]
+> - [Re: Using libcurl to send shell commands through SSH?](https://curl.se/mail/lib-2018-06/0124.html)
+>   - [libcurl 8](https://github.com/curl/curl/wiki/libcurl-8)
+> - [How to Build and Install latest cURL version on CentOS and Ubuntu?](https://geekflare.com/curl-installation/)
+> - [how to install curl and libcurl](https://github.com/curl/curl/blob/master/docs/INSTALL.md)
+> - [release curl/curl](https://github.com/curl/curl/releases)
+
+- environment
+  ```bash
+  $ sudo dnf install -y wget gcc openssl-devel libssh2 libssh2-devel libssh2-docs
+  $ curl -fsSLgk -O https://github.com/curl/curl/releases/download/curl-8_2_1/curl-8.2.1.tar.gz
+  $ tar xzf curl-8.2.1.tar.gz
+  $ cd curl-8.2.1
+  ```
+
+- build
+
+  > [!NOTE|label:references]
+  > - `--prefix=/usr/local` will install in :
+  >   - `/usr/local/lib`
+  >   - `/usr/local/bin`
+  >   - `/usr/local/include`
+  >   - `/usr/local/share`
+
+  ```bash
+  $ ./configure --with-libssh \
+                --with-libssh2 \
+                --with-ssl \
+                --enable-websockets
+                --with-gssapi \
+                --prefix=/opt/curl \
+  ...
+
+  configure: Configured to build curl/libcurl:
+
+    Host setup:       x86_64-pc-linux-gnu
+    Install prefix:   /opt/curl
+    Compiler:         gcc
+     CFLAGS:          -Werror-implicit-function-declaration -O2 -Wno-system-headers -pthread
+     CPPFLAGS:
+     LDFLAGS:
+     LIBS:            -lssh2 -lssh2 -lssl -lcrypto -lssl -lcrypto -lgssapi_krb5 -lzstd -lz
+
+    curl version:     8.2.1
+    SSL:              enabled (OpenSSL)
+    SSH:              enabled (libSSH2)
+    zlib:             enabled
+    brotli:           no      (--with-brotli)
+    zstd:             enabled (libzstd)
+    GSS-API:          enabled (MIT Kerberos/Heimdal)
+    GSASL:            no      (libgsasl not found)
+    TLS-SRP:          enabled
+    resolver:         POSIX threaded
+    IPv6:             enabled
+    Unix sockets:     enabled
+    IDN:              no      (--with-{libidn2,winidn})
+    Build libcurl:    Shared=yes, Static=yes
+    Built-in manual:  enabled
+    --libcurl option: enabled (--disable-libcurl-option)
+    Verbose errors:   enabled (--disable-verbose)
+    Code coverage:    disabled
+    SSPI:             no      (--enable-sspi)
+    ca cert bundle:   /etc/pki/tls/certs/ca-bundle.crt
+    ca cert path:     no
+    ca fallback:      no
+    LDAP:             no      (--enable-ldap / --with-ldap-lib / --with-lber-lib)
+    LDAPS:            no      (--enable-ldaps)
+    RTSP:             enabled
+    RTMP:             no      (--with-librtmp)
+    PSL:              no      (libpsl not found)
+    Alt-svc:          enabled (--disable-alt-svc)
+    Headers API:      enabled (--disable-headers-api)
+    HSTS:             enabled (--disable-hsts)
+    HTTP1:            enabled (internal)
+    HTTP2:            no      (--with-nghttp2, --with-hyper)
+    HTTP3:            no      (--with-ngtcp2 --with-nghttp3, --with-quiche, --with-msh3)
+    ECH:              no      (--enable-ech)
+    WebSockets:       enabled
+    Protocols:        DICT FILE FTP FTPS GOPHER GOPHERS HTTP HTTPS IMAP IMAPS MQTT POP3 POP3S RTSP SCP SFTP SMB SMBS SMTP SMTPS TELNET TFTP WS WSS
+    Features:         AsynchDNS GSS-API HSTS HTTPS-proxy IPv6 Kerberos Largefile NTLM NTLM_WB SPNEGO SSL TLS-SRP UnixSockets alt-svc libz threadsafe zstd
+
+    WARNING:  Websockets enabled but marked EXPERIMENTAL. Use with caution!
+
+  $ make -j
+  $ sudo make install
+
+  # check
+  $ tree -L 2 /opt/curl
+  /opt/curl
+  ├── bin
+  │   ├── curl
+  │   └── curl-config
+  ├── include
+  │   └── curl
+  ├── lib
+  │   ├── libcurl.a
+  │   ├── libcurl.la
+  │   ├── libcurl.so -> libcurl.so.4.8.0
+  │   ├── libcurl.so.4 -> libcurl.so.4.8.0
+  │   ├── libcurl.so.4.8.0
+  │   └── pkgconfig
+  └── share
+      ├── aclocal
+      └── man
+  ```
+
+- set
+
+  > [!NOTE|label:OPTIONAL]
+  > no need if using `/usr/local` as `--prefix`
+
+  ```bash
+  $ sudo update-alternatives --install /usr/local/bin/curl curl /opt/curl/bin/curl 999
+  $ sudo update-alternatives --install /usr/local/bin/curl-config curl-config /opt/curl/bin/curl-config 999
+
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export LD_RUN_PATH=/usr/local/lib:$LD_RUN_PATH
+  ```
+
+- check
+  ```bash
+  $ alternatives --list | grep curl
+  curl                    auto    /opt/curl/bin/curl
+  curl-config             auto    /opt/curl/bin/curl-config
+
+  $ curl --version
+  curl 8.2.1 (x86_64-pc-linux-gnu) libcurl/8.2.1 OpenSSL/1.1.1k-fips zlib/1.2.11 zstd/1.4.4 libssh2/1.9.0
+  Release-Date: 2023-07-26
+  Protocols: dict file ftp ftps gopher gophers http https imap imaps mqtt pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp ws wss
+  Features: alt-svc AsynchDNS GSS-API HSTS HTTPS-proxy IPv6 Kerberos Largefile libz NTLM NTLM_WB SPNEGO SSL threadsafe TLS-SRP UnixSockets zstd
+
+  $ curl --help all
+  ```
 
 ## get
 ### [get JSON](https://reqbin.com/req/c-vdhoummp/curl-get-json-example)
