@@ -6,6 +6,7 @@
   * [aql](artifactory/aql.md)
 * [cheatsheet](cheatsheet/good.md)
   * [bash](cheatsheet/bash/bash.md)
+    * [builtin](cheatsheet/bash/builtin.md)
     * [syntactic sugar](cheatsheet/bash/sugar.md)
   * [windows](cheatsheet/windows/windows.md)
     * [powershell](cheatsheet/windows/powershell.md)

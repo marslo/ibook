@@ -129,6 +129,27 @@ E..GP....._.
 
 ### strace
 
+> [!NOTE|label:references:]
+> - [I have a tab completion that hangs, is it possible to use strace to find out what is going on?](https://unix.stackexchange.com/a/525582/29178)
+
+```bash
+$ ... run cmd ...
+
+# or
+$ pid=$(echo ??)
+$ sudo strace -fp ${pid} -o log
+
+# or
+$ sudo -v
+$ sudo strace -fp $$ -o log &
+```
+
+- more
+  ```bash
+  $ set -o functrace xtrace
+  $ PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
+  ```
+
 ### sar
 
 ### netcat
