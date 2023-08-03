@@ -224,8 +224,13 @@
   $ sudo update-alternatives --install /usr/local/bin/curl curl /opt/curl/bin/curl 999
   $ sudo update-alternatives --install /usr/local/bin/curl-config curl-config /opt/curl/bin/curl-config 999
 
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-export LD_RUN_PATH=/usr/local/lib:$LD_RUN_PATH
+  # or /opt/curl
+  $ bash -c "echo 'export LD_LIBRARY_PATH=/opt/curl/lib:$LD_LIBRARY_PATH' >> /etc/bashrc"
+  $ bash -c "echo 'export LD_RUN_PATH=/opt/curl/lib:$LD_RUN_PATH' >> /etc/bashrc"
+
+  # or /usr/local
+  $ bash -c "echo 'export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH' >> /etc/bashrc"
+  $ bash -c "echo 'export LD_RUN_PATH=/usr/local/lib:$LD_RUN_PATH' >> /etc/bashrc"
   ```
 
 - check

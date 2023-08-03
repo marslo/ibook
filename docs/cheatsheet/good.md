@@ -339,6 +339,10 @@ $ wget -r --no-parent --no-host-directories --cut-dirs=1 https://www.baeldung.co
   ```
 
 - `shopt -s dotglob`
+
+  > [!NOTE|label:references:]
+  > - [imarslo : bash/bash](./bash/bash.html#options)
+
   ```bash
   $ shopt -s dotglob
   $ zip name.zip *
@@ -350,12 +354,19 @@ $ wget -r --no-parent --no-host-directories --cut-dirs=1 https://www.baeldung.co
   ```
 
 ### remove dot-file without `skipping '..' '.'` issue
+
+> [!NOTE|label:references:]
+> - [imarslo : bash/bash](./bash/bash.html#options)
+> - turn `dotglob` off
+>   ```bash
+>   $ shopt -u dotglob
+>   ```
+
 - [`shopt -s dotglob`](https://unix.stackexchange.com/a/289393/29179)
     ```bash
     $ shopt -s dotglob
     $ rm [-rf] *
     ```
-  - using `shopt -u dotglob` to turn `dotglob` off
 
 - `.[^.]*`
     ```bash
