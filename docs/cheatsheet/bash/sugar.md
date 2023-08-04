@@ -2,6 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [`<<<`, `< <(..)`](#--)
+  - [`< <(..)` && `> >(..)`](#----)
 - [parameter substitution](#parameter-substitution)
   - [arguments substitution](#arguments-substitution)
 - [string manipulations](#string-manipulations)
@@ -19,6 +21,90 @@
 > - [ShellCheck Wiki Sitemap](https://www.shellcheck.net/wiki/)
 {% endhint %}
 
+
+## `<<<`, `< <(..)`
+
+> [!TIP]
+> - `< <(` is [Process Substitution](http://mywiki.wooledge.org/ProcessSubstitution)
+>   - The difference between `<(...)` and `>(...)` is merely which way the redirections are done
+
+### `< <(..)` && `> >(..)`
+
+> [!NOTE]
+> - [process substitution](http://mywiki.wooledge.org/ProcessSubstitution)
+> - [syntax](https://askubuntu.com/a/678924/92979)
+>   ```bash
+>   $ command1 < <( command2 )
+>   # equals to
+>   $ command2 | command1
+>
+>   # if read from file, then using `< /path/to/file`
+>   ```
+> - [SubShell](http://mywiki.wooledge.org/BashFAQ/024)
+>
+> - example:
+>   ```bash
+>   $ while read line; do echo "-- ${line} --"; done < <(ls -1)
+>
+>   # equals to: http://mywiki.wooledge.org/BashFAQ/024
+>   $ ls -1 | while read line; do echo "-- ${line} --"; done
+>   # equals to
+>   $ ls -1 | xargs -n1 -i bash -c "echo \"-- {} --\""
+>
+>   # equals to read from file via `< /path/to/file`
+>   $ ls -1 > ls.txt
+>   $ while read line; do echo "-- ${line} --"; done < ls.txt
+>   ```
+
+```bash
+$ wc < <(date)
+    1       6      29
+
+# same as:
+$ date | wc
+    1       6      29
+```
+
+- `< <(..)`
+
+  > [!TIP|label:referencs:]
+  > - [subshell](http://mywiki.wooledge.org/BashFAQ/024)
+  > - tips:
+  >   ```bash
+  >   # If commandA can read the data from stdin
+  >   commandB | commandA                 # You can now get the exit code of commandB from PIPESTATUS.
+  >   commandB > >(commandA)              # You can now get the exit code of commandB from $? (or by putting this in an if)
+  >
+  >   # If commandA cannot read it from stdin, but requires a file argument
+  >   commandB > >(commandA <(cat))       # Again, commandB's exit code is available from $?
+  >
+  >   # You can also keep commandB's output in memory.  When you do this, you can get commandB's exit code from $? or put the assignment in an if
+  >   b=$(commandB); commandA <<< "$b"    # Here, commandA reads commandB's output from stdin
+  >   ```
+
+  - common usage
+    ```bash
+    $ diff <(sort list1) <(sort list2)
+
+    # or
+    $ while read file; do
+        echo -e "\n\033[1;33m${file}\n---\033[0m"
+        sed -n "/<<<<<<< HEAD/,/>>>>>>> /!d;=;p" ${file}
+        echo -e "\n\033[1;33m---\033[0m"
+      done < <(git grep --no-color -l "<<<<<<< HEAD")
+    ```
+
+- `> >(..)`
+
+  > [!TIP]
+  > - [Process Substitution](http://mywiki.wooledge.org/ProcessSubstitution)
+  >   - `>(...)` is used less frequently; the most common situation is in conjunction with `tee(1)`.
+  >   - `>(...)` is handy when redirecting the output to multiple files, based on some criteria.
+
+  ```bash
+  # For example:
+  $ some_command | tee >(grep A > A.out) >(grep B > B.out) >(grep C > C.out) > /dev/null
+  ```
 
 ## parameter substitution
 
