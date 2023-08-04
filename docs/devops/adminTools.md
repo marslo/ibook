@@ -150,6 +150,60 @@ $ sudo strace -fp $$ -o log &
   $ PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
   ```
 
+- [debug script](https://askubuntu.com/a/678919/92979)
+  ```bash
+  $ strace -e clone,execve,pipe,dup2 \
+           -f bash -c 'cat <(/bin/true) <(/bin/false) <(/bin/echo)'
+  execve("/usr/bin/bash", ["bash", "-c", "cat <(/bin/true) <(/bin/false) <"...], 0x7fff9b9c6f98 /* 75 vars */) = 0
+  pipe([3, 4])                            = 0
+  dup2(3, 63)                             = 63
+  clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f7cf6a8ca10) = 289963
+  strace: Process 289963 attached
+  [pid 289962] pipe([3, 4])               = 0
+  [pid 289962] dup2(3, 62)                = 62
+  [pid 289962] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+  [pid 289963] dup2(4, 1)                 = 1
+  [pid 289962] <... clone resumed>, child_tidptr=0x7f7cf6a8ca10) = 289964
+  strace: Process 289964 attached
+  [pid 289963] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+  [pid 289962] pipe([3, 4])               = 0
+  strace: Process 289965 attached
+  [pid 289963] <... clone resumed>, child_tidptr=0x7f7cf6a8ca10) = 289965
+  [pid 289962] dup2(3, 61)                = 61
+  [pid 289962] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+  [pid 289964] dup2(4, 1)                 = 1
+  [pid 289965] execve("/bin/true", ["/bin/true"], 0x55ec7c007680 /* 73 vars */strace: Process 289966 attached
+   <unfinished ...>
+  [pid 289962] <... clone resumed>, child_tidptr=0x7f7cf6a8ca10) = 289966
+  [pid 289964] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
+  [pid 289965] <... execve resumed>)      = 0
+  strace: Process 289967 attached
+  [pid 289964] <... clone resumed>, child_tidptr=0x7f7cf6a8ca10) = 289967
+  [pid 289966] dup2(4, 1)                 = 1
+  [pid 289967] execve("/bin/false", ["/bin/false"], 0x55ec7c007af0 /* 73 vars */ <unfinished ...>
+  [pid 289966] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7f7cf6a8ca10) = 289968
+  [pid 289967] <... execve resumed>)      = 0
+  strace: Process 289968 attached
+  [pid 289962] execve("/usr/bin/cat", ["cat", "/dev/fd/63", "/dev/fd/62", "/dev/fd/61"], 0x55ec7c007bc0 /* 73 vars */ <unfinished ...>
+  [pid 289968] execve("/bin/echo", ["/bin/echo"], 0x55ec7c007e20 /* 73 vars */ <unfinished ...>
+  [pid 289962] <... execve resumed>)      = 0
+  [pid 289968] <... execve resumed>)      = 0
+  [pid 289965] +++ exited with 0 +++
+  [pid 289963] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289965, si_uid=10564, si_status=0, si_utime=0, si_stime=0} ---
+  [pid 289963] +++ exited with 0 +++
+  [pid 289962] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289963, si_uid=10564, si_status=0, si_utime=0, si_stime=0} ---
+  [pid 289967] +++ exited with 1 +++
+  [pid 289964] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289967, si_uid=10564, si_status=1, si_utime=0, si_stime=0} ---
+  [pid 289964] +++ exited with 1 +++
+  [pid 289962] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289964, si_uid=10564, si_status=1, si_utime=0, si_stime=0} ---
+
+  [pid 289968] +++ exited with 0 +++
+  [pid 289966] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289968, si_uid=10564, si_status=0, si_utime=0, si_stime=0} ---
+  [pid 289966] +++ exited with 0 +++
+  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289966, si_uid=10564, si_status=0, si_utime=0, si_stime=0} ---
+  +++ exited with 0 +++
+  ```
+
 ### sar
 
 ### netcat
