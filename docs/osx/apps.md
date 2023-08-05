@@ -4,6 +4,7 @@
 
 - [homebrew](#homebrew)
   - [homebrew installation](#homebrew-installation)
+  - [alternative sources](#alternative-sources)
   - [homebrew caskroom installation](#homebrew-caskroom-installation)
   - [list formula](#list-formula)
   - [install](#install)
@@ -26,74 +27,100 @@
 
 
 ## homebrew
+
+> [!TIP|label:references:]
+> - [Mac 下 brew 切换为国内源](https://cloud.tencent.com/developer/article/1614039)
+> - [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
+
 ### homebrew installation
 ```bash
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-#### [homebrewCN](https://gitee.com/Busch/HomebrewCN)
-```bash
-$ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
-```
+- default source
+  ```bash
+  $ git -C "$(brew --repo)" remote -v
+  origin  git@github.com:Homebrew/brew (fetch)
+  origin  git@github.com:Homebrew/brew (push)
 
-#### [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
+  $ git -C "$(brew --repo homebrew/core)" remote -v
+  origin  git@github.com:Homebrew/homebrew-core (fetch)
+  origin  git@github.com:Homebrew/homebrew-core (push)
+  ```
+
+### alternative sources
+
+- [homebrewCN](https://gitee.com/Busch/HomebrewCN)
+  ```bash
+  $ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+  ```
+
 - official
   ```bash
-  brew_source='https://github.com/Homebrew'
+  $ brew_source='https://github.com/Homebrew'
   # brew 程序本身
-  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
 
-  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-  git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
-  git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  $ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  $ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  $ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
 
-  brew update
+  $ brew update
   ```
 
 - tsinghua (清华)
   ```bash
-  brew_source='https://mirrors.tuna.tsinghua.edu.cn/git/homebrew'
+  $ brew_source='https://mirrors.tuna.tsinghua.edu.cn/git/homebrew'
   # brew 程序本身
-  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-  git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
-  git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  $ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  $ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  $ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+
+  $ brew update
   ```
 
 - ustc (中科大)
   ```bash
-  brew_source='https://mirrors.ustc.edu.cn'
+  $ brew_source='https://mirrors.ustc.edu.cn'
   # brew 程序本身
-  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
 
-  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  $ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+
+  $ brew update
   ```
 
 - ali (阿里)
   ```bash
-  brew_source='https://mirrors.aliyun.com/homebrew'
+  $ brew_source='https://mirrors.aliyun.com/homebrew'
   # brew 程序本身
-  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
-  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+
+  $ brew update
   ```
 
 - tencent
   ```bash
-  brew_source='https://mirrors.cloud.tencent.com/homebrew'
+  $ brew_source='https://mirrors.cloud.tencent.com/homebrew'
   # brew 程序本身
-  git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
+  $ git -C "$(brew --repo)" remote set-url origin ${brew_source}/brew.git
 
-  git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
-  git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
-  git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
-  git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+  $ git -C "$(brew --repo homebrew/core)" remote set-url origin ${brew_source}/homebrew-core.git
+  $ git -C "$(brew --repo homebrew/cask)" remote set-url origin ${brew_source}/homebrew-cask.git
+  $ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin ${brew_source}/homebrew-cask-fonts.git
+  $ git -C "$(brew --repo homebrew/cask-drivers)" remote set-url origin ${brew_source}/homebrew-cask-drivers.git
+
+  $ brwe update
   ```
 
 #### homebrew bottles
-> address:
+
+> [!NOTE|label:address:]
 > - `https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles`
 > - `https://mirrors.ustc.edu.cn/homebrew-bottles`
 > - `https://mirrors.aliyun.com/homebrew/homebrew-bottles`
