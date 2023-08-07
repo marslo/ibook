@@ -11,6 +11,7 @@
   * [windows](cheatsheet/windows/windows.md)
     * [powershell](cheatsheet/windows/powershell.md)
     * [wsl](cheatsheet/windows/wsl.md)
+    * [wt](cheatsheet/windows/wt.md)
     * [shortcut](cheatsheet/windows/shortcut.md)
     * [clsid](cheatsheet/windows/clsid.md)
     * [env](cheatsheet/windows/env.md)
