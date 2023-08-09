@@ -10,6 +10,7 @@
 - [q&a](#qa)
   - [`Error: 0x80040326`](#error-0x80040326)
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
+- [tip](#tip)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -24,6 +25,7 @@
 > - [Set up a WSL development environment](https://learn.microsoft.com/en-us/windows/wsl/setup/environment?source=recommendations)
 > - [Install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 > - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
+> - [Enable 256 colour support over SSH](https://github.com/cmderdev/cmder/issues/379)
 >
 > windows terminal:
 > - [Windows Terminal 下载，美化，完整配置](https://zhuanlan.zhihu.com/p/439437013)
@@ -331,3 +333,9 @@ sudo update-binfmts --disable cli
   $ mount | grep binfmt_misc
   binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,relatime)
   ```
+
+
+## tip
+```powershell
+> set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt
+```

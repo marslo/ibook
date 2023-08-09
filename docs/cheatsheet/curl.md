@@ -118,6 +118,19 @@
 > - [release curl/curl](https://github.com/curl/curl/releases)
 
 - environment
+
+  > [!TIP]
+  > - centos:
+  >   - `gcc` : `appstream`
+  >   - `libssh2` : `@epel`
+  >   - `libssh2-devel` : `@epel`
+  >   - `libssh2-doc` : `@epel`
+  >   - `zlib` : `@centos-baseos`
+  >   - `brotli` : `@centos-baseos`
+  >   - `libpsl` : `@centos-baseos`
+  >   - `openssl` : `@centos-baseos`
+  >   - `libidn2` : `@centos-baseos`
+
   ```bash
   $ sudo dnf install -y wget gcc openssl-devel libssh2 libssh2-devel libssh2-docs
   $ curl -fsSLgk -O https://github.com/curl/curl/releases/download/curl-8_2_1/curl-8.2.1.tar.gz
