@@ -123,16 +123,20 @@
   > - centos:
   >   - `gcc` : `appstream`
   >   - `libssh2` : `@epel`
-  >   - `libssh2-devel` : `@epel`
+  >   - `libssh2-devel` : `@epel` : `$ dnf install libssh2 libssh2-devel libssh2-docs`
   >   - `libssh2-doc` : `@epel`
   >   - `zlib` : `@centos-baseos`
-  >   - `brotli` : `@centos-baseos`
+  >   - `brotli` : `@centos-baseos` : `$ sudo dnf install brotli-devel.i686`
   >   - `libpsl` : `@centos-baseos`
   >   - `openssl` : `@centos-baseos`
   >   - `libidn2` : `@centos-baseos`
 
   ```bash
-  $ sudo dnf install -y wget gcc openssl-devel libssh2 libssh2-devel libssh2-docs
+  $ sudo dnf install -y autoconf automake libtool
+  $ sudo dnf install -y wget gcc openssl-devel libssh2 libssh2-devel libssh2-docs brotli brotli-devel
+  # nice to have
+  $ sudo dnf install -y zstd libzstd libzstd-devel
+
   $ curl -fsSLgk -O https://github.com/curl/curl/releases/download/curl-8_2_1/curl-8.2.1.tar.gz
   $ tar xzf curl-8.2.1.tar.gz
   $ cd curl-8.2.1
@@ -151,8 +155,9 @@
   $ ./configure --with-libssh \
                 --with-libssh2 \
                 --with-ssl \
-                --enable-websockets
+                --with-wolfssh \
                 --with-gssapi \
+                --enable-websockets \
                 --prefix=/opt/curl \
   ...
 
@@ -229,6 +234,139 @@
       └── man
   ```
 
+- full configure
+
+<!--sec data-title="full config" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ ./configure --with-libssh \
+              --with-libssh2 \
+              --with-ssl \
+              --with-openssl \
+              --with-zstd \
+              --with-wolfssh \
+              --with-gnu-ld \
+              --with-gssapi \
+              --with-zlib \
+              --with-brotli \    # ../lib/.libs/libcurl.so: undefined reference to `BrotliDecoderCreateInstance'`
+              --with-quiche \
+              --with-nghttp3 \
+              --with-ngtcp2 \
+              --with-libidn2 \
+              --with-zsh-functions-dir
+              --enable-debug \
+              --enable-optimize \
+              --enable-warnings \
+              --enable-werror \
+              --enable-curldebug \
+              --enable-http \
+              --enable-ftp \
+              --enable-file \
+              --enable-ldaps \
+              --enable-proxy \
+              --enable-dict \
+              --enable-telnet \
+              --enable-tftp \
+              --enable-smb \
+              --enable-manual \
+              --enable-libcurl-option \
+              --enable-libgcc \
+              --enable-ipv6 \
+              --enable-openssl-auto-load-config \
+              --enable-verbose \
+              --enable-unix-sockets \
+              --enable-socketpair \
+              --enable-http-auth \
+              --enable-netrc \
+              --enable-dnsshuffle \
+              --enable-websockets \
+              --enable-hsts \
+              --enable-headers-api \
+              --enable-alt-svc \
+              --enable-get-easy-options \
+              --prefix=/usr/local
+
+  Host setup:       x86_64-pc-linux-gnu
+  Install prefix:   /usr/local
+  Compiler:         gcc
+   CFLAGS:          -Werror-implicit-function-declaration -g -O2 -std=gnu89 -pedantic -Wall -W -Wpointer-arith -Wwrite-strings -Wunused -Wshadow -Winline -Wnested-externs -Wmissing-declarations -Wmissing-prototypes -Wno-long-long -Wbad-function-cast -Wfloat-equal -Wno-multichar -Wsign-compare -Wundef -Wno-format-nonliteral -Wendif-labels -Wstrict-prototypes -Wdeclaration-after-statement -Wold-style-definition -Wstrict-aliasing=3 -Wcast-align -Wtype-limits -Wold-style-declaration -Wmissing-parameter-type -Wempty-body -Wclobbered -Wignored-qualifiers -Wconversion -Wno-sign-conversion -Wvla -ftree-vrp -Wdouble-promotion -Wformat=2 -Warray-bounds=2 -Wshift-negative-value -Wshift-overflow=2 -Wnull-dereference -fdelete-null-pointer-checks -Wduplicated-cond -Wunused-const-variable -Wduplicated-branches -Wrestrict -Walloc-zero -Wformat-overflow=2 -Wformat-truncation=2 -Wimplicit-fallthrough=4 -Wno-system-headers -pthread
+   CPPFLAGS:
+   LDFLAGS:         -L/usr/lib
+   LIBS:            -lssh2 -lssh2 -lssl -lcrypto -lssl -lcrypto -lgssapi_krb5 -lldap -llber -lzstd -lzstd -lz -lgcc
+
+  curl version:     8.2.1
+  SSL:              enabled (OpenSSL)
+  SSH:              enabled (libSSH2)
+  zlib:             enabled
+  brotli:           enabled (libbrotlidec)
+  zstd:             enabled (libzstd)
+  GSS-API:          enabled (MIT Kerberos/Heimdal)
+  GSASL:            no      (libgsasl not found)
+  TLS-SRP:          enabled
+  resolver:         POSIX threaded
+  IPv6:             enabled
+  Unix sockets:     enabled
+  IDN:              no      (--with-{libidn2,winidn})
+  Build libcurl:    Shared=yes, Static=yes
+  Built-in manual:  enabled
+  --libcurl option: enabled (--disable-libcurl-option)
+  Verbose errors:   enabled (--disable-verbose)
+  Code coverage:    disabled
+  SSPI:             no      (--enable-sspi)
+  ca cert bundle:   /etc/pki/tls/certs/ca-bundle.crt
+  ca cert path:     no
+  ca fallback:      no
+  LDAP:             enabled (OpenLDAP)
+  LDAPS:            enabled
+  RTSP:             enabled
+  RTMP:             no      (--with-librtmp)
+  PSL:              no      (libpsl not found)
+  Alt-svc:          enabled (--disable-alt-svc)
+  Headers API:      enabled (--disable-headers-api)
+  HSTS:             enabled (--disable-hsts)
+  HTTP1:            enabled (internal)
+  HTTP2:            no      (--with-nghttp2, --with-hyper)
+  HTTP3:            no      (--with-ngtcp2 --with-nghttp3, --with-quiche, --with-msh3)
+  ECH:              no      (--enable-ech)
+  WebSockets:       enabled
+  Protocols:        DICT FILE FTP FTPS GOPHER GOPHERS HTTP HTTPS IMAP IMAPS LDAP LDAPS MQTT POP3 POP3S RTSP SCP SFTP SMB SMBS SMTP SMTPS TELNET TFTP WS WSS
+  Features:         AsynchDNS GSS-API HSTS HTTPS-proxy IPv6 Kerberos Largefile NTLM NTLM_WB SPNEGO SSL TLS-SRP UnixSockets alt-svc brotli libz threadsafe zstd
+
+  WARNING:  Websockets enabled but marked EXPERIMENTAL. Use with caution!
+
+$ make -j && sudo make install
+
+$ curl --version
+WARNING: this libcurl is Debug-enabled, do not use in production
+
+curl 8.2.1 (x86_64-pc-linux-gnu) libcurl/8.2.1 OpenSSL/1.1.1k-fips zlib/1.2.11 zstd/1.4.4 libssh2/1.9.0 OpenLDAP/2.4.46
+Release-Date: 2023-07-26
+Protocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp ws wss
+Features: alt-svc AsynchDNS Debug GSS-API HSTS HTTPS-proxy IPv6 Kerberos Largefile libz NTLM NTLM_WB SPNEGO SSL threadsafe TLS-SRP TrackMemory UnixSockets zstd
+
+$ curl-config --configure
+ '--without-brotli' '--with-quiche' '--with-zstd' '--with-nghttp3' '--with-ngtcp2' '--with-ssl' '--with-gssapi' '--enable-debug' '--enable-optimize' '--enable-warnings' '--enable-werror' '--enable-curldebug' '--enable-http' '--enable-ftp' '--enable-file' '--enable-ldaps' '--enable-proxy' '--enable-dict' '--enable-telnet' '--enable-tftp' '--enable-smb' '--enable-manual' '--enable-libcurl-option' '--enable-libgcc' '--enable-ipv6' '--enable-openssl-auto-load-config' '--enable-verbose' '--enable-unix-sockets' '--enable-socketpair' '--enable-http-auth' '--enable-netrc' '--enable-dnsshuffle' '--enable-websockets' '--enable-hsts' '--enable-headers-api' '--enable-alt-svc' '--enable-get-easy-options' '--with-openssl' '--with-gnu-ld' '--with-zlib' '--with-libssh2' '--with-libssh' '--with-wolfssh' '--with-libidn2' '--with-zsh-functions-dir' '--prefix=/usr/local'
+```
+
+- for issue: `undefined reference to 'BrotliDecoderCreateInstance'`:
+
+  ```bash
+  $ make -j
+  ../lib/.libs/libcurl.so: undefined reference to 'BrotliDecoderCreateInstance'
+  ../lib/.libs/libcurl.so: undefined reference to 'BrotliDecoderVersion'
+  ../lib/.libs/libcurl.so: undefined reference to 'BrotliDecoderDestroyInstance'
+  ../lib/.libs/libcurl.so: undefined reference to 'BrotliDecoderDecompressStream'
+  ../lib/.libs/libcurl.so: undefined reference to 'BrotliDecoderGetErrorCode'
+  collect2: error: ld returned 1 exit status
+  make[2]: *** [Makefile:1018: curl] Error 1
+  ```
+  - solution:
+    ```bash
+    $ ./configure --without-brotli ...
+    ```
+
+
+<!--endsec-->
+
 - set
 
   > [!NOTE|label:OPTIONAL]
@@ -296,6 +434,9 @@ zstd
 
 $ curl-config --cflags
 -I/usr/local/Cellar/curl/8.2.1/include
+
+$ curl-config --configure
+ '--disable-debug' '--disable-dependency-tracking' '--disable-silent-rules' '--prefix=/usr/local/Cellar/curl/8.2.1' '--with-ssl=/usr/local/opt/openssl@3' '--without-ca-bundle' '--without-ca-path' '--with-ca-fallback' '--with-secure-transport' '--with-default-ssl-backend=openssl' '--with-libidn2' '--with-librtmp' '--with-libssh2' '--without-libpsl' '--with-gssapi' 'CC=clang'
 ```
 
 ## get
