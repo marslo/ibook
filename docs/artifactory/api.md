@@ -5,6 +5,8 @@
 - [variable](#variable)
 - [list](#list)
   - [list subfolders in 1st depth](#list-subfolders-in-1st-depth)
+  - [list docker image tags](#list-docker-image-tags)
+  - [list docker registry](#list-docker-registry)
 - [repo](#repo)
   - [check repo exists](#check-repo-exists)
   - [get all repos](#get-all-repos)
@@ -51,6 +53,44 @@ $ curlOpt="-s -g --netrc-file ~/.marslo/.netrc"
 $ /usr/bin/curl ${curlOpt} \
                 -X GET "${rtUrl}/api/storage/${repoName}-local?list&deep=1&listFolders=1&depth=1" |
                 jq -r '.files[].uri | split("/")[1])'
+```
+
+### list docker image tags
+
+> [!NOTE|label:references:]
+> - [List Docker Tags](https://jfrog.com/help/r/jfrog-rest-apis/list-docker-tags)
+>   - `GET /api/docker/{repo-key}/v2/{image name}/tags/list?n=<Number of consecutive tags>&last=<last tag position (numeric) from previous response>`
+
+```bash
+# API: /api/docker/<repo-key>/v2/<path/to/name>/tags/list
+
+# i.e.:
+$ curl -fsSL -XGET https://artifactory.example.com/artifactory/api/docker/devops-docker/v2/devops/ubuntu/tags/list |
+       jq -r .tags
+[
+  "1.1-bionic",
+  "1.1-bionic-dind",
+  "1.2-bionic",
+  "1.2-bionic-dind",
+  "1.4-bionic",
+  "1.4-bionic-dind",
+  ...
+]
+```
+
+### list docker registry
+
+> [!NOTE|label:references:]
+> - [List Docker Repositories](https://jfrog.com/help/r/jfrog-rest-apis/list-docker-repositories)
+
+```bash
+$ curl -fsSL -XGET https://artifactory.example.com/artifactory/api/docker/devops-docker/v2/_catalog |
+       jq -r .repositories
+[
+  "busybox",
+  "centos",
+  ...
+]
 ```
 
 ## repo
