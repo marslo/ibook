@@ -22,6 +22,7 @@
     - [enable or disable repo](#enable-or-disable-repo)
     - [yum group](#yum-group)
     - [tools installation](#tools-installation)
+    - [resolve conflict](#resolve-conflict)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
 - [tricky](#tricky)
   - [unicode](#unicode)
@@ -458,6 +459,27 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 > - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
 > - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
 > - [How to Find Out Top Directories and Files (Disk Space) in Linux](https://www.tecmint.com/find-top-large-directories-and-files-sizes-in-linux/)
+> - [8.4. Configuring Yum and Yum Repositories](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-configuring_yum_and_yum_repositories)
+>   - [8.4.2. Setting [repository] Options](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-setting_repository_options)
+> - [repo vars](https://unix.stackexchange.com/q/624738/29178)
+>   ```bash
+>   $ cd /etc/dnf/vars; grep -H --color=none . *
+>   contentdir:centos
+>   infra:stock
+>
+>   # or
+>   $ tail -f /var/log/dnf.log
+>   ```
+> - [moving from CentOS 8 to CentOS Stream 8](https://unix.stackexchange.com/a/704363/29178)
+>   ```bash
+>   $ sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+>   $ sudo sed -i 's/mirrorlist/#mirrorlist/g'  /etc/yum.repos.d/CentOS-*
+>   $ sudo dnf install centos-release-stream -y --allowerasing
+>   $ sudo dnf swap centos-{linux,stream}-repos
+>   $ sudo dnf distro-sync --best --allowerasing
+>   $ sudo reboot
+>   ```
+> - [DNF Command Reference](https://dnf.readthedocs.io/en/latest/command_ref.html)
 {% endhint %}
 
 ### enable or disable repo
@@ -487,12 +509,27 @@ $ yum groupremove <groupName>
 ```
 
 ### tools installation
+
+> [!TIP|label:convert CentOS repo file in RHEL]
+> ```bash
+> $ sudo sed -i 's/\$contentdir/centos/' /etc/yum.repo.d/*.repo
+> ```
+> - [CentOS through a VM - no URLs in mirrorlist [closed]](https://stackoverflow.com/a/70930049/2940319)
+>   ```bash
+>   $ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
+>   $ sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+>   $
+>   $ sudo dnf install centos-release-stream -y
+>   $ sudo dnf swap centos-{linux,stream}-repos -y
+>   $ sudo dnf distro-sync -y
+>   ```
+
 - epel
 
-  > [!TIP]
-  > references:
+  > [!TIP|label:references:]
   > - [How To enable the EPEL Repository on RHEL 8 / CentOS 8 Linux](https://linuxconfig.org/redhat-8-epel-install-guide)
   > - [Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
+  > - [404 error trying to install EPEL](https://access.redhat.com/discussions/5473561)
 
   ```bash
   # install from url
@@ -505,9 +542,144 @@ $ yum groupremove <groupName>
   $ sudo yum [re]install -y epel-release yum-utils
   ```
 
+  - [We can workaround this by replacing the $releasever variable with 8](https://access.redhat.com/discussions/5473561#comment-2119161)
+    ```bash
+    $ sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/epel*.repo
+
+    # Same problem, RHEL 8.2 on Azure.
+    $ sed -i.bak 's/\$releasever/8/g' /etc/yum.repos.d/epel*.repo
+    ```
+
+  - list only epel supported
+    ```bash
+    $ dnf --disablerepo="*" --enablerepo="epel" list available
+    ```
+
 - check what's package repo can provide
   ```
   $ dnf repository-packages epel list
+  ```
+
+
+### resolve conflict
+
+> [!NOTE|label:references:]
+> - [How do I resolve a conflict reported by dnf?](https://forums.fedoraforum.org/showthread.php?311928-How-do-I-resolve-a-conflict-reported-by-dnf&s=8c3c741c88076f09c1a5187ea8c66849&p=1773908#post1773908)
+
+- issue
+  ```bash
+  $ sudo dnf update --refresh
+  CentOS Linux 8 - BaseOS                                                                 15 kB/s | 3.9 kB     00:00
+  CentOS Linux 8 - Extras                                                                 14 kB/s | 1.5 kB     00:00
+  Extra Packages for Enterprise Linux 8 - x86_64                                          50 kB/s |  22 kB     00:00
+  jfrog-cli                                                                              3.9 kB/s | 1.4 kB     00:00
+  mono-centos8-stable                                                                     20 kB/s | 2.9 kB     00:00
+  Error:
+   Problem 1: cannot install both authselect-1.2.2-3.el8.x86_64 and authselect-1.1-2.el8.x86_64
+    - package authselect-compat-1.1-2.el8.x86_64 requires authselect(x86-64) = 1.1-2.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package authselect-1.1-2.el8.x86_64
+    - problem with installed package authselect-compat-1.1-2.el8.x86_64
+   Problem 2: cannot install both cups-libs-1:2.2.6-40.el8.x86_64 and cups-libs-1:2.2.6-28.el8.x86_64
+    - package cups-client-1:2.2.6-28.el8.x86_64 requires cups-libs(x86-64) = 1:2.2.6-28.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package cups-libs-1:2.2.6-28.el8.x86_64
+    - problem with installed package cups-client-1:2.2.6-28.el8.x86_64
+   Problem 3: cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
+    - package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-daemon-1:1.12.8-9.el8.x86_64
+    - problem with installed package dbus-x11-1:1.12.8-9.el8.x86_64
+   Problem 4: cannot install both libgomp-8.5.0-4.el8_5.x86_64 and libgomp-8.3.1-4.5.el8.x86_64
+    - package gcc-8.3.1-4.5.el8.x86_64 requires libgomp = 8.3.1-4.5.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package libgomp-8.3.1-4.5.el8.x86_64
+    - problem with installed package gcc-8.3.1-4.5.el8.x86_64
+   Problem 5: package libsolv-0.7.19-1.el8.x86_64 conflicts with rpm(x86-64) < 4.14.3 provided by rpm-4.14.2-26.el8_1.x86_64
+    - package rpm-build-4.14.2-26.el8_1.x86_64 requires rpm = 4.14.2-26.el8_1, but none of the providers can be installed
+    - cannot install the best update candidate for package libsolv-0.7.4-3.el8.x86_64
+    - problem with installed package rpm-build-4.14.2-26.el8_1.x86_64
+   Problem 6: cannot install both libstdc++-8.5.0-4.el8_5.x86_64 and libstdc++-8.3.1-4.5.el8.x86_64
+    - package gcc-c++-8.3.1-4.5.el8.x86_64 requires libstdc++ = 8.3.1-4.5.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package libstdc++-8.3.1-4.5.el8.x86_64
+    - problem with installed package gcc-c++-8.3.1-4.5.el8.x86_64
+   Problem 7: cannot install both lua-libs-5.3.4-12.el8.x86_64 and lua-libs-5.3.4-11.el8.x86_64
+    - package lua-5.3.4-11.el8.x86_64 requires lua-libs = 5.3.4-11.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package lua-libs-5.3.4-11.el8.x86_64
+    - problem with installed package lua-5.3.4-11.el8.x86_64
+   Problem 8: cannot install both newt-0.52.20-11.el8.x86_64 and newt-0.52.20-9.el8.x86_64
+    - package python3-newt-0.52.20-9.el8.x86_64 requires newt(x86-64) = 0.52.20-9.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package newt-0.52.20-9.el8.x86_64
+    - problem with installed package python3-newt-0.52.20-9.el8.x86_64
+   Problem 9: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
+    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package perl-libs-4:5.26.3-416.el8.x86_64
+    - problem with installed package perl-devel-4:5.26.3-416.el8.x86_64
+   Problem 10: cannot install both platform-python-3.6.8-41.el8.x86_64 and platform-python-3.6.8-15.1.el8.x86_64
+    - package platform-python-devel-3.6.8-15.1.el8.x86_64 requires platform-python = 3.6.8-15.1.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package platform-python-3.6.8-15.1.el8.x86_64
+    - problem with installed package platform-python-devel-3.6.8-15.1.el8.x86_64
+   Problem 11: cannot install both platform-python-pip-9.0.3-20.el8.noarch and platform-python-pip-9.0.3-15.el8.noarch
+    - package python3-pip-9.0.3-15.el8.noarch requires platform-python-pip = 9.0.3-15.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package platform-python-pip-9.0.3-15.el8.noarch
+    - problem with installed package python3-pip-9.0.3-15.el8.noarch
+   Problem 12: cannot install both python3-gobject-base-3.28.3-2.el8.x86_64 and python3-gobject-base-3.28.3-1.el8.x86_64
+    - package python3-gobject-3.28.3-1.el8.x86_64 requires python3-gobject-base(x86-64) = 3.28.3-1.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package python3-gobject-base-3.28.3-1.el8.x86_64
+    - problem with installed package python3-gobject-3.28.3-1.el8.x86_64
+   Problem 13: package platform-python-devel-3.6.8-15.1.el8.x86_64 requires python3-libs(x86-64) = 3.6.8-15.1.el8, but none of the providers can be installed
+    - cannot install both python3-libs-3.6.8-41.el8.x86_64 and python3-libs-3.6.8-15.1.el8.x86_64
+    - package python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64 requires platform-python-devel, but none of the providers can be installed
+    - cannot install the best update candidate for package python3-libs-3.6.8-15.1.el8.x86_64
+    - problem with installed package python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64
+   Problem 14: cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
+    - package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package dbus-1:1.12.8-14.el8.x86_64 requires dbus-daemon = 1:1.12.8-14.el8, but none of the providers can be installed
+    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-1:1.12.8-9.el8.x86_64
+    - problem with installed package ibus-1.5.19-4.el8.x86_64
+   Problem 15: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
+    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
+    - package perl-Errno-1.28-420.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-420.el8, but none of the providers can be installed
+    - package perl-ExtUtils-CBuilder-1:0.280230-2.el8.noarch requires perl-devel, but none of the providers can be installed
+    - cannot install the best update candidate for package perl-Errno-1.28-416.el8.x86_64
+    - problem with installed package perl-ExtUtils-CBuilder-1:0.280230-2.el8.noarch
+   Problem 16: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
+    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
+    - package perl-interpreter-4:5.26.3-420.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-420.el8, but none of the providers can be installed
+    - package perl-ExtUtils-MakeMaker-1:7.34-1.el8.noarch requires perl-devel, but none of the providers can be installed
+    - cannot install the best update candidate for package perl-interpreter-4:5.26.3-416.el8.x86_64
+    - problem with installed package perl-ExtUtils-MakeMaker-1:7.34-1.el8.noarch
+   Problem 17: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package dbus-daemon-1:1.12.8-9.el8.x86_64 requires dbus-common = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
+    - cannot install both dbus-common-1:1.12.8-14.el8.noarch and dbus-common-1:1.12.8-9.el8.noarch
+    - package ibus-libpinyin-1.10.0-1.el8.x86_64 requires ibus >= 1.5.11, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-common-1:1.12.8-9.el8.noarch
+    - problem with installed package ibus-libpinyin-1.10.0-1.el8.x86_64
+   Problem 18: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package dbus-daemon-1:1.12.8-9.el8.x86_64 requires dbus-libs(x86-64) = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
+    - cannot install both dbus-libs-1:1.12.8-14.el8.x86_64 and dbus-libs-1:1.12.8-9.el8.x86_64
+    - package ibus-setup-1.5.19-4.el8.noarch requires ibus = 1.5.19-4.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-libs-1:1.12.8-9.el8.x86_64
+    - problem with installed package ibus-setup-1.5.19-4.el8.noarch
+  (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
+  ```
+
+- solution
+  ```bash
+  $ sudo dnf repolist
+  repo id                                       repo name
+  baseos                                        CentOS Linux 8 - BaseOS
+  epel                                          Extra Packages for Enterprise Linux 8 - x86_64
+  extras                                        CentOS Linux 8 - Extras
+  jfrog-cli                                     jfrog-cli
+  mono-centos8-stable                           mono-centos8-stable
+  $ sudo dnf update --refresh --allowerasing
+  $ sudo dnf distro-sync -y
+
+  # or
+  $ sudo dnf remove $(dnf repoquery --duplicated --latest-limit -1 -q)
+
+  # show duplicate packages
+  $ dnf repoquery --duplicated
   ```
 
 ### `File "/usr/libexec/urlgrabber-ext-down", line 28`

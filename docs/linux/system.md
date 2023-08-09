@@ -50,6 +50,7 @@
   - [specified terminal size](#specified-terminal-size)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
+  - [none of the providers can be installed in `dnf upgrade`](#none-of-the-providers-can-be-installed-in-dnf-upgrade)
   - [ls: Argument list too long](#ls-argument-list-too-long)
 - [others](#others-1)
   - [cockpit](#cockpit)
@@ -1813,7 +1814,8 @@ $ gnome-terminal --geometry=123x42+0+0
 
 ## Q&A
 ### yum issue after python upgrade to 3.x
-> references:
+
+> [!NOTE|label:references:]
 > - [CentOS 7升级Python到3.6.6后yum出错问题解决总结](https://www.cnblogs.com/kerrycode/p/11553470.html)
 > - [yum upgrading error](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/#post6071710)
 
@@ -1835,6 +1837,72 @@ $ gnome-terminal --geometry=123x42+0+0
     $ vim /usr/libexec/urlgrabber-ext-down
     ... change '#! /usr/bin/python' to  '#! /usr/bin/python2'
     ```
+
+### none of the providers can be installed in `dnf upgrade`
+
+- issue
+  ```bash
+  $ sudo dnf update
+  ...
+  Last metadata expiration check: 0:01:44 ago on Tue 08 Aug 2023 08:43:40 PM PDT.
+  Error:
+   Problem 1: package authselect-compat-1.1-2.el8.x86_64 requires authselect(x86-64) = 1.1-2.el8, but none of the providers can be installed
+    - cannot install both authselect-1.2.2-3.el8.x86_64 and authselect-1.1-2.el8.x86_64
+    - cannot install both authselect-1.1-2.el8.x86_64 and authselect-1.2.2-3.el8.x86_64
+    - cannot install the best update candidate for package authselect-compat-1.1-2.el8.x86_64
+    - cannot install the best update candidate for package authselect-1.1-2.el8.x86_64
+   Problem 2: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
+    - cannot install both dbus-daemon-1:1.12.8-9.el8.x86_64 and dbus-daemon-1:1.12.8-14.el8.x86_64
+    - cannot install the best update candidate for package dbus-x11-1:1.12.8-9.el8.x86_64
+    - cannot install the best update candidate for package dbus-daemon-1:1.12.8-9.el8.x86_64
+   Problem 3: package libstdc++-devel-8.3.1-4.5.el8.x86_64 requires libstdc++(x86-64) = 8.3.1-4.5.el8, but none of the providers can be installed
+   ...
+  ```
+
+- upgrade bypass issue
+
+  > [!NOTE]
+  > issue stills exists, but upgrade will be executed successfully
+
+  ```bash
+  $ sudo yum upgrade --allowerasing --nobest
+
+  Last metadata expiration check: 0:02:43 ago on Tue 08 Aug 2023 08:43:40 PM PDT.
+  Dependencies resolved.
+
+   Problem 1: cannot install the best update candidate for package cups-client-1:2.2.6-28.el8.x86_64
+   ...
+   Problem 2: cannot install the best update candidate for package gcc-8.3.1-4.5.el8.x86_64
+   ...
+   Problem 3: package rpm-libs-4.14.3-19.el8.x86_64 requires liblua-5.3.so()(64bit), but none of the providers can be installed
+   ...
+   Problem 4: cannot install the best update candidate for package python3-gobject-3.28.3-1.el8.x86_64
+   ...
+  =======================================================================================================================
+   Package                                    Arch       Version                              Repository            Size
+  =======================================================================================================================
+  Upgrading:
+   NetworkManager                             x86_64     1:1.32.10-4.el8                      centos-baseos        2.6 M
+   NetworkManager-libnm                       x86_64     1:1.32.10-4.el8                      centos-baseos        1.8 M
+   NetworkManager-team                        x86_64     1:1.32.10-4.el8                      centos-baseos        148 k
+   NetworkManager-tui                         x86_64     1:1.32.10-4.el8                      centos-baseos        336 k
+   ...
+  ```
+
+- fix with erase conflict packges permanently
+  ```bash
+  $ sudo dnf repolist
+  repo id                                       repo name
+  baseos                                        CentOS Linux 8 - BaseOS
+  epel                                          Extra Packages for Enterprise Linux 8 - x86_64
+  extras                                        CentOS Linux 8 - Extras
+  jfrog-cli                                     jfrog-cli
+  mono-centos8-stable                           mono-centos8-stable
+
+  $ sudo dnf update --refresh --allowerasing
+  $ sudo dnf distro-sync -y
+  ```
 
 ### ls: Argument list too long
 
@@ -1878,10 +1946,10 @@ $ gnome-terminal --geometry=123x42+0+0
 > - `/etc/security/limits.d/*.conf`
 >   - `/etc/security/limits.d/99-nproc-devops.conf`
 >
-> all modifications requires **logout** and **login** again
-> ```bash
-> $ sudo pkill -u <username>
-> ```
+> - all modifications requires **logout** and **login** again
+>   ```bash
+>   $ sudo pkill -u <username>
+>   ```
 
 #### check the limit
 ```bash
