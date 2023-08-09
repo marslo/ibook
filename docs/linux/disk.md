@@ -7,6 +7,7 @@
   - [mount ios](#mount-ios)
   - [mount smb](#mount-smb)
   - [mount nfs](#mount-nfs)
+  - [remount](#remount)
   - [disconnect the mount](#disconnect-the-mount)
 - [LVM](#lvm)
   - [example](#example)
@@ -70,7 +71,7 @@ $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_6
     $ /usr/bin/osascript -e "try" -e "mount volume \"smb://guest@${host}\"" -e "end try"
     ```
   - `mount`
-    ``bash
+    ```bash
     $ mkdir -p /Volumes/mount
     $ sudo mkdir -p $(whoami):staff /Volumes/mount
 
@@ -213,8 +214,17 @@ $ findmnt /mnt/mynfs
 #### setup nfs mount by default server boot
 ```bash
 $ sudo bash -c "cat > /etc/fstab" << EOF
-1.2.3.4:/a/b    /mnt/mynfs nfs default 0 0
+1.2.3.4:/a/b    /mnt/mynfs nfs defaults 0 0
 EOF
+
+# i.e.:
+$ cat /etc/fstab | grep -v '^#' | column -t
+/dev/mapper/cl-root                             /               xfs   defaults                    0  0
+UUID=18c35fe1-36ad-4d7e-aeb6-88bdb6b145af       /boot           ext4  defaults                    1  2
+UUID=6C3A-C81A                                  /boot/efi       vfat  umask=0077,shortname=winnt  0  2
+/dev/mapper/cl-home                             /home           xfs   defaults                    0  0
+/dev/mapper/cl-swap                             swap            swap  defaults                    0  0
+1.2.3.4:/a/b                                    /path/to/mount  nfs   defaults                    0  0
 ```
 
 #### related configure
@@ -224,10 +234,49 @@ EOF
 - `/etc/nfs.conf`
 - `/proc/mounts`
 
+
+### [remount](https://unix.stackexchange.com/a/280543/29178)
+```bash
+$ sudo mount -oremount,rw /
+
+# or
+$ sudo mount -oremount,ro /
+```
+
+
 ### disconnect the mount
 ```bash
 $ sudo umount /mnt/mynfs
 ```
+
+- `device is busy`
+
+  > [!NOTE|label:references:]
+  > - [umount: device is busy. Why?](https://unix.stackexchange.com/a/35960/29178)
+
+  ```bash
+  # check who is occupy the device
+  $ fuser -vm /path/to/mount
+  $ sudo fuser -vm /jenkins
+                       USER        PID ACCESS COMMAND
+  /path/to/mount:      root     kernel mount /path/to/mount
+                       devops    1369210 ..c.. bash
+                       marslo    1377303 ..c.. bash
+
+  # or
+  $ lsof +f -- /path/to/mount
+  # or interactively kill only processes with files open for writing
+  $ sudo fuser -vmMkiv /path/to/mount
+  # or force kill directly without asking
+  $ sudo fuser -vmMk /path/to/mount
+
+  # logout
+  $ sudo pkill -KILL -u marslo
+  $ sudo pkill -KILL -u devops
+
+  # umount again
+  $ sudo umount -f /path/to/mount
+  ```
 
 ## LVM
 > reference:
