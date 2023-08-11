@@ -20,6 +20,12 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+> [!TIP|label:references:]
+> - [3.5.3 Shell Parameter Expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+>   - [How can I use variable variables (indirect variables, pointers, references) or associative arrays?](http://mywiki.wooledge.org/BashFAQ/006)
+>   - [risk](https://stackoverflow.com/a/55331060/2940319)
+>   - [Eval command and security issues](http://mywiki.wooledge.org/BashFAQ/048)
+
 ## eval
 
 {% hint style='tip' %}
