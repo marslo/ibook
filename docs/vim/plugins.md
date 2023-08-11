@@ -13,6 +13,8 @@
   - [autopairs](#autopairs)
   - [rainbow](#rainbow)
   - [tabular](#tabular)
+  - [ycm](#ycm)
+  - [tabnine-vim](#tabnine-vim)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -340,3 +342,205 @@ if exists(":Tabularize")
   endfunction
 endif
 ```
+
+### ycm
+
+> [!NOTE|label:references:]
+> - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
+> - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
+> - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
+>   - [jdt-language-server-1.19.0-202301090450.tar.gz)](https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-1.19.0-202301090450.tar.gz)
+
+
+- environment
+  - java
+    ```bash
+    $ brew install java
+
+    $ java -version
+    openjdk version "20.0.1" 2023-04-18
+    OpenJDK Runtime Environment Homebrew (build 20.0.1)
+    OpenJDK 64-Bit Server VM Homebrew (build 20.0.1, mixed mode, sharing)
+
+    $ brew --prefix java
+    /usr/local/opt/openjdk
+
+    $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+    ```
+
+  - python
+    ```bash
+    $ python --version
+    Python 3.11.4
+
+    $ pip --version
+    pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
+    ```
+
+- brew install
+
+  > [!NOTE|label:references:]
+  > - [vim ycm c++ 环境搭建](https://www.xjx100.cn/news/651145.html?action=onClick)
+  >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
+  >   - C#：`brew install Mono` first and enabled by `--cs-completer`
+  >   - Go：`brew install go` and enabled by `--go-completer`
+  >   - TypeScript：insall Node.js and npm，and enable typescript via `npm install -g typescript`
+  >   - JavaScript: install Node.js and npm，and enabled via `--js-completer`
+  >   - Rust: install Rust，`--rust-completer`
+  >   - Java: `brew install java`，enabled via `--java-completer`
+  >   - for all support : enabled via `--all`
+
+  ```bash
+  $ brew install cmake python go nodejs
+
+  # [optioinal] for C#
+  $ brew install mono
+
+  # not necessary
+  $ brew install jdtls
+  ```
+
+- install
+  ```bash
+  # full install
+  $ cd ~/.vim/bundle/YouCompleteMe
+  $ python install.py --all --verbose
+  ```
+
+  - or via `--system-libclang`
+    ```bash
+    $ brew install llvm
+    $ cd ~/.vim/bundle/YouCompleteMe
+    $ python install.py --system-libclang --all --verbose
+
+    $ cat ~/.vimrc
+    ...
+    let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+    ...
+    ```
+
+  - or using `install.sh`
+    ```bash
+    $ cd ~/.vim/bundle/YouCompleteMe
+    $ ./install.py --all --verbose
+
+    # or
+    $ ./install.py --clangd-completer --verbose
+
+    # or
+    ./install.py --verbose
+    ```
+
+#### vimrc
+
+> [!NOTE|label:references:]
+> - [CM代码补全插件找不到c++头文件](https://www.xjx100.cn/news/651148.html?action=onClick)
+
+```bash
+```
+
+#### troubleshooting
+
+##### downlaod failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
+
+> [!NOTE|label:related issues:]
+> - [#4063: Failing to build, Java Error 404 HTTP](https://github.com/ycm-core/YouCompleteMe/issues/4063)
+> - [#4136: Installing jdt.ls for Java support...FAILED (Similar to #3972 & #3974)](https://github.com/ycm-core/YouCompleteMe/issues/4136)
+> - [#3974: 404 error downloading JDT.LS](https://github.com/ycm-core/YouCompleteMe/issues/3974)
+
+- [solution 1](https://github.com/ycm-core/ycmd/blob/master/build.py#L92)
+  - using `ycm-core/YouCompleteMe` instead of [`tabnine/YouCompleteMe`](https://github.com/tabnine/YouCompleteMe/blob/master/.gitmodules#L3) ( [details](https://github.com/tabnine/ycmd/blob/master/build.py#L92) )
+
+- solution 2:
+  ```bash
+  $ git diff -- build.py
+  diff --git a/build.py b/build.py
+  index 4f586f28..01c19315 100755
+  --- a/build.py
+  +++ b/build.py
+  @@ -89,10 +89,10 @@ DYNAMIC_PYTHON_LIBRARY_REGEX = """
+     )$
+   """
+
+  -JDTLS_MILESTONE = '1.14.0'
+  -JDTLS_BUILD_STAMP = '202207211651'
+  +JDTLS_MILESTONE = '1.19.0'
+  +JDTLS_BUILD_STAMP = '202301090450'
+   JDTLS_SHA256 = (
+  -  '4978ee235049ecba9c65b180b69ef982eedd2f79dc4fd1781610f17939ecd159'
+  +  'acfd91918c51770a2e63a5a4d72f3543611ad7e1610b917c28797548b84e8460'
+   )
+
+   RUST_TOOLCHAIN = 'nightly-2022-08-17'
+  ```
+
+- [solution 3](https://github.com/ycm-core/YouCompleteMe/issues/4136#issuecomment-1448333945)
+  - download the tar.gz manually
+    - [snapshots](https://download.eclipse.org/jdtls/snapshots/)
+    - [milestone](https://projects.eclipse.org/projects/eclipse.jdt.ls)
+  - copy/move package into `YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/`
+
+
+### [tabnine-vim]()
+
+
+#### troubleshooting
+
+- `libclang` download failure
+  - error
+    ```bash
+    $ python install.py --all
+    ...
+    -- Downloading libclang 6.0.0 from https://dl.bintray.com/micbou/libclang/libclang-6.0.0-x86_64-apple-darwin.tar.bz2
+    -- [download 0% complete]
+    CMake Error at ycm/CMakeLists.txt:108 (file):
+      file DOWNLOAD cannot compute hash on failed download
+    ```
+
+  - solution:
+
+    - ultimate solution
+      - using `YouCompleteMe/third_party/ycmd` replace the `tabnine-vim/third_party/ycmd`
+        ```bash
+        $ cd ~/.vim/bundle
+        $ mv tabnine-vim/third_party/ycmd{,.bak}
+        $ cp -r YouCompleteMe/third_party/ycmd  tabnine-vim/third_party/
+
+        $ python install.py --all
+        ```
+    - replace the libclang 6.0.0 to [`16.0.1`](https://github.com/ycm-core/ycmd/blob/master/build.py#L110)
+
+      - `./ycmd/cpp/ycm/CMakeLists.txt`
+        ```bash
+        # https://github.com/ycm-core/llvm/releases/download/16.0.1/libclang-16.0.1-x86_64-apple-darwin.tar.bz2
+
+        $ git diff -- third_party/ycmd/cpp/ycm/CMakeLists.txt
+        diff --git a/third_party/ycmd/cpp/ycm/CMakeLists.txt b/third_party/ycmd/cpp/ycm/CMakeLists.txt
+        index 047b118d..9d912c98 100644
+        --- a/third_party/ycmd/cpp/ycm/CMakeLists.txt
+        +++ b/third_party/ycmd/cpp/ycm/CMakeLists.txt
+        @@ -30,12 +30,12 @@ if ( USE_CLANG_COMPLETER AND
+              NOT PATH_TO_LLVM_ROOT AND
+              NOT EXTERNAL_LIBCLANG_PATH )
+
+        -  set( CLANG_VERSION 6.0.0 )
+        +  set( CLANG_VERSION 16.0.1 )
+
+           if ( APPLE )
+             set( LIBCLANG_DIRNAME "libclang-${CLANG_VERSION}-x86_64-apple-darwin" )
+             set( LIBCLANG_SHA256
+        -         "fd12532e3eb7b67cfede097134fc0a5b478c63759bcbe144ae6897f412ce2fe6" )
+        +         "43f7e4e72bc1d661eb01ee61666ee3a62a97d2993586c0b98efa6f46a96e768f" )
+           elseif ( WIN32 )
+             if( 64_BIT_PLATFORM )
+               set( LIBCLANG_DIRNAME "libclang-${CLANG_VERSION}-win64" )
+        @@ -84,7 +84,7 @@ if ( USE_CLANG_COMPLETER AND
+
+           set( LIBCLANG_DOWNLOAD ON )
+           set( LIBCLANG_URL
+        -       "https://dl.bintray.com/micbou/libclang/${LIBCLANG_FILENAME}" )
+        +       "https://github.com/ycm-core/llvm/releases/download/${CLANG_VERSION}/${LIBCLANG_FILENAME}" )
+
+           # Check if the Clang archive is already downloaded and its checksum is
+           # correct.  If this is not the case, remove it if needed and download it.
+        ```
