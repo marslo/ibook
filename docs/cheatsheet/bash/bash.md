@@ -30,6 +30,23 @@
 > [!NOTE]
 > references:
 > - [Bash scripting cheatsheet](https://devhints.io/bash)
+> - [Introduction to Bash Array](https://www.baeldung.com/linux/bash-array)
+> - [Bash For Loop Array: Iterate Through Array Values](https://www.cyberciti.biz/faq/bash-for-loop-array/)
+>   ```bash
+>   $ declare -A foo=(
+>                      ["one"]="apple"
+>                      ["two"]="orange"
+>                      ["three"]="banana"
+>                    )
+>
+>   # show keys
+>   $ echo ${!foo[@]}
+>   two three one
+>
+>   # show values
+>   $ echo ${foo[@]}
+>   orange banana apple
+>   ```
 
 ## [alias](https://askubuntu.com/a/871435)
 ```bash

@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [using string as variable name](#using-string-as-variable-name)
 - [`<<<`, `< <(..)`](#--)
   - [`< <(..)` && `> >(..)`](#----)
 - [parameter substitution](#parameter-substitution)
@@ -20,6 +21,61 @@
 > - [Unix / Linux - Shell Substitution](https://www.tutorialspoint.com/unix/unix-shell-substitutions.htm)
 > - [ShellCheck Wiki Sitemap](https://www.shellcheck.net/wiki/)
 {% endhint %}
+
+
+## using string as variable name
+
+> [!NOTE|label:references:]
+> - [3.5.3 Shell Parameter Expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+> - [How to get a variable value if variable name is stored as string?](https://stackoverflow.com/a/1921337/2940319)
+> - [Dynamic variable names in Bash](https://stackoverflow.com/a/18124325/2940319)
+
+- [`eval`](https://stackoverflow.com/a/1921376/2940319)
+  ```bash
+  $ aa='echo me'
+  $ var='aa'
+  $ eval echo \$$var
+  echo me
+  ```
+
+- [`${!var}`](https://stackoverflow.com/a/1921337/2940319)
+  ```bash
+  $ var1="this is the real value"
+  $ a="var1"
+  $ echo "${!a}"
+  this is the real value
+  ```
+
+- more usage
+  ```bash
+  $ sunny='''
+  \033[38;5;226m    \\   /    \033[0m
+  \033[38;5;226m     .-.     \033[0m
+  \033[38;5;226m  ― (   ) ―  \033[0m
+  \033[38;5;226m     `-’     \033[0m
+  \033[38;5;226m    /   \\    \033[0m
+  '''
+
+  $ fewClouds='''
+  \033[38;5;226m   \\  /\033[0m
+  \033[38;5;226m _ /\"\"\033[38;5;250m.-.    \033[0m
+  \033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m
+  \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+
+  '''
+
+  $ codeMap=(
+               ["01"]="sunny"
+               ["02"]="fewClouds"
+             )
+  $ icon="$(/usr/bin/curl -sg "https://api.openweathermap.org/data/3.0/onecall?lat=37.3541132&lon=-121.955174&units=metric&exclude=hourly,daily,minutely,alerts&appid=${OWM_API_TOKEN}" | jq -r .current.weather[].icon)"
+  $ echo ${icon}
+  02n
+
+  $ echo -e "${!codeMap["${icon:0:-1}"]}"
+  ```
+
+  ![using string as var name](../../screenshot/tools/widget/bash-map-var-is-string.png)
 
 
 ## `<<<`, `< <(..)`
