@@ -6,6 +6,9 @@
   - [linux/osx](#linuxosx)
   - [windows](#windows)
 - [weather](#weather)
+  - [iweather](#iweather)
+  - [uriel1998/weather.sh](#uriel1998weathersh)
+  - [szantaii/bash-weather](#szantaiibash-weather)
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -546,272 +549,273 @@
     Thu Aug 10 20:06:46 PDT 2023
     ```
 
-  - [iweather](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/iweather)
+### [iweather](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/iweather)
 
-    <!--sec data-title="iweather" data-id="section3" data-show=true data-collapse=true ces-->
-    ```bash
-    #!/usr/local/bin/bash
-    # shellcheck disable=SC2034,SC1111,SC1110
-    # ===========================================================================
-    #     FileName : iWeather
-    #       Author : marslo.jiao@gmail.com
-    #      Created : 2023-08-11 03:05:27
-    #   LastChange : 2023-08-11 03:13:50
-    # ===========================================================================
+<!--sec data-title="iweather" data-id="section3" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/local/bin/bash
+# shellcheck disable=SC2034,SC1111,SC1110
+# ===========================================================================
+#     FileName : iWeather
+#       Author : marslo.jiao@gmail.com
+#      Created : 2023-08-11 03:05:27
+#   LastChange : 2023-08-11 03:13:50
+# ===========================================================================
 
-    function capitalized() {
-      result=''
-      for _i in "$@"; do result+=${_i^}; result+=' '; done
-      echo "${result}"
-    }
+function capitalized() {
+  result=''
+  for _i in "$@"; do result+=${_i^}; result+=' '; done
+  echo "${result}"
+}
 
-    function windDirection() {
-      direction=$1
-      if ((   $(echo "0     < ${direction}" | bc -l) && $(echo "${direction} <= 22.5"  | bc -l) )); then
-        echo '→'
-      elif (( $(echo "22.5  < ${direction}" | bc -l) && $(echo "${direction} <= 67.5"  | bc -l) )); then
-        echo '↗'
-      elif (( $(echo "67.5  < ${direction}" | bc -l) && $(echo "${direction} <= 112.5" | bc -l) )); then
-        echo '↑'
-      elif (( $(echo "112.5 < ${direction}" | bc -l) && $(echo "${direction} <= 157.5" | bc -l) )); then
-        echo '↖'
-      elif (( $(echo "157.5 < ${direction}" | bc -l) && $(echo "${direction} <= 202.5" | bc -l) )); then
-        echo '←'
-      elif (( $(echo "202.5 < ${direction}" | bc -l) && $(echo "${direction} <= 247.5" | bc -l) )); then
-        echo '↙'
-      elif (( $(echo "247.5 < ${direction}" | bc -l) && $(echo "${direction} <= 292.5" | bc -l) )); then
-        echo '↓'
-      elif (( $(echo "292.5 < ${direction}" | bc -l) && $(echo "${direction} <= 337.5" | bc -l) )); then
-        echo '↘'
-      elif (( $(echo "337.5 < ${direction}" | bc -l) && $(echo "${direction} <= 360"   | bc -l) )); then
-        echo '→'
-      fi
-    }
+function windDirection() {
+  direction=$1
+  if ((   $(echo "0     < ${direction}" | bc -l) && $(echo "${direction} <= 22.5"  | bc -l) )); then
+    echo '→'
+  elif (( $(echo "22.5  < ${direction}" | bc -l) && $(echo "${direction} <= 67.5"  | bc -l) )); then
+    echo '↗'
+  elif (( $(echo "67.5  < ${direction}" | bc -l) && $(echo "${direction} <= 112.5" | bc -l) )); then
+    echo '↑'
+  elif (( $(echo "112.5 < ${direction}" | bc -l) && $(echo "${direction} <= 157.5" | bc -l) )); then
+    echo '↖'
+  elif (( $(echo "157.5 < ${direction}" | bc -l) && $(echo "${direction} <= 202.5" | bc -l) )); then
+    echo '←'
+  elif (( $(echo "202.5 < ${direction}" | bc -l) && $(echo "${direction} <= 247.5" | bc -l) )); then
+    echo '↙'
+  elif (( $(echo "247.5 < ${direction}" | bc -l) && $(echo "${direction} <= 292.5" | bc -l) )); then
+    echo '↓'
+  elif (( $(echo "292.5 < ${direction}" | bc -l) && $(echo "${direction} <= 337.5" | bc -l) )); then
+    echo '↘'
+  elif (( $(echo "337.5 < ${direction}" | bc -l) && $(echo "${direction} <= 360"   | bc -l) )); then
+    echo '→'
+  fi
+}
 
-    tempfile="/tmp/open-weather-map.json"
+tempfile="/tmp/open-weather-map.json"
 
-    ## more for weather icons: https://erikflowers.github.io/weather-icons/
-    sunny='''
-    \033[38;5;226m    \\   /    \033[0m
-    \033[38;5;226m     .-.     \033[0m
-    \033[38;5;226m  ― (   ) ―  \033[0m
-    \033[38;5;226m     `-’     \033[0m
-    \033[38;5;226m    /   \\    \033[0m
-    '''
+## more for weather icons: https://erikflowers.github.io/weather-icons/
+sunny='''
+\033[38;5;226m    \\   /    \033[0m
+\033[38;5;226m     .-.     \033[0m
+\033[38;5;226m  ― (   ) ―  \033[0m
+\033[38;5;226m     `-’     \033[0m
+\033[38;5;226m    /   \\    \033[0m
+'''
 
-    fewClouds='''
-    \033[38;5;226m   \\  /\033[0m
-    \033[38;5;226m _ /\"\"\033[38;5;250m.-.    \033[0m
-    \033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+fewClouds='''
+\033[38;5;226m   \\  /\033[0m
+\033[38;5;226m _ /\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 
-    '''
+'''
 
-    scatteredClouds='''
+scatteredClouds='''
 
-    \033[38;5;250m     .--.    \033[0m
-    \033[38;5;250m  .-(    ).  \033[0m
-    \033[38;5;250m (___.__)__) \033[0m
+\033[38;5;250m     .--.    \033[0m
+\033[38;5;250m  .-(    ).  \033[0m
+\033[38;5;250m (___.__)__) \033[0m
 
-    '''
+'''
 
-    brokenClouds='''
+brokenClouds='''
 
-    \033[38;5;240;1m     .--.    \033[0m
-    \033[38;5;240;1m  .-(    ).  \033[0m
-    \033[38;5;240;1m (___.__)__) \033[0m
+\033[38;5;240;1m     .--.    \033[0m
+\033[38;5;240;1m  .-(    ).  \033[0m
+\033[38;5;240;1m (___.__)__) \033[0m
 
-    '''
+'''
 
-    lightShowers='''
-    \033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
-    \033[38;5;111m     ‘ ‘ ‘ ‘ \033[0m
-    \033[38;5;111m    ‘ ‘ ‘ ‘  \033[0m
-    '''
+lightShowers='''
+\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+\033[38;5;111m     ‘ ‘ ‘ ‘ \033[0m
+\033[38;5;111m    ‘ ‘ ‘ ‘  \033[0m
+'''
 
-    heavyShowers='''
-    \033[38;5;226m _`/\"\"\033[38;5;240;1m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;240;1m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;240;1m(___(__) \033[0m
-    \033[38;5;21;1m   ‚‘‚‘‚‘‚‘  \033[0m
-    \033[38;5;21;1m   ‚’‚’‚’‚’  \033[0m
-    '''
+heavyShowers='''
+\033[38;5;226m _`/\"\"\033[38;5;240;1m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;240;1m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;240;1m(___(__) \033[0m
+\033[38;5;21;1m   ‚‘‚‘‚‘‚‘  \033[0m
+\033[38;5;21;1m   ‚’‚’‚’‚’  \033[0m
+'''
 
-    lightSnowShowers='''
-    \033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
-    \033[38;5;255m     *  *  * \033[0m
-    \033[38;5;255m    *  *  *  \033[0m
-    '''
+lightSnowShowers='''
+\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+\033[38;5;255m     *  *  * \033[0m
+\033[38;5;255m    *  *  *  \033[0m
+'''
 
-    heavySnowShowers='''
-    \033[38;5;226m _`/\"\"\033[38;5;240;1m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;240;1m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;240;1m(___(__) \033[0m
-    \033[38;5;255;1m    * * * *  \033[0m
-    \033[38;5;255;1m   * * * *   \033[0m
-    '''
+heavySnowShowers='''
+\033[38;5;226m _`/\"\"\033[38;5;240;1m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;240;1m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;240;1m(___(__) \033[0m
+\033[38;5;255;1m    * * * *  \033[0m
+\033[38;5;255;1m   * * * *   \033[0m
+'''
 
-    lightSleetShowers='''
-    \033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
-    \033[38;5;111m     ‘ \033[38;5;255m*\033[38;5;111m ‘ \033[38;5;255m* \033[0m
-    \033[38;5;255m    *\033[38;5;111m ‘ \033[38;5;255m*\033[38;5;111m ‘  \033[0m
-    '''
+lightSleetShowers='''
+\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+\033[38;5;111m     ‘ \033[38;5;255m*\033[38;5;111m ‘ \033[38;5;255m* \033[0m
+\033[38;5;255m    *\033[38;5;111m ‘ \033[38;5;255m*\033[38;5;111m ‘  \033[0m
+'''
 
-    showerRain='''
-    \033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
-    \033[38;5;228;5m    ⚡\033[38;5;111;25m‘ ‘\033[38;5;228;5m⚡\033[38;5;111;25m‘ ‘ \033[0m
-    \033[38;5;111m    ‘ ‘ ‘ ‘  \033[0m
-    '''
+showerRain='''
+\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+\033[38;5;228;5m    ⚡\033[38;5;111;25m‘ ‘\033[38;5;228;5m⚡\033[38;5;111;25m‘ ‘ \033[0m
+\033[38;5;111m    ‘ ‘ ‘ ‘  \033[0m
+'''
 
-    thunderStorm='''
-    \033[38;5;240;1m     .-.     \033[0m
-    \033[38;5;240;1m    (   ).   \033[0m
-    \033[38;5;240;1m   (___(__)  \033[0m
-    \033[38;5;21;1m  ‚‘\033[38;5;228;5m⚡\033[38;5;21;25m‘‚\033[38;5;228;5m⚡\033[38;5;21;25m‚‘ \033[0m
-    \033[38;5;21;1m  ‚’‚’\033[38;5;228;5m⚡\033[38;5;21;25m’‚’  \033[0m
-    '''
+thunderStorm='''
+\033[38;5;240;1m     .-.     \033[0m
+\033[38;5;240;1m    (   ).   \033[0m
+\033[38;5;240;1m   (___(__)  \033[0m
+\033[38;5;21;1m  ‚‘\033[38;5;228;5m⚡\033[38;5;21;25m‘‚\033[38;5;228;5m⚡\033[38;5;21;25m‚‘ \033[0m
+\033[38;5;21;1m  ‚’‚’\033[38;5;228;5m⚡\033[38;5;21;25m’‚’  \033[0m
+'''
 
-    thunderySnowShowers='''
-    \033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
-    \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
-    \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
-    \033[38;5;255m     *\033[38;5;228;5m⚡\033[38;5;255;25m*\033[38;5;228;5m⚡\033[38;5;255;25m* \033[0m
-    \033[38;5;255m    *  *  *  \033[0m
-    '''
+thunderySnowShowers='''
+\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
+\033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
+\033[38;5;255m     *\033[38;5;228;5m⚡\033[38;5;255;25m*\033[38;5;228;5m⚡\033[38;5;255;25m* \033[0m
+\033[38;5;255m    *  *  *  \033[0m
+'''
 
-    rain='''
-    \033[38;5;250m     .-.     \033[0m
-    \033[38;5;250m    (   ).   \033[0m
-    \033[38;5;250m   (___(__)  \033[0m
-    \033[38;5;111m    ‘ ‘ ‘ ‘  \033[0m
-    \033[38;5;111m   ‘ ‘ ‘ ‘   \033[0m
-    '''
+rain='''
+\033[38;5;250m     .-.     \033[0m
+\033[38;5;250m    (   ).   \033[0m
+\033[38;5;250m   (___(__)  \033[0m
+\033[38;5;111m    ‘ ‘ ‘ ‘  \033[0m
+\033[38;5;111m   ‘ ‘ ‘ ‘   \033[0m
+'''
 
-    heavyRain='''
-    \033[38;5;240;1m     .-.     \033[0m
-    \033[38;5;240;1m    (   ).   \033[0m
-    \033[38;5;240;1m   (___(__)  \033[0m
-    \033[38;5;21;1m  ‚‘‚‘‚‘‚‘   \033[0m
-    \033[38;5;21;1m  ‚’‚’‚’‚’   \033[0m
-    '''
+heavyRain='''
+\033[38;5;240;1m     .-.     \033[0m
+\033[38;5;240;1m    (   ).   \033[0m
+\033[38;5;240;1m   (___(__)  \033[0m
+\033[38;5;21;1m  ‚‘‚‘‚‘‚‘   \033[0m
+\033[38;5;21;1m  ‚’‚’‚’‚’   \033[0m
+'''
 
-    snow='''
-    \033[38;5;250m     .-.     \033[0m
-    \033[38;5;250m    (   ).   \033[0m
-    \033[38;5;250m   (___(__)  \033[0m
-    \033[38;5;255m    *  *  *  \033[0m
-    \033[38;5;255m   *  *  *   \033[0m
-    '''
+snow='''
+\033[38;5;250m     .-.     \033[0m
+\033[38;5;250m    (   ).   \033[0m
+\033[38;5;250m   (___(__)  \033[0m
+\033[38;5;255m    *  *  *  \033[0m
+\033[38;5;255m   *  *  *   \033[0m
+'''
 
-    heavySnow='''
-    \033[38;5;240;1m     .-.     \033[0m
-    \033[38;5;240;1m    (   ).   \033[0m
-    \033[38;5;240;1m   (___(__)  \033[0m
-    \033[38;5;255;1m   * * * *   \033[0m
-    \033[38;5;255;1m  * * * *    \033[0m
-    '''
+heavySnow='''
+\033[38;5;240;1m     .-.     \033[0m
+\033[38;5;240;1m    (   ).   \033[0m
+\033[38;5;240;1m   (___(__)  \033[0m
+\033[38;5;255;1m   * * * *   \033[0m
+\033[38;5;255;1m  * * * *    \033[0m
+'''
 
-    lightSleet='''
-    \033[38;5;250m     .-.     \033[0m
-    \033[38;5;250m    (   ).   \033[0m
-    \033[38;5;250m   (___(__)  \033[0m
-    \033[38;5;111m    ‘ \033[38;5;255m*\033[38;5;111m ‘ \033[38;5;255m*  \033[0m
-    \033[38;5;255m   *\033[38;5;111m ‘ \033[38;5;255m*\033[38;5;111m ‘   \033[0m
-    '''
+lightSleet='''
+\033[38;5;250m     .-.     \033[0m
+\033[38;5;250m    (   ).   \033[0m
+\033[38;5;250m   (___(__)  \033[0m
+\033[38;5;111m    ‘ \033[38;5;255m*\033[38;5;111m ‘ \033[38;5;255m*  \033[0m
+\033[38;5;255m   *\033[38;5;111m ‘ \033[38;5;255m*\033[38;5;111m ‘   \033[0m
+'''
 
-    mist='''
+mist='''
 
-    \033[38;5;251m _ - _ - _ - \033[0m
-    \033[38;5;251m  _ - _ - _  \033[0m
-    \033[38;5;251m _ - _ - _ - \033[0m
+\033[38;5;251m _ - _ - _ - \033[0m
+\033[38;5;251m  _ - _ - _  \033[0m
+\033[38;5;251m _ - _ - _ - \033[0m
 
-    '''
+'''
 
-    /usr/bin/curl -sg "https://api.openweathermap.org/data/3.0/onecall?lat=37.3541132&lon=-121.955174&units=metric&exclude=hourly,daily,minutely,alerts&appid=${OWM_API_TOKEN}" | jq -r .current > ${tempfile}
-    weatherIcon="$(jq -r .weather[].icon < ${tempfile})"
-    description="$(jq -r .weather[].description < ${tempfile})"
-    temperature="$(jq -r .temp < ${tempfile})"
-    windSpeed="$(jq -r .wind_speed < ${tempfile})"
-    windDeg=$(jq -r .wind_deg < ${tempfile})
-    visibility="""$(bc <<< "scale=2; $(jq -r .visibility < ${tempfile})/1000")"""
-    uvi="""$(bc <<< "scale=1; $(jq -r .uvi < ${tempfile})/1")"""
+/usr/bin/curl -sg "https://api.openweathermap.org/data/3.0/onecall?lat=37.3541132&lon=-121.955174&units=metric&exclude=hourly,daily,minutely,alerts&appid=${OWM_API_TOKEN}" | jq -r .current > ${tempfile}
+weatherIcon="$(jq -r .weather[].icon < ${tempfile})"
+description="$(jq -r .weather[].description < ${tempfile})"
+temperature="$(jq -r .temp < ${tempfile})"
+windSpeed="$(jq -r .wind_speed < ${tempfile})"
+windDeg=$(jq -r .wind_deg < ${tempfile})
+visibility="""$(bc <<< "scale=2; $(jq -r .visibility < ${tempfile})/1000")"""
+uvi="""$(bc <<< "scale=1; $(jq -r .uvi < ${tempfile})/1")"""
 
-    # workaround for : E: Numbers with leading 0 are considered octal
-    # Weather icons: https://openweathermap.org/weather-conditions
-    declare -A codeMap=(
-                          ['x01']="sunny"
-                          ['x02']="fewClouds"
-                          ['x03']="scatteredClouds"
-                          ['x04']="brokenClouds"
-                          ['x09']="showerRain"
-                          ['x10']="rain"
-                          ['x11']="thunderStorm"
-                          ['x13']="snow"
-                          ['x50']="mist"
-                        )
+# workaround for : E: Numbers with leading 0 are considered octal
+# Weather icons: https://openweathermap.org/weather-conditions
+declare -A codeMap=(
+                      ['x01']="sunny"
+                      ['x02']="fewClouds"
+                      ['x03']="scatteredClouds"
+                      ['x04']="brokenClouds"
+                      ['x09']="showerRain"
+                      ['x10']="rain"
+                      ['x11']="thunderStorm"
+                      ['x13']="snow"
+                      ['x50']="mist"
+                    )
 
-    declare -A descMap=(
-                          ['01_desc']="$(capitalized ${description})"
-                          ['02_temperature']="\033[38;5;142m${temperature}\033[0m °C"
-                          ['03_windSpeed']="$(windDirection "${windDeg}") \033[38;5;142m${windSpeed}\033[0m m/s"
-                          ['04_visibility']="${visibility} km"
-                          ['05_uvi']="${uvi}"
-                       )
+declare -A descMap=(
+                      ['01_desc']="$(capitalized ${description})"
+                      ['02_temperature']="\033[38;5;142m${temperature}\033[0m °C"
+                      ['03_windSpeed']="$(windDirection "${windDeg}") \033[38;5;142m${windSpeed}\033[0m m/s"
+                      ['04_visibility']="${visibility} km"
+                      ['05_uvi']="${uvi}"
+                   )
 
-    echo -e "${!codeMap["x${weatherIcon:0:-1}"]}"
+echo -e "${!codeMap["x${weatherIcon:0:-1}"]}"
 
-    tput sc
-    tput cuu 6
-    for k in "${!descMap[@]}"; do echo "${k}"; done | sort -h | while read -r _d; do
-      tput cuf 15
-      echo -e "${descMap[${_d}]}"
-    done
+tput sc
+tput cuu 6
+for k in "${!descMap[@]}"; do echo "${k}"; done | sort -h | while read -r _d; do
+  tput cuf 15
+  echo -e "${descMap[${_d}]}"
+done
 
-    tput rc
-    ```
-    <!--endsec-->
+tput rc
+```
+<!--endsec-->
 
-  - [associated `now` cmd](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/now#L19)
-    <!--sec data-title="now" data-id="section4" data-show=true data-collapse=true ces-->
-    ```bash
+- [associated `now` cmd](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/now#L19)
+  <!--sec data-title="now" data-id="section4" data-show=true data-collapse=true ces-->
+  ```bash
+  #--------- WEATHER ----------------------------------------------------------
+  curl wttr.in/sanjose?QmM0 --fail --silent --max-time 3 > /tmp/now-weather
+  if [[ 0 -ne $? ]]; then
+    ~/.marslo/bin/iweather > /tmp/now-weather
+  fi
 
-    #--------- WEATHER ----------------------------------------------------------
-    curl wttr.in/sanjose?QmM0 --fail --silent --max-time 3 > /tmp/now-weather
-    if [[ 0 -ne $? ]]; then
-      ~/.marslo/bin/iweather > /tmp/now-weather
-    fi
-
-    if grep '°C' /tmp/now-weather >/dev/null 2>&1; then
-      WeatherSuccess=true
-      cat /tmp/now-weather
-    else
-      WeatherSuccess=false
-      echo "                              "
-      echo "                              "
-      echo "                              "
-      echo "                              "
-      echo "                              "
-      echo "                              "
-      echo "                              "
-      echo " "
-    fi
+  if grep '°C' /tmp/now-weather >/dev/null 2>&1; then
+    WeatherSuccess=true
+    cat /tmp/now-weather
+  else
+    WeatherSuccess=false
+    echo "                              "
+    echo "                              "
+    echo "                              "
+    echo "                              "
+    echo "                              "
+    echo "                              "
+    echo "                              "
     echo " "
-    ```
-    <!--endsec-->
+  fi
+  echo " "
+  rm -rf /tmp/now-weather
+  ```
+  <!--endsec-->
 
-  ![iweather and now](../screenshot/widget/iweather.png)
+![iweather and now](../screenshot/widget/iweather.png)
 
-- [uriel1998/weather.sh](https://github.com/uriel1998/weather.sh)
+### [uriel1998/weather.sh](https://github.com/uriel1998/weather.sh)
   - [How to start using professional collections](https://openweathermap.org/appid)
-- [szantaii/bash-weather](https://github.com/szantaii/bash-weather)
+
+### [szantaii/bash-weather](https://github.com/szantaii/bash-weather)
 
 
 ## others
