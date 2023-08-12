@@ -521,10 +521,9 @@ EOF
 > - [#4136: Installing jdt.ls for Java support...FAILED (Similar to #3972 & #3974)](https://github.com/ycm-core/YouCompleteMe/issues/4136)
 > - [#3974: 404 error downloading JDT.LS](https://github.com/ycm-core/YouCompleteMe/issues/3974)
 
-- [solution 1](https://github.com/ycm-core/ycmd/blob/master/build.py#L92)
-  - using `ycm-core/YouCompleteMe` instead of [`tabnine/YouCompleteMe`](https://github.com/tabnine/YouCompleteMe/blob/master/.gitmodules#L3) ( [details](https://github.com/tabnine/ycmd/blob/master/build.py#L92) )
+1. [solution 1](https://github.com/ycm-core/ycmd/blob/master/build.py#L92): using `ycm-core/YouCompleteMe` instead of [`tabnine/YouCompleteMe`](https://github.com/tabnine/YouCompleteMe/blob/master/.gitmodules#L3) ( [details](https://github.com/tabnine/ycmd/blob/master/build.py#L92) )
 
-- solution 2:
+1. solution 2:
   ```bash
   $ git diff -- build.py
   diff --git a/build.py b/build.py
@@ -547,7 +546,7 @@ EOF
    RUST_TOOLCHAIN = 'nightly-2022-08-17'
   ```
 
-- [solution 3](https://github.com/ycm-core/YouCompleteMe/issues/4136#issuecomment-1448333945)
+1. [solution 3](https://github.com/ycm-core/YouCompleteMe/issues/4136#issuecomment-1448333945)
   - download the tar.gz manually
     - [snapshots](https://download.eclipse.org/jdtls/snapshots/)
     - [milestone](https://projects.eclipse.org/projects/eclipse.jdt.ls)
@@ -687,16 +686,15 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 
   - solution:
 
-    - ultimate solution
-      - using `YouCompleteMe/third_party/ycmd` replace the `tabnine-vim/third_party/ycmd`
-        ```bash
-        $ cd ~/.vim/bundle
-        $ mv tabnine-vim/third_party/ycmd{,.bak}
-        $ cp -r YouCompleteMe/third_party/ycmd  tabnine-vim/third_party/
+    1. ultimate solution: using `YouCompleteMe/third_party/ycmd` replace the `tabnine-vim/third_party/ycmd`
+      ```bash
+      $ cd ~/.vim/bundle
+      $ mv tabnine-vim/third_party/ycmd{,.bak}
+      $ cp -r YouCompleteMe/third_party/ycmd  tabnine-vim/third_party/
 
-        $ python install.py --all
-        ```
-    - replace the libclang 6.0.0 to [`16.0.1`](https://github.com/ycm-core/ycmd/blob/master/build.py#L110)
+      $ python install.py --all
+      ```
+    1. replace the libclang 6.0.0 to [`16.0.1`](https://github.com/ycm-core/ycmd/blob/master/build.py#L110)
 
       - `./ycmd/cpp/ycm/CMakeLists.txt`
         ```bash
