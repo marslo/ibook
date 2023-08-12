@@ -551,17 +551,23 @@
 
 ### [iweather](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/iweather)
 
-<!--sec data-title="iweather" data-id="section3" data-show=true data-collapse=true ces-->
 ```bash
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC2034,SC1111,SC1110
 # ===========================================================================
-#     FileName : iWeather
-#       Author : marslo.jiao@gmail.com
+#     FileName : iweather
+#       Author : marslo
 #      Created : 2023-08-11 03:05:27
-#   LastChange : 2023-08-11 03:13:50
+#   LastChange : 2023-08-12 00:55:09
 # ===========================================================================
 
+shopt -s extglob
+
+# https://github.com/ppo/bash-colors (v0.3.0)
+# shellcheck disable=SC2015,SC2059
+c() { [ $# == 0 ] && printf "\e[0m" || printf "$1" | sed 's/\(.\)/\1;/g;s/\([SDIUFNHT]\)/2\1/g;s/\([KRGYBMCW]\)/3\1/g;s/\([krgybmcw]\)/4\1/g;y/SDIUFNHTsdiufnhtKRGYBMCWkrgybmcw/12345789123457890123456701234567/;s/^\(.*\);$/\\e[\1m/g'; }
+function die() { echo -e "$(c R)~~> ERROR$(c) : $*" >&2; exit 2; }
+function showHelp() { echo -e "${usage}"; exit 0; }
 function capitalized() {
   result=''
   for _i in "$@"; do result+=${_i^}; result+=' '; done
@@ -591,8 +597,152 @@ function windDirection() {
   fi
 }
 
-tempfile="/tmp/open-weather-map.json"
+function getLatLon() {
+  ccity=$(echo "$*" | xargs | sed 's/ /%20/g')
+  # curl -skg "${API_HOME}?q=${ccity,,}&appid=${OWM_API_TOKEN}&limit=5" | jq -r '.[] | select(.state == "California") | .lat ...'
+  curl -skg "${API_HOME}/geo/1.0/direct?q=${ccity,,}&limit=1&appid=${appid}" | jq -r '.[] | "lat=" + (.lat|tostring) + "&lon=" + (.lon|tostring)' > "${locFile}"
+  if [[ ! -s ${locFile} ]] || [[ ! -f "${locFile}" ]]; then
+    echo '-1'
+  else
+    cat "${locFile}"
+  fi
+}
 
+function getWeatherData() {
+  param="$*"
+  loc=$(getLatLon "$param")
+  [[ '-1' = "${loc}" ]] && die "city '$(c Y)${param}$(c)' cannot be found ! manual check the valid name from https://openweathermap.org/ !"
+  units='metric'
+  exclude='hourly,daily,minutely,alerts'
+  # shellcheck disable=SC1111,SC1110,SC2086
+  curl -skg "${API_HOME}/data/3.0/onecall?${loc}&units=${units}&exclude=${exclude}&appid=${appid}" \
+       | jq -r .current > ${tempfile}
+}
+
+source "$(dirname "$0")/iweather.icon"
+API_HOME="https://api.openweathermap.org"
+tempfile='/tmp/open-weather-map.json'
+locFile='/tmp/omw-lat-lon'
+cname='San Jose'
+verbose='false'
+appid="${OWM_API_TOKEN}"
+usage="""
+$(c M)iweather$(c) - show weather status of city
+\nNOTICE:
+\n\t1. requires https://openweathermap.org/api API key first! and setup environment variable:
+\t   $(c Y)\$ export OWM_API_TOKEN=xxxxx$(c)
+\t2. copy or move $(c G)iweather.icon$(c) into same directory with current script
+\t   $(c Y)\$ cp mylinux/config/home/.marslo/bin/iweather.icon .$(c)
+\t   $(c sW)# or$(c)
+\t   $(c Y)\$ curl -o iweather.icon https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/bin/iweather.icon$(c)
+\nSYNOPSIS:
+\n\t$(c sY)\$ iweather [ -h | -v | -c <city> ]$(c)
+\nEXAMPLE:
+\n\tshow help
+\t   $(c G)\$ iweather -h$(c)
+\n\tto show current weather stats
+\t   $(c G)\$ iweather <city name>$(c) | $(c G)iweather -c <city name>$(c)
+USAGE:
+\n\t $ iweather -v
+\t  $(c G)Santa Clara$(c) : Few Clouds
+\t
+\t \033[38;5;226m   \\  /\033[0m        \033[38;5;214m17.36\033[0m °C
+\t \033[38;5;226m _ /""\033[38;5;250m.-.    \033[0m    → \033[38;5;220m3.6\033[0m m/s
+\t \033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m  10.00 km
+\t \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m  80 %
+\t                0 mW/cm2
+\n\t $ iweather -c beijing -v
+\t  $(c G)Beijing$(c) : Clear Sky
+\t
+\t\033[38;5;226m    \\   /    \033[0m   \033[38;5;214m31.94\033[0m °C
+\t\033[38;5;226m     .-.     \033[0m   ↑ \033[38;5;220m2.05\033[0m m/s
+\t\033[38;5;226m  ― (   ) ―  \033[0m   10.00 km
+\t\033[38;5;226m     \`-’     \033[0m   57 %
+\t\033[38;5;226m    /   \\    \033[0m   4.6 mW/cm2
+"""
+
+if [[ 0 -eq $# ]]; then
+  cname="${cname}"
+# simple usage: not starts with '-' && not contains '='
+elif [[ 1 -eq $# ]] && [[ '-' != "${1::1}" ]] ; then
+  cname="$1"
+else
+  # credit belongs to https://stackoverflow.com/a/28466267/519360
+  # shellcheck disable=SC2295
+  while getopts :hvc:-: OPT; do
+    if [ "$OPT" = "-" ]; then
+      OPT="${OPTARG%%=*}"
+      OPTARG="${OPTARG#$OPT}"
+      OPTARG="${OPTARG#=}"
+    fi
+    case "$OPT" in
+      h   ) help='true'                 ;;
+      v   ) verbose=true                ;;
+      c   ) cname="$OPTARG"             ;;
+      ??* ) die "Illegal option --$OPT" ;;
+      ?   ) die "Illegal option --$OPT" ;;
+    esac
+  done
+  [[ 1 -eq $OPTIND ]] && showHelp
+fi
+
+
+[[ 'true' = "${help}"    ]] && showHelp
+[[ -z "${OWM_API_TOKEN}" ]] && die "setup environment variable '$(c M)OWM_API_TOKEN$(c)' first! check details via $(c Y)$ iweather -h$(c)."
+[[ -z "${sunny}"         ]] && die "setup $(c G)weather.icon$(c) first!"
+
+getWeatherData "${cname}"
+weatherIcon="$(jq -r .weather[].icon < ${tempfile})"
+description="$(jq -r .weather[].description < ${tempfile})"
+temperature="$(jq -r .temp < ${tempfile})"
+windSpeed="$(jq -r .wind_speed < ${tempfile})"
+windDeg=$(jq -r .wind_deg < ${tempfile})
+humidity=$(jq -r .humidity < ${tempfile})
+visibility="""$(bc <<< "scale=2; $(jq -r .visibility < ${tempfile})/1000")"""
+uvi="""$(bc <<< "scale=1; $(jq -r .uvi < ${tempfile})/1")"""
+
+# workaround for : E: Numbers with leading 0 are considered octal
+# Weather icons: https://openweathermap.org/weather-conditions
+declare -A codeMap=(
+                      ['x01']="sunny"
+                      ['x02']="fewClouds"
+                      ['x03']="scatteredClouds"
+                      ['x04']="brokenClouds"
+                      ['x09']="showerRain"
+                      ['x10']="rain"
+                      ['x11']="thunderStorm"
+                      ['x13']="snow"
+                      ['x50']="mist"
+                    )
+
+# shellcheck disable=SC2086
+declare -A descMap=(
+                      ['01_temperature']="\033[38;5;214m${temperature}\033[0m °C"
+                      ['02_windSpeed']="$(windDirection "${windDeg}") \033[38;5;220m${windSpeed}\033[0m m/s"
+                      ['03_visibility']="${visibility} km"
+                      ['04_humidity']="${humidity} %"
+                      ['05_uvi']="${uvi} mW/cm2"
+                   )
+
+[[ 'true' = "${verbose}" ]] && echo -e " $(c G)$(capitalized ${cname})$(c): $(capitalized ${description})"
+echo -e "${!codeMap["x${weatherIcon:0:-1}"]}"
+
+tput sc
+tput cuu 6
+for k in "${!descMap[@]}"; do echo "${k}"; done | sort -h | while read -r _d; do
+  tput cuf 15
+  echo -e "${descMap[${_d}]}"
+done
+
+tput rc
+
+rm -rf "${tempfile}" "${locFile}"
+
+# vim: ft=sh ts=2 sts=2 sw=2 et
+```
+
+<!--sec data-title="iweather.icon" data-id="section3" data-show=true data-collapse=true ces-->
+```bash
 ## more for weather icons: https://erikflowers.github.io/weather-icons/
 sunny='''
 \033[38;5;226m    \\   /    \033[0m
@@ -604,7 +754,7 @@ sunny='''
 
 fewClouds='''
 \033[38;5;226m   \\  /\033[0m
-\033[38;5;226m _ /\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m _ /""\033[38;5;250m.-.    \033[0m
 \033[38;5;226m   \\_\033[38;5;250m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 
@@ -627,7 +777,7 @@ brokenClouds='''
 '''
 
 lightShowers='''
-\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;250m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 \033[38;5;111m     ‘ ‘ ‘ ‘ \033[0m
@@ -635,7 +785,7 @@ lightShowers='''
 '''
 
 heavyShowers='''
-\033[38;5;226m _`/\"\"\033[38;5;240;1m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;240;1m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;240;1m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;240;1m(___(__) \033[0m
 \033[38;5;21;1m   ‚‘‚‘‚‘‚‘  \033[0m
@@ -643,7 +793,7 @@ heavyShowers='''
 '''
 
 lightSnowShowers='''
-\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;250m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 \033[38;5;255m     *  *  * \033[0m
@@ -651,7 +801,7 @@ lightSnowShowers='''
 '''
 
 heavySnowShowers='''
-\033[38;5;226m _`/\"\"\033[38;5;240;1m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;240;1m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;240;1m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;240;1m(___(__) \033[0m
 \033[38;5;255;1m    * * * *  \033[0m
@@ -659,7 +809,7 @@ heavySnowShowers='''
 '''
 
 lightSleetShowers='''
-\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;250m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 \033[38;5;111m     ‘ \033[38;5;255m*\033[38;5;111m ‘ \033[38;5;255m* \033[0m
@@ -667,7 +817,7 @@ lightSleetShowers='''
 '''
 
 showerRain='''
-\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;250m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 \033[38;5;228;5m    ⚡\033[38;5;111;25m‘ ‘\033[38;5;228;5m⚡\033[38;5;111;25m‘ ‘ \033[0m
@@ -682,8 +832,9 @@ thunderStorm='''
 \033[38;5;21;1m  ‚’‚’\033[38;5;228;5m⚡\033[38;5;21;25m’‚’  \033[0m
 '''
 
+
 thunderySnowShowers='''
-\033[38;5;226m _`/\"\"\033[38;5;250m.-.    \033[0m
+\033[38;5;226m _`/""\033[38;5;250m.-.    \033[0m
 \033[38;5;226m  ,\\_\033[38;5;250m(   ).  \033[0m
 \033[38;5;226m   /\033[38;5;250m(___(__) \033[0m
 \033[38;5;255m     *\033[38;5;228;5m⚡\033[38;5;255;25m*\033[38;5;228;5m⚡\033[38;5;255;25m* \033[0m
@@ -737,48 +888,6 @@ mist='''
 \033[38;5;251m _ - _ - _ - \033[0m
 
 '''
-
-/usr/bin/curl -sg "https://api.openweathermap.org/data/3.0/onecall?lat=37.3541132&lon=-121.955174&units=metric&exclude=hourly,daily,minutely,alerts&appid=${OWM_API_TOKEN}" | jq -r .current > ${tempfile}
-weatherIcon="$(jq -r .weather[].icon < ${tempfile})"
-description="$(jq -r .weather[].description < ${tempfile})"
-temperature="$(jq -r .temp < ${tempfile})"
-windSpeed="$(jq -r .wind_speed < ${tempfile})"
-windDeg=$(jq -r .wind_deg < ${tempfile})
-visibility="""$(bc <<< "scale=2; $(jq -r .visibility < ${tempfile})/1000")"""
-uvi="""$(bc <<< "scale=1; $(jq -r .uvi < ${tempfile})/1")"""
-
-# workaround for : E: Numbers with leading 0 are considered octal
-# Weather icons: https://openweathermap.org/weather-conditions
-declare -A codeMap=(
-                      ['x01']="sunny"
-                      ['x02']="fewClouds"
-                      ['x03']="scatteredClouds"
-                      ['x04']="brokenClouds"
-                      ['x09']="showerRain"
-                      ['x10']="rain"
-                      ['x11']="thunderStorm"
-                      ['x13']="snow"
-                      ['x50']="mist"
-                    )
-
-declare -A descMap=(
-                      ['01_desc']="$(capitalized ${description})"
-                      ['02_temperature']="\033[38;5;142m${temperature}\033[0m °C"
-                      ['03_windSpeed']="$(windDirection "${windDeg}") \033[38;5;142m${windSpeed}\033[0m m/s"
-                      ['04_visibility']="${visibility} km"
-                      ['05_uvi']="${uvi}"
-                   )
-
-echo -e "${!codeMap["x${weatherIcon:0:-1}"]}"
-
-tput sc
-tput cuu 6
-for k in "${!descMap[@]}"; do echo "${k}"; done | sort -h | while read -r _d; do
-  tput cuf 15
-  echo -e "${descMap[${_d}]}"
-done
-
-tput rc
 ```
 <!--endsec-->
 
