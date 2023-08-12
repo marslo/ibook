@@ -8,11 +8,13 @@
 - [tricky](#tricky)
 - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
 - [Switching case of characters](#switching-case-of-characters)
+- [vimrc examples](#vimrc-examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 {% hint style='tip' %}
 > reference:
+> - [Bram Moolenaar](https://www.moolenaar.net/)
 > - [vim:tip](https://vim.fandom.com/wiki/Category:VimTip)
 > - [Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
 > - [Search for visually selected text](https://vim.fandom.com/wiki/Search_for_visually_selected_text)
@@ -123,3 +125,7 @@
   ```vim
   g~
   ```
+
+### vimrc examples
+
+- [reiter/.vim-files/vimrc](https://github.com/jreiter/.vim-files/blob/master/vimrc)

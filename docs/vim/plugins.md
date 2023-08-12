@@ -14,6 +14,8 @@
   - [rainbow](#rainbow)
   - [tabular](#tabular)
   - [ycm](#ycm)
+  - [lsp-examples](#lsp-examples)
+  - [vim-easycomplete](#vim-easycomplete)
   - [tabnine-vim](#tabnine-vim)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -350,6 +352,8 @@ endif
 > - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 > - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
 >   - [jdt-language-server-1.19.0-202301090450.tar.gz)](https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-1.19.0-202301090450.tar.gz)
+> - [Vim/YouCompleteMe](https://wiki.archlinux.org/title/Vim/YouCompleteMe)
+> - [在vim中配置最新YouCompleteMe代码自动补全插件](https://blog.csdn.net/qq_28584889/article/details/97131637)
 
 
 - environment
@@ -381,6 +385,7 @@ endif
 
   > [!NOTE|label:references:]
   > - [vim ycm c++ 环境搭建](https://www.xjx100.cn/news/651145.html?action=onClick)
+  > - [MAC安装YCM](https://www.xjx100.cn/news/651144.html?action=onClick)
   >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
   >   - C#：`brew install Mono` first and enabled by `--cs-completer`
   >   - Go：`brew install go` and enabled by `--go-completer`
@@ -389,6 +394,19 @@ endif
   >   - Rust: install Rust，`--rust-completer`
   >   - Java: `brew install java`，enabled via `--java-completer`
   >   - for all support : enabled via `--all`
+
+
+| OPTION             | LANGUAGE               | TOOL                          | DEPENDENCIES      |
+|--------------------|------------------------|-------------------------------|-------------------|
+| --clang-completer  | C, C++, Objective-C    | Clang（libclang）             | Clang             |
+| --clangd-completer | C, C++, Objective-C    | clang-tools-extra<br>(clangd) | clang-tools-extra |
+| --cs-completer     | C#                     | Mono Runtime                  | Mono Runtime      |
+| --rust-completer   | Rust                   | RustToolChains                | RustToolChains    |
+| --go-completer     | golang                 | GoToolchain                   | GoToolchain       |
+| --js-completer     | JavaScript             | Tern                          | node.js、npm      |
+| --ts-completer     | JavaScript, TypeScript | tsserver                      | node.js、npm      |
+| --java-completer   | Java                   | eclipse.jdt.ls                | JDK8              |
+| --all              | all                    | -                             | -                 |
 
   ```bash
   $ brew install cmake python go nodejs
@@ -436,10 +454,65 @@ endif
 > [!NOTE|label:references:]
 > - [CM代码补全插件找不到c++头文件](https://www.xjx100.cn/news/651148.html?action=onClick)
 
+> [!TIP|label:tips]
+> - to disable prompt message for extra config in vimrc
+>   ```
+>   let g:ycm_confirm_extra_conf = 0
+>   ```
+
 ```bash
+# create simple file for sample.cpp
+$ g++ -v test.cpp
+#include “…” search starts here:
+#include <…> search starts here:
+/usr/include/c++/11
+/usr/include/x86_64-linux-gnu/c++/11
+/usr/include/c++/11/backward
+/usr/lib/gcc/x86_64-linux-gnu/11/include
+/usr/local/include
+/usr/include/x86_64-linux-gnu
+/usr/include
+
+$ cat >> ~/.ycm_extra_conf.py << EOF
+flags = [
+'-Wall',
+'-Wextra',
+#'-Werror',
+#'-Wc++98-compat',
+'-Wno-long-long',
+'-Wno-variadic-macros',
+'-fexceptions',
+'-stdlib=libc++',
+# THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
+# language to use when compiling headers. So it will guess. Badly. So C++
+# headers will be compiled as C headers. You don't want that so ALWAYS specify
+# a "-std=<something>".
+# For a C project, you would set this to something like 'c99' instead of
+# 'c++11'.
+'-std=c++11',
+# ...and the same thing goes for the magic -x option which specifies the
+# language that the files to be compiled are written in. This is mostly
+# relevant for c++ headers.
+# For a C project, you would set this to 'c' instead of 'c++'.
+'-x', 'c++',
+'-I', '.',
+'-isystem', '/usr/include/c++/11',
+'-isystem', '/usr/include/x86_64-linux-gnu/c++/11',
+'-isystem', '/usr/include/c++/11/backward',
+'-isystem', '/usr/lib/gcc/x86_64-linux-gnu/11/include',
+'-isystem', '/usr/local/include',
+'-isystem', '/usr/include/x86_64-linux-gnu',
+'-isystem', '/usr/include',
+]
+EOF
 ```
 
 #### troubleshooting
+
+- how to debug
+  - `:message`
+  - `:YcmDebugInfo`
+  - `:YcmDiags`
 
 ##### downlaod failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
 
@@ -481,8 +554,123 @@ endif
   - copy/move package into `YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/`
 
 
-### [tabnine-vim]()
+### [lsp-examples](https://github.com/ycm-core/lsp-examples)
 
+> [!NOTE|label:references:]
+> - [YouCompleteMe](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe)
+>   - [YouCompleteMe with JSON](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/JSON)
+>   - [YouCompleteMe with YAML](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/YAML)
+>   - [YouCompleteMe with VimL](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/VimL)
+> - [My Julia setup for vim with YCM on Linux](https://discourse.julialang.org/t/my-julia-setup-for-vim-with-ycm-on-linux/45485)
+
+- vimrc
+  ```bash
+  $ cat ~/.vimrc
+  ...
+
+  Bundle 'ycm-core/lsp-examples'
+
+  $ vim +BundleInstall
+  ```
+
+- install
+  ```bash
+  $ cd ~/.vim/bundle/lsp-examples
+  $ python install.py --enable-cmake \
+                      --enable-python \
+                      --enable-viml \
+                      --enable-bash \
+                      --enable-json \
+                      --enable-yaml \
+                      --enable-groovy \
+                      --enable-docker
+  $ cat /Users/marslo/.vim/bundle/lsp-examples/vimrc.generated | pbcopy
+  # paste into .vimrc
+  ```
+
+- sample vimrc
+  ```bash
+  """ ycm lsp
+  let g:ycm_lsp_dir = '~/.vim/bundle/lsp-examples'
+  let s:pip_os_dir  = 'bin'
+  let g:ycm_language_server = [
+    \   { 'name': 'docker',
+    \     'filetypes': [ 'dockerfile' ],
+    \     'cmdline': [ expand( g:ycm_lsp_dir . '/docker/node_modules/.bin/docker-langserver' ), '--stdio' ]
+    \   },
+    \   {
+    \     'name': 'cmake',
+    \     'cmdline': [ expand( g:ycm_lsp_dir . '/cmake/venv/' . s:pip_os_dir . '/cmake-language-server' )],
+    \     'filetypes': [ 'cmake' ],
+    \    },
+    \   {
+    \     'name': 'python',
+    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/python/node_modules/.bin/pyright-langserver' ), '--stdio' ],
+    \     'filetypes': [ 'python' ],
+    \   },
+    \   { 'name': 'vim',
+    \     'filetypes': [ 'vim' ],
+    \     'cmdline': [ expand( g:ycm_lsp_dir . '/viml/node_modules/.bin/vim-language-server' ), '--stdio' ]
+    \   },
+    \   {
+    \     'name': 'bash',
+    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/bash/node_modules/.bin/bash-language-server' ), 'start' ],
+    \     'filetypes': [ 'sh', 'bash' ],
+    \   },
+    \   {
+    \     'name': 'json',
+    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/json/node_modules/.bin/vscode-json-languageserver' ), '--stdio' ],
+    \     'filetypes': [ 'json' ],
+    \     'capabilities': { 'textDocument': { 'completion': { 'completionItem': { 'snippetSupport': v:true } } } },
+    \   },
+    \   {
+    \     'name': 'yaml',
+    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/yaml/node_modules/.bin/yaml-language-server' ), '--stdio' ],
+    \     'filetypes': [ 'yaml' ],
+    \     'capabilities': {
+    \       'workspace': { 'configuration': v:true },
+    \       'textDocument': {
+    \         'completion': {
+    \           'completionItem': { 'snippetSupport': v:true },
+    \         }
+    \       }
+    \     },
+    \   },
+    \   {
+    \     'name': 'groovy',
+    \     'cmdline': [ 'java', '-jar', expand( g:ycm_lsp_dir . '/groovy/groovy-language-server/build/libs/groovy-language-server-all.jar' ) ],
+    \     'filetypes': [ 'groovy' ]
+    \   }
+    \ ]
+  ```
+
+#### [GroovyLanguageServer/groovy-language-server](https://github.com/GroovyLanguageServer/groovy-language-server)
+```bash
+# java has to be less than jdk 19
+$ brew install openjdk@17
+$ export JAVA_HOME='/usr/local/opt/openjdk@17'
+$ export PATH=${JAVA_HOME}/bin:${PATH}
+$ export CPPFLAGS="-I${JAVA_HOME}/include ${CPPFLAGS}"
+
+$ git clone git@github.com:GroovyLanguageServer/groovy-language-server.git
+$ ./gradew build
+
+# run
+$ git@github.com:GroovyLanguageServer/groovy-language-server.git
+```
+
+### [vim-easycomplete](https://github.com/jayli/vim-easycomplete)
+
+> [!NOTE|label:references:]
+> - [How to improve your vim/nvim coding experience with vim-easycomplete?](https://dev.to/jayli/how-to-improve-your-vimnvim-coding-experience-with-vim-easycomplete-29o0)
+> - [Vim-EasyComplete 体验优化踩坑记录](https://zhuanlan.zhihu.com/p/425555993)
+> - [vim-easycomplete VS vim-lsp](https://www.libhunt.com/compare-vim-easycomplete-vs-vim-lsp?ref=compare)
+> - [Which lsp plugin should I use?](https://www.reddit.com/r/vim/comments/7lnhrt/which_lsp_plugin_should_i_use/)
+
+### [tabnine-vim](https://github.com/tabnine/YouCompleteMe)
+
+> [!DANGER|label:ERROR]
+> not working for python3.9+
 
 #### troubleshooting
 
