@@ -7,7 +7,10 @@
     - [etcd](#etcd)
     - [kube-apiserver](#kube-apiserver)
 - [show secrets tls.crt](#show-secrets-tlscrt)
+  - [create secrets](#create-secrets)
+  - [duplicate secrets to the other ns](#duplicate-secrets-to-the-other-ns)
   - [show server.crt](#show-servercrt)
+  - [show all tls](#show-all-tls)
   - [show ca.crt](#show-cacrt)
 - [renew both certificates and kubeconfig](#renew-both-certificates-and-kubeconfig)
   - [check info](#check-info)
@@ -144,14 +147,48 @@
 
 # show secrets tls.crt
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [Quick Tip: SSL Cert Expiry from Kubernetes Secrets](https://syvarth.com/post/ssl-cert-expiry-kubernetes-secret)
+
+## create secrets
+- by command
+  ```bash
+  $ kubectl create secret tls my-certs \
+            --key .devops/certs/server.key \
+            --cert .devops/certs/server.crt \
+            -n ingress-nginx
+  ```
+
+- by yaml
+  ```bash
+  $ echo "apiVersion: v1
+  kind: Secret
+  type: kubernetes.io/tls
+  metadata:
+    name: mytest-cert
+    namespace: ingress-nginx
+  data:
+    tls.crt: $(cat $HOME/.devops/certs/server.csr | base64 -w0)
+    tls.key: $(cat $HOME/.devops/certs/server.key | base64 -w0)" |
+  kubectl apply -f -
+  ```
+
+## duplicate secrets to the other ns
+
+{% hint style='tip' %}
+> reference:
+> - [others](https://github.com/jetstack/cert-manager/issues/494)
+> - [Pro-Tip – Copying Kubernetes Secrets Between Namespaces](https://www.revsys.com/tidbits/copying-kubernetes-secrets-between-namespaces/)
+{% endhint %}
+
+```bash
+$ kubectl -n ingress-nginx get secrets my-certs -o yaml --export | kubectl apply -n devops -f -
+```
 
 ## show server.crt
 ```bash
 $ kubectl -n kube-system \
-          get secrets my-tls \
+          get secrets sample-tls \
           -o yaml \
           -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
@@ -162,10 +199,24 @@ $ kubectl -n kube-system \
             Not After : Aug 18 23:59:59 2022 GM
 ```
 
+## show all tls
+```bash
+$ kubectl get ingress --all-namespaces --no-headers |
+          awk '{print $1}' |
+          sort -u |
+          while read -r ns; do
+            echo "-- ${ns} --";
+              kubectl -n ${ns} get secret sample-tls -o yaml -o "jsonpath={.data['tls\.crt']}" |
+                      base64 -d -w0 |
+                      sed '/-----END CERTIFICATE-----/q' |
+                      openssl x509 -text -noout | grep 'Not'
+          done
+```
+
 ## show ca.crt
 ```bash
 $ kubectl -n kube-system \
-          get secrets my-tls \
+          get secrets sample-tls \
           -o yaml \
           -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
@@ -258,7 +309,7 @@ $ sudo cp -rp --parents /etc/kubernetes/pki "${backupFolder}"
 # for kubelet
 $ sudo cp -rp /var/lib/kubelet/config.yaml{,.backup.${timestampe}}
 $ sudo cp -rp --parents /var/lib/kubelet/pki "${backupFolder}"
-$ sudo cp -rp --parents /var/lib/kubelet/pki{,.backup.${timestampe}}
+$ sudo cp -r /var/lib/kubelet/pki{,.backup.${timestampe}}
 $ sudo cp -rp --parents /var/lib/kubelet/config.yaml "${backupFolder}"
 
 # for kubeconfig
