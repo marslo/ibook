@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [docker list](#docker-list)
 - [docker inspect](#docker-inspect)
   - [show docker image](#show-docker-image)
   - [show entrypoint](#show-entrypoint)
@@ -18,6 +19,16 @@
 - [ps format](#ps-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## docker list
+
+- sort by image size
+
+  {% raw %}
+  ```bash
+  $ docker images --format "{{.ID}}\t{{.Size}}\t{{.Repository}}:{{.Tag}}" | sort -k 2 -hr
+  ```
+  {%endraw%}
 
 ## docker inspect
 

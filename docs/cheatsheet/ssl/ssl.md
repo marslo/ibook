@@ -60,6 +60,12 @@
 > - [Kubernetes Authentication and Authorization with X509 client certificates](https://medium.com/@sureshpalemoni/kubernetes-authentication-and-authorization-with-x509-client-certificates-edbc3517c10)
 > - [Proactively Handling Certificate Expiration With ssl-cert-check](https://prefetch.net/articles/checkcertificate.html)
 >   - [Matty9191/ssl-cert-check](https://github.com/Matty9191/ssl-cert-check)
+> - [Converting a Java Keystore into PEM Format](https://stackoverflow.com/a/656559/2940319)
+>   - `*.jks` - keystore in java format.
+>   - `*.p12` - keystore in PKCS#12 format.
+>   - `*.pem` - all keys and certs from keystore, in PEM format.
+> - [Additional Keystore Formats (PKCS12)](https://docs.oracle.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html#InstallProbs)
+> - [How to setup Microsoft Active Directory Certificate Services [AD CS]](https://www.virtuallyboring.com/setup-microsoft-active-directory-certificate-services-ad-cs/)
 {% endhint %}
 
 # openssl
@@ -483,9 +489,7 @@ $ echo | openssl s_client \
 ```
 - check
   ```bash
-  $ keytool -printcert \
-            -v \
-            -file cacert.crt
+  $ keytool -printcert -v -file cacert.crt
   ```
 
 # cheatsheet

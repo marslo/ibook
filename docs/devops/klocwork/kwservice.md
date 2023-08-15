@@ -60,6 +60,11 @@ Checking Klocwork Server [running on my.klocwork.com:8080]
 - stop
   ```bash
   $ kwservice --projects-root /projects/root stop
+  Using projects root: /projects_root
+  Local Host is: devops-klocwork-7********b-s***b [10.244.6.81]
+  Stopping License Server  [running on l******2:3***8]
+  Stopping Database Server [stopped]
+  Stopping Klocwork Server [stopped]
   ```
 
 ## check license status
