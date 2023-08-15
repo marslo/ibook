@@ -88,7 +88,8 @@ to add cert into Java for Java services (i.e.: Jenkins)
 > - [bric3/SSLPoke.java](https://gist.github.com/bric3/4ac8d5184fdc80c869c70444e591d3de)
 > - [klasen/sslpoke](https://github.com/klasen/sslpoke)
 > - [Test of java SSL / keystore / cert setup](https://confluence.atlassian.com/download/attachments/117455/SSLPoke.java)
->
+> - [Code Examples](https://docs.oracle.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html#CodeExamples)
+>   - [SSLSocketClient.java](https://docs.oracle.com/javase/6/docs/technotes/guides/security/jsse/samples/sockets/client/SSLSocketClient.java)
 {% endhint %}
 
 <!--sec data-title="SSLPoke.java" data-id="section0" data-show=true data-collapse=true ces-->
@@ -177,6 +178,10 @@ public class SSLPoke {
   $ java -Djavax.net.ssl.trustStore=./LocalTrustStore -jar SSLPoke.jar $HOST $PORT
   ```
 
+- list expired date for all in cacerts
+  ```bash
+  $ keytool --list -v --keystore cacerts | grep "until:" | sed 's/^.*until: //'
+  ```
 
 ### [InstallCert.java](https://github.com/escline/InstallCert)
 

@@ -149,20 +149,23 @@ $ keytool -import \
 
 ## import an entire keystore into another keystore
 ```bash
-$ keytool -importkeystore
-          -srckeystore key.jks -destkeystore NONE
-          -srcstoretype JKS -deststoretype PKCS11
-          -srcstorepass <source keystore password> -deststorepass <destination keystore password>
+$ keytool -importkeystore                          \
+          -srckeystore key.jks -destkeystore NONE  \
+          -srcstoretype JKS -deststoretype PKCS11  \
+          -srcstorepass <source keystore password> \
+          -deststorepass <destination keystore password>
 ```
 
 - import only single alias from keystore to another keystore
   ```bash
-  $ keytool -importkeystore
-            -srckeystore key.jks -destkeystore NONE
-            -srcstoretype JKS -deststoretype PKCS11
-            -srcstorepass <source keystore password> -deststorepass <destination keystore password>
-            -srcalias myprivatekey -destalias myoldprivatekey
-            -srckeypass <source entry password> -destkeypass <destination entry password>
+  $ keytool -importkeystore                                   \
+            -srckeystore key.jks -destkeystore NONE           \
+            -srcstoretype JKS -deststoretype PKCS11           \
+            -srcstorepass <source keystore password>          \
+            -deststorepass <destination keystore password>    \
+            -srcalias myprivatekey -destalias myoldprivatekey \
+            -srckeypass <source entry password>               \
+            -destkeypass <destination entry password>         \
             -noprompt
   ```
 

@@ -18,7 +18,9 @@
   - [creating a report](#creating-a-report)
 - [CI](#ci)
   - [Jenkinsfile](#jenkinsfile)
-- [renew LDAP cert](#renew-ldap-cert)
+- [ssl](#ssl)
+  - [renew LDAP cert](#renew-ldap-cert)
+  - [using a secure klocwork server connection](#using-a-secure-klocwork-server-connection)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -562,14 +564,112 @@ pipeline {
   }
   ```
 
-## renew LDAP cert
+## ssl
+### renew LDAP cert
 
 > [!NOTE|label:references:]
 > - keytool and java : `/opt/Klocwork/Server/_jvm/bin`
 > - [Security Best Practices + Klocwork](https://www.perforce.com/blog/kw/security-best-practices#best)
+> - [Simple bind failed error when trying to connect to Active Directory](https://analyst.phyzdev.net/documentation/help/concepts/simplebindfailederrorwhentryingtoconnecttoactivedirectory.htm)
+> - [Klocwork 部署的安全最佳实践](https://xie.infoq.cn/article/421efc31cd471a3ab2e3991fb)
+> - [[SOLVED]-LDAPS : SIMPLE BIND FAILED-JAVA](https://www.appsloveworld.com/java/100/402/ldaps-simple-bind-failed)
+>   ```bash
+>   - -djdk.tls.client.protocols=tlsv1
+>   + -djdk.tls.client.protocols=tlsv1,tlsv1.1,tlsv1.2,tlsv1.3
+>   ```
+> - [2020.4.1](https://ssdfw-klocwork.marvell.com/documentation/help/)
+>   - [Error occurred during SSL handshake](https://analyst.phyzdev.net/documentation/help/concepts/p4errorduringsslhandshake.htm)
+>   - [Using a secure Klocwork Server connection](https://analyst.phyzdev.net/documentation/help/concepts/usingasecureklocworkserverconnection.htm)
+>   - [Troubleshooting](https://analyst.phyzdev.net/documentation/help/concepts/troubleshootingcr.htm)
+>   - [Setting up LDAP access control](https://analyst.phyzdev.net/documentation/help/concepts/settingupldapaccesscontrol.htm)
 
 ```bash
 $ keytool -import -alias ldaproot -file rootca.cer -keystore cacerts
 $ keytool -import -alias ldapInter -file inter.cer -keystore cacerts
 $ keytool -import -alias ldap -file ldap.cer -keystore cacerts
 ```
+
+### using a secure klocwork server connection
+
+> [!TIP]
+> for klocwork 2020.4 Build 20.4.0.81
+
+- Create a self-signed keystore file
+  ```bash
+  # From <Server_install>, run the following command:
+  # The keystore is saved into the Tomcat config directory at <projects_root>/tomcat/conf.
+  $ _jvm/bin/keytool -genkeypair -alias tomcat \
+                     -keyalg RSA \
+                     -keystore <projects_root>/tomcat/conf/.keystore \
+                     -dname "cn=<KlocworkServer_hostname>, ou=<your_organizational_unit>,o=<your_organization>" \
+                     -keypass changeit \
+                     -storepass changeit
+
+  # i.e.:
+
+  $ _jvm/bin/keytool -genkeypair -alias tomcat \
+                     -keyalg RSA \
+                     -keystore <projects_root>/tomcat/conf/.keystore \
+                     -dname "cn=testserver.klocwork.com, ou=Development, o=Klocwork" \
+                     -keypass changeit \
+                     -storepass changeit
+  ```
+
+- Configure the Klocwork Server to use SSL (manually)
+  ```bash
+
+  $ grep klocwork.protocol <projects_root>/config/admin.conf
+  - klocwork.protocol=http
+  + klocwork.protocol=https
+
+  $ grep Connector <projects_root>/tomcat/conf/server.template
+  -  <Connector port="$PORT" protocol="org.apache.coyote.http11.Http11NioProtocol" maxThreads="64" minSpareThreads="20" redirectPort="8443" acceptCount="200" connectionTimeout="20000" URIEncoding="UTF-8" compression="on" compressionMinSize="2048" noCompressionUserAgents="gozilla,traviata" compressableMimeType="text/html,text/xml,text/javascript" maxPostSize="-1" />
+  +  <Connector port="$PORT" maxthreads="4-" minSpareThreads="20" maxSpareThreads="40" enableLooksups="false" redirectPort="8443" acceptCount="50" debug="0" connectionTimeout="20000" compression="on" compressionMinSize="2048" noCompressionUserAgents=".*MSIE.*,gozilla,traviata" compressableMimeType="text/html,text/xml" maxPostSize="0" />
+  ```
+
+- restart klocwork service
+
+  > [!TIP|label:see also:]
+  > - [iMarslo: start/restart service](kwservice.html#startrestart-service)
+
+  ```bash
+  $ kwservice --projects-root <projects_root> stop
+  $ kwservice --projects-root <projects_root> start
+
+  # or
+  $ kwservice --projects-root <projects_root> restart klocwork
+  ```
+
+- verify
+  ```bash
+  $ kwadmin --ssl --host klocwork.example.com -port 443 list-projects
+  # same as
+  $ kwadmin --url https://klocwork.example.com:443 list-projects
+  ```
+
+- Disabling the SSL connection
+
+  > [!NOTE]
+  > - Simple bind failed error when trying to connect to Active Directory
+  >   ```bash
+  >   simple bind failed: ad.hostname.com:636
+  >   ```
+
+  1. import the ldap server public certificate directly into the klocwork keystore
+
+
+     ```bash
+     # localtion:
+     <path_to_JVM_install>\_jvm\lib\security\cacerts
+     ```
+
+  2. [ask your LDAP administrator to set this extension of your LDAP server certificate to non-critical](http://blogs.technet.com/b/askds/archive/2008/09/16/third-party-application-fails-using-ldap-over-ssl.aspx)
+
+  > [!NOTE|label:references:]
+  > - [Third Party Application Fails Using LDAP over SSL](https://techcommunity.microsoft.com/t5/ask-the-directory-services-team/third-party-application-fails-using-ldap-over-ssl/ba-p/395650)
+  > - [Troubleshoot LDAP over SSL connection problems](https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/ldap-over-ssl-connection-issues)
+  > - [Enable LDAP over SSL (LDAPS) for Microsoft Active Directory servers](https://gist.github.com/magnetikonline/0ccdabfec58eb1929c997d22e7341e45)
+  > - [Enable LDAP over SSL with a third-party certification authority](https://learn.microsoft.com/en-US/troubleshoot/windows-server/identity/enable-ldap-over-ssl-3rd-certification-authority)
+  > - [How to Enable LDAP over TLS on a SonicWall without a Certificate Authority (CA)](https://content.spiceworksstatic.com/service.community/p/post_attachments/0000176808/597a8c40/attached_file/Enable_LDAP_over_TLS_on_a_SonicWall_without_a_CA.pdf)
+  > - [LDAP over SSL configuration in Active Directory](https://community.spiceworks.com/topic/2279275-ldap-over-ssl-configuration-in-active-directory)
+  > - [Windows Server – Enable LDAPS](https://www.petenetlive.com/KB/Article/0000962)

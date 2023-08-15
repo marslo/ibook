@@ -15,6 +15,7 @@
   - [cortana](#cortana)
   - [install ssh-agent](#install-ssh-agent)
   - [deploy windows 10 in a test lab using configuration manager](#deploy-windows-10-in-a-test-lab-using-configuration-manager)
+- [STEP-BY-STEP GUIDE TO SETUP TWO-TIER PKI ENVIRONMENT](#step-by-step-guide-to-setup-two-tier-pki-environment)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -148,7 +149,7 @@ True
 ```
 
 - or search via keywords
-	```powershell
+  ```powershell
   PS C:\Users\marslo> Get-AppxPackage -Name *edge*
   Name              : Microsoft.MicrosoftEdgeDevToolsClient
   Publisher         : CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
@@ -556,3 +557,92 @@ Status                 : Ok
     ```
 
 - replace a client with windows 10 using configuration manager
+
+## [STEP-BY-STEP GUIDE TO SETUP TWO-TIER PKI ENVIRONMENT](http://www.rebeladmin.com/2018/06/step-step-guide-setup-two-tier-pki-environment/)
+
+```powershell
+# Setup Standalone Root CA
+> Add-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
+> Install-ADcsCertificationAuthority -CACommonName “REBELAdmin Root CA” -CAType StandaloneRootCA -CryptoProviderName “RSA#Microsoft Software Key Storage Provider” -HashAlgorithmName SHA256 -KeyLength 2048 -ValidityPeriod Years -ValidityPeriodUnits 20
+
+# DSConfigDN
+> certutil.exe –setreg ca\DSConfigDN CN=Configuration,DC=rebeladmin,DC=com
+
+# CDP Location
+> Install-WindowsFeature Web-WebServer -IncludeManagementTools
+
+# for virtual directory
+> mkdir C:\CertEnroll
+> New-smbshare -name CertEnroll C:\CertEnroll -FullAccess SYSTEM,"rebeladmin\Domain Admins" -ChangeAccess "rebeladmin\Cert Publishers"
+
+# publish the CDP settings
+> certutil -setreg CA\CRLPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl \n10:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10\n2:http://crt.rebeladmin.com/CertEnroll/%3%8%9.crl"
+
+# AIA Location (Authority Information Access)
+> certutil -setreg CA\CACertPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt\n2:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11\n2:http://crt.rebeladmin.com/CertEnroll/%1_%3%4.crt"
+
+# CA Time Limits
+> certutil -setreg ca\ValidityPeriod "Years"
+> certutil -setreg ca\ValidityPeriodUnits 10
+
+# CRL Time Limits
+> Certutil -setreg CA\CRLPeriodUnits 13
+> Certutil -setreg CA\CRLPeriod "Weeks"
+> Certutil -setreg CA\CRLDeltaPeriodUnits 0
+> Certutil -setreg CA\CRLOverlapPeriodUnits 6
+> Certutil -setreg CA\CRLOverlapPeriod "Hours"
+
+> Restart-Service certsvc
+
+# New CRL
+> certutil -crl
+```
+
+- Publish Root CA Data in to Active Directory
+  ```powershell
+  > certutil –f –dspublish "REBEL-CRTROOT_REBELAdmin Root CA.crt" RootCA
+  > certutil –f –dspublish "REBELAdmin Root CA.crl"
+  ```
+
+- Setup Issuing CA
+  ```powershell
+  > Add-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
+  > Add-WindowsFeature ADCS-web-enrollment
+  > Install-ADcsCertificationAuthority -CACommonName “REBELAdmin IssuingCA” -CAType EnterpriseSubordinateCA -CryptoProviderName “RSA#Microsoft Software Key Storage Provider” -HashAlgorithmName SHA256 -KeyLength 2048
+  > Install-ADCSwebenrollment
+  ```
+
+- Issue Certificate for Issuing CA
+  ```powershell
+  > certreq -submit "REBEL-CA1.rebeladmin.com_REBELAdmin IssuingCA.req"
+  ```
+
+  - go to Server Manager > Tools > Certificate Authority > Pending Certificates and the right click on the certificate > All Tasks > Issue
+  - export
+    ```powershell
+    > certreq -retrieve 2 "C:\REBEL-CA1.rebeladmin.com_REBELAdmin_IssuingCA.crt"
+    > Certutil –installcert "C:\REBEL-CA1.rebeladmin.com_REBELAdmin_IssuingCA.crt"
+    > start-service certsvc
+    ```
+
+- Post Configuration Tasks
+  ```powershell
+  # CDP Location
+  > certutil -setreg CA\CRLPublicationURLs "1:%WINDIR%\system32\CertSrv\CertEnroll\%3%8%9.crl\n2:http://crt.rebeladmin.com/CertEnroll/%3%8%9.crl\n3:ldap:///CN=%7%8,CN=%2,CN=CDP,CN=Public Key Services,CN=Services,%6%10"
+
+  # AIA Location
+  > certutil -setreg CA\CACertPublicationURLs "1:%WINDIR%\system32\CertSrv\CertEnroll\%1_%3%4.crt\n2:http://crt.rebeladmin.com/CertEnroll/%1_%3%4.crt\n3:ldap:///CN=%7,CN=AIA,CN=Public Key Services,CN=Services,%6%11"
+
+  # CA and CRL Time Limits
+  > certutil -setreg CA\CRLPeriodUnits 7
+  > certutil -setreg CA\CRLPeriod “Days”
+  > certutil -setreg CA\CRLOverlapPeriodUnits 3
+  > certutil -setreg CA\CRLOverlapPeriod “Days”
+  > certutil -setreg CA\CRLDeltaPeriodUnits 0
+  > certutil -setreg ca\ValidityPeriodUnits 3
+  > certutil -setreg ca\ValidityPeriod “Years”
+
+  > Restart-Service certsvc
+  > certutil -crl
+  ```
+  - run `PKIView.msc` to verify the configuration.

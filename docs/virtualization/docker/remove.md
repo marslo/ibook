@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [prune](#prune)
 - [docker rmi](#docker-rmi)
   - [docker rmi for keywords](#docker-rmi-for-keywords)
 - [docker rm](#docker-rm)
@@ -9,6 +10,28 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+## [prune](https://docs.docker.com/engine/reference/commandline/system_prune/)
+```bash
+$ docker system prune --all
+WARNING! This will remove:
+        - all stopped containers
+        - all networks not used by at least one container
+        - all dangling images
+        - all build cache
+Are you sure you want to continue? [y/N] y
+
+# prune volume only
+$ docker system prune --volumes
+```
+
+- show info
+
+  > [!NOTE|label:see also:]
+  > - [iMarslo: show info](./show.html#docker-system)
+
+  ```bash
+  $ docker system df
+  ```
 
 ## docker rmi
 - remove via docker image
