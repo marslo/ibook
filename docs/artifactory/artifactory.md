@@ -58,10 +58,15 @@
 <!--endsec-->
 
 ### Artifactory SSL Certification
+
+> [!NOTE|label:references:]
 > - [ARTIFACTORY: How to Resolve an “unable to find valid certification path to requested target” Error](https://jfrog.com/knowledge-base/how-to-resolve-unable-to-find-valid-certification-path-to-requested-target-error/)
 > - [Using TLS Certificates as a Client](https://www.jfrog.com/confluence/display/JFROG/Using+TLS+Certificates+as+a+Client)
 > - [Working with Certificates and SSL](https://docs.oracle.com/cd/E19830-01/819-4712/ablqw/index.html)
 > - [ibook : ssl/keystore](../cheatsheet/ssl/keystore.html)
+
+> [!TIP|label:see also:]
+> - [iMarslo: get remote server certs](../cheatsheet/ssl/ssl.html#get-remote-server-certs)
 
 #### get remote cert
 ```bash
