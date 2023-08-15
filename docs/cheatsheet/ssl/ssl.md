@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [openssl](#openssl)
 - [ssl cert](#ssl-cert)
   - [create cert for server](#create-cert-for-server)
     - [ca (root cert)](#ca-root-cert)
@@ -12,7 +13,7 @@
   - [certificate in Nginx](#certificate-in-nginx)
   - [get remote server certs](#get-remote-server-certs)
     - [keytool](#keytool)
-    - [openssl](#openssl)
+    - [openssl](#openssl-1)
 - [cheatsheet](#cheatsheet)
     - [generate private key and csr](#generate-private-key-and-csr)
     - [generate a self-signed certificate](#generate-a-self-signed-certificate)
@@ -60,6 +61,29 @@
 > - [Proactively Handling Certificate Expiration With ssl-cert-check](https://prefetch.net/articles/checkcertificate.html)
 >   - [Matty9191/ssl-cert-check](https://github.com/Matty9191/ssl-cert-check)
 {% endhint %}
+
+# openssl
+
+- check version
+  ```bash
+  $ openssl version
+  OpenSSL 3.1.2 1 Aug 2023 (Library: OpenSSL 3.1.2 1 Aug 2023)
+
+  $ openssl version -a
+  OpenSSL 3.1.2 1 Aug 2023 (Library: OpenSSL 3.1.2 1 Aug 2023)
+  built on: Tue Aug  1 13:36:55 2023 UTC
+  platform: darwin64-x86_64-cc
+  options:  bn(64,64)
+  compiler: clang -fPIC -arch x86_64 -O3 -Wall -DL_ENDIAN -DOPENSSL_PIC -D_REENTRANT -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+  OPENSSLDIR: "/usr/local/etc/openssl@3"
+  ENGINESDIR: "/usr/local/Cellar/openssl@3/3.1.2/lib/engines-3"
+  MODULESDIR: "/usr/local/Cellar/openssl@3/3.1.2/lib/ossl-modules"
+  Seeding source: os-specific
+  CPUINFO: OPENSSL_ia32cap=0x7ffaf3bfffebffff:0x40000000029c67af
+
+  $ openssl version -d
+  OPENSSLDIR: "/usr/local/etc/openssl@3"
+  ```
 
 # ssl cert
 ## create cert for server
@@ -437,6 +461,10 @@ $ keytool -printcert \
   ```
 
 ### openssl
+
+> [!NOTE|label:see more]
+> - [iMarslo : Artifactory SSL Certification](../../artifactory/artifactory.html#artifactory-ssl-certification)
+
 ```bash
 $ echo |
   openssl s_client -showcerts \

@@ -18,6 +18,7 @@
   - [creating a report](#creating-a-report)
 - [CI](#ci)
   - [Jenkinsfile](#jenkinsfile)
+- [renew LDAP cert](#renew-ldap-cert)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -90,7 +91,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://my.kw.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" "~/npp/npp.out"
+    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" "~/npp/npp.out"
     ```
 
 - load the database
@@ -101,7 +102,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://my.kw.com" load "NotepadPlusPlus" "~/npp/npp_tables"
+    $ kwadmin --url "http://klocwork.sample.com" load "NotepadPlusPlus" "~/npp/npp_tables"
     ```
 
   - [debug for authentication issue](https://webcache.googleusercontent.com/search?q=cache:ZlMRAvROjswJ:https://developer.klocwork.com/community/forums/klocwork-general/admin-tools/non-interactive-authentication+&cd=1&hl=en&ct=clnk&gl=us)
@@ -134,7 +135,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://my.kw.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --force "~/npp/npp.out"
+    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --force "~/npp/npp.out"
     ```
 
 - load the result
@@ -145,7 +146,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url http://my.kw.com/ load NotepadPlusPlus "~/npp/npp_tables"
+    $ kwadmin --url http://klocwork.sample.com/ load NotepadPlusPlus "~/npp/npp_tables"
     ```
 
 ### [incremental build analysis](https://docs.roguewave.com/en/klocwork/2020/runningyournextintegrationbuildanalysis1#Runningincrementalanalysis)
@@ -168,7 +169,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://my.kw.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --incremental "~/npp/npp_tables"
+    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --incremental "~/npp/npp_tables"
     ```
 
 - load the result
@@ -179,7 +180,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://my.kw.com" load NotepadPlusPlus "~/npp/npp_tables"
+    $ kwadmin --url "http://klocwork.sample.com" load NotepadPlusPlus "~/npp/npp_tables"
     ```
 
 ### load result from both windows and linux
@@ -193,7 +194,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url http://my.kw.com create-project NotepadPlusPlus
+    $ kwadmin --url http://klocwork.sample.com create-project NotepadPlusPlus
     ```
 
 - capture build settings on linux machine
@@ -214,7 +215,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://my.kw.com/NotepadPlusPlus" \
+    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" \
                      --tables-directory "~/npp/npp_tables" \
                      "~/npp/npp.out"
     ```
@@ -234,7 +235,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://my.kw.com/NotepadPlusPlus" \
+    $ kwadmin --url "http://klocwork.sample.com/NotepadPlusPlus" \
               load NotepadPlusPlus \
               "~/npp/npp_tables"
     ```
@@ -357,15 +358,15 @@
 ### [get ltoken](https://docs.roguewave.com/en/klocwork/2020/klocworkltoken)
 ```bash
 $ export KLOCWORK_LTOKEN=/home/marslo/.klocwork/ltoken
-$ kwauth --url https://my.kw.com:443
+$ kwauth --url https://klocwork.sample.com:443
 Login: marslo
 Password: ****
 $ cat /home/marslo/.klocwork/ltoen
-my.kw.com;443;marslo;abcdefg1234567**************************************************
+klocwork.sample.com;443;marslo;abcdefg1234567**************************************************
 ```
 
 ## [api](https://docs.roguewave.com/en/klocwork/current/formattingrequeststotheapi1)
-> api url: http(s)://my.kw.com:443/review/api
+> api url: http(s)://klocwork.sample.com:443/review/api
 > reference:
 > - [Klocwork Web API cookbook](https://docs.roguewave.com/en/klocwork/current/klocworkwebapicookbook)
 > - [Klocwork Insight Web API cookbook](http://docs.klocwork.com/Insight-10.0/Klocwork_Insight_Web_API_cookbook)
@@ -373,14 +374,14 @@ my.kw.com;443;marslo;abcdefg1234567*********************************************
 > - [Issue and metric API examples](https://docs.roguewave.com/en/klocwork/2020/examples2)
 
 Klocwork Static Code Analysis Web API Reference
-> To access Web API send a POST request to http://my.kw.com/review/api with the following parameters:
+> To access Web API send a POST request to http://klocwork.sample.com/review/api with the following parameters:
   > user*     Klocwork user name
   > ltoken    kwauth login token
   > action*   action name
 >
 > builds
 > Retrieve the list of builds for a project.
-> - Example: `curl --data "action=builds&user=myself&project=my_project" http://my.kw.com/review/api`
+> - Example: `curl --data "action=builds&user=myself&project=my_project" http://klocwork.sample.com/review/api`
 >   - project* : project name
 
 ### list builds info from project
@@ -395,12 +396,12 @@ Klocwork Static Code Analysis Web API Reference
 
 - [via api](https://stackoverflow.com/a/28774031/2940319)
   ```bash
-  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://my.kw.com/review/api
+  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://klocwork.sample.com/review/api
   ```
   - i.e.:
     ```bash
     $ curl --data "action=builds&user=marslo&ltoken=abcd1234****&project=marslo-kw" \
-           https://my.kw.com:443/review/api
+           https://klocwork.sample.com:443/review/api
     {"id":3,"name":"build_3","date":1619437882164,"keepit":false}
     {"id":2,"name":"build_2","date":1619436216567,"keepit":false}
     {"id":1,"name":"build_1","date":1619434698145,"keepit":false}
@@ -408,14 +409,14 @@ Klocwork Static Code Analysis Web API Reference
 
 - [via `kwadmin`](https://docs.roguewave.com/en/klocwork/current/kwadmin)
   ```bash
-  $ kwadmin --url https://my.kw.com:443 list-builds marslo-kw
+  $ kwadmin --url https://klocwork.sample.com:443 list-builds marslo-kw
   build_1
   build_2
   build_3
   ```
   - list project config files
     ```bash
-    $ kwadmin --url https://my.kw.com:443 list-config-files marslo-kw
+    $ kwadmin --url https://klocwork.sample.com:443 list-config-files marslo-kw
     analysis_profile.pconf (Problems Configuration)
     metrics_default.mconf (Metrics Thresholds)
     ```
@@ -426,7 +427,7 @@ Klocwork Static Code Analysis Web API Reference
 
 **search**
 > Retrieve the list of detected issues.
-> - Example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://my.kw.com/review/api`
+> - Example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://klocwork.sample.com/review/api`
 >   - project* : project name
 >   - query    : search query, such as narrowing by file (for example, 'file:MyFile.c')
 >   - view     : view name
@@ -447,7 +448,7 @@ $ ltoken='abcd1234*****'
 $ username='marslo'
 $ project='marslo-kw'
 $ query='build:build_3 state:New'
-$ url='https://my.kw.com:443'
+$ url='https://klocwork.sample.com:443'
 $ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project}&query=${query}" \
        ${url}/review/api |
        jq --raw-output .
@@ -560,3 +561,15 @@ pipeline {
     }
   }
   ```
+
+## renew LDAP cert
+
+> [!NOTE|label:references:]
+> - keytool and java : `/opt/Klocwork/Server/_jvm/bin`
+> - [Security Best Practices + Klocwork](https://www.perforce.com/blog/kw/security-best-practices#best)
+
+```bash
+$ keytool -import -alias ldaproot -file rootca.cer -keystore cacerts
+$ keytool -import -alias ldapInter -file inter.cer -keystore cacerts
+$ keytool -import -alias ldap -file ldap.cer -keystore cacerts
+```
