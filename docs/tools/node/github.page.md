@@ -24,6 +24,11 @@
 >   - [jamstackthemes.dev](https://jamstackthemes.dev/ssg/jekyll/)
 >   - [Solar](https://jekyll-themes.com/solar/)
 >   - [DevJoural](https://hemang.dev/DevJournal/)
+>   - [Jamstack Themes](https://jamstackthemes.dev/)
+>   - [jekyll-theme](https://github.com/topics/jekyll-theme)
+>   - [GitHub Pages themes](https://github.com/pages-themes)
+>   - [jekyll-gruvbox-theme](https://rphlmr.github.io/jekyll-gruvbox-theme/)
+>   - [jekyll-TeXt-theme](https://github.com/kitian616/jekyll-TeXt-theme/)
 
 ### `jekyll`
 
