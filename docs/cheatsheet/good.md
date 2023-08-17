@@ -644,6 +644,40 @@ $ ldapsearch \
       CN='DL-name-group'
   ```
 
+### get userCertificates
+- get cert info
+  ```bash
+  $ ldapsearch marslo userCertificate |
+               awk '{print $NF}' |
+               xargs -i bash -c "echo {} | base64 -d -w0 | openssl x509 -noout -dates -subject -issuer"
+
+  # or
+  $ while read -r crt; do
+      echo "${crt}" | base64 -d -w0 | openssl x509 -noout -dates -subject -issuer;
+    done < <(ldapsearch marslo userCertificate | awk '{print $NF}')
+  notBefore=Apr 28 18:05:13 2023 GMT
+  notAfter=Apr 27 18:05:13 2025 GMT
+  subject=DC = com, DC = example, OU = Workers, CN = marslo, emailAddress = marslo@example.com
+  issuer=DC = com, DC = example, CN = example SC Issuing CA V1
+  ```
+
+- save local
+  - der
+    ```bash
+    $ while read -r n c; do
+        echo "-- ${n} --";
+        echo "${c}" | base64 -d -w0 > cert_${n}.der;
+      done < <(ldapsearch marslo userCertificate | awk '{print $NF}' | cat -n)
+    ```
+  - crt
+    ```bash
+    $ while read -r n c; do
+        echo "-- ${n} --";
+        echo "${c}" | base64 -d -w0 > cert_${n}.der;
+        openssl x509 -in cert_${n}.der -inform DER -out cert_${n}.crt;
+      done < <(ldapsearch marslo userCertificate | awk '{print $NF}' | cat -n)
+    ```
+
 ## others
 ### directory diff
 ```bash
