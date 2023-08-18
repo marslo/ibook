@@ -20,6 +20,13 @@
     - [tar all and extra in remote](#tar-all-and-extra-in-remote)
   - [with proxy](#with-proxy)
     - [using command directly](#using-command-directly)
+- [ssh certificate](#ssh-certificate)
+  - [SSH User Certificates](#ssh-user-certificates)
+    - [ca](#ca)
+    - [sign and generate cert key](#sign-and-generate-cert-key)
+    - [update for existing key](#update-for-existing-key)
+    - [login via specific cert](#login-via-specific-cert)
+  - [SSH Host Certificates](#ssh-host-certificates)
 - [ssh tunnel](#ssh-tunnel)
   - [two servers](#two-servers)
     - [`-L`](#-l)
@@ -32,7 +39,7 @@
   - [sshd_config](#sshd_config)
     - [banner and motd](#banner-and-motd)
     - [disable login password](#disable-login-password)
-    - [disallow grou to use password](#disallow-grou-to-use-password)
+    - [disallow group to use password](#disallow-group-to-use-password)
     - [disallowing user to use tcp forwarding](#disallowing-user-to-use-tcp-forwarding)
     - [displaying a special banner for users not in the staff group](#displaying-a-special-banner-for-users-not-in-the-staff-group)
     - [allowing root login from host rootallowed.example.com](#allowing-root-login-from-host-rootallowedexamplecom)
@@ -236,6 +243,126 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
     $ ssh -o 'ProxyCommand nc -X connect -x proxy.url.com:proxy-port %h %p' -vT git@github.com
     ```
 
+# ssh certificate
+
+> [!NOTE|label:references:]
+> - [* OpenSSH/Cookbook/Certificate-based Authentication](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Certificate-based_Authentication)
+> - [* Configure ssh certificate based authentication](https://www.ezeelogin.com/kb/article/configure-ssh-certificate-based-authentication-298.html)
+> - [14.3.3. Creating SSH CA Certificate Signing Keys](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-creating_ssh_ca_certificate_signing-keys)
+>   - [Files Associated with SSH Host Certificates](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Certificate-based_Authentication#Files_Associated_with_SSH_Host_Certificates)
+>     - Certificate Authority (ca) - a private key generated for signing other keys
+>     - Certificate public key - the public component of the certificate authority
+>     - Host Public Key - the actual key that the SSH daemon uses to identify itself to the clients
+>     - Host Certificate - the signature made for the Host Public Key using the Certificate Authority
+> - [How to Generate and Configure SSH Certificate-Based Authentication](https://goteleport.com/blog/how-to-configure-ssh-certificate-based-authentication/)
+> - [If you’re not using SSH certificates you’re doing SSH wrong](https://smallstep.com/blog/use-ssh-certificates/)
+> - [How to configure and setup SSH certificates for SSH authentication](https://dev.to/gvelrajan/how-to-configure-and-setup-ssh-certificates-for-ssh-authentication-b52)
+> - [How To Configure SSH Key-Based Authentication on a Linux Server](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
+> - [Tightening SSH access using short-lived SSH certificates](https://www.bastionxp.com/blog/tightening-ssh-access-using-short-lived-ssh-certificates/)
+> - [How to setup SSH certificates for SSH authentication](https://ganeshvelrajan.medium.com/how-to-setup-ssh-certificates-for-ssh-authentication-3fb3a56d8607)
+
+
+## [SSH User Certificates](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Certificate-based_Authentication#SSH_User_Certificates)
+### ca
+```bash
+remote $ ssh-keygen -t ed25519 -b 4096 -f devops@ca -C 'devops@ca' -P '' -q
+remote $ sudo cp devops@ca* /etc/ssh/
+remote $ echo 'TrustedUserCAKeys /etc/ssh/devops@ca.pub' | sudo tee -a /etc/ssh/sshd_config
+
+remote $ sudo grep TrustedUserCAKeys /etc/ssh/sshd_config
+TrustedUserCAKeys /etc/ssh/devops@ca.pub
+```
+
+### sign and generate cert key
+```bash
+# download devops@ca
+#                                 key id  principals
+#                                    v        v
+local $ ssh-keygen -s devops@ca -I marslo -n marslo -V +52w ~/.ssh/marslo.pub
+$ ls ~/.ssh/marslo*
+/Users/marslo/.ssh/marslo  /Users/marslo/.ssh/marslo-cert.pub  /Users/marslo/.ssh/marslo.pub
+```
+
+- verify
+  ```bash
+  $ ssh-keygen -Lf ~/.ssh/marslo-cert.pub
+  /Users/marslo/.ssh/marslo-cert.pub:
+          Type: ssh-ed25519-cert-v01@openssh.com user certificate
+          Public key: ED25519-CERT SHA256:JfJnCDxjWhLwW3BcBX3XycBr3dT3JtHTwD1M4H3828E
+          Signing CA: ED25519 SHA256:5dNlpIIjX/pdoNSpmtfcGQijSrl3W87TByA9KeCe2M0 (using ssh-ed25519)
+          Key ID: "marslo"
+          Serial: 0
+          Valid: from 2023-08-17T17:41:00 to 2024-08-15T17:42:52
+          Principals:
+                  marslo
+          Critical Options: (none)
+          Extensions:
+                  permit-X11-forwarding
+                  permit-agent-forwarding
+                  permit-port-forwarding
+                  permit-pty
+                  permit-user-rc
+
+  $ ssh -i ~/.ssh/marslo marslo@remote "cat /home/marslo/.ssh/authorized_keys; du -hs /home/marslo/.ssh/authorized_keys; hostname"
+  0 /home/marslo/.ssh/authorized_keys
+  remote
+  ```
+
+### update for existing key
+```bash
+#                                       serial
+#                                         v
+$ ssh-keygen -s devops@ca -I 'edcba' -z '0002' -n marslo marslo.pub
+Signed user key marslo-cert.pub: id "edcba" serial 2 for marslo valid forever
+
+# verify
+$ ssh-keygen -f marslo-cert.pub -L
+marslo-cert.pub:
+        Type: ssh-ed25519-cert-v01@openssh.com user certificate
+        Public key: ED25519-CERT SHA256:JfJnCDxjWhLwW3BcBX3XycBr3dT3JtHTwD1M4H3828E
+        Signing CA: ED25519 SHA256:5dNlpIIjX/pdoNSpmtfcGQijSrl3W87TByA9KeCe2M0 (using ssh-ed25519)
+        Key ID: "edcba"
+        Serial: 2
+        Valid: forever
+        Principals:
+                marslo
+        Critical Options: (none)
+        Extensions:
+                permit-X11-forwarding
+                permit-agent-forwarding
+                permit-port-forwarding
+                permit-pty
+                permit-user-rc
+```
+
+### login via specific cert
+
+> [!NOTE|label:references:]
+> - [OpenSSH/Cookbook/Certificate-based Authentication](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Certificate-based_Authentication)
+>   ```bash
+>   $ ssh -o CertificateFile=server01.ed25519-cert.pub -i server01.ed25519 \
+>           fred@server01.example.org
+>   ```
+
+```bash
+$ ssh marslo@example.server.com
+marslo@example.server.com's password:
+
+$ ssh -o CertificateFile=marslo-cert.pub marslo@example.server.com "du -hs ~/.ssh/authorized_keys"
+0 /home/marslo/.ssh/authorized_keys
+
+# via config
+$ cat ~/.ssh/confg
+Host example example.server.com
+     Hostname example.server.com
+     User marslo
+     IdentitiesOnly yes
+     IdentityFile /home/marslo/.ssh/marslo
+     CertificateFile /home/marslo/.ssh/marslo-cert.pub
+```
+
+## [SSH Host Certificates](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Certificate-based_Authentication#SSH_Host_Certificates)
+
 # ssh tunnel
 
 {% hint style='tip' %}
@@ -250,9 +377,9 @@ $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
 >   - `-R` : `-->`
 >
 > - basic command line
-> ```bash
-> ssh -Nf -L <localhost/localip>:<local_port>:<target>:<target_port> <to-be-mapping/localhost>
-> ```
+>   ```bash
+>   $ ssh -Nf -L <localhost/localip>:<local_port>:<target>:<target_port> <to-be-mapping/localhost>
+>   ```
 > - usage:
 >   - `1 -> [2 ->] 3` : `ssh host2:port2:host3:port3 host1:port1`
 >   - if ignore `host2`. default using local.host
@@ -329,7 +456,7 @@ Host  jumper
 <h4>in jumper</h4>
 > - purpose:
 >   ```bash
->   local:6666 <--- jumper:6666 <--- remote:6666`
+>   local:6666 <--- jumper:6666 <--- remote:6666
 >   ```
 {% endhint %}
 
@@ -477,9 +604,9 @@ UsePAM no
   ```
 
 
-### disallow grou to use password
+### disallow group to use password
 
-> [!TIP]
+> [!TIP|label:references:]
 > - Directive 'UsePAM' is not allowed within a Match block
 > - Directive 'ChallengeResponseAuthentication' is not allowed within a Match block
 > - Directive 'PrintMotd' is not allowed within a Match block
@@ -525,6 +652,7 @@ Match Address 192.168.0.0/24
 
 # duebug
 ## debug git
+
 - GIT_SSH_COMMAND
   ```bash
   $ GIT_SSH_COMMAND="ssh -vvT" git clone git@github.com:Marslo/myblog.git
