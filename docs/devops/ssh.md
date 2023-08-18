@@ -88,6 +88,31 @@ $ ssh-keyscan -p 29418 -t rsa www.server.com
 $ ssh-keyscan -p 29418 -t rsa www.server.com >> ~/.ssh/known_hosts
 ```
 
+- [upload the local ~/.ssh/know_hosts](https://github.com/orgs/community/discussions/27405#discussioncomment-5458902)
+
+  > [!NOTE|label:references:]
+  > - [We updated our RSA SSH host key](https://github.blog/2023-03-23-we-updated-our-rsa-ssh-host-key/)
+
+  ```bash
+  $ ssh-keygen -R github.com
+  # Host github.com found: line 63
+  /home/marslo/.ssh/known_hosts updated.
+  Original contents retained as /home/marslo/.ssh/known_hosts.old
+
+  # or
+  $ curl -sL https://api.github.com/meta | jq -r '.ssh_keys | .[]'  | sed -e 's/^/github.com /' >> ~/.ssh/know_hosts
+
+  # more details
+  $ curl -sL https://api.github.com/meta | jq -r '.ssh_keys | .[]'
+  ssh-ed25519 AAAA***9GKJl
+  ecdsa-sha2-nistp256 AAAA***ockg=
+  ssh-rsa AAAA***wsjk=
+  $ curl -sL https://api.github.com/meta | jq -r '.ssh_keys | .[]'  | sed -e 's/^/github.com /'
+  github.com ssh-ed25519 AAAA***9GKJl
+  github.com ecdsa-sha2-nistp256 AAAA***ockg=
+  github.com ssh-rsa AAAA***wsjk=
+  ```
+
 ## add ssh key into agent
 ```bash
 $ ssh-add ~/.ssh/${keyname}
