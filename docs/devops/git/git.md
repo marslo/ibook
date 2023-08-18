@@ -56,6 +56,7 @@ git command study and practice
   - [show all tags for particular revision](#show-all-tags-for-particular-revision)
   - [get tag and distance (depth)](#get-tag-and-distance-depth)
 - [checkout](#checkout)
+  - [sparse-checkout](#sparse-checkout)
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
@@ -1314,6 +1315,21 @@ nightly#82-2001310818-1765-gc18894b193
   ```
 
 ## checkout
+
+### [sparse-checkout](https://github.blog/2020-01-17-bring-your-monorepo-down-to-size-with-sparse-checkout/)
+
+> [!NOTE|label:references:]
+> - [Git submodule prepare for sparse checkout](https://stackoverflow.com/a/53233492/2940319)
+>   ```bash
+>   $ git submodule absorbgitdirs
+>   $ git -C <submodule> config core.sparseCheckout true
+>   $ echo 'path/to/*' >>.git/modules/<submodule>/info/sparse-checkout
+>   ```
+> - [How to do submodule sparse-checkout with Git?](https://stackoverflow.com/a/45689692/2940319)
+> - [git sparse-checkout of a submodule from a root repo](https://stackoverflow.com/questions/59520196/git-sparse-checkout-of-a-submodule-from-a-root-repo)
+
+
+
 ### [checkout specific commit](https://stackoverflow.com/a/3489576/2940319)
 ```bash
 # make a new blank repository in the current directory

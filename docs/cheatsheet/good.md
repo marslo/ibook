@@ -32,6 +32,7 @@
   - [filter `DN` field only](#filter-dn-field-only)
   - [filter `SAMAccountName`, `uid` and `uidNumber` only](#filter-samaccountname-uid-and-uidnumber-only)
   - [filter particular group](#filter-particular-group)
+  - [get userCertificates](#get-usercertificates)
 - [others](#others)
   - [directory diff](#directory-diff)
   - [show some command periodically](#show-some-command-periodically)
@@ -645,6 +646,22 @@ $ ldapsearch \
   ```
 
 ### get userCertificates
+
+
+> [!NOTE|label:references:]
+> - [Problems with ldap userCertificate attribute](https://unix.stackexchange.com/a/443779/29178)
+> - [9.2. Certificate Publishing](https://tldp.org/HOWTO/archived/LDAP-Implementation-HOWTO/certificates.html)
+>   ```bash
+>   # convert a pem certificate into der
+>   openssl x509 -outform DER -in incert.pem  -out outcert.der
+>
+>   # created LDIF file
+>   ldif -b "usercertificate;binary" < outcert.der  > cert.ldif
+>
+>   # creates an usercertificate attribute encoded in base64
+>   ldapmodify -x -W -D "cn=Manager,dc=yourorg,dc=com" -f cert.ldif
+>   ```
+
 - get cert info
   ```bash
   $ ldapsearch marslo userCertificate |
