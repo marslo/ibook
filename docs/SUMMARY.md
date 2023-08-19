@@ -153,6 +153,7 @@
   * [disk](linux/disk.md)
   * [network](linux/network.md)
   * [system](linux/system.md)
+    * [x11](linux/x11.md)
   * [ubuntu](linux/ubuntu/ubuntu.md)
     * [apps](linux/ubuntu/apps.md)
     * [installation](linux/ubuntu/installation.md)
