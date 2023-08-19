@@ -11,6 +11,7 @@
   - [`Error: 0x80040326`](#error-0x80040326)
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 - [tip](#tip)
+  - [enable vim clipboard](#enable-vim-clipboard)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
