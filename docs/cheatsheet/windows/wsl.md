@@ -334,8 +334,21 @@ sudo update-binfmts --disable cli
   binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,relatime)
   ```
 
-
 ## tip
 ```powershell
 > set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt
+```
+
+### enable vim clipboard
+
+> [!NOTE|label:references:]
+> - [Windows Subsystem Linux - Make VIM use the clipboard?](https://superuser.com/a/1784084/112396)
+> - [How to copy/paste from Vim in WSL](https://stackoverflow.com/a/68317739/2940319)
+
+```bash
+$ sudo apt-get install vim-gtk
+
+$ vim --version | grep clipboard
++clipboard         +keymap            +printer           +vertsplit
++eval              -mouse_jsbterm     -sun_workshop      +xterm_clipboard
 ```
