@@ -21,6 +21,7 @@ search:
   - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
   - [`TypeError [ERR_INVALID_ARG_TYPE]` in `git init`](#typeerror-err_invalid_arg_type-in-git-init)
   - [`unexpected token: .`](#unexpected-token-)
+  - [failed to install plugin "codegroup"](#failed-to-install-plugin-codegroup)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -501,3 +502,45 @@ warning
     {% endraw %}
     ```
     {% endraw %}
+
+### failed to install plugin "codegroup"
+
+- issue
+  ```bash
+  $ gitbook install
+  info: installing plugin "codegroup"
+  runTopLevelLifecycles → 3 ▄ ╢█████████████████████████████████████████████████████████████████████████████████████████████░░░╟
+  fetchMetadata → request   ▀ ╢█████████████████████████████████████████████████████████████████████████████████████████░░░░░░░╟
+  /Users/marslo/.gitbook/versions/3.2.3/node_modules/npm/node_modules/aproba/index.js:25
+      if (args[ii] == null) throw missingRequiredArg(ii)
+  ```
+
+- solution
+  ```bash
+  $ gitbook install                    # expecting failure
+
+  $ npm i gitbook-plugin-codegroup@2.3.5
+  npm WARN old lockfile
+  npm WARN old lockfile The package-lock.json file was created with an old version of npm,
+  npm WARN old lockfile so supplemental metadata must be fetched from the registry.
+  npm WARN old lockfile
+  npm WARN old lockfile This is a one-time fix-up, please be patient...
+  npm WARN old lockfile
+
+  added 41 packages, and audited 168 packages in 3s
+
+  3 packages are looking for funding
+    run `npm fund` for details
+
+  20 vulnerabilities (6 moderate, 8 high, 6 critical)
+
+  To address all issues possible (including breaking changes), run:
+    npm audit fix --force
+
+  Some issues need review, and may require choosing
+  a different dependency.
+
+  Run `npm audit` for details.
+
+  $ gitbook install
+  ```
