@@ -10,10 +10,11 @@
   - [rfc-3339](#rfc-3339)
   - [utc](#utc)
   - [timezone](#timezone)
-  - [Common formats](#common-formats)
+  - [common formats](#common-formats)
 - [convert](#convert)
   - [timestamps to epoch](#timestamps-to-epoch)
   - [epoch to timestamps](#epoch-to-timestamps)
+  - [convert in different timezone](#convert-in-different-timezone)
   - [calculate time different](#calculate-time-different)
   - [transfer date format](#transfer-date-format)
 
@@ -196,6 +197,16 @@ Fri Oct  9 09:09:34 UTC 2020
 ```
 
 ### timezone
+
+> [!NOTE|label:references:]
+> - list all timezone:
+>   ```bash
+>   $ timedatectl list-timezones | more
+>
+>   # or
+>   $ tree /usr/share/zoneinfo/
+>   ```
+
 ```bash
 $ date '+%Z'
 CST
@@ -212,12 +223,23 @@ $ date '+%::z'
 $ date '+%:::z'
 +08
 
-$ date '+%Z'
-CST
+$ echo $TZ
+Asia/Beijing
+
+$ timedatectl
+      Local time: Tue 2023-08-22 05:58:45 CST
+  Universal time: Mon 2023-08-21 21:58:45 UTC
+        RTC time: Mon 2023-08-21 21:53:46
+       Time zone: Asia/Beijing (CST, +0800)
+     NTP enabled: yes
+NTP synchronized: yes
+ RTC in local TZ: no
+      DST active: n/a
 ```
 
-### Common formats
+### common formats
 
+> [!NOTE|label:references:]
 > [Shell command: date](https://renenyffenegger.ch/notes/Linux/shell/commands/date)
 > [Most common Bash date commands for timestamping](https://zxq9.com/archives/795)
 
@@ -256,13 +278,14 @@ CST
 > Fri Oct  9 17:16:37 CST 2020
 > ```
 
-|  Human-readable time |      Seconds     |
+|  HUMAN-READABLE TIME |      SECONDS     |
 |:--------------------:|:----------------:|
 |        1 hour        |   3600 seconds   |
 |         1 day        |   86400 seconds  |
 |        1 week        |  604800 seconds  |
 | 1 month (30.44 days) |  2629743 seconds |
 | 1 year (365.24 days) | 31556926 seconds |
+
 
 ### timestamps to epoch
 ```bash
@@ -309,6 +332,42 @@ Fri Oct  9 09:18:17 UTC 2020
     s: 1602239314
     ms: 534
     ```
+
+### convert in different timezone
+
+> [!NOTE|label:references:]
+> - [CST to UTC conversion](https://www.unix.com/shell-programming-and-scripting/118163-cst-utc-conversion.html)
+> - timezone can be found via:
+>   ```bash
+>   $ cat /usr/share/zoneinfo
+>
+>   # or
+>   $ timedatectl list-timezones | more
+>   ```
+
+```bash
+$ TZ="Asia/Shanghai" date -d @$(date -d "2023-01-01 00:00:00 GMT" +"%s")
+Sun Jan  1 08:00:00 CST 2023
+
+$ TZ="America/Los_Angeles" date -d @$(date -d "2023-01-01 00:00:00 GMT" +"%s")
+Sat Dec 31 16:00:00 PST 2022
+```
+
+- [convert to another timezone](https://unix.stackexchange.com/a/617692/29178)
+  ```bash
+  $ date --date='TZ="GTM" 15:00 tomorrow'
+  Tue Aug 22 08:00:00 PDT 2023
+
+  $ echo $TZ
+  America/Los_Angeles
+  $ date --date='TZ="Asia/Shanghai" 16:00 tomorrow'
+  Wed Aug 23 01:00:00 PDT 2023
+
+  $ echo $TZ
+  America/Los_Angeles
+  $ TZ="Asia/Shanghai" date -d 'TZ="America/Los_Angeles" 0:00 tomorrow'
+  Tue Aug 22 15:00:00 CST 2023
+  ```
 
 ### calculate time different
 ```bash
