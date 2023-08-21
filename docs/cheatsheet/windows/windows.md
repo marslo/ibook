@@ -33,6 +33,7 @@
   - [Enable Gadgets](#enable-gadgets)
   - [issue about `"profile.d\Active"' is not recognized as an internal or external command`](#issue-about-profiled%5Cactive-is-not-recognized-as-an-internal-or-external-command)
   - [stop windows beep](#stop-windows-beep)
+  - [outlook move hubbar to bottom](#outlook-move-hubbar-to-bottom)
 - [`shell`](#shell)
   - [utf-8 in windows terminal](#utf-8-in-windows-terminal)
   - [<kbd>win</kbd> + <kbd>r</kbd>](#kbdwinkbd--kbdrkbd)
@@ -178,7 +179,7 @@ Availability  BytesPerSector  Capabilities  CapabilityDescriptions              
 ### manufacturer
 ```batch
 > wmic computersystem get manufacturer
-Manufacturer
+anufacturer
 Supermicro
 ```
 
@@ -246,7 +247,7 @@ REM or
 ```batch
 > wmic os get Caption,CodeSet,Manufacturer,OSArchitecture,SerialNumber
 Caption                                 CodeSet  Manufacturer           OSArchitecture  SerialNumber
-Microsoft Windows Server 2016 Standard  1252     Microsoft Corporation  64-bit          003xx-6xxxx-00000-AAxxx
+icrosoft Windows Server 2016 Standard  1252     Microsoft Corporation  64-bit          003xx-6xxxx-00000-AAxxx
 ```
 
 ### system sensor status
@@ -368,10 +369,10 @@ N/A                 Hardware not present
 $ wmic product get name,version
 Name                                                                     Version
 ALM-Platform Loader 11.5x                                                11.52.444.0
-Microsoft Lync Web App Plug-in                                           15.8.8308.577
+icrosoft Lync Web App Plug-in                                           15.8.8308.577
 Google App Engine                                                        1.8.6.0
-Microsoft Office Professional Plus 2010                                  14.0.6029.1000
-Microsoft Office OneNote MUI (English) 2010                              14.0.6029.1000
+icrosoft Office Professional Plus 2010                                  14.0.6029.1000
+icrosoft Office OneNote MUI (English) 2010                              14.0.6029.1000
 ...
 ```
 
@@ -647,14 +648,27 @@ Windows Registry Editor Version 5.00
   ```
 
 ### stop windows beep
-> references:
-> - [How to disable PC Speaker beep sound in Windows 10]()https://winaero.com/how-to-disable-pc-speaker-beep-sound-in-windows-10/
+> [!NOTE|label:references:]
+> - [How to disable PC Speaker beep sound in Windows 10](https://winaero.com/how-to-disable-pc-speaker-beep-sound-in-windows-10/)
 > - [How to disable System Beep in Windows 10](https://www.thewindowsclub.com/disable-system-beep-windows-7-8)
 
 ```batch
 > net stop beep
 > sc config beep start= disabled
 ```
+
+### [outlook move hubbar to bottom](https://answers.microsoft.com/en-us/outlook_com/forum/all/outlook-office-365-desktop-move-navigation-bar-to/e1429b26-25cf-423f-86ed-45760a37d8d9)
+```batch
+> REG ADD "HKCU\SOFTWARE\Microsoft\Office\16.0\Common\ExperimentConfigs\ExternalFeatureOverrides\outlook" /v "Microsoft.Office.Outlook.Hub.HubBar" /t REG_SZ /d "false" /f
+```
+
+- regedit
+  ```batch
+  Windows Registry Editor Version 5.00
+
+  [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\ExperimentConfigs\ExternalFeatureOverrides\outlook]
+  "Microsoft.Office.Outlook.Hub.HubBar"="false"
+  ```
 
 ## `shell`
 
