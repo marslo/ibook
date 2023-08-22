@@ -84,14 +84,42 @@ $ <cmd> | pbcopy
 ![copy path shortcut key](../screenshot/osx/copy-path-shortcut.png)
 
 ## create an app for script
+
+> [!NOTE|label:expection]
 > case: run `groovyConsole` from Spolite or Alfred
-> reference: [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
+> reference:
+> - [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
 
 ### get standalone commands for the script
+
+```bash
+$ ps aux | grep groovyConsole | grep -v grep
+marslo           63030   0.0  1.9 42636292 310724 s008  S+    2:06PM   0:12.48 /usr/local/opt/openjdk/bin/java -Dsun.awt.keepWorkingSetOnMinimize=true -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -classpath /usr/local/opt/groovy/libexec/lib/groovy-4.0.13.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/usr/local/opt/openjdk/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/usr/local/opt/openjdk/lib/tools.jar:/usr/local/opt/openjdk/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+```
+
+==> which would be:
+```bash
+/usr/local/opt/openjdk/bin/java \
+     -Dsun.awt.keepWorkingSetOnMinimize=true \
+     -Xdock:name=GroovyConsole \
+     -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \
+     -classpath /usr/local/opt/groovy/libexec/lib/groovy-4.0.13.jar \
+     -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \
+     -Dprogram.name=groovyConsole \
+     -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
+     -Dgroovy.home=/usr/local/opt/groovy/libexec \
+     -Dtools.jar=/usr/local/opt/openjdk/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+     --main groovy.console.ui.Console \
+     --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
+     --classpath .:/usr/local/opt/openjdk/lib/tools.jar:/usr/local/opt/openjdk/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+```
+
+<!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 $ ps aux | grep groovyConsole | grep -v grep
 marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -Dgroovy.jaxb=jaxb -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
 ```
+
 ==> which would be:
 ```bash
 /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java \
@@ -108,10 +136,12 @@ marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /
         --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
         --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
 ```
+<!--endsec-->
 
 ### using Automator.app to create an app
 - Open **Automator.app** » **New** » **Application**
   ![Automator.app » select Applicaiton](../screenshot/osx/runable-app-1.png)
+
 - Select **Run Shell Script** » save to <name>.app with empty shell script
   ![Automator.app » select Run Shell Script](../screenshot/osx/runable-app-2.png)
 
@@ -124,7 +154,7 @@ $ vim groovyConsole.app/Contents/Info.plist
 <key>CFBundleExecutable</key>
 <string>gConsole</string>           « the script name, can be any name you want
 <key>CFBundleIconFile</key>
-<string>groovy</string>
+<string>groovy</string>             « for -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns
 <key>CFBundleIdentifier</key>
 <string>com.apple.groovyConsole</string>
 ...
@@ -141,6 +171,40 @@ $ vim groovyConsole.app/Contents/Info.plist
   ```
 
 ### create script to open the groovyConsole
+```bash
+$ touch groovyConsole.app/Contents/MacOS/groovyConsole
+
+$ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
+  -> #!/usr/bin/env bash
+  ->
+  -> JAVA_HOME="$(/usr/local/bin/brew --prefix java)"
+  -> GROOVY_VERSION="$(/usr/local/bin/groovy --version | /usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^[^:]+:\s*([0-9\.]+).*$/\1/p')"
+  -> GROOVY_HOME="$(/usr/local/bin/brew --prefix groovy)/libexec"
+  ->
+  -> "${JAVA_HOME}"/bin/java \
+  ->     -Dsun.awt.keepWorkingSetOnMinimize=true \
+  ->     -Xdock:name=GroovyConsole \
+  ->     -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+  ->     -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+  ->     -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+  ->     -Dprogram.name=groovyConsole \
+  ->     -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+  ->     -Dgroovy.home="${GROOVY_HOME}" \
+  ->     -Dtools.jar="${JAVA_HOME}"/lib/tools.jar \
+  ->     org.codehaus.groovy.tools.GroovyStarter \
+  ->         --main groovy.console.ui.Console \
+  ->         --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+  ->         --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
+  -> EOF
+
+$ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
+$ ls -1 groovyConsole.app/Contents/MacOS/
+Automator Application Stub                    # ignore it
+groovyConsole
+```
+
+
+<!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 $ touch groovyConsole.app/Contents/MacOS/groovyConsole
 
@@ -163,6 +227,8 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
 
 $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 ```
+<!--endsec-->
+
 - try validate via execute `groovyConsole.app/Contents/MacOS/groovyConsole` directly. to see whether if the groovyConsole will be opened.
   ![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
 
