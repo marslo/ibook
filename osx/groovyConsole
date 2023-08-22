@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+JAVA_HOME="$(/usr/local/bin/brew --prefix java)"
+GROOVY_VERSION="$(/usr/local/bin/groovy --version | /usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^[^:]+:\s*([0-9\.]+).*$/\1/p')"
+GROOVY_HOME="$(/usr/local/bin/brew --prefix groovy)/libexec"
+
+"${JAVA_HOME}"/bin/java \
+    -Dsun.awt.keepWorkingSetOnMinimize=true \
+    -Xdock:name=GroovyConsole \
+    -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+    -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+    -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+    -Dprogram.name=groovyConsole \
+    -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+    -Dgroovy.home="${GROOVY_HOME}" \
+    -Dtools.jar="${JAVA_HOME}"/lib/tools.jar \
+    org.codehaus.groovy.tools.GroovyStarter \
+        --main groovy.console.ui.Console \
+        --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+        --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
