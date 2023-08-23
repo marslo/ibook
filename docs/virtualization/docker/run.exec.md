@@ -7,6 +7,7 @@
 - [docker run](#docker-run)
   - [run into dind](#run-into-dind)
   - [run to override entrypoint](#run-to-override-entrypoint)
+  - [run commands to override entrypoint](#run-commands-to-override-entrypoint)
   - [runtime options with memory, cpus, and gpus](#runtime-options-with-memory-cpus-and-gpus)
   - [run with always restart](#run-with-always-restart)
 
@@ -43,6 +44,16 @@ $ docker run \
          -it \
          --entrypoint /bin/bash \
          docker:dind
+```
+
+### run commands to override entrypoint
+```bash
+$ docker run  \
+         -it  \
+         --rm \
+         --entrypoint /bin/bash \
+         docker:dind \
+         -c 'cat /etc/*-release'
 ```
 
 ### [runtime options with memory, cpus, and gpus](https://docs.docker.com/config/containers/resource_constraints/)
