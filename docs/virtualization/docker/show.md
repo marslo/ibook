@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [docker ps](#docker-ps)
 - [docker list](#docker-list)
 - [docker inspect](#docker-inspect)
   - [show docker image](#show-docker-image)
@@ -19,6 +20,45 @@
 - [ps format](#ps-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!TIP|label:references:]
+> - [Format command and log output](https://docs.docker.com/config/formatting/)
+> - [Format the output (--format)](https://docs.docker.com/engine/reference/commandline/ps/#format)
+
+## docker ps
+
+| PLACEHOLDER   | DESCRIPTION                                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `.ID`         | Container ID                                                                                                       |
+| `.Image`      | Image ID                                                                                                           |
+| `.Command`    | Quoted command                                                                                                     |
+| `.CreatedAt`  | Time when the container was created.                                                                               |
+| `.RunningFor` | Elapsed time since the container was started.                                                                      |
+| `.Ports`      | Exposed ports.                                                                                                     |
+| `.State`      | Container status (for example; "created", "running", "exited").                                                    |
+| `.Status`     | Container status with details about duration and health-status.                                                    |
+| `.Size`       | Container disk size.                                                                                               |
+| `.Names`      | Container names.                                                                                                   |
+| `.Labels`     | All labels assigned to the container.                                                                              |
+| `.Label`      | Value of a specific label for this container. For example {% raw %}'{{.Label "com.docker.swarm.cpu"}}'{% endraw %} |
+| `.Mounts`     | Names of the volumes mounted in this container.                                                                    |
+| `.Networks`   | Names of the networks attached to this container.                                                                  |
+
+- original
+  ```bash
+  $ docker ps -a --filter 'status=exited' | head -2
+  CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+  5e5f59e3aff3        3129a2ca29d7        "/configmap-reload -…"   2 months ago        Exited (137) 2 months ago                       k8s_rules-configmap-reloader_prometheus-k8s-0_monitoring_aeba5164-dda4-11ec-b785-0cc47aff0b92_1
+  ```
+
+- via foramt
+  {% raw %}
+  ```bash
+  $ docker ps -f 'status=exited' --format 'table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.RunningFor}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}' | head -2
+  CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+  5e5f59e3aff3        3129a2ca29d7        "/configmap-reload -…"   2 months ago        Exited (137) 2 months ago                       k8s_rules-configmap-reloader_prometheus-k8s-0_monitoring_aeba5164-dda4-11ec-b785-0cc47aff0b92_1
+  ```
+  {% endraw %}
 
 ## docker list
 
