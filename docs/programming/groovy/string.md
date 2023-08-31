@@ -34,6 +34,7 @@
   - [`size`](#size)
 - [random](#random)
   - [`shuffled`](#shuffled)
+- [file](#file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -377,4 +378,57 @@ assert 11 == 'Hello world'.length()
 - for number and chars only
   ```groovy
   (('a'..'z')+('A'..'Z')+(0..9)).shuffled().take(10).join()
+  ```
+
+## file
+
+> [!NOTE|label:references:]
+> - [Class File](https://docs.oracle.com/javase/8/docs/api/java/io/File.html)
+> - [Class FilenameUtils](https://commons.apache.org/proper/commons-io/javadocs/api-1.4/org/apache/commons/io/FilenameUtils.html#getName(java.lang.String))
+>   - [FilenameUtils.getName(String)](https://stackoverflow.com/a/39336223/2940319)
+> - [Package java.nio.file](https://docs.oracle.com/javase/10/docs/api/java/nio/file/package-summary.html)
+> - [Class Paths](https://docs.oracle.com/javase/10/docs/api/java/nio/file/Paths.html) VS. [Interface Path](https://docs.oracle.com/javase/10/docs/api/java/nio/file/Path.html#getFileName())
+>   ```groovy
+>   // https://stackoverflow.com/a/49019436/2940319
+>   assert sun.nio.fs.UnixPath == java.nio.file.Paths.get( '/a/b/c/d.txt' ).getClass()
+>   java.nio.file.Path path = java.nio.file.Paths.get( '/a/b/c/d.txt' )
+>   ```
+>   - [Path getFileName() method in Java with Examples](https://www.geeksforgeeks.org/path-getfilename-method-in-java-with-examples/)
+> - [Java Files - java.nio.file.Files Class](https://www.digitalocean.com/community/tutorials/java-files-nio-files-class)
+
+| IO                                                            | NIO                                                                     |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `File file = new File( 'c:/data' )`<br>`file.createNewFile()` | `Path path = Paths.get( 'c:/data' )`<br>`Files.createFile(path)`        |
+| `File file = new File( 'c:/data' )`<br>`file.mkdir()`         | `Path path = Paths.get( 'c:/data' )`<br>`Files.createDirectory(path)`   |
+| `File file = new File( 'c:/data' )`<br>`file.mkdirs()`        | `Path path = Paths.get( 'c:/data' )`<br>`Files.createDirectories(path)` |
+| `File file = new File( 'c:/data' )`<br>`file.exists()`        | `Path path = Paths.get( 'c:/data' )`<br>`Files.exists(path)`            |
+
+
+- dirname
+  ```groovy
+  # via File
+  assert '/a/b/c' == ( new File('/a/b/c/d.txt') ).getParentFile().toString()
+  assert '/a/b/c' == ( new File('/a/b/c/d.txt') ).getParent()
+  assert '/a/b/c' == ( new File('/a/b/c/d.txt') ).parent
+
+  # via java.nio.file.Paths
+  assert '/a/b/c' == java.nio.file.Paths.get( '/a/b/c/d.txt' ).getParent().toString()
+  assert '/a/b/c' == jhava.nio.file.Paths.get( '/a/b/c/d.txt' ).parent.toString()
+  ```
+
+- basename
+  ```groovy
+  # via File
+  assert 'd.txt' == (new File('/a/b/c/d.txt')).getName()
+  assert 'd.txt' == (new File('/a/b/c/d.txt')).name
+
+  # via java.nio.file.Paths
+  assert 'd.txt' == java.nio.file.Paths.get( '/a/b/c/d.txt' ).getFileName().toString()
+  assert 'd.txt' == java.nio.file.Paths.get( '/a/b/c/d.txt' ).fileName.toString()
+  ```
+
+- isDirectory || isFile
+  ```groovy
+  assert true  == ( new File('/Users/marslo/.vimrc') ).isFile()
+  assert false == ( new File('/Users/marslo/.vimrc') ).isDirectory()
   ```
