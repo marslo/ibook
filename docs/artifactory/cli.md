@@ -321,7 +321,7 @@
 ### search with aql
 
 > [!NOTE|label:references:]
-> [Jfrog artifactory delete folder of containing artifacts after remove them](https://stackoverflow.com/a/59273175/2940319)
+> - [Jfrog artifactory delete folder of containing artifacts after remove them](https://stackoverflow.com/a/59273175/2940319)
 
 ```bash
 $ cat spec.json
