@@ -61,7 +61,7 @@ $ curl -4 icanhazip.com
 182.150.46.248
 ```
 
-## applications
+### proxy
 ### shadowsocks
 #### server
 ```bash
@@ -212,11 +212,15 @@ $ sudo pip install genpac
 #### client
 
 | plugin        | plugin opts                          |
-| :-:           | :-:                                  |
+| ------------- | ------------------------------------ |
 | `simple-obfs` | `obfs=http;obfs-host=www.google.com` |
 
 ![ss-libev-client](../../screenshot/ss/ss-libev-client.png)
 
+
+## [squid](http://www.squid-cache.org/Doc/)
+
+## applications
 ### terminal configurations
 - Backup
 ```bash
