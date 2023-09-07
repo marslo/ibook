@@ -6,11 +6,6 @@
   - [change interface name](#change-interface-name)
   - [show](#show)
 - [route](#route)
-- [netmask](#netmask)
-  - [basic concept](#basic-concept)
-  - [example](#example)
-  - [netmask quick reference](#netmask-quick-reference)
-  - [ipcalc](#ipcalc)
 - [DNS](#dns)
   - [add new DNS permanently](#add-new-dns-permanently)
 - [port redirection](#port-redirection)
@@ -20,6 +15,12 @@
   - [`iwconfig`](#iwconfig)
   - [nmcli](#nmcli)
   - [nmtui](#nmtui)
+- [netmask](#netmask)
+  - [conversion](#conversion)
+  - [basic concept](#basic-concept)
+  - [example](#example)
+  - [netmask quick reference](#netmask-quick-reference)
+  - [ipcalc](#ipcalc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -150,6 +151,8 @@ Settings for eth0:
 ```
 
 #### list hardware
+
+<!--sec data-title="sudo lshw -class network" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 $ sudo lshw -class network
   *-network
@@ -236,6 +239,7 @@ $ sudo lshw -class network
        capabilities: ethernet physical
        configuration: autonegotiation=off broadcast=yes driver=veth driverversion=1.0 duplex=full link=yes multicast=yes port=twisted pair speed=10Gbit/s
 ```
+<!--endsec-->
 
 ## route
 ```bash
@@ -313,149 +317,6 @@ $ ip route get 192.30.253.113
   185.166.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eth0
   192.168.10.0    0.0.0.0         255.255.254.0   U     600    0        0 wlan0
   ```
-
-## netmask
-
-> [!NOTE|label:references:]
-> - [ipcalc online](https://jodies.de/ipcalc?host=10.0.0.0&mask1=29&mask2=)
-> - [ipcalc brew install](https://formulae.brew.sh/formula/ipcalc)
-
-
-### basic concept
-
-> [!TIP|label:what is netmask]
-> A netmask is a `32-bit` binary mask used to divide an IP address into subnets and specify the network's available hosts.
-> - full 32-bit :
->   ```bash
->     11111111 11111111 11111111 11111111
->   # |------| |------| |------| |------|
->   #    8    +    8   +    8   +    8       == total 32-bit
->   ```
-> - sample data:
->   - ip address: `10.0.0.0`
-
-- `24-bit` = <br>
-  `1x8x3` + `0x8` bit = <br>
-  <pre><font color="red"><code>11111111</code></font> <font color="red"><code>11111111</code></font> <font color="red"><code>11111111</code></font> <font color="black"><code>00000000</code></font></pre>
-- wildcard = <br>
-  <pre><font color="black"><code>00000000</code></font> <font color="black"><code>00000000</code></font> <font color="black"><code>00000000</code></font> <font color="red"><code>11111111</code></font></pre>
-  = `0x8x3` + `1x8` bit <br>
-  = `2^8 - 1` <br>
-  = `255` <br>
-  = support 255 IPs maximum including boardcast <br>
-  = support `255-1` regular IPs <br>
-==>
-- network   : `10.0.0.0/24`
-- hostMin   : `10.0.0.1`
-- hostMax   : `10.0.0.254`
-- boardcast : `10.0.0.254`
-- host/net  : `254`
-
-
-### example
-#### if netmask using `bit`, then supported hosts/nets = `2^(32-<n>) - 1 - 1`. i.e.:
-- netmask : `27`
-- supported IPs : `2^(32-27) - 1 - 1` = `2^5 - 1 - 1` = `32 - 2` = `30`
-- IP ranges : `10.0.0.1 ~ 10.0.0.30`
-- boardcast : `10.0.0.31`
-
-#### if netmask using `255.255.x.x`
-1. convert netmask decimal to binary, and get bit and then get wildcard. i.e.:
-  - netmask : `255.255.255.192`
-  - decimal to binary :
-
-    > [!NOTE]
-    > ```bash
-    > $ bc -l <<< 'obase=2;255;255;192;0' | awk '{ printf "%08d\n", $0 }' | xargs
-    > 11111111 11111111 11000000 00000000
-    > $ bc -l <<< 'obase=2;255;255;192;0' | numfmt --format=%08f | xargs
-    > 11111111 11111111 11000000 00000000
-    > ```
-
-    `192` = `128` + `64` = `2^7` + `2^6` = <br>
-    <pre><font color="red">1</font><font color="black">0000000</font> + <font color="black">0</font><font color="red">1</font><font color="black">000000</font></pre>
-  - netmask :
-    <pre><font color="red">11111111 11111111 11111111 11</font><font color="black">000000</font> <br>|---------------------------|<br>             26-bit</pre>
-    = `1x3x8` + `1x2` + `0x6` = `26`
-  - wildcard :
-    <pre> <font color="black">00000000 00000000 00000000 00</font><font color="red">111111</font><br>                              |----|<br>                               6-bit</pre>
-    = `0x3x8` + `0x2` + `1x6` = `6` <br>
-    = `32 - 26` = `6`
-  - IPs : `2^6 - 1 - 1` = `64 - 2` = `62`
-    = `10.0.0.1 ~ 10.0.0.62`
-  - boardcast : `10.0.0.63`
-1. `255.255.255.255 - <netmask>`, and then convert decimal to binary
-  - netmask : `255.255.240.0`
-  - wildcard :
-
-    > [!TIP]
-    > ```bash
-    > $ bc -l <<< 'obase=2;0;0;15;255' | awk '{ printf "%08d\n", $0 }' | xargs
-    > 00000000 00000000 00001111 11111111
-    > $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
-    > 00000000 00000000 00001111 11111111
-    > ```
-
-    `255.255.255.255 - 255.255.240.0` = <br>
-    `0.0.15.255` =
-    <pre><font color="black">00000000 00000000 0000</font><font color="red">1111 11111111</font> <br>                      |-----------|<br>                          12-bit</pre>
-  - IPs : `2^12 - 1 - 1` = `4094` =
-    <pre><font color="black">10.0.0.1 ~ 10.0.0.</font><font color="red">15</font><font color="black">.254</font> <br>                  <font color="red">--</font> <br>              <font color="gray">0.0.</font><font color="red">15</font><font color="gray">.255    # 255.255.255.255 - 255.255.240.0 = 0.0.</font><font color="red">15</font><font color="gray">.255</font> </pre>
-  - boardcast : `10.0.15.255`
-
-
-### [netmask quick reference](http://www.unixwiz.net/techtips/netmask-ref.html)
-
-| # BITS   | # HOSTS       | NETMASK           | CLASS |
-| :------: | ------------- | ----------------- | :---: |
-| `/4`     | `268435456`   | `240.0.0.0`       | A     |
-| `/5`     | `134217728`   | `248.0.0.0`       | A     |
-| `/6`     | `67108864`    | `252.0.0.0`       | A     |
-| `/7`     | `33554432`    | `254.0.0.0`       | A     |
-| `/8`     | `16777216`    | `255.0.0.0`       | A     |
-| `/9`     | `8388608`     | `255.128.0.0`     | B     |
-| `/10`    | `4194304`     | `255.192.0.0`     | B     |
-| `/11`    | `2097152`     | `255.224.0.0`     | B     |
-| `/12`    | `1048576`     | `255.240.0.0`     | B     |
-| `/13`    | `524288`      | `255.248.0.0`     | B     |
-| `/14`    | `262144`      | `255.252.0.0`     | B     |
-| `/15`    | `131072`      | `255.254.0.0`     | B     |
-| `/16`    | `65536`       | `255.255.0.0`     | B     |
-| `/17`    | `32768`       | `255.255.128.0`   | C     |
-| `/18`    | `16384`       | `255.255.192.0`   | C     |
-| `/19`    | `8192`        | `255.255.224.0`   | C     |
-| `/20`    | `4096`        | `255.255.240.0`   | C     |
-| `/21`    | `2048`        | `255.255.248.0`   | C     |
-| `/22`    | `1024`        | `255.255.252.0`   | C     |
-| `/23`    | `512`         | `255.255.254.0`   | C     |
-| `/24`    | `256`         | `255.255.255.0`   | C     |
-| `/25`    | `128`         | `255.255.255.128` | -     |
-| `/26`    | `64`          | `255.255.255.192` | -     |
-| `/27`    | `32`          | `255.255.255.224` | -     |
-| `/28`    | `16`          | `255.255.255.240` | -     |
-| `/29`    | `8`           | `255.255.255.248` | -     |
-| `/30`    | `4`           | `255.255.255.252` | -     |
-| `/31`    | -             | -                 | -     |
-| `/32`    | `1`           | `255.255.255.255` | -     |
-
-
-### [ipcalc](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
-
-> [!NOTE|label:references:]
-> - [How to Calculate Network Addresses with ipcalc](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
-
-- basic usage
-
-  ![network detials](../screenshot/linux/admin/ipcalc-network-details.png)
-
-- split network to subnets
-
-  ![split to subnets](../screenshot/linux/admin/ipcalc-ip-range-split.png)
-
-- deaggregate address range
-
-  ![ip range](../screenshot/linux/admin/ipcalc-ip-range.png)
-
 
 ## DNS
 ### add new DNS permanently
@@ -629,3 +490,180 @@ $ ifstat -n -i en7
 ### nmtui
 ![nmtui-1](../screenshot/linux/admin/nmtung)
 ![nmtui-2](../screenshot/linux/admin/nmtui-2.png)
+
+
+## netmask
+
+> [!NOTE|label:references:]
+> - [ipcalc online](https://jodies.de/ipcalc?host=10.0.0.0&mask1=29&mask2=)
+> - [ipcalc brew install](https://formulae.brew.sh/formula/ipcalc)
+
+### conversion
+
+> [!NOTE|label:references:]
+> - [* iMarslo : math : binary <> decimal <> hexadecimal](../cheatsheet/math.html#binary--decimal--hexadecimal)
+>   - `obase` : `[o]utput base`
+>   - `ibase` : `[i]utput base`
+
+```bash
+# bin -> dec
+$ bc <<< 'ibase=2;11111111;11111111;11000000;00000000' | paste -sd. -
+255.255.192.0
+
+# bin -> hex
+$ bc <<< 'obase=16;ibase=2;11111111;11111111;11000000;00000000' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
+00FF.00FF.00C0.0000
+
+# dec -> bin
+$ bc <<< 'ibase=10;obase=2;255;255;240;0' | numfmt --format %08f | paste -sd' ' -
+11111111 11111111 11110000 00000000
+
+# dec -> hex
+$ bc <<< 'ibase=10;obase=16;255;255;240;0' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
+00FF.00FF.00F0.0000
+
+# hex -> bin
+$ bc <<< 'ibase=16;obase=2;FF;FF;EE;0A' | numfmt --format %08f | paste -sd' ' -
+11111111 11111111 11101110 00001010
+
+# hex -> dec
+$ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
+255.255.238.10
+```
+
+### basic concept
+
+> [!TIP|label:what is netmask]
+> A netmask is a `32-bit` binary mask used to divide an IP address into subnets and specify the network's available hosts.
+> - full 32-bit :
+>   ```bash
+>     11111111 11111111 11111111 11111111
+>   # |------| |------| |------| |------|
+>   #    8    +    8   +    8   +    8       == total 32-bit
+>   ```
+> - sample data:
+>   - ip address: `10.0.0.0`
+
+- `24-bit` <br>
+  = `1x8x3` + `0x8` bit <br>
+  = <font color="red"><code>11111111</code> <code>11111111</code> <code>11111111</code></font> <font color="black"><code>00000000</code></font>
+- wildcard <br>
+  = <font color="black"><code>00000000</code> <code>00000000</code> <code>00000000</code></font> <font color="red"><code>11111111</code></font>
+  = `0x8x3` + `1x8` bit <br>
+  = `2^8 - 1` <br>
+  = `255` <br>
+  = support 255 IPs maximum including boardcast <br>
+  = support `255-1` regular IPs <br>
+
+==>
+
+- network   : `10.0.0.0/24`
+- hostMin   : `10.0.0.1`
+- hostMax   : `10.0.0.254`
+- boardcast : `10.0.0.254`
+- host/net  : `254`
+
+### example
+#### if netmask using `n-bit`, then supported hosts/nets = `2^(32-<n>) - 1 - 1`. i.e.:
+- netmask : `27`
+- supported IPs : `2^(32-27) - 1 - 1` = `2^5 - 1 - 1` = `32 - 2` = `30`
+- IP ranges : `10.0.0.1 ~ 10.0.0.30`
+- boardcast : `10.0.0.31`
+
+#### if netmask using `255.255.x.x`
+1. convert netmask decimal to binary, and get bit and then get wildcard. i.e.:
+  - netmask : `255.255.255.192`
+  - decimal to binary :
+
+    > [!TIP]
+    > ```bash
+    > $ bc -l <<< 'obase=2;255;255;192;0' | awk '{ printf "%08d\n", $0 }' | xargs
+    > 11111111 11111111 11000000 00000000
+    > $ bc -l <<< 'obase=2;255;255;192;0' | numfmt --format=%08f | xargs
+    > 11111111 11111111 11000000 00000000
+    > ```
+
+    `192` <br>
+    = `128` + `64` <br>
+    = `2^7` + `2^6` <br>
+    = <br>
+    <pre><font color="black"><font color="red">1</font>0000000 + 0<font color="red">1</font>000000</font></pre>
+  - netmask :
+    <pre><font color="red">  255   <font color="black">.</font>  255   <font color="black">.</font>  255   <font color="black">.</font>  192   </font> <br><font color="red">11111111 11111111 11111111 11</font><font color="black">000000</font><br>|---------------------------|<br>             26-bit</pre>
+    = `1x3x8` + `1x2` + `0x6` = `26`
+  - wildcard :
+    <pre><font color="black">   0    .   0    .   0    .<font color="red">   63   </font><br>00000000 00000000 00000000 00<font color="red">111111</font></font><br>                             |----|<br>                              6-bit</pre>
+    = `0x3x8` + `0x2` + `1x6` = `6` === `32 - 26` = `6`
+  - IPs : `2^6 - 1 - 1` = `64 - 2` = `62`
+    = `10.0.0.1 ~ 10.0.0.62`
+  - boardcast : `10.0.0.63`
+1. `255.255.255.255 - <netmask>`, and then convert decimal to binary
+  - netmask : `255.255.240.0`
+  - wildcard :
+
+    > [!TIP]
+    > ```bash
+    > $ bc -l <<< 'obase=2;0;0;15;255' | awk '{ printf "%08d\n", $0 }' | xargs
+    > 00000000 00000000 00001111 11111111
+    > $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
+    > 00000000 00000000 00001111 11111111
+    > ```
+
+    `255.255.255.255 - 255.255.240.0` = `0.0.15.255` =
+    <pre><font color="black">    0    .    0   .</font><font color="red">    15  <font color="black">.</font>  255</font> <br> <font color="black">00000000 00000000 0000</font><font color="red">1111 11111111</font><br>                       |-----------|<br>                           12-bit</pre>
+  - IPs : `2^12 - 1 - 1` = `4094` =
+    <pre><font color="black">10.0.0.1 ~ 10.0.0.</font><font color="red">15</font><font color="black">.254</font> <br>                  <font color="red">--</font> <br>              <font color="gray">0.0.</font><font color="red">15</font><font color="gray">.255    # 255.255.255.255 - 255.255.240.0 = 0.0.</font><font color="red">15</font><font color="gray">.255</font> </pre>
+  - boardcast : `10.0.15.255`
+
+
+### [netmask quick reference](http://www.unixwiz.net/techtips/netmask-ref.html)
+
+| # BITS   | # HOSTS       | NETMASK           | CLASS |
+| :------: | ------------- | ----------------- | :---: |
+| `/4`     | `268435456`   | `240.0.0.0`       | A     |
+| `/5`     | `134217728`   | `248.0.0.0`       | A     |
+| `/6`     | `67108864`    | `252.0.0.0`       | A     |
+| `/7`     | `33554432`    | `254.0.0.0`       | A     |
+| `/8`     | `16777216`    | `255.0.0.0`       | A     |
+| `/9`     | `8388608`     | `255.128.0.0`     | B     |
+| `/10`    | `4194304`     | `255.192.0.0`     | B     |
+| `/11`    | `2097152`     | `255.224.0.0`     | B     |
+| `/12`    | `1048576`     | `255.240.0.0`     | B     |
+| `/13`    | `524288`      | `255.248.0.0`     | B     |
+| `/14`    | `262144`      | `255.252.0.0`     | B     |
+| `/15`    | `131072`      | `255.254.0.0`     | B     |
+| `/16`    | `65536`       | `255.255.0.0`     | B     |
+| `/17`    | `32768`       | `255.255.128.0`   | C     |
+| `/18`    | `16384`       | `255.255.192.0`   | C     |
+| `/19`    | `8192`        | `255.255.224.0`   | C     |
+| `/20`    | `4096`        | `255.255.240.0`   | C     |
+| `/21`    | `2048`        | `255.255.248.0`   | C     |
+| `/22`    | `1024`        | `255.255.252.0`   | C     |
+| `/23`    | `512`         | `255.255.254.0`   | C     |
+| `/24`    | `256`         | `255.255.255.0`   | C     |
+| `/25`    | `128`         | `255.255.255.128` | -     |
+| `/26`    | `64`          | `255.255.255.192` | -     |
+| `/27`    | `32`          | `255.255.255.224` | -     |
+| `/28`    | `16`          | `255.255.255.240` | -     |
+| `/29`    | `8`           | `255.255.255.248` | -     |
+| `/30`    | `4`           | `255.255.255.252` | -     |
+| `/31`    | -             | -                 | -     |
+| `/32`    | `1`           | `255.255.255.255` | -     |
+
+
+### [ipcalc](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
+
+> [!NOTE|label:references:]
+> - [How to Calculate Network Addresses with ipcalc](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
+
+- basic usage
+
+  ![network detials](../screenshot/linux/admin/ipcalc-network-details.png)
+
+- split network to subnets
+
+  ![split to subnets](../screenshot/linux/admin/ipcalc-ip-range-split.png)
+
+- deaggregate address range
+
+  ![ip range](../screenshot/linux/admin/ipcalc-ip-range.png)
