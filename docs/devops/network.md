@@ -10,6 +10,7 @@
   - [basic concept](#basic-concept)
   - [example](#example)
   - [netmask quick reference](#netmask-quick-reference)
+  - [ipcalc](#ipcalc)
 - [DNS](#dns)
   - [add new DNS permanently](#add-new-dns-permanently)
 - [port redirection](#port-redirection)
@@ -419,6 +420,25 @@ $ ip route get 192.30.253.113
 | `/31`    | -             | -                 | -     |
 | `/32`    | `1`           | `255.255.255.255` | -     |
 
+
+### [ipcalc](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
+
+> [!NOTE|label:references:]
+> - [How to Calculate Network Addresses with ipcalc](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
+
+- basic usage
+
+  ![network detials](../screenshot/linux/admin/ipcalc-network-details.png)
+
+- split network to subnets
+
+  ![split to subnets](../screenshot/linux/admin/ipcalc-ip-range-split.png)
+
+- deaggregate address range
+
+  ![ip range](../screenshot/linux/admin/ipcalc-ip-range.png)
+
+
 ## DNS
 ### add new DNS permanently
 ```bash
@@ -553,7 +573,7 @@ $ ifstat -n -i en7
   ```
 
 ### [nmcli](https://askubuntu.com/a/461831/92979)
-![nmcli-1](../screenshot/linux/nmcli-1.png)
+![nmcli-1](../screenshot/linux/admin/nmcli-1.png)
 
 - show available wifi
   ```bash
@@ -577,7 +597,7 @@ $ ifstat -n -i en7
           HCB               Infra  1     195 Mbit/s  19      ▂___  WPA2 802.1X
   ```
 
-![nmcli-2](../screenshot/linux/nmcli-2.png)
+![nmcli-2](../screenshot/linux/admin/nmcli-2.png)
 
 - show saved wifi list
   ```bash
@@ -589,5 +609,5 @@ $ ifstat -n -i en7
   ```
 
 ### nmtui
-![nmtui-1](../screenshot/linux/nmtui-1.png)
-![nmtui-2](../screenshot/linux/nmtui-2.png)
+![nmtui-1](../screenshot/linux/admin/nmtung)
+![nmtui-2](../screenshot/linux/admin/nmtui-2.png)
