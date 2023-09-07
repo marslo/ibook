@@ -9,10 +9,17 @@
   - [jq](#jq)
   - [`$(())`](#)
 - [sum from file](#sum-from-file)
+- [advanced computing](#advanced-computing)
+  - [logarithm](#logarithm)
+  - [power](#power)
+  - [square](#square)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
+> [!NOTE|label:references:]
+> - [Bash 的算术运算](https://wangdoc.com/bash/arithmetic)
+> - [Linux 中bc命令实现自然对数、指数运算、自然指数、平方根的运算](https://www.cnblogs.com/liujiaxin2018/p/17036256.html)
+> - [bc to Perform Advanced Arithmetic Operations in BASH](https://linuxhint.com/bc-arithmetic-operations-bash/)
 
 ## sum
 
@@ -155,3 +162,50 @@ $ echo $(( $( tr "\n" "+"  < /tmp/test) 0 ))
   331.58
   ```
 
+## advanced computing
+
+> [!NOTE|label:references:]
+> - [How to calculate the log of a number using bc?](https://stackoverflow.com/a/7962297/2940319)
+> - [指数与对数](https://www.shuxuele.com/algebra/exponents-logarithms.html)
+> - [n次方根](https://www.shuxuele.com/numbers/nth-root.html)
+
+### logarithm
+
+- bc
+  ```bash
+  $ bc -l <<< 'l(9)/l(3)'
+  2.00000000000000000000
+  ```
+  - [🫠](https://stackoverflow.com/a/48911293/2940319)
+    ```bash
+    $ bc -l <<< 'l(512)/l(2)'
+    9.00000000000000000008
+    ```
+
+- awk
+  ```bash
+  $ echo 512 | awk '{print log($1)/log(2)}'
+  9
+  ```
+
+### power
+- bc
+  ```bash
+  $ bc <<< '2^3'
+  8
+  ```
+
+- `$(())`
+  ```bash
+  $ echo $(( 2**8 ))
+  256
+  ```
+
+### square
+```bash
+$ bc -l <<< 'sqrt(2)'
+1.41421356237309504880
+
+$ bc <<< 'sqrt(2)'
+1
+```
