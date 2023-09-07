@@ -8,9 +8,11 @@
   - [setup MOTD](#setup-motd)
   - [get subnet ip address](#get-subnet-ip-address)
   - [get public IP address](#get-public-ip-address)
-- [applications](#applications)
+  - [proxy](#proxy)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
+- [squid](#squid)
+- [applications](#applications)
   - [terminal configurations](#terminal-configurations)
   - [vncserver](#vncserver)
 - [artifactory](#artifactory)
@@ -219,6 +221,17 @@ $ sudo pip install genpac
 
 
 ## [squid](http://www.squid-cache.org/Doc/)
+
+> [!NOTE|label:references:]
+> - [About Squid proxy servers](https://ubuntu.com/server/docs/proxy-servers-squid)
+> - [Squid installation and configuration in Ubuntu](https://help.ubuntu.com/community/Squid)
+> - [SquidGuard in ubuntu](https://help.ubuntu.com/community/SquidGuard)
+> - [How to configure an SSH proxy server with Squid](https://fedoramagazine.org/configure-ssh-proxy-server/)
+> - [Use Squid as HTTP / HTTPS / SSH Proxy](https://www.squins.com/knowledge/squid-http-https-ssh-proxy/)
+> - [Tunnelling SSH/SFTP over Squid proxy](https://www.seniorlinuxadmin.co.uk/ssh-over-proxy.html)
+> - [How to Set Up a Proxy Server on Your Mac Using SquidMan](https://howchoo.com/mac/how-to-set-up-a-proxy-server-on-mac)
+> - [brew install squid on macOS but can't run squid](https://serverfault.com/a/1069392/129815)
+
 
 ## applications
 ### terminal configurations
