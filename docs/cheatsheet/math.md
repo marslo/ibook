@@ -14,6 +14,7 @@
   - [power](#power)
   - [square](#square)
   - [decimal to binary](#decimal-to-binary)
+  - [binary <> decimal <> hexadecimal](#binary--decimal--hexadecimal)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -234,3 +235,36 @@ $ bc <<< 'sqrt(2)'
   $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
   00000000 00000000 00001111 11111111
   ```
+
+
+### binary <> decimal <> hexadecimal
+
+> [!NOTE]
+> - `obase` : `[o]utput base`
+> - `ibase` : `[i]utput base`
+
+```bash
+# bin -> dec
+$ bc <<< 'ibase=2;11111111;11111111;11000000;00000000' | paste -sd. -
+255.255.192.0
+
+# bin -> hex
+$ bc <<< 'obase=16;ibase=2;11111111;11111111;11000000;00000000' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
+00FF.00FF.00C0.0000
+
+# dec -> bin
+$ bc <<< 'ibase=10;obase=2;255;255;240;0' | numfmt --format %08f | paste -sd' ' -
+11111111 11111111 11110000 00000000
+
+# dec -> hex
+$ bc <<< 'ibase=10;obase=16;255;255;240;0' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
+00FF.00FF.00F0.0000
+
+# hex -> bin
+$ bc <<< 'ibase=16;obase=2;FF;FF;EE;0A' | numfmt --format %08f | paste -sd' ' -
+11111111 11111111 11101110 00001010
+
+# hex -> dec
+$ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
+255.255.238.10
+```
