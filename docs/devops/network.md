@@ -362,7 +362,16 @@ $ ip route get 192.30.253.113
 #### if netmask using `255.255.x.x`
 1. convert netmask decimal to binary, and get bit and then get wildcard. i.e.:
   - netmask : `255.255.255.192`
-  - decimal to binary :<br>
+  - decimal to binary :
+
+    > [!NOTE]
+    > ```bash
+    > $ bc -l <<< 'obase=2;255;255;192;0' | awk '{ printf "%08d\n", $0 }' | xargs
+    > 11111111 11111111 11000000 00000000
+    > $ bc -l <<< 'obase=2;255;255;192;0' | numfmt --format=%08f | xargs
+    > 11111111 11111111 11000000 00000000
+    > ```
+
     `192` = `128` + `64` = `2^7` + `2^6` = <br>
     <pre><font color="red">1</font><font color="black">0000000</font> + <font color="black">0</font><font color="red">1</font><font color="black">000000</font></pre>
   - netmask :
@@ -377,7 +386,16 @@ $ ip route get 192.30.253.113
   - boardcast : `10.0.0.63`
 1. `255.255.255.255 - <netmask>`, and then convert decimal to binary
   - netmask : `255.255.240.0`
-  - wildcard : <br>
+  - wildcard :
+
+    > [!TIP]
+    > ```bash
+    > $ bc -l <<< 'obase=2;0;0;15;255' | awk '{ printf "%08d\n", $0 }' | xargs
+    > 00000000 00000000 00001111 11111111
+    > $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
+    > 00000000 00000000 00001111 11111111
+    > ```
+
     `255.255.255.255 - 255.255.240.0` = <br>
     `0.0.15.255` =
     <pre><font color="black">00000000 00000000 0000</font><font color="red">1111 11111111</font> <br>                      |-----------|<br>                          12-bit</pre>

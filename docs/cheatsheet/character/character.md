@@ -8,6 +8,7 @@
   - [single line to multiple lines](#single-line-to-multiple-lines)
 - [show](#show)
   - [align](#align)
+  - [numfmt](#numfmt)
 - [combinations](#combinations)
   - [combine every 2 lines](#combine-every-2-lines)
   - [combine every 3 lines](#combine-every-3-lines)
@@ -41,7 +42,6 @@
   - [remove the ending '\n'](#remove-the-ending-%5Cn)
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
-- [regex](#regex)
 - [insert new line](#insert-new-line)
 - [write a file without indent space](#write-a-file-without-indent-space)
 - [cat](#cat)
@@ -175,6 +175,357 @@ _    foobar_
 $ printf  _"%-10s"_ "foobar"
 _foobar    _
 ```
+
+### numfmt
+
+> [!NOTE|label:references:]
+> - [* iMarslo : math](../math.html#decimal-to-binary)
+> - [* numfmt - A number reformatting utility](https://www.pixelbeat.org/docs/numfmt.html)
+> - [numfmt(1) — Linux manual page](https://man7.org/linux/man-pages/man1/numfmt.1.html)
+> - [numfmt - Convert numbers from/to human-readable strings](https://manpages.ubuntu.com/manpages/focal/man1/numfmt.1.html)
+> - [The Numfmt Command Tutorial With Examples For Beginners](https://ostechnix.com/the-numfmt-command-tutorial-with-examples-for-beginners/)
+
+- setup
+  ```bash
+  # generic
+  $ npm install numfmt
+
+  # osx
+  $ brew install coreutils
+  ```
+
+  <!--sec data-title="brew list coreutils" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  $ brew list coreutils | grep bin
+  /usr/local/Cellar/coreutils/9.4/bin/md5sum
+  /usr/local/Cellar/coreutils/9.4/bin/gsha512sum
+  /usr/local/Cellar/coreutils/9.4/bin/gusers
+  /usr/local/Cellar/coreutils/9.4/bin/gprintenv
+  /usr/local/Cellar/coreutils/9.4/bin/gmknod
+  /usr/local/Cellar/coreutils/9.4/bin/shuf
+  /usr/local/Cellar/coreutils/9.4/bin/gdd
+  /usr/local/Cellar/coreutils/9.4/bin/gtsort
+  /usr/local/Cellar/coreutils/9.4/bin/grealpath
+  /usr/local/Cellar/coreutils/9.4/bin/grmdir
+  /usr/local/Cellar/coreutils/9.4/bin/gfold
+  /usr/local/Cellar/coreutils/9.4/bin/gnl
+  /usr/local/Cellar/coreutils/9.4/bin/greadlink
+  /usr/local/Cellar/coreutils/9.4/bin/gshred
+  /usr/local/Cellar/coreutils/9.4/bin/gmv
+  /usr/local/Cellar/coreutils/9.4/bin/runcon
+  /usr/local/Cellar/coreutils/9.4/bin/gmkdir
+  /usr/local/Cellar/coreutils/9.4/bin/gkill
+  /usr/local/Cellar/coreutils/9.4/bin/guniq
+  /usr/local/Cellar/coreutils/9.4/bin/gpr
+  /usr/local/Cellar/coreutils/9.4/bin/ptx
+  /usr/local/Cellar/coreutils/9.4/bin/ghead
+  /usr/local/Cellar/coreutils/9.4/bin/glink
+  /usr/local/Cellar/coreutils/9.4/bin/gstat
+  /usr/local/Cellar/coreutils/9.4/bin/gmktemp
+  /usr/local/Cellar/coreutils/9.4/bin/gyes
+  /usr/local/Cellar/coreutils/9.4/bin/gsha1sum
+  /usr/local/Cellar/coreutils/9.4/bin/b2sum
+  /usr/local/Cellar/coreutils/9.4/bin/grm
+  /usr/local/Cellar/coreutils/9.4/bin/gsha256sum
+  /usr/local/Cellar/coreutils/9.4/bin/gfalse
+  /usr/local/Cellar/coreutils/9.4/bin/gwho
+  /usr/local/Cellar/coreutils/9.4/bin/gcut
+  /usr/local/Cellar/coreutils/9.4/bin/gvdir
+  /usr/local/Cellar/coreutils/9.4/bin/gdir
+  /usr/local/Cellar/coreutils/9.4/bin/gchmod
+  /usr/local/Cellar/coreutils/9.4/bin/gbase32
+  /usr/local/Cellar/coreutils/9.4/bin/sha224sum
+  /usr/local/Cellar/coreutils/9.4/bin/ghostid
+  /usr/local/Cellar/coreutils/9.4/bin/gnohup
+  /usr/local/Cellar/coreutils/9.4/bin/gtr
+  /usr/local/Cellar/coreutils/9.4/bin/gdirname
+  /usr/local/Cellar/coreutils/9.4/bin/gsha384sum
+  /usr/local/Cellar/coreutils/9.4/bin/gchroot
+  /usr/local/Cellar/coreutils/9.4/bin/gpaste
+  /usr/local/Cellar/coreutils/9.4/bin/timeout
+  /usr/local/Cellar/coreutils/9.4/bin/tac
+  /usr/local/Cellar/coreutils/9.4/bin/numfmt
+  /usr/local/Cellar/coreutils/9.4/bin/gid
+  /usr/local/Cellar/coreutils/9.4/bin/gpinky
+  /usr/local/Cellar/coreutils/9.4/bin/genv
+  /usr/local/Cellar/coreutils/9.4/bin/basenc
+  /usr/local/Cellar/coreutils/9.4/bin/nproc
+  /usr/local/Cellar/coreutils/9.4/bin/gln
+  /usr/local/Cellar/coreutils/9.4/bin/gbasename
+  /usr/local/Cellar/coreutils/9.4/bin/gtruncate
+  /usr/local/Cellar/coreutils/9.4/bin/stdbuf
+  /usr/local/Cellar/coreutils/9.4/bin/chcon
+  /usr/local/Cellar/coreutils/9.4/bin/gcp
+  /usr/local/Cellar/coreutils/9.4/bin/gls
+  /usr/local/Cellar/coreutils/9.4/bin/factor
+  /usr/local/Cellar/coreutils/9.4/bin/gtrue
+  /usr/local/Cellar/coreutils/9.4/bin/gchown
+  /usr/local/Cellar/coreutils/9.4/bin/gsync
+  /usr/local/Cellar/coreutils/9.4/bin/guptime
+  /usr/local/Cellar/coreutils/9.4/bin/gsum
+  /usr/local/Cellar/coreutils/9.4/bin/gtac
+  /usr/local/Cellar/coreutils/9.4/bin/gexpand
+  /usr/local/Cellar/coreutils/9.4/bin/gruncon
+  /usr/local/Cellar/coreutils/9.4/bin/gpathchk
+  /usr/local/Cellar/coreutils/9.4/bin/gnice
+  /usr/local/Cellar/coreutils/9.4/bin/gecho
+  /usr/local/Cellar/coreutils/9.4/bin/gdu
+  /usr/local/Cellar/coreutils/9.4/bin/gb2sum
+  /usr/local/Cellar/coreutils/9.4/bin/gtouch
+  /usr/local/Cellar/coreutils/9.4/bin/gmkfifo
+  /usr/local/Cellar/coreutils/9.4/bin/gdf
+  /usr/local/Cellar/coreutils/9.4/bin/gjoin
+  /usr/local/Cellar/coreutils/9.4/bin/gtest
+  /usr/local/Cellar/coreutils/9.4/bin/gmd5sum
+  /usr/local/Cellar/coreutils/9.4/bin/gunexpand
+  /usr/local/Cellar/coreutils/9.4/bin/gsort
+  /usr/local/Cellar/coreutils/9.4/bin/gshuf
+  /usr/local/Cellar/coreutils/9.4/bin/gfmt
+  /usr/local/Cellar/coreutils/9.4/bin/gunlink
+  /usr/local/Cellar/coreutils/9.4/bin/gcsplit
+  /usr/local/Cellar/coreutils/9.4/bin/g[
+  /usr/local/Cellar/coreutils/9.4/bin/gwhoami
+  /usr/local/Cellar/coreutils/9.4/bin/gsplit
+  /usr/local/Cellar/coreutils/9.4/bin/gseq
+  /usr/local/Cellar/coreutils/9.4/bin/sha1sum
+  /usr/local/Cellar/coreutils/9.4/bin/sha256sum
+  /usr/local/Cellar/coreutils/9.4/bin/gdircolors
+  /usr/local/Cellar/coreutils/9.4/bin/ginstall
+  /usr/local/Cellar/coreutils/9.4/bin/gsha224sum
+  /usr/local/Cellar/coreutils/9.4/bin/shred
+  /usr/local/Cellar/coreutils/9.4/bin/sha384sum
+  /usr/local/Cellar/coreutils/9.4/bin/gcomm
+  /usr/local/Cellar/coreutils/9.4/bin/gtty
+  /usr/local/Cellar/coreutils/9.4/bin/gcksum
+  /usr/local/Cellar/coreutils/9.4/bin/gexpr
+  /usr/local/Cellar/coreutils/9.4/bin/gbase64
+  /usr/local/Cellar/coreutils/9.4/bin/gwc
+  /usr/local/Cellar/coreutils/9.4/bin/gnproc
+  /usr/local/Cellar/coreutils/9.4/bin/base32
+  /usr/local/Cellar/coreutils/9.4/bin/gptx
+  /usr/local/Cellar/coreutils/9.4/bin/gtimeout
+  /usr/local/Cellar/coreutils/9.4/bin/pinky
+  /usr/local/Cellar/coreutils/9.4/bin/hostid
+  /usr/local/Cellar/coreutils/9.4/bin/gpwd
+  /usr/local/Cellar/coreutils/9.4/bin/gtail
+  /usr/local/Cellar/coreutils/9.4/bin/gchcon
+  /usr/local/Cellar/coreutils/9.4/bin/glogname
+  /usr/local/Cellar/coreutils/9.4/bin/guname
+  /usr/local/Cellar/coreutils/9.4/bin/gtee
+  /usr/local/Cellar/coreutils/9.4/bin/gstty
+  /usr/local/Cellar/coreutils/9.4/bin/gchgrp
+  /usr/local/Cellar/coreutils/9.4/bin/gcat
+  /usr/local/Cellar/coreutils/9.4/bin/ggroups
+  /usr/local/Cellar/coreutils/9.4/bin/gsleep
+  /usr/local/Cellar/coreutils/9.4/bin/sha512sum
+  /usr/local/Cellar/coreutils/9.4/bin/gfactor
+  /usr/local/Cellar/coreutils/9.4/bin/god
+  /usr/local/Cellar/coreutils/9.4/bin/gprintf
+  /usr/local/Cellar/coreutils/9.4/bin/gstdbuf
+  /usr/local/Cellar/coreutils/9.4/bin/gnumfmt
+  /usr/local/Cellar/coreutils/9.4/bin/gbasenc
+  /usr/local/Cellar/coreutils/9.4/bin/gdate
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/tee
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/md5sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/split
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/cat
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/shuf
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/mkfifo
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/pathchk
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/runcon
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/expand
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/tty
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/basename
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/install
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/nice
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/truncate
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/echo
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/du
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/ptx
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/join
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/df
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/pwd
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/test
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/csplit
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sort
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/whoami
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/touch
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/unlink
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/b2sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sleep
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/fmt
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/stty
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/logname
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/chgrp
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/printenv
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/seq
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/uname
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sha224sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/od
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/date
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/base64
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/realpath
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/readlink
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/dircolors
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/timeout
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/tac
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/numfmt
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/wc
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/basenc
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/comm
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/nproc
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/expr
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/stdbuf
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/cksum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/printf
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/groups
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/chcon
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/factor
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/tail
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/env
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/pr
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/head
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/kill
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/uniq
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/stat
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/link
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/tsort
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/mknod
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/users
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/dd
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/who
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sha1sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/mktemp
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/cut
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sha256sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/dir
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/mkdir
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/nl
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/shred
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/fold
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/rmdir
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sha384sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/mv
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/dirname
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/id
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/base32
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/pinky
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/ln
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/hostid
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/chroot
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/ls
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/true
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/cp
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sync
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/yes
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/unexpand
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/chown
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/chmod
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/uptime
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/rm
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/vdir
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/false
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/sha512sum
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/[
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/tr
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/paste
+  /usr/local/Cellar/coreutils/9.4/libexec/gnubin/nohup
+  ```
+  <!--endsec-->
+
+- usage
+  ```bash
+  $ bc -l <<< 'obase=2;0;0;15;255'
+  0
+  0
+  1111
+  11111111
+
+  $ bc -l <<< 'obase=2;0;0;15;255' | numfmt --format=%08f
+  00000000
+  00000000
+  00001111
+  11111111
+
+  $ bc -l <<< 'obase=2;0;0;15;255' | numfmt --format=%08f | xargs
+  00000000 00000000 00001111 11111111
+
+  $ numfmt --to=si --format "%f bottles of beer on the wall"  99999999
+  100M bottles of beer on the wall
+  ```
+
+- convert foramt
+  ```bash
+  $ echo 1G | numfmt --from=si
+  1000000000
+  $ echo 1G | numfmt --from=iec
+  1073741824
+
+  $ echo 500G | numfmt --from=si --to=iec
+  466G
+
+  $ numfmt --field=2 --from-unit=1024 --to=iec-i --suffix B < /proc/meminfo  | sed 's/ kB//' | head -n4
+  MemTotal:          1008GiB
+  MemFree:           816GiB
+  MemAvailable:      941GiB
+  Buffers:          3.1MiB
+
+  $ watch -n.1 \
+  >  'numfmt --header --field=2 --to=iec-i --round=nearest < /proc/interrupts |
+  >   LC_ALL=en_US numfmt --header --field=3 --group --invalid=ignore --padding=16 |
+  >   pr -TW$COLUMNS'
+
+  $ for method in up down nearest; do
+  >   echo $method
+  >   numfmt --to=iec --round=$method 4095 4096 4097
+  > done | paste - - - -
+  up      4.0K  4.0K  4.1K
+  down    3.9K  4.0K  4.0K
+  nearest 4.0K  4.0K  4.0K
+  ```
+
+- padding
+  ```bash
+  $ du -s * | numfmt --to=si --padding=10
+          12 awk.md
+          40 character.md
+           4 html.md
+          16 json.md
+           8 markdown.md
+           4 regex.md
+          16 sed.md
+
+  $ du -s * | numfmt --to=si --padding=-10
+  12         awk.md
+  40         character.md
+  4          html.md
+  16         json.md
+  8          markdown.md
+  4          regex.md
+  16         sed.md
+  ```
+
+- field
+  ```bash
+  $ ls -l
+  total 100
+  -rw-r--r-- 1 marslo staff  9720 Sep  7 00:37 awk.md
+  -rw-r--r-- 1 marslo staff 40500 Sep  7 00:51 character.md
+  $ ls -l | numfmt --field 5 --to=si
+  total 100
+  -rw-r--r-- 1 marslo staff  9.8K Sep  7 00:37 awk.md
+  -rw-r--r-- 1 marslo staff   41K Sep  7 00:51 character.md
+
+  $ df -B1 | head -3
+  Filesystem                                         1B-blocks          Used     Available Use% Mounted on
+  devtmpfs                                        540881096704             0  540881096704   0% /dev
+  tmpfs                                           540899667968        258048  540899409920   1% /dev/shm
+  $ df -B1 | head -3 | numfmt --header --field 2-4 --to=si
+  Filesystem                                         1B-blocks          Used     Available Use% Mounted on
+  devtmpfs                                                541G             0          541G   0% /dev
+  tmpfs                                                   541G          259K          541G   1% /dev/shm
+  ```
 
 ## combinations
 ### combine every 2 lines
@@ -1040,9 +1391,6 @@ for _p in $(echo "${param}" | fold -w1); do
 done
 ```
 
-## regex
-
-
 ## insert new line
 - insert right after the second match string
 {% codetabs name="original", type="bash" -%}
@@ -1112,7 +1460,7 @@ items.find ({
 ## cat
 ### `<< -` and `<<`
 
-<!--sec data-title="doc for <<[-]word" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="doc for <<[-]word" data-id="section1" data-show=true data-collapse=true ces-->
  [Here Documents](https://en.wikipedia.org/wiki/Here_document#Unix_shells):
 > This type of redirection instructs the shell to read input from the current source until a line containing only delimiter (with no trailing blanks) is seen. All of the lines read up to that point are then used as the standard input for a command.
 >
