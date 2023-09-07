@@ -13,6 +13,7 @@
   - [logarithm](#logarithm)
   - [power](#power)
   - [square](#square)
+  - [decimal to binary](#decimal-to-binary)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -209,3 +210,27 @@ $ bc -l <<< 'sqrt(2)'
 $ bc <<< 'sqrt(2)'
 1
 ```
+
+### decimal to binary
+
+> [!NOTE|label:references:]
+> - [Prevent bc from auto truncating leading zeros when converting from hex to binary](https://stackoverflow.com/a/12633973/2940319)
+> - [How to make `bc` output a desired number of base-2 binary digits](https://stackoverflow.com/a/71570190/2940319)
+
+- bc
+  ```bash
+  $ bc <<< 'obase=2;15'
+  1111
+
+  $ bc -l <<< 'obase=2;0;0;15;255' | xargs
+  0 0 1111 11111111
+
+  $ bc -l <<< 'obase=2;0;0;15;255' | awk '{ printf "%08d\n", $0 }' | xargs
+  00000000 00000000 00001111 11111111
+
+  $ printf "%08d\n" $(echo "obase=2; 0;0;15;255" | bc) | xargs
+  00000000 00000000 00001111 11111111
+
+  $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
+  00000000 00000000 00001111 11111111
+  ```
