@@ -12,6 +12,10 @@
 - [combinations](#combinations)
   - [combine every 2 lines](#combine-every-2-lines)
   - [combine every 3 lines](#combine-every-3-lines)
+- [format output](#format-output)
+  - [diff](#diff)
+  - [comm](#comm)
+  - [column](#column)
 - [get next line by the pattern](#get-next-line-by-the-pattern)
 - [get lines in 2 patterns](#get-lines-in-2-patterns)
   - [awk](#awk)
@@ -645,6 +649,224 @@ _foobar    _
   1 2 3
   4 5 6
   7 8 9
+  ```
+
+## format output
+
+> [!TIP|label:sample data]
+> ```bash
+> $ paste <(sort a.txt) <(sort b.txt) | expand --tabs=10
+> a         a
+> b         b
+> d         c
+> f         d
+>           e
+> $ pr -w 30 -m -t a.txt b.txt
+> a        a
+> b        b
+> d        c
+> f        d
+>          e
+>```
+> - [display two files side by side by pr](https://stackoverflow.com/a/13343943/2940319)
+> - [display two files side by side by paste](https://stackoverflow.com/a/32196696/2940319)
+> - [Displaying Files Side by Side in Linux](https://www.baeldung.com/linux/files-display-compare)
+> - [Print two files in two columns side-by-side](https://unix.stackexchange.com/q/392655/29178)
+> - [11.4. Side-by-Side diffs: sdiff](https://docstore.mik.ua/orelly/unix3/upt/ch11_04.htm)
+
+### diff
+
+> [!NOTE|label:references:]
+> - [Linux diff command](https://www.computerhope.com/unix/udiff.htm)
+> - [* GNU Diffutils](https://www.gnu.org/software/diffutils/)
+>   - [* Comparing and Merging Files](https://www.gnu.org/software/diffutils/manual/diffutils.html#Line-Formats)
+> - [13.1 Options to diff](https://www.gnu.org/software/diffutils/manual/html_node/diff-Options.html)
+> - [Diff and "--GTYPE-group-format"](https://stackoverflow.com/q/8098045/2940319)
+> - [diff - output line-numbers](https://unix.stackexchange.com/a/34890/29178)
+
+- show all status
+  ```bash
+  $ diff --side-by-side <(sort a.txt) <(sort b.txt)
+  a               a
+  b               b
+                  > c
+  d               d
+  f               | e
+  ```
+
+- show diff only
+  ```bash
+  $ diff --suppress-common-lines --side-by-side <(sort a.txt) <(sort b.txt)
+                      > c
+  f                   | e
+  ```
+  - show diff with `--<GTYPE>-group-format`
+
+    | VARIALBE    | APPLICABLE       |
+    | ----------- | ---------------- |
+    | `old`       | `GTYPE`, `LTYPE` |
+    | `new`       | `GTYPE`, `LTYPE` |
+    | `unchanged` | `GTYPE`, `LTYPE` |
+    | `changed`   | `GTYPE`          |
+
+    > [!NOTE|label:tips:]
+    > - [line format](https://www.gnu.org/software/diffutils/manual/html_node/Line-Formats.html):
+    >   - `[G]TYPE` : `[g]roup` : `--<GTYPE>-group-format`
+    > - [group format](https://www.gnu.org/software/diffutils/manual/diffutils.html#Line-Group-Formats)
+    >   - `[L]TYPE` : `[l]ine` : `--<LTYPE>-line-format`
+
+    ```bash
+    $ diff --old-group-format="L %<" --new-group-format="R %>" --unchanged-group-format=""  a.txt b.txt
+    R c
+    L f
+    R e
+
+    # with line number
+    $ diff --unchanged-line-format="" --old-line-format="< %dn: %L" --new-line-format="> %dn: %L" <(sort a.txt) <(sort b.txt)
+    > 3: c
+    < 4: f
+    > 5: e
+
+    # beging-end
+    $ diff --old-group-format='\begin{em}
+      -> %<\end{em}
+      -> ' --new-group-format='\begin{bf}
+      -> %>\end{bf}
+      -> ' --changed-group-format='\begin{em}
+      -> %<\end{em}
+      -> \begin{bf}
+      -> %>\end{bf}
+      -> ' --unchanged-group-format='%=' \
+      -> <(sort a.txt) <(sort b.txt)
+    a
+    b
+    \begin{bf}
+    c
+    \end{bf}
+    d
+    \begin{em}
+    f
+    \end{em}
+    \begin{bf}
+    e
+    \end{bf}
+
+    $ diff \
+      ->    --unchanged-group-format='' \
+      ->    --old-group-format='-------- %dn line%(n=1?:s) deleted at %df:
+      -> %<' \
+      ->    --new-group-format='-------- %dN line%(N=1?:s) added after %de:
+      -> %>' \
+      ->    --changed-group-format='-------- %dn line%(n=1?:s) changed at %df:
+      -> %<-------- to:
+      -> %>' \
+      -> <(sort a.txt) <(sort b.txt)
+    -------- 1 line added after 2:
+    c
+    -------- 1 line changed at 4:
+    f
+    -------- to:
+    e
+    ```
+
+- show common
+  ```bash
+  $ diff --unchanged-line-format="%L" --new-line-format="" --old-line-format="" <(sort a.txt) <(sort b.txt)
+  a
+  b
+  d
+  ```
+
+- create patch
+  ```bash
+  $ diff -c <(sort a.txt) <(sort b.txt)
+  *** /dev/fd/63  2023-09-12 21:51:50.828885643 -0700
+  --- /dev/fd/62  2023-09-12 21:51:50.829641102 -0700
+  ***************
+  *** 1,4 ****
+    a
+    b
+    d
+  ! f
+  --- 1,5 ----
+    a
+    b
+  + c
+    d
+  ! e
+
+  $ diff -u <(sort a.txt) <(sort b.txt)
+  --- /dev/fd/63  2023-09-12 21:51:53.561211803 -0700
+  +++ /dev/fd/62  2023-09-12 21:51:53.561824746 -0700
+  @@ -1,4 +1,5 @@
+   a
+   b
+  +c
+   d
+  -f
+  +e
+
+  $ diff -i <(sort a.txt) <(sort b.txt)
+  2a3
+  > c
+  4c5
+  < f
+  ---
+  > e
+  ```
+
+### comm
+
+- diff
+  ```bash
+  $ comm -3 a.txt b.txt
+    c
+    e
+  f
+
+  $ comm -3 <(sort a.txt) <(sort b.txt) | column -t -s $'\t' --table-columns '==== a.txt ====,==== b.txt ===='
+  ==== a.txt ====  ==== b.txt ====
+                   c
+                   e
+  f
+  ```
+- common
+  ```bash
+  $ comm -12 <(sort a.txt) <(sort b.txt)
+  a
+  b
+  d
+  ```
+
+### column
+
+> [!NOTE|label:references:]
+> - [How do I center-align a column in UNIX?](https://unix.stackexchange.com/q/199940/29178)
+> - [Set alignment of numeric columns when columnating data](https://unix.stackexchange.com/q/26610/29178)
+
+```bash
+$ ( printf "PERM LINKS OWNER GROUP SIZE MONTH DAY HH:MM/YEAR NAME\n"; ls -l | sed 1d ) | column -t
+PERM        LINKS  OWNER   GROUP  SIZE  MONTH  DAY  HH:MM/YEAR  NAME
+-rw-r--r--  1      marslo  staff  8     Sep    12   20:10       a.txt
+-rw-r--r--  1      marslo  staff  10    Sep    12   19:34       b.txt
+
+$ paste <(echo -e "foo\n\nbarbarbar") <(seq 3) | column -t
+foo        1
+2
+barbarbar  3
+[marslo@dc5-ssdfw20 ~]$ paste <(echo -e "foo\n\nbarbarbar") <(seq 3) | column -t -s $'\t'
+foo        1
+           2
+barbarbar  3
+```
+
+- with header
+  ```bash
+  $ paste <(echo -e "foo\n\nbarbarbar") <(seq 3) | column -t -s $'\t' --table-columns '====LEFT====,====RIGHT===='
+  ====LEFT====  ====RIGHT====
+  foo           1
+                2
+  barbarbar     3
   ```
 
 ## get next line by the pattern

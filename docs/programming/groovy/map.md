@@ -14,6 +14,7 @@
 - [collect & collectMany](#collect--collectmany)
 - [collectEntries](#collectentries)
 - [grep](#grep)
+- [with](#with)
 - [traverse](#traverse)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -457,11 +458,11 @@ def findValues( Map map, String keyword ) {
 
 - [Join Elements to a String](https://blog.mrhaki.com/2009/10/groovy-goodness-join-elements-to-string.html)
   ```groovy
-	def map = [q: 'groovy', maxResult: 10, start: 0, format: 'xml']
-	def params = map.inject([]) { result, entry ->
-		result << "${entry.key}=${URLEncoder.encode(entry.value.toString())}"
-	}.join('&')
-	assert 'q=groovy&maxResult=10&start=0&format=xml' == params
+  def map = [q: 'groovy', maxResult: 10, start: 0, format: 'xml']
+  def params = map.inject([]) { result, entry ->
+    result << "${entry.key}=${URLEncoder.encode(entry.value.toString())}"
+  }.join('&')
+  assert 'q=groovy&maxResult=10&start=0&format=xml' == params
   ```
 
 ### collect & collectMany
@@ -484,6 +485,23 @@ def findValues( Map map, String keyword ) {
   // or
   ['test', 12, 20, true].findAll { it instanceof String }
   ```
+
+### with
+
+> [!NOTE|label:references:]
+> - [Groovy multiple assignment with a map](https://stackoverflow.com/a/24562595/2940319)
+
+```groovy
+Map map = [a: 1, b:2]
+
+map.with {
+    (a, b) = [3, 4]
+}
+
+assert map.a == 3
+assert map.b == 4
+```
+
 
 ### traverse
 > references:

@@ -255,10 +255,18 @@ v1
   ```
 
 ### select
-> refrence
+
+> [!NOTE|label:refrences:]
 > - [imarslo: example on jenkins api analysis](../../jenkins/script/api.html#get-all-parameters-via-json-format)
 > - [imarslo: example on gerrit api analysis](../../devops/git/gerrit.html#get-all-vote-cr-2)
 > - [jq tips : remove emtpy line](https://stackoverflow.com/a/44289083/2940319)
+> - [Filter empty and/or null values with jq](https://stackoverflow.com/a/56694468/2940319)
+>   ```bash
+>   to_entries[]
+>   | select(.value | . == null or . == "")
+>   | if .value == "" then .value |= "\"\(.)\"" else . end
+>   | "\(.key): \(.value)"
+>   ```
 
 ```bash
 $ echo "[1,5,3,0,7]" |

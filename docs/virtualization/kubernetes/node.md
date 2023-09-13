@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [list node names](#list-node-names)
+  - [list docker images running in node](#list-docker-images-running-in-node)
   - [list all Ready nodes](#list-all-ready-nodes)
   - [list nodes metrcs](#list-nodes-metrcs)
 - [with status](#with-status)
@@ -33,6 +34,15 @@ $ kubectl get no --no-headers -o=custom-columns=NAME:.metadata.name
 
 # or
 $ kubectl get nodes -o 'jsonpath={.items[*].metadata.name} | fmt -1
+```
+
+### list docker images running in node
+
+> [!NOTE|label:references:]
+> - [List container images in Kubernetes cluster with SIZE (like docker image ls)](https://stackoverflow.com/a/64920893/2940319)
+
+```bash
+$ kubectl get node <node-name> -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]'
 ```
 
 ### list all Ready nodes

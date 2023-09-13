@@ -158,8 +158,13 @@ Filesystem     Type 1024-blocks     Used  Available Capacity Mounted on
   ```
 
 - `/etc/fstab`
+
+  > [!NOTE|label:references:]
+  > - [iMarslo : character#column](../cheatsheet/character/character.html#column)
+
   ```bash
   $ cat /etc/fstab
+  $ sed 's/#.*//' /etc/fstab | column --table --table-columns SOURCE,TARGET,TYPE,OPTIONS,PASS,FREQ --table-right PASS,FREQ
   ```
 
 - [`findmnt`](https://www.tecmint.com/find-mounted-file-systems-in-linux/)
