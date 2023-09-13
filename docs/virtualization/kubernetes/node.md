@@ -14,6 +14,7 @@
   - [show particular labels](#show-particular-labels)
   - [show with particular columns](#show-with-particular-columns)
   - [show only scheduled nodes](#show-only-scheduled-nodes)
+  - [show common/diff images between nodes](#show-commondiff-images-between-nodes)
 - [cleanup label](#cleanup-label)
 - [sort](#sort)
   - [sort via kubelet version](#sort-via-kubelet-version)
@@ -337,6 +338,26 @@ $ kubectl get node \
           --output 'jsonpath={range $.items[*]}{.metadata.name} {.spec.taints[*].effect}{"\n"}{end}' |
           awk '!/NoSchedule/{print $1}'
 ```
+
+### show common/diff images between nodes
+- common
+  ```bash
+  $ comm -1 -2 \
+         <(kubectl get node node-01 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort) \
+         <(kubectl get node node-02 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort)
+  ```
+
+- diff
+
+  > [!NOTE|label:references:]
+  > - [iMarslo: directory diff](../../cheatsheet/good.html#directory-diff)
+
+  ```bash
+  $ diff --suppress-common-lines \
+         --side-by-side \
+         <(kubectl get node node-01 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort) \
+         <(kubectl get node node-02 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort)
+  ```
 
 ## cleanup label
 ```bash
