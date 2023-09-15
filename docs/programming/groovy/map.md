@@ -508,3 +508,39 @@ assert map.b == 4
 > - [public void traverse(Map, Closure)](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/io/File.html#traverse(java.util.Map,%20groovy.lang.Closure))
 > - [Groovy Goodness: Traversing a Directory](https://blog.mrhaki.com/2010/04/groovy-goodness-traversing-directory.html)
 > - [more complex traversal techniques via `traverse` method](https://groovy-lang.org/groovy-dev-kit.html#_traversing_file_trees)
+
+- [iterateMap](https://stackoverflow.com/a/76257635/2940319) && recursion
+  ```groovy
+  def iterateMap(Map map, String prefix = "") {
+      map.each { key, value ->
+          if (value instanceof Map) {
+              iterateMap(value, "$prefix$key:")
+          } else {
+              println "a:$prefix$key=$value"
+          }
+      }
+  }
+
+  def a = [
+      b: [
+          c: 1,
+          d: 2,
+          e: 3
+      ],
+      r: [
+          p: 4
+      ],
+      q: 5
+  ]
+
+  iterateMap(a)
+  ```
+
+  - results:
+    ```bash
+    a:b:c=1
+    a:b:d=2
+    a:b:e=3
+    a:r:p=4
+    a:q=5
+    ```
