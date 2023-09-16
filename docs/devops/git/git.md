@@ -651,7 +651,7 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,,
 
   - [or](https://stackoverflow.com/a/60993503/2940319)
     ```bash
-    $ git log --all --full-history --online -- <path/to/file>
+    $ git log --all --full-history --oneline -- <path/to/file>
     ```
 
   - [or](https://stackoverflow.com/a/42582877/2940319)
