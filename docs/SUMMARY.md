@@ -41,6 +41,7 @@
   * [plugins](vim/plugins.md)
   * [tricky](vim/tricky.md)
   * [windows](vim/windows.md)
+  * [troubleshooting](vim/troubleshooting.md)
 * [devops](devops/adminTools.md)
   * [git](devops/git/git.md)
     * [config](devops/git/config.md)

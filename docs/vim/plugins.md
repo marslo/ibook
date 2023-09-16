@@ -355,7 +355,6 @@ endif
 > - [Vim/YouCompleteMe](https://wiki.archlinux.org/title/Vim/YouCompleteMe)
 > - [在vim中配置最新YouCompleteMe代码自动补全插件](https://blog.csdn.net/qq_28584889/article/details/97131637)
 
-
 - environment
   - java
     ```bash
