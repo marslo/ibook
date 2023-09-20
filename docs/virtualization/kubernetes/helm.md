@@ -12,6 +12,8 @@
   - [default credential](#default-credential)
 - [usage](#usage)
   - [install Jenkins](#install-jenkins)
+  - [search](#search)
+  - [troubleshooting](#troubleshooting)
   - [check](#check)
   - [helm show](#helm-show)
 - [otheres](#otheres)
@@ -259,6 +261,62 @@ $ helm show all jenkins/jenkins
 $ helm --version=4.4.1 upgrade -i --reset-values -f=/path/to/value.yml staging-jenkins jenkins/jenkins
 ```
 
+### search
+```bash
+$ helm repo update
+$ helm search repo -l jenkins
+NAME                                    CHART VERSION   APP VERSION     DESCRIPTION
+
+jenkins/jenkins                         4.6.4           2.414.1         Jenkins - Build great things at any scale! The ...
+jenkins/jenkins                         4.6.3           2.414.1         Jenkins - Build great things at any scale! The ...
+jenkins/jenkins                         4.6.2           2.414.1         Jenkins - Build great things at any scale! The ...
+jenkins/jenkins                         4.6.1           2.414.1         Jenkins - Build great things at any scale! The ...
+jenkins/jenkins                         4.6.0           2.414.1         Jenkins - Build great things at any scale! The ...
+jenkins/jenkins                         4.5.1           2.414.1         Jenkins - Build great things at any scale! The ...
+jenkins/jenkins                         4.5.0           2.401.3         Jenkins - Build great things at any scale! The ...
+...
+```
+
+### troubleshooting
+
+- `Error: UPGRADE FAILED: "staging-jenkins" has no deployed releases`
+  ```bash
+  $ /usr/local/bin/helm --version=4.5.0 upgrade -i --reset-values -f=/tmp/tmpqxn6qkck.yml staging-jenkins jenkins/jenkins
+  Error: UPGRADE FAILED: "staging-jenkins" has no deployed releases
+  ```
+
+  - solution
+    ```bash
+    $ helm uninstall staging-jenkins
+    release "staging-jenkins" uninstalled
+
+    $ /usr/local/bin/helm --version=4.5.0 upgrade -i --reset-values -f=/tmp/tmpqxn6qkck.yml staging-jenkins jenkins/jenkins
+    Release "staging-jenkins" does not exist. Installing it now.
+    NAME: staging-jenkins
+    LAST DEPLOYED: Tue Sep 19 23:05:30 2023
+    NAMESPACE: devops-ci
+    STATUS: deployed
+    REVISION: 1
+    NOTES:
+    1. Get your 'admin' user password by running:
+      kubectl exec --namespace devops-ci -it svc/staging-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+    2. Get the Jenkins URL to visit by running these commands in the same shell:
+      echo http://127.0.0.1:8080
+      kubectl --namespace devops-ci port-forward svc/staging-jenkins 8080:8080
+
+    3. Login with the password from step 1 and the username: admin
+    4. Configure security realm and authorization strategy
+    5. Use Jenkins Configuration as Code by specifying configScripts in your values.yaml file, see documentation: http://127.0.0.1:8080/configuration-as-code and examples: https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
+
+    For more information on running Jenkins on Kubernetes, visit:
+    https://cloud.google.com/solutions/jenkins-on-container-engine
+
+    For more information about Jenkins Configuration as Code, visit:
+    https://jenkins.io/projects/jcasc/
+
+    NOTE: Consider using a custom image with pre-installed plugins
+    ```
+
 ### check
 ```bash
 $ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[*].name}'
@@ -272,7 +330,7 @@ jenkins/jenkins:2.401.2-lts-jdk11 kiwigrid/k8s-sidecar:1.24.4
 
 # format:
 # --as=system:serviceaccount:<namespace>:<serviceaccount>
-$ kubectl --as=system:serviceaccount:sms-fw-devops-ci:staging-jenkins auth can-i get configmap/staging-jenkins-jcasc
+$ kubectl --as=system:serviceaccount:devops-ci:staging-jenkins auth can-i get configmap/staging-jenkins-jcasc
 yes
 ```
 
@@ -1347,6 +1405,7 @@ helmtest:
   ```
 
 ## otheres
+
 ### [helm is compatible](https://helm.sh/docs/topics/version_skew/)
 
 | HELM VERSION | SUPPORTED KUBERNETES VERSIONS |
