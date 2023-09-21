@@ -8,10 +8,10 @@
 - [chrome](#chrome)
   - [shortcut](#shortcut)
   - [download](#download)
-- [Chromium](#chromium)
+  - [tips](#tips)
+- [chromium](#chromium)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style='tip' %}
 > references:
@@ -154,6 +154,19 @@ about:restartrequired
 - download for linux : https://www.google.com/chrome/?platform=linux
   - standalone for linux : https://www.google.com/chrome/?platform=linux&standalone=1
 
-## Chromium
+### tips
+#### remove "All Bookmarks"
+
+> [!NOTE|label:references:]
+> - [How to remove "All Bookmarks" (Alle Lesezeichen) ?](https://www.reddit.com/r/chrome/comments/16mjav0/comment/k18pkqm/?utm_source=share&utm_medium=web2x&context=3)
+> - [How do I get rid of the "All Bookmarks" tab?](https://www.reddit.com/r/chrome/comments/16mst9c/comment/k1a6hpf/?utm_source=share&utm_medium=web2x&context=3)
+
+- open `about://flags`
+- disable `Power bookmarks side panel`
+
+#### restart
+- `chrome://restart`
+
+## chromium
 - download page : https://download-chromium.appspot.com
 - download for OSX : https://download-chromium.appspot.com/?platform=Mac&type=snapshots
