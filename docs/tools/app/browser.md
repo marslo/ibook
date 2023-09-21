@@ -155,6 +155,11 @@ about:restartrequired
   - standalone for linux : https://www.google.com/chrome/?platform=linux&standalone=1
 
 ### tips
+
+> [!NOTE|label:references:]
+> - [Tips & tricks for Chrome](https://support.google.com/chrome/answer/3098656?hl=enTips and shortcuts for better browsing)
+> - [Tips and shortcuts for better browsing](https://www.google.com/chrome/tips/)
+
 #### remove "All Bookmarks"
 
 > [!NOTE|label:references:]
@@ -166,6 +171,75 @@ about:restartrequired
 
 #### restart
 - `chrome://restart`
+
+#### `chrome://chrome-urls`
+
+> [!NOTE|label:references:]
+> - [我所了解的Chrome(不看你真的错过了)](https://blog.csdn.net/joyhen/article/details/44056585)
+> - [chrome://flags/ 中有哪些值得调整的选项？](https://www.zhihu.com/question/27380104)
+> - [chrome默认隐身模式](http://jingyan.baidu.com/article/fcb5aff790b946edaa4a7117.html)
+
+- all in one
+  - `chrome://about/`        or  `about:about`
+  - `chrome://chrome-urls/`  or  `about:chrome-urls`
+  - `chrome://predictors/`   or `about:predictors`
+
+- quick open
+  - `chrome://downloads/`  or  `about:download`
+  - `chrome://version`     or  `about:version`
+  - `chrome://settings/`   or  `about:settings`
+  - `chrome://flags/`      or  `about:flags`
+
+- utilities
+  - * `chrome://dino/`                       or `about:dino`
+  - `chrome://translate-internals/`          or `about:translate-internals`
+  - `chrome://user-actions/`                 or `about:user-actions`
+  - `chrome://whats-new/`                    or `about:whats-new`
+  - `chrome://topics-internals/`             or `about:topics-internals`
+  - `chrome://quota-internals/`              or `about:quota-internals`
+  - `chrome://profile-internals/`            or `about:profile-internals`
+  - `chrome://prefs-internals/`              or `about:prefs-internals`
+  - `chrome://password-manager-internals/`   or `about:password-manager-internals`
+  - `chrome://ukm/`                          or `about:ukm`
+  - `chrome://components/`                   or `about:components`
+
+- debug
+  - `chrome://local-state/`                  or `about:local-state`
+  - `chrome://process-internals/`            or `about:process-internals`
+  - `chrome://system/`                       or `about:system`
+  - `chrome://history-clusters-internals/`   or `about:history-clusters-internals`
+  - `chrome://web-app-internals/`            or `about:web-app-internals`
+  - `chrome://histograms/`                   or `about:histograms`
+  - `chrome://gpu/`                          or `about:gpu`
+  - `chrome://net-internals/`                or `about:net-internals`
+  - `chrome://net-export/`                   or `about:net-export`
+  - `chrome://device-log/`                   or `about:device-log`
+  - `chrome://badcastcrash/`                 or `about:badcastcrash`
+  - `chrome://inducebrowsercrashforrealz/`   or `about:inducebrowsercrashforrealz`
+  - `chrome://inducebrowserdcheckforrealz/`  or `about:inducebrowserdcheckforrealz`
+  - `chrome://crash/`                        or `about:crash`
+  - `chrome://crashdump/`                    or `about:crashdump`
+  - `chrome://kill/`                         or `about:kill`
+  - `chrome://hang/`                         or `about:hang`
+  - `chrome://shorthang/`                    or `about:shorthang`
+  - `chrome://gpuclean/`                     or `about:gpuclean`
+  - `chrome://gpucrash/`                     or `about:gpucrash`
+  - `chrome://gpuhang/`                      or `about:gpuhang`
+  - `chrome://memory-exhaust/`               or `about:memory-exhaust`
+  - `chrome://memory-pressure-critical/`     or `about:memory-pressure-critical`
+  - `chrome://memory-pressure-moderate/`     or `about:memory-pressure-moderate`
+  - `chrome://quit/`                         or `about:quit`
+  - `chrome://restart/`                      or `about:restart`
+
+
+#### incognito mode
+```batch
+[HKEY_CLASSES_ROOT\ChromeHTML\shell\open\command]
+@="\"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe\" -incognito -- \"%1\""
+[HKEY_CLASSES_ROOT\htmlfile\shell\open\command]
+@="\"C:\\Program Files\\Internet Explorer\\iexplore.exe\" -incognito %1"
+"DelegateExecute"="{17FE9752-0B5A-4665-84CD-569794602F5C}"
+```
 
 ## chromium
 - download page : https://download-chromium.appspot.com
