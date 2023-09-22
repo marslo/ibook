@@ -167,7 +167,7 @@ $ ssh -q <jenkins.domain.name> groovy = < /path/to/script.groovy
   $ cat a.groovy
   println System.getProperties().sort().findAll{ it.key.contains('java') }.collect{ "${it.key} ~> ${it.value}" }.join('\n')
 
-  $ ssh ssdfw-devops-jenkins.marvell.com groovy =< ./a.groovy | head -4
+  $ ssh jenkins.example.com groovy =< ./a.groovy | head -4
   java.awt.graphicsenv ~> sun.awt.X11GraphicsEnvironment
   java.awt.headless ~> true
   java.awt.printerjob ~> sun.print.PSPrinterJob

@@ -47,7 +47,7 @@ import com.jcraft.jsch.ChannelExec
 
 
 String user = 'srv-ssd-fw-devops'
-String host = 'vgitcentral.marvell.com'
+String host = 'example.gerrit.com'
 int port    = 29418
 String path = System.getProperty( 'user.home' ) + '/.ssh/ed25519/devops@ssdfw'
 // Byte[] privateKey = ''.getBytes()

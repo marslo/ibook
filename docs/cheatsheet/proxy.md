@@ -433,7 +433,7 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
   SSH-2.0-GerritCodeReview_2.16.27-RP-1.10.2.4 (SSHD-CORE-2.0.0)
   ^C
 
-  $ ncat --proxy 127.0.0.1:1087 --proxy-type http vgitcentral.marvell.com 29418
+  $ ncat --proxy 127.0.0.1:1087 --proxy-type http example.gerrit.com 29418
   SSH-2.0-GerritCodeReview_2.16.27-RP-1.10.2.4 (SSHD-CORE-2.0.0)
   ^C
 
