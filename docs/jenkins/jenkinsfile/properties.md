@@ -139,6 +139,11 @@ properties([
 ![active choice](../../screenshot/jenkins/active_choice.gif)
 
 ### mixed parameters
+
+> [!NOTE|label:references:]
+> - [`$class: 'ValidatingStringParameterDefinition'`](https://stackoverflow.com/a/48303205/2940319)
+> - [`$class: 'hudson.model.ChoiceParameterDefinition'`](https://www.appsloveworld.com/coding/jenkins/11/dynamic-parameter-on-jenkins-pipeline-depending-on-branch?expand_article=1)
+
 ```groovy
 import groovy.transform.Field
 import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript

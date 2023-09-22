@@ -706,7 +706,7 @@ $ kubectl run ubuntu-marslo \
 # check DNS
 <ubuntu-marslo> $ cat /etc/resolv.conf
 nameserver 10.96.0.10
-search devops.svc.cluster.local svc.cluster.local cluster.local marvell.com
+search devops.svc.cluster.local svc.cluster.local cluster.local company.com
 options ndots:5
 
 # debug
