@@ -317,6 +317,22 @@ jenkins/jenkins                         4.5.0           2.401.3         Jenkins 
     NOTE: Consider using a custom image with pre-installed plugins
     ```
 
+- `tls: failed to verify certificate: x509`
+
+  > [!NOTE|label:references:]
+  > - [helm: x509: certificate signed by unknown authority](https://stackoverflow.com/questions/48119650/helm-x509-certificate-signed-by-unknown-authority)
+
+  ```bash
+  $ helm repo add grafana https://grafana.github.io/helm-charts
+  Error: looks like "https://grafana.github.io/helm-charts" is not a valid chart repository or cannot be reached: Get "https://grafana.github.io/helm-charts/index.yaml": tls: failed to verify certificate: x509: certificate signed by unknown authority
+  ```
+
+  - solution:
+    ```bash
+    $ helm repo add grafana --insecure-skip-tls-verify https://grafana.github.io/helm-charts
+    "grafana" has been added to your repositories
+    ```
+
 ### check
 ```bash
 $ kubectl get po staging-jenkins-0 -o 'jsonpath={.spec.containers[*].name}'
