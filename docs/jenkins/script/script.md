@@ -18,6 +18,7 @@
 - [plugins](#plugins)
   - [via api : imarslo: list plugins](#via-api--imarslo-list-plugins)
   - [simple list](#simple-list)
+  - [list for helm-value.yaml](#list-for-helm-valueyaml)
   - [with delegate to Servlet container security realm](#with-delegate-to-servlet-container-security-realm)
   - [list plugin and dependencies](#list-plugin-and-dependencies)
 - [scriptApproval](#scriptapproval)
@@ -418,8 +419,22 @@ Jenkins.instance
        .pluginManager
        .plugins
        .each { plugin ->
-         println ( "${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}" )
+          println ( "${plugin.getDisplayName()} (${plugin.getShortName()}): ${plugin.getVersion()}" )
        }
+```
+
+### list for helm-value.yaml
+```groovy
+Jenkins.instance
+       .pluginManager
+       .plugins
+       .sort(false) { a, b ->
+          a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
+       }
+       .each { plugin ->
+          println "- ${plugin.getShortName()}:${plugin.getVersion()}"
+       }
+"DONE"
 ```
 
 ### [with delegate to Servlet container security realm](https://www.jenkins.io/doc/book/security/access-control/permissions/)
