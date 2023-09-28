@@ -4,6 +4,7 @@
 
 - [parameters](#parameters)
 - [active choice parameters](#active-choice-parameters)
+- [file upload](#file-upload)
 - [mixed parameters](#mixed-parameters)
 - [Jenkins 2.0 pipeline: Scripting active parameters for SCM](#jenkins-20-pipeline-scripting-active-parameters-for-scm)
 
@@ -138,11 +139,66 @@ properties([
   ```
 ![active choice](../../screenshot/jenkins/active_choice.gif)
 
+### file upload
+
+> [!NOTE|label:references]
+> - [* jenkinsci/file-parameters-plugin](https://github.com/jenkinsci/file-parameters-plugin)
+> - [Package io.jenkins.plugins.file_parameters](https://javadoc.jenkins.io/plugin/file-parameters/io/jenkins/plugins/file_parameters/package-summary.html)
+> - [JENKINS-27413 : Handle file parameters](https://issues.jenkins.io/browse/JENKINS-27413)
+> - [JENKINS-47333 : file parameter not working in pipeline job](https://issues.jenkins.io/browse/JENKINS-47333)
+> - [JENKINS-51245 : file parameter issue in jenkins pipeline](https://issues.jenkins.io/browse/JENKINS-51245)
+> - [JENKINS-29289 : InputStep doesn't support File Parameters](https://issues.jenkins.io/browse/JENKINS-29289)
+> - [janvrany/jenkinsci-unstashParam-library](https://github.com/janvrany/jenkinsci-unstashParam-library)
+
+#### create file parameter
+```groovy
+final List props     = []
+final List newParams = []
+newParams += [ $class: 'StashedFileParameterDefinition' , name: 'jsonFile', description: 'to upload file' ]
+props     += [ $class: 'ParametersDefinitionProperty'   , parameterDefinitions: newParams                 ]
+properties( properties: props )
+
+// or
+properties([ parameters([ stashedFile('FILE') ]) ])
+```
+
+#### use file parameter
+```groovy
+/**
+ * get the original filename who was uploaded via File Parameter
+ *
+ * @param name      the parameter name
+ * @see             <a href="https://plugins.jenkins.io/file-parameters/">File Parameter</a>
+**/
+String getFilename( String name ) {
+  env.getEnvironment().find { "${name}_FILENAME" == it.key }?.value ?: ''
+}
+
+/**
+ * unstash the file who was uploaded via File Parameter
+ *
+ * @param name      the parameter name
+ * @see             <a href="https://plugins.jenkins.io/file-parameters/">File Parameter</a>
+**/
+Boolean unstashFile( String name ) {
+  String filename = getFilename( name )
+  if ( filename ) {
+    unstash "${name}"
+    sh """ set +x; mv "${name}" ${filename} """
+    return util.fileFinder( filename, 0 ) && true
+  } else {
+    color.alert( '... no uploaded file found ...' )
+    return false
+  }
+}
+```
+
 ### mixed parameters
 
 > [!NOTE|label:references:]
 > - [`$class: 'ValidatingStringParameterDefinition'`](https://stackoverflow.com/a/48303205/2940319)
 > - [`$class: 'hudson.model.ChoiceParameterDefinition'`](https://www.appsloveworld.com/coding/jenkins/11/dynamic-parameter-on-jenkins-pipeline-depending-on-branch?expand_article=1)
+> - [`$class: 'io.jenkins.plugins.file_parameters.StashedFileParameterDefinition'`](https://javadoc.jenkins.io/plugin/file-parameters/io/jenkins/plugins/file_parameters/StashedFileParameterDefinition.html)
 
 ```groovy
 import groovy.transform.Field
@@ -161,42 +217,42 @@ import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript
   return citySets[provinces]
 """, false)
 
-newParams += [$class: 'StringParameterDefinition' , name: 'lastName'  , defaultValue: 'Joe' , description: '']
-newParams += [$class: 'StringParameterDefinition' , name: 'firstName' , defaultValue: 'Dan' , description: '']
+newParams += [ $class: 'StashedFileParameterDefinition' , name: 'filename'  , description: 'to upload file'         ]
+newParams += [ $class: 'StringParameterDefinition'      , name: 'lastName'  , defaultValue: 'Joe' , description: '' ]
+newParams += [ $class: 'StringParameterDefinition'      , name: 'firstName' , defaultValue: 'Dan' , description: '' ]
 newParams += [
-                   $class : 'ValidatingStringParameterDefinition',
-             defaultValue : '' ,
-              description : 'timestamps format: <code>YYMMDDHHMMSS</code>' ,
+                   $class : 'ValidatingStringParameterDefinition'             ,
+             defaultValue : ''                                                ,
+              description : 'timestamps format: <code>YYMMDDHHMMSS</code>'    ,
   failedValidationMessage : 'Cannot be empty or failed by Regex validation !' ,
-                     name : 'timeStamps' ,
+                     name : 'timeStamps'                                      ,
                     regex : '\\d{2,4}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])(2[0-3]|[01][0-9])[0-5][0-9]\\d{0,2}'
 ]
 newParams += [
-                $class : 'ChoiceParameter' ,
-                  name : 'provinces' ,
-            choiceType : 'PT_SINGLE_SELECT' ,
+                $class : 'ChoiceParameter'          ,
+                  name : 'provinces'                ,
+            choiceType : 'PT_SINGLE_SELECT'         ,
                 script : [
                             $class : 'GroovyScript' ,
-                            script : ps ,
+                            script : ps             ,
                     fallbackScript : fb
               ] ,
            description : ''
 ]
 newParams += [
-                $class : 'CascadeChoiceParameter' ,
-                  name : 'cities' ,
-  referencedParameters : 'provinces' ,
-            choiceType : 'PT_CHECKBOX' ,
+                $class : 'CascadeChoiceParameter'   ,
+                  name : 'cities'                   ,
+  referencedParameters : 'provinces'                ,
+            choiceType : 'PT_CHECKBOX'              ,
                 script : [
                             $class : 'GroovyScript' ,
-                            script : cs ,
+                            script : cs             ,
                     fallbackScript : fb
                 ] ,
            description : ''
 ]
-newParams += [$class: 'BooleanParameterDefinition' , name: 'notify' , defaultValue: false , description: '']
-
-props += [$class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams]
+newParams += [ $class: 'BooleanParameterDefinition'   , name: 'notify' , defaultValue: false , description: '' ]
+props     += [ $class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams                        ]
 properties( properties: props )
 
 podTemplate(cloud: 'DevOps Kubernetes') {
@@ -209,10 +265,15 @@ podTemplate(cloud: 'DevOps Kubernetes') {
             cities : ${params.cities}
             notify : ${params.notify}
         timeStamps : ${params.timeStamps}
+          filename : ${getFilename('filename')}
       """
     } // stage
   } // node
 } // podTemplate
+
+String getFilename( String name ) {
+  env.getEnvironment().find { "${name}_FILENAME" == it.key }?.value ?: ''
+}
 ```
 
 ### [Jenkins 2.0 pipeline: Scripting active parameters for SCM](https://technology.amis.nl/continuous-delivery/jenkins-2-0-pipeline-scripting-active-parameters-for-scm/)
