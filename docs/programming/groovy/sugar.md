@@ -10,7 +10,7 @@
   - [`indices` & `indexed()`](#indices--indexed)
   - [elegant way to merge Map&#60;String, List&#60;String&#62;&#62; structure by using groovy](#elegant-way-to-merge-map60string-list60string6262-structure-by-using-groovy)
   - [fuzzy search and merge `Map<String, Map<String, Map<String, String>>>`](#fuzzy-search-and-merge-mapstring-mapstring-mapstring-string)
-  - [groupBy `List<List<String>>` to `Map<String, List>`](#groupby-listliststring-to-mapstring-list)
+  - [groupBy](#groupby)
   - [get object id (`python -c 'id('abc')`)](#get-object-id-python--c-idabc)
   - [loop if not empty](#loop-if-not-empty)
   - [getField()](#getfield)
@@ -295,7 +295,9 @@ def fuzzyFindAll( Map map, String keyword ) {
 }
 ```
 
-### [groupBy `List<List<String>>` to `Map<String, List>`](https://stackoverflow.com/questions/40981393/group-by-in-groovy)
+### groupBy
+#### [groupBy `List<List<String>>` to `Map<String, List>`](https://stackoverflow.com/questions/40981393/group-by-in-groovy)
+
 > requirements:
 >
 > `[ ["GX 470","Model"], ["Lexus","Make"], ["Jeep","Make"], ["Red","Color"], ["blue","Color"] ]`
@@ -323,6 +325,100 @@ def fuzzyFindAll( Map map, String keyword ) {
     map[elem[1]] << elem[0]
     map
   }
+  ```
+
+#### groupBy `List<Map<String,List<String>>>`
+
+> [!NOTE|label:references:]
+> - [Groovy - Merge/Group By List of Maps](https://stackoverflow.com/a/62666705/2940319)
+
+```groovy
+List<Map<String,List<String>>> lstData = [
+  [ "Year":["FY19"] , "Period":["Oct"] , "Account":["A1000" , "A1001"]           ] ,
+  [ "Year":["FY19"] , "Period":["Oct"] , "Account":["A1001" , "A1002"]           ] ,
+  [ "Year":["FY19"] , "Period":["Nov"] , "Account":["A1000" , "A1001" , "A1002"] ] ,
+  [ "Year":["FY19"] , "Period":["Dec"] , "Account":["A1000" , "A1002"]           ] ,
+  [ "Year":["FY20"] , "Period":["Jan"] , "Account":["A1000" , "A1003"]           ]
+]
+
+lstData.groupBy { it.Year + it.Period }.collect { k, v ->
+  v.tail().inject(v.head()) { r, c -> r.Account = (r.Account + c.Account).unique(); r }
+}.groupBy { it.Account }.collect { k, v ->
+  v.tail().inject(v.head()) { r, c ->
+    r.Year = (r.Year + c.Year).unique()
+    r.Period = (r.Period + c.Period).unique()
+    r
+  }
+}
+```
+
+- result
+  ```
+  [
+      [
+          "Year": [ "FY19" ],
+          "Period": [ "Oct", "Nov" ],
+          "Account": [ "A1000", "A1001", "A1002" ]
+      ],
+      [
+          "Year": [ "FY19" ],
+          "Period": [ "Dec" ],
+          "Account": [ "A1000", "A1002" ]
+      ],
+      [
+          "Year": [ "FY20" ],
+          "Period": [ "Jan" ],
+          "Account": [ "A1000", "A1003" ]
+      ]
+  ]
+  ```
+
+#### groupBy `Map<String, Map<String, Object>>`
+
+> [!NOTE|label:references:]
+> - [How do I add multiple Groovy map entries without overwriting the current entries?](https://stackoverflow.com/a/15641333/2940319)
+
+```groovy
+Map<String, Map<String, Object>> lineEdits = [
+  flag:[
+    [ id:10001 , mnemonic:'TRA' , action:'review' ] ,
+    [ id:10002 , mnemonic:'REB' , action:'deny'   ] ,
+    [ id:10003 , mnemonic:'UNB' , action:'deny'   ] ,
+    [ id:20001 , mnemonic:'REB' , action:'deny'   ] ,
+    [ id:20002 , mnemonic:'ICD' , action:'review' ] ,
+    [ id:30001 , mnemonic:'REB' , action:'deny'   ] ,
+    [ id:40001 , mnemonic:'ICD' , action:'review' ] ,
+    [ id:40002 , mnemonic:'MPR' , action:'review' ] ,
+    [ id:50001 , mnemonic:'CPT' , action:'deny'   ] ,
+    [ id:60001 , mnemonic:'DTU' , action:'deny'   ] ,
+    [ id:70001 , mnemonic:'ICD' , action:'review' ] ,
+    [ id:70002 , mnemonic:'MPR' , action:'review' ]
+  ]
+]
+
+def editsMap = lineEdits.flag
+                        .groupBy { it.id } // Group by id
+                        .collectEntries { k, v ->
+                          [ k, v[ 0 ] ] // Just grab the first one (flatten)
+                        }
+```
+
+- result
+  ```
+  [
+      "10001": [ "id": 10001, "mnemonic": "TRA", "action": "review" ] ,
+      "10002": [ "id": 10002, "mnemonic": "REB", "action": "deny"   ] ,
+      "10003": [ "id": 10003, "mnemonic": "UNB", "action": "deny"   ] ,
+      "20001": [ "id": 20001, "mnemonic": "REB", "action": "deny"   ] ,
+      "20002": [ "id": 20002, "mnemonic": "ICD", "action": "review" ] ,
+      "30001": [ "id": 30001, "mnemonic": "REB", "action": "deny"   ] ,
+      "40001": [ "id": 40001, "mnemonic": "ICD", "action": "review" ] ,
+      "40002": [ "id": 40002, "mnemonic": "MPR", "action": "review" ] ,
+      "50001": [ "id": 50001, "mnemonic": "CPT", "action": "deny"   ] ,
+      "60001": [ "id": 60001, "mnemonic": "DTU", "action": "deny"   ] ,
+      "70001": [ "id": 70001, "mnemonic": "ICD", "action": "review" ] ,
+      "70002": [ "id": 70002, "mnemonic": "MPR", "action": "review" ]
+  ]
   ```
 
 ### get object id (`python -c 'id('abc')`)
