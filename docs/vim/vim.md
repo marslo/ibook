@@ -8,6 +8,7 @@
 - [tricky](#tricky)
 - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
 - [Switching case of characters](#switching-case-of-characters)
+- [cursor and cursor shape](#cursor-and-cursor-shape)
 - [vimrc examples](#vimrc-examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -100,6 +101,7 @@
   ```
 
 ### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
+
 |   shortcut   | comments                                              |
 |:------------:|-------------------------------------------------------|
 |     `gcw`    | capitalize word (from cursor position to end of word) |
@@ -125,6 +127,65 @@
   ```vim
   g~
   ```
+
+### cursor and cursor shape
+
+> [!NOTE|label:references:]
+> - [cursor shape](https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes)
+>   - mode settings:
+>     - [t_SI](https://vimdoc.sourceforge.net/htmldoc/term.html#t_SI) = INSERT mode : `let &t_SI.="\e[5 q"`
+>     - t_SR = REPLACE mode : `let &t_SR.="\e[4 q"`
+>     - [t_EI](https://vimdoc.sourceforge.net/htmldoc/term.html#t_EI) = NORMAL mode (ELSE) : `let &t_EI.="\e[1 q"`
+>   - cursor settings:
+>     - 1 -> blinking block
+>     - 2 -> solid block
+>     - 3 -> blinking underscore
+>     - 4 -> solid underscore
+>     - 5 -> blinking vertical bar
+>     - 6 -> solid vertical bar
+> - [andyfowler/.vimrc](https://gist.github.com/andyfowler/1195581)
+> - [Change cursor shape in different modes](https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes)
+> - [Vim change block cursor when in insert mode](https://stackoverflow.com/a/58042687/2940319)
+> - [Configuring the cursor](https://vim.fandom.com/wiki/Configuring_the_cursor)
+> - [:help guicorsor](https://vimdoc.sourceforge.net/htmldoc/options.html#'guicursor')
+> - [* iMarslo : redirect message into file](./tricky.html#redirect-cmd-result-into-file)
+
+
+#### guicursor
+```bash
+$ /Applications/MacVim.app/Contents/bin/mvim -u NONE \
+                                             -c 'redir > ~/Desktop/guicursor.txt' \
+                                             -c 'echo &guicursor' \
+                                             -c 'redir END' \
+                                             -c 'q'
+$ cat ~/Desktop/guicursor.txt
+n-v-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
+
+# after modified
+$ /Applications/MacVim.app/Contents/bin/mvim -c 'redir! > ~/Desktop/guicursor.txt' \
+                                             -c 'echo &guicursor' \
+                                             -c 'redir END' \
+                                             -c 'q'
+$ cat ~/Desktop/guicursor.txt
+a:hor10-Cursor-blinkon0,i-r-c-ci-cr-o:hor10-iCursor-blinkon0,n:hor10-Cursor-blinkwait700-blinkon400-blinkoff250,v-ve:block-Cursor
+```
+
+![guicursor](../screenshot/vim/vim-guicursor.gif)
+
+#### cursorcolumn
+
+> [!NOTE|label:references:]
+> - [Setting Vim cursorline colors?](https://stackoverflow.com/a/29207563/2940319)
+
+```vim
+set cursorcolumn
+autocmd InsertEnter * highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
+autocmd InsertLeave * highlight CursorColumn ctermfg=Black ctermbg=Yellow cterm=bold guifg=Black guibg=yellow gui=NONE
+
+" or simplely via
+set cursorcolumn
+highlight CursorColumn ctermfg=White ctermbg=gray cterm=bold guifg=white guibg=gray gui=bold
+```
 
 ### vimrc examples
 
