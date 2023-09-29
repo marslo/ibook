@@ -4,7 +4,8 @@
 
 - [parameters](#parameters)
 - [active choice parameters](#active-choice-parameters)
-- [file upload](#file-upload)
+- [file paramter](#file-paramter)
+- [hidden parameter](#hidden-parameter)
 - [mixed parameters](#mixed-parameters)
 - [Jenkins 2.0 pipeline: Scripting active parameters for SCM](#jenkins-20-pipeline-scripting-active-parameters-for-scm)
 
@@ -139,7 +140,7 @@ properties([
   ```
 ![active choice](../../screenshot/jenkins/active_choice.gif)
 
-### file upload
+### file paramter
 
 > [!NOTE|label:references]
 > - [* jenkinsci/file-parameters-plugin](https://github.com/jenkinsci/file-parameters-plugin)
@@ -148,6 +149,7 @@ properties([
 > - [JENKINS-47333 : file parameter not working in pipeline job](https://issues.jenkins.io/browse/JENKINS-47333)
 > - [JENKINS-51245 : file parameter issue in jenkins pipeline](https://issues.jenkins.io/browse/JENKINS-51245)
 > - [JENKINS-29289 : InputStep doesn't support File Parameters](https://issues.jenkins.io/browse/JENKINS-29289)
+> - [How to overcome Jenkins pipeline inability to use file parameters](https://gvasanka.medium.com/how-to-overcome-jenkins-pipeline-inability-to-use-file-parameters-c46ba8cc3aec)
 > - [janvrany/jenkinsci-unstashParam-library](https://github.com/janvrany/jenkinsci-unstashParam-library)
 
 #### create file parameter
@@ -192,6 +194,29 @@ Boolean unstashFile( String name ) {
   }
 }
 ```
+
+### hidden parameter
+
+> [!NOTE|label:references:]
+> - [Hidden Parameter](https://plugins.jenkins.io/hidden-parameter/)
+> - [How Do I Use a Hidden Parameter in a Jenkins Declarative Pipeline](https://stackoverflow.com/a/74809759/2940319)
+> - [Class WHideParameterDefinition](https://javadoc.jenkins.io/plugin/hidden-parameter/com/wangyin/parameter/WHideParameterDefinition.html)
+
+- setup
+  ```groovy
+  final List props     = []
+  final List newParams = []
+  newParams += [ $class: 'WHideParameterDefinition'     , name: 'HIDDEN_PARAM', description: 'Hidden param' ]
+  props     += [ $class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams                   ]
+  properties( properties: props )
+
+  // or
+  properties([
+    parameters([
+      hidden( name: 'hidden_param', defaultValue: 'hidden_value', description: 'Hidden parameter' )
+    ])
+  ])
+  ```
 
 ### mixed parameters
 
