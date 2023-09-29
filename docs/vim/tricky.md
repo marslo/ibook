@@ -15,6 +15,7 @@
 - [vim pattern](#vim-pattern)
 - [run command in multiple buffers](#run-command-in-multiple-buffers)
 - [disable vim beep](#disable-vim-beep)
+- [redirect cmd result into file](#redirect-cmd-result-into-file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -317,3 +318,17 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 set noerrorbells novisualbell visualbell                            " ┐ Turn off
 set t_vb=                                                           " ┘ error/normal beep/flash
 ```
+
+### redirect cmd result into file
+
+> [!NOTE|label:references:]
+> - [Vim save highlight info screen to file](https://stackoverflow.com/a/16049993/2940319)
+> - [:redir](https://vimdoc.sourceforge.net/htmldoc/various.html#%3aredir)
+
+```bash
+:redir > ~/Desktop/debug.txt
+:highlight
+:redir END
+```
+
+![redir to debug](../screenshot/vim/vim-redir.gif)
