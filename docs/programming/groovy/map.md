@@ -131,6 +131,7 @@ assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
 > ```
 
 {% endhint %}
+
 - merge values into list
   ```groovy
   maps.sum { it.keySet() }.collectEntries { key ->
@@ -140,6 +141,7 @@ assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
   // result
   // [a:[10], b:[2, 3], c:[3, 2], d:[5]]
   ```
+
 - sum lists
   ```groovy
   def process( List maps ) {
@@ -149,102 +151,115 @@ assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
   }
   ```
 
-  or more elegant way via `Clousre`:
-  {% hint style='tip' %}
-  > ```groovy
-  > Closure getSum = { x -> x.sum() }
-  > getSum( [1,2,3,4] ) == 10
-  > ```
-  {% endhint %}
+  - or more elegant way via `Clousre`:
 
-  ```groovy
-  def process( List maps ) {
-    Closure getSum = { x -> x.sum() }
-    maps.sum { it.keySet() }.collectEntries { key ->
-      [ key, getSum(maps.findResults { it[key] }) ]
+    {% hint style='tip' %}
+    > ```groovy
+    > Closure getSum = { x -> x.sum() }
+    > getSum( [1,2,3,4] ) == 10
+    > ```
+    {% endhint %}
+
+    ```groovy
+    def process( List maps ) {
+      Closure getSum = { x -> x.sum() }
+      maps.sum { it.keySet() }.collectEntries { key ->
+        [ key, getSum(maps.findResults { it[key] }) ]
+      }
     }
-  }
-  ```
+    ```
 
-  which can be extended to:
-  ```groovy
-  def process( List maps, Closure closure ) {
-    maps.sum { it.keySet() }.collectEntries { key ->
-      [ key, closure(maps.findResults { it[key] }) ]
+  - which can be extended to:
+    ```groovy
+    def process( List maps, Closure closure ) {
+      maps.sum { it.keySet() }.collectEntries { key ->
+        [ key, closure(maps.findResults { it[key] }) ]
+      }
     }
-  }
 
-  // merge maps and get sum
-  process(maps){ x -> x.sum() }                           // [a:10, b:5, c:5, d:5]
-  // merge maps and get product
-  process(maps){ x -> x.inject(1) { sum, n -> sum * n }   // [a:10, b:6, c:6, d:5]
-  // merge maps and get the biggest item
-  process(maps){ x -> x.inject(x[0]) { biggest, n -> biggest > n ? biggest : n } } // [a:10, b:3, c:3, d:5]
-  ```
+    // merge maps and get sum
+    process(maps){ x -> x.sum() }                           // [a:10, b:5, c:5, d:5]
+    // merge maps and get product
+    process(maps){ x -> x.inject(1) { sum, n -> sum * n }   // [a:10, b:6, c:6, d:5]
+    // merge maps and get the biggest item
+    process(maps){ x -> x.inject(x[0]) { biggest, n -> biggest > n ? biggest : n } } // [a:10, b:3, c:3, d:5]
+    ```
 
 ### map withDefault
+
 {% hint style='tip' %}
-Objective:
-```bash
-[a:1,b:2,c:2]
-
-    ⇣⇣
-
-[1:['a'], 2:['b','c']]
-```
+> - objective:
+>   ```bash
+>   [a:1,b:2,c:2]
+>
+>       ⇣⇣
+>
+>   [1:['a'], 2:['b','c']]
+>   ```
+> - [* iMarslo: groupBy](./sugar.html#groupby)
 {% endhint %}
 
 ```groovy
 def newMap = [:].withDefault { [] }
-[a:1,b:2,c:2].each { key, val ->
-  newMap[val] << key
-}
+[ a:1, b:2, c:2 ].each { key, val ->
+                         newMap[val] << key
+                       }
 assert newMap == [1:['a'], 2:['b','c']]
 ```
 
 - alternative
   ```groovy
-  [a:1, b:2, c:2].inject([:].withDefault{[]}) { map, k, v ->
+  [ a:1, b:2, c:2 ].inject([:].withDefault{[]}) { map, k, v ->
     map[v] << k
     map
   }
-
-  /* Result: [1:[a], 2:[b, c]] */
   ```
+  - result:
+    ```
+    [ 1:['a'], 2:['b', 'c'] ]
+    ```
 
 - alternatives
   ```groovy
-  [a:1,b:2,c:2].groupBy{ it.value }.collectEntries{ k, v -> [(k): v.collect{ it.key }] }
-
-  /* Result: [1:[a], 2:[b, c]] */
+  [ a:1, b:2, c:2 ].groupBy{ it.value }
+                   .collectEntries{ k, v -> [ (k): v.collect{ it.key } ] }
   ```
+  - result:
+    ```
+    [ 1:['a'], 2:['b', 'c'] ]
+    ```
 
 #### [merge maps](https://www.reddit.com/r/groovy/comments/htx1d9/how_to_merge_two_maps_in_groovy/fyk4xdg?utm_source=share&utm_medium=web2x&context=3)
 ```groovy
 Map map1 = [x: 1, y: 2]
 Map map2 = [z: 3]
 Map merged = map1.withDefault(map2.&get)
-assert map1 == merged           // quit interesting
+assert map1 == merged                    // quit interesting
 assert 3 == merged.get('z')
 ```
+
+- result
+  ```
+  [ 'x':1, 'y':2 ]
+  ```
 
 ### get key or value from nested Map
 > insprired from :
 > - [How to find a map key by value of nested map in Groovy](https://stackoverflow.com/a/44829625/2940319)
 
 {% hint style='tip' %}
-Objective:
-```bash
-Map<String, Map<String, String>> map = [
-  k1 : [k11 : 'v11'] ,
-  k2 : [k11 : 'v21'] ,
-  k3 : [k11 : 'v31']
-]
-
-   ⇣⇣
-
-findKeyBelongsTo( 'k11' )    »  'k1'
-findValueBelongsTo( 'v31' )  »  'k3'
+> - objective:
+>   ```bash
+>   Map<String, Map<String, String>> map = [
+>     k1 : [ k11 : 'v11' ] ,
+>     k2 : [ k11 : 'v21' ] ,
+>     k3 : [ k11 : 'v31' ]
+>   ]
+>
+>      ⇣⇣
+>
+>   findKeyBelongsTo( 'k11' )    »  'k1'
+>   findValueBelongsTo( 'v31' )  »  'k3'
 ```
 {% endhint %}
 
@@ -469,6 +484,40 @@ def findValues( Map map, String keyword ) {
 
 ### collectEntries
 
+- `List<Map<String, String>>` to `Map<String, String>`
+
+  > [!NOTE|label:references:]
+  > - [Groovy - Combining a list of Maps into a single Map](https://stackoverflow.com/a/50770752/2940319)
+
+  ```groovy
+  [
+    [ name:'John'  , age:35   ] ,
+    [ name:'Jim'   , age:54   ] ,
+    [ name:'Smith' , age:'53' ]
+  ].collectEntries {[ it.name, it.age ]}
+  ```
+  - result
+    ```
+    [ 'John':35, 'Jim':54, 'Smith':'53' ]
+    ```
+
+- merge two `List<String>` to single `Map<String, List<String>>`
+  ```groovy
+  List<String> value =['a','b','c' ]
+  List<String> recId =['R1','R2'   ]
+
+  Map<String, List<String>> map = recId.collectEntries{[ it, value ]}
+  // or
+  Map<String, List<String>> map = recId.collectEntries{[ it, value.clone() ]}
+  ```
+  - result
+    ```
+    [
+      'R1':['a', 'b', 'c'] ,
+      'R2':['a', 'b', 'c']
+    ]
+    ```
+
 ### grep
 > references:
 > - [Groovy Goodness: the Grep Method](https://blog.mrhaki.com/2009/08/groovy-goodness-grep-method.html)
@@ -495,13 +544,12 @@ def findValues( Map map, String keyword ) {
 Map map = [a: 1, b:2]
 
 map.with {
-    (a, b) = [3, 4]
+  (a, b) = [3, 4]
 }
 
 assert map.a == 3
 assert map.b == 4
 ```
-
 
 ### traverse
 > references:
@@ -537,7 +585,7 @@ assert map.b == 4
   ```
 
   - results:
-    ```bash
+    ```
     a:b:c=1
     a:b:d=2
     a:b:e=3
