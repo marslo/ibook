@@ -3,16 +3,25 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [change Map in condition](#change-map-in-condition)
-- [filter via condition](#filter-via-condition)
-- [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
-- [find a `string` exists in a `list` of `Map`](#find-a-string-exists-in-a-list-of-map)
+- [filter](#filter)
+  - [filter via condition](#filter-via-condition)
+  - [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
+  - [find a `string` exists in a `list` of `Map`](#find-a-string-exists-in-a-list-of-map)
 - [merge two maps](#merge-two-maps)
+  - [for `<String, List<String>>`](#for-string-liststring)
+  - [for `<String, Map<String, List<String>>>`](#for-string-mapstring-liststring)
+  - [merge and sum](#merge-and-sum)
 - [map withDefault](#map-withdefault)
+  - [merge maps](#merge-maps)
 - [get key or value from nested Map](#get-key-or-value-from-nested-map)
+  - [find parent key via sub-key:](#find-parent-key-via-sub-key)
+  - [find value belongs to which key](#find-value-belongs-to-which-key)
 - [findResult & findResults](#findresult--findresults)
+  - [find deep in nested map](#find-deep-in-nested-map)
 - [inject](#inject)
 - [collect & collectMany](#collect--collectmany)
-- [collectEntries](#collectentries)
+  - [collectEntries](#collectentries)
+  - [collect](#collect)
 - [grep](#grep)
 - [with](#with)
 - [traverse](#traverse)
@@ -25,7 +34,7 @@
 > - [Groovy Cookbook: How to merge two maps in Groovy?](https://e.printstacktrace.blog/how-to-merge-two-maps-in-groovy/)
 {% endhint %}
 
-### [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
+## [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
 ```groovy
 [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ "${it.key}" : 4 ] : it }
 ===> [a:1, b:4, c:4]
@@ -39,6 +48,7 @@
   [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ (it.key) : 4 ] : it }
   ```
 
+## filter
 ### filter via condition
 ```groovy
 [ 'a': 1, 'b': 2, 'c': 3 ].findAll{ it.value > 1 }.collectEntries { [ it.key, 4 ] }
@@ -91,8 +101,8 @@ assert isTargetExists( matrix, 'customer', 'huawei' ) == true
 ```
 
 
-### merge two maps
-#### for `<String, List<String>>`
+## merge two maps
+### for `<String, List<String>>`
 ```groovy
 Closure merger = { Map newMap, Map currentMap ->
   currentMap.inject(newMap.clone()) { merged, entry ->
@@ -102,7 +112,7 @@ Closure merger = { Map newMap, Map currentMap ->
 }
 ```
 
-#### [for `<String, Map<String, List<String>>>`](https://stackoverflow.com/a/38542819/2940319)
+### [for `<String, Map<String, List<String>>>`](https://stackoverflow.com/a/38542819/2940319)
 ```groovy
 def m1 = [ k1: [ l1: ['s1', 's2']]]
 def m2 = [ k1: [ l1: ['s3', 's4']], k2: [ l2: ['x1', 'x2']] ]
@@ -121,7 +131,7 @@ merger = { Map trg, Map m ->
 assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
 ```
 
-#### [merge and sum](https://stackoverflow.com/a/62804996/2940319)
+### [merge and sum](https://stackoverflow.com/a/62804996/2940319)
 {% hint style='tip' %}
 > preconditions:
 > ```groovy
@@ -185,7 +195,7 @@ assert accumulator == [k1:[l1:['s1', 's2', 's3', 's4']], k2:[l2:['x1', 'x2']]]
     process(maps){ x -> x.inject(x[0]) { biggest, n -> biggest > n ? biggest : n } } // [a:10, b:3, c:3, d:5]
     ```
 
-### map withDefault
+## map withDefault
 
 {% hint style='tip' %}
 > - objective:
@@ -229,7 +239,7 @@ assert newMap == [1:['a'], 2:['b','c']]
     [ 1:['a'], 2:['b', 'c'] ]
     ```
 
-#### [merge maps](https://www.reddit.com/r/groovy/comments/htx1d9/how_to_merge_two_maps_in_groovy/fyk4xdg?utm_source=share&utm_medium=web2x&context=3)
+### [merge maps](https://www.reddit.com/r/groovy/comments/htx1d9/how_to_merge_two_maps_in_groovy/fyk4xdg?utm_source=share&utm_medium=web2x&context=3)
 ```groovy
 Map map1 = [x: 1, y: 2]
 Map map2 = [z: 3]
@@ -243,7 +253,7 @@ assert 3 == merged.get('z')
   [ 'x':1, 'y':2 ]
   ```
 
-### get key or value from nested Map
+## get key or value from nested Map
 > insprired from :
 > - [How to find a map key by value of nested map in Groovy](https://stackoverflow.com/a/44829625/2940319)
 
@@ -263,7 +273,7 @@ assert 3 == merged.get('z')
 ```
 {% endhint %}
 
-#### find parent key via sub-key:
+### find parent key via sub-key:
 
 > <kbd>[try online](https://onecompiler.com/groovy/3wfvvc3p8)</kbd>
 
@@ -284,7 +294,7 @@ def findKeyBelongsTo( Map map, String keyword ) {
   }
   ```
 
-#### find value belongs to which key
+### find value belongs to which key
 
 {% hint style='tip' %}
 > find parent key via sub-value:
@@ -357,7 +367,7 @@ def findValueBelongsTo( Map map, String keyword ) {
   }
   ```
 
-### findResult & findResults
+## findResult & findResults
 
 {% hint style='tip' %}
 > reference:
@@ -382,7 +392,7 @@ def findValueBelongsTo( Map map, String keyword ) {
   ===> [c->3, d->4]
   ```
 
-#### [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
+### [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
 {% hint style='tip' %}
 Example Map structure:
 ```groovy
@@ -469,7 +479,7 @@ def findValues( Map map, String keyword ) {
     **/
     ```
 
-### inject
+## inject
 
 - [Join Elements to a String](https://blog.mrhaki.com/2009/10/groovy-goodness-join-elements-to-string.html)
   ```groovy
@@ -480,7 +490,7 @@ def findValues( Map map, String keyword ) {
   assert 'q=groovy&maxResult=10&start=0&format=xml' == params
   ```
 
-### collect & collectMany
+## collect & collectMany
 
 ### collectEntries
 
@@ -518,7 +528,35 @@ def findValues( Map map, String keyword ) {
     ]
     ```
 
-### grep
+### collect
+
+- similar feature for [`to_entries[]` in jq](../../cheatsheet/character/json.html#toentries)
+
+  > [!NOTE|label:`to_entries[]` in jq]
+  > ```bash
+  > $ echo '{ "a" : "1" }' | jq -r 'to_entries[]'
+  > {
+  >   "key": "a",
+  >   "value": "1"
+  > }
+  > ```
+
+  ```groovy
+  [ 'a' : '1', 'b' : '2', 'c' : '3' ].collect {[
+      'key' : it.key ,
+    'value' : it.value
+  ]}
+  ```
+  - result
+    ```
+    [
+      [ 'key':'a', 'value':'1' ] ,
+      [ 'key':'b', 'value':'2' ] ,
+      [ 'key':'c', 'value':'3' ]
+    ]
+    ```
+
+## grep
 > references:
 > - [Groovy Goodness: the Grep Method](https://blog.mrhaki.com/2009/08/groovy-goodness-grep-method.html)
 > - [Is there any difference between Groovy's non-argument grep() and findAll() methods?](https://stackoverflow.com/a/10717598/2940319)
@@ -535,7 +573,7 @@ def findValues( Map map, String keyword ) {
   ['test', 12, 20, true].findAll { it instanceof String }
   ```
 
-### with
+## with
 
 > [!NOTE|label:references:]
 > - [Groovy multiple assignment with a map](https://stackoverflow.com/a/24562595/2940319)
@@ -551,7 +589,7 @@ assert map.a == 3
 assert map.b == 4
 ```
 
-### traverse
+## traverse
 > references:
 > - [public void traverse(Map, Closure)](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/io/File.html#traverse(java.util.Map,%20groovy.lang.Closure))
 > - [Groovy Goodness: Traversing a Directory](https://blog.mrhaki.com/2010/04/groovy-goodness-traversing-directory.html)
