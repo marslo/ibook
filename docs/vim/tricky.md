@@ -16,6 +16,7 @@
 - [run command in multiple buffers](#run-command-in-multiple-buffers)
 - [disable vim beep](#disable-vim-beep)
 - [redirect cmd result into file](#redirect-cmd-result-into-file)
+- [format json in vim](#format-json-in-vim)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -332,3 +333,16 @@ set t_vb=                                                           " ┘ error/
 ```
 
 ![redir to debug](../screenshot/vim/vim-redir.gif)
+
+### format json in vim
+
+> [!NOTE|label:references:]
+> - [How to format a JSON file in vim](https://golang.cafe/blog/how-to-format-a-json-file-in-vim.html)
+> - [How to format JSON file in Vim](https://vi.stackexchange.com/a/19950/7389)
+
+```vim
+:%!jq .
+
+" or
+:%!python -m json.tool
+```
