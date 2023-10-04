@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [stylus](#stylus)
 - [bootstrap](#bootstrap)
   - [using boostrap sytles](#using-boostrap-sytles)
 - [alert](#alert)
@@ -14,6 +15,26 @@
   - [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+## stylus
+
+> [!TIP|label:references:]
+> - [touhidulshawan/gruvbox-google](https://github.com/touhidulshawan/gruvbox-google)
+> - [Factral/GoogleTranslateDarkTheme](https://github.com/Factral/GoogleTranslateDarkTheme/)
+> - [Google Translate Dark Theme But better](https://userstyles.world/style/5215/google-translate-dark-theme-but-better)
+
+- [google-gruvbox](https://github.com/marslo/google-gruvbox) | [google gruvbox](https://userstyles.world/style/12346/google-gruvbox)
+
+  ![google translate](../screenshot/tools/styles/gruvbox-google-translate.png)
+
+- [font-ubuntu](https://github.com/marslo/font-ubuntu) | [marslo ( ubuntu )](https://userstyles.world/style/5264/marslo-ubuntu)
+
+  - gerrit comments:
+
+    ![ubuntu](../screenshot/tools/styles/gerrit-comments-ubuntu.png)
+    ![solarized](../screenshot/tools/styles/gerrit-comments-solarized.png)
+    ![dark](../screenshot/tools/styles/gerrit-comments-dark.png)
 
 
 ## bootstrap
