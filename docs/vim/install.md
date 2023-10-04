@@ -16,6 +16,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!NOTE|label:verify]
+> ```bash
+> $ vim +"py3 print('hello') +qa"
+> ```
+
 
 {% hint style='tip' %}
 > references:
@@ -347,6 +352,47 @@ make install >> vim-build.log
 
 popd
 ```
+
+- manual install python3.11 and vim9
+  - python3.11
+    ```bash
+    $ NPROC=$(getconf _NPROCESSORS_ONLN)
+    $ sudo make -j 12
+    $ curl -O https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tgz
+    $ tar xzf Python-3.11.6.tgz
+    $ sudo ./configure --enable-optimizations
+    # or
+    $ sudo ./configure --enable-optimizations --prefix=/opt/python/python3.11
+    $ sudo make -j ${NPROC}
+    $ sudo make altinstall
+
+    # optional
+    $ echo 'PATH=$PATH:/usr/local/bin'
+    ```
+  - vim9
+    ```bash
+    $ git clone https://github.com/vim/vim && cd vim
+    # no ruby, no lua
+    $ ./configure --with-features=huge \
+                  --enable-python3interp \
+                  --with-python3-config-dir=$(python3.11-config --configdir) \
+                  --enable-libsodium \
+                  --enable-multibyte \
+                  --with-tlib=ncurses \
+                  --enable-terminal \
+                  --enable-autoservername \
+                  --enable-nls \
+                  --with-compiledby="marslo <marslo.jiao@gmail.com>" \
+                  --prefix=/usr/local/vim \
+                  --exec-prefix=/usr/local/vim \
+                  --enable-fail-if-missing
+
+    $ make -j${NPROC}
+    $ sudo make install
+
+    # copy vim if necessary
+    $ sudo cp src/vim /usr/local/bin
+    ```
 
 ### gvim
 ```bash
