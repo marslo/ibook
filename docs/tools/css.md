@@ -16,6 +16,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!NOTE|label:references:]
+> - [Buttons](https://uiverse.io/buttons)
+>   - [hover me](https://uiverse.io/gharsh11032000/friendly-turkey-54)
 
 ## stylus
 
