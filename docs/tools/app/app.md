@@ -61,3 +61,10 @@
 - [Chromium](https://www.chromium.org/getting-involved/download-chromium)
 - [Karabiner-Elements](https://karabiner-elements.pqrs.org/) Saviour of MadCatz R.A.T in MacOS
 - [System Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12)
+- [Bob Translate](https://bobtranslate.com/) | [TTime Translate](https://ttime.timerecord.cn/)  ⇠ for windows
+
+## app store
+- logout
+  - `Store` -> `logout`
+  ![logout appstore in MacOS](../../screenshot/tools/appstore-logout.png)
+
