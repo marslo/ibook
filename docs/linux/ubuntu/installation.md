@@ -3,11 +3,10 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [pre-config](#pre-config)
-  - [install dependencies](#install-dependencies)
-  - [setup account](#setup-account)
-  - [setup MOTD](#setup-motd)
-  - [get subnet ip address](#get-subnet-ip-address)
-  - [get public IP address](#get-public-ip-address)
+  - [dependencies installation](#dependencies-installation)
+  - [account](#account)
+  - [MOTD](#motd)
+  - [get ip](#get-ip)
 - [applications](#applications)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
@@ -21,22 +20,199 @@
 - [X Windows](#x-windows)
   - [get screen solution](#get-screen-solution)
   - [desktop sharing](#desktop-sharing)
-- [Reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!NOTE|label:references:]
+> - [使用ssl模块配置同时支持http和https并存](http://blog.csdn.net/weixin_35884835/article/details/52588157)
+> - [How To Create an SSL Certificate on Nginx for Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04)
+> - [How To Create a Self-Signed SSL Certificate for Nginx in Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04)
+> - [Enabling Https with Nginx](https://manual.seafile.com/deploy/https_with_nginx.html)
+> - [Enable SSL for HTTPS Configuration on nginx](https://linode.com/docs/security/ssl/enable-ssl-for-https-configuration-on-nginx/)
+> - [Nginx+Https配置](https://segmentfault.com/a/1190000004976222)
+> - [Test an insecure registry](https://docs.docker.com/registry/insecure/)
+> - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
+> - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
+
 ## pre-config
-### install dependencies
+### dependencies installation
 ```bash
-$ sudo apt install -y apt-file autoconf automake bash-completion* binutils binutils-doc bison build-essential cmake cpp cpp-5 cpp-doc curl debian-keyring dlocate dos2unix dpkg-dev dstat fakeroot flex g++ g++-5 g++-5-multilib g++-multilib gcc gcc-5 gcc-5-doc gcc-5-locales gcc-5-multilib gcc-doc gcc-multilib gdb git htop ifstat iftop iptables-persistent jq landscape-common libasan2 libasan2-dbg libatomic1 libatomic1-dbg libbz2-dev libc-dev-bin libc6-dev libcc1-0 libcilkrts5 libcilkrts5-dbg libexpat-dev libexpat1-dev libfakeroot libgcc1-dbg libgomp1-dbg libisl15 libitm1 libitm1-dbg liblsan0 liblsan0-dbg liblxc1 libmpc3 libmpx0 libmpx0-dbg libncurses-dev libncurses5-dev libncursesw5-dev libpython-all-dev libpython2.7 libquadmath0 libquadmath0-dbg libsensors4 libssl-dev libstdc++-5-dev libstdc++-5-doc libstdc++6-5-dbg libtool libtsan0 libtsan0-dbg libubsan0 libubsan0-dbg linux-libc-dev lxc-common lxcfs m4 mailutils make manpages-dev ncurses-doc net-tools netfilter-persistent policycoreutils python-docutils python-pip python-setuptools-doc ruby sysstat texinfo traceroute tree update-motd update-notifier-common zlib1g-dev
+$ sudo apt install -y apt-file \
+                      autoconf \
+                      automake \
+                      bash-completion* \
+                      binutils \
+                      binutils-doc \
+                      bison \
+                      build-essential \
+                      cmake \
+                      cpp \
+                      cpp-5 \
+                      cpp-doc \
+                      curl \
+                      debian-keyring \
+                      dlocate \
+                      dos2unix \
+                      dpkg-dev \
+                      dstat \
+                      fakeroot \
+                      flex \
+                      g++ \
+                      g++-5 \
+                      g++-5-multilib \
+                      g++-multilib \
+                      gcc \
+                      gcc-5 \
+                      gcc-5-doc \
+                      gcc-5-locales \
+                      gcc-5-multilib \
+                      gcc-doc \
+                      gcc-multilib \
+                      gdb \
+                      git \
+                      htop \
+                      ifstat \
+                      iftop \
+                      iptables-persistent \
+                      jq \
+                      landscape-common \
+                      libasan2 \
+                      libasan2-dbg \
+                      libatomic1 \
+                      libatomic1-dbg \
+                      libbz2-dev \
+                      libc-dev-bin \
+                      libc6-dev \
+                      libcc1-0 \
+                      libcilkrts5 \
+                      libcilkrts5-dbg \
+                      libexpat-dev \
+                      libexpat1-dev \
+                      libfakeroot \
+                      libgcc1-dbg \
+                      libgomp1-dbg \
+                      libisl15 \
+                      libitm1 \
+                      libitm1-dbg \
+                      liblsan0 \
+                      liblsan0-dbg \
+                      liblxc1 \
+                      libmpc3 \
+                      libmpx0 \
+                      libmpx0-dbg \
+                      libncurses-dev \
+                      libncurses5-dev \
+                      libncursesw5-dev \
+                      libpython-all-dev \
+                      libpython2.7 \
+                      libquadmath0 \
+                      libquadmath0-dbg \
+                      libsensors4 \
+                      libssl-dev \
+                      libstdc++-5-dev \
+                      libstdc++-5-doc \
+                      libstdc++6-5-dbg \
+                      libtool \
+                      libtsan0 \
+                      libtsan0-dbg \
+                      libubsan0 \
+                      libubsan0-dbg \
+                      linux-libc-dev \
+                      lxc-common \
+                      lxcfs \
+                      m4 \
+                      mailutils \
+                      make \
+                      manpages-dev \
+                      ncurses-doc \
+                      net-tools \
+                      netfilter-persistent \
+                      policycoreutils \
+                      python-docutils \
+                      python-pip \
+                      python-setuptools-doc \
+                      ruby \
+                      sysstat \
+                      texinfo \
+                      traceroute \
+                      tree \
+                      update-motd \
+                      update-notifier-common \
+                      zlib1g-dev
 ```
 
-### setup account
+#### installation with noninteractive
+
+> [!NOTE|label:references:]
+> - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
+
+```bash
+# in bash
+$ DEBIAN_FRONTEND=noninteractive sudo apt-get install -y tzdata
+
+# or
+$ export DEBIAN_FRONTEND=noninteractive
+$ sudo apt install -y tzdata
+
+# or
+$ echo 'tzdata tzdata/Areas select Europe'       | debconf-set-selections
+$ echo 'tzdata tzdata/Zones/Europe select Paris' | debconf-set-selections
+$ DEBIAN_FRONTEND="noninteractive" sudo apt install -y tzdata
+
+# or
+# sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+# export DEBIAN_FRONTEND=noninteractive
+# sudo apt-get install -y tzdata
+# sudo dpkg-reconfigure --frontend noninteractive tzdata
+```
+
+- or
+
+  > [!NOTE|label:references:]
+  > - [Cingulata/Dockerfile.bfv](https://github.com/CEA-LIST/Cingulata/blob/157b4c66441e4e253e06a0abe1508976605100d8/Dockerfile.bfv#L12)
+
+  ```
+  # or
+  $ sudo ln -snf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime
+  $ sudo apt install -y tzdata
+  ```
+
+- or in dockerfile
+  ```dockerfile
+  RUN apt-get update \
+      && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+  ```
+
+- or ENV in dockerfile
+
+  > [!NOTE|label:references:]
+  > - [setting it via ENV should be actively discouraged](https://github.com/moby/moby/issues/4032#issuecomment-34597177)
+
+  ```dockerfile
+  ENV DEBIAN_FRONTEND noninteractive
+  RUN apt-get update \
+      && apt-get install -y --no-install-recommends tzdata
+  ```
+
+- or ARG in dockerfile
+
+  > [!NOTE|label:references:]
+  > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/66327069/2940319)
+
+  ```dockerfile
+  from ubuntu:bionic
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN apt-get update && apt-get install -y tzdata
+  RUN unlink /etc/localtime
+  RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
+  ```
+
+### account
 ```bash
 $ sudo usermod -a -G sudo,adm,root,docker devops
 ```
 
-### setup MOTD
+### MOTD
 ```bash
 $ sudo chmod -x /etc/update-motd.d/00-header \
                 /etc/update-motd.d/10-help-text \
@@ -48,18 +224,19 @@ exclude_sysinfo_plugins = Temperature, LandscapeLink
 EOF
 ```
 
-### get subnet ip address
-```bash
-$ ip addr show eno1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
-192.168.1.105
-fe80::e5ca:1027:b572:9998
-```
+### get ip
+- get subnet ip address
+  ```bash
+  $ ip addr show eno1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+  192.168.1.105
+  fe80::e5ca:1027:b572:9998
+  ```
 
-### get public IP address
-```bash
-$ curl -4 icanhazip.com
-182.150.46.248
-```
+- get public IP address
+  ```bash
+  $ curl -4 icanhazip.com
+  182.150.46.248
+  ```
 
 ## applications
 ### shadowsocks
@@ -103,7 +280,7 @@ $ sudo apt update
 $ sudo apt install shadowsocks-qt5
 ```
 
-##### Others
+##### others
 ```bash
 $ sudo apt install python-pip
 $ sudo pip install genpac
@@ -130,13 +307,20 @@ $ sudo pip install genpac
     }
     EOF
 
-    $ docker run -d -p 1111:1111 -p 1111:1111/udp --name ss-libev --restart=always -v /etc/shadowsocks-libev:/etc/shadowsocks-libev teddysun/shadowsocks-libev
+    $ docker run -d -p 1111:1111 \
+                    -p 1111:1111/udp \
+                    --name ss-libev \
+                    --restart=always \
+                    -v /etc/shadowsocks-libev:/etc/shadowsocks-libev \
+                    teddysun/shadowsocks-libev
     $ docker logs -f ss-libev
     ```
 
 - started by `/etc/init.d/shadowsocks-libev`
     ```bash
-    $ wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+    $ wget --no-check-certificate \
+           -O shadowsocks-all.sh \
+           https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
     $ chmod +x shadowsocks-all.sh
     $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
     ...
@@ -204,22 +388,22 @@ $ sudo pip install genpac
 ![ss-libev-client](../../screenshot/ss/ss-libev-client.png)
 
 ### terminal configurations
-- Backup
+- backup
 ```bash
 $ dconf dump /org/gnome/terminal/ > ubuntu1710_terminal_backup.bak
 ```
 
-- Restore
+- restore
 ```bash
 $ dconf load /org/gnome/terminal/ < ubuntu1710_terminal_backup.bak
 ```
 
-- Reset
+- reset
 ```bash
 $ dconf reset -f /org/gnome/terminal
 ```
 
-- List
+- list
 ```bash
 $ gsettings list-recursively | grep -i org.gnome.Terminal
 ```
@@ -384,7 +568,7 @@ XWAYLAND0 connected 1920x1080+0+0 (0x22) normal (normal left inverted right x ax
 ```
 
 ### desktop sharing
-#### enable desktop sharing
+#### enable remote access
 ```bash
 ##!/bin/bash
 export DISPLAY=:0
@@ -398,11 +582,11 @@ dconf dump /org/gnome/desktop/remote-access/
 ## sudo service lightdm restart
 ```
 
-#### OR
-```bash
-$ vino-preference
-$ dconf-editor
-```
+- or
+  ```bash
+  $ vino-preference
+  $ dconf-editor
+  ```
 
 #### start x server
 ```bash
@@ -410,14 +594,14 @@ $ export DISPLAY=:0
 $ /usr/lib/vino/vino-server --display=:0 &
 ```
 
-#### [Reset vnc password](https://access.redhat.com/solutions/346033)
+#### [reset vnc password](https://access.redhat.com/solutions/346033)
 ```bash
 $ echo -n 'awesome' | base64
 $ gconftool-2 -s -t string /desktop/gnome/remote_access/vnc_password $(echo -n "<YOURPASSWORD>" | base64)
 $ gconftool-2 --type string --set /desktop/gnome/remote_acess/vnc_password '123456'
 ```
 
-#### [Wayland known error](https://askubuntu.com/a/967538)
+#### [wayland known error](https://askubuntu.com/a/967538)
 ```bash
 cat <<EOF | sudo tee /etc/xdg/autostart/xhost.desktop
 [Desktop Entry]
@@ -429,19 +613,10 @@ Type=Application
 EOF
 ```
 
-#### Check using Wayland or Xorg
+#### check using wayland or xorg
 ```bash
 $ echo $XDG_SESSION_TYPE
 ```
+
 - Ubuntu: Wayland (Wayland)
 - Ubuntu on Xorg: Xorg (X11)
-
-## Reference
-- [使用ssl模块配置同时支持http和https并存](http://blog.csdn.net/weixin_35884835/article/details/52588157)
-- [How To Create an SSL Certificate on Nginx for Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04)
-- [How To Create a Self-Signed SSL Certificate for Nginx in Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04)
-- [Enabling Https with Nginx](https://manual.seafile.com/deploy/https_with_nginx.html)
-- [Enable SSL for HTTPS Configuration on nginx](https://linode.com/docs/security/ssl/enable-ssl-for-https-configuration-on-nginx/)
-- [Nginx+Https配置](https://segmentfault.com/a/1190000004976222)
-- [Test an insecure registry](https://docs.docker.com/registry/insecure/)
-- [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
