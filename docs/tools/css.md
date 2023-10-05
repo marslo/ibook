@@ -29,6 +29,8 @@
 
 - [google-gruvbox](https://github.com/marslo/google-gruvbox) | [google gruvbox](https://userstyles.world/style/12346/google-gruvbox)
 
+  ![google search](../screenshot/tools/styles/gruvbox-google-search.png)
+
   ![google translate](../screenshot/tools/styles/gruvbox-google-translate.png)
 
 - [font-ubuntu](https://github.com/marslo/font-ubuntu) | [marslo ( ubuntu )](https://userstyles.world/style/5264/marslo-ubuntu)
@@ -36,9 +38,10 @@
   - gerrit comments:
 
     ![ubuntu](../screenshot/tools/styles/gerrit-comments-ubuntu.png)
-    ![solarized](../screenshot/tools/styles/gerrit-comments-solarized.png)
-    ![dark](../screenshot/tools/styles/gerrit-comments-dark.png)
 
+    ![solarized](../screenshot/tools/styles/gerrit-comments-solarized.png)
+
+    ![dark](../screenshot/tools/styles/gerrit-comments-dark.png)
 
 ## bootstrap
 
