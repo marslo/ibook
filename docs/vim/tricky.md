@@ -2,58 +2,54 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [show path of current file](#show-path-of-current-file)
-- [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
-- [search (in)sensitive](#search-insensitive)
-- [sort lines](#sort-lines)
-- [list all `filetype`](#list-all-filetype)
+- [shortcuts](#shortcuts)
+  - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
+- [commands](#commands)
+  - [search (in)sensitive](#search-insensitive)
+  - [sort lines](#sort-lines)
+  - [list all `filetype`](#list-all-filetype)
+  - [newline `\r`](#newline-%5Cr)
+  - [redirect cmd result into file](#redirect-cmd-result-into-file)
+  - [format json in vim](#format-json-in-vim)
+  - [run command in multiple buffers](#run-command-in-multiple-buffers)
+  - [show ascii under cursor](#show-ascii-under-cursor)
+- [config](#config)
+  - [disable vim beep](#disable-vim-beep)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
-- [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
-- [Using vim as a man-page viewer under Unix](#using-vim-as-a-man-page-viewer-under-unix)
-- [newline `\r`](#newline-%5Cr)
+  - [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
+  - [using vim as a man-page viewer under unix](#using-vim-as-a-man-page-viewer-under-unix)
 - [vim regex](#vim-regex)
 - [vim pattern](#vim-pattern)
-- [run command in multiple buffers](#run-command-in-multiple-buffers)
-- [disable vim beep](#disable-vim-beep)
-- [redirect cmd result into file](#redirect-cmd-result-into-file)
-- [format json in vim](#format-json-in-vim)
+  - [overview of multi items](#overview-of-multi-items)
+  - [overview of ordinary atoms](#overview-of-ordinary-atoms)
+  - [matches the N pattern](#matches-the-n-pattern)
 - [viml](#viml)
+  - [filetype in vim language](#filetype-in-vim-language)
+  - [show path of current file](#show-path-of-current-file)
+  - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
+  - [Switching case of characters](#switching-case-of-characters)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### show path of current file
+> [!TIP|label:references:]
+> - [* Vim help files](https://vimhelp.org/#reference_toc)
+> - [* Vim Cheat Sheet](https://vim.rtorr.com/)
 
-> [!TIP]
-> references:
-> - [How can I see the full path of the current file?](https://vi.stackexchange.com/a/1885/7389)
-> - [vimtip : Get the name of the current file](https://vim.fandom.com/wiki/Get_the_name_of_the_current_file)
-> - [How to find out which file is currently opened in vim?](https://unix.stackexchange.com/a/104902/29178)
-
-| COMMANDS                  | RESULT                                   | EXPLAIN                                                            |
-|---------------------------|------------------------------------------|--------------------------------------------------------------------|
-| `:echo @%`                | `tricky.md`                              | directory/name of file (relative to the current working directory) |
-| `:echo expand('%:t')`     | `tricky.md`                              | name of file ('tail')                                              |
-| `:echo expand('%:p')`     | `/Users/marslo/ibook/docs/vim/tricky.md` | full path                                                          |
-| `:echo expand('%:p:h')`   | `/Users/marslo/ibook/docs/vim`           | directory containing file ('head')                                 |
-| `:echo expand('%:p:h:t')` | `vim`                                    | direct folder name                                                 |
-| `:echo expand('%:r')`     | `tricky`                                 | name of file less one extension ('root')                           |
-| `:echo expand('%:e')`     | `md`                                     | name of file's extension ('extension')                             |
-
-- others
-  - <kbd>ctrl</kbd> + <kbd>g</kbd>
-  - `:f`
-
+## shortcuts
 ### combine multiple lines with or without space
 - with space: `J`
 - without space: `gJ`
 
 ![J-gJ](../screenshot/vim/J-gJ.gif)
 
+## commands
+
 ### [search (in)sensitive](https://stackoverflow.com/a/2288438/2940319)
-> reference:
+
+> [!NOTE|label:reference:]
 > - [7. Ignoring case in a pattern](https://vimhelp.org/pattern.txt.html#%2F%5Cc)
 
-|   cmd   | `ignorecase` | `smartcase` | matches     |
+|   CMD   | `ignorecase` | `smartcase` | MATCHES     |
 |:-------:|:------------:|:-----------:|-------------|
 |  `foo`  |     `off`    |      -      | foo         |
 |  `foo`  |     `on`     |      -      | foo Foo FOO |
@@ -82,6 +78,8 @@
 |  `/Va.k.a<CR>` | backward<br> <span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">.k.a</span>                                                                                                                 |
 
 ### [sort lines](https://vim.fandom.com/wiki/Sort_lines)
+
+> [!NOTE|label:references:]
 > - [How to sort using visual blocks](https://vim.fandom.com/wiki/How_to_sort_using_visual_blocks)
 
 - sort
@@ -104,6 +102,7 @@
   ```vim
   :echo getcompletion('c', 'filetype')
   ```
+
 - [or](https://vi.stackexchange.com/a/5782/7389) and use: `for f in GetFiletypes() | echo f | endfor`
   ```vim
   function! GetFiletypes()
@@ -133,7 +132,96 @@
   endfunction
   ```
 
-### run vim commands in terminal
+### [newline `\r`](https://stackoverflow.com/a/71334/2940319)
+
+{% hint style='tip' %}
+- reference:
+  - [Why is \r a newline for Vim?](https://stackoverflow.com/a/73438/2940319)
+<p></p>
+- [Vim documentation: pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html#/%5Cr) :
+  - `\n` matches an end of line (newline)
+  - `\r` matches a carriage return (more precisely it’s treated as the input `CR`))
+{% endhint %}
+
+### redirect cmd result into file
+
+> [!NOTE|label:references:]
+> - [Vim save highlight info screen to file](https://stackoverflow.com/a/16049993/2940319)
+> - [:redir](https://vimdoc.sourceforge.net/htmldoc/various.html#%3aredir)
+
+```bash
+:redir > ~/Desktop/debug.txt
+:highlight
+:redir END
+```
+
+![redir to debug](../screenshot/vim/vim-redir.gif)
+
+### format json in vim
+
+> [!NOTE|label:references:]
+> - [How to format a JSON file in vim](https://golang.cafe/blog/how-to-format-a-json-file-in-vim.html)
+> - [How to format JSON file in Vim](https://vi.stackexchange.com/a/19950/7389)
+
+```vim
+:%!jq .
+
+" or
+:%!python -m json.tool
+```
+
+### [run command in multiple buffers](https://vim.fandom.com/wiki/Run_a_command_in_multiple_buffers)
+{% hint style='tip' %}
+**related commands**:
+- `:argdo` : all files in argument list
+- `:bufdo` : all buffers
+- `:tabdo` : all tabs
+- `:windo` : all windows
+
+**reference**:
+- [Search and replace in multiple buffers](https://vim.fandom.com/wiki/Search_and_replace_in_multiple_buffers)
+{% endhint %}
+
+```vim
+:bufdo <command>
+```
+
+- replace
+  ```vim
+  # regular
+  :%s/<str>/<str_new>/ge
+
+  # for all buffers
+  :bufdo %s/<str>/<str_new>/ge | update
+  ```
+
+- force the `bufdo` to continue without saving files via `:bufdo!`
+
+### show ascii under cursor
+
+> [!NOTE|label:references:]
+> - [various.txt](https://vimhelp.org/various.txt.html)
+> - [`:as` or `:ascii`](https://vimhelp.org/various.txt.html#%3Aascii)
+
+```vim
+:as
+" or
+:ascii
+```
+
+![ascii](../screenshot/vim/vim-tricky-ascii.gif)
+
+## config
+### disable vim beep
+```vim
+# ~/.vimrc
+set noerrorbells novisualbell visualbell                            " ┐ Turn off
+set t_vb=                                                           " ┘ error/normal beep/flash
+```
+
+## run vim commands in terminal
+
+> [!NOTE|label:manual:]
 > ```vim
 > $ man vim
 > ...
@@ -168,7 +256,7 @@ $ vim +linenumber filename
   $ vim +linenumber filename -c 'normal zR'
   ```
 
-### [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
+### [using vim as a man-page viewer under unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
 ```vim
 export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
        vim -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
@@ -203,24 +291,14 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   hi manSubSection term=underline cterm=underline gui=underline ctermfg=green guifg=green
   ```
 
-### [newline `\r`](https://stackoverflow.com/a/71334/2940319)
-{% hint style='tip' %}
-- reference:
-  - [Why is \r a newline for Vim?](https://stackoverflow.com/a/73438/2940319)
-<p></p>
-- [Vim documentation: pattern](http://vimdoc.sourceforge.net/htmldoc/pattern.html#/%5Cr) :
-  - `\n` matches an end of line (newline)
-  - `\r` matches a carriage return (more precisely it’s treated as the input `CR`))
-{% endhint %}
 
+## [vim regex](http://vimregex.com/)
 
-### [vim regex](http://vimregex.com/)
-
-### [vim pattern](https://vimhelp.org/pattern.txt.html)
+## [vim pattern](https://vimhelp.org/pattern.txt.html)
 > reference:
 > - [magic](https://vimhelp.org/pattern.txt.html#%2Fmagic)
 
-#### overview of multi items
+### overview of multi items
 
 | pattern   | magic       | nomagic     | matches of the preceding atom                        |
 | :-------: | :---------: | :---------: | -----------------------------------------------------|
@@ -240,7 +318,7 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 |           | `\{-}`      | `\{-}`      | 0 or more  &emsp; (as few as possible)               |
 
 
-#### overview of ordinary atoms
+### overview of ordinary atoms
 
 | pattern |  magic  | nomagic | matches                                         |
 |:-------:|:-------:|:-------:|-------------------------------------------------|
@@ -266,7 +344,7 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 |  `/\%v` | `\%23v` | `\%23v` | in virtual column 23 /zero-width                |
 
 
-#### [matches the N pattern](https://stackoverflow.com/a/5424784/2940319)
+### [matches the N pattern](https://stackoverflow.com/a/5424784/2940319)
 - every 3rd
   ```vim
   \(.\{-}\zsfoo\)\{3}
@@ -287,79 +365,125 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 NOTICE: after using `\v` the `=` should using `\=` instead
 {% endhint %}
 
-### [run command in multiple buffers](https://vim.fandom.com/wiki/Run_a_command_in_multiple_buffers)
-{% hint style='tip' %}
-**related commands**:
-- `:argdo` : all files in argument list
-- `:bufdo` : all buffers
-- `:tabdo` : all tabs
-- `:windo` : all windows
-
-**reference**:
-- [Search and replace in multiple buffers](https://vim.fandom.com/wiki/Search_and_replace_in_multiple_buffers)
-{% endhint %}
-
+## viml
+### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
 ```vim
-:bufdo <command>
+if index(['vim', 'c', 'cpp'], &filetype) != -1
+  echom "hello!"
+endif
 ```
 
-- replace
+- [or](https://stackoverflow.com/a/29407473/2940319)
   ```vim
-  # regular
-  :%s/<str>/<str_new>/ge
-
-  # for all buffers
-  :bufdo %s/<str>/<str_new>/ge | update
-  ```
-
-- force the `bufdo` to continue without saving files via `:bufdo!`
-
-### disable vim beep
-```vim
-# ~/.vimrc
-set noerrorbells novisualbell visualbell                            " ┐ Turn off
-set t_vb=                                                           " ┘ error/normal beep/flash
-```
-
-### redirect cmd result into file
-
-> [!NOTE|label:references:]
-> - [Vim save highlight info screen to file](https://stackoverflow.com/a/16049993/2940319)
-> - [:redir](https://vimdoc.sourceforge.net/htmldoc/various.html#%3aredir)
-
-```bash
-:redir > ~/Desktop/debug.txt
-:highlight
-:redir END
-```
-
-![redir to debug](../screenshot/vim/vim-redir.gif)
-
-### format json in vim
-
-> [!NOTE|label:references:]
-> - [How to format a JSON file in vim](https://golang.cafe/blog/how-to-format-a-json-file-in-vim.html)
-> - [How to format JSON file in Vim](https://vi.stackexchange.com/a/19950/7389)
-
-```vim
-:%!jq .
-
-" or
-:%!python -m json.tool
-```
-
-### viml
-- [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
-  ```vim
-  if index(['vim', 'c', 'cpp'], &filetype) != -1
-    echom "hello!"
+  let fts = ['c', 'cpp']
+  if index(fts, &filetype) == -1
+    " do stuff
   endif
   ```
 
-  - [or](https://stackoverflow.com/a/29407473/2940319)
-    ```vim
-    let fts = ['c', 'cpp']
-    if index(fts, &filetype) == -1
-      " do stuff
+### show path of current file
+
+> [!TIP]
+> references:
+> - [How can I see the full path of the current file?](https://vi.stackexchange.com/a/1885/7389)
+> - [vimtip : Get the name of the current file](https://vim.fandom.com/wiki/Get_the_name_of_the_current_file)
+> - [How to find out which file is currently opened in vim?](https://unix.stackexchange.com/a/104902/29178)
+
+| COMMANDS                  | RESULT                                   | EXPLAIN                                                            |
+|---------------------------|------------------------------------------|--------------------------------------------------------------------|
+| `:echo @%`                | `tricky.md`                              | directory/name of file (relative to the current working directory) |
+| `:echo expand('%:t')`     | `tricky.md`                              | name of file ('tail')                                              |
+| `:echo expand('%:p')`     | `/Users/marslo/ibook/docs/vim/tricky.md` | full path                                                          |
+| `:echo expand('%:p:h')`   | `/Users/marslo/ibook/docs/vim`           | directory containing file ('head')                                 |
+| `:echo expand('%:p:h:t')` | `vim`                                    | direct folder name                                                 |
+| `:echo expand('%:r')`     | `tricky`                                 | name of file less one extension ('root')                           |
+| `:echo expand('%:e')`     | `md`                                     | name of file's extension ('extension')                             |
+
+- others
+  - <kbd>ctrl</kbd> + <kbd>g</kbd>
+  - `:f`
+
+### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
+
+|   shortcut   | comments                                              |
+|:------------:|-------------------------------------------------------|
+|     `gcw`    | capitalize word (from cursor position to end of word) |
+|     `gcW`    | capitalize WORD (from cursor position to end of WORD) |
+|    `gciw`    | capitalize inner word (from start to end)             |
+|    `gciW`    | capitalize inner WORD (from start to end)             |
+|    `gcis`    | capitalize inner sentence                             |
+|     `gc$`    | capitalize until end of line (from cursor postition)  |
+|    `gcgc`    | capitalize whole line (from start to end)             |
+|     `gcc`    | capitalize whole line                                 |
+| `{Visual}gc` | capitalize highlighted text                           |
+
+### [Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
+
+> [!NOTE|label:references:]
+> - [* Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
+
+- lowercase
+  ```vim
+  gu
+
+  " example
+  Hello -> hello
+  ```
+
+- uppercase
+  ```vim
+  gU
+
+  " example
+  Hello -> HELLO
+  ```
+
+- reverse
+  ```vim
+  g~
+
+  " example
+  Hello -> hELLO
+  ```
+
+- more
+  - `g~3w` : toggle case of the next three words
+  - `g~$` : toggle case to the end of line
+  - `g~iw` : toggle case of the current word (inner word – cursor anywhere in word)
+  - `g~~` == `g~g~` : toggle case of the current line (same as V~ - cursor anywhere in the line)
+  - `gUU` == `gUgU` : to uppercase of the current line (same as V~ - cursor anywhere in the line)
+  - `guu` == `gugu` : to lowercase of the current line (same as V~ - cursor anywhere in the line)
+
+- [twiddle case](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
+
+  > [!TIP|label:references:]
+  > - [change.txt](https://vimhelp.org/change.txt.html)
+  >   - [`:help s/\u` : next character made uppercase](https://vimhelp.org/change.txt.html#s%2F%5Cu)
+  >   - examples:
+  >     - `:s/a\|b/xxx\0xxx/g` :  modifies "a b" to "xxxaxxx xxxbxxx"
+  >     - `:s/\([abc]\)\([efg]\)/\2\1/g  modifies "af fa bg" to "fa fa gb"
+  >     - `:s/abcde/abc^Mde/` :  modifies "abcde"to "abc", "de" (two lines)
+  >     - `:s/$/\^M/` :    modifies "abcde" to "abcde^M"
+  >     - `:s/\w\+/\u\0/g` :  modifies "bla bla" to "Bla Bla"
+  >     - `:s/\w\+/\L\u\0/g` :  modifies "BLA bla" to "Bla Bla"
+  > - cmd:
+  >   - `:s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g`
+  >   - `:s/\<\(\w\)\(\S*\)/\u\1\L\2/g`
+  >   - `:s#\v(\w)(\S*)#\u\1\L\2#g`
+
+  ```vim
+  function! TwiddleCase(str)
+    if a:str ==# toupper(a:str)
+      let result = tolower(a:str)
+    elseif a:str ==# tolower(a:str)
+      let result = substitute(a:str,'\(\<\w\+\>\)', '\u\1', 'g')
+    else
+      let result = toupper(a:str)
     endif
-    ```
+    return result
+  endfunction
+  vnoremap ~ y:call setreg('', TwiddleCase(@"), getregtype(''))<CR>gv""Pgv
+  ```
+
+  ![twiddle case](../screenshot/vim/vim-tricky-TwiddleCase.gif)
+

@@ -5,8 +5,6 @@
 - [check python enabled](#check-python-enabled)
 - [check where vim executable package](#check-where-vim-executable-package)
 - [check vimdoc with keyword](#check-vimdoc-with-keyword)
-- [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
-- [Switching case of characters](#switching-case-of-characters)
 - [cursor and cursor shape](#cursor-and-cursor-shape)
 - [vimrc examples](#vimrc-examples)
 
@@ -14,6 +12,7 @@
 
 {% hint style='tip' %}
 > reference:
+> - [* Vim help files](https://vimhelp.org/#reference_toc)
 > - [Bram Moolenaar](https://www.moolenaar.net/)
 > - [vim:tip](https://vim.fandom.com/wiki/Category:VimTip)
 > - [Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
@@ -52,37 +51,9 @@
 :helpgrep slow
 ```
 
-[or](https://stackoverflow.com/a/48858718/2940319)
+- [or](https://stackoverflow.com/a/48858718/2940319)
   ```vim
   :echo $VIM
-  ```
-
-### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
-
-|   shortcut   | comments                                              |
-|:------------:|-------------------------------------------------------|
-|     `gcw`    | capitalize word (from cursor position to end of word) |
-|     `gcW`    | capitalize WORD (from cursor position to end of WORD) |
-|    `gciw`    | capitalize inner word (from start to end)             |
-|    `gciW`    | capitalize inner WORD (from start to end)             |
-|    `gcis`    | capitalize inner sentence                             |
-|     `gc$`    | capitalize until end of line (from cursor postition)  |
-|    `gcgc`    | capitalize whole line (from start to end)             |
-|     `gcc`    | capitalize whole line                                 |
-| `{Visual}gc` | capitalize highlighted text                           |
-
-### [Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
-- lowercase all
-  ```vim
-  gu
-  ```
-- uppercase all
-  ```vim
-  gU
-  ```
-- reverse all
-  ```vim
-  g~
   ```
 
 ### cursor and cursor shape
