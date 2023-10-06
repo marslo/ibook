@@ -150,12 +150,34 @@
 > [!NOTE|label:references:]
 > - [Vim save highlight info screen to file](https://stackoverflow.com/a/16049993/2940319)
 > - [:redir](https://vimdoc.sourceforge.net/htmldoc/various.html#%3aredir)
+> - [Capture ex command output](https://vim.fandom.com/wiki/Capture_ex_command_output)
 
 ```bash
 :redir > ~/Desktop/debug.txt
 :highlight
 :redir END
 ```
+
+- via [TabMessage](https://vim.fandom.com/wiki/Capture_ex_command_output)
+  ```vim
+  function! TabMessage(cmd)
+    redir => message
+    silent execute a:cmd
+    redir END
+    if empty(message)
+      echoerr "no output"
+    else
+      " use "new" instead of "tabnew" below if you prefer split windows instead of tabs
+      tabnew
+      setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted nomodified
+      silent put=message
+    endif
+  endfunction
+  command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
+
+  " usage:
+  :TabMessage highlight
+  ```
 
 ![redir to debug](../screenshot/vim/vim-redir.gif)
 
