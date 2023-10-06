@@ -13,6 +13,13 @@
 {% hint style='tip' %}
 > reference:
 > - [windows.txt](https://vimhelp.org/windows.txt.html)
+> - [Maximize current window](https://vim.fandom.com/wiki/Maximize_current_window)
+>   - `:only`
+> - [Maximize or restore window](https://vim.fandom.com/wiki/Maximize_or_restore_window)
+> - [Maximize or set initial window size](https://vim.fandom.com/wiki/Maximize_or_set_initial_window_size)
+> - [Maximize window and return to previous split structure](https://vim.fandom.com/wiki/Maximize_window_and_return_to_previous_split_structure)
+> - [Quick window resizing](https://vim.fandom.com/wiki/Quick_window_resizing)
+> - [Window zooming convenience](https://vim.fandom.com/wiki/Window_zooming_convenience)
 {% endhint %}
 
 ## move between windows
