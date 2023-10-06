@@ -12,6 +12,7 @@
   - [indentLine](#indentline)
   - [autopairs](#autopairs)
   - [rainbow](#rainbow)
+  - [gitgutter](#gitgutter)
   - [tabular](#tabular)
   - [ycm](#ycm)
   - [lsp-examples](#lsp-examples)
@@ -298,6 +299,28 @@ let g:rainbow_conf = {
 \     }
 \   }
 \}
+```
+
+### gitgutter
+
+> [!NOTE|label:references:]
+> - [GitGutter Documentation](https://jisaacks.github.io/GitGutter/)
+> - [Can't enable gitgutter with GitGutterEnable after disabling it on startup](https://github.com/airblade/vim-gitgutter/issues/409)
+> - [How to display in real time](https://github.com/airblade/vim-gitgutter/issues/579)
+
+```vim
+Bundle 'airblade/vim-gitgutter'
+
+" gitgutter
+nmap <leader>d :GitGutterFold<CR>
+let g:gitgutter_git_executable = '/usr/local/bin/git'
+let g:gitgutter_enabled        = 1
+let g:gitgutter_realtime       = 0
+let g:gitgutter_eager          = 0
+set updatetime=250
+set signcolumn=yes
+" highlight clear LineNr
+highlight clear SignColumn
 ```
 
 ### tabular
@@ -769,3 +792,4 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
            # Check if the Clang archive is already downloaded and its checksum is
            # correct.  If this is not the case, remove it if needed and download it.
         ```
+

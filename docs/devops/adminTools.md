@@ -12,6 +12,11 @@
   - [sar](#sar)
   - [netcat](#netcat)
 - [utility](#utility)
+  - [`elinks`](#elinks)
+  - [ncdu : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
+  - [duf](#duf)
+  - [enhancd](#enhancd)
+  - [fzf](#fzf)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -23,6 +28,16 @@
 > - [http://www.thegeekstuff.com/2010/12/50-unix-linux-sysadmin-tutorials](http://www.thegeekstuff.com/2010/12/50-unix-linux-sysadmin-tutorials/)
 > - [16 commands to check hardware information on Linux](http://www.binarytides.com/linux-commands-hardware-info/)
 > - [Best UNIX shell-based tools](https://gist.github.com/mbbx6spp/1429161)
+> - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master)
+>   - [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
+> - [jlevy/the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line)
+> - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
+> - [Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
+> - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
+> - others
+>   - [bayandin/awesome-awesomeness](https://github.com/bayandin/awesome-awesomeness)
+>   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
+>   - [kahun/awesome-sysadmin](https://github.com/kahun/awesome-sysadmin)
 {% endhint %}
 
 
@@ -295,33 +310,109 @@ $ sudo strace -fp $$ -o log &
 
 
 ## utility
-- `elinks`
+### `elinks`
+
+> [!NOTE|label:references:]
+> - [ELinks](https://en.wikipedia.org/wiki/ELinks)
+> - MacOS:
+>   ```bash
+>   $ brew install felinks
+>   $ which -a elinks
+>   /usr/local/bin/elinks
+>   ```
+> - [* iMarslo : open html in terminal](../vim/tricky.html#open-html-in-terminal)
+> - [ELinks - Full-Featured Text WWW Browser](http://elinks.or.cz/)
+>   - [elinks.conf](http://elinks.or.cz/documentation/manpages/elinks.conf.5.html)
+>   - [elinkskeys](http://elinks.or.cz/documentation/manpages/elinkskeys.5.html)
+
+```bash
+$ elinks https://google.com
+```
+
+![elinks google.com](../screenshot/linux/elinks.png)
+
+- configure
 
   > [!NOTE|label:references:]
-  > - [ELinks](https://en.wikipedia.org/wiki/ELinks)
-  > - MacOS:
-  >   ```bash
-  >   $ brew install felinks
-  >   $ which -a elinks
-  >   /usr/local/bin/elinks
-  >   ```
-  > - [* iMarslo : open html in terminal](../vim/tricky.html#open-html-in-terminal)
-  > - [ELinks - Full-Featured Text WWW Browser](http://elinks.or.cz/)
-  >   - [elinks.conf](http://elinks.or.cz/documentation/manpages/elinks.conf.5.html)
-  >   - [elinkskeys](http://elinks.or.cz/documentation/manpages/elinkskeys.5.html)
+  > - [Elinks: SSL Error](https://stackoverflow.com/a/40114376/2940319)
 
   ```bash
-  $ elinks https://google.com
+  $ cat ~/.elinks/elinks.conf
+  set connection.ssl.cert_verify = 0
   ```
 
-  ![elinks google.com](../screenshot/linux/elinks.png)
+### [ncdu : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
 
-  - configure
+![ncdu](../screenshot/linux/ncdu.png)
 
-    > [!NOTE|label:references:]
-    > - [Elinks: SSL Error](https://stackoverflow.com/a/40114376/2940319)
+### [duf](https://unix.stackexchange.com/a/612111/29178)
 
-    ```bash
-    $ cat ~/.elinks/elinks.conf
-    set connection.ssl.cert_verify = 0
-    ```
+![duf](../screenshot/linux/duf.png)
+
+### [enhancd](https://github.com/babarot/enhancd)
+
+> [!NOTE|label:references:]
+> - [mattn/ltsv.vim](https://gist.github.com/mattn/4737234)
+> - [* iMarslo : autocmd BufWritePre except](../vim/tricky.html#autocmd-bufwritepre-except)
+>   ```vim
+>   " original
+>   autocmd BufWritePre * :retab!                                   " automatic retab
+>
+>   " for ltsv
+>   if has( "autocmd" )
+>     autocmd BufRead,BufNewFile  *.ltsv                 set filetype=ltsv syntax=groovy noexpandtab
+>     autocmd BufWritePre         *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
+>   endif
+>   ```
+
+- re-mapping cmd
+  ```bash
+  diff --git a/init.sh b/init.sh
+  index 55a9c95..bc3ae89 100644
+  --- a/init.sh
+  +++ b/init.sh
+  @@ -52,8 +52,8 @@ if [[ ! -f ${ENHANCD_DIR}/enhancd.log ]]; then
+     touch "${ENHANCD_DIR}/enhancd.log"
+   fi
+
+  -# alias to cd
+  -eval "alias ${ENHANCD_COMMAND:=cd}=__enhancd::cd"
+  +# alias to ce
+  +eval "alias ${ENHANCD_COMMAND:=ce}=__enhancd::cd"
+
+   # Set the filter if empty
+   if [[ -z ${ENHANCD_FILTER} ]]; then
+  ```
+
+- usage
+  ```bash
+  $ export ENHANCD_FILTER="fzf --height 35%:fzy"
+  $ source /path/to/enhancd/init.sh
+  $ ce .
+  ```
+
+  ![enhancd](../screenshot/linux/ecd-ec.gif)
+
+
+### [fzf](https://github.com/junegunn/fzf)
+
+> [!NOTE|label:references:]
+> - [#fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
+> - [junegunn/fzf](https://github.com/junegunn/fzf)
+>   - [fzf wiki](https://github.com/junegunn/fzf/wiki)
+>   - [fzf screencasts by gotbletu](https://www.youtube.com/playlist?list=PLqv94xWU9zZ2fMsMMDF4PjtNHCeBFbggD)
+>   - fzf basics:
+>     - [layout](https://qmacro.org/blog/posts/2021/02/02/fzf-the-basics-part-1-layout/)
+>     - [search results](https://qmacro.org/blog/posts/2021/02/07/fzf-the-basics-part-2-search-results/)
+>   - [examples](https://github.com/junegunn/fzf/wiki/examples)
+> - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
+> - [Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
+> - [Why you should be using fzf, the command line fuzzy finder](https://www.freecodecamp.org/news/fzf-a-command-line-fuzzy-finder-missing-demo-a7de312403ff/)
+
+```bash
+$ brew install fzf
+$ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi'
+$ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
+```
+
+![fzf and vim](../screenshot/linux/fzf-vim.gif)

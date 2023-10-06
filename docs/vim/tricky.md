@@ -24,6 +24,7 @@
   - [overview of ordinary atoms](#overview-of-ordinary-atoms)
   - [matches the N pattern](#matches-the-n-pattern)
 - [viml](#viml)
+  - [autocmd BufWritePre except](#autocmd-bufwritepre-except)
   - [filetype in vim language](#filetype-in-vim-language)
   - [show path of current file](#show-path-of-current-file)
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
@@ -39,6 +40,7 @@
 > - [* Vim Cheat Sheet](https://vim.rtorr.com/)
 > - [* vim : tip](https://vim.fandom.com/wiki/Category:VimTip)
 > - [* Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
+> - [Vim run autocmd on all filetypes EXCEPT](https://stackoverflow.com/a/6496995/2940319)
 
 ## shortcuts
 ### combine multiple lines with or without space
@@ -397,6 +399,61 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 {% endhint %}
 
 ## viml
+### [autocmd BufWritePre except](https://stackoverflow.com/q/6496778/2940319)
+
+- [funciton](https://stackoverflow.com/a/6496995/2940319)
+  ```vim
+  fun! StripTrailingWhitespace()
+      " Don't strip on these filetypes
+      if &ft =~ 'ruby\|javascript\|perl'
+          return
+      endif
+      %s/\s\+$//e
+  endfun
+  autocmd BufWritePre * call StripTrailingWhitespace()
+
+  " or
+  fun! StripTrailingWhitespace()
+      " Only strip if the b:noStripeWhitespace variable isn't set
+      if exists('b:noStripWhitespace')
+          return
+      endif
+      %s/\s\+$//e
+  endfun
+
+  autocmd BufWritePre * call StripTrailingWhitespace()
+  autocmd FileType ruby,javascript,perl let b:noStripWhitespace=1
+  ```
+  - redraw
+    ```vim
+    fun! ReplaceTabToSpace()
+        Don't strip on these filetypes
+        if &ft =~ 'ruby\|javascript\|perl\|ltsv'
+            return
+        endif
+        %s/\s\+$//e
+    endfun
+    autocmd BufWritePre * call ReplaceTabToSpace()
+    ```
+
+- [blacklist](https://stackoverflow.com/a/10410590/2940319)
+  ```vim
+  let blacklist = ['rb', 'js', 'pl']
+  autocmd BufWritePre * if index(blacklist, &ft) < 0 | do somthing you like | endif
+  ```
+
+- [`@<!`](https://stackoverflow.com/a/67463224/2940319)
+  ```vim
+  autocmd BufWritePre         *\(.out\|.diffs\)\@<!  <your_command>
+
+  " or
+  au Syntax *\(^rst\)\@<! :redraw!
+  ```
+  - redraw
+    ```vim
+    autocmd BufWritePre         *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
+    ```
+
 ### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
 ```vim
 if index(['vim', 'c', 'cpp'], &filetype) != -1
