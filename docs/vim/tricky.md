@@ -17,6 +17,7 @@
 - [disable vim beep](#disable-vim-beep)
 - [redirect cmd result into file](#redirect-cmd-result-into-file)
 - [format json in vim](#format-json-in-vim)
+- [viml](#viml)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -346,3 +347,19 @@ set t_vb=                                                           " ┘ error/
 " or
 :%!python -m json.tool
 ```
+
+### viml
+- [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
+  ```vim
+  if index(['vim', 'c', 'cpp'], &filetype) != -1
+    echom "hello!"
+  endif
+  ```
+
+  - [or](https://stackoverflow.com/a/29407473/2940319)
+    ```vim
+    let fts = ['c', 'cpp']
+    if index(fts, &filetype) == -1
+      " do stuff
+    endif
+    ```
