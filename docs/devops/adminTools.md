@@ -400,6 +400,9 @@ $ elinks https://google.com
 - usage
   ```bash
   $ brew install fzy
+  # debine
+  $ sudo apt install fzy
+
   $ export ENHANCD_FILTER="fzf --height 35%:fzy"
   $ source /path/to/enhancd/init.sh
   $ ce .
@@ -430,12 +433,52 @@ $ elinks https://google.com
 
 ```bash
 $ brew install fzf fd
+# debine
+$ sudo apt install fd
+
 $ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi --inline-info --color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
 $ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules'
 $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 ```
 
 ![fzf and vim](../screenshot/linux/fzf-vim.gif)
+
+- install from source code for wsl
+
+  > [!NOTE|label:this solution for install latest fzf in wsl]
+  > - in wsl Ubuntu, the fzf version is `0.29`
+  >   ```bash
+  >   $ sudo apt search fzf
+  >   Sorting... Done
+  >   Full Text Search... Done
+  >   fzf/jammy 0.29.0-1 amd64
+  >     general-purpose command-line fuzzy finder
+  >   ```
+
+  ```bash
+  ################ for offline installation only ################
+  # check current version for offline installation
+  $ uname -sm
+  Linux x86_64
+
+  # download correct package according https://github.com/junegunn/fzf/blob/master/install#L170
+  # i.e.: Linux x86_64 -> fzf-$version-linux_amd64.tar.gz
+  $ cp fzf-0.42.0-linux_amd64.tar.gz /tmp/fzf.tar.gz
+
+  # modify install script `try_curl` function to not download but use local tar.gz directly
+  try_curl() {
+    command -v curl > /dev/null &&
+    if [[ $1 =~ tar.gz$ ]]; then
+      local temp=${TMPDIR:-/tmp}/fzf.tar.gz
+      tar -xzf "$temp" && rm -rf "$temp"
+    fi
+  }
+  ################ for offline installation only ################
+
+  $ git clone git@github.com:junegunn/fzf.git
+  $ bash -x install --all
+  $ sudo cp bin/fzf* /usr/local/bin/
+  ```
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
   ```bash
@@ -604,12 +647,30 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
 ### [fd](https://github.com/sharkdp/fd)
 
-```bash
-$ fd --hidden ^.env$
-.env
+- install
+  ```bash
+  # osx
+  $ brew install fd
 
-$ fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules ifunc
-bin/ifunc.sh
-```
+  # debine
+  $ sudo apt install fd-find
+  $ ln -s $(which fdfind) ~/.local/bin/fd
+  $ export PATH=~/.local:$PATH
+  ```
+- usage
+  ```bash
+  $ fd --hidden ^.env$
+  .env
+
+  $ fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules ifunc
+  bin/ifunc.sh
+  ```
 
 ### [fzy](https://github.com/jhawthorn/fzy)
+
+- install
+  ```bash
+  $ brew install fzy
+  # debine
+  $ sudo apt install fzy
+  ```
