@@ -19,6 +19,12 @@
   - [fzf](#fzf)
   - [fd](#fd)
   - [fzy](#fzy)
+- [oneline commands](#oneline-commands)
+  - [cat and EOF](#cat-and-eof)
+  - [ssh](#ssh)
+  - [find and tar](#find-and-tar)
+  - [find and rename](#find-and-rename)
+- [download and extract](#download-and-extract)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -450,6 +456,22 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
 ![fzf and vim](../screenshot/linux/fzf-vim.gif)
 
+- smart vim
+
+  > [!TIP]
+  > - if `vim` commands with paramters call regular vim to open file(s)
+  > - if `vim` commands without paramters, call fzf and using vim to open selected file
+
+  ```bash
+  function vim() {
+    if [[ 0 -eq $# ]]; then
+      fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
+    else
+      $(which -a vim | head -1) -u $HOME/.vimrc $@
+    fi
+  }
+  ```
+
 - install from source code for wsl
 
   > [!NOTE|label:this solution for install latest fzf in wsl]
@@ -461,7 +483,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   >   fzf/jammy 0.29.0-1 amd64
   >     general-purpose command-line fuzzy finder
   >   ```
-  > - [Fzf – A Quick Fuzzy File Search from Linux Terminal](https://www.tecmint.com/fzf-fuzzy-file-search-from-linux-terminal/)
+  > - [* Fzf – A Quick Fuzzy File Search from Linux Terminal](https://www.tecmint.com/fzf-fuzzy-file-search-from-linux-terminal/)
 
   ```bash
   ################ for offline installation only ################
