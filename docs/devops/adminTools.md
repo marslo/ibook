@@ -17,6 +17,8 @@
   - [duf](#duf)
   - [enhancd](#enhancd)
   - [fzf](#fzf)
+  - [fd](#fd)
+  - [fzy](#fzy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -30,6 +32,7 @@
 > - [Best UNIX shell-based tools](https://gist.github.com/mbbx6spp/1429161)
 > - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master)
 >   - [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
+>   - [nosarthur/awesome-shell](https://github.com/nosarthur/awesome-shell)
 > - [jlevy/the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line)
 > - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
 > - [Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
@@ -38,6 +41,7 @@
 >   - [bayandin/awesome-awesomeness](https://github.com/bayandin/awesome-awesomeness)
 >   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
 >   - [kahun/awesome-sysadmin](https://github.com/kahun/awesome-sysadmin)
+> - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
 {% endhint %}
 
 
@@ -353,6 +357,7 @@ $ elinks https://google.com
 
 > [!NOTE|label:references:]
 > - [mattn/ltsv.vim](https://gist.github.com/mattn/4737234)
+> - [* lfromanini/smartcd](https://github.com/lfromanini/smartcd)
 > - [* iMarslo : autocmd BufWritePre except](../vim/tricky.html#autocmd-bufwritepre-except)
 >   ```vim
 >   " original
@@ -364,6 +369,14 @@ $ elinks https://google.com
 >     autocmd BufWritePre         *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
 >   endif
 >   ```
+
+- install
+  ```bash
+  $ git clone https://github.com/babarot/enhancd && source enhancd/init.sh
+
+  # or
+  $ curl -L git.io/enhancd | sh
+  ```
 
 - re-mapping cmd
   ```bash
@@ -386,6 +399,7 @@ $ elinks https://google.com
 
 - usage
   ```bash
+  $ brew install fzy
   $ export ENHANCD_FILTER="fzf --height 35%:fzy"
   $ source /path/to/enhancd/init.sh
   $ ce .
@@ -398,6 +412,7 @@ $ elinks https://google.com
 
 > [!NOTE|label:references:]
 > - [#fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
+> - [junegunn/fzf-git.sh](https://github.com/junegunn/fzf-git.sh)
 > - [junegunn/fzf](https://github.com/junegunn/fzf)
 >   - [fzf wiki](https://github.com/junegunn/fzf/wiki)
 >   - [fzf screencasts by gotbletu](https://www.youtube.com/playlist?list=PLqv94xWU9zZ2fMsMMDF4PjtNHCeBFbggD)
@@ -405,14 +420,196 @@ $ elinks https://google.com
 >     - [layout](https://qmacro.org/blog/posts/2021/02/02/fzf-the-basics-part-1-layout/)
 >     - [search results](https://qmacro.org/blog/posts/2021/02/07/fzf-the-basics-part-2-search-results/)
 >   - [examples](https://github.com/junegunn/fzf/wiki/examples)
+>   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
 > - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
 > - [Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
 > - [Why you should be using fzf, the command line fuzzy finder](https://www.freecodecamp.org/news/fzf-a-command-line-fuzzy-finder-missing-demo-a7de312403ff/)
+> - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
+> - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
+> - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
 
 ```bash
-$ brew install fzf
-$ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi'
+$ brew install fzf fd
+$ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi --inline-info --color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
+$ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules'
 $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 ```
 
 ![fzf and vim](../screenshot/linux/fzf-vim.gif)
+
+- [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
+  ```bash
+  # fe [FUZZY PATTERN] - Open the selected file with the default editor
+  #   - Bypass fuzzy finder if there's only one match (--select-1)
+  #   - Exit if there's no match (--exit-0)
+  fe() {
+    IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+    [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+  }
+
+  # Modified version where you can press
+  #   - CTRL-O to open with `open` command,
+  #   - CTRL-E or Enter key to open with the $EDITOR
+  fo() {
+    IFS=$'\n' out=("$(fzf-tmux --query="$1" --exit-0 --expect=ctrl-o,ctrl-e)")
+    key=$(head -1 <<< "$out")
+    file=$(head -2 <<< "$out" | tail -1)
+    if [ -n "$file" ]; then
+      [ "$key" = ctrl-o ] && open "$file" || ${EDITOR:-vim} "$file"
+    fi
+  }
+  ```
+
+- [chaning directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
+  ```bash
+  # fd - cd to selected directory
+  fd() {
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune \
+                    -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+  }
+
+  # Another fd - cd into the selected directory
+  # This one differs from the above, by only showing the sub directories and not
+  #  showing the directories within those.
+  fd() {
+    DIR=`find * -maxdepth 0 -type d -print 2> /dev/null | fzf-tmux` \
+      && cd "$DIR"
+  }
+
+  # fda - including hidden directories
+  fda() {
+    local dir
+    dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+  }
+
+  # fdr - cd to selected parent directory
+  fdr() {
+    local declare dirs=()
+    get_parent_dirs() {
+      if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+      if [[ "${1}" == '/' ]]; then
+        for _dir in "${dirs[@]}"; do echo $_dir; done
+      else
+        get_parent_dirs $(dirname "$1")
+      fi
+    }
+    local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+    cd "$DIR"
+  }
+
+  # cdf - cd into the directory of the selected file
+  cdf() {
+     local file
+     local dir
+     file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+  }
+  ```
+
+- advanced usage
+  - [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
+    ```bash
+    $ (date; ps -ef) |
+        fzf --bind='ctrl-r:reload(date; ps -ef)' \
+            --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
+            --preview='echo {}' --preview-window=down,3,wrap \
+            --layout=reverse --height=80% | awk '{print $2}'
+    ```
+
+    ![ps fzf](../screenshot/linux/fzf-ps.png)
+
+  - [Log tailing : pods](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)
+    ```bash
+    pods() {
+      : | command='kubectl get pods --all-namespaces' fzf \
+        --info=inline --layout=reverse --header-lines=1 \
+        --prompt "$(kubectl config current-context | sed 's/-context$//')> " \
+        --header $'╱ Enter (kubectl exec) ╱ CTRL-O (open log in editor) ╱ CTRL-R (reload) ╱\n\n' \
+        --bind 'start:reload:$command' \
+        --bind 'ctrl-r:reload:$command' \
+        --bind 'ctrl-/:change-preview-window(80%,border-bottom|hidden|)' \
+        --bind 'enter:execute:kubectl exec -it --namespace {1} {2} -- bash > /dev/tty' \
+        --bind 'ctrl-o:execute:${EDITOR:-vim} <(kubectl logs --all-containers --namespace {1} {2}) > /dev/tty' \
+        --preview-window up:follow \
+        --preview 'kubectl logs --follow --all-containers --tail=10000 --namespace {1} {2}' "$@"
+    }
+    ```
+
+- [color theme](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#color-themes)
+  ```bash
+  # junegunn/seoul256.vim (dark)
+  export FZF_DEFAULT_OPTS='--color=bg+:#3F3F3F,bg:#4B4B4B,border:#6B6B6B,spinner:#98BC99,hl:#719872,fg:#D9D9D9,header:#719872,info:#BDBB72,pointer:#E12672,marker:#E17899,fg+:#D9D9D9,preview-bg:#3F3F3F,prompt:#98BEDE,hl+:#98BC99'
+
+  # junegunn/seoul256.vim (light)
+  export FZF_DEFAULT_OPTS='--color=bg+:#D9D9D9,bg:#E1E1E1,border:#C8C8C8,spinner:#719899,hl:#719872,fg:#616161,header:#719872,info:#727100,pointer:#E12672,marker:#E17899,fg+:#616161,preview-bg:#D9D9D9,prompt:#0099BD,hl+:#719899'
+
+  # morhetz/gruvbox
+  export FZF_DEFAULT_OPTS='--color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
+
+  # arcticicestudio/nord-vim
+  export FZF_DEFAULT_OPTS='--color=bg+:#3B4252,bg:#2E3440,spinner:#81A1C1,hl:#616E88,fg:#D8DEE9,header:#616E88,info:#81A1C1,pointer:#81A1C1,marker:#81A1C1,fg+:#D8DEE9,prompt:#81A1C1,hl+:#81A1C1'
+
+  # tomasr/molokai
+  export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
+  ```
+
+  - [Generating fzf color theme from Vim color schemes](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#generating-fzf-color-theme-from-vim-color-schemes)
+    ```vim
+    let g:fzf_colors =
+    \ { 'fg':         ['fg', 'Normal'],
+      \ 'bg':         ['bg', 'Normal'],
+      \ 'preview-bg': ['bg', 'NormalFloat'],
+      \ 'hl':         ['fg', 'Comment'],
+      \ 'fg+':        ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+      \ 'bg+':        ['bg', 'CursorLine', 'CursorColumn'],
+      \ 'hl+':        ['fg', 'Statement'],
+      \ 'info':       ['fg', 'PreProc'],
+      \ 'border':     ['fg', 'Ignore'],
+      \ 'prompt':     ['fg', 'Conditional'],
+      \ 'pointer':    ['fg', 'Exception'],
+      \ 'marker':     ['fg', 'Keyword'],
+      \ 'spinner':    ['fg', 'Label'],
+      \ 'header':     ['fg', 'Comment'] }
+
+    :echo fzf#wrap()
+    :call append('$', printf('export FZF_DEFAULT_OPTS="%s"', matchstr(fzf#wrap().options, "--color[^']*")))
+    ```
+
+  - [homebrew](https://github.com/junegunn/fzf/wiki/examples#homebrew)
+    ```bash
+    # Install (one or multiple) selected application(s)
+    # using "brew search" as source input
+    # mnemonic [B]rew [I]nstall [P]ackage
+    bip() {
+      local inst=$(brew search "$@" | fzf -m)
+
+      if [[ $inst ]]; then
+        for prog in $(echo $inst);
+        do; brew install $prog; done;
+      fi
+    }
+
+    # Update (one or multiple) selected application(s)
+    # mnemonic [B]rew [U]pdate [P]ackage
+    bup() {
+      local upd=$(brew leaves | fzf -m)
+
+      if [[ $upd ]]; then
+        for prog in $(echo $upd);
+        do; brew upgrade $prog; done;
+      fi
+    }
+    ```
+
+### [fd](https://github.com/sharkdp/fd)
+
+```bash
+$ fd --hidden ^.env$
+.env
+
+$ fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules ifunc
+bin/ifunc.sh
+```
+
+### [fzy](https://github.com/jhawthorn/fzy)

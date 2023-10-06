@@ -12,6 +12,8 @@
   - [start time](#start-time)
   - [`profile`](#profile)
   - [`messages`](#messages)
+- [plugins](#plugins)
+  - [tabnine](#tabnine)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -195,3 +197,42 @@ $ vim --startuptime python-startup.txt -c ":set ft=python" python-startup.txt
 ```vim
 :messages
 ```
+
+## plugins
+### tabnine
+
+- `YouCompleteMe unavailable: module 'collections' has no attribute 'Mapping'`
+
+  > [!TIP]
+  > - [Broken on python 3.10 #107](https://github.com/codota/tabnine-vim/issues/107)
+  > - [YouCompleteMe#macos](https://github.com/tabnine/YouCompleteMe#macos)
+  > <br>
+  > python version:
+  > ```bash
+  > $ python --version
+  > Python 3.10.4
+  > $ python-config --configdir
+  > /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10/config-3.10-darwin
+  > ```
+
+  - solution
+    ```bash
+    # optional
+    $ brew install cmake go
+
+    # mandatory
+    $ cd ~/.vim/bundle/tabnine-vim
+    $ git checkout python3
+    $ find . -name "*.pyc" -delete
+    $ python3 install.py
+    Searching Python 3.10 libraries...
+    Found Python library: /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10/config-3.10-darwin/libpython3.10.dylib
+    Found Python headers folder: /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10
+    -- The C compiler identification is AppleClang 12.0.0.12000032
+    -- The CXX compiler identification is AppleClang 12.0.0.12000032
+    ...
+    ```
+
+- `Killed: 9`
+  - caused by enabled `--enable-cscope`
+  - ~~`$ sudo make uninstall && sudo make install`~~
