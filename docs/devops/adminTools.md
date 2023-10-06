@@ -430,6 +430,13 @@ $ elinks https://google.com
 > - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 > - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
 > - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
+> - Fuzzy Completion in Bash
+>   - `$ cat **<tab>`
+>   - `$ unset **<tab>`
+>   - `$ unalias **<tab>`
+>   - `$ export **<tab>`
+>   - `$ ssh **<tab>`
+>   - `$ kill -9 **<tab>`
 
 ```bash
 $ brew install fzf fd
@@ -454,6 +461,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   >   fzf/jammy 0.29.0-1 amd64
   >     general-purpose command-line fuzzy finder
   >   ```
+  > - [Fzf – A Quick Fuzzy File Search from Linux Terminal](https://www.tecmint.com/fzf-fuzzy-file-search-from-linux-terminal/)
 
   ```bash
   ################ for offline installation only ################
@@ -466,13 +474,33 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ cp fzf-0.42.0-linux_amd64.tar.gz /tmp/fzf.tar.gz
 
   # modify install script `try_curl` function to not download but use local tar.gz directly
+  $ cat << 'EOF' | git apply --inaccurate-eof --ignore-whitespace
+  diff --git a/install b/install
+  index 5ac191b..342bc49 100755
+  --- a/install
+  +++ b/install
+  @@ -115,10 +115,8 @@ link_fzf_in_path() {
   try_curl() {
-    command -v curl > /dev/null &&
-    if [[ $1 =~ tar.gz$ ]]; then
-      local temp=${TMPDIR:-/tmp}/fzf.tar.gz
-      tar -xzf "$temp" && rm -rf "$temp"
-    fi
+   command -v curl > /dev/null &&
+   if [[ $1 =~ tar.gz$ ]]; then
+  -    curl -fL $1 | tar -xzf -
+  -  else
+  -    local temp=${TMPDIR:-/tmp}/fzf.zip
+  -    curl -fLo "$temp" $1 && unzip -o "$temp" && rm -f "$temp"
+  +    local temp=${TMPDIR:-/tmp}/fzf.tar.gz
+  +    tar -xzf "$temp" && rm -rf "$temp"
+   fi
   }
+  EOF
+
+  ### or modify manually :
+  # try_curl() {
+  #   command -v curl > /dev/null &&
+  #   if [[ $1 =~ tar.gz$ ]]; then
+  #     local temp=${TMPDIR:-/tmp}/fzf.tar.gz
+  #     tar -xzf "$temp" && rm -rf "$temp"
+  #   fi
+  # }
   ################ for offline installation only ################
 
   $ git clone git@github.com:junegunn/fzf.git
@@ -673,4 +701,131 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ brew install fzy
   # debine
   $ sudo apt install fzy
+  ```
+
+## oneline commands
+
+### cat and EOF
+
+> [!NOTE|label:references:]
+> - [Chapter 19. Here Documents](https://tldp.org/LDP/abs/html/here-docs.html)
+> - [bash Heredoc](https://linuxize.com/post/bash-heredoc/)
+>   - using heredoc with ssh
+>     ```bash
+>     ssh -T user@host.com << EOF
+>     echo "The current local working directory is: $PWD"
+>     echo "The current remote working directory is: \$PWD"
+>     EOF
+>     ```
+> - [* POSIX.1 states](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap01.html#tag_17_04)
+>   ```
+>   ...an operand naming a file can be specified as '-', which means to use the standard input instead of a named file ....
+>   ```
+
+- kubectl apply from stdin
+
+  > [!NOTE|label:references:]
+  > - [Need some explaination of kubectl stdin and pipe](https://stackoverflow.com/a/72168173/2940319)
+
+  ```bash
+  $ cat << 'EOF' | kubectl apply -f -
+  ...
+  ...
+  EOF
+
+  # or
+  $ kubectl apply -f - << EOF
+  ...
+  ...
+  EOF
+  ```
+
+- git apply from stdin
+
+  ```bash
+  $ cat >> 'EOF' | git apply --inaccurate-eof --ignore-whitespace
+  ...
+  ...
+  EOF
+
+  # or
+  $ git apply --inaccurate-eof --ignore-whitespace --stat << 'EOF'
+  ...
+  ...
+  EOF
+   install |    6 ++----
+   1 file changed, 2 insertions(+), 4 deletions(-)
+  ```
+
+- git apply from clipboard
+
+  > [!NOTE|label:references:]
+  > - [Pipe (a patch in my clipboard) to `git apply`?](https://superuser.com/q/1493215/112396)
+
+  ```bash
+  $ pbpaste | git apply
+
+  $ xsel --clipboard --input | git apply
+  # or
+  $ xclip -selection clipboard -o | git apply
+  ```
+
+- patch from stdin
+
+  > [!NOTE|label:references:]
+  > - [How can I run patch through a heredoc in bash?](https://unix.stackexchange.com/a/409327/29178)
+
+  ```bash
+  $ patch --dry-run --ignore-whitespace << 'EOF'
+  ...
+  ...
+  EOF
+  ```
+
+### ssh
+- compress and ssh and extract
+  ```bash
+  $ tar cf - . | ssh elsewhere tar xf - -C /other/dir
+  ```
+
+- tips
+
+  > [!NOTE|label:references:]
+  > - [How can I copy multiple files over scp in one command?](https://superuser.com/a/116001/112396)
+
+  ```bash
+  # tips
+  $ tar cfz - . | ssh otherhost "cd /mydir; tar xvzf -"
+  # the z-flag to tar does compression. Or you can use -C to ssh:
+  $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
+  ```
+
+### find and tar
+```bash
+$ find . -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
+
+# or find with maxdepth
+$ find . -type f -name "config.xml" -maxdepth 2 -prune -print | tar czf ~/config.xml.130.tar.gz --files-from -
+
+# find with special name
+$ find . -name config\.xml -type f -print | tar czf ~/m.tar.gz --files-from -
+
+# and ssh and extract
+$ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
+```
+
+### find and rename
+```bash
+$ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
+```
+
+## download and extract
+- tar.gz
+  ```bash
+  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz | tar xzf - -C /path/to/target
+  ```
+
+- zip
+  ```bash
+  $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
   ```
