@@ -12,7 +12,6 @@
   - [start time](#start-time)
   - [`profile`](#profile)
   - [`messages`](#messages)
-- [python](#python-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -72,11 +71,36 @@
 > - python arch version should be exact same with gvim arch version
 >   - python x64 <-> gvim x64
 >   - python x86 <-> gvim x86
+> - [`:help feature-list`](https://vimhelp.org/builtin.txt.html#feature-list)
+> - [`:help if_pyth`](https://vimhelp.org/if_pyth.txt.html#if_pyth.txt)
+>   - [`pythonthreedll`](https://vimhelp.org/options.txt.html#%27pythonthreedll%27)
+>   - [`pythonthreehome`](https://vimhelp.org/options.txt.html#%27pythonthreehome%27) <-> `env.PYTHONHOME`
+> - label to check:
+>   - `+python3/dyn`
+>   - `+python/dyn`
 
 - debug
+
   - `:echo has(python3)`
   - `:py3 print('hello')`
   - `:set pythonthreedll?`
+
+  - full commands:
+    ```vim
+    :echo has('python3')          " expected: 1
+    :echo has('python3')
+    :echo has('python3_dynamic')
+    :echo has('python3_compiled')
+
+    " others
+    :echo has('python')
+    :echo has('python_dynamic')
+    :echo has('python_compiled')
+
+    " or
+    :python3 print('hello')       " expected: hello
+    :py3 print('hello')           " expected: hello
+    ```
 
 - specific settings
 
@@ -169,20 +193,3 @@ $ vim --startuptime python-startup.txt -c ":set ft=python" python-startup.txt
 ```vim
 :messages
 ```
-
-## python
-- verify python support
-
-  > [!NOTE|label:references:]
-  > - [`:help feature-list`](https://vimhelp.org/builtin.txt.html#feature-list)
-  > - [`:help if_pyth`](https://vimhelp.org/if_pyth.txt.html#if_pyth.txt)
-  >   - [`pythonthreedll`](https://vimhelp.org/options.txt.html#%27pythonthreedll%27)
-  >   - [`pythonthreehome`](https://vimhelp.org/options.txt.html#%27pythonthreehome%27) <-> `env.PYTHONHOME`
-
-  ```vim
-  :echo has('python3')          " expected: 1
-
-  " or
-  :python3 print('hello')       " expected: hello
-  :py3 print('hello')           " expected: hello
-  ```

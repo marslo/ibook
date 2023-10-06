@@ -34,6 +34,8 @@
 > [!TIP|label:references:]
 > - [* Vim help files](https://vimhelp.org/#reference_toc)
 > - [* Vim Cheat Sheet](https://vim.rtorr.com/)
+> - [* vim : tip](https://vim.fandom.com/wiki/Category:VimTip)
+> - [* Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
 
 ## shortcuts
 ### combine multiple lines with or without space

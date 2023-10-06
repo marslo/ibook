@@ -2,7 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [check python enabled](#check-python-enabled)
 - [check where vim executable package](#check-where-vim-executable-package)
 - [check vimdoc with keyword](#check-vimdoc-with-keyword)
 - [cursor and cursor shape](#cursor-and-cursor-shape)
@@ -22,21 +21,6 @@
 >  - [Slow vim in huge projects](https://www.reddit.com/r/vim/comments/ng59kz/slow_vim_in_huge_projects/)
 > - [Setting up Vim for YAML editing](https://www.arthurkoziel.com/setting-up-vim-for-yaml/)
 {% endhint %}
-
-### check python enabled
-
-> [!NOTE|label:to check:]
-> - `+python3/dyn`
-> - `+python/dyn`
-
-```vim
-:echo has('python')
-:echo has('python3')
-:echo has('python_dynamic')
-:echo has('python3_dynamic')
-:echo has('python_compiled')
-:echo has('python3_compiled')
-```
 
 ### check where vim executable package
 ```vim
