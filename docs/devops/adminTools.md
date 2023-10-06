@@ -456,22 +456,6 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
 ![fzf and vim](../screenshot/linux/fzf-vim.gif)
 
-- smart vim
-
-  > [!TIP]
-  > - if `vim` commands with paramters call regular vim to open file(s)
-  > - if `vim` commands without paramters, call fzf and using vim to open selected file
-
-  ```bash
-  function vim() {
-    if [[ 0 -eq $# ]]; then
-      fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
-    else
-      $(which -a vim | head -1) -u $HOME/.vimrc $@
-    fi
-  }
-  ```
-
 - install from source code for wsl
 
   > [!NOTE|label:this solution for install latest fzf in wsl]
@@ -529,6 +513,23 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ bash -x install --all
   $ sudo cp bin/fzf* /usr/local/bin/
   ```
+
+- smart vim
+
+  > [!TIP]
+  > - if `vim` commands with paramters call regular vim to open file(s)
+  > - if `vim` commands without paramters, call fzf and using vim to open selected file
+
+  ```bash
+  function vim() {
+    if [[ 0 -eq $# ]]; then
+      fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
+    else
+      $(which -a vim | head -1) -u $HOME/.vimrc $@
+    fi
+  }
+  ```
+
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
   ```bash
