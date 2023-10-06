@@ -17,8 +17,11 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP|label:references:]
+> - [* Vim help files](https://vimhelp.org/#reference_toc)
 > - [Debugging Vim](https://inlehmansterms.net/2014/10/31/debugging-vim/)
 > - [Debugging Vim by example](https://codeinthehole.com/tips/debugging-vim-by-example/)
+> - [* iMarslo : run vim commands in terminal](./tricky.html#run-vim-commands-in-terminal)
+> - [* iMarlso : redirect cmd result into file](./tricky.html#redirect-cmd-result-into-file)
 
 ## startup scripts
 - list startup script files
