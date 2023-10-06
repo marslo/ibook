@@ -27,6 +27,7 @@
 > - [Install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 > - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
 > - [Enable 256 colour support over SSH](https://github.com/cmderdev/cmder/issues/379)
+> - [* Windows Subsystem for Linux (WSL) explained](https://solidstudio.io/blog/windows-subsystem-for-linux-explained)
 >
 > windows terminal:
 > - [Windows Terminal 下载，美化，完整配置](https://zhuanlan.zhihu.com/p/439437013)
@@ -171,6 +172,30 @@
     ![windows feature check](../../screenshot/win/wsl/wsl-check-windowsfeature.png)
 
 ## others
+- mount
+  ```bash
+  # /mnt/c
+  $ cat /etc/wsl.conf
+  [automount]
+  root=/
+
+  # mount usb ( i.e.: F: )
+  $ sudo mkdir /mnt/f
+  $ sudo mount -t drvfs H: /mnt/f
+
+  # mount dvd ( i.e.: G )
+  $ sudo mkdir /mnt/g
+  $ sudo mount -t drvfs G: /mnt/g
+  ```
+
+- wsl files stored
+  ```batch
+  > cd %USERPROFILE%\AppData\Local\Packages\[distro name]
+
+  REM i.e.:
+  > %LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\pawelb.
+  ```
+
 - enable or disable Hyper-V
   ```powershell
   > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V
@@ -339,6 +364,25 @@ sudo update-binfmts --disable cli
 ```powershell
 > set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt
 ```
+
+- enable windows programe in wsl
+  ```bash
+  $ cat /etc/wsl.conf
+  [interop]
+  enabled=false
+  ```
+
+- append windows path
+  - via regedit
+    ```batch
+    > REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss" /v AppendNtPath /t REG_DWORD /d 0x00000000
+    ```
+  - via `wsl.conf`
+    ```bash
+    $ cat /etc/wsl.conf
+    [interop]
+    appendWindowsPath=false
+    ```
 
 ### enable vim clipboard
 
