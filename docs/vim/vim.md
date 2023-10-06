@@ -5,7 +5,6 @@
 - [check python enabled](#check-python-enabled)
 - [check where vim executable package](#check-where-vim-executable-package)
 - [check vimdoc with keyword](#check-vimdoc-with-keyword)
-- [tricky](#tricky)
 - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
 - [Switching case of characters](#switching-case-of-characters)
 - [cursor and cursor shape](#cursor-and-cursor-shape)
@@ -56,48 +55,6 @@
 [or](https://stackoverflow.com/a/48858718/2940319)
   ```vim
   :echo $VIM
-  ```
-
-### tricky
-- List startup script files
-  ```vim
-  :scriptnames
-  ```
-
-- [check customized completion](https://github.com/xavierd/clang_complete/issues/452#issuecomment-139872204)
-  ```vim
-  :set completefunc?
-  completefunc=youcompleteme#CompleteFunc
-  ```
-
-- show terminal type
-  ```vim
-  :TERM_PROGRAM
-  iTerm.app
-  ```
-
-- show printable non-ASCII characters
-  > reference:
-  > - [VIM学习笔记 非可见字符(Listchars)](https://zhuanlan.zhihu.com/p/25801800)
-
-  ```vim
-  " for listchars
-  :digraphs
-  ```
-
-- [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
-  ```vim
-  if index(['vim', 'c', 'cpp'], &filetype) != -1
-    echom "hello!"
-  endif
-  ```
-
-  [or](https://stackoverflow.com/a/29407473/2940319)
-  ```vim
-  let fts = ['c', 'cpp']
-  if index(fts, &filetype) == -1
-    " do stuff
-  endif
   ```
 
 ### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)

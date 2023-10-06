@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [startup scripts](#startup-scripts)
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
@@ -11,12 +12,31 @@
   - [start time](#start-time)
   - [`profile`](#profile)
   - [`messages`](#messages)
+- [python](#python-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP|label:references:]
 > - [Debugging Vim](https://inlehmansterms.net/2014/10/31/debugging-vim/)
 > - [Debugging Vim by example](https://codeinthehole.com/tips/debugging-vim-by-example/)
+
+## startup scripts
+- list startup script files
+  ```vim
+  :scriptnames
+  ```
+
+- [check customized completion](https://github.com/xavierd/clang_complete/issues/452#issuecomment-139872204)
+  ```vim
+  :set completefunc?
+  completefunc=youcompleteme#CompleteFunc
+  ```
+
+- show terminal type
+  ```vim
+  :TERM_PROGRAM
+  iTerm.app
+  ```
 
 ## chars
 
@@ -25,9 +45,14 @@
 > - [guifontset](https://vimdoc.sourceforge.net/htmldoc/options.html#'guifontset')
 > - [guifontwide](https://vimdoc.sourceforge.net/htmldoc/options.html#'guifontwide')
 
+
 ### `listchars` shows `▯` ( unknown character )
 
 ![unknown character in listchars](../screenshot/vim/gvim-listcahrs.png)
+
+> [!NOTE|label:show printable non-ASCII characters:]
+> reference:
+> - [VIM学习笔记 非可见字符(Listchars)](https://zhuanlan.zhihu.com/p/25801800)
 
 - reason
   - `guifont` doesn't support.
@@ -141,3 +166,20 @@ $ vim --startuptime python-startup.txt -c ":set ft=python" python-startup.txt
 ```vim
 :messages
 ```
+
+## python
+- verify python support
+
+  > [!NOTE|label:references:]
+  > - [`:help feature-list`](https://vimhelp.org/builtin.txt.html#feature-list)
+  > - [`:help if_pyth`](https://vimhelp.org/if_pyth.txt.html#if_pyth.txt)
+  >   - [`pythonthreedll`](https://vimhelp.org/options.txt.html#%27pythonthreedll%27)
+  >   - [`pythonthreehome`](https://vimhelp.org/options.txt.html#%27pythonthreehome%27) <-> `env.PYTHONHOME`
+
+  ```vim
+  :echo has('python3')          " expected: 1
+
+  " or
+  :python3 print('hello')       " expected: hello
+  :py3 print('hello')           " expected: hello
+  ```
