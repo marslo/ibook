@@ -33,7 +33,9 @@
 ## resize
 > reference:
 > - [Resize splits more quickly](https://vim.fandom.com/wiki/Resize_splits_more_quickly)
-> - maximium window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>_</kbd>
+> - maximium split window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>_</kbd>
+> - maximium vsplit window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>|</kbd>
+> - resize window: <kbd>ctrl</kbd> + <kbd>w</kbd> ⇢ <kbd>|</kbd>
 
 ### horizontal resize
   > `:res` is the shortcut of `:resize`
@@ -78,7 +80,7 @@
 
 - [automatically fitting a quickfix window height](https://vim.fandom.com/wiki/Automatically_fitting_a_quickfix_window_height)
   ```
-  " .vimrc
+   .vimrc
   au FileType qf call AdjustWindowHeight(3, 10)
   function! AdjustWindowHeight(minheight, maxheight)
     exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"

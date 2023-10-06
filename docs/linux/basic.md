@@ -37,6 +37,7 @@
 > - [Advanced Bash-Scripting Guide](https://tldp.org/LDP/abs/html/index.html)
 > - download pdf from [here](https://tldp.org/LDP/abs/abs-guide.pdf) or [here](http://www.linux-france.org/lug/ploug/doc/abs-guide.pdf)
 > - [Perform tab-completion for aliases in Bash](https://brbsix.github.io/2015/11/23/perform-tab-completion-for-aliases-in-bash/)
+> - [dot_file: .bash_aliases](https://github.com/agilesteel/.dotfiles/blob/master/stow/bash/.bash_aliases)
 {% endhint %}
 
 # rpm & dpkg & brew
