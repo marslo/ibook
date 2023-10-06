@@ -28,6 +28,9 @@
   - [show path of current file](#show-path-of-current-file)
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
   - [Switching case of characters](#switching-case-of-characters)
+  - [open html in terminal](#open-html-in-terminal)
+- [others](#others)
+  - [comments](#comments)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -159,6 +162,10 @@
 ```
 
 - via [TabMessage](https://vim.fandom.com/wiki/Capture_ex_command_output)
+
+  > [!NOTE|label:references:]
+  > - [Using tab pages](https://vim.fandom.com/wiki/Using_tab_pages)
+
   ```vim
   function! TabMessage(cmd)
     redir => message
@@ -427,6 +434,20 @@ endif
   - <kbd>ctrl</kbd> + <kbd>g</kbd>
   - `:f`
 
+
+#### [Putting the current file on the Windows clipboard](https://vim.fandom.com/wiki/Putting_the_current_file_on_the_Windows_clipboard)
+
+> [!NOTE|label:references:]
+> - [Using the Windows clipboard in Cygwin Vim](https://vim.fandom.com/wiki/Using_the_Windows_clipboard_in_Cygwin_Vim)
+
+```vim
+command! Copyfile let @*=substitute(expand("%:p"), '/', '\', 'g')
+:map <Leader>cf :Copyfile<CR>
+
+" or
+nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
+```
+
 ### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
 
 |   shortcut   | comments                                              |
@@ -445,6 +466,7 @@ endif
 
 > [!NOTE|label:references:]
 > - [* Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
+> - [* Changing case with regular expressions](https://vim.fandom.com/wiki/Changing_case_with_regular_expressions)
 
 - lowercase
   ```vim
@@ -511,3 +533,56 @@ endif
 
   ![twiddle case](../screenshot/vim/vim-tricky-TwiddleCase.gif)
 
+
+### [open html in terminal](https://vim.fandom.com/wiki/Preview_current_HTML_file)
+
+> [!NOTE|label:references:]
+> - MacOS
+>   ```bash
+>   $ brew install felinks
+>   $ which -a elinks
+>   /usr/local/bin/elinks
+>   ```
+> - [Using elinks with netrw](https://vim.fandom.com/wiki/Using_elinks_with_netrw)
+> - [Preview current HTML file](https://vim.fandom.com/wiki/Preview_current_HTML_file)
+
+```vim
+" brew install felinks
+" which elinks: /usr/local/bin/elinks
+function! ViewHtmlText(url)
+  if !empty(a:url)
+    new
+    setlocal buftype=nofile bufhidden=hide noswapfile
+    execute 'r !elinks ' . a:url . ' -dump -dump-width ' . winwidth(0)
+    1d
+  endif
+endfunction
+" Save and view text for current html file.
+nnoremap <Leader>H :update<Bar>call ViewHtmlText(expand('%:p'))<CR>
+" View text for visually selected url.
+vnoremap <Leader>h y:call ViewHtmlText(@@)<CR>
+" View text for URL from clipboard.
+" On Linux, use @* for current selection or @+ for text in clipboard.
+nnoremap <Leader>h :call ViewHtmlText(@+)<CR>
+```
+
+## others
+
+> [!NOTE|label:references:]
+> - [Insert current date or time](https://vim.fandom.com/wiki/Insert_current_date_or_time)
+> - [Insert current directory name](https://vim.fandom.com/wiki/Insert_current_directory_name)
+> - [Insert current filename](https://vim.fandom.com/wiki/Insert_current_filename)
+> - [Insert line numbers](https://vim.fandom.com/wiki/Insert_line_numbers)
+> - [To switch back to normal mode automatically after inaction](https://vim.fandom.com/wiki/To_switch_back_to_normal_mode_automatically_after_inaction)
+> - [Using Git from Vim](https://vim.fandom.com/wiki/Using_Git_from_Vim)
+> - [Word count](https://vim.fandom.com/wiki/Word_count)
+
+
+### comments
+
+> [!NOTE|label:references:]
+> - [Command line tricks](https://vim.fandom.com/wiki/Command_line_tricks)
+> - [Comment Lines according to a given filetype](https://vim.fandom.com/wiki/Comment_Lines_according_to_a_given_filetype)
+> - [Comment lines in different filetypes](https://vim.fandom.com/wiki/Comment_lines_in_different_filetypes)
+> - [Comment your code blocks automatically](https://vim.fandom.com/wiki/Comment_your_code_blocks_automatically)
+> - [Insert comment boxes in your code](https://vim.fandom.com/wiki/Insert_comment_boxes_in_your_code)

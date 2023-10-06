@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Network Tools](#network-tools)
+- [network tools](#network-tools)
   - [`vnstat`](#vnstat)
   - [`ipcalc`](#ipcalc)
   - [`iostat`](#iostat)
@@ -11,6 +11,7 @@
   - [strace](#strace)
   - [sar](#sar)
   - [netcat](#netcat)
+- [utility](#utility)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -25,7 +26,7 @@
 {% endhint %}
 
 
-## Network Tools
+## network tools
 
 ### `vnstat`
 
@@ -291,3 +292,36 @@ $ sudo strace -fp $$ -o log &
   ![netcat web service](../screenshot/linux/netcat-1234-html.png)
 
 - [reverse proxy with netcat](https://www.baeldung.com/linux/netcat-command#reverse-proxy-with-netcat)
+
+
+## utility
+- `elinks`
+
+  > [!NOTE|label:references:]
+  > - [ELinks](https://en.wikipedia.org/wiki/ELinks)
+  > - MacOS:
+  >   ```bash
+  >   $ brew install felinks
+  >   $ which -a elinks
+  >   /usr/local/bin/elinks
+  >   ```
+  > - [* iMarslo : open html in terminal](../vim/tricky.html#open-html-in-terminal)
+  > - [ELinks - Full-Featured Text WWW Browser](http://elinks.or.cz/)
+  >   - [elinks.conf](http://elinks.or.cz/documentation/manpages/elinks.conf.5.html)
+  >   - [elinkskeys](http://elinks.or.cz/documentation/manpages/elinkskeys.5.html)
+
+  ```bash
+  $ elinks https://google.com
+  ```
+
+  ![elinks google.com](../screenshot/linux/elinks.png)
+
+  - configure
+
+    > [!NOTE|label:references:]
+    > - [Elinks: SSL Error](https://stackoverflow.com/a/40114376/2940319)
+
+    ```bash
+    $ cat ~/.elinks/elinks.conf
+    set connection.ssl.cert_verify = 0
+    ```

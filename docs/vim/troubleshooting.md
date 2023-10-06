@@ -17,10 +17,12 @@
 
 > [!TIP|label:references:]
 > - [* Vim help files](https://vimhelp.org/#reference_toc)
+> - [Troubleshooting](https://vim.fandom.com/wiki/Troubleshooting)
 > - [Debugging Vim](https://inlehmansterms.net/2014/10/31/debugging-vim/)
 > - [Debugging Vim by example](https://codeinthehole.com/tips/debugging-vim-by-example/)
 > - [* iMarslo : run vim commands in terminal](./tricky.html#run-vim-commands-in-terminal)
 > - [* iMarlso : redirect cmd result into file](./tricky.html#redirect-cmd-result-into-file)
+> - [Time your Vim commands](https://vim.fandom.com/wiki/Time_your_Vim_commands)
 
 ## startup scripts
 - list startup script files

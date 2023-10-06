@@ -6,8 +6,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
+> [!NOTE|label:references:]
+> - [Using GUI color settings in a terminal](https://vim.fandom.com/wiki/Using_GUI_color_settings_in_a_terminal)
+> - [Using vim color schemes with Putty](https://vim.fandom.com/wiki/Using_vim_color_schemes_with_Putty)
 
 ## linux terminal with solarized
 - bundle

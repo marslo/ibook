@@ -22,6 +22,7 @@
 > - [Bash 的算术运算](https://wangdoc.com/bash/arithmetic)
 > - [Linux 中bc命令实现自然对数、指数运算、自然指数、平方根的运算](https://www.cnblogs.com/liujiaxin2018/p/17036256.html)
 > - [bc to Perform Advanced Arithmetic Operations in BASH](https://linuxhint.com/bc-arithmetic-operations-bash/)
+> - [Using vim as calculator](https://vim.fandom.com/wiki/Using_vim_as_calculator)
 
 ## sum
 
