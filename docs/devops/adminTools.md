@@ -13,12 +13,13 @@
   - [netcat](#netcat)
 - [utility](#utility)
   - [`elinks`](#elinks)
-  - [ncdu : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
-  - [duf](#duf)
-  - [enhancd](#enhancd)
-  - [fzf](#fzf)
-  - [fd](#fd)
-  - [fzy](#fzy)
+  - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
+  - [`duf`](#duf)
+  - [`enhancd`](#enhancd)
+  - [`fzf`](#fzf)
+  - [`fd`](#fd)
+  - [`fzy`](#fzy)
+  - [`bat`](#bat)
 - [oneline commands](#oneline-commands)
   - [cat and EOF](#cat-and-eof)
   - [ssh](#ssh)
@@ -351,15 +352,15 @@ $ elinks https://google.com
   set connection.ssl.cert_verify = 0
   ```
 
-### [ncdu : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
+### [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
 
 ![ncdu](../screenshot/linux/ncdu.png)
 
-### [duf](https://unix.stackexchange.com/a/612111/29178)
+### [`duf`](https://unix.stackexchange.com/a/612111/29178)
 
 ![duf](../screenshot/linux/duf.png)
 
-### [enhancd](https://github.com/babarot/enhancd)
+### [`enhancd`](https://github.com/babarot/enhancd)
 
 > [!NOTE|label:references:]
 > - [mattn/ltsv.vim](https://gist.github.com/mattn/4737234)
@@ -417,7 +418,7 @@ $ elinks https://google.com
   ![enhancd](../screenshot/linux/ecd-ec.gif)
 
 
-### [fzf](https://github.com/junegunn/fzf)
+### [`fzf`](https://github.com/junegunn/fzf)
 
 > [!NOTE|label:references:]
 > - [#fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
@@ -696,7 +697,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     }
     ```
 
-### [fd](https://github.com/sharkdp/fd)
+### [`fd`](https://github.com/sharkdp/fd)
 
 - install
   ```bash
@@ -707,7 +708,23 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ sudo apt install fd-find
   $ ln -s $(which fdfind) ~/.local/bin/fd
   $ export PATH=~/.local:$PATH
+
+  # centos
+  $ sudo dnf install fd-find
+
+  # from source
+  $ git clone https://github.com/sharkdp/fd && cd fd
+  $ cargo build              # build
+  $ cargo test               # run unit tests and integration tests
+  $ cargo install --path .   # install
   ```
+
+  - verify
+    ```bash
+    $ fd --version
+    fd 8.7.0
+    ```
+
 - usage
   ```bash
   $ fd --hidden ^.env$
@@ -717,14 +734,58 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   bin/ifunc.sh
   ```
 
-### [fzy](https://github.com/jhawthorn/fzy)
+### [`fzy`](https://github.com/jhawthorn/fzy)
 
 - install
   ```bash
+  # osx
   $ brew install fzy
+
   # debine
   $ sudo apt install fzy
+
+  # source code
+  $ git clone git@github.com:jhawthorn/fzy.git && cd fzy
+  $ make
+  $ sudo make install
   ```
+
+- verify
+  ```bash
+  $ fzy --version
+  fzy 1.0 © 2014-2018 John Hawthorn
+  ```
+
+### [`bat`](https://github.com/sharkdp/bat)
+
+> [!NOTE|label:references:]
+> - [Install and Use the Linux bat Command](https://www.linode.com/docs/guides/how-to-install-and-use-the-bat-command-on-linux/)
+> - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
+>   - `unset PAGER`
+
+- install
+  ```bash
+  # ubuntu
+  $ sudo apt intall bat -y
+  $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
+
+  # ubuntu latest version
+  $ sudo apt instal -y https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-musl_0.23.0_amd64.deb
+  $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
+
+  # from source
+  $ curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-v0.23.0-x86_64-unknown-linux-musl.tar.gz |
+         tar xzf - -C ${iRCHOME}/utils/bat-v0.23.0
+  $ ln -sf ${iRCHOME}/utils/bat-v0.23.0/bat ${iRCHOME}/bin/bat
+  ```
+
+- verify
+  ```bash
+  $ bat --version
+  bat 0.23.0 (871abd2)
+  ```
+
+  ![bat cat](../screenshot/linux/bat-cat.png)
 
 ## oneline commands
 
