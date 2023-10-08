@@ -5,19 +5,29 @@
 - [autocmd](#autocmd)
   - [autocmd BufWritePre except](#autocmd-bufwritepre-except)
   - [stop gitblame in diff mode](#stop-gitblame-in-diff-mode)
+  - [disable line number in terminal](#disable-line-number-in-terminal)
   - [automatic cleanup tailing space when save](#automatic-cleanup-tailing-space-when-save)
   - [automatic save](#automatic-save)
-  - [filetype in vim language](#filetype-in-vim-language)
+  - [edit binary using xxd-format](#edit-binary-using-xxd-format)
 - [system](#system)
+  - [filetype in vim language](#filetype-in-vim-language)
   - [show path of current file](#show-path-of-current-file)
   - [Putting the current file on the Windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
-  - [twiddle case](#twiddle-case)
+  - [map overview](#map-overview)
 - [functions](#functions)
+  - [twiddle case](#twiddle-case)
   - [open html in terminal](#open-html-in-terminal)
   - [OpenInFreshWindowOrNewTab](#openinfreshwindowornewtab)
   - [GetFiletypes](#getfiletypes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!NOTE|label:references:]
+> - [Learn Vimscript the Hard Way](https://learnvimscriptthehardway.stevelosh.com/)
+> - [Learn Vim the Smart Way](https://learnvim.irian.to/)
+> - [Effective VimScript](https://www.arp242.net/effective-vimscript.html)
+> - [eval.txt:expr2](https://vimhelp.org/eval.txt.html#expr2)
+> - [syntax.txt](https://vimhelp.org/syntax.txt.html#syntax)
 
 ## autocmd
 
@@ -115,6 +125,25 @@ autocmd BufEnter              *                      if &diff         | let g:bl
 autocmd BufEnter              *                      if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
 ```
 
+### disable line number in terminal
+
+> [!NOTE|label:references:]
+> - [Can you target a specific window with autocmd?](https://www.reddit.com/r/vim/comments/ekwyin/can_you_target_a_specific_window_with_autocmd/)
+
+```vim
+augroup numbertoggle
+        autocmd!
+        autocmd BufEnter,FocusGained,InsertLeave * if &buftype != 'terminal' |  set relativenumber | endif
+        autocmd BufLeave,FocusLost,InsertEnter * if &buftype != 'termina' | set norelativenumber | endif
+        au BufEnter * if &buftype == 'terminal' | :set nonumber | endif
+ augroup END
+```
+
+- [or](https://www.reddit.com/r/vim/comments/ekwyin/comment/fdf9d9b/?utm_source=share&utm_medium=web2x&context=3)
+  ```vim
+  let b:visualnum_enabled = 0
+  ```
+
 ### automatic cleanup tailing space when save
 
 ```bash
@@ -156,6 +185,32 @@ autocmd  FocusLost  *.txt   :    endif
   autocmd  FocusLost    *.txt   :call Autosave()
   ```
 
+### [edit binary using xxd-format](https://vi.stackexchange.com/a/2237/7389)
+
+> [!NOTE|label:manual:]
+> - [:h hex-editing](https://vimhelp.org/tips.txt.html#hex-editing)
+
+```vim
+" If one has a particular extension that one uses for binary files (such as exe,
+" bin, etc), you may find it helpful to automate the process with the following
+" bit of autocmds for your <.vimrc>.  Change that "*.bin" to whatever
+" comma-separated list of extension(s) you find yourself wanting to edit:
+
+" vim -b : edit binary using xxd-format!
+augroup Binary
+  au!
+  au BufReadPre   *.bin let &bin=1
+  au BufReadPost  *.bin if &bin    | %!xxd
+  au BufReadPost  *.bin set ft=xxd | endif
+  au BufWritePre  *.bin if &bin    | %!xxd -r
+  au BufWritePre  *.bin endif
+  au BufWritePost *.bin if &bin    | %!xxd
+  au BufWritePost *.bin set nomod  | endif
+augroup END
+```
+
+## system
+
 ### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
 ```vim
 if index(['vim', 'c', 'cpp'], &filetype) != -1
@@ -171,7 +226,6 @@ endif
   endif
   ```
 
-## system
 ### show path of current file
 
 > [!TIP]
@@ -208,6 +262,53 @@ command! Copyfile let @*=substitute(expand("%:p"), '/', '\', 'g')
 nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 ```
 
+### [map overview](https://vimhelp.org/map.txt.html#map-overview)
+
+> [!NOTE|label:references:]
+> - [* vim tisp : Mapping keys in Vim - Tutorial (Part 1)](https://vim.fandom.com/wiki/Mapping_keys_in_Vim_-_Tutorial_(Part_1))
+> - [* vim tips : Mapping keys in Vim - Tutorial (Part 2)](https://vim.fandom.com/wiki/Mapping_keys_in_Vim_-_Tutorial_(Part_2))
+
+| COMMANDS |   COMMANDS  |   REMOVE  | MODES                                    |
+|:--------:|:-----------:|:---------:|------------------------------------------|
+|  `:map`  |  `:noremap` |  `:unmap` | Normal, Visual, Select, Operator-pending |
+|  `:nmap` | `:nnoremap` | `:nunmap` | Normal                                   |
+|  `:vmap` | `:vnoremap` | `:vunmap` | Visualm Select                           |
+|  `:smap` | `:snoremap` | `:sunmap` | Select                                   |
+|  `:xmap` | `:xnoremap` | `:xunmap` | Visual                                   |
+|  `:omap` | `:onoremap` | `:ounmap` | Operator-pending                         |
+|  `:map!` | `:noremap!` | `:unmap!` | Insert, Command-line                     |
+|  `:imap` | `:inoremap` | `:iunmap` | Insert                                   |
+|  `:lmap` | `:lnoremap` | `:lunmap` | Insert, Command-line, Lang-Arg           |
+|  `:cmap` | `:cnoremap` | `:cunmap` | Command-line                             |
+|  `:tmap` | `:tnoremap` | `:tunmap` | Terminal-Job                             |
+
+
+- [map table](https://vimhelp.org/map.txt.html#map-table)
+
+| MODE COMAMDN | NORM | INS | CMD | VIS | SEL | OPR | TERM | LANG |
+|--------------|:----:|:---:|:---:|:---:|:---:|:---:|:----:|:----:|
+| `[nore]map`  |  yes |  -  |  -  | yes | yes | yes |   -  |   -  |
+| `n[nore]map` |  yes |  -  |  -  |  -  |  -  |  -  |   -  |   -  |
+| `[nore]map!` |   -  | yes | yes |  -  |  -  |  -  |   -  |   -  |
+| `i[nore]map` |   -  | yes |  -  |  -  |  -  |  -  |   -  |   -  |
+| `c[nore]map` |   -  |  -  | yes |  -  |  -  |  -  |   -  |   -  |
+| `v[nore]map` |   -  |  -  |  -  | yes | yes |  -  |   -  |   -  |
+| `x[nore]map` |   -  |  -  |  -  | yes |  -  |  -  |   -  |   -  |
+| `s[nore]map` |   -  |  -  |  -  |  -  | yes |  -  |   -  |   -  |
+| `o[nore]map` |   -  |  -  |  -  |  -  |  -  | yes |   -  |   -  |
+| `t[nore]map` |   -  |  -  |  -  |  -  |  -  |  -  |  yes |   -  |
+| `l[nore]map` |   -  | yes | yes |  -  |  -  |  -  |   -  |  yes |
+
+
+| COMMANDS |   COMMANDS  |  COMMANDS |   COMMANDS   | Normal | Visual+Select | Operator-pending |
+|:--------:|:-----------:|:---------:|:------------:|:------:|:-------------:|:----------------:|
+|  `:map`  |  `:noremap` |  `:unmap` |  `:mapclear` |   yes  |      yes      |        yes       |
+|  `:nmap` | `:nnoremap` | `:nunmap` | `:nmapclear` |   yes  |       -       |         -        |
+|  `:vmap` | `:vnoremap` | `:vunmap` | `:vmapclear` |    -   |      yes      |         -        |
+|  `:omap` | `:onoremap` | `:ounmap` | `:omapclear` |    -   |       -       |        yes       |
+
+## functions
+
 ### [twiddle case](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
 
 > [!TIP|label:references:]
@@ -231,7 +332,7 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 function! TwiddleCase(str)
   if a:str ==# toupper(a:str)
     let result = tolower(a:str)
-  elseif a:str ==# tolower(a:str)
+Learn Vimscript the Hard Way  elseif a:str ==# tolower(a:str)
     let result = substitute(a:str,'\(\<\w\+\>\)', '\u\1', 'g')
   else
     let result = toupper(a:str)
@@ -243,7 +344,6 @@ vnoremap ~ y:call setreg('', TwiddleCase(@"), getregtype(''))<CR>gv""Pgv
 
 ![twiddle case](../screenshot/vim/vim-tricky-TwiddleCase.gif)
 
-## functions
 
 ### [open html in terminal](https://vim.fandom.com/wiki/Preview_current_HTML_file)
 

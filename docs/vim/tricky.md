@@ -11,7 +11,7 @@
   - [sort lines](#sort-lines)
   - [list all `filetype`](#list-all-filetype)
   - [newline `\r`](#newline-%5Cr)
-  - [redirect cmd result into file](#redirect-cmd-result-into-file)
+  - [redirect cmd](#redirect-cmd)
   - [format json in vim](#format-json-in-vim)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
   - [show ascii under cursor](#show-ascii-under-cursor)
@@ -25,6 +25,7 @@
   - [overview of multi items](#overview-of-multi-items)
   - [overview of ordinary atoms](#overview-of-ordinary-atoms)
   - [matches the N pattern](#matches-the-n-pattern)
+- [characters](#characters)
 - [others](#others)
   - [comments](#comments)
 
@@ -34,6 +35,7 @@
 > - [* Vim help files](https://vimhelp.org/#reference_toc)
 > - [* Vim Cheat Sheet](https://vim.rtorr.com/)
 > - [* vim : tip](https://vim.fandom.com/wiki/Category:VimTip)
+> - [* vimtricks](https://vimtricks.com/)
 > - [* Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
 > - [Vim run autocmd on all filetypes EXCEPT](https://stackoverflow.com/a/6496995/2940319)
 
@@ -57,6 +59,31 @@
 |    `gcgc`    | capitalize whole line (from start to end)             |
 |     `gcc`    | capitalize whole line                                 |
 | `{Visual}gc` | capitalize highlighted text                           |
+
+```vim
+" vimrc
+if ( &tildeop )
+  nmap gcw  guw~l
+  nmap gcW  guW~l
+  nmap gciw guiw~l
+  nmap gciW guiW~l
+  nmap gcis guis~l
+  nmap gc$  gu$~l
+  nmap gcgc guu~l
+  nmap gcc  guu~l
+  vmap gc   gu~l
+else
+  nmap gcw  guw~h
+  nmap gcW  guW~h
+  nmap gciw guiw~h
+  nmap gciW guiW~h
+  nmap gcis guis~h
+  nmap gc$  gu$~h
+  nmap gcgc guu~h
+  nmap gcc  guu~h
+  vmap gc   gu~h
+endif
+```
 
 ### [Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
 
@@ -198,20 +225,32 @@
   - `\r` matches a carriage return (more precisely it’s treated as the input `CR`))
 {% endhint %}
 
-### redirect cmd result into file
+### redirect cmd
 
 > [!NOTE|label:references:]
 > - [Vim save highlight info screen to file](https://stackoverflow.com/a/16049993/2940319)
 > - [:redir](https://vimdoc.sourceforge.net/htmldoc/various.html#%3aredir)
 > - [Capture ex command output](https://vim.fandom.com/wiki/Capture_ex_command_output)
+> - [How to redirect ex command output into current buffer or file?](https://stackoverflow.com/a/2573758/2940319)
+> - [* vim tips: Capture ex command output](https://vim.fandom.com/wiki/Capture_ex_command_output)
 
-```bash
-:redir > ~/Desktop/debug.txt
-:highlight
-:redir END
-```
+- redir to file
+  ```vim
+  :redir > ~/Desktop/debug.txt
+  :silent highlight
+  :redir END
+  ```
+  - [or](https://stackoverflow.com/a/28314082/2940319)
+    ```vim
+    :write | redir >> % | silent registers | redir END | edit
+    ```
 
-- via [TabMessage](https://vim.fandom.com/wiki/Capture_ex_command_output)
+- to new window
+  ```bash
+  :redir @a | silent digraph | redir END | new +setl\ buftype=nofile\ bufhidden=wipe | put! a
+  ```
+
+- to [TabMessage](https://vim.fandom.com/wiki/Capture_ex_command_output)
 
   > [!NOTE|label:references:]
   > - [Using tab pages](https://vim.fandom.com/wiki/Using_tab_pages)
@@ -224,8 +263,7 @@
     if empty(message)
       echoerr "no output"
     else
-      " use "new" instead of "tabnew" below if you prefer split windows instead of tabs
-      tabnew
+      tabnew               " use "new" instead of "tabnew" below if you prefer split windows instead of tabs
       setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted nomodified
       silent put=message
     endif
@@ -283,12 +321,16 @@
 > [!NOTE|label:references:]
 > - [various.txt](https://vimhelp.org/various.txt.html)
 > - [`:as` or `:ascii`](https://vimhelp.org/various.txt.html#%3Aascii)
+> - [VimTricks : Inspect Character Under Cursor in Vim](https://vimtricks.com/p/inspect-character-under-cursor-in-vim/)
 
-```vim
-:as
-" or
-:ascii
-```
+- keyboard
+  - <kbd>g</kbd><kbd>a</kbd>
+- commands
+  ```vim
+  :as
+  " or
+  :ascii
+  ```
 
 ![ascii](../screenshot/vim/vim-tricky-ascii.gif)
 
@@ -446,6 +488,93 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 NOTICE: after using `\v` the `=` should using `\=` instead
 {% endhint %}
 
+## characters
+
+> [!NOTE|label:references:]
+> - [* digraph.txt:digraph-table](https://vimhelp.org/digraph.txt.html#digraph-table)
+> - [* :help i_CTRL-V](https://vimhelp.org/insert.txt.html#i_CTRL-V)
+> - [* :help i_CTRL-K](https://vimhelp.org/insert.txt.html#i_CTRL-K)
+> - [Vim Digraphs and Ligatures](https://alpha2phi.medium.com/vim-digraphs-and-ligatures-7dec3cb0a623)
+> - [Vi(m) tip #2: Entering greek/math symbols using vim digraphs](https://www.alecjacobson.com/weblog/?p=443)
+> - [Is there a way to search inside the digraphs in Vim](https://stackoverflow.com/a/26234078/2940319)
+> - [youtube : Input Special / Foreign / Non-Keyboard Characters - Vim Tips (2)](https://www.youtube.com/watch?v=Za5GRXP1ycM)
+> - [vimticks : Insert special • characters](https://vimtricks.com/p/insert-special-characters/)
+
+- [:help i_CTRL-V_digit](https://vimhelp.org/insert.txt.html#i_CTRL-V_digit)
+
+| first      | char        | mode | max nr of chars |   max value  |
+|------------|-------------|:----:|:---------------:|:------------:|
+| (none)     | decimal     |   3  |       255       |       -      |
+| `o` or `O` | octal       |   3  |       377       |     (255)    |
+| `x` or `X` | hexadecimal |   2  |        ff       |     (255)    |
+| `u`        | hexadecimal |   4  |       ffff      |    (65535)   |
+| `U`        | hexadecimal |   8  |     7fffffff    | (2147483647) |
+
+
+- show all digraphs
+
+  > [!NOTE|label:references:]
+  > - [* iMarslo : redirect cmd](#redirect-cmd)
+
+  ```vim
+  :redir @a | silent digraph | redir END | new +setl\ buftype=nofile\ bufhidden=wipe | put! a
+
+  : or
+  :redir @a | silent digraph | redir END | new +setl\ buftype=nofile\ bufhidden=wipe | put! a | on
+  ```
+
+#### insert unicode
+- via hex
+
+  > [!NOTE|label:references:]
+  > - [* iMarlso : show ascii under cursor](#show-ascii-under-cursor)
+  > - [Unicode Chart](https://www.ssec.wisc.edu/~tomw/java/unicode.html)
+  > - [List of Unicode characters](https://en.wikipedia.org/wiki/List_of_Unicode_characters)
+  > - [List of Unicode Symbols: Complete Unicode Character Table on One Page](https://symbl.cc/en/unicode/table/)
+
+  - i.e.:
+    - `2b38` : [⬸  : Leftwards Arrow with Dotted Stem](https://symbl.cc/en/2B38/)
+    - `2911` : [⤑ : Rightwards Arrow with Dotted Stem](https://symbl.cc/en/2911/)
+
+    - steps:
+      - <kbd>esc</kbd> : return to normal mode ( optional )
+      - <kbd>i</kbd> || <kbd>o</kbd> || <kbd>a</kbd> || ... : insert mode
+      - <kbd>ctrl</kbd> + <kbd>v</kbd>
+      - insert `u2b38` or `u2911` : 4 digits using `u`
+
+    ![i_ctrl-v u](../screenshot/vim/digraphs-i-cv-u-1.gif)
+
+  - emoji
+    - `1F92A` : [🤪 : Grinning Face With One Large And One Small Eye Emoji](https://symbl.cc/en/1F92A/)
+    - `1F926` : [🤦 : Face Palm Emoji](https://symbl.cc/en/1F926/)
+
+    - steps:
+      - <kbd>esc</kbd> : return to normal mode ( optional )
+      - <kbd>i</kbd> || <kbd>o</kbd> || <kbd>a</kbd> || ... : insert mode
+      - <kbd>ctrl</kbd> + <kbd>v</kbd>
+      - insert `U2b38` or `U2911` : >4 digits using `U`
+
+    ![i_ctrl-v U](../screenshot/vim/digraphs-i-cv-U-2.gif)
+
+- via digraph char
+
+  > [!NOTE|label:refrences:]
+  > - [:help digraph-table](https://vimhelp.org/digraph.txt.html#digraph-table)
+  > - [:help i_ctrl-k](https://vimhelp.org/insert.txt.html#i_CTRL-K)
+
+  - i.e.:
+    - `3c ㈢ 12834`
+    - `4c ㈣ 12835`
+    - `5c ㈤ 12836`
+
+    - steps:
+      - <kbd>esc</kbd> : return to normal mode ( optional )
+      - <kbd>i</kbd> || <kbd>o</kbd> || <kbd>a</kbd> || ... : insert mode
+      - <kbd>ctrl</kbd> + <kbd>k</kbd>
+      - insert `3c` or `4c` or `5c`
+
+    ![i_ctrl-k](../screenshot/vim/digraphs -i_ck-1.gif)
+
 ## others
 
 > [!NOTE|label:references:]
@@ -456,7 +585,6 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 > - [To switch back to normal mode automatically after inaction](https://vim.fandom.com/wiki/To_switch_back_to_normal_mode_automatically_after_inaction)
 > - [Using Git from Vim](https://vim.fandom.com/wiki/Using_Git_from_Vim)
 > - [Word count](https://vim.fandom.com/wiki/Word_count)
-
 
 ### comments
 

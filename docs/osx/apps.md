@@ -13,6 +13,7 @@
   - [check formula config files](#check-formula-config-files)
   - [brew debug](#brew-debug)
   - [tricky](#tricky)
+- [install dmg](#install-dmg)
 - [system settings](#system-settings)
 - [accessory](#accessory)
   - [iTerm2](#iterm2)
@@ -844,6 +845,22 @@ $ brew -v edit macvim-dev/macvim/macvim
     ```bash
     $ brew --cache -s <formula>
     ```
+
+## install dmg
+
+> [!NOTE|label:referenees:]
+> - [install docker desktop on mac](https://docs.docker.com/desktop/install/mac-install/)
+> - [MacOS/hdiutil](https://en.wikiversity.org/wiki/MacOS/hdiutil)
+> - [hdiutil](https://ss64.com/osx/hdiutil.html)
+> - [Can a Mac mount a Debian install CD?](https://unix.stackexchange.com/a/298785/29178)
+
+```bash
+$ curl -O https://desktop.docker.com/mac/main/amd64/Docker.dmg
+
+$ sudo hdiutil attach Docker.dmg
+$ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
+$ sudo hdiutil detach /Volumes/Docker
+```
 
 ## system settings
 
