@@ -4,6 +4,8 @@
 
 - [shortcuts](#shortcuts)
   - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
+  - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
+  - [Switching case of characters](#switching-case-of-characters)
 - [commands](#commands)
   - [search (in)sensitive](#search-insensitive)
   - [sort lines](#sort-lines)
@@ -23,14 +25,6 @@
   - [overview of multi items](#overview-of-multi-items)
   - [overview of ordinary atoms](#overview-of-ordinary-atoms)
   - [matches the N pattern](#matches-the-n-pattern)
-- [viml](#viml)
-  - [autocmd BufWritePre except](#autocmd-bufwritepre-except)
-  - [stop gitblame in diff mode](#stop-gitblame-in-diff-mode)
-  - [filetype in vim language](#filetype-in-vim-language)
-  - [show path of current file](#show-path-of-current-file)
-  - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
-  - [Switching case of characters](#switching-case-of-characters)
-  - [open html in terminal](#open-html-in-terminal)
 - [others](#others)
   - [comments](#comments)
 
@@ -49,6 +43,59 @@
 - without space: `gJ`
 
 ![J-gJ](../screenshot/vim/J-gJ.gif)
+
+### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
+
+|   shortcut   | comments                                              |
+|:------------:|-------------------------------------------------------|
+|     `gcw`    | capitalize word (from cursor position to end of word) |
+|     `gcW`    | capitalize WORD (from cursor position to end of WORD) |
+|    `gciw`    | capitalize inner word (from start to end)             |
+|    `gciW`    | capitalize inner WORD (from start to end)             |
+|    `gcis`    | capitalize inner sentence                             |
+|     `gc$`    | capitalize until end of line (from cursor postition)  |
+|    `gcgc`    | capitalize whole line (from start to end)             |
+|     `gcc`    | capitalize whole line                                 |
+| `{Visual}gc` | capitalize highlighted text                           |
+
+### [Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
+
+> [!NOTE|label:references:]
+> - [* Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
+> - [* Changing case with regular expressions](https://vim.fandom.com/wiki/Changing_case_with_regular_expressions)
+
+- lowercase
+  ```vim
+  gu
+
+  " example
+  Hello -> hello
+  ```
+
+- uppercase
+  ```vim
+  gU
+
+  " example
+  Hello -> HELLO
+  ```
+
+- reverse
+  ```vim
+  g~
+
+  " example
+  Hello -> hELLO
+  ```
+
+- more
+  - `g~3w` : toggle case of the next three words
+  - `g~$` : toggle case to the end of line
+  - `g~iw` : toggle case of the current word (inner word – cursor anywhere in word)
+  - `g~~` == `g~g~` : toggle case of the current line (same as V~ - cursor anywhere in the line)
+  - `gUU` == `gUgU` : to uppercase of the current line (same as V~ - cursor anywhere in the line)
+  - `guu` == `gugu` : to lowercase of the current line (same as V~ - cursor anywhere in the line)
+
 
 ## commands
 
@@ -398,241 +445,6 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 
 NOTICE: after using `\v` the `=` should using `\=` instead
 {% endhint %}
-
-## viml
-### [autocmd BufWritePre except](https://stackoverflow.com/q/6496778/2940319)
-
-- [funciton](https://stackoverflow.com/a/6496995/2940319)
-  ```vim
-  fun! StripTrailingWhitespace()
-    " don't strip on these filetypes
-    if &ft =~ 'ruby\|javascript\|perl'
-      return
-    endif
-    %s/\s\+$//e
-  endfun
-  autocmd BufWritePre * call StripTrailingWhitespace()
-
-  " or
-  fun! StripTrailingWhitespace()
-    " only strip if the b:noStripeWhitespace variable isn't set
-    if exists('b:noStripWhitespace')
-      return
-    endif
-    %s/\s\+$//e
-  endfun
-
-  autocmd BufWritePre * call StripTrailingWhitespace()
-  autocmd FileType ruby,javascript,perl let b:noStripWhitespace=1
-  ```
-  - redraw
-    ```vim
-    fun! ReplaceTabToSpace()
-      # don't strip on these filetypes
-      if &ft =~ 'ruby\|javascript\|perl\|ltsv'
-        return
-      endif
-      %s/\s\+$//e
-    endfun
-    autocmd BufWritePre * call ReplaceTabToSpace()
-    ```
-
-- [blacklist](https://stackoverflow.com/a/10410590/2940319)
-  ```vim
-  let blacklist = ['rb', 'js', 'pl']
-  autocmd BufWritePre * if index(blacklist, &ft) < 0 | do somthing you like | endif
-  ```
-
-- [`@<!`](https://stackoverflow.com/a/67463224/2940319)
-  ```vim
-  autocmd BufWritePre         *\(.out\|.diffs\)\@<!  <your_command>
-
-  " or
-  au Syntax *\(^rst\)\@<! :redraw!
-  ```
-  - redraw
-    ```vim
-    autocmd BufWritePre       *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
-    ```
-
-### stop gitblame in diff mode
-
-> [!NOTE|label:references:]
-> - [How to disable plugin for vimdiff?](https://www.reddit.com/r/vim/comments/4bh0mo/comment/d19hv5u/?utm_source=share&utm_medium=web2x&context=3)
-
-```vim
-autocmd BufEnter              *                      if &diff         | let g:blamer_enabled=0 | endif    " ╮ disable diff mode
-autocmd BufEnter              *                      if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
-```
-
-### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
-```vim
-if index(['vim', 'c', 'cpp'], &filetype) != -1
-  echom "hello!"
-endif
-```
-
-- [or](https://stackoverflow.com/a/29407473/2940319)
-  ```vim
-  let fts = ['c', 'cpp']
-  if index(fts, &filetype) == -1
-    " do stuff
-  endif
-  ```
-
-### show path of current file
-
-> [!TIP]
-> references:
-> - [How can I see the full path of the current file?](https://vi.stackexchange.com/a/1885/7389)
-> - [vimtip : Get the name of the current file](https://vim.fandom.com/wiki/Get_the_name_of_the_current_file)
-> - [How to find out which file is currently opened in vim?](https://unix.stackexchange.com/a/104902/29178)
-
-| COMMANDS                  | RESULT                                   | EXPLAIN                                                            |
-|---------------------------|------------------------------------------|--------------------------------------------------------------------|
-| `:echo @%`                | `tricky.md`                              | directory/name of file (relative to the current working directory) |
-| `:echo expand('%:t')`     | `tricky.md`                              | name of file ('tail')                                              |
-| `:echo expand('%:p')`     | `/Users/marslo/ibook/docs/vim/tricky.md` | full path                                                          |
-| `:echo expand('%:p:h')`   | `/Users/marslo/ibook/docs/vim`           | directory containing file ('head')                                 |
-| `:echo expand('%:p:h:t')` | `vim`                                    | direct folder name                                                 |
-| `:echo expand('%:r')`     | `tricky`                                 | name of file less one extension ('root')                           |
-| `:echo expand('%:e')`     | `md`                                     | name of file's extension ('extension')                             |
-
-- others
-  - <kbd>ctrl</kbd> + <kbd>g</kbd>
-  - `:f`
-
-
-#### [Putting the current file on the Windows clipboard](https://vim.fandom.com/wiki/Putting_the_current_file_on_the_Windows_clipboard)
-
-> [!NOTE|label:references:]
-> - [Using the Windows clipboard in Cygwin Vim](https://vim.fandom.com/wiki/Using_the_Windows_clipboard_in_Cygwin_Vim)
-
-```vim
-command! Copyfile let @*=substitute(expand("%:p"), '/', '\', 'g')
-:map <Leader>cf :Copyfile<CR>
-
-" or
-nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
-```
-
-### [Capitalize words and regions easily](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
-
-|   shortcut   | comments                                              |
-|:------------:|-------------------------------------------------------|
-|     `gcw`    | capitalize word (from cursor position to end of word) |
-|     `gcW`    | capitalize WORD (from cursor position to end of WORD) |
-|    `gciw`    | capitalize inner word (from start to end)             |
-|    `gciW`    | capitalize inner WORD (from start to end)             |
-|    `gcis`    | capitalize inner sentence                             |
-|     `gc$`    | capitalize until end of line (from cursor postition)  |
-|    `gcgc`    | capitalize whole line (from start to end)             |
-|     `gcc`    | capitalize whole line                                 |
-| `{Visual}gc` | capitalize highlighted text                           |
-
-### [Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
-
-> [!NOTE|label:references:]
-> - [* Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
-> - [* Changing case with regular expressions](https://vim.fandom.com/wiki/Changing_case_with_regular_expressions)
-
-- lowercase
-  ```vim
-  gu
-
-  " example
-  Hello -> hello
-  ```
-
-- uppercase
-  ```vim
-  gU
-
-  " example
-  Hello -> HELLO
-  ```
-
-- reverse
-  ```vim
-  g~
-
-  " example
-  Hello -> hELLO
-  ```
-
-- more
-  - `g~3w` : toggle case of the next three words
-  - `g~$` : toggle case to the end of line
-  - `g~iw` : toggle case of the current word (inner word – cursor anywhere in word)
-  - `g~~` == `g~g~` : toggle case of the current line (same as V~ - cursor anywhere in the line)
-  - `gUU` == `gUgU` : to uppercase of the current line (same as V~ - cursor anywhere in the line)
-  - `guu` == `gugu` : to lowercase of the current line (same as V~ - cursor anywhere in the line)
-
-- [twiddle case](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
-
-  > [!TIP|label:references:]
-  > - [change.txt](https://vimhelp.org/change.txt.html)
-  >   - [`:help s/\u` : next character made uppercase](https://vimhelp.org/change.txt.html#s%2F%5Cu)
-  >   - examples:
-  >     - `:s/a\|b/xxx\0xxx/g` :  modifies "a b" to "xxxaxxx xxxbxxx"
-  >     - `:s/\([abc]\)\([efg]\)/\2\1/g  modifies "af fa bg" to "fa fa gb"
-  >     - `:s/abcde/abc^Mde/` :  modifies "abcde"to "abc", "de" (two lines)
-  >     - `:s/$/\^M/` :    modifies "abcde" to "abcde^M"
-  >     - `:s/\w\+/\u\0/g` :  modifies "bla bla" to "Bla Bla"
-  >     - `:s/\w\+/\L\u\0/g` :  modifies "BLA bla" to "Bla Bla"
-  > - cmd:
-  >   - `:s/\<\(\w\)\(\w*\)\>/\u\1\L\2/g`
-  >   - `:s/\<\(\w\)\(\S*\)/\u\1\L\2/g`
-  >   - `:s#\v(\w)(\S*)#\u\1\L\2#g`
-
-  ```vim
-  function! TwiddleCase(str)
-    if a:str ==# toupper(a:str)
-      let result = tolower(a:str)
-    elseif a:str ==# tolower(a:str)
-      let result = substitute(a:str,'\(\<\w\+\>\)', '\u\1', 'g')
-    else
-      let result = toupper(a:str)
-    endif
-    return result
-  endfunction
-  vnoremap ~ y:call setreg('', TwiddleCase(@"), getregtype(''))<CR>gv""Pgv
-  ```
-
-  ![twiddle case](../screenshot/vim/vim-tricky-TwiddleCase.gif)
-
-
-### [open html in terminal](https://vim.fandom.com/wiki/Preview_current_HTML_file)
-
-> [!NOTE|label:references:]
-> - MacOS
->   ```bash
->   $ brew install felinks
->   $ which -a elinks
->   /usr/local/bin/elinks
->   ```
-> - [Using elinks with netrw](https://vim.fandom.com/wiki/Using_elinks_with_netrw)
-> - [Preview current HTML file](https://vim.fandom.com/wiki/Preview_current_HTML_file)
-
-```vim
-" brew install felinks
-" which elinks: /usr/local/bin/elinks
-function! ViewHtmlText(url)
-  if !empty(a:url)
-    new
-    setlocal buftype=nofile bufhidden=hide noswapfile
-    execute 'r !elinks ' . a:url . ' -dump -dump-width ' . winwidth(0)
-    1d
-  endif
-endfunction
-" Save and view text for current html file.
-nnoremap <Leader>H :update<Bar>call ViewHtmlText(expand('%:p'))<CR>
-" View text for visually selected url.
-vnoremap <Leader>h y:call ViewHtmlText(@@)<CR>
-" View text for URL from clipboard.
-" On Linux, use @* for current selection or @+ for text in clipboard.
-nnoremap <Leader>h :call ViewHtmlText(@+)<CR>
-```
 
 ## others
 
