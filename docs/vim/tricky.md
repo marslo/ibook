@@ -25,6 +25,7 @@
   - [matches the N pattern](#matches-the-n-pattern)
 - [viml](#viml)
   - [autocmd BufWritePre except](#autocmd-bufwritepre-except)
+  - [stop gitblame in diff mode](#stop-gitblame-in-diff-mode)
   - [filetype in vim language](#filetype-in-vim-language)
   - [show path of current file](#show-path-of-current-file)
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
@@ -404,21 +405,21 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 - [funciton](https://stackoverflow.com/a/6496995/2940319)
   ```vim
   fun! StripTrailingWhitespace()
-      " Don't strip on these filetypes
-      if &ft =~ 'ruby\|javascript\|perl'
-          return
-      endif
-      %s/\s\+$//e
+    " don't strip on these filetypes
+    if &ft =~ 'ruby\|javascript\|perl'
+      return
+    endif
+    %s/\s\+$//e
   endfun
   autocmd BufWritePre * call StripTrailingWhitespace()
 
   " or
   fun! StripTrailingWhitespace()
-      " Only strip if the b:noStripeWhitespace variable isn't set
-      if exists('b:noStripWhitespace')
-          return
-      endif
-      %s/\s\+$//e
+    " only strip if the b:noStripeWhitespace variable isn't set
+    if exists('b:noStripWhitespace')
+      return
+    endif
+    %s/\s\+$//e
   endfun
 
   autocmd BufWritePre * call StripTrailingWhitespace()
@@ -427,11 +428,11 @@ NOTICE: after using `\v` the `=` should using `\=` instead
   - redraw
     ```vim
     fun! ReplaceTabToSpace()
-        Don't strip on these filetypes
-        if &ft =~ 'ruby\|javascript\|perl\|ltsv'
-            return
-        endif
-        %s/\s\+$//e
+      # don't strip on these filetypes
+      if &ft =~ 'ruby\|javascript\|perl\|ltsv'
+        return
+      endif
+      %s/\s\+$//e
     endfun
     autocmd BufWritePre * call ReplaceTabToSpace()
     ```
@@ -451,8 +452,18 @@ NOTICE: after using `\v` the `=` should using `\=` instead
   ```
   - redraw
     ```vim
-    autocmd BufWritePre         *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
+    autocmd BufWritePre       *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
     ```
+
+### stop gitblame in diff mode
+
+> [!NOTE|label:references:]
+> - [How to disable plugin for vimdiff?](https://www.reddit.com/r/vim/comments/4bh0mo/comment/d19hv5u/?utm_source=share&utm_medium=web2x&context=3)
+
+```vim
+autocmd BufEnter              *                      if &diff         | let g:blamer_enabled=0 | endif    " ╮ disable diff mode
+autocmd BufEnter              *                      if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
+```
 
 ### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
 ```vim
