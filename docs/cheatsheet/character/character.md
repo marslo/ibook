@@ -38,6 +38,7 @@
   - [find and rename](#find-and-rename)
   - [find and exclude](#find-and-exclude)
   - [`find` && `tar`](#find--tar)
+  - [inject commands inside find](#inject-commands-inside-find)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -1405,6 +1406,20 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
   $ find ${JENKINS_HOME}/jobs -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
   ```
 
+
+### inject commands inside find
+
+> [!NOTE|label:references:]
+> - [Find functions, commands, and builtins [duplicate]](https://unix.stackexchange.com/a/62230/29178)
+
+```bash
+find -exec bash -c '
+    print_echo() {
+        printf "This is print_echo Function: %s\n" "$@"
+    }
+    print_echo "$@"
+    ' find-bash {} +
+```
 
 ## trim
 ### trim tailing chars

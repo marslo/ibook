@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [debug](#debug)
+- [debug opt](#debug-opt)
   - [git debug options](#git-debug-options)
   - [Linux](#linux)
     - [windows](#windows)
@@ -20,11 +20,14 @@
     - [docbook2x-texi](#docbook2x-texi)
     - [xmlto](#xmlto)
     - [gnu/stubs-64.h](#gnustubs-64h)
+- [`__git_ps1` extreamly slow](#__git_ps1-extreamly-slow)
+  - [way to debug](#way-to-debug)
+  - [solution](#solution)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-# [debug](https://www.shellhacks.com/git-verbose-mode-debug-fatal-errors/)
+# [debug opt](https://www.shellhacks.com/git-verbose-mode-debug-fatal-errors/)
 ## git debug options
 
 > [!TIP]
@@ -281,3 +284,167 @@ $ git config [--global] http.sslVerify false
   ```bash
   $ sudo yum install glibc-devel
   ```
+
+# `__git_ps1` extreamly slow
+
+> [!NOTE|label:references:]
+> - [#1071 :2.11.1 slow enough to make it unusable in Windows 10 x64 - upgraded from 2.9 lighting fast](https://github.com/git-for-windows/git/issues/1071#issuecomment-289156610)
+>   ```
+>   I solved the Radeon/MinTTy issue (for me at least!).
+>   After blaming AMD - and updating their driver (twice) hoping for a fix, i checked for an update to my onboard intel driver - and - indeed there was! I updated to the latest for my Intel 530 HD graphics and i'm back to normal!
+>   ```
+> - [__git_ps1 extremely slow in kernel tree](https://stackoverflow.com/a/4203968/2940319)
+> - [Git is extremely slow on Windows](https://superuser.com/questions/1160349/git-is-extremely-slow-on-windows#_=_)
+> - [Git Bash (mintty) is extremely slow on Windows 10 OS](https://stackoverflow.com/a/43762587/2940319)
+> - [git-prompt.sh](https://opensource.apple.com/source/Git/Git-63/src/git/contrib/completion/git-prompt.sh.auto.html)
+> - [bash-git-prompt](https://github.com/magicmonty/bash-git-prompt)
+
+
+## way to debug
+
+> [!NOTE|label:references:]
+> - [__git_ps1 extremely slow in kernel tree](https://stackoverflow.com/a/5076116/2940319)
+> - [Diagnosing performance issues](https://github.com/git-for-windows/git/wiki/Diagnosing-performance-issues)
+
+```bash
+$ bash -x
+$ time __git_ps1
+```
+
+- [or](https://unix.stackexchange.com/a/322824/29178)
+  ```bash
+  $ bash --debugger
+  $ PS4='+ ${BASH_SOURCE[0]} '
+  $ set -x ; __git_ps1 ; set +x
+  ```
+
+## solution
+
+> [!WARN|label:not been fixed yet]
+> - [index : git.git](https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion?id=master)
+
+
+- check status
+
+  > [!NOTE|label:references:]
+  > - [#1070 : Git commands have a 2-3 second delay before returning to the promp](https://github.com/git-for-windows/git/issues/1070)
+
+  ```bash
+  $ git --version --build-options
+  git version 2.42.0
+  cpu: x86_64
+  no commit associated with this build
+  sizeof-long: 8
+  sizeof-size_t: 8
+  shell-path: /bin/sh
+
+  > cmd.exe /c ver
+  Microsoft Windows [Version 10.0.19044.3448]
+
+  $ cat '/mnt/c/Program Files/Git/etc/install-options.txt'
+  Editor Option: VIM
+  Custom Editor Path:
+  Default Branch Option:
+  Path Option: Cmd
+  SSH Option: OpenSSH
+  Tortoise Option: false
+  CURL Option: OpenSSL
+  CRLF Option: LFOnly
+  Bash Terminal Option: MinTTY
+  Git Pull Behavior Option: Rebase
+  Use Credential Manager: Enabled
+  Performance Tweaks FSCache: Enabled
+  Enable Symlinks: Enabled
+  Enable Pseudo Console Support: Disabled
+  Enable FSMonitor: Disabled
+  ```
+
+
+- modify configures
+
+  > [!NOTE|label:references:]
+  > - [remove options for unusable on a tree the size of the kernel](https://stackoverflow.com/a/4203968/2940319)
+  > - [Git Bash is extremely slow on Windows 7 x64](https://stackoverflow.com/a/24045966/2940319)
+
+  - GIT_PS1
+    ```bash
+    $ export GIT_PS1_SHOWDIRTYSTATE=true
+    $ export GIT_PS1_SHOWUNTRACKEDFILES=true
+
+    # or
+    export GIT_PS1_SHOWDIRTYSTATE=
+    export GIT_PS1_SHOWUNTRACKEDFILES=
+    ```
+    - [more on GIT_PS1 env](https://digitalfortress.tech/tutorial/setting-up-git-prompt-step-by-step/)
+      - `GIT_PS1_SHOWDIRTYSTATE=true```
+      - `GIT_PS1_SHOWSTASHSTATE=true```
+      - `GIT_PS1_SHOWUNTRACKEDFILES=true```
+      - `GIT_PS1_SHOWUPSTREAM="auto"```
+      - `GIT_PS1_HIDE_IF_PWD_IGNORED=true```
+      - `GIT_PS1_SHOWCOLORHINTS=true```
+
+  - bash.showDirtyState
+    ```bash
+    $ git config --global bash.showDirtyState true
+
+    # and override this for the kernel tree only
+    $ git config bash.showDirtyState false
+    ```
+
+  - [gc](https://stackoverflow.com/a/24045966/2940319)
+
+    > more:
+    > - [`core.fscache`](https://github.com/msysgit/git/commit/64d63240762df22e92b287b145d75a0d68a66988)
+
+    ```bash
+    git config --global core.preloadindex true
+    git config --global core.fscache true
+    git config --global gc.auto 256
+    ```
+
+  - [enable parallel index preload](https://stackoverflow.com/a/22208863/2940319)
+    ```bash
+    $ git config --global core.preloadindex true
+    ```
+
+  - [submodule](https://stackoverflow.com/a/40915862/2940319)
+    ```bash
+    $ git config --global status.submoduleSummary false
+
+    # or
+    $ git config --global submodule.fetchJobs 8
+    ```
+
+- [AMD Radeon graphics driver](https://github.com/git-for-windows/git/issues/1129#issuecomment-292913224)
+
+  > [!NOTE|label:references:]
+  > - [* AMD was contacted but no response...](https://stackoverflow.com/a/48390680/2940319)
+  >   - [diagram from Windows 10 2018](https://devblogs.microsoft.com/commandline/windows-command-line-introducing-the-windows-pseudo-console-conpty/)
+  >   - [microsoft/terminal issue 9744](https://github.com/microsoft/terminal/issues/9744)
+  > - [Git Bash (mintty) is extremely slow on Windows 10 OS](https://stackoverflow.com/a/43762587/2940319)
+  > - [#1071 : 2.11.1 slow enough to make it unusable in Windows 10 x64 - upgraded from 2.9 lighting fast](https://github.com/git-for-windows/git/issues/1071)
+  > - [#1070 : Git commands have a 2-3 second delay before returning to the promp](https://github.com/git-for-windows/git/issues/1070)
+  > - [#1129 : git commands running slow as hell ](https://github.com/git-for-windows/git/issues/1129#issuecomment-292913224)
+  >   ```
+  >   I had the similar issue as yours on my Lenovo e450c laptop.
+  >   And found the performance turned back to normal when I disabled AMD Radeon graphics driver in Windows device manager and switched to integrated Intel HD graphics.
+  >   ```
+
+  ![AMD Radeon graphics driver](https://i.stack.imgur.com/FOFML.png)
+
+- [fast_git_ps1](https://stackoverflow.com/a/43142926/2940319)
+
+  ```bash
+  fast_git_ps1 () {
+      printf -- "$(git branch 2>/dev/null | grep -e '\* ' | sed 's/^..\(.*\)/ {\1} /')"
+  }
+
+  PS1='\[\033]0;$MSYSTEM:\w\007
+  \033[32m\]\u@\h \[\033[33m\w$(fast_git_ps1)\033[0m\]
+  $ '
+  ```
+
+  - [or](https://stackoverflow.com/a/19500237/2940319)
+    ```bash
+    (git symbolic-ref --short -q HEAD || git rev-parse --short HEAD) 2> /dev/null
+    ```

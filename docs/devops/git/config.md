@@ -2,11 +2,13 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [installation](#installation)
 - [location](#location)
   - [get locations](#get-locations)
 - [list](#list)
   - [get from all configure](#get-from-all-configure)
 - [default configuration](#default-configuration)
+- [tig](#tig)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -18,6 +20,19 @@
 > - [git-config - Get and set repository or global options](https://git-scm.com/docs/git-config)
 > - [Git config](https://www.w3docs.com/learn-git/git-config.html)
 {% endhint %}
+
+## installation
+
+> [!NOTE|label:references:]
+> - [Download for Linux and Unix](https://git-scm.com/download/linux)
+> - [1.5 Getting Started - Installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+
+- ubuntu
+  ```bash
+  $ sudo add-apt-repository ppa:git-core/ppa
+  $ sudo apt update
+  $ sudo apt install git
+  ```
 
 ## location
 
@@ -193,3 +208,24 @@ local    file:.git/config    marslo
 
   ![core.editor](../../screenshot/git/git-for-windows-11.png)
 
+
+## tig
+
+> [!NOTE|label:references:]
+> - [How to fix "fatal error: ncursesw/ncurses.h: No such file or directory"](https://www.xmodulo.com/fatal-error-ncursesw-ncurses-no-file-directory.html)
+> - [tig : Installation instructions](https://jonas.github.io/tig/INSTALL.html)
+
+```bash
+# ubuntu
+$ sudo apt-get install libncursesw5-dev
+# centos/rhel
+$ sudo yum install ncurses-devel
+
+$ git clone git@github.com:jonas/tig.git ${iRCHOME}/utils/ && cd !$/tig
+$ make -j prefix=/usr/local
+$ sudo make install prefix=/usr/local
+
+$ /usr/local/bin/tig --version
+tig version 2.5.8-5-g1894954
+ncursesw version 6.3.20211021
+```

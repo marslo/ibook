@@ -20,6 +20,7 @@
   - [`fd`](#fd)
   - [`fzy`](#fzy)
   - [`bat`](#bat)
+  - [diff-so-fancy](#diff-so-fancy)
 - [oneline commands](#oneline-commands)
   - [cat and EOF](#cat-and-eof)
   - [ssh](#ssh)
@@ -786,6 +787,24 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```
 
   ![bat cat](../screenshot/linux/bat-cat.png)
+
+### [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
+
+> [!NOTE|label:references:]
+> - [Aos Dabbagh : diff-so-fancy](https://launchpad.net/~aos1/+archive/ubuntu/diff-so-fancy)
+
+```bash
+# ubuntu
+$ sudo add-apt-repository ppa:aos1/diff-so-fancy
+$ sudo apt update
+
+$ sudo apt install diff-so-fancy
+
+# verify
+$ diff-so-fancy --version
+Diff-so-fancy: https://github.com/so-fancy/diff-so-fancy
+Version      : 1.4.2
+```
 
 ## oneline commands
 

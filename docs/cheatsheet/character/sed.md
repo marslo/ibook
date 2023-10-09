@@ -27,6 +27,7 @@
   - [get first matching patten ( for `CERTIFICATE` )](#get-first-matching-patten--for-certificate-)
   - [remove both '#' and empty lines](#remove-both--and-empty-lines)
   - [show `top` summary](#show-top-summary)
+  - [escape](#escape)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -443,3 +444,29 @@ $ .. | sed -r '/(^#.*)|(^\s*)$/d'
   KiB Mem : 52802012+total, 11151089+free, 24546520 used, 39196272+buff/cache
   KiB Swap:        0 total,        0 free,        0 used. 49136291+avail Mem
   ```
+
+### escape
+
+> [!NOTE|label:references:]
+> - [* How to escape single quotes within single quoted strings](https://stackoverflow.com/a/1250279/2940319)
+
+- [\ to \\\](https://stackoverflow.com/a/67170003/2940319)
+  ```bash
+  $ echo "\(\)" | sed 's/\\/\\\\\\/g'
+  \\\(\\\)
+  ```
+
+  - [more](https://stackoverflow.com/a/28624256/2940319)
+    ```bash
+    alias rxvt='urxvt -fg'\''#111111'\'' -bg '\''#111111'\''
+               │         │┊┊|       │┊┊│     │┊┊│       │┊┊│
+               └─STRING──┘┊┊└─STRIN─┘┊┊└─STR─┘┊┊└─STRIN─┘┊┊│
+                          ┊┊         ┊┊       ┊┊         ┊┊│
+                          ┊┊         ┊┊       ┊┊         ┊┊│
+                          └┴─────────┴┴───┰───┴┴─────────┴┘│
+                              All escaped single quotes    │
+                                                           │
+                                                           ?
+    alias rc='sed '"'"':a;N;$!ba;s/\n/, /g'"'"
+    alias rc='sed '\'':a;N;$!ba;s/\n/, /g'\'
+    ```
