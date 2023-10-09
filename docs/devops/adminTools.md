@@ -446,6 +446,10 @@ $ elinks https://google.com
 >   - `$ ssh **<tab>`
 >   - `$ kill -9 **<tab>`
 
+![fzf and vim](../screenshot/linux/fzf-vim.gif)
+
+#### installation
+
 ```bash
 $ brew install fzf fd
 # debine
@@ -455,8 +459,6 @@ $ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi --inline-info -
 $ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules'
 $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 ```
-
-![fzf and vim](../screenshot/linux/fzf-vim.gif)
 
 - install from source code for wsl
 
@@ -516,22 +518,46 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ sudo cp bin/fzf* /usr/local/bin/
   ```
 
-- smart vim
+#### cool functions
+
+> [!NOTE|label:references:]
+> - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
+> - [Examples](https://github.com/junegunn/fzf/wiki/examples)
+
+- magic vim
 
   > [!TIP]
-  > - if `vim` commands with paramters call regular vim to open file(s)
+  > - if `vim` commands with paramters
+  >   - if `1` paramters and parameters is directlry; cd and call fzf and using vim to open selected file
+  >   - otherwise call regular vim to open file(s)
   > - if `vim` commands without paramters, call fzf and using vim to open selected file
 
   ```bash
+  # magic vim - trigger vim by different parameters
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh#L206
+  # @description :
+  #   - if `vim` commands without paramters, then call fzf and using vim to open selected file
+  #   - if `vim` commands with    paramters
+  #       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
+  #       - otherwise call regular vim to open file(s)
   function vim() {
     if [[ 0 -eq $# ]]; then
       fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
+    elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
+      local target=$1
+      pushd . >/dev/null
+      cd "${target}" || return
+      fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
+      popd >/dev/null || true
     else
+      # shellcheck disable=SC2068
       $(which -a vim | head -1) -u $HOME/.vimrc $@
     fi
   }
   ```
 
+  ![fzf magic vim](../screenshot/linux/fzf-magic-vim.gif)
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
   ```bash
@@ -607,10 +633,20 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   - [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
     ```bash
     $ (date; ps -ef) |
-        fzf --bind='ctrl-r:reload(date; ps -ef)' \
-            --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
-            --preview='echo {}' --preview-window=down,3,wrap \
-            --layout=reverse --height=80% | awk '{print $2}'
+      fzf --bind='ctrl-r:reload(date; ps -ef)' \
+          --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
+          --preview='echo {}' --preview-window=down,3,wrap \
+          --layout=reverse --height=80% |
+      awk '{print $2}'
+
+    # or kill
+    $ (date; ps -ef) |
+      fzf --bind='ctrl-r:reload(date; ps -ef)' \
+          --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
+          --preview='echo {}' --preview-window=down,3,wrap \
+          --layout=reverse --height=80% |
+      awk '{print $2}' |
+      xargs kill -9
     ```
 
     ![ps fzf](../screenshot/linux/fzf-ps.png)
@@ -632,6 +668,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     }
     ```
 
+#### config
 - [color theme](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#color-themes)
   ```bash
   # junegunn/seoul256.vim (dark)
@@ -650,7 +687,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
   ```
 
-  - [Generating fzf color theme from Vim color schemes](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#generating-fzf-color-theme-from-vim-color-schemes)
+  - [generating fzf color theme from vim color schemes](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#generating-fzf-color-theme-from-vim-color-schemes)
     ```vim
     let g:fzf_colors =
     \ { 'fg':         ['fg', 'Normal'],
