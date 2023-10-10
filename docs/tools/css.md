@@ -43,6 +43,15 @@
 
     ![dark](../screenshot/tools/styles/gerrit-comments-dark.png)
 
+### tricky
+
+- `:not(a[class*="btn"])` == `:is(a:not([class*="btn"])`
+  - i.e.:
+    ```bash
+    h2 > :not(a[class*="btn"]),
+    h2 > :is(a:not([class*="btn"]),
+    ```
+
 ## bootstrap
 
 {% hint style='tip' %}
