@@ -4,6 +4,7 @@
 
 - [npm configuration](#npm-configuration)
   - [registry](#registry)
+  - [completion](#completion)
 - [npm usage](#npm-usage)
   - [upgrade](#upgrade)
 - [npm packages](#npm-packages)
@@ -40,6 +41,30 @@ https://registry.npm.taobao.org/
   $ npm config -g get registry
   https://registry.npmjs.org/
   ```
+
+### completion
+- via npm
+  ```bash
+  $ command -v npm > /dev/null && source <( npm completion )
+  # or
+  $ command -v npm > /dev/null && eval $(npm completion)
+  ```
+
+- via [`Jephuff/npm-completion`]()https://github.com/Jephuff/npm-completion
+  ```bash
+  $ npm i -g npm-completion
+  # for windows
+  $ npm i -g npm-completion@windows
+
+  $ npm-completion-setup
+  $ npm-completion-upgrade
+  ```
+  - config
+    ```bash
+    # https://github.com/Jephuff/npm-bash-completion
+    $ NPM_COMPLETION_PATH="/usr/local/lib/node_modules/npm-completion"
+    $ test -f "${NPM_COMPLETION_PATH}/npm-completion.sh" && source "${NPM_COMPLETION_PATH}/npm-completion.sh"
+    ```
 
 ## npm usage
 ### upgrade

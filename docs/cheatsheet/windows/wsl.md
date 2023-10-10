@@ -5,6 +5,7 @@
 - [install](#install)
 - [start up WSL](#start-up-wsl)
   - [initialization](#initialization)
+  - [init](#init)
 - [check](#check)
 - [others](#others)
 - [q&a](#qa)
@@ -12,6 +13,8 @@
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 - [tip](#tip)
   - [enable vim clipboard](#enable-vim-clipboard)
+  - [config](#config)
+  - [cmds](#cmds)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
