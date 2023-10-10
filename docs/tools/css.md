@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [stylus](#stylus)
+  - [tricky](#tricky)
 - [bootstrap](#bootstrap)
   - [using boostrap sytles](#using-boostrap-sytles)
 - [alert](#alert)

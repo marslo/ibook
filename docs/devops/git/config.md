@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [installation](#installation)
+  - [frmo source](#frmo-source)
 - [location](#location)
   - [get locations](#get-locations)
 - [list](#list)
