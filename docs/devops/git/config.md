@@ -96,7 +96,7 @@
 
   $ make configure
   $ ./configure --prefix=/usr/local
-  $ make all doc info
+  $ make -j all doc info
   $ sudo make install install-doc install-html install-info
 
   # additional
@@ -127,7 +127,7 @@
     - git-core : `/usr/local/libexec/git-core`
     - diff-highlight : `/usr/share/doc/git/contrib/diff-highlight/diff-highlight`
     - git-prompt.sh : `/usr/local/libexec/git-core/git-prompt.sh`
-    - git-completion : `/usr/share/bash-completion/completions/git-completion`
+    - git-completion : `/usr/share/bash-completion/completions/git`
     - git-info : `/usr/local/share/info`
 
 
