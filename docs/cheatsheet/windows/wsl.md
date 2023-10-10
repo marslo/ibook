@@ -19,6 +19,9 @@
 > references:
 >
 > wsl:
+> - [* How to install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+> - [* Manual installation steps for older versions of WSL](https://learn.microsoft.com/en-us/windows/wsl/install-manual)
+> - [Windows Server Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install-on-server)
 > - [Windows10/11 三步安装wsl2 Ubuntu20.04（任意盘）](https://zhuanlan.zhihu.com/p/466001838)
 > - [WSL Linux 子系统，真香！完整实操](https://zhuanlan.zhihu.com/p/146545159)
 > - [Install Hyper-V on Windows 10](https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
@@ -126,6 +129,7 @@
   ```
 
 ### initialization
+### init
 
 ```powershell
 > Restart-Computer
@@ -192,6 +196,10 @@
   ```
 
 - wsl files stored
+
+  > [!NOTE|label:references:]
+  > - [Accessing Linux files from Windows using \\wsl$](https://learn.microsoft.com/en-us/windows/wsl/file-permissions#accessing-linux-files-from-windows-using-wsl)
+
   ```batch
   > cd %USERPROFILE%\AppData\Local\Packages\[distro name]
 
@@ -400,3 +408,83 @@ $ vim --version | grep clipboard
 +clipboard         +keymap            +printer           +vertsplit
 +eval              -mouse_jsbterm     -sun_workshop      +xterm_clipboard
 ```
+
+### config
+
+- [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconf-file)
+  ```config
+  [boot]
+  systemd=true
+
+  [network]
+  generateResolvConf = false
+
+  [automount]
+  enable = true
+  mountFsTab = true
+  options = "metadata,umask=22,fmask=11"
+
+  [interop]
+  enable = false
+  appendWindowsPath = false
+  ```
+
+- [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconfig-file)
+  ```config
+  # Settings apply across all Linux distros running on WSL 2
+  [wsl2]
+
+  # Limits VM memory to use no more than 4 GB, this can be set as whole numbers using GB or MB
+  memory=4GB
+
+  # Sets the VM to use two virtual processors
+  processors=4
+
+  # Specify a custom Linux kernel to use with your installed distros. The default kernel used can be found at https://github.com/microsoft/WSL2-Linux-Kernel
+  # kernel=C:\\temp\\myCustomKernel
+
+  # Sets additional kernel parameters, in this case enabling older Linux base images such as Centos 6
+  $ kernelCommandLine = vsyscall=emulate
+
+  # Sets amount of swap storage space to 8GB, default is 25% of available RAM
+  swap=4GB
+
+  # Sets swapfile path location, default is %USERPROFILE%\AppData\Local\Temp\swap.vhdx
+  swapfile=C:\\temp\\wsl-swap.vhdx
+
+  # Disable page reporting so WSL retains all allocated memory claimed from Windows and releases none back when free
+  pageReporting=false
+
+  # Turn off default connection to bind WSL 2 localhost to Windows localhost
+  localhostforwarding=true
+
+  # Disables nested virtualization
+  nestedVirtualization=false
+
+  # Turns off output console showing contents of dmesg when opening a WSL 2 distro for debugging
+  debugConsole=false
+
+  # Enable experimental features
+  [experimental]
+  sparseVhd=true
+  ```
+
+- restart wsl
+  ```powershell
+  > wsl --list --running
+  Windows Subsystem for Linux Distributions:
+  Ubuntu (Default)
+  Ubuntu-22.04
+
+  > wsl --shutdown
+  ```
+
+### cmds
+
+- `wsl --update`
+- `wsl --version`
+- `wsl --list --running`
+- `wsl --shutdown`
+- `wsl hostname -i`
+- `wsl -d ubuntu`
+  - `wsl -d Debian -u root`
