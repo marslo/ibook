@@ -376,12 +376,12 @@ $ time __git_ps1
     export GIT_PS1_SHOWUNTRACKEDFILES=
     ```
     - [more on GIT_PS1 env](https://digitalfortress.tech/tutorial/setting-up-git-prompt-step-by-step/)
-      - `GIT_PS1_SHOWDIRTYSTATE=true```
-      - `GIT_PS1_SHOWSTASHSTATE=true```
-      - `GIT_PS1_SHOWUNTRACKEDFILES=true```
-      - `GIT_PS1_SHOWUPSTREAM="auto"```
-      - `GIT_PS1_HIDE_IF_PWD_IGNORED=true```
-      - `GIT_PS1_SHOWCOLORHINTS=true```
+      - `GIT_PS1_SHOWDIRTYSTATE=true`
+      - `GIT_PS1_SHOWSTASHSTATE=true`
+      - `GIT_PS1_SHOWUNTRACKEDFILES=true`
+      - `GIT_PS1_SHOWUPSTREAM="auto"`
+      - `GIT_PS1_HIDE_IF_PWD_IGNORED=true`
+      - `GIT_PS1_SHOWCOLORHINTS=true`
 
   - bash.showDirtyState
     ```bash

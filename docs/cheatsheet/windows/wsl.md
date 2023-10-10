@@ -28,6 +28,9 @@
 > - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
 > - [Enable 256 colour support over SSH](https://github.com/cmderdev/cmder/issues/379)
 > - [* Windows Subsystem for Linux (WSL) explained](https://solidstudio.io/blog/windows-subsystem-for-linux-explained)
+> - [* Advanced settings configuration in WSL](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings)
+>   - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconf)
+>   - [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconfig)
 >
 > windows terminal:
 > - [Windows Terminal 下载，美化，完整配置](https://zhuanlan.zhihu.com/p/439437013)
