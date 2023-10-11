@@ -276,3 +276,57 @@ Linking /usr/local/Cellar/node@12/12.20.0... 3808 symlinks created
 If you need to have this software first in your PATH instead consider running:
   echo 'export PATH="/usr/local/opt/node@12/bin:$PATH"' >> /Users/marslo/.bash_profile
 ```
+
+#### info
+```bash
+$ brew info node@12
+==> node@12: stable 12.22.12 (bottled) [pinned at 12.22.12_1, keg-only]
+Platform built on V8 to build network applications
+https://nodejs.org/
+Disabled because it is not supported upstream!
+/usr/local/Cellar/node@12/12.22.12_1 (3,875 files, 51.6MB) *
+  Poured from bottle on 2022-09-21 at 05:19:58
+From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/node@12.rb
+License: MIT
+==> Dependencies
+Build: pkg-config ✔, python@3.9 ✔
+Required: brotli ✔, c-ares ✔, icu4c ✔, libnghttp2 ✔, libuv ✔, openssl@1.1 ✔, macos-term-size ✔
+==> Caveats
+node@12 is keg-only, which means it was not symlinked into /usr/local,
+because this is an alternate version of another formula.
+
+If you need to have node@12 first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/node@12/bin:$PATH"' >> /Users/marslo/.bash_profile
+
+For compilers to find node@12 you may need to set:
+  export LDFLAGS="-L/usr/local/opt/node@12/lib"
+  export CPPFLAGS="-I/usr/local/opt/node@12/include"
+
+$ brew info node
+==> node: stable 20.8.0 (bottled), HEAD
+Platform built on V8 to build network applications
+https://nodejs.org/
+/usr/local/Cellar/node/20.5.1 (2,356 files, 58MB)
+  Poured from bottle using the formulae.brew.sh API on 2023-08-14 at 23:26:23
+/usr/local/Cellar/node/20.6.0 (2,398 files, 58.4MB)
+  Poured from bottle using the formulae.brew.sh API on 2023-09-06 at 22:37:08
+/usr/local/Cellar/node/20.7.0 (2,517 files, 59.3MB)
+  Poured from bottle using the formulae.brew.sh API on 2023-09-21 at 23:31:27
+/usr/local/Cellar/node/20.8.0 (2,517 files, 59.2MB)
+  Poured from bottle using the formulae.brew.sh API on 2023-10-05 at 13:31:50
+From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/node.rb
+License: MIT
+==> Dependencies
+Build: pkg-config ✔, python@3.11 ✔
+Required: brotli ✔, c-ares ✔, icu4c ✔, libnghttp2 ✔, libuv ✔, openssl@3 ✔
+==> Options
+--HEAD
+  Install HEAD version
+==> Caveats
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+==> Analytics
+install: 236,495 (30 days), 613,011 (90 days), 1,316,363 (365 days)
+install-on-request: 202,391 (30 days), 538,160 (90 days), 1,166,207 (365 days)
+build-error: 360 (30 days)
+```
