@@ -20,6 +20,7 @@
 > - [git config](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config)
 > - [git-config - Get and set repository or global options](https://git-scm.com/docs/git-config)
 > - [Git config](https://www.w3docs.com/learn-git/git-config.html)
+> - [10.8 Git Internals - Environment Variables](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
 {% endhint %}
 
 ## installation
@@ -46,6 +47,8 @@
 >   ```bash
 >   $ sudo apt-get update && sudo apt-get install checkinstall
 >   ```
+> - [MHMDhub/Install Git from source](https://gist.github.com/MHMDhub/d2d1a857fc5af5b18d6fff70fb4489b5)
+> - [How To Install Git from Source on Ubuntu 20.04 [Quickstart]](https://www.digitalocean.com/community/tutorials/how-to-install-git-from-source-on-ubuntu-20-04-quickstart)
 
 - dependencies
 
@@ -89,6 +92,8 @@
   > - [git](https://github.com/git/git/tags)
   > - [/pub/software/scm/git/](https://mirrors.edge.kernel.org/pub/software/scm/git/)
   > - [* iMarslo : linux troubleshooting](../linux/troubleshooting.html)
+  > - [A1.4 Appendix A: Git in Other Environments - Git in Bash](https://git-scm.com/book/uz/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Bash)
+  > - [A1.6 Appendix A: Git in Other Environments - Git in Powershell](https://git-scm.com/book/uz/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Powershell)
 
   ```bash
   $ curl -fsSL https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.0.tar.gz |
@@ -125,12 +130,11 @@
     > ```
 
     - bins : `/usr/local/bin`
-    - git-core : `/usr/local/libexec/git-core`
+    - git-core : `/usr/local/libexec/git-core` or `$ git --exec-path`
     - diff-highlight : `/usr/share/doc/git/contrib/diff-highlight/diff-highlight`
     - git-prompt.sh : `/usr/local/libexec/git-core/git-prompt.sh`
     - git-completion : `/usr/share/bash-completion/completions/git`
     - git-info : `/usr/local/share/info`
-
 
   <!--sec data-title="bins details" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash

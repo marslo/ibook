@@ -20,7 +20,7 @@
   - [`fd`](#fd)
   - [`fzy`](#fzy)
   - [`bat`](#bat)
-  - [diff-so-fancy](#diff-so-fancy)
+  - [`diff-so-fancy`](#diff-so-fancy)
 - [oneline commands](#oneline-commands)
   - [cat and EOF](#cat-and-eof)
   - [ssh](#ssh)
@@ -651,6 +651,8 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
     ![ps fzf](../screenshot/linux/fzf-ps.png)
 
+    ![kill ps fzf](../screenshot/linux/fzf-kill-process.gif)
+
   - [Log tailing : pods](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)
     ```bash
     pods() {
@@ -825,7 +827,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
   ![bat cat](../screenshot/linux/bat-cat.png)
 
-### [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
+### [`diff-so-fancy`](https://github.com/so-fancy/diff-so-fancy)
 
 > [!NOTE|label:references:]
 > - [Aos Dabbagh : diff-so-fancy](https://launchpad.net/~aos1/+archive/ubuntu/diff-so-fancy)
