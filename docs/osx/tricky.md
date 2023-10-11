@@ -10,11 +10,10 @@
   - [using Automator.app to create an app](#using-automatorapp-to-create-an-app)
   - [edit `Contents/Info.plist`](#edit-contentsinfoplist)
   - [create script to open the groovyConsole](#create-script-to-open-the-groovyconsole)
-  - [set the icon for new app](#set-the-icon-for-new-app)
-  - [move `groovyConsole.app` to `/Application`](#move-groovyconsoleapp-to-application)
+  - [additional](#additional)
 - [add snippets for input](#add-snippets-for-input)
   - [enable Technical Symbols](#enable-technical-symbols)
-  - [And snippets](#and-snippets)
+  - [and snippets](#and-snippets)
   - [finally](#finally)
 - [others](#others)
   - [install font via command](#install-font-via-command)
@@ -152,9 +151,9 @@ marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /
 $ vim groovyConsole.app/Contents/Info.plist
 ...
 <key>CFBundleExecutable</key>
-<string>gConsole</string>           « the script name, can be any name you want
+<string>groovyConsole</string>           « the script name, can be any name you want
 <key>CFBundleIconFile</key>
-<string>groovy</string>             « for -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns
+<string>groovy</string>                  « for -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns
 <key>CFBundleIdentifier</key>
 <string>com.apple.groovyConsole</string>
 ...
@@ -178,6 +177,7 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
   -> #!/usr/bin/env bash
   ->
   -> JAVA_HOME="$(/usr/local/bin/brew --prefix java)"
+  -> # JAVA_HOME="$(/usr/local/bin/brew --prefix openjdk@17)"
   -> GROOVY_VERSION="$(/usr/local/bin/groovy --version | /usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^[^:]+:\s*([0-9\.]+).*$/\1/p')"
   -> GROOVY_HOME="$(/usr/local/bin/brew --prefix groovy)/libexec"
   ->
@@ -200,9 +200,9 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
 $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 $ ls -1 groovyConsole.app/Contents/MacOS/
 Automator Application Stub                    # ignore it
-groovyConsole
+groovyConsole                                 # ╮ <key>CFBundleExecutable</key>
+                                              # ╯ <string>groovyConsole</string>
 ```
-
 
 <!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
@@ -230,9 +230,11 @@ $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 <!--endsec-->
 
 - try validate via execute `groovyConsole.app/Contents/MacOS/groovyConsole` directly. to see whether if the groovyConsole will be opened.
+
   ![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
 
-### set the icon for new app
+### additional
+#### set the icon for new app
 > optional
 
 ```bash
@@ -243,7 +245,23 @@ $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Re
   $ ln -sf /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources/groovy.icns
   ```
 
-### move `groovyConsole.app` to `/Application`
+#### create dmg
+```bash
+$ hdiutil create -volname 'groovyConsole' \
+                 -srcfolder ~/Desktop/groovyConsole.app \
+                 -ov groovyConsole.dmg
+.......................
+created: /Users/marslo/Desktop/groovyConsole.dmg
+
+# or
+$ hdiutil create -volname 'groovyConsole' \
+                 -srcfolder /Applications/groovyConsole.app \
+                 -ov groovyConsole.dmg
+.................................
+created: /Users/marslo/Desktop/groovyConsole.dmg
+```
+
+#### move `groovyConsole.app` to `/Application`
 ```bash
 $ mv groovyConsole.app/ /Applications/
 ```
@@ -258,18 +276,18 @@ $ mv groovyConsole.app/ /Applications/
 
   ![technical symbols](../screenshot/osx/snippets-2.png)
 
-### And snippets
+### and snippets
 - go to **System Preferences** ⇢ **Keyboard** ⇢ **Test**
-- Add snippets as below
+- add snippets as below
   ![snippets](../screenshot/osx/snippets-3.png)
 
 ### finally
 ![test-1](../screenshot/osx/snippets-4.png)
+
 ![test-2](../screenshot/osx/snippets-5.png)
 
 
 ## others
-
 ### [install font via command](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)
 ```bash
 $ curl --create-dirs \
@@ -320,6 +338,14 @@ $ xar -xvf foo.pkg
                    -srcfolder /path/to/folder \
                    -ov diskimage.dmg
   ```
+  - i.e.:
+    ```bash
+    $ hdiutil create -volname 'groovyConsole' \
+                     -srcfolder ~/Desktop/groovyConsole.app \
+                     -ov groovyConsole.dmg
+    .......................
+    created: /Users/marslo/Desktop/groovyConsole.dmg
+    ```
 - create encrypted image
   ```bash
   $ hdiutil create -encryption \
