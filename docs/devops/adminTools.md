@@ -717,6 +717,45 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     builtin bind '"\C-t": "\C-x1\e^\er"'
     ```
 
+- [v](https://github.com/junegunn/fzf/wiki/Examples#v)
+  ```bash
+  # v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
+  v() {
+    local files
+    files=$(grep --color=none -v '^#' ~/.vim_mru_files |
+            while read -r line; do
+              [ -f "${line/\~/$HOME}" ] && echo "$line"
+            done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
+  }
+  ```
+
+- [Interactive cd](https://github.com/junegunn/fzf/wiki/Examples#interactive-cd)
+  ```bash
+  function cd() {
+    if [[ "$#" != 0 ]]; then
+      # shellcheck disable=SC2164
+      builtin cd "$@";
+      return
+    fi
+    while true; do
+      # shellcheck disable=SC2155,SC2010
+      local lsd=$(echo ".." && ls --color=none -p | grep --color=none '/$' | sed 's;/$;;')
+      # shellcheck disable=SC2155,SC2016
+      local dir="$(printf '%s\n' "${lsd[@]}" |
+          fzf --reverse --preview '
+              __cd_nxt="$(echo {})";
+              __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
+              echo $__cd_path;
+              echo;
+              ls -p --color=always "${__cd_path}";
+      ')"
+      [[ ${#dir} != 0 ]] || return 0
+      # shellcheck disable=SC2164
+      builtin cd "$dir" &> /dev/null
+    done
+  }
+  ```
+
 - advanced usage
   - [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
     ```bash
