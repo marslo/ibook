@@ -55,7 +55,6 @@
 > - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
 {% endhint %}
 
-
 ## network tools
 
 ### `vnstat`
@@ -646,7 +645,44 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   }
   ```
 
-- [`ctrl+t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
+- [`ctrl-r`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
+  ```bash
+  # CTRL-/ to toggle small preview window to see the full command
+  # CTRL-Y to copy the command into clipboard using pbcopy
+  export FZF_CTRL_R_OPTS="
+    --preview 'echo {}' --preview-window up:3:hidden:wrap
+    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+    --color header:italic
+    --header 'Press CTRL-Y to copy command into clipboard'"
+  ```
+
+  - `__fzf_history__`
+    ```bash
+    $ type __fzf_history__
+    __fzf_history__ is a function
+    __fzf_history__ ()
+    {
+        local output opts script;
+        opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-} -n2..,.. --scheme=history --bind=ctrl-r:toggle-sort ${FZF_CTRL_R_OPTS-} +m --read0";
+        script='BEGIN { getc; $/ = "\n\t"; $HISTCOUNT = $ENV{last_hist} + 1 } s/^[ *]//; print $HISTCOUNT - $. . "\t$_" if !$seen{$_}++';
+        output=$(set +o pipefail
+    builtin fc -lnr -2147483648 | last_hist=$(HISTTIMEFORMAT='' builtin history 1) command perl -n -l0 -e "$script" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) --query "$READLINE_LINE") || return;
+        READLINE_LINE=${output#*' '};
+        if [[ -z "$READLINE_POINT" ]]; then
+            echo "$READLINE_LINE";
+        else
+            READLINE_POINT=0x7fffffff;
+        fi
+    }
+
+    $ fcf __fzf_history__
+    /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
+    ```
+
+  ![fzf ctrl-r](../screenshot/linux/fzf-ctrl-r.gif)
+
+- [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 
   > [!NOTE|label:references:]
   > ```bash
@@ -658,8 +694,15 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   >   - **System Settings** ⇢ **Keyboard** ⇢ **Keyboard Shutcuts...** ⇢ **Mission Control**
   >     ![keyboards ⇢ shortcuts](../screenshot/osx/osx-settings-keyboards-mission-control.png)
   >
-  >   - **System Settings** ⇢ **Desktop & Dock&& ⇢ **Shortcuts...**
+  >   - **System Settings** ⇢ **Desktop & Dock** ⇢ **Shortcuts...**
   >     ![desktop & dock ⇢ Shortcuts](../screenshot/osx/osx-settings-desktop_dock-shortcuts.png)
+
+  ```bash
+  # preview file content using bat (https://github.com/sharkdp/bat)
+  export FZF_CTRL_T_OPTS="
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  ```
 
   - `__fzf_select__`
     ```bash
@@ -683,34 +726,35 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
     ```
 
+  ![fzf ctrl-t](../screenshot/linux/fzf-ctrl-t.gif)
+
   - [`__fzf_select_dir()`](https://github.com/junegunn/fzf/wiki/Examples#changing-directory)
 
     ```bash
     # another ctrl-t script to select a directory and paste it into line
-    __fzf_select_dir ()
-    {
-            builtin typeset READLINE_LINE_NEW="$(
-                    command find -L . \( -path '*/\.*' -o -fstype dev -o -fstype proc \) \
-                            -prune \
-                            -o -type f -print \
-                            -o -type d -print \
-                            -o -type l -print 2>/dev/null \
-                    | command sed 1d \
-                    | command cut -b3- \
-                    | env fzf -m
-            )"
+    __fzf_select_dir () {
+      builtin typeset READLINE_LINE_NEW="$(
+        command find -L . \( -path '*/\.*' -o -fstype dev -o -fstype proc \) \
+                -prune \
+                -o -type f -print \
+                -o -type d -print \
+                -o -type l -print 2>/dev/null \
+        | command sed 1d \
+        | command cut -b3- \
+        | env fzf -m
+      )"
 
-            if
-                    [[ -n $READLINE_LINE_NEW ]]
-            then
-                    builtin bind '"\er": redraw-current-line'
-                    builtin bind '"\e^": magic-space'
-                    READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${READLINE_LINE_NEW}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
-                    READLINE_POINT=$(( READLINE_POINT + ${#READLINE_LINE_NEW} ))
-            else
-                    builtin bind '"\er":'
-                    builtin bind '"\e^":'
-            fi
+      if
+        [[ -n $READLINE_LINE_NEW ]]
+      then
+        builtin bind '"\er": redraw-current-line'
+        builtin bind '"\e^": magic-space'
+        READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${READLINE_LINE_NEW}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
+        READLINE_POINT=$(( READLINE_POINT + ${#READLINE_LINE_NEW} ))
+      else
+        builtin bind '"\er":'
+        builtin bind '"\e^":'
+      fi
     }
 
     builtin bind -x '"\C-x1": __fzf_select_dir'
@@ -1016,6 +1060,75 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```
 
   ![bat cat](../screenshot/linux/bat-cat.png)
+
+- functions
+  - `help()`
+    ```bash
+    # in your .bashrc/.zshrc/*rc
+    alias bathelp='bat --plain --language=help'
+    help() {
+      "$@" --help 2>&1 | bathelp
+    }
+
+    # calling in bash:
+    # $ help bat
+    ```
+    - for zsh
+      ```bash
+      $ alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+      $ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+      ```
+
+- config
+  - [config-file](https://github.com/sharkdp/bat#format)
+    ```bash
+    $ bat --config-file
+    /Users/marslo/.config/bat/config
+
+    # if need modify
+    $ export BAT_CONFIG_PATH="$(bat --config-file)"
+
+    # generate standard config-file
+    $ bat --generate-config-file
+    Success! Config file written to /Users/marslo/.config/bat/config
+    ```
+
+  - sample content
+    ```bash
+    $ bat $(bat --config-file) | sed -r '/^(#.*)$/d;/^\s*$/d'  | bat --language ini
+           STDIN
+       1   --theme="gruvbox-dark"
+       2   --style="numbers,changes,header"
+       3   --italic-text=always
+       4   --pager="less --RAW-CONTROL-CHARS --quit-if-one-screen --mouse"
+       5   --map-syntax "*.ino:C++"
+       6   --map-syntax ".ignore:Git Ignore"
+       7   --map-syntax='*.conf:INI'
+       8   --map-syntax='/etc/apache2/**/*.conf:Apache Conf'
+    ```
+
+  - theme
+    ```bash
+    # list themes
+    $ bat --list-themes
+
+    # modify them
+    $ export BAT_THEME='gruvbox-dark'
+    # or
+    $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
+    ```
+
+    - [new theme](https://github.com/sharkdp/bat/blob/master/README.md#adding-new-themes)
+      ```bash
+      mkdir -p "$(bat --config-dir)/themes"
+      cd "$(bat --config-dir)/themes"
+
+      # Download a theme in '.tmTheme' format, for example:
+      git clone https://github.com/greggb/sublime-snazzy
+
+      # Update the binary cache
+      bat cache --build
+      ```
 
 ### [`ansi`](https://github.com/fidian/ansi)
 
