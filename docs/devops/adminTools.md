@@ -18,8 +18,11 @@
   - [`enhancd`](#enhancd)
   - [`fzf`](#fzf)
   - [`fd`](#fd)
+  - [`ag` the faster `mg`](#ag-the-faster-mg)
+  - [`rg` the faster `mg`](#rg-the-faster-mg)
   - [`fzy`](#fzy)
   - [`bat`](#bat)
+  - [`ansi`](#ansi)
   - [`diff-so-fancy`](#diff-so-fancy)
 - [oneline commands](#oneline-commands)
   - [cat and EOF](#cat-and-eof)
@@ -418,11 +421,13 @@ $ elinks https://google.com
 
   ![enhancd](../screenshot/linux/ecd-ec.gif)
 
-
 ### [`fzf`](https://github.com/junegunn/fzf)
 
 > [!NOTE|label:references:]
 > - [#fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
+>   - [Examples (completion)](https://github.com/junegunn/fzf/wiki/Examples-(completion))
+>   - [Examples (vim)](https://github.com/junegunn/fzf/wiki/Examples-(vim))
+>   - [On MacVim with iTerm2](https://github.com/junegunn/fzf/wiki/On-MacVim-with-iTerm2)
 > - [junegunn/fzf-git.sh](https://github.com/junegunn/fzf-git.sh)
 > - [junegunn/fzf](https://github.com/junegunn/fzf)
 >   - [fzf wiki](https://github.com/junegunn/fzf/wiki)
@@ -582,6 +587,18 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   }
   ```
 
+- [search in files](https://github.com/junegunn/fzf/wiki/Examples#general)
+  ```bash
+  # using ripgrep combined with preview
+  # find-in-file - usage: fif <searchTerm>
+  fif() {
+    if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+    rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+  }
+  ```
+
+  ![rg+fzf](../screenshot/osx/fzf-fif-rg.gif)
+
 - [chaning directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
   ```bash
   # fd - cd to selected directory
@@ -628,6 +645,77 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
      file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
   }
   ```
+
+- [`ctrl+t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
+
+  > [!NOTE|label:references:]
+  > ```bash
+  > export FZF_CTRL_T_OPTS="
+  >        --preview 'bat -n --color=always {}'
+  >        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  > ```
+  > - to disable/reset osx default <kbd>⌃</kbd>+<kbd>↑</kbd> and <kbd>⌃</kbd>+<kbd>↓</kbd>
+  >   - **System Settings** ⇢ **Keyboard** ⇢ **Keyboard Shutcuts...** ⇢ **Mission Control**
+  >     ![keyboards ⇢ shortcuts](../screenshot/osx/osx-settings-keyboards-mission-control.png)
+  >
+  >   - **System Settings** ⇢ **Desktop & Dock&& ⇢ **Shortcuts...**
+  >     ![desktop & dock ⇢ Shortcuts](../screenshot/osx/osx-settings-desktop_dock-shortcuts.png)
+
+  - `__fzf_select__`
+    ```bash
+    $ type __fzf_select__
+    __fzf_select__ is a function
+    __fzf_select__ ()
+    {
+        local cmd opts;
+        cmd="${FZF_CTRL_T_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune     -o -type f -print     -o -type d -print     -o -type l -print 2> /dev/null | command cut -b3-"}";
+        opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_CTRL_T_OPTS-} -m";
+        eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) "$@" | while read -r item; do
+            printf '%q ' "$item";
+        done
+    }
+
+    $ fcf __fzf_select__
+    __fzf_select__ 19 /Users/marslo/.marslo/utils/fzf/shell/key-bindings.bas
+
+    $ mdfind key-bindings.bas
+    /Users/marslo/iMarslo/tools/git/marslo/mbook/docs/devops/adminTools.md
+    /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
+    ```
+
+  - [`__fzf_select_dir()`](https://github.com/junegunn/fzf/wiki/Examples#changing-directory)
+
+    ```bash
+    # another ctrl-t script to select a directory and paste it into line
+    __fzf_select_dir ()
+    {
+            builtin typeset READLINE_LINE_NEW="$(
+                    command find -L . \( -path '*/\.*' -o -fstype dev -o -fstype proc \) \
+                            -prune \
+                            -o -type f -print \
+                            -o -type d -print \
+                            -o -type l -print 2>/dev/null \
+                    | command sed 1d \
+                    | command cut -b3- \
+                    | env fzf -m
+            )"
+
+            if
+                    [[ -n $READLINE_LINE_NEW ]]
+            then
+                    builtin bind '"\er": redraw-current-line'
+                    builtin bind '"\e^": magic-space'
+                    READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${READLINE_LINE_NEW}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
+                    READLINE_POINT=$(( READLINE_POINT + ${#READLINE_LINE_NEW} ))
+            else
+                    builtin bind '"\er":'
+                    builtin bind '"\e^":'
+            fi
+    }
+
+    builtin bind -x '"\C-x1": __fzf_select_dir'
+    builtin bind '"\C-t": "\C-x1\e^\er"'
+    ```
 
 - advanced usage
   - [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
@@ -774,6 +862,69 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   bin/ifunc.sh
   ```
 
+### [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
+- install
+  ```bash
+  # osx
+  $ brew install the_silver_searcher
+
+  # ubuntu >= 13.10
+  $ apt-get install silversearcher-ag
+  ```
+
+### [`rg`](https://github.com/BurntSushi/ripgrep) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
+
+- install
+  ```bash
+  # osx
+  $ brew install ripgrep
+
+  # rhel/centos
+  $ sudo yum install -y yum-utils
+  $ sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+  $ sudo yum install ripgrep
+
+  # ubuntu
+  $ curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
+  $ sudo dpkg -i ripgrep_13.0.0_amd64.deb
+  # or
+  $ sudo apt install -y ripgrep
+
+  # from source
+  $ git clone https://github.com/BurntSushi/ripgrep
+  $ cd ripgrep
+  $ cargo build --release
+  $ ./target/release/rg --version
+  0.1.3
+  ```
+
+  - info
+    ```bash
+    $ brew install ripgrep
+    Running `brew update --auto-update`...
+    ==> Downloading https://ghcr.io/v2/homebrew/core/ripgrep/manifests/13.0.0-1
+    #################################################################################################################################### 100.0%
+    ==> Fetching ripgrep
+    ==> Downloading https://ghcr.io/v2/homebrew/core/ripgrep/blobs/sha256:f0727ff4b6aeddff356a3319fe8844dfc2f7435c8ca81ba9bbbeaffd04906926
+    #################################################################################################################################### 100.0%
+    ==> Pouring ripgrep--13.0.0.sonoma.bottle.1.tar.gz
+    ==> Caveats
+    Bash completion has been installed to:
+      /usr/local/etc/bash_completion.d
+    ==> Summary
+    ☕️ 🐸  /usr/local/Cellar/ripgrep/13.0.0: 13 files, 5.8MB
+    ==> Running `brew cleanup ripgrep`...
+    Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+    Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+
+    $ rg --version
+    ripgrep 13.0.0
+    -SIMD -AVX (compiled)
+    +SIMD +AVX (runtime)
+    ```
+
+![ag rg](../screenshot/osx/ag-rg.png)
+
 ### [`fzy`](https://github.com/jhawthorn/fzy)
 
 - install
@@ -826,6 +977,19 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```
 
   ![bat cat](../screenshot/linux/bat-cat.png)
+
+### [`ansi`](https://github.com/fidian/ansi)
+
+> [!NOTE|label:references:]
+> - [example](https://github.com/fidian/ansi/tree/master/examples)
+
+- install
+  ```bash
+  $ curl -sL git.io/ansi -o "${iRCHOME}"/utils/ansi && chmod +x $_
+  $ ln -sf $(realpath "${iRCHOME}"/utils/ansi) $(realpath "${iRCHOME}"/bin)/ansi
+  ```
+
+  ![ansi color tables](../screenshot/osx/ansi-color-codes.png)
 
 ### [`diff-so-fancy`](https://github.com/so-fancy/diff-so-fancy)
 

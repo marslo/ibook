@@ -19,6 +19,7 @@
   - [open html in terminal](#open-html-in-terminal)
   - [OpenInFreshWindowOrNewTab](#openinfreshwindowornewtab)
   - [GetFiletypes](#getfiletypes)
+- [commands](#commands)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -422,3 +423,24 @@ function! GetFiletypes()
     return uniq(sort(filetypes))
 endfunction
 ```
+
+## commands
+
+> [!NOTE|label:references:]
+> - [Avoiding the "Hit ENTER to continue" prompts](https://vim.fandom.com/wiki/Avoiding_the_%22Hit_ENTER_to_continue%22_prompts)
+> - [`:help hint-enter`](https://vimhelp.org/message.txt.html#hit-enter)
+> - [`:help avoid-hint-enter`](https://vimhelp.org/version5.txt.html#avoid-hit-enter)
+> - [`:help <q-args>`](https://vimhelp.org/map.txt.html#%3Cq-args%3E)
+>   - [`:help q-args-example`](https://vimhelp.org/map.txt.html#q-args-example)
+> - [How to execute shell commands silently?](https://vi.stackexchange.com/a/1958/7389)
+> - [How do I execute an external command without jumping out of vim?](https://vi.stackexchange.com/a/9805/7389)
+> - [excuting vim command silently then echo in vim](https://stackoverflow.com/a/37272102/2940319)
+> - [silent vs. silent! - What is the difference?](https://vi.stackexchange.com/q/34346/7389)
+
+- execute [`doctoc`](https://github.com/thlorenz/doctoc) in vim via command `:Toc`
+  ```vim
+  command! -nargs=0 Toc execute 'silent ! /usr/local/bin/doctoc --github --maxlevel 3 %' | execute 'redraw!'
+
+  # for automatic cmd
+  autocmd BufWritePost *\(.md\)  silent :Toc                 " automatic build doctoc when save it
+  ```
