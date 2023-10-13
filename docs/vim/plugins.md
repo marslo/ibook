@@ -9,11 +9,10 @@
   - [align with the N pattern](#align-with-the-n-pattern)
   - [align on specific symbol](#align-on-specific-symbol)
 - [recommended plugins](#recommended-plugins)
-  - [indentLine](#indentline)
-  - [autopairs](#autopairs)
-  - [rainbow](#rainbow)
-  - [gitgutter](#gitgutter)
-  - [tabular](#tabular)
+  - [utils](#utils)
+  - [markdown](#markdown)
+  - [git](#git)
+  - [programming](#programming)
   - [ycm](#ycm)
   - [lsp-examples](#lsp-examples)
   - [vim-easycomplete](#vim-easycomplete)
@@ -230,7 +229,8 @@
   ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
 
 ## recommended plugins
-### indentLine
+### utils
+#### indentLine
 ```vim
 " install
 Bundle 'Yggdroot/indentLine'
@@ -258,7 +258,61 @@ else
 endif
 ```
 
-### autopairs
+
+#### [AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
+```vim
+Plugin 'marslo/authorinfo'
+
+noremap <leader>aid :AuthorInfoDetect<CR>
+let g:vimrc_author = 'marslo'
+let g:vimrc_email  = 'marslo.jiao@gmail.com'
+autocmd BufWritePre, FileWritePre * :AuthorInfoDetect<CR>
+autocmd BufWritePre               * :AuthorInfoDetect<CR>
+```
+
+#### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
+```vim
+Plugin 'sjl/gundo.vim'
+
+noremap <Leader>u :GundoToggle<CR>
+set undodir=~/.vim/undo/
+set undofile
+```
+
+#### [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
+```vim
+Plugin 'kien/ctrlp.vim'
+
+let g:ctrlp_map                 = '<c-p>'                           " CtrlP
+let g:ctrlp_working_path_mode   = 'ra'                              " search parents as well (stop searching safety)
+let g:ctrlp_max_height          = 8
+let g:ctrlp_max_depth           = 100
+let g:ctrl_root_makers          = ['.ctrlp']                        " stop search if these files present
+let g:ctrlp_use_caching         = 1
+let g:ctrlp_clear_cache_on_exit = 0                                 " cross session caching
+if has('win32') || has('win95') || has('win64')
+  let g:ctrlp_cache_dir = $VIM . '/cache/ctrlp'
+else
+  let g:ctrlp_cache_dir = '$HOME/.vim/cache/ctrlp'
+endif
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+    \ 'file': '\v\.(exe|so|dll|rpm|tar|gz|bz2|zip|ctags|tags)|tags|ctags$',
+    \ 'link': 'some_bad_symbolic_links',
+    \ }
+
+```
+
+#### [yegappan/mru](https://github.com/yegappan/mru)
+```vim
+noremap <leader>re :MRU<CR>
+let MRU_Auto_Close    = 1                                           " most recently used(mru)
+let MRU_Max_Entries   = 10
+let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
+
+```
+
+#### autopairs
 ```vim
 Bundle 'marslo/auto-pairs'
 " or
@@ -271,7 +325,7 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutBackInsert = '<M-b>'
 ```
 
-### rainbow
+#### rainbow
 ```vim
 " install
 Bundle 'luochen1990/rainbow'
@@ -304,32 +358,95 @@ let g:rainbow_conf = {
 \}
 ```
 
-### gitgutter
-
-> [!NOTE|label:references:]
-> - [GitGutter Documentation](https://jisaacks.github.io/GitGutter/)
-> - [Can't enable gitgutter with GitGutterEnable after disabling it on startup](https://github.com/airblade/vim-gitgutter/issues/409)
-> - [How to display in real time](https://github.com/airblade/vim-gitgutter/issues/579)
-
+### markdown
+#### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
 ```vim
-Bundle 'airblade/vim-gitgutter'
+Plugin 'gabrielelana/vim-markdown'
 
-" gitgutter
-nmap <leader>d :GitGutterFold<CR>
-let g:gitgutter_git_executable = '/usr/local/bin/git'
-let g:gitgutter_enabled        = 1
-let g:gitgutter_realtime       = 0
-let g:gitgutter_eager          = 0
-set updatetime=250
-set signcolumn=yes
-" highlight clear LineNr
-highlight clear SignColumn
+nnoremap <Leader>cc :let &cole=(&cole == 2) ? 0 : 2 <bar> echo 'conceallevel ' . &cole <CR>
+let g:vim_markdown_folding_style_pythonic = 1
+let g:vim_markdown_override_foldtext      = 0
+let g:vim_markdown_autowrite              = 1
+let g:vim_markdown_new_list_item_indent   = 4
+let g:vim_markdown_toc_autofit            = 1
+let g:vim_markdown_conceal                = 0
+set conceallevel                          = 2
+let g:vim_markdown_frontmatter            = 1
+let g:vim_markdown_json_frontmatter       = 1
+let g:markdown_enable_spell_checking      = 0
+let g:markdown_enable_input_abbreviations = 0
+let g:markdown_enable_conceal             = 0
+hi markdownItalic           guifg=gray25    gui=underline
+hi MarkdownHeadingDelimiter gui=bold        guifg=gray25
+hi htmlSpecialChar          guifg=black
+hi markdownBold             gui=bold        guifg=gray25
+hi markdownUrl              guifg=#2fb3a6
+hi markdownAutomaticLink    guifg=#2fb3a6
+hi markdownLinkText         guifg=#317849
+hi markdownUrlTitle         guifg=#317849
+hi markdownBlockquote       guifg=#317849   gui=bold
+hi markdownId               guifg=#2fb3a6
+hi markdownIdDeclaration    guifg=#317849   gui=bold
+hi markdownListMarker       guifg=#317849
 ```
 
-### tabular
+#### [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
+```vim
+Plugin 'tpope/vim-markdown'
+
+" for tpope vim-markdown
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+let g:markdown_syntax_conceal = 0
+let g:markdown_minlines = 100
+```
+
+#### [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
+```vim
+Plugin 'preservim/vim-markdown'
+
+" preservim/vim-markdown
+let g:vim_markdown_toc_autofit         = 1
+let g:vim_markdown_conceal             = 0
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_strikethrough       = 1
+let g:vim_markdown_folding_disabled    = 1
+" let g:vim_markdown_frontmatter         = 1
+" let g:vim_markdown_json_frontmatter    = 1
+" let g:vim_markdown_autowrite           = 1
+" let g:vim_markdown_follow_anchor       = 1
+" let g:vim_markdown_anchorexpr          = "'<<'.v:anchor.'>>'"
+```
+
+#### [dhruvasagar/vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
+```vim
+Plugin 'dhruvasagar/vim-table-mode'
+
+noremap <Leader>tm :TableModeToggle<CR>
+let g:table_mode_corner          = '|'
+let g:table_mode_header_fillchar = '-'
+let g:table_mode_align_char      = ":"
+let g:table_mode_corner          = "|"
+let g:table_mode_align_char      = ":"
+" let g:table_mode_corner_corner = '+'
+function! s:isAtStartOfLine(mapping)
+  let text_before_cursor = getline('.')[0 : col('.')-1]
+  let mapping_pattern = '\V' . escape(a:mapping, '\')
+  let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+  return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+endfunction
+inoreabbrev <expr> <bar><bar>
+          \ <SID>isAtStartOfLine('\|\|') ?
+          \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+inoreabbrev <expr> __
+          \ <SID>isAtStartOfLine('__') ?
+          \ '<c-o>:silent! TableModeDisable<cr>' : '__'
+let g:tabular_loaded             = 1
+```
+
+#### tabular
 ```vim
 " install
-Bundle 'godlygeek/tabular'
+Plugin 'godlygeek/tabular'
 
 " settings
 noremap <Leader>tb :TableModeToggle<CR>
@@ -369,6 +486,101 @@ if exists(":Tabularize")
     endif
   endfunction
 endif
+```
+
+### git
+#### gitgutter
+
+> [!NOTE|label:references:]
+> - [GitGutter Documentation](https://jisaacks.github.io/GitGutter/)
+> - [Can't enable gitgutter with GitGutterEnable after disabling it on startup](https://github.com/airblade/vim-gitgutter/issues/409)
+> - [How to display in real time](https://github.com/airblade/vim-gitgutter/issues/579)
+
+```vim
+Bundle 'airblade/vim-gitgutter'
+
+" gitgutter
+nmap <leader>d :GitGutterFold<CR>
+let g:gitgutter_git_executable = '/usr/local/bin/git'
+let g:gitgutter_enabled        = 1
+let g:gitgutter_realtime       = 0
+let g:gitgutter_eager          = 0
+set updatetime=250
+set signcolumn=yes
+" highlight clear LineNr
+highlight clear SignColumn
+```
+
+#### [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+```vim
+Plugin 'tpope/vim-fugitive'
+
+" nnoremap <leader>mp :silent exec '! git mp'<CR>
+" fugitive
+" nnoremap <Leader>ga :Git add %:p<CR><CR>
+" nnoremap <Leader>gs :Gstatus<CR>
+" nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
+" nnoremap <leader>gp :Ggrep<Space>
+" nnoremap <leader>gb :Git branch<Space>
+" nnoremap <leader>go :Git checkout<Space>
+" nnoremap <leader>gc :Git commit -am ""<Left>
+" command! -bar -nargs=* Gpull execute 'Git pull'
+" command! -bar -nargs=* Gpush execute 'Git push'
+
+```
+
+### programming
+#### yaml
+```vim
+Plugin 'stephpy/vim-yaml'
+Plugin 'pedrohdz/vim-yaml-folds'
+Plugin 'dense-analysis/ale'
+
+" yamllint                                                          " brew install yamllint
+" ale                                                               " :help g:ale_echo_msg_format
+let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%] '
+let g:ale_sign_error                      = '✘'
+let g:ale_sign_warning                    = '⚠'
+let g:ale_lint_on_text_changed            = 'never'
+let g:ale_fix_on_save                     = 0
+let g:ale_lint_on_save                    = 1
+let g:ale_lint_on_text_changed            = 'never'
+let g:ale_warn_about_trailing_blank_lines = 1
+let g:ale_warn_about_trailing_whitespace  = 1
+
+```
+
+#### [EnhCommentify](https://github.com/vim-scripts/EnhCommentify.vim)
+```vim
+" EnhCommentify
+let g:EnhCommentifyAlignRight      = 'Yes'
+let g:EnhCommentifyRespectIndent   = 'yes'
+let g:EnhCommentifyPretty          = 'Yes'
+let g:EnhCommentifyMultiPartBlocks = 'Yes'
+let g:EnhCommentifyUseSyntax       = 'Yes'
+```
+
+#### [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
+```vim
+" tpope/vim-commentary
+map  <C-/> <Plug>Commentary
+imap <C-/> <Esc><Plug>CommentaryLineA
+xmap <c-/> <Plug>Commentary
+```
+
+#### [honza/vim-snippets](https://github.com/honza/vim-snippets)
+```vim
+Plugin 'honza/vim-snippets'
+```
+
+#### [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
+```vim
+Plugin 'msanders/snipmate.vim'
+
+" Snippet
+imap <S-C-J> <Plug>snipMateNextOrTrigger
+smap <S-C-J> <Plug>snipMateNextOrTrigger
+imap <Tab>   <Plug>snipMateNextOrTrigger
 ```
 
 ### ycm
@@ -545,11 +757,9 @@ EOF
 - vimrc
   ```bash
   $ cat ~/.vimrc
-  ...
+  Plugin 'ycm-core/lsp-examples'
 
-  Bundle 'ycm-core/lsp-examples'
-
-  $ vim +BundleInstall
+  vim +BundleInstall +qa
   ```
 
 - install
@@ -650,6 +860,50 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 
 > [!DANGER|label:ERROR]
 > not working for python3.9+
+
+```vim
+" tabnine-vim
+if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
+if !(&filetype == 'vim')           | let g:loaded_youcompleteme = 1 | endif
+if &filetype ==# 'vim'             | let g:loaded_youcompleteme = 0 | endif
+
+let g:ycm_filetype_blacklist                      = { 'vim':0  }
+let b:ycm_largefile                               = 1
+let g:ycm_disable_for_files_larger_than_kb        = 1000
+let g:ycm_python_binary_path                      = '/usr/local/opt/python/libexec/bin/python'
+let g:ycm_min_num_of_chars_for_completion         = 2
+let g:ycm_python_binary_path                      = '/usr/local/opt/python@3.9/libexec/bin/python'
+let g:ycm_filetype_specific_completion_to_disable = { 'gitcommit': 1 }
+let g:ycm_semantic_triggers                       = {
+  \   'c': ['->', '.'],
+  \   'objc': ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+  \            're!\[.*\]\s'],
+  \   'ocaml': ['.', '#'],
+  \   'cpp,cuda,objcpp': ['->', '.', '::'],
+  \   'perl': ['->'],
+  \   'php': ['->', '::'],
+  \   'cs,d,elixir,go,groovy,java,javascript,julia,perl6,python,scala,typescript,vb': ['.'],
+  \   'ruby,rust': ['.', '::'],
+  \   'lua': ['.', ':'],
+  \   'erlang': [':'],
+  \ }
+
+function! TriggerYCM()
+  if g:loaded_youcompleteme == 1
+    let g:loaded_youcompleteme = 0
+  else
+    let g:loaded_youcompleteme = 1
+  endif
+endfunction
+nmap <C-y> :call TriggerYCM()<CR>
+```
+
+- disable tabnine for vim
+  ```vim
+  " tabnine-vim                                                        " Bundle 'codota/tabnine-vim'
+  if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
+  if !( &filetype == 'vim' )         | let g:loaded_youcompleteme = 1 | endif
+  ```
 
 
 ## troubleshooting
