@@ -966,6 +966,9 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ sudo yum install -y yum-utils
   $ sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
   $ sudo yum install ripgrep
+  # or via epel: https://marslo.github.io/ibook/linux/basic.html#tools-installation
+  $ sudo yum install -y yum-utils epel-release
+  $ sudo yum install ripgrep
 
   # ubuntu
   $ curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
