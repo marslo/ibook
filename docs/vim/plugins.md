@@ -18,9 +18,12 @@
   - [lsp-examples](#lsp-examples)
   - [vim-easycomplete](#vim-easycomplete)
   - [tabnine-vim](#tabnine-vim)
+- [troubleshooting](#troubleshooting)
+  - [download failed](#download-failed)
+  - [all caches](#all-caches)
+  - [no hints](#no-hints)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style='tip' %}
 > references:
@@ -530,91 +533,6 @@ flags = [
 EOF
 ```
 
-#### troubleshooting
-
-- how to debug
-  - `:message`
-  - `:YcmDebugInfo`
-  - `:YcmDiags`
-
-##### downlaod failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
-
-> [!NOTE|label:related issues:]
-> - [#4063: Failing to build, Java Error 404 HTTP](https://github.com/ycm-core/YouCompleteMe/issues/4063)
-> - [#4136: Installing jdt.ls for Java support...FAILED (Similar to #3972 & #3974)](https://github.com/ycm-core/YouCompleteMe/issues/4136)
-> - [#3974: 404 error downloading JDT.LS](https://github.com/ycm-core/YouCompleteMe/issues/3974)
-
-1. [solution 1](https://github.com/ycm-core/ycmd/blob/master/build.py#L92): using `ycm-core/YouCompleteMe` instead of [`tabnine/YouCompleteMe`](https://github.com/tabnine/YouCompleteMe/blob/master/.gitmodules#L3) ( [details](https://github.com/tabnine/ycmd/blob/master/build.py#L92) )
-
-1. solution 2:
-  ```bash
-  $ git diff -- build.py
-  diff --git a/build.py b/build.py
-  index 4f586f28..01c19315 100755
-  --- a/build.py
-  +++ b/build.py
-  @@ -89,10 +89,10 @@ DYNAMIC_PYTHON_LIBRARY_REGEX = """
-     )$
-   """
-
-  -JDTLS_MILESTONE = '1.14.0'
-  -JDTLS_BUILD_STAMP = '202207211651'
-  +JDTLS_MILESTONE = '1.19.0'
-  +JDTLS_BUILD_STAMP = '202301090450'
-   JDTLS_SHA256 = (
-  -  '4978ee235049ecba9c65b180b69ef982eedd2f79dc4fd1781610f17939ecd159'
-  +  'acfd91918c51770a2e63a5a4d72f3543611ad7e1610b917c28797548b84e8460'
-   )
-
-   RUST_TOOLCHAIN = 'nightly-2022-08-17'
-  ```
-
-1. [solution 3](https://github.com/ycm-core/YouCompleteMe/issues/4136#issuecomment-1448333945)
-  - download the tar.gz manually
-    - [snapshots](https://download.eclipse.org/jdtls/snapshots/)
-    - [milestone](https://projects.eclipse.org/projects/eclipse.jdt.ls)
-  - copy/move package into `YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/`
-  ```bash
-  $ mkdir -p YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/ && cd !$
-  $ wget https://github.com/ycm-core/llvm/releases/download/16.0.1/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
-  ```
-
-
-##### download failed for omnisharp.http-osx.tar.gz
-
-```bash
-$ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11
-$ curl -o YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz \
-          https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
-```
-
-#### all caches
-```bash
-$ find YouCompleteMe/ -name '*.zip' -o -name '*.tar.*'
-YouCompleteMe/third_party/ycmd/ycmd/tests/testdata/python-future/embedded_standard_library/python35.zip
-YouCompleteMe/third_party/ycmd/clang_archives/libclang-16.0.1-x86_64-apple-darwin.tar.bz2
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/honnef.co/go/tools/@v/v0.3.2.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/mvdan.cc/gofumpt/@v/v0.3.1.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/mvdan.cc/xurls/v2/@v/v2.4.0.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/vuln/@v/v0.0.0-20220725105440-4151a5aca1df.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/tools/gopls/@v/v0.9.4.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/tools/@v/v0.1.13-0.20220812184215-3f9b119300de.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/sys/@v/v0.0.0-20220722155257-8c9f86f7a55f.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/text/@v/v0.3.7.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/sync/@v/v0.0.0-20220722155255-886fb9371eb4.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/exp/typeparams/@v/v0.0.0-20220722155223-a9213eeb770e.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/mod/@v/v0.6.0-dev.0.20220419223038-86c51ed26bb4.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/!burnt!sushi/toml/@v/v1.2.0.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/google/go-cmp/@v/v0.5.8.zip
-YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/sergi/go-diff/@v/v1.1.0.zip
-YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
-YouCompleteMe/third_party/ycmd/third_party/jedi_deps/jedi/test/examples/zipped_imports/pkg.zip
-YouCompleteMe/third_party/ycmd/third_party/jedi_deps/jedi/test/examples/zipped_imports/not_pkg.zip
-YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz
-YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/jdt-language-server-1.14.0-202207211651.tar.gz
-YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
-```
-
 ### [lsp-examples](https://github.com/ycm-core/lsp-examples)
 
 > [!NOTE|label:references:]
@@ -733,6 +651,132 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 > [!DANGER|label:ERROR]
 > not working for python3.9+
 
+
+## troubleshooting
+
+> [!TIP|label:how to debug:]
+> - `:message`
+> - `:YcmDebugInfo`
+> - `:YcmDiags`
+> - `:py3 import sys; print( sys.version)`
+
+
+### download failed
+#### download failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
+
+> [!NOTE|label:related issues:]
+> - [#4063: Failing to build, Java Error 404 HTTP](https://github.com/ycm-core/YouCompleteMe/issues/4063)
+> - [#4136: Installing jdt.ls for Java support...FAILED (Similar to #3972 & #3974)](https://github.com/ycm-core/YouCompleteMe/issues/4136)
+> - [#3974: 404 error downloading JDT.LS](https://github.com/ycm-core/YouCompleteMe/issues/3974)
+
+1. [solution 1](https://github.com/ycm-core/ycmd/blob/master/build.py#L92): using `ycm-core/YouCompleteMe` instead of [`tabnine/YouCompleteMe`](https://github.com/tabnine/YouCompleteMe/blob/master/.gitmodules#L3) ( [details](https://github.com/tabnine/ycmd/blob/master/build.py#L92) )
+
+1. solution 2:
+  ```bash
+  $ git diff -- build.py
+  diff --git a/build.py b/build.py
+  index 4f586f28..01c19315 100755
+  --- a/build.py
+  +++ b/build.py
+  @@ -89,10 +89,10 @@ DYNAMIC_PYTHON_LIBRARY_REGEX = """
+     )$
+   """
+
+  -JDTLS_MILESTONE = '1.14.0'
+  -JDTLS_BUILD_STAMP = '202207211651'
+  +JDTLS_MILESTONE = '1.19.0'
+  +JDTLS_BUILD_STAMP = '202301090450'
+   JDTLS_SHA256 = (
+  -  '4978ee235049ecba9c65b180b69ef982eedd2f79dc4fd1781610f17939ecd159'
+  +  'acfd91918c51770a2e63a5a4d72f3543611ad7e1610b917c28797548b84e8460'
+   )
+
+   RUST_TOOLCHAIN = 'nightly-2022-08-17'
+  ```
+
+1. [solution 3](https://github.com/ycm-core/YouCompleteMe/issues/4136#issuecomment-1448333945)
+  - download the tar.gz manually
+    - [snapshots](https://download.eclipse.org/jdtls/snapshots/)
+    - [milestone](https://projects.eclipse.org/projects/eclipse.jdt.ls)
+  - copy/move package into `YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/`
+  ```bash
+  $ mkdir -p YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/ && cd !$
+  $ wget https://github.com/ycm-core/llvm/releases/download/16.0.1/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
+  ```
+
+#### download failed for `clangd-17.0.1-x86_64-apple-darwin.tar.bz2`
+```bash
+$ mkdir -p YouCompleteMe/third_party/ycmd/third_party/clangd/cache
+$ curl  -o YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 \
+        -fsSL https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+```
+
+
+#### download failed for `omnisharp.http-osx.tar.gz`
+```bash
+$ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11
+$ curl -o YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz \
+          https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
+```
+
+### all caches
+```bash
+$ find YouCompleteMe/ -name '*.zip' -o -name '*.tar.*'
+YouCompleteMe/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+YouCompleteMe/third_party/ycmd/ycmd/tests/testdata/python-future/embedded_standard_library/python35.zip
+YouCompleteMe/third_party/ycmd/clang_archives/libclang-17.0.1-x86_64-apple-darwin.tar.bz2
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/honnef.co/go/tools/@v/v0.4.2.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/mvdan.cc/gofumpt/@v/v0.4.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/mvdan.cc/xurls/v2/@v/v2.4.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/vuln/@v/v0.0.0-20230110180137-6ad3e3d07815.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/tools/gopls/@v/v0.13.2.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/tools/@v/v0.11.2-0.20230810185051-cc6b5804b8cf.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/sys/@v/v0.10.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/text/@v/v0.11.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/sync/@v/v0.3.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/exp/typeparams/@v/v0.0.0-20221212164502-fae10dda9338.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/exp/@v/v0.0.0-20220722155223-a9213eeb770e.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/mod/@v/v0.12.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/!burnt!sushi/toml/@v/v1.2.1.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/google/go-cmp/@v/v0.5.9.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/sergi/go-diff/@v/v1.1.0.zip
+YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+YouCompleteMe/third_party/ycmd/third_party/jedi_deps/jedi/test/examples/zipped_imports/pkg.zip
+YouCompleteMe/third_party/ycmd/third_party/jedi_deps/jedi/test/examples/zipped_imports/not_pkg.zip
+YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz
+YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/jdt-language-server-1.26.0-202307271613.tar.gz
+YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/third_party/ycmd/third_party/eclipse.jdt.ls/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+```
+
+<!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ find YouCompleteMe/ -name '*.zip' -o -name '*.tar.*'
+YouCompleteMe/third_party/ycmd/ycmd/tests/testdata/python-future/embedded_standard_library/python35.zip
+YouCompleteMe/third_party/ycmd/clang_archives/libclang-16.0.1-x86_64-apple-darwin.tar.bz2
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/honnef.co/go/tools/@v/v0.3.2.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/mvdan.cc/gofumpt/@v/v0.3.1.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/mvdan.cc/xurls/v2/@v/v2.4.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/vuln/@v/v0.0.0-20220725105440-4151a5aca1df.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/tools/gopls/@v/v0.9.4.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/tools/@v/v0.1.13-0.20220812184215-3f9b119300de.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/sys/@v/v0.0.0-20220722155257-8c9f86f7a55f.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/text/@v/v0.3.7.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/sync/@v/v0.0.0-20220722155255-886fb9371eb4.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/exp/typeparams/@v/v0.0.0-20220722155223-a9213eeb770e.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/golang.org/x/mod/@v/v0.6.0-dev.0.20220419223038-86c51ed26bb4.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/!burnt!sushi/toml/@v/v1.2.0.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/google/go-cmp/@v/v0.5.8.zip
+YouCompleteMe/third_party/ycmd/third_party/go/pkg/mod/cache/download/github.com/sergi/go-diff/@v/v1.1.0.zip
+YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
+YouCompleteMe/third_party/ycmd/third_party/jedi_deps/jedi/test/examples/zipped_imports/pkg.zip
+YouCompleteMe/third_party/ycmd/third_party/jedi_deps/jedi/test/examples/zipped_imports/not_pkg.zip
+YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz
+YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/jdt-language-server-1.14.0-202207211651.tar.gz
+YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
+```
+<!--endsec-->
+
 #### troubleshooting
 
 - `libclang` download failure
@@ -793,3 +837,21 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
            # correct.  If this is not the case, remove it if needed and download it.
         ```
 
+### no hints
+
+> [!NOTE|label:references:]
+> - [.vim/.ycm_extra_conf.py](https://github.com/rasendubi/dotfiles/blob/master/.vim/.ycm_extra_conf.py)
+> - [Why python autocompletion does not work if path to python binary is taken from variable?](https://vi.stackexchange.com/questions/14414/why-python-autocompletion-does-not-work-if-path-to-python-binary-is-taken-from-v)
+> - [vim - Youcomplete me unable to find an appropriate Python library](https://stackoverflow.com/questions/37277976/vim-youcomplete-me-unable-to-find-an-appropriate-python-library)
+> - [#2874 : "ycmd server SHUTDOWN" error on macOS High Sierra](https://github.com/ycm-core/YouCompleteMe/issues/2874)
+
+```bash
+$ cd ~/.vim/bundle/YouCompleteMe/third_party/ycmd/
+$ cp ycmd/default_settings.json .
+$ python ycmd --options_file default_settings.json
+2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
+2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
+2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
+2023-10-13 01:42:34,338 - INFO - Completion config: 50, detailing -1 candiates
+serving on http://1.0.0.127.in-addr.arpa:63691
+```
