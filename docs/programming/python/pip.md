@@ -10,12 +10,16 @@
   - [setup default python version](#setup-default-python-version)
   - [`index-url` & `extra-index-url`](#index-url--extra-index-url)
   - [list pip package with url](#list-pip-package-with-url)
+  - [installing from local packages](#installing-from-local-packages)
 - [config](#config)
   - [list all configs](#list-all-configs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## installation
+
+> [!NOTE|label:references:]
+> - [Python Management and Project Dependencies](https://www.integralist.co.uk/posts/python-management/)
 
 ### install pip
 #### from source code
@@ -181,6 +185,22 @@ websocket-client:   https://github.com/websocket-client/websocket-client.git
 wheel:              https://github.com/pypa/wheel
 xattr:              http://github.com/xattr/xattr
 ```
+
+### [installing from local packages](https://pip.pypa.io/en/stable/user_guide/#installing-from-local-packages)
+- osx/unix
+  ```bash
+  $ python -m pip download --destination-directory DIR -r requirements.txt
+
+  # --no-index && --find-links
+  $ python -m pip install --no-index --find-links=DIR -r requirements.txt
+  ```
+- windows
+  ```bash
+  $ py -m pip download --destination-directory DIR -r requirements.txt
+
+  # --no-index && --find-links
+  $ py -m pip install --no-index --find-links=DIR -r requirements.txt
+  ```
 
 ## config
 ### list all configs
