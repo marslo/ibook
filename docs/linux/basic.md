@@ -65,16 +65,16 @@
 {% endhint %}
 
 ```bash
-PS1="\[$(tput setaf 0)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 1)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 2)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 3)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 4)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 5)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 6)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 7)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 8)\]my prompt\[$(tput sgr0)\]> "
-PS1="\[$(tput setaf 9)\]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 0) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 1) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 2) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 3) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 4) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 5) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 6) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 7) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 8) \]my prompt\[$(tput sgr0)\]> "
+PS1="\[$(tput setaf 9) \]my prompt\[$(tput sgr0)\]> "
 PS1="\[$(tput setaf 10)\]my prompt\[$(tput sgr0)\]> "
 PS1="\[$(tput setaf 11)\]my prompt\[$(tput sgr0)\]> "
 PS1="\[$(tput setaf 12)\]my prompt\[$(tput sgr0)\]> "
@@ -531,6 +531,7 @@ $ yum groupremove <groupName>
   > - [How To enable the EPEL Repository on RHEL 8 / CentOS 8 Linux](https://linuxconfig.org/redhat-8-epel-install-guide)
   > - [Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
   > - [404 error trying to install EPEL](https://access.redhat.com/discussions/5473561)
+  > - [Index of /epel/8/Everything](https://mirrors.iu13.net/epel/8/Everything/)
 
   ```bash
   # install from url
@@ -542,6 +543,37 @@ $ yum groupremove <groupName>
   # install via cmd
   $ sudo yum [re]install -y epel-release yum-utils
   ```
+
+  - info
+    ```bash
+    $ cat /etc/yum.repos.d/epel.repo
+    [epel]
+    name=Extra Packages for Enterprise Linux 8 - $basearch
+    # It is much more secure to use the metalink, but if you wish to use a local mirror
+    # place its address here.
+    #baseurl=https://download.example/pub/epel/8/Everything/$basearch
+    metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=centos
+    enabled=1
+    gpgcheck=1
+    countme=1
+    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8
+
+    $ dnf repoinfo epel
+    Repo-id            : epel
+    Repo-name          : Extra Packages for Enterprise Linux 8 - x86_64
+    Repo-status        : enabled
+    Repo-revision      : 1697078836
+    Repo-updated       : Wed 11 Oct 2023 07:48:01 PM PDT
+    Repo-pkgs          : 9,872
+    Repo-available-pkgs: 9,870
+    Repo-size          : 17 G
+    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=x86_64&infra=$infra&content=centos
+      Updated          : Thu 12 Oct 2023 05:16:56 PM PDT
+    Repo-baseurl       : https://mirrors.iu13.net/epel/8/Everything/x86_64/ (153 more)
+    Repo-expire        : 172,800 second(s) (last: Thu 12 Oct 2023 05:16:56 PM PDT)
+    Repo-filename      : /etc/yum.repos.d/epel.repo
+    Total packages: 9,872
+    ```
 
   - [We can workaround this by replacing the $releasever variable with 8](https://access.redhat.com/discussions/5473561#comment-2119161)
     ```bash
