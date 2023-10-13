@@ -15,11 +15,18 @@
   - [Putting the current file on the Windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
   - [map overview](#map-overview)
 - [functions](#functions)
-  - [twiddle case](#twiddle-case)
+  - [TwiddleCase](#twiddlecase)
   - [open html in terminal](#open-html-in-terminal)
   - [OpenInFreshWindowOrNewTab](#openinfreshwindowornewtab)
   - [GetFiletypes](#getfiletypes)
+  - [IgnoreSpells](#ignorespells)
+  - [IgnoreCamelCaseSpell](#ignorecamelcasespell)
+  - [TabMessage](#tabmessage)
+  - [BSkipQuickFix](#bskipquickfix)
+  - [TriggerYCM](#triggerycm)
 - [commands](#commands)
+- [settings](#settings)
+  - [theme](#theme)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -310,7 +317,7 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 
 ## functions
 
-### [twiddle case](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
+### [TwiddleCase](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
 
 > [!TIP|label:references:]
 > - [change.txt](https://vimhelp.org/change.txt.html)
@@ -398,30 +405,118 @@ nnoremap ; :call OpenInFreshWindowOrNewTab()<cr>
 ### [GetFiletypes](https://vi.stackexchange.com/a/5782/7389)
 ```vim
 function! GetFiletypes()
-    " Get a list of all the runtime directories by taking the value of that
-    " option and splitting it using a comma as the separator.
-    let rtps = split(&runtimepath, ",")
-    " This will be the list of filetypes that the function returns
-    let filetypes = []
+  " https://vi.stackexchange.com/a/5782/7389
+  " Get a list of all the runtime directories by taking the value of that
+  " option and splitting it using a comma as the separator.
+  let rtps      = split( &runtimepath, "," )
+  " This will be the list of filetypes that the function returns
+  let filetypes = []
 
-    " Loop through each individual item in the list of runtime paths
-    for rtp in rtps
-        let syntax_dir = rtp . "/syntax"
-        " Check to see if there is a syntax directory in this runtimepath.
-        if (isdirectory(syntax_dir))
-            " Loop through each vimscript file in the syntax directory
-            for syntax_file in split(glob(syntax_dir . "/*.vim"), "\n")
-                " Add this file to the filetypes list with its everything
-                " except its name removed.
-                call add(filetypes, fnamemodify(syntax_file, ":t:r"))
-            endfor
-        endif
-    endfor
+  " Loop through each individual item in the list of runtime paths
+  for rtp in rtps
+    let syntax_dir = rtp . "/syntax"
+    " Check to see if there is a syntax directory in this runtimepath.
+    if ( isdirectory(syntax_dir) )
+      " Loop through each vimscript file in the syntax directory
+      for syntax_file in split( glob(syntax_dir . "/*.vim"), "\n" )
+        " Add this file to the filetypes list with its everything
+        " except its name removed.
+        call add( filetypes, fnamemodify(syntax_file, ":t:r") )
+      endfor
+    endif
+  endfor
 
-    " This removes any duplicates and returns the resulting list.
-    " NOTE: This might not be the best way to do this, suggestions are welcome.
-    return uniq(sort(filetypes))
+  " This removes any duplicates and returns the resulting list.
+  " NOTE: This might not be the best way to do this, suggestions are welcome.
+  return uniq( sort(filetypes) )
 endfunction
+```
+
+### IgnoreSpells
+```vim
+" spell
+" set spellcamelcase=1
+" ignore CamelCase words when spell checking
+function! IgnoreSpells()
+  syntax match Url "\w\+:\/\/[:/?#[\]@!$&'()*+,;=0-9[:lower:][:upper:]_\-.~]\+" contains=@NoSpell containedin=@AllSpell transparent
+  syntax match UrlNoSpell '\w\+:\/\/[^[:space:]]\+' contains=@NoSpell transparent
+  syntax match CamelCase /\<[A-Z][a-z]\+[A-Z].\{-}\>/ contains=@NoSpell transparent
+  " or syn match myExNonWords +\<\p*[^A-Za-z \t]\p*\>+ contains=@NoSpell
+  " or syn match myExCapitalWords +\<\w*[A-Z]\K*\>\|'s+ contains=@NoSpell
+  syntax match mixedCase /\<[a-z]\+[A-Z].\{-}\>/ contains=@NoSpell transparent
+  syntax cluster Spell add=Url
+  syntax cluster Spell add=UrlNoSpell
+  syntax cluster Spell add=CamelCase
+  syntax cluster Spell add=mixedCase
+endfunction
+autocmd BufRead,BufNewFile * :call IgnoreSpells()
+" ignore capital check
+set spellcapcheck=
+```
+
+### IgnoreCamelCaseSpell
+```vim
+" spell
+" set spellcamelcase=1
+" Ignore CamelCase words when spell checking
+fun! IgnoreCamelCaseSpell()
+  syn match CamelCase /\<[A-Z][a-z]\+[A-Z].\{-}\>/ contains=@NoSpell transparent
+  syn match mixedCase /\<[a-z]\+[A-Z].\{-}\>/ contains=@NoSpell transparent
+  syn cluster Spell add=CamelCase
+  syn cluster Spell add=mixedCase
+endfun
+autocmd BufRead,BufNewFile * :call IgnoreCamelCaseSpell()
+syn match UrlNoSpell '\w\+:\/\/[^[:space:]]\+' contains=@NoSpell
+```
+
+### TabMessage
+```vim
+" redir into new tab: https://vim.fandom.com/wiki/Capture_ex_command_output; https://vim.fandom.com/wiki/Capture_ex_command_output
+" `gt`, `:tabfirst`, `:tabnext`, `:tablast` ... to switch tabs : https://vim.fandom.com/wiki/Alternative_tab_navigation
+function! TabMessage(cmd)
+  redir => message
+  silent execute a:cmd
+  redir END
+  if empty(message)
+    echoerr "no output"
+  else
+    " use "new" instead of "tabnew" below if you prefer split windows instead of tabs
+    tabnew
+    setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted nomodified
+    silent put=message
+  endif
+endfunction
+command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
+```
+
+### [BSkipQuickFix](https://vi.stackexchange.com/a/19420/7389)
+```vim
+" switch avoid quickfix : https://vi.stackexchange.com/a/19420/7389
+function! BSkipQuickFix(command)
+  let start_buffer = bufnr('%')
+  execute a:command
+  while &buftype ==# 'quickfix' && bufnr('%') != start_buffer
+    execute a:command
+  endwhile
+endfunction
+
+nnoremap <Tab>      :call BSkipQuickFix("bn")<CR>
+nnoremap <S-Tab>    :call BSkipQuickFix("bp")<CR>
+nnoremap <leader>bp :call BSkipQuickFix("bn")<CR>
+nnoremap <leader>bn :call BSkipQuickFix("bp")<CR>
+```
+
+### TriggerYCM
+```vim
+function! TriggerYCM()
+  if g:loaded_youcompleteme == 1
+    let g:loaded_youcompleteme = 0
+  else
+    let g:loaded_youcompleteme = 1
+  endif
+endfunction
+nnoremap <C-y> :call TriggerYCM()<CR>
+
 ```
 
 ## commands
@@ -444,3 +539,65 @@ endfunction
   # for automatic cmd
   autocmd BufWritePost *\(.md\)  silent :Toc                 " automatic build doctoc when save it
   ```
+
+## settings
+- [Capitalize](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
+  ```vim
+  " https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily
+  if ( &tildeop )
+    nnoremap gcw  guw~l
+    nnoremap gcW  guW~l
+    nnoremap gciw guiw~l
+    nnoremap gciW guiW~l
+    nnoremap gcis guis~l
+    nnoremap gc$  gu$~l
+    nnoremap gcgc guu~l
+    nnoremap gcc  guu~l
+    vnoremap gc   gu~l
+  else
+    nnoremap gcw  guw~h
+    nnoremap gcW  guW~h
+    nnoremap gciw guiw~h
+    nnoremap gciW guiW~h
+    nnoremap gcis guis~h
+    nnoremap gc$  gu$~h
+    nnoremap gcgc guu~h
+    nnoremap gcc  guu~h
+    vnoremap gc   gu~h
+  endif
+  nnoremap gcc :s/\v<(.)(\w*)/\u\1\L\2/g<CR>
+  nnoremap gcgc gcc
+  ```
+
+- [comments](https://stackoverflow.com/a/1676672/2940319)
+  ```vim
+  " Commenting blocks of code.
+  augroup commenting_blocks_of_code
+    autocmd!
+    autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
+    autocmd FileType sh,ruby,python   let b:comment_leader = '# '
+    autocmd FileType conf,fstab       let b:comment_leader = '# '
+    autocmd FileType tex              let b:comment_leader = '% '
+    autocmd FileType mail             let b:comment_leader = '> '
+    autocmd FileType vim              let b:comment_leader = '" '
+  augroup END
+  noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+  noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+  ```
+
+### theme
+- solarized
+  ```vim
+  """ solarized
+  colorscheme solarized
+  set termguicolors
+  let g:solarized_termcolors=256
+  let &t_8f = "\<esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<esc>[48;2;%lu;%lu;%lum"
+  let g:solarized_termtrans = 1
+  let g:solarized_extra_hi_groups = 1
+  let g:solarized_visibility = "high"
+  let g:solarized_contrast = "high"
+  let s:base03 = "255"
+  ```
+
