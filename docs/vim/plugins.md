@@ -561,6 +561,35 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_theme                  = 'random'
     ```
 
+  - [tabline](https://github.com/vim-airline/vim-airline/issues/1043#issuecomment-188236831)
+    ```vim
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#show_buffers = 0
+    let g:airline#extensions#tabline#show_splits = 0
+    let g:airline#extensions#tabline#show_tabs = 1
+    let g:airline#extensions#tabline#show_tab_nr = 0
+    let g:airline#extensions#tabline#show_tab_type = 0
+    let g:airline#extensions#tabline#close_symbol = '×'
+    let g:airline#extensions#tabline#show_close_button = 0
+    ```
+
+  - quickfix
+    ```vim
+    :echo getwininfo()
+    [{'winnr': 1, 'variables': {'airline_lastmode': 'inactive spell', 'm1': 1000, 'css_color_match_id': [], 'indentLine_ind
+    entLineId': [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018
+    , 1019, 1020, 1021], 'airline_active': 0, 'last_pos': [0, 3, 1], 'airline_current_mode': '-', 'airline_section_y': '%{s
+    trftime("%H:%M %b-%d %a")} [unix]%{v:hlsearch ? airline#extensions#searchcount#status() : ""}', 'syntastic_loclist_set'
+    : [1, 4]}, 'botline': 19, 'height': 19, 'bufnr': 1, 'winbar': 0, 'width': 119, 'tabnr': 1, 'quickfix': 0, 'topline': 1,
+     'loclist': 0, 'wincol': 1, 'winrow': 1, 'textoff': 7, 'winid': 1000, 'terminal': 0}, {'winnr': 2, 'variables': {'airli
+    ne_lastmode': 'commandline spell readonly', 'airline_section_a': 'Location', 'airline_section_b': '%{get(w:, "quickfix_
+    title", "")}', 'airline_section_c': '', 'airline_active': 1, 'indentLine_indentLineId': [1021, 1022, 1023, 1024, 1025,
+    1026, 1027, 1028, 1029, 1030, 1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 1041], 'airline_current_mode'
+    : 'C', 'airline_section_x': '', 'airline_section_y': '%{strftime("%H:%M %b-%d %a")} [unix]%{v:hlsearch ? airline#extens
+    ions#searchcount#status() : ""}', 'quickfix_title': '/Users/marslo/.marslo/bin/iweather'}, 'botline': 1, 'height': 10,
+    'bufnr': 2, 'winbar': 0, 'width': 119, 'tabnr': 1, 'quickfix': 1, 'topline': 1, 'loclist': 1, 'wincol': 1, 'winrow': 21
+    , 'textoff': 7, 'winid': 1001, 'terminal': 0}]
+    ```
 
 ## utils
 ### [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
@@ -601,6 +630,8 @@ let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 >   ```
 
 ```vim
+Plugin 'vim-syntastic/syntastic'
+
 " syntastic settings                                                " Plugin 'vim-syntastic/syntastic'
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -609,18 +640,24 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list            = 1
 let g:syntastic_check_on_open            = 1
 let g:syntastic_check_on_wq              = 0
+let g:syntastic_loc_list_height          = 2
+let g:syntastic_ignore_files             = ['\.py$']
+let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
 let g:syntastic_enable_signs             = 1
-let g:syntastic_error_symbol             = '✗'
-let g:syntastic_style_error_symbol       = '✠'
-let g:syntastic_warning_symbol           = '∆'
-let g:syntastic_style_warning_symbol     = '≈'
-" let g:syntastic_style_warning_symbol   = '💩'
-
-highlight link SyntasticErrorSign        SignColumn
-highlight link SyntasticWarningSign      SignColumn
-highlight link SyntasticStyleErrorSign   SignColumn
-highlight link SyntasticStyleWarningSign SignColumn
+let g:syntastic_info_symbol              = 'ೲ'                    " ࠵ ϊ
+let g:syntastic_error_symbol             = '✗'                    " ஓ ௐ ྾
+let g:syntastic_warning_symbol           = '⍨'                    " ᓆ ᓍ
+let g:syntastic_style_error_symbol       = '⍥'
+let g:syntastic_style_warning_symbol     = 'ఠ'                    " ⍤ ൠ
+highlight link SyntasticErrorSign        Error
+highlight link SyntasticWarningSign      GruvboxYellow
+highlight link SyntasticStyleErrorSign   GruvboxRedSign
+highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 ```
+
+![style warning](../screenshot/vim/vim-syntastic-style-warning.png)
+
+![error](../screenshot/vim/vim-syntastic-error.png)
 
 <!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
   ```vim
@@ -633,14 +670,10 @@ highlight link SyntasticStyleWarningSign SignColumn
   let g:syntastic_always_populate_loc_list  = 1
   let g:syntastic_auto_loc_list             = 1
   let g:syntastic_check_on_open             = 1
-  let g:syntastic_check_on_wq               = 1
+  let g:syntastic_check_on_wq               = 0
   let g:syntastic_loc_list_height           = 2
   let g:syntastic_ignore_files              = ['\.py$']
-  let g:syntastic_check_on_wq               = 0
-  let g:syntastic_check_on_open             = 1
   let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
-  let g:syntastic_always_populate_loc_list  = 1
-  let g:syntastic_auto_loc_list             = 1
   ```
 <!--endsec-->
 
