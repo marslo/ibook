@@ -17,6 +17,7 @@
 - [system settings](#system-settings)
 - [accessory](#accessory)
   - [iTerm2](#iterm2)
+  - [powerline](#powerline)
   - [backgroundmusic](#backgroundmusic)
   - [mac cli](#mac-cli)
   - [others](#others)
@@ -975,6 +976,47 @@ pwSafe.app
   $ curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
   ```
 - [more settings](../../tools/iterm2.md)
+
+### powerline
+
+> [!NOTE|label:references]
+> - [powerline/powerline](https://github.com/powerline/powerline)
+> - [* sbt: customize Shell Prompt with git branch (round 2)](http://www.whiteboardcoder.com/2016/03/sbt-customize-shell-prompt-with-git.html)
+> - [patmandenver/global.sbt](https://gist.github.com/patmandenver/71839aaf63c71f4d6cd2)
+> - fonts:
+>   - [Showing special Unicode characters on MacOS](https://discussions.apple.com/thread/251585417)
+>   - [GNU Unifont Glyphs](https://unifoundry.com/unifont/)
+>   - [supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
+>     - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
+>     - [Menlo Regular for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Menlo)
+>     - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/blob/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
+>   - [* powerline/fonts](https://github.com/powerline/fonts)
+>     - [Monofur for Powerline.ttf](https://github.com/powerline/fonts/tree/master/Monofur)
+
+- install
+
+  > [!NOTE|label:references:]
+  > - [How to install Powerline to pimp your BASH prompt (For Mac)](https://medium.com/@ITZDERR/how-to-install-powerline-to-pimp-your-bash-prompt-for-mac-9b82b03b1c02)
+  > - [itzderr/install-powerline](https://gist.github.com/itzderr/abdb2cdd795a23bc36e6a7838e388867)
+  > - [How to Jazz Up Your Bash Terminal — A Step By Step Guide With Pictures](https://www.freecodecamp.org/news/jazz-up-your-bash-terminal-a-step-by-step-guide-with-pictures-80267554cb22/)
+
+  ```bash
+  $ pip install --user powerline-status
+
+  $ cat >> ~/.bash_profile << EOF
+  powerline-daemon -q
+  POWERLINE_BASH_CONTINUATION=1
+  POWERLINE_BASH_SELECT=1
+  source /Users/marslo/Library/Python/3.11/lib/python/site-packages/powerline/bindings/bash/powerline.sh
+  EOF
+
+  $ mkdir ~/.config/powerline
+  $ cp -r /Users/marslo/Library/Python/3.11/lib/python/site-packages/powerline/config_files/ ~/.config/powerline/
+  ```
+
+- settings in iTerm2: `Use a different font for non-ASCII text`
+
+  ![non-ascii in iterm2](../screenshot/osx/iterm2-non-ascii.png)
 
 ### [backgroundmusic](https://github.com/kyleneideck/BackgroundMusic)
 ```bash

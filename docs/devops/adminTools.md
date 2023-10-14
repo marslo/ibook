@@ -44,6 +44,7 @@
 > - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master)
 >   - [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
 >   - [nosarthur/awesome-shell](https://github.com/nosarthur/awesome-shell)
+> - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim)
 > - [jlevy/the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line)
 > - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
 > - [Shell Style Guide](https://google.github.io/styleguide/shellguide.html)
