@@ -25,6 +25,7 @@
   - [BSkipQuickFix](#bskipquickfix)
   - [TriggerYCM](#triggerycm)
 - [commands](#commands)
+  - [get path](#get-path)
 - [settings](#settings)
   - [theme](#theme)
 
@@ -540,6 +541,92 @@ nnoremap <C-y> :call TriggerYCM()<CR>
   autocmd BufWritePost *\(.md\)  silent :Toc                 " automatic build doctoc when save it
   ```
 
+### get path
+
+> [!NOTE|label:references:]
+> - [`:help expand`](https://vimhelp.org/builtin.txt.html#expand%28%29)
+>
+> | MODIFIERS | COMMENTS                           |
+> |:---------:|------------------------------------|
+> |    `:p`   | expand to full path                |
+> |    `:h`   | head (last path component removed) |
+> |    `:t`   | tail (last path component only)    |
+> |    `:r`   | root (one extension removed)       |
+> |    `:e`   | extension only                     |
+>
+> - [`:help filename-modifiers`](https://vimhelp.org/cmdline.txt.html#filename-modifiers)
+>
+> | MODIFIERS            |                        RESULTS |
+> |:---------------------|-------------------------------:|
+> | `:p`                 | `/home/mool/vim/src/version.c` |
+> | `:p:.`               |                `src/version.c` |
+> | `:p:~`               |          `~/vim/src/version.c` |
+> | `:h`                 |                          `src` |
+> | `:p:h`               |           `/home/mool/vim/src` |
+> | `:p:h:h`             |               `/home/mool/vim` |
+> | `:t`                 |                    `version.c` |
+> | `:p:t`               |                    `version.c` |
+> | `:r`                 |                  `src/version` |
+> | `:p:r`               |   `/home/mool/vim/src/version` |
+> | `:t:r`               |                      `version` |
+> | `:e`                 |                            `c` |
+> | `:s?version?main?`   |                   `src/main.c` |
+> | `:s?version?main?:p` |    `/home/mool/vim/src/main.c` |
+> | `:p:gs?/?\\?`        | `\home\mool\vim\src\version.c` |
+>
+> - [`:help extension-removal`](https://vimhelp.org/cmdline.txt.html#extension-removal)
+>
+> | MODIFIES   | EXPLANATION                            |
+> |:-----------|----------------------------------------|
+> | `%`        | current file name                      |
+> | `%<`       | current file name without extension    |
+> | `#`        | alternate file name for current window |
+> | `#<`       | idem, without extension                |
+> | `#31`      | alternate file number 31               |
+> | `#31<`     | idem, without extension                |
+> | `<cword>`  | word under the cursor                  |
+> | `<cWORD>`  | WORD under the cursor (see `WORD` )    |
+> | `<cfile>`  | path name under the cursor             |
+> | `<cfile><` | idem, without extension                |
+>
+> - [Learn Vimscript the Hard Way : String Functions](https://learnvimscriptthehardway.stevelosh.com/chapters/27.html)
+> - [Learn Vimscript the Hard Way : Lists](https://learnvimscriptthehardway.stevelosh.com/chapters/35.html)
+
+```vim
+:echo expand("%:p")
+/Users/marslo/ibook/docs/vim/viml.md
+:echo expand("%:p:~")
+~/ibook/docs/vim/viml.md
+:echo getcwd()
+/Users/marslo/ibook/docs/vim
+
+:echo fnamemodify('.', ':p:h:t')               " https://stackoverflow.com/a/13940563/2940319
+vim
+:echo fnamemodify(getcwd(), ':t')              " https://vi.stackexchange.com/a/15047/7389
+vim
+:echo substitute(getcwd(), '^.*/', '', '')
+vim
+
+:echo expand("%:t")
+viml.md
+:echo expand("%:r")
+viml
+```
+
+- get home
+
+  > [!NOTE|label:references:]
+  > - [vim’s lcd command](https://benatkin.com/2011/11/04/vims-lcd-command/)
+  > - [vim's lcd command](https://www.reddit.com/r/vim/comments/m0pwu/comment/c2x5mla/?utm_source=share&utm_medium=web2x&context=3)
+  >   ```vim
+  >   autocmd BufEnter * lcd %:p:h
+  >   ```
+  > - [Set working directory to the current file](https://vim.fandom.com/wiki/Set_working_directory_to_the_current_file)
+
+  ```vim
+  :lcd
+  ```
+
 ## settings
 - [Capitalize](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
   ```vim
@@ -591,13 +678,13 @@ nnoremap <C-y> :call TriggerYCM()<CR>
   """ solarized
   colorscheme solarized
   set termguicolors
-  let g:solarized_termcolors=256
-  let &t_8f = "\<esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<esc>[48;2;%lu;%lu;%lum"
-  let g:solarized_termtrans = 1
+  let g:solarized_termcolors      = 256
+  let &t_8f                       = "\<esc>[38;2;%lu;%lu;%lum"
+  let &t_8b                       = "\<esc>[48;2;%lu;%lu;%lum"
+  let g:solarized_termtrans       = 1
   let g:solarized_extra_hi_groups = 1
-  let g:solarized_visibility = "high"
-  let g:solarized_contrast = "high"
-  let s:base03 = "255"
+  let g:solarized_visibility      = "high"
+  let g:solarized_contrast        = "high"
+  let s:base03                    = "255"
   ```
 
