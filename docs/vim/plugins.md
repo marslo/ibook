@@ -11,6 +11,7 @@
   - [Yggdroot/indentLine](#yggdrootindentline)
   - [airblade/vim-gitgutter](#airbladevim-gitgutter)
   - [vim-airline/vim-airline](#vim-airlinevim-airline)
+  - [dense-analysis/ale](#dense-analysisale)
 - [utils](#utils)
   - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
   - [sjl/gundo.vim](#sjlgundovim)
@@ -23,7 +24,6 @@
   - [godlygeek/tabular](#godlygeektabular)
 - [git](#git)
 - [programming](#programming)
-  - [lint](#lint)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [vim-scripts/EnhCommentify.vim](#vim-scriptsenhcommentifyvim)
   - [tpope/vim-commentary](#tpopevim-commentary)
@@ -413,33 +413,44 @@ let g:airline_powerline_fonts                      = 1
 let g:airline_highlighting_cache                   = 1
 let g:airline_detect_spelllang                     = 0              " disable spelling language
 let g:airline_exclude_preview                      = 0              " disable in preview window
-let g:airline_theme                                = 'tomorrow'
-" let g:airline_theme                                = 'zenburn'
+let g:airline_theme                                = 'base16'       " 'apprentice', 'base16_embers', 'gruvbox', 'zenburn'
 let g:Powerline_symbols                            = 'fancy'
 let g:airline_section_y                            = ''             " fileencoding
 let g:airline_section_x                            = ''
 let g:airline_section_z                            = "%3p%% %l/%L:%c [%B]"
 let g:airline_skip_empty_sections                  = 1
+let g:airline_detect_modified                      = 1
+let g:airline_detect_paste                         = 1
 let g:airline#extensions#wordcount#enabled         = 0
+let g:airline#extensions#quickfix#enabled          = 0
+let g:airline#extensions#quickfix#quickfix_text    = 'Quickfix'
 let g:airline#extensions#tabline#fnamemod          = ':t'
-let g:airline#extensions#tabline#enabled           = 1              " enable airline tabline
-let g:airline#extensions#tabline#show_close_button = 0              " remove 'X' at the end of the tabline
-let g:airline#extensions#tabline#tab_min_count     = 2              " minimum of 2 tabs needed to display the tabline
-let g:airline#extensions#tabline#show_splits       = 0              " disables the buffer name that displays on the right of the tabline
-let g:airline#extensions#tabline#enabled           = 1
-let g:airline#extensions#tabline#tab_nr_type       = 1              " tab number
+let g:airline_stl_path_style                       = 'short'
+let g:airline#extensions#tabline#enabled           = 1              " ╮ enable airline tabline
+let g:airline#extensions#tabline#show_close_button = 0              " │ remove 'X' at the end of the tabline
+let g:airline#extensions#tabline#show_buffers      = 1              " │
+let g:airline#extensions#tabline#show_splits       = 0              " │ disables the buffer name that displays on the right of the tabline
+let g:airline#extensions#tabline#tab_min_count     = 2              " │ minimum of 2 tabs needed to display the tabline
+let g:airline#extensions#tabline#show_tabs         = 1              " │
+let g:airline#extensions#tabline#tab_nr_type       = 1              " ╯ tab number
 let g:airline#extensions#branch#format             = 2
+let g:airline#extensions#ale#enabled               = 1              " ╮
+let airline#extensions#ale#error_symbol            = ' ᓆ :'         " │
+let airline#extensions#ale#warning_symbol          = ' ᣍ :'         " ├ ale
+let airline#extensions#ale#show_line_numbers       = 1              " │
+let airline#extensions#ale#open_lnum_symbol        = '(␊:'          " │
+let airline#extensions#ale#close_lnum_symbol       = ')'            " ╯
 if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
 let g:airline_symbols.dirty                        = ' ♪'
-let g:airline_symbols.space                        = "\ua0"
-let g:airline_mode_map                             = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
 function! AirlineInit()
-  let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(expand("%:p"), "/")[-3:-1], "/" )}' ])
-  let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
-  " let g:airline_section_c = '%<' . airline#section#create(['%{expand("%:p:~")}'])
+  let g:airline_section_a = airline#section#create([ '[', 'mode', ']', '  ', '%{&fenc}' ])
+  let g:airline_section_y = airline#section#create([ '%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']' ])
+  let g:airline_section_c = '%<' . airline#section#create([ '%F' ]) " let g:airline_section_c = '%<' . '%{expand(%:p:~)}'
 endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 ```
+
+![airline + ale](../screenshot/vim/vim-airline-ale.png)
 
 - tips
   - [remove section_<x>](https://stackoverflow.com/a/45150368/2940319)
@@ -447,32 +458,6 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_section_<x>         = ''                          " remove the filetype part
     let g:airline_skip_empty_sections = 1                           " remove separators for empty sections
     ```
-
-  - setup sections:
-
-    > [!NOTE|label:references:]
-    > - [#696 : Accents may cause status line exceed width](https://github.com/vim-airline/vim-airline/issues/696#issuecomment-75034875)
-
-    ```vim
-    let g:airline_section_x                          = "%-{strftime(\"%H:%M\ %d/%m/%y\")} %1*--%n%%--%*"
-    let g:airline_section_y                          = "%{&fenc}%{&bomb ? '[bom]' : ''}%{strlen(&ff) > 0 ? '['.&ff.']' : ''}"
-    let g:airline#parts#ffenc#skip_expected_string   ='utf-8[unix]'
-    let g:airline_section_c_only_filename            = 0
-
-    function! AirlineInit()
-      " NORMAL  docs/vim/
-      let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(getcwd(), "/")[-2:-1], "/" )}', '/' ])
-      " NORMAL  docs/vim/plugins.md
-      let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(expand("%:p"), "/")[-3:-1], "/" )}' ])
-      let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
-      let g:airline_section_c = '%<' . airline#section#create(['%{expand("%:p:~")}'])
-    endfunction
-    autocmd User AirlineAfterInit call AirlineInit()
-    ```
-
-    ![section_a with default mode](../screenshot/vim/vim-airline-section_a-default.png)
-
-    ![section_a with short mode](../screenshot/vim/vim-airline-section_a-short.png)
 
   - setup short mode
     ```vim
@@ -561,35 +546,129 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_theme                  = 'random'
     ```
 
-  - [tabline](https://github.com/vim-airline/vim-airline/issues/1043#issuecomment-188236831)
+#### sections:
+
+> [!NOTE|label:references:]
+> - [#696 : Accents may cause status line exceed width](https://github.com/vim-airline/vim-airline/issues/696#issuecomment-75034875)
+
+```vim
+let g:airline_section_x                          = "%-{strftime(\"%H:%M\ %d/%m/%y\")} %1*--%n%%--%*"
+let g:airline_section_y                          = "%{&fenc}%{&bomb ? '[bom]' : ''}%{strlen(&ff) > 0 ? '['.&ff.']' : ''}"
+let g:airline#parts#ffenc#skip_expected_string   ='utf-8[unix]'
+let g:airline_section_c_only_filename            = 0
+
+function! AirlineInit()
+  " NORMAL  docs/vim/
+  let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(getcwd(), "/")[-2:-1], "/" )}', '/' ])
+  " NORMAL  docs/vim/plugins.md
+  let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(expand("%:p"), "/")[-3:-1], "/" )}' ])
+  let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
+  let g:airline_section_c = '%<' . airline#section#create(['%{expand("%:p:~")}'])
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
+```
+
+- section_a
+
+  > [!NOTE|label:paths:]
+  > - show relative path `%F` : `let g:airline_section_c = airline#section#create([ '%F' ])` -> `~/.vimrc`
+  > - show filename only `%f` : `let g:airline_section_c = airline#section#create([ '%f' ])` -> `.vimrc`
+
+  ![section_a with default mode](../screenshot/vim/vim-airline-section_a-default.png)
+
+  ![section_a with short mode](../screenshot/vim/vim-airline-section_a-short.png)
+
+  - via function
     ```vim
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#show_buffers = 0
-    let g:airline#extensions#tabline#show_splits = 0
-    let g:airline#extensions#tabline#show_tabs = 1
-    let g:airline#extensions#tabline#show_tab_nr = 0
-    let g:airline#extensions#tabline#show_tab_type = 0
-    let g:airline#extensions#tabline#close_symbol = '×'
-    let g:airline#extensions#tabline#show_close_button = 0
+    function! ShortPath()
+      let pathlist=split(expand("%:p:~"), "/")
+      return len(pathlist) < 3 ? join( pathlist[-2:-1], "/" ) : join( pathlist[-3:-1], "/" )
+    endfunction
+    " or"
+    function! ShortPath()
+      let pathlist=split(expand("%:p:~"), "/")
+      if len(pathlist) < 3 | let final_result=join( pathlist[-2:-1], "/" ) | else | let final_result=join( pathlist[-3:-1], "/" ) | endif
+      return final_result
+    endfunction
+
+    let g:airline_section_a = airline#section#create([ 'mode', '  ', ShortPath() ])
     ```
 
-  - quickfix
+    - i.e.:
+      ```vim
+      function! ShortPath()
+        let pathlist=split(expand("%:p:~"), "/")
+        return len(pathlist) < 3 ? join( pathlist[-2:-1], "/" ) : join( pathlist[-3:-1], "/" )
+      endfunction
+      function! AirlineInit()
+        let g:airline_section_a = airline#section#create([ '[', 'mode', ']', '  ', '%{&fenc}', '  ', ShortPath() ])
+        let g:airline_section_y = airline#section#create([ '%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']' ])
+        let g:airline_section_c = '%<' . airline#section#create([ '%F' ]) " let g:airline_section_c = '%<' . '%{expand(%:p:~)}'
+      endfunction
+      autocmd User AirlineAfterInit call AirlineInit()
+      ```
+
+      ![airline section_a shortpath](../screenshot/vim/vim-airline-section_a-shortpath-1.png)
+
+  - via `%{}`
     ```vim
-    :echo getwininfo()
-    [{'winnr': 1, 'variables': {'airline_lastmode': 'inactive spell', 'm1': 1000, 'css_color_match_id': [], 'indentLine_ind
-    entLineId': [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018
-    , 1019, 1020, 1021], 'airline_active': 0, 'last_pos': [0, 3, 1], 'airline_current_mode': '-', 'airline_section_y': '%{s
-    trftime("%H:%M %b-%d %a")} [unix]%{v:hlsearch ? airline#extensions#searchcount#status() : ""}', 'syntastic_loclist_set'
-    : [1, 4]}, 'botline': 19, 'height': 19, 'bufnr': 1, 'winbar': 0, 'width': 119, 'tabnr': 1, 'quickfix': 0, 'topline': 1,
-     'loclist': 0, 'wincol': 1, 'winrow': 1, 'textoff': 7, 'winid': 1000, 'terminal': 0}, {'winnr': 2, 'variables': {'airli
-    ne_lastmode': 'commandline spell readonly', 'airline_section_a': 'Location', 'airline_section_b': '%{get(w:, "quickfix_
-    title", "")}', 'airline_section_c': '', 'airline_active': 1, 'indentLine_indentLineId': [1021, 1022, 1023, 1024, 1025,
-    1026, 1027, 1028, 1029, 1030, 1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 1041], 'airline_current_mode'
-    : 'C', 'airline_section_x': '', 'airline_section_y': '%{strftime("%H:%M %b-%d %a")} [unix]%{v:hlsearch ? airline#extens
-    ions#searchcount#status() : ""}', 'quickfix_title': '/Users/marslo/.marslo/bin/iweather'}, 'botline': 1, 'height': 10,
-    'bufnr': 2, 'winbar': 0, 'width': 119, 'tabnr': 1, 'quickfix': 1, 'topline': 1, 'loclist': 1, 'wincol': 1, 'winrow': 21
-    , 'textoff': 7, 'winid': 1001, 'terminal': 0}]
+    function! AirlineInit()
+      let pathlist=split( expand("%:p:~"), "/" )
+      let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{len(pathlist) < 3 ? join( pathlist[-2:-1], "/" ) : join( pathlist[-3:-1], "/" )}'])
+    endfunction
+    autocmd User AirlineAfterInit call AirlineInit()
     ```
+
+    ![airline section_a shortpath with '%{}'](../screenshot/vim/vim-airline-section_a-shortpath-2.png)
+
+
+- sections with length limitation
+  - `%<'`: `let g:airline_section_c = '%<' . airline#section#create(['%{expand("%:p:~")}'])`
+  - [`%-0.xx{}`](https://github.com/vim-airline/vim-airline/issues/1485#issuecomment-309734370) : `let g:airline_section_c = '%<' . '%-0.13{expand("%:p:~")}'`
+
+  - i.e.:
+    ```vim
+    let g:airline_section_c = '%<' . '%-0.20{expand("%:p:~")}'
+    " <docs/vim/plugins.md
+
+    let g:airline_section_c = '%<' . '%{expand("%:p:~")}'
+    " ~/path/to/ibook/docs/vim/plugins.md
+
+    let g:airline_section_c = airline#section#create(['%F'])
+    " ~/path/to/book/docs/vim/plugins.md
+    ```
+
+### [dense-analysis/ale](https://github.com/dense-analysis/ale)
+```vim
+Plugin 'stephpy/vim-yaml'
+Plugin 'pedrohdz/vim-yaml-folds'
+Plugin 'dense-analysis/ale'
+
+" yamllint                                                          " brew install yamllint
+" ale                                                               " :help g:ale_echo_msg_format
+let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%] '
+let g:ale_virtualtext_prefix              = '%comment% %type% [%code%]: '
+let g:ale_sign_error                      = '💢'                    " ✘ 👾 💣  🙅 🤦
+let g:ale_sign_warning                    = 'ᑹᑹ'                    " ⚠ ⸮ ⸘ ☹
+let g:ale_sign_info                       = 'ᓆ'                     " ⸚ ϔ 𐘿 𐰦
+let g:ale_sign_style_error                = '⍥'                     " ᑹ
+let g:ale_sign_style_warning              = 'ᓍ'                     " ᓏ
+let g:ale_lint_on_text_changed            = 'never'
+let g:ale_fix_on_save                     = 0
+let g:ale_lint_on_save                    = 1
+let g:ale_warn_about_trailing_blank_lines = 1
+let g:ale_warn_about_trailing_whitespace  = 1
+let g:ale_set_balloons                    = 1
+let g:ale_hover_to_preview                = 1
+let g:ale_floating_preview                = 1
+let g:ale_close_preview_on_insert         = 1
+```
+
+![ale error](../screenshot/vim/vim-ale-error.png)
+
+![ale warning](../screenshot/vim/vim-ale-warning.png)
+
+![ale info ](../screenshot/vim/vim-ale-info.png)
 
 ## utils
 ### [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
@@ -769,34 +848,6 @@ command! -bar -nargs=* Gpush execute 'Git push'
 ```
 
 ## programming
-### lint
-```vim
-Plugin 'stephpy/vim-yaml'
-Plugin 'pedrohdz/vim-yaml-folds'
-Plugin 'dense-analysis/ale'
-
-" yamllint                                                          " brew install yamllint
-" ale                                                               " :help g:ale_echo_msg_format
-let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%] '
-let g:ale_virtualtext_prefix              = '%comment% %type% [%code%]: '
-let g:ale_sign_error                      = '✘'
-let g:ale_sign_warning                    = '⚠'
-let g:ale_sign_info                       = 'ᓆ'
-let g:ale_sign_style_error                = '⍥'
-let g:ale_sign_style_warning              = 'ᓍ'
-let g:ale_lint_on_text_changed            = 'never'
-let g:ale_fix_on_save                     = 0
-let g:ale_lint_on_save                    = 1
-let g:ale_warn_about_trailing_blank_lines = 1
-let g:ale_warn_about_trailing_whitespace  = 1
-let g:ale_set_balloons                    = 1
-let g:ale_hover_to_preview                = 1
-```
-
-![ale warning](../screenshot/vim/vim-ale-warning.png)
-
-![ale info ](../screenshot/vim/vim-ale-info.png)
-
 ### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
 
 > [!NOTE|label:references:]
