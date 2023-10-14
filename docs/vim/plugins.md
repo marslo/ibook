@@ -15,7 +15,6 @@
   - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
   - [sjl/gundo.vim](#sjlgundovim)
   - [yegappan/mru](#yegappanmru)
-  - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
 - [markdown](#markdown)
   - [gabrielelana/vim-markdown](#gabrielelanavim-markdown)
   - [tpope/vim-markdown](#tpopevim-markdown)
@@ -25,6 +24,7 @@
 - [git](#git)
 - [programming](#programming)
   - [lint](#lint)
+  - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [vim-scripts/EnhCommentify.vim](#vim-scriptsenhcommentifyvim)
   - [tpope/vim-commentary](#tpopevim-commentary)
   - [honza/vim-snippets](#honzavim-snippets)
@@ -620,63 +620,6 @@ let MRU_Max_Entries   = 10
 let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 ```
 
-### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
-
-> [!NOTE|label:references:]
-> - [#1577 : Unknown function: SyntasticStatuslineFlag](https://github.com/vim-syntastic/syntastic/issues/1577)
-> - [In Editor Linting with Syntastic](https://medium.com/usevim/in-editor-linting-with-syntastic-6814122bdbec)
->   ```vim
->   :SyntasticInfo
->   ```
-
-```vim
-Plugin 'vim-syntastic/syntastic'
-
-" syntastic settings                                                " Plugin 'vim-syntastic/syntastic'
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list            = 1
-let g:syntastic_check_on_open            = 1
-let g:syntastic_check_on_wq              = 0
-let g:syntastic_loc_list_height          = 2
-let g:syntastic_ignore_files             = ['\.py$']
-let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
-let g:syntastic_enable_signs             = 1
-let g:syntastic_info_symbol              = 'ೲ'                    " ࠵ ϊ
-let g:syntastic_error_symbol             = '✗'                    " ஓ ௐ ྾
-let g:syntastic_warning_symbol           = '⍨'                    " ᓆ ᓍ
-let g:syntastic_style_error_symbol       = '⍥'
-let g:syntastic_style_warning_symbol     = 'ఠ'                    " ⍤ ൠ
-highlight link SyntasticErrorSign        Error
-highlight link SyntasticWarningSign      GruvboxYellow
-highlight link SyntasticStyleErrorSign   GruvboxRedSign
-highlight link SyntasticStyleWarningSign GruvboxPurpleSign
-```
-
-![style warning](../screenshot/vim/vim-syntastic-style-warning.png)
-
-![error](../screenshot/vim/vim-syntastic-error.png)
-
-<!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
-  ```vim
-  Bundle 'vim-syntastic/syntastic'
-
-  " configure syntastic syntax checking to check on open as well as save
-  set statusline+=%#warningmsg#
-  set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
-  set statusline+=\ %* |
-  let g:syntastic_always_populate_loc_list  = 1
-  let g:syntastic_auto_loc_list             = 1
-  let g:syntastic_check_on_open             = 1
-  let g:syntastic_check_on_wq               = 0
-  let g:syntastic_loc_list_height           = 2
-  let g:syntastic_ignore_files              = ['\.py$']
-  let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
-  ```
-<!--endsec-->
-
 ## markdown
 ### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
 ```vim
@@ -835,15 +778,82 @@ Plugin 'dense-analysis/ale'
 " yamllint                                                          " brew install yamllint
 " ale                                                               " :help g:ale_echo_msg_format
 let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%] '
+let g:ale_virtualtext_prefix              = '%comment% %type% [%code%]: '
 let g:ale_sign_error                      = '✘'
 let g:ale_sign_warning                    = '⚠'
+let g:ale_sign_info                       = 'ᓆ'
+let g:ale_sign_style_error                = '⍥'
+let g:ale_sign_style_warning              = 'ᓍ'
 let g:ale_lint_on_text_changed            = 'never'
 let g:ale_fix_on_save                     = 0
 let g:ale_lint_on_save                    = 1
-let g:ale_lint_on_text_changed            = 'never'
 let g:ale_warn_about_trailing_blank_lines = 1
 let g:ale_warn_about_trailing_whitespace  = 1
+let g:ale_set_balloons                    = 1
+let g:ale_hover_to_preview                = 1
 ```
+
+![ale warning](../screenshot/vim/vim-ale-warning.png)
+
+![ale info ](../screenshot/vim/vim-ale-info.png)
+
+### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
+
+> [!NOTE|label:references:]
+> - [#1577 : Unknown function: SyntasticStatuslineFlag](https://github.com/vim-syntastic/syntastic/issues/1577)
+> - [In Editor Linting with Syntastic](https://medium.com/usevim/in-editor-linting-with-syntastic-6814122bdbec)
+>   ```vim
+>   :SyntasticInfo
+>   ```
+
+```vim
+Plugin 'vim-syntastic/syntastic'
+
+" syntastic settings                                                " Plugin 'vim-syntastic/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list            = 1
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
+let g:syntastic_loc_list_height          = 2
+let g:syntastic_ignore_files             = ['\.py$']
+let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
+let g:syntastic_enable_signs             = 1
+let g:syntastic_info_symbol              = 'ೲ'                      " ࠵ ϊ
+let g:syntastic_error_symbol             = '✗'                      " ஓ ௐ ྾
+let g:syntastic_warning_symbol           = '⍨'                      " ᓆ ᓍ
+let g:syntastic_style_error_symbol       = '⍥'
+let g:syntastic_style_warning_symbol     = 'ఠ'                      " ⍤ ൠ
+highlight link SyntasticErrorSign        Error
+highlight link SyntasticWarningSign      GruvboxYellow
+highlight link SyntasticStyleErrorSign   GruvboxRedSign
+highlight link SyntasticStyleWarningSign GruvboxPurpleSign
+```
+
+![style warning](../screenshot/vim/vim-syntastic-style-warning.png)
+
+![error](../screenshot/vim/vim-syntastic-error.png)
+
+<!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
+  ```vim
+  Bundle 'vim-syntastic/syntastic'
+
+  " configure syntastic syntax checking to check on open as well as save
+  set statusline+=%#warningmsg#
+  set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
+  set statusline+=\ %* |
+  let g:syntastic_always_populate_loc_list  = 1
+  let g:syntastic_auto_loc_list             = 1
+  let g:syntastic_check_on_open             = 1
+  let g:syntastic_check_on_wq               = 0
+  let g:syntastic_loc_list_height           = 2
+  let g:syntastic_ignore_files              = ['\.py$']
+  let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
+  ```
+<!--endsec-->
+
 
 ### [vim-scripts/EnhCommentify.vim](https://github.com/vim-scripts/EnhCommentify.vim)
 ```vim
