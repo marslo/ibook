@@ -388,6 +388,7 @@ highlight clear SignColumn
 > - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
 > - [* Change the vim-airline theme](https://github.com/vim-airline/vim-airline/wiki/Screenshots)
 >   - `:AirlineTheme random` : `let g:airline_theme='random'` : `:echo g:airline_theme`
+>     ![pick up theme](../screenshot/vim/vim-AirlineTheme-random.gif)
 >   - [tomorrow](https://github.com/vim-airline/vim-airline/wiki/Screenshots#tomorrow-1)
 >   - [distinguished](https://github.com/vim-airline/vim-airline/wiki/Screenshots#distinguished)
 >   - [base16](https://github.com/vim-airline/vim-airline/wiki/Screenshots#base16)
@@ -551,13 +552,13 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_symbols.dirty          = ' ↯'                   " ╯
     ```
 
-  - get theme randomly
+  - [get theme randomly](https://github.com/vim-airline/vim-airline-themes/issues/170#issuecomment-476524390)
 
     > [!NOTE]
     > - [#2145 : Align section C to the left when overflowed](https://github.com/vim-airline/vim-airline/issues/2145#issuecomment-673640814)
 
     ```vim
-    let g:airline_theme= get(g:, 'airline_theme', "random")
+    let g:airline_theme                  = 'random'
     ```
 
 
