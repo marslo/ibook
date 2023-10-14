@@ -2,19 +2,33 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [`Tabularize`](#tabularize)
-  - [including the `<sep>`](#including-the-sep)
-  - [align without `<sep>`](#align-without-sep)
-  - [align on first matche](#align-on-first-matche)
-  - [align with the N pattern](#align-with-the-n-pattern)
-  - [align on specific symbol](#align-on-specific-symbol)
-- [recommended plugins](#recommended-plugins)
-  - [utils](#utils)
-  - [markdown](#markdown)
-  - [git](#git)
-  - [programming](#programming)
-  - [ycm](#ycm)
-  - [lsp-examples](#lsp-examples)
+- [usage](#usage)
+  - [`Tabularize`](#tabularize)
+- [highly recommended plugins](#highly-recommended-plugins)
+  - [jiangmiao/auto-pairs](#jiangmiaoauto-pairs)
+  - [kien/ctrlp.vim](#kienctrlpvim)
+  - [luochen1990/rainbow](#luochen1990rainbow)
+  - [Yggdroot/indentLine](#yggdrootindentline)
+  - [airblade/vim-gitgutter](#airbladevim-gitgutter)
+- [utils](#utils)
+  - [AuthorInfoDetect](#authorinfodetect)
+  - [sjl/gundo.vim](#sjlgundovim)
+  - [yegappan/mru](#yegappanmru)
+- [markdown](#markdown)
+  - [gabrielelana/vim-markdown](#gabrielelanavim-markdown)
+  - [tpope/vim-markdown](#tpopevim-markdown)
+  - [preservim/vim-markdown](#preservimvim-markdown)
+  - [dhruvasagar/vim-table-mode](#dhruvasagarvim-table-mode)
+  - [godlygeek/tabular](#godlygeektabular)
+- [git](#git)
+- [programming](#programming)
+  - [lint](#lint)
+  - [vim-scripts/EnhCommentify.vim](#vim-scriptsenhcommentifyvim)
+  - [tpope/vim-commentary](#tpopevim-commentary)
+  - [honza/vim-snippets](#honzavim-snippets)
+  - [msanders/snipmate.vim](#msanderssnipmatevim)
+  - [ycm-core/YouCompleteMe](#ycm-coreyoucompleteme)
+  - [ycm-core/lsp-examples](#ycm-corelsp-examples)
   - [vim-easycomplete](#vim-easycomplete)
   - [tabnine-vim](#tabnine-vim)
 - [troubleshooting](#troubleshooting)
@@ -30,7 +44,8 @@
 {% endhint %}
 
 
-## [`Tabularize`](https://github.com/godlygeek/tabular)
+## usage
+### [`Tabularize`](https://github.com/godlygeek/tabular)
 
 > [!TIP]
 > - [Tabular cheatsheet](https://devhints.io/tabular)
@@ -52,7 +67,7 @@
 * then everything after the comma left aligned.
 {% endhint %}
 
-### including the `<sep>`
+#### including the `<sep>`
 - align to left
   ```vim
   :Tabularize /<sep>
@@ -69,14 +84,14 @@
 
   ![tabularize](../screenshot/vim/tabularize/tabu.gif)
 
-### align without `<sep>`
+#### align without `<sep>`
 > [`help /zs`](https://vimhelp.org/pattern.txt.html#%2F%5Czs)
 
 ```vim
 :Tabularize /<sep>\zs/<specifier>
 ```
 
-### [align on first matche](https://stackoverflow.com/a/11497961/2940319)
+#### [align on first matche](https://stackoverflow.com/a/11497961/2940319)
 - align the first `:`
   ```vim
   :Tabularize /^[^:]*\zs:
@@ -96,7 +111,7 @@
   command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
   ```
 
-### align with the N pattern
+#### align with the N pattern
 > i.e.: the second match (`=`)
 > - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
 
@@ -122,14 +137,13 @@
                |
                no `^` means every `{N}` matches
   ```
-  or
+  - or
+    ```vim
+    :Tabularize /\v(.{-}\zs\=){N}/<specifier>
+    ```
 
-  ```vim
-  :Tabularize /\v(.{-}\zs\=){N}/<specifier>
-  ```
-
-### [align on specific symbol](https://vi.stackexchange.com/a/12652/7389)
-> pre condition:
+#### [align on specific symbol](https://vi.stackexchange.com/a/12652/7389)
+> [!NOTE|label:pre condition:]
 > - align the first `:` and last matches `,` as below:
 > ```groovy
 > [
@@ -140,150 +154,120 @@
 > ]
 > ```
 
-#### first `:`
-> reference: via
-> - `/^[^;]*\zs:`
-> - `/^[^;]*\zs:/r1c1l0`
-> - `/^[^;]*/r1c1l0`
+- first `:`
+  > reference: via
+  > - `/^[^;]*\zs:`
+  > - `/^[^;]*\zs:/r1c1l0`
+  > - `/^[^;]*/r1c1l0`
 
-- `/^[^:]*\zs:`
-  ```groovy
-  isRunning    : proc.getOrDefault( 'run' , false ) ,
-  name         : proc.getOrDefault( 'name' , '') ,
-  runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-  type         : proc.type.split('^.*\\u00BB\\s*').last() ,
-  ```
-  ![tabularize-1](../screenshot/vim/tabularize/tabularize-1.gif)
-  ![tabularize-2](../screenshot/vim/tabularize/tabularize-2.gif)
-
-- `/^[^:]*\zs/r1c1l0`
-  ```groovy
-     isRunning  : proc.getOrDefault( 'run' , false ) ,
-          name  : proc.getOrDefault( 'name' , '') ,
-  runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
-          type  : proc.type.split('^.*\\u00BB\\s*').last() ,
-  ```
-
-- `/^[^:]*\zs:/r1c1l0`
-  ```groovy
-     isRunning : proc.getOrDefault( 'run' , false ) ,
-          name : proc.getOrDefault( 'name' , '') ,
-  runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-          type : proc.type.split('^.*\\u00BB\\s*').last() ,
-  ```
-  ![tabularize-3](../screenshot/vim/tabularize/tabularize-3.gif)
-
-- `/^[^:]*/r1c1l0`
-  ```groovy
-    isRunning   : proc.getOrDefault( 'run' , false ) ,
-      name      : proc.getOrDefault( 'name' , '') ,
-  runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
-      type      : proc.type.split('^.*\\u00BB\\s*').last() ,
-  ```
-
-- `/^[^:]*:/r1c1l0`:
-  ```groovy
-    isRunning :  proc.getOrDefault( 'run' , false ) ,
-      name :     proc.getOrDefault( 'name' , '') ,
-  runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-      type :     proc.type.split('^.*\\u00BB\\s*').last() ,
-  ```
-
-#### last `,`
-> tips:
-> - actually the pattern not matches with the final `,`, but matches with `)<.*> ,`
->
-> **sample code**:
-> ```groovy
->    isRunning : proc.getOrDefault( 'run' , false ) ,
->         name : proc.getOrDefault( 'name' , '') ,
-> runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
->         type : proc.type.split('^.*\\u00BB\\s*').last() ,
-> ```
-
-- `/)[^,]*\zs,`
-  ```groovy
-     isRunning : proc.getOrDefault( 'run' , false )       ,
-          name : proc.getOrDefault( 'name' , '')          ,
-  runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
-          type : proc.type.split('^.*\\u00BB\\s*').last() ,
-  ```
-
-  or even better align
-
-  - `:1,3Tabularize /,` or `:'<,'>Tabularize /,`
+  - `/^[^:]*\zs:`
     ```groovy
-       isRunning : proc.getOrDefault( 'run'   , false )   ,
-            name : proc.getOrDefault( 'name'  , '')       ,
+    isRunning    : proc.getOrDefault( 'run' , false ) ,
+    name         : proc.getOrDefault( 'name' , '') ,
+    runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+    type         : proc.type.split('^.*\\u00BB\\s*').last() ,
+    ```
+    ![tabularize-1](../screenshot/vim/tabularize/tabularize-1.gif)
+    ![tabularize-2](../screenshot/vim/tabularize/tabularize-2.gif)
+
+  - `/^[^:]*\zs/r1c1l0`
+    ```groovy
+       isRunning  : proc.getOrDefault( 'run' , false ) ,
+            name  : proc.getOrDefault( 'name' , '') ,
+    runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
+            type  : proc.type.split('^.*\\u00BB\\s*').last() ,
+    ```
+
+  - `/^[^:]*\zs:/r1c1l0`
+    ```groovy
+       isRunning : proc.getOrDefault( 'run' , false ) ,
+            name : proc.getOrDefault( 'name' , '') ,
     runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
             type : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
-  - `:Tabularize /)[^,]*\zs,`
+    ![tabularize-3](../screenshot/vim/tabularize/tabularize-3.gif)
+
+  - `/^[^:]*/r1c1l0`
     ```groovy
-       isRunning : proc.getOrDefault( 'run'   , false )     ,
-            name : proc.getOrDefault( 'name'  , '')         ,
+      isRunning   : proc.getOrDefault( 'run' , false ) ,
+        name      : proc.getOrDefault( 'name' , '') ,
+    runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
+        type      : proc.type.split('^.*\\u00BB\\s*').last() ,
+    ```
+
+  - `/^[^:]*:/r1c1l0`:
+    ```groovy
+      isRunning :  proc.getOrDefault( 'run' , false ) ,
+        name :     proc.getOrDefault( 'name' , '') ,
+    runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+        type :     proc.type.split('^.*\\u00BB\\s*').last() ,
+    ```
+
+- last `,`
+  > tips:
+  > - actually the pattern not matches with the final `,`, but matches with `)<.*> ,`
+  >
+  > **sample code**:
+  > ```groovy
+  >    isRunning : proc.getOrDefault( 'run' , false ) ,
+  >         name : proc.getOrDefault( 'name' , '') ,
+  > runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+  >         type : proc.type.split('^.*\\u00BB\\s*').last() ,
+  > ```
+
+  - `/)[^,]*\zs,`
+    ```groovy
+       isRunning : proc.getOrDefault( 'run' , false )       ,
+            name : proc.getOrDefault( 'name' , '')          ,
     runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
             type : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
 
-  ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
+    - or even better align
 
-## recommended plugins
+      - `:1,3Tabularize /,` or `:'<,'>Tabularize /,`
+        ```groovy
+           isRunning : proc.getOrDefault( 'run'   , false )   ,
+                name : proc.getOrDefault( 'name'  , '')       ,
+        runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
+                type : proc.type.split('^.*\\u00BB\\s*').last() ,
+        ```
+      - `:Tabularize /)[^,]*\zs,`
+        ```groovy
+           isRunning : proc.getOrDefault( 'run'   , false )     ,
+                name : proc.getOrDefault( 'name'  , '')         ,
+        runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
+                type : proc.type.split('^.*\\u00BB\\s*').last() ,
+        ```
+
+    ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
+
+## highly recommended plugins
 
 > [!NOTE|label:references:]
 > - [Vim Plugin Audit](https://tuckerchapman.com/2020/05/18/vim-plugin-audit/)
 
-### utils
-#### indentLine
+### [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
+
+> [!NOTE|label:references:]
+> - [#128 : Disable autopairs for certain filetypes](https://github.com/jiangmiao/auto-pairs/issues/128#issuecomment-195461762)
+>   ```vim
+>   au Filetype markdown let b:AutoPairs={'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+>   ```
+
 ```vim
-" install
-Bundle 'Yggdroot/indentLine'
+Plugin 'jiangmiao/auto-pairs'
+" or
+Plugin 'marslo/auto-pairs'
 
 " settings
-nnoremap <leader>idl :IndentLineEnable<CR>
-
-let g:indentLine_enabled = 1
-let g:indentLine_color_gui = "#282828"
-let g:indentLine_color_term = 239
-let g:indentLine_indentLevel = 20
-let g:indentLine_showFirstIndentLevel = 1
-let g:indentLine_color_tty = 0
-let g:indentLine_faster = 1
-let g:indentLine_concealcursor = 'inc'
-let g:indentLine_conceallevel = 2
-if has('gui_running') || 'xterm-256color' == $TERM
-  let g:indentLine_char = '¦'
-elseif has('win32')
-  let g:indentLine_color_term = 8
-  let g:indentLine_char = '|'
-else
-  let g:indentLine_color_tty_dark = 0
-  let g:indentLine_char = '¦'
-endif
+let g:AutoPairs = {'(':')', '[':']', '{':'}', '<':'>',"'":"'",'"':'"', '`':'`'}
+let g:AutoPairsParens = {'(':')', '[':']', '{':'}', '<':'>'}
+let g:AutoPairsFlyMode = 0
+let g:AutoPairsShortcutBackInsert = '<M-b>'
 ```
 
-
-#### [AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
-```vim
-Plugin 'marslo/authorinfo'
-
-noremap <leader>aid :AuthorInfoDetect<CR>
-let g:vimrc_author = 'marslo'
-let g:vimrc_email  = 'marslo.jiao@gmail.com'
-autocmd BufWritePre, FileWritePre * :AuthorInfoDetect<CR>
-autocmd BufWritePre               * :AuthorInfoDetect<CR>
-```
-
-#### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
-```vim
-Plugin 'sjl/gundo.vim'
-
-noremap <Leader>u :GundoToggle<CR>
-set undodir=~/.vim/undo/
-set undofile
-```
-
-#### [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
+### [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
 ```vim
 Plugin 'kien/ctrlp.vim'
 
@@ -304,42 +288,11 @@ let g:ctrlp_custom_ignore = {
     \ 'file': '\v\.(exe|so|dll|rpm|tar|gz|bz2|zip|ctags|tags)|tags|ctags$',
     \ 'link': 'some_bad_symbolic_links',
     \ }
-
 ```
-
-#### [yegappan/mru](https://github.com/yegappan/mru)
-```vim
-noremap <leader>re :MRU<CR>
-let MRU_Auto_Close    = 1                                           " most recently used(mru)
-let MRU_Max_Entries   = 10
-let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
-
-```
-
-#### autopairs
-
-> [!NOTE|label:references:]
-> - [#128 : Disable autopairs for certain filetypes](https://github.com/jiangmiao/auto-pairs/issues/128#issuecomment-195461762)
->   ```vim
->   au Filetype markdown let b:AutoPairs={'(':')', '[':']', '{':'}','"':'"', '`':'`'}
->   ```
-
-```vim
-Plugin 'jiangmiao/auto-pairs'
-" or
-Plugin 'marslo/auto-pairs'
-
-" settings
-let g:AutoPairs = {'(':')', '[':']', '{':'}', '<':'>',"'":"'",'"':'"', '`':'`'}
-let g:AutoPairsParens = {'(':')', '[':']', '{':'}', '<':'>'}
-let g:AutoPairsFlyMode = 0
-let g:AutoPairsShortcutBackInsert = '<M-b>'
-```
-
-#### [luochen1990/rainbow](https://github.com/luochen1990/rainbow)
+### [luochen1990/rainbow](https://github.com/luochen1990/rainbow)
 ```vim
 " install
-Bundle 'luochen1990/rainbow'
+Plugin 'luochen1990/rainbow'
 
 " settings
 let g:rainbow_active = 1
@@ -367,6 +320,85 @@ let g:rainbow_conf = {
 \     }
 \   }
 \}
+```
+
+### [Yggdroot/indentLine](https://github.com/Yggdroot/indentLine)
+```vim
+" install
+Plugin 'Yggdroot/indentLine'
+
+" settings
+nnoremap <leader>idl :IndentLineEnable<CR>
+
+let g:indentLine_enabled = 1
+let g:indentLine_color_gui = "#282828"
+let g:indentLine_color_term = 239
+let g:indentLine_indentLevel = 20
+let g:indentLine_showFirstIndentLevel = 1
+let g:indentLine_color_tty = 0
+let g:indentLine_faster = 1
+let g:indentLine_concealcursor = 'inc'
+let g:indentLine_conceallevel = 2
+if has('gui_running') || 'xterm-256color' == $TERM
+  let g:indentLine_char = '¦'
+elseif has('win32')
+  let g:indentLine_color_term = 8
+  let g:indentLine_char = '|'
+else
+  let g:indentLine_color_tty_dark = 0
+  let g:indentLine_char = '¦'
+endif
+```
+
+### [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+
+> [!NOTE|label:references:]
+> - [GitGutter Documentation](https://jisaacks.github.io/GitGutter/)
+> - [Can't enable gitgutter with GitGutterEnable after disabling it on startup](https://github.com/airblade/vim-gitgutter/issues/409)
+> - [How to display in real time](https://github.com/airblade/vim-gitgutter/issues/579)
+
+```vim
+Plugin 'airblade/vim-gitgutter'
+
+" gitgutter
+nmap <leader>d :GitGutterFold<CR>
+let g:gitgutter_git_executable = '/usr/local/bin/git'
+let g:gitgutter_enabled        = 1
+let g:gitgutter_realtime       = 0
+let g:gitgutter_eager          = 0
+set updatetime=250
+set signcolumn=yes
+" highlight clear LineNr
+highlight clear SignColumn
+```
+
+## utils
+### [AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
+```vim
+Plugin 'marslo/authorinfo'
+
+noremap <leader>aid :AuthorInfoDetect<CR>
+let g:vimrc_author = 'marslo'
+let g:vimrc_email  = 'marslo.jiao@gmail.com'
+autocmd BufWritePre, FileWritePre * :AuthorInfoDetect<CR>
+autocmd BufWritePre               * :AuthorInfoDetect<CR>
+```
+
+### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
+```vim
+Plugin 'sjl/gundo.vim'
+
+noremap <Leader>u :GundoToggle<CR>
+set undodir=~/.vim/undo/
+set undofile
+```
+
+### [yegappan/mru](https://github.com/yegappan/mru)
+```vim
+noremap <leader>re :MRU<CR>
+let MRU_Auto_Close    = 1                                           " most recently used(mru)
+let MRU_Max_Entries   = 10
+let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 ```
 
 #### [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)
@@ -407,14 +439,14 @@ let g:airline_powerline_fonts                      = 1
 let g:airline_highlighting_cache                   = 1
 let g:airline_detect_spelllang                     = 0              " disable spelling language
 let g:airline_exclude_preview                      = 0              " disable in preview window
-" let g:airline_theme                                = 'gruvbox'
-let g:airline_theme                                = 'zenburn'
+let g:airline_theme                                = 'tomorrow'
+" let g:airline_theme                                = 'zenburn'
 let g:Powerline_symbols                            = 'fancy'
 let g:airline_section_y                            = ''             " fileencoding
 let g:airline_section_x                            = ''
 let g:airline_section_z                            = "%3p%% %l/%L:%c [%B]"
 let g:airline_skip_empty_sections                  = 1
-let g:airline#extensions#wordcount#enabled         = 1
+let g:airline#extensions#wordcount#enabled         = 0
 let g:airline#extensions#tabline#fnamemod          = ':t'
 let g:airline#extensions#tabline#enabled           = 1              " enable airline tabline
 let g:airline#extensions#tabline#show_close_button = 0              " remove 'X' at the end of the tabline
@@ -422,21 +454,15 @@ let g:airline#extensions#tabline#tab_min_count     = 2              " minimum of
 let g:airline#extensions#tabline#show_splits       = 0              " disables the buffer name that displays on the right of the tabline
 let g:airline#extensions#tabline#enabled           = 1
 let g:airline#extensions#tabline#tab_nr_type       = 1              " tab number
+let g:airline#extensions#branch#format             = 2
 if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
 let g:airline_symbols.dirty                        = ' ♪'
 let g:airline_symbols.space                        = "\ua0"
-" let g:airline_symbols.branch                     = '⎇'            " ╮
-" let g:airline_symbols.paste                      = 'ρ'            " ├ unicode symbols
-" let g:airline_symbols.dirty                      = ' ↯'           " ╯
-" let g:airline_mode_map                           = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
-" let g:airline_section_x                          = "%-{strftime(\"%H:%M\ %d/%m/%y\")} %1*--%n%%--%*"
-" let g:airline_section_y                          = "%{&fenc}%{&bomb ? '[bom]' : ''}%{strlen(&ff) > 0 ? '['.&ff.']' : ''}"
-" let g:airline_skip_empty_sections                = 1
-" let g:airline#parts#ffenc#skip_expected_string   ='utf-8[unix]'
+let g:airline_mode_map                             = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
 function! AirlineInit()
-  let g:airline_section_a = airline#section#create([ 'mode' ])
+  let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(expand("%:p"), "/")[-3:-1], "/" )}' ])
   let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
-  " let g:airline_section_c = airline#section#create(['%{getcwd()}'])
+  " let g:airline_section_c = '%<' . airline#section#create(['%{expand("%:p:~")}'])
 endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 ```
@@ -451,18 +477,29 @@ autocmd User AirlineAfterInit call AirlineInit()
     ```
 
   - setup sections:
+
+    > [!NOTE|label:references:]
+    > - [#696 : Accents may cause status line exceed width](https://github.com/vim-airline/vim-airline/issues/696#issuecomment-75034875)
+
     ```vim
     let g:airline_section_x                          = "%-{strftime(\"%H:%M\ %d/%m/%y\")} %1*--%n%%--%*"
     let g:airline_section_y                          = "%{&fenc}%{&bomb ? '[bom]' : ''}%{strlen(&ff) > 0 ? '['.&ff.']' : ''}"
     let g:airline#parts#ffenc#skip_expected_string   ='utf-8[unix]'
+    let g:airline_section_c_only_filename            = 0
 
     function! AirlineInit()
-      let g:airline_section_a = airline#section#create([ 'mode' ])
+      " NORMAL  docs/vim/
+      let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(getcwd(), "/")[-2:-1], "/" )}', '/' ])
+      " NORMAL  docs/vim/plugins.md
+      let g:airline_section_a = airline#section#create([ 'mode', '  ', '%{join( split(expand("%:p"), "/")[-3:-1], "/" )}' ])
       let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
-      let g:airline_section_c = airline#section#create(['%{getcwd()}'])
+      let g:airline_section_c = '%<' . airline#section#create(['%{expand("%:p:~")}'])
     endfunction
     autocmd User AirlineAfterInit call AirlineInit()
     ```
+    ![section_a with default mode](../screenshot/vim/vim-airline-section_a-default.png)
+
+    ![section_a with short mode](../screenshot/vim/vim-airline-section_a-short.png)
 
   - setup short mode
     ```vim
@@ -472,24 +509,29 @@ autocmd User AirlineAfterInit call AirlineInit()
   - unicode symbols
 
     > [!NOTE|label:symbols]
-    > - [`:help airline-customization`](https://vi.stackexchange.com/a/3363/7389)
-    >   ```vim
-    >   " unicode symbols
-    >   let g:airline_left_sep           = '»'
-    >   let g:airline_left_sep           = '▶'
-    >   let g:airline_right_sep          = '«'
-    >   let g:airline_right_sep          = '◀'
-    >   let g:airline_symbols.linenr     = '␊'
-    >   let g:airline_symbols.linenr     = '␤'
-    >   let g:airline_symbols.linenr     = '¶'
-    >   let g:airline_symbols.branch     = '⎇'
-    >   let g:airline_symbols.paste      = 'ρ'
-    >   let g:airline_symbols.paste      = 'Þ'
-    >   let g:airline_symbols.paste      = '∥'
-    >   let g:airline_symbols.whitespace = 'Ξ'
-    >   ```
     > - [`:help airline`](https://github.com/vim-airline/vim-airline/blob/master/doc/airline.txt)
     >   ```vim
+    >   " powerline symbols
+    >   let g:airline_left_sep          = ''     " \ue0b0
+    >   let g:airline_left_alt_sep      = ''     " \ue0b1
+    >   let g:airline_right_sep         = ''     " \ue0b2
+    >   let g:airline_right_alt_sep     = ''     " \ue0b3
+    >   let g:airline_symbols.branch    = ''     " \ue0a0
+    >   let g:airline_symbols.colnr     = ' ℅:'   " \u2105 \u3a
+    >   let g:airline_symbols.readonly  = ''     " \ue0a2
+    >   let g:airline_symbols.linenr    = ' :'   " \ue0a1
+    >   let g:airline_symbols.maxlinenr = '☰ '    " \u2630
+    >   let g:airline_symbols.dirty     = '⚡'    " \u26a1
+    >
+    >   " old vim-powerline symbols
+    >   let g:airline_left_sep          = '⮀'     " \u2b80
+    >   let g:airline_left_alt_sep      = '⮁'     " \u2b81
+    >   let g:airline_right_sep         = '⮂'     " \u2b82
+    >   let g:airline_right_alt_sep     = '⮃'     " \u2b83
+    >   let g:airline_symbols.branch    = '⭠'     " \u2b60
+    >   let g:airline_symbols.readonly  = '⭤'     " \u2b64
+    >   let g:airline_symbols.linenr    = '⭡'     " \u2b61
+    >
     >   " unicode symbols
     >   let g:airline_left_sep           = '»'    " \u00bb
     >   let g:airline_left_sep           = '▶'    " \u25b6
@@ -512,27 +554,23 @@ autocmd User AirlineAfterInit call AirlineInit()
     >   let g:airline_symbols.notexists  = 'Ɇ'    " \u0246
     >   let g:airline_symbols.notexists  = '∄'    " \u2204
     >   let g:airline_symbols.whitespace = 'Ξ'    " \u039e
+    >   ```
     >
-    >   " powerline symbols
-    >   let g:airline_left_sep          = ''   " \ue0b0
-    >   let g:airline_left_alt_sep      = ''   " \ue0b1
-    >   let g:airline_right_sep         = ''   " \ue0b2
-    >   let g:airline_right_alt_sep     = ''   " \ue0b3
-    >   let g:airline_symbols.branch    = ''   " \ue0a0
-    >   let g:airline_symbols.colnr     = ' ℅:' " \u2105 \u3a               "
-    >   let g:airline_symbols.readonly  = ''   " \ue0a2
-    >   let g:airline_symbols.linenr    = ' :' " \ue0a1
-    >   let g:airline_symbols.maxlinenr = '☰ '  " \u2630
-    >   let g:airline_symbols.dirty     = '⚡'  " \u26a1
-    >
-    >   " old vim-powerline symbols
-    >   let g:airline_left_sep          = '⮀'   " \u2b80
-    >   let g:airline_left_alt_sep      = '⮁'   " \u2b81
-    >   let g:airline_right_sep         = '⮂'   " \u2b82
-    >   let g:airline_right_alt_sep     = '⮃'   " \u2b83
-    >   let g:airline_symbols.branch    = '⭠'   " \u2b60
-    >   let g:airline_symbols.readonly  = '⭤'   " \u2b64
-    >   let g:airline_symbols.linenr    = '⭡'   " \u2b61
+    > - [`:help airline-customization`](https://vi.stackexchange.com/a/3363/7389)
+    >   ```vim
+    >   " unicode symbols
+    >   let g:airline_left_sep           = '»'
+    >   let g:airline_left_sep           = '▶'
+    >   let g:airline_right_sep          = '«'
+    >   let g:airline_right_sep          = '◀'
+    >   let g:airline_symbols.linenr     = '␊'
+    >   let g:airline_symbols.linenr     = '␤'
+    >   let g:airline_symbols.linenr     = '¶'
+    >   let g:airline_symbols.branch     = '⎇'
+    >   let g:airline_symbols.paste      = 'ρ'
+    >   let g:airline_symbols.paste      = 'Þ'
+    >   let g:airline_symbols.paste      = '∥'
+    >   let g:airline_symbols.whitespace = 'Ξ'
     >   ```
 
     ```vim
@@ -602,8 +640,8 @@ highlight link SyntasticStyleWarningSign SignColumn
   let g:syntastic_auto_loc_list             = 1
   ```
 
-### markdown
-#### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
+## markdown
+### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
 ```vim
 Plugin 'gabrielelana/vim-markdown'
 
@@ -634,7 +672,7 @@ hi markdownIdDeclaration    guifg=#317849   gui=bold
 hi markdownListMarker       guifg=#317849
 ```
 
-#### [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
+### [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
 ```vim
 Plugin 'tpope/vim-markdown'
 
@@ -644,7 +682,7 @@ let g:markdown_syntax_conceal = 0
 let g:markdown_minlines = 100
 ```
 
-#### [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
+### [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
 ```vim
 Plugin 'preservim/vim-markdown'
 
@@ -661,7 +699,7 @@ let g:vim_markdown_folding_disabled    = 1
 " let g:vim_markdown_anchorexpr          = "'<<'.v:anchor.'>>'"
 ```
 
-#### [dhruvasagar/vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
+### [dhruvasagar/vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
 ```vim
 Plugin 'dhruvasagar/vim-table-mode'
 
@@ -687,7 +725,7 @@ inoreabbrev <expr> __
 let g:tabular_loaded             = 1
 ```
 
-#### tabular
+### [godlygeek/tabular](https://github.com/godlygeek/tabular)
 ```vim
 " install
 Plugin 'godlygeek/tabular'
@@ -732,49 +770,26 @@ if exists(":Tabularize")
 endif
 ```
 
-### git
-#### gitgutter
-
-> [!NOTE|label:references:]
-> - [GitGutter Documentation](https://jisaacks.github.io/GitGutter/)
-> - [Can't enable gitgutter with GitGutterEnable after disabling it on startup](https://github.com/airblade/vim-gitgutter/issues/409)
-> - [How to display in real time](https://github.com/airblade/vim-gitgutter/issues/579)
-
-```vim
-Bundle 'airblade/vim-gitgutter'
-
-" gitgutter
-nmap <leader>d :GitGutterFold<CR>
-let g:gitgutter_git_executable = '/usr/local/bin/git'
-let g:gitgutter_enabled        = 1
-let g:gitgutter_realtime       = 0
-let g:gitgutter_eager          = 0
-set updatetime=250
-set signcolumn=yes
-" highlight clear LineNr
-highlight clear SignColumn
-```
-
+## git
 #### [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
 ```vim
 Plugin 'tpope/vim-fugitive'
 
-" nnoremap <leader>mp :silent exec '! git mp'<CR>
 " fugitive
-" nnoremap <Leader>ga :Git add %:p<CR><CR>
-" nnoremap <Leader>gs :Gstatus<CR>
-" nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
-" nnoremap <leader>gp :Ggrep<Space>
-" nnoremap <leader>gb :Git branch<Space>
-" nnoremap <leader>go :Git checkout<Space>
-" nnoremap <leader>gc :Git commit -am ""<Left>
-" command! -bar -nargs=* Gpull execute 'Git pull'
-" command! -bar -nargs=* Gpush execute 'Git push'
-
+nnoremap <leader>mp :silent exec '! git mp'<CR>
+nnoremap <Leader>ga :Git add %:p<CR><CR>
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <leader>gl :silent! Glog<CR>:bot copen<CR>
+nnoremap <leader>gp :Ggrep<Space>
+nnoremap <leader>gb :Git branch<Space>
+nnoremap <leader>go :Git checkout<Space>
+nnoremap <leader>gc :Git commit -am ""<Left>
+command! -bar -nargs=* Gpull execute 'Git pull'
+command! -bar -nargs=* Gpush execute 'Git push'
 ```
 
-### programming
-#### yaml
+## programming
+### lint
 ```vim
 Plugin 'stephpy/vim-yaml'
 Plugin 'pedrohdz/vim-yaml-folds'
@@ -793,7 +808,7 @@ let g:ale_warn_about_trailing_blank_lines = 1
 let g:ale_warn_about_trailing_whitespace  = 1
 ```
 
-#### [EnhCommentify](https://github.com/vim-scripts/EnhCommentify.vim)
+### [vim-scripts/EnhCommentify.vim](https://github.com/vim-scripts/EnhCommentify.vim)
 ```vim
 " EnhCommentify
 let g:EnhCommentifyAlignRight      = 'Yes'
@@ -803,7 +818,7 @@ let g:EnhCommentifyMultiPartBlocks = 'Yes'
 let g:EnhCommentifyUseSyntax       = 'Yes'
 ```
 
-#### [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
+### [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
 ```vim
 " tpope/vim-commentary
 map  <C-/> <Plug>Commentary
@@ -811,12 +826,12 @@ imap <C-/> <Esc><Plug>CommentaryLineA
 xmap <c-/> <Plug>Commentary
 ```
 
-#### [honza/vim-snippets](https://github.com/honza/vim-snippets)
+### [honza/vim-snippets](https://github.com/honza/vim-snippets)
 ```vim
 Plugin 'honza/vim-snippets'
 ```
 
-#### [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
+### [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
 ```vim
 Plugin 'msanders/snipmate.vim'
 
@@ -826,7 +841,7 @@ smap <S-C-J> <Plug>snipMateNextOrTrigger
 imap <Tab>   <Plug>snipMateNextOrTrigger
 ```
 
-### ycm
+### [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 
 > [!NOTE|label:references:]
 > - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
@@ -988,7 +1003,7 @@ flags = [
 EOF
 ```
 
-### [lsp-examples](https://github.com/ycm-core/lsp-examples)
+### [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
 
 > [!NOTE|label:references:]
 > - [YouCompleteMe](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe)
@@ -1143,11 +1158,10 @@ nmap <C-y> :call TriggerYCM()<CR>
 
 - disable tabnine for vim
   ```vim
-  " tabnine-vim                                                        " Bundle 'codota/tabnine-vim'
+  " tabnine-vim                                                        " Plugin 'codota/tabnine-vim'
   if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
   if !( &filetype == 'vim' )         | let g:loaded_youcompleteme = 1 | endif
   ```
-
 
 ## troubleshooting
 
