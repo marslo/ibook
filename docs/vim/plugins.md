@@ -18,9 +18,9 @@
   - [vim-easycomplete](#vim-easycomplete)
   - [tabnine-vim](#tabnine-vim)
 - [troubleshooting](#troubleshooting)
-  - [download failed](#download-failed)
-  - [all caches](#all-caches)
-  - [no hints](#no-hints)
+  - [ycm download failed](#ycm-download-failed)
+  - [tabnine](#tabnine)
+  - [airline](#airline)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -229,6 +229,10 @@
   ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
 
 ## recommended plugins
+
+> [!NOTE|label:references:]
+> - [Vim Plugin Audit](https://tuckerchapman.com/2020/05/18/vim-plugin-audit/)
+
 ### utils
 #### indentLine
 ```vim
@@ -313,10 +317,17 @@ let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 ```
 
 #### autopairs
+
+> [!NOTE|label:references:]
+> - [#128 : Disable autopairs for certain filetypes](https://github.com/jiangmiao/auto-pairs/issues/128#issuecomment-195461762)
+>   ```vim
+>   au Filetype markdown let b:AutoPairs={'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+>   ```
+
 ```vim
-Bundle 'marslo/auto-pairs'
+Plugin 'jiangmiao/auto-pairs'
 " or
-" Bundle 'marslo/auto-pairs'
+Plugin 'marslo/auto-pairs'
 
 " settings
 let g:AutoPairs = {'(':')', '[':']', '{':'}', '<':'>',"'":"'",'"':'"', '`':'`'}
@@ -325,7 +336,7 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutBackInsert = '<M-b>'
 ```
 
-#### rainbow
+#### [luochen1990/rainbow](https://github.com/luochen1990/rainbow)
 ```vim
 " install
 Bundle 'luochen1990/rainbow'
@@ -357,6 +368,239 @@ let g:rainbow_conf = {
 \   }
 \}
 ```
+
+#### [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)
+
+> [!NOTE|label:references:]
+> - [* iMarso : osx/apps/powerline](../osx/apps.html#powerline)
+> - [* Getting started with vim-airline](https://tuckerchapman.com/2020/09/15/getting-started-vim-airline/)
+> - [How do I fix the status bar symbols in the Airline plugin?](https://vi.stackexchange.com/a/16512/7389)
+> - section:
+>   - [#787: How to modify contents of section Y?](https://github.com/vim-airline/vim-airline/issues/787#issue-84289641)
+>   - [#1087: How to replace section_y with contents of section_x?](https://github.com/vim-airline/vim-airline/issues/1087)
+>   - [#1845: how to disable additional section totally.](https://github.com/vim-airline/vim-airline/issues/1845#issuecomment-449700299)
+> - [n-st/vim-airline-screenshots](https://github.com/n-st/vim-airline-screenshots)
+> - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
+> - [* Change the vim-airline theme](https://github.com/vim-airline/vim-airline/wiki/Screenshots)
+>   - `:AirlineTheme <theme-name>`
+>   - [tomorrow](https://github.com/vim-airline/vim-airline/wiki/Screenshots#tomorrow-1)
+>   - [distinguished](https://github.com/vim-airline/vim-airline/wiki/Screenshots#distinguished)
+>   - [base16](https://github.com/vim-airline/vim-airline/wiki/Screenshots#base16)
+>   - [angr](https://github.com/vim-airline/vim-airline/wiki/Screenshots#angr)
+>   - [zenburn](https://github.com/vim-airline/vim-airline/wiki/Screenshots#zenburn)
+>   - [zenburn](https://github.com/vim-airline/vim-airline/wiki/Screenshots#zenburn)
+>   - [wombat](https://github.com/vim-airline/vim-airline/wiki/Screenshots#wombat)
+> - [Vim Airline Setup](https://jnduli.co.ke/vim-airline-setup.html)
+> - [autoload/airline/init.vim](https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/init.vim)
+> - tips:
+>   - check loaded extensions : `:AirlineExtension`
+>   - [#1373 How can I show system time in airline?](https://github.com/vim-airline/vim-airline/issues/1373#issuecomment-273040424)
+>   - [* FAQ](https://github.com/vim-airline/vim-airline/wiki/FAQ)
+
+```vim
+Plugin 'tpope/vim-fugitive'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+" vim-airline/vim-airline
+let g:airline_powerline_fonts                      = 1
+let g:airline_highlighting_cache                   = 1
+let g:airline_detect_spelllang                     = 0              " disable spelling language
+let g:airline_exclude_preview                      = 0              " disable in preview window
+" let g:airline_theme                                = 'gruvbox'
+let g:airline_theme                                = 'zenburn'
+let g:Powerline_symbols                            = 'fancy'
+let g:airline_section_y                            = ''             " fileencoding
+let g:airline_section_x                            = ''
+let g:airline_section_z                            = "%3p%% %l/%L:%c [%B]"
+let g:airline_skip_empty_sections                  = 1
+let g:airline#extensions#wordcount#enabled         = 1
+let g:airline#extensions#tabline#fnamemod          = ':t'
+let g:airline#extensions#tabline#enabled           = 1              " enable airline tabline
+let g:airline#extensions#tabline#show_close_button = 0              " remove 'X' at the end of the tabline
+let g:airline#extensions#tabline#tab_min_count     = 2              " minimum of 2 tabs needed to display the tabline
+let g:airline#extensions#tabline#show_splits       = 0              " disables the buffer name that displays on the right of the tabline
+let g:airline#extensions#tabline#enabled           = 1
+let g:airline#extensions#tabline#tab_nr_type       = 1              " tab number
+if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
+let g:airline_symbols.dirty                        = ' ♪'
+let g:airline_symbols.space                        = "\ua0"
+" let g:airline_symbols.branch                     = '⎇'            " ╮
+" let g:airline_symbols.paste                      = 'ρ'            " ├ unicode symbols
+" let g:airline_symbols.dirty                      = ' ↯'           " ╯
+" let g:airline_mode_map                           = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
+" let g:airline_section_x                          = "%-{strftime(\"%H:%M\ %d/%m/%y\")} %1*--%n%%--%*"
+" let g:airline_section_y                          = "%{&fenc}%{&bomb ? '[bom]' : ''}%{strlen(&ff) > 0 ? '['.&ff.']' : ''}"
+" let g:airline_skip_empty_sections                = 1
+" let g:airline#parts#ffenc#skip_expected_string   ='utf-8[unix]'
+function! AirlineInit()
+  let g:airline_section_a = airline#section#create([ 'mode' ])
+  let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
+  " let g:airline_section_c = airline#section#create(['%{getcwd()}'])
+endfunction
+autocmd User AirlineAfterInit call AirlineInit()
+```
+
+- tips
+  - [remove section_<x>](https://stackoverflow.com/a/45150368/2940319)
+    ```vim
+    " remove the filetype part
+    let g:airline_section_<x>=''
+    " remove separators for empty sections
+    let g:airline_skip_empty_sections = 1
+    ```
+
+  - setup sections:
+    ```vim
+    let g:airline_section_x                          = "%-{strftime(\"%H:%M\ %d/%m/%y\")} %1*--%n%%--%*"
+    let g:airline_section_y                          = "%{&fenc}%{&bomb ? '[bom]' : ''}%{strlen(&ff) > 0 ? '['.&ff.']' : ''}"
+    let g:airline#parts#ffenc#skip_expected_string   ='utf-8[unix]'
+
+    function! AirlineInit()
+      let g:airline_section_a = airline#section#create([ 'mode' ])
+      let g:airline_section_y = airline#section#create(['%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']'])
+      let g:airline_section_c = airline#section#create(['%{getcwd()}'])
+    endfunction
+    autocmd User AirlineAfterInit call AirlineInit()
+    ```
+
+  - setup short mode
+    ```vim
+    let g:airline_mode_map                           = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
+    ```
+
+  - unicode symbols
+
+    > [!NOTE|label:symbols]
+    > - [`:help airline-customization`](https://vi.stackexchange.com/a/3363/7389)
+    >   ```vim
+    >   " unicode symbols
+    >   let g:airline_left_sep           = '»'
+    >   let g:airline_left_sep           = '▶'
+    >   let g:airline_right_sep          = '«'
+    >   let g:airline_right_sep          = '◀'
+    >   let g:airline_symbols.linenr     = '␊'
+    >   let g:airline_symbols.linenr     = '␤'
+    >   let g:airline_symbols.linenr     = '¶'
+    >   let g:airline_symbols.branch     = '⎇'
+    >   let g:airline_symbols.paste      = 'ρ'
+    >   let g:airline_symbols.paste      = 'Þ'
+    >   let g:airline_symbols.paste      = '∥'
+    >   let g:airline_symbols.whitespace = 'Ξ'
+    >   ```
+    > - [`:help airline`](https://github.com/vim-airline/vim-airline/blob/master/doc/airline.txt)
+    >   ```vim
+    >   " unicode symbols
+    >   let g:airline_left_sep           = '»'    " \u00bb
+    >   let g:airline_left_sep           = '▶'    " \u25b6
+    >   let g:airline_right_sep          = '«'    " \u00ab
+    >   let g:airline_right_sep          = '◀'    " \u25c0
+    >   let g:airline_symbols.colnr      = ' ㏇:' " \u33C7
+    >   let g:airline_symbols.colnr      = ' ℅:'  " \u2105
+    >   let g:airline_symbols.crypt      = '🔒'   " \U0001f512
+    >   let g:airline_symbols.linenr     = '☰'    " \u2630
+    >   let g:airline_symbols.linenr     = ' ␊:'  " \u240a
+    >   let g:airline_symbols.linenr     = ' ␤:'  " \u2424
+    >   let g:airline_symbols.linenr     = '¶'    " \u00b6
+    >   let g:airline_symbols.maxlinenr  = ''
+    >   let g:airline_symbols.maxlinenr  = '㏑'   " \u33d1
+    >   let g:airline_symbols.branch     = '⎇'    " \u2387
+    >   let g:airline_symbols.paste      = 'ρ'    " \u03c1
+    >   let g:airline_symbols.paste      = 'Þ'    " \u00de
+    >   let g:airline_symbols.paste      = '∥'    " \u2225
+    >   let g:airline_symbols.spell      = 'Ꞩ'    " \ua7a8
+    >   let g:airline_symbols.notexists  = 'Ɇ'    " \u0246
+    >   let g:airline_symbols.notexists  = '∄'    " \u2204
+    >   let g:airline_symbols.whitespace = 'Ξ'    " \u039e
+    >
+    >   " powerline symbols
+    >   let g:airline_left_sep          = ''   " \ue0b0
+    >   let g:airline_left_alt_sep      = ''   " \ue0b1
+    >   let g:airline_right_sep         = ''   " \ue0b2
+    >   let g:airline_right_alt_sep     = ''   " \ue0b3
+    >   let g:airline_symbols.branch    = ''   " \ue0a0
+    >   let g:airline_symbols.colnr     = ' ℅:' " \u2105 \u3a               "
+    >   let g:airline_symbols.readonly  = ''   " \ue0a2
+    >   let g:airline_symbols.linenr    = ' :' " \ue0a1
+    >   let g:airline_symbols.maxlinenr = '☰ '  " \u2630
+    >   let g:airline_symbols.dirty     = '⚡'  " \u26a1
+    >
+    >   " old vim-powerline symbols
+    >   let g:airline_left_sep          = '⮀'   " \u2b80
+    >   let g:airline_left_alt_sep      = '⮁'   " \u2b81
+    >   let g:airline_right_sep         = '⮂'   " \u2b82
+    >   let g:airline_right_alt_sep     = '⮃'   " \u2b83
+    >   let g:airline_symbols.branch    = '⭠'   " \u2b60
+    >   let g:airline_symbols.readonly  = '⭤'   " \u2b64
+    >   let g:airline_symbols.linenr    = '⭡'   " \u2b61
+    >   ```
+
+    ```vim
+    let g:airline_symbols.branch                     = '⎇'            " ╮
+    let g:airline_symbols.paste                      = 'ρ'            " ├ unicode symbols
+    let g:airline_symbols.dirty                      = ' ↯'           " ╯
+    ```
+
+  - get theme randomly
+
+    > [!NOTE]
+    > - [#2145 : Align section C to the left when overflowed](https://github.com/vim-airline/vim-airline/issues/2145#issuecomment-673640814)
+
+    ```vim
+    let g:airline_theme= get(g:, 'airline_theme', "random")
+    ```
+
+#### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
+
+> [!NOTE|label:references:]
+> - [#1577 : Unknown function: SyntasticStatuslineFlag](https://github.com/vim-syntastic/syntastic/issues/1577)
+> - [In Editor Linting with Syntastic](https://medium.com/usevim/in-editor-linting-with-syntastic-6814122bdbec)
+>   ```vim
+>   :SyntasticInfo
+>   ```
+
+```vim
+" syntastic settings                                                " Plugin 'vim-syntastic/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list            = 1
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
+let g:syntastic_enable_signs             = 1
+let g:syntastic_error_symbol             = '✗'
+let g:syntastic_style_error_symbol       = '✠'
+let g:syntastic_warning_symbol           = '∆'
+let g:syntastic_style_warning_symbol     = '≈'
+" let g:syntastic_style_warning_symbol   = '💩'
+
+highlight link SyntasticErrorSign        SignColumn
+highlight link SyntasticWarningSign      SignColumn
+highlight link SyntasticStyleErrorSign   SignColumn
+highlight link SyntasticStyleWarningSign SignColumn
+```
+
+- former version
+  ```vim
+  Plugin 'vim-syntastic/syntastic'
+
+  " configure syntastic syntax checking to check on open as well as save
+  set statusline+=%#warningmsg#
+  set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
+  set statusline+=\ %* |
+  let g:syntastic_always_populate_loc_list  = 1
+  let g:syntastic_auto_loc_list             = 1
+  let g:syntastic_check_on_open             = 1
+  let g:syntastic_check_on_wq               = 1
+  let g:syntastic_loc_list_height           = 2
+  let g:syntastic_ignore_files              = ['\.py$']
+  let g:syntastic_check_on_wq               = 0
+  let g:syntastic_check_on_open             = 1
+  let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
+  let g:syntastic_always_populate_loc_list  = 1
+  let g:syntastic_auto_loc_list             = 1
+  ```
 
 ### markdown
 #### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
@@ -547,7 +791,6 @@ let g:ale_lint_on_save                    = 1
 let g:ale_lint_on_text_changed            = 'never'
 let g:ale_warn_about_trailing_blank_lines = 1
 let g:ale_warn_about_trailing_whitespace  = 1
-
 ```
 
 #### [EnhCommentify](https://github.com/vim-scripts/EnhCommentify.vim)
@@ -914,8 +1157,7 @@ nmap <C-y> :call TriggerYCM()<CR>
 > - `:YcmDiags`
 > - `:py3 import sys; print( sys.version)`
 
-
-### download failed
+### ycm download failed
 #### download failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
 
 > [!NOTE|label:related issues:]
@@ -952,28 +1194,44 @@ nmap <C-y> :call TriggerYCM()<CR>
   - download the tar.gz manually
     - [snapshots](https://download.eclipse.org/jdtls/snapshots/)
     - [milestone](https://projects.eclipse.org/projects/eclipse.jdt.ls)
-  - copy/move package into `YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/`
-  ```bash
-  $ mkdir -p YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/ && cd !$
-  $ wget https://github.com/ycm-core/llvm/releases/download/16.0.1/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
-  ```
 
-#### download failed for `clangd-17.0.1-x86_64-apple-darwin.tar.bz2`
+  - copy/move [clangd-16.0.1-x86_64-apple-darwin.tar.bz2](https://github.com/ycm-core/llvm/releases/download/16.0.1/clangd-16.0.1-x86_64-apple-darwin.tar.bz2) into `YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/`
+    ```bash
+    $ mkdir -p YouCompleteme/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/ && cd !$
+    $ wget https://github.com/ycm-core/llvm/releases/download/16.0.1/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
+    ```
+
+#### download failed for [`clangd-17.0.1-x86_64-apple-darwin.tar.bz2`](https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2)
 ```bash
 $ mkdir -p YouCompleteMe/third_party/ycmd/third_party/clangd/cache
 $ curl  -o YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 \
         -fsSL https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
 ```
 
-
-#### download failed for `omnisharp.http-osx.tar.gz`
+#### download failed for [`omnisharp.http-osx.tar.gz` v1.37.11](https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz)
 ```bash
 $ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11
 $ curl -o YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz \
           https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
 ```
 
-### all caches
+#### scripts for download
+```bash
+$ curl -fsSL -o ~/Desktop/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+$ curl -fsSL -o ~/Desktop/omnisharp.http-osx.tar.gz                 https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
+
+$ for _d in YouCompleteMe/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/ \
+            YouCompleteMe/third_party/ycmd/third_party/clangd/cache \
+            YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache \
+            YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/third_party/ycmd/third_party/eclipse.jdt.ls;
+  do
+    cp ~/Desktop/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 ${_d}
+  done
+$ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/ &&
+  cp ~/Desktop/omnisharp.http-osx.tar.gz YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/
+```
+
+#### all caches
 ```bash
 $ find YouCompleteMe/ -name '*.zip' -o -name '*.tar.*'
 YouCompleteMe/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
@@ -1031,7 +1289,7 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16
 ```
 <!--endsec-->
 
-#### troubleshooting
+#### tips
 
 - `libclang` download failure
   - error
@@ -1091,7 +1349,378 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16
            # correct.  If this is not the case, remove it if needed and download it.
         ```
 
-### no hints
+- full logs
+  <!--sec data-title="full logs" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ python install.py --all --verbose
+  Searching Python 3.11 libraries...
+  Found Python library: /usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/config-3.11-darwin/libpython3.11.dylib
+  Found Python headers folder: /usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/include/python3.11
+  -- The C compiler identification is AppleClang 14.0.3.14030022
+  -- The CXX compiler identification is AppleClang 14.0.3.14030022
+  -- Detecting C compiler ABI info
+  -- Detecting C compiler ABI info - done
+  -- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc - skipped
+  -- Detecting C compile features
+  -- Detecting C compile features - done
+  -- Detecting CXX compiler ABI info
+  -- Detecting CXX compiler ABI info - done
+  -- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
+  -- Detecting CXX compile features
+  -- Detecting CXX compile features - done
+  -- Found Python3: /usr/local/opt/python@3.11/bin/python3.11 (found suitable version "3.11.6", minimum required is "3.6") found components: Interpreter Development Development.Module Development.Embed
+  -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+  -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+  -- Found Threads: TRUE
+  -- Using libclang archive: /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/../clang_archives/libclang-17.0.1-x86_64-apple-darwin.tar.bz2
+  -- Using libclang to provide semantic completion for C/C++/ObjC
+  -- Using external libclang: /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/ycm_build_o7x3lu3s/lib/libclang.dylib
+  -- Using Abseil hash tables
+  -- Configuring done (13.9s)
+  -- Generating done (0.6s)
+  -- Build files have been written to: /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/ycm_build_o7x3lu3s
+  [  0%] Building CXX object absl/absl/time/CMakeFiles/absl_civil_time.dir/internal/cctz/src/civil_time_detail.cc.o
+  [  3%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_format.cc.o
+  [  3%] Building CXX object absl/absl/base/CMakeFiles/absl_log_severity.dir/log_severity.cc.o
+  [  3%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_fixed.cc.o
+  [  4%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_if.cc.o
+  [  6%] Building CXX object absl/absl/base/CMakeFiles/absl_exponential_biased.dir/internal/exponential_biased.cc.o
+  [  8%] Building CXX object absl/absl/numeric/CMakeFiles/absl_int128.dir/int128.cc.o
+  [  8%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_impl.cc.o
+  [  8%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_libc.cc.o
+  [  8%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_lookup.cc.o
+  [  8%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_info.cc.o
+  [  8%] Building CXX object absl/absl/base/CMakeFiles/absl_spinlock_wait.dir/internal/spinlock_wait.cc.o
+  [  9%] Linking CXX static library libabsl_spinlock_wait.a
+  [  9%] Built target absl_spinlock_wait
+  [ 11%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/time_zone_posix.cc.o
+  [ 13%] Linking CXX static library libabsl_exponential_biased.a
+  [ 13%] Built target absl_exponential_biased
+  [ 13%] Building CXX object absl/absl/time/CMakeFiles/absl_time_zone.dir/internal/cctz/src/zone_info_source.cc.o
+  [ 13%] Linking CXX static library libabsl_log_severity.a
+  [ 13%] Built target absl_log_severity
+  [ 14%] Linking CXX static library libabsl_civil_time.a
+  [ 14%] Building CXX object absl/absl/base/CMakeFiles/absl_raw_logging_internal.dir/internal/raw_logging.cc.o
+  [ 16%] Linking CXX static library libabsl_int128.a
+  [ 16%] Built target absl_civil_time
+  [ 16%] Built target absl_int128
+  [ 18%] Linking CXX static library libabsl_time_zone.a
+  [ 19%] Linking CXX static library libabsl_raw_logging_internal.a
+  [ 19%] Built target absl_time_zone
+  [ 19%] Built target absl_raw_logging_internal
+  [ 19%] Building CXX object absl/absl/debugging/CMakeFiles/absl_debugging_internal.dir/internal/address_is_readable.cc.o
+  [ 21%] Building CXX object absl/absl/types/CMakeFiles/absl_bad_variant_access.dir/bad_variant_access.cc.o
+  [ 21%] Building CXX object absl/absl/base/CMakeFiles/absl_throw_delegate.dir/internal/throw_delegate.cc.o
+  [ 21%] Building CXX object absl/absl/types/CMakeFiles/absl_bad_optional_access.dir/bad_optional_access.cc.o
+  [ 21%] Building CXX object absl/absl/debugging/CMakeFiles/absl_debugging_internal.dir/internal/vdso_support.cc.o
+  [ 21%] Building CXX object absl/absl/base/CMakeFiles/absl_base.dir/internal/sysinfo.cc.o
+  [ 24%] Building CXX object absl/absl/base/CMakeFiles/absl_base.dir/internal/spinlock.cc.o
+  [ 24%] Building CXX object absl/absl/base/CMakeFiles/absl_base.dir/internal/thread_identity.cc.o
+  [ 26%] Building CXX object absl/absl/debugging/CMakeFiles/absl_debugging_internal.dir/internal/elf_mem_image.cc.o
+  [ 26%] Building CXX object absl/absl/base/CMakeFiles/absl_base.dir/internal/cycleclock.cc.o
+  [ 26%] Building CXX object absl/absl/base/CMakeFiles/absl_base.dir/internal/unscaledcycleclock.cc.o
+  [ 27%] Linking CXX static library libabsl_debugging_internal.a
+  [ 29%] Linking CXX static library libabsl_bad_variant_access.a
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_debugging_internal.a(elf_mem_image.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_debugging_internal.a(vdso_support.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_debugging_internal.a(elf_mem_image.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_debugging_internal.a(vdso_support.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_bad_variant_access.a(bad_variant_access.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_bad_variant_access.a(bad_variant_access.cc.o) has no symbols
+  warning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: archive library: libabsl_bad_variant_access.a the table of contents is empty (no object file members in the library define global symbols)
+  [ 29%] Built target absl_debugging_internal
+  [ 29%] Built target absl_bad_variant_access
+  [ 29%] Building CXX object absl/absl/debugging/CMakeFiles/absl_stacktrace.dir/stacktrace.cc.o
+  [ 31%] Linking CXX static library libabsl_bad_optional_access.a
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_bad_optional_access.a(bad_optional_access.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_bad_optional_access.a(bad_optional_access.cc.o) has no symbols
+  warning: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: archive library: libabsl_bad_optional_access.a the table of contents is empty (no object file members in the library define global symbols)
+  [ 31%] Built target absl_bad_optional_access
+  [ 32%] Linking CXX static library libabsl_stacktrace.a
+  [ 32%] Built target absl_stacktrace
+  [ 32%] Linking CXX static library libabsl_throw_delegate.a
+  [ 32%] Built target absl_throw_delegate
+  [ 34%] Linking CXX static library libabsl_base.a
+  [ 34%] Built target absl_base
+  [ 34%] Building CXX object absl/absl/debugging/CMakeFiles/absl_demangle_internal.dir/internal/demangle.cc.o
+  [ 34%] Building CXX object absl/absl/hash/CMakeFiles/absl_city.dir/internal/city.cc.o
+  [ 37%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings_internal.dir/internal/ostringstream.cc.o
+  [ 37%] Building CXX object absl/absl/base/CMakeFiles/absl_malloc_internal.dir/internal/low_level_alloc.cc.o
+  [ 37%] Building CXX object absl/absl/hash/CMakeFiles/absl_wyhash.dir/internal/wyhash.cc.o
+  [ 39%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings_internal.dir/internal/escaping.cc.o
+  [ 39%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings_internal.dir/internal/utf8.cc.o
+  [ 40%] Linking CXX static library libabsl_wyhash.a
+  [ 40%] Built target absl_wyhash
+  [ 42%] Linking CXX static library libabsl_city.a
+  [ 42%] Built target absl_city
+  [ 42%] Linking CXX static library libabsl_strings_internal.a
+  [ 42%] Built target absl_strings_internal
+  [ 42%] Linking CXX static library libabsl_malloc_internal.a
+  [ 42%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/ascii.cc.o
+  [ 45%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/internal/charconv_bigint.cc.o
+  [ 45%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/escaping.cc.o
+  [ 45%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/charconv.cc.o
+  [ 47%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/internal/charconv_parse.cc.o
+  [ 47%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/internal/memutil.cc.o
+  [ 49%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/match.cc.o
+  [ 50%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/str_cat.cc.o
+  [ 50%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/numbers.cc.o
+  [ 50%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/str_replace.cc.o
+  [ 52%] Linking CXX static library libabsl_demangle_internal.a
+  [ 52%] Built target absl_malloc_internal
+  [ 54%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/str_split.cc.o
+  [ 54%] Built target absl_demangle_internal
+  [ 55%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_graphcycles_internal.dir/internal/graphcycles.cc.o
+  [ 55%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/string_view.cc.o
+  [ 57%] Building CXX object absl/absl/strings/CMakeFiles/absl_strings.dir/substitute.cc.o
+  [ 57%] Linking CXX static library libabsl_graphcycles_internal.a
+  [ 57%] Built target absl_graphcycles_internal
+  [ 57%] Linking CXX static library libabsl_strings.a
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_strings.a(string_view.cc.o) has no symbols
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib: file: libabsl_strings.a(string_view.cc.o) has no symbols
+  [ 57%] Built target absl_strings
+  [ 57%] Building CXX object absl/absl/time/CMakeFiles/absl_time.dir/format.cc.o
+  [ 59%] Building CXX object absl/absl/strings/CMakeFiles/absl_cord.dir/cord.cc.o
+  [ 59%] Building CXX object absl/absl/time/CMakeFiles/absl_time.dir/civil_time.cc.o
+  [ 60%] Building CXX object absl/absl/debugging/CMakeFiles/absl_symbolize.dir/symbolize.cc.o
+  [ 60%] Building CXX object absl/absl/time/CMakeFiles/absl_time.dir/clock.cc.o
+  [ 62%] Building CXX object absl/absl/hash/CMakeFiles/absl_hash.dir/internal/hash.cc.o
+  [ 63%] Building CXX object absl/absl/strings/CMakeFiles/absl_cord.dir/internal/cord_internal.cc.o
+  [ 65%] Building CXX object absl/absl/time/CMakeFiles/absl_time.dir/duration.cc.o
+  [ 65%] Building CXX object absl/absl/strings/CMakeFiles/absl_cord.dir/internal/cord_rep_ring.cc.o
+  [ 67%] Building CXX object absl/absl/time/CMakeFiles/absl_time.dir/time.cc.o
+  In file included from /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/absl/absl/strings/cord.cc:15:
+  In file included from /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/absl/absl/strings/cord.h:78:
+  /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/absl/absl/functional/function_ref.h:124:16: warning: definition of implicit copy constructor for 'FunctionRef<void (std::string_view)>' is deprecated because it has a user-declared copy assignment operator [-Wdeprecated-copy]
+    FunctionRef& operator=(const FunctionRef& rhs) = delete;
+                 ^
+  /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/absl/absl/strings/cord.h:1325:33: note: in implicit copy constructor for 'absl::FunctionRef<void (std::string_view)>' first required here
+      return ForEachChunkAux(rep, callback);
+                                  ^
+  [ 67%] Linking CXX static library libabsl_hash.a
+  [ 67%] Linking CXX static library libabsl_symbolize.a
+  [ 67%] Built target absl_hash
+  [ 67%] Built target absl_symbolize
+  [ 67%] Linking CXX static library libabsl_time.a
+  [ 67%] Built target absl_time
+  [ 67%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/blocking_counter.cc.o
+  [ 68%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/internal/create_thread_identity.cc.o
+  [ 70%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/barrier.cc.o
+  [ 70%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/internal/per_thread_sem.cc.o
+  [ 70%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/notification.cc.o
+  [ 72%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/internal/waiter.cc.o
+  [ 73%] Building CXX object absl/absl/synchronization/CMakeFiles/absl_synchronization.dir/mutex.cc.o
+  1 warning generated.
+  [ 75%] Linking CXX static library libabsl_cord.a
+  [ 75%] Built target absl_cord
+  [ 75%] Linking CXX static library libabsl_synchronization.a
+  [ 75%] Built target absl_synchronization
+  [ 77%] Building CXX object absl/absl/container/CMakeFiles/absl_hashtablez_sampler.dir/internal/hashtablez_sampler_force_weak_definition.cc.o
+  [ 77%] Building CXX object absl/absl/container/CMakeFiles/absl_hashtablez_sampler.dir/internal/hashtablez_sampler.cc.o
+  [ 78%] Linking CXX static library libabsl_hashtablez_sampler.a
+  [ 78%] Built target absl_hashtablez_sampler
+  [ 78%] Building CXX object absl/absl/container/CMakeFiles/absl_raw_hash_set.dir/internal/raw_hash_set.cc.o
+  [ 80%] Linking CXX static library libabsl_raw_hash_set.a
+  [ 80%] Built target absl_raw_hash_set
+  [ 81%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Character.cpp.o
+  [ 81%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Candidate.cpp.o
+  [ 83%] Building CXX object ycm/CMakeFiles/ycm_core.dir/IdentifierUtils.cpp.o
+  [ 83%] Building CXX object ycm/CMakeFiles/ycm_core.dir/CodePoint.cpp.o
+  [ 86%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Repository.cpp.o
+  [ 86%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Result.cpp.o
+  [ 86%] Building CXX object ycm/CMakeFiles/ycm_core.dir/IdentifierCompleter.cpp.o
+  [ 86%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Word.cpp.o
+  [ 86%] Building CXX object ycm/CMakeFiles/ycm_core.dir/PythonSupport.cpp.o
+  [ 86%] Building CXX object ycm/CMakeFiles/ycm_core.dir/IdentifierDatabase.cpp.o
+  [ 90%] Building CXX object ycm/CMakeFiles/ycm_core.dir/versioning.cpp.o
+  [ 90%] Building CXX object ycm/CMakeFiles/ycm_core.dir/Utils.cpp.o
+  [ 90%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ycm_core.cpp.o
+  [ 91%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/ClangCompleter.cpp.o
+  [ 91%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/ClangHelpers.cpp.o
+  [ 93%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/ClangUtils.cpp.o
+  [ 93%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/CompilationDatabase.cpp.o
+  [ 95%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/CompletionData.cpp.o
+  [ 95%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/Documentation.cpp.o
+  [ 96%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/Range.cpp.o
+  [ 96%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/TranslationUnit.cpp.o
+  [ 98%] Building CXX object ycm/CMakeFiles/ycm_core.dir/ClangCompleter/TranslationUnitStore.cpp.o
+  [100%] Linking CXX shared library /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.cpython-311-darwin.so
+  ld: warning: directory not found for option '-L/usr/local/Cellar/node/20.8.0/lib'
+  ld: warning: dylib (/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/config-3.11-darwin/libpython3.11.dylib) was built for newer macOS version (14.0) than being linked (13.3)
+  ld: warning: dylib (/usr/local/opt/llvm/lib/libunwind.dylib) was built for newer macOS version (14.0) than being linked (13.3)
+  ld: warning: dylib (/usr/local/opt/llvm/lib/libunwind.dylib) was built for newer macOS version (14.0) than being linked (13.3)
+  [100%] Built target ycm_core
+  running build
+  running build_py
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/regex
+  copying regex_3/__init__.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/regex
+  copying regex_3/regex.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/regex
+  copying regex_3/_regex_core.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/regex
+  copying regex_3/test_regex.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/regex
+  running build_ext
+  building 'regex._regex' extension
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3/temp.macosx-14-x86_64-cpython-311
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3/temp.macosx-14-x86_64-cpython-311/regex_3
+  clang -Wsign-compare -Wunreachable-code -fno-common -dynamic -DNDEBUG -g -fwrapv -O3 -Wall -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/openjdk@17/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/20.8.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include -I/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/include/python3.11 -c regex_3/_regex.c -o /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3/temp.macosx-14-x86_64-cpython-311/regex_3/_regex.o
+  regex_3/_regex.c:24940:23: warning: unused function 'contains_repeat' [-Wunused-function]
+   24940 | Py_LOCAL_INLINE(BOOL) contains_repeat(RE_CODE* code, RE_CODE* end_code) {
+         |                       ^~~~~~~~~~~~~~~
+  1 warning generated.
+  clang -Wsign-compare -Wunreachable-code -fno-common -dynamic -DNDEBUG -g -fwrapv -O3 -Wall -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/openjdk@17/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/20.8.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include -I/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/include/python3.11 -c regex_3/_regex_unicode.c -o /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3/temp.macosx-14-x86_64-cpython-311/regex_3/_regex_unicode.o
+  clang -bundle -undefined dynamic_lookup -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/local/opt/binutils/lib -L/usr/local/opt/python@3.11/lib -L/usr/local/opt/ruby/lib -L/usr/local/opt/tcl-tk/lib -L/usr/local/opt/sqlite/lib -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/Cellar/node/20.8.0/lib -L/usr/local/opt/libressl/lib -L/usr/local/Cellar/icu4c@71.1/71.1/lib -L/usr/local/opt/llvm/lib -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/openjdk@17/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/20.8.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3/temp.macosx-14-x86_64-cpython-311/regex_3/_regex.o /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/3/temp.macosx-14-x86_64-cpython-311/regex_3/_regex_unicode.o -o /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/regex-build/regex/_regex.cpython-311-darwin.so
+  ld: warning: directory not found for option '-L/usr/local/Cellar/node/20.8.0/lib'
+  running build
+  running build_py
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog
+  copying src/watchdog/watchmedo.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog
+  copying src/watchdog/version.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog
+  copying src/watchdog/events.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog
+  copying src/watchdog/__init__.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/patterns.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/__init__.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/event_debouncer.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/dirsnapshot.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/delayed_queue.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/platform.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/process_watcher.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/bricks.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  copying src/watchdog/utils/echo.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/utils
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/fsevents.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/inotify.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/__init__.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/api.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/inotify_buffer.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/winapi.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/read_directory_changes.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/kqueue.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/inotify_c.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/polling.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  copying src/watchdog/observers/fsevents2.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/observers
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/tricks
+  copying src/watchdog/tricks/__init__.py -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog/tricks
+  running egg_info
+  writing src/watchdog.egg-info/PKG-INFO
+  writing dependency_links to src/watchdog.egg-info/dependency_links.txt
+  writing entry points to src/watchdog.egg-info/entry_points.txt
+  writing requirements to src/watchdog.egg-info/requires.txt
+  writing top-level names to src/watchdog.egg-info/top_level.txt
+  reading manifest file 'src/watchdog.egg-info/SOURCES.txt'
+  reading manifest template 'MANIFEST.in'
+  warning: no files found matching '*.h' under directory 'src'
+  warning: no files found matching 'docs/*.txt'
+  adding license file 'LICENSE'
+  adding license file 'COPYING'
+  adding license file 'AUTHORS'
+  writing manifest file 'src/watchdog.egg-info/SOURCES.txt'
+  copying src/watchdog/py.typed -> /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/watchdog
+  running build_ext
+  building '_watchdog_fsevents' extension
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/3
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/3/temp.macosx-14-x86_64-cpython-311
+  creating /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/3/temp.macosx-14-x86_64-cpython-311/src
+  clang -Wsign-compare -Wunreachable-code -fno-common -dynamic -DNDEBUG -g -fwrapv -O3 -Wall -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/openjdk@17/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/20.8.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include -DWATCHDOG_VERSION_STRING=\"3.0.0\" -DWATCHDOG_VERSION_MAJOR=3 -DWATCHDOG_VERSION_MINOR=0 -DWATCHDOG_VERSION_BUILD=0 -I/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/include/python3.11 -c src/watchdog_fsevents.c -o /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/3/temp.macosx-14-x86_64-cpython-311/src/watchdog_fsevents.o -std=c99 -pedantic -Wall -Wextra -fPIC -Wno-nullability-completeness -Wno-nullability-extension -Wno-newline-eof -Wno-error=unused-command-line-argument
+  src/watchdog_fsevents.c:681:5: warning: 'FSEventStreamScheduleWithRunLoop' is deprecated: first deprecated in macOS 13.0 - Use FSEventStreamSetDispatchQueue instead. [-Wdeprecated-declarations]
+    681 |     FSEventStreamScheduleWithRunLoop(stream_ref, run_loop_ref, kCFRunLoopDefaultMode);
+        |     ^
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/FSEvents.framework/Headers/FSEvents.h:1153:1: note: 'FSEventStreamScheduleWithRunLoop' has been explicitly marked deprecated here
+   1153 | FSEventStreamScheduleWithRunLoop(
+        | ^
+  1 warning generated.
+  clang -bundle -undefined dynamic_lookup -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/local/opt/binutils/lib -L/usr/local/opt/python@3.11/lib -L/usr/local/opt/ruby/lib -L/usr/local/opt/tcl-tk/lib -L/usr/local/opt/sqlite/lib -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/Cellar/node/20.8.0/lib -L/usr/local/opt/libressl/lib -L/usr/local/Cellar/icu4c@71.1/71.1/lib -L/usr/local/opt/llvm/lib -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/openjdk@17/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/20.8.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/3/temp.macosx-14-x86_64-cpython-311/src/watchdog_fsevents.o -lm -o /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/watchdog_deps/watchdog/build/lib3/_watchdog_fsevents.cpython-311-darwin.so -framework CoreFoundation -framework CoreServices
+  ld: warning: directory not found for option '-L/usr/local/Cellar/node/20.8.0/lib'
+  Installing Omnisharp v1.37.11
+  Using cached Omnisharp: omnisharp.http-osx.tar.gz
+  Extracting Omnisharp to /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn...DONE
+  Done installing Omnisharp
+  go: downloading golang.org/x/tools/gopls v0.13.2
+  go: downloading golang.org/x/tools v0.11.2-0.20230810185051-cc6b5804b8cf
+  go: downloading honnef.co/go/tools v0.4.2
+  go: downloading github.com/sergi/go-diff v1.1.0
+  go: downloading mvdan.cc/gofumpt v0.4.0
+  go: downloading mvdan.cc/xurls/v2 v2.4.0
+  go: downloading golang.org/x/mod v0.12.0
+  go: downloading golang.org/x/sync v0.3.0
+  go: downloading golang.org/x/text v0.11.0
+  go: downloading golang.org/x/sys v0.10.0
+  go: downloading golang.org/x/vuln v0.0.0-20230110180137-6ad3e3d07815
+  go: downloading github.com/google/go-cmp v0.5.9
+  go: downloading golang.org/x/exp/typeparams v0.0.0-20221212164502-fae10dda9338
+  go: downloading github.com/BurntSushi/toml v1.2.1
+  go: downloading golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
+  npm notice created a lockfile as package-lock.json. You should commit this file.
+  npm WARN tern_runtime No repository field.
+  npm WARN tern_runtime No license field.
+
+  added 30 packages from 125 contributors in 7.411s
+
+  1 package is looking for funding
+    run `npm fund` for details
+
+  info: downloading installer
+  info: profile set to 'default'
+  info: default host triple is x86_64-apple-darwin
+  info: skipping toolchain installation
+
+  Rust is installed now. Great!
+
+  To get started you need Cargo's bin directory
+  (/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/rust_install_b3bomd59/bin) in
+  your PATH
+  environment variable. This has not been done automatically.
+
+  To configure your current shell, run:
+  source
+  "/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/rust_install_b3bomd59/env"
+  info: syncing channel updates for 'nightly-2023-08-18-x86_64-apple-darwin'
+  info: latest update on 2023-08-18, rust version 1.73.0-nightly (076887268 2023-08-17)
+  info: downloading component 'cargo'
+  info: downloading component 'clippy'
+  info: downloading component 'rust-docs'
+  info: downloading component 'rust-std'
+  info: downloading component 'rustc'
+   56.1 MiB /  56.1 MiB (100 %)  38.3 MiB/s in  1s ETA:  0s
+  info: downloading component 'rustfmt'
+  info: installing component 'cargo'
+  info: installing component 'clippy'
+  info: installing component 'rust-docs'
+   13.8 MiB /  13.8 MiB (100 %)   4.0 MiB/s in  3s ETA:  0s
+  info: installing component 'rust-std'
+   25.0 MiB /  25.0 MiB (100 %)  11.8 MiB/s in  2s ETA:  0s
+  info: installing component 'rustc'
+   56.1 MiB /  56.1 MiB (100 %)  12.8 MiB/s in  4s ETA:  0s
+  info: installing component 'rustfmt'
+
+    nightly-2023-08-18-x86_64-apple-darwin installed - rustc 1.73.0-nightly (076887268 2023-08-17)
+
+  info: default toolchain set to 'nightly-2023-08-18-x86_64-apple-darwin'
+  info: checking for self-update
+  info: downloading component 'rust-src'
+  info: installing component 'rust-src'
+  info: downloading component 'rust-analyzer'
+  info: installing component 'rust-analyzer'
+  info: component 'rustfmt' for target 'x86_64-apple-darwin' is up to date
+  info: component 'clippy' for target 'x86_64-apple-darwin' is up to date
+  Downloading jdt.ls from https://download.eclipse.org/jdtls/milestones/1.26.0/jdt-language-server-1.26.0-202307271613.tar.gz...
+  Extracting jdt.ls to /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/repository...
+  Done installing jdt.ls
+  npm notice created a lockfile as package-lock.json. You should commit this file.
+  npm WARN tsserver No repository field.
+  npm WARN tsserver No license field.
+
+  added 1 package from 1 contributor in 1.09s
+  Using cached Clangd: /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+  Extracting Clangd to /Users/marslo/.vim/bundle/YouCompleteMe/third_party/ycmd/third_party/clangd/output...
+  Done installing Clangd
+  Clangd completer enabled. If you are using .ycm_extra_conf.py files, make sure they use Settings() instead of the old and deprecated FlagsForFile().
+  ```
+  <!--endsec-->
+
+#### ycm no hints
 
 > [!NOTE|label:references:]
 > - [.vim/.ycm_extra_conf.py](https://github.com/rasendubi/dotfiles/blob/master/.vim/.ycm_extra_conf.py)
@@ -1109,3 +1738,72 @@ $ python ycmd --options_file default_settings.json
 2023-10-13 01:42:34,338 - INFO - Completion config: 50, detailing -1 candiates
 serving on http://1.0.0.127.in-addr.arpa:63691
 ```
+
+### tabnine
+
+- `YouCompleteMe unavailable: module 'collections' has no attribute 'Mapping'`
+
+  > [!TIP]
+  > - [Broken on python 3.10 #107](https://github.com/codota/tabnine-vim/issues/107)
+  > - [YouCompleteMe#macos](https://github.com/tabnine/YouCompleteMe#macos)
+  > <br>
+  > python version:
+  > ```bash
+  > $ python --version
+  > Python 3.10.4
+  > $ python-config --configdir
+  > /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10/config-3.10-darwin
+  > ```
+
+  - solution
+    ```bash
+    # optional
+    $ brew install cmake go
+
+    # mandatory
+    $ cd ~/.vim/bundle/tabnine-vim
+    $ git checkout python3
+    $ find . -name "*.pyc" -delete
+    $ python3 install.py
+    Searching Python 3.10 libraries...
+    Found Python library: /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/python3.10/config-3.10-darwin/libpython3.10.dylib
+    Found Python headers folder: /usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10
+    -- The C compiler identification is AppleClang 12.0.0.12000032
+    -- The CXX compiler identification is AppleClang 12.0.0.12000032
+    ...
+    ```
+
+- `Killed: 9`
+  - caused by enabled `--enable-cscope`
+  - ~~`$ sudo make uninstall && sudo make install`~~
+
+### airline
+
+> [!NOTE|label:references:]
+> - [#2316 : Airline breaks down under certain conditions](https://github.com/vim-airline/vim-airline/issues/2316)
+> - fonts
+>   - [Why vim-airline is not showing symbols properly?](https://stackoverflow.com/a/34210791/2940319)
+>   - [The powerline font symbols are not showing up](https://github.com/vim-airline/vim-airline/wiki/FAQ#the-powerline-font-symbols-are-not-showing-up)
+>   - [lujiacn/Monaco for Powerline.md](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466)
+>     ```vim
+>     if has("mac") || has("macunix")
+>         set guifont=Monaco\ for\ Powerline:h24
+>     elseif has("win32") || has("win64")
+>         set guifont=Monaco\ for\ Powerline:h14:cANSI
+>         set renderoptions=type:directx,renmode:5
+>     endif
+>     ```
+
+- solution : install powerline fonts
+
+  > [!NOTE]
+  > - [* powerline/fonts](https://github.com/powerline/fonts)
+  > - [supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
+
+  ```bash
+  $ git clone git@github.com:powerline/fonts.git ${iRCHOME}/utils/
+  $ git clone git@github.com:supermarin/powerline-fonts.git ${iRCHOME}/utils/
+
+  $ cd ${iRCHOME}/utils/fonts
+  $ ./install.sh
+  ```

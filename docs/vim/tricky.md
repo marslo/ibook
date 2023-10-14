@@ -27,7 +27,9 @@
   - [matches the N pattern](#matches-the-n-pattern)
 - [characters](#characters)
 - [others](#others)
+  - [How to Open Files with Vim](#how-to-open-files-with-vim)
   - [comments](#comments)
+  - [statueline](#statueline)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -586,6 +588,8 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 > - [Using Git from Vim](https://vim.fandom.com/wiki/Using_Git_from_Vim)
 > - [Word count](https://vim.fandom.com/wiki/Word_count)
 
+### [How to Open Files with Vim](https://tuckerchapman.com/2021/02/16/vim-open-files/)
+
 ### comments
 
 > [!NOTE|label:references:]
@@ -594,3 +598,21 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 > - [Comment lines in different filetypes](https://vim.fandom.com/wiki/Comment_lines_in_different_filetypes)
 > - [Comment your code blocks automatically](https://vim.fandom.com/wiki/Comment_your_code_blocks_automatically)
 > - [Insert comment boxes in your code](https://vim.fandom.com/wiki/Insert_comment_boxes_in_your_code)
+
+### statueline
+
+> [!NOTE|label:references:]
+> - [Insert current date or time](https://vim.fandom.com/wiki/Insert_current_date_or_time)
+> - [Build your own Vim statusline](https://shapeshed.com/vim-statuslines/)
+
+- sample
+  ```vim
+  if has('statusline')
+    set laststatus=2
+    set statusline=%#User2#%m%r%*\ %F\ %y,%{&fileformat}
+    " set statusline+=\ %{FugitiveStatusline()}                     " set statusline+=\ %{fugitive#statusline()}
+    set statusline+=%=\ %-{strftime(\"%H:%M\ %d/%m/%Y\")}\ %b[A],0x%B\ %c%V,%l/%L\ %1*--%n%%--%*\ %p%%\ |
+  endif
+  ```
+
+- [vim-airline](https://github.com/vim-airline/vim-airline)
