@@ -10,10 +10,12 @@
   - [luochen1990/rainbow](#luochen1990rainbow)
   - [Yggdroot/indentLine](#yggdrootindentline)
   - [airblade/vim-gitgutter](#airbladevim-gitgutter)
+  - [vim-airline/vim-airline](#vim-airlinevim-airline)
 - [utils](#utils)
-  - [AuthorInfoDetect](#authorinfodetect)
+  - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
   - [sjl/gundo.vim](#sjlgundovim)
   - [yegappan/mru](#yegappanmru)
+  - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
 - [markdown](#markdown)
   - [gabrielelana/vim-markdown](#gabrielelanavim-markdown)
   - [tpope/vim-markdown](#tpopevim-markdown)
@@ -372,36 +374,7 @@ set signcolumn=yes
 highlight clear SignColumn
 ```
 
-## utils
-### [AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
-```vim
-Plugin 'marslo/authorinfo'
-
-noremap <leader>aid :AuthorInfoDetect<CR>
-let g:vimrc_author = 'marslo'
-let g:vimrc_email  = 'marslo.jiao@gmail.com'
-autocmd BufWritePre, FileWritePre * :AuthorInfoDetect<CR>
-autocmd BufWritePre               * :AuthorInfoDetect<CR>
-```
-
-### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
-```vim
-Plugin 'sjl/gundo.vim'
-
-noremap <Leader>u :GundoToggle<CR>
-set undodir=~/.vim/undo/
-set undofile
-```
-
-### [yegappan/mru](https://github.com/yegappan/mru)
-```vim
-noremap <leader>re :MRU<CR>
-let MRU_Auto_Close    = 1                                           " most recently used(mru)
-let MRU_Max_Entries   = 10
-let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
-```
-
-#### [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)
+### [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)
 
 > [!NOTE|label:references:]
 > - [* iMarso : osx/apps/powerline](../osx/apps.html#powerline)
@@ -414,7 +387,7 @@ let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 > - [n-st/vim-airline-screenshots](https://github.com/n-st/vim-airline-screenshots)
 > - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
 > - [* Change the vim-airline theme](https://github.com/vim-airline/vim-airline/wiki/Screenshots)
->   - `:AirlineTheme <theme-name>`
+>   - `:AirlineTheme random` : `let g:airline_theme='random'` : `:echo g:airline_theme`
 >   - [tomorrow](https://github.com/vim-airline/vim-airline/wiki/Screenshots#tomorrow-1)
 >   - [distinguished](https://github.com/vim-airline/vim-airline/wiki/Screenshots#distinguished)
 >   - [base16](https://github.com/vim-airline/vim-airline/wiki/Screenshots#base16)
@@ -470,10 +443,8 @@ autocmd User AirlineAfterInit call AirlineInit()
 - tips
   - [remove section_<x>](https://stackoverflow.com/a/45150368/2940319)
     ```vim
-    " remove the filetype part
-    let g:airline_section_<x>=''
-    " remove separators for empty sections
-    let g:airline_skip_empty_sections = 1
+    let g:airline_section_<x>         = ''                          " remove the filetype part
+    let g:airline_skip_empty_sections = 1                           " remove separators for empty sections
     ```
 
   - setup sections:
@@ -497,6 +468,7 @@ autocmd User AirlineAfterInit call AirlineInit()
     endfunction
     autocmd User AirlineAfterInit call AirlineInit()
     ```
+
     ![section_a with default mode](../screenshot/vim/vim-airline-section_a-default.png)
 
     ![section_a with short mode](../screenshot/vim/vim-airline-section_a-short.png)
@@ -574,9 +546,9 @@ autocmd User AirlineAfterInit call AirlineInit()
     >   ```
 
     ```vim
-    let g:airline_symbols.branch                     = '⎇'            " ╮
-    let g:airline_symbols.paste                      = 'ρ'            " ├ unicode symbols
-    let g:airline_symbols.dirty                      = ' ↯'           " ╯
+    let g:airline_symbols.branch         = '⎇'                    " ╮
+    let g:airline_symbols.paste          = 'ρ'                    " ├ unicode symbols
+    let g:airline_symbols.dirty          = ' ↯'                   " ╯
     ```
 
   - get theme randomly
@@ -588,7 +560,37 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_theme= get(g:, 'airline_theme', "random")
     ```
 
-#### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
+
+## utils
+### [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
+```vim
+Plugin 'marslo/authorinfo'
+
+noremap <leader>aid :AuthorInfoDetect<CR>
+let g:vimrc_author = 'marslo'
+let g:vimrc_email  = 'marslo.jiao@gmail.com'
+autocmd BufWritePre, FileWritePre * :AuthorInfoDetect<CR>
+autocmd BufWritePre               * :AuthorInfoDetect<CR>
+```
+
+### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
+```vim
+Plugin 'sjl/gundo.vim'
+
+noremap <Leader>u :GundoToggle<CR>
+set undodir=~/.vim/undo/
+set undofile
+```
+
+### [yegappan/mru](https://github.com/yegappan/mru)
+```vim
+noremap <leader>re :MRU<CR>
+let MRU_Auto_Close    = 1                                           " most recently used(mru)
+let MRU_Max_Entries   = 10
+let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
+```
+
+### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
 
 > [!NOTE|label:references:]
 > - [#1577 : Unknown function: SyntasticStatuslineFlag](https://github.com/vim-syntastic/syntastic/issues/1577)
@@ -619,9 +621,9 @@ highlight link SyntasticStyleErrorSign   SignColumn
 highlight link SyntasticStyleWarningSign SignColumn
 ```
 
-- former version
+<!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
   ```vim
-  Plugin 'vim-syntastic/syntastic'
+  Bundle 'vim-syntastic/syntastic'
 
   " configure syntastic syntax checking to check on open as well as save
   set statusline+=%#warningmsg#
@@ -639,6 +641,7 @@ highlight link SyntasticStyleWarningSign SignColumn
   let g:syntastic_always_populate_loc_list  = 1
   let g:syntastic_auto_loc_list             = 1
   ```
+<!--endsec-->
 
 ## markdown
 ### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
