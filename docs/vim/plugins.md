@@ -384,18 +384,7 @@ highlight clear SignColumn
 >   - [#787: How to modify contents of section Y?](https://github.com/vim-airline/vim-airline/issues/787#issue-84289641)
 >   - [#1087: How to replace section_y with contents of section_x?](https://github.com/vim-airline/vim-airline/issues/1087)
 >   - [#1845: how to disable additional section totally.](https://github.com/vim-airline/vim-airline/issues/1845#issuecomment-449700299)
-> - [n-st/vim-airline-screenshots](https://github.com/n-st/vim-airline-screenshots)
 > - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
-> - [* Change the vim-airline theme](https://github.com/vim-airline/vim-airline/wiki/Screenshots)
->   - `:AirlineTheme random` : `let g:airline_theme='random'` : `:echo g:airline_theme`
->     ![pick up theme](../screenshot/vim/vim-AirlineTheme-random.gif)
->   - [tomorrow](https://github.com/vim-airline/vim-airline/wiki/Screenshots#tomorrow-1)
->   - [distinguished](https://github.com/vim-airline/vim-airline/wiki/Screenshots#distinguished)
->   - [base16](https://github.com/vim-airline/vim-airline/wiki/Screenshots#base16)
->   - [angr](https://github.com/vim-airline/vim-airline/wiki/Screenshots#angr)
->   - [zenburn](https://github.com/vim-airline/vim-airline/wiki/Screenshots#zenburn)
->   - [zenburn](https://github.com/vim-airline/vim-airline/wiki/Screenshots#zenburn)
->   - [wombat](https://github.com/vim-airline/vim-airline/wiki/Screenshots#wombat)
 > - [Vim Airline Setup](https://jnduli.co.ke/vim-airline-setup.html)
 > - [autoload/airline/init.vim](https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/init.vim)
 > - tips:
@@ -546,7 +535,7 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_theme                  = 'random'
     ```
 
-#### sections:
+#### sections
 
 > [!NOTE|label:references:]
 > - [#696 : Accents may cause status line exceed width](https://github.com/vim-airline/vim-airline/issues/696#issuecomment-75034875)
@@ -637,6 +626,56 @@ autocmd User AirlineAfterInit call AirlineInit()
     let g:airline_section_c = airline#section#create(['%F'])
     " ~/path/to/book/docs/vim/plugins.md
     ```
+
+#### themes
+
+> - [n-st/vim-airline-screenshots](https://github.com/n-st/vim-airline-screenshots)
+> - [* Change the vim-airline theme](https://github.com/vim-airline/vim-airline/wiki/Screenshots)
+>   - `:AirlineTheme random` : `let g:airline_theme='random'` : `:echo g:airline_theme`
+>     ![pick up theme](../screenshot/vim/vim-AirlineTheme-random.gif)
+>   - [tomorrow](https://github.com/vim-airline/vim-airline/wiki/Screenshots#tomorrow-1)
+>   - [distinguished](https://github.com/vim-airline/vim-airline/wiki/Screenshots#distinguished)
+>   - [base16](https://github.com/vim-airline/vim-airline/wiki/Screenshots#base16)
+>   - [angr](https://github.com/vim-airline/vim-airline/wiki/Screenshots#angr)
+>   - [zenburn](https://github.com/vim-airline/vim-airline/wiki/Screenshots#zenburn)
+>   - [zenburn](https://github.com/vim-airline/vim-airline/wiki/Screenshots#zenburn)
+>   - [wombat](https://github.com/vim-airline/vim-airline/wiki/Screenshots#wombat)
+
+- great themes
+  - * base16_embers
+    ![base16_embers](../screenshot/vim/vim-airline-base16_embers.gif)
+
+  - * base16
+    ![base16](../screenshot/vim/vim-airline-base16.gif)
+
+  - * apprentice
+    ![apprentice](../screenshot/vim/vim-airline-apprentice.gif)
+
+  - * gruvbox
+    ![gruvbox](../screenshot/vim/vim-airline-gruvbox.gif)
+
+  - * zenburn
+    ![zenburn](../screenshot/vim/vim-airline-zenburn.gif)
+
+  - angr
+  - selenized/selenized_bw
+  - biogoo
+  - base16_default
+  - base16color
+  - base16_chalk
+  - base16_bright
+  - biogoo ( dark background in insert mode )
+
+- nice themes
+  - owo
+  - hybrid
+  - bubblegum
+  - supernova
+  - alduin
+  - base16_summerfruit
+  - base16_atelierseaside
+  - raven ( no background color )
+  - peaksea ( no background color change )
 
 ### [dense-analysis/ale](https://github.com/dense-analysis/ale)
 ```vim
