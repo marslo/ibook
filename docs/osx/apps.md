@@ -983,6 +983,7 @@ pwSafe.app
 > - [powerline/powerline](https://github.com/powerline/powerline)
 > - [* sbt: customize Shell Prompt with git branch (round 2)](http://www.whiteboardcoder.com/2016/03/sbt-customize-shell-prompt-with-git.html)
 > - [patmandenver/global.sbt](https://gist.github.com/patmandenver/71839aaf63c71f4d6cd2)
+> - [romkatv/powerlevel10k](https://github.com/romkatv/powerlevel10k)
 
 - install
 
@@ -1011,17 +1012,55 @@ pwSafe.app
 
 #### powerline fonts
 
-> - fonts:
->   - [Showing special Unicode characters on MacOS](https://discussions.apple.com/thread/251585417)
->   - [GNU Unifont Glyphs](https://unifoundry.com/unifont/)
->   - [lujiacn/Monaco for Powerline.md](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466)
->     - [Monaco for Powerline.ttf](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466/raw/5be6ef0e44a3427fdb8343b4dacc29716449c59e/Monaco%2520for%2520Powerline.ttf)
->   - [supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
->     - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
->     - [Menlo Regular for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Menlo)
->     - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/blob/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
->   - [* powerline/fonts](https://github.com/powerline/fonts)
->     - [Monofur for Powerline.ttf](https://github.com/powerline/fonts/tree/master/Monofur)
+> [!NOTE|label:references:]
+> - [Showing special Unicode characters on MacOS](https://discussions.apple.com/thread/251585417)
+> - [GNU Unifont Glyphs](https://unifoundry.com/unifont/)
+> - [* lujiacn/Monaco for Powerline.md](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466)
+>   - [Monaco for Powerline.ttf](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466/raw/5be6ef0e44a3427fdb8343b4dacc29716449c59e/Monaco%2520for%2520Powerline.ttf)
+> - [* supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
+>   - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
+>   - [Menlo Regular for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Menlo)
+>   - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/blob/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
+> - [* powerline/fonts](https://github.com/powerline/fonts)
+>   - [Monofur for Powerline.ttf](https://github.com/powerline/fonts/tree/master/Monofur)
+> - [ithewei/powerline-fonts](https://gitee.com/ithewei/powerline-fonts)
+> - [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
+> - [Powerline Fonts](https://sourceforge.net/projects/powerline-fonts.mirror/)
+> - [gdetrez/powerline-test.sh](https://gist.github.com/gdetrez/5845092)
+
+
+```bash
+# Cominc Mono
+$ curl --create-dirs -O --output-dir ~/.fonts \
+       https://dtinth.github.io/comic-mono-font/ComicMono.ttf &&
+  curl --create-dirs -O --output-dir ~/.fonts \
+       https://dtinth.github.io/comic-mono-font/ComicMono-Bold.ttf &&
+  fc-cache -f -v
+
+# Comic Mono for Powerline/Vim-Airline
+$ curl --create-dirs -O --output-dir ~/.fonts \
+       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Comic-Mono-for-Powerline.ttf &&
+  fc-cache -f -v
+
+# Monaco for Powerline/Vim-Airline
+$ curl --create-dirs -O --output-dir ~/.fonts \
+       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monaco-for-Powerline.otf &&
+  fc-cache -f -v
+
+# menlo for Powerline/Vim-Airline
+$ curl --create-dirs -O --output-dir ~/.fonts \
+       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Menlo-Regular.ttf &&
+  fc-cache -f -v
+
+# Monofur for Powerline/Vim-Airline
+$ curl --create-dirs -O --output-dir ~/.fonts \
+       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monofur-for-Powerline.ttf &&
+  curl --create-dirs -O --output-dir ~/.fonts \
+       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monofur-Italic-for-Powershell.ttf &&
+  curl --create-dirs -O --output-dir ~/.fonts \
+       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monofur-Bold-for-Powerline.ttf &&
+  fc-cache -f -v
+```
 
 ### [backgroundmusic](https://github.com/kyleneideck/BackgroundMusic)
 ```bash
