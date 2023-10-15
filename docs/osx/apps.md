@@ -983,15 +983,6 @@ pwSafe.app
 > - [powerline/powerline](https://github.com/powerline/powerline)
 > - [* sbt: customize Shell Prompt with git branch (round 2)](http://www.whiteboardcoder.com/2016/03/sbt-customize-shell-prompt-with-git.html)
 > - [patmandenver/global.sbt](https://gist.github.com/patmandenver/71839aaf63c71f4d6cd2)
-> - fonts:
->   - [Showing special Unicode characters on MacOS](https://discussions.apple.com/thread/251585417)
->   - [GNU Unifont Glyphs](https://unifoundry.com/unifont/)
->   - [supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
->     - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
->     - [Menlo Regular for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Menlo)
->     - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/blob/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
->   - [* powerline/fonts](https://github.com/powerline/fonts)
->     - [Monofur for Powerline.ttf](https://github.com/powerline/fonts/tree/master/Monofur)
 
 - install
 
@@ -1017,6 +1008,20 @@ pwSafe.app
 - settings in iTerm2: `Use a different font for non-ASCII text`
 
   ![non-ascii in iterm2](../screenshot/osx/iterm2-non-ascii.png)
+
+#### powerline fonts
+
+> - fonts:
+>   - [Showing special Unicode characters on MacOS](https://discussions.apple.com/thread/251585417)
+>   - [GNU Unifont Glyphs](https://unifoundry.com/unifont/)
+>   - [lujiacn/Monaco for Powerline.md](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466)
+>     - [Monaco for Powerline.ttf](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466/raw/5be6ef0e44a3427fdb8343b4dacc29716449c59e/Monaco%2520for%2520Powerline.ttf)
+>   - [supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
+>     - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
+>     - [Menlo Regular for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Menlo)
+>     - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/blob/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
+>   - [* powerline/fonts](https://github.com/powerline/fonts)
+>     - [Monofur for Powerline.ttf](https://github.com/powerline/fonts/tree/master/Monofur)
 
 ### [backgroundmusic](https://github.com/kyleneideck/BackgroundMusic)
 ```bash
