@@ -192,6 +192,7 @@
     * [ruby](programming/archive/ruby/rubyInstallationBySourceCode.md)
       * [rubyInstallationQ&A](programming/archive/ruby/rubyInstallationQ&A.md)
 * [tools](tools/node/gitbook.md)
+  * [fonts](tools/programming-fonts.md)
   * [html & css](tools/css.md)
   * [Jira & Confluence](tools/atlassian.md)
   * [node & npm](tools/node/node.md)
