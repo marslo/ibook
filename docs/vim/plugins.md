@@ -973,6 +973,24 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
     $ pip --version
     pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
     ```
+- wsl(ubuntu) install
+
+  > [!NOTE|label:references:]
+  > - [nodejs/snap](https://github.com/nodejs/snap)
+  > - [How to install cmake 3.2 on Ubuntu](https://askubuntu.com/a/1254438/92979)
+
+  ```bash
+  $ sudo snap install cmake --classic
+
+  $ sudo snap install go --classic
+  # or
+  $ sudo apt install golang-go
+
+  $ sudo snap install node --classic --channel=15
+  # upgrade version to 20.x
+  $ sudo snap refresh --channel=20 node
+  node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+  ```
 
 - brew install
 
@@ -1313,34 +1331,57 @@ nmap <C-y> :call TriggerYCM()<CR>
     $ wget https://github.com/ycm-core/llvm/releases/download/16.0.1/clangd-16.0.1-x86_64-apple-darwin.tar.bz2
     ```
 
-#### download failed for [`clangd-17.0.1-x86_64-apple-darwin.tar.bz2`](https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2)
+#### download failed for [`clangd-17.0.1-x86_64-apple-darwin.tar.bz2`](https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2) | [clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2](https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2)
 ```bash
 $ mkdir -p YouCompleteMe/third_party/ycmd/third_party/clangd/cache
-$ curl  -o YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 \
-        -fsSL https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+
+# osx
+$ curl -o YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 \
+       -fsSL https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
+# wsl (windows)
+$ curl -o YouCompleteMe/third_party/ycmd/third_party/clangd/cache/clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2
+       -fsSL https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2
 ```
 
-#### download failed for [`omnisharp.http-osx.tar.gz` v1.37.11](https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz)
+#### download failed for [`omnisharp.http-osx.tar.gz` v1.37.11](https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz) | [omnisharp.http-linux-x64.tar.gz](https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-linux-x64.tar.gz)
 ```bash
 $ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11
+
+# osx
 $ curl -o YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-osx.tar.gz \
-          https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
+       -fsSL https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
+# wsl (ubuntu)
+$ curl -o YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/omnisharp.http-linux-x64.tar.gz \
+       -fsSL https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-linux-x64.tar.gz
 ```
 
 #### scripts for download
 ```bash
+# osx
 $ curl -fsSL -o ~/Desktop/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
 $ curl -fsSL -o ~/Desktop/omnisharp.http-osx.tar.gz                 https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-osx.tar.gz
+# wsl (windows)
+$ curl -fsSL -o ~/Desktop/clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2 https://github.com/ycm-core/llvm/releases/download/17.0.1/clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2
+$ curl -fsSL -o ~/Desktop/omnisharp.http-linux-x64.tar.gz                https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.11/omnisharp.http-linux-x64.tar.gz
 
 $ for _d in YouCompleteMe/YouCompleteMe/third_party/ycmd/third_party/clangd/cache/ \
             YouCompleteMe/third_party/ycmd/third_party/clangd/cache \
             YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache \
             YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/third_party/ycmd/third_party/eclipse.jdt.ls;
   do
+    mkdir -p "${_d}"
+    # osx
     cp ~/Desktop/clangd-17.0.1-x86_64-apple-darwin.tar.bz2 ${_d}
+    # wsl ( windows )
+    cp ~/Desktop/clangd-17.0.1-x86_64-unknown-linux-gnu.tar.bz2 "${_d}"
   done
+
+# oxx
 $ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/ &&
   cp ~/Desktop/omnisharp.http-osx.tar.gz YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/
+# wsl ( windows )
+$ mkdir -p YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/ &&
+  cp ~/Desktop/omnisharp.http-linux-x64.tar.gz YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn/v1.37.11/
 ```
 
 #### all caches
