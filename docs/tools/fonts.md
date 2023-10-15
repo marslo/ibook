@@ -16,6 +16,8 @@
 > - [* arrowtype/recursive](https://github.com/arrowtype/recursive)
 > - [Patch Fonts with Cursive Italic Styles](https://www.sainnhe.dev/post/patch-fonts-with-cursive-italic-styles/)
 > - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font)
+> - [INPUT™ fonts](https://input.djr.com/download/)
+> - [Consolas font family](https://learn.microsoft.com/en-us/typography/font-list/consolas)
 
 ## powerline fonts
 

@@ -378,15 +378,17 @@ highlight clear SignColumn
 
 > [!NOTE|label:references:]
 > - [* iMarso : osx/apps/powerline](../osx/apps.html#powerline)
+>   - [ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols)
+>     ![extra symbols](https://github.com/ryanoasis/powerline-extra-symbols/blob/master/img/fontforge.png?raw=true)
 > - [* Getting started with vim-airline](https://tuckerchapman.com/2020/09/15/getting-started-vim-airline/)
 > - [How do I fix the status bar symbols in the Airline plugin?](https://vi.stackexchange.com/a/16512/7389)
+> - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
+> - [Vim Airline Setup](https://jnduli.co.ke/vim-airline-setup.html)
+> - [autoload/airline/init.vim](https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/init.vim)
 > - section:
 >   - [#787: How to modify contents of section Y?](https://github.com/vim-airline/vim-airline/issues/787#issue-84289641)
 >   - [#1087: How to replace section_y with contents of section_x?](https://github.com/vim-airline/vim-airline/issues/1087)
 >   - [#1845: how to disable additional section totally.](https://github.com/vim-airline/vim-airline/issues/1845#issuecomment-449700299)
-> - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
-> - [Vim Airline Setup](https://jnduli.co.ke/vim-airline-setup.html)
-> - [autoload/airline/init.vim](https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/init.vim)
 > - tips:
 >   - check loaded extensions : `:AirlineExtension`
 >   - [#1373 How can I show system time in airline?](https://github.com/vim-airline/vim-airline/issues/1373#issuecomment-273040424)
@@ -402,7 +404,7 @@ let g:airline_powerline_fonts                      = 1
 let g:airline_highlighting_cache                   = 1
 let g:airline_detect_spelllang                     = 0              " disable spelling language
 let g:airline_exclude_preview                      = 0              " disable in preview window
-let g:airline_theme                                = 'base16'       " 'apprentice', 'base16_embers', 'gruvbox', 'zenburn'
+let g:airline_theme                                = 'base16_embers'" 'base16' 'apprentice', 'gruvbox', 'zenburn'
 let g:Powerline_symbols                            = 'fancy'
 let g:airline_section_y                            = ''             " fileencoding
 let g:airline_section_x                            = ''
@@ -431,6 +433,8 @@ let airline#extensions#ale#open_lnum_symbol        = '(␊:'          " │
 let airline#extensions#ale#close_lnum_symbol       = ')'            " ╯
 if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
 let g:airline_symbols.dirty                        = ' ♪'
+let g:airline_left_sep                             = ''
+let g:airline_right_sep                            = ''
 function! AirlineInit()
   let g:airline_section_a = airline#section#create([ '[', 'mode', ']', '  ', '%{&fenc}' ])
   let g:airline_section_y = airline#section#create([ '%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']' ])
@@ -439,7 +443,7 @@ endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 ```
 
-![airline + ale](../screenshot/vim/vim-airline-ale.png)
+![airline + ale](../screenshot/vim/vim-airline-ale-3.png)
 
 - tips
   - [remove section_<x>](https://stackoverflow.com/a/45150368/2940319)
@@ -643,7 +647,7 @@ autocmd User AirlineAfterInit call AirlineInit()
 
 - great themes
   - * base16_embers
-    ![base16_embers](../screenshot/vim/vim-airline-base16_embers.gif)
+    ![base16_embers](../screenshot/vim/vim-airline-base16_embers_2.gif)
 
   - * base16
     ![base16](../screenshot/vim/vim-airline-base16.gif)
