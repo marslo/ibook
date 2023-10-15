@@ -2,12 +2,17 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [powerline fonts](#powerline-fonts)
+- [highly recommended](#highly-recommended)
+  - [Monaco](#monaco)
+  - [RecMonoCasual](#recmonocasual)
+  - [Comic Mono](#comic-mono)
+  - [Gohu](#gohu)
 - [nerd-fonts](#nerd-fonts)
   - [pixel](#pixel)
   - [hand-writing](#hand-writing)
   - [symbole](#symbole)
   - [others](#others)
+- [powerline fonts](#powerline-fonts)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -18,6 +23,159 @@
 > - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font)
 > - [INPUT™ fonts](https://input.djr.com/download/)
 > - [Consolas font family](https://learn.microsoft.com/en-us/typography/font-list/consolas)
+
+## highly recommended
+
+### Monaco
+
+> [!NOTE]
+> THE BEST ALWAYS !
+
+- [Monaco](https://www.cufonfonts.com/font/monaco)
+- [MonacoNF](https://github.com/Karmenzind/monaco-nerd-fonts)
+
+![Monaco vim](../screenshot/vim/vim-airline-ale-monaco.png)
+
+![Monaco bash](../screenshot/tools/fonts/bash-Monaco.png)
+
+### [RecMonoCasual](https://github.com/arrowtype/recursive/tree/main/fonts/ArrowType-Recursive-1.085/Recursive_Code)
+```bash
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoCasual/RecMonoCasual-Regular-1.085.ttf &&
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoDuotone/RecMonoDuotone-Regular-1.085.ttf &&
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoLinear/RecMonoLinear-Regular-1.085.ttf &&
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/arrowtype/recursive/blob/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoSemicasual/RecMonoSemicasual-Regular-1.085.ttf &&
+  fc-cache -f -v
+
+# or
+$ version=1.085
+$ url='https://github.com/arrowtype/recursive/blob/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/'
+$ while read -r _t; do
+    curl --create-dirs -O --output-dir "${fontsPath}" \
+         "${url}"/"RecMono${_t}/RecMono${_t}-Regular-1.085.ttf"
+  done < <( echo 'Casual Duotone Linear Semicasual' | fmt -1 )
+$ fc-cache -f -v
+```
+
+![RecMonoCasual vim](../screenshot/vim/vim-airline-ale-3.png)
+
+![RecMonoCasual bash](../screenshot/tools/fonts/bash-RecMonoCasual.png)
+
+### [Comic Mono](https://dtinth.github.io/comic-mono-font/)
+
+> [!NOTE|label:references:]
+> - [knolljo/comic-mono-nerd](https://codeberg.org/knolljo/comic-mono-nerd)
+
+- [Comic Mono](https://dtinth.github.io/comic-mono-font/ComicMono.ttf)
+- [Comic Mono for NF](https://github.com/xtevenx/ComicMonoNF) or [here](https://codeberg.org/knolljo/comic-mono-nerd/raw/branch/master/ComicMonoNerd.ttf)
+
+![ComicMono vim](../screenshot/vim/vim-airline-ale-comicmono.png)
+
+![ComicMonoNF bash](../screenshot/tools/fonts/bash-ComicMonoNF.png)
+
+### [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
+```bash
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-14/GohuFontuni14NerdFontMono-Regular.ttf &&
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-11/GohuFontuni11NerdFontMono-Regular.ttf &&
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/14/GohuFont14NerdFontMono-Regular.ttf &&
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/11/GohuFont11NerdFontMono-Regular.ttf &&
+  fc-cache -f -v
+```
+
+![GohuNF vim](../screenshot/vim/vim-airline-ale-2.png)
+![GohuNF bash](../screenshot/tools/fonts/bash-Gohu.png)
+
+## nerd-fonts
+
+> [!NOTE|label:refereces:]
+> - [download](https://www.nerdfonts.com/font-downloads)
+> - [Karmenzind/monaco-nerd-fonts](https://github.com/Karmenzind/monaco-nerd-fonts)
+> - [xtevenx/ComicMonoNF](https://github.com/xtevenx/ComicMonoNF)
+
+- [AgaveNerdFontMono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+  ```
+
+- [CodeNewRoman](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CodeNewRoman) another `Monaco`
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/CodeNewRoman/Regular/CodeNewRomanNerdFontMono-Regular.otf &&
+    fc-cache -f -v
+  ```
+
+- [DejaVuSansMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DejaVuSansMono) another `Monaco`
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DejaVuSansMono/Regular/DejaVuSansMNerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+  ```
+
+### pixel
+- [BigBlueTerminal](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/BigBlueTerminal)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/BigBlueTerminal/BigBlueTerm437NerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+  ```
+
+### hand-writing
+- [Monofur](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monofur)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Monofur/Regular/MonofurNerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+  ```
+
+- [ComicShannsMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/ComicShannsMono)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/ComicShannsMono/ComicShannsMonoNerdFontMono-Regular.otf &&
+    fc-cache -f -v
+  ```
+
+- [DaddyTimeMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DaddyTimeMono)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DaddyTimeMono/DaddyTimeMonoNerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+  ```
+
+- [FantasqueSansMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FantasqueSansMono/Regular/FantasqueSansMNerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+```
+
+- [Hermit](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hermit)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hermit/Regular/HurmitNerdFontMono-Regular.otf &&
+    fc-cache -f -v
+  ```
+
+### symbole
+- [NerdFontsSymbolsOnly](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/NerdFontsSymbolsOnly)
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf &&
+    fc-cache -f -v
+  ```
+
+### others
+- [CascadiaCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CascadiaCode)
+- [EnvyCodeR](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/EnvyCodeR)
+- [IBMPlexMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/IBMPlexMono)
 
 ## powerline fonts
 
@@ -131,122 +289,3 @@
       fc-cache -f -v
     ```
 
-## nerd-fonts
-
-> [!NOTE|label:refereces:]
-> - [download](https://www.nerdfonts.com/font-downloads)
-> - [Karmenzind/monaco-nerd-fonts](https://github.com/Karmenzind/monaco-nerd-fonts)
-> - [xtevenx/ComicMonoNF](https://github.com/xtevenx/ComicMonoNF)
-
-- [AgaveNerdFontMono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-- [CodeNewRoman](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CodeNewRoman) another `Monaco`
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/CodeNewRoman/Regular/CodeNewRomanNerdFontMono-Regular.otf &&
-    fc-cache -f -v
-  ```
-
-- [DejaVuSansMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DejaVuSansMono) another `Monaco`
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DejaVuSansMono/Regular/DejaVuSansMNerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-### pixel
-- [BigBlueTerminal](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/BigBlueTerminal)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/BigBlueTerminal/BigBlueTerm437NerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-- [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-14/GohuFontuni14NerdFontMono-Regular.ttf &&
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-11/GohuFontuni11NerdFontMono-Regular.ttf &&
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/14/GohuFont14NerdFontMono-Regular.ttf &&
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/11/GohuFont11NerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-### hand-writing
-- [ComicShannsMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/ComicShannsMono)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/ComicShannsMono/ComicShannsMonoNerdFontMono-Regular.otf &&
-    fc-cache -f -v
-  ```
-
-- [DaddyTimeMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DaddyTimeMono)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DaddyTimeMono/DaddyTimeMonoNerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-- [FantasqueSansMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FantasqueSansMono/Regular/FantasqueSansMNerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-```
-
-- [Monofur](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monofur)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Monofur/Regular/MonofurNerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-- [Hermit](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hermit)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hermit/Regular/HurmitNerdFontMono-Regular.otf &&
-    fc-cache -f -v
-  ```
-
-- [* RecMonoCasual](https://github.com/arrowtype/recursive/tree/main/fonts/ArrowType-Recursive-1.085/Recursive_Code)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoCasual/RecMonoCasual-Regular-1.085.ttf &&
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoDuotone/RecMonoDuotone-Regular-1.085.ttf &&
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoLinear/RecMonoLinear-Regular-1.085.ttf &&
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/arrowtype/recursive/blob/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoSemicasual/RecMonoSemicasual-Regular-1.085.ttf &&
-    fc-cache -f -v
-
-  # or
-  $ version=1.085
-  $ url='https://github.com/arrowtype/recursive/blob/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/'
-  $ while read -r _t; do
-      curl --create-dirs -O --output-dir "${fontsPath}" \
-           "${url}"/"RecMono${_t}/RecMono${_t}-Regular-1.085.ttf"
-    done < <( echo 'Casual Duotone Linear Semicasual' | fmt -1 )
-  $ fc-cache -f -v
-  ```
-
-### symbole
-- [NerdFontsSymbolsOnly](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/NerdFontsSymbolsOnly)
-  ```bash
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/NerdFontsSymbolsOnly/SymbolsNerdFontMono-Regular.ttf &&
-    fc-cache -f -v
-  ```
-
-### others
-- [CascadiaCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CascadiaCode)
-- [EnvyCodeR](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/EnvyCodeR)
-- [IBMPlexMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/IBMPlexMono)
