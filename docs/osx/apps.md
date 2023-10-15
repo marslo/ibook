@@ -263,7 +263,7 @@ $ brew cu --all
 > - [Homebrew Formulae - macvim](https://formulae.brew.sh/formula/macvim)
 > - [MacVim](https://macvim-dev.github.io/macvim/)
 >
-> - more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/blob/master/osx/belloMyOSX.sh#L429)
+> - more on [mytools/osx/belloMyOSX](https://github.com/marslo/mytools/raw/master/osx/belloMyOSX.sh#L429)
 >   ```bash
 >   systemlist="imagemagick coreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof trash"
 >   regularlist="wget tmux corkscrew tig ifstat binutils diffutils gawk gnutls gzip less file-formula stow telnet iproute2mac ctags jshon colordiff tree vifm p7zip git mas htop watch jfrog-cli-go youtube-dl etcd mas figlet screenfetch glances bash-completion@2 dos2unix nmap rename renameutils pipenv inetutils hadolint"
@@ -610,7 +610,7 @@ $ alias git="git -C ${hcore}"
   ==> Fetching icu4c
   ==> Downloading https://ghcr.io/v2/homebrew/core/icu4c/manifests/71.1
   Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/afc80f921cbba7963984e5d24567fbff5b3ba72dfc409cbf7c7f02ccaf0bebab--icu4c-71.1.bottle_manifest.json
-  ==> Downloading https://ghcr.io/v2/homebrew/core/icu4c/blobs/sha256:012f882f239863200f0f87150541ea695d609aa14c14a390909d249352ae51f9
+  ==> Downloading https://ghcr.io/v2/homebrew/core/icu4c/raws/sha256:012f882f239863200f0f87150541ea695d609aa14c14a390909d249352ae51f9
   Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/f0134d8542652b3e26e7a482164caededc27b5ff5925270efdb6f268467f51ae--icu4c--71.1.ventura.bottle.tar.gz
   ==> Reinstalling icu4c
   Warning: icu4c 72.1 is available and more recent than version 71.1.
@@ -991,6 +991,13 @@ pwSafe.app
   > - [How to install Powerline to pimp your BASH prompt (For Mac)](https://medium.com/@ITZDERR/how-to-install-powerline-to-pimp-your-bash-prompt-for-mac-9b82b03b1c02)
   > - [itzderr/install-powerline](https://gist.github.com/itzderr/abdb2cdd795a23bc36e6a7838e388867)
   > - [How to Jazz Up Your Bash Terminal — A Step By Step Guide With Pictures](https://www.freecodecamp.org/news/jazz-up-your-bash-terminal-a-step-by-step-guide-with-pictures-80267554cb22/)
+  > - settings:
+  >   - [* ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols) works with fonts [AurulentSansMono.tar.xz](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/AurulentSansMono.tar.xz) in [ryanoasis/nerd-fonts/releases](https://github.com/ryanoasis/nerd-fonts/releases)
+  >     ![extra symbols](https://github.com/ryanoasis/powerline-extra-symbols/blob/master/img/fontforge.png?raw=true)
+  >   - [tvieira/ansible-powerline-fonts](https://github.com/tvieira/ansible-powerline-fonts)
+  >   - [agemooij/sbt-prompt](https://github.com/agemooij/sbt-prompt)
+  >   - [csivanich/dotfiles](https://github.com/csivanich/dotfiles)
+  >   - [LeoJhonSong/power-python-prompt](https://github.com/LeoJhonSong/power-python-prompt)
 
   ```bash
   $ pip install --user powerline-status
@@ -1010,9 +1017,11 @@ pwSafe.app
 
   ![non-ascii in iterm2](../screenshot/osx/iterm2-non-ascii.png)
 
+
 #### powerline fonts
 
 > [!NOTE|label:references:]
+> - [Comic Mono font](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)
 > - [Showing special Unicode characters on MacOS](https://discussions.apple.com/thread/251585417)
 > - [GNU Unifont Glyphs](https://unifoundry.com/unifont/)
 > - [* lujiacn/Monaco for Powerline.md](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466)
@@ -1020,47 +1029,191 @@ pwSafe.app
 > - [* supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
 >   - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
 >   - [Menlo Regular for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Menlo)
->   - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/blob/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
-> - [* powerline/fonts](https://github.com/powerline/fonts)
+>   - [DejaVu Sans Mono for Powerline.otf](https://github.com/supermarin/powerline-fonts/raw/master/DejaVuSansMono/DejaVu%20Sans%20Mono%20for%20Powerline.otf)
+> - [* powerline/fonts](https://github.com/powerline/fonts) ~ [AnwarShah/fonts](https://github.com/AnwarShah/fonts)
 >   - [Monofur for Powerline.ttf](https://github.com/powerline/fonts/tree/master/Monofur)
+> - [* Twixes/SF-Mono-Powerline](https://github.com/Twixes/SF-Mono-Powerline)
+> - [* benbusby/anomaly-mono](https://github.com/benbusby/anomaly-mono)
+> - [yumitsu/font-menlo-extra](https://github.com/yumitsu/font-menlo-extra)
 > - [ithewei/powerline-fonts](https://gitee.com/ithewei/powerline-fonts)
+> - [JayXon/powerline-web-fonts](https://github.com/JayXon/powerline-web-fonts)
+> - [github topic: powerline-fonts](https://github.com/topics/powerline-fonts)
 > - [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
 > - [Powerline Fonts](https://sourceforge.net/projects/powerline-fonts.mirror/)
-> - [gdetrez/powerline-test.sh](https://gist.github.com/gdetrez/5845092)
+> - windows
+>   - [Change font for non-legacy command prompt in Windows 10 with non-ASCII charset - Properties vs default values?](https://superuser.com/a/1202335/112396)
+>   - [gdetrez/powerline-test.sh](https://gist.github.com/gdetrez/5845092)
 
 
-```bash
-# Cominc Mono
-$ curl --create-dirs -O --output-dir ~/.fonts \
-       https://dtinth.github.io/comic-mono-font/ComicMono.ttf &&
-  curl --create-dirs -O --output-dir ~/.fonts \
-       https://dtinth.github.io/comic-mono-font/ComicMono-Bold.ttf &&
-  fc-cache -f -v
+- install via package tool
+  ```bash
+  # debian
+  $ sudo apt-get install fonts-powerline
 
-# Comic Mono for Powerline/Vim-Airline
-$ curl --create-dirs -O --output-dir ~/.fonts \
-       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Comic-Mono-for-Powerline.ttf &&
-  fc-cache -f -v
+  # centos/rhel
+  $ sudo dnf install powerline-fonts
+  ```
 
-# Monaco for Powerline/Vim-Airline
-$ curl --create-dirs -O --output-dir ~/.fonts \
-       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monaco-for-Powerline.otf &&
-  fc-cache -f -v
+- install via cmd
 
-# menlo for Powerline/Vim-Airline
-$ curl --create-dirs -O --output-dir ~/.fonts \
-       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Menlo-Regular.ttf &&
-  fc-cache -f -v
+  > [!TIP|label:fonts path in different system:]
+  > - linux: `$HOME/.local/share/fonts`
+  > - osx : `$HOME/Library/Fonts`
+  >   ```bash
+  >   $ fontPath=$HOME/Library/Fonts
+  >   $ fontPath=$HOME/.local/share/fonts
+  >   ```
 
-# Monofur for Powerline/Vim-Airline
-$ curl --create-dirs -O --output-dir ~/.fonts \
-       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monofur-for-Powerline.ttf &&
-  curl --create-dirs -O --output-dir ~/.fonts \
-       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monofur-Italic-for-Powershell.ttf &&
-  curl --create-dirs -O --output-dir ~/.fonts \
-       https://github.com/marslo/mytools/blob/master/others/fonts/monospace/Monofur-Bold-for-Powerline.ttf &&
-  fc-cache -f -v
-```
+  - [cominc mono](https://dtinth.github.io) && [comic mono for powerline](https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Comic-Mono-for-Powerline.ttf)
+    ```bash
+    # regular
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://dtinth.github.io/comic-mono-font/ComicMono.ttf &&
+      curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://dtinth.github.io/comic-mono-font/ComicMono-Bold.ttf &&
+      fc-cache -f -v
+
+    # for powerline/vim-airline
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Comic-Mono-for-Powerline.ttf &&
+      fc-cache -f -v
+    ```
+
+  - [monaco for powerline osx version](https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Monaco-for-Powerline.otf) && [monaco for powerline windows version](https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Monaco-for-Powerline.ttf)
+    ```bash
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Monaco-for-Powerline.otf &&
+      fc-cache -f -v
+    ```
+
+  - [menlo for powerline](https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Menlo-Regular.ttf)
+    ```bash
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/marslo/mytools/raw/master/others/fonts/monospace/Menlo-Regular.ttf &&
+      fc-cache -f -v
+    ```
+
+  - [monofur for powerline](https://github.com/powerline/fonts/tree/master/Monofur)
+    ```bash
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/powerline/fonts/raw/master/Monofur/Monofur%20for%20Powerline.ttf &&
+      curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/powerline/fonts/raw/master/Monofur/Monofur%20Italic%20for%20Powerline.ttf &&
+      curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/powerline/fonts/raw/master/Monofur/Monofur%20Bold%20for%20Powerline.ttf &&
+      fc-cache -f -v
+    ```
+
+  - [sf-mono for powerline](https://github.com/Twixes/SF-Mono-Powerline)
+    ```bash
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/Twixes/SF-Mono-Powerline/raw/master/SF-Mono-Powerline-Regular.otf &&
+      curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/Twixes/SF-Mono-Powerline/raw/master/SF-Mono-Powerline-RegularItalic.otf &&
+      curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/Twixes/SF-Mono-Powerline/raw/master/SF-Mono-Powerline-Bold.otf &&
+      curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/Twixes/SF-Mono-Powerline/raw/master/SF-Mono-Powerline-BoldItalic.otf &&
+      fc-cache -f -v
+    ```
+
+  - [anomaly mono for powerline](https://github.com/benbusby/anomaly-mono)
+    ```bash
+    $ curl --create-dirs -O --output-dir "${fontsPath}" \
+           https://github.com/benbusby/anomaly-mono/raw/master/AnomalyMono-Powerline.otf &&
+      fc-cache -f -v
+    ```
+
+  - nerd-fonts
+
+    - [AgaveNerdFontMono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+      ```
+
+    - [CodeNewRoman](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CodeNewRoman) another `Monaco`
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/CodeNewRoman/Regular/CodeNewRomanNerdFontMono-Regular.otf &&
+        fc-cache -f -v
+      ```
+
+    - [DejaVuSansMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DejaVuSansMono) another `Monaco`
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DejaVuSansMono/Regular/DejaVuSansMNerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+      ```
+
+  - pixel
+    - [BigBlueTerminal](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/BigBlueTerminal)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/BigBlueTerminal/BigBlueTerm437NerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+      ```
+
+    - [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-14/GohuFontuni14NerdFontMono-Regular.ttf &&
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-11/GohuFontuni11NerdFontMono-Regular.ttf &&
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/14/GohuFont14NerdFontMono-Regular.ttf &&
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/11/GohuFont11NerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+      ```
+
+  - hand-writing
+    - [ComicShannsMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/ComicShannsMono)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/ComicShannsMono/ComicShannsMonoNerdFontMono-Regular.otf &&
+        fc-cache -f -v
+      ```
+
+    - [DaddyTimeMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/DaddyTimeMono)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DaddyTimeMono/DaddyTimeMonoNerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+      ```
+
+    - [FantasqueSansMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FantasqueSansMono)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FantasqueSansMono/Regular/FantasqueSansMNerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+    ```
+
+    - [Monofur](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monofur)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Monofur/Regular/MonofurNerdFontMono-Regular.ttf &&
+        fc-cache -f -v
+      ```
+
+    - [Hermit](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hermit)
+      ```bash
+      $ curl --create-dirs -O --output-dir "${fontsPath}" \
+             https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hermit/Regular/HurmitNerdFontMono-Regular.otf &&
+        fc-cache -f -v
+      ```
+
+  - others
+    - [CascadiaCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CascadiaCode)
+    - [EnvyCodeR](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/EnvyCodeR)
+    - [IBMPlexMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/IBMPlexMono)
+
+
+- install in windows
+  ```powershell
+  > Invoke-WebRequest -Uri "https://dtinth.github.io/comic-mono-font/ComicMono.ttf" -OutFile "ComicMono.ttf"; Invoke-WebRequest -Uri "https://dtinth.github.io/comic-mono-font/ComicMono-Bold.ttf" -OutFile "ComicMono-Bold.ttf"; $fonts = (New-Object -ComObject Shell.Application).Namespace(0x14); Get-ChildItem -include ComicMono* | % { $fonts.CopyHere($_.fullname) }
+  ```
 
 ### [backgroundmusic](https://github.com/kyleneideck/BackgroundMusic)
 ```bash
