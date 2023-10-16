@@ -43,7 +43,7 @@ $ python -m pip completion --bash >> ~/.bashrc
   $ eval "`pip completion --bash`"
   ```
 
-### [installation via source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
+### [install from source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
 - basic environment prepare
   ```bash
   $ sudo dnf install gcc openssl-devel bzip2-devel libffi-devel
@@ -60,15 +60,85 @@ $ python -m pip completion --bash >> ~/.bashrc
   ```bash
   $ curl -O https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz
   $ tar xzf Python-3.8.3.tgz
+
+  # or
+  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz |
+    tar xzf - -C /opt/python &&
+    cd /opt/python
   ```
 
 - compile and install
+
+  > [!NOTE|label:references:]
+  > - [How to build your own Python version](https://cdsarc.u-strasbg.fr/doc/man/gildas/html/gildas-python-html/node36.html)
+  > - [docker-library/python/Dockerfile](https://github.com/docker-library/python/blob/master/3.11/alpine3.18/Dockerfile)
+  >   ```bash
+  >   # debian
+  >   gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"
+  >   ```
+  > - [* 3. Configure Python](https://docs.python.org/3/using/configure.html)
+  >   - [3.3.7. Linker options](https://docs.python.org/3/using/configure.html#linker-options)
+  >     - [`--enable-shared`](https://docs.python.org/3/using/configure.html#cmdoption-enable-shared)
+  >     - [`--without-static-libpython`](https://docs.python.org/3/using/configure.html#cmdoption-without-static-libpython)
+  > - [Shared libraries in macOS and Linux](https://docs.conda.io/projects/conda-build/en/latest/resources/use-shared-libraries.html#shared-libraries-in-macos-and-linux)
+  >   - `DYLD_LIBRARY_PATH` in osx
+  >   - `LD_LIBRARY_PATH` in linux
+  >   - [Search Path Used by Windows to Locate a DLL](https://learn.microsoft.com/en-us/previous-versions/7d83bc18(v=vs.140))
+
+  ```bash
+  $ nproc="$(nproc)"
+  $ ./configure --enable-optimizations \
+                --enable-shared \                 # or export PYTHON_CONFIGURE_OPTS="--enable-shared"
+                --with-lto \
+                --with-system-expat \
+                --with-ensurepip
+  $ sudo make -j ${nproc}
+  $ sudo make install
+
+  $ export PYTHON_HOME='/opt/python/Python-3.11.6'
+  # for libpython3.11.so.1.0
+  $ export LD_LIBRARY_PATH=$PYTHON_HOME:$LD_LIBRARY_PATH
+
+  # check
+  $ which -a python3.11
+  /usr/local/bin/python3.11
+  $ python3 --version
+  Python 3.11.6
+
+  # upgrade pip
+  $ sudo -H /usr/local/bin/python3.11 -m pip install --upgrade pip
+  ```
+
+  <!--sec data-title="python3.8.3" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   $ cd Python-3.8.3
   $ sudo ./configure --enable-optimizations
   $ sudo make -j 12
   $ sudo make altinstall
   ```
+  <!--endsec-->
+
+  - linker cache
+
+    > [!NOTE|label:references:]
+    > - [Python3.7: error while loading shared libraries: libpython3.7m.so.1.0](https://stackoverflow.com/a/58650045/2940319)
+    >   ```bash
+    >   $ sudo ldconfig -v
+    >   $ sudo ldconfig /usr/local/lib
+    >   ```
+
+    ```bash
+    $ sudo ldconfig -v | grep python
+            libpython3.so -> libpython3.so
+            libpython3.6m.so.1.0 -> libpython3.6m.so.1.0
+
+    $ sudo ldconfig -v /opt/python/Python-3.11.6 | grep python
+    /opt/python/Python-3.11.6: (from <cmdline>:0)
+            libpython3.so -> libpython3.so
+            libpython3.11.so.1.0 -> libpython3.11.so.1.0
+            libpython3.so -> libpython3.so
+            libpython3.6m.so.1.0 -> libpython3.6m.so.1.0
+    ```
 
 - setup
   ```bash
