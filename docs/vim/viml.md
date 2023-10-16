@@ -24,10 +24,13 @@
   - [TabMessage](#tabmessage)
   - [BSkipQuickFix](#bskipquickfix)
   - [TriggerYCM](#triggerycm)
+  - [DeleteCurBufferNotCloseWindow](#deletecurbuffernotclosewindow)
+  - [WordCount](#wordcount)
 - [commands](#commands)
   - [get path](#get-path)
 - [settings](#settings)
   - [theme](#theme)
+- [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -317,7 +320,6 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 |  `:omap` | `:onoremap` | `:ounmap` | `:omapclear` |    -   |       -       |        yes       |
 
 ## functions
-
 ### [TwiddleCase](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
 
 > [!TIP|label:references:]
@@ -517,7 +519,123 @@ function! TriggerYCM()
   endif
 endfunction
 nnoremap <C-y> :call TriggerYCM()<CR>
+```
 
+### DeleteCurBufferNotCloseWindow
+
+> [!NOTE]
+> - [How can I close a buffer without closing the window?](https://stackoverflow.com/a/5179609/2940319)
+
+```vim
+function! BufferDelete()
+    if &modified
+        echohl ErrorMsg
+        echomsg "No write since last change. Not closing buffer."
+        echohl NONE
+    else
+        let s:total_nr_buffers = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+
+        if s:total_nr_buffers == 1
+            bdelete
+            echo "Buffer deleted. Created new buffer."
+        else
+            bprevious
+            bdelete #
+            echo "Buffer deleted."
+        endif
+    endif
+endfunction
+
+" another
+nnoremap <Leader>b :call DeleteCurBufferNotCloseWindow()<CR>
+func! DeleteCurBufferNotCloseWindow() abort
+    if &modified
+        echohl ErrorMsg
+        echom "E89: no write since last change"
+        echohl None
+    elseif winnr('$') == 1
+        bd
+    else  " multiple window
+        let oldbuf = bufnr('%')
+        let oldwin = winnr()
+        while 1   " all windows that display oldbuf will remain open
+            if buflisted(bufnr('#'))
+                b#
+            else
+                bn
+                let curbuf = bufnr('%')
+                if curbuf == oldbuf
+                    enew    " oldbuf is the only buffer, create one
+                endif
+            endif
+            let win = bufwinnr(oldbuf)
+            if win == -1
+                break
+            else        " there are other window that display oldbuf
+                exec win 'wincmd w'
+            endif
+        endwhile
+        " delete oldbuf and restore window to oldwin
+        exec oldbuf 'bd'
+        exec oldwin 'wincmd w'
+    endif
+endfunc
+```
+
+- AdjustWindowHeight
+  ```vim
+  function! AdjustWindowHeight(minheight, maxheight)
+    exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+  endfunction
+  autocmd FileType qf call AdjustWindowHeight( 3, 10 )
+  ```
+
+
+### [WordCount](https://stackoverflow.com/q/51951218/2940319)
+
+> [!NOTE]
+> - [#1013 Add visual mode word counting](https://github.com/vim-airline/vim-airline/issues/1013) | [pr](https://github.com/vim-airline/vim-airline/pull/1014/commits/c35c1b2ba798ebaed3e1914e1cb00558ad30e356)
+> - [#1309 Advice to shorten statusline](https://github.com/vim-airline/vim-airline/issues/1309)
+
+```vim
+function! WordCount()
+   let s:old_status = v:statusmsg
+   let position = getpos(".")
+   exe ":silent normal g\<c-g>"
+   let stat = v:statusmsg
+   let s:word_count = 0
+   if stat != '--No lines in buffer--'
+     let s:word_count = str2nr(split(v:statusmsg)[11])
+     let v:statusmsg = s:old_status
+   end
+   call setpos('.', position)
+   return s:word_count
+endfunction
+set statusline=wc:%{WordCount()}
+
+" or
+let g:word_count="<unknown>"
+fun! WordCount()
+    return g:word_count
+endfun
+fun! UpdateWordCount()
+    let s = system("wc -w ".expand("%p"))
+    let parts = split(s, ' ')
+    if len(parts) > 1
+        let g:word_count = parts[0]
+    endif
+endfun
+
+augroup WordCounter
+    au! CursorHold  * call UpdateWordCount()
+    au! CursorHoldI * call UpdateWordCount()
+augroup END
+
+" how eager are you? (default is 4000 ms)
+set updatetime=500
+
+" modify as you please...
+set statusline=%{WordCount()}\ words
 ```
 
 ## commands
@@ -628,6 +746,10 @@ viml
   ```
 
 ## settings
+
+> [!NOTE|label:sample dot-vimrc]
+> - [thinca/.vimrc](https://gist.github.com/thinca/1518874)
+
 - [Capitalize](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
   ```vim
   " https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily
@@ -688,3 +810,17 @@ viml
   let s:base03                    = "255"
   ```
 
+## tricky
+
+- `[NO NAME]` filetype
+
+  > [!NOTE]
+  > - [autocommand to delete [No Name] hidden buffers](https://www.reddit.com/r/vim/comments/95d0a1/autocommand_to_delete_no_name_hidden_buffers/)
+  > - [Vim --remote-silent always opens [No Name] buffer for first file](https://stackoverflow.com/a/12328741/2940319)
+
+  ```vim
+  :echo expand("%")
+  :echo expand("<afile>")
+
+  au BufHidden * if expand("<afile>") == "" && &modified == 0 | bdelete | endif
+  ```

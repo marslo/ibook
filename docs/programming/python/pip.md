@@ -223,3 +223,12 @@ user:
   /home/marslo/.pip/pip.conf, exists: False
   /home/marslo/.config/pip/pip.conf, exists: False
 ```
+
+- or
+  ```bash
+  $ pip config -v list
+  For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
+  For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
+  For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
+  For variant 'site', will try loading '/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/pip.conf'
+  ```
