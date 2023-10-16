@@ -2,21 +2,6 @@
 disqus: false
 ---
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [life is hard, make it easier](#life-is-hard-make-it-easier)
-  - [Introduction](#introduction)
-  - [The other docs](#the-other-docs)
-    - [build mocp from Source Code](#build-mocp-from-source-code)
-    - [goagent configuration](#goagent-configuration)
-  - [windows](#windows)
-    - [build vim/gvim from source code](#build-vimgvim-from-source-code)
-    - [colorful windows command line](#colorful-windows-command-line)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 life is hard, make it easier
 =======
 
