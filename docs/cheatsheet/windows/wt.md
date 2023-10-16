@@ -9,6 +9,7 @@
   - [Open the quake mode window](#open-the-quake-mode-window)
 - [my settings](#my-settings)
   - [gruvbox-dark](#gruvbox-dark)
+  - [global-wild togged hotkey](#global-wild-togged-hotkey)
   - [quake](#quake)
   - [all](#all)
 
@@ -163,6 +164,21 @@
 
 ## shortcut key
 
+> [!NOTE|label:references:]
+> - [`globalSummon` action](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/actions#global-commands)
+> - [#12047: Global keyboard shortcut for launching Terminal](https://github.com/microsoft/terminal/issues/12047)
+> - [#2983: Shortcut key to launch Terminal](https://github.com/microsoft/terminal/issues/2983)
+>   ```bash
+>   @ECHO OFF
+>   start /B C:\Users\user\AppData\Local\Microsoft\WindowsApps\wt.exe
+>   ```
+> - [Bring up the Windows Terminal in a keystroke](https://blog.danskingdom.com/Bring-up-the-Windows-Terminal-in-a-keystroke/)
+>   - [ahk](https://blog.danskingdom.com/Bring-up-the-Windows-Terminal-in-a-keystroke/#method-4-switch-to-windows-terminal-via-keyboard-shortcut-and-autohotkey)
+> - [#12220: Minimize to tray not working](https://github.com/microsoft/terminal/issues/12220)
+>   ```json
+>   "minimizeToNotificationArea": true
+>   ```
+
 | KEYS                      | CMD/ACTIONS          | TARGET/MODE    |
 | ------------------------- | -------------------- | -------------- |
 | `ctrl+shift+f`            | `find`               | -              |
@@ -287,19 +303,29 @@
 ],
 ```
 
+### global-wild togged hotkey
+```json
+"actions":
+[
+  { "keys": "ctrl+alt+o", "command": { "action": "globalSummon" } },
+
+],
+"minimizeToNotificationArea": true,
+```
+
 ### quake
 ```json
-    "actions": 
+    "actions":
     [
         {
-            "command": 
+            "command":
             {
                 "action": "globalSummon",
                 "name": "_quake"
             }
         },
         {
-            "command": 
+            "command":
             {
                 "action": "globalSummon",
                 "desktop": "toCurrent",
@@ -315,41 +341,22 @@
 
 ### all
 
-
 <!--sec data-title="LocalState\settings.json" data-id="section0" data-show=true data-collapse=true ces-->
 ```json
 {
     "$help": "https://aka.ms/terminal-documentation",
-    "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
+    "$schema": "https://aka.ms/terminal-profiles-schema-preview",
+    "actions":
     [
         {
-            "command": 
+            "command":
             {
                 "action": "globalSummon",
                 "name": "_quake"
             }
         },
         {
-            "command": 
-            {
-                "action": "clearBuffer",
-                "clear": "all"
-            },
-            "keys": "ctrl+l"
-        },
-        {
-            "command": 
-            {
-                "action": "nextTab"
-            },
-            "keys": "ctrl+shift+l"
-        },
-        {
-            "command": "paste"
-        },
-        {
-            "command": 
+            "command":
             {
                 "action": "globalSummon",
                 "desktop": "toCurrent",
@@ -360,8 +367,42 @@
             },
             "keys": "shift+space"
         },
+        { "keys": "ctrl+alt+o", "command": { "action": "globalSummon" } },
         {
-            "command": 
+            "command":
+            {
+                "action": "moveTab",
+                "direction": "backward"
+            },
+            "keys": "alt+shift+l"
+        },
+        {
+            "command":
+            {
+                "action": "clearBuffer",
+                "clear": "all"
+            },
+            "keys": "ctrl+l"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "left"
+            }
+        },
+        {
+            "command":
+            {
+                "action": "nextTab"
+            },
+            "keys": "ctrl+shift+l"
+        },
+        {
+            "command": "paste"
+        },
+        {
+            "command":
             {
                 "action": "copy",
                 "singleLine": false
@@ -369,11 +410,19 @@
             "keys": "ctrl+c"
         },
         {
+            "command":
+            {
+                "action": "moveTab",
+                "direction": "forward"
+            },
+            "keys": "alt+shift+h"
+        },
+        {
             "command": "find",
             "keys": "ctrl+shift+f"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "splitPane",
                 "split": "auto",
@@ -386,34 +435,11 @@
             "keys": "ctrl+v"
         },
         {
-            "command": 
-            {
-                "action": "moveTab",
-                "direction": "backward"
-            },
-            "keys": "alt+shift+l"
-        },
-        {
-            "command": 
-            {
-                "action": "moveFocus",
-                "direction": "left"
-            }
-        },
-        {
-            "command": 
+            "command":
             {
                 "action": "prevTab"
             },
             "keys": "ctrl+shift+h"
-        },
-        {
-            "command": 
-            {
-                "action": "moveTab",
-                "direction": "forward"
-            },
-            "keys": "alt+shift+h"
         }
     ],
     "alwaysShowNotificationIcon": true,
@@ -432,35 +458,41 @@
     "language": "en-US",
     "launchMode": "default",
     "minimizeToNotificationArea": true,
-    "newTabMenu": 
+    "newTabMenu":
     [
         {
             "type": "remainingProfiles"
         }
     ],
     "newTabPosition": "afterCurrentTab",
-    "profiles": 
+    "profiles":
     {
-        "defaults": 
+        "defaults":
         {
             "bellStyle": "none",
-            "closeOnExit": "always",
+            "closeOnExit": "graceful",
             "colorScheme": "One Half Dark",
-            "cursorShape": "underscore",
+            "cursorShape": "bar",
             "experimental.retroTerminalEffect": true,
-            "font": 
+            "font":
             {
                 "cellHeight": "1",
-                "face": "Comic Mono",
-                "size": 18.0
+                "face": "Rec Mono Casual",
+                "size": 19.0
             },
             "opacity": 98
         },
-        "list": 
+        "list":
         [
             {
                 "colorScheme": "Campbell Powershell",
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "cursorShape": "underscore",
+                "font":
+                {
+                    "face": "GohuFont uni14 Nerd Font Mono",
+                    "size": 20.0
+                },
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
                 "name": "Windows PowerShell",
@@ -469,6 +501,12 @@
             {
                 "colorScheme": "Solarized Dark",
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "cursorShape": "underscore",
+                "font":
+                {
+                    "face": "GohuFont uni14 Nerd Font Mono",
+                    "size": 20.0
+                },
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
                 "name": "Command Prompt",
@@ -490,9 +528,12 @@
             },
             {
                 "colorScheme": "gruvbox-dark",
-                "font": 
+                "cursorShape": "doubleUnderscore",
+                "font":
                 {
-                    "size": 18.0
+                    "face": "Rec Mono Casual",
+                    "size": 20.0,
+                    "weight": "semi-light"
                 },
                 "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
                 "hidden": false,
@@ -511,7 +552,7 @@
             },
             {
                 "colorScheme": "gruvbox-dark",
-                "font": 
+                "font":
                 {
                     "size": 18.0
                 },
@@ -523,7 +564,7 @@
             },
             {
                 "commandline": "ubuntu.exe",
-                "font": 
+                "font":
                 {
                     "size": 14.0
                 },
@@ -533,7 +574,7 @@
             }
         ]
     },
-    "schemes": 
+    "schemes":
     [
         {
             "background": "#0C0C0C",
