@@ -4,7 +4,7 @@
 
 - [installation](#installation)
   - [command completion](#command-completion)
-  - [installation via source code](#installation-via-source-code)
+  - [install from source code](#install-from-source-code)
 - [environment in MacOS](#environment-in-macos)
   - [`pip.conf`](#pipconf)
   - [pip config file](#pip-config-file)

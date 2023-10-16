@@ -990,6 +990,8 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
 ### [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 
 > [!NOTE|label:references:]
+> - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
+> - [* iMarslo: build vim from source](../vim/install.html#install-python311-and-vim9)
 > - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
 > - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 > - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
@@ -1009,18 +1011,21 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
 
     $ brew --prefix java
     /usr/local/opt/openjdk
-
     $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
     ```
 
   - python
+
+    > [!NOTE|label:install python from source]
+    > - [iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
+
     ```bash
     $ python --version
     Python 3.11.4
-
     $ pip --version
     pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
     ```
+
 - wsl(ubuntu) install
 
   > [!NOTE|label:references:]
@@ -1038,6 +1043,35 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   # upgrade version to 20.x
   $ sudo snap refresh --channel=20 node
   node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+  ```
+
+- centos
+
+  > [!NOTE]
+  > - [#2756: CMake Error,no libclang found](https://github.com/ycm-core/YouCompleteMe/issues/2756)
+  > - [Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/html/using_llvm_13.0.1_toolset/assembly_llvm#proc_installing-comp-toolset_assembly_llvm)
+  > - [PDF: Red Hat Developer Tools 1: Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/pdf/using_llvm_13.0.1_toolset/red_hat_developer_tools-1-using_llvm_13.0.1_toolset-en-us.pdf)
+  > - [Getting Started with the LLVM System](https://llvm.org/docs/GettingStarted.html)
+
+  ```bash
+  $ sudo dnf install -y cmake \
+                        clang clang-devel clang-libs clang-tools-extra \   # no libclang found
+                        llvm llvm-libs \
+                        go
+
+  # upgrade nodejs
+  $ node --version
+  v12.22.5
+  $ sudo npm i -g n
+  $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
+  $ sudo n latest
+  $ which -a node
+  /usr/local/bin/node
+  /usr/bin/node
+  $ node --version
+  v20.8.1
+  $ /usr/bin/node --version
+  v12.22.5
   ```
 
 - brew install

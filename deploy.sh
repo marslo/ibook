@@ -136,7 +136,7 @@ function updateBook() {
 
 function doDeploy() {
   installModules
-  # rebuiltToc
+  rebuiltToc
   rePush
 
   if [ -d "${target}" ]; then

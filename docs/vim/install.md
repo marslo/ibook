@@ -319,77 +319,87 @@ macvim_excmd -c 'lang es_ES' -c 'version' | grep Enlazado
 ## Linux
 
 ### vim
-```bash
-#!/bin/bash
 
-VIM_SRC=$(dirname $(readlink -f $0))/vimsrc
+#### install python3.11 and vim9
+- python3.11
 
-if [ ! -d "$VIM_SRC" ]; then
-  echo "Bad VIM source path. Exit."
-  exit 1
-fi
+  > [!NOTE|label:references:]
+  > - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
 
-pushd $VIM_SRC
-git clean -dffx *
-git checkout -- *
-make clean distclean
+  ```bash
+  $ NPROC=$(getconf _NPROCESSORS_ONLN)
+  $ curl -O https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tgz |
+    tar xzf - -C /opt/python &&
+    cd /opt/python
 
-git pull
-./configure --prefix=$HOME/.marslo/myprograms/vim74 \
-            --enable-pythoninterp=yes \
-            --with-python-config-dir=/usr/local/lib/python2.7/config \
-            --enable-rubyinterp=yes \
-            --with-features=huge \
-            --disable-smack \
-            --enable-fail-if-missing \
-            --with-compiledby=marslo@appliance > vim-build.log
+  $ sudo ./configure --enable-optimizations --enable-shared --prefix=/opt/python/python3.11
+  # or
+  $ ./configure --enable-optimizations --enable-shared --with-lto --with-system-expat --with-ensurepip
+  $ sudo make -j ${NPROC}
+  $ sudo make altinstall
+  $ export LD_LIBRARY_PATH=/opt/python/Python-3.11.6:$LD_LIBRARY_PATH
 
-make -j3 >> vim-build.log
-make install >> vim-build.log
+  # optional
+  $ echo 'PATH=$PATH:/usr/local/bin'
+  ```
 
-popd
-```
+- vim9
+  ```bash
+  $ git clone https://github.com/vim/vim && cd vim
+  # no ruby, no lua
+  $ ./configure --with-features=huge \
+                --enable-python3interp \
+                --with-python3-config-dir=$(python3.11-config --configdir) \
+                --enable-libsodium \
+                --enable-multibyte \
+                --with-tlib=ncurses \
+                --enable-terminal \
+                --enable-autoservername \
+                --enable-nls \
+                --with-compiledby="marslo <marslo.jiao@gmail.com>" \
+                --prefix=/usr/local/vim \
+                --exec-prefix=/usr/local/vim \
+                --enable-fail-if-missing
+  $ make -j${NPROC}
+  $ sudo make install
 
-- manual install python3.11 and vim9
-  - python3.11
-    ```bash
-    $ NPROC=$(getconf _NPROCESSORS_ONLN)
-    $ sudo make -j 12
-    $ curl -O https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tgz
-    $ tar xzf Python-3.11.6.tgz
-    $ sudo ./configure --enable-optimizations
-    # or
-    $ sudo ./configure --enable-optimizations --prefix=/opt/python/python3.11
-    $ sudo make -j ${NPROC}
-    $ sudo make altinstall
+  # copy vim if necessary
+  $ sudo cp src/vim /usr/local/bin
+  # or
+  $ sudo update-alternatives --install /usr/local/bin/vim vim /usr/local/vim/bin/vim 99
+  ```
 
-    # optional
-    $ echo 'PATH=$PATH:/usr/local/bin'
-    ```
-  - vim9
-    ```bash
-    $ git clone https://github.com/vim/vim && cd vim
-    # no ruby, no lua
-    $ ./configure --with-features=huge \
-                  --enable-python3interp \
-                  --with-python3-config-dir=$(python3.11-config --configdir) \
-                  --enable-libsodium \
-                  --enable-multibyte \
-                  --with-tlib=ncurses \
-                  --enable-terminal \
-                  --enable-autoservername \
-                  --enable-nls \
-                  --with-compiledby="marslo <marslo.jiao@gmail.com>" \
-                  --prefix=/usr/local/vim \
-                  --exec-prefix=/usr/local/vim \
-                  --enable-fail-if-missing
+#### shell script
+  ```bash
+  #!/usr/bin/env bash
 
-    $ make -j${NPROC}
-    $ sudo make install
+  VIM_SRC=$(dirname $(readlink -f $0))/vimsrc
 
-    # copy vim if necessary
-    $ sudo cp src/vim /usr/local/bin
-    ```
+  if [ ! -d "$VIM_SRC" ]; then
+    echo "Bad VIM source path. Exit."
+    exit 1
+  fi
+
+  pushd $VIM_SRC
+  git clean -dffx *
+  git checkout -- *
+  make clean distclean
+
+  git pull
+  ./configure --prefix=$HOME/.marslo/myprograms/vim74 \
+              --enable-pythoninterp=yes \
+              --with-python-config-dir=/usr/local/lib/python2.7/config \
+              --enable-rubyinterp=yes \
+              --with-features=huge \
+              --disable-smack \
+              --enable-fail-if-missing \
+              --with-compiledby=marslo@appliance > vim-build.log
+
+  make -j3 >> vim-build.log
+  make install >> vim-build.log
+
+  popd
+  ```
 
 ### gvim
 ```bash
