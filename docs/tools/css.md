@@ -24,6 +24,13 @@
 ## stylus
 
 > [!TIP|label:references:]
+> - [* marslo/global-fonts](https://github.com/marslo/global-fonts) | [* global fonts ( marslo )](https://userstyles.world/style/5264/global-fonts-marslo) | [click to install](https://userstyles.world/api/style/5264.user.css)
+> - [* marslo/google-gruvbox](https://github.com/marslo/google-gruvbox) | [* gruvbox google ( marslo )](https://userstyles.world/style/12346/google-gruvbox)  | [click to install](https://userstyles.world/api/style/12346.user.css)
+> - [* userstyle.org: marslo](https://userstyles.org/user-profile/517150)
+>   - [Google - Clean Dark (marslo)](https://userstyles.org/user-profile/517150)
+>   - [Kubernetes.io Dark theme (marslo)](https://userstyles.org/styles/176169)
+>   - [New Dev's Dark StackOverflow (marslo)](https://userstyles.org/styles/175748)
+>   - [GitHub Ice Dark (marslo)](https://userstyles.org/styles/175747)
 > - [touhidulshawan/gruvbox-google](https://github.com/touhidulshawan/gruvbox-google)
 > - [Factral/GoogleTranslateDarkTheme](https://github.com/Factral/GoogleTranslateDarkTheme/)
 > - [Google Translate Dark Theme But better](https://userstyles.world/style/5215/google-translate-dark-theme-but-better)
