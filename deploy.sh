@@ -81,6 +81,7 @@ function rebuiltToc() {
   find "$(git rev-parse --show-toplevel)"/docs \
        -iname '*.md' \
        -not -path '**/SUMMARY.md' \
+       -not -path '**/README.md' \
        -exec doctoc --github --maxlevel 3 {} \;
 }
 

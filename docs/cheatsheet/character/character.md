@@ -39,6 +39,7 @@
   - [find and exclude](#find-and-exclude)
   - [`find` && `tar`](#find--tar)
   - [inject commands inside find](#inject-commands-inside-find)
+  - [printf](#printf)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -1420,6 +1421,84 @@ find -exec bash -c '
     print_echo "$@"
     ' find-bash {} +
 ```
+
+### printf
+> [!NOTE|label:references:]
+> - [How to Use find -printf in Linux?](https://www.codedodle.com/find-printf.html)
+
+#### time formats
+
+> [!NOTE|label:references:]
+> - [`printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
+>   ```bash
+>   find . -printf "%T<format>\n"
+>   ```
+
+- `@`: unix epoch
+- `a` | `A` : abbreviated | full weekday ( `Wed` | `Wednesday` )
+- `b`/`h` | `B` : abbreviated | full month name ( `Aug` | `August` )
+- `m` : month : `01..12`
+- `d` : day of month : `01..31`
+- `w` : day of week
+  - `01`: `Monday`
+  - `02`: `Tuesday`
+- `j`: day of year : `001..366`
+- `U` : week number of the year Sunday as first day of week: `00..53`
+- `W` : week number of the year Monday as first day of week: `00..53`
+- `y` | `Y` : last two digits of year | year : `00..99` | `1970..`
+- `r` : time in 12-hour format : `hh:mm:ss [AP]M`
+  ```bash
+  $ find . -type f -printf "\n%Td-%Tm-%TY %Tr %p" | head -1
+  4-10-2023 02:38:42 AM /Users/marslo/.marslo/.marslorc
+  ```
+
+- `T` : time in 24-hour format : `hh:mm:ss.xxxxxxxxxx`
+  ```bash
+  $ find . -type f -printf "\n%Td-%Tm-%TY %TT %p" | head -1
+  14-10-2023 02:38:42.5626405780 /Users/marslo/.marslo/.marslorc
+  ```
+
+- `X` : locale time : `hh:mm:ss.xxxxxxxxxx`
+- `c` : locale time in ctime format
+  ```bash
+  $ find . -type f -printf "\n%Tc %p" | head -1
+  Sat Oct 14 02:38:42 2023 /Users/marslo/.marslo/.marslorc
+  ```
+
+- `D` : date : `mm/dd/yy`
+- `F` : date : `yyyy-mm-dd`
+- `x` : locale date : `mm/dd/yy`
+- `R` : hour and minute in 24 hour format : `HH:MM`
+
+- `+` : date and time
+  ```bash
+  $ find . -printf "%T+ | %p\n" | head -1
+  2023-10-14+02:38:42.5626405780 | /Users/marslo/.marslo/.marslor
+  ```
+
+- [Formatting Tips](https://codedodle.com/find-printf.html#formatting-tips)
+  - center-align
+    ```bash
+    $ find . -printf "%15TA | %p\n"
+             Monday | /Users/marslo/.marslo/bin/iweather
+           Saturday | /Users/marslo/.marslo/.marslorc
+    ```
+  - left-align
+    ```bash
+    $ find . -printf "%-15TA | %p\n"
+    Monday          | /Users/marslo/.marslo/bin/iweather
+    Saturday        | /Users/marslo/.marslo/.marslorc
+    ```
+
+  - mixed align
+    ```bash
+    $ find . -type f -printf "%10T+ %-10TA | %m | %p\n" | sort -r | head -2
+    2023-10-16+20:25:53.5005192040 Monday     | 755 | /Users/marslo/.marslo/bin/iweather
+    2023-10-14+02:38:42.5626405780 Saturday   | 755 | /Users/marslo/.marslo/.marslorc
+
+    # more
+    find . -type d -printf "%d    %-30p %-10u %-10g %-5m %T+\n" | sort
+    ```
 
 ## trim
 ### trim tailing chars

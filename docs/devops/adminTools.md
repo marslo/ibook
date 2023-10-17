@@ -29,6 +29,7 @@
   - [ssh](#ssh)
   - [find and tar](#find-and-tar)
   - [find and rename](#find-and-rename)
+  - [find and sort](#find-and-sort)
 - [download and extract](#download-and-extract)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -451,6 +452,7 @@ $ elinks https://google.com
 >   - `$ ssh **<tab>`
 >   - `$ kill -9 **<tab>`
 > - customize
+>   - [* fzf wiki: color themes](https://github.com/junegunn/fzf/wiki/Color-schemes)
 >   - [* fzf-color-theme.css](./fzf-color-theme.css)
 >   - [#692 Custom selected character](https://github.com/junegunn/fzf/issues/692)
 
@@ -1357,6 +1359,49 @@ $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
 ```bash
 $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
 ```
+
+### find and sort
+
+- via timestamp
+  > [!NOTE]
+  > - [How to Find and Sort Files Based on Modification Date and Time in Linux](https://www.tecmint.com/find-and-sort-files-modification-date-and-time-in-linux/)
+  >   ```bash
+  >   $ find . -type f -printf "\n%AD %AT %p" | head -n 11 | sort -k1.8n -k1.1nr -k1
+  >   # or
+  >   $ find . -type f -printf "\n%Tm/%Td/%TY %TT %p" | sort -k1.8n -k1.1nr -k1
+  >   ```
+  > - [* iMarslo : find printf](../cheatsheet/character/character.html#printf)
+  > - [* `printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
+  >   ```bash
+  >   $ find . -printf "%T<format>\n"
+  >   ```
+  > - [sort by datetime format in bash](https://stackoverflow.com/a/67608960/2940319)
+  > - [how to sort file by DD-MM-YYYY dates](https://unix.stackexchange.com/a/485708/29178)
+  > - [Sort logs by date field in bash](https://stackoverflow.com/a/5243126/2940319)
+
+  ```bash
+  # via %T+
+  $ find ~/.marslo -type f -printf "%10T+ | %p\n" | sort -r | head -10
+
+  # via %Td-%Tm-%TY
+  $ find ~/.marslo -type f -printf "\n%Td-%Tm-%TY %TT %p" |
+    sort -b -k1.7,1.10 -k1.4,1.5 -k1.1,1.2 -r
+  ```
+
+  - via [awk+sort](https://stackoverflow.com/a/73881909/2940319)
+    ```bash
+    $ cat a.txt
+    ABC,1/02/2022,05:50
+    OPQ,18/10/2023,07:50
+    HIJ,31/09/2023,08:50
+    DEF,1/02/2021,06:00
+
+    $ awk -F'[,/]' '{printf "%04d-%02d-%02d\t%s\n", $4,$3,$2, $0}' a | sort -r | cut -f2-
+    OPQ,18/10/2023,07:50
+    HIJ,31/09/2023,08:50
+    ABC,1/02/2022,05:50
+    DEF,1/02/2021,06:00
+    ```
 
 ## download and extract
 - tar.gz
