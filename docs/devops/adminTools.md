@@ -424,14 +424,14 @@ $ elinks https://google.com
 ### [`fzf`](https://github.com/junegunn/fzf)
 
 > [!NOTE|label:references:]
-> - [#fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
+> - [* fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
 >   - [Examples (completion)](https://github.com/junegunn/fzf/wiki/Examples-(completion))
 >   - [Examples (vim)](https://github.com/junegunn/fzf/wiki/Examples-(vim))
 >   - [On MacVim with iTerm2](https://github.com/junegunn/fzf/wiki/On-MacVim-with-iTerm2)
-> - [junegunn/fzf-git.sh](https://github.com/junegunn/fzf-git.sh)
-> - [junegunn/fzf](https://github.com/junegunn/fzf)
+> - [* junegunn/fzf](https://github.com/junegunn/fzf)
 >   - [fzf wiki](https://github.com/junegunn/fzf/wiki)
 >   - [fzf screencasts by gotbletu](https://www.youtube.com/playlist?list=PLqv94xWU9zZ2fMsMMDF4PjtNHCeBFbggD)
+>   - [junegunn/fzf-git.sh](https://github.com/junegunn/fzf-git.sh)
 >   - fzf basics:
 >     - [layout](https://qmacro.org/blog/posts/2021/02/02/fzf-the-basics-part-1-layout/)
 >     - [search results](https://qmacro.org/blog/posts/2021/02/07/fzf-the-basics-part-2-search-results/)
@@ -450,6 +450,9 @@ $ elinks https://google.com
 >   - `$ export **<tab>`
 >   - `$ ssh **<tab>`
 >   - `$ kill -9 **<tab>`
+> - customize
+>   - [* fzf-color-theme.css](./fzf-color-theme.css)
+>   - [#692 Custom selected character](https://github.com/junegunn/fzf/issues/692)
 
 ![fzf and vim](../screenshot/linux/fzf-vim.gif)
 
@@ -460,10 +463,22 @@ $ brew install fzf fd
 # debine
 $ sudo apt install fd
 
+$ export FZF_DEFAULT_OPTS='--height 35%'
+$ FZF_DEFAULT_OPTS+=' --layout=reverse'
+$ FZF_DEFAULT_OPTS+=' --pointer="→" --marker="» " --prompt="$ "'
+$ FZF_DEFAULT_OPTS+=' --multi'
+$ FZF_DEFAULT_OPTS+=' --inline-info'
+$ FZF_DEFAULT_OPTS+=' --color=spinner:#e6db74,hl:#928374,fg:#ebdbb2,header:#928374,info:#504945,pointer:#98971a,marker:#d79921,fg+:#ebdbb2,prompt:#404945,hl+:#fb4934'
+# or
 $ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi --inline-info --color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
+
 $ export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules'
 $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 ```
+
+![fzf color themes](../screenshot/linux/fzf-color-themes.png)
+
+![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf-color-theme-gruvbox-marslo.png)
 
 - install from source code for wsl
 
@@ -523,12 +538,31 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   $ sudo cp bin/fzf* /usr/local/bin/
   ```
 
+
+#### movement
+
+> [!NOTE|label:references:]
+> - [Using the finder](https://github.com/junegunn/fzf#using-the-finder)
+
+- [multiple select](https://github.com/junegunn/fzf.vim/issues/40#issuecomment-156037468)
+  - <kbd>tab</kbd> : select and move down
+  - <kbd>shift</kbd> + <kbd>tab</kbd> : select and move up
+  - <kbd>alt</kbd> + <kbd>a</kbd> : select all
+  - <kbd>alt</kbd> + <kbd>d</kbd> : de-select all
+- actions
+  - <kbd>enter</kbd> : open selected item(s)
+  - <kbd>ctrl</kbd> + <kbd>x</kbd> : horizontal splits
+  - <kbd>ctrl</kbd> + <kbd>v</kbd> : vertical splits
+  - <kbd>ctrl</kbd> + <kbd>t</kbd> : tab
+- move
+  - up : <kbd>up</kbd> | <kbd>ctrl</kbd> + <kbd>k</kbd> | <kbd>ctrl</kbd> + <kbd>p</kbd>
+  - down : <kbd>down</kbd> | <kbd>ctrl</kbd> + <kbd>j</kbd> | <kbd>ctrl</kbd> + <kbd>n</kbd>
+
 #### cool functions
 
 > [!NOTE|label:references:]
 > - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
 > - [Examples](https://github.com/junegunn/fzf/wiki/examples)
-
 - magic vim
 
   > [!TIP]
