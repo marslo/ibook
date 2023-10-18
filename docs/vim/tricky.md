@@ -30,6 +30,7 @@
   - [How to Open Files with Vim](#how-to-open-files-with-vim)
   - [comments](#comments)
   - [statueline](#statueline)
+  - [ctags](#ctags)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -616,3 +617,16 @@ NOTICE: after using `\v` the `=` should using `\=` instead
   ```
 
 - [vim-airline](https://github.com/vim-airline/vim-airline)
+
+### ctags
+
+> [!NOTE|label:references:]
+> - [* preservim/tagbar](https://github.com/preservim/tagbar/wiki#ansible)
+> - [kornicameister/dotfiles/ctags.d](https://github.com/kornicameister/dotfiles/tree/master/ctags.d)
+> - [mfwarren/.ctags for groovy](https://gist.github.com/mfwarren/793482)
+> - [ik5/dotfiles/.ctags](https://github.com/ik5/dotfiles/blob/master/ctags)
+> - [aiya000/dotfiles/.ctags.d](https://github.com/aiya000/dotfiles/tree/main/.ctags.d)
+> - groovy
+>   - [groovytags](https://bitbucket.org/sw-samuraj/groovytags/src/develop/)
+>   - [sw-samuraj/vim-gradle](https://bitbucket.org/sw-samuraj/vim-gradle/src/develop/)
+>   - [vim-scripts/vim-gradle](https://github.com/vim-scripts/vim-gradle)
