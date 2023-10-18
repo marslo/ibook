@@ -48,7 +48,8 @@
 > tips:
 > - [os_mac.txt](https://vimhelp.org/os_mac.txt.html)
 >   - `--disable-darwin` will make `-clipboard`
-
+> references:
+> - [nvim install.sh](https://github.com/chrisarcand/dotfiles/blob/master/vim/install.sh)
 
 <!--sec data-title="config help" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
