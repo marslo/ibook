@@ -27,7 +27,7 @@
     - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
 - [stop builds](#stop-builds)
   - [abort single build](#abort-single-build)
-  - [abort running builds if new one is running](#abort-running-builds-if-new-one-is-running)
+  - [abort previous running builds by params condition](#abort-previous-running-builds-by-params-condition)
   - [stop all queue and running jobs](#stop-all-queue-and-running-jobs)
   - [stop all running builds](#stop-all-running-builds)
   - [stop all running builds started in 24 hours](#stop-all-running-builds-started-in-24-hours)
@@ -793,7 +793,7 @@ Jenkins.instance
        )
 ```
 
-## [abort running builds if new one is running](https://stackoverflow.com/a/44326216/2940319)
+## abort previous running builds by params condition
 
 > [!NOTE|label:reference:]
 > - [Controlling the Flow with Stage, Lock, and Milestone](https://www.jenkins.io/blog/2016/10/16/stage-lock-milestone/)
@@ -802,68 +802,96 @@ Jenkins.instance
 > - [Cancel queued builds and aborting executing builds using Groovy for Jenkins](https://stackoverflow.com/questions/12305244/cancel-queued-builds-and-aborting-executing-builds-using-groovy-for-jenkins)
 
 ```groovy
-import hudson.model.Result
-import jenkins.model.CauseOfInterruption
+String JOB_NAME               = env.JOB_NAME
+String EXCLUDE_JOB_NUMBER     = env.BUILD_NUMBER
+Map<String, String> condition = [ 'str1': params.str1 ]
 
-// iterate through current project runs
-build.getProject()._getRuns().iterator().each { run ->
-  def exec = run.getExecutor()
-  // if the run is not a current build and it has executor (running) then stop it
-  if( run != build && exec != null ) {
-    // prepare the cause of interruption
-    def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
-    exec.interrupt( Result.ABORTED, cause )
-  }
-}
+currentBuild.description = params.collect{ "${it.key}: ${it.value}" }.join('<br>')
+
+Jenkins.instance
+       .getItemByFullName( JOB_NAME )
+       .getBuilds()
+       .findAll { Run run ->
+         run.id < EXCLUDE_JOB_NUMBER &&
+         run.isInProgress() &&
+         run?.getAction(ParametersAction.class)?.parameters?.find {
+           condition.keySet().contains( it?.name ) &&
+           condition.getOrDefault( it?.name, '' ) == it?.value
+         }
+       }.each { Run run ->
+         run.setDescription( "<b>aborted by ${currentBuild.fullDisplayName} due to new pathcset triggered !</b><br>" + (run.getDescription() ?: '') )
+         run.finish(
+                    hudson.model.Result.ABORTED,
+                    new java.io.IOException( "Aborting build due to new patchset has been triggered" )
+                  )
+       }
 ```
 
-- [or](https://stackoverflow.com/a/49901413/2940319)
+- [abort running builds if new one is running](https://stackoverflow.com/a/44326216/2940319)
+
   ```groovy
   import hudson.model.Result
-  import hudson.model.Run
-  import jenkins.model.CauseOfInterruption.UserInterruption
+  import jenkins.model.CauseOfInterruption
 
-  def abortPreviousBuilds() {
-    Run previousBuild = currentBuild.rawBuild.getPreviousBuildInProgress()
-
-    while ( previousBuild != null ) {
-      if ( previousBuild.isInProgress() ) {
-        def executor = previousBuild.getExecutor()
-          if ( executor != null ) {
-            echo ">> Aborting older build #${previousBuild.number}"
-              executor.interrupt( Result.ABORTED,
-                                  new UserInterruption(
-                                    "Aborted by newer build #${currentBuild.number}"
-                                ))
-          }
-      }
-      previousBuild = previousBuild.getPreviousBuildInProgress()
+  // iterate through current project runs
+  build.getProject()._getRuns().iterator().each { run ->
+    def exec = run.getExecutor()
+    // if the run is not a current build and it has executor (running) then stop it
+    if( run != build && exec != null ) {
+      // prepare the cause of interruption
+      def cause = { "interrupted by build #${build.getId()}" as String } as CauseOfInterruption
+      exec.interrupt( Result.ABORTED, cause )
     }
-
-  } // abortPreviousBuilds
-  ```
-
-- or: [cancel builds same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
-  ```groovy
-  /**
-   * Author: Isaac S Cohen
-   * This script works with workflow to cancel other running builds for the same job
-   * Use case: many build may go to QA, but only the build that is accepted is needed,
-   * the other builds in the workflow should be aborted
-  **/
-
-  def JOB_NAME     = env.JOB_NAME
-  int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
-
-  def job = Jenkins.instance.getItemByFullName( JOB_NAME )
-  for ( build in job.builds ) {
-    if ( !build.isBuilding() ) { continue; }
-    if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
-    build.doStop()
   }
   ```
 
-- or: [properly stop only running pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
+  - [or](https://stackoverflow.com/a/49901413/2940319)
+    ```groovy
+    import hudson.model.Result
+    import hudson.model.Run
+    import jenkins.model.CauseOfInterruption.UserInterruption
+
+    def abortPreviousBuilds() {
+      Run previousBuild = currentBuild.rawBuild.getPreviousBuildInProgress()
+
+      while ( previousBuild != null ) {
+        if ( previousBuild.isInProgress() ) {
+          def executor = previousBuild.getExecutor()
+            if ( executor != null ) {
+              echo ">> Aborting older build #${previousBuild.number}"
+                executor.interrupt( Result.ABORTED,
+                                    new UserInterruption(
+                                      "Aborted by newer build #${currentBuild.number}"
+                                  ))
+            }
+        }
+        previousBuild = previousBuild.getPreviousBuildInProgress()
+      }
+
+    } // abortPreviousBuilds
+    ```
+
+  - or: [cancel builds same job](https://raw.githubusercontent.com/cloudbees/jenkins scripts/master/cancel builds same job.groovy)
+    ```groovy
+    /**
+     * Author: Isaac S Cohen
+     * This script works with workflow to cancel other running builds for the same job
+     * Use case: many build may go to QA, but only the build that is accepted is needed,
+     * the other builds in the workflow should be aborted
+    **/
+
+    def JOB_NAME     = env.JOB_NAME
+    int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
+
+    def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+    for ( build in job.builds ) {
+      if ( !build.isBuilding() ) { continue; }
+      if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
+      build.doStop()
+    }
+    ```
+
+  - or: [properly stop only running pipelines](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/ProperlyStopOnlyRunningPipelines.groovy)
 
 ## [stop all queue and running jobs](https://stackoverflow.com/a/47631794/2940319)
 
