@@ -12,6 +12,8 @@
   - [run shell scripts in a cluster-operation](#run-shell-scripts-in-a-cluster-operation)
   - [get all running thread](#get-all-running-thread)
   - [Automate configuring via Jenkins Script Console](#automate-configuring-via-jenkins-script-console)
+  - [Jenkins search results missing /ci/ URL component](#jenkins-search-results-missing-ci-url-component)
+  - [jenkins server info](#jenkins-server-info)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -420,3 +422,15 @@ config.save()
            instance.doSafeRestart()
      }
     ```
+
+### [Jenkins search results missing /ci/ URL component](https://phabricator.wikimedia.org/T294424#8028735)
+```groovy
+new File(System.getProperty("user.home"),'.nestedViewsSearch').createNewFile()
+```
+
+### [jenkins server info](https://www.jenkins.io/participate/report-issue/#what-information-to-provide-for-environment-and-description)
+```groovy
+println("Jenkins: ${Jenkins.instance.getVersion()}")
+println("OS: ${System.getProperty('os.name')} - ${System.getProperty('os.version')}")
+println("Java: ${System.getProperty('java.version')} - ${System.getProperty('java.vm.vendor')} (${System.getProperty('java.vm.name')})")
+```
