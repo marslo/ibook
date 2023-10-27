@@ -26,6 +26,8 @@
   - [overview of ordinary atoms](#overview-of-ordinary-atoms)
   - [matches the N pattern](#matches-the-n-pattern)
 - [characters](#characters)
+- [micro](#micro)
+  - [stop macro at the end of line](#stop-macro-at-the-end-of-line)
 - [others](#others)
   - [How to Open Files with Vim](#how-to-open-files-with-vim)
   - [comments](#comments)
@@ -577,6 +579,23 @@ NOTICE: after using `\v` the `=` should using `\=` instead
       - insert `3c` or `4c` or `5c`
 
     ![i_ctrl-k](../screenshot/vim/digraphs -i_ck-1.gif)
+
+## micro
+
+> [!NOTE|label:references:]
+> - [How do I stop a recursive macro at the end of the line?](https://vi.stackexchange.com/a/6427/7389)
+
+### stop macro at the end of line
+```vim
+:let a=line('.')
+<....>                  " do micro
+:if line('.')==a | exec 'normal @q' | endif
+"                                |
+"                                v
+"                           micro name
+```
+
+![stop recursive macro at the end of line](../screenshot/vim/vim-micro-endofline.gif)
 
 ## others
 
