@@ -21,6 +21,9 @@
   - [`reverse`](#reverse)
   - [`replaceAll`](#replaceall)
   - [`replaceFirst`](#replacefirst)
+  - [replaceAll with case-insensitive](#replaceall-with-case-insensitive)
+- [split](#split)
+  - [split string by Capital Letters](#split-string-by-capital-letters)
 - [trim](#trim)
   - [`stripIndent()`](#stripindent)
   - [`stripMargin()`](#stripmargin)
@@ -35,6 +38,7 @@
 - [random](#random)
   - [`shuffled`](#shuffled)
 - [file](#file)
+- [StringTokenizer](#stringtokenizer)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -250,6 +254,153 @@ assert '1-FISH, two fish' == 'one fish, two fish'.replaceFirst(/([a-z]{3})\s([a-
 assert '1-FISH, 2-FISH'   == 'one fish, two fish'.replaceAll(/([a-z]{3})\s([a-z]{4})/)   { [one:1, two:2][it[1]] + '-' + it[2].toUpperCase() }
 ```
 
+### replaceAll with case-insensitive
+
+> [!TIP|label:references:]
+> - [How to replace case-insensitive literal substrings in Java](https://stackoverflow.com/a/5055036/2940319)
+> - [Use replaceAll() to ignore case when replacing one substring with another](http://www.java2s.com/Code/Java/Regular-Expressions/UsereplaceAlltoignorecasewhenreplacingonesubstringwithanother.htm)
+> - [Case insensitive String split() method](https://stackoverflow.com/a/16582115/2940319)
+> - useful libs:
+>   - [Class java.util.regex.Matcher](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Matcher.html)
+>   - [Class java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
+>   - Special constructs (non-capturing) : [Constant Field Values](https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.util.regex.Pattern.CASE_INSENSITIVE)
+>     - `(?i)` : [public static final int CASE_INSENSITIVE](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#CASE_INSENSITIVE)
+>     - `(?d)` : [public static final int UNIX_LINES](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#UNIX_LINES)
+>     - `(?m)` : [public static final int MULTILINE](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#MULTILINE)
+>     - `(?s)` : [public static final int DOTALL](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#DOTALL)
+>     - `(?u)` : [public static final int UNICODE_CASE](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#UNICODE_CASE)
+>     - `(?x)` : [public static final int COMMENTS](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#COMMENTS)
+> - [tutorial: Methods of the Pattern Class](https://docs.oracle.com/javase/tutorial/essential/regex/pattern.html)
+>   - [RegexTestHarness.java](https://docs.oracle.com/javase/tutorial/essential/regex/examples/RegexTestHarness.java)
+> - [tutorial: Methods of the Matcher Class](https://docs.oracle.com/javase/tutorial/essential/regex/matcher.html)
+
+| EQUIVALENT EMBEDDED FLAG EXPRESSION | CONSTANT                                                                                                            |
+|:-----------------------------------:|---------------------------------------------------------------------------------------------------------------------|
+|                `None`               | [Pattern.CANON_EQ](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#CANON_EQ)                 |
+|                `(?i)`               | [Pattern.CASE_INSENSITIVE](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#CASE_INSENSITIVE) |
+|                `(?x)`               | [Pattern.COMMENTS](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#COMMENTS)                 |
+|                `(?m)`               | [Pattern.MULTILINE](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#MULTILINE)               |
+|                `(?s)`               | [Pattern.DOTALL](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#DOTALL)                     |
+|                `None`               | [Pattern.LITERAL](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#LITERAL)                   |
+|                `(?u)`               | [Pattern.UNICODE_CASE](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#UNICODE_CASE)         |
+|                `(?d)`               | [Pattern.UNIX_LINES](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#UNIX_LINES)             |
+
+```groovy
+String target                 = '++Apple@@Banana | aPPle##BanANa$$'
+Map<String, String> p         = [ 'banana' : '--', 'apple' : '==' ]
+assert '++==@@-- | ==##--$$' == p.inject('') { injected, k, v ->
+                                  injected = ( injected ?: target ).replaceAll( "(?i)${k}", v );
+                                  injected
+                                }
+```
+
+- or
+  ```groovy
+  import java.util.regex.Pattern
+
+  String parentPath = 'D:\\ifs\\APP\\Checkout'
+  String path = 'D:\\IFS\\APP\\Checkout\\trvexp\\client\\Ifs.App\\text.txt'
+
+  assert '\\trvexp\\client\\Ifs.App\\text.txt' == path.replaceAll( "(?i)" + Pattern.quote(parentPath), '' )
+  ```
+
+- [or](https://stackoverflow.com/a/11236723/2940319)
+  ```groovy
+  import java.util.regex.Pattern
+
+  String label = 'table'
+  String html  = '<table>aaa</table>'
+
+  assert '<WINDOWS>aaa</WINDOWS>' == Pattern.compile(label, Pattern.CASE_INSENSITIVE).matcher(html).replaceAll("WINDOWS");
+  ```
+
+## split
+### split string by Capital Letters
+
+> [!NOTE|label:references:]
+> - [Java: Split string when an uppercase letter is found](https://stackoverflow.com/a/3752693/2940319)
+> - [Split String by Capital letters in Java](https://beginnersbook.com/2022/09/split-string-by-capital-letters-in-java/)
+>   - `\p{Lu}` | `\p{Upper}` : shorthand for `\p{Uppercase Letter}`
+>   - `\p{Ll}` | `\p{Lower}` : shorthand for `\p{Lowercase Letter}`
+> - [Lookahead and Lookbehind Zero-Length Assertions](https://www.regular-expressions.info/lookaround.html)
+> - [Java split is eating my characters](https://stackoverflow.com/q/2819933/2940319)
+> - [Regex split string but keep separators](https://stackoverflow.com/q/2910536/2940319)
+> - [Class java.util.regex.Pattern: POSIX character classes (US-ASCII only)](https://docs.oracle.com/javase/1.5.0/docs/api/java/util/regex/Pattern.html)
+>   - `\p{Lower}` : A lower-case alphabetic character: `[a-z]`
+>   - `\p{Upper}` : An upper-case alphabetic character: `[A-Z]`
+>   - `\p{ASCII}` : All ASCII: `[\x00-\x7F]`
+>   - `\p{Alpha}` : An alphabetic character: `[\p{Lower}\p{Upper}]`
+>   - `\p{Digit}` : A decimal digit: `[0-9]`
+>   - `\p{Alnum}` : An alphanumeric character: `[\p{Alpha}\p{Digit}]`
+>   - `\p{Punct}` : Punctuation: One of `!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~`
+>   - `\p{Graph}` : A visible character: `[\p{Alnum}\p{Punct}]`
+>   - `\p{Print}` : A printable character: `[\p{Graph}\x20]`
+>   - `\p{Blank}` : A space or a tab: `[ \t]`
+>   - `\p{Cntrl}` : A control character: `[\x00-\x1F\x7F]`
+>   - `\p{XDigit}` : A hexadecimal digit: `[0-9a-fA-F]`
+>   - `\p{Space}` : A whitespace character: `[ \t\n\x0B\f\r]`
+
+```groovy
+// split by Uppercase
+'IWantToSplitThisString'.split("(?=\\p{Lu})")
+'IWantToSplitThisString'.split("(?=\\p{Upper})")
+// result: ['I', 'Want', 'To', 'Split', 'This', 'String']
+
+// split by Lowercase
+'iwANTtOsPLITtHISsTRING'.split("(?=\\p{Ll})")
+'iwANTtOsPLITtHISsTRING'.split("(?=\\p{Lower})")
+// result: ['i', 'wANT', 'tO', 'sPLIT', 'tHIS', 'sTRING']
+```
+
+- [or via `[A-Z]`](https://stackoverflow.com/a/3752705/2940319)
+  ```groovy
+  assert ['this', 'Is', 'My', 'String'] == "thisIsMyString".split("(?=[A-Z])");
+  ```
+
+- [or via `String.format`](https://stackoverflow.com/a/2560017/2940319)
+  ```groovy
+  String splitCamelCase(String s) {
+    return s.replaceAll(
+      String.format("%s|%s|%s",
+         "(?<=[A-Z])(?=[A-Z][a-z])",
+         "(?<=[^A-Z])(?=[A-Z])",
+         "(?<=[A-Za-z])(?=[^A-Za-z])"
+      ),
+    " "
+    );
+  }
+
+  [
+    "lowercase",
+    "Class",
+    "MyClass",
+    "HTML",
+    "PDFLoader",
+    "AString",
+    "SimpleXMLParser",
+    "GL11Version",
+    "99Bottles",
+    "May5",
+    "BFG9000",
+  ].each { test ->
+    System.out.println("${test.padRight(16)}: [" + splitCamelCase(test) + "]");
+  }
+  ```
+  - result
+    ```groovy
+    lowercase       : [lowercase]
+    Class           : [Class]
+    MyClass         : [My Class]
+    HTML            : [HTML]
+    PDFLoader       : [PDF Loader]
+    AString         : [A String]
+    SimpleXMLParser : [Simple XML Parser]
+    GL11Version     : [GL 11 Version]
+    99Bottles       : [99 Bottles]
+    May5            : [May 5]
+    BFG9000         : [BFG 9000]
+    ```
+
 ## trim
 ### `stripIndent()`
 ```groovy
@@ -431,4 +582,31 @@ assert 11 == 'Hello world'.length()
   ```groovy
   assert true  == ( new File('/Users/marslo/.vimrc') ).isFile()
   assert false == ( new File('/Users/marslo/.vimrc') ).isDirectory()
+  ```
+
+## [StringTokenizer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/StringTokenizer.html)
+
+> [!NOTE|label:references:]
+> - [Class java.util.StringTokenizer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/StringTokenizer.html)
+
+```groovy
+import java.util.StringTokenizer
+
+StringTokenizer st = new StringTokenizer("this is a test");
+while (st.hasMoreTokens()) { System.out.println(st.nextToken()); }
+```
+
+- output
+  ```
+  this
+  is
+  a
+  test
+  ```
+
+- equals
+  ```grvooy
+  String[] result = "this is a test".split("\\s");
+  for (int x=0; x<result.length; x++)
+      System.out.println(result[x]);
   ```
