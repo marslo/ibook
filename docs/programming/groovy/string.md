@@ -22,6 +22,7 @@
   - [`replaceAll`](#replaceall)
   - [`replaceFirst`](#replacefirst)
   - [replaceAll with case-insensitive](#replaceall-with-case-insensitive)
+  - [Apply proper uppercase and lowercase on a String](#apply-proper-uppercase-and-lowercase-on-a-string)
 - [split](#split)
   - [split string by Capital Letters](#split-string-by-capital-letters)
 - [trim](#trim)
@@ -313,6 +314,22 @@ assert '++==@@-- | ==##--$$' == p.inject('') { injected, k, v ->
 
   assert '<WINDOWS>aaa</WINDOWS>' == Pattern.compile(label, Pattern.CASE_INSENSITIVE).matcher(html).replaceAll("WINDOWS");
   ```
+
+### [Apply proper uppercase and lowercase on a String](http://www.java2s.com/Code/Java/Regular-Expressions/ApplyproperuppercaseandlowercaseonaString.htm)
+
+```groovy
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+String str = "this is a test"
+
+StringBuffer sb = new StringBuffer()
+Matcher m = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str)
+while ( m.find() ) {
+  m.appendReplacement( sb, m.group(1).toUpperCase() + m.group(2).toLowerCase() )
+}
+assert 'This Is A Test' == m.appendTail(sb).toString()
+```
 
 ## split
 ### split string by Capital Letters
