@@ -202,6 +202,7 @@ about:restartrequired
   - `chrome://password-manager-internals/`   or `about:password-manager-internals`
   - `chrome://ukm/`                          or `about:ukm`
   - `chrome://components/`                   or `about:components`
+  - `chrome://sync-internals`
 
 - debug
   - `chrome://local-state/`                  or `about:local-state`
