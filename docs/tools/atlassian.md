@@ -6,6 +6,7 @@
   - [check fields](#check-fields)
   - [check attachment](#check-attachment)
   - [generate OAuth consumer](#generate-oauth-consumer)
+  - [icons](#icons)
 - [confluence](#confluence)
   - [get info](#get-info)
   - [publish to confluence](#publish-to-confluence)
@@ -92,6 +93,21 @@ $ openssl genrsa -out jira_privatekey.pem 1024
 $ openssl req -newkey rsa:1024 -x509 -key jira_privatekey.pem -out jira_publickey.cer -days 365
 $ openssl pkcs8 -topk8 -nocrypt -in jira_privatekey.pem -out jira_privatekey.pcks8
 $ openssl x509 -pubkey -noout -in jira_publickey.cer  > jira_publickey.pem
+```
+
+### icons
+#### priority
+
+> [!NOTE|label:references:]
+> - [how do I view ALL icons for priority](https://community.atlassian.com/t5/Jira-questions/how-do-I-view-ALL-icons-for-priority/qaq-p/802188)
+> - [AlexanderBartash/JIRA-Priority-Icons](https://github.com/AlexanderBartash/JIRA-Priority-Icons)
+> - [DevOps Use case: Jira Jenkins Integration](https://medium.com/@shrut_terminator/devops-usecase-jira-jenkins-integration-4051413446a9)
+
+```bash
+$ for _i in "blocker.png" "blocker.svg" "critical.png" "critical.svg" "high.png" "high.svg" "highest.png" "highest.svg" "low.png" "low.svg" "lowest.png" "lowest.svg" "major.png" "major.svg" "medium.png" "medium.svg" "minor.png" "minor.svg" "trivial.png" "trivial.svg"; do
+    echo "--> ${_i}"
+    curl -O https://jira-trigger-plugin.atlassian.net/images/icons/priorities/${_i}
+  done
 ```
 
 ## confluence

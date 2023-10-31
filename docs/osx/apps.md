@@ -58,6 +58,32 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
   ```
 
 - official
+
+
+  > [!NOTE|label:revert back]
+  > ```bash
+  > $ brew doctor
+  > Please note that these warnings are just used to help the Homebrew maintainers
+  > with debugging if you file an issue. If everything you use Homebrew for is
+  > working fine: please don't worry or file an issue; just ignore this. Thanks!
+  >
+  > Warning: Suspicious https://github.com/Homebrew/brew git origin remote found.
+  > The current git origin is:
+  >   https://mirrors.ustc.edu.cn/brew.git
+  >
+  > With a non-standard origin, Homebrew won't update properly.
+  > You can solve this by setting the origin remote:
+  >   git -C "/usr/local/Homebrew" remote set-url origin https://github.com/Homebrew/brew
+  >
+  > Warning: Suspicious https://github.com/Homebrew/homebrew-core git origin remote found.
+  > The current git origin is:
+  >   https://mirrors.ustc.edu.cn/homebrew-core.git
+  >
+  > With a non-standard origin, Homebrew won't update properly.
+  > You can solve this by setting the origin remote:
+  >   git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" remote set-url origin https://github.com/Homebrew/homebrew-core
+  > ```
+
   ```bash
   $ brew_source='https://github.com/Homebrew'
   # brew 程序本身
