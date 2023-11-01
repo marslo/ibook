@@ -15,6 +15,8 @@
   - [tricky](#tricky)
 - [install dmg](#install-dmg)
 - [system settings](#system-settings)
+- [tools](#tools)
+  - [java](#java)
 - [accessory](#accessory)
   - [iTerm2](#iterm2)
   - [powerline](#powerline)
@@ -993,6 +995,120 @@ System Indicators.app
 WeChat.app
 Xcode.app
 pwSafe.app
+```
+
+## tools
+### java
+
+> [!NOTE|label:references:]
+> - [Installing the JDK on macOS](https://docs.oracle.com/en/java/javase/15/install/installation-jdk-macos.html#GUID-F575EB4A-70D3-4AB4-A20E-DBE95171AB5F)
+> - [Uninstalling the JDK on macOS](https://docs.oracle.com/en/java/javase/15/install/installation-jdk-macos.html#GUID-F9183C70-2E96-40F4-9104-F3814A5A331F)
+> - [Java Platform, Standard Edition - JDK Installation Guide.pdf](https://docs.oracle.com/en/java/javase/21/install/installation-guide.pdf)
+> - [JDK Development Kit 21.0.1 downloads](https://www.oracle.com/java/technologies/downloads/#jdk21-mac)
+>   - [jdk-21_macos-x64_bin.dmg](https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.dmg)
+>   - [jdk-21_macos-x64_bin.tar.gz](https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.tar.gz)
+>   - [jdk-21_macos-aarch64_bin.dmg](https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.dmg)
+>   - [jdk-21_macos-aarch64_bin.tar.gz](https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz)
+> - [JDK Development Kit 17.0.9 downloads](https://www.oracle.com/java/technologies/downloads/#java17)
+>   - [jdk-17_macos-x64_bin.dmg](https://download.oracle.com/java/17/latest/jdk-17_macos-x64_bin.dmg)
+>   - [jdk-17_macos-x64_bin.tar.gz ](https://download.oracle.com/java/17/latest/jdk-17_macos-x64_bin.tar.gz )
+>   - [jdk-17_macos-aarch64_bin.dmg](https://download.oracle.com/java/17/latest/jdk-17_macos-aarch64_bin.dmg)
+>   - [jdk-17_macos-aarch64_bin.tar.gz](https://download.oracle.com/java/17/latest/jdk-17_macos-aarch64_bin.tar.gz)
+> - [Java SE Development Kit 11.0.21](https://www.oracle.com/java/technologies/downloads/#java11-mac)
+> - [Java SE Development Kit 8u391](https://www.oracle.com/java/technologies/downloads/#java8-mac)
+> - others
+>   - [wavezhang/java_download.sh](https://gist.github.com/wavezhang/ba8425f24a968ec9b2a8619d7c2d86a6)
+>   - [How to install Java 21 and setup JAVA_HOME Path in macOS 🍏 (Apple Silicon M1 & M2)](https://medium.com/@aniketvishal/how-to-install-java-and-setup-java-home-path-in-macos-apple-silicon-m1-m2-2edf185b992c)
+>   - [Why should I uninstall older versions of Java from my system?](https://www.java.com/en/download/help/remove_olderversions.html)
+>     - [How do I uninstall Java on my Mac?](https://www.java.com/en/download/help/mac_uninstall_java.html)
+>     - [How do I uninstall Java for Linux ?](https://www.java.com/en/download/help/linux_uninstall.html)
+
+#### various versions
+
+- `/Library/Java/JavaVirtualMachines`
+  ```bash
+  $ ls -Altrh /Library/Java/JavaVirtualMachines
+  total 0
+  drwxr-xr-x 3 root wheel 96 Dec 14  2020 jdk1.8.0_271.jdk
+  drwxr-xr-x 3 root wheel 96 Jul 19  2022 jdk-11.0.15.1.jdk
+  drwxr-xr-x 3 root wheel 96 Oct 31 20:52 jdk-21.jdk
+  drwxr-xr-x 3 root wheel 96 Oct 31 21:06 jdk-17.jdk
+  ```
+
+- default `JAVA_HOME`
+  ```bash
+  $ export JAVA_HOME=$(/usr/libexec/java_home)
+  # or
+  $ export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+
+  $ /usr/libexec/java_home
+  /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+  ```
+
+- java 17
+  ```bash
+  $ export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+  # details
+  $ /usr/libexec/java_home -v 17
+  /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+
+  $ /usr/libexec/java_home -v 17 --exec java -version
+  java version "17.0.9" 2023-10-17 LTS
+  Java(TM) SE Runtime Environment (build 17.0.9+11-LTS-201)
+  Java HotSpot(TM) 64-Bit Server VM (build 17.0.9+11-LTS-201, mixed mode, sharing
+  ```
+
+- java 11
+  ```bash
+  $ export JAVA_HOME=$(/usr/libexec/java_home -v 11)
+  # details
+  $ /usr/libexec/java_home -v 11
+  /Library/Java/JavaVirtualMachines/jdk-11.0.15.1.jdk/Contents/Home
+  ```
+
+- java 8
+  ```bash
+  $ export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+  $ /usr/libexec/java_home -v 1.8
+  /Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home
+  ```
+
+#### openjdk
+
+```bash
+# jdk 21
+$ brew install openjdk
+
+# jdk 17
+$ brew install openjdk@17
+
+# jdk 11
+$ brew install openjdk@11
+```
+
+- JAVA_HOME
+  ```bash
+  # java 21
+  $ export JAVA_HOME="$(brew --prefix java)
+
+  # java 17
+  $ export JAVA_HOME=$(brew --prefix openjdk@17)
+
+  # java 11
+  $ export JAVA_HOME=$(brew --prefix openjdk@11)
+  ```
+
+#### [remove old version Java](https://www.java.com/en/download/help/mac_uninstall_java.html)
+
+> [!NOTE|label:references:]
+> - [10 Installation of the JDK on macOS](https://docs.oracle.com/javase/8/docs/technotes/guides/install/mac_jdk.html)
+> - [OpenJDK JDK 21.0.1 General-Availability Release](https://jdk.java.net/21/)
+> - [How to uninstall Java on Mac](https://nektony.com/blog/uninstall-java-on-mac)
+
+```bash
+sudo rm -fr /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin
+sudo rm -fr /Library/PreferencePanes/JavaControlPanel.prefPane
+sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 ```
 
 ## accessory
