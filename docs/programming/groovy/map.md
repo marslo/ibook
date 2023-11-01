@@ -24,6 +24,7 @@
   - [collect](#collect)
 - [grep](#grep)
 - [with](#with)
+- [sort](#sort)
 - [traverse](#traverse)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -588,6 +589,17 @@ map.with {
 assert map.a == 3
 assert map.b == 4
 ```
+
+## sort
+
+- descending
+
+  ```groovy
+  assert ['h3':'bb', 'h2':'cc', 'h1':'aa'] == [ 'h1' : 'aa', 'h3' : 'bb', 'h2' : 'cc' ].sort{ - it.key.split('h').last().toInteger() }
+
+  # or
+  assert ['h3':'bb', 'h2':'cc', 'h1':'aa'] == [ 'h1' : 'aa', 'h3' : 'bb', 'h2' : 'cc' ].sort{ it.key }.reversed()
+  ```
 
 ## traverse
 > references:
