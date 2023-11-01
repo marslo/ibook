@@ -310,6 +310,10 @@ local    file:.git/config    marslo
 
 
 - `core.autocrlf`
+
+  > [!TIP|label:see also:]
+  > - [* iMarslo : core.autocrlf](./eol.html#coreautocrlf)
+
   - checkout windows-style, commit unix-style line endings
     ```bash
     $ git config --get core.autocrlf
