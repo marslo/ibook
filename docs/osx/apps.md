@@ -8,12 +8,10 @@
   - [homebrew caskroom installation](#homebrew-caskroom-installation)
   - [list formula](#list-formula)
   - [install](#install)
-  - [batch install](#batch-install)
   - [reinstall/downgrade](#reinstalldowngrade)
-  - [check formula config files](#check-formula-config-files)
-  - [brew debug](#brew-debug)
   - [tricky](#tricky)
 - [install dmg](#install-dmg)
+  - [install pkg inside dmg](#install-pkg-inside-dmg)
 - [system settings](#system-settings)
 - [tools](#tools)
   - [java](#java)
@@ -23,9 +21,10 @@
   - [backgroundmusic](#backgroundmusic)
   - [mac cli](#mac-cli)
   - [others](#others)
-- [q&a](#qa)
+- [trouble shooting](#trouble-shooting)
   - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
+  - [groovyConsole](#groovyconsole)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -362,7 +361,7 @@ $ brew install less --with-pcre
   $ brew list --pinned
   ```
 
-### batch install
+#### batch install
 
 > [!NOTE|label:references:]
 > - [List of all packages installed using Homebrew](https://apple.stackexchange.com/a/101092/254265)
@@ -726,7 +725,12 @@ $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr
   ```
   <!--endsec-->
 
-### check formula config files
+### tricky
+
+> [!NOTE|label:references]
+> - [Tips and Tricks](https://docs.brew.sh/Tips-N%27-Tricks#installing-previous-versions-of-formulae)
+
+#### check formula config files
 ```bash
 $ brew -v edit macvim
 Editing /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/macvim.rb
@@ -762,7 +766,7 @@ $ brew -v edit macvim-dev/macvim/macvim
   $ brew pin macvim
   ```
 
-### brew debug
+#### brew debug
 - info
   ```bash
   $ brew info --analytics
@@ -799,10 +803,6 @@ $ brew -v edit macvim-dev/macvim/macvim
   Xcode: 12.2
   ```
 
-### tricky
-
-> [!NOTE|label:references]
-> - [Tips and Tricks](https://docs.brew.sh/Tips-N%27-Tricks#installing-previous-versions-of-formulae)
 
 - pathes
   ```bash
@@ -889,6 +889,14 @@ $ curl -O https://desktop.docker.com/mac/main/amd64/Docker.dmg
 $ sudo hdiutil attach Docker.dmg
 $ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
 $ sudo hdiutil detach /Volumes/Docker
+```
+
+### install pkg inside dmg
+```bash
+$ curl -fsSL -O https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.dmg
+$ hdiutil attach jdk-21_macos-x64_bin.dmg
+$ sudo installer -pkg /Volumes/JDK\ 21.0.1/JDK\ 21.0.1.pkg -target /
+$ sudo hdiutil detach /Volumes/JDK\ 21.0.1/
 ```
 
 ## system settings
@@ -1321,7 +1329,7 @@ $ sudo gem install iStats -n /usr/local/bin
   For more stats run `istats extra` and follow the instructions.
   ```
 
-## q&a
+## trouble shooting
 ### [`failed to connect to raw.githubusercontent.com port 443: connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
 - issue
   ```bash
@@ -1395,3 +1403,163 @@ EOF
   $ git -C $(brew --repo homebrew/cask-versions) reset --hard
   HEAD is now at 67d487bd6 Update dotnet-preview from 6.0.0-preview.4.21253.7,bab80210-ac54-44fa-bf41-7474c6371cf2:eadcd657b93e347d08bc33c59bd60835 to 6.0.0-preview.5.21301.5,c326f2e1-10ee-482e-9871-5fb8de7f7777:dda8203d3b58e56efeca4a7248cdea67 (#11293)
   ```
+
+### groovyConsole
+
+- error message
+  ```bash
+  $ groovyConsole
+  2023-11-01 18:49:18.068 java[17232:171223] WARNING: Secure coding is automatically enabled for restorable state! However, not on all supported macOS versions of this application. Opt-in to secure coding explicitly by implementing NSApplicationDelegate.applicationSupportsSecureRestorableState:.
+  #
+  # A fatal error has been detected by the Java Runtime Environment:
+  #
+  #  SIGILL (0x4) at pc=0x00007ff8144c2bc5, pid=17232, tid=259
+  #
+  # JRE version: OpenJDK Runtime Environment Homebrew (17.0.9) (build 17.0.9+0)
+  # Java VM: OpenJDK 64-Bit Server VM Homebrew (17.0.9+0, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, bsd-amd64)
+  # Problematic frame:
+  # C  [AppKit+0xc92bc5]  _NSCarbonMenuCrashIfNeeded+0x258
+  #
+  # No core dump will be written. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+  #
+  # An error report file with more information is saved as:
+  # /Users/marslo/hs_err_pid17232.log
+  #
+  # If you would like to submit a bug report, please visit:
+  #   https://github.com/Homebrew/homebrew-core/issues
+  # The crash happened outside the Java Virtual Machine in native code.
+  # See problematic frame for where to report the bug.
+  #
+  Abort trap: 6
+  ```
+
+- analysis
+  - issue is due to java 8u391 ( version 8 Update 391 (build 1.8.0_391-b13) )
+
+    ![java 8u391](../screenshot/osx/groovyConsole-java8u391.png)
+
+  - [details info](http://java.sun.com/products/autodl/j2se)
+    ```bash
+    $ '/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java' -version
+    java version "1.8.0_391"
+    Java(TM) SE Runtime Environment (build 1.8.0_391-b13)
+    Java HotSpot(TM) 64-Bit Server VM (build 25.391-b13, mixed mode)
+    ```
+
+- solution
+
+  1. remove old version java
+
+    > [!NOTE|label:see also:]
+    > - [* iMarslo : remove old version java](#remove-old-version-java)
+
+    - manual
+      ![manual remove java 8u391](../screenshot/osx/groovyConsole-java8u391-remove.png)
+
+    - cmd
+      ```bash
+      $ sudo rm -fr /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin
+      $ sudo rm -fr /Library/PreferencePanes/JavaControlPanel.prefPane
+      $ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
+      ```
+
+  2. using java instead of openjdk
+
+    > [!NOTE|label:see also:]
+    > - [* iMarlso : java](#java)
+
+    - remove openjdk
+      ```bash
+      $ brew list --formula | grep openjdk
+      openjdk
+      openjdk@17
+
+      $ brew remove openjdk
+      Error: Refusing to uninstall /usr/local/Cellar/openjdk/21.0.1
+      because it is required by gradle, groovy and jdtls, which are currently installed.
+      You can override this and force removal with:
+        brew uninstall --ignore-dependencies openjdk
+
+      $ brew uninstall --ignore-dependencies openjdk
+      Uninstalling /usr/local/Cellar/openjdk/21.0.1... (600 files, 331.4MB)
+
+      $ brew uninstall openjdk@17
+      Uninstalling /usr/local/Cellar/openjdk@17/17.0.9... (635 files, 304.8MB)
+      ```
+
+    - install java
+
+      > [!NOTE|label:references:]
+      > - [* iMarlso : install dmg](#install-dmg)
+      > - [Install dmg file on mac via terminal](https://cyb.tw/docs/Tech/2021/3/17_How-to-install-dmg-and-dkg-on-mac-via-terminal.html)
+      > - [Is there a command to install a dmg](https://apple.stackexchange.com/a/73931/254265)
+
+      ```bash
+      # java 21
+      $ curl -fsSL -O https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.dmg
+      $ hdiutil attach jdk-21_macos-x64_bin.dmg
+      $ sudo installer -pkg /Volumes/JDK\ 21.0.1/JDK\ 21.0.1.pkg -target /
+      $ sudo hdiutil detach /Volumes/JDK\ 21.0.1/
+
+      # java 17
+      $ curl -fsSL -O https://download.oracle.com/java/17/latest/jdk-17_macos-x64_bin.dmg
+      $ hdiutil attach jdk-17_macos-x64_bin.dmg
+      $ sudo installer -pkg /Volumes/JDK\ 17.0.9/JDK\ 17.0.9.pkg  -target /
+      $ sudo hdiutil detach /Volumes/JDK\ 17.0.9/
+
+      $ java -version
+      java version "21.0.1" 2023-10-17 LTS
+      Java(TM) SE Runtime Environment (build 21.0.1+12-LTS-29)
+      Java HotSpot(TM) 64-Bit Server VM (build 21.0.1+12-LTS-29, mixed mode, sharing)
+
+      $ /usr/libexec/java_home -v 17 --exec java -version
+      java version "17.0.9" 2023-10-17 LTS
+      Java(TM) SE Runtime Environment (build 17.0.9+11-LTS-201)
+      Java HotSpot(TM) 64-Bit Server VM (build 17.0.9+11-LTS-201, mixed mode, sharing)
+
+      $ export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+      ```
+
+      - more
+        ```bash
+        $ /usr/libexec/java_home --verbose
+        Matching Java Virtual Machines (3):
+            21.0.1 (x86_64) "Oracle Corporation" - "Java SE 21.0.1" /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+            17.0.9 (x86_64) "Oracle Corporation" - "Java SE 17.0.9" /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home
+            1.8.0_271 (x86_64) "Oracle Corporation" - "Java SE 8" /Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home
+        /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+        ```
+
+      <!--sec data-title="details" data-id="section3" data-show=true data-collapse=true ces-->
+      ```bash
+      $ hdiutil attach jdk-21_macos-x64_bin.dmg
+      Checksumming Protective Master Boot Record (MBR : 0)…
+      Protective Master Boot Record (MBR :: verified   CRC32 $A63E199D
+      Checksumming GPT Header (Primary GPT Header : 1)…
+       GPT Header (Primary GPT Header : 1): verified   CRC32 $9E905196
+      Checksumming GPT Partition Data (Primary GPT Table : 2)…
+      GPT Partition Data (Primary GPT Tabl: verified   CRC32 $29140A79
+      Checksumming  (Apple_Free : 3)…
+                          (Apple_Free : 3): verified   CRC32 $00000000
+      Checksumming disk image (Apple_HFS : 4)…
+      .......................................................................................................
+                disk image (Apple_HFS : 4): verified   CRC32 $1BBB6538
+      Checksumming  (Apple_Free : 5)…
+                          (Apple_Free : 5): verified   CRC32 $00000000
+      Checksumming GPT Partition Data (Backup GPT Table : 6)…
+      GPT Partition Data (Backup GPT Table: verified   CRC32 $29140A79
+      Checksumming GPT Header (Backup GPT Header : 7)…
+        GPT Header (Backup GPT Header : 7): verified   CRC32 $015D0E38
+      verified   CRC32 $F5652D51
+      /dev/disk3            GUID_partition_scheme
+      /dev/disk3s1          Apple_HFS                       /Volumes/JDK 21.0.1
+
+      $ sudo installer -pkg /Volumes/JDK\ 21.0.1/JDK\ 21.0.1.pkg -target /
+      installer: Package name is JDK 21.0.1
+      installer: Installing at base path /
+      installer: The install was successful.
+
+      $ sudo hdiutil detach /Volumes/JDK\ 21.0.1/
+      "disk3" ejected.
+      ```
+      <!--endsec-->
