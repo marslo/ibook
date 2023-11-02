@@ -5,11 +5,11 @@
 - [copy path](#copy-path)
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
-- [create an app for script](#create-an-app-for-script)
+- [create app](#create-app)
   - [get standalone commands for the script](#get-standalone-commands-for-the-script)
   - [using Automator.app to create an app](#using-automatorapp-to-create-an-app)
-  - [edit `Contents/Info.plist`](#edit-contentsinfoplist)
-  - [create script to open the groovyConsole](#create-script-to-open-the-groovyconsole)
+  - [`Contents/Info.plist`](#contentsinfoplist)
+  - [script](#script)
   - [additional](#additional)
 - [add snippets for input](#add-snippets-for-input)
   - [enable Technical Symbols](#enable-technical-symbols)
@@ -82,7 +82,7 @@ $ <cmd> | pbcopy
 
 ![copy path shortcut key](../screenshot/osx/copy-path-shortcut.png)
 
-## create an app for script
+## create app
 
 > [!NOTE|label:expection]
 > case: run `groovyConsole` from Spolite or Alfred
@@ -146,14 +146,14 @@ marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /
 
   ![Automator.app » save to an app](../screenshot/osx/runable-app-3.png)
 
-### edit `Contents/Info.plist`
+### `Contents/Info.plist`
 ```bash
 $ vim groovyConsole.app/Contents/Info.plist
 ...
 <key>CFBundleExecutable</key>
-<string>groovyConsole</string>           « the script name, can be any name you want
+<string>groovyConsole</string>           « the script name to MacOS/groovyConsole
 <key>CFBundleIconFile</key>
-<string>groovy</string>                  « for -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns
+<string>groovy</string>                  « for icon in Resources/groovy.icns
 <key>CFBundleIdentifier</key>
 <string>com.apple.groovyConsole</string>
 ...
@@ -169,10 +169,44 @@ $ vim groovyConsole.app/Contents/Info.plist
   <string>com.apple.automator.groovyConsole</string>
   ```
 
-### create script to open the groovyConsole
+### script
+```bash
+$ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
+
+$ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
+  -> #!/usr/bin/env bash
+  ->
+  -> JAVA_HOME="$(/usr/libexec/java_home -v 21)"
+  -> GROOVY_HOME="$(/usr/local/bin/brew --prefix groovy)/libexec"
+  -> GROOVY_VERSION="$(/usr/bin/sed -rn 's/^[^:]+:[[:blank:]]?([[:digit:].]+)[[:blank:]]?.+$/\1/p' < <(${GROOVY_HOME}/bin/groovy --version))"
+  ->
+  -> "${JAVA_HOME}"/bin/java \
+  ->   -Dsun.awt.keepWorkingSetOnMinimize=true \
+  ->   -Xdock:name=GroovyConsole \
+  ->   -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+  ->   -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+  ->   -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+  ->   -Dprogram.name=groovyConsole \
+  ->   -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+  ->   -Dgroovy.home="${GROOVY_HOME}" \
+  ->   -Dtools.jar="${JAVA_HOME}"/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+  ->   --main groovy.console.ui.Console \
+  ->   --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+  ->   --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib
+  -> EOF
+
+$ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
+$ ls -1 groovyConsole.app/Contents/MacOS/
+Automator Application Stub                    # ignore it
+groovyConsole                                 # ╮ <key>CFBundleExecutable</key>
+                                              # ╯ <string>groovyConsole</string>
+
+$ mv groovyConsole.app/ /Applications/
+```
+
+<!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 $ touch groovyConsole.app/Contents/MacOS/groovyConsole
-
 $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
   -> #!/usr/bin/env bash
   ->
@@ -197,17 +231,7 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
   ->         --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
   -> EOF
 
-$ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
-$ ls -1 groovyConsole.app/Contents/MacOS/
-Automator Application Stub                    # ignore it
-groovyConsole                                 # ╮ <key>CFBundleExecutable</key>
-                                              # ╯ <string>groovyConsole</string>
-```
-
-<!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
-```bash
-$ touch groovyConsole.app/Contents/MacOS/groovyConsole
-
+# or
 $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
   -> #!/bin/bash
   -> /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java \\
@@ -261,11 +285,6 @@ $ hdiutil create -volname 'groovyConsole' \
 created: /Users/marslo/Desktop/groovyConsole.dmg
 ```
 
-#### move `groovyConsole.app` to `/Application`
-```bash
-$ mv groovyConsole.app/ /Applications/
-```
-
 ## [add snippets for input](https://sspai.com/post/36203)
 ### enable Technical Symbols
 - Input Method ⇢ **Show emoji and symbols**
@@ -285,7 +304,6 @@ $ mv groovyConsole.app/ /Applications/
 ![test-1](../screenshot/osx/snippets-4.png)
 
 ![test-2](../screenshot/osx/snippets-5.png)
-
 
 ## others
 ### [install font via command](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)
