@@ -25,6 +25,7 @@
   - [Apply proper uppercase and lowercase on a String](#apply-proper-uppercase-and-lowercase-on-a-string)
 - [split](#split)
   - [split string by Capital Letters](#split-string-by-capital-letters)
+  - [split via patten](#split-via-patten)
 - [trim](#trim)
   - [`stripIndent()`](#stripindent)
   - [`stripMargin()`](#stripmargin)
@@ -417,6 +418,46 @@ assert 'This Is A Test' == m.appendTail(sb).toString()
     May5            : [May 5]
     BFG9000         : [BFG 9000]
     ```
+
+### split via patten
+
+> [!NOTE|label:expect:]
+> - original:
+>   ```groovy
+>   'h1:aaa:h2:bbb'
+>   ```
+> - expect:
+>   ```groovy
+>   '<h1>aaa</h1><h2>bbb</h2>'
+>   ```
+
+- via `inject`
+  ```groovy
+  String title = 'h1:aaa:h2:bbb'
+  String pattern = 'h\\d'
+
+  title.trim().split(':')
+        .inject([:]) { injected, str ->
+           key = str.matches(pattern) ? str : key
+           injected[key] = injected.getOrDefault(key, '') + ( ! str.matches(pattern) ? ":${str}" : '')
+           injected
+        }
+        .collectEntries {[ (it.key), it.value.tokenize(':').join(':') ]}
+        .collect { "<${it.key}>${it.value}</${it.key}>" }
+        .join()
+  ```
+
+- via `split`
+  ```groovy
+  String title = 'h1:aaa:h2:bbb'
+
+  title.trim()
+       .split( "(?=h\\d:)" )
+       .collect{ it.tokenize(':') }
+       .collectEntries{[ (it.first().trim()) : it.last().trim() ]}
+       .collect{ "<${it.key}>${it.value}</${it.key}>" }
+       .join()
+  ```
 
 ## trim
 ### `stripIndent()`

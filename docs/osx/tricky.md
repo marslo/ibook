@@ -6,10 +6,9 @@
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
 - [create app](#create-app)
-  - [get standalone commands for the script](#get-standalone-commands-for-the-script)
-  - [using Automator.app to create an app](#using-automatorapp-to-create-an-app)
-  - [`Contents/Info.plist`](#contentsinfoplist)
-  - [script](#script)
+  - [create app via Automator.app](#create-app-via-automatorapp)
+  - [create script](#create-script)
+  - [modify `Info.plist`](#modify-infoplist)
   - [additional](#additional)
 - [add snippets for input](#add-snippets-for-input)
   - [enable Technical Symbols](#enable-technical-symbols)
@@ -89,55 +88,11 @@ $ <cmd> | pbcopy
 > reference:
 > - [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
 
-### get standalone commands for the script
+### create app via Automator.app
 
-```bash
-$ ps aux | grep groovyConsole | grep -v grep
-marslo           63030   0.0  1.9 42636292 310724 s008  S+    2:06PM   0:12.48 /usr/local/opt/openjdk/bin/java -Dsun.awt.keepWorkingSetOnMinimize=true -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -classpath /usr/local/opt/groovy/libexec/lib/groovy-4.0.13.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/usr/local/opt/openjdk/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/usr/local/opt/openjdk/lib/tools.jar:/usr/local/opt/openjdk/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
-```
+> [!NOTE|label:tips]
+> Automator.app will create whole bunch of necessary files for app. only need to replace the `CFBundleExecutable` filename
 
-==> which would be:
-```bash
-/usr/local/opt/openjdk/bin/java \
-     -Dsun.awt.keepWorkingSetOnMinimize=true \
-     -Xdock:name=GroovyConsole \
-     -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \
-     -classpath /usr/local/opt/groovy/libexec/lib/groovy-4.0.13.jar \
-     -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \
-     -Dprogram.name=groovyConsole \
-     -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
-     -Dgroovy.home=/usr/local/opt/groovy/libexec \
-     -Dtools.jar=/usr/local/opt/openjdk/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
-     --main groovy.console.ui.Console \
-     --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
-     --classpath .:/usr/local/opt/openjdk/lib/tools.jar:/usr/local/opt/openjdk/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
-```
-
-<!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
-```bash
-$ ps aux | grep groovyConsole | grep -v grep
-marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -Dgroovy.jaxb=jaxb -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
-```
-
-==> which would be:
-```bash
-/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java \
-        -Xdock:name=GroovyConsole \
-        -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \
-        -Dgroovy.jaxb=jaxb \
-        -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar \
-        -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \
-        -Dprogram.name=groovyConsole \
-        -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
-        -Dgroovy.home=/usr/local/opt/groovy/libexec \
-        -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
-        --main groovy.console.ui.Console \
-        --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
-        --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
-```
-<!--endsec-->
-
-### using Automator.app to create an app
 - Open **Automator.app** » **New** » **Application**
   ![Automator.app » select Applicaiton](../screenshot/osx/runable-app-1.png)
 
@@ -146,30 +101,57 @@ marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /
 
   ![Automator.app » save to an app](../screenshot/osx/runable-app-3.png)
 
-### `Contents/Info.plist`
-```bash
-$ vim groovyConsole.app/Contents/Info.plist
-...
-<key>CFBundleExecutable</key>
-<string>groovyConsole</string>           « the script name to MacOS/groovyConsole
-<key>CFBundleIconFile</key>
-<string>groovy</string>                  « for icon in Resources/groovy.icns
-<key>CFBundleIdentifier</key>
-<string>com.apple.groovyConsole</string>
-...
-```
+### create script
 
-- original
-  ```bash
-  <key>CFBundleExecutable</key>
-  <string>Application Stub</string>
-  <key>CFBundleIconFile</key>
-  <string>AutomatorApplet</string>
-  <key>CFBundleIdentifier</key>
-  <string>com.apple.automator.groovyConsole</string>
-  ```
+> [!NOTE|label:tips:]
+> - get standalone commands for the script
+>   ```bash
+>   $ ps aux | grep groovyConsole | grep -v grep
+>   marslo           63030   0.0  1.9 42636292 310724 s008  S+    2:06PM   0:12.48 /usr/local/opt/openjdk/bin/java -Dsun.awt.keepWorkingSetOnMinimize=true -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -classpath /usr/local/opt/groovy/libexec/lib/groovy-4.0.13.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/usr/local/opt/openjdk/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/usr/local/opt/openjdk/lib/tools.jar:/usr/local/opt/openjdk/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+>   ```
+>
+>   ==> which would be:
+>   ```bash
+>   /usr/local/opt/openjdk/bin/java \
+>        -Dsun.awt.keepWorkingSetOnMinimize=true \
+>        -Xdock:name=GroovyConsole \
+>        -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \
+>        -classpath /usr/local/opt/groovy/libexec/lib/groovy-4.0.13.jar \
+>        -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \
+>        -Dprogram.name=groovyConsole \
+>        -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
+>        -Dgroovy.home=/usr/local/opt/groovy/libexec \
+>        -Dtools.jar=/usr/local/opt/openjdk/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+>        --main groovy.console.ui.Console \
+>        --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
+>        --classpath .:/usr/local/opt/openjdk/lib/tools.jar:/usr/local/opt/openjdk/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+>   ```
+>
+>   <!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
+>   ```bash
+>   $ ps aux | grep groovyConsole | grep -v grep
+>   marslo           50495   0.0  3.4 11683536 577828   ??  S     5:50PM   0:15.85 /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java -Xdock:name=GroovyConsole -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns -Dgroovy.jaxb=jaxb -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole -Dprogram.name=groovyConsole -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf -Dgroovy.home=/usr/local/opt/groovy/libexec -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+>   ```
+>
+>   ==> which would be:
+>   ```bash
+>   /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java \
+>           -Xdock:name=GroovyConsole \
+>           -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \
+>           -Dgroovy.jaxb=jaxb \
+>           -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar \
+>           -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \
+>           -Dprogram.name=groovyConsole \
+>           -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
+>           -Dgroovy.home=/usr/local/opt/groovy/libexec \
+>           -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+>           --main groovy.console.ui.Console \
+>           --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \
+>           --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+>   ```
+>   <!--endsec-->
 
-### script
+
 ```bash
 $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
 
@@ -256,6 +238,30 @@ $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 - try validate via execute `groovyConsole.app/Contents/MacOS/groovyConsole` directly. to see whether if the groovyConsole will be opened.
 
   ![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
+
+
+### modify `Info.plist`
+```bash
+$ vim groovyConsole.app/Contents/Info.plist
+...
+<key>CFBundleExecutable</key>
+<string>groovyConsole</string>           « the script name to MacOS/groovyConsole
+<key>CFBundleIconFile</key>
+<string>groovy</string>                  « for icon in Resources/groovy.icns
+<key>CFBundleIdentifier</key>
+<string>com.apple.groovyConsole</string>
+...
+```
+
+- original
+  ```bash
+  <key>CFBundleExecutable</key>
+  <string>Application Stub</string>
+  <key>CFBundleIconFile</key>
+  <string>AutomatorApplet</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.apple.automator.groovyConsole</string>
+  ```
 
 ### additional
 #### set the icon for new app
