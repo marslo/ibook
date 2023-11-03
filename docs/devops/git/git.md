@@ -49,6 +49,7 @@ git command study and practice
 - [diff](#diff)
   - [`diff-highlight`](#diff-highlight)
   - [get difference between two branches](#get-difference-between-two-branches)
+  - [diff ignore whitespace](#diff-ignore-whitespace)
 - [tag](#tag)
   - [discribe](#discribe)
   - [get distance between tags](#get-distance-between-tags)
@@ -1128,6 +1129,36 @@ $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/
                  --cherry-pick \
                  --right-only origin/<release>...origin/<dev> \
                  | grep "^TO_TEST "
+  ```
+
+### diff ignore whitespace
+
+> [!NOTE|label:references:]
+> - [Ignore *all* whitespace changes with git-diff between commits](https://stackoverflow.com/a/33159593/2940319)
+> - [Error in console fatal: cannot enforce both tab-in-indent and indent-with-non-tab](https://stackoverflow.com/a/57160479/2940319)
+> - [indentation configuration only for some files](https://stackoverflow.com/a/13823013/2940319)
+
+- ignore tab
+
+  > [!TIP|label:tab-in-indent]
+  > - [Git v1.7.2 Release Notes](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/RelNotes/1.7.2.txt)
+
+  ```bash
+  $ git config core.whitespace '-tab-in-indent'
+  $ git diff HEAD^..
+  ```
+
+  - ignore tab-in-indent for `*.config` and `*.ltsv` only
+    ```bash
+    $ cat ~/.gitattributes
+           File: /Users/marslo/.gitattributes
+       1   *.config    text diff=config whitespace=-tab-in-indent
+       2   *.ltsv      text diff=ltsv whitespace=-tab-in-indent
+    ```
+
+- ignore all
+  ```bash
+  $ git config core.whitespace '-trailing-space,-indent-with-non-tab,-tab-in-indent'
   ```
 
 ## tag
