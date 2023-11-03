@@ -15,6 +15,7 @@
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
 - [get pipeline definitions](#get-pipeline-definitions)
   - [get pipeline scriptPath](#get-pipeline-scriptpath)
+  - [get pipeline scm branch](#get-pipeline-scm-branch)
   - [get pipeline scm definition](#get-pipeline-scm-definition)
   - [get pipeline bare script](#get-pipeline-bare-script)
 - [get logRotator](#get-logrotator)
@@ -197,6 +198,30 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 marslo/sandbox/sandbox         ~> jenkins/jenkinsfile/sandbox.Jenkinsfile
 marlso/sandbox/dump            ~> jenkins/jenkinsfile/dump.Jenkinsfile
 ...
+```
+
+### get pipeline scm branch
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+String branch = 'develop'
+
+jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+}.findAll {
+  ! ( it.definition?.scm instanceof hudson.scm.NullSCM ) &&
+  ! it.definition?.scm?.branches?.any{ it.getName().contains(branch) }
+}.each {
+  println it.fullName.toString().padRight(50) + ' : ' +
+          it.definition?.scm?.branches?.collect{ it.getName() }?.join(', ')
+}
+
+"DONE"
+
+-- result --
+$ ssh sample.jenkins.com groovy =< scmBranchPath.groovy
+marslo/sandbox/sandbox                             : refs/heads/sandbox/marslo
+marslo/sandbox/dump                                : refs/heads/utility
 ```
 
 ### get pipeline scm definition
