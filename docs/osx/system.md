@@ -380,10 +380,21 @@ $ dot_clean -mvp <path>
   ```
 
 - or all-in-all actions
+
+  > [!NOTE|label:references:]
+  > - [* iMarslo: defaults: disable the `.DS_Store` and `._*`](./defaults.html#disable-the-ds_store-and-_)
+
   ```bash
   $ sudo defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
   $ sudo mdutil -i off /Volumes/<FS NAME>
   $ sudo rm -rf .{DS_Store,fseventsd,Spotlight-V*,Trashes}
+  ```
+
+- for windows
+  ```batch
+  > cd c:\path\to\folder
+  > del /s /q /f /a .DS_STORE
+  > del /s /q /f /a:h ._*
   ```
 
 ## launchctl

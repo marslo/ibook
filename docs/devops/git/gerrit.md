@@ -25,6 +25,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!NOTE|label:references:]
+> - [Gerrit Code Review - Access Controls](https://gerrit.cloudera.org/Documentation/access-control.html)
+>   - [Special and magic references](https://gerrit.cloudera.org/Documentation/access-control.html#references)
+>     - [Magic references](https://gerrit.cloudera.org/Documentation/access-control.html#references_magic)
+>   - [Access Categories](https://gerrit.cloudera.org/Documentation/access-control.html#access_categories)
+
+
 ## .gitconfig
 ```bash
 $ git config --global gitreview.username <UserName>
@@ -37,15 +44,15 @@ $ git config --global gitreview.remote origin
 > - [Gerrit Code Review - Access Controls](https://git.eclipse.org/r/Documentation/access-control.html#non-interactive_users)
 
 - System Groups
-  - Anonymous Users
-  - Change Owner
-  - Project Owners
-  - Registered Users
+  - [Anonymous Users](https://gerrit.cloudera.org/Documentation/access-control.html#anonymous_users)
+  - [Change Owner](https://gerrit.cloudera.org/Documentation/access-control.html#change_owner)
+  - [Project Owners](https://gerrit.cloudera.org/Documentation/access-control.html#project_owners)
+  - [Registered Users](https://gerrit.cloudera.org/Documentation/access-control.html#registered_users)
 
-- Predefined Groups
-  - Administrators
-  - Non-Interactive Users
-  - Service Users
+- [Predefined Groups](https://gerrit.cloudera.org/Documentation/access-control.html#_predefined_groups)
+  - [Administrators](https://gerrit.cloudera.org/Documentation/access-control.html#administrators)
+  - [Non-Interactive Users](https://gerrit.cloudera.org/Documentation/access-control.html#non-interactive_users)
+  - ~Service Users~
 
 #### Special references
 
@@ -94,6 +101,10 @@ $ git commit -m "<add your comments here>"
   ```
 
 - submit review
+
+  > [!NOTE|label:references:]
+  > - [smirn0v/gist:b8e6c4bedebed23a0328](https://gist.github.com/smirn0v/b8e6c4bedebed23a0328)
+
   ```bash
   $ git push origin HEAD:refs/for/refs/meta/config
   ```

@@ -2,24 +2,43 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [common usage](#common-usage)
+- [usage](#usage)
   - [commands](#commands)
-  - [usage](#usage)
-- [Mac defaults](#mac-defaults)
+  - [usage](#usage-1)
+    - [basic usage](#basic-usage)
+    - [list all domains](#list-all-domains)
+- [defaults](#defaults)
   - [programming](#programming)
-  - [disable the startup sounds](#disable-the-startup-sounds)
-  - [Dock performance setup](#dock-performance-setup)
-  - [keyboard & trackpad](#keyboard--trackpad)
+    - [xcode](#xcode)
+    - [iTerm2](#iterm2)
+    - [terminal](#terminal)
+    - [simulator](#simulator)
   - [utilities](#utilities)
   - [screenshot](#screenshot)
   - [finder](#finder)
+    - [quitable via ⌘ + Q](#quitable-via-%E2%8C%98--q)
+    - [default location](#default-location)
+    - [extension](#extension)
+    - [view](#view)
+    - [icon](#icon)
+    - [bars](#bars)
+    - [panel](#panel)
+    - [hidden file](#hidden-file)
+    - [others](#others)
   - [menu bar](#menu-bar)
-  - [mission control](#mission-control)
-  - [feedback assistant](#feedback-assistant)
-  - [time machine](#time-machine)
   - [dock](#dock)
-  - [tricky for keyboards](#tricky-for-keyboards)
-  - [battery settings](#battery-settings)
+    - [show](#show)
+    - [icon](#icon-1)
+    - [animation](#animation)
+    - [autohide](#autohide)
+    - [others](#others-1)
+  - [keyboard & trackpad](#keyboard--trackpad)
+  - [battery](#battery)
+  - [browser](#browser)
+    - [chrome](#chrome)
+    - [safari](#safari)
+  - [system](#system)
+  - [others](#others-2)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
   - [vscode](#vscode)
@@ -31,10 +50,18 @@
 > - [macOS defaults](https://macos-defaults.com/)
 > - [How To Change Preferences From The Command Line On MacOS?](https://www.shell-tips.com/mac/defaults/)
 > - [mac defaults](https://github.com/kevinSuttle/macOS-Defaults/blob/master/REFERENCE.md)
+> - [uson1x/hack.sh](https://gist.github.com/uson1x/2275613)
+> - [Maya/mac settings.sh](https://charlesreid1.com/wiki/Maya/mac_settings.sh)
+>   - [dotfiles/mac/mac_settings.sh](https://git.charlesreid1.com/dotfiles/mac/src/branch/main/mac_settings.sh)
+> - [osx-for-hackers.sh](https://blocks.roadtolarissa.com/mhkeller/d7e0cd4dc30236291622)
+> - [brandonb927/osx-for-hackers.sh](https://gist.github.com/brandonb927/3195465)
+> - [mathiasbynens/dotfiles](https://github.com/mathiasbynens/dotfiles)
+>   - [.macos](https://github.com/mathiasbynens/dotfiles/blob/main/.macos)
+> - [akachrislee/osx](https://gist.github.com/akachrislee/3220956)
 {% endhint %}
 
-## common usage
-### commands
+# usage
+## commands
 
 |   commands  | comments                                                     |
 |:-----------:|--------------------------------------------------------------|
@@ -48,17 +75,26 @@
 |  `domains`  | prints the name of all domains                               |
 |    `find`   | search all domains, keys, and values for a given word        |
 
-### usage
-#### basic usage
+## usage
+### basic usage
 ```bash
-$ defaults read DOMAIN # gets all
-$ defaults read DOMAIN PROPERTY_NAME # gets
-$ defaults write DOMAIN PROPERTY_NAME VALUE # sets
-$ defaults delete DOMAIN PROPERTY_NAME # resets a property
-$ defaults delete DOMAIN # resets preferences
+# gets all
+$ defaults read DOMAIN
+
+# gets
+$ defaults read DOMAIN PROPERTY_NAME
+
+# sets
+$ defaults write DOMAIN PROPERTY_NAME VALUE
+
+# resets a property
+$ defaults delete DOMAIN PROPERTY_NAME
+
+# resets preferences
+$ defaults delete DOMAIN
 ```
 
-#### list all domains
+### list all domains
 ```bash
 $ defaults domains
 ```
@@ -77,100 +113,704 @@ $ defaults domains
    com.apple.AddressBook
   ```
 
-## Mac defaults
-### programming
-#### xcode
+# defaults
+## programming
+### xcode
 - add additional Counterpart Suffixes
-  - `"ViewModel" "View"`
-    ```bash
-    $ defaults write com.apple.dt.Xcode IDEAdditionalCounterpartSuffixes -array-add "ViewModel" "View" && killall Xcode
-    ```
-  - `"Router" "Interactor" "Builder"`
-    ```bash
-    $ defaults write com.apple.dt.Xcode IDEAdditionalCounterpartSuffixes -array-add "Router" "Interactor" "Builder" && killall Xcode
-    ```
-- Show Build Durations
+  ```bash
+  # `"ViewModel" "View"`
+  $ defaults write com.apple.dt.Xcode IDEAdditionalCounterpartSuffixes -array-add "ViewModel" "View" && killall Xcode
+
+  # `"Router" "Interactor" "Builder"`
+  $ defaults write com.apple.dt.Xcode IDEAdditionalCounterpartSuffixes -array-add "Router" "Interactor" "Builder" && killall Xcode
+  ```
+
+- show build durations
   ```bash
   $ defaults write com.apple.dt.Xcode ShowBuildOperationDuration -bool true && killall Xcode
   ```
 
-#### reset iTerm Profile
+### iTerm2
+
+#### profile
 ```bash
+# reset
 $ cd ~/Library/Preferences/com.googlecode.iterm2.plist
 $ defaults delete com.googlecode.iterm2
 ```
 
-#### simulator
-- set screenshot location
-  - `~/Picture/Screenshots`
-    ```bash
-    $ defaults write com.apple.iphonesimulator ScreenShotSaveLocation -string ~/Pictures/Screenshots
-    ```
-  - `~/Picture/Simulator Screenshots`
-    ```bash
-    $ defaults write com.apple.iphonesimulator ScreenShotSaveLocation -string ~/Pictures/Simulator Screenshots
-    ```
+#### prompt when quitting
+```bash
+# disable
+$ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+```
 
-### [disable the startup sounds](https://www.youtube.com/watch?v=_OjQIh4Ro5A)
-- disable
+### terminal
+```bash
+# UTF-8 encoding
+$ defaults write com.apple.terminal StringEncodings -array 4
+
+# theme
+$ defaults write com.apple.Terminal "Default Window Settings" -string "gruvbox-dark"
+$ defaults write com.apple.Terminal "Startup Window Settings" -string "gruvbox-dark"
+
+# more
+$ defaults read com.apple.Terminal
+```
+
+#### [modify theme](https://github.com/mathiasbynens/dotfiles/blob/main/.macos#L628C33-L628C53)
+```bash
+$ osascript <<EOD
+
+tell application "Terminal"
+
+  local allOpenedWindows
+  local initialOpenedWindows
+  local windowID
+  set themeName to "Solarized Dark xterm-256color"
+
+  (* Store the IDs of all the open terminal windows. *)
+  set initialOpenedWindows to id of every window
+
+  (* Open the custom theme so that it gets added to the list
+     of available terminal themes (note: this will open two
+     additional terminal windows). *)
+  do shell script "open '$HOME/init/" & themeName & ".terminal'"
+
+  (* Wait a little bit to ensure that the custom theme is added. *)
+  delay 1
+
+  (* Set the custom theme as the default terminal theme. *)
+  set default settings to settings set themeName
+
+  (* Get the IDs of all the currently opened terminal windows. *)
+  set allOpenedWindows to id of every window
+
+  repeat with windowID in allOpenedWindows
+
+    (* Close the additional windows that were opened in order
+       to add the custom theme to the list of terminal themes. *)
+    if initialOpenedWindows does not contain windowID then
+      close (every window whose id is windowID)
+
+    (* Change the theme for the initial opened terminal windows
+       to remove the need to close them in order for the custom
+       theme to be applied. *)
+    else
+      set current settings of tabs of (every window whose id is windowID) to settings set themeName
+    end if
+
+  end repeat
+end tell
+EOD
+```
+
+#### enable security keyboard
+
+> [!NOTE|label:references:]
+> - [How secure is "Secure Keyboard Entry" in Mac OS X's Terminal?](https://security.stackexchange.com/a/47786/8918)
+
+```bash
+$ defaults write com.apple.terminal SecureKeyboardEntry -bool true
+```
+
+#### line marks
+```bash
+# disable
+$ defaults write com.apple.Terminal ShowLineMarks -int 0
+```
+
+### simulator
+- set screenshot location
   ```bash
-  $ sudo nvram StartupMute=%01
+  # `~/Picture/Screenshots`
+  $ defaults write com.apple.iphonesimulator ScreenShotSaveLocation -string ~/Pictures/Screenshots
+
+  # `~/Picture/Simulator Screenshots`
+  $ defaults write com.apple.iphonesimulator ScreenShotSaveLocation -string ~/Pictures/Simulator Screenshots
   ```
+
+## utilities
+
+#### [startup sounds](https://www.youtube.com/watch?v=_OjQIh4Ro5A)
+```bash
+# disable
+$ sudo nvram StartupMute=%01
+# or
+$ sudo nvram SystemAudioVolume=" "
+
+# enable
+$ sudo nvram StartupMute=%00
+```
+
+#### avoid install resource validation
+
+{% hint style='tip' %}
+> references:
+> - [How to fix: This is an application downloaded from the Internet. Are you sure you want to open it?](https://www.idownloadblog.com/2017/04/20/fix-application-from-internet-gatekeeper/)
+{% endhint %}
+
+```bash
+$ sudo spctl --master-disable
+$ defaults write com.apple.LaunchServices LSQuarantine -bool false
+```
+
+#### [forbidden spell automatic correction](https://github.com/bestswifter/macbootstrap/blob/master/doc/system.md)
+```bash
+$ defaults write -g NSAutomaticQuoteSubstitutionEnabled  -bool false
+$ defaults write -g NSAutomaticDashSubstitutionEnabled   -bool false
+$ defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
+```
+
+#### disable notification centers
+```bash
+$ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist && killall NotificationCenter
+```
+
+#### are you sure you want to open this application?
+```bash
+$ defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+# or
+$ sudo spctl — master-disable
+```
+
+#### none warning for unknown resource open
+```bash
+$ defaults write com.apple.LaunchServices LSQuarantine -bool false
+```
+
+#### enable the hidden file
+```bash
+$ defaults write com.apple.finder AppleShowAllFiles TRUE && killall Finder
+
+# or
+$ defaults write com.apple.finder AppleShowAllFiles YES
+```
+
+## screenshot
+#### shadow
+```bash
+# show
+$ defaults write com.apple.screencapture disable-shadow -bool false
+
+# disable
+$ defaults write com.apple.screencapture disable-shadow -bool true
+```
+
+#### include date
+```bash
+# include
+$ defaults write com.apple.screencapture include-date -bool true
+
+# disable
+$ defaults write com.apple.screencapture include-date -bool false
+```
+
+#### save location
+```bash
+# `~/Desktop`
+$ defaults write com.apple.screencapture location -string ~/Desktop && killall SystemUIServer
+
+# `~/Pictures`
+$ defaults write com.apple.screencapture location -string ~/Pictures && killall SystemUIServer
+```
+
+#### thumbnail
+```bash
+# display
+$ defaults write com.apple.screencapture show-thumbnail -bool true
+
+# disable thumbnail
+$ defaults write com.apple.screencapture show-thumbnail -bool false
+```
+
+#### screenshot format
+```bash
+# `png`
+$ defaults write com.apple.screencapture type -string png
+
+# `jpg`
+$ defaults write com.apple.screencapture type -string jpg
+```
+
+## finder
+### quitable via ⌘ + Q
+```bash
+# hidden quite
+$ defaults write com.apple.finder QuitMenuItem -bool false && killall Finder
+
+# enable quite
+$ defaults write com.apple.finder QuitMenuItem -bool true && killall Finder
+```
+
+### default location
+```bash
+$ defaults write com.apple.finder NewWindowTarget -string "PfDe"
+$ defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+```
+
+### extension
+```bash
+# show
+$ defaults write NSGlobalDomain AppleShowAllExtensions -bool true && killall Finder
+# disable
+$ defaults write NSGlobalDomain AppleShowAllExtensions -bool false && killall Finder
+
+# show warning when change file extension warning
+$ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true && killall Finder
+# silent when change file extension warning
+$ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false && killall Finder
+```
+
+### view
+#### snap-to-grid for icons
+```bash
+$ /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+$ /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+$ /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+```
+
+#### column view
+```bash
+$ defaults write com.apple.finder FXPreferredViewStyle Clmv
+```
+
+#### adjust toolbar title rollover delay
+```bash
+# `0.5`
+$ defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 0.5 && killall Finder
+
+# `0`
+$ defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 0 && killall Finder
+
+# `1`
+$ defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 1 && killall Finder
+```
+
+#### full POSIX path in toolbar title
+```bash
+$ defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+```
+
+### icon
+#### set sidebar icon size
+```bash
+# small
+$ defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 && killall Finder
+
+# medium
+$ defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2 && killall Finder
+
+# large
+$ defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 3 && killall Finder
+```
+
+#### icons on the desktop
+```bash
+# show external hard drive
+$ defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+
+# show hard drive
+$ defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
+$ defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+
+# removeable media
+$ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+```
+
+### bars
+```bash
+# show path bar
+$ defaults write com.apple.finder ShowPathbar -bool true
+
+# show status bar
+$ defaults write com.apple.finder ShowStatusBar -bool true
+```
+
+### panel
+```bash
+# expand save panel by default
+$ defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+$ defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# expand print panel by default
+$ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+$ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+```
+
+### hidden file
+#### show hidden files
+```bash
+# show
+$ defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder
+
+# disable
+$ defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder
+```
+
+#### disable the `.DS_Store` and `._*`
+
+> [!NOTE|label:references:]
+> - [Junk files created by macOS (or Finder)...](https://discussions.apple.com/thread/251428275?answerId=252779543022#252779543022)
+>   - You can disable MDS on a specific volume, but you need to create a hidden file to do it
+>     ```bash
+>     $ sudo touch /Volumes/{drive name}/.metadata_never_index
+>     ```
+> - [more details](https://apple.stackexchange.com/a/208495/254265)
+>   - `.DS_Store` – The name of a file in the Apple OS X operating system for storing custom attributes of a folder such as the position of icons or the choice of a background image (Read more)
+>   - `.Spotlight-V100` – This file holds information to speed up the 'Spotlight Search' feature. Deleting would simply force this information to be re-indexed if you performed another Spotlight Search for an item in this folder.
+>   - `.apDisk` – This file holds information about shared folders and can be safely removed as it will be automatically re-created if Apple needs it.
+>   - `.VolumeIcon.icns` – This file is used to store the icon of the volume (USB device) if the volume uses a custom icon and not the default icon. If you want the device to continue using this default icon, or if the folder/device you want to clean contains an application, you might want to keep this file in your system. As a side note, if you wanted to create a custom icon for your device you could create/download an .icns file and rename it .VolumeIcon.icns and place in your folder/device.
+>   - `.fseventsd` – This file is used as a buffer for the File System Events daemon. If you are using a program that is monitoring this folder/device, this file might be used to store temporary data.
+>   - `.Trash` & `.Trashes` – These folders are used to hold deleted items the same way that the 'Trash' icon from the dock works. If you don't need this feature on your folder/device, you can clean this folder to save space.
+>   - `.TemporaryItems` – This file is used by the OS to hold temporary data when files are being copied/moved/appended. If you are running any programs that are accessing the folder/device you want to clean, and you aren't copying or moving any files, then this file can simply hold old data for caching.
+
+```bash
+# Network drives
+$ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+# USB drives
+$ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+```
+
 - enable
   ```bash
-  $ sudo nvram StartupMute=%00
+  $ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool false
+  $ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool false
   ```
 
-### [Dock performance setup](https://sspai.com/post/33493)
-#### minimize Windows Using "suck" mode
+- result
+  ```bash
+  $ defaults read com.apple.desktopservices
+  {
+      DSDontWriteNetworkStores = 1;
+      DSDontWriteUSBStores = 1;
+  }
+  ```
+
+### others
+#### disk image verification
 ```bash
-$ defaults write com.apple.dock mineffect suck && killall Dock
+# disable
+$ defaults write com.apple.frameworks.diskimages skip-verify -bool true
+$ defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+$ defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
 ```
-- `genie`
-  ```bash
-  $ defaults write com.apple.dock mineffect genie && killall Dock
-  ```
-- `scale`
-  ```bash
-  $ defaults write com.apple.dock mineffect -string scale && killall Dock
-  ```
 
-#### Highlight icon
+#### search scope
+```bash
+# use current directory as default search scope
+$ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+```
+
+#### silent quiet
+```bash
+# quit printer app once the print jobs complete
+$ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+```
+
+#### save to disk or iCloud
+```bash
+# yes: save to iCloud
+$ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool true
+
+# no: save to disk by default
+$ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+```
+
+#### select && copy from quicklook
+```bash
+$ defaults write com.apple.finder QLEnableTextSelection -bool TRUE; killall Finder
+```
+
+## menu bar
+#### transparency
+```bash
+# disable transparency
+$ defaults write com.apple.universalaccess reduceTransparency -bool true
+```
+
+#### highlight color
+```bash
+# green
+$ defaults write NSGlobalDomain AppleHighlightColor -string "0.764700 0.976500 0.568600"
+
+# black
+$ defaults write NSGlobalDomain AppleHighlightColor -string "0.500000 0.500000 0.500000"
+```
+
+#### flash clock time separators
+```bash
+# stay solid
+$ defaults write com.apple.menuextra.clock FlashDateSeparators -bool false && killall SystemUIServer
+
+# separator flashes
+$ defaults write com.apple.menuextra.clock FlashDateSeparators -bool true && killall SystemUIServer
+```
+
+#### set menu bar digital clock format
+
+> [!NOTE|label:region settings:]
+> - `ss` for seconds.
+> - `HH` for 24-hour clock.
+> - `EEE` for 3-letter day of the week.
+> - `d MMM` for day of the month and 3-letter month.
+
+```bash
+# `EEE d MMM HH:mm:ss`
+$ defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
+
+# `EEE h:mm:ss`
+$ defaults write com.apple.menuextra.clock DateFormat -string "EEE h:mm:ss"
+
+# `EEE HH:mm:ss`
+$ defaults write com.apple.menuextra.clock DateFormat -string "EEE HH:mm:ss"
+```
+
+#### menu bar transparency
+```bash
+# disable transparency
+$ defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
+```
+
+## dock
+
+> [!NOTE|label:references:]
+> - [Dock performance setup](https://sspai.com/post/33493)
+
+### show
+#### position
+```bash
+# `left`
+$ defaults write com.apple.dock orientation -string left && killall Dock
+
+# `right`
+$ defaults write com.apple.dock orientation -string right && killall Dock
+
+# `bottom`
+$ defaults write com.apple.dock orientation -string bottom && killall Dock
+```
+
+#### disable delay of dock displaying
+```bash
+$ defaults write com.apple.Dock autohide-delay -float 0 && killall Dock
+```
+
+#### show recently
+```bash
+# show
+$ defaults write com.apple.dock show-recents -bool true && killall Dock
+
+# disable show
+$ defaults write com.apple.dock show-recents -bool false && killall Dock
+```
+
+### icon
+#### highlight icon
 ```bash
 $ defaults write com.apple.dock mouse-over-hilite-stack -bool TRUE && killall Dock
+
+# revert
+$ defaults delete com.apple.dock mouse-over-hilite-stack && killall Dock
 ```
-- Restore to Default:
-  ```bash
-  $ defaults delete com.apple.dock mouse-over-hilite-stack && killall Dock
-  ```
+
+#### icon size
+```bash
+# `36`
+$ defaults write com.apple.dock tilesize -int 36 && killall Dock
+
+# `48`
+$ defaults write com.apple.dock tilesize -int 48 && killall Dock
+
+# read current value
+$ defaults read com.apple.dock tilesize
+46
+```
 
 #### remove none-opened apps
 ```bash
 $ defaults write com.apple.dock static-only -boolean true && killall Dock
+
+# revert
+$ defaults delete com.apple.dock static-only && killall Dock
 ```
-- restore to default:
-  ```bash
-  $ defaults delete com.apple.dock static-only && killall Dock
-  ```
 
 #### hidden icon
 ```bash
 $ defaults write com.apple.dock showhidden -bool true && killall Dock
-```
-- restore to default
-  ```bash
-  $ defaults delete com.apple.Dock showhidden && killall Dock
-  ```
 
-### keyboard & trackpad
-#### enable Key Repeat
+# revert
+$ defaults delete com.apple.Dock showhidden && killall Dock
+```
+
+### animation
+#### opening applications animation
 ```bash
+# enable
+$ defaults write com.apple.dock launchanim -bool true
+
+# disable
+$ defaults write com.apple.dock launchanim -bool false
+```
+
+#### animation of minimize windows
+```bash
+# suck
+$ defaults write com.apple.dock mineffect suck && killall Dock
+
+# `genie`
+$ defaults write com.apple.dock mineffect genie && killall Dock
+
+# `scale`
+$ defaults write com.apple.dock mineffect -string scale && killall Dock
+```
+
+### autohide
+```bash
+# auto hide
+$ defaults write com.apple.dock autohide -bool true && killall Dock
+
+# always show
+$ defaults write com.apple.dock autohide -bool false && killall Dock
+```
+
+#### autohide animation delay
+
+> [!NOTE|label:precondition]
+> - setup autohide to true
+
+```bash
+# `0.5`
+$ defaults write com.apple.dock autohide-time-modifier -float 0.5 && killall dock
+
+# `2`
+$ defaults write com.apple.dock autohide-time-modifier -float 2 && killall dock
+
+# `0`
+$ defaults write com.apple.dock autohide-time-modifier -float 0 && killall dock
+
+# read current value
+$ defaults read com.apple.dock autohide-time-modifier
+1
+```
+
+#### autohide delay
+
+> [!NOTE|label:precondition]
+> - setup autohide to true
+
+```bash
+# `0.5`
+$ defaults write com.apple.dock autohide-delay -float 0.5 && killall Dock
+
+# `0`
+$ defaults write com.apple.dock autohide-delay -float 0 && killall Dock
+
+# read current value
+$ defaults read com.apple.dock autohide-delay
+0
+```
+
+### others
+#### 2D Dock
+```bash
+$ defaults write com.apple.dock no-glass -bool true
+```
+
+#### enable iTunes track notifications in the dock
+```bash
+$ defaults write com.apple.dock itunes-notifications -bool true
+```
+
+#### highlight hover effect
+```bash
+# enable highlight
+$ defaults write com.apple.dock mouse-over-hilte-stack -bool true
+```
+
+#### speeding up mission control animations
+```bash
+$ defaults write com.apple.dock expose-animation-duration -float 0.1
+$ defaults write com.apple.dock "expose-group-by-app" -bool true
+```
+
+#### spring loading for all Dock items
+```bash
+$ defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+```
+
+#### indicator lights for open apps
+```bash
+# show indicators lights
+$ defaults write com.apple.dock show-process-indicators -bool true
+```
+
+## keyboard & trackpad
+
+> [!NOTE|label:references:]
+> - [Key repeat in GitHub Codespaces](https://stackoverflow.com/a/76385233/2940319)
+> - [How can I disable `ApplePressAndHoldEnabled` for a specific application](https://stackoverflow.com/a/70911250/2940319)
+> - [#31919: Characters don't repeat when ApplePressAndHoldEnabled is disabled for VSCode](https://github.com/Microsoft/vscode/issues/31919#issuecomment-343897993)
+
+#### [key repeat](https://blog.csdn.net/m290345792/article/details/110383724)
+```bash
+$ defaults write NSGlobalDomain ApplePressAndHoldEnabled -boolean false
+
+# or
 $ defaults write -g ApplePressAndHoldEnabled -bool false
 ```
-- Restore to Default
+
+- restore
   ```bash
   $ defaults delete -g ApplePressAndHoldEnabled
   ```
+
+- key repeat for in specific apps
+  ```bash
+  # chrome
+  $ defaults delete -g ApplePressAndHoldEnabled
+  $ defaults write "com.google.Chrome" ApplePressAndHoldEnabled 0
+
+  # vscode
+  $ defaults delete com.microsoft.VSCode ApplePressAndHoldEnabled
+  $ defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+  ```
+
+#### fast keyboard response
+```bash
+$ defaults write NSGlobalDomain KeyRepeat -int 0.02
+```
+
+#### reduce key repeat delay
+```bash
+$ defaults write NSGlobalDomain InitialKeyRepeat -int 12
+```
+
+#### enable full keyboard access
+
+> [!TIP]
+>  Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
+
+```bash
+$ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+```
+
+#### auto-correct
+```bash
+# disable
+$ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+```
+
+#### keyboard illumination
+```bash
+# turn off keyboard illumination when computer is not used for 5 minutes
+$ defaults write com.apple.BezelServices kDimTime -int 300
+```
+
+#### increasing sound quality for bluetooth
+```bash
+$ defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+```
 
 #### enable tap to click
 ```bash
@@ -185,434 +825,408 @@ $ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThre
 $ defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
 ```
 
-#### fast keyboard response
+#### trackpad & mouse speed
 ```bash
-$ defaults write NSGlobalDomain KeyRepeat -int 0.02
-```
-#### reduce key repeat delay
-```bash
-$ defaults write NSGlobalDomain InitialKeyRepeat -int 12
+$ defaults write -g com.apple.trackpad.scaling 2
+$ defaults write -g com.apple.mouse.scaling 2.5
 ```
 
-### utilities
-#### avoid install resource validation
-
-{% hint style='tip' %}
-> references:
-> - [How to fix: This is an application downloaded from the Internet. Are you sure you want to open it?](https://www.idownloadblog.com/2017/04/20/fix-application-from-internet-gatekeeper/)
-{% endhint %}
-
+## [battery](https://apple.stackexchange.com/a/35718/254265)
 ```bash
-$ sudo spctl --master-disable
-$ defaults write com.apple.LaunchServices LSQuarantine -bool false
+# get display off timer
+$ pmset -g  | grep displaysleep
+displaysleep         180
+
+# set display off timer
+$ pmset -a displaysleep 30
 ```
 
-#### disable the `.DS_Store` file
+#### battery percent
 ```bash
-$ defaults write com.apple.desktopservices DSDontWriteNetworkStores true
-```
-- Enable the .DS_Store
-  ```bash
-  $ defaults write com.apple.desktopservices DSDontWriteNetworkStores false
-  ```
-
-- [more details](https://apple.stackexchange.com/a/208495/254265)
-  - `.DS_Store` – The name of a file in the Apple OS X operating system for storing custom attributes of a folder such as the position of icons or the choice of a background image (Read more)
-  - `.Spotlight-V100` – This file holds information to speed up the 'Spotlight Search' feature. Deleting would simply force this information to be re-indexed if you performed another Spotlight Search for an item in this folder.
-  - `.apDisk` – This file holds information about shared folders and can be safely removed as it will be automatically re-created if Apple needs it.
-  - `.VolumeIcon.icns` – This file is used to store the icon of the volume (USB device) if the volume uses a custom icon and not the default icon. If you want the device to continue using this default icon, or if the folder/device you want to clean contains an application, you might want to keep this file in your system. As a side note, if you wanted to create a custom icon for your device you could create/download an .icns file and rename it .VolumeIcon.icns and place in your folder/device.
-  - `.fseventsd` – This file is used as a buffer for the File System Events daemon. If you are using a program that is monitoring this folder/device, this file might be used to store temporary data.
-  - `.Trash` & `.Trashes` – These folders are used to hold deleted items the same way that the 'Trash' icon from the dock works. If you don't need this feature on your folder/device, you can clean this folder to save space.
-  - `.TemporaryItems` – This file is used by the OS to hold temporary data when files are being copied/moved/appended. If you are running any programs that are accessing the folder/device you want to clean, and you aren't copying or moving any files, then this file can simply hold old data for caching.
-
-#### show battery percent
-```bash
+# show battery percent
 $ defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 ```
 
-#### [forbidden spell automatic correction](https://github.com/bestswifter/macbootstrap/blob/master/doc/system.md)
+#### remaining battery time
 ```bash
-$ defaults write -g NSAutomaticQuoteSubstitutionEnabled -bool false
-$ defaults write -g NSAutomaticDashSubstitutionEnabled -bool false
-$ defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
+$ defaults write com.apple.menuextra.battery ShowTime -string "YES"
 ```
 
-#### disable notification centers
+## browser
+### chrome
+#### sensitive backswipe
 ```bash
-$ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
-$ killall NotificationCenter
+# disable on trackpads
+$ defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
+$ defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false
+
+# disable on magic mouse
+$ defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
+$ defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
 ```
 
-#### are you sure you want to open this application?
+#### system-native print preview
 ```bash
-$ defaults write com.apple.LaunchServices LSQuarantine -bool false
-```
-- or
-  ```bash
-  $ sudo spctl — master-disable
-  ```
-
-#### none warning for unknow resource open
-```bash
-$ defaults write com.apple.LaunchServices LSQuarantine -bool false
+$ defaults write com.google.Chrome DisablePrintPreview -bool true
+$ defaults write com.google.Chrome.canary DisablePrintPreview -bool true
 ```
 
-#### enable the hidden file
+#### expand the print dialog
 ```bash
-$ defaults write com.apple.finder AppleShowAllFiles TRUE; killall Finder
+$ defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
+$ defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
 ```
-- or
-  ```bash
-  $ defaults write com.apple.finder AppleShowAllFiles YES
-  ```
 
-#### [Safari Font Size](https://discussions.apple.com/thread/7674863?start=0&tstart=0)
+### safari
+#### bookmarks
+```bash
+# hidden bookmark
+$ defaults write com.apple.Safari ShowFavoritesBar -bool false
+
+# removing useless icons from bookmark bar
+defaults write com.apple.Safari ProxiesInBookmarksBar "()"
+```
+
+#### sidebar
+```bash
+# hidden
+$ defaults write com.apple.Safari ShowSidebarInTopSites -bool false
+```
+
+#### thumbnail cache
+```bash
+# disable
+$ defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
+```
+
+#### debug mode
+```bash
+# enable debug menu
+$ defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+
+# develop menu and the web inspector
+$ defaults write com.apple.Safari IncludeDevelopMenu -bool true
+$ defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+$ defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
+
+# context menu for web inspector
+$ defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+```
+
+#### search banners
+```bash
+# search banners default to Contains instead of Starts With
+$ defaults write com.apple.Safari FindOnPageMatchesWordStartsOnly -bool false
+```
+
+#### backspace key to previous page
+```bash
+# disable
+$ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled -bool true
+```
+
+#### [safari font size](https://discussions.apple.com/thread/7674863?start=0&tstart=0)
 ```bash
 $ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2MinimumFontSize -int 14
 ```
 
-#### disable Spotlight
+## system
+#### set standby
 ```bash
+# to 24 hours
+$ sudo pmset -a standbydelay 86400
+```
+
+#### reset launchpad
+```bash
+$ [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
+```
+
+#### automatic terminate inactive apps
+```bash
+# disable
+$ defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
+
+# enable
+$ defaults write NSGlobalDomain NSDisableAutomaticTermination -bool false
+```
+
+#### viewer windows mode
+```bash
+# non-floating mode
+$ defaults write com.apple.helpviewer DevMode -bool true
+
+# floating mode
+$ defaults write com.apple.helpviewer DevMode -bool false
+```
+
+#### textEdit
+```bash
+# plain text mode
+$ defaults write com.apple.TextEdit RichText -int 0
+
+# UTF-8 in TextEdit
+$ defaults write com.apple.TextEdit PlainTextEncoding -int 4
+$ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+```
+
+#### disk utility
+```bash
+# enable debug menu
+$ defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
+$ defaults write com.apple.DiskUtility advanced-image-options -bool true
+```
+
+#### QuickTime
+```bash
+# auto-play when open video
+$ defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
+```
+
+#### App Store
+```bash
+# enable the webkit developer tools
+$ defaults write com.apple.appstore WebKitDeveloperExtras -bool true
+
+# enable debug menu
+$ defaults write com.apple.appstore ShowDebugMenu -bool true
+
+# enable the automatic update check
+$ defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+
+# check for software updates daily instead of weekly
+$ defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
+# download newly available updates in background
+$ defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+
+# install system data files & security updates
+$ defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+
+# automatically download apps purchased on other macs
+$ defaults write com.apple.SoftwareUpdate ConfigDataInstall -int 1
+
+# turn on app auto-update
+$ defaults write com.apple.commerce AutoUpdate -bool true
+
+# allow the app store to reboot machine on macos updates
+$ defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
+```
+
+#### Activity Monitor
+```bash
+# show main window
+$ defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
+
+# visualize cpu usage
+$ defaults write com.apple.ActivityMonitor IconType -int 5
+
+# show all processes
+$ defaults write com.apple.ActivityMonitor ShowCategory -int 0
+
+# sort via cpu usage
+$ defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+$ defaults write com.apple.ActivityMonitor SortDirection -int 0
+```
+
+#### over-the-top focus ring animation
+```bash
+# disable
+$ defaults write NSGlobalDomain NSUseAnimatedFocusRing -bool false
+```
+
+#### spotlight
+```bash
+# disable
 $ sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
-```
-- re-enable Spotlight
-  ```bash
-  $ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
-  ```
 
-#### disable Notification Center
+# enable
+$ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.metadata.mds.plist
+
+# [not recommended] hide icon
+$ sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+
+# stop indexing in a specific volume
+$ sudo mdutil -i off "/Volumes/<name>"
+
+# stop mdutil in a specific volume
+$ sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes/<name>"
+```
+
+#### change indexing order
 ```bash
-$ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
-$ killall NotificationCenter
+defaults write com.apple.spotlight orderedItems -array \
+  '{"enabled" = 1;"name" = "APPLICATIONS";}' \
+  '{"enabled" = 1;"name" = "SYSTEM_PREFS";}' \
+  '{"enabled" = 1;"name" = "DIRECTORIES";}' \
+  '{"enabled" = 1;"name" = "PDF";}' \
+  '{"enabled" = 1;"name" = "FONTS";}' \
+  '{"enabled" = 0;"name" = "DOCUMENTS";}' \
+  '{"enabled" = 0;"name" = "MESSAGES";}' \
+  '{"enabled" = 0;"name" = "CONTACT";}' \
+  '{"enabled" = 0;"name" = "EVENT_TODO";}' \
+  '{"enabled" = 0;"name" = "IMAGES";}' \
+  '{"enabled" = 0;"name" = "BOOKMARKS";}' \
+  '{"enabled" = 0;"name" = "MUSIC";}' \
+  '{"enabled" = 0;"name" = "MOVIES";}' \
+  '{"enabled" = 0;"name" = "PRESENTATIONS";}' \
+  '{"enabled" = 0;"name" = "SPREADSHEETS";}' \
+  '{"enabled" = 0;"name" = "SOURCE";}' \
+  '{"enabled" = 0;"name" = "MENU_DEFINITION";}' \
+  '{"enabled" = 0;"name" = "MENU_OTHER";}' \
+  '{"enabled" = 0;"name" = "MENU_CONVERSION";}' \
+  '{"enabled" = 0;"name" = "MENU_EXPRESSION";}' \
+  '{"enabled" = 0;"name" = "MENU_WEBSEARCH";}' \
+  '{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}'
+# Load new settings before rebuilding the index
+killall mds > /dev/null 2>&1
+# Make sure indexing is enabled for the main volume
+sudo mdutil -i on / > /dev/null
+# Rebuild the index from scratch
+sudo mdutil -E / > /dev/null
 ```
-- re-enable Notifaction Center
-  ```bash
-  $ launchctl load -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
-  ```
 
-#### Disable the download apps security
+#### notification center
 ```bash
-$ defaults write com.apple.LaunchServices LSQuarantine -bool NO
+# disable
+$ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist && killall NotificationCenter
+
+# enable
+$ launchctl load -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist && killall NotificationCenter
 ```
-- re-enable the download apps security
-  ```bash
-  $ defaults write com.apple.LaunchServices LSQuarantine -bool YES
-  ```
 
-#### Disable the dashboard
-```bash
-$ defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
-```
-- re-enable the dashboard
+#### mission control
+- rearrange automatically
   ```bash
-  $ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
-  ```
-
-### screenshot
-#### shadow
-- show
-  ```bash
-  $ defaults write com.apple.screencapture disable-shadow -bool false
-  ```
-- disable
-  ```bash
-  $ defaults write com.apple.screencapture disable-shadow -bool true
-  ```
-
-#### include date
-- include
-  ```bash
-  $ defaults write com.apple.screencapture include-date -bool true
-  ```
-- not
-  ```bash
-  $ defaults write com.apple.screencapture include-date -bool false
-  ```
-
-#### save location
-- `~/Desktop`
-  ```bash
-  $ defaults write com.apple.screencapture location -string ~/Desktop && killall SystemUIServer
-  ```
-- `~/Pictures`
-  ```bash
-  $ defaults write com.apple.screencapture location -string ~/Pictures && killall SystemUIServer
-  ```
-
-#### Display thumbnail
-- display
-  ```bash
-  $ defaults write com.apple.screencapture show-thumbnail -bool true
-  ```
-- not show thumbnail
-  ```bash
-  $ defaults write com.apple.screencapture show-thumbnail -bool false
-  ```
-
-#### screenshot format
-- `png`
-  ```bash
-  $ defaults write com.apple.screencapture type -string png
-  ```
-- `jpg`
-  ```bash
-  $ defaults write com.apple.screencapture type -string jpg
-  ```
-
-### finder
-#### quitable
-- hidden quite
-  ```bash
-  $ defaults write com.apple.finder QuitMenuItem -bool false && killall Finder
-  ```
-- enable quite
-  ```bash
-  $ defaults write com.apple.finder QuitMenuItem -bool true && killall Finder
-  ```
-
-#### show extension
-- show
-  ```bash
-  $ defaults write NSGlobalDomain AppleShowAllExtensions -bool true && killall Finder
-  ```
-- not show
-  ```bash
-  $ defaults write NSGlobalDomain AppleShowAllExtensions -bool false && killall Finder
-  ```
-
-#### show hidden files
-- show
-  ```bash
-  $ defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder
-  ```
-- not show
-  ```bash
-  $ defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder
-  ```
-
-#### change file extension warning
-- show warning
-  ```bash
-  $ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true && killall Finder
-  ```
-- silent
-  ```bash
-  $ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false && killall Finder
-  ```
-
-#### save to disk or iCloud by default
-- yes
-  ```bash
-  $ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool true
-  ```
-- no
-  ```bash
-  $ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
-  ```
-
-#### adjust toolbar title rollover delay
-- `0.5`
-  ```bash
-  $ defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 0.5 && killall Finder
-  ```
-- `0`
-  ```bash
-  $ defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 0 && killall Finder
-  ```
-- `1`
-  ```bash
-  $ defaults write NSGlobalDomain NSToolbarTitleViewRolloverDelay -float 1 && killall Finder
-  ```
-
-#### set sidebar icon size
-- small
-  ```bash
-  $ defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1 && killall Finder
-  ```
-- medium
-  ```bash
-  $ defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2 && killall Finder
-  ```
-- large
-  ```bash
-  $ defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 3 && killall Finder
-  ```
-
-### menu bar
-#### flash clock time separators
-- stay solid
-  ```bash
-  $ defaults write com.apple.menuextra.clock FlashDateSeparators -bool false && killall SystemUIServer
-  ```
-- separator flashes
-  ```bash
-  $ defaults write com.apple.menuextra.clock FlashDateSeparators -bool true && killall SystemUIServer
-  ```
-
-#### set menu bar digital clock format
-> region settings:
-> - `ss` for seconds.
-> - `HH` for 24-hour clock.
-> - `EEE` for 3-letter day of the week.
-> - `d MMM` for day of the month and 3-letter month.
-
-- `EEE d MMM HH:mm:ss`
-  ```bash
-  $ defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
-  ```
-- `EEE h:mm:ss`
-  ```bash
-  $ defaults write com.apple.menuextra.clock DateFormat -string "EEE h:mm:ss"
-  ```
-- `EEE HH:mm:ss`
-  ```bash
-  $ defaults write com.apple.menuextra.clock DateFormat -string "EEE HH:mm:ss"
-  ```
-
-### mission control
-#### rearrange automatically
-- base on most of recent use
-  ```bash
+  # base on most of recent use
   $ defaults write com.apple.dock mru-spaces -bool true && killall Dock
-  ```
-- keep space arrangement
-  ```bash
+
+  # keep space arrangement
   $ defaults write com.apple.dock mru-spaces -bool false && killall Dock
   ```
 
-### feedback assistant
-#### auto gather
-- allow large
+#### dashboard
+```bash
+# disable
+$ defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
+
+# enable
+$ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
+```
+
+#### time machine
+```bash
+# disable dialog
+$ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
+# or disable local backup
+$ hash tmutil &> /dev/null && sudo tmutil disablelocal
+```
+
+#### scrollbars
+```bash
+# always show
+$ defaults write NSGlobalDomain AppleShowScrollBars -string "Auto"
+```
+
+#### ASCII control characters using caret notation in standard text views
+
+> [!NOTE|label:references:]
+> - [#465 : NSTextShowsControlCharacters setting causes Mail to freeze](https://github.com/mathiasbynens/dotfiles/issues/465)
+> - [Mail App Freezes/Hangs OS X 10.10.2](https://discussions.apple.com/thread/6801271)
+
+```bash
+$ defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
+```
+
+#### system-wide resume
+```bash
+# disable
+$ defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
+```
+
+#### loginwindow
+```bash
+# reveal ip address, hostname, os version, etc. when clicking the clock in the login window
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+```
+
+#### sleep mode
+```bash
+# never go to sleep mode
+$ systemsetup -setcomputersleep Off > /dev/null
+
+# disable computer sleep and stop the display from shutting off
+$ sudo pmset -a sleep 0
+$ sudo pmset -a displaysleep 0
+
+# disable hibernatemode to speeds up entering sleep mode
+$ sudo pmset -a hibernatemode 0
+```
+
+#### remove sleep image file
+```bash
+$ sudo rm /Private/var/vm/sleepimage
+# creating a zero-byte file instead of
+$ sudo touch /Private/var/vm/sleepimage
+# make sure be rewritten
+$ sudo chflags uchg /Private/var/vm/sleepimage
+```
+
+#### download apps security
+```bash
+# disable
+$ defaults write com.apple.LaunchServices LSQuarantine -bool NO
+
+# enable
+$ defaults write com.apple.LaunchServices LSQuarantine -bool YES
+```
+
+#### un-useful sudden motion sensor for SSDs
+```bash
+# disable
+$ sudo pmset -a sms 0
+```
+
+#### smart quotes and smart dashes
+```bash
+# disable
+$ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+$ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+```
+
+#### requiring password immediately
+```bash
+$ defaults write com.apple.screensaver askForPassword -int 1
+$ defaults write com.apple.screensaver askForPasswordDelay -int 0
+```
+
+#### subpixel font rendering
+```bash
+# enable subpixel font rendering on non-Apple LCDs
+$ defaults write NSGlobalDomain AppleFontSmoothing -int 2
+```
+
+#### HiDPI display modes
+```bash
+$ sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
+$ sudo reboot
+```
+
+## others
+#### feedback assistant
+- auto gather
   ```bash
+  # allow large
   $ defaults write com.apple.appleseed.FeedbackAssistant Autogather -bool true
-  ```
-- not allow
-  ```bash
+
+  # not allow
   $ defaults write com.apple.appleseed.FeedbackAssistant Autogather -bool false
   ```
 
-### time machine
-#### disable dialog
-```bash
-$ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-```
 
-### dock
-#### change position
-> available positions
-> - bottom
-> - left
-> - right
-
-- `left`
-  ```bash
-  $ defaults write com.apple.dock orientation -string left && killall Dock
-  ```
-- `right`
-  ```bash
-  $ defaults write com.apple.dock orientation -string right && killall Dock
-  ```
-- `bottom`
-  ```bash
-  $ defaults write com.apple.dock orientation -string bottom && killall Dock
-  ```
-
-#### change icon size
-- `36`
-  ```bash
-  $ defaults write com.apple.dock tilesize -int 36 && killall Dock
-  ```
-- `48`
-  ```bash
-  $ defaults write com.apple.dock tilesize -int 48 && killall Dock
-  ```
-- read current value
-  ```bash
-  $ defaults read com.apple.dock tilesize
-  64
-  ```
-
-#### autohide
-- auto hide
-  ```bash
-  $ defaults write com.apple.dock autohide -bool true && killall Dock
-  ```
-- always show
-  ```bash
-  $ defaults write com.apple.dock autohide -bool false && killall Dock
-  ```
-
-#### autohide animation time
-> precondition
-> - setup autohide to true
-
-- `0.5`
-  ```bash
-  $ defaults write com.apple.dock autohide-time-modifier -float 0.5 && killall dock
-  ```
-- `2`
-  ```bash
-  $ defaults write com.apple.dock autohide-time-modifier -float 2 && killall dock
-  ```
-- `0`
-  ```bash
-  $ defaults write com.apple.dock autohide-time-modifier -float 0 && killall dock
-  ```
-- read current value
-  ```bash
-  $ defaults read com.apple.dock autohide-time-modifier
-  1
-  ```
-
-#### autohide delay
-> precondition
-> - setup autohide to true
-
-- `0.5`
-  ```bash
-  $ defaults write com.apple.dock autohide-delay -float 0.5 && killall Dock
-  ```
-- `0`
-  ```bash
-  $ defaults write com.apple.dock autohide-delay -float 0 && killall Dock
-  ```
-- read current value
-  ```bash
-  $ defaults read com.apple.dock autohide-delay
-  0
-  ```
-
-#### show recently
-- show
-  ```bash
-  $ defaults write com.apple.dock show-recents -bool true && killall Dock
-  ```
-- not show
-  ```bash
-  $ defaults write com.apple.dock show-recents -bool false && killall Dock
-  ```
-
-### [tricky for keyboards](https://blog.csdn.net/m290345792/article/details/110383724)
-```bash
-$ defaults write NSGlobalDomain ApplePressAndHoldEnabled -boolean false
-
-# or
-$ defaults write -g ApplePressAndHoldEnabled -bool false
-```
-
-### [battery settings](https://apple.stackexchange.com/a/35718/254265)
-- get display off timer
-  ```bash
-  $ pmset -g  | grep displaysleep
-  displaysleep         180
-  ```
-- set display off timer
-  ```bash
-  $ pmset -a displaysleep 30
-  ```
-
-## backup & restore
-### [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)
+# backup & restore
+## [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)
 - backup
   ```bash
   $ defaults export com.manytricks.Moom ~/Desktop/Moom.plist
@@ -622,7 +1236,7 @@ $ defaults write -g ApplePressAndHoldEnabled -bool false
   $ defaults import com.manytricks.Moom ~/Desktop/Moom.plist
   ```
 
-### vscode
+## vscode
 #### [extension](https://superuser.com/a/1452176)
 - backup
   ```bash
