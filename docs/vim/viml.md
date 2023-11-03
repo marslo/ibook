@@ -201,6 +201,7 @@ autocmd  FocusLost  *.txt   :    endif
 
 > [!NOTE|label:manual:]
 > - [:h hex-editing](https://vimhelp.org/tips.txt.html#hex-editing)
+> - [Improved hex editing](https://vim.fandom.com/wiki/Improved_hex_editing)
 
 ```vim
 " If one has a particular extension that one uses for binary files (such as exe,
