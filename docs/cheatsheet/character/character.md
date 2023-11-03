@@ -46,7 +46,7 @@
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
   - [search and replace](#search-and-replace)
   - [replace with position](#replace-with-position)
-  - [check string ending with `\n`](#check-string-ending-with-%5Cn)
+  - [check line ending](#check-line-ending)
   - [remove the ending '\n'](#remove-the-ending-%5Cn)
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
@@ -62,6 +62,24 @@
 > - [FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
 
 ## charset
+
+> [!NOTE|label:references:]
+> - [ASCII Table, ISO 1252 Latin-1 Chart & Character Set](https://www.barcodefaq.com/ascii-chart-char-set/)
+> - [ASCII Character Chart with Decimal, Binary and Hexadecimal Conversions](https://www.eso.org/~ndelmott/ascii.html)
+> - [control character](https://en.wikipedia.org/wiki/Control_character)
+>
+> |   HEX  | NAME            | ABBREVIATION | ESCAPE | CODE |
+> |:------:|-----------------|:------------:|:------:|:----:|
+> | `0x00` | null            |      NUL     |  `\0`  | `^@` |
+> | `0x07` | bell            |      BEL     |  `\a`  | `^G` |
+> | `0x08` | backspace       |      BS      |  `\b`  | `^H` |
+> | `0x09` | horizontal tab  |      HT      |  `\t`  | `^I` |
+> | `0x0a` | line feed       |      LF      |  `\n`  | `^J` |
+> | `0x0b` | vertical tab    |      VT      |  `\v`  | `^K` |
+> | `0x0c` | form feed       |      FF      |  `\f`  | `^L` |
+> | `0x0d` | carriage return |      CR      |  `\r`  | `^M` |
+> | `0x1a` | Control-Z       |      SUB     |    -   | `^Z` |
+> | `0x1b` | escape          |      ESC     |  `\e`  | `^[` |
 
 - list all charset
   ```bash
@@ -1631,7 +1649,7 @@ aabaa
   aabaa
   ```
 
-### check string ending with `\n`
+### check line ending
 
 > [!NOTE|label:references:]
 > - check ascii via terminal
@@ -1707,7 +1725,14 @@ aabaa
   a.txt: ASCII text, with CRLF line terminators
   ```
 
+- vim
+  ```bash
+  $ vim a.txt
+  :%!hexdump -C
 
+  # or
+  $ vim -c '%!xxd' a.txt
+  ```
 
 ### remove the ending '\n'
 

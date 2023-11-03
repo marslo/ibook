@@ -29,6 +29,7 @@
 - [micro](#micro)
   - [stop macro at the end of line](#stop-macro-at-the-end-of-line)
 - [others](#others)
+  - [startup-options](#startup-options)
   - [How to Open Files with Vim](#how-to-open-files-with-vim)
   - [comments](#comments)
   - [statueline](#statueline)
@@ -607,6 +608,17 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 > - [To switch back to normal mode automatically after inaction](https://vim.fandom.com/wiki/To_switch_back_to_normal_mode_automatically_after_inaction)
 > - [Using Git from Vim](https://vim.fandom.com/wiki/Using_Git_from_Vim)
 > - [Word count](https://vim.fandom.com/wiki/Word_count)
+
+### [startup-options](https://vimhelp.org/starting.txt.html)
+
+> [!NOTE|label:references:]
+> - [`:help edit-binary`](https://vimhelp.org/editing.txt.html#edit-binary)
+
+- binary mode by [`-b`](https://vimhelp.org/starting.txt.html#-b)
+  - `binary` on
+  - `textwidth` 0
+  - `modeline` off
+  - `expandtab` off
 
 ### [How to Open Files with Vim](https://tuckerchapman.com/2021/02/16/vim-open-files/)
 

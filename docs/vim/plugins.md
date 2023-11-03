@@ -385,6 +385,7 @@ highlight clear SignColumn
 > - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
 > - [Vim Airline Setup](https://jnduli.co.ke/vim-airline-setup.html)
 > - [autoload/airline/init.vim](https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/init.vim)
+> - [Getting started with vim-airline](https://tuckerchapman.com/posts/getting-started-vim-airline/)
 > - section:
 >   - [#787: How to modify contents of section Y?](https://github.com/vim-airline/vim-airline/issues/787#issue-84289641)
 >   - [#1087: How to replace section_y with contents of section_x?](https://github.com/vim-airline/vim-airline/issues/1087)

@@ -99,6 +99,8 @@ EOF
 
 > [!NOTE]
 > - [Encrypting content with Ansible Vault](https://docs.ansible.com/ansible/3/user_guide/vault.html)
+> - [* iMarslo : check line ending](../cheatsheet/character/character.html#check-line-ending)
+> - [* iMarslo : remove the ending '\n'](../cheatsheet/character/character.html#remove-the-ending-%5Cn)
 
 ### [encrypted files](https://docs.ansible.com/ansible/3/user_guide/vault.html#creating-encrypted-files)
 
