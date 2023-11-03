@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [charset](#charset)
 - [encryption](#encryption)
   - [`base64`](#base64)
 - [conversion](#conversion)
@@ -45,6 +46,7 @@
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
   - [search and replace](#search-and-replace)
   - [replace with position](#replace-with-position)
+  - [check string ending with `\n`](#check-string-ending-with-%5Cn)
   - [remove the ending '\n'](#remove-the-ending-%5Cn)
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
@@ -58,6 +60,18 @@
 > reference:
 > - [10 Awk Tips, Tricks and Pitfalls](https://catonmat.net/ten-awk-tips-tricks-and-pitfalls)
 > - [FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
+
+## charset
+
+- list all charset
+  ```bash
+  $ iconv --list
+  ```
+
+- [convert text-file from utf-8 to iso-8859-1](https://www.linuxquestions.org/questions/linux-server-73/convert-text-file-from-utf-8-to-iso-8859-1-%5Bsolved%5D-560834/)
+  ```bash
+  $ iconv --from-code=UTF-8 --to-code=ISO-8859-1 inputfile.txt > outputfile.txt
+  ```
 
 ## encryption
 ### `base64`
@@ -1616,6 +1630,84 @@ aabaa
   $ echo "${string:0:position-1}${replacement}${string:position}"
   aabaa
   ```
+
+### check string ending with `\n`
+
+> [!NOTE|label:references:]
+> - check ascii via terminal
+>   - `$ man ascii`
+>   - `$ cat /usr/share/misc/ascii`
+> - [How Hexdump works](https://opensource.com/article/19/8/dig-binary-files-hexdump)
+> - [ASCII Table](https://bytetool.web.app/en/ascii/)
+>   - [ASCII/Binary of 0x0a](https://bytetool.web.app/en/ascii/code/0x0a/)
+> - [Newline](https://en.wikipedia.org/wiki/Newline)
+>
+> | OS                       | CHARACTER ENCODING | ABBREVIATION | HEX   | DEC   | ESCAPE SEQUENCE |
+> |--------------------------|--------------------|--------------|-------|-------|-----------------|
+> | UNIX  or Unix-like       | ASCII              | LF           | 0A    | 10    | \n              |
+> | MS-DOS                   | ASCII              | CR LF        | 0D 0A | 13 10 | \r\n            |
+> | Commodore 8-bit machines | ASCII              | CR           | 0D    | 13    | \r              |
+> | QNX pre-POSIX            | ASCII              | RS           | 1E    | 30    | \036            |
+> | Acorn BBC and RISC OS    | ASCII              | LF CR        | 0A 0D | 10 13 | \n\r            |
+> | Atari 8-bit machines     | ATASCII            | -            | 9B    | 155   | -               |
+> | IBM mainframe systems    | EBCDIC             | NL           | 15    | 21    | \025            |
+> | ZX80 and ZX81            | non-ASCII          | NEWLINE      | 76    | 118   | -               |
+
+- `od -c`
+  ```bash
+  $ echo 'abc' | od -c
+  0000000   a   b   c  \n
+  0000004
+
+  $ echo -n 'abc' | od -c
+  0000000   a   b   c
+  0000003
+  ```
+
+- `hexdump -c`
+  ```bash
+  $ echo 'abc' | hexdump -c
+  0000000   a   b   c  \n
+  0000004
+  $ echo -n 'abc' | hexdump -c
+  0000000   a   b   c
+  0000003
+  ```
+
+- `hexdump -C`
+  ```bash
+  $ echo 'abc' | hexdump -C
+  00000000  61 62 63 0a                                       |abc.|
+  00000004
+  #                  ^
+  #                  |
+  #              0x0a: LF
+  $ echo -n 'abc' | hexdump -C
+  00000000  61 62 63                                          |abc|
+  00000003
+
+  $ cat a.txt | hexdump -C
+  #                    0x0a
+  #                     v
+  00000000  61 61 61 61 0a                                    |aaaa.|
+  00000005
+
+  $ unix2dos a.txt
+  unix2dos: converting file a.txt to DOS format...
+  $ cat a.txt | hexdump -C
+  #                   0x0d 0x0a
+  #                     v   v
+  00000000  61 61 61 61 0d 0a                                 |aaaa..|
+  00000006
+
+  $ cat a.txt | hexdump -c
+  0000000   a   a   a   a  \r  \n
+  0000006
+  $ file a.txt
+  a.txt: ASCII text, with CRLF line terminators
+  ```
+
+
 
 ### remove the ending '\n'
 

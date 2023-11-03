@@ -1137,6 +1137,7 @@ $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/
 > - [Ignore *all* whitespace changes with git-diff between commits](https://stackoverflow.com/a/33159593/2940319)
 > - [Error in console fatal: cannot enforce both tab-in-indent and indent-with-non-tab](https://stackoverflow.com/a/57160479/2940319)
 > - [indentation configuration only for some files](https://stackoverflow.com/a/13823013/2940319)
+> - [How to show space and tabs with git-diff](https://stackoverflow.com/a/30803980/2940319)
 
 - ignore tab
 

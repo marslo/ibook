@@ -782,6 +782,7 @@ $ yum groupremove <groupName>
 > Your description is vague. Either your terminal does not support Unicode, or you're editing a file that's in latin1 (= iso-8859-1).
 > On a bash or zsh shell, with `LC_CTYPE=en_US.UTF-8`, run `echo $'\xc3a9'`. If you see `é`, your terminal supports UTF-8. If you see `Ã©`, your terminal is showing latin1.
 {% endhint %}
+
 > ```bash
 > $ echo $'\xc3a9'
 > a9
