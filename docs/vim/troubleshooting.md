@@ -6,6 +6,7 @@
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
+  - [windows app settings](#windows-app-settings)
 - [vimrc](#vimrc)
   - [`verbose`](#verbose)
   - [`echo`](#echo)
@@ -111,6 +112,48 @@
   set pythonthreedll=c:\path\to\python\python37.dll
   set pythonthreehome=c:\path\to\python
   ```
+
+### windows app settings
+
+> [!NOTE|label:references:]
+> - [CMD opens Windows Store when I type 'python'](https://stackoverflow.com/a/58773979/2940319)
+> - [The Python executable is not recognized on Windows 10](https://stackoverflow.com/a/66547100/2940319)
+>   - app location: `%LocalAppData%\Microsoft\WindowsApps`
+> - [Typing “python” on Windows 10 (version 1903) command prompt opens Microsoft store](https://superuser.com/a/1461471/112396)
+> - [3. Using Python on Windows](https://docs.python.org/3.7/using/windows.html#using-python-on-windows)
+>   - [3.2. The Microsoft Store package](https://docs.python.org/3.7/using/windows.html#the-microsoft-store-package)
+>   - [3.5. Alternative bundles](https://docs.python.org/3.7/using/windows.html#alternative-bundles)
+>   - [3.6. Configuring Python](https://docs.python.org/3.7/using/windows.html#configuring-python)
+>     - [`PYTHONPATH`](https://docs.python.org/3.7/using/cmdline.html#envvar-PYTHONPATH)
+
+- solution
+  - **Settings** -> **Apps** -> **Apps & features** -> **App Execution alias**
+  - enable both `python.exe` and `python3.exe`
+
+  ![App execution alias](../screenshot/win/win10-python-vim.png)
+
+- solution
+  - delete both `python.exe` and `python3.exe` from `%LocalAppData%\Microsoft\WindowsApps`
+  - setup environment variable for manual-installation ( `%LocalAppData\Programs\Python\Python311` by default )
+
+  ```batch
+  > cd %LocalAppData%\Microsoft\WindowsApps
+  > del python.exe
+  > del python3.exe
+  ```
+
+  - [install via nuget.exe](https://docs.python.org/3.7/using/windows.html#the-nuget-org-packages)
+    ```batch
+    > nuget.exe install python -ExcludeVersion -OutputDirectory .
+    > nuget.exe install pythonx86 -ExcludeVersion -OutputDirectory .
+    ```
+
+- [know issues](https://docs.python.org/3.7/using/windows.html#known-issues)
+
+  > [!NOTE]
+  > - [3.8. Python Launcher for Windows](https://docs.python.org/3.7/using/windows.html#python-launcher-for-windows)
+
+  - Currently, the `py.exe` launcher cannot be used to start Python when it has been installed from the Microsoft Store.
 
 ## vimrc
 
