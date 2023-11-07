@@ -14,6 +14,7 @@
   - [show path of current file](#show-path-of-current-file)
   - [Putting the current file on the Windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
   - [map overview](#map-overview)
+  - [check `MACHTYPE`](#check-machtype)
 - [functions](#functions)
   - [TwiddleCase](#twiddlecase)
   - [open html in terminal](#open-html-in-terminal)
@@ -202,6 +203,7 @@ autocmd  FocusLost  *.txt   :    endif
 > [!NOTE|label:manual:]
 > - [:h hex-editing](https://vimhelp.org/tips.txt.html#hex-editing)
 > - [Improved hex editing](https://vim.fandom.com/wiki/Improved_hex_editing)
+> - [Displaying Bytecode](https://learnvimscriptthehardway.stevelosh.com/chapters/52.html)
 
 ```vim
 " If one has a particular extension that one uses for binary files (such as exe,
@@ -319,6 +321,48 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 |  `:nmap` | `:nnoremap` | `:nunmap` | `:nmapclear` |   yes  |       -       |         -        |
 |  `:vmap` | `:vnoremap` | `:vunmap` | `:vmapclear` |    -   |      yes      |         -        |
 |  `:omap` | `:onoremap` | `:ounmap` | `:omapclear` |    -   |       -       |        yes       |
+
+
+### [check `MACHTYPE`](https://vi.stackexchange.com/a/2575/7389)
+
+> [!NOTE]
+> - [`MACHTYPE`](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#index-MACHTYPE)
+>   A string that fully describes the system type on which Bash is executing, in the standard GNU cpu-company-system format
+> - [`system()`](https://learnvimscriptthehardway.stevelosh.com/chapters/52.html#system)
+> - [:help system()](https://vimhelp.org/builtin.txt.html#system%28%29)
+
+- git bash
+  ```bash
+  :echo system('echo -n $MACHTYPE')
+  x86_64-pc-msys
+  ```
+
+- wsl
+  ```bash
+  :echo system('echo -n $MACHTYPE')
+  x86_64-pc-linux-gnu
+  ```
+
+- centos
+  ```bash
+  :echo system('echo -n $MACHTYPE')
+  x86_64-redhat-linux-gnu
+  ```
+
+- more for `system()`
+  ```viml
+  :echo system('ls ' .. expand('%:h:S'))
+  color.md
+  install.md
+  plugins.md
+  tricky.md
+  troubleshooting.md
+  vim.md
+  viml.md
+  windows.md
+
+  Press ENTER or type command to continue
+  ```
 
 ## functions
 ### [TwiddleCase](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)

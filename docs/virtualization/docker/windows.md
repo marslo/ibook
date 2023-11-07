@@ -30,6 +30,7 @@
 >   - [docker-redis-start.ps1](https://gist.github.com/thnk2wn/32ce1ad47882bd5b1c43e19cbf8f37f4)
 >   - [eureka-start.ps1](https://gist.github.com/thnk2wn/ad1e1dbfa5c4c96d6ca59a72a00e45c9)
 >   - [eureka-wait.ps1](https://gist.github.com/thnk2wn/5366a34a71c8fcfd5e3d14722dc02975)
+> - [Docker Engine on Windows](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon)
 {% endhint %}
 
 ## docker
@@ -46,6 +47,8 @@
 > - [basic settings: Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
 > - [Use a script to install docker-ee](https://docs.docker.com.zh.xy2401.com/v17.12/install/windows/docker-ee/#optional-make-sure-you-have-all-required-updates)
 > - [Remote Management of a Windows Docker Host](https://docs.microsoft.com/en-us/virtualization/windowscontainers/management/manage_remotehost)
+> - [Windows Server 2019 - Docker Daemon](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/)
+>   - [Downloading Docker Manually](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/#downloading-docker-manually)
 
 ```powershell
 > Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
@@ -135,6 +138,51 @@
 
   # reboot
   > Restart-Computer -Force
+  ```
+
+
+- [download docker manually](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/#downloading-docker-manually)
+
+  > [!NOTE]
+  > - [OneGet/MicrosoftDockerProvider](https://github.com/OneGet/MicrosoftDockerProvider)
+  > - [Install Package Docker - Windows Server 2022 error](https://learn.microsoft.com/en-us/answers/questions/1324697/install-package-docker-windows-server-2022-error)
+
+  ```powershell
+  # On an online machine, download the zip file.
+  > Invoke-WebRequest -UseBasicParsing -OutFile docker-19.03.3.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.3.zip
+
+  # Stop Docker service if eralier version of Docker is already installed
+  Stop-Service docker
+
+  # Extract the archive.
+  Expand-Archive docker-19.03.3.zip -DestinationPath $Env:ProgramFiles -Force
+
+  # Clean up the zip file.
+  Remove-Item -Force docker-19.03.3.zip
+
+  # Install Docker. This requires rebooting.
+  $null = Install-WindowsFeature containers
+
+  Restart-Computer -Force
+
+  # Add Docker to the path for the current session.
+  $env:path += ';$env:ProgramFiles\docker'
+
+  # Optionally, modify PATH to persist across sessions.
+  $newPath = '$env:ProgramFiles\docker;' +
+  [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Machine)
+  [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+
+  # Register the Docker daemon as a service.
+  dockerd --register-service
+
+  # Start the Docker service.
+  Start-Service docker
+
+  # verify
+  docker pull hello-world:nanoserver
+  docker images
+  docker container run hello-world:nanoserver
   ```
 
 - pull and run windows image
