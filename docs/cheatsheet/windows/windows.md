@@ -29,8 +29,8 @@
   - [Set Environment Variables](#set-environment-variables)
   - [setx problem](#setx-problem)
   - [whoami check SID](#whoami-check-sid)
-  - [Fingerprint Pro](#fingerprint-pro)
-  - [Enable Gadgets](#enable-gadgets)
+  - [fingerprint pro](#fingerprint-pro)
+  - [enable gadgets](#enable-gadgets)
   - [issue about `"profile.d\Active"' is not recognized as an internal or external command`](#issue-about-profiled%5Cactive-is-not-recognized-as-an-internal-or-external-command)
   - [stop windows beep](#stop-windows-beep)
   - [outlook move hubbar to bottom](#outlook-move-hubbar-to-bottom)
@@ -41,6 +41,7 @@
   - [show all environment variables](#show-all-environment-variables)
   - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
 - [tricky](#tricky)
+  - [enable LongPaths in windows](#enable-longpaths-in-windows)
   - [Internet Explorer Enhanced Security Configuration is enabled](#internet-explorer-enhanced-security-configuration-is-enabled)
   - [powershell plugins](#powershell-plugins)
   - [openssh for windows](#openssh-for-windows)
@@ -484,16 +485,17 @@ or
 [clsid](./clsid.md)
 
 ## `regedit`
+
 ### [Set `%USERPROFILE%` as `${HOME}` for **cygwin**](http://stackoverflow.com/questions/225764/safely-change-home-directory-in-cygwin)
 ```batch
 [15:55:36.30 C:\]
-$ reg add HKCU\Environment /v HOME /t REG_EXPAND_SZ /d ^%USERPROFILE^%
+> REG ADD HKCU\Environment /v HOME /t REG_EXPAND_SZ /d ^%USERPROFILE^%
 ```
 
 ### PuTTy
 - Backup PuTTy sessions
   ```batch
-  > regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
+  > REGEDIT /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham
   ```
 
 - Launchy PuTTy session as shortcut
@@ -503,16 +505,16 @@ $ reg add HKCU\Environment /v HOME /t REG_EXPAND_SZ /d ^%USERPROFILE^%
 
 - Backup PuTTy session
   ```batch
-  > regedit /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
+  > REGEDIT /e "%userprofile%\desktop\putty-sessions.reg" HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions
   ```
 
 ### [disable screensaver](https://gist.github.com/Otiel/8d15d21593b481c1e525500762db52ba)
 > reference [Configure screensaver command line](https://www.windows-commandline.com/configure-screensaver-command-line/)
 
 ```batch
-REM  Disable the screensaver
-REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
-REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 0 /f
+> REM  Disable the screensaver
+> REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
+> REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 0 /f
 ```
 - or by using autohotkey
   ```autohotkey
@@ -529,59 +531,54 @@ REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v Scre
   return
   ```
 
-  [or](https://autohotkey.com/board/topic/13510-move-mouse-when-not-in-use-to-disable-screensaver/)
-  ```autohotkey
-  #Persistent
-  SetTimer, WatchCursor, 100
-  return
+  - [or](https://autohotkey.com/board/topic/13510-move-mouse-when-not-in-use-to-disable-screensaver/)
+    ```autohotkey
+    #Persistent
+    SetTimer, WatchCursor, 100
+    return
 
-  Loop
-  {
-    WatchCursor:
-    MouseGetPos,X1 ,Y1
-    Sleep 10000
-    MouseGetPos,X2,Y2
-    if X1=X2 And Y1=Y2
+    Loop
     {
-      MouseMove,100,100
-      Sleep, 10000
-      MouseMove,200,200
-      Sleep, 10000
+      WatchCursor:
+      MouseGetPos,X1 ,Y1
+      Sleep 10000
+      MouseGetPos,X2,Y2
+      if X1=X2 And Y1=Y2
+      {
+        MouseMove,100,100
+        Sleep, 10000
+        MouseMove,200,200
+        Sleep, 10000
+      }
     }
-  }
-  ```
+    ```
 
 ### Remove Graphics card context menu
 - Unregister igfxpph.dll
   ```batch
-  [11:39:50.61 C:\]
-  $ regsvr32 /u igfxpph.dll
+  > regsvr32 /u igfxpph.dll
   ```
 
 - Remove register
     - Setting from regedit
     ```batch
-    [11:47:10.20 C:\]
-    $ REG DELETE "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\igfxcui" /f
+    > REG DELETE "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\igfxcui" /f
     ```
 
     - Setting from setx
     ```batch
-    [11:47:10.20 C:\]
-    $ REG DELETE "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\igfxcui" /f
+    > REG DELETE "HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\igfxcui" /f
     ```
 
 ### Set Environment Variables
 - Set User Varialbe
   ```batch
-  [13:48:11.20 C:\]
-  $ setx VIM_HOME C:\Marslo\MyProgramFiles\Vim\vim74\gvim.exe
+  > setx VIM_HOME C:\Marslo\MyProgramFiles\Vim\vim74\gvim.exe
   ```
 
 - Set System Variable
   ```batch
-  [13:48:11.20 C:\]
-  $ setx /M VIM_HOME C:\Marslo\MyProgramFiles\Vim\vim74\gvim.exe
+  > setx /M VIM_HOME C:\Marslo\MyProgramFiles\Vim\vim74\gvim.exe
   ```
 
 #### details
@@ -590,23 +587,20 @@ REG ADD "HKCU\SOFTWARE\Policies\Microsoft\Windows\Control Panel\Desktop" /v Scre
 ### setx problem
 
 ```batch
-[14:31:18.67 C:\]
-$ setx /M PATH %PATH%;%M2_HOME%\bin
+> setx /M PATH %PATH%;%M2_HOME%\bin
 ERROR: Invalid syntax. Default option is not allowed more than '2' time(s).
 Type "SETX /?" for usage.
 ```
 
-- Fix:
+- fix:
   ```batch
-  [14:31:18.67 C:\]
-  $ REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path /t REG_SZ /d "%path%;%M2_HOME%\bin" /f
+  > REG ADD "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path /t REG_SZ /d "%path%;%M2_HOME%\bin" /f
   ```
 
 ### whoami check SID
 
 ```batch
-[15:59:24.12 C:\Windows\SysWOW64]
-$ whoami /user
+> whoami /user
 USER INFORMATION
 ----------------
 User Name        SID
@@ -614,7 +608,7 @@ User Name        SID
 mj\marslo_jiao S-1-5-21-354581543-3608027983-2995495404-970613
 ```
 
-### Fingerprint Pro
+### fingerprint pro
 
 ```batch
 URL: www.lenovo.com
@@ -624,7 +618,7 @@ Uninstaller: "C:\Program Files\InstallShield Installation Information\{314FAD12-
 Estimated size: 70.21 MB
 ```
 
-### Enable Gadgets
+### enable gadgets
 
 ```batch
 Windows Registry Editor Version 5.00
@@ -644,7 +638,7 @@ Windows Registry Editor Version 5.00
 
 - cmd
   ```batch
-  $ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d "@CHCP 65001>nul" /f
+  > REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d "@CHCP 65001>nul" /f
   ```
 
 ### stop windows beep
@@ -692,7 +686,6 @@ Windows Registry Editor Version 5.00
 > - [Change default code page of Windows console to UTF-8](https://superuser.com/a/269857/112396)
 
 ![windows terminal utf-8](../../screenshot/win/wt-utf-8.png)
-
 
 ### <kbd>win</kbd> + <kbd>r</kbd>
 > references:
@@ -759,6 +752,34 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ```
 
 ## tricky
+### enable LongPaths in windows
+
+> [!NOTE|label:references:]
+> - [Maximum Path Length Limitation](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry)
+>   - The maximum path of 32,767 characters is approximate
+>   - [GetVolumeInformationA function](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationa)
+> - [How to Make Windows 10 Accept File Paths Over 260 Characters](https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/)
+> - [Enabling Windows Long Path (Windows 10 - 1803 build)](https://www.microfocus.com/documentation/filr/filr-4/filr-desktop/t47bx2ogpfz7.html)
+
+- regedit
+  ```batch
+  > REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 0x00000001 /f
+  ```
+
+  ![regedit -> LongPathsEnabled](../../screenshot/win/regedit-long-path-2.png)
+
+- powershell
+  ```powershell
+  > New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+  ```
+
+- gpedit.msc
+
+  - **Local Group Policy Editor** -> **Computer Configuration** -> **Administrative Templates** -> **System** > **Filesystem**
+  - **Enable win32 long paths** -> **Enabled**
+
+  ![pgedit.msc -> Enable win32 long paths](../../screenshot/win/gpedit.msc-long-path-1.png)
+
 ### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
 ![windows step 1](../../screenshot/win/windows-service-security-1.png)
 ![windows step 2](../../screenshot/win/windows-service-security-2.png)
