@@ -6,6 +6,7 @@
 - [Using set commands to modify objects before creation](#using-set-commands-to-modify-objects-before-creation)
 - [Using --edit to modify objects before creation](#using---edit-to-modify-objects-before-creation)
 - [secrets](#secrets)
+- [auth](#auth)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -766,3 +767,28 @@ $ kubectl create --edit -f /tmp/srv.yaml
             --from-literal='username=my-app' \
             --from-literal='password=39528$vdg7Jb'
   ```
+
+### auth
+
+> [!NOTE|label:references:]
+> - [Adding permission to exec commands in containers inside pods in a certain namespace](https://discuss.kubernetes.io/t/adding-permission-to-exec-commands-in-containers-inside-pods-in-a-certain-namespace/22821)
+
+#### `auth can-i`
+
+```bash
+$ namespace='test'
+$ kubectl auth can-i get pods -n "${namespace}"
+yes
+$ kubectl auth can-i list pods -n "${namespace}"
+yes
+$ kubectl auth can-i create pods -n "${namespace}"
+yes
+$ kubectl auth can-i create pods/exec -n "${namespace}"
+yes
+$ kubectl auth can-i get pods/exec -n "${namespace}"
+yes
+$ kubectl auth can-i create pods --subresource=exec -n "${namespace}"
+no
+$ kubectl auth can-i get pods --subresource=exec -n "${namespace}"
+no
+```
