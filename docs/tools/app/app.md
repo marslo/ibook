@@ -9,6 +9,8 @@
   - [development](#development)
   - [system](#system)
 - [app store](#app-store)
+- [program](#program)
+  - [Java](#java)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -67,5 +69,49 @@
 ## app store
 - logout
   - `Store` -> `logout`
+
   ![logout appstore in MacOS](../../screenshot/tools/appstore-logout.png)
 
+## program
+### [Java](https://www.oracle.com/java/technologies/)
+
+> [!NOTE|label:references:]
+> - [* iMarslo : apps/java](../../osx/apps.html#java)
+> - [Oracle Java Archive](https://www.oracle.com/java/technologies/downloads/archive/)
+
+- [java 21](https://www.oracle.com/java/technologies/downloads/#java21)
+  - [linux](https://www.oracle.com/java/technologies/downloads/#jdk21-linux)
+  - [osx](https://www.oracle.com/java/technologies/downloads/#jdk21-mac)
+  - [windows](https://www.oracle.com/java/technologies/downloads/#jdk21-windows)
+
+- [java 17](https://www.oracle.com/java/technologies/downloads/#java17)
+  - [linux](https://www.oracle.com/java/technologies/downloads/#jdk17-linux)
+  - [osx](https://www.oracle.com/java/technologies/downloads/#jdk17-mac)
+  - [windows](https://www.oracle.com/java/technologies/downloads/#jdk17-windows)
+
+- [java 11](https://www.oracle.com/java/technologies/downloads/#java11)
+  - [linux](https://www.oracle.com/java/technologies/downloads/#java11-linux)
+  - [osx](https://www.oracle.com/java/technologies/downloads/#java11-mac)
+  - [windows](https://www.oracle.com/java/technologies/downloads/#java11-windows)
+  - [solaris](https://www.oracle.com/java/technologies/downloads/#java11-solaris)
+
+- [java 8](https://www.oracle.com/java/technologies/downloads/#java8)
+
+  > [!NOTE|label:references:]
+  > - [java 8u391](https://www.oracle.com/java/technologies/downloads/#java8)
+  > - [java 8u211 and later](https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html)
+  > - [java 8u202 and earlier](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)
+
+  - [linux](https://www.oracle.com/java/technologies/downloads/#java8-linux)
+  - [osx](https://www.oracle.com/java/technologies/downloads/#java8-mac)
+  - [windows](https://www.oracle.com/java/technologies/downloads/#java8-windows)
+  - [solaris](https://www.oracle.com/java/technologies/downloads/#java8-solaris)
+
+- [java archive](https://www.oracle.com/java/technologies/downloads/archive/)
+  - [Java SE 7](https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html)
+  - [Java SE 6](https://www.oracle.com/java/technologies/javase-java-archive-javase6-downloads.html)
+  - [Java SE 5](https://www.oracle.com/java/technologies/java-archive-javase5-downloads.html)
+  - [Java SE 1.4](https://www.oracle.com/java/technologies/java-archive-javase-v14-downloads.html)
+  - [Java SE 1.3](https://www.oracle.com/java/technologies/java-archive-javase-v13-downloads.html)
+  - [Java SE 1.2](https://www.oracle.com/java/technologies/java-archive-javase-v12-downloads.html)
+  - [Java SE 1.1](https://www.oracle.com/java/technologies/java-archive-downloads-javase11-downloads.html)
