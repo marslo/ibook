@@ -21,6 +21,7 @@
   - [get all vote CR-2](#get-all-vote-cr-2)
   - [who approval the V+1](#who-approval-the-v1)
   - [reference](#reference)
+- [integrate in Jenkins](#integrate-in-jenkins)
 - [css for code block](#css-for-code-block)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -672,6 +673,40 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 - [Gerrit push not working. Remote rejected, prohibited by gerrit](https://stackoverflow.com/a/31297860/2940319)
 - [Gerrit Code Review - Project Configuration File Format](https://gerrit-review.googlesource.com/Documentation/config-project-config.html)
 - [Review UI](https://gerrit-review.googlesource.com/Documentation/user-review-ui.html)
+
+
+## integrate in Jenkins
+
+> [!NOTE|label:references:]
+> - [Gerrit Trigger](https://plugins.jenkins.io/gerrit-trigger/)
+> - [How does the Gerrit- trigger plugin in Jenkins works?](https://stackoverflow.com/a/16206203/2940319)
+
+- `stream-events`
+
+  ```bash
+  # permission requies
+  $ ssh -i id_rsa jenkins@gerrit.sample.com -p 29418 gerrit stream-events
+  stream events not permitted
+
+  # verify
+  $ ssh -i id_rsa jenkins@gerrit.sample.com -p 29418 gerrit stream-events | jq -r .type
+  ref-updated
+  comment-added
+  ```
+
+- build current patches only
+
+  > [!NOTE]
+  > Warning: The current implementation takes into account that 'Build Current Patches Only' with 'Abort new patch sets' and 'Abort patch sets with same topic' are enabled (see help for more).
+
+  ![gerrit trigger](../../screenshot/jenkins/gerrit-trigger.png)
+
+- generate ssh-key
+
+  ```bash
+  $ keyname='devops@jenkins'
+  $ ssh-keygen -m PEM -t rsa -f ~/.ssh/${keyname} -C "${keyname}" -P '' -q
+  ```
 
 ## css for code block
 ```css
