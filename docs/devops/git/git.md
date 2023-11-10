@@ -21,6 +21,7 @@ git command study and practice
   - [get local/remote branches](#get-localremote-branches)
   - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
   - [change head](#change-head)
+  - [get first parent branch](#get-first-parent-branch)
 - [status](#status)
   - [list ignored](#list-ignored)
 - [log](#log)
@@ -328,11 +329,11 @@ $ git branch --no-color \
     $ git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
     origin/meta/config
     ```
-  [or](https://stackoverflow.com/a/49418399/2940319)
-  ```bash
-  $ git status -bsuno
-  ## master...origin/master
-  ```
+  - [or](https://stackoverflow.com/a/49418399/2940319)
+    ```bash
+    $ git status -bsuno
+    ## master...origin/master
+    ```
 
 - get specific
   ```bash
@@ -357,7 +358,6 @@ $ git branch --no-color \
 
 ### [sort local branch via `committerdate`](https://stackoverflow.com/a/5188364/2940319)
 
-
 {% hint style='tip' %}
 > references:
 > - [How can I get a list of Git branches, ordered by most recent commit?](https://stackoverflow.com/q/5188320/2940319)
@@ -370,7 +370,7 @@ $ git branch --no-color \
 ```bash
 $ git for-each-ref --sort=-committerdate refs/heads/
 
-# Or using git branch (since version 2.7.0)
+# or using git branch (since version 2.7.0)
 $ git branch --sort=-committerdate  # DESC
 $ git branch --sort=committerdate   # ASC
 ```
@@ -464,6 +464,13 @@ or
   $ git fetch --all --force
   $ git remote set-head origin refs/remotes/origin/new_master
   ```
+
+### get first parent branch
+
+> [!NOTE|label:references:]
+> - [How to find the nearest parent of a Git branch](https://stackoverflow.com/q/3161204/2940319)
+> - [joechrysler/who_is_my_mummy.sh](https://gist.github.com/joechrysler/6073741)
+> - [* explainshell.com](https://explainshell.com)
 
 ## status
 ### list ignored
