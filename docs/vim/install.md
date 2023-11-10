@@ -14,6 +14,24 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+<
+:wa
+!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [OSX](#osx)
+  - [installation](#installation)
+- [Linux](#linux)
+  - [vim](#vim)
+  - [gvim](#gvim)
+- [Windows](#windows)
+  - [setup environment ( via cygwin )](#setup-environment--via-cygwin-)
+  - [gvim.exe](#gvimexe)
+  - [vim.exe](#vimexe)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 > [!NOTE|label:verify]
 > ```bash
 > $ vim +"py3 print('hello') +qa"
@@ -50,6 +68,7 @@
 >   - `--disable-darwin` will make `-clipboard`
 > references:
 > - [nvim install.sh](https://github.com/chrisarcand/dotfiles/blob/master/vim/install.sh)
+> - [Install vim on macOS High Sierra using source code](https://arophix.com/2018/01/24/install-vim-on-macos-high-sierra/)
 
 <!--sec data-title="config help" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
@@ -212,18 +231,21 @@ $ NPROC=$(getconf _NPROCESSORS_ONLN)
 $ make distclean && make clean
 
 $ ./configure --with-features=huge \
-              --enable-rubyinterp \
-              --enable-python3interp \
+              --enable-cscope \
+              --enable-largefile \
+              --enable-rubyinterp=dynamic \
               --with-python3-config-dir=$(python3-config --configdir) \
-              --enable-luainterp \
+              --enable-python3interp=dynamic \
               --with-lua-prefix=/usr/local \
+              --enable-luainterp=dynamic \
               --enable-libsodium \
               --enable-multibyte \
               --with-tlib=ncurses \
               --enable-terminal \
               --enable-autoservername \
               --enable-nls \
-              --with-macarchs=x86_64 \
+              --with-mac-arch=current \
+              --enable-darwin \
               --with-compiledby="marslo <marslo.jiao@gmail.com>" \
               --prefix=/usr/local/vim \
               --exec-prefix=/usr/local/vim \
@@ -258,6 +280,58 @@ macvim_excmd -c 'py3 import sys; print("Test")'
 macvim_excmd -c 'ruby puts("Test")'
 macvim_excmd -c 'lang es_ES' -c 'version' | grep Enlazado
 ```
+
+<!--sec data-title="result" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ src/vim --version
+VIM - Vi IMproved 9.0 (2022 Jun 28, compiled Nov  9 2023 17:10:37)
+macOS version - x86_64
+Included patches: 1-2095
+Compiled by marslo <marslo.jiao@gmail.com>
+Huge version without GUI.  Features included (+) or not (-):
++acl               +file_in_path      +mouse_urxvt       -tag_any_white
++arabic            +find_in_path      +mouse_xterm       -tcl
++autocmd           +float             +multi_byte        +termguicolors
++autochdir         +folding           +multi_lang        +terminal
++autoservername    -footer            -mzscheme          +terminfo
+-balloon_eval      +fork()            +netbeans_intg     +termresponse
++balloon_eval_term +gettext           +num64             +textobjects
+-browse            -hangul_input      +packages          +textprop
+++builtin_terms    +iconv             +path_extra        +timers
++byte_offset       +insert_expand     -perl              +title
++channel           +ipv6              +persistent_undo   -toolbar
++cindent           +job               +popupwin          +user_commands
+-clientserver      +jumplist          +postscript        +vartabs
++clipboard         +keymap            +printer           +vertsplit
++cmdline_compl     +lambda            +profile           +vim9script
++cmdline_hist      +langmap           -python            +viminfo
++cmdline_info      +libcall           +python3/dyn       +virtualedit
++comments          +linebreak         +quickfix          +visual
++conceal           +lispindent        +reltime           +visualextra
++cryptv            +listcmds          +rightleft         +vreplace
++cscope            +localmap          +ruby/dyn          +wildignore
++cursorbind        +lua/dyn           +scrollbind        +wildmenu
++cursorshape       +menu              +signs             +windows
++dialog_con        +mksession         +smartindent       +writebackup
++diff              +modify_fname      +sodium            -X11
++digraphs          +mouse             +sound             -xattr
+-dnd               -mouseshape        +spell             -xfontset
+-ebcdic            +mouse_dec         +startuptime       -xim
++emacs_tags        -mouse_gpm         +statusline        -xpm
++eval              -mouse_jsbterm     -sun_workshop      -xsmp
++ex_extra          +mouse_netterm     +syntax            -xterm_clipboard
++extra_search      +mouse_sgr         +tag_binary        -xterm_save
+-farsi             -mouse_sysmouse    -tag_old_static
+   system vimrc file: "$VIM/vimrc"
+     user vimrc file: "$HOME/.vimrc"
+ 2nd user vimrc file: "~/.vim/vimrc"
+      user exrc file: "$HOME/.exrc"
+       defaults file: "$VIMRUNTIME/defaults.vim"
+  fall-back for $VIM: "/usr/local/vim/share/vim"
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H -I/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/21.1.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include -DMACOS_X -DMACOS_X_DARWIN -I/usr/local/opt/tcl-tk/include -I/usr/local/Cellar/libsodium/1.0.19/include -D_REENTRANT -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
+Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/local/opt/binutils/lib -L/usr/local/opt/python@3.11/lib -L/usr/local/opt/ruby/lib -L/usr/local/opt/tcl-tk/lib -L/usr/local/opt/sqlite/lib -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/Cellar/node/21.1.0/libexec/lib -L/usr/local/opt/libressl/lib -L/usr/local/Cellar/icu4c@71.1/71.1/lib -L/usr/local/opt/llvm/lib -L/usr/local/opt/llvm/lib/c++ -Wl,-rpath,/usr/local/opt/llvm/lib/c++ -o vim -lm -lncurses -L/usr/local/Cellar/libsodium/1.0.19/lib -lsodium -liconv -lintl -framework AppKit
+```
+<!--endsec-->
 
 - additonal options
   - `--enable-fontset           # no GUI selected; xim has been disabled`
@@ -302,6 +376,7 @@ macvim_excmd -c 'lang es_ES' -c 'version' | grep Enlazado
   - `--disable-darwin --enable-gui=athena`
   - `--disable-darwin --with-x --enable-gui=motif`
   - `--disable-darwin --enable-gui=carbon`
+  - `--enable-gui --enable-darwin --with-mac-arch --enable-xim`
 
   > [!TIP]
   > references:
