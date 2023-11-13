@@ -10,6 +10,7 @@
   - [get from all configure](#get-from-all-configure)
 - [default configuration](#default-configuration)
 - [tig](#tig)
+  - [install from source](#install-from-source)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -372,6 +373,7 @@ local    file:.git/config    marslo
 > [!NOTE|label:references:]
 > - [How to fix "fatal error: ncursesw/ncurses.h: No such file or directory"](https://www.xmodulo.com/fatal-error-ncursesw-ncurses-no-file-directory.html)
 > - [tig : Installation instructions](https://jonas.github.io/tig/INSTALL.html)
+> - [Tig - cheat sheet](https://www.mendelowski.com/docs/git/tig-cheat-sheet/)
 
 ```bash
 # ubuntu
@@ -387,3 +389,64 @@ $ /usr/local/bin/tig --version
 tig version 2.5.8-5-g1894954
 ncursesw version 6.3.20211021
 ```
+
+### [install from source](https://jonas.github.io/tig/INSTALL.html)
+
+```bash
+$ git clone git@github.com:jonas/tig.git && cd tig
+
+$ make
+# or
+$ make prefix=/usr/local
+
+$ make install
+# or
+$ sudo make install prefix=/usr/local
+
+$ sudo make install-doc
+   INSTALL  doc/tig.1 -> /root/share/man/man1
+   INSTALL  doc/tigrc.5 -> /root/share/man/man5
+   INSTALL  doc/tigmanual.7 -> /root/share/man/man7
+   INSTALL  doc/tig.1.html -> /root/share/doc/tig
+   INSTALL  doc/tigrc.5.html -> /root/share/doc/tig
+   INSTALL  doc/manual.html -> /root/share/doc/tig
+   INSTALL  README.html -> /root/share/doc/tig
+   INSTALL  INSTALL.html -> /root/share/doc/tig
+   INSTALL  NEWS.html -> /root/share/doc/tig
+
+# or
+$ [sudo] make install-release-doc
+GIT_INDEX_FILE=.tmp-doc-index git read-tree origin/release
+GIT_INDEX_FILE=.tmp-doc-index git checkout-index -f --prefix=./ doc/tig.1 doc/tigrc.5 doc/tigmanual.7
+rm -f .tmp-doc-index
+make install-doc-man
+make[1]: Entering directory '/home/marslo/iMarslo/tools/git/tools/tig'
+   INSTALL  doc/tig.1 -> /home/marslo/share/man/man1
+   INSTALL  doc/tigrc.5 -> /home/marslo/share/man/man5
+   INSTALL  doc/tigmanual.7 -> /home/marslo/share/man/man7
+make[1]: Leaving directory '/home/marslo/iMarslo/tools/git/tools/tig'
+GIT_INDEX_FILE=.tmp-doc-index git read-tree origin/release
+GIT_INDEX_FILE=.tmp-doc-index git checkout-index -f --prefix=./ doc/tig.1.html doc/tigrc.5.html doc/manual.html README.html INSTALL.html NEWS.html
+rm -f .tmp-doc-index
+make install-doc-html
+make[1]: Entering directory '/home/marslo/iMarslo/tools/git/tools/tig'
+       GEN  doc/manual.toc
+  ASCIIDOC  doc/manual.html
+   INSTALL  doc/tig.1.html -> /home/marslo/share/doc/tig
+   INSTALL  doc/tigrc.5.html -> /home/marslo/share/doc/tig
+   INSTALL  doc/manual.html -> /home/marslo/share/doc/tig
+   INSTALL  README.html -> /home/marslo/share/doc/tig
+   INSTALL  INSTALL.html -> /home/marslo/share/doc/tig
+   INSTALL  NEWS.html -> /home/marslo/share/doc/tig
+make[1]: Leaving directory '/home/marslo/iMarslo/tools/git/tools/tig'
+```
+
+- result
+  ```bash
+  $ which -a tig
+  /usr/local/bin/tig
+
+  $ tig --version
+  tig version 2.5.8-17-ge543cfe
+  ncursesw version 6.1.20180224
+  ```
