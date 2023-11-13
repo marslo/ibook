@@ -6,6 +6,8 @@
   - [docker pull](#docker-pull)
   - [docker build](#docker-build)
   - [docker build with GPG key proxy](#docker-build-with-gpg-key-proxy)
+- [docker for osx](#docker-for-osx)
+  - [`docker: command cannot be found`](#docker-command-cannot-be-found)
 - [command-line auto completion](#command-line-auto-completion)
   - [Linux](#linux)
   - [osx](#osx)
@@ -147,6 +149,40 @@ EOF
   gpg: WARNING: nothing exported
   Warning: apt-key output should not be parsed (stdout is not a terminal)
   ```
+
+## docker for osx
+
+> [!TIP|label:references:]
+> - [#6793: Docker not found when freshly installed on Mac](https://github.com/docker/for-mac/issues/6793)
+> - [Installing symlinks](https://docs.docker.com/desktop/mac/permission-requirements/#installing-symlinks)
+
+### `docker: command cannot be found`
+
+![docker desktop advanced Settings](../../screenshot/docker/docker-desktop-osx-settings.png)
+
+- using user
+  ```bash
+  $ export $HOME/.docker/bin:$PATH
+  ```
+
+- using system
+  ```bash
+  $ ln -sf $HOME/.docker/bin/docker /usr/local/bin/docker
+  # or
+  $ ln -s /Applications/Docker.app/Contents/Resources/bin/docker /usr/local/bin/docker
+
+  $ sudo ln -s -f $HOME/.docker/run/docker.sock /var/run/docker.sock
+  ```
+
+  - modify `~/.docker/config.json` if necessary
+    ```diff
+    {
+            "auths": {},
+    -        "credsStore": "desktop",
+    +        "credStore": "desktop",
+            "currentContext": "desktop-linux"
+    }
+    ```
 
 ## command-line auto completion
 
