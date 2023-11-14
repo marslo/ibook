@@ -325,6 +325,103 @@ $ kubectl get apiservice
   $ kubectl get apiservices.apiregistration.k8s.io v1beta1.metrics.k8s.io -o yaml
   ```
 
+  <!--sec data-title="details" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  $ kubectl get apiservices.apiregistration.k8s.io
+  NAME                                   SERVICE                      AVAILABLE                 AGE
+  v1.                                    Local                        True                      4y
+  v1.apps                                Local                        True                      4y
+  v1.authentication.k8s.io               Local                        True                      4y
+  v1.authorization.k8s.io                Local                        True                      4y
+  v1.autoscaling                         Local                        True                      4y
+  v1.batch                               Local                        True                      4y
+  v1.monitoring.coreos.com               Local                        True                      168d
+  v1.networking.k8s.io                   Local                        True                      4y
+  v1.rbac.authorization.k8s.io           Local                        True                      4y
+  v1.storage.k8s.io                      Local                        True                      4y
+  v1beta1.admissionregistration.k8s.io   Local                        True                      4y
+  v1beta1.apiextensions.k8s.io           Local                        True                      4y
+  v1beta1.apps                           Local                        True                      4y
+  v1beta1.authentication.k8s.io          Local                        True                      4y
+  v1beta1.authorization.k8s.io           Local                        True                      4y
+  v1beta1.batch                          Local                        True                      4y
+  v1beta1.certificates.k8s.io            Local                        True                      4y
+  v1beta1.coordination.k8s.io            Local                        True                      4y
+  v1beta1.events.k8s.io                  Local                        True                      4y
+  v1beta1.extensions                     Local                        True                      4y
+  v1beta1.metrics.k8s.io                 kube-system/metrics-server   False (ServiceNotFound)   188d
+  v1beta1.policy                         Local                        True                      4y
+  v1beta1.rbac.authorization.k8s.io      Local                        True                      4y
+  v1beta1.scheduling.k8s.io              Local                        True                      4y
+  v1beta1.storage.k8s.io                 Local                        True                      4y
+  v1beta2.apps                           Local                        True                      4y
+  v2beta1.autoscaling                    Local                        True                      4y
+  v2beta2.autoscaling                    Local                        True                      4y0
+
+  $ kubectl get apiservices.apiregistration.k8s.io v1beta1.metrics.k8s.io -o yaml --export
+  apiVersion: apiregistration.k8s.io/v1
+  kind: APIService
+  metadata:
+    name: v1beta1.metrics.k8s.io
+  spec:
+    group: metrics.k8s.io
+    groupPriorityMinimum: 100
+    insecureSkipTLSVerify: true
+    service:
+      name: prometheus-adapter
+      namespace: monitoring
+    version: v1beta1
+    versionPriority: 100
+  status:
+    conditions:
+    - lastTransitionTime: 2022-08-15T14:10:39Z
+      message: all checks passed
+      reason: Passed
+      status: "True"
+      type: Available
+  ```
+  <!--endsec-->
+
+- troubleshooting
+
+  > [!NOTE|label:references:]
+  > ```
+  > $ kubectl api-resources
+  > error: unable to retrieve the complete list of server APIs: metrics.k8s.io/v1beta1: the server is currently unable to handle the request
+  > ```
+  > - references:
+  >   - [#1223: "couldn't get resource list" error](https://github.com/kubernetes/client-go/issues/1223)
+  >   - [#11772: Couldn't get resource list for metrics error](https://github.com/helm/helm/issues/11772)
+  >   - [#157: couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request](https://github.com/kubernetes-sigs/metrics-server/issues/157)
+  >   - [Configure Service Accounts for Pods](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+
+  ```bash
+  $ kubectl get apiservices.apiregistration.k8s.io
+  NAME                                   SERVICE                      AVAILABLE                 AGE
+  v1beta1.metrics.k8s.io                 kube-system/metrics-server   False (ServiceNotFound)   188d
+
+  # remove metrics.k8s.io
+  $ kubectl delete apiservices.apiregistration.k8s.io v1beta1.metrics.k8s.io
+
+  # debug
+  $ kubectl get secrets $(kubectl -n kube-system get sa metrics-server -o 'jsonpath={.secrets[].name}')
+  Error from server (NotFound): secrets "metrics-server-token-mr49q" not found
+
+  $ kubectl get secrets $(kubectl -n kube-system get sa metrics-server -o 'jsonpath={.secrets[].name}') \
+            -o "jsonpath={.data.ca\.crt}" |
+            base64 -d |
+            openssl x509 -text -noout |
+            grep Not
+  # get token
+  $ kubectl get secrets $(kubectl -n kube-system get sa metrics-server -o 'jsonpath={.secrets[].name}') \
+            -o "jsonpath={.data.token}" |
+            base64 -d -w0
+  # get namespace
+  $ kubectl get secrets $(kubectl -n kube-system get sa metrics-server -o 'jsonpath={.secrets[].name}') \
+            -o "jsonpath={.data.namespace}" |
+            base64 -d -w0
+  ```
+
 ### check etcd
 ```bash
 $ kubectl get --raw=/healthz/etcd
@@ -373,4 +470,3 @@ ok
 
 > [!NOTE|label:references:]
 > -[** How do you rollback deployments in Kubernetes?](https://learnk8s.io/kubernetes-rollbacks)
-

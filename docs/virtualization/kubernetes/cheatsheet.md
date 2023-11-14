@@ -7,6 +7,7 @@
 - [Using --edit to modify objects before creation](#using---edit-to-modify-objects-before-creation)
 - [secrets](#secrets)
 - [auth](#auth)
+- [kubecolor](#kubecolor)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -792,3 +793,50 @@ no
 $ kubectl auth can-i get pods --subresource=exec -n "${namespace}"
 no
 ```
+
+### kubecolor
+
+> [!NOTE|label:references:]
+> - [hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)
+
+- go
+
+  > [!NOTE|label:references:]
+  > - [Download and install](https://go.dev/doc/install)
+  > - [Managing Go installations](https://go.dev/doc/manage-install#linux-mac-bsd)
+
+  ```bash
+  $ mkdir -p /opt/go
+  $ curl -fsSL https://dl.google.com/go/go1.21.4.linux-amd64.tar.gz | tar xzf - -C /opt/go
+
+  $ cat >> ~/.bashrc << EOF
+  export GOPATH=/opt/go
+  export PATH=$GOPATH/bin:$PATH
+  EOF
+  ```
+
+- kubecolor
+  ```bash
+  # install via go
+  $ go install github.com/hidetatz/kubecolor/cmd/kubecolor@latest
+  # or
+  $ go get -u github.com/hidetatz/kubecolor/cmd/kubecolor
+
+  # brew
+  $ brew install hidetatz/tap/kubecolor
+  ```
+
+- config
+  ```bash
+  # autocomplete
+  $ cat >> ~/.bashrc << EOF
+  alias k='kubecolor '
+  alias kubectl='kubecolor '
+  alias kc='kubecolor -n kube-system'
+
+  complete -o default -F __start_kubectl kubecolor
+  while read -r _i; do
+    complete -o default -F __start_kubectl "${_i}"
+  done < <(alias | sed -rn "s:^alias.(.+)=.kubec.+.$:\1:p)
+  EOF
+  ```
