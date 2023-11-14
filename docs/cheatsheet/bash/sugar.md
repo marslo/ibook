@@ -12,6 +12,7 @@
   - [SC2155](#sc2155)
   - [SC2155](#sc2155-1)
   - [escape code](#escape-code)
+- [alias for sudo](#alias-for-sudo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -266,3 +267,13 @@ $ date | wc
 |     `\e`    | Bash                   | -            |
 |    `\c[`    | -                      | control char |
 
+
+## alias for sudo
+
+> [!TIP|label:references:]
+> - [Aliases not available when using sudo](https://askubuntu.com/a/22043/92979)
+> - [6.6 Aliases](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Aliases)
+
+```bash
+alias sudo='sudo '
+```
