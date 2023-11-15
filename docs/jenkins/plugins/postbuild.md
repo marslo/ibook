@@ -102,6 +102,7 @@ def showBadges( String... badges ) {
 >   - [Essential Basic Icons Collection](https://www.svgrepo.com/collection/essential-basic-icons)
 >   - [Statistics Icons Collection](https://www.svgrepo.com/collection/statistics-icons)
 >   - [Virtual Pet 8bit Vectors Collection](https://www.svgrepo.com/collection/virtual-pet-8bit-vectors/)
+>   - [Kids Interface Collection](https://www.svgrepo.com/collection/kids-interface)
 > - [image editor](https://www.iloveimg.com/)
 
 ```groovy

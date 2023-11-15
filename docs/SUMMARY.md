@@ -127,6 +127,7 @@
       * [monitor](virtualization/kubernetes/monitor.md)
       * [helm](virtualization/kubernetes/helm.md)
       * [network](virtualization/kubernetes/network.md)
+      * [minikube](virtualization/kubernetes/minikube.md)
   * [docker](virtualization/docker/docker.md)
     * [run & exec](virtualization/docker/run.exec.md)
     * [voume](virtualization/docker/volume.md)

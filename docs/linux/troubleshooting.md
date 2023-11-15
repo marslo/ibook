@@ -11,6 +11,7 @@
 - [hunspell](#hunspell)
 - [ao](#ao)
 - [ncurses](#ncurses)
+- [bash_completion](#bash_completion)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -193,4 +194,48 @@
   - For RHEL/CentOS:
     ```bash
     $ yum install ncurses-devel
+    ```
+
+### bash_completion
+
+- `bash: _filedir: command not found`
+
+  > [!NOTE|label:references:]
+  > - [#1305: bash:_filedir: command not found](https://github.com/Bash-it/bash-it/issues/1305)
+
+  ```bash
+  # modify
+  BASH_COMPLETION="$(brew --prefix)/etc/profile.d/bash_completion.sh"
+  # to
+  BASH_COMPLETION="$(brew --prefix bash-completion)/etc/bash_completion"
+
+  # and then
+  test -f "${BASH_COMPLETION}" && source "${BASH_COMPLETION}"
+  ```
+
+  - result
+    ```bash
+    $ type _filedir
+    _filedir is a function
+    _filedir ()
+    {
+        local i IFS='
+    ' xspec;
+        _tilde "$cur" || return 0;
+        local -a toks;
+        local quoted tmp;
+        _quote_readline_by_ref "$cur" quoted;
+        toks=(${toks[@]-} $(compgen -d -- "$cur" | { while read -r tmp; do
+        printf '%s\n' $tmp;
+    done; }));
+        if [[ "$1" != -d ]]; then
+            [[ ${BASH_VERSINFO[0]} -ge 4 ]] && xspec=${1:+"!*.@($1|${1^^})"} || xspec=${1:+"!*.@($1|$(printf %s $1 | tr '[:lower:]' '[:upper:]'))"};
+            toks=(${toks[@]-} $(compgen -f -X "$xspec" -- $quoted));
+        fi;
+        [ ${#toks[@]} -ne 0 ] && _compopt_o_filenames;
+        COMPREPLY=("${COMPREPLY[@]}" "${toks[@]}")
+    }
+
+    $ fcf _filedir
+    _filedir 632 /usr/local/opt/bash-completion/etc/bash_completion
     ```
