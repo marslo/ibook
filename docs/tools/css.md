@@ -10,6 +10,9 @@
   - [bootstrap alert](#bootstrap-alert)
   - [callout](#callout)
 - [kbd](#kbd)
+- [border](#border)
+  - [padding](#padding)
+  - [border-style](#border-style)
 - [font](#font)
 - [selector](#selector)
   - [attribute selectors](#attribute-selectors)
@@ -735,6 +738,57 @@ kbd {
   <!-- or -->
   <a href="#" style="margin:0px 0.1em;padding:0.1em 0.6em;border-radius:3px;border:1px solid #ccc;box-shadow:0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #ffffff;text-shadow:0 1px 0 #fff;line-height:1.4;font-size:12.0px;background-color:rgb(247,247,247);display:inline-block;color:rgb(51,51,51);">click me</a>
   ```
+
+## border
+
+> [!NOTE|label:references:]
+> - [padding](https://developer.mozilla.org/en-US/docs/Web/CSS/padding)
+> - [border-*](https://developer.mozilla.org/en-US/docs/Web/CSS/border)
+>   - [border-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-style)
+> - [CSS Borders](https://www.w3schools.com/css/css_border.asp)
+
+### padding
+```css
+/*       + top, right, bottom, left   */
+padding: 1px;
+
+/*        + top, bottom               */
+/*        |  + right, left            */
+padding: 1px 2px;
+
+/*        + top                       */
+/*        |  + right, left            */
+/*        |  |   + bottom             */
+padding: 1px 2px 3px;
+
+/*        + top                       */
+/*        |  + right                  */
+/*        |  |   + bottom             */
+/*        |  |   |   + left           */
+padding: 1px 2px 3px 4px;
+```
+
+### border-style
+```bash
+/*            + top, right, bottom, left */
+border-style: dotted;
+
+/*            + top, bottom              */
+/*            |      + right, left       */
+border-style: dotted dashed;
+
+/*            + top                      */
+/*            |      + right, left       */
+/*            |      |      + bottom     */
+border-style: dotted dashed solid;
+
+/*            + top                      */
+/*            |      + right             */
+/*            |      |      + bottom     */
+/*            |      |      |     + left */
+border-style: dotted dashed solid groove;
+```
+
 
 ## font
 
