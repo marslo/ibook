@@ -29,6 +29,7 @@
 > - [Jenkins Plugin Developer Series](https://www.youtube.com/playlist?list=PLvBBnHmZuNQIb4p2t69dgMQyGbzb8qr4T)
 > - [Jenkins X](https://www.youtube.com/playlist?list=PLvBBnHmZuNQJxNWu6X-5pqpAxRCQEWRGn)
 > - [CloudBees CI](https://docs.cloudbees.com/docs/cloudbees-ci/latest/)
+> - [ci.jenkins.io](https://ci.jenkins.io/)
 {% endhint %}
 
 ## basic
@@ -36,12 +37,24 @@
 ### [Java requirements](https://www.jenkins.io/doc/administration/requirements/java/)
 
 > [!NOTE]
-> Jenkins requires Java 11 or 17 since Jenkins 2.357 and LTS 2.361.1. [Read more about this in the announcement blog post](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
-> - [Jenkins requires Java 11 or newer](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
->
-> proxy
-> - [Setting JVM Options for Application Servers](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/v56/setting-jvm-options-application)
-> - [ava HotSpot VM Command-Line Options](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/clopts001.html)
+> - Jenkins requires Java 11 or 17 since Jenkins 2.357 and LTS 2.361.1. [Read more about this in the announcement blog post](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
+>   - [Jenkins requires Java 11 or newer](https://www.jenkins.io/blog/2022/06/28/require-java-11/)
+> - Java 11 end of life in Jenkins
+>   - [Java Support Policy](https://www.jenkins.io/doc/book/platform-information/support-policy-java/)
+> - references:
+>   - [Java 11 to 17 upgrade guidelines](https://www.jenkins.io/doc/book/platform-information/upgrade-java-to-17)
+>   - [Java 8 to 11 upgrade guidelines](https://www.jenkins.io/doc/book/platform-information/upgrade-java-to-11)
+> - proxy
+>   - [Setting JVM Options for Application Servers](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/v56/setting-jvm-options-application)
+>   - [ava HotSpot VM Command-Line Options](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/clopts001.html)
+
+| SUPPORTED JAVA VERSION      | LTS RELEASE              | WEEKLY RELEASE        |
+|-----------------------------|--------------------------|-----------------------|
+| Java 11, Java 17 or Java 21 | N/A                      | 2.419 (August 2023)   |
+| Java 11, Java 17            | 2.361.1 (September 2022) | 2.357 (June 2022)     |
+| Java 8, Java 11 or Java 17  | 2.346.1 (June 2022)      | 2.340 (March 2022)    |
+| Java 8, Java 17             | 2.164.1 (March 2019)     | 2.164 (February 2019) |
+
 
 ### CPS
 
@@ -400,6 +413,9 @@ $ curl -X POST \
 > - [remoting configuration](https://github.com/jenkinsci/remoting/blob/master/docs/configuration.md)
 > - [IMPORTANT JENKINS COMMAND](https://rajeevtechblog.wordpress.com/2018/09/28/important-jenkins-command/)
 > - [unable to deactivate CSRF via JCasC](https://github.com/jenkinsci/configuration-as-code-plugin/issues/1184)
+> - [Security updates for Jenkins core](https://www.jenkins.io/blog/2016/05/11/security-update/)
+>   - `hudson.model.ParametersAction.keepUndefinedParameters=true`
+>   - `hudson.model.ParametersAction.safeParameters`
 {% endhint %}
 
 > [!TIP|label: latest jdk11 JAVA_OPT:]
