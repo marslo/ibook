@@ -6,9 +6,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
-
 > [!NOTE|label:references:]
 > - [How to Setup Kubernetes(k8s) Cluster in HA with Kubeadm](https://www.linuxtechi.com/setup-highly-available-kubernetes-cluster-kubeadm/)
 > - [Creating Highly Available Clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
@@ -47,8 +44,3 @@
   Loaded plugins: fastestmirror, versionlock
   versionlock list done
   ```
-
-
-
-
-
