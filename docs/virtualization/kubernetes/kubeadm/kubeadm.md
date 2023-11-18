@@ -5,50 +5,61 @@
 - [basic environment](#basic-environment)
   - [Ubuntu](#ubuntu)
   - [CentOS/RHEL](#centosrhel)
-  - [q&a](#qa)
 - [tricky](#tricky)
   - [list images](#list-images)
   - [get or modify kubeadm-cfg.yml](#get-or-modify-kubeadm-cfgyml)
   - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
+  - [show endpoint](#show-endpoint)
   - [show default kubeadm config](#show-default-kubeadm-config)
   - [kubeadm join](#kubeadm-join)
+  - [CNI](#cni)
+- [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ![how kubeadm init](../../../screenshot/k8s/Kubeadm-init.png)
 
 {% hint style='tip' %}
-> scripts:
-> - [mritd/shell_scripts](https://github.com/mritd/shell_scripts/tree/master)
->   - [init_ubuntu.sh](https://github.com/mritd/shell_scripts/blob/master/init_ubuntu.sh)
-> installation:
-> - [* install tools](https://kubernetes.io/docs/tasks/tools/)
-> - [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
-> - [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
-> - [* kubeadm 搭建 HA kubernetes 集群](https://mritd.com/2020/01/21/set-up-kubernetes-ha-cluster-by-kubeadm/)
->   - [Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
-> - [* kubeadm Configuration (v1beta3)](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
-> - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
-> - [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
-> - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
-> - [* codefarm](https://blog.codefarm.me/category/#kubernetes)
->   - [Kubernetes Recovery from Master Failure with Kubeadm](https://blog.codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
->   - [1 - Kubernetes Objects](https://blog.codefarm.me/2019/02/22/kubernetes-crash-course-1/)
->   - [2 - Kubernetes Pods](https://blog.codefarm.me/2019/03/04/kubernetes-crash-course-2/)
->   - [3 - Kubernetes Services and Ingress](https://blog.codefarm.me/2019/03/04/kubernetes-crash-course-3/)
->   - [4 - Kubernetes Storage](https://blog.codefarm.me/2019/03/25/kubernetes-crash-course-4/)
->   - [5 - Kubernetes StatefulSet](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-5/)
->   - [6 - Kubernetes Monitoring](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-6/)
-> - [authenticating with bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/)
-> - [kubernetes/design-proposals-archive](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md)
-> - [design-proposals-archive/cluster-lifecycle/cluster-deployment.md](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/cluster-deployment.md)
-> - [How to Upgrade Kubernetes Cluster Using Kubeadm?](https://devopscube.com/upgrade-kubernetes-cluster-kubeadm/)
-> upgrade:
-> - [Upgrading kubeadm clusters](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
-> - [kubeadm 集群升级](https://mritd.com/2020/01/21/how-to-upgrade-kubeadm-cluster/)
->   ```bash
->   $ kubeadm upgrade plan --config /etc/kubernetes/kubeadm.yaml
->   ```
+> - scripts:
+>   - [mritd/shell_scripts](https://github.com/mritd/shell_scripts/tree/master)
+>     - [init_ubuntu.sh](https://github.com/mritd/shell_scripts/blob/master/init_ubuntu.sh)
+> - installation:
+>   - [* install tools](https://kubernetes.io/docs/tasks/tools/)
+>   - [* Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/_print/)
+>   - [* 使用 kubeadm 创建集群](https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
+>   - [* kubeadm 搭建 HA kubernetes 集群](https://mritd.com/2020/01/21/set-up-kubernetes-ha-cluster-by-kubeadm/)
+>     - [Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
+>   - [* kubeadm Configuration (v1beta3)](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
+>   - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/)
+>   - [* How To Setup A Three Node Kubernetes Cluster Step By Step](https://k21academy.com/docker-kubernetes/three-node-kubernetes-cluster/)
+>   - [cURLing the Kubernetes API server](https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c)
+>   - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
+>   - [* codefarm](https://blog.codefarm.me/category/#kubernetes)
+>     - [Kubernetes Recovery from Master Failure with Kubeadm](https://blog.codefarm.me/2019/05/22/kubernetes-recovery-master-failure/)
+>     - [1 - Kubernetes Objects](https://blog.codefarm.me/2019/02/22/kubernetes-crash-course-1/)
+>     - [2 - Kubernetes Pods](https://blog.codefarm.me/2019/03/04/kubernetes-crash-course-2/)
+>     - [3 - Kubernetes Services and Ingress](https://blog.codefarm.me/2019/03/04/kubernetes-crash-course-3/)
+>     - [4 - Kubernetes Storage](https://blog.codefarm.me/2019/03/25/kubernetes-crash-course-4/)
+>     - [5 - Kubernetes StatefulSet](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-5/)
+>     - [6 - Kubernetes Monitoring](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-6/)
+>   - [authenticating with bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/)
+>   - [kubernetes/design-proposals-archive](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md)
+>   - [design-proposals-archive/cluster-lifecycle/cluster-deployment.md](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/cluster-deployment.md)
+>   - [How to Upgrade Kubernetes Cluster Using Kubeadm?](https://devopscube.com/upgrade-kubernetes-cluster-kubeadm/)
+>   - [在 Kubernetes 上最小化安装 KubeSphere](https://kubesphere.io/zh/docs/v3.4/quick-start/minimal-kubesphere-on-k8s/)
+> - management:
+>   - [Administering Kubernetes](https://www.ibm.com/docs/en/fci/1.1.0?topic=administering-kubernetes)
+> - upgrade:
+>   - [Upgrading kubeadm clusters](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+>   - [kubeadm 集群升级](https://mritd.com/2020/01/21/how-to-upgrade-kubeadm-cluster/)
+>     ```bash
+>     $ kubeadm upgrade plan --config /etc/kubernetes/kubeadm.yaml
+>     ```
+> - network
+>   - [Migrating a cluster from flannel to Calico](https://docs.projectcalico.org/v3.9/getting-started/kubernetes/installation/migration-from-flannel)
+>   - [v3.9 Migrating a cluster from flannel to Calico](https://docs.tigera.io/archive/v3.9/getting-started/kubernetes/installation/migration-from-flannel)
+>   - [#1817: kube-flannel dial tcp 10.96.0.1:443: i/o timeout](https://github.com/kubernetes/kubeadm/issues/1817)
+>   - [Quickstart for Calico on Kubernetes](https://docs.tigera.io/archive/v3.9/getting-started/kubernetes/)
 
 {% endhint %}
 
@@ -78,6 +89,10 @@ net.ipv4.ip_forward=1
 net.bridge.bridge-nf-call-iptables=1
 net.bridge.bridge-nf-call-ip6tables=1
 EOF
+# or
+$ sudo sysctl -w net.ipv4.ip_forward=1
+$ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
+$ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
 ```
 
 - [or network setup](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-1/)
@@ -238,21 +253,24 @@ $ sudo systemctl is-enabled firewalld
 $ sudo systemctl is-active firewalld
 $ sudo firewall-cmd --state
 
-$ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
 $ sudo swapoff -a
-
 $ sudo setenforce 0
 $ sudo bash -c "sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc/selinux/config"
 $ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
 
 $ sudo modprobe br_netfilter
+
+$ sudo sysctl -w net.ipv4.ip_forward=1
 $ sudo sysctl net.bridge.bridge-nf-call-iptables=1
 $ sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
-
-$ sudo bash -c "cat >  /etc/sysctl.d/k8s.conf" << EOF
+#or
+$ sudo bash -c "cat > /etc/sysctl.d/k8s.conf" << EOF
+net.ipv4.ip_forward = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
+$ sudo sysctl -p /etc/sysctl.d/k8s.conf
+
 $ sudo sysctl --system
 $ lsmod | grep br_netfilter
 ```
@@ -337,38 +355,6 @@ $ sudo systemctl enable --now kubelet
   [config/images] Pulled k8s.gcr.io/coredns:1.2.2
   ```
 
-### q&a
-#### [problem with installed package podman](https://forums.docker.com/t/problem-with-installed-package-podman/116529/2)
-
-- issue
-  ```bash
-  $ sudo yum install docker-ce-19.03.15-3.el8 docker-ce-cli-19.03.15-3.el8 containerd.io docker-buildx-plugin docker-compose-plugin
-  Docker CE Stable - x86_64                                                              272 kB/s |  43 kB     00:00
-  Error:
-   Problem 1: problem with installed package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64
-    - package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
-    - package podman-3.3.1-9.module_el8.5.0+988+b1f0b741.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
-    - package containerd.io-1.6.21-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
-    - package containerd.io-1.6.21-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
-    - package containerd.io-1.6.21-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.2-1.module_el8.5.0+911+f19012f9.x86_64
-    - package containerd.io-1.6.21-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.2-1.module_el8.5.0+911+f19012f9.x86_64
-    - cannot install the best candidate for the job
-    - package runc-1.0.0-66.rc10.module_el8.5.0+1004+c00a74f5.x86_64 is filtered out by modular filtering
-    - package runc-1.0.0-72.rc92.module_el8.5.0+1006+8d0e68a2.x86_64 is filtered out by modular filtering
-   Problem 2: problem with installed package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64
-    - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
-    ...
-    - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
-    - package buildah-1.22.3-2.module_el8.5.0+911+f19012f9.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
-    - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
-    ...
-  ```
-- [solution : remove podman](https://www.ibm.com/docs/en/eam/4.2?topic=questions-troubleshooting-tips#uninstall_podman)
-  ```bash
-  $ yum remove buildah skopeo podman containers-common atomic-registries docker container-tools
-  $ rm -rf /etc/containers/* /var/lib/containers/* /etc/docker /etc/subuid* /etc/subgid*
-  $ cd ~ && rm -rf /.local/share/containers/
-  ```
 
 ## tricky
 
@@ -445,6 +431,15 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
 ```
 {% endhint %}
 
+### show endpoint
+
+```bash
+$ kubectl get endpoints kubernetes
+NAME         ENDPOINTS                                               AGE
+kubernetes   192.168.1.55:6443,192.168.1.73:6443,192.168.1.87:6443   4y347d
+```
+
+
 ### show default kubeadm config
 
 {% hint style='tip' %}
@@ -467,7 +462,51 @@ $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfig
 
 > [!TIP]
 > reference:
+> - [kubeadm join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/)
+>   - `openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'`
+>   - [Using init phases with kubeadm](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#init-phases)
+>     - `sudo kubeadm init phase control-plane controller-manager --help`
+>     - `sudo kubeadm init phase control-plane --help`
+> - [Uploading control-plane certificates to the cluster](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#uploading-control-plane-certificates-to-the-cluster)
 > - [kubeadm join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
+
+
+
+- [install docker-ce](../../docker/docker.html#install)
+
+- install kubelet in node
+  ```bash
+  $ sudo bash -c 'cat > /etc/yum.repos.d/kubernetes.repo' <<EOF
+  [kubernetes]
+  name=Kubernetes
+  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+  enabled=1
+  gpgcheck=1
+  repo_gpgcheck=1
+  gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  EOF
+
+  $ sudo yum makecache
+  $ sudo dnf install -y kubelet-1.12.3-0 \
+                        kubeadm-1.12.3-0 \
+                        kubectl-1.12.3-0 \
+                        --disableexcludes=kubernetes
+
+  $ sudo systemctl enable --now kubelet
+  Created symlink /etc/systemd/system/multi-user.target.wants/kubelet.service → /etc/systemd/system/kubelet.service.
+  ```
+
+  - verify
+    ```bash
+    $ sudo dnf list --installed | grep kube
+    cri-tools.x86_64                                   1.26.0-0                                              @kubernetes
+    kubeadm.x86_64                                     1.12.3-0                                              @kubernetes
+    kubectl.x86_64                                     1.12.3-0                                              @kubernetes
+    kubelet.x86_64                                     1.12.3-0                                              @kubernetes
+    kubernetes-cni.x86_64                              0.6.0-0                                               @kubernetes
+
+    $ journalctl -u kubelet -f
+    ```
 
 - normal commands
   ```bash
@@ -495,3 +534,60 @@ $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfig
     ```bash
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
     ```
+
+### CNI
+
+> [!NOTE|label:references:]
+> - [#2695 dial tcp 10.96.0.1:443 timeout](https://github.com/projectcalico/calico/issues/2695)
+> - [k8s安装插件出现dial tcp 10.96.0.1:443: i/o timeout问题解析](https://blog.csdn.net/qq_44847649/article/details/123504663)
+> - [kube-flannel.yml](https://www.cnblogs.com/chaojiyingxiong/p/16896593.html)
+> - [Kubernetes / Flannel – Failed to list *v1.Service](https://www.thenoccave.com/2020/08/kubernetes-flannel-failed-to-list-v1-service/)
+>   - `$ cat /run/flannel/subnet.env`
+>   - `$ kubectl get nodes k8s-node-01 -o jsonpath='{.spec.podCIDR}'`
+
+- modify
+  ```bash
+  $ kubectl edit cm -n kube-system kube-flannel-cfg
+  net-conf.json: |
+       {
+         "Network": "10.244.0.0/16",
+         "Backend": {
+           "Type": "vxlan"
+         }
+       }
+  ```
+
+- check
+  ```bash
+  $ kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
+
+  # e.g.: flannel
+  $ kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
+  10.244.21.0/24 10.244.4.0/24 10.244.1.0/24 10.244.10.0/24 10.244.20.0/24 10.244.7.0/24 10.244.5.0/24 10.244.17.0/24 10.244.3.0/24 10.244.0.0/24 10.244.6.0/24 10.244.12.0/24 10.244.13.0/24 10.244.16.0/24 10.244.15.0/24
+  ```
+
+## troubleshooting
+
+- `error: open /var/lib/kubelet/config.yaml: no such file or directory`
+  ```bash
+  Nov 17 19:25:19 kube-node-01 systemd[1]: Started kubelet: The Kubernetes Node Agent.
+  Nov 17 19:25:19 kube-node-01 kubelet[28335]: F1117 19:25:19.391266   28335 server.go:190] failed to load Kubelet config file /var/lib/kubelet/config.yaml, error failed to read kubelet config file "/var/lib/kubelet/config.yaml", error: open /var/lib/kubelet/config.yaml: no such file or directory
+  Nov 17 19:25:19 kube-node-01 systemd[1]: kubelet.service: Main process exited, code=exited, status=255/n/a
+  Nov 17 19:25:19 kube-node-01 systemd[1]: kubelet.service: Failed with result 'exit-code'.
+  ```
+
+  - solution:
+    - controller: [kubeadm init phase kubelet-start](https://stackoverflow.com/a/60301879/2940319)
+      ```bash
+      $ kubeadm init phase kubelet-start
+      $ swapoff -a
+      $ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
+      ```
+
+    - node:
+      ```bash
+      $ kubeadm join api.kubernetes.com:6443 \
+                --token 8*****.***************a \
+                --discovery-token-ca-cert-hash sha256:e**************************************************************5 \
+                --ignore-preflight-errors=all
+      ```

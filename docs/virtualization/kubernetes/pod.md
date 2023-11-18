@@ -601,8 +601,9 @@ devops-jenkins-659f4c6d44-d2w76
 > reference:
 > - [Restarting Kubernetes Pods](https://phoenixnap.com/kb/how-to-restart-kubernetes-pods)
 > - [How to Restarting Kubernetes Pods](https://www.cloudytuts.com/tutorials/kubernetes/how-to-restarting-kubernetes-pods/)
+> - [How to gracefully remove a node from Kubernetes?](https://stackoverflow.com/a/68910564/2940319)
 > for kubernetes version 1.15+
-> `kubectl -n <namespace> rollout restart deployment <name>`
+> - `kubectl -n <namespace> rollout restart deployment <name>`
 {% endhint %}
 
 ```bash

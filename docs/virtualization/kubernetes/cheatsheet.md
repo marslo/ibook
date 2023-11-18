@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [pods and containers](#pods-and-containers)
+- [disable daemonset](#disable-daemonset)
 - [Using set commands to modify objects before creation](#using-set-commands-to-modify-objects-before-creation)
 - [Using --edit to modify objects before creation](#using---edit-to-modify-objects-before-creation)
 - [secrets](#secrets)
@@ -693,6 +694,16 @@
     resourceNames: ["06f6ce97-e2c5-4ab8-7ba5-7654dd08d52b"]
   ```
 
+### disable daemonset
+
+> [!NOTE|label:referfences:]
+> - [how to scale kubernetes daemonset to 0?](https://stackoverflow.com/a/57533340/2940319)
+
+```bash
+$ kubectl patch daemonset <name-of-daemon-set> \
+          -n <namespace> \
+          -p '{"spec": {"template": {"spec": {"nodeSelector": {"non-existing": "true"}}}}}'
+```
 
 ### [Using set commands to modify objects before creation](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/imperative-command/#using-set-commands-to-modify-objects-before-creation)
 ```bash
