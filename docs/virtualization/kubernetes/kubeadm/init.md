@@ -1169,7 +1169,7 @@ $ kubeadm init phase bootstrap-token [flags] [--kubeconfig <string>] [--config <
 $ kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
 $ kubectl delete node <node name>
 
-$ sudo kubeadm  reset
+$ sudo kubeadm reset
 [preflight] Running pre-flight checks.
 [reset] Stopping the kubelet service.
 [reset] Unmounting mounted directories in "/var/lib/kubelet"
@@ -1180,29 +1180,41 @@ $ sudo kubeadm  reset
 
 $ sudo systemctl stop kubelet
 $ sudo systemctl stop docker
+$ sudo systemctl stop containerd
 $ sudo systemctl disable --now kubelet
 $ sudo systemctl disable --now docker
+$ sudo systemctl disable --now containerd
 
 $ docker system prune -a -f
 
 $ sudo ifconfig cni0 down
 $ sudo ifconfig flannel.1 down
-$ sudo rm -rf /etc/kubernetes/
-$ sudo rm -rf /var/lib/cni/
+$ sudo rm -rf /etc/kubernetes /var/lib/cni /var/lib/kubelet/* /etc/cni/net.d /etc/cni/ ~/.kube/
+$ sudo rm -rf /var/log/pods
+
+# or
+$ sudo rm -rf /etc/kubernetes
+$ sudo rm -rf /var/lib/cni
 $ sudo rm -rf /var/lib/kubelet/*
 $ sudo rm -rf /etc/cni/net.d
 $ sudo rm -rf /etc/cni/
-
 $ rm -rf ~/.kube/
 
 $ sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
 $ sudo apt-get autoremove
+# or
+$ sudo dnf clean all
 
 $ sudo iptables -P INPUT ACCEPT
 $ sudo iptables -P FORWARD ACCEPT
 $ sudo iptables -P OUTPUT ACCEPT
+# or
+$ sudo iptables -P INPUT ACCEPT && sudo iptables -P FORWARD ACCEPT && sudo iptables -P OUTPUT ACCEPT
+
 $ sudo iptables -t nat -F
 $ sudo iptables -t mangle -F
 $ sudo iptables -F
 $ sudo iptables -X
+# or
+$ sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
 ```

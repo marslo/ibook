@@ -16,6 +16,7 @@
   - [show with particular columns](#show-with-particular-columns)
   - [show only scheduled nodes](#show-only-scheduled-nodes)
   - [show common/diff images between nodes](#show-commondiff-images-between-nodes)
+- [delete node](#delete-node)
 - [cleanup label](#cleanup-label)
 - [sort](#sort)
   - [sort via kubelet version](#sort-via-kubelet-version)
@@ -42,7 +43,7 @@ $ kubectl get nodes -o 'jsonpath={.items[*].metadata.name} | fmt -1
 > - [List container images in Kubernetes cluster with SIZE (like docker image ls)](https://stackoverflow.com/a/64920893/2940319)
 
 ```bash
-$ kubectl get node <node-name> -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]'
+$ kubectl get node <node_name> -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]'
 ```
 
 ### list all Ready nodes
@@ -368,6 +369,26 @@ $ kubectl get node \
          <(kubectl get node node-01 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort) \
          <(kubectl get node node-02 -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]' | sort)
   ```
+
+
+## delete node
+
+> [!NOTE|label:references:]
+> - [How to gracefully remove a node from Kubernetes?](https://stackoverflow.com/a/54220808/2940319)
+> - [kubectl_drain.svg](https://kubernetes.io/images/docs/kubectl_drain.svg)
+
+```bash
+# get info
+$ kubectl get nodes
+
+$ kubectl cordon <node_name>
+
+$ kubectl drain <node_name>
+# or
+$ kubectl drain <node_name> --ignore-daemonsets --delete-local-data
+
+$ kubectl delete node <node_name>
+```
 
 ## cleanup label
 ```bash

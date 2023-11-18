@@ -79,6 +79,7 @@
 >   - [Kubernetes Architecture Explained [Comprehensive Guide]](https://devopscube.com/kubernetes-architecture-explained/)
 > - [* How to Access Kubernetes API Server](https://blog.codefarm.me/2021/12/18/access-kubernetes/)
 > - [Kubernetes（k8s）基础概念介绍](https://www.cnblogs.com/liugp/p/16345473.html)
+> - [Migrating a cluster from flannel to Calico](https://docs.projectcalico.org/v3.9/getting-started/kubernetes/installation/migration-from-flannel)
 >
 > resources:
 > - [Free Kubernetes Ebook: Kubernetes up and running](https://devopscube.com/free-kubernetes-ebook/)
@@ -229,6 +230,24 @@
 ![Kubernetes Architecture : ccm](../../screenshot/k8s/kubernetes-architecture_ccm.png)
 
 ## work node
+
+> [!NOTE]
+> - [supported endpoints](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+> - linux
+>
+> | RUNTIME                           | PATH TO UNIX DOMAIN SOCKET                 |
+> |-----------------------------------|--------------------------------------------|
+> | containerd                        | unix:///var/run/containerd/containerd.sock |
+> | CRI-O                             | unix:///var/run/crio/crio.sock             |
+> | Docker Engine (using cri-dockerd) | unix:///var/run/cri-dockerd.sock           |
+>
+> - windows
+>
+> | RUNTIME                           | PATH TO UNIX DOMAIN SOCKET             |
+> |-----------------------------------|----------------------------------------|
+> | containerd                        | npipe:////./pipe/containerd-containerd |
+> | Docker Engine (using cri-dockerd) | npipe:////./pipe/cri-dockerd           |
+
 ### kubelet
 ![Kubernetes Architecture : kubelet](../../screenshot/k8s/kubernetes-architecture_kubelet.png)
 

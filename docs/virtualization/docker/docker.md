@@ -6,6 +6,9 @@
   - [cgoups](#cgoups)
   - [namespace](#namespace)
   - [docker daemon](#docker-daemon)
+- [init](#init)
+  - [install](#install)
+  - [troubleshooting](#troubleshooting)
 - [enable tcp port 2375 for external connection to docker](#enable-tcp-port-2375-for-external-connection-to-docker)
 - [docker completion](#docker-completion)
   - [complete alias](#complete-alias)
@@ -54,12 +57,229 @@
 
 ### docker daemon
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/)
 > - [Configure and troubleshoot the Docker daemon](https://docs.docker.com/config/daemon/)
 > - [Set Up Docker with TLS](https://www.labkey.org/Documentation/wiki-page.view?name=dockerTLS)
 > - [How to Configure Docker daemon with a configuration file?](https://www.devopsschool.com/blog/how-to-configure-docker-daemon-with-a-configuration-file/)
+
+## init
+
+> [!NOTE|label:references:]
+> - [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
+> - [Linux post-installation steps for Docker Engine](https://docs.docker.com/engine/install/linux-postinstall/)
+
+### install
+- environment cleanup
+  ```bash
+  $ sudo dnf remove docker \
+                    docker-client \
+                    docker-client-latest \
+                    docker-common \
+                    docker-latest \
+                    docker-latest-logrotate \
+                    docker-logrotate \
+                    docker-engine
+  ```
+- repo setup
+  ```bash
+  $ sudo dnf install -y yum-utils
+  $ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  $ sudo dnf makecache
+  ```
+
+- install
+  ```bash
+  $ sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  # or
+  $ sudo dnf install -y docker-ce docker-ce-cli containerd.io
+
+  # or
+  $ sudo dnf install -y docker-ce-19.03.15-3.el8 docker-ce-cli-19.03.15-3.el8 containerd.io
+
+  # or
+  $ sudo dnf install -y docker-ce-19.03.15-3.el8 \
+                        docker-ce-cli-19.03.15-3.el8 \
+                        containerd.io \
+                        docker-compose-plugin-2.16.0-1.el8 \
+                        docker-scan-plugin-0.23.0-3.el8 \
+                        docker-buildx-plugin-0.10.2-1.el8
+  ```
+
+  - to get available version:
+    ```bash
+    $ sudo dnf list docker-ce --showduplicates | grep 19\.03
+    docker-ce.x86_64               3:19.03.15-3.el8                @docker-ce-stable
+    docker-ce.x86_64               3:19.03.13-3.el8                docker-ce-stable
+    docker-ce.x86_64               3:19.03.14-3.el8                docker-ce-stable
+    docker-ce.x86_64               3:19.03.15-3.el8                docker-ce-stable
+    ```
+
+- enable service
+  ```bash
+  $ sudo systemctl enable --now docker
+  Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /usr/local/lib/systemd/system/docker.service.
+  ```
+
+- account settings
+  ```bash
+  $ sudo usermod -aG docker $(whoami)
+  ```
+
+- teardown
+  ```bash
+  $ sudo dnf remove -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-scan-plugin docker-buildx-plugin
+  ```
+
+### troubleshooting
+#### [problem with installed package podman](https://forums.docker.com/t/problem-with-installed-package-podman/116529/2)
+
+- issue
+  ```bash
+  $ sudo yum install docker-ce-19.03.15-3.el8 \
+                     docker-ce-cli-19.03.15-3.el8 \
+                     containerd.io \
+                     docker-buildx-plugin \
+                     docker-compose-plugin
+  Docker CE Stable - x86_64                                                              272 kB/s |  43 kB     00:00
+  Error:
+   Problem 1: problem with installed package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64
+    - package podman-1.6.4-10.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
+    - package podman-3.3.1-9.module_el8.5.0+988+b1f0b741.x86_64 requires runc >= 1.0.0-57, but none of the providers can be installed
+    - package containerd.io-1.6.21-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+    - package containerd.io-1.6.21-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+    - package containerd.io-1.6.21-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.2-1.module_el8.5.0+911+f19012f9.x86_64
+    - package containerd.io-1.6.21-3.1.el8.x86_64 obsoletes runc provided by runc-1.0.2-1.module_el8.5.0+911+f19012f9.x86_64
+    - cannot install the best candidate for the job
+    - package runc-1.0.0-66.rc10.module_el8.5.0+1004+c00a74f5.x86_64 is filtered out by modular filtering
+    - package runc-1.0.0-72.rc92.module_el8.5.0+1006+8d0e68a2.x86_64 is filtered out by modular filtering
+   Problem 2: problem with installed package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64
+    - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+    ...
+    - package buildah-1.11.6-7.module_el8.2.0+305+5e198a41.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+    - package buildah-1.22.3-2.module_el8.5.0+911+f19012f9.x86_64 requires runc >= 1.0.0-26, but none of the providers can be installed
+    - package containerd.io-1.3.7-3.1.el8.x86_64 conflicts with runc provided by runc-1.0.0-65.rc10.module_el8.2.0+305+5e198a41.x86_64
+    ...
+  ```
+
+- [solution : remove podman](https://www.ibm.com/docs/en/eam/4.2?topic=questions-troubleshooting-tips#uninstall_podman)
+  ```bash
+  $ sudo dnf remove buildah skopeo podman containers-common atomic-registries docker container-tools
+  $ sudo rm -rf /etc/containers/* /var/lib/containers/* /etc/docker /etc/subuid* /etc/subgid*
+  $ cd ~ && rm -rf /.local/share/containers/
+  ```
+
+#### `Error: Transaction test error`
+
+- issue
+  ```bash
+  $ sudo dnf install -y docker-ce-19.03.15-3.el8 docker-ce-cli-19.03.15-3.el8 containerd.io docker-compose-plugin-2.16.0-1.el8 docker-scan-plugin-0.23.0-3.el8 docker-buildx-plugin-0.10.2-1.el8
+  Error: Transaction test error:
+    file /usr/libexec/docker/cli-plugins/docker-buildx from install of docker-buildx-plugin-0:0.10.2-1.el8.x86_64 conflicts with file from package docker-ce-cli-1:19.03.15-3.el8.x86_64
+  ```
+
+- solution: using latest `docker-ce-cli`
+
+  ```bash
+  $ sudo dnf install -y docker-ce-19.03.15-3.el8 docker-ce-cli containerd.io docker-compose-plugin docker-scan-plugin docker-buildx-plugin
+  CentOS Stream 8 - AppStream                                              14 MB/s |  34 MB     00:02
+  CentOS Stream 8 - BaseOS                                                6.4 MB/s |  53 MB     00:08
+  CentOS Stream 8 - Extras                                                 31 kB/s |  18 kB     00:00
+  CentOS Stream 8 - Extras common packages                                9.6 kB/s | 6.9 kB     00:00
+  Docker CE Stable - x86_64                                               289 kB/s |  51 kB     00:00
+  Dependencies resolved.
+  ========================================================================================================
+   Package                  Arch      Version                                   Repository           Size
+  ========================================================================================================
+  Installing:
+   containerd.io            x86_64    1.6.24-3.1.el8                            docker-ce-stable     34 M
+   docker-buildx-plugin     x86_64    0.11.2-1.el8                              docker-ce-stable     13 M
+   docker-ce                x86_64    3:19.03.15-3.el8                          docker-ce-stable     24 M
+   docker-ce-cli            x86_64    1:24.0.7-1.el8                            docker-ce-stable    7.2 M
+   docker-compose-plugin    x86_64    2.21.0-1.el8                              docker-ce-stable     13 M
+   docker-scan-plugin       x86_64    0.23.0-3.el8                              docker-ce-stable    3.8 M
+  Installing dependencies:
+   container-selinux        noarch    2:2.224.0-1.module_el8+712+4cd1bd69       appstream            70 k
+   libcgroup                x86_64    0.41-19.el8                               baseos               70 k
+
+  Transaction Summary
+  ========================================================================================================
+  Install  8 Packages
+
+  Total download size: 95 M
+  Installed size: 376 M
+  Downloading Packages:
+  (1/8): containerd.io-1.6.24-3.1.el8.x86_64.rpm                           24 MB/s |  34 MB     00:01
+  (2/8): container-selinux-2.224.0-1.module_el8+712+4cd1bd69.noarch.rpm    49 kB/s |  70 kB     00:01
+  (3/8): libcgroup-0.41-19.el8.x86_64.rpm                                  48 kB/s |  70 kB     00:01
+  (4/8): docker-buildx-plugin-0.11.2-1.el8.x86_64.rpm                      30 MB/s |  13 MB     00:00
+  (5/8): docker-compose-plugin-2.21.0-1.el8.x86_64.rpm                     31 MB/s |  13 MB     00:00
+  (6/8): docker-ce-cli-24.0.7-1.el8.x86_64.rpm                            7.2 MB/s | 7.2 MB     00:00
+  (7/8): docker-scan-plugin-0.23.0-3.el8.x86_64.rpm                        12 MB/s | 3.8 MB     00:00
+  (8/8): docker-ce-19.03.15-3.el8.x86_64.rpm                               14 MB/s |  24 MB     00:01
+  --------------------------------------------------------------------------------------------------------
+  Total                                                                    26 MB/s |  95 MB     00:03
+  Running transaction check
+  Transaction check succeeded.
+  Running transaction test
+  Transaction test succeeded.
+  Running transaction
+    Preparing        :                                                                                1/1
+    Installing       : docker-compose-plugin-2.21.0-1.el8.x86_64                                      1/8
+    Running scriptlet: docker-compose-plugin-2.21.0-1.el8.x86_64                                      1/8
+    Running scriptlet: container-selinux-2:2.224.0-1.module_el8+712+4cd1bd69.noarch                   2/8
+    Installing       : container-selinux-2:2.224.0-1.module_el8+712+4cd1bd69.noarch                   2/8
+    Running scriptlet: container-selinux-2:2.224.0-1.module_el8+712+4cd1bd69.noarch                   2/8
+    Installing       : containerd.io-1.6.24-3.1.el8.x86_64                                            3/8
+    Running scriptlet: containerd.io-1.6.24-3.1.el8.x86_64                                            3/8
+    Installing       : docker-scan-plugin-0.23.0-3.el8.x86_64                                         4/8
+    Running scriptlet: docker-scan-plugin-0.23.0-3.el8.x86_64                                         4/8
+    Installing       : docker-buildx-plugin-0.11.2-1.el8.x86_64                                       5/8
+    Running scriptlet: docker-buildx-plugin-0.11.2-1.el8.x86_64                                       5/8
+    Installing       : docker-ce-cli-1:24.0.7-1.el8.x86_64                                            6/8
+    Running scriptlet: docker-ce-cli-1:24.0.7-1.el8.x86_64                                            6/8
+    Running scriptlet: libcgroup-0.41-19.el8.x86_64                                                   7/8
+    Installing       : libcgroup-0.41-19.el8.x86_64                                                   7/8
+    Running scriptlet: libcgroup-0.41-19.el8.x86_64                                                   7/8
+  /sbin/ldconfig: /usr/lib64/llvm15/lib/libclang.so.15 is not a symbolic link
+
+    Installing       : docker-ce-3:19.03.15-3.el8.x86_64                                              8/8
+    Running scriptlet: docker-ce-3:19.03.15-3.el8.x86_64                                              8/8
+    Running scriptlet: container-selinux-2:2.224.0-1.module_el8+712+4cd1bd69.noarch                   8/8
+    Running scriptlet: docker-ce-3:19.03.15-3.el8.x86_64                                              8/8
+  /sbin/ldconfig: /usr/lib64/llvm15/lib/libclang.so.15 is not a symbolic link
+
+    Verifying        : container-selinux-2:2.224.0-1.module_el8+712+4cd1bd69.noarch                   1/8
+    Verifying        : libcgroup-0.41-19.el8.x86_64                                                   2/8
+    Verifying        : containerd.io-1.6.24-3.1.el8.x86_64                                            3/8
+    Verifying        : docker-buildx-plugin-0.11.2-1.el8.x86_64                                       4/8
+    Verifying        : docker-ce-3:19.03.15-3.el8.x86_64                                              5/8
+    Verifying        : docker-ce-cli-1:24.0.7-1.el8.x86_64                                            6/8
+    Verifying        : docker-compose-plugin-2.21.0-1.el8.x86_64                                      7/8
+    Verifying        : docker-scan-plugin-0.23.0-3.el8.x86_64                                         8/8
+
+  Installed:
+    container-selinux-2:2.224.0-1.module_el8+712+4cd1bd69.noarch
+    containerd.io-1.6.24-3.1.el8.x86_64
+    docker-buildx-plugin-0.11.2-1.el8.x86_64
+    docker-ce-3:19.03.15-3.el8.x86_64
+    docker-ce-cli-1:24.0.7-1.el8.x86_64
+    docker-compose-plugin-2.21.0-1.el8.x86_64
+    docker-scan-plugin-0.23.0-3.el8.x86_64
+    libcgroup-0.41-19.el8.x86_64
+  Complete!
+
+  $ sudo dnf list --installed | grep -E 'docker|container'
+  container-selinux.noarch                           2:2.224.0-1.module_el8+712+4cd1bd69                   @appstream
+  containerd.io.x86_64                               1.6.24-3.1.el8                                        @docker-ce-stable
+  containernetworking-plugins.x86_64                 1:1.3.0-2.module_el8+461+0c6b54ea                     @AppStream
+  docker-buildx-plugin.x86_64                        0.11.2-1.el8                                          @docker-ce-stable
+  docker-ce.x86_64                                   3:19.03.15-3.el8                                      @docker-ce-stable
+  docker-ce-cli.x86_64                               1:24.0.7-1.el8                                        @docker-ce-stable
+  docker-compose-plugin.x86_64                       2.21.0-1.el8                                          @docker-ce-stable
+  docker-scan-plugin.x86_64                          0.23.0-3.el8                                          @docker-ce-stable
+  systemd-container.x86_64                           239-76.el8                                            @anaconda
+  ```
 
 ## [enable tcp port 2375 for external connection to docker](https://gist.github.com/styblope/dc55e0ad2a9848f2cc3307d4819d819f)
 
