@@ -6,13 +6,19 @@
   - [homebrew installation](#homebrew-installation)
   - [alternative sources](#alternative-sources)
   - [homebrew caskroom installation](#homebrew-caskroom-installation)
-  - [list formula](#list-formula)
   - [install](#install)
   - [reinstall/downgrade](#reinstalldowngrade)
   - [tricky](#tricky)
+  - [check homebrew env](#check-homebrew-env)
 - [install dmg](#install-dmg)
   - [install pkg inside dmg](#install-pkg-inside-dmg)
 - [system settings](#system-settings)
+- [list formula](#list-formula)
+  - [list all](#list-all)
+  - [list all packages with dependencies](#list-all-packages-with-dependencies)
+  - [list all formula size](#list-all-formula-size)
+  - [list all formula descriptions](#list-all-formula-descriptions)
+  - [whatprovides](#whatprovides)
 - [tools](#tools)
   - [java](#java)
 - [accessory](#accessory)
@@ -208,79 +214,6 @@ $ brew cu --all
   - [or](https://stackoverflow.com/a/31994862/2940319)
   ```bash
   $ brew upgrade --cask --greedy
-  ```
-
-### list formula
-
-> [!NOTE|references:]
-> - `brew leaves` shows you all top-level packages; packages that are not dependencies
-
-- list all
-  ```bash
-  $ list leaves
-
-  # or
-  $ brew leaves --installed-on-request
-  ```
-
-- list all packages with dependencies
-  ```bash
-  $ brew deps --tree --installed
-  ack
-
-  adns
-
-  aften
-
-  aom
-  ├── jpeg-xl
-  │   ├── brotli
-  │   ├── giflib
-  │   ├── highway
-  │   ├── imath
-  │   ├── jpeg-turbo
-  │   ├── libpng
-  │   ├── little-cms2
-  │   │   ├── jpeg-turbo
-  │   │   └── libtiff
-  │   │       ├── jpeg-turbo
-  │   │       └── zstd
-  │   │           ├── lz4
-  │   │           └── xz
-  ...
-  ```
-
-- list all formula size
-  ```bash
-  $ brew list --formula |
-              xargs -n1 -P8 -I {} \
-              sh -c "
-                  brew info {} | \
-                  grep -E '[0-9]* files, ' | \
-                  sed 's/^.*[0-9]* files, \(.*\)).*$/{} \1/'
-              " |
-              sort -h -r -k2 - |
-              column -t
-
-  ghc                    1.8GB
-  ghc@8.6                1.3GB
-  go                     629.9MB
-  openjdk                322.6MB
-  binutils               165.0MB
-  ghostscript            151.9MB
-  ...
-  ```
-
-- list all formula descriptions
-  ```bash
-  $ brew leaves | xargs -n1 brew desc --eval-all
-  ack: Search tool like grep, but optimized for programmers
-  adns: C/C++ resolver library and DNS resolver utilities
-  autoconf-archive: Collection of over 500 reusable autoconf macros
-  automake: Tool for generating GNU Standards-compliant Makefiles
-  bash-completion: Programmable completion for Bash 3.2
-  bash-completion@2: Programmable completion for Bash 4.2+
-  ...
   ```
 
 ### install
@@ -875,6 +808,17 @@ $ brew -v edit macvim-dev/macvim/macvim
     $ brew --cache -s <formula>
     ```
 
+### check homebrew env
+```bash
+$ brew shellenv
+export HOMEBREW_PREFIX="/usr/local";
+export HOMEBREW_CELLAR="/usr/local/Cellar";
+export HOMEBREW_REPOSITORY="/usr/local/Homebrew";
+export PATH="/usr/local/bin:/usr/local/sbin${PATH+:$PATH}";
+export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}:";
+export INFOPATH="/usr/local/share/info:${INFOPATH:-}";
+```
+
 ## install dmg
 
 > [!NOTE|label:referenees:]
@@ -1004,6 +948,152 @@ WeChat.app
 Xcode.app
 pwSafe.app
 ```
+
+
+## list formula
+
+> [!NOTE|references:]
+> - `brew leaves` shows you all top-level packages; packages that are not dependencies
+> - [List of all packages installed using Homebrew](https://apple.stackexchange.com/q/101090/254265)
+> - [eguven/brew-list.sh](https://gist.github.com/eguven/23d8c9fc78856bd20f65f8bcf03e691b)
+
+### list all
+```bash
+$ brew leaves
+
+# or
+$ brew leaves --installed-on-request
+```
+
+### list all packages with dependencies
+```bash
+$ brew deps --tree --installed --full-name
+# or
+$ brew deps --tree --installed
+ack
+
+adns
+
+aften
+
+aom
+├── jpeg-xl
+│   ├── brotli
+│   ├── giflib
+│   ├── highway
+│   ├── imath
+│   ├── jpeg-turbo
+│   ├── libpng
+│   ├── little-cms2
+│   │   ├── jpeg-turbo
+│   │   └── libtiff
+│   │       ├── jpeg-turbo
+│   │       └── zstd
+│   │           ├── lz4
+│   │           └── xz
+...
+```
+
+### list all formula size
+```bash
+$ brew list --formula |
+            xargs -n1 -P8 -I {} \
+            sh -c "
+                brew info {} | \
+                grep -E '[0-9]* files, ' | \
+                sed 's/^.*[0-9]* files, \(.*\)).*$/{} \1/'
+            " |
+            sort -h -r -k2 - |
+            column -t
+
+ghc                    1.8GB
+ghc@8.6                1.3GB
+go                     629.9MB
+openjdk                322.6MB
+binutils               165.0MB
+ghostscript            151.9MB
+...
+```
+
+### list all formula descriptions
+```bash
+$ brew leaves | xargs -n1 brew desc --eval-all
+ack: Search tool like grep, but optimized for programmers
+adns: C/C++ resolver library and DNS resolver utilities
+autoconf-archive: Collection of over 500 reusable autoconf macros
+automake: Tool for generating GNU Standards-compliant Makefiles
+bash-completion: Programmable completion for Bash 3.2
+bash-completion@2: Programmable completion for Bash 4.2+
+...
+```
+
+### whatprovides
+```bash
+$ cat >> ~/.bash_profile << EOF
+brew-whatprovides() {
+  if [[ 0 -ne $# ]]; then
+    _p="$*";
+    _realp="$(realpath ${_p})";
+    while read -r pkg; do
+      echo -ne "\r$(tput el)>> searching in ${pkg} ..."
+      if brew list --verbose "${pkg}" 2>/dev/null | grep "${_realp}" >/dev/null 2>&1; then
+        echo -ne "\r$(tput el)>> \033[0;32m${_p}\033[0m ( \033[0;37m${_realp}\033[0m ) provided by \033[0;33m${pkg}\033[0m";
+        break;
+      fi;
+    done < <(brew leaves);
+  fi
+}
+EOF
+```
+
+- or
+  ```bash
+  $ touch /usr/local/bin/brew-whatprovides
+  $ cat > /usr/local/bin/brew-whatprovides << EOF
+  #!/usr/bin/env bash
+
+  brew-whatprovides() {
+    if [[ 0 -ne $# ]]; then
+      _p="$*";
+      _realp="$(realpath ${_p})";
+      while read -r pkg; do
+        echo -ne "\r$(tput el)>> searching in ${pkg} ..."
+        if brew list --verbose "${pkg}" 2>/dev/null | grep "${_realp}" >/dev/null 2>&1; then
+          echo -ne "\r$(tput el)>> \033[0;32m${_p}\033[0m ( \033[0;37m${_realp}\033[0m ) provided by \033[0;33m${pkg}\033[0m";
+          break;
+        fi;
+      done < <(brew leaves);
+    fi
+  }
+  brew-whatprovides "$*"
+  EOF
+
+  $ bash +x /usr/local/bin/brew-whatprovides
+  ```
+
+- result
+  ```bash
+  # in progress
+  $ brew-whatprovides $(which -a ts | head -1)
+  >> searching in ffmpeg ...                              # this line is update timely
+
+  # result
+  $ brew-whatprovides $(which -a ts | head -1)
+  >> /usr/local/bin/ts ( /usr/local/Cellar/moreutils/0.67/bin/ts ) provided by moreutils
+  ```
+
+  ![brew whatprovides](../screenshot/osx/brew-whatprovides.gif)
+
+- oneline cmd
+  ```bash
+  $ path='/path/to/file'
+  $ brew list --formula |
+         xargs -P8 -i bash -c "
+          if brew list --verbose {} 2>/dev/null | grep \"$(realpath ${path})\" >/dev/null 2>&1; then
+            echo \">> ${path} is provided by {}\";
+          fi
+         "
+  ```
 
 ## tools
 ### java
