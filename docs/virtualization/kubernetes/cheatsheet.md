@@ -2,13 +2,14 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [pods and containers](#pods-and-containers)
-- [disable daemonset](#disable-daemonset)
-- [Using set commands to modify objects before creation](#using-set-commands-to-modify-objects-before-creation)
-- [Using --edit to modify objects before creation](#using---edit-to-modify-objects-before-creation)
-- [secrets](#secrets)
-- [auth](#auth)
-- [kubecolor](#kubecolor)
+    - [oneline cmds](#oneline-cmds)
+- [Create a secret with several keys](#create-a-secret-with-several-keys)
+    - [disable daemonset](#disable-daemonset)
+    - [Using set commands to modify objects before creation](#using-set-commands-to-modify-objects-before-creation)
+    - [Using --edit to modify objects before creation](#using---edit-to-modify-objects-before-creation)
+    - [secrets](#secrets)
+    - [auth](#auth)
+    - [kubecolor](#kubecolor)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -17,6 +18,7 @@
 > - [* Cheatsheet - Kubectl](https://dockerlabs.collabnix.com/kubernetes/cheatsheets/kubectl.html)
 > - [* kubectl cheatsheet](https://kapeli.com/cheat_sheets/Kubernetes.docset/Contents/Resources/Documents/index)
 > - [* Configure Pods and Containers](https://kubernetes.io/docs/tasks/configure-pod-container/)
+> - [* user-guide/kubectl-cheatsheet.md](https://github.com/fabric8io/kansible/blob/master/vendor/k8s.io/kubernetes/docs/user-guide/kubectl-cheatsheet.md)
 > - [Assign Memory Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/)
 > - [Imperative Commands](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/imperative-command/)
 >   - [How to create objects](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/imperative-command/#how-to-create-objects)
@@ -36,6 +38,80 @@
 >     - `get`
 >     - `describe`
 >     - `logs`
+
+### oneline cmds
+- create
+
+  > [!NOTE|label:references:]
+  > - [Authorization Overview](https://kubernetes.io/docs/reference/access-authn-authz/authorization/)
+
+  ```bash
+  $ kubectl create -f - -o yaml << EOF
+  apiVersion: authorization.k8s.io/v1
+  kind: SelfSubjectAccessReview
+  spec:
+    resourceAttributes:
+      group: apps
+      resource: deployments
+      verb: create
+      namespace: dev
+  EOF
+  ```
+
+- [or](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#creating-objects)
+  ```bash
+  $ kubectl apply -f - <<EOF
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: mysecret
+  type: Opaque
+  data:
+    password: $(echo -n "s33msi4" | base64 -w0)
+    username: $(echo -n "jane" | base64 -w0)
+  EOF
+  ```
+
+- [or](https://github.com/fabric8io/kansible/blob/master/vendor/k8s.io/kubernetes/docs/user-guide/kubectl-cheatsheet.md)
+  ```bash
+  $ cat <<EOF | kubectl create -f -
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: busybox-sleep
+  spec:
+    containers:
+    - name: busybox
+      image: busybox
+      args:
+      - sleep
+      - "1000000"
+  ---
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: busybox-sleep-less
+  spec:
+    containers:
+    - name: busybox
+      image: busybox
+      args:
+      - sleep
+      - "1000"
+  EOF
+
+# Create a secret with several keys
+  $ cat <<EOF | kubectl create -f -
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: mysecret
+  type: Opaque
+  data:
+    password: $(echo "s33msi4" | base64)
+    username: $(echo "jane" | base64)
+  EOF
+  ```
 
 ### [pods and containers](https://kubernetes.io/docs/tasks/configure-pod-container/)
 
@@ -787,6 +863,9 @@ $ kubectl create --edit -f /tmp/srv.yaml
 
 #### `auth can-i`
 
+> [!NOTE|label:references:]
+> - [kubectl-auth-can-i - Man Page](https://www.mankier.com/1/kubectl-auth-can-i)
+
 ```bash
 $ namespace='test'
 $ kubectl auth can-i get pods -n "${namespace}"
@@ -814,6 +893,10 @@ no
      echo ".. pod create: $(kubectl auth can-i create pods -n ${namespace})";
      echo ".. pod create exec: $(kubectl auth can-i create pods --subresource=exec -n ${namespace})";
      echo ".. pod get exec : $(kubectl auth can-i get pods --subresource=exec -n ${namespace})";
+     echo "statefulset :";
+     echo ".. sts get : $(kubectl auth can-i get statefulset -n ${namespace})";
+     echo ".. sts list : $(kubectl auth can-i list statefulset -n ${namespace})";
+     echo ".. sts create : $(kubectl auth can-i create statefulset -n ${namespace})";
      echo "ingressroute :";
      echo ".. ingressroute : $(kubectl auth can-i get ingressroute -n ${namespace})";
      echo ".. ingressroutetcp : $(kubectl auth can-i get ingressroutetcp -n ${namespace})";

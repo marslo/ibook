@@ -264,7 +264,7 @@
 > references:
 > - [JSONPath Support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
 > - [how to make kubectl jsonpath output on separate lines](https://downey.io/notes/dev/kubectl-jsonpath-new-lines/)
-
+> - [JSONPath Reference](https://support.smartbear.com/readyapi/docs/testing/jsonpath-reference.html)
 
 # options
 ## explain

@@ -20,6 +20,7 @@
 > - [详解 K8S 高可用部署](https://mp.weixin.qq.com/s?__biz=MzU0OTE4MzYzMw==&mid=2247550185&sn=6286db333de97b99584301956a339e3a&chksm=fbb18d17ccc60401b232e9ebb54eb2970129caa0595c454f4356f6ee29f87a6b63adc9b97af0)
 > - others:
 >   - [Kubernetes 1.28 震撼发布，Sidecar Containers 迎面而来](https://baijiahao.baidu.com/s?id=1774263469282248861)
+>   - [Manual installation on Kubernetes from scratch with kubectl](https://www.ibm.com/docs/en/cloud-paks/foundational-services/3.23?topic=software-manual-installation-kubernetes-from-scratch-kubectl)
 
 
 ## teardown

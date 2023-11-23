@@ -6,6 +6,7 @@
   - [helm3](#helm3)
   - [helm2](#helm2)
   - [install plugin](#install-plugin)
+  - [install apps](#install-apps)
 - [configuration](#configuration)
   - [init](#init)
   - [add repo](#add-repo)
@@ -182,6 +183,11 @@ $ while read -r _i; do
 $ echo '-k' >> ~/.curlrc
 $ helm plugin install https://github.com/databus23/helm-diff
 ```
+
+### install apps
+
+> [!NOTE|label:references:]
+> - [minikube helm 安装 jenkins](https://blog.csdn.net/xixihahalelehehe/article/details/128166331)
 
 ## configuration
 
