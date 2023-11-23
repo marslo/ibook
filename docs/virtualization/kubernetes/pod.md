@@ -19,6 +19,8 @@
   - [deploy](#deploy)
   - [svc](#svc)
 - [list](#list)
+  - [watch pods with timestamp](#watch-pods-with-timestamp)
+  - [list pod status with timestamp](#list-pod-status-with-timestamp)
   - [list pod with nodename](#list-pod-with-nodename)
   - [list all ready pods](#list-all-ready-pods)
   - [list error status pods](#list-error-status-pods)
@@ -215,6 +217,60 @@ $ kubectl expose deployment <name> --port=80 --target-port=9376
 ```
 
 ## list
+### watch pods with timestamp
+
+> [!NOTE|label:references:]
+> - [Append timestamp to kubernetes --watch-only command](https://stackoverflow.com/q/63252502/2940319)
+
+```bash
+$ kubectl get pods --watch-only |
+  while read line ; do echo -e "$(date +"%Y-%m-%d %H:%M:%S.%3N")\t pods\t $line" ; done
+```
+
+### list pod status with timestamp
+
+> [!NOTE|label:references:]
+> - [Can kubectl describe show timestamp of pod events?](https://stackoverflow.com/a/59846576/2940319)
+
+- via evnets
+  ```bash
+  $ kubectl get events -o custom-columns=FirstSeen:.firstTimestamp,LastSeen:.lastTimestamp,Count:.count,From:.source.component,Type:.type,Reason:.reason,Message:.message \
+            --field-selector involvedObject.kind=Pod,involvedObject.name=<pod-name>
+  ```
+- via pod json
+  ```bash
+  $ kubectl get po <pod-name> -o json | jq -r '.status.conditions'
+  [
+    {
+      "lastProbeTime": null,
+      "lastTransitionTime": "2023-09-28T08:15:33Z",
+      "status": "True",
+      "type": "Initialized"
+    },
+    {
+      "lastProbeTime": null,
+      "lastTransitionTime": "2023-11-23T02:33:09Z",
+      "message": "containers with unready status: [config-reload]",
+      "reason": "ContainersNotReady",
+      "status": "False",
+      "type": "Ready"
+    },
+    {
+      "lastProbeTime": null,
+      "lastTransitionTime": "2023-11-23T02:33:09Z",
+      "message": "containers with unready status: [config-reload]",
+      "reason": "ContainersNotReady",
+      "status": "False",
+      "type": "ContainersReady"
+    },
+    {
+      "lastProbeTime": null,
+      "lastTransitionTime": "2023-09-28T08:15:16Z",
+      "status": "True",
+      "type": "PodScheduled"
+    }
+  ]
+  ```
 
 ### list pod with nodename
 - filter
