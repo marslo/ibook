@@ -5,6 +5,7 @@
 - [security](#security)
   - [get securityRealm](#get-securityrealm)
 - [authorization strategy](#authorization-strategy)
+  - [decrypt credentials.xml](#decrypt-credentialsxml)
   - [list all Jenkins supported authorization permissions](#list-all-jenkins-supported-authorization-permissions)
   - [get current authorization strategy class](#get-current-authorization-strategy-class)
   - [get raw authorization and permissions info](#get-raw-authorization-and-permissions-info)
@@ -59,7 +60,27 @@ println jenkins.authorizationStrategy
 > - [matrix-auth-plugin/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java](https://github.com/jenkinsci/matrix-auth-plugin/blob/master/src/main/java/hudson/security/ProjectMatrixAuthorizationStrategy.java)
 > - [How to add permission in GlobalMatrixAuthorizationStrategy through the groovy - for hudson.sercurity.item.Move](https://issues.jenkins.io/browse/JENKINS-57832?attachmentViewMode=list)
 > - [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
+> - [Accessing and dumping Jenkins credentials](https://www.codurance.com/publications/2019/05/30/accessing-and-dumping-jenkins-credentials)
 {% endhint %}
+
+### decrypt credentials.xml
+
+> [!NOTE|label:references:]
+> - [How to decrypt Jenkins passwords from credentials.xml?](https://devops.stackexchange.com/a/2192/3503)
+> - [tweksteen/jenkins-decrypt](https://github.com/tweksteen/jenkins-decrypt)
+> - [menski/jenkins-decrypt.py](https://gist.github.com/menski/8f9980999ed43246b9b2)
+
+```groovy
+hudson.util.Secret.fromString('{..string..}').getPlainText()
+// or
+hudson.util.Secret.fromString('{..string..}').getEncryptedValue()
+```
+
+- example
+  ```bash
+  hudson.util.Secret.fromString('{AQAAABAAAAAQszhBK4LXdjzjqP/7w8yQWbD4+Kf1ql4XnYEnPUyvP2o=}').getPlainText()
+  // 123456
+  ```
 
 ### [list all Jenkins supported authorization permissions](https://stackoverflow.com/a/58035811/2940319)
 ```groovy
