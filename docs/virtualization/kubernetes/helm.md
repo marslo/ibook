@@ -16,7 +16,11 @@
   - [troubleshooting](#troubleshooting)
   - [check](#check)
   - [helm show](#helm-show)
-- [otheres](#otheres)
+- [history](#history)
+- [status](#status)
+- [get](#get)
+  - [get all](#get-all)
+- [others](#others)
   - [helm is compatible](#helm-is-compatible)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -294,15 +298,15 @@ jenkins/jenkins                         4.5.0           2.401.3         Jenkins 
     Release "staging-jenkins" does not exist. Installing it now.
     NAME: staging-jenkins
     LAST DEPLOYED: Tue Sep 19 23:05:30 2023
-    NAMESPACE: devops-ci
+    NAMESPACE: devops
     STATUS: deployed
     REVISION: 1
     NOTES:
     1. Get your 'admin' user password by running:
-      kubectl exec --namespace devops-ci -it svc/staging-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+      kubectl exec --namespace devops -it svc/staging-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
     2. Get the Jenkins URL to visit by running these commands in the same shell:
       echo http://127.0.0.1:8080
-      kubectl --namespace devops-ci port-forward svc/staging-jenkins 8080:8080
+      kubectl --namespace devops port-forward svc/staging-jenkins 8080:8080
 
     3. Login with the password from step 1 and the username: admin
     4. Configure security realm and authorization strategy
@@ -346,7 +350,7 @@ jenkins/jenkins:2.401.2-lts-jdk11 kiwigrid/k8s-sidecar:1.24.4
 
 # format:
 # --as=system:serviceaccount:<namespace>:<serviceaccount>
-$ kubectl --as=system:serviceaccount:devops-ci:staging-jenkins auth can-i get configmap/staging-jenkins-jcasc
+$ kubectl --as=system:serviceaccount:devops:staging-jenkins auth can-i get configmap/staging-jenkins-jcasc
 yes
 ```
 
@@ -1420,8 +1424,78 @@ helmtest:
   $ helm show values jenkins/jenkins
   ```
 
-## otheres
+## history
 
+```bash
+# get RELEASE_NAME
+$ helm list
+NAME            NAMESPACE  REVISION  UPDATED                                 STATUS    CHART         APP VERSION
+staging-jenkins devops  11        2023-09-27 23:39:38.982931215 -0700 PDT deployed  jenkins-4.5.0 2.401.3
+
+# get history
+$ helm history staging-jenkins
+REVISION  UPDATED                   STATUS      CHART         APP VERSION DESCRIPTION
+2         Wed Sep 27 19:20:35 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+3         Wed Sep 27 20:18:10 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+4         Wed Sep 27 21:16:24 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+5         Wed Sep 27 21:18:01 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+6         Wed Sep 27 21:22:02 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+7         Wed Sep 27 21:31:07 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+8         Wed Sep 27 21:32:55 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+9         Wed Sep 27 21:35:42 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+10        Wed Sep 27 23:02:57 2023  superseded  jenkins-4.5.0 2.401.3     Upgrade complete
+11        Wed Sep 27 23:39:38 2023  deployed    jenkins-4.5.0 2.401.3     Upgrade complete
+```
+
+## status
+
+```bash
+# get RELEASE_NAME
+$ helm list
+NAME            NAMESPACE  REVISION  UPDATED                                 STATUS    CHART         APP VERSION
+staging-jenkins devops     11        2023-09-27 23:39:38.982931215 -0700 PDT deployed  jenkins-4.5.0 2.401.3
+
+# get status
+$ helm status staging-jenkins
+NAME: staging-jenkins
+LAST DEPLOYED: Wed Sep 27 23:39:38 2023
+NAMESPACE: devops
+STATUS: deployed
+REVISION: 11
+NOTES:
+1. Get your 'admin' user password by running:
+  kubectl exec --namespace devops -it svc/staging-jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
+2. Get the Jenkins URL to visit by running these commands in the same shell:
+  echo http://127.0.0.1:8080
+  kubectl --namespace devops port-forward svc/staging-jenkins 8080:8080
+
+3. Login with the password from step 1 and the username: admin
+4. Configure security realm and authorization strategy
+5. Use Jenkins Configuration as Code by specifying configScripts in your values.yaml file, see documentation: http://127.0.0.1:8080/configuration-as-code and examples: https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos
+
+For more information on running Jenkins on Kubernetes, visit:
+https://cloud.google.com/solutions/jenkins-on-container-engine
+
+For more information about Jenkins Configuration as Code, visit:
+https://jenkins.io/projects/jcasc/
+
+NOTE: Consider using a custom image with pre-installed plugins
+```
+
+## get
+
+### get all
+```bash
+# get RELEASE_NAME
+$ helm list
+NAME            NAMESPACE  REVISION  UPDATED                                 STATUS    CHART         APP VERSION
+staging-jenkins devops  11        2023-09-27 23:39:38.982931215 -0700 PDT deployed  jenkins-4.5.0 2.401.3
+
+# get all including yaml
+$ helm get all staging-jenkins
+```
+
+## others
 ### [helm is compatible](https://helm.sh/docs/topics/version_skew/)
 
 | HELM VERSION | SUPPORTED KUBERNETES VERSIONS |

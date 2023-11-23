@@ -805,6 +805,21 @@ $ kubectl auth can-i get pods --subresource=exec -n "${namespace}"
 no
 ```
 
+- more
+  ```bash
+  $ while read -r namespace; do
+     echo -e "\n>> ${namespace}";
+     echo "pod :";
+     echo ".. pod list: $(kubectl auth can-i list pods -n ${namespace})";
+     echo ".. pod create: $(kubectl auth can-i create pods -n ${namespace})";
+     echo ".. pod create exec: $(kubectl auth can-i create pods --subresource=exec -n ${namespace})";
+     echo ".. pod get exec : $(kubectl auth can-i get pods --subresource=exec -n ${namespace})";
+     echo "ingressroute :";
+     echo ".. ingressroute : $(kubectl auth can-i get ingressroute -n ${namespace})";
+     echo ".. ingressroutetcp : $(kubectl auth can-i get ingressroutetcp -n ${namespace})";
+   done< <(echo namespace-1 namespace-2 namespace-3 namespace-4 namespace-5 | fmt -1)
+  ```
+
 ### kubecolor
 
 > [!NOTE|label:references:]
