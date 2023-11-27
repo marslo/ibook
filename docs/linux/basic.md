@@ -588,6 +588,22 @@ $ yum groupremove <groupName>
     $ dnf --disablerepo="*" --enablerepo="epel" list available
     ```
 
+- moreutils
+
+  > [!NOTE|label:references:]
+  > - [1820925 - moreutils from epel8 not installable](https://bugzilla.redhat.com/show_bug.cgi?id=1820925)
+  > - [Has anyone figured out how to install `moreutils` on Centos8?](https://stackoverflow.com/a/68834383/2940319)
+  > - [RPM resource perl-IPC-Run](https://rpmfind.net/linux/rpm2html/search.php?query=perl-IPC-Run)
+  > - [or](https://unix.stackexchange.com/a/447936/29178)
+  >   ```bash
+  >   $ dnf config-manager --enable powertools
+  >   ```
+
+  ```bash
+  $ dnf install epel-release -y
+  $ dnf --enablerepo=powertools install moreutils -y
+  ```
+
 - check what's package repo can provide
   ```
   $ dnf repository-packages epel list
