@@ -12,8 +12,7 @@
   - [when editing the makefile is not an option](#when-editing-the-makefile-is-not-an-option)
 - [authentication](#authentication)
   - [get ltoken](#get-ltoken)
-- [api](#api)
-  - [list builds info from project](#list-builds-info-from-project)
+- [import your projects and server settings](#import-your-projects-and-server-settings)
 - [report](#report)
   - [creating a report](#creating-a-report)
 - [CI](#ci)
@@ -59,6 +58,8 @@
 > - video: [Build integration for C/C++ projects](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
 > - video: [Klocwork Demo](https://www.perforce.com/success/klocwork-demo)
 > - [Useful resources](https://developer.klocwork.com/resources/videos/build-integration-cc-projects)
+> - [Creating the Python script](https://help.klocwork.com/current/en-us/concepts/creatingthepythonscript.htm)
+> - [bwinhwang/PyKW](https://github.com/bwinhwang/PyKW)
 
 ## analysis
 > [issue severity](http://docs.klocwork.com/Insight-10.0/Issue_severity)
@@ -367,94 +368,46 @@ $ cat /home/marslo/.klocwork/ltoen
 klocwork.sample.com;443;marslo;abcdefg1234567**************************************************
 ```
 
-## [api](https://docs.roguewave.com/en/klocwork/current/formattingrequeststotheapi1)
-> api url: http(s)://klocwork.sample.com:443/review/api
-> reference:
-> - [Klocwork Web API cookbook](https://docs.roguewave.com/en/klocwork/current/klocworkwebapicookbook)
-> - [Klocwork Insight Web API cookbook](http://docs.klocwork.com/Insight-10.0/Klocwork_Insight_Web_API_cookbook)
-> - [Access control API examples](https://docs.roguewave.com/en/klocwork/2020/examples_webacl)
-> - [Issue and metric API examples](https://docs.roguewave.com/en/klocwork/2020/examples2)
+## import your projects and server settings
 
-Klocwork Static Code Analysis Web API Reference
-> To access Web API send a POST request to http://klocwork.sample.com/review/api with the following parameters:
-  > user*     Klocwork user name
-  > ltoken    kwauth login token
-  > action*   action name
->
-> builds
-> Retrieve the list of builds for a project.
-> - Example: `curl --data "action=builds&user=myself&project=my_project" http://klocwork.sample.com/review/api`
->   - project* : project name
+> [!NOTE|label:references:]
+> - [Import your projects and server settings](https://help.klocwork.com/current/en-us/concepts/importyourprojectsandserversettings.htm)
+> - [Import your projects and server settings](https://help.klocwork.com/current/en-us/concepts/examples2.htm)
+> - [Import your existing projects into a new projects root](https://help.klocwork.com/current/en-us/concepts/importyourexistingprojectsintoanewprojectsroot.htm)
+> - [Using the search API](https://help.klocwork.com/current/en-us/concepts/usingthesearchapi.htm)
+> - [kwadmin import-config](https://help.klocwork.com/current/en-us/reference/kwadmin.htm)
+> - [Kwxsync](https://help.klocwork.com/current/en-us/reference/kwxsync.htm)
 
-### list builds info from project
-> **`ltoek`** is got from `${KLOCWORK_LTOKEN}` file
->
-> reference:
-> - [Klocwork Insight Web API cookbook](http://docs.klocwork.com/Insight-10.0/Klocwork_Insight_Web_API_cookbook)
-> - [Issue states](https://docs.roguewave.com/en/klocwork/2020/issuestates)
-> - [Issue statuses](https://docs.roguewave.com/en/klocwork/current/issuestatuses)
->
-> [api additional header](https://docs.roguewave.com/en/klocwork/current/formattingrequeststotheapi1) : `-H "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"`
-
-- [via api](https://stackoverflow.com/a/28774031/2940319)
+- api
   ```bash
-  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://klocwork.sample.com/review/api
-  ```
-  - i.e.:
-    ```bash
-    $ curl --data "action=builds&user=marslo&ltoken=abcd1234****&project=marslo-kw" \
-           https://klocwork.sample.com:443/review/api
-    {"id":3,"name":"build_3","date":1619437882164,"keepit":false}
-    {"id":2,"name":"build_2","date":1619436216567,"keepit":false}
-    {"id":1,"name":"build_1","date":1619434698145,"keepit":false}
+  # import project
+  $ curl --data "action=import_project&user=myself&project=my_project&sourceURL=http://oldserver:8080&sourceAdmin=user&sourcePassword=pwd" http://local.klocwork.com:8080/review/api
+
+  # import server configuration
+  $ curl --data "action=import_server_configuration&user=myself&sourceURL=http://oldserver:8080&sourceAdmin=user&sourcePassword=pwd" http://local.klocwork.com:8080/review/api
   ```
 
-- [via `kwadmin`](https://docs.roguewave.com/en/klocwork/current/kwadmin)
+- cli
   ```bash
-  $ kwadmin --url https://klocwork.sample.com:443 list-builds marslo-kw
-  build_1
-  build_2
-  build_3
+  # import
+  $ kwadmin import-config <project_name> <file>
+  # i.e.:
+  $ kwadmin import-config workspace C:\Klocwork\OurMetrics.mconf
+
+  # export
+  $ kwadmin export-config [options] <project-name> <server-file> <local-file>
+  # i.e.:
+  $ kwadmin export-config Toolbus ExportedOurMetrics.mconf C:\Klocwork\OurMetrics.mconf
   ```
-  - list project config files
-    ```bash
-    $ kwadmin --url https://klocwork.sample.com:443 list-config-files marslo-kw
-    analysis_profile.pconf (Problems Configuration)
-    metrics_default.mconf (Metrics Thresholds)
-    ```
 
-#### [query only new issues](https://stackoverflow.com/a/28774031/2940319)
-> reference
-> - [Using the search API](https://bullwhip.physio-control.com/documentation/help/concepts/usingthesearchapi.htm)
+  ```bash
+  # kwxsync import single project
+  $ kwxsync [<options>] <project_name_1>|<project_URL_1> <project_name_2>|<project_URL_2> [...]
 
-**search**
-> Retrieve the list of detected issues.
-> - Example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://klocwork.sample.com/review/api`
->   - project* : project name
->   - query    : search query, such as narrowing by file (for example, 'file:MyFile.c')
->   - view     : view name
->   - limit    : search result limit
->   - summary  : include summary record to output stream
+  # i.e.:
+  $ kwxsync --url https://sample.klocwork.com:443 -f -c project project-backup
+  ```
 
-{% hint style='tip' %}
-> [Searching in Klocwork Static Code Analysis](https://bullwhip.physio-control.com/documentation/help/concepts/searchinginklocworksca.htm#concept955):
->
-> Note: You can only search by one build at a time. Other acceptable syntax:
-> - build:'123' - searches for build which contains substring '123'
-> - build:+123 - searches for build with name 123
-> - build:+'123string' - searches for build with name equal to '123string'
-{% endhint %}
-
-```bash
-$ ltoken='abcd1234*****'
-$ username='marslo'
-$ project='marslo-kw'
-$ query='build:build_3 state:New'
-$ url='https://klocwork.sample.com:443'
-$ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project}&query=${query}" \
-       ${url}/review/api |
-       jq --raw-output .
-```
 
 ## report
 ### [creating a report](https://docs.roguewave.com/en/klocwork/current/creatingareport)
@@ -584,9 +537,9 @@ pipeline {
 >   - [Setting up LDAP access control](https://analyst.phyzdev.net/documentation/help/concepts/settingupldapaccesscontrol.htm)
 
 ```bash
-$ keytool -import -alias ldaproot -file rootca.cer -keystore cacerts
-$ keytool -import -alias ldapInter -file inter.cer -keystore cacerts
-$ keytool -import -alias ldap -file ldap.cer -keystore cacerts
+$ keytool -import -alias ldaproot  -file rootca.cer -keystore cacerts
+$ keytool -import -alias ldapInter -file inter.cer  -keystore cacerts
+$ keytool -import -alias ldap      -file ldap.cer   -keystore cacerts
 ```
 
 ### using a secure klocwork server connection
@@ -596,7 +549,7 @@ $ keytool -import -alias ldap -file ldap.cer -keystore cacerts
 
 - Create a self-signed keystore file
   ```bash
-  # From <Server_install>, run the following command:
+  # from <server_install>, run the following command:
   # The keystore is saved into the Tomcat config directory at <projects_root>/tomcat/conf.
   $ _jvm/bin/keytool -genkeypair -alias tomcat \
                      -keyalg RSA \
@@ -606,7 +559,6 @@ $ keytool -import -alias ldap -file ldap.cer -keystore cacerts
                      -storepass changeit
 
   # i.e.:
-
   $ _jvm/bin/keytool -genkeypair -alias tomcat \
                      -keyalg RSA \
                      -keystore <projects_root>/tomcat/conf/.keystore \
@@ -647,7 +599,7 @@ $ keytool -import -alias ldap -file ldap.cer -keystore cacerts
   $ kwadmin --url https://klocwork.example.com:443 list-projects
   ```
 
-- Disabling the SSL connection
+- disabling the ssl connection
 
   > [!NOTE]
   > - Simple bind failed error when trying to connect to Active Directory
@@ -657,11 +609,10 @@ $ keytool -import -alias ldap -file ldap.cer -keystore cacerts
 
   1. import the ldap server public certificate directly into the klocwork keystore
 
-
-     ```bash
-     # localtion:
-     <path_to_JVM_install>\_jvm\lib\security\cacerts
-     ```
+   ```bash
+   # location
+   <path_to_JVM_install>\_jvm\lib\security\cacerts
+   ```
 
   2. [ask your LDAP administrator to set this extension of your LDAP server certificate to non-critical](http://blogs.technet.com/b/askds/archive/2008/09/16/third-party-application-fails-using-ldap-over-ssl.aspx)
 

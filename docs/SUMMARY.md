@@ -65,6 +65,7 @@
   * [klocwork](devops/klocwork/klocwork.md)
     * [kwadmin](devops/klocwork/kwadmin.md)
     * [kwserver](devops/klocwork/kwservice.md)
+    * [api](devops/klocwork/api.md)
     * [q&a](devops/klocwork/qa.md)
 * [jenkins](jenkins/jenkins.md)
   * [config](jenkins/config/config.md)
