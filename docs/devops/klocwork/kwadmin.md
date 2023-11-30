@@ -28,7 +28,7 @@
 
 {% hint style='tip' %}
 > reference:
-> - command line references:
+> - [command line references](https://help.klocwork.com/current/en-us/concepts/commandreference.htm):
 >   - [kwadmin](https://help.klocwork.com/current/en-us/reference/kwadmin.htm)
 >   - [Kwagent](https://help.klocwork.com/current/en-us/reference/kwagent.htm)
 >   - [Kwauth](https://help.klocwork.com/current/en-us/reference/kwauth.htm)

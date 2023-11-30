@@ -1,0 +1,874 @@
+
+<!-- saved from url=(0038)https://sample.klocwork.com/review/api -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Klocwork Web API</title>
+    <style type="text/css">
+        body {
+            color: #000000;
+            font-family: Tahoma, Arial, sans-serif;
+            font-size: 13px;
+            line-height: 19px;
+            margin: 25px;
+            overflow: auto;
+        }
+
+        dl {
+        }
+
+        dt {
+            float: left;
+            clear: left;
+            width: 170px;
+            text-align: right;
+            color: #00008b;
+        }
+
+        dt:after {
+            content: ":";
+        }
+
+        dd {
+            margin: 0 0 0 100px;
+            padding: 0 0 0.5em 0;
+        }
+
+        dd:after {
+            content: ".";
+        }
+
+        .code {
+            font: 1em 'Courier New', Courier, Fixed, monospace;
+            font-size: 100%;
+            color: #444;
+        }
+
+        .required {
+            color: red;
+        }
+    </style>
+</head><body>
+<div>
+    <div style="float:right; width:15%;">
+        <h3>Supported actions:</h3>
+        <ul>
+        <li><a href="https://sample.klocwork.com/review/api#builds">builds</a></li><li><a href="https://sample.klocwork.com/review/api#create_group">create_group</a></li><li><a href="https://sample.klocwork.com/review/api#create_module">create_module</a></li><li><a href="https://sample.klocwork.com/review/api#create_role">create_role</a></li><li><a href="https://sample.klocwork.com/review/api#create_user">create_user</a></li><li><a href="https://sample.klocwork.com/review/api#create_view">create_view</a></li><li><a href="https://sample.klocwork.com/review/api#defect_types">defect_types</a></li><li><a href="https://sample.klocwork.com/review/api#delete_build">delete_build</a></li><li><a href="https://sample.klocwork.com/review/api#delete_group">delete_group</a></li><li><a href="https://sample.klocwork.com/review/api#delete_module">delete_module</a></li><li><a href="https://sample.klocwork.com/review/api#delete_project">delete_project</a></li><li><a href="https://sample.klocwork.com/review/api#delete_role">delete_role</a></li><li><a href="https://sample.klocwork.com/review/api#delete_user">delete_user</a></li><li><a href="https://sample.klocwork.com/review/api#delete_view">delete_view</a></li><li><a href="https://sample.klocwork.com/review/api#fchurns">fchurns</a></li><li><a href="https://sample.klocwork.com/review/api#groups">groups</a></li><li><a href="https://sample.klocwork.com/review/api#import_project">import_project</a></li><li><a href="https://sample.klocwork.com/review/api#import_server_configuration">import_server_configuration</a></li><li><a href="https://sample.klocwork.com/review/api#import_status">import_status</a></li><li><a href="https://sample.klocwork.com/review/api#issue_details">issue_details</a></li><li><a href="https://sample.klocwork.com/review/api#license_count">license_count</a></li><li><a href="https://sample.klocwork.com/review/api#metrics">metrics</a></li><li><a href="https://sample.klocwork.com/review/api#modules">modules</a></li><li><a href="https://sample.klocwork.com/review/api#project_configuration">project_configuration</a></li><li><a href="https://sample.klocwork.com/review/api#projects">projects</a></li><li><a href="https://sample.klocwork.com/review/api#report">report</a></li><li><a href="https://sample.klocwork.com/review/api#role_assignments">role_assignments</a></li><li><a href="https://sample.klocwork.com/review/api#roles">roles</a></li><li><a href="https://sample.klocwork.com/review/api#search">search</a></li><li><a href="https://sample.klocwork.com/review/api#task_status">task_status</a></li><li><a href="https://sample.klocwork.com/review/api#taxonomies">taxonomies</a></li><li><a href="https://sample.klocwork.com/review/api#update_build">update_build</a></li><li><a href="https://sample.klocwork.com/review/api#update_defect_type">update_defect_type</a></li><li><a href="https://sample.klocwork.com/review/api#update_group">update_group</a></li><li><a href="https://sample.klocwork.com/review/api#update_module">update_module</a></li><li><a href="https://sample.klocwork.com/review/api#update_project">update_project</a></li><li><a href="https://sample.klocwork.com/review/api#update_role_assignment">update_role_assignment</a></li><li><a href="https://sample.klocwork.com/review/api#update_role_permissions">update_role_permissions</a></li><li><a href="https://sample.klocwork.com/review/api#update_status">update_status</a></li><li><a href="https://sample.klocwork.com/review/api#update_view">update_view</a></li><li><a href="https://sample.klocwork.com/review/api#users">users</a></li><li><a href="https://sample.klocwork.com/review/api#version">version</a></li><li><a href="https://sample.klocwork.com/review/api#views">views</a></li>
+        </ul>
+    </div>
+
+    <div style="float:left; width:85%;">
+        <h2>Klocwork Static Code Analysis Web API Reference</h2>
+
+        To access Web API send a POST request to <span class="code">http://0.0.0.0:8080/review/api</span> with the following parameters:
+        <dl>
+            <dt>user<span class="required">*</span></dt>
+            <dd>Klocwork user name</dd>
+            <dt>ltoken</dt>
+            <dd>kwauth login token</dd>
+            <dt>action<span class="required">*</span></dt>
+            <dd>action name</dd>
+        </dl>
+
+        <h4 id="builds">builds</h4>Retrieve the list of builds for a project.<br>Example: <span class="code">curl --data "action=builds&amp;user=myself&amp;project=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd></dl><h4 id="create_group">create_group</h4>Create a group and optionally assign users to it.<br>Example: <span class="code">curl --data "action=create_group&amp;user=myself&amp;name=group_name&amp;users=User1,User2" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the group to create</dd><dt>users</dt><dd>comma separated list of users. If the user name contains a comma, escape it with a backslash. Backslashes can be escaped with another backslash. For example: User1\,name and User2\\name</dd></dl><h4 id="create_module">create_module</h4>Create a module for a project.<br>Example: <span class="code">curl --data "action=create_module&amp;user=myself&amp;project=my_project&amp;name=test&amp;allow_all=true&amp;paths="**/test/*"" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>module name</dd><dt>allow_all</dt><dd>module access (‘true’ to allow access for everyone by default)</dd><dt>allow_users</dt><dd>grant access to users (list of comma separated user names)</dd><dt>allow_groups</dt><dd>grant access to user groups (list of comma separated group names)</dd><dt>deny_users</dt><dd>deny access to users (list of comma separated user names)</dd><dt>deny_groups</dt><dd>deny access to user groups (list of comma separated group names)</dd><dt>paths<span class="required">*</span></dt><dd>list of comma separated path regexps</dd><dt>tags</dt><dd>list of comma separated tags (for example, 'c,security')</dd></dl><h4 id="create_role">create_role</h4>Create a role. To grant a permission on the new role, set its value to 'true'.<br>Example: <span class="code">curl --data "action=create_role&amp;user=myself&amp;name=myrole&amp;create_project=true&amp;manage_roles=false&amp;change_issue_status=true&amp;allowed_status_transitions=Any,Analyze;Analyze,Fix" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the role to create</dd><dt>create_project</dt><dd>grant or revoke the Create project permission</dd><dt>manage_roles</dt><dd>grant or revoke the Manage roles permission</dd><dt>manage_users</dt><dd>grant or revoke the Manage users permission</dd><dt>access_source_files</dt><dd>grant or revoke the Access source files permission</dd><dt>assign_role</dt><dd>grant or revoke the Assign roles permission</dd><dt>change_project_settings</dt><dd>grant or revoke the Change project settings permission</dd><dt>create_build</dt><dd>grant or revoke the Create build permission</dd><dt>delete_build</dt><dd>grant or revoke the Delete build permission</dd><dt>delete_project</dt><dd>grant or revoke the Delete project permission</dd><dt>manage_modules</dt><dd>grant or revoke the Manage modules permission</dd><dt>use_local_configuration</dt><dd>grant or revoke the Use local configuration permission</dd><dt>change_issue_status</dt><dd>grant or revoke the Change issue status permission</dd><dt>webapi_access</dt><dd>grant or revoke the Web API access permission</dd><dt>execute_kwxsync</dt><dd>grant or revoke the Perform cross-project synchronization permission</dd><dt>allowed_status_transitions</dt><dd>set the allowed status transition. (semi-colon separated list of status pairs, for example: Any,Analyze;Analyze,Fix)</dd></dl><h4 id="create_user">create_user</h4>Create a user.<br>Example: <span class="code">curl --data "action=create_user&amp;user=myself&amp;name=user_name&amp;password=thepassword" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the user to create</dd><dt>password</dt><dd>assign a password to the new user (optional)</dd></dl><h4 id="create_view">create_view</h4>Create a view for a project.<br>Example: <span class="code">curl --data "action=create_view&amp;user=myself&amp;project=my_project&amp;name=critical&amp;query=severity:1-3" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>view name</dd><dt>query<span class="required">*</span></dt><dd>search query for the view</dd><dt>tags</dt><dd>list of comma separated tags (for example, 'c,security')</dd><dt>is_public</dt><dd>whether the view is visible to all users with access to this project (true|false)</dd></dl><h4 id="defect_types">defect_types</h4>Retrieve the list of defect types.<br>Example: <span class="code">curl --data "action=defect_types&amp;user=myself&amp;project=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>taxonomy</dt><dd>filter by taxonomy</dd></dl><h4 id="delete_build">delete_build</h4>Delete a build.<br>Example: <span class="code">curl --data "action=delete_build&amp;user=myself&amp;project=my_project&amp;name=build_1" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>build name</dd></dl><h4 id="delete_group">delete_group</h4>Delete a group.<br>Example: <span class="code">curl --data "action=delete_group&amp;user=myself&amp;name=group_name" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the group to delete</dd></dl><h4 id="delete_module">delete_module</h4>Delete a module.<br>Example: <span class="code">curl --data "action=delete_module&amp;user=myself&amp;project=my_project&amp;name=my_module" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>module name</dd></dl><h4 id="delete_project">delete_project</h4>Delete a project.<br>Example: <span class="code">curl --data "action=delete_project&amp;user=myself&amp;name=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>project name</dd></dl><h4 id="delete_role">delete_role</h4>Delete a role.<br>Example: <span class="code">curl --data "action=delete_role&amp;user=myself&amp;name=my_role" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>role name</dd></dl><h4 id="delete_user">delete_user</h4>Delete a user.<br>Example: <span class="code">curl --data "action=delete_user&amp;user=myself&amp;name=user_name" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the user to delete</dd></dl><h4 id="delete_view">delete_view</h4>Delete a view.<br>Example: <span class="code">curl --data "action=delete_view&amp;user=myself&amp;project=my_project&amp;name=my_view" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>view name</dd></dl><h4 id="fchurns">fchurns</h4>Generate file churns report.<br>Example: <span class="code">curl --data "action=fchurns&amp;user=myself&amp;component=Component" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>name of the project you want to create a report for</dd><dt>view</dt><dd>the view you want to set for the report</dd><dt>viewCreator</dt><dd>view creator name</dd><dt>latestBuilds</dt><dd>the number of builds you want to show in the report</dd><dt>component</dt><dd>root component</dd></dl><h4 id="groups">groups</h4>List groups.<br>Example: <span class="code">curl --data "action=groups&amp;user=myself&amp;search=groupname&amp;limit=1000" http://0.0.0.0:8080/review/api</span><dl><dt>search</dt><dd>simple group name search pattern (for example, '*group' or '*groupname*'). Default: '*'</dd><dt>list_users</dt><dd>output user list for each group (default: 'false')</dd><dt>limit</dt><dd>maximum number of results to return. Default: 1000</dd></dl><h4 id="import_project">import_project</h4>Import project from another Klocwork server.<br>Example: <span class="code">curl --data "action=import_project&amp;user=myself&amp;project=my_project&amp;sourceURL=http://oldserver:8080&amp;sourceAdmin=user&amp;sourcePassword=pwd" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>Name of the project to import</dd><dt>sourceURL<span class="required">*</span></dt><dd>URL to source Klocwork server</dd><dt>sourceAdmin<span class="required">*</span></dt><dd>Projects_root administrator account name</dd><dt>sourcePassword</dt><dd>Projects_root administrator account password</dd></dl><h4 id="import_server_configuration">import_server_configuration</h4>Import server settings from another Klocwork server.<br>Example: <span class="code">curl --data "action=import_server_configuration&amp;user=myself&amp;sourceURL=http://oldserver:8080&amp;sourceAdmin=user&amp;sourcePassword=pwd" http://0.0.0.0:8080/review/api</span><dl><dt>sourceURL<span class="required">*</span></dt><dd>URL to source Klocwork server</dd><dt>sourceAdmin<span class="required">*</span></dt><dd>Projects_root administator account name</dd><dt>sourcePassword</dt><dd>Projects_root administator account password</dd></dl><h4 id="import_status">import_status</h4>List current import status of projects.<br>Example: <span class="code">curl --data "action=import_status&amp;user=myself" http://0.0.0.0:8080/review/api</span><dl></dl><h4 id="issue_details">issue_details</h4>Get details for the given issue id.<br>Example: <span class="code">curl --data "action=issue_details&amp;user=myself&amp;project=my_project&amp;id=650" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>name of the project you want to search</dd><dt>id<span class="required">*</span></dt><dd>the id to search</dd><dt>include_xsync</dt><dd>boolean to return xSyncInfo, default is false</dd></dl><h4 id="license_count">license_count</h4>Retrieve the number of licenses issued for a feature.<br>Example: <span class="code">curl --data "action=license_count&amp;user=myself&amp;feature=kwadmin10" http://0.0.0.0:8080/review/api</span><dl></dl><h4 id="metrics">metrics</h4>Retrieve the list of metrics.<br>Example: <span class="code">curl --data "action=metrics&amp;user=myself&amp;project=my_project&amp;query=file:MyFile.c" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>query</dt><dd>search query, such as narrowing by file (for example, 'file:MyFile.c')</dd><dt>view</dt><dd>view name</dd><dt>limit</dt><dd>search result limit</dd><dt>aggregate</dt><dd>set to true, to retrieve statistics {min, max, total, entries} for each unique metric, (aggregated across the view)</dd><dt>exclude_system_files</dt><dd>when set to true, system files are omitted (default:false)</dd></dl><h4 id="modules">modules</h4>Retrieve the list of modules for a project.<br>Example: <span class="code">curl --data "action=modules&amp;user=myself&amp;project=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd></dl><h4 id="project_configuration">project_configuration</h4>Generate project configuration report.<br>Example: <span class="code">curl --data "action=project_configuration&amp;user=myself&amp;project=my_project&amp;build=build_name" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>name of the project you want to create a report for</dd><dt>build</dt><dd>name of the build you want to focus your report on</dd></dl><h4 id="projects">projects</h4>Retrieve list of projects.<br>Example: <span class="code">curl --data "action=projects&amp;user=myself" http://0.0.0.0:8080/review/api</span><dl></dl><h4 id="report">report</h4>Generate build summary report.<br>Example: <span class="code">curl --data "action=report&amp;user=myself&amp;project=my_project&amp;build=build_1&amp;x=Category&amp;y=Component" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>name of the project you want to create a report for</dd><dt>build</dt><dd>name of the build you want to focus your report on</dd><dt>filterQuery</dt><dd>the filter query you want to set for the report (search criteria are: State, Status, Severity, Module, Owner, Category, Code, Reference)</dd><dt>view</dt><dd>the view you want to set for the report</dd><dt>x</dt><dd>the value you want to set along the x-axis (options are: Module, Category, Severity, State, Status, Owner, Error Code)</dd><dt>xDrilldown</dt><dd>row drill-down item id (default: root item)</dd><dt>y</dt><dd>the variable you want to set along the y-axis (options are: Module, Category, Severity, State, Status, Owner, Error Code)</dd><dt>yDrilldown</dt><dd>column drill-down item id (default: root item)</dd><dt>group_issues</dt><dd>show grouped issues</dd></dl><h4 id="role_assignments">role_assignments</h4>List role assignments.<br>Example: <span class="code">curl --data "action=role_assignments&amp;user=myself&amp;search=rolename" http://0.0.0.0:8080/review/api</span><dl><dt>search</dt><dd>simple role filter. If the filter text starts with '+' ('%2b' if URL encoding is required) only exact matches will be returned. Otherwise all roles with names containing the text will be returned</dd></dl><h4 id="roles">roles</h4>List roles.<br>Example: <span class="code">curl --data "action=roles&amp;user=myself&amp;search=rolename" http://0.0.0.0:8080/review/api</span><dl><dt>search</dt><dd>simple role filter. If the filter text starts with '+' ('%2b' if URL encoding is required) only exact matches will be returned. Otherwise all roles with names containing the text will be returned</dd></dl><h4 id="search">search</h4>Retrieve the list of detected issues.<br>Example: <span class="code">curl --data "action=search&amp;user=myself&amp;project=my_project&amp;query=file:MyFile.c" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>query</dt><dd>search query, such as narrowing by file (for example, 'file:MyFile.c')</dd><dt>view</dt><dd>view name</dd><dt>limit</dt><dd>search result limit</dd><dt>summary</dt><dd>include summary record to output stream</dd></dl><h4 id="task_status">task_status</h4>List statuses of all tasks running on Klocwork server.<br>Example: <span class="code">curl --data "action=task_status&amp;user=myself" http://0.0.0.0:8080/review/api</span><dl></dl><h4 id="taxonomies">taxonomies</h4>Retrieve the list of taxonomy terms for a project..<br>Example: <span class="code">curl --data "action=taxonomies&amp;user=myself&amp;project=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd></dl><h4 id="update_build">update_build</h4>Update a build.<br>Example: <span class="code">curl --data "action=update_build&amp;user=myself&amp;name=build_1&amp;new_name=build_03_11_2011" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>build name</dd><dt>new_name</dt><dd>new build name</dd><dt>keepit</dt><dd>whether this build will be deleted by the auto-delete build feature (true|false)</dd></dl><h4 id="update_defect_type">update_defect_type</h4>Enable or disable a defect.<br>Example: <span class="code">curl --data "action=update_defect_type&amp;user=myself&amp;project=my_project&amp;code=ECC.EMPTY&amp;enabled=false" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>code<span class="required">*</span></dt><dd>defect code</dd><dt>enabled</dt><dd>true to enable, false to disable</dd><dt>severity</dt><dd>specify new defect severity</dd></dl><h4 id="update_group">update_group</h4>Update users in a group.<br>Example: <span class="code">curl --data "action=update_group&amp;user=myself&amp;name=group_name&amp;users=User1,User2" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the group to update</dd><dt>users</dt><dd>comma separated list of users (replaces existing users). If the user name contains a comma, escape it with a backslash. Backslashes can be escaped with another backslash. For example: User1\,name and User2\\name</dd><dt>remove_all</dt><dd>if 'true', the group's user list will be cleared. Ignored if 'users' is specified</dd></dl><h4 id="update_module">update_module</h4>Update a module for a project.<br>Example: <span class="code">curl --data "action=update_module&amp;user=myself&amp;project=my_project&amp;name=test&amp;new_name=aux&amp;allow_all=true&amp;paths="**/test/*,**/assert/*"" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>module name</dd><dt>new_name</dt><dd>new view name</dd><dt>allow_all</dt><dd>module access (‘true’ to allow access for everyone by default)</dd><dt>allow_users</dt><dd>grant access to users (list of comma separated user names)</dd><dt>allow_groups</dt><dd>grant access to user groups (list of comma separated group names)</dd><dt>deny_users</dt><dd>deny access to users (list of comma separated user names)</dd><dt>deny_groups</dt><dd>deny access to user groups (list of comma separated group names)</dd><dt>paths</dt><dd>list of comma separated path regexps</dd><dt>tags</dt><dd>list of comma separated tags (for example, 'c,security')</dd></dl><h4 id="update_project">update_project</h4>Update a project.<br>Example: <span class="code">curl --data "action=update_project&amp;user=myself&amp;name=myproject&amp;new_name=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>project name</dd><dt>new_name</dt><dd>new project name</dd><dt>description</dt><dd>new project description</dd><dt>tags</dt><dd>list of comma separated tags (for example, 'c,security')</dd><dt>auto_delete_builds</dt><dd>whether the builds in the project should automatically be deleted (true|false)</dd><dt>auto_delete_threshold</dt><dd>the number of builds to keep in the project if auto_delete_builds is true (default: 20)</dd></dl><h4 id="update_role_assignment">update_role_assignment</h4>Add or remove a user to/from a role.<br>Example: <span class="code">curl --data "action=update_role_assignment&amp;user=myself&amp;name=myrole&amp;project=myproject&amp;account=jdoe&amp;group=false&amp;remove=false" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the role to update</dd><dt>project</dt><dd>the project id the role should be updated for, if any. The project id can be obtained from role_assignments</dd><dt>account<span class="required">*</span></dt><dd>the name of the account to add or remove</dd><dt>group</dt><dd>set to 'true' if the account is a group (default: 'false')</dd><dt>remove</dt><dd>set to 'true' to remove the account from the role (default: 'false')</dd></dl><h4 id="update_role_permissions">update_role_permissions</h4>Update role permissions. To grant a permission set its value to 'true'. To revoke a permission set its value to 'false'. Only specified permissions will be updated.<br>Example: <span class="code">curl --data "action=update_role_permissions&amp;user=myself&amp;name=myrole&amp;create_project=true&amp;manage_roles=false&amp;change_issue_status=true&amp;allowed_status_transitions=Any,Analyze;Analyze,Fix" http://0.0.0.0:8080/review/api</span><dl><dt>name<span class="required">*</span></dt><dd>the name of the role to update</dd><dt>create_project</dt><dd>grant or revoke the Create project permission</dd><dt>manage_roles</dt><dd>grant or revoke the Manage roles permission</dd><dt>manage_users</dt><dd>grant or revoke the Manage users permission</dd><dt>access_source_files</dt><dd>grant or revoke the Access source files permission</dd><dt>assign_role</dt><dd>grant or revoke the Assign roles permission</dd><dt>change_project_settings</dt><dd>grant or revoke the Change project settings permission</dd><dt>create_build</dt><dd>grant or revoke the Create build permission</dd><dt>delete_build</dt><dd>grant or revoke the Delete build permission</dd><dt>delete_project</dt><dd>grant or revoke the Delete project permission</dd><dt>manage_modules</dt><dd>grant or revoke the Manage modules permission</dd><dt>use_local_configuration</dt><dd>grant or revoke the Use local configuration permission</dd><dt>change_issue_status</dt><dd>grant or revoke the Change issue status permission</dd><dt>webapi_access</dt><dd>grant or revoke the Web API access permission</dd><dt>execute_kwxsync</dt><dd>grant or revoke the Perform cross-project synchronization permission</dd><dt>allowed_status_transitions</dt><dd>set the allowed status transition. (semi-colon separated list of status pairs, for example: Any,Analyze;Analyze,Fix)</dd></dl><h4 id="update_status">update_status</h4>Change the status, owner, and comment, or alternatively set the bug tracker id of issues.<br>Example: <span class="code">curl --data "action=update_status&amp;user=myself&amp;project=my_project&amp;ids=ids_list&amp;status=new_status&amp;comment=new_comment&amp;owner=new_owner" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>ids<span class="required">*</span></dt><dd>comma seperated list of ids to change</dd><dt>status</dt><dd>new status to set</dd><dt>comment</dt><dd>new comment to set</dd><dt>owner</dt><dd>new owner to set</dd><dt>bug_tracker_id</dt><dd>new bug tracker id to set</dd></dl><h4 id="update_view">update_view</h4>Update a view.<br>Example: <span class="code">curl --data "action=update_view&amp;user=myself&amp;project=my_project&amp;tags=c,security&amp;name=my_view" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd><dt>name<span class="required">*</span></dt><dd>current view name</dd><dt>new_name</dt><dd>new view name</dd><dt>query</dt><dd>updates the search query</dd><dt>tags</dt><dd>list of comma separated tags (for example, 'c,security')</dd><dt>is_public</dt><dd>whether the view is visible to all users with access to this project (true|false)</dd></dl><h4 id="users">users</h4>List users.<br>Example: <span class="code">curl --data "action=users&amp;user=myself&amp;search=username&amp;limit=1000" http://0.0.0.0:8080/review/api</span><dl><dt>search</dt><dd>simple username search pattern (for example, '*doe' or '*username*'). Default: '*'</dd><dt>limit</dt><dd>maximum number of results to return. Default: 1000</dd></dl><h4 id="version">version</h4>Retrieve Klocwork server version.<br>Example: <span class="code">curl --data "action=version&amp;user=myself" http://0.0.0.0:8080/review/api</span><dl></dl><h4 id="views">views</h4>Retrieve list of views.<br>Example: <span class="code">curl --data "action=views&amp;user=myself&amp;project=my_project" http://0.0.0.0:8080/review/api</span><dl><dt>project<span class="required">*</span></dt><dd>project name</dd></dl>
+
+        <h3>Troubleshooting</h3>
+
+        If the server was not able to process your request, a json object with the following
+        fields will be returned to the client:
+
+        <dl>
+            <dt>status</dt>
+            <dd>http status</dd>
+            <dt>message</dt>
+            <dd>additional diagnostics</dd>
+        </dl>
+    </div>
+</div>
+
+
+</body><style id="stylus-46" type="text/css" class="stylus">/** @-moz-document regexp : for jenkins hosts **/
+
+
+
+
+
+  /**
+   * regexp("^((?!.*\\-jenkins(-dev)?(-staging)?\\.[^\\.]+\\.com|.*Monitor/$|.*sabacloud.com|.*detail.*pipeline|.*api|marslo.github.*|shields.io|127.0.0.1|0.0.0.0|localhost).)*$")
+   * regexp("^((?!.*\-jenkins(-staging)?(-dev)?\.[^\.]+\.com|.*Monitor/$|.*sabacloud.com|.*detail.*pipeline|.*api|shields.io|127.0.0.1|0.0.0.0|localhost).)*$")
+   * regexp("^((?!.*\\-jenkins(-staging)?(-dev)?\\.[^\\.]+\\.com|.*Monitor/$|.*sabacloud.com|.*detail.*pipeline|.*api|shields.io|127.0.0.1|0.0.0.0|localhost|fonts.*).)*$")
+  **/
+
+  html {
+    --font-family-sans: "Recursive Sans Casual Static", "MFeltPen PRC", "Grandstander", "Recursive Sans Linear Static", "Ubuntu", "Recursive", "Candara", "Gisha", "Titillium";
+    --font-family-mono: "Rec Mono Casual", "Monaco", "Menlo", "Andale Mono", "Ubuntu Mono", "monofur", "Consolas";
+    --font-family-handwritten: "Papyrus", "fantasy";
+    --font-family-icon: "Adgs Icons", "Font Awesome 5 Free", "Font Awesome 5 Pro", "FontAwesome", "Glyphicons Halflings", "Google Material Icons", "Material Icons Extended", "ReadMe-Icons", "StructureFontAwesome", "VideoJS", "codicon", "controlIcons", "iconfont", "icozoom", "retina_icons", "streamline", "union-design-icons", "yunfont";
+    --font-size-normal-sans: 18px;
+    --font-size-normal-mono: 17px;
+    --font-size-small-mono: 16px;
+    --font-size-big-mono: 19px;
+    --font-size-h1: 34px;
+    --font-size-h2: 26px;
+    --font-size-h3: 24px;
+    --font-size-h4: 20px;
+  }
+
+  /**
+   * kbd, pre, code:                             html tag
+   *                                             e.g.: <kbd></kbd>, <pre></pre>
+   * pre *, code *, div.line-numbers, div.code   html tag with class.
+   *                                             e.g.: <div class="code"></div>
+   *                                                   <div class="line-numbers"></div>
+   * .line, .line-number, .monospaced:           specific class name
+   * #name, #number                              specific id name
+   * :is(), :not(), :where(), :any()             Pseudo-classes https://developer.mozilla.org/en-US/docs/Web/CSS
+  **/
+
+  *:not(pre):not(code):not(textarea):not(button):not(select):not(option):not(cursor):not(kbd):not(icon):not(input):not(i):not(hl):not(nav):not(::before):not(::after):not(button *):not(pre code):not(pre code *):not(li code):not(li code *):not(code *):not(textarea *):not(* code):not(* pre *):not(* code *):not(div.ace_editor):not(div[class*="ace_"]):not(div[class*="ace_"] *):not(canvas.graph-cursor-pointer):not([class*="icon"]):not([class*="fa-"]):not([class*="octicon"]):not([class*="win-icon"]):not([class*="icon-"]):not([class*="ace_"]):not([class*="ico"]):not([class*="pc"]):not([class*="DPvwYc"]):not([class*="para"]):not([class*="ms-Icon"]):not([class*="sort-caret"]):not([class*="Da"]):not([class*="drop"]):not([class*="bowtie-"]):not([class*="view-"]):not([class*="pl-"]):not([class*="fa-"]):not([class*="avatar-"]):not([class*='wysiwyg-macro-*']):not([class*="-line"]):not([class*="CodeMirror-"]):not([class*="cm-"]):not([class*="setting-"]):not([class*="gr-"]):not([class*="s-code-"]):not([class*="code"]):not([class*="w3-"]):not([class*="language-"]):not([class*="hljs"]):not([class*="post-"]):not([class*="code"]):not([class*="line"]):not([class*="js-post"]):not([role=presentation]):not([class*="btn"]):not([class*="w3-button"]):not([class*="QueryBuilder-"]),
+  .gr-app,
+  .sidebar,
+  div[class*="timeline"],
+  div#book-search-input > input, span.algolia-autocomplete > input {
+    font-family: var(--font-family-sans) !important;
+  }
+
+  /****************************************************************************************
+   * TFS Log Content
+  ****************************************************************************************/
+  span.vsts-build-log {
+    font-family: var(--font-family-mono) !important;
+  }
+
+  /****************************************************************************************
+   * https://help.obsidian.md/
+   * https://readme.com/
+  ****************************************************************************************/
+  div[class*="callout-"], div[class*="callout-"] :is(p, a), .callout-title-inner,
+  span[class*="SearchTabs"],
+  i.icon-search~h6,
+  div[class*="style_CardRow"] p,
+  nav[class*="style_Navbar"] button,
+  a[class*="style_Navbar"],
+  a[class="style_Button"],
+  a[class*="style_Menu"],
+  button[class*="style_Tabs"],
+  [class*="style_Button"],
+  div[class*="style_FancyCard-content"] *,
+  div[class*="style_CTAList"] * {
+    font-family: var(--font-family-sans) !important;
+  }
+
+
+  /****************************************************************************************
+   * code block:
+   *   textarea
+   *   .editor,                             Github Codeblock
+   *   div.ace_content                      Gitlab Diff content ; Jenkins Script Box
+   *   .solarized-dark,                     http://www.myregexp.com
+   *   .js-file-line *,                     http://thisdavej.com
+   *   .changeset-message,                  Jenkins Console Editor
+   *   .node-log-frame,                     Jenkins Change list
+   *   #terminal *                          Jenkins Stage View
+   *   shellcheck
+   *   .lines-content *                     LeetCode-cn
+   *   markdown-body *:is(pre, pre *),
+   *   [class*="line-"] *, #content,
+   *   pre span, pre span *                 handled by pre *
+  ****************************************************************************************/
+  kbd,
+  pre, pre *, pre.code *,
+  code, code *, * code *, .code-line,
+  input :where(code, pre),
+  textarea :where(code, pre),
+  [class*="highlight"] :where(pre, code),
+  .markdown-body :is(code, code *, pre, pre *),
+  .highlight :is(pre, code),
+  .blob-code, .blob-code-inner, .blob-num,
+  .editor, div.ace_content,
+  .blob-code-addition *, .blob-code-inner *,
+  .solarized-dark,
+  .EnlighterJS *,
+  .js-file-line *,
+  .changeset-message,
+  .node-log-frame,
+  .lines-content *,
+  tr.line_holder *,
+  div[class*="hljs-"] *,
+  div[class*=".comment"] code,
+  [class*="code"] *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a):not([class*="fa"], [class*="iconfont"], [class*="codicon"]):not([class*="step"] *),
+  [class*="linenumber"] *, [class*="markdown"] code, [class*="blob"] code,
+  [class*="terminal"] *:not([class*="icon"]), #terminal *:not([class*="icon"]){
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+
+
+  /****************************************************************************************
+   * stylish/stylus editor
+   * https://userstyles.world/
+  ****************************************************************************************/
+  .CodeMirror-line, *.CodeMirror-lines *, *.CodeMirror *, .CodeMirror *,
+  span.target, details.sections-list li, h2.style-name *,
+  div[class*="CodeMirror-"] *, pre[class*="s-code-"] *, div[class*="cm-"] * {
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+  details[class*="ignore-pref-if-compact"] h2 {
+    font-size: 2em !important;
+  }
+  div[id*="basic-info-name"] > input,
+  div[class*="buttons"] > button,
+  h2.style-name *,
+  div.manage-settings *,
+  div[class*="select-"] select,
+  div.settings-column :is(a, button, span),
+  div.options-column > div.option,
+  input[type*="search"],
+  span[id*="share"],
+  div[class*="share"] * {
+    font-family: var(--font-family-sans) !important;
+  }
+
+
+  /****************************************************************************************
+   * https://bootsnipp.com/
+   * ace_
+  ****************************************************************************************/
+  [class*="ace_"], [class*="ace_"]~div, [class*="ace_"]~div, [class*="ace_"]+div, [class*="ace_"] *,
+  div#playground-container * {
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+
+
+  /****************************************************************************************
+     * gerrit
+   * .gr-change-metadata, .gr-related-changes-list, .gr-change-list-item, .gr-comment-list
+   * td.u-red, td.u-green
+   *
+   * td[class *= 'gr-'] {
+   *   font-family: var(--font-family-mono) !important;
+   * }
+   * [class*="style"] *, [class*="style"], [rel="noopener"], div[class*="gr-"] *, .style-scope *
+   *
+  ****************************************************************************************/
+  .gr-app,
+  .webLink,
+  .gr-message,
+  .gr-file-list,
+  .gr-admin-view,
+  .branches.name,
+  .bigTitle,
+  a.gr-related-changes-list,
+  .gr-formatted-text-0 ul.gr-formatted-text,
+  .gr-formatted-text-0 li.gr-formatted-text,
+  .gr-linked-text-0 span.gr-linked-text,
+  span.gr-account-label, span.gr-account-dropdown,
+  th.gr-change-list, a.gr-change-list-item,
+  span.gr-main-header,
+  a.gr-admin-view,
+  h1.gr-repo,
+  label.gr-editable-label,
+  span.headerSubject,
+  span.breadcrumbText,
+  paper-button, paper-button.gr-button,
+  span#automatedMessageToggleContainer,
+  div.desktop :is(a, p),
+  span.gr-change-metadata,
+  div.gr-change-status,
+  span.title,
+  a.gr-dropdown,
+  aper-item.gr-dropdown-list div,
+  div.gr-dropdown-list div[class*="gr-dropdown-list"],
+  div.gr-related-changes-list *,
+  table.object_header td,
+  .linksTitle.gr-main-header,
+  span.gr-linked-text *:not([class*="pre"]),
+  div.hideOnOpen,
+  [class*="gr-*-list"],
+  blockquote[class*="gr-formatted-text"] *,
+  input[id*="b_signin"] {
+    font-family: var(--font-family-sans) !important;
+  }
+  gr-linked-text[class*="pre"] #output,
+  gr-formatted-text :is([class*="pre"]),
+  gr-commit-info *,
+  gr-date-formatter *,
+  gr-diff *,
+a.gr-change-view,
+a.gr-diff-view,
+  h3.gr-access-section,
+  td.gr-diff,
+  div.stats > span,
+  div.total-stats > span,
+  div.commitMessage > #commitMessageEditor > div.gr-editable-content span#output,
+  [class*="monospace"] *,
+  .cell.number > a,
+  span.value,
+  .branches.revision,
+  div.page_path *,
+  div.page_body *,
+  div.textarea-container *,
+  div.gr-editable-content a[rel*="noopener"] {
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+  td.changesLink.style-scope.gr-repo-list,
+  td.repositoryBrowser.style-scope.gr-repo-list {
+    font-size: 15px !important;
+  }
+  .style-scope.gr-account-dropdown,
+  gr-endpoint-decorator.gr-main-header *,
+  h2.logo + div.page_header > a:not([href*="git"]) {
+    font-family: var(--font-family-handwritten) !important;
+    font-size: 20px !important;
+    text-transform: none !important;
+  }
+  span.title,
+  .gr-message,
+  .gr-file-list,
+  span.gr-main-header,
+  label.gr-editable-label,
+  span.gr-account-label,
+  span.gr-account-dropdown,
+  th.gr-change-list,
+  a.gr-change-list-item,
+  .gr-admin-view,
+  .branches.name {
+    font-size: var(--font-size-small-mono) !important;
+    font-family: var(--font-family-sans) !important;
+  }
+  .gr-change-list-item-0 th.gr-change-list-item:not(.label),
+  .gr-change-list-item-0 .cell.gr-change-list-item:not(.label) {
+    padding-right: 2px !important;
+  }
+  td:is([title*="Valid-Commit-Message"]),
+  td:is([title*="Non-Author-Code-Review"]),
+  td:is([title*="Verified"]) {
+    background: #212121 !important;
+  }
+  label.gr-editable-label,
+  span.headerSubject,
+  span.breadcrumbText,
+  .linksTitle.gr-main-header,
+  h3.gr-diff-view span {
+    font-size: 1.25rem !important;
+  }
+  gr-endpoint-decorator.gr-main-header *,
+  .bigTitle,
+  h1.gr-repo {
+    color: #e2e2e2;
+    font-size: 2.25rem !important;
+    text-decoration: none;
+  }
+  div.reviewed > label.gr-file-list > span.markReviewed {
+    font-size: 16px !important;
+  }
+  .gr-file-list-1 .reviewed.gr-file-list ,
+  .gr-file-list-0 .reviewed.gr-file-list {
+    margin-left: 1em !important;
+    width: 18em !important;
+  }
+  /**
+   * gerrit code block
+  **/
+  .gr-formatted-text-0 gr-linked-text.pre.gr-formatted-text,
+  gr-linked-text[class*="pre"], gr-linked-text[class*="pre"] #output {
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+  .gr-formatted-text-0 gr-linked-text.pre.gr-formatted-text,
+  gr-linked-text[class*="pre"] {
+    color: #c8c8c8 !important;
+    background: #272727 !important;
+    border-radius: .75em !important;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    overflow: auto;
+    display: block;
+    padding: 12px 12px 1px 12px;
+    margin: 0px;
+  }
+
+  /****************************************************************************************
+   * .editor, * div.ace_content * {
+   *   font-family: var(--font-family-mono) !important;
+   *   font-size: var(--font-size-normal-mono) !important
+   * }
+  ****************************************************************************************/
+  /* ol li, */
+  td ol,
+  select,
+  input:not([name*="password"], [name*="username"], [class*="button"], [type*="submit"], [name*="summary"]),
+  a.jstree-anchor, pre.console-output,
+  div.line-numbers *, .line-numbers, .js-line-number, /* artifactory tree list */
+  .line, .line-number, .gr-diff,                      /* github codeblock */
+  div.QueryBuilder-StyledInputContainer,              /* github search input box */
+  pre.span *, pre *, #confluenceTd, .blockInner,      /* confluence */
+  .jsonpOpener, td.wysiwyg-macro-body *, .timestamp,  /* Json Viewer */
+  li.blockList {
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+
+  /****************************************************************************************
+   * stackoverflow
+  ****************************************************************************************/
+  .fs-headline1 *,
+  .question-header * {
+    font-size: 26px !important;
+  }
+  .fs-headline2 *,
+  .s-post-summary--content-title {
+    font-size: 22px !important;
+  }
+  .modal-content * {
+    font-size: 16px !important;
+  }
+  .fs-title,
+  .s-notice,
+  .js-review-actions,
+  .ws-nowrap,
+  .s-sidebarwidget,
+  .comments-list *,
+  .js-post-body p,
+  .js-post-body li,
+  .js-add-link,
+  .user-info *,
+  .question-hyperlink,
+  div#question-mini-list a, .nav-links a, .modal-content a,
+  li.js-freemium-cta *,
+  .s-btn span,
+  div#question-mini-list [class*="-unit"],
+  span[class*="gwd-span-"],
+  div[class*="-ad-"] *,
+  div[id*="user-panel"] a,
+  [role*="tooltip"],
+  [type*="button"] {
+    font-family: var(--font-family-sans) !important;
+  }
+  .comment-body code,
+  .mainEntity :is(code, pre),
+  div#question-mini-list [class*="-number"] {
+    font-family: var(--font-family-mono) !important;
+  }
+
+
+  /****************************************************************************************
+   * github
+   * [class*="text"],
+  ****************************************************************************************/
+  .markdown-title,
+  .markdown-section :is(p, h1, h2, h3, h4),
+  .markdown-body, .markdown-body :is(p, h1, h2, h3, h4),
+  div.list-style-none,
+  .page-header,
+  div[class*="style_CardRow"] h1,
+  .d-flex.flex-self-stretch,
+  a.dropdown-item,
+  [class*="headline"],
+  [class*="footer"],
+  .d-flex.flex-wrap.flex-justify-end,
+  label.header-search-wrapper > input,
+  div.d-none.d-sm-block > span:is([class*="js-path-segment"]):not([class*="js-repo-root"]) > a  {
+    font-family: var(--font-family-sans) !important;
+  }
+  /** for selection dismatches issue **/
+  textarea#read-only-cursor-text-area {
+    font-size: var(--font-size-normal-mono) !important;
+    font-family: var(--font-family-mono) !important;
+  }
+  table.js-code-nav-container > tbody *,
+  .QueryBuilder-StyledInputContainer * {                /* github search/query input */
+    font-family: var(--font-family-mono) !important;
+  }
+  .d-flex.flex-wrap.flex-justify-end [rel*="author"],
+  header.pagehead h1,
+  h1.wb-break-word.f3 > span.author > a, h3.text-normal a.author,       /* gist.github.com */
+  span.js-repo-root,
+  div.vcard-names-container h1 .vcard-fullname,
+  [data-hovercard-type="user"]  span.AppHeader-context-item-label {
+    font-family: var(--font-family-handwritten) !important;
+    font-size: 24px !important;
+  }
+  h3.text-normal a.author {
+    padding-top: 0px !important;
+  }
+  h2.breadcrumb, .separator {
+    font-size: 16px !important;
+  }
+  .markdown-body.js-comment-body p,
+  h3.text-normal a.author,
+  .d-none.d-sm-block,
+  h2:is([id*="blob-path"])
+  {
+    font-size: 18px !important;
+  }
+  .d-flex.flex-wrap.flex-justify-end [rel*="author"] {
+    font-size: 24px !important;
+  }
+
+
+  /****************************************************************************************
+   * github pager
+   * https://idratherbewriting.com/documentation-theme-jekyll/index.html
+  ****************************************************************************************/
+  .markdown-section *:not(mark) {
+    font-size: 14px !important;
+  }
+  .markdown-section a,
+  .book-summary a,
+  div[type*="text"],
+  li li,
+  ul li,
+  ol li,
+  #book-search-input>input,
+  textarea[id*="commento-textarea"],
+  a.btn,
+  div.tags>b,
+  input[type=checkbox]+label,
+  .commento-submit-button,
+  div[class*="language-liquid"]~table * {
+    font-family: var(--font-family-sans) !important;
+  }
+
+
+  /****************************************************************************************
+   * slack
+   * https://app.slack.com
+  ****************************************************************************************/
+  [class*="c-message"],
+  span[class*="p-view_header_"],
+  [data-qa*="slack_"] *,
+  [class*="c-menu_"] *,
+  span[id*="context_bar_"] *,
+  div[class*="c-base_list_entity"] *,
+  [class*="c-basic_container__body"] button,
+  div[class*="message_input"] *,
+  div[class*="p-draft_unfurls"] *,
+  [class*="p-notification_bar"] *,
+  [data-qa*="context_bar_text_timezone"] * {
+    font-family: var(--font-family-sans) !important;
+  }
+  [class*=c-mrkdwn__code],
+  [class*="c-mrkdwn__pre"],
+  [class*="ql-editor"] :is(code, pre) {
+    font-family: var(--font-family-mono) !important;
+  }
+
+
+  /****************************************************************************************
+   * jira
+   * #create-issue-dialog input
+   * :not([class*="aui-icon"]),
+   * .aui-button
+  ****************************************************************************************/
+  .js-issue-list *,
+  span.aui-label,
+  table.issue-table p,
+  div.tabwrap.aui-tabs,
+  .message-container,
+  a.s-summary,
+  div.tableHeader *,
+  .gadget-container *,
+  div.foot :is(a, div),
+  div.action-details,  div.action-details *,
+  div.field-group input:where([class*="text"], [type*="password"], [name*="password"], [name*="username"]),
+  .text.aui-ss-field,
+  input.text.long-field,
+  .textfield.long-field,
+  .ajax_autocomplete input.long-field,
+  div.cke_contents textarea,
+  h1#summary-val,
+  div#attachmentmodule *,
+  input.aui-ss-field,
+  div.user-content-block *:not(code):not(pre>code *),
+  [class*="dashboard-item"] iframe *,
+  [class*="applinks*messages"],
+  [class*="jira-activity"] [class*="activity"],
+  div[class*="ghx-"],
+  [id*="details-module"] *:not([class*="icon"]),
+  [class*="s-view-dd-"],
+  [class*="aui-dropdown"] strong {
+    font-family: var(--font-family-sans) !important;
+    font-size: var(--font-size-normal-sans) !important;
+  }
+  div[class*="ghx-key"] > a, td.issuekey,
+  .user-content-block :is(code, code *, pre code),
+  .cke_editable :where(code, code *, pre),
+  [class*="action-body"] :where(code, code *, pre),
+  .mod-content :where(code, code *, pre),
+  textarea[class*="cke_source"] {
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+  }
+  /* div.field-group input:not([type*="password"], [type*="submit"], [name*="user"], [id*="customfield_"] */
+  div.aui-page-header-main > h1#summary-val,
+  div.aui-page-header-main > h1#summary-val form#summary-form input.long-field {
+    font-size: 26px !important;
+  }
+  li.ghx-column > h2 {
+    font-size: 18px !important;
+    align-content: center !important;
+  }
+  .user-content-block *:not(pre)>code,
+  [class*="action-body"] *:not(pre)>code,
+  #create-issue-dialog *:not(pre)>code,
+  .cke_editable *:not(pre)>code,
+  .mod-content *:not(pre)>code {
+    color: #d63384 !important;
+    font-family: var(--font-family-mono) !important;
+    font-size: var(--font-size-normal-mono) !important;
+    /* font-style: italic; */
+  }
+  body.cke_editable :where(p, a, code, pre),
+  div.cke_contents textarea                            /* comments input box */
+  {
+    font-size: 18px !important;
+  }
+  /*div.gadget-container > div.dashboard-item-header > h3,                      assigned to me */
+  /* .mod-content li.people-details span:where([id*="reporter"], [id*="assignee"]) > span[id*="issue_summary"]      assignee & reporter */
+  div.aui-page-header > div.aui-page-header-inner > div.aui-page-header-main > h1, /* system dashboard */
+  h1 > span.subnav-container > span#subnav-title > span.subnavigator-title,  /* sprint - xx */
+  div#search-header-view > div.header-section-primary > h1.search-title {
+    font-family: var(--font-family-handwritten) !important;
+  }
+
+  /****************************************************************************************
+   * confluence
+  body.page-edit :is(h1, h2, h3, h4, h5, li, p, a, span) *,
+  [class*="confluence"] *,
+  [class*="wysiwyg-macro"] *,
+  .wiki-content *,
+  table.wysiwyg-fmacro,
+  table.wysiwyg-macro+p {
+    font-family: var(--font-family-sans) !important;
+  }
+  ****************************************************************************************/
+  input#content-title,
+  .wiki-content .contentLayout2,
+  span.aui-header-logo-text,
+  #autocomplete-dropdown * {
+    font-family: var(--font-family-sans) !important;
+  }
+  body.page-edit code, [class*="confluence"] code *,
+  .wysiwyg-macro-body>pre, div.codeContent td.code * {
+    font-family: var(--font-family-mono) !important;
+  }
+  input#content-title {
+    font-size: 1.25em !important;
+  }
+  h1#logo > a > span.aui-header-logo-text {
+    font-size: 24px !important;
+    line-height: 1;
+    padding: 12px 0 0px 0px;
+    font-family: var(--font-family-handwritten) !important
+  }
+
+  /****************************************************************************************
+   * kubernetes.io
+   * https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-interactive/
+  ****************************************************************************************/
+  #click-to-connect :is(h1,h2),
+  section#intro *:not([class*="fa-"]),
+  div#course-title *,
+  div.step *,
+  .settings-dropdown li>a, .webpreview-dropdown li>a {
+    font-family: var(--font-family-sans) !important;
+  }
+  section#terminal.terminal-container *,
+  div.xterm-screen canvas,
+  canvas.xterm-text-layer .terminal *,
+  .terminal-container, .terminal, .terminal[style],
+  #xterm-text-layer *
+  {
+    font-family: var(--font-family-mono) !important;
+    /* font-size: 1.25em !important; */
+  }
+  section#tutorial :where(code, pre) {
+    font-family: var(--font-family-mono) !important;
+    font-size: 1.35em !important;
+  }
+  section#tutorial p,
+  div.col-md-12 a.btn,
+  #settings-dropdown-terminal a {
+    font-size: 16px !important;
+  }
+  #click-to-connect :is(h1),
+  div.row.no-margin h1,
+  div.header.banner h1 {
+    font-size: 28px !important;
+  }
+  #click-to-connect :is(h2),
+  div#course-title :is(h3),
+  div.step :is(h4),
+  div#course-details+h1 {
+    font-size: 20px !important;
+  }
+  div#course-details i[class*="fa"] {
+    font-family: var(--font-family-icon) !important;
+  }
+
+  /****************************************************************************************
+   * others:
+   * .lwptoc_item,                  stackoverflow
+   * .book.font-size-2              https://psyteachr.github.io
+   * .MuiGrid-container             https://onecompiler.com/
+  ****************************************************************************************/
+  time, h2[class*="bottom"], .lwptoc_item,
+  .book.font-size-2 .book-body .page-inner section,    /* https://psyteachr.github.io */
+  .MuiGrid-container h2                                /* https://onecompiler.com/ */
+  {
+    font-size: 14px !important;
+  }
+  .page-header a>b                                     /* https://ci.jenkins.io/ */
+  {
+    font-size: 20px !important;
+  }
+  [data-target*="readme-toc.content"] *,
+  .css-truncate a, .BorderGrid-cell,
+  ul.blockListLast > li.blockList,                     /* groovy doc */
+  time-ago,
+  td.colLast > div.block,                              /* https://javadoc.jenkins.io */
+  a.wb-break-all strong,                               /* gist.github.com */
+  h4.line * {
+    font-family: var(--font-family-sans) !important;
+  }
+  /* https://www.wikiwand.com/en/Web_colors */
+  .mw-parser-output .color-chart-x11-table td:nth-child(2),
+  .entry pre>code {
+    font-family: var(--font-family-mono) !important;
+  }
+  /** service now **/
+  ul[ng-if*="::user.logged_in"] span:where([class*="navbar-avatar"], [class*="visible-lg-inline"]),
+  div[ng-show*="::!isViewNative"] div.logo-name {
+    font-family: var(--font-family-handwritten) !important;
+    font-size: 1.25em !important;
+  }
+  /** vault **/
+  textarea.input.masked-value {
+    font-family: var(--font-family-mono) !important;
+  }
+  /** zoom.us **/
+  h1.r-title * {
+    font-size: 22px !important;
+
+  }
+
+
+  /****************************************************************************************
+   * for content: "\f19d";
+   * .fa i.fa-clone, i.fa-check                     github pager
+   * i.s-fa-external-link, i.s-fa-info-circle       jira
+   * i[class*="material-icons-"]                    google search
+   * , i[class*="-icon"]
+   * .codicon[class*="codicon-"] font: normal normal normal 16px/1 codicon !important;
+  ****************************************************************************************/
+  ::before, ::after, button, button.btn, span.fa-angle-up * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    font-family: inherit;
+  }
+
+  /**
+   * i.fa-clone, i.fa-check,
+   * #anchor-navigation-ex-navbar > i[class*='fa'], ⌍
+   * #anchorNavigationExGoTop > i[class*='fa'],     ⋮ https://marslo.github.io/ibook
+   * a.navigation > i[class*='fa'],                 ⋮
+   * a > i[class*='fa'],                            ⌏
+   * span > i[class*='fa'],                         https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+  **/
+  i[class*="fa-"],
+  span[class*="glyphicon"],
+  span[class*="style_Navbar"], span[class*="avatar"], span[class*="icon-"],
+  i[class*="s-fa-"],
+  i[class*="material-icons-"],
+  i[class*="google-material-icons"],
+  i[class*="iconfont"],
+  i[class*="ms-Button-icon"], [class*="ms-Button"], .icon-530,
+  button[class*="vjs-"], .video-js,
+  button[class*="zm-button"], i[class^=zm-icon-], i[class^=zm-dialog],
+  [class*="g-button-right"] > [class*="icon-"],
+  [class^="u-icon-"],
+  .codicon[class*="codicon-"],                   /** gitpod **/
+  span[class^="icon"]::before                    /** https://www4.benefitsolver.com/benefits/BenefitSolverView **/
+  {
+    font-family: var(--font-family-icon) !important;
+  }
+
+  /****************************************************************************************
+   * global settings
+   *   button#btnSubmit, div.k-widget.k-grid *      projecttracker
+   *   div.breadcrumbs *, ul.one-third *,         ⌍
+   *   [class*="grepper_answer_button"] *,        ⋮
+   *   [class*="answer_title"],                   ⋮
+   *   ul.code_language_large *, .a-center        ⌏ https://www.codegrepper.com/
+   *   aui-dropdown2                                jira
+  ****************************************************************************************/
+  p, h1, h2, h3, h4, h5,
+  code :where(h1, h2, h3, h4, h5),
+  pre :is(h1, h2, h3, h4, h5),
+  button#btnSubmit, div.k-widget.k-grid *,
+  div.breadcrumbs *, ul.one-third *,
+  ul.code_language_large *, .a-center,
+  [class*="grepper_answer_button"] *,
+  [class*="answer_title"] {
+    font-family: var(--font-family-sans) !important;
+  }
+  /** .page-header, **/
+  h1.page-header :not([class*="hidden-"]),
+  h1:not([class*="button"]):not([class*="btn"]):not([id*="section-directions"]):not([class*="fontHeadlineLarge"]):not([id*="file-name-id"]),
+  h1 > a:not([class*="btn"]), h1 > code,
+  h1 :not(button):not(button+div):not(a[class*="tab"]):not(a[class*="Tab"]):not(i[class*="fa"]):not([class*="aui-dropdown2"] *),
+  h1#gh-pages code,
+  .markdown-body h1, .markdown-section h1,
+  div[class*="headline"] *:not([class*="btn"]),
+  [class*="header"] > h1 *:not([class*="btn"]):not([class*="logo"]),
+  div#click-to-connect > div > :not(h1):not(h2),
+  div[class*="style_CardRow"] h1 {
+    font-size: var(--font-size-h1) !important;
+    font-weight: 500 !important;
+  }
+
+  /* *:not([class*="confluence"]):not([class*="tablesorter-header-inner"]):not(em) > strong:not([class*="final-path"]), */
+  h1:is([class*="text-normal"]):not([id*="summary-val"]),            /* gist.github.com */
+  .header h1[data-v-03dd129c],                                       /* ⌍               */
+  .app-layout-wrapper .title-wrapper h1[data-v-32d38c0c],            /* ⌏  artifactory  */
+  h2:not([class*="css-"]) > a:not([class*="css-"]),
+  h2[dir*="auto"] > code,                                            /* https://plugins.jenkins.io/kubernetes/ */
+  *:not(blockquote) > h2:not([dir*="auto"]):not([class*="panel-title"]):not([data-v-0b7a2eac]):not([id*="blob-path"]):not([class*="spanh2"]):not([class*="fontBodyMedium"]):not([class*="css-"]),
+  *:not(blockquote) > h2:not([class*="style-name"]):not([id*="blob-path"]):not([class*="spanh2"]):not([id*="directions-mode-group-"]) > :is(a:not([class*="btn"]), span:not([class*="btn"]):not([class*="separator"]):not([class*="js-path"], a:not([class*="btn"]))),
+  h2 span:not([class*="PpN7xc"]),
+  *:not(blockquote) > h2:not([id*="directions-mode-group"]) > *:not(code),
+  h2#gitbook-cli > code, h2#gh-pages code,
+  .markdown-body h2:not([class*="btn"]):not([dir*="auto"]),
+  .markdown-section h2:not([class*="btn"]):not([dir*="auto"]),
+  .markdown-section h2 > mark,
+  .markdown-section h2 > a:not([class*="btn"]) {
+    font-size: var(--font-size-h2) !important;
+    font-weight: 400 !important;
+  }
+  h3:not([class*="btn"]):not([class*="ghx-name"]):not([class*="gr-access-section"]):not([class*="f5"]) div:not([class*="react-directory-truncate"]),
+  h3 > code, h3#gh-pages code,
+  .content h2,                                              /* https://plugins.jenkins.io/kubernetes/ */
+  .markdown-section h2 > code,
+  .markdown-body h3,
+  .markdown-section h3,
+  .markdown-section h3 code,
+  .markdown-section h3 > mark,
+  .markdown-section h3 > a:not([class*="btn"]) {
+    font-size: var(--font-size-h3) !important;
+    font-weight: 400 !important;
+  }
+  div[data-v-0b7a2eac] > h2[data-v-0b7a2eac],               /* artifactory repo name */
+  .c-title.t.tts-title a,                                   /* baidu title */
+  h4:not([class*="btn"]):not([class*="panel-title"]):not([class*="flex-1"]),
+  h4 > code, h4#gh-pages code,
+  section[role*="region"] h3,
+  .blockList > h3,
+  .markdown-section h3 > code,
+  .markdown-body h4,
+  .markdown-section h4,
+  .markdown-section h4 > mark,
+  .markdown-section h4 > a:not([class*="btn"]) {
+    font-size: var(--font-size-h4) !important;
+    font-weight: 400 !important;
+  }</style></html>
