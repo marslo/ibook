@@ -2,21 +2,36 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [enable screensharing](#enable-screensharing)
+- [screen sharing](#screen-sharing)
   - [backup and restore config](#backup-and-restore-config)
   - [setup screen sharing](#setup-screen-sharing)
-  - [start application remotelly](#start-application-remotelly)
-  - [GDM](#gdm)
+    - [reset VNC password](#reset-vnc-password)
+    - [read all conf](#read-all-conf)
+  - [start application remotely](#start-application-remotely)
+- [gdm](#gdm)
+  - [gnome-shell](#gnome-shell)
+  - [autologin](#autologin)
   - [login session](#login-session)
-  - [Process and SubProcesses](#process-and-subprocesses)
-  - [Wayland](#wayland)
-- [Reference](#reference)
+  - [default session](#default-session)
+  - [process and subprocesses](#process-and-subprocesses)
+    - [pstree](#pstree)
+  - [ps](#ps)
+- [Wayland](#wayland)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## enable screensharing
 
-### backup and restore config
+> [!NOTE|label:references:]
+> - [GDM Reference Manual](https://help.gnome.org/admin/gdm/stable/index.html.en)
+> - [GNOME](https://wiki.archlinux.org/index.php/GNOME)
+> - [How to configure Vino for remote desktop access using command line](https://access.redhat.com/solutions/346033)
+> - [Vino](https://wiki.archlinux.org/index.php/Vino)
+> - [Vino. The Remote Desktop Project](https://people.gnome.org/~markmc/remote-desktop.html)
+> - [VND/Servers](https://help.ubuntu.com/community/VNC/Servers)
+
+# screen sharing
+
+## backup and restore config
 ```bash
 $ dconf dump /org/gnome/desktop/remote-access/ > ubuntu1804_remoteaccess
 $ cat ubuntu1804_remoteaccess
@@ -28,7 +43,7 @@ prompt-enabled=false
 $ dconf load /org/gnome/desktop/remote-access/ < ubuntu1804_remoteaccess
 ```
 
-### setup screen sharing
+## setup screen sharing
 ```bash
 $ read -e -p "VNC Password: " -i "ubuntu" VNCPASSWORD
 $ dconf write /org/gnome/desktop/remote-access/enabled true
@@ -39,15 +54,17 @@ $ dconf write /org/gnome/desktop/remote-access/vnc-password \"\'$(echo -n $VNCPA
 $ sudo service lightdm restart
 ```
 
-#### reset VNC password
+### reset VNC password
 ```bash
 $ echo -n "marslo" | base64
 bWFyc2xv
 ```
 
-#### read all conf
+### read all conf
 ```bash
-$ for i in $(gsettings list-keys org.gnome.Vino); do echo -e "$i:\t --> "$(dconf read /org/gnome/desktop/remote-access/$i); done
+$ for i in $(gsettings list-keys org.gnome.Vino); do
+  echo -e "$i:\t --> "$(dconf read /org/gnome/desktop/remote-access/$i);
+done
 notify-on-connect:   -->
 alternative-port:    -->
 disable-background:  -->
@@ -65,13 +82,13 @@ lock-screen-on-disconnect:   -->
 vnc-password:    --> 'bWFyc2xv'
 ```
 
-### start application remotelly
+## start application remotely
 ```bash
 $ export DISPLAY=:0
 $ gnome-terminal
 ```
 
-### [GDM](https://wiki.archlinux.org/index.php/GDM)
+# [gdm](https://wiki.archlinux.org/index.php/GDM)
 ```bash
 $ cat /lib/systemd/system/gdm.service
 [Unit]
@@ -110,53 +127,55 @@ ExecReload=/usr/share/gdm/generate-config
 ExecReload=/bin/kill -SIGHUP $MAINPID
 ```
 
-#### [gnome-shell](https://www.archlinux.org/packages/extra/x86_64/gnome-shell/)
+## [gnome-shell](https://www.archlinux.org/packages/extra/x86_64/gnome-shell/)
 
-#### [AutoLogin](https://wiki.archlinux.org/index.php/GDM##Users_and_login)
+## [autologin](https://wiki.archlinux.org/index.php/GDM##Users_and_login)
 
-##### Login with desired session
-```bash
-$ cat /var/lib/AccountsService/users/devops
-[User]
-FormatsLocale=en_US.UTF-8
-XSession=gnome-xorg
-SystemAccount=false
+- login with desired session
+  ```bash
+  $ cat /var/lib/AccountsService/users/devops
+  [User]
+  FormatsLocale=en_US.UTF-8
+  XSession=gnome-xorg
+  SystemAccount=false
 
-[InputSource0]
-xkb=us
-```
+  [InputSource0]
+  xkb=us
+  ```
 
-##### Auto Login with GDM
-```bash
-$ grep -i auto /etc/gdm3/custom.conf
-[daemon]
-## Enabling automatic login
-AutomaticLoginEnable = true
-AutomaticLogin = devops
-```
+- auto login with gdm
+  ```bash
+  $ grep -i auto /etc/gdm3/custom.conf
+  [daemon]
+  ## Enabling automatic login
+  AutomaticLoginEnable = true
+  AutomaticLogin = devops
+  ```
 
-##### Auto Login with Delay
-```bash
-$ grep -i time /etc/gdm3/custom.conf
-[daemon]
-## Enabling timed login
-##  TimedLoginEnable = true
-##  TimedLogin = user1
-##  TimedLoginDelay = 10
-```
+- auto login with delay
+  ```bash
+  $ grep -i time /etc/gdm3/custom.conf
+  [daemon]
+  ## Enabling timed login
+  ##  TimedLoginEnable = true
+  ##  TimedLogin = user1
+  ##  TimedLoginDelay = 10
+  ```
 
-### login session
+## login session
 
 ![desktop styles](screenshots/desktop-style-2.jpeg)
 
-#### Default Session
+## default session
 ```bash
 $ cat /etc/X11/default-display-manager
 /usr/sbin/gdm3
 ```
 
-### Process and SubProcesses
-#### pstree
+## process and subprocesses
+### pstree
+
+<!--sec data-title="pstree" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 $ pstree 1391
 gdm3─┬─gdm-session-wor─┬─gdm-x-session─┬─Xorg───{Xorg}
@@ -188,10 +207,10 @@ gdm3─┬─gdm-session-wor─┬─gdm-x-session─┬─Xorg───{Xorg}
      │                 └─2*[{gdm-session-wor}]
      └─2*[{gdm3}]
 ```
+<!--endsec-->
 
-#### ps
-
-##### short
+## ps
+<!--sec data-title="ps short" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 $ ps auxwwf
 /usr/sbin/gdm3
@@ -223,8 +242,9 @@ $ ps auxwwf
              \_ update-notifier
              \_ /usr/lib/deja-dup/deja-dup-monitor
 ```
+<!--endsec-->
 
-##### full
+<!--sec data-title="ps full" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
 $ ps auxwwf
 root      1391  0.0  0.1 308176  8340 ?        Ssl  16:58   0:00 /usr/sbin/gdm3
@@ -256,13 +276,6 @@ devops    2599  0.2  0.9 1197708 75864 tty1    Sl+  16:58   0:01              \_
 devops    3686  0.0  0.3 605436 28680 tty1     Sl+  16:59   0:00              \_ update-notifier
 devops    4017  0.0  0.4 118225468 32448 tty1  Sl+  17:00   0:00              \_ /usr/lib/deja-dup/deja-dup-monitor
 ```
+<!--endsec-->
 
-### [Wayland](https://wiki.archlinux.org/index.php/Wayland)
-
-## Reference
-- [GDM Reference Manual](https://help.gnome.org/admin/gdm/stable/index.html.en)
-- [GNOME](https://wiki.archlinux.org/index.php/GNOME)
-- [How to configure Vino for remote desktop access using command line](https://access.redhat.com/solutions/346033)
-- [Vino](https://wiki.archlinux.org/index.php/Vino)
-- [Vino. The Remote Desktop Project](https://people.gnome.org/~markmc/remote-desktop.html)
-- [VND/Servers](https://help.ubuntu.com/community/VNC/Servers)
+# [Wayland](https://wiki.archlinux.org/index.php/Wayland)

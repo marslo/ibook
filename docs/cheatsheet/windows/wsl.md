@@ -416,7 +416,7 @@ $ vim --version | grep clipboard
 ### config
 
 - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconf-file)
-  ```config
+  ```editorconfig
   [boot]
   systemd=true
 
@@ -434,7 +434,7 @@ $ vim --version | grep clipboard
   ```
 
 - [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconfig-file)
-  ```config
+  ```editorconfig
   # Settings apply across all Linux distros running on WSL 2
   [wsl2]
 
