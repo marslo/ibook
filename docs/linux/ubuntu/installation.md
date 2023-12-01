@@ -346,29 +346,29 @@ $ sudo pip install genpac
     ...
     ```
     - service
-        ```bash
-        $ sudo /etc/init.d/shadowsocks-libev start
-        $ sudo /etc/init.d/shadowsocks-libev stop
-        $ sudo /etc/init.d/shadowsocks-libev restart
-        $ sudo /etc/init.d/shadowsocks-libev status
-        ```
+      ```bash
+      $ sudo /etc/init.d/shadowsocks-libev start
+      $ sudo /etc/init.d/shadowsocks-libev stop
+      $ sudo /etc/init.d/shadowsocks-libev restart
+      $ sudo /etc/init.d/shadowsocks-libev status
+      ```
     - config
-        ```bash
-        $ /etc/shadowsocks-libev/config.json
-        {
-            "server":"0.0.0.0",
-            "server_port": 1111,
-            "password":"mypassword",
-            "timeout":300,
-            "user":"nobody",                  // optinal
-            "method":"aes-256-cfb",
-            "fast_open":false,
-            "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
-            "mode":"tcp_and_udp",
-            "plugin":"obfs-server",
-            "plugin_opts":"obfs=http"
-        }
-        ```
+      ```bash
+      $ /etc/shadowsocks-libev/config.json
+      {
+          "server":"0.0.0.0",
+          "server_port": 1111,
+          "password":"mypassword",
+          "timeout":300,
+          "user":"nobody",                  // optinal
+          "method":"aes-256-cfb",
+          "fast_open":false,
+          "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
+          "mode":"tcp_and_udp",
+          "plugin":"obfs-server",
+          "plugin_opts":"obfs=http"
+      }
+      ```
 
 - check status
     ```bash
