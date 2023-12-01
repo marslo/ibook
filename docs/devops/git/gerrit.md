@@ -685,11 +685,11 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 
   ```bash
   # permission requies
-  $ ssh -i id_rsa jenkins@gerrit.sample.com -p 29418 gerrit stream-events
+  $ ssh -i id_rsa jenkins@gerrit.domain.com -p 29418 gerrit stream-events
   stream events not permitted
 
   # verify
-  $ ssh -i id_rsa jenkins@gerrit.sample.com -p 29418 gerrit stream-events | jq -r .type
+  $ ssh -i id_rsa jenkins@gerrit.domain.com -p 29418 gerrit stream-events | jq -r .type
   ref-updated
   comment-added
   ```

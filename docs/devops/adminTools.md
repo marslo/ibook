@@ -148,7 +148,7 @@ E..GP....._.
   $ sudo tcpdump -n -i any src or dst target.ip.address [ -v ]
 
   # i.e.
-  $ sudo tcpdump -n -i any src or dst git.sample.com -v
+  $ sudo tcpdump -n -i any src or dst git.domain.com -v
   tcpdump: data link type PKTAP
   tcpdump: listening on any, link-type PKTAP (Apple DLT_PKTAP), snapshot length 524288 bytes
   00:02:55.698822 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto TCP (6), length 52)

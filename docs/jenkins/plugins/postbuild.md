@@ -106,7 +106,7 @@ def showBadges( String... badges ) {
 > - [image editor](https://www.iloveimg.com/)
 
 ```groovy
-String url = 'https://artifactory.sample.com/artifactory/tools/jenkins/icon/'
+String url = 'https://artifactory.domain.com/artifactory/tools/jenkins/icon/'
 
 manager.createSummary( "${url}/jira.png" ).appendText ( 'jira' )
 manager.createSummary( "${url}/confluence.png" ).appendText ( 'confluence' )

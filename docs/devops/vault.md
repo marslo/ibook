@@ -171,7 +171,7 @@ HA Enabled      false
 
 - pre-setup
   ```bash
-  $ export VAULT_ADDR='https://vault.sample.com'
+  $ export VAULT_ADDR='https://vault.domain.com'
   $ export VAULT_TOKEN='s.s**********************K'
   ```
 

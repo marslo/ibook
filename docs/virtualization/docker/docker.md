@@ -722,7 +722,7 @@ ad080923604a        7 months ago        /bin/sh -c #(nop)  CMD ["bash"]         
 
 <!--sec data-title="application/vnd.docker.distribution.manifest.v2+json" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
-$ docker manifest inspect artifactory.sample.com/docker/devops/jenkins:2.387.1-lts
+$ docker manifest inspect artifactory.domain.com/docker/devops/jenkins:2.387.1-lts
 WARN[0000] Conmon at /usr/libexec/podman/conmon invalid: outdated conmon version
 WARN[0000] Warning! The manifest type application/vnd.docker.distribution.manifest.v2+json is not a manifest list but a single image.
 {

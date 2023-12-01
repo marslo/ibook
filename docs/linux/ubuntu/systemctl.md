@@ -3,10 +3,18 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [ubuntu 17.10 bootup settings](#ubuntu-1710-bootup-settings)
-- [Reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+> [!NOET|label:references:]
+> - [How to automatically execute shell script at startup boot on systemd Linux](https://linuxconfig.org/how-to-automatically-execute-shell-script-at-startup-boot-on-systemd-linux)
+> - [Using systemd to control the Docker daemon](https://success.docker.com/article/Using_systemd_to_control_the_Docker_daemon)
+> - [systemd_service.5.manual](http://manpages.ubuntu.com/manpages/zesty/man5/systemd.service.5.html)
+> - [Linux route命令详解：查看和操作IP路由表](http://network.51cto.com/art/201503/469761.htm)
+> - [ubuntu配置静态路由及重启生效](http://www.mamicode.com/info-detail-1704736.html)
+> - [Systemd的Unit文件; systemctl增加服务详细介绍](http://blog.csdn.net/shuaixingi/article/details/49641721)
+> - [SystemdForUpstartUsers](https://wiki.ubuntu.com/SystemdForUpstartUsers)
 
 ## ubuntu 17.10 bootup settings
 #### create Script
@@ -80,19 +88,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/add_route.service �
 ```
 
 #### route FLags
-- U: Up: 表示此路由当前为启动状态
-- H: Host: 表示此网关为一主机
-- G: Gateway: 表示此网关为一路有
-- R: Reinstate Route: 使用动态路由重新初始化的路由
-- D: Dynamically: 此路由是动态性的写入
-- M: Modifed: 此路由是有路由守护程序或导向器动态修改
-- !: 关闭状态
-
-## Reference
-- [How to automatically execute shell script at startup boot on systemd Linux](https://linuxconfig.org/how-to-automatically-execute-shell-script-at-startup-boot-on-systemd-linux)
-- [Using systemd to control the Docker daemon](https://success.docker.com/article/Using_systemd_to_control_the_Docker_daemon)
-- [systemd_service.5.manual](http://manpages.ubuntu.com/manpages/zesty/man5/systemd.service.5.html)
-- [Linux route命令详解：查看和操作IP路由表](http://network.51cto.com/art/201503/469761.htm)
-- [ubuntu配置静态路由及重启生效](http://www.mamicode.com/info-detail-1704736.html)
-- [Systemd的Unit文件; systemctl增加服务详细介绍](http://blog.csdn.net/shuaixingi/article/details/49641721)
-- [SystemdForUpstartUsers](https://wiki.ubuntu.com/SystemdForUpstartUsers)
+- `U`: Up: 表示此路由当前为启动状态
+- `H`: Host: 表示此网关为一主机
+- `G`: Gateway: 表示此网关为一路有
+- `R`: Reinstate Route: 使用动态路由重新初始化的路由
+- `D`: Dynamically: 此路由是动态性的写入
+- `M`: Modifed: 此路由是有路由守护程序或导向器动态修改
+- `!`: 关闭状态

@@ -46,30 +46,30 @@
 ```bash
 # global settings
 $ cat /etc/bashrc
-export http_proxy=http://proxy.example.com:80/
-export https_proxy=http://proxy.example.com:80/
+export http_proxy=http://proxy.domain.com:80/
+export https_proxy=http://proxy.domain.com:80/
 
 # individual account settings
 $ cat ~/.bashrc
-export http_proxy=http://proxy.example.com:80/
-export https_proxy=http://proxy.example.com:80/
+export http_proxy=http://proxy.domain.com:80/
+export https_proxy=http://proxy.domain.com:80/
 ```
 
 ## proxy for curl
 ```bash
-$ curl -x http://proxy.example.com:80 <https://target.server.com>
+$ curl -x http://proxy.domain.com:80 <https://target.server.com>
 ```
 
 - to get head only
   ```bash
-  $ curl -kvI -x http://proxy.example.com:80 <https://target.server.com>
+  $ curl -kvI -x http://proxy.domain.com:80 <https://target.server.com>
   ```
 
 ## proxy for yum
 ```bash
 $ cat /etc/yum.conf
 [main]
-proxy=http://proxy.example.com:80
+proxy=http://proxy.domain.com:80
 ```
 
 ## proxy for apt
@@ -79,9 +79,9 @@ proxy=http://proxy.example.com:80
 
 ```bash
 $ cat /etc/apt/apt.conf
-Acquire::http::Proxy "http://proxy.example.com:80";
-Acquire::https::Proxy "http://proxy.example.com:80";
-Acquire::ftp::Proxy "http://proxy.example.com:80";
+Acquire::http::Proxy "http://proxy.domain.com:80";
+Acquire::https::Proxy "http://proxy.domain.com:80";
+Acquire::ftp::Proxy "http://proxy.domain.com:80";
 ```
 
 ## proxy for docker
@@ -97,8 +97,8 @@ $ cat > ~/.docker/config.json << EOF
 {
         "proxies": {
                 "default": {
-                        "httpProxy": "http://proxy.example.com:80",
-                        "httpsProxy": "http://proxy.example.com:80"
+                        "httpProxy": "http://proxy.domain.com:80",
+                        "httpsProxy": "http://proxy.domain.com:80"
                 }
         }
 }
@@ -108,8 +108,8 @@ EOF
 - or via cmd directly
   ```bash
   $ docker build \
-           --build-arg http_proxy=http://proxy.example.com:80 \
-           --build-arg https_proxy=http://proxy.example.com:443 \
+           --build-arg http_proxy=http://proxy.domain.com:80 \
+           --build-arg https_proxy=http://proxy.domain.com:443 \
   ```
 
 ### for docker pull
@@ -121,8 +121,8 @@ $ sudo mkdir -p /etc/systemd/system/docker.service.d
 
 $ sudo bash -c "cat > /etc/systemd/system/docker.service.d" << EOF
 [Service]
-Environment="HTTP_PROXY=http://proxy.example.com:80"
-Environment="HTTPS_PROXY=https://proxy.example.com:443"
+Environment="HTTP_PROXY=http://proxy.domain.com:80"
+Environment="HTTPS_PROXY=https://proxy.domain.com:443"
 Environment="NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp"
 EOF
 
@@ -131,7 +131,7 @@ $ sudo systemctl restart docker
 
 # verify
 $ systemctl show docker --property Environment
-Environment=HTTPS_PROXY=http://proxy.example.com:443 HTTP_PROXY=http://proxy.example.com:80 NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp
+Environment=HTTPS_PROXY=http://proxy.domain.com:443 HTTP_PROXY=http://proxy.domain.com:80 NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp
 ```
 
 ## proxy for pip
@@ -143,24 +143,24 @@ Environment=HTTPS_PROXY=http://proxy.example.com:443 HTTP_PROXY=http://proxy.exa
 
 ### setup [via command line](https://stackoverflow.com/a/69568878/2940319)
 ```bash
-$ pip config set global.proxy http://proxy.example.com:80
+$ pip config set global.proxy http://proxy.domain.com:80
 ```
 
 ### using directly
 ```bash
-$ pip install --proxy http://proxy.example.com:80 git-review
+$ pip install --proxy http://proxy.domain.com:80 git-review
 ```
 
 ## proxy for ssh
 ### nc
 ```bash
 $ ssh -vT \
-      -o "ProxyCommand=nc -X connect -x proxy.example.com:80 %h %p" \
+      -o "ProxyCommand=nc -X connect -x proxy.domain.com:80 %h %p" \
       -p 22 \
       ssh://remote.git.com
 # or
 $ ssh -vT \
-      -o "ProxyCommand=netcat -X connect -x proxy.example.com:80 %h %p" \
+      -o "ProxyCommand=netcat -X connect -x proxy.domain.com:80 %h %p" \
       -p 22 \
       ssh://remote.git.com
 
@@ -170,11 +170,11 @@ Host  github.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
-      ProxyCommand        nc -X connect -x proxy.example.com:80 %h %p
+      ProxyCommand        nc -X connect -x proxy.domain.com:80 %h %p
 ```
 - for socks5
   ```bash
-  ProxyCommand        nc -X 5 -x proxy.example.com:80 %h %p
+  ProxyCommand        nc -X 5 -x proxy.domain.com:80 %h %p
   ```
 
 ### corkscrew
@@ -182,7 +182,7 @@ Host  github.com
 $ brew install corkscrew
 
 $ ssh -vT \
-      -o "ProxyCommand=corkscrew proxy.example.com 80 %h %p" \
+      -o "ProxyCommand=corkscrew proxy.domain.com 80 %h %p" \
       -p 22 \
       ssh://remote.git.com
 
@@ -192,7 +192,7 @@ Host  github.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
-      ProxyCommand        corkscrew proxy.example.com 80 %h %p
+      ProxyCommand        corkscrew proxy.domain.com 80 %h %p
 ```
 
 ### [ncat](https://nmap.org/)
@@ -200,7 +200,7 @@ Host  github.com
 $ brew install nmap
 
 $ ssh -vT \
-      -o "ProxyCommand=ncat --proxy proxy.example.com:80 --proxy-type http %h %p" \
+      -o "ProxyCommand=ncat --proxy proxy.domain.com:80 --proxy-type http %h %p" \
       -p 22 \
       ssh://remote.git.com
 
@@ -210,11 +210,11 @@ Host  github.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
-      ProxyCommand        ncat --proxy proxy.example.com:80 --proxy-type http %h %p
+      ProxyCommand        ncat --proxy proxy.domain.com:80 --proxy-type http %h %p
 ```
 - for socks5
   ```bash
-  ProxyCommand        ncat --proxy proxy.example.com:80 --proxy-type socks5 %h %p
+  ProxyCommand        ncat --proxy proxy.domain.com:80 --proxy-type socks5 %h %p
   ```
 
 ### [connect](https://github.com/gotoh/ssh-connect)
@@ -226,7 +226,7 @@ Host  github.com
 $ brew install connect
 
 $ ssh -vT \
-      -o "ProxyCommand=connect -H proxy.example.com:80 %h %p" \
+      -o "ProxyCommand=connect -H proxy.domain.com:80 %h %p" \
       -p 22 \
       ssh://remote.git.com
 
@@ -236,12 +236,12 @@ Host  github.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
-      ProxyCommand        connect -H proxy.example.com:80 %h %p
+      ProxyCommand        connect -H proxy.domain.com:80 %h %p
 ```
 
 - for socks5
   ```bash
-  ProxyCommand        connect -S proxy.example.com:80 %h %p
+  ProxyCommand        connect -S proxy.domain.com:80 %h %p
   ```
 
 ### [socat](http://www.dest-unreach.org/socat/)
@@ -279,37 +279,37 @@ Host  github.com
 
 ### http.proxy and https.proxy
 ```bash
-$ git config --global https.proxy 'http://proxy.example.com:80'   # using privoxy convert socks to http
-$ git config --global http.proxy  'http://proxy.example.com:80'
+$ git config --global https.proxy 'http://proxy.domain.com:80'   # using privoxy convert socks to http
+$ git config --global http.proxy  'http://proxy.domain.com:80'
 $ git config --global https.sslVerify false                       # unable to access '...': Unknown SSL protocol error in connection to ...:443
 $ git config --global http.sslVerify false                        # unable to access '...': Unknown SSL protocol error in connection to ...:443
 ```
 
 - for specific url
   ```bash
-  $ git config --global http.https://github.com http://proxy.example.com:80
-  $ git config --global http.https://chromium.googlesource.com http://proxy.example.com:80
+  $ git config --global http.https://github.com http://proxy.domain.com:80
+  $ git config --global http.https://chromium.googlesource.com http://proxy.domain.com:80
   ```
 
 - or
   ```bash
   $ cat ~/.gitconfig
   [http]
-    proxy = http://proxy.example.com:80
+    proxy = http://proxy.domain.com:80
   [https]
-    proxy = http://proxy.example.com:80
+    proxy = http://proxy.domain.com:80
   [http "https://chromium.googlesource.com"]
-    proxy = http://proxy.example.com:80
+    proxy = http://proxy.domain.com:80
   [http "https://github.com"]
-    proxy = http://proxy.example.com:80
+    proxy = http://proxy.domain.com:80
   ```
 
 - [for socks5](https://github.com/521xueweihan/git-tips#git-%E9%85%8D%E7%BD%AE-http-%E5%92%8C-socks-%E4%BB%A3%E7%90%86)
   ```bash
-  $ git config --global socks.proxy "proxy.example.com:80"
+  $ git config --global socks.proxy "proxy.domain.com:80"
 
   # or
-  $ git config --global socks.proxy "socks5://proxy.example.com:80"
+  $ git config --global socks.proxy "socks5://proxy.domain.com:80"
   ```
 
 - additional usage
@@ -346,7 +346,7 @@ $ git config --global http.sslVerify false                        # unable to ac
 
 ### core.gitproxy
 ```bash
-$ git config --global core.gitproxy https://proxy.example.com:80
+$ git config --global core.gitproxy https://proxy.domain.com:80
 $ git config --global url.git://github.com/.insteadOf git@github.com:
 ```
 
@@ -357,10 +357,10 @@ $ git config --global url.git://github.com/.insteadOf git@github.com:
 > > A new configuration variable `core.sshCommand` has been added to specify what value for `GIT_SSH_COMMAND` to use per repository.
 
 ```bash
-$ git config --global core.sshCommand "ssh -v -o 'ProxyCommand=connect -H proxy.example.com:80 %h %p'"
+$ git config --global core.sshCommand "ssh -v -o 'ProxyCommand=connect -H proxy.domain.com:80 %h %p'"
 
 # or
-$ git -c core.sshCommand "ssh -v -o 'ProxyCommand=commect -H proxy.example.com:80 %h %p'" clone git@github.com/marslo/ibook.git
+$ git -c core.sshCommand "ssh -v -o 'ProxyCommand=commect -H proxy.domain.com:80 %h %p'" clone git@github.com/marslo/ibook.git
 ```
 
 ## proxy for npm
@@ -371,8 +371,8 @@ $ git -c core.sshCommand "ssh -v -o 'ProxyCommand=commect -H proxy.example.com:8
 > - [How to fix SSL certificate error when running Npm on Windows?](https://stackoverflow.com/a/54538095/2940319)
 
 ```bash
-$ npm config set proxy http://proxy.example.com:80/
-$ npm config set https-proxy http://proxy.example.com:80/
+$ npm config set proxy http://proxy.domain.com:80/
+$ npm config set https-proxy http://proxy.domain.com:80/
 $ npm config set noproxy '127.0.0.1,my.noproxy.com'
 
 # optional
@@ -383,8 +383,8 @@ $ npm config set strict-ssl false
   ```bash
   $ cat ~/.npmrc
   strict-ssl=false
-  proxy=http://proxy.example.com:80/
-  https-proxy=http://proxy.example.com:80/
+  proxy=http://proxy.domain.com:80/
+  https-proxy=http://proxy.domain.com:80/
   ```
 
 ## proxy for nc
@@ -406,7 +406,7 @@ $ npm config set strict-ssl false
 
 ```bash
 # with proxy
-$ nc -zv -X connect -x proxy.example.com:80 google.com 443
+$ nc -zv -X connect -x proxy.domain.com:80 google.com 443
 nc: Proxy error: "HTTP/1.1 200 Connection established"
 
 # without proxy
@@ -423,13 +423,13 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
 ### nc : `nc: Proxy error: "HTTP/1.1 200 Connection established"`
 - issue
   ```bash
-  $ nc -X connect -x 127.0.0.1:8080 -zv git.sample.com 22
+  $ nc -X connect -x 127.0.0.1:8080 -zv git.domain.com 22
   nc: Proxy error: "HTTP/1.1 200 Connection established"
   ```
 
 - solution
   ```bash
-  $ corkscrew 127.0.0.1 8080 git.sample.com 22
+  $ corkscrew 127.0.0.1 8080 git.domain.com 22
   SSH-2.0-GerritCodeReview_2.16.27-RP-1.10.2.4 (SSHD-CORE-2.0.0)
   ^C
 
@@ -438,8 +438,8 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
   ^C
 
   $ cat ~/.ssh/config
-    Host  git.sample.com
-          Hostname              git.sample.com
+    Host  git.domain.com
+          Hostname              git.domain.com
           User                  marslo
           Port                  22
           StrictHostKeyChecking no
@@ -449,7 +449,7 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
           ProxyCommand          ncat --proxy 127.0.0.1:8080 --proxy-type http %h %p
 
   # verify in ssh
-  $ ssh -vT -o "ProxyCommand=corkscrew 127.0.0.1 8080 %h %p" -p 22 git.sample.com
+  $ ssh -vT -o "ProxyCommand=corkscrew 127.0.0.1 8080 %h %p" -p 22 git.domain.com
   ```
 
 ## proxy with kubeconfig
@@ -461,7 +461,7 @@ nc: connectx to google.com port 443 (tcp) failed: Operation timed out
 $ kubectl config set-cluster <my-cluster-name> --proxy-url=<my-proxy-url>
 
 # i.e.
-$ kubectl config set-cluster development --proxy-url=http://proxy.example.com:8080
+$ kubectl config set-cluster development --proxy-url=http://proxy.domain.com:8080
 ```
 
 ## proxy with windows
@@ -502,7 +502,7 @@ $ kubectl config set-cluster development --proxy-url=http://proxy.example.com:80
 - check
   ```batch
   $ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" | find AutoConfigURL
-      AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
+      AutoConfigURL    REG_SZ    http://proxy.domain.com/file.pac
 
   REM full list
   $ reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings"
@@ -518,5 +518,5 @@ $ kubectl config set-cluster development --proxy-url=http://proxy.example.com:80
       EnableNegotiate    REG_DWORD    0x1
       ProxyEnable    REG_DWORD    0x0
       MigrateProxy    REG_DWORD    0x1
-      AutoConfigURL    REG_SZ    http://proxy.example.com/file.pac
+      AutoConfigURL    REG_SZ    http://proxy.domain.com/file.pac
   ```
