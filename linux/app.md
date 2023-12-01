@@ -8,7 +8,7 @@
   - [setup MOTD](#setup-motd)
   - [get subnet ip address](#get-subnet-ip-address)
   - [get public IP address](#get-public-ip-address)
-  - [proxy](#proxy)
+- [proxy server](#proxy-server)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
 - [squid](#squid)
@@ -23,14 +23,132 @@
 - [X Windows](#x-windows)
   - [get screen solution](#get-screen-solution)
   - [desktop sharing](#desktop-sharing)
-- [Reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!NOTE|label:references:]
+> - [使用ssl模块配置同时支持http和https并存](http://blog.csdn.net/weixin_35884835/article/details/52588157)
+> - [How To Create an SSL Certificate on Nginx for Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04)
+> - [How To Create a Self-Signed SSL Certificate for Nginx in Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04)
+> - [Enabling Https with Nginx](https://manual.seafile.com/deploy/https_with_nginx.html)
+> - [Enable SSL for HTTPS Configuration on nginx](https://linode.com/docs/security/ssl/enable-ssl-for-https-configuration-on-nginx/)
+> - [Nginx+Https配置](https://segmentfault.com/a/1190000004976222)
+> - [Test an insecure registry](https://docs.docker.com/registry/insecure/)
+> - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
+
+> [!TIP|label:download deb only]
+> - [Is there an apt command to download a deb file from the repositories to the current directory?](https://askubuntu.com/a/30581/92979)
+>   ```bash
+>   # get package name
+>   $ sudo apt list --installed | grep <keywords>
+>   $ apt-get install --reinstall --print-uris -qq <package-name> | cut -d"'" -f2
+>   ```
 
 ## pre-config
 ### install dependencies
 ```bash
-$ sudo apt install -y apt-file autoconf automake bash-completion* binutils binutils-doc bison build-essential cmake cpp cpp-5 cpp-doc curl debian-keyring dlocate dos2unix dpkg-dev dstat fakeroot flex g++ g++-5 g++-5-multilib g++-multilib gcc gcc-5 gcc-5-doc gcc-5-locales gcc-5-multilib gcc-doc gcc-multilib gdb git htop ifstat iftop iptables-persistent jq landscape-common libasan2 libasan2-dbg libatomic1 libatomic1-dbg libbz2-dev libc-dev-bin libc6-dev libcc1-0 libcilkrts5 libcilkrts5-dbg libexpat-dev libexpat1-dev libfakeroot libgcc1-dbg libgomp1-dbg libisl15 libitm1 libitm1-dbg liblsan0 liblsan0-dbg liblxc1 libmpc3 libmpx0 libmpx0-dbg libncurses-dev libncurses5-dev libncursesw5-dev libpython-all-dev libpython2.7 libquadmath0 libquadmath0-dbg libsensors4 libssl-dev libstdc++-5-dev libstdc++-5-doc libstdc++6-5-dbg libtool libtsan0 libtsan0-dbg libubsan0 libubsan0-dbg linux-libc-dev lxc-common lxcfs m4 mailutils make manpages-dev ncurses-doc net-tools netfilter-persistent policycoreutils python-docutils python-pip python-setuptools-doc ruby sysstat texinfo traceroute tree update-motd update-notifier-common zlib1g-dev
+$ sudo apt install -y apt-file \
+                      autoconf \
+                      automake \
+                      bash-completion* \
+                      binutils \
+                      binutils-doc \
+                      bison \
+                      build-essential \
+                      cmake \
+                      cpp \
+                      cpp-5 \
+                      cpp-doc \
+                      curl \
+                      debian-keyring \
+                      dlocate \
+                      dos2unix \
+                      dpkg-dev \
+                      dstat \
+                      fakeroot \
+                      flex \
+                      g++ \
+                      g++-5 \
+                      g++-5-multilib \
+                      g++-multilib \
+                      gcc \
+                      gcc-5 \
+                      gcc-5-doc \
+                      gcc-5-locales \
+                      gcc-5-multilib \
+                      gcc-doc \
+                      gcc-multilib \
+                      gdb \
+                      git \
+                      htop \
+                      ifstat \
+                      iftop \
+                      iptables-persistent \
+                      jq \
+                      landscape-common \
+                      libasan2 \
+                      libasan2-dbg \
+                      libatomic1 \
+                      libatomic1-dbg \
+                      libbz2-dev \
+                      libc-dev-bin \
+                      libc6-dev \
+                      libcc1-0 \
+                      libcilkrts5 \
+                      libcilkrts5-dbg \
+                      libexpat-dev \
+                      libexpat1-dev \
+                      libfakeroot \
+                      libgcc1-dbg \
+                      libgomp1-dbg \
+                      libisl15 \
+                      libitm1 \
+                      libitm1-dbg \
+                      liblsan0 \
+                      liblsan0-dbg \
+                      liblxc1 \
+                      libmpc3 \
+                      libmpx0 \
+                      libmpx0-dbg \
+                      libncurses-dev \
+                      libncurses5-dev \
+                      libncursesw5-dev \
+                      libpython-all-dev \
+                      libpython2.7 \
+                      libquadmath0 \
+                      libquadmath0-dbg \
+                      libsensors4 \
+                      libssl-dev \
+                      libstdc++-5-dev \
+                      libstdc++-5-doc \
+                      libstdc++6-5-dbg \
+                      libtool \
+                      libtsan0 \
+                      libtsan0-dbg \
+                      libubsan0 \
+                      libubsan0-dbg \
+                      linux-libc-dev \
+                      lxc-common \
+                      lxcfs \
+                      m4 \
+                      mailutils \
+                      make \
+                      manpages-dev \
+                      ncurses-doc \
+                      net-tools \
+                      netfilter-persistent \
+                      policycoreutils \
+                      python-docutils \
+                      python-pip \
+                      python-setuptools-doc \
+                      ruby \
+                      sysstat \
+                      texinfo \
+                      traceroute \
+                      tree \
+                      update-motd \
+                      update-notifier-common \
+                      zlib1g-dev
 ```
 
 ### setup account
@@ -63,7 +181,8 @@ $ curl -4 icanhazip.com
 182.150.46.248
 ```
 
-### proxy
+## proxy server
+
 ### shadowsocks
 #### server
 ```bash
@@ -466,13 +585,3 @@ $ echo $XDG_SESSION_TYPE
 ```
 - Ubuntu: Wayland (Wayland)
 - Ubuntu on Xorg: Xorg (X11)
-
-## Reference
-- [使用ssl模块配置同时支持http和https并存](http://blog.csdn.net/weixin_35884835/article/details/52588157)
-- [How To Create an SSL Certificate on Nginx for Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04)
-- [How To Create a Self-Signed SSL Certificate for Nginx in Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04)
-- [Enabling Https with Nginx](https://manual.seafile.com/deploy/https_with_nginx.html)
-- [Enable SSL for HTTPS Configuration on nginx](https://linode.com/docs/security/ssl/enable-ssl-for-https-configuration-on-nginx/)
-- [Nginx+Https配置](https://segmentfault.com/a/1190000004976222)
-- [Test an insecure registry](https://docs.docker.com/registry/insecure/)
-- [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
