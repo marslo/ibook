@@ -135,7 +135,7 @@ kubectl config set-cluster kubernetes-staging \
 ## set credential
 kubectl config set-credentials marslo@kubernetes-staging  \
                --auth-provider=oidc  \
-               --auth-provider-arg='idp-issuer-url=https://dex-k8s.sample.com/'  \
+               --auth-provider-arg='idp-issuer-url=https://dex-k8s.domain.com/'  \
                --auth-provider-arg='client-id=dex-k8s-authenticator'  \
                --auth-provider-arg='client-secret=Z**********************0' \
                --auth-provider-arg='refresh-token=C**********************************************************************n' \

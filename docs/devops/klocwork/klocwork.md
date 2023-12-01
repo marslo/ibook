@@ -25,6 +25,7 @@
 
 {% hint style='tip' %}
 > reference:
+> - [* Klocwork Documentation](https://help.klocwork.com/current/en-us/concepts/home.htm)
 > - [Klocwork Build integration for C Cplus plus projects EN](https://www.youtube.com/watch?v=2f4CfEU5CEI)
 > - [Command Reference](https://docs.roguewave.com/en/klocwork/2020/commandreference)
 > - [Troubleshooting an incomplete kwinject build specification](https://docs.roguewave.com/en/klocwork/2020/troubleshootinganincompletekwinjectbuildspecification)
@@ -48,6 +49,25 @@
 > - [klocwork 2020](https://docs.roguewave.com/en/klocwork/2020/)
 >   - [Setting up Klocwork with Containers (Linux)](https://docs.roguewave.com/en/klocwork/2020/setupkwcontainers)
 >   - [Limitations](https://docs.roguewave.com/en/klocwork/2021/kwlimitations)
+> - checkers
+>   - [C and C++ checker reference](https://help.klocwork.com/current/en-us/concepts/candccheckerreference.htm)
+>     - [UNUSED.FUNC.GEN](https://help.klocwork.com/current/en-us/reference/unused.func.gen.htm)
+>     - [UNUSED.FUNC.WARN](https://help.klocwork.com/current/en-us/reference/unused.func.warn.htm)
+>   - [CERT community C and C++ checker reference](https://help.klocwork.com/current/en-us/concepts/certcommunitycandccheckerreference.htm)
+> - [How can I know which parts in the code are never used?](https://stackoverflow.com/a/4814564/2940319)
+>   - `-Wunused`
+>   - `-Wunreachable-code`
+> - [How do I locate Uncalled Functions?](https://softwareengineering.stackexchange.com/q/157774/56124)
+>   - [Cppcheck](https://cppcheck.sourceforge.io/)
+>     ```bash
+>     $ cppcheck --enable=unusedFunction .
+>     Checking foo.c...
+>     1/2 files checked 0% done
+>     Checking main.c...
+>     2/2 files checked 0% done
+>     [foo.c:1]: (style) The function 'foo' is never used.
+>     ```
+> - [Dead code detection in legacy C/C++ project](https://stackoverflow.com/questions/229069/dead-code-detection-in-legacy-c-c-project)
 {% endhint %}
 
 ## environment
@@ -94,7 +114,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" "~/npp/npp.out"
+    $ kwbuildproject --url "http://klocwork.domain.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" "~/npp/npp.out"
     ```
 
 - load the database
@@ -105,7 +125,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://klocwork.sample.com" load "NotepadPlusPlus" "~/npp/npp_tables"
+    $ kwadmin --url "http://klocwork.domain.com" load "NotepadPlusPlus" "~/npp/npp_tables"
     ```
 
   - [debug for authentication issue](https://webcache.googleusercontent.com/search?q=cache:ZlMRAvROjswJ:https://developer.klocwork.com/community/forums/klocwork-general/admin-tools/non-interactive-authentication+&cd=1&hl=en&ct=clnk&gl=us)
@@ -138,7 +158,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --force "~/npp/npp.out"
+    $ kwbuildproject --url "http://klocwork.domain.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --force "~/npp/npp.out"
     ```
 
 - load the result
@@ -149,7 +169,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url http://klocwork.sample.com/ load NotepadPlusPlus "~/npp/npp_tables"
+    $ kwadmin --url http://klocwork.domain.com/ load NotepadPlusPlus "~/npp/npp_tables"
     ```
 
 ### [incremental build analysis](https://docs.roguewave.com/en/klocwork/2020/runningyournextintegrationbuildanalysis1#Runningincrementalanalysis)
@@ -172,7 +192,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --incremental "~/npp/npp_tables"
+    $ kwbuildproject --url "http://klocwork.domain.com/NotepadPlusPlus" --tables-directory "~/npp/npp_tables" --incremental "~/npp/npp_tables"
     ```
 
 - load the result
@@ -183,7 +203,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://klocwork.sample.com" load NotepadPlusPlus "~/npp/npp_tables"
+    $ kwadmin --url "http://klocwork.domain.com" load NotepadPlusPlus "~/npp/npp_tables"
     ```
 
 ### load result from both windows and linux
@@ -197,7 +217,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url http://klocwork.sample.com create-project NotepadPlusPlus
+    $ kwadmin --url http://klocwork.domain.com create-project NotepadPlusPlus
     ```
 
 - capture build settings on linux machine
@@ -218,7 +238,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwbuildproject --url "http://klocwork.sample.com/NotepadPlusPlus" \
+    $ kwbuildproject --url "http://klocwork.domain.com/NotepadPlusPlus" \
                      --tables-directory "~/npp/npp_tables" \
                      "~/npp/npp.out"
     ```
@@ -238,7 +258,7 @@
   ```
   - i.e.:
     ```bash
-    $ kwadmin --url "http://klocwork.sample.com/NotepadPlusPlus" \
+    $ kwadmin --url "http://klocwork.domain.com/NotepadPlusPlus" \
               load NotepadPlusPlus \
               "~/npp/npp_tables"
     ```
@@ -361,11 +381,11 @@
 ### [get ltoken](https://docs.roguewave.com/en/klocwork/2020/klocworkltoken)
 ```bash
 $ export KLOCWORK_LTOKEN=/home/marslo/.klocwork/ltoken
-$ kwauth --url https://klocwork.sample.com:443
+$ kwauth --url https://klocwork.domain.com:443
 Login: marslo
 Password: ****
 $ cat /home/marslo/.klocwork/ltoen
-klocwork.sample.com;443;marslo;abcdefg1234567**************************************************
+klocwork.domain.com;443;marslo;abcdefg1234567**************************************************
 ```
 
 ## import your projects and server settings
@@ -405,7 +425,7 @@ klocwork.sample.com;443;marslo;abcdefg1234567***********************************
   $ kwxsync [<options>] <project_name_1>|<project_URL_1> <project_name_2>|<project_URL_2> [...]
 
   # i.e.:
-  $ kwxsync --url https://sample.klocwork.com:443 -f -c project project-backup
+  $ kwxsync --url https://klocwork.domain.com:443 -f -c project project-backup
   ```
 
 

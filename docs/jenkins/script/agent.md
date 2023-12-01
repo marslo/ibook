@@ -414,7 +414,7 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
 - result
   ```
          name : jenkins-sample-job-381-fcql9-j2mp9
-       images : artifactory.sample.com/docker/jnlp:2.0.2-py38-bionic
+       images : artifactory.domain.com/docker/jnlp:2.0.2-py38-bionic
            os : Unix
   isJnlpAgent : true
          jobs : sample-job#381
@@ -423,7 +423,7 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
                 JENKINS_AGENT_NAME : jenkins-sample-job-381-fcql9-j2mp9
                 JENKINS_NAME : jenkins-sample-job-381-fcql9-j2mp9
                 JENKINS_AGENT_WORKDIR : /home/devops
-                JENKINS_URL : https://jenkins.sample.com/
+                JENKINS_URL : https://jenkins.domain.com/
     resources : limits :
                     cpu : 1
                     ephemeral-storage : 500Mi

@@ -219,7 +219,7 @@ jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 "DONE"
 
 -- result --
-$ ssh sample.jenkins.com groovy =< scmBranchPath.groovy
+$ ssh jenkins.domain.com groovy =< scmBranchPath.groovy
 marslo/sandbox/sandbox                             : refs/heads/sandbox/marslo
 marslo/sandbox/dump                                : refs/heads/utility
 ```

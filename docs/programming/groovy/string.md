@@ -663,7 +663,7 @@ while (st.hasMoreTokens()) { System.out.println(st.nextToken()); }
   ```
 
 - equals
-  ```grvooy
+  ```groovy
   String[] result = "this is a test".split("\\s");
   for (int x=0; x<result.length; x++)
       System.out.println(result[x]);

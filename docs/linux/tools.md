@@ -3,6 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [apt](#apt)
+  - [Raspberry Pi](#raspberry-pi)
   - [apt configuration](#apt-configuration)
   - [necessory pckages and dependencies](#necessory-pckages-and-dependencies)
   - [package auto-upgrade dislable](#package-auto-upgrade-dislable)
@@ -10,6 +11,7 @@
     - [revert hold settings](#revert-hold-settings)
     - [Show all Hold](#show-all-hold)
   - [complete remove an app](#complete-remove-an-app)
+  - [gpg keys](#gpg-keys)
 - [system](#system)
   - [timezone setup](#timezone-setup)
   - [motd upgrade disable](#motd-upgrade-disable)
@@ -25,6 +27,29 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # apt
+
+> [!TIP|label:download deb only]
+> - [Is there an apt command to download a deb file from the repositories to the current directory?](https://askubuntu.com/a/30581/92979)
+>   ```bash
+>   # get package name
+>   $ sudo apt list --installed | grep <keywords>
+>   $ apt-get install --reinstall --print-uris -qq <package-name> | cut -d"'" -f2
+>   ```
+
+## Raspberry Pi
+
+> [!NOTE|label:references:]
+> - [* debian/dists/bullseye](https://ftp.debian.org/debian/dists/bullseye/main/)
+> - [How to install and use Java 11 and JavaFX 11 on Raspberry Pi boards with ARMv6 processor](https://webtechie.be/post/2020-08-27-azul-zulu-java-11-and-gluon-javafx-11-on-armv6-raspberry-pi/)
+> - [bellsoft: Liberica JDK Download Center](https://bell-sw.com/pages/downloads/#jdk-17-lts)
+> - [bellsoft: Liberica JDK 11.0.2 Install Guide](https://docs.bell-sw.com/liberica-jdk/11.0.2b7/general/install-guide/)
+> - [How to Install Java on Raspberry Pi](https://phoenixnap.com/kb/install-java-raspberry-pi)
+> - [raspbian.raspberrypi.org: openjdk-11](http://raspbian.raspberrypi.org/raspbian/pool/main/o/openjdk-11/)
+> - [PiJava - Part 2 - Installing Java 11 on a Raspberry PI 3 Model B+](https://webtechie.be/post/2019-03-13-pijava-part-2-java-11-on-raspberry-pi-3/)
+> - [How to Update Java on Raspberry Pi](https://linuxhint.com/update-java-raspberry-pi/)
+> - [Upgrading your Raspberry Pi to Bullseye](https://www.sanderh.dev/upgrade-Raspberry-Pi-bullseye/)
+
+
 ## apt configuration
 ```bash
 $ cat /etc/apt/apt.conf
@@ -90,6 +115,28 @@ $ sudo rm -rf /var/lib/mysql/debian-*.flag
 $ sudo rm -rf /var/lib/mysql
 $ sudo rm -rf /etc/mysql
 ```
+
+## gpg keys
+
+> [!NOTE|label:references:]
+> - [Omv and Apt broken: Pending configuration changes](https://forum.openmediavault.org/index.php?thread/48094-omv-and-apt-broken-pending-configuration-changes/&postID=352338#post352338)
+>   - `$ sudo dpkg -l | grep openmediavault`
+>   - `$ sudo ls -alh /etc/apt/trusted.gpg.d/`
+> - [apt-get update errors missing public keys](https://forum.openmediavault.org/index.php?thread/49140-apt-get-update-errors-missing-public-keys/)
+> - [The following signatures couldn't be verified because the public key is not available](https://forums.raspberrypi.com/viewtopic.php?t=352539)
+
+- openmediavault-keyring
+  ```bash
+  $ cd /tmp
+  $ sudo wget https://packages.openmediavault.org/public/pool/main/o/openmediavault-keyring/openmediavault-keyring_1.0.2-2_all.deb
+  $ sudo dpkg -i openmediavault-keyring
+  $ sudo apt-get update
+  ```
+
+- install keyring
+  ```bash
+  $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
+  ```
 
 # system
 ## timezone setup
