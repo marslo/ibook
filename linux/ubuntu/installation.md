@@ -3,16 +3,13 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [pre-config](#pre-config)
-  - [install dependencies](#install-dependencies)
-  - [setup account](#setup-account)
-  - [setup MOTD](#setup-motd)
-  - [get subnet ip address](#get-subnet-ip-address)
-  - [get public IP address](#get-public-ip-address)
-- [proxy server](#proxy-server)
+  - [dependencies installation](#dependencies-installation)
+  - [account](#account)
+  - [MOTD](#motd)
+  - [get ip](#get-ip)
+- [applications](#applications)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
-- [squid](#squid)
-- [applications](#applications)
   - [terminal configurations](#terminal-configurations)
   - [vncserver](#vncserver)
 - [artifactory](#artifactory)
@@ -35,17 +32,10 @@
 > - [Nginx+Https配置](https://segmentfault.com/a/1190000004976222)
 > - [Test an insecure registry](https://docs.docker.com/registry/insecure/)
 > - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
-
-> [!TIP|label:download deb only]
-> - [Is there an apt command to download a deb file from the repositories to the current directory?](https://askubuntu.com/a/30581/92979)
->   ```bash
->   # get package name
->   $ sudo apt list --installed | grep <keywords>
->   $ apt-get install --reinstall --print-uris -qq <package-name> | cut -d"'" -f2
->   ```
+> - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
 
 ## pre-config
-### install dependencies
+### dependencies installation
 ```bash
 $ sudo apt install -y apt-file \
                       autoconf \
@@ -151,12 +141,77 @@ $ sudo apt install -y apt-file \
                       zlib1g-dev
 ```
 
-### setup account
+#### tzdata installation with noninteractive
+
+> [!NOTE|label:references:]
+> - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
+
+```bash
+# in bash
+$ DEBIAN_FRONTEND=noninteractive sudo apt-get install -y tzdata
+
+# or
+$ export DEBIAN_FRONTEND=noninteractive
+$ sudo apt install -y tzdata
+
+# or
+$ echo 'tzdata tzdata/Areas select Europe'       | debconf-set-selections
+$ echo 'tzdata tzdata/Zones/Europe select Paris' | debconf-set-selections
+$ DEBIAN_FRONTEND="noninteractive" sudo apt install -y tzdata
+
+# or
+$ sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+$ export DEBIAN_FRONTEND=noninteractive
+$ sudo apt-get install -y tzdata
+$ sudo dpkg-reconfigure --frontend noninteractive tzdata
+```
+
+- or
+
+  > [!NOTE|label:references:]
+  > - [Cingulata/Dockerfile.bfv](https://github.com/CEA-LIST/Cingulata/blob/157b4c66441e4e253e06a0abe1508976605100d8/Dockerfile.bfv#L12)
+
+  ```
+  $ sudo ln -snf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime
+  $ sudo apt install -y tzdata
+  ```
+
+- or in dockerfile
+  ```dockerfile
+  RUN apt-get update \
+      && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+  ```
+
+- or ENV in dockerfile
+
+  > [!NOTE|label:references:]
+  > - [setting it via ENV should be actively discouraged](https://github.com/moby/moby/issues/4032#issuecomment-34597177)
+
+  ```dockerfile
+  ENV DEBIAN_FRONTEND noninteractive
+  RUN apt-get update \
+      && apt-get install -y --no-install-recommends tzdata
+  ```
+
+- or ARG in dockerfile
+
+  > [!NOTE|label:references:]
+  > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/66327069/2940319)
+
+  ```dockerfile
+  from ubuntu:bionic
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN apt-get update && apt-get install -y tzdata
+  RUN unlink /etc/localtime
+  RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
+  ```
+
+### account
 ```bash
 $ sudo usermod -a -G sudo,adm,root,docker devops
 ```
 
-### setup MOTD
+### MOTD
 ```bash
 $ sudo chmod -x /etc/update-motd.d/00-header \
                 /etc/update-motd.d/10-help-text \
@@ -168,36 +223,28 @@ exclude_sysinfo_plugins = Temperature, LandscapeLink
 EOF
 ```
 
-### get subnet ip address
-```bash
-$ ip addr show eno1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
-192.168.1.105
-fe80::e5ca:1027:b572:9998
-```
+### get ip
+- get subnet ip address
+  ```bash
+  $ ip addr show eno1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+  192.168.1.105
+  fe80::e5ca:1027:b572:9998
+  ```
 
-### get public IP address
-```bash
-$ curl -4 icanhazip.com
-182.150.46.248
-```
+- get public IP address
+  ```bash
+  $ curl -4 icanhazip.com
+  182.150.46.248
+  ```
 
-## proxy server
-
+## applications
 ### shadowsocks
 #### server
 ```bash
-# ubuntu
 $ sudo apt install m2crypto git python-pip
-# centos
-$ sudo yum install m2crypto git python3-pip
-
 $ pip install --upgrade pip
-# or
-$ pip3 install --upgrade pip
-# or
-$ sudo /usr/bin/python3 -m pip install --upgrade pip
-
 $ pip install git+https://github.com/shadowsocks/shadowsocks.git@master
+
 $ sudo ln -sf /home/marslo/.local/bin/ssserver /usr/local/bin/ssserver
 ```
 
@@ -232,7 +279,7 @@ $ sudo apt update
 $ sudo apt install shadowsocks-qt5
 ```
 
-##### Others
+##### others
 ```bash
 $ sudo apt install python-pip
 $ sudo pip install genpac
@@ -259,13 +306,20 @@ $ sudo pip install genpac
     }
     EOF
 
-    $ docker run -d -p 1111:1111 -p 1111:1111/udp --name ss-libev --restart=always -v /etc/shadowsocks-libev:/etc/shadowsocks-libev teddysun/shadowsocks-libev
+    $ docker run -d -p 1111:1111 \
+                    -p 1111:1111/udp \
+                    --name ss-libev \
+                    --restart=always \
+                    -v /etc/shadowsocks-libev:/etc/shadowsocks-libev \
+                    teddysun/shadowsocks-libev
     $ docker logs -f ss-libev
     ```
 
 - started by `/etc/init.d/shadowsocks-libev`
     ```bash
-    $ wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+    $ wget --no-check-certificate \
+           -O shadowsocks-all.sh \
+           https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
     $ chmod +x shadowsocks-all.sh
     $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
     ...
@@ -297,7 +351,6 @@ $ sudo pip install genpac
       $ sudo /etc/init.d/shadowsocks-libev stop
       $ sudo /etc/init.d/shadowsocks-libev restart
       $ sudo /etc/init.d/shadowsocks-libev status
-      Shadowsocks-libev (pid 903) is running...
       ```
     - config
       ```bash
@@ -318,58 +371,38 @@ $ sudo pip install genpac
       ```
 
 - check status
-  ```bash
-  $ sudo lsof -i:1111
-  COMMAND   PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
-  ss-server 903 nobody    8u  IPv4  20522      0t0  UDP *:1111
-  obfs-serv 909   root    7u  IPv4  20649      0t0  TCP *:1111 (LISTEN)
-  $ sudo netstatus -tunpla | grep 1111
-  tcp        0      0 0.0.0.0:1111            0.0.0.0:*               LISTEN      909/obfs-server
-  udp        0      0 0.0.0.0:1111            0.0.0.0:*                           903/ss-server
-  ```
+    ```bash
+    $ sudo lsof -i:1111
+    $ sudo netstatus -tunpla | grep 1111
+    ```
 
 ![ss-libev-service](../../screenshot/ss/ss-libev-port.png)
 
 #### client
 
 | plugin        | plugin opts                          |
-| ------------- | ------------------------------------ |
+| :-:           | :-:                                  |
 | `simple-obfs` | `obfs=http;obfs-host=www.google.com` |
 
 ![ss-libev-client](../../screenshot/ss/ss-libev-client.png)
 
-
-## [squid](http://www.squid-cache.org/Doc/)
-
-> [!NOTE|label:references:]
-> - [About Squid proxy servers](https://ubuntu.com/server/docs/proxy-servers-squid)
-> - [Squid installation and configuration in Ubuntu](https://help.ubuntu.com/community/Squid)
-> - [SquidGuard in ubuntu](https://help.ubuntu.com/community/SquidGuard)
-> - [How to configure an SSH proxy server with Squid](https://fedoramagazine.org/configure-ssh-proxy-server/)
-> - [Use Squid as HTTP / HTTPS / SSH Proxy](https://www.squins.com/knowledge/squid-http-https-ssh-proxy/)
-> - [Tunnelling SSH/SFTP over Squid proxy](https://www.seniorlinuxadmin.co.uk/ssh-over-proxy.html)
-> - [How to Set Up a Proxy Server on Your Mac Using SquidMan](https://howchoo.com/mac/how-to-set-up-a-proxy-server-on-mac)
-> - [brew install squid on macOS but can't run squid](https://serverfault.com/a/1069392/129815)
-
-
-## applications
 ### terminal configurations
-- Backup
+- backup
 ```bash
 $ dconf dump /org/gnome/terminal/ > ubuntu1710_terminal_backup.bak
 ```
 
-- Restore
+- restore
 ```bash
 $ dconf load /org/gnome/terminal/ < ubuntu1710_terminal_backup.bak
 ```
 
-- Reset
+- reset
 ```bash
 $ dconf reset -f /org/gnome/terminal
 ```
 
-- List
+- list
 ```bash
 $ gsettings list-recursively | grep -i org.gnome.Terminal
 ```
@@ -534,7 +567,7 @@ XWAYLAND0 connected 1920x1080+0+0 (0x22) normal (normal left inverted right x ax
 ```
 
 ### desktop sharing
-#### enable desktop sharing
+#### enable remote access
 ```bash
 ##!/bin/bash
 export DISPLAY=:0
@@ -548,11 +581,11 @@ dconf dump /org/gnome/desktop/remote-access/
 ## sudo service lightdm restart
 ```
 
-#### OR
-```bash
-$ vino-preference
-$ dconf-editor
-```
+- or
+  ```bash
+  $ vino-preference
+  $ dconf-editor
+  ```
 
 #### start x server
 ```bash
@@ -560,14 +593,14 @@ $ export DISPLAY=:0
 $ /usr/lib/vino/vino-server --display=:0 &
 ```
 
-#### [Reset vnc password](https://access.redhat.com/solutions/346033)
+#### [reset vnc password](https://access.redhat.com/solutions/346033)
 ```bash
 $ echo -n 'awesome' | base64
 $ gconftool-2 -s -t string /desktop/gnome/remote_access/vnc_password $(echo -n "<YOURPASSWORD>" | base64)
 $ gconftool-2 --type string --set /desktop/gnome/remote_acess/vnc_password '123456'
 ```
 
-#### [Wayland known error](https://askubuntu.com/a/967538)
+#### [wayland known error](https://askubuntu.com/a/967538)
 ```bash
 cat <<EOF | sudo tee /etc/xdg/autostart/xhost.desktop
 [Desktop Entry]
@@ -579,9 +612,10 @@ Type=Application
 EOF
 ```
 
-#### Check using Wayland or Xorg
+#### check using wayland or xorg
 ```bash
 $ echo $XDG_SESSION_TYPE
 ```
+
 - Ubuntu: Wayland (Wayland)
 - Ubuntu on Xorg: Xorg (X11)
