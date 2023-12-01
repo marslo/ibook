@@ -14,7 +14,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 ## recommend apps
 ### screenshot
 - [jietu](https://jietu.qq.com/)
@@ -78,7 +77,9 @@
 > [!NOTE|label:references:]
 > - [* iMarslo : apps/java](../../osx/apps.html#java)
 > - [Oracle Java Archive](https://www.oracle.com/java/technologies/downloads/archive/)
+> - [bellsoft/Liberica](https://github.com/bell-sw/Liberica/releases)
 
+#### oracle
 - [java 21](https://www.oracle.com/java/technologies/downloads/#java21)
   - [linux](https://www.oracle.com/java/technologies/downloads/#jdk21-linux)
   - [osx](https://www.oracle.com/java/technologies/downloads/#jdk21-mac)
@@ -115,3 +116,33 @@
   - [Java SE 1.3](https://www.oracle.com/java/technologies/java-archive-javase-v13-downloads.html)
   - [Java SE 1.2](https://www.oracle.com/java/technologies/java-archive-javase-v12-downloads.html)
   - [Java SE 1.1](https://www.oracle.com/java/technologies/java-archive-downloads-javase11-downloads.html)
+
+#### bellsoft
+
+> [!NOTE|label:references:]
+> - [B4J Tutorials](https://www.b4x.com/android/forum/forums/b4j-tutorials.57/)
+> - [Raspberry Pi with Java 11](https://www.b4x.com/android/forum/threads/raspberry-pi-with-java-11.99606/)
+> - [Liberica JDK.pdf](https://bell-sw.com/assets/files/Liberica_JDK_Whitepaper.pdf)
+
+- [21.0.1+12](https://github.com/bell-sw/Liberica/releases/tag/21.0.1%2B12)
+  - [bellsoft-jdk21.0.1+12-linux-arm32-vfp-hflt-full.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-arm32-vfp-hflt-full.deb)
+  - [bellsoft-jdk21.0.1+12-linux-aarch64-full.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-aarch64-full.deb)
+  - [bellsoft-jdk21.0.1+12-linux-aarch64.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-aarch64.deb)
+  - [bellsoft-jdk21.0.1+12-linux-amd64-full.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-amd64-full.deb)
+  - [bellsoft-jdk21.0.1+12-linux-amd64.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-amd64.deb)
+
+- [17.0.9+11](https://github.com/bell-sw/Liberica/releases/tag/17.0.9%2B11)
+  - [bellsoft-jdk17.0.9+11-linux-aarch64-full.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-aarch64-full.deb)
+  - [bellsoft-jdk17.0.9+11-linux-aarch64.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-aarch64.deb)
+  - [bellsoft-jdk17.0.9+11-linux-amd64-full.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-amd64-full.deb)
+  - [bellsoft-jdk17.0.9+11-linux-amd64.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-amd64.deb)
+  - [bellsoft-jdk17.0.9+11-linux-arm32-vfp-hflt-full.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-arm32-vfp-hflt-full.deb)
+  - [bellsoft-jdk17.0.9+11-linux-arm32-vfp-hflt.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-arm32-vfp-hflt.deb)
+
+- [11.0.21+10](https://github.com/bell-sw/Liberica/releases/tag/11.0.21%2B10)
+  - [bellsoft-jdk11.0.21+10-linux-aarch64-full.deb](https://github.com/bell-sw/Liberica/releases/download/11.0.21%2B10/bellsoft-jdk11.0.21+10-linux-aarch64-full.deb)
+  - [bellsoft-jdk11.0.21+10-linux-aarch64.deb](https://github.com/bell-sw/Liberica/releases/download/11.0.21%2B10/bellsoft-jdk11.0.21+10-linux-aarch64.deb)
+  - [bellsoft-jdk11.0.21+10-linux-amd64-full.deb](https://github.com/bell-sw/Liberica/releases/download/11.0.21%2B10/bellsoft-jdk11.0.21+10-linux-amd64-full.deb)
+  - [bellsoft-jdk11.0.21+10-linux-amd64.deb](https://github.com/bell-sw/Liberica/releases/download/11.0.21%2B10/bellsoft-jdk11.0.21+10-linux-amd64.deb)
+  - [bellsoft-jdk11.0.21+10-linux-arm32-vfp-hflt-full.deb](https://github.com/bell-sw/Liberica/releases/download/11.0.21%2B10/bellsoft-jdk11.0.21+10-linux-arm32-vfp-hflt-full.deb)
+  - [bellsoft-jdk11.0.21+10-linux-arm32-vfp-hflt.deb](https://github.com/bell-sw/Liberica/releases/download/11.0.21%2B10/bellsoft-jdk11.0.21+10-linux-arm32-vfp-hflt.deb)

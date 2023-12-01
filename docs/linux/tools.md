@@ -3,7 +3,6 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [apt](#apt)
-  - [Raspberry Pi](#raspberry-pi)
   - [apt configuration](#apt-configuration)
   - [necessory pckages and dependencies](#necessory-pckages-and-dependencies)
   - [package auto-upgrade dislable](#package-auto-upgrade-dislable)
@@ -12,6 +11,9 @@
     - [Show all Hold](#show-all-hold)
   - [complete remove an app](#complete-remove-an-app)
   - [gpg keys](#gpg-keys)
+- [Raspberry Pi](#raspberry-pi)
+  - [repository](#repository)
+  - [jdk](#jdk)
 - [system](#system)
   - [timezone setup](#timezone-setup)
   - [motd upgrade disable](#motd-upgrade-disable)
@@ -35,44 +37,6 @@
 >   $ sudo apt list --installed | grep <keywords>
 >   $ apt-get install --reinstall --print-uris -qq <package-name> | cut -d"'" -f2
 >   ```
-
-## Raspberry Pi
-
-> [!NOTE|label:references:]
-> - [* debian/dists/bullseye](https://ftp.debian.org/debian/dists/bullseye/main/)
-> - [How to install and use Java 11 and JavaFX 11 on Raspberry Pi boards with ARMv6 processor](https://webtechie.be/post/2020-08-27-azul-zulu-java-11-and-gluon-javafx-11-on-armv6-raspberry-pi/)
-> - [bellsoft: Liberica JDK Download Center](https://bell-sw.com/pages/downloads/#jdk-17-lts)
-> - [bellsoft: Liberica JDK 11.0.2 Install Guide](https://docs.bell-sw.com/liberica-jdk/11.0.2b7/general/install-guide/)
-> - [How to Install Java on Raspberry Pi](https://phoenixnap.com/kb/install-java-raspberry-pi)
-> - [raspbian.raspberrypi.org: openjdk-11](http://raspbian.raspberrypi.org/raspbian/pool/main/o/openjdk-11/)
-> - [PiJava - Part 2 - Installing Java 11 on a Raspberry PI 3 Model B+](https://webtechie.be/post/2019-03-13-pijava-part-2-java-11-on-raspberry-pi-3/)
-> - [How to Update Java on Raspberry Pi](https://linuxhint.com/update-java-raspberry-pi/)
-> - [Upgrading your Raspberry Pi to Bullseye](https://www.sanderh.dev/upgrade-Raspberry-Pi-bullseye/)
-> - [Raspbian Mirrors](https://www.raspbian.org/RaspbianMirrors)
-> - [How to change the Repository Mirror on Raspbian](https://pimylifeup.com/raspbian-repository-mirror/)
-
-- `/etc/apt/source.list`
-  ```bash
-  $ cat /etc/apt/sources.list
-  deb http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
-  # Uncomment line below then 'apt-get update' to enable 'apt-get source'
-  # deb-src http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
-
-  # or
-  $ cat /etc/apt/sources.list
-  deb http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
-  deb http://deb.debian.org/debian bullseye main contrib non-free
-  deb http://security.debian.org/debian-security bullseye-security main contrib non-free
-  deb http://deb.debian.org/debian bullseye-updates main contrib non-free
-  ```
-
-- `/etc/apt/sources.list.d/raspi.list`
-  ```bash
-  $ cat /etc/apt/sources.list.d/raspi.list
-  deb http://archive.raspberrypi.org/debian/ bullseye main
-  # Uncomment line below then 'apt-get update' to enable 'apt-get source'
-  # deb-src http://archive.raspberrypi.org/debian/ bullseye main
-  ```
 
 ## apt configuration
 ```bash
@@ -161,6 +125,51 @@ $ sudo rm -rf /etc/mysql
   ```bash
   $ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
   ```
+
+# Raspberry Pi
+
+> [!NOTE|label:references:]
+> - [* debian/dists/bullseye](https://ftp.debian.org/debian/dists/bullseye/main/)
+> - [How to install and use Java 11 and JavaFX 11 on Raspberry Pi boards with ARMv6 processor](https://webtechie.be/post/2020-08-27-azul-zulu-java-11-and-gluon-javafx-11-on-armv6-raspberry-pi/)
+> - [bellsoft: Liberica JDK Download Center](https://bell-sw.com/pages/downloads/#jdk-17-lts)
+> - [bellsoft: Liberica JDK 11.0.2 Install Guide](https://docs.bell-sw.com/liberica-jdk/11.0.2b7/general/install-guide/)
+> - [How to Install Java on Raspberry Pi](https://phoenixnap.com/kb/install-java-raspberry-pi)
+> - [raspbian.raspberrypi.org: openjdk-11](http://raspbian.raspberrypi.org/raspbian/pool/main/o/openjdk-11/)
+> - [PiJava - Part 2 - Installing Java 11 on a Raspberry PI 3 Model B+](https://webtechie.be/post/2019-03-13-pijava-part-2-java-11-on-raspberry-pi-3/)
+> - [How to Update Java on Raspberry Pi](https://linuxhint.com/update-java-raspberry-pi/)
+> - [Upgrading your Raspberry Pi to Bullseye](https://www.sanderh.dev/upgrade-Raspberry-Pi-bullseye/)
+> - [Raspbian Mirrors](https://www.raspbian.org/RaspbianMirrors)
+> - [How to change the Repository Mirror on Raspbian](https://pimylifeup.com/raspbian-repository-mirror/)
+
+## repository
+- `/etc/apt/source.list`
+  ```bash
+  $ cat /etc/apt/sources.list
+  deb http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
+  # Uncomment line below then 'apt-get update' to enable 'apt-get source'
+  # deb-src http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
+
+  # or
+  $ cat /etc/apt/sources.list
+  deb http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
+  deb http://deb.debian.org/debian bullseye main contrib non-free
+  deb http://security.debian.org/debian-security bullseye-security main contrib non-free
+  deb http://deb.debian.org/debian bullseye-updates main contrib non-free
+  ```
+
+- `/etc/apt/sources.list.d/raspi.list`
+  ```bash
+  $ cat /etc/apt/sources.list.d/raspi.list
+  deb http://archive.raspberrypi.org/debian/ bullseye main
+  # Uncomment line below then 'apt-get update' to enable 'apt-get source'
+  # deb-src http://archive.raspberrypi.org/debian/ bullseye main
+  ```
+
+## jdk
+
+> [!NOTE|label:references:]
+> - [* iMarslo: jdk/bellsoft](../tools/app/app.html#java)
+> - [Liberica jdk : all versions](https://bell-sw.com/pages/downloads/)
 
 # system
 ## timezone setup
