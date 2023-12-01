@@ -447,10 +447,10 @@ $ echo $(dirs -3)
 {% endhint %}
 
 ## gpg
-
 ### install
 
 > [!TIP]
+> - [* iMarslo : keyring](../../linux/ubuntu/repo.html#keyring)
 > - [step by step by `apt-key add`](https://github.com/microsoft/WSL/issues/3286#issuecomment-402594992)
 > - [Hockeypuck OpenPGP keyserver](http://keyserver.ubuntu.com/)
 

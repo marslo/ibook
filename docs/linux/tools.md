@@ -48,7 +48,31 @@
 > - [PiJava - Part 2 - Installing Java 11 on a Raspberry PI 3 Model B+](https://webtechie.be/post/2019-03-13-pijava-part-2-java-11-on-raspberry-pi-3/)
 > - [How to Update Java on Raspberry Pi](https://linuxhint.com/update-java-raspberry-pi/)
 > - [Upgrading your Raspberry Pi to Bullseye](https://www.sanderh.dev/upgrade-Raspberry-Pi-bullseye/)
+> - [Raspbian Mirrors](https://www.raspbian.org/RaspbianMirrors)
+> - [How to change the Repository Mirror on Raspbian](https://pimylifeup.com/raspbian-repository-mirror/)
 
+- `/etc/apt/source.list`
+  ```bash
+  $ cat /etc/apt/sources.list
+  deb http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
+  # Uncomment line below then 'apt-get update' to enable 'apt-get source'
+  # deb-src http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
+
+  # or
+  $ cat /etc/apt/sources.list
+  deb http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi
+  deb http://deb.debian.org/debian bullseye main contrib non-free
+  deb http://security.debian.org/debian-security bullseye-security main contrib non-free
+  deb http://deb.debian.org/debian bullseye-updates main contrib non-free
+  ```
+
+- `/etc/apt/sources.list.d/raspi.list`
+  ```bash
+  $ cat /etc/apt/sources.list.d/raspi.list
+  deb http://archive.raspberrypi.org/debian/ bullseye main
+  # Uncomment line below then 'apt-get update' to enable 'apt-get source'
+  # deb-src http://archive.raspberrypi.org/debian/ bullseye main
+  ```
 
 ## apt configuration
 ```bash
