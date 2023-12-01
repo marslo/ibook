@@ -350,7 +350,7 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
   ```
 
 - more for `system()`
-  ```viml
+  ```vim
   :echo system('ls ' .. expand('%:h:S'))
   color.md
   install.md

@@ -141,7 +141,7 @@ $ sudo apt install -y apt-file \
                       zlib1g-dev
 ```
 
-#### installation with noninteractive
+#### tzdata installation with noninteractive
 
 > [!NOTE|label:references:]
 > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
@@ -160,10 +160,10 @@ $ echo 'tzdata tzdata/Zones/Europe select Paris' | debconf-set-selections
 $ DEBIAN_FRONTEND="noninteractive" sudo apt install -y tzdata
 
 # or
-# sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-# export DEBIAN_FRONTEND=noninteractive
-# sudo apt-get install -y tzdata
-# sudo dpkg-reconfigure --frontend noninteractive tzdata
+$ sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+$ export DEBIAN_FRONTEND=noninteractive
+$ sudo apt-get install -y tzdata
+$ sudo dpkg-reconfigure --frontend noninteractive tzdata
 ```
 
 - or
@@ -172,7 +172,6 @@ $ DEBIAN_FRONTEND="noninteractive" sudo apt install -y tzdata
   > - [Cingulata/Dockerfile.bfv](https://github.com/CEA-LIST/Cingulata/blob/157b4c66441e4e253e06a0abe1508976605100d8/Dockerfile.bfv#L12)
 
   ```
-  # or
   $ sudo ln -snf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime
   $ sudo apt install -y tzdata
   ```
