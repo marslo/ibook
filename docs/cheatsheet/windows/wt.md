@@ -15,11 +15,15 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 > [!TIP|label:references:]
+> - [* microsoft/terminal](https://github.com/microsoft/terminal)
 > - [Custom actions in Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/actions)
 > - [在windows下用下拉式中断yakuake(guake)指南](https://zhuanlan.zhihu.com/p/345480762?utm_id=0)
+> - [Settings JSON file](https://learn.microsoft.com/en-us/windows/terminal/install#settings-json-file)
+>   - stable : `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json`
+>   - preview : `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json`
+>   - unpackaged(scoop, chocolately, ...) : `%LOCALAPPDATA%\Microsoft\Windows Terminal\settings.json`
+> - [Using command line arguments for Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/command-line-arguments)
 
 ## install
 ### via download

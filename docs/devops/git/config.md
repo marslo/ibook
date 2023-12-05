@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [installation](#installation)
-  - [frmo source](#frmo-source)
+  - [from source](#from-source)
 - [location](#location)
   - [get locations](#get-locations)
 - [list](#list)
@@ -37,7 +37,7 @@
   $ sudo apt install git
   ```
 
-### frmo source
+### from source
 
 > [!NOTE|label:references:]
 > - [1.5 Getting Started - Installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -46,7 +46,7 @@
 > - [How do I correctly install the tools in git's contrib directory?](https://stackoverflow.com/a/11613541/2940319)
 > - [* CheckInstall](https://help.ubuntu.com/community/CheckInstall)
 >   ```bash
->   $ sudo apt-get update && sudo apt-get install checkinstall
+>   $ sudo apt-get update -y && sudo apt-get install checkinstall -y
 >   ```
 > - [MHMDhub/Install Git from source](https://gist.github.com/MHMDhub/d2d1a857fc5af5b18d6fff70fb4489b5)
 > - [How To Install Git from Source on Ubuntu 20.04 [Quickstart]](https://www.digitalocean.com/community/tutorials/how-to-install-git-from-source-on-ubuntu-20-04-quickstart)
@@ -54,36 +54,44 @@
 - dependencies
 
   > [!NOTE|label:references:]
-  > - [* iMarslo : linux troubleshooting](../linux/troubleshooting.html)
+  > - [* iMarslo : linux troubleshooting](../../linux/troubleshooting.html)
+  > - [1.5 Per Iniziare - Installing Git](https://git-scm.com/book/it/v2/Per-Iniziare-Installing-Git)
 
   - git-core
-
     ```bash
     # debian
-    $ sudo apt-get install dh-autoreconf libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+    $ sudo apt-get install -y dh-autoreconf libcurl4-openssl-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
 
     # centos/rhel
-    $ sudo dnf install dh-autoreconf curl-devel expat-devel gettext-devel openssl-devel perl-devel zlib-devel
+    $ sudo dnf install -y dh-autoreconf libcurl-devel curl-devel expat-devel gettext-devel openssl-devel perl-devel zlib-devel
     ```
 
   - git-doc
     ```bash
     # debian
-    $ sudo apt-get install asciidoc xmlto docbook2x
+    $ sudo apt-get install -y asciidoc xmlto docbook2x hunspell libhunspell-dev
 
     # centos/rhel
-    $ sudo dnf install asciidoc xmlto docbook2X
+    $ sudo dnf install -y asciidoc xmlto docbook2X docbook-style-xsl
+    # or
+    sudo dnf install -y --enablerepo=*epel* install docbook2X
     ```
 
   - git-info
     ```bash
     # debian
-    $ sudo apt-get install install-info
+    $ sudo apt-get install -y install-info
 
     # centos/rhel
-    $ sudo dnf install getopt
+    $ sudo dnf install -y getopt
     # or
     $ sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+    ```
+
+  - others
+    ```bash
+    # audio output
+    $ apt install libao-dev
     ```
 
 - install
@@ -95,6 +103,7 @@
   > - [* iMarslo : linux troubleshooting](../linux/troubleshooting.html)
   > - [A1.4 Appendix A: Git in Other Environments - Git in Bash](https://git-scm.com/book/uz/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Bash)
   > - [A1.6 Appendix A: Git in Other Environments - Git in Powershell](https://git-scm.com/book/uz/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Powershell)
+  > - [How to make bash as default shell in git alias?](https://stackoverflow.com/a/73163369/2940319)
 
   ```bash
   $ curl -fsSL https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.42.0.tar.gz |
@@ -102,7 +111,7 @@
     cd ${iRCHOME}/utils/git
 
   $ make configure
-  $ ./configure --prefix=/usr/local
+  $ ./configure --prefix=/usr/local --with-shell=/usr/local/bin/bash
   $ make -j all doc info
   $ sudo make install install-doc install-html install-info
 
