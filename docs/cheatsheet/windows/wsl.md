@@ -4,7 +4,6 @@
 
 - [install](#install)
 - [start up WSL](#start-up-wsl)
-  - [initialization](#initialization)
   - [init](#init)
 - [check](#check)
 - [others](#others)
@@ -37,6 +36,10 @@
 > - [* Advanced settings configuration in WSL](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings)
 >   - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconf)
 >   - [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconfig)
+> - [general profile settings in windows terminal](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/profile-general)
+>   - by default: `"startingDirectory": "%USERPROFILE%"`
+>   - in wsl: `"startingDirectory": "\\\\wsl$\\DISTRO NAME\\home\\USERNAME"` or `"startingDirectory": "\\\\wsl.localhost\\DISTRO NAME\\home\\USERNAME"`
+>     - i.e.: `\\wsl.localhsot\Ubuntu\home\marslo`
 >
 > windows terminal:
 > - [Windows Terminal 下载，美化，完整配置](https://zhuanlan.zhihu.com/p/439437013)
@@ -131,7 +134,6 @@
   > .\ubuntu2004.exe
   ```
 
-### initialization
 ### init
 
 ```powershell
@@ -481,6 +483,26 @@ $ vim --version | grep clipboard
   Ubuntu-22.04
 
   > wsl --shutdown
+  ```
+
+- setup default bash
+
+  > [!NOTE|label:references:]
+  > - [How to change default shell for Linux susbsystem for Windows](https://superuser.com/a/1264333/112396)
+
+  ```bash
+  $ echo $SHELL
+  /bin/bash
+  # for current account
+  $ chsh -s /usr/bin/bash
+  # for root
+  $ sudo chsh -s /usr/bin/bash
+  $ exit
+
+  # re-login
+  $ echo $SHELL
+  /usr/bin/bash
+  # verify in /etc/passwd
   ```
 
 ### cmds

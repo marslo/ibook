@@ -12,7 +12,10 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
+> [!NOTE|label:references:]
+> - [Must Have Git Aliases: Advanced Examples](https://www.durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/)
+> - [mwhite/git-aliases.md](https://gist.github.com/mwhite/6887990)
+> - [How to make bash as default shell in git alias?](https://stackoverflow.com/a/73163369/2940319)
 
 ### basic
 ```
