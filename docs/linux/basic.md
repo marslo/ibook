@@ -38,6 +38,7 @@
 > - download pdf from [here](https://tldp.org/LDP/abs/abs-guide.pdf) or [here](http://www.linux-france.org/lug/ploug/doc/abs-guide.pdf)
 > - [Perform tab-completion for aliases in Bash](https://brbsix.github.io/2015/11/23/perform-tab-completion-for-aliases-in-bash/)
 > - [dot_file: .bash_aliases](https://github.com/agilesteel/.dotfiles/blob/master/stow/bash/.bash_aliases)
+> - [killbutmakeitlooklikeanaccident.sh](https://gist.github.com/moyix/95ca9a7a26a639b2322c36c7411dc3be)
 {% endhint %}
 
 # rpm & dpkg & brew

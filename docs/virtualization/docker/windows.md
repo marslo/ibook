@@ -6,6 +6,7 @@
   - [docker-ee](#docker-ee)
   - [exec commands](#exec-commands)
   - [tricky](#tricky)
+- [dockerfile](#dockerfile)
 - [Hyper-V](#hyper-v)
   - [installation](#installation)
   - [Windows Docker Container Hyper-V Isolation](#windows-docker-container-hyper-v-isolation)
@@ -14,7 +15,6 @@
   - [could not read CA certificate](#could-not-read-ca-certificate)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style='tip' %}
 > references:
@@ -31,6 +31,8 @@
 >   - [eureka-start.ps1](https://gist.github.com/thnk2wn/ad1e1dbfa5c4c96d6ca59a72a00e45c9)
 >   - [eureka-wait.ps1](https://gist.github.com/thnk2wn/5366a34a71c8fcfd5e3d14722dc02975)
 > - [Docker Engine on Windows](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon)
+> - [* Remote Management of a Windows Docker Host](https://learn.microsoft.com/en-us/virtualization/windowscontainers/management/manage_remotehost)
+> - [Docker Enterprise Documentation](https://docs.mirantis.com/containers/v3.0/)
 {% endhint %}
 
 ## docker
@@ -47,10 +49,35 @@
 > - [basic settings: Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
 > - [Use a script to install docker-ee](https://docs.docker.com.zh.xy2401.com/v17.12/install/windows/docker-ee/#optional-make-sure-you-have-all-required-updates)
 > - [Remote Management of a Windows Docker Host](https://docs.microsoft.com/en-us/virtualization/windowscontainers/management/manage_remotehost)
-> - [Windows Server 2019 - Docker Daemon](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/)
+> - [* Windows Server 2019 - Docker Daemon](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/)
 >   - [Downloading Docker Manually](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/#downloading-docker-manually)
+> - [* iMarslo : powershell modules](../../cheatsheet/windows/powershell.html#modules)
+> - [Index of win/static/stable/x86_64/](https://download.docker.com/win/static/stable/x86_64/)
+> - [microsoft/Windows-Containers](https://github.com/microsoft/Windows-Containers)
+>   - [install-docker-ce.ps1](https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1IMPORTANT - THIS PROVIDER IS NOW DEPRECATED)
+> - [* package/DockerMsftProvider](https://www.powershellgallery.com/api/v2/package/DockerMsftProvider)
+> - [How to Install Docker EE on Windows Server 2016 | Offline](https://mechdeveloper.medium.com/how-to-install-docker-ee-on-windows-server-2016-offline-fed1c9f13012)
+> - [Difference between Docker from DockerProvider and DockerMsftProvider](https://stackoverflow.com/a/48231887/2940319)
+>   - [DockerProvider](https://www.powershellgallery.com/packages/DockerProvider)
+>   - [DockerMsftProvider](https://www.powershellgallery.com/packages/DockerMsftProvider)
+
+> [!WARNING]
+> - [OneGet/MicrosoftDockerProvider](https://github.com/OneGet/MicrosoftDockerProvider)
+>   - [#65: [PROXY] Cannot find path 'C:\[..]\DockerMsftProvider\DockerDefault_DockerSearchIndex.json' because it does not exist.](https://github.com/OneGet/MicrosoftDockerProvider/issues/65)
+> - [Important Update – Deprecation of Docker Virtual Machine Images Extended to 30 April 2023](https://techcommunity.microsoft.com/t5/containers/important-update-deprecation-of-docker-virtual-machine-images/ba-p/3646272)
+>
+> IMPORTANT - THIS PROVIDER IS NOW DEPRECATED
+> As of May 23rd 2023 the backing service for this provider has been shutdown. You can find alternative options at [Windows Container Documentation - Setup Environment](https://learn.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=dockerce#windows-server-1).
+> For more information on the deprecation please see the following blog posts: [Updates to the Windows Container Runtime support](https://techcommunity.microsoft.com/t5/containers/updates-to-the-windows-container-runtime-support/ba-p/2788799) [Reminder - Updates to Windows Container Runtime Support](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989)
 
 ```powershell
+# optioinal: https://github.com/OneGet/MicrosoftDockerProvider/issues/65#issuecomment-734284852
+> [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+> Install-PackageProvider -Name NuGet
+> Install-Module DockerMsftProvider -Force
+> Install-Package Docker -ProviderName DockerMsftProvider -Force
+
+# or
 > Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
 > Install-Package -Name docker -ProviderName DockerMsftProvider
 > Restart-Computer -Force
@@ -79,6 +106,41 @@
   Name                           Version          Source           Summary
   ----                           -------          ------           -------
   Docker                         20.10.9          DockerDefault    Contains docker-ee for use with Windows Server.
+  ```
+
+- [find package vis proxy](https://github.com/OneGet/MicrosoftDockerProvider/issues/65#issue-489747059)
+  ```powershell
+  > Find-Package -Name docker -ProviderName DockerMsftProvider  -Proxy http://squid.tls.renault.fr:911 -Verbose
+  VERBOSE: Using the provider 'DockerMsftProvider' for searching packages.
+  VERBOSE: Download size: 0.02MB
+  VERBOSE: Free space on the drive: 199788.78MB
+  VERBOSE: Downloading https://dockermsft.blob.core.windows.net/dockercontainer/DockerMsftIndex.json to C:\Users\Administrator\AppData\Local\Temp\DockerMsftProvider\DockerDefault_DockerSearchIndex.json
+  VERBOSE: About to download
+  VERBOSE: Finished downloading
+  VERBOSE: Downloaded in 0 hours, 0 minutes, 0 seconds.
+
+  Name                           Version          Source           Summary
+  ----                           -------          ------           -------
+  Docker                         19.03.1          DockerDefault    Contains Docker EE for use with Windows Server.
+  ```
+
+- check module and resource
+  ```powershell
+  > Get-PackageSource -ProviderName DockerMsftProvider
+  Name                             ProviderName     IsTrusted  Location
+  ----                             ------------     ---------  --------
+  DockerDefault                    DockerMsftPro... False      https://go.microsoft.com/fwlink/?LinkID=825636&clcid=0x409
+
+  > Get-Package -Name Docker -ProviderName DockerMsftProvider
+  Name                           Version          Source                           ProviderName
+  ----                           -------          ------                           ------------
+  docker                         20.10.9          DockerDefault                    DockerMsftProvider
+
+  # info: C:\Program Files\WindowsPowerShell\Modules\DockerMsftProvider\1.0.0.8
+  > Get-InstalledModule -Name "DockerMsftProvider"
+  Version    Name                                Repository           Description
+  -------    ----                                ----------           -----------
+  1.0.0.8    DockerMsftProvider                  PSGallery            PowerShell module with commands fo...
   ```
 
 - update DockerMsftProvider
@@ -140,7 +202,6 @@
   > Restart-Computer -Force
   ```
 
-
 - [download docker manually](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/#downloading-docker-manually)
 
   > [!NOTE]
@@ -189,6 +250,9 @@
   ```powershell
   > docker pull mcr.microsoft.com/dotnet/samples:dotnetapp-nanoserver-2009
   > docker run mcr.microsoft.com/dotnet/samples:dotnetapp-nanoserver-2009
+
+  # or
+  > docker pull mcr.microsoft.com/windows/servercore:ltsc2019
   ```
 
 <!--sec data-title="Use a script to install docker-ee" data-id="section0" data-show=true data-collapse=true ces-->
@@ -270,7 +334,7 @@ Docker                    18.09                 Docker           Contains Docker
 > Install-Package -Name docker -ProviderName DockerMsftProvider -RequiredVersion 18.09 -Update -Force
 ```
 
-#### uninstall docker-ee
+#### [uninstall docker-ee](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#clean-up-docker-data-and-system-components)
 ```powershell
 # Leave any active Docker Swarm
 > docker swarm leave --force
@@ -290,10 +354,68 @@ Docker                    18.09                 Docker           Contains Docker
 > Remove-Item -Path "C:\ProgramData\Docker" -Recurse -Force
 ```
 
+#### [remote access](https://learn.microsoft.com/en-us/virtualization/windowscontainers/management/manage_remotehost)
+
+- allow inbound connections
+  ```powershell
+  > New-NetFirewallRule -DisplayName 'Docker SSL Inbound' -Profile @('Domain', 'Public', 'Private') -Direction Inbound -Action Allow -Protocol TCP -LocalPort 2376
+  ```
+
+- Copy the files `ca.pem`, `cert.pem` and `key.pem` from your user's docker folder on your machine
+  - e.g. `c:\users\chris\.docker` to you local machine.
+
+- confirm connection
+  ```powershell
+  > docker -D -H tcp://wsdockerhost.southcentralus.cloudapp.azure.com:2376 \
+           --tlsverify --tlscacert=c:\users\foo\.docker\client\ca.pem \
+           --tlscert=c:\users\foo\.docker\client\cert.pem \
+           --tlskey=c:\users\foo\.docker\client\key.pem \
+           ps
+  ```
+
+- tips
+  - disable tls in `c\programdata\docker\config\daemon.json`
+    ```json
+    {
+        "tlsverify":  false,
+    }
+    ```
+  - connect via
+    ```powershell
+    > docker -H tcp://wsdockerhost.southcentralus.cloudapp.azure.com:2376 \
+             --tlsverify=0 \
+             version
+    ```
+
 ### exec commands
+
+> [!NOTE|label:references:]
+> - [container on windows](https://learn.microsoft.com/en-us/virtualization/windowscontainers/)
+>   - [Container Base Images](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-base-images)
+>     - [windows server](https://hub.docker.com/_/microsoft-windows-server/)
+>     - [windows](https://hub.docker.com/_/microsoft-windows)
+>     - [nano server](https://hub.docker.com/_/microsoft-windows-nanoserver)
+>     - [windows server core](https://hub.docker.com/_/microsoft-windows-servercore)
+
 ```powershell
 > docker exec a8 powershell -c "Get-CimInstance Win32_Process | Select-Object ProcessId, CommandLine"
 ```
+
+- image discovery
+  ```powershell
+  > docker pull mcr.microsoft.com/windows/servercore:ltsc2022
+  ```
+
+- [Base images for Windows Insiders](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-base-images#base-images-for-windows-insiders)
+  - [mcr.microsoft.com/windows/servercore/insider](https://hub.docker.com/_/microsoft-windows-servercore-insider)
+  - [mcr.microsoft.com/windows/nanoserver/insider](https://hub.docker.com/_/microsoft-windows-nanoserver-insider)
+  - [mcr.microsoft.com/windows/server/insider:10.0.20344.1](https://hub.docker.com/_/microsoft-windows-server-insider/)
+  - [mcr.microsoft.com/windows/insider](https://hub.docker.com/_/microsoft-windows-insider)
+
+  > [!TIP]
+  > - Windows Server Core vs Nanoserver
+  >   - Windows Server Core and Nanoserver are the most common base images to target. The key difference between these images is that Nanoserver has a significantly smaller API surface. PowerShell, WMI, and the Windows servicing stack are absent from the Nanoserver image.
+  > - [.NET Core Nano Server Dockerfile](https://github.com/dotnet/dotnet-docker)
 
 ### tricky
 
@@ -315,6 +437,7 @@ Docker                    18.09                 Docker           Contains Docker
 # or
 > Restart-Service Docker
 ```
+
 - verify
   ```powershell
   > docker info
@@ -415,6 +538,134 @@ Labels:
   com.docker.security.fips=enabled
 ...
 ```
+
+#### [manual install docker-ee](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/#downloading-docker-manually)
+
+> [!NOTE]
+> - [manual install docker-ee](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/#downloading-docker-manually)
+> - [#2496: Documentation on how to install Docker engine offline](https://github.com/docker/docs/issues/2496)
+> - [Getting Started with Windows Containers](https://blog.jcorioland.io/archives/2016/10/13/getting-started-with-windows-containers.html)
+> - [Windows Server 2019 - Docker Daemon](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-13--windows-server-2019-docker-daemon/2019-06-13/)
+> - download links
+>   - [index.json](https://download.docker.com/components/engine/windows-server/index.json)
+>   - [docker-17.06.2-ee-7.zip](https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7.zip)
+>   - [docker-17-06-2-ee-13.zip](https://download.docker.com/components/engine/windows-server/17.06/docker-17-06-2-ee-13.zip)
+>   - [docker-17.03.0-ee.zip](https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.0-ee.zip)
+>   - [docker-18.09.5.zip](https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.5.zip)
+>   - [docker-19.03.3.zip](https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.3.zip)
+>   - [docker-19.03.5.zip](https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.5.zip)
+>   - [choco: Docker Engine 20.10.9](https://community.chocolatey.org/packages/docker-engine/20.10.9#install)
+>   - [docker-1-12-2-cs2-ws-beta.zip](https://dockermsft.blob.core.windows.net/dockercontainer/docker-1-12-2-cs2-ws-beta.zip)
+> - [* choco: docker engine](https://community.chocolatey.org/packages/docker-engine/#install)
+>   - [version history](https://community.chocolatey.org/packages/docker-engine/#versionhistory)
+> - [install_docker_msft.ps1](https://github.com/pablodav/kubernetes-for-windows/blob/feature/kubespray_k8win1803/ansible/roles/windows/docker/files/install_docker_msft.ps1)
+> - [install_docker_windows_server.ps1](https://github.com/vinicius91/docker-windows-containers/blob/master/PowerShell-Scripts/install_docker_windows_server.ps1)
+> - [Install Docker Engine - Enterprise on Windows Servers](http://man.hubwiz.com/docset/Docker.docset/Contents/Resources/Documents/docs.docker.com/install/windows/docker-ee.html)
+
+- download archive
+  ```powershell
+  # On an online machine, download the zip file.
+  Invoke-WebRequest -UseBasicParsing -OutFile docker-19.03.3.zip https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.3.zip
+  ```
+
+- install
+  ```powershell
+  # Stop Docker service if eralier version of Docker is already installed
+  > Stop-Service docker
+
+  # Extract the archive.
+  > Expand-Archive docker-19.03.3.zip -DestinationPath $Env:ProgramFiles -Force
+
+  # Clean up the zip file.
+  > Remove-Item -Force docker-19.03.3.zip
+
+  # Install Docker. This requires rebooting.
+  > $null = Install-WindowsFeature containers
+
+  > Restart-Computer -Force
+
+  # Add Docker to the path for the current session.
+  > $env:path += ';$env:ProgramFiles\docker'
+
+  # Optionally, modify PATH to persist across sessions.
+  > $newPath = '$env:ProgramFiles\docker;' +
+    [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Machine)
+    [Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine)
+
+  # Register the Docker daemon as a service.
+  > dockerd --register-service
+
+  # Start the Docker service.
+  > Start-Service docker
+  ```
+
+- [another](https://github.com/OneGet/MicrosoftDockerProvider/issues/15#issuecomment-269219021)
+
+  ```powershell
+  # download
+  > Start-BitsTransfer -Source https://dockermsft.blob.core.windows.net/dockercontainer/docker-1-12-2-cs2-ws-beta.zip -Destination /docker.zip
+  # get sha256
+  > Get-FileHash -Path /docker.zip -Algorithm SHA256
+
+  # install
+  > cp .\docker.zip C:\Users\Administrator\AppData\Local\Temp\DockerMsftProvider\Docker-1-12-2-cs2-ws-beta.zip
+  > cd C:\Users\Administrator\AppData\Local\Temp\DockerMsftProvider\
+  > Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose
+
+  # restart
+  > Restart-Computer -Force
+  ```
+
+- [or](https://github.com/OneGet/MicrosoftDockerProvider/issues/15#issuecomment-396969826)
+
+  ```powershell
+  > $downloadURL = 'https://dockermsft.blob.core.windows.net/dockercontainer/docker-17-06-2-ee-13.zip'
+  > $destination = 'C:\Users\ADMINI~1\AppData\Local\Temp\2\DockerMsftProvider\Docker-17-06-2-ee-13.zip'
+  > Invoke-WebRequest -Uri $downloadURL -OutFile $destination
+  > Install-Package Docker -ProviderName DockerMsftProvider -RequiredVersion $RequiredVersion -Verbose
+  ```
+
+
+#### DockerMsftIndex.json
+
+> [!NOTE]
+> - [Server 2016 Docker Install SHA256 verify failed. Deleting file](https://forums.docker.com/t/server-2016-docker-install-sha256-verify-failed-deleting-file/27781)
+
+```powershell
+> Invoke-WebRequest -Uri "https://dockermsft.azureedge.net/dockercontainer/DockerMsftIndex.json" `
+                    -OutFile $env:USERPROFILE\AppData\Local\Temp\DockerMsftProvider\DockerDefault_DockerSearchIndex.json
+
+# mark to read-only
+(Get-Item $env:USERPROFILE\AppData\Local\Temp\DockerMsftProvider\DockerDefault_DockerSearchIndex.json).Attributes = [IO.FileAttributes]::ReadOnly
+```
+
+## dockerfile
+
+> [!NOTE|label:references:]
+> - [How to get docker inside docker working in Windows Base Image](https://forums.docker.com/t/how-to-get-docker-inside-docker-working-in-windows-base-image/101303)
+
+```dockerfile
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019
+RUN Install-PackageProvider NuGet -Force
+RUN Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+RUN Import-Packageprovider -Name DockerMsftProvider -Force
+RUN Find-Package -ProviderName DockerMsftProvider | Install-Package -Verbose -Force; exit 0
+RUN Find-Package -ProviderName DockerMsftProvider | Install-Package -Verbose -Force
+```
+
+- or
+  ```dockerfile
+  FROM mcr.microsoft.com/windows/servercore:ltsc2019
+  USER ContainerAdministrator
+  SHELL ["powershell", "-command"]
+  RUN Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+  RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+  RUN Install-PackageProvider -Name NuGet -Force
+  RUN Install-Module -Name DockerMsftProvider -Force
+  RUN Import-Module -Name DockerMsftProvider -Force
+  RUN Import-Packageprovider -Name DockerMsftProvider -Force
+  RUN Install-Package -Name docker -ProviderName DockerMsftProvider -Verbose -Update -Force
+  ```
 
 ## Hyper-V
 

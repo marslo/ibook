@@ -15,7 +15,13 @@
   - [cortana](#cortana)
   - [install ssh-agent](#install-ssh-agent)
   - [deploy windows 10 in a test lab using configuration manager](#deploy-windows-10-in-a-test-lab-using-configuration-manager)
-- [STEP-BY-STEP GUIDE TO SETUP TWO-TIER PKI ENVIRONMENT](#step-by-step-guide-to-setup-two-tier-pki-environment)
+- [modules](#modules)
+  - [list installed modules](#list-installed-modules)
+  - [get package source](#get-package-source)
+- [scripts](#scripts)
+  - [environment](#environment)
+  - [timezone](#timezone)
+- [step-by-step guide to setup two-tier pki environment](#step-by-step-guide-to-setup-two-tier-pki-environment)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -558,7 +564,87 @@ Status                 : Ok
 
 - replace a client with windows 10 using configuration manager
 
-## [STEP-BY-STEP GUIDE TO SETUP TWO-TIER PKI ENVIRONMENT](http://www.rebeladmin.com/2018/06/step-step-guide-setup-two-tier-pki-environment/)
+## modules
+
+> [!NOTE|label:references:]
+> - [PowerShell Gallery](https://www.powershellgallery.com/)
+>   - [DockerProvider](https://www.powershellgallery.com/packages/DockerProvider/0.0.0.3)
+>   - [Difference between Docker from DockerProvider and DockerMsftProvider](https://stackoverflow.com/a/48231887/2940319)
+> - [Get-InstalledModule](https://learn.microsoft.com/en-us/powershell/module/powershellget/get-installedmodule?view=powershellget-3.x)
+> - [Get-Module](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-module?view=powershell-7.4)
+
+### list installed modules
+```powershell
+> Get-InstalledModule
+
+Version    Name                                Repository           Description
+-------    ----                                ----------           -----------
+1.13.0     7Zip4Powershell                     PSGallery            Powershell module for creating and...
+1.0.0.8    DockerMsftProvider                  PSGallery            PowerShell module with commands fo...
+0.87.3     PSWriteColor                        PSGallery            Write-Color is a wrapper around Wr...
+2.2.16     VSSetup                             PSGallery            Visual Studio Setup PowerShell Module
+0.5.2      WebKitDev                           PSGallery            PowerShell scripts for WebKit deve...
+```
+
+### get package source
+```powershell
+> Get-PackageSource -ProviderName DockerMsftProvider
+Name                             ProviderName     IsTrusted  Location
+----                             ------------     ---------  --------
+DockerDefault                    DockerMsftPro... False      https://go.microsoft.com/fwlink/?LinkID=825636&clcid=0x409
+
+> Get-PackageSource
+Name                             ProviderName     IsTrusted  Location
+----                             ------------     ---------  --------
+PSGallery                        PowerShellGet    False      https://www.powershellgallery.com/api/v2
+DockerDefault                    DockerMsftPro... False      https://go.microsoft.com/fwlink/?LinkID=825636&clcid=0x409
+```
+
+
+## scripts
+
+> [!NOTE|label:references:]
+> - [Windows Server 2019 - Scripting and Sharing](https://mpolinowski.github.io/docs/DevOps/Windows/2019-06-10--windows-server-2019-scripting-and-sharing/2019-06-10)
+> - [* MicrosoftDockerProvider/DockerMsftProvider.psm1](https://github.com/OneGet/MicrosoftDockerProvider/blob/developer/DockerMsftProvider.psm1)
+> - [* Install-DockerCE/install-docker-ce.ps1](https://github.com/microsoft/Windows-Containers/blob/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1)
+> - [* install_docker_msft.ps1](https://github.com/pablodav/kubernetes-for-windows/blob/feature/kubespray_k8win1803/ansible/roles/windows/docker/files/install_docker_msft.ps1)
+> - [* install_docker_windows_server.ps1](https://github.com/vinicius91/docker-windows-containers/blob/master/PowerShell-Scripts/install_docker_windows_server.ps1)
+
+### environment
+
+- [setup proxy](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#proxy-configuration)
+  ```powershell
+  > [Environment]::SetEnvironmentVariable("HTTP_PROXY", "http://username:password@proxy:port/", [EnvironmentVariableTarget]::Machine)
+  ```
+
+### timezone
+
+> [!NOTE|label:references:]
+> - [Virtualized time zone](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/virtual-time-zone)
+
+- get timezone
+  ```batch
+  > tzutil /g
+  Dateline Standard Time
+  ```
+
+  ```powershell
+  > Get-TimeZone
+  Id                         : Dateline Standard Time
+  DisplayName                : (UTC-12:00) International Date Line West
+  StandardName               : Dateline Standard Time
+  DaylightName               : Dateline Daylight Time
+  BaseUtcOffset              : -12:00:00
+  SupportsDaylightSavingTime : False
+  ```
+
+- modify timezone
+  ```batch
+  > tzutil /s "Samoa Standard Time"
+  > tzutil /g
+  ```
+
+## [step-by-step guide to setup two-tier pki environment](http://www.rebeladmin.com/2018/06/step-step-guide-setup-two-tier-pki-environment/)
 
 ```powershell
 # Setup Standalone Root CA
