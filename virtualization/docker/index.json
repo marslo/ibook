@@ -1,0 +1,1041 @@
+{
+    "channels": {
+        "1.12-cs": {
+            "version": "1.12.2-cs1"
+        },
+        "1.13-cs": {
+            "version": "1.13.1-cs6"
+        },
+        "17.03": {
+            "version": "17.03.2-ee-6"
+        },
+        "17.03.0": {
+            "version": "17.03.0-ee"
+        },
+        "17.03.1": {
+            "version": "17.03.1-ee"
+        },
+        "17.06": {
+            "version": "17.06.2-ee-25"
+        },
+        "18.03": {
+            "version": "18.03.1-ee-12"
+        },
+        "18.09": {
+            "version": "18.09.11"
+        },
+        "19.03": {
+            "version": "19.03.5"
+        },
+        "beta": {
+            "alias": "edge"
+        },
+        "cs": {
+            "alias": "stable"
+        },
+        "edge": {
+            "alias": "17.06"
+        },
+        "preview": {
+            "version": "17.10.0-ee-preview-3"
+        },
+        "stable": {
+            "alias": "19.03"
+        },
+        "stable-17.06": {
+            "version": "17.06.2-ee-25"
+        },
+        "stable-18.03": {
+            "version": "18.03.1-ee-12"
+        },
+        "stable-18.09": {
+            "version": "18.09.11"
+        },
+        "stable-19.03": {
+            "version": "19.03.5"
+        },
+        "test": {
+            "alias": "test-18.03"
+        },
+        "test-17.06": {
+            "version": "17.06.2-ee-25"
+        },
+        "test-18.03": {
+            "version": "18.03.1-ee-12"
+        },
+        "test-18.09": {
+            "version": "18.09.11"
+        },
+        "test-19.03": {
+            "version": "19.03.8-beta3"
+        }
+    },
+    "versions": {
+        "1.12.1-cs1": {
+            "date": "2016-09-24T01:26:23.000Z",
+            "notes": "Contains the CS Docker Engine for use with Windows Server 2016 and Nano Server.",
+            "sha256": "20b92ba208b685269bb154005a46beb46d37053bb3e1153dd504b36508526fe6",
+            "size": "13838077",
+            "url": "https://download.docker.com/components/engine/windows-server/cs-1.12/docker-1.12.1.zip"
+        },
+        "1.12.2-cs1": {
+            "date": "2016-10-11T01:26:23.000Z",
+            "notes": "Contains the CS Docker Engine for use with Windows Server 2016 and Nano Server.",
+            "sha256": "f7ca06a4247e33edfb24bf42e2ef6bacc3593fdcd618676d5f1c7e9651374c40",
+            "size": "13863262",
+            "url": "https://download.docker.com/components/engine/windows-server/cs-1.12/docker-1.12.2.zip"
+        },
+        "1.13.0-rc3": {
+            "date": "2016-12-05T:01:23.000Z",
+            "notes": "Contains the Docker Engine for use with Windows Server 2016 and Nano Server.",
+            "sha256": "d9baf789736ea69f14a47b59ea40d4c1204ee00fad33e3da943ba79252b05879",
+            "size": "13911681",
+            "url": "https://test.docker.com/builds/Windows/x86_64/docker-1.13.0-rc3.zip"
+        },
+        "1.13.0-rc4": {
+            "date": "2016-12-19:01:23.000Z",
+            "notes": "Contains the Docker Engine for use with Windows Server 2016 and Nano Server.",
+            "sha256": "ac2f64a9e490194ff46cb3a93f0e8552c350564b73e9395b10aa1a416938d280",
+            "size": "13934374",
+            "url": "https://test.docker.com/builds/Windows/x86_64/docker-1.13.0-rc4.zip"
+        },
+        "1.13.1-cs1": {
+            "date": "2017-02-07:01:23.000Z",
+            "notes": "Contains the Docker Engine for use with Windows Server 2016 and Nano Server.",
+            "sha256": "9e035e254f33230764dddeed64611632a510b6708f1fe229a5c70f2d9f9a24fa",
+            "size": "14025912",
+            "url": "https://download.docker.com/components/engine/windows-server/cs-1.13/docker-1.13.1.zip"
+        },
+        "1.13.1-cs6": {
+            "date": "2017-08-25T18:48:01",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "e9c808c92035a9509bbe6f1119f3a0a1a37f80f83a3ccb3130c3f889c9a8ce87",
+            "size": 14164580,
+            "url": "https://packages.docker.com/1.13/builds/windows/amd64/docker-1.13.1-cs6.zip"
+        },
+        "17.03.0-ee": {
+            "date": "2017-03-01:18:30.000Z",
+            "notes": "Contains Docker EE for use with Windows Server 2016 and Nano Server.",
+            "sha256": "1ea21b19e165a23c58847a93ed1aa5586628c9b1d4f2432eaa10fa2e27c5dca1",
+            "size": "14027010",
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.0-ee.zip"
+        },
+        "17.03.1-ee": {
+            "date": "2017-03-30:18:30.000Z",
+            "notes": "Contains Docker EE for use with Windows Server 2016 and Nano Server.",
+            "sha256": "fe641acfe8513b8b969dea09625e275d3a6f382002e98f23aa7290ec5caaf5f3",
+            "size": "14029894",
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.1-ee.zip"
+        },
+        "17.03.2-ee-5": {
+            "date": "2017-07-20T21:26:08",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b76fd55cd187cf093c0534d3c7ca547254d9714e14b4356bca4e3d4fd223aab2",
+            "size": 14135155,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-5.zip"
+        },
+        "17.03.2-ee-6": {
+            "date": "2017-08-25T21:20:01",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "6090bf3500a688c5269449b1a608cf9e68b393ba48b6d06eb242beca012e1812",
+            "size": 14130509,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-6.zip"
+        },
+        "17.03.2-ee-7-rc2": {
+            "date": "2017-10-03T04:58:57",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "68be6d4a911025e189a3c313dbcba9695a38b9c87ce74a2825a98e4b15c18777",
+            "size": 14141712,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-7-rc2.zip"
+        },
+        "17.03.2-ee-8": {
+            "date": "2017-12-13T22:15:42.781364",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "31626c83db693c56dafa320be0c264d25b5cbd681d22ce1d5b5c1e5113bf000d",
+            "size": 14145970,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-8.zip"
+        },
+        "17.03.2-ee-8-rc1": {
+            "date": "2017-10-25T02:21:14.675221",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "3041e4103c2160d5a5906402d5d0e2ad1dc9e9bfaf9f5c3861f361cb6c4eff3c",
+            "size": 14144279,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-8-rc1.zip"
+        },
+        "17.03.2-ee-8-rc2": {
+            "date": "2017-11-01T17:30:41.571420",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b7d962321143f962c16a5f2ec1838b391e7fdd4cea94fdab4b29a216b4ac9e67",
+            "size": 14144752,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-8-rc2.zip"
+        },
+        "17.03.2-ee-8-rc3": {
+            "date": "2017-12-06T21:17:39.022167",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "02351aabb4aadf38fa8b7b24087e29be12bd87336ee2377b5937c9934281bfa1",
+            "size": 14146299,
+            "url": "https://download.docker.com/components/engine/windows-server/17.03/docker-17.03.2-ee-8-rc3.zip"
+        },
+        "17.06.1-ee-1": {
+            "date": "2017-08-16T06:35:05",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "22875af52d531c3d57eda00c3dd1691ced21cb6f4c60d4164dadbe85739a64c3",
+            "size": 16298291,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-1.zip"
+        },
+        "17.06.1-ee-1-rc1": {
+            "date": "2017-07-17T21:59:10",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "ead63fd1fae0684ff391b33abbc34e2618b8bec8b6815d4d3970a780626ecb04",
+            "size": 16288329,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-1-rc1.zip"
+        },
+        "17.06.1-ee-1-rc2": {
+            "date": "2017-08-04T17:11:03",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "cb2f62d0a974a7df1891ad751934b136cba7b795ca59c768e73eb234f9263ac5",
+            "size": 16288838,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-1-rc2.zip"
+        },
+        "17.06.1-ee-1-rc3": {
+            "date": "2017-08-08T17:13:09",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "2238a9f97fe09334caf4a22e4f54cd9651b547baf0f93817f9ee3ddb4e232ef9",
+            "size": 16286871,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-1-rc3.zip"
+        },
+        "17.06.1-ee-1-rc4": {
+            "date": "2017-08-10T23:43:44",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "408967eb6405a7e1aa91ae0284d3e907ddbabd50b66f0a9e59f396540fb97ef6",
+            "size": 16287688,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-1-rc4.zip"
+        },
+        "17.06.1-ee-2": {
+            "date": "2017-08-24T19:48:56",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "0c76e5e515a50f330a27cec6d673943aa1ef3376b01a4509cd73164255b2efb9",
+            "size": 16298309,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-2.zip"
+        },
+        "17.06.1-ee-2-rc1": {
+            "date": "2018-12-07T16:49:49",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "68bfd1131ec9744b0a657137a483440661f1fc0a89f6ba9f61c976a9d631a486",
+            "size": 16298049,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-2-rc1.zip"
+        },
+        "17.06.1-ee-2-rc2": {
+            "date": "2018-12-07T16:49:49",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "7dcc9c9825290cf2068e70d0cafed81fda0d25bb989e9fbbd2218a56f7dc5c44",
+            "size": 16298389,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.1-ee-2-rc2.zip"
+        },
+        "17.06.2-ee-10": {
+            "date": "2018-04-27T04:08:30.630478",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5f3d66347129f90771bef82de1da94299b7937faaa370f9c76d59161393b5ded",
+            "size": 16328413,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-10.zip"
+        },
+        "17.06.2-ee-11": {
+            "date": "2018-05-17T07:27:26.711344",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "eb71c4e5d2ce9d3e9a0018876aa989247a1444c0f8340bd7a8cac0015140c2ee",
+            "size": 16331850,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-11.zip"
+        },
+        "17.06.2-ee-11-rc1": {
+            "date": "2018-05-14T22:15:35.616541",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "aa0b9d01d2d8f961f2f1733e1b50c7d87b588a3aa4ddbf8ad3183e4bbf61f51f",
+            "size": 16332234,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-11-rc1.zip"
+        },
+        "17.06.2-ee-11-tp1": {
+            "date": "2018-05-01T01:38:06.019389",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "58bf1407691de9fbc740fbb4f18bf278b6668b42ff9d6a47b72a491d974fd60d",
+            "size": 16330923,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-11-tp1.zip"
+        },
+        "17.06.2-ee-11-tp2": {
+            "date": "2018-05-02T19:10:51.344750",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "6c6274a944701fed75508ca876fd1f3779fbb2f216a486c7549e74d5d178e681",
+            "size": 16332191,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-11-tp2.zip"
+        },
+        "17.06.2-ee-12": {
+            "date": "2018-05-29T19:48:22.497319",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "c71402becccea98e9cd8a8728cae4cef3626e81305786492d6a7588a504ca29d",
+            "size": 16337190,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-12.zip"
+        },
+        "17.06.2-ee-12-rc1": {
+            "date": "2018-05-25T19:18:04.855371",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "04a44ea35b4a4935bc0a5e9b05851b58b1403cd0392fe2803afa96f42b25cb2d",
+            "size": 16337621,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-12-rc1.zip"
+        },
+        "17.06.2-ee-13": {
+            "date": "2018-06-04T18:18:34.617322",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "e1762868319036c136ad45e610870f1230c6bbd8e90f3cc9696357fea4fe44fc",
+            "size": 16337294,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-13.zip"
+        },
+        "17.06.2-ee-13-rc1": {
+            "date": "2018-06-01T06:31:59.879504",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "e74adf3900434747801c4151a8448873411ce52a763620082133c7bdbead93f1",
+            "size": 16337772,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-13-rc1.zip"
+        },
+        "17.06.2-ee-13-tp1": {
+            "date": "2018-05-30T23:18:20.590367",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "c0962067e0571c2fd2a894d041396c6466319ac2f57d92a97e6e87fd08599ac7",
+            "size": 16339476,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-13-tp1.zip"
+        },
+        "17.06.2-ee-14": {
+            "date": "2018-06-21T19:55:29.664025",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "3619d5ffd9ccd179a37c910404841afa81a2dad26b00735ab15c69e6d682ef63",
+            "size": 16340562,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-14.zip"
+        },
+        "17.06.2-ee-14-rc1": {
+            "date": "2018-06-18T17:45:46.084988",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b4004c8a8c105e1847c2159dfc9505a56ea0613560015c056ca2bd3f65f360e9",
+            "size": 16340996,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-14-rc1.zip"
+        },
+        "17.06.2-ee-14-tp1": {
+            "date": "2018-06-05T22:28:50.783381",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1be80fed5ea6c0d621ab94a2a20066368acb6111c6b2eddcf90189593a6181d8",
+            "size": 16340597,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-14-tp1.zip"
+        },
+        "17.06.2-ee-15": {
+            "date": "2018-07-10T01:25:02.155202",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "75a50974a47434958ad4157ffbf8448b4dd22317376b6291ae6ba7b37f584717",
+            "size": 16340831,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-15.zip"
+        },
+        "17.06.2-ee-16": {
+            "date": "2018-07-26T18:38:24.704210",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "a6ecfeaed85ce1dabdb2bf2f7e7a208ad2e1140aa7c9f818bad2e49a2e97ad28",
+            "size": 16429790,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-16.zip"
+        },
+        "17.06.2-ee-16-rc1": {
+            "date": "2018-07-13T19:23:19.961083",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "6e7f8d401e289b802d8a1a1883e7020d401a1bb195d058a95fe810c8b16ae524",
+            "size": 16429182,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-16-rc1.zip"
+        },
+        "17.06.2-ee-16-rc2": {
+            "date": "2018-07-17T23:25:49.246934",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "a79da42d1ca685a6b064a029f8b8e1e359ff873d06af85d2b7014e5f64b2afd1",
+            "size": 16429434,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-16-rc2.zip"
+        },
+        "17.06.2-ee-17": {
+            "date": "2018-12-07T16:49:52",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "d4c04edd0b28d446f17c87ac111baccec0d2efb940c7bd9d55c27b7006969cc7",
+            "size": 16426894,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-17.zip"
+        },
+        "17.06.2-ee-17-rc1": {
+            "date": "2018-12-07T16:49:52",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "8e23b2cfcea71a35e5e111b0894538c13d0629e704f26deee6d0ffdac31fa9df",
+            "size": 16427480,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-17-rc1.zip"
+        },
+        "17.06.2-ee-18": {
+            "date": "2019-01-09T20:15:49.964877",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1ce081ffc0ee9df0133b18e92da5683e116761346c6d84237ea6810e6275207b",
+            "size": 16373205,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-18.zip"
+        },
+        "17.06.2-ee-18-rc1": {
+            "date": "2018-12-07T16:49:53",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "c44dfd5a2823e307251109141d8e2a21e85e3d7b1818db950fa85504633252d7",
+            "size": 16429633,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-18-rc1.zip"
+        },
+        "17.06.2-ee-19": {
+            "date": "2019-02-11T06:27:24.125542",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "3c7ee5d91b3a8722f9d9b493c173a1a4fdb27f2abaae77e8af839a8c254325a0",
+            "size": 16373494,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-19.zip"
+        },
+        "17.06.2-ee-20": {
+            "date": "2019-02-28T09:54:25.731654",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "3b1e6cc02b5394be1bfe41586bab24cfea1dd1d244d91b1068e820fd76a94e4e",
+            "size": 16370617,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-20.zip"
+        },
+        "17.06.2-ee-21": {
+            "date": "2019-04-11T07:02:47.585819",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "9e3d7079d7ea255eb0319bac5732177a14b78db5ce91d3795c85319d161a9cc8",
+            "size": 16374497,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-21.zip"
+        },
+        "17.06.2-ee-21-rc1": {
+            "date": "2019-03-21T04:45:42.959847",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "01fcada3b6e45a9b4aec2de1c2bf4a086ffc2ccd9716af2f4af6ebfa9177bc78",
+            "size": 16370527,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-21-rc1.zip"
+        },
+        "17.06.2-ee-21-rc2": {
+            "date": "2019-04-09T00:48:27.939430",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "cd902e08feb66f8451248239de1d637f29aca485e145fbe1e233f4633b2de74a",
+            "size": 16374179,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-21-rc2.zip"
+        },
+        "17.06.2-ee-22": {
+            "date": "2019-06-27T18:49:17.879520",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "511cb79e6c9823f78ea1bbd1d3155b6a4b44478093e4ef049c9ea2bfa1520ff4",
+            "size": 16373596,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-22.zip"
+        },
+        "17.06.2-ee-22-rc1": {
+            "date": "2019-06-24T22:50:05.321258",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "8d1c85d24a914d7376bf4538113faa6306799201355c79efbd08eceb70c9efa6",
+            "size": 16373162,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-22-rc1.zip"
+        },
+        "17.06.2-ee-23": {
+            "date": "2019-07-16T17:14:21.825864",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "d179970c4bde6f01103116bf255effbdcbc7e4080121dc4d093bf173cde3dd05",
+            "size": 16374612,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-23.zip"
+        },
+        "17.06.2-ee-24": {
+            "date": "2019-09-03T16:14:55.917136",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "f8998f4e1bdca9ff46e32880d5a1051c26b33a209342ad0f446532d1bcdb9f47",
+            "size": 19116258,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-24.zip"
+        },
+        "17.06.2-ee-24-rc1": {
+            "date": "2019-08-23T19:16:19.341131",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "50fd76d1a4816efdb907ba524b71ea35cf248b0aa9e373455b3c23579b71c08c",
+            "size": 19118051,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-24-rc1.zip"
+        },
+        "17.06.2-ee-25": {
+            "date": "2019-11-19T21:14:17.437701",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "57b3f1e1c9ff3590ad35ca588d6ea263e6f13b1bfa6cb7b37b7b9e76a73d3907",
+            "size": 20880040,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-25.zip"
+        },
+        "17.06.2-ee-3": {
+            "date": "2017-09-27T17:57:32",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "c530d6e006aee86f39d18ac099968b48bec69ba6f53b5cb3f494789fb200d8f0",
+            "size": 16297938,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-3.zip"
+        },
+        "17.06.2-ee-4": {
+            "date": "2017-10-12T18:57:00",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "fe8171276959627f3b6e8fb781da599e3e2cf3eee51d0dcff22d8f53771b1d8c",
+            "size": 16308502,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-4.zip"
+        },
+        "17.06.2-ee-4-rc1": {
+            "date": "2018-12-07T16:49:53",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "49c2b9fbcb671ee94a6dbdcfbb7e4abb0d8324b025e8d9034f8b8c7b04905350",
+            "size": 16304720,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-4-rc1.zip"
+        },
+        "17.06.2-ee-4-rc2": {
+            "date": "2018-12-07T16:49:53",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "72142555ff40c35413618f4508e61c00f89b5b5812426801da792a24ae8ee59e",
+            "size": 16308516,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-4-rc2.zip"
+        },
+        "17.06.2-ee-4-rc3": {
+            "date": "2018-12-07T16:49:53",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "3376013baa5d59511d5e82085b37318668d391ea39e7a1dd6f1e46f4f6da80a0",
+            "size": 16308916,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-4-rc3.zip"
+        },
+        "17.06.2-ee-5": {
+            "date": "2017-11-02T02:35:29.195585",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "248f8efc11724243879a107ebf15f4d2bfa030493a574eb41f7ef0feb94ed5dd",
+            "size": 16314805,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-5.zip"
+        },
+        "17.06.2-ee-5-rc1": {
+            "date": "2017-10-20T04:47:35.622627",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1951f3498170508c28beca963dd8455943d47e8a68a985adcc7dfc3da0952c6d",
+            "size": 16312412,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-5-rc1.zip"
+        },
+        "17.06.2-ee-5-rc2": {
+            "date": "2017-10-25T19:45:17.893289",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "23938ae0d7b0976b3fdd3eb5a943869a1ad379bc869af890f761dcfd691eec45",
+            "size": 16315200,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-5-rc2.zip"
+        },
+        "17.06.2-ee-6": {
+            "date": "2017-11-27T23:50:23.742509",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "fc31d16c3efd4e3769a58639c207410d840e89c6b4e36bf78b8fc564fe06caa5",
+            "size": 16315551,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-6.zip"
+        },
+        "17.06.2-ee-6-rc1": {
+            "date": "2017-11-17T22:43:58.638515",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "90b757427f3a38d07ae1bd9084472093bd3914e87a6e90a53cac77bcd4e17f36",
+            "size": 16316127,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-6-rc1.zip"
+        },
+        "17.06.2-ee-7": {
+            "date": "2018-03-19T17:47:28.241299",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b64522d2b334165c4a58cf486b48da2e44bf6f54d1d0213fb9b9ac6133943fe5",
+            "size": 16320956,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7.zip"
+        },
+        "17.06.2-ee-7-beta3": {
+            "date": "2018-02-28T02:36:49.642265",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b6090e5818eb7ca2fa63af101826bd50b019da3b1e49de7fa4a0ca3af9994189",
+            "size": 16318463,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7-beta3.zip"
+        },
+        "17.06.2-ee-7-rc": {
+            "date": "2018-03-15T02:10:59.375179",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "dcfcde1db29819512a84f250503cb5124aa89e7dcf0a4e432c951e25706be240",
+            "size": 16320705,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7-rc.zip"
+        },
+        "17.06.2-ee-7-tp1": {
+            "date": "2018-02-01T21:37:58.182509",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "fce7ba5881743aba6e27a12aa5e27553f2274d9bfca0c7d77a58ef80bd004636",
+            "size": 16314631,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7-tp1.zip"
+        },
+        "17.06.2-ee-7-tp2": {
+            "date": "2018-02-06T01:56:44.459113",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1bdc7fccd0209e11e654287b43505fa345f55fbf2d3ec6650a008b54481584db",
+            "size": 16319241,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7-tp2.zip"
+        },
+        "17.06.2-ee-7-tp3": {
+            "date": "2018-02-13T00:50:57.198221",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "6571597a9df8c48428ffd60a0f7fd8959f278f58893e5cccdaf5da2b113a4a6a",
+            "size": 16319101,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7-tp3.zip"
+        },
+        "17.06.2-ee-7-tp4": {
+            "date": "2018-03-03T04:49:31.037196",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "e7be3576e54413b9105c19b8ee9c08216348b2b7871c04edbbe39fa0f47acf9b",
+            "size": 16325365,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-7-tp4.zip"
+        },
+        "17.06.2-ee-8": {
+            "date": "2018-04-16T23:02:33.164814",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "8a29236d5a6e7be69b7ec65e1acfc86e8e7936148b2e2701085f0feee9960e06",
+            "size": 16330062,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-8.zip"
+        },
+        "17.06.2-ee-8-rc1": {
+            "date": "2018-03-24T00:45:49.385764",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "6ef92a09a9e13715f0602e392440ee4a9dcabcee58e656089390ec8e6c3f4874",
+            "size": 16330721,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-8-rc1.zip"
+        },
+        "17.06.2-ee-8-tp1": {
+            "date": "2018-03-19T23:19:52.930108",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "08020401e85f7abc3f728fd82fe56b62dc7335b4e7b38243a54e6bab2844d6e4",
+            "size": 16324633,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-8-tp1.zip"
+        },
+        "17.06.2-ee-9": {
+            "date": "2018-04-26T11:05:46.535751",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "04cd5ee61df8381adec309ddf03c97b8f5bd1905df139e59ddf59d2a8e8d4fce",
+            "size": 16328526,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-9.zip"
+        },
+        "17.06.2-ee-9-rc1": {
+            "date": "2018-04-25T00:05:05.790692",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "cef38c0504126cbbc6fb66920dd5177186952e52c32e3fbefd2b11207e133ead",
+            "size": 16328617,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.2-ee-9-rc1.zip"
+        },
+        "17.06.3-ee-1-beta2": {
+            "date": "2018-12-07T16:49:55",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "9aa117c0ec75ce4e22529db2568dab4b63c151237c2fe867b95f8295c66e1a7d",
+            "size": 16316925,
+            "url": "https://download.docker.com/components/engine/windows-server/17.06/docker-17.06.3-ee-1-beta2.zip"
+        },
+        "17.10.0-ee-preview-2": {
+            "date": "2017-09-21T23:23:06",
+            "notes": "Docker Enterprise Edition for Windows Server 2016 (Preview)",
+            "sha256": "42e374a2c7f32aaa0628aaf964b5ff94f4510bfcef2ee81bd89c1b6b9323073b",
+            "size": 30895102,
+            "url": "https://download.docker.com/components/engine/windows-server/preview/docker-17.10.0-ee-preview-2.zip"
+        },
+        "17.10.0-ee-preview-3": {
+            "date": "2017-10-06T18:19:09",
+            "notes": "Docker Enterprise Edition for Windows Server 2016 (Preview)",
+            "sha256": "09d9d31e2373e4c12144ff8dfc8a97a7aedfc7934928d9d2638f8c35649d5975",
+            "size": 30938586,
+            "url": "https://download.docker.com/components/engine/windows-server/preview/docker-17.10.0-ee-preview-3.zip"
+        },
+        "18.01.0-ee-1-tp3": {
+            "date": "2017-11-15T03:47:35.814971",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "4c4dc7171aea54d034fe9ad3eecb3fdae3e3056b5d68855bba69f360b8e37881",
+            "size": 16315152,
+            "url": "https://download.docker.com/components/engine/windows-server/18.01/docker-18.01.0-ee-1-tp3.zip"
+        },
+        "18.01.0-ee-1-tp4": {
+            "date": "2017-12-06T01:16:54.541435",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5ae4af940d0dd645ae77a7e2dd5e4ac4f1bfbedb7adaef95918056701cb04edd",
+            "size": 16316123,
+            "url": "https://download.docker.com/components/engine/windows-server/18.01/docker-18.01.0-ee-1-tp4.zip"
+        },
+        "18.01.0-ee-1-tp5": {
+            "date": "2017-12-07T03:05:18.584137",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "dc24d2fd752df48d802753dfd3179b8c2e3ed3cf79729405ea8afdd7098bb167",
+            "size": 16313297,
+            "url": "https://download.docker.com/components/engine/windows-server/18.01/docker-18.01.0-ee-1-tp5.zip"
+        },
+        "18.03.1-ee-1": {
+            "date": "2018-06-27T18:08:07.230375",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "ebecad33df142fb63b76391cfbd9c9c4fb17d5aeef5ca126236ebaddafe86628",
+            "size": 21787610,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-1.zip"
+        },
+        "18.03.1-ee-10": {
+            "date": "2019-07-16T20:27:15.525041",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "73f75338af0a7ecd14b18d1011ae5b8d709d189ed0e3c89f14f5642466e484d4",
+            "size": 24993266,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-10.zip"
+        },
+        "18.03.1-ee-11": {
+            "date": "2019-09-03T19:49:03.596219",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "9bb4a9a28b9372f970aea1767e781a534796f4b86df4562a3c707174f040e04d",
+            "size": 28642609,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-11.zip"
+        },
+        "18.03.1-ee-11-rc1": {
+            "date": "2019-08-23T16:55:57.519837",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "38cd3f8c08cf72dfaeb958f79a7c22cf363de864d138c16059da2cc60970587d",
+            "size": 28640847,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-11-rc1.zip"
+        },
+        "18.03.1-ee-12": {
+            "date": "2019-11-14T20:29:09.298483",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "94406929637caf9cb7f7ac1d404d9f88e4b27b0aba45647fdf01cc3ffa261d3b",
+            "size": 33324972,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-12.zip"
+        },
+        "18.03.1-ee-12-rc1": {
+            "date": "2019-11-07T18:29:37.616157",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b5875ac617f5e6c2fd6064f19b0801ca5eafdf892ad9866cd9b5f496d38281fe",
+            "size": 33324246,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-12-rc1.zip"
+        },
+        "18.03.1-ee-2": {
+            "date": "2018-07-10T23:57:29.354464",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "24c9e716d5e86421b89040140e6b03292840e0ae901d039bc5990c706b74557a",
+            "size": 21788578,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-2.zip"
+        },
+        "18.03.1-ee-3": {
+            "date": "2018-12-07T16:49:56",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "e2f7b4c8f69483ae7483dae74bdc1090bd380102522113b6bde6225e9ad9ae9c",
+            "size": 24743004,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-3.zip"
+        },
+        "18.03.1-ee-4": {
+            "date": "2018-12-07T16:49:56",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "9712f05ed04410bfd6f64bf99753d8b56388d41c852405a7849aa83fc83e2a0c",
+            "size": 24760971,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-4.zip"
+        },
+        "18.03.1-ee-4-rc1": {
+            "date": "2018-12-07T16:49:56",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1591fb579c7b17fd4186574eca63eff66eb4e9a3fee534e7f0ad03c934704378",
+            "size": 24760711,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-4-rc1.zip"
+        },
+        "18.03.1-ee-5": {
+            "date": "2019-01-09T22:45:15.904233",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1c48669fa6f668525ca3e881466fb9b43dd306084ec470bcd4c76c9753c81a1f",
+            "size": 21813162,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-5.zip"
+        },
+        "18.03.1-ee-5-rc1": {
+            "date": "2018-12-07T16:49:56",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "0d12ffe108afe17d7e860e611b3f25a654bc872e258dfb2481cccfca3686fef3",
+            "size": 21810977,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-5-rc1.zip"
+        },
+        "18.03.1-ee-6": {
+            "date": "2019-02-11T09:06:06.054986",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "d14331230335328ba180883a8453dd0be71234fb40d4d7f1d301f020434d0726",
+            "size": 21813069,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-6.zip"
+        },
+        "18.03.1-ee-7": {
+            "date": "2019-02-28T08:50:02.095738",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "87a11f4401bdc791cdb9ff1129342dceefad67fa63a065ba19b7ec1455a80d57",
+            "size": 21813634,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-7.zip"
+        },
+        "18.03.1-ee-8": {
+            "date": "2019-03-28T05:30:44.884570",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "aec924261fb2562a3e8fb1269f408eca65bb40e4638b09a31cc9333eadb9d4c1",
+            "size": 21814573,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-8.zip"
+        },
+        "18.03.1-ee-8-rc1": {
+            "date": "2019-03-21T06:11:06.416516",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "3d40211315bc9336cae60e98abe6c9f284b2e3f3f101b7c8a9bd8f51c81a31d4",
+            "size": 21812850,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-8-rc1.zip"
+        },
+        "18.03.1-ee-9": {
+            "date": "2019-06-27T17:32:51.612940",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "7fa58fb1e00a71a8c783b97f813228cc32c0bcbaa86d72077208f896f84fd614",
+            "size": 24992072,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-9.zip"
+        },
+        "18.03.1-ee-9-rc1": {
+            "date": "2019-06-25T00:45:05.184818",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "aeadc448958172a8e4fccd10a9fa5d6178c7a71b59c69dc3a01e297c0ebb2e0d",
+            "size": 24992492,
+            "url": "https://download.docker.com/components/engine/windows-server/18.03/docker-18.03.1-ee-9-rc1.zip"
+        },
+        "18.09.0": {
+            "date": "2018-12-07T16:49:57",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "bae8e01d4ee4576816a6bfd91fdd3957797cb3c4373c33c075053f994d09279b",
+            "size": 69660530,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.0.zip"
+        },
+        "18.09.0-beta3": {
+            "date": "2018-12-07T16:49:56",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5769eb9d772e7e0c9df74622ed5db802faf9113e0329472d8c3047e32f6ac7ff",
+            "size": 69151543,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.0-beta3.zip"
+        },
+        "18.09.0-rc1": {
+            "date": "2018-12-07T16:49:57",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "f99e65823bc12db632aea310322c2edc3bc4bfae96c3880c13b10dce5ab45b47",
+            "size": 69659269,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.0-rc1.zip"
+        },
+        "18.09.1": {
+            "date": "2019-01-09T23:46:31.958948",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "44d0d7887e6311415faf2774cf1d9bca40c667360774173bfc4f8d9dc3078964",
+            "size": 35623564,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.1.zip"
+        },
+        "18.09.1-rc1": {
+            "date": "2018-12-07T21:50:15",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "dab7ee809de40dcfa70bf5bd59abc7f84c80af17d075b4d16a2fa1f0943736e7",
+            "size": 35622885,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.1-rc1.zip"
+        },
+        "18.09.10": {
+            "date": "2019-10-08T16:48:09.831566",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "c5a76819f6238551d4c825fa16e3ba6fc64851947607f306698297a0ef4e33c2",
+            "size": 55168601,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.10.zip"
+        },
+        "18.09.10-rc1": {
+            "date": "2019-10-03T00:36:57.700919",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "6ba8f1794f7f2e67f05d2c61fc2de538b51f278448463fc49f4c45cfa396a9bc",
+            "size": 55170653,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.10-rc1.zip"
+        },
+        "18.09.11": {
+            "date": "2019-11-14T19:23:51.743480",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "83a2e511d1babd1e97b5a83ce7a63878e148a8f25648ca0dc2afac5e91b0e1c8",
+            "size": 55255821,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.11.zip"
+        },
+        "18.09.11-rc1": {
+            "date": "2019-11-06T08:03:51.504565",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "fae566f82e71a23fa7eb2279e91fd235b95d646f4b7077aa20f94138c64fe941",
+            "size": 55255114,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.11-rc1.zip"
+        },
+        "18.09.2": {
+            "date": "2019-02-11T10:06:34.518479",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "8669bcbef0152f3a8967c50ffa5ffb1688dfa634c70a31a4d594806e470d7a58",
+            "size": 35622881,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.2.zip"
+        },
+        "18.09.3": {
+            "date": "2019-02-28T07:58:52.557598",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "d0a4d57c031ef7bbaa962f8f9988504c2f483c9cde121dc86150118592b315a1",
+            "size": 35655917,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.3.zip"
+        },
+        "18.09.4": {
+            "date": "2019-03-28T04:32:52.155323",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "05f9e83c6f5023684ed7e6e90ae598f3c5eea9ce4fdf65f0c3f6eb9f08e5b6c8",
+            "size": 35659178,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.4.zip"
+        },
+        "18.09.4-rc1": {
+            "date": "2019-03-21T06:52:19.261571",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1d5aa2ba0ce942bd7fae04db50f894a157ef3f47b7183dde396f92af25cbd175",
+            "size": 35655705,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.4-rc1.zip"
+        },
+        "18.09.5": {
+            "date": "2019-04-11T15:21:06.871708",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "2df7fd1e82ef8a9084f75ab635c225d0427c6662a36257a7c2a1d06ca0bf61e8",
+            "size": 35663017,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.5.zip"
+        },
+        "18.09.5-rc1": {
+            "date": "2019-04-09T02:51:04.048071",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "751b94f37a89862b3c2f72fb7e7249d425c4c8005a33ab84f25bdef63bdf0939",
+            "size": 35663366,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.5-rc1.zip"
+        },
+        "18.09.6": {
+            "date": "2019-05-06T16:29:35.047339",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "f96377153474b583bcf15e5176a0f5f6e3b0752c7b6ee5c2023152a75b867d8b",
+            "size": 35688159,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.6.zip"
+        },
+        "18.09.7": {
+            "date": "2019-06-27T21:25:18.288343",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1b75b7fcf421d4c376b087b56162bb8f6ed85e788b5cb524fe2906571f760ab5",
+            "size": 35698013,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.7.zip"
+        },
+        "18.09.7-rc1": {
+            "date": "2019-06-25T01:33:22.517683",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5ddf8ea3b1bfdf9cfb6e5b44af825e8de6d360704c9fbc77260fb4818c852a09",
+            "size": 35699563,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.7-rc1.zip"
+        },
+        "18.09.8": {
+            "date": "2019-07-16T21:43:24.319768",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b844b2b4d50dc260332e0c448a34cb0df9eeb0505d61fbdd8a4c39a439d8b02d",
+            "size": 35697692,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.8.zip"
+        },
+        "18.09.9": {
+            "date": "2019-09-03T21:08:15.581473",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "f8212530f8f531581d87ded3d3e6028c761ce5947fe1fcd0c06db71fa648c663",
+            "size": 49417290,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.9.zip"
+        },
+        "18.09.9-rc1": {
+            "date": "2019-08-23T17:45:15.202537",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5a80480c5601546f018b2575be886be26d9133b1504ab453fa386f312f6447f5",
+            "size": 49417099,
+            "url": "https://download.docker.com/components/engine/windows-server/18.09/docker-18.09.9-rc1.zip"
+        },
+        "19.03.0": {
+            "date": "2019-07-22T17:34:19.729479",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "f156a3d833816ffee70afe4d58464ddb926d762716a0f75a232093dacb1e45e1",
+            "size": 130160585,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.0.zip"
+        },
+        "19.03.0-beta4": {
+            "date": "2019-05-16T20:48:21.891771",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5f45fee4b4e897386f1b0705bb8b84ab884db0b44030ac894df54ec70e0a0bc8",
+            "size": 148694173,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.0-beta4.zip"
+        },
+        "19.03.0-rc2": {
+            "date": "2019-06-06T22:48:55.696682",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "572d7e7dc68044a85c13c46d3a5f81e7b677cc24c97524ae78f13bb03e86ec77",
+            "size": 130197728,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.0-rc2.zip"
+        },
+        "19.03.1": {
+            "date": "2019-07-25T21:37:26.960907",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b2015b87d411d77c08fa71974867454f84b0b1b5edd99e8f091f71b3e0b2770d",
+            "size": 130196699,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.1.zip"
+        },
+        "19.03.2": {
+            "date": "2019-09-03T22:09:39.699652",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "d2166e5d9133644d10e7fd5dffa340d7127852f857e1cbee2c1b8ac1cdea8984",
+            "size": 127361731,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.2.zip"
+        },
+        "19.03.2-rc1": {
+            "date": "2019-08-23T18:27:33.433975",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "1724d4b17ffd43c3299d5edd777b4aa2da47b9dc2066b706ae714ed4e6a9947b",
+            "size": 130266268,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.2-rc1.zip"
+        },
+        "19.03.3": {
+            "date": "2019-10-08T18:37:29.234999",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "5a1b69c3807ef69146deedd66920ed63f3a769d788a1b0de1ab24939b0970a98",
+            "size": 127560071,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.3.zip"
+        },
+        "19.03.3-rc1": {
+            "date": "2019-10-02T23:32:18.810993",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "0045fb45e2f3c732751244c956f88347fa6c69a1303a2016d050cb9affff86ee",
+            "size": 127555015,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.3-rc1.zip"
+        },
+        "19.03.4": {
+            "date": "2019-10-18T00:50:25.718415",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b61eca7b8ca524f70412502c62e8253423bb84b9ffe376198f338a0961daef80",
+            "size": 127561382,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.4.zip"
+        },
+        "19.03.4-rc1": {
+            "date": "2019-10-14T21:49:55.294710",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "95954e630ae2ab47579fe342550fc6fdba19f6e9c8e30198923dee6033e51853",
+            "size": 127561081,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.4-rc1.zip"
+        },
+        "19.03.5": {
+            "date": "2019-11-14T17:54:40.286612",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "4ce8e7df20cfa7bfc6e7733f79d5dda4fda7aec3606168adfc8ea3f50261fdab",
+            "size": 127550095,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.5.zip"
+        },
+        "19.03.5-rc1": {
+            "date": "2019-11-06T08:56:39.468208",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "9a49b8ba2ff744038a44248f4c14d21f02a62660226df1ddd8aa5ffc00f461ae",
+            "size": 127557336,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.5-rc1.zip"
+        },
+        "19.03.5-rc2": {
+            "date": "2019-11-08T06:21:26.138574",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "e3bebfa2c04b461a0fd01fb9a4872ca1ff855a62fd77e285daca9acfec340231",
+            "size": 127557130,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.5-rc2.zip"
+        },
+        "19.03.8-beta1": {
+            "date": "2020-03-14T18:02:25.409781",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "00877275f7c8e4cebefb9400decd859bf8ff0e0438960a1f3df9add8b3e88cb5",
+            "size": 95148009,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.8-beta1.zip"
+        },
+        "19.03.8-beta2": {
+            "date": "2020-03-17T12:18:37.463080",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "b2d68599de33919d6a9e993d7b8bbe95866a5410b115b8c74693bd340d14501b",
+            "size": 95143022,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.8-beta2.zip"
+        },
+        "19.03.8-beta3": {
+            "date": "2020-04-02T14:39:55.797502",
+            "notes": "Docker for Windows Server 2016",
+            "sha256": "0755b6701010aed11ab410dc37fc1fa0ff2dbcdad9f2c28696fd00787ee1c33a",
+            "size": 95140620,
+            "url": "https://download.docker.com/components/engine/windows-server/19.03/docker-19.03.8-beta3.zip"
+        }
+    }
+}
