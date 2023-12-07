@@ -609,6 +609,12 @@ DockerDefault                    DockerMsftPro... False      https://go.microsof
 > - [* Install-DockerCE/install-docker-ce.ps1](https://github.com/microsoft/Windows-Containers/blob/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1)
 > - [* install_docker_msft.ps1](https://github.com/pablodav/kubernetes-for-windows/blob/feature/kubespray_k8win1803/ansible/roles/windows/docker/files/install_docker_msft.ps1)
 > - [* install_docker_windows_server.ps1](https://github.com/vinicius91/docker-windows-containers/blob/master/PowerShell-Scripts/install_docker_windows_server.ps1)
+> - [* windows-tools-installation.md](https://gist.github.com/thxCode/cd8ec26795a56eb120b57675f0c067cf)
+>   - [git_install.ps1)](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/c2f2dce527bae0c7ed913ae14ac58b64f5a2d97f/zz_git_install.ps1)
+>   - [docker_install.ps1](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/10d748f604764aa337864941b99d79154cbc5fc2/zz_docker_install.ps1)
+>   - [golang_install.ps1](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/c2f2dce527bae0c7ed913ae14ac58b64f5a2d97f/zz_golang_install.ps1)
+>   - [tcpdump_install.ps1](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/c2f2dce527bae0c7ed913ae14ac58b64f5a2d97f/zz_tcpdump_install.ps1)
+>   - [sshd_manage.ps1](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/897f2c41df99832d6f88f663a9c2ac442dee4875/zz_sshd_manage.ps1)
 
 ### environment
 
