@@ -183,18 +183,22 @@ $ date | wc
 {% hint style='tip' %}
 > reference:
 > - [Process all arguments except the first one (in a bash script)](https://stackoverflow.com/a/62630975/2940319)
+> - [Getting the last argument passed to a shell script](https://stackoverflow.com/a/5496054/2940319)
+> - [Extract parameters before last parameter in "$@"](https://stackoverflow.com/a/1215592/2940319)
 {% endhint %}
 
-| EXPR         | DESCRIPTION                                           |
-| - | - |
-| `$@`         | <pre><code>           p1 p2 p3 p4 p5 p6 </code></pre> |
-| `${@: 0}`    | <pre><code> ./args.sh p1 p2 p3 p4 p5 p6 </code></pre> |
-| `${@: 1}`    | <pre><code>           p1 p2 p3 p4 p5 p6 </code></pre> |
-| `${@: 2}`    | <pre><code>              p2 p3 p4 p5 p6 </code></pre> |
-| `${@: 2:1}`  | <pre><code>              p2             </code></pre> |
-| `${@: 2:2}`  | <pre><code>              p2 p3          </code></pre> |
-| `${@: -2}`   | <pre><code>                       p5 p6 </code></pre> |
-| `${@: -2:1}` | <pre><code>                       p5    </code></pre> |
+|           EXPR           | DESCRIPTION                                           |
+|:------------------------:|-------------------------------------------------------|
+|           `$@`           | <pre><code>           p1 p2 p3 p4 p5 p6 </code></pre> |
+|         `${@: 0}`        | <pre><code> ./args.sh p1 p2 p3 p4 p5 p6 </code></pre> |
+|         `${@: 1}`        | <pre><code>           p1 p2 p3 p4 p5 p6 </code></pre> |
+|         `${@: 2}`        | <pre><code>              p2 p3 p4 p5 p6 </code></pre> |
+|        `${@: 2:1}`       | <pre><code>              p2             </code></pre> |
+|        `${@: 2:2}`       | <pre><code>              p2 p3          </code></pre> |
+|        `${@: -2}`        | <pre><code>                       p5 p6 </code></pre> |
+|       `${@: -2:1}`       | <pre><code>                       p5    </code></pre> |
+| `${*: -1}` or `${@: $#}` | <pre><code>                          p6 </code></pre> |
+|      `${@: 1:$#-1}`      | <pre><code>           p1 p2 p3 p4 p5    </code></pre> |
 
 ## string manipulations
 
