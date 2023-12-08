@@ -50,6 +50,7 @@
 > - [Important Update – Deprecation of Docker Virtual Machine Images Extended to 30 April 2023](https://techcommunity.microsoft.com/t5/containers/important-update-deprecation-of-docker-virtual-machine-images/ba-p/3646272)
 >
 > IMPORTANT - THIS PROVIDER IS NOW DEPRECATED
+> <p>
 > As of May 23rd 2023 the backing service for this provider has been shutdown. You can find alternative options at [Windows Container Documentation - Setup Environment](https://learn.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=dockerce#windows-server-1).
 > For more information on the deprecation please see the following blog posts: [Updates to the Windows Container Runtime support](https://techcommunity.microsoft.com/t5/containers/updates-to-the-windows-container-runtime-support/ba-p/2788799) [Reminder - Updates to Windows Container Runtime Support](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989)
 

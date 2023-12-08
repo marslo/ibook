@@ -807,6 +807,9 @@ PS C:\> cat .\test.txt | ForEach-Object {
 > - [OpenSSH Server configuration for Windows Server and Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration?source=recommendations)
 > - [Tutorial: SSH in Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/tutorials/ssh?source=recommendations)
 > - [[Solved] Add-WindowsCapability failed. Error code = 0x800f0954 – RSAT Fix](https://thesysadminchannel.com/solved-add-windowscapability-failed-error-code-0x800f0954-rsat-fix/)
+> - [Installing and Configuring OpenSSH on Windows Server 2019](https://techcommunity.microsoft.com/t5/itops-talk-blog/installing-and-configuring-openssh-on-windows-server-2019/ba-p/309540)
+> - [owerShell/Win32-OpenSSH](https://github.com/PowerShell/Win32-OpenSSH)
+> - [Install Win32 OpenSSH](https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH)
 
 - pre-check
   ```powershell
@@ -871,7 +874,31 @@ PS C:\> cat .\test.txt | ForEach-Object {
   > dism /online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
   ```
 
-  - for error `0x800f0954`:
+  - install for windows 2019
+
+    > [!NOTE|label:references:]
+    > - [windows-dev-guide/install.ps1](https://github.com/rkitover/windows-dev-guide/blob/94fb6faa4c86055ee5b135a10a3556ada2e695f2/install.ps1)
+    >   ```powershell
+    >   > choco install -y openssh --prerelease --force --params '/SSHServerFeature /PathSpecsToProbeForShellEXEString:$env:programfiles\PowerShell\*\pwsh.exe'
+    >   > Import-Module -force (resolve-path /prog*s/openssh*/opensshutils.psd1)
+    >   > Repair-AuthorizedKeyPermission -file ~/.ssh/authorized_keys
+    >   > Icacls authorized_keys /remove “NT SERVICE\sshd”
+    >   ```
+
+    ```powershell
+    > Install-Module -Force OpenSSHUtils -Scope AllUsers
+    > Set-ExecutionPolicy Bypass
+    > Iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+    > choco install nano -y
+
+    # start services
+    > Set-Service -Name ssh-agent -StartupType ‘Automatic’
+    > Set-Service -Name sshd -StartupType ‘Automatic’
+    > Start-Service ssh-agent
+    > Start-Service sshd
+    ```
+
+  - error `0x800f0954`:
 
     > [!NOTE|label:references:]
     > - `UseWUServer`
@@ -979,13 +1006,59 @@ PS C:\> cat .\test.txt | ForEach-Object {
     > Update-Help
     ```
 
+  - [install in win10-64](https://github.com/PowerShell/Win32-OpenSSH/wiki/Install-Win32-OpenSSH)
+
+    > [!NOTE|label:references:]
+    > - [* provision.ps1](https://github.com/pymor/conda-forge-windows-vagrant-builder/blob/3d00a653d2172977b0520a37d7d0bd940262555d/basebox/provision.ps1)
+    > - [ssh-pubkey.ps1](https://github.com/y0rune/webi-installers/blob/e5685b902576c50549a9eb32d24d0d82bf0f6948/ssh-pubkey/ssh-pubkey.ps1)
+    > - [Static-Binaries/openssh/INFO.md](https://github.com/Azathothas/Static-Binaries/blob/637bafdd49b9ceb922c105f70d99cc43f09898d4/openssh/INFO.md)
+    >   ```PowerShell
+    >   > curl -qfSLO "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/openssh/openssh_amd_x86_Windows.msi"
+    >   > curl -qfSLO "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/openssh/openssh_amd_x86_Windows.zip"
+    >   # or
+    >
+    >   > Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/openssh/openssh_amd_x86_Windows.msi" -OutFile "openssh.msi"
+    >   > Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/openssh/openssh_amd_x86_Windows.zip" -OutFile "openssh.zip"
+    >   > msiexec /i openssh.msi
+    >   > msiexec /i openssh.msi /l*vx install.log
+    >   ```
+
+
+    - download [OpenSSH-Win64.zip](https://github.com/PowerShell/Win32-OpenSSH/releases/download/v9.4.0.0p1-Beta/OpenSSH-Win64.zip)
+    - extract to `c:\Program Files\OpenSSH-Win32`
+    - execute as admin
+      ```powershell
+      cd "c:\Program Files\OpenSSH-Win32"
+      powershell -executionpolicy bypass
+                .\install-sshd.ps1
+                .\ssh-keygen.exe -A
+
+      Start-Service ssh-agent
+      .\ssh-add ssh_host_dsa_key
+      .\ssh-add ssh_host_rsa_key
+      .\ssh-add ssh_host_ecdsa_key
+      .\ssh-add ssh_host_ed25519_key
+
+      netsh advfirewall firewall add rule name="SSH Port" dir=in action=allow protocol=TCP localport=22
+      .\install-sshlsa.ps1
+
+      Set-Service sshd -StartupType Automatic
+      Set-Service ssh-agent -StartupType Automatic
+      .\FixHostFilePermissions.ps1 -Confirm:$false
+      .\FixUserFilePermissions.ps1 -Confirm:$false
+
+      Start-Service sshd
+      ```
+
 - start services
   ```powershell
   # Start the sshd service
   > Start-Service sshd
+  > Start-Service ssh-agent
 
   # OPTIONAL but recommended:
   > Set-Service -Name sshd -StartupType 'Automatic'
+  > Set-Service -Name ssh-agent -StartupType 'Automatic'
 
   # confirm the firewall rule is configured. it should be created automatically by setup. run the following to verify
   > if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
@@ -1029,6 +1102,161 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ```
 
   ![ssh windows server](../../screenshot/win/win-openssh-server.png)
+
+- ssh key
+
+  > [!NOTE|label:references:]
+  > - [Windows SSH: Permissions for 'private-key' are too open](https://superuser.com/q/1296024/112396)
+  > - [Key-based authentication in OpenSSH for Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement)
+  > - [Setting up SSH-Agent in Windows for Passwordless Git Authentication](https://interworks.com/blog/2021/09/15/setting-up-ssh-agent-in-windows-for-passwordless-git-authentication/)
+  > - [SSH_AUTH_SOCK and wsl-ssh-pageant.exe --winssh ssh-pageant](https://superuser.com/a/1595998/112396)
+  > - [Comprehensive Guide to ssh-agent on Windows and WSL](https://medium.com/@wondrous_oxblood_cheetah_508/ssh-agent-on-windows-c74b90fb2e31)
+
+  - generate keys
+    ```powershell
+    > ssh-keygen -t ed25519
+
+    # By default the ssh-agent service is disabled. Configure it to start automatically.
+    # Make sure you're running as an Administrator.
+    > Get-Service ssh-agent | Set-Service -StartupType Automatic
+
+    # Start the service
+    > Start-Service ssh-agent
+
+    # This should return a status of Running
+    > Get-Service ssh-agent
+
+    # Now load your key files into ssh-agent
+    > ssh-add $env:USERPROFILE\.ssh\id_ed25519
+    ```
+
+
+  - standard user
+    ```powershell
+    # Get the public key file generated previously on your client
+    > $authorizedKey = Get-Content -Path $env:USERPROFILE\.ssh\id_ed25519.pub
+
+    # Generate the PowerShell to be run remote that will copy the public key file generated previously on your client to the authorized_keys file on your server
+    > $remotePowershell = "powershell New-Item -Force -ItemType Directory -Path $env:USERPROFILE\.ssh; Add-Content -Force -Path $env:USERPROFILE\.ssh\authorized_keys -Value '$authorizedKey'"
+
+    # Connect to your server and run the PowerShell using the $remotePowerShell variable
+    > ssh username@domain1@contoso.com $remotePowershell
+    ```
+
+  - administrative user
+
+    > [!NOTE]
+    > This example shows the steps for creating the `administrators_authorized_keys` file. This only applies to administrator accounts and must be user instead of the per user file within the user's profile location.
+    > - [AuthorizedKeysFile](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration#authorizedkeysfile)
+    > - [GSSAPIAuthentication](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_server_configuration#gssapiauthentication)
+
+    ```powershell
+    # get the public key file generated previously on your client
+    $authorizedKey = Get-Content -Path $env:USERPROFILE\.ssh\id_ed25519.pub
+
+    # generate the powershell to be run remote that will copy the public key file generated previously on your client to the authorized_keys file on your server
+    $remotePowershell = "powershell Add-Content -Force -Path $env:ProgramData\ssh\administrators_authorized_keys -Value '$authorizedKey';icacls.exe ""$env:ProgramData\ssh\administrators_authorized_keys"" /inheritance:r /grant ""Administrators:F"" /grant ""SYSTEM:F"""
+
+    # Connect to your server and run the PowerShell using the $remotePowerShell variable
+    ssh username@domain1@contoso.com $remotePowershell
+
+    > icacls.exe "C:\ProgramData\ssh\administrators_authorized_keys" /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F"
+    ```
+
+  - troubleshooting
+
+    > [!NOTE]
+    > Permissions for '/path/to/private/key' are too open
+    > - [FixHostFilePermissions.ps1](https://github.com/PowerShell/openssh-portable/blob/cb23f0d9c0f4d40edbc2863419dcff40ebd5e0a6/contrib/win32/openssh/FixHostFilePermissions.ps1)
+    > - [FixUserFilePermissions.ps1](https://github.com/PowerShell/openssh-portable/blob/cb23f0d9c0f4d40edbc2863419dcff40ebd5e0a6/contrib/win32/openssh/FixUserFilePermissions.ps1)
+
+    ```batch
+    REM run as normal user
+    > icacls private-key /inheritance:r
+    > icacls private-key /grant:r "%username%":"(R)"
+    ```
+
+    ![ssh key](../../screenshot/win/windows-openssh-key-1.png)
+
+    - [more details](https://superuser.com/a/1329702/112396)
+
+      - cmd
+        ```batch
+        ::# Set Key File Variable:
+          Set Key="%UserProfile%\.ssh\id_rsa"
+
+        ::# Remove Inheritance:
+            Icacls %Key% /c /t /Inheritance:d
+
+        ::# Set Ownership to Owner:
+            :: # Key's within %UserProfile%:
+                 Icacls %Key% /c /t /Grant %UserName%:F
+
+            :: # Key's outside of %UserProfile%:
+                 TakeOwn /F %Key%
+                 Icacls %Key% /c /t /Grant:r %UserName%:F
+
+        ::# Remove All Users, except for Owner:
+            Icacls %Key% /c /t /Remove:g "Authenticated Users" BUILTIN\Administrators BUILTIN Everyone System Users
+
+        ::# Verify:
+            Icacls %Key%
+
+        ::# Remove Variable:
+            set "Key="
+        ```
+
+      - powershell
+        ```powershell
+        # Set Key File Variable:
+          New-Variable -Name Key -Value "$env:UserProfile\.ssh\id_rsa"
+
+        # Remove Inheritance:
+          Icacls $Key /c /t /Inheritance:d
+
+        # Set Ownership to Owner:
+          # Key's within $env:UserProfile:
+            Icacls $Key /c /t /Grant ${env:UserName}:F
+
+           # Key's outside of $env:UserProfile:
+             TakeOwn /F $Key
+             Icacls $Key /c /t /Grant:r ${env:UserName}:F
+
+        # Remove All Users, except for Owner:
+          Icacls $Key /c /t /Remove:g Administrator "Authenticated Users" BUILTIN\Administrators BUILTIN Everyone System Users
+
+        # Verify:
+          Icacls $Key
+
+        # Remove Variable:
+          Remove-Variable -Name Key
+        ```
+
+      - [or](https://superuser.com/a/1598490/112396)
+        ```powershell
+        > cat ~\.ssh\example-key.ecdsa | ssh-add -k -
+        ```
+
+      - [or](https://superuser.com/a/1488937/112396)
+        ```powershell
+        # do the following in powerhsell if not already done
+        # Set-ExecutionPolicy RemoteSigned
+
+        # NOTE: edit the path in this command if needed
+        $sshFiles=Get-ChildItem -Path "$env:userprofile\.ssh" -Force
+
+        $sshFiles | % {
+          $key = $_
+          & icacls $key /c /t /inheritance:d
+          & icacls $key /c /t /grant  "${echo $env:username}":F
+          & icacls $key /c /t /remove Administrator "Authenticated Users" BUILTIN\Administrators BUILTIN Everyone System Users
+        }
+
+        # verify
+        $sshFiles | % {
+          icacls $_
+        }
+        ```
 
 - uninstall
   ```powershell

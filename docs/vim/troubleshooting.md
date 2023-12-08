@@ -130,7 +130,7 @@
   - **Settings** -> **Apps** -> **Apps & features** -> **App Execution alias**
   - enable both `python.exe` and `python3.exe`
 
-  ![App execution alias](../screenshot/win/win10-python-vim.png)
+  ![Manage App Execution Aliases](../screenshot/win/win10-python-vim.png)
 
 - solution
   - delete both `python.exe` and `python3.exe` from `%LocalAppData%\Microsoft\WindowsApps`
