@@ -56,6 +56,15 @@
   > [!NOTE|label:references:]
   > - [* iMarslo : linux troubleshooting](../../linux/troubleshooting.html)
   > - [1.5 Per Iniziare - Installing Git](https://git-scm.com/book/it/v2/Per-Iniziare-Installing-Git)
+  > - osx
+  >   - [* tools-scripts/build-darwin](https://github.com/gnustep/tools-scripts/blob/master/build-darwin)
+  >   - [Install Git on Mac OS X](https://www.atlassian.com/git/tutorials/install-git)
+  >   - [git-install.sh](https://gist.github.com/ma11hew28/419201/382d769b9e3be737dd06c74f4c5f592ffe17396c)
+  >   - [git-install.bash](https://gist.github.com/ma11hew28/419201)
+  >   - [Install git from source on OS X](https://joequery.me/guides/install-git-source-osx/)
+  >   - [compile-git-debian10](https://blog.ziki.cn/post/complie-git-debian-10/)
+  >   - [NO_GETTEXT=true](https://stackoverflow.com/a/59288943/2940319)
+  >   - [How should I resolve a "ld: library not found for -liconv" error when running "cargo build"?](https://stackoverflow.com/questions/71788323/how-should-i-resolve-a-ld-library-not-found-for-liconv-error-when-running-c)
 
   - git-core
     ```bash
@@ -64,6 +73,12 @@
 
     # centos/rhel
     $ sudo dnf install -y dh-autoreconf libcurl-devel curl-devel expat-devel gettext-devel openssl-devel perl-devel zlib-devel
+
+    # osx
+    $ brew install gcc autoconf automake openssl@3 expat gettext zlib libtool libiconv ncurses
+    $ brew install perl
+    $ sudo PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib
+    $ eval "$(sudo perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
     ```
 
   - git-doc
@@ -74,7 +89,12 @@
     # centos/rhel
     $ sudo dnf install -y asciidoc xmlto docbook2X docbook-style-xsl
     # or
-    sudo dnf install -y --enablerepo=*epel* install docbook2X
+    $ sudo dnf install -y --enablerepo=*epel* install docbook2X
+    $ sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+
+    # osx
+    $ brew install asciidoc xmlto docbook2x docbook-xsl hunspell
+    $ ln -sf /usr/local/bin/docbook2texi /usr/local/bin/docbook2x-texi
     ```
 
   - git-info
@@ -84,14 +104,18 @@
 
     # centos/rhel
     $ sudo dnf install -y getopt
-    # or
-    $ sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+
+    # osx
+    $ brew install gnu-getopt
     ```
 
   - others
     ```bash
     # audio output
     $ apt install libao-dev
+
+    # osx
+    $ brew install libao
     ```
 
 - install
