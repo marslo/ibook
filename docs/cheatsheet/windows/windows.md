@@ -45,9 +45,10 @@
   - [Internet Explorer Enhanced Security Configuration is enabled](#internet-explorer-enhanced-security-configuration-is-enabled)
   - [powershell plugins](#powershell-plugins)
   - [openssh for windows](#openssh-for-windows)
+- [troubleshooting](#troubleshooting)
+  - [`Error code = 0x800f0954`](#error-code--0x800f0954)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style='info' %}
 > reference:
@@ -781,9 +782,10 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ![pgedit.msc -> Enable win32 long paths](../../screenshot/win/gpedit.msc-long-path-1.png)
 
 ### [Internet Explorer Enhanced Security Configuration is enabled](https://blog.blksthl.com/2012/11/28/how-to-disable-ie-enhanced-security-in-windows-server-2012/#:~:text=%20The%20steps%3A%20%201%20On%20the%20Windows,that%20can%20be%20disabled%2C%20one%20only...%20More%20)
-![windows step 1](../../screenshot/win/windows-service-security-1.png)
-![windows step 2](../../screenshot/win/windows-service-security-2.png)
 
+![windows step 1](../../screenshot/win/windows-service-security-1.png)
+
+![windows step 2](../../screenshot/win/windows-service-security-2.png)
 
 ### [powershell plugins](https://zhuanlan.zhihu.com/p/439437013)
 ```powershell
@@ -808,8 +810,16 @@ PS C:\> cat .\test.txt | ForEach-Object {
 
 - pre-check
   ```powershell
+  # verify whehter if running as Administrator
   > (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
   True
+
+  > Get-Command -Noun WindowsCapability
+  CommandType     Name                                               Version    Source
+  -----------     ----                                               -------    ------
+  Cmdlet          Add-WindowsCapability                              3.0        Dism
+  Cmdlet          Get-WindowsCapability                              3.0        Dism
+  Cmdlet          Remove-WindowsCapability                           3.0        Dism
   ```
 
 - check openssh versions
@@ -821,6 +831,24 @@ PS C:\> cat .\test.txt | ForEach-Object {
 
   Name  : OpenSSH.Server~~~~0.0.1.0
   State : NotPresent
+
+  # or
+  > Get-WindowsCapability -Name OpenSSH* -Online
+  Name         : OpenSSH.Client~~~~0.0.1.0
+  State        : NotPresent
+  DisplayName  : OpenSSH Client
+  Description  : OpenSSH-based secure shell (SSH) client, for secure key management and access to remote
+                 machines.
+  DownloadSize : 1323493
+  InstallSize  : 5301402
+
+  Name         : OpenSSH.Server~~~~0.0.1.0
+  State        : NotPresent
+  DisplayName  : OpenSSH Server
+  Description  : OpenSSH-based secure shell (SSH) server, for secure key management and access from remote
+                 machines.
+  DownloadSize : 1297677
+  InstallSize  : 4946932
   ```
 
   ![check openssh version](../../screenshot/win/powershell/windows-ssh-2.png)
@@ -829,40 +857,126 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ```powershell
   > Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
   > Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
+  # or via dism ( Deployment Image Servicing and Management tool )
+  > dism /online /Add-Capability /CapabilityName:OpenSSH.Client~~~~0.0.1.0
+  Deployment Image Servicing and Management tool
+  Version: 10.0.19041.3570
+
+  Image Version: 10.0.19044.3570
+
+  [==========================100.0%==========================]
+  The operation completed successfully.
+
+  > dism /online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
   ```
 
   - for error `0x800f0954`:
-    ```powershell
-    # Set Windows Update Server Key to 0
-    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 0
 
+    > [!NOTE|label:references:]
+    > - `UseWUServer`
+    >   ```powershell
+    >   > Get-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer
+    >   UseWUServer  : 1
+    >   PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+    >   PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+    >   PSChildName  : AU
+    >   PSDrive      : HKLM
+    >   PSProvider   : Microsoft.PowerShell.Core\Registry
+
+    >   > Get-ItemPropertyValue -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer
+    >   1
+    >
+    >   # or
+    >   > REG query HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+    >   HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+    >       NoAutoUpdate                     REG_DWORD    0x0
+    >       AUOptions                        REG_DWORD    0x3
+    >       ScheduledInstallDay              REG_DWORD    0x0
+    >       ScheduledInstallTime             REG_DWORD    0x3
+    >       NoAutoRebootWithLoggedOnUsers    REG_DWORD    0x1
+    >       DetectionFrequencyEnabled        REG_DWORD    0x1
+    >       DetectionFrequency               REG_DWORD    0x16
+    >       UseWUServer                      REG_DWORD    0x1
+    >
+    >   > REG query HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU /v UseWUServer
+    >   HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+    >       UseWUServer                      REG_DWORD    0x1
+    >   ```
+    > - `DisableWindowsUpdateAccess`:
+    >   ```powershell
+    >   > Get-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ -Name DisableWindowsUpdateAccess
+    >   DisableWindowsUpdateAccess : 1
+    >   PSPath                     : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUp
+    >                                date\
+    >   PSParentPath               : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows
+    >   PSChildName                : WindowsUpdate
+    >   PSDrive                    : HKLM
+    >   PSProvider                 : Microsoft.PowerShell.Core\Registry
+    >
+    >   > Get-ItemPropertyValue -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ -Name DisableWindowsUpdateAccess
+    >   1
+    >
+    >   # or
+    >   > REG query HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\
+    >   HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+    >       DisableWindowsUpdateAccess    REG_DWORD    0x1
+    >       TargetGroupEnabled            REG_DWORD    0x1
+    >       TargetGroup                   REG_SZ       SC_Servers
+    >       WUServer                      REG_SZ       http://msi-wsus03.marvell.com
+    >       WUStatusServer                REG_SZ       http://msi-wsus03.marvell.com
+    >   HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+    >
+    >   > REG query HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ /v DisableWindowsUpdateAccess
+    >   HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+    >       DisableWindowsUpdateAccess    REG_DWORD    0x1
+    >   ```
+
+    ```powershell
+    # set Windows Update Server Key to 0
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 0
     # Set Disable Windows Update Access to 0
     > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ -Name DisableWindowsUpdateAccess -Value 0
 
-    # Restart Windows Update Service
+    # restart Windows Update Service
     > Restart-Service -Name wuauserv -Force
     ```
 
   - or full process
     ```powershell
-    # Set Windows Update Server Key to 0
-    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 0
+    # get defautl values
+    > $currentWU = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer"
+    > $currentWUAccess = Get-ItemPropertyValue -Path "HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess"
 
-    # Set Disable Windows Update Access to 0
-    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ -Name DisableWindowsUpdateAccess -Value 0
-
-    # Restart Windows Update Service
+    # set Windows Update Server Key to 0
+    > Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value 0
+    # set Disable Windows Update Access to 0
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -Name DisableWindowsUpdateAccess -Value 0
+    # restart Windows Update Service ( wuauserv )
+    > Restart-Service wuauserv
+    # or
     > Restart-Service -Name wuauserv -Force
 
-    # Install OpenSSH
+    # install
+    > Get-WindowsCapability -Name OpenSSH* -Online | Add-WindowsCapability –Online
+    # or
     > dism /online /Add-Capability /CapabilityName:OpenSSH.Client~~~~0.0.1.0
+    > dism /online /Add-Capability /CapabilityName:OpenSSH.Server~~~~0.0.1.0
+    # or
+    > Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+    > Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 
-    # Set Necessary Windows Update Server Key to 1
-    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name UseWUServer -Value 1
-    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -Name DisableWindowsUpdateAccess -Value 1
-
-    # Restart Windows Update Service
+    # revert
+    > Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value $currentWU
+    > Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -Name DisableWindowsUpdateAccess -Value $currentWUAccess
+    > Restart-Service wuauserv
+    # or
     > Restart-Service -Name wuauserv -Force
+    ```
+
+  - update help
+    ```powershell
+    > Update-Help
     ```
 
 - start services
@@ -873,7 +987,7 @@ PS C:\> cat .\test.txt | ForEach-Object {
   # OPTIONAL but recommended:
   > Set-Service -Name sshd -StartupType 'Automatic'
 
-  # Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
+  # confirm the firewall rule is configured. it should be created automatically by setup. run the following to verify
   > if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
       Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
       New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
@@ -882,20 +996,108 @@ PS C:\> cat .\test.txt | ForEach-Object {
     }
   ```
 
+  - verify
+    ```powershell
+    > Get-Service *ssh* | Where-Object {$_.Status -eq "Running"}
+    Status   Name               DisplayName
+    ------   ----               -----------
+    Running  sshd               OpenSSH SSH Server
+    ```
+
 - connect via ssh
   ```powershell
   > ssh domain\username@servername
+
+  # in wsl
+  $ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no marslo@server.sample.com
+  marslo@dc5-ssdfw14's password:
+
+  (c) 2018 Microsoft Corporation. All rights reserved.
+
+  Clink v1.3.47.d5796b
+  Copyright (c) 2012-2018 Martin Ridgers
+  Portions Copyright (c) 2020-2022 Christopher Antos
+  https://github.com/chrisant996/clink
+
+  Clink v1.5.18 is available.
+  - To apply the update, run 'clink update'.
+  - To stop checking for updates, run 'clink set clink.autoupdate false'.
+  - To view the release notes, visit the Releases page:
+    https://github.com/chrisant996/clink/releases
+
+  DOMAIN\marslo@SERVER.SAMPLE.COM C:\Users\marslo>
   ```
+
+  ![ssh windows server](../../screenshot/win/win-openssh-server.png)
 
 - uninstall
   ```powershell
-  # Uninstall the OpenSSH Client
+  # uninstall the OpenSSH Client
   > Remove-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 
-  # Uninstall the OpenSSH Server
+  # uninstall the OpenSSH Server
   > Remove-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
   ```
 
-#### Q&A
-- `Error code = 0x800f0954`
-  - [[Solved] Add-WindowsCapability failed. Error code = 0x800f0954 – RSAT Fix](https://thesysadminchannel.com/solved-add-windowscapability-failed-error-code-0x800f0954-rsat-fix/)
+## troubleshooting
+### `Error code = 0x800f0954`
+
+> [!NOTE]
+> - [[Solved] Add-WindowsCapability failed. Error code = 0x800f0954 – RSAT Fix](https://thesysadminchannel.com/solved-add-windowscapability-failed-error-code-0x800f0954-rsat-fix/)
+> - [Fix: RSAT Tools Installation Error 0x800f0954 on Windows](https://www.prajwaldesai.com/rsat-tools-installation-error-0x800f0954/)
+> - [How can I utilize the Add-WindowsCapability function through a proxy in PowerShell?](https://stackoverflow.com/a/74947737/2940319)
+> - [RSAT and WSUS Locations](https://community.spiceworks.com/topic/2166885-rsat-and-wsus-locations#entry-8149857)
+
+- via `gpedit.msc`
+  - <kbd>win</kbd> + <kbd>r</kbd> -> `gpedit.msc`
+  - `Computer Configuration` -> `Administrative Templates` -> `System`
+  - `Specify settings for optional component installation and component repair`
+    - Enable
+    - Enable: Download repair content and optional features directly from Windows update instead of Windows Server Update Services ( WSUS )
+  - cmd run
+    ```powershell
+    > gpupdate /force
+    ```
+
+    ![win dism 0x800f0954](../../screenshot/win/win-0x800f0954-dism.png)
+
+    ![win gpedit 0x800f0954](../../screenshot/win/win-0x800f0954-gpedit.png)
+
+  - verify
+    ```powershell
+    > Get-WindowsCapability -Name OpenSSH.Server~~~~0.0.1.0 -Online | Add-WindowsCapability -Online
+
+    # for rast
+    > Get-WindowsCapability -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~0.0.1.0 -Online | Add-WindowsCapability -Online
+    ```
+
+- via `wuauserv`
+
+  > [!NOTE|label:references]
+  > - [Error Code 0x800F0954 on Windows 10](https://learn.microsoft.com/en-us/answers/questions/112308/error-code-0x800f0954-on-windows-10)
+  > - [Windows 10 - 1809 - RSAT Toolset - error code of 0x800f0954](https://social.technet.microsoft.com/Forums/en-US/42bfdd6e-f191-4813-9142-5c86a2797c53/windows-10-1809-rsat-toolset-error-code-of-0x800f0954?forum=win10itprogeneral)
+
+  ```powershell
+  $currentWU = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer"
+  Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value 0
+  Restart-Service wuauserv
+  # install
+  Get-WindowsCapability -Name OpenSSH* -Online | Add-WindowsCapability –Online
+  Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value $currentWU
+  Restart-Service wuauserv
+  ```
+
+  ![win openssh 0x800F0954](../../screenshot/win/win-0x800f0954-itempropert.png)
+
+  - or
+    ```powershell
+    $currentWU = Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer"
+    $currentWUAccess = Get-ItemPropertyValue -Path "HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "DisableWindowsUpdateAccess"
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value 0
+    Restart-Service wuauserv
+    # install
+    Get-WindowsCapability -Name OpenSSH* -Online | Add-WindowsCapability –Online
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value $currentWU
+    Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -Name DisableWindowsUpdateAccess -Value $currentWUAccess
+    Restart-Service wuauserv
+    ```
