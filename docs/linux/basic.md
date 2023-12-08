@@ -42,14 +42,14 @@
 {% endhint %}
 
 # rpm & dpkg & brew
-| rpm                                                           | dpkg                                                                                           | brew                                                       |
-|---------------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------|
-| `rpm -qa`                                                     | `dpkg -l`                                                                                      | `brew list`                                                |
-| `rpm -ql sofrwareanme`                                        | `dpkg -L softwarename` <br> `dpkg --listfiles softwarename` <br> `dpkg-qurery -L softwarename` | `brew list softwarename` <br> `brew ls --verbose software` |
-| `rpm -qf /path/to/file` <br> `yum whatprovides /path/to/file` | `dpkg -S /path/to/file`                                                                        |                                                            |
-| `rpm -qip pkgfile.rpm` <br> `rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb` <br> `dpkg -c pkgfile.deb`                                               |                                                            |
-| `rpm -q softwarename` <br> `rpm -qi softwarename`             | `dpkg -l softwarename` <br> `dpkg -s softwarename <br> dpkg -p softwarename`                   | `brew info softwarename`                                   |
-| `rpm -e softwarename`                                         | `dpkg -r softwarename` <br> `dpkg -P softwareanme`                                             | `brew uninstall softwarename`                              |
+| RPM                                                           | DPKG                                                                   | BREW                                           |
+|---------------------------------------------------------------|------------------------------------------------------------------------|------------------------------------------------|
+| `rpm -qa`                                                     | `dpkg -l`                                                              | `brew list`                                    |
+| `rpm -ql sofrwareanme`                                        | `dpkg -L name` <br> `dpkg --listfiles name` <br> `dpkg-qurery -L name` | `brew list name` <br> `brew ls --verbose name` |
+| `rpm -qf /path/to/file` <br> `yum whatprovides /path/to/file` | `dpkg -S /path/to/file`                                                | `brew which-formula name`                      |
+| `rpm -qip pkgfile.rpm` <br> `rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb` <br> `dpkg -c pkgfile.deb`                       |                                                |
+| `rpm -q name` <br> `rpm -qi name`                             | `dpkg -l name` <br> `dpkg -s name` <br> `dpkg -p name`                 | `brew info name`                               |
+| `rpm -e name`                                                 | `dpkg -r name` <br> `dpkg -P name`                                     | `brew uninstall name`                          |
 
 
 
