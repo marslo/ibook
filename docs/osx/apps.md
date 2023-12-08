@@ -18,6 +18,7 @@
   - [list all packages with dependencies](#list-all-packages-with-dependencies)
   - [list all formula size](#list-all-formula-size)
   - [list all formula descriptions](#list-all-formula-descriptions)
+  - [apt-file list](#apt-file-list)
   - [whatprovides](#whatprovides)
 - [tools](#tools)
   - [java](#java)
@@ -1027,7 +1028,48 @@ bash-completion@2: Programmable completion for Bash 4.2+
 ...
 ```
 
+### apt-file list
+
+> [!NOTE|label:references:]
+> - [How to find package for installed file in Brew?](https://stackoverflow.com/a/20040445/2940319)
+
+```bash
+$ brew list git [--verbose]
+# or
+$ brew ls git [--verbose]
+/usr/local/Cellar/git/2.43.0/.bottle/etc/gitconfig
+/usr/local/Cellar/git/2.43.0/bin/git
+/usr/local/Cellar/git/2.43.0/bin/git-cvsserver
+/usr/local/Cellar/git/2.43.0/bin/git-receive-pack
+/usr/local/Cellar/git/2.43.0/bin/git-shell
+/usr/local/Cellar/git/2.43.0/bin/git-upload-archive
+/usr/local/Cellar/git/2.43.0/bin/git-upload-pack
+/usr/local/Cellar/git/2.43.0/bin/scalar
+/usr/local/Cellar/git/2.43.0/etc/bash_completion.d/ (2 files)
+/usr/local/Cellar/git/2.43.0/libexec/git-core/ (195 files)
+/usr/local/Cellar/git/2.43.0/share/doc/ (1025 files)
+/usr/local/Cellar/git/2.43.0/share/git-core/ (163 files)
+/usr/local/Cellar/git/2.43.0/share/gitweb/ (5 files)
+/usr/local/Cellar/git/2.43.0/share/locale/ (19 files)
+/usr/local/Cellar/git/2.43.0/share/man/ (195 files)
+/usr/local/Cellar/git/2.43.0/share/perl5/ (20 files)
+/usr/local/Cellar/git/2.43.0/share/zsh/ (2 files)
+```
+
 ### whatprovides
+#### brew which-formula
+
+> [!NOTE|label:references:]
+> - [Homebrew/homebrew-command-not-found](https://github.com/Homebrew/homebrew-command-not-found)
+
+```bash
+$ brew tap homebrew/command-not-found
+$ brew which-formula ts
+moreutils
+task-spooler
+```
+
+#### brew-whatprovides
 ```bash
 $ cat >> ~/.bash_profile << EOF
 brew-whatprovides() {
