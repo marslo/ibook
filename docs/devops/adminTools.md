@@ -11,6 +11,7 @@
   - [strace](#strace)
   - [sar](#sar)
   - [netcat](#netcat)
+  - [`ip`](#ip)
 - [utility](#utility)
   - [`elinks`](#elinks)
   - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
@@ -55,6 +56,7 @@
 >   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
 >   - [kahun/awesome-sysadmin](https://github.com/kahun/awesome-sysadmin)
 > - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
+> - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
 {% endhint %}
 
 ## network tools
@@ -264,7 +266,6 @@ $ sudo strace -fp $$ -o log &
   nc: connectx to 127.0.0.1 port 28 (tcp) failed: Connection refused
   ```
 
-
 - running simple web server
   ```bash
   $ cat > index.html <<<EOF
@@ -324,6 +325,18 @@ $ sudo strace -fp $$ -o log &
 
 - [reverse proxy with netcat](https://www.baeldung.com/linux/netcat-command#reverse-proxy-with-netcat)
 
+
+### `ip`
+```bash
+$ ip addr show | sed -nE "s/inet\s(.*)\/[0-9]+.*\s(\w+)/\2 \1/p"
+  lo0 127.0.0.1
+  en0 192.168.1.71
+
+# for linux
+$ ip addr show | sed -nE "s/inet\s(.*)\/[0-9]+.*\s(\w+)/\2 \1/p" | column -to ' => '
+lo0 => 127.0.0.1
+en0 => 192.168.1.71
+```
 
 ## utility
 ### `elinks`
@@ -444,6 +457,18 @@ $ elinks https://google.com
 > - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 > - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
 > - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
+> - [* How to search faster in Vim with FZF.vim](https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko)
+> - [* How FZF and ripgrep improved my workflow](https://sidneyliebrand.medium.com/how-fzf-and-ripgrep-improved-my-workflow-61c7ca212861) | [SidOfc/vim-rg-outdated-command.vim](https://gist.github.com/SidOfc/ba43acade7f4a1bf9faf57d16b33616a#file-vim-rg-outdated-command-vim)
+>   ```vim
+>   " fzf.vim now supports this command out of the box
+>   " so this code is no longer needed.
+>   command! -bang -nargs=* Rg
+>     \ call fzf#vim#grep(
+>     \   'rg --column --line-number --hidden --ignore-case --no-heading --color=always '.shellescape(<q-args>), 1,
+>     \   <bang>0 ? fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%')
+>     \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
+>     \   <bang>0)
+>   ```
 > - Fuzzy Completion in Bash
 >   - `$ cat **<tab>`
 >   - `$ unset **<tab>`

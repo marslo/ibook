@@ -892,8 +892,20 @@ $ brew install file-formula
 ```
 
 #### applications(brew, cask and [mas](https://github.com/mas-cli/mas))
+
+> [!NOTE|label:youtube-dl example:]
+> - [devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
+>   ```bash
+>   # save youtube videos from all chrome tabs
+>   $ chrome-cli list links | awk '{ print $2}' | sort -u | grep viewkey >> movies.db
+>
+>   # download youtube videos from all chrome tabs
+>   $ chrome-cli list links | awk '{ print $2}' | grep viewkey | youtube-dl --external-downloader=aria2c --batch-file - # may cause wtf-mode on networking
+>   $ chrome-cli list links | awk '{ print $2}' | grep viewkey | youtube-dl --batch-file -
+>   ```
+
 ```bash
-$ brew tap homebrew/dupes           # Optional
+$ brew tap homebrew/dupes           # optional
 $ brew tap macvim-dev/macvim
 
 $ brew install vim --override-system-vi
@@ -907,7 +919,7 @@ $ brew install mas                  # app tools like appstore
 $ brew install youtube-dl
 
 $ brew cask install firefox
-$ brew cask install google-chrome   # OR $ brew cask install google-chrome-dev
+$ brew cask install google-chrome   # or $ brew cask install google-chrome-dev
 $ brew cask install moom            # instead of mas install 419330170
 $ brew cask install dash
 $ brew cask install little-snitch
@@ -961,7 +973,6 @@ pwSafe.app
 ### list all
 ```bash
 $ brew leaves
-
 # or
 $ brew leaves --installed-on-request
 ```
