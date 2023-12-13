@@ -469,6 +469,9 @@ Docker                    18.09                 Docker           Contains Docker
 
 ### running linux container in windows server
 
+> [!NOTE]
+> - [Linux containers on Windows 10](https://learn.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/linux-containers)
+
 - [by enable experimental features in docker daemon.conf](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
   - Set LCOW_SUPPORTED Variable to 1 for enabled
     ```powershell
@@ -676,6 +679,10 @@ Labels:
 >   - [Docker Engine on Windows](https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/live/virtualization/windowscontainers/manage-docker/configure-docker-daemon.md)
 >   - [Dockerfile on Windows](https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/live/virtualization/windowscontainers/manage-docker/manage-windows-dockerfile.md)
 >   - [Optimize Windows Dockerfiles](https://github.com/MicrosoftDocs/Virtualization-Documentation/blob/live/virtualization/windowscontainers/manage-docker/optimize-windows-dockerfile.md)
+> - [* Dockerfile on Windows](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/manage-windows-dockerfile)
+> - [Optimize Windows Dockerfiles](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/optimize-windows-dockerfile)
+> - [Use containers with the Windows Insider program](https://learn.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/insider-overview)
+> - [Manage Container images on Windows Admin Center](https://learn.microsoft.com/en-us/virtualization/windowscontainers/wac-tooling/wac-manage)
 
 - sample
   ```dockerfile
@@ -827,6 +834,14 @@ Set-VMFirmware -VMName $VMName -FirstBootDevice $DVDDrive
 ```
 
 ## troubleshooting
+
+> [!NOTE]
+> - [Troubleshoot Visual Studio development with Docker](https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/ide/troubleshooting-docker-errors)
+>   - [Docker users group](https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/ide/troubleshooting-docker-errors#docker-users-group)
+> - [Container Tools error messages](https://learn.microsoft.com/en-us/visualstudio/containers/container-tools-error-messages?view=vs-2022)
+> - [microsoft/DockerTools](https://github.com/microsoft/DockerTools)
+> - [Overview of Docker remote development on Windows](https://learn.microsoft.com/en-us/windows/dev-environment/docker/overview)
+
 ### [could not read CA certificate](https://github.com/docker/for-win/issues/1746)
 - solution
   ```powershell
