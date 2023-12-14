@@ -113,13 +113,13 @@ THE SOFTWARE.
 <service>
   <id>jenkins</id>
   <name>jenkins</name>
-  <description>the windows agent for jenkins https://my.jenkins.com</description>
+  <description>the windows agent for jenkins https://jenkins.sample.com</description>
   <!--
     if you'd like to run Jenkins with a specific version of Java, specify a full path to java.exe.
     The following value assumes that you have java in your PATH.
   -->
   <executable>C:\Program Files\Java\jdk-11.0.16.1\bin\java.exe</executable>
-  <arguments>-Xrs  -jar "%BASE%\agent.jar" -jnlpUrl https://my.jenkins.com.com/computer/win-server-01/slave-agent.jnlp -secret c**************************************************************1</arguments>
+  <arguments>-Xrs  -jar "%BASE%\agent.jar" -jnlpUrl https://jenkins.sample.com/computer/win-server-01/slave-agent.jnlp -secret c**************************************************************1</arguments>
   <!--
     interactive flag causes the empty black Java window to be displayed.
     I'm still debugging this.
@@ -135,7 +135,7 @@ THE SOFTWARE.
     NOTE: This option may fail to work correctly (e.g. if Jenkins is located behind HTTPS with untrusted certificate).
     In such case the old agent version will be used; you can replace slave.jar manually or to specify another download URL.
   -->
-  <download from="https://my.jenkins.com.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>
+  <download from="https://jenkins.sample.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>
   <!--
     In the case WinSW gets terminated and leaks the process, we want to abort
     these runaway JAR processes on startup to prevent "Slave is already connected errors" (JENKINS-28492).
@@ -285,7 +285,7 @@ SUCCESS: The process "mmc.exe" with PID 19572 has been terminated.
 ### prepare
 #### download `agent.jar`
 ```batch
-> curl -s -o j:\jenkins\agent.jar https://my.jenkins.com/jnlpJars/agent.jar
+> curl -s -o j:\jenkins\agent.jar https://jenkins.sample.com/jnlpJars/agent.jar
 ```
 
 #### download `winws.exe` and rename
@@ -327,15 +327,15 @@ J:\jenkins> cat > j:\jenkins\jenkins-agent.xml << EOF
 <service>
   <id>jenkins-agent</id>
   <name>jenkins-agent</name>
-  <description>the jenkins agent process connect to https://my.jenkins.com.</description>
+  <description>the jenkins agent process connect to https://jenkins.sample.com.</description>
   <!-- to specific the java version -->
   <executable>C:\Program Files\Java\jdk-11.0.16.1\bin\java.exe</executable>
   <!-- get from jenkins agent page -->
-  <arguments>-jar %BASE%\agent.jar -jnlpUrl https://my.jenkins.com/computer/windows-agent/jenkins-agent.jnlp -secret f**************************************************************8 -workDir "J:\jenkins"</arguments>
+  <arguments>-jar %BASE%\agent.jar -jnlpUrl https://jenkins.sample.com/computer/windows-agent/jenkins-agent.jnlp -secret f**************************************************************8 -workDir "J:\jenkins"</arguments>
   <log mode="roll" />
   <onfailure action="restart" />
   <!-- download the Remoting version provided by the Jenkins master. -->
-  <download from="https://my.jenkins.com.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>
+  <download from="https://jenkins.sample.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>
 </service>
 EOF
 ```
@@ -345,9 +345,9 @@ EOF
 >
 >   ![onfailure action="restart"](../../screenshot/jenkins/config/winsw-service-resrart.png)
 >
-> - `<download from="https://my.jenkins.com.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>`:
+> - `<download from="https://jenkins.sample.com/jnlpJars/agent.jar" to="%BASE%\agent.jar"/>`:
 >
->   `2022-11-30 06:31:38,022 INFO  - Downloading: https://my.jenkins.com/jnlpJars/agent.jar to J:\jenkins\agent.jar. failOnError=False`
+>   `2022-11-30 06:31:38,022 INFO  - Downloading: https://jenkins.sample.com/jnlpJars/agent.jar to J:\jenkins\agent.jar. failOnError=False`
 
 
 ### install and start agent service
@@ -437,9 +437,9 @@ SERVICE_NAME: jenkins
 2022-11-30 06:31:37,166 INFO  - Starting service 'jenkins (jenkins)'...
 2022-11-30 06:31:37,903 DEBUG - Starting WinSW in service mode
 2022-11-30 06:31:37,940 INFO  - Service 'jenkins (jenkins)' started successfully.
-2022-11-30 06:31:38,022 INFO  - Downloading: https://my.jenkins.com/jnlpJars/agent.jar to J:\jenkins\agent.jar. failOnError=False
-2022-11-30 06:31:38,945 INFO  - Skipped downloading unmodified resource 'https://my.jenkins.com/jnlpJars/agent.jar'
-2022-11-30 06:31:39,029 INFO  - Starting C:\Program Files\Java\jdk-11.0.16.1\bin\java.exe -jar agent.jar -jnlpUrl https://my.jenkins.com/computer/windows-agent/jenkins-agent.jnlp -secret f**************************************************************8 -workDir "J:\jenkins"
+2022-11-30 06:31:38,022 INFO  - Downloading: https://jenkins.sample.com/jnlpJars/agent.jar to J:\jenkins\agent.jar. failOnError=False
+2022-11-30 06:31:38,945 INFO  - Skipped downloading unmodified resource 'https://jenkins.sample.com/jnlpJars/agent.jar'
+2022-11-30 06:31:39,029 INFO  - Starting C:\Program Files\Java\jdk-11.0.16.1\bin\java.exe -jar agent.jar -jnlpUrl https://jenkins.sample.com/computer/windows-agent/jenkins-agent.jnlp -secret f**************************************************************8 -workDir "J:\jenkins"
 2022-11-30 06:31:39,066 INFO  - Started process 4928
 2022-11-30 06:31:39,079 DEBUG - Forwarding logs of the process System.Diagnostics.Process (java) to WinSW.RollingLogAppender
 2022-11-30 06:31:44,302 DEBUG - Starting WinSW in console mode

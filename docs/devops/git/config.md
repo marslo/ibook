@@ -50,12 +50,14 @@
 >   ```
 > - [MHMDhub/Install Git from source](https://gist.github.com/MHMDhub/d2d1a857fc5af5b18d6fff70fb4489b5)
 > - [How To Install Git from Source on Ubuntu 20.04 [Quickstart]](https://www.digitalocean.com/community/tutorials/how-to-install-git-from-source-on-ubuntu-20-04-quickstart)
+> - [#1053: Adjusting the documentation - 1.5 installing git - getopt package](https://github.com/progit/progit2/issues/1053)
 
 - dependencies
 
   > [!NOTE|label:references:]
   > - [* iMarslo : linux troubleshooting](../../linux/troubleshooting.html)
   > - [1.5 Per Iniziare - Installing Git](https://git-scm.com/book/it/v2/Per-Iniziare-Installing-Git)
+  > - [Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
   > - osx
   >   - [* tools-scripts/build-darwin](https://github.com/gnustep/tools-scripts/blob/master/build-darwin)
   >   - [Install Git on Mac OS X](https://www.atlassian.com/git/tutorials/install-git)
@@ -72,6 +74,8 @@
     $ sudo apt-get install -y dh-autoreconf libcurl4-openssl-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
 
     # centos/rhel
+    $ sudo dnf config-manager --set-enabled powertools
+    $ sudo dnf install epel-release epel-next-release
     $ sudo dnf install -y dh-autoreconf libcurl-devel curl-devel expat-devel gettext-devel openssl-devel perl-devel zlib-devel
 
     # osx
@@ -89,7 +93,7 @@
     # centos/rhel
     $ sudo dnf install -y asciidoc xmlto docbook2X docbook-style-xsl
     # or
-    $ sudo dnf install -y --enablerepo=*epel* install docbook2X
+    $ sudo dnf install -y --enablerepo=*epel* docbook2X
     $ sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
 
     # osx
@@ -103,6 +107,8 @@
     $ sudo apt-get install -y install-info
 
     # centos/rhel
+    $ sudo dnf install -y util-linux
+    # deprecated
     $ sudo dnf install -y getopt
 
     # osx
@@ -113,6 +119,9 @@
     ```bash
     # audio output
     $ apt install libao-dev
+
+    # centos
+    $ sudo dnf install -y libao libao-devel
 
     # osx
     $ brew install libao
