@@ -450,6 +450,8 @@ $ elinks https://google.com
 >     - [layout](https://qmacro.org/blog/posts/2021/02/02/fzf-the-basics-part-1-layout/)
 >     - [search results](https://qmacro.org/blog/posts/2021/02/07/fzf-the-basics-part-2-search-results/)
 >   - [examples](https://github.com/junegunn/fzf/wiki/examples)
+>     - [Man pages](https://github.com/junegunn/fzf/wiki/Examples#man-pages)
+>     - [Git](https://github.com/junegunn/fzf/wiki/Examples#git)
 >   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
 > - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
 > - [Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)

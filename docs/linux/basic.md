@@ -530,7 +530,7 @@ $ yum groupremove <groupName>
 
   > [!TIP|label:references:]
   > - [How To enable the EPEL Repository on RHEL 8 / CentOS 8 Linux](https://linuxconfig.org/redhat-8-epel-install-guide)
-  > - [Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
+  > - [* Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
   > - [404 error trying to install EPEL](https://access.redhat.com/discussions/5473561)
   > - [Index of /epel/8/Everything](https://mirrors.iu13.net/epel/8/Everything/)
 
@@ -540,9 +540,14 @@ $ yum groupremove <groupName>
   $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   # centos 8
   $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+  # centos 9
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
 
   # install via cmd
   $ sudo yum [re]install -y epel-release yum-utils
+  # or
+  $ sudo dnf config-manager --set-enabled powertools
+  $ sudo dnf install -y epel-release epel-next-release
   ```
 
   - info
@@ -574,6 +579,40 @@ $ yum groupremove <groupName>
     Repo-expire        : 172,800 second(s) (last: Thu 12 Oct 2023 05:16:56 PM PDT)
     Repo-filename      : /etc/yum.repos.d/epel.repo
     Total packages: 9,872
+
+    $ dnf repoinfo epel-next
+    Last metadata expiration check: 0:10:35 ago on Wed 13 Dec 2023 03:48:24 PM PST.
+    Repo-id            : epel-next
+    Repo-name          : Extra Packages for Enterprise Linux 8 - Next - x86_64
+    Repo-status        : enabled
+    Repo-revision      : 1693098199
+    Repo-updated       : Sat 26 Aug 2023 06:03:39 PM PDT
+    Repo-pkgs          : 40
+    Repo-available-pkgs: 40
+    Repo-size          : 87 M
+    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-next-8&arch=x86_64&infra=$infra&content=$contentdir
+      Updated          : Wed 13 Dec 2023 03:48:22 PM PST
+    Repo-baseurl       : http://mirrors.wcupa.edu/epel/next/8/Everything/x86_64/ (126 more)
+    Repo-expire        : 172,800 second(s) (last: Wed 13 Dec 2023 03:48:22 PM PST)
+    Repo-filename      : /etc/yum.repos.d/epel-next.repo
+    Total packages: 40
+
+    $ dnf repoinfo epel-modular
+    Last metadata expiration check: 0:11:06 ago on Wed 13 Dec 2023 03:48:24 PM PST.
+    Repo-id            : epel-modular
+    Repo-name          : Extra Packages for Enterprise Linux Modular 8 - x86_64 - RETIRED
+    Repo-status        : enabled
+    Repo-revision      : 1663033591
+    Repo-updated       : Mon 12 Sep 2022 06:46:46 PM PDT
+    Repo-pkgs          : 290
+    Repo-available-pkgs: 0
+    Repo-size          : 835 M
+    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-modular-8&arch=x86_64&infra=$infra&content=centos
+      Updated          : Wed 13 Dec 2023 03:48:21 PM PST
+    Repo-baseurl       : http://opencolo.mm.fcix.net/epel/8/Modular/x86_64/ (189 more)
+    Repo-expire        : 172,800 second(s) (last: Wed 13 Dec 2023 03:48:21 PM PST)
+    Repo-filename      : /etc/yum.repos.d/epel-modular.repo
+    Total packages: 290
     ```
 
   - [We can workaround this by replacing the $releasever variable with 8](https://access.redhat.com/discussions/5473561#comment-2119161)
