@@ -13,6 +13,7 @@
   - [installing from local packages](#installing-from-local-packages)
 - [config](#config)
   - [list all configs](#list-all-configs)
+- [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -232,3 +233,65 @@ user:
   For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
   For variant 'site', will try loading '/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/pip.conf'
   ```
+
+## troubleshooting
+
+- `error: externally-managed-environment`
+
+  > [!NOTE|label:references:]
+  > - [pip(3) install，完美解决 externally-managed-environment](https://www.yaolong.net/article/pip-externally-managed-environment/)
+  > - [Python教程：解决pip安装包时报错：error: externally-managed-environment This environment is externally managed](https://blog.csdn.net/a772304419/article/details/133469123)
+  > - [How do I solve "error: externally-managed-environment" every time I use pip 3?](https://stackoverflow.com/a/76641565/2940319)
+  > - [How to Fix the pip "externally-managed-environment" Error on Linux](https://www.makeuseof.com/fix-pip-error-externally-managed-environment-linux/)
+
+  - issue
+    ```bash
+    $ pip install pipx
+    error: externally-managed-environment
+
+    × This environment is externally managed
+    ╰─> To install Python packages system-wide, try brew install
+        xyz, where xyz is the package you are trying to
+        install.
+
+        If you wish to install a non-brew-packaged Python package,
+        create a virtual environment using python3 -m venv path/to/venv.
+        Then use path/to/venv/bin/python and path/to/venv/bin/pip.
+
+        If you wish to install a non-brew packaged Python application,
+        it may be easiest to use pipx install xyz, which will manage a
+        virtual environment for you. Make sure you have pipx installed.
+
+    note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+    hint: See PEP 668 for the detailed specification.
+    ```
+  - solution
+    ```bash
+    $ mv $(brew --prefix python@3.12)/Frameworks/Python.framework/Versions/3.12/lib/python3.12/EXTERNALLY-MANAGED{,.bak}
+    ```
+
+- `Skipping ... due to invalid metadata entry 'name'`
+
+  > [!NOTE|label:info]
+  > - [changelog : 23.2 (2023-07-15)](https://pip.pypa.io/en/stable/news/#v23-2)
+  > Deprecate support for eggs for Python 3.11 or later, when the new importlib.metadata backend is used to load distribution metadata. This only affects the egg distribution format (with the .egg extension); distributions using the .egg-info metadata format (but are not actually eggs) are not affected. For more information about eggs, see [relevant section in the setuptools documentation](https://setuptools.pypa.io/en/stable/deprecated/python_eggs.html)
+
+  - solution
+    ```bash
+    $ pip list
+    WARNING: Skipping /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.egg-info due to invalid metadata entry 'name'
+
+    $ pip unisntall six
+    $ rm -rf /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.egg-info
+    $ pip install six
+    ```
+
+- `has inconsistent version`
+
+  > [!NOTE|label:references:]
+  > - [pip has problems with metadata](https://stackoverflow.com/a/68126941/2940319)
+
+  - solution
+    ```bash
+    $ python -m pip install --upgrade --no-cache-dir --use-deprecated=legacy-resolver <your_package>
+    ```

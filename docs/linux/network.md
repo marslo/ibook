@@ -257,6 +257,7 @@ PORT     STATE SERVICE REASON
 ### iptables
 
 > [!NOTE|label:references:]
+> - [Linux系统运维: Iptables 应用](https://www.yaolong.net/article/linux-ops-iptables/)
 > - [How to save/backup existing iptables rules to a file – Iptables commands](https://www.crybit.com/how-to-save-current-iptables-rules/)
 > - [How to Backup Iptables Configuration](https://elearning.wsldp.com/pcmagazine/backup-iptables-configuration/)
 > - [What's the difference between PREROUTING and FORWARD in iptables?](https://askubuntu.com/a/579242/92979)
@@ -440,6 +441,10 @@ traceroute to 1.2.3.4 (1.2.3.4), 30 hops max, 60 byte packets
 ```
 
 ### No route to host
+
+> [!NOTE|label:references:]
+> - [Linux系统运维: 防火墙 - Firewalld](https://www.yaolong.net/article/linux-ops-firewalld/)
+
 ```bash
 $ nc -zv 1.2.3.4 2376
 nc: connect to 1.2.3.4 port 2376 (tcp) failed: No route to host

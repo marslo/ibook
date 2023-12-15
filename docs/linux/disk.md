@@ -59,6 +59,7 @@ $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_6
 > - [Mounting a Samba share](https://apple.stackexchange.com/a/444568/254265)
 > - [如何在 macOS 中停用 SMB 1 或 NetBIOS](https://support.apple.com/zh-tw/HT211927)
 > - [Performance issues with SMB 2 and 3 connections](http://www.centralit-helpdesk.co.uk/index.php?pg=kb.page&id=240)
+> - [Linux系统运维: Samba 应用](https://www.yaolong.net/article/linux-ops-samba/)
 
 #### macos
 - via GUI :
