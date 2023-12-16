@@ -974,6 +974,12 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
 ### [`fd`](https://github.com/sharkdp/fd)
 
+> [!NOTE|label:references:]
+> - [Find Files With the fd Command](https://www.linode.com/docs/guides/finding-files-with-fd-command/)
+> - [How to Use the fd Command on Linux](https://www.howtogeek.com/682244/how-to-use-the-fd-command-on-linux/)
+> - [How to Find Files with fd Command in Linux](https://www.atlantic.net/vps-hosting/how-to-find-files-with-fd-command-in-linux/)
+> - [Fd – The Best Alternative to ‘Find’ Command for Quick File Searching](https://www.tecmint.com/fd-alternative-to-find-command/)
+
 - install
   ```bash
   # osx
@@ -1011,9 +1017,11 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
 - crontab for delete '*\.DS_*'
   ```bash
-  /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs rm
+  /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs -r rm
   # or
-  /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs rm
+  /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r rm
+  # or
+  /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r rm
   ```
 
 ### [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
@@ -1086,7 +1094,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
 #### crontab for delete '*\.DS_*'
 ```bash
-/usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs rm
+/usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs -r rm
 ```
 
 #### [search in dotfiles with ripgrep](https://til.hashrocket.com/posts/ezeddwpiso-search-in-dotfiles-with-ripgrep)

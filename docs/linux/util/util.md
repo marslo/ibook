@@ -158,6 +158,7 @@ text/plain
     source "${iRCHOME}/.imac"
   }
   ```
+
 - [come from](https://unix.stackexchange.com/a/322887/29178)
   ```bash
   $ shopt -s extdebug
@@ -180,6 +181,23 @@ text/plain
     $ bash --debugger
     $ declare -F _docker
     _docker 5011 /usr/share/bash-completion/completions/docker
+    ```
+
+- find alias come from
+
+  > [!NOTE|label:references:]
+  > - [Is it possible to check where an alias was defined?](https://unix.stackexchange.com/a/322468/29178)
+
+  ```bash
+  $ bash -ixlc : 2>&1 | grep ...
+  $ zsh -ixc : 2>&1 | grep ...
+  ```
+
+  - i.e.:
+    ```bash
+    $ bash -ixlc : 2>&1 | grep 'clr='
+        /Users/marslo/.marslo/.alias/docker::16: alias 'dclr=docker system prune -a -f'
+        /Users/marslo/.marslo/.alias/utils::22: alias clr=clear
     ```
 
 ### Get all google website
