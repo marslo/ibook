@@ -6,10 +6,9 @@
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
 - [create app](#create-app)
-  - [create app via Automator.app](#create-app-via-automatorapp)
-  - [create script](#create-script)
-  - [modify `Info.plist`](#modify-infoplist)
-  - [additional](#additional)
+  - [groovyConsole](#groovyconsole)
+  - [python IDLE](#python-idle)
+  - [create dmg](#create-dmg)
 - [add snippets for input](#add-snippets-for-input)
   - [enable Technical Symbols](#enable-technical-symbols)
   - [and snippets](#and-snippets)
@@ -83,12 +82,22 @@ $ <cmd> | pbcopy
 
 ## create app
 
+> [!NOTE|label:references:]
+> - [* splaisan/appify.sh](https://gist.github.com/splaisan/e4ebae891f6f26f86e75)
+> - [advorak/appify.sh](https://gist.github.com/advorak/1403124)
+> - [pypi: mac-appify](https://pypi.org/project/mac-appify/)
+> - [9 Automator Apps You Can Create in Under 5 Minutes](https://www.makeuseof.com/tag/10-automator-applications-create-5-minutes-mac/)
+> - [How to create an OSX Application to wrap a call to a shell script?](https://apple.stackexchange.com/a/201309/254265)
+> - [CREATE YOUR OWN CUSTOM ICONS IN OS X 10.7.5 OR LATER [UPDATED]](https://eshop.macsales.com/blog/28492-create-your-own-custom-icons-in-10-7-5-or-later/)
+
+### groovyConsole
+
 > [!NOTE|label:expection]
 > case: run `groovyConsole` from Spolite or Alfred
-> reference:
-> - [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
+> - reference:
+>   - [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
 
-### create app via Automator.app
+#### via Automator.app
 
 > [!NOTE|label:tips]
 > Automator.app will create whole bunch of necessary files for app. only need to replace the `CFBundleExecutable` filename
@@ -101,7 +110,7 @@ $ <cmd> | pbcopy
 
   ![Automator.app » save to an app](../screenshot/osx/runable-app-3.png)
 
-### create script
+#### via script
 
 > [!NOTE|label:tips:]
 > - get standalone commands for the script
@@ -240,7 +249,7 @@ $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
   ![Automator.app » show in Alfred](../screenshot/osx/runable-app-4.png)
 
 
-### modify `Info.plist`
+#### modify `Info.plist`
 ```bash
 $ vim groovyConsole.app/Contents/Info.plist
 ...
@@ -263,19 +272,127 @@ $ vim groovyConsole.app/Contents/Info.plist
   <string>com.apple.automator.groovyConsole</string>
   ```
 
-### additional
-#### set the icon for new app
-> optional
+#### additional
+- set the icon for new app
 
-```bash
-$ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
-```
-- or
+  > optional
+
   ```bash
-  $ ln -sf /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources/groovy.icns
+  $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
+  ```
+  - or
+    ```bash
+    $ ln -sf /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources/groovy.icns
+    ```
+
+### python IDLE
+
+#### via automator.app
+- script
+  ```bash
+  #/usr/bin/env bash
+
+  PYTHON_SHORT_VERSION=$(/usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
+  /usr/bin/open "$(/usr/local/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app
   ```
 
-#### create dmg
+  ![script in automator.app](../screenshot/osx/pythonIdle-automator.png)
+
+- icon
+  ```bash
+  $ PYTHON_SHORT_VERSION=$(/usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
+  $ cp "$(/usr/local/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app/Contents/Resources/IDLE.icns IDLE.app/Contents/Resources/
+
+  # modify IDLE.app/Contents/Info.plist
+  <key>CFBundleIconFile</key>
+  <string>IDLE.icns</string>
+
+  ## original
+  <key>CFBundleIconFile</key>
+  <string>ApplicationStub</string>
+  ```
+
+  - others
+    ```bash
+    $ cat IDLE.app/Contents/Info.plist
+    <key>CFBundleGetInfoString</key>
+    <string>3.11.6, © 2001-2023 Python Software Foundation</string>
+    <key>CFBundleIconFile</key>
+    <string>IDLE.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>org.python.IDLE</string>
+    ```
+
+#### via appify
+
+> [!NOTE|label:references:]
+> - [* splaisan/appify.sh](https://gist.github.com/splaisan/e4ebae891f6f26f86e75)
+> - [advorak/appify.sh](https://gist.github.com/advorak/1403124)
+
+- shell script
+  ```bash
+  $ cat > ~/IDLE << EOF
+  #!/usr/bin/env bash
+
+  PYTHON_SHORT_VERSION=$(/usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
+  /usr/bin/open "$(/usr/local/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app
+  EOF
+  ```
+
+- create app via appify
+  ```bash
+  $ icon=$(brew --prefix python@3.12)/IDLE\ 3.app/Contents/Resources/IDLE.icns
+  $ ./appify.sh -i ${icon} -s IDLE -n IDLE
+  $ mv IDLE.app /Applications
+  ```
+
+  ![IDLE.app](../screenshot/osx/pythonIdle-runable.png)
+
+- more:
+  - Info.plist
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>CFBundleExecutable</key>
+      <string>IDLE</string>
+      <key>CFBundleGetInfoString</key>
+      <string>IDLE</string>
+      <key>CFBundleIconFile</key>
+      <string>IDLE</string>
+      <key>CFBundleName</key>
+      <string>IDLE</string>
+      <key>CFBundlePackageType</key>
+      <string>APPL</string>
+      <key>CFBundleIdentifier</key>
+      <string>org.python.IDLE</string>
+    </dict>
+    </plist>
+    ```
+
+  - create dmg
+    ```bash
+    $ hdiutil create -volname IDLE -srcfolder ~/Desktop/IDLE.app -ov IDLE.dmg
+    ....
+    created: /Users/marslo/Desktop/IDLE.dmg
+    ```
+
+  - change default python3
+    ```bash
+    $ ln -sf /usr/local/bin/python3.12        /usr/local/bin/python3
+    $ ln -sf /usr/local/bin/python3.12-config /usr/local/bin/python3-config
+
+    # or
+    $ brew unlink python@3.11
+    $ brew unlink python@3.12
+    $ brew link --force python@3.12
+
+    # or
+    $ brew link --force --overwrite python@3.12
+    ```
+
+### create dmg
 ```bash
 $ hdiutil create -volname 'groovyConsole' \
                  -srcfolder ~/Desktop/groovyConsole.app \
