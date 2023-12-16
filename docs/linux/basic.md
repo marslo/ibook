@@ -17,6 +17,7 @@
     - [sort result via human-readable format](#sort-result-via-human-readable-format)
   - [others](#others)
     - [`you have new mail`](#you-have-new-mail)
+    - [crontab](#crontab)
 - [centos](#centos)
   - [yum](#yum)
     - [enable or disable repo](#enable-or-disable-repo)
@@ -450,6 +451,48 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
   ? delete *
   No applicable messages.
   ? q
+  ```
+
+  - or
+    ```bash
+    $ mail -N
+    ? d *
+    ? quit
+    ```
+
+### crontab
+
+> [!NOTE|label:references:]
+> - [Linux / UNIX Crontab File Location](https://www.cyberciti.biz/faq/where-is-the-crontab-file/)
+
+- macos
+  ```bash
+  $ sudo ls -Altrh /usr/lib/cron/tabs/<USERNAME>
+  ```
+
+- freebsd/openbsd/netbsd
+  ```bash
+  $ sudo ls -Altrh /var/cron/tabs/<USERNAME>
+  ```
+
+- centos/rhel/fedora/scientific/rocky/alma linux
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/<USERNAME>
+  ```
+
+- debian/ubuntu/mint linux
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
+  ```
+
+- p-ux unix
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
+  ```
+
+- ibm aix unix
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/<USERNAME>
   ```
 
 # centos

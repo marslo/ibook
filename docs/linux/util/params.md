@@ -6,15 +6,20 @@
 - [getopts with long option](#getopts-with-long-option)
   - [additional params on `--`](#additional-params-on---)
 - [shift](#shift)
+  - [shift with uncertain params](#shift-with-uncertain-params)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!TIP|label:see also:]
+> - [* iMarslo: parameter substitution](../../cheatsheet/bash/sugar.html#parameter-substitution)
 
 ## pass self parameters to another script
 
 > [!NOTE]
 > - objective:
->   `$ ./b.sh 1 2 3 4 5` -> `$ ./a.sh 2 3 4 5`
+>   ````
+>   $ ./b.sh 1 2 3 4 5` -> $ ./a.sh 2 3 4 5
+>   ```
 
 - b.sh
   ```bash
@@ -129,6 +134,7 @@ echo """
    prop : ${prop}
 """
 ```
+
 - result
   ```bash
   $ ./longopts.sh -h
@@ -194,7 +200,6 @@ $ ./param.sh -v -- -m '256Gi' --author 'marslo'
   AOPT          : -m 256Gi --author marslo
 ```
 
-
 ## shift
 ```bash
 until [ -z "$1" ]; do # Until all parameters used up
@@ -208,4 +213,43 @@ $@  : 2 3 4 5
 $@  : 3 4 5
 $@  : 4 5
 $@  : 5
+```
+
+### shift with uncertain params
+```bash
+echo '---------------- before shift -------------------'
+echo ".. \$# : $#"
+echo ".. \$@ : $@"
+echo ".. \$* : $*"
+
+echo '---------------- after shift -------------------'
+opt=''
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -*) opt+="$1 "; shift;;
+     *) break            ;;
+  esac
+done
+
+echo ".. \$#   : $#"
+echo ".. \$@   : $@"
+echo ".. \$*   : $*"
+echo ".. \$opt : $opt"
+
+if [[ 0 = "$#" ]]; then
+  echo -e "\033[0;33mERROR: must provide at least one non-opt param\033[0m"
+  exit 2
+elif [[ 1 = "$#" ]]; then
+  path=''
+  params="$1"
+else
+  path=${*: -1}
+  params=${*: 1:$#-1}
+fi
+
+echo '---------------- result -------------------'
+echo ">> opt    : ${opt}"
+echo ">> params : ${params}"
+echo ">> path   : ${path}"
 ```
