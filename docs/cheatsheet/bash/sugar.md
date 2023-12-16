@@ -168,6 +168,7 @@ $ date | wc
 {% hint style='tip' %}
 > reference:
 > - [10.2. Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
+> - [* iMarslo: params](../../linux/util/params.html)
 {% endhint %}
 
 |          EXPR          | DESCRIPTION                                               |
@@ -199,6 +200,119 @@ $ date | wc
 |       `${@: -2:1}`       | <pre><code>                       p5    </code></pre> |
 | `${*: -1}` or `${@: $#}` | <pre><code>                          p6 </code></pre> |
 |      `${@: 1:$#-1}`      | <pre><code>           p1 p2 p3 p4 p5    </code></pre> |
+
+- sample with uncertain parameters
+
+  ```bash
+  local opt=''
+  local loop=true
+  local path params
+
+  while ${loop} && [[ $# -gt 0 ]]; do
+    case "$1" in
+      -*) opt+="$1 "; shift;;
+       *) loop=false       ;;
+    esac
+  done
+
+  if [[ 1 = "$#" ]]; then
+    path=''
+    params="$1"
+  else
+    path=${*: -1}
+    params=${*:1:$#-1}
+  fi
+  ```
+
+  <!--sec data-title="sample script c.sh" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  echo '---------------- before shift -------------------'
+  echo ".. \$# : $#"
+  echo ".. \$@ : $@"
+  echo ".. \$* : $*"
+
+  echo '---------------- after shift -------------------'
+  opt=''
+  ss=''
+  loop=true
+
+  while $loop && [[ $# -gt 0 ]]; do
+    case "$1" in
+      -*) opt+="$1 "; shift;;
+       *) loop=false       ;;
+    esac
+  done
+
+  echo ".. \$#   : $#"
+  echo ".. \$@   : $@"
+  echo ".. \$*   : $*"
+  echo ".. \$opt : $opt"
+
+  if [[ 0 = "$#" ]]; then
+    echo -e "\033[0;33mERROR: must provide at least one non-opt param\033[0m"
+    exit 2
+  elif [[ 1 = "$#" ]]; then
+    path=''
+    params="$1"
+  else
+    path=${*: -1}
+    params=${*:1:$#-1}
+  fi
+
+  echo '---------------- result -------------------'
+  echo ">> opt    : ${opt}"
+  echo ">> params : ${params}"
+  echo ">> path   : ${path}"
+  ```
+  <!--endsec-->
+
+  <!--sec data-title="result" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ ./c.sh -1 -2 --3-4 a b c d e
+  ---------------- before shift -------------------
+  .. $# : 8
+  .. $@ : -1 -2 --3-4 a b c d e
+  .. $* : -1 -2 --3-4 a b c d e
+  ---------------- after shift -------------------
+  .. $#   : 5
+  .. $@   : a b c d e
+  .. $*   : a b c d e
+  .. $opt : -1 -2 --3-4
+  .. $ss  : a b c d e
+  ---------------- result -------------------
+  >> opt    : -1 -2 --3-4
+  >> params : a b c d
+  >> path   : e
+
+  $ ./c.sh aa bb
+  ---------------- before shift -------------------
+  .. $# : 2
+  .. $@ : aa bb
+  .. $* : aa bb
+  ---------------- after shift -------------------
+  .. $#   : 2
+  .. $@   : aa bb
+  .. $*   : aa bb
+  .. $opt :
+  .. $ss  : aa bb
+  ---------------- result -------------------
+  >> opt    :
+  >> params : aa
+  >> path   : bb
+
+  $ ./c.sh -1
+  ---------------- before shift -------------------
+  .. $# : 1
+  .. $@ : -1
+  .. $* : -1
+  ---------------- after shift -------------------
+  .. $#   : 0
+  .. $@   :
+  .. $*   :
+  .. $opt : -1
+  ERROR: must provide at least one non-opt param
+  ```
+  <!--endsec-->
 
 ## string manipulations
 

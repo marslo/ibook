@@ -1009,6 +1009,13 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   bin/ifunc.sh
   ```
 
+- crontab for delete '*\.DS_*'
+  ```bash
+  /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs rm
+  # or
+  /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs rm
+  ```
+
 ### [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
 - install
   ```bash
@@ -1020,6 +1027,10 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```
 
 ### [`rg`](https://github.com/BurntSushi/ripgrep) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
+
+> [!NOTE]
+> - [#193: [Question] how to search by filenames only?](https://github.com/BurntSushi/ripgrep/issues/193#issuecomment-775059326)
+> - [How can I recursively find all files in current and subfolders based on wildcard matching?](https://stackoverflow.com/a/50840902/2940319)
 
 - install
   ```bash
@@ -1072,6 +1083,11 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     -SIMD -AVX (compiled)
     +SIMD +AVX (runtime)
     ```
+
+#### crontab for delete '*\.DS_*'
+```bash
+/usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs rm
+```
 
 #### [search in dotfiles with ripgrep](https://til.hashrocket.com/posts/ezeddwpiso-search-in-dotfiles-with-ripgrep)
 
