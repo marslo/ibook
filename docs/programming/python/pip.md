@@ -274,7 +274,7 @@ user:
 
   > [!NOTE|label:info]
   > - [changelog : 23.2 (2023-07-15)](https://pip.pypa.io/en/stable/news/#v23-2)
-  > Deprecate support for eggs for Python 3.11 or later, when the new importlib.metadata backend is used to load distribution metadata. This only affects the egg distribution format (with the .egg extension); distributions using the .egg-info metadata format (but are not actually eggs) are not affected. For more information about eggs, see [relevant section in the setuptools documentation](https://setuptools.pypa.io/en/stable/deprecated/python_eggs.html)
+  >   Deprecate support for eggs for Python 3.11 or later, when the new importlib.metadata backend is used to load distribution metadata. This only affects the egg distribution format (with the .egg extension); distributions using the .egg-info metadata format (but are not actually eggs) are not affected. For more information about eggs, see [relevant section in the setuptools documentation](https://setuptools.pypa.io/en/stable/deprecated/python_eggs.html)
 
   - solution
     ```bash
@@ -283,6 +283,8 @@ user:
 
     $ pip unisntall six
     $ rm -rf /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.egg-info
+    # if necessary
+    $ rm -rf /usr/local/lib/python3.12/site-packages/six-1.16.0-py3.12.dist-info
     $ pip install six
     ```
 

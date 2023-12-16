@@ -364,7 +364,8 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
 ```
 
 ## `strace`
-> reference [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
+> [!NOTE|label:reference]
+> - [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
 
 # basic commands
 ## `du`
@@ -464,42 +465,92 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 
 > [!NOTE|label:references:]
 > - [Linux / UNIX Crontab File Location](https://www.cyberciti.biz/faq/where-is-the-crontab-file/)
+> - [* cron.help](https://cron.help/)
+>   - [Cron Examples](https://crontab.guru/examples.html)
+> - [Cron Jobs: The Complete Guide for 2023](https://cronitor.io/guides/cron-jobs?utm_source=crontabguru&utm_campaign=cron_reference)
 
-- macos
+- format
   ```bash
-  $ sudo ls -Altrh /usr/lib/cron/tabs/<USERNAME>
+  *    *    *    *    *   /home/user/bin/somecommand.sh
+  |    |    |    |    |            |
+  |    |    |    |    |    Command or Script to execute
+  |    |    |    |    |
+  |    |    |    | Day of week(0-6 | Sun-Sat)
+  |    |    |    |
+  |    |    |  Month(1-12)
+  |    |    |
+  |    |  Day of Month(1-31)
+  |    |
+  |   Hour(0-23)
+  |
+  Min(0-59)
   ```
 
-- freebsd/openbsd/netbsd
-  ```bash
-  $ sudo ls -Altrh /var/cron/tabs/<USERNAME>
-  ```
+- tips
+  - every odd hours
+    ```bash
+    0 1-23/2 * * *
+    ```
+  - every even hours
+    ```bash
+    0 */2 * * *
+    ```
 
-- centos/rhel/fedora/scientific/rocky/alma linux
-  ```bash
-  $ sudo ls -Altrh /var/spool/cron/<USERNAME>
-  ```
+- sample
+  - delete *.DS_*
+    ```bash
+    15 */2 * * 1-5 /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME | xargs -r rm
+    # or
+    30 */2 * * 1-5 /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r rm
+    # or
+    30 */2 * * 1-5 /usr/local/bin/rg --hidden --smart-case --color=never --files "$HOME" -g '*\.DS_*' | xargs -r rm
+    ```
 
-- debian/ubuntu/mint linux
-  ```bash
-  $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
-  ```
+  - flush disk cache
+    ```bash
+    0 * * * * /usr/sbin/purge
+    ```
 
-- p-ux unix
-  ```bash
-  $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
-  ```
+  - flush DNS
+    ```bash
+    0 1-23/6 * * * /usr/bin/killall -HUP mDNSResponder
+    ```
 
-- ibm aix unix
-  ```bash
-  $ sudo ls -Altrh /var/spool/cron/<USERNAME>
-  ```
+- localtion
+  - macos
+    ```bash
+    $ sudo ls -Altrh /usr/lib/cron/tabs/<USERNAME>
+    ```
+
+  - freebsd/openbsd/netbsd
+    ```bash
+    $ sudo ls -Altrh /var/cron/tabs/<USERNAME>
+    ```
+
+  - centos/rhel/fedora/scientific/rocky/alma linux
+    ```bash
+    $ sudo ls -Altrh /var/spool/cron/<USERNAME>
+    ```
+
+  - debian/ubuntu/mint linux
+    ```bash
+    $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
+    ```
+
+  - p-ux unix
+    ```bash
+    $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
+    ```
+
+  - ibm aix unix
+    ```bash
+    $ sudo ls -Altrh /var/spool/cron/<USERNAME>
+    ```
 
 # centos
 ## yum
 
-{% hint style='tip' %}
-> references:
+> [!NOTE|label:references:]
 > - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
 > - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
 > - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
@@ -511,7 +562,6 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 >   $ cd /etc/dnf/vars; grep -H --color=none . *
 >   contentdir:centos
 >   infra:stock
->
 >   # or
 >   $ tail -f /var/log/dnf.log
 >   ```
@@ -525,7 +575,6 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 >   $ sudo reboot
 >   ```
 > - [DNF Command Reference](https://dnf.readthedocs.io/en/latest/command_ref.html)
-{% endhint %}
 
 ### enable or disable repo
 ```bash

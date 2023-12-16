@@ -344,20 +344,52 @@ more info:
 {% endhint %}
 
 ## flushed
+
+> [!NOTE|label:references:]
+> - [How to safely clear cache on Mac](https://setapp.com/how-to/clear-cache-on-mac)
+
 ### disk cache
 ```bash
 $ sudo purge
 ```
 
 ### flush DNS
+
+> [!NOTE|label:references:]
+> - [How to safely clear cache on Mac](https://setapp.com/how-to/clear-cache-on-mac)
+> - [How to Flush DNS](https://blog.hubspot.com/website/flush-dns)
+
 ```bash
 $ sudo killall -HUP mDNSResponder
+# or
+$ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder; say cache flushed
 ```
+
+- ventura & monterey
+  ```bash
+  $ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+  ```
+
+- lion, mountain lion, mavericks, el capitan, sierra, high sierra, mojave
+  ```bash
+  $ sudo killall -HUP mDNSResponder
+  ```
+
+- yosemite
+  ```bash
+  $ sudo discoveryutil mdnsflushcache
+  ```
+
+- tiger
+  ```bash
+  $ lookupd -flushcache
+  ```
 
 ## clean OSX native dot file
 ```bash
 $ dot_clean -mvp <path>
 ```
+
 - i.e.:
   ```bash
   $ sudo dot_clean -mvp /
@@ -365,11 +397,13 @@ $ dot_clean -mvp <path>
 
 - or
   ```bash
-  $ find $HOME -name '.DS_Store' -type f -delete
+  $ /usr/local/bin/rg --hidden --smart-case --color=never --files "$HOME" -g '*\.DS_*' | xargs -r rm
+  # or
+  $ /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r rm
 
+  $ find $HOME -name '.DS_Store' -type f -delete
   # or
   $ find / -name '._*' -type f -delete
-
   # or
   $ find / -name '._*' -type f -size -4k -delete
   ```
@@ -395,6 +429,11 @@ $ dot_clean -mvp <path>
   > cd c:\path\to\folder
   > del /s /q /f /a .DS_STORE
   > del /s /q /f /a:h ._*
+  ```
+
+- flush DNS
+  ```bash
+  $ ipconfig /flushdns
   ```
 
 ## launchctl
