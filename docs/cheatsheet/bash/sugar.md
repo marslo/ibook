@@ -13,6 +13,9 @@
   - [SC2155](#sc2155-1)
   - [escape code](#escape-code)
 - [alias for sudo](#alias-for-sudo)
+- [echo](#echo)
+  - [echo var name from variable](#echo-var-name-from-variable)
+  - [echo var name](#echo-var-name)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -395,3 +398,83 @@ $ date | wc
 ```bash
 alias sudo='sudo '
 ```
+
+## echo
+### echo var name from variable
+
+> [!NOTE]
+> - [Chapter 28. Indirect References](https://tldp.org/LDP/abs/html/ivr.html)
+> - [3.5.3 Shell Parameter Expansion: `{!parameter}`](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+> - [9.2. Typing variables: declare or typeset](https://tldp.org/LDP/abs/html/declareref.html)
+> - sample:
+>   ```bash
+>   $ foo=bar             # `bar` is the var name
+>   $ bar=baz             # `baz` is the var value
+>   ```
+
+- `typeset`
+  ```bash
+  $ typeset -p "${foo}"$
+  declare -- bar="baz"
+  ```
+
+- `eval \$$`
+  ```bash
+  $ eval echo \$$foo
+  baz
+  ```
+  - more:
+    ```bash
+    $ echo \$$foo
+    $bar
+    # or
+    $ echo '$'$foo
+    $bar
+    ```
+
+- `{!parameter}`
+  ```bash
+  $ echo "${!foo}"
+  baz
+  ```
+
+### echo var name
+
+> [!NOTE]
+> - [Shell: print both variable name and value?](https://stackoverflow.com/a/71637863/2940319)
+> - [* How to Echo the Variable Name Instead of Variable Value](https://www.baeldung.com/linux/echo-variable-name)
+> - [`typeset -p`](https://unix.stackexchange.com/a/397595/29178)
+> - sample
+>   ```bash
+>   $ a1='a'
+>   $ a2='aa'
+>   $ c1='c'
+>   $ c2='cc'
+>   ```
+
+- `typeset`
+  ```bash
+  $ typeset -p c2
+  declare -- c2="cc"
+  ```
+
+- `{!parameter@}`
+  ```bash
+  $ echo "${!c@}"
+  c1 c2
+
+  $ echo "${!a@}"
+  a1 a2
+  ```
+
+- more
+  ```bash
+  superEcho() {
+    echo "$1 = ${!1}"
+  }
+
+  $ superEcho foo
+  foo = bar
+  $ superEcho bar
+  bar = baz
+  ```
