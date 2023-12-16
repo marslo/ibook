@@ -165,6 +165,7 @@ E..GP....._.
 
 > [!NOTE|label:references:]
 > - [I have a tab completion that hangs, is it possible to use strace to find out what is going on?](https://unix.stackexchange.com/a/525582/29178)
+> - [Resolve nested aliases to their source commands](https://unix.stackexchange.com/a/441389/29178)
 
 ```bash
 $ ... run cmd ...
@@ -185,6 +186,8 @@ $ sudo strace -fp $$ -o log &
   ```
 
 - [debug script](https://askubuntu.com/a/678919/92979)
+
+  <!--sec data-title="debug script" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   $ strace -e clone,execve,pipe,dup2 \
            -f bash -c 'cat <(/bin/true) <(/bin/false) <(/bin/echo)'
@@ -236,6 +239,19 @@ $ sudo strace -fp $$ -o log &
   [pid 289966] +++ exited with 0 +++
   --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=289966, si_uid=10564, si_status=0, si_utime=0, si_stime=0} ---
   +++ exited with 0 +++
+  ```
+  <!--endsec-->
+
+- [xtrace](https://unix.stackexchange.com/a/441389/29178)
+  ```bash
+  xtrace() {
+      local eval_cmd
+      printf -v eval_cmd '%q' "${@}"
+      { set -x
+        eval "${eval_cmd}"
+      } 2>&1 | grep '^++'
+      return "${PIPESTATUS[0]}"
+  }
   ```
 
 ### sar
@@ -1039,6 +1055,9 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 > [!NOTE]
 > - [#193: [Question] how to search by filenames only?](https://github.com/BurntSushi/ripgrep/issues/193#issuecomment-775059326)
 > - [How can I recursively find all files in current and subfolders based on wildcard matching?](https://stackoverflow.com/a/50840902/2940319)
+> - [chinanf-boy/ripgrep-zh](https://github.com/chinanf-boy/ripgrep-zh/tree/master)
+>   - [ripgrep-zh/GUIDE.zh.md](https://github.com/chinanf-boy/ripgrep-zh/blob/master/GUIDE.zh.md)
+> - [How to get a git's branch with fuzzy finder?](https://stackoverflow.com/a/37007733/2940319)
 
 - install
   ```bash

@@ -9,13 +9,18 @@
     - [example](#example)
   - [system command](#system-command)
     - [use parameter in `xargs`](#use-parameter-in-xargs)
-    - [find out commands belongs to and come from](#find-out-commands-belongs-to-and-come-from)
-    - [Get all google website](#get-all-google-website)
+    - [find commands belongs to and come from](#find-commands-belongs-to-and-come-from)
+    - [find alias come from](#find-alias-come-from)
+    - [get command from PATH](#get-command-from-path)
+    - [get all google website](#get-all-google-website)
   - [check linux window size](#check-linux-window-size)
 - [readline & bind](#readline--bind)
   - [get info](#get-info)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!NOTE|label:references:]
+> - [Hidden features of Bash](https://stackoverflow.com/q/211378/2940319)
 
 # utils
 ## padRight
@@ -145,7 +150,7 @@ text/plain
 text/plain
 ```
 
-### find out commands belongs to and come from
+### find commands belongs to and come from
 - belongs to
   ```bash
   $ type which
@@ -183,24 +188,72 @@ text/plain
     _docker 5011 /usr/share/bash-completion/completions/docker
     ```
 
-- find alias come from
+### find alias come from
 
-  > [!NOTE|label:references:]
-  > - [Is it possible to check where an alias was defined?](https://unix.stackexchange.com/a/322468/29178)
+> [!NOTE|label:references:]
+> - [Is it possible to check where an alias was defined?](https://unix.stackexchange.com/a/322468/29178)
 
+```bash
+$ bash -ixlc : 2>&1 | grep ...
+$ zsh -ixc : 2>&1 | grep ...
+```
+
+- i.e.:
   ```bash
-  $ bash -ixlc : 2>&1 | grep ...
-  $ zsh -ixc : 2>&1 | grep ...
+  $ bash -ixlc : 2>&1 | grep 'clr='
+      /Users/marslo/.marslo/.alias/docker::16: alias 'dclr=docker system prune -a -f'
+      /Users/marslo/.marslo/.alias/utils::22: alias clr=clear
   ```
 
-  - i.e.:
-    ```bash
-    $ bash -ixlc : 2>&1 | grep 'clr='
-        /Users/marslo/.marslo/.alias/docker::16: alias 'dclr=docker system prune -a -f'
-        /Users/marslo/.marslo/.alias/utils::22: alias clr=clear
-    ```
+### get command from PATH
 
-### Get all google website
+> [!NOTE|label:references:]
+> - [How to use `which` on an aliased command?](https://unix.stackexchange.com/q/10525/29178)
+
+```bash
+$ type -a kubectl
+kubectl is aliased to `kubecolor'
+kubectl is /Users/marslo/.docker/bin/kubectl
+```
+
+- `type -P`
+  ```bash
+  $ type -P kubectl
+  /Users/marslo/.docker/bin/kubectl
+  ```
+
+- `/usr/bin/which`
+  ```bash
+  $ /usr/bin/which kubectl
+  /Users/marslo/.docker/bin/kubectl
+  ```
+
+- `which --skip-alias`
+  ```bash
+  $ which --skip-alias kubectl
+  ~/.docker/bin/kubectl
+  ```
+
+- `shopt -u expand_aliases`
+  ```bash
+  $ type -a kubectl
+  kubectl is aliased to `kubecolor'
+  kubectl is /Users/marslo/.docker/bin/kubectl
+
+  $ shopt -u expand_aliases
+  $ type -a kubectl
+  kubectl is /Users/marslo/.docker/bin/kubectl
+
+  $ shopt -s expand_aliases
+  ```
+
+- check alias only
+  ```bash
+  $ echo ${BASH_ALIASES[kubectl]}
+  kubecolor
+  ```
+
+### get all google website
 ```bash
 $ whois www.google.com
 
