@@ -152,6 +152,9 @@
   $ chmod +x ${iRCHOME}/utils/git/contrib/completion/*
   $ sudo ln -sf ${iRCHOME}/utils/git/contrib/completion/git-prompt.sh       /usr/local/libexec/git-core/git-prompt.sh
   $ sudo ln -sf ${iRCHOME}/utils/git/contrib/completion/git-completion.bash /usr/share/bash-completion/completions/git
+  # or
+  $ sudo ln -sf ${iRCHOME}/utils/git/contrib/completion/*                   /usr/share/doc/git/contrib/completion/
+  $ sudo ln -sf ${iRCHOME}/utils/git/contrib/completion/git-completion.bash /usr/share/bash-completion/completions/git
   ```
 
   - result

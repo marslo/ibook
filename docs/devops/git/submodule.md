@@ -19,8 +19,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> [!TIP]
-> reference:
+> [!TIP|label:reference:]
 > - [Git Submodules](http://bijanebrahimi.github.io/blog/git-submodules.html)
 > - [git-submodule - Initialize, update or inspect submodules](https://git-scm.com/docs/git-submodule)
 > - [gitmodules - Defining submodule properties](https://git-scm.com/docs/gitmodules)
@@ -28,14 +27,28 @@
 
 ## init submodule
 ```bash
-$ git submodule add -b <BranchName> <SubRepoUrl> <NameInSuper>
+$ git submodule add --name <NAME> -b <BRANCH> <REPO_URL> </path/in/repo>
 $ git submodule init
 $ git submodule update --init
 ```
+- i.e.:
+  ```bash
+  $ git submodule add --name ansible-completion \
+                      -b master \
+                      https://github.com/dysosmus/ansible-completion.git \
+                      confs/home/.marslo/.completion/ansible-completion
+  $ git submodule add --name bash-completion \
+                      -b master \
+                      https://github.com/scop/bash-completion.git \
+                      confs/home/.marslo/bin/bash-completion
+  $ git submodule init
+  $ git submodule update --init
+  ```
 
 ## update submodule
 ```bash
-$ git config -f .gitmodules submodule.<SubmoduleNameInSuperRepo>.branch <NewBranchName>
+# update branch
+$ git config -f .gitmodules submodule.<NAME>.branch <NEW_BRANCH>
 $ git submodule update --remote
 ```
 
@@ -76,8 +89,7 @@ $ git config --blob HEAD:.gitmodules --get-regexp path |
 
 ## list submodules
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [git plumbing command to get submodule remote](https://stackoverflow.com/a/41217484/2940319)
 > - [Get submodule hash from bare repository](https://stackoverflow.com/a/30329683/2940319)
 > - [How to make shallow git submodules?](https://stackoverflow.com/a/17692710/2940319)
@@ -161,14 +173,14 @@ $ git config --blob HEAD:.gitmodules --get-regexp branch
 ### push to remote
 - push submodule only
   ```bash
-  $ cd <SubFolder>
+  $ cd ./path/to/submodule
   $ git push --recurse-submodule=on-demand
   ```
 - push for both super and submodule
   ```bash
-  $ cd <SubFolder>
+  $ cd ./path/to/submodule
   $ git add --all
-  $ git commit -am "<Comments for Sub>"
+  $ git commit -am ".. comments here .."
   $ git push --recurse-submodule=on-demand
 
   $ cd $(git rev-parse --show-superproject-working-tree)
@@ -176,7 +188,7 @@ $ git config --blob HEAD:.gitmodules --get-regexp branch
   $ cd $(git rev-parse --show-superproject-working-tree --show-toplevel | head -1)
 
   $ git add --all
-  $ git commit -am "<Comments for Super>"
+  $ git commit -am ".. comments here .."
   $ git push origin $(git rev-parse --abbrev-ref HEAD)
   ```
 
@@ -189,11 +201,10 @@ $ git config --blob HEAD:.gitmodules --get-regexp branch
 {% endhint %}
 
 ```bash
-$ git submodule deinit -f <submoduleName>                              ### operational
-$ git rm --cached <submoduleName>
+$ git submodule deinit -f <NAME>                              ### operational
+$ git rm --cached <NAME>
 $ rm -rf <submodulePath>
-$ rm -rf .git/modules/<submoduleName>
-$ git config -f .gitmodules --remove-section submodule.<submoduleName> ### or $ rm -rf .gitmodules
-$ git config -f .git/config --remove-section submodule.<submoduleName> ### or $ vim .git/config
+$ rm -rf .git/modules/<NAME>
+$ git config -f .gitmodules --remove-section submodule.<NAME> ### or $ rm -rf .gitmodules
+$ git config -f .git/config --remove-section submodule.<NAME> ### or $ vim .git/config
 ```
-
