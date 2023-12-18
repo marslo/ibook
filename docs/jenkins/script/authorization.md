@@ -589,6 +589,8 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                                                            valutKey : ${it.vaultKey}
                            """
                            break;
+                       }
+                      }
   ```
 
 - [or](https://devops.stackexchange.com/a/8692/3503)
