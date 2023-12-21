@@ -20,10 +20,10 @@
 #### create Script
 ```bash
 $ cat /usr/local/bin/do_route.sh
-##!/bin/bash
+#!/usr/bin/env bash
 
-## Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-## 0.0.0.0         192.168.10.1    0.0.0.0         UG    0      0        0 eno2
+# Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+# 0.0.0.0         192.168.10.1    0.0.0.0         UG    0      0        0 eno2
 /sbin/route -n | grep "0\.0\.0\.0.*192\.168\.10\.1.*eno2" > /dev/null 2>&1
 if [ $? != 0 ]; then
   sudo route add default gw 192.168.10.1

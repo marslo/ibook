@@ -83,6 +83,12 @@
 > **reference**:
 > - [Writing Robust Bash Shell Scripts](https://www.davidpashley.com/articles/writing-robust-shell-scripts/)
 > - [用内置的set和shopt命令来设置bash的选项](https://blog.csdn.net/tonyyong90/article/details/105606638)
+> - [Bash history reuse and bang commands](https://softpanorama.org/Scripting/Shellorama/Bash_as_command_interpreter/bash_command_history_reuse.shtml)
+> - [History Expansion](https://www.gnu.org/software/bash/manual/html_node/History-Interaction.html) | [Event Designators](https://www.gnu.org/software/bash/manual/html_node/Event-Designators.html#Event-Designators)
+>   - `!!`: to repeat last commands
+>   - `set +H` or `set +o histexpand` to disable
+>   - `set -H` or `set -o histexpand` to enable
+>   - more via `$ man bash | less -Ip 'Event Designators'`
 >
 > **set**
 >   ```
