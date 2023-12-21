@@ -33,6 +33,7 @@
   - [ycm-core/lsp-examples](#ycm-corelsp-examples)
   - [vim-easycomplete](#vim-easycomplete)
   - [tabnine-vim](#tabnine-vim)
+- [color and theme](#color-and-theme)
 - [troubleshooting](#troubleshooting)
   - [ycm download failed](#ycm-download-failed)
   - [tabnine](#tabnine)
@@ -42,6 +43,7 @@
 
 {% hint style='tip' %}
 > references:
+> - [* vimcolorschemes](https://vimcolorschemes.com/)
 > - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
 {% endhint %}
 
@@ -1361,6 +1363,16 @@ nmap <C-y> :call TriggerYCM()<CR>
   if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
   if !( &filetype == 'vim' )         | let g:loaded_youcompleteme = 1 | endif
   ```
+
+## color and theme
+
+> [!NOTE|label:references:]
+> - [Highlighting color strings with correspondent color](https://vi.stackexchange.com/a/26891/7389)
+> - plugins:
+>   - [chrisbra/Colorizer](https://github.com/chrisbra/Colorizer)
+>   - [gko/vim-coloresque](https://github.com/gko/vim-coloresque)
+>   - [ap/vim-css-color](https://github.com/ap/vim-css-color)
+>   - [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
 
 ## troubleshooting
 

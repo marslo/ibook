@@ -406,14 +406,29 @@ sudo update-binfmts --disable cli
 > - [Windows Subsystem Linux - Make VIM use the clipboard?](https://superuser.com/a/1784084/112396)
 > - [How to copy/paste from Vim in WSL](https://stackoverflow.com/a/68317739/2940319)
 > - [#10223 : Neovim pasting content with ^M at the end of lines](https://github.com/neovim/neovim/issues/10223)
+> - [Pasting from clipboard in vim](https://stackoverflow.com/q/33567746/2940319)
 
 ```bash
 $ sudo apt-get install vim-gtk
-
 $ vim --version | grep clipboard
 +clipboard         +keymap            +printer           +vertsplit
 +eval              -mouse_jsbterm     -sun_workshop      +xterm_clipboard
+
+# or
+$ sudo add-apt-repository ppa:jonathonf/vim
+$ sudo apt update
+$ sudo apt install vim
 ```
+
+- vimrc
+  ```bash
+  set clipboard=unnamed
+  set clipboard=unnamedplus
+
+  " or
+  set clipboard^=unnamed
+  set clipboard^=unnamedplus
+  ```
 
 ### config
 
