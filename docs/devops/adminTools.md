@@ -475,6 +475,7 @@ $ elinks https://google.com
 > - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 > - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
 > - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
+> - [scripts/rgfzf](https://github.com/naggie/dotfiles/blob/master/include/scripts/rgfzf)
 > - [* How to search faster in Vim with FZF.vim](https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko)
 > - [* How FZF and ripgrep improved my workflow](https://sidneyliebrand.medium.com/how-fzf-and-ripgrep-improved-my-workflow-61c7ca212861) | [SidOfc/vim-rg-outdated-command.vim](https://gist.github.com/SidOfc/ba43acade7f4a1bf9faf57d16b33616a#file-vim-rg-outdated-command-vim)
 >   ```vim
@@ -505,15 +506,17 @@ $ elinks https://google.com
 
 ```bash
 $ brew install fzf fd
+$ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
 # debine
 $ sudo apt install fd
 
-$ export FZF_DEFAULT_OPTS='--height 35%'
+$ FZF_DEFAULT_OPTS='--height 35%'
 $ FZF_DEFAULT_OPTS+=' --layout=reverse'
 $ FZF_DEFAULT_OPTS+=' --pointer="→" --marker="» " --prompt="$ "'
 $ FZF_DEFAULT_OPTS+=' --multi'
 $ FZF_DEFAULT_OPTS+=' --inline-info'
 $ FZF_DEFAULT_OPTS+=' --color=spinner:#e6db74,hl:#928374,fg:#ebdbb2,header:#928374,info:#504945,pointer:#98971a,marker:#d79921,fg+:#ebdbb2,prompt:#404945,hl+:#fb4934'
+$ export FZF_DEFAULT_OPTS
 # or
 $ export FZF_DEFAULT_OPTS='--height 35% --layout=reverse --multi --inline-info --color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
 
@@ -584,30 +587,55 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```
 
 
-#### movement
+#### shortcuts
 
 > [!NOTE|label:references:]
 > - [Using the finder](https://github.com/junegunn/fzf#using-the-finder)
 
 - [multiple select](https://github.com/junegunn/fzf.vim/issues/40#issuecomment-156037468)
+
+  > [!NOTE]
+  > - enable via : `--multi` or `-m`
+  > - disable via : `--no-multi` or `+m`
+
   - <kbd>tab</kbd> : select and move down
   - <kbd>shift</kbd> + <kbd>tab</kbd> : select and move up
   - <kbd>alt</kbd> + <kbd>a</kbd> : select all
   - <kbd>alt</kbd> + <kbd>d</kbd> : de-select all
+
 - actions
   - <kbd>enter</kbd> : open selected item(s)
   - <kbd>ctrl</kbd> + <kbd>x</kbd> : horizontal splits
   - <kbd>ctrl</kbd> + <kbd>v</kbd> : vertical splits
   - <kbd>ctrl</kbd> + <kbd>t</kbd> : tab
-- move
+
+- up/down shortcuts
   - up : <kbd>up</kbd> | <kbd>ctrl</kbd> + <kbd>k</kbd> | <kbd>ctrl</kbd> + <kbd>p</kbd>
   - down : <kbd>down</kbd> | <kbd>ctrl</kbd> + <kbd>j</kbd> | <kbd>ctrl</kbd> + <kbd>n</kbd>
+
+- shortcuts for ctrl-t
+
+  > [!TIP]
+  > specific shortcut key via:
+  > ```bash
+  > export FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --bind 'ctrl-p:preview-up,ctrl-n:preview-down'"
+  > export FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  > ```
+
+  - file list:
+    - up : <kbd>up</kbd> | <kbd>ctrl</kbd> + <kbd>k</kbd>
+    - down : <kbd>down</kbd> | <kbd>ctrl</kbd> + <kbd>j</kbd>
+    - change-preview-window: <kbd>ctrl</kbd> + <kbd>/</kbd>
+  - content:
+    - up : <kbd>ctrl</kbd> + <kbd>p</kbd>
+    - down : <kbd>ctrl</kbd> + <kbd>n</kbd>
 
 #### cool functions
 
 > [!NOTE|label:references:]
 > - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
 > - [Examples](https://github.com/junegunn/fzf/wiki/examples)
+
 - magic vim
 
   > [!TIP]
@@ -627,21 +655,49 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   #       - otherwise call regular vim to open file(s)
   function vim() {
     if [[ 0 -eq $# ]]; then
-      fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
+      fzf --multi --bind="enter:become($(type -P vim) {+})"
     elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
       local target=$1
       pushd . >/dev/null
       cd "${target}" || return
-      fzf --multi --bind="enter:become($(which -a vim | head -1) {+})"
+      fzf --multi --bind="enter:become($(type -P vim) {+})"
       popd >/dev/null || true
     else
       # shellcheck disable=SC2068
-      $(which -a vim | head -1) -u $HOME/.vimrc $@
+      $(type -P vim) -u $HOME/.vimrc $@
     fi
+  }
+
+  # v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
+  function v() {
+    local files
+    files=$(grep --color=none -v '^#' ~/.vim_mru_files |
+            while read -r line; do
+              [ -f "${line/\~/$HOME}" ] && echo "$line"
+            done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
   }
   ```
 
   ![fzf magic vim](../screenshot/linux/fzf-magic-vim.gif)
+
+- smart cat
+  ```bash
+  # smart cat
+  function cat() {
+    if [[ 0 -eq $# ]]; then
+      # shellcheck disable=SC2046
+      bat --theme='gruvbox-dark' $(fzf --exit-0)
+    elif [[ '-c' = "$1" ]]; then
+      $(type -P cat) "${@:2}"
+    elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
+      local target=$1;
+      fd . "${target}" --type f --hidden --follow --exclude .git --exclude node_modules |
+        fzf --multi --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
+    else
+      bat --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
+    fi
+  }
+  ```
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
   ```bash
@@ -667,24 +723,48 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```
 
 - [search in files](https://github.com/junegunn/fzf/wiki/Examples#general)
+
+  > [!NOTE]
+  > - [#1057 Feature request: new option preview-window-scroll](https://github.com/junegunn/fzf/issues/1057#issuecomment-339347148)
+
   ```bash
-  # using ripgrep combined with preview
   # find-in-file - usage: fif <searchTerm>
+  # bat as preview tool, `enter` to open by vim
   fif() {
     if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
-    rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+    # rg --files-with-matches --no-messages "$1" |
+    $(type -P rg) --files-with-matches --no-messages --hidden --follow --smart-case "$1" |
+    fzf --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
+        --bind "enter:become($(type -P vim) {+})" \
+        --header 'CTRL-N/CTRL-P to view contents' \
+        --preview "bat --color=always --style=plain {} |
+                   rg --no-line-number --colors 'match:bg:yellow' --ignore-case --pretty --context 10 \"$1\" ||
+                   rg --no-line-number --ignore-case --pretty --context 10 \"$1\" {} \
+                  "
+  }
+
+  # or highlight as preview tool
+  fif() {
+    if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+    rg --color never --files-with-matches --no-messages "$1" |
+    fzf --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
+        --preview "highlight -O ansi {} 2> /dev/null |
+                   rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' ||
+                   rg --no-line-number --ignore-case --pretty --context 10 '$1' {} \
+                  "
   }
   ```
 
-  ![rg+fzf](../screenshot/osx/fzf-fif-rg.gif)
+  ![rg+fzf](../screenshot/linux/fzf-fif-rg.gif)
 
 - [chaning directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
   ```bash
   # fd - cd to selected directory
+  ### conflict with fd-find ###
   fd() {
     local dir
     dir=$(find ${1:-.} -path '*/\.*' -prune \
-                    -o -type d -print 2> /dev/null | fzf +m) &&
+                       -o -type d -print 2> /dev/null | fzf +m) &&
     cd "$dir"
   }
 
@@ -702,144 +782,32 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
   }
 
-  # fdr - cd to selected parent directory
-  fdr() {
+  # cdp - cd to selected parent directory
+  cdp() {
+    # shellcheck disable=SC2034,SC2316
     local declare dirs=()
     get_parent_dirs() {
       if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
       if [[ "${1}" == '/' ]]; then
         for _dir in "${dirs[@]}"; do echo $_dir; done
       else
+        # shellcheck disable=SC2046
         get_parent_dirs $(dirname "$1")
       fi
     }
+    # shellcheck disable=SC2155,SC2046
     local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
-    cd "$DIR"
+    cd "$DIR" || return
   }
 
   # cdf - cd into the directory of the selected file
   cdf() {
-     local file
-     local dir
-     file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+    local file
+    local dir
+    # shellcheck disable=SC2164
+    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
   }
   ```
-
-- [`ctrl-r`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
-  ```bash
-  # CTRL-/ to toggle small preview window to see the full command
-  # CTRL-Y to copy the command into clipboard using pbcopy
-  export FZF_CTRL_R_OPTS="
-    --preview 'echo {}' --preview-window up:3:hidden:wrap
-    --bind 'ctrl-/:toggle-preview'
-    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-    --color header:italic
-    --header 'Press CTRL-Y to copy command into clipboard'"
-  ```
-
-  - `__fzf_history__`
-    ```bash
-    $ type __fzf_history__
-    __fzf_history__ is a function
-    __fzf_history__ ()
-    {
-        local output opts script;
-        opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-} -n2..,.. --scheme=history --bind=ctrl-r:toggle-sort ${FZF_CTRL_R_OPTS-} +m --read0";
-        script='BEGIN { getc; $/ = "\n\t"; $HISTCOUNT = $ENV{last_hist} + 1 } s/^[ *]//; print $HISTCOUNT - $. . "\t$_" if !$seen{$_}++';
-        output=$(set +o pipefail
-    builtin fc -lnr -2147483648 | last_hist=$(HISTTIMEFORMAT='' builtin history 1) command perl -n -l0 -e "$script" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) --query "$READLINE_LINE") || return;
-        READLINE_LINE=${output#*' '};
-        if [[ -z "$READLINE_POINT" ]]; then
-            echo "$READLINE_LINE";
-        else
-            READLINE_POINT=0x7fffffff;
-        fi
-    }
-
-    $ fcf __fzf_history__
-    /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
-    ```
-
-  ![fzf ctrl-r](../screenshot/linux/fzf-ctrl-r.gif)
-
-- [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
-
-  > [!NOTE|label:references:]
-  > ```bash
-  > export FZF_CTRL_T_OPTS="
-  >        --preview 'bat -n --color=always {}'
-  >        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-  > ```
-  > - to disable/reset osx default <kbd>⌃</kbd>+<kbd>↑</kbd> and <kbd>⌃</kbd>+<kbd>↓</kbd>
-  >   - **System Settings** ⇢ **Keyboard** ⇢ **Keyboard Shutcuts...** ⇢ **Mission Control**
-  >     ![keyboards ⇢ shortcuts](../screenshot/osx/osx-settings-keyboards-mission-control.png)
-  >
-  >   - **System Settings** ⇢ **Desktop & Dock** ⇢ **Shortcuts...**
-  >     ![desktop & dock ⇢ Shortcuts](../screenshot/osx/osx-settings-desktop_dock-shortcuts.png)
-
-  ```bash
-  # preview file content using bat (https://github.com/sharkdp/bat)
-  export FZF_CTRL_T_OPTS="
-    --preview 'bat -n --color=always {}'
-    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-  ```
-
-  - `__fzf_select__`
-    ```bash
-    $ type __fzf_select__
-    __fzf_select__ is a function
-    __fzf_select__ ()
-    {
-        local cmd opts;
-        cmd="${FZF_CTRL_T_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune     -o -type f -print     -o -type d -print     -o -type l -print 2> /dev/null | command cut -b3-"}";
-        opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_CTRL_T_OPTS-} -m";
-        eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) "$@" | while read -r item; do
-            printf '%q ' "$item";
-        done
-    }
-
-    $ fcf __fzf_select__
-    __fzf_select__ 19 /Users/marslo/.marslo/utils/fzf/shell/key-bindings.bas
-
-    $ mdfind key-bindings.bas
-    /Users/marslo/iMarslo/tools/git/marslo/mbook/docs/devops/adminTools.md
-    /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
-    ```
-
-  ![fzf ctrl-t](../screenshot/linux/fzf-ctrl-t.gif)
-
-  - [`__fzf_select_dir()`](https://github.com/junegunn/fzf/wiki/Examples#changing-directory)
-
-    ```bash
-    # another ctrl-t script to select a directory and paste it into line
-    __fzf_select_dir () {
-      builtin typeset READLINE_LINE_NEW="$(
-        command find -L . \( -path '*/\.*' -o -fstype dev -o -fstype proc \) \
-                -prune \
-                -o -type f -print \
-                -o -type d -print \
-                -o -type l -print 2>/dev/null \
-        | command sed 1d \
-        | command cut -b3- \
-        | env fzf -m
-      )"
-
-      if
-        [[ -n $READLINE_LINE_NEW ]]
-      then
-        builtin bind '"\er": redraw-current-line'
-        builtin bind '"\e^": magic-space'
-        READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${READLINE_LINE_NEW}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
-        READLINE_POINT=$(( READLINE_POINT + ${#READLINE_LINE_NEW} ))
-      else
-        builtin bind '"\er":'
-        builtin bind '"\e^":'
-      fi
-    }
-
-    builtin bind -x '"\C-x1": __fzf_select_dir'
-    builtin bind '"\C-t": "\C-x1\e^\er"'
-    ```
 
 - [v](https://github.com/junegunn/fzf/wiki/Examples#v)
   ```bash
@@ -880,46 +848,101 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   }
   ```
 
-- advanced usage
-  - [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
-    ```bash
-    $ (date; ps -ef) |
-      fzf --bind='ctrl-r:reload(date; ps -ef)' \
-          --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
-          --preview='echo {}' --preview-window=down,3,wrap \
-          --layout=reverse --height=80% |
-      awk '{print $2}'
+#### advanced usage
+- git alias
 
-    # or kill
-    $ (date; ps -ef) |
-      fzf --bind='ctrl-r:reload(date; ps -ef)' \
-          --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
-          --preview='echo {}' --preview-window=down,3,wrap \
-          --layout=reverse --height=80% |
-      awk '{print $2}' |
-      xargs kill -9
-    ```
+  > [!TIP]
+  > - [git-del](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/git-del) to delete both local and remote branches automatically
 
-    ![ps fzf](../screenshot/linux/fzf-ps.png)
+  ```bash
+  ### checkout sorted [b]ranch
+  bb    = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
+                      grep --color=never -v \"origin$\" | \n\
+                      fzf +m --prompt=\"branch> \" | \n\
+                      sed -rn \"s:\\s*(origin/)?(.*)$:\\2:p\") && \n\
+                      [[ -n \"${branch}\" ]] && \n\
+                      echo -e \"\\033[1;33m~~> ${branch}\\033[0m\" && \n\
+                      git checkout \"${branch}\"; \n\
+                     '"
 
-    ![kill ps fzf](../screenshot/linux/fzf-kill-process.gif)
+  ### [b]ranch [copy]
+  bcopy = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
+                      grep --color=never -v \"origin$\" | \n\
+                      fzf +m --prompt=\"branch> \" | \n\
+                      sed -rn \"s:\\s*(origin/)?(.*)$:\\2:p\") && \n\
+                      [[ -n \"${branch}\" ]] && \n\
+                      echo -e \"\\033[0;33;1m~~> branch \\033[0m\\033[0;32;3m${branch}\\033[0m \\033[0;33;1mcopied\\033[0m\" && \n\
+                      pbcopy <<< \"${branch}\" \n\
+                     '"
+  ```
 
-  - [Log tailing : pods](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)
-    ```bash
-    pods() {
-      : | command='kubectl get pods --all-namespaces' fzf \
-        --info=inline --layout=reverse --header-lines=1 \
-        --prompt "$(kubectl config current-context | sed 's/-context$//')> " \
-        --header $'╱ Enter (kubectl exec) ╱ CTRL-O (open log in editor) ╱ CTRL-R (reload) ╱\n\n' \
-        --bind 'start:reload:$command' \
-        --bind 'ctrl-r:reload:$command' \
-        --bind 'ctrl-/:change-preview-window(80%,border-bottom|hidden|)' \
-        --bind 'enter:execute:kubectl exec -it --namespace {1} {2} -- bash > /dev/tty' \
-        --bind 'ctrl-o:execute:${EDITOR:-vim} <(kubectl logs --all-containers --namespace {1} {2}) > /dev/tty' \
-        --preview-window up:follow \
-        --preview 'kubectl logs --follow --all-containers --tail=10000 --namespace {1} {2}' "$@"
-    }
-    ```
+- unset environment
+  ```bash
+  # [e]nvironment [c][l]ea[r]
+  function eclr(){
+    while read -r _env; do
+      echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
+      unset "${_env}"
+    done < <( env |
+              sed -rn 's/^([a-zA-Z0-9]+)=.*$/\1/p' |
+              fzf -1 -0 --no-sort -m --prompt='env> '
+            )
+  }
+
+  # or limited to environment list
+  function eclr(){
+    while read -r _env; do
+      echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
+      unset "${_env}"
+    done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH' |
+                    fmt -1 |
+                    fzf -1 -0 --no-sort -m --prompt='env> '
+            )
+  }
+  ```
+
+![fzf for unset environment](../screenshot/linux/fzf-eclr.gif)
+
+
+- [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
+  ```bash
+  $ (date; ps -ef) |
+    fzf --bind='ctrl-r:reload(date; ps -ef)' \
+        --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
+        --preview='echo {}' --preview-window=down,3,wrap \
+        --layout=reverse --height=80% |
+    awk '{print $2}'
+
+  # or kill
+  $ (date; ps -ef) |
+    fzf --bind='ctrl-r:reload(date; ps -ef)' \
+        --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
+        --preview='echo {}' --preview-window=down,3,wrap \
+        --layout=reverse --height=80% |
+    awk '{print $2}' |
+    xargs kill -9
+  ```
+
+  ![ps fzf](../screenshot/linux/fzf-ps.png)
+
+  ![kill ps fzf](../screenshot/linux/fzf-kill-process.gif)
+
+- [Log tailing : pods](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)
+  ```bash
+  pods() {
+    : | command='kubectl get pods --all-namespaces' fzf \
+      --info=inline --layout=reverse --header-lines=1 \
+      --prompt "$(kubectl config current-context | sed 's/-context$//')> " \
+      --header $'╱ Enter (kubectl exec) ╱ CTRL-O (open log in editor) ╱ CTRL-R (reload) ╱\n\n' \
+      --bind 'start:reload:$command' \
+      --bind 'ctrl-r:reload:$command' \
+      --bind 'ctrl-/:change-preview-window(80%,border-bottom|hidden|)' \
+      --bind 'enter:execute:kubectl exec -it --namespace {1} {2} -- bash > /dev/tty' \
+      --bind 'ctrl-o:execute:${EDITOR:-vim} <(kubectl logs --all-containers --namespace {1} {2}) > /dev/tty' \
+      --preview-window up:follow \
+      --preview 'kubectl logs --follow --all-containers --tail=10000 --namespace {1} {2}' "$@"
+  }
+  ```
 
 #### config
 - [color theme](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#color-themes)
@@ -988,6 +1011,141 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
     }
     ```
 
+- [`ctrl-r`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
+  ```bash
+  # CTRL-/ to toggle small preview window to see the full command
+  # CTRL-Y to copy the command into clipboard using pbcopy
+  export FZF_CTRL_R_OPTS="
+    --preview 'echo {}' --preview-window up:3:hidden:wrap
+    --bind 'ctrl-/:toggle-preview'
+    --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+    --color header:italic
+    --header 'Press CTRL-Y to copy command into clipboard'"
+
+  # or
+  FZF_CTRL_R_OPTS="--preview 'echo {}'"
+  FZF_CTRL_R_OPTS+=" --preview-window up:3:hidden:wrap"
+  FZF_CTRL_R_OPTS+=" --bind 'ctrl-/:toggle-preview'"
+  FZF_CTRL_R_OPTS+=" --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'"
+  FZF_CTRL_R_OPTS+=" --color header:italic"
+  FZF_CTRL_R_OPTS+=" --header 'Press CTRL-Y to copy command into clipboard'"
+  export FZF_CTRL_R_OPTS
+  ```
+
+  - `__fzf_history__`
+    ```bash
+    $ type __fzf_history__
+    __fzf_history__ is a function
+    __fzf_history__ ()
+    {
+        local output opts script;
+        opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-} -n2..,.. --scheme=history --bind=ctrl-r:toggle-sort ${FZF_CTRL_R_OPTS-} +m --read0";
+        script='BEGIN { getc; $/ = "\n\t"; $HISTCOUNT = $ENV{last_hist} + 1 } s/^[ *]//; print $HISTCOUNT - $. . "\t$_" if !$seen{$_}++';
+        output=$(set +o pipefail
+    builtin fc -lnr -2147483648 | last_hist=$(HISTTIMEFORMAT='' builtin history 1) command perl -n -l0 -e "$script" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) --query "$READLINE_LINE") || return;
+        READLINE_LINE=${output#*' '};
+        if [[ -z "$READLINE_POINT" ]]; then
+            echo "$READLINE_LINE";
+        else
+            READLINE_POINT=0x7fffffff;
+        fi
+    }
+
+    $ fcf __fzf_history__
+    /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
+    ```
+
+  ![fzf ctrl-r](../screenshot/linux/fzf-ctrl-r.gif)
+
+- [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
+
+  > [!NOTE|label:references:]
+  > ```bash
+  > export FZF_CTRL_T_OPTS="
+  >        --preview 'bat -n --color=always {}'
+  >        --bind 'ctrl-p:preview-up,ctrl-n:preview-down'
+  >        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  > ```
+  > - to disable/reset osx default <kbd>⌃</kbd>+<kbd>↑</kbd> and <kbd>⌃</kbd>+<kbd>↓</kbd>
+  >   - **System Settings** ⇢ **Keyboard** ⇢ **Keyboard Shutcuts...** ⇢ **Mission Control**
+  >     ![keyboards ⇢ shortcuts](../screenshot/osx/osx-settings-keyboards-mission-control.png)
+  >
+  >   - **System Settings** ⇢ **Desktop & Dock** ⇢ **Shortcuts...**
+  >     ![desktop & dock ⇢ Shortcuts](../screenshot/osx/osx-settings-desktop_dock-shortcuts.png)
+
+  ```bash
+  # preview file content using bat (https://github.com/sharkdp/bat)
+  export FZF_CTRL_T_OPTS="
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-p:preview-up,ctrl-n:preview-down'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+  # or
+  FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+  FZF_CTRL_T_OPTS+=" --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  FZF_CTRL_T_OPTS+=" --bind 'ctrl-p:preview-up,ctrl-n:preview-down'"
+  FZF_CTRL_T_OPTS+=" --header 'CTRL-N/CTRL-P to view contents'"
+  export FZF_CTRL_T_OPTS
+  ```
+
+  - `__fzf_select__`
+    ```bash
+    $ type __fzf_select__
+    __fzf_select__ is a function
+    __fzf_select__ ()
+    {
+        local cmd opts;
+        cmd="${FZF_CTRL_T_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune     -o -type f -print     -o -type d -print     -o -type l -print 2> /dev/null | command cut -b3-"}";
+        opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse --scheme=path ${FZF_DEFAULT_OPTS-} ${FZF_CTRL_T_OPTS-} -m";
+        eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) "$@" | while read -r item; do
+            printf '%q ' "$item";
+        done
+    }
+
+    $ fcf __fzf_select__
+    __fzf_select__ 19 /Users/marslo/.marslo/utils/fzf/shell/key-bindings.bas
+
+    $ mdfind key-bindings.bas
+    /Users/marslo/iMarslo/tools/git/marslo/mbook/docs/devops/adminTools.md
+    /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
+    ```
+
+  ![fzf ctrl-t](../screenshot/linux/fzf-ctrl-t.gif)
+
+  - [`__fzf_select_dir()`](https://github.com/junegunn/fzf/wiki/Examples#changing-directory)
+
+    ```bash
+    # another ctrl-t script to select a directory and paste it into line
+    __fzf_select_dir () {
+      builtin typeset READLINE_LINE_NEW="$(
+        command find -L . \( -path '*/\.*' -o -fstype dev -o -fstype proc \) \
+                -prune \
+                -o -type f -print \
+                -o -type d -print \
+                -o -type l -print 2>/dev/null \
+        | command sed 1d \
+        | command cut -b3- \
+        | env fzf -m
+      )"
+
+      if
+        [[ -n $READLINE_LINE_NEW ]]
+      then
+        builtin bind '"\er": redraw-current-line'
+        builtin bind '"\e^": magic-space'
+        READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${READLINE_LINE_NEW}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
+        READLINE_POINT=$(( READLINE_POINT + ${#READLINE_LINE_NEW} ))
+      else
+        builtin bind '"\er":'
+        builtin bind '"\e^":'
+      fi
+    }
+
+    builtin bind -x '"\C-x1": __fzf_select_dir'
+    builtin bind '"\C-t": "\C-x1\e^\er"'
+    ```
+
+
 ### [`fd`](https://github.com/sharkdp/fd)
 
 > [!NOTE|label:references:]
@@ -1000,6 +1158,8 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   ```bash
   # osx
   $ brew install fd
+  # v9.0.0
+  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
 
   # debine
   $ sudo apt install fd-find
@@ -1011,9 +1171,16 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
   # from source
   $ git clone https://github.com/sharkdp/fd && cd fd
-  $ cargo build              # build
-  $ cargo test               # run unit tests and integration tests
-  $ cargo install --path .   # install
+
+  # osx
+  $ brew install rust
+  $ cargo install amethyst_tools
+
+  $ cargo build                     # build
+  $ cargo test                      # run unit tests and integration tests
+  $ cargo install --debug --path .  # install
+  # or
+  $ cargo install --path .          # install
   ```
 
   - verify
@@ -1039,6 +1206,78 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   # or
   /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r rm
   ```
+
+#### advanced usage
+
+> [!NOTE]
+> - [`ffs`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L162)
+>
+>   ![fd-ffs](../screenshot/linux/fd-ffs.png)
+>
+> - [`ff`](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/ff)
+>
+>   ![fd-ffs](../screenshot/linux/fd-ff.png)
+
+```bash
+# [f]ind [f]ile and [s]ort
+function ffs() {
+  local opt=''
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+          -g ) opt+="$1 "   ; shift   ;;
+         -fg ) opt+="$1 "   ; shift   ;;
+          -f ) opt+="$1 "   ; shift   ;;
+         --* ) opt+="$1 $2 "; shift 2 ;;
+          -* ) opt+="$1 "   ; shift   ;;
+           * ) break                  ;;
+    esac
+  done
+
+  local path=${1:-~/.marslo}
+  local num=${2:-10}
+  num=${num//-/}
+  local depth=${3:-}
+  depth=${depth//-/}
+  local option='--type f'
+
+  if [[ "${opt}" =~ '-g ' ]]; then
+    # git show --name-only --pretty="format:" -"${num}" | awk 'NF' | sort -u
+    # references: https://stackoverflow.com/a/54677384/2940319
+    git log --date=iso-local --first-parent --pretty=%cd --name-status |
+        awk 'NF==1{date=$1}NF>1 && !seen[$2]++{print date,$0}' FS=$'\t' |
+        head -"${num}"
+  elif [[ "${opt}" =~ '-fg ' ]]; then
+    # references: https://stackoverflow.com/a/63864280/2940319
+    git ls-tree -r --name-only HEAD -z |
+        TZ=PDT xargs -0 -I_ git --no-pager log -1 --date=iso-local --format="%ad | _" -- _ |
+        sort -r |
+        head -"${num}"
+  elif [[ "${opt}" =~ '-f ' ]]; then
+    option=${option: 1}
+    [[ -n "${depth}" ]] && option="-maxdepth ${depth} ${option}"
+    # shellcheck disable=SC2086
+    find "${path}" ${option} \
+                   -not -path '*/\.git/*' \
+                   -not -path '*/node_modules/*' \
+                   -not -path '*/go/pkg/*' \
+                   -not -path '*/git/git*/*' \
+                   -not -path '*/.marslo/utils/*' \
+                   -not -path '*/.marslo/.completion/*' \
+                   -printf "%10T+ | %p\n" |
+    sort -r |
+    head -"${num}"
+  else
+    if [[ "${opt}}" =~ .*-t.* ]] || [[ "${opt}" =~ .*--type.* ]]; then
+      option="${option//--type\ f/}"
+    fi
+    option="${opt} ${option} --hidden --follow --unrestricted --ignore-file ~/.fdignore"
+    [[ -n "${depth}"    ]] && option="--max-depth ${depth} ${option}"
+    [[ '.' != "${path}" ]] && option="${path} ${option}"
+    # shellcheck disable=SC2086,SC2027
+    eval """ fd . "${option}" --exec stat --printf='%y | %n\n' | sort -r | head -"${num}" """
+  fi
+}
+```
 
 ### [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
 - install
@@ -1282,6 +1521,21 @@ $ cat ~/.rgignore
       # Update the binary cache
       bat cache --build
       ```
+
+- [cygwin path issue](https://github.com/sharkdp/bat?tab=readme-ov-file#cygwin)
+  ```bash
+  bat() {
+      local index
+      local args=("$@")
+      for index in $(seq 0 ${#args[@]}) ; do
+          case "${args[index]}" in
+          -*) continue;;
+          *)  [ -e "${args[index]}" ] && args[index]="$(cygpath --windows "${args[index]}")";;
+          esac
+      done
+      command bat "${args[@]}"
+  }
+  ```
 
 ### [`ansi`](https://github.com/fidian/ansi)
 

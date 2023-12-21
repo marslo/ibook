@@ -7,6 +7,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!NOTE|label:references:]
+> - [* vimcolorschemes](https://vimcolorschemes.com/)
 > - [Using GUI color settings in a terminal](https://vim.fandom.com/wiki/Using_GUI_color_settings_in_a_terminal)
 > - [Using vim color schemes with Putty](https://vim.fandom.com/wiki/Using_vim_color_schemes_with_Putty)
 
@@ -38,15 +39,15 @@
     """ solarized
     let &t_Co=256
     set t_Co=256
-    let g:solarized_termcolors=256
-    let g:solarized_termtrans = 1
+    let g:solarized_termcolors = 256
+    let g:solarized_termtrans  = 1
 
-    let g:solarized_extra_hi_groups = 1   " ┐
-    let g:solarized_visibility = "high"   " | nice to have
-    let g:solarized_contrast = "high"     " |
-    let s:base03 = "255"                  " ┘
+    let g:solarized_extra_hi_groups = 1        " ┐
+    let g:solarized_visibility      = "high"   " | nice to have
+    let g:solarized_contrast        = "high"   " |
+    let s:base03                    = "255"    " ┘
 
-    " set termguicolors                   " do not enable
+    " set termguicolors                        " do not enable
 
     colorscheme solarized
   endif
@@ -59,9 +60,9 @@
   highlight Conceal        term=NONE        cterm=NONE          ctermbg=NONE    ctermfg=239
   highlight SpecialKey     term=NONE        cterm=NONE          ctermfg=130
   highlight Constant       term=NONE        ctermfg=99
-  highlight LineNr         term=NONE        ctermbg=NONE        ctermfg=235    guifg=#586e75
-  highlight CursorLineNr   term=underline   cterm=NONE          ctermbg=NONE        ctermfg=124
-  highlight CursorLine     term=NONE        cterm=NONE          ctermbg=NONE        ctermfg=NONE
+  highlight LineNr         term=NONE        ctermbg=NONE        ctermfg=235     guifg=#586e75
+  highlight CursorLineNr   term=underline   cterm=NONE          ctermbg=NONE    ctermfg=124
+  highlight CursorLine     term=NONE        cterm=NONE          ctermbg=NONE    ctermfg=NONE
   highlight Exception      term=bold        ctermbg=NONE        ctermfg=136
   highlight Visual         term=NONE        cterm=underline     ctermbg=NONE
   highlight Comment        ctermfg=234      guifg=#002b36
