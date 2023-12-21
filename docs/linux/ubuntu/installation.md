@@ -569,7 +569,7 @@ XWAYLAND0 connected 1920x1080+0+0 (0x22) normal (normal left inverted right x ax
 ### desktop sharing
 #### enable remote access
 ```bash
-##!/bin/bash
+#!/usr/bin/env bash
 export DISPLAY=:0
 read -e -p "VNC Password: " -i "ubuntu" password
 dconf write /org/gnome/desktop/remote-access/enabled true

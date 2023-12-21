@@ -390,6 +390,18 @@ $ elinks https://google.com
 
 ![ncdu](../screenshot/linux/ncdu.png)
 
+> [!NOTE|label:Alternatives:]
+> - CLI
+>   - [`dust`: bootandy/dust](https://github.com/bootandy/dust)
+>   - [`dutree`: nachoparker/dutree](https://github.com/nachoparker/dutree)
+>   - [`dua`: Byron/dua-cli](https://github.com/Byron/dua-cli)
+>   - [`pdu`: KSXGitHub/parallel-disk-usage](https://github.com/KSXGitHub/parallel-disk-usage)
+> - TUI:
+>   - [`ncdu`](https://dev.yorhel.nl/ncdu)
+>   - [`ds`: scullionw/dirstat-rs](https://github.com/scullionw/dirstat-rs)
+>   - [`gdu`: dundee/gdu](https://github.com/dundee/gdu)
+>   - [`godu`: viktomas/godu](https://github.com/viktomas/godu)
+
 ### [`duf`](https://unix.stackexchange.com/a/612111/29178)
 
 ![duf](../screenshot/linux/duf.png)
@@ -616,19 +628,21 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 - shortcuts for ctrl-t
 
   > [!TIP]
-  > specific shortcut key via:
-  > ```bash
-  > export FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --bind 'ctrl-p:preview-up,ctrl-n:preview-down'"
-  > export FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-  > ```
+  > - customized shortcut key via:
+  >   ```bash
+  >   export FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --bind 'ctrl-p:preview-up,ctrl-n:preview-down'"
+  >   export FZF_CTRL_T_OPTS="${FZF_CTRL_T_OPTS} --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  >   ```
+  > - [#358: Keyboard bindings for scrolling preview window?](https://github.com/junegunn/fzf.vim/issues/358#issuecomment-769589975)
+  > - [#211: Scroll inside preview?](https://github.com/junegunn/fzf.vim/issues/211)
 
   - file list:
-    - up : <kbd>up</kbd> | <kbd>ctrl</kbd> + <kbd>k</kbd>
-    - down : <kbd>down</kbd> | <kbd>ctrl</kbd> + <kbd>j</kbd>
+    - up : <kbd>↑</kbd> | <kbd>ctrl</kbd> + <kbd>k</kbd>
+    - down : <kbd>↓</kbd> | <kbd>ctrl</kbd> + <kbd>j</kbd>
     - change-preview-window: <kbd>ctrl</kbd> + <kbd>/</kbd>
   - content:
-    - up : <kbd>ctrl</kbd> + <kbd>p</kbd>
-    - down : <kbd>ctrl</kbd> + <kbd>n</kbd>
+    - up : <kbd>shift</kbd> + <kbd>↑</kbd> ( default ) | <kbd>ctrl</kbd> + <kbd>↑</kbd> ( default ) | <kbd>ctrl</kbd> + <kbd>p</kbd> ( customized )
+    - down : <kbd>shift</kbd> + <kbd>↓</kbd> ( default ) | <kbd>ctrl</kbd> + <kbd>↓</kbd> ( default ) | <kbd>ctrl</kbd> + <kbd>n</kbd> ( customized )
 
 #### cool functions
 
@@ -726,17 +740,17 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
 
   > [!NOTE]
   > - [#1057 Feature request: new option preview-window-scroll](https://github.com/junegunn/fzf/issues/1057#issuecomment-339347148)
+  > - [gnanderson/fif.sh](https://gist.github.com/gnanderson/d74079d16714bb8b2822a7a07cc883d4)
 
   ```bash
   # find-in-file - usage: fif <searchTerm>
   # bat as preview tool, `enter` to open by vim
   fif() {
     if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
-    # rg --files-with-matches --no-messages "$1" |
     $(type -P rg) --files-with-matches --no-messages --hidden --follow --smart-case "$1" |
     fzf --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
         --bind "enter:become($(type -P vim) {+})" \
-        --header 'CTRL-N/CTRL-P to view contents' \
+        --header 'CTRL-N/CTRL-P or CTRL-↑/CTRL-↓ to view contents' \
         --preview "bat --color=always --style=plain {} |
                    rg --no-line-number --colors 'match:bg:yellow' --ignore-case --pretty --context 10 \"$1\" ||
                    rg --no-line-number --ignore-case --pretty --context 10 \"$1\" {} \
@@ -1084,7 +1098,7 @@ $ function fs() { fzf --multi --bind 'enter:become(vim {+})' }
   FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
   FZF_CTRL_T_OPTS+=" --bind 'ctrl-/:change-preview-window(down|hidden|)'"
   FZF_CTRL_T_OPTS+=" --bind 'ctrl-p:preview-up,ctrl-n:preview-down'"
-  FZF_CTRL_T_OPTS+=" --header 'CTRL-N/CTRL-P to view contents'"
+  FZF_CTRL_T_OPTS+=" --header 'CTRL-N/CTRL-P or CTRL-↑/CTRL-↓ to view contents'"
   export FZF_CTRL_T_OPTS
   ```
 
