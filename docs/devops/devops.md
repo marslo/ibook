@@ -1,6 +1,5 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [`fzf`](#fzf)
   - [install](#install)
@@ -9,38 +8,33 @@
     - [action and select](#action-and-select)
     - [movement](#movement)
     - [ctrl-t](#ctrl-t)
-  - [cool functions](#cool-functions)
+  - [usage](#usage)
+    - [magic vim](#magic-vim)
+    - [smart vimdiff](#smart-vimdiff)
+    - [smart cat](#smart-cat)
+    - [smart copy](#smart-copy)
+    - [others](#others)
   - [advanced usage](#advanced-usage)
     - [git alias](#git-alias)
     - [unset environment](#unset-environment)
-    - [ps](#ps)
+    - [process](#process)
     - [kubectl](#kubectl)
     - [homebrew](#homebrew)
   - [config](#config)
-    - [color theme](#color-theme)
     - [`ctrl-r`](#ctrl-r)
     - [`ctrl-t`](#ctrl-t)
+    - [theme](#theme)
 - [`fd`](#fd)
   - [install](#install-1)
-  - [usage](#usage)
   - [advanced usage](#advanced-usage-1)
-    - [`ff`](#ff)
-    - [`ffs`](#ffs)
 - [`ag` the faster `mg`](#ag-the-faster-mg)
-  - [install](#install-2)
 - [`rg` the faster `mg`](#rg-the-faster-mg)
-  - [install](#install-3)
   - [usage](#usage-1)
-  - [search in dotfiles with ripgrep](#search-in-dotfiles-with-ripgrep)
 - [`fzy`](#fzy)
-  - [install](#install-4)
 - [`bat`](#bat)
-  - [install](#install-5)
   - [usage](#usage-2)
-    - [`help()`](#help)
-    - [cygwin path issue](#cygwin-path-issue)
   - [config](#config-1)
-  - [theme](#theme)
+  - [theme](#theme-1)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [theme and colors](#theme-and-colors)
   - [`c`: bash-color](#c-bash-color)
@@ -343,128 +337,146 @@ $ sudo cp bin/fzf* /usr/local/bin/
   </div>
 
 
-## cool functions
+## usage
 
 > [!NOTE|label:references:]
 > - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
 > - [Examples](https://github.com/junegunn/fzf/wiki/examples)
 
-- magic vim
+### magic vim
 
-  > [!TIP]
-  > - if `vim` commands with paramters
-  >   - if `1` paramters and parameters is directlry; cd and call fzf and using vim to open selected file
-  >   - otherwise call regular vim to open file(s)
-  > - if `vim` commands without paramters, call fzf and using vim to open selected file
+> [!TIP]
+> - [v](https://github.com/junegunn/fzf/wiki/Examples#v)
+> - [Opening files](https://github.com/junegunn/fzf/wiki/Examples#opening-files)
 
-  ```bash
-  # magic vim: fzf list in recent modified order
-  # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh#L206
-  # @description :
-  #   - if `vim` commands without paramters, then call fzf and using vim to open selected file
-  #   - if `vim` commands with    paramters
-  #       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
-  #       - otherwise call regular vim to open file(s)
-  function vim() {
-    local target
-    local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
-    if [[ 0 -eq $# ]]; then
-      fd . ${fdOpt} | fzf --multi --bind="enter:become($(type -P vim) {+})"
-    elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
-      [[ '.' = "${1}" ]] && target="${1}" || target=". ${1}"
-      fd ${target} ${fdOpt} | fzf --multi --bind="enter:become($(type -P vim) {+})"
-    else
-      # shellcheck disable=SC2068
-      $(type -P vim) -u $HOME/.vimrc $@
-    fi
-  }
+```bash
+# magic vim - fzf list in recent modified order
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description :
+#   - if `vim` commands without paramters, then call fzf and using vim to open selected file
+#   - if `vim` commands with    paramters
+#       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
+#       - otherwise call regular vim to open file(s)
+function vim() {
+  local target
+  local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
+  if [[ 0 -eq $# ]]; then
+    fd . ${fdOpt} | fzf --multi --bind="enter:become($(type -P vim) {+})"
+  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
+    [[ '.' = "${1}" ]] && target="${1}" || target=". ${1}"
+    fd ${target} ${fdOpt} | fzf --multi --bind="enter:become($(type -P vim) {+})"
+  else
+    # shellcheck disable=SC2068
+    $(type -P vim) -u $HOME/.vimrc $@
+  fi
+}
 
-  # v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
-  function v() {
-    local files
-    files=$(grep --color=none -v '^#' ~/.vim_mru_files |
-            while read -r line; do
-              [ -f "${line/\~/$HOME}" ] && echo "$line"
-            done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
-  }
-  ```
+# v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description : list 10 most recently used files via fzf, and open by regular vim
+function v() {
+  local files
+  files=$(grep --color=none -v '^#' ~/.vim_mru_files |
+          while read -r line; do
+            [ -f "${line/\~/$HOME}" ] && echo "$line"
+          done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
+}
+```
 
-  ![fzf magic vim](../screenshot/linux/fzf-magic-vim.gif)
+![fzf magic vim](../screenshot/linux/fzf-magic-vim.gif)
 
-- [v](https://github.com/junegunn/fzf/wiki/Examples#v)
-  ```bash
-  # v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
-  function v() {
-    local files
-    files=$( grep --color=none -v '^#' ~/.vim_mru_files |
-             while read -r line; do
-               [ -f "${line/\~/$HOME}" ] && echo "$line"
-             done | fzf-tmux -d -m -q "$*" -1
-           ) && vim ${files//\~/$HOME}
-  }
-  ```
+### smart vimdiff
+```bash
+# magic vimdiff - using fzf list in recent modified order
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description :
+#   - if `vimdiff` commands without parameter , then list files in `.` and `~/.marslo`
+#   - if `vimdiff` commands with 1  parameter , and `$1` is a directory; then list files in `.` and `$1`
+#   - if `vimdiff` commands with 2  parameters, and `$1` and `$2` are all directory; then list files in `$1` and `$2`
+#   - otherwise call regular vimdiff for `$*`
+function vimdiff() {
+  local rPath
+  local lPath
 
-- smart vimdiff
-  ```bash
-  # smart vimdiff
-  function vimdiff() {
-    local rPath
-    local lPath
+  if [[ 0 -eq $# ]]; then
+    rPath='.'
+    # shellcheck disable=SC2154
+    lPath=". ${iRCHOME}"
+  elif [[ 1 -eq $# ]] && [[ -d "$1" ]]; then
+    [[ '.' = "${1}" ]] && lPath="${1}" || lPath=". ${1}"
+  elif [[ 2 -eq $# ]] && [[ -d "$1" ]] && [[ -d "$2" ]]; then
+    [[ '.' = "${1}" ]] && rPath="${1}" || rPath=". ${1}"
+    [[ '.' = "${2}" ]] && lPath="${2}" || lPath=". ${2}"
+  fi
 
-    if [[ 0 -eq $# ]]; then
-      rPath='.'
-      # shellcheck disable=SC2154
-      lPath=". ${iRCHOME}"
-    elif [[ 1 -eq $# ]] && [[ -d "$1" ]]; then
-      [[ '.' = "${1}" ]] && lPath="${1}" || lPath=". ${1}"
-    elif [[ 2 -eq $# ]] && [[ -d "$1" ]] && [[ -d "$2" ]]; then
-      [[ '.' = "${1}" ]] && rPath="${1}" || rPath=". ${1}"
-      [[ '.' = "${2}" ]] && lPath="${2}" || lPath=". ${2}"
-    fi
+  if [[ -z "${rPath}" ]] && [[ -z "${lPath}" ]]; then
+    $(type -P vim) -d "$*"
+  else
+    fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
+    lfile="$(fd ${rPath} ${fdOpt} | fzf +m)" &&
+    rfile="$(fd ${lPath} ${fdOpt} | fzf +m)" &&
+    $(type -P vim) -d "${lfile}" "${rfile}"
+  fi
+}
+```
 
-    if [[ -z "${rPath}" ]] && [[ -z "${lPath}" ]]; then
-      $(type -P vim) -d "$*"
-    else
-      fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
-      lfile="$(fd ${rPath} ${fdOpt} | fzf +m)" &&
-      rfile="$(fd ${lPath} ${fdOpt} | fzf +m)" &&
-      $(type -P vim) -d "${lfile}" "${rfile}"
-    fi
-  }
-  ```
+### smart cat
+```bash
+# smart cat - using bat by default for cat content, respect bat options
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description :
+#   - if `bat` without  paramter, then search file via `fzf` and shows via `bat`
+#   - if `bat` with 1   paramter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
+#   - if `bat` with 1st paramter is `-c`, then call default `cat` with rest of paramters
+#   - otherwise respect `bat` options, and shows via `bat`
+function cat() {
+  if [[ 0 -eq $# ]]; then
+    # shellcheck disable=SC2046
+    bat --theme='gruvbox-dark' $(fzf --exit-0)
+  elif [[ '-c' = "$1" ]]; then
+    $(type -P cat) "${@:2}"
+  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
+    local target=$1;
+    fd . "${target}" --type f --hidden --follow --exclude .git --exclude node_modules |
+      fzf --multi --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
+  else
+    bat --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
+  fi
+}
+```
 
-- smart cat
-  ```bash
-  # smart cat
-  function cat() {
-    if [[ 0 -eq $# ]]; then
-      # shellcheck disable=SC2046
-      bat --theme='gruvbox-dark' $(fzf --exit-0)
-    elif [[ '-c' = "$1" ]]; then
-      $(type -P cat) "${@:2}"
-    elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
-      local target=$1;
-      fd . "${target}" --type f --hidden --follow --exclude .git --exclude node_modules |
-        fzf --multi --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
-    else
-      bat --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
-    fi
-  }
-  ```
+### smart copy
+```bash
+# smart copy - using `fzf` to list files and copy the selected file
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description :
+#   - if `copy` without paramter, then list file via `fzf` and copy via `pbcopy` or `clip.exe`
+#   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
+function copy() {                           # osx
+  if [[ 0 -eq $# ]]; then
+    # shellcheck disable=SC2046
+    /usr/bin/pbcopy < $(fzf --multi --exit-0)
+  else
+    /usr/bin/pbcopy < "$1"
+  fi
+}
 
-- smart copy
-  ```bash
-  # smart copy
-  function copy() {
-    if [[ 0 -eq $# ]]; then
-      # shellcheck disable=SC2046
-      /usr/bin/pbcopy < $(fzf --exit-0)
-    else
-      /usr/bin/pbcopy < "$1"
-    fi
-  }
-  ```
+function copy() {                           # wsl
+  if [[ 0 -eq $# ]]; then
+    # shellcheck disable=SC2046
+    /mnt/c/Windows/System32/clip.exe < $(fzf --multi --exit-0)
+  else
+    /mnt/c/Windows/System32/clip.exe < "$1"
+  fi
+}
+```
+
+### others
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
 
@@ -533,11 +545,20 @@ $ sudo cp bin/fzf* /usr/local/bin/
 
   ![rg+fzf](../screenshot/linux/fzf-fif-rg.gif)
 
-- [chaning directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
+- chaning directory
+
+  > [!NOTE]
+  > - [changin directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
+  > - fuzzy-cd : [rumpelsepp/fcd.fish](https://gist.github.com/rumpelsepp/b1b416f52d6790de1aee) | [chrisnorris/fcd.fish](https://gist.github.com/chrisnorris/fe57c7855fd87a2636999edf1d4d735b)
+  > - [l4u/autojump_fzf.fish](https://gist.github.com/l4u/06502cf680b9a3817efddfb0a9a6ede8)
+
   - `fd`
+
+    > [!DANGER]
+    > **conflict with fd-find**
+
     ```bash
     # fd - cd to selected directory
-    ### conflict with fd-find ###
     fd() {
       local dir
       dir=$(find ${1:-.} -path '*/\.*' -prune \
@@ -549,8 +570,7 @@ $ sudo cp bin/fzf* /usr/local/bin/
     # This one differs from the above, by only showing the sub directories and not
     #  showing the directories within those.
     fd() {
-      DIR=`find * -maxdepth 0 -type d -print 2> /dev/null | fzf-tmux` \
-        && cd "$DIR"
+      DIR=$(find * -maxdepth 0 -type d -print 2> /dev/null | fzf-tmux) && cd "$DIR"
     }
     ```
 
@@ -629,38 +649,43 @@ $ sudo cp bin/fzf* /usr/local/bin/
 > [!TIP]
 > - [* iMarslo : git-del](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/git-del) to delete both local and remote branches automatically
 
-```bash
-### checkout sorted [b]ranch
-bb    = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
-                    grep --color=never -v \"origin$\" | \n\
-                    fzf +m --prompt=\"branch> \" | \n\
-                    sed -rn \"s:\\s*(origin/)?(.*)$:\\2:p\") && \n\
-                    [[ -n \"${branch}\" ]] && \n\
-                    echo -e \"\\033[1;33m~~> ${branch}\\033[0m\" && \n\
-                    git checkout \"${branch}\"; \n\
-                   '"
+```gitconfig
+[alias]
+  ### checkout sorted [b]ranch
+  bb    = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
+                      grep --color=never -v \"origin$\" | \n\
+                      fzf +m --prompt=\"branch> \" | \n\
+                      sed -rn \"s:\\s*(origin/)?(.*)$:\\2:p\") && \n\
+                      [[ -n \"${branch}\" ]] && \n\
+                      echo -e \"\\033[1;33m~~> ${branch}\\033[0m\" && \n\
+                      git checkout \"${branch}\"; \n\
+                     '"
 
-### [b]ranch [copy]
-bcopy = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
-                    grep --color=never -v \"origin$\" | \n\
-                    fzf +m --prompt=\"branch> \" | \n\
-                    sed -rn \"s:\\s*(origin/)?(.*)$:\\2:p\") && \n\
-                    [[ -n \"${branch}\" ]] && \n\
-                    echo -e \"\\033[0;33;1m~~> branch \\033[0m\\033[0;32;3m${branch}\\033[0m \\033[0;33;1mcopied\\033[0m\" && \n\
-                    pbcopy <<< \"${branch}\" \n\
-                   '"
+  ### [b]ranch [copy]
+  bcopy = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
+                      grep --color=never -v \"origin$\" | \n\
+                      fzf +m --prompt=\"branch> \" | \n\
+                      sed -rn \"s:\\s*(origin/)?(.*)$:\\2:p\") && \n\
+                      [[ -n \"${branch}\" ]] && \n\
+                      echo -e \"\\033[0;33;1m~~> branch \\033[0m\\033[0;32;3m${branch}\\033[0m \\033[0;33;1mcopied\\033[0m\" && \n\
+                      pbcopy <<< \"${branch}\" \n\
+                     '"
 ```
 
 ### unset environment
 ```bash
-# [e]nvironment [c][l]ea[r]
+# eclr - environment variable clear, support multiple select
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description : list all environment varialbe via `fzf`, and unset for selected items
+# [e]nvironment variable [c][l]ea[r]
 function eclr(){
   while read -r _env; do
     echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
     unset "${_env}"
   done < <( env |
             sed -rn 's/^([a-zA-Z0-9]+)=.*$/\1/p' |
-            fzf -1 -0 --no-sort -m --prompt='env> '
+            fzf -1 --exit-0 --no-sort --multi --prompt='env> ' --header 'TAB to select multiple items'
           )
 }
 
@@ -671,14 +696,23 @@ function eclr(){
     unset "${_env}"
   done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH' |
                   fmt -1 |
-                  fzf -1 -0 --no-sort -m --prompt='env> '
+                  fzf -1 --exit-0 \
+                         --no-sort \
+                         --multi \
+                         --prompt='env> ' \
+                         --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all'
           )
 }
 ```
 
 ![fzf for unset environment](../screenshot/linux/fzf-eclr.gif)
 
-### [ps](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
+### process
+
+> [!NOTE]
+> - [Processes](https://github.com/junegunn/fzf/wiki/examples#processes)
+> - [ctrl-r](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#updating-the-list-of-processes-by-pressing-ctrl-r)
+
 ```bash
 $ (date; ps -ef) |
   fzf --bind='ctrl-r:reload(date; ps -ef)' \
@@ -696,7 +730,8 @@ $ (date; ps -ef) |
   awk '{print $2}' |
   xargs kill -9
 ```
-- functions:
+
+- functions
   ```bash
   # [l]i[s]t [p]roces[s]
   function lsps() {
@@ -708,8 +743,8 @@ $ (date; ps -ef) |
     awk '{print $2}'
   }
 
-  # [k]ill [p]roces[s]
-  function kps() {
+  # [kill] [p]roces[s]
+  function killps() {
     (date; ps -ef) |
     fzf --bind='ctrl-r:reload(date; ps -ef)' \
         --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
@@ -727,6 +762,10 @@ $ (date; ps -ef) |
 ### kubectl
 - `kns`
   ```bash
+  # kns - kubectl set default namesapce
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @description : using `fzf` to list all available namespaces and use the selected namespace as default
   # [k]ubectl [n]ame[s]pace
   function kns() {
     local krn=$(kubecolor config get-contexts --no-headers $(kubectl config current-context) | awk "{print \$5}" | sed "s/^$/default/")
@@ -737,6 +776,7 @@ $ (date; ps -ef) |
             xargs -i bash -c "echo -e \"\033[1;33m~~> {}\\033[0m\";
                               kubecolor config set-context --current --namespace {};
                               kubecolor config get-contexts;
+                             "
   }
 
   # or limited with `kubectl get namespace`
@@ -799,58 +839,8 @@ $ (date; ps -ef) |
   ```
 
 ## config
-### [color theme](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#color-themes)
-```bash
-# junegunn/seoul256.vim (dark)
-export FZF_DEFAULT_OPTS='--color=bg+:#3F3F3F,bg:#4B4B4B,border:#6B6B6B,spinner:#98BC99,hl:#719872,fg:#D9D9D9,header:#719872,info:#BDBB72,pointer:#E12672,marker:#E17899,fg+:#D9D9D9,preview-bg:#3F3F3F,prompt:#98BEDE,hl+:#98BC99'
-
-# junegunn/seoul256.vim (light)
-export FZF_DEFAULT_OPTS='--color=bg+:#D9D9D9,bg:#E1E1E1,border:#C8C8C8,spinner:#719899,hl:#719872,fg:#616161,header:#719872,info:#727100,pointer:#E12672,marker:#E17899,fg+:#616161,preview-bg:#D9D9D9,prompt:#0099BD,hl+:#719899'
-
-# morhetz/gruvbox
-export FZF_DEFAULT_OPTS='--color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
-
-# arcticicestudio/nord-vim
-export FZF_DEFAULT_OPTS='--color=bg+:#3B4252,bg:#2E3440,spinner:#81A1C1,hl:#616E88,fg:#D8DEE9,header:#616E88,info:#81A1C1,pointer:#81A1C1,marker:#81A1C1,fg+:#D8DEE9,prompt:#81A1C1,hl+:#81A1C1'
-
-# tomasr/molokai
-export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
-```
-
-- [generating fzf color theme from vim color schemes](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#generating-fzf-color-theme-from-vim-color-schemes)
-  ```vim
-  let g:fzf_colors =
-  \ { 'fg':         ['fg', 'Normal'],
-    \ 'bg':         ['bg', 'Normal'],
-    \ 'preview-bg': ['bg', 'NormalFloat'],
-    \ 'hl':         ['fg', 'Comment'],
-    \ 'fg+':        ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \ 'bg+':        ['bg', 'CursorLine', 'CursorColumn'],
-    \ 'hl+':        ['fg', 'Statement'],
-    \ 'info':       ['fg', 'PreProc'],
-    \ 'border':     ['fg', 'Ignore'],
-    \ 'prompt':     ['fg', 'Conditional'],
-    \ 'pointer':    ['fg', 'Exception'],
-    \ 'marker':     ['fg', 'Keyword'],
-    \ 'spinner':    ['fg', 'Label'],
-    \ 'header':     ['fg', 'Comment'] }
-
-  :echo fzf#wrap()
-  :call append('$', printf('export FZF_DEFAULT_OPTS="%s"', matchstr(fzf#wrap().options, "--color[^']*")))
-  ```
-
 ### [`ctrl-r`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 ```bash
-# CTRL-/ to toggle small preview window to see the full command
-# CTRL-Y to copy the command into clipboard using pbcopy
-export FZF_CTRL_R_OPTS="
-  --preview 'echo {}' --preview-window up:3:hidden:wrap
-  --bind 'ctrl-/:toggle-preview'
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-  --color header:italic
-  --header 'Press CTRL-Y to copy command into clipboard'"
-
-# or
 FZF_CTRL_R_OPTS="--preview 'echo {}'"
 FZF_CTRL_R_OPTS+=" --preview-window up:3:hidden:wrap"
 FZF_CTRL_R_OPTS+=" --bind 'ctrl-/:toggle-preview'"
@@ -858,6 +848,14 @@ FZF_CTRL_R_OPTS+=" --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'"
 FZF_CTRL_R_OPTS+=" --color header:italic"
 FZF_CTRL_R_OPTS+=" --header 'Press CTRL-Y to copy command into clipboard'"
 export FZF_CTRL_R_OPTS
+
+# or
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}' --preview-window up:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'Press CTRL-Y to copy command into clipboard'"
 ```
 
 -  `__fzf_history__`
@@ -888,12 +886,6 @@ export FZF_CTRL_R_OPTS
 ### [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 
 > [!NOTE|label:references:]
-> ```bash
-> export FZF_CTRL_T_OPTS="
->        --preview 'bat -n --color=always {}'
->        --bind 'ctrl-p:preview-up,ctrl-n:preview-down'
->        --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-> ```
 > - to disable/reset osx default <kbd>⌃</kbd>+<kbd>↑</kbd> and <kbd>⌃</kbd>+<kbd>↓</kbd>
 >   - **System Settings** ⇢ **Keyboard** ⇢ **Keyboard Shutcuts...** ⇢ **Mission Control**
 >     ![keyboards ⇢ shortcuts](../screenshot/osx/osx-settings-keyboards-mission-control.png)
@@ -903,17 +895,17 @@ export FZF_CTRL_R_OPTS
 
 ```bash
 # preview file content using bat (https://github.com/sharkdp/bat)
-export FZF_CTRL_T_OPTS="
-  --preview 'bat -n --color=always {}'
-  --bind 'ctrl-p:preview-up,ctrl-n:preview-down'
-  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-
-# or
 FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
 FZF_CTRL_T_OPTS+=" --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 FZF_CTRL_T_OPTS+=" --bind 'ctrl-p:preview-up,ctrl-n:preview-down'"
 FZF_CTRL_T_OPTS+=" --header 'CTRL-N/CTRL-P or CTRL-↑/CTRL-↓ to view contents'"
 export FZF_CTRL_T_OPTS
+
+# or
+export FZF_CTRL_T_OPTS="
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-p:preview-up,ctrl-n:preview-down'
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 ```
 
 ![fzf ctrl-t](../screenshot/linux/fzf-ctrl-t.gif)
@@ -956,9 +948,7 @@ export FZF_CTRL_T_OPTS
       | env fzf -m
     )"
 
-    if
-      [[ -n $READLINE_LINE_NEW ]]
-    then
+    if [[ -n $READLINE_LINE_NEW ]]; then
       builtin bind '"\er": redraw-current-line'
       builtin bind '"\e^": magic-space'
       READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${READLINE_LINE_NEW}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
@@ -972,6 +962,47 @@ export FZF_CTRL_T_OPTS
   builtin bind -x '"\C-x1": __fzf_select_dir'
   builtin bind '"\C-t": "\C-x1\e^\er"'
   ```
+
+### [theme](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#color-themes)
+```bash
+# junegunn/seoul256.vim (dark)
+export FZF_DEFAULT_OPTS='--color=bg+:#3F3F3F,bg:#4B4B4B,border:#6B6B6B,spinner:#98BC99,hl:#719872,fg:#D9D9D9,header:#719872,info:#BDBB72,pointer:#E12672,marker:#E17899,fg+:#D9D9D9,preview-bg:#3F3F3F,prompt:#98BEDE,hl+:#98BC99'
+
+# junegunn/seoul256.vim (light)
+export FZF_DEFAULT_OPTS='--color=bg+:#D9D9D9,bg:#E1E1E1,border:#C8C8C8,spinner:#719899,hl:#719872,fg:#616161,header:#719872,info:#727100,pointer:#E12672,marker:#E17899,fg+:#616161,preview-bg:#D9D9D9,prompt:#0099BD,hl+:#719899'
+
+# morhetz/gruvbox
+export FZF_DEFAULT_OPTS='--color=bg+:#3c3836,bg:#32302f,spinner:#fb4934,hl:#928374,fg:#ebdbb2,header:#928374,info:#8ec07c,pointer:#fb4934,marker:#fb4934,fg+:#ebdbb2,prompt:#fb4934,hl+:#fb4934'
+
+# arcticicestudio/nord-vim
+export FZF_DEFAULT_OPTS='--color=bg+:#3B4252,bg:#2E3440,spinner:#81A1C1,hl:#616E88,fg:#D8DEE9,header:#616E88,info:#81A1C1,pointer:#81A1C1,marker:#81A1C1,fg+:#D8DEE9,prompt:#81A1C1,hl+:#81A1C1'
+
+# tomasr/molokai
+export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#E6DB74,hl:#7E8E91,fg:#F8F8F2,header:#7E8E91,info:#A6E22E,pointer:#A6E22E,marker:#F92672,fg+:#F8F8F2,prompt:#F92672,hl+:#F92672'
+```
+
+- [generating fzf color theme from vim color schemes](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#generating-fzf-color-theme-from-vim-color-schemes)
+  ```vim
+  let g:fzf_colors =
+  \ { 'fg':         ['fg', 'Normal'],
+    \ 'bg':         ['bg', 'Normal'],
+    \ 'preview-bg': ['bg', 'NormalFloat'],
+    \ 'hl':         ['fg', 'Comment'],
+    \ 'fg+':        ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+    \ 'bg+':        ['bg', 'CursorLine', 'CursorColumn'],
+    \ 'hl+':        ['fg', 'Statement'],
+    \ 'info':       ['fg', 'PreProc'],
+    \ 'border':     ['fg', 'Ignore'],
+    \ 'prompt':     ['fg', 'Conditional'],
+    \ 'pointer':    ['fg', 'Exception'],
+    \ 'marker':     ['fg', 'Keyword'],
+    \ 'spinner':    ['fg', 'Label'],
+    \ 'header':     ['fg', 'Comment'] }
+
+  :echo fzf#wrap()
+  :call append('$', printf('export FZF_DEFAULT_OPTS="%s"', matchstr(fzf#wrap().options, "--color[^']*")))
+  ```
+
 
 # [`fd`](https://github.com/sharkdp/fd)
 
@@ -1024,8 +1055,7 @@ $ cargo install --path .          # install
   $ fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules ifunc
   bin/ifunc.sh
   ```
-
-## usage
+## advanced usage
 - crontab for delete '*\.DS_*'
   ```bash
   /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs -r rm
@@ -1035,84 +1065,83 @@ $ cargo install --path .          # install
   /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r rm
   ```
 
-## advanced usage
-### [`ff`](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/ff)
+- [`ff`](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/ff)
 
-![fd-ffs](../screenshot/linux/fd-ff.png)
+  ![fd-ffs](../screenshot/linux/fd-ff.png)
 
-### `ffs`
-```bash
-# [f]ind [f]ile and [s]ort
-function ffs() {
-  local opt=''
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-          -g ) opt+="$1 "   ; shift   ;;
-         -fg ) opt+="$1 "   ; shift   ;;
-          -f ) opt+="$1 "   ; shift   ;;
-         --* ) opt+="$1 $2 "; shift 2 ;;
-          -* ) opt+="$1 "   ; shift   ;;
-           * ) break                  ;;
-    esac
-  done
+- `ffs`
+  ```bash
+  # [f]ind [f]ile and [s]ort
+  function ffs() {
+    local opt=''
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+            -g ) opt+="$1 "   ; shift   ;;
+           -fg ) opt+="$1 "   ; shift   ;;
+            -f ) opt+="$1 "   ; shift   ;;
+           --* ) opt+="$1 $2 "; shift 2 ;;
+            -* ) opt+="$1 "   ; shift   ;;
+             * ) break                  ;;
+      esac
+    done
 
-  local path=${1:-~/.marslo}
-  local num=${2:-10}
-  num=${num//-/}
-  local depth=${3:-}
-  depth=${depth//-/}
-  local option='--type f'
+    local path=${1:-~/.marslo}
+    local num=${2:-10}
+    num=${num//-/}
+    local depth=${3:-}
+    depth=${depth//-/}
+    local option='--type f'
 
-  if [[ "${opt}" =~ '-g ' ]]; then
-    # git show --name-only --pretty="format:" -"${num}" | awk 'NF' | sort -u
-    # references: https://stackoverflow.com/a/54677384/2940319
-    git log --date=iso-local --first-parent --pretty=%cd --name-status --relative |
-        awk 'NF==1{date=$1}NF>1 && !seen[$2]++{print date,$0}' FS=$'\t' |
-        head -"${num}"
-  elif [[ "${opt}" =~ '-fg ' ]]; then
-    # references: https://stackoverflow.com/a/63864280/2940319
-    git ls-tree -r --name-only HEAD -z |
-        TZ=PDT xargs -0 -I_ git --no-pager log -1 --date=iso-local --format="%ad | _" -- _ |
-        sort -r |
-        head -"${num}"
-  elif [[ "${opt}" =~ '-f ' ]]; then
-    option=${option: 1}
-    [[ -n "${depth}" ]] && option="-maxdepth ${depth} ${option}"
-    # shellcheck disable=SC2086
-    find "${path}" ${option} \
-                   -not -path '*/\.git/*' \
-                   -not -path '*/node_modules/*' \
-                   -not -path '*/go/pkg/*' \
-                   -not -path '*/git/git*/*' \
-                   -not -path '*/.marslo/utils/*' \
-                   -not -path '*/.marslo/.completion/*' \
-                   -printf "%10T+ | %p\n" |
-    sort -r |
-    head -"${num}"
-  else
-    if [[ "${opt}}" =~ .*-t.* ]] || [[ "${opt}" =~ .*--type.* ]]; then
-      option="${option//--type\ f/}"
+    if [[ "${opt}" =~ '-g ' ]]; then
+      # git show --name-only --pretty="format:" -"${num}" | awk 'NF' | sort -u
+      # references: https://stackoverflow.com/a/54677384/2940319
+      git log --date=iso-local --first-parent --pretty=%cd --name-status --relative |
+          awk 'NF==1{date=$1}NF>1 && !seen[$2]++{print date,$0}' FS=$'\t' |
+          head -"${num}"
+    elif [[ "${opt}" =~ '-fg ' ]]; then
+      # references: https://stackoverflow.com/a/63864280/2940319
+      git ls-tree -r --name-only HEAD -z |
+          TZ=PDT xargs -0 -I_ git --no-pager log -1 --date=iso-local --format="%ad | _" -- _ |
+          sort -r |
+          head -"${num}"
+    elif [[ "${opt}" =~ '-f ' ]]; then
+      option=${option: 1}
+      [[ -n "${depth}" ]] && option="-maxdepth ${depth} ${option}"
+      # shellcheck disable=SC2086
+      find "${path}" ${option} \
+                     -not -path '*/\.git/*' \
+                     -not -path '*/node_modules/*' \
+                     -not -path '*/go/pkg/*' \
+                     -not -path '*/git/git*/*' \
+                     -not -path '*/.marslo/utils/*' \
+                     -not -path '*/.marslo/.completion/*' \
+                     -printf "%10T+ | %p\n" |
+      sort -r |
+      head -"${num}"
+    else
+      if [[ "${opt}}" =~ .*-t.* ]] || [[ "${opt}" =~ .*--type.* ]]; then
+        option="${option//--type\ f/}"
+      fi
+      option="${opt} ${option} --hidden --follow --unrestricted --ignore-file ~/.fdignore"
+      [[ -n "${depth}"    ]] && option="--max-depth ${depth} ${option}"
+      [[ '.' != "${path}" ]] && option="${path} ${option}"
+      # shellcheck disable=SC2086,SC2027
+      eval """ fd . "${option}" --exec stat --printf='%y | %n\n' | sort -r | head -"${num}" """
     fi
-    option="${opt} ${option} --hidden --follow --unrestricted --ignore-file ~/.fdignore"
-    [[ -n "${depth}"    ]] && option="--max-depth ${depth} ${option}"
-    [[ '.' != "${path}" ]] && option="${path} ${option}"
-    # shellcheck disable=SC2086,SC2027
-    eval """ fd . "${option}" --exec stat --printf='%y | %n\n' | sort -r | head -"${num}" """
-  fi
-}
-```
+  }
+  ```
 
-![fd-ffs](../screenshot/linux/fd-ffs.png)
+  ![fd-ffs](../screenshot/linux/fd-ffs.png)
 
 # [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
-## install
-```bash
-# osx
-$ brew install the_silver_searcher
+- install
+  ```bash
+  # osx
+  $ brew install the_silver_searcher
 
-# ubuntu >= 13.10
-$ apt-get install silversearcher-ag
-```
+  # ubuntu >= 13.10
+  $ apt-get install silversearcher-ag
+  ```
 
 # [`rg`](https://github.com/BurntSushi/ripgrep) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
 
@@ -1123,32 +1152,32 @@ $ apt-get install silversearcher-ag
 >   - [ripgrep-zh/GUIDE.zh.md](https://github.com/chinanf-boy/ripgrep-zh/blob/master/GUIDE.zh.md)
 > - [How to get a git's branch with fuzzy finder?](https://stackoverflow.com/a/37007733/2940319)
 
-## install
-```bash
-# osx
-$ brew install ripgrep
+- install
+  ```bash
+  # osx
+  $ brew install ripgrep
 
-# rhel/centos
-$ sudo yum install -y yum-utils
-$ sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
-$ sudo yum install ripgrep
-# or via epel: https://marslo.github.io/ibook/linux/basic.html#tools-installation
-$ sudo yum install -y yum-utils epel-release
-$ sudo yum install ripgrep
+  # rhel/centos
+  $ sudo yum install -y yum-utils
+  $ sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+  $ sudo yum install ripgrep
+  # or via epel: https://marslo.github.io/ibook/linux/basic.html#tools-installation
+  $ sudo yum install -y yum-utils epel-release
+  $ sudo yum install ripgrep
 
-# ubuntu
-$ curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
-$ sudo dpkg -i ripgrep_13.0.0_amd64.deb
-# or
-$ sudo apt install -y ripgrep
+  # ubuntu
+  $ curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb
+  $ sudo dpkg -i ripgrep_13.0.0_amd64.deb
+  # or
+  $ sudo apt install -y ripgrep
 
-# from source
-$ git clone https://github.com/BurntSushi/ripgrep
-$ cd ripgrep
-$ cargo build --release
-$ ./target/release/rg --version
-0.1.3
-```
+  # from source
+  $ git clone https://github.com/BurntSushi/ripgrep
+  $ cd ripgrep
+  $ cargo build --release
+  $ ./target/release/rg --version
+  0.1.3
+  ```
 
 - info
   ```bash
@@ -1181,24 +1210,24 @@ $ ./target/release/rg --version
   /usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs -r rm
   ```
 
-## [search in dotfiles with ripgrep](https://til.hashrocket.com/posts/ezeddwpiso-search-in-dotfiles-with-ripgrep)
+- [search in dotfiles with ripgrep](https://til.hashrocket.com/posts/ezeddwpiso-search-in-dotfiles-with-ripgrep)
 
-> [!NOTE|label:references:]
-> - [#771 : .gitignore files might be searched without using '--hidden'](https://github.com/BurntSushi/ripgrep/issues/771)
-> - [#919 : RipGrep does not show hidden files even with the --hidden flag](https://github.com/BurntSushi/ripgrep/issues/919)
+  > [!NOTE|label:references:]
+  > - [#771 : .gitignore files might be searched without using '--hidden'](https://github.com/BurntSushi/ripgrep/issues/771)
+  > - [#919 : RipGrep does not show hidden files even with the --hidden flag](https://github.com/BurntSushi/ripgrep/issues/919)
 
-```bash
-$ rg --hidden 'alias cat'
+  ```bash
+  $ rg --hidden 'alias cat'
 
-# or https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044
-alias rg="rg --hidden --glob '!.git'"
+  # or https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044
+  alias rg="rg --hidden --glob '!.git'"
 
-# or `.ignore` or `.rgignore`
-$ cat ~/.rgignore
-.git/
-.tox/
-.github/
-```
+  # or `.ignore` or `.rgignore`
+  $ cat ~/.rgignore
+  .git/
+  .tox/
+  .github/
+  ```
 
 - info
   ```bash
@@ -1224,22 +1253,22 @@ $ cat ~/.rgignore
   .no-hidden
   ```
 
-![ag rg](../screenshot/osx/ag-rg.png)
+  ![ag rg](../screenshot/osx/ag-rg.png)
 
 # [`fzy`](https://github.com/jhawthorn/fzy)
-## install
-```bash
-# osx
-$ brew install fzy
+- install
+  ```bash
+  # osx
+  $ brew install fzy
 
-# debine
-$ sudo apt install fzy
+  # debine
+  $ sudo apt install fzy
 
-# source code
-$ git clone git@github.com:jhawthorn/fzy.git && cd fzy
-$ make
-$ sudo make install
-```
+  # source code
+  $ git clone git@github.com:jhawthorn/fzy.git && cd fzy
+  $ make
+  $ sudo make install
+  ```
 
 - verify
   ```bash
@@ -1254,21 +1283,21 @@ $ sudo make install
 > - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
 >   - `unset PAGER`
 
-## install
-```bash
-# ubuntu
-$ sudo apt intall bat -y
-$ ln -s /usr/bin/batcat ~/.marslo/bin/bat
+- install
+  ```bash
+  # ubuntu
+  $ sudo apt intall bat -y
+  $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
 
-# ubuntu latest version
-$ sudo apt instal -y https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-musl_0.23.0_amd64.deb
-$ ln -s /usr/bin/batcat ~/.marslo/bin/bat
+  # ubuntu latest version
+  $ sudo apt instal -y https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-musl_0.23.0_amd64.deb
+  $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
 
-# from source
-$ curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-v0.23.0-x86_64-unknown-linux-musl.tar.gz |
-       tar xzf - -C ${iRCHOME}/utils/bat-v0.23.0
-$ ln -sf ${iRCHOME}/utils/bat-v0.23.0/bat ${iRCHOME}/bin/bat
-```
+  # from source
+  $ curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-v0.23.0-x86_64-unknown-linux-musl.tar.gz |
+         tar xzf - -C ${iRCHOME}/utils/bat-v0.23.0
+  $ ln -sf ${iRCHOME}/utils/bat-v0.23.0/bat ${iRCHOME}/bin/bat
+  ```
 
 - verify
   ```bash
@@ -1279,36 +1308,36 @@ $ ln -sf ${iRCHOME}/utils/bat-v0.23.0/bat ${iRCHOME}/bin/bat
 ![bat cat](../screenshot/linux/bat-cat.png)
 
 ## usage
-### `help()`
-```bash
-# in your .bashrc/.zshrc/*rc
-alias bathelp='bat --plain --language=help'
-help() { "$@" --help 2>&1 | bathelp }
-
-# calling in bash:
-# $ help bat
-```
-
-- for zsh
+- `help()`
   ```bash
-  $ alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
-  $ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+  # in your .bashrc/.zshrc/*rc
+  alias bathelp='bat --plain --language=help'
+  help() { "$@" --help 2>&1 | bathelp }
+
+  # calling in bash:
+  # $ help bat
   ```
 
-### [cygwin path issue](https://github.com/sharkdp/bat?tab=readme-ov-file#cygwin)
-```bash
-bat() {
-    local index
-    local args=("$@")
-    for index in $(seq 0 ${#args[@]}) ; do
-        case "${args[index]}" in
-        -*) continue;;
-        *)  [ -e "${args[index]}" ] && args[index]="$(cygpath --windows "${args[index]}")";;
-        esac
-    done
-    command bat "${args[@]}"
-}
-```
+  - for zsh
+    ```bash
+    $ alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+    $ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+    ```
+
+- [cygwin path issue](https://github.com/sharkdp/bat?tab=readme-ov-file#cygwin)
+  ```bash
+  bat() {
+      local index
+      local args=("$@")
+      for index in $(seq 0 ${#args[@]}) ; do
+          case "${args[index]}" in
+          -*) continue;;
+          *)  [ -e "${args[index]}" ] && args[index]="$(cygpath --windows "${args[index]}")";;
+          esac
+      done
+      command bat "${args[@]}"
+  }
+  ```
 
 ## config
 - [config-file](https://github.com/sharkdp/bat#format)

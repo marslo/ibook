@@ -1,6 +1,5 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [DSL](#dsl)
   - [How do I access Pipeline DSLs from inside a Groovy class?](#how-do-i-access-pipeline-dsls-from-inside-a-groovy-class)
