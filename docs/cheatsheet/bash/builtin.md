@@ -90,7 +90,7 @@
 >   - `set -H` or `set -o histexpand` to enable
 >   - more via `$ man bash | less -Ip 'Event Designators'`
 >
-> **set**
+> - **set**
 >   ```
 >   set [--abefhkmnptuvxBCEHPT] [-o option-name] [argument …]
 >   set [+abefhkmnptuvxBCEHPT] [+o option-name] [argument …]
@@ -102,6 +102,7 @@
 >   BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
 >   SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
 >   ```
+> - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
 
 
 |      OPTION      | EXPLANATION                                                                                                  |
