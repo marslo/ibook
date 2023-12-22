@@ -43,7 +43,7 @@
   * [viml](vim/viml.md)
   * [windows](vim/windows.md)
   * [troubleshooting](vim/troubleshooting.md)
-* [devops](devops/powerfullTools.md)
+* [devops](devops/devops.md)
   * [admin tools](devops/adminTools.md)
   * [git](devops/git/git.md)
     * [config](devops/git/config.md)

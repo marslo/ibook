@@ -8,6 +8,7 @@
   - [word splitting](#word-splitting)
   - [filename expansion](#filename-expansion)
 - [quoting](#quoting)
+- [ternary arithmetic](#ternary-arithmetic)
 - [brace expansion](#brace-expansion)
   - [segmented continuous](#segmented-continuous)
   - [scp multipule folder/file to target server](#scp-multipule-folderfile-to-target-server)
@@ -163,6 +164,31 @@ arr=(apple)  # an indexed array with a single element
 | 20   | `"!cmd"`                   | `cmd` args              | expands to the most recent command matching `"cmd"`                                                |
 | 21   | `$'!cmd'`                  | `!cmd`                  | history expansion character `'!'` is ignored inside ANSI-C quotes                                  |
 
+## ternary arithmetic
+
+> [!NOTE]
+> - [Shell Scripting Ternary operator to get string result](https://stackoverflow.com/q/48041845/2940319)
+
+- string
+  ```bash
+  $ [[ '.' = '.' ]] && path='.' || path='--'
+  $ echo $path
+  .
+
+  $ [[ '.' = '-' ]] && path='.' || path='--'
+  $ echo $path
+  --
+  ```
+- mathematical operation
+  ```bash
+  $ (( 3 == 3 ? (var=1) : (var=0) ))
+  $ echo $var
+  1
+
+  $ (( 3 == 1 ? (var=1) : (var=0) ))
+  $ echo $var
+  0
+  ```
 
 ## [brace expansion](https://www.gnu.org/software/bash/manual/html_node/brace-expansion.html)
 ### [segmented continuous](https://stackoverflow.com/a/44429171/2940319)
