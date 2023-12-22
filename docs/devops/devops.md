@@ -3,7 +3,6 @@
 
 - [`fzf`](#fzf)
   - [install](#install)
-    - [install from source code for wsl](#install-from-source-code-for-wsl)
   - [shortcuts](#shortcuts)
     - [action and select](#action-and-select)
     - [movement](#movement)
@@ -25,11 +24,10 @@
     - [`ctrl-t`](#ctrl-t)
     - [theme](#theme)
 - [`fd`](#fd)
-  - [install](#install-1)
   - [advanced usage](#advanced-usage-1)
-- [`ag` the faster `mg`](#ag-the-faster-mg)
 - [`rg` the faster `mg`](#rg-the-faster-mg)
   - [usage](#usage-1)
+- [`ag` the faster `mg`](#ag-the-faster-mg)
 - [`fzy`](#fzy)
 - [`bat`](#bat)
   - [usage](#usage-2)
@@ -143,24 +141,24 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 
 ![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf-color-theme-gruvbox-marslo.png)
 
-### install from source code for wsl
+- install from source code for wsl
 
-> [!NOTE|label:this solution for install latest fzf in wsl]
-> - in wsl Ubuntu, the fzf version is `0.29`
->   ```bash
->   $ sudo apt search fzf
->   Sorting... Done
->   Full Text Search... Done
->   fzf/jammy 0.29.0-1 amd64
->     general-purpose command-line fuzzy finder
->   ```
-> - [* Fzf – A Quick Fuzzy File Search from Linux Terminal](https://www.tecmint.com/fzf-fuzzy-file-search-from-linux-terminal/)
+  > [!NOTE|label:this solution for install latest fzf in wsl]
+  > - in wsl Ubuntu, the fzf version is `0.29`
+  >   ```bash
+  >   $ sudo apt search fzf
+  >   Sorting... Done
+  >   Full Text Search... Done
+  >   fzf/jammy 0.29.0-1 amd64
+  >     general-purpose command-line fuzzy finder
+  >   ```
+  > - [* Fzf – A Quick Fuzzy File Search from Linux Terminal](https://www.tecmint.com/fzf-fuzzy-file-search-from-linux-terminal/)
 
-```bash
-$ git clone git@github.com:junegunn/fzf.git
-$ bash -x install --all
-$ sudo cp bin/fzf* /usr/local/bin/
-```
+  ```bash
+  $ git clone git@github.com:junegunn/fzf.git
+  $ bash -x install --all
+  $ sudo cp bin/fzf* /usr/local/bin/
+  ```
 
 - offline install
   ```bash
@@ -253,7 +251,7 @@ $ sudo cp bin/fzf* /usr/local/bin/
     <tr>
       <td style="text-align:center;"><kbd>↑</kbd></td>
       <td style="text-align:center;"><kbd>↓</kbd></td>
-      <td style="text-align:center; vertical-align:middle" rowspan="4"><kbd>⇥</kbd></td>
+      <td style="text-align:center; vertical-align:middle" rowspan="2"><kbd>⇥</kbd></td>
     </tr>
     <tr>
       <td style="text-align:center;"><kbd>ctrl</kbd> + <kbd>k</kbd></td>
@@ -262,6 +260,7 @@ $ sudo cp bin/fzf* /usr/local/bin/
     <tr>
       <td style="text-align:center;"><kbd>ctrl</kbd> + <kbd>p</kbd></td>
       <td style="text-align:center;"><kbd>ctrl</kbd> + <kbd>n</kbd></td>
+      <td style="text-align:center; vertical-align:middle" rowspan="2"><kbd>shift</kbd> + <kbd>⇥</kbd></td>
     </tr>
     <tr>
       <td style="text-align:center;"><kbd>ctrl</kbd> + <kbd>k</kbd></td>
@@ -649,7 +648,7 @@ function copy() {                           # wsl
 > [!TIP]
 > - [* iMarslo : git-del](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/git-del) to delete both local and remote branches automatically
 
-```gitconfig
+```editorconfig
 [alias]
   ### checkout sorted [b]ranch
   bb    = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
@@ -1012,34 +1011,34 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 > - [How to Find Files with fd Command in Linux](https://www.atlantic.net/vps-hosting/how-to-find-files-with-fd-command-in-linux/)
 > - [Fd – The Best Alternative to ‘Find’ Command for Quick File Searching](https://www.tecmint.com/fd-alternative-to-find-command/)
 
-## install
-```bash
-# osx
-$ brew install fd
-# v9.0.0
-$ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
+-  install
+  ```bash
+  # osx
+  $ brew install fd
+  # v9.0.0
+  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
 
-# debine
-$ sudo apt install fd-find
-$ ln -s $(which fdfind) ~/.local/bin/fd
-$ export PATH=~/.local:$PATH
+  # debine
+  $ sudo apt install fd-find
+  $ ln -s $(which fdfind) ~/.local/bin/fd
+  $ export PATH=~/.local:$PATH
 
-# centos
-$ sudo dnf install fd-find
+  # centos
+  $ sudo dnf install fd-find
 
-# from source
-$ git clone https://github.com/sharkdp/fd && cd fd
+  # from source
+  $ git clone https://github.com/sharkdp/fd && cd fd
 
-# osx
-$ brew install rust
-$ cargo install amethyst_tools
+  # osx
+  $ brew install rust
+  $ cargo install amethyst_tools
 
-$ cargo build                     # build
-$ cargo test                      # run unit tests and integration tests
-$ cargo install --debug --path .  # install
-# or
-$ cargo install --path .          # install
-```
+  $ cargo build                     # build
+  $ cargo test                      # run unit tests and integration tests
+  $ cargo install --debug --path .  # install
+  # or
+  $ cargo install --path .          # install
+  ```
 
 - verify
   ```bash
@@ -1058,11 +1057,11 @@ $ cargo install --path .          # install
 ## advanced usage
 - crontab for delete '*\.DS_*'
   ```bash
-  /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs -r rm
+  /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
   # or
-  /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r rm
+  /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
   # or
-  /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r rm
+  /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r -i rm '{}'
   ```
 
 - [`ff`](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/ff)
@@ -1133,16 +1132,6 @@ $ cargo install --path .          # install
 
   ![fd-ffs](../screenshot/linux/fd-ffs.png)
 
-# [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
-- install
-  ```bash
-  # osx
-  $ brew install the_silver_searcher
-
-  # ubuntu >= 13.10
-  $ apt-get install silversearcher-ag
-  ```
-
 # [`rg`](https://github.com/BurntSushi/ripgrep) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
 
 > [!NOTE]
@@ -1207,7 +1196,7 @@ $ cargo install --path .          # install
 ## usage
 - crontab for delete '*\.DS_*'
   ```bash
-  /usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs -r rm
+  /usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs -r -i rm '{}'
   ```
 
 - [search in dotfiles with ripgrep](https://til.hashrocket.com/posts/ezeddwpiso-search-in-dotfiles-with-ripgrep)
@@ -1254,6 +1243,16 @@ $ cargo install --path .          # install
   ```
 
   ![ag rg](../screenshot/osx/ag-rg.png)
+
+# [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
+- install
+  ```bash
+  # osx
+  $ brew install the_silver_searcher
+
+  # ubuntu >= 13.10
+  $ apt-get install silversearcher-ag
+  ```
 
 # [`fzy`](https://github.com/jhawthorn/fzy)
 - install
