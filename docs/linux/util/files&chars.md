@@ -1,6 +1,5 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [`.join()` alike in shell](#join-alike-in-shell)
 - [find out the file is ending by crlf or lf](#find-out-the-file-is-ending-by-crlf-or-lf)
