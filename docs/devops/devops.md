@@ -23,6 +23,7 @@
     - [`ctrl-r`](#ctrl-r)
     - [`ctrl-t`](#ctrl-t)
     - [theme](#theme)
+  - [tips](#tips)
 - [`fd`](#fd)
   - [advanced usage](#advanced-usage-1)
 - [`rg` the faster `mg`](#rg-the-faster-mg)
@@ -357,7 +358,7 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 #   - if `vim` commands with    paramters
 #       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
 #       - otherwise call regular vim to open file(s)
-function vim() {
+function vim() {                           # magic vim - fzf list in most recent modified order
   local target
   local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
   if [[ 0 -eq $# ]]; then
@@ -375,7 +376,7 @@ function vim() {
 # @author      : marslo
 # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
 # @description : list 10 most recently used files via fzf, and open by regular vim
-function v() {
+function v() {                             # v - open files in ~/.vim_mru_files
   local files
   files=$(grep --color=none -v '^#' ~/.vim_mru_files |
           while read -r line; do
@@ -388,37 +389,50 @@ function v() {
 
 ### smart vimdiff
 ```bash
+function fzfFromPath() {                         # return file name via fzf to particular folder
+  local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
+  [[ '.' = "${1}" ]] && path="${1}" || path=". ${1}"
+  fd ${path} ${fdOpt} | fzf +m --header "filter in ${1} :"
+}
+
 # magic vimdiff - using fzf list in recent modified order
 # @author      : marslo
 # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
 # @description :
-#   - if `vimdiff` commands without parameter , then list files in `.` and `~/.marslo`
-#   - if `vimdiff` commands with 1  parameter , and `$1` is a directory; then list files in `.` and `$1`
-#   - if `vimdiff` commands with 2  parameters, and `$1` and `$2` are all directory; then list files in `$1` and `$2`
-#   - otherwise call regular vimdiff for `$*`
-function vimdiff() {
-  local rPath
-  local lPath
+#   - if any of paramters is directory, then get file path via fzf in target path first
+#   - if `vimdiff` commands without parameter , then compare files in `.` and `~/.marslo`
+#   - if `vimdiff` commands with 1  parameter , then compare files in current path and `$1`
+#   - if `vimdiff` commands with 2  parameters, then compare files in `$1` and `$2`
+#   - otherwise ( if more than 2 paramters )  , then compare files in `${*: -2:1}` and `${*: -1}` with paramters of `${*: 1:$#-2}`
+function vimdiff() {                       # smart vimdiff
+  local lFile
+  local rFile
+  local option
 
   if [[ 0 -eq $# ]]; then
-    rPath='.'
+    lFile=$(fzfFromPath '.')
     # shellcheck disable=SC2154
-    lPath=". ${iRCHOME}"
-  elif [[ 1 -eq $# ]] && [[ -d "$1" ]]; then
-    [[ '.' = "${1}" ]] && lPath="${1}" || lPath=". ${1}"
-  elif [[ 2 -eq $# ]] && [[ -d "$1" ]] && [[ -d "$2" ]]; then
-    [[ '.' = "${1}" ]] && rPath="${1}" || rPath=". ${1}"
-    [[ '.' = "${2}" ]] && lPath="${2}" || lPath=". ${2}"
+    rFile=$(fzfFromPath "${iRCHOME}")
+  elif [[ 1 -eq $# ]]; then
+    lFile=$(fzfFromPath '.')
+    [[ -d "$1" ]] && rFile=$(fzfFromPath "$1") || rFile="$1"
+  elif [[ 2 -eq $# ]]; then
+    [[ -d "$1" ]] && lFile=$(fzfFromPath "$1") || lFile="$1"
+    [[ -d "$2" ]] && rFile=$(fzfFromPath "$2") || rFile="$2"
+  else
+    option="${*: 1:$#-2}"
+    [[ -d "${*: -2:1}" ]] && lFile=$(fzfFromPath "${*: -2:1}") || lFile="${*: -2:1}"
+    [[ -d "${*: -1}"   ]] && rFile=$(fzfFromPath "${*: -1}")   || rFile="${*: -1}"
   fi
 
-  if [[ -z "${rPath}" ]] && [[ -z "${lPath}" ]]; then
-    $(type -P vim) -d "$*"
-  else
-    fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
-    lfile="$(fd ${rPath} ${fdOpt} | fzf +m)" &&
-    rfile="$(fd ${lPath} ${fdOpt} | fzf +m)" &&
-    $(type -P vim) -d "${lfile}" "${rfile}"
-  fi
+  [[ -f "${lFile}" ]] && [[ -f "${rFile}" ]] && $(type -P vim) -d ${option} "${lFile}" "${rFile}"
+}
+
+function vd() {                            # vd - open vimdiff loaded files from ~/.vim_mru_files
+  files=$( grep --color=none -v '^#' ~/.vim_mru_files |
+           xargs -d'\n' -I_ bash -c "sed 's:\~:$HOME:' <<< _" |
+           fzf --multi --sync
+         ) && vimdiff ${files}
 }
 ```
 
@@ -432,15 +446,16 @@ function vimdiff() {
 #   - if `bat` with 1   paramter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
 #   - if `bat` with 1st paramter is `-c`, then call default `cat` with rest of paramters
 #   - otherwise respect `bat` options, and shows via `bat`
-function cat() {
+function cat() {                           # smart cat
+  local fdOpt="--type f --hidden --follow --exclude .git --exclude node_modules --exec-batch ls -t"
   if [[ 0 -eq $# ]]; then
     # shellcheck disable=SC2046
-    bat --theme='gruvbox-dark' $(fzf --exit-0)
+    bat --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --exit-0)
   elif [[ '-c' = "$1" ]]; then
     $(type -P cat) "${@:2}"
   elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
     local target=$1;
-    fd . "${target}" --type f --hidden --follow --exclude .git --exclude node_modules |
+    fd . "${target}" ${fdOpt} |
       fzf --multi --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
   else
     bat --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
@@ -647,6 +662,7 @@ function copy() {                           # wsl
 
 > [!TIP]
 > - [* iMarslo : git-del](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/git-del) to delete both local and remote branches automatically
+> - [junegunn/fzf-git.sh](https://github.com/junegunn/fzf-git.sh)
 
 ```editorconfig
 [alias]
@@ -1002,6 +1018,85 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   :call append('$', printf('export FZF_DEFAULT_OPTS="%s"', matchstr(fzf#wrap().options, "--color[^']*")))
   ```
 
+## tips
+
+- select by column
+
+  > [!NOTE]
+  > - [#3514 : Manual output on enter, no linebreak.](https://github.com/junegunn/fzf/discussions/3514#discussioncomment-7667338)
+
+  ```bash
+  $ seq 20 | pr -ts' ' --column 4
+  1 6 11 16
+  2 7 12 17
+  3 8 13 18
+  4 9 14 19
+  5 10 15 20
+
+  $ seq 20 | pr -ts' ' --column 4 | fzf --sync --bind 'start:select-all+become:cat {+f2}'
+  6
+  7
+  8
+  9
+  10
+
+  $ seq 20 | pr -ts' ' --column 4 | fzf --sync --bind 'start:select-all+become:echo {+2}'
+  6 7 8 9 10
+  ```
+
+- `--with-nth`
+
+  > [!NOTE]
+  > - [#102: Feature Request: Option to hide some fields]
+
+  ```bash
+  $ echo {a..z} | fzf --with-nth='1..3'
+  ```
+
+  ![fzf --with-nth](../screenshot/linux/fzf-with-nth.png)
+
+  ```bash
+  # https://github.com/junegunn/fzf/issues/1323#issuecomment-499615418
+  # for git comment show
+  $ git log --pretty=oneline |
+    fzf --ansi --delimiter=' ' --no-multi --preview='git show --color=always {1}' --with-nth=2.. |
+    cut --delimiter=' ' --field=
+  ```
+
+  ![git with-nth for git comments](../screenshot/linux/fzf-with-nth-git.gif)
+
+- select-all
+  ```bash
+  $ seq 3 | fzf --multi --sync --bind start:last+select-all
+  ```
+  ![fzf select-all](../screenshot/linux/fzf-select-all.png)
+
+
+- for git
+
+  > [!NOTE]
+  > - [fshow](https://github.com/junegunn/fzf/issues/1323#issuecomment-780326885)
+
+  ```bash
+  # cannot be used to grab a sha as an argument.
+  fshow() {
+    git log --color=always \
+        --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+    fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+        --bind "ctrl-o:execute(git show --color=always {1})"
+  }
+  ```
+
+  - [view history by fzf, show revision number finally](https://github.com/junegunn/fzf/issues/1323#issuecomment-781244399)
+    ```bash
+    git log --pretty=oneline \
+        | fzf --ansi --delimiter=' ' --no-multi --preview='git show --color=always {1}' --with-nth=2.. \
+        | cut --delimiter=' ' --field=1
+    # or
+    git log --pretty=oneline --all \
+        | fzf --ansi --no-multi --preview='git show --color=always {1}' --with-nth=2.. \
+        | awk '{print $1}'
+    ```
 
 # [`fd`](https://github.com/sharkdp/fd)
 
