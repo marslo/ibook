@@ -10,6 +10,7 @@
   - [`Error: 0x80040326`](#error-0x80040326)
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 - [tip](#tip)
+  - [wsl or ubuntu](#wsl-or-ubuntu)
   - [enable vim clipboard](#enable-vim-clipboard)
   - [config](#config)
   - [cmds](#cmds)
@@ -398,6 +399,28 @@ sudo update-binfmts --disable cli
     [interop]
     appendWindowsPath=false
     ```
+
+### wsl or ubuntu
+
+> [!TIP]
+> - [In a bash script, how can I tell if the script is running under Ubuntu pure or in Linux subsystem for Windows?](https://superuser.com/a/1464436/112396)
+> - [How can I check if the environment is WSL from a shell script?](https://superuser.com/a/1749811/112396)
+> - [How to check if running in Cygwin, Mac or Linux?](https://stackoverflow.com/a/3466183/2940319)
+> - [uname](https://en.wikipedia.org/wiki/Uname)
+
+- `uname -r`
+  ```bash
+  $ uname -r | grep -q "Microsoft"
+  ```
+
+- `/proc/sys/kernel/osrelease` or `/proc/version`
+  ```bash
+  $ cat /proc/version
+  Linux version 5.15.133.1-microsoft-standard-WSL2 (root@1c602f52c2e4) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP Thu Oct 5 21:02:42 UTC 2023
+
+  $ cat /proc/sys/kernel/osrelease
+  5.15.133.1-microsoft-standard-WSL2
+  ```
 
 ### enable vim clipboard
 

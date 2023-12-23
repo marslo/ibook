@@ -162,46 +162,66 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
   ```
 
 - offline install
-  ```bash
-  ################ for offline installation only ################
-  # check current version for offline installation
-  $ uname -sm
-  Linux x86_64
 
-  # download correct package according https://github.com/junegunn/fzf/blob/master/install#L170
-  # i.e.: Linux x86_64 -> fzf-$version-linux_amd64.tar.gz
-  $ cp fzf-0.42.0-linux_amd64.tar.gz /tmp/fzf.tar.gz
+  > [!NOTE]
+  > - `curl: (60) SSL certificate problem: self-signed certificate in certificate chain`:
+  >   ```bash
+  >   $ curl -fL https://github.com/junegunn/fzf/releases/download/0.44.1/fzf-0.44.1-linux_amd64.tar.gz
+  >   curl: (60) SSL certificate problem: self-signed certificate in certificate chain
+  >   More details here: https://curl.se/docs/sslcerts.html
+  >
+  >   curl failed to verify the legitimacy of the server and therefore could not
+  >   establish a secure connection to it. To learn more about this situation and
+  >   how to fix it, please visit the web page mentioned above.
+  >   ```
+  > - [How to fix curl: (60) SSL certificate: Invalid certificate chain](https://stackoverflow.com/a/46843526/2940319)
 
-  # modify install script `try_curl` function to not download but use local tar.gz directly
-  $ cat << 'EOF' | git apply --inaccurate-eof --ignore-whitespace
-  diff --git a/install b/install
-  index 5ac191b..342bc49 100755
-  --- a/install
-  +++ b/install
-  @@ -115,10 +115,8 @@ link_fzf_in_path() {
-  try_curl() {
-   command -v curl > /dev/null &&
-   if [[ $1 =~ tar.gz$ ]]; then
-  -    curl -fL $1 | tar -xzf -
-  -  else
-  -    local temp=${TMPDIR:-/tmp}/fzf.zip
-  -    curl -fLo "$temp" $1 && unzip -o "$temp" && rm -f "$temp"
-  +    local temp=${TMPDIR:-/tmp}/fzf.tar.gz
-  +    tar -xzf "$temp" && rm -rf "$temp"
-   fi
-  }
-  EOF
+  - `~/.curlrc`
+    ```bash
+    $ echo '--insecure' >> ~/.curlrc
+    ```
 
-  ### or modify manually ###
-  # try_curl() {
-  #   command -v curl > /dev/null &&
-  #   if [[ $1 =~ tar.gz$ ]]; then
-  #     local temp=${TMPDIR:-/tmp}/fzf.tar.gz
-  #     tar -xzf "$temp" && rm -rf "$temp"
-  #   fi
-  # }
-  ################ for offline installation only ################
-  ```
+  - offline installation
+    ```bash
+    ################ for offline installation only ################
+    # check current version for offline installation
+    $ uname -sm
+    Linux x86_64
+
+    # download correct package according https://github.com/junegunn/fzf/blob/master/install#L170
+    # i.e.: Linux x86_64 -> fzf-$version-linux_amd64.tar.gz
+    $ cp fzf-0.42.0-linux_amd64.tar.gz /tmp/fzf.tar.gz
+
+    # modify install script `try_curl` function to not download but use local tar.gz directly
+    $ cat << 'EOF' | git apply --inaccurate-eof --ignore-whitespace
+    diff --git a/install b/install
+    index 5ac191b..342bc49 100755
+    --- a/install
+    +++ b/install
+    @@ -115,10 +115,8 @@ link_fzf_in_path() {
+    try_curl() {
+     command -v curl > /dev/null &&
+     if [[ $1 =~ tar.gz$ ]]; then
+    -    curl -fL $1 | tar -xzf -
+    -  else
+    -    local temp=${TMPDIR:-/tmp}/fzf.zip
+    -    curl -fLo "$temp" $1 && unzip -o "$temp" && rm -f "$temp"
+    +    local temp=${TMPDIR:-/tmp}/fzf.tar.gz
+    +    tar -xzf "$temp" && rm -rf "$temp"
+     fi
+    }
+    EOF
+
+    ### or modify manually ###
+    # try_curl() {
+    #   command -v curl > /dev/null &&
+    #   if [[ $1 =~ tar.gz$ ]]; then
+    #     local temp=${TMPDIR:-/tmp}/fzf.tar.gz
+    #     tar -xzf "$temp" && rm -rf "$temp"
+    #   fi
+    # }
+    ################ for offline installation only ################
+    ```
 
 ## shortcuts
 
@@ -1120,25 +1140,37 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
   # centos
   $ sudo dnf install fd-find
-
-  # from source
-  $ git clone https://github.com/sharkdp/fd && cd fd
-
-  # osx
-  $ brew install rust
-  $ cargo install amethyst_tools
-
-  $ cargo build                     # build
-  $ cargo test                      # run unit tests and integration tests
-  $ cargo install --debug --path .  # install
-  # or
-  $ cargo install --path .          # install
   ```
+
+  - from source
+    ```bash
+    $ git clone https://github.com/sharkdp/fd && cd $_
+
+    # osx
+    $ brew install rust
+    $ cargo install amethyst_tools
+    # wsl/ubuntu
+    $ sudo apt install cargo
+
+    $ cargo build                     # build
+    $ cargo test                      # run unit tests and integration tests
+    $ cargo install --debug --path .  # install in osx
+    $ cargo install --path .          # install in ubuntu/wsl
+    $ ln -sf /home/marslo/.cargo/bin/fd /home/marslo/.local/bin/fd
+
+    # completion ( >= 9.0.0 )
+    # wsl/ubuntu/centos
+    $ fd --gen-completions | sudo tee /usr/share/bash-completion/completions/fd
+    # or centos
+    $ fd --gen-completions | sudo tee /etc/bash_completion.d/fd
+    # osx
+    $ fd --gen-completions | sudo tee /usr/local/etc/bash_completion.d/fd
+    ```
 
 - verify
   ```bash
   $ fd --version
-  fd 8.7.0
+  fd 9.0.0
   ```
 
 - usage
@@ -1149,6 +1181,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules ifunc
   bin/ifunc.sh
   ```
+
 ## advanced usage
 - crontab for delete '*\.DS_*'
   ```bash
@@ -1256,8 +1289,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ sudo apt install -y ripgrep
 
   # from source
-  $ git clone https://github.com/BurntSushi/ripgrep
-  $ cd ripgrep
+  $ git clone https://github.com/BurntSushi/ripgrep && cd $_
   $ cargo build --release
   $ ./target/release/rg --version
   0.1.3

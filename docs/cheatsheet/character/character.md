@@ -733,16 +733,16 @@ _foobar    _
                       > c
   f                   | e
   ```
+
   - show diff with `--<GTYPE>-group-format`
 
-    | VARIALBE    | APPLICABLE       |
-    | ----------- | ---------------- |
-    | `old`       | `GTYPE`, `LTYPE` |
-    | `new`       | `GTYPE`, `LTYPE` |
-    | `unchanged` | `GTYPE`, `LTYPE` |
-    | `changed`   | `GTYPE`          |
-
     > [!NOTE|label:tips:]
+    > | VARIALBE    | APPLICABLE       |
+    > | ----------- | ---------------- |
+    > | `old`       | `GTYPE`, `LTYPE` |
+    > | `new`       | `GTYPE`, `LTYPE` |
+    > | `unchanged` | `GTYPE`, `LTYPE` |
+    > | `changed`   | `GTYPE`          |
     > - [line format](https://www.gnu.org/software/diffutils/manual/html_node/Line-Formats.html):
     >   - `[G]TYPE` : `[g]roup` : `--<GTYPE>-group-format`
     > - [group format](https://www.gnu.org/software/diffutils/manual/diffutils.html#Line-Group-Formats)
