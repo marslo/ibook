@@ -736,13 +736,36 @@ _foobar    _
 
   - show diff with `--<GTYPE>-group-format`
 
+    <div style="margin-left: 1.5em;">
+      <table>
+      <thead>
+        <tr>
+          <th style="text-align:center;vertical-align:middle">VARIABLE</th>
+          <th style="text-align:center;vertical-align:middle">APPLICABLE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center;"><code>old</code></td>
+          <td style="text-align:center;"><code>GTYPE</code>, <code>LTYPE</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><code>new</code></td>
+          <td style="text-align:center;"><code>GTYPE</code>, <code>LTYPE</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><code>unchanged</code></td>
+          <td style="text-align:center;"><code>GTYPE</code>, <code>LTYPE</code></td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><code>changed</code></td>
+          <td style="text-align:center;"><code>GTYPE</code></td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+
     > [!NOTE|label:tips:]
-    > | VARIALBE    | APPLICABLE       |
-    > | ----------- | ---------------- |
-    > | `old`       | `GTYPE`, `LTYPE` |
-    > | `new`       | `GTYPE`, `LTYPE` |
-    > | `unchanged` | `GTYPE`, `LTYPE` |
-    > | `changed`   | `GTYPE`          |
     > - [line format](https://www.gnu.org/software/diffutils/manual/html_node/Line-Formats.html):
     >   - `[G]TYPE` : `[g]roup` : `--<GTYPE>-group-format`
     > - [group format](https://www.gnu.org/software/diffutils/manual/diffutils.html#Line-Group-Formats)
@@ -786,13 +809,9 @@ _foobar    _
 
     $ diff \
       ->    --unchanged-group-format='' \
-      ->    --old-group-format='-------- %dn line%(n=1?:s) deleted at %df:
-      -> %<' \
-      ->    --new-group-format='-------- %dN line%(N=1?:s) added after %de:
-      -> %>' \
-      ->    --changed-group-format='-------- %dn line%(n=1?:s) changed at %df:
-      -> %<-------- to:
-      -> %>' \
+      ->    --old-group-format='-------- %dn line%(n=1?:s) deleted at %df: %<' \
+      ->    --new-group-format='-------- %dN line%(N=1?:s) added after %de: %>' \
+      ->    --changed-group-format='-------- %dn line%(n=1?:s) changed at %df: %<-------- to: %>' \
       -> <(sort a.txt) <(sort b.txt)
     -------- 1 line added after 2:
     c
@@ -1953,4 +1972,3 @@ HERE DOC WITH <<
 
 ECHO THE INTENDED END WAS BEFORE THIS LINE
 {%- endcodetabs %}
-

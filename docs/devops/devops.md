@@ -1408,6 +1408,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 > - [Install and Use the Linux bat Command](https://www.linode.com/docs/guides/how-to-install-and-use-the-bat-command-on-linux/)
 > - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
 >   - `unset PAGER`
+> - [CentOS 7 - Installing the latest bat command release version from GitHub](https://github.com/sharkdp/bat/issues/325#issuecomment-697947031)
 
 - install
   ```bash
@@ -1419,16 +1420,53 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ sudo apt instal -y https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-musl_0.23.0_amd64.deb
   $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
 
-  # from source
+  # from release package
   $ curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-v0.23.0-x86_64-unknown-linux-musl.tar.gz |
          tar xzf - -C ${iRCHOME}/utils/bat-v0.23.0
   $ ln -sf ${iRCHOME}/utils/bat-v0.23.0/bat ${iRCHOME}/bin/bat
+  # or
+  $ V=$(curl --silent "https://api.github.com/repos/sharkdp/bat/releases/latest" | grep -Eo '"tag_name": "v(.*)"' | sed -E 's/.*"([^"]+)".*/\1/') &&
+      curl -sOL "https://github.com/sharkdp/bat/releases/download/$V/bat-$V-x86_64-unknown-linux-musl.tar.gz" &&
+      tar xzvf "bat-$V-x86_64-unknown-linux-musl.tar.gz" -C . &&
+      sudo sh -c "cp ./bat-$V-x86_64-unknown-linux-musl/bat /usr/local/bin/bat" &&
+      rm bat-$V-x86_64-unknown-linux-musl.tar.gz &&
+      unset V
+
+  # from source
+  $ git clone git@github.com:sharkdp/bat.git && cd bat
+  $ git submodule update -f --init --recursive
+  # or
+  $ git clone --recurse-submodules git@github.com:sharkdp/bat.git && cd bat
+
+  $ cargo install --locked bat
+
+  # build a bat binary with modified syntaxes and themes
+  $ bash assets/create.sh
+  $ cargo install --path . --locked --forc
   ```
+
+- completion
+  {% raw %}
+  ```bash
+  $ sed 's/{{PROJECT_EXECUTABLE}}/bat/'                                     "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" | sudo tee /etc/bash_completion.d/bat
+  # or
+  $ sed 's/{{PROJECT_EXECUTABLE}}/-o nosort -o bashdefault -o default bat/' "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" | sudo tee /etc/bash_completion.d/bat
+
+  # or
+  $ sed 's/{{PROJECT_EXECUTABLE}}/bat/'                                     -i "${iRCHOME}/utils/bat/assets/completions/bat.bash.in"
+  $ sed 's/{{PROJECT_EXECUTABLE}}/-o nosort -o bashdefault -o default bat/' -i "${iRCHOME}/utils/bat/assets/completions/bat.bash.in"
+  $ sudo ln -sf "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" /usr/share/bash-completion/completions/bat
+
+  # or without modify `bat.bash.in` and add complete into bashrc
+  $ sudo ln -sf "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" /usr/share/bash-completion/completions/bat
+  $ echo 'type -t _bat >/dev/null 2>&1 && complete -F _bat -o nosort -o bashdefault -o default bat' >> ~/.bashrc
+  ```
+  {% endraw %}
 
 - verify
   ```bash
   $ bat --version
-  bat 0.23.0 (871abd2)
+  bat 0.24.0 (28990bc-modified)
   ```
 
 ![bat cat](../screenshot/linux/bat-cat.png)
@@ -1453,15 +1491,15 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 - [cygwin path issue](https://github.com/sharkdp/bat?tab=readme-ov-file#cygwin)
   ```bash
   bat() {
-      local index
-      local args=("$@")
-      for index in $(seq 0 ${#args[@]}) ; do
-          case "${args[index]}" in
-          -*) continue;;
-          *)  [ -e "${args[index]}" ] && args[index]="$(cygpath --windows "${args[index]}")";;
-          esac
-      done
-      command bat "${args[@]}"
+    local index
+    local args=("$@")
+    for index in $(seq 0 ${#args[@]}) ; do
+      case "${args[index]}" in
+        -* ) continue;;
+         * ) [ -e "${args[index]}" ] && args[index]="$(cygpath --windows "${args[index]}") ";;
+      esac
+    done
+    command bat "${args[@]}"
   }
   ```
 
@@ -1506,14 +1544,14 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 
 - [new theme](https://github.com/sharkdp/bat/blob/master/README.md#adding-new-themes)
   ```bash
-  mkdir -p "$(bat --config-dir)/themes"
-  cd "$(bat --config-dir)/themes"
+  $ mkdir -p "$(bat --config-dir)/themes"
+  $ cd "$(bat --config-dir)/themes"
 
-  # Download a theme in '.tmTheme' format, for example:
-  git clone https://github.com/greggb/sublime-snazzy
+  # download a theme in '.tmtheme' format, for example:
+  $ git clone https://github.com/greggb/sublime-snazzy
 
   # Update the binary cache
-  bat cache --build
+  $ bat cache --build
   ```
 
 # [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
