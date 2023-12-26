@@ -214,6 +214,19 @@ mode: 755
 | `brew upgrade`                           | Install newer versions of outdated packages                                                                |
 | `brew upgrade [formula]`                 | Install newer version of formula                                                                           |
 | `brew versions [formula]`                | List previous versions of formulae, along with a command to checkout each version                          |
+| `brew analytics [state]`                 | Display the current state of Homebrew's analytics                                                          |
+
+- [brew analytics](https://stackoverflow.com/a/19688479/2940319)
+  ```bash
+  # turn on/off
+  $ export HOMEBREW_NO_ANALYTICS=1/0
+  $ brew analytics off/on
+
+  # check status
+  $ brew analytics
+  InfluxDB analytics are enabled.
+  Google Analytics were destroyed.
+  ```
 
 ## network
 ### show network information

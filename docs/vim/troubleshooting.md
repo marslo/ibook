@@ -43,6 +43,11 @@
   iTerm.app
   ```
 
+- [How to prevent MacVim from inheriting .profile as if it was Bash itself?](https://apple.stackexchange.com/a/137354/254265)
+  ```bash
+  $ defaults write org.vim.MacVim MMLoginShell 0
+  ```
+
 ## chars
 
 > [!NOTE|label:references:]

@@ -70,9 +70,12 @@ function installModules() {
   [[ -d "${modules}" ]] || gitbook install
 }
 
+# to rebuilt for changed file only
 function rebuiltToc() {
+  # xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null \
+  #        < <( fd . "$(git rev-parse --show-toplevel)"/docs --type f --extension md --exclude SUMMARY.md --exclude README.md )
   xargs doctoc --github --notitle --update-only --maxlevel 3 >/dev/null \
-         < <( fd . "$(git rev-parse --show-toplevel)"/docs --type f --extension md --exclude SUMMARY.md --exclude README.md )
+        < <(git diff --name-only HEAD..HEAD^)
 }
 
 function rePush(){
