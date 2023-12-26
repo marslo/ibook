@@ -44,6 +44,7 @@
 > references:
 > - [* vimcolorschemes](https://vimcolorschemes.com/)
 > - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
+> - [* amix/vimrc](https://github.com/amix/vimrc)
 {% endhint %}
 
 
@@ -1000,6 +1001,7 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
 >   - [jdt-language-server-1.19.0-202301090450.tar.gz)](https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-1.19.0-202301090450.tar.gz)
 > - [Vim/YouCompleteMe](https://wiki.archlinux.org/title/Vim/YouCompleteMe)
 > - [在vim中配置最新YouCompleteMe代码自动补全插件](https://blog.csdn.net/qq_28584889/article/details/97131637)
+> - [* How to Set Up Code-Completion for Vim in macOS](https://medium.com/@rohmanhakim/how-to-set-up-code-completion-for-vim-in-macos-9766dd459385)
 
 - environment
   - java

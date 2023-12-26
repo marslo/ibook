@@ -378,17 +378,30 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 #   - if `vim` commands with    paramters
 #       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
 #       - otherwise call regular vim to open file(s)
+#   - respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vim`
 function vim() {                           # magic vim - fzf list in most recent modified order
+  local option
   local target
-  local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore --exec-batch ls -t"
-  if [[ 0 -eq $# ]]; then
-    fd . ${fdOpt} | fzf --multi --bind="enter:become($(type -P vim) {+})"
+  local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore"
+  if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --help ) option+="$1 "   ; shift   ;;
+          -* ) option+="$1 $2 "; shift 2 ;;
+           * ) break                     ;;
+    esac
+  done
+  option+="--multi --cycle"
+
+  if [[ ! "${option}" =~ '--help' ]] && [[ 0 -eq $# ]]; then
+    fd . ${fdOpt} | fzf ${option//--help\ /} --bind="enter:become($(type -P vim) {+})"
   elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
     [[ '.' = "${1}" ]] && target="${1}" || target=". ${1}"
-    fd ${target} ${fdOpt} | fzf --multi --bind="enter:become($(type -P vim) {+})"
+    fd ${target} ${fdOpt} | fzf ${option//--help\ /} --bind="enter:become($(type -P vim) {+})"
   else
     # shellcheck disable=SC2068
-    $(type -P vim) -u $HOME/.vimrc $@
+    $(type -P vim) -u $HOME/.vimrc ${option//--multi\ --cycle/} $@
   fi
 }
 
@@ -398,10 +411,11 @@ function vim() {                           # magic vim - fzf list in most recent
 # @description : list 10 most recently used files via fzf, and open by regular vim
 function v() {                             # v - open files in ~/.vim_mru_files
   local files
-  files=$(grep --color=none -v '^#' ~/.vim_mru_files |
-          while read -r line; do
-            [ -f "${line/\~/$HOME}" ] && echo "$line"
-          done | fzf-tmux -d -m -q "$*" -1) && vim ${files//\~/$HOME}
+  files=$( grep --color=none -v '^#' ~/.vim_mru_files |
+           while read -r line; do [ -f "${line/\~/$HOME}" ] && echo "$line"; done |
+           fzf-tmux -d -m -q "$*" -1
+         ) &&
+  vim ${files//\~/$HOME}
 }
 ```
 
@@ -430,29 +444,38 @@ function vimdiff() {                       # smart vimdiff
   local option
 
   if [[ 0 -eq $# ]]; then
-    lFile=$(fzfFromPath '.')
+    lFile=$(fzfInPath '.')
     # shellcheck disable=SC2154
-    rFile=$(fzfFromPath "${iRCHOME}")
+    rFile=$(fzfInPath "${iRCHOME}")
   elif [[ 1 -eq $# ]]; then
-    lFile=$(fzfFromPath '.')
-    [[ -d "$1" ]] && rFile=$(fzfFromPath "$1") || rFile="$1"
+    lFile=$(fzfInPath '.')
+    [[ -d "$1" ]] && rFile=$(fzfInPath "$1") || rFile="$1"
   elif [[ 2 -eq $# ]]; then
-    [[ -d "$1" ]] && lFile=$(fzfFromPath "$1") || lFile="$1"
-    [[ -d "$2" ]] && rFile=$(fzfFromPath "$2") || rFile="$2"
+    [[ -d "$1" ]] && lFile=$(fzfInPath "$1") || lFile="$1"
+    [[ -d "$2" ]] && rFile=$(fzfInPath "$2") || rFile="$2"
   else
     option="${*: 1:$#-2}"
-    [[ -d "${*: -2:1}" ]] && lFile=$(fzfFromPath "${*: -2:1}") || lFile="${*: -2:1}"
-    [[ -d "${*: -1}"   ]] && rFile=$(fzfFromPath "${*: -1}")   || rFile="${*: -1}"
+    [[ -d "${*: -2:1}" ]] && lFile=$(fzfInPath "${*: -2:1}") || lFile="${*: -2:1}"
+    [[ -d "${*: -1}"   ]] && rFile=$(fzfInPath "${*: -1}")   || rFile="${*: -1}"
   fi
 
   [[ -f "${lFile}" ]] && [[ -f "${rFile}" ]] && $(type -P vim) -d ${option} "${lFile}" "${rFile}"
 }
 
+# vd - open vimdiff loaded files from ~/.vim_mru_files
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @description : list 10 most recently used files via fzf, and open by vimdiff
+#   - if `vd` commands without parameter, list 10 most recently used files via fzf, and open selected files by vimdiff
+#   - if `vd` commands with `-a` ( [q]uiet ) parameter, list 10 most recently used files via fzf and automatic select top 2, and open selected files by vimdiff
 function vd() {                            # vd - open vimdiff loaded files from ~/.vim_mru_files
+  [[ 1 -eq $# ]] && [[ '-q' = "$1" ]] && opt='--bind start:select+down+select' || opt=''
+  # shellcheck disable=SC2046
   files=$( grep --color=none -v '^#' ~/.vim_mru_files |
            xargs -d'\n' -I_ bash -c "sed 's:\~:$HOME:' <<< _" |
-           fzf --multi --sync
-         ) && vimdiff ${files}
+           fzf --multi --sync --cycle --reverse ${opt}
+         ) &&
+  vimdiff $(xargs <<< "${files}")
 }
 ```
 
@@ -467,20 +490,22 @@ function vd() {                            # vd - open vimdiff loaded files from
 #   - if `bat` with 1st paramter is `-c`, then call default `cat` with rest of paramters
 #   - otherwise respect `bat` options, and shows via `bat`
 function cat() {                           # smart cat
-  local fdOpt="--type f --hidden --follow --exclude .git --exclude node_modules --exec-batch ls -t"
+  local fdOpt='--type f --hidden --follow --exclude .git --exclude node_modules'
+  if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
   if [[ 0 -eq $# ]]; then
     # shellcheck disable=SC2046
-    bat --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --exit-0)
+    bat --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --multi --cycle --exit-0)
   elif [[ '-c' = "$1" ]]; then
     $(type -P cat) "${@:2}"
   elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
     local target=$1;
     fd . "${target}" ${fdOpt} |
-      fzf --multi --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
+      fzf --multi --cycle --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
   else
     bat --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
   fi
 }
+
 ```
 
 ### smart copy
@@ -491,21 +516,21 @@ function cat() {                           # smart cat
 # @description :
 #   - if `copy` without paramter, then list file via `fzf` and copy via `pbcopy` or `clip.exe`
 #   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
-function copy() {                           # osx
-  if [[ 0 -eq $# ]]; then
-    # shellcheck disable=SC2046
-    /usr/bin/pbcopy < $(fzf --multi --exit-0)
+function copy() {                          # smart copy osx/wsl
+  if uname -r | grep -q 'Microsoft'; then
+    COPY='/mnt/c/Windows/System32/clip.exe'
+  elif [[ 'Darwin' = "$(uname)" ]]; then
+    COPY='/usr/bin/pbcopy'
   else
-    /usr/bin/pbcopy < "$1"
+    echo -e "$(c Rs)ERROR: 'copy' function NOT support :$(c) $(c Ri)$(uanme -v)$(c)$(c Rs). EXIT..$(c)"
+    exit 0
   fi
-}
 
-function copy() {                           # wsl
   if [[ 0 -eq $# ]]; then
     # shellcheck disable=SC2046
-    /mnt/c/Windows/System32/clip.exe < $(fzf --multi --exit-0)
+    "${COPY}" < $(fzf --cycle --exit-0)
   else
-    /mnt/c/Windows/System32/clip.exe < "$1"
+    "${COPY}" < "$1"
   fi
 }
 ```
@@ -552,8 +577,7 @@ function copy() {                           # wsl
   > - [gnanderson/fif.sh](https://gist.github.com/gnanderson/d74079d16714bb8b2822a7a07cc883d4)
 
   ```bash
-  # [f]ind-[i]n-[f]ile - usage: fif <searchTerm>
-  function fif() {
+  function fif() {                           # [f]ind-[i]n-[f]ile
     if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
     $(type -P rg) --files-with-matches --no-messages --hidden --follow --smart-case "$1" |
     fzf --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
@@ -566,7 +590,7 @@ function copy() {                           # wsl
   }
 
   # or highlight as preview tool
-  fif() {
+  function fif() {                           # [f]ind-[i]n-[f]ile
     if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
     rg --color never --files-with-matches --no-messages "$1" |
     fzf --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
@@ -713,8 +737,7 @@ function copy() {                           # wsl
 # @author      : marslo
 # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
 # @description : list all environment varialbe via `fzf`, and unset for selected items
-# [e]nvironment variable [c][l]ea[r]
-function eclr(){
+function eclr() {                          # [e]nvironment variable [c][l]ea[r]
   while read -r _env; do
     echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
     unset "${_env}"
@@ -768,8 +791,7 @@ $ (date; ps -ef) |
 
 - functions
   ```bash
-  # [l]i[s]t [p]roces[s]
-  function lsps() {
+  function lsps() {                          # [l]i[s]t [p]roces[s]
     (date; ps -ef) |
     fzf --bind='ctrl-r:reload(date; ps -ef)' \
         --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
@@ -778,8 +800,7 @@ $ (date; ps -ef) |
     awk '{print $2}'
   }
 
-  # [kill] [p]roces[s]
-  function killps() {
+  function killps() {                        # [kill] [p]roces[s]
     (date; ps -ef) |
     fzf --bind='ctrl-r:reload(date; ps -ef)' \
         --header=$'Press CTRL-R to reload\n\n' --header-lines=2 \
@@ -802,7 +823,7 @@ $ (date; ps -ef) |
   # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
   # @description : using `fzf` to list all available namespaces and use the selected namespace as default
   # [k]ubectl [n]ame[s]pace
-  function kns() {
+  function kns() {                           # [k]ubectl [n]ame[s]pace
     local krn=$(kubecolor config get-contexts --no-headers $(kubectl config current-context) | awk "{print \$5}" | sed "s/^$/default/")
     kubectl get -o name namespace |
             sed "s|^.*/|  |;\|^  $(krn)$|s/ /*/" |

@@ -185,6 +185,7 @@ endif
 ```
 :echo getcompletion('', 'filetype')
 ```
+
 - or
   ```vim
   :echo getcompletion('c', 'filetype')
@@ -261,11 +262,11 @@ endif
   > - [Using tab pages](https://vim.fandom.com/wiki/Using_tab_pages)
 
   ```vim
-  function! TabMessage(cmd)
+  function! TabMessage( cmd )
     redir => message
     silent execute a:cmd
     redir END
-    if empty(message)
+    if empty( message )
       echoerr "no output"
     else
       tabnew               " use "new" instead of "tabnew" below if you prefer split windows instead of tabs
