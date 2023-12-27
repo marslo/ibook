@@ -136,7 +136,7 @@
   $ set -o
   ```
 
-  <!--sec data-title="set -o details" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="set -o details" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   $ set -o
   allexport       off
@@ -174,7 +174,7 @@
   $ set +o
   ```
 
-  <!--sec data-title="set +o details" data-id="section2" data-show=true data-collapse=true ces-->
+  <!--sec data-title="set +o details" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
   $ set +o
   set +o allexport
@@ -392,7 +392,7 @@
   $ shopt -p
   ```
 
-  <!--sec data-title="shopt | column -t" data-id="section4" data-show=true data-collapse=true ces-->
+  <!--sec data-title="shopt | column -t" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ shopt | column -t
   autocd                   off
@@ -455,7 +455,7 @@
   ```
   <!--endsec-->
 
-  <!--sec data-title="shopt | column -t" data-id="section5" data-show=true data-collapse=true ces-->
+  <!--sec data-title="shopt | column -t" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   $ shopt -p
   shopt -u autocd
@@ -704,7 +704,7 @@ $ bind -l
 
 ### `inputrc`
 
-<!--sec data-title="~/.inputrc" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="~/.inputrc" data-id="section4" data-show=true data-collapse=true ces-->
 ```bash
 $ cat ~/.inputrc
 set convert-meta off                          # allow iso-latin1 characters to be inserted
@@ -783,7 +783,7 @@ $endif
 <!--endsec-->
 
 
-<!--sec data-title="/etc/inputrc" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="/etc/inputrc" data-id="section5" data-show=true data-collapse=true ces-->
 ```bash
 $ cat /etc/inputrc
 # do not bell on tab-completion
