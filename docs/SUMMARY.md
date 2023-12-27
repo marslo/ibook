@@ -153,6 +153,7 @@
     * [files & chars](linux/util/files&chars.md)
     * [params](linux/util/params.md)
     * [tricky](linux/util/tricky.md)
+  * [nutshell](linux/nutshell.md)
   * [disk](linux/disk.md)
   * [network](linux/network.md)
   * [tools](linux/tools.md)
