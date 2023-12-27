@@ -1062,6 +1062,7 @@ alias sudo='sudo '
 
 > [!NOTE]
 > - [Bash Completion](https://sourabhbajaj.com/mac-setup/BashCompletion/)
+> - [How to Enable Bash Completion on macOS](https://tecadmin.net/enable-bash-completion-on-macos/)
 
 ```bash
 $ brew install bash-completion

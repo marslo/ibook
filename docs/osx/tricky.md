@@ -370,7 +370,7 @@ $ vim groovyConsole.app/Contents/Info.plist
     </plist>
     ```
 
-  - create dmg
+  - [create dmg](#create-image)
     ```bash
     $ hdiutil create -volname IDLE -srcfolder ~/Desktop/IDLE.app -ov IDLE.dmg
     ....
@@ -391,21 +391,7 @@ $ vim groovyConsole.app/Contents/Info.plist
     $ brew link --force --overwrite python@3.12
     ```
 
-### create dmg
-```bash
-$ hdiutil create -volname 'groovyConsole' \
-                 -srcfolder ~/Desktop/groovyConsole.app \
-                 -ov groovyConsole.dmg
-.......................
-created: /Users/marslo/Desktop/groovyConsole.dmg
-
-# or
-$ hdiutil create -volname 'groovyConsole' \
-                 -srcfolder /Applications/groovyConsole.app \
-                 -ov groovyConsole.dmg
-.................................
-created: /Users/marslo/Desktop/groovyConsole.dmg
-```
+### [create dmg](#create-image)
 
 ## [add snippets for input](https://sspai.com/post/36203)
 ### enable Technical Symbols
@@ -486,6 +472,7 @@ $ xar -xvf foo.pkg
     .......................
     created: /Users/marslo/Desktop/groovyConsole.dmg
     ```
+
 - create encrypted image
   ```bash
   $ hdiutil create -encryption \
@@ -495,7 +482,7 @@ $ xar -xvf foo.pkg
                    -ov encrypted.dmg
   ```
 
-- creaste dvd (for .iso, .img, .dmg)
+- create dvd (for .iso, .img, .dmg)
   ```bash
   $ hdiutil burn /path/to/image_file
   ```
@@ -504,6 +491,7 @@ $ xar -xvf foo.pkg
 ```bash
 $ sudo hdiutil create ~/Desktop/<name>.dmg -srcdevice /dev/<disk-identifier>
 ```
+
 - i.e.:
   ```bash
   $ sudo hdiutil create ~/Desktop/Lion.dmg -srcdevice /dev/disk2s4
@@ -513,6 +501,7 @@ $ sudo hdiutil create ~/Desktop/<name>.dmg -srcdevice /dev/<disk-identifier>
 ```bash
 $ hdiutil create <imagename>.dmg -volname "<name of volume>" -srcfolder /path/to/folder'
 ```
+
 - i.e.:
   ```bash
   $ hdiutil create ~/Desktop/marsloTest.dmg -volname 'marslo test' -srcfolder ~/Desktop/marsloTest/
@@ -567,7 +556,6 @@ $ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
 > - [Disk Management From the Command-Line, Part 1](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-1)
 > - [Disk Management From the Command-Line, Part 2](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-2)
 > - [Disk Management From the Command-Line, Part 3](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-3)
-
 {% endhint %}
 
 #### check volumn info
