@@ -1,0 +1,120 @@
+$ brew install pass
+Warning: No remote 'origin' in /usr/local/Homebrew/Library/Taps/marslo/homebrew-icu4c-70-1, skipping update!
+Warning: No remote 'origin' in /usr/local/Homebrew/Library/Taps/marslo/homebrew-icu4c-71-1, skipping update!
+==> Downloading https://ghcr.io/v2/homebrew/core/pass/manifests/1.7.4
+################################################################################################# 100.0%
+==> Fetching dependencies for pass: libgpg-error, libassuan, libgcrypt, libksba, libusb, npth, pinentry, gnupg and qrencode
+==> Downloading https://ghcr.io/v2/homebrew/core/libgpg-error/manifests/1.47
+################################################################################################# 100.0%
+==> Fetching libgpg-error
+==> Downloading https://ghcr.io/v2/homebrew/core/libgpg-error/blobs/sha256:bd833dc2e4864adf415010b6b5789
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libassuan/manifests/2.5.6
+################################################################################################# 100.0%
+==> Fetching libassuan
+==> Downloading https://ghcr.io/v2/homebrew/core/libassuan/blobs/sha256:7e7849c151251ada88d638136dfe0013
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libgcrypt/manifests/1.10.3
+################################################################################################# 100.0%
+==> Fetching libgcrypt
+==> Downloading https://ghcr.io/v2/homebrew/core/libgcrypt/blobs/sha256:b76b7d12d56c2db70d895c3babc24d90
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libksba/manifests/1.6.5
+################################################################################################# 100.0%
+==> Fetching libksba
+==> Downloading https://ghcr.io/v2/homebrew/core/libksba/blobs/sha256:db3d3ccc012b420632652c7215040cae34
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/manifests/1.0.26
+################################################################################################# 100.0%
+==> Fetching libusb
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/blobs/sha256:e5b50e9a452dcb136bf4399d1c731841c84
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/npth/manifests/1.6
+################################################################################################# 100.0%
+==> Fetching npth
+==> Downloading https://ghcr.io/v2/homebrew/core/npth/blobs/sha256:10f63696032b8fa1b949ba31ebc0829a2c859
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/pinentry/manifests/1.2.1
+################################################################################################# 100.0%
+==> Fetching pinentry
+==> Downloading https://ghcr.io/v2/homebrew/core/pinentry/blobs/sha256:53e6d1f37f718b1b3ba483d0780d663c1
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/gnupg/manifests/2.4.3-1
+################################################################################################# 100.0%
+==> Fetching gnupg
+==> Downloading https://ghcr.io/v2/homebrew/core/gnupg/blobs/sha256:2b0b7b726fb7a4e98dcefb331d7bebaac035
+################################################################################################# 100.0%
+==> Downloading https://ghcr.io/v2/homebrew/core/qrencode/manifests/4.1.1
+################################################################################################# 100.0%
+==> Fetching qrencode
+==> Downloading https://ghcr.io/v2/homebrew/core/qrencode/blobs/sha256:3d7be7074b40470b1b4a883642d6a9d6b
+################################################################################################# 100.0%
+==> Fetching pass
+==> Downloading https://ghcr.io/v2/homebrew/core/pass/blobs/sha256:c168f0693175727cfcf58a796200f6e002c49
+################################################################################################# 100.0%
+==> Installing dependencies for pass: libgpg-error, libassuan, libgcrypt, libksba, libusb, npth, pinentry, gnupg and qrencode
+==> Installing pass dependency: libgpg-error
+==> Downloading https://ghcr.io/v2/homebrew/core/libgpg-error/manifests/1.47
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/98f5d26e0bbc42377eac3ea624367f84264ea91bb4ca8c4e7cc6fa402bb3d3d5--libgpg-error-1.47.bottle_manifest.json
+==> Pouring libgpg-error--1.47.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/libgpg-error/1.47: 49 files, 1.6MB
+==> Installing pass dependency: libassuan
+==> Downloading https://ghcr.io/v2/homebrew/core/libassuan/manifests/2.5.6
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/610e925ffd1b60820d35375df9b7d7becf5f0c32b7162afda2ab5d8a99d9a70f--libassuan-2.5.6.bottle_manifest.json
+==> Pouring libassuan--2.5.6.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/libassuan/2.5.6: 17 files, 506.7KB
+==> Installing pass dependency: libgcrypt
+==> Downloading https://ghcr.io/v2/homebrew/core/libgcrypt/manifests/1.10.3
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/51a9d782e7010eccf6d60ff8e69c811398480eb544aec8866787a22cda36fccd--libgcrypt-1.10.3.bottle_manifest.json
+==> Pouring libgcrypt--1.10.3.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/libgcrypt/1.10.3: 23 files, 3.3MB
+==> Installing pass dependency: libksba
+==> Downloading https://ghcr.io/v2/homebrew/core/libksba/manifests/1.6.5
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/8e23b932176e83513e00aa1304de6ea8a3f850dde4bb79d5040b5f5175860f41--libksba-1.6.5.bottle_manifest.json
+==> Pouring libksba--1.6.5.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/libksba/1.6.5: 18 files, 498.7KB
+==> Installing pass dependency: libusb
+==> Downloading https://ghcr.io/v2/homebrew/core/libusb/manifests/1.0.26
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/ce7ffd7c94deb7060c2cac56f1d68a97b9d4bdc039f9548c3df327bee3d20ae4--libusb-1.0.26.bottle_manifest.json
+==> Pouring libusb--1.0.26.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/libusb/1.0.26: 22 files, 531.8KB
+==> Installing pass dependency: npth
+==> Downloading https://ghcr.io/v2/homebrew/core/npth/manifests/1.6
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/7f7f728b80105db0157378a1dd01ff1830028b856621f43d8ce3f07ca64b1234--npth-1.6.bottle_manifest.json
+==> Pouring npth--1.6.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/npth/1.6: 12 files, 134.5KB
+==> Installing pass dependency: pinentry
+==> Downloading https://ghcr.io/v2/homebrew/core/pinentry/manifests/1.2.1
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/e8146fc5e26cf5d163a9a273fe2ab4aa9260ccfad557452133fd0c2382b776bd--pinentry-1.2.1.bottle_manifest.json
+==> Pouring pinentry--1.2.1.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/pinentry/1.2.1: 12 files, 380.8KB
+==> Installing pass dependency: gnupg
+==> Downloading https://ghcr.io/v2/homebrew/core/gnupg/manifests/2.4.3-1
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/f51277d36a524e108cf05276bc29f8f43501badcb846d0f7d78f8c172efeead8--gnupg-2.4.3-1.bottle_manifest.json
+==> Pouring gnupg--2.4.3.sonoma.bottle.1.tar.gz
+☕️ 🐸  /usr/local/Cellar/gnupg/2.4.3: 140 files, 12.0MB
+==> Installing pass dependency: qrencode
+==> Downloading https://ghcr.io/v2/homebrew/core/qrencode/manifests/4.1.1
+Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/078d8985a246772990bd81208165562b88ac9c275ee403683fca612317120370--qrencode-4.1.1.bottle_manifest.json
+==> Pouring qrencode--4.1.1.sonoma.bottle.tar.gz
+☕️ 🐸  /usr/local/Cellar/qrencode/4.1.1: 13 files, 272.3KB
+==> Installing pass
+==> Pouring pass--1.7.4.sonoma.bottle.tar.gz
+==> Caveats
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/pass
+==> Summary
+☕️ 🐸  /usr/local/Cellar/pass/1.7.4: 34 files, 157.3KB
+==> Running `brew cleanup pass`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+==> Caveats
+==> pass
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/pass
