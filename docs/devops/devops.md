@@ -552,6 +552,30 @@ function copy() {                          # smart copy osx/wsl
 
 ### others
 
+- image view
+
+  > [!NOTE]
+  > - [eddieantonio/imgcat](https://github.com/eddieantonio/imgcat)
+
+  ```bash
+  # imgview - fzf list and preview images
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @description :
+  #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default imgview`
+  # shellcheck disable=SC2215
+  function imgview() {                       # view image via [imgcat](https://github.com/eddieantonio/imgcat)
+    fd --unrestricted --type f --exclude .git --exclude node_modules '^*\.(png|gif|jpg)$' |
+    fzf "$@" --height 100% \
+             --preview "imgcat -W \$FZF_PREVIEW_COLUMNS -H \$FZF_PREVIEW_LINES {}" \
+             --bind 'ctrl-y:execute-silent(echo -n {+} | pbcopy)+abort' \
+             --header 'Press CTRL-Y to copy name into clipboard' \
+             --preview-window 'down,80%,wrap' \
+             --exit-0 \
+    >/dev/null || true
+  }
+  ```
+
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
 
   - `fs`
@@ -1349,6 +1373,17 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   ```
 
   ![fd-ffs](../screenshot/linux/fd-ffs.png)
+
+- search for multiple pattern
+
+  > [!NOTE]
+  > - [#1139 add support for matching multiple patterns](https://github.com/sharkdp/fd/pull/1139#issuecomment-1297725086)
+  > - [#315 Finding multiple patterns](https://github.com/sharkdp/fd/issues/315#issuecomment-841869872)
+
+  ```bash
+  $ fd --unrestricted '^*\.(png|gif|jpg)$'
+  $ fd --unrestricted --extension png --extension jpg --extension gif
+  ```
 
 # [`rg`](https://github.com/BurntSushi/ripgrep) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
 
