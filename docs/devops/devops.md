@@ -488,7 +488,7 @@ function vd() {                            # vd - open vimdiff loaded files from
   # shellcheck disable=SC2046
   files=$( grep --color=none -v '^#' ~/.vim_mru_files |
            xargs -d'\n' -I_ bash -c "sed 's:\~:$HOME:' <<< _" |
-           fzf --multi --sync --cycle --reverse ${opt}
+           fzf --multi 3 --sync --cycle --reverse ${opt}
          ) &&
   vimdiff $(xargs <<< "${files}")
 }

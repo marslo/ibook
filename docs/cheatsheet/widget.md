@@ -9,6 +9,8 @@
   - [uriel1998/weather.sh](#uriel1998weathersh)
   - [szantaii/bash-weather](#szantaiibash-weather)
 - [others](#others)
+  - [figlet](#figlet)
+  - [toilet](#toilet)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -287,7 +289,7 @@
 - [modified WinScreeny](https://askubuntu.com/a/978978/92979)
   <!--sec data-title="winscreeny" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
-  #!/bin/bash
+  #!/usr/bin/env bash
   #
   # Windows Screenfetch (Without the Screenshot functionality)
   # Hacked together by Nijikokun <nijikokun@gmail.com>
@@ -565,9 +567,10 @@
 
 shopt -s extglob
 
-# https://github.com/ppo/bash-colors (v0.3.0)
-# shellcheck disable=SC2015,SC2059
-c() { [ $# == 0 ] && printf "\e[0m" || printf "$1" | sed 's/\(.\)/\1;/g;s/\([SDIUFNHT]\)/2\1/g;s/\([KRGYBMCW]\)/3\1/g;s/\([krgybmcw]\)/4\1/g;y/SDIUFNHTsdiufnhtKRGYBMCWkrgybmcw/12345789123457890123456701234567/;s/^\(.*\);$/\\e[\1m/g'; }
+# https://github.com/ppo/bash-colors
+# shellcheck disable=SC2154,SC1091
+source "${iRCHOME}"/bin/bash-color.sh
+
 function die() { echo -e "$(c R)~~> ERROR$(c) : $*" >&2; exit 2; }
 function showHelp() { echo -e "${usage}"; exit 0; }
 function capitalized() {
@@ -601,8 +604,8 @@ function windDirection() {
 
 function getLatLon() {
   ccity=$(echo "$*" | xargs | sed 's/ /%20/g')
-  # curl -skg "${API_HOME}?q=${ccity,,}&appid=${OWM_API_TOKEN}&limit=5" | jq -r '.[] | select(.state == "California") | .lat ...'
-  curl -skg "${API_HOME}/geo/1.0/direct?q=${ccity,,}&limit=1&appid=${appid}" | jq -r '.[] | "lat=" + (.lat|tostring) + "&lon=" + (.lon|tostring)' > "${locFile}"
+  # ${CURL} -skg "${API_HOME}?q=${ccity,,}&appid=${OWM_API_TOKEN}&limit=5" | jq -r '.[] | select(.state == "California") | .lat ...'
+  ${CURL} -skg "${API_HOME}/geo/1.0/direct?q=${ccity,,}&limit=1&appid=${appid}" | jq -r '.[] | "lat=" + (.lat|tostring) + "&lon=" + (.lon|tostring)' > "${locFile}"
   if [[ ! -s ${locFile} ]] || [[ ! -f "${locFile}" ]]; then
     echo '-1'
   else
@@ -617,17 +620,20 @@ function getWeatherData() {
   units='metric'
   exclude='hourly,daily,minutely,alerts'
   # shellcheck disable=SC1111,SC1110,SC2086
-  curl -skg "${API_HOME}/data/3.0/onecall?${loc}&units=${units}&exclude=${exclude}&appid=${appid}" \
+  ${CURL} -skg "${API_HOME}/data/3.0/onecall?${loc}&units=${units}&exclude=${exclude}&appid=${appid}" \
        | jq -r .current > ${tempfile}
 }
 
-source "$(dirname "$0")/iweather.icon"
+# shellcheck disable=SC2086,SC1091
+source "$(dirname $0)/iweather.icon"
 API_HOME="https://api.openweathermap.org"
+CURL='/usr/local/opt/curl/bin/curl'
 tempfile='/tmp/open-weather-map.json'
 locFile='/tmp/omw-lat-lon'
 cname='San Jose'
 verbose='false'
 appid="${OWM_API_TOKEN}"
+# shellcheck disable=SC1078,SC1079
 usage="""
 $(c M)iweather$(c) - show weather status of city
 \nNOTICE:
@@ -664,6 +670,7 @@ USAGE:
 """
 
 if [[ 0 -eq $# ]]; then
+  # shellcheck disable=SC2269
   cname="${cname}"
 # simple usage: not starts with '-' && not contains '='
 elif [[ 1 -eq $# ]] && [[ '-' != "${1::1}" ]] ; then
@@ -726,6 +733,7 @@ declare -A descMap=(
                       ['05_uvi']="${uvi} mW/cm2"
                    )
 
+# shellcheck disable=SC2086
 [[ 'true' = "${verbose}" ]] && echo -e " $(c G)$(capitalized ${cname})$(c): $(capitalized ${description})"
 echo -e "${!codeMap["x${weatherIcon:0:-1}"]}"
 
@@ -740,7 +748,7 @@ tput rc
 
 rm -rf "${tempfile}" "${locFile}"
 
-# vim: ft=sh ts=2 sts=2 sw=2 et
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
 ```
 
 <!--sec data-title="iweather.icon" data-id="section3" data-show=true data-collapse=true ces-->
@@ -932,3 +940,76 @@ mist='''
 
 ## others
 - [ruanyf/simple-bash-scripts](https://github.com/ruanyf/simple-bash-scripts/tree/master/scripts)
+
+### figlet
+
+> [!NOTE|label:references:]
+> - [font examples](http://www.figlet.org/examples.html)
+> - [font database](http://www.figlet.org/fontdb.cgi)
+> - [FIGlet Fonts Library](http://www.jave.de/figlet/fonts.html)
+> - [cmatsuoka/figlet-fonts](https://github.com/cmatsuoka/figlet-fonts/tree/master)
+> - [Figlet cheatsheet](https://devhints.io/figlet)
+
+- list all fonts
+  ```bash
+  $ while read -r _font; do
+      echo -e "\n\n>> ${_font}";
+      date +"%I:%M %P"  | figlet -w 300 -f ${_font} -d /usr/local/share/figlet;
+    done < <(fd . /usr/local/share/figlet --follow -e tlf -e flf --color never)
+  ```
+
+  - result
+    ```bash
+    >> /usr/local/share/figlet/smblock.tlf
+    ▗▌ ▞▀▖  ▗▌ ▛▀▌
+     ▌  ▗▘▐▌ ▌  ▐  ▛▀▖▛▚▀▖
+     ▌ ▗▘ ▗▖ ▌  ▌  ▙▄▘▌▐ ▌
+    ▝▀ ▀▀▘▝▘▝▀  ▘  ▌  ▘▝ ▘
+
+    >> /usr/local/share/figlet/smbraille.tlf
+     ⢺  ⠊⡱  ⢺  ⠉⡹   ⣀⡀ ⣀⣀
+     ⠼⠄ ⠮⠤: ⠼⠄ ⠸    ⡧⠜ ⠇⠇⠇
+
+    >> /usr/local/share/figlet/future.tlf
+    ╺┓ ┏━┓ ╺┓ ┏━┓   ┏━┓┏┳┓
+     ┃ ┏━┛╹ ┃   ┃   ┣━┛┃┃┃
+    ╺┻╸┗━╸╹╺┻╸  ╹   ╹  ╹ ╹
+
+    >> /usr/local/share/figlet/fonts/straight.flf
+        __      ___
+     /|  _). /|   /   _  _
+      | /__.  |  /   |_)|||
+                     |
+
+    $ realpath /usr/local/share/figlet/fonts/straight.flf
+    /usr/local/Cellar/figlet/2.2.5/share/figlet/fonts/straight.flf
+
+    $ realpath /usr/local/share/figlet/future.tlf
+    /usr/local/Cellar/toilet/0.3/share/figlet/future.tlf
+
+    $ realpath /usr/local/share/figlet/smbraille.tlf
+    /usr/local/Cellar/toilet/0.3/share/figlet/smbraille.tlf
+
+    $ realpath /usr/local/share/figlet/smblock.tlf
+    /usr/local/Cellar/toilet/0.3/share/figlet/smblock.tlf
+    ```
+
+### toilet
+
+- fonts
+  ```bash
+  $ ls $(brew --prefix toilet)/share/figlet
+  ascii12.tlf     bigascii9.tlf  circle.tlf   future.tlf  mono9.tlf      smascii9.tlf   smmono12.tlf
+  ascii9.tlf      bigmono12.tlf  emboss.tlf   letter.tlf  pagga.tlf      smblock.tlf    smmono9.tlf
+  bigascii12.tlf  bigmono9.tlf   emboss2.tlf  mono12.tlf  smascii12.tlf  smbraille.tlf  wideterm.tlf
+  ```
+
+- list all fonts
+  ```bash
+  $ while read -r _path; do
+      _n=$(basename $_path);
+      _fname=${_n//\.?lf/};
+      echo -e "\n\n>> ${_fname}";
+      date +"%I:%M %P" | toilet -f "${_fname}";
+    done < <(fd . $(brew --prefix toilet)/share/figlet --color never)
+  ```
