@@ -15,6 +15,7 @@
 ## prompt
 
 ### linux/osx
+
 - [now](https://askubuntu.com/a/1020693/92979)
 
   <!--sec data-title="now" data-id="section0" data-show=true data-collapse=true ces-->
@@ -278,6 +279,8 @@
   exit 0
   ```
   <!--endsec-->
+
+  ![screenfetch and now](../screenshot/linux/widget-now.png)
 
 ### windows
 - [nijikokun/WinScreeny](https://github.com/nijikokun/WinScreeny)
@@ -893,12 +896,13 @@ mist='''
 - [associated `now` cmd](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/now#L19)
   <!--sec data-title="now" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
-  #--------- WEATHER ----------------------------------------------------------
-  curl wttr.in/sanjose?QmM0 --fail --silent --max-time 3 > /tmp/now-weather
-  if [[ 0 -ne $? ]]; then
+  #------------------------------ WEATHER -------------------------------------
+  if ! curl ${curlOpt} wttr.in/sanjose?QmM0 --fail --silent --max-time 3 > /tmp/now-weather; then
+  #   timeout #. increase for slow connection---^
     ~/.marslo/bin/iweather > /tmp/now-weather
   fi
 
+  # was valid weather report found or an error message?
   if grep '°C' /tmp/now-weather >/dev/null 2>&1; then
     WeatherSuccess=true
     cat /tmp/now-weather
@@ -908,12 +912,12 @@ mist='''
     echo "                              "
     echo "                              "
     echo "                              "
-    echo "                              "
+    echo "                              " # replace edmonton with your city
     echo "                              "
     echo "                              "
     echo " "
   fi
-  echo " "
+  echo " "                                # pad blank lines for calendar & time to fit
   rm -rf /tmp/now-weather
   ```
   <!--endsec-->

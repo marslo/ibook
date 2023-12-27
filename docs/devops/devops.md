@@ -809,6 +809,11 @@ function copy() {                          # smart copy osx/wsl
   ![fzf for unset environment](../screenshot/linux/fzf/fzf-eclr.gif)
 
 - print and copy
+
+  > [!NOTE|label:references:]
+  > - `environ – user environment` : ( `man environ` )
+  > - [`printenv`](https://www.gnu.org/software/coreutils/manual/html_node/printenv-invocation.html)
+
   ```bash
   # penv - print environment variable, support multiple select
   # @author      : marslo
