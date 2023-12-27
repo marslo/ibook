@@ -4,6 +4,7 @@
 - [alias](#alias)
   - [`bash -<parameter>`](#bash--parameter)
 - [shell expansions](#shell-expansions)
+  - [IFS](#ifs)
   - [word splitting](#word-splitting)
   - [filename expansion](#filename-expansion)
 - [quoting](#quoting)
@@ -103,19 +104,71 @@ ls --color=always
 |       Word Splitting      | `$IFS`                                      |
 |     Filename Expansion    | `*`, `?` , `[..]`,...                       |
 
-### [word splitting](https://www.gnu.org/software/bash/manual/html_node/Word-Splitting.html)
-> due to 7 fields are spitted via `:` in /etc/passwd
+### IFS
+
+> [!NOTE]
+> - [bash read command splits line into words using space as delimiter even though space is not in IFS](https://stackoverflow.com/a/25836343/2940319)
+> - [Bash/KSH: Define Delimiter (IFS) While Using read Command](https://www.cyberciti.biz/faq/unix-linux-bash-while-read-function-define-ifs-delimiter/)
 
 ```bash
-IFS=':'
-read f1 f2 f3 f4 f5 f6 f7 < /etc/passwd
+# default IFS
+$ echo "${IFS@Q}"
+$' \t\n'
+
+$ echo "$IFS" | od -tcx1
+0000000      \t  \n  \n
+         20  09  0a  0a
+0000004
+
+$ echo -n "$IFS" | od -tcx1
+0000000      \t  \n
+         20  09  0a
+0000003
+
+# i.e.:
+$ read a b c <<< "foo bar baz"; echo $a - $b - $c
+foo - bar - baz
+```
+
+- or
+  ```bash
+  $ cat -c -etv <<<"$IFS"
+   ^I$
+  $
+
+  $ printf "%s" "$IFS" | od -to1 -vtc
+  0000000 040 011 012
+               \t  \n
+  0000003
+  ```
+
+- example
+  ```bash
+  $ IFS=' ' read -p 'Enter your first and last name : ' first last; echo ">> hello $first $last"
+  Enter your first and last name : marslo jiao
+  >> hello marslo jiao
+
+  # read from array
+  $ foo=( x=y a=b )
+  $ while IFS='=' read -r var value; do echo "$var >> $value"; done < <(printf '%s\n' "${foo[@]}")
+  x >> y
+  a >> b
+  ```
+
+  ![while read show variable](../../screenshot/linux/bash-read-ifs=-showvar.png)
+
+### [word splitting](https://www.gnu.org/software/bash/manual/html_node/Word-Splitting.html)
+
+```bash
+# due to 7 fields are spitted via `:` in /etc/passwd
+IFS=':' read f1 f2 f3 f4 f5 f6 f7 < /etc/passwd
 ```
 
 ### [filename expansion](https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html)
 > Bash scans each word for the characters `'*'`, `'?'`, and `'['`, unless the `-f` (`set -f`) option has been set
 
 | CONDITION                             | RESULT                                                                                               |
-| - | - |
+|---------------------------------------|------------------------------------------------------------------------------------------------------|
 | match found && `nullglob` disabled    | the word is regarded as a pattern                                                                    |
 | no match found && `nullglob` disabled | the word is left unchanged                                                                           |
 | no match found && `nullglob` set      | the word is removed                                                                                  |

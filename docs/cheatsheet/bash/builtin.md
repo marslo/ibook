@@ -114,7 +114,7 @@
 |       `-k`       | `-o keyword`                                                                                                 |
 |       `-m`       | `-o monitor`                                                                                                 |
 |       `-n`       | `-o noexec`                                                                                                  |
-| `-o option-name` | see [option name ](#option-name)                                                                             |
+| `-o option-name` | see [option name](#option-name)                                                                              |
 |       `-p`       | `-o privileged`<br> the `$BASH_ENV` and `$ENV` files are not processed                                       |
 |       `-t`       | `-o onecmd`                                                                                                  |
 |       `-u`       | `-o unset`<br>treat unset variables and parameters other than the special parameters '@' or '*' as an error  |
@@ -131,7 +131,12 @@
 
 
 ### show current status
-- `set -o`
+- show on/off
+  ```bash
+  $ set -o
+  ```
+
+  <!--sec data-title="set -o details" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
   $ set -o
   allexport       off
@@ -162,8 +167,14 @@
   vi              off
   xtrace          off
   ```
+  <!--endsec-->
 
-- `set +o`
+- show +o/-o
+  ```bash
+  $ set +o
+  ```
+
+  <!--sec data-title="set +o details" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ set +o
   set +o allexport
@@ -194,6 +205,8 @@
   set +o vi
   set +o xtrace
   ```
+  <!--endsec-->
+
 
 ### option name
 
@@ -228,8 +241,48 @@
 
 ## [shopt](https://www.gnu.org/software/bash/manual/html_node/the-shopt-builtin.html)
 
+{% hint style='tip' %}
+> **[set VS. shopt](https://unix.stackexchange.com/a/490474/29178)**
+> - `set` originates from the bourne shell (sh) and is part of the POSIX standard;
+> - `shopt` is bourne-again shell (bash) specific
+>   ```bash
+>   $ set | grep -e SHELLOPTS -e BASHOPTS
+>   # for shopt
+>   BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
+>   # for set
+>   SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
+>
+>   $ set -o |  column -t | grep -v off
+>   braceexpand           on
+>   emacs                 on
+>   hashall               on
+>   histexpand            on
+>   history               on
+>   interactive-comments  on
+>   monitor               on
+>
+>   $ shopt | column -t | grep -v off
+>   cdspell                  on
+>   checkwinsize             on
+>   cmdhist                  on
+>   complete_fullquote       on
+>   expand_aliases           on
+>   extglob                  on
+>   extquote                 on
+>   force_fignore            on
+>   globasciiranges          on
+>   histappend               on
+>   interactive_comments     on
+>   login_shell              on
+>   progcomp                 on
+>   promptvars               on
+>   sourcepath               on
+>   ```
+{% endhint %}
+
 > [!TIP|label:tips:]
-> check the shopt on/off
+> - [iMarslo : filename expansion](./bash.html#filename-expansion)
+> check the shopt on/off ( `set +o` )
 > - off
 >   ```bash
 >   $ shopt -u extglob
@@ -247,7 +300,7 @@
 >   0
 >   ```
 >
-> check without output
+> check without output via `-q`
 > - on
 >   ```bash
 >   $ shopt -q extglob; echo $?
@@ -260,10 +313,10 @@
 >   ```
 
 {% hint style='tip' %}
-shopt
-```bash
-shopt [-pqsu] [-o] [optname …]
-```
+> shopt
+> ```bash
+> shopt [-pqsu] [-o] [optname …]
+> ```
 {% endhint %}
 
 | option | expression               |
@@ -294,12 +347,14 @@ shopt [-pqsu] [-o] [optname …]
 - `direxpand`
 - `dirspell`
 - `dotglob`
+  - `-s`: `*` will including all `.*`
 - `execfail`
 - `expand_aliases`
 - `extdebug`
 - `extglob`
 - `extquote`
 - `failglob`
+  - `-s`: show error msg and cmd not been exectued
 - `force_fignore`
 - `globasciiranges`
 - `globstar`
@@ -331,6 +386,76 @@ shopt [-pqsu] [-o] [optname …]
 
 ### examples
 - show all status
+  ```bash
+  $ shopt | column -t
+  # or
+  $ shopt -p
+  ```
+
+  <!--sec data-title="shopt | column -t" data-id="section4" data-show=true data-collapse=true ces-->
+  ```bash
+  $ shopt | column -t
+  autocd                   off
+  assoc_expand_once        off
+  cdable_vars              off
+  cdspell                  on
+  checkhash                off
+  checkjobs                off
+  checkwinsize             on
+  cmdhist                  on
+  compat31                 off
+  compat32                 off
+  compat40                 off
+  compat41                 off
+  compat42                 off
+  compat43                 off
+  compat44                 off
+  complete_fullquote       on
+  direxpand                off
+  dirspell                 off
+  dotglob                  off
+  execfail                 off
+  expand_aliases           on
+  extdebug                 off
+  extglob                  on
+  extquote                 on
+  failglob                 off
+  force_fignore            on
+  globasciiranges          on
+  globskipdots             on
+  globstar                 off
+  gnu_errfmt               off
+  histappend               on
+  histreedit               off
+  histverify               off
+  hostcomplete             off
+  huponexit                off
+  inherit_errexit          off
+  interactive_comments     on
+  lastpipe                 off
+  lithist                  off
+  localvar_inherit         off
+  localvar_unset           off
+  login_shell              on
+  mailwarn                 off
+  no_empty_cmd_completion  off
+  nocaseglob               off
+  nocasematch              off
+  noexpand_translation     off
+  nullglob                 off
+  patsub_replacement       on
+  progcomp                 on
+  progcomp_alias           off
+  promptvars               on
+  restricted_shell         off
+  shift_verbose            off
+  sourcepath               on
+  varredir_close           off
+  xpg_echo                 off
+  ```
+  <!--endsec-->
+
+  <!--sec data-title="shopt | column -t" data-id="section5" data-show=true data-collapse=true ces-->
   ```bash
   $ shopt -p
   shopt -u autocd
@@ -387,6 +512,7 @@ shopt [-pqsu] [-o] [optname …]
   shopt -s sourcepath
   shopt -u xpg_echo
   ```
+  <!--endsec-->
 
 - show single option
   ```bash
@@ -398,45 +524,6 @@ shopt [-pqsu] [-o] [optname …]
   $ shopt -q xpg_echo; echo $?
   1
   ```
-
-{% hint style='tip' %}
-> **[set VS. shopt](https://unix.stackexchange.com/a/490474/29178)**
-> - `set` originates from the bourne shell (sh) and is part of the POSIX standard;
-> - `shopt` is bourne-again shell (bash) specific
->   ```bash
->   $ set | grep -e SHELLOPTS -e BASHOPTS
->   # for shopt
->   BASHOPTS=cdspell:checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob:extquote:force_fignore:globasciiranges:histappend:interactive_comments:login_shell:progcomp:promptvars:sourcepath
->   # for set
->   SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor
->
->   $ set -o |  column -t | grep -v off
->   braceexpand           on
->   emacs                 on
->   hashall               on
->   histexpand            on
->   history               on
->   interactive-comments  on
->   monitor               on
->
->   $ shopt | column -t | grep -v off
->   cdspell                  on
->   checkwinsize             on
->   cmdhist                  on
->   complete_fullquote       on
->   expand_aliases           on
->   extglob                  on
->   extquote                 on
->   force_fignore            on
->   globasciiranges          on
->   histappend               on
->   interactive_comments     on
->   login_shell              on
->   progcomp                 on
->   promptvars               on
->   sourcepath               on
->   ```
-{% endhint %}
 
 ## [readline](https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html) && [bind](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-bind)
 

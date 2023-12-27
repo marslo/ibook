@@ -22,6 +22,7 @@
 - [tools](#tools)
   - [java](#java)
 - [accessory](#accessory)
+  - [Alfred](#alfred)
   - [iTerm2](#iterm2)
   - [powerline](#powerline)
   - [backgroundmusic](#backgroundmusic)
@@ -1262,6 +1263,26 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 ```
 
 ## accessory
+### Alfred
+
+> [!NOTE]
+> - [workflow](https://www.alfredapp.com/workflows/) | [Alfred Gallery](https://alfred.app/)
+>   - units convertor
+>     - [deanishe/alfred-convert](https://github.com/deanishe/alfred-convert)
+>     - [units](https://units.dnsu.ch/)
+>     - [Unit converter](https://www.packal.org/workflow/unit-converter) | [wolph/alfred-converter](https://github.com/WoLpH/alfred-converter) | [Advanced calculator with fast off-line unit converter](https://www.alfredforum.com/topic/5256-advanced-calculator-with-fast-off-line-unit-converter/)
+>  - calculate
+>    - [Calculate Anything](https://alfred.app/workflows/biatidigital/calculate-anything/)
+>  - system
+>    - [Backup Preferences](https://alfred.app/workflows/alfredapp/backup-preferences/)
+>    - [`pw`: Pass](https://alfred.app/workflows/chrisgrieser/pass/) | [pass: the standard unix password manager](https://www.passwordstore.org/)
+>    - [HEIC to JPEG](https://alfred.app/workflows/alfredapp/heic-to-jpeg/)
+>    - [Flush DNS](https://alfred.app/workflows/boneskull/flush-dns/)
+>    - [IP Address](https://alfred.app/workflows/alexchantastic/ip-address/)
+>  - dev tools
+>    - [DevToys](https://alfred.app/workflows/cagechung/devtoys/)
+>    - [Hacker News Search](https://alfred.app/workflows/jereze/hacker-news-search/)
+
 ### iTerm2
 - Install Shell Integration
   ```bash

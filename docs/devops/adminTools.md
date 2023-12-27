@@ -1,6 +1,15 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [oneline commands](#oneline-commands)
+  - [cat and EOF](#cat-and-eof)
+  - [ssh](#ssh)
+  - [find and tar](#find-and-tar)
+  - [find and rename](#find-and-rename)
+  - [find and sort](#find-and-sort)
+  - [download and extract](#download-and-extract)
+- [utility](#utility)
+  - [pass](#pass)
 - [network tools](#network-tools)
   - [`vnstat`](#vnstat)
   - [`ipcalc`](#ipcalc)
@@ -11,13 +20,6 @@
   - [sar](#sar)
   - [netcat](#netcat)
   - [`ip`](#ip)
-- [oneline commands](#oneline-commands)
-  - [cat and EOF](#cat-and-eof)
-  - [ssh](#ssh)
-  - [find and tar](#find-and-tar)
-  - [find and rename](#find-and-rename)
-  - [find and sort](#find-and-sort)
-- [download and extract](#download-and-extract)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -44,6 +46,270 @@
 > - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
 > - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
 {% endhint %}
+
+## oneline commands
+
+### cat and EOF
+
+> [!NOTE|label:references:]
+> - [Chapter 19. Here Documents](https://tldp.org/LDP/abs/html/here-docs.html)
+> - [bash Heredoc](https://linuxize.com/post/bash-heredoc/)
+>   - using heredoc with ssh
+>     ```bash
+>     ssh -T user@host.com << EOF
+>     echo "The current local working directory is: $PWD"
+>     echo "The current remote working directory is: \$PWD"
+>     EOF
+>     ```
+> - [* POSIX.1 states](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap01.html#tag_17_04)
+>   ```
+>   ...an operand naming a file can be specified as '-', which means to use the standard input instead of a named file ....
+>   ```
+
+- kubectl apply from stdin
+
+  > [!NOTE|label:references:]
+  > - [Need some explaination of kubectl stdin and pipe](https://stackoverflow.com/a/72168173/2940319)
+
+  ```bash
+  $ cat << 'EOF' | kubectl apply -f -
+  ...
+  ...
+  EOF
+
+  # or
+  $ kubectl apply -f - << EOF
+  ...
+  ...
+  EOF
+  ```
+
+- git apply from stdin
+
+  ```bash
+  $ cat >> 'EOF' | git apply --inaccurate-eof --ignore-whitespace
+  ...
+  ...
+  EOF
+
+  # or
+  $ git apply --inaccurate-eof --ignore-whitespace --stat << 'EOF'
+  ...
+  ...
+  EOF
+   install |    6 ++----
+   1 file changed, 2 insertions(+), 4 deletions(-)
+  ```
+
+- git apply from clipboard
+
+  > [!NOTE|label:references:]
+  > - [Pipe (a patch in my clipboard) to `git apply`?](https://superuser.com/q/1493215/112396)
+
+  ```bash
+  $ pbpaste | git apply
+
+  $ xsel --clipboard --input | git apply
+  # or
+  $ xclip -selection clipboard -o | git apply
+  ```
+
+- patch from stdin
+
+  > [!NOTE|label:references:]
+  > - [How can I run patch through a heredoc in bash?](https://unix.stackexchange.com/a/409327/29178)
+
+  ```bash
+  $ patch --dry-run --ignore-whitespace << 'EOF'
+  ...
+  ...
+  EOF
+  ```
+
+### ssh
+- compress and ssh and extract
+  ```bash
+  $ tar cf - . | ssh elsewhere tar xf - -C /other/dir
+  ```
+
+- tips
+
+  > [!NOTE|label:references:]
+  > - [How can I copy multiple files over scp in one command?](https://superuser.com/a/116001/112396)
+
+  ```bash
+  # tips
+  $ tar cfz - . | ssh otherhost "cd /mydir; tar xvzf -"
+  # the z-flag to tar does compression. Or you can use -C to ssh:
+  $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
+  ```
+
+### find and tar
+```bash
+$ find . -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
+
+# or find with maxdepth
+$ find . -type f -name "config.xml" -maxdepth 2 -prune -print | tar czf ~/config.xml.130.tar.gz --files-from -
+
+# find with special name
+$ find . -name config\.xml -type f -print | tar czf ~/m.tar.gz --files-from -
+
+# and ssh and extract
+$ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
+```
+
+### find and rename
+```bash
+$ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
+```
+
+### find and sort
+
+- via timestamp
+  > [!NOTE]
+  > - [How to Find and Sort Files Based on Modification Date and Time in Linux](https://www.tecmint.com/find-and-sort-files-modification-date-and-time-in-linux/)
+  >   ```bash
+  >   $ find . -type f -printf "\n%AD %AT %p" | head -n 11 | sort -k1.8n -k1.1nr -k1
+  >   # or
+  >   $ find . -type f -printf "\n%Tm/%Td/%TY %TT %p" | sort -k1.8n -k1.1nr -k1
+  >   ```
+  > - [* iMarslo : find printf](../cheatsheet/character/character.html#printf)
+  > - [* `printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
+  >   ```bash
+  >   $ find . -printf "%T<format>\n"
+  >   ```
+  > - [sort by datetime format in bash](https://stackoverflow.com/a/67608960/2940319)
+  > - [how to sort file by DD-MM-YYYY dates](https://unix.stackexchange.com/a/485708/29178)
+  > - [Sort logs by date field in bash](https://stackoverflow.com/a/5243126/2940319)
+
+  ```bash
+  # via %T+
+  $ find ~/.marslo -type f -printf "%10T+ | %p\n" | sort -r | head -10
+
+  # via %Td-%Tm-%TY
+  $ find ~/.marslo -type f -printf "\n%Td-%Tm-%TY %TT %p" |
+    sort -b -k1.7,1.10 -k1.4,1.5 -k1.1,1.2 -r
+  ```
+
+  - via [awk+sort](https://stackoverflow.com/a/73881909/2940319)
+    ```bash
+    $ cat a.txt
+    ABC,1/02/2022,05:50
+    OPQ,18/10/2023,07:50
+    HIJ,31/09/2023,08:50
+    DEF,1/02/2021,06:00
+
+    $ awk -F'[,/]' '{printf "%04d-%02d-%02d\t%s\n", $4,$3,$2, $0}' a | sort -r | cut -f2-
+    OPQ,18/10/2023,07:50
+    HIJ,31/09/2023,08:50
+    ABC,1/02/2022,05:50
+    DEF,1/02/2021,06:00
+    ```
+
+### download and extract
+- tar.gz
+  ```bash
+  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz | tar xzf - -C /path/to/target
+  ```
+
+- zip
+  ```bash
+  $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
+  ```
+
+## utility
+### pass
+
+> [!NOTE]
+> - [pass: the standard unix password manager](https://www.passwordstore.org/)
+> - [video: How to Use Pass Which Is a Command Line Password Manager](https://www.youtube.com/watch?v=w34xAnNdliE)
+> - [How to Use Pass Which Is a Command Line Password Manager](https://nickjanetakis.com/blog/how-to-use-pass-which-is-a-command-line-password-manager)
+> - [archlinux: pass](https://wiki.archlinux.org/title/Pass)
+> - [compatible clients](https://www.passwordstore.org/#other)
+> - extensions
+>   - [roddhjav/pass-tomb](https://github.com/roddhjav/pass-tomb)
+>   - [tadfisher/pass-otp)](https://github.com/tadfisher/pass-otp)
+>   - [roddhjav/pass-import](https://github.com/roddhjav/pass-import)
+>   - [roddhjav/pass-update](https://github.com/roddhjav/pass-update)
+>   - [roddhjav/pass-audit](https://github.com/roddhjav/pass-audit)
+>   - [ayushnix/pass-coffin](https://github.com/ayushnix/pass-coffin)
+>   - [ayushnix/pass-tessen](https://github.com/ayushnix/pass-tessen)
+
+- env
+  ```bash
+  $ export PASSWORD_STORE_DIR=~/.password-store
+  ```
+
+- insert
+  ```bash
+  $ pass insert <NAME>
+
+  # i.e.:
+  $ pass insert test
+  Enter password for test: abc
+  Retype password for test: abc
+  $ pass test
+  abc
+
+  # copy
+  $ pass -c test
+  Copied test to clipboard. Will clear in 45 seconds.
+  ```
+
+  ![pass insert](../screenshot/linux/cmd-pass-insert.gif)
+
+- advanced usage
+  - pw
+    ```bash
+    pw() {
+      export PASSWORD_STORE_CLIP_TIME=8
+      export PASSWORD_STORE_X_SELECTION=primary
+      pass -c2 $1; sleep 5; pass -c $1; sleep 5; pass otp -c $1; exit
+    }
+    ```
+
+  - extend
+
+    ```bash
+    # ~/.bashrc
+    $ alias passred="PASSWORD_STORE_DIR=~/.pass/red pass"
+    $ alias passblue="PASSWORD_STORE_DIR=~/.pass/blue pass"
+
+    $ cat /usr/share/bash-completion/completions/pass
+    _passred(){
+        PASSWORD_STORE_DIR=~/.pass/red/ _pass
+    }
+    complete -o filenames -o nospace -F _passred passred
+    _passblue(){
+        PASSWORD_STORE_DIR=~/.pass/blue/ _pass
+    }
+    complete -o filenames -o nospace -F _passblue passblue
+    $ source /usr/share/bash-completion/completions/pass
+    ```
+
+  - git
+    ```bash
+    $ git config --global credential.helper /usr/bin/pass-git-helper
+
+    $ cat ~/.gitconfig
+    [github.com]
+    target=dev/github
+
+    [*.fooo-bar.*]
+    target=dev/fooo-bar
+    ```
+
+    - client
+      ```bash
+      # create local password store
+      $ pass init <gpg key id>
+      # enable management of local changes through git
+      $ pass git init
+      # add the the remote git repository as 'origin'
+      $ pass git remote add origin user@server:~/.password-store
+      # push your local pass history
+      $ pass git push -u --all
+      ```
 
 ## network tools
 
@@ -339,173 +605,3 @@ $ ip addr show | sed -nE "s/inet\s(.*)\/[0-9]+.*\s(\w+)/\2 \1/p" | column -to ' 
 lo0 => 127.0.0.1
 en0 => 192.168.1.71
 ```
-
-## oneline commands
-
-### cat and EOF
-
-> [!NOTE|label:references:]
-> - [Chapter 19. Here Documents](https://tldp.org/LDP/abs/html/here-docs.html)
-> - [bash Heredoc](https://linuxize.com/post/bash-heredoc/)
->   - using heredoc with ssh
->     ```bash
->     ssh -T user@host.com << EOF
->     echo "The current local working directory is: $PWD"
->     echo "The current remote working directory is: \$PWD"
->     EOF
->     ```
-> - [* POSIX.1 states](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap01.html#tag_17_04)
->   ```
->   ...an operand naming a file can be specified as '-', which means to use the standard input instead of a named file ....
->   ```
-
-- kubectl apply from stdin
-
-  > [!NOTE|label:references:]
-  > - [Need some explaination of kubectl stdin and pipe](https://stackoverflow.com/a/72168173/2940319)
-
-  ```bash
-  $ cat << 'EOF' | kubectl apply -f -
-  ...
-  ...
-  EOF
-
-  # or
-  $ kubectl apply -f - << EOF
-  ...
-  ...
-  EOF
-  ```
-
-- git apply from stdin
-
-  ```bash
-  $ cat >> 'EOF' | git apply --inaccurate-eof --ignore-whitespace
-  ...
-  ...
-  EOF
-
-  # or
-  $ git apply --inaccurate-eof --ignore-whitespace --stat << 'EOF'
-  ...
-  ...
-  EOF
-   install |    6 ++----
-   1 file changed, 2 insertions(+), 4 deletions(-)
-  ```
-
-- git apply from clipboard
-
-  > [!NOTE|label:references:]
-  > - [Pipe (a patch in my clipboard) to `git apply`?](https://superuser.com/q/1493215/112396)
-
-  ```bash
-  $ pbpaste | git apply
-
-  $ xsel --clipboard --input | git apply
-  # or
-  $ xclip -selection clipboard -o | git apply
-  ```
-
-- patch from stdin
-
-  > [!NOTE|label:references:]
-  > - [How can I run patch through a heredoc in bash?](https://unix.stackexchange.com/a/409327/29178)
-
-  ```bash
-  $ patch --dry-run --ignore-whitespace << 'EOF'
-  ...
-  ...
-  EOF
-  ```
-
-### ssh
-- compress and ssh and extract
-  ```bash
-  $ tar cf - . | ssh elsewhere tar xf - -C /other/dir
-  ```
-
-- tips
-
-  > [!NOTE|label:references:]
-  > - [How can I copy multiple files over scp in one command?](https://superuser.com/a/116001/112396)
-
-  ```bash
-  # tips
-  $ tar cfz - . | ssh otherhost "cd /mydir; tar xvzf -"
-  # the z-flag to tar does compression. Or you can use -C to ssh:
-  $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
-  ```
-
-### find and tar
-```bash
-$ find . -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
-
-# or find with maxdepth
-$ find . -type f -name "config.xml" -maxdepth 2 -prune -print | tar czf ~/config.xml.130.tar.gz --files-from -
-
-# find with special name
-$ find . -name config\.xml -type f -print | tar czf ~/m.tar.gz --files-from -
-
-# and ssh and extract
-$ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
-```
-
-### find and rename
-```bash
-$ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
-```
-
-### find and sort
-
-- via timestamp
-  > [!NOTE]
-  > - [How to Find and Sort Files Based on Modification Date and Time in Linux](https://www.tecmint.com/find-and-sort-files-modification-date-and-time-in-linux/)
-  >   ```bash
-  >   $ find . -type f -printf "\n%AD %AT %p" | head -n 11 | sort -k1.8n -k1.1nr -k1
-  >   # or
-  >   $ find . -type f -printf "\n%Tm/%Td/%TY %TT %p" | sort -k1.8n -k1.1nr -k1
-  >   ```
-  > - [* iMarslo : find printf](../cheatsheet/character/character.html#printf)
-  > - [* `printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
-  >   ```bash
-  >   $ find . -printf "%T<format>\n"
-  >   ```
-  > - [sort by datetime format in bash](https://stackoverflow.com/a/67608960/2940319)
-  > - [how to sort file by DD-MM-YYYY dates](https://unix.stackexchange.com/a/485708/29178)
-  > - [Sort logs by date field in bash](https://stackoverflow.com/a/5243126/2940319)
-
-  ```bash
-  # via %T+
-  $ find ~/.marslo -type f -printf "%10T+ | %p\n" | sort -r | head -10
-
-  # via %Td-%Tm-%TY
-  $ find ~/.marslo -type f -printf "\n%Td-%Tm-%TY %TT %p" |
-    sort -b -k1.7,1.10 -k1.4,1.5 -k1.1,1.2 -r
-  ```
-
-  - via [awk+sort](https://stackoverflow.com/a/73881909/2940319)
-    ```bash
-    $ cat a.txt
-    ABC,1/02/2022,05:50
-    OPQ,18/10/2023,07:50
-    HIJ,31/09/2023,08:50
-    DEF,1/02/2021,06:00
-
-    $ awk -F'[,/]' '{printf "%04d-%02d-%02d\t%s\n", $4,$3,$2, $0}' a | sort -r | cut -f2-
-    OPQ,18/10/2023,07:50
-    HIJ,31/09/2023,08:50
-    ABC,1/02/2022,05:50
-    DEF,1/02/2021,06:00
-    ```
-
-## download and extract
-- tar.gz
-  ```bash
-  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz | tar xzf - -C /path/to/target
-  ```
-
-- zip
-  ```bash
-  $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
-  ```

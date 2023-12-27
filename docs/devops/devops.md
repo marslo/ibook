@@ -49,18 +49,18 @@
 {% hint style='top' %}
 > references:
 > - [Best UNIX shell-based tools](https://gist.github.com/mbbx6spp/1429161)
-> - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master)
->   - [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
+> - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master) | [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
 >   - [nosarthur/awesome-shell](https://github.com/nosarthur/awesome-shell)
 > - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim)
-> - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
-> - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
 > - others
 >   - [bayandin/awesome-awesomeness](https://github.com/bayandin/awesome-awesomeness)
 >   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
 >   - [kahun/awesome-sysadmin](https://github.com/kahun/awesome-sysadmin)
+>   - [stup - Daily notes in the terminal](https://iridakos.com/programming/2020/04/20/stup-cli-notes)
 > - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
 > - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
+> - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
+> - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
 {% endhint %}
 
 # [`fzf`](https://github.com/junegunn/fzf)
@@ -81,13 +81,24 @@
 >     - [Man pages](https://github.com/junegunn/fzf/wiki/Examples#man-pages)
 >     - [Git](https://github.com/junegunn/fzf/wiki/Examples#git)
 >   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
-> - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
-> - [Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
-> - [Why you should be using fzf, the command line fuzzy finder](https://www.freecodecamp.org/news/fzf-a-command-line-fuzzy-finder-missing-demo-a7de312403ff/)
-> - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
-> - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
-> - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
-> - [scripts/rgfzf](https://github.com/naggie/dotfiles/blob/master/include/scripts/rgfzf)
+> - usage
+>   - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
+>   - [Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
+>   - [Why you should be using fzf, the command line fuzzy finder](https://www.freecodecamp.org/news/fzf-a-command-line-fuzzy-finder-missing-demo-a7de312403ff/)
+>   - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
+>   - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
+>   - [4 Useful fzf Tricks for Your Terminal](https://pragmaticpineapple.com/four-useful-fzf-tricks-for-your-terminal/)
+>   - fuzzy completion in bash
+>     - `$ cat **<tab>`
+>     - `$ unset **<tab>`
+>     - `$ unalias **<tab>`
+>     - `$ export **<tab>`
+>     - `$ ssh **<tab>`
+>     - `$ kill -9 **<tab>`
+> - more tools
+>   - [ggVGc/fzf_browser](https://github.com/ggVGc/fzf_browser/tree/master)
+>   - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
+>   - [scripts/rgfzf](https://github.com/naggie/dotfiles/blob/master/include/scripts/rgfzf)
 > - vim
 >   - [Improving Vim Workflow With fzf](https://pragmaticpineapple.com/improving-vim-workflow-with-fzf/)
 >   - [* How to search faster in Vim with FZF.vim](https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko)
@@ -102,19 +113,12 @@
 >       \           : fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%:hidden', '?'),
 >       \   <bang>0)
 >     ```
-> - fuzzy completion in bash
->   - `$ cat **<tab>`
->   - `$ unset **<tab>`
->   - `$ unalias **<tab>`
->   - `$ export **<tab>`
->   - `$ ssh **<tab>`
->   - `$ kill -9 **<tab>`
 > - customize
 >   - [* fzf wiki: color themes](https://github.com/junegunn/fzf/wiki/Color-schemes)
 >   - [* fzf-color-theme.css](./fzf-color-theme.css)
 >   - [#692 Custom selected character](https://github.com/junegunn/fzf/issues/692)
 
-![fzf and vim](../screenshot/linux/fzf-vim.gif)
+![fzf and vim](../screenshot/linux/fzf/fzf-vim.gif)
 
 ## install
 
@@ -138,9 +142,9 @@ $ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
 $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ```
 
-![fzf color themes](../screenshot/linux/fzf-color-themes.png)
+![fzf color themes](../screenshot/linux/fzf/fzf-color-themes.png)
 
-![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf-color-theme-gruvbox-marslo.png)
+![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf/fzf-color-theme-gruvbox-marslo.png)
 
 - install from source code for wsl
 
@@ -419,7 +423,7 @@ function v() {                             # v - open files in ~/.vim_mru_files
 }
 ```
 
-![fzf magic vim](../screenshot/linux/fzf-magic-vim.gif)
+![fzf magic vim](../screenshot/linux/fzf/fzf-magic-vim.gif)
 
 ### smart vimdiff
 ```bash
@@ -601,7 +605,7 @@ function copy() {                          # smart copy osx/wsl
   }
   ```
 
-  ![rg+fzf](../screenshot/linux/fzf-fif-rg.gif)
+  ![rg+fzf](../screenshot/linux/fzf/fzf-fif-rg.gif)
 
 - chaning directory
 
@@ -708,7 +712,7 @@ function copy() {                          # smart copy osx/wsl
 > - [* iMarslo : git-del](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/git-del) to delete both local and remote branches automatically
 > - [junegunn/fzf-git.sh](https://github.com/junegunn/fzf-git.sh)
 
-```editorconfig
+```
 [alias]
   ### checkout sorted [b]ranch
   bb    = "! bash -c 'branch=$(git for-each-ref refs/remotes refs/heads --sort=-committerdate --format=\"%(refname:short)\" | \n\
@@ -732,38 +736,77 @@ function copy() {                          # smart copy osx/wsl
 ```
 
 ### unset environment
-```bash
-# eclr - environment variable clear, support multiple select
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
-# @description : list all environment varialbe via `fzf`, and unset for selected items
-function eclr() {                          # [e]nvironment variable [c][l]ea[r]
-  while read -r _env; do
-    echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
-    unset "${_env}"
-  done < <( env |
-            sed -rn 's/^([a-zA-Z0-9]+)=.*$/\1/p' |
-            fzf -1 --exit-0 --no-sort --multi --prompt='env> ' --header 'TAB to select multiple items'
-          )
-}
+- unset
+  ```bash
+  # eclr - environment variable clear, support multiple select
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @description : list all environment varialbe via `fzf`, and unset for selected items
+  function eclr() {                          # [e]nvironment variable [c][l]ea[r]
+    while read -r _env; do
+      echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
+      unset "${_env}"
+    done < <( env |
+              sed -rn 's/^([a-zA-Z0-9]+)=.*$/\1/p' |
+              fzf -1 --exit-0 --no-sort --multi --prompt='env> ' --header 'TAB to select multiple items'
+            )
+  }
 
-# or limited to environment list
-function eclr(){
-  while read -r _env; do
-    echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
-    unset "${_env}"
-  done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH' |
-                  fmt -1 |
-                  fzf -1 --exit-0 \
-                         --no-sort \
-                         --multi \
-                         --prompt='env> ' \
-                         --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all'
-          )
-}
-```
+  # or limited to environment list
+  function eclr(){
+    while read -r _env; do
+      echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
+      unset "${_env}"
+    done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH' |
+                    fmt -1 |
+                    fzf -1 --exit-0 \
+                           --no-sort \
+                           --multi \
+                           --prompt='env> ' \
+                           --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all'
+            )
+  }
+  ```
 
-![fzf for unset environment](../screenshot/linux/fzf-eclr.gif)
+![fzf for unset environment](../screenshot/linux/fzf/fzf-eclr.gif)
+
+- print and copy
+  ```bash
+  # penv - print environment variable, support multiple select
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @description : list all environment variable via `fzf`, and print values for selected items
+  #   - to copy via `-c`
+  #     - "${COPY}"
+  #       - `pbcopy` in osx
+  #       - `/mnt/c/Windows/System32/clip.exe` in wsl
+  #   - to respect fzf options via `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default penv`
+  function penv() {                          # [p]rint [e]nvironment variable
+    local option
+    local -a array
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -c ) option+="$1 "   ; shift   ;;
+        -* ) option+="$1 $2 "; shift 2 ;;
+         * ) break                     ;;
+      esac
+    done
+
+    option+='-1 --exit-0 --sort --multi --cycle'
+    while read -r _env; do
+      echo -e "$(c Ys)>> ${_env}$(c)\n$(c Wi).. $(eval echo \$${_env})$(c)"
+      array+=( "${_env}=$(eval echo \$${_env})" )
+    done < <( env |
+              sed -r 's/^([a-zA-Z0-9_-]+)=.*$/\1/' |
+              fzf ${option//-c\ /} \
+                  --prompt 'env> ' \
+                  --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all, CTRL-S to select-all'
+            )
+    [[ "${option}" == *-c\ * ]] && [[ -n "${COPY}" ]] && "${COPY}" < <( printf '%s\n' "${array[@]}" | head -c-1 )
+  }
+  ```
+
+  ![penv](../screenshot/linux/fzf/fzf-penv.gif)
 
 ### process
 
@@ -811,9 +854,9 @@ $ (date; ps -ef) |
   }
   ```
 
-![ps fzf](../screenshot/linux/fzf-ps.png)
+![ps fzf](../screenshot/linux/fzf/fzf-ps.png)
 
-![kill ps fzf](../screenshot/linux/fzf-kill-process.gif)
+![kill ps fzf](../screenshot/linux/fzf/fzf-kill-process.gif)
 
 ### kubectl
 - `kns`
@@ -937,7 +980,7 @@ export FZF_CTRL_R_OPTS="
   /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
   ```
 
-![fzf ctrl-r](../screenshot/linux/fzf-ctrl-r.gif)
+![fzf ctrl-r](../screenshot/linux/fzf/fzf-ctrl-r.gif)
 
 ### [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 
@@ -964,7 +1007,7 @@ export FZF_CTRL_T_OPTS="
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 ```
 
-![fzf ctrl-t](../screenshot/linux/fzf-ctrl-t.gif)
+![fzf ctrl-t](../screenshot/linux/fzf/fzf-ctrl-t.gif)
 
 - `__fzf_select__`
   ```bash
@@ -1061,6 +1104,21 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
 ## tips
 
+- move cursor to position
+
+  > [!TIP]
+  > - [12af069 Add pos(...) action to move the cursor to the numeric position](https://github.com/junegunn/fzf/commit/12af069dcad672b1563388c61ec33ba8a86c013e)
+  > - [#395 Feature: Set selected entries](https://github.com/junegunn/fzf/issues/395)
+
+  ```bash
+  $ seq 100 | fzf --sync --bind 'start:pos(N)'
+  ```
+
+  ![fzf start pos](../screenshot/linux/fzf/fzf-start-pos-1.png)
+
+  ![fzf start pos](../screenshot/linux/fzf/fzf-start-pos-2.png)
+
+
 - select by column
 
   > [!NOTE]
@@ -1104,7 +1162,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     cut --delimiter=' ' --field=
   ```
 
-  ![git with-nth for git comments](../screenshot/linux/fzf-with-nth-git.gif)
+  ![git with-nth for git comments](../screenshot/linux/fzf/fzf-with-nth-git.gif)
 
 - select-all
   ```bash
@@ -1614,6 +1672,8 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 >   └────────────────────────┴─────────────────┘   └───────┴─────────────────┴───────┘
 >                                                   Uppercase = Reset a style: \e[2*m
 >   ```
+
+![bash color](../screenshot/linux/bash-color.gif)
 
 ## [`ansi`](https://github.com/fidian/ansi)
 
