@@ -4,8 +4,10 @@
 - [terminal](#terminal)
   - [terminal info](#terminal-info)
   - [reset terminal](#reset-terminal)
-- [tput](#tput)
+- [`tput`](#tput)
 - [`stty`](#stty)
+- [`tty` ( teletypewriter )](#tty--teletypewriter-)
+- [`tabs`](#tabs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -51,7 +53,7 @@ $ reset
 $ tset
 ```
 
-## tput
+## `tput`
 
 > [!NOTE]
 > - [tput](https://linuxcommand.org/lc3_adv_tput.php)
@@ -110,6 +112,39 @@ $ tset
 > |  `el1`  | Clear from the cursor to the beginning of the line |
 > |   `ed`  | Clear from the cursor to the end of the screen     |
 > | `clear` | Clear the entire screen and home the cursor        |
+>
+> - cursor action:
+>
+> |   Name  | Termcap Equiv. | Description                                    |
+> |:-------:|:--------------:|------------------------------------------------|
+> | `civis` |      `vi`      | Make cursor invisible                          |
+> | `cvvis` |      `vs`      | Make cursor very visible                       |
+> | `cnorm` |      `ve`      | Make cursor normal (undo `cvvis' & `civis)'    |
+> |  `cuf`  |      `RI`      | Move cursor right #1 spaces (P*)               |
+> |  `cuf1` |      `nd`      | Move cursor right one space                    |
+> |  `cub`  |      `LE`      | Move cursor left #1 spaces (P)                 |
+> |  `cub1` |      `le`      | Move cursor left one space                     |
+> |  `cuu`  |      `UP`      | Move cursor up #1 lines (P*)                   |
+> |  `cuu1` |      `up`      | Move cursor up one line                        |
+> |  `cud`  |      `DO`      | Move cursor down #1 lines (P*)                 |
+> |  `cud1` |      `do`      | Move cursor down one line                      |
+> |  `cup`  |      `cm`      | Move cursor to row #1, column #2 of screen (P) |
+> | `mrcup` |      `CM`      | Move cursor to row #1, column #2 of memory (P) |
+> |  `vpa`  |      `cv`      | Move cursor to row #1 (P)                      |
+> |  `hpa`  |      `ch`      | Move cursor to column #1 (P)                   |
+> |  `home` |      `ho`      | Home cursor (if no `cup')                      |
+> |   `hd`  |      `hd`      | Move cursor down one-half line                 |
+> |   `hu`  |      `hu`      | Move cursor up one-half line                   |
+> |   `sc`  |      `sc`      | Save cursor position                           |
+> |   `rc`  |      `rc`      | Restore cursor to position of last `sc'        |
+> | `sgr0`  |      `me`      | Turn off all attributes                        |
+> |  `ll`   |      `ll`      | Go to last line, first column (if no `cup`)    |
+>
+> - samples
+>   - [AdaRoseCannon/todo-repl](https://gist.github.com/AdaRoseCannon/1165e64d83ccf85f2f8638d0629bf4b3)
+>   - [slumos/xtctl](https://gist.github.com/slumos/a8907d067bbc128dfa40)
+>   - [zhgqthomas/ssr-install.sh](https://gist.github.com/zhgqthomas/67d1191e8ac42ca9c84c2d8bd09598be)
+>   - [izabera/mappings](https://gist.github.com/izabera/6a1e58b22e33a496457e)
 
 - move sequence to top
   ```bash
@@ -165,6 +200,47 @@ $ tset
     reset=$(tput sgr0)
     PS1='\[$red\]\u\[$reset\]@\[$green\]\h\[$reset\]:\[$blue\]\w\[$reset\]\$ '
     ```
+
+- shows tput processing in one invocation
+  ```bash
+  $ tput -S <<!
+    clear
+    cup 10 10
+    bold
+    !
+
+  # or
+  $ tput -S <<EOF
+    sc
+    cup $line $column
+    rev
+    EOF
+  %p1%d;%p2%dH
+  ```
+
+- print in center of line
+  ```bash
+  COLUMNS=`tput cols` export COLUMNS # Get screen width.
+  echo "$@" | awk '
+  { spaces = ('$COLUMNS' - length) / 2
+    while (spaces-- > 0) printf (" ")
+    print
+  }'
+  ```
+
+- print in center of terminal
+  ```bash
+  COLUMNS=`tput cols`
+  LINES=`tput lines`
+  line=`expr $LINES / 2`
+  column=`expr \( $COLUMNS - 6 \) / 2`
+  tput sc
+  tput cup $line $column
+  tput rev
+  echo 'Hello, World'
+  tput sgr0
+  tput rc
+  ```
 
 - `tput_menu` : script for clean screen
 
@@ -231,6 +307,10 @@ $ tset
   <!--endsec-->
 
 - now
+
+  > [!NOTE]
+  > - [now bash script](https://askubuntu.com/a/1020693/92979)
+  > - [now bash script](https://unix.stackexchange.com/a/434701/29178)
 
   ![now date time](../screenshot/linux/now-cal-time.png)
 
@@ -313,6 +393,7 @@ $ tset
 > - [Shell does not show typed-in commands, what do I do to fix it?](https://askubuntu.com/a/1238357/92979)
 > - [stty : set or display terminal options](https://www.mkssoftware.com/docs/man1/stty.1.asp)
 > - [Linux in a Nutshell.pdf](https://repo.zenk-security.com/Linux%20et%20systemes%20d.exploitations/Linux-in-a-Nutshell-6th-Edition.pdf)
+> - [man pages section 1: User Commands: stty (1g)](https://docs.oracle.com/cd/E36784_01/html/E36870/stty-1g.html)
 > - [Local Modes](https://sites.ualberta.ca/dept/chemeng/AIX-43/share/man/info/C/a_doc_lib/cmds/aixcmds5/stty.htm)
 >
 > |   OPTION   | COMMENTS                                                                                                                                                                                                                                                                                                                          |
@@ -359,8 +440,30 @@ $ tset
   isig icanon iexten echo echoe echok -echonl -noflsh -tostop -echoprt echoctl echoke -flusho -extproc
   ```
 
+- show size
+  ```bash
+  $ stty size
+  30 104
+  ```
+
 - enable/disable echo
   ```bash
   $ stty echo    # or stty sane
   $ stty -echo
   ```
+
+## `tty` ( teletypewriter )
+
+> [!NOTE|label:references:]
+> - [19.4 tty: Print file name of terminal on standard input](https://www.gnu.org/software/coreutils/manual/html_node/tty-invocation.html)
+> - [What are pseudo terminals (pty/tty)?](https://unix.stackexchange.com/a/21149/29178)
+> - [The TTY demystified](https://www.linusakesson.net/programming/tty/index.php) | [解密tty](https://www.cnblogs.com/liqiuhao/p/9031803.html)
+> - [终端、Shell、tty 和控制台（console）有什么区别？](https://www.zhihu.com/question/21711307)
+> - [Linux终端和Line discipline图解](https://blog.csdn.net/dog250/article/details/78818612)
+> - [彻底理解Linux的各种终端类型以及概念](https://blog.csdn.net/dog250/article/details/78766716)
+> - [printf的归宿-数据打印到哪儿了](https://blog.csdn.net/dog250/article/details/23000909)
+
+## `tabs`
+
+> [!NOTE|label:references]
+> - [tabs: Setting Terminal Tabs](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_chapter/tput_2.html#SEC10)
