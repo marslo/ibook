@@ -494,6 +494,8 @@ function vd() {                            # vd - open vimdiff loaded files from
 }
 ```
 
+![vimdiff](../screenshot/linux/fzf/fzf-vimdiff-vd.gif)
+
 ### smart cat
 ```bash
 # smart cat - using bat by default for cat content, respect bat options
@@ -563,9 +565,10 @@ function copy() {                          # smart copy osx/wsl
   # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
   # @description :
   #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default imgview`
+  #   - disable `gif` due to imgcat performance issue
   # shellcheck disable=SC2215
   function imgview() {                       # view image via [imgcat](https://github.com/eddieantonio/imgcat)
-    fd --unrestricted --type f --exclude .git --exclude node_modules '^*\.(png|gif|jpg)$' |
+    fd --unrestricted --type f --exclude .git --exclude node_modules '^*\.(png|jpeg|jpg|xpm|bmp)$' |
     fzf "$@" --height 100% \
              --preview "imgcat -W \$FZF_PREVIEW_COLUMNS -H \$FZF_PREVIEW_LINES {}" \
              --bind 'ctrl-y:execute-silent(echo -n {+} | pbcopy)+abort' \
@@ -803,7 +806,7 @@ function copy() {                          # smart copy osx/wsl
   }
   ```
 
-![fzf for unset environment](../screenshot/linux/fzf/fzf-eclr.gif)
+  ![fzf for unset environment](../screenshot/linux/fzf/fzf-eclr.gif)
 
 - print and copy
   ```bash
@@ -889,9 +892,9 @@ $ (date; ps -ef) |
   }
   ```
 
-![ps fzf](../screenshot/linux/fzf/fzf-ps.png)
+  ![ps fzf](../screenshot/linux/fzf/fzf-ps.png)
 
-![kill ps fzf](../screenshot/linux/fzf/fzf-kill-process.gif)
+  ![kill ps fzf](../screenshot/linux/fzf/fzf-kill-process.gif)
 
 ### kubectl
 - `kns`
@@ -1015,7 +1018,7 @@ export FZF_CTRL_R_OPTS="
   /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
   ```
 
-![fzf ctrl-r](../screenshot/linux/fzf/fzf-ctrl-r.gif)
+  ![fzf ctrl-r](../screenshot/linux/fzf/fzf-ctrl-r.gif)
 
 ### [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 
@@ -1187,24 +1190,51 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ echo {a..z} | fzf --with-nth='1..3'
   ```
 
-  ![fzf --with-nth](../screenshot/linux/fzf-with-nth.png)
+  ![fzf --with-nth](../screenshot/linux/fzf/fzf-with-nth.png)
 
   ```bash
   # https://github.com/junegunn/fzf/issues/1323#issuecomment-499615418
   # for git comment show
   $ git log --pretty=oneline |
     fzf --ansi --delimiter=' ' --no-multi --preview='git show --color=always {1}' --with-nth=2.. |
-    cut --delimiter=' ' --field=
+    cut --delimiter=' ' --field=1
   ```
 
   ![git with-nth for git comments](../screenshot/linux/fzf/fzf-with-nth-git.gif)
+
+- `--track`
+  ```bash
+  $ git log --oneline --graph --color=always |
+    nl |
+    fzf --ansi --track --no-sort --layout=reverse-list
+  ```
+
+  ![fzf --track for git](../screenshot/linux/fzf/fzf---track.gif)
 
 - select-all
   ```bash
   $ seq 3 | fzf --multi --sync --bind start:last+select-all
   ```
-  ![fzf select-all](../screenshot/linux/fzf-select-all.png)
 
+  ![fzf select-all](../screenshot/linux/fzf/fzf-select-all.png)
+
+
+- select-n
+
+  > [!TIP]
+  > - [#3548 - [new feature] ask for select-n feature](https://github.com/junegunn/fzf/issues/3548#issuecomment-1868433219)
+
+  ```bash
+  # select top 2 and move down
+  $ seq 10 | fzf --multi --sync --reverse --bind start:select+down+select+down
+
+  # select top 2
+  $ seq 10 | fzf --multi --sync --reverse --bind start:select+down+select
+  ```
+
+  ![select and move down](../screenshot/linux/fzf/fzf-bind-select.png)
+
+  ![select](../screenshot/linux/fzf/fzf-bind-select-2.png)
 
 - for git
 
@@ -1606,6 +1636,8 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   # calling in bash:
   # $ help bat
   ```
+
+  ![bat help](../screenshot/linux/bat-help.png)
 
   - for zsh
     ```bash

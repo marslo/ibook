@@ -9,10 +9,11 @@
 - [save & restore screen](#save--restore-screen)
   - [`tput`](#tput)
   - [`echo`](#echo)
-- [Terminfo escape sequences](#terminfo-escape-sequences)
-- [others](#others)
+- [terminfo escape sequences](#terminfo-escape-sequences)
+- [`tput`](#tput-1)
+  - [reset terminal](#reset-terminal)
   - [clear screen](#clear-screen)
-  - [show TERM](#show-term)
+  - [show term](#show-term)
   - [show terminal width](#show-terminal-width)
   - [customized colorful output](#customized-colorful-output)
 
@@ -43,7 +44,7 @@ done
 > - [A progress bar for the shell](https://ownyourbits.com/2017/07/16/a-progress-bar-for-the-shell/)
 
 ```bash
-# Main function designed for quickly copying to another program
+# main function designed for quickly copying to another program
 progressBar() {
   Bar=""                                  # Progress Bar / Volume level
   Len=25                                  # Length of Progress Bar / Volume level
@@ -59,7 +60,7 @@ progressBar() {
       (( FullBlock-- ))                   # Decrement full blocks counter
   done
 
-  # If remainder zero no partial block, else append character from array
+  # if remainder zero no partial block, else append character from array
   if [[ $PartBlock -gt 0 ]]; then Bar="$Bar${Arr[$PartBlock]}"; fi
 
   # Pad Progress Bar with fill character
@@ -79,7 +80,7 @@ Main () {
   echo -e \\n                             # Advance line to keep last progress
   echo "$0 Done"
   tput cnorm                              # Turn cursor back on
-} # Main
+} # main
 
 Main "$@"
 ```
@@ -144,7 +145,7 @@ done
   $ echo -e '\033[?47l'
   ```
 
-## Terminfo escape sequences
+## terminfo escape sequences
 ```bash
 $ infocmp
   ...
@@ -154,13 +155,29 @@ $ infocmp
   ...
 ```
 
-## others
+## `tput`
+### reset terminal
+
+> [!NOTE]
+> - [Shell does not show typed-in commands, what do I do to fix it?](https://askubuntu.com/a/1238357/92979)
+
+```bash
+$ reset
+# or
+$ stty sane
+```
+
 ### clear screen
 ```bash
 $ tput home
+
+# or
+$ tput cup %py %px
+# or
+$ tput cup %py %px >/dev/null
 ```
 
-### show TERM
+### show term
 ```bash
 $ tput color
 ```
