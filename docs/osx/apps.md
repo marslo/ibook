@@ -1282,6 +1282,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 >  - dev tools
 >    - [DevToys](https://alfred.app/workflows/cagechung/devtoys/)
 >    - [Hacker News Search](https://alfred.app/workflows/jereze/hacker-news-search/)
+>    - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
 
 ### iTerm2
 - Install Shell Integration

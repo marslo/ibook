@@ -35,6 +35,7 @@
   - [usage](#usage-2)
   - [config](#config-1)
   - [theme](#theme-1)
+- [`cheat.sh`](#cheatsh)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [theme and colors](#theme-and-colors)
   - [`c`: bash-color](#c-bash-color)
@@ -58,6 +59,7 @@
 >   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
 >   - [kahun/awesome-sysadmin](https://github.com/kahun/awesome-sysadmin)
 >   - [stup - Daily notes in the terminal](https://iridakos.com/programming/2020/04/20/stup-cli-notes)
+>   - [Awesome Command-Line Tools](https://www.vimfromscratch.com/articles/awesome-command-line-tools)
 > - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
 > - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
 > - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
@@ -81,7 +83,7 @@
 >   - [examples](https://github.com/junegunn/fzf/wiki/examples)
 >     - [Man pages](https://github.com/junegunn/fzf/wiki/Examples#man-pages)
 >     - [Git](https://github.com/junegunn/fzf/wiki/Examples#git)
->   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
+>   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md) | [Advanced fzf examples](https://fossies.org/linux/fzf/ADVANCED.md)
 > - usage
 >   - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
 >   - [* Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
@@ -89,6 +91,7 @@
 >   - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 >   - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
 >   - [4 Useful fzf Tricks for Your Terminal](https://pragmaticpineapple.com/four-useful-fzf-tricks-for-your-terminal/)
+>   - [Day 18 - Awesome command-line fuzzy finding with fzf](https://sysadvent.blogspot.com/2017/12/day-18-awesome-command-line-fuzzy.html)
 >   - fuzzy completion in bash
 >     - `$ cat **<tab>`
 >     - `$ unset **<tab>`
@@ -235,6 +238,13 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 > - [multiple select](https://github.com/junegunn/fzf.vim/issues/40#issuecomment-156037468)
 >   - enable via : `--multi` or `-m`
 >   - disable via : `--no-multi` or `+m`
+> - [Customizing fzf Keybindings](https://thevaluable.dev/fzf-shell-integration/)
+>
+> | KEYSTROKE                    |   BASH FUNCTION   |     ZSH FUNCTION     | ENVIRONMENT VARIABLE |
+> |------------------------------|:-----------------:|:--------------------:|----------------------|
+> | <kbd>CTRL</kbd>-<kbd>t</kbd> |  `__fzf_select__` |       `__fsel`       | `FZF_CTRL_T_COMMAND` |
+> | <kbd>CTRL</kbd>-<kbd>r</kbd> | `__fzf_history__` | `fzf-history-widget` | `FZF_CTRL_R_OPTS`    |
+> | <kbd>ALT</kbd>-<kbd>c</kbd>  |    `__fzf_cd__`   |    `fzf-cd-widget`   | `FZF_ALT_C_COMMAND`  |
 
 ### action and select
 <div style="margin-left: 1.5em;">
@@ -618,6 +628,8 @@ function copy() {                          # smart copy osx/wsl
   > [!NOTE]
   > - [#1057 Feature request: new option preview-window-scroll](https://github.com/junegunn/fzf/issues/1057#issuecomment-339347148)
   > - [gnanderson/fif.sh](https://gist.github.com/gnanderson/d74079d16714bb8b2822a7a07cc883d4)
+  > - [Switching to fzf-only search mode](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#switching-to-fzf-only-search-mode)
+  > - [Switching between Ripgrep mode and fzf mode](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#switching-to-fzf-only-search-mode)
 
   ```bash
   function fif() {                           # [f]ind-[i]n-[f]ile
@@ -751,6 +763,7 @@ function copy() {                          # smart copy osx/wsl
 > - [fzf example: man page](https://github.com/junegunn/fzf/wiki/examples#man-pages)
 > - [`fzf-man-widget()`](https://github.com/junegunn/fzf/wiki/examples#fzf-man-pages-widget-for-zsh)
 > - [apropos(1) — Linux manual page](https://man7.org/linux/man-pages/man1/apropos.1.html)
+> - [`fzf_apropos()`](https://gist.github.com/igemnace/9b6fb8c2885c3e35299b3a122e1009e5)
 
 ```bash
 # fman - fzf list and preview for manpage:
@@ -797,6 +810,22 @@ function fman() {
       --exit-0
 }
 ```
+
+- simple version
+  ```bash
+  $ apropos . |
+    fzf -d ') ' --nth 1 \
+                --height 100% \
+                --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
+                --header 'CTRL-N/CTRL-P or CTRL-↑/CTRL-↓ to view contents' \
+                --preview-window=up:88%:wrap \
+                --preview 'echo {} | sed -r "s/([^\(]+).*$/\1/" | xargs man' \
+                --exit-0 |
+    sed -r "s/([^\(]+).*$/\1/" |
+    xargs man
+  ```
+
+![fzf man](../screenshot/linux/fzf/fzf-fman.gif)
 
 ### git alias
 
@@ -1769,6 +1798,19 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
   # Update the binary cache
   $ bat cache --build
   ```
+
+# `cheat.sh`
+
+> [!NOTE]
+> - [chubin/cheat.sh](https://github.com/chubin/cheat.sh)
+> - [cheat.sh](https://cheat.sh/)
+>   - [cheat.sh/fzf](https://cheat.sh/fzf)
+> - [gotbletu/fzf-cheat.sh](https://gist.github.com/gotbletu/538ffd9565bc38b5426dd9071ff1eecd)
+> - [youtube: I made the greatest tool ever! | tmux & cht.sh & fzf](https://www.youtube.com/watch?v=hJzqEAf2U4I)
+>   - [ThePrimeagen/.dotfiles/tmux-cht.sh](https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-cht.sh)
+>   - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
+> - [kenos1/tmux-cht-sh/bin/tmux-cht-sh.sh](https://github.com/kenos1/tmux-cht-sh/blob/main/bin/tmux-cht-sh.sh)
+> - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
 
 # [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
 
