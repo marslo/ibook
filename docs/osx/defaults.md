@@ -276,7 +276,7 @@ $ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenteru
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 # or
-$ sudo spctl — master-disable
+$ sudo spctl --master-disable
 ```
 
 #### avoid install resource validation
@@ -841,7 +841,7 @@ $ defaults write com.apple.dock launchanim -bool false
 
 #### animation of minimize windows
 ```bash
-# suck
+# * `suck`
 $ defaults write com.apple.dock mineffect suck && killall Dock
 
 # `genie`

@@ -14,6 +14,7 @@
     - [smart copy](#smart-copy)
     - [others](#others)
   - [advanced usage](#advanced-usage)
+    - [man page](#man-page)
     - [git alias](#git-alias)
     - [unset environment](#unset-environment)
     - [process](#process)
@@ -83,7 +84,7 @@
 >   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md)
 > - usage
 >   - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
->   - [Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
+>   - [* Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
 >   - [Why you should be using fzf, the command line fuzzy finder](https://www.freecodecamp.org/news/fzf-a-command-line-fuzzy-finder-missing-demo-a7de312403ff/)
 >   - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 >   - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
@@ -743,6 +744,59 @@ function copy() {                          # smart copy osx/wsl
   ```
 
 ## advanced usage
+
+### man page
+
+> [!NOTE]
+> - [fzf example: man page](https://github.com/junegunn/fzf/wiki/examples#man-pages)
+> - [`fzf-man-widget()`](https://github.com/junegunn/fzf/wiki/examples#fzf-man-pages-widget-for-zsh)
+> - [apropos(1) — Linux manual page](https://man7.org/linux/man-pages/man1/apropos.1.html)
+
+```bash
+# fman - fzf list and preview for manpage:
+# @source      : https://github.com/junegunn/fzf/wiki/examples#fzf-man-pages-widget-for-zsh
+# @description :
+#   - CTRL-N/CTRL-P or SHIFT-↑/↓ for view preview content
+#   - ENTER/Q for toggle maximize/normal preview window
+#   - CTRL+O  for toggle tldr in preview window
+#   - CTRL+I  for toggle man in preview window
+#   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default fman`
+# shellcheck disable=SC2046
+function fman() {
+  local option
+  local batman="man {1} | col -bx | bat --language=man --plain --color always --theme='gruvbox-dark'"
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+          -* ) option+="$1 $2 "; shift 2 ;;
+           * ) break                     ;;
+    esac
+  done
+
+  man -k . |
+  sort -u |
+  sed -r 's/(\(.+\))//g' |
+  grep -v -E '::' |
+  awk -v cyan=$(tput setaf 6) -v blue=$(tput setaf 4) -v res=$(tput sgr0) -v bld=$(tput bold) '{ $1=cyan bld $1; $2=res blue $2;} 1' |
+  fzf ${option:-} \
+      -d ' ' \
+      --nth 1 \
+      --height 100% \
+      --ansi \
+      --no-multi \
+      --tiebreak=begin \
+      --prompt='ᓆ > ' \
+      --color='prompt:#0099BD' \
+      --preview-window 'up,70%,wrap,rounded,<50(up,85%,border-bottom)' \
+      --preview "${batman}" \
+      --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
+      --bind "ctrl-o:+change-preview(tldr --color {1})+change-prompt(ﳁ tldr > )" \
+      --bind "ctrl-i:+change-preview(${batman})+change-prompt(ᓆ  man > )" \
+      --bind "enter:execute(${batman})+change-preview(${batman})+change-prompt(ᓆ > )" \
+      --header 'CTRL-N/P or SHIFT-↑/↓ to view preview contents; ENTER/Q to maximize/normal preview window' \
+      --exit-0
+}
+```
 
 ### git alias
 
@@ -1731,6 +1785,7 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 >   - [`ds`: scullionw/dirstat-rs](https://github.com/scullionw/dirstat-rs)
 >   - [`gdu`: dundee/gdu](https://github.com/dundee/gdu)
 >   - [`godu`: viktomas/godu](https://github.com/viktomas/godu)
+>   - [`Vifm`](https://vifm.info/manual.shtml)
 
 
 # theme and colors
