@@ -734,6 +734,19 @@ autocmd BufWritePre               * :AuthorInfoDetect<CR>
 ```
 
 ### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
+
+> [!TIP]
+> - [delete undo file for 3 days ago](https://www.reddit.com/r/vim/comments/13s4e6l/remove_older_than_x_days_undo_files/)
+>   ```bash
+>   $ find ~/.vim/undo -mtime +3
+>   # or
+>   $ fd --type=file \
+>        --change-older-than=30days \
+>        . \
+>        ~/.cache/vim/{backup,swap,undo}/ \
+>        -x rm -v
+>   ```
+
 ```vim
 Plugin 'sjl/gundo.vim'
 
@@ -995,7 +1008,7 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
 > [!NOTE|label:references:]
 > - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
 > - [* iMarslo: build vim from source](../vim/install.html#install-python311-and-vim9)
-> - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
+> - [gitter room](https://app.gitter.im/#/room/#Valloric_YouCompleteMe:gitter.im)
 > - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 > - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
 >   - [jdt-language-server-1.19.0-202301090450.tar.gz)](https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-1.19.0-202301090450.tar.gz)
@@ -1007,15 +1020,36 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   - java
     ```bash
     $ brew install java
+    $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
 
     $ java -version
     openjdk version "20.0.1" 2023-04-18
     OpenJDK Runtime Environment Homebrew (build 20.0.1)
     OpenJDK 64-Bit Server VM Homebrew (build 20.0.1, mixed mode, sharing)
+    ```
 
-    $ brew --prefix java
-    /usr/local/opt/openjdk
-    $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+  - build tools
+    ```bash
+    $ xbuild --version
+    >>>> xbuild tool is deprecated and will be removed in future updates, use msbuild instead <<<<
+    XBuild Engine Version 14.0
+    Mono, Version 6.12.0.182
+    Copyright (C) 2005-2013 Various Mono authors
+    MSBUILD: error MSBUILD0000: Project file '--version' not found.
+
+    $ msbuild --version
+    Microsoft (R) Build Engine version 16.10.1 for Mono
+    Copyright (C) Microsoft Corporation. All rights reserved.
+    16.10.1.6601
+
+    $ gcc --version
+    Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+    Target: x86_64-apple-darwin23.2.0
+    Thread model: posix
+    InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+    $ node --version
+    v20.10.0
     ```
 
   - python
@@ -1078,9 +1112,17 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   v12.22.5
   ```
 
-- brew install
+- macOS
+  - os
+    ```bash
+    $ sw_vers
+    ProductName:      macOS
+    ProductVersion:   14.2.1
+    BuildVersion:     23C71
+    ```
 
   > [!NOTE|label:references:]
+  > - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
   > - [vim ycm c++ 环境搭建](https://www.xjx100.cn/news/651145.html?action=onClick)
   > - [MAC安装YCM](https://www.xjx100.cn/news/651144.html?action=onClick)
   >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
@@ -1091,7 +1133,6 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   >   - Rust: install Rust，`--rust-completer`
   >   - Java: `brew install java`，enabled via `--java-completer`
   >   - for all support : enabled via `--all`
-
 
 | OPTION             | LANGUAGE               | TOOL                          | DEPENDENCIES      |
 |--------------------|------------------------|-------------------------------|-------------------|
@@ -1105,9 +1146,21 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
 | --java-completer   | Java                   | eclipse.jdt.ls                | JDK8              |
 | --all              | all                    | -                             | -                 |
 
+
   ```bash
   $ brew install cmake python go nodejs
   $ pip install urllib3
+  $ pip install --user cmake
+  $ sudo xcode-select -switch /Applications/Xcode.app
+
+  # check
+  $ ~/Library/Python/3.12/bin/cmake --version
+  cmake version 3.28.1
+  CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+  $ /usr/local/bin/cmake --version
+  cmake version 3.28.1
+  CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
   # [optioinal] for C#
   $ brew install mono
@@ -1117,17 +1170,29 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   ```
 
 - install
+
+  > [!TIP|label:references:]
+  > - [Building Vim from source](https://github.com/ycm-core/YouCompleteMe/wiki/Building-Vim-from-source)
+  > - [* Installation](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#installation)
+  >   - [* macOS](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#macos)
+  >   - [Linux 64-bit](https://github.com/ycm-core/YouCompleteMe/tree/master?tab=readme-ov-file#linux-64-bit)
+  >   - [Windows](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#windows)
+  > - [Full Installation Guide](https://github.com/ycm-core/YouCompleteMe/wiki/Full-Installation-Guide)
+  > - [Full installation on CentOS](https://github.com/ycm-core/YouCompleteMe/wiki/Full-installation-on-CentOS)
+  > - [Windows Installation Guide for Unix‐like Environments](https://github.com/ycm-core/YouCompleteMe/wiki/Windows-Installation-Guide-for-Unix%E2%80%90like-Environments)
+  > - [* Troubleshooting steps for ycmd server SHUT DOWN](https://github.com/ycm-core/YouCompleteMe/wiki/Troubleshooting-steps-for-ycmd-server-SHUT-DOWN)
+
   ```bash
   # full install
   $ cd ~/.vim/bundle/YouCompleteMe
-  $ python install.py --all --verbose
+  $ python3 install.py --all --verbose
   ```
 
   - or via `--system-libclang`
     ```bash
     $ brew install llvm
     $ cd ~/.vim/bundle/YouCompleteMe
-    $ python install.py --system-libclang --all --verbose
+    $ python3 install.py --system-libclang --all --verbose
 
     $ cat ~/.vimrc
     ...
@@ -1147,16 +1212,83 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
     ./install.py --verbose
     ```
 
+- tips
+
+  - popup
+
+    > [!NOTE|label:references]
+    > - [YCM documentation hover - should we enable it by default](https://www.reddit.com/r/vim/comments/g9v832/ycm_documentation_hover_should_we_enable_it_by/)
+    >   - `:help completeopt`
+    >   - `:help previewpopup`
+    >   - `:help completepopup`
+    > - [The `g:ycm_add_preview_to_completeopt` option](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#the-gycm_add_preview_to_completeopt-option)
+
+    ```vim
+    let g:ycm_add_preview_to_completeopt                = 0
+    let g:ycm_autoclose_preview_window_after_insertion  = 1
+    let g:ycm_autoclose_preview_window_after_completion = 1
+    set completeopt-=preview
+    set completeopt+=popup
+    ```
+
+  - hint
+    ```vim
+    # highlight
+    highlight link YcmInlayHint Comment
+    ```
+
+- troubleshooting
+  - `c++/libclang.dylib` cannot be found issue
+
+    > [!NOTE]
+    > - [libclang](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#c-family-semantic-completion)
+    > - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
+    > - [#1141 Compilation errors with --system-libclang on macOS Mojave](https://github.com/ycm-core/ycmd/issues/1141#issuecomment-443677162)
+
+    ```bash
+    $ ln -sf $(brew --prefix llvm)/lib/libclang.dylib $(brew --prefix llvm)/lib/c++/libclang.dylib
+
+    # or : https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661
+    $ EXTRA_CMAKE_ARGS="-DCMAKE_CXX_FLAGS=-march=native" ./install.py --clang-completer --system-libclang
+
+    # for libclang
+    $ EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/path/to/your/llvm' ./install.py --clang-completer --system-libclang
+    ```
+
+  - Question can be turned off with options, see YCM docs
+    ```bash
+    Found /path/to/.ycm_extra_conf.py. Load?
+    (Question can be turned off with options, see YCM docs)
+    ```
+
+    - [solution](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#the-gycm_extra_conf_globlist-option)
+      ```vim
+      let g:ycm_extra_conf_globlist = ['~/path/to/ycm_extra_conf/*', '~/.vim/plugged/YouCompleteMe/*']
+      ```
+
+#### .ycm_extra_conf.py
+
+> [!NOTE|label:references]
+> - [* ycm-core/ycmd/.ycm_extra_conf.py](https://github.com/ycm-core/ycmd/blob/master/.ycm_extra_conf.py)
+> - [iogf's ycm_extra_conf](https://github.com/ycm-core/ycmd/issues/1329#issuecomment-535715712)
+> - [ycm_extra_conf/ycm_extra_conf.py](https://github.com/zxcyec/ycm_extra_conf/blob/master/ycm_extra_conf.py)
+> - [nemausus/dotfiles/ycm_extra_conf.py](https://github.com/nemausus/dotfiles/blob/master/ycm_extra_conf.py)
+> - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/#ycm_extra_confpy)
+
 #### vimrc
 
 > [!NOTE|label:references:]
 > - [CM代码补全插件找不到c++头文件](https://www.xjx100.cn/news/651148.html?action=onClick)
-
-> [!TIP|label:tips]
 > - to disable prompt message for extra config in vimrc
 >   ```
 >   let g:ycm_confirm_extra_conf = 0
 >   ```
+> - [chxuan/vimplus/.vimrc](https://github.com/chxuan/vimplus/blob/master/.vimrc#L270)
+> - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/)
+> - ycm
+>   - [vimrc_ycm_minimal](https://github.com/ycm-core/YouCompleteMe/blob/master/vimrc_ycm_minimal)
+>   - [test/vimrc](https://github.com/ycm-core/YouCompleteMe/blob/master/test/vimrc)
+>   - [#3906 completion popmenu close automatically After type `.`](https://github.com/ycm-core/YouCompleteMe/issues/3906)
 
 ```bash
 # create simple file for sample.cpp
@@ -1213,6 +1345,7 @@ EOF
 >   - [YouCompleteMe with YAML](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/YAML)
 >   - [YouCompleteMe with VimL](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/VimL)
 > - [My Julia setup for vim with YCM on Linux](https://discourse.julialang.org/t/my-julia-setup-for-vim-with-ycm-on-linux/45485)
+> - [Language Server Protocol Specification - 3.17](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens)
 
 - vimrc
   ```bash
@@ -1319,7 +1452,11 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 ### [tabnine-vim](https://github.com/tabnine/YouCompleteMe)
 
 > [!DANGER|label:ERROR]
-> not working for python3.9+
+> not working for python3.9+, using [codota/tabnine-nvim](https://github.com/codota/tabnine-nvim)
+
+{% hint style='info' %}
+> - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
+{% endhint %}
 
 ```vim
 " tabnine-vim
@@ -1381,7 +1518,8 @@ nmap <C-y> :call TriggerYCM()<CR>
 > - `:message`
 > - `:YcmDebugInfo`
 > - `:YcmDiags`
-> - `:py3 import sys; print( sys.version)`
+> - `:YcmToggleLogs`
+> - `:py3 import sys; print( sys.version)` : `3.12.1 (main, Dec  7 2023, 20:45:44) [Clang 15.0.0 (clang-1500.0.40.1)]`
 
 ### ycm download failed
 #### download failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
@@ -1993,6 +2131,7 @@ serving on http://1.0.0.127.in-addr.arpa:63691
 - `YouCompleteMe unavailable: module 'collections' has no attribute 'Mapping'`
 
   > [!TIP]
+  > - using [codota/tabnine-nvim](https://github.com/codota/tabnine-nvim)
   > - [Broken on python 3.10 #107](https://github.com/codota/tabnine-vim/issues/107)
   > - [YouCompleteMe#macos](https://github.com/tabnine/YouCompleteMe#macos)
   > <br>

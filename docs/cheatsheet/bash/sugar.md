@@ -26,6 +26,7 @@
 > - [ppo/gist/bash.md](https://github.com/ppo/gist/blob/master/bash.md)
 > - [Unix / Linux - Shell Substitution](https://www.tutorialspoint.com/unix/unix-shell-substitutions.htm)
 > - [ShellCheck Wiki Sitemap](https://www.shellcheck.net/wiki/)
+> - [* cd is not a program](https://seb.jambor.dev/posts/cd-is-not-a-program/)
 {% endhint %}
 
 
@@ -492,6 +493,8 @@ alias sudo='sudo '
 > - [Multi Level Bash Completion](https://stackoverflow.com/a/5303225/2940319)
 > - [List all commands that a shell knows](https://unix.stackexchange.com/a/94825/29178)
 > - [* iMarslo : `_vim()`](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.completion/vim.sh)
+> - [8.6 Programmable Completion : `_completion_loader()` ](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
+> - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
 > - paths:
 >   - osx: `/usr/local/etc/bash_completion.d`
 >   - centos: `/usr/share/bash-completion/completions` or `/etc/bash_completion.d`

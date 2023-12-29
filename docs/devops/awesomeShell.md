@@ -91,6 +91,7 @@
 >   - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 >   - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
 >   - [4 Useful fzf Tricks for Your Terminal](https://pragmaticpineapple.com/four-useful-fzf-tricks-for-your-terminal/)
+>   - [Improving shell workflows with fzf](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
 >   - [Day 18 - Awesome command-line fuzzy finding with fzf](https://sysadvent.blogspot.com/2017/12/day-18-awesome-command-line-fuzzy.html)
 >   - fuzzy completion in bash
 >     - `$ cat **<tab>`
@@ -1290,6 +1291,13 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
   ![git with-nth for git comments](../screenshot/linux/fzf/fzf-with-nth-git.gif)
 
+  ```bash
+  $ echo -e 'first line\tfirst preview\nsecond line\tsecond preview' |
+    fzf --delimiter='\t' --with-nth=1 --preview='echo {2}'
+  ```
+
+  ![fzf --with-nth for preview](../screenshot/linux/fzf/fzf-with-nth-preview.png)
+
 - `--track`
   ```bash
   $ git log --oneline --graph --color=always |
@@ -1341,14 +1349,98 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
   - [view history by fzf, show revision number finally](https://github.com/junegunn/fzf/issues/1323#issuecomment-781244399)
     ```bash
-    git log --pretty=oneline \
-        | fzf --ansi --delimiter=' ' --no-multi --preview='git show --color=always {1}' --with-nth=2.. \
-        | cut --delimiter=' ' --field=1
+    $ git log --pretty=oneline \
+          | fzf --ansi --delimiter=' ' --no-multi --preview='git show --color=always {1}' --with-nth=2.. \
+          | cut --delimiter=' ' --field=1
     # or
-    git log --pretty=oneline --all \
-        | fzf --ansi --no-multi --preview='git show --color=always {1}' --with-nth=2.. \
-        | awk '{print $1}'
+    $ git log --pretty=oneline --all \
+          | fzf --ansi --no-multi --preview='git show --color=always {1}' --with-nth=2.. \
+          | awk '{print $1}'
     ```
+
+  - [pr checkout](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
+
+    > [!NOTE]
+    > - [github cli: `gh`](https://cli.github.com/)
+
+    ```bash
+    function pr-checkout() {
+      local jq_template pr_number
+
+      jq_template='"'\
+        '#\(.number) - \(.title)'\
+        '\t'\
+        'Author: \(.user.login)\n'\
+        'Created: \(.created_at)\n'\
+        'Updated: \(.updated_at)\n\n'\
+        '\(.body)'\
+        '"'
+
+      pr_number=$(
+        gh api 'repos/:owner/:repo/pulls' |
+        jq ".[] | $jq_template" |
+        sed -e 's/"\(.*\)"/\1/' -e 's/\\t/\t/' |
+        fzf \
+          --with-nth=1 \
+          --delimiter='\t' \
+          --preview='echo -e {2}' \
+          --preview-window=top:wrap |
+        sed 's/^#\([0-9]\+\).*/\1/'
+      )
+
+      if [ -n "$pr_number" ]; then
+        gh pr checkout "$pr_number"
+      fi
+    }
+    ```
+
+- [creating feature branches from JIRA issues](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
+  ```bash
+  function create-branch() {
+    # The function expectes that username and password are stored using secret-tool.
+    # To store these, use
+    # secret-tool store --label="JIRA username" jira username
+    # secret-tool store --label="JIRA password" jira password
+
+    local jq_template query username password branch_name
+
+    jq_template='"'\
+      '\(.key). \(.fields.summary)'\
+      '\t'\
+      'Reporter: \(.fields.reporter.displayName)\n'\
+      'Created: \(.fields.created)\n'\
+      'Updated: \(.fields.updated)\n\n'\
+      '\(.fields.description)'\
+      '"'
+    query='project=BLOG AND status="In Progress" AND assignee=currentUser()'
+    username=$(secret-tool lookup jira username)
+    password=$(secret-tool lookup jira password)
+
+    branch_name=$(
+      curl \
+        --data-urlencode "jql=$query" \
+        --get \
+        --user "$username:$password" \
+        --silent \
+        --compressed \
+        'https://jira.example.com/rest/api/2/search' |
+      jq ".issues[] | $jq_template" |
+      sed -e 's/"\(.*\)"/\1/' -e 's/\\t/\t/' |
+      fzf \
+        --with-nth=1 \
+        --delimiter='\t' \
+        --preview='echo -e {2}' \
+        --preview-window=top:wrap |
+      cut -f1 |
+      sed -e 's/\. /\t/' -e 's/[^a-zA-Z0-9\t]/-/g' |
+      awk '{printf "%s/%s", $1, tolower($2)}'
+    )
+
+    if [ -n "$branch_name" ]; then
+      git checkout -b "$branch_name"
+    fi
+  }
+  ```
 
 # [`fd`](https://github.com/sharkdp/fd)
 

@@ -342,6 +342,10 @@ for detailed information.
   ```
 
 # readline & bind
+
+> [!NOTE]
+> - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
+
 ## get info
 - get current keymap
   ```bash

@@ -422,6 +422,12 @@ $ git config [--global] http.sslVerify false
 > - [Git is really slow for 100,000 objects. Any fixes?](https://stackoverflow.com/a/43667992/2940319)
 > - [way to improve git status performance](https://stackoverflow.com/a/74889434/2940319)
 >   - [The performance of git status should improve with Git 2.13 (Q2 2017)](https://stackoverflow.com/a/43644347/2940319)
+> - [* Understanding the performance bottlenecks](https://seb.jambor.dev/posts/performance-optimizations-for-the-shell-prompt/)
+>   - `GIT_PS1_SHOWDIRTYSTATE`: 58 milliseconds.
+>   - `GIT_PS1_SHOWUNTRACKEDFILES`: 106 milliseconds.
+>   - `GIT_PS1_SHOWSTASHSTATE`: 8.7 milliseconds.
+>   - `GIT_PS1_SHOWUPSTREAM`: 10.6 milliseconds.
+>   - [Improving performance](https://seb.jambor.dev/posts/performance-optimizations-for-the-shell-prompt/)
 
 
 ## way to debug
@@ -482,7 +488,6 @@ $ time __git_ps1
   Enable Pseudo Console Support: Disabled
   Enable FSMonitor: Disabled
   ```
-
 
 - modify configures
 

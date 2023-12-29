@@ -65,6 +65,7 @@
 > [!NOTE|label:references:]
 > - [ASCII Table, ISO 1252 Latin-1 Chart & Character Set](https://www.barcodefaq.com/ascii-chart-char-set/)
 > - [ASCII Character Chart with Decimal, Binary and Hexadecimal Conversions](https://www.eso.org/~ndelmott/ascii.html)
+> - [The difference between "binary" and "text" files](https://dev.to/sharkdp/what-is-a-binary-file-2cf5)
 > - [control character](https://en.wikipedia.org/wiki/Control_character)
 >
 > |   HEX  | NAME            | ABBREVIATION | ESCAPE | CODE |
