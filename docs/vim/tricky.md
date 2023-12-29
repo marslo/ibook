@@ -661,3 +661,13 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 >   - [groovytags](https://bitbucket.org/sw-samuraj/groovytags/src/develop/)
 >   - [sw-samuraj/vim-gradle](https://bitbucket.org/sw-samuraj/vim-gradle/src/develop/)
 >   - [vim-scripts/vim-gradle](https://github.com/vim-scripts/vim-gradle)
+>   - [#84 groovy support? : Put this in ~/.ctags](https://github.com/preservim/tagbar/issues/84#issuecomment-6615001)
+> - [`genctags`](https://github.com/nemausus/dotfiles/blob/master/bashrc#L94C1-L96C2)
+
+```bash
+# Generates ctags.
+#   Usage: exfind folly,common cpp,h,thrift | genctags
+function genctags () {
+  ctags --c++-kinds=+p --extras=+q -L -
+}
+```

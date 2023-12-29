@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [fancy bash](#fancy-bash)
 - [alias](#alias)
   - [`bash -<parameter>`](#bash--parameter)
 - [shell expansions](#shell-expansions)
@@ -48,6 +49,13 @@
 >   $ echo ${foo[@]}
 >   orange banana apple
 >   ```
+
+## fancy bash
+
+> [!NOTE]
+> - [ohmybash/oh-my-bash](https://github.com/ohmybash/oh-my-bash)
+> - [Bash-it/bash-it](https://github.com/Bash-it/bash-it?tab=readme-ov-file)
+> - [akinomyoga/ble.sh](https://github.com/akinomyoga/ble.sh)
 
 ## [alias](https://askubuntu.com/a/871435)
 ```bash

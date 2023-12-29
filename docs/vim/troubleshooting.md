@@ -26,10 +26,30 @@
 > - [Time your Vim commands](https://vim.fandom.com/wiki/Time_your_Vim_commands)
 
 ## startup scripts
+
+> [!TIP]
+> - [* iMarslo : redirect cmd](./tricky.html#redirect-cmd)
+
 - list startup script files
   ```vim
   :scriptnames
   ```
+
+- list all shortcut mapping
+  ```vim
+  :verbose map
+  :map
+  :nmap
+  :vmap
+  :imap
+  ```
+
+  - [redirect all contents to a file](https://stackoverflow.com/a/15756785/2940319)
+    ```vim
+    :redir > ~/Desktop/debug.txt
+    :silent verbose map
+    :redir END
+    ```
 
 - [check customized completion](https://github.com/xavierd/clang_complete/issues/452#issuecomment-139872204)
   ```vim

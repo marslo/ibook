@@ -26,6 +26,7 @@
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
 - [tricky](#tricky)
   - [unicode](#unicode)
+  - [useful functions](#useful-functions)
   - [search manual page](#search-manual-page)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1030,7 +1031,28 @@ $ echo -e "�" | hexdump -C
   }
   ```
 
-
+## useful functions
+- [universal extract](https://github.com/nemausus/dotfiles/blob/master/bashrc#L113)
+  ```bash
+  function extract () {
+    case $1 in
+      *.tar.bz2) tar xjf "$1" ;;
+      *.tar.gz) tar xzf "$1" ;;
+      *.tar.xz) tar Jxvf "$1" ;;
+      *.tar.Z) tar xzf "$1" ;;
+      *.tar) tar xf "$1" ;;
+      *.taz) tar xzf "$1" ;;
+      *.tb2) tar xjf "$1" ;;
+      *.tbz) tar xjf "$1" ;;
+      *.tbz2) tar xjf "$1" ;;
+      *.tgz) tar xzf "$1" ;;
+      *.txz) tar Jxvf "$1" ;;
+      *.zip) unzip "$1" ;;
+      *.gz) gunzip "$1" ;;
+      *) echo "'$1' cannot be extracted" ;;
+    esac
+  }
+  ```
 ## search manual page
 - `whatis -r <string>`
 - `apropos -r <string>`
