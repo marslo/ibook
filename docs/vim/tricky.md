@@ -5,8 +5,10 @@
   - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
   - [Switching case of characters](#switching-case-of-characters)
+  - [counter](#counter)
 - [commands](#commands)
   - [search (in)sensitive](#search-insensitive)
+  - [search in visual mode](#search-in-visual-mode)
   - [sort lines](#sort-lines)
   - [list all `filetype`](#list-all-filetype)
   - [newline `\r`](#newline-%5Cr)
@@ -128,6 +130,16 @@ endif
   - `gUU` == `gUgU` : to uppercase of the current line (same as V~ - cursor anywhere in the line)
   - `guu` == `gugu` : to lowercase of the current line (same as V~ - cursor anywhere in the line)
 
+### counter
+
+> [!NOTE|label:references]
+> - [Simple calculations with Vim's expression register](http://vimcasts.org/transcripts/56/en/)
+
+```vim
+nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
+```
+
+![vim calculator](../screenshot/vim/vim-leader-cr-count-expr.gif)
 
 ## commands
 
@@ -154,6 +166,7 @@ endif
 /example\C    " Case sensitive
 /Example\c    " Case insensitive
 ```
+
 ![search-case-sensitive](../screenshot/vim/search-ignoreCase.gif)
 
 #### search with `\V`
@@ -164,6 +177,18 @@ endif
 | `/a\.k\.a<CR>` | backward<br> <span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">.k.a</span>                                                                                                                 |
 |  `/Va.k.a<CR>` | backward<br> <span style="background-color:#333; color:#eee">a</span><span style="background-color: #777; color: #eee">.k.a</span>                                                                                                                 |
 
+
+### search in visual mode
+
+> [!NOTE]
+> - ["Find next" in Vim](https://stackoverflow.com/a/23475249/2940319)
+
+- `v` go to visual mode
+- `/KEYWORDS` search next KEYWORDS | `?KEYWORDS` search previous KEYWORDS
+- <kbd>enter</kbd>
+
+![select until find](../screenshot/vim/vim-visual-mode-search.gif)
+
 ### [sort lines](https://vim.fandom.com/wiki/Sort_lines)
 
 > [!NOTE|label:references:]
@@ -173,6 +198,7 @@ endif
   ```vim
   :{range}sort
   ```
+
   ![sort lines](../screenshot/vim/sort-lines.gif)
 
 - sort and unique
@@ -296,15 +322,16 @@ endif
 ```
 
 ### [run command in multiple buffers](https://vim.fandom.com/wiki/Run_a_command_in_multiple_buffers)
-{% hint style='tip' %}
-**related commands**:
-- `:argdo` : all files in argument list
-- `:bufdo` : all buffers
-- `:tabdo` : all tabs
-- `:windo` : all windows
 
-**reference**:
-- [Search and replace in multiple buffers](https://vim.fandom.com/wiki/Search_and_replace_in_multiple_buffers)
+{% hint style='tip' %}
+> **related commands**:
+> - `:argdo` : all files in argument list
+> - `:bufdo` : all buffers
+> - `:tabdo` : all tabs
+> - `:windo` : all windows
+>
+> **reference**:
+> - [Search and replace in multiple buffers](https://vim.fandom.com/wiki/Search_and_replace_in_multiple_buffers)
 {% endhint %}
 
 ```vim
@@ -344,7 +371,7 @@ endif
 ### disable vim beep
 ```vim
 # ~/.vimrc
-set noerrorbells novisualbell visualbell                            " ┐ Turn off
+set noerrorbells novisualbell visualbell                            " ┐ turn off
 set t_vb=                                                           " ┘ error/normal beep/flash
 ```
 
