@@ -3,38 +3,44 @@
 
 - [usage](#usage)
   - [`Tabularize`](#tabularize)
-- [highly recommended plugins](#highly-recommended-plugins)
+    - [align with the N pattern](#align-with-the-n-pattern)
+    - [align on specific symbol](#align-on-specific-symbol)
+- [highly recommended](#highly-recommended)
   - [jiangmiao/auto-pairs](#jiangmiaoauto-pairs)
-  - [kien/ctrlp.vim](#kienctrlpvim)
+  - [junegunn/fzf.vim](#junegunnfzfvim)
   - [luochen1990/rainbow](#luochen1990rainbow)
   - [Yggdroot/indentLine](#yggdrootindentline)
   - [airblade/vim-gitgutter](#airbladevim-gitgutter)
   - [vim-airline/vim-airline](#vim-airlinevim-airline)
   - [dense-analysis/ale](#dense-analysisale)
+- [programming](#programming)
+  - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
+  - [tpope/vim-commentary](#tpopevim-commentary)
+  - [msanders/snipmate.vim](#msanderssnipmatevim)
+  - [ycm-core/YouCompleteMe](#ycm-coreyoucompleteme)
+    - [install](#install)
+    - [tips](#tips)
+    - [extra](#extra)
+  - [ycm-core/lsp-examples](#ycm-corelsp-examples)
+    - [GroovyLanguageServer/groovy-language-server](#groovylanguageservergroovy-language-server)
+  - [others](#others)
 - [utils](#utils)
   - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
   - [sjl/gundo.vim](#sjlgundovim)
   - [yegappan/mru](#yegappanmru)
 - [markdown](#markdown)
-  - [gabrielelana/vim-markdown](#gabrielelanavim-markdown)
-  - [tpope/vim-markdown](#tpopevim-markdown)
   - [preservim/vim-markdown](#preservimvim-markdown)
   - [dhruvasagar/vim-table-mode](#dhruvasagarvim-table-mode)
   - [godlygeek/tabular](#godlygeektabular)
 - [git](#git)
-- [programming](#programming)
-  - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
-  - [vim-scripts/EnhCommentify.vim](#vim-scriptsenhcommentifyvim)
-  - [tpope/vim-commentary](#tpopevim-commentary)
-  - [honza/vim-snippets](#honzavim-snippets)
-  - [msanders/snipmate.vim](#msanderssnipmatevim)
-  - [ycm-core/YouCompleteMe](#ycm-coreyoucompleteme)
-  - [ycm-core/lsp-examples](#ycm-corelsp-examples)
-  - [vim-easycomplete](#vim-easycomplete)
-  - [tabnine-vim](#tabnine-vim)
+    - [tpope/vim-fugitive](#tpopevim-fugitive)
 - [color and theme](#color-and-theme)
+- [others](#others-1)
+  - [deprecated](#deprecated)
+  - [not been using](#not-been-using)
 - [troubleshooting](#troubleshooting)
-  - [ycm download failed](#ycm-download-failed)
+  - [ycmd](#ycmd)
+    - [ycm download failed](#ycm-download-failed)
   - [tabnine](#tabnine)
   - [airline](#airline)
 
@@ -48,8 +54,8 @@
 {% endhint %}
 
 
-## usage
-### [`Tabularize`](https://github.com/godlygeek/tabular)
+# usage
+## [`Tabularize`](https://github.com/godlygeek/tabular)
 
 > [!TIP]
 > - [Tabular cheatsheet](https://devhints.io/tabular)
@@ -71,69 +77,76 @@
 * then everything after the comma left aligned.
 {% endhint %}
 
-#### including the `<sep>`
-- align to left
-  ```vim
-  :Tabularize /<sep>
-  ```
-  - or
+- including the `<sep>`
+  - align to left
     ```vim
-    :Tabularize /<sep>/l1
+    :Tabularize /<sep>
     ```
+    - or
+      ```vim
+      :Tabularize /<sep>/l1
+      ```
 
-- align to center
-  ```vim
-  :Tabularize /<sep>/r1c1l0
-  ```
+  - align to center
+    ```vim
+    :Tabularize /<sep>/r1c1l0
+    ```
 
   ![tabularize](../screenshot/vim/tabularize/tabu.gif)
 
-#### align without `<sep>`
-> [`help /zs`](https://vimhelp.org/pattern.txt.html#%2F%5Czs)
+- align without `<sep>`
 
-```vim
-:Tabularize /<sep>\zs/<specifier>
-```
-
-#### [align on first matche](https://stackoverflow.com/a/11497961/2940319)
-- align the first `:`
-  ```vim
-  :Tabularize /^[^:]*\zs:
-  ```
-  [or](https://stackoverflow.com/a/23840400/2940319)
-  ```vim
-  :Tabularize /:.*
-  ```
-
-  ![tabularize-5](../screenshot/vim/tabularize/tabularize-5.gif)
-
-- [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
-  > only for default left-alignemnt. Not support customized right/middle alignment.
-  > i.e.: `/r1c1l0`
+  > [!NOTE]
+  > [`help /zs`](https://vimhelp.org/pattern.txt.html#%2F%5Czs)
 
   ```vim
-  command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
+  :Tabularize /<sep>\zs/<specifier>
   ```
 
-#### align with the N pattern
+### align with the N pattern
 > i.e.: the second match (`=`)
 > - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
 
-```vim
-:Tabularize /^\(.\{-}\zs=\)\{N}/
-             |
-            `^` means start of the line
-```
-![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+- [align on first matche](https://stackoverflow.com/a/11497961/2940319)
+  - align the first `:`
+    ```vim
+    :Tabularize /^[^:]*\zs:
+    ```
+    [or](https://stackoverflow.com/a/23840400/2940319)
+    ```vim
+    :Tabularize /:.*
+    ```
 
-- or with `\v` (very magic)
-  > reference:
-  > - [`:help \v`](https://vimhelp.org/pattern.txt.html#%2F%5Cv)
-  > - [vim pattern: overview of ordinary atoms](tricky.html#overview-of-ordinary-atoms)
+  ![tabularize-5](../screenshot/vim/tabularize/tabularize-5.gif)
 
+  - [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
+
+    > [!NOTE]
+    > only for default left-alignemnt. Not support customized right/middle alignment.
+    > i.e.: `/r1c1l0`
+
+    ```vim
+    command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
+    ```
+
+- align with 2nd matches
   ```vim
-  :Tabularize /\v^(.{-}\zs\=){N}/<specifier>
+  :Tabularize /^\(.\{-}\zs=\)\{N}/
+               |
+              `^` means start of the line
   ```
+
+  ![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+
+
+  - or with `\v` (very magic)
+    > reference:
+    > - [`:help \v`](https://vimhelp.org/pattern.txt.html#%2F%5Cv)
+    > - [vim pattern: overview of ordinary atoms](tricky.html#overview-of-ordinary-atoms)
+
+    ```vim
+    :Tabularize /\v^(.{-}\zs\=){N}/<specifier>
+    ```
 
 - for every N matches
   ```vim
@@ -146,7 +159,8 @@
     :Tabularize /\v(.{-}\zs\=){N}/<specifier>
     ```
 
-#### [align on specific symbol](https://vi.stackexchange.com/a/12652/7389)
+### [align on specific symbol](https://vi.stackexchange.com/a/12652/7389)
+
 > [!NOTE|label:pre condition:]
 > - align the first `:` and last matches `,` as below:
 > ```groovy
@@ -246,12 +260,12 @@
 
     ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
 
-## highly recommended plugins
+# highly recommended
 
 > [!NOTE|label:references:]
 > - [Vim Plugin Audit](https://tuckerchapman.com/2020/05/18/vim-plugin-audit/)
 
-### [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
+## [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
 > [!NOTE|label:references:]
 > - [#128 : Disable autopairs for certain filetypes](https://github.com/jiangmiao/auto-pairs/issues/128#issuecomment-195461762)
@@ -260,9 +274,9 @@
 >   ```
 
 ```vim
-Plugin 'jiangmiao/auto-pairs'
+Plug 'jiangmiao/auto-pairs'
 " or
-Plugin 'marslo/auto-pairs'
+Plug 'marslo/auto-pairs'
 
 " settings
 let g:AutoPairs = {'(':')', '[':']', '{':'}', '<':'>',"'":"'",'"':'"', '`':'`'}
@@ -271,32 +285,63 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutBackInsert = '<M-b>'
 ```
 
-### [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
+## [junegunn/fzf.vim](https://github.com/junegunn/fzf.vim)
 ```vim
-Plugin 'kien/ctrlp.vim'
+set runtimepath+=/usr/local/opt/fzf                                         " $ brew install fzf
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
 
-let g:ctrlp_map                 = '<c-p>'                           " CtrlP
-let g:ctrlp_working_path_mode   = 'ra'                              " search parents as well (stop searching safety)
-let g:ctrlp_max_height          = 8
-let g:ctrlp_max_depth           = 100
-let g:ctrl_root_makers          = ['.ctrlp']                        " stop search if these files present
-let g:ctrlp_use_caching         = 1
-let g:ctrlp_clear_cache_on_exit = 0                                 " cross session caching
-if has('win32') || has('win95') || has('win64')
-  let g:ctrlp_cache_dir = $VIM . '/cache/ctrlp'
-else
-  let g:ctrlp_cache_dir = '$HOME/.vim/cache/ctrlp'
-endif
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-    \ 'file': '\v\.(exe|so|dll|rpm|tar|gz|bz2|zip|ctags|tags)|tags|ctags$',
-    \ 'link': 'some_bad_symbolic_links',
-    \ }
+" fzf.vim
+nnoremap <C-p> :Files<CR>
+nnoremap <C-g> :GFiles<CR>
+nnoremap <C-s> :Ag<CR>
+nnoremap <silent><leader>l  :Buffers<CR>
+nnoremap <silent> <Leader>H :Helptags<CR>
+nnoremap <silent> <Leader>g :Commits<CR>
+let g:fzf_layout                  = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true } }
+let g:fzf_history_dir             = '~/.vim/cache/fzf-history'
+let g:fzf_vim                     = {}
+let g:fzf_vim.preview_window      = [ 'right,50%', 'ctrl-\' ]
+let g:fzf_vim.tags_command        = 'ctags -R'
+let g:fzf_vim.commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'bat --color=always {}']}, <bang>0)
+command! -bang -complete=dir -nargs=? LS
+    \ call fzf#run(fzf#wrap('ls', {'source': 'ls', 'dir': <q-args>}, <bang>0))
+inoremap <expr> <c-x><c-l> fzf#vim#complete(fzf#wrap({
+  \ 'prefix': '^.*$',
+  \ 'source': 'rg -n ^ --color always',
+  \ 'options': '--ansi --delimiter : --nth 3..',
+  \ 'reducer': { lines -> join(split(lines[0], ':\zs')[2:], '') }}
+  \ )
+\ )
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit'
+\ }
+let g:fzf_colors = {
+  \ 'fg':         ['fg', 'Normal'],
+  \ 'bg':         ['bg', 'Normal'],
+  \ 'preview-bg': ['bg', 'NormalFloat'],
+  \ 'hl':         ['fg', 'Comment'],
+  \ 'fg+':        ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':        ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':        ['fg', 'Statement'],
+  \ 'info':       ['fg', 'PreProc'],
+  \ 'border':     ['fg', 'Ignore'],
+  \ 'prompt':     ['fg', 'Conditional'],
+  \ 'pointer':    ['fg', 'Exception'],
+  \ 'marker':     ['fg', 'Keyword'],
+  \ 'spinner':    ['fg', 'Label'],
+  \ 'header':     ['fg', 'Comment']
+\ }
 ```
-### [luochen1990/rainbow](https://github.com/luochen1990/rainbow)
+
+## [luochen1990/rainbow](https://github.com/luochen1990/rainbow)
 ```vim
 " install
-Plugin 'luochen1990/rainbow'
+Plug 'luochen1990/rainbow'
 
 " settings
 let g:rainbow_active = 1
@@ -326,10 +371,10 @@ let g:rainbow_conf = {
 \}
 ```
 
-### [Yggdroot/indentLine](https://github.com/Yggdroot/indentLine)
+## [Yggdroot/indentLine](https://github.com/Yggdroot/indentLine)
 ```vim
 " install
-Plugin 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine'
 
 " settings
 nnoremap <leader>idl :IndentLineEnable<CR>
@@ -354,7 +399,7 @@ else
 endif
 ```
 
-### [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+## [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
 
 > [!NOTE|label:references:]
 > - [GitGutter Documentation](https://jisaacks.github.io/GitGutter/)
@@ -362,7 +407,7 @@ endif
 > - [How to display in real time](https://github.com/airblade/vim-gitgutter/issues/579)
 
 ```vim
-Plugin 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 
 " gitgutter
 nmap <leader>d :GitGutterFold<CR>
@@ -376,7 +421,7 @@ set signcolumn=yes
 highlight clear SignColumn
 ```
 
-### [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)
+## [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline)
 
 > [!NOTE|label:references:]
 > - [* iMarso : osx/apps/powerline](../osx/apps.html#powerline)
@@ -398,9 +443,9 @@ highlight clear SignColumn
 >   - [* FAQ](https://github.com/vim-airline/vim-airline/wiki/FAQ)
 
 ```vim
-Plugin 'tpope/vim-fugitive'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 " vim-airline/vim-airline
 let g:airline_powerline_fonts                      = 1
@@ -684,16 +729,16 @@ autocmd User AirlineAfterInit call AirlineInit()
   - raven ( no background color )
   - peaksea ( no background color change )
 
-### [dense-analysis/ale](https://github.com/dense-analysis/ale)
+## [dense-analysis/ale](https://github.com/dense-analysis/ale)
 
 > [!NOTE|label:references:]
 > - [How do I disable "annotations" generated by ALE in vim?](https://www.reddit.com/r/vim/comments/151tiqz/how_do_i_disable_annotations_generated_by_ale_in/)
 > - [How do i get rid of Ale errors on the line i am editing?](https://www.reddit.com/r/vim/comments/b9amj9/how_do_i_get_rid_of_ale_errors_on_the_line_i_am/)
 
 ```vim
-Plugin 'stephpy/vim-yaml'
-Plugin 'pedrohdz/vim-yaml-folds'
-Plugin 'dense-analysis/ale'
+Plug 'stephpy/vim-yaml'
+Plug 'pedrohdz/vim-yaml-folds'
+Plug 'dense-analysis/ale'
 
 " yamllint                                                          " brew install yamllint
 " ale                                                               " :help g:ale_echo_msg_format
@@ -721,10 +766,509 @@ let g:ale_close_preview_on_insert         = 1
 
 ![ale info ](../screenshot/vim/vim-ale-info.png)
 
-## utils
-### [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
+# programming
+## [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
+
+> [!NOTE|label:references:]
+> - [#1577 : Unknown function: SyntasticStatuslineFlag](https://github.com/vim-syntastic/syntastic/issues/1577)
+> - [In Editor Linting with Syntastic](https://medium.com/usevim/in-editor-linting-with-syntastic-6814122bdbec)
+>   ```vim
+>   :SyntasticInfo
+>   ```
+
 ```vim
-Plugin 'marslo/authorinfo'
+Plug 'vim-syntastic/syntastic'
+
+" syntastic settings                                                " Plug 'vim-syntastic/syntastic'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list            = 1
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
+let g:syntastic_loc_list_height          = 2
+let g:syntastic_ignore_files             = ['\.py$']
+let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
+let g:syntastic_enable_signs             = 1
+let g:syntastic_info_symbol              = 'ೲ'                      " ࠵ ϊ
+let g:syntastic_error_symbol             = '✗'                      " ஓ ௐ ྾
+let g:syntastic_warning_symbol           = '⍨'                      " ᓆ ᓍ
+let g:syntastic_style_error_symbol       = '⍥'
+let g:syntastic_style_warning_symbol     = 'ఠ'                      " ⍤ ൠ
+highlight link SyntasticErrorSign        Error
+highlight link SyntasticWarningSign      GruvboxYellow
+highlight link SyntasticStyleErrorSign   GruvboxRedSign
+highlight link SyntasticStyleWarningSign GruvboxPurpleSign
+```
+
+![style warning](../screenshot/vim/vim-syntastic-style-warning.png)
+
+![error](../screenshot/vim/vim-syntastic-error.png)
+
+<!--sec data-title="former version" data-id="section0" data-show=true data-collapse=true ces-->
+  ```vim
+  Bundle 'vim-syntastic/syntastic'
+
+  " configure syntastic syntax checking to check on open as well as save
+  set statusline+=%#warningmsg#
+  set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
+  set statusline+=\ %* |
+  let g:syntastic_always_populate_loc_list  = 1
+  let g:syntastic_auto_loc_list             = 1
+  let g:syntastic_check_on_open             = 1
+  let g:syntastic_check_on_wq               = 0
+  let g:syntastic_loc_list_height           = 2
+  let g:syntastic_ignore_files              = ['\.py$']
+  let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
+  ```
+<!--endsec-->
+
+
+## [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
+```vim
+" tpope/vim-commentary
+map  <C-/> <Plug>Commentary
+imap <C-/> <Esc><Plug>CommentaryLineA
+xmap <c-/> <Plug>Commentary
+```
+
+## [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
+```vim
+Plug 'msanders/snipmate.vim'
+
+" Snippet
+imap <S-C-J> <Plug>snipMateNextOrTrigger
+smap <S-C-J> <Plug>snipMateNextOrTrigger
+imap <Tab>   <Plug>snipMateNextOrTrigger
+```
+
+## [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
+
+> [!NOTE|label:references:]
+> - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
+> - [* iMarslo: build vim from source](../vim/install.html#install-python311-and-vim9)
+> - [gitter room](https://app.gitter.im/#/room/#Valloric_YouCompleteMe:gitter.im)
+> - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
+> - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
+>   - [jdt-language-server-1.19.0-202301090450.tar.gz)](https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-1.19.0-202301090450.tar.gz)
+> - [Vim/YouCompleteMe](https://wiki.archlinux.org/title/Vim/YouCompleteMe)
+> - [在vim中配置最新YouCompleteMe代码自动补全插件](https://blog.csdn.net/qq_28584889/article/details/97131637)
+> - [* How to Set Up Code-Completion for Vim in macOS](https://medium.com/@rohmanhakim/how-to-set-up-code-completion-for-vim-in-macos-9766dd459385)
+
+### install
+
+> [!TIP|label:references:]
+> - [Building Vim from source](https://github.com/ycm-core/YouCompleteMe/wiki/Building-Vim-from-source)
+> - [* Installation](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#installation)
+>   - [* macOS](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#macos)
+>   - [Linux 64-bit](https://github.com/ycm-core/YouCompleteMe/tree/master?tab=readme-ov-file#linux-64-bit)
+>   - [Windows](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#windows)
+> - [Full Installation Guide](https://github.com/ycm-core/YouCompleteMe/wiki/Full-Installation-Guide)
+> - [Full installation on CentOS](https://github.com/ycm-core/YouCompleteMe/wiki/Full-installation-on-CentOS)
+> - [Windows Installation Guide for Unix‐like Environments](https://github.com/ycm-core/YouCompleteMe/wiki/Windows-Installation-Guide-for-Unix%E2%80%90like-Environments)
+> - [* Troubleshooting steps for ycmd server SHUT DOWN](https://github.com/ycm-core/YouCompleteMe/wiki/Troubleshooting-steps-for-ycmd-server-SHUT-DOWN)
+
+| OPTION             | LANGUAGE               | TOOL                          | DEPENDENCIES      |
+|--------------------|------------------------|-------------------------------|-------------------|
+| --clang-completer  | C, C++, Objective-C    | Clang（libclang）             | Clang             |
+| --clangd-completer | C, C++, Objective-C    | clang-tools-extra<br>(clangd) | clang-tools-extra |
+| --cs-completer     | C#                     | Mono Runtime                  | Mono Runtime      |
+| --rust-completer   | Rust                   | RustToolChains                | RustToolChains    |
+| --go-completer     | golang                 | GoToolchain                   | GoToolchain       |
+| --js-completer     | JavaScript             | Tern                          | node.js、npm      |
+| --ts-completer     | JavaScript, TypeScript | tsserver                      | node.js、npm      |
+| --java-completer   | Java                   | eclipse.jdt.ls                | JDK8              |
+| --all              | all                    | -                             | -                 |
+
+
+- environment setup
+
+  - macOS
+
+    > [!NOTE|label:references:]
+    > - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
+    > - [vim ycm c++ 环境搭建](https://www.xjx100.cn/news/651145.html?action=onClick)
+    > - [MAC安装YCM](https://www.xjx100.cn/news/651144.html?action=onClick)
+    >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
+    >   - C#：`brew install Mono` first and enabled by `--cs-completer`
+    >   - Go：`brew install go` and enabled by `--go-completer`
+    >   - TypeScript：insall Node.js and npm，and enable typescript via `npm install -g typescript`
+    >   - JavaScript: install Node.js and npm，and enabled via `--js-completer`
+    >   - Rust: install Rust，`--rust-completer`
+    >   - Java: `brew install java`，enabled via `--java-completer`
+    >   - for all support : enabled via `--all`
+
+    ```bash
+    $ brew install cmake python go nodejs
+    $ pip install urllib3
+    $ pip install --user cmake
+    $ sudo xcode-select -switch /Applications/Xcode.app
+    $ brew install java
+    $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+
+    # optioinal for C#
+    $ brew install mono
+    # optional
+    $ brew install jdtls
+
+    ## check
+    # cmake
+    $ ~/Library/Python/3.12/bin/cmake --version
+    cmake version 3.28.1
+    CMake suite maintained and supported by Kitware (kitware.com/cmake).
+    $ /usr/local/bin/cmake --version
+    cmake version 3.28.1
+    CMake suite maintained and supported by Kitware (kitware.com/cmake).
+    # java
+    $ java -version
+    openjdk version "20.0.1" 2023-04-18
+    OpenJDK Runtime Environment Homebrew (build 20.0.1)
+    OpenJDK 64-Bit Server VM Homebrew (build 20.0.1, mixed mode, sharing)
+
+    # c/c++
+    $ xbuild --version
+    >>>> xbuild tool is deprecated and will be removed in future updates, use msbuild instead <<<<
+    XBuild Engine Version 14.0
+    Mono, Version 6.12.0.182
+    Copyright (C) 2005-2013 Various Mono authors
+    MSBUILD: error MSBUILD0000: Project file '--version' not found.
+
+    $ msbuild --version
+    Microsoft (R) Build Engine version 16.10.1 for Mono
+    Copyright (C) Microsoft Corporation. All rights reserved.
+    16.10.1.6601
+
+    $ gcc --version
+    Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+    Target: x86_64-apple-darwin23.2.0
+    Thread model: posix
+    InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+    # node
+    $ node --version
+    v20.10.0
+    ```
+
+    - python
+
+      > [!NOTE|label:install python from source]
+      > - [iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
+
+      ```bash
+      $ python --version
+      Python 3.11.4
+      $ pip --version
+      pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
+      ```
+
+
+  - wsl/ubuntu install
+
+    > [!NOTE|label:references:]
+    > - [nodejs/snap](https://github.com/nodejs/snap)
+    > - [How to install cmake 3.2 on Ubuntu](https://askubuntu.com/a/1254438/92979)
+
+    ```bash
+    $ sudo snap install cmake --classic
+
+    $ sudo snap install go --classic
+    # or
+    $ sudo apt install golang-go
+
+    $ sudo snap install node --classic --channel=15
+    # upgrade version to 20.x
+    $ sudo snap refresh --channel=20 node
+    node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+    ```
+
+  - centos
+
+    > [!NOTE]
+    > - [#2756: CMake Error,no libclang found](https://github.com/ycm-core/YouCompleteMe/issues/2756)
+    > - [Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/html/using_llvm_13.0.1_toolset/assembly_llvm#proc_installing-comp-toolset_assembly_llvm)
+    > - [PDF: Red Hat Developer Tools 1: Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/pdf/using_llvm_13.0.1_toolset/red_hat_developer_tools-1-using_llvm_13.0.1_toolset-en-us.pdf)
+    > - [Getting Started with the LLVM System](https://llvm.org/docs/GettingStarted.html)
+
+    ```bash
+    $ sudo dnf install -y cmake \
+                          clang clang-devel clang-libs clang-tools-extra \   # no libclang found
+                          llvm llvm-libs \
+                          go
+
+    # upgrade nodejs
+    $ node --version
+    v12.22.5
+    $ sudo npm i -g n
+    $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
+    $ sudo n latest
+    $ which -a node
+    /usr/local/bin/node
+    /usr/bin/node
+    $ node --version
+    v20.8.1
+    $ /usr/bin/node --version
+    v12.22.5
+    ```
+
+- install with `install.py`
+  ```bash
+  # full install
+  $ cd ~/.vim/bundle/YouCompleteMe
+  $ python3 install.py --all --verbose
+  ```
+
+  - with `--system-libclang`
+    ```bash
+    $ brew install llvm
+    $ cd ~/.vim/bundle/YouCompleteMe
+    $ python3 install.py --system-libclang --all --verbose
+
+    $ cat ~/.vimrc
+    ...
+    let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
+    ...
+    ```
+
+- install with `install.sh`
+  ```bash
+  $ cd ~/.vim/bundle/YouCompleteMe
+  $ ./install.py --all --verbose
+
+  # or
+  $ ./install.py --clangd-completer --verbose
+
+  # or
+  ./install.py --verbose
+  ```
+
+### tips
+
+- popup
+
+  > [!NOTE|label:references]
+  > - [YCM documentation hover - should we enable it by default](https://www.reddit.com/r/vim/comments/g9v832/ycm_documentation_hover_should_we_enable_it_by/)
+  >   - `:help completeopt`
+  >   - `:help previewpopup`
+  >   - `:help completepopup`
+  > - [The `g:ycm_add_preview_to_completeopt` option](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#the-gycm_add_preview_to_completeopt-option)
+
+  ```vim
+  let g:ycm_add_preview_to_completeopt                = 0
+  let g:ycm_autoclose_preview_window_after_insertion  = 1
+  let g:ycm_autoclose_preview_window_after_completion = 1
+  set completeopt-=preview
+  set completeopt+=popup
+  ```
+
+- hint
+  ```vim
+  # highlight
+  highlight link YcmInlayHint Comment
+  ```
+
+### extra
+
+- .ycm_extra_conf.py
+
+  > [!NOTE|label:references]
+  > - [* ycm-core/ycmd/.ycm_extra_conf.py](https://github.com/ycm-core/ycmd/blob/master/.ycm_extra_conf.py)
+  > - [iogf's ycm_extra_conf](https://github.com/ycm-core/ycmd/issues/1329#issuecomment-535715712)
+  > - [ycm_extra_conf/ycm_extra_conf.py](https://github.com/zxcyec/ycm_extra_conf/blob/master/ycm_extra_conf.py)
+  > - [nemausus/dotfiles/ycm_extra_conf.py](https://github.com/nemausus/dotfiles/blob/master/ycm_extra_conf.py)
+  > - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/#ycm_extra_confpy)
+
+- vimrc
+
+  > [!NOTE|label:references:]
+  > - [CM代码补全插件找不到c++头文件](https://www.xjx100.cn/news/651148.html?action=onClick)
+  > - to disable prompt message for extra config in vimrc
+  >   ```
+  >   let g:ycm_confirm_extra_conf = 0
+  >   ```
+  > - [chxuan/vimplus/.vimrc](https://github.com/chxuan/vimplus/blob/master/.vimrc#L270)
+  > - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/)
+  > - ycm
+  >   - [vimrc_ycm_minimal](https://github.com/ycm-core/YouCompleteMe/blob/master/vimrc_ycm_minimal)
+  >   - [test/vimrc](https://github.com/ycm-core/YouCompleteMe/blob/master/test/vimrc)
+  >   - [#3906 completion popmenu close automatically After type `.`](https://github.com/ycm-core/YouCompleteMe/issues/3906)
+
+  ```bash
+  # create simple file for sample.cpp
+  $ g++ -v test.cpp
+  #include “…” search starts here:
+  #include <…> search starts here:
+  /usr/include/c++/11
+  /usr/include/x86_64-linux-gnu/c++/11
+  /usr/include/c++/11/backward
+  /usr/lib/gcc/x86_64-linux-gnu/11/include
+  /usr/local/include
+  /usr/include/x86_64-linux-gnu
+  /usr/include
+
+  $ cat >> ~/.ycm_extra_conf.py << EOF
+  flags = [
+  '-Wall',
+  '-Wextra',
+  #'-Werror',
+  #'-Wc++98-compat',
+  '-Wno-long-long',
+  '-Wno-variadic-macros',
+  '-fexceptions',
+  '-stdlib=libc++',
+  # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
+  # language to use when compiling headers. So it will guess. Badly. So C++
+  # headers will be compiled as C headers. You don't want that so ALWAYS specify
+  # a "-std=<something>".
+  # For a C project, you would set this to something like 'c99' instead of
+  # 'c++11'.
+  '-std=c++11',
+  # ...and the same thing goes for the magic -x option which specifies the
+  # language that the files to be compiled are written in. This is mostly
+  # relevant for c++ headers.
+  # For a C project, you would set this to 'c' instead of 'c++'.
+  '-x', 'c++',
+  '-I', '.',
+  '-isystem', '/usr/include/c++/11',
+  '-isystem', '/usr/include/x86_64-linux-gnu/c++/11',
+  '-isystem', '/usr/include/c++/11/backward',
+  '-isystem', '/usr/lib/gcc/x86_64-linux-gnu/11/include',
+  '-isystem', '/usr/local/include',
+  '-isystem', '/usr/include/x86_64-linux-gnu',
+  '-isystem', '/usr/include',
+  ]
+  EOF
+  ```
+
+## [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
+
+> [!NOTE|label:references:]
+> - [YouCompleteMe](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe)
+>   - [YouCompleteMe with JSON](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/JSON)
+>   - [YouCompleteMe with YAML](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/YAML)
+>   - [YouCompleteMe with VimL](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/VimL)
+> - [My Julia setup for vim with YCM on Linux](https://discourse.julialang.org/t/my-julia-setup-for-vim-with-ycm-on-linux/45485)
+> - [Language Server Protocol Specification - 3.17](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens)
+
+- vimrc
+  ```bash
+  $ cat ~/.vimrc
+  Plug 'ycm-core/lsp-examples'
+
+  vim +BundleInstall +qa
+  ```
+
+- install
+  ```bash
+  $ cd ~/.vim/plugged/lsp-examples
+  $ python install.py --all
+
+  ## add into .vimrc
+  source $HOME/.vim/plugged/lsp-examples/vimrc.generated
+  ```
+
+  <!--sec data-title="deprecated" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ cd ~/.vim/bundle/lsp-examples
+  $ python install.py --enable-cmake \
+                      --enable-python \
+                      --enable-viml \
+                      --enable-bash \
+                      --enable-json \
+                      --enable-yaml \
+                      --enable-groovy \
+                      --enable-docker
+  $ cat /Users/marslo/.vim/bundle/lsp-examples/vimrc.generated | pbcopy
+  # paste into .vimrc
+  ```
+
+  - sample vimrc
+    ```bash
+    """ ycm lsp
+    let g:ycm_lsp_dir = '~/.vim/bundle/lsp-examples'
+    let s:pip_os_dir  = 'bin'
+    let g:ycm_language_server = [
+      \   { 'name': 'docker',
+      \     'filetypes': [ 'dockerfile' ],
+      \     'cmdline': [ expand( g:ycm_lsp_dir . '/docker/node_modules/.bin/docker-langserver' ), '--stdio' ]
+      \   },
+      \   {
+      \     'name': 'cmake',
+      \     'cmdline': [ expand( g:ycm_lsp_dir . '/cmake/venv/' . s:pip_os_dir . '/cmake-language-server' )],
+      \     'filetypes': [ 'cmake' ],
+      \    },
+      \   {
+      \     'name': 'python',
+      \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/python/node_modules/.bin/pyright-langserver' ), '--stdio' ],
+      \     'filetypes': [ 'python' ],
+      \   },
+      \   { 'name': 'vim',
+      \     'filetypes': [ 'vim' ],
+      \     'cmdline': [ expand( g:ycm_lsp_dir . '/viml/node_modules/.bin/vim-language-server' ), '--stdio' ]
+      \   },
+      \   {
+      \     'name': 'bash',
+      \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/bash/node_modules/.bin/bash-language-server' ), 'start' ],
+      \     'filetypes': [ 'sh', 'bash' ],
+      \   },
+      \   {
+      \     'name': 'json',
+      \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/json/node_modules/.bin/vscode-json-languageserver' ), '--stdio' ],
+      \     'filetypes': [ 'json' ],
+      \     'capabilities': { 'textDocument': { 'completion': { 'completionItem': { 'snippetSupport': v:true } } } },
+      \   },
+      \   {
+      \     'name': 'yaml',
+      \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/yaml/node_modules/.bin/yaml-language-server' ), '--stdio' ],
+      \     'filetypes': [ 'yaml' ],
+      \     'capabilities': {
+      \       'workspace': { 'configuration': v:true },
+      \       'textDocument': {
+      \         'completion': {
+      \           'completionItem': { 'snippetSupport': v:true },
+      \         }
+      \       }
+      \     },
+      \   },
+      \   {
+      \     'name': 'groovy',
+      \     'cmdline': [ 'java', '-jar', expand( g:ycm_lsp_dir . '/groovy/groovy-language-server/build/libs/groovy-language-server-all.jar' ) ],
+      \     'filetypes': [ 'groovy' ]
+      \   }
+      \ ]
+    ```
+  <!--endsec-->
+
+### [GroovyLanguageServer/groovy-language-server](https://github.com/GroovyLanguageServer/groovy-language-server)
+```bash
+# java has to be less than jdk 19
+$ brew install openjdk@17
+$ export JAVA_HOME='/usr/local/opt/openjdk@17'
+$ export PATH=${JAVA_HOME}/bin:${PATH}
+$ export CPPFLAGS="-I${JAVA_HOME}/include ${CPPFLAGS}"
+
+$ git clone git@github.com:GroovyLanguageServer/groovy-language-server.git
+$ ./gradew build
+
+# run
+$ git@github.com:GroovyLanguageServer/groovy-language-server.git
+```
+
+## others
+
+#### [vim-easycomplete](https://github.com/jayli/vim-easycomplete)
+
+> [!NOTE|label:references:]
+> - [How to improve your vim/nvim coding experience with vim-easycomplete?](https://dev.to/jayli/how-to-improve-your-vimnvim-coding-experience-with-vim-easycomplete-29o0)
+> - [Vim-EasyComplete 体验优化踩坑记录](https://zhuanlan.zhihu.com/p/425555993)
+> - [vim-easycomplete VS vim-lsp](https://www.libhunt.com/compare-vim-easycomplete-vs-vim-lsp?ref=compare)
+> - [Which lsp plugin should I use?](https://www.reddit.com/r/vim/comments/7lnhrt/which_lsp_plugin_should_i_use/)
+
+
+# utils
+## [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
+```vim
+Plug 'marslo/authorinfo'
 
 noremap <leader>aid :AuthorInfoDetect<CR>
 let g:vimrc_author = 'marslo'
@@ -733,7 +1277,7 @@ autocmd BufWritePre, FileWritePre * :AuthorInfoDetect<CR>
 autocmd BufWritePre               * :AuthorInfoDetect<CR>
 ```
 
-### [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
+## [sjl/gundo.vim](https://docs.stevelosh.com/gundo.vim/)
 
 > [!TIP]
 > - [delete undo file for 3 days ago](https://www.reddit.com/r/vim/comments/13s4e6l/remove_older_than_x_days_undo_files/)
@@ -748,14 +1292,14 @@ autocmd BufWritePre               * :AuthorInfoDetect<CR>
 >   ```
 
 ```vim
-Plugin 'sjl/gundo.vim'
+Plug 'sjl/gundo.vim'
 
 noremap <Leader>u :GundoToggle<CR>
 set undodir=~/.vim/undo/
 set undofile
 ```
 
-### [yegappan/mru](https://github.com/yegappan/mru)
+## [yegappan/mru](https://github.com/yegappan/mru)
 ```vim
 noremap <leader>re :MRU<CR>
 let MRU_Auto_Close    = 1                                           " most recently used(mru)
@@ -763,51 +1307,10 @@ let MRU_Max_Entries   = 10
 let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 ```
 
-## markdown
-### [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
+# markdown
+## [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
 ```vim
-Plugin 'gabrielelana/vim-markdown'
-
-nnoremap <Leader>cc :let &cole=(&cole == 2) ? 0 : 2 <bar> echo 'conceallevel ' . &cole <CR>
-let g:vim_markdown_folding_style_pythonic = 1
-let g:vim_markdown_override_foldtext      = 0
-let g:vim_markdown_autowrite              = 1
-let g:vim_markdown_new_list_item_indent   = 4
-let g:vim_markdown_toc_autofit            = 1
-let g:vim_markdown_conceal                = 0
-set conceallevel                          = 2
-let g:vim_markdown_frontmatter            = 1
-let g:vim_markdown_json_frontmatter       = 1
-let g:markdown_enable_spell_checking      = 0
-let g:markdown_enable_input_abbreviations = 0
-let g:markdown_enable_conceal             = 0
-hi markdownItalic           guifg=gray25    gui=underline
-hi MarkdownHeadingDelimiter gui=bold        guifg=gray25
-hi htmlSpecialChar          guifg=black
-hi markdownBold             gui=bold        guifg=gray25
-hi markdownUrl              guifg=#2fb3a6
-hi markdownAutomaticLink    guifg=#2fb3a6
-hi markdownLinkText         guifg=#317849
-hi markdownUrlTitle         guifg=#317849
-hi markdownBlockquote       guifg=#317849   gui=bold
-hi markdownId               guifg=#2fb3a6
-hi markdownIdDeclaration    guifg=#317849   gui=bold
-hi markdownListMarker       guifg=#317849
-```
-
-### [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
-```vim
-Plugin 'tpope/vim-markdown'
-
-" for tpope vim-markdown
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-let g:markdown_syntax_conceal = 0
-let g:markdown_minlines = 100
-```
-
-### [preservim/vim-markdown](https://github.com/preservim/vim-markdown)
-```vim
-Plugin 'preservim/vim-markdown'
+Plug 'preservim/vim-markdown'
 
 " preservim/vim-markdown
 let g:vim_markdown_toc_autofit         = 1
@@ -822,9 +1325,9 @@ let g:vim_markdown_folding_disabled    = 1
 " let g:vim_markdown_anchorexpr          = "'<<'.v:anchor.'>>'"
 ```
 
-### [dhruvasagar/vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
+## [dhruvasagar/vim-table-mode](https://github.com/dhruvasagar/vim-table-mode)
 ```vim
-Plugin 'dhruvasagar/vim-table-mode'
+Plug 'dhruvasagar/vim-table-mode'
 
 noremap <Leader>tm :TableModeToggle<CR>
 let g:table_mode_corner          = '|'
@@ -848,10 +1351,10 @@ inoreabbrev <expr> __
 let g:tabular_loaded             = 1
 ```
 
-### [godlygeek/tabular](https://github.com/godlygeek/tabular)
+## [godlygeek/tabular](https://github.com/godlygeek/tabular)
 ```vim
 " install
-Plugin 'godlygeek/tabular'
+Plug 'godlygeek/tabular'
 
 " settings
 noremap <Leader>tb :TableModeToggle<CR>
@@ -893,10 +1396,10 @@ if exists(":Tabularize")
 endif
 ```
 
-## git
-#### [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+# git
+### [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
 ```vim
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 
 " fugitive
 nnoremap <leader>mp :silent exec '! git mp'<CR>
@@ -911,599 +1414,7 @@ command! -bar -nargs=* Gpull execute 'Git pull'
 command! -bar -nargs=* Gpush execute 'Git push'
 ```
 
-## programming
-### [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
-
-> [!NOTE|label:references:]
-> - [#1577 : Unknown function: SyntasticStatuslineFlag](https://github.com/vim-syntastic/syntastic/issues/1577)
-> - [In Editor Linting with Syntastic](https://medium.com/usevim/in-editor-linting-with-syntastic-6814122bdbec)
->   ```vim
->   :SyntasticInfo
->   ```
-
-```vim
-Plugin 'vim-syntastic/syntastic'
-
-" syntastic settings                                                " Plugin 'vim-syntastic/syntastic'
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list            = 1
-let g:syntastic_check_on_open            = 1
-let g:syntastic_check_on_wq              = 0
-let g:syntastic_loc_list_height          = 2
-let g:syntastic_ignore_files             = ['\.py$']
-let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
-let g:syntastic_enable_signs             = 1
-let g:syntastic_info_symbol              = 'ೲ'                      " ࠵ ϊ
-let g:syntastic_error_symbol             = '✗'                      " ஓ ௐ ྾
-let g:syntastic_warning_symbol           = '⍨'                      " ᓆ ᓍ
-let g:syntastic_style_error_symbol       = '⍥'
-let g:syntastic_style_warning_symbol     = 'ఠ'                      " ⍤ ൠ
-highlight link SyntasticErrorSign        Error
-highlight link SyntasticWarningSign      GruvboxYellow
-highlight link SyntasticStyleErrorSign   GruvboxRedSign
-highlight link SyntasticStyleWarningSign GruvboxPurpleSign
-```
-
-![style warning](../screenshot/vim/vim-syntastic-style-warning.png)
-
-![error](../screenshot/vim/vim-syntastic-error.png)
-
-<!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
-  ```vim
-  Bundle 'vim-syntastic/syntastic'
-
-  " configure syntastic syntax checking to check on open as well as save
-  set statusline+=%#warningmsg#
-  set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
-  set statusline+=\ %* |
-  let g:syntastic_always_populate_loc_list  = 1
-  let g:syntastic_auto_loc_list             = 1
-  let g:syntastic_check_on_open             = 1
-  let g:syntastic_check_on_wq               = 0
-  let g:syntastic_loc_list_height           = 2
-  let g:syntastic_ignore_files              = ['\.py$']
-  let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
-  ```
-<!--endsec-->
-
-
-### [vim-scripts/EnhCommentify.vim](https://github.com/vim-scripts/EnhCommentify.vim)
-```vim
-" EnhCommentify
-let g:EnhCommentifyAlignRight      = 'Yes'
-let g:EnhCommentifyRespectIndent   = 'yes'
-let g:EnhCommentifyPretty          = 'Yes'
-let g:EnhCommentifyMultiPartBlocks = 'Yes'
-let g:EnhCommentifyUseSyntax       = 'Yes'
-```
-
-### [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
-```vim
-" tpope/vim-commentary
-map  <C-/> <Plug>Commentary
-imap <C-/> <Esc><Plug>CommentaryLineA
-xmap <c-/> <Plug>Commentary
-```
-
-### [honza/vim-snippets](https://github.com/honza/vim-snippets)
-```vim
-Plugin 'honza/vim-snippets'
-```
-
-### [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
-```vim
-Plugin 'msanders/snipmate.vim'
-
-" Snippet
-imap <S-C-J> <Plug>snipMateNextOrTrigger
-smap <S-C-J> <Plug>snipMateNextOrTrigger
-imap <Tab>   <Plug>snipMateNextOrTrigger
-```
-
-### [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
-
-> [!NOTE|label:references:]
-> - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
-> - [* iMarslo: build vim from source](../vim/install.html#install-python311-and-vim9)
-> - [gitter room](https://app.gitter.im/#/room/#Valloric_YouCompleteMe:gitter.im)
-> - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
-> - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
->   - [jdt-language-server-1.19.0-202301090450.tar.gz)](https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-1.19.0-202301090450.tar.gz)
-> - [Vim/YouCompleteMe](https://wiki.archlinux.org/title/Vim/YouCompleteMe)
-> - [在vim中配置最新YouCompleteMe代码自动补全插件](https://blog.csdn.net/qq_28584889/article/details/97131637)
-> - [* How to Set Up Code-Completion for Vim in macOS](https://medium.com/@rohmanhakim/how-to-set-up-code-completion-for-vim-in-macos-9766dd459385)
-
-- environment
-  - java
-    ```bash
-    $ brew install java
-    $ sudo ln -sfn $(brew --prefix java)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
-
-    $ java -version
-    openjdk version "20.0.1" 2023-04-18
-    OpenJDK Runtime Environment Homebrew (build 20.0.1)
-    OpenJDK 64-Bit Server VM Homebrew (build 20.0.1, mixed mode, sharing)
-    ```
-
-  - build tools
-    ```bash
-    $ xbuild --version
-    >>>> xbuild tool is deprecated and will be removed in future updates, use msbuild instead <<<<
-    XBuild Engine Version 14.0
-    Mono, Version 6.12.0.182
-    Copyright (C) 2005-2013 Various Mono authors
-    MSBUILD: error MSBUILD0000: Project file '--version' not found.
-
-    $ msbuild --version
-    Microsoft (R) Build Engine version 16.10.1 for Mono
-    Copyright (C) Microsoft Corporation. All rights reserved.
-    16.10.1.6601
-
-    $ gcc --version
-    Apple clang version 15.0.0 (clang-1500.1.0.2.5)
-    Target: x86_64-apple-darwin23.2.0
-    Thread model: posix
-    InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
-
-    $ node --version
-    v20.10.0
-    ```
-
-  - python
-
-    > [!NOTE|label:install python from source]
-    > - [iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
-
-    ```bash
-    $ python --version
-    Python 3.11.4
-    $ pip --version
-    pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
-    ```
-
-- wsl(ubuntu) install
-
-  > [!NOTE|label:references:]
-  > - [nodejs/snap](https://github.com/nodejs/snap)
-  > - [How to install cmake 3.2 on Ubuntu](https://askubuntu.com/a/1254438/92979)
-
-  ```bash
-  $ sudo snap install cmake --classic
-
-  $ sudo snap install go --classic
-  # or
-  $ sudo apt install golang-go
-
-  $ sudo snap install node --classic --channel=15
-  # upgrade version to 20.x
-  $ sudo snap refresh --channel=20 node
-  node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
-  ```
-
-- centos
-
-  > [!NOTE]
-  > - [#2756: CMake Error,no libclang found](https://github.com/ycm-core/YouCompleteMe/issues/2756)
-  > - [Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/html/using_llvm_13.0.1_toolset/assembly_llvm#proc_installing-comp-toolset_assembly_llvm)
-  > - [PDF: Red Hat Developer Tools 1: Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/pdf/using_llvm_13.0.1_toolset/red_hat_developer_tools-1-using_llvm_13.0.1_toolset-en-us.pdf)
-  > - [Getting Started with the LLVM System](https://llvm.org/docs/GettingStarted.html)
-
-  ```bash
-  $ sudo dnf install -y cmake \
-                        clang clang-devel clang-libs clang-tools-extra \   # no libclang found
-                        llvm llvm-libs \
-                        go
-
-  # upgrade nodejs
-  $ node --version
-  v12.22.5
-  $ sudo npm i -g n
-  $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
-  $ sudo n latest
-  $ which -a node
-  /usr/local/bin/node
-  /usr/bin/node
-  $ node --version
-  v20.8.1
-  $ /usr/bin/node --version
-  v12.22.5
-  ```
-
-- macOS
-  - os
-    ```bash
-    $ sw_vers
-    ProductName:      macOS
-    ProductVersion:   14.2.1
-    BuildVersion:     23C71
-    ```
-
-  > [!NOTE|label:references:]
-  > - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
-  > - [vim ycm c++ 环境搭建](https://www.xjx100.cn/news/651145.html?action=onClick)
-  > - [MAC安装YCM](https://www.xjx100.cn/news/651144.html?action=onClick)
-  >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
-  >   - C#：`brew install Mono` first and enabled by `--cs-completer`
-  >   - Go：`brew install go` and enabled by `--go-completer`
-  >   - TypeScript：insall Node.js and npm，and enable typescript via `npm install -g typescript`
-  >   - JavaScript: install Node.js and npm，and enabled via `--js-completer`
-  >   - Rust: install Rust，`--rust-completer`
-  >   - Java: `brew install java`，enabled via `--java-completer`
-  >   - for all support : enabled via `--all`
-
-| OPTION             | LANGUAGE               | TOOL                          | DEPENDENCIES      |
-|--------------------|------------------------|-------------------------------|-------------------|
-| --clang-completer  | C, C++, Objective-C    | Clang（libclang）             | Clang             |
-| --clangd-completer | C, C++, Objective-C    | clang-tools-extra<br>(clangd) | clang-tools-extra |
-| --cs-completer     | C#                     | Mono Runtime                  | Mono Runtime      |
-| --rust-completer   | Rust                   | RustToolChains                | RustToolChains    |
-| --go-completer     | golang                 | GoToolchain                   | GoToolchain       |
-| --js-completer     | JavaScript             | Tern                          | node.js、npm      |
-| --ts-completer     | JavaScript, TypeScript | tsserver                      | node.js、npm      |
-| --java-completer   | Java                   | eclipse.jdt.ls                | JDK8              |
-| --all              | all                    | -                             | -                 |
-
-
-  ```bash
-  $ brew install cmake python go nodejs
-  $ pip install urllib3
-  $ pip install --user cmake
-  $ sudo xcode-select -switch /Applications/Xcode.app
-
-  # check
-  $ ~/Library/Python/3.12/bin/cmake --version
-  cmake version 3.28.1
-  CMake suite maintained and supported by Kitware (kitware.com/cmake).
-
-  $ /usr/local/bin/cmake --version
-  cmake version 3.28.1
-  CMake suite maintained and supported by Kitware (kitware.com/cmake).
-
-  # [optioinal] for C#
-  $ brew install mono
-
-  # not necessary
-  $ brew install jdtls
-  ```
-
-- install
-
-  > [!TIP|label:references:]
-  > - [Building Vim from source](https://github.com/ycm-core/YouCompleteMe/wiki/Building-Vim-from-source)
-  > - [* Installation](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#installation)
-  >   - [* macOS](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#macos)
-  >   - [Linux 64-bit](https://github.com/ycm-core/YouCompleteMe/tree/master?tab=readme-ov-file#linux-64-bit)
-  >   - [Windows](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#windows)
-  > - [Full Installation Guide](https://github.com/ycm-core/YouCompleteMe/wiki/Full-Installation-Guide)
-  > - [Full installation on CentOS](https://github.com/ycm-core/YouCompleteMe/wiki/Full-installation-on-CentOS)
-  > - [Windows Installation Guide for Unix‐like Environments](https://github.com/ycm-core/YouCompleteMe/wiki/Windows-Installation-Guide-for-Unix%E2%80%90like-Environments)
-  > - [* Troubleshooting steps for ycmd server SHUT DOWN](https://github.com/ycm-core/YouCompleteMe/wiki/Troubleshooting-steps-for-ycmd-server-SHUT-DOWN)
-
-  ```bash
-  # full install
-  $ cd ~/.vim/bundle/YouCompleteMe
-  $ python3 install.py --all --verbose
-  ```
-
-  - or via `--system-libclang`
-    ```bash
-    $ brew install llvm
-    $ cd ~/.vim/bundle/YouCompleteMe
-    $ python3 install.py --system-libclang --all --verbose
-
-    $ cat ~/.vimrc
-    ...
-    let g:ycm_clangd_binary_path = trim(system('brew --prefix llvm')).'/bin/clangd'
-    ...
-    ```
-
-  - or using `install.sh`
-    ```bash
-    $ cd ~/.vim/bundle/YouCompleteMe
-    $ ./install.py --all --verbose
-
-    # or
-    $ ./install.py --clangd-completer --verbose
-
-    # or
-    ./install.py --verbose
-    ```
-
-- tips
-
-  - popup
-
-    > [!NOTE|label:references]
-    > - [YCM documentation hover - should we enable it by default](https://www.reddit.com/r/vim/comments/g9v832/ycm_documentation_hover_should_we_enable_it_by/)
-    >   - `:help completeopt`
-    >   - `:help previewpopup`
-    >   - `:help completepopup`
-    > - [The `g:ycm_add_preview_to_completeopt` option](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#the-gycm_add_preview_to_completeopt-option)
-
-    ```vim
-    let g:ycm_add_preview_to_completeopt                = 0
-    let g:ycm_autoclose_preview_window_after_insertion  = 1
-    let g:ycm_autoclose_preview_window_after_completion = 1
-    set completeopt-=preview
-    set completeopt+=popup
-    ```
-
-  - hint
-    ```vim
-    # highlight
-    highlight link YcmInlayHint Comment
-    ```
-
-- troubleshooting
-  - `c++/libclang.dylib` cannot be found issue
-
-    > [!NOTE]
-    > - [libclang](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#c-family-semantic-completion)
-    > - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
-    > - [#1141 Compilation errors with --system-libclang on macOS Mojave](https://github.com/ycm-core/ycmd/issues/1141#issuecomment-443677162)
-
-    ```bash
-    $ ln -sf $(brew --prefix llvm)/lib/libclang.dylib $(brew --prefix llvm)/lib/c++/libclang.dylib
-
-    # or : https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661
-    $ EXTRA_CMAKE_ARGS="-DCMAKE_CXX_FLAGS=-march=native" ./install.py --clang-completer --system-libclang
-
-    # for libclang
-    $ EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/path/to/your/llvm' ./install.py --clang-completer --system-libclang
-    ```
-
-  - Question can be turned off with options, see YCM docs
-    ```bash
-    Found /path/to/.ycm_extra_conf.py. Load?
-    (Question can be turned off with options, see YCM docs)
-    ```
-
-    - [solution](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#the-gycm_extra_conf_globlist-option)
-      ```vim
-      let g:ycm_extra_conf_globlist = ['~/path/to/ycm_extra_conf/*', '~/.vim/plugged/YouCompleteMe/*']
-      ```
-
-#### .ycm_extra_conf.py
-
-> [!NOTE|label:references]
-> - [* ycm-core/ycmd/.ycm_extra_conf.py](https://github.com/ycm-core/ycmd/blob/master/.ycm_extra_conf.py)
-> - [iogf's ycm_extra_conf](https://github.com/ycm-core/ycmd/issues/1329#issuecomment-535715712)
-> - [ycm_extra_conf/ycm_extra_conf.py](https://github.com/zxcyec/ycm_extra_conf/blob/master/ycm_extra_conf.py)
-> - [nemausus/dotfiles/ycm_extra_conf.py](https://github.com/nemausus/dotfiles/blob/master/ycm_extra_conf.py)
-> - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/#ycm_extra_confpy)
-
-#### vimrc
-
-> [!NOTE|label:references:]
-> - [CM代码补全插件找不到c++头文件](https://www.xjx100.cn/news/651148.html?action=onClick)
-> - to disable prompt message for extra config in vimrc
->   ```
->   let g:ycm_confirm_extra_conf = 0
->   ```
-> - [chxuan/vimplus/.vimrc](https://github.com/chxuan/vimplus/blob/master/.vimrc#L270)
-> - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/)
-> - ycm
->   - [vimrc_ycm_minimal](https://github.com/ycm-core/YouCompleteMe/blob/master/vimrc_ycm_minimal)
->   - [test/vimrc](https://github.com/ycm-core/YouCompleteMe/blob/master/test/vimrc)
->   - [#3906 completion popmenu close automatically After type `.`](https://github.com/ycm-core/YouCompleteMe/issues/3906)
-
-```bash
-# create simple file for sample.cpp
-$ g++ -v test.cpp
-#include “…” search starts here:
-#include <…> search starts here:
-/usr/include/c++/11
-/usr/include/x86_64-linux-gnu/c++/11
-/usr/include/c++/11/backward
-/usr/lib/gcc/x86_64-linux-gnu/11/include
-/usr/local/include
-/usr/include/x86_64-linux-gnu
-/usr/include
-
-$ cat >> ~/.ycm_extra_conf.py << EOF
-flags = [
-'-Wall',
-'-Wextra',
-#'-Werror',
-#'-Wc++98-compat',
-'-Wno-long-long',
-'-Wno-variadic-macros',
-'-fexceptions',
-'-stdlib=libc++',
-# THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
-# language to use when compiling headers. So it will guess. Badly. So C++
-# headers will be compiled as C headers. You don't want that so ALWAYS specify
-# a "-std=<something>".
-# For a C project, you would set this to something like 'c99' instead of
-# 'c++11'.
-'-std=c++11',
-# ...and the same thing goes for the magic -x option which specifies the
-# language that the files to be compiled are written in. This is mostly
-# relevant for c++ headers.
-# For a C project, you would set this to 'c' instead of 'c++'.
-'-x', 'c++',
-'-I', '.',
-'-isystem', '/usr/include/c++/11',
-'-isystem', '/usr/include/x86_64-linux-gnu/c++/11',
-'-isystem', '/usr/include/c++/11/backward',
-'-isystem', '/usr/lib/gcc/x86_64-linux-gnu/11/include',
-'-isystem', '/usr/local/include',
-'-isystem', '/usr/include/x86_64-linux-gnu',
-'-isystem', '/usr/include',
-]
-EOF
-```
-
-### [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
-
-> [!NOTE|label:references:]
-> - [YouCompleteMe](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe)
->   - [YouCompleteMe with JSON](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/JSON)
->   - [YouCompleteMe with YAML](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/YAML)
->   - [YouCompleteMe with VimL](http://blog.fpliu.com/it/software/vim/plugin/YouCompleteMe/config/VimL)
-> - [My Julia setup for vim with YCM on Linux](https://discourse.julialang.org/t/my-julia-setup-for-vim-with-ycm-on-linux/45485)
-> - [Language Server Protocol Specification - 3.17](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens)
-
-- vimrc
-  ```bash
-  $ cat ~/.vimrc
-  Plugin 'ycm-core/lsp-examples'
-
-  vim +BundleInstall +qa
-  ```
-
-- install
-  ```bash
-  $ cd ~/.vim/bundle/lsp-examples
-  $ python install.py --enable-cmake \
-                      --enable-python \
-                      --enable-viml \
-                      --enable-bash \
-                      --enable-json \
-                      --enable-yaml \
-                      --enable-groovy \
-                      --enable-docker
-  $ cat /Users/marslo/.vim/bundle/lsp-examples/vimrc.generated | pbcopy
-  # paste into .vimrc
-  ```
-
-- sample vimrc
-  ```bash
-  """ ycm lsp
-  let g:ycm_lsp_dir = '~/.vim/bundle/lsp-examples'
-  let s:pip_os_dir  = 'bin'
-  let g:ycm_language_server = [
-    \   { 'name': 'docker',
-    \     'filetypes': [ 'dockerfile' ],
-    \     'cmdline': [ expand( g:ycm_lsp_dir . '/docker/node_modules/.bin/docker-langserver' ), '--stdio' ]
-    \   },
-    \   {
-    \     'name': 'cmake',
-    \     'cmdline': [ expand( g:ycm_lsp_dir . '/cmake/venv/' . s:pip_os_dir . '/cmake-language-server' )],
-    \     'filetypes': [ 'cmake' ],
-    \    },
-    \   {
-    \     'name': 'python',
-    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/python/node_modules/.bin/pyright-langserver' ), '--stdio' ],
-    \     'filetypes': [ 'python' ],
-    \   },
-    \   { 'name': 'vim',
-    \     'filetypes': [ 'vim' ],
-    \     'cmdline': [ expand( g:ycm_lsp_dir . '/viml/node_modules/.bin/vim-language-server' ), '--stdio' ]
-    \   },
-    \   {
-    \     'name': 'bash',
-    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/bash/node_modules/.bin/bash-language-server' ), 'start' ],
-    \     'filetypes': [ 'sh', 'bash' ],
-    \   },
-    \   {
-    \     'name': 'json',
-    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/json/node_modules/.bin/vscode-json-languageserver' ), '--stdio' ],
-    \     'filetypes': [ 'json' ],
-    \     'capabilities': { 'textDocument': { 'completion': { 'completionItem': { 'snippetSupport': v:true } } } },
-    \   },
-    \   {
-    \     'name': 'yaml',
-    \     'cmdline': [ 'node', expand( g:ycm_lsp_dir . '/yaml/node_modules/.bin/yaml-language-server' ), '--stdio' ],
-    \     'filetypes': [ 'yaml' ],
-    \     'capabilities': {
-    \       'workspace': { 'configuration': v:true },
-    \       'textDocument': {
-    \         'completion': {
-    \           'completionItem': { 'snippetSupport': v:true },
-    \         }
-    \       }
-    \     },
-    \   },
-    \   {
-    \     'name': 'groovy',
-    \     'cmdline': [ 'java', '-jar', expand( g:ycm_lsp_dir . '/groovy/groovy-language-server/build/libs/groovy-language-server-all.jar' ) ],
-    \     'filetypes': [ 'groovy' ]
-    \   }
-    \ ]
-  ```
-
-#### [GroovyLanguageServer/groovy-language-server](https://github.com/GroovyLanguageServer/groovy-language-server)
-```bash
-# java has to be less than jdk 19
-$ brew install openjdk@17
-$ export JAVA_HOME='/usr/local/opt/openjdk@17'
-$ export PATH=${JAVA_HOME}/bin:${PATH}
-$ export CPPFLAGS="-I${JAVA_HOME}/include ${CPPFLAGS}"
-
-$ git clone git@github.com:GroovyLanguageServer/groovy-language-server.git
-$ ./gradew build
-
-# run
-$ git@github.com:GroovyLanguageServer/groovy-language-server.git
-```
-
-### [vim-easycomplete](https://github.com/jayli/vim-easycomplete)
-
-> [!NOTE|label:references:]
-> - [How to improve your vim/nvim coding experience with vim-easycomplete?](https://dev.to/jayli/how-to-improve-your-vimnvim-coding-experience-with-vim-easycomplete-29o0)
-> - [Vim-EasyComplete 体验优化踩坑记录](https://zhuanlan.zhihu.com/p/425555993)
-> - [vim-easycomplete VS vim-lsp](https://www.libhunt.com/compare-vim-easycomplete-vs-vim-lsp?ref=compare)
-> - [Which lsp plugin should I use?](https://www.reddit.com/r/vim/comments/7lnhrt/which_lsp_plugin_should_i_use/)
-
-### [tabnine-vim](https://github.com/tabnine/YouCompleteMe)
-
-> [!DANGER|label:ERROR]
-> not working for python3.9+, using [codota/tabnine-nvim](https://github.com/codota/tabnine-nvim)
-
-{% hint style='info' %}
-> - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
-{% endhint %}
-
-```vim
-" tabnine-vim
-if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
-if !(&filetype == 'vim')           | let g:loaded_youcompleteme = 1 | endif
-if &filetype ==# 'vim'             | let g:loaded_youcompleteme = 0 | endif
-
-let g:ycm_filetype_blacklist                      = { 'vim':0  }
-let b:ycm_largefile                               = 1
-let g:ycm_disable_for_files_larger_than_kb        = 1000
-let g:ycm_python_binary_path                      = '/usr/local/opt/python/libexec/bin/python'
-let g:ycm_min_num_of_chars_for_completion         = 2
-let g:ycm_python_binary_path                      = '/usr/local/opt/python@3.9/libexec/bin/python'
-let g:ycm_filetype_specific_completion_to_disable = { 'gitcommit': 1 }
-let g:ycm_semantic_triggers                       = {
-  \   'c': ['->', '.'],
-  \   'objc': ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-  \            're!\[.*\]\s'],
-  \   'ocaml': ['.', '#'],
-  \   'cpp,cuda,objcpp': ['->', '.', '::'],
-  \   'perl': ['->'],
-  \   'php': ['->', '::'],
-  \   'cs,d,elixir,go,groovy,java,javascript,julia,perl6,python,scala,typescript,vb': ['.'],
-  \   'ruby,rust': ['.', '::'],
-  \   'lua': ['.', ':'],
-  \   'erlang': [':'],
-  \ }
-
-function! TriggerYCM()
-  if g:loaded_youcompleteme == 1
-    let g:loaded_youcompleteme = 0
-  else
-    let g:loaded_youcompleteme = 1
-  endif
-endfunction
-nmap <C-y> :call TriggerYCM()<CR>
-```
-
-- disable tabnine for vim
-  ```vim
-  " tabnine-vim                                                        " Plugin 'codota/tabnine-vim'
-  if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
-  if !( &filetype == 'vim' )         | let g:loaded_youcompleteme = 1 | endif
-  ```
-
-## color and theme
-
+# color and theme
 > [!NOTE|label:references:]
 > - [Highlighting color strings with correspondent color](https://vi.stackexchange.com/a/26891/7389)
 > - plugins:
@@ -1512,7 +1423,154 @@ nmap <C-y> :call TriggerYCM()<CR>
 >   - [ap/vim-css-color](https://github.com/ap/vim-css-color)
 >   - [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
 
-## troubleshooting
+# others
+## deprecated
+
+<!--sec data-title="using fzf.vim instead of ctrlp" data-id="section4" data-show=true data-collapse=true ces-->
+- [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
+  ```vim
+  Plug 'kien/ctrlp.vim'
+
+  let g:ctrlp_map                 = '<c-p>'                           " CtrlP
+  let g:ctrlp_working_path_mode   = 'ra'                              " search parents as well (stop searching safety)
+  let g:ctrlp_max_height          = 8
+  let g:ctrlp_max_depth           = 100
+  let g:ctrl_root_makers          = ['.ctrlp']                        " stop search if these files present
+  let g:ctrlp_use_caching         = 1
+  let g:ctrlp_clear_cache_on_exit = 0                                 " cross session caching
+  if has('win32') || has('win95') || has('win64')
+    let g:ctrlp_cache_dir = $VIM . '/cache/ctrlp'
+  else
+    let g:ctrlp_cache_dir = '$HOME/.vim/cache/ctrlp'
+  endif
+  let g:ctrlp_custom_ignore = {
+      \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+      \ 'file': '\v\.(exe|so|dll|rpm|tar|gz|bz2|zip|ctags|tags)|tags|ctags$',
+      \ 'link': 'some_bad_symbolic_links',
+      \ }
+  ```
+<!--endsec-->
+
+<!--sec data-title="codota/tabnine-nvim instead of tabnine-vim" data-id="section5" data-show=true data-collapse=true ces-->
+- [tabnine-vim](https://github.com/tabnine/YouCompleteMe)
+
+  > [!DANGER|label:ERROR]
+  > not working for python3.9+, using [codota/tabnine-nvim](https://github.com/codota/tabnine-nvim)
+
+  {% hint style='info' %}
+  > - [tabnine/YouCompleteMe](https://github.com/tabnine/YouCompleteMe)
+  {% endhint %}
+
+  ```vim
+  " tabnine-vim
+  if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
+  if !(&filetype == 'vim')           | let g:loaded_youcompleteme = 1 | endif
+  if &filetype ==# 'vim'             | let g:loaded_youcompleteme = 0 | endif
+
+  let g:ycm_filetype_blacklist                      = { 'vim':0  }
+  let b:ycm_largefile                               = 1
+  let g:ycm_disable_for_files_larger_than_kb        = 1000
+  let g:ycm_python_binary_path                      = '/usr/local/opt/python/libexec/bin/python'
+  let g:ycm_min_num_of_chars_for_completion         = 2
+  let g:ycm_python_binary_path                      = '/usr/local/opt/python@3.9/libexec/bin/python'
+  let g:ycm_filetype_specific_completion_to_disable = { 'gitcommit': 1 }
+  let g:ycm_semantic_triggers                       = {
+    \   'c': ['->', '.'],
+    \   'objc': ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+    \            're!\[.*\]\s'],
+    \   'ocaml': ['.', '#'],
+    \   'cpp,cuda,objcpp': ['->', '.', '::'],
+    \   'perl': ['->'],
+    \   'php': ['->', '::'],
+    \   'cs,d,elixir,go,groovy,java,javascript,julia,perl6,python,scala,typescript,vb': ['.'],
+    \   'ruby,rust': ['.', '::'],
+    \   'lua': ['.', ':'],
+    \   'erlang': [':'],
+    \ }
+
+  function! TriggerYCM()
+    if g:loaded_youcompleteme == 1
+      let g:loaded_youcompleteme = 0
+    else
+      let g:loaded_youcompleteme = 1
+    endif
+  endfunction
+  nmap <C-y> :call TriggerYCM()<CR>
+  ```
+
+  - disable tabnine for vim
+    ```vim
+    " tabnine-vim                                                        " Plug 'codota/tabnine-vim'
+    if index(['vim'], &filetype) == -1 | let g:loaded_youcompleteme = 1 | endif
+    if !( &filetype == 'vim' )         | let g:loaded_youcompleteme = 1 | endif
+    ```
+<!--endsec-->
+
+<!--sec data-title="tpope/vim-commentary instead of EnhCommentify" data-id="section6" data-show=true data-collapse=true ces-->
+- [vim-scripts/EnhCommentify.vim](https://github.com/vim-scripts/EnhCommentify.vim)
+  ```vim
+  " EnhCommentify
+  let g:EnhCommentifyAlignRight      = 'Yes'
+  let g:EnhCommentifyRespectIndent   = 'yes'
+  let g:EnhCommentifyPretty          = 'Yes'
+  let g:EnhCommentifyMultiPartBlocks = 'Yes'
+  let g:EnhCommentifyUseSyntax       = 'Yes'
+  ```
+<!--endsec-->
+
+<!--sec data-title="codota/tabnine-nvim instead of tabnine-vim" data-id="section7" data-show=true data-collapse=true ces-->
+- [honza/vim-snippets](https://github.com/honza/vim-snippets)
+  ```vim
+  Plug 'honza/vim-snippets'
+  ```
+<!--endsec-->
+
+## not been using
+
+<!--sec data-title="not been using" data-id="section8" data-show=true data-collapse=true ces-->
+- [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
+  ```vim
+  Plug 'gabrielelana/vim-markdown'
+
+  nnoremap <Leader>cc :let &cole=(&cole == 2) ? 0 : 2 <bar> echo 'conceallevel ' . &cole <CR>
+  let g:vim_markdown_folding_style_pythonic = 1
+  let g:vim_markdown_override_foldtext      = 0
+  let g:vim_markdown_autowrite              = 1
+  let g:vim_markdown_new_list_item_indent   = 4
+  let g:vim_markdown_toc_autofit            = 1
+  let g:vim_markdown_conceal                = 0
+  set conceallevel                          = 2
+  let g:vim_markdown_frontmatter            = 1
+  let g:vim_markdown_json_frontmatter       = 1
+  let g:markdown_enable_spell_checking      = 0
+  let g:markdown_enable_input_abbreviations = 0
+  let g:markdown_enable_conceal             = 0
+  hi markdownItalic           guifg=gray25    gui=underline
+  hi MarkdownHeadingDelimiter gui=bold        guifg=gray25
+  hi htmlSpecialChar          guifg=black
+  hi markdownBold             gui=bold        guifg=gray25
+  hi markdownUrl              guifg=#2fb3a6
+  hi markdownAutomaticLink    guifg=#2fb3a6
+  hi markdownLinkText         guifg=#317849
+  hi markdownUrlTitle         guifg=#317849
+  hi markdownBlockquote       guifg=#317849   gui=bold
+  hi markdownId               guifg=#2fb3a6
+  hi markdownIdDeclaration    guifg=#317849   gui=bold
+  hi markdownListMarker       guifg=#317849
+  ```
+
+- [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
+  ```vim
+  Plug 'tpope/vim-markdown'
+
+  " for tpope vim-markdown
+  let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+  let g:markdown_syntax_conceal = 0
+  let g:markdown_minlines = 100
+  ```
+<!--endsec-->
+
+# troubleshooting
 
 > [!TIP|label:how to debug:]
 > - `:message`
@@ -1520,6 +1578,36 @@ nmap <C-y> :call TriggerYCM()<CR>
 > - `:YcmDiags`
 > - `:YcmToggleLogs`
 > - `:py3 import sys; print( sys.version)` : `3.12.1 (main, Dec  7 2023, 20:45:44) [Clang 15.0.0 (clang-1500.0.40.1)]`
+
+## ycmd
+
+#### `c++/libclang.dylib` cannot be found issue
+
+> [!NOTE]
+> - [libclang](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#c-family-semantic-completion)
+> - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
+> - [#1141 Compilation errors with --system-libclang on macOS Mojave](https://github.com/ycm-core/ycmd/issues/1141#issuecomment-443677162)
+
+```bash
+$ ln -sf $(brew --prefix llvm)/lib/libclang.dylib $(brew --prefix llvm)/lib/c++/libclang.dylib
+
+# or : https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661
+$ EXTRA_CMAKE_ARGS="-DCMAKE_CXX_FLAGS=-march=native" ./install.py --clang-completer --system-libclang
+
+# for libclang
+$ EXTRA_CMAKE_ARGS='-DPATH_TO_LLVM_ROOT=/path/to/your/llvm' ./install.py --clang-completer --system-libclang
+```
+
+#### Question can be turned off with options, see YCM docs
+```bash
+Found /path/to/.ycm_extra_conf.py. Load?
+(Question can be turned off with options, see YCM docs)
+```
+
+- [solution](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#the-gycm_extra_conf_globlist-option)
+  ```vim
+  let g:ycm_extra_conf_globlist = ['~/path/to/ycm_extra_conf/*', '~/.vim/plugged/YouCompleteMe/*']
+  ```
 
 ### ycm download failed
 #### download failed for `jdt-language-server-1.14.0-202207211651.tar.gz`
@@ -1648,7 +1736,7 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/third_par
 YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-17.0.1-x86_64-apple-darwin.tar.bz2
 ```
 
-<!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="older version" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
 $ find YouCompleteMe/ -name '*.zip' -o -name '*.tar.*'
 YouCompleteMe/third_party/ycmd/ycmd/tests/testdata/python-future/embedded_standard_library/python35.zip
@@ -1737,7 +1825,7 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16
         ```
 
 - full logs
-  <!--sec data-title="full logs" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="full logs" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   $ python install.py --all --verbose
   Searching Python 3.11 libraries...
@@ -2126,7 +2214,7 @@ $ python ycmd --options_file default_settings.json
 serving on http://1.0.0.127.in-addr.arpa:63691
 ```
 
-### tabnine
+## tabnine
 
 - `YouCompleteMe unavailable: module 'collections' has no attribute 'Mapping'`
 
@@ -2165,7 +2253,7 @@ serving on http://1.0.0.127.in-addr.arpa:63691
   - caused by enabled `--enable-cscope`
   - ~~`$ sudo make uninstall && sudo make install`~~
 
-### airline
+## airline
 
 > [!NOTE|label:references:]
 > - [#2316 : Airline breaks down under certain conditions](https://github.com/vim-airline/vim-airline/issues/2316)
@@ -2195,3 +2283,4 @@ serving on http://1.0.0.127.in-addr.arpa:63691
   $ cd ${iRCHOME}/utils/fonts
   $ ./install.sh
   ```
+
