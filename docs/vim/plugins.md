@@ -5,8 +5,9 @@
   - [`Tabularize`](#tabularize)
     - [align with the N pattern](#align-with-the-n-pattern)
     - [align on specific symbol](#align-on-specific-symbol)
+- [useful commands](#useful-commands)
 - [highly recommended](#highly-recommended)
-  - [jiangmiao/auto-pairs](#jiangmiaoauto-pairs)
+  - [LunarWatcher/auto-pairs](#lunarwatcherauto-pairs)
   - [junegunn/fzf.vim](#junegunnfzfvim)
   - [luochen1990/rainbow](#luochen1990rainbow)
   - [Yggdroot/indentLine](#yggdrootindentline)
@@ -16,7 +17,6 @@
 - [programming](#programming)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [tpope/vim-commentary](#tpopevim-commentary)
-  - [msanders/snipmate.vim](#msanderssnipmatevim)
   - [ycm-core/YouCompleteMe](#ycm-coreyoucompleteme)
     - [install](#install)
     - [tips](#tips)
@@ -33,7 +33,9 @@
   - [dhruvasagar/vim-table-mode](#dhruvasagarvim-table-mode)
   - [godlygeek/tabular](#godlygeektabular)
 - [git](#git)
-    - [tpope/vim-fugitive](#tpopevim-fugitive)
+  - [tpope/vim-fugitive](#tpopevim-fugitive)
+  - [APZelos/blamer.nvim](#apzelosblamernvim)
+  - [zivyangll/git-blame.vim](#zivyangllgit-blamevim)
 - [color and theme](#color-and-theme)
 - [others](#others-1)
   - [deprecated](#deprecated)
@@ -260,30 +262,54 @@
 
     ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
 
+# useful commands
+
+```vim
+command! -nargs=0 -bar -range=% Reverse
+    \       let save_mark_t = getpos("'t")
+    \<bar>      <line2>kt
+    \<bar>      exe "<line1>,<line2>g/^/m't"
+    \<bar>  call setpos("'t", save_mark_t)
+nnoremap <Leader>r :Reverse <bar> nohlsearch<CR>
+xnoremap <Leader>r :Reverse <bar> nohlsearch<CR>
+
+command! -nargs=0 DocToc execute 'silent !/usr/local/bin/doctoc --notitle --update-only --github --maxlevel 3 %' | execute 'redraw!'
+command! -nargs=0 FullPath execute 'echo expand("%:p")'
+```
+
 # highly recommended
 
 > [!NOTE|label:references:]
 > - [Vim Plugin Audit](https://tuckerchapman.com/2020/05/18/vim-plugin-audit/)
 
-## [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
-
-> [!NOTE|label:references:]
-> - [#128 : Disable autopairs for certain filetypes](https://github.com/jiangmiao/auto-pairs/issues/128#issuecomment-195461762)
->   ```vim
->   au Filetype markdown let b:AutoPairs={'(':')', '[':']', '{':'}','"':'"', '`':'`'}
->   ```
+## [LunarWatcher/auto-pairs](https://github.com/LunarWatcher/auto-pairs/tree/master)
 
 ```vim
-Plug 'jiangmiao/auto-pairs'
-" or
-Plug 'marslo/auto-pairs'
+" LunarWatcher/auto-pairs
+let g:AutoPairs                             = autopairs#AutoPairsDefine({ '<': '>' })
+let g:AutoPairsMapBS                        = 1
+let g:AutoPairsFlyMode                      = 0
+let g:AutoPairsCompleteOnlyOnSpace          = 1
+let g:AutoPairsNoJump                       = 0
+let g:AutoPairsSpaceCompletionRegex         = '\w'
+" to avoid impact with ctrl-p ( :Files )
+let g:AutoPairsShortcutToggleMultilineClose = 0
+let g:AutoPairsShortcutBackInsert           = '<M-b>'
+let g:AutoPairsPrefix                       = '<M-j>'
+let g:AutoPairsShortcutJump                 = '<M-n>'
+let g:AutoPairsShortcutToggle               = '<M-j>'
 
-" settings
-let g:AutoPairs = {'(':')', '[':']', '{':'}', '<':'>',"'":"'",'"':'"', '`':'`'}
-let g:AutoPairsParens = {'(':')', '[':']', '{':'}', '<':'>'}
-let g:AutoPairsFlyMode = 0
-let g:AutoPairsShortcutBackInsert = '<M-b>'
+augroup DevOps
+  autocmd FileType markdown,html let g:AutoPairsCompleteOnlyOnSpace = 0
+  autocmd FileType markdown,html let b:AutoPairs = autopairs#AutoPairsDefine({
+        \ '<div>':'</div>', '<font>':'</font>', '<a>':'</a>', '<p>':'</p>',
+        \ '<table>':'</table>', '<tbody>':'</tbody>',
+        \ '<thread>':'</thread>', '<th>':'</th>', '<td>':'</td>'
+        \ })
+augroup END
 ```
+
+![vim auto-pairs](../screenshot/vim/vim-auto-pairs.gif)
 
 ## [junegunn/fzf.vim](https://github.com/junegunn/fzf.vim)
 ```vim
@@ -343,29 +369,30 @@ let g:fzf_colors = {
 " install
 Plug 'luochen1990/rainbow'
 
-" settings
-let g:rainbow_active = 1
+" luochen1990/rainbow
+" for i in '75' '147' '108' '196' '208' '66' '106' '172' '115' '129'; do echo -e "\e[38;05;${i}m${i}"; done | column -c 250 -s ' '; echo -e "\e[m"
+let g:rainbow_active    = 1
 let g:rainbow_operators = 1
-let g:rainbow_conf = {
-\   'guifgs' : ['#DC322F', '#268bd2', '#6c71c4', '#B22222', '#C0FF3E', '#6A5ACD', '#EEC900', '#9A32CD', '#EE7600', '#98fb98'],
-\   'ctermfgs' : 'xterm-256color' == $TERM ? ['9', '69', '178', '196', '112', '208', '129', '166', '84', '99'] : ['lightblue', 'lightgreen', 'yellow', 'red', 'magenta'],
-\   'parentheses': [['(',')'], ['\[','\]'], ['{','}']],
+let g:rainbow_conf      = {
+\   'guifgs' : [ '#6A5ACD', '#ff6347', '#b58900', '#9acd32', '#EEC900', '#9A32CD', '#EE7600', '#268bd2', '#183172' ],
+\   'ctermfgs' : 'xterm-256color' == $TERM ? [ '75', '147', '108', '196', '208', '66', '106', '172', '115', '129' ] : [ 'lightblue', 'lightgreen', 'yellow', 'red', 'magenta' ],
+\   'parentheses': [ ['(',')'], ['\[','\]'], ['{','}'] ],
 \   'separately': {
 \     '*': {},
 \     'markdown': {
 \       'parentheses_options': 'containedin=markdownCode contained',
 \     },
 \     'css': {
-\       'parentheses': [['(',')'], ['\[','\]']],
+\       'parentheses': [ ['(',')'], ['\[','\]'] ],
 \     },
 \     'scss': {
-\       'parentheses': [['(',')'], ['\[','\]']],
+\       'parentheses': [ ['(',')'], ['\[','\]'] ],
 \     },
 \     'html': {
-\       'parentheses': [['(',')'], ['\[','\]'], ['{','}']],
+\       'parentheses': [ ['(',')'], ['\[','\]'], ['{','}'] ],
 \     },
 \     'stylus': {
-\       'parentheses': ['start=/{/ end=/}/ fold contains=@colorableGroup'],
+\       'parentheses': [ 'start=/{/ end=/}/ fold contains=@colorableGroup' ],
 \     }
 \   }
 \}
@@ -379,23 +406,23 @@ Plug 'Yggdroot/indentLine'
 " settings
 nnoremap <leader>idl :IndentLineEnable<CR>
 
-let g:indentLine_enabled = 1
-let g:indentLine_color_gui = "#282828"
-let g:indentLine_color_term = 239
-let g:indentLine_indentLevel = 20
+let g:indentLine_enabled              = 1
+let g:indentLine_color_gui            = "#282828"
+let g:indentLine_color_term           = 239
+let g:indentLine_indentLevel          = 20
 let g:indentLine_showFirstIndentLevel = 1
-let g:indentLine_color_tty = 0
-let g:indentLine_faster = 1
-let g:indentLine_concealcursor = 'inc'
-let g:indentLine_conceallevel = 2
-if has('gui_running') || 'xterm-256color' == $TERM
-  let g:indentLine_char = '¦'
-elseif has('win32')
-  let g:indentLine_color_term = 8
-  let g:indentLine_char = '|'
+let g:indentLine_color_tty            = 0
+let g:indentLine_faster               = 1
+let g:indentLine_concealcursor        = 'inc'
+let g:indentLine_conceallevel         = 2
+if has( 'gui_running' ) || 'xterm-256color' == $TERM
+  let g:indentLine_char               = '¦'
+elseif has( 'win32' )
+  let g:indentLine_color_term         = 8
+  let g:indentLine_char               = '|'
 else
-  let g:indentLine_color_tty_dark = 0
-  let g:indentLine_char = '¦'
+  let g:indentLine_color_tty_dark     = 0
+  let g:indentLine_char               = '¦'
 endif
 ```
 
@@ -409,15 +436,13 @@ endif
 ```vim
 Plug 'airblade/vim-gitgutter'
 
-" gitgutter
-nmap <leader>d :GitGutterFold<CR>
+" airblade/vim-gitgutter
 let g:gitgutter_git_executable = '/usr/local/bin/git'
 let g:gitgutter_enabled        = 1
 let g:gitgutter_realtime       = 0
 let g:gitgutter_eager          = 0
 set updatetime=250
 set signcolumn=yes
-" highlight clear LineNr
 highlight clear SignColumn
 ```
 
@@ -502,7 +527,7 @@ autocmd User AirlineAfterInit call AirlineInit()
 
   - setup short mode
     ```vim
-    let g:airline_mode_map                           = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
+    let g:airline_mode_map = { '__': '-', 'n' : 'N', 'i' : 'I', 'R' : 'R', 'c' : 'C', 'v' : 'V', 'V' : 'V', '': 'V', 's' : 'S', 'S' : 'S', '': 'S', }
     ```
 
   - unicode symbols
@@ -826,21 +851,17 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 
 
 ## [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
+
 ```vim
 " tpope/vim-commentary
-map  <C-/> <Plug>Commentary
-imap <C-/> <Esc><Plug>CommentaryLineA
-xmap <c-/> <Plug>Commentary
-```
+map  <C-/>     gcc
+map  <leader>x gcc
+imap <C-/>     <Esc><Plug>CommentaryLineA
+xmap <C-/>     <Plug>Commentary
 
-## [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
-```vim
-Plug 'msanders/snipmate.vim'
-
-" Snippet
-imap <S-C-J> <Plug>snipMateNextOrTrigger
-smap <S-C-J> <Plug>snipMateNextOrTrigger
-imap <Tab>   <Plug>snipMateNextOrTrigger
+augroup DevOps
+  autocmd FileType ignore,gitconfig setlocal commentstring=#\ %s
+augroup END
 ```
 
 ## [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
@@ -1077,21 +1098,11 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   > - [ycm_extra_conf/ycm_extra_conf.py](https://github.com/zxcyec/ycm_extra_conf/blob/master/ycm_extra_conf.py)
   > - [nemausus/dotfiles/ycm_extra_conf.py](https://github.com/nemausus/dotfiles/blob/master/ycm_extra_conf.py)
   > - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/#ycm_extra_confpy)
-
-- vimrc
-
-  > [!NOTE|label:references:]
   > - [CM代码补全插件找不到c++头文件](https://www.xjx100.cn/news/651148.html?action=onClick)
   > - to disable prompt message for extra config in vimrc
   >   ```
   >   let g:ycm_confirm_extra_conf = 0
   >   ```
-  > - [chxuan/vimplus/.vimrc](https://github.com/chxuan/vimplus/blob/master/.vimrc#L270)
-  > - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/)
-  > - ycm
-  >   - [vimrc_ycm_minimal](https://github.com/ycm-core/YouCompleteMe/blob/master/vimrc_ycm_minimal)
-  >   - [test/vimrc](https://github.com/ycm-core/YouCompleteMe/blob/master/test/vimrc)
-  >   - [#3906 completion popmenu close automatically After type `.`](https://github.com/ycm-core/YouCompleteMe/issues/3906)
 
   ```bash
   # create simple file for sample.cpp
@@ -1138,6 +1149,90 @@ imap <Tab>   <Plug>snipMateNextOrTrigger
   '-isystem', '/usr/include',
   ]
   EOF
+  ```
+
+- vimrc
+
+  > [!NOTE|label:references:]
+  > - [chxuan/vimplus/.vimrc](https://github.com/chxuan/vimplus/blob/master/.vimrc#L270)
+  > - [A better YouCompleteMe Config](https://jonasdevlieghere.com/post/a-better-youcompleteme-config/)
+  > - ycm
+  >   - [vimrc_ycm_minimal](https://github.com/ycm-core/YouCompleteMe/blob/master/vimrc_ycm_minimal)
+  >   - [test/vimrc](https://github.com/ycm-core/YouCompleteMe/blob/master/test/vimrc)
+  >   - [#3906 completion popmenu close automatically After type `.`](https://github.com/ycm-core/YouCompleteMe/issues/3906)
+
+  ```vim
+  Plug 'ycm-core/YouCompleteMe', { 'do': 'python3 install.py --all' }
+  Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --all' }
+
+  " ycm-core/YouCompleteMe
+  nnoremap <leader>gc :YcmCompleter GoToDeclaration<CR>
+  nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+  nnoremap <leader>go :YcmCompleter GoToInclude<cr>
+  nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+  nnoremap <leader>gd :YcmDiags<CR>
+  let g:ycm_extra_conf_globlist                      = ['~/.marslo/ycm/*', '~/.vim/plugged/YouCompleteMe/*']
+  let g:ycm_key_invoke_completion                    = '<C-\>'
+  let g:ycm_echo_current_diagnostic                  = 'virtual-text'
+  let g:ycm_error_symbol                             = '✗'
+  let g:ycm_warning_symbol                           = '✹'
+  let g:ycm_seed_identifiers_with_syntax             = 1
+  let g:ycm_complete_in_comments                     = 1
+  let g:ycm_complete_in_strings                      = 1
+  let g:ycm_collect_identifiers_from_tags_files      = 1
+  let g:ycm_keep_logfiles                            = 1
+  let g:ycm_log_level                                = 'debug'
+  let g:ycm_show_detailed_diag_in_popup              = 1
+  let g:ycm_filepath_completion_use_working_dir      = 1
+  let g:ycm_min_num_of_chars_for_completion          = 1
+  let g:ycm_complete_in_comments                     = 1
+  let g:ycm_autoclose_preview_window_after_insertion = 1
+  let g:ycm_filetype_whitelist                       = { '*': 1, 'ycm_nofiletype': 1 }
+  let g:ycm_filetype_specific_completion_to_disable  = { 'gitcommit': 1, 'vim': 1 }
+  let g:ycm_filetype_blacklist                       = {
+    \   'tagbar'  : 1,
+    \   'notes'   : 1,
+    \   'netrw'   : 1,
+    \   'unite'   : 1,
+    \   'vimwiki' : 1,
+    \   'infolog' : 1,
+    \   'leaderf' : 1,
+    \   'mail'    : 1,
+    \   'help'    : 1,
+    \   'undo'    : 1
+    \ }
+  let g:ycm_semantic_triggers                        =  {
+    \   'c'         : [ '->', '.'],
+    \   'objc'      : [ '->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s', 're!\[.*\]\s'],
+    \   'ocaml'     : [ '.', '#'],
+    \   'cpp,cuda,objcpp' : [ '->', '.', '::'],
+    \   'perl'      : [ '->'],
+    \   'php'       : [ '->', '::'],
+    \   'cs,d,elixir,go,groovy,java,javascript,julia,perl6,python,scala,typescript,vb': ['.'],
+    \   'ruby,rust' : [ '.', '::'],
+    \   'lua'       : [ '.', ':'],
+    \   'erlang'    : [ ':'],
+    \ }
+
+  " ycm-core/lsp-examples
+  let g:ycm_lsp_dir = expand( pluginHome . 'lsp-examples' )
+  let s:pip_os_dir  = 'bin'
+  if has( 'win32' ) | let s:pip_os_dir = 'Scripts' | end
+  source $HOME/.vim/plugged/lsp-examples/vimrc.generated
+
+  augroup YCMCustomized
+    autocmd!
+    autocmd Filetype vim let g:ycm_complete_in_strings = 3
+    autocmd FileType c,cpp,sh,python,groovy,Jenkinsfile let b:ycm_hover = {
+      \ 'command': 'GetDoc',
+      \ 'syntax': &filetype,
+      \ 'popup_params': {
+      \     'maxwidth': 80,
+      \     'border': [],
+      \     'borderchars': ['─', '│', '─', '│', '┌', '┐', '┘', '└'],
+      \   },
+      \ }
+  augroup END
   ```
 
 ## [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
@@ -1263,7 +1358,6 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 > - [Vim-EasyComplete 体验优化踩坑记录](https://zhuanlan.zhihu.com/p/425555993)
 > - [vim-easycomplete VS vim-lsp](https://www.libhunt.com/compare-vim-easycomplete-vs-vim-lsp?ref=compare)
 > - [Which lsp plugin should I use?](https://www.reddit.com/r/vim/comments/7lnhrt/which_lsp_plugin_should_i_use/)
-
 
 # utils
 ## [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
@@ -1397,7 +1491,12 @@ endif
 ```
 
 # git
-### [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+- call bash cmd in silent mode
+  ```bash
+  nnoremap <leader>mp  :execute 'silent !git push --force' \| redraw!<CR>
+  ```
+
+## [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
 ```vim
 Plug 'tpope/vim-fugitive'
 
@@ -1412,6 +1511,28 @@ nnoremap <leader>go :Git checkout<Space>
 nnoremap <leader>gc :Git commit -am ""<Left>
 command! -bar -nargs=* Gpull execute 'Git pull'
 command! -bar -nargs=* Gpush execute 'Git push'
+```
+
+## [APZelos/blamer.nvim](https://github.com/APZelos/blamer.nvim)
+
+```vim
+Plug 'APZelos/blamer.nvim'
+
+" APZelos/blamer.nvim
+nnoremap <Leader>bb  :BlamerToggle<CR>
+let g:blamer_enabled              = 0
+let g:blamer_delay                = 100
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_show_in_insert_modes = 0
+let g:blamer_relative_time        = 1
+" let g:blamer_prefix             = ' » '
+```
+
+## [zivyangll/git-blame.vim](https://github.com/zivyangll/git-blame.vim)
+
+```vim
+" zivyangll/git-blame.vim
+nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 ```
 
 # color and theme
@@ -1528,6 +1649,36 @@ command! -bar -nargs=* Gpush execute 'Git push'
 ## not been using
 
 <!--sec data-title="not been using" data-id="section8" data-show=true data-collapse=true ces-->
+- [msanders/snipmate.vim](https://github.com/msanders/snipmate.vim)
+  ```vim
+  Plug 'msanders/snipmate.vim'
+
+  " Snippet
+  imap <S-C-J> <Plug>snipMateNextOrTrigger
+  smap <S-C-J> <Plug>snipMateNextOrTrigger
+  imap <Tab>   <Plug>snipMateNextOrTrigger
+  ```
+
+- [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
+
+  > [!NOTE|label:references:]
+  > - [#128 : Disable autopairs for certain filetypes](https://github.com/jiangmiao/auto-pairs/issues/128#issuecomment-195461762)
+  >   ```vim
+  >   au Filetype markdown let b:AutoPairs={'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+  >   ```
+
+  ```vim
+  Plug 'jiangmiao/auto-pairs'
+  " or
+  Plug 'marslo/auto-pairs'
+
+  " settings
+  let g:AutoPairs = {'(':')', '[':']', '{':'}', '<':'>',"'":"'",'"':'"', '`':'`'}
+  let g:AutoPairsParens = {'(':')', '[':']', '{':'}', '<':'>'}
+  let g:AutoPairsFlyMode = 0
+  let g:AutoPairsShortcutBackInsert = '<M-b>'
+  ```
+
 - [gabrielelana/vim-markdown](https://github.com/gabrielelana/vim-markdown)
   ```vim
   Plug 'gabrielelana/vim-markdown'
