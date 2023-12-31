@@ -1616,6 +1616,9 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
 - install
   ```bash
+  # with cargo
+  $ cargo install ripgrep
+
   # osx
   $ brew install ripgrep
 
@@ -1638,31 +1641,14 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ cargo build --release
   $ ./target/release/rg --version
   0.1.3
-  ```
 
-- info
-  ```bash
-  $ brew install ripgrep
-  Running `brew update --auto-update`...
-  ==> Downloading https://ghcr.io/v2/homebrew/core/ripgrep/manifests/13.0.0-1
-  #################################################################################################################################### 100.0%
-  ==> Fetching ripgrep
-  ==> Downloading https://ghcr.io/v2/homebrew/core/ripgrep/blobs/sha256:f0727ff4b6aeddff356a3319fe8844dfc2f7435c8ca81ba9bbbeaffd04906926
-  #################################################################################################################################### 100.0%
-  ==> Pouring ripgrep--13.0.0.sonoma.bottle.1.tar.gz
-  ==> Caveats
-  Bash completion has been installed to:
-    /usr/local/etc/bash_completion.d
-  ==> Summary
-  ☕️ 🐸  /usr/local/Cellar/ripgrep/13.0.0: 13 files, 5.8MB
-  ==> Running `brew cleanup ripgrep`...
-  Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
-  Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
-
-  $ rg --version
-  ripgrep 13.0.0
-  -SIMD -AVX (compiled)
-  +SIMD +AVX (runtime)
+  # completion
+  # wsl/ubuntu/centos
+  $ rg --generate complete-bash | sudo tee /usr/share/bash-completion/completions/rg
+  # or centos
+  $ rg --generate complete-bash | sudo tee /etc/bash_completion.d/rg
+  # osx
+  $ rg --generate complete-bash | sudo tee /usr/local/etc/bash_completion.d/rg
   ```
 
 ## usage
