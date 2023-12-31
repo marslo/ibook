@@ -989,19 +989,52 @@ augroup END
     > [!NOTE|label:references:]
     > - [nodejs/snap](https://github.com/nodejs/snap)
     > - [How to install cmake 3.2 on Ubuntu](https://askubuntu.com/a/1254438/92979)
+    > - tips
+    >   - using snap instead of apt for nodejs due to
+    >     ```bash
+    >     $ sudo apt install nodejs
+    >     $ node --version
+    >     v12.22.9
+    >     ```
 
     ```bash
-    $ sudo snap install cmake --classic
+    $ sudo mkdir -p /etc/apt/keyrings
+    $ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    $ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_current.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 
-    $ sudo snap install go --classic
-    # or
-    $ sudo apt install golang-go
+    $ sudo apt install build-essential cmake vim-nox python3-dev
+    $ sudo apt install mono-complete golang openjdk-17-jdk openjdk-17-jre npm
 
+    # nodejs/golang using snap instead of $ sudo apt isntall nodejs
     $ sudo snap install node --classic --channel=15
     # upgrade version to 20.x
     $ sudo snap refresh --channel=20 node
     node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+
+    # check
+    $ go version
+    go version go1.18.1 linux/amd64
+    $ node --version
+    v20.10.0
+    $ cmake --version
+    cmake version 3.22.1
+    CMake suite maintained and supported by Kitware (kitware.com/cmake).
+    $ java --version
+    openjdk 19.0.2 2023-01-17
+    OpenJDK Runtime Environment (build 19.0.2+7-Ubuntu-0ubuntu322.04)
+    OpenJDK 64-Bit Server VM (build 19.0.2+7-Ubuntu-0ubuntu322.04, mixed mode, sharing)
     ```
+
+    - snap install for cmake and golang
+      ```bash
+      $ sudo snap install cmake --classic
+      $ sudo snap install go --classic
+      # or
+      $ sudo apt install golang-go
+
+      $ go version
+      go version go1.21.5 linux/amd64
+      ```
 
   - centos
 
@@ -1012,25 +1045,30 @@ augroup END
     > - [Getting Started with the LLVM System](https://llvm.org/docs/GettingStarted.html)
 
     ```bash
-    $ sudo dnf install -y cmake \
-                          clang clang-devel clang-libs clang-tools-extra \   # no libclang found
-                          llvm llvm-libs \
-                          go
-
-    # upgrade nodejs
-    $ node --version
-    v12.22.5
-    $ sudo npm i -g n
-    $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
-    $ sudo n latest
-    $ which -a node
-    /usr/local/bin/node
-    /usr/bin/node
-    $ node --version
-    v20.8.1
-    $ /usr/bin/node --version
-    v12.22.5
+    $ sudo dnf install cmake gcc-c++ make python3-devel
     ```
+
+    - or
+      ```bash
+      $ sudo dnf install -y cmake \
+                            clang clang-devel clang-libs clang-tools-extra \   # no libclang found
+                            llvm llvm-libs \
+                            go
+
+      # upgrade nodejs
+      $ node --version
+      v12.22.5
+      $ sudo npm i -g n
+      $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
+      $ sudo n latest
+      $ which -a node
+      /usr/local/bin/node
+      /usr/bin/node
+      $ node --version
+      v20.8.1
+      $ /usr/bin/node --version
+      v12.22.5
+      ```
 
 - install with `install.py`
   ```bash
