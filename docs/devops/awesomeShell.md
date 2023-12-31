@@ -1467,6 +1467,16 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   ```
 
   - from source
+
+    > [!NOTE]
+    > - install rust via
+    >   ```bash
+    >   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    >   $ source "$HOME/.cargo/env"
+    >   $ cargo --version
+    >   cargo 1.74.1 (ecb9851af 2023-10-18)
+    >   ```
+
     ```bash
     $ git clone https://github.com/sharkdp/fd && cd $_
 
