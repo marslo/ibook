@@ -5,6 +5,7 @@
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
+  - [`E370: Could not load library "msys-python3.11.dll"`](#e370-could-not-load-library-msys-python311dll)
   - [windows app settings](#windows-app-settings)
 - [vimrc](#vimrc)
   - [`verbose`](#verbose)
@@ -135,6 +136,16 @@
   ```vim
   set pythonthreedll=c:\path\to\python\python37.dll
   set pythonthreehome=c:\path\to\python
+  ```
+
+### `E370: Could not load library "msys-python3.11.dll"`
+
+- solution
+  ```bash
+  > cd c:\iMarslo\myprograms\Python3.11
+  > cp python3.11.dll to msys-python3.11.dll
+
+  # check $PATH contains `C:\iMarslo\myprograms\Python3.11`
   ```
 
 ### windows app settings
