@@ -831,6 +831,13 @@ _foobar    _
   ```
 
 - create patch
+
+  > [!NOTE|label:references:]
+  > - [Is this a good way to create a patch?](https://unix.stackexchange.com/a/162146/29178)
+  >   ```bash
+  >   $ diff -Naru file_original file_updated > file.patch
+  >   ```
+
   ```bash
   $ diff -c <(sort a.txt) <(sort b.txt)
   *** /dev/fd/63  2023-09-12 21:51:50.828885643 -0700
@@ -883,6 +890,7 @@ _foobar    _
                    e
   f
   ```
+
 - common
   ```bash
   $ comm -12 <(sort a.txt) <(sort b.txt)

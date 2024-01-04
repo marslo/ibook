@@ -7,7 +7,7 @@
   - [package auto-upgrade dislable](#package-auto-upgrade-dislable)
   - [disable server auto upgrade](#disable-server-auto-upgrade)
     - [revert hold settings](#revert-hold-settings)
-    - [Show all Hold](#show-all-hold)
+    - [show all hold](#show-all-hold)
   - [complete remove an app](#complete-remove-an-app)
   - [gpg keys](#gpg-keys)
 - [Raspberry Pi](#raspberry-pi)
@@ -21,6 +21,9 @@
   - [jdk and JAVA_HOME](#jdk-and-java_home)
   - [groovy](#groovy)
   - [gcc](#gcc)
+  - [glibc](#glibc)
+    - [troubleshooting](#troubleshooting)
+  - [lua](#lua)
   - [ruby](#ruby)
   - [mono](#mono)
   - [mysql](#mysql)
@@ -87,8 +90,7 @@ $ sudo echo "jenkins install" | dpkg --set-selections
 $ sudo apt-mark unhold jenkins
 ```
 
-### Show all Hold
-
+### show all hold
 ```bash
 $ sudo apt-mark showhold
 ```
@@ -282,11 +284,13 @@ update-rc.d: warning:  stop runlevel arguments (none) do not match jenkins Defau
 > - [gcc.gnu.org](https://gcc.gnu.org/)
 > - [Installing GCC](https://gcc.gnu.org/wiki/InstallingGCC)
 > - [How To Install GCC on CentOS 7](https://linuxhostsupport.com/blog/how-to-install-gcc-on-centos-7/)
+> - [Host/Target specific installation notes for GCC](https://gcc.gnu.org/install/specific.html)
 
 - install
   ```bash
-  $ mdir -p /opt/gcc/gcc-13.2.0
-  $ curl -fsSL https://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-13.2.0/gcc-13.2.0.tar.gz | tar xzf - -C /opt/gcc/gcc-13.2.0
+  $ mdir -p /opt/gcc
+  $ curl -fsSL https://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-13.2.0/gcc-13.2.0.tar.gz | tar xzf - -C /opt/gcc
+  $ cd /opt/gcc/gcc-13.2.0
 
   # prerequisites
   gcc-13.2.0 $ grep base_url= contrib/download_prerequisites
@@ -336,6 +340,90 @@ update-rc.d: warning:  stop runlevel arguments (none) do not match jenkins Defau
   Copyright (C) 2023 Free Software Foundation, Inc.
   This is free software; see the source for copying conditions.  There is NO
   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ```
+
+## glibc
+
+> [!NOTE|label:references:]
+> - [Reverting installation of glibc to CentOS libraries](https://forums.centos.org/viewtopic.php?t=76973)
+>   ```bash
+>   # crash
+>   build $ ../configure --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
+>   ```
+> - [Index of /gnu/glibc](https://ftp.gnu.org/gnu/glibc/)
+> - upgrade glibc due to
+>   ```bash
+>   /lib64/libc.so.6: version `GLIBC_2.18’ not found`
+>   ```
+> - [glibc-2.28-246.el8.aarch64.rpm](https://pkgs.org/download/glibc)
+> - [safely upgrade glibc on CentOS 7](https://serverfault.com/a/894689/129815)
+> - [How to upgrade glibc from version 2.12 to 2.14 on CentOS?](https://stackoverflow.com/a/38317265/2940319)
+> - [* Glibc installation](https://leistech.blogspot.com/2015/06/glibc-installation.html)
+> - [* 谨慎操作. libc.so.6: version `GLIBC_2.14’ not found.](https://feng1o.github.io/01.glibc/)
+> - [harv/glibc-2.17_centos6.sh](https://gist.github.com/harv/f86690fcad94f655906ee9e37c85b174)
+
+```bash
+$ mkdir -p /opt/glibc
+$ curl -fsSL https://ftp.gnu.org/gnu/glibc/glibc-2.38.tar.xz | tar -xJf - -C /opt/glibc
+$ mkdir -p /opt/glibc/glibc-2.38/build && cd $_
+
+build $ ../configure --prefix=/opt/glibc/2.38
+# or
+build $ ../configure --prefix `pwd`/../install
+
+build $ make -j $(nproc)
+build $ sudo make install
+# highly recommended
+build $ make install DESTDIR=/root/glibc-2.14/staging
+```
+
+### [troubleshooting](https://leistech.blogspot.com/2015/06/glibc-installation.html)
+
+- No rule to make target `glibc-build/Versions.all`, needed by `glibc-build/abi-versions.h`. Stop.
+  ```bash
+  $ sudo dnf install gawk texinfo
+  ```
+
+- make[2]: *** [/mnt/lfs/sources/glibc-build/misc/syslog.o] Error 1
+  ```bash
+  $ make clean
+  $ make -j2 CFLAGS="-U_FORTIFY_SOURCE -O2 -fno-stack-protector"
+  ```
+
+- ldconfig: Can't open configuration
+  ```bash
+  /opt/glibc-2.14/etc $ sudo sh -c "echo '/usr/local/lib' >> ld.so.conf"
+  /opt/glibc-2.14/etc $ sudo sh -c "echo '/opt/lib' >> ld.so.conf"
+  ```
+
+## lua
+
+> [!NOTE]
+> - [lua download](https://luabinaries.sourceforge.net/download.html)
+> - [LuaBinaries Files](https://sourceforge.net/projects/luabinaries/files/)
+> - [How to compile Lua 5.4.0 for Linux as a shared library](https://blog.spreendigital.de/2020/05/24/how-to-compile-lua-5-4-0-for-linux-as-a-shared-library/)
+> - [Compiling Lua - create .so files?](https://stackoverflow.com/a/28773470/2940319)
+>   - [dcarrith/Makefile.patch](https://gist.github.com/dcarrith/899047f3a2d603b25a58)
+>   - [dcarrith/src.Makefile.patch](https://gist.github.com/dcarrith/6095183b8dc60c909779)
+> - [* iMarslo : patch for build lua v5.4.6 as a shared library (liblua.so)](https://gist.github.com/marslo/767e339e32e0dbc038a3e00e3c8a7cba)
+
+```bash
+$ mkdir -p /opt/lua
+$ curl -fsSL https://www.lua.org/ftp/lua-5.4.6.tar.gz | tar xzf - -C /opt/lua
+$ cd /opt/lua/lua-5.4.6
+
+$ make all test
+$ sudo make install
+```
+
+- build with `.so` file
+
+  ```bash
+  $ patch --ignore-whitespace < <(curl -fsSL https://gist.githubusercontent.com/marslo/767e339e32e0dbc038a3e00e3c8a7cba/raw/01f29ac774a468221082f4d504b013d264435567/Makefile.patch)
+  $ cd src
+  $ patch --ignore-whitespace < <(curl -fsSL https://gist.githubusercontent.com/marslo/767e339e32e0dbc038a3e00e3c8a7cba/raw/01f29ac774a468221082f4d504b013d264435567/src.Makefile.patch)
+
+  $ make all test && sudo make install
   ```
 
 ## ruby
@@ -444,6 +532,25 @@ Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-proj
 # optional
 $ sudo yum install mono-complete
 ```
+
+- repo files
+  ```bash
+  $ cat -pp mono-centos7-stable.repo
+  [mono-centos7-stable]
+  name=mono-centos7-stable
+  baseurl=https://download.mono-project.com/repo/centos7-stable/
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://download.mono-project.com/repo/xamarin.gpg
+
+  $ cat -pp mono-centos8-stable.repo
+  [mono-centos8-stable]
+  name=mono-centos8-stable
+  baseurl=https://download.mono-project.com/repo/centos8-stable/
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://download.mono-project.com/repo/xamarin.gpg
+  ```
 
 ## mysql
 ### built from source code

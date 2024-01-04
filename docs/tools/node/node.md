@@ -12,6 +12,8 @@
   - [macOS](#macos)
 - [tips](#tips)
   - [nvm](#nvm)
+- [hogo](#hogo)
+  - [loveit](#loveit)
 - [Q&A](#qa)
   - [empty of `npm ls -g`](#empty-of-npm-ls--g)
   - [env: node: No such file or directory](#env-node-no-such-file-or-directory)
@@ -141,6 +143,10 @@ brew cleanup --prune-prefix
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 $ nvm install v12
 ```
+
+## hogo
+
+### [loveit](https://feng1o.github.io/loveit/)
 
 ## Q&A
 ### empty of `npm ls -g`

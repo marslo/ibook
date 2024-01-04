@@ -2,6 +2,18 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [rpm & dpkg & brew](#rpm--dpkg--brew)
+- [yum/dnf](#yumdnf)
+  - [repo](#repo)
+    - [check configure](#check-configure)
+    - [check variable](#check-variable)
+    - [enable or disable repo](#enable-or-disable-repo)
+    - [cache](#cache)
+    - [cleanup no-required packages](#cleanup-no-required-packages)
+  - [yum group](#yum-group)
+  - [tools installation](#tools-installation)
+    - [resolve conflict](#resolve-conflict)
+    - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
+  - [CentOS 8 -> CentOS 9](#centos-8---centos-9)
 - [prompt](#prompt)
 - [character](#character)
   - [metacharacter](#metacharacter)
@@ -17,13 +29,6 @@
   - [others](#others)
     - [`you have new mail`](#you-have-new-mail)
     - [crontab](#crontab)
-- [centos](#centos)
-  - [yum](#yum)
-    - [enable or disable repo](#enable-or-disable-repo)
-    - [yum group](#yum-group)
-    - [tools installation](#tools-installation)
-    - [resolve conflict](#resolve-conflict)
-    - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
 - [tricky](#tricky)
   - [unicode](#unicode)
   - [useful functions](#useful-functions)
@@ -43,6 +48,7 @@
 {% endhint %}
 
 # rpm & dpkg & brew
+
 | RPM                                                           | DPKG                                                                   | BREW                                           |
 |---------------------------------------------------------------|------------------------------------------------------------------------|------------------------------------------------|
 | `rpm -qa`                                                     | `dpkg -l`                                                              | `brew list`                                    |
@@ -53,6 +59,519 @@
 | `rpm -e name`                                                 | `dpkg -r name` <br> `dpkg -P name`                                     | `brew uninstall name`                          |
 
 
+# yum/dnf
+
+> [!NOTE|label:references:]
+> - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
+> - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
+> - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
+> - [How to Find Out Top Directories and Files (Disk Space) in Linux](https://www.tecmint.com/find-top-large-directories-and-files-sizes-in-linux/)
+> - [8.4. Configuring Yum and Yum Repositories](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-configuring_yum_and_yum_repositories)
+>   - [8.4.2. Setting [repository] Options](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-setting_repository_options)
+> - [repo vars](https://unix.stackexchange.com/q/624738/29178)
+>   ```bash
+>   $ cd /etc/dnf/vars; grep -H --color=none . *
+>   contentdir:centos
+>   infra:stock
+>   # or
+>   $ tail -f /var/log/dnf.log
+>   ```
+> - [moving from CentOS 8 to CentOS Stream 8](https://unix.stackexchange.com/a/704363/29178)
+>   ```bash
+>   $ sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+>   $ sudo sed -i 's/mirrorlist/#mirrorlist/g'  /etc/yum.repos.d/CentOS-*
+>   $ sudo dnf install centos-release-stream -y --allowerasing
+>   $ sudo dnf swap centos-{linux,stream}-repos
+>   $ sudo dnf distro-sync --best --allowerasing
+>   $ sudo reboot
+>   ```
+> - [DNF Command Reference](https://dnf.readthedocs.io/en/latest/command_ref.html)
+
+## repo
+
+> [!NOTE]
+> - [CentOS Repositories](https://centos.pkgs.org/)
+> - [CentOS Stream Mirror](https://mirror.stream.centos.org/)
+> - [8.4. Configuring Yum and Yum Repositories](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-configuring_yum_and_yum_repositories)
+> - [variables in repo files](https://unix.stackexchange.com/a/20226/29178)
+>   ```bash
+>   # centos 8
+>   $ /usr/libexec/platform-python -c 'import dnf, json; db = dnf.dnf.Base(); print(json.dumps(db.conf.substitutions, indent=2))'
+>   {
+>     "arch": "x86_64",
+>     "basearch": "x86_64",
+>     "releasever": "8"
+>   }
+>
+>   # centos 7
+>   $ python -c 'import yum, json; yb = yum.YumBase(); print json.dumps(yb.conf.yumvar, indent=2)'
+>   Loaded plugins: fastestmirror, langpacks, versionlock
+>   {
+>     "uuid": "512cdde3-4de7-47af-a2fd-6b4e6d711b12",
+>     "contentdir": "centos",
+>     "basearch": "x86_64",
+>     "infra": "stock",
+>     "releasever": "7",
+>     "arch": "ia32e"
+>   }
+>
+>   # or
+>   $ dnf config-manager --dump-variables
+>   arch = x86_64
+>   basearch = x86_64
+>   stream = 9-stream
+>   releasever = 8
+>   ```
+
+```bash
+$ sudo dnf install -y https://mirror.stream.centos.org/9-stream/BaseOS/aarch64/os/Packages/centos-gpg-keys-9.0-23.el9.noarch.rpm \
+                      https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/centos-stream-repos-9.0-23.el9.noarch.rpm
+```
+
+- i.e.:
+  ```bash
+  $ sudo cat << EOF > /etc/yum.repos.d/centos.repo
+  [baseos]
+  name=CentOS Stream $releasever - BaseOS
+  metalink=https://mirrors.centos.org/metalink?repo=centos-baseos-$stream&arch=$basearch&protocol=https,http
+  gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+  gpgcheck=1
+  repo_gpgcheck=0
+  metadata_expire=6h
+  countme=1
+  enabled=1
+  EOF
+
+  $ dnf --disablerepo=* --enablerepo=baseos reinstall centos-stream-repos
+  ```
+
+### check configure
+
+```bash
+$ dnf config-manager --dump
+```
+
+### check variable
+
+> [!NOTE]
+> - [`man yum.conf`](https://man7.org/linux/man-pages/man5/yum.conf.5.html)
+> - [Yum: How can I view variables like $releasever, $basearch & $YUM0?](https://unix.stackexchange.com/a/20226/29178)
+
+```bash
+$ dnf config-manager --dump-variables
+arch = x86_64
+basearch = x86_64
+contentdir = centos
+infra = stock
+stream = 8-stream
+releasever = 8
+
+# or
+$ /usr/libexec/platform-python -c 'import dnf, json; db = dnf.dnf.Base(); print(json.dumps(db.conf.substitutions, indent=2))'
+{
+  "arch": "x86_64",
+  "basearch": "x86_64",
+  "releasever": "8"
+}
+
+# or
+$ cat /etc/yum/vars/*
+       File: /etc/yum/vars/contentdir
+   1   centos
+──────────────────────────────────────────────────────────────────────────────────────────────────
+       File: /etc/yum/vars/infra
+   1   stock
+──────────────────────────────────────────────────────────────────────────────────────────────────
+       File: /etc/yum/vars/stream
+   1   8-stream
+```
+
+#### [install via different releasever](https://gist.github.com/yodermk/9c8081a70ec4e0f2ffca8d6c3603da32?permalink_comment_id=4067846#gistcomment-4067846)
+```bash
+$ dnf -y --releasever=9 --allowerasing --setopt=deltarpm=false swap python39-setuptools python3-setuptools
+```
+
+### enable or disable repo
+```bash
+# enable
+$ sudo yum config-manager --set-enabled PowerTools
+
+# disable
+$ sudo yum config-manager --set-disabled PowerTools
+```
+
+### cache
+
+```bash
+# clean
+$ sudo dnf clean all [ --refresh ]
+
+# makecache
+$ sudo dnf makecache
+```
+
+### [cleanup no-required packages](https://www.tecmint.com/upgrade-centos-7-to-centos-8/)
+```bash
+$ sudo package-cleanup --leaves
+$ sudo package-cleanup --orphans
+```
+
+## yum group
+
+{% hint style='tip' %}
+> references:
+> - [2.5 Yum Groups](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_yum_groups.html)
+> - [How to install a group of packages with yum on Red Hat Enterprise Linux?](https://access.redhat.com/solutions/15815)
+{% endhint %}
+
+```bash
+$ yum grouplist
+$ yum group hidden
+$ yum groupinfo <groupName>
+$ yum groupinstall <groupName>
+$ yum groupupdate <groupName>
+$ yum groupremove <groupName>
+```
+
+## tools installation
+
+> [!TIP|label:convert CentOS repo file in RHEL]
+> ```bash
+> $ sudo sed -i 's/\$contentdir/centos/' /etc/yum.repo.d/*.repo
+> ```
+> - [CentOS through a VM - no URLs in mirrorlist [closed]](https://stackoverflow.com/a/70930049/2940319)
+>   ```bash
+>   $ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
+>   $ sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+>   $
+>   $ sudo dnf install centos-release-stream -y
+>   $ sudo dnf swap centos-{linux,stream}-repos -y
+>   $ sudo dnf distro-sync -y
+>   ```
+
+- epel
+
+  > [!TIP|label:references:]
+  > - [How To enable the EPEL Repository on RHEL 8 / CentOS 8 Linux](https://linuxconfig.org/redhat-8-epel-install-guide)
+  > - [* Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
+  > - [404 error trying to install EPEL](https://access.redhat.com/discussions/5473561)
+  > - [Index of /epel/8/Everything](https://mirrors.iu13.net/epel/8/Everything/)
+
+  ```bash
+  # install from url
+  # centos 7
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  # centos 8
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+  # centos 9
+  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+  # install via cmd
+  $ sudo yum [re]install -y epel-release yum-utils
+  # or
+  $ sudo dnf config-manager --set-enabled powertools
+  $ sudo dnf install -y epel-release epel-next-release
+  ```
+
+  - info
+    ```bash
+    $ cat /etc/yum.repos.d/epel.repo
+    [epel]
+    name=Extra Packages for Enterprise Linux 8 - $basearch
+    # It is much more secure to use the metalink, but if you wish to use a local mirror
+    # place its address here.
+    #baseurl=https://download.example/pub/epel/8/Everything/$basearch
+    metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=centos
+    enabled=1
+    gpgcheck=1
+    countme=1
+    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8
+
+    $ dnf repoinfo epel
+    Repo-id            : epel
+    Repo-name          : Extra Packages for Enterprise Linux 8 - x86_64
+    Repo-status        : enabled
+    Repo-revision      : 1697078836
+    Repo-updated       : Wed 11 Oct 2023 07:48:01 PM PDT
+    Repo-pkgs          : 9,872
+    Repo-available-pkgs: 9,870
+    Repo-size          : 17 G
+    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=x86_64&infra=$infra&content=centos
+      Updated          : Thu 12 Oct 2023 05:16:56 PM PDT
+    Repo-baseurl       : https://mirrors.iu13.net/epel/8/Everything/x86_64/ (153 more)
+    Repo-expire        : 172,800 second(s) (last: Thu 12 Oct 2023 05:16:56 PM PDT)
+    Repo-filename      : /etc/yum.repos.d/epel.repo
+    Total packages: 9,872
+
+    $ dnf repoinfo epel-next
+    Last metadata expiration check: 0:10:35 ago on Wed 13 Dec 2023 03:48:24 PM PST.
+    Repo-id            : epel-next
+    Repo-name          : Extra Packages for Enterprise Linux 8 - Next - x86_64
+    Repo-status        : enabled
+    Repo-revision      : 1693098199
+    Repo-updated       : Sat 26 Aug 2023 06:03:39 PM PDT
+    Repo-pkgs          : 40
+    Repo-available-pkgs: 40
+    Repo-size          : 87 M
+    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-next-8&arch=x86_64&infra=$infra&content=$contentdir
+      Updated          : Wed 13 Dec 2023 03:48:22 PM PST
+    Repo-baseurl       : http://mirrors.wcupa.edu/epel/next/8/Everything/x86_64/ (126 more)
+    Repo-expire        : 172,800 second(s) (last: Wed 13 Dec 2023 03:48:22 PM PST)
+    Repo-filename      : /etc/yum.repos.d/epel-next.repo
+    Total packages: 40
+
+    $ dnf repoinfo epel-modular
+    Last metadata expiration check: 0:11:06 ago on Wed 13 Dec 2023 03:48:24 PM PST.
+    Repo-id            : epel-modular
+    Repo-name          : Extra Packages for Enterprise Linux Modular 8 - x86_64 - RETIRED
+    Repo-status        : enabled
+    Repo-revision      : 1663033591
+    Repo-updated       : Mon 12 Sep 2022 06:46:46 PM PDT
+    Repo-pkgs          : 290
+    Repo-available-pkgs: 0
+    Repo-size          : 835 M
+    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-modular-8&arch=x86_64&infra=$infra&content=centos
+      Updated          : Wed 13 Dec 2023 03:48:21 PM PST
+    Repo-baseurl       : http://opencolo.mm.fcix.net/epel/8/Modular/x86_64/ (189 more)
+    Repo-expire        : 172,800 second(s) (last: Wed 13 Dec 2023 03:48:21 PM PST)
+    Repo-filename      : /etc/yum.repos.d/epel-modular.repo
+    Total packages: 290
+    ```
+
+  - [We can workaround this by replacing the $releasever variable with 8](https://access.redhat.com/discussions/5473561#comment-2119161)
+    ```bash
+    $ sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/epel*.repo
+
+    # Same problem, RHEL 8.2 on Azure.
+    $ sed -i.bak 's/\$releasever/8/g' /etc/yum.repos.d/epel*.repo
+    ```
+
+  - list only epel supported
+    ```bash
+    $ dnf --disablerepo="*" --enablerepo="epel" list available
+    ```
+
+- moreutils
+
+  > [!NOTE|label:references:]
+  > - [1820925 - moreutils from epel8 not installable](https://bugzilla.redhat.com/show_bug.cgi?id=1820925)
+  > - [Has anyone figured out how to install `moreutils` on Centos8?](https://stackoverflow.com/a/68834383/2940319)
+  > - [RPM resource perl-IPC-Run](https://rpmfind.net/linux/rpm2html/search.php?query=perl-IPC-Run)
+  > - [or](https://unix.stackexchange.com/a/447936/29178)
+  >   ```bash
+  >   $ dnf config-manager --enable powertools
+  >   ```
+
+  ```bash
+  $ dnf install epel-release -y
+  $ dnf --enablerepo=powertools install moreutils -y
+  ```
+
+- check what's package repo can provide
+  ```
+  $ dnf repository-packages epel list
+  ```
+
+
+### resolve conflict
+
+> [!NOTE|label:references:]
+> - [How do I resolve a conflict reported by dnf?](https://forums.fedoraforum.org/showthread.php?311928-How-do-I-resolve-a-conflict-reported-by-dnf&s=8c3c741c88076f09c1a5187ea8c66849&p=1773908#post1773908)
+
+- issue
+  ```bash
+  $ sudo dnf update --refresh
+  CentOS Linux 8 - BaseOS                                                                 15 kB/s | 3.9 kB     00:00
+  CentOS Linux 8 - Extras                                                                 14 kB/s | 1.5 kB     00:00
+  Extra Packages for Enterprise Linux 8 - x86_64                                          50 kB/s |  22 kB     00:00
+  jfrog-cli                                                                              3.9 kB/s | 1.4 kB     00:00
+  mono-centos8-stable                                                                     20 kB/s | 2.9 kB     00:00
+  Error:
+   Problem 1: cannot install both authselect-1.2.2-3.el8.x86_64 and authselect-1.1-2.el8.x86_64
+    - package authselect-compat-1.1-2.el8.x86_64 requires authselect(x86-64) = 1.1-2.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package authselect-1.1-2.el8.x86_64
+    - problem with installed package authselect-compat-1.1-2.el8.x86_64
+   Problem 2: cannot install both cups-libs-1:2.2.6-40.el8.x86_64 and cups-libs-1:2.2.6-28.el8.x86_64
+    - package cups-client-1:2.2.6-28.el8.x86_64 requires cups-libs(x86-64) = 1:2.2.6-28.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package cups-libs-1:2.2.6-28.el8.x86_64
+    - problem with installed package cups-client-1:2.2.6-28.el8.x86_64
+   Problem 3: cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
+    - package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-daemon-1:1.12.8-9.el8.x86_64
+    - problem with installed package dbus-x11-1:1.12.8-9.el8.x86_64
+   Problem 4: cannot install both libgomp-8.5.0-4.el8_5.x86_64 and libgomp-8.3.1-4.5.el8.x86_64
+    - package gcc-8.3.1-4.5.el8.x86_64 requires libgomp = 8.3.1-4.5.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package libgomp-8.3.1-4.5.el8.x86_64
+    - problem with installed package gcc-8.3.1-4.5.el8.x86_64
+   Problem 5: package libsolv-0.7.19-1.el8.x86_64 conflicts with rpm(x86-64) < 4.14.3 provided by rpm-4.14.2-26.el8_1.x86_64
+    - package rpm-build-4.14.2-26.el8_1.x86_64 requires rpm = 4.14.2-26.el8_1, but none of the providers can be installed
+    - cannot install the best update candidate for package libsolv-0.7.4-3.el8.x86_64
+    - problem with installed package rpm-build-4.14.2-26.el8_1.x86_64
+   Problem 6: cannot install both libstdc++-8.5.0-4.el8_5.x86_64 and libstdc++-8.3.1-4.5.el8.x86_64
+    - package gcc-c++-8.3.1-4.5.el8.x86_64 requires libstdc++ = 8.3.1-4.5.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package libstdc++-8.3.1-4.5.el8.x86_64
+    - problem with installed package gcc-c++-8.3.1-4.5.el8.x86_64
+   Problem 7: cannot install both lua-libs-5.3.4-12.el8.x86_64 and lua-libs-5.3.4-11.el8.x86_64
+    - package lua-5.3.4-11.el8.x86_64 requires lua-libs = 5.3.4-11.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package lua-libs-5.3.4-11.el8.x86_64
+    - problem with installed package lua-5.3.4-11.el8.x86_64
+   Problem 8: cannot install both newt-0.52.20-11.el8.x86_64 and newt-0.52.20-9.el8.x86_64
+    - package python3-newt-0.52.20-9.el8.x86_64 requires newt(x86-64) = 0.52.20-9.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package newt-0.52.20-9.el8.x86_64
+    - problem with installed package python3-newt-0.52.20-9.el8.x86_64
+   Problem 9: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
+    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package perl-libs-4:5.26.3-416.el8.x86_64
+    - problem with installed package perl-devel-4:5.26.3-416.el8.x86_64
+   Problem 10: cannot install both platform-python-3.6.8-41.el8.x86_64 and platform-python-3.6.8-15.1.el8.x86_64
+    - package platform-python-devel-3.6.8-15.1.el8.x86_64 requires platform-python = 3.6.8-15.1.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package platform-python-3.6.8-15.1.el8.x86_64
+    - problem with installed package platform-python-devel-3.6.8-15.1.el8.x86_64
+   Problem 11: cannot install both platform-python-pip-9.0.3-20.el8.noarch and platform-python-pip-9.0.3-15.el8.noarch
+    - package python3-pip-9.0.3-15.el8.noarch requires platform-python-pip = 9.0.3-15.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package platform-python-pip-9.0.3-15.el8.noarch
+    - problem with installed package python3-pip-9.0.3-15.el8.noarch
+   Problem 12: cannot install both python3-gobject-base-3.28.3-2.el8.x86_64 and python3-gobject-base-3.28.3-1.el8.x86_64
+    - package python3-gobject-3.28.3-1.el8.x86_64 requires python3-gobject-base(x86-64) = 3.28.3-1.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package python3-gobject-base-3.28.3-1.el8.x86_64
+    - problem with installed package python3-gobject-3.28.3-1.el8.x86_64
+   Problem 13: package platform-python-devel-3.6.8-15.1.el8.x86_64 requires python3-libs(x86-64) = 3.6.8-15.1.el8, but none of the providers can be installed
+    - cannot install both python3-libs-3.6.8-41.el8.x86_64 and python3-libs-3.6.8-15.1.el8.x86_64
+    - package python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64 requires platform-python-devel, but none of the providers can be installed
+    - cannot install the best update candidate for package python3-libs-3.6.8-15.1.el8.x86_64
+    - problem with installed package python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64
+   Problem 14: cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
+    - package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package dbus-1:1.12.8-14.el8.x86_64 requires dbus-daemon = 1:1.12.8-14.el8, but none of the providers can be installed
+    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-1:1.12.8-9.el8.x86_64
+    - problem with installed package ibus-1.5.19-4.el8.x86_64
+   Problem 15: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
+    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
+    - package perl-Errno-1.28-420.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-420.el8, but none of the providers can be installed
+    - package perl-ExtUtils-CBuilder-1:0.280230-2.el8.noarch requires perl-devel, but none of the providers can be installed
+    - cannot install the best update candidate for package perl-Errno-1.28-416.el8.x86_64
+    - problem with installed package perl-ExtUtils-CBuilder-1:0.280230-2.el8.noarch
+   Problem 16: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
+    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
+    - package perl-interpreter-4:5.26.3-420.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-420.el8, but none of the providers can be installed
+    - package perl-ExtUtils-MakeMaker-1:7.34-1.el8.noarch requires perl-devel, but none of the providers can be installed
+    - cannot install the best update candidate for package perl-interpreter-4:5.26.3-416.el8.x86_64
+    - problem with installed package perl-ExtUtils-MakeMaker-1:7.34-1.el8.noarch
+   Problem 17: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package dbus-daemon-1:1.12.8-9.el8.x86_64 requires dbus-common = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
+    - cannot install both dbus-common-1:1.12.8-14.el8.noarch and dbus-common-1:1.12.8-9.el8.noarch
+    - package ibus-libpinyin-1.10.0-1.el8.x86_64 requires ibus >= 1.5.11, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-common-1:1.12.8-9.el8.noarch
+    - problem with installed package ibus-libpinyin-1.10.0-1.el8.x86_64
+   Problem 18: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package dbus-daemon-1:1.12.8-9.el8.x86_64 requires dbus-libs(x86-64) = 1:1.12.8-9.el8, but none of the providers can be installed
+    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
+    - cannot install both dbus-libs-1:1.12.8-14.el8.x86_64 and dbus-libs-1:1.12.8-9.el8.x86_64
+    - package ibus-setup-1.5.19-4.el8.noarch requires ibus = 1.5.19-4.el8, but none of the providers can be installed
+    - cannot install the best update candidate for package dbus-libs-1:1.12.8-9.el8.x86_64
+    - problem with installed package ibus-setup-1.5.19-4.el8.noarch
+  (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
+  ```
+
+- solution
+  ```bash
+  $ sudo dnf repolist
+  repo id                                       repo name
+  baseos                                        CentOS Linux 8 - BaseOS
+  epel                                          Extra Packages for Enterprise Linux 8 - x86_64
+  extras                                        CentOS Linux 8 - Extras
+  jfrog-cli                                     jfrog-cli
+  mono-centos8-stable                           mono-centos8-stable
+  $ sudo dnf update --refresh --allowerasing
+  $ sudo dnf distro-sync -y
+
+  # or
+  $ sudo dnf remove $(dnf repoquery --duplicated --latest-limit -1 -q)
+
+  # show duplicate packages
+  $ dnf repoquery --duplicated
+  ```
+
+### `File "/usr/libexec/urlgrabber-ext-down", line 28`
+
+- error
+  ```bash
+  File "/usr/libexec/urlgrabber-ext-down", line 28
+  except OSError, e:
+                ^
+  ```
+
+- solution
+  ```bash
+  $ sudo update-alternatives --remove python /usr/bin/python3
+  $ realpath /usr/bin/python
+  /usr/bin/python2.7
+  ```
+
+- or
+  ```bash
+  $ sudo update-alternatives --config python
+
+  There are 3 programs which provide 'python'.
+
+    Selection    Command
+  -----------------------------------------------
+  *+ 1           /usr/bin/python3
+     2           /usr/bin/python2.7
+     3           /usr/bin/python2
+
+  Enter to keep the current selection[+], or type selection number: 3
+  ```
+
+- [reason](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/)
+  ```bash
+  $ ls -l /usr/bin/python*
+  lrwxrwxrwx 1 root root    24 Jul 10 02:29 /usr/bin/python -> /etc/alternatives/python
+  lrwxrwxrwx 1 root root     9 Dec  6  2018 /usr/bin/python2 -> python2.7
+  -rwxr-xr-x 1 root root  7216 Oct 30  2018 /usr/bin/python2.7
+  lrwxrwxrwx 1 root root     9 Mar  7  2019 /usr/bin/python3 -> python3.4
+  -rwxr-xr-x 2 root root 11392 Feb  5  2019 /usr/bin/python3.4
+  -rwxr-xr-x 2 root root 11392 Feb  5  2019 /usr/bin/python3.4m
+
+  $ ls -altrh /etc/alternatives/python
+  lrwxrwxrwx 1 root root 16 Jul 10 02:29 /etc/alternatives/python -> /usr/bin/python3
+  ```
+
+## CentOS 8 -> CentOS 9
+
+> [!NOTE|label:references:]
+> - [yodermk/centos8-9.sh](https://gist.github.com/yodermk/9c8081a70ec4e0f2ffca8d6c3603da32)
+> - [Conflicting requests after update to CentOS 9 Stream from 8](https://unix.stackexchange.com/q/694789/29178)
+
+```bash
+$ sudo yum upgrade
+$ sudo reboot
+$ sudo dnf install epel-release
+$ sudo dnf install rpmconf
+$ sudo dnf install yum-utils
+$ sudo rpmconf -a  # answer "n" to both things
+$ sudo package-cleanup --leaves
+$ sudo package-cleanup --orphans
+$ dnf install http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/centos-stream-repos-9.0-9.el9.noarch.rpm \
+              http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/centos-stream-release-9.0-9.el9.noarch.rpm \
+              http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/centos-gpg-keys-9.0-9.el9.noarch.rpm
+$ sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+$ sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+$ sudo rpm -Uvh *.rpm
+$ sudo yum update
+$ sudo dnf clean all
+$ sudo rpm -e `rpm -q kernel`
+$ sudo dnf -y --releasever=9 --allowerasing --setopt=deltarpm=false distro-sync
+$ sudo dnf clean all
+$ sudo reboot
+$ sudo rm -f /var/lib/rpm/__db*
+$ sudo rpm --rebuilddb
+$ sudo dnf -y groupupdate "Core" "Minimal Install"
+
+
+```
 
 # prompt
 
@@ -112,66 +631,66 @@ PS1="\[$(tput setaf 18)\]my prompt\[$(tput sgr0)\]> "
 # character
 ## [metacharacter](https://www.grymoire.com/Unix/Quote.html)
 
-| Character        | Where                | Meaning                                       |
+|     Character    | Where                | Meaning                                       |
 |:----------------:|----------------------|-----------------------------------------------|
-| `<RETURN>`       | csh, sh              | Execute command                               |
-| `#`              | csh, sh, ASCII files | Start a comment                               |
-| `<SPACE>`        | csh, sh              | Argument separator                            |
-| ```              | csh, sh              | Command substitution                          |
-| `"`              | csh, sh              | Weak Quotes                                   |
-| `'`              | csh, sh              | Strong Quotes                                 |
-| `\`              | csh, sh              | Single Character Quote                        |
-| `variable`       | sh, csh              | Variable                                      |
-| `variable`       | csh, sh              | Same as variable                              |
-| `\`              | csh, sh              | Pipe character                                |
-| `^`              | sh                   | Pipe Character                                |
-| `&`              | csh, sh              | Run program in background                     |
-| `?`              | csh, sh              | Match one character                           |
-| `*`              | csh, sh              | Match any number of characters                |
-| `;`              | csh, sh              | Command separator                             |
-| `;;`             | sh                   | End of Case statement                         |
-| `~`              | csh                  | Home Directory                                |
-| `~user`          | csh                  | User's Home Directory                         |
-| `!`              | csh                  | History of Commands                           |
-| `-`              | Programs             | Start of optional argument                    |
-| `$#`             | csh, sh              | Number of arguments to script                 |
-| `$*`             | csh, sh              | Arguments to script                           |
-| `$@`             | sh                   | Original arguments to script                  |
-| `$-`             | sh                   | Flags passed to shell                         |
-| `$?`             | sh                   | Status of previous command                    |
-| `$$`             | sh                   | Process identification number                 |
-| `$!`             | sh                   | PID of last background job                    |
-| `&&`             | sh                   | Short-circuit AND                             |
-| `||`             | sh                   | Short-circuit OR                              |
-| `.`              | csh, sh              | Typ. filename extension                       |
-| `.`              | sh                   | Source a file and execute as command          |
-| `:`              | sh                   | Nothing command                               |
-| `:`              | sh                   | Separates Values in environment variables     |
-| `:`              | csh                  | Variable modifier                             |
-| `Character`      | Where                | Meaning                                       |
-| `[ ]`            | csh, sh              | Match range of characters                     |
-| `[ ]`            | sh                   | Test                                          |
-| `%job`           | csh                  | Identifies job Number                         |
-| `(cmd;cmd)`      | csh. sh              | Runs cmd;cmd as a sub-shell                   |
-| `{ }`            | csh                  | In-line expansions                            |
-| `{cmd;cmd }`     | sh                   | Like (cmd;cmd ) without a subshell            |
-| `>ofile`         | csh, sh              | Standard output                               |
-| `>>ofile`        | csh, sh              | Append to standard output                     |
-| `<ifile`         | csh, sh              | Standard Input                                |
-| `<<word`         | csh, sh              | Read until word, substitute variables         |
-| `<<\word`        | csh, sh              | Read until word, no substitution              |
-| `<<-word`        | sh                   | Read until word, ignoring TABS                |
-| `>>!file`        | csh                  | Append to file, ignore error if not there     |
-| `>!file`         | csh                  | Output to new file, ignore error if not there |
-| `>&file`         | csh                  | Send standard & error output to file          |
-| `<&digit`        | sh                   | Switch Standard Input to file                 |
-| `<&-`            | sh                   | Close Standard Input                          |
-| `>&digit`        | sh                   | Switch Standard Output to file                |
-| `>&-`            | sh                   | Close Standard Output                         |
+|    `<RETURN>`    | csh, sh              | Execute command                               |
+|        `#`       | csh, sh, ASCII files | Start a comment                               |
+|     `<SPACE>`    | csh, sh              | Argument separator                            |
+|  <code>`</code>  | csh, sh              | Command substitution                          |
+|        `"`       | csh, sh              | Weak Quotes                                   |
+|        `'`       | csh, sh              | Strong Quotes                                 |
+|        `\`       | csh, sh              | Single Character Quote                        |
+|    `variable`    | sh, csh              | Variable                                      |
+|    `variable`    | csh, sh              | Same as variable                              |
+|        `\`       | csh, sh              | Pipe character                                |
+|        `^`       | sh                   | Pipe Character                                |
+|        `&`       | csh, sh              | Run program in background                     |
+|        `?`       | csh, sh              | Match one character                           |
+|        `*`       | csh, sh              | Match any number of characters                |
+|        `;`       | csh, sh              | Command separator                             |
+|       `;;`       | sh                   | End of Case statement                         |
+|        `~`       | csh                  | Home Directory                                |
+|      `~user`     | csh                  | User's Home Directory                         |
+|        `!`       | csh                  | History of Commands                           |
+|        `-`       | Programs             | Start of optional argument                    |
+|       `$#`       | csh, sh              | Number of arguments to script                 |
+|       `$*`       | csh, sh              | Arguments to script                           |
+|       `$@`       | sh                   | Original arguments to script                  |
+|       `$-`       | sh                   | Flags passed to shell                         |
+|       `$?`       | sh                   | Status of previous command                    |
+|       `$$`       | sh                   | Process identification number                 |
+|       `$!`       | sh                   | PID of last background job                    |
+|       `&&`       | sh                   | Short-circuit AND                             |
+|         `        |                      | `                                             | sh | Short-circuit OR |
+|        `.`       | csh, sh              | Typ. filename extension                       |
+|        `.`       | sh                   | Source a file and execute as command          |
+|        `:`       | sh                   | Nothing command                               |
+|        `:`       | sh                   | Separates Values in environment variables     |
+|        `:`       | csh                  | Variable modifier                             |
+|    `Character`   | Where                | Meaning                                       |
+|       `[ ]`      | csh, sh              | Match range of characters                     |
+|       `[ ]`      | sh                   | Test                                          |
+|      `%job`      | csh                  | Identifies job Number                         |
+|    `(cmd;cmd)`   | csh. sh              | Runs cmd;cmd as a sub-shell                   |
+|       `{ }`      | csh                  | In-line expansions                            |
+|   `{cmd;cmd }`   | sh                   | Like (cmd;cmd ) without a subshell            |
+|     `>ofile`     | csh, sh              | Standard output                               |
+|     `>>ofile`    | csh, sh              | Append to standard output                     |
+|     `<ifile`     | csh, sh              | Standard Input                                |
+|     `<<word`     | csh, sh              | Read until word, substitute variables         |
+|     `<<\word`    | csh, sh              | Read until word, no substitution              |
+|     `<<-word`    | sh                   | Read until word, ignoring TABS                |
+|     `>>!file`    | csh                  | Append to file, ignore error if not there     |
+|     `>!file`     | csh                  | Output to new file, ignore error if not there |
+|     `>&file`     | csh                  | Send standard & error output to file          |
+|     `<&digit`    | sh                   | Switch Standard Input to file                 |
+|       `<&-`      | sh                   | Close Standard Input                          |
+|     `>&digit`    | sh                   | Switch Standard Output to file                |
+|       `>&-`      | sh                   | Close Standard Output                         |
 | `digit1<&digit2` | sh                   | Connect digit2 to digit1                      |
-| `digit<&-`       | sh                   | Close file digit                              |
+|    `digit<&-`    | sh                   | Close file digit                              |
 | `digit2>&digit1` | sh                   | Connect digit2 to digit1                      |
-| `digit>&-`       | sh                   | Close file digit                              |
+|    `digit>&-`    | sh                   | Close file digit                              |
 
 
 # [process substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
@@ -547,366 +1066,6 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
     $ sudo ls -Altrh /var/spool/cron/<USERNAME>
     ```
 
-# centos
-## yum
-
-> [!NOTE|label:references:]
-> - [Yum install error file "/usr/bin/yum", line 30](http://www.programmersought.com/article/3242669414/)
-> - [failed at yum update and how to fix it](http://wenhan.blog/2018/02/18/failed-at-yum-update-and-how-to-fix-it/)
-> - [Upgraded Python, and now I can't run “yum upgrade”](https://unix.stackexchange.com/questions/524552/upgraded-python-and-now-i-cant-run-yum-upgrade)
-> - [How to Find Out Top Directories and Files (Disk Space) in Linux](https://www.tecmint.com/find-top-large-directories-and-files-sizes-in-linux/)
-> - [8.4. Configuring Yum and Yum Repositories](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-configuring_yum_and_yum_repositories)
->   - [8.4.2. Setting [repository] Options](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-setting_repository_options)
-> - [repo vars](https://unix.stackexchange.com/q/624738/29178)
->   ```bash
->   $ cd /etc/dnf/vars; grep -H --color=none . *
->   contentdir:centos
->   infra:stock
->   # or
->   $ tail -f /var/log/dnf.log
->   ```
-> - [moving from CentOS 8 to CentOS Stream 8](https://unix.stackexchange.com/a/704363/29178)
->   ```bash
->   $ sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
->   $ sudo sed -i 's/mirrorlist/#mirrorlist/g'  /etc/yum.repos.d/CentOS-*
->   $ sudo dnf install centos-release-stream -y --allowerasing
->   $ sudo dnf swap centos-{linux,stream}-repos
->   $ sudo dnf distro-sync --best --allowerasing
->   $ sudo reboot
->   ```
-> - [DNF Command Reference](https://dnf.readthedocs.io/en/latest/command_ref.html)
-
-### enable or disable repo
-```bash
-# enable
-$ sudo yum config-manager --set-enabled PowerTools
-
-# disable
-$ sudo yum config-manager --set-disabled PowerTools
-```
-
-### yum group
-
-{% hint style='tip' %}
-> references:
-> - [2.5 Yum Groups](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_yum_groups.html)
-> - [How to install a group of packages with yum on Red Hat Enterprise Linux?](https://access.redhat.com/solutions/15815)
-{% endhint %}
-
-```bash
-$ yum grouplist
-$ yum group hidden
-$ yum groupinfo <groupName>
-$ yum groupinstall <groupName>
-$ yum groupupdate <groupName>
-$ yum groupremove <groupName>
-```
-
-### tools installation
-
-> [!TIP|label:convert CentOS repo file in RHEL]
-> ```bash
-> $ sudo sed -i 's/\$contentdir/centos/' /etc/yum.repo.d/*.repo
-> ```
-> - [CentOS through a VM - no URLs in mirrorlist [closed]](https://stackoverflow.com/a/70930049/2940319)
->   ```bash
->   $ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
->   $ sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
->   $
->   $ sudo dnf install centos-release-stream -y
->   $ sudo dnf swap centos-{linux,stream}-repos -y
->   $ sudo dnf distro-sync -y
->   ```
-
-- epel
-
-  > [!TIP|label:references:]
-  > - [How To enable the EPEL Repository on RHEL 8 / CentOS 8 Linux](https://linuxconfig.org/redhat-8-epel-install-guide)
-  > - [* Extra Packages for Enterprise Linux (EPEL)](https://docs.fedoraproject.org/en-US/epel/)
-  > - [404 error trying to install EPEL](https://access.redhat.com/discussions/5473561)
-  > - [Index of /epel/8/Everything](https://mirrors.iu13.net/epel/8/Everything/)
-
-  ```bash
-  # install from url
-  # centos 7
-  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-  # centos 8
-  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-  # centos 9
-  $ sudo dnf [re]install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-
-  # install via cmd
-  $ sudo yum [re]install -y epel-release yum-utils
-  # or
-  $ sudo dnf config-manager --set-enabled powertools
-  $ sudo dnf install -y epel-release epel-next-release
-  ```
-
-  - info
-    ```bash
-    $ cat /etc/yum.repos.d/epel.repo
-    [epel]
-    name=Extra Packages for Enterprise Linux 8 - $basearch
-    # It is much more secure to use the metalink, but if you wish to use a local mirror
-    # place its address here.
-    #baseurl=https://download.example/pub/epel/8/Everything/$basearch
-    metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=centos
-    enabled=1
-    gpgcheck=1
-    countme=1
-    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-8
-
-    $ dnf repoinfo epel
-    Repo-id            : epel
-    Repo-name          : Extra Packages for Enterprise Linux 8 - x86_64
-    Repo-status        : enabled
-    Repo-revision      : 1697078836
-    Repo-updated       : Wed 11 Oct 2023 07:48:01 PM PDT
-    Repo-pkgs          : 9,872
-    Repo-available-pkgs: 9,870
-    Repo-size          : 17 G
-    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=x86_64&infra=$infra&content=centos
-      Updated          : Thu 12 Oct 2023 05:16:56 PM PDT
-    Repo-baseurl       : https://mirrors.iu13.net/epel/8/Everything/x86_64/ (153 more)
-    Repo-expire        : 172,800 second(s) (last: Thu 12 Oct 2023 05:16:56 PM PDT)
-    Repo-filename      : /etc/yum.repos.d/epel.repo
-    Total packages: 9,872
-
-    $ dnf repoinfo epel-next
-    Last metadata expiration check: 0:10:35 ago on Wed 13 Dec 2023 03:48:24 PM PST.
-    Repo-id            : epel-next
-    Repo-name          : Extra Packages for Enterprise Linux 8 - Next - x86_64
-    Repo-status        : enabled
-    Repo-revision      : 1693098199
-    Repo-updated       : Sat 26 Aug 2023 06:03:39 PM PDT
-    Repo-pkgs          : 40
-    Repo-available-pkgs: 40
-    Repo-size          : 87 M
-    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-next-8&arch=x86_64&infra=$infra&content=$contentdir
-      Updated          : Wed 13 Dec 2023 03:48:22 PM PST
-    Repo-baseurl       : http://mirrors.wcupa.edu/epel/next/8/Everything/x86_64/ (126 more)
-    Repo-expire        : 172,800 second(s) (last: Wed 13 Dec 2023 03:48:22 PM PST)
-    Repo-filename      : /etc/yum.repos.d/epel-next.repo
-    Total packages: 40
-
-    $ dnf repoinfo epel-modular
-    Last metadata expiration check: 0:11:06 ago on Wed 13 Dec 2023 03:48:24 PM PST.
-    Repo-id            : epel-modular
-    Repo-name          : Extra Packages for Enterprise Linux Modular 8 - x86_64 - RETIRED
-    Repo-status        : enabled
-    Repo-revision      : 1663033591
-    Repo-updated       : Mon 12 Sep 2022 06:46:46 PM PDT
-    Repo-pkgs          : 290
-    Repo-available-pkgs: 0
-    Repo-size          : 835 M
-    Repo-metalink      : https://mirrors.fedoraproject.org/metalink?repo=epel-modular-8&arch=x86_64&infra=$infra&content=centos
-      Updated          : Wed 13 Dec 2023 03:48:21 PM PST
-    Repo-baseurl       : http://opencolo.mm.fcix.net/epel/8/Modular/x86_64/ (189 more)
-    Repo-expire        : 172,800 second(s) (last: Wed 13 Dec 2023 03:48:21 PM PST)
-    Repo-filename      : /etc/yum.repos.d/epel-modular.repo
-    Total packages: 290
-    ```
-
-  - [We can workaround this by replacing the $releasever variable with 8](https://access.redhat.com/discussions/5473561#comment-2119161)
-    ```bash
-    $ sudo sed -i 's/$releasever/8/g' /etc/yum.repos.d/epel*.repo
-
-    # Same problem, RHEL 8.2 on Azure.
-    $ sed -i.bak 's/\$releasever/8/g' /etc/yum.repos.d/epel*.repo
-    ```
-
-  - list only epel supported
-    ```bash
-    $ dnf --disablerepo="*" --enablerepo="epel" list available
-    ```
-
-- moreutils
-
-  > [!NOTE|label:references:]
-  > - [1820925 - moreutils from epel8 not installable](https://bugzilla.redhat.com/show_bug.cgi?id=1820925)
-  > - [Has anyone figured out how to install `moreutils` on Centos8?](https://stackoverflow.com/a/68834383/2940319)
-  > - [RPM resource perl-IPC-Run](https://rpmfind.net/linux/rpm2html/search.php?query=perl-IPC-Run)
-  > - [or](https://unix.stackexchange.com/a/447936/29178)
-  >   ```bash
-  >   $ dnf config-manager --enable powertools
-  >   ```
-
-  ```bash
-  $ dnf install epel-release -y
-  $ dnf --enablerepo=powertools install moreutils -y
-  ```
-
-- check what's package repo can provide
-  ```
-  $ dnf repository-packages epel list
-  ```
-
-
-### resolve conflict
-
-> [!NOTE|label:references:]
-> - [How do I resolve a conflict reported by dnf?](https://forums.fedoraforum.org/showthread.php?311928-How-do-I-resolve-a-conflict-reported-by-dnf&s=8c3c741c88076f09c1a5187ea8c66849&p=1773908#post1773908)
-
-- issue
-  ```bash
-  $ sudo dnf update --refresh
-  CentOS Linux 8 - BaseOS                                                                 15 kB/s | 3.9 kB     00:00
-  CentOS Linux 8 - Extras                                                                 14 kB/s | 1.5 kB     00:00
-  Extra Packages for Enterprise Linux 8 - x86_64                                          50 kB/s |  22 kB     00:00
-  jfrog-cli                                                                              3.9 kB/s | 1.4 kB     00:00
-  mono-centos8-stable                                                                     20 kB/s | 2.9 kB     00:00
-  Error:
-   Problem 1: cannot install both authselect-1.2.2-3.el8.x86_64 and authselect-1.1-2.el8.x86_64
-    - package authselect-compat-1.1-2.el8.x86_64 requires authselect(x86-64) = 1.1-2.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package authselect-1.1-2.el8.x86_64
-    - problem with installed package authselect-compat-1.1-2.el8.x86_64
-   Problem 2: cannot install both cups-libs-1:2.2.6-40.el8.x86_64 and cups-libs-1:2.2.6-28.el8.x86_64
-    - package cups-client-1:2.2.6-28.el8.x86_64 requires cups-libs(x86-64) = 1:2.2.6-28.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package cups-libs-1:2.2.6-28.el8.x86_64
-    - problem with installed package cups-client-1:2.2.6-28.el8.x86_64
-   Problem 3: cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
-    - package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package dbus-daemon-1:1.12.8-9.el8.x86_64
-    - problem with installed package dbus-x11-1:1.12.8-9.el8.x86_64
-   Problem 4: cannot install both libgomp-8.5.0-4.el8_5.x86_64 and libgomp-8.3.1-4.5.el8.x86_64
-    - package gcc-8.3.1-4.5.el8.x86_64 requires libgomp = 8.3.1-4.5.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package libgomp-8.3.1-4.5.el8.x86_64
-    - problem with installed package gcc-8.3.1-4.5.el8.x86_64
-   Problem 5: package libsolv-0.7.19-1.el8.x86_64 conflicts with rpm(x86-64) < 4.14.3 provided by rpm-4.14.2-26.el8_1.x86_64
-    - package rpm-build-4.14.2-26.el8_1.x86_64 requires rpm = 4.14.2-26.el8_1, but none of the providers can be installed
-    - cannot install the best update candidate for package libsolv-0.7.4-3.el8.x86_64
-    - problem with installed package rpm-build-4.14.2-26.el8_1.x86_64
-   Problem 6: cannot install both libstdc++-8.5.0-4.el8_5.x86_64 and libstdc++-8.3.1-4.5.el8.x86_64
-    - package gcc-c++-8.3.1-4.5.el8.x86_64 requires libstdc++ = 8.3.1-4.5.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package libstdc++-8.3.1-4.5.el8.x86_64
-    - problem with installed package gcc-c++-8.3.1-4.5.el8.x86_64
-   Problem 7: cannot install both lua-libs-5.3.4-12.el8.x86_64 and lua-libs-5.3.4-11.el8.x86_64
-    - package lua-5.3.4-11.el8.x86_64 requires lua-libs = 5.3.4-11.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package lua-libs-5.3.4-11.el8.x86_64
-    - problem with installed package lua-5.3.4-11.el8.x86_64
-   Problem 8: cannot install both newt-0.52.20-11.el8.x86_64 and newt-0.52.20-9.el8.x86_64
-    - package python3-newt-0.52.20-9.el8.x86_64 requires newt(x86-64) = 0.52.20-9.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package newt-0.52.20-9.el8.x86_64
-    - problem with installed package python3-newt-0.52.20-9.el8.x86_64
-   Problem 9: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
-    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package perl-libs-4:5.26.3-416.el8.x86_64
-    - problem with installed package perl-devel-4:5.26.3-416.el8.x86_64
-   Problem 10: cannot install both platform-python-3.6.8-41.el8.x86_64 and platform-python-3.6.8-15.1.el8.x86_64
-    - package platform-python-devel-3.6.8-15.1.el8.x86_64 requires platform-python = 3.6.8-15.1.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package platform-python-3.6.8-15.1.el8.x86_64
-    - problem with installed package platform-python-devel-3.6.8-15.1.el8.x86_64
-   Problem 11: cannot install both platform-python-pip-9.0.3-20.el8.noarch and platform-python-pip-9.0.3-15.el8.noarch
-    - package python3-pip-9.0.3-15.el8.noarch requires platform-python-pip = 9.0.3-15.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package platform-python-pip-9.0.3-15.el8.noarch
-    - problem with installed package python3-pip-9.0.3-15.el8.noarch
-   Problem 12: cannot install both python3-gobject-base-3.28.3-2.el8.x86_64 and python3-gobject-base-3.28.3-1.el8.x86_64
-    - package python3-gobject-3.28.3-1.el8.x86_64 requires python3-gobject-base(x86-64) = 3.28.3-1.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package python3-gobject-base-3.28.3-1.el8.x86_64
-    - problem with installed package python3-gobject-3.28.3-1.el8.x86_64
-   Problem 13: package platform-python-devel-3.6.8-15.1.el8.x86_64 requires python3-libs(x86-64) = 3.6.8-15.1.el8, but none of the providers can be installed
-    - cannot install both python3-libs-3.6.8-41.el8.x86_64 and python3-libs-3.6.8-15.1.el8.x86_64
-    - package python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64 requires platform-python-devel, but none of the providers can be installed
-    - cannot install the best update candidate for package python3-libs-3.6.8-15.1.el8.x86_64
-    - problem with installed package python36-devel-3.6.8-2.module+el8.1.0+3334+5cb623d7.x86_64
-   Problem 14: cannot install both dbus-daemon-1:1.12.8-14.el8.x86_64 and dbus-daemon-1:1.12.8-9.el8.x86_64
-    - package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
-    - package dbus-1:1.12.8-14.el8.x86_64 requires dbus-daemon = 1:1.12.8-14.el8, but none of the providers can be installed
-    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
-    - cannot install the best update candidate for package dbus-1:1.12.8-9.el8.x86_64
-    - problem with installed package ibus-1.5.19-4.el8.x86_64
-   Problem 15: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
-    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
-    - package perl-Errno-1.28-420.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-420.el8, but none of the providers can be installed
-    - package perl-ExtUtils-CBuilder-1:0.280230-2.el8.noarch requires perl-devel, but none of the providers can be installed
-    - cannot install the best update candidate for package perl-Errno-1.28-416.el8.x86_64
-    - problem with installed package perl-ExtUtils-CBuilder-1:0.280230-2.el8.noarch
-   Problem 16: cannot install both perl-libs-4:5.26.3-420.el8.x86_64 and perl-libs-4:5.26.3-416.el8.x86_64
-    - package perl-devel-4:5.26.3-416.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-416.el8, but none of the providers can be installed
-    - package perl-interpreter-4:5.26.3-420.el8.x86_64 requires perl-libs(x86-64) = 4:5.26.3-420.el8, but none of the providers can be installed
-    - package perl-ExtUtils-MakeMaker-1:7.34-1.el8.noarch requires perl-devel, but none of the providers can be installed
-    - cannot install the best update candidate for package perl-interpreter-4:5.26.3-416.el8.x86_64
-    - problem with installed package perl-ExtUtils-MakeMaker-1:7.34-1.el8.noarch
-   Problem 17: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
-    - package dbus-daemon-1:1.12.8-9.el8.x86_64 requires dbus-common = 1:1.12.8-9.el8, but none of the providers can be installed
-    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
-    - cannot install both dbus-common-1:1.12.8-14.el8.noarch and dbus-common-1:1.12.8-9.el8.noarch
-    - package ibus-libpinyin-1.10.0-1.el8.x86_64 requires ibus >= 1.5.11, but none of the providers can be installed
-    - cannot install the best update candidate for package dbus-common-1:1.12.8-9.el8.noarch
-    - problem with installed package ibus-libpinyin-1.10.0-1.el8.x86_64
-   Problem 18: package dbus-x11-1:1.12.8-9.el8.x86_64 requires dbus-daemon = 1:1.12.8-9.el8, but none of the providers can be installed
-    - package dbus-daemon-1:1.12.8-9.el8.x86_64 requires dbus-libs(x86-64) = 1:1.12.8-9.el8, but none of the providers can be installed
-    - package ibus-1.5.19-4.el8.x86_64 requires dbus-x11, but none of the providers can be installed
-    - cannot install both dbus-libs-1:1.12.8-14.el8.x86_64 and dbus-libs-1:1.12.8-9.el8.x86_64
-    - package ibus-setup-1.5.19-4.el8.noarch requires ibus = 1.5.19-4.el8, but none of the providers can be installed
-    - cannot install the best update candidate for package dbus-libs-1:1.12.8-9.el8.x86_64
-    - problem with installed package ibus-setup-1.5.19-4.el8.noarch
-  (try to add '--allowerasing' to command line to replace conflicting packages or '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
-  ```
-
-- solution
-  ```bash
-  $ sudo dnf repolist
-  repo id                                       repo name
-  baseos                                        CentOS Linux 8 - BaseOS
-  epel                                          Extra Packages for Enterprise Linux 8 - x86_64
-  extras                                        CentOS Linux 8 - Extras
-  jfrog-cli                                     jfrog-cli
-  mono-centos8-stable                           mono-centos8-stable
-  $ sudo dnf update --refresh --allowerasing
-  $ sudo dnf distro-sync -y
-
-  # or
-  $ sudo dnf remove $(dnf repoquery --duplicated --latest-limit -1 -q)
-
-  # show duplicate packages
-  $ dnf repoquery --duplicated
-  ```
-
-### `File "/usr/libexec/urlgrabber-ext-down", line 28`
-
-- error
-  ```bash
-  File "/usr/libexec/urlgrabber-ext-down", line 28
-  except OSError, e:
-                ^
-  ```
-
-- solution
-  ```bash
-  $ sudo update-alternatives --remove python /usr/bin/python3
-  $ realpath /usr/bin/python
-  /usr/bin/python2.7
-  ```
-
-- or
-  ```bash
-  $ sudo update-alternatives --config python
-
-  There are 3 programs which provide 'python'.
-
-    Selection    Command
-  -----------------------------------------------
-  *+ 1           /usr/bin/python3
-     2           /usr/bin/python2.7
-     3           /usr/bin/python2
-
-  Enter to keep the current selection[+], or type selection number: 3
-  ```
-
-- [reason](https://www.linuxquestions.org/questions/linux-newbie-8/yum-upgrading-error-4175632414/)
-  ```bash
-  $ ls -l /usr/bin/python*
-  lrwxrwxrwx 1 root root    24 Jul 10 02:29 /usr/bin/python -> /etc/alternatives/python
-  lrwxrwxrwx 1 root root     9 Dec  6  2018 /usr/bin/python2 -> python2.7
-  -rwxr-xr-x 1 root root  7216 Oct 30  2018 /usr/bin/python2.7
-  lrwxrwxrwx 1 root root     9 Mar  7  2019 /usr/bin/python3 -> python3.4
-  -rwxr-xr-x 2 root root 11392 Feb  5  2019 /usr/bin/python3.4
-  -rwxr-xr-x 2 root root 11392 Feb  5  2019 /usr/bin/python3.4m
-
-  $ ls -altrh /etc/alternatives/python
-  lrwxrwxrwx 1 root root 16 Jul 10 02:29 /etc/alternatives/python -> /usr/bin/python3
-  ```
 
 # tricky
 
