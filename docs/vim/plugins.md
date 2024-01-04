@@ -1044,9 +1044,23 @@ augroup END
     > - [PDF: Red Hat Developer Tools 1: Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/pdf/using_llvm_13.0.1_toolset/red_hat_developer_tools-1-using_llvm_13.0.1_toolset-en-us.pdf)
     > - [Getting Started with the LLVM System](https://llvm.org/docs/GettingStarted.html)
 
-    ```bash
-    $ sudo dnf install cmake gcc-c++ make python3-devel
-    ```
+    {% hint style='warning' %}
+    > - `dnf install gcc-c++`
+    {% endhint %}
+
+    * dnf install
+      ```bash
+      $ sudo dnf install cmake make
+      ```
+
+    * [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
+      ```bash
+      # or
+      $ sudo dnf install python3-devel
+      ```
+    * [* iMarslo: build gcc from source](../linux/tools.html#gcc)
+    * [* iMarslo: build ruby from source](../linux/tools.html#ruby)
+    * [* iMarslo: build mono from source](../linux/tools.html#mono)
 
     - or
       ```bash

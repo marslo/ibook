@@ -13,24 +13,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-<
-:wa
-!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [OSX](#osx)
-  - [installation](#installation)
-- [Linux](#linux)
-  - [vim](#vim)
-  - [gvim](#gvim)
-- [Windows](#windows)
-  - [setup environment ( via cygwin )](#setup-environment--via-cygwin-)
-  - [gvim.exe](#gvimexe)
-  - [vim.exe](#vimexe)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 > [!NOTE|label:verify]
 > ```bash
 > $ vim +"py3 print('hello') +qa"
@@ -398,9 +380,10 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
 #### install python3.11 and vim9
 - python3.11
 
-  > [!NOTE|label:references:]
+  > [!TIP|label:references:]
   > - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
 
+  <!--sec data-title="build lua with shared lib" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ NPROC=$(getconf _NPROCESSORS_ONLN)
   $ curl -O https://www.python.org/ftp/python/3.11.6/Python-3.11.6.tgz |
@@ -417,11 +400,86 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
   # optional
   $ echo 'PATH=$PATH:/usr/local/bin'
   ```
+  <!--endsec-->
+
+
+- lua 5.4.6 ( with shared libs )
+
+  > [!TIP]
+  > - [iMarslo: build lua with shared lib](../linux/tools.html#lua)
+
+  <!--sec data-title="build lua with shared lib" data-id="section3" data-show=true data-collapse=true ces-->
+  ```bash
+  $ mkdir /opt/lua
+  $ curl -fsSL https://www.lua.org/ftp/lua-5.4.6.tar.gz | tar xzf - -C /opt/lua
+  $ cd /opt/lua/lua-5.4.6
+
+  $ patch --ignore-whitespace < <(curl -fsSL https://gist.githubusercontent.com/marslo/767e339e32e0dbc038a3e00e3c8a7cba/raw/01f29ac774a468221082f4d504b013d264435567/Makefile.patch)
+  $ cd src
+  $ patch --ignore-whitespace < <(curl -fsSL https://gist.githubusercontent.com/marslo/767e339e32e0dbc038a3e00e3c8a7cba/raw/01f29ac774a468221082f4d504b013d264435567/src.Makefile.patch)
+
+  # build
+  $ make all test
+  # install
+  $ sudo make install
+  ```
+  <!--endsec-->
+
+
+- ruby ( via rbenv )
+
+  > [!TIP]
+  > - [iMarslo: install ruby with rbenv](../linux/tools.html#ruby)
+
+  <!--sec data-title="install ruby by rbenv" data-id="section4" data-show=true data-collapse=true ces-->
+  ```bash
+  $ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+
+  $ ~/.rbenv/bin/rbenv init
+  $ echo 'export PATH="$PATH:$HOME/.rbenv/bin"' >> ~/.bashrc
+  $ echo 'eval "$(/home/marslo/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+
+  $ rbenv install 3.3.0
+  $ rbenv global 3.3.0
+  ```
+  <!--endsec-->
+
 
 - vim9
+
   ```bash
   $ git clone https://github.com/vim/vim && cd vim
-  # no ruby, no lua
+  ./configure --with-features=huge \
+              --enable-cscope \
+              --enable-rubyinterp=dynamic \
+              --enable-python3interp=dynamic \
+              --with-python3-config-dir=$(python3.11-config --configdir) \
+              --enable-luainterp=dynamic \
+              --with-lua-prefix=/usr/local \
+              --enable-libsodium \
+              --enable-multibyte \
+              --with-tlib=ncurses \
+              --enable-terminal \
+              --enable-autoservername \
+              --enable-nls \
+              --with-compiledby="marslo <marslo.jiao@gmail.com>" \
+              --prefix=/usr/local/vim \
+              --exec-prefix=/usr/local/vim \
+              --enable-fail-if-missing
+
+  $ make -j${NPROC}
+  $ sudo make install
+
+  $ sudo alternatives --install /usr/local/bin/vim      vim      /usr/local/vim/bin/vim      99
+  $ sudo alternatives --install /usr/local/bin/vimdiff  vimdiff  /usr/local/vim/bin/vimdiff  99
+  $ sudo alternatives --install /usr/local/bin/vimtutor vimtutor /usr/local/vim/bin/vimtutor 99
+  $ sudo alternatives --auto vim
+  $ sudo alternatives --auto vimdiff
+  $ sudo alternatives --auto vimtutor
+  ```
+
+  <!--sec data-title="build without ruby and lua" data-id="section6" data-show=true data-collapse=true ces-->
+  ```bash
   $ ./configure --with-features=huge \
                 --enable-python3interp \
                 --with-python3-config-dir=$(python3.11-config --configdir) \
@@ -435,16 +493,64 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
                 --prefix=/usr/local/vim \
                 --exec-prefix=/usr/local/vim \
                 --enable-fail-if-missing
-  $ make -j${NPROC}
-  $ sudo make install
-
-  # copy vim if necessary
-  $ sudo cp src/vim /usr/local/bin
-  # or
-  $ sudo update-alternatives --install /usr/local/bin/vim vim /usr/local/vim/bin/vim 99
   ```
+  <!--endsec-->
+
+
+  <!--sec data-title="--version" data-id="section5" data-show=true data-collapse=true ces-->
+  ```bash
+  $ /usr/local/bin/vim --version
+  VIM - Vi IMproved 9.1 (2024 Jan 02, compiled Jan  4 2024 18:32:13)
+  Included patches: 1-11
+  Compiled by marslo <marslo.jiao@gmail.com>
+  Huge version without GUI.  Features included (+) or not (-):
+  +acl               +file_in_path      +mouse_urxvt       -tag_any_white
+  +arabic            +find_in_path      +mouse_xterm       -tcl
+  +autocmd           +float             +multi_byte        +termguicolors
+  +autochdir         +folding           +multi_lang        +terminal
+  +autoservername    -footer            -mzscheme          +terminfo
+  -balloon_eval      +fork()            +netbeans_intg     +termresponse
+  +balloon_eval_term +gettext           +num64             +textobjects
+  -browse            -hangul_input      +packages          +textprop
+  ++builtin_terms    +iconv             +path_extra        +timers
+  +byte_offset       +insert_expand     -perl              +title
+  +channel           +ipv6              +persistent_undo   -toolbar
+  +cindent           +job               +popupwin          +user_commands
+  -clientserver      +jumplist          +postscript        +vartabs
+  -clipboard         +keymap            +printer           +vertsplit
+  +cmdline_compl     +lambda            +profile           +vim9script
+  +cmdline_hist      +langmap           -python            +viminfo
+  +cmdline_info      +libcall           +python3/dyn       +virtualedit
+  +comments          +linebreak         +quickfix          +visual
+  +conceal           +lispindent        +reltime           +visualextra
+  +cryptv            +listcmds          +rightleft         +vreplace
+  +cscope            +localmap          +ruby/dyn          +wildignore
+  +cursorbind        +lua/dyn           +scrollbind        +wildmenu
+  +cursorshape       +menu              +signs             +windows
+  +dialog_con        +mksession         +smartindent       +writebackup
+  +diff              +modify_fname      -sodium            -X11
+  +digraphs          +mouse             -sound             +xattr
+  -dnd               -mouseshape        +spell             -xfontset
+  -ebcdic            +mouse_dec         +startuptime       -xim
+  +emacs_tags        -mouse_gpm         +statusline        -xpm
+  +eval              -mouse_jsbterm     -sun_workshop      -xsmp
+  +ex_extra          +mouse_netterm     +syntax            -xterm_clipboard
+  +extra_search      +mouse_sgr         +tag_binary        -xterm_save
+  -farsi             -mouse_sysmouse    -tag_old_static
+     system vimrc file: "$VIM/vimrc"
+       user vimrc file: "$HOME/.vimrc"
+   2nd user vimrc file: "~/.vim/vimrc"
+        user exrc file: "$HOME/.exrc"
+         defaults file: "$VIMRUNTIME/defaults.vim"
+    fall-back for $VIM: "/usr/local/vim/share/vim"
+  Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H -g -O2 -D_REENTRANT -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
+  Linking: gcc -Wl,--as-needed -o vim -lm -lelf -lselinux -lncurses -lrt -ldl
+  ```
+  <!--endsec-->
+
 
 #### shell script
+- vim
   ```bash
   #!/usr/bin/env bash
 

@@ -8,6 +8,7 @@
   - [find and rename](#find-and-rename)
   - [find and sort](#find-and-sort)
   - [download and extract](#download-and-extract)
+- [sync mirro](#sync-mirro)
 - [using string as variable name](#using-string-as-variable-name)
 - [`<<<`, `< <(..)`](#--)
   - [`< <(..)` && `> >(..)`](#----)
@@ -201,10 +202,34 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
   $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz | tar xzf - -C /path/to/target
   ```
 
+- tar.xz
+  ```bash
+  $ curl -fsSL https://ftp.gnu.org/gnu/glibc/glibc-2.38.tar.xz | tar -xJf - -C /path/to/target
+  ```
+
 - zip
   ```bash
   $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
   ```
+
+## sync mirro
+
+> [!NOTE]
+> - [How to create public mirrors for CentOS](https://wiki.centos.org/HowTos(2f)CreatePublicMirrors.html)
+> - [Configure DNF/Yum Mirror Server](https://www.server-world.info/en/note?os=CentOS_Stream_9&p=localrepo)
+
+```bash
+$ rsync -aqzH --delay-updates --delete-after  msync.centos.org::CentOS /path/to/local/mirror/root
+
+# stream 9
+$ rsync -aqzH --delay-updates --delete-after rsync.stream.centos.org::CentOS-Stream-All /path/to/local/mirror/root
+
+# or src
+$ rsync -aqzH --delay-updates --delete-after rsync.stream.centos.org::CentOS-Stream-nosrc /path/to/local/mirror/root
+
+# exclude debuginfo
+$ rsync -aqzH --delay-updates --delete-after rsync.stream.centos.org::CentOS-Stream-nodebug /path/to/local/mirror/root
+```
 
 ## using string as variable name
 
