@@ -1054,6 +1054,8 @@ augroup END
                             clang clang-devel clang-libs clang-tools-extra \   # no libclang found
                             llvm llvm-libs \
                             go
+      $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      $ sudo dnf install java-17-openjdk-devel java-17-openjdk
 
       # upgrade nodejs
       $ node --version
