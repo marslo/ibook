@@ -20,6 +20,9 @@
 - [application](#application)
   - [jdk and JAVA_HOME](#jdk-and-java_home)
   - [groovy](#groovy)
+  - [gcc](#gcc)
+  - [ruby](#ruby)
+  - [mono](#mono)
   - [mysql](#mysql)
     - [built from source code](#built-from-source-code)
     - [install from apt repo](#install-from-apt-repo)
@@ -222,6 +225,11 @@ update-rc.d: warning:  stop runlevel arguments (none) do not match jenkins Defau
   $ curl -L -C - -b "oraclelicense=accept-securebackup-cookie" \
          -O http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz
   $ tar xf jdk-8u121-linux-x64.tar.gz
+
+  # or
+  $ curl -L -C - -b "oraclelicense=accept-securebackup-cookie" \
+         -fsS http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz |
+    tar xzf - -C /opt/java
   ```
 
 * setup java environment
@@ -258,11 +266,184 @@ update-rc.d: warning:  stop runlevel arguments (none) do not match jenkins Defau
   EOF
   ```
 
-* Set Default Groovy
+* set default groovy
   ```bash
   $ sudo update-alternatives --install /usr/bin/groovy groovy /opt/groovy/groovy-2.4.10/bin/groovy 999999999
   $ sudo update-alternatives --auto groovy
+
+  # or
+  $ sudo alternatives --config groovy
   ```
+
+## gcc
+
+> [!NOTE]
+> - [Index of /sites/sourceware.org/pub/gcc/releases/](https://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases)
+> - [gcc.gnu.org](https://gcc.gnu.org/)
+> - [Installing GCC](https://gcc.gnu.org/wiki/InstallingGCC)
+> - [How To Install GCC on CentOS 7](https://linuxhostsupport.com/blog/how-to-install-gcc-on-centos-7/)
+
+- install
+  ```bash
+  $ mdir -p /opt/gcc/gcc-13.2.0
+  $ curl -fsSL https://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc-13.2.0/gcc-13.2.0.tar.gz | tar xzf - -C /opt/gcc/gcc-13.2.0
+
+  # prerequisites
+  gcc-13.2.0 $ grep base_url= contrib/download_prerequisites
+  base_url='http://gcc.gnu.org/pub/gcc/infrastructure/'
+  gcc-13.2.0 $ ./contrib/download_prerequisites
+
+  # config
+  gcc-13.2.0 $ mkdir ../objdir && cd $_
+  objdir $ ../gcc-13.2.0/configure --disable-multilib
+
+  # make
+  objdir $ NPROC="$(nproc)"
+  objdir $ tmux                # it will take very long time to build, better using tmux to avoid interrupt by ssh session down
+  objdir $ make -j${NPROC} [ | tee make.log ]
+
+  # install
+  objdir $ sudo make install
+  ```
+
+- configure
+  ```bash
+  $ sudo mv /usr/bin/g++{,.8.5.0}
+  $ sudo mv /usr/bin/gcc{,.8.5.0}
+  $ sudo mv /usr/bin/c++{,.8.5.0}
+
+  $ sudo alternatives --install /usr/bin/g++ g++ /usr/local/bin/g++ 50
+  $ sudo alternatives --install /usr/bin/gcc gcc /usr/local/bin/gcc 50
+  $ sudo alternatives --install /usr/bin/c++ c++ /usr/local/bin/c++ 50
+  ```
+
+- verify
+  ```bash
+  $ gcc --version
+  gcc (GCC) 13.2.0
+  Copyright (C) 2023 Free Software Foundation, Inc.
+  This is free software; see the source for copying conditions.  There is NO
+  warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+  $ g++ --version
+  g++ (GCC) 13.2.0
+  Copyright (C) 2023 Free Software Foundation, Inc.
+  This is free software; see the source for copying conditions.  There is NO
+  warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+  $ c++ --version
+  c++ (GCC) 13.2.0
+  Copyright (C) 2023 Free Software Foundation, Inc.
+  This is free software; see the source for copying conditions.  There is NO
+  warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ```
+
+## ruby
+
+> [!NOTE|label:references:]
+> - [How to Install Ruby 3.2 on CentOS & RHEL using RVM](https://tecadmin.net/install-ruby-3-on-centos/)
+> - [rbenv/rbenv](https://github.com/rbenv/rbenv)
+> - [rbenv/rbenv-installer](https://github.com/rbenv/rbenv-installer)
+> - [* ftp:pub/ruby](https://ftp.ruby-lang.org/pub/ruby/)
+
+- rbenv
+  ```bash
+  $ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+  # or
+  $ wget -q https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer -O- | bash
+
+  $ ~/.rbenv/bin/rbenv init
+  $ echo 'export PATH="$PATH:$HOME/.rbenv/bin"' >> ~/.bashrc
+  $ echo 'eval "$(/home/marslo/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+
+  # list latest available versions
+  $ rbenv install -l
+  3.0.6
+  3.1.4
+  3.2.2
+  3.3.0
+  jruby-9.4.5.0
+  mruby-3.2.0
+  picoruby-3.0.0
+  truffleruby-23.1.1
+  truffleruby+graalvm-23.1.1
+
+  # install
+  $ rbenv install 3.3.0
+  ==> Downloading ruby-3.3.0.tar.gz...
+  -> curl -q -fL -o ruby-3.3.0.tar.gz https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.0.tar.gz
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100 21.0M  100 21.0M    0     0  27.6M      0 --:--:-- --:--:-- --:--:-- 27.5M
+  ==> Installing ruby-3.3.0...
+  -> ./configure "--prefix=$HOME/.rbenv/versions/3.3.0" --enable-shared --with-ext=openssl,psych,+
+  -> make -j 32
+  -> make install
+  ==> Installed ruby-3.3.0 to /home/marslo/.rbenv/versions/3.3.0
+
+  $ rbenv global 3.3.0
+  ```
+
+  - result
+    ```bash
+    $ ruby --version
+    ruby 3.3.0 (2023-12-25 revision 5124f9ac75) [x86_64-linux]
+
+    $ bundler --version
+    Bundler version 2.5.3
+    ```
+
+- rvm
+  ```bash
+  $ sudo yum update -y
+  $ sudo yum install curl gpg gcc gcc-c++ make libyaml-devel openssl-devel readline-devel zlib-devel -y
+
+  $ command curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+  $ command curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
+  $ curl -sSL https://get.rvm.io | bash -s stable
+  $ echo "export PATH=\"$PATH:$HOME/.rvm/bin\"" >> ~/.bashrc
+
+  # verify
+  $ rvm --version
+  rvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+
+  # install ruby
+  $ rvm install 3.3
+  $ rvm use 3.3 --default
+  ```
+
+## mono
+
+> [!NOTE]
+> - [mono download](https://www.mono-project.com/download/stable/)
+> - [mono repo](https://download.mono-project.com/repo/)
+
+```bash
+# centos 7
+$ sudo su -c 'curl https://download.mono-project.com/repo/centos7-stable.repo |tee /etc/yum.repos.d/mono-centos7-stable.repo'
+
+# centos 8
+$ sudo rpm --import 'http://pool.sks-keyservers.net/pks/lookup?op=get&search=0x3fa7e0328081bff6a14da29aa6a19b38d3d831ef'
+$ sudo dnf config-manager --add-repo https://download.mono-project.com/repo/centos8-stable.repo
+
+$ sudo yum install mono-devel
+$ mono --version
+Mono JIT compiler version 6.12.0.107 (tarball Wed Dec  9 21:44:58 UTC 2020)
+Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com
+        TLS:           __thread
+        SIGSEGV:       altstack
+        Notifications: epoll
+        Architecture:  amd64
+        Disabled:      none
+        Misc:          softdebug
+        Interpreter:   yes
+        LLVM:          yes(610)
+        Suspend:       hybrid
+        GC:            sgen (concurrent by default)
+
+# optional
+$ sudo yum install mono-complete
+```
 
 ## mysql
 ### built from source code
