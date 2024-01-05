@@ -45,6 +45,7 @@
   - [disable lock screen in CentOS 8](#disable-lock-screen-in-centos-8)
   - [sogou Pinyin input method](#sogou-pinyin-input-method)
   - [specified terminal size](#specified-terminal-size)
+- [burn bootable usb stick](#burn-bootable-usb-stick)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
   - [none of the providers can be installed in `dnf upgrade`](#none-of-the-providers-can-be-installed-in-dnf-upgrade)
@@ -1787,6 +1788,25 @@ $ # sudo apt-get remove ibus
 ```bash
 $ gnome-terminal --geometry=123x42+0+0
 ```
+
+## burn bootable usb stick
+
+> [!NOTE|label:references:]
+> - [Create a bootable USB stick on macOS](https://ubuntu.com/tutorials/create-a-usb-stick-on-macos#4-install-and-run-etcher)
+> - [download etcher](https://etcher.balena.io/#download-etcher)
+>   - [ETCHER FOR MACOS](https://github.com/balena-io/etcher/releases/download/v1.18.11/balenaEtcher-1.18.11.dmg)
+
+* [get ubuntu](https://ubuntu.com/download)
+
+* Disk Utility -> Erase
+  * format: `MS-DOS (FAT)`
+  * scheme: `GUID Partition Map`
+
+  ![erase usb](../screenshot/linux/bootable-usb-1.png)
+
+* [download and install etcher](https://github.com/balena-io/etcher/releases/download/v1.18.11/balenaEtcher-1.18.11.dmg)
+
+  ![flash](../screenshot/linux/bootable-usb-3.png)
 
 ## Q&A
 ### yum issue after python upgrade to 3.x
