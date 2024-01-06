@@ -383,6 +383,13 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
   > [!TIP|label:references:]
   > - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
 
+  ```bash
+  # ubuntu
+  #                        to provide python3-config
+  #                                    v
+  $ sudo apt install python3.11 python3.11-dev
+  ```
+
   <!--sec data-title="build lua with shared lib" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ NPROC=$(getconf _NPROCESSORS_ONLN)
@@ -401,7 +408,6 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
   $ echo 'PATH=$PATH:/usr/local/bin'
   ```
   <!--endsec-->
-
 
 - lua 5.4.6 ( with shared libs )
 
@@ -443,7 +449,6 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
   $ rbenv global 3.3.0
   ```
   <!--endsec-->
-
 
 - vim9
 
