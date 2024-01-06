@@ -889,6 +889,11 @@ augroup END
 > - [Full installation on CentOS](https://github.com/ycm-core/YouCompleteMe/wiki/Full-installation-on-CentOS)
 > - [Windows Installation Guide for Unix‐like Environments](https://github.com/ycm-core/YouCompleteMe/wiki/Windows-Installation-Guide-for-Unix%E2%80%90like-Environments)
 > - [* Troubleshooting steps for ycmd server SHUT DOWN](https://github.com/ycm-core/YouCompleteMe/wiki/Troubleshooting-steps-for-ycmd-server-SHUT-DOWN)
+> - [issue with `sudo npm install -g`](https://stackoverflow.com/a/18414606)
+>   ```bash
+>   $ sudo chown -R $USER /usr/local/lib/node_modules
+>   $ npm install -g ..
+>   ```
 
 | OPTION             | LANGUAGE               | TOOL                          | DEPENDENCIES      |
 |--------------------|------------------------|-------------------------------|-------------------|
@@ -1036,6 +1041,50 @@ augroup END
       go version go1.21.5 linux/amd64
       ```
 
+    - offline ( only allows apt and git )
+
+      > [!NOTE|label:references:]
+      > - [Installing Gradle](https://docs.gradle.org/current/userguide/installation.html#ex-installing-manually)
+      > - [Gradle Installing manually](https://gradle.org/install/#manually)
+      > - [Go: Download and install](https://go.dev/doc/install)
+      > - [How to fix npm throwing error without sudo](https://stackoverflow.com/a/18414606)
+      > - [Don’t use `sudo` with `npm`](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-5711d2726aa3)
+      > - [Ubuntu setup](https://innovativeinnovation.github.io/ubuntu-setup/)
+
+      ```bash
+      # c/c++
+      $ sudo apt install build-essential cmake vim-nox
+      $ sudo apt install build-essential cmake vim-nox
+      $ sudo apt install python3.11-dev python3-pip
+      $ python3 -m pip install --upgrade pip
+
+      # java
+      $ sudo apt install openjdk-21-doc openjdk-21-jdk
+      $ export JAVA_HOME='/usr/lib/jvm/java-21-openjdk-amd64'
+
+      # go
+      $ curl -LO https://go.dev/dl/go1.21.5.linux-amd64.tar.gz
+      # or
+      $ sudo apt install golang-1.21 golang-1.21-go golang-1.21-doc
+      $ sudo update-alternatives --install /usr/bin/go go /usr/lib/go-1.21/bin/go 99
+      $ sudo update-alternatives --install /usr/bin/gofmt gofmt /usr/lib/go-1.21/bin/gofmt 99
+      $ sudo update-alternatives --auto go
+      $ sudo update-alternatives --auto gofmt
+
+      # node/npm
+      $ npm config set registry https://artifactory.sample.com/artifactory/api/npm/npm-remote/
+      $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
+      $ sudo n latest
+      $ npm i -g npm-completion --verbose
+
+      # gradle
+      $ curl -O https://services.gradle.org/distributions/gradle-7.6.1-bin.zip    # download somewhere and sync to server
+      $ unzip gradle-7.6.1-bin.zip -d /opt/gradle
+      $ ln -sf /opt/gradle/gradle-7.6.1 /opt/gradle/latest
+      $ sudo update-alternatives --install /usr/local/bin/gralde gradle /opt/gradle/latest/bin/gradle 99
+      $ sudo update-alternatives --auto gradle
+      ```
+
   - centos
 
     > [!NOTE]
@@ -1075,7 +1124,7 @@ augroup END
       $ node --version
       v12.22.5
       $ sudo npm i -g n
-      $ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
+      $ sudo mkdir -p /usr/local/n && sudo chown -R $(whoami) /usr/local/n
       $ sudo n latest
       $ which -a node
       /usr/local/bin/node

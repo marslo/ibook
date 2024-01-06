@@ -14,6 +14,7 @@
     - [resolve conflict](#resolve-conflict)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
   - [CentOS 8 -> CentOS 9](#centos-8---centos-9)
+- [snap](#snap)
 - [prompt](#prompt)
 - [character](#character)
   - [metacharacter](#metacharacter)
@@ -569,8 +570,35 @@ $ sudo reboot
 $ sudo rm -f /var/lib/rpm/__db*
 $ sudo rpm --rebuilddb
 $ sudo dnf -y groupupdate "Core" "Minimal Install"
+```
 
+# snap
 
+> [!NOTE|label:references:]
+> - [Is it possible to install the .snap application in an offline computer?](https://askubuntu.com/a/944479/92979)
+
+```bash
+# online machine
+$ snap download curl
+Fetching snap "curl"
+2024/01/05 21:58:46.632267 store_download.go:142: no host system xdelta3 available to use deltas
+Fetching assertions for "curl"
+Install the snap with:
+   snap ack curl_1754.assert
+   snap install curl_1754.snap
+
+$ scp curl_1754* account@offline.server.com:~/snap
+
+# offline machine
+$ sudo snap ack curl_1754.assert
+$ sudo snap install curl_1754.snap
+curl 8.1.2 from Wouter van Bommel (woutervb) installed
+
+$ curl --version
+curl 8.1.2 (x86_64-pc-linux-gnu) libcurl/8.1.2 OpenSSL/1.1.1f zlib/1.2.11 brotli/1.0.7 zstd/1.4.4 libidn2/2.2.0 libpsl/0.21.0 (+libidn2/2.2.0) libssh/0.9.3/openssl/zlib nghttp2/1.40.0 librtmp/2.3 libgsasl/1.8.1
+Release-Date: 2023-05-30
+Protocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtmp rtsp scp sftp smb smbs smtp smtps telnet tftp
+Features: alt-svc AsynchDNS brotli gsasl GSS-API HSTS HTTP2 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM NTLM_WB PSL SPNEGO SSL threadsafe TLS-SRP UnixSockets zstd
 ```
 
 # prompt

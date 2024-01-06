@@ -70,7 +70,9 @@
   - git-core
     ```bash
     # debian
-    $ sudo apt-get install -y dh-autoreconf libcurl4-openssl-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+    $ sudo apt install -y dh-autoreconf libexpat1-dev gettext libz-dev libssl-dev
+    $ sudo apt install -y libcurl4-openssl-dev
+    $ sudo apt install -y libcurl4-gnutls-dev
 
     # centos/rhel
     $ sudo dnf config-manager --set-enabled powertools
@@ -87,7 +89,7 @@
   - git-doc
     ```bash
     # debian
-    $ sudo apt-get install -y asciidoc xmlto docbook2x hunspell libhunspell-dev
+    $ sudo apt install -y asciidoc xmlto docbook2x hunspell libhunspell-dev
 
     # centos/rhel
     $ sudo dnf install -y asciidoc xmlto docbook2X docbook-style-xsl
@@ -103,7 +105,7 @@
   - git-info
     ```bash
     # debian
-    $ sudo apt-get install -y install-info
+    $ sudo apt install -y install-info
 
     # centos/rhel
     $ sudo dnf install -y util-linux

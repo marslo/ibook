@@ -472,6 +472,29 @@ $ sudo make install
   $ rbenv global 3.3.0
   ```
 
+  - [install offline package](https://stackoverflow.com/a/35589999)
+
+    > [!TIP]
+    > - [#2184 Installing Ruby 3.2.2 on FreeBSD fails due to missing libyaml even when it is installed](https://github.com/rbenv/ruby-build/issues/2184#issuecomment-1508529361)
+
+    ```bash
+    # online machine
+    $ curl -q -fL -o ruby-3.3.0.tar.gz https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.0.tar.gz
+    $ scp ruby-3.3.0.tar.gz account@server.com:~/.rbenv/cache
+
+    # offline machine
+    $ sudo apt install libyaml-dev libyaml-doc
+    $ export CPPFLAGS=-I/usr/local/include
+    $ export LDFLAGS=-L/usr/local/lib
+    $ rbenv install 3.3.0
+    ==> Installing ruby-3.3.0...
+    -> ./configure "--prefix=$HOME/.rbenv/versions/3.3.0" --enable-shared --with-ext=openssl,psych,+
+    -> make -j 128
+    -> make install
+    ==> Installed ruby-3.3.0 to /home/marslo/.rbenv/versions/3.3.0
+    $ rbenv global 3.3.0
+    ```
+
   - result
     ```bash
     $ ruby --version

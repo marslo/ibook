@@ -23,6 +23,7 @@
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
   - [disk size](#disk-size)
+  - [push to github with credential](#push-to-github-with-credential)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -597,6 +598,18 @@ $ git for-each-ref --format='%(refname)' |
 $ git rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
 ```
 
+### push to github with credential
 
+> [!NOTE]
+> - [`git config credential.helper store`](https://stackoverflow.com/a/65786142)
+> - [`git remote set-url`](https://stackoverflow.com/a/68783135)
+> - [credential.helper](https://stackoverflow.com/a/62184716)
+> - [Credential stores](https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/credstores.md)
+>   - [GPG/pass compatible files](https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/credstores.md#gpgpass-compatible-files)
 
+```bash
+$ git config credential.helper store
 
+# or
+git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
+```
