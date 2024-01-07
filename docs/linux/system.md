@@ -47,6 +47,7 @@
   - [sogou Pinyin input method](#sogou-pinyin-input-method)
   - [specified terminal size](#specified-terminal-size)
 - [burn bootable usb stick](#burn-bootable-usb-stick)
+- [remove system](#remove-system)
 - [Q&A](#qa)
   - [yum issue after python upgrade to 3.x](#yum-issue-after-python-upgrade-to-3x)
   - [none of the providers can be installed in `dnf upgrade`](#none-of-the-providers-can-be-installed-in-dnf-upgrade)
@@ -1971,6 +1972,15 @@ $ gnome-terminal --geometry=123x42+0+0
 * [download and install etcher](https://github.com/balena-io/etcher/releases/download/v1.18.11/balenaEtcher-1.18.11.dmg)
 
   ![flash](../screenshot/linux/bootable-usb-3.png)
+
+
+## remove system
+
+> [!NOTE|label:references:]
+> - [Uninstalling CentOS](https://docs.centos.org/en-US/centos/install-guide/uninstall/#sect-uninstall-dual-linux-x86)
+> - [[OS-Uninstaller] Safely remove Windows, Ubuntu... in 1 clic !](https://ubuntuforums.org/showthread.php?t=1769489&s=9c32add65a3609002c225db872e8f762&p=10871988#post10871988)
+>   - [OS-Uninstaller](https://help.ubuntu.com/community/OS-Uninstaller)
+> - [NEW PROJECT : Ubuntu_uninstaller and Boot_repair](https://ubuntuforums.org/showthread.php?t=1615667)
 
 ## Q&A
 ### yum issue after python upgrade to 3.x
