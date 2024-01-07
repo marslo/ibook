@@ -9,6 +9,8 @@
   - [remount](#remount)
   - [disconnect the mount](#disconnect-the-mount)
 - [LVM](#lvm)
+  - [check current status](#check-current-status)
+  - [add new pv ( Physical Volume )](#add-new-pv--physical-volume-)
   - [example](#example)
 - [performance](#performance)
   - [check NFS performance](#check-nfs-performance)
@@ -287,6 +289,86 @@ $ sudo umount /mnt/mynfs
 > reference:
 > - [CONFIGURING AND MANAGING LOGICAL VOLUMES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index)
 > - [CHAPTER 5. MODIFYING THE SIZE OF A LOGICAL VOLUME](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/assembly_modifying-logical-volume-size-configuring-and-managing-logical-volumes)
+> - [LVM in Linux — Create and Extend a Logical Volume](https://medium.com/@yhakimi/lvm-how-to-create-and-extend-a-logical-volume-in-linux-9744f27eacfe)
+>
+> | COMMAND | NAME            |
+> |:-------:|-----------------|
+> |   `vg`  | Volume Group    |
+> |   `pv`  | Physical Volume |
+> |   `lv`  | Logical Volume  |
+
+### check current status
+
+- lvm
+  ```bash
+  $ sudo vgs
+    VG       #PV #LV #SN Attr   VSize    VFree
+    vgubuntu   1   2   0 wz--n- <931.01g    0
+
+  $ sudo lvs
+    LV     VG       Attr          LSize    Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+    root   vgubuntu -wi-ao----    <929.10g
+    swap_1 vgubuntu -wi-ao----    1.91g
+
+  $ sudo pvs
+    PV             VG       Fmt  Attr PSize    PFree
+    /dev/nvme0n1p2 vgubuntu lvm2 a--  <931.01g      0
+    /dev/sda3               lvm2 ---    <1.82t  <1.82t
+  ```
+
+- disk status
+  ```bash
+  $ sudo lsblk
+  NAME                MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+  sda                   8:0    0   1.8T  0 disk
+  ├─sda1                8:1    0   600M  0 part
+  ├─sda2                8:2    0     1G  0 part /media/devops/99dad889-9bcc-4edb-baa9-3433c2502f18
+  └─sda3                8:3    0   1.8T  0 part
+  sdb                   8:16   1     0B  0 disk
+  sr0                  11:0    1  1024M  0 rom
+  nvme1n1             259:0    0 931.5G  0 disk
+  ├─nvme1n1p1         259:2    0   512M  0 part
+  └─nvme1n1p2         259:3    0   931G  0 part /media/devops/f99da1e7-9555-4cdc-9781-6dbc9e6153ca
+  nvme0n1             259:1    0 931.5G  0 disk
+  ├─nvme0n1p1         259:4    0   512M  0 part /boot/efi
+  └─nvme0n1p2         259:5    0   931G  0 part
+    ├─vgubuntu-root   253:0    0 929.1G  0 lvm  /var/snap/firefox/common/host-hunspell
+    │                                           /
+    └─vgubuntu-swap_1 253:1    0   1.9G  0 lvm  [SWAP]
+  ```
+
+
+### add new pv ( Physical Volume )
+
+```bash
+$ sudo pvcreate /dev/nvme1n1p2
+  Can't open /dev/nvme1n1p2 exclusively.  Mounted filesystem?
+  Can't open /dev/nvme1n1p2 exclusively.  Mounted filesystem?
+
+$ sudo mount | grep f99da1e7-9555-4cdc-9781-6dbc9e6153ca
+/dev/nvme1n1p2 on /media/devops/f99da1e7-9555-4cdc-9781-6dbc9e6153ca type ext4 (rw,nosuid,nodev,relatime,errors=remount-ro,uhelper=udisks2)
+
+$ sudo umount /dev/nvme1n1p2
+
+$ sudo mount | grep f99da1e7-9555-4cdc-9781-6dbc9e6153ca
+
+$ sudo lsblk /dev/nvme1n1
+NAME                MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+nvme1n1             259:0    0 931.5G  0 disk
+├─nvme1n1p1         259:2    0   512M  0 part
+└─nvme1n1p2         259:3    0   931G  0 part
+
+$ sudo pvcreate /dev/nvme1n1p2
+WARNING: ext4 signature detected on /dev/nvme1n1p2 at offset 1080. Wipe it? [y/n]: y
+  Wiping ext4 signature on /dev/nvme1n1p2.
+  Physical volume "/dev/nvme1n1p2" successfully created.
+
+$ sudo pvs
+  PV             VG       Fmt  Attr PSize    PFree
+  /dev/nvme0n1p2 vgubuntu lvm2 a--  <931.01g      0
+  /dev/nvme1n1p2          lvm2 ---   931.01g 931.01g
+  /dev/sda3               lvm2 ---    <1.82t  <1.82t
+```
 
 ### example
 - extends the logical volume /dev/myvg/homevol to 12 gigabytes
