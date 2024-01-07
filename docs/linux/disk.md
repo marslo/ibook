@@ -11,6 +11,8 @@
 - [LVM](#lvm)
   - [check current status](#check-current-status)
   - [add new pv ( Physical Volume )](#add-new-pv--physical-volume-)
+  - [moving home with lvm](#moving-home-with-lvm)
+  - [remove LVM](#remove-lvm)
   - [example](#example)
 - [performance](#performance)
   - [check NFS performance](#check-nfs-performance)
@@ -286,10 +288,13 @@ $ sudo umount /mnt/mynfs
   ```
 
 ## LVM
-> reference:
+
+> [!NOTE|label:reference:]
 > - [CONFIGURING AND MANAGING LOGICAL VOLUMES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index)
 > - [CHAPTER 5. MODIFYING THE SIZE OF A LOGICAL VOLUME](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/assembly_modifying-logical-volume-size-configuring-and-managing-logical-volumes)
-> - [LVM in Linux — Create and Extend a Logical Volume](https://medium.com/@yhakimi/lvm-how-to-create-and-extend-a-logical-volume-in-linux-9744f27eacfe)
+> - [LVM HOWTO](https://tldp.org/HOWTO/LVM-HOWTO/index.html)
+> - [* Logical Volume Manager Administration](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/logical_volume_manager_administration/index)
+> - [* LVM in Linux — Create and Extend a Logical Volume](https://medium.com/@yhakimi/lvm-how-to-create-and-extend-a-logical-volume-in-linux-9744f27eacfe)
 >
 > | COMMAND | NAME            |
 > |:-------:|-----------------|
@@ -337,7 +342,6 @@ $ sudo umount /mnt/mynfs
     └─vgubuntu-swap_1 253:1    0   1.9G  0 lvm  [SWAP]
   ```
 
-
 ### add new pv ( Physical Volume )
 
 ```bash
@@ -347,9 +351,7 @@ $ sudo pvcreate /dev/nvme1n1p2
 
 $ sudo mount | grep f99da1e7-9555-4cdc-9781-6dbc9e6153ca
 /dev/nvme1n1p2 on /media/devops/f99da1e7-9555-4cdc-9781-6dbc9e6153ca type ext4 (rw,nosuid,nodev,relatime,errors=remount-ro,uhelper=udisks2)
-
 $ sudo umount /dev/nvme1n1p2
-
 $ sudo mount | grep f99da1e7-9555-4cdc-9781-6dbc9e6153ca
 
 $ sudo lsblk /dev/nvme1n1
@@ -368,6 +370,36 @@ $ sudo pvs
   /dev/nvme0n1p2 vgubuntu lvm2 a--  <931.01g      0
   /dev/nvme1n1p2          lvm2 ---   931.01g 931.01g
   /dev/sda3               lvm2 ---    <1.82t  <1.82t
+```
+
+### moving home with lvm
+
+> [!NOTE|label:references]
+> - [Moving /home with LVM](https://askubuntu.com/a/923943/92979)
+
+
+### remove LVM
+
+> [!TIP]
+> - remove order:
+>   1. lv
+>   2. pv
+>   3. vg
+> - [15.2.2. Removing an LVM2 Logical Volume for Swap](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/storage_administration_guide/swap-removing-lvm2)
+> - [5.3.10. Removing Volume Groups](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/logical_volume_manager_administration/vg_remove)
+> - [Linux Quick Tip: How to Delete or Remove LVM volumes](https://faun.pub/linux-quick-tip-how-to-delete-or-remove-lvm-volumes-7df4447102af)
+> - [Removing an existing LVM volume](https://subscription.packtpub.com/book/cloud-and-networking/9781783288885/5/ch05lvl1sec45/removing-an-existing-lvm-volume)
+
+```bash
+$ sudo lvremove /dev/cl/home
+# for swap
+$ sudo swapoff -v /dev/cl/swap
+$ sudo lvremove /dev/cl/swap
+# and remove swap from `/etc/fstab`
+$ sudo awk '!/\/dev\/cl\/swap/' /etc/fstab
+
+$ sudo pvremove <pv-name>
+$ sudo vgremove <vg-name>
 ```
 
 ### example
