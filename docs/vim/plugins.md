@@ -37,6 +37,7 @@
   - [APZelos/blamer.nvim](#apzelosblamernvim)
   - [zivyangll/git-blame.vim](#zivyangllgit-blamevim)
 - [color and theme](#color-and-theme)
+  - [ryanoasis/vim-devicons](#ryanoasisvim-devicons)
 - [others](#others-1)
   - [deprecated](#deprecated)
   - [not been using](#not-been-using)
@@ -1647,6 +1648,12 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 >   - [ap/vim-css-color](https://github.com/ap/vim-css-color)
 >   - [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
 
+## [ryanoasis/vim-devicons](https://github.com/ryanoasis/vim-devicons)
+
+> [!NOTE|label:unicodes]
+> - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
+> - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
+
 # others
 ## deprecated
 
@@ -2537,4 +2544,3 @@ serving on http://1.0.0.127.in-addr.arpa:63691
   $ cd ${iRCHOME}/utils/fonts
   $ ./install.sh
   ```
-
