@@ -16,12 +16,15 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
-> - [* 131 Programming Fonts](https://www.programmingfonts.org/)
+> - [* 142 Programming Fonts](https://www.programmingfonts.org/)
 > - [* arrowtype/recursive](https://github.com/arrowtype/recursive)
 > - [Patch Fonts with Cursive Italic Styles](https://www.sainnhe.dev/post/patch-fonts-with-cursive-italic-styles/)
-> - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font)
+> - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font) | [sainnhe/mono-nerd-font](https://git.sainnhe.dev/sainnhe/mono-nerd-font)
 > - [INPUT™ fonts](https://input.djr.com/download/)
 > - [Consolas font family](https://learn.microsoft.com/en-us/typography/font-list/consolas)
+> - [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
+> - [ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols)
+> - [ArrowType](https://www.arrowtype.com/)
 
 ## highly recommended
 
@@ -287,4 +290,3 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
            https://github.com/benbusby/anomaly-mono/raw/master/AnomalyMono-Powerline.otf &&
       fc-cache -f -v
     ```
-
