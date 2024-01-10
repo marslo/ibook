@@ -5,6 +5,7 @@
   - [Monaco](#monaco)
   - [RecMonoCasual](#recmonocasual)
   - [Comic Mono](#comic-mono)
+  - [Agave](#agave)
   - [Gohu](#gohu)
 - [nerd-fonts](#nerd-fonts)
   - [pixel](#pixel)
@@ -27,6 +28,11 @@
 > - [ArrowType](https://www.arrowtype.com/)
 
 ## highly recommended
+
+> [!TIP]
+> - `fontPath`:
+>   - osx: `~/Library/Fonts` or `/System/Fonts`
+>   - Linux: `~/.fonts` or `~/.local/share/fonts` or `/usr/share/fonts`
 
 ### Monaco
 
@@ -83,6 +89,26 @@ $ fc-cache -f -v
 
 ![ComicMonoNF bash](../screenshot/tools/fonts/bash-ComicMonoNF.png)
 
+### [Agave](https://github.com/blobject/agave)
+
+> [!NOTE|label:references:]
+> - [Agave Nerd Font Mono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Agave)
+
+- [AgaveNerdFontMono-Regular.ttf](https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
+- [AgaveNerdFontMono-Bold.ttf](https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Bold.ttf)
+
+```bash
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Bold.ttf
+```
+
+![Agave NF Mono](../screenshot/vim/vim-airline-ale-agave.png)
+
+![AgaveNFM bash](../screenshot/tools/fonts/bash-AgaveNFM.png)
+
+
 ### [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
 ```bash
 $ curl --create-dirs -O --output-dir "${fontsPath}" \
@@ -106,6 +132,10 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > - [download](https://www.nerdfonts.com/font-downloads)
 > - [Karmenzind/monaco-nerd-fonts](https://github.com/Karmenzind/monaco-nerd-fonts)
 > - [xtevenx/ComicMonoNF](https://github.com/xtevenx/ComicMonoNF)
+> - [#1103 What does --variable-width-glyphs do now?](https://github.com/ryanoasis/nerd-fonts/discussions/1103#discussioncomment-4852120)
+>   - `Nerd Font Mono` (a strictly monospaced variant, created with `--mono`)
+>   - `Nerd Font` (a somehow monospaced variant, maybe)
+>   - `Nerd Font Propo` (a not monospaced variant, created with `--variable-width-glyphs`)
 
 - [AgaveNerdFontMono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
   ```bash
