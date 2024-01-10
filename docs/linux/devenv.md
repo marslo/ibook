@@ -1,12 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [system](#system)
-  - [timezone setup](#timezone-setup)
-  - [motd upgrade disable](#motd-upgrade-disable)
-  - [set service auto-startup](#set-service-auto-startup)
 - [application](#application)
-  - [jdk and JAVA_HOME](#jdk-and-java_home)
+  - [python](#python)
+  - [vim](#vim)
+  - [java](#java)
   - [groovy](#groovy)
   - [gcc](#gcc)
   - [glibc](#glibc)
@@ -22,46 +20,15 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# system
-## timezone setup
-```bash
-$ sudo dpkg-reconfigure tzdata
-```
-
-## motd upgrade disable
-```bash
-$ sudo mv /etc/update-motd.d/90-updates-available /etc/update-motd.d/org.90-updates-available.org
-```
-
-## set service auto-startup
-```bash
-$ sudo sysv-rc-config jenkins on
-$ sudo sysv-rc-conf --list | grep jenkins
-jenkins      0:off      1:off   2:on    3:on    4:on    5:on    6:off
-$ sudo update-rc.d jenkins enable
-update-rc.d: warning:  start runlevel arguments (none) do not match jenkins Default-Start values (2 3 4 5)
-update-rc.d: warning:  stop runlevel arguments (none) do not match jenkins Default-Stop values (0 1 6)
- Enabling system startup links for /etc/init.d/jenkins ...
- Removing any system startup links for /etc/init.d/jenkins ...
-   /etc/rc0.d/K20jenkins
-   /etc/rc1.d/K20jenkins
-   /etc/rc2.d/S20jenkins
-   /etc/rc3.d/S20jenkins
-   /etc/rc4.d/S20jenkins
-   /etc/rc5.d/S20jenkins
-   /etc/rc6.d/K20jenkins
- Adding system startup for /etc/init.d/jenkins ...
-   /etc/rc0.d/K20jenkins -> ../init.d/jenkins
-   /etc/rc1.d/K20jenkins -> ../init.d/jenkins
-   /etc/rc6.d/K20jenkins -> ../init.d/jenkins
-   /etc/rc2.d/S20jenkins -> ../init.d/jenkins
-   /etc/rc3.d/S20jenkins -> ../init.d/jenkins
-   /etc/rc4.d/S20jenkins -> ../init.d/jenkins
-   /etc/rc5.d/S20jenkins -> ../init.d/jenkins
-```
-
 # application
-## jdk and JAVA_HOME
+## [python](../programming/python/config.html#install-from-source-code)
+## [vim](../vim/install.html)
+
+* [osx](../vim/install.html#osx)
+* [linux](../vim/install.html#linux)
+* [windows](../vim/install.html#windows)
+
+## java
 * download jdk 1.8.0_121
   ```bash
   $ mkdir -p /opt/java && cd /opt/java
@@ -494,4 +461,3 @@ $ sudo mysql_secure_installation
 $ sudo apt install vnc4server
 $ sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
 ```
-

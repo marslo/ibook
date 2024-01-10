@@ -3,7 +3,8 @@
 
 - [formatting](#formatting)
   - [padding](#padding)
-  - [padRight](#padright)
+    - [solution](#solution)
+    - [padRight](#padright)
   - [`.join()` alike in shell](#join-alike-in-shell)
   - [show all line numbers in a file](#show-all-line-numbers-in-a-file)
   - [get the common part](#get-the-common-part)
@@ -22,14 +23,13 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## formatting
-
-### padding
+# formatting
+## padding
 
 > [!NOTE|label:references:]
 > - [Padding characters in printf](https://stackoverflow.com/questions/4409399/padding-characters-in-printf)
 
-#### theory
+### solution
 - `printf`
   ```bash
   $ printf "%-50s%s\n" '123456'  '[STATUS]'
@@ -105,18 +105,24 @@ echo '123 : [foo] : 30'        | padRight
 # 123  ..........................  [foo]
 ```
 
-#### example
-```bash
-pad=$(printf '%0.1s' "-"{1..60})
-padlength=40
-string2='bbbbbbb'
-for string1 in a aa aaaa aaaaaaaa; do
-  printf '%s' "$string1"
-  printf '%*.*s' 0 $((padlength - ${#string1} - ${#string2} )) "$pad"
-  printf '%s\n' "$string2"
-  string2=${string2:1}
-done
-```
+- or
+  ```bash
+  pad=$(printf '%0.1s' "-"{1..60})
+  padlength=40
+  string2='bbbbbbb'
+  for string1 in a aa aaaa aaaaaaaa; do
+    printf '%s' "$string1"
+    printf '%*.*s' 0 $((padlength - ${#string1} - ${#string2} )) "$pad"
+    printf '%s\n' "$string2"
+    string2=${string2:1}
+  done
+
+  # result
+  # a--------------------------------bbbbbbb
+  # aa--------------------------------bbbbbb
+  # aaaa-------------------------------bbbbb
+  # aaaaaaaa----------------------------bbbb
+  ```
 
 - or
   ```bash
@@ -134,8 +140,7 @@ done
   # VeryLongProcessName ------------------------------ [UP]
   ```
 
-
-### `.join()` alike in shell
+## `.join()` alike in shell
 - [`paste`](https://stackoverflow.com/a/6539865/2940319)
   ```bash
   $ seq 1 100 | paste -sd ':' -
@@ -164,8 +169,7 @@ done
   Applications, Desktop, Documents, Downloads, Library, Movies, Music, Pictures, Public,
   ```
 
-
-### show all line numbers in a file
+## show all line numbers in a file
 - `cat`
   ```bash
   $ sudo cat /etc/passwd | wc -l
@@ -178,7 +182,11 @@ done
   36
   ```
 
-### get the common part
+## get the common part
+
+> [!NOTE|label:see also:]
+> - [iMarslo: comm](../../cheatsheet/character/character.html#comm)
+
 ```bash
 $ cat a.txt
 1
@@ -195,15 +203,17 @@ $ cat common
 3
 ```
 
-
-### revert a string
+## revert a string
 ```bash
 $ echo linux | rev
 xunil
 ```
 
+## format a file to a table
 
-### format a file to a table
+> [!NOTE|label:see also:]
+> - [iMarslo: column](../../cheatsheet/character/character.html#column)
+
 ```bash
 $ cat a_b
 1:1
@@ -215,8 +225,13 @@ $ column -tns: a_b
 3  3
 ```
 
+## convert multiple line into one
 
-### convert multiple line into one
+
+> [!NOTE|label:see also:]
+> - [iMarslo: single line to multiple lines](../../cheatsheet/character/character.html#single-line-to-multiple-lines)
+> - [iMarlso: combine every 2 lines](../../cheatsheet/character/character.html#combine-every-2-lines)
+
 ```bash
 $ cat a
 1
@@ -230,8 +245,8 @@ $ cat a | xargs
 1 2 3 4 5
 ```
 
-## others
-### file ending crlf or lf
+# others
+## file ending crlf or lf
 - `cat -e`
   ```bash
   $ cat -e <file>
@@ -257,7 +272,7 @@ $ cat a | xargs
   windows.txt: ASCII text
   ```
 
-### insert into the first line
+## insert into the first line
 ```bash
 $ cat demo.file
 abc
@@ -269,12 +284,12 @@ abc
 efg
 ```
 
-### [find and replace](https://unix.stackexchange.com/a/36805/29178)
+## [find and replace](https://unix.stackexchange.com/a/36805/29178)
 ```bash
 $ find . -type f -name '*.md' -exec sed -i 's/<string1>/<string2>/g' {} +
 ```
 
-### find and copy
+## find and copy
 ```bash
 source="/Users/marslo/test/logs"
 target="/Users/marslo/test/logs/targetet"
@@ -284,7 +299,7 @@ while IFS= read -r -d '' logFile; do
 done < <(find "${source}" -maxdepth 1 -name '*.log' -print0)
 ```
 
-### get the count of a word in a file
+## get the count of a word in a file
 ```bash
 $ cat /etc/passwd | grep marslo -o | wc -l
 3
@@ -292,13 +307,13 @@ $ cat /etc/passwd | grep marslo -o | wc -l
 $ find . -name file.txt | xargs -e grep "token" -o | wc -l
 ```
 
-### print 50th char
+## print 50th char
 ```bash
 $ awk 'BEGIN{while (a++<50) s=s "-"; print s}'
 --------------------------------------------------
 ```
 
-### show last n lines in a file
+## show last n lines in a file
 ```bash
 $ tail /etc/passwd -n 3
 saned:x:115:123::/home/saned:/bin/false
@@ -311,7 +326,7 @@ mysql:x:1001:1001::/home/mysql:/bin/sh
 
 
 
-## [shell parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+# [shell parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
 
 ```bash
 $ x='aabbcc'

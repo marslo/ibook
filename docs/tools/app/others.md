@@ -86,8 +86,7 @@ bingo!
   ![tabset --pick](../../screenshot/osx/tabset--pick.png)
 
   ```bash
-  function cpick ()
-  {
+  function cpick() {
     if test tabset; then
       rgb=$(tabset -p | sed -nr "s:.*rgb\(([^)]+)\).*$:\1:p");
       hexc=$(for c in $(echo "${rgb}" | sed -re 's:,: :g'); do printf '%02x' "$c"; done);
@@ -114,4 +113,3 @@ bingo!
   ```
 
   ![terminal-colors](../../screenshot/osx/terminal-color.png)
-

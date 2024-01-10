@@ -1,6 +1,9 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [timezone](#timezone)
+  - [timezone setup](#timezone-setup)
+  - [tzdata installation with noninteractive](#tzdata-installation-with-noninteractive)
 - [date](#date)
   - [epoch](#epoch)
   - [timestamps](#timestamps)
@@ -8,7 +11,7 @@
   - [IOS 8601](#ios-8601)
   - [rfc-3339](#rfc-3339)
   - [utc](#utc)
-  - [timezone](#timezone)
+  - [timezone](#timezone-1)
   - [common formats](#common-formats)
 - [convert](#convert)
   - [timestamps to epoch](#timestamps-to-epoch)
@@ -24,6 +27,77 @@
 > - [* imarslo: groovy time ](../../programming/groovy/time.html)
 > - [https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time):
 {% endhint %}
+
+## timezone
+### timezone setup
+```bash
+$ sudo dpkg-reconfigure tzdata
+```
+
+### tzdata installation with noninteractive
+
+> [!NOTE|label:references:]
+> - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
+
+```bash
+# in bash
+$ DEBIAN_FRONTEND=noninteractive sudo apt-get install -y tzdata
+
+# or
+$ export DEBIAN_FRONTEND=noninteractive
+$ sudo apt install -y tzdata
+
+# or
+$ echo 'tzdata tzdata/Areas select Europe'       | debconf-set-selections
+$ echo 'tzdata tzdata/Zones/Europe select Paris' | debconf-set-selections
+$ DEBIAN_FRONTEND="noninteractive" sudo apt install -y tzdata
+
+# or
+$ sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+$ export DEBIAN_FRONTEND=noninteractive
+$ sudo apt-get install -y tzdata
+$ sudo dpkg-reconfigure --frontend noninteractive tzdata
+```
+
+- or
+
+  > [!NOTE|label:references:]
+  > - [Cingulata/Dockerfile.bfv](https://github.com/CEA-LIST/Cingulata/blob/157b4c66441e4e253e06a0abe1508976605100d8/Dockerfile.bfv#L12)
+
+  ```
+  $ sudo ln -snf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime
+  $ sudo apt install -y tzdata
+  ```
+
+- or in dockerfile
+  ```dockerfile
+  RUN apt-get update \
+      && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+  ```
+
+- or ENV in dockerfile
+
+  > [!NOTE|label:references:]
+  > - [setting it via ENV should be actively discouraged](https://github.com/moby/moby/issues/4032#issuecomment-34597177)
+
+  ```dockerfile
+  ENV DEBIAN_FRONTEND noninteractive
+  RUN apt-get update \
+      && apt-get install -y --no-install-recommends tzdata
+  ```
+
+- or `ARG` in dockerfile
+
+  > [!NOTE|label:references:]
+  > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/66327069/2940319)
+
+  ```dockerfile
+  from ubuntu:bionic
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN apt-get update && apt-get install -y tzdata
+  RUN unlink /etc/localtime
+  RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
+  ```
 
 ## date
 ### epoch

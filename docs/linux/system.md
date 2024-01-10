@@ -53,7 +53,8 @@
   - [none of the providers can be installed in `dnf upgrade`](#none-of-the-providers-can-be-installed-in-dnf-upgrade)
   - [ls: Argument list too long](#ls-argument-list-too-long)
 - [others](#others-1)
-  - [cockpit](#cockpit)
+  - [motd](#motd)
+  - [motd](#motd-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -2249,7 +2250,26 @@ $ cat /etc/security/limits.conf
 ```
 
 ## others
-### cockpit
+### motd
+
+### motd
+```bash
+$ sudo chmod -x /etc/update-motd.d/00-header \
+                /etc/update-motd.d/10-help-text \
+                /etc/update-motd.d/50-motd-news
+
+$ cat << 'EOF' > /etc/landscape/client.conf
+[sysinfo]
+exclude_sysinfo_plugins = Temperature, LandscapeLink
+EOF
+```
+
+- motd upgrade disable
+  ```bash
+  $ sudo mv /etc/update-motd.d/90-updates-available /etc/update-motd.d/org.90-updates-available.org
+  ```
+
+#### cockpit
 ```bash
 $ sudo systemctl enable --now cockpit.socket
 Created symlink /etc/systemd/system/sockets.target.wants/cockpit.socket → /usr/lib/systemd/system/cockpit.socket.

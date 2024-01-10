@@ -4,12 +4,11 @@
 - [charset](#charset)
 - [encryption](#encryption)
   - [`base64`](#base64)
-- [conversion](#conversion)
-  - [single line to multiple lines](#single-line-to-multiple-lines)
 - [show](#show)
   - [align](#align)
   - [numfmt](#numfmt)
 - [combinations](#combinations)
+  - [single line to multiple lines](#single-line-to-multiple-lines)
   - [combine every 2 lines](#combine-every-2-lines)
   - [combine every 3 lines](#combine-every-3-lines)
 - [format output](#format-output)
@@ -17,14 +16,14 @@
   - [comm](#comm)
   - [column](#column)
 - [get next line by the pattern](#get-next-line-by-the-pattern)
-- [get lines in 2 patterns](#get-lines-in-2-patterns)
+- [get lines between 2 patterns](#get-lines-between-2-patterns)
   - [awk](#awk)
   - [sed](#sed)
   - [with empty line](#with-empty-line)
-  - [get first matching pattern](#get-first-matching-pattern)
-  - [get second matching pattern](#get-second-matching-pattern)
+  - [return first matching pattern](#return-first-matching-pattern)
+  - [return second matching pattern](#return-second-matching-pattern)
 - [`xargs`](#xargs)
-  - [complex comamnds with xargs](#complex-comamnds-with-xargs)
+  - [complex commands with xargs](#complex-commands-with-xargs)
   - [multiple move](#multiple-move)
   - [subset of arguments](#subset-of-arguments)
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
@@ -102,108 +101,13 @@ bWFyc2xvCg==
   $ echo "bWFyc2xvCg==" | base64 --decode
   marslo
   ```
-## conversion
-
-### single line to multiple lines
-
-> [!TIP]
-> ```bash
-> $ echo 'a b c'
-> a b c
-> ```
-
-- `xargs -n<x>`
-  ```bash
-  $ echo 'a b c' | xargs -n1
-  a
-  b
-  c
-
-  $ echo {a..c}.{1..2} | xargs -n1 | xargs -I{} echo -{}-
-  -a.1-
-  -a.2-
-  -b.1-
-  -b.2-
-  -c.1-
-  -c.2-
-  ```
-
-- [`fmt`](https://unix.stackexchange.com/a/170008/29178)
-  ```bash
-  $ echo 'a b c' | fmt -1
-  a
-  b
-  c
-
-  $ echo {a..c}.{1..2} | fmt -1 | xargs -I{} echo -{}-
-  -a.1-
-  -a.2-
-  -b.1-
-  -b.2-
-  -c.1-
-  -c.2-
-  ```
-
-- [`awk`](https://unix.stackexchange.com/a/169996/29178)
-  ```bash
-  $ echo 'a b c' | awk '{ OFS=RS; $1=$1 }1'
-  a
-  b
-  c
-  ```
-
-- `tr`
-  ```bash
-  $ echo 'a b c' | tr -s ' ' '\n'
-  a
-  b
-  c
-  ```
-
-- [`printf`](https://unix.stackexchange.com/a/428312/29178)
-  ```bash
-  $ printf '%s\n' a b c
-  a
-  b
-  c
-  ```
-
-#### execute commands from file
-- [create files](https://linuxize.com/post/linux-xargs-command/)
-
-  > [!TIP]
-  > - precondition <br>
-  >   ```bash
-  >   $ cat a.txt
-  >   a b c
-  >   ```
-
-  ```bash
-  $ echo 'a b c' | xargs -n1 -t touch
-  touch a
-  touch b
-  touch c
-
-  $ echo 'a b c' | xargs -n1 -p touch
-  touch a?...y
-  touch b?...y
-  touch c?...y
-  ```
-
-  > ```bash
-  > -t, --verbose
-  >           Print the command line on the standard error output before executing it.
-  > -p, --interactive
-  >           Prompt  the  user  about  whether to run each command line and read a line from the terminal.
-  >           Only run the command line if the response starts with `y' or `Y'.  Implies -t.
-  > -I replace-str
-  >           Replace occurrences of replace-str in the initial-arguments with names read from standard in-
-  >           put.  Also, unquoted blanks do not terminate input items; instead the separator is  the  new-
-  >           line character.  Implies -x and -L 1.
-  > ```
 
 ## show
 ### align
+
+> [!NOTE|label:see also]
+> - [iMarslo: padRight](../../linux/util/chars.html#padright)
+
 ```bash
 # right-align
 $ printf  _"%10s"_ "foobar"
@@ -493,7 +397,7 @@ _foobar    _
   100M bottles of beer on the wall
   ```
 
-- convert foramt
+- convert format
   ```bash
   $ echo 1G | numfmt --from=si
   1000000000
@@ -566,6 +470,104 @@ _foobar    _
   ```
 
 ## combinations
+### single line to multiple lines
+
+> [!TIP]
+> ```bash
+> $ echo 'a b c'
+> a b c
+> ```
+
+- `xargs -n<x>`
+  ```bash
+  $ echo 'a b c' | xargs -n1
+  a
+  b
+  c
+
+  $ echo {a..c}.{1..2} | xargs -n1 | xargs -I{} echo -{}-
+  -a.1-
+  -a.2-
+  -b.1-
+  -b.2-
+  -c.1-
+  -c.2-
+  ```
+
+- [`fmt`](https://unix.stackexchange.com/a/170008/29178)
+  ```bash
+  $ echo 'a b c' | fmt -1
+  a
+  b
+  c
+
+  $ echo {a..c}.{1..2} | fmt -1 | xargs -I{} echo -{}-
+  -a.1-
+  -a.2-
+  -b.1-
+  -b.2-
+  -c.1-
+  -c.2-
+  ```
+
+- [`awk`](https://unix.stackexchange.com/a/169996/29178)
+  ```bash
+  $ echo 'a b c' | awk '{ OFS=RS; $1=$1 }1'
+  a
+  b
+  c
+  ```
+
+- `tr`
+  ```bash
+  $ echo 'a b c' | tr -s ' ' '\n'
+  a
+  b
+  c
+  ```
+
+- [`printf`](https://unix.stackexchange.com/a/428312/29178)
+  ```bash
+  $ printf '%s\n' a b c
+  a
+  b
+  c
+  ```
+
+#### execute commands from file
+- [create files](https://linuxize.com/post/linux-xargs-command/)
+
+  > [!TIP]
+  > - precondition <br>
+  >   ```bash
+  >   $ cat a.txt
+  >   a b c
+  >   ```
+
+  ```bash
+  $ echo 'a b c' | xargs -n1 -t touch
+  touch a
+  touch b
+  touch c
+
+  $ echo 'a b c' | xargs -n1 -p touch
+  touch a?...y
+  touch b?...y
+  touch c?...y
+  ```
+
+  > ```bash
+  > -t, --verbose
+  >           Print the command line on the standard error output before executing it.
+  > -p, --interactive
+  >           Prompt  the  user  about  whether to run each command line and read a line from the terminal.
+  >           Only run the command line if the response starts with `y' or `Y'.  Implies -t.
+  > -I replace-str
+  >           Replace occurrences of replace-str in the initial-arguments with names read from standard in-
+  >           put.  Also, unquoted blanks do not terminate input items; instead the separator is  the  new-
+  >           line character.  Implies -x and -L 1.
+  > ```
+
 ### combine every 2 lines
 
 > [!NOTE|label:references:]
@@ -987,16 +989,16 @@ $ cat a.txt
   5e
   ```
 
-## get lines in 2 patterns
+## get lines between 2 patterns
 
-> reference:
+> [!NOTE|label:reference:]
 > - [How to print lines between two patterns, inclusive or exclusive (in sed, AWK or Perl)?](https://stackoverflow.com/a/58568587/2940319)
 > - [Print lines between PAT1 and PAT2](https://stackoverflow.com/a/55773449/2940319)
 > - [How to select lines between two marker patterns which may occur multiple times with awk/sed](https://stackoverflow.com/a/17988834/2940319)
 > - [Print lines between (and excluding) two patterns](https://unix.stackexchange.com/a/430154/29178)
 >
-> use case:
-> - [* imarslo : get first matching patten ( for CERTIFICATE )](./sed.html#get-first-matching-patten--for-certificate-)
+> - see also
+>   - [* imarslo : get first matching patten ( for CERTIFICATE )](./sed.html#get-first-matching-patten--for-certificate-)
 
 > [!TIP]
 > sample data:
@@ -1110,7 +1112,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 6f
 ```
 
-### get first matching pattern
+### return first matching pattern
 
 {% hint style='tip' %}
 > references:
@@ -1180,7 +1182,7 @@ first paragraph
 -----END CERTIFICATE-----
 ```
 
-### get second matching pattern
+### return second matching pattern
 
 {% hint style='tip' %}
 > references:
@@ -1223,7 +1225,7 @@ second paragraph
 {% endhint %}
 
 
-### complex comamnds with xargs
+### complex commands with xargs
 
 > [!NOTE|label:references:]
 > - [using xargs with output piped to awk throws syntax error](https://stackoverflow.com/a/61665869/2940319)
@@ -1335,7 +1337,7 @@ $ find . -maxdepth 1 ! -path . -type d -print0 |
        }'
 ```
 
-#### ping multiple ips
+#### ping multiple IPs
 
 > [!TIP]
 > ```bash
@@ -1428,7 +1430,7 @@ cfssljson
   ```
 
 ### `exec` and `sed`
-- change bunches ip address
+- change bunches IP address
   ```bash
   $ find ${JENKINS_HOME}/jobs \
          -type f \
@@ -1839,7 +1841,7 @@ aabaa
 ### check the params valid
 
 {% hint style='tip' %}
-available params should be contained by 'iwfabcem'
+> available params should be contained by 'iwfabcem'
 {% endhint %}
 
 ```bash
@@ -1853,6 +1855,7 @@ done
 
 ## insert new line
 - insert right after the second match string
+
 {% codetabs name="original", type="bash" -%}
 DCR
 DCR
@@ -1871,7 +1874,7 @@ $ echo -e "DCR\nDCR\nDCR" | awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2)
 ## write a file without indent space
 ```bash
 $ sed -e 's:^\s*::' > ~/file-without-indent-space.txt < <(echo "items.find ({
-      \"repo\": \"my-repo\",
+      \"repo\": \"repo-name\",
       \"type\" : \"folder\" ,
       \"depth\" : \"1\",
       \"created\" : { \"\$before\" : \"4mo\" }
@@ -1880,7 +1883,7 @@ $ sed -e 's:^\s*::' > ~/file-without-indent-space.txt < <(echo "items.find ({
 
 $ cat ~/file-without-indent-space.txt
 items.find ({
-"repo": "my-repo",
+"repo": "repo-name",
 "type" : "folder" ,
 "depth" : "1",
 "created" : { "$before" : "4mo" }

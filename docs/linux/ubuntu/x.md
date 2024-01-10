@@ -1,11 +1,14 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [get screen solution](#get-screen-solution)
 - [screen sharing](#screen-sharing)
-  - [backup and restore config](#backup-and-restore-config)
   - [setup screen sharing](#setup-screen-sharing)
-    - [reset VNC password](#reset-vnc-password)
+  - [start x server](#start-x-server)
+  - [backup and restore config](#backup-and-restore-config)
     - [read all conf](#read-all-conf)
+  - [reset vnc password](#reset-vnc-password)
+  - [check using wayland or xorg](#check-using-wayland-or-xorg)
   - [start application remotely](#start-application-remotely)
 - [gdm](#gdm)
   - [gnome-shell](#gnome-shell)
@@ -16,9 +19,9 @@
     - [pstree](#pstree)
   - [ps](#ps)
 - [Wayland](#wayland)
+  - [wayland known error](#wayland-known-error)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 > [!NOTE|label:references:]
 > - [GDM Reference Manual](https://help.gnome.org/admin/gdm/stable/index.html.en)
@@ -28,7 +31,65 @@
 > - [Vino. The Remote Desktop Project](https://people.gnome.org/~markmc/remote-desktop.html)
 > - [VND/Servers](https://help.ubuntu.com/community/VNC/Servers)
 
+# get screen solution
+```bash
+$ xrandr --verbose
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 8192 x 8192
+XWAYLAND0 connected 1920x1080+0+0 (0x22) normal (normal left inverted right x axis y axis) 480mm x 270mm
+    Identifier: 0x21
+    Timestamp:  3807
+    Subpixel:   unknown
+    Gamma:      1.0:1.0:1.0
+    Brightness: 0.0
+    Clones:
+    CRTC:       0
+    CRTCs:      0
+    Transform:  1.000000 0.000000 0.000000
+                0.000000 1.000000 0.000000
+                0.000000 0.000000 1.000000
+               filter:
+  1920x1080 (0x22) 173.000MHz -HSync +VSync *current +preferred
+        h: width  1920 start 2048 end 2248 total 2576 skew    0 clock  67.16KHz
+        v: height 1080 start 1083 end 1088 total 1120           clock  59.96Hz
+```
+
 # screen sharing
+## setup screen sharing
+```bash
+#!/usr/bin/env bash
+export DISPLAY=:0
+read -e -p "VNC Password: " -i "ubuntu" password
+dconf write /org/gnome/desktop/remote-access/enabled true
+dconf write /org/gnome/desktop/remote-access/prompt-enabled false
+dconf write /org/gnome/desktop/remote-access/authentication-methods "['vnc']"
+dconf write /org/gnome/desktop/remote-access/require-encryption false08/03/2018
+dconf write /org/gnome/desktop/remote-access/vnc-password \"\'$(echo -n $password | base64)\'\"
+dconf dump /org/gnome/desktop/remote-access/
+## sudo service lightdm restart
+```
+
+- or
+  ```bash
+  $ read -e -p "VNC Password: " -i "ubuntu" VNCPASSWORD
+  $ dconf write /org/gnome/desktop/remote-access/enabled true
+  $ dconf write /org/gnome/desktop/remote-access/authentication-methods "['vnc']"
+  $ dconf write /org/gnome/desktop/remote-access/prompt-enabled false
+  $ dconf write /org/gnome/desktop/remote-access/require-encryption false
+  $ dconf write /org/gnome/desktop/remote-access/vnc-password \"\'$(echo -n $VNCPASSWORD | base64)\'\"
+  $ sudo service lightdm restart
+  ```
+
+- or
+  ```bash
+  $ vino-preference
+  $ dconf-editor
+  ```
+
+## start x server
+```bash
+$ export DISPLAY=:0
+$ /usr/lib/vino/vino-server --display=:0 &
+```
 
 ## backup and restore config
 ```bash
@@ -40,23 +101,6 @@ vnc-password='bWFyc2xv'
 authentication-methods=['vnc']
 prompt-enabled=false
 $ dconf load /org/gnome/desktop/remote-access/ < ubuntu1804_remoteaccess
-```
-
-## setup screen sharing
-```bash
-$ read -e -p "VNC Password: " -i "ubuntu" VNCPASSWORD
-$ dconf write /org/gnome/desktop/remote-access/enabled true
-$ dconf write /org/gnome/desktop/remote-access/authentication-methods "['vnc']"
-$ dconf write /org/gnome/desktop/remote-access/prompt-enabled false
-$ dconf write /org/gnome/desktop/remote-access/require-encryption false
-$ dconf write /org/gnome/desktop/remote-access/vnc-password \"\'$(echo -n $VNCPASSWORD | base64)\'\"
-$ sudo service lightdm restart
-```
-
-### reset VNC password
-```bash
-$ echo -n "marslo" | base64
-bWFyc2xv
 ```
 
 ### read all conf
@@ -80,6 +124,28 @@ mailto:  -->
 lock-screen-on-disconnect:   -->
 vnc-password:    --> 'bWFyc2xv'
 ```
+
+
+## [reset vnc password](https://access.redhat.com/solutions/346033)
+```bash
+$ echo -n 'awesome' | base64
+$ gconftool-2 -s -t string /desktop/gnome/remote_access/vnc_password $(echo -n "<YOURPASSWORD>" | base64)
+$ gconftool-2 --type string --set /desktop/gnome/remote_acess/vnc_password '123456'
+```
+- or
+  ```bash
+  $ echo -n "marslo" | base64
+  bWFyc2xv
+  ```
+
+## check using wayland or xorg
+```bash
+$ echo $XDG_SESSION_TYPE
+```
+
+- Ubuntu: Wayland (Wayland)
+- Ubuntu on Xorg: Xorg (X11)
+
 
 ## start application remotely
 ```bash
@@ -278,3 +344,15 @@ devops    4017  0.0  0.4 118225468 32448 tty1  Sl+  17:00   0:00              \_
 <!--endsec-->
 
 # [Wayland](https://wiki.archlinux.org/index.php/Wayland)
+
+## [wayland known error](https://askubuntu.com/a/967538)
+```bash
+cat <<EOF | sudo tee /etc/xdg/autostart/xhost.desktop
+[Desktop Entry]
+Name=xhost
+Comment=Fix graphical root applications
+Exec="xhost +si:localuser:root"
+Terminal=false
+Type=Application
+EOF
+```

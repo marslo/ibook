@@ -33,6 +33,8 @@
 > - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
 > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
 
+@DEPRECATED
+
 ## pre-config
 ### dependencies installation
 ```bash
