@@ -23,6 +23,10 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='warning' %}
+@DEPRECATED
+{% endhint %}
+
 {% hint style='tip' %}
 > reference:
 > - [ARCH NetWork Configuration](https://wiki.archlinux.org/index.php/Network_configuration#Change_device_name)

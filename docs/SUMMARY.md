@@ -55,7 +55,6 @@
   * [ansible](devops/ansible.md)
   * [ssh](devops/ssh.md)
   * [vault](devops/vault.md)
-  * [network](devops/network.md)
   * [nginx&cert](devops/nginx&cert.md)
   * [artifactory](artifactory/artifactory.md)
     * [api](artifactory/api.md)
