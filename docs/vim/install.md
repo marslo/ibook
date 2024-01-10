@@ -32,10 +32,14 @@
 > - [Build Vim in Windows with Cygwin](https://vim.fandom.com/wiki/Build_Vim_in_Windows_with_Cygwin)
 > - [joshukraine/compile-vim.md](https://gist.github.com/joshukraine/b9085aeb3dd762cf1d1e1c356974032f)
 > - [Building VIM from source code](https://developpaper.com/building-vim-from-source-code/)
-> - [travis CI : vim](https://app.travis-ci.com/github/vim/vim)
 > - [configurable.nix](https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vim/configurable.nix)
 > - [How can I fix this error when making vim on Fedora 23](https://stackoverflow.com/q/34975039/2940319)
 {% endhint %}
+
+> [!TIP|label:official CI pipelines]
+> - [travis CI : vim](https://app.travis-ci.com/github/vim/vim) | [build: patch 8.2.2966](https://app.travis-ci.com/github/vim/vim/builds/228443016/config)
+> - [cirrus-ci : vim](https://cirrus-ci.com/github/vim) | [builds](https://cirrus-ci.com/github/vim/vim) | [#13261 CI: re-enable Cirrus CI](https://github.com/vim/vim/pull/13261)
+> - [Github Actions: workflow](https://github.com/vim/vim/actions/workflows/ci.yml) | [workflow configure file](https://github.com/vim/vim/actions/runs/7473188644/workflow) | [build log (macos huge)](https://github.com/vim/vim/actions/runs/7473188644/job/20336876599)
 
 ## OSX
 
