@@ -60,7 +60,7 @@
 # usage
 ## [`Tabularize`](https://github.com/godlygeek/tabular)
 
-> [!TIP]
+> [!TIP|label:references:]
 > - [Tabular cheatsheet](https://devhints.io/tabular)
 > - [align with first space](https://stackoverflow.com/a/15915827/2940319) : `/^\s*\S\+\zs/l0c1l0`
 > - [align the second `=` to left](https://stackoverflow.com/a/5424784/2940319) : `/^\(.\{-}\zs=\)\{2}/l1l0`
@@ -1051,6 +1051,9 @@ augroup END
       > - [How to fix npm throwing error without sudo](https://stackoverflow.com/a/18414606)
       > - [Don’t use `sudo` with `npm`](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-5711d2726aa3)
       > - [Ubuntu setup](https://innovativeinnovation.github.io/ubuntu-setup/)
+      > - [Full Installation Guide](https://github.com/ycm-core/YouCompleteMe/wiki/Full-Installation-Guide)
+      >   - C# support: install [Mono on non-Windows platforms](http://www.mono-project.com/docs/getting-started/install/). Navigate to YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn. Download an [Omnisharp-Roslyn release archive](https://github.com/OmniSharp/omnisharp-roslyn/releases) and extract the archive to `YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn`.
+      >   - Java support: install JDK8 (version 8 required). Download a binary release of eclipse.jdt.ls and extract it to YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/repository
 
       ```bash
       # c/c++
@@ -1089,6 +1092,7 @@ augroup END
   - centos
 
     > [!NOTE]
+    > - [* YCM: Full installation on CentOS](https://github.com/ycm-core/YouCompleteMe/wiki/Full-installation-on-CentOS)
     > - [#2756: CMake Error,no libclang found](https://github.com/ycm-core/YouCompleteMe/issues/2756)
     > - [Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/html/using_llvm_13.0.1_toolset/assembly_llvm#proc_installing-comp-toolset_assembly_llvm)
     > - [PDF: Red Hat Developer Tools 1: Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/pdf/using_llvm_13.0.1_toolset/red_hat_developer_tools-1-using_llvm_13.0.1_toolset-en-us.pdf)
@@ -1136,17 +1140,22 @@ augroup END
       v12.22.5
       ```
 
+  - windows
+
+    > [!NOTE|label:references:]
+    > - [* YCM: Windows Installation Guide for Unix‐like Environments](https://github.com/ycm-core/YouCompleteMe/wiki/Windows-Installation-Guide-for-Unix%E2%80%90like-Environments)
+
 - install with `install.py`
   ```bash
   # full install
-  $ cd ~/.vim/bundle/YouCompleteMe
+  $ cd ~/.vim/plugged/YouCompleteMe
   $ python3 install.py --all --verbose
   ```
 
   - with `--system-libclang`
     ```bash
     $ brew install llvm
-    $ cd ~/.vim/bundle/YouCompleteMe
+    $ cd ~/.vim/plugged/YouCompleteMe
     $ python3 install.py --system-libclang --all --verbose
 
     $ cat ~/.vimrc
@@ -1157,7 +1166,7 @@ augroup END
 
 - install with `install.sh`
   ```bash
-  $ cd ~/.vim/bundle/YouCompleteMe
+  $ cd ~/.vim/plugged/YouCompleteMe
   $ ./install.py --all --verbose
 
   # or
@@ -1368,7 +1377,7 @@ augroup END
 
   <!--sec data-title="deprecated" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
-  $ cd ~/.vim/bundle/lsp-examples
+  $ cd ~/.vim/plugged/lsp-examples
   $ python install.py --enable-cmake \
                       --enable-python \
                       --enable-viml \
@@ -1384,7 +1393,7 @@ augroup END
   - sample vimrc
     ```bash
     """ ycm lsp
-    let g:ycm_lsp_dir = '~/.vim/bundle/lsp-examples'
+    let g:ycm_lsp_dir = '~/.vim/plugged/lsp-examples'
     let s:pip_os_dir  = 'bin'
     let g:ycm_language_server = [
       \   { 'name': 'docker',
@@ -2042,7 +2051,7 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16
 
     1. ultimate solution: using `YouCompleteMe/third_party/ycmd` replace the `tabnine-vim/third_party/ycmd`
       ```bash
-      $ cd ~/.vim/bundle
+      $ cd ~/.vim/plugged
       $ mv tabnine-vim/third_party/ycmd{,.bak}
       $ cp -r YouCompleteMe/third_party/ycmd  tabnine-vim/third_party/
 
@@ -2465,7 +2474,7 @@ YouCompleteMe/third_party/ycmd/third_party/eclipse.jdt.ls/target/cache/clangd-16
 > - [#2874 : "ycmd server SHUTDOWN" error on macOS High Sierra](https://github.com/ycm-core/YouCompleteMe/issues/2874)
 
 ```bash
-$ cd ~/.vim/bundle/YouCompleteMe/third_party/ycmd/
+$ cd ~/.vim/plugged/YouCompleteMe/third_party/ycmd/
 $ cp ycmd/default_settings.json .
 $ python ycmd --options_file default_settings.json
 2023-10-13 01:42:34,337 - INFO - Completion config: 50, detailing -1 candiates
@@ -2498,7 +2507,7 @@ serving on http://1.0.0.127.in-addr.arpa:63691
     $ brew install cmake go
 
     # mandatory
-    $ cd ~/.vim/bundle/tabnine-vim
+    $ cd ~/.vim/plugged/tabnine-vim
     $ git checkout python3
     $ find . -name "*.pyc" -delete
     $ python3 install.py

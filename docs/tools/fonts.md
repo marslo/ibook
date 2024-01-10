@@ -34,7 +34,12 @@
 > THE BEST ALWAYS !
 
 - [Monaco](https://www.cufonfonts.com/font/monaco)
-- [MonacoNF](https://github.com/Karmenzind/monaco-nerd-fonts)
+- Nerd-Fonts
+  - [Monaco Nerd Font Mono](https://github.com/Karmenzind/monaco-nerd-fonts)
+  - [Monaco Nerd Font](https://github.com/thep0y/monaco-nerd-font)
+- Powerline
+  - [Monaco for Powerline.ttf](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466/raw/5be6ef0e44a3427fdb8343b4dacc29716449c59e/Monaco%2520for%2520Powerline.ttf)
+  - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
 
 ![Monaco vim](../screenshot/vim/vim-airline-ale-monaco.png)
 
@@ -92,6 +97,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 ```
 
 ![GohuNF vim](../screenshot/vim/vim-airline-ale-2.png)
+
 ![GohuNF bash](../screenshot/tools/fonts/bash-Gohu.png)
 
 ## nerd-fonts
@@ -178,6 +184,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 - [CascadiaCode](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/CascadiaCode)
 - [EnvyCodeR](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/EnvyCodeR)
 - [IBMPlexMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/IBMPlexMono)
+- JetBrains [original](https://www.jetbrains.com/lp/mono/) | [JetBrains Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
 
 ## powerline fonts
 
@@ -224,7 +231,6 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
   >   $ fontPath=$HOME/Library/Fonts
   >   $ fontPath=$HOME/.local/share/fonts
   >   ```
-
 
   - via powershell
     ```powershell

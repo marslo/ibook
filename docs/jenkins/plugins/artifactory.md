@@ -6,7 +6,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 ### [allow interactive promotion](https://www.jfrog.com/confluence/display/JFROG/Scripted+Pipeline+Syntax#ScriptedPipelineSyntax-AllowingInteractivePromotionforPublishedBuilds)
 ```groovy
 /**
