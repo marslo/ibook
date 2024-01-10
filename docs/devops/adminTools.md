@@ -137,6 +137,9 @@
 
 ## network tools
 
+> [!NOTE|label:see also:]
+> - [iMarslo : linux/network](../linux/network.html)
+
 ### `vnstat`
 
 ![vnstat](../screenshot/linux/vnstat.png)

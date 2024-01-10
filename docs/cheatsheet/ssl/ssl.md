@@ -41,6 +41,7 @@
 
 > [!TIP|label:see also]
 > - [* imarslo : kubernetes/certificates](../../virtualization/kubernetes/certificates.html#generate-new-certificate-csr)
+> - [* iMarslo : artifactory/certificates](../../artifactory/nginx-cert.html)
 > - [* k8s: Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
 >   - [easyrsa](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#easyrsa)
 >   - [openssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#openssl)
@@ -883,22 +884,22 @@ Getting Private key
 # Artifactory HTTPS
 
 {% codetabs name="command", type="bash" -%}
-$ sudo openssl genrsa -des3 -out artifactorykey 2048
-$ sudo openssl req -new -key artifactorykey -out artifactorycsr
-$ sudo cp artifactorykey{,.org}
-$ sudo openssl rsa -in artifactorykey.org -out artifactorykey
-$ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactorykey -out artifactorycrt
+$ sudo openssl genrsa -des3 -out artifactory.key 2048
+$ sudo openssl req -new -key artifactory.key -out artifactorycsr
+$ sudo cp artifactory.key{,.org}
+$ sudo openssl rsa -in artifactory.key.org -out artifactory.key
+$ sudo openssl x509 -req -days 365 -in artifactorycsr -signkey artifactory.key -out artifactory.crt
 {%- language name="SSL With Domain", type="bash" -%}
-$ sudo openssl genrsa -des3 -out artifactorykey 2048
+$ sudo openssl genrsa -des3 -out artifactory.key 2048
 Generating RSA private key, 2048 bit long modulus
 .........................+++
 ........................................................................+++
 e is 65537 (0x10001)
-Enter pass phrase for artifactorykey: artifactory
-Verifying - Enter pass phrase for artifactorykey: artifactory
+Enter pass phrase for artifactory.key: artifactory
+Verifying - Enter pass phrase for artifactory.key: artifactory
 
-$ sudo openssl req -new -key artifactorykey -out artifactorycsr
-Enter pass phrase for artifactorykey: artifactory
+$ sudo openssl req -new -key artifactory.key -out artifactorycsr
+Enter pass phrase for artifactory.key: artifactory
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
 What you are about to enter is what is called a Distinguished Name or a DN.
@@ -919,24 +920,24 @@ to be sent with your certificate request
 A challenge password []:.
 An optional company name []:.
 
-$ sudo cp artifactorykey{,.org}
+$ sudo cp artifactory.key{,.org}
 
-$ sudo openssl rsa -in artifactorykey.org -out artifactorykey
-Enter pass phrase for artifactorykey.org: artifactory
+$ sudo openssl rsa -in artifactory.key.org -out artifactory.key
+Enter pass phrase for artifactory.key.org: artifactory
 writing RSA key
 
 $ sudo openssl x509 -req \
                     -days 365 \
                     -in artifactorycsr \
-                    -signkey artifactorykey \
-                    -out artifactorycrt
+                    -signkey artifactory.key \
+                    -out artifactory.crt
 Signature ok
 subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany Ltd/CN=192.168.1.102
 Getting Private key
 
 $ openssl x509 -text \
                -noout \
-               -in ssl_ip/artifactorycrt
+               -in ssl_ip/artifactory.crt
 Certificate:
     Data:
         Version: 1 (0x0)
@@ -987,19 +988,19 @@ Certificate:
          33:50:e9:a8:24:3e:5e:2a:68:ea:fa:f3:12:30:94:8e:0f:0d:
          da:6c:17:60
 {%- language name="SSL with IP", type="bash" -%}
-$ sudo openssl genrsa -des3 -out artifactorykey 2048
+$ sudo openssl genrsa -des3 -out artifactory.key 2048
 Generating RSA private key, 2048 bit long modulus
 ........................+++
 .......................................+++
 e is 65537 (0x10001)
-Enter pass phrase for artifactorykey: artifactory
-Verifying - Enter pass phrase for artifactorykey: artifactory
+Enter pass phrase for artifactory.key: artifactory
+Verifying - Enter pass phrase for artifactory.key: artifactory
 
 $ sudo openssl req \
                -new \
-               -key artifactorykey \
+               -key artifactory.key \
                -out artifactorycsr
-Enter pass phrase for artifactorykey: artifactory
+Enter pass phrase for artifactory.key: artifactory
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
 What you are about to enter is what is called a Distinguished Name or a DN.
@@ -1020,23 +1021,23 @@ to be sent with your certificate request
 A challenge password []:.
 An optional company name []:.
 
-$ sudo cp artifactorykey{,.org}
+$ sudo cp artifactory.key{,.org}
 $ sudo openssl rsa \
-               -in artifactorykey.org \
-               -out artifactorykey
-Enter pass phrase for artifactorykey.org: artifactory
+               -in artifactory.key.org \
+               -out artifactory.key
+Enter pass phrase for artifactory.key.org: artifactory
 writing RSA key
 
 $ sudo openssl x509 -req \
                     -days 365 \
                     -in artifactorycsr \
-                    -signkey artifactorykey \
-                    -out artifactorycrt
+                    -signkey artifactory.key \
+                    -out artifactory.crt
 Signature ok
 subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany Ltd/OU=mycompany CDI/CN=docker-1.artifactory
 Getting Private key
 
-$ openssl x509 -text -noout -in ssl/artifactorycrt
+$ openssl x509 -text -noout -in ssl/artifactory.crt
 Certificate:
     Data:
         Version: 1 (0x0)

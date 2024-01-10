@@ -303,7 +303,7 @@ $ sudo pip install genpac
   udp        0      0 0.0.0.0:1111            0.0.0.0:*                           903/ss-server
   ```
 
-![ss-libev-service](../../screenshot/ss/ss-libev-port.png)
+![ss-libev-service](../screenshot/ss/ss-libev-port.png)
 
 #### client
 
@@ -311,7 +311,7 @@ $ sudo pip install genpac
 |:-------------:|:------------------------------------:|
 | `simple-obfs` | `obfs=http;obfs-host=www.google.com` |
 
-![ss-libev-client](../../screenshot/ss/ss-libev-client.png)
+![ss-libev-client](../screenshot/ss/ss-libev-client.png)
 
 
 ## [squid](http://www.squid-cache.org/Doc/)

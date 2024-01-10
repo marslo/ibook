@@ -112,23 +112,23 @@ $ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
 #### repo sources
 ```bash
 $ cat /etc/apt/sources.list
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful main restricted
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful-updates main restricted
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful universe
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful-updates universe
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful multiverse
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful-updates multiverse
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful-backports main restricted universe multiverse
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-canonical artful partner
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu-security artful-security main restricted
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu-security artful-security universe
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu-security artful-security multiverse
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful main restricted
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates main restricted
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful universe
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates universe
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful multiverse
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates multiverse
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-backports main restricted universe multiverse
+deb http://sample.artifactory.com/artifactory/debian-remote-canonical artful partner
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security main restricted
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security universe
+deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security multiverse
 
 $ cat sources.list.d/kubernetes.list
-deb http://www.artifactory.mycompany.com/artifactory/debian-remote-google kubernetes-xenial main
+deb http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial main
 
 $ cat sources.list.d/docker.list
-deb [arch=amd64] http://www.artifactory.mycompany.com/artifactory/debian-remote-docker artful edge
+deb [arch=amd64] http://sample.artifactory.com/artifactory/debian-remote-docker artful edge
 # deb [arch=amd64] https://download.docker.com/linux/ubuntu artful edge
 ```
 
@@ -160,13 +160,13 @@ The following NEW packages will be installed:
 0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
 Need to get 57.1 MB of archives.
 After this operation, 411 MB of additional disk space will be used.
-Get:1 http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful/main amd64 ebtables amd64 2.0.10.4-3.5ubuntu2 [80.0 kB]
-Get:2 http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful/main amd64 ethtool amd64 1:4.8-1 [109 kB]
-Get:3 http://www.artifactory.mycompany.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubernetes-cni amd64 0.6.0-00 [5,910 kB]
-Get:4 http://www.artifactory.mycompany.com/artifactory/debian-remote-ubuntu artful/universe amd64 socat amd64 1.7.3.2-1 [342 kB]
-Get:5 http://www.artifactory.mycompany.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubelet amd64 1.10.0-00 [21.1 MB]
-Get:6 http://www.artifactory.mycompany.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubectl amd64 1.10.0-00 [8,905 kB]
-Get:7 http://www.artifactory.mycompany.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubeadm amd64 1.10.0-00 [20.7 MB]
+Get:1 http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful/main amd64 ebtables amd64 2.0.10.4-3.5ubuntu2 [80.0 kB]
+Get:2 http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful/main amd64 ethtool amd64 1:4.8-1 [109 kB]
+Get:3 http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubernetes-cni amd64 0.6.0-00 [5,910 kB]
+Get:4 http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful/universe amd64 socat amd64 1.7.3.2-1 [342 kB]
+Get:5 http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubelet amd64 1.10.0-00 [21.1 MB]
+Get:6 http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubectl amd64 1.10.0-00 [8,905 kB]
+Get:7 http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial/main amd64 kubeadm amd64 1.10.0-00 [20.7 MB]
 Fetched 57.1 MB in 1min 22s (697 kB/s)
 Selecting previously unselected package ebtables.
 (Reading database ... 195476 files and directories currently installed.)

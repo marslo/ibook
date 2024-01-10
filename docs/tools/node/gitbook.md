@@ -190,7 +190,7 @@ $ npm config set https-proxy $https_proxy -g
 > - [Hints and Callouts](https://docs.gitbook.com/editing-content/markdown#hints-and-callouts)
 
 
-|   styles  | code                                                                                       | gitbook-plugin-flexible-alerts    |
+|   STYLES  | CODE                                                                                       | GITBOOK-PLUGIN-FLEXIBLE-ALERTS    |
 |:---------:|:-------------------------------------------------------------------------------------------|:----------------------------------|
 |    info   | {% raw %}`{% hint style='info' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}    | {% raw %}> [!NOTE]{% endraw %}    |
 |    tip    | {% raw %}`{% hint style='tip' %}`{% endraw %}<br> {% raw %}`{% endhint %}`{% endraw %}     | {% raw %}> [!TIP]{% endraw %}     |
@@ -219,8 +219,6 @@ success
   > // or
   > > [!NOTE|style:flat|label:title|iconVisibility:hidden|icon:fa fa-bullhorn]
   > ```
-
-
 
 #### tip
 {% hint style='tip' %}
@@ -342,6 +340,7 @@ warning
   {% endraw %}
 
 ### emoji
+
 > **reference**:
 > - [gist](https://gist.github.com/rxaviers/7360908)
 > - [Emoji](https://github.com/StylishThemes/GitHub-Dark/wiki/Emoji)
@@ -360,8 +359,7 @@ warning
 ## plugins
 ### Flexible Alerts
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [npm: docsify-plugin-flexible-alerts](https://www.npmjs.com/package/docsify-plugin-flexible-alerts)
 > - [fzankl/docsify-plugin-flexible-alerts](https://github.com/fzankl/docsify-plugin-flexible-alerts)
 > - [Gitbook book.json 配置文件](https://www.mapull.com/gitbook/comscore/others/book.html)
