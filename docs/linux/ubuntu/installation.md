@@ -22,6 +22,10 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='warning' %}
+@DEPRECATED
+{% endhint %}
+
 > [!NOTE|label:references:]
 > - [使用ssl模块配置同时支持http和https并存](http://blog.csdn.net/weixin_35884835/article/details/52588157)
 > - [How To Create an SSL Certificate on Nginx for Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04)
@@ -32,8 +36,6 @@
 > - [Test an insecure registry](https://docs.docker.com/registry/insecure/)
 > - [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
 > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
-
-@DEPRECATED
 
 ## pre-config
 ### dependencies installation
