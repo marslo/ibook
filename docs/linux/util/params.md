@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [pass self parameters to another script](#pass-self-parameters-to-another-script)
+- [pass parameters to another script](#pass-parameters-to-another-script)
 - [getopts with long option](#getopts-with-long-option)
   - [additional params on `--`](#additional-params-on---)
 - [shift](#shift)
@@ -12,7 +12,7 @@
 > [!TIP|label:see also:]
 > - [* iMarslo: parameter substitution](../../cheatsheet/bash/sugar.html#parameter-substitution)
 
-## pass self parameters to another script
+## pass parameters to another script
 
 > [!NOTE]
 > - objective:
@@ -25,15 +25,16 @@
   #!/bin/bash
   echo """
   b.sh:
-    \$1: "$1"
-    \$#: "$#"
-    \$@: "$@"
-    \${@: -1}: ${@: -1}
-    \${@: -2}: ${@: -2}
-    \${@: -3}: ${@: -2}
-    \${@: -\$(( \$#-1 ))}: ${@: -$(( $#-1 ))}
+    \$1                   : "$1"
+    \$#                   : "$#"
+    \$@                   : "$@"
+    \${@: -1}             : ${@: -1}
+    \${@: -2}             : ${@: -2}
+    \${@: -3}             : ${@: -2}
+    \${@: -\$(( \$#-1 ))} : ${@: -$(( $#-1 ))}
     \$(echo '\${@: -\$(( \$#-1 ))}' | cut -d' ' -f1-) : $(echo "${@: -$(( $#-1 ))}" | cut -d' ' -f1-)
   """
+
   echo -e "\n'~~> ./a.sh \"\${@: -1}\"': ~~~> ./a.sh ${@: -1}:"
   ./a.sh "${@: -1}"
 
@@ -63,13 +64,13 @@
   $ ./b.sh 1 2 3 4 5
 
   b.sh:
-    $1: 1
-    $#: 5
-    $@: 1 2 3 4 5
-    ${@: -1}: 5
-    ${@: -2}: 4 5
-    ${@: -3}: 4 5
-    ${@: -$(( $#-1 ))}: 2 3 4 5
+    $1                 : 1
+    $#                 : 5
+    $@                 : 1 2 3 4 5
+    ${@: -1}           : 5
+    ${@: -2}           : 4 5
+    ${@: -3}           : 4 5
+    ${@: -$(( $#-1 ))} : 2 3 4 5
     $(echo '${@: -$(( $#-1 ))}' | cut -d' ' -f1-) : 2 3 4 5
 
   '~~> ./a.sh "${@: -1}"': ~~~> ./a.sh e:
@@ -113,15 +114,15 @@ usage="""USAGE
 """
 
 while test -n "$1"; do
-    case "$1" in
-      -c | --clean    ) clean=true        ; shift   ;;
-      -t | --tag      ) tag=$2            ; shift 2 ;;
-      -i | --image    ) image=$2          ; shift 2 ;;
-      -v | --ver      ) ver=$2            ; shift 2 ;;
-      -n | --name     ) name=$2           ; shift 2 ;;
-      -p | --prop     ) prop=$2           ; shift 2 ;;
-      -h | --help | * ) echo -e "${usage}"; exit 0  ;;
-    esac
+  case "$1" in
+    -c | --clean    ) clean=true        ; shift   ;;
+    -t | --tag      ) tag=$2            ; shift 2 ;;
+    -i | --image    ) image=$2          ; shift 2 ;;
+    -v | --ver      ) ver=$2            ; shift 2 ;;
+    -n | --name     ) name=$2           ; shift 2 ;;
+    -p | --prop     ) prop=$2           ; shift 2 ;;
+    -h | --help | * ) echo -e "${usage}"; exit 0  ;;
+  esac
 done
 
 echo """

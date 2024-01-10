@@ -29,9 +29,9 @@
 $ sudo mkdir -p /etc/systemd/system/docker.service.d
 $ cat /etc/systemd/system/docker.service.d/http-proxy.conf
 [Service]
-Environment="HTTPS_PROXY=http://proxy.example.com:80"
-Environment="HTTP_PROXY=http://proxy.example.com:80"
-Environment="ALL_PROXY=http://proxy.example.com:80"
+Environment="HTTPS_PROXY=http://sample.proxy.com:80"
+Environment="HTTP_PROXY=http://sample.proxy.com:80"
+Environment="ALL_PROXY=http://sample.proxy.com:80"
 systemctl daemon-reload;systemctl start docker
 
 $ sudo systemctl daemon-reload
@@ -39,7 +39,7 @@ $ sudo systemctl restart docker
 
 # verify
 $ systemctl show docker --property Environment
-Environment=HTTPS_PROXY=http://proxy.example.com:80 HTTP_PROXY=http://proxy.example.com:80 ALL_PROXY=http://proxy.example.com:80
+Environment=HTTPS_PROXY=http://sample.proxy.com:80 HTTP_PROXY=http://sample.proxy.com:80 ALL_PROXY=http://sample.proxy.com:80
 ```
 
 - for socks5
@@ -47,7 +47,7 @@ Environment=HTTPS_PROXY=http://proxy.example.com:80 HTTP_PROXY=http://proxy.exam
   $ [ ! -d /etc/systemd/system/docker.service.d ] && sudo mkdir -p /etc/systemd/system/docker.service.d
   $ sudo bash -c "cat > /etc/systemd/system/docker.service.d/socks5-proxy.conf" << EOF
   [Service]
-  Environment="ALL_PROXY=socks5://proxy.example.com:80"
+  Environment="ALL_PROXY=socks5://sample.proxy.com:80"
   Environment="NO_PROXY=localhost,127.0.0.1,130.147.0.0/16,130.145.0.0/16"
   EOF
 
@@ -65,9 +65,9 @@ Environment=HTTPS_PROXY=http://proxy.example.com:80 HTTP_PROXY=http://proxy.exam
 
   $ sudo bash -c "cat > /etc/systemd/system/docker.service.d" << EOF
   [Service]
-  Environment="HTTP_PROXY=http://proxy.example.com:80"
-  Environment="HTTPS_PROXY=https://proxy.example.com:443"
-  Environment="NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp"
+  Environment="HTTP_PROXY=http://sample.proxy.com:80"
+  Environment="HTTPS_PROXY=https://sample.proxy.com:443"
+  Environment="NO_PROXY=localhost,127.0.0.1,sample.docker-registry.com,.corp"
   EOF
 
   $ sudo systemctl daemon-reload
@@ -75,7 +75,7 @@ Environment=HTTPS_PROXY=http://proxy.example.com:80 HTTP_PROXY=http://proxy.exam
 
   # verify
   $ systemctl show docker --property Environment
-  Environment=HTTP_PROXY=http://proxy.example.com:80 HTTPS_PROXY=http://proxy.example.com:443 NO_PROXY=localhost,127.0.0.1,docker-registry.example.com,.corp
+  Environment=HTTP_PROXY=http://sample.proxy.com:80 HTTPS_PROXY=http://sample.proxy.com:443 NO_PROXY=localhost,127.0.0.1,sample.docker-registry.com,.corp
   ```
 
 ### [docker build](https://docs.docker.com/network/proxy/)
@@ -87,10 +87,10 @@ $ cat > ~/.docker/config.json << EFO
  {
    "default":
    {
-     "httpProxy": "http://proxy.example.com:80",
-     "httpsProxy": "http://proxy.example.com:80",
-     "allProxy": "http://proxy.example.com:80",
-     "noProxy": "*.test.example.com,.example2.com,127.0.0.0/8"
+     "httpProxy": "http://sample.proxy.com:80",
+     "httpsProxy": "http://sample.proxy.com:80",
+     "allProxy": "http://sample.proxy.com:80",
+     "noProxy": "*.sample.domain1.com,.domain2.com,127.0.0.0/8"
    }
  }
 }
@@ -100,21 +100,19 @@ EOF
 - or via [`--build-arg`](https://dev.to/zyfa/setup-the-proxy-for-dockerfile-building--4jc8):
   ```bash
   $ docker build \
-           --build-arg http_proxy=http://proxy.example.com:80 \
-           --build-arg https_proxy=http://proxy.example.com:443 \
+           --build-arg http_proxy=http://sample.proxy.com:80 \
+           --build-arg https_proxy=http://sample.proxy.com:443 \
           .
   ```
 
-
 - details
 
-
-  |   Variable  | Dockerfile example                              | docker run example                                            |
-  |:-----------:|:------------------------------------------------|---------------------------------------------------------------|
-  |  HTTP_PROXY | ENV HTTP_PROXY="http://proxy.example.com:80"         | --env HTTP_PROXY="http://proxy.example.com:80"                     |
-  | HTTPS_PROXY | ENV HTTPS_PROXY="https://proxy.example.com:80"       | --env HTTPS_PROXY="https://proxy.example.com:80"                   |
-  |  FTP_PROXY  | ENV FTP_PROXY="ftp://proxy.example.com:80"           | --env FTP_PROXY="ftp://proxy.example.com:80"                       |
-  |   NO_PROXY  | ENV NO_PROXY="*.test.example.com,.example2.com" | --env NO_PROXY="*.test.example.com,.example2.com,127.0.0.0/8" |
+  |   VARIABLE  | DOCKERFILE EXAMPLE                               | DOCKER RUN EXAMPLE                                             |
+  |:-----------:|:-------------------------------------------------|----------------------------------------------------------------|
+  |  HTTP_PROXY | ENV HTTP_PROXY="http://sample.proxy.com:80"      | --env HTTP_PROXY="http://sample.proxy.com:80"                  |
+  | HTTPS_PROXY | ENV HTTPS_PROXY="https://sample.proxy.com:80"    | --env HTTPS_PROXY="https://sample.proxy.com:80"                |
+  |  FTP_PROXY  | ENV FTP_PROXY="ftp://sample.proxy.com:80"        | --env FTP_PROXY="ftp://sample.proxy.com:80"                    |
+  |   NO_PROXY  | ENV NO_PROXY="*.sample.domain1.com,.domain2.com" | --env NO_PROXY="*.sample.domain1.com,.domain2.com,127.0.0.0/8" |
 
 
 ### docker build with GPG key proxy
@@ -133,13 +131,13 @@ EOF
 - GPG with proxy
   ```docker
   ...
-  apt-key adv --keyserver-options http-proxy=http://proxy.example.com:80 \
+  apt-key adv --keyserver-options http-proxy=http://sample.proxy.com:80 \
               --keyserver hkp://keyserver.ubuntu.com:80 \
               --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
   ...
 
   # result
-  Executing: /tmp/apt-key-gpghome.uegAG54mKu/gpg.1.sh --keyserver-options http-proxy=http://proxy.example.com:80 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  Executing: /tmp/apt-key-gpghome.uegAG54mKu/gpg.1.sh --keyserver-options http-proxy=http://sample.proxy.com:80 --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
   gpg: key A6A19B38D3D831EF: 2 signatures not checked due to missing keys
   gpg: key A6A19B38D3D831EF: public key "Xamarin Public Jenkins (auto-signing) <releng@xamarin.com>" imported
   gpg: Total number processed: 1

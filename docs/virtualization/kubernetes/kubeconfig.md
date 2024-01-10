@@ -354,7 +354,7 @@ kubectl config use-context kubernetes-staging
 $ kubectl config set-cluster <my-cluster-name> --proxy-url=<my-proxy-url>
 
 # i.e.
-$ kubectl config set-cluster development --proxy-url=http://proxy.example.com:3128
+$ kubectl config set-cluster development --proxy-url=http://sample.proxy.com:3128
 ```
 - result
   ```bash

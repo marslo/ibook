@@ -18,7 +18,7 @@
 ## [api](https://docs.roguewave.com/en/klocwork/current/formattingrequeststotheapi1)
 
 > [!NOTE]
-> api url: http(s)://klocwork.domain.com:443/review/api
+> api url: http(s)://sample.klocwork.com:443/review/api
 > reference:
 > - [Klocwork Web API cookbook](https://docs.roguewave.com/en/klocwork/current/klocworkwebapicookbook)
 > - [Klocwork Code Review Web API cookbook](https://help.klocwork.com/current/en-us/concepts/klocworkcrwebapicookbook.htm)
@@ -33,12 +33,12 @@
 >     - Mac: `~/.klocwork/ltoken`
 
 Klocwork Static Code Analysis Web API Reference
-> to access Web API send a POST request to http://klocwork.domain.com/review/api with the following parameters:
+> to access Web API send a POST request to http://sample.klocwork.com/review/api with the following parameters:
 > - user*     Klocwork user name
 > - ltoken    kwauth login token
 > - action*   action name
 >   - `builds`: retrieve the list of builds for a project.
->   - example: `curl --data "action=builds&user=myself&project=project_name" http://klocwork.domain.com/review/api`
+>   - example: `curl --data "action=builds&user=myself&project=project_name" http://sample.klocwork.com/review/api`
 >     - project* : project name
 >     - username : username
 
@@ -46,7 +46,7 @@ Klocwork Static Code Analysis Web API Reference
 ```bash
 $ username='account'
 $ ltoken='abc123**********************************************************'
-$ url='https://klocwork.domain.com:8080'
+$ url='https://sample.klocwork.com:8080'
 $ curl -skg \
        --data "action=projects&user=${username}&ltoken=${ltoken}" \
        "${url}/review/api" |
@@ -65,12 +65,12 @@ $ curl -skg \
 
 - [via api](https://stackoverflow.com/a/28774031/2940319)
   ```bash
-  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://klocwork.domain.com/review/api
+  $ curl --data "action=builds&user=<user_account>&ltoken=<ltoken>&project=<projct_name>" http://sample.klocwork.com/review/api
   ```
   - i.e.:
     ```bash
     $ curl --data "action=builds&user=marslo&ltoken=abcd1234****&project=marslo-kw" \
-           https://klocwork.domain.com:443/review/api
+           https://sample.klocwork.com:443/review/api
     {"id":3,"name":"build_3","date":1619437882164,"keepit":false}
     {"id":2,"name":"build_2","date":1619436216567,"keepit":false}
     {"id":1,"name":"build_1","date":1619434698145,"keepit":false}
@@ -78,14 +78,14 @@ $ curl -skg \
 
 - [via `kwadmin`](https://docs.roguewave.com/en/klocwork/current/kwadmin)
   ```bash
-  $ kwadmin --url https://klocwork.domain.com:443 list-builds marslo-kw
+  $ kwadmin --url https://sample.klocwork.com:443 list-builds marslo-kw
   build_1
   build_2
   build_3
   ```
   - list project config files
     ```bash
-    $ kwadmin --url https://klocwork.domain.com:443 list-config-files marslo-kw
+    $ kwadmin --url https://sample.klocwork.com:443 list-config-files marslo-kw
     analysis_profile.pconf (Problems Configuration)
     metrics_default.mconf (Metrics Thresholds)
     ```
@@ -96,7 +96,7 @@ $ curl -skg \
 
 **search**
 > retrieve the list of detected issues.
-> - example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://klocwork.domain.com/review/api`
+> - example: `curl --data "action=search&user=myself&project=my_project&query=file:MyFile.c" http://sample.klocwork.com/review/api`
 >   - project* : project name
 >   - query    : search query, such as narrowing by file (for example, 'file:MyFile.c')
 >   - view     : view name
@@ -118,7 +118,7 @@ $ ltoken='abcd1234*****'
 $ username='marslo'
 $ project='marslo-kw'
 $ query='build:build_3 state:New'
-$ url='https://klocwork.domain.com:443'
+$ url='https://sample.klocwork.com:443'
 $ curl --data "action=search&user=${username}&ltoken=${ltoken}&project=${project}&query=${query}" \
        ${url}/review/api |
        jq --raw-output .

@@ -369,16 +369,16 @@ marslo-cert.pub:
 >   ```
 
 ```bash
-$ ssh marslo@example.server.com
-marslo@example.server.com's password:
+$ ssh marslo@sample.server.com
+marslo@sample.server.com's password:
 
-$ ssh -o CertificateFile=marslo-cert.pub marslo@example.server.com "du -hs ~/.ssh/authorized_keys"
+$ ssh -o CertificateFile=marslo-cert.pub marslo@sample.server.com "du -hs ~/.ssh/authorized_keys"
 0 /home/marslo/.ssh/authorized_keys
 
 # via config
 $ cat ~/.ssh/confg
-Host example example.server.com
-     Hostname example.server.com
+Host example sample.server.com
+     Hostname sample.server.com
      User marslo
      IdentitiesOnly yes
      IdentityFile /home/marslo/.ssh/marslo

@@ -44,9 +44,8 @@ import com.jcraft.jsch.LocalIdentityRepository
 import com.jcraft.jsch.Channel
 import com.jcraft.jsch.ChannelExec
 
-
 String user = 'srv-ssd-fw-devops'
-String host = 'example.gerrit.com'
+String host = 'sample.gerrit.com'
 int port    = 29418
 String path = System.getProperty( 'user.home' ) + '/.ssh/ed25519/devops@ssdfw'
 // Byte[] privateKey = ''.getBytes()
