@@ -23,17 +23,14 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-{% hint style='warning' %}
-@DEPRECATED
-{% endhint %}
+> [!DANGER]
+> @DEPRECATED
 
-{% hint style='tip' %}
 > reference:
 > - [ARCH NetWork Configuration](https://wiki.archlinux.org/index.php/Network_configuration#Change_device_name)
 > - [How do I add a DNS server via resolv.conf?](https://askubuntu.com/a/51332/92979)
 > - [How to Configure and Manage Network Connections Using ‘nmcli’ Tool](https://www.tecmint.com/configure-network-connections-using-nmcli-tool-in-linux/)
 > - [9 张动图让明白网络性能的四大指标：带宽、时延、抖动、丢包](https://zhuanlan.zhihu.com/p/404778160)
-{% endhint %}
 
 ## interface
 ### change interface name

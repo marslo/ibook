@@ -22,9 +22,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-{% hint style='warning' %}
-@DEPRECATED
-{% endhint %}
+> [!DANGER]
+> @DEPRECATED
 
 > [!NOTE|label:references:]
 > - [使用ssl模块配置同时支持http和https并存](http://blog.csdn.net/weixin_35884835/article/details/52588157)
