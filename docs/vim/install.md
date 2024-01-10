@@ -2,7 +2,6 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [OSX](#osx)
-  - [installation](#installation)
 - [Linux](#linux)
   - [vim](#vim)
   - [gvim](#gvim)
@@ -38,7 +37,6 @@
 {% endhint %}
 
 ## OSX
-### installation
 
 > [!TIP]
 > ```bash
@@ -236,11 +234,15 @@ $ ./configure --with-features=huge \
 $ make
 # or
 $ make -j${NPROC}
+# or
+$ make -j$(nproc)
 
 ## ... install ...
 $ sudo make install
 # or uninstall if necessary
 $ sudo make uninstall && sudo make install
+# optional
+$ sudo cp src/vim /usr/local/vim/bin/vim
 
 ## ... validate ...
 $ src/vim --version
@@ -264,10 +266,10 @@ macvim_excmd -c 'lang es_ES' -c 'version' | grep Enlazado
 
 <!--sec data-title="result" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
-$ src/vim --version
-VIM - Vi IMproved 9.0 (2022 Jun 28, compiled Nov  9 2023 17:10:37)
+$ vim --version
+VIM - Vi IMproved 9.1 (2024 Jan 02, compiled Jan  8 2024 16:50:47)
 macOS version - x86_64
-Included patches: 1-2095
+Included patches: 1-16
 Compiled by marslo <marslo.jiao@gmail.com>
 Huge version without GUI.  Features included (+) or not (-):
 +acl               +file_in_path      +mouse_urxvt       -tag_any_white
@@ -309,8 +311,8 @@ Huge version without GUI.  Features included (+) or not (-):
       user exrc file: "$HOME/.exrc"
        defaults file: "$VIMRUNTIME/defaults.vim"
   fall-back for $VIM: "/usr/local/vim/share/vim"
-Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H -I/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl@1.1/include -I/usr/local/Cellar/node/21.1.0/include -I/usr/local/opt/libressl/include -I/usr/local/opt/tcl-tk/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include -DMACOS_X -DMACOS_X_DARWIN -I/usr/local/opt/tcl-tk/include -I/usr/local/Cellar/libsodium/1.0.19/include -D_REENTRANT -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
-Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/local/opt/binutils/lib -L/usr/local/opt/python@3.11/lib -L/usr/local/opt/ruby/lib -L/usr/local/opt/tcl-tk/lib -L/usr/local/opt/sqlite/lib -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/openssl@1.1/lib -L/usr/local/Cellar/node/21.1.0/libexec/lib -L/usr/local/opt/libressl/lib -L/usr/local/Cellar/icu4c@71.1/71.1/lib -L/usr/local/opt/llvm/lib -L/usr/local/opt/llvm/lib/c++ -Wl,-rpath,/usr/local/opt/llvm/lib/c++ -o vim -lm -lncurses -L/usr/local/Cellar/libsodium/1.0.19/lib -lsodium -liconv -lintl -framework AppKit
+Compilation: gcc -c -I. -Iproto -DHAVE_CONFIG_H -I/usr/local/include -I/usr/local/Cellar/openjdk/21.0.1/libexec/openjdk.jdk/Contents/Home/include -I/usr/local/opt/openldap/include -I/usr/local/opt/curl/include -I/usr/local/opt/binutils/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/readline/include -I/usr/local/opt/openssl/include -I/usr/local/opt/node@21/include -I/usr/local/opt/tcl-tk/include -I/usr/local/Cellar/icu4c@71.1/71.1/include -I/usr/local/opt/llvm/include -I/usr/local/opt/libiconv/include -I/usr/local/opt/ncurses/include -DMACOS_X -DMACOS_X_DARWIN -I/usr/local/include -I/usr/local/opt/tcl-tk/include -I/usr/local/Cellar/libsodium/1.0.19/include -D_REENTRANT -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1
+Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/local/opt/binutils/lib -L/usr/local/opt/python@3.12/lib -L/usr/local/opt/tcl-tk/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl/lib -L/usr/local/opt/node@21/lib -L/usr/local/Cellar/icu4c@71.1/71.1/lib -L/usr/local/opt/ncurses/lib -L/usr/local/opt/libiconv/lib -L/usr/local/opt/llvm/lib -L/usr/local/opt/llvm/lib/c++ -Wl,-rpath,/usr/local/opt/llvm/lib/c++ -o vim -lm -lncurses -L/usr/local/Cellar/libsodium/1.0.19/lib -lsodium -liconv -lintl -framework AppKit
 ```
 <!--endsec-->
 
@@ -374,9 +376,7 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
 
 
 ## Linux
-
 ### vim
-
 #### install python3.11 and vim9
 - python3.11
 
@@ -473,6 +473,8 @@ Linking: gcc -L/usr/local/opt/openldap/lib -L/usr/local/opt/curl/lib -L/usr/loca
               --enable-fail-if-missing
 
   $ make -j${NPROC}
+  # or
+  $ make -j$(nproc)
   $ sudo make install
 
   $ sudo alternatives --install /usr/local/bin/vim      vim      /usr/local/vim/bin/vim      99

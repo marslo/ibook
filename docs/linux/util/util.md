@@ -13,6 +13,7 @@
   - [check perm](#check-perm)
 - [gpg](#gpg)
   - [encrypt bash file](#encrypt-bash-file)
+  - [install apt keys](#install-apt-keys)
 - [inode](#inode)
   - [get inode of a file](#get-inode-of-a-file)
   - [get inodes in a folder](#get-inodes-in-a-folder)
@@ -295,6 +296,58 @@ done < file.perm
 $ echo "ls" > script.bash; gpg -c script.bash; cat script.bash.gpg | gpg -d --no-mdc-warning | bash
 ```
 
+### install apt keys
+
+> [!TIP]
+> - [* iMarslo : keyring](../ubuntu/apt.html#keyring)
+> - [step by step by `apt-key add`](https://github.com/microsoft/WSL/issues/3286#issuecomment-402594992)
+> - [Hockeypuck OpenPGP keyserver](http://keyserver.ubuntu.com/)
+
+- via gpg
+  ```bash
+  $ gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  ```
+
+  - more options
+    ```bash
+    $ gpg --ignore-time-conflict \
+          --no-options \
+          --no-default-keyring \
+          --homedir /tmp/tmp.Hrb5ETPac2 \
+          --no-auto-check-trustdb \
+          --trust-model always \
+          --keyring /etc/apt/trusted.gpg \
+          --primary-keyring /etc/apt/trusted.gpg \
+          --keyserver keyserver.ubuntu.com \
+          --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+    ```
+
+- via `apt-key adv`
+  ```bash
+  $ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  ```
+
+- [via `apt-key add`](https://github.com/microsoft/WSL/issues/3286#issuecomment-395980867)
+  ```bash
+  $ curl -sL "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA6A19B38D3D831EF" | sudo apt-key add
+  ```
+
+- [Ghostbird/add-repository](https://gist.github.com/Ghostbird/83eb5bcd2ffd4a6b6966137a2e1c4caf)
+  ```bash
+  $ ./add-repository "https://keyserver.ubuntu.com/pks/lookup?search=0x3fa7e0328081bff6a14da29aa6a19b38d3d831ef&op=get" "deb https://download.mono-project.com/repo/debian stable-buster main" mono-official-stable.list
+  ```
+
+- [others](https://github.com/mono/mono/issues/21584#issuecomment-1354833031)
+  ```bash
+  # dockerfile
+  RUN apt install -y gnupg ca-certificates
+  RUN gpg --keyserver keyserver.ubuntu.com --recv 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  RUN gpg --export 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF | tee /usr/share/keyrings/mono.gpg >/dev/null
+  RUN gpg --batch --yes --delete-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  RUN echo "deb [signed-by=/usr/share/keyrings/mono.gpg] https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list
+  RUN apt update
+  RUN apt install -y mono-devel
+  ```
 
 ## inode
 ### get inode of a file

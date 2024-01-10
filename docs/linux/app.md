@@ -4,8 +4,6 @@
 - [pre-config](#pre-config)
   - [dependencies installation](#dependencies-installation)
   - [account](#account)
-  - [MOTD](#motd)
-  - [ip address](#ip-address)
 - [proxy service](#proxy-service)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
@@ -146,101 +144,10 @@ $ sudo apt install -y apt-file \
                       zlib1g-dev
 ```
 
-#### tzdata installation with noninteractive
-
-> [!NOTE|label:references:]
-> - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/44333806/2940319)
-
-```bash
-# in bash
-$ DEBIAN_FRONTEND=noninteractive sudo apt-get install -y tzdata
-
-# or
-$ export DEBIAN_FRONTEND=noninteractive
-$ sudo apt install -y tzdata
-
-# or
-$ echo 'tzdata tzdata/Areas select Europe'       | debconf-set-selections
-$ echo 'tzdata tzdata/Zones/Europe select Paris' | debconf-set-selections
-$ DEBIAN_FRONTEND="noninteractive" sudo apt install -y tzdata
-
-# or
-$ sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-$ export DEBIAN_FRONTEND=noninteractive
-$ sudo apt-get install -y tzdata
-$ sudo dpkg-reconfigure --frontend noninteractive tzdata
-```
-
-- or
-
-  > [!NOTE|label:references:]
-  > - [Cingulata/Dockerfile.bfv](https://github.com/CEA-LIST/Cingulata/blob/157b4c66441e4e253e06a0abe1508976605100d8/Dockerfile.bfv#L12)
-
-  ```
-  $ sudo ln -snf /usr/share/zoneinfo/$(curl https://ipapi.co/timezone) /etc/localtime
-  $ sudo apt install -y tzdata
-  ```
-
-- or in dockerfile
-  ```dockerfile
-  RUN apt-get update \
-      && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-  ```
-
-- or ENV in dockerfile
-
-  > [!NOTE|label:references:]
-  > - [setting it via ENV should be actively discouraged](https://github.com/moby/moby/issues/4032#issuecomment-34597177)
-
-  ```dockerfile
-  ENV DEBIAN_FRONTEND noninteractive
-  RUN apt-get update \
-      && apt-get install -y --no-install-recommends tzdata
-  ```
-
-- or `ARG` in dockerfile
-
-  > [!NOTE|label:references:]
-  > - [apt-get install tzdata noninteractive](https://stackoverflow.com/a/66327069/2940319)
-
-  ```dockerfile
-  from ubuntu:bionic
-  ARG DEBIAN_FRONTEND=noninteractive
-  RUN apt-get update && apt-get install -y tzdata
-  RUN unlink /etc/localtime
-  RUN ln -s /usr/share/zoneinfo/America/New_York /etc/localtime
-  ```
-
 ### account
 ```bash
 $ sudo usermod -a -G sudo,adm,root,docker devops
 ```
-
-### MOTD
-```bash
-$ sudo chmod -x /etc/update-motd.d/00-header \
-                /etc/update-motd.d/10-help-text \
-                /etc/update-motd.d/50-motd-news
-
-$ cat << 'EOF' > /etc/landscape/client.conf
-[sysinfo]
-exclude_sysinfo_plugins = Temperature, LandscapeLink
-EOF
-```
-
-### ip address
-- get subnet ip address
-  ```bash
-  $ ip addr show eno1 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
-  192.168.1.105
-  fe80::e5ca:1027:b572:9998
-  ```
-
-- get public IP address
-  ```bash
-  $ curl -4 icanhazip.com
-  182.150.46.248
-  ```
 
 ## proxy service
 ### shadowsocks
