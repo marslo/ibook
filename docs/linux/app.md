@@ -6,14 +6,11 @@
   - [account](#account)
   - [MOTD](#motd)
   - [ip address](#ip-address)
-- [proxy servers](#proxy-servers)
+- [proxy service](#proxy-service)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
 - [squid](#squid)
-- [applications](#applications)
-  - [terminal configurations](#terminal-configurations)
-  - [vncserver](#vncserver)
-- [artifactory](#artifactory)
+- [docker client](#docker-client)
   - [add insecure-regiestry](#add-insecure-regiestry)
   - [docker login & logout](#docker-login--logout)
   - [docker pull](#docker-pull)
@@ -245,7 +242,7 @@ EOF
   182.150.46.248
   ```
 
-## proxy servers
+## proxy service
 ### shadowsocks
 #### server
 ```bash
@@ -265,13 +262,13 @@ $ pip install git+https://github.com/shadowsocks/shadowsocks.git@master
 $ sudo ln -sf /home/marslo/.local/bin/ssserver /usr/local/bin/ssserver
 ```
 
-##### start
-```bash
-$ sudo bash -c 'cat > /etc/rc.local' << EOF
-## ssserver -c /etc/shadowsocks.json -d start
-sudo /home/marslo/.local/bin/ssserver -c /etc/shadowsocks.json -d start
-EOF
-```
+- start
+  ```bash
+  $ sudo bash -c 'cat > /etc/rc.local' << EOF
+  ## ssserver -c /etc/shadowsocks.json -d start
+  sudo /home/marslo/.local/bin/ssserver -c /etc/shadowsocks.json -d start
+  EOF
+  ```
 
 #### client
 ##### ubuntu
@@ -305,88 +302,88 @@ $ sudo pip install genpac
 ### shadowsocks-libev
 #### service
 - started by docker image `teddysun/shadowsocks-libev`
+  ```bash
+  $ mkdir -p /etc/shadowsocks-libev
+  $ sudo bash -c "cat > /etc/shadowsocks-libev/config.json" << EOF
+  {
+      "server":"0.0.0.0",
+      "server_port":1111,
+      "password":"password0",
+      "timeout":300,
+      "user":"nobody",                // optional
+      "method":"aes-256-gcm",
+      "fast_open":false,
+      "nameserver":"8.8.8.8",         // be careful for this in private sub-network
+      "mode":"tcp_and_udp",
+      "plugin":"obfs-server",
+      "plugin_opts":"obfs=http"
+  }
+  EOF
+
+  $ docker run -d -p 1111:1111 \
+                  -p 1111:1111/udp \
+                  --name ss-libev \
+                  --restart=always \
+                  -v /etc/shadowsocks-libev:/etc/shadowsocks-libev \
+                  teddysun/shadowsocks-libev
+  $ docker logs -f ss-libev
+  ```
+
+- started by `/etc/init.d/shadowsocks-libev`
+  ```bash
+  $ wget --no-check-certificate \
+         -O shadowsocks-all.sh \
+         https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+  $ chmod +x shadowsocks-all.sh
+  $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+  ...
+
+  Which Shadowsocks server you'd select:
+  1) Shadowsocks-Python
+  2) ShadowsocksR
+  3) Shadowsocks-Go
+  4) Shadowsocks-libev
+  Please enter a number (Default Shadowsocks-Python): 4
+  You choose = Shadowsocks-libev
+  ...
+
+  [Info] Starting install package autoconf
+  Do you want install simple-obfs for Shadowsocks-libev? [y/n]
+  (default: n): y
+  You choose = y
+
+  Please select obfs for simple-obfs:
+  1) http
+  2) tls
+  Which obfs you'd select(Default: http): 1
+  obfs = http
+  ...
+  ```
+  - service
     ```bash
-    $ mkdir -p /etc/shadowsocks-libev
-    $ sudo bash -c "cat > /etc/shadowsocks-libev/config.json" << EOF
+    $ sudo /etc/init.d/shadowsocks-libev start
+    $ sudo /etc/init.d/shadowsocks-libev stop
+    $ sudo /etc/init.d/shadowsocks-libev restart
+    $ sudo /etc/init.d/shadowsocks-libev status
+    Shadowsocks-libev (pid 903) is running...
+    ```
+  - config
+    ```bash
+    $ /etc/shadowsocks-libev/config.json
     {
         "server":"0.0.0.0",
-        "server_port":1111,
-        "password":"password0",
+        "server_port": 1111,
+        "password":"mypassword",
         "timeout":300,
-        "user":"nobody",                // optional
-        "method":"aes-256-gcm",
+        "user":"nobody",                  // optinal
+        "method":"aes-256-cfb",
         "fast_open":false,
-        "nameserver":"8.8.8.8",         // be careful for this in private sub-network
+        "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
         "mode":"tcp_and_udp",
         "plugin":"obfs-server",
         "plugin_opts":"obfs=http"
     }
-    EOF
-
-    $ docker run -d -p 1111:1111 \
-                    -p 1111:1111/udp \
-                    --name ss-libev \
-                    --restart=always \
-                    -v /etc/shadowsocks-libev:/etc/shadowsocks-libev \
-                    teddysun/shadowsocks-libev
-    $ docker logs -f ss-libev
     ```
-
-- started by `/etc/init.d/shadowsocks-libev`
-    ```bash
-    $ wget --no-check-certificate \
-           -O shadowsocks-all.sh \
-           https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
-    $ chmod +x shadowsocks-all.sh
-    $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
-    ...
-
-    Which Shadowsocks server you'd select:
-    1) Shadowsocks-Python
-    2) ShadowsocksR
-    3) Shadowsocks-Go
-    4) Shadowsocks-libev
-    Please enter a number (Default Shadowsocks-Python): 4
-    You choose = Shadowsocks-libev
-    ...
-
-    [Info] Starting install package autoconf
-    Do you want install simple-obfs for Shadowsocks-libev? [y/n]
-    (default: n): y
-    You choose = y
-
-    Please select obfs for simple-obfs:
-    1) http
-    2) tls
-    Which obfs you'd select(Default: http): 1
-    obfs = http
-    ...
-    ```
-    - service
-      ```bash
-      $ sudo /etc/init.d/shadowsocks-libev start
-      $ sudo /etc/init.d/shadowsocks-libev stop
-      $ sudo /etc/init.d/shadowsocks-libev restart
-      $ sudo /etc/init.d/shadowsocks-libev status
-      Shadowsocks-libev (pid 903) is running...
-      ```
-    - config
-      ```bash
-      $ /etc/shadowsocks-libev/config.json
-      {
-          "server":"0.0.0.0",
-          "server_port": 1111,
-          "password":"mypassword",
-          "timeout":300,
-          "user":"nobody",                  // optinal
-          "method":"aes-256-cfb",
-          "fast_open":false,
-          "nameserver":"1.0.0.1",           // be careful for dns resolve in private network
-          "mode":"tcp_and_udp",
-          "plugin":"obfs-server",
-          "plugin_opts":"obfs=http"
-      }
-      ```
 
 - check status
   ```bash
@@ -403,8 +400,8 @@ $ sudo pip install genpac
 
 #### client
 
-| plugin        | plugin opts                          |
-| :-----------: | :----------------------------------: |
+|     PLUGIN    |              PLUGIN OPTS             |
+|:-------------:|:------------------------------------:|
 | `simple-obfs` | `obfs=http;obfs-host=www.google.com` |
 
 ![ss-libev-client](../../screenshot/ss/ss-libev-client.png)
@@ -422,127 +419,14 @@ $ sudo pip install genpac
 > - [How to Set Up a Proxy Server on Your Mac Using SquidMan](https://howchoo.com/mac/how-to-set-up-a-proxy-server-on-mac)
 > - [brew install squid on macOS but can't run squid](https://serverfault.com/a/1069392/129815)
 
-## applications
-### terminal configurations
-- backup
-  ```bash
-  $ dconf dump /org/gnome/terminal/ > ubuntu1710_terminal_backup.bak
-  ```
-
-- restore
-  ```bash
-  $ dconf load /org/gnome/terminal/ < ubuntu1710_terminal_backup.bak
-  ```
-
-- reset
-  ```bash
-  $ dconf reset -f /org/gnome/terminal
-  ```
-
-- list
-  ```bash
-  $ gsettings list-recursively | grep -i org.gnome.Terminal
-  ```
-
-<details><summary>Click to check details</summary>
-<pre><code>$ gsettings list-recursively | grep -i org.gnome.Terminal
-org.gnome.Terminal.ProfilesList list ['b1dcc9dd-5262-4d8d-a863-c897e6d979b9']
-org.gnome.Terminal.ProfilesList default 'b1dcc9dd-5262-4d8d-a863-c897e6d979b9'
-org.gnome.shell favorite-apps ['firefox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Terminal.desktop']
-org.gnome.Terminal.Legacy.Settings new-terminal-mode 'window'
-org.gnome.Terminal.Legacy.Settings menu-accelerator-enabled true
-org.gnome.Terminal.Legacy.Settings tab-position 'top'
-org.gnome.Terminal.Legacy.Settings confirm-close true
-org.gnome.Terminal.Legacy.Settings shell-integration-enabled true
-org.gnome.Terminal.Legacy.Settings theme-variant 'dark'
-org.gnome.Terminal.Legacy.Settings default-show-menubar true
-org.gnome.Terminal.Legacy.Settings mnemonics-enabled false
-org.gnome.Terminal.Legacy.Settings schema-version uint32 3
-org.gnome.Terminal.Legacy.Settings encodings ['UTF-8']
-org.gnome.Terminal.Legacy.Settings shortcuts-enabled true
-org.gnome.Terminal.Legacy.Settings tab-policy 'automatic'
-org.gnome.Terminal.Legacy.Keybindings toggle-menubar 'disabled'
-org.gnome.Terminal.Legacy.Keybindings reset-and-clear 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-14 'disabled'
-org.gnome.Terminal.Legacy.Keybindings zoom-normal '<Ctrl>0'
-org.gnome.Terminal.Legacy.Keybindings read-only 'disabled'
-org.gnome.Terminal.Legacy.Keybindings new-profile 'disabled'
-org.gnome.Terminal.Legacy.Keybindings zoom-out '<Ctrl>minus'
-org.gnome.Terminal.Legacy.Keybindings move-tab-left '<Ctrl><Shift>Page_Up'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-20 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-21 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-22 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-23 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-24 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-25 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-26 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-27 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-28 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-29 'disabled'
-org.gnome.Terminal.Legacy.Keybindings zoom-in '<Ctrl>plus'
-org.gnome.Terminal.Legacy.Keybindings detach-tab 'disabled'
-org.gnome.Terminal.Legacy.Keybindings move-tab-right '<Ctrl><Shift>Page_Down'
-org.gnome.Terminal.Legacy.Keybindings close-tab '<Ctrl><Shift>w'
-org.gnome.Terminal.Legacy.Keybindings paste '<Ctrl><Shift>v'
-org.gnome.Terminal.Legacy.Keybindings reset 'disabled'
-org.gnome.Terminal.Legacy.Keybindings new-tab '<Ctrl><Shift>t'
-org.gnome.Terminal.Legacy.Keybindings find-previous '<Control><Shift>H'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-30 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-31 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-32 'disabled'
-org.gnome.Terminal.Legacy.Keybindings select-all 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-34 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-35 'disabled'
-org.gnome.Terminal.Legacy.Keybindings preferences 'disabled'
-org.gnome.Terminal.Legacy.Keybindings prev-tab '<Control>Page_Up'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-33 'disabled'
-org.gnome.Terminal.Legacy.Keybindings find-next '<Control><Shift>G'
-org.gnome.Terminal.Legacy.Keybindings find '<Control><Shift>F'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-1 '<Alt>1'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-2 '<Alt>2'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-3 '<Alt>3'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-4 '<Alt>4'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-5 '<Alt>5'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-6 '<Alt>6'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-7 '<Alt>7'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-8 '<Alt>8'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-9 '<Alt>9'
-org.gnome.Terminal.Legacy.Keybindings help 'F1'
-org.gnome.Terminal.Legacy.Keybindings copy '<Ctrl><Shift>c'
-org.gnome.Terminal.Legacy.Keybindings close-window '<Ctrl><Shift>q'
-org.gnome.Terminal.Legacy.Keybindings new-window '<Ctrl><Shift>n'
-org.gnome.Terminal.Legacy.Keybindings save-contents 'disabled'
-org.gnome.Terminal.Legacy.Keybindings find-clear '<Control><Shift>J'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-10 '<Alt>0'
-org.gnome.Terminal.Legacy.Keybindings full-screen 'F11'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-12 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-13 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-11 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-15 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-16 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-17 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-18 'disabled'
-org.gnome.Terminal.Legacy.Keybindings switch-to-tab-19 'disabled'
-org.gnome.Terminal.Legacy.Keybindings profile-preferences 'disabled'
-org.gnome.Terminal.Legacy.Keybindings next-tab '<Control>Page_Down'
-</code></pre>
-</details>
-
-### vncserver
-#### install
-```bash
-$ sudo apt install vnc4server
-$ sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
-```
-
-## artifactory
+## docker client
 ### add insecure-regiestry
 ```bash
 $ cat ~/.docker/daemon.json
 {
   "debug" : true,
   "experimental" : true,
-  "insecure-registries" : ["www.artifactory.mycompany.com", "www.artifactory.mycompany.com:2500", "www.artifactory.mycompany.com:2501", "docker-1.artifactory", "docker-1.artifactory:443"]
+  "insecure-registries" : ["sample.artifactory.com", "sample.artifactory.com:2500", "sample.artifactory.com:2501", "docker-1.artifactory", "docker-1.artifactory:443"]
 }
 
 $ sudo systemctl daemon-reload

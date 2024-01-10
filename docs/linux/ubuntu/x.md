@@ -163,7 +163,7 @@ ExecReload=/bin/kill -SIGHUP $MAINPID
 
 ## login session
 
-![desktop styles](screenshots/desktop-style-2.jpeg)
+![desktop styles](../../screenshots/desktop-style-2.jpeg)
 
 ## default session
 ```bash

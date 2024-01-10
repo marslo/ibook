@@ -5,8 +5,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-> [!NOET|label:references:]
+> [!NOTE|label:references:]
 > - [How to automatically execute shell script at startup boot on systemd Linux](https://linuxconfig.org/how-to-automatically-execute-shell-script-at-startup-boot-on-systemd-linux)
 > - [Using systemd to control the Docker daemon](https://success.docker.com/article/Using_systemd_to_control_the_Docker_daemon)
 > - [systemd_service.5.manual](http://manpages.ubuntu.com/manpages/zesty/man5/systemd.service.5.html)
@@ -16,7 +15,8 @@
 > - [SystemdForUpstartUsers](https://wiki.ubuntu.com/SystemdForUpstartUsers)
 
 ## ubuntu 17.10 bootup settings
-#### create Script
+
+#### create script
 ```bash
 $ cat /usr/local/bin/do_route.sh
 #!/usr/bin/env bash
@@ -42,7 +42,7 @@ done
 
 route="130.147.0.0 130.140.0.0 130.146.0.0 137.55.0.0 161.83.0.0 161.84.0.0 161.85.0.0 161.88.0.0 161.91.0.0 161.92.0.0 185.166.0.0"
 for _r in ${route}; do
-    sudo route add -net ${_r} netmask 255.255.0.0 eno1
+  sudo route add -net ${_r} netmask 255.255.0.0 eno1
 done
 
 touch /home/devops/hi-marslo
@@ -73,12 +73,14 @@ Created symlink /etc/systemd/system/myroute.service → /lib/systemd/system/do_r
 
 $ sudo systemctl start do_route.service
 ```
+
 #### disable the service
 ```bash
 $ sudo systemctl disable do_route.service
 Removed /etc/systemd/system/myroute.service.
 Removed /etc/systemd/system/multi-user.target.wants/do_route.service.
 ```
+
 #### re-enable the service
 ```bash
 $ sudo systemctl enable add_route.service

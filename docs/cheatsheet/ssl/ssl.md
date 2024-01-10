@@ -101,7 +101,7 @@ $ openssl req -new \
               -days 365 \
               -key ca.key \
               -out ca.crt \
-              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
+              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com"
 {%- language name="more details", type="bash" -%}
 $ openssl genrsa -aes256 -out ca.key 2048 Generating RSA private key, 2048 bit long modulus
 ....................................................................+++
@@ -116,7 +116,7 @@ $ openssl req -new \
               -days 365 \
               -key ca.key \
               -out ca.crt \
-              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
+              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com"
 Enter pass phrase for ca.key:artifactory
 {%- endcodetabs %}
 
@@ -127,7 +127,7 @@ $ openssl req -new\
               -sha256 \
               -key server.key \
               -out server.csr \
-              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
+              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com"
 {%- language name="more details", type="bash" -%}
 $ openssl genrsa -out  server.key 2048
 Generating RSA private key, 2048 bit long modulus
@@ -139,12 +139,12 @@ $ openssl req -new \
               -sha256 \
               -key server.key \
               -out server.csr \
-              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
+              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com"
 {%- endcodetabs %}
 
 #### sign the server cert with CA
 {% codetabs name="command", type="bash" -%}
-$ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
+$ echo subjectAltName = DNS:sample.artifactory.com,IP:130.147.219.19 >> extfile.cnf
 $ echo extendedKeyUsage = serverAuth >> extfile.cnf
 
 $ openssl x509 -req \
@@ -157,7 +157,7 @@ $ openssl x509 -req \
                -out server.crt \
                -extfile extfile.cnf
 {%- language name="more details", type="bash" -%}
-$ echo subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19 >> extfile.cnf
+$ echo subjectAltName = DNS:sample.artifactory.com,IP:130.147.219.19 >> extfile.cnf
 $ echo extendedKeyUsage = serverAuth >> extfile.cnf
 
 $ openssl x509 -req \
@@ -170,7 +170,7 @@ $ openssl x509 -req \
                -out server.crt \
                -extfile extfile.cnf
 Signature ok
-subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
 Getting CA Private Key
 Enter pass phrase for ca.key:artifactory
 unable to write 'random state'
@@ -186,7 +186,7 @@ $ openssl genrsa -out client.key
 $ openssl req -new \
               -key client.key \
               -out client.csr \
-              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com"
+              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com"
 
 $ echo extendedKeyUsage = clientAuth >> extfile.cnf
 $ openssl x509 -req \
@@ -207,13 +207,13 @@ unable to write 'random state'
 e is 65537 (0x10001)
 
 $ openssl req -new \
-              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com" \
+              -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com" \
               -key client.key \
               -out client.csr
 
 $ echo extendedKeyUsage = clientAuth >> extfile.cnf
 $ cat extfile.cnf
-subjectAltName = DNS:www.artifactory.mycompany.com,IP:130.147.219.19
+subjectAltName = DNS:sample.artifactory.com,IP:130.147.219.19
 gxtendedKeyUsage = serverAuth
 extendedKeyUsage = clientAuth
 
@@ -227,7 +227,7 @@ $ openssl x509 -req \
                -out client.cert \
                -extfile extfile.cnf
 Signature ok
-subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
 Getting CA Private Key
 Enter pass phrase for ca.key:artifactor
 unable to write 'random state'
@@ -258,11 +258,11 @@ Certificate:
         Version: 3 (0x2)
         Serial Number: 15145698426239402702 (0xd23054792b3142ce)
     Signature Algorithm: sha256WithRSAEncryption
-        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
         Validity
             Not Before: Jan  2 11:35:31 2018 GMT
             Not After : Jan  2 11:35:31 2019 GMT
-        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
         Subject Public Key Info:
             Public Key Algorithm: rsaEncryption
                 Public-Key: (2048 bit)
@@ -322,11 +322,11 @@ Certificate:
         Version: 3 (0x2)
         Serial Number: 12625600037876864867 (0xaf37245755cf1763)
     Signature Algorithm: sha256WithRSAEncryption
-        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Issuer: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
         Validity
             Not Before: Jan  2 11:39:47 2018 GMT
             Not After : Jan  2 11:39:47 2019 GMT
-        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
         Subject Public Key Info:
             Public Key Algorithm: rsaEncryption
                 Public-Key: (2048 bit)
@@ -352,7 +352,7 @@ Certificate:
                 Exponent: 65537 (0x10001)
         X509v3 extensions:
             X509v3 Subject Alternative Name:
-                DNS:www.artifactory.mycompany.com, IP Address:130.147.219.19
+                DNS:sample.artifactory.com, IP Address:130.147.219.19
             X509v3 Extended Key Usage:
                 TLS Web Server Authentication
     Signature Algorithm: sha256WithRSAEncryption
@@ -385,7 +385,7 @@ $ openssl req -noout \
 Certificate Request:
     Data:
         Version: 0 (0x0)
-        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=www.artifactory.mycompany.com/emailAddress=marslo.jiao@mycompany.com
+        Subject: C=CN, ST=Sichuan, L=Chengdu, O=mycompany, OU=CDI, CN=sample.artifactory.com/emailAddress=marslo.jiao@mycompany.com
         Subject Public Key Info:
             Public Key Algorithm: rsaEncryption
                 Public-Key: (2048 bit)
@@ -432,8 +432,8 @@ Certificate Request:
 ## certificate in Nginx
 ```bash
 $ grep ssl_certificate /etc/nginx/sites-enabled/artifactoryv2.conf
-ssl_certificate       /etc/nginx/certs/www.artifactory.mycompany.com/server.crt;
-ssl_certificate_key   /etc/nginx/certs/www.artifactory.mycompany.com/server.key;
+ssl_certificate       /etc/nginx/certs/sample.artifactory.com/server.crt;
+ssl_certificate_key   /etc/nginx/certs/sample.artifactory.com/server.key;
 ```
 
 ## get remote server certs
@@ -468,7 +468,7 @@ $ keytool -printcert \
 ### openssl
 
 > [!NOTE|label:see more]
-> - [iMarslo : Artifactory SSL Certification](../../artifactory/artifactory.html#artifactory-ssl-certification)
+> - [iMarslo : Artifactory SSL Certification]( ../../artifactory/artifactory.html#artifactory-ssl-certification)
 
 ```bash
 $ echo |
@@ -665,11 +665,11 @@ attributes:
     "cenc"<uint32>=0x00000003
     "ctyp"<uint32>=0x00000001
     "hpky"<blob>=0x2332BC619E***  "#2\274a\236Q\216\224"0[\256h\212~\216S\322E|"
-    "issu"<blob>=0x3081A3310B*** "0\201\..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..www.artifactory.mycompany.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
-    "labl"<blob>="www.artifactory.mycompany.com"
+    "issu"<blob>=0x3081A3310B*** "0\201\..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..sample.artifactory.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
+    "labl"<blob>="sample.artifactory.com"
     "skid"<blob>=0x2332BC619E***  "#2\274a\236Q\216\224"0[\256h\212~\216S\322E|"
     "snbr"<blob>=0x00D2305479***  "\000\3220Ty+1B\316"
-    "subj"<blob>=0x3081A3310B***  "0\201\..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..www.artifactory.mycompany.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
+    "subj"<blob>=0x3081A3310B***  "0\201\..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..sample.artifactory.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
 
 $ security find-certificate -a -c artifactor -Z -p -m
 SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
@@ -820,12 +820,12 @@ Getting Private key
                            -sha256 \
                            -days 365 \
                            -newkey rsa:2048 \
-                           -keyout certs/www.artifactory.mycompany.com.key \
-                           -out certs/www.artifactory.mycompany.com.crt
+                           -keyout certs/sample.artifactory.com.key \
+                           -out certs/sample.artifactory.com.crt
   Generating a 2048 bit RSA private key
   ........+++
   ..............................................................+++
-  writing new private key to 'certs/www.artifactory.mycompany.com.key'
+  writing new private key to 'certs/sample.artifactory.com.key'
   -----
   You are about to be asked to enter information that will be incorporated
   into your certificate request.
@@ -840,7 +840,7 @@ Getting Private key
   Locality Name (eg, city) []:Chengdu
   Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
   Organizational Unit Name (eg, section) []:mycompany
-  Common Name (e.g. server FQDN or YOUR name) []:www.artifactory.mycompany.com
+  Common Name (e.g. server FQDN or YOUR name) []:sample.artifactory.com
   Email Address []:marslo.jiao@mycompany.com
   ```
 
@@ -851,7 +851,7 @@ Getting Private key
                 -nodes \
                 -out www_artifactory__mycompany_com.csr \
                 -keyout www_artifactory__mycompany_com.key \
-                -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=www.artifactory.mycompany.com"
+                -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com"
   ```
 
 ## Windows
