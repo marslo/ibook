@@ -6,6 +6,11 @@
     - [align with the N pattern](#align-with-the-n-pattern)
     - [align on specific symbol](#align-on-specific-symbol)
 - [useful commands](#useful-commands)
+- [plugin alternatives](#plugin-alternatives)
+  - [autocompletion](#autocompletion)
+  - [language server protocol](#language-server-protocol)
+  - [ctrl-p](#ctrl-p)
+  - [snippets](#snippets)
 - [highly recommended](#highly-recommended)
   - [LunarWatcher/auto-pairs](#lunarwatcherauto-pairs)
   - [junegunn/fzf.vim](#junegunnfzfvim)
@@ -55,7 +60,6 @@
 > - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
 > - [* amix/vimrc](https://github.com/amix/vimrc)
 {% endhint %}
-
 
 # usage
 ## [`Tabularize`](https://github.com/godlygeek/tabular)
@@ -277,6 +281,28 @@ xnoremap <Leader>r :Reverse <bar> nohlsearch<CR>
 command! -nargs=0 DocToc execute 'silent !/usr/local/bin/doctoc --notitle --update-only --github --maxlevel 3 %' | execute 'redraw!'
 command! -nargs=0 FullPath execute 'echo expand("%:p")'
 ```
+
+# plugin alternatives
+
+## autocompletion
+- [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
+- [neoclide/coc.nvim](https://github.com/neoclide/coc.nvim) | [CocList 入坑指南](https://zhuanlan.zhihu.com/p/71846145) | [coc.nvim 插件体系 - 介绍](https://zhuanlan.zhihu.com/p/65524706)
+- [prabirshrestha/asyncomplete.vim](https://github.com/prabirshrestha/asyncomplete.vim)
+- [Shougo/ddc.vim](https://github.com/Shougo/ddc.vim)
+
+## [language server protocol](https://microsoft.github.io/language-server-protocol/)
+- [prabirshrestha/vim-lsp](https://github.com/prabirshrestha/vim-lsp)
+- [rhysd/vim-lsp-ale](https://github.com/rhysd/vim-lsp-ale)
+- [mattn/vim-lsp-settings](https://github.com/mattn/vim-lsp-settings)
+- [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
+
+## ctrl-p
+- [Shougo/denite.nvim](https://github.com/Shougo/denite.nvim)
+
+## snippets
+- [hrsh7th/vim-vsnip](https://github.com/hrsh7th/vim-vsnip) | [hrsh7th/vim-vsnip-integ](https://github.com/hrsh7th/vim-vsnip-integ)
+- [SirVer/UltiSnips](https://github.com/SirVer/ultisnips) | [thomasfaingnaert/vim-lsp-ultisnips](https://github.com/thomasfaingnaert/vim-lsp-ultisnips)
+- [Shougo/neosnippet.vim](https://github.com/Shougo/neosnippet.vim) | [thomasfaingnaert/vim-lsp-neosnippet](https://github.com/thomasfaingnaert/vim-lsp-neosnippet)
 
 # highly recommended
 
@@ -877,6 +903,7 @@ augroup END
 > - [Vim/YouCompleteMe](https://wiki.archlinux.org/title/Vim/YouCompleteMe)
 > - [在vim中配置最新YouCompleteMe代码自动补全插件](https://blog.csdn.net/qq_28584889/article/details/97131637)
 > - [* How to Set Up Code-Completion for Vim in macOS](https://medium.com/@rohmanhakim/how-to-set-up-code-completion-for-vim-in-macos-9766dd459385)
+> - [My Julia setup for vim with YCM on Linux](https://discourse.julialang.org/t/my-julia-setup-for-vim-with-ycm-on-linux/45485)
 
 ### install
 
