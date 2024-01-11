@@ -345,6 +345,11 @@ devops    4017  0.0  0.4 118225468 32448 tty1  Sl+  17:00   0:00              \_
 
 # [Wayland](https://wiki.archlinux.org/index.php/Wayland)
 
+```bash
+$ echo $WAYLAND_DISPLAY
+wayland-0
+```
+
 ## [wayland known error](https://askubuntu.com/a/967538)
 ```bash
 cat <<EOF | sudo tee /etc/xdg/autostart/xhost.desktop
