@@ -828,11 +828,14 @@ let g:ale_close_preview_on_insert         = 1
 
 - linter/checker install
   ```bash
-  $ brew install checkstyle
+  $ brew install checkstyle stylelint prettier
   # shell
   $ brew install bashate shfmt
   # yaml
   $ brew install yamllint yamlfmt
+  # java
+  $ brew install google-java-format
+  # groovy/Jenkinsfile
   $ npm i -g npm-groovy-lint
   ```
 
