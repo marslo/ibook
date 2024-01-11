@@ -160,6 +160,20 @@ $ dscacheutil -flushcache
 $ sudo shutdown -r now
 ```
 
+- [or](https://docs.gz.ro/node/321)
+  ```bash
+  $ HNAME='iMarsloPro'
+  $ sudo /usr/libexec/PlistBuddy -c "Add :ProgramArguments: string --no-namechange" /System/Library/LaunchDaemons/com.apple.discoveryd.plist
+  $ sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.discoveryd.plist
+  $ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.discoveryd.plist
+
+  $ sudo scutil --set ComputerName "${HNAME}"
+  $ sudo scutil --set HostName "${HNAME}"
+  $ sudo scutil --set LocalHostName "${HNAME}"
+  $ hostname -f
+  iMarsloPro
+  ```
+
 ### disable guest user
 ```bash
 $ sudo dscl . delete /Users/Guest
@@ -216,6 +230,7 @@ $ security login-keychain -s $keychain
 ```
 
 ### [enable root user](https://support.apple.com/en-us/HT204012)
+
 ![Enable Root User](../screenshot/osx/enable-root-user.png)
 
 ### [system integrity protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
@@ -238,6 +253,7 @@ $ sudo chflags restricted /usr/local
 
 - [reboot and <kbd>command</kbd> + <kbd>r</kbd>](https://support.apple.com/en-us/HT201314)
 - go to `Utilities` -> `Terminal`
+
   ![csrutil](../screenshot/osx/csrutil-1.jpg)
 
 - disable

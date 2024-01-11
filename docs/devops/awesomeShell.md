@@ -45,6 +45,7 @@
   - [`elinks`](#elinks)
   - [`duf`](#duf)
   - [`enhancd`](#enhancd)
+  - [tmux](#tmux)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -2071,3 +2072,9 @@ $ elinks https://google.com
   ```
 
   ![enhancd](../screenshot/linux/ecd-ec.gif)
+
+## tmux
+
+> [!NOTE|label:references]
+> - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
+> - [Michał Mieszczak/.dotfiles/.tmux.conf](https://gitlab.com/LongerHV/.dotfiles/-/blob/master/.tmux.conf?ref_type=heads)

@@ -39,6 +39,7 @@
   * [viml](vim/viml.md)
   * [windows](vim/windows.md)
   * [troubleshooting](vim/troubleshooting.md)
+  * [nvim](vim/nvim.md)
 * [devops](devops/awesomeShell.md)
   * [admin tools](devops/adminTools.md)
   * [ssh](devops/ssh.md)

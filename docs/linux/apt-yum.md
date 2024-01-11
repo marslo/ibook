@@ -22,6 +22,7 @@
   - [apt-cache](#apt-cache)
     - [get package name by command](#get-package-name-by-command)
     - [search package name for apt-get](#search-package-name-for-apt-get)
+  - [trouble shooting](#trouble-shooting)
 - [yum/dnf](#yumdnf)
   - [repo](#repo)
     - [check configure](#check-configure)
@@ -249,6 +250,11 @@ google-chrome-beta - The web browser from Google
 google-chrome-stable - The web browser from Google
 google-chrome-unstable - The web browser from Google
 ```
+
+## trouble shooting
+
+- [修复 apt-key deprecated 警告](https://taoshu.in/unix/apt-key-deprecated.html)
+
 # yum/dnf
 
 > [!NOTE|label:references:]

@@ -12,7 +12,7 @@
 - [tip](#tip)
   - [wsl or ubuntu](#wsl-or-ubuntu)
   - [enable vim clipboard](#enable-vim-clipboard)
-  - [config](#config)
+  - [`wsl.conf`](#wslconf)
   - [cmds](#cmds)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -33,9 +33,6 @@
 > - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
 > - [Enable 256 colour support over SSH](https://github.com/cmderdev/cmder/issues/379)
 > - [* Windows Subsystem for Linux (WSL) explained](https://solidstudio.io/blog/windows-subsystem-for-linux-explained)
-> - [* Advanced settings configuration in WSL](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings)
->   - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconf)
->   - [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconfig)
 > - [general profile settings in windows terminal](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/profile-general)
 >   - by default: `"startingDirectory": "%USERPROFILE%"`
 >   - in wsl: `"startingDirectory": "\\\\wsl$\\DISTRO NAME\\home\\USERNAME"` or `"startingDirectory": "\\\\wsl.localhost\\DISTRO NAME\\home\\USERNAME"`
@@ -452,7 +449,13 @@ $ sudo apt install vim
   set clipboard^=unnamedplus
   ```
 
-### config
+### `wsl.conf`
+
+> [!NOTE|label:references:]
+> - [* Advanced settings configuration in WSL](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings)
+>   - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconf)
+>   - [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconfig)
+> - [hsab/WSL-config](https://github.com/hsab/WSL-config)
 
 - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconf-file)
   ```editorconfig

@@ -12,6 +12,7 @@
   - [check remote server dns](#check-remote-server-dns)
   - [show hardware spec](#show-hardware-spec)
   - [change interface name](#change-interface-name)
+- [nginx](#nginx)
 - [nmap](#nmap)
   - [host discovery](#host-discovery)
   - [scan `80` or `22` in particular setment](#scan-80-or-22-in-particular-setment)
@@ -345,6 +346,10 @@ $ sudo ifconfig <NEW_INTERFACE_NAME>
   docker0             47c195b8-4867-40d3-acec-c28223e2b013  bridge    docker0
   ```
 
+## nginx
+
+> [!NOTE|label:references:]
+> - [使用 Nginx 反向代理 HTTPS 网站](https://taoshu.in/unix/nginx-proxy-https.html)
 
 ## [nmap](https://nmap.org/)
 {% hint style='tip' %}
