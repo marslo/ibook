@@ -417,7 +417,7 @@ Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ope
 - lua 5.4.6 ( with shared libs )
 
   > [!TIP]
-  > - [iMarslo: build lua with shared lib](../linux/tools.html#lua)
+  > - [iMarslo: build lua with shared lib](../linux/devenv.html#lua)
 
   <!--sec data-title="build lua with shared lib" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
@@ -440,7 +440,7 @@ Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ope
 - ruby ( via rbenv )
 
   > [!TIP]
-  > - [iMarslo: install ruby with rbenv](../linux/tools.html#ruby)
+  > - [iMarslo: install ruby with rbenv](../linux/devenv.html#ruby)
 
   <!--sec data-title="install ruby by rbenv" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash

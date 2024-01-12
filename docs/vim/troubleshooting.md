@@ -5,6 +5,8 @@
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
+  - [`MatchTagAlways unavaiable: requries python`](#matchtagalways-unavaiable-requries-python)
+  - [`vim: error while loading shared libraries: libpython3.11.so.1.0`](#vim-error-while-loading-shared-libraries-libpython311so10)
   - [`E370: Could not load library "msys-python3.11.dll"`](#e370-could-not-load-library-msys-python311dll)
   - [windows app settings](#windows-app-settings)
 - [vimrc](#vimrc)
@@ -136,6 +138,52 @@
   ```vim
   set pythonthreedll=c:\path\to\python\python37.dll
   set pythonthreehome=c:\path\to\python
+  ```
+
+### `MatchTagAlways unavaiable: requries python`
+
+- issue
+  ```vim
+  $ vim
+  MatchTagAlways unavaiable: requires python
+
+  :py3 print('hello')
+  the Python library could not be load
+  ```
+
+- environment
+  - os: ubuntu 22.04.3 LTS
+  - python
+    - installed from apt ppa sources
+    - environment
+      - /usr/local/bin/python3 -> /usr/local/bin/python -> /usr/bin/python3.12
+      - /usr/local/bin/python3-config -> /usr/local/bin/python-config -> /usr/bin/python3.12
+
+- solution
+
+  > [!NOTE]
+  > - [vim: Could not load library libpython](https://stackoverflow.com/a/47133334/2940319)
+
+  ```bash
+  $ sudo ldconfig
+  # and re-build
+  ```
+
+### `vim: error while loading shared libraries: libpython3.11.so.1.0`
+
+- issue
+  ```bash
+  $ vim
+  vim: error while loading shared libraries: libpython3.11.so.1.0: cannot open shared object file: No such file or directory
+  ```
+
+- env
+  - os: CentOS 8.3
+  - python: build from source, in `/opt/python/Python3.11.6`
+
+- solution
+  ```bash
+  $ export LD_LIBRARY_PATH=/opt/python/Python3.11.6:$LD_LIBRARY_PATH
   ```
 
 ### `E370: Could not load library "msys-python3.11.dll"`

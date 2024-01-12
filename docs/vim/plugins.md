@@ -922,6 +922,7 @@ augroup END
 > [!NOTE|label:references:]
 > - [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
 > - [* iMarslo: build vim from source](../vim/install.html#install-python311-and-vim9)
+> - [* iMarslo: devenv setup](../linux/devenv.html)
 > - [gitter room](https://app.gitter.im/#/room/#Valloric_YouCompleteMe:gitter.im)
 > - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 > - [Eclipse Downloads](https://download.eclipse.org/jdtls/snapshots/)
@@ -940,14 +941,17 @@ augroup END
 >   - [Linux 64-bit](https://github.com/ycm-core/YouCompleteMe/tree/master?tab=readme-ov-file#linux-64-bit)
 >   - [Windows](https://github.com/ycm-core/YouCompleteMe?tab=readme-ov-file#windows)
 > - [Full Installation Guide](https://github.com/ycm-core/YouCompleteMe/wiki/Full-Installation-Guide)
+>   - C/C++/Objective-C/Objective-C++：`--clang-completer`
+>   - C#：`brew install Mono` first and enabled by `--cs-completer`
+>   - Go：`brew install go` and enabled by `--go-completer`
+>   - TypeScript：insall Node.js and npm，and enable typescript via `npm install -g typescript`
+>   - JavaScript: install Node.js and npm，and enabled via `--js-completer`
+>   - Rust: install Rust，`--rust-completer`
+>   - Java: `brew install java`，enabled via `--java-completer`
+>   - for all support : enabled via `--all`
 > - [Full installation on CentOS](https://github.com/ycm-core/YouCompleteMe/wiki/Full-installation-on-CentOS)
 > - [Windows Installation Guide for Unix‐like Environments](https://github.com/ycm-core/YouCompleteMe/wiki/Windows-Installation-Guide-for-Unix%E2%80%90like-Environments)
 > - [* Troubleshooting steps for ycmd server SHUT DOWN](https://github.com/ycm-core/YouCompleteMe/wiki/Troubleshooting-steps-for-ycmd-server-SHUT-DOWN)
-> - [issue with `sudo npm install -g`](https://stackoverflow.com/a/18414606)
->   ```bash
->   $ sudo chown -R $USER /usr/local/lib/node_modules
->   $ npm install -g ..
->   ```
 
 | OPTION             | LANGUAGE               | TOOL                          | DEPENDENCIES      |
 |--------------------|------------------------|-------------------------------|-------------------|
@@ -961,23 +965,13 @@ augroup END
 | --java-completer   | Java                   | eclipse.jdt.ls                | JDK8              |
 | --all              | all                    | -                             | -                 |
 
-
 - environment setup
-
   - macOS
 
     > [!NOTE|label:references:]
     > - [#1925 How to build using -march=native?](https://github.com/ycm-core/YouCompleteMe/issues/1925#issuecomment-173184661)
     > - [vim ycm c++ 环境搭建](https://www.xjx100.cn/news/651145.html?action=onClick)
     > - [MAC安装YCM](https://www.xjx100.cn/news/651144.html?action=onClick)
-    >   - C/C++/Objective-C/Objective-C++：`--clang-completer`
-    >   - C#：`brew install Mono` first and enabled by `--cs-completer`
-    >   - Go：`brew install go` and enabled by `--go-completer`
-    >   - TypeScript：insall Node.js and npm，and enable typescript via `npm install -g typescript`
-    >   - JavaScript: install Node.js and npm，and enabled via `--js-completer`
-    >   - Rust: install Rust，`--rust-completer`
-    >   - Java: `brew install java`，enabled via `--java-completer`
-    >   - for all support : enabled via `--all`
 
     ```bash
     $ brew install cmake python go nodejs
@@ -1013,12 +1007,10 @@ augroup END
     Mono, Version 6.12.0.182
     Copyright (C) 2005-2013 Various Mono authors
     MSBUILD: error MSBUILD0000: Project file '--version' not found.
-
     $ msbuild --version
     Microsoft (R) Build Engine version 16.10.1 for Mono
     Copyright (C) Microsoft Corporation. All rights reserved.
     16.10.1.6601
-
     $ gcc --version
     Apple clang version 15.0.0 (clang-1500.1.0.2.5)
     Target: x86_64-apple-darwin23.2.0
@@ -1028,26 +1020,19 @@ augroup END
     # node
     $ node --version
     v20.10.0
+
+    # python
+    $ python --version
+    Python 3.11.4
+    $ pip --version
+    pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
     ```
-
-    - python
-
-      > [!NOTE|label:install python from source]
-      > - [iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
-
-      ```bash
-      $ python --version
-      Python 3.11.4
-      $ pip --version
-      pip 23.2.1 from /usr/local/lib/python3.11/site-packages/pip (python 3.11)
-      ```
-
 
   - wsl/ubuntu install
 
     > [!NOTE|label:references:]
-    > - [nodejs/snap](https://github.com/nodejs/snap)
     > - [How to install cmake 3.2 on Ubuntu](https://askubuntu.com/a/1254438/92979)
+    > - [nodejs/snap](https://github.com/nodejs/snap)
     > - tips
     >   - using snap instead of apt for nodejs due to
     >     ```bash
@@ -1055,6 +1040,11 @@ augroup END
     >     $ node --version
     >     v12.22.9
     >     ```
+
+    * [* iMarslo: devenv/go](../linux/devenv.html#go)
+    * [* iMarslo: devenv/node&npm](../linux/devenv.html#node--npm)
+    * [* iMarslo: devenv/cmake](../linux/devenv.html#cmake)
+    * [* iMarslo: devenv/gradle](../linux/devenv.html#gradle)
 
     ```bash
     $ sudo mkdir -p /etc/apt/keyrings
@@ -1064,13 +1054,8 @@ augroup END
     $ sudo apt install build-essential cmake vim-nox python3-dev
     $ sudo apt install mono-complete golang openjdk-17-jdk openjdk-17-jre npm
 
-    # nodejs/golang using snap instead of $ sudo apt isntall nodejs
-    $ sudo snap install node --classic --channel=15
-    # upgrade version to 20.x
-    $ sudo snap refresh --channel=20 node
-    node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
-
-    # check
+    # environment
+    # - nodejs/golang using snap instead of $ sudo apt isntall nodejs
     $ go version
     go version go1.18.1 linux/amd64
     $ node --version
@@ -1084,25 +1069,9 @@ augroup END
     OpenJDK 64-Bit Server VM (build 19.0.2+7-Ubuntu-0ubuntu322.04, mixed mode, sharing)
     ```
 
-    - snap install for cmake and golang
-      ```bash
-      $ sudo snap install cmake --classic
-      $ sudo snap install go --classic
-      # or
-      $ sudo apt install golang-go
-
-      $ go version
-      go version go1.21.5 linux/amd64
-      ```
-
     - offline ( only allows apt and git )
 
       > [!NOTE|label:references:]
-      > - [Installing Gradle](https://docs.gradle.org/current/userguide/installation.html#ex-installing-manually)
-      > - [Gradle Installing manually](https://gradle.org/install/#manually)
-      > - [Go: Download and install](https://go.dev/doc/install)
-      > - [How to fix npm throwing error without sudo](https://stackoverflow.com/a/18414606)
-      > - [Don’t use `sudo` with `npm`](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-5711d2726aa3)
       > - [Ubuntu setup](https://innovativeinnovation.github.io/ubuntu-setup/)
       > - [Full Installation Guide](https://github.com/ycm-core/YouCompleteMe/wiki/Full-Installation-Guide)
       >   - C# support: install [Mono on non-Windows platforms](http://www.mono-project.com/docs/getting-started/install/). Navigate to YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn. Download an [Omnisharp-Roslyn release archive](https://github.com/OmniSharp/omnisharp-roslyn/releases) and extract the archive to `YouCompleteMe/third_party/ycmd/third_party/omnisharp-roslyn`.
@@ -1110,7 +1079,6 @@ augroup END
 
       ```bash
       # c/c++
-      $ sudo apt install build-essential cmake vim-nox
       $ sudo apt install build-essential cmake vim-nox
       $ sudo apt install python3.11-dev python3-pip
       $ python3 -m pip install --upgrade pip
@@ -1155,19 +1123,22 @@ augroup END
     > - `dnf install gcc-c++`
     {% endhint %}
 
-    * dnf install
+    * cmake/make
       ```bash
       $ sudo dnf install cmake make
       ```
-
     * [* iMarslo: build python from source](../programming/python/config.html#install-from-source-code)
       ```bash
       # or
       $ sudo dnf install python3-devel
       ```
-    * [* iMarslo: build gcc from source](../linux/tools.html#gcc)
-    * [* iMarslo: build ruby from source](../linux/tools.html#ruby)
-    * [* iMarslo: build mono from source](../linux/tools.html#mono)
+    * [* iMarslo: devenv/build gcc from source](../linux/devenv.html#gcc)
+    * [* iMarslo: devenv/build ruby from source](../linux/devenv.html#ruby)
+    * [* iMarslo: devenv/build mono from source](../linux/devend.html#mono)
+    * [* iMarslo: devenv/go](../linux/devenv.html#go)
+    * [* iMarslo: devenv/node&npm](../linux/devenv.html#node--npm)
+    * [* iMarslo: devenv/cmake](../linux/devenv.html#cmake)
+    * [* iMarslo: devenv/gradle](../linux/devenv.html#gradle)
 
     - or
       ```bash
@@ -1175,22 +1146,7 @@ augroup END
                             clang clang-devel clang-libs clang-tools-extra \   # no libclang found
                             llvm llvm-libs \
                             go
-      $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
       $ sudo dnf install java-17-openjdk-devel java-17-openjdk
-
-      # upgrade nodejs
-      $ node --version
-      v12.22.5
-      $ sudo npm i -g n
-      $ sudo mkdir -p /usr/local/n && sudo chown -R $(whoami) /usr/local/n
-      $ sudo n latest
-      $ which -a node
-      /usr/local/bin/node
-      /usr/bin/node
-      $ node --version
-      v20.8.1
-      $ /usr/bin/node --version
-      v12.22.5
       ```
 
   - windows
@@ -1422,7 +1378,7 @@ augroup END
 - install
   ```bash
   $ cd ~/.vim/plugged/lsp-examples
-  $ python install.py --all
+  $ python3 install.py --all
 
   ## add into .vimrc
   source $HOME/.vim/plugged/lsp-examples/vimrc.generated
