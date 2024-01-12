@@ -17,6 +17,7 @@
   - [accpet license from cmd](#accpet-license-from-cmd)
   - [commandline tools and compoents](#commandline-tools-and-compoents)
   - [enable dev mode](#enable-dev-mode)
+  - [troubleshooting](#troubleshooting)
 - [security](#security)
   - [backup security](#backup-security)
 
@@ -505,6 +506,20 @@ $ sudo xcodebuild -license accept
 ### enable dev mode
 ```bash
 $ DevToolsSecurity -enable
+```
+
+### troubleshooting
+#### [xcode-select: error: tool 'xcodebuild' requires Xcode](https://github.com/nodejs/node-gyp/issues/569#issuecomment-104284148)
+
+```bash
+$ sudo xcode-select -s /Library/Developer/CommandLineTools
+$ xcodebuild -version
+xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+
+$ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+$ xcodebuild -version
+Xcode 15.2
+Build version 15C500b
 ```
 
 ## security

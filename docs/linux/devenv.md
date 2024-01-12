@@ -8,7 +8,7 @@
   - [groovy](#groovy)
   - [gcc](#gcc)
   - [glibc](#glibc)
-    - [troubleshooting](#troubleshooting)
+    - [glibc troubleshooting](#glibc-troubleshooting)
   - [lua](#lua)
   - [ruby](#ruby)
   - [mono](#mono)
@@ -17,6 +17,12 @@
     - [install from apt repo](#install-from-apt-repo)
   - [mysql-connector (jdbc)](#mysql-connector-jdbc)
   - [vncserver](#vncserver)
+- [troubleshooting](#troubleshooting)
+  - [issues](#issues)
+  - [cheatsheet](#cheatsheet)
+    - [to use the bundled libc++ please add the following LDFLAGS](#to-use-the-bundled-libc-please-add-the-following-ldflags)
+    - [check osx compilers](#check-osx-compilers)
+    - [check *.o file](#check-o-file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -191,7 +197,7 @@ build $ sudo make install
 build $ make install DESTDIR=/root/glibc-2.14/staging
 ```
 
-### [troubleshooting](https://leistech.blogspot.com/2015/06/glibc-installation.html)
+### [glibc troubleshooting](https://leistech.blogspot.com/2015/06/glibc-installation.html)
 
 - No rule to make target `glibc-build/Versions.all`, needed by `glibc-build/abi-versions.h`. Stop.
   ```bash
@@ -464,3 +470,155 @@ $ sudo mysql_secure_installation
 $ sudo apt install vnc4server
 $ sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
 ```
+
+# troubleshooting
+## issues
+- `macOS 14.1 on arm64 using ruby-build 20231107`
+
+  > [!NOTE]
+  > - [#2309 Build failures on macOS Sonoma 14.1](https://github.com/rbenv/ruby-build/discussions/2309)
+  > - [#2178 BUILD FAILED (macOS 13.2.1 using ruby-build 20230330)](https://github.com/rbenv/ruby-build/discussions/2178)
+
+
+- `"ld: multiple errors: archive member '/' not a mach-o file"`
+
+  > [!NOTE]
+  > - [iMarslo : build git from source](../devops/git/config.html#ld-archive-member--not-a-mach-o-file)
+  > - [Clang archive or linking issue. Xcode 15.0.1](https://developer.apple.com/forums/thread/741149)
+  > - [build and install git from source on macOS Sonama 14.x: "ld: multiple errors: archive member '/' not a mach-o file"](https://stackoverflow.com/q/77626259/2940319)
+
+## cheatsheet
+### [to use the bundled libc++ please add the following LDFLAGS](https://formulae.brew.sh/formula/llvm)
+```bash
+LDFLAGS="-L$HOMEBREW_PREFIX/opt/llvm/lib/c++ -Wl,-rpath,$HOMEBREW_PREFIX/opt/llvm/lib/c++"
+```
+
+### check osx compilers
+```bash
+$ while read -r _compiler; do
+  echo -e '\n';
+  which -a "${_compiler}";
+  "${_compiler}" --version;
+done < <(echo 'cc c++ gcc g++ clang clang++' | fmt -1)
+
+/usr/bin/cc
+Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+Target: x86_64-apple-darwin23.2.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+/usr/bin/c++
+Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+Target: x86_64-apple-darwin23.2.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+/usr/bin/gcc
+Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+Target: x86_64-apple-darwin23.2.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+/usr/bin/g++
+Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+Target: x86_64-apple-darwin23.2.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+/usr/bin/clang
+Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+Target: x86_64-apple-darwin23.2.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+/usr/bin/clang++
+Apple clang version 15.0.0 (clang-1500.1.0.2.5)
+Target: x86_64-apple-darwin23.2.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+```
+
+### check *.o file
+
+<!--sec data-title="objdump" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ objdump -d ar-test1.o
+ar-test1.o:     file format mach-o-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 <_ar_test1>:
+   0: 55                    push   %rbp
+   1: 48 89 e5              mov    %rsp,%rbp
+   4: 48 8d 3d 09 00 00 00  lea    0x9(%rip),%rdi        # 14 <_ar_test1+0x14>
+   b: b0 00                 mov    $0x0,%al
+   d: e8 00 00 00 00        call   12 <_ar_test1+0x12>
+  12: 5d                    pop    %rbp
+  13: c3                    ret
+```
+<!--endsec-->
+
+<!--sec data-title="execsnoop" data-id="section2" data-show=true data-collapse=true ces-->
+```bash
+$ sudo execsnoop -a -c ar-test1.o
+dtrace: system integrity protection is on, some features will not be available
+
+dtrace: invalid probe specifier
+ /*
+  * Command line arguments
+  */
+ inline int OPT_dump  = 0;
+ inline int OPT_cmd   = 1;
+ inline int OPT_time  = 1;
+ inline int OPT_timestr = 1;
+ inline int OPT_zone  = 0;
+ inline int OPT_safe  = 0;
+ inline int OPT_proj  = 1;
+ inline int FILTER  = 1;
+ inline string COMMAND  = "ar-test1.o";
+
+ #pragma D option quiet
+ #pragma D option switchrate=10hz
+
+ /*
+  * Print header
+  */
+ dtrace:::BEGIN
+ {
+  /* print optional headers */
+  OPT_time    ? printf("%-14s ", "TIME") : 1;
+  OPT_timestr ? printf("%-20s ", "STRTIME") : 1;
+  OPT_zone    ? printf("%-10s ", "ZONE") : 1;
+  OPT_proj    ? printf("%5s ", "PROJ") : 1;
+
+  /* print main headers */
+  /* APPLE: Removed "ZONE" header, it has no meaning in darwin */
+  OPT_dump    ? printf("%s %s %s %s %s %s %s\n",
+      "TIME", "PROJ", "UID", "PID", "PPID", "COMM", "ARGS") :
+      printf("%5s %6s %6s %s\n", "UID", "PID", "PPID", "ARGS");
+ }
+
+ /*
+  * Print exec event
+  */
+ /* SOLARIS: syscall::exec:return, syscall::exece:return */
+proc:::exec-success
+ /(FILTER == 0) || (OPT_cmd == 1 && COMMAND == strstr(COMMAND, execname)) || (OPT_cmd == 1 && execname == strstr(execname, COMMAND))/
+ {
+  /* print optional fields */
+  OPT_time ? printf("%-14d ", timestamp/1000) : 1;
+  OPT_timestr ? printf("%-20Y ", walltimestamp) : 1;
+  OPT_zone ? printf("%-10s ", zonename) : 1;
+  OPT_proj ? printf("%5d ", curpsinfo->pr_projid) : 1;
+
+  /* print main data */
+  /* APPLE: Removed the zonename output, it has no meaning in darwin */
+  OPT_dump ? printf("%d %d %d %d %d %s ", timestamp/1000,
+      curpsinfo->pr_projid, uid, pid, ppid, execname) :
+      printf("%5d %6d %6d ", uid, pid, ppid);
+  OPT_safe ? printf("%S\n", curpsinfo->pr_psargs) :
+      printf("%s\n", curpsinfo->pr_psargs);
+ }
+: probe description proc:::exec-success does not match any probes. System Integrity Protection is on
+```
+<!--endsec-->

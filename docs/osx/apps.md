@@ -1288,7 +1288,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
   ```bash
   $ curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
   ```
-- [more settings](../../tools/iterm2.md)
+- [more settings](../tools/app/iterm2.md)
 
 ### powerline
 
