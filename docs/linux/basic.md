@@ -199,7 +199,24 @@ PS2="${COL_DEFAULT}  -> ${COL_RESET}${COL_NONE}"
 PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
 ```
 
-<!--sec data-title="colors" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="for wsl" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+PS1="\\n${COL_RESET}${COL_DEFAULT}╭╶ (\\u@\\h${COL_RESET} "
+PS1+="${COL_SL_RED}\\w${COL_RESET}${COL_DEFAULT}) "
+PS1+="\`__git_ps1 '- (%s) '\`"
+PS1+="${COL_RESET}${COL_DEFAULT}->${COL_RESET}"
+PS1+="\\n${COL_DEFAULT}╰╶ ${COL_RESET}"
+PS1+="\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\\$; else echo ${COL_IF_SL_RED}\\$; fi\` ${COL_RESET}"
+PS1+="${COL_NONE}"
+# PS2="${COL_DEFAULT} |-> ${COL_RESET}${COL_NONE}"
+PS2="${COL_DEFAULT}  -> ${COL_RESET}${COL_NONE}"
+PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
+
+export PS1 PS2 PS4
+```
+<!-- endsec -->
+
+<!--sec data-title="colors" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 UMARK='\[\033(0\]l\[\033(B\]'
 DMARK='\[\033(0\]m\[\033(B\]'
@@ -238,7 +255,7 @@ COL_IF_SD_BLUE='\[\033[1\;34m\]'
 ```
 <!--endsec-->
 
-<!--sec data-title="deprecated" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="deprecated" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
 if [ -z "$DISPLAY" ]; then
   export PS1="\n${COL_D_BLACK}┌─ (\u@\h ${COL_RESET} ${COL_D_RED}\w${COL_RESET}${COL_D_BLACK}) ->${COL_RESET}\n${COL_D_BLACK}└─ ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_SD_BLACK}\\$ ${COL_RESET}; else echo ${COL_SD_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
