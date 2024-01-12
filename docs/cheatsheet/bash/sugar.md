@@ -8,7 +8,8 @@
   - [find and rename](#find-and-rename)
   - [find and sort](#find-and-sort)
   - [download and extract](#download-and-extract)
-- [sync mirro](#sync-mirro)
+  - [kubectl apply from stdin](#kubectl-apply-from-stdin)
+- [sync mirror](#sync-mirror)
 - [using string as variable name](#using-string-as-variable-name)
 - [`<<<`, `< <(..)`](#--)
   - [`< <(..)` && `> >(..)`](#----)
@@ -38,6 +39,9 @@
 {% endhint %}
 
 ## oneline commands
+
+> [!TIP]
+> - [iMarslo : kubernetes - oneline cmd](../../virtualization/kubernetes/cheatsheet.html#oneline-command)
 
 ### cat and EOF
 
@@ -212,7 +216,21 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
   $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
   ```
 
-## sync mirro
+### kubectl apply from stdin
+```bash
+$ cat << EOF | kubectl create -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+type: Opaque
+data:
+  username: $(echo -n 'admin' | base64)
+  password: $(echo -n 'password' | base64)
+EOF
+```
+
+## sync mirror
 
 > [!NOTE]
 > - [How to create public mirrors for CentOS](https://wiki.centos.org/HowTos(2f)CreatePublicMirrors.html)

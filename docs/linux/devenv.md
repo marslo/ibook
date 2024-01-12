@@ -12,12 +12,21 @@
   - [lua](#lua)
   - [ruby](#ruby)
   - [mono](#mono)
+  - [cmake](#cmake)
+  - [llvm](#llvm)
+  - [go](#go)
+  - [node && npm](#node--npm)
+    - [troubleshooting](#troubleshooting)
+    - [install from private registry](#install-from-private-registry)
+    - [upgrade via `n`](#upgrade-via-n)
+  - [gradle](#gradle)
+  - [rust](#rust)
   - [mysql](#mysql)
     - [built from source code](#built-from-source-code)
     - [install from apt repo](#install-from-apt-repo)
   - [mysql-connector (jdbc)](#mysql-connector-jdbc)
   - [vncserver](#vncserver)
-- [troubleshooting](#troubleshooting)
+- [troubleshooting](#troubleshooting-1)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
     - [to use the bundled libc++ please add the following LDFLAGS](#to-use-the-bundled-libc-please-add-the-following-ldflags)
@@ -256,6 +265,9 @@ $ sudo make install
 
 - rbenv
   ```bash
+  # debine
+  $ sudo apt install libffi-dev libyaml-dev
+
   $ curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
   # or
   $ wget -q https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer -O- | bash
@@ -397,6 +409,155 @@ $ sudo yum install mono-complete
   gpgcheck=1
   gpgkey=https://download.mono-project.com/repo/xamarin.gpg
   ```
+
+## cmake
+
+> [!NOTE|label:references]
+> - [How to install cmake 3.2 on Ubuntu](https://askubuntu.com/a/1254438/92979)
+> - [#2756: CMake Error,no libclang found](https://github.com/ycm-core/YouCompleteMe/issues/2756)
+
+```bash
+# snap
+$ sudo snap install cmake --classic
+
+# pip
+$ pip install --user cmake
+
+# dnf
+$ sudo dnf install cmake make
+```
+
+## llvm
+
+> [!NOTE|label:references:]
+> - [PDF: Red Hat Developer Tools 1: Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/pdf/using_llvm_13.0.1_toolset/red_hat_developer_tools-1-using_llvm_13.0.1_toolset-en-us.pdf)
+> - [Using LLVM 13.0.1 Toolset](https://access.redhat.com/documentation/en-us/red_hat_developer_tools/1/html/using_llvm_13.0.1_toolset/assembly_llvm#proc_installing-comp-toolset_assembly_llvm)
+> - [Getting Started with the LLVM System](https://llvm.org/docs/GettingStarted.html)
+
+```bash
+# dnf
+$ sudo dnf install llvm llvm-libs
+```
+
+## go
+
+> [!NOTE|label:references:]
+> - [Go: Download and install](https://go.dev/doc/install)
+> - [Managing Go installations](https://go.dev/doc/manage-install#linux-mac-bsd)
+
+```bash
+# snap
+$ sudo snap install go --classic
+
+# apt
+$ sudo apt install golang-1.21 golang-1.21-go golang-1.21-doc
+# or
+$ sudo apt install golang-go
+$ sudo update-alternatives --install /usr/bin/go go /usr/lib/go-1.21/bin/go 99
+$ sudo update-alternatives --install /usr/bin/gofmt gofmt /usr/lib/go-1.21/bin/gofmt 99
+$ sudo update-alternatives --auto go
+$ sudo update-alternatives --auto gofmt
+$ go version
+go version go1.21.5 linux/amd64
+
+# standalone pacakge
+$ mkdir -p /opt/go
+$ curl -fsSL https://dl.google.com/go/go1.21.5.linux-amd64.tar.gz | tar xzf - -C /opt/go
+
+$ cat >> ~/.bashrc << EOF
+export GOPATH=/opt/go
+export PATH=$GOPATH/bin:$PATH
+EOF
+```
+
+## node && npm
+```bash
+# snap
+$ sudo snap install node --classic --channel=15
+# upgrade version to 20.x
+$ sudo snap refresh --channel=20 node
+node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+```
+
+### troubleshooting
+
+> [!NOTE]
+> - [Don’t use `sudo` with `npm`](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-5711d2726aa3)
+> - [issue with `sudo npm install -g`](https://stackoverflow.com/a/18414606)
+> - [How to fix npm throwing error without sudo](https://stackoverflow.com/a/18414606)
+>   ```bash
+>   $ npm config get prefix
+>   /usr/local
+>   ```
+
+```bash
+$ sudo chown -R $USER /usr/local/lib/node_modules
+$ npm install -g ..
+
+# or
+$ export NPM_CONFIG_PREFIX="$HOME/.npm"
+$ npm config set prefix "$NPM_CONFIG_PREFIX"
+$ export PATH="$PATH:$NPM_CONFIG_PREFIX/bin"
+$ npm install -g ..
+
+# or
+$ sudo groupadd nodegrp
+$ sudo usermode -aG nodegrp `logname`
+# without re-login
+$ newgrp nodegrp
+$ sudo chgrp -R nodegrp /usr/lib/node_modules
+$ sudo chgrp nodegrp /usr/bin/node
+$ sudo chgrp nodegrp /usr/bin/npm
+$ npm instal -g ...
+```
+
+### install from private registry
+```bash
+$ npm config set registry https://artifactory.sample.com/artifactory/api/npm/npm-remote/
+$ sudo mkdir -p /usr/local/n && sudo chwon -R $(whoami) /usr/local/n
+$ sudo n latest
+$ npm i -g npm-completion --verbose
+```
+
+### upgrade via `n`
+```bash
+# upgrade nodejs
+$ node --version
+v12.22.5
+$ sudo npm i -g n
+$ sudo mkdir -p /usr/local/n && sudo chown -R $(whoami) /usr/local/n
+$ sudo n latest
+$ which -a node
+/usr/local/bin/node
+/usr/bin/node
+$ node --version
+v20.8.1
+$ /usr/bin/node --version
+v12.22.5
+```
+
+## gradle
+
+> [!NOTE]
+> - [Installing Gradle](https://docs.gradle.org/current/userguide/installation.html#ex-installing-manually)
+> - [Gradle Installing manually](https://gradle.org/install/#manually)
+
+```bash
+# snap
+$ sudo snap install gradle --classic
+
+# standalone package
+$ curl -O https://services.gradle.org/distributions/gradle-7.6.1-bin.zip    # download somewhere and sync to server
+$ unzip gradle-7.6.1-bin.zip -d /opt/gradle
+$ ln -sf /opt/gradle/gradle-7.6.1 /opt/gradle/latest
+$ sudo update-alternatives --install /usr/local/bin/gradle gradle /opt/gradle/latest/bin/gradle 99
+$ sudo update-alternatives --auto gradle
+```
+
+## rust
+```bash
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
 
 ## mysql
 ### built from source code

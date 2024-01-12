@@ -74,7 +74,7 @@ proxy=http://proxy.domain.com:80
 ## proxy for apt
 
 > [!TIP|label:see also]
-> - [* imarlso : APT Configuration](../linux/tools.html#apt-configuration)
+> - [* imarlso : apt.conf](../linux/apt-yum.html#aptconf)
 
 ```bash
 $ cat /etc/apt/apt.conf

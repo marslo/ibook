@@ -1605,7 +1605,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     >   ```
 
     ```bash
-    $ git clone https://github.com/sharkdp/fd && cd $_
+    $ git clone https://github.com/sharkdp/fd && cd fd
 
     # osx
     $ brew install rust
@@ -1764,7 +1764,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ sudo apt install -y ripgrep
 
   # from source
-  $ git clone https://github.com/BurntSushi/ripgrep && cd $_
+  $ git clone https://github.com/BurntSushi/ripgrep && cd ripgrep
   $ cargo build --release
   $ ./target/release/rg --version
   0.1.3
@@ -1900,7 +1900,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
   # build a bat binary with modified syntaxes and themes
   $ bash assets/create.sh
-  $ cargo install --path . --locked --forc
+  $ cargo install --path . --locked --force
   ```
 
 - completion
@@ -2027,7 +2027,37 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 > - [kenos1/tmux-cht-sh/bin/tmux-cht-sh.sh](https://github.com/kenos1/tmux-cht-sh/blob/main/bin/tmux-cht-sh.sh)
 > - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
 
+```bash
+# install
+$ curl -fsSL https://cht.sh/:cht.sh --create-dirs -o ~/.local/bin/cht.sh
+$ chmod +x ~/.local/bin/cht.sh
+
+# completion
+$ curl -fsSL https://cheat.sh/:bash_completion --create-dirs -o ~/.marslo/.completion/cht.sh
+$ source ~/.marslo/.completion/cht.sh
+
+# added in .bashrc
+$ [[ -f "${iRCHOME}"/.completion/cht.sh ]] && source "${iRCHOME}"/.completion/cht.sh
+```
+
 # [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
+
+> [!TIP]
+> - [code.blicky.net/yorhel/ncdu](https://code.blicky.net/yorhel/ncdu/)
+> - [Ncdu 2: Less hungry and more Ziggy](https://dev.yorhel.nl/doc/ncdu2)
+
+```bash
+# deps install
+$ sudo snap install zig --class --beta
+$ sudo apt install libncurses-dev
+
+$ make
+$ sudo make install PREFIX=/usr/local
+
+# verify
+$ ncdu --version
+ncdu 2.3
+```
 
 ![ncdu](../screenshot/linux/ncdu.png)
 
