@@ -16,7 +16,7 @@
   - [advanced usage](#advanced-usage)
     - [man page](#man-page)
     - [git alias](#git-alias)
-    - [unset environment](#unset-environment)
+    - [environment](#environment)
     - [process](#process)
     - [kubectl](#kubectl)
     - [homebrew](#homebrew)
@@ -50,7 +50,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-{% hint style='top' %}
+{% hint style='tip' %}
 > references:
 > - [Best UNIX shell-based tools](https://gist.github.com/mbbx6spp/1429161)
 > - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master) | [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
@@ -72,6 +72,16 @@
 {% endhint %}
 
 # [`fzf`](https://github.com/junegunn/fzf)
+
+{% hint style='tip' %}
+> - fuzzy completion in bash
+>   - `$ cat **<tab>`
+>   - `$ unset **<tab>`
+>   - `$ unalias **<tab>`
+>   - `$ export **<tab>`
+>   - `$ ssh **<tab>`
+>   - `$ kill -9 **<tab>`
+{% endhint %}
 
 > [!NOTE|label:references:]
 > - [* fzf - FuZzy Finder Tutorial](https://www.youtube.com/watch?v=tB-AgxzBmH8)
@@ -98,13 +108,6 @@
 >   - [4 Useful fzf Tricks for Your Terminal](https://pragmaticpineapple.com/four-useful-fzf-tricks-for-your-terminal/)
 >   - [Improving shell workflows with fzf](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
 >   - [Day 18 - Awesome command-line fuzzy finding with fzf](https://sysadvent.blogspot.com/2017/12/day-18-awesome-command-line-fuzzy.html)
->   - fuzzy completion in bash
->     - `$ cat **<tab>`
->     - `$ unset **<tab>`
->     - `$ unalias **<tab>`
->     - `$ export **<tab>`
->     - `$ ssh **<tab>`
->     - `$ kill -9 **<tab>`
 > - more tools
 >   - [ggVGc/fzf_browser](https://github.com/ggVGc/fzf_browser/tree/master)
 >   - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
@@ -393,7 +396,7 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ```bash
 # magic vim - fzf list in recent modified order
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
 # @description :
 #   - if `vim` commands without paramters, then call fzf and using vim to open selected file
 #   - if `vim` commands with    paramters
@@ -428,7 +431,7 @@ function vim() {                           # magic vim - fzf list in most recent
 
 # v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
 # @description : list 10 most recently used files via fzf, and open by regular vim
 function v() {                             # v - open files in ~/.vim_mru_files
   local files
@@ -453,7 +456,7 @@ function fzfInPath() {                   # return file name via fzf in particula
 
 # magic vimdiff - using fzf list in recent modified order
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
 # @description :
 #   - if any of paramters is directory, then get file path via fzf in target path first
 #   - if `vimdiff` commands without parameter , then compare files in `.` and `~/.marslo`
@@ -496,7 +499,7 @@ function vimdiff() {                       # smart vimdiff
 
 # vd - open vimdiff loaded files from ~/.vim_mru_files
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
 # @description : list 10 most recently used files via fzf, and open by vimdiff
 #   - if `vd` commands without parameter, list 10 most recently used files via fzf, and open selected files by vimdiff
 #   - if `vd` commands with `-a` ( [q]uiet ) parameter, list 10 most recently used files via fzf and automatic select top 2, and open selected files by vimdiff
@@ -517,7 +520,7 @@ function vd() {                            # vd - open vimdiff loaded files from
 ```bash
 # smart cat - using bat by default for cat content, respect bat options
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
 # @description :
 #   - if `bat` without  paramter, then search file via `fzf` and shows via `bat`
 #   - if `bat` with 1   paramter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
@@ -546,7 +549,7 @@ function cat() {                           # smart cat
 ```bash
 # smart copy - using `fzf` to list files and copy the selected file
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
 # @description :
 #   - if `copy` without paramter, then list file via `fzf` and copy via `pbcopy` or `clip.exe`
 #   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
@@ -579,7 +582,7 @@ function copy() {                          # smart copy osx/wsl
   ```bash
   # imgview - fzf list and preview images
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
   # @description :
   #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default imgview`
   #   - disable `gif` due to imgcat performance issue
@@ -862,12 +865,119 @@ function fman() {
                      '"
 ```
 
-### unset environment
+### environment
+- export
+  ```bash
+  # mkexp - compilation environment variable export, support multiple select
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @description : list compilation environment variable via `fzf`, and export selected items
+  #   - if paramter is [ -f | --full ], then load full tool paths
+  # shellcheck disable=SC1090
+  function mkexp() {                         # [m]a[k]e environment variable [e][x][p]ort
+    if [[ 1 -eq $# ]] && [[ '-f' = "$1" || '--full' = "$1" ]]; then
+      source ~/.marslo/.imac
+    fi
+
+    LDFLAGS="${LDFLAGS:-}"
+    test -d "${HOMEBREW_PREFIX}"      && LDFLAGS+=" -L${HOMEBREW_PREFIX}/lib"
+    test -d '/usr/local/opt/readline' && LDFLAGS+=' -L/usr/local/opt/readline/lib'
+    test -d "${OPENLDAP_HOME}"        && LDFLAGS+=" -L${OPENLDAP_HOME}/lib"
+    test -d "${CURL_OPENSSL_HOME}"    && LDFLAGS+=" -L${CURL_OPENSSL_HOME}/lib"
+    test -d "${BINUTILS}"             && LDFLAGS+=" -L${BINUTILS}/lib"
+    test -d "${PYTHON_HOME}"          && LDFLAGS+=" -L${PYTHON_HOME}/lib"
+    test -d "${RUBY_HOME}"            && LDFLAGS+=" -L${RUBY_HOME}/lib"
+    test -d "${TCLTK_HOME}"           && LDFLAGS+=" -L${TCLTK_HOME}/lib"
+    test -d "${SQLITE_HOME}"          && LDFLAGS+=" -L${SQLITE_HOME}/lib"
+    test -d "${OPENSSL_HOME}"         && LDFLAGS+=" -L${OPENSSL_HOME}/lib"
+    test -d "${NODE_HOME}"            && LDFLAGS+=" -L${NODE_HOME}/lib"                       # ${NODE_HOME}/libexec/lib for node@12
+    test -d "${LIBRESSL_HOME}"        && LDFLAGS+=" -L${LIBRESSL_HOME}/lib"
+    test -d "${ICU4C_711}"            && LDFLAGS+=" -L${ICU4C_711}/lib"
+    test -d "${EXPAT_HOME}"           && LDFLAGS+=" -L${EXPAT_HOME}/lib"
+    test -d "${NCURSES_HOME}"         && LDFLAGS+=" -L${NCURSES_HOME}/lib"
+    test -d "${LIBICONV_HOME}"        && LDFLAGS+=" -L${LIBICONV_HOME}/lib"
+    test -d "${ZLIB_HOME}"            && LDFLAGS+=" -L${ZLIB_HOME}/lib"
+    test -d "${LLVM_HOME}"            && LDFLAGS+=" -L${LLVM_HOME}/lib"
+    test -d "${LLVM_HOME}"            && LDFLAGS+=" -L${LLVM_HOME}/lib/c++ -Wl,-rpath,${LLVM_HOME}/lib/c++"  # for c++
+    LDFLAGS=$( echo "$LDFLAGS" | tr ' ' '\n' | uniq | sed '/^$/d' | paste -s -d' ' )
+
+    CFLAGS="${CFLAGS:-}"
+    CFLAGS+=" -I/usr/local/include"
+    test -d "${TCLTK_HOME}" && CFLAGS+=" -I${TCLTK_HOME}/include"
+    CFLAGS=$( echo "$CFLAGS" | tr ' ' '\n' | uniq | sed '/^$/d' | paste -s -d' ' )
+
+    CPPFLAGS="${CPPFLAGS:-}"
+    test -d "${HOMEBREW_PREFIX}"      && CPPFLAGS+=" -I${HOMEBREW_PREFIX}/include"
+    test -d "${JAVA_HOME}"            && CPPFLAGS+=" -I${JAVA_HOME}/include"
+    test -d "${OPENLDAP_HOME}"        && CPPFLAGS+=" -I${OPENLDAP_HOME}/include"
+    test -d "${CURL_OPENSSL_HOME}"    && CPPFLAGS+=" -I${CURL_OPENSSL_HOME}/include"
+    test -d "${BINUTILS}"             && CPPFLAGS+=" -I${BINUTILS}/include"
+    test -d "${SQLITE_HOME}"          && CPPFLAGS+=" -I${SQLITE_HOME}/include"
+    test -d '/usr/local/opt/readline' && CPPFLAGS+=' -I/usr/local/opt/readline/include'
+    test -d "${OPENSSL_HOME}"         && CPPFLAGS+=" -I${OPENSSL_HOME}/include"
+    test -d "${NODE_HOME}"            && CPPFLAGS+=" -I${NODE_HOME}/include"
+    test -d "${LIBRESSL_HOME}"        && CPPFLAGS+=" -I${LIBRESSL_HOME}/include"
+    test -d "${TCLTK_HOME}"           && CPPFLAGS+=" -I${TCLTK_HOME}/include"
+    test -d "${RUBY_HOME}"            && CPPFLAGS+=" -I${RUBY_HOME}/include"
+    test -d "${ICU4C_711}"            && CPPFLAGS+=" -I${ICU4C_711}/include"
+    test -d "${LLVM_HOME}"            && CPPFLAGS+=" -I${LLVM_HOME}/include"
+    test -d "${LIBICONV_HOME}"        && CPPFLAGS+=" -I${LIBICONV_HOME}/include"
+    test -d "${EXPAT_HOME}"           && CPPFLAGS+=" -I${EXPAT_HOME}/include"
+    test -d "${NCURSES_HOME}"         && CPPFLAGS+=" -I${NCURSES_HOME}/include"
+    test -d "${ZLIB_HOME}"            && CPPFLAGS+=" -I${ZLIB_HOME}/include"
+    CPPFLAGS=$( echo "$CPPFLAGS" | tr ' ' '\n' | uniq | sed '/^$/d' | paste -s -d' ' )
+
+    PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}
+    PKG_CONFIG_PATH+=":${HOMEBREW_PREFIX}/lib/pkgconfig"
+    test -d "${CURL_OPENSSL_HOME}"  && PKG_CONFIG_PATH+=":${CURL_OPENSSL_HOME}/lib/pkgconfig"
+    test -d "${TCLTK_HOME}"         && PKG_CONFIG_PATH+=":${TCLTK_HOME}/lib/pkgconfig"
+    command -v brew >/dev/null 2>&1 && PKG_CONFIG_PATH+=':/usr/local/Homebrew/Library/Homebrew/os/mac/pkgconfig/14'
+    test -d "${SQLITE_HOME}"        && PKG_CONFIG_PATH+=":${SQLITE_HOME}/lib/pkgconfig"
+    test -d "${OPENSSL_HOME}"       && PKG_CONFIG_PATH+=":${OPENSSL_HOME}/lib/pkgconfig"
+    test -d "${PYTHON_HOME}"        && PKG_CONFIG_PATH+=":${PYTHON_HOME}/lib/pkgconfig"
+    test -d "${RUBY_HOME}"          && PKG_CONFIG_PATH+=":${RUBY_HOME}/lib/pkgconfig"
+    test -d "${LIBRESSL_HOME}"      && PKG_CONFIG_PATH+=":${LIBRESSL_HOME}/lib/pkgconfig"
+    test -d "${ICU4C_711}"          && PKG_CONFIG_PATH+=":${ICU4C_711}/lib/pkgconfig"
+    test -d "${EXPAT_HOME}"         && PKG_CONFIG_PATH+=":${EXPAT_HOME}/lib/pkgconfig"
+    test -d "${NCURSES_HOME}"       && PKG_CONFIG_PATH+=":${NCURSES_HOME}/lib/pkgconfig"
+    test -d "${ZLIB_HOME}"          && PKG_CONFIG_PATH+=":${ZLIB_HOME}/lib/pkgconfig"
+    PKG_CONFIG_PATH=$( echo "$PKG_CONFIG_PATH" | tr ':' '\n' | uniq | sed '/^$/d' | paste -s -d: )
+
+    LIBRARY_PATH="${HOMEBREW_PREFIX}/lib"
+    test -d "${LIBICONV_HOME}" && LIBRARY_PATH+=":${LIBICONV_HOME}/lib"
+    LIBRARY_PATH=$( echo "$LIBRARY_PATH" | tr ':' '\n' | uniq | sed '/^$/d' | paste -s -d: )
+
+    LD_LIBRARY_PATH=/usr/local/lib
+    LD_LIBRARY_PATH=$( echo "$LD_LIBRARY_PATH" | tr ':' '\n' | uniq | sed '/^$/d' | paste -s -d: )
+
+    while read -r _env; do
+      export "${_env?}"
+      echo -e "$(c Ys)>> ${_env}$(c)\n$(c Wi).. $(eval echo \$${_env})$(c)"
+    done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH LD_LIBRARY_PATH' |
+                    fmt -1 |
+                    fzf -1 --exit-0 \
+                           --no-sort \
+                           --multi \
+                           --cycle \
+                           --prompt 'env> ' \
+                           --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all, CTRL-S to select-all'
+            )
+  }
+  ```
+
 - unset
+
+  > - * alternative:
+  >   ```bash
+  >   $ unset ,,<TAB>
+  >   # by deafult
+  >   $ unset **<TAB>
+  >   ```
+
   ```bash
   # eclr - environment variable clear, support multiple select
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
   # @description : list all environment varialbe via `fzf`, and unset for selected items
   function eclr() {                          # [e]nvironment variable [c][l]ea[r]
     while read -r _env; do
@@ -878,20 +988,28 @@ function fman() {
               fzf -1 --exit-0 --no-sort --multi --prompt='env> ' --header 'TAB to select multiple items'
             )
   }
+  ```
 
-  # or limited to environment list
-  function eclr(){
+- or unset limited to environment list
+  ```bash
+  # mkclr - compilation environment variable clear, support multiple select
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @description : list compilation environment variable via `fzf`, and unset for selected items
+  function mkclr() {                         # [m]a[k]e environment variable [c][l]ea[r]
     while read -r _env; do
       echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
       unset "${_env}"
-    done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH' |
+    done < <( echo 'LDFLAGS CFLAGS CPPFLAGS PKG_CONFIG_PATH LIBRARY_PATH LD_LIBRARY_PATH' |
                     fmt -1 |
                     fzf -1 --exit-0 \
                            --no-sort \
                            --multi \
-                           --prompt='env> ' \
-                           --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all'
+                           --cycle \
+                           --prompt 'env> ' \
+                           --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all, CTRL-S to select-all'
             )
+    # echo -e "\n$(c Wdi)[TIP]>> to list all env via $(c)$(c Wdiu)\$ env | sed -rn 's/^([a-zA-Z0-9]+)=.*$/\1/p'$(c)"
   }
   ```
 
@@ -906,7 +1024,7 @@ function fman() {
   ```bash
   # penv - print environment variable, support multiple select
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
   # @description : list all environment variable via `fzf`, and print values for selected items
   #   - to copy via `-c`
   #     - "${COPY}"
@@ -995,7 +1113,7 @@ $ (date; ps -ef) |
   ```bash
   # kns - kubectl set default namesapce
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
   # @description : using `fzf` to list all available namespaces and use the selected namespace as default
   # [k]ubectl [n]ame[s]pace
   function kns() {                           # [k]ubectl [n]ame[s]pace
