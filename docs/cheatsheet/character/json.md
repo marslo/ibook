@@ -476,4 +476,3 @@ $ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
 marslo
 18
 ```
-

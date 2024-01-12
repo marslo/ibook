@@ -11,6 +11,7 @@
 {% hint style='tip' %}
 > reference:
 > - [* Vim help files](https://vimhelp.org/#reference_toc)
+> - [mhinz/vim-galore](https://github.com/mhinz/vim-galore)
 > - [Bram Moolenaar](https://www.moolenaar.net/)
 > - [vim:tip](https://vim.fandom.com/wiki/Category:VimTip)
 > - [Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)

@@ -41,6 +41,7 @@
 
 > [!NOTE]
 > - [Shell does not show typed-in commands, what do I do to fix it?](https://askubuntu.com/a/1238357/92979)
+> - [Fix a messed up terminal](https://yalneb.blogspot.com/2016/05/fix-messed-up-terminal.html)
 
 ```bash
 $ stty sane

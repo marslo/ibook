@@ -278,7 +278,10 @@ $ sudo make install
                                    Dload  Upload   Total   Spent    Left  Speed
   100 21.0M  100 21.0M    0     0  27.6M      0 --:--:-- --:--:-- --:--:-- 27.5M
   ==> Installing ruby-3.3.0...
+  # linux
   -> ./configure "--prefix=$HOME/.rbenv/versions/3.3.0" --enable-shared --with-ext=openssl,psych,+
+  # osx
+  -> ./configure "--prefix=$HOME/.rbenv/versions/3.3.0" --enable-shared --with-readline-dir=/usr/local/opt/readline --with-libyaml-dir=/usr/local/opt/libyaml --with-gmp-dir=/usr/local/opt/gmp --with-ext=openssl,psych,+ --with-openssl-dir=/usr/local/opt/openssl
   -> make -j 32
   -> make install
   ==> Installed ruby-3.3.0 to /home/marslo/.rbenv/versions/3.3.0

@@ -917,7 +917,8 @@ $ paste <(echo -e "foo\n\nbarbarbar") <(seq 3) | column -t
 foo        1
 2
 barbarbar  3
-[marslo@dc5-ssdfw20 ~]$ paste <(echo -e "foo\n\nbarbarbar") <(seq 3) | column -t -s $'\t'
+
+$ paste <(echo -e "foo\n\nbarbarbar") <(seq 3) | column -t -s $'\t'
 foo        1
            2
 barbarbar  3
