@@ -6,12 +6,16 @@
   - [building neovim from source](#building-neovim-from-source)
   - [package manager](#package-manager)
 - [initialize](#initialize)
+  - [provider](#provider)
+  - [vimrc](#vimrc)
   - [config](#config)
     - [`config.lua`](#configlua)
   - [lua](#lua)
     - [lua-intro](#lua-intro)
     - [lua-commands](#lua-commands)
   - [Tips](#tips)
+    - [true color](#true-color)
+  - [config path](#config-path)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -31,6 +35,7 @@
 >   - [Share Config Between Vim and Neovim](https://www.baeldung.com/linux/vim-neovim-configs)
 >   - [How to share config between Vim and Neovim](https://vi.stackexchange.com/a/15548/7389)
 > - [init.vim](https://vi.stackexchange.com/a/15548)
+> - [HiPhish/nvim-config/init.vim](https://gitlab.com/HiPhish/nvim-config/-/blob/master/init.vim?ref_type=heads)
 >   - osx/linux: `~/.config/nvim/init.vim`
 >   - windows: `%LOCALAPPDATA%\nvim\init.vim`
 
@@ -45,12 +50,15 @@
 
 - tarball
   ```bash
-  $ curl -fsSL -O https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
+  $ curl -fsSL --creat-dirs -o /opt/nvim/nvim-macos.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
   # avoid `unknown developer` warning
   $ xattr -c ./nvim-macos.tar.gz
   $ tar xzf ./nvim-macos.tar.gz
   # run
   $ ./nvim-macos/bin/nvim
+
+  # or
+  $ sudo ln -sf /opt/nvim/nvim-macos /usr/local/nvim
   ```
 
 ## building neovim from source
@@ -69,6 +77,17 @@ $ brew install nvim
 > [!TIP]
 > - [Transitioning from Vim](https://neovim.io/doc/user/nvim.html#nvim-from-vim)
 
+## [provider](https://neovim.io/doc/user/provider.html)
+
+> `:checkhealth`
+
+```bash
+$ python3 -m pip install --user --upgrade pynvim
+$ gem install neovim
+$ npm install -g neovim
+```
+
+## vimrc
 - create init.vim
   ```vim
   :exe 'edit '.stdpath('config').'/init.vim'
@@ -133,3 +152,30 @@ LuaJIT 2.1.1703358377
 ```
 
 ## [Tips](https://neovim.io/doc/user/tips.html#tips)
+
+### true color
+
+> [!NOTE|label:references:]
+> - [#24760 fix(terminal): preserve $COLORTERM value from outer terminal](https://github.com/neovim/neovim/pull/24760)
+> - [#24717 Advertise directcolor support in Neovim terminal](https://github.com/neovim/neovim/issues/24717)
+
+```vim
+:echo &termguicolors
+1
+```
+
+```bash
+$ echo $TERM $COLORTERM
+xterm-256color truecolor
+```
+
+- force 16 colors
+  ```bash
+  $ TERM= COLORTERM= nvim
+  ```
+
+## config path
+
+> [!NOTE]
+> - SYNTAX FILES: `~/.config/nvim/syntax`
+> - ruby : `~/.config/nvim/ruby`

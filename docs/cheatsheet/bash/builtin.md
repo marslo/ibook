@@ -9,11 +9,14 @@
   - [options](#options)
   - [examples](#examples)
 - [readline && bind](#readline--bind)
+  - [vi mode](#vi-mode)
+  - [hybrid mode](#hybrid-mode)
+  - [show-mode-in-prompt](#show-mode-in-prompt)
   - [show options](#show-options)
   - [key bindings](#key-bindings)
   - [list all names](#list-all-names)
   - [`inputrc`](#inputrc)
-  - [show-mode-in-prompt](#show-mode-in-prompt)
+  - [unbind](#unbind)
   - [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -528,17 +531,23 @@
 ## [readline](https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html) && [bind](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-bind)
 
 > [!NOTE|label:references:]
+> - [GNU Readline Library](https://tiswww.case.edu/php/chet/readline/rluserman.html)
 > - [Readline Interaction](https://www.gnu.org/software/bash/manual/html_node/Readline-Interaction.html)
 >   - [Readline Bare Essentials](https://www.gnu.org/software/bash/manual/html_node/Readline-Bare-Essentials.html)
 >   - [Readline Movement Commands](https://www.gnu.org/software/bash/manual/html_node/Readline-Movement-Commands.html)
 >   - [Readline Killing Commands](https://www.gnu.org/software/bash/manual/html_node/Readline-Killing-Commands.html)
 > - [Readline Init File](https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File.html)
 >   - [Sample Init File](https://www.gnu.org/software/bash/manual/html_node/Sample-Init-File.html)
-> - [*hybrid readline](https://unix.stackexchange.com/a/409866/29178)
->
+> - [* hybrid readline](https://unix.stackexchange.com/a/409866/29178)
+> - [mrzool/dotfiles/readline/.inputrc](https://github.com/mrzool/dotfiles/blob/master/readline/.inputrc)
+> - pdf
+>   - [Readline VI Editing Mode Cheat Sheet Default Keyboard Shortcuts for Bash](https://catonmat.net/ftp/bash-vi-editing-mode-cheat-sheet.pdf)
+>   - [Readline Emacs Editing Mode Cheat Sheet Default Keyboard Shortcuts for Bash](https://catonmat.net/ftp/readline-emacs-editing-mode-cheat-sheet.pdf)
+> <br>
 > - [readline init file syntax](https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html)
+>
 > | KEY    | EXPLAIN                         |
-> | ------ | ------------------------------- |
+> |:------:|---------------------------------|
 > | `\C-`  | control prefix                  |
 > | `\M-`  | meta prefix                     |
 > | `\e`   | an escape character             |
@@ -570,6 +579,270 @@
 >     "\C-x\C-r": re-read-init-file
 >     "\e[11~": "Function Key 1"
 >     ```
+> - [* useful keystrokes](https://www.usenix.org.uk/content/bash.html#input)
+>
+> | EMACS COMBINATION |   VI   | RESULT                                                      |
+> |:-----------------:|:------:|-------------------------------------------------------------|
+> |      `alt-.`      |    -   | last arg from previous command                              |
+> |      `alt-d`      | `^[dw` | delete the next word on the line                            |
+> |  `alt-backspace`  | `^[db` | delete backwards one word                                   |
+> |      `ctrl-w`     | `^[dT` | delete backwards a whole word until white space/punctuation |
+> |      `ctrl-k`     |  `^[D` | delete from the cursor to the end of the line               |
+> |      `ctrl-u`     | `^[d^` | delete from the cursor to the start of the line             |
+> |      `alt-f`      |  `^[E` | move to the end of the word                                 |
+> |      `alt-b`      |  `^[w` | move to the start of the word                               |
+> |      `ctrl-e`     |  `^[$` | move to the very end of the line                            |
+> |      `ctrl-a`     |  `^[^` | move to the very start of the line                          |
+
+### vi mode
+
+> [!NOTE]
+> - [GNU Library: 1.5 Readline vi Mode](https://tiswww.case.edu/php/chet/readline/rluserman.html#Readline-vi-Mode)
+> - [Use vi shortcuts in terminal](https://vim.fandom.com/wiki/Use_vi_shortcuts_in_terminal)
+> - [Toggling Vi mode?](https://www.reddit.com/r/bash/comments/i1vuz4/comment/g00yn85/?utm_source=share&utm_medium=web2x&context=3)
+> - [readline: difference between vi, vi-move, vi-command, vi-insert keymaps](https://superuser.com/a/286788/112396)
+> - [How can I make zsh's vi mode behave more like bash's vi mode?](https://superuser.com/a/533685/112396)
+> - [map jj to Esc in inputrc (readline)](https://stackoverflow.com/a/7979417/2940319)
+> - [What are the unique keymaps?](https://unix.stackexchange.com/a/303480/29178)
+>   ```bash
+>   Acceptable keymap names are emacs, emacs-standard, emacs-meta, emacs-ctlx,
+>   vi, vi-move, vi-command, and vi-insert.
+>   vi is equivalent to vi-command; emacs is equivalent to emacs-standard.
+>   ```
+
+```bash
+$ cat .inputrc
+set editing-mode vi
+set keymap vi
+
+# or
+$ set -o vi
+```
+
+### hybrid mode
+
+> [!TIP|label:references:]
+> - [How can I setup a hybrid readline with emacs insert mode and vi command mode?](https://unix.stackexchange.com/a/409866/29178)
+> - [* vi-mode input](https://www.usenix.org.uk/content/bash.html#input)
+> - [What are readline's modes, keymaps and their default bindings?](https://unix.stackexchange.com/a/303480/29178)
+
+<!--sec data-title="~/.inputrc for hybrid mode" data-id="section8" data-show=true data-collapse=true ces-->
+```bash
+set show-mode-in-prompt on
+set emacs-mode-string   ╰╶ ᓆ
+set vi-ins-mode-string  ╰╶ ᓎ
+set vi-cmd-mode-string  ╰╶ ᓏ
+set emacs-mode-string   \1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2
+set vi-ins-mode-string  \1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2
+set vi-cmd-mode-string  \1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2
+
+# allow iso-latin1 characters to be inserted
+set convert-meta                   off
+# don't strip characters to 7 bits when reading
+set input-meta                     on
+set completion-ignore-case         on
+set show-all-if-ambiguous          on
+set show-all-if-unmodified         on
+set mark-symlinked-directories     on
+set print-completions-horizontally on
+# https://github.com/scop/bash-completion
+set visible-stats                  on
+set enable-bracketed-paste         off
+# https://groups.google.com/g/iterm2-discuss/c/K6YazwKUvjQ/m/7eqeT-AvBgAJ
+
+# TAB: menu-complete
+# set colored-completion-prefix on
+set colored-stats                  on
+set skip-completed-text            on
+# ask if more than 100 candidates
+# set completion-query-items       100
+
+set keymap emacs
+"\ee": vi-editing-mode
+
+set keymap vi-command
+"\ee": emacs-editing-mode
+"dw": kill-word
+"dd": kill-whole-line
+"db": backward-kill-word
+"D":kill-line
+# key bindings to get out of vi-editing-mode
+"v"  : ''
+"\C-_": undo
+"\C-a": beginning-of-line
+"\C-b": backward-char
+"\C-d": delete-char
+"\C-e": end-of-line
+"\C-f": forward-char
+"\C-g": abort
+"\C-k": kill-line
+"\C-l": clear-screen
+"\C-p": previous-history
+"\C-n": next-history
+"\C-w": unix-word-rubout
+"\C-q": quoted-insert
+"\C-x\C-r": re-read-init-file
+"\e#": insert-comment
+"\e.": insert-last-argument
+"\e.": yank-last-arg
+
+set keymap vi-insert
+"\ee": emacs-editing-mode
+"\C-_": undo
+"\C-a": beginning-of-line
+"\C-b": backward-char
+"\C-d": delete-char
+"\C-e": end-of-line
+"\C-f": forward-char
+"\C-g": abort
+"\C-k": kill-line
+"\C-l": clear-screen
+"\C-p": previous-history
+"\C-n": next-history
+"\C-w": unix-word-rubout
+"\C-q": quoted-insert
+"\C-x\C-r": re-read-init-file
+"\e#": insert-comment
+"\e.": insert-last-argument
+"\e.": yank-last-arg
+```
+<!--endsec-->
+
+### [show-mode-in-prompt](https://github.com/calid/bash)
+
+> [!NOTE|label:notes:]
+> This is a patched version of bash `4.3.48` that adds support for custom prompt mode indicators. <br>
+> It also adds support for a `\m` prompt escape to specify where in the prompt the indicator should occur.
+> <br>
+> - [* calid/bash: Bash with Configurable Mode Strings](https://github.com/calid/bash)
+> - [Different bash prompt for different vi editing mode?](https://stackoverflow.com/q/1039713/2940319)
+> - [96f66efe6fccbd914d3c92a45405af9a7cf25704](http://git.savannah.gnu.org/cgit/bash.git/tree/NEWS?h=96f66efe6fccbd914d3c92a45405af9a7cf25704#n108)
+> - [`show-mode-in-prompt`](https://www.gnu.org/software/bash/manual/bash.html#index-show_002dmode_002din_002dprompt)
+> - [`vi-cmd-mode-string`](https://www.gnu.org/software/bash/manual/bash.html#index-vi_002dcmd_002dmode_002dstring)
+> - [`vi-ins-mode-string`](https://www.gnu.org/software/bash/manual/bash.html#index-vi_002dins_002dmode_002dstring)
+> - [ArchLinux: Readline](https://wiki.archlinux.org/title/readline#Mode_indicator_in_prompt)
+> - [Spacemacs style colored cursor](https://stackoverflow.com/a/65145878/2940319)
+> <br>
+> - [set the mode string and cursor to indicate the vim mode ( for the number after `\e[` )](https://stackoverflow.com/a/60179103/2940319)
+>
+> | NUMBER | CURSOR SHAPE             |
+> |:------:|--------------------------|
+> |   `0`  | blinking block           |
+> |   `1`  | blinking block (default) |
+> |   `2`  | steady block             |
+> |   `3`  | blinking underline       |
+> |   `4`  | steady underline         |
+> |   `5`  | blinking bar (xterm)     |
+> |   `6`  | steady bar (xterm)       |
+
+![bash show-mode-in-prompt](../../screenshot/shell/bash-bind-show-mode-in-prompt.png)
+
+![bash show-mode-in-prompt](../../screenshot/shell/bash-bind-show-mode-in-prompt.gif)
+
+#### PS1
+```bash
+PS1='\n\[\033[1m\]\[\033[38;5;240m\]╭╶ (\u@\h\[\033[1m\] '
+PS1+='\[\033[0;31m\]\w\[\033[1m\]\[\033[38;5;240m\]) '
+PS1+='$(__git_ps1 "- (\[\033[32;2m\]%s\[\033[0m\]\[\033[38;5;240m\]) ")\[\033[1m\]'
+PS1+='\[\033[38;5;240m\]`if [ $? = 0 ]; then echo \[\033[38\;5\;240m\]\-\>; else echo \[\033[0\;31m\]\-\>; fi`\[\033[1m\]'
+PS1+='\n\[\033[38;5;240m\] $ \[\033[1m\]\[\033[0m\]'
+export PS1
+```
+
+#### inputrc
+```bash
+set show-mode-in-prompt on
+set emacs-mode-string  \1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2
+set vi-ins-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2
+set vi-cmd-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2
+
+set keymap emacs
+"\ee": vi-editing-mode
+
+set keymap vi-command
+"\ee": emacs-editing-mode
+
+set keymap vi-insert
+"\ee": vi-movement-mode
+```
+
+![bind -v for mode-string](../../screenshot/shell/bash-bind-mode-string.png)
+
+- [example](https://stackoverflow.com/a/55978495/2940319)
+  ```bash
+  $ export PS1=" ┌錄 \[\e[32m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \w \\$ \n "
+  $ bind 'set show-mode-in-prompt on'
+  $ bind 'set vi-ins-mode-string " └──錄 (ins):"'
+  $ bind 'set vi-cmd-mode-string " └──錄 (cmd):"'
+  ```
+
+- [example](https://stackoverflow.com/a/60179103/2940319)
+  ```bash
+  #################### VIM ####################
+  # FOR MORE INFORMATION CHECK:
+  # https://wiki.archlinux.org/index.php/Readline
+
+  # TURN ON VIM (E.G. FOR READLINE)
+  set editing-mode vi
+
+  # SHOW THE VIM MODE IN THE PROMPT (COMMAND OR INSERT)
+  set show-mode-in-prompt on
+
+  # SET THE MODE STRING AND CURSOR TO INDICATE THE VIM MODE
+  #   FOR THE NUMBER AFTER `\e[`:
+  #     0: blinking block
+  #     1: blinking block (default)
+  #     2: steady block
+  #     3: blinking underline
+  #     4: steady underline
+  #     5: blinking bar (xterm)
+  #     6: steady bar (xterm)
+  set vi-ins-mode-string (ins)\1\e[5 q\2
+  set vi-cmd-mode-string (cmd)\1\e[1 q\2
+  ```
+
+- [example](https://stackoverflow.com/a/65145878/2940319)
+  ```bash
+  $ cat ~/.inputrc
+  set editing-mode vi
+  set vi-ins-mode-string \1\e[5 q\e]12;green\a\2
+  set vi-cmd-mode-string \1\e[1 q\e]12;orange\a\2
+  set show-mode-in-prompt on
+  ```
+
+- [example](https://github.com/camspiers/dotfiles/blob/master/files/.inputrc)
+  ```bash
+  # Set the default readline mode as vi
+  set editing-mode vi
+
+  # Show the vi mode indicators
+  set show-mode-in-prompt on
+
+  # The following is a little hard to understand
+  # a full example omiting the wrapping \1 and \2
+  #
+  # \e[     (open sequence: ESC CSI)
+  # 48;5;   (specifies 256 bg)
+  # 2       (bg color)
+  # m       (end)
+  # 1;      (bold)
+  # 38;5;   (specifies 256 fg)
+  # 0       (fg color)
+  # m       (end)
+  # COMMAND (some text to display)
+  # \e[     (open sequence)
+  # 0       (reset)
+  # m       (end)
+  # \e[     (open sequence)
+  # 0       (cursor type)
+  # q       (end)
+
+  # Configures the cmd mode display
+  set vi-cmd-mode-string "\1\e[48;5;2m\2\1\e[1;38;5;0m\2 N \1\e[0m\2 \1\e[0 q\2"
+
+  # Configures the ins mode display
+  set vi-ins-mode-string "\1\e[48;5;4m\2\1\e[1;38;5;0m\2 I \1\e[0m\2 \1\e[6 q\2"
+  ```
 
 
 ### show options
@@ -583,7 +856,7 @@ set bind-tty-special-chars on
 set blink-matching-paren off
 set byte-oriented off
 set colored-completion-prefix off
-set colored-stats off
+set colored-stats on
 set completion-ignore-case on
 set completion-map-case off
 set convert-meta off
@@ -610,21 +883,21 @@ set print-completions-horizontally on
 set revert-all-at-newline off
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
-set show-mode-in-prompt off
+set show-mode-in-prompt on
 set skip-completed-text on
-set visible-stats off
+set visible-stats on
 set bell-style audible
 set comment-begin #
 set completion-display-width -1
 set completion-prefix-display-length 0
 set completion-query-items 100
 set editing-mode emacs
-set emacs-mode-string @
-set history-size 10000
+set emacs-mode-string ╰╶ ᓆ
+set history-size 5000
 set keymap emacs
 set keyseq-timeout 500
-set vi-cmd-mode-string (cmd)
-set vi-ins-mode-string (ins)
+set vi-cmd-mode-string ╰╶ ᓏ
+set vi-ins-mode-string ╰╶ ᓎ
 ```
 
 #### options
@@ -688,7 +961,7 @@ $ bind -P
 $ bind -p
 ...
 "\e&": tilde-expand
-# vi-tilde-expand (not bound
+# vi-tilde-expand (not bound)
 ....
 
 $ bind -q tilde-expand
@@ -705,6 +978,220 @@ $ bind -l
 ### `inputrc`
 
 <!--sec data-title="~/.inputrc" data-id="section4" data-show=true data-collapse=true ces-->
+```bash
+# https://www.gnu.org/software/bash/manual/bash.html#index-show_002dmode_002din_002dprompt
+set show-mode-in-prompt on
+# SET THE MODE STRING AND CURSOR TO INDICATE THE VIM MODE
+#   FOR THE NUMBER AFTER `\e[`:
+#     0: blinking block
+#     1: blinking block (default)
+#     2: steady block
+#     3: blinking underline
+#     4: steady underline
+#     5: blinking bar (xterm)
+#     6: steady bar (xterm)
+set emacs-mode-string  ╰╶ ᓆ
+set vi-ins-mode-string ╰╶ ᓎ
+set vi-cmd-mode-string ╰╶ ᓏ
+set emacs-mode-string  \1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2
+set vi-ins-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2
+set vi-cmd-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2
+
+# allow iso-latin1 characters to be inserted
+set convert-meta off
+# don't strip characters to 7 bits when reading
+set input-meta on
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set mark-symlinked-directories on
+set print-completions-horizontally on
+# https://github.com/scop/bash-completion
+set visible-stats on
+# https://groups.google.com/g/iterm2-discuss/c/K6YazwKUvjQ/m/7eqeT-AvBgAJ
+set enable-bracketed-paste off
+
+# TAB: menu-complete
+# set colored-completion-prefix on
+set colored-stats on
+set skip-completed-text on
+# ask if more than 100 candidates
+# set completion-query-items 100
+
+set keymap emacs
+"\ee": vi-editing-mode
+
+set keymap vi-command
+"\ee": emacs-editing-mode
+"dw": kill-word
+"dd": kill-whole-line
+"db": backward-kill-word
+"D":kill-line
+"v"  : ''
+"\C-_": undo
+"\C-a": beginning-of-line
+"\C-b": backward-char
+"\C-d": delete-char
+"\C-e": end-of-line
+"\C-f": forward-char
+"\C-g": abort
+"\C-k": kill-line
+"\C-l": clear-screen
+"\C-p": previous-history
+"\C-n": next-history
+"\C-w": unix-word-rubout
+"\C-q": quoted-insert
+"\C-x\C-r": re-read-init-file
+"\e#": insert-comment
+"\e.": insert-last-argument
+"\e.": yank-last-arg
+
+# key bindings to get out of vi-editing-mode
+set keymap vi-insert
+"\ee": emacs-editing-mode
+"\C-_": undo
+"\C-a": beginning-of-line
+"\C-b": backward-char
+"\C-d": delete-char
+"\C-e": end-of-line
+"\C-f": forward-char
+"\C-g": abort
+"\C-k": kill-line
+"\C-l": clear-screen
+"\C-p": previous-history
+"\C-n": next-history
+"\C-w": unix-word-rubout
+"\C-q": quoted-insert
+"\C-x\C-r": re-read-init-file
+"\e#": insert-comment
+"\e.": insert-last-argument
+"\e.": yank-last-arg
+```
+<!--endsec-->
+
+<!--sec data-title="~/.inputrc.if-endif" data-id="section5" data-show=true data-collapse=true ces-->
+```bash
+# https://www.gnu.org/software/bash/manual/bash.html#index-show_002dmode_002din_002dprompt
+set show-mode-in-prompt on
+# SET THE MODE STRING AND CURSOR TO INDICATE THE VIM MODE
+#   FOR THE NUMBER AFTER `\e[`:
+#     0: blinking block
+#     1: blinking block (default)
+#     2: steady block
+#     3: blinking underline
+#     4: steady underline
+#     5: blinking bar (xterm)
+#     6: steady bar (xterm)
+
+set emacs-mode-string  ╰╶ ᓆ
+set vi-ins-mode-string ╰╶ ᓎ
+set vi-cmd-mode-string ╰╶ ᓏ
+set emacs-mode-string  \1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2
+set vi-ins-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2
+set vi-cmd-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2
+
+####################
+# \e : Meta        #
+# \C : Control     #
+####################
+
+# allow iso-latin1 characters to be inserted
+set convert-meta off
+# don't strip characters to 7 bits when reading
+set input-meta on
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set mark-symlinked-directories on
+set print-completions-horizontally on
+# https://github.com/scop/bash-completion
+set visible-stats on
+# https://groups.google.com/g/iterm2-discuss/c/K6YazwKUvjQ/m/7eqeT-AvBgAJ
+set enable-bracketed-paste off
+
+# TAB: menu-complete
+# set colored-completion-prefix on
+set colored-stats on
+set skip-completed-text on
+# ask if more than 100 candidates
+# set completion-query-items 100
+
+set keymap emacs
+"\ee": vi-editing-mode
+
+set keymap vi-command
+"\ee": emacs-editing-mode
+
+# key bindings to get out of vi-editing-mode
+set keymap vi-insert
+"\ee": vi-movement-mode
+
+##### emacs #####
+$if mode=emacs
+"\ee": vi-editing-mode                       # `Esc-e`:vi-insert. https://unix.stackexchange.com/a/409866/29178
+# "\e\e": vi-movement-mode
+"\e~": complete-username
+"\e_": yank-last-arg
+"\e?": possible-completions
+Meta-Control-h: backward-kill-word
+$endif
+
+##### vi #####
+$if mode=vi
+"\ee": emacs-editing-mode
+$endif
+
+##### command mode #####
+$if mode=vi-command
+"\ee": emacs-editing-mode
+
+v: ""
+Control-a: beginning-of-line
+Control-b: backward-char
+Control-d: delete-char
+Control-e: end-of-line
+Control-f: forward-char
+Control-k: kill-line
+Control-n: next-history
+Control-p: previous-history
+$endif
+
+##### insert mode #####
+$if mode=vi-insert
+"\ee": emacs-editing-mode
+
+"\C-k": kill-line
+"\C-u": unix-line-discard
+"\C-p": previous-history
+"\C-n": next-history
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+"\C-f": forward-char
+"\C-b": backward-char
+"\C-l": clear-screen
+"\C-d": delete-char
+"\C-h": backward-delete-char
+"\C-w": unix-word-rubout
+
+"\et": transpose-words
+"\ef": forward-word
+"\eb": backward-word
+"\ed": kill-word
+"\e.":yank-last-arg
+"\e_": yank-last-arg
+"\C-_": undo
+$endif
+
+$if Bash
+# edit the path
+"\C-xp": "PATH=${PATH}\e\C-e\C-a\ef\C-f"
+# Quote the current or previous word
+"\C-xq": "\eb\"\ef\""
+$endif
+```
+<!--endsec-->
+
+<!--sec data-title="~/.inputrc.old" data-id="section6" data-show=true data-collapse=true ces-->
 ```bash
 $ cat ~/.inputrc
 set convert-meta off                          # allow iso-latin1 characters to be inserted
@@ -782,8 +1269,7 @@ $endif
 ```
 <!--endsec-->
 
-
-<!--sec data-title="/etc/inputrc" data-id="section5" data-show=true data-collapse=true ces-->
+<!--sec data-title="/etc/inputrc" data-id="section7" data-show=true data-collapse=true ces-->
 ```bash
 $ cat /etc/inputrc
 # do not bell on tab-completion
@@ -831,62 +1317,18 @@ $endif
 ```
 <!--endsec-->
 
-### [show-mode-in-prompt](https://github.com/calid/bash)
+### unbind
 
-> [!NOTE|label:notes:]
-> This is a patched version of bash `4.3.48` that adds support for custom prompt mode indicators. <br>
-> It also adds support for a `\m` prompt escape to specify where in the prompt the indicator should occur.
-> <br>
-> - [Different bash prompt for different vi editing mode?](https://stackoverflow.com/q/1039713/2940319)
-> - [96f66efe6fccbd914d3c92a45405af9a7cf25704](http://git.savannah.gnu.org/cgit/bash.git/tree/NEWS?h=96f66efe6fccbd914d3c92a45405af9a7cf25704#n108)
-> - [`show-mode-in-prompt`](https://www.gnu.org/software/bash/manual/bash.html#index-show_002dmode_002din_002dprompt)
-> - [`vi-cmd-mode-string`](https://www.gnu.org/software/bash/manual/bash.html#index-vi_002dcmd_002dmode_002dstring)
-> - [`vi-ins-mode-string`](https://www.gnu.org/software/bash/manual/bash.html#index-vi_002dins_002dmode_002dstring)
+> [!NOTE]
+> - [How can I unbind and remap C-w in Bash?](https://stackoverflow.com/a/10980808/2940319)
 
-- [example](https://stackoverflow.com/a/55978495/2940319)
-  ```bash
-  $ export PS1=" ┌錄 \[\e[32m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\] \w \\$ \n "
-  $ bind 'set show-mode-in-prompt on'
-  $ bind 'set vi-ins-mode-string " └──錄 (ins):"'
-  $ bind 'set vi-cmd-mode-string " └──錄 (cmd):"'
-  ```
+```bash
+# .bashrc
+stty werase undef
 
-- [example](https://stackoverflow.com/a/60179103/2940319)
-  ```bash
-  #################### VIM ####################
-  # FOR MORE INFORMATION CHECK:
-  # https://wiki.archlinux.org/index.php/Readline
-
-  # TURN ON VIM (E.G. FOR READLINE)
-  set editing-mode vi
-
-  # SHOW THE VIM MODE IN THE PROMPT (COMMAND OR INSERT)
-  set show-mode-in-prompt on
-
-  # SET THE MODE STRING AND CURSOR TO INDICATE THE VIM MODE
-  #   FOR THE NUMBER AFTER `\e[`:
-  #     0: blinking block
-  #     1: blinking block (default)
-  #     2: steady block
-  #     3: blinking underline
-  #     4: steady underline
-  #     5: blinking bar (xterm)
-  #     6: steady bar (xterm)
-  set vi-ins-mode-string (ins)\1\e[5 q\2
-  set vi-cmd-mode-string (cmd)\1\e[1 q\2
-  ```
-
-- [example](https://stackoverflow.com/a/65145878/2940319)
-  ```bash
-  $ cat ~/.inputrc
-  set editing-mode vi
-  set vi-ins-mode-string \1\e[5 q\e]12;green\a\2
-  set vi-cmd-mode-string \1\e[1 q\e]12;orange\a\2
-  set show-mode-in-prompt on
-  ```
-
-
-
+# .inputrc
+bind '"\C-w":kill-region'
+```
 
 ### tips
 - [How to move the cursor word by word in the OS X Terminal](https://stackoverflow.com/a/81309/2940319)

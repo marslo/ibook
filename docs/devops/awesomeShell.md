@@ -45,6 +45,7 @@
   - [`elinks`](#elinks)
   - [`duf`](#duf)
   - [`enhancd`](#enhancd)
+  - [watchman](#watchman)
   - [tmux](#tmux)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -55,6 +56,7 @@
 > - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master) | [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
 >   - [nosarthur/awesome-shell](https://github.com/nosarthur/awesome-shell)
 > - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim)
+> - [sindresorhus/awesome](https://github.com/sindresorhus/awesome)
 > - others
 >   - [bayandin/awesome-awesomeness](https://github.com/bayandin/awesome-awesomeness)
 >   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
@@ -65,6 +67,8 @@
 > - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
 > - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
 > - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
+> - [jlevy/the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line)
+> - [pv - Pipe Viewer](https://www.ivarch.com/programs/pv.shtml)
 {% endhint %}
 
 # [`fzf`](https://github.com/junegunn/fzf)
@@ -2072,6 +2076,8 @@ $ elinks https://google.com
   ```
 
   ![enhancd](../screenshot/linux/ecd-ec.gif)
+
+## [watchman](https://facebook.github.io/watchman/)
 
 ## tmux
 

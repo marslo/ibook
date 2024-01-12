@@ -9,6 +9,9 @@
 > - [* vimcolorschemes](https://vimcolorschemes.com/)
 > - [Using GUI color settings in a terminal](https://vim.fandom.com/wiki/Using_GUI_color_settings_in_a_terminal)
 > - [Using vim color schemes with Putty](https://vim.fandom.com/wiki/Using_vim_color_schemes_with_Putty)
+> - [rgb.txt: color with name](http://fugal.net/vim/rgbtxt.html) | [rgb.txt with RGB format](https://github.com/marslo/MarsloVimOthers/blob/master/AboutGvimColors/rgb/rgb.txt)
+> - [Xterm256 color names for console Vim](https://vim.fandom.com/wiki/Xterm256_color_names_for_console_Vim)
+> - [Highlight multiple words](https://vim.fandom.com/wiki/Highlight_multiple_words)
 
 ## linux terminal with solarized
 - bundle

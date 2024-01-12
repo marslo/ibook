@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [prompt](#prompt)
+- [prompts](#prompts)
 - [character](#character)
   - [metacharacter](#metacharacter)
 - [process substitution](#process-substitution)
@@ -34,7 +34,7 @@
 > - [killbutmakeitlooklikeanaccident.sh](https://gist.github.com/moyix/95ca9a7a26a639b2322c36c7411dc3be)
 {% endhint %}
 
-# prompt
+# prompts
 
 {% hint style='tip' %}
 > reference:
@@ -44,6 +44,9 @@
 > - [What color codes can I use in my PS1 prompt?](https://unix.stackexchange.com/a/124409/29178)
 > - [joseluisq/terminal-git-branch-name.md](https://gist.github.com/joseluisq/1e96c54fa4e1e5647940)
 > - [How to show git branch in terminal and change terminal colours](https://www.stijit.com/engineering/show-git-branch-colours-terminal-mac.html)
+> - [8 Useful and Interesting Bash Prompts](https://www.maketecheasier.com/8-useful-and-interesting-bash-prompts/)
+> - [* 2.5. Bash Prompt Escape Sequences](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html)
+> - [* My Ultimate PowerShell prompt with Oh My Posh and the Windows Terminal](https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal)
 {% endhint %}
 
 ```bash
@@ -67,6 +70,7 @@ PS1="\[$(tput setaf 16)\]my prompt\[$(tput sgr0)\]> "
 PS1="\[$(tput setaf 17)\]my prompt\[$(tput sgr0)\]> "
 PS1="\[$(tput setaf 18)\]my prompt\[$(tput sgr0)\]> "
 ```
+
 ![bash ps1](../../screenshot/ansi/bash-ps1.png)
 
 - or

@@ -4,6 +4,7 @@
 - [pre-config](#pre-config)
   - [dependencies installation](#dependencies-installation)
   - [account](#account)
+  - [PS1](#ps1)
 - [proxy service](#proxy-service)
   - [shadowsocks](#shadowsocks)
   - [shadowsocks-libev](#shadowsocks-libev)
@@ -148,6 +149,30 @@ $ sudo apt install -y apt-file \
 ```bash
 $ sudo usermod -a -G sudo,adm,root,docker devops
 ```
+
+### PS1
+
+> [!NOTE]
+> - [Terminals Are Sexy](https://terminalsare.sexy/#bash)
+
+- powerline
+  > [!NOTE|label:powerline]
+  > - [powerline/powerline](https://github.com/powerline/powerline)
+  > - [milkypostman/powerline](https://github.com/milkypostman/powerline)
+  > - [erikw/tmux-powerline](https://github.com/erikw/tmux-powerline)
+  > - [riobard/bash-powerline](https://github.com/riobard/bash-powerline)
+  > - [riobard/zsh-powerline](https://github.com/riobard/zsh-powerline)
+  > - [Lokaltog/vim-powerline](https://github.com/Lokaltog/vim-powerline)
+  > - [b-ryan/powerline-shell](https://github.com/b-ryan/powerline-shell)
+  > - [Fancy bash prompt with colors](https://yalneb.blogspot.com/2018/01/fancy-bash-promt.html)
+
+- oh-my-*
+  > [!NOTE|label:oh-my-*]
+  > - [arialdomartini/oh-my-git](https://github.com/arialdomartini/oh-my-git)
+  > - [ohmybash/oh-my-bash](https://github.com/ohmybash/oh-my-bash)
+  > - [oh-my-fish/oh-my-fish](https://github.com/oh-my-fish/oh-my-fish)
+  > - [ohmyzsh/ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
+  >   - [unixorn/zsh-quickstart-kit](https://github.com/unixorn/zsh-quickstart-kit)
 
 ## proxy service
 ### shadowsocks
