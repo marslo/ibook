@@ -16,7 +16,7 @@
   - [llvm](#llvm)
   - [go](#go)
   - [node && npm](#node--npm)
-    - [troubleshooting](#troubleshooting)
+    - [node/npm troubleshooting](#nodenpm-troubleshooting)
     - [install from private registry](#install-from-private-registry)
     - [upgrade via `n`](#upgrade-via-n)
   - [gradle](#gradle)
@@ -26,7 +26,10 @@
     - [install from apt repo](#install-from-apt-repo)
   - [mysql-connector (jdbc)](#mysql-connector-jdbc)
   - [vncserver](#vncserver)
-- [troubleshooting](#troubleshooting-1)
+- [compiler environment](#compiler-environment)
+  - [pkg-config](#pkg-config)
+  - [ldconfig](#ldconfig)
+- [troubleshooting](#troubleshooting)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
     - [to use the bundled libc++ please add the following LDFLAGS](#to-use-the-bundled-libc-please-add-the-following-ldflags)
@@ -34,6 +37,9 @@
     - [check *.o file](#check-o-file)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!TIP]
+> - [* iMarslo : devenv troubleshooting](../../linux/troubleshooting.html)
 
 # application
 ## [python](../programming/python/config.html#install-from-source-code)
@@ -224,6 +230,21 @@ build $ make install DESTDIR=/root/glibc-2.14/staging
   /opt/glibc-2.14/etc $ sudo sh -c "echo '/usr/local/lib' >> ld.so.conf"
   /opt/glibc-2.14/etc $ sudo sh -c "echo '/opt/lib' >> ld.so.conf"
   ```
+
+- manpath
+
+```bash
+$ echo $MANPATH
+/usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+
+$ eclr
+>> unset MANPATH
+.. /usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+$ echo $MANPATH
+
+$ manpath
+/Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/nvim/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/opt/node@21/share/man:/usr/local/Cellar/openjdk/21.0.1/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+```
 
 ## lua
 
@@ -479,7 +500,7 @@ $ sudo snap refresh --channel=20 node
 node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
 ```
 
-### troubleshooting
+### node/npm troubleshooting
 
 > [!NOTE]
 > - [Don’t use `sudo` with `npm`](https://medium.com/@ExplosionPills/dont-use-sudo-with-npm-5711d2726aa3)
@@ -630,6 +651,298 @@ $ sudo mysql_secure_installation
 ```bash
 $ sudo apt install vnc4server
 $ sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
+```
+
+# compiler environment
+## pkg-config
+
+```bash
+$ pkg-config --cflags openssl
+-I/usr/local/Cellar/openssl@3/3.2.0_1/include
+$ pkg-config --variable pc_path pkg-config
+/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/local/Homebrew/Library/Homebrew/os/mac/pkgconfig/11.0
+
+# list all
+$ pkg-config --list-all
+```
+
+<!--sec data-title="$ pkg-config --list-all" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ pkg-config --list-all
+sqlite3                          SQLite - SQL database engine
+libgcrypt                        libgcrypt - General purpose cryptographic library
+xcb-xevie                        XCB Xevie - XCB Xevie Extension
+xcb-damage                       XCB Damage - XCB Damage Extension
+pixman-1                         Pixman - The pixman library (version 1)
+gmodule-export-2.0               GModule - Dynamic module loader for GLib
+libevent_pthreads                libevent_pthreads - libevent_pthreads adds pthreads-based threading support to libevent
+cairo-svg                        cairo-svg - SVG surface backend for cairo graphics library
+recordproto                      RecordProto - Record extension headers
+libmagic                         libmagic - Magic number recognition library
+nettle                           Nettle - Nettle low-level cryptographic library (symmetric algorithms)
+gnutls                           GnuTLS - Transport Security Layer implementation for the GNU system
+fmt                              fmt - A modern formatting library
+libpcreposix                     libpcreposix - PCREPosix - Posix compatible interface to libpcre
+imlib2                           imlib2 - Powerful image loading and rendering library
+lqr-1                            lqr-1 - LiquidRescale seam-carving library
+libglog                          libglog - Google Log (glog) C++ logging framework
+jemalloc                         jemalloc - A general purpose malloc(3) implementation that emphasizes fragmentation avoidance and scalable concurrency support.
+lua-5.4                          Lua - An Extensible Extension Language
+cairo-tee                        cairo-tee - Tee surface backend for cairo graphics library
+applewmproto                     AppleWMProto - AppleWM extension headers
+xcb-render                       XCB Render - XCB Render Extension
+ImageMagick-7.Q16HDRI            ImageMagick - ImageMagick - convert, edit, and compose images (ABI Q16HDRI)
+xwaylandproto                    XwaylandProto - Xwayland extension headers
+libjq                            libjq - Library to process JSON using a query language
+libpcre2-16                      libpcre2-16 - PCRE2 - Perl compatible regular expressions C library (2nd API) with 16 bit character support
+dri3proto                        DRI3Proto - DRI3 extension headers
+libfolly                         libfolly - Facebook (Folly) C++ library
+dpmsproto                        DPMSProto - DPMS extension headers
+libjxl_threads                   libjxl_threads - JPEG XL multi-thread runner using std::threads.
+cairo-png                        cairo-png - PNG functions for cairo graphics library
+libcurl                          libcurl - Library to transfer files with ftp, http, etc.
+gflags                           gflags - A commandline flags library that allows for distributed flags.
+xcmiscproto                      XCMiscProto - XCMisc extension headers
+libidn                           Libidn - IETF stringprep, nameprep, punycode, IDNA text processing.
+libxslt                          libxslt - XSLT library version 2.
+yaml-0.1                         LibYAML - Library to parse and emit YAML
+python3-embed                    Python - Embed Python into an application
+xf86vidmodeproto                 XF86VidModeProto - XF86VidMode extension headers
+python-3.10-embed                Python - Embed Python into an application
+xbuild12                         XBuild 12.0 - XBuild/MSBuild 12.0
+caca                             caca - Colour ASCII-Art library
+damageproto                      DamageProto - Damage extension headers
+libraw_r                         libraw - Raw image decoder library (thread-safe)
+mono-options                     Mono.Options - Command Line Parsing Library
+odbccr                           odbccr (unixODBC) - unixODBC Cursor Library
+videoproto                       VideoProto - Video extension headers
+cairo-xlib                       cairo-xlib - Xlib surface backend for cairo graphics library
+xcb-xvmc                         XCB XvMC - XCB XvMC Extension
+gnutls-dane                      GnuTLS-DANE - DANE security library for the GNU system
+kbproto                          KBProto - KB extension headers
+expat                            expat - expat XML parser
+gmp                              GNU MP - GNU Multiple Precision Arithmetic Library
+xf86dgaproto                     XF86DGAProto - XF86DGA extension headers
+libpcre2-8                       libpcre2-8 - PCRE2 - Perl compatible regular expressions C library (2nd API) with 8 bit character support
+libraw                           libraw - Raw image decoder library (non-thread-safe)
+uuid                             uuid - Universally unique id library
+xcb-dri2                         XCB DRI2 - XCB DRI2 Extension
+xcb-dri3                         XCB DRI3 - XCB DRI3 Extension
+libpcre2-32                      libpcre2-32 - PCRE2 - Perl compatible regular expressions C library (2nd API) with 32 bit character support
+randrproto                       RandrProto - Randr extension headers
+apr-util-1                       APR Utils - Companion library for APR
+libhwy                           libhwy - Efficient and performance-portable SIMD wrapper
+Magick++                         Magick++ - Magick++ - C++ API for ImageMagick (ABI Q16HDRI)
+MagickWand-7.Q16HDRI             MagickWand - MagickWand - C API for ImageMagick (ABI Q16HDRI)
+libjxl_cms                       libjxl_cms - CMS support library for libjxl
+x265                             x265 - H.265/HEVC video encoder
+scrnsaverproto                   ScrnSaverProto - ScrnSaver extension headers
+MagickCore-7.Q16HDRI             MagickCore - MagickCore - C API for ImageMagick (ABI Q16HDRI)
+libtasn1                         libtasn1 - Library for ASN.1 and DER manipulation
+dri2proto                        DRI2Proto - DRI2 extension headers
+OpenEXR                          OpenEXR - OpenEXR image library
+harfbuzz-cairo                   harfbuzz-cairo - HarfBuzz cairo support
+system.web.mvc                   System.Web.Mvc - System.Web.Mvc - ASP.NET MVC
+dotnet                           Standard libraries in a .NET setup - References all the standard .NET libraries for compilation
+cairo-ps                         cairo-ps - PostScript surface backend for cairo graphics library
+libheif                          libheif - HEIF image codec.
+p11-kit-1                        p11-kit - Library and proxy module for properly loading and sharing PKCS
+fixesproto                       FixesProto - X Fixes extension headers
+gpg-error                        gpg-error - GPG Runtime
+libcares                         c-ares - asynchronous DNS lookup library
+python-3.11-embed                Python - Embed Python into an application
+python3                          Python - Build a C extension for Python
+xcb-dpms                         XCB DPMS - XCB DPMS Extension
+gmodule-2.0                      GModule - Dynamic module loader for GLib
+ImageMagick                      ImageMagick - ImageMagick - convert, edit, and compose images (ABI Q16HDRI)
+reactive                         Reactive Extensions - Reactive Extensions
+libvmaf                          libvmaf - VMAF, Video Multimethod Assessment Fusion
+libargon2                        libargon2 - Development libraries for libargon2
+libutf8proc                      libutf8proc - UTF8 processing
+libturbojpeg                     libturbojpeg - A SIMD-accelerated JPEG codec that provides the TurboJPEG API
+xcb-xinput                       XCB XInput - XCB XInput Extension (EXPERIMENTAL)
+Magick++-7.Q16HDRI               Magick++ - Magick++ - C++ API for ImageMagick (ABI Q16HDRI)
+Imath                            Imath - Imath library: vector/matrix and math operations, plus the half type.
+xcb-dbe                          XCB Dbe - XCB Double Buffer Extension
+lua                              Lua - An Extensible Extension Language
+xcb-xtest                        XCB XTEST - XCB XTEST Extension
+libsodium                        libsodium - A modern and easy-to-use crypto library
+libedit                          libedit - command line editor library provides generic line editing, history, and tokenization functions.
+xcb-ge                           XCB GenericEvent - XCB GenericEvent Extension
+fontsproto                       FontsProto - Fonts extension headers
+xineramaproto                    XineramaProto - Xinerama extension headers
+guile-3.0                        GNU Guile - GNU's Ubiquitous Intelligent Language for Extension
+compositeproto                   CompositeExt - Composite extension headers
+xf86bigfontproto                 XF86BigFontProto - XF86BigFont extension headers
+aspnetwebstack                   AspNetWebStack - References Microsoft ASP.NET Web Stack
+xcb-xselinux                     XCB SELinux - XCB SELinux Extension
+libpcre                          libpcre - PCRE - Perl compatible regular expressions C library with 8 bit character support
+ksba                             ksba - X.509 and CMS support library
+libpcre16                        libpcre16 - PCRE - Perl compatible regular expressions C library with 16 bit character support
+cairo-xcb-shm                    cairo-xcb-shm - XCB/SHM functions for cairo graphics library
+libavif                          libavif - Library for encoding and decoding .avif files
+glproto                          GLProto - GL extension headers
+cairo-pdf                        cairo-pdf - PDF surface backend for cairo graphics library
+libevent_openssl                 libevent_openssl - libevent_openssl adds openssl-based TLS support to libevent
+lcms2                            lcms2 - LCMS Color Management Library
+dmxproto                         DMXProto - DMX extension headers
+xcb-glx                          XCB GLX - XCB GLX Extension
+aom                              aom - Alliance for Open Media AV1 codec library v3.8.0.
+python-3.12-embed                Python - Embed Python into an application
+libusb-1.0                       libusb-1.0 - C API for USB device access from Linux, Mac OS X, Windows, OpenBSD/NetBSD and Solaris userspace
+gthread-2.0                      GThread - Thread support for GLib
+x11-xcb                          X11 XCB - X Library XCB interface
+xf86driproto                     XF86DRIProto - XF86DRI extension headers
+libssl                           OpenSSL-libssl - Secure Sockets Layer and cryptography libraries
+libpcrecpp                       libpcrecpp - PCRECPP - C++ wrapper for PCRE
+cairo-xcb                        cairo-xcb - XCB surface backend for cairo graphics library
+xcb-screensaver                  XCB Screensaver - XCB Screensaver Extension
+lua5.4                           Lua - An Extensible Extension Language
+xcb-composite                    XCB Composite - XCB Composite Extension
+odbcinst                         odbcinst (unixODBC) - unixODBC Configuration Library
+cairo-quartz-image               cairo-quartz-image - Quartz Image surface backend for cairo graphics library
+mpfr                             mpfr - C library for multiple-precision floating-point computations
+MagickWand                       MagickWand - MagickWand - C API for ImageMagick (ABI Q16HDRI)
+libxml-2.0                       libXML - libXML library version2.
+harfbuzz-subset                  harfbuzz-subset - HarfBuzz font subsetter
+apr-1                            APR - The Apache Portable Runtime library
+xcb-xv                           XCB Xv - XCB Xv Extension
+xextproto                        XExtProto - XExt extension headers
+cairo-gobject                    cairo-gobject - cairo-gobject for cairo graphics library
+dotnet35                         Standard libraries in a .NET setup - References all the standard .NET libraries for compilation (.NET Framework 3.5 compatibility)
+gmodule-no-export-2.0            GModule - Dynamic module loader for GLib
+libde265                         libde265 - H.265/HEVC video decoder.
+libbrotlienc                     libbrotlienc - Brotli encoder library
+libcrypto                        OpenSSL-libcrypto - OpenSSL cryptography library
+bdw-gc                           Boehm-Demers-Weiser Conservative Garbage Collector - A garbage collector for C and C++
+x11                              X11 - X Library
+xcb-res                          XCB Res - XCB X-Resource Extension
+system.web.extensions.design_1.0 System.Web.Extensions.Design - System.Web.Extensions.Design ASP.NET 2.0 add-on
+bigreqsproto                     BigReqsProto - BigReqs extension headers
+jasper                           JasPer - Image Processing/Coding Tool Kit with JPEG-2000 Support
+libpcre32                        libpcre32 - PCRE - Perl compatible regular expressions C library with 32 bit character support
+libjxl                           libjxl - Loads and saves JPEG XL files
+libevent                         libevent - libevent is an asynchronous notification event loop library
+libopenjp2                       openjp2 - JPEG2000 library (Part 1 and 2)
+gsl                              GSL - GNU Scientific Library
+cairo-quartz-font                cairo-quartz-font - Quartz font backend for cairo graphics library
+hogweed                          Hogweed - Nettle low-level cryptographic library (public-key algorithms)
+resourceproto                    ResourceProto - Resource extension headers
+libexslt                         libexslt - EXSLT Extension library
+libassuan                        libassuan - IPC library for the GnuPG components
+cecil                            Mono Internal -- Do not use. - Mono Internal Libraries -- Do not use
+bash                             bash - Bash headers for bash loadable builtins
+cairo-fc                         cairo-fc - Fontconfig font backend for cairo graphics library
+z3                               z3 - The Z3 Theorem Prover
+cairo                            cairo - Multi-platform 2D graphics library
+glib-2.0                         GLib - C Utility Library
+libevent_core                    libevent_core - libevent_core
+tidy                             tidy - tidy - HTML syntax checker
+cairo-ft                         cairo-ft - FreeType font backend for cairo graphics library
+jbig2dec                         libjbig2dec - JBIG2 decoder library.
+xcb-sync                         XCB Sync - XCB Sync Extension
+xcb-xprint                       XCB Xprint - XCB Xprint Extension
+gio-unix-2.0                     GIO unix specific APIs - unix specific headers for glib I/O library
+MagickCore                       MagickCore - MagickCore - C API for ImageMagick (ABI Q16HDRI)
+cairo-quartz                     cairo-quartz - Quartz surface backend for cairo graphics library
+system.web.mvc2                  System.Web.Mvc2 - System.Web.Mvc - ASP.NET MVC v2
+system.web.mvc3                  System.Web.Mvc3 - System.Web.Mvc - ASP.NET MVC v3
+presentproto                     PresentProto - Present extension headers
+xcb-xfixes                       XCB XFixes - XCB XFixes Extension
+librtmp                          librtmp - RTMP implementation
+libwebpdecoder                   libwebpdecoder - Library for the WebP graphics format (decode only)
+python-3.10                      Python - Build a C extension for Python
+python-3.11                      Python - Build a C extension for Python
+monodoc                          Monodoc - Monodoc - Mono Documentation Tools
+python-3.12                      Python - Build a C extension for Python
+libssh2                          libssh2 - Library for SSH-based communication
+libnghttp2                       libnghttp2 - HTTP/2 C library
+xcb-xkb                          XCB XKB - XCB Keyboard Extension (EXPERIMENTAL)
+libpng                           libpng - Loads and saves PNG files
+libpcre2-posix                   libpcre2-posix - Posix compatible interface to libpcre2-8
+libwebpdemux                     libwebpdemux - Library for parsing the WebP graphics format container
+wcf                              WCF - References WCF for compilation
+odbc                             odbc (unixODBC) - unixODBC Driver Manager library
+libhwy-contrib                   libhwy-contrib - Additions to Highway: dot product, image, math, sort
+lzo2                             lzo2 - LZO - a real-time data compression library
+mono-2                           Mono - Mono Runtime
+xcb-randr                        XCB RandR - XCB RandR Extension
+IlmBase                          IlmBase - Base math and exception libraries
+cairo-script-interpreter         cairo-script-interpreter - script surface backend for cairo graphics library
+freetype2                        FreeType 2 - A free, high-quality, and portable font engine.
+xext                             Xext - Misc X Extension Library
+libjpeg                          libjpeg - A SIMD-accelerated JPEG codec that provides the libjpeg API
+xcb-xf86dri                      XCB XFree86-DRI - XCB XFree86-DRI Extension
+libtiff-4                        libtiff - Tag Image File Format (TIFF) library.
+xau                              Xau - X authorization file management library
+system.web.extensions_1.0        System.Web.Extensions - System.Web.Extensions ASP.NET 2.0 add-on
+xcb-record                       XCB Record - XCB Record Extension
+xcb-present                      XCB Present - XCB Present Extension
+harfbuzz                         harfbuzz - HarfBuzz text shaping library
+libbrotlidec                     libbrotlidec - Brotli decoder library
+openssl                          OpenSSL - Secure Sockets Layer and cryptography libraries and tools
+mono-cairo                       Mono.Cairo - Cairo bindings for Mono
+libuv                            libuv - multi-platform support library with a focus on asynchronous I/O.
+libwebpmux                       libwebpmux - Library for manipulating the WebP graphics format container
+libzstd                          zstd - fast lossless compression algorithm library
+libevent_extra                   libevent_extra - libevent_extra
+cairo-script                     cairo-script - script surface backend for cairo graphics library
+libzip                           libzip - library for handling zip archives
+ncursesw                         ncursesw - ncurses 5.7 library
+libffi                           libffi - Library supporting Foreign Function Interfaces
+xcb-shape                        XCB Shape - XCB Shape Extension
+libqrencode                      libqrencode - A QR Code encoding library
+harfbuzz-icu                     harfbuzz-icu - HarfBuzz text shaping library ICU integration
+pthread-stubs                    pthread stubs - Meta package for pthread symbols - defaults to heavyweight ones if the C runtime does not provide lightweight ones.
+isl                              isl - isl Library
+shared-mime-info                 shared-mime-info - Freedesktop common MIME database
+caca++                           caca++ - Colour ASCII-Art library C++ bindings
+gdlib                            gd - GD graphics library
+gmpxx                            GNU MP C++ - GNU Multiple Precision Arithmetic Library (C++ bindings)
+liblz4                           lz4 - extremely fast lossless compression algorithm library
+xrender                          Xrender - X Render Library
+inputproto                       InputProto - Input extension headers
+xproto                           Xproto - Xproto headers
+libgit2                          libgit2 - The git library, take 2
+xcb-shm                          XCB Shm - XCB Shm Extension
+monosgen-2                       Mono - Mono Runtime
+oniguruma                        oniguruma - Regular expression library
+libpng16                         libpng - Loads and saves PNG files
+mono                             Mono - Mono Runtime
+xcb                              XCB - X-protocol C Binding
+graphite2                        Graphite2 - Font rendering engine for Complex Scripts
+liblzma                          liblzma - General purpose data compression library
+python-3.9-embed                 Python - Embed Python into an application
+mono-lineeditor                  Mono.Terminal.LineEditor - Terminal text entry editor using System.Console.
+libunbound                       unbound - Library with validating, recursive, and caching DNS resolver
+libwebp                          libwebp - Library for the WebP graphics format
+ncurses                          ncurses - ncurses 5.7 library
+jansson                          Jansson - Library for encoding, decoding and manipulating JSON data
+fontconfig                       Fontconfig - Font configuration and customization library
+libsharpyuv                      libsharpyuv - Library for sharp RGB to YUV conversion
+cairo-xlib-xrender               cairo-xlib-xrender - Xlib Xrender surface backend for cairo graphics library
+harfbuzz-gobject                 harfbuzz-gobject - HarfBuzz text shaping library GObject integration
+libbrotlicommon                  libbrotlicommon - Brotli common dictionary library
+zlib                             zlib - zlib compression library
+python-3.9                       Python - Build a C extension for Python
+gobject-2.0                      GObject - GLib Type, Object, Parameter and Signal Library
+libidn2                          libidn2 - Library implementing IDNA2008 and TR46
+gio-2.0                          GIO - glib I/O library
+xdmcp                            Xdmcp - X Display Manager Control Protocol library
+xcb-xinerama                     XCB Xinerama - XCB Xinerama Extension
+libiodbc                         iODBC - iODBC Driver Manager
+renderproto                      RenderProto - Render extension headers
+```
+<!--endsec-->
+
+## ldconfig
+
+```bash
+# rebuild ldconfig
+$ sudo ldconfig
+
+# show all
+$ sudo ldconfig --print-cache
 ```
 
 # troubleshooting

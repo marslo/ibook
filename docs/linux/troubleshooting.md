@@ -55,8 +55,8 @@
       $ sudo yum install libcurl libcurl-devel
       ```
 
-- Reason:
-`libcurl-dev` should be installed, but
+- reason:
+  `libcurl-dev` should be installed, but
   ```bash
   Package libcurl-dev is a virtual package provided by:
     libcurl4-openssl-dev 7.35.0-1ubuntu2
@@ -97,7 +97,7 @@
   make: *** [all] Error 2
   ```
 
-- Solution:
+- solution:
   - For Ubuntu/Debain:
     ```bash
     $ sudo apt-get install gettext

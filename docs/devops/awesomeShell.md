@@ -396,42 +396,55 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ```bash
 # magic vim - fzf list in recent modified order
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
+#   - if `nvim` installed using `nvim` instead of `vim`
+#     - using `-v` to force using `vim` instead of `nvim` even if nvim installed
 #   - if `vim` commands without paramters, then call fzf and using vim to open selected file
-#   - if `vim` commands with    paramters
+#   - if `vim` commands with paramters
 #       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
 #       - otherwise call regular vim to open file(s)
-#   - respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vim`
+#   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vim`
+# shellcheck disable=SC2155
 function vim() {                           # magic vim - fzf list in most recent modified order
-  local option
+  local voption
   local target
-  local fdOpt="--type f --hidden --follow --ignore-file $HOME/.fdignore"
+  local orgv                               # force using vim instead of nvim
+  local VIM="$(type -P vim)"
+  local foption='--multi --cycle '
+  local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore --exclude Music"
+  [[ "$(pwd)" = "$HOME" ]] && fdOpt+=' --max-depth 3'
   if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --help ) option+="$1 "   ; shift   ;;
-          -* ) option+="$1 $2 "; shift 2 ;;
-           * ) break                     ;;
+                 -v ) orgv=1            ; shift   ;;
+        -h | --help ) voption+="$1 "    ; shift   ;;
+          --version ) voption+="$1 "    ; shift   ;;
+      --startuptime ) voption+="$1 $2 " ; shift 2 ;;
+                -Nu ) voption+="$1 $2 " ; shift 2 ;;
+              --cmd ) voption+="$1 $2 " ; shift 2 ;;
+                 -* ) foption+="$1 $2 " ; shift 2 ;;
+                  * ) break                       ;;
     esac
   done
-  option+="--multi --cycle"
 
-  if [[ ! "${option}" =~ '--help' ]] && [[ 0 -eq $# ]]; then
-    fd . ${fdOpt} | fzf ${option//--help\ /} --bind="enter:become($(type -P vim) {+})"
+  [[ 1 -ne "${orgv}" ]] && command -v nvim >/dev/null && VIM="$(type -P nvim)"
+
+  if [[ 0 -eq $# ]] && [[ -z "${voption}" ]]; then
+    fd . ${fdOpt} | fzf ${foption} --bind="enter:become(${VIM} {+})"
   elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
     [[ '.' = "${1}" ]] && target="${1}" || target=". ${1}"
-    fd ${target} ${fdOpt} | fzf ${option//--help\ /} --bind="enter:become($(type -P vim) {+})"
+    fd ${target} ${fdOpt} | fzf ${foption} --bind="enter:become(${VIM} {+})"
   else
     # shellcheck disable=SC2068
-    $(type -P vim) -u $HOME/.vimrc ${option//--multi\ --cycle/} $@
+    "${VIM}" ${voption} $@
   fi
 }
 
 # v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description : list 10 most recently used files via fzf, and open by regular vim
 function v() {                             # v - open files in ~/.vim_mru_files
   local files
@@ -456,7 +469,7 @@ function fzfInPath() {                   # return file name via fzf in particula
 
 # magic vimdiff - using fzf list in recent modified order
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
 #   - if any of paramters is directory, then get file path via fzf in target path first
 #   - if `vimdiff` commands without parameter , then compare files in `.` and `~/.marslo`
@@ -499,12 +512,12 @@ function vimdiff() {                       # smart vimdiff
 
 # vd - open vimdiff loaded files from ~/.vim_mru_files
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description : list 10 most recently used files via fzf, and open by vimdiff
 #   - if `vd` commands without parameter, list 10 most recently used files via fzf, and open selected files by vimdiff
-#   - if `vd` commands with `-a` ( [q]uiet ) parameter, list 10 most recently used files via fzf and automatic select top 2, and open selected files by vimdiff
+#   - if `vd` commands with `-q` ( [q]uiet ) parameter, list 10 most recently used files via fzf and automatic select top 2, and open selected files by vimdiff
 function vd() {                            # vd - open vimdiff loaded files from ~/.vim_mru_files
-  [[ 1 -eq $# ]] && [[ '-q' = "$1" ]] && opt='--bind start:select+down+select' || opt=''
+  [[ 1 -eq $# ]] && [[ '-q' = "$1" ]] && opt='--bind start:select+down+select+accept' || opt=''
   # shellcheck disable=SC2046
   files=$( grep --color=none -v '^#' ~/.vim_mru_files |
            xargs -d'\n' -I_ bash -c "sed 's:\~:$HOME:' <<< _" |
@@ -520,36 +533,39 @@ function vd() {                            # vd - open vimdiff loaded files from
 ```bash
 # smart cat - using bat by default for cat content, respect bat options
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
+#   - using `bat` by default if `command -v bat`
+#     - using `-c` ( `c`at ) as 1st parameter, to force using `type -P cat` instead of `type -P bat`
 #   - if `bat` without  paramter, then search file via `fzf` and shows via `bat`
 #   - if `bat` with 1   paramter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
-#   - if `bat` with 1st paramter is `-c`, then call default `cat` with rest of paramters
 #   - otherwise respect `bat` options, and shows via `bat`
+# shellcheck disable=SC2046,SC2155
 function cat() {                           # smart cat
   local fdOpt='--type f --hidden --follow --exclude .git --exclude node_modules'
+  local CAT="$(type -P cat)"
   if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
+  command -v nvim >/dev/null && CAT="$(type -P bat)"
+
   if [[ 0 -eq $# ]]; then
-    # shellcheck disable=SC2046
-    bat --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --multi --cycle --exit-0)
+    "${CAT}" --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --multi --cycle --exit-0)
   elif [[ '-c' = "$1" ]]; then
     $(type -P cat) "${@:2}"
   elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
     local target=$1;
     fd . "${target}" ${fdOpt} |
-      fzf --multi --cycle --bind="enter:become(bat --theme='gruvbox-dark' {+})" ;
+      fzf --multi --cycle --bind="enter:become(${CAT} --theme='gruvbox-dark' {+})" ;
   else
-    bat --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
+    "${CAT}" --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
   fi
 }
-
 ```
 
 ### smart copy
 ```bash
 # smart copy - using `fzf` to list files and copy the selected file
 # @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
 #   - if `copy` without paramter, then list file via `fzf` and copy via `pbcopy` or `clip.exe`
 #   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
@@ -582,7 +598,7 @@ function copy() {                          # smart copy osx/wsl
   ```bash
   # imgview - fzf list and preview images
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description :
   #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default imgview`
   #   - disable `gif` due to imgcat performance issue
@@ -870,7 +886,7 @@ function fman() {
   ```bash
   # mkexp - compilation environment variable export, support multiple select
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : list compilation environment variable via `fzf`, and export selected items
   #   - if paramter is [ -f | --full ], then load full tool paths
   # shellcheck disable=SC1090
@@ -977,7 +993,7 @@ function fman() {
   ```bash
   # eclr - environment variable clear, support multiple select
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : list all environment varialbe via `fzf`, and unset for selected items
   function eclr() {                          # [e]nvironment variable [c][l]ea[r]
     while read -r _env; do
@@ -994,7 +1010,7 @@ function fman() {
   ```bash
   # mkclr - compilation environment variable clear, support multiple select
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : list compilation environment variable via `fzf`, and unset for selected items
   function mkclr() {                         # [m]a[k]e environment variable [c][l]ea[r]
     while read -r _env; do
@@ -1024,7 +1040,7 @@ function fman() {
   ```bash
   # penv - print environment variable, support multiple select
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : list all environment variable via `fzf`, and print values for selected items
   #   - to copy via `-c`
   #     - "${COPY}"
@@ -1113,7 +1129,7 @@ $ (date; ps -ef) |
   ```bash
   # kns - kubectl set default namesapce
   # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : using `fzf` to list all available namespaces and use the selected namespace as default
   # [k]ubectl [n]ame[s]pace
   function kns() {                           # [k]ubectl [n]ame[s]pace

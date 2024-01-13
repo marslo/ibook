@@ -501,6 +501,9 @@ make[1]: Leaving directory '/home/marslo/iMarslo/tools/git/tools/tig'
 
 ## troubleshooting
 
+> [!TIP]
+> - [* iMarslo : devenv troubleshooting](../../linux/troubleshooting.html)
+
 ### `ld: archive member '/' not a mach-o file`
 
 > [!NOTE]
