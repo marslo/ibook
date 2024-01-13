@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Q&A](#qa)
+  - [`/usr/bin/python3.12: No module named ensurepip`](#usrbinpython312-no-module-named-ensurepip)
   - [`pkg_resources.VersionConflict`](#pkg_resourcesversionconflict)
   - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
   - [`No module named pip`](#no-module-named-pip)
@@ -12,6 +13,42 @@
 
 
 ## Q&A
+### `/usr/bin/python3.12: No module named ensurepip`
+- issue
+  ```bash
+  $ pipx install ansible --include-deps
+  Error: Command '['/home/marslo/.local/share/pipx/shared/bin/python3.12', '-m', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exit status 1.
+  '/usr/bin/python3.12 -m venv --clear /home/marslo/.local/share/pipx/shared' failed
+
+  $ /usr/bin/python3.12 -m ensurepip --upgrade --default-pip
+  /usr/bin/python3.12: No module named ensurepip
+  ```
+
+- solution
+  ```bash
+  $ sudo apt install python3.12-venv
+  ```
+
+- result
+  ```bash
+  $ pipx install ansible --include-deps
+    installed package ansible 9.1.0, installed using Python 3.12.1
+    These apps are now globally available
+      - ansible
+      - ansible-community
+      - ansible-config
+      - ansible-connection
+      - ansible-console
+      - ansible-doc
+      - ansible-galaxy
+      - ansible-inventory
+      - ansible-playbook
+      - ansible-pull
+      - ansible-test
+      - ansible-vault
+  done! ✨ 🌟 ✨
+  ```
+
 ### `pkg_resources.VersionConflict`
 
 - issue
