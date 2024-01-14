@@ -2,9 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [prompts](#prompts)
+  - [settings](#settings)
   - [colors](#colors)
   - [functions](#functions)
-  - [settings](#settings)
 - [character](#character)
   - [metacharacter](#metacharacter)
 - [process substitution](#process-substitution)
@@ -52,133 +52,14 @@
 > - [* My Ultimate PowerShell prompt with Oh My Posh and the Windows Terminal](https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal)
 {% endhint %}
 
-## colors
-
-- [Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
-  ```bash
-  # https://misc.flogisoft.com/bash/tip_colors_and_formatting
-  #  ----+---+---+----+---+----       --------+--------     ----+------+------
-  # | ⌌・| ⠋ | ⌜ | ╭╶ | ┌ | ┌─ |    | 0\;xxm | Normal |    | \e | \033 | \x1B |
-  # | ⌎・| ⠦ | ⌞ | ╰╶ | └ | └─ |    | 1\;xxm | Bright |     ----+------+------
-  #  ----+---+---+----+---+----      --------+--------
-  #
-  #  ---+--------------++---------------------++----------------------+    +-----------------
-  # | # |  color name  ||      foregrand      ||      background      |    |   attribute     |
-  #  ---+--------------++---------------------++----------------------+    +---+-------------
-  # | 9 | Default      ||      \e[0;39m       ||       e[0;49m        |    | 0 | Normal      |
-  # | 0 | Black        || \e[0;30m |          || \e[0;40m |           |    | 1 | Bold        |
-  # | 1 | Red          || \e[0;31m |          || \e[0;41m |           |    | 2 | Faint       |
-  # | 2 | Green        || \e[0;32m |          || \e[0;42m |           |    | 3 | Italic      |
-  # | 3 | Yellow       || \e[0;33m |          || \e[0;43m |           |    | 4 | Underline   |
-  # | 4 | Blue         || \e[0;34m |          || \e[0;44m |           |    | 5 | Slow Blink  |
-  # | 5 | Purple       || \e[0;35m |          || \e[0;45m |           |    | 6 | Rapid Blink |
-  # | 6 | Cyan         || \e[0;36m |          || \e[0;46m |           |    | 7 | reverse     |
-  # | 7 | Light Gray   || \e[0;37m |          || \e[0;47m |           |     ---+-------------
-  # | 0 | Dark Gray    || \e[1;30m | \e[0;90m || \e[1;40m | \e[0;100m |     ---------------------
-  # | 1 | Light Red    || \e[1;31m | \e[0;91m || \e[1;41m | \e[0;101m |    |       others        |
-  # | 2 | Light Green  || \e[1;32m | \e[0;92m || \e[1;42m | \e[0;102m |     -------------+-------
-  # | 3 | Light Yellow || \e[1;33m | \e[0;93m || \e[1;43m | \e[0;103m |    | color none  | \e[0m |
-  # | 4 | Light Blue   || \e[1;34m | \e[0;94m || \e[1;44m | \e[0;104m |    | color reset | \e[1m |
-  # | 5 | Light Purple || \e[1;35m | \e[0;95m || \e[1;45m | \e[0;105m |     -------------+-------
-  # | 6 | Light Cyan   || \e[1;36m | \e[0;96m || \e[1;46m | \e[0;106m |     ----------------+---------------------------------
-  # | 7 | White        ||      \e[0;97m       ||      \e[0;107m       |    | \[\e[xx;0m]\]  | system color                    |
-  #  ---+--------------++---------------------++----------------------     | \[\e[xx\;0m]\] | system color in ``              |
-  # |   |              ||  \e[38;5;{0..255}m# ||  \e[48;5;{0..255}m#  |    | \[\e[0;xxm]\]  | profile color (solarized)       |
-  #  ---+--------------++---------------------++----------------------     | \[\e[0\;xxm]\] | profile color (solarized) in `` |
-  #                                                                         ----------------+---------------------------------
-  #  ------------+-------------------------------------------------------   ----------------+-------------------------------
-  # |                   256 colors standard format                       | |                   comments                     |
-  #  ------------+-------------------------------------------------------   ----------------+-------------------------------
-  # | attributes | 0 1 2 3 4 5 6 7                                       | | COL_NONE       | no color                      |
-  # | foregrand  | {0..255}                                              | | COL_RESET      | reset color                   |
-  # | background | {30..37} {90..97} 39                                  | | COL_DEFAULT    | default color                 |
-  #  ------------+-------------------------------------------------------  | COL_IF_DEFAULT | default color in if-statement |
-  # | usage : \e[${attributes};{background};5;${foreground}m <str> \e[0m |  ----------------+-------------------------------
-  #  ------------+-------------------------------------------------------
-  #
-  # Solarized color table from http://ethanschoonover.com/solarized.
-  #
-  # | SOLARIZED | HEX     | ANSI      | TERMCOL   | cmd.exe     | PowerShell  | ColorTable | DWORD    |
-  # |-----------|---------|-----------|-----------|-------------|-------------|------------|----------|
-  # | base03    | #002b36 | ESC[0;30m | brblack   | Black       | Black       | 00         | 00362b00 |
-  # | base02    | #073642 | ESC[1;30m | black     | Gray        | DarkGray    | 08         | 00423607 |
-  # | base01    | #586e75 | ESC[0;32m | brgreen   | Green       | DarkGreen   | 02         | 00756e58 |
-  # | base00    | #657b83 | ESC[0;33m | bryellow  | Yellow      | DarkYellow  | 06         | 00837b65 |
-  # | base0     | #839496 | ESC[0;34m | brblue    | Blue        | DarkBlue    | 01         | 00969483 |
-  # | base1     | #93a1a1 | ESC[0;36m | brcyan    | Aqua        | DarkCyan    | 03         | 00a1a193 |
-  # | base2     | #eee8d5 | ESC[0;37m | white     | White       | Gray        | 07         | 00d5e8ee |
-  # | base3     | #fdf6e3 | ESC[1;37m | brwhite   | BrightWhite | White       | 15         | 00e3f6fd |
-  # | yellow    | #b58900 | ESC[1;33m | yellow    | LightYellow | Yellow      | 14         | 000089b5 |
-  # | orange    | #cb4b16 | ESC[0;31m | brred     | Red         | DarkRed     | 04         | 00164bcb |
-  # | red       | #dc322f | ESC[1;31m | red       | LightRed    | Red         | 12         | 002f32dc |
-  # | magenta   | #d33682 | ESC[1;35m | magenta   | LightPurple | Magenta     | 13         | 008236d3 |
-  # | violet    | #6c71c4 | ESC[0;35m | brmagenta | Purple      | DarkMagenta | 05         | 00c4716c |
-  # | blue      | #268bd2 | ESC[1;34m | blue      | LightBlue   | Blue        | 09         | 00d28b26 |
-  # | cyan      | #2aa198 | ESC[1;36m | cyan      | LightAqua   | Cyan        | 11         | 0098a12a |
-  # | green     | #859900 | ESC[1;32m | green     | LightGreen  | Green       | 10         | 00009985 |
-  ```
-
-  ```bash
-  PS1="\[$(tput setaf 0) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 1) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 2) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 3) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 4) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 5) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 6) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 7) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 8) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 9) \]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 10)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 11)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 12)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 13)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 14)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 15)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 16)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 17)\]my prompt\[$(tput sgr0)\]> "
-  PS1="\[$(tput setaf 18)\]my prompt\[$(tput sgr0)\]> "
-  ```
-
-  ![bash ps1](../../screenshot/ansi/bash-ps1.png)
-
-  - or
-    ```bash
-    $ DEFAULT="\[$(tput setaf 3)\]"         # or '\[\033[1;38;5;3m\]'     or '\[\e[1;33m\]'
-    $ ifDEFAULT='\[\e[1\;33m\]'             # or '\[\033[1\;38\;5\;3m\]'
-    $ ifRED='\[\e[1\;31m\]'                 # or '\[\033[1\;38\;5\;1m\]'
-    $ PS1="${DEFAULT}my prompt${RESET} \$( if [ \$? != 0 ]; then echo -e ${ifRED}\\$; else echo -e ${ifDEFAULT}\\$; fi) ${RESET}"
-    ```
-    ![bash ps1 in conditional](../../screenshot/ansi/bash-ps1-conditions.png)
-
-  - right prompt
-    ```
-    rightprompt()
-    {
-      printf "%*s" $COLUMNS "right prompt"
-    }
-    PS1='\[$(tput sc; rightprompt; tput rc)\]left prompt > '
-    ```
-
-    ![bash ps1 right-prompt](../../screenshot/ansi/bash-ps1-right-prompt.png)
-
-## functions
-```bash
-function showKeyMap() { RET=$?; bind -v | awk '/keymap/ {print $NF}'; return "${RET}"; }
-function rightPrompt() {
-  if [ "$(bind -v | awk '/keymap/ {print $NF}')" == 'emacs' ]; then
-    kmap=⌁
-  else
-    kmap=⚙︎
-  fi
-  printf "%*s" $COLUMNS "${kmap}"
-  # add this to PS1: \[$(tput sc; rightPrompt; tput rc)\]
-}
-
-PS1+="- [\$(showKeyMap)] "
-```
+![bash prompts with change-mode and cursorshape](../screenshot/shell/bash-bind-mode-string-cursor-shape.gif)
 
 ## settings
+
+> [!NOTE|label:inputrc]
+> - [* iMarlso: inputrc](../cheatsheet/bash/builtin.html#inputrc)
+> - [* marslo/mylinux/inputrc](https://github.com/marslo/mylinux/blob/main/confs/home/.inputrc)
+
 ```bash
 # https://marslo.github.io/ibook/screenshot/colors/ansi/color-formatting.png
 fgc=$(RGBcolor 5 6 8)                             # 240;  fgc=$(RGBcolor 5 6 5)  # 237
@@ -270,69 +151,192 @@ export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET
 ```
 <!-- endsec -->
 
+## colors
+
+- [Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
+  ```bash
+  # https://misc.flogisoft.com/bash/tip_colors_and_formatting
+  #  ----+---+---+----+---+----       --------+--------     ----+------+------
+  # | ⌌・| ⠋ | ⌜ | ╭╶ | ┌ | ┌─ |    | 0\;xxm | Normal |    | \e | \033 | \x1B |
+  # | ⌎・| ⠦ | ⌞ | ╰╶ | └ | └─ |    | 1\;xxm | Bright |     ----+------+------
+  #  ----+---+---+----+---+----      --------+--------
+  #
+  #  ---+--------------++---------------------++----------------------+    +-----------------
+  # | # |  color name  ||      foregrand      ||      background      |    |   attribute     |
+  #  ---+--------------++---------------------++----------------------+    +---+-------------
+  # | 9 | Default      ||      \e[0;39m       ||       e[0;49m        |    | 0 | Normal      |
+  # | 0 | Black        || \e[0;30m |          || \e[0;40m |           |    | 1 | Bold        |
+  # | 1 | Red          || \e[0;31m |          || \e[0;41m |           |    | 2 | Faint       |
+  # | 2 | Green        || \e[0;32m |          || \e[0;42m |           |    | 3 | Italic      |
+  # | 3 | Yellow       || \e[0;33m |          || \e[0;43m |           |    | 4 | Underline   |
+  # | 4 | Blue         || \e[0;34m |          || \e[0;44m |           |    | 5 | Slow Blink  |
+  # | 5 | Purple       || \e[0;35m |          || \e[0;45m |           |    | 6 | Rapid Blink |
+  # | 6 | Cyan         || \e[0;36m |          || \e[0;46m |           |    | 7 | reverse     |
+  # | 7 | Light Gray   || \e[0;37m |          || \e[0;47m |           |     ---+-------------
+  # | 0 | Dark Gray    || \e[1;30m | \e[0;90m || \e[1;40m | \e[0;100m |     ---------------------
+  # | 1 | Light Red    || \e[1;31m | \e[0;91m || \e[1;41m | \e[0;101m |    |       others        |
+  # | 2 | Light Green  || \e[1;32m | \e[0;92m || \e[1;42m | \e[0;102m |     -------------+-------
+  # | 3 | Light Yellow || \e[1;33m | \e[0;93m || \e[1;43m | \e[0;103m |    | color none  | \e[0m |
+  # | 4 | Light Blue   || \e[1;34m | \e[0;94m || \e[1;44m | \e[0;104m |    | color reset | \e[1m |
+  # | 5 | Light Purple || \e[1;35m | \e[0;95m || \e[1;45m | \e[0;105m |     -------------+-------
+  # | 6 | Light Cyan   || \e[1;36m | \e[0;96m || \e[1;46m | \e[0;106m |     ----------------+---------------------------------
+  # | 7 | White        ||      \e[0;97m       ||      \e[0;107m       |    | \[\e[xx;0m]\]  | system color                    |
+  #  ---+--------------++---------------------++----------------------     | \[\e[xx\;0m]\] | system color in ``              |
+  # |   |              ||  \e[38;5;{0..255}m# ||  \e[48;5;{0..255}m#  |    | \[\e[0;xxm]\]  | profile color (solarized)       |
+  #  ---+--------------++---------------------++----------------------     | \[\e[0\;xxm]\] | profile color (solarized) in `` |
+  #                                                                         ----------------+---------------------------------
+  #  ------------+-------------------------------------------------------   ----------------+-------------------------------
+  # |                   256 colors standard format                       | |                   comments                     |
+  #  ------------+-------------------------------------------------------   ----------------+-------------------------------
+  # | attributes | 0 1 2 3 4 5 6 7                                       | | COL_NONE       | no color                      |
+  # | foregrand  | {0..255}                                              | | COL_RESET      | reset color                   |
+  # | background | {30..37} {90..97} 39                                  | | COL_DEFAULT    | default color                 |
+  #  ------------+-------------------------------------------------------  | COL_IF_DEFAULT | default color in if-statement |
+  # | usage : \e[${attributes};{background};5;${foreground}m <str> \e[0m |  ----------------+-------------------------------
+  #  ------------+-------------------------------------------------------
+  #
+  # Solarized color table from http://ethanschoonover.com/solarized.
+  #
+  # | SOLARIZED | HEX     | ANSI      | TERMCOL   | cmd.exe     | PowerShell  | ColorTable | DWORD    |
+  # |-----------|---------|-----------|-----------|-------------|-------------|------------|----------|
+  # | base03    | #002b36 | ESC[0;30m | brblack   | Black       | Black       | 00         | 00362b00 |
+  # | base02    | #073642 | ESC[1;30m | black     | Gray        | DarkGray    | 08         | 00423607 |
+  # | base01    | #586e75 | ESC[0;32m | brgreen   | Green       | DarkGreen   | 02         | 00756e58 |
+  # | base00    | #657b83 | ESC[0;33m | bryellow  | Yellow      | DarkYellow  | 06         | 00837b65 |
+  # | base0     | #839496 | ESC[0;34m | brblue    | Blue        | DarkBlue    | 01         | 00969483 |
+  # | base1     | #93a1a1 | ESC[0;36m | brcyan    | Aqua        | DarkCyan    | 03         | 00a1a193 |
+  # | base2     | #eee8d5 | ESC[0;37m | white     | White       | Gray        | 07         | 00d5e8ee |
+  # | base3     | #fdf6e3 | ESC[1;37m | brwhite   | BrightWhite | White       | 15         | 00e3f6fd |
+  # | yellow    | #b58900 | ESC[1;33m | yellow    | LightYellow | Yellow      | 14         | 000089b5 |
+  # | orange    | #cb4b16 | ESC[0;31m | brred     | Red         | DarkRed     | 04         | 00164bcb |
+  # | red       | #dc322f | ESC[1;31m | red       | LightRed    | Red         | 12         | 002f32dc |
+  # | magenta   | #d33682 | ESC[1;35m | magenta   | LightPurple | Magenta     | 13         | 008236d3 |
+  # | violet    | #6c71c4 | ESC[0;35m | brmagenta | Purple      | DarkMagenta | 05         | 00c4716c |
+  # | blue      | #268bd2 | ESC[1;34m | blue      | LightBlue   | Blue        | 09         | 00d28b26 |
+  # | cyan      | #2aa198 | ESC[1;36m | cyan      | LightAqua   | Cyan        | 11         | 0098a12a |
+  # | green     | #859900 | ESC[1;32m | green     | LightGreen  | Green       | 10         | 00009985 |
+  ```
+
+  ```bash
+  PS1="\[$(tput setaf 0) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 1) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 2) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 3) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 4) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 5) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 6) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 7) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 8) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 9) \]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 10)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 11)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 12)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 13)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 14)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 15)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 16)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 17)\]my prompt\[$(tput sgr0)\]> "
+  PS1="\[$(tput setaf 18)\]my prompt\[$(tput sgr0)\]> "
+  ```
+
+  ![bash ps1](../screenshot/colors/ansi/bash-ps1.png)
+  - or ps1 with conditions
+    ```bash
+    $ DEFAULT="\[$(tput setaf 3)\]"         # or '\[\033[1;38;5;3m\]'     or '\[\e[1;33m\]'
+    $ ifDEFAULT='\[\e[1\;33m\]'             # or '\[\033[1\;38\;5\;3m\]'
+    $ ifRED='\[\e[1\;31m\]'                 # or '\[\033[1\;38\;5\;1m\]'
+    $ PS1="${DEFAULT}my prompt${RESET} \$( if [ \$? != 0 ]; then echo -e ${ifRED}\\$; else echo -e ${ifDEFAULT}\\$; fi) ${RESET}"
+    ```
+
+    ![bash ps1 in conditional](../screenshot/colors/ansi/bash-ps1-conditions.png)
+
+## functions
+```bash
+function showKeyMap() { RET=$?; bind -v | awk '/keymap/ {print $NF}'; return "${RET}"; }
+function rightPrompt() {
+  if [ "$(bind -v | awk '/keymap/ {print $NF}')" == 'emacs' ]; then
+    kmap=⌁
+  else
+    kmap=⚙︎
+  fi
+  printf "%*s" $COLUMNS "${kmap}"
+}
+
+PS1+="- [\$(showKeyMap)] "
+PS1+="- [\$(tput sc; rightPrompt; tput rc)]"
+```
+
+- right prompt
+  ```
+  rightprompt() { printf "%*s" $COLUMNS "right prompt"; }
+  PS1='\[$(tput sc; rightprompt; tput rc)\]left prompt > '
+  ```
+
+  ![bash ps1 right-prompt](../screenshot/colors/ansi/bash-ps1-right-prompt.png)
+
 # character
 ## [metacharacter](https://www.grymoire.com/Unix/Quote.html)
 
-|     Character    | Where                | Meaning                                       |
-|:----------------:|----------------------|-----------------------------------------------|
-|    `<RETURN>`    | csh, sh              | Execute command                               |
-|        `#`       | csh, sh, ASCII files | Start a comment                               |
-|     `<SPACE>`    | csh, sh              | Argument separator                            |
-|  <code>`</code>  | csh, sh              | Command substitution                          |
-|        `"`       | csh, sh              | Weak Quotes                                   |
-|        `'`       | csh, sh              | Strong Quotes                                 |
-|        `\`       | csh, sh              | Single Character Quote                        |
-|    `variable`    | sh, csh              | Variable                                      |
-|    `variable`    | csh, sh              | Same as variable                              |
-|        `\`       | csh, sh              | Pipe character                                |
-|        `^`       | sh                   | Pipe Character                                |
-|        `&`       | csh, sh              | Run program in background                     |
-|        `?`       | csh, sh              | Match one character                           |
-|        `*`       | csh, sh              | Match any number of characters                |
-|        `;`       | csh, sh              | Command separator                             |
-|       `;;`       | sh                   | End of Case statement                         |
-|        `~`       | csh                  | Home Directory                                |
-|      `~user`     | csh                  | User's Home Directory                         |
-|        `!`       | csh                  | History of Commands                           |
-|        `-`       | Programs             | Start of optional argument                    |
-|       `$#`       | csh, sh              | Number of arguments to script                 |
-|       `$*`       | csh, sh              | Arguments to script                           |
-|       `$@`       | sh                   | Original arguments to script                  |
-|       `$-`       | sh                   | Flags passed to shell                         |
-|       `$?`       | sh                   | Status of previous command                    |
-|       `$$`       | sh                   | Process identification number                 |
-|       `$!`       | sh                   | PID of last background job                    |
-|       `&&`       | sh                   | Short-circuit AND                             |
-|         `        |                      | `                                             | sh | Short-circuit OR |
-|        `.`       | csh, sh              | Typ. filename extension                       |
-|        `.`       | sh                   | Source a file and execute as command          |
-|        `:`       | sh                   | Nothing command                               |
-|        `:`       | sh                   | Separates Values in environment variables     |
-|        `:`       | csh                  | Variable modifier                             |
-|    `Character`   | Where                | Meaning                                       |
-|       `[ ]`      | csh, sh              | Match range of characters                     |
-|       `[ ]`      | sh                   | Test                                          |
-|      `%job`      | csh                  | Identifies job Number                         |
-|    `(cmd;cmd)`   | csh. sh              | Runs cmd;cmd as a sub-shell                   |
-|       `{ }`      | csh                  | In-line expansions                            |
-|   `{cmd;cmd }`   | sh                   | Like (cmd;cmd ) without a subshell            |
-|     `>ofile`     | csh, sh              | Standard output                               |
-|     `>>ofile`    | csh, sh              | Append to standard output                     |
-|     `<ifile`     | csh, sh              | Standard Input                                |
-|     `<<word`     | csh, sh              | Read until word, substitute variables         |
-|     `<<\word`    | csh, sh              | Read until word, no substitution              |
-|     `<<-word`    | sh                   | Read until word, ignoring TABS                |
-|     `>>!file`    | csh                  | Append to file, ignore error if not there     |
-|     `>!file`     | csh                  | Output to new file, ignore error if not there |
-|     `>&file`     | csh                  | Send standard & error output to file          |
-|     `<&digit`    | sh                   | Switch Standard Input to file                 |
-|       `<&-`      | sh                   | Close Standard Input                          |
-|     `>&digit`    | sh                   | Switch Standard Output to file                |
-|       `>&-`      | sh                   | Close Standard Output                         |
-| `digit1<&digit2` | sh                   | Connect digit2 to digit1                      |
-|    `digit<&-`    | sh                   | Close file digit                              |
-| `digit2>&digit1` | sh                   | Connect digit2 to digit1                      |
-|    `digit>&-`    | sh                   | Close file digit                              |
+|         Character         | Where                | Meaning                                       |
+|:-------------------------:|----------------------|-----------------------------------------------|
+|         `<RETURN>`        | csh, sh              | Execute command                               |
+|            `#`            | csh, sh, ASCII files | Start a comment                               |
+|         `<SPACE>`         | csh, sh              | Argument separator                            |
+|       <code>`</code>      | csh, sh              | Command substitution                          |
+|            `"`            | csh, sh              | Weak Quotes                                   |
+|            `'`            | csh, sh              | Strong Quotes                                 |
+|            `\`            | csh, sh              | Single Character Quote                        |
+|         `variable`        | sh, csh              | Variable                                      |
+|         `variable`        | csh, sh              | Same as variable                              |
+|            `\`            | csh, sh              | Pipe character                                |
+|            `^`            | sh                   | Pipe Character                                |
+|            `&`            | csh, sh              | Run program in background                     |
+|            `?`            | csh, sh              | Match one character                           |
+|            `*`            | csh, sh              | Match any number of characters                |
+|            `;`            | csh, sh              | Command separator                             |
+|            `;;`           | sh                   | End of Case statement                         |
+|            `~`            | csh                  | Home Directory                                |
+|          `~user`          | csh                  | User's Home Directory                         |
+|            `!`            | csh                  | History of Commands                           |
+|            `-`            | Programs             | Start of optional argument                    |
+|            `$#`           | csh, sh              | Number of arguments to script                 |
+|            `$*`           | csh, sh              | Arguments to script                           |
+|            `$@`           | sh                   | Original arguments to script                  |
+|            `$-`           | sh                   | Flags passed to shell                         |
+|            `$?`           | sh                   | Status of previous command                    |
+|            `$$`           | sh                   | Process identification number                 |
+|            `$!`           | sh                   | PID of last background job                    |
+|            `&&`           | sh                   | Short-circuit AND                             |
+| <code>&#124;&#124;</code> | sh                   | Short-circuit OR                              |
+|            `.`            | csh, sh              | Typ. filename extension                       |
+|            `.`            | sh                   | Source a file and execute as command          |
+|            `:`            | sh                   | Nothing command                               |
+|            `:`            | sh                   | Separates Values in environment variables     |
+|            `:`            | csh                  | Variable modifier                             |
+|        `Character`        | Where                | Meaning                                       |
+|           `[ ]`           | csh, sh              | Match range of characters                     |
+|           `[ ]`           | sh                   | Test                                          |
+|           `%job`          | csh                  | Identifies job Number                         |
+|        `(cmd;cmd)`        | csh. sh              | Runs cmd;cmd as a sub-shell                   |
+|           `{ }`           | csh                  | In-line expansions                            |
+|        `{cmd;cmd }`       | sh                   | Like (cmd;cmd ) without a subshell            |
+|          `>ofile`         | csh, sh              | Standard output                               |
+|         `>>ofile`         | csh, sh              | Append to standard output                     |
+|          `<ifile`         | csh, sh              | Standard Input                                |
+|          `<<word`         | csh, sh              | Read until word, substitute variables         |
+|         `<<\word`         | csh, sh              | Read until word, no substitution              |
+|         `<<-word`         | sh                   | Read until word, ignoring TABS                |
+|         `>>!file`         | csh                  | Append to file, ignore error if not there     |
+|          `>!file`         | csh                  | Output to new file, ignore error if not there |
+|          `>&file`         | csh                  | Send standard & error output to file          |
+|         `<&digit`         | sh                   | Switch Standard Input to file                 |
+|           `<&-`           | sh                   | Close Standard Input                          |
+|         `>&digit`         | sh                   | Switch Standard Output to file                |
+|           `>&-`           | sh                   | Close Standard Output                         |
+|      `digit1<&digit2`     | sh                   | Connect digit2 to digit1                      |
+|         `digit<&-`        | sh                   | Close file digit                              |
+|      `digit2>&digit1`     | sh                   | Connect digit2 to digit1                      |
+|         `digit>&-`        | sh                   | Close file digit                              |
 
 
 # [process substitution](http://www.gnu.org/software/bash/manual/html_node/Process-Substitution.html#Process-Substitution)
