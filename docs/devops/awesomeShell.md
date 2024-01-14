@@ -583,18 +583,20 @@ function cat() {                           # smart cat
   command -v nvim >/dev/null && CAT="$(type -P bat)"
 
   if [[ 0 -eq $# ]]; then
-    "${CAT}" --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --multi --cycle --exit-0)
+    "${CAT}" --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --multi --cycle --exit-1)
   elif [[ '-c' = "$1" ]]; then
     $(type -P cat) "${@:2}"
   elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
     local target=$1;
     fd . "${target}" ${fdOpt} |
-      fzf --multi --cycle --bind="enter:become(${CAT} --theme='gruvbox-dark' {+})" ;
+      fzf --multi --cycle --exit-1 --bind="enter:become(${CAT} --theme='gruvbox-dark' {+})" ;
   else
     "${CAT}" --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
   fi
 }
 ```
+
+![smart cat](../screenshot/linux/fzf/fzf-smart-cat.gif)
 
 ### smart copy
 ```bash
@@ -602,26 +604,32 @@ function cat() {                           # smart cat
 # @author      : marslo
 # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
-#   - if `copy` without paramter, then list file via `fzf` and copy via `pbcopy` or `clip.exe`
+#   - if `copy` without parameter, then list file via `fzf` and copy the content
+#     - "${COPY}"
+#       - `pbcopy` in osx
+#       - `/mnt/c/Windows/System32/clip.exe` in wsl
 #   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
-function copy() {                          # smart copy osx/wsl
-  if uname -r | grep -q 'Microsoft'; then
-    COPY='/mnt/c/Windows/System32/clip.exe'
-  elif [[ 'Darwin' = "$(uname)" ]]; then
-    COPY='/usr/bin/pbcopy'
-  else
-    echo -e "$(c Rs)ERROR: 'copy' function NOT support :$(c) $(c Ri)$(uanme -v)$(c)$(c Rs). EXIT..$(c)"
-    exit 0
-  fi
+# shellcheck disable=SC2317
+function copy() {                          # smart copy
+  local fdOpt='--type f --hidden --follow --exclude .git --exclude node_modules'
+  [[ -z "${COPY}" ]] && echo -e "$(c Rs)ERROR: 'copy' function NOT support :$(c) $(c Ri)$(uanme -v)$(c)$(c Rs). EXIT..$(c)" && return;
 
   if [[ 0 -eq $# ]]; then
-    # shellcheck disable=SC2046
-    "${COPY}" < $(fzf --cycle --exit-0)
+    file=$(fzf --cycle --exit-0) &&
+      "${COPY}" < "${file}" &&
+      echo -e "$(c Wd)>>$(c) $(c Gis)${file}$(c) $(c Wdi)has been copied ..$(c)"
+  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
+    local target=$1;
+    file=$( fd . "${target}" ${fdOpt} | fzf --cycle --exit-0 ) &&
+      "${COPY}" < "${file}" &&
+      echo -e "$(c Wd)>>$(c) $(c Gis)${file}$(c) $(c Wdi)has been copied ..$(c)"
   else
     "${COPY}" < "$1"
   fi
 }
 ```
+
+![smart copy](../screenshot/linux/fzf/fzf-smart-copy.gif)
 
 ### others
 
