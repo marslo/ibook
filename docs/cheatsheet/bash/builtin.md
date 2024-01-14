@@ -739,7 +739,29 @@ set keymap vi-insert
 
 ![bash show-mode-in-prompt](../../screenshot/shell/bash-bind-show-mode-in-prompt.gif)
 
+- [change cursor shape](https://stackoverflow.com/a/65145878/2940319)
+
+  > [!NOTE|label:references:]
+  > - [Xterm Control Sequences](https://www.xfree86.org/current/ctlseqs.html)
+
+  ```bash
+  set emacs-mode-string   \1\e[4 q\e]12;red\a\2
+  set vi-ins-mode-string  \1\e[5 q\e]12;green\a\2
+  set vi-cmd-mode-string  \1\e[4 q\e]12;orange\a\2
+
+  # or
+  set  emacs-mode-string "\1\e[3 q\2"
+  set vi-ins-mode-string "\1\e[5 q\2"
+  set vi-cmd-mode-string "\1\e[4 q\2"
+  ```
+
+  ![bash show-mode-in-prompte change cursor shape](../../screenshot/shell/bash-bind-mode-string-cursor-shape.gif)
+
 #### PS1
+
+> [!NOTE|label:see also:]
+> - [prompts](../../linux/basic.html#prompts)
+
 ```bash
 PS1='\n\[\033[1m\]\[\033[38;5;240m\]╭╶ (\u@\h\[\033[1m\] '
 PS1+='\[\033[0;31m\]\w\[\033[1m\]\[\033[38;5;240m\]) '
@@ -752,9 +774,17 @@ export PS1
 #### inputrc
 ```bash
 set show-mode-in-prompt on
-set emacs-mode-string  \1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2
-set vi-ins-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2
-set vi-cmd-mode-string \1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2
+#                                 string settings       cursor shape
+#                        +------------------------------++--------+
+#                           color begin         color end
+#                          +------------+         +---+
+set emacs-mode-string   "\1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2\1\e[3 q\2"
+#                                      string settings              cursor shape
+#                        +------------------------------------------++--------+
+#                           color begin       color begin   color end
+#                          +------------+       +------+      +---+
+set vi-ins-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2\1\e[5 q\2"
+set vi-cmd-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2\1\e[4 q\2"
 
 set keymap emacs
 "\ee": vi-editing-mode
@@ -843,7 +873,6 @@ set keymap vi-insert
   # Configures the ins mode display
   set vi-ins-mode-string "\1\e[48;5;4m\2\1\e[1;38;5;0m\2 I \1\e[0m\2 \1\e[6 q\2"
   ```
-
 
 ### show options
 ```bash

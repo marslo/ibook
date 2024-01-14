@@ -31,6 +31,7 @@
     - [GroovyLanguageServer/groovy-language-server](#groovylanguageservergroovy-language-server)
   - [others](#others)
     - [coc.nvim](#cocnvim)
+  - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
 - [utils](#utils)
   - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
   - [sjl/gundo.vim](#sjlgundovim)
@@ -45,6 +46,7 @@
   - [zivyangll/git-blame.vim](#zivyangllgit-blamevim)
 - [color and theme](#color-and-theme)
   - [ryanoasis/vim-devicons](#ryanoasisvim-devicons)
+  - [RRethy/vim-hexokinase](#rrethyvim-hexokinase)
 - [others](#others-1)
   - [deprecated](#deprecated)
   - [not been using](#not-been-using)
@@ -1484,6 +1486,7 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 ### [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 > [!NOTE|label:references:]
+> - [* Language servers](https://github.com/neoclide/coc.nvim/wiki/Language-servers)
 > - [#805 ALE diagnostic signs don't appear](https://github.com/neoclide/coc.nvim/issues/805)
 > - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
 
@@ -1494,7 +1497,8 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 
   and execute:
   ```bash
-  :CocInstall coc-json coc-tsserver
+  :CocInstall coc-sh coc-groovy coc-json coc-css coc-pyright coc-git coc-snippets
+  :CocInstall CocInstall @yaegassy/coc-tailwindcss3
   ```
 
 - open configure file ( `coc-settings.json` )
@@ -1514,6 +1518,32 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
     "diagnostic.displayByAle": true
   }
   ```
+
+## [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+
+> [!NOTE]
+> - if install from standalone package, `tree-sitter` required
+>   - osx: `$ brew install tree-sitter`
+
+```vim
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+```
+
+- install
+  ```vim
+  :TSInstall bash css gitcommit git_config gpg html java jq lua python xml yaml
+  ```
+
+- check via
+  ```vim
+  :TSInstallInfo
+  :TSModuleInfo
+  :checkhealth nvim-treesitter
+  :echo nvim_get_runtime_file('*/lua.so', v:true)
+  ['/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua.so', '/usr/local/Cellar/neovim/0.9.5/lib/nvim/parser/lua.so']
+  ```
+
+![nvim-treesitter](../screenshot/vim/nvim-treesitter.gif)
 
 # utils
 ## [vim-scripts/AuthorInfoDetect](https://github.com/vim-scripts/AuthorInfo)
@@ -1706,6 +1736,25 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 > - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
 > - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
 
+## [RRethy/vim-hexokinase](https://github.com/RRethy/vim-hexokinase)
+
+```vim
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+
+" rrethy/vim-hexokinase
+let g:Hexokinase_highlighters  = [ 'backgroundfull' ]              " available options: 'virtual', 'sign_column', 'background', 'backgroundfull', 'foreground', 'foregroundfull'
+let g:Hexokinase_optInPatterns = [
+\     'full_hex',
+\     'triple_hex',
+\     'rgb',
+\     'rgba',
+\     'hsl',
+\     'hsla',
+\     'colour_names'
+\ ]
+let g:Hexokinase_ftEnabled     = [ 'css', 'html', 'javascript']    " not recommended
+```
+
 # others
 ## deprecated
 
@@ -1878,8 +1927,8 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 
   " for tpope vim-markdown
   let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-  let g:markdown_syntax_conceal = 0
-  let g:markdown_minlines = 100
+  let g:markdown_syntax_conceal   = 0
+  let g:markdown_minlines         = 100
   ```
 <!--endsec-->
 

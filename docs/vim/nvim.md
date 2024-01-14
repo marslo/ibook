@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [install](#install)
+  - [dependencies](#dependencies)
   - [Nvim development (prerelease) build](#nvim-development-prerelease-build)
   - [building neovim from source](#building-neovim-from-source)
   - [package manager](#package-manager)
@@ -45,6 +46,34 @@
 > [!NOTE]
 > - [neovim/INSTALL.md](https://github.com/neovim/neovim/blob/master/INSTALL.md)
 > - [#19029 ci: build universal release on macOS](https://github.com/neovim/neovim/pull/19029)
+
+## dependencies
+- osx
+  - `gettext` :  GNU internationalization (i18n) and localization (l10n) library
+  - `libtermkey` : Library for processing keyboard entry from the terminal
+  - `libuv` : Multi-platform support library with a focus on asynchronous I/O
+  - `libvterm` : C99 library which implements a VT220 or xterm terminal emulator
+  - `luajit` : Just-In-Time Compiler (JIT) for the Lua programming language
+  - `luv` : Bare libuv bindings for lua
+  - `msgpack` : Library for a binary-based efficient data interchange format
+  - `tree-sitter` : Parser generator tool and incremental parsing library
+  - `unibilium`: Very basic terminfo library
+
+  ```bash
+  $ brew deps --tree neovim
+  neovim
+  ├── gettext
+  ├── libtermkey
+  │   └── unibilium
+  ├── libuv
+  ├── libvterm
+  ├── luajit
+  ├── luv
+  │   └── libuv
+  ├── msgpack
+  ├── tree-sitter
+  └── unibilium
+  ```
 
 ## [Nvim development (prerelease) build](https://github.com/neovim/neovim/releases/nightly)
 
