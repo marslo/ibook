@@ -421,6 +421,7 @@ function vim() {                           # magic vim - fzf list in most recent
                  -v ) orgv=1            ; shift   ;;
         -h | --help ) voption+="$1 "    ; shift   ;;
           --version ) voption+="$1 "    ; shift   ;;
+                 -c ) voption+="$1 $2"  ; shift   ;;
       --startuptime ) voption+="$1 $2 " ; shift 2 ;;
                 -Nu ) voption+="$1 $2 " ; shift 2 ;;
               --cmd ) voption+="$1 $2 " ; shift 2 ;;
@@ -454,9 +455,43 @@ function v() {                             # v - open files in ~/.vim_mru_files
          ) &&
   vim ${files//\~/$HOME}
 }
+
+# vimrc - open rc files list from "${rcPaths}"
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
+# @description :
+#   - default rcPaths: ~/.marslo ~/.config/nvim ~/.*rc ~/.*profile ~/.*ignore
+#   - using nvim if `command -v nvim` is true
+#   - using `-v` force using `command vim` instead of `command nvim`
+# shellcheck disable=SC2155
+function vimrc() {                         # magic vim - fzf list in most recent modified order
+  local orgv                               # force using vim instead of nvim
+  local rcPaths="$HOME/.config/nvim $HOME/.marslo"
+  local VIM="$(type -P vim)"
+  local foption='--multi --cycle '
+  local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
+  if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -v ) orgv=1 ; shift ;;
+       * ) break          ;;
+    esac
+  done
+
+  [[ 1 -ne "${orgv}" ]] && command -v nvim >/dev/null && VIM="/usr/local/bin/nvim"
+  (
+    fd '.*rc|.*profile|.*ignore' $HOME --max-depth 1 ${fdOpt};
+    echo "${rcPaths}" | fmt -1 | xargs -I{} bash -c "fd . {} --exclude ss/ --exclude log/ --exclude .completion/ ${fdOpt}" ;
+  ) | fzf ${foption} --bind="enter:become(${VIM} {+})" \
+                     --bind "ctrl-y:execute-silent(echo -n {+} | ${COPY})+abort" \
+                     --header 'Press CTRL-Y to copy name into clipboard'
+}
 ```
 
 ![fzf magic vim](../screenshot/linux/fzf/fzf-magic-vim.gif)
+
+![fzf vimrc](../screenshot/linux/fzf/fzf-vimrc.gif)
 
 ### smart vimdiff
 ```bash
@@ -683,10 +718,10 @@ function copy() {                          # smart copy osx/wsl
 
   ![rg+fzf](../screenshot/linux/fzf/fzf-fif-rg.gif)
 
-- chaning directory
+- changing directory
 
   > [!NOTE]
-  > - [changin directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
+  > - [changing directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
   > - fuzzy-cd : [rumpelsepp/fcd.fish](https://gist.github.com/rumpelsepp/b1b416f52d6790de1aee) | [chrisnorris/fcd.fish](https://gist.github.com/chrisnorris/fe57c7855fd87a2636999edf1d4d735b)
   > - [l4u/autojump_fzf.fish](https://gist.github.com/l4u/06502cf680b9a3817efddfb0a9a6ede8)
 
@@ -781,7 +816,6 @@ function copy() {                          # smart copy osx/wsl
   ```
 
 ## advanced usage
-
 ### man page
 
 > [!NOTE]
@@ -801,6 +835,7 @@ function copy() {                          # smart copy osx/wsl
 #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default fman`
 # shellcheck disable=SC2046
 function fman() {
+  unset MANPATH
   local option
   local batman="man {1} | col -bx | bat --language=man --plain --color always --theme='gruvbox-dark'"
 
