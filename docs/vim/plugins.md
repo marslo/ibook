@@ -1562,7 +1562,7 @@ Plug 'neovim/nvim-lspconfig'
   require'lspconfig'.cssls.setup{}
   ```
 
-- [dockerls]()
+- [dockerls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#dockerls)
   ```bash
   $ npm install -g dockerfile-language-server-nodejs
   ```
@@ -1570,6 +1570,28 @@ Plug 'neovim/nvim-lspconfig'
   # ~/.config/nvim/init.lua
   require'lspconfig'.dockerls.setup{}
   ```
+
+- [pylsp](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#pylsp)
+
+  > [!NOTE|label:references:]
+  > - [python-lsp/python-lsp-server](https://github.com/python-lsp/python-lsp-server)
+
+  ```bash
+  $ pip install python-lsp-server
+  ```
+  ```vim
+  require'lspconfig'.pylsp.setup{}
+  ```
+
+- [vimls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls)
+  ```bash
+  $ npm install -g vim-language-server
+  ```
+  ```vim
+  require'lspconfig'.vimls.setup{}
+  ```
+
+- [yamlls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#yamlls)
 
 ### [coc.nvim](https://github.com/neoclide/coc.nvim)
 
@@ -1592,6 +1614,7 @@ Plug 'neovim/nvim-lspconfig'
   ```bash
   :CocInstall coc-sh coc-groovy coc-json coc-css coc-pyright coc-git coc-snippets
   :CocInstall @yaegassy/coc-tailwindcss3
+  :CocUninstall coc-git
   ```
 
 - open configure file ( `coc-settings.json` )
@@ -1608,9 +1631,22 @@ Plug 'neovim/nvim-lspconfig'
 - CocConfig:
   ```json
   {
-    "diagnostic.displayByAle": true
+    "codeLens.enable": true,
+    "java.referencesCodeLens.enabled": true,
+    "diagnostic.displayByAle": false,
+    "diagnostic.errorSign": "✗",
+    "diagnostic.infoSign": "i",
+    "diagnostic.warningSign": "⚠",
+    "diagnostic.hintSign": "➤"
   }
   ```
+  - cause issue of trigger
+    ```json
+    {
+      "suggest.autoTrigger": "trigger",
+      "suggest.triggerCompletionWait": 50
+    }
+    ```
 
 ## [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
