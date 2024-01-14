@@ -793,6 +793,9 @@ viml
 
 > [!NOTE|label:sample dot-vimrc]
 > - [thinca/.vimrc](https://gist.github.com/thinca/1518874)
+> - [vs2022 vim配置](https://www.cnblogs.com/dogingate/p/17900546.html)
+> - [nshen/learn-neovim-lua](https://github.com/nshen/learn-neovim-lua/tree/main/lua)
+> - [DPS0340/vimrc](https://github.com/DPS0340/vimrc/tree/main)
 
 - [Capitalize](https://vim.fandom.com/wiki/Capitalize_words_and_regions_easily)
   ```vim

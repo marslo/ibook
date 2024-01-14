@@ -684,6 +684,7 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 > - [mfwarren/.ctags for groovy](https://gist.github.com/mfwarren/793482)
 > - [ik5/dotfiles/.ctags](https://github.com/ik5/dotfiles/blob/master/ctags)
 > - [aiya000/dotfiles/.ctags.d](https://github.com/aiya000/dotfiles/tree/main/.ctags.d)
+> - [dansomething/dotfiles](https://github.com/dansomething/dotfiles)
 > - groovy
 >   - [groovytags](https://bitbucket.org/sw-samuraj/groovytags/src/develop/)
 >   - [sw-samuraj/vim-gradle](https://bitbucket.org/sw-samuraj/vim-gradle/src/develop/)

@@ -105,6 +105,15 @@ $ brew install nvim
 
 > [!TIP]
 > - [Transitioning from Vim](https://neovim.io/doc/user/nvim.html#nvim-from-vim)
+> - [学习 Neovim 全 lua 配置](https://zhuanlan.zhihu.com/p/571617696)
+> - [My Neovim setup for React, TypeScript, Tailwind CSS, etc](https://blog.inkdrop.app/my-neovim-setup-for-react-typescript-tailwind-css-etc-in-2022-a7405862c9a4)
+> - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
+> - [nanotee/nvim-lua-guide](https://github.com/nanotee/nvim-lua-guide)
+> - [nshen/learn-neovim-lua](https://github.com/nshen/learn-neovim-lua)
+>   - [Neovim 代码高亮插件 nvim-treesitter 的安装与配置](https://www.zhihu.com/tardis/bd/art/441818052?source_id=1001)
+> - [nshen/InsisVim](https://github.com/nshen/InsisVim)
+> - [fanxy1/nvim-dotfile](https://github.com/fanxy1/nvim-dotfile)
+> - [Java in Neovim](https://www.chiarulli.me/Neovim/24-neovim-and-java/)
 
 ## [provider](https://neovim.io/doc/user/provider.html)
 
