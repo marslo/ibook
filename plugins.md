@@ -928,7 +928,7 @@ augroup END
     }
     ```
 
-![nvim coc lspconfig](../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)
+![nvim coc lspconfig](../screenshot/vim/nvim-coc-lspconfig.gif)
 
 ## [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
@@ -965,7 +965,7 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 
 ## [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 
-![vim lspconfig treesitter coc](../screenshot/vim/nvim-lspconfig-coc-treesitter.gif)
+![nvim lspconfig treesitter coc](../screenshot/)
 
 ```vim
 Plug 'neovim/nvim-lspconfig'
@@ -1092,7 +1092,7 @@ let g:NERDTreeWinPos = 'left'
 let g:NERDTreeIgnore = [ '^node_modules$' ]
 ```
 
-![nvim nerdtree devicons coc lspconfig](../screenshot/vim/nvim-nerdtree-devicon-treesitter-coc-lspconfig.gif)
+![nvim nerdtree devicons coc lspconfig](../screenshot/vim/nvim-nerdtree-devicon-coc-lspconfig.gif)
 
 ## others
 
