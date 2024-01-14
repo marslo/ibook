@@ -30,6 +30,7 @@
   - [ycm-core/lsp-examples](#ycm-corelsp-examples)
     - [GroovyLanguageServer/groovy-language-server](#groovylanguageservergroovy-language-server)
   - [others](#others)
+    - [neovim/nvim-lspconfig](#neovimnvim-lspconfig)
     - [coc.nvim](#cocnvim)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
 - [utils](#utils)
@@ -295,8 +296,14 @@ command! -nargs=0 FullPath execute 'echo expand("%:p")'
 - [Shougo/ddc.vim](https://github.com/Shougo/ddc.vim)
 
 ## [language server protocol](https://microsoft.github.io/language-server-protocol/)
+
+> [!NOTE]
+> - [Ale Alternatives](https://www.libhunt.com/r/ale)
+
 - [prabirshrestha/vim-lsp](https://github.com/prabirshrestha/vim-lsp)
 - [rhysd/vim-lsp-ale](https://github.com/rhysd/vim-lsp-ale)
+- [mfussenegger/nvim-lint](https://github.com/mfussenegger/nvim-lint)
+- [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 - [mattn/vim-lsp-settings](https://github.com/mattn/vim-lsp-settings)
 - [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
 - [jose-elias-alvarez/null-ls.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
@@ -1483,14 +1490,100 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 > - [vim-easycomplete VS vim-lsp](https://www.libhunt.com/compare-vim-easycomplete-vs-vim-lsp?ref=compare)
 > - [Which lsp plugin should I use?](https://www.reddit.com/r/vim/comments/7lnhrt/which_lsp_plugin_should_i_use/)
 
+### [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+
+```vim
+Plug 'neovim/nvim-lspconfig'
+```
+
+- [gradlels](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#gradle_ls)
+
+  ```bash
+  $ mkdir -p ~/.vim/lsp
+  $ git clone https://github.com/microsoft/vscode-gradle.git ~/.vim/lsp/vscode-gradle && cd $_
+  $ ./gradlew installDist
+  ```
+
+- groovyls
+  > [!NOTE]
+  > - full ycm-core/lsp-examples list
+  >   ```vim
+  >  Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --enable-groovy --enable-yaml --enable-bash --enable-json --enable-python --enable-lua --enable-docker' }
+  >   ```
+
+  ```vim
+  # .vimrc
+  Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --enable-groovy' }
+
+  # ~/.config/nvim/init.lua
+  require'lspconfig'.groovyls.setup{
+    filetypes = { 'groovy', 'Jenkinsfile' },
+    cmd = { "java", "-jar", "~/.vim/plugged/lsp-examples/groovy/groovy-language-server/build/libs/groovy-language-server-all.jar" },
+  }
+  ```
+
+- [ansiblels](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ansiblels)
+  ```bash
+  $ npm install -g @ansible/ansible-language-server
+  ```
+  ```vim
+  # ~/.config/nvim/init.lua
+  require'lspconfig'.ansiblels.setup{}
+  ```
+
+- [bashls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#bashls)
+
+  ```bash
+  $ npm i -g bash-language-server
+  ```
+  ```vim
+  # ~/.config/nvim/init.lua
+  require'lspconfig'.bashls.setup{}
+  ```
+
+- [cmake](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#cmake) | [cmake-language-server](https://github.com/regen100/cmake-language-server)
+  ```bash
+  $ pip install cmake-language-server
+  ```
+  ```vim
+  # ~/.config/nvim/init.lua
+  require'lspconfig'.cmake.setup{}
+  ```
+
+- [cssls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#cssls)
+  ```bash
+  $ npm i -g vscode-langservers-extracted
+  ```
+  ```vim
+  # ~/.config/nvim/init.lua
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  require'lspconfig'.cssls.setup { capabilities = capabilities, }
+  require'lspconfig'.cssls.setup{}
+  ```
+
+- [dockerls]()
+  ```bash
+  $ npm install -g dockerfile-language-server-nodejs
+  ```
+  ```vim
+  # ~/.config/nvim/init.lua
+  require'lspconfig'.dockerls.setup{}
+  ```
+
 ### [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 > [!NOTE|label:references:]
 > - [* Language servers](https://github.com/neoclide/coc.nvim/wiki/Language-servers)
 > - [#805 ALE diagnostic signs don't appear](https://github.com/neoclide/coc.nvim/issues/805)
 > - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
+> - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
 
 - initilize
+  ```bash
+  $ pip install jedi
+  ```
+
   ```vim
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   ```
@@ -1498,7 +1591,7 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
   and execute:
   ```bash
   :CocInstall coc-sh coc-groovy coc-json coc-css coc-pyright coc-git coc-snippets
-  :CocInstall CocInstall @yaegassy/coc-tailwindcss3
+  :CocInstall @yaegassy/coc-tailwindcss3
   ```
 
 - open configure file ( `coc-settings.json` )
@@ -1524,6 +1617,13 @@ $ git@github.com:GroovyLanguageServer/groovy-language-server.git
 > [!NOTE]
 > - if install from standalone package, `tree-sitter` required
 >   - osx: `$ brew install tree-sitter`
+> - [Vim/Neovim 代码高亮插件 -- nvim-treesitter](https://zhuanlan.zhihu.com/p/609164334)
+
+```bash
+$ pip3 install tree_sitter
+# or
+$ brew install tree_sitter
+```
 
 ```vim
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
