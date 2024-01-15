@@ -78,16 +78,20 @@
 ## [Nvim development (prerelease) build](https://github.com/neovim/neovim/releases/nightly)
 
 - tarball
-  ```bash
-  $ curl -fsSL --creat-dirs -o /opt/nvim/nvim-macos.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
-  # avoid `unknown developer` warning
-  $ xattr -c ./nvim-macos.tar.gz
-  $ tar xzf ./nvim-macos.tar.gz
-  # run
-  $ ./nvim-macos/bin/nvim
 
-  # or
+  > [!TIP]
+  > - osx: avoid `unknown developer` warning
+  >   ```bash
+  >   $ xattr -c ./nvim-macos.tar.gz
+  >   ```
+
+  ```bash
+  $ curl -fsSL https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz | tar xzf - -C /opt/nvim
+  $ /opt/nvim/nvim-macos/bin/nvim
   $ sudo ln -sf /opt/nvim/nvim-macos /usr/local/nvim
+
+  $ export NVIM_HOME=/usr/local/nvim
+  $ export PATH=$NVIM_HOME/bin:$PATH
   ```
 
 ## building neovim from source
@@ -99,6 +103,20 @@
 ```bash
 # osx
 $ brew install nvim
+
+# ubuntu
+$ sudo add-apt-repository ppa:neovim-ppa/unstable
+$ sudo add-apt-repository ppa:neovim-ppa/stable
+$ sudo apt update
+$ sudo apt install neovim
+$ apt-cache madison neovim
+    neovim | 0.10.0~ubuntu1+git202401142109-310fb2efc-c60402a16-3c3072a0a~ubuntu20.04.1 | https://ppa.launchpadcontent.net/neovim-ppa/unstable/ubuntu focal/main amd64 Packages
+    neovim | 0.7.2-3~bpo22.04.1~ppa1 | https://ppa.launchpadcontent.net/neovim-ppa/stable/ubuntu jammy/main amd64 Packages
+    neovim | 0.6.1-3 | http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages
+
+# or
+$ curl -fsSL -O http://archive.ubuntu.com/ubuntu/pool/universe/n/neovim/neovim_0.7.2-8_amd64.deb
+$ sudo dpkg -i neovim_0.7.2-8_amd64.deb
 ```
 
 # initialize
@@ -114,6 +132,8 @@ $ brew install nvim
 > - [nshen/InsisVim](https://github.com/nshen/InsisVim)
 > - [fanxy1/nvim-dotfile](https://github.com/fanxy1/nvim-dotfile)
 > - [Java in Neovim](https://www.chiarulli.me/Neovim/24-neovim-and-java/)
+> - [Integralist/dotfiles](https://github.com/Integralist/dotfiles)
+>   - [Integralist/nvim](https://github.com/Integralist/nvim)
 
 ## [provider](https://neovim.io/doc/user/provider.html)
 
@@ -133,12 +153,21 @@ $ npm install -g neovim
   ```
 
 - add content
-  ```vim
-  # init.vim
-  set runtimepath^=~/.vim runtimepath+=~/.vim/after
-  let &packpath = &runtimepath
-  source ~/.vimrc
+  ```lua
+  -- ~/.config/nvim/init.lua
+  vim.cmd( 'set runtimepath^=~/.vim runtimepath+=~/.vim/after' )
+  vim.cmd( 'let &packpath = &runtimepath' )
+  vim.cmd( 'source ~/.vimrc' )
+  vim.cmd( 'autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}' )
   ```
+  - or
+    ```vim
+    # ~/.config/nvim/init.vim
+    set runtimepath^=~/.vim runtimepath+=~/.vim/after
+    let &packpath = &runtimepath
+    source ~/.vimrc
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}
+    ```
 
 - config file location
   ```vim

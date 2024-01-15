@@ -1,6 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [installer](#installer)
+  - [sdkman](#sdkman)
+  - [cargo](#cargo)
+  - [snap](#snap)
 - [application](#application)
   - [python](#python)
   - [vim](#vim)
@@ -35,11 +39,46 @@
     - [to use the bundled libc++ please add the following LDFLAGS](#to-use-the-bundled-libc-please-add-the-following-ldflags)
     - [check osx compilers](#check-osx-compilers)
     - [check *.o file](#check-o-file)
+- [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
 > - [* iMarslo : devenv troubleshooting](../../linux/troubleshooting.html)
+
+# installer
+
+> [!NOTE]
+> - [package info/download for Linux system](https://pkgs.org/)
+
+## [sdkman](https://sdkman.io/install)
+```bash
+$ curl -s "https://get.sdkman.io" | bash
+$ source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+$ sdk version
+SDKMAN!
+script: 5.18.2
+native: 0.4.6
+
+$ sdk install gradle
+```
+
+## [cargo](https://doc.rust-lang.org/cargo/index.html)
+```bash
+$ curl https://sh.rustup.rs -sSf | sh
+```
+
+## [snap](https://snapcraft.io/)
+```bash
+# debine
+$ sudo apt update
+$ sudo apt install snapd
+
+# fedora
+$ sudo dnf install snapd
+$ sudo ln -s /var/lib/snapd/snap /snap
+```
 
 # application
 ## [python](../programming/python/config.html#install-from-source-code)
@@ -562,6 +601,7 @@ v12.22.5
 > [!NOTE]
 > - [Installing Gradle](https://docs.gradle.org/current/userguide/installation.html#ex-installing-manually)
 > - [Gradle Installing manually](https://gradle.org/install/#manually)
+> - [ubuntu gradle ppa](https://launchpad.net/~cwchien/+archive/ubuntu/gradle)
 
 ```bash
 # snap
@@ -573,6 +613,11 @@ $ unzip gradle-7.6.1-bin.zip -d /opt/gradle
 $ ln -sf /opt/gradle/gradle-7.6.1 /opt/gradle/latest
 $ sudo update-alternatives --install /usr/local/bin/gradle gradle /opt/gradle/latest/bin/gradle 99
 $ sudo update-alternatives --auto gradle
+
+# ubuntu
+$ sudo add-apt-repository ppa:cwchien/gradle
+$ sudo apt-get update
+$ sudo apt upgrade gradle
 ```
 
 ## rust
@@ -1096,3 +1141,8 @@ proc:::exec-success
 : probe description proc:::exec-success does not match any probes. System Integrity Protection is on
 ```
 <!--endsec-->
+
+# others
+
+> [!NOTE|label:references:]
+> - [Integralist/New Laptop Configuration. Summary.md](https://gist.github.com/Integralist/05e5415de6743e66b112574a1a5c1970)
