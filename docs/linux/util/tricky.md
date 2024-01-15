@@ -6,6 +6,7 @@
   - [with `▉ ▎ ▌ ▊`](#with-%E2%96%89-%E2%96%8E-%E2%96%8C-%E2%96%8A)
   - [with `[###----]`](#with-----)
   - [with `|\|/`](#with-%5C)
+  - [Integralist/python progress bar.py](#integralistpython-progress-barpy)
 - [save & restore screen](#save--restore-screen)
   - [`tput`](#tput)
   - [`echo`](#echo)
@@ -117,7 +118,10 @@ while :; do
   done
 done
 ```
+
 ![progress bar with `|\|/`](../../screenshot/shell/shell-waiting-progress-bar4.gif)
+
+### [Integralist/python progress bar.py](https://gist.github.com/Integralist/01aed051251476c4bd6daa4b076eb23a)
 
 ## save & restore screen
 {% hint style='tip' %}

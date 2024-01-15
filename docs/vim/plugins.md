@@ -24,7 +24,9 @@
   - [tpope/vim-commentary](#tpopevim-commentary)
   - [coc.nvim](#cocnvim)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
+  - [williamboman/nvim-lsp-installer](#williambomannvim-lsp-installer)
   - [neovim/nvim-lspconfig](#neovimnvim-lspconfig)
+    - [manual install lsp](#manual-install-lsp)
   - [scrooloose/nerdtree](#scrooloosenerdtree)
   - [others](#others)
 - [utils](#utils)
@@ -880,6 +882,7 @@ augroup END
 > - [#805 ALE diagnostic signs don't appear](https://github.com/neoclide/coc.nvim/issues/805)
 > - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
 > - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
+> - [dansomething/coc-groovy](https://github.com/dansomething/coc-groovy)
 
 - initialize
   ```bash
@@ -895,6 +898,9 @@ augroup END
   :CocInstall coc-sh coc-groovy coc-json coc-css coc-pyright coc-git coc-snippets
   :CocInstall @yaegassy/coc-tailwindcss3
   :CocUninstall coc-git
+
+  $ ls ~/.config/coc/extensions/node_modules
+  coc-css  coc-groovy  coc-java  coc-json  coc-pyright  coc-sh  coc-snippets
   ```
 
 - open configure file ( `coc-settings.json` )
@@ -936,16 +942,29 @@ augroup END
 > - if install from standalone package, `tree-sitter` required
 >   - osx: `$ brew install tree-sitter`
 > - [Vim/Neovim 代码高亮插件 -- nvim-treesitter](https://zhuanlan.zhihu.com/p/609164334)
+> - [#1097 tree-sitter executable not found](https://github.com/nvim-treesitter/nvim-treesitter/issues/1097)
+> - [Tree-sitter CLI](https://github.com/tree-sitter/tree-sitter/blob/master/cli/README.md)
+
+![nvim-treesitter](../screenshot/vim/nvim-treesitter.gif)
 
 ```bash
-$ pip3 install tree_sitter
-# or
-$ brew install tree_sitter
+# tree-sitter executable not found
+$ cargo install tree-sitter-cli
+
+$ which -a tree-sitter
+~/.cargo/bin/tree-sitter
 ```
 
-```vim
-Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-```
+- others
+  ```bash
+  $ pip3 install tree_sitter
+  # or
+  $ brew install tree_sitter
+  ```
+
+  ```vim
+  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+  ```
 
 - install
   ```vim
@@ -961,7 +980,29 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
   ['/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua.so', '/usr/local/Cellar/neovim/0.9.5/lib/nvim/parser/lua.so']
   ```
 
-![nvim-treesitter](../screenshot/vim/nvim-treesitter.gif)
+## [williamboman/nvim-lsp-installer](https://github.com/williamboman/nvim-lsp-installer)
+
+> [!NOTE|label:references:]
+> - [#848 - Spawning language server with cmd: a-language-server failed. The language server is either not installed, missing from PATH, or not executable.](https://github.com/williamboman/nvim-lsp-installer/issues/848)
+> - [#17354 - Spawning language server with cmd: pyright-langserver failed. The language server is either not installed, missing from PATH, or not executable.](https://github.com/neovim/neovim/issues/17354)
+
+```bash
+$ mkdir -p ~/.cache/nvim/
+```
+```vim
+# show all available packages
+:LspInstall <TAB>
+:LspInstall <package>
+" i.e.:
+:LspInstall groovyls
+
+:LspInstallInfo
+:LspPrintInstalled
+
+:LspUninstall <package>
+```
+
+![groovyls](../screenshot/vim/nvim-lsp-installer.png)
 
 ## [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 
@@ -971,32 +1012,42 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'neovim/nvim-lspconfig'
 ```
 
+- debug
+  ```vim
+  :LspInfo
+  :LspLog
+  ```
+
+### manual install lsp
+
+> [!NOTE]
+> - [williamboman/nvim-lsp-installer](https://github.com/williamboman/nvim-lsp-installer) install lsp via `:LspInstall`
+
 - [gradlels](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#gradle_ls)
 
   ```bash
   $ mkdir -p ~/.vim/lsp
   $ git clone https://github.com/microsoft/vscode-gradle.git ~/.vim/lsp/vscode-gradle && cd $_
   $ ./gradlew installDist
+  $ sudo ln -sf /opt/lsp/gradle-language-server/build/install/gradle-language-server/bin/gradle-language-server /usr/local/bin/
+  $ which -a gradle-language-server
+  /usr/local/bin/gradle-language-server
+
+  # details for offline install
+  $ la ~/.gradle/wrapper/dists/gradle-8.5-bin/5t9huq95ubn472n8rpzujfbqh/
+  total 4.0K
+  -rw-rw-r-- 1 marslo marslo    0 Jan 15 19:58 gradle-8.5-bin.zip.lck
+  drwxrwxr-x 5 marslo marslo 4.0K Jan 15 19:58 gradle-8.5
+  -rw-rw-r-- 1 marslo marslo    0 Jan 15 19:58 gradle-8.5-bin.zip.ok
   ```
 
-- groovyls
-  > [!NOTE]
-  > - full ycm-core/lsp-examples list
-  >   ```vim
-  >  Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --enable-groovy --enable-yaml --enable-bash --enable-json --enable-python --enable-lua --enable-docker' }
-  >   ```
-
-  ```vim
-  # .vimrc
-  Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --enable-groovy' }
-
-  # ~/.config/nvim/init.lua
-  require'lspconfig'.groovyls.setup{
-    filetypes = { 'groovy', 'Jenkinsfile' },
-    cmd = { "java", "-jar", "~/.vim/plugged/lsp-examples/groovy/groovy-language-server/build/libs/groovy-language-server-all.jar" },
+  ```lua
+  require'lspconfig'.gradle_ls.setup {
+    filetypes = { 'groovy', 'Jenkinsfile' }
   }
   ```
 
+- groovyls
   - [GroovyLanguageServer/groovy-language-server](https://github.com/GroovyLanguageServer/groovy-language-server)
     ```bash
     # java has to be less than jdk 19
@@ -1010,6 +1061,25 @@ Plug 'neovim/nvim-lspconfig'
 
     # run
     $ git@github.com:GroovyLanguageServer/groovy-language-server.git
+    ```
+
+  - [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
+    > [!NOTE|label:@deprecated]
+    > **using gradlels instead of groovyls**
+    > - full ycm-core/lsp-examples list
+    >   ```vim
+    >   Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --enable-groovy --enable-yaml --enable-bash --enable-json --enable-python --enable-lua --enable-docker' }
+    >   ```
+
+    ```vim
+    # .vimrc
+    Plug 'ycm-core/lsp-examples',  { 'do': 'python3 install.py --enable-groovy' }
+
+    # ~/.config/nvim/init.lua
+    require'lspconfig'.groovyls.setup{
+      filetypes = { 'groovy', 'Jenkinsfile' },
+      cmd = { "java", "-jar", "~/.vim/plugged/lsp-examples/groovy/groovy-language-server/build/libs/groovy-language-server-all.jar" },
+    }
     ```
 
 - [ansiblels](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ansiblels)
@@ -1068,9 +1138,10 @@ Plug 'neovim/nvim-lspconfig'
 
   ```bash
   $ pip install python-lsp-server
+  $ sudo npm install -g pyright
   ```
   ```vim
-  require'lspconfig'.pylsp.setup{}
+  require'lspconfig'.pylsp.setup {}
   ```
 
 - [vimls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#vimls)
@@ -1099,6 +1170,31 @@ let g:NERDTreeIgnore = [ '^node_modules$' ]
 #### [ycm-core/YouCompleteMe](./deprecated.html#ycm-coreyoucompleteme)
 #### [ycm-core/lsp-examples](./deprecated.html#ycm-corelsp-examples)
 #### [dense-analysis/ale](./deprecated.html#dense-analysisale)
+
+#### [hrsh7th/cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp)
+```lua
+require('cmp_nvim_lsp').default_capabilities
+
+require'cmp'.setup {
+  sources = {
+    { name = 'nvim_lsp' }
+  }
+}
+
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+-- An example for configuring `clangd` LSP to use nvim-cmp as a completion engine
+require('lspconfig').clangd.setup {
+  capabilities = capabilities,
+  ...  -- other lspconfig configs
+}
+```
+
+```vim
+Plug 'hrsh7th/cmp-nvim-lsp'
+set runtimepath+=~/.vim/plugged/cmp-nvim-lsp
+```
 
 #### [vim-easycomplete](https://github.com/jayli/vim-easycomplete)
 
