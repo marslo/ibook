@@ -36,6 +36,7 @@
   * [install](vim/install.md)
   * [color](vim/color.md)
   * [plugins](vim/plugins.md)
+    * [usage](vim/plugin-usage.md)
     * [deprecated](vim/deprecated.md)
   * [tricky](vim/tricky.md)
   * [viml](vim/viml.md)
