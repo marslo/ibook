@@ -123,17 +123,20 @@ $ sudo dpkg -i neovim_0.7.2-8_amd64.deb
 
 > [!TIP]
 > - [Transitioning from Vim](https://neovim.io/doc/user/nvim.html#nvim-from-vim)
+> - [vim学习](https://www.kancloud.cn/jiangguowu/vimlearn/1859976)
 > - [学习 Neovim 全 lua 配置](https://zhuanlan.zhihu.com/p/571617696)
 > - [My Neovim setup for React, TypeScript, Tailwind CSS, etc](https://blog.inkdrop.app/my-neovim-setup-for-react-typescript-tailwind-css-etc-in-2022-a7405862c9a4)
 > - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
 > - [nanotee/nvim-lua-guide](https://github.com/nanotee/nvim-lua-guide)
 > - [nshen/learn-neovim-lua](https://github.com/nshen/learn-neovim-lua)
 >   - [Neovim 代码高亮插件 nvim-treesitter 的安装与配置](https://www.zhihu.com/tardis/bd/art/441818052?source_id=1001)
+>   - [Neovim 内置 LSP 配置 (二)：自动代码补全](https://zhuanlan.zhihu.com/p/445331508)
 > - [nshen/InsisVim](https://github.com/nshen/InsisVim)
 > - [fanxy1/nvim-dotfile](https://github.com/fanxy1/nvim-dotfile)
 > - [Java in Neovim](https://www.chiarulli.me/Neovim/24-neovim-and-java/)
 > - [Integralist/dotfiles](https://github.com/Integralist/dotfiles)
 >   - [Integralist/nvim](https://github.com/Integralist/nvim)
+> - [Neovim for Beginners — LSP Inlay Hints](https://alpha2phi.medium.com/neovim-for-beginners-lsp-inlay-hints-bf4a8afa6f27)
 
 ## [provider](https://neovim.io/doc/user/provider.html)
 

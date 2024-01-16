@@ -1,18 +1,14 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [usage](#usage)
-  - [`Tabularize`](#tabularize)
-    - [align with the N pattern](#align-with-the-n-pattern)
-    - [align on specific symbol](#align-on-specific-symbol)
-- [useful commands](#useful-commands)
+- [plugin alternatives](#plugin-alternatives)
+  - [autocompletion](#autocompletion)
+  - [language server protocol](#language-server-protocol)
+  - [ctrl-p](#ctrl-p)
+  - [snippets](#snippets)
+  - [cryptmethod](#cryptmethod)
+  - [comments](#comments)
 - [highly recommended](#highly-recommended)
-  - [plugin alternatives](#plugin-alternatives)
-    - [autocompletion](#autocompletion)
-    - [language server protocol](#language-server-protocol)
-    - [ctrl-p](#ctrl-p)
-    - [snippets](#snippets)
-    - [cryptmethod](#cryptmethod)
   - [LunarWatcher/auto-pairs](#lunarwatcherauto-pairs)
   - [junegunn/fzf.vim](#junegunnfzfvim)
   - [luochen1990/rainbow](#luochen1990rainbow)
@@ -23,6 +19,7 @@
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [tpope/vim-commentary](#tpopevim-commentary)
   - [coc.nvim](#cocnvim)
+    - [extensions](#extensions)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
   - [williamboman/nvim-lsp-installer](#williambomannvim-lsp-installer)
   - [neovim/nvim-lspconfig](#neovimnvim-lspconfig)
@@ -44,6 +41,7 @@
 - [color and theme](#color-and-theme)
   - [ryanoasis/vim-devicons](#ryanoasisvim-devicons)
   - [RRethy/vim-hexokinase](#rrethyvim-hexokinase)
+  - [NvChad/nvim-colorizer.lua](#nvchadnvim-colorizerlua)
 - [troubleshooting](#troubleshooting)
   - [airline](#airline)
 
@@ -55,267 +53,52 @@
 > - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
 > - [* amix/vimrc](https://github.com/amix/vimrc)
 > - [deprecated plugins](./deprecated.html)
+> - [Code Completion for Neovim using Lazy](https://medium.com/@shaikzahid0713/code-completion-for-neovim-6127401ebec2)
 {% endhint %}
 
-# usage
-## [`Tabularize`](https://github.com/godlygeek/tabular)
-
-> [!TIP|label:references:]
-> - [Tabular cheatsheet](https://devhints.io/tabular)
-> - [align with first space](https://stackoverflow.com/a/15915827/2940319) : `/^\s*\S\+\zs/l0c1l0`
-> - [align the second `=` to left](https://stackoverflow.com/a/5424784/2940319) : `/^\(.\{-}\zs=\)\{2}/l1l0`
->   ![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
-
-| specifier | comments                             |
-|:---------:|--------------------------------------|
-|   `l<N>`  | left-align (with N spaces padding)   |
-|   `r<N>`  | right-align (with N spaces padding)  |
-|   `c<N>`  | center-align (with N spaces padding) |
-
-{% hint style='tip' %}
-`:Tabularize /,/r1c1l0` means:
-* splitting fields on commas (`:`)
-* print everything before the first comma right aligned, then 1 space
-* then the comma center aligned, then 1 space,
-* then everything after the comma left aligned.
-{% endhint %}
-
-- including the `<sep>`
-  - align to left
-    ```vim
-    :Tabularize /<sep>
-    ```
-    - or
-      ```vim
-      :Tabularize /<sep>/l1
-      ```
-
-  - align to center
-    ```vim
-    :Tabularize /<sep>/r1c1l0
-    ```
-
-  ![tabularize](../screenshot/vim/tabularize/tabu.gif)
-
-- align without `<sep>`
-
-  > [!NOTE]
-  > [`help /zs`](https://vimhelp.org/pattern.txt.html#%2F%5Czs)
-
-  ```vim
-  :Tabularize /<sep>\zs/<specifier>
-  ```
-
-### align with the N pattern
-> i.e.: the second match (`=`)
-> - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
-
-- [align on first matche](https://stackoverflow.com/a/11497961/2940319)
-  - align the first `:`
-    ```vim
-    :Tabularize /^[^:]*\zs:
-    ```
-    [or](https://stackoverflow.com/a/23840400/2940319)
-    ```vim
-    :Tabularize /:.*
-    ```
-
-  ![tabularize-5](../screenshot/vim/tabularize/tabularize-5.gif)
-
-  - [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
-
-    > [!NOTE]
-    > only for default left-alignemnt. Not support customized right/middle alignment.
-    > i.e.: `/r1c1l0`
-
-    ```vim
-    command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
-    ```
-
-- align with 2nd matches
-  ```vim
-  :Tabularize /^\(.\{-}\zs=\)\{N}/
-               |
-              `^` means start of the line
-  ```
-
-  ![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
-
-
-  - or with `\v` (very magic)
-    > reference:
-    > - [`:help \v`](https://vimhelp.org/pattern.txt.html#%2F%5Cv)
-    > - [vim pattern: overview of ordinary atoms](tricky.html#overview-of-ordinary-atoms)
-
-    ```vim
-    :Tabularize /\v^(.{-}\zs\=){N}/<specifier>
-    ```
-
-- for every N matches
-  ```vim
-  : Tabularize /\(.\{-}\zs=\)\{N}/<specifier>
-               |
-               no `^` means every `{N}` matches
-  ```
-  - or
-    ```vim
-    :Tabularize /\v(.{-}\zs\=){N}/<specifier>
-    ```
-
-### [align on specific symbol](https://vi.stackexchange.com/a/12652/7389)
-
-> [!NOTE|label:pre condition:]
-> - align the first `:` and last matches `,` as below:
-> ```groovy
-> [
->   isRunning : proc.getOrDefault( 'run' , false ) ,
->   name : proc.getOrDefault( 'name' , '') ,
->   runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
->   type : proc.type.split('^.*\\u00BB\\s*').last() ,
-> ]
-> ```
-
-- first `:`
-  > reference: via
-  > - `/^[^;]*\zs:`
-  > - `/^[^;]*\zs:/r1c1l0`
-  > - `/^[^;]*/r1c1l0`
-
-  - `/^[^:]*\zs:`
-    ```groovy
-    isRunning    : proc.getOrDefault( 'run' , false ) ,
-    name         : proc.getOrDefault( 'name' , '') ,
-    runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-    type         : proc.type.split('^.*\\u00BB\\s*').last() ,
-    ```
-    ![tabularize-1](../screenshot/vim/tabularize/tabularize-1.gif)
-    ![tabularize-2](../screenshot/vim/tabularize/tabularize-2.gif)
-
-  - `/^[^:]*\zs/r1c1l0`
-    ```groovy
-       isRunning  : proc.getOrDefault( 'run' , false ) ,
-            name  : proc.getOrDefault( 'name' , '') ,
-    runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
-            type  : proc.type.split('^.*\\u00BB\\s*').last() ,
-    ```
-
-  - `/^[^:]*\zs:/r1c1l0`
-    ```groovy
-       isRunning : proc.getOrDefault( 'run' , false ) ,
-            name : proc.getOrDefault( 'name' , '') ,
-    runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-            type : proc.type.split('^.*\\u00BB\\s*').last() ,
-    ```
-    ![tabularize-3](../screenshot/vim/tabularize/tabularize-3.gif)
-
-  - `/^[^:]*/r1c1l0`
-    ```groovy
-      isRunning   : proc.getOrDefault( 'run' , false ) ,
-        name      : proc.getOrDefault( 'name' , '') ,
-    runningStage  : proc.getOrDefault( 'stage' , ['all'] ) ,
-        type      : proc.type.split('^.*\\u00BB\\s*').last() ,
-    ```
-
-  - `/^[^:]*:/r1c1l0`:
-    ```groovy
-      isRunning :  proc.getOrDefault( 'run' , false ) ,
-        name :     proc.getOrDefault( 'name' , '') ,
-    runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-        type :     proc.type.split('^.*\\u00BB\\s*').last() ,
-    ```
-
-- last `,`
-  > tips:
-  > - actually the pattern not matches with the final `,`, but matches with `)<.*> ,`
-  >
-  > **sample code**:
-  > ```groovy
-  >    isRunning : proc.getOrDefault( 'run' , false ) ,
-  >         name : proc.getOrDefault( 'name' , '') ,
-  > runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-  >         type : proc.type.split('^.*\\u00BB\\s*').last() ,
-  > ```
-
-  - `/)[^,]*\zs,`
-    ```groovy
-       isRunning : proc.getOrDefault( 'run' , false )       ,
-            name : proc.getOrDefault( 'name' , '')          ,
-    runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
-            type : proc.type.split('^.*\\u00BB\\s*').last() ,
-    ```
-
-    - or even better align
-
-      - `:1,3Tabularize /,` or `:'<,'>Tabularize /,`
-        ```groovy
-           isRunning : proc.getOrDefault( 'run'   , false )   ,
-                name : proc.getOrDefault( 'name'  , '')       ,
-        runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
-                type : proc.type.split('^.*\\u00BB\\s*').last() ,
-        ```
-      - `:Tabularize /)[^,]*\zs,`
-        ```groovy
-           isRunning : proc.getOrDefault( 'run'   , false )     ,
-                name : proc.getOrDefault( 'name'  , '')         ,
-        runningStage : proc.getOrDefault( 'stage' , ['all'] )   ,
-                type : proc.type.split('^.*\\u00BB\\s*').last() ,
-        ```
-
-    ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
-
-# useful commands
-
-```vim
-command! -nargs=0 -bar -range=% Reverse
-    \       let save_mark_t = getpos("'t")
-    \<bar>      <line2>kt
-    \<bar>      exe "<line1>,<line2>g/^/m't"
-    \<bar>  call setpos("'t", save_mark_t)
-nnoremap <Leader>r :Reverse <bar> nohlsearch<CR>
-xnoremap <Leader>r :Reverse <bar> nohlsearch<CR>
-
-command! -nargs=0 DocTocUpdate execute 'silent !/usr/local/bin/doctoc --notitle --update-only --github --maxlevel 3 %' | execute 'redraw!'
-command! -nargs=0 DocTocCreate execute 'silent !/usr/local/bin/doctoc --notitle --github --maxlevel 3 %' | execute 'redraw!'
-command! -nargs=1        First execute                           'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
-command! -nargs=1 -range First execute <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
-command! -nargs=0        Iname execute 'echo expand("%:p")'
-```
-
-# highly recommended
-
-## plugin alternatives
-
-### autocompletion
+# plugin alternatives
+## autocompletion
+- [* neoclide/coc.nvim](https://github.com/neoclide/coc.nvim) | [CocList 入坑指南](https://zhuanlan.zhihu.com/p/71846145) | [coc.nvim 插件体系 - 介绍](https://zhuanlan.zhihu.com/p/65524706)
+- [* hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | [Nvim-cmp configuration for auto-completion](https://neovim.discourse.group/t/nvim-cmp-configuration-for-auto-completion/1045/3)
+- [* ms-jpq/coq_nvim](https://github.com/ms-jpq/coq_nvim)
+- [@ nvim-lua/completion-nvim](https://github.com/nvim-lua/completion-nvim?tab=readme-ov-file)
+- [Shougo/deoplete.nvim](https://github.com/Shougo/deoplete.nvim?tab=readme-ov-file) | [Shougo/ddc.vim](https://github.com/Shougo/ddc.vim)
 - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
-- [neoclide/coc.nvim](https://github.com/neoclide/coc.nvim) | [CocList 入坑指南](https://zhuanlan.zhihu.com/p/71846145) | [coc.nvim 插件体系 - 介绍](https://zhuanlan.zhihu.com/p/65524706)
 - [prabirshrestha/asyncomplete.vim](https://github.com/prabirshrestha/asyncomplete.vim)
 - [Shougo/ddc.vim](https://github.com/Shougo/ddc.vim)
+- [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 
-### [language server protocol](https://microsoft.github.io/language-server-protocol/)
+## [language server protocol](https://microsoft.github.io/language-server-protocol/)
 
 > [!NOTE]
 > - [Ale Alternatives](https://www.libhunt.com/r/ale)
 
+- [* neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+- [* hrsh7th/cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp)
 - [prabirshrestha/vim-lsp](https://github.com/prabirshrestha/vim-lsp)
 - [rhysd/vim-lsp-ale](https://github.com/rhysd/vim-lsp-ale)
 - [mfussenegger/nvim-lint](https://github.com/mfussenegger/nvim-lint)
-- [neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 - [mattn/vim-lsp-settings](https://github.com/mattn/vim-lsp-settings)
 - [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
 - [jose-elias-alvarez/null-ls.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
 
-### ctrl-p
+## ctrl-p
 - [Shougo/denite.nvim](https://github.com/Shougo/denite.nvim)
 
-### snippets
+## snippets
 - [hrsh7th/vim-vsnip](https://github.com/hrsh7th/vim-vsnip) | [hrsh7th/vim-vsnip-integ](https://github.com/hrsh7th/vim-vsnip-integ)
 - [SirVer/UltiSnips](https://github.com/SirVer/ultisnips) | [thomasfaingnaert/vim-lsp-ultisnips](https://github.com/thomasfaingnaert/vim-lsp-ultisnips)
 - [Shougo/neosnippet.vim](https://github.com/Shougo/neosnippet.vim) | [thomasfaingnaert/vim-lsp-neosnippet](https://github.com/thomasfaingnaert/vim-lsp-neosnippet)
 
-### cryptmethod
+## cryptmethod
 - [kurotych/CCryptor.nvim](https://github.com/kurotych/ccryptor.nvim)
 - [GPG](https://www.reddit.com/r/neovim/comments/7js0qq/comment/dr8zczy/?utm_source=share&utm_medium=web2x&context=3)
 
+## comments
+- [preservim/nerdcommenter](https://github.com/preservim/nerdcommenter)
+
+
+# highly recommended
 
 > [!NOTE|label:references:]
 > - [Vim Plugin Audit](https://tuckerchapman.com/2020/05/18/vim-plugin-audit/)
@@ -475,12 +258,12 @@ endif
 Plug 'airblade/vim-gitgutter'
 
 " airblade/vim-gitgutter
+set updatetime=250
+set signcolumn=yes
 let g:gitgutter_git_executable = '/usr/local/bin/git'
 let g:gitgutter_enabled        = 1
 let g:gitgutter_realtime       = 0
 let g:gitgutter_eager          = 0
-set updatetime=250
-set signcolumn=yes
 highlight clear SignColumn
 ```
 
@@ -883,6 +666,9 @@ augroup END
 > - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
 > - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
 > - [dansomething/coc-groovy](https://github.com/dansomething/coc-groovy)
+> - [Manage coc extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#manage-coc-extensions)
+> - [Debug language server](https://github.com/neoclide/coc.nvim/wiki/Debug-language-server#using-output-channel)
+> - [nicknisi/dotfiles/config/nvim/coc-settings.json](https://github.com/nicknisi/dotfiles/blob/master/config/nvim/coc-settings.json)
 
 - initialize
   ```bash
@@ -890,17 +676,53 @@ augroup END
   ```
 
   ```vim
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  ```
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
-  and execute:
-  ```bash
-  :CocInstall coc-sh coc-groovy coc-json coc-css coc-pyright coc-git coc-snippets
-  :CocInstall @yaegassy/coc-tailwindcss3
-  :CocUninstall coc-git
-
-  $ ls ~/.config/coc/extensions/node_modules
-  coc-css  coc-groovy  coc-java  coc-json  coc-pyright  coc-sh  coc-snippets
+  " neoclide/coc.nvim
+  set updatetime=300
+  set signcolumn=yes
+  let g:coc_global_extensions = [
+    \   'coc-sh',
+    \   'coc-groovy', 'coc-java',
+    \   'coc-docker',
+    \   'coc-json',
+    \   'coc-docker',
+    \   'coc-css', 'coc-htmlhint', 'coc-html-css-support',
+    \   'coc-pyright',
+    \   'coc-snippets',
+    \   'coc-emoji'
+    \ ]
+  function! CheckBackspace() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
+  function! ShowDocumentation()
+    if CocAction('hasProvider', 'hover')
+      call CocActionAsync('doHover')
+    else
+      call feedkeys('K', 'in')
+    endif
+  endfunction
+  autocmd FileType   json syntax match Comment +\/\/.\+$+
+  autocmd FileType   html let b:coc_root_patterns = ['.git', '.env', 'tailwind.config.js', 'tailwind.config.cjs']
+  inoremap <silent><expr> <S-C-space> coc#refresh()
+  inoremap <silent><expr> <DOWN>
+        \ coc#pum#visible() ? coc#pum#next(1) :
+        \ CheckBackspace() ? "\<Tab>" :
+        \ coc#refresh()
+  inoremap <expr><UP> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+  inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#confirm()
+                                \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+  nmap     <silent> [g  <Plug>(coc-diagnostic-prev)
+  nmap     <silent> ]g  <Plug>(coc-diagnostic-next)
+  nmap     <silent> gd  <Plug>(coc-definition)
+  nmap     <silent> gy  <Plug>(coc-type-definition)
+  nmap     <silent> gi  <Plug>(coc-implementation)
+  nmap     <silent> gr  <Plug>(coc-references)
+  nnoremap <silent> K   :call ShowDocumentation()<CR>
+  nmap     <leader>cl   <Plug>(coc-codelens-action)
+  imap     <C-l>        <Plug>(coc-snippets-expand)
   ```
 
 - open configure file ( `coc-settings.json` )
@@ -908,10 +730,28 @@ augroup END
   :CocConfig
   ```
 
+  - [language server setup](https://www.narga.net/how-to-set-up-code-completion-for-vim/)
+    ```json
+    {
+        "languageserver": {
+            "intelephense": {
+                "command": "intelephense",
+                "args": ["--stdio"],
+                "filetypes": ["php"],
+                "initializationOptions": {
+                    "storagePath": "/tmp/intelephense"
+                }
+            }
+        },
+    }
+    ```
+
 - check information
   ```vim
   :CocInfo
   :checkhealth
+  :CocOpenLog
+  :CocCommand workspace.showOutput
   ```
 
 - CocConfig:
@@ -926,7 +766,17 @@ augroup END
     "diagnostic.hintSign": "➤"
   }
   ```
+  - start completion from 2nd string
+    ```json
+    {
+      "suggest.minTriggerInputLength": 2
+    }
+    ```
   - cause issue of trigger
+
+    > [!TIP]
+    > - support autoTrigger: `always`, `trigger`
+
     ```json
     {
       "suggest.autoTrigger": "trigger",
@@ -935,6 +785,89 @@ augroup END
     ```
 
 ![nvim coc lspconfig](../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)
+
+- troubleshooting
+  ```bash
+  $ rust-analyzer --help
+  error: 'rust-analyzer' is not installed for the toolchain 'stable-x86_64-unknown-linux-gnu'
+
+  $ rustup component add rust-analyzer
+  ```
+
+### extensions
+
+> [!NOTE|label:references:]
+> - [Implemented coc extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#implemented-coc-extensions)
+>   - [yuki-yano/fzf-preview.vim](https://github.com/yuki-yano/fzf-preview.vim)
+>   - [neoclide/coc-highlight](https://github.com/neoclide/coc-highlight)
+>   - [yaegassy/coc-pylsp](https://github.com/yaegassy/coc-pylsp) | [fannheyward/coc-pyright](https://github.com/fannheyward/coc-pyright) | [yaegassy/coc-pydocstring](https://github.com/yaegassy/coc-pydocstring) | [neoclide/coc-python](https://github.com/neoclide/coc-python)
+>   - [xiyaowong/coc-symbol-line](https://github.com/xiyaowong/coc-symbol-line)
+>   - [neoclide/coc-pairs](https://github.com/neoclide/coc-pairs)
+
+- list all installed
+  ```vim
+  :CocList extensions
+
+  $ ls ~/.config/coc/extensions/node_modules
+  coc-css     coc-emoji   coc-html-css-support  coc-java  coc-omni     coc-sh        coc-tag
+  coc-docker  coc-groovy  coc-htmlhint          coc-json  coc-pyright  coc-snippets
+  ```
+
+- add/remove execute:
+  ```bash
+  :CocInstall coc-sh coc-groovy coc-json coc-css coc-pyright coc-snippets coc-emoji coc-omni coc-tag coc-htmlhint coc-html-css-support coc-docker
+  :CocInstall @yaegassy/coc-tailwindcss3
+  :CocUninstall coc-git
+  ```
+
+- or
+  ```bash
+  $ nvim -c 'CocInstall -sync coc-groovy \
+                              coc-java \
+                              coc-css \
+                              coc-pyright \
+                              coc-snippet \
+                              coc-emoji \
+                              coc-tag \
+                              coc-docker\
+                              coc-htmlhint\
+                              coc-html-css-support \
+                              coc-sh \
+                              coc-omni|q'
+  ```
+
+- [using custom registry](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#using-custom-registry)
+  ```bash
+  $ cat ~/.npmrc
+  coc.nvim:registry=https://registry.npmjs.org/
+  ```
+
+- [update extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#update-extensions)
+  ```vim
+  :CocUpdate
+  :CocUpdateSync
+  ```
+  ```bash
+  # or
+  $ vim -c 'CocUpdateSync|q'
+  ```
+
+#### [coc-snippets](https://github.com/neoclide/coc-snippets)
+
+```vim
+: CocCommand workspace.showOutput snippets
+[Info  - 04:39:05.988] Using ultisnips directories:
+[
+  "UltiSnips",
+  "/Users/marslo/.config/coc/ultisnips"
+]
+[Info  - 04:39:06.009] Loading textmate snippets from filetypes: groovy
+
+:CocList snippets
+:CocCommand snippets.openSnippetFiles
+:CocCommand snippets.editSnippets
+:CocCommand snippets.openOutput
+```
 
 ## [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
@@ -950,6 +883,8 @@ augroup END
 ```bash
 # tree-sitter executable not found
 $ cargo install tree-sitter-cli
+# or
+$ sudo npm i -g tree-sitter-cli
 
 $ which -a tree-sitter
 ~/.cargo/bin/tree-sitter
@@ -973,6 +908,7 @@ $ which -a tree-sitter
 
 - check via
   ```vim
+  :TSBufToggle highlight
   :TSInstallInfo
   :TSModuleInfo
   :checkhealth nvim-treesitter
@@ -1394,6 +1330,15 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 >   - [gko/vim-coloresque](https://github.com/gko/vim-coloresque)
 >   - [ap/vim-css-color](https://github.com/ap/vim-css-color)
 >   - [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
+>   - [lifepillar/vim-colortemplate](https://github.com/lifepillar/vim-colortemplate)
+> - theme
+>   - [rafi/awesome-vim-colorschemes](https://github.com/rafi/awesome-vim-colorschemes)
+
+```vim
+set enc=utf-8
+set guifont=Powerline_Consolas:h11
+set renderoptions=type:directx,gamma:1.5,contrast:0.5,geom:1,renmode:5,taamode:1,level:0.5
+```
 
 ## [ryanoasis/vim-devicons](https://github.com/ryanoasis/vim-devicons)
 
@@ -1402,7 +1347,6 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 > - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
 
 ## [RRethy/vim-hexokinase](https://github.com/RRethy/vim-hexokinase)
-
 ```vim
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 
@@ -1418,6 +1362,30 @@ let g:Hexokinase_optInPatterns = [
 \     'colour_names'
 \ ]
 let g:Hexokinase_ftEnabled     = [ 'css', 'html', 'javascript']    " not recommended
+```
+
+
+
+## [NvChad/nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
+```vim
+Plug 'NvChad/nvim-colorizer.lua'
+```
+```ruby
+# ~/.config/nvim/init.lua
+require('config/theme')
+
+# ~/.config/nvim/lua/config/theme.lua
+require 'colorizer'.setup()
+require 'colorizer'.setup {
+  filetypes = {
+    '*';
+    css = { rgb_fn = true; mode = 'background'; };
+    html = { names = true; };
+    cmp_docs = {always_update = true}
+  },
+  user_default_options = { RRGGBBAA = true, css_fn = true, css = true, tailwind = true },
+  buftypes = { "*", "!prompt", "!popup", }
+}
 ```
 
 # troubleshooting

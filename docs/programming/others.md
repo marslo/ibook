@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [java](#java)
 - [others](#others)
   - [import data to sql and print process](#import-data-to-sql-and-print-process)
   - [get the cnf file location for mysql](#get-the-cnf-file-location-for-mysql)
@@ -19,8 +20,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## others
+## java
 
+> [!NOTE|label:references:]
+> - [Spring Boot Development Using Command Line Only](https://javadev.org/devtools/ide/neovim/example/)
+
+## others
 ### import data to sql and print process
 ```bash
 $ (pv -n ~/database.sql | mysql -u root -pPASSWORD -D database_name) 2>&1 | zenity --width 550 --progress --auto-close --auto-kill --title "Im

@@ -16,6 +16,7 @@
   - [`profile`](#profile)
   - [`messages`](#messages)
   - [Vim has unexpected key presses on startup, what could be causing this?](#vim-has-unexpected-key-presses-on-startup-what-could-be-causing-this)
+  - [Tmux is changing part of the background in vim](#tmux-is-changing-part-of-the-background-in-vim)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -335,3 +336,12 @@ $ vim --cmd 'set t_RV='
   :help t_RV
   :help v:termresponse
   ```
+
+### [Tmux is changing part of the background in vim](https://vi.stackexchange.com/a/247/7389)
+```vim
+if &term =~ '256color'
+  " disable Background Color Erase (BCE)
+  set t_ut=
+endif
+set ttyfast
+```
