@@ -628,13 +628,36 @@ $ set -o vi
 
 <!--sec data-title="~/.inputrc for hybrid mode" data-id="section8" data-show=true data-collapse=true ces-->
 ```bash
+#=============================================================================
+#     FileName : .inputrc
+#       Author : marslo.jiao@gmail.com
+#      Created : 2020-08-25 15:22:56
+#   LastChange : 2024-01-13 21:08:28
+#=============================================================================
+# [GNU Readline Library](https://tiswww.case.edu/php/chet/readline/rluserman.html)
+# [PS1](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.env#L209)
+# set the mode string and cursor to indicate the vim mode
+#   - cursor shape:       `\1\e[<number> q\2` ( i.e.: `\1\e[4 q\2` )
+#   - cursor shape+color: `\1\e[<nubmer> q\e]12;<color>\a\2` ( i.e.: `\1\e[1 q\e]12;orange\a\2` )
+#     0: blinking block
+#     1: blinking block (default)
+#     2: steady block
+#     3: blinking underline
+#     4: steady underline
+#     5: blinking bar (xterm)
+#     6: steady bar (xterm)
+#                                 string settings       cursor shape
+#                        +------------------------------++--------+
+#                           color begin         color end
+#                          +------------+         +---+
+set emacs-mode-string   "\1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2\1\e[3 q\2"
+#                                      string settings              cursor shape
+#                        +------------------------------------------++--------+
+#                           color begin       color begin   color end
+#                          +------------+       +------+      +---+
+set vi-ins-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2\1\e[5 q\2"
+set vi-cmd-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2\1\e[4 q\2"
 set show-mode-in-prompt on
-set emacs-mode-string   ╰╶ ᓆ
-set vi-ins-mode-string  ╰╶ ᓎ
-set vi-cmd-mode-string  ╰╶ ᓏ
-set emacs-mode-string   \1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2
-set vi-ins-mode-string  \1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2
-set vi-cmd-mode-string  \1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2
 
 # allow iso-latin1 characters to be inserted
 set convert-meta                   off
@@ -660,14 +683,66 @@ set skip-completed-text            on
 set keymap emacs
 "\ee": vi-editing-mode
 
+# https://www.usenix.org.uk/content/bash.html#input
 set keymap vi-command
 "\ee": emacs-editing-mode
+# key bindings to get out of vi-editing-mode
+"v"  : ''
+"#": insert-comment
 "dw": kill-word
 "dd": kill-whole-line
 "db": backward-kill-word
 "D":kill-line
-# key bindings to get out of vi-editing-mode
-"v"  : ''
+"da\"": "lF\"df\""
+"di\"": "lF\"lmtf\"d`t"
+"ci\"": "di\"i"
+"da'": "lF'df'"
+"di'": "lF'lmtf'd`t"
+"ci'": "di'i"
+"da`": "lF\`df\`"
+"di`": "lF\`lmtf\`d`t"
+"ci`": "di`i"
+"ca`": "da`i"
+"da(": "lF(df)"
+"di(": "lF(lmtf)d`t"
+"ci(": "di(i"
+"ca(": "da(i"
+"da)": "lF(df)"
+"di)": "lF(lmtf)d`t"
+"ci)": "di(i"
+"ca)": "da(i"
+"da{": "lF{df}"
+"di{": "lF{lmtf}d`t"
+"ci{": "di{i"
+"ca{": "da{i"
+"da}": "lF{df}"
+"di}": "lF{lmtf}d`t"
+"ci}": "di}i"
+"ca}": "da}i"
+"da[": "lF[df]"
+"di[": "lF[lmtf]d`t"
+"ci[": "di[i"
+"ca[": "da[i"
+"da]": "lF[df]"
+"di]": "lF[lmtf]d`t"
+"ci]": "di]i"
+"ca]": "da]i"
+"da<": "lF<df>"
+"di<": "lF<lmtf>d`t"
+"ci<": "di<i"
+"ca<": "da<i"
+"da>": "lF<df>"
+"di>": "lF<lmtf>d`t"
+"ci>": "di>i"
+"ca>": "da>i"
+"da/": "lF/df/"
+"di/": "lF/lmtf/d`t"
+"ci/": "di/i"
+"ca/": "da/i"
+"da:": "lF:df:"
+"di:": "lF:lmtf:d`t"
+"ci:": "di:i"
+"ca:": "da:i"
 "\C-_": undo
 "\C-a": beginning-of-line
 "\C-b": backward-char
