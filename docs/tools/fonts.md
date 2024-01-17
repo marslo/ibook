@@ -6,6 +6,7 @@
   - [RecMonoCasual](#recmonocasual)
   - [Comic Mono](#comic-mono)
   - [Agave](#agave)
+  - [Operator Mono](#operator-mono)
   - [Gohu](#gohu)
 - [nerd-fonts](#nerd-fonts)
   - [pixel](#pixel)
@@ -19,13 +20,17 @@
 > [!TIP]
 > - [* 142 Programming Fonts](https://www.programmingfonts.org/)
 > - [* arrowtype/recursive](https://github.com/arrowtype/recursive)
+> - [* ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
 > - [Patch Fonts with Cursive Italic Styles](https://www.sainnhe.dev/post/patch-fonts-with-cursive-italic-styles/)
-> - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font) | [sainnhe/mono-nerd-font](https://git.sainnhe.dev/sainnhe/mono-nerd-font)
+> - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font) | [thlineric/icursive-nerd-font](https://github.com/thlineric/icursive-nerd-font) | [sainnhe/mono-nerd-font](https://git.sainnhe.dev/sainnhe/mono-nerd-font) | [40huo/Patched-Fonts](https://github.com/40huo/Patched-Fonts)
 > - [INPUT™ fonts](https://input.djr.com/download/)
 > - [Consolas font family](https://learn.microsoft.com/en-us/typography/font-list/consolas)
-> - [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
+> - [monaspace](https://monaspace.githubnext.com/)
+>   - [monaspace nerd font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monaspace) | [Monaspace.zip](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.zip) | [Monaspace.tar.xz](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.tar.xz)
 > - [ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols)
 > - [ArrowType](https://www.arrowtype.com/)
+> - [oldschool font list](https://int10h.org/oldschool-pc-fonts/fontlist/)
+> - [subframe7536/maple-font](https://github.com/subframe7536/Maple-font)
 
 ## highly recommended
 
@@ -108,6 +113,27 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 ![AgaveNFM bash](../screenshot/tools/fonts/bash-AgaveNFM.png)
 
+### [Operator Mono](https://www.typography.com/fonts/operator/styles/operatormono)
+
+> [!NOTE|label:referencess:]
+> - [40huo/Patched-Fonts](https://github.com/40huo/Patched-Fonts) | [NF patched fonts](https://github.com/keyding/Operator-Mono)
+
+```vim
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+Plug 'sainnhe/gruvbox-material'
+Plug 'scrooloose/nerdtree'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+
+set termguicolors
+set background=dark
+colorscheme gruvbox-material
+```
+
+![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)
+
+![operator mono airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
+
+![operator mono coc nerdtree hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
 
 ### [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
 ```bash

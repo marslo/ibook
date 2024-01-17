@@ -20,7 +20,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 > [!NOTE|label:references:]
 > - [vimcast 71 : Meet Neovim](http://vimcasts.org/episodes/meet-neovim/)
 > - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
@@ -39,7 +38,6 @@
 > - [HiPhish/nvim-config/init.vim](https://gitlab.com/HiPhish/nvim-config/-/blob/master/init.vim?ref_type=heads)
 >   - osx/linux: `~/.config/nvim/init.vim`
 >   - windows: `%LOCALAPPDATA%\nvim\init.vim`
-
 
 # install
 
@@ -136,6 +134,7 @@ $ sudo dpkg -i neovim_0.7.2-8_amd64.deb
 > - [Java in Neovim](https://www.chiarulli.me/Neovim/24-neovim-and-java/)
 > - [Integralist/dotfiles](https://github.com/Integralist/dotfiles)
 >   - [Integralist/nvim](https://github.com/Integralist/nvim)
+> - [m4xshen/dotfiles/nvim/nvim](https://github.com/m4xshen/dotfiles/tree/main/nvim/nvim)
 > - [Neovim for Beginners — LSP Inlay Hints](https://alpha2phi.medium.com/neovim-for-beginners-lsp-inlay-hints-bf4a8afa6f27)
 
 ## [provider](https://neovim.io/doc/user/provider.html)
