@@ -57,6 +57,8 @@
 >   - [nosarthur/awesome-shell](https://github.com/nosarthur/awesome-shell)
 > - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim)
 > - [sindresorhus/awesome](https://github.com/sindresorhus/awesome)
+> - [Sainnhe's Dashboard: os in web browser](https://dashboard.sainnhe.dev/)
+>   - [osx](https://macos.sainnhe.dev/) | [windows](https://windows.sainnhe.dev/)
 > - others
 >   - [bayandin/awesome-awesomeness](https://github.com/bayandin/awesome-awesomeness)
 >   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)

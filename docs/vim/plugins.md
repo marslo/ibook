@@ -58,7 +58,7 @@
 
 # plugin alternatives
 ## autocompletion
-- [* neoclide/coc.nvim](https://github.com/neoclide/coc.nvim) | [CocList 入坑指南](https://zhuanlan.zhihu.com/p/71846145) | [coc.nvim 插件体系 - 介绍](https://zhuanlan.zhihu.com/p/65524706)
+- [* neoclide/coc.nvim](https://github.com/neoclide/coc.nvim)
 - [* hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | [Nvim-cmp configuration for auto-completion](https://neovim.discourse.group/t/nvim-cmp-configuration-for-auto-completion/1045/3)
 - [* ms-jpq/coq_nvim](https://github.com/ms-jpq/coq_nvim)
 - [@ nvim-lua/completion-nvim](https://github.com/nvim-lua/completion-nvim?tab=readme-ov-file)
@@ -96,7 +96,7 @@
 
 ## comments
 - [preservim/nerdcommenter](https://github.com/preservim/nerdcommenter)
-
+- [tpope/vim-commentary](https://github.com/tpope/vim-commentary)
 
 # highly recommended
 
@@ -197,7 +197,7 @@ let g:rainbow_operators = 1
 let g:rainbow_conf      = {
 \   'guifgs' : [ '#6A5ACD', '#ff6347', '#b58900', '#9acd32', '#EEC900', '#9A32CD', '#EE7600', '#268bd2', '#183172' ],
 \   'ctermfgs' : 'xterm-256color' == $TERM ? [ '75', '147', '108', '196', '208', '66', '106', '172', '115', '129' ] : [ 'lightblue', 'lightgreen', 'yellow', 'red', 'magenta' ],
-\   'parentheses': [ ['(',')'], ['\[','\]'], ['{','}'] ],
+\   'parentheses': [ ['(',')'], ['\[','\]'], ['{','}'], ['<', '>'] ],
 \   'separately': {
 \     '*': {},
 \     'markdown': {
@@ -210,7 +210,7 @@ let g:rainbow_conf      = {
 \       'parentheses': [ ['(',')'], ['\[','\]'] ],
 \     },
 \     'html': {
-\       'parentheses': [ ['(',')'], ['\[','\]'], ['{','}'] ],
+\       'parentheses': [ ['(',')'], ['\[','\]'], ['{','}'], ['<', '>'] ],
 \     },
 \     'stylus': {
 \       'parentheses': [ 'start=/{/ end=/}/ fold contains=@colorableGroup' ],
@@ -661,6 +661,7 @@ augroup END
 ## [coc.nvim](https://github.com/neoclide/coc.nvim)
 
 > [!NOTE|label:references:]
+> - [CocList 入坑指南](https://zhuanlan.zhihu.com/p/71846145) | [coc.nvim 插件体系 - 介绍](https://zhuanlan.zhihu.com/p/65524706)
 > - [* Language servers](https://github.com/neoclide/coc.nvim/wiki/Language-servers)
 > - [#805 ALE diagnostic signs don't appear](https://github.com/neoclide/coc.nvim/issues/805)
 > - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
@@ -1330,9 +1331,12 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 >   - [gko/vim-coloresque](https://github.com/gko/vim-coloresque)
 >   - [ap/vim-css-color](https://github.com/ap/vim-css-color)
 >   - [skammer/vim-css-color](https://github.com/skammer/vim-css-color)
->   - [lifepillar/vim-colortemplate](https://github.com/lifepillar/vim-colortemplate)
+>   - [lifepillar/vim-colortemplate](https://github.com/lifepillar/vim-colortemplamarkdownRulete)
 > - theme
 >   - [rafi/awesome-vim-colorschemes](https://github.com/rafi/awesome-vim-colorschemes)
+>   - [morhetz/gruvbox](https://github.com/morhetz/gruvbox) | [sainnhe/gruvbox-material](https://github.com/sainnhe/gruvbox-material) | [luisiacc/gruvbox-baby](https://github.com/luisiacc/gruvbox-baby) | [ellisonleao/gruvbox.nvim](https://github.com/ellisonleao/gruvbox.nvim)
+> - wallpapers
+>   - [FrenzyExists/wallpapers](https://github.com/FrenzyExists/wallpapers/tree/main)
 
 ```vim
 set enc=utf-8
@@ -1363,8 +1367,6 @@ let g:Hexokinase_optInPatterns = [
 \ ]
 let g:Hexokinase_ftEnabled     = [ 'css', 'html', 'javascript']    " not recommended
 ```
-
-
 
 ## [NvChad/nvim-colorizer.lua](https://github.com/NvChad/nvim-colorizer.lua)
 ```vim
