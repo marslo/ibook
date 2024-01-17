@@ -8,6 +8,7 @@
   - [Agave](#agave)
   - [Operator Mono](#operator-mono)
   - [Gohu](#gohu)
+  - [Monaspace RN](#monaspace-rn)
 - [nerd-fonts](#nerd-fonts)
   - [pixel](#pixel)
   - [hand-writing](#hand-writing)
@@ -131,9 +132,9 @@ colorscheme gruvbox-material
 
 ![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)
 
-![operator mono airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
+![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
 
-![operator mono coc nerdtree hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
+![operator mono + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
 
 ### [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
 ```bash
@@ -151,6 +152,16 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 ![GohuNF vim](../screenshot/vim/vim-airline-ale-2.png)
 
 ![GohuNF bash](../screenshot/tools/fonts/bash-Gohu.png)
+
+### [Monaspace RN](https://monaspace.githubnext.com/)
+
+> [!NOTE|label:references:]
+> - [monaspace nerd font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monaspace)
+> - [Monaspace.zip](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.zip) | [Monaspace.tar.xz](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.tar.xz)
+
+![monaspace rn NF](../screenshot/tools/fonts/bash-MonaspaceRN.png)
+
+![monaspace rn NF + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-MonaspaceRN-coc-nerdtree-hexokinase.png)
 
 ## nerd-fonts
 
