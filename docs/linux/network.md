@@ -160,7 +160,6 @@ $ ifstat -n -i en7
     8.36      1.78
 ```
 
-
 ### check remote server dns
 ```bash
 $ for _i in {1..10}; do
@@ -168,7 +167,6 @@ $ for _i in {1..10}; do
     ssh -q marslo@myserver_${_i} "cat /etc/resolv.conf | sed -nre 's:^nameserver\s([0-9.]+):\1:p' | xargs -L1 /usr/bin/ping -c 1"
   done
 ```
-
 
 ### show hardware spec
 #### `ethtool`

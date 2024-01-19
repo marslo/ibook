@@ -892,6 +892,7 @@ $ kubectl create secret generic test-secret \
 
 > [!NOTE|label:references:]
 > - [kubectl-auth-can-i - Man Page](https://www.mankier.com/1/kubectl-auth-can-i)
+> - [printTable](https://stackoverflow.com/a/49180405/2940319)
 
 ```bash
 $ namespace='test'
@@ -910,6 +911,34 @@ no
 $ kubectl auth can-i get pods --subresource=exec -n "${namespace}"
 no
 ```
+
+- or
+  ```bash
+  #!/usr/bin/env bash
+  # shellcheck disable=SC2086,SC1090
+
+  source ~/.marslo/bin/bash-color.sh
+
+  while read -r namespace; do
+    actions='list get create update delete'
+    components='pod sts ingressroute ingressroutetcp'
+    echo -e "\n>> ${namespace}";
+    for _c in $components; do
+      echo ".. ${_c} :";
+      res='';
+      for _a in $actions; do
+        r="$(kubectl auth can-i ${_a} ${_c} -n ${namespace})";
+        [[ 'yes' = "${r}" ]] && r="$(c Gs)${r}$(c)" || r="$(c Rs)${r}$(c)";
+        res+="${r}\t";
+      done;
+      echo -e "\t${actions}" | tr ' ' '\t';
+      echo -e "\t${res}";
+    done;
+
+  done< <(echo namespace-1 namespace-2 namespace-3 namespace-4 namespace-5 | fmt -1)
+  ```
+
+  ![pretty format of can-i](../../screenshot/k8s/auth-can-i.png)
 
 - more
   ```bash

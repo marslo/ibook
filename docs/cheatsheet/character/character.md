@@ -107,6 +107,9 @@ bWFyc2xvCg==
 
 > [!NOTE|label:see also]
 > - [iMarslo: padRight](../../linux/util/chars.html#padright)
+> - [iMarslo: column](#column)
+> - [iMarslo: pretty auth can-i](../../virtualization/kubernetes/cheatsheet.html#auth-can-i)
+> - [printTable](https://stackoverflow.com/a/49180405/2940319) | [gdbtek/linux-cookbooks/libraries/util.bash](https://github.com/gdbtek/linux-cookbooks/blob/main/libraries/util.bash)
 
 ```bash
 # right-align
@@ -906,6 +909,8 @@ _foobar    _
 > [!NOTE|label:references:]
 > - [How do I center-align a column in UNIX?](https://unix.stackexchange.com/q/199940/29178)
 > - [Set alignment of numeric columns when columnating data](https://unix.stackexchange.com/q/26610/29178)
+> - [mycolumn](https://stackoverflow.com/a/52209504/2940319)
+>   - [Using awk to align columns in text file?](https://stackoverflow.com/q/14095011/2940319)
 
 ```bash
 $ ( printf "PERM LINKS OWNER GROUP SIZE MONTH DAY HH:MM/YEAR NAME\n"; ls -l | sed 1d ) | column -t
@@ -931,6 +936,13 @@ barbarbar  3
   foo           1
                 2
   barbarbar     3
+  ```
+
+- [column with `\t`](https://stackoverflow.com/a/12769104/2940319)
+  ```bash
+  $ echo -e 'a very long string..........\t112232432\tanotherfield\na smaller string\t123124343\tanotherfield\n' | column -t -s $'\t'
+  a very long string..........  112232432  anotherfield
+  a smaller string              123124343  anotherfield
   ```
 
 ## get next line by the pattern
