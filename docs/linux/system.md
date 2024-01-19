@@ -755,6 +755,11 @@ OR
 $ echo "${PATH//:/$'\n'}"
 ```
 
+### graphics card driver
+
+> [!NOTE|label:references:]
+> - [How to Install NVIDIA Drivers on Fedora 39, 38 Linux](https://www.linuxcapable.com/how-to-install-nvidia-drivers-on-fedora-linux/)
+
 ## get system info
 
 {% hint style='tip' %}
