@@ -1,6 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [needrestart](#needrestart)
+- [dpkg](#dpkg)
+- [service](#service)
+  - [list all](#list-all)
 - [ubuntu 17.10 bootup settings](#ubuntu-1710-bootup-settings)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -21,6 +25,9 @@
 > - [liske/needrestart](https://github.com/liske/needrestart)
 > - [How to Install Needrestart on Fedora 39, 38 Linux](https://www.linuxcapable.com/how-to-install-needrestart-on-fedora-linux/)
 > - [Debian: unattended-upgrades + needrestart](https://blog.cyberfront.org/index.php/2021/10/27/debian-unattended-upgrades-need2restart/)
+> - [UnattendedUpgrades](https://wiki.debian.org/UnattendedUpgrades)
+> - [How to stop ubuntu pop-up "Daemons using outdated libraries" when using apt to install or update packages? [closed]](https://stackoverflow.com/a/73397970/2940319)
+> - [apt-get upgrade auto restart services](https://askubuntu.com/q/1367139/92979)
 
 ```bash
 $ needrestart -r i -k
@@ -53,6 +60,7 @@ $ sudo dpkg --configure -a
 > - [GDM](https://wiki.archlinux.org/title/GDM)
 > - [GNOME Display Manager](https://wiki.gnome.org/Projects/GDM)
 >   - [Display managers](https://wiki.archlinux.org/title/Display_manager) provide [X Window System](https://wiki.archlinux.org/title/X_Window_System) and [Wayland](https://wiki.archlinux.org/title/Wayland) users with a graphical login prompt.
+> - [Ubuntu18-22.04安装和干净卸载nvidia显卡驱动——超详细、最简单](https://blog.csdn.net/Perfect886/article/details/119109380)
 
 ### list all
 ```bash
