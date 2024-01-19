@@ -41,6 +41,9 @@
 
 # rpm & dpkg & brew
 
+> [!NOTE|label:references:]
+> - [ubuntu: Package management](https://ubuntu.com/server/docs/package-management)
+
 | RPM                                                           | DPKG                                                                   | BREW                                           |
 |---------------------------------------------------------------|------------------------------------------------------------------------|------------------------------------------------|
 | `rpm -qa`                                                     | `dpkg -l`                                                              | `brew list`                                    |
