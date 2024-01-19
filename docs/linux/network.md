@@ -3,9 +3,9 @@
 
 - [get into](#get-into)
   - [get interface by command](#get-interface-by-command)
+  - [get gateway](#get-gateway)
   - [get ipv4 address](#get-ipv4-address)
   - [get ip address by hostname](#get-ip-address-by-hostname)
-  - [get active interface](#get-active-interface)
   - [get active IP address](#get-active-ip-address)
   - [get active Mac address](#get-active-mac-address)
   - [get network speed](#get-network-speed)
@@ -56,17 +56,57 @@
 
 > [!NOTE|label:references:]
 > - [* imarslo : osx/network](../osx/network.md)
+> - [Ubuntu Linux view status of my network interfaces card])(https://www.cyberciti.biz/tips/ubuntu-linux-view-the-status-of-my-network-interfacescard.html)
 
 ### get interface by command
 ```bash
-interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+$ interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+
 # or get the route to github
-interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
+$ interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
+# or
+$ ip route get 1.1.1.1 | grep --color=never 'via' | sed -re 's/.+via.+dev ([0-9a-zA-Z]+) src.+$/\1/'
+
+# or via nmcli
+$ interface=$(nmcli device | grep --color=never -w connected | awk '{print $1}')
+```
+
+- list all interfaces
+  ```bash
+  $ ip l show
+  ```
+
+- show active via `nmcli`
+  ```bash
+  $ nmcli connection show --active
+  NAME                UUID                                  TYPE      DEVICE
+  Wired connection 5  f866f67c-16db-3808-8e45-29352a730089  ethernet  enx7ae71f506ee6
+  Wired connection 4  dc0adc36-baa3-361b-ab2d-15dd111a0e82  ethernet  enp74s0
+  ```
+
+- get status
+  ```bash
+  # with color
+  $ ip -c route get 1.1.1.1
+
+  # without color
+  $ ip route get 1.1.1.1
+  1.1.1.1 via 10.111.22.1 dev enp74s0 src 10.111.22.97 uid 1001
+  #-----#     #---------#     #-----#     #----------#
+  #target       gateway      interface     ip address
+      cache
+  ```
+
+### get gateway
+```bash
+$ getway=$(route -n | grep --color=never -E 'UG|UGSc' | awk '{print $2}')
+$ echo ${gateway}
+10.111.22.1
 ```
 
 ### get ipv4 address
 ```bash
-ipAddr=$(ip a s "${interface}" | sed -rn 's|.*inet ([0-9\.]{7,15})/[0-9]{2} brd.*$|\1|p')
+$ ipAddr=$(ip a s "${interface}" | sed -rn 's|.*inet ([0-9\.]{7,15})/[0-9]{2} brd.*$|\1|p')
 ```
 
 ### get ip address by hostname
@@ -87,14 +127,6 @@ ipAddr=$(ip a s "${interface}" | sed -rn 's|.*inet ([0-9\.]{7,15})/[0-9]{2} brd.
   ```bash
   $ nslookup github.com | awk '/Name:/{getline; print $2;}'
   ```
-
-### get active interface
-```bash
-$ interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
-
-# or get the route to github
-$ interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
-```
 
 ### get active IP address
 ```bash
@@ -686,7 +718,6 @@ run-parts: executing /usr/share/netfilter-persistent/plugins.d/25-ip6tables save
 $ sudo iptables-save > /etc/iptables/rules.v4
 ```
 
-
 ### nslookup
 ```bash
 $ nslookup sample.gitlab.com
@@ -782,9 +813,6 @@ $ ip route get 192.30.253.113
 > - [How To Fix “No Route To Host” In Linux](https://www.technewstoday.com/no-route-to-host/)
 
 ### traceroute for port
-
-> [!NOTE|label:references:]
-> - []
 
 ```bash
 ## before firewall open the port 2376
