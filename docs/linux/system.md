@@ -10,6 +10,7 @@
   - [disk](#disk)
   - [network](#network)
   - [environment variables](#environment-variables)
+  - [graphics card driver](#graphics-card-driver)
 - [get system info](#get-system-info)
   - [top](#top)
   - [ps](#ps)
@@ -1987,6 +1988,33 @@ $ gnome-terminal --geometry=123x42+0+0
 > - [[OS-Uninstaller] Safely remove Windows, Ubuntu... in 1 clic !](https://ubuntuforums.org/showthread.php?t=1769489&s=9c32add65a3609002c225db872e8f762&p=10871988#post10871988)
 >   - [OS-Uninstaller](https://help.ubuntu.com/community/OS-Uninstaller)
 > - [NEW PROJECT : Ubuntu_uninstaller and Boot_repair](https://ubuntuforums.org/showthread.php?t=1615667)
+> - [How to disable IPv6 address on Ubuntu 22.04 LTS Jammy Jellyfish](https://linuxconfig.org/how-to-disable-ipv6-address-on-ubuntu-22-04-lts-jammy-jellyfish)
+
+- remove `initrd.img` and `vmlinuz-*`
+  ```bash
+  $ ls -altrh /boot/vmlinuz-6.2.0-39-generic /boot/initrd.img-6.2.0-39-generic
+  -rw------- 1 root root 14M Nov 16 01:50 /boot/vmlinuz-6.2.0-39-generic
+  -rw-r--r-- 1 root root 71M Jan  5 19:58 /boot/initrd.img-6.2.0-39-generic
+
+  $ sudo rm -rf /boot/vmlinuz-6.2.0-39-generic /boot/initrd.img-6.2.0-39-generic
+  ```
+- update grub
+  ```bash
+  $ sudo update-grub
+  Sourcing file `/etc/default/grub'
+  Sourcing file `/etc/default/grub.d/init-select.cfg'
+  Generating grub configuration file ...
+  Found linux image: /boot/vmlinuz-6.5.0-14-generic
+  Found initrd image: /boot/initrd.img-6.5.0-14-generic
+  Found linux image: /boot/vmlinuz-6.2.0-39-generic
+  Found initrd image: /boot/initrd.img-6.2.0-39-generic
+  Memtest86+ needs a 16-bit boot, that is not available on EFI, exiting
+  Warning: os-prober will not be executed to detect other bootable partitions.
+  Systems on them will not be added to the GRUB boot configuration.
+  Check GRUB_DISABLE_OS_PROBER documentation entry.
+  Adding boot menu entry for UEFI Firmware Settings ...
+  done
+  ```
 
 ## Q&A
 ### yum issue after python upgrade to 3.x
