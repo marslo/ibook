@@ -13,6 +13,101 @@
 > - [ubuntu配置静态路由及重启生效](http://www.mamicode.com/info-detail-1704736.html)
 > - [Systemd的Unit文件; systemctl增加服务详细介绍](http://blog.csdn.net/shuaixingi/article/details/49641721)
 > - [SystemdForUpstartUsers](https://wiki.ubuntu.com/SystemdForUpstartUsers)
+> - [How to disable IPv6 address on Ubuntu 22.04 LTS Jammy Jellyfish](https://linuxconfig.org/how-to-disable-ipv6-address-on-ubuntu-22-04-lts-jammy-jellyfish)
+
+## needrestart
+
+> [!NOTE]
+> - [liske/needrestart](https://github.com/liske/needrestart)
+> - [How to Install Needrestart on Fedora 39, 38 Linux](https://www.linuxcapable.com/how-to-install-needrestart-on-fedora-linux/)
+> - [Debian: unattended-upgrades + needrestart](https://blog.cyberfront.org/index.php/2021/10/27/debian-unattended-upgrades-need2restart/)
+
+```bash
+$ needrestart -r i -k
+Scanning linux images...
+
+Pending kernel upgrade!
+
+Running kernel version:
+  6.5.0-14-generic
+
+  Diagnostics:
+    The currently running kernel has an ABI compatible upgrade pending.
+
+    Restarting the system to load the new kernel will not be handled automatically, so you should consider
+    rebooting. [Return]
+```
+
+## dpkg
+```bash
+$ sudo dpkg --list
+
+# reconfiguring the dpkg package
+$ sudo dpkg --configure -a
+```
+
+## service
+
+> [!NOTE|label:references:]
+> - [how we can see all running services Linux machine?](https://stackoverflow.com/a/66315070/2940319)
+> - [GDM](https://wiki.archlinux.org/title/GDM)
+> - [GNOME Display Manager](https://wiki.gnome.org/Projects/GDM)
+>   - [Display managers](https://wiki.archlinux.org/title/Display_manager) provide [X Window System](https://wiki.archlinux.org/title/X_Window_System) and [Wayland](https://wiki.archlinux.org/title/Wayland) users with a graphical login prompt.
+
+### list all
+```bash
+$ sudo service --status-all
+$ sudo service --status-all | grep '\[ + \]'
+$ sudo service --status-all | grep '\[ - \]'
+
+# list all running services on Ubuntu
+$ sudo systemctl list-units
+$ sudo systemctl list-units --state running
+```
+
+```bash
+$ sudo service --status-all
+ [ + ]  acpid
+ [ - ]  alsa-utils
+ [ - ]  anacron
+ [ + ]  apparmor
+ [ + ]  apport
+ [ + ]  avahi-daemon
+ [ - ]  bluetooth
+ [ - ]  console-setup.sh
+ [ + ]  cron
+ [ + ]  cups
+ [ + ]  cups-browsed
+ [ + ]  dbus
+ [ + ]  gdm3
+ [ - ]  grub-common
+ [ - ]  hwclock.sh
+ [ + ]  irqbalance
+ [ + ]  kerneloops
+ [ - ]  keyboard-setup.sh
+ [ + ]  kmod
+ [ - ]  lm-sensors
+ [ - ]  lvm2
+ [ - ]  lvm2-lvmpolld
+ [ + ]  openvpn
+ [ - ]  plymouth
+ [ + ]  plymouth-log
+ [ + ]  procps
+ [ - ]  pulseaudio-enable-autospawn
+ [ - ]  rsync
+ [ - ]  saned
+ [ - ]  speech-dispatcher
+ [ - ]  spice-vdagent
+ [ + ]  ssh
+ [ + ]  sssd
+ [ + ]  udev
+ [ + ]  ufw
+ [ + ]  unattended-upgrades
+ [ - ]  uuidd
+ [ - ]  whoopsie
+ [ - ]  x11-common
+ [ - ]  xrdp
+```
 
 ## ubuntu 17.10 bootup settings
 
