@@ -9,6 +9,7 @@
 - [remove non-duplicated lines](#remove-non-duplicated-lines)
 - [show matched values](#show-matched-values)
 - [field separator variable](#field-separator-variable)
+- [align](#align)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -275,3 +276,39 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
   C:/Users/marslo/AppData/Local/Programs/Git/etc/gitconfig
   C:/Users/marslo/AppData/Local/Programs/Git/etc/gitconfig
   ```
+
+### align
+
+> [!NOTE|label:references:]
+> - [bash: how to add header to its corresponding lines](https://stackoverflow.com/a/46703062/2940319)
+
+```bash'
+$ cat a.txt
+CGRT,630,SC063P1
+10001,X,6849
+10003,X,6913
+10005,X,6977
+CGRT,631,SC063P2
+10049,X,8481
+10051,X,8545
+10081,X,1185
+CGRT,632,SC063P3
+10110,X,1601
+10111,X,1633
+
+$ awk '!/^[0-9]/{h=$0;next}{print h,$0}' a.txt
+CGRT,630,SC063P1 10001,X,6849
+CGRT,630,SC063P1 10003,X,6913
+CGRT,630,SC063P1 10005,X,6977
+CGRT,631,SC063P2 10049,X,8481
+CGRT,631,SC063P2 10051,X,8545
+CGRT,631,SC063P2 10081,X,1185
+CGRT,632,SC063P3 10110,X,1601
+CGRT,632,SC063P3 10111,X,1633
+
+# or
+$ awk '/^[a-zA-Z]/{val=$0;next} {print val "\t" $0}' a.txt
+
+# or via sed
+$ sed '/^[^0-9]/h;//d;G;s/\(.*\)\n\(.*\)/\2 \1/'
+```
