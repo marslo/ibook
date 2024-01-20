@@ -12,6 +12,7 @@
   - [combine every 2 lines](#combine-every-2-lines)
   - [combine every 3 lines](#combine-every-3-lines)
 - [format output](#format-output)
+  - [echo](#echo)
   - [diff](#diff)
   - [comm](#comm)
   - [column](#column)
@@ -712,6 +713,37 @@ _foobar    _
 > - [Displaying Files Side by Side in Linux](https://www.baeldung.com/linux/files-display-compare)
 > - [Print two files in two columns side-by-side](https://unix.stackexchange.com/q/392655/29178)
 > - [11.4. Side-by-Side diffs: sdiff](https://docstore.mik.ua/orelly/unix3/upt/ch11_04.htm)
+
+### echo
+
+> [!TIP]
+> - `echo -e` [didn't print newlines and contiguous whitespaces](https://unix.stackexchange.com/a/388747/29178)
+
+```bash
+$ echo -e "a\t\tb"
+a      b
+$ echo -e $(echo -e "a\t\tb")
+a b
+```
+
+![echo -e](../../screenshot/shell/bash-echo-e.png)
+
+- print file with ansicolor
+  ```bash
+  $ command cat c.txt
+  get  get/exec  get/subresource  list  create  create/exec  get/subresource
+  \e[32;1myes\e[0m  \e[32;1myes\e[0m       \e[32;1myes\e[0m              \e[32;1myes\e[0m   \e[32;1myes\e[0m     no           no
+
+  $ echo -ne $(command cat c.txt | sed  's/$/\\n/' | sed 's/ /\\a /g')
+  get  get/exec  get/subresource  list  create  create/exec  get/subresource
+   yes  yes       yes              yes   yes     no           no
+
+  $ echo -ne $(command cat c.txt | sed  's/$/\\n/' | sed 's/ /\\033 /g')
+  get  get/exec  get/subresource  list  create  create/exec  get/subresource
+   yes  yes       yes              yes   yes     no           no
+  ```
+
+  ![echo -ne file with ansicolor](../../screenshot/shell/bash-echo-ne-file-ansicolor.png)
 
 ### diff
 
