@@ -14,6 +14,7 @@
     - [smart copy](#smart-copy)
     - [others](#others)
   - [advanced usage](#advanced-usage)
+    - [chrome](#chrome)
     - [man page](#man-page)
     - [git alias](#git-alias)
     - [environment](#environment)
@@ -110,6 +111,7 @@
 >   - [4 Useful fzf Tricks for Your Terminal](https://pragmaticpineapple.com/four-useful-fzf-tricks-for-your-terminal/)
 >   - [Improving shell workflows with fzf](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
 >   - [Day 18 - Awesome command-line fuzzy finding with fzf](https://sysadvent.blogspot.com/2017/12/day-18-awesome-command-line-fuzzy.html)
+>   - [* A Practical Guide to fzf: Building a File Explorer](https://thevaluable.dev/practical-guide-fzf-example/)
 > - more tools
 >   - [ggVGc/fzf_browser](https://github.com/ggVGc/fzf_browser/tree/master)
 >   - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
@@ -730,13 +732,92 @@ function copy() {                          # smart copy
 
 - changing directory
 
-  > [!NOTE]
+  > [!NOTE|label:references:]
   > - [changing directory](https://github.com/junegunn/fzf/wiki/examples#changing-directory)
   > - fuzzy-cd : [rumpelsepp/fcd.fish](https://gist.github.com/rumpelsepp/b1b416f52d6790de1aee) | [chrisnorris/fcd.fish](https://gist.github.com/chrisnorris/fe57c7855fd87a2636999edf1d4d735b)
   > - [l4u/autojump_fzf.fish](https://gist.github.com/l4u/06502cf680b9a3817efddfb0a9a6ede8)
 
-  - `fd`
+  - `cdp`
+    ```bash
+    # shellcheck disable=SC2034,SC2316
+    function cdp() {                           # cdp - [c][d] to selected [p]arent directory
+      local declare dirs=()
+      get_parent_dirs() {
+        if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+        if [[ "${1}" == '/' ]]; then
+          for _dir in "${dirs[@]}"; do echo $_dir; done
+        else
+          # shellcheck disable=SC2046
+          get_parent_dirs $(dirname "$1")
+        fi
+      }
+      # shellcheck disable=SC2155,SC2046
+      local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+      cd "$DIR" || return
+    }
+    ```
 
+  - `cdf`
+    ```bash
+    function cdf() {                           # [c][d] into the directory of the selected [f]ile
+      local file
+      local dir
+      # shellcheck disable=SC2164
+      file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+    }
+    ```
+
+  - `cdd`
+    ```bash
+    function cdd() {                           # cdd - [c][d] to selected sub [d]irectory
+      local dir
+      # shellcheck disable=SC2164
+      dir=$(fd --type d --hidden --ignore-file ~/.fdignore | fzf --no-multi -0) && cd "${dir}"
+    }
+    ```
+
+  - `cdr`
+    ```bash
+    function cdr() {                           # cdd - [c][d] to selected [r]epo directory
+      local repodir
+      repodir="$(git rev-parse --show-toplevel)"
+      # shellcheck disable=SC2164
+      dir=$( ( echo './'; fd . "${repodir}" --type d --hidden --ignore-file ~/.fdignore |
+                         xargs -I{} bash -c "echo {} | sed \"s|${repodir}/||g\""
+             ) | fzf --no-multi -0
+           ) && cd "${repodir}/${dir}"
+    }
+    ```
+
+- [Interactive cd](https://github.com/junegunn/fzf/wiki/Examples#interactive-cd)
+  ```bash
+  function cd() {
+    if [[ "$#" != 0 ]]; then
+      # shellcheck disable=SC2164
+      builtin cd "$@";
+      return
+    fi
+    while true; do
+      # shellcheck disable=SC2155,SC2010
+      local lsd=$(echo ".." && ls -A --color=none -p | grep --color=none '/$' | sed 's;/$;;')
+      # shellcheck disable=SC2155,SC2016
+      local dir="$(printf '%s\n' "${lsd[@]}" |
+          fzf --reverse --preview '
+              __cd_nxt="$(echo {})";
+              __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
+              echo $__cd_path;
+              echo;
+              ls -p --color=always "${__cd_path}";
+      ')"
+      [[ ${#dir} != 0 ]] || return 0
+      # shellcheck disable=SC2164
+      builtin cd "$dir" &> /dev/null
+    done
+  }
+  ```
+
+  <!--sec data-title="deprecated `fd`" data-id="section0" data-show=true data-collapse=true ces-->
+  - `fd`
     > [!DANGER]
     > **conflict with fd-find**
 
@@ -765,67 +846,41 @@ function copy() {                          # smart copy
       dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
     }
     ```
+  <!--endsec-->
 
-  - `cdp`
-    ```bash
-    # cdp - cd to selected parent directory
-    cdp() {
-      # shellcheck disable=SC2034,SC2316
-      local declare dirs=()
-      get_parent_dirs() {
-        if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
-        if [[ "${1}" == '/' ]]; then
-          for _dir in "${dirs[@]}"; do echo $_dir; done
-        else
-          # shellcheck disable=SC2046
-          get_parent_dirs $(dirname "$1")
-        fi
-      }
-      # shellcheck disable=SC2155,SC2046
-      local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
-      cd "$DIR" || return
-    }
-    ```
-
-  - `cdf`
-    ```bash
-    # cdf - cd into the directory of the selected file
-    cdf() {
-      local file
-      local dir
-      # shellcheck disable=SC2164
-      file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
-    }
-    ```
-
-- [Interactive cd](https://github.com/junegunn/fzf/wiki/Examples#interactive-cd)
+## advanced usage
+### chrome
+- [Bookmarks](https://github.com/junegunn/fzf/wiki/Examples#bookmarks)
   ```bash
-  function cd() {
-    if [[ "$#" != 0 ]]; then
-      # shellcheck disable=SC2164
-      builtin cd "$@";
-      return
+  # https://github.com/junegunn/fzf/wiki/Examples#bookmarks
+  # shellcheck disable=SC2016
+  function b() {                             # chrome [b]ookmarks browser with jq
+    if [ "$(uname)" = "Darwin" ]; then
+      if [[ -e "$HOME/Library/Application Support/Google/Chrome Canary/Default/Bookmarks" ]]; then
+        bookmarks_path="$HOME/Library/Application Support/Google/Chrome Canary/Default/Bookmarks"
+      else
+        bookmarks_path="$HOME/Library/Application Support/Google/Chrome/Default/Bookmarks"
+      fi
+      open=open
+    else
+      bookmarks_path="$HOME/.config/google-chrome/Default/Bookmarks"
+      open=xdg-open
     fi
-    while true; do
-      # shellcheck disable=SC2155,SC2010
-      local lsd=$(echo ".." && ls --color=none -p | grep --color=none '/$' | sed 's;/$;;')
-      # shellcheck disable=SC2155,SC2016
-      local dir="$(printf '%s\n' "${lsd[@]}" |
-          fzf --reverse --preview '
-              __cd_nxt="$(echo {})";
-              __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
-              echo $__cd_path;
-              echo;
-              ls -p --color=always "${__cd_path}";
-      ')"
-      [[ ${#dir} != 0 ]] || return 0
-      # shellcheck disable=SC2164
-      builtin cd "$dir" &> /dev/null
-    done
+
+    jq_script='
+       def ancestors: while(. | length >= 2; del(.[-1,-2]));
+       . as $in | paths(.url?) as $key | $in | getpath($key) | {name,url, path: [$key[0:-2] | ancestors as $a | $in | getpath($a) | .name?] | reverse | join("/") } | .path + "/" + .name + "\t" + .url'
+
+    urls=$( jq -r "${jq_script}" < "${bookmarks_path}" \
+               | sed -E $'s/(.*)\t(.*)/\\1\t\x1b[36m\\2\x1b[m/g' \
+               | fzf --ansi \
+               | cut -d$'\t' -f2
+          )
+    # shellcheck disable=SC2046
+    [[ -z "${urls}" ]] || "${open}" $(echo "${urls}" | xargs)
   }
   ```
 
-## advanced usage
 ### man page
 
 > [!NOTE]
@@ -1201,6 +1256,100 @@ $ (date; ps -ef) |
   }
   ```
 
+- `kcani`
+  ```bash
+  # kcani - kubectl check permission (auth can-i)
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
+  # @description : check whether an action is allowed in given namespaces. support multiple selection
+  # [k]ubectl [can]-[i]
+  function kcani() {                         # [k]ubectl [can]-[i]
+    local namespaces=''
+    local actions='list get watch create update delete'
+    local components='sts deploy secrets configmap ingressroute ingressroutetcp'
+
+    namespaces=$( echo 'namepsace-1 namespace-2 namespace-3 ...' |
+                      fmt -1 |
+                      fzf -1 -0 --no-sort --prompt='namespace> ' \
+                          --bind 'ctrl-y:execute-silent(echo -n {+} | pbcopy)+abort' \
+                          --header 'Press CTRL-Y to copy name into clipboard'
+               )
+    [[ -z "${namespaces}" ]] && echo "$(c Rs)ERROR: select at least one namespace !$(c)" && return
+
+    while read -r namespace; do
+      echo -e "\n>> $(c Ys)${namespace}$(c)"
+      k-p-cani ${namespace}                  # for pods component
+
+      for _c in ${components}; do
+        local res=''
+        echo -e ".. $(c Ms)${_c}$(c) :"
+        for _a in ${actions}; do
+          r=$(_can_i -n "${namespace}" "${_a}" "${_c}")
+          res+="${r} ";
+        done;                                # in actions
+        echo -e "${actions}\n${res}" | "${COLUMN}" -t | sed 's/^/\t/g'
+      done;                                  # in components
+
+    done< <(echo "${namespaces}" | fmt -1)
+  }
+
+  # _can_i - kubectl check permission (auth can-i) for pods component
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @description : check whether given action is allowed in given namespaces; if namespace not provide, using default namespace
+  function _can_i() {
+    local namespace
+    namespace=$(command kubectl config view --minify -o jsonpath='{..namespace}')
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -n | --namespace ) namespace="$2" ; shift 2 ;;
+                       * ) break                    ;;
+      esac
+    done
+
+    [[ 0 = "$#" ]] && echo -e "$(c Rs)>> ERROR: must provide action to check with$(c)\n\nUSAGE$(c Gis)\n\t\$ $0 list pod\n\t\$ $0 -n <namespace> create deploy$(c)" && return
+    checker=$*
+    r="$(kubectl auth can-i ${checker} -n ${namespace})";
+    [[ 'yes' = "${r}" ]] && r="$(c Gs)${r}$(c)" || r="$(c Rs)${r}$(c)";
+    echo -e "${r}";
+  }
+
+  # k-p-cani - kubectl check permission (auth can-i) for pods component
+  # @author      : marslo
+  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ifunc.sh
+  # @description : check whether certain action is allowed in given namespaces
+  # [k]ubectl [can]-[i]
+  function k-p-cani() {
+    local components='pods'
+    declare -A pactions
+    pactions=(
+               ['0_get']="get ${components}"
+               ['1_get/exec']="get ${components}/exec"
+               ['2_get/sub/exec']="get ${components} --subresource=exec"
+               ['2_get/sub/log']="get ${components} --subresource=log"
+               ['3_list']="list ${components}"
+               ['4_create']="create ${components}"
+               ['5_create/exec']="create ${components}/exec"
+               ['6_get/sub/exec']="get ${components} --subresource=exec"
+             )
+
+    while read -r pnamespace; do
+      local headers=''
+      local pres=''
+      while read -r _a; do
+        headers+="$(sed -rn 's/^[0-9]+_(.+)$/\1/p' <<< ${_a}) "
+        r=$(_can_i -n "${pnamespace}" "${pactions[${_a}]}")
+        pres+="${r} "
+      done < <( for _act in "${!pactions[@]}"; do echo "${_act}"; done | sort -h )
+      echo -e ".. $(c Ms)pods$(c) :"
+      echo -e "${headers}\n${pres}" | "${COLUMN}" -t | sed 's/^/\t/g'
+    done< <(echo "$*" | fmt -1)
+  }
+  ```
+
+  ![kcani](../screenshot/linux/fzf/fzf-kcani.png)
+
 - [Log tailing : pods](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)
   ```bash
   pods() {
@@ -1457,7 +1606,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 - `--with-nth`
 
   > [!NOTE]
-  > - [#102: Feature Request: Option to hide some fields]
+  > - [#102: Feature Request: Option to hide some fields](https://github.com/junegunn/fzf/issues/102)
 
   ```bash
   $ echo {a..z} | fzf --with-nth='1..3'

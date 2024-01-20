@@ -84,12 +84,15 @@ $ ccat --palette
 > [!TIP]
 > references:
 > - [Removing colors from output](https://stackoverflow.com/a/18000433/2940319)
+> - [Remove ANSI color codes from a text file using bash](https://stackoverflow.com/a/30938702/2940319)
 
 ```bash
 $ <cmd> | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"
 
 # or
-$ alias decolorize='sed -r "s/\\x1B\\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"'
+$ alias decolorize='sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[mGKHfJ]//g"'
+# deprecated
+# $ alias decolorize='sed -r "s/\\x1B\\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g"'
 $ command | decolorize
 ```
 
