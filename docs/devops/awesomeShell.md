@@ -460,7 +460,33 @@ function v() {                             # v - open files in ~/.vim_mru_files
   vim ${files//\~/$HOME}
 }
 
-# vimrc - open rc files list from "${rcPaths}"
+# vimr - open files by [vim] in whole [r]epository
+#        same series: [`cdr`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L310-L318)
+#        similar with [`:Gfiles`](https://github.com/junegunn/fzf.vim?tab=readme-ov-file#commands)
+# @author      : marslo
+# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
+# @description :
+#   - if pwd inside the repo, then filter all files within current git repository via data modified and open by vim
+#   - if pwd not inside the repo, then call `vim`
+function vimr() {                          # vimr - open file(s) via [vim] in whole [r]epository
+  local repodir
+  isrepo=$(git rev-parse --is-inside-work-tree >/dev/null 2>&1; echo $?)
+  if [[ 0 = "${isrepo}" ]]; then
+    repodir="$(git rev-parse --show-toplevel)"
+    # shellcheck disable=SC2164
+    files=$( fd . "${repodir}" --type f --hidden --ignore-file ~/.fdignore --exec-batch ls -t |
+                  xargs -I{} bash -c "echo {} | sed \"s|${repodir}/||g\"" |
+                  fzf --multi -0 |
+                  xargs -I{} bash -c "echo ${repodir}/{}"
+           )
+    # shellcheck disable=SC2046
+    [[ -z "${files}" ]] || vim $(xargs <<< "${files}")
+  else
+    vim
+  fi
+}
+
+# vimrc - open rc files list from "${rcPaths}" to quick update/modify rc files
 # @author      : marslo
 # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
@@ -468,7 +494,7 @@ function v() {                             # v - open files in ~/.vim_mru_files
 #   - using nvim if `command -v nvim` is true
 #   - using `-v` force using `command vim` instead of `command nvim`
 # shellcheck disable=SC2155
-function vimrc() {                         # magic vim - fzf list in most recent modified order
+function vimrc() {                         # vimrc - fzf list all rc files in data modified order
   local orgv                               # force using vim instead of nvim
   local rcPaths="$HOME/.config/nvim $HOME/.marslo"
   local VIM="$(type -P vim)"
@@ -483,15 +509,28 @@ function vimrc() {                         # magic vim - fzf list in most recent
     esac
   done
 
-  [[ 1 -ne "${orgv}" ]] && command -v nvim >/dev/null && VIM="/usr/local/bin/nvim"
-  (
-    fd '.*rc|.*profile|.*ignore' $HOME --max-depth 1 ${fdOpt};
-    echo "${rcPaths}" | fmt -1 | xargs -I{} bash -c "fd . {} --exclude ss/ --exclude log/ --exclude .completion/ ${fdOpt}" ;
-  ) | fzf ${foption} --bind="enter:become(${VIM} {+})" \
-                     --bind "ctrl-y:execute-silent(echo -n {+} | ${COPY})+abort" \
-                     --header 'Press CTRL-Y to copy name into clipboard'
+  [[ 1 -ne "${orgv}" ]] && command -v nvim >/dev/null && VIM="$(type -P nvim)"
+  fdInRC | sed -rn 's/^[^|]* \| (.+)$/\1/p' \
+         | fzf ${foption} --bind="enter:become(${VIM} {+})" \
+                          --bind "ctrl-y:execute-silent(echo -n {+} | ${COPY})+abort" \
+                          --header 'Press CTRL-Y to copy name into clipboard'
 }
+
 ```
+
+- `fdInRC`
+  ```bash
+  # shellcheck disable=SC2089,SC2090
+  function fdInRC() {
+    local rcPaths="$HOME/.config/nvim $HOME/.marslo $HOME/.idlerc $HOME/.ssh"
+    local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
+    fdOpt+=' --exec stat --printf="%y | %n\n"'
+    (
+      eval "fd --max-depth 1 --hidden '.*rc|.*profile|.*ignore' $HOME ${fdOpt}";
+      echo "${rcPaths}" | fmt -1 | xargs -I{} bash -c "fd . {} --exclude ss/ --exclude log/ --exclude .completion/ --exclude bin/bash-completion/ ${fdOpt}" ;
+    ) |  sort -r
+  }
+  ```
 
 ![fzf magic vim](../screenshot/linux/fzf/fzf-magic-vim.gif)
 
