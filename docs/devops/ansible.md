@@ -35,6 +35,7 @@
 >   - [Tips and tricks](https://docs.ansible.com/ansible/3/user_guide/playbooks_best_practices.html#tip-for-variables-and-vaults)
 >   - [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)
 > - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
+> - [* Filters](https://docs.ansible.com/ansible/2.9/user_guide/playbooks_filters.html#filters)
 
 ## environment
 

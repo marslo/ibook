@@ -139,6 +139,9 @@
 
 ## install
 
+> [!NOTE|label:references:]
+> - [FZF_DEFAULT_OPTS](https://github.com/junegunn/fzf/issues/3053#issuecomment-1330285106)
+
 ```bash
 $ brew install fzf fd
 $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd

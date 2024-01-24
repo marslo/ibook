@@ -670,6 +670,7 @@ augroup END
 > - [Manage coc extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#manage-coc-extensions)
 > - [Debug language server](https://github.com/neoclide/coc.nvim/wiki/Debug-language-server#using-output-channel)
 > - [nicknisi/dotfiles/config/nvim/coc-settings.json](https://github.com/nicknisi/dotfiles/blob/master/config/nvim/coc-settings.json)
+> - [YongJieYongJie/dotfiles/coc-settings.json](https://github.com/YongJieYongJie/dotfiles/blob/master/coc-settings.json)
 
 - initialize
   ```bash
