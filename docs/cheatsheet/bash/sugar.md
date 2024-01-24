@@ -10,6 +10,8 @@
   - [download and extract](#download-and-extract)
   - [kubectl apply from stdin](#kubectl-apply-from-stdin)
 - [sync mirror](#sync-mirror)
+- [get all declare](#get-all-declare)
+  - [print env](#print-env)
 - [using string as variable name](#using-string-as-variable-name)
 - [`<<<`, `< <(..)`](#--)
   - [`< <(..)` && `> >(..)`](#----)
@@ -247,6 +249,48 @@ $ rsync -aqzH --delay-updates --delete-after rsync.stream.centos.org::CentOS-Str
 
 # exclude debuginfo
 $ rsync -aqzH --delay-updates --delete-after rsync.stream.centos.org::CentOS-Stream-nodebug /path/to/local/mirror/root
+```
+
+## get all declare
+
+> [!NOTE|label:references:]
+> - [How to list all variables names and their current values?](https://askubuntu.com/a/1451692/92979)
+> - [What is the difference between source and export?](https://stackoverflow.com/q/15474650/2940319)
+
+```bash
+$ declare
+$ declare -p
+$ declare -xp
+
+# or
+$ typeset
+$ typeset -p
+
+# or
+$ compgen -v
+$ compgen -v | while read line; do echo $line=${!line};done
+$ compgen -v | while read line; do declare -p $line; done
+
+# or
+$ export
+$ printenv
+```
+
+### print env
+
+> [!NOTE|label:references:]
+> - [List all shell variables](https://unix.stackexchange.com/a/176003/29178)
+
+```bash
+$ set -o posix ; set | awk -F '=' '{ print $1 }'
+
+# or
+$ env
+$ env | awk -F '=' '{ print $1 }'
+$ env | awk -F '=' '{ print $1 }' | tr '\n' ' '
+
+# or
+$ printenv
 ```
 
 ## using string as variable name
