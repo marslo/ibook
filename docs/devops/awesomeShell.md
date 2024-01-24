@@ -1186,9 +1186,12 @@ function fman() {
   #       - `pbcopy` in osx
   #       - `/mnt/c/Windows/System32/clip.exe` in wsl
   #   - to respect fzf options via `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default penv`
-  function penv() {                          # [p]rint [e]nvironment variable
+  #   - more options: https://github.com/junegunn/fzf/issues/3599#issuecomment-1907233847
+  # shellcheck disable=SC2215,SC2016
+  function penv() {                          # [p]rint [env]ironment variable
     local option
     local -a array
+
     while [[ $# -gt 0 ]]; do
       case "$1" in
         -c ) option+="$1 "   ; shift   ;;
@@ -1198,13 +1201,18 @@ function fman() {
     done
 
     option+='-1 --exit-0 --sort --multi --cycle'
+    _echo_values() { echo -e "$(c Ys)>> $1$(c)\n$(c Wi).. $(eval echo \$$1)$(c)"; }
+
     while read -r _env; do
-      echo -e "$(c Ys)>> ${_env}$(c)\n$(c Wi).. $(eval echo \$${_env})$(c)"
+      _echo_values $_env
       array+=( "${_env}=$(eval echo \$${_env})" )
     done < <( env |
               sed -r 's/^([a-zA-Z0-9_-]+)=.*$/\1/' |
               fzf ${option//-c\ /} \
                   --prompt 'env> ' \
+                  --height '50%' \
+                  --preview-window 'top,30%,wrap,rounded' \
+                  --preview='source ~/.marslo/bin/bash-color.sh; _env={}; echo -e "$(c Gs)${_env}=${!_env}$(c)"' \
                   --header 'TAB/SHIFT-TAB to select multiple items, CTRL-D to deselect-all, CTRL-S to select-all'
             )
     [[ "${option}" == *-c\ * ]] && [[ -n "${COPY}" ]] && "${COPY}" < <( printf '%s\n' "${array[@]}" | head -c-1 )
