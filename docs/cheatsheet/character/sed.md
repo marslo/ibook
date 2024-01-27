@@ -227,7 +227,6 @@ $ sed 'd' employee.txt
 - delete all comment lines :  `$ sed '/^#/ d' /path/to/file`
 
 ## substitute
-
 ### substitute-flags
 
 |    flag   | comments         |
@@ -253,7 +252,6 @@ $ sed '{
 ```
 
 ## get matched pattern
-
 ### `&`
 {% hint style='tip' %}
 When & is used in the replacement-string, it replaces it with whatever text matched the original-string or the regular-expression.

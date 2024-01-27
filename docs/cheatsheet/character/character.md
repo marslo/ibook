@@ -43,6 +43,7 @@
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
+  - [remove empty lines](#remove-empty-lines)
   - [search and replace](#search-and-replace)
   - [replace with position](#replace-with-position)
   - [check line ending](#check-line-ending)
@@ -1658,6 +1659,60 @@ $ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
   $ echo ..$(echo "   aaa     bbb   " | trim)..
   ..aaa bbb..
   ```
+
+### remove empty lines
+
+> [!NOTE|label:references:]
+> - [Delete empty lines using sed](https://stackoverflow.com/a/39139322/2940319)
+>   - `sed`
+>     - `'/^[[:space:]]*$/d'`
+>     - `'/^\s*$/d'`
+>     - `'/^$/d'`
+>     - `-n '/^\s*$/!p'`
+>   - `grep`
+>     - `.`
+>     - `-v '^$'`
+>     - `-v '^\s*$'`
+>     - `-v '^[[:space:]]*$'`
+>   - `awk`
+>     - `/./`
+>     - `'NF'`
+>     - `'length'`
+>     - `'/^[ \t]*$/ {next;} {print}'`
+>     - `'!/^[ \t]*$/'`
+
+```bash
+# original
+$ cal | cat -pp -A
+····January·2024····␊
+Su·Mo·Tu·We·Th·Fr·Sa␊
+····1··2··3··4··5··6␊
+·7··8··9·10·11·12·13␊
+14·15·16·17·18·19·20␊
+21·22·23·24·25·26·27␊
+28·29·30·31·········␊
+····················␊
+
+# awk 'NF'
+$ cal | awk 'NF' | cat -pp -A
+····January·2024····␊
+Su·Mo·Tu·We·Th·Fr·Sa␊
+····1··2··3··4··5··6␊
+·7··8··9·10·11·12·13␊
+14·15·16·17·18·19·20␊
+21·22·23·24·25·26·27␊
+28·29·30·31·········␊
+
+# sed '/^\s*$/d'
+$ cal | sed '/^\s*$/d' | cat -pp -A
+····January·2024····␊
+Su·Mo·Tu·We·Th·Fr·Sa␊
+····1··2··3··4··5··6␊
+·7··8··9·10·11·12·13␊
+14·15·16·17·18·19·20␊
+21·22·23·24·25·26·27␊
+28·29·30·31·········␊
+```
 
 ### [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
 
