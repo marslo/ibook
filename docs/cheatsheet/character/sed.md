@@ -28,6 +28,7 @@
   - [remove tailing spaces](#remove-tailing-spaces)
   - [show `top` summary](#show-top-summary)
   - [escape](#escape)
+- [tricky](#tricky)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -513,3 +514,40 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
     alias rc='sed '"'"':a;N;$!ba;s/\n/, /g'"'"
     alias rc='sed '\'':a;N;$!ba;s/\n/, /g'\'
     ```
+
+## tricky
+- add `'` or `"` to strings
+
+  > [!NOTE|label:references:]
+  > - [* iMarslo: sed quota](../bash/sugar.html#quotas)
+  > - [How can I keep quotes in Bash arguments?](https://stackoverflow.com/q/1668649/2940319)
+  > - [How can I preserve quotes in printing a Bash script's arguments?](https://stackoverflow.com/q/10835933/2940319)
+
+  ```bash
+  $ GIT_OPT="-a -b --c=1 2 3 -d=4 5 6"
+  $ GIT_OPT=$(echo "${GIT_OPT}" |
+              sed -r 's/\s+-/\n-/g' |
+              sed -r "s/^([^=]+)=(.+)$/\1='\2'/g" |
+              sed -e 'N;s/\n/ /'
+             )
+  $ echo $GIT_OPT
+  -a -b --c='1 2 3' -d='4 5 6'
+
+  $ GIT_OPT="--c=1 2 3 --d=4 5 6"
+  $ GIT_OPT=$(echo "${GIT_OPT}" |
+              sed -r 's/\s+--/\n--/g' |
+              sed -r "s/^([^=]+)=(.+)$/\1='\2'/g" |
+              sed -e 'N;s/\n/ /'
+             )
+  $ echo $GIT_OPT
+  --c='1 2 3' --d='4 5 6'
+
+  $ GIT_OPT="--c=1 2 3 --d=4 5 6"
+  $ GIT_OPT=$(echo "${GIT_OPT}" |
+              sed -r 's/\s+--/\n--/g' |
+              sed -r "s/^([^=]+)=(.+)$/\1=\"\2\"/g" |
+              sed -e 'N;s/\n/ /'
+             )
+  $ echo $GIT_OPT
+  --c="1 2 3" --d="4 5 6"
+  ```

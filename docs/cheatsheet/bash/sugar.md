@@ -17,6 +17,7 @@
   - [`< <(..)` && `> >(..)`](#----)
 - [parameter substitution](#parameter-substitution)
   - [arguments substitution](#arguments-substitution)
+  - [quotas](#quotas)
 - [string manipulations](#string-manipulations)
 - [compound comparison](#compound-comparison)
   - [SC2155](#sc2155)
@@ -438,6 +439,8 @@ $ date | wc
 > reference:
 > - [10.2. Parameter Substitution](https://tldp.org/LDP/abs/html/parameter-substitution.html)
 > - [* iMarslo: params](../../linux/util/params.html)
+> - [How can I keep quotes in Bash arguments?](https://stackoverflow.com/q/1668649/2940319)
+> - [How can I preserve quotes in printing a Bash script's arguments?](https://stackoverflow.com/q/10835933/2940319)
 {% endhint %}
 
 |          EXPR          | DESCRIPTION                                               |
@@ -582,6 +585,110 @@ $ date | wc
   ERROR: must provide at least one non-opt param
   ```
   <!--endsec-->
+
+### quotas
+- `${@@Q}`
+  ```bash
+  # a.sh
+  line="${@@Q}"
+  echo $line
+
+  $ bash a.sh -a -b --c='1 2 3'
+  '-a' '-b' '--c=1 2 3'
+  ```
+
+  ```bash
+  # https://stackoverflow.com/a/39463371/2940319
+  $ expand-q() { for i; do echo ${i@Q}; done; }
+  $ expand-q -a -b --c='1 2 3'
+  '-a'
+  '-b'
+  '--c=1 2 3'
+  ```
+
+  ```bash
+  # https://stackoverflow.com/a/72745869/2940319
+  function quote() {
+    local QUOTED_ARRAY=()
+    for ARGUMENT; do
+      case ${ARGUMENT} in
+        --*=*)
+          QUOTED_ARRAY+=( "${ARGUMENT%%=*}=$(printf "%q" "${ARGUMENT#*=}")" )
+          shift
+        ;;
+        *)
+          QUOTED_ARRAY+=( "$(printf " %q" "${ARGUMENT}")" )
+        ;;
+      esac
+    done
+    echo ${QUOTED_ARRAY[@]}
+  }
+
+  ARGUMENTS="$(quote "${@}")"
+  echo "${ARGUMENTS}"
+  ```
+
+- `printf " %q" "${@}"`
+
+  > [!NOTE]
+  > - [git-effort](https://github.com/tj/git-extras/blob/main/bin/git-effort#L162)
+
+  ```bash
+  while test -n "$1"; do
+    case "$1" in
+      -- ) shift; GIT_OPT=$(printf " %q" "${@}"); break ;;
+    esac
+  done
+  GIT_OPT="${GIT_OPT#\ \'\'}"
+  ```
+
+  ```bash
+  # https://stackoverflow.com/a/39463371/2940319
+  $ params-q() { printf "%q\n" "$@"; }
+  $ params-q -a -b --c='1 2 3'
+  -a
+  -b
+  --c=1\ 2\ 3
+  ```
+
+- String replacement
+
+  > [!TIP]
+  > - [* iMarslo: add `'` or `"` to strings](../character/character.html#tricky)
+
+  ```bash
+  # a.sh
+  while test -n "$1"; do
+    case "$1" in
+      -- ) shift; GIT_OPT="$@";;
+      *  ) shift;;
+    esac
+  done
+
+  GIT_OPT=$(echo "${GIT_OPT}" |
+               sed -r 's/\s+--/\n--/g' |
+               sed -r "s/^([^=]+)=(.+)$/\1='\2'/g" |
+               sed -e 'N;s/\n/ /'
+            )
+  echo $GIT_OPT
+
+  $ bash a.sh -a -b -- --c='1 2 3'
+  --c='1 2 3'
+  ```
+
+  ```bash
+  # https://stackoverflow.com/a/8723305/2940319
+  # a.sh
+  C=''
+  for i in "$@"; do
+      i="${i//\\/\\\\}"
+      C="$C \"${i//\"/\\\"}\""
+  done
+  echo $C
+
+  $ bash ~/a.sh -a -b --c='1 2 3'
+  "-a" "-b" "--c=1 2 3"
+  ```
 
 ## string manipulations
 
