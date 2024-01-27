@@ -11,7 +11,16 @@
   - [user changes](#user-changes)
 - [tools](#tools)
   - [git-stat](#git-stat)
+  - [`nova_git_stats`](#nova_git_stats)
   - [git-stats](#git-stats)
+- [extra](#extra)
+  - [git effort](#git-effort)
+  - [git summary](#git-summary)
+  - [git count](#git-count)
+  - [git guilt](#git-guilt)
+  - [git victim](#git-victim)
+  - [git stat](#git-stat)
+  - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -149,11 +158,20 @@ $ git log "${GIT_OPT}" --author='marslo' --numstat  --pretty=tformat: |
 ### git-stat
 
 > [!NOTE]
-> - download from [github.com/marslo/mytools](https://github.com/marslo/mytools/blob/master/itool/git-stat)
+> - download from [github/marslo/dotfiles](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-stat)
 > - usage:
 >   ![git stat --help](../../screenshot/git/git-stat-help.png)
 > - example:
 >   ![git stat --help](../../screenshot/git/git-stat-result.png)
+
+
+### [`nova_git_stats`](https://github.com/mishina2228/nova_git_stats?tab=readme-ov-file)
+```bash
+$ gem install nova_git_stats
+$ /usr/local/lib/ruby/gems/3.3.0/gems/nova_git_stats-2.4.1/bin/git_stats generate -o stats
+```
+
+![git_stats](../../screenshot/git/git-st-NovaGitStats.png)
 
 ### git-stats
 ```bash
@@ -173,9 +191,223 @@ $ npm i -g git-stats-importer
 $ npm i -g git-stats-html         # usage $ git-stats --raw | git-stats-html -o out.html
 $ npm i -g pageres-cli            # usage $ pageres out.html 775x250
 
-
 $ curl -sk https://raw.githubusercontent.com/IonicaBizau/git-stats/master/scripts/init-git-post-commit | bash
 Setting up git-stats hooks.
 Set new global git template dir at /Users/marslo/.git-templates
 Successfully set up git-stats hook at /Users/marslo/.git-templates/hooks/post-commit.
 ```
+
+
+## extra
+
+> [!TIP]
+> - [git extra](https://github.com/tj/git-extras)
+
+### [git effort](https://github.com/tj/git-extras/blob/main/bin/git-effort)
+
+> [!NOTE|label:references:]
+> - [git effort usage](https://github.com/tj/git-extras/blob/main/Commands.md#git-effort)
+>   Displays "effort" statistics, currently just the number of commits per file, showing highlighting where the most activity is. The "active days" column is the total number of days which contributed modifications to this file.
+> - [How can I calculate the number of lines changed between two commits in Git?](https://stackoverflow.com/questions/2528111/how-can-i-calculate-the-number-of-lines-changed-between-two-commits-in-git)
+
+
+```bash
+$ git effort --above 15 devops/*
+  path                            commits    active days
+  devops/git..................... 111         88
+  devops/adminTools.md........... 42          27
+  devops/awesomeShell.md......... 34          16
+  devops/ssh.md.................. 16          15
+
+$ git effort -- --since='3 months ago'
+  path                                                                                                    commits    active days
+  devops/awesomeShell.md................................................................................. 34          16
+  vim/plugins.md......................................................................................... 26          17
+  vim/deprecated.md...................................................................................... 21          14
+  linux/basic.md......................................................................................... 17          15
+  SUMMARY.md............................................................................................. 16          9
+  linux/apt-yum.md....................................................................................... 15          14
+  linux/devenv.md........................................................................................ 14          9
+  devops/adminTools.md................................................................................... 14          10
+  cheatsheet/bash/sugar.md............................................................................... 14          13
+  cheatsheet/character/character.md...................................................................... 13          9
+  osx/apps.md............................................................................................ 12          9
+  devops/git/config.md................................................................................... 11          10
+  linux/system.md........................................................................................ 9           7
+  virtualization/kubernetes/cheatsheet.md................................................................ 8           7
+  vim/troubleshooting.md................................................................................. 8           8
+```
+
+### [git summary](https://github.com/tj/git-extras/blob/main/bin/git-summary)
+
+> [!NOTE|label:references:]
+> - [git summary](https://github.com/tj/git-extras/blob/main/Commands.md#git-summary)
+>   Outputs a repo or path summary
+
+```bash
+$ git summary --line
+ project     : mbook
+ lines       : 114620
+ authors     :
+ 114563 marslo             100.0%
+     40 Not Committed Yet  0.0%
+     17 marslojiao         0.0%
+
+$ git log --pretty=format:"%H" --since='3 months ago' | tail -1
+435c4f75edb840a5f2c10991fc1d072eb4f51e50
+$ git summary 435c4f75edb840a5f2c10991fc1d072eb4f51e50..
+
+ project     : mbook
+ repo age    : 3 years, 4 months
+ branch:     : marslo
+ last active : 11 minutes ago
+ active on   : 56 days
+ commits     : 130
+ uncommitted : 1
+ authors     :
+   130  marslo  100.0%
+```
+
+### [git count](https://github.com/tj/git-extras/blob/main/bin/git-count)
+
+> [!NOTE|label:references:]
+> - [git count](https://github.com/tj/git-extras/blob/main/Commands.md#git-count)
+
+```bash
+$ git count
+
+# or
+$ git count --all
+marslo (871)
+marslojiao (1)
+
+total 872
+```
+
+### [git guilt](https://github.com/tj/git-extras/blob/main/bin/git-guilt)
+
+> [!NOTE]
+> - [https://github.com/tj/git-extras/blob/main/Commands.md#git-guilt](https://github.com/tj/git-extras/blob/main/Commands.md#git-guilt)
+>   Calculate the change in blame between two revisions
+
+```bash
+$ git guilt $(git log --since="3 weeks ago" --format="%H" | tail -1) HEAD
+marslo                        ++++++++++++++++++++++++++++++++++++++++++(122886)
+```
+
+### [git victim](https://gist.github.com/ccw/6a43efb2468ac20ec4c19240c210e0e4)
+
+> [!NOTE]
+> modified from git-guilt to show the line changes per file
+
+```bash
+$ git victim $(git log --since="3 weeks ago" --format="%H" | tail -1) HEAD
+docs/linux/tools.md                                                                   +++++++++++++++++++++++++++++++++++++++++++++(643)
+docs/linux/basic.md                                                                   +++++++++++++++++++++++++++++++++++++++++++++(381)
+docs/linux/util/files    218 docs/linux/util/files&chars.mdchars.md                   +++++++++++++++++++++++++++++++++++++++++++++(218)
+docs/linux/util/files    172 books/linux/files&chars.mdchars.md                       +++++++++++++++++++++++++++++++++++++++++++++(172)
+docs/linux/ubuntu/repo.md                                                             +++++++++++++++++++++++++++++++++++++++++(89)
+docs/cheatsheet/bash/bash.md                                                          +++++++++++++++++++++++++(56)
+docs/linux/ubuntu/apps.md                                                             ++(8)
+...
+```
+
+### [git stat](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-stat)
+
+> [!NOTE]
+> - [* mishina2228/nova_git_stats](https://github.com/mishina2228/nova_git_stats)
+> - [How do I show statistics for author's contributions in git?](https://stackoverflow.com/q/42715785/2940319)
+> - [IonicaBizau/git-stats](https://github.com/IonicaBizau/git-stats)
+> - [GitStats - git history statistics generator](https://gitstats.sourceforge.net/)
+>   - [hoxu/gitstats](https://github.com/hoxu/gitstats)
+> - [shitchell/git-user-stats](https://gist.github.com/shitchell/783cc8a892ed1591eca2afeb65e8720a)
+> - [Git statistics for repo per author](https://coderwall.com/p/pek-yg/git-statistics-for-repo-per-author)
+> - [eyecatchup/git-commit-log-stats.md](https://gist.github.com/eyecatchup/3fb7ef0c0cbdb72412fc)
+> - [ejwa/gitinspector](https://github.com/ejwa/gitinspector?tab=readme-ov-file)
+>   - [sacdallago/git-inspector](https://github.com/sacdallago/git-inspector)
+
+- `git shortlog`
+  ```bash
+  vim $ git shortlog -sne | head -5
+       16563  Bram Moolenaar <Bram@vim.org>
+         332  Yegappan Lakshmanan <yegappan@yahoo.com>
+         330  zeertzjq <zeertzjq@outlook.com>
+         273  Christian Brabandt <cb@256bit.org>
+         106  K.Takata <kentkt@csc.jp>
+
+  vim $ git shortlog -s -n
+       16566   Bram Moolenaar
+         343   Yegappan Lakshmanan
+         330   zeertzjq
+         273   Christian Brabandt
+         106   K.Takata
+          73   Dominique Pelle
+          ...
+
+  vim $ git shortlog -s -n --since='1 week ago'
+           4   Christian Brabandt
+           3   Restorer
+           3   Sean Dewar
+           2   dkearns
+           1   Andrea C from The App
+           1   Anton Sharonov
+           1   Antonio Giovanni Colombo
+           ...
+  vim $ git log --pretty=format:%ae |
+        gawk -- '{ ++c[$0]; } END { for(cc in c) printf "%5d %s\n",c[cc],cc; }' |
+        sort -k1 -nr |
+        head -5
+      16563 Bram@vim.org
+        332 yegappan@yahoo.com
+        330 zeertzjq@outlook.com
+        273 cb@256bit.org
+        129 kentkt@csc.jp
+  ```
+
+  ```bash
+  $ git ls-files |
+        while read f; do git blame -w -M -C -C --line-porcelain "$f" | grep -I '^author '; done |
+        sort -f |
+        uniq -ic |
+        sort -n --reverse
+  ```
+
+  ```bash
+  # https://stackoverflow.com/a/1487421/2940319
+  $ git log --pretty=format:%an \
+    | awk '{ ++c[$0]; } END { for(cc in c) printf "%5d %s\n",c[cc],cc; }'\
+    | sort -r
+  ```
+
+- [git user-stats](https://gist.github.com/shitchell/783cc8a892ed1591eca2afeb65e8720a)
+  ```bash
+  vim $ git user-stats --since="4 days ago"
+      Email                           Commits     Files       Insertions  Deletions   Total Lines
+      -----                           -------     -----       ----------  ---------   -----------
+      dougkearns@gmail.com            2           72          439         409         848
+      anton.sharonov@gmail.com        1           6           483         83          566
+      seandewar@users.noreply.github.com  3           19          200         31          231
+      dapeng.mao@qq.com               1           5           87          6           93
+      cb@256bit.org                   2           5           93          0           93
+      gi1242@gmail.com                1           1           12          7           19
+      github.e41mv@aleeas.com         1           2           13          1           14
+      azc100@gmail.com                1           1           4           7           11
+      zeertzjq@outlook.com            1           1           2           2           4
+      zoltan.arpadffy@gmail.com       1           1           1           1           2
+  ```
+
+### others
+- [gitstats-simple.rb](https://stackoverflow.com/a/18797915/2940319)
+  ```bash
+  vim $ git log --numstat --pretty='%an' | ruby ~/Desktop/st/gitstats-simple.rb | head -6
+      "Bram", 209045, 666898, 16424
+      "Yegappan", 6218, 46864, 343
+      "zeertzjq", 3708, 4435, 330
+      "Christian", 2935, 4162, 272
+      "K.Takata", 1000, 5522, 106
+      "Restorer", 129, 3678, 15
+  ```
+- [knadh/git-bars](https://github.com/knadh/git-bars)
+- [xiongchiamiov/git-merge-stats](https://github.com/xiongchiamiov/git-merge-stats)
+- [git buggy](https://gist.github.com/ccw/accaff3982da4181c3ff0e181623ad45)
+- [dexcodeinc/gitlogged](https://github.com/dexcodeinc/gitlogged)
