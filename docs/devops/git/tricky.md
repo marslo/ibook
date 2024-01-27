@@ -24,6 +24,13 @@
   - [check help in previw.app](#check-help-in-previwapp)
   - [disk size](#disk-size)
   - [push to github with credential](#push-to-github-with-credential)
+- [extra](#extra)
+  - [git effort](#git-effort)
+  - [git summary](#git-summary)
+  - [git count](#git-count)
+  - [git guilt](#git-guilt)
+  - [git victim](#git-victim)
+  - [git buggy](#git-buggy)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -613,3 +620,117 @@ $ git config credential.helper store
 # or
 git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 ```
+
+## extra
+
+> [!TIP]
+> - [git extra](https://github.com/tj/git-extras)
+
+### [git effort](https://github.com/tj/git-extras/blob/main/bin/git-effort)
+
+> [!NOTE|label:references:]
+> - [git effort usage](https://github.com/tj/git-extras/blob/main/Commands.md#git-effort)
+>   Displays "effort" statistics, currently just the number of commits per file, showing highlighting where the most activity is. The "active days" column is the total number of days which contributed modifications to this file.
+
+```bash
+$ git effort --above 15 devops/*
+  path                            commits    active days
+  devops/git..................... 111         88
+  devops/adminTools.md........... 42          27
+  devops/awesomeShell.md......... 34          16
+  devops/ssh.md.................. 16          15
+
+$ git effort -- --since='3 months ago'
+  path                                                                                                    commits    active days
+  devops/awesomeShell.md................................................................................. 34          16
+  vim/plugins.md......................................................................................... 26          17
+  vim/deprecated.md...................................................................................... 21          14
+  linux/basic.md......................................................................................... 17          15
+  SUMMARY.md............................................................................................. 16          9
+  linux/apt-yum.md....................................................................................... 15          14
+  linux/devenv.md........................................................................................ 14          9
+  devops/adminTools.md................................................................................... 14          10
+  cheatsheet/bash/sugar.md............................................................................... 14          13
+  cheatsheet/character/character.md...................................................................... 13          9
+  osx/apps.md............................................................................................ 12          9
+  devops/git/config.md................................................................................... 11          10
+  linux/system.md........................................................................................ 9           7
+  virtualization/kubernetes/cheatsheet.md................................................................ 8           7
+  vim/troubleshooting.md................................................................................. 8           8
+```
+
+### [git summary](https://github.com/tj/git-extras/blob/main/bin/git-summary)
+
+> [!NOTE|label:references:]
+> - [git summary](https://github.com/tj/git-extras/blob/main/Commands.md#git-summary)
+>   Outputs a repo or path summary
+
+```bash
+$ git summary --line
+ project     : mbook
+ lines       : 114620
+ authors     :
+ 114563 marslo             100.0%
+     40 Not Committed Yet  0.0%
+     17 marslojiao         0.0%
+
+$ git log --pretty=format:"%H" --since='3 months ago' | tail -1
+435c4f75edb840a5f2c10991fc1d072eb4f51e50
+$ git summary 435c4f75edb840a5f2c10991fc1d072eb4f51e50..
+
+ project     : mbook
+ repo age    : 3 years, 4 months
+ branch:     : marslo
+ last active : 11 minutes ago
+ active on   : 56 days
+ commits     : 130
+ uncommitted : 1
+ authors     :
+   130  marslo  100.0%
+```
+
+### [git count](https://github.com/tj/git-extras/blob/main/bin/git-count)
+
+> [!NOTE|label:references:]
+> - [git count](https://github.com/tj/git-extras/blob/main/Commands.md#git-count)
+
+```bash
+$ git count
+
+# or
+$ git count --all
+marslo (871)
+marslojiao (1)
+
+total 872
+```
+
+### [git guilt](https://github.com/tj/git-extras/blob/main/bin/git-guilt)
+
+> [!NOTE]
+> - [https://github.com/tj/git-extras/blob/main/Commands.md#git-guilt](https://github.com/tj/git-extras/blob/main/Commands.md#git-guilt)
+>   Calculate the change in blame between two revisions
+
+```bash
+$ git guilt $(git log --since="3 weeks ago" --format="%H" | tail -1) HEAD
+marslo                        ++++++++++++++++++++++++++++++++++++++++++(122886)
+```
+
+### [git victim](https://gist.github.com/ccw/6a43efb2468ac20ec4c19240c210e0e4)
+
+> [!NOTE]
+> modified from git-guilt to show the line changes per file
+
+```bash
+$ git victim $(git log --since="3 weeks ago" --format="%H" | tail -1) HEAD
+docs/linux/tools.md                                                                   +++++++++++++++++++++++++++++++++++++++++++++(643)
+docs/linux/basic.md                                                                   +++++++++++++++++++++++++++++++++++++++++++++(381)
+docs/linux/util/files    218 docs/linux/util/files&chars.mdchars.md                   +++++++++++++++++++++++++++++++++++++++++++++(218)
+docs/linux/util/files    172 books/linux/files&chars.mdchars.md                       +++++++++++++++++++++++++++++++++++++++++++++(172)
+docs/linux/ubuntu/repo.md                                                             +++++++++++++++++++++++++++++++++++++++++(89)
+docs/cheatsheet/bash/bash.md                                                          +++++++++++++++++++++++++(56)
+docs/linux/ubuntu/apps.md                                                             ++(8)
+...
+```
+
+### [git buggy](https://gist.github.com/ccw/accaff3982da4181c3ff0e181623ad45)
