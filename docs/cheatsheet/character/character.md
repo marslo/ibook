@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [charset](#charset)
+  - [escape](#escape)
 - [encryption](#encryption)
   - [`base64`](#base64)
 - [show](#show)
@@ -90,6 +91,46 @@
 - [convert text-file from utf-8 to iso-8859-1](https://www.linuxquestions.org/questions/linux-server-73/convert-text-file-from-utf-8-to-iso-8859-1-%5Bsolved%5D-560834/)
   ```bash
   $ iconv --from-code=UTF-8 --to-code=ISO-8859-1 inputfile.txt > outputfile.txt
+  ```
+
+### escape
+
+> [!NOTE|label:references:]
+> - [Difference between single and double quotes in Bash](https://stackoverflow.com/a/6697781/2940319)
+> - [How to escape single quotes within single quoted strings](https://stackoverflow.com/q/1250079/2940319)
+>
+> | ESCAPING SEQUENCES | COMMENTS        |
+> |:------------------:|-----------------|
+> |        `\'`        | single quote    |
+> |        `\"`        | double quote    |
+> |        `\\`        | backslash       |
+> |        `\n`        | new line        |
+> |        `\t`        | horizontal tab  |
+> |        `\r`        | carriage return |
+> |        `\?`        | question mark   |
+>
+> - [ASCII Printable characters](https://en.wikipedia.org/wiki/ASCII#Printable_characters)
+> - [String interpolation](https://en.wikipedia.org/wiki/String_interpolation)
+
+- single quota & double quotas
+
+  > [!TIP|label:references:]
+  > - [3.1.2.4 ANSI-C Quoting](https://www.gnu.org/software/bash/manual/html_node/ANSI_002dC-Quoting.html)
+  > - [3.1.2.5 Locale-Specific Translation](https://www.gnu.org/software/bash/manual/html_node/Locale-Translation.html#Locale-Translation)
+  >   Prefixing a double-quoted string with a dollar sign (`$`), such as `$"hello, world"`, will cause the string to be translated according to the current locale
+
+  ```bash
+  $ echo $'aa\'bb'
+  aa'bb
+
+  # ascii code
+  #            hex  octal  hex   octal
+  $ echo -e  "\x27  \047  \\x22  \042"
+  '  '  "  "
+  $ echo -e "Let\x27s get coding!"
+  Let's get coding!
+  $ echo -e "Let\x22s get coding!"
+  Let"s get coding!
   ```
 
 ## encryption

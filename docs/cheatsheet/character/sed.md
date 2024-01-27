@@ -509,6 +509,7 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
                               All escaped single quotes    │
                                                            │
                                                            ?
+
     alias rc='sed '"'"':a;N;$!ba;s/\n/, /g'"'"
     alias rc='sed '\'':a;N;$!ba;s/\n/, /g'\'
     ```
