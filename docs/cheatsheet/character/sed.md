@@ -25,6 +25,7 @@
 - [cheatsheet](#cheatsheet)
   - [get first matching patten ( for `CERTIFICATE` )](#get-first-matching-patten--for-certificate-)
   - [remove both '#' and empty lines](#remove-both--and-empty-lines)
+  - [remove tailing spaces](#remove-tailing-spaces)
   - [show `top` summary](#show-top-summary)
   - [escape](#escape)
 
@@ -384,6 +385,10 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
   ```
 
 ### remove both '#' and empty lines
+
+> [!NOTE|label:references:]
+> - [* iMarslo: remove empty lines](./character.html#remove-empty-lines)
+
 ```bash
 $ .. | sed -r '/^(#.*)$/d' | sed -r '/^\s*$/d'
 
@@ -399,6 +404,46 @@ $ .. | sed -r '/(^#.*)|(^\s*)$/d'
   $ ldapsearch CN=marslo DN | sed -r '/^(#.*)$/d;/^\s*$/d'
   dn: CN=marslo,OU=Workers,DC=company,DC=com
   ```
+
+### remove tailing spaces
+
+> [!TIP|label:available patterns]
+> - `'s/[ \t]*$//'`
+> - `'s/[[:blank:]]*$//'`
+> - `'s/[[:space:]]*$//'`
+
+```bash
+$ cal | cat -pp -A
+····January·2024····␊
+Su·Mo·Tu·We·Th·Fr·Sa␊
+····1··2··3··4··5··6␊
+·7··8··9·10·11·12·13␊
+14·15·16·17·18·19·20␊
+21·22·23·24·25·26·27␊
+28·29·30·31·········␊
+····················␊
+
+# remove empty line
+$ cal | sed -r '/^(#.*)$/d;/^\s*$/d' | cat -pp -A
+····January·2024····␊
+Su·Mo·Tu·We·Th·Fr·Sa␊
+····1··2··3··4··5··6␊
+·7··8··9·10·11·12·13␊
+14·15·16·17·18·19·20␊
+21·22·23·24·25·26·27␊
+28·29·30·31·········␊
+
+# remove trailing spaces
+$ cal | sed 's/[[:space:]]*$//' | cat -pp -A
+····January·2024␊
+Su·Mo·Tu·We·Th·Fr·Sa␊
+····1··2··3··4··5··6␊
+·7··8··9·10·11·12·13␊
+14·15·16·17·18·19·20␊
+21·22·23·24·25·26·27␊
+28·29·30·31␊
+␊
+```
 
 ### show `top` summary
 
