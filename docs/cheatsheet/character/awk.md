@@ -10,6 +10,7 @@
 - [show matched values](#show-matched-values)
 - [field separator variable](#field-separator-variable)
 - [align](#align)
+- [longest line](#longest-line)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -281,6 +282,7 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
 
 > [!NOTE|label:references:]
 > - [bash: how to add header to its corresponding lines](https://stackoverflow.com/a/46703062/2940319)
+> - [How to add blank space in the middle of the line if the line is less than fixed length?](https://stackoverflow.com/a/65523122/2940319)
 
 ```bash'
 $ cat a.txt
@@ -311,4 +313,102 @@ $ awk '/^[a-zA-Z]/{val=$0;next} {print val "\t" $0}' a.txt
 
 # or via sed
 $ sed '/^[^0-9]/h;//d;G;s/\(.*\)\n\(.*\)/\2 \1/'
+```
+
+- alignment with fixed column
+  ```bash
+  $ cat -pp a.txt
+  ABCEFGH  K
+  ABCDE  FGH
+  ABCD  EFG
+  ABCDE FGH
+  ABCDE
+
+  $ awk -v tgt=10 'length($0)<tgt{gsub(/ /,""); $0=substr($0,1,4) sprintf("%*s",tgt-length($0),"") substr($0,5)} 1' a.txt
+  ABCEFGH  K
+  ABCDE  FGH
+  ABCD   EFG
+  ABCD  EFGH
+  ABCD     E
+
+  # or
+  $ awk -v l=10 -v i=4 'length($0)>=l{print; next}
+                        {
+                        gsub(/ /,"")
+                        s1=substr($0,1,i)
+                        s2=substr($0,i+1,length($0))
+                        printf "%s%*s%s\n",s1,l-length($0)," ",s2
+                        }' a.txt
+  ```
+
+- append space
+
+  > [!NOTE]
+  > - [How to add 100 spaces at end of each line of a file in Unix](https://stackoverflow.com/a/41000523/2940319)
+
+  ```bash
+  # 2 extra empty space, 22 chars per line in linux
+  $ cal | wc -L
+  22
+  $ cal | command cat -e
+      January 2024      $
+  Su Mo Tu We Th Fr Sa  $
+      1  2  3  4  5  6  $
+   7  8  9 10 11 12 13  $
+  14 15 16 17 18 19 20  $
+  21 22 23 24 25 26 27  $
+  28 29 30 31           $
+
+  # remove trailing space and empty lines
+  $ cal | sed 's/[ \t]*$//' | sed '/^[[:space:]]*$/d' | command cat -e
+      January 2024$
+  Su Mo Tu We Th Fr Sa$
+      1  2  3  4  5  6$
+   7  8  9 10 11 12 13$
+  14 15 16 17 18 19 20$
+  21 22 23 24 25 26 27$
+  28 29 30 31$
+
+  # append spaces to the length of longest line ( 20 )
+  $ cal | sed 's/[ \t]*$//' | sed '/^[[:space:]]*$/d' | awk '{printf "%-20s\n", $0}' | command cat -e
+      January 2024    $
+  Su Mo Tu We Th Fr Sa$
+      1  2  3  4  5  6$
+   7  8  9 10 11 12 13$
+  14 15 16 17 18 19 20$
+  21 22 23 24 25 26 27$
+  28 29 30 31         $
+
+  # tput cub 20 works for every single lines
+  ```
+
+### longest line
+
+> [!NOTE]
+> [Longest line in a file](https://stackoverflow.com/a/1655488/2940319)
+
+```bash
+$ cat -pp /tmp/terminal-1
+    January 2024
+Su Mo Tu We Th Fr Sa
+    1  2  3  4  5  6
+ 7  8  9 10 11 12 13
+14 15 16 17 18 19 20
+21 22 23 24 25 26 27
+28 29 30 31
+
+$ wc -L /tmp/terminal-1
+20 /tmp/terminal-1
+
+$ awk '{ if (length($0) > max) {max = length($0); maxline = $0} } END { print maxline }' /tmp/terminal-1
+Su Mo Tu We Th Fr Sa
+
+$ awk '{print length, $0}' /tmp/terminal-1  | sort -nr
+20 Su Mo Tu We Th Fr Sa
+20  7  8  9 10 11 12 13
+20 21 22 23 24 25 26 27
+20 14 15 16 17 18 19 20
+20     1  2  3  4  5  6
+16     January 2024
+11 28 29 30 31
 ```
