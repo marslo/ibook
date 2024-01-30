@@ -213,7 +213,6 @@ Report bugs to the package provider.
 $ NPROC=$(getconf _NPROCESSORS_ONLN)
 
 $ make distclean && make clean
-
 $ ./configure --with-features=huge \
               --enable-cscope \
               --enable-largefile \
@@ -459,23 +458,23 @@ Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ope
 
   ```bash
   $ git clone https://github.com/vim/vim && cd vim
-  ./configure --with-features=huge \
-              --enable-cscope \
-              --enable-rubyinterp=dynamic \
-              --enable-python3interp=dynamic \
-              --with-python3-config-dir=$(python3.11-config --configdir) \
-              --enable-luainterp=dynamic \
-              --with-lua-prefix=/usr/local \
-              --enable-libsodium \
-              --enable-multibyte \
-              --with-tlib=ncurses \
-              --enable-terminal \
-              --enable-autoservername \
-              --enable-nls \
-              --with-compiledby="marslo <marslo.jiao@gmail.com>" \
-              --prefix=/usr/local/vim \
-              --exec-prefix=/usr/local/vim \
-              --enable-fail-if-missing
+  $ ./configure --with-features=huge \
+                --enable-cscope \
+                --enable-rubyinterp=dynamic \
+                --enable-python3interp=dynamic \
+                --with-python3-config-dir=$(python3.12-config --configdir) \
+                --enable-luainterp=dynamic \
+                --with-lua-prefix=/usr/local \
+                --enable-libsodium \
+                --enable-multibyte \
+                --with-tlib=ncurses \
+                --enable-terminal \
+                --enable-autoservername \
+                --enable-nls \
+                --with-compiledby="marslo <marslo.jiao@gmail.com>" \
+                --prefix=/usr/local/vim \
+                --exec-prefix=/usr/local/vim \
+                --enable-fail-if-missing
 
   $ make -j${NPROC}
   # or
