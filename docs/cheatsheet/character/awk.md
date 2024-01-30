@@ -283,6 +283,7 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
 > [!NOTE|label:references:]
 > - [bash: how to add header to its corresponding lines](https://stackoverflow.com/a/46703062/2940319)
 > - [How to add blank space in the middle of the line if the line is less than fixed length?](https://stackoverflow.com/a/65523122/2940319)
+> - [Bash shell script output alignment](https://unix.stackexchange.com/a/396226/29178)
 
 ```bash'
 $ cat a.txt
@@ -315,6 +316,31 @@ $ awk '/^[a-zA-Z]/{val=$0;next} {print val "\t" $0}' a.txt
 $ sed '/^[^0-9]/h;//d;G;s/\(.*\)\n\(.*\)/\2 \1/'
 ```
 
+- right/left alignment
+
+  ```bash
+  $ printf '|%-5s|\n' a ab abc abcd abcde
+  |a    |
+  |ab   |
+  |abc  |
+  |abcd |
+  |abcde|
+
+  $ printf '|%5s|\n' a ab abc abcd abcde
+  |    a|
+  |   ab|
+  |  abc|
+  | abcd|
+  |abcde|
+
+  $ printf '|%.5s|\n' a ab abc abcd abcde
+  |a|
+  |ab|
+  |abc|
+  |abcd|
+  |abcde|
+  ```
+
 - alignment with fixed column
   ```bash
   $ cat -pp a.txt
@@ -345,6 +371,7 @@ $ sed '/^[^0-9]/h;//d;G;s/\(.*\)\n\(.*\)/\2 \1/'
 
   > [!NOTE]
   > - [How to add 100 spaces at end of each line of a file in Unix](https://stackoverflow.com/a/41000523/2940319)
+  > - [Find Longest Line in a .txt File and fill all Lines to that Length with 'blank Spaces'?]()
 
   ```bash
   # 2 extra empty space, 22 chars per line in linux
@@ -382,6 +409,21 @@ $ sed '/^[^0-9]/h;//d;G;s/\(.*\)\n\(.*\)/\2 \1/'
   # tput cub 20 works for every single lines
   ```
 
+  - and more
+    ```bash
+    $ command cat file
+    jlsf
+    slf
+    asdfasfs
+    sd
+
+    $ awk 'FNR==NR{ t=(length>=t)?length:t;next }length<t{ for(o=1;o<=t-length;o++)s=s "|";$0=$0s;s="" }1' file file
+    jlsf||||
+    slf|||||
+    asdfasfs
+    sd||||||
+    ```
+
 ### longest line
 
 > [!NOTE]
@@ -412,3 +454,17 @@ $ awk '{print length, $0}' /tmp/terminal-1  | sort -nr
 16     January 2024
 11 28 29 30 31
 ```
+
+#### longest filename
+```bash
+# in repo
+$ fd | awk '{ print length " | " $0 }' | sort -rn | head -3
+98 | programming/archive/maven/hello-world/src/main/java/com/juvenxu/mvnbook/helloworld/HelloWorld.java
+83 | programming/archive/maven/hello-world/src/main/java/com/juvenxu/mvnbook/helloworld/
+72 | programming/archive/maven/hello-world/src/main/java/com/juvenxu/mvnbook/
+
+
+$ fd | awk '{ if (length($0) > max){ max = length($0); line = $0} } END { print max " | " line }'
+98 | programming/archive/maven/hello-world/src/main/java/com/juvenxu/mvnbook/helloworld/HelloWorld.java
+```
+
