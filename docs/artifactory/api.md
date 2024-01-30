@@ -26,6 +26,7 @@
 - [deploy](#deploy)
   - [deploy single artifacts](#deploy-single-artifacts)
   - [deploy bundle artifact](#deploy-bundle-artifact)
+  - [deploy docker image via API](#deploy-docker-image-via-api)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -435,7 +436,7 @@ $ curl -s \
        -k \
        -X POST \
        -H 'Content-Type:text/plain' \
-       'https://artifactory.domain.com/artifactory/api/search/aql' \
+       'https://artifactory.sample.com/artifactory/api/search/aql' \
        -d 'builds.find({
                "name": "my - build - dev",
                "created": {"$before": "3days"}
@@ -449,7 +450,7 @@ $ curl -s \
 $ curl -gsSL \
        --netrc-file ~/.marslo/.netrc \
        -XPUT \
-       "https://artifactory.domain.com/artifactory/<repo-name>/<path/to/file.txt>" \
+       "https://artifactory.sample.com/artifactory/<repo-name>/<path/to/file.txt>" \
        -T <artifacts>.txt
 ```
 
@@ -460,6 +461,26 @@ $ curl -g \
        -SL \
        -H "X-Explode-Archive-Atomic: true" \
        -X PUT \
-       "https://artifactory.domain.com/artifactory/<repo-name>/<path>/" \
-       -T <artifacts>.[zip\|tar.gz\|tgz]
+       "https://artifactory.sample.com/artifactory/<repo-name>/<path>/" \
+       -T <artifacts>.[zip\|tar.gz\|tgz]               #             ^
+                                                       #     `/` is mandatory
+```
+
+### [deploy docker image via API](https://philippart-s.github.io/blog/articles/dev/docker-artificatory-promote/)
+
+> [!NOTE|label:references:]
+> - [* iMarslo: deploy docekr image via CLI](./cli.html#deploy-docker-image-via-cli)
+
+```bash
+$ curl -X POST -H "X-JFrog-Art-Api:$ARTI_API_KEY" \
+               -H "Content-Type: application/json" \
+               -d '{"targetRepo" : "stef-docker-local",
+                    "dockerRepository" : "hello-world",
+                    "targetDockerRepository" : "hello-world",
+                    "tag" : "1.0.0",
+                    "targetTag" : "prod",
+                    "copy": false    }' \
+               https://xxxx.jfrog.io/artifactory/api/docker/default-docker-local/v2/promote
+
+Promotion ended successfully%
 ```

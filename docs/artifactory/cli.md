@@ -11,6 +11,7 @@
   - [ping](#ping)
   - [discarding old builds from artifactory](#discarding-old-builds-from-artifactory)
   - [search with aql](#search-with-aql)
+  - [deploy docker image via cli](#deploy-docker-image-via-cli)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -164,7 +165,6 @@
 > reference:
 > - [CLI for JFrog Artifactory](https://www.jfrog.com/confluence/display/CLI/CLI+for+JFrog+Artifactory)
 
-
 | ABBREVIATION | COMMANDS                     |
 |:------------:|------------------------------|
 |     `atc`    | `access-token-create`        |
@@ -246,37 +246,60 @@
   ```bash
   $ jf c add --url=ssh://artifactory.example.com:1339 \
              --ssh-key-path=/Users/marslo/.ssh/id_rsa \
-             myrt
+             sample
 
-  $ jf c show myrt
-  Server ID:              myrt
+  $ jf c show sample
+  Server ID:              sample
   JFrog Platform URL:     ssh://artifactory.example.com:1339/
   Artifactory URL:        ssh://artifactory.example.com:1339/
   SSH key file path:      /Users/marslo/.ssh/id_rsa
   Default:                true
   ```
 
-- via api key
+- [via password/api key](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory#authenticating-with-username-and-password-api-key)
   ```bash
-  $ jfrog rt c myrt --url=https://artifactory.example.com/artifactory --apikey=***********
+  $ jf c add --serverId rt-api-key \
+             --artifactory-url=https://artifactory.sample.com/artifactory \
+             --user=marslo \
+             --password=A***********************************************************************x \
+             --insecure-tls \
+             --interactive=false
+  ```
+
+  <!--sec data-title="deprecated" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ jfrog rt c sample --url=https://artifactory.example.com/artifactory --apikey=***********
   JFrog Distribution URL (Optional):
   For commands which don't use external tools or the JFrog Distribution service, JFrog CLI supports replacing the configured username and password/API key with automatically created access token that's refreshed hourly. Enable this setting? (y/n) [y]? n
   Is the Artifactory reverse proxy configured to accept a client certificate? (y/n) [n]? n
 
   $ jfrog rt c show
-  Server ID:  myrt
+  Server ID:  sample
   Url:        https://artifactory.example.com/artifactory/
   API key:    ***************
   Default:    true
   ```
 
-- via username/password
+  - via username/password
+    ```bash
+    $ jfrog rt c sample --user=myaccount \
+                        --url=https://artifactory.example.com/artifactory \
+                        --password=mypassword
+    JFrog Distribution URL (Optional):
+    For commands which don't use external tools or the JFrog Distribution service, JFrog CLI supports replacing the configured username and password/API key with automatically created access token that's refreshed hourly. Enable this setting? (y/n) [y]? n
+    Is the Artifactory reverse proxy configured to accept a client certificate? (y/n) [n]? n
+    [Info] Encrypting password...
+    ```
+  <!--endsec-->
+
+- [access token](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory#authenticating-with-an-access-token)
   ```bash
-  $ jfrog rt c myrt --url=https://artifactory.example.com/artifactory --user=myaccount --password=mypassword
-  JFrog Distribution URL (Optional):
-  For commands which don't use external tools or the JFrog Distribution service, JFrog CLI supports replacing the configured username and password/API key with automatically created access token that's refreshed hourly. Enable this setting? (y/n) [y]? n
-  Is the Artifactory reverse proxy configured to accept a client certificate? (y/n) [n]? n
-  [Info] Encrypting password...
+  $ jf c add --serverId sample
+             --artifactory-url=https://artifactory.sample.com/artifactory \
+             --user=marslo \
+             --access-token=c**************************************************************Q \
+             --interactive=false \
+             --insecure-tls
   ```
 
 - in docker
@@ -297,16 +320,24 @@
   OK
 
   # or
-  $ jfrog rt p --server-id=myrt
+  $ jfrog rt p --server-id=sample
   OK
   ```
 
 ### discarding old builds from artifactory
 - clean build info and artifacts 30 days before
+
   ```bash
-  $ jfrog rt use myrt
+  $ jf use <sample>
   $ jfrog rt bdi --max-days=30 --delete-artifacts=true "my-job-build"
   ```
+
+  <!--sec data-title="deprecated" data-id="section2" data-show=true data-collapse=true ces-->
+  ```bash
+  $ jfrog rt use sample
+  $ jfrog rt bdi --max-days=30 --delete-artifacts=true "my-job-build"
+  ```
+  <!--endsec-->
 
 - using cli via docker
   ```bash
@@ -344,3 +375,15 @@ $ jfrog rt s --spec spec.json
   ```bash
   $ jfrog rt del --spec spec.json
   ```
+
+### [deploy docker image via cli](https://philippart-s.github.io/blog/articles/dev/docker-artificatory-promote/)
+
+> [!NOTE|label:references:]
+> - [* iMarlso: deploy docker image via API](./api.html#deploy-docker-image-via-api)
+
+```bash
+$ jf rt docker-promote hello-world default-docker-local stef-docker-local \
+                       --source-tag=1.0.0 \
+                       --target-docker-image=hello-world \
+                       --target-tag=prod
+```
