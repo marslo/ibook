@@ -8,6 +8,7 @@
 - [show](#show)
   - [align](#align)
   - [numfmt](#numfmt)
+  - [`q`](#q)
 - [combinations](#combinations)
   - [single line to multiple lines](#single-line-to-multiple-lines)
   - [combine every 2 lines](#combine-every-2-lines)
@@ -514,6 +515,18 @@ _foobar    _
   devtmpfs                                                541G             0          541G   0% /dev
   tmpfs                                                   541G          259K          541G   1% /dev/shm
   ```
+
+### [`q`](https://github.com/harelba/q)
+
+> [!NOTE|label:references:]
+> - [harelba/q](https://github.com/harelba/q)
+> - [q - Run SQL directly on CSV or TSV files](https://harelba.github.io/q/#installation)
+> - [GET CONTRIBUTOR STATS FROM GIT](https://www.lostindetails.com/articles/get-contributor-stats-from-git)
+
+```bash
+$ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), sum(c2) from -"
+60650.0   66363.0
+```
 
 ## combinations
 ### single line to multiple lines

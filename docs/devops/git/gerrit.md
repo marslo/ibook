@@ -19,6 +19,7 @@
   - [who approval the CR+2](#who-approval-the-cr2)
   - [get all vote CR-2](#get-all-vote-cr-2)
   - [who approval the V+1](#who-approval-the-v1)
+  - [access contains account](#access-contains-account)
   - [reference](#reference)
 - [integrate in Jenkins](#integrate-in-jenkins)
 - [css for code block](#css-for-code-block)
@@ -658,6 +659,27 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r .labels.Verified.approved.username
+```
+
+### access contains account
+
+> [!NOTE]
+> - [list projects](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#list-projects)
+> - [List Access Rights for Project](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#get-access)
+
+```bash
+# i.e. : check all repos who contains account marslo@sample.com
+$ while read -r _proj; do
+    output=$( curl -fsSL https://gerrit.sample.com/a/projects/"${_proj}"/access |
+              tail -n+2 |
+              jq -r '.. | .rules? | select(. != null) | keys[] | ascii_downcase | select(contains("marslo@sample.com"))';
+            )
+    [[ -z "${output}" ]] || echo ">> https://gerrit.sample.com/admin/repos/$(sed 's:%2F:/:g' <<< "${_proj}")"
+  done < <( curl -fsSL https://gerrit.sample.com/a/projects/?d |
+                  tail -n+2 |
+                  jq -r '.[].id' |
+                  grep --color=never -E 'ssd|storage'
+          )
 ```
 
 ### reference
