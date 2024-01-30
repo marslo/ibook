@@ -16,7 +16,7 @@
   - [echo](#echo)
   - [diff](#diff)
   - [comm](#comm)
-  - [column](#column)
+  - [alignment](#alignment)
 - [get next line by the pattern](#get-next-line-by-the-pattern)
 - [get lines between 2 patterns](#get-lines-between-2-patterns)
   - [awk](#awk)
@@ -978,7 +978,16 @@ a b
   d
   ```
 
-### column
+### alignment
+
+> [!TIP]
+> - [Bash shell script output alignment](https://unix.stackexchange.com/a/396226/29178)
+
+#### [expand (POSIX)](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/expand.html)
+#### [pr (POSIX)](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/pr.html)
+#### [rs (BSD)](https://man.freebsd.org/cgi/man.cgi?query=rs)
+
+#### column (BSD)
 
 > [!NOTE|label:references:]
 > - [How do I center-align a column in UNIX?](https://unix.stackexchange.com/q/199940/29178)
