@@ -13,6 +13,8 @@
   - [git-stat](#git-stat)
   - [`nova_git_stats`](#nova_git_stats)
   - [git-stats](#git-stats)
+  - [git fame](#git-fame)
+  - [gitstats.exe](#gitstatsexe)
 - [extra](#extra)
   - [git effort](#git-effort)
   - [git summary](#git-summary)
@@ -197,6 +199,52 @@ Set new global git template dir at /Users/marslo/.git-templates
 Successfully set up git-stats hook at /Users/marslo/.git-templates/hooks/post-commit.
 ```
 
+### [git fame](https://github.com/casperdcl/git-fame#readme)
+```bash
+# install
+pip install git-fame
+
+# completion
+# osx
+$ curl -fsSL https://raw.githubusercontent.com/casperdcl/git-fame/main/git-fame_completion.bash \
+       -o /usr/local/etc/bash_completion.d/git-fame_completion.bash
+# linux
+$ sudo curl -fsSL https://raw.githubusercontent.com/casperdcl/git-fame/main/git-fame_completion.bash \
+            -o /usr/share/bash-completion/completions/git-fame_completion.bash
+# centos only
+$ sudo curl -fsSL https://raw.githubusercontent.com/casperdcl/git-fame/main/git-fame_completion.bash \
+            -o /etc/bash_completion.d/git-fame_completion.bash
+
+# usage
+vim $ git fame --cost hour,month --since='5 days ago'
+    Processing: 100%|███████████████████████████████████████████████████████| 1/1 [00:00<00:00, 10.02repo/s]
+    Total commits: 23
+    Total ctimes: 133
+    Total files: 133
+    Total hours: 28.3
+    Total loc: 1838
+    Total months: 5.5
+    | Author             |   hrs |   mths |   loc |   coms |   fils |  distribution   |
+    |:-------------------|------:|-------:|------:|-------:|-------:|:----------------|
+    | dkearns            |     2 |      2 |   658 |      3 |     20 | 35.8/13.0/15.0  |
+    | lilydjwg           |     3 |      1 |   325 |      2 |     15 | 17.7/ 8.7/11.3  |
+    | Christian Brabandt |     4 |      1 |   300 |      6 |     46 | 16.3/26.1/34.6  |
+    | zeertzjq           |     2 |      1 |   176 |      3 |     19 | 9.6/13.0/14.3   |
+    | Sergey Vlasov      |     2 |      0 |   126 |      1 |      9 | 6.9/ 4.3/ 6.8   |
+    | Casey Tucker       |     2 |      0 |    83 |      1 |     11 | 4.5/ 4.3/ 8.3   |
+    | thinca             |     2 |      0 |    61 |      1 |      4 | 3.3/ 4.3/ 3.0   |
+    | kawaii-Code        |     2 |      0 |    32 |      1 |      2 | 1.7/ 4.3/ 1.5   |
+    | user202729         |     2 |      0 |    28 |      1 |      1 | 1.5/ 4.3/ 0.8   |
+    | VanaIgr            |     2 |      0 |    18 |      1 |      3 | 1.0/ 4.3/ 2.3   |
+    | h_east             |     2 |      0 |    16 |      1 |      1 | 0.9/ 4.3/ 0.8   |
+    | Melker Ulander     |     2 |      0 |    11 |      1 |      1 | 0.6/ 4.3/ 0.8   |
+    | gi1242             |     2 |      0 |     4 |      1 |      1 | 0.2/ 4.3/ 0.8   |
+```
+
+### [gitstats.exe](https://gitcontributors.com/)
+
+> [!NOTE|label:references:]
+> - [See all contributors of your git repos](https://gitcontributors.com/)
 
 ## extra
 
