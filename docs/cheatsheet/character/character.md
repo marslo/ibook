@@ -11,6 +11,7 @@
   - [`q`](#q)
 - [combinations](#combinations)
   - [single line to multiple lines](#single-line-to-multiple-lines)
+    - [execute commands from file](#execute-commands-from-file)
   - [combine every 2 lines](#combine-every-2-lines)
   - [combine every 3 lines](#combine-every-3-lines)
 - [format output](#format-output)
@@ -18,12 +19,18 @@
   - [diff](#diff)
   - [comm](#comm)
   - [alignment](#alignment)
-- [get next line by the pattern](#get-next-line-by-the-pattern)
-- [get lines between 2 patterns](#get-lines-between-2-patterns)
-  - [awk](#awk)
-  - [sed](#sed)
-  - [with empty line](#with-empty-line)
+  - [sort](#sort)
+    - [sort the last column](#sort-the-last-column)
+- [get lines](#get-lines)
+  - [get second-to-last line](#get-second-to-last-line)
+  - [get next line by the pattern](#get-next-line-by-the-pattern)
+  - [get lines between 2 patterns](#get-lines-between-2-patterns)
+    - [awk](#awk)
+    - [sed](#sed)
+    - [with empty line](#with-empty-line)
   - [return first matching pattern](#return-first-matching-pattern)
+    - [sed](#sed-1)
+    - [awk](#awk-1)
   - [return second matching pattern](#return-second-matching-pattern)
 - [`xargs`](#xargs)
   - [complex commands with xargs](#complex-commands-with-xargs)
@@ -32,6 +39,8 @@
   - [sort all shell script by line number](#sort-all-shell-script-by-line-number)
   - [diff every git commit against its parent](#diff-every-git-commit-against-its-parent)
   - [running multiple commands with xargs](#running-multiple-commands-with-xargs)
+    - [compress sub-folders](#compress-sub-folders)
+    - [ping multiple IPs](#ping-multiple-ips)
   - [read by char](#read-by-char)
 - [`find`](#find)
   - [output file name only](#output-file-name-only)
@@ -42,6 +51,7 @@
   - [`find` && `tar`](#find--tar)
   - [inject commands inside find](#inject-commands-inside-find)
   - [printf](#printf)
+    - [time formats](#time-formats)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -63,7 +73,7 @@
 > - [10 Awk Tips, Tricks and Pitfalls](https://catonmat.net/ten-awk-tips-tricks-and-pitfalls)
 > - [FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
 
-## charset
+# charset
 
 > [!NOTE|label:references:]
 > - [ASCII Table, ISO 1252 Latin-1 Chart & Character Set](https://www.barcodefaq.com/ascii-chart-char-set/)
@@ -94,7 +104,7 @@
   $ iconv --from-code=UTF-8 --to-code=ISO-8859-1 inputfile.txt > outputfile.txt
   ```
 
-### escape
+## escape
 
 > [!NOTE|label:references:]
 > - [Difference between single and double quotes in Bash](https://stackoverflow.com/a/6697781/2940319)
@@ -134,8 +144,8 @@
   Let"s get coding!
   ```
 
-## encryption
-### `base64`
+# encryption
+## `base64`
 ```bash
 $ echo "marslo" | base64 -w0
 bWFyc2xvCg==
@@ -146,8 +156,8 @@ bWFyc2xvCg==
   marslo
   ```
 
-## show
-### align
+# show
+## align
 
 > [!NOTE|label:see also]
 > - [iMarslo: padRight](../../linux/util/chars.html#padright)
@@ -165,7 +175,7 @@ $ printf  _"%-10s"_ "foobar"
 _foobar    _
 ```
 
-### numfmt
+## numfmt
 
 > [!NOTE|label:references:]
 > - [* iMarslo : math](../math.html#decimal-to-binary)
@@ -516,7 +526,7 @@ _foobar    _
   tmpfs                                                   541G          259K          541G   1% /dev/shm
   ```
 
-### [`q`](https://github.com/harelba/q)
+## [`q`](https://github.com/harelba/q)
 
 > [!NOTE|label:references:]
 > - [harelba/q](https://github.com/harelba/q)
@@ -528,8 +538,8 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
 60650.0   66363.0
 ```
 
-## combinations
-### single line to multiple lines
+# combinations
+## single line to multiple lines
 
 > [!TIP]
 > ```bash
@@ -593,7 +603,7 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
   c
   ```
 
-#### execute commands from file
+### execute commands from file
 - [create files](https://linuxize.com/post/linux-xargs-command/)
 
   > [!TIP]
@@ -627,7 +637,7 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
   >           line character.  Implies -x and -L 1.
   > ```
 
-### combine every 2 lines
+## combine every 2 lines
 
 > [!NOTE|label:references:]
 > - [How to merge every two lines into one from the command line?](https://stackoverflow.com/q/9605232/2940319)
@@ -722,7 +732,7 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
   3 : c
   ```
 
-### combine every 3 lines
+## combine every 3 lines
 - paste
   ```bash
   # or every 3 lines
@@ -746,7 +756,7 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
   7 8 9
   ```
 
-## format output
+# format output
 
 > [!TIP|label:sample data]
 > ```bash
@@ -769,7 +779,7 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
 > - [Print two files in two columns side-by-side](https://unix.stackexchange.com/q/392655/29178)
 > - [11.4. Side-by-Side diffs: sdiff](https://docstore.mik.ua/orelly/unix3/upt/ch11_04.htm)
 
-### echo
+## echo
 
 > [!TIP]
 > - `echo -e` [didn't print newlines and contiguous whitespaces](https://unix.stackexchange.com/a/388747/29178)
@@ -800,7 +810,7 @@ a b
 
   ![echo -ne file with ansicolor](../../screenshot/shell/bash-echo-ne-file-ansicolor.png)
 
-### diff
+## diff
 
 > [!NOTE|label:references:]
 > - [Linux diff command](https://www.computerhope.com/unix/udiff.htm)
@@ -967,7 +977,7 @@ a b
   > e
   ```
 
-### comm
+## comm
 
 - diff
   ```bash
@@ -991,7 +1001,7 @@ a b
   d
   ```
 
-### alignment
+## alignment
 
 > [!TIP]
 > - [Bash shell script output alignment](https://unix.stackexchange.com/a/396226/29178)
@@ -1039,6 +1049,70 @@ barbarbar  3
   $ echo -e 'a very long string..........\t112232432\tanotherfield\na smaller string\t123124343\tanotherfield\n' | column -t -s $'\t'
   a very long string..........  112232432  anotherfield
   a smaller string              123124343  anotherfield
+  ```
+
+## sort
+
+> [!NOTE|label:references:]
+> - [Unix sort using unknown delimiter (last column)](https://stackoverflow.com/q/16593463/2940319)
+
+### sort the last column
+- awk: `print( $NF" "$0 ) | sort | cut -f2- -d' '`
+  ```bash
+  $ echo -e '5 5 0 0 622 20\n6 3 2 0 439 8\n5 2 3 0 450 8'
+  5 5 0 0 622 20
+  6 3 2 0 439 8
+  5 2 3 0 450 12
+
+  $ echo -e '5 5 0 0 622 20\n6 3 2 0 439 8\n5 2 3 0 450 12' |
+    awk '{print($NF" "$0)}' |
+    sort -k1,1 -n -r -t' ' |
+    cut -f2- -d' '
+  5 5 0 0 622 20
+  5 2 3 0 450 12
+  6 3 2 0 439 8
+  ```
+
+- awk: similar with rev for words
+  ```bash
+  $ echo -e '5 5 0 0 622 20\n6 3 2 0 439 8\n5 2 3 0 450 12' |
+    awk '{ for (i=NF; i>0; i--) printf("%s ",$i); printf("\n")}' |             # rev
+    sort -k1,1 -nr -t' ' |
+    awk '{ for (i=NF; i>0; i--) printf("%s ",$i); printf("\n")}'               # rev
+  5 5 0 0 622 20
+  5 2 3 0 450 12
+  6 3 2 0 439 8
+  ```
+
+# get lines
+## get second-to-last line
+
+> [!NOTE|label:references:]
+> - [How to read the second-to-last line in a file using Bash?](https://stackoverflow.com/q/7022390/2940319)
+
+- sed
+  ```bash
+  $ sed -n 'x;$p' <<\INPUT
+    a
+    b
+    c
+    d
+    INPUT
+  c
+
+  # or
+  $ echo -e 'a\nb\nc\nd' | sed -n -e '${x;1!p;};h'
+  c
+
+  # tac + sed
+  $ echo -e 'a\nb\nc\nd' | tac | sed -n '2p'
+  c
+  ```
+
+- tail & head
+  ```bash
+  $ echo -e 'a\nb\nc\nd' | tail -2 | head -1
+  c
   ```
 
 ## get next line by the pattern
@@ -1221,7 +1295,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 6f
 ```
 
-### return first matching pattern
+## return first matching pattern
 
 {% hint style='tip' %}
 > references:
@@ -1239,7 +1313,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 > -----END CERTIFICATE-----
 > ```
 
-#### sed
+### sed
 ```bash
 $ cat sample.crt | sed '/-END CERTIFICATE-/q'
 -----BEGIN CERTIFICATE-----
@@ -1265,7 +1339,7 @@ first paragraph
 -----END CERTIFICATE-----
 ```
 
-#### awk
+### awk
 ```bash
 $ cat sample.crt | awk '/-BEGIN CERTIFICATE-/{a=1}; a; /-END CERTIFICATE-/{exit}'
 -----BEGIN CERTIFICATE-----
@@ -1291,7 +1365,7 @@ first paragraph
 -----END CERTIFICATE-----
 ```
 
-### return second matching pattern
+## return second matching pattern
 
 {% hint style='tip' %}
 > references:
@@ -1316,15 +1390,23 @@ second paragraph
 -----END CERTIFICATE-----
 ```
 
-## `xargs`
+# `xargs`
 
 {% hint style='tip' %}
 > references:
 > - [xargs](https://en.wikipedia.org/wiki/Xargs)
+> - [Brainiarc7/xargs-primer-brief.md](https://gist.github.com/Brainiarc7/133fd582e124981c08cbafca98455ee9)
 > - [running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
 > - [Xargs Command in Linux](https://linuxize.com/post/linux-xargs-command/)
 > - [How to Use the Linux xargs Command](https://phoenixnap.com/kb/xargs-command)
 > - [xargs - Construct an argument list and run a command](https://www.ibm.com/docs/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.bpxa500/xargs.htm)
+> - [Why does the wc utility generate multiple lines with "total"?](https://stackoverflow.com/a/20098969/2940319)
+>   ```bash
+>   $ xargs --show-limits < /dev/null
+>   # solution for multiple `total` in $ `git ls-files -z | xargs -0 wc -l`:
+>   $ git ls-files -z | wc -l --files0-from=-
+>   ```
+> - [xargs split at newlines not spaces](https://stackoverflow.com/questions/23142776/xargs-split-at-newlines-not-spaces)
 > <br>
 > - tips:
 >   - `--delimiter=delim`, `-d delim`
@@ -1333,8 +1415,7 @@ second paragraph
 >   - `-t`, `--verbose`
 {% endhint %}
 
-
-### complex commands with xargs
+## complex commands with xargs
 
 > [!NOTE|label:references:]
 > - [using xargs with output piped to awk throws syntax error](https://stackoverflow.com/a/61665869/2940319)
@@ -1356,7 +1437,7 @@ $ echo ip1 ip2 ip3 ... |
          xargs -n1 bash -c 'echo -e "\n...... $@ ......"; /sbin/ping -t1 -c1 -W0 "$@" | sed '/^$/d'' _
   ```
 
-### [multiple move](https://en.wikipedia.org/wiki/Xargs#Placement_of_arguments)
+## [multiple move](https://en.wikipedia.org/wiki/Xargs#Placement_of_arguments)
 ```bash
 $ mkdir ~/backups
 $ find /path -type f -name '*~' -print0 | xargs -0 -I % cp -a % ~/backups
@@ -1367,7 +1448,7 @@ $ find /path -type f -name '*~' -print0 | xargs -0 -I % cp -a % ~/backups
 $ find /path -type f -name '*~' -print0 | xargs -0 sh -c 'if [ $# -gt 0 ]; then cp -a "$@" ~/backup; fi' sh
 ```
 
-### [subset of arguments](https://en.wikipedia.org/wiki/Xargs#Operating_on_a_subset_of_arguments_at_a_time)
+## [subset of arguments](https://en.wikipedia.org/wiki/Xargs#Operating_on_a_subset_of_arguments_at_a_time)
 ```bash
 $ echo {0..9} | xargs -n 2
 0 1
@@ -1377,21 +1458,24 @@ $ echo {0..9} | xargs -n 2
 8 9
 ```
 
-### sort all shell script by line number
+## sort all shell script by line number
 
 > [!TIP]
 > [Pipe `xargs` into `find`](http://xion.io/post/code/shell-xargs-into-find.html)
 
 ```bash
 $ find . -name "*.sh" | xargs wc -l | sort -hr
+
+# better solution
+$ find . -name "*.sh" -print0 | wc -l --files0-from=- | sort -hr
 ```
 
-### diff every git commit against its parent
+## diff every git commit against its parent
 ```bash
 $ git log --format="%H %P" | xargs -L 1 git diff
 ```
 
-### [running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
+## [running multiple commands with xargs](https://stackoverflow.com/questions/6958689/running-multiple-commands-with-xargs)
 
 > [!TIP]
 > precondition:<br>
@@ -1437,7 +1521,7 @@ command 2: ###this is a comment
     done < a.txt
   ```
 
-#### compress sub-folders
+### compress sub-folders
 ```bash
 $ find . -maxdepth 1 ! -path . -type d -print0 |
        xargs -0 -I @@ bash -c '{ \
@@ -1446,7 +1530,7 @@ $ find . -maxdepth 1 ! -path . -type d -print0 |
        }'
 ```
 
-#### ping multiple IPs
+### ping multiple IPs
 
 > [!TIP]
 > ```bash
@@ -1479,19 +1563,19 @@ round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
   $ echo domain-{1..4}.com | fmt -1 | xargs -L1 ping -c1 -t1 -W0
   ```
 
-### [read by char](https://stackoverflow.com/a/28800844/2940319)
+## [read by char](https://stackoverflow.com/a/28800844/2940319)
 ```bash
 $ printf 'mark spitz' | while read -r -n1 c; do printf "[%c]" "$c"; done
 [m][a][r][k][][s][p][i][t][z]
 ```
 
-## `find`
+# `find`
 
 > [!NOTE|label:reference:]
 > - [Everything CLI: FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
 > - [How to get only names from find command without path](https://superuser.com/a/559827/112396)
 
-### output file name only
+## output file name only
 ```bash
 # has `./` by default
 $ find . -type f
@@ -1527,7 +1611,7 @@ mkbundle
 cfssljson
 ```
 
-### cat config file in all `.git` folder
+## cat config file in all `.git` folder
 - `xargs` && `cat`
   ```bash
   $ find . -type d -name '.git' -print0 | xargs -0 -I {} cat {}/config
@@ -1538,7 +1622,7 @@ cfssljson
   $ find . -type d -name '.git' -exec cat {}/config \;
   ```
 
-### `exec` and `sed`
+## `exec` and `sed`
 - change bunches IP address
   ```bash
   $ find ${JENKINS_HOME}/jobs \
@@ -1548,12 +1632,12 @@ cfssljson
          -exec sed -i 's/1.2.3./4.5.6./g' {} \; -print
   ```
 
-### find and rename
+## find and rename
 ```bash
 $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
 ```
 
-### [find and exclude](https://stackoverflow.com/a/60439808/2940319)
+## [find and exclude](https://stackoverflow.com/a/60439808/2940319)
 ```bash
 $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and -not -regex ".*/(node_modules|vendor)/.*"
 ```
@@ -1562,7 +1646,7 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
   $ find . -regex-type posix-extended -regex ".*def/incoming.*|.*456/incoming.*" -prune -o -print
   ```
 
-### `find` && `tar`
+## `find` && `tar`
 
 > [!TIP]
 > more can be found in [imarslo: find and tar](../../devops/ssh.html#ssh-and-tar)
@@ -1578,7 +1662,7 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
   ```
 
 
-### inject commands inside find
+## inject commands inside find
 
 > [!NOTE|label:references:]
 > - [Find functions, commands, and builtins [duplicate]](https://unix.stackexchange.com/a/62230/29178)
@@ -1592,11 +1676,11 @@ find -exec bash -c '
     ' find-bash {} +
 ```
 
-### printf
+## printf
 > [!NOTE|label:references:]
 > - [How to Use find -printf in Linux?](https://www.codedodle.com/find-printf.html)
 
-#### time formats
+### time formats
 
 > [!NOTE|label:references:]
 > - [`printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
@@ -1670,8 +1754,8 @@ find -exec bash -c '
     find . -type d -printf "%d    %-30p %-10u %-10g %-5m %T+\n" | sort
     ```
 
-## trim
-### trim tailing chars
+# trim
+## trim tailing chars
 > ```bash
 > str='1234567890'
 > ```
@@ -1688,7 +1772,7 @@ find -exec bash -c '
   1234567
   ```
 
-### [remove leading & trailing whitespace](https://stackoverflow.com/a/11791508/2940319)
+## [remove leading & trailing whitespace](https://stackoverflow.com/a/11791508/2940319)
 ```bash
 $ str="    aaaa    bbbb      "
 $ echo "$str" | sed 's:^ *::; s: *$::'
@@ -1723,7 +1807,7 @@ $ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
   ..aaa bbb..
   ```
 
-### remove empty lines
+## remove empty lines
 
 > [!NOTE|label:references:]
 > - [Delete empty lines using sed](https://stackoverflow.com/a/39139322/2940319)
@@ -1777,7 +1861,7 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
 28·29·30·31·········␊
 ```
 
-### [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
+## [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
 
 > [!NOTE|label:reference]
 > - [shellcheck SC2001](https://github.com/koalaman/shellcheck/wiki/SC2001)
@@ -1827,7 +1911,7 @@ echo "${string:0:$(( position - 1 ))}${replacement}${string:position}"
   aa|bb|cc
   ```
 
-### [replace with position](https://stackoverflow.com/a/54680736/2940319)
+## [replace with position](https://stackoverflow.com/a/54680736/2940319)
 ```bash
 $ string=aaaaa
 $ replacement=b
@@ -1841,7 +1925,7 @@ aabaa
   aabaa
   ```
 
-### check line ending
+## check line ending
 
 > [!NOTE|label:references:]
 > - check ascii via terminal
@@ -1926,7 +2010,7 @@ aabaa
   $ vim -c '%!xxd' a.txt
   ```
 
-### remove the ending '\n'
+## remove the ending '\n'
 
 > [!NOTE|label:references:]
 > - [Why should text files end with a newline?](https://stackoverflow.com/q/729692/2940319)
@@ -2000,8 +2084,8 @@ aabaa
   0000007
   ```
 
-## fold
-### check the params valid
+# fold
+## check the params valid
 
 {% hint style='tip' %}
 > available params should be contained by 'iwfabcem'
@@ -2016,7 +2100,7 @@ for _p in $(echo "${param}" | fold -w1); do
 done
 ```
 
-## insert new line
+# insert new line
 - insert right after the second match string
 
 {% codetabs name="original", type="bash" -%}
@@ -2034,7 +2118,7 @@ DCR
 $ echo -e "DCR\nDCR\nDCR" | awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
 ```
 
-## write a file without indent space
+# write a file without indent space
 ```bash
 $ sed -e 's:^\s*::' > ~/file-without-indent-space.txt < <(echo "items.find ({
       \"repo\": \"repo-name\",
@@ -2083,8 +2167,8 @@ items.find ({
 {%- endcodetabs %}
 
 
-## cat
-### `<< -` and `<<`
+# cat
+## `<< -` and `<<`
 
 <!--sec data-title="doc for <<[-]word" data-id="section1" data-show=true data-collapse=true ces-->
  [Here Documents](https://en.wikipedia.org/wiki/Here_document#Unix_shells):

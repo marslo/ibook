@@ -3,11 +3,13 @@
 
 - [oneline commands](#oneline-commands)
   - [cat and EOF](#cat-and-eof)
+  - [while read from input](#while-read-from-input)
   - [ssh](#ssh)
   - [find and tar](#find-and-tar)
   - [find and rename](#find-and-rename)
   - [find and sort](#find-and-sort)
   - [download and extract](#download-and-extract)
+  - [mirror website](#mirror-website)
   - [kubectl apply from stdin](#kubectl-apply-from-stdin)
 - [sync mirror](#sync-mirror)
 - [get all declare](#get-all-declare)
@@ -123,6 +125,18 @@
   EOF
   ```
 
+### while read from input
+
+> [!NOTE|label:references:]
+> - [How to use a shell command to only show the first column and last column in a text file?](https://unix.stackexchange.com/a/148416/29178)
+
+```bash
+$ while IFS=\| read -r col1 col2; do echo ">> $col1 .. $col2 <<"; done <<\INPUT
+  a|b
+  INPUT
+>> a .. b <<
+```
+
 ### ssh
 - compress and ssh and extract
   ```bash
@@ -218,6 +232,17 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
   ```bash
   $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
   ```
+
+### [mirror website](https://explainshell.com/explain?cmd=wget+--mirror+--page-requisites+--html-extension+--convert-links++example.com)
+```bash
+$ wget --mirror --page-requisites --html-extension --convert-links $URL
+
+# or https://www.linuxjournal.com/content/downloading-entire-web-site-wget
+# wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains website.org --no-parent sample.com
+
+# or https://superuser.com/a/1415765/112396
+$ wget --recursive --level 5 --no-clobber --page-requisites --adjust-extension --span-hosts --convert-links --restrict-file-names=windows --domains sample.com --no-parent sample.com
+```
 
 ### kubectl apply from stdin
 ```bash
