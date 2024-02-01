@@ -502,19 +502,18 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
   - [more](https://stackoverflow.com/a/28624256/2940319)
     ```bash
     alias rxvt='urxvt -fg'\''#111111'\'' -bg '\''#111111'\''
-               │         │┊┊|       │┊┊│     │┊┊│       │┊┊│
-               └─STRING──┘┊┊└─STRIN─┘┊┊└─STR─┘┊┊└─STRIN─┘┊┊│
-                          ┊┊         ┊┊       ┊┊         ┊┊│
-                          ┊┊         ┊┊       ┊┊         ┊┊│
-                          └┴─────────┴┴───┰───┴┴─────────┴┘│
-                              All escaped single quotes    │
-                                                           │
-                                                           ?
+    #          │         │┊┊|       │┊┊│     │┊┊│       │┊┊│
+    #          └─STRING──┘┊┊└─STRIN─┘┊┊└─STR─┘┊┊└─STRIN─┘┊┊│
+    #                     ┊┊         ┊┊       ┊┊         ┊┊│
+    #                     ┊┊         ┊┊       ┊┊         ┊┊│
+    #                     └┴─────────┴┴───┰───┴┴─────────┴┘│
+    #                         All escaped single quotes    │
+    #                                                      │
+    #                                                      ?
 
     alias rc='sed '"'"':a;N;$!ba;s/\n/, /g'"'"
     alias rc='sed '\'':a;N;$!ba;s/\n/, /g'\'
     ```
-
 ## tricky
 - add `'` or `"` to strings
 

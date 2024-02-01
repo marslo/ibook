@@ -17,6 +17,8 @@
     - [last 2 columns](#last-2-columns)
     - [second-to-last column ( `--NF` )](#second-to-last-column----nf-)
     - [last N columns](#last-n-columns)
+    - [get major domain](#get-major-domain)
+    - [trim](#trim)
 - [calculate](#calculate)
   - [length](#length)
     - [longest line](#longest-line)
@@ -30,10 +32,12 @@
     - [sum since nth line](#sum-since-nth-line)
     - [sum for each column](#sum-for-each-column)
   - [calculate word count in a file](#calculate-word-count-in-a-file)
+  - [maximize & minimize](#maximize--minimize)
 - [removal](#removal)
   - [remove non-duplicated lines](#remove-non-duplicated-lines)
   - [show matched values](#show-matched-values)
 - [field](#field)
+  - [multiple delimiters](#multiple-delimiters)
   - [field separator variable](#field-separator-variable)
   - [FS/OFS](#fsofs)
 - [parser](#parser)
@@ -44,6 +48,8 @@
 {% hint style='tip' %}
 > references:
 > - [awk printf](http://kb.ictbanking.net/article.php?id=688)
+> - [Gawk: Effective AWK Programming](https://www.gnu.org/software/gawk/manual/) | [pdf](https://www.gnu.org/software/gawk/manual/gawk.pdf)
+>   -[gnu.org/manual](https://www.gnu.org/manual/)
 > - [4.5 Specifying How Fields Are Separated](https://www.gnu.org/software/gawk/manual/html_node/Field-Separators.html)
 > - [awk裡好用的變數：FS, OFS, RS, ORS, NR, NF, FILENAME, FNR](https://weitinglin.com/2016/10/17/awk%E8%A3%A1%E5%A5%BD%E7%94%A8%E7%9A%84%E8%AE%8A%E6%95%B8%EF%BC%9Afs-ofs-rs-ors-nr-nf-filename-fnr/comment-page-1/)
 {% endhint %}
@@ -67,19 +73,16 @@
 > - [* An efficient way to transpose a file in Bash](https://stackoverflow.com/a/1729980/2940319)
 
 ```bash
-awk '{
-       for ( i=1; i<=NF; i++ ) arr[i] = (arr[i]? arr[i] FS $i: $i)
-     } END {
-       for ( i in arr ) print arr[i]
-     }
-   ' sample.txt
-```
+$ awk '{
+          for ( i=1; i<=NF; i++ ) arr[i] = (arr[i]? arr[i] FS $i: $i)
+        } END {
+          for ( i in arr ) print arr[i]
+        }
+      ' sample.txt
 
-- result
-  ```bash
-  job c++ java php
-  salary 13 14 12
-  ```
+job c++ java php
+salary 13 14 12
+```
 
 - or
   ```bash
@@ -566,6 +569,43 @@ $ awk '{ for(i=1;i<=5;i++) $i="";print }' <<INPUT
   c6 c7 c8 c9 c10
   ```
 
+### [get major domain](https://unix.stackexchange.com/a/711622/29178)
+```bash
+$ echo -e 'a.domain.com\nb.domain.com\nc.domain.com' |
+  awk -F. -v OFS='.' '{ print $(NF-1), $NF }'
+domain.com
+domain.com
+domain.com
+```
+
+### trim
+
+> [!NOTE|label:references:]
+> - [How can I trim white space from a variable in awk?](https://stackoverflow.com/a/27158086/2940319)
+>   - [andrewrcollins/trim.awk](https://gist.github.com/andrewrcollins/1592991)
+> - [How can I keep the leading white spaces while removing last field in awk?](https://stackoverflow.com/q/59855038/2940319)
+
+```bash
+# original string
+$ echo "man(1), apropos(1), whatis(1) - display online manual documentation pages" |
+  awk -F"(\\\([0-9]\\\),?)" \
+        '{ printf "|%s|", $NF }'
+| - display online manual documentation pages|
+#^ space here
+
+# remove leading & trailing space
+$ echo "man(1), apropos(1), whatis(1) - display online manual documentation pages" |
+  awk -F"(\\\([0-9]\\\),?)" \
+        '{ gsub(/^[ \t]+|[ \t]+$/, "", $NF); printf "|%s|", $NF}'
+|- display online manual documentation pages|
+#^ remove `-` and space after it
+
+$ echo "man(1), apropos(1), whatis(1) - display online manual documentation pages" |
+  awk -F"(\\\([0-9]\\\),?)" \
+        '{ gsub(/^[ \t-?]+|[-? \t]+$/, "", $NF); printf "|%s|", $NF}'
+|display online manual documentation pages|
+```
+
 # calculate
 ## length
 ### longest line
@@ -845,6 +885,30 @@ $ < sample.txt \
         sort -gk2
   ```
 
+## maximize & minimize
+
+- [maximize and second maximize](https://unix.stackexchange.com/a/333312/29178)
+  ```bash
+  $ awk '{ for(i=1;i<=NF;i++) if($i>maxval) maxval=$i; }
+           NR%4==0 { print maxval ; maxval= -1}' <<INPUT
+      1 2 3
+    4 5 6 7 7
+    9 7 7 6 5
+      4 3 2
+      1 2 3
+    4 6 7 7 7
+    7 7 7 6 5
+      4 3 2
+  INPUT
+
+  9
+  7
+
+  # alternative using array
+  $ awk '{ x=split($0,a);asort(a);if(a[x]>maxval)maxval=a[x] }
+           NR%4==0 { print maxval ; maxval= -1}'
+  ```
+
 # removal
 ## remove non-duplicated lines
 {% hint style='tip' %}
@@ -910,6 +974,71 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
   ```
 
 # field
+
+## multiple delimiters
+
+> [!NOTE]
+> - [multiple Field Separators in awk](https://stackoverflow.com/a/15665156/2940319)
+> - [Using Multiple Delimiters in Awk](https://www.baeldung.com/linux/awk-several-delimiters)
+
+- `-F"[..]"`
+  ```bash
+  $ echo "  man(1), apropos(1), whatis(1) - display online manual documentation pages" |
+    awk -F"[,-]" '{print $1, "\n", $2, "\n", $3, "\n", $4}'
+    man(1)
+    apropos(1)
+    whatis(1)
+    display online manual documentation pages
+  ```
+
+- `-F"(..)"`
+
+  > [!TIP]
+  > the `\` should be `\\\` in "(..)"
+
+  ```bash
+  $ echo "man(1), apropos(1), whatis(1) - display online manual documentation pages" |
+    awk -F"(\\\([0-9]\\\),?)" \
+        '{ for(i=1;i<NF;i++) {
+             sub(/ +/, "", $i);
+             sub(/ +-? +/, "", $NF);
+             if (length($i) != 0) printf ("%s - %s\n", $i, $NF)
+         } }'
+  man - display online manual documentation pages
+  apropos - display online manual documentation pages
+  whatis - display online manual documentation pages
+  ```
+
+  - simprude solution
+    ```bash
+    # remove everything between/include first `(` to last `)`
+    $ echo "man(1), apropos(1), whatis(1) - display online manual documentation pages" |
+      sed -r 's/(\(.+\))//g'
+    man - display online manual documentation pages
+    ```
+
+- `-F'..'`
+  ```bash
+  $ echo '-foo {{0.000 0.000} {648.0 0.000} {648.0 1980.0} {0.000 1980.0} {0.000 0.000}}' |
+    awk -F'}+|{+| ' '{for (i=1; i<=NF; i++) if ($i ~ "[0-9]") print $i}'
+  0.000
+  0.000
+  648.0
+  0.000
+  648.0
+  1980.0
+  0.000
+  1980.0
+  0.000
+  0.000
+  ```
+
+- `BEGIN{ FS=".." }`
+  ```bash
+  $ echo '-foo {{0.000 0.000} {648.0 0.000} {648.0 1980.0} {0.000 1980.0} {0.000 0.000}}' |
+    awk 'BEGIN{FS="}+|{+| "} {for(i=1;i<=NF;i++) if($i ~ "[0-9]")print $i}'
+  ```
+
 ## field separator variable
 - multiple separators
 
