@@ -12,6 +12,8 @@
   - [installing from local packages](#installing-from-local-packages)
 - [config](#config)
   - [list all configs](#list-all-configs)
+- [tricky](#tricky)
+  - [get size of installed pip package](#get-size-of-installed-pip-package)
 - [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -232,6 +234,66 @@ user:
   For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
   For variant 'site', will try loading '/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/pip.conf'
   ```
+
+## tricky
+### [get size of installed pip package](https://stackoverflow.com/a/60850841/2940319)
+```bash
+$ pip list |
+      tail -n +3 |
+      awk '{print $1}' |
+      xargs pip show |
+      grep --color=never -E 'Location:|Name:' |
+      cut -d ' ' -f 2 |
+      paste -d ' ' - - |
+      awk '{print $2 "/" tolower($1)}' |
+      xargs du -sh 2> /dev/null |
+      sort -hr
+124M  /Users/marslo/Library/Python/3.12/lib/python/site-packages/cmake
+28M   /usr/local/lib/python3.12/site-packages/kubernetes
+16M   /usr/local/lib/python3.12/site-packages/pip
+13M   /usr/local/lib/python3.12/site-packages/ansible
+9.9M  /usr/local/lib/python3.12/site-packages/cryptography
+8.8M  /usr/local/lib/python3.12/site-packages/pygments
+5.1M  /usr/local/lib/python3.12/site-packages/setuptools
+1.5M  /usr/local/lib/python3.12/site-packages/msgpack
+1.5M  /usr/local/lib/python3.12/site-packages/greenlet
+1.3M  /usr/local/lib/python3.12/site-packages/pycparser
+1.3M  /usr/local/lib/python3.12/site-packages/oauthlib
+1.2M  /usr/local/lib/python3.12/site-packages/jinja2
+948K  /usr/local/lib/python3.12/site-packages/pyasn1
+848K  /usr/local/lib/python3.12/site-packages/cffi
+824K  /Users/marslo/Library/Python/3.12/lib/python/site-packages/fortls
+820K  /usr/local/lib/python3.12/site-packages/click
+784K  /usr/local/lib/python3.12/site-packages/urllib3
+556K  /usr/local/lib/python3.12/site-packages/wheel
+556K  /Users/marslo/Library/Python/3.12/lib/python/site-packages/pynvim
+520K  /usr/local/lib/python3.12/site-packages/tqdm
+520K  /usr/local/lib/python3.12/site-packages/pipx
+520K  /usr/local/lib/python3.12/site-packages/idna
+456K  /usr/local/lib/python3.12/site-packages/requests
+360K  /usr/local/lib/python3.12/site-packages/packaging
+348K  /usr/local/lib/python3.12/site-packages/asciidoc
+312K  /usr/local/lib/python3.12/site-packages/certifi
+244K  /usr/local/lib/python3.12/site-packages/rsa
+204K  /usr/local/lib/python3.12/site-packages/argcomplete
+204K  /Users/marslo/Library/Python/3.12/lib/python/site-packages/json5
+196K  /usr/local/lib/python3.12/site-packages/tabulate
+156K  /usr/local/lib/python3.12/site-packages/distlib
+140K  /usr/local/lib/python3.12/site-packages/resolvelib
+96K   /usr/local/lib/python3.12/site-packages/argopt
+88K   /usr/local/lib/python3.12/site-packages/cachetools
+84K   /usr/local/lib/python3.12/site-packages/userpath
+44K   /usr/local/lib/python3.12/site-packages/platformdirs
+32K   /usr/local/lib/python3.12/site-packages/bashate
+28K   /usr/local/lib/python3.12/site-packages/pbr
+20K   /usr/local/lib/python3.12/site-packages/markupsafe
+0     /usr/local/lib/python3.12/site-packages/virtualenv
+0     /usr/local/lib/python3.12/site-packages/tbb
+0     /usr/local/lib/python3.12/site-packages/openvino
+0     /usr/local/lib/python3.12/site-packages/numpy
+0     /usr/local/lib/python3.12/site-packages/filelock
+0     /usr/local/lib/python3.12/site-packages/docutils
+```
 
 ## troubleshooting
 

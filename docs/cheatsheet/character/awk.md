@@ -12,6 +12,11 @@
     - [alignment with fixed column](#alignment-with-fixed-column)
     - [append space](#append-space)
     - [convert csv format](#convert-csv-format)
+  - [removal](#removal)
+    - [remove non-duplicated lines](#remove-non-duplicated-lines)
+  - [combination](#combination)
+    - [git-st](#git-st)
+  - [show matched values](#show-matched-values)
   - [split](#split)
   - [last n columns](#last-n-columns)
     - [last 2 columns](#last-2-columns)
@@ -33,9 +38,6 @@
     - [sum for each column](#sum-for-each-column)
   - [calculate word count in a file](#calculate-word-count-in-a-file)
   - [maximize & minimize](#maximize--minimize)
-- [removal](#removal)
-  - [remove non-duplicated lines](#remove-non-duplicated-lines)
-  - [show matched values](#show-matched-values)
 - [field](#field)
   - [multiple delimiters](#multiple-delimiters)
   - [field separator variable](#field-separator-variable)
@@ -395,6 +397,102 @@ a   b   c
     x   y
 dd  ee  ff
 ```
+
+## removal
+### remove non-duplicated lines
+{% hint style='tip' %}
+> pre-condition
+> ```bash
+> $ cat sample.txt | xargs
+> a a b c d e e e f
+> ```
+{% endhint %}
+
+```bash
+$ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
+```
+
+- or
+  ```bash
+  $ awk '{ arr[$1]++ } END {
+           for (key in arr) {
+             if ( arr[key] > 1 ){ print arr[key], key }
+           }
+         }' \
+    sample.txt
+  ```
+
+- [show only duplicated lines](https://superuser.com/a/1107659/112396)
+  ```bash
+  $ awk 'seen[$1]++' sample.txt
+  ```
+  - show only non-duplicated lines
+    ```bash
+    $ awk '!seen[$1]++' sample.txt
+    ```
+
+## combination
+
+> [!NOTE|label:references:]
+> - [Using AWK to Process Input from Multiple Files](https://stackoverflow.com/a/14984673/2940319)
+>   - `FNR == NR` : read 1st file
+>   - `FNR != NR` : read 2nd file
+> - [AWK compare two columns form different files and merge outputs [duplicate]](https://stackoverflow.com/a/64139395/2940319)
+> - [Awk asking combine two files](https://stackoverflow.com/q/29476542/2940319)
+> - [How to combine output of `git diff --name-status` and `git diff --stat` commands?](https://stackoverflow.com/a/55202319/2940319)
+
+### [git-st](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-st)
+
+> [!NOTE]
+> objective: `git status` + `git diff --stat`
+> - [* awk union two columns from different output files](https://stackoverflow.com/q/77919418/2940319)
+
+```bash
+awk 'FNR==NR { map[$1]=$2" "$3" "$4 }
+     FNR != NR { if ($2 in map) {print $0, map[$2]} else { print $0 } }
+    ' <(git --no-pager diff --stat --relative | head -n-1 ) <(git status -sb)
+
+## main
+ M a | 2 ++
+?? b
+
+# better solution
+declare gdiff
+gdiff=$(git --no-pager diff --stat --relative | head -n-1)
+awk 'FNR==NR { k=$1; $1=""; map[k]=$0; next } { print $0 map[$2] }' \
+    <(echo -e "${gdiff}") <(git status -sb)
+```
+
+## show matched values
+> - [Comparison Operators](https://www.gnu.org/software/gawk/manual/html_node/Comparison-Operators.html)
+> - [Regular Expressions](http://www.math.utah.edu/docs/info/gawk_5.html)
+> - [How to check the checksum through commandline?](https://stackoverflow.com/a/21956985/2940319)
+
+- find distrib name from `/etc/lsb-release`
+  ```bash
+  $ awk -F= '$1 == "DISTRIB_ID" {print $2;}' /etc/lsb-release
+  Ubuntu
+
+  # or
+  $ awk -F= '$1=="ID" {print $2;}' /etc/os-release
+  ubuntu
+  ```
+
+- [find multiple matches](https://unix.stackexchange.com/q/6345/29178)
+  ```bash
+  $ awk -F= '$1 ~ /DISTRIB_ID|DISTRIB_RELEASE/ {print $2;}' /etc/lsb-release
+  Ubuntu
+  18.04
+  ```
+
+- return `true` or `false` according to matches result
+  ```bash
+  $ standard='2cf1b1652a5b268ec80717ef33fef111'
+  $ md5sum ~/.bashrc | awk '$1 != "${standard}" {exit 1}'
+
+  # or
+  $ md5sum ~/.bashrc | awk '$1 == "${standard}" {print "true"}'
+  ```
 
 
 ## split
@@ -909,70 +1007,6 @@ $ < sample.txt \
            NR%4==0 { print maxval ; maxval= -1}'
   ```
 
-# removal
-## remove non-duplicated lines
-{% hint style='tip' %}
-> pre-condition
-> ```bash
-> $ cat sample.txt | xargs
-> a a b c d e e e f
-> ```
-{% endhint %}
-
-```bash
-$ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
-```
-
-- or
-  ```bash
-  $ awk '{ arr[$1]++ } END {
-           for (key in arr) {
-             if ( arr[key] > 1 ){ print arr[key], key }
-           }
-         }' \
-    sample.txt
-  ```
-
-- [show only duplicated lines](https://superuser.com/a/1107659/112396)
-  ```bash
-  $ awk 'seen[$1]++' sample.txt
-  ```
-  - show only non-duplicated lines
-    ```bash
-    $ awk '!seen[$1]++' sample.txt
-    ```
-
-## show matched values
-> - [Comparison Operators](https://www.gnu.org/software/gawk/manual/html_node/Comparison-Operators.html)
-> - [Regular Expressions](http://www.math.utah.edu/docs/info/gawk_5.html)
-> - [How to check the checksum through commandline?](https://stackoverflow.com/a/21956985/2940319)
-
-- find distrib name from `/etc/lsb-release`
-  ```bash
-  $ awk -F= '$1 == "DISTRIB_ID" {print $2;}' /etc/lsb-release
-  Ubuntu
-
-  # or
-  $ awk -F= '$1=="ID" {print $2;}' /etc/os-release
-  ubuntu
-  ```
-
-- [find multiple matches](https://unix.stackexchange.com/q/6345/29178)
-  ```bash
-  $ awk -F= '$1 ~ /DISTRIB_ID|DISTRIB_RELEASE/ {print $2;}' /etc/lsb-release
-  Ubuntu
-  18.04
-  ```
-
-- return `true` or `false` according to matches result
-  ```bash
-  $ standard='2cf1b1652a5b268ec80717ef33fef111'
-  $ md5sum ~/.bashrc | awk '$1 != "${standard}" {exit 1}'
-
-  # or
-  $ md5sum ~/.bashrc | awk '$1 == "${standard}" {print "true"}'
-  ```
-
 # field
 
 ## multiple delimiters
@@ -1019,7 +1053,7 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
 
 - `-F'..'`
   ```bash
-  $ echo '-foo {{0.000 0.000} {648.0 0.000} {648.0 1980.0} {0.000 1980.0} {0.000 0.000}}' |
+  $ echo '-foo { {0.000 0.000} {648.0 0.000} {648.0 1980.0} {0.000 1980.0} {0.000 0.000} }' |
     awk -F'}+|{+| ' '{for (i=1; i<=NF; i++) if ($i ~ "[0-9]") print $i}'
   0.000
   0.000
@@ -1035,7 +1069,7 @@ $ awk '{ print $1 }' sample.txt | sort | uniq -cd | sort -g
 
 - `BEGIN{ FS=".." }`
   ```bash
-  $ echo '-foo {{0.000 0.000} {648.0 0.000} {648.0 1980.0} {0.000 1980.0} {0.000 0.000}}' |
+  $ echo '-foo { {0.000 0.000} {648.0 0.000} {648.0 1980.0} {0.000 1980.0} {0.000 0.000} }' |
     awk 'BEGIN{FS="}+|{+| "} {for(i=1;i<=NF;i++) if($i ~ "[0-9]")print $i}'
   ```
 

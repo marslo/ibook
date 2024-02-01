@@ -819,6 +819,7 @@ a b
 > - [13.1 Options to diff](https://www.gnu.org/software/diffutils/manual/html_node/diff-Options.html)
 > - [Diff and "--GTYPE-group-format"](https://stackoverflow.com/q/8098045/2940319)
 > - [diff - output line-numbers](https://unix.stackexchange.com/a/34890/29178)
+> - [`diffstat`](https://stackoverflow.com/a/7024876/2940319)
 
 - show all status
   ```bash
