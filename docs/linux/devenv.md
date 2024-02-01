@@ -39,6 +39,8 @@
     - [to use the bundled libc++ please add the following LDFLAGS](#to-use-the-bundled-libc-please-add-the-following-ldflags)
     - [check osx compilers](#check-osx-compilers)
     - [check *.o file](#check-o-file)
+- [env](#env)
+  - [manpath](#manpath)
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -271,19 +273,18 @@ build $ make install DESTDIR=/root/glibc-2.14/staging
   ```
 
 - manpath
+  ```bash
+  $ echo $MANPATH
+  /usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
 
-```bash
-$ echo $MANPATH
-/usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+  $ eclr
+  >> unset MANPATH
+  .. /usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+  $ echo $MANPATH
 
-$ eclr
->> unset MANPATH
-.. /usr/local/opt/coreutils/libexec/gnuman:/usr/local/share/man:/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
-$ echo $MANPATH
-
-$ manpath
-/Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/nvim/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/opt/node@21/share/man:/usr/local/Cellar/openjdk/21.0.1/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
-```
+  $ manpath
+  /Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/nvim/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/opt/node@21/share/man:/usr/local/Cellar/openjdk/21.0.1/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+  ```
 
 ## lua
 
@@ -1141,6 +1142,115 @@ proc:::exec-success
 : probe description proc:::exec-success does not match any probes. System Integrity Protection is on
 ```
 <!--endsec-->
+
+# env
+
+## manpath
+
+> [!NOTE|label:references:]
+> - [macOS Terminal not using correct manpath](https://apple.stackexchange.com/q/376901/254265)
+> - [`apropos` Linux Command Explained {with Examples}](https://phoenixnap.com/kb/apropos-linux)
+
+- show manpath
+  ```bash
+  $ man -aw bash
+  /usr/local/share/man/man1/bash.1
+  /usr/share/man/man1/bash.1
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man/man1/bash.1
+
+  $ manpath | tr ':' '\n'
+  # or
+  $ manpath | perl -nE 's/:/\n/g; print'
+  /Users/marslo/perl5/man
+  /Users/marslo/.local/share/man
+  /usr/local/Cellar/icu4c@71.1/71.1/share/man
+  /usr/local/vim/share/man
+  /Applications/MacVim.app/Contents/man
+  /usr/local/opt/llvm/share/man
+  /usr/local/opt/util-linux/share/man
+  /usr/local/opt/gnu-getopt/share/man
+  /usr/local/opt/binutils/share/man
+  /usr/local/opt/ruby/share/man
+  /usr/local/opt/tcl-tk/share/man
+  /usr/local/Cellar/node/21.1.0/share/man
+  /usr/local/Cellar/openjdk/21.0.2/libexec/openjdk.jdk/Contents/Home/man
+  /usr/local/opt/ed/share/man
+  /usr/local/opt/git-extras/share/man
+  /usr/local/opt/gettext/share/man
+  /usr/local/opt/file-formula/share/man
+  /usr/local/opt/openldap/share/man
+  /usr/local/opt/curl/share/man
+  /usr/local/opt/openssl/share/man
+  /usr/local/opt/libiconv/share/man
+  /usr/local/opt/sqlite/share/man
+  /usr/local/share/man
+  /usr/local/man
+  /usr/share/man
+  /Library/Apple/usr/share/man
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man
+  /Applications/Xcode.app/Contents/Developer/usr/share/man
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+  ```
+
+- config file
+  ```bash
+  $ cat /private/etc/man.conf | sed -r '/^(#.*)$/d;/^\s*$/d'
+  MANPATH   /usr/share/man
+  MANPATH   /usr/local/share/man
+  MANPATH   /usr/X11/man
+  MANPATH   /Library/Apple/usr/share/man
+  MANSECT   1:1p:8:2:3:3p:4:5:6:7:9:0p:tcl:n:l:p:o
+
+  $ cat /etc/man.conf | sed -r '/^(#.*)$/d;/^\s*$/d'
+  MANPATH   /usr/share/man
+  MANPATH   /usr/local/share/man
+  MANPATH   /usr/X11/man
+  MANPATH   /Library/Apple/usr/share/man
+  MANSECT   1:1p:8:2:3:3p:4:5:6:7:9:0p:tcl:n:l:p:o
+
+  $ cat /etc/manpaths
+  /usr/share/man
+  /usr/local/share/man
+  ```
+
+- manpath
+  ```bash
+  $ manpath -d
+  -- Searching PATH for man directories
+  --   Adding /Users/marslo/perl5/man to manpath
+  --   Adding /Users/marslo/.local/share/man to manpath
+  --   Adding /usr/local/Cellar/icu4c@71.1/71.1/share/man to manpath
+  --   Adding /usr/local/vim/share/man to manpath
+  --   Adding /Applications/MacVim.app/Contents/man to manpath
+  --   Adding /usr/local/opt/llvm/share/man to manpath
+  --   Adding /usr/local/opt/util-linux/share/man to manpath
+  --   Adding /usr/local/opt/gnu-getopt/share/man to manpath
+  --   Adding /usr/local/opt/binutils/share/man to manpath
+  --   Adding /usr/local/opt/ruby/share/man to manpath
+  --   Adding /usr/local/opt/tcl-tk/share/man to manpath
+  --   Adding /usr/local/Cellar/node/21.1.0/share/man to manpath
+  --   Adding /usr/local/Cellar/openjdk/21.0.2/libexec/openjdk.jdk/Contents/Home/man to manpath
+  --   Adding /usr/local/opt/ed/share/man to manpath
+  --   Adding /usr/local/opt/git-extras/share/man to manpath
+  --   Adding /usr/local/opt/gettext/share/man to manpath
+  --   Adding /usr/local/opt/file-formula/share/man to manpath
+  --   Adding /usr/local/opt/openldap/share/man to manpath
+  --   Adding /usr/local/opt/curl/share/man to manpath
+  --   Adding /usr/local/opt/openssl/share/man to manpath
+  --   Adding /usr/local/opt/libiconv/share/man to manpath
+  --   Adding /usr/local/opt/sqlite/share/man to manpath
+  --   Adding /usr/local/share/man to manpath
+  --   Adding /usr/local/man to manpath
+  --   Adding /usr/share/man to manpath
+  --   Adding /Library/Apple/usr/share/man to manpath
+  --   Adding /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man to manpath
+  --   Adding /Applications/Xcode.app/Contents/Developer/usr/share/man to manpath
+  --   Adding /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man to manpath
+  -- Adding default manpath entries
+  -- Parsing config file: /etc/man.conf
+  -- Using manual path: /Users/marslo/perl5/man:/Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/opt/llvm/share/man:/usr/local/opt/util-linux/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/Cellar/node/21.1.0/share/man:/usr/local/Cellar/openjdk/21.0.2/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/git-extras/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/openldap/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/local/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+  /Users/marslo/perl5/man:/Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/opt/llvm/share/man:/usr/local/opt/util-linux/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/Cellar/node/21.1.0/share/man:/usr/local/Cellar/openjdk/21.0.2/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/git-extras/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/openldap/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/local/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
+  ```
 
 # others
 
