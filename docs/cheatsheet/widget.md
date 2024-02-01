@@ -8,6 +8,8 @@
   - [iweather](#iweather)
   - [uriel1998/weather.sh](#uriel1998weathersh)
   - [szantaii/bash-weather](#szantaiibash-weather)
+- [widget](#widget)
+  - [brndnmtthws/conky](#brndnmtthwsconky)
 - [others](#others)
   - [figlet](#figlet)
   - [toilet](#toilet)
@@ -18,7 +20,7 @@
 
 ### linux/osx
 
-- [now](https://askubuntu.com/a/1020693/92979)
+- [now](https://askubuntu.com/a/1020693/92979) | [now](https://www.pippim.com/2018/03/30/Terminal-splash-screen-with-Weather_-Calendar_-Time-_-Sysinfo_.html)
 
   <!--sec data-title="now" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
@@ -38,14 +40,15 @@
   #          for i in ${TOILET_FONT_PATH:=/usr/share/figlet}/*.{t,f}lf; do j=${i##*/}; toilet -d "${i%/*}" -f "$j" "${j%.*}"; done
 
   # setup for 92 character wide terminal
-  dateColumn=34                           # default is 27 for 80 character line, 34 for 92 character line
-  timeColumn=61                           # default is 49 for   "   "   "   "    61 "   "   "   "
-  curlOpt="-k"
+  dateColumn=34                                   # default is 27 for 80 character line, 34 for 92 character line
+  timeColumn=61                                   # default is 49 for   "   "   "   "    61 "   "   "   "
+  curlOpt='-skg -x http://proxy.sample.com:80'
 
   #------------------------------ WEATHER -------------------------------------
 
   # current weather, already in color so no need to override
   # replace edmonton with your city name, gps, etc. see: curl wttr.in/:help
+  # shellcheck disable=SC2086
   if ! curl ${curlOpt} wttr.in/sanjose?QmM0 --fail --silent --max-time 3 > /tmp/now-weather; then
   #                          timeout #. increase for slow connection---^
     ~/.marslo/bin/iweather > /tmp/now-weather
@@ -57,55 +60,46 @@
     cat /tmp/now-weather
   else
     weatherDone=false
-    echo "+============================+"
-    echo "| Weather unavailable now!!! |"
-    echo "| Check reason with command: |"
-    echo "|                            |"
-    echo "| curl wttr.in/Edmonton?0    |" # Replace Edmonton with your city
-    echo "|   --silent --max-time 3    |"
-    echo "+============================+"
-    echo " "
+    dateColumn=1                                    # show data as first column if got weather failed
+    timeColumn=27                                   # move 34 column right if got weather failed
   fi
-  echo " "                                # pad blank lines for calendar & time to fit
-  rm -rf /tmp/now-weather
+  [[ -f /tmp/now-weather ]] && rm -rf /tmp/now-weather
 
   #------------------------------- DATA ---------------------------------------
 
   # calendar current month with today highlighted.
-  # colors 00=bright white, 31=red, 32=green, 33=yellow, 34=blue, 35=purple,
-  #        36=cyan, 37=white
+  # colors 00=bright white, 31=red, 32=green, 33=yellow, 34=blue, 35=purple, 36=cyan, 37=white
 
-  tput sc                                 # save cursor position.
-  tput cuu 7                              # move up 9 lines
-  # i=0; while [ $((++i)) -lt 10 ]; do tput cuu1; done
-
+  tput sc                                         # save cursor position.
   if [[ "$weatherDone" == true ]] ; then
+      tput cuu 6                                  # move up 6 lines
       # depending on length of your city name and country name you will:
       #   1. comment out next three lines of code. uncomment fourth code line.
       #   2. change subtraction value and set number of print spaces to match
       #      subtraction value. then place comment on fourth code line.
       column=$((dateColumn - 10))
-      tput cuf $column                    # move x column number
-      printf "          "                 # blank out ", country" with x spaces
+      tput cuf $column                            # move x column number
+      printf '%10s' ''                            # blank out ", country" with 10 spaces
   else
-      tput cuf $dateColumn                # position to column 27 for date display
+      tput cuf $dateColumn                        # position to column 27 for date display
   fi
 
   # -h needed to turn off formatting: https://askubuntu.com/questions/1013954/bash-substring-stringoffsetlength-error/1013960#1013960
   # -h not supported in Ubuntu 18.04. Use second answer: https://askubuntu.com/a/1028566/307523
+  # to fit for both macOS and Linux
+  #   - linux: cal have 2 more extra whitespace in each line, 22 chars per line
+  #   - osx: cal has no more extra whitespace in each line, 20 chars per line
   #                    cal -h                 remove trailing spaces     remove empty line
   #                       v                              v                       v
   cal | tr -cd '\11\12\15\40\60-\136\140-\176' | sed 's/[ \t]*$//' | sed '/^[[:space:]]*$/d' > /tmp/terminal
-
   calLineCnt=1
   today=$(date +"%e")
-
-  printf "\033[32m"                       # color green -- see list above.
+  printf "\033[32m"                               # color green -- see list above.
 
   while IFS= read -r cal; do
     printf "%s" "$cal"
     if [[ $calLineCnt -gt 2 ]] ; then
-      tput cub 20
+      tput cub "$(awk '{print length($0)}' <<< "${cal}")"
       for (( j=0 ; j <= 18 ; j += 3 )) ; do       # see if today is on current line & invert background
         day=${cal:$j:2}                           # current day on calendar line
         if [[ "$day" == "$today" ]] ; then
@@ -120,41 +114,37 @@
       done
     fi
 
-    tput cud1                             # move one line down
-    tput cuf $dateColumn                  # move 27 columns right
+    tput cud1                                     # move one line down
+    tput cuf $dateColumn                          # move 27 columns right
     calLineCnt=$((++calLineCnt))
   done < /tmp/terminal
 
-  printf "\033[00m"                       # color -- bright white (default)
-  echo ""
-
-  tput rc                                 # restore saved cursor position.
+  printf "\033[00m"                               # color -- bright white (default)
+  tput rc                                         # restore saved cursor position.
 
   #------------------------------- TIME ---------------------------------------
 
-  tput sc                                 # save cursor position.
-  tput cuu 7                              # move up 9 lines
-  # Move up 8 lines
-  # i=0; while [ $((++i)) -lt 9 ]; do tput cuu1; done
-  tput cuf $timeColumn                    # move 49 columns right
+  tput sc                                         # save cursor position.
+  tput cuu 6                                      # move up 9 lines
+  tput cuf $timeColumn                            # move 49 columns right
 
-  if hash toilet 2>/dev/null; then        # if has toilet
+  if hash toilet 2>/dev/null; then                # if has toilet
      date +"%I:%M %P" | toilet -f future > /tmp/terminal
-  elif hash figlet 2>/dev/null; then      # if has figlet
+  elif hash figlet 2>/dev/null; then              # if has figlet
      date +"%I:%M %P" | figlet -f /usr/local/share/figlet/future.tlf > /tmp/terminal
   else
      date +"%I:%M %P" > /tmp/terminal
   fi
 
   while IFS= read -r time; do
-    printf "\033[01;36m"                  # color cyan
+    printf "\033[01;36m"                          # color cyan
     printf "%s" "$time"
-    tput cud1                             # up one line
-    tput cuf $timeColumn                  # move 49 columns right
+    tput cud1                                     # up one line
+    tput cuf $timeColumn                          # move 49 columns right
   done < /tmp/terminal
 
-  tput rc                                 # restore saved cursor position.
-
+  [[ -f /tmp/terminal ]] && rm -rf /tmp/terminal
+  tput rc                                         # restore saved cursor position.
   exit 0
 
   # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
@@ -937,9 +927,13 @@ mist='''
 
 ### [szantaii/bash-weather](https://github.com/szantaii/bash-weather)
 
+## widget
+### [brndnmtthws/conky](https://github.com/brndnmtthws/conky?tab=readme-ov-file)
 
 ## others
-- [ruanyf/simple-bash-scripts](https://github.com/ruanyf/simple-bash-scripts/tree/master/scripts)
+
+> [!NOTE]
+> - [ruanyf/simple-bash-scripts](https://github.com/ruanyf/simple-bash-scripts/tree/master/scripts)
 
 ### figlet
 
