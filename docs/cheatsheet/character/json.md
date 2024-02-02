@@ -8,7 +8,6 @@
 - [join](#join)
 - [split](#split)
 - [replacing](#replacing)
-- [space in the key](#space-in-the-key)
 - [builtin operators](#builtin-operators)
   - [debug](#debug)
   - [select](#select)
@@ -19,9 +18,11 @@
   - [from_entries](#from_entries)
   - [with_entries](#with_entries)
   - [as](#as)
+- [tricky](#tricky)
+  - [space in the key](#space-in-the-key)
+  - [get urlencode](#get-urlencode)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 {% hint style="tip" %}
 > json online player:
@@ -212,13 +213,6 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' | jq -r '.[].uri | su
 1
 2
 3
-```
-
-## space in the key
-```bash
-$ echo '{ "k1 name": "v1", "k2 name": "v2", "k3": "v3", "k4": "v4" }' |
-       jq -r '."k1 name"'
-v1
 ```
 
 ## builtin operators
@@ -475,4 +469,24 @@ $ echo '{ "name/" : "marslo", "age/" : "18", "citizenship" : "china" }' |
        jq -r '. as $o | keys_unsorted[] | select(endswith("/")) | $o[.]'
 marslo
 18
+```
+
+## tricky
+### space in the key
+```bash
+$ echo '{ "k1 name": "v1", "k2 name": "v2", "k3": "v3", "k4": "v4" }' |
+       jq -r '."k1 name"'
+v1
+```
+
+### [get urlencode](https://stackoverflow.com/a/34407620/2940319)
+```bash
+$ printf %s 'input text'|jq -sRr @uri
+input%20text
+
+$ printf %s 'input=(text)'|jq -sRr @uri
+input%3D%28text%29
+
+$ printf %s '(=)&'|jq -sRr @uri
+%28%3D%29%26
 ```
