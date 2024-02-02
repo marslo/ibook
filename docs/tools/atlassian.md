@@ -4,6 +4,8 @@
 - [jira](#jira)
   - [check fields](#check-fields)
   - [check attachment](#check-attachment)
+  - [list all projects](#list-all-projects)
+  - [search issue by JQL](#search-issue-by-jql)
   - [generate OAuth consumer](#generate-oauth-consumer)
   - [icons](#icons)
 - [confluence](#confluence)
@@ -12,7 +14,6 @@
   - [plugins](#plugins)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 > reference:
 > - [* Confluence REST API examples](https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/)
@@ -43,10 +44,16 @@
 ## jira
 {% hint style='tip' %}
 ```bash
-$ jiraName='my.jira.com'
+$ jiraName='jira.sample.com'
 $ jiraID='STORY-1'
 ```
 {% endhint %}
+
+> [!NOTE]
+> - [Special headers](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/#special-request-headers)
+>   - `X-Atlassian-Token`
+>   - `X-Force-Accept-Language`
+>   - `X-AAccountId`
 
 ### check fields
 ```bash
@@ -85,6 +92,91 @@ $ curl -s \
            jq --raw-output .fields.attachment[].content |
            xargs -I '{}' curl -sgOJL '{}'
     ```
+
+### list all projects
+```bash
+$ curl -fsSL -XGET https://jira.sample.com/rest/api/2/project |
+  jq -r '.[] | [.key, .name] | join(" | ")' |
+  column -s '|' -t
+```
+
+### search issue by JQL
+
+> [!TIP]
+> - [Search for issues using JQL (GET)](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-search/#api-rest-api-3-search-get)
+> - [JQL: What is advanced search in Jira Cloud?](https://support.atlassian.com/jira-software-cloud/docs/what-is-advanced-search-in-jira-cloud/)
+> - [How to get all issues by project key and issue type using REST api](https://community.developer.atlassian.com/t/how-to-get-all-issues-by-project-key-and-issue-type-using-rest-api/16074)
+> - JQL pattern rule:
+>   1. remove all space
+>   2. `%3D` instead of `=`
+>     - `project=abc` -> `project%3Dabc`
+>   3. `%20CONDITION%20` instead of `CONDITION`
+>     - `AND` -> `%20AND%20`
+>     - `OR` -> `%20OR%20`
+
+- format JQL
+
+  > [!TIP]
+  > - [* iMarslo: using jql to get URLEncodign](../cheatsheet/character/json.html#get-urlencode)
+
+  ```bash
+  $ jql="$(sed 's/ //g;s/AND/ AND /g;s/OR/ OR /g;s/IN/ IN /g;s/IS/ IS /g' <<< "${jql}")"
+  $ jql="$(printf %s "${jql}" | jq -sRr @uri)"
+
+  # i.e.:
+  $ jql='project = abc AND issuetype = release'
+
+  $ jql="$(sed 's/ //g;s/AND/ AND /g;s/OR/ OR /g;s/IN/ IN /g;s/IS/ IS /g' <<< "${jql}")"
+  $ echo $jql
+  project=abc AND issuetype=release
+
+  $ jql="$(printf %s "${jql}" | jq -sRr @uri)"
+  $ echo $jql
+  project%3Dabc%20AND%20issuetype%3Drelease
+  ```
+
+- api
+
+  > [!NOTE]
+  > - [* iMarslo : bin/jira](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/jira)
+  > - [query parameters](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-search/#api-rest-api-3-search-get):
+  >   - `maxResults`: `integer`
+  >   - `startAt`: `integer`
+  >   - `validateQuery`: `string`
+  >   - `fields`: `array<string>`
+  >   - `expand`: `string`
+  >   - `properties`: `array<string>`
+  >   - `fieldsByKeys`: `boolean`
+  >   - sample: `search?jql=${jql}&maxResults=100&startAt=0`
+
+  ```bash
+  $ curl --silent \
+         --insecure \
+         --globoff \
+         --netrc-file ~/.netrc \
+         -XGET \
+         "https://jira.sample.com/rest/api/2/search?jql=${jql}" | jq -r ${jqOpt}
+
+  # i.e.:
+  $ curlOpt='--silent --insecure --globoff --netrc-file ~/.netrc'
+  $ url='https://jira.sample.com/rest/api/2'
+  $ queryParams="startAt=0&maxResults=10"
+  $ jql='project = abc AND issuetype = release'          # copy from Jira website
+
+  $ jql="$(sed 's/ //g;s/AND/ AND /g;s/OR/ OR /g;s/IN/ IN /g;s/IS/ IS /g' <<< "${jql}")"
+  $ jql="$(printf %s "${jql}" | jq -sRr @uri)"
+
+  $ curl "${curlOpt}" "${url}/search?jql=${jql}&${queryParams}" |
+         jq -r '.issues[]' |
+         jq -r '. | [.key, .fields.summary, .fields.status.name, .fields.issuetype.name, .fields.updated, .fields.created] | join("|")' |
+         while IFS='|' read -r _key _summary _status _issuetype _updated _created; do
+           echo "- [${_key}] - ${_summary}"
+           echo "  -  status    : ${_status}"
+           echo "  -  issuetype : ${_issuetype}"
+           echo "  -  created   : ${_created}"
+           echo "  -  updated   : ${_updated}"
+         done
+  ```
 
 ### [generate OAuth consumer](https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/)
 ```bash

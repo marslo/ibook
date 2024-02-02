@@ -18,6 +18,7 @@
   - [echo](#echo)
   - [diff](#diff)
   - [comm](#comm)
+  - [join](#join)
   - [alignment](#alignment)
   - [sort](#sort)
     - [sort the last column](#sort-the-last-column)
@@ -979,7 +980,6 @@ a b
   ```
 
 ## comm
-
 - diff
   ```bash
   $ comm -3 a.txt b.txt
@@ -1000,6 +1000,41 @@ a b
   a
   b
   d
+  ```
+
+## join
+
+> [!NOTE|label:references:]
+> - [How can I join elements of a Bash array into a delimited string?](https://stackoverflow.com/a/17841619/2940319)
+
+```bash
+function join_by {
+  local d=${1-} f=${2-}
+  if shift 2; then
+    printf %s "$f" "${@/#/$d}"
+  fi
+}
+```
+
+- [via `printf`](https://stackoverflow.com/a/53839433/2940319)
+  ```bash
+  $ foo=( a "b c" d )
+  $ printf -v joined '%s,' "${foo[@]}"
+  $ echo "${joined%,}"
+  a,b c,d
+
+  $ printf -v joined '|,%s,|' "${foo[@]}"
+  $ echo "${joined%,}"
+  |,a,||,b c,||,d,|
+  ```
+
+- [another solution](https://stackoverflow.com/a/9429887/2940319)
+  ```bash
+  # join by single char
+  $ foo=(a "b c" d)
+  $ bar=$(IFS=, ; echo "${foo[*]}")
+  $ echo "$bar"
+  a,b c,d
   ```
 
 ## alignment
