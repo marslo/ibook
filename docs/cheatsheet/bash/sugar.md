@@ -1,37 +1,39 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [oneline commands](#oneline-commands)
-  - [cat and EOF](#cat-and-eof)
-  - [while read from input](#while-read-from-input)
-  - [ssh](#ssh)
-  - [find and tar](#find-and-tar)
-  - [find and rename](#find-and-rename)
-  - [find and sort](#find-and-sort)
-  - [download and extract](#download-and-extract)
-  - [mirror website](#mirror-website)
-  - [kubectl apply from stdin](#kubectl-apply-from-stdin)
-- [sync mirror](#sync-mirror)
-- [get all declare](#get-all-declare)
-  - [print env](#print-env)
-- [using string as variable name](#using-string-as-variable-name)
-- [`<<<`, `< <(..)`](#--)
-  - [`< <(..)` && `> >(..)`](#----)
-- [parameter substitution](#parameter-substitution)
-  - [arguments substitution](#arguments-substitution)
-  - [quotas](#quotas)
-- [string manipulations](#string-manipulations)
-- [compound comparison](#compound-comparison)
-  - [SC2155](#sc2155)
-  - [SC2155](#sc2155-1)
-  - [escape code](#escape-code)
-- [alias for sudo](#alias-for-sudo)
-- [echo](#echo)
-  - [echo var name from variable](#echo-var-name-from-variable)
-  - [echo var name](#echo-var-name)
-- [bash completion](#bash-completion)
-  - [osx](#osx)
-  - [linux](#linux)
+  - [oneline commands](#oneline-commands)
+    - [cat and EOF](#cat-and-eof)
+    - [while read from input](#while-read-from-input)
+    - [ssh](#ssh)
+    - [find and tar](#find-and-tar)
+    - [find and rename](#find-and-rename)
+    - [find and sort](#find-and-sort)
+    - [download and extract](#download-and-extract)
+    - [mirror website](#mirror-website)
+    - [kubectl apply from stdin](#kubectl-apply-from-stdin)
+  - [sync mirror](#sync-mirror)
+  - [get all declare](#get-all-declare)
+    - [print env](#print-env)
+  - [using string as variable name](#using-string-as-variable-name)
+  - [`<<<`, `< <(..)`](#--)
+    - [`< <(..)` && `> >(..)`](#----)
+  - [parameter substitution](#parameter-substitution)
+    - [arguments substitution](#arguments-substitution)
+    - [quotas](#quotas)
+  - [string manipulations](#string-manipulations)
+  - [compound comparison](#compound-comparison)
+    - [SC2155](#sc2155)
+    - [SC2155](#sc2155-1)
+    - [escape code](#escape-code)
+  - [echo](#echo)
+    - [echo var name from variable](#echo-var-name-from-variable)
+    - [echo var name](#echo-var-name)
+  - [bash completion](#bash-completion)
+    - [osx](#osx)
+    - [linux](#linux)
+- [tricky](#tricky)
+  - [alias for sudo](#alias-for-sudo)
+  - [check file text or binary](#check-file-text-or-binary)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -787,16 +789,6 @@ $ date | wc
 |    `\c[`    | -                      | control char |
 
 
-## alias for sudo
-
-> [!TIP|label:references:]
-> - [Aliases not available when using sudo](https://askubuntu.com/a/22043/92979)
-> - [6.6 Aliases](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Aliases)
-
-```bash
-alias sudo='sudo '
-```
-
 ## echo
 ### echo var name from variable
 
@@ -1526,3 +1518,30 @@ $ cat ~/.bash_profile
     ```bash
     $ fd --gen-completions | sudo tee /etc/bash_completion.d/fd
     ```
+
+# tricky
+## alias for sudo
+
+> [!TIP|label:references:]
+> - [Aliases not available when using sudo](https://askubuntu.com/a/22043/92979)
+> - [6.6 Aliases](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Aliases)
+
+```bash
+alias sudo='sudo '
+```
+
+## check file text or binary
+
+> [!NOTE]
+> - [How to check if a file is binary?](https://stackoverflow.com/q/16760378/2940319)
+>   - [`file`](https://stackoverflow.com/a/16760396/2940319)
+>   - [`grep`](https://stackoverflow.com/a/43586072/2940319)
+>   - [`perl`](https://stackoverflow.com/a/14603497/2940319)
+> - [grep: (standard input): binary file matches](https://unix.stackexchange.com/a/379755/29178)
+
+```bash
+$ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _'
+
+# verify
+$ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E '\.db$'
+```
