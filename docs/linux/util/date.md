@@ -120,6 +120,15 @@ Unix: -28800
 $ date -u -d '1970-01-01 00:00:00 UTC +1 day' '+Normal: %F %T %:z%nUnix: %s'
 Normal: 1970-01-02 00:00:00 +00:00
 Unix: 86400
+
+$ date -d '2023-01-01' +%s; date -d '2023-01-01 - 1 year' +%s
+1672560000
+1641024000
+
+# using now
+$ date -d'now' +%s; date -d 'now - 1 day' +%s
+1706952065
+1706865665
 ```
 
 ```bash
@@ -367,9 +376,21 @@ $ echo $EPOCHSECONDS
 
 $ date -d $(date -u +"%Y-%m-%dT%H:%M:%SZ") +%s
 1602235097
-
 $ date --date=$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ") +%s%3N
 1602235097801
+
+$ date -d '2023-01-01' +%s; date -d '2023-01-01 - 1 day' +%s
+1672560000
+1672473600
+
+$ date -d '2023-01-01' +%s; date -d '2023-01-01 - 1 year' +%s
+1672560000
+1641024000
+
+# using now
+$ date -d'now' +%s; date -d 'now - 1 day' +%s
+1706952065
+1706865665
 ```
 
 ### epoch to timestamps
@@ -473,6 +494,9 @@ Sun Dec  9 18:39:55 CST 2018
 
 $ date -d "2018-12-10 00:00:00 5 hours ago 20 minutes ago 5 seconds ago"
 Sun Dec  9 18:39:55 CST 2018
+
+$ date -d '2023-01-01 - 1 year' +"%Y-%m-%d %H:%M:%S"
+2022-01-01 00:00:00
 ```
 
 #### two times different
