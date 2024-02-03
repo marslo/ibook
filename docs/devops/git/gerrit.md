@@ -19,7 +19,9 @@
   - [who approval the CR+2](#who-approval-the-cr2)
   - [get all vote CR-2](#get-all-vote-cr-2)
   - [who approval the V+1](#who-approval-the-v1)
-  - [access contains account](#access-contains-account)
+  - [access list contains account](#access-list-contains-account)
+  - [all reviews at a certain time](#all-reviews-at-a-certain-time)
+  - [get review rate in certain time](#get-review-rate-in-certain-time)
   - [reference](#reference)
 - [integrate in Jenkins](#integrate-in-jenkins)
 - [css for code block](#css-for-code-block)
@@ -620,13 +622,12 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r '.labels."Code-Review".all[] | select ( .value == -2 ) | .username'
-                                          : |⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂| :
-                                          :           ⇣             :
-                                          :  select ".value"== -2   :
-                                          :                         :
-                                          ⇣                         ⇣
-                                         pipe                     pipe
-
+#                                         : |⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂| :
+#                                         :           ⇣             :
+#                                         :  select ".value"== -2   :
+#                                         :                         :
+#                                         ⇣                         ⇣
+#                                        pipe                     pipe
 
 # or
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
@@ -653,7 +654,6 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
                                                                    pipe
 ```
 
-
 ### who approval the V+1
 ```bash
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
@@ -661,7 +661,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        jq -r .labels.Verified.approved.username
 ```
 
-### access contains account
+### access list contains account
 
 > [!NOTE]
 > - [list projects](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#list-projects)
@@ -678,8 +678,54 @@ $ while read -r _proj; do
   done < <( curl -fsSL https://gerrit.sample.com/a/projects/?d |
                   tail -n+2 |
                   jq -r '.[].id' |
-                  grep --color=never -E 'ssd|storage'
+                  grep --color=never -E 'keyword|keyword'
           )
+```
+
+### all reviews at a certain time
+
+> [!NOTE|label:references:]
+> - [How to change the limit numbers of gerrit query](https://stackoverflow.com/a/66810126/2940319)
+> - [Gerrit Code Review - Searching Changes](https://gerrit-review.googlesource.com/Documentation/user-search.html#_search_operators)
+
+```bash
+project='PROJECT'
+branch='BRANCH'
+start='2023-01-01'
+end='2024-01-01'
+curlOpt='--silent --insecure --globoff --netrc-file ~/.netrc'
+query="project:${project}+branch:${branch}+after:${start}+before:${end}"
+filter by status if necessary
+query="${query}+is:closed+-is:abandoned"
+
+echo ">> ${project} ~ ${branch}"
+while IFS='|' read -r _change_id _id; do
+  echo -e "\t- [${_id}] [_change_id]"
+$( eval "curl ${curlOpt} 'https://gerrit.sample.com/a/changes/?q=${query}'" |
+         tail -n +2 |
+         jq -r '.[] | .change_id + "|" + .id'
+ )
+```
+
+### get review rate in certain time
+```bash
+sum=0
+rnum=0
+onum=0
+echo ">> ${project} ~ ${branch}"
+while IFS='|' read -r _change_id _id; do
+  sum=$(( sum+1 ))
+  output=$( eval "curl ${curlOpt} 'https://gerrit.sample.com/a/changes/${_id}/detail' | tail -n+2" )
+  reviewed=$( jq -r '.labels."Code-Review".all[] | select(.value != null) | select( .value | contains(2) ) | .username' <<< "${output}" )
+  owned=$( jq -r '.owner.username' <<< "${output}" )
+  if grep 'marslo' <<< "${reviewed}" >/dev/null; then rnum=$(( rnum+1 )); fi
+  if grep 'marslo' <<< "${owned}"    >/dev/null; then onum=$(( onum+1 )); fi
+$( eval "curl ${curlOpt} 'https://gerrit.sample.com/a/changes/?q=${query}'" |
+         tail -n +2 |
+         jq -r '.[] | .change_id + "|" + .id'
+ )
+echo "${sum} ${rnum} ${onum} $(( sum-onum ))" |
+      awk '{ sum=$1; reviewed=$2; owned=$3; rsum=$4; rate=$2*100/$4 } END { printf("\t- gerrit review: %s/(%s-%s) ( %s% )\n", reviewed, sum, owned, rate) }'
 ```
 
 ### reference
