@@ -6,6 +6,7 @@
   - [`Computer` and `Node`](#computer-and-node)
   - [get projects tied to agent](#get-projects-tied-to-agent)
   - [get ip address of node](#get-ip-address-of-node)
+  - [get agent credentialsId](#get-agent-credentialsid)
   - [get agent environment variable](#get-agent-environment-variable)
   - [get a list of all Jenkins nodes assigned with label](#get-a-list-of-all-jenkins-nodes-assigned-with-label)
 - [cloud agents](#cloud-agents)
@@ -298,6 +299,27 @@ println jenkins.model
 [or](https://stackoverflow.com/a/14930330/2940319)
 ```groovy
 println InetAddress.localHost.hostAddress
+```
+
+### get agent credentialsId
+
+> [!NOTE|label:references:]
+> - [Class hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
+> - [Class hudson.slaves.SlaveComputer: getLauncher](https://javadoc.jenkins.io/hudson/slaves/SlaveComputer.html#getLauncher())
+
+```groovy
+println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
+
+Jenkins.instance.computers.findAll { computer ->
+  ! jenkins.model.Jenkins.MasterComputer.isInstance(computer) &&
+  computer?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+}.each { computer ->
+  println "~> ${computer.displayName.padRight(30)}" +
+          "[${computer.online}]".padRight(15) +
+          (computer.launcher?.credentialsId?.toString() ?: '')
+}
+
+"DONE"
 ```
 
 ### get agent environment variable
