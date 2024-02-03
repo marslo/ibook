@@ -229,6 +229,7 @@ marslo/sandbox/dump                                : refs/heads/utility
 > - [Class SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html)
 > - [Class hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
 > - [Class org.eclipse.jgit.transport.RemoteConfig](https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/transport/RemoteConfig.html)
+> - [Class hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
 
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
@@ -236,8 +237,9 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob
 Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
   it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
 }.each {
-  println it.fullName.toString().padRight(30) +
-          (it.definition?.scm?.branches?.join() ?: '').padRight(30) +
+  println it.fullName.toString().padRight(40) +
+          ( it.definition?.scm?.branches?.join() ?: '' ).padRight(30) +
+          it.definition?.scm?.userRemoteConfigs.collect { it.credentialsId }.join().padRight(30) +
           it.definition?.scm?.repositories?.collect{ it.getURIs() }?.flatten()?.join()
 }
 
