@@ -13,10 +13,14 @@
   - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
   - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
 - [get pipeline definitions](#get-pipeline-definitions)
-  - [get pipeline scriptPath](#get-pipeline-scriptpath)
-  - [get pipeline scm branch](#get-pipeline-scm-branch)
   - [get pipeline scm definition](#get-pipeline-scm-definition)
+  - [get pipeline scriptPath](#get-pipeline-scriptpath)
+  - [get typical scm](#get-typical-scm)
+  - [get pipeline scm branch](#get-pipeline-scm-branch)
+  - [get all SCMs](#get-all-scms)
   - [get pipeline bare script](#get-pipeline-bare-script)
+- [update pipeline definition](#update-pipeline-definition)
+  - [update SCM definition](#update-scm-definition)
 - [get logRotator](#get-logrotator)
 - [get single job properties](#get-single-job-properties)
 - [get particular job status](#get-particular-job-status)
@@ -177,6 +181,37 @@ Jenkins.instance
 > - [WorkflowDefinitionContext.groovy](https://github.com/jenkinsci/job-dsl-plugin/blob/master/job-dsl-core/src/main/groovy/javaposse/jobdsl/dsl/helpers/workflow/WorkflowDefinitionContext.groovy)
 > - [BuildConfigToJobMapper.java](https://github.com/openshift/jenkins-sync-plugin/blob/master/src/main/java/io/fabric8/jenkins/openshiftsync/BuildConfigToJobMapper.java)
 
+
+### get pipeline scm definition
+
+> [!TIP]
+> - [Class SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html)
+> - [Class hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
+> - [Class org.eclipse.jgit.transport.RemoteConfig](https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/transport/RemoteConfig.html)
+> - [Class hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
+> - [org.jenkinsci.plugins.workflow.job.WorkflowJob getTypicalSCM()](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowJob.html#getTypicalSCM())
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).findAll{
+  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+}.each {
+  println it.fullName.toString().padRight(30) +
+          ( it.definition?.scm?.branches?.join() ?: '' ).padRight(20) +
+          ( it?.definition?.scriptPath ?: '' ).padRight(30) +
+          it.definition?.scm?.userRemoteConfigs.collect { it.credentialsId }.join().padRight(30) +
+          it.definition?.scm?.repositories?.collect{ it.getURIs() }?.flatten()?.join()
+}
+
+"DONE"
+
+-- result --
+marslo/sandbox/sandbox        */main              jenkinsfile/sandbox           GIT_SSH_CREDENTIAL            git://github.com:marslo/pipelines
+marslo/sandbox/dump           */dev               jenkinsfile/dump              GIT_SSH_CREDENTIAL            git://github.com:marslo/pipelines
+...
+```
+
 ### get pipeline scriptPath
 
 > [!TIP]
@@ -197,6 +232,25 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 marslo/sandbox/sandbox         ~> jenkins/jenkinsfile/sandbox.Jenkinsfile
 marlso/sandbox/dump            ~> jenkins/jenkinsfile/dump.Jenkinsfile
 ...
+```
+
+### get typical scm
+
+> [!NOTE]
+> - [groovy to list Jenkins jobs with GIT URL used in jobs](https://stackoverflow.com/a/53225808/2940319)
+
+```groovy
+jenkins.model.Jenkins.instance.getAllItems( hudson.model.Job.class ).findAll {
+  it.hasProperty( 'typicalSCM' ) &&
+  it.typicalSCM instanceof hudson.plugins.git.GitSCM
+}.each { job ->
+  println job.fullName.padRight(40) + ' : ' +
+          ( job.typicalSCM.branches?.join() ?: '' ).padRight(40) +
+          job.typicalSCM.userRemoteConfigs?.collect { it.credentialsId }.join().padRight(30) +
+          job.typicalSCM.repositories?.collect{ it.getURIs() }?.flatten()?.join()
+}
+
+"DONE"
 ```
 
 ### get pipeline scm branch
@@ -223,35 +277,76 @@ marslo/sandbox/sandbox                             : refs/heads/sandbox/marslo
 marslo/sandbox/dump                                : refs/heads/utility
 ```
 
-### get pipeline scm definition
+### get all SCMs
 
-> [!TIP]
-> - [Class SCM](https://javadoc.jenkins.io/hudson/scm/SCM.html)
-> - [Class hudson.plugins.git.GitSCM](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/GitSCM.html)
-> - [Class org.eclipse.jgit.transport.RemoteConfig](https://archive.eclipse.org/jgit/docs/jgit-2.0.0.201206130900-r/apidocs/org/eclipse/jgit/transport/RemoteConfig.html)
-> - [Class hudson.plugins.git.UserRemoteConfig](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/UserRemoteConfig.html)
+> [!NOTE]
+> - get all SCM definitions via `getSCMs`, including
+>   - Libraries
+>   - last builds, including all stages calls `GitSCM`
+> - [`getSCMs`](https://github.com/jenkinsci/workflow-job-plugin/blob/master/src/main/java/org/jenkinsci/plugins/workflow/job/WorkflowJob.java#L180)
+>   - `getLastSuccessfulBuild` ?: `getLastCompletedBuild` ?: `definedSCMs`
 
 ```groovy
-import org.jenkinsci.plugins.workflow.job.WorkflowJob
-
-Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
-  it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
-}.each {
-  println it.fullName.toString().padRight(40) +
-          ( it.definition?.scm?.branches?.join() ?: '' ).padRight(30) +
-          it.definition?.scm?.userRemoteConfigs.collect { it.credentialsId }.join().padRight(30) +
-          it.definition?.scm?.repositories?.collect{ it.getURIs() }?.flatten()?.join()
+Jenkins.instance.getAllItems( Job.class ).findAll {
+  it.SCMs &&
+  it.SCMs.any { scm -> scm instanceof hudson.plugins.git.GitSCM }
+}.each { job ->
+  println job.fullName.padRight(50) + ':'
+  job.SCMs.branches.eachWithIndex { scm, idx ->
+    println '\t - ' + job.SCMs.branches[idx].join().padRight(45) +
+                      job.SCMs.userRemoteConfigs[idx].credentialsId.join().padRight(30) +
+                      job.SCMs.repositories[idx].collect { it.getURIs() }.flatten().join()
+  }
 }
 
 "DONE"
-
--- result --
-marslo/sandbox/sandbox        */main                        git://github.com:marslo/pipelines
-marslo/sandbox/dump           */dev                         git://github.com:marslo/pipelines
-...
 ```
 
-#### check pipeline not get from particular branche
+- or without lastBuild
+  ```groovy
+  Jenkins.instance.getAllItems( Job.class ).findAll {
+    it.hasProperty( 'typicalSCM' ) &&
+    it.typicalSCM instanceof hudson.plugins.git.GitSCM
+  }.each { job ->
+    println job.fullName.padRight(40) + ' : ' +
+            ( job.typicalSCM.branches?.join() ?: '' ).padRight(40) +
+            job.typicalSCM.userRemoteConfigs?.collect { it.credentialsId }.join().padRight(30) +
+            job.typicalSCM.repositories?.collect{ it.getURIs() }?.flatten()?.join()
+  }
+
+  "DONE"
+
+  -- result --
+  marslo/whitebox/whitebox                          : main             ED25519_SSH_CREDENTIAL     git://github.com:marslo/pipelines
+  marslo/sandbox/dump                               : sandbox/dump     ED25519_SSH_CREDENTIAL     git://github.com:marslo/pipelines
+  ```
+
+- or
+  ```groovy
+  Jenkins.instance.getAllItems( Job.class ).findAll {
+    it.hasProperty( 'typicalSCM' ) &&
+    it.typicalSCM instanceof hudson.plugins.git.GitSCM
+  }.each { job ->
+    println job.fullName.padRight(50) + ':' +
+            '\n\t - ' + job.typicalSCM.branches.join() +
+            '\n\t - ' + job.typicalSCM.userRemoteConfigs.collect { it.credentialsId }.join() +
+            '\n\t - ' + job.typicalSCM.repositories?.collect{ it.getURIs() }?.flatten()?.join()
+  }
+
+  "DONE"
+
+  -- result --
+  marslo/whitebox/whitebox                          :
+     - main
+     - ED25519_SSH_CREDENTIAL
+     - git://github.com:marslo/pipelines
+  marslo/sandbox/dump                               :
+     - sandbox/dump
+     - ED25519_SSH_CREDENTIAL
+     - git://github.com:marslo/pipelines
+  ```
+
+#### check pipeline isn't get from particular branch
 
 > [!TIP]
 > - [hudson.plugins.git.BranchSpec](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/BranchSpec.html)
@@ -289,6 +384,124 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 }
 
 "DONE"
+```
+
+## update pipeline definition
+
+> [!NOTE]
+> - [How to update job config files using the REST API and cURL?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-update-job-config-files-using-the-rest-api-and-curl)
+
+### update SCM definition
+
+> [!NOTE]
+> - [How to change a Git URL in all Jenkins jobs](https://stackoverflow.com/a/27646182/2940319)
+> - [GitSCM credentials programmatically with Groovy](https://stackoverflow.com/q/69465371/2940319)
+> - [How to change the Git URL in all Jenkins jobs](https://stackoverflow.com/a/73056378/2940319)
+
+#### without output
+```groovy
+#!/usr/bin/env groovy
+
+import hudson.plugins.git.GitSCM
+import hudson.plugins.git.UserRemoteConfig
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+
+String newCredId = 'ED25519_SSH_CREDENTIAL'
+
+if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
+                        .any { newCredId == it.id }
+) {
+
+  jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).findAll {
+    it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition &&
+    ! it.definition?.scm?.userRemoteConfigs.collect { it.credentialsId }.contains( newCredId )
+  }.each { job ->
+
+    GitSCM orgScm          = job.definition?.scm
+    Boolean orgLightweight = job.definition?.lightweight
+
+    List<UserRemoteConfig> newUserRemoteConfigs = orgScm.userRemoteConfigs.collect {
+      newUrl = 'ssh://' + it.url.split('ssh://').last().split('@').last()
+      new UserRemoteConfig( newUrl, it.name, it.refspec, newCredId )
+    }
+    GitSCM newScm = new GitSCM( newUserRemoteConfigs, orgScm.branches, orgScm.doGenerateSubmoduleConfigurations,
+                                orgScm.submoduleCfg, orgScm.browser, orgScm.gitTool, orgScm.extensions
+                              )
+    CpsScmFlowDefinition flowDefinition = new CpsScmFlowDefinition( newScm, job.definition.scriptPath )
+
+    job.definition = flowDefinition
+    job.definition.lightweight = orgLightweight
+    job.save()
+
+    println ">> " + job.fullName + " DONE !"
+  }
+
+} else {
+  println "${newCredId} CANNOT be found !!"
+}
+
+"DONE"
+
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
+```
+
+#### with output
+```groovy
+#!/usr/bin/env groovy
+
+import hudson.plugins.git.GitSCM
+import hudson.plugins.git.UserRemoteConfig
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+
+String newCredId = 'ED25519_SSH_CREDENTIAL'
+String orgCredId = ''
+String newUrl    = ''
+String orgUrl    = ''
+
+if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
+                        .any { newCredId == it.id }
+) {
+
+  Jenkins.instance.getAllItems( WorkflowJob.class ).findAll {
+    it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition &&
+    ! it.definition?.scm?.userRemoteConfigs.collect { it.credentialsId }.contains( newCredId )
+  }.each { job ->
+
+    GitSCM orgScm          = job.definition?.scm
+    Boolean orgLightweight = job.definition?.lightweight
+
+    List<UserRemoteConfig> newUserRemoteConfigs = orgScm.userRemoteConfigs.collect {
+      orgUrl    = it.url
+      newUrl    = 'ssh://' + it.url.split('ssh://').last().split('@').last()
+      orgCredId = it.credentialsId
+      new UserRemoteConfig( newUrl, it.name, it.refspec, newCredId )
+    }
+    GitSCM newScm = new GitSCM( newUserRemoteConfigs, orgScm.branches, orgScm.doGenerateSubmoduleConfigurations,
+                                orgScm.submoduleCfg, orgScm.browser, orgScm.gitTool, orgScm.extensions
+                              )
+    CpsScmFlowDefinition flowDefinition = new CpsScmFlowDefinition( newScm, job.definition.scriptPath )
+
+    job.definition = flowDefinition
+    job.definition.lightweight = orgLightweight
+    job.save()
+    println ">> " + job.fullName + " DONE :" +
+            "\n\t - orgScm: ${(orgCredId ?: '').padRight(30)}: ${orgUrl}" +
+            "\n\t - newScm: ${(newCredId ?: '').padRight(30)}: ${newUrl}"
+  }
+
+} else {
+  println "${newCredId} CANNOT be found !!"
+}
+
+"DONE"
+
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
 ```
 
 ## get logRotator

@@ -362,6 +362,8 @@ disposer.getBacklog().each { item ->
 > - [* Jenkins Credentials Store Access via Groovy](https://stackoverflow.com/a/35215587/2940319)
 > - [* Adding Google Service Account Credentials by a groovy script](https://stackoverflow.com/a/66553315/2940319)
 > - [* Fetch the domain for each credential returned in a job template.](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-masters/fetch-the-domain-for-each-credential-returned-in-a-job-template)
+> - [* update username/password crednetial](https://stackoverflow.com/a/32216097/2940319)
+> - [* How to update credentials of specific folder in Jenkins using Groovy script?](https://stackoverflow.com/q/59696646/2940319)
 > - [Extension Points defined in Credentials Plugin](https://www.jenkins.io/doc/developer/extensions/credentials/)
 > - [CredentialsProvider.java](https://github.com/jenkinsci/credentials-plugin/blob/master/src/main/java/com/cloudbees/plugins/credentials/CredentialsProvider.java)
 > - [Jenkins Pipelines: How to use withCredentials() from a shared-variable script](https://stackoverflow.com/a/54927543/2940319)
