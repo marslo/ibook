@@ -3,6 +3,7 @@
 
 - [downgrade](#downgrade)
   - [jsch](#jsch)
+  - [grgit](#grgit)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -98,3 +99,33 @@ session.connect()
   ```
 
   ![jsch plugin issue](../../screenshot/jenkins/jsch-plugin-rsa-issue.png)
+
+### grgit
+
+> [!NOTE]
+> - [grgit-authentication](https://ajoberstar.org/grgit/main/grgit-authentication-2.html)
+>   - This support must be explicitly enabled with the system property `org.ajoberstar.grgit.auth.command.allow=true`.
+
+- grgit-clone
+  ```groovy
+  Grgit.clone {
+    dir = <path>
+    uri = <path or uri>
+    remote = <name>
+    all = <boolean>
+    bare = <boolean>
+    branches = <full refs>
+    checkout = <boolean>
+    refToCheckout = <name>
+    depth = <integer>
+    credentials = <credentials>
+  }
+  ```
+
+  - [sample](https://ajoberstar.org/grgit/main/grgit-authentication-2.html#_hardcoded_credentials)
+    ```groovy
+    import org.ajoberstar.grgit.Grgit
+    import org.ajoberstar.grgit.Credentials
+
+    def grgit = Grgit.clone(dir: '...', url: '...', credentials: new Credentials(username, password))
+    ```
