@@ -6,14 +6,12 @@
 - [curry](#curry)
 - [Memoization](#memoization)
 - [composition](#composition)
-- [Methods](#methods)
+- [methods](#methods)
 - [delegate](#delegate)
 - [tricky](#tricky)
+- [example](#example)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
-
 
 > [!NOTE]
 > references:
@@ -202,23 +200,23 @@ assert plus2times3(3) == times3(plus2(3))
 {% hint style='tip' %}
 > ```groovy
 > assert ( plus2 << times3 )(3)   ==   ( times3 >> plus2 )(3)
->            |        + execute first      |       + execute last
->            + execute last                + execute first
+> //         |        + execute first      |       + execute last
+> //         + execute last                + execute first
 ```
 {% endhint %}
 
 - [example for recursive in List](https://stackoverflow.com/a/62804996/2940319)
   ```groovy
-  def map1 = [a: 10, b:2, c:3]
-  def map2 = [b:3, c:2, d:5]
-  def maps = [map1, map2]
+  def map1 = [ a: 10 , b: 2 , c: 3 ]
+  def map2 = [ b: 3  , c: 2 , d: 5 ]
+  def maps = [ map1  , map2 ]
 
-  def process(def maps, Closure myLambda) {
+  def process( def maps, Closure myLambda ) {
     maps.sum { it.keySet() }.collectEntries { key ->
       [ key,
         { x ->
           x.subList(1, x.size()).inject(x[0], myLambda)
-        }(maps.findResults { it[key] })
+        }( maps.findResults { it[key] } )
       ]
     }
   }
@@ -227,27 +225,27 @@ assert plus2times3(3) == times3(plus2(3))
   def prodResult = process(maps) { a, b -> a * b }
   def minResult  = process(maps) { a, b -> a < b ? a : b }
 
-  assert sumResult  == [a:10, b:5, c:5, d:5]
-  assert prodResult == [a:10, b:6, c:6, d:5]
-  assert minResult  == [a:10, b:2, c:2, d:5]
+  assert sumResult  == [ a:10, b:5, c:5, d:5 ]
+  assert prodResult == [ a:10, b:6, c:6, d:5 ]
+  assert minResult  == [ a:10, b:2, c:2, d:5 ]
   ```
-  - Resolution
+  - resolution
     ```groovy
     assert [2,4,5].inject(1){ a, b -> a + b  }   == 12
-    assert [2,4,5].inject(1, { a, b -> a + b  }) == 12
+    assert [2,4,5].inject(1, { a, b -> a + b }) == 12
     ```
 
 #### triple composition
 ```groovy
-def multiply = { x, y -> return x * y }
-def triple = multiply.curry(3)
-def quadruple = multiply.curry(4)
+def multiply    = { x, y -> return x * y }
+def triple      = multiply.curry(3)
+def quadruple   = multiply.curry(4)
 def composition = { f, g, x -> return f(g(x)) }
 def twelveTimes = composition.curry(triple, quadruple)      //  twelveTimes = { y -> composition { y -> 3*(4*y) } }
-def threeDozen = twelveTimes(3)
+def threeDozen  = twelveTimes(3)
 ```
 
-### Methods
+### methods
 - various method to call closure
   ```groovy
   def work( String input, Closure cl ) {
@@ -259,7 +257,7 @@ def threeDozen = twelveTimes(3)
   }
 
   println work( "Java", assertJava )
-  println work("Java", { it == 'Java' }) // ==> work 'Java', { it == 'Java' }
+  println work("Java", { it == 'Java' })   // ==> work 'Java', { it == 'Java' }
   println work( 'Java' ){
     it == 'Java'
   }
@@ -309,8 +307,7 @@ def threeDozen = twelveTimes(3)
 
   or
   ```groovy
-  on('marslo')
-    .skip()
+  on('marslo').skip()
 
   // result
   no params. skip
@@ -348,7 +345,6 @@ result = list.collectWithIndex { it, index -> "${index + 1}. ${it}" }
   }
   ```
 
-
 ### tricky
 #### `this`
 ```groovy
@@ -365,3 +361,116 @@ class Enclosing {
 Enclosing e = new Enclosing()
 e.run()
 ```
+
+### example
+#### Closure return Closure
+- simple
+  ```groovy
+  def withClosure( Object object, Closure body ) {
+    Closure bar = { obj -> obj.toString() }
+    Closure foo = { cid ->
+      [
+        (java.lang.String)    : { body([ claz: cid.class.simpleName,  str: bar(cid) ]) } ,
+        (java.util.ArrayList) : { body([ claz: cid.class.simpleName, list: bar(cid) ]) }
+      ].find { it.key.isAssignableFrom( cid.getClass() ) }.value.call()
+    }
+    foo(object)
+  }
+
+  withClosure('s')   { b -> println "${b.claz} -> ${b.str}" }
+  withClosure(['a']) { b -> println "${b.claz} -> ${b.list}" }
+
+  -- result --
+  String -> s
+  ArrayList -> [a]
+  ```
+
+- working with Jenkins Credential Class
+  ```groovy
+  import com.datapipe.jenkins.vault.credentials.common.VaultSSHUserPrivateKeyImpl
+  import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredentialImpl
+  import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
+  import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey
+  import com.cloudbees.plugins.credentials.CredentialsProvider
+  import com.cloudbees.plugins.credentials.common.StandardCredentials
+  import groovy.transform.Field
+
+  def withCredential( String credentialsId, Closure body ) {
+    Closure foo = { cid ->
+      [
+        ( VaultSSHUserPrivateKeyImpl )          : { body([ username: cid.username, id: cid.id ]) },
+        ( VaultUsernamePasswordCredentialImpl ) : { body([ username: cid.username, id: cid.id ]) },
+        ( UsernamePasswordCredentialsImpl )     : { body([ username: cid.username, id: cid.id ]) },
+        ( BasicSSHUserPrivateKey )              : { body([ username: cid.username, id: cid.id ]) }
+      ].find { it.key.isAssignableFrom( cid.getClass() ) }.value.call()
+    }
+
+    foo( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
+                            .find { credentialsId == it.id }
+       )
+  }
+
+  withCredential( 'BASIC_CREDENTIAL' ) { account ->
+    println "${account.id.getClass()} -> ${account.username}"
+  }
+
+  withCredential( 'SSH_CREDENTIAL' ) { account ->
+    println "${account.id.getClass()} -> ${account.username}"
+  }
+
+  -- result --
+  [Pipeline] Start of Pipeline
+  [Pipeline] echo
+  class java.lang.String -> functional-account
+  [Pipeline] echo
+  class java.lang.String -> functional-account
+  [Pipeline] End of Pipeline
+  Finished: SUCCESS
+  ```
+
+- Closure return Closure with DSL
+  ```groovy
+  def withCredential( String credentialsId, Closure body ) {
+    Closure foo = { cid ->
+      [
+        ( VaultSSHUserPrivateKeyImpl )          : {
+            withCredentials([[ $class: 'VaultSSHUserPrivateKeyBinding', credentialsId: credentialsId, privateKeyVariable : 'SSHKEY', usernameVariable: 'USERNAME' ]]) {
+              body([ username : '${USERNAME}', sshkey : '${SSHKEY}' ])
+            }
+        },
+
+        ( VaultUsernamePasswordCredentialImpl ) : {
+            withCredentials([[ $class: 'VaultUsernamePasswordCredentialBinding', credentialsId: credentialsId, passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME' ]]) {
+              body([ username : '${USERNAME}', password : '${PASSWORD}' ])
+            }
+        },
+
+        ( UsernamePasswordCredentialsImpl )     : {
+            withCredentials([ usernamePassword( credentialsId: credentialsId, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD' ) ]) {
+              body([ username : '${USERNAME}', password : '${PASSWORD}' ])
+            }
+        },
+
+        ( BasicSSHUserPrivateKey )              : {
+            withCredentials([ sshUserPrivateKey( credentialsId: credentialsId, keyFileVariable: 'SSHKEY', usernameVariable: 'USERNAME' ) ]) {
+              body([ username : '${USERNAME}', sshkey : '${SSHKEY}' ])
+            }
+        }
+      ].find { it.key.isAssignableFrom( cid.getClass() ) }.value.call()
+    }
+
+    foo( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
+                            .find { credentialsId == it.id }
+    )
+  }
+
+  def download( String url, String credential = 'BASIC_CREDENTIAL' ) {
+    withCredential( credential ) { account ->
+      sh """
+        set +x
+        [ ! -z '${name}' ] && [ ! -d \$(dirname '${name}') ] && mkdir -p \$(dirname '${name}')
+        bash -c "/usr/bin/curl -u${account.username}:${account.password} -skg ${url}"
+      """
+    } // withCredential
+  }
+  ```
