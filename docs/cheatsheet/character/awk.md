@@ -248,7 +248,7 @@ $ echo -e '5 5 0 0 622 20\n6 3 2 0 439 8\n5 2 3 0 450 12' |
 > - [How to add blank space in the middle of the line if the line is less than fixed length?](https://stackoverflow.com/a/65523122/2940319)
 > - [Bash shell script output alignment](https://unix.stackexchange.com/a/396226/29178)
 
-```bash'
+```bash
 $ cat a.txt
 CGRT,630,SC063P1
 10001,X,6849
