@@ -15,6 +15,7 @@
   - [getField()](#getfield)
   - [generate the random String](#generate-the-random-string)
   - [dynamic method names](#dynamic-method-names)
+  - [`instanceof`](#instanceof)
 - [run groovy from docker](#run-groovy-from-docker)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
@@ -495,9 +496,33 @@ codecs.each { codec ->
     Object.metaClass."decodeFrom${codec.name-'Codec'}" = { codec.newInstance().decode(delegate) }
 }
 
-
 def html = '<html><body>hello</body></html>'
 assert '<html><body>hello</body></html>' == html.encodeAsHTML()
+```
+
+### `instanceof`
+
+> [!NOTE]
+> - [What is the difference between instanceof and Class.isAssignableFrom(...)?](https://stackoverflow.com/a/12106524/2940319)
+> - [How instanceof is implemented inside JAVA?](https://stackoverflow.com/q/14190189/2940319)
+> - [The performance impact of using instanceof in Java](https://stackoverflow.com/a/26514984/2940319)
+
+```groovy
+assert '' instanceof String
+
+Class clz = ''.getClass()
+
+assert '' in clz
+assert 0 in clz == false
+
+assert clz.isCase( '' )
+assert clz.isCase( [] ) == false
+
+assert clz.isAssignableFrom( ''.getClass() )
+assert clz.isAssignableFrom( [:].getClass() ) == false
+
+assert clz.isInstance( '' )
+assert clz.isInstance( [] ) == false
 ```
 
 ## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
