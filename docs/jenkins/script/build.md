@@ -216,6 +216,32 @@ job.builds.findAll { Run run -> run.isKeepLog() }
           .collect { Run run -> run.id }
 ```
 
+- list build number and start timestamp
+  ```bash
+  List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+
+  Jenkins.instance
+         .getAllItems( Job.class )
+         .findAll { projects.any { p -> it.fullName.startsWith(p) } }
+         .findAll { job -> job.builds.any { Run run -> run.isKeepLog() } }
+         .collectEntries {[
+            ( it ) : it.builds.findAll { Run run -> run.isKeepLog() }
+         ]}
+         .each { k, v ->
+           println '>> ' + k.fullName.padRight(35) + ': \n\t - ' +
+             [
+               v.id,
+               v.startTimeInMillis
+                .collect{ new Date(it).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") }
+             ].transpose()
+              .collectEntries()
+              .collect{ "${it.key.padRight(5)} : ${it.value}" }
+              .join('\n\t - ')
+         }
+
+  "DONE"
+  ```
+
 - or
   ```groovy
   List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
