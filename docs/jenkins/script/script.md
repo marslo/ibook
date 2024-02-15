@@ -9,6 +9,7 @@
   - [read & write files](#read--write-files)
   - [nslookup](#nslookup)
 - [jenkins system](#jenkins-system)
+  - [get system info](#get-system-info)
   - [modify log level](#modify-log-level)
   - [RABC](#rabc)
 - [jobs & builds](#jobs--builds)
@@ -34,16 +35,6 @@
 > reference:
 > - [Script Console](https://www.jenkins.io/doc/book/managing/script-console/)
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
-> - [samrocketman/jenkins-script-console-scripts](https://github.com/samrocketman/jenkins-script-console-scripts)
->   - [monitor and slack](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/monitor-agent-queue.groovy)
-> - [* jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
-> - [* cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
-> - [* dnozay/_Jenkins+Script+Console.md](https://gist.github.com/dnozay/e7afcf7a7dd8f73a4e05)
-> - [* mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)
-> - [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
-> - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
-> - [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
-> - [mikejoh/jenkins-and-groovy-snippets.md](https://gist.github.com/mikejoh/9a721d1e6de7574059dcb8f851692be9)
 > - [Jenkins : Jenkins Script Console](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
 > - [Jenkins : Use Jenkins](https://wiki.jenkins.io/display/JENKINS/Use-Jenkins.html)
 > - [Java API Usage Example](https://programtalk.com/java-api-usage-examples/?api=jenkins)
@@ -51,13 +42,27 @@
 >   - [jenkins.model.BuildDiscarder](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarder/)
 >   - [org.jenkinsci.plugins.workflow.steps](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/package-summary.html)
 > - [I have a stuck Pipeline and I can not stop it](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/troubleshooting-guides/i-have-a-stuck-pipeline-and-i-can-not-stop-it)
-> - [others](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
->  - [Jenkins : Monitor and Restart Offline Slaves](https://wiki.jenkins.io/display/JENKINS/Monitor-and-Restart-Offline-Slaves.html)
->  - [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
->  - [Jenkins : Printing a list of credentials and their IDs](https://wiki.jenkins.io/display/JENKINS/Printing-a-list-of-credentials-and-their-IDs.html)
->  - [Jenkins : Wipe workspaces for a set of jobs on all nodes](https://wiki.jenkins.io/display/JENKINS/Wipe-workspaces-for-a-set-of-jobs-on-all-nodes.html)
->  - [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
->  - [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
+> - scripts:
+>   - [* jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
+>   - [* cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
+>   - [* dnozay/_Jenkins+Script+Console.md](https://gist.github.com/dnozay/e7afcf7a7dd8f73a4e05)
+>   - [* mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)
+>   - [Jenkins script](https://blog.csdn.net/lingqiao023/article/details/107029326)
+>   - [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
+>   - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
+>   - [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
+>   - [mikejoh/jenkins-and-groovy-snippets.md](https://gist.github.com/mikejoh/9a721d1e6de7574059dcb8f851692be9)
+>   - [samrocketman/jenkins-script-console-scripts](https://github.com/samrocketman/jenkins-script-console-scripts)
+>     - [monitor and slack](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/monitor-agent-queue.groovy)
+>   - [others](https://wiki.jenkins.io/display/JENKINS/Jenkins-Script-Console.html)
+>    - [Jenkins : Monitor and Restart Offline Slaves](https://wiki.jenkins.io/display/JENKINS/Monitor-and-Restart-Offline-Slaves.html)
+>    - [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
+>    - [Jenkins : Printing a list of credentials and their IDs](https://wiki.jenkins.io/display/JENKINS/Printing-a-list-of-credentials-and-their-IDs.html)
+>    - [Jenkins : Wipe workspaces for a set of jobs on all nodes](https://wiki.jenkins.io/display/JENKINS/Wipe-workspaces-for-a-set-of-jobs-on-all-nodes.html)
+>    - [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
+>    - [Jenkins : Grant Cancel Permission for user and group that have Build permission](https://wiki.jenkins.io/display/JENKINS/Grant-Cancel-Permission-for-user-and-group-that-have-Build-permission.html)
+>   - python
+>     - [jjb/python-jenkins](https://opendev.org/jjb/python-jenkins)
 {% endhint %}
 
 > [!TIP]
@@ -341,6 +346,22 @@ instance.save()
 def sshd = SSHD.get()
 sshd.setPort( 12345 )
 sshd.save()
+```
+
+### [get system info](https://www.jenkins.io/participate/report-issue/#what-information-to-provide-for-environment-and-description)
+```groovy
+println("Jenkins: ${Jenkins.instance.getVersion()}")
+println("OS: ${System.getProperty('os.name')} - ${System.getProperty('os.version')}")
+println("Java: ${System.getProperty('java.version')} - ${System.getProperty('java.vm.vendor')} (${System.getProperty('java.vm.name')})")
+println "---"
+
+Jenkins.instance.pluginManager.plugins
+    .collect()
+    .sort { it.getShortName() }
+    .each {
+        plugin -> println("${plugin.getShortName()}:${plugin.getVersion()}")
+    }
+return
 ```
 
 ### modify log level
