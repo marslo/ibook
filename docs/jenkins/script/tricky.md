@@ -209,6 +209,11 @@ println ("Number of Nodes: " + numberNodes)
 ```
 
 ## others
+
+> [!NOTE|label:references:]
+> - scripts:
+>   - [jira-publisher.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/jira-publisher.groovy)
+
 ### [run shell scripts in a cluster-operation](https://support.cloudbees.com/hc/en-us/articles/360020737392-How-to-run-shell-scripts-in-a-cluster-operation)
 ```groovy
 def exec(cmd) {

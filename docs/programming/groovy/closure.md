@@ -374,7 +374,7 @@ e.run()
         (java.util.ArrayList) : { body([ claz: cid.class.simpleName, list: bar(cid) ]) }
       ].find { it.key.isAssignableFrom( cid.getClass() ) }.value.call()
     }
-    foo(object)
+    foo object
   }
 
   withClosure('s')   { b -> println "${b.claz} -> ${b.str}" }
@@ -405,9 +405,7 @@ e.run()
       ].find { it.key.isAssignableFrom( cid.getClass() ) }.value.call()
     }
 
-    foo( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
-                            .find { credentialsId == it.id }
-       )
+    foo CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance).find { credentialsId == it.id }
   }
 
   withCredential( 'BASIC_CREDENTIAL' ) { account ->
@@ -459,9 +457,7 @@ e.run()
       ].find { it.key.isAssignableFrom( cid.getClass() ) }.value.call()
     }
 
-    foo( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance)
-                            .find { credentialsId == it.id }
-    )
+    foo CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance).find { credentialsId == it.id }
   }
 
   def download( String url, String credential = 'BASIC_CREDENTIAL' ) {

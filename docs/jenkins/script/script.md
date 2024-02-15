@@ -7,7 +7,10 @@
   - [extend built-in node executor](#extend-built-in-node-executor)
   - [execute shell script in console](#execute-shell-script-in-console)
   - [read & write files](#read--write-files)
+  - [nslookup](#nslookup)
 - [jenkins system](#jenkins-system)
+  - [modify log level](#modify-log-level)
+  - [RABC](#rabc)
 - [jobs & builds](#jobs--builds)
   - [list build status with percentage](#list-build-status-with-percentage)
   - [get all builds status during certain start-end time](#get-all-builds-status-during-certain-start-end-time)
@@ -24,8 +27,6 @@
   - [backup & restore all scriptApproval items](#backup--restore-all-scriptapproval-items)
   - [automatic approval all pending](#automatic-approval-all-pending)
   - [disable the scriptApproval](#disable-the-scriptapproval)
-- [logRotator](#logrotator)
-  - [show logRotator](#show-logrotator)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -37,7 +38,8 @@
 >   - [monitor and slack](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/monitor-agent-queue.groovy)
 > - [* jenkinsci/jenkins-scripts](https://github.com/jenkinsci/jenkins-scripts)
 > - [* cloudbees/jenkins-scripts](https://github.com/cloudbees/jenkins-scripts)
-> - [mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)
+> - [* dnozay/_Jenkins+Script+Console.md](https://gist.github.com/dnozay/e7afcf7a7dd8f73a4e05)
+> - [* mubbashir/Jenkins+Script+Console.md](https://gist.github.com/mubbashir/484903fda934aeea9f30)
 > - [Sam Gleske’s jenkins-script-console-scripts repository](https://github.com/samrocketman/jenkins-script-console-scripts)
 > - [Sam Gleske’s jenkins-bootstrap-shared repository](https://github.com/samrocketman/jenkins-bootstrap-shared)
 > - [Some scripts at JBoss.org](http://community.jboss.org/wiki/HudsonHowToDebug)
@@ -293,7 +295,55 @@ new File('/tmp/file.txt').text
   println '==='
   ```
 
-#### modify log level
+### nslookup
+
+> [!NOTE|label:references:]
+> - [get-ip-from-dns.groovy](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/get-ip-from-dns.groovy)
+
+```groovy
+if( !binding.hasVariable('domain') ) {
+  domain = 'example.com'
+}
+
+if( !(domain in String) ) {
+  throw new Exception('PARAMETER ERROR: domain must be a string.')
+}
+
+InetAddress dnsInetAddress = InetAddress.getByName domain
+println dnsInetAddress.hostAddress
+```
+
+## jenkins system
+
+{% hint style='tip' %}
+> references:
+> - [AnalogJ/you-dont-know-jenkins-init](https://github.com/AnalogJ/you-dont-know-jenkins-init)
+> - [3003.plugin-pipeline-library.groovy](https://github.com/AnalogJ/you-dont-know-jenkins-init/blob/master/3003.plugin-pipeline-library.groovy)
+> - [Using Hudson/Features controlled by system properties](https://wiki.eclipse.org/Using_Hudson/Features_controlled_by_system_properties)
+> - [jenkins-stats.groovy](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/jenkins-stats.groovy)
+> - scripts:
+>   - [checkPluginUpdateServer.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkPluginUpdateServer.groovy)
+>   - [reloadJobConfig.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/reloadJobConfig.groovy)
+>   - [copy-move-diagnosis.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/copy-move-diagnosis.groovy)
+{% endhint %}
+
+```groovy
+import jenkins.model.*;
+import org.jenkinsci.main.modules.sshd.*;
+
+jenins.model.Jenkins instance = jenkins.model.Jenkins.instance
+instance.setDisableRememberMe( false )
+instance.setNumExecutors( 2 )
+instance.setSystemMessage( '<h2>welcome to the Jenkins Master</h2>' )
+instance.setRawBuildsDir()
+instance.save()
+
+def sshd = SSHD.get()
+sshd.setPort( 12345 )
+sshd.save()
+```
+
+### modify log level
 
 {% hint style='tip' %}
 > references:
@@ -323,30 +373,14 @@ System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.
   println System.getProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient");
   ```
 
-## jenkins system
+### RABC
 
-{% hint style='tip' %}
-> references:
-> - [AnalogJ/you-dont-know-jenkins-init](https://github.com/AnalogJ/you-dont-know-jenkins-init)
-> - [3003.plugin-pipeline-library.groovy](https://github.com/AnalogJ/you-dont-know-jenkins-init/blob/master/3003.plugin-pipeline-library.groovy)
-> - [Using Hudson/Features controlled by system properties](https://wiki.eclipse.org/Using_Hudson/Features_controlled_by_system_properties)
-{% endhint %}
-
-```groovy
-import jenkins.model.*;
-import org.jenkinsci.main.modules.sshd.*;
-
-def instance = Jenkins.instance
-instance.setDisableRememberMe( false )
-instance.setNumExecutors( 2 )
-instance.setSystemMessage( '<h2>welcome to the Jenkins Master</h2>' )
-instance.setRawBuildsDir()
-instance.save()
-
-def sshd = SSHD.get()
-sshd.setPort( 12345 )
-sshd.save()
-```
+> [!NOTE|label:references:]
+> - scripts:
+>   - [GroupsFromLDAP.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/GroupsFromLDAP.groovy)
+>   - [FindAllGroupsInFolders.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/FindAllGroupsInFolders.groovy)
+>   - [RBAC_Example.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/RBAC_Example.groovy)
+>   - [TriggerRestrictionsAudit.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/TriggerRestrictionsAudit.groovy)
 
 ## jobs & builds
 
@@ -448,7 +482,6 @@ ExtensionList.lookup( UnprotectedRootAction ).each {
 ```
 
 ### list plugin and dependencies
-
 ```groovy
 println Jenkins.instance.pluginManager.plugins
                .sort(false) { a, b ->
@@ -601,8 +634,10 @@ println Jenkins.instance.pluginManager.plugins
 > references:
 > - [Class ScriptApproval](https://javadoc.jenkins.io/plugin/script-security/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.html)
 > - [ScriptApproval.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/scripts/ScriptApproval.java)
-> - [SecureGroovyScript.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/sandbox/groovy/SecureGroovyScript.java)
 > - [jenkins.model.CauseOfInterruption](https://programtalk.com/java-api-usage-examples/jenkins.model.CauseOfInterruption/)
+> - scripts:
+>   - [approve-pending-signatures.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/approve-pending-signatures.groovy)
+>   - [SecureGroovyScript.java](https://github.com/jenkinsci/script-security-plugin/blob/master/src/main/java/org/jenkinsci/plugins/scriptsecurity/sandbox/groovy/SecureGroovyScript.java)
 {% endhint %}
 
 ### backup & restore all scriptApproval items
@@ -787,47 +822,4 @@ import jenkins.model.GlobalConfiguration
 // disable Job DSL script approval
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).useScriptSecurity=false
 GlobalConfiguration.all().get(GlobalJobDslSecurityConfiguration.class).save()
-```
-
-## logRotator
-
-{% hint style='tip' %}
-> references:
-> - [Class LogRotator](https://javadoc.jenkins.io/hudson/tasks/LogRotator.html)
-> - [Jenkins : Manually run log rotation on all jobs](https://wiki.jenkins.io/display/JENKINS/Manually-run-log-rotation-on-all-jobs.html)
-> - [jenkins/core/src/main/java/hudson/tasks/LogRotator.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/tasks/LogRotator.java)
-{% endhint %}
-
-### show logRotator
-```groovy
-List<String> projects = [ 'project' ]
-
-Jenkins.instance.getAllItems(Job.class).findAll {
-  projects.any { p -> it.fullName.startsWith(p) }
-}.each {
-  println """
-    ~~> ${it.fullName} :
-
-            artifactDaysToKeep : ${it.logRotator?.artifactDaysToKeep    ?: '' }
-         artifactDaysToKeepStr : ${it.logRotator?.artifactDaysToKeepStr ?: '' }
-             artifactNumToKeep : ${it.logRotator?.artifactNumToKeep     ?: '' }
-          artifactNumToKeepStr : ${it.logRotator?.artifactNumToKeepStr  ?: '' }
-                    daysToKeep : ${it.logRotator?.daysToKeep            ?: '' }
-                 daysToKeepStr : ${it.logRotator?.daysToKeepStr         ?: '' }
-                     numToKeep : ${it.logRotator?.numToKeep             ?: '' }
-                  numToKeepStr : ${it.logRotator?.numToKeepStr          ?: '' }
-
-    --------------------------------------------------------------------------------
-
-       getArtifactDaysToKeep() : ${it.logRotator?.getArtifactDaysToKeep()    ?: '' }
-    getArtifactDaysToKeepStr() : ${it.logRotator?.getArtifactDaysToKeepStr() ?: '' }
-        getArtifactNumToKeep() : ${it.logRotator?.getArtifactNumToKeep()     ?: '' }
-     getArtifactNumToKeepStr() : ${it.logRotator?.getArtifactNumToKeepStr()  ?: '' }
-               getDaysToKeep() : ${it.logRotator?.getDaysToKeep()            ?: '' }
-            getDaysToKeepStr() : ${it.logRotator?.getDaysToKeepStr()         ?: '' }
-                getNumToKeep() : ${it.logRotator?.getNumToKeep()             ?: '' }
-             getNumToKeepStr() : ${it.logRotator?.getNumToKeepStr()          ?: '' }
-
-  """
-}
 ```
