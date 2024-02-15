@@ -89,7 +89,7 @@
 > [!TIP]
 > references:
 > - `currentBuild.class` == [Class RunWrapper](https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html)
-> - `currentBuild.rawBuild.class` == `Jenkins.instance.getItemByFullName(String).getBuildByNumber(int).class` == [Class WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
+> - `currentBuild.rawBuild.class` == `jenkins.model.Jenkins.instance.getItemByFullName(String).getBuildByNumber(int).class` == [Class WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
 
 {% hint style='tip' %}
 > references:
@@ -122,7 +122,7 @@
 final String JOB_NAME  = 'marslo/sandbox'
 final int BUILD_NUMBER = 6458
 
-def build = Jenkins.instance
+def build = jenkins.model.Jenkins.instance
                    .getItemByFullName( JOB_NAME )
                    .getBuildByNumber( BUILD_NUMBER )
 ```
@@ -132,7 +132,7 @@ def build = Jenkins.instance
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 import hudson.util.RunList
 
-WorkflowJob job = Jenkins.instance.getItemByFullName( '/marslo/sandbox/test' )
+WorkflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( '/marslo/sandbox/test' )
 RunList runList = job.getBuilds()
 
 println """
@@ -154,6 +154,7 @@ println """
            getActions.causes : ${runList.collect{ run -> run.id + ': ' + run.getActions( jenkins.model.InterruptedBuildAction.class ).causes.flatten().collect{ it.class.simpleName } }}
 """
 ```
+
 - result:
   ```
                     all builds : [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
@@ -181,7 +182,7 @@ println build.getCulprits()
 
 ### setup next build number
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( '/path/to/job' )
        .updateNextBuildNumber( n )
 ```
@@ -211,7 +212,7 @@ import com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.GerritCause
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 import hudson.util.RunList
 
-WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/job' )
+WorkflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( '/path/to/job' )
 RunList builds  = job.getBuilds()
 
 builds.each { build ->
@@ -231,7 +232,7 @@ builds.each { build ->
 ### get build cause
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
-Jenkins.instance.getAllItems( Job.class ).findAll {
+jeniins.model.jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll {
   projects.any { p -> it.fullName.startsWith(p) }
 }.each {
   println it.name + "\t -> " + it.fullName + "\t ~> " +
@@ -240,6 +241,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
 
 "DONE"
 ```
+
 - result
   ```
   user-trigger -> marslo/user-trigger ~> hudson.model.Cause.UserIdCause
@@ -255,7 +257,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
 - or
   ```groovy
   List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
-  Jenkins.instance.getAllItems( Job.class ).findAll {
+  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll {
     projects.any { p -> it.fullName.startsWith(p) }
   }.each {
     println it.name + "\t -> " +
@@ -278,7 +280,7 @@ final List<String> PROJECTS = [ 'project-1' ]
 final long BENCH_MARK       = 1*24*60*60*1000
 final Calendar RIGHT_NOW    = Calendar.getInstance()
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   PROJECTS.any { job.fullName.startsWith(it) }
 }.collectEntries { Job job ->
   [
@@ -304,7 +306,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 "DONE"
 ```
 
-- result
+- result:
   ```groovy
   >> project-1 : 4
      BuildUpstreamCause :
@@ -319,7 +321,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 
 ### details on `Cause.UserIdCause`
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( JOB_NUMBER )
        .getActions( hudson.model.CauseAction.class )
@@ -362,7 +364,7 @@ import com.sonymobile.tools.gerrit.gerritevents.dto.events.CommentAdded
 import com.sonymobile.tools.gerrit.gerritevents.dto.events.RefUpdated
 import com.sonymobile.tools.gerrit.gerritevents.dto.events.PatchsetCreated
 
-WorkflowJob job = Jenkins.instance.getItemByFullName( '/path/to/pipeline' )
+WorkflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( '/path/to/pipeline' )
 RunList builds  = job.getBuilds()
 
 builds.each { build ->
@@ -478,7 +480,7 @@ builds.each { build ->
 {% endhint %}
 
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( BUILD_NUMBER )
        .getActions( jenkins.model.InterruptedBuildAction.class )
@@ -490,7 +492,7 @@ Jenkins.instance
 ```groovy
 import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
 
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( BUILD_NUMBER )
        .getActions( jenkins.model.InterruptedBuildAction.class )
@@ -504,7 +506,7 @@ Jenkins.instance
   import org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution
   import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-  WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+  WorkflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( JOB_NAME )
   job.builds.findAll { Run run ->
     BUILD_NUMBER.toString() == run.id
   }.collect { Run run -> run.getActions( jenkins.model.InterruptedBuildAction.class )
@@ -519,7 +521,7 @@ Jenkins.instance
 import org.jenkinsci.plugins.workflow.support.steps.build.BuildTriggerCancelledCause
 import jenkins.model.CauseOfInterruption
 
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( BUILD_NUMBER )
        .getActions( jenkins.model.InterruptedBuildAction.class )
@@ -536,7 +538,7 @@ Jenkins.instance
   ```bash
   import jenkins.model.CauseOfInterruption
 
-  Jenkins.instance
+  jenkins.model.Jenkins.instance
          .getItemByFullName( '/marslo/sandbox/abort' )
          .getBuildByNumber(159)
          .getActions( jenkins.model.InterruptedBuildAction.class )
@@ -557,7 +559,7 @@ Jenkins.instance
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-WorkflowJob job = Jenkins.instance.getItemByFullName( JOB_NAME )
+WorkflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( JOB_NAME )
 job.builds.findAll { Run run ->
   run.getActions( jenkins.model.InterruptedBuildAction.class ).causes
 }.collect{ Run run ->
@@ -566,7 +568,7 @@ job.builds.findAll { Run run ->
 }.join('\n')
 ```
 
-- result
+- result:
   ```
   #42 : ExceededTimeout
   #41 : ExceededTimeout
@@ -603,7 +605,7 @@ job.builds.findAll { Run run ->
 {% endhint %}
 
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( BUILD_NUMBER )
        .logFile
@@ -623,7 +625,7 @@ job.builds.findAll { Run run -> run.isKeepLog() }
   ```bash
   List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-  Jenkins.instance
+  jenkins.model.Jenkins.instance
          .getAllItems( Job.class )
          .findAll { projects.any { p -> it.fullName.startsWith(p) } }
          .findAll { job -> job.builds.any { Run run -> run.isKeepLog() } }
@@ -669,7 +671,7 @@ job.builds.findAll { Run run -> run.isKeepLog() }
   ```groovy
   List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-  Jenkins.instance
+  jenkins.model.Jenkins.instance
          .getAllItems( Job.class )
          .findAll { projects.any { p -> it.fullName.startsWith(p) } }
          .collectEntries {[
@@ -707,7 +709,7 @@ job.builds.findAll { Run run -> run.isKeepLog() }
 > ```
 
 ```groovy
-Jenkins.instance.getItemByFullName( <JOB_PATTERN> )
+jenkins.model.Jenkins.instance.getItemByFullName( <JOB_PATTERN> )
                 .getBuildByNumber( <BUILD_NUMBER> )
                 .getLog( 30 )
                 .find{ it.contains('real\t') }
@@ -743,7 +745,8 @@ job.builds.each { Run run ->
 
 "DONE"
 ```
-- result
+
+- result:
   ```
   #7:     id  : marslo
       gender  : female
@@ -793,7 +796,7 @@ job.builds.each { Run run ->
   }
   ```
 
-  - result
+  - result:
     ```
     --- Parameters for GRA-00-UploadIntoClearCase ---
     ONCSDAP1_USER jdoe
@@ -845,7 +848,7 @@ println params.collect { k , v ->
 }.join('\n')
 ```
 
-- result
+- result:
   ```
   build #7 ~~> id : marslo
   build #6 ~~> id : marslo
@@ -922,7 +925,7 @@ build.addAction(new ParametersAction(new StringParameterValue('BAR', '3')))
 > - [cg-soft/explore.groovy](https://gist.github.com/cg-soft/4251ad83932340129925)
 
 ```groovy
-def q = Jenkins.instance.queue
+def q = jenkins.model.Jenkins.instance.queue
 q.items.each {
   println("${it.task.name}:")
   println("Parameters: ${it.params}")
@@ -956,7 +959,7 @@ checkout([
 {% endhint %}
 
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( '/marslo/up' )
        .getBuildByNumber( 195 )
        .changeSets
@@ -983,7 +986,7 @@ Jenkins.instance
 - get changeSets to `List<Map<String, String>>`:
   ```groovy
   def getChangeSets( String name, int nubmer ) {
-    Jenkins.instance
+    jenkins.model.Jenkins.instance
            .getItemByFullName( name )
            .getBuildByNumber( number )
            .changeSets
@@ -1034,7 +1037,7 @@ Jenkins.instance
 {% endhint %}
 
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( '/path/to/pipeline' )
        .getBuildByNumber( n )
        .SCMs
@@ -1057,7 +1060,7 @@ Jenkins.instance
 {% endhint %}
 
 ```groovy
-def job = Jenkins.instance
+def job = jenkins.model.Jenkins.instance
                  .getItemByFullName( '/path/to/pipeline' )
                  .getBuildByNumber( n )
 
@@ -1076,7 +1079,8 @@ job.changeSets
      }
    }
 ```
-- result
+
+- result:
   ```bash
   -----------------------------
 
@@ -1113,10 +1117,7 @@ job.changeSets
 >                 Date(NOW).format() : ${new Date(NOW).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
 >      Date(NOW-BENCH_MARK).format() : ${new Date(NOW - BENCH_MARK).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
 > """
-> ```
->
-> - result:
->   ```
+>  -- result --
 >                                NOW : 1619790803151
 >                   NOW - BENCH_MARK : 1619704403151
 >                 Date(NOW).format() : 2021-04-30T06:53:23.151Z
@@ -1142,7 +1143,7 @@ println """
         RIGHT_NOW : ${RIGHT_NOW}
 """
 
-Jenkins.instance.getAllItems( Job.class ).each { job ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).each { job ->
   if ( job.fullName.contains( JOB_PATTERN ) ) {
     def build = job.getLastBuild()
     println """
@@ -1158,28 +1159,29 @@ Jenkins.instance.getAllItems( Job.class ).each { job ->
 }
 "DONE"
 ```
+
+![get build start time](../../screenshot/jenkins/job-get-build-time.png)
+
+- or:
+  ```groovy
+  final String JOB_PATTERN = '<group>/<name>'                  // keywords
+
+  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+    job.fullName.contains( JOB_PATTERN )
+  }.each { Job job ->
+    def build = job.getLastBuild()
+    println """
+                   build.getTime() : ${build.getTime()}
+           build.getTimeInMillis() : ${build.getTimeInMillis()}
+              build.getTimestamp() : ${build.getTimestamp()}
+      build.getStartTimeInMillis() : ${build.getStartTimeInMillis()}
+        build.getTimestampString() : ${build.getTimestampString()}
+       build.getTimestampString2() : ${build.getTimestampString2()}
+    """
+  }
+  ```
+
 - result:
-  ![get build start time](../../screenshot/jenkins/job-get-build-time.png)
-**or** :
-```groovy
-final String JOB_PATTERN = '<group>/<name>'                  // keywords
-
-Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
-  job.fullName.contains( JOB_PATTERN )
-}.each { Job job ->
-  def build = job.getLastBuild()
-  println """
-                 build.getTime() : ${build.getTime()}
-         build.getTimeInMillis() : ${build.getTimeInMillis()}
-            build.getTimestamp() : ${build.getTimestamp()}
-    build.getStartTimeInMillis() : ${build.getStartTimeInMillis()}
-      build.getTimestampString() : ${build.getTimestampString()}
-     build.getTimestampString2() : ${build.getTimestampString2()}
-  """
-}
-```
-
-- result
   ```
                  build.getTime() : Thu Apr 29 04:08:08 PDT 2021
          build.getTimeInMillis() : 1619694488799
@@ -1235,6 +1237,7 @@ Wed Feb 14 04:06:30 PST 2024
 > println "${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")} ~> ${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?.getClass()}"
 > println "${job.getLastBuild()?.getTimeInMillis()} ~> ${job.getLastBuild()?.getTimeInMillis()?.getClass()}"
 > println "${job.getLastBuild()?.getTime()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getTime()?.getClass()}"
+>
 > -- result --
 > Thu Aug 11 06:28:00 PDT 2022 ~> class java.util.Date
 > 2022-08-11T06:28:00.220Z ~> class java.lang.String
@@ -1245,7 +1248,7 @@ Wed Feb 14 04:06:30 PST 2024
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getAllItems( Job.class )
        .findAll { projects.any { p -> it.fullName.startsWith(p) } }
        .collectEntries {[ (it.fullName) : it.getLastBuild()?.getTime() ]}
@@ -1255,7 +1258,7 @@ Jenkins.instance
 "DONE"
 ```
 
-- result
+- result:
   ```
   marslo/dangling                ~> Fri Nov 04 02:28:14 PDT 2022
   marslo/abort                   ~> Thu Aug 11 06:28:00 PDT 2022
@@ -1267,7 +1270,7 @@ Jenkins.instance
 
 ### sort all buildable jobs
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getAllItems( org.jenkinsci.plugins.workflow.job.WorkflowJob.class )
        .findAll { it.isBuildable() }
        .collectEntries {[ (it.fullName + ' #' + it.getLastBuild()?.id) : it.getLastBuild()?.getTime() ]}
@@ -1298,7 +1301,7 @@ import static groovy.json.JsonOutput.*
 final String JOB_PATTERN                 = '<group>[/<name>]'                         // project/job keywords
 Map<String, Map<String, String>> results = [:]
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   results.(job.fullName) = job.builds.findAll { Run run ->
@@ -1333,7 +1336,8 @@ jenkins.model.Jenkins.instance.computers
        }
 ```
 
-- show `UserIdCause.userId`
+- show `UserIdCause.userId`:
+
   ```groovy
   import org.jenkinsci.plugins.workflow.job.WorkflowRun
 
@@ -1346,7 +1350,6 @@ jenkins.model.Jenkins.instance.computers
          .findAll { it.isBusy() }
          .collect { it.currentExecutable.parentExecutable }
          .findAll { ( RIGHT_NOW.getTimeInMillis() - it.startTimeInMillis ) >= BENCH_MARK }
-
 
   builds.each { build ->
     println ">> ${build.fullDisplayName} :" +
@@ -1367,7 +1370,7 @@ jenkins.model.Jenkins.instance.computers
    * We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
   **/
 
-  Jenkins.instance.getAllItems( Job )
+  jeniins.model.jenkins.model.Jenkins.instance.getAllItems( Job )
                   .findAll{ job -> job.isBuildable() }
                   .each { job ->
                     def build = job.getLastBuild()
@@ -1396,7 +1399,7 @@ final Calendar RIGHT_NOW = Calendar.getInstance()
 final long BENCH_MARK    = 1*24*60*60*1000
 final String JOB_PATTERN = '<group>/<name>'
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.startsWith( JOB_PATTERN )
 }.collect { Job job ->
   job.builds.findAll { Run run ->
@@ -1415,7 +1418,7 @@ import jenkins.model.Jenkins
 
 final String JOB_PATTERN = '<group>/<name>'
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.startsWith( JOB_PATTERN )
 }.collectEntries { Job job ->
   [ ( job.fullName ) : job.builds.findAll { Run run -> run.isBuilding() }.collect { Run run -> run.id } ]
@@ -1441,7 +1444,7 @@ String JOB_PATTERN      = '<group>[/<name>]'                  // keywords
 final long CURRENT_TIME = System.currentTimeMillis()
 final int BENCH_MARK    = 1*24*60*60*1000                     // days * hours * minutes * seconds * microseconds (1000)
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
@@ -1466,7 +1469,7 @@ final Calendar RIGHT_NOW = Calendar.getInstance()
 final long BENCH_MARK    = 1*24*60*60*1000
 final String JOB_PATTERN = '<group>'
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.collect { Job job ->
   job.builds.findAll { Run run ->
@@ -1491,7 +1494,7 @@ final String JOB_PATTERN = '<group>'
 
 Map results = [:]
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   results.(job.fullName) = job.builds.findAll { Run run ->
@@ -1519,7 +1522,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   final String JOB_PATTERN = '<group>'
   Map results = [:]
 
-  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
     job.fullName.contains( JOB_PATTERN )
   }.each { Job job ->
     results.(job.fullName) = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME ).findAll { Run run ->
@@ -1546,7 +1549,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   final String JOB_PATTERN = '<group>'
   Map results = [:]
 
-  Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+  jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
     job.fullName.contains(JOB_PATTERN)
   }.each { Job job ->
     def history = job.getBuilds().byTimestamp( CURRENT_TIME - BENCH_MARK, CURRENT_TIME )
@@ -1570,7 +1573,7 @@ final String JOB_PATTERN = '<group>/<name>'
 Map<String, Map<String, String>> results = [:]
 int sum = 0
 
-Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
   project.fullName.contains( JOB_PATTERN )
   // or
   // project.fullName.startsWith( JOB_PATTERN )
@@ -1609,7 +1612,7 @@ final int BENCH_MARK     = 1*24*60*60*1000
 Map<String, Map<String, String>> results = [:]
 int sum = 0
 
-Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
   project.fullName.startsWith( JOB_PATTERN )
   // or
   // project.fullName.contains( JOB_PATTERN )
@@ -1670,7 +1673,7 @@ final String END_DATE   = '2021-04-27 00:00:00'
 long start = simpleDateFormat.parse( START_DATE ).getTime()
 long end   = simpleDateFormat.parse( END_DATE ).getTime()
 
-Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   results."${job.fullName}" = [:]
@@ -1754,7 +1757,7 @@ if ( NOW_TIME && BENCH_MARK ) {
   return
 }
 
-Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
 }.each { Job job ->
   results."${job.fullName}" = [:]
@@ -1828,7 +1831,7 @@ results.each { name, values ->
 final String JOB_NAME      = env.JOB_NAME
 final Integer BUILD_NUMBER = env.BUILD_NUMBER
 
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuildByNumber( BUILD_NUMBER )
        .finish(
@@ -1854,7 +1857,7 @@ Map<String, String> condition = [ 'str1': params.str1 ]
 
 currentBuild.description = params.collect{ "${it.key}: ${it.value}" }.join('<br>')
 
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .getItemByFullName( JOB_NAME )
        .getBuilds()
        .findAll { Run run ->
@@ -1929,7 +1932,7 @@ Jenkins.instance
     def JOB_NAME     = env.JOB_NAME
     int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
 
-    def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+    def job = jenkins.model.Jenkins.instance.getItemByFullName( JOB_NAME )
     for ( build in job.builds ) {
       if ( !build.isBuilding() ) { continue; }
       if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
@@ -1944,7 +1947,7 @@ Jenkins.instance
 > [!TIP|label:reference:]
 > - [cancel queue builds](https://xanderx.com/post/cancel-all-queued-jenkins-jobs/)
 >   ```groovy
->   Jenkins.instance.queue.clear()
+>   jenkins.model.Jenkins.instance.queue.clear()
 >   ```
 > - scripts:
 >   - [* list all running builds via `executors`](#list-all-running-builds)
@@ -1956,13 +1959,13 @@ import hudson.model.*
 import jenkins.model.Jenkins
 
 // Remove everything which is currently queued
-def q = Jenkins.instance.queue
-for ( queued in Jenkins.instance.queue.items ) {
+def q = jenkins.model.Jenkins.instance.queue
+for ( queued in jenkins.model.Jenkins.instance.queue.items ) {
   q.cancel( queued.task )
 }
 
 // stop all the currently running jobs
-for ( job in Jenkins.instance.items ) {
+for ( job in jenkins.model.Jenkins.instance.items ) {
   stopJobs(job)
 }
 
@@ -1998,7 +2001,7 @@ import jenkins.model.Jenkins
 final Calendar RIGHT_NOW = Calendar.getInstance()
 final String JOB_PATTERN = '<group>/<name>'
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.startsWith( JOB_PATTERN )
 }.collect { Job job ->
   job.builds.findAll { Run run -> run.isBuilding() }
@@ -2025,7 +2028,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   final String JOB_NAME  = env.JOB_NAME
   final int BUILD_NUMBER = env.BUILD_NUMBER.toInteger()
 
-  def job = Jenkins.instance.getItemByFullName( JOB_NAME )
+  def job = jenkins.model.Jenkins.instance.getItemByFullName( JOB_NAME )
   for ( build in job.builds ) {
     if ( !build.isBuilding() ) { continue }
     if ( BUILD_NUMBER == build.getNumber().toInteger() ) { continue; println "equals" }
@@ -2049,7 +2052,7 @@ final Calendar RIGHT_NOW = Calendar.getInstance()
 final long BENCH_MARK    = 1*24*60*60*1000
 final String JOB_PATTERN = '<group>/<name>'
 
-Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.startsWith( JOB_PATTERN )
 }.collect { Job job ->
   job.builds.findAll { Run run ->
@@ -2068,7 +2071,7 @@ Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 
 ## [list all queue tasks and blocked reason](https://support.cloudbees.com/hc/en-us/articles/360051376772-How-can-I-purge-clean-the-build-queue-)
 ```groovy
-Jenkins.instance.queue.items.each {
+jenkins.model.Jenkins.instance.queue.items.each {
   println """
                    getId : ${it.getId()}
              isBuildable : ${it.isBuildable()}
@@ -2108,7 +2111,7 @@ Jenkins.instance.queue.items.each {
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
 final String JOB_PATTERN = '<group>/<job>'
-WorkflowJob project      = Jenkins.instance.getItemByFullName( JOB_PATTERN )
+WorkflowJob project      = jenkins.model.Jenkins.instance.getItemByFullName( JOB_PATTERN )
 final int START_BUILD    = <build-id>
 final int END_BUILD      = project.getLastCompletedBuild().getId().toInteger()
 
@@ -2117,5 +2120,5 @@ final int END_BUILD      = project.getLastCompletedBuild().getId().toInteger()
 
 - setup next build number if necessary
   ```groovy
-  Jenkins.instance.getItemByFullName( JOB_PATTERN ).updateNextBuildNumber( START_BUILD+1 )
+  jenkins.model.Jenkins.instance.getItemByFullName( JOB_PATTERN ).updateNextBuildNumber( START_BUILD+1 )
   ```

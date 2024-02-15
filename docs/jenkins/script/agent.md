@@ -8,6 +8,7 @@
   - [get ip address of node](#get-ip-address-of-node)
   - [get agent credentialsId](#get-agent-credentialsid)
   - [get agent environment variable](#get-agent-environment-variable)
+  - [get agent labels](#get-agent-labels)
   - [get a list of all Jenkins nodes assigned with label](#get-a-list-of-all-jenkins-nodes-assigned-with-label)
 - [cloud agents](#cloud-agents)
   - [check how many cloud agent running](#check-how-many-cloud-agent-running)
@@ -20,15 +21,17 @@
   - [to `WorkflowRun`](#to-workflowrun)
   - [to `WorkUnit` and `SubTask` ( `ExecutorStepExecution.PlaceholderTask` )](#to-workunit-and-subtask--executorstepexecutionplaceholdertask-)
   - [to `Computer`](#to-computer)
-- [Managing Nodes](#managing-nodes)
-  - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
-  - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
+- [managing nodes](#managing-nodes)
+  - [create agent](#create-agent)
   - [update agent label](#update-agent-label)
-  - [disable agent](#disable-agent)
+  - [update agent credentialsId](#update-agent-credentialsid)
+  - [universal agent update](#universal-agent-update)
   - [disconnect agent](#disconnect-agent)
-  - [offline agent](#offline-agent)
+  - [temporarily offline agent](#temporarily-offline-agent)
+  - [restart agent](#restart-agent)
   - [delete agent](#delete-agent)
 - [monitor](#monitor)
+  - [monitor and restart offline agents](#monitor-and-restart-offline-agents)
   - [for jenkins master](#for-jenkins-master)
   - [send alerts](#send-alerts)
   - [for jenkins agents](#for-jenkins-agents)
@@ -42,7 +45,7 @@
 >   - [JENKINS-27514: Core - Thread spikes in Computer.threadPoolForRemoting leading to eventual server OOM](https://issues.jenkins.io/browse/JENKINS-27514)
 >   - [JENKINS-19465: Slave hangs while being launched](https://issues.jenkins.io/browse/JENKINS-19465)
 > - [CloudBees: Managing agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-admin-guide/agents#static-agents)
-> - [CloudBees: Create a Permanent Agent from Groovy Console](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/create-agent-node-from-groovy)
+> - [* CloudBees: Create a Permanent Agent from Groovy Console](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/create-agent-node-from-groovy)
 >   - [DumbSlave](https://javadoc.jenkins-ci.org/hudson/slaves/DumbSlave.html)
 >   - [JNLPLauncher](https://javadoc.jenkins.io/hudson/slaves/JNLPLauncher.html)
 > - [Create a new Jenkins node, and run your Jenkins agent as a service](https://www.jenkins.io/blog/2022/12/27/run-jenkins-agent-as-a-service/)
@@ -72,7 +75,6 @@
 > - [Jenkins : Monitoring Scripts](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
 > - [Jenkins : Display Tools Location on All Nodes](https://wiki.jenkins.io/display/JENKINS/Display-Tools-Location-on-All-Nodes.html)
 > - [Jenkins : Display Information About Nodes](https://wiki.jenkins.io/display/JENKINS/Display-Information-About-Nodes.html)
-
 {% endhint %}
 
 ### get all
@@ -91,15 +93,14 @@ jenkins.model.Jenkins.instance.computers.each { agent ->
 }
 ```
 
-or
-
-```groovy
-jenkins.model.Jenkins.instance.get().computers.each { agent ->
-  println "${agent.displayName} : ${agent.class} : ${agent.class.superclass}"
-  println "     >> is master : ${jenkins.model.Jenkins.MasterComputer.isInstance(agent)}"
-  println "     >> is cloud  : ${hudson.slaves.AbstractCloudComputer.isInstance(agent)} "
-}
-```
+- or
+  ```groovy
+  jenkins.model.Jenkins.instance.get().computers.each { agent ->
+    println "${agent.displayName} : ${agent.class} : ${agent.class.superclass}"
+    println "     >> is master : ${jenkins.model.Jenkins.MasterComputer.isInstance(agent)}"
+    println "     >> is cloud  : ${hudson.slaves.AbstractCloudComputer.isInstance(agent)} "
+  }
+  ```
 
 ### `Computer` and `Node`
 {% hint style='info' %}
@@ -111,42 +112,52 @@ jenkins.model.Jenkins.instance.get().computers.each { agent ->
 #### example for `Computer` Object
 - get description
   ```groovy
-  Jenkins.instance.getNode('<agent-name>').toComputer().description
+  Jenkins.instance.getNode('<AGENT_NAME>').toComputer().description
   ```
 
 - get all info
   ```groovy
-  String agentName = 'marslo-test'
+  import hudson.slaves.ComputerLauncher
+
+  String agentName = <AGENT_NAME>
+
   Jenkins.instance.computers.findAll { computer ->
     agentName == computer.name
   }.each { computer ->
     String moreinfo = computer.online
                         ? "properties : ${computer.getSystemProperties().collect { k, v -> "$k=$v" }.join('\n\t\t\t>>> ')}"
                         : "      logs : ${computer.getLog()}"
+    ComputerLauncher launcher = computer.node.launcher
+
     println """
-      ~~> ${computer.displayName} :
+      >> ${computer.displayName} :
                       class : ${computer.getClass()}
                       class : ${computer.class.superclass?.simpleName}
                     online? : ${computer.online}
                 description : ${computer.description}
-                connectTime : ${computer.connectTime}
+                connectTime : ${computer.connectTime} | ${new Date(computer.connectTime).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
+      idleStartMilliseconds : ${computer.idleStartMilliseconds} | ${new Date(computer.idleStartMilliseconds).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}
          offlineCauseReason : ${computer.offlineCauseReason}
-                   executor : ${computer.numExecutors}
+                   executor : ${computer.numExecutors} | ${computer.node.numExecutors}
+                   launcher : ${launcher.host} | ${launcher.port} | ${launcher.credentialsId}
                  ${moreinfo}
     """
   }
   ```
+
   - result
    ```groovy
-        ~~> marslo-test :
+        >> AGENT_NAME :
                         class : class hudson.slaves.SlaveComputer
                         class : Computer
                       online? : false
                   description : marslo test agent offline
-                  connectTime : 1620478291102
+                  connectTime : 1620478291102 | 2021-05-08T05:51:31.102Z
+        idleStartMilliseconds : 1707980922716 | 2024-02-14T23:08:42.716Z
            offlineCauseReason : This agent is offline because Jenkins failed to launch the agent process on it.
                      executor : 1
-                         logs : SSHLauncher{host='1.2.3.4', port=22, credentialsId='DevOpsSSHCredential', jvmOptions='', javaPath='', prefixStartSlaveCmd='', suffixStartSlaveCmd='', launchTimeoutSeconds=30, maxNumRetries=5, retryWaitTime=30, sshHostKeyVerificationStrategy=hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy, tcpNoDelay=true, trackCredentials=true}
+                     launcher : 1.2.3.4 | sample.com | 22 | NEW_CREDENTIAL
+                         logs : SSHLauncher{host='1.2.3.4', port=22, credentialsId='NEW_CREDENTIAL', jvmOptions='', javaPath='', prefixStartSlaveCmd='', suffixStartSlaveCmd='', launchTimeoutSeconds=30, maxNumRetries=5, retryWaitTime=30, sshHostKeyVerificationStrategy=hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy, tcpNoDelay=true, trackCredentials=true}
     [05/08/21 05:51:31] [SSH] Opening SSH connection to 1.2.3.4:22.
     connect timed out
     SSH Connection failed with IOException: "connect timed out", retrying in 30 seconds. There are 5 more retries left.
@@ -157,7 +168,10 @@ jenkins.model.Jenkins.instance.get().computers.each { agent ->
 #### example for `Node` Object
 ```groovy
 import hudson.slaves.*
-DumbSlave agent = jenkins.model.Jenkins.instance.getNode( 'marslo-test' )
+
+DumbSlave agent = jenkins.model.Jenkins.instance.getNode( 'AGEENT_NAME' )
+ComputerLauncher launcher = agent.launcher
+
 println """
      display name : ${agent.getDisplayName()}
         node name : ${agent.getNodeName()}
@@ -166,17 +180,19 @@ println """
      label string : ${agent.getLabelString()}
         node mode : ${agent.getMode()}
   hold off launch : ${agent.isHoldOffLaunchUntilSave()}
+         launcher : ${launcher.host} | ${launcher.port} | ${launcher.credentialsId}
 """
 ```
 - result
   ```
-     display name : marslo-test
-        node name : marslo-test
+     display name : AGEENT_NAME
+        node name : AGEENT_NAME
       description : marslo test agent offline
          executor : 1
      label string :
         node mode : NORMAL
   hold off launch : true
+         launcher : 1.2.3.4 | sample.com | 22 | NEW_CREDENTIAL
   ```
 
 {% hint style='tip' %}
@@ -185,18 +201,18 @@ println """
 
 - `node` -> `computer`
   ```groovy
-  String agent = 'marslo-test'
-  Jenkins.instance.getNode(agent).toComputer().isOnline()
-  ```
+  String agent = 'AGEENT_NAME'
 
-  or
-  ```groovy
+  jenkins.model.Jenkins.instance.getNode(agent).toComputer().isOnline()
+  // or
   hudson.model.Hudson.instance.getNode(agent).toComputer().isOnline()
+  // or
+  jenkins.model.Jenkins.instance.getNode(agent).computer.isOnline()
   ```
 
-  or get log
+- or get log
   ```groovy
-  println jenkins.model.Jenkins.instance.getNode( 'marslo-test' ).toComputer().getLog()
+  println jenkins.model.Jenkins.instance.getNode( 'AGEENT_NAME' ).toComputer().getLog()
 
   // result
   SSHLauncher{host='1.2.3.4', port=22, credentialsId='DevOpsSSHCredential', jvmOptions='', javaPath='', prefixStartSlaveCmd='', suffixStartSlaveCmd='', launchTimeoutSeconds=30, maxNumRetries=5, retryWaitTime=30, sshHostKeyVerificationStrategy=hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy, tcpNoDelay=true, trackCredentials=true}
@@ -207,7 +223,7 @@ println """
 
 ### get projects tied to agent
 
-> reference:
+> [!NOTE|label:reference:]
 > - [`jenkins.model.Computer.allExecutors`](https://javadoc.jenkins-ci.org/hudson/model/Computer.html#getAllExecutors--)
 > - [`hudson.model.Executor.currentWorkUnit`](https://javadoc.jenkins-ci.org/hudson/model/Executor.html#getCurrentWorkUnit--)
 > - [`<SubTask> hudson.model.queue.WorkUnit.work`](https://javadoc.jenkins-ci.org/hudson/model/queue/WorkUnit.html#work)
@@ -217,7 +233,7 @@ import hudson.model.*
 import jenkins.model.*
 import hudson.slaves.*
 
-String name = 'myagent'
+String name = '<AGENT_NAME>'
 Computer computer = jenkins.model.Jenkins.instance.getNode(name)?.computer ?: null
 println computer.allExecutors.collect { it.currentWorkUnit?.work?.runId ?: '' }.join(', ') ?: ''
 ```
@@ -260,16 +276,16 @@ println computer.allExecutors.collect { it.currentWorkUnit?.work?.runId ?: '' }.
   // result
   class org.jenkinsci.plugins.workflow.support.steps.ExecutorStepExecution$PlaceholderTask
   .................
-  MY_AGENT_001
+  AGENT_001
   marslo/sandbox#6460
   .................
-  MY_AGENT_001
+  AGENT_001
   marslo/sandbox#6460
   .................
   class org.jenkinsci.plugins.workflow.job.WorkflowJob
   marslo » sandbox
   .................
-  Result: [Thread[Executor #0 for MY_AGENT_001 : executing PlaceholderExecutable:ExecutorStepExecution.PlaceholderTask{runId=marslo/sandbox#6460,label=CI-WP-CD-RPI005,context=CpsStepContext[3:node]:Owner[marslo/sandbox/6460:marslo/sandbox #6460],cookie=null,auth=null},5,]]
+  Result: [Thread[Executor #0 for AGENT_001 : executing PlaceholderExecutable:ExecutorStepExecution.PlaceholderTask{runId=marslo/sandbox#6460,label=CI-WP-CD-RPI005,context=CpsStepContext[3:node]:Owner[marslo/sandbox/6460:marslo/sandbox #6460],cookie=null,auth=null},5,]]
   ```
 
 #### get number of executor of agents
@@ -283,7 +299,7 @@ import hudson.model.Computer.ListPossibleNames
 
 println jenkins.model
                .Jenkins.instance
-               .getNode( '<agent_name>' ).computer
+               .getNode( '<AGENT_NAME>' ).computer
                .getChannel().call(new ListPossibleNames())
 ```
 
@@ -291,7 +307,7 @@ or
 ```groovy
 println jenkins.model
                .Jenkins.instance
-               .getNode( '<agent_name>' ).computer
+               .getNode( '<AGENT_NAME>' ).computer
                .getHostName()
 ```
 
@@ -305,6 +321,7 @@ println InetAddress.localHost.hostAddress
 > [!NOTE|label:references:]
 > - [Class hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
 > - [Class hudson.slaves.SlaveComputer: getLauncher](https://javadoc.jenkins.io/hudson/slaves/SlaveComputer.html#getLauncher())
+> - [JENKINS-72716: credentialsId shows different in `Jenkins.instance.nodes` and `Jenkins.instance.computers`](https://issues.jenkins.io/browse/JENKINS-72716)
 
 ```groovy
 println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
@@ -313,13 +330,28 @@ Jenkins.instance.computers.findAll { computer ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(computer) &&
   computer?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
 }.each { computer ->
-  println "~> ${computer.displayName.padRight(30)}" +
+  println ">> ${computer.displayName.padRight(30)}" +
           "[${computer.online}]".padRight(15) +
-          (computer.launcher?.credentialsId?.toString() ?: '')
+          "${computer.node.launcher?.credentialsId?.toString() ?: ''} | ${computer.launcher?.credentialsId?.toString() ?: ''}"
 }
 
 "DONE"
 ```
+- or
+  ```groovy
+  println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
+
+  Jenkins.instance.nodes.findAll { node ->
+    ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+    node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+  }.each { node ->
+    println ">> ${node.displayName.padRight(30)}" +
+            "[${node.computer.online}]".padRight(15) +
+            "${node.launcher?.credentialsId?.toString() ?: ''} | ${node.computer.launcher?.credentialsId?.toString() ?: ''}"
+  }
+
+  "DONE"
+  ```
 
 ### get agent environment variable
 ```groovy
@@ -338,18 +370,36 @@ jenkins.model.Jenkins.instance.slaves.each { agent ->
 "DONE"
 ```
 
-[or](https://stackoverflow.com/a/28076291/2940319)
+- [or](https://stackoverflow.com/a/28076291/2940319)
+  ```groovy
+  for ( slave in jenkins.model.Jenkins.instance.slaves ) {
+    println( slave.name + ": " )
+    def props = slave.nodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+    for ( prop in props ) {
+      for ( envvar in prop.envVars ) {
+        println envvar.key + " -> " + envvar.value
+      }
+    }
+  }
+  ```
+
+### get agent labels
 ```groovy
-for ( slave in jenkins.model.Jenkins.instance.slaves ) {
-  println( slave.name + ": " )
-  def props = slave.nodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
-  for ( prop in props ) {
-    for ( envvar in prop.envVars ) {
-      println envvar.key + " -> " + envvar.value
+def getLabel( String label ){
+  for ( node in jenkins.model.Jenkins.instance.nodes ) {
+    if ( node.getNodeName().toString().equals(label) ) {
+      return node.getLabelString()
     }
   }
 }
 ```
+
+- or
+  ```groovy
+  def getLabel( String label ){
+    jenkins.model.Jenkins.instance.nodes.find { it.getNodeName().toString().equals(label) }.getLabelString()
+  }
+  ```
 
 ### [get a list of all Jenkins nodes assigned with label](https://stackoverflow.com/a/64106569/2940319)
 ```groovy
@@ -695,23 +745,619 @@ Jenkins.instance.computers.findAll { computer ->
   owner                          :  KubernetesComputer name: jenkins-sandbox-sample-11998-r16jc-nj9fc agent: null
   ```
 
-## [Managing Nodes](https://www.jenkins.io/doc/book/managing/nodes/)
-### [Monitor and Restart Offline Agents](https://www.jenkins.io/doc/book/managing/nodes/)
+## [managing nodes](https://www.jenkins.io/doc/book/managing/nodes/)
+### [create agent](https://support.cloudbees.com/hc/en-us/articles/218154667-Create-a-Permanent-Agent-from-Groovy-Console?mobile_site=false)
 
+{% hint style='tip' %}
+> api:
+> - [hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
+> - [hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/verifiers/SshHostKeyVerificationStrategy.html)
+> - [hudson.slaves.DumbSlave](https://javadoc.jenkins-ci.org/hudson/slaves/DumbSlave.html)
+> - [hudson.slaves.ComputerLauncher](https://javadoc.jenkins-ci.org/hudson/slaves/ComputerLauncher.html)
+>
+{% endhint %}
+
+> [!NOTE|label:references:]
+> - scripts:
+>   - [jenkins-scripts/createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
+>   - [GroovyJenkins/src/main/groovy/AddNodeToJenkins.groovy](https://github.com/MovingBlocks/GroovyJenkins/blob/master/src/main/groovy/AddNodeToJenkins.groovy)
+>   - [JenkinsSharedSSHAgent.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/JenkinsSharedSSHAgent)
+>   - [createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
+
+{% hint style='tip' %}
+> useful libs:
+> - `import jenkins.model.*`
+> - `import hudson.slaves.*`
+> - `import hudson.slaves.NodePropertyDescriptor`
+> - `import hudson.plugins.sshslaves.*`
+> - `import hudson.plugins.sshslaves.verifiers.*`
+> - `import hudson.model.*`
+> - `import hudson.model.Node`
+> - `import hudson.model.Queue`
+> - `import hudson.model.queue.CauseOfBlockage`
+> - `import hudson.slaves.EnvironmentVariablesNodeProperty.Entry`
+> - `import java.util.ArrayList`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.nodes.JobRestrictionProperty`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.Messages`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestriction`
+> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestrictionBlockageCause`
+> - `import hudson.Extension`
+> - `import hudson.slaves.NodeProperty`
+> - `import org.kohsuke.stapler.DataBoundConstructor`
+>
+> - SSH host verification strategy:
+>   ```groovy
+>   // Known hosts file Verification Strategy
+>   new KnownHostsFileKeyVerificationStrategy()
+>   // Manually provided key Verification Strategy
+>   new ManuallyProvidedKeyVerificationStrategy("<your-key-here>")
+>   // Manually trusted key Verification Strategy
+>   new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/)
+>   // Non verifying Verification Strategy
+>   new NonVerifyingKeyVerificationStrategy()
+>   ```
+{% endhint %}
+
+```groovy
+import hudson.model.*
+import jenkins.model.*
+import hudson.slaves.*
+import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+import hudson.plugins.sshslaves.verifiers.*
+
+// Pick one of the strategies from the comments below this line
+// SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new KnownHostsFileKeyVerificationStrategy()
+//    = new KnownHostsFileKeyVerificationStrategy(                                         ) // Known hosts file Verification Strategy
+//    = new ManuallyProvidedKeyVerificationStrategy("<your-key-here>"                      ) // Manually provided key Verification Strategy
+//    = new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/ ) // Manually trusted key Verification Strategy
+//    = new NonVerifyingKeyVerificationStrategy(                                           ) // Non verifying Verification Strategy
+
+// define a "Launch method": "Launch agents via SSH"
+ComputerLauncher launcher = new hudson.plugins.sshslaves.SSHLauncher(
+        "1.2.3.4",                                 // Host
+        22,                                        // Port
+        "MyCredentials",                           // Credentials
+        (String)null,                              // JVM Options
+        (String)null,                              // JavaPath
+        (String)null,                              // Prefix Start Agent Command
+        (String)null,                              // Suffix Start Agent Command
+        (Integer)null,                             // Connection Timeout in Seconds
+        (Integer)null,                             // Maximum Number of Retries
+        (Integer)null,                             // The number of seconds to wait between retries
+        new NonVerifyingKeyVerificationStrategy()  // Host Key Verification Strategy
+)
+
+// define a "Permanent Agent"
+Slave agent             = new DumbSlave( "AGEENT_NAME", "/home/devops", launcher )
+agent.nodeDescription   = '.. agent description ..'
+agent.numExecutors      = 1
+agent.labelString       = ''
+agent.mode              = Node.Mode.NORMAL
+agent.retentionStrategy = new RetentionStrategy.Always()
+
+List<Entry> env         = new ArrayList<Entry>();
+env.add(new Entry("key1","value1"))
+env.add(new Entry("key2","value2"))
+EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
+
+agent.getNodeProperties().add(envPro)
+
+// create a "Permanent Agent"
+Jenkins.instance.addNode(agent)
+
+return "Node has been created successfully."
+```
+
+- [or](https://groups.google.com/g/jenkinsci-users/c/JmVNQm47l8g)
+  ```groovy
+  import hudson.model.*
+  import jenkins.model.*
+  import hudson.slaves.*
+  import hudson.plugins.sshslaves.verifiers.*
+  import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+
+  String name        = 'AGEENT_NAME'
+  String description = 'marslo test agent'
+  String rootDir     = '/home/marslo'
+  String nodeLabel   = ''
+  String ip          = '1.2.3.4'
+  String credential  = 'MyCredential'
+  Map envVars        = [
+    'key1' : 'value1',
+    'key2' : 'value2'
+  ]
+  SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new NonVerifyingKeyVerificationStrategy()
+
+  List<Entry> env = new ArrayList<Entry>();
+  envVars.each { k, v -> env.add(new Entry(k, v)) }
+  EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
+
+  Slave agent = new DumbSlave(
+    name,
+    description,
+    rootDir,
+    "1",
+    Node.Mode.NORMAL,
+    nodeLabel,
+    new hudson.plugins.sshslaves.SSHLauncher(
+      ip,                          // Host
+      22,                          // Port
+      credential,                  // Credentials
+      (String)null,                // JVM Options
+      (String)null,                // JavaPath
+      (String)null,                // Prefix Start Agent Command
+      (String)null,                // Suffix Start Agent Command
+      (Integer)null,               // Connection Timeout in Seconds
+      (Integer)null,               // Maximum Number of Retries
+      (Integer)null,               // The number of seconds to wait between retries
+      hostKeyVerificationStrategy  // Host Key Verification Strategy
+    ) ,
+    new RetentionStrategy.Always(),
+    new LinkedList()
+  )
+
+  agent.getNodeProperties().add(envPro)
+  Jenkins.instance.addNode(agent)
+  ```
+
+### update agent label
+
+> [!NOTE|label:references:]
+> - [Groovy script for modifying Jenkins nodes labels](https://stackoverflow.com/questions/62148298/groovy-script-for-modifying-jenkins-nodes-labels)
+
+```groovy
+def updateLabel( String agent, String label ) {
+  def node = jenkins.model.Jenkins.instance.getNode( agent )
+  if ( node ) {
+    node.setLabelString( label )
+    node.save()
+  }
+}
+```
+
+### update agent credentialsId
+```groovy
+import jenkins.model.Jenkins
+import hudson.plugins.sshslaves.SSHLauncher
+import hudson.slaves.ComputerLauncher
+
+String newCredId = 'NEW_CREDENTIAL'
+
+Jenkins.instance.nodes.findAll { node ->
+  ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+  node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+}.each { node ->
+  ComputerLauncher launcher = node.launcher
+  SSHLauncher newLauncher = new SSHLauncher( launcher.host,
+                                             launcher.port,
+                                             newCredId,
+                                             launcher.jvmOptions,
+                                             launcher.javaPath,
+                                             launcher.prefixStartSlaveCmd,
+                                             launcher.suffixStartSlaveCmd,
+                                             launcher.launchTimeoutSeconds,
+                                             launcher.maxNumRetries,
+                                             launcher.retryWaitTime,
+                                             launcher.sshHostKeyVerificationStrategy
+                                           )
+  node.setLauncher( newLauncher )
+  node.save()
+  println ">> ${node.name} DONE <<"
+
+  // restart agent
+  if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+    println ">> ${node.name} disconnect <<"
+    String message = 'disconnect due to credential update'
+    node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI(message) )
+    node.computer.disconnect( new hudson.slaves.OfflineCause.UserCause(User.current(), message ) )
+    node.computer.doChangeOfflineCause( message )
+    println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+  }
+  Thread.sleep( 5*1000 )
+  if ( node.computer.isOffline() ) {
+    println ">> ${node.name} re-connect <<"
+    node.getComputer().connect( true )
+    node.computer.setTemporarilyOffline( false, null )
+  }
+}
+```
+
+- or simply
+  ```groovy
+  import jenkins.model.Jenkins
+  import hudson.plugins.sshslaves.SSHLauncher
+  import hudson.slaves.ComputerLauncher
+
+  String newCredId = 'NEW_CREDENTIAL'
+
+  Jenkins.instance.nodes.findAll { node ->
+    ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+    node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+  }.each { node ->
+    println ">> ${node.name} update <<"
+    ComputerLauncher launcher = node.launcher
+    SSHLauncher newLauncher = new SSHLauncher( launcher.host, launcher.port, newCredId )
+    newLauncher.sshHostKeyVerificationStrategy = launcher.sshHostKeyVerificationStrategy
+    node.setLauncher( newLauncher )
+    node.save()
+  }
+
+  // restart agent
+  if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+    println ">> ${node.name} disconnect <<"
+    String message = 'disconnect due to credential update'
+    node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI(message) )
+    node.computer.disconnect( new hudson.slaves.OfflineCause.UserCause(User.current(), message ) )
+    node.computer.doChangeOfflineCause( message )
+    println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+  }
+  Thread.sleep( 5*1000 )
+  if ( node.computer.isOffline() ) {
+    println ">> ${node.name} re-connect <<"
+    node.getComputer().connect( true )
+    node.computer.setTemporarilyOffline( false, null )
+  }
+  ```
+
+- by `Jenkins.instance.addNode`
+  ```groovy
+  import hudson.slaves.*
+  import hudson.model.Node.Mode
+  import jenkins.model.Jenkins
+  import hudson.plugins.sshslaves.SSHLauncher
+
+  String newCredId = 'NEW_CREDENTIAL'
+  String nodeName  = AGENT_NAME
+
+  Jenkins.instance.nodes.findAll { node ->
+    ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+    node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
+    nodeName == node.name
+  }.each { node ->
+    ComputerLauncher launcher = node.launcher
+    SSHLauncher newLauncher = new SSHLauncher( launcher.host,
+                                               launcher.port,
+                                               newCredId,
+                                               launcher.jvmOptions,
+                                               launcher.javaPath,
+                                               launcher.prefixStartSlaveCmd,
+                                               launcher.suffixStartSlaveCmd,
+                                               launcher.launchTimeoutSeconds,
+                                               launcher.maxNumRetries,
+                                               launcher.retryWaitTime,
+                                               launcher.sshHostKeyVerificationStrategy
+                                             )
+    DumbSlave agent = new DumbSlave( node.name, node.remoteFS, newLauncher )
+    agent.nodeDescription   = node.nodeDescription
+    agent.numExecutors      = node.numExecutors
+    agent.labelString       = node.labelString
+    agent.mode              = node.mode
+    agent.retentionStrategy = node.retentionStrategy
+    node.computer.doDoDelete()
+    Thread.sleep( 5*1000 )
+    Jenkins.instance.addNode( agent )
+
+    // restart agent
+    if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+      println ">> ${node.name} disconnect <<"
+      String message = 'disconnect due to credential update'
+      node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI(message) )
+      node.computer.disconnect( new hudson.slaves.OfflineCause.UserCause(User.current(), message ) )
+      node.computer.doChangeOfflineCause( message )
+      println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+    }
+    Thread.sleep( 5*1000 )
+    if ( node.computer.isOffline() ) {
+      println ">> ${node.name} re-connect <<"
+      node.getComputer().connect( true )
+      node.computer.setTemporarilyOffline( false, null )
+    }
+}
+  ```
+
+### universal agent update
+```groovy
+import hudson.slaves.*
+import hudson.model.Node.Mode
+import jenkins.model.Jenkins
+import hudson.plugins.sshslaves.SSHLauncher
+
+Map<String, Object> newInfo = [
+        credId : 'NEW_CREDENTIAL' ,
+          name : ''               ,
+         label : ''               ,
+   description : ''               ,
+      hostname : ''               ,
+  numExecutors : 1                ,
+          port : 22
+]
+
+Jenkins.instance.nodes.findAll { node ->
+  ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+  node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+}.each { node ->
+  ComputerLauncher launcher = node.launcher
+  SSHLauncher newLauncher = new SSHLauncher( newInfo.get('hostname') ?: launcher.host,
+                                             newInfo.get('port')     ?: launcher.port,
+                                             newInfo.get('credId')   ?: launcher.credentialsId,
+                                             launcher.jvmOptions,
+                                             launcher.javaPath,
+                                             launcher.prefixStartSlaveCmd,
+                                             launcher.suffixStartSlaveCmd,
+                                             launcher.launchTimeoutSeconds,
+                                             launcher.maxNumRetries,
+                                             launcher.retryWaitTime,
+                                             launcher.sshHostKeyVerificationStrategy
+                                           )
+  node.setLauncher( newLauncher )
+  node.nodeDescription   = newInfo.get('description')  ?: node.nodeDescription
+  node.numExecutors      = newInfo.get('numExecutors') ?: node.numExecutors
+  node.labelString       = newInfo.get('label')        ?: node.labelString
+  node.mode              = node.mode
+  node.retentionStrategy = node.retentionStrategy
+  node.save()
+
+  println ">> ${node.name} DONE <<"
+}
+```
+
+### disconnect agent
+{% hint style='tip' %}
+> - reconnect:
+>   - `agent.computer.connect( true  )`
+>   - `jenkins.model.Jenkins.instance.getNode( name ).computer.connect( true )`
+> - disconnect:
+>   - `agent.computer.doDoDisconnect( 'messasge' )`
+>   - `agent.computer.disconnect( new hudson.slaves.OfflineCause.UserCause(User.current(), 'message') )`
+>   - `agent.computer.disconnect( new hudson.slaves.OfflineCause.ByCLI('message') )`
+> - reference:
+>   - [awslabs/ec2-spot-jenkins-plugin](https://github.com/awslabs/ec2-spot-jenkins-plugin/blob/master/src/test/java/com/amazon/jenkins/ec2fleet/AutoResubmitIntegrationTest.java#L101) | [or](https://www.programcreek.com/java-api-examples/?api=hudson.slaves.OfflineCause)
+>   - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy)
+>   - [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/disableSlaveNodeStartsWith.groovy)
+> - API:
+>   - [Class hudson.model.Computer](https://javadoc.jenkins-ci.org/hudson/model/computer.html)
+>   - [Class hudson.slaves.OfflineCause](https://javadoc.jenkins-ci.org/hudson/slaves/OfflineCause.html)
+{% endhint %}
+
+```groovy
+import jenkins.model.Jenkins
+import hudson.plugins.sshslaves.SSHLauncher
+import hudson.slaves.ComputerLauncher
+import hudson.slaves.OfflineCause
+
+String newCredId = 'NEW_CREDENTIAL'
+String nodeName  = 'AGENT_NAME'
+
+Jenkins.instance.nodes.findAll { node ->
+  ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+  node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
+  nodeName == node.name
+}.each { node ->
+  if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+    println ">> ${node.name} disconnect <<"
+    String message = 'disconnect due to ...'
+    node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI(message) )
+    node.computer.disconnect( new OfflineCause.UserCause(User.current(), message) )
+    node.computer.doChangeOfflineCause( message )
+    println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+  }
+}
+```
+- legacy version
+  ```groovy
+  import hudson.slaves.*
+
+  String name = 'AGEENT_NAME'
+  String cause = "disconnet the agent automatically via ${env.BUILD_URL}"
+
+  DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
+
+  if ( agent
+       && ! ['AbstractCloudComputer', 'AbstractCloudSlave'].contains(agent.computer?.class.superclass?.simpleName)
+       && ! (agent.computer instanceof jenkins.model.Jenkins.MasterComputer)
+     ) {
+      Boolean online = agent.computer.isOnline()
+      Boolean busy = agent.computer.countBusy() != 0
+      if( online && !busy ) {
+        agent.computer.disconnect( new OfflineCause.ChannelTermination(new UnsupportedOperationException(cause)) )
+      }
+  }
+  ```
+
+### temporarily offline agent
+
+{% hint style='tip' %}
+> offline agent is normally for workspace cleanup
+>
+> reference:
+> - [codecentric/jenkins-scripts](https://github.com/codecentric/jenkins-scripts/blob/master/src/main/groovy/CleanupSlaveWorkspaces.groovy)
+> - [Display Information About Nodes](https://wiki.jenkins.io/display/jenkins/display+information+about+nodes)
+> - [IS there any process to automate the jeniks nodes/slaves](https://stackoverflow.com/a/74110981/2940319)
+> - [Bring 'offline node' online script](https://stackoverflow.com/a/72787137/2940319)
+> - [How do I disable a node in Jenkins UI after it has completed its currently running jobs?](https://stackoverflow.com/a/69641939/2940319)
+>
+> - bring node online
+>   ```groovy
+>   computer.setTemporarilyOffline( false, null )
+>   ```
+{% endhint %}
+
+> [!NOTE|label:references:]
+> - [CleanupSlaveWorkspaces.groovy](https://github.com/codecentric/jenkins-scripts/blob/master/src/main/groovy/CleanupSlaveWorkspaces.groovy)
+>   ```groovy
+>   import hudson.slaves.OfflineCause
+>
+>   // offline
+>   node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI("disk cleanup on slave") )
+>   // online
+>   node.computer.setTemporarilyOffline( false, null )
+>   // or online
+>   node.computer.cliOnline()
+>   ```
+> - [hudson.slaves.OfflineCause Java Examples](https://www.programcreek.com/java-api-examples/?api=hudson.slaves.OfflineCause)
+>   - [AutoResubmitIntegrationTest.java](https://www.programcreek.com/java-api-examples/?code=awslabs%2Fec2-spot-jenkins-plugin%2Fec2-spot-jenkins-plugin-master%2Fsrc%2Ftest%2Fjava%2Fcom%2Famazon%2Fjenkins%2Fec2fleet%2FAutoResubmitIntegrationTest.java#)
+
+
+```groovy
+import jenkins.model.Jenkins
+import hudson.plugins.sshslaves.SSHLauncher
+import hudson.slaves.ComputerLauncher
+
+String nodeName = <AGENT_NAME>
+
+Jenkins.instance.nodes.findAll { node ->
+  ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+  node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
+  nodeName == node.name
+}.each { node ->
+  if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+    println ">> ${node.name} offline <<"
+    String message = 'disconnect due to update credential'
+    node.computer.setTemporarilyOffline(true, new hudson.slaves.OfflineCause.ByCLI( message ))
+    node.computer.doChangeOfflineCause( message )
+    println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+  }
+
+  if ( ! node.computer.isOnline() ) {
+    sleep 10
+    println ">> ${node.name} re-online <<"
+    node.computer.cliOnline()
+  }
+}
+```
+
+- legacy version
+  ```groovy
+  import hudson.slaves.*
+
+  String name  = 'AGEENT_NAME'
+  String cause = "temporary offline for the agent workspace cleanup"
+  DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
+
+  if ( agent
+       && ! ['AbstractCloudComputer', 'AbstractCloudSlave'].contains(agent.computer?.class.superclass?.simpleName)
+       && ! (agent.computer instanceof jenkins.model.Jenkins.MasterComputer)
+   ) {
+    Boolean online = agent.computer.isOnline()
+    Boolean busy = agent.computer.countBusy() != 0
+
+    if( online && !busy ) {
+      agent.computer.setTemporarilyOffline( true,
+                                            new hudson.slaves.OfflineCause.ByCLI("disk cleanup on slave")
+                                          )
+    }
+  }
+  ```
+
+### restart agent
+
+> [!NOTE|label:references:]
+> - [Jenkins slave disconnect via pipeline script from scm](https://groups.google.com/g/jenkinsci-dev/c/ch2lQZvZdkw/m/Rs6KuXNHDAAJ)
+> - [darinpope/How-to-Restart-Jenkins-Agent.md](https://gist.github.com/darinpope/ae8fd8432b173fbe507336e2746e206d)
+
+```groovy
+import jenkins.model.Jenkins
+import hudson.plugins.sshslaves.SSHLauncher
+import hudson.slaves.ComputerLauncher
+import hudson.slaves.OfflineCause
+
+String nodeName = '<AGENT_NAME>'
+
+Jenkins.instance.nodes.findAll { node ->
+  ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
+  node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
+  nodeName == node.name
+}.each { node ->
+  if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+    println ">> ${node.name} disconnect <<"
+    String message = 'disconnect due to ...'
+    node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI(message) )
+    node.computer.disconnect( new OfflineCause.UserCause(User.current(), message ) )
+    node.computer.doChangeOfflineCause( message )
+    println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+  }
+
+  if ( node.computer.isOffline() ) {
+    sleep 10
+    println ">> ${node.name} re-connect <<"
+    node.getComputer().connect( true )
+    node.getComputer().cliOnline()
+  }
+}
+```
+
+### delete agent
+> references:
+> - [cloudbees/jenkins-scripts/deleteAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/deleteAgents.groovy)
+
+```groovy
+def isAgentExists( String name ) {
+  jenkins.model.Jenkins.instance.getNodes().any { name == it.computer?.name }
+}
+
+def removeAgent( String name ) {
+  Boolean deleted = false
+  DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
+
+  if ( agent
+       && ! AbstractCloudComputer.isInstance( agent.computer )
+       && ! AbstractCloudSlave.isInstance( agent.computer )
+       && ! ( agent.computer instanceof jenkins.model.Jenkins.MasterComputer )
+  ) {
+    Boolean online = agent.computer.isOnline()
+    Boolean busy   = agent.computer.countBusy() != 0
+
+    if ( !busy ) {
+      println """
+        "${online ? ' offline and' : ''} remove agent ${name} :"
+           display name : ${agent.getDisplayName()}
+            description : ${agent.getNodeDescription()}
+               executor : ${agent.getNumExecutors()}
+              node mode : ${agent.getMode()}
+                online? : ${online}
+                  busy? : ${busy}
+         offline cause? : ${agent.computer.getOfflineCause()}
+      """
+      if ( online ) {
+        agent.computer.setTemporarilyOffline( true,
+                                              new hudson.slaves.OfflineCause.ByCLI('offline due to agent will be removed automatically')
+        )
+        Thread.sleep( 5*1000 )
+      }
+      agent.computer.doDoDelete()
+      deleted = ! isAgentExists( name )
+      println( "INFO: agent ${name} ${deleted ? 'has been successfully removed' : 'failed been removed'} from ${env.JENKINS_URL}computer")
+    } else {
+      println("WARN: the agent ${name} cannot be removed due to project is tie to it" )
+    }
+  } else {
+    println('WARN: cloud agent or Jenkins master cannot be removed!' )
+  }
+
+  return deleted
+}
+```
+
+## [monitor](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
+
+{% hint style='tip' %}
+> references:
+> - [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
+> - [Jenkins : Display monitors status](https://wiki.jenkins.io/display/JENKINS/Display-monitors-status.html)
+{% endhint %}
+
+### [monitor and restart offline agents](https://www.jenkins.io/doc/book/managing/nodes/)
 ```groovy
 import hudson.node_monitors.*
 import hudson.slaves.*
 import java.util.concurrent.*
-
-jenkins = Jenkins.instance
-
 import javax.mail.internet.*;
 import javax.mail.*
 import javax.activation.*
 
+jenkins = Jenkins.instance
 
-def sendMail (agent, cause) {
-
+def sendMail ( agent, cause ) {
   message = agent + " agent is down. Check http://JENKINS_HOSTNAME:JENKINS_PORT/computer/" + agent + "\nBecause " + cause
   subject = agent + " agent is offline"
   toAddress = "JENKINS_ADMIN@YOUR_DOMAIN"
@@ -726,7 +1372,6 @@ def sendMail (agent, cause) {
 
   Session lSession = Session.getDefaultInstance(mprops,null);
   MimeMessage msg = new MimeMessage(lSession);
-
 
   //tokenize out the recipients in case they came in as a list
   StringTokenizer tok = new StringTokenizer(toAddress,";");
@@ -747,7 +1392,6 @@ def sendMail (agent, cause) {
   transporter.connect();
   transporter.send(msg);
 }
-
 
 def getEnviron(computer) {
   def env
@@ -796,337 +1440,8 @@ println ("Number of Offline Nodes: " + numberOfflineNodes)
 println ("Number of Nodes: " + numberNodes)
 ```
 
-### [Create a Permanent Agent from Groovy Console](https://support.cloudbees.com/hc/en-us/articles/218154667-Create-a-Permanent-Agent-from-Groovy-Console?mobile_site=false)
-{% hint style='tip' %}
-> api:
-> - [hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
-> - [hudson.plugins.sshslaves.verifiers.SshHostKeyVerificationStrategy](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/verifiers/SshHostKeyVerificationStrategy.html)
-> - [hudson.slaves.DumbSlave](https://javadoc.jenkins-ci.org/hudson/slaves/DumbSlave.html)
-> - [hudson.slaves.ComputerLauncher](https://javadoc.jenkins-ci.org/hudson/slaves/ComputerLauncher.html)
->
-{% endhint %}
-
-> [!NOTE|label:references:]
-> - scripts:
->   - [jenkins-scripts/createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
->   - [GroovyJenkins/src/main/groovy/AddNodeToJenkins.groovy](https://github.com/MovingBlocks/GroovyJenkins/blob/master/src/main/groovy/AddNodeToJenkins.groovy)
->   - [JenkinsSharedSSHAgent.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/JenkinsSharedSSHAgent)
->   - [createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
-
-{% hint style='tip' %}
-> useful libs:
-> - `import jenkins.model.*`
-> - `import hudson.slaves.*`
-> - `import hudson.slaves.NodePropertyDescriptor`
-> - `import hudson.plugins.sshslaves.*`
-> - `import hudson.plugins.sshslaves.verifiers.*`
-> - `import hudson.model.*`
-> - `import hudson.model.Node`
-> - `import hudson.model.Queue`
-> - `import hudson.model.queue.CauseOfBlockage`
-> - `import hudson.slaves.EnvironmentVariablesNodeProperty.Entry`
-> - `import java.util.ArrayList`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.nodes.JobRestrictionProperty`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.Messages`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestriction`
-> - `import com.synopsys.arc.jenkinsci.plugins.jobrestrictions.restrictions.JobRestrictionBlockageCause`
-> - `import hudson.Extension`
-> - `import hudson.slaves.NodeProperty`
-> - `import org.kohsuke.stapler.DataBoundConstructor`
->
-> - SSH host verification strategy:
->
-> ```groovy
-> // Known hosts file Verification Strategy
-> new KnownHostsFileKeyVerificationStrategy()
-> // Manually provided key Verification Strategy
-> new ManuallyProvidedKeyVerificationStrategy("<your-key-here>")
-> // Manually trusted key Verification Strategy
-> new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/)
-> // Non verifying Verification Strategy
-> new NonVerifyingKeyVerificationStrategy()
-> ```
-{% endhint %}
-
-```groovy
-import hudson.model.*
-import jenkins.model.*
-import hudson.slaves.*
-import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
-import hudson.plugins.sshslaves.verifiers.*
-
-// Pick one of the strategies from the comments below this line
-// SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new KnownHostsFileKeyVerificationStrategy()
-    //= new KnownHostsFileKeyVerificationStrategy() // Known hosts file Verification Strategy
-    //= new ManuallyProvidedKeyVerificationStrategy("<your-key-here>") // Manually provided key Verification Strategy
-    //= new ManuallyTrustedKeyVerificationStrategy(false /*requires initial manual trust*/) // Manually trusted key Verification Strategy
-    //= new NonVerifyingKeyVerificationStrategy() // Non verifying Verification Strategy
-
-// Define a "Launch method": "Launch agents via SSH"
-ComputerLauncher launcher = new hudson.plugins.sshslaves.SSHLauncher(
-        "1.2.3.4",                                 // Host
-        22,                                        // Port
-        "MyCredentials",                           // Credentials
-        (String)null,                              // JVM Options
-        (String)null,                              // JavaPath
-        (String)null,                              // Prefix Start Agent Command
-        (String)null,                              // Suffix Start Agent Command
-        (Integer)null,                             // Connection Timeout in Seconds
-        (Integer)null,                             // Maximum Number of Retries
-        (Integer)null,                             // The number of seconds to wait between retries
-        new NonVerifyingKeyVerificationStrategy()  // Host Key Verification Strategy
-)
-
-// Define a "Permanent Agent"
-Slave agent = new DumbSlave(
-        "marslo-test",
-        "/home/devops",
-        launcher)
-agent.nodeDescription = "marslo test agent"
-agent.numExecutors = 1
-agent.labelString = ""
-agent.mode = Node.Mode.NORMAL
-agent.retentionStrategy = new RetentionStrategy.Always()
-
-List<Entry> env = new ArrayList<Entry>();
-env.add(new Entry("key1","value1"))
-env.add(new Entry("key2","value2"))
-EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
-
-agent.getNodeProperties().add(envPro)
-
-// Create a "Permanent Agent"
-Jenkins.instance.addNode(agent)
-
-return "Node has been created successfully."
-```
-
-- [or](https://groups.google.com/g/jenkinsci-users/c/JmVNQm47l8g)
-  ```groovy
-  import hudson.model.*
-  import jenkins.model.*
-  import hudson.slaves.*
-  import hudson.plugins.sshslaves.verifiers.*
-  import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
-
-  String name        = 'marslo-test'
-  String description = 'marslo test agent'
-  String rootDir     = '/home/marslo'
-  String nodeLabel   = ''
-  String ip          = '1.2.3.4'
-  String credential  = 'MyCredential'
-  Map envVars        = [
-    'key1' : 'value1',
-    'key2' : 'value2'
-  ]
-  SshHostKeyVerificationStrategy hostKeyVerificationStrategy = new NonVerifyingKeyVerificationStrategy()
-
-  List<Entry> env = new ArrayList<Entry>();
-  envVars.each { k, v -> env.add(new Entry(k, v)) }
-  EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env);
-
-  Slave agent = new DumbSlave(
-    name,
-    description,
-    rootDir,
-    "1",
-    Node.Mode.NORMAL,
-    nodeLabel,
-    new hudson.plugins.sshslaves.SSHLauncher(
-      ip,                          // Host
-      22,                          // Port
-      credential,                  // Credentials
-      (String)null,                // JVM Options
-      (String)null,                // JavaPath
-      (String)null,                // Prefix Start Agent Command
-      (String)null,                // Suffix Start Agent Command
-      (Integer)null,               // Connection Timeout in Seconds
-      (Integer)null,               // Maximum Number of Retries
-      (Integer)null,               // The number of seconds to wait between retries
-      hostKeyVerificationStrategy  // Host Key Verification Strategy
-    ) ,
-    new RetentionStrategy.Always(),
-    new LinkedList()
-  )
-
-  agent.getNodeProperties().add(envPro)
-  Jenkins.instance.addNode(agent)
-  ```
-
-### update agent label
-> references:
-> - [Groovy script for modifying Jenkins nodes labels](https://stackoverflow.com/questions/62148298/groovy-script-for-modifying-jenkins-nodes-labels)
-
-- get label
-  ```groovy
-  def getLabel( String label ){
-    for ( node in jenkins.model.Jenkins.instance.nodes ) {
-      if ( node.getNodeName().toString().equals(label) ) {
-        return node.getLabelString()
-      }
-    }
-  }
-  ```
-  or
-  ```groovy
-  def getLabel( String label ){
-    jenkins.model.Jenkins.instance.nodes.find { it.getNodeName().toString().equals(label) }.getLabelString()
-  }
-  ```
-
-- update label
-  ```groovy
-  def updateLabel( String agent, String label ) {
-    def node = jenkins.model.Jenkins.instance.getNode( agent )
-    if ( node ) {
-      node.setLabelString(label)
-      node.save()
-    }
-  }
-  ```
-
-### disable agent
-
-> [!NOTE|label:references:]
-> - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy)
-> - [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/disableSlaveNodeStartsWith.groovy)
-
-### disconnect agent
-{% hint style='tip' %}
-> reconnect:
-> - `agent.computer.connect( true  )`
-> - `jenkins.model.Jenkins.instance.getNode( name ).computer.connect( true )`
->
-> reference:
-> - [awslabs/ec2-spot-jenkins-plugin](https://github.com/awslabs/ec2-spot-jenkins-plugin/blob/master/src/test/java/com/amazon/jenkins/ec2fleet/AutoResubmitIntegrationTest.java#L101) | [or](https://www.programcreek.com/java-api-examples/?api=hudson.slaves.OfflineCause)
-{% endhint %}
-
-```groovy
-import hudson.slaves.*
-
-String name = 'marslo-test'
-String cause = "disconnet the agent automatically via ${env.BUILD_URL}"
-
-DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
-
-if ( agent
-     &&
-     ! ['AbstractCloudComputer', 'AbstractCloudSlave'].contains(agent.computer?.class.superclass?.simpleName)
-     &&
-     ! (agent.computer instanceof jenkins.model.Jenkins.MasterComputer)
-   ) {
-    Boolean online = agent.computer.isOnline()
-    Boolean busy = agent.computer.countBusy() != 0
-    if( online && !busy ) {
-      agent.computer.disconnect( new OfflineCause.ChannelTermination(new UnsupportedOperationException(cause)) )
-    }
-}
-```
-
-
-### offline agent
-{% hint style='tip' %}
-> offline agent is normally for workspace cleanup
->
-> reference:
-> - [codecentric/jenkins-scripts](https://github.com/codecentric/jenkins-scripts/blob/master/src/main/groovy/CleanupSlaveWorkspaces.groovy)
-> - [Display Information About Nodes](https://wiki.jenkins.io/display/jenkins/display+information+about+nodes)
->
-> bring node online
-> `computer.setTemporarilyOffline( false, null )`
-{% endhint %}
-
-```groovy
-import hudson.slaves.*
-
-String name = 'marslo-test'
-String cause = "temporary offline for the agent workspace cleanup"
-
-DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
-
-if ( agent
-     &&
-     ! ['AbstractCloudComputer', 'AbstractCloudSlave'].contains(agent.computer?.class.superclass?.simpleName)
-     &&
-     ! (agent.computer instanceof jenkins.model.Jenkins.MasterComputer)
-   ) {
-    Boolean online = agent.computer.isOnline()
-    Boolean busy = agent.computer.countBusy() != 0
-
-    if( online && !busy ) {
-      agent.computer.setTemporarilyOffline( true,
-                                            new hudson.slaves.OfflineCause.ByCLI("disk cleanup on slave")
-                                          )
-    }
-}
-```
-
-### delete agent
-> references:
-> - [cloudbees/jenkins-scripts/deleteAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/deleteAgents.groovy)
-
-```groovy
-def isAgentExists( String name ) {
-  jenkins.model.Jenkins.instance.getNodes().any { name == it.computer?.name }
-}
-
-def removeAgent( String name ) {
-  Boolean deleted = false
-  DumbSlave agent = jenkins.model.Jenkins.instance.getNode( name )
-
-  if ( agent
-       &&
-       ! AbstractCloudComputer.isInstance( agent.computer )
-       &&
-       ! AbstractCloudSlave.isInstance( agent.computer )
-       &&
-       ! ( agent.computer instanceof jenkins.model.Jenkins.MasterComputer )
-  ) {
-    Boolean online = agent.computer.isOnline()
-    Boolean busy   = agent.computer.countBusy() != 0
-
-    if ( !busy ) {
-      println """
-        "${online ? ' offline and' : ''} remove agent ${name} :"
-           display name : ${agent.getDisplayName()}
-            description : ${agent.getNodeDescription()}
-               executor : ${agent.getNumExecutors()}
-              node mode : ${agent.getMode()}
-                online? : ${online}
-                  busy? : ${busy}
-         offline cause? : ${agent.computer.getOfflineCause()}
-      """
-      if ( online ) {
-        agent.computer.setTemporarilyOffline( true,
-                                              new hudson.slaves.OfflineCause.ByCLI('offline due to agent will be removed automatically')
-        )
-        Thread.sleep( 5*1000 )
-      }
-      agent.computer.doDoDelete()
-      deleted = ! isAgentExists( name )
-      println( "INFO: agent ${name} ${deleted ? 'has been successfully removed' : 'failed been removed'} from ${env.JENKINS_URL}computer")
-    } else {
-      println("WARN: the agent ${name} cannot be removed due to project is tie to it" )
-    }
-  } else {
-    println('WARN: cloud agent or Jenkins master cannot be removed!' )
-  }
-
-  return deleted
-}
-```
-
-## [monitor](https://wiki.jenkins.io/display/JENKINS/Monitoring-Scripts.html)
-
-{% hint style='tip' %}
-> references:
-> - [Jenkins : Invalidate Jenkins HTTP sessions](https://wiki.jenkins.io/display/JENKINS/Invalidate-Jenkins-HTTP-sessions.html)
-> - [Jenkins : Display monitors status](https://wiki.jenkins.io/display/JENKINS/Display-monitors-status.html)
-{% endhint %}
-
 
 ### for jenkins master
-
 #### execute gc
 ```groovy
 import net.bull.javamelody.*;
@@ -1294,24 +1609,24 @@ for ( request in aggreg.getRequests() ) {
 
 ### send alerts
 
-> [!TIP]
-> suppose that you want to check:
-> - every 15 minutes on the Jenkins master,
-> - if the system load average is above 50
-> - if the active HTTP threads count is above 100
-> - if there are deadlocked threads
-> - if there are less than 10 Gb free disk space left:
-> by:
-> - create a freestyle job in jenkins by clicking "New Item".
-> - check "build periodically" and write a schedule, "*/15 * * * *" for example.
-> - add a build step "execute system groovy script" and write a script
+> [!TIP|label:references:]
+> - suppose that you want to check:
+>   - every 15 minutes on the Jenkins master,
+>   - if the system load average is above 50
+>   - if the active HTTP threads count is above 100
+>   - if there are deadlocked threads
+>   - if there are less than 10 Gb free disk space left:
+> - by:
+>   - create a freestyle job in jenkins by clicking "New Item".
+>   - check "build periodically" and write a schedule, "*/15 * * * *" for example.
+>   - add a build step "execute system groovy script" and write a script
 >
 > <br>
-> or any script with monitoring values in this page
-> - add a post-build action "E-mail Notification" and write your email in "Recipients".
-> - you can also configure "Discard old builds" and write a description.
-> - save.
-> - click "Build now" to test it.
+> - or any script with monitoring values in this page
+>   - add a post-build action "E-mail Notification" and write your email in "Recipients".
+>   - you can also configure "Discard old builds" and write a description.
+>   - save.
+>   - click "Build now" to test it.
 
 ```groovy
 import net.bull.javamelody.*;
