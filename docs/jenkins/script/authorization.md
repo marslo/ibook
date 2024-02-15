@@ -21,11 +21,7 @@
   - [BasicSSHUserPrivateKey](#basicsshuserprivatekey)
   - [CertificateCredentials](#certificatecredentials)
   - [SystemCredentialsProvider](#systemcredentialsprovider)
-  - [VaultUsernamePasswordCredential](#vaultusernamepasswordcredential)
-  - [VaultAppRoleCredential](#vaultapprolecredential)
-  - [VaultSSHUserPrivateKeyImpl](#vaultsshuserprivatekeyimpl)
-  - [VaultStringCredentialImpl](#vaultstringcredentialimpl)
-  - [VaultUsernamePasswordCredentialImpl](#vaultusernamepasswordcredentialimpl)
+  - [vault](#vault)
   - [encrypt/decrypt password](#encryptdecrypt-password)
 - [tricky](#tricky)
   - [Access granted with Overall/SystemRead](#access-granted-with-overallsystemread)
@@ -34,6 +30,10 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## security
+
+> [!NOTE|label:references:]
+> - [getJavaSecurityAlgorithmReport.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/getJavaSecurityAlgorithmReport.groovy)
+
 ### [get securityRealm](https://stackoverflow.com/a/66606027/2940319)
 ```groovy
 import hudson.security.*
@@ -357,7 +357,6 @@ disposer.getBacklog().each { item ->
 {% hint style='tip' %}
 > references:
 > - [* Setting Jenkins Credentials with Groovy](https://nickcharlton.net/posts/setting-jenkins-credentials-with-groovy.html)
-> - [* menski/jenkins-decrypt.py](https://gist.github.com/menski/8f9980999ed43246b9b2)
 > - [* addCredentials : hayderimran7/Jenkins_ssh_groovy.md](https://gist.github.com/hayderimran7/d6ab8a6a770cb970349e)
 > - [* Jenkins Credentials Store Access via Groovy](https://stackoverflow.com/a/35215587/2940319)
 > - [* Adding Google Service Account Credentials by a groovy script](https://stackoverflow.com/a/66553315/2940319)
@@ -373,13 +372,21 @@ disposer.getBacklog().each { item ->
 > - [* Jenkins: Decrypting all passwords in credentials.xml (via Jenkins execution console)](https://stackoverflow.com/a/56047194/2940319)
 > - [How to get android signing certificate back from jenkins plugin](https://stackoverflow.com/a/56290348/2940319)
 > - [bstapes/jenkins-decrypt](https://github.com/bstapes/jenkins-decrypt)
-> - [* tuxfight3r/jenkins-decrypt.groovy](https://gist.github.com/tuxfight3r/eca9442ff76649b057ab)
 > - [* How to decrypt Jenkins passwords from credentials.xml?](https://devops.stackexchange.com/a/8692/3503)
+> - [update Jenkins credentials by script](https://stackoverflow.com/a/32216097/2940319)
+> - [Accessing and dumping Jenkins credentials](https://www.codurance.com/publications/2019/05/30/accessing-and-dumping-jenkins-credentials)
 {% endhint %}
 
 > [!TIP]
 > something else :
 > - [kubernetes-credentials-provider-plugin](https://jenkinsci.github.io/kubernetes-credentials-provider-plugin/examples/)
+> - scripts:
+>   - [* tuxfight3r/jenkins-decrypt.groovy](https://gist.github.com/tuxfight3r/eca9442ff76649b057ab)
+>   - [* menski/jenkins-decrypt.py](https://gist.github.com/menski/8f9980999ed43246b9b2)
+>   - [addCredentials.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/addCredentials.groovy)
+>   - [changeCredentialPassword.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/changeCredentialPassword.groovy)
+>   - [credentials-migration](https://github.com/cloudbees/jenkins-scripts/tree/master/credentials-migration)
+>   - [list-credential.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/list-credential.groovy)
 >
 > api :
 > - [com.cloudbees.plugins.credentials](https://javadoc.jenkins.io/plugin/credentials/com/cloudbees/plugins/credentials/Credentials.html)
@@ -720,7 +727,43 @@ systemCredentialsProvider.credentials.each {
 }
 ```
 
-### [VaultUsernamePasswordCredential](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
+### vault
+
+> [!NOTE|label:references:]
+> - scripts:
+>   - [vaultTokenCredential.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/vaultTokenCredential.groovy)
+
+#### [VaultAppRoleCredential](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/VaultAppRoleCredential.html)
+
+> [!NOTE|label:references:]
+> - scripts
+>   - [vaultAppRoleCredential.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/vaultAppRoleCredential.groovy)
+
+```groovy
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
+
+List<VaultAppRoleCredential> creds = CredentialsProvider.lookupCredentials(
+  VaultAppRoleCredential.class ,
+  jenkins.model.Jenkins.instance
+).sort{ it.id }
+
+creds.each {
+  println """
+             type : ${it.class.simpleName}
+            scope : ${it.scope}
+    engineVersion : ${it.engineVersion}
+               id : ${it.id}
+      description : ${it.description}
+        namespace : ${it.namespace}
+             path : ${it.path}
+         secretId : ${it.secretId}
+           roleId : ${it.roleId}
+  """
+}
+```
+
+#### [VaultUsernamePasswordCredential](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
 ```groovy
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredential
@@ -747,32 +790,35 @@ creds.each {
 }
 ```
 
-### [VaultAppRoleCredential](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/VaultAppRoleCredential.html)
-```groovy
+#### [VaultUsernamePasswordCredentialImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
+```bash
 import com.cloudbees.plugins.credentials.CredentialsProvider
-import com.datapipe.jenkins.vault.credentials.VaultAppRoleCredential
+import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredentialImpl
 
-List<VaultAppRoleCredential> creds = CredentialsProvider.lookupCredentials(
-  VaultAppRoleCredential.class ,
+List<VaultUsernamePasswordCredentialImpl> creds = CredentialsProvider.lookupCredentials(
+  VaultUsernamePasswordCredentialImpl.class ,
   jenkins.model.Jenkins.instance
 ).sort{ it.id }
 
 creds.each {
   println """
-             type : ${it.class.simpleName}
-            scope : ${it.scope}
-    engineVersion : ${it.engineVersion}
-               id : ${it.id}
-      description : ${it.description}
-        namespace : ${it.namespace}
-             path : ${it.path}
-         secretId : ${it.secretId}
-           roleId : ${it.roleId}
+              type : ${it.class.simpleName}
+     engineVersion : ${it.engineVersion}
+               id  : ${it.id}
+             scope : ${it.scope}
+       description : ${it.description}
+       displayName : ${it.displayName}
+              path : ${it.path}
+       usernameKey : ${it.usernameKey}
+          username : ${it.username}
+       passwordKey : ${it.passwordKey}
+          password : ${it.password}
+    usernameSecret : ${it.usernameSecret ?: 'false'}
   """
 }
 ```
 
-### [VaultSSHUserPrivateKeyImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultSSHUserPrivateKeyImpl.html)
+#### [VaultSSHUserPrivateKeyImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultSSHUserPrivateKeyImpl.html)
 ```bash
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.datapipe.jenkins.vault.credentials.common.VaultSSHUserPrivateKeyImpl
@@ -802,7 +848,7 @@ creds.each {
 }
 ```
 
-### [VaultStringCredentialImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultStringCredentialImpl.html)
+#### [VaultStringCredentialImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultStringCredentialImpl.html)
 ```bash
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.datapipe.jenkins.vault.credentials.common.VaultStringCredentialImpl
@@ -824,34 +870,6 @@ creds.each {
              path : ${it.path}
          valutKey : ${it.vaultKey}
            secret : ${it.secret}
-  """
-}
-```
-
-### [VaultUsernamePasswordCredentialImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
-```bash
-import com.cloudbees.plugins.credentials.CredentialsProvider
-import com.datapipe.jenkins.vault.credentials.common.VaultUsernamePasswordCredentialImpl
-
-List<VaultUsernamePasswordCredentialImpl> creds = CredentialsProvider.lookupCredentials(
-  VaultUsernamePasswordCredentialImpl.class ,
-  jenkins.model.Jenkins.instance
-).sort{ it.id }
-
-creds.each {
-  println """
-              type : ${it.class.simpleName}
-     engineVersion : ${it.engineVersion}
-               id  : ${it.id}
-             scope : ${it.scope}
-       description : ${it.description}
-       displayName : ${it.displayName}
-              path : ${it.path}
-       usernameKey : ${it.usernameKey}
-          username : ${it.username}
-       passwordKey : ${it.passwordKey}
-          password : ${it.password}
-    usernameSecret : ${it.usernameSecret ?: 'false'}
   """
 }
 ```

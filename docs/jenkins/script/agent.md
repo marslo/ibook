@@ -24,7 +24,6 @@
   - [Monitor and Restart Offline Agents](#monitor-and-restart-offline-agents)
   - [Create a Permanent Agent from Groovy Console](#create-a-permanent-agent-from-groovy-console)
   - [update agent label](#update-agent-label)
-  - [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](#jenkins-scriptsscriptlerdisableslavenodestartswithgroovy)
   - [disable agent](#disable-agent)
   - [disconnect agent](#disconnect-agent)
   - [offline agent](#offline-agent)
@@ -807,9 +806,12 @@ println ("Number of Nodes: " + numberNodes)
 >
 {% endhint %}
 
-> references:
-> - [jenkins-scripts/createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
-> - [GroovyJenkins/src/main/groovy/AddNodeToJenkins.groovy](https://github.com/MovingBlocks/GroovyJenkins/blob/master/src/main/groovy/AddNodeToJenkins.groovy)
+> [!NOTE|label:references:]
+> - scripts:
+>   - [jenkins-scripts/createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
+>   - [GroovyJenkins/src/main/groovy/AddNodeToJenkins.groovy](https://github.com/MovingBlocks/GroovyJenkins/blob/master/src/main/groovy/AddNodeToJenkins.groovy)
+>   - [JenkinsSharedSSHAgent.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/JenkinsSharedSSHAgent)
+>   - [createAgentsScript.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/createAgentsScript.groovy)
 
 {% hint style='tip' %}
 > useful libs:
@@ -983,11 +985,11 @@ return "Node has been created successfully."
   }
   ```
 
-### [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/disableSlaveNodeStartsWith.groovy)
-
 ### disable agent
-> references:
+
+> [!NOTE|label:references:]
 > - [cloudbees/jenkins-scripts/disableAgents.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/disableAgents.groovy)
+> - [jenkins-scripts/scriptler/disableSlaveNodeStartsWith.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/disableSlaveNodeStartsWith.groovy)
 
 ### disconnect agent
 {% hint style='tip' %}

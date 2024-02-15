@@ -4,14 +4,12 @@
 - [list items](#list-items)
   - [get name and classes](#get-name-and-classes)
   - [list all jobs and folders](#list-all-jobs-and-folders)
-  - [list all pipeline jobs](#list-all-pipeline-jobs)
-  - [list all abstract Project](#list-all-abstract-project)
+  - [list all WorkflowJob](#list-all-workflowjob)
+  - [list all AbstractProject](#list-all-abstractproject)
   - [list all folders](#list-all-folders)
-  - [list deactive jobs](#list-deactive-jobs)
-- [disable and enable jobs](#disable-and-enable-jobs)
-  - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
-  - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
-  - [find all disabled projects/jobs](#find-all-disabled-projectsjobs)
+  - [list all disabled projects/jobs](#list-all-disabled-projectsjobs)
+  - [list inactive jobs](#list-inactive-jobs)
+  - [list cron jobs](#list-cron-jobs)
 - [get pipeline definitions](#get-pipeline-definitions)
   - [get pipeline scm definition](#get-pipeline-scm-definition)
   - [get pipeline scriptPath](#get-pipeline-scriptpath)
@@ -19,13 +17,14 @@
   - [get pipeline scm branch](#get-pipeline-scm-branch)
   - [get all SCMs](#get-all-scms)
   - [get pipeline bare script](#get-pipeline-bare-script)
+  - [get particular job status](#get-particular-job-status)
+  - [get logRotator](#get-logrotator)
+  - [show logRotator via pattern](#show-logrotator-via-pattern)
+  - [set logrotator](#set-logrotator)
 - [update pipeline definition](#update-pipeline-definition)
   - [update SCM definition](#update-scm-definition)
-- [get logRotator](#get-logrotator)
-- [get single job properties](#get-single-job-properties)
-- [get particular job status](#get-particular-job-status)
-- [Find Jenkins projects that build periodically](#find-jenkins-projects-that-build-periodically)
-- [list job which running for more than 24 hours](#list-job-which-running-for-more-than-24-hours)
+  - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
+  - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -61,7 +60,7 @@ Jenkins.instance.getAllItems( Job.class ).each {
 
 ### list all jobs and folders
 ```groovy
-Jenkins.instance.getAllItems( AbstractItem.class ).each {
+jenkins.model.Jenkins.instance.getAllItems( AbstractItem.class ).each {
   println(it.fullName)
 }
 ```
@@ -71,16 +70,16 @@ Jenkins.instance.getAllItems( AbstractItem.class ).each {
   marslo/fs
   ```
 
-### list all pipeline jobs
+### list all WorkflowJob
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-Jenkins.instance.getAllItems( WorkflowJob.class ).each {
+jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).each {
    println it.fullName
 }
 ```
 
-### [list all abstract Project](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
+### [list all AbstractProject](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-freestyle-jobs-using-shell-command.groovy)
 
 {% hint style='tip' %}
 > Abstract Project: freestyle, maven, etc...
@@ -101,7 +100,32 @@ Jenkins.instance.getAllItems( Folder.class ).each {
 }
 ```
 
-### list deactive jobs
+### list all disabled projects/jobs
+```groovy
+jenkins.model.Jenkins.instance
+       .getAllItems( Job.class )
+       .findAll { it.disabled }
+       .collect { it.fullName }
+```
+
+- or
+  ```groovy
+  jenkins.model.Jenkins.instance
+         .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
+         .findAll{ it.disabled }
+         .each { println it.fullName }
+  ```
+
+- or
+  ```groovy
+  jenkins.model.Jenkins.instance
+         .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
+         .findAll{ it.disabled }
+         .collect { it.fullName }
+  ```
+
+
+### list inactive jobs
 
 > [!NOTE]
 > List jobs haven't been built in 6 months
@@ -117,65 +141,95 @@ Jenkins.instance.getAllItems( Job.class ).collect { project ->
 }
 ```
 
-## disable and enable jobs
-### disable all particular projects jobs
-```groovy
-List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+### [list cron jobs](https://support.cloudbees.com/hc/en-us/articles/360032285111-Find-Jenkins-projects-that-build-periodically)
 
-Jenkins.instance.getAllItems(Job.class).findAll {
-  projects.any { p -> it.fullName.startsWith(p) }
-}.each {
-  println "~~> ${it.fullName}"
-  it.disabled = true
-  it.save()
-}
+> [!NOTE|label:references:]
+> - [jenkins-script-console-scripts/find-all-cron-schedules-by-frequency.groovy](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-all-cron-schedules-by-frequency.groovy)
+
+#### list all cron jobs
+```groovy
+import hudson.triggers.TimerTrigger
+
+jenkins.model.Jenkins j      = jenkins.model.Jenkins.instance
+hudson.model.Descriptor cron = j.getDescriptor( TimerTrigger )
+
+println j.getAllItems(Job).findAll { Job job ->
+  job?.triggers?.get(cron)
+}.collectEntries { Job job ->
+    [ (job.fullName):  job.triggers.get(cron).spec ]
+}.collect {
+  "${it.key.padRight(30)}: ${it.value}"
+}.join('\n')
 ```
 
-### undo disable jobs in particular projects
+#### disable timer trigger in freestyle only
 ```groovy
-List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
+import hudson.model.*
+import hudson.triggers.*
 
-Jenkins.instance.getAllItems(Job.class).findAll {
-  it.disabled && projects.any{ p -> it.fullName.startsWith(p) }
-}.each {
-  println "~~> ${it.fullName}"
-  it.disabled = false
-  it.save()
+TriggerDescriptor TIMER_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie( TimerTrigger.class )
+Jenkins.instance.getAllItems(Job).findAll { item ->
+  item.getTriggers().get( TIMER_TRIGGER_DESCRIPTOR )
+}.each { item ->
+  if ( item instanceof hudson.model.FreeStyleProject ) {
+    item.removeTrigger(TIMER_TRIGGER_DESCRIPTOR)
+    println(item.fullName + " Build periodically disabled");
+  } else {
+    println(item.fullName + " Build periodically remains enabled; not as Freestyle project");
+  }
 }
-```
 
-### find all disabled projects/jobs
-```groovy
-Jenkins.instance
-       .getAllItems( Job.class )
-       .findAll { it.disabled }
-       .collect { it.fullName }
+"DONE"
 ```
 
 - or
   ```groovy
-  jenkins.model
-         .Jenkins
-         .instance
-         .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
-         .findAll{ it.disabled }
-         .each {
-           println it.fullName;
-         }
+  import hudson.model.*
+  import hudson.triggers.*
+
+  TriggerDescriptor TIMER_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie( TimerTrigger.class )
+
+  for( item in Jenkins.instance.getAllItems(Job) ) {
+    def timertrigger = item.getTriggers().get( TIMER_TRIGGER_DESCRIPTOR )
+    if ( timertrigger ) {
+      if (item.class.canonicalName == "hudson.model.FreeStyleProject") {
+        item.removeTrigger(TIMER_TRIGGER_DESCRIPTOR)
+        println(item.name + " Build periodically disabled");
+      }
+      else {
+        println(item.name + " Build periodically remains enabled; not as Freestyle project");
+      }
+    }
+  }
   ```
 
-- or
+- example 2:
   ```groovy
-  jenkins.model
-         .Jenkins
-         .instance
-         .getAllItems(jenkins.model.ParameterizedJobMixIn.ParameterizedJob.class)
-         .findAll{ it.disabled }
-         .collect { it.fullName }
+  Jenkins.instance.getAllItems(Job).each {
+    def jobBuilds=it.getBuilds()
+
+    // Check the last build only
+    jobBuilds[0].each { build ->
+      def runningSince  = groovy.time.TimeCategory.minus( new Date(), build.getTime() )
+      def currentStatus = build.buildStatusSummary.message
+      def cause = build.getCauses()[0] //we keep the cause
+
+      //triggered by a user
+      def user = cause instanceof Cause.UserIdCause? cause.getUserId():null;
+
+      if( !user ) {
+        println "[AUTOMATION] ${build}"
+      } else {
+        println "[${user}] ${build}"
+      }
+    }
+  }
+  return
   ```
 
 ## get pipeline definitions
-> [!TIP]
+
+> [!TIP|label:references:]
 > - [How to get the pipeline configuration field 'Script Path' when executing the Jenkinsfile?](https://stackoverflow.com/a/50022871/2940319)
 > - [Groovy script to get Jenkins pipeline's script path](https://stackoverflow.com/a/70728550/2940319)
 > - [WorkflowDefinitionContext.groovy](https://github.com/jenkinsci/job-dsl-plugin/blob/master/job-dsl-core/src/main/groovy/javaposse/jobdsl/dsl/helpers/workflow/WorkflowDefinitionContext.groovy)
@@ -386,10 +440,107 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 "DONE"
 ```
 
+### get particular job status
+```groovy
+def job = Jenkins.instance.getItemByFullName('<group>/<name>')
+println """
+  Last success : ${job.getLastSuccessfulBuild()}
+    All builds : ${job.getBuilds().collect{ it.getNumber() }}
+    Last build : ${job.getLastBuild()}
+   Is building : ${job.isBuilding()}
+"""
+```
+
+#### list properties
+
+> [!NOTE]
+> [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
+
+```groovy
+def job = Jenkins.instance.getItemByFullName('<group>/<name>')
+println """
+       job.getClass() : ${job.getClass()}
+    job.isBuildable() : ${job.isBuildable()}
+  job.getFirstBuild() : ${job.getFirstBuild()}
+         job.getACL() : ${job.getACL()}
+  "======================="
+      job.getBuilds() : ${job.getBuilds()}
+"""
+```
+
+### get logRotator
+
+{% hint style='tip' %}
+> references:
+> - [Class LogRotator](https://javadoc.jenkins.io/hudson/tasks/LogRotator.html)
+> - [Jenkins : Manually run log rotation on all jobs](https://wiki.jenkins.io/display/JENKINS/Manually-run-log-rotation-on-all-jobs.html)
+> - [jenkins/core/src/main/java/hudson/tasks/LogRotator.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/tasks/LogRotator.java)
+{% endhint %}
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import hudson.tasks.LogRotator
+
+String JOB_PATTERN = 'pattern'
+
+Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.fullName.startsWith( JOB_PATTERN ) && it.buildDiscarder
+}.each { job ->
+  LogRotator discarder = job.buildDiscarder
+  println job.fullName.toString().padRight(30) + ' : ' +
+          "builds=(${discarder.daysToKeep} days, ${discarder.numToKeep} total) " +
+          "artifacts=(${discarder.artifactDaysToKeep} days, ${discarder.artifactNumToKeep} total)"
+}
+
+"DONE"
+```
+
+### show logRotator via pattern
+```groovy
+List<String> projects = [ 'project' ]
+
+Jenkins.instance.getAllItems(Job.class).findAll {
+  projects.any { p -> it.fullName.startsWith(p) }
+}.each {
+  println """
+    >> ${it.fullName} :
+
+            artifactDaysToKeep : ${it.logRotator?.artifactDaysToKeep    ?: '' }
+         artifactDaysToKeepStr : ${it.logRotator?.artifactDaysToKeepStr ?: '' }
+             artifactNumToKeep : ${it.logRotator?.artifactNumToKeep     ?: '' }
+          artifactNumToKeepStr : ${it.logRotator?.artifactNumToKeepStr  ?: '' }
+                    daysToKeep : ${it.logRotator?.daysToKeep            ?: '' }
+                 daysToKeepStr : ${it.logRotator?.daysToKeepStr         ?: '' }
+                     numToKeep : ${it.logRotator?.numToKeep             ?: '' }
+                  numToKeepStr : ${it.logRotator?.numToKeepStr          ?: '' }
+
+    --------------------------------------------------------------------------------
+
+       getArtifactDaysToKeep() : ${it.logRotator?.getArtifactDaysToKeep()    ?: '' }
+    getArtifactDaysToKeepStr() : ${it.logRotator?.getArtifactDaysToKeepStr() ?: '' }
+        getArtifactNumToKeep() : ${it.logRotator?.getArtifactNumToKeep()     ?: '' }
+     getArtifactNumToKeepStr() : ${it.logRotator?.getArtifactNumToKeepStr()  ?: '' }
+               getDaysToKeep() : ${it.logRotator?.getDaysToKeep()            ?: '' }
+            getDaysToKeepStr() : ${it.logRotator?.getDaysToKeepStr()         ?: '' }
+                getNumToKeep() : ${it.logRotator?.getNumToKeep()             ?: '' }
+             getNumToKeepStr() : ${it.logRotator?.getNumToKeepStr()          ?: '' }
+
+  """
+}
+```
+
+### set logrotator
+
+> [!NOTE|label:references:]
+> - scripts:
+>   - [logrotator-config.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/logrotator-config.groovy)
+
 ## update pipeline definition
 
 > [!NOTE]
 > - [How to update job config files using the REST API and cURL?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-update-job-config-files-using-the-rest-api-and-curl)
+> - scripts:
+>   - [updateJobParameterDefinition.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/updateJobParameterDefinition.groovy)
 
 ### update SCM definition
 
@@ -504,117 +655,28 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
 // vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
 ```
 
-## get logRotator
+### disable all particular projects jobs
 ```groovy
-import org.jenkinsci.plugins.workflow.job.WorkflowJob
-import hudson.tasks.LogRotator
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-String JOB_PATTERN = 'pattern'
-
-Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
-  it.fullName.startsWith( JOB_PATTERN ) && it.buildDiscarder
-}.each { job ->
-  LogRotator discarder = job.buildDiscarder
-  println job.fullName.toString().padRight(30) + ' : ' +
-          "builds=(${discarder.daysToKeep} days, ${discarder.numToKeep} total) " +
-          "artifacts=(${discarder.artifactDaysToKeep} days, ${discarder.artifactNumToKeep} total)"
+Jenkins.instance.getAllItems(Job.class).findAll {
+  projects.any { p -> it.fullName.startsWith(p) }
+}.each {
+  println "~~> ${it.fullName}"
+  it.disabled = true
+  it.save()
 }
-
-"DONE"
 ```
 
-## get single job properties
-> [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
-
+### undo disable jobs in particular projects
 ```groovy
-def job = Jenkins.instance.getItemByFullName('<group>/<name>')
-println """
-       job.getClass() : ${job.getClass()}
-    job.isBuildable() : ${job.isBuildable()}
-  job.getFirstBuild() : ${job.getFirstBuild()}
-         job.getACL() : ${job.getACL()}
-  "======================="
-      job.getBuilds() : ${job.getBuilds()}
-"""
-```
+List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-## get particular job status
-```groovy
-def job = Jenkins.instance.getItemByFullName('<group>/<name>')
-println """
-  Last success : ${job.getLastSuccessfulBuild()}
-    All builds : ${job.getBuilds().collect{ it.getNumber() }}
-    Last build : ${job.getLastBuild()}
-   Is building : ${job.isBuilding()}
-"""
-```
-
-## [Find Jenkins projects that build periodically](https://support.cloudbees.com/hc/en-us/articles/360032285111-Find-Jenkins-projects-that-build-periodically)
-
-- example 1:
-  ```groovy
-  import hudson.model.*
-  import hudson.triggers.*
-  TriggerDescriptor TIMER_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie(TimerTrigger.class)
-
-  for(item in Jenkins.instance.getAllItems(Job))
-  {
-    def timertrigger = item.getTriggers().get(TIMER_TRIGGER_DESCRIPTOR)
-    if (timertrigger) {
-      if (item.class.canonicalName == "hudson.model.FreeStyleProject") {
-        item.removeTrigger(TIMER_TRIGGER_DESCRIPTOR)
-        println(item.name + " Build periodically disabled");
-      }
-      else {
-        println(item.name + " Build periodically remains enabled; not as Freestyle project");
-      }
-    }
-  }
-  ```
-
-- example 2:
-  ```groovy
-  Jenkins.instance.getAllItems(Job).each{
-    def jobBuilds=it.getBuilds()
-
-        // Check the last build only
-        jobBuilds[0].each { build ->
-          def runningSince = groovy.time.TimeCategory.minus( new Date(), build.getTime() )
-          def currentStatus = build.buildStatusSummary.message
-          def cause = build.getCauses()[0] //we keep the cause
-
-        //triggered by a user
-        def user = cause instanceof Cause.UserIdCause? cause.getUserId():null;
-
-        if( !user ) {
-          println "[AUTOMATION] ${build}"
-        }
-        else
-        {
-          println "[${user}] ${build}"
-        }
-      }
-  }
-  return
-  ```
-
-## [list job which running for more than 24 hours](https://raw.githubusercontent.com/cloudbees/jenkins-scripts/master/builds-running-more-than-24h.groovy)
-
-> [!TIP]
-> only for `lastBuild`.
-
-```bash
-/*
-   We had to write this script several times. Time to have it stored, it is a very simple approach but will serve as starting point for more refined approaches.
- */
-Jenkins.instance.getAllItems( Job )
-                .findAll{ job -> job.isBuildable() }
-                .each { job ->
-                  def myBuild= job.getLastBuild()
-                  def runningSince = groovy.time.TimeCategory.minus( new Date(), myBuild.getTime() )
-                  if ( runningSince.hours >= 24 ){
-                    println job.name +"---- ${runningSince.hours} hours:${runningSince.minutes} minutes"
-                  }
-                }
-return null
+Jenkins.instance.getAllItems(Job.class).findAll {
+  it.disabled && projects.any{ p -> it.fullName.startsWith(p) }
+}.each {
+  println "~~> ${it.fullName}"
+  it.disabled = false
+  it.save()
+}
 ```
