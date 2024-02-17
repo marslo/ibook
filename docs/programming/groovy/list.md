@@ -331,6 +331,16 @@ assert [ '3', '1', '2' ] == l.swap(2, 1).swap(1, 0)
 
 ## conversion or restruction
 
+> [!NOTE|label:references:]
+> - [Class groovy.util.GroovyCollections](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html)
+>   - [combinations()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#combinations(java.lang.Iterable))
+>   - [transpose()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#transpose(java.util.List))
+>   - [sum()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#sum(java.lang.Iterable))
+>   - [max()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#max(java.lang.Iterable))
+>   - [min()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#min(java.lang.Iterable))
+>   - [union()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#union(groovy.lang.Closure,java.lang.Iterable...))
+>   - [subsequences()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#subsequences(java.util.List))
+
 ### `toSpreadMap` to Map
 ```groovy
 [ 'a', 'b', 'c', 'd' ].toSpreadMap()
@@ -352,9 +362,9 @@ assert [ '3', '1', '2' ] == l.swap(2, 1).swap(1, 0)
 
 ```groovy
 // expectation :
-// [ 'a', 'b' ] -
-//               |-> [ [ 'a', '1' ], [ 'b', '2' ] ]
-// [ '1', '2' ] -
+// [ 'a', 'b' ] ╮  [ 'a', '1' ]
+//              ├
+// [ '1', '2' ] ╯  [ 'b', '2' ]
 
 assert [ ['a', '1'], ['b', '2'] ] == [ [ 'a', 'b' ], [ '1', '2' ] ].transpose()
 ```
