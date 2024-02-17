@@ -45,7 +45,7 @@ println jenkins.securityRealm
 println jenkins.authorizationStrategy
 
 
-// result
+// -- result --
 // hudson.security.LDAPSecurityRealm@7d090e41
 // hudson.security.ProjectMatrixAuthorizationStrategy@6d51bb9d
 ```
@@ -197,7 +197,7 @@ Jenkins.instance.save()
   def strategy = Class.forName(instanceName).newInstance()
   println strategy.class
 
-  // result
+  // -- result --
   // class hudson.security.ProjectMatrixAuthorizationStrategy
   ```
 
