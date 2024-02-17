@@ -30,6 +30,7 @@
 - [show](#show)
   - [print 2D matrix](#print-2d-matrix)
   - [`indexed`](#indexed)
+  - [show 2D list in alignment](#show-2d-list-in-alignment)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -246,9 +247,7 @@ def listsMultiply( List... lists ) {
   java.util.ArrayList.metaClass.multiply = { e ->
     def list = new ArrayList()
     delegate.each { aa ->
-      e.each {
-        list.add( aa + it )
-      }
+      e.each { list.add( aa + it ) }
     }
     list
   }
@@ -519,12 +518,11 @@ after
 ## show
 ### print 2D matrix
 ```groovy
-(1..255).collect { color ->
-  " █${color}█ "
-}.eachWithIndex{ c, idx ->
-  print c
-  if ( 4 == (idx+1)%6 ) { println '' }
-}
+(1..255).collect { color -> " █${color}█ " }
+        .eachWithIndex{ c, idx ->
+          print c
+          if ( 4 == (idx+1)%6 ) { println '' }
+        }
 ```
 
 ### `indexed`
@@ -550,3 +548,74 @@ after
 ('a'..'d').withIndex(1)
 // [['a', 1], ['b', 2], ['c', 3], ['d', 4]]
 ```
+
+### show 2D list in alignment
+```groovy
+List<List<String>> list = [
+  [ 'aaaaaaaaaaa', 'bbbbbbbbbbbbbbbbb', 'cccccccccccccccccccccc' ],
+  [ '1111', '2222222222', '3333333333' ]
+]
+
+list.add( 0, list.transpose().collect { column -> column.collect{ it.size() }.max() } )
+println list.withIndex().collect { raw, idx ->
+  if ( idx ) {
+    raw.withIndex().collect { x, y -> "${x.padRight(list[0][y])}" }.join(' | ')
+  }
+}.findAll().join('\n')
+
+-- result --
+aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc
+1111        | 2222222222        | 3333333333
+```
+
+- or with table format
+  ```groovy
+  List<String> title      = [ 'AGENT NAME', 'NODE CREDENTIAL', 'COMPUTER CREDENTIIAL' ]
+  List<List<String>> list = [
+    [ 'aaaaaaaaaaa', 'bbbbbbbbbbbbbbbbb', 'cccccccccccccccccccccc' ],
+    [ '1111', '2222222222', '3333333333' ]
+  ]
+
+
+  list.add( 0, title )
+  list.add( 0, list.transpose().collect { column -> column.collect{ it.size() }.max() } )
+
+  println list.withIndex().collect { raw, idx ->
+    if ( idx ) {
+      '| ' + raw.withIndex().collect { x, y -> x.toString().padRight(list[0][y]) }.join(' | ') + ' |'
+    }
+  }.findAll().join( '\n' )
+
+  -- result --
+  | AGENT NAME  | NODE CREDENTIAL   | COMPUTER CREDENTIIAL   |
+  | aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc |
+  | 1111        | 2222222222        | 3333333333             |
+  ```
+
+- or
+  ```groovy
+  List<String> title      = [ 'AGENT NAME', 'NODE CREDENTIAL', 'COMPUTER CREDENTIIAL' ]
+  List<List<String>> list = [
+    [ 'aaaaaaaaaaa', 'bbbbbbbbbbbbbbbbb', 'cccccccccccccccccccccc' ],
+    [ '1111', '2222222222', '3333333333' ]
+  ]
+
+  list.add( 0, title )
+  list.add( 0, list.transpose().collect { column -> column.collect{ it.size() }.max() } )
+  list = list.withIndex().collect { raw, idx ->
+    if ( idx ) raw.withIndex().collect { x, y -> x.toString().padRight(list[0][y]) }
+  }.findAll()
+
+  String showTable ( List l ) {
+    l.collect{ '| ' +  it.join(' | ' ) + ' |' }.join('\n')
+  }
+
+  println showTable( [ list.head(), list.head().collect { '-'*it.size() } ] )
+  println showTable( list.tail() )
+
+  -- result --
+  | AGENT NAME  | NODE CREDENTIAL   | COMPUTER CREDENTIIAL   |
+  | ----------- | ----------------- | ---------------------- |
+  | aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc |
+  | 1111        | 2222222222        | 3333333333             |
+  ```
