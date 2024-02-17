@@ -86,8 +86,7 @@
 > - [jenkins.model.BuildDiscarderProperty](https://programtalk.com/java-api-usage-examples/jenkins.model.BuildDiscarderProperty/)
 {% endhint %}
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - `currentBuild.class` == [Class RunWrapper](https://javadoc.jenkins.io/plugin/workflow-support/org/jenkinsci/plugins/workflow/support/steps/build/RunWrapper.html)
 > - `currentBuild.rawBuild.class` == `jenkins.model.Jenkins.instance.getItemByFullName(String).getBuildByNumber(int).class` == [Class WorkflowRun](https://javadoc.jenkins.io/plugin/workflow-job/org/jenkinsci/plugins/workflow/job/WorkflowRun.html)
 
@@ -1100,9 +1099,8 @@ job.changeSets
 > - [imarslo: groovy programming -> time](../../programming/groovy/time.html)
 {% endhint %}
 
-> [!TIP]
-> reference :
-> - [Getting current timestamp in inline pipeline script using pipeline plugin of hudson](https://stackoverflow.com/a/55242657/2940319)
+> [!TIP|label:references]
+> - [Getting current tiestamp in inline pipeline script using pipeline plugin of hudson](https://stackoverflow.com/a/55242657/2940319)
 > - [get Job && build by number for the Job and all related to time](https://stackoverflow.com/a/54947196/2940319)
 > - [convert milliseconds to date-time format](https://stackoverflow.com/a/45815290/2940319)
 > - [Date.format(String format)](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
@@ -1218,32 +1216,31 @@ Wed Feb 14 04:06:30 PST 2024
 
 ### sort last build
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [Date.format(String format)](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html#format(java.lang.String))
 > - [Convert milliseconds to yyyy-MM-dd date-time format in Groovy](https://stackoverflow.com/a/45815290/2940319)
 > - [java.util.Date](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
 > - [* imarslo : groovy/time](../../programming/groovy/time.html)
-> details:
-> ```
-> java.util.Date                                           : job.getLastBuild()?.getTime()
-> java.lang.Long                                           : job.getLastBuild()?.getTimeInMillis()
-> Date.getTime()      : java.util.Date -> java.lang.Long   : job.getLastBuild()?.getTime()          -> job.getLastBuild()?.getTime().getTime()
-> Date.format(String) : java.lang.Long -> java.lang.String : job.getLastBuild()?.getTimeInMillis()  -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")
-> ```
-> example:
-> ```groovy
-> println "${job.getLastBuild()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getClass()}"
-> println "${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")} ~> ${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?.getClass()}"
-> println "${job.getLastBuild()?.getTimeInMillis()} ~> ${job.getLastBuild()?.getTimeInMillis()?.getClass()}"
-> println "${job.getLastBuild()?.getTime()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getTime()?.getClass()}"
+> - details:
+>   ```groovy
+>   java.util.Date                                           : job.getLastBuild()?.getTime()
+>   java.lang.Long                                           : job.getLastBuild()?.getTimeInMillis()
+>   Date.getTime()      : java.util.Date -> java.lang.Long   : job.getLastBuild()?.getTime()          -> job.getLastBuild()?.getTime().getTime()
+>   Date.format(String) : java.lang.Long -> java.lang.String : job.getLastBuild()?.getTimeInMillis()  -> new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH : mm : ss.SSS'Z'")
+>   ```
+> - example:
+>   ```groovy
+>   println "${job.getLastBuild()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getClass()}"
+>   println "${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")} ~> ${new Date(job.getLastBuild()?.getTimeInMillis())?.format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")?.getClass()}"
+>   println "${job.getLastBuild()?.getTimeInMillis()} ~> ${job.getLastBuild()?.getTimeInMillis()?.getClass()}"
+>   println "${job.getLastBuild()?.getTime()?.getTime()} ~> ${job.getLastBuild()?.getTime()?.getTime()?.getClass()}"
 >
-> -- result --
-> Thu Aug 11 06:28:00 PDT 2022 ~> class java.util.Date
-> 2022-08-11T06:28:00.220Z ~> class java.lang.String
-> 1660224480220 ~> class java.lang.Long
-> 1660224480220 ~> class java.lang.Long
-> ```
+>   -- result --
+>   Thu Aug 11 06:28:00 PDT 2022 ~> class java.util.Date
+>   2022-08-11T06:28:00.220Z ~> class java.lang.String
+>   1660224480220 ~> class java.lang.Long
+>   1660224480220 ~> class java.lang.Long
+>   ```
 
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
