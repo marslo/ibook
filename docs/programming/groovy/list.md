@@ -493,8 +493,8 @@ Map<String, String> reference = [
 >   'z' : [ 'baz' ]
 > ]
 > ```
-
-**Inspired from [sboardwell/matrix-based-auth.groovy](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L96)**
+>
+> ** inspired from [sboardwell/matrix-based-auth.groovy](https://gist.github.com/sboardwell/f1e85536fc13b8e4c0d108726239c027#file-matrix-based-auth-groovy-L96)**
 {% endhint %}
 
 ```groovy

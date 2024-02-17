@@ -322,21 +322,84 @@ println InetAddress.localHost.hostAddress
 > - [Class hudson.plugins.sshslaves.SSHLauncher](https://javadoc.jenkins.io/plugin/ssh-slaves/hudson/plugins/sshslaves/SSHLauncher.html)
 > - [Class hudson.slaves.SlaveComputer: getLauncher](https://javadoc.jenkins.io/hudson/slaves/SlaveComputer.html#getLauncher())
 > - [JENKINS-72716: credentialsId shows different in `Jenkins.instance.nodes` and `Jenkins.instance.computers`](https://issues.jenkins.io/browse/JENKINS-72716)
+> - [marslo/0.script for jenkins agent.md](https://gist.github.com/marslo/ce6dddd2cf7e264ba5e2ffec2d6610c4)
 
 ```groovy
-println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
+/**
+ * @author marslo
+ * @since 02/16/2024
+ *
+ * @result
+ * | AGENT NAME         | NODE CREDENTIAL | COMPUTER CREDENTIIAL |
+ * | ------------------ | --------------- | -------------------- |
+ * | STAGING_TEST_01    | SSH_CREDENTIAL  | SSH_CREDENTIAL       |
+ * | DEVELOPMENT_ENV_03 | SSH_CREDENTIAL  | SSH_CREDENTIAL       |
+**/
 
-Jenkins.instance.computers.findAll { computer ->
+List<String> title = [ 'AGENT NAME', 'NODE CREDENTIAL', 'COMPUTER CREDENTIIAL' ]
+List<List<String>> agentCredentials = jenkins.model.Jenkins.instance.computers.findAll { computer ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(computer) &&
   computer?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
-}.each { computer ->
-  println ">> ${computer.displayName.padRight(30)}" +
-          "[${computer.online}]".padRight(15) +
-          "${computer.node.launcher?.credentialsId?.toString() ?: ''} | ${computer.launcher?.credentialsId?.toString() ?: ''}"
+}.collect { computer ->
+  [ computer.name, computer.node.launcher?.credentialsId?.toString() ?: '', computer.launcher?.credentialsId?.toString() ?: '' ]
 }
 
-"DONE"
+agentCredentials.add( 0, title )
+agentCredentials.add( 0, agentCredentials.transpose().collect { column -> column.collect{ it.size() }.max() } )
+
+agentCredentials = agentCredentials.withIndex().collect { raw, idx ->
+  if ( idx ) raw.withIndex().collect { x, y -> x.toString().padRight(agentCredentials[0][y]) }
+}.findAll()
+
+String showTable ( List l ) {
+  l.collect{ '| ' +  it.join(' | ' ) + ' |' }.join('\n')
+}
+
+println showTable( [ agentCredentials.head(), agentCredentials.head().collect { '-'*it.size() } ] )
+println showTable( agentCredentials.tail() )
 ```
+
+- or simple output
+  ```groovy
+  /**
+   * @author marslo
+   * @since 02/16/2024
+   *
+   * @result
+   * STAGING_TEST_01    | SSH_CREDENTIAL  | SSH_CREDENTIAL
+   * DEVELOPMENT_ENV_03 | SSH_CREDENTIAL  | SSH_CREDENTIAL
+  **/
+
+  List<List<String>> agentCredentials = jenkins.model.Jenkins.instance.computers.findAll { computer ->
+    ! jenkins.model.Jenkins.MasterComputer.isInstance(computer) &&
+    computer?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+  }.collect { computer ->
+    [ computer.name, computer.node.launcher?.credentialsId?.toString() ?: '', computer.launcher?.credentialsId?.toString() ?: '' ]
+  }
+
+  agentCredentials.add( 0, agentCredentials.transpose().collect { column -> column.collect{ it.size() }.max() } )
+  println agentCredentials.withIndex().collect { raw, idx ->
+    if ( idx ) {
+      raw.withIndex().collect { x, y -> "${x.padRight(agentCredentials[0][y])}" }.join(' | ')
+    }
+  }.findAll().join('\n')
+  ```
+
+- or
+  ```groovy
+  println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
+
+  Jenkins.instance.computers.findAll { computer ->
+    ! jenkins.model.Jenkins.MasterComputer.isInstance(computer) &&
+    computer?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
+  }.each { computer ->
+    println ">> ${computer.displayName.padRight(30)}" +
+            "[${computer.online}]".padRight(15) +
+            "${computer.node.launcher?.credentialsId?.toString() ?: ''} | ${computer.launcher?.credentialsId?.toString() ?: ''}"
+  }
+
+  "DONE"
+  ```
 - or
   ```groovy
   println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
@@ -916,6 +979,11 @@ def updateLabel( String agent, String label ) {
 ```
 
 ### update agent credentialsId
+
+> [!NOTE|label:references:]
+> - [JENKINS-72716: credentialsId shows different in `Jenkins.instance.nodes` and `Jenkins.instance.computers`](https://issues.jenkins.io/browse/JENKINS-72716)
+> - [* marslo/0.script for jenkins agent.md](https://gist.github.com/marslo/ce6dddd2cf7e264ba5e2ffec2d6610c4)
+
 ```groovy
 import jenkins.model.Jenkins
 import hudson.plugins.sshslaves.SSHLauncher
@@ -923,10 +991,11 @@ import hudson.slaves.ComputerLauncher
 
 String newCredId = 'NEW_CREDENTIAL'
 
-Jenkins.instance.nodes.findAll { node ->
+jenkins.model.Jenkins.instance.nodes.findAll { node ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
   node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
 }.each { node ->
+  println ">> ${node.name} update <<"
   ComputerLauncher launcher = node.launcher
   SSHLauncher newLauncher = new SSHLauncher( launcher.host,
                                              launcher.port,
@@ -942,7 +1011,7 @@ Jenkins.instance.nodes.findAll { node ->
                                            )
   node.setLauncher( newLauncher )
   node.save()
-  println ">> ${node.name} DONE <<"
+  node.computer.setNode( node )
 
   // restart agent
   if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
@@ -955,7 +1024,7 @@ Jenkins.instance.nodes.findAll { node ->
   }
   Thread.sleep( 5*1000 )
   if ( node.computer.isOffline() ) {
-    println ">> ${node.name} re-connect <<"
+    println ">> ${node.name} reconnect <<"
     node.getComputer().connect( true )
     node.computer.setTemporarilyOffline( false, null )
   }
@@ -970,7 +1039,7 @@ Jenkins.instance.nodes.findAll { node ->
 
   String newCredId = 'NEW_CREDENTIAL'
 
-  Jenkins.instance.nodes.findAll { node ->
+  jenkins.model.Jenkins.instance.nodes.findAll { node ->
     ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
     node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
   }.each { node ->
@@ -980,6 +1049,7 @@ Jenkins.instance.nodes.findAll { node ->
     newLauncher.sshHostKeyVerificationStrategy = launcher.sshHostKeyVerificationStrategy
     node.setLauncher( newLauncher )
     node.save()
+    node.computer.setNode( node )
   }
 
   // restart agent
@@ -993,7 +1063,7 @@ Jenkins.instance.nodes.findAll { node ->
   }
   Thread.sleep( 5*1000 )
   if ( node.computer.isOffline() ) {
-    println ">> ${node.name} re-connect <<"
+    println ">> ${node.name} reconnect <<"
     node.getComputer().connect( true )
     node.computer.setTemporarilyOffline( false, null )
   }
@@ -1009,7 +1079,7 @@ Jenkins.instance.nodes.findAll { node ->
   String newCredId = 'NEW_CREDENTIAL'
   String nodeName  = AGENT_NAME
 
-  Jenkins.instance.nodes.findAll { node ->
+  jenkins.model.Jenkins.instance.nodes.findAll { node ->
     ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
     node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
     nodeName == node.name
@@ -1052,11 +1122,16 @@ Jenkins.instance.nodes.findAll { node ->
       node.getComputer().connect( true )
       node.computer.setTemporarilyOffline( false, null )
     }
-}
+  }
   ```
 
 ### universal agent update
 ```groovy
+/**
+ * @author marslo
+ * @since 02/14/2024
+**/
+
 import hudson.slaves.*
 import hudson.model.Node.Mode
 import jenkins.model.Jenkins
@@ -1072,10 +1147,11 @@ Map<String, Object> newInfo = [
           port : 22
 ]
 
-Jenkins.instance.nodes.findAll { node ->
+jenkins.model.Jenkins.instance.nodes.findAll { node ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
   node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
 }.each { node ->
+  println ">> ${node.name} update <<"
   ComputerLauncher launcher = node.launcher
   SSHLauncher newLauncher = new SSHLauncher( newInfo.get('hostname') ?: launcher.host,
                                              newInfo.get('port')     ?: launcher.port,
@@ -1089,16 +1165,37 @@ Jenkins.instance.nodes.findAll { node ->
                                              launcher.retryWaitTime,
                                              launcher.sshHostKeyVerificationStrategy
                                            )
-  node.setLauncher( newLauncher )
   node.nodeDescription   = newInfo.get('description')  ?: node.nodeDescription
   node.numExecutors      = newInfo.get('numExecutors') ?: node.numExecutors
   node.labelString       = newInfo.get('label')        ?: node.labelString
   node.mode              = node.mode
   node.retentionStrategy = node.retentionStrategy
+  node.setLauncher( newLauncher )
   node.save()
+  node.computer.setNode( node )
+
+  // disconnect agent
+  if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
+    println ">> ${node.name} disconnect <<"
+    String message = 'disconnect due to credential update'
+    node.computer.setTemporarilyOffline( true, new hudson.slaves.OfflineCause.ByCLI(message) )
+    node.computer.disconnect( new hudson.slaves.OfflineCause.UserCause(User.current(), message ) )
+    node.computer.doChangeOfflineCause( message )
+    println '\t.. computer.getOfflineCause: ' + node.computer.getOfflineCause();
+  }
+
+  // connect agent
+  Thread.sleep( 5*1000 )
+  if ( node.computer.isOffline() ) {
+    println ">> ${node.name} connect <<"
+    node.getComputer().connect( true )
+    node.computer.setTemporarilyOffline( false, null )
+  }
 
   println ">> ${node.name} DONE <<"
 }
+
+"DONE"
 ```
 
 ### disconnect agent
