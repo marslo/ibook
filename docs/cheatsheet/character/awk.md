@@ -760,11 +760,13 @@ $ awk '{ for(i=1; i<=NF; i++) { print $i, length($i) } }' sample.txt
   done < <(cat sample.txt | xargs -n1 echo)
   ```
 
-
 ## sum
 
 > [!NOTE|label:references:]
 > - [Summing values of a column using awk command](https://stackoverflow.com/a/28445186/2940319)
+> - [Using awk to sum the values of a column, based on the values of another column](https://stackoverflow.com/a/55028307/2940319)
+> - [Using awk to sum the values of a column, based on the values of another column](https://unix.stackexchange.com/a/242972/29178)
+> - [Using awk to sum the values of a column, based on the emptyness or not of another column](https://unix.stackexchange.com/a/569364/29178)
 
 ### base on other column
 
@@ -798,6 +800,103 @@ No.ofRecord    FileName                   delimiter
 TOTAL:
 295169219 NextUnixFileName.txt
 1714083 UnixfileName.txt
+```
+
+#### sum $4 base on $2 and print original
+```bash
+$ url='jira.sample.com'
+$ project='MY_PROJECT'
+$ sprint='SPRINT-1'
+$ curl --silent --insecure --globoff -XGET "https://${url}/rest/api/2/search?jql=project%3D${project}%20AND%20Sprint%3D${sprint}&maxResults=100" |
+  jq -r '.issues[] | [.key, .fields.status.name, .fields.created, .fields.customfield_10062] | join(" | ")' |
+  sort -t'|' -k3 |
+  column -t -s'|' -o'|' |
+  awk -F'|' '{ map[$2]+=$4; print }; END { print "\nresult:"; for (key in map) { print key ": " map[key] } }'
+JIRA-00 | Closed      | 2024-02-05T23:05:36.000-0800 | 1.0
+JIRA-01 | Closed      | 2024-02-05T23:08:13.000-0800 | 1.0
+JIRA-02 | Open        | 2024-02-06T19:35:12.000-0800 |
+JIRA-05 | Open        | 2024-02-07T00:56:35.000-0800 | 1.0
+JIRA-06 | Open        | 2024-02-07T00:56:50.000-0800 | 1.0
+JIRA-07 | Open        | 2024-02-07T00:56:57.000-0800 | 1.0
+JIRA-08 | Open        | 2024-02-07T00:57:06.000-0800 | 1.0
+JIRA-09 | In Review   | 2024-02-07T00:57:21.000-0800 | 3.0
+JIRA-10 | In Review   | 2024-02-07T00:57:29.000-0800 | 2.0
+JIRA-11 | Open        | 2024-02-07T00:57:35.000-0800 | 2.0
+JIRA-12 | Open        | 2024-02-07T00:57:42.000-0800 | 2.0
+JIRA-13 | Open        | 2024-02-07T00:57:58.000-0800 | 2.0
+JIRA-14 | Closed      | 2024-02-08T02:26:37.000-0800 | 0.5
+JIRA-15 | Closed      | 2024-02-08T02:27:34.000-0800 | 0.5
+JIRA-16 | In Progress | 2024-02-08T03:11:11.000-0800 | 1.5
+JIRA-17 | In Progress | 2024-02-08T03:12:58.000-0800 | 0.5
+JIRA-18 | In Progress | 2024-02-08T03:14:14.000-0800 | 1.5
+JIRA-19 | In Progress | 2024-02-08T03:14:34.000-0800 | 0.5
+JIRA-20 | In Progress | 2024-02-08T03:15:38.000-0800 | 1.5
+JIRA-21 | In Progress | 2024-02-08T03:15:57.000-0800 | 0.5
+JIRA-22 | Open        | 2024-02-08T03:18:30.000-0800 | 1.5
+JIRA-23 | Open        | 2024-02-08T03:18:46.000-0800 | 0.5
+JIRA-24 | Open        | 2024-02-09T00:11:31.000-0800 | 1.5
+JIRA-25 | Open        | 2024-02-09T00:12:09.000-0800 | 0.5
+JIRA-26 | Open        | 2024-02-09T00:12:45.000-0800 | 1.5
+JIRA-27 | Open        | 2024-02-09T00:13:18.000-0800 | 0.5
+JIRA-28 | Open        | 2024-02-09T00:14:03.000-0800 | 1.5
+JIRA-29 | Open        | 2024-02-09T00:14:31.000-0800 | 0.5
+
+result:
+ Open        : 18
+ In Progress : 6
+ In Review   : 5
+ Closed      : 3
+```
+
+#### sum before date
+
+> [!TIP|label:substr]
+> - references:
+>   - [Use awk to print first 6 characters](https://www.unix.com/shell-programming-and-scripting/143768-use-awk-print-first-6-characters.html)
+>   - [comparing dates using awk in bash](https://stackoverflow.com/a/39948321/2940319)
+> - `substr` VS. original string:
+>   ```bash
+>   $ curl --silent --insecure --globoff -XGET "https://${url}/rest/api/2/search?jql=project%3D${project}%20AND%20Sprint%3D${sprint}&maxResults=100" |
+>     jq -r '.issues[] | [.key, .fields.status.name, .fields.created, .fields.customfield_10062] | join(" | ")' |
+>     sort -t'|' -k3 |
+>     column -t -s'|' -o'|' |
+>     awk -F '|' -v dateA="2024-02-08" '{ d=substr($3,2,10); if (dateA>d) {print d":"$3} }'
+>   2024-02-05: 2024-02-05T23:05:36.000-0800
+>   2024-02-05: 2024-02-05T23:08:13.000-0800
+>   2024-02-06: 2024-02-06T19:35:12.000-0800
+>   2024-02-07: 2024-02-07T00:56:35.000-0800
+>   2024-02-07: 2024-02-07T00:56:50.000-0800
+>   2024-02-07: 2024-02-07T00:56:57.000-0800
+>   2024-02-07: 2024-02-07T00:57:06.000-0800
+>   2024-02-07: 2024-02-07T00:57:21.000-0800
+>   2024-02-07: 2024-02-07T00:57:29.000-0800
+>   2024-02-07: 2024-02-07T00:57:35.000-0800
+>   2024-02-07: 2024-02-07T00:57:42.000-0800
+>   2024-02-07: 2024-02-07T00:57:58.000-0800
+>   ```
+
+```bash
+$ url='jira.sample.com'
+$ project='MY_PROJECT'
+$ sprint='SPRINT-1'
+$ curl --silent --insecure --globoff -XGET "https://${url}/rest/api/2/search?jql=project%3D${project}%20AND%20Sprint%3D${sprint}&maxResults=100" |
+  jq -r '.issues[] | [.key, .fields.status.name, .fields.created, .fields.customfield_10062] | join(" | ")' |
+  sort -t'|' -k3 |
+  column -t -s'|' -o'|' |
+  awk -F '|'  -v dateA="2024-02-08" '{ d=substr($3,2,10); if (dateA>d) {print; sum+=$4} }; END { print "total: "sum }'
+JIRA-00 | Closed      | 2024-02-05T23:05:36.000-0800 | 1.0
+JIRA-01 | Closed      | 2024-02-05T23:08:13.000-0800 | 1.0
+JIRA-02 | Open        | 2024-02-06T19:35:12.000-0800 |
+JIRA-05 | Open        | 2024-02-07T00:56:35.000-0800 | 1.0
+JIRA-06 | Open        | 2024-02-07T00:56:50.000-0800 | 1.0
+JIRA-07 | Open        | 2024-02-07T00:56:57.000-0800 | 1.0
+JIRA-08 | Open        | 2024-02-07T00:57:06.000-0800 | 1.0
+JIRA-09 | In Review   | 2024-02-07T00:57:21.000-0800 | 3.0
+JIRA-10 | In Review   | 2024-02-07T00:57:29.000-0800 | 2.0
+JIRA-11 | Open        | 2024-02-07T00:57:35.000-0800 | 2.0
+JIRA-12 | Open        | 2024-02-07T00:57:42.000-0800 | 2.0
+JIRA-13 | Open        | 2024-02-07T00:57:58.000-0800 | 2.0
+total: 17
 ```
 
 #### [sum $3 base on $1,$2](https://stackoverflow.com/a/6970077/2940319)
@@ -1008,7 +1107,6 @@ $ < sample.txt \
   ```
 
 # field
-
 ## multiple delimiters
 
 > [!NOTE]
@@ -1079,7 +1177,7 @@ $ < sample.txt \
   > [!NOTE|label:multiple separators]
   > - [Two field separators (colon and space) in awk](https://unix.stackexchange.com/a/515679/29178)
   > - [How to match space or \s via regex in awk](https://stackoverflow.com/a/71136187/2940319)
-  > - [8 Powerful Awk Built-in Variables – FS, OFS, RS, ORS, NR, NF, FILENAME, FNR](https://www.thegeekstuff.com/2010/01/8-powerful-awk-built-in-variables-fs-ofs-rs-ors-nr-nf-filename-fnr/?ref=binfind.com/web)
+  > - [* 8 Powerful Awk Built-in Variables – FS, OFS, RS, ORS, NR, NF, FILENAME, FNR](https://www.thegeekstuff.com/2010/01/8-powerful-awk-built-in-variables-fs-ofs-rs-ors-nr-nf-filename-fnr/?ref=binfind.com/web)
   > - [How to split a delimited string into an array in awk?](https://stackoverflow.com/a/36211699/2940319)
   > - [Retrieve information Text/Word from HTML code using awk/sed](https://www.unix.com/302897228-post6.html)
   > - [How to use a shell command to only show the first column and last column in a text file?](https://unix.stackexchange.com/a/136886/291780)
@@ -1136,7 +1234,6 @@ foo|bar
 ```
 
 # parser
-
 ## csv
 
 > [!NOTE|label:references:]

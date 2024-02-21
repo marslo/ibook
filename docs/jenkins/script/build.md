@@ -45,7 +45,7 @@
     - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
   - [list build with results](#list-build-with-results)
     - [get all builds result percentage](#get-all-builds-result-percentage)
-    - [get builds result percentage within 24 hours](#get-builds-result-percentage-within-24-hours)
+    - [get builds result percentage ( within 24 hours )](#get-builds-result-percentage--within-24-hours-)
     - [get builds result data range](#get-builds-result-data-range)
     - [get builds result and percentage in data range](#get-builds-result-and-percentage-in-data-range)
 - [stop builds](#stop-builds)
@@ -660,7 +660,7 @@ job.builds.findAll { Run run -> run.isKeepLog() }
      - 32    : 119 days, 15 hours, 4 minutes, 39.369 seconds
 
   v.collect { it.getTime() }
-  >> vail/sync                          :
+  >> marslo/sample                          :
      - 454   : Tue Feb 13 10:16:31 PST 2024
      - 36    : Wed Oct 18 03:39:19 PDT 2023
      - 32    : Wed Oct 18 03:39:05 PDT 2023
@@ -1466,15 +1466,55 @@ final Calendar RIGHT_NOW = Calendar.getInstance()
 final long BENCH_MARK    = 1*24*60*60*1000
 final String JOB_PATTERN = '<group>'
 
-jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
-  job.fullName.contains( JOB_PATTERN )
-}.collect { Job job ->
-  job.builds.findAll { Run run ->
-    run.result == Result.FAILURE &&
-    ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+List<List<String, String>> results = jenkins.model
+                                            .Jenkins
+                                            .instance
+                                            .getAllItems(Job.class)
+                                            .findAll { Job job -> job.fullName.contains( JOB_PATTERN ) }
+                                            .collect { Job job ->
+                                                        job.builds.findAll { Run run ->
+                                                          run.result == Result.FAILURE &&
+                                                          ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+                                                        }
+                                                      }
+                                            .sum()
+                                            .collect {[ "${it.fullDisplayName}", "${it.absoluteUrl}" ]}
+results.add( 0, results.transpose().collect { column -> column.collect{ it.size() }.max() } )
+
+println results.withIndex().collect { raw, idx ->
+  if ( idx ) {
+    raw.withIndex().collect { x, y -> "${x.padRight(results[0][y])}" }.join(' | ')
   }
-}.sum()
+}.findAll().join('\n')
+
+-- result --
+marslo » sandbox » pipeline #3549 | https://jenkins.sample.com/job/marslo/job/sandbox/job/pipeline/3549/
+marslo » whitebox » builder #191  | https://jenkins.sample.com/job/marslo/job/whitebox/job/builder/191/
+marslo » sample #510              | https://jenkins.sample.com/job/marslo/job/sample/510/
+marslo » sample #505              | https://jenkins.sample.com/job/marslo/job/sample/505/
 ```
+
+- without table format
+  ```groovy
+  import hudson.model.Job
+  import hudson.model.Result
+  import hudson.model.Run
+  import java.util.Calendar
+  import jenkins.model.Jenkins
+
+  final Calendar RIGHT_NOW = Calendar.getInstance()
+  final long BENCH_MARK    = 1*24*60*60*1000
+  final String JOB_PATTERN = '<group>'
+
+  jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
+    job.fullName.contains( JOB_PATTERN )
+  }.collect { Job job ->
+    job.builds.findAll { Run run ->
+      run.result == Result.FAILURE &&
+      ( RIGHT_NOW.getTimeInMillis() - run.getStartTimeInMillis() ) <= BENCH_MARK
+    }
+  }.sum()
+  ```
 
 ### get last 24 hours failure builds via Map structure
 ```groovy
@@ -1600,47 +1640,112 @@ results.each{ name, status ->
 
 ![build status](../../screenshot/jenkins/job-successful-failure-percentage.png)
 
-### [get builds result percentage within 24 hours](https://stackoverflow.com/a/28039134/2940319)
+### [get builds result percentage ( within 24 hours )](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
 final String JOB_PATTERN = '<group>'
 final long CURRENT_TIME  = System.currentTimeMillis()
 final int BENCH_MARK     = 1*24*60*60*1000
 
-Map<String, Map<String, String>> results = [:]
+Map<String, Map<String, List<String>>> results = [:]
 int sum = 0
 
-jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { project ->
   project.fullName.startsWith( JOB_PATTERN )
-  // or
-  // project.fullName.contains( JOB_PATTERN )
 }.each { project ->
   if ( project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
-    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+    results."${project.fullName}" = [:]
     def build = project.getLastBuild()
-
     while ( build && (CURRENT_TIME - build.startTimeInMillis) <= BENCH_MARK ) {
-      if ( build.isBuilding() ) {
-        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
-      } else {
-        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-      } // if job is building, then results."${project.fullName}"."${build.result}" will be null
+      String key = build.isBuilding() ? 'INPROGRESS' : "${build.result}"
+      results."${project.fullName}"."${key}" = ( results."${project.fullName}".getOrDefault( key, [] ) << build )
       build = build.getPreviousBuild()
-    } // traverse in the whole traverse builds
-
-  } // if there's builds within 24 hours
-}
-
-results.each{ name, status ->
-  sum = status.values().sum()
-  println "\n>> ${name}: ${sum} : "
-  status.each{ r, c ->
-    if ( c ) println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " +
-                     ( sum ? "${c * 100 / sum}%" : '0%' )
+    }
   }
 }
 
+results.each { name, status ->
+  sum = status.values().flatten().size()
+  println "\n>> ${name}: ${sum} : "
+  println status.collect { r, b ->
+    "\t${r.padRight(10)}: ${b.size()}: ( " + ( sum ? "${b.size()*100/sum}%" : '0%' ) + ' )' +
+    '\n\t  -' + b.collect {"\t${it.id} : " + new Date(it.startTimeInMillis).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}.join('\n\t  -')
+  }.join('\n')
+}
+
 "DONE"
+
+-- result --
+>> marslo/whitebox/sample: 5 :
+  SUCCESS   : 3: ( 60% )
+    - 193 : 2024-02-20T01:15:48.536Z
+    - 192 : 2024-02-19T22:19:12.759Z
+    - 190 : 2024-02-19T20:37:42.204Z
+  FAILURE   : 1: ( 20% )
+    - 191 : 2024-02-19T21:53:17.644Z
+  NOT_BUILT : 1: ( 20% )
+    - 189 : 2024-02-19T06:01:43.875Z
+
+>> marslo/sandbox/script: 3 :
+  FAILURE   : 3: ( 100% )
+    - 84 : 2024-02-20T00:38:18.385Z
+    - 83 : 2024-02-19T21:01:42.314Z
+    - 82 : 2024-02-19T03:00:13.123Z
+
+>> marslo/sandbox/pipeline: 8 :
+  NOT_BUILT : 5: ( 62.5% )
+    - 3553 : 2024-02-20T21:51:00.713Z
+    - 3552 : 2024-02-20T15:51:00.727Z
+    - 3551 : 2024-02-20T09:51:00.729Z
+    - 3548 : 2024-02-19T15:51:00.721Z
+    - 3547 : 2024-02-19T09:51:00.726Z
+  SUCCESS   : 2: ( 25% )
+    - 3550 : 2024-02-20T03:51:00.713Z
+    - 3546 : 2024-02-19T03:51:00.707Z
+  FAILURE   : 1: ( 12.5% )
+    - 3549 : 2024-02-19T21:51:00.722Z
 ```
+
+- with percentage only
+  ```groovy
+  final String JOB_PATTERN = '<group>'
+  final long CURRENT_TIME  = System.currentTimeMillis()
+  final int BENCH_MARK     = 1*24*60*60*1000
+
+  Map<String, Map<String, String>> results = [:]
+  int sum = 0
+
+  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+    project.fullName.startsWith( JOB_PATTERN )
+    // or
+    // project.fullName.contains( JOB_PATTERN )
+  }.each { project ->
+    if ( project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
+      results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+      def build = project.getLastBuild()
+
+      while ( build && (CURRENT_TIME - build.startTimeInMillis) <= BENCH_MARK ) {
+        if ( build.isBuilding() ) {
+          results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
+        } else {
+          results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
+        } // if job is building, then results."${project.fullName}"."${build.result}" will be null
+        build = build.getPreviousBuild()
+      } // traverse in the whole traverse builds
+
+    } // if there's builds within 24 hours
+  }
+
+  results.each{ name, status ->
+    sum = status.values().sum()
+    println "\n>> ${name}: ${sum} : "
+    status.each{ r, c ->
+      if ( c ) println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " +
+                       ( sum ? "${c * 100 / sum}%" : '0%' )
+    }
+  }
+
+  "DONE"
+  ```
 
 ![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
 
