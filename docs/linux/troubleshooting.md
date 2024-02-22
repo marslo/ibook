@@ -114,17 +114,15 @@
   ```
 
 - solution
-  - For Ubuntu/Debain:
-    ```bash
-    $ apt-cache search asciidoc
-    $ sudo apt-get install asciidoc
-    ```
+  ```bash
+  # ubuntu/debain
+  $ apt-cache search asciidoc
+  $ sudo apt-get install -y asciidoc
 
-  - For RHEL/CentOS:
-    ```bash
-    $ yum install docbook-style-xsl
-    $ rpm -ivh http://pkgs.repoforge.org/asciidoc/asciidoc-8.6.9-1.el6.rfx.noarch.rpm
-    ```
+  # centos/rhel
+  $ yum install -y docbook-style-xsl
+  $ rpm -ivh http://pkgs.repoforge.org/asciidoc/asciidoc-8.6.9-1.el6.rfx.noarch.rpm
+  ```
 
 ### docbook2x-texi
 - issues
@@ -137,15 +135,18 @@
   ```
 
 - solution
-  - For Ubuntu/Debain:
-    ```bash
-    $ sudo apt-get install docbook2x
-    ```
-  - For RHEL/CentOS (Inspired from [Git for human beings google group](https://groups.google.com/d/msg/git-users/DMaDpy8Bpww/jqXULjp8ry8J)):
-    ```bash
-    $ sudo yum -y --enablerepo=*epel* install docbook2X
-    $ sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
-    ```
+
+  > [!NOTE]
+  > - [Git for human beings google group](https://groups.google.com/d/msg/git-users/DMaDpy8Bpww/jqXULjp8ry8J)
+
+  ```bash
+  # ubuntu/debain
+  $ sudo apt-get install -y docbook2x
+
+  # centos/rhel
+  $ sudo yum -y --enablerepo=*epel* install docbook2X
+  $ sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+  ```
 
 ### hunspell
 - issues
@@ -156,11 +157,10 @@
   ```
 
 - solution
-  - For Ubuntu/Debain:
-    ```bash
-    $ sudo apt-get install hunspell
-    $ sudo apt-get install libhunspell-dev
-    ```
+  ```bash
+  # ubuntu/debain
+  $ sudo apt-get install -y hunspell libhunspell-dev
+  ```
 
 ### ao
 - issues

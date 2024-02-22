@@ -11,6 +11,7 @@
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 - [tip](#tip)
   - [wsl or ubuntu](#wsl-or-ubuntu)
+  - [enable nvim clipboard](#enable-nvim-clipboard)
   - [enable vim clipboard](#enable-vim-clipboard)
   - [`wsl.conf`](#wslconf)
   - [cmds](#cmds)
@@ -418,6 +419,13 @@ sudo update-binfmts --disable cli
   $ cat /proc/sys/kernel/osrelease
   5.15.133.1-microsoft-standard-WSL2
   ```
+
+### enable nvim clipboard
+```bash
+$ sudo apt install xclip
+$ nvim
+:checkhealth
+```
 
 ### enable vim clipboard
 

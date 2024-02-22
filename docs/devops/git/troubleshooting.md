@@ -321,12 +321,13 @@ $ git config [--global] http.sslVerify false
 
 - solution:
   ```bash
-  $ sudo yum install expat-devel
+  # centos/rhel
+  $ sudo yum install -y expat-devel
+  # ubuntu
+  $ sudo apt install -y libexpat1-dev
   ```
 
 ### asciidoc
-
-
 - error:
   ```bash
   /bin/sh: line 1: asciidoc: command not found
@@ -342,7 +343,6 @@ $ git config [--global] http.sslVerify false
   $ sudo rpm -ivh http://pkgs.repoforge.org/asciidoc/asciidoc-8.6.9-1.el6.rfx.noarch.rpm
 
   # or
-
   $ wget http://downloads.sourceforge.net/project/asciidoc/asciidoc/8.6.9/asciidoc-8.6.9.tar.gz
   $ tar xf asciidoc-8.6.9.tar.gz
   $ autoconf
@@ -352,7 +352,6 @@ $ git config [--global] http.sslVerify false
   ```
 
 ### docbook2x-texi
-
 - error:
   ```bash
   DB2TEXI user-manual.texi
