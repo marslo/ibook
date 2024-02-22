@@ -43,17 +43,27 @@ $ python -m pip completion --bash >> ~/.bashrc
   ```
 
 ### [install from source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
+
+> [!NOTE|label:references:]
+> - [Building python from source on Ubuntu 20.04 LTS Focal Fossa](https://towardsdatascience.com/building-python-from-source-on-ubuntu-20-04-2ed29eec152b)
+> - [How to Install Python 3 on Ubuntu 20.04 or 22.04](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu)
+> - [How to Install Python 3.8 on CentOS 8](https://linuxize.com/post/how-to-install-python-3-8-on-centos-8/)
+
 - basic environment prepare
   ```bash
-  $ sudo dnf install gcc openssl-devel bzip2-devel libffi-devel
+  # centos
+  $ sudo dnf groupinstall 'development tools'
+  $ sudo dnf install gcc openssl-devel bzip2-devel libffi-devel \
+  $ sudo dnf install expat-devel gdbm-devel ncurses-devel \
+                     readline-devel sqlite-devel tk-devel xz-devel zlib-devel
+
+  # ubuntu
+  $ sudo apt install build-essential checkinstall pkg-config \
+                     libexpat1-dev libncursesw5-dev libssl-dev \
+                     libreadline8 libreadline-dev libsqlite3-dev \
+                     tk-dev libgdbm-dev libc6-dev libbz2-dev \
+                     libnss3-dev zlib1g-dev
   ```
-  - [or](https://linuxize.com/post/how-to-install-python-3-8-on-centos-8/)
-    ```bash
-    $ sudo dnf groupinstall 'development tools'
-    $ sudo dnf install bzip2-devel expat-devel gdbm-devel \
-               ncurses-devel openssl-devel readline-devel wget \
-               sqlite-devel tk-devel xz-devel zlib-devel libffi-devel
-    ```
 
 - download source code
   ```bash
@@ -61,9 +71,10 @@ $ python -m pip completion --bash >> ~/.bashrc
   $ tar xzf Python-3.8.3.tgz
 
   # or
-  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz |
+  $ PYTHON_VERSION='3.12.2'
+  $ curl -fsSL https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz |
     tar xzf - -C /opt/python &&
-    cd /opt/python
+    cd /opt/python/Python-${PYTHON_VERSION}
   ```
 
 - compile and install
@@ -85,27 +96,27 @@ $ python -m pip completion --bash >> ~/.bashrc
   >   - [Search Path Used by Windows to Locate a DLL](https://learn.microsoft.com/en-us/previous-versions/7d83bc18(v=vs.140))
 
   ```bash
-  $ nproc="$(nproc)"
   $ ./configure --enable-optimizations \
                 --enable-shared \                 # or export PYTHON_CONFIGURE_OPTS="--enable-shared"
                 --with-lto \
                 --with-system-expat \
-                --with-ensurepip
-  $ sudo make -j ${nproc}
+                --with-ensurepip \
+                --with-openssl=/usr/lib/ssl
+  $ sudo make -j "$(nproc)"
   $ sudo make install
 
-  $ export PYTHON_HOME='/opt/python/Python-3.11.6'
-  # for libpython3.11.so.1.0
+  $ export PYTHON_HOME='/opt/python/Python-3.12.2'
+  # for libpython3.12.so.1.0
   $ export LD_LIBRARY_PATH=$PYTHON_HOME:$LD_LIBRARY_PATH
 
   # check
-  $ which -a python3.11
-  /usr/local/bin/python3.11
+  $ which -a python3.12
+  /usr/local/bin/python3.12
   $ python3 --version
-  Python 3.11.6
+  Python 3.12.2
 
   # upgrade pip
-  $ sudo -H /usr/local/bin/python3.11 -m pip install --upgrade pip
+  $ sudo -H /usr/local/bin/python3.12 -m pip install --upgrade pip
   ```
 
   <!--sec data-title="python3.8.3" data-id="section0" data-show=true data-collapse=true ces-->
@@ -131,10 +142,10 @@ $ python -m pip completion --bash >> ~/.bashrc
             libpython3.so -> libpython3.so
             libpython3.6m.so.1.0 -> libpython3.6m.so.1.0
 
-    $ sudo ldconfig -v /opt/python/Python-3.11.6 | grep python
-    /opt/python/Python-3.11.6: (from <cmdline>:0)
+    $ sudo ldconfig -v /opt/python/Python-3.12.2 | grep python
+    /opt/python/Python-3.12.2: (from <cmdline>:0)
             libpython3.so -> libpython3.so
-            libpython3.11.so.1.0 -> libpython3.11.so.1.0
+            libpython3.12.so.1.0 -> libpython3.12.so.1.0
             libpython3.so -> libpython3.so
             libpython3.6m.so.1.0 -> libpython3.6m.so.1.0
     ```
@@ -157,7 +168,7 @@ $ python -m pip completion --bash >> ~/.bashrc
 - list config:
   ```bash
   $ pip config list [ -v ]
-  global.index-url='https://repo.my.com/artifactory/api/pypi/tools/simple'
+  global.index-url='https://artifactory.sample.com/artifactory/api/pypi/tools/simple'
   ```
   - details
     ```bash
@@ -166,8 +177,8 @@ $ python -m pip completion --bash >> ~/.bashrc
     For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
     For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
     For variant 'site', will try loading '/usr/local/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/pip.conf'
-    global.extra-index-url='https://my.artifactory.com/artifactory/api/pypi/myPrivate'
-    global.index-url='https://my.artifactory.com/artifactory/api/pypi/pypi/simple'
+    global.extra-index-url='https://artifactory.sample.com/artifactory/api/pypi/myPrivate'
+    global.index-url='https://artifactory.sample.com/artifactory/api/pypi/pypi/simple'
     ```
 
 - [`PIP_CONF_FILE`](https://pip.pypa.io/en/stable/user_guide/#configuration)
