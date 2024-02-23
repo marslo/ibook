@@ -3,6 +3,9 @@
 
 - [basic](#basic)
   - [echo](#echo)
+- [powershell 7](#powershell-7)
+  - [install](#install)
+  - [upgrade](#upgrade)
 - [system](#system)
   - [check current user is admin](#check-current-user-is-admin)
   - [maximum path length limitation](#maximum-path-length-limitation)
@@ -17,6 +20,7 @@
 - [modules](#modules)
   - [list installed modules](#list-installed-modules)
   - [get package source](#get-package-source)
+  - [PSReadLine](#psreadline)
 - [scripts](#scripts)
   - [environment](#environment)
   - [timezone](#timezone)
@@ -45,6 +49,41 @@
 Write-Warning "hello"
 Write-Error "hello"
 Write-Output "hello" | Out-Null
+```
+
+## powershell 7
+
+> [!NOTE|label:references:]
+> - [windows的powershell7 配置](https://blog.csdn.net/u012946588/article/details/108616637?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-108616637-blog-126855644.235%5Ev43%5Epc_blog_bottom_relevance_base3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-108616637-blog-126855644.235%5Ev43%5Epc_blog_bottom_relevance_base3&utm_relevant_index=2)
+
+### [install](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
+```powershell
+> winget install --id Microsoft.Powershell --source winget
+> winget install --id Microsoft.Powershell.Preview --source winget
+
+# silent install
+> curl -fsSL -O https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/PowerShell-7.4.1-win-x64.msi
+> msiexec.exe /package PowerShell-7.4.1-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1 ADD_PATH=1
+
+# check avaiable
+> winget search Microsoft.PowerShell
+Name               Id                           Version Source
+---------------------------------------------------------------
+PowerShell         Microsoft.PowerShell         7.4.1.0 winget
+PowerShell Preview Microsoft.PowerShell.Preview 7.5.0.1 winget
+```
+
+#### for restriction
+```powershell
+> Register-PSSessionConfiguration
+> Update-Help -Scope AllUsers
+> Enable-ExperimentalFeature -Scope AllUsers
+> Set-ExecutionPolicy -Scope LocalMachine
+```
+
+### upgrade
+```powershell
+> winget list --name PowerShell --upgrade-available
 ```
 
 ## system
@@ -573,16 +612,21 @@ Status                 : Ok
 > - [Get-Module](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/get-module?view=powershell-7.4)
 
 ### list installed modules
+
+> [!NOTE|label:references:]
+> - [powershell 自定义tab键下拉菜单智能提示](https://www.cnblogs.com/whiter001/p/15226132.html)
+
 ```powershell
 > Get-InstalledModule
 
 Version    Name                                Repository           Description
 -------    ----                                ----------           -----------
-1.13.0     7Zip4Powershell                     PSGallery            Powershell module for creating and...
-1.0.0.8    DockerMsftProvider                  PSGallery            PowerShell module with commands fo...
-0.87.3     PSWriteColor                        PSGallery            Write-Color is a wrapper around Wr...
+1.13.0     7Zip4Powershell                     PSGallery            Powershell module for creating and extracting...
+1.6.3133.0 Microsoft.WinGet.Client             PSGallery            PowerShell Module for the Windows Package Man...
+2.3.4      PSReadLine                          PSGallery            Great command line editing in the PowerShell ...
+1.0.1      PSWriteColor                        PSGallery            Write-Color is a wrapper around Write-Host al...
 2.2.16     VSSetup                             PSGallery            Visual Studio Setup PowerShell Module
-0.5.2      WebKitDev                           PSGallery            PowerShell scripts for WebKit deve...
+0.5.2      WebKitDev                           PSGallery            PowerShell scripts for WebKit development on ...
 ```
 
 ### get package source
@@ -599,6 +643,77 @@ PSGallery                        PowerShellGet    False      https://www.powersh
 DockerDefault                    DockerMsftPro... False      https://go.microsoft.com/fwlink/?LinkID=825636&clcid=0x409
 ```
 
+### [PSReadLine](https://github.com/PowerShell/PSReadLine)
+
+![powershell psreadline](../../screenshot/win/powershell/ps-readline-1.png)
+
+> [!NOTE|label:references:]
+> - [Getting started with the PSReadLine module for PowerShell](https://4sysops.com/archives/getting-started-with-the-psreadline-module-for-powershell/)
+> - keys:
+>   - `F2`: list all candidates
+>     ![powershell psreadline f2](../../screenshot/win/powershell/ps-readline-2-f2.png)
+
+- install
+  ```powershell
+  > Install-Module PSReadLine
+  # or
+  > Install-Module PSReadLine -RequiredVersion 2.1.0
+
+  > Import-Module PSReadLine
+  > Set-PSReadLineOption -PredictionSource History
+  # or
+  > Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+  # change execution policy if necessary
+  > Set-ExecutionPolicy RemoteSigned
+  ```
+
+- configure
+
+  > [!TIP|label:references:]
+  > - [PSReadLine/PSReadLine/SamplePSReadLineProfile.ps1](https://github.com/PowerShell/PSReadLine/blob/master/PSReadLine/SamplePSReadLineProfile.ps1)
+
+  ```powershell
+  # check profile
+  > Test-path $profile
+  # create profile file if necessary
+  > New-item –type file –force $profile
+  # edit profile
+  > notepad $profile
+
+  > cat $profile
+  # or
+  > cat %USERPROFILE%\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+  # or
+  > cat %USERPROFILE%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+
+  # shows navigable menu of all options when hitting tab
+  Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+
+  # autocompletion for arrow keys
+  Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
+  Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
+
+  # auto suggestions
+  Import-Module PSReadLine
+  Set-PSReadLineOption -PredictionSource History
+
+  # emaics mode
+  Set-PSReadLineOption -EditMode Emacs
+  # Set-PSReadLineKeyHandler -Key Ctrl+p -Function HistorySearchBackward
+  # Set-PSReadlineKeyHandler -Key Ctrl+n -Function HistorySearchForward
+  # Set-PSReadLineKeyHandler -Key Ctrl+u -Function RevertLine
+  ```
+
+  - setup candidate color
+    ```powershell
+    > Set-PSReadLineOption -Colors @{emphasis = '#ff0000'; inlinePrediction = 'magenta'}
+    ```
+
+- get info
+  ```powershell
+  > Get-PSReadLineKeyHandler
+  > Get-PSReadLineOption
+  ```
 
 ## scripts
 

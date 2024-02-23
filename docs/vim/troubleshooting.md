@@ -33,6 +33,17 @@
 
 > [!TIP]
 > - [* iMarslo : redirect cmd](./tricky.html#redirect-cmd)
+> - [Debug unexpected option settings](https://vim.fandom.com/wiki/Debug_unexpected_option_settings)
+
+- [v9 logfile](https://vi.stackexchange.com/a/3595/7389)
+  ```bash
+  $ vim -V9logfile.log
+  ```
+
+- [step debug](https://vi.stackexchange.com/a/2064/7389)
+  ```bash
+  $ vim --noplugin -D
+  ```
 
 - list startup script files
   ```vim
