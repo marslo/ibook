@@ -3,6 +3,7 @@
 
 - [basic](#basic)
   - [echo](#echo)
+  - [running powershell script](#running-powershell-script)
 - [powershell 7](#powershell-7)
   - [install](#install)
   - [upgrade](#upgrade)
@@ -49,6 +50,21 @@
 Write-Warning "hello"
 Write-Error "hello"
 Write-Output "hello" | Out-Null
+```
+
+### running powershell script
+
+> [!NOTE|label:references:]
+> - [run powershell command from cmd](https://superuser.com/a/1080336/112396)
+
+```batch
+REM cmd
+> powershell -command "..."
+REM example
+> powershell -command "get-process | ? {$_.Description -eq 'Sysinter Process Explorer'} | select processname | out-file $env:APPDATA\example.txt"
+
+REM execute ps file
+> powershell -file /path/to/script.ps1
 ```
 
 ## powershell 7
