@@ -2,12 +2,15 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [install](#install)
+- [upgrade](#upgrade)
+- [uninstall](#uninstall)
 - [start up WSL](#start-up-wsl)
   - [init](#init)
 - [check](#check)
 - [others](#others)
 - [q&a](#qa)
   - [`Error: 0x80040326`](#error-0x80040326)
+  - [Error `4294967295`](#error-4294967295)
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 - [tip](#tip)
   - [wsl or ubuntu](#wsl-or-ubuntu)
@@ -15,6 +18,9 @@
   - [enable vim clipboard](#enable-vim-clipboard)
   - [`wsl.conf`](#wslconf)
   - [cmds](#cmds)
+  - [Get list of all WSL distributions, their locations, and sizes](#get-list-of-all-wsl-distributions-their-locations-and-sizes)
+  - [recover data](#recover-data)
+  - [release disk space](#release-disk-space)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -77,6 +83,19 @@
     > wsl --install -d <DistroName>
     ```
 
+- reset
+
+  > [!NOTE|label:references:]
+  > - [How can I reset the Windows Subsystem for Linux (WSL) back to defaults? [duplicate]](https://superuser.com/a/1446410/112396)
+  > - [How Do I Reset A Manual Installation Of Windows Subsystem For Linux?](https://superuser.com/a/1440062/112396)
+
+  ```powershell
+  > wsl --unregister <DistributionName>
+
+  # or
+  > wslconfig /unregister <DistributionName>
+  ```
+
 - Microsoft-Windows-Subsystem-Linux
   ```powershell
   > dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
@@ -115,6 +134,111 @@
   > wsl --set-default-version 2
   This application requires the Windows Subsystem for Linux Optional Component.
   The system may need to be restarted so the changes can take effect.
+  ```
+
+## upgrade
+```powershell
+> Get-AppxPackage |? { $_.Name -like "*WindowsSubsystemforLinux*" }
+Name              : MicrosoftCorporationII.WindowsSubsystemForLinux
+Publisher         : CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+Architecture      : X64
+ResourceId        :
+Version           : 2.0.9.0
+PackageFullName   : MicrosoftCorporationII.WindowsSubsystemForLinux_2.0.9.0_x64__8wekyb3d8bbwe
+InstallLocation   : C:\Program Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForLinux_2.0.9.0_x64__8wekyb3d8bbwe
+IsFramework       : False
+PackageFamilyName : MicrosoftCorporationII.WindowsSubsystemForLinux_8wekyb3d8bbwe
+PublisherId       : 8wekyb3d8bbwe
+IsResourcePackage : False
+IsBundle          : False
+IsDevelopmentMode : False
+NonRemovable      : False
+IsPartiallyStaged : False
+SignatureKind     : Store
+Status            : Ok
+
+> wsl --update
+Checking for updates.
+Updating Windows Subsystem for Linux to version: 2.0.14.
+
+> Get-AppxPackage |? { $_.Name -like "*WindowsSubsystemforLinux*" }
+Name              : MicrosoftCorporationII.WindowsSubsystemForLinux
+Publisher         : CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+Architecture      : X64
+ResourceId        :
+Version           : 2.0.14.0
+PackageFullName   : MicrosoftCorporationII.WindowsSubsystemForLinux_2.0.14.0_x64__8wekyb3d8bbwe
+InstallLocation   : C:\Program
+                    Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForLinux_2.0.14.0_x64__8wekyb3d8bbwe
+IsFramework       : False
+PackageFamilyName : MicrosoftCorporationII.WindowsSubsystemForLinux_8wekyb3d8bbwe
+PublisherId       : 8wekyb3d8bbwe
+IsResourcePackage : False
+IsBundle          : False
+IsDevelopmentMode : False
+NonRemovable      : False
+IsPartiallyStaged : False
+SignatureKind     : Developer
+Status            : Ok
+```
+
+- update to pre-release version
+  ```powershell
+  > wsl --update --pre-release
+  Checking for updates.
+  Updating Windows Subsystem for Linux to version: 2.1.3.
+
+  > Get-AppxPackage |? { $_.Name -like "*WindowsSubsystemforLinux*" }
+  Name              : MicrosoftCorporationII.WindowsSubsystemForLinux
+  Publisher         : CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+  Architecture      : X64
+  ResourceId        :
+  Version           : 2.0.14.0
+  PackageFullName   : MicrosoftCorporationII.WindowsSubsystemForLinux_2.0.14.0_x64__8wekyb3d8bbwe
+  InstallLocation   : C:\Program
+                      Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForLinux_2.0.14.0_x64__8wekyb3d8bbwe
+  IsFramework       : False
+  PackageFamilyName : MicrosoftCorporationII.WindowsSubsystemForLinux_8wekyb3d8bbwe
+  PublisherId       : 8wekyb3d8bbwe
+  IsResourcePackage : False
+  IsBundle          : False
+  IsDevelopmentMode : False
+  NonRemovable      : False
+  IsPartiallyStaged : False
+  SignatureKind     : Developer
+  Status            : Ok
+  ```
+
+## uninstall
+
+> [!NOTE|label:references:]
+> - [4wk-/README.md](https://gist.github.com/4wk-/889b26043f519259ab60386ca13ba91b)
+> - [How to Uninstall WSL on Windows 11 & Windows 10? See a Guide!](https://www.minitool.com/news/uninstall-wsl.html)
+
+- destroy distros
+  ```powershell
+  > wsl --unregister all
+
+  # or
+  > wsl --unregister Ubuntu-22.04
+  > wsl --unregister Ubuntu
+  ...
+
+  # if wsl hung, execute following cmd first
+  > taskkill /f /im wslservice.exe
+  ```
+
+- uninstall in `Settings` > `Apps` > `Installed apps`
+  - Ubuntu
+  - Ubuntu-22.04.3 LTS
+
+- disable in `Start Menu` > `Turn Windows Features on or off`
+  - Virtual Machine Platform
+  - Windows Subsystem for Linux
+
+- reboot
+  ```powershell
+  > Restart-Computer
   ```
 
 ## start up WSL
@@ -357,6 +481,31 @@
 
   ![0x80040326](../../screenshot/win/wsl/wsl-0x80040326-update-shutdown.png)
 
+### Error `4294967295`
+
+> [!NOTE|label:references:]
+> - [Process Exited with Code 4294967295 in Windows? Fix It Now](https://www.partitionwizard.com/partitionmagic/4294967295.html)
+> - [#5092 WSL2 distro failing to startup with code 4294967295](https://github.com/microsoft/WSL/issues/5092#issuecomment-645567980)
+
+```powershell
+> netsh winsock reset
+# disable
+> DISM /online /disable-feature /featurename:VirtualMachinePlatform /norestart
+> DISM /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
+
+# restart
+> Restart-Computer
+
+# enable
+> DISM /online /enable-feature /featurename:VirtualMachinePlatform /norestart
+> DISM /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
+```
+
+- check vmcompute
+  ```powershell
+  > Get-Service vmcompute
+  ```
+
 ### run-detectors: unable to find an interpreter
 
 > [!INFO|label:references:]
@@ -562,3 +711,91 @@ $ sudo apt install vim
 - `wsl hostname -i`
 - `wsl -d ubuntu`
   - `wsl -d Debian -u root`
+
+### [Get list of all WSL distributions, their locations, and sizes](https://www.reddit.com/r/bashonubuntuonwindows/comments/t5d6l0/get_list_of_all_wsl_distributions_their_locations/?rdt=33973)
+
+> [!NOTE|label:references:]
+> - [How to get a WSL distribution size from the Windows command line?](https://superuser.com/a/1707747/112396)
+
+```powershell
+Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss" -Recurse |
+ForEach-Object {
+    $distro_name = ($_ | Get-ItemProperty -Name DistributionName).DistributionName
+    $distro_dir =  ($_ | Get-ItemProperty -Name BasePath).BasePath
+
+    $distro_dir = Switch ($PSVersionTable.PSEdition) {
+      "Core" {
+        $distro_dir -replace '^\\\\\?\\',''
+      }
+      "Desktop" {
+        if ($distro_dir.StartsWith('\\?\')) {
+            $distro_dir
+        } else {
+            '\\?\' + $distro_dir
+        }
+      }
+    }
+    Write-Output "------------------------------"
+    Write-Output "Distribution: $distro_name"
+    Write-Output "Directory: $($distro_dir -replace '\\\\\?\\','')"
+    $distro_size = "{0:N0} MB" -f ((Get-ChildItem -Recurse -LiteralPath "$distro_dir" | Measure-Object -Property Length -sum).sum / 1Mb)
+    Write-Output "Size: $distro_size"
+}
+```
+
+### recover data
+
+> [!NOTE|label:references:]
+> - [wsl2 frozen (unable to run any distro). Can I recover data? Windows 11](https://superuser.com/a/1777950/112396)
+
+```powershell
+Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss\ |
+    ForEach-Object {
+        (Get-ItemProperty $_.PSPATH) | Select-Object DistributionName,BasePath
+    } | Format-List
+```
+
+- mount
+  ```bash
+  $ mount -o ro /dev/sdx /mnt/wsl-rescue
+  ```
+
+### release disk space
+
+> [!NOTE|label:references:]
+> - [#4699 WSL 2 should automatically release disk space back to the host OS](https://github.com/microsoft/WSL/issues/4699)
+> - [Finding or Recovering your WSL Data](https://christopherkibble.com/posts/wsl-vhdx-recovery/)
+> - [WSL2 How-to: Prepare and Attach Virtual Drives (VHD)](https://anthony-f-tannous.medium.com/wsl2-how-to-prepare-and-attach-virtual-drives-vhd-ac17b1fc7a61)
+
+```powershell
+> wsl --shutdown
+> optimize-vhd -Path .\ext4.vhdx -Mode full
+```
+
+- [another](https://github.com/microsoft/WSL/issues/4699#issuecomment-627133168)
+  ```powershell
+  > wsl --shutdown
+  # open window Diskpart
+  > diskpart
+  > select vdisk file="C:\WSL-Distros\…\ext4.vhdx"
+  > attach vdisk readonly
+  > compact vdisk
+  > detach vdisk
+  > exit
+  ```
+
+- [or via `.wslconf`](https://github.com/microsoft/WSL/issues/4699#issuecomment-1763550488)
+  ```
+  [wsl2]
+  memory=6GB
+  swap=6GB
+
+  [experimental]
+  autoMemoryReclaim=dropcache
+  sparseVhd=true
+  ```
+
+- [or](https://github.com/microsoft/WSL/issues/4699#issuecomment-1845703674)
+  ```powershell
+  > wsl --manage Ubuntu --set-sparse false
+  ```
