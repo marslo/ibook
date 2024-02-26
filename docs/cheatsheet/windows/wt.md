@@ -5,6 +5,7 @@
   - [via download](#via-download)
   - [windows terminal](#windows-terminal)
   - [theme](#theme)
+  - [others](#others)
 - [shortcut key](#shortcut-key)
   - [Open the quake mode window](#open-the-quake-mode-window)
 - [my settings](#my-settings)
@@ -196,6 +197,12 @@
       "yellow": "#D79921"
   },
   ```
+
+### others
+
+> [!NOTE|label:references:]
+> - [LittleNewton/Open_Windows_Terminal_Here](https://github.com/LittleNewton/Open_Windows_Terminal_Here/tree/master)
+> - [Fluent Terminal 完整配置（持续更新）](https://zhuanlan.zhihu.com/p/448732483)
 
 ## shortcut key
 

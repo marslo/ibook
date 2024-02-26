@@ -3,6 +3,7 @@
 
 - [basic](#basic)
   - [echo](#echo)
+  - [profile](#profile)
   - [running powershell script](#running-powershell-script)
 - [powershell 7](#powershell-7)
   - [install](#install)
@@ -19,6 +20,7 @@
   - [install ssh-agent](#install-ssh-agent)
   - [deploy windows 10 in a test lab using configuration manager](#deploy-windows-10-in-a-test-lab-using-configuration-manager)
   - [IP](#ip)
+  - [history](#history)
 - [modules](#modules)
   - [list installed modules](#list-installed-modules)
   - [get package source](#get-package-source)
@@ -52,6 +54,24 @@
 Write-Warning "hello"
 Write-Error "hello"
 Write-Output "hello" | Out-Null
+```
+
+### profile
+
+> [!NOTE|label:references:]
+> - [PowerShell Profile Files: Getting Started](https://woshub.com/powershell-profile-files/)
+
+```powershell
+> $PROFILE | Get-Member -Type NoteProperty
+
+   TypeName: System.String
+
+Name                   MemberType   Definition
+----                   ----------   ----------
+AllUsersAllHosts       NoteProperty string AllUsersAllHosts=C:\Program Files\PowerShell\7\profile.ps1
+AllUsersCurrentHost    NoteProperty string AllUsersCurrentHost=C:\Program Files\PowerShell\7\Microsoft.Power…
+CurrentUserAllHosts    NoteProperty string CurrentUserAllHosts=C:\Users\marslo\OneDrive - Marvell\Documents\…
+CurrentUserCurrentHost NoteProperty string CurrentUserCurrentHost=C:\Users\marslo\OneDrive - Marvell\Documen…
 ```
 
 ### running powershell script
@@ -634,6 +654,76 @@ Status                 : Ok
   > Get-NetRoute -AddressFamily IPv6 | Where-Object -FilterScript {$_.NextHop -ne '::'}
   ```
 
+### history
+
+> [!NOTE|label:references:]
+> - [PowerShell Command History Forensics](https://community.sophos.com/sophos-labs/b/blog/posts/powershell-command-history-forensics)
+>   - Console History File: `$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt`
+>   - PSReadLine history File: `(Get-PSReadlineOption).HistorySavePath`
+> - [ConsoleHost_history.pdf](https://kacos2000.github.io/Win10/ConsoleHost_history.pdf)
+> - [PowerShell History File](https://0xdf.gitlab.io/2018/11/08/powershell-history-file.html)
+
+- info
+  ```powershell
+  > Get-PSReadLineOption | select -ExpandProperty HistorySavePath
+  C:\Users\marslo\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+
+  # or
+  > (Get-PSReadlineOption).HistorySaveStyle
+  SaveIncrementally
+  > (Get-PSReadlineOption).HistoryNoDuplicates
+  True
+  > (Get-PSReadlineOption).MaximumHistoryCount
+  4096
+  > (Get-PSReadlineOption).HistorySavePath
+  C:\Users\marslo\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+
+  # list history with timeline
+  > Get-History | Format-List -Property *
+  ```
+
+- backup
+  ```powershell
+  > Get-Content (Get-PSReadlineOption).HistorySavePath > D:\PowerShellHistory.txt
+  ```
+
+- search in history
+  ```powershell
+  > Select-String '..keywords..' (Get-PSReadlineOption).HistorySavePath
+  ```
+
+- rename
+  ```powershell
+  > rename-item -path $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt -newname ConsoleHost_history_before.txt
+  ```
+
+- remove
+  ```powershell
+  > remove-item -force -path $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+  ```
+
+- clear history
+  ```powershell
+  > Set-PSReadlineOption -HistorySaveStyle SaveNothing
+  > Set-PSReadlineOption -HistorySaveStyle SaveIncrementally
+
+  # or
+  > Clear-History
+  > Clear-History -count 1 -newest
+  > Clear-History -CommandLine *set-ad*
+  ```
+
+- add history
+  ```powershell
+  > Get-History | Export-Clixml -Path C:\Users\marslo\commands_hist.xml
+  > Add-History -InputObject (Import-Clixml -Path C:\Users\marslo\commands_hist.xml)
+
+  # automatic import
+  > $HistFile = Join-Path ([Environment]::GetFolderPath('UserProfile')) .ps_history
+  > Register-EngineEvent PowerShell.Exiting -Action { Get-History | Export-Clixml $HistFile } | out-null
+  > if (Test-path $HistFile) { Import-Clixml $HistFile | Add-History }
+  ```
+
 ## modules
 
 > [!NOTE|label:references:]
@@ -745,6 +835,13 @@ DockerDefault                    DockerMsftPro... False      https://go.microsof
   ```powershell
   > Get-PSReadLineKeyHandler
   > Get-PSReadLineOption
+
+  # get value
+  > echo (Get-PSReadlineOption).HistorySavePath
+  C:\Users\marslo\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+  # or
+  > Test-Path ((Get-PSReadlineOption).HistorySavePath)
+  True
   ```
 
 ## scripts
