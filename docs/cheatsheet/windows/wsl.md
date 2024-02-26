@@ -3,6 +3,8 @@
 
 - [install](#install)
   - [upgrade](#upgrade)
+  - [start up WSL](#start-up-wsl)
+- [check](#check)
 - [reinstall](#reinstall)
   - [uninstall](#uninstall)
   - [reinstall](#reinstall-1)
@@ -14,16 +16,13 @@
 - [debug](#debug)
   - [features](#features)
   - [services](#services)
-- [start up WSL](#start-up-wsl)
-  - [init](#init)
-- [check](#check)
 - [others](#others)
 - [q&a](#qa)
   - [`Error: 0x80040326`](#error-0x80040326)
   - [Error `4294967295`](#error-4294967295)
   - [run-detectors: unable to find an interpreter](#run-detectors-unable-to-find-an-interpreter)
 - [tip](#tip)
-  - [wsl or ubuntu](#wsl-or-ubuntu)
+  - [isWsl or isUbuntu](#iswsl-or-isubuntu)
   - [enable nvim clipboard](#enable-nvim-clipboard)
   - [enable vim clipboard](#enable-vim-clipboard)
   - [`wsl.conf`](#wslconf)
@@ -221,6 +220,70 @@ Status            : Ok
   SignatureKind     : Developer
   Status            : Ok
   ```
+
+### start up WSL
+- download
+  ```powershell
+  > cd d:\Linux
+  > Invoke-WebRequest -Uri https://wsldownload.azureedge.net/Ubuntu_2004.2020.424.0_x64.appx -OutFile Ubuntu20.04.appx -UseBasicParsing
+  ```
+
+- rename
+  ```powershell
+  > Rename-Item .\Ubuntu20.04.appx Ubuntu.zip
+  > Expand-Archive .\Ubuntu.zip -Verbose
+  > cd .\Ubuntu\
+  > .\ubuntu2004.exe
+  ```
+
+#### init
+
+```powershell
+> Restart-Computer
+```
+
+![wsl init](../../screenshot/win/wsl/wsl-account-setup-3.png)
+
+## check
+- windows feature
+  - appwiz.cpl
+
+    ![appwiz.cpl](../../screenshot/win/wsl/wsl-check-appwiz.cpl.png)
+
+  - windows features
+    ```powershell
+    > Get-WindowsOptionalFeature -Online | Where-Object {$_.State -eq "Enabled"} | format-table
+
+    FeatureName                                   State
+    -----------                                   -----
+    WCF-Services45                              Enabled
+    WCF-TCP-PortSharing45                       Enabled
+    MediaPlayback                               Enabled
+    SmbDirect                                   Enabled
+    MSRDC-Infrastructure                        Enabled
+    MicrosoftWindowsPowerShellV2Root            Enabled
+    MicrosoftWindowsPowerShellV2                Enabled
+    NetFx4-AdvSrvs                              Enabled
+    Printing-PrintToPDFServices-Features        Enabled
+    Printing-XPSServices-Features               Enabled
+    SearchEngine-Client-Package                 Enabled
+    WorkFolders-Client                          Enabled
+    Internet-Explorer-Optional-amd64            Enabled
+    Windows-Defender-Default-Definitions        Enabled
+    Printing-Foundation-Features                Enabled
+    Printing-Foundation-InternetPrinting-Client Enabled
+    Microsoft-Windows-Subsystem-Linux           Enabled
+    VirtualMachinePlatform                      Enabled
+    Microsoft-Hyper-V-All                       Enabled
+    Microsoft-Hyper-V                           Enabled
+    Microsoft-Hyper-V-Tools-All                 Enabled
+    Microsoft-Hyper-V-Management-PowerShell     Enabled
+    Microsoft-Hyper-V-Hypervisor                Enabled
+    Microsoft-Hyper-V-Services                  Enabled
+    Microsoft-Hyper-V-Management-Clients        Enabled
+    ```
+
+    ![windows feature check](../../screenshot/win/wsl/wsl-check-windowsfeature.png)
 
 ## reinstall
 ### uninstall
@@ -508,70 +571,6 @@ Status            : Ok
   > netsh int ip reset
   ```
 
-## start up WSL
-- download
-  ```powershell
-  > cd d:\Linux
-  > Invoke-WebRequest -Uri https://wsldownload.azureedge.net/Ubuntu_2004.2020.424.0_x64.appx -OutFile Ubuntu20.04.appx -UseBasicParsing
-  ```
-
-- rename
-  ```powershell
-  > Rename-Item .\Ubuntu20.04.appx Ubuntu.zip
-  > Expand-Archive .\Ubuntu.zip -Verbose
-  > cd .\Ubuntu\
-  > .\ubuntu2004.exe
-  ```
-
-### init
-
-```powershell
-> Restart-Computer
-```
-
-![wsl init](../../screenshot/win/wsl/wsl-account-setup-3.png)
-
-## check
-- windows feature
-  - appwiz.cpl
-
-    ![appwiz.cpl](../../screenshot/win/wsl/wsl-check-appwiz.cpl.png)
-
-  - windows features
-    ```powershell
-    > Get-WindowsOptionalFeature -Online | Where-Object {$_.State -eq "Enabled"} | format-table
-
-    FeatureName                                   State
-    -----------                                   -----
-    WCF-Services45                              Enabled
-    WCF-TCP-PortSharing45                       Enabled
-    MediaPlayback                               Enabled
-    SmbDirect                                   Enabled
-    MSRDC-Infrastructure                        Enabled
-    MicrosoftWindowsPowerShellV2Root            Enabled
-    MicrosoftWindowsPowerShellV2                Enabled
-    NetFx4-AdvSrvs                              Enabled
-    Printing-PrintToPDFServices-Features        Enabled
-    Printing-XPSServices-Features               Enabled
-    SearchEngine-Client-Package                 Enabled
-    WorkFolders-Client                          Enabled
-    Internet-Explorer-Optional-amd64            Enabled
-    Windows-Defender-Default-Definitions        Enabled
-    Printing-Foundation-Features                Enabled
-    Printing-Foundation-InternetPrinting-Client Enabled
-    Microsoft-Windows-Subsystem-Linux           Enabled
-    VirtualMachinePlatform                      Enabled
-    Microsoft-Hyper-V-All                       Enabled
-    Microsoft-Hyper-V                           Enabled
-    Microsoft-Hyper-V-Tools-All                 Enabled
-    Microsoft-Hyper-V-Management-PowerShell     Enabled
-    Microsoft-Hyper-V-Hypervisor                Enabled
-    Microsoft-Hyper-V-Services                  Enabled
-    Microsoft-Hyper-V-Management-Clients        Enabled
-    ```
-
-    ![windows feature check](../../screenshot/win/wsl/wsl-check-windowsfeature.png)
-
 ## others
 - mount
   ```bash
@@ -599,123 +598,6 @@ Status            : Ok
 
   REM i.e.:
   > %LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\pawelb.
-  ```
-
-- [setup powershell startup](https://zhuanlan.zhihu.com/p/439437013)
-  ```powershell
-  # 引入 posh-git
-  Import-Module posh-git
-
-  # 引入 oh-my-posh
-  Import-Module oh-my-posh
-
-  # 引入 ps-read-line
-  Import-Module PSReadLine
-
-  # 设置 PowerShell 主题
-  Set-PoshPrompt -Theme gmay
-  #------------------------------- Import Modules END   -------------------------------
-
-  #-------------------------------  Set Hot-keys BEGIN  -------------------------------
-  # 设置预测文本来源为历史记录
-  Set-PSReadLineOption -PredictionSource History
-
-  # 每次回溯输入历史，光标定位于输入内容末尾
-  Set-PSReadLineOption -HistorySearchCursorMovesToEnd
-
-  # 设置 Tab 为菜单补全和 Intellisense
-  Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete
-
-  # 设置 Ctrl+d 为退出 PowerShell
-  Set-PSReadlineKeyHandler -Key "Ctrl+d" -Function ViExit
-
-  # 设置 Ctrl+z 为撤销
-  Set-PSReadLineKeyHandler -Key "Ctrl+z" -Function Undo
-
-  # 设置向上键为后向搜索历史记录
-  Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
-
-  # 设置向下键为前向搜索历史纪录
-  Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
-  #-------------------------------  Set Hot-keys END    -------------------------------
-
-  #-------------------------------    Functions BEGIN   -------------------------------
-  # Python 直接执行
-  $env:PATHEXT += ";.py"
-
-  # 更新系统组件
-  function Update-Packages {
-    # update pip
-    Write-Host "Step 1: 更新 pip" -ForegroundColor Magenta -BackgroundColor Cyan
-    $a = pip list --outdated
-    $num_package = $a.Length - 2
-    for ($i = 0; $i -lt $num_package; $i++) {
-      $tmp = ($a[2 + $i].Split(" "))[0]
-      pip install -U $tmp
-    }
-
-    # update TeX Live
-    $CurrentYear = Get-Date -Format yyyy
-    Write-Host "Step 2: 更新 TeX Live" $CurrentYear -ForegroundColor Magenta -BackgroundColor Cyan
-    tlmgr update --self
-    tlmgr update --all
-
-    # update Chocolotey
-    Write-Host "Step 3: 更新 Chocolatey" -ForegroundColor Magenta -BackgroundColor Cyan
-    choco outdated
-  }
-  #-------------------------------    Functions END     -------------------------------
-
-  #-------------------------------   Set Alias BEGIN    -------------------------------
-  # 1. 编译函数 make
-  function MakeThings {
-    nmake.exe $args -nologo
-  }
-  Set-Alias -Name make -Value MakeThings
-
-  # 2. 更新系统 os-update
-  Set-Alias -Name os-update -Value Update-Packages
-
-  # 3. 查看目录 ls & ll
-  function ListDirectory {
-    (Get-ChildItem).Name
-    Write-Host("")
-  }
-  Set-Alias -Name ls -Value ListDirectory
-  Set-Alias -Name ll -Value Get-ChildItem
-
-  # 4. 打开当前工作目录
-  function OpenCurrentFolder {
-    param
-    (
-      # 输入要打开的路径
-      # 用法示例：open C:\
-      # 默认路径：当前工作文件夹
-      $Path = '.'
-    )
-    Invoke-Item $Path
-  }
-  Set-Alias -Name open -Value OpenCurrentFolder
-  #-------------------------------    Set Alias END     -------------------------------
-
-  #-------------------------------   Set Network BEGIN    -------------------------------
-  # 1. 获取所有 Network Interface
-  function Get-AllNic {
-    Get-NetAdapter | Sort-Object -Property MacAddress
-  }
-  Set-Alias -Name getnic -Value Get-AllNic
-
-  # 2. 获取 IPv4 关键路由
-  function Get-IPv4Routes {
-    Get-NetRoute -AddressFamily IPv4 | Where-Object -FilterScript {$_.NextHop -ne '0.0.0.0'}
-  }
-  Set-Alias -Name getip -Value Get-IPv4Routes
-
-  # 3. 获取 IPv6 关键路由
-  function Get-IPv6Routes {
-    Get-NetRoute -AddressFamily IPv6 | Where-Object -FilterScript {$_.NextHop -ne '::'}
-  }
-  Set-Alias -Name getip6 -Value Get-IPv6Routes
   ```
 
 ## q&a
@@ -803,6 +685,7 @@ sudo update-binfmts --disable cli
     ```batch
     > REG ADD "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss" /v AppendNtPath /t REG_DWORD /d 0x00000000
     ```
+
   - via `wsl.conf`
     ```bash
     $ cat /etc/wsl.conf
@@ -810,7 +693,7 @@ sudo update-binfmts --disable cli
     appendWindowsPath=false
     ```
 
-### wsl or ubuntu
+### isWsl or isUbuntu
 
 > [!TIP]
 > - [In a bash script, how can I tell if the script is running under Ubuntu pure or in Linux subsystem for Windows?](https://superuser.com/a/1464436/112396)
