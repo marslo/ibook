@@ -2,8 +2,18 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [install](#install)
-- [upgrade](#upgrade)
-- [uninstall](#uninstall)
+  - [upgrade](#upgrade)
+- [reinstall](#reinstall)
+  - [uninstall](#uninstall)
+  - [reinstall](#reinstall-1)
+- [cmds](#cmds)
+  - [status](#status)
+  - [users](#users)
+  - [shutdown](#shutdown)
+  - [disk](#disk)
+- [debug](#debug)
+  - [features](#features)
+  - [services](#services)
 - [start up WSL](#start-up-wsl)
   - [init](#init)
 - [check](#check)
@@ -17,7 +27,6 @@
   - [enable nvim clipboard](#enable-nvim-clipboard)
   - [enable vim clipboard](#enable-vim-clipboard)
   - [`wsl.conf`](#wslconf)
-  - [cmds](#cmds)
   - [Get list of all WSL distributions, their locations, and sizes](#get-list-of-all-wsl-distributions-their-locations-and-sizes)
   - [recover data](#recover-data)
   - [release disk space](#release-disk-space)
@@ -136,7 +145,11 @@
   The system may need to be restarted so the changes can take effect.
   ```
 
-## upgrade
+### upgrade
+
+> [!NOTE|label:references:]
+> - [How to Update from WSL to WSL 2 in Windows 10](https://www.tenforums.com/tutorials/164301-how-update-wsl-wsl-2-windows-10-a.html)
+
 ```powershell
 > Get-AppxPackage |? { $_.Name -like "*WindowsSubsystemforLinux*" }
 Name              : MicrosoftCorporationII.WindowsSubsystemForLinux
@@ -209,11 +222,13 @@ Status            : Ok
   Status            : Ok
   ```
 
-## uninstall
+## reinstall
+### uninstall
 
 > [!NOTE|label:references:]
 > - [4wk-/README.md](https://gist.github.com/4wk-/889b26043f519259ab60386ca13ba91b)
 > - [How to Uninstall WSL on Windows 11 & Windows 10? See a Guide!](https://www.minitool.com/news/uninstall-wsl.html)
+> - [Can't install WSL - error: 0x80070424](https://www.elevenforum.com/t/cant-install-wsl-error-0x80070424.20307/#post-379885)
 
 - destroy distros
   ```powershell
@@ -235,10 +250,262 @@ Status            : Ok
 - disable in `Start Menu` > `Turn Windows Features on or off`
   - Virtual Machine Platform
   - Windows Subsystem for Linux
+  - or via
+    ```powershell
+    > Disable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+    > Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    # or
+    > DISM /online /disable-feature /featurename:VirtualMachinePlatform /norestart
+    > DISM /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
+
+    # check status
+    > Get-Service vmcompute
+    Status   Name               DisplayName
+    ------   ----               -----------
+    Running  vmcompute          Hyper-V Host Compute Service
+    ```
 
 - reboot
   ```powershell
   > Restart-Computer
+  ```
+
+- others:
+  ```powershell
+  > Dism /online /cleanup-image /restorehealth
+  > sfc /scannow
+  ```
+
+### reinstall
+```powershell
+> Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+> Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+> Restart-Computer
+> wsl --install --distribution Ubuntu
+```
+
+## cmds
+
+> [!NOTE|label:references:]
+> - [Basic commands for WSL](https://learn.microsoft.com/en-us/windows/wsl/basic-commands)
+> - commands:
+>   - `wsl --update`
+>   - `wsl --version`
+>   - `wsl --list --running`
+>   - `wsl --shutdown`
+>   - `wsl hostname -i`
+>   - `wsl -d ubuntu`
+>     - `wsl -d Debian -u root`
+
+### status
+- check status
+  ```powershell
+  > wsl --status
+  > wsl --list --verbose
+
+  > wsl --list --verbose
+    NAME            STATE           VERSION
+  * Ubuntu-22.04    Stopped         1
+    Ubuntu          Running         2
+  ```
+
+- set wsl version
+  - set default version
+    ```powershell
+    > wsl --set-default-version <Version>
+
+    # i.e.:
+    > wsl --set-default-version 2
+    ```
+
+  - set distros
+    ```powershell
+    > wsl --set-version <distribution name> <versionNumber>
+
+    # i.e.:
+    > wsl --set-version Ubuntu 2
+    ```
+
+### users
+- run as root
+  ```powershell
+  > wsl --distribution <Distribution Name> --user <User Name>
+
+  # i.e.:
+  > wsl --distribution Ubuntu-22.04 --user root
+  ```
+
+- config default user
+  ```powershell
+  > <DistributionName> config --default-user <Username>
+
+  # i.e.:
+  > Ubuntu-22.04 config --default-user root
+  ```
+
+### shutdown
+- shutdown and terminate
+  ```powershell
+  > wsl --shutdown
+  > wsl --terminate <Distribution Name>
+  ```
+
+- unregister
+  ```powershell
+  > wsl --unregister <DistributionName>
+  ```
+
+### disk
+- export and import
+  ```powershell
+  # export
+  > wsl --export <Distribution Name> <FileName>
+  # for wsl2 to .vhdx
+  > wsl --export <Distribution Name> --vhd <FileName>
+
+  # import
+  > wsl --import <Distribution Name> <InstallLocation> <FileName> [ --version 1/2 ]
+  # for wsl2
+  > wsl --import <Distribution Name> <InstallLocation> --vhd <FileName> [ --version 1/2 ]
+
+  # import a distribution
+  > wsl --import-in-place <Distribution Name> <FileName>
+  ```
+
+- mount
+  ```powershell
+  > wsl --mount <DiskPath>
+
+  # for wsl2
+  > wsl --mount <DiskPath> --vhd
+  > wsl --unmount <DiskPath>
+  ```
+
+## debug
+
+> [!NOTE|label:references:]
+> - [collect-wsl-logs.ps1](https://github.com/Microsoft/WSL/blob/master/diagnostics/collect-wsl-logs.ps1)
+> - [#10999 WSL 2 freezes](https://github.com/microsoft/WSL/issues/10999)
+> - [How to Add or Remove Optional Features in Windows 11?](https://www.partitionwizard.com/partitionmanager/add-or-remove-optional-features-win-11.html)
+> - [How to Enable or Disable Windows Subsystem for Linux WSL in Windows 10](https://www.tenforums.com/tutorials/46769-enable-disable-windows-subsystem-linux-wsl-windows-10-a.html)
+
+- dump log
+  ```powershell
+  > Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/microsoft/WSL/master/diagnostics/collect-wsl-logs.ps1" -OutFile collect-wsl-logs.ps1
+  > Set-ExecutionPolicy Bypass -Scope Process -Force
+  > .\collect-wsl-logs.ps1 -Dump
+  ```
+
+- host info
+  - powershell
+    ```powershell
+    > echo $PSVersionTable
+    Name                           Value
+    ----                           -----
+    PSVersion                      7.4.1
+    PSEdition                      Core
+    GitCommitId                    7.4.1
+    OS                             Microsoft Windows 10.0.22621
+    Platform                       Win32NT
+    PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0…}
+    PSRemotingProtocolVersion      2.3
+    SerializationVersion           1.1.0.1
+    WSManStackVersion              3.0
+    ```
+
+  - host network
+    ```powershell
+    > Get-Service -Name 'Host Network Service'
+    Status   Name               DisplayName
+    ------   ----               -----------
+    Running  hns                Host Network Service
+    ```
+
+- packages
+  ```powershell
+  > winget --info
+  ```
+
+### features
+
+> [!NOTE|label:list windows features:]
+> ```powershell
+> > Get-WindowsOptionalFeature -Online | Where-Object {$_.State -eq "Enabled"} | format-table
+> ```
+
+- VirtualMachinePlatform
+  ```powershell
+  # enable
+  > Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+  # or
+  > DISM /online /enable-feature /featurename:VirtualMachinePlatform /norestart
+
+  # disable
+  > Disable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+  # or
+  > DISM /online /disable-feature /featurename:VirtualMachinePlatform /norestart
+  ```
+
+- Microsoft-Windows-Subsystem-Linux
+  ```powershell
+  # enable
+  > Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+  # or
+  > DISM /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
+
+  # disable
+  > Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+  # or
+  > DISM /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
+  ```
+
+- hyper-v
+
+  > [!NOTE|label:references:]
+  > - [Disable Hyper-V in PowerShell](https://learn.microsoft.com/en-us/troubleshoot/windows-client/application-management/virtualization-apps-not-work-with-hyper-v)
+
+  ```powershell
+  # enable
+  > Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+  # or
+  > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V-All
+  > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V
+
+  # disable
+  > Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+  # or
+  > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V
+  > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V-All
+  # win10
+  > Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Hypervisor
+  ```
+
+### services
+- Host Network Service
+  ```powershell
+  > Get-Service -Name 'Host Network Service' | Restart-Service
+  ```
+
+- wslservices
+  ```powershell
+  # restart wslservice
+  > net stop wslservice
+  > net start wslservice
+
+  # if wsl hung, execute following cmd first
+  > taskkill /f /im wslservice.exe
+  ```
+
+- winsock
+
+  > [!NOTE|label:references:]
+  > - [Why “Resetting” Winsock is Necessary](https://adamtheautomator.com/netsh-winsock-reset/)
+
+  ```powershell
+  > netsh winsock reset
+
+  # reset tcp/ip settings
+  > netsh int ip reset
   ```
 
 ## start up WSL
@@ -332,11 +599,6 @@ Status            : Ok
 
   REM i.e.:
   > %LOCALAPPDATA%\Packages\CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc\LocalState\rootfs\home\pawelb.
-  ```
-
-- enable or disable Hyper-V
-  ```powershell
-  > DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V
   ```
 
 - [setup powershell startup](https://zhuanlan.zhihu.com/p/439437013)
@@ -489,6 +751,7 @@ Status            : Ok
 
 ```powershell
 > netsh winsock reset
+
 # disable
 > DISM /online /disable-feature /featurename:VirtualMachinePlatform /norestart
 > DISM /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart
@@ -701,16 +964,6 @@ $ sudo apt install vim
   /usr/bin/bash
   # verify in /etc/passwd
   ```
-
-### cmds
-
-- `wsl --update`
-- `wsl --version`
-- `wsl --list --running`
-- `wsl --shutdown`
-- `wsl hostname -i`
-- `wsl -d ubuntu`
-  - `wsl -d Debian -u root`
 
 ### [Get list of all WSL distributions, their locations, and sizes](https://www.reddit.com/r/bashonubuntuonwindows/comments/t5d6l0/get_list_of_all_wsl_distributions_their_locations/?rdt=33973)
 
