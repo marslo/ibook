@@ -45,6 +45,9 @@ $ python -m pip completion --bash >> ~/.bashrc
 ### [install from source code](https://blog.eldernode.com/install-python-3-8-on-centos/)
 
 > [!NOTE|label:references:]
+> - [* Python Developer's Guide: Compile and build](https://devguide.python.org/getting-started/setup-building/#compile-and-build)
+> - [* Python Developer's Guide: Install dependencies](https://devguide.python.org/getting-started/setup-building/index.html#install-dependencies)
+> - [Python 3.3 source code setup: modules were not found: _lzma _sqlite3 _tkinter](https://stackoverflow.com/a/70564810/2940319)
 > - [Building python from source on Ubuntu 20.04 LTS Focal Fossa](https://towardsdatascience.com/building-python-from-source-on-ubuntu-20-04-2ed29eec152b)
 > - [How to Install Python 3 on Ubuntu 20.04 or 22.04](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu)
 > - [How to Install Python 3.8 on CentOS 8](https://linuxize.com/post/how-to-install-python-3-8-on-centos-8/)
