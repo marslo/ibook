@@ -761,7 +761,7 @@ $ sudo apt install vim
 > - [hsab/WSL-config](https://github.com/hsab/WSL-config)
 
 - [`/etc/wsl.conf`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconf-file)
-  ```editorconfig
+  ```
   [boot]
   systemd=true
 
@@ -779,7 +779,7 @@ $ sudo apt install vim
   ```
 
 - [`%USERPROFILE%\.wslconfig`](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#example-wslconfig-file)
-  ```editorconfig
+  ```
   # Settings apply across all Linux distros running on WSL 2
   [wsl2]
 
