@@ -18,13 +18,15 @@
   - [cortana](#cortana)
   - [install ssh-agent](#install-ssh-agent)
   - [deploy windows 10 in a test lab using configuration manager](#deploy-windows-10-in-a-test-lab-using-configuration-manager)
+  - [IP](#ip)
 - [modules](#modules)
   - [list installed modules](#list-installed-modules)
   - [get package source](#get-package-source)
   - [PSReadLine](#psreadline)
 - [scripts](#scripts)
-  - [environment](#environment)
+  - [environment variable](#environment-variable)
   - [timezone](#timezone)
+  - [setup powershell startup](#setup-powershell-startup)
 - [step-by-step guide to setup two-tier pki environment](#step-by-step-guide-to-setup-two-tier-pki-environment)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -618,6 +620,20 @@ Status                 : Ok
 
 - replace a client with windows 10 using configuration manager
 
+### IP
+- get network interface (NIC)
+  ```powershell
+  > Get-NetAdapter | Sort-Object -Property MacAddress
+  ```
+- get ip route
+  ```powershell
+  # ipv4
+  > Get-NetRoute -AddressFamily IPv4 | Where-Object -FilterScript {$_.NextHop -ne '0.0.0.0'}
+
+  # ipv6
+  > Get-NetRoute -AddressFamily IPv6 | Where-Object -FilterScript {$_.NextHop -ne '::'}
+  ```
+
 ## modules
 
 > [!NOTE|label:references:]
@@ -746,7 +762,7 @@ DockerDefault                    DockerMsftPro... False      https://go.microsof
 >   - [tcpdump_install.ps1](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/c2f2dce527bae0c7ed913ae14ac58b64f5a2d97f/zz_tcpdump_install.ps1)
 >   - [sshd_manage.ps1](https://gist.githubusercontent.com/thxCode/cd8ec26795a56eb120b57675f0c067cf/raw/897f2c41df99832d6f88f663a9c2ac442dee4875/zz_sshd_manage.ps1)
 
-### environment
+### environment variable
 
 - [setup proxy](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-docker/configure-docker-daemon#proxy-configuration)
   ```powershell
@@ -780,8 +796,127 @@ DockerDefault                    DockerMsftPro... False      https://go.microsof
   > tzutil /g
   ```
 
-## [step-by-step guide to setup two-tier pki environment](http://www.rebeladmin.com/2018/06/step-step-guide-setup-two-tier-pki-environment/)
+### [setup powershell startup](https://zhuanlan.zhihu.com/p/439437013)
 
+<!--sec data-title="setup powershell startup" data-id="section0" data-show=true data-collapse=true ces-->
+```powershell
+# 引入 posh-git
+Import-Module posh-git
+
+# 引入 oh-my-posh
+Import-Module oh-my-posh
+
+# 引入 ps-read-line
+Import-Module PSReadLine
+
+# 设置 PowerShell 主题
+Set-PoshPrompt -Theme gmay
+#------------------------------- Import Modules END   -------------------------------
+
+#-------------------------------  Set Hot-keys BEGIN  -------------------------------
+# 设置预测文本来源为历史记录
+Set-PSReadLineOption -PredictionSource History
+
+# 每次回溯输入历史，光标定位于输入内容末尾
+Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+
+# 设置 Tab 为菜单补全和 Intellisense
+Set-PSReadLineKeyHandler -Key "Tab" -Function MenuComplete
+
+# 设置 Ctrl+d 为退出 PowerShell
+Set-PSReadlineKeyHandler -Key "Ctrl+d" -Function ViExit
+
+# 设置 Ctrl+z 为撤销
+Set-PSReadLineKeyHandler -Key "Ctrl+z" -Function Undo
+
+# 设置向上键为后向搜索历史记录
+Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+
+# 设置向下键为前向搜索历史纪录
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+#-------------------------------  Set Hot-keys END    -------------------------------
+
+#-------------------------------    Functions BEGIN   -------------------------------
+# Python 直接执行
+$env:PATHEXT += ";.py"
+
+# 更新系统组件
+function Update-Packages {
+  # update pip
+  Write-Host "Step 1: 更新 pip" -ForegroundColor Magenta -BackgroundColor Cyan
+  $a = pip list --outdated
+  $num_package = $a.Length - 2
+  for ($i = 0; $i -lt $num_package; $i++) {
+    $tmp = ($a[2 + $i].Split(" "))[0]
+    pip install -U $tmp
+  }
+
+  # update TeX Live
+  $CurrentYear = Get-Date -Format yyyy
+  Write-Host "Step 2: 更新 TeX Live" $CurrentYear -ForegroundColor Magenta -BackgroundColor Cyan
+  tlmgr update --self
+  tlmgr update --all
+
+  # update Chocolotey
+  Write-Host "Step 3: 更新 Chocolatey" -ForegroundColor Magenta -BackgroundColor Cyan
+  choco outdated
+}
+#-------------------------------    Functions END     -------------------------------
+
+#-------------------------------   Set Alias BEGIN    -------------------------------
+# 1. 编译函数 make
+function MakeThings {
+  nmake.exe $args -nologo
+}
+Set-Alias -Name make -Value MakeThings
+
+# 2. 更新系统 os-update
+Set-Alias -Name os-update -Value Update-Packages
+
+# 3. 查看目录 ls & ll
+function ListDirectory {
+  (Get-ChildItem).Name
+  Write-Host("")
+}
+Set-Alias -Name ls -Value ListDirectory
+Set-Alias -Name ll -Value Get-ChildItem
+
+# 4. 打开当前工作目录
+function OpenCurrentFolder {
+  param
+  (
+    # 输入要打开的路径
+    # 用法示例：open C:\
+    # 默认路径：当前工作文件夹
+    $Path = '.'
+  )
+  Invoke-Item $Path
+}
+Set-Alias -Name open -Value OpenCurrentFolder
+#-------------------------------    Set Alias END     -------------------------------
+
+#-------------------------------   Set Network BEGIN    -------------------------------
+# 1. 获取所有 Network Interface
+function Get-AllNic {
+  Get-NetAdapter | Sort-Object -Property MacAddress
+}
+Set-Alias -Name getnic -Value Get-AllNic
+
+# 2. 获取 IPv4 关键路由
+function Get-IPv4Routes {
+  Get-NetRoute -AddressFamily IPv4 | Where-Object -FilterScript {$_.NextHop -ne '0.0.0.0'}
+}
+Set-Alias -Name getip -Value Get-IPv4Routes
+
+# 3. 获取 IPv6 关键路由
+function Get-IPv6Routes {
+  Get-NetRoute -AddressFamily IPv6 | Where-Object -FilterScript {$_.NextHop -ne '::'}
+}
+Set-Alias -Name getip6 -Value Get-IPv6Routes
+```
+<!--endsec-->
+
+## [step-by-step guide to setup two-tier pki environment](http://www.rebeladmin.com/2018/06/step-step-guide-setup-two-tier-pki-environment/)
 ```powershell
 # Setup Standalone Root CA
 > Add-WindowsFeature ADCS-Cert-Authority -IncludeManagementTools
