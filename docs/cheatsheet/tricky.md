@@ -7,6 +7,7 @@
   - [grep](#grep)
   - [highlight](#highlight)
   - [ccat](#ccat)
+  - [render visualization of hexadecimal colors](#render-visualization-of-hexadecimal-colors)
   - [others](#others)
 - [remove highlight](#remove-highlight)
 - [alias](#alias)
@@ -73,6 +74,38 @@ $ ccat file.py --bg=dark --html
 
 # get colors
 $ ccat --palette
+```
+
+### render visualization of hexadecimal colors
+
+> [!NOTE|label:references:]
+> - [#2705 Render visualization of hexadecimal colors (or other common formats) using true color ANSI escape sequences](https://github.com/sharkdp/bat/issues/2705)
+```bash
+# colorcat
+# - cats a file, but if any line contains N hex colors, it appends the colors
+#   (rendered as ansi escape sequences) to the end of the line.
+# - input can be stdin, a file, or a hex color in plain text
+function colorcat() {
+  if [[ "$#" -eq 1 && ! -f "$1" ]]; then
+    echo "$1"
+  else
+    cat "$@"
+  fi | while read -r line; do
+    local colors=""
+    for word in $line; do
+      if [[ "$word" =~ ^[^A-Fa-f0-9]*#?([A-Fa-f0-9]{6})[^A-Fa-f0-9]*$ ]]; then
+        hex=${BASH_REMATCH[1]}
+        local r=$((16#${hex:0:2}))
+        local g=$((16#${hex:2:2}))
+        local b=$((16#${hex:4:2}))
+        local truecolor="\033[48;2;${r};${g};${b}m"
+        local reset="\033[0m"
+        colors="${colors}${truecolor}  ${reset} "
+      fi
+    done
+      echo -e "$line $colors"
+  done
+}
 ```
 
 ### others
