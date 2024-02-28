@@ -481,12 +481,12 @@ v1
 
 ### [get urlencode](https://stackoverflow.com/a/34407620/2940319)
 ```bash
-$ printf %s 'input text'|jq -sRr @uri
+$ printf %s 'input text' | jq -sRr @uri
 input%20text
 
-$ printf %s 'input=(text)'|jq -sRr @uri
+$ printf %s 'input=(text)' | jq -sRr @uri
 input%3D%28text%29
 
-$ printf %s '(=)&'|jq -sRr @uri
+$ printf %s '(=)&' | jq -sRr @uri
 %28%3D%29%26
 ```

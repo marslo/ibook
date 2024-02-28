@@ -113,12 +113,21 @@ $ curl -fsSL -XGET https://jira.sample.com/rest/api/2/project |
 >   3. `%20CONDITION%20` instead of `CONDITION`
 >     - `AND` -> `%20AND%20`
 >     - `OR` -> `%20OR%20`
+> - [* JQL operators](https://support.atlassian.com/jira-software-cloud/docs/jql-operators/)
+> - [REST API - 'order by' param is ignored](https://community.atlassian.com/t5/Jira-Software-questions/REST-API-order-by-param-is-ignored/qaq-p/1696769#M483680)
+> - [What is advanced search in Jira Cloud?](https://support.atlassian.com/jira-software-cloud/docs/what-is-advanced-search-in-jira-cloud/)
 
 - format JQL
 
   > [!TIP]
   > - [* iMarslo: using jql to get URLEncodign](../cheatsheet/character/json.html#get-urlencode)
 
+  ```bash
+  $ jql='project = abc AND issuetype = release order by updated desc'
+  $ jql=$(printf %s "${jql}" | jq -sRr @uri)
+  ```
+
+  <!--sec data-title="legacy version" data-id="section0" data-show=true data-collapse=true ces-->
   ```bash
   $ jql="$(sed 's/ //g;s/AND/ AND /g;s/OR/ OR /g;s/IN/ IN /g;s/IS/ IS /g' <<< "${jql}")"
   $ jql="$(printf %s "${jql}" | jq -sRr @uri)"
@@ -134,6 +143,7 @@ $ curl -fsSL -XGET https://jira.sample.com/rest/api/2/project |
   $ echo $jql
   project%3Dabc%20AND%20issuetype%3Drelease
   ```
+  <!--endsec-->
 
 - api
 
@@ -155,7 +165,38 @@ $ curl -fsSL -XGET https://jira.sample.com/rest/api/2/project |
          --globoff \
          --netrc-file ~/.netrc \
          -XGET \
-         "https://jira.sample.com/rest/api/2/search?jql=${jql}" | jq -r ${jqOpt}
+         "https://jira.sample.com/rest/api/2/search?jql=${jql}" |
+    jq -r ${jqOpt}
+
+  # i.e.:
+  $ curlOpt='--silent --insecure --globoff --netrc-file ~/.netrc'
+  $ url='https://jira.sample.com/rest/api/2'
+  $ queryParams="startAt=0&maxResults=10"
+
+  $ jql='project = ABC AND issuetype = Release ORDER BY updated ASC'          # copy from Jira website
+  $ jql="$(printf %s "${jql}" | jq -sRr @uri)"
+
+  $ curl "${curlOpt}" "${url}/search?jql=${jql}&${queryParams}" |
+         jq -r '.issues[]' |
+         jq -r '. | [.key, .fields.summary, .fields.status.name, .fields.issuetype.name, .fields.updated, .fields.created] | join("|")' |
+         while IFS='|' read -r _key _summary _status _issuetype _updated _created; do
+           echo "- [${_key}] - ${_summary}"
+           echo "  -  status    : ${_status}"
+           echo "  -  issuetype : ${_issuetype}"
+           echo "  -  created   : ${_created}"
+           echo "  -  updated   : ${_updated}"
+         done
+  ```
+
+  <!--sec data-title="legacy version" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ curl --silent \
+         --insecure \
+         --globoff \
+         --netrc-file ~/.netrc \
+         -XGET \
+         "https://jira.sample.com/rest/api/2/search?jql=${jql}" |
+    jq -r ${jqOpt}
 
   # i.e.:
   $ curlOpt='--silent --insecure --globoff --netrc-file ~/.netrc'
@@ -177,6 +218,7 @@ $ curl -fsSL -XGET https://jira.sample.com/rest/api/2/project |
            echo "  -  updated   : ${_updated}"
          done
   ```
+  <!--endsec-->
 
 ### [generate OAuth consumer](https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/)
 ```bash
