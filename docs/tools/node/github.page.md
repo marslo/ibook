@@ -3,6 +3,7 @@
 
 - [theme](#theme)
   - [`jekyll`](#jekyll)
+  - [hogo](#hogo)
 - [`gh-pages`](#gh-pages)
 - [Please use a personal access token instead](#please-use-a-personal-access-token-instead)
   - [token generation](#token-generation)
@@ -57,6 +58,13 @@
       Server address: http://127.0.0.1:4000/
     Server running... press ctrl-c to stop.
   ```
+
+### hogo
+#### [loveit](https://feng1o.github.io/loveit/)
+
+> [!NOTE|label:references:]
+> - [探索 Hugo - LoveIt 主题的全部内容和背后的核心概念](https://hugoloveit.com/zh-cn/theme-documentation-basics/#32-%E7%BD%91%E7%AB%99%E5%9B%BE%E6%A0%87-%E6%B5%8F%E8%A7%88%E5%99%A8%E9%85%8D%E7%BD%AE-%E7%BD%91%E7%AB%99%E6%B8%85%E5%8D%95)
+> - [dillonzq/LoveIt](https://github.com/dillonzq/LoveIt)
 
 ## `gh-pages`
 
