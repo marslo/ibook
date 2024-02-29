@@ -39,6 +39,25 @@
 > - [Installing Node.js via package manager](https://nodejs.org/en/download/package-manager)
 
 ### [n](https://www.npmjs.com/package/n)
+
+> [!NOTE|label:references:]
+> - [tj/n](https://github.com/tj/n)
+> - [mklement0/n-install](https://github.com/mklement0/n-install)
+> - [Install Node.js to install n to install Node.js?](https://stackoverflow.com/a/30967671/2940319)
+
+```bash
+# tj/n
+$ git clone --depth=1 https://github.com/tj/n /tmp/n && cd $_
+$ sudo make install
+# or
+$ curl -fsSL https://raw.githubusercontent.com/tj/n/master/bin/n | bash
+
+# n-install
+$ curl -L https://bit.ly/n-install | bash
+# install n to ~/util/n
+$ curl -L https://bit.ly/n-install | N_PREFIX=~/util/n bash -s -- -y
+```
+
 ### nvm
 
 > [!NOTE|label:references:]
