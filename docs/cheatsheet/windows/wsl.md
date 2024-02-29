@@ -310,6 +310,8 @@ Status            : Ok
   - Ubuntu
   - Ubuntu-22.04.3 LTS
 
+  ![uninstall apps](../../screenshot/win/wsl/uninstall-apps.png)
+
 - disable in `Start Menu` > `Turn Windows Features on or off`
   - Virtual Machine Platform
   - Windows Subsystem for Linux
@@ -327,6 +329,7 @@ Status            : Ok
     ------   ----               -----------
     Running  vmcompute          Hyper-V Host Compute Service
     ```
+  ![manual disable windows features](../../screenshot/win/wsl/uninstall-windows-features.png)
 
 - reboot
   ```powershell
