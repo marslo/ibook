@@ -736,7 +736,6 @@ $ brew -v edit macvim-dev/macvim/macvim
   Xcode: 12.2
   ```
 
-
 - pathes
   ```bash
   $ brew --repository
@@ -807,6 +806,20 @@ $ brew -v edit macvim-dev/macvim/macvim
     ```bash
     $ brew --cache -s <formula>
     ```
+
+- `brew gist-log`
+
+
+  > [!TIP|label:generate token via:]
+  > - [Create a GitHub personal access token](https://github.com/settings/tokens/new?scopes=gist&description=Homebrew)
+
+  ```bash
+  $ echo 'export HOMEBREW_GITHUB_API_TOKEN=your_token_here' >> ~/.bash_profile
+  $ source ~/.bash_profile
+
+  $ brew gist-logs node
+  https://gist.github.com/marslo/353904e6472536e94d0c8f51a8a23a84
+  ```
 
 ### check homebrew env
 ```bash
