@@ -8,6 +8,7 @@
     - [find and tar](#find-and-tar)
     - [find and rename](#find-and-rename)
     - [find and sort](#find-and-sort)
+    - [find and copy](#find-and-copy)
     - [download and extract](#download-and-extract)
     - [mirror website](#mirror-website)
     - [kubectl apply from stdin](#kubectl-apply-from-stdin)
@@ -218,6 +219,19 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
     ABC,1/02/2022,05:50
     DEF,1/02/2021,06:00
     ```
+
+### find and copy
+
+> [!TIP]
+> - [* iMarslo: find by timestamp](../character/character.html#find-by-timestamp)
+
+```bash
+$ find . -type f -newermt '2023-10-16 00:00:00' -exec cp -a --parents -t /path/to/target "{}" \+
+
+# or
+$ diff=$(( ($(date --date "24-02-29" +%s) - $(date --date "231016" +%s) )/(60*60*24) ))
+$ find . -type f -daystart -mtime -$((diff+1)) -exec cp -a --parents -t /path/to/target "{}" \+
+```
 
 ### download and extract
 - tar.gz
