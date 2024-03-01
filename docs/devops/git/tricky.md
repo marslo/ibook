@@ -23,6 +23,7 @@
   - [check help in previw.app](#check-help-in-previwapp)
   - [disk size](#disk-size)
   - [push to github with credential](#push-to-github-with-credential)
+  - [How is git commit sha1 formed](#how-is-git-commit-sha1-formed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -607,3 +608,8 @@ $ git config credential.helper store
 # or
 git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 ```
+
+### [How is git commit sha1 formed](https://gist.github.com/masak/2415865)
+
+> [!NOTE|label:references:]
+> - [How is the Git hash calculated?](https://stackoverflow.com/q/35430584/2940319)

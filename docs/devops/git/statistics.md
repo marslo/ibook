@@ -9,6 +9,7 @@
   - [full history](#full-history)
   - [total changes](#total-changes)
   - [user changes](#user-changes)
+  - [file changes](#file-changes)
 - [tools](#tools)
   - [git-stat](#git-stat)
   - [`nova_git_stats`](#nova_git_stats)
@@ -155,6 +156,20 @@ $ git log "${GIT_OPT}" --author='marslo' --numstat  --pretty=tformat: |
 .. added: 14090, removed: 8877, total: 5213 .
 ```
 
+### file changes
+
+> [!NOTE|label:references:]
+> - [Finding most changed files in Git](https://stackoverflow.com/a/7686616/2940319)
+> - [Use git commit history to find project hot-spots? [duplicate]](https://stackoverflow.com/a/18594249/2940319)
+> - [marslo/git-hotspot](https://gist.github.com/marslo/d89ab035abcd5fb00bbdf158d685e088)
+> - [dotfiles/.marslo/bin/git-effort](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-effort)
+
+```bash
+# linux
+$ git log --pretty=format: --name-only | sed '/^\s*$/d' | sort | uniq -c | sort -rg | head -100
+# windows
+$ git log --pretty=format: --name-only | sort | uniq -c | sort /R | head -100
+```
 
 ## tools
 ### git-stat

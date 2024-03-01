@@ -118,6 +118,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 > [!NOTE|label:referencess:]
 > - [40huo/Patched-Fonts](https://github.com/40huo/Patched-Fonts) | [NF patched fonts](https://github.com/keyding/Operator-Mono)
+> - [xiyaowong/Operator-Fonts](https://github.com/xiyaowong/Operator-Fonts)
 
 ```vim
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
