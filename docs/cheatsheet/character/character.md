@@ -50,6 +50,9 @@
   - [find and rename](#find-and-rename)
   - [find and exclude](#find-and-exclude)
   - [`find` && `tar`](#find--tar)
+  - [find by timestamp](#find-by-timestamp)
+    - [via `mtime`](#via-mtime)
+    - [via `newermt`](#via-newermt)
   - [inject commands inside find](#inject-commands-inside-find)
   - [printf](#printf)
     - [time formats](#time-formats)
@@ -1659,7 +1662,7 @@ cfssljson
   ```
 
 ## `exec` and `sed`
-- change bunches IP address
+- change IP address in batch processing
   ```bash
   $ find ${JENKINS_HOME}/jobs \
          -type f \
@@ -1697,6 +1700,85 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
   $ find ${JENKINS_HOME}/jobs -name builds -prune -o -type f -print | tar czf ~/m.tar.gz --files-from -
   ```
 
+## find by timestamp
+
+> [!NOTE|label:references:]
+> - [Find files newer than a day and copy](https://unix.stackexchange.com/a/331276/29178)
+> - [How to find the difference in days between two dates?](https://stackoverflow.com/a/6948865/2940319)
+>   ```bash
+>   $ echo $(( ($(date +%s -d 20210131)-$(date +%s -d 20210101))/86400 )) days
+>   30 days
+>
+>   # or in `%y%m%d` format
+>   $ echo $(( ($(date --date="230301" +%s) - $(date --date="240301" +%s) )/(60*60*24) )) days
+>   -366 days
+>   ```
+
+### via `mtime`
+
+> [!TIP|label:tricky on `-mtime`:]
+> - [Understanding find with atime, ctime, and mtime](https://unix.stackexchange.com/a/558128/29178)
+>   - `+n`: for greater than n
+>   - `-n`: for less than n
+>   - `n`: for exactly n
+>   - i.e.:
+>     - `-mtime -14`: less than 14 days, not including 14 days == 13 days ago and less
+>     - `-mtime +14`: more than 14 days, not including 14 days == 15 days ago and more
+> - [* iMarslo : how many days from timestamps](../../linux/util/date.html#how-many-days-from-timestamps)
+
+```bash
+# get all files since 2023-10-16
+$ diff=$(( ($(date --date "24-02-29" +%s) - $(date --date "231016" +%s) )/(60*60*24) ))
+$ find . -type f -daystart -mtime -$((diff+1)) -printf "%T+ | %p\n" | sort | wc -l
+33
+
+# copy all files modified since 2023-10-16
+$ find . -type f -daystart -mtime -$((diff+1)) -exec cp -a --parents -t /path/to/target "{}" \+
+
+# with timezone
+$ diff=$(( ($(date -d "2015-03-11 UTC" +%s) - $(date -d "2015-03-05 UTC" +%s)) / (60*60*24) ))
+```
+
+### via `newermt`
+
+> [!TIP|label:tips for `-newerXY`]
+> - [What does newermt mean in find command?](https://unix.stackexchange.com/a/169801/29178)
+>   ```bash
+>   -newerXY reference
+>             Compares the timestamp of the current file with reference.   The
+>             reference  argument  is  normally the name of a file (and one of
+>             its timestamps is used for the comparison) but it may also be  a
+>             string  describing  an  absolute time.  X and Y are placeholders
+>             for other letters, and these letters select which time belonging
+>             to how reference is used for the comparison.
+>
+>             a   The access time of the file reference
+>             B   The birth time of the file reference
+>             c   The inode status change time of reference
+>             m   The modification time of the file reference
+>             t   reference is interpreted directly as a time
+>   ```
+> - [List of files modified between perticular time period](https://askubuntu.com/a/196504/92979)
+> - [How to find files between two dates using "find"?](https://askubuntu.com/a/533797/92979)
+> - [find files in data range](https://unix.stackexchange.com/a/256051/29178)
+>   ```bash
+>   $ find ./ -newermt "2016-01-18" ! -newermt '2016-01-19'
+>   $ find . -type f -newermt "2014-10-08 10:17:00" ! -newermt "2014-10-08 10:53:00"
+>   ```
+
+```bash
+$ find . -type f -newermt '2023-10-16 00:00:00'  | wc -l
+33
+# or
+$ find . -type f -newermt '16 Oct 2023 00:00:00' | wc -l
+33
+# or with difference timestamp format
+$ find . -type f -newermt "@$(date +%s -d '10/16/2023 0:00:00 PDT')" -printf "%T+ | %p\n" | sort | wc -l
+33
+
+# copy all files modified since 2023-10-16
+$ find . -type f -newermt '2023-10-16 00:00:00' -exec cp -a --parents -t /path/to/target "{}" \+
+```
 
 ## inject commands inside find
 
@@ -1704,12 +1786,10 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
 > - [Find functions, commands, and builtins [duplicate]](https://unix.stackexchange.com/a/62230/29178)
 
 ```bash
-find -exec bash -c '
-    print_echo() {
-        printf "This is print_echo Function: %s\n" "$@"
-    }
-    print_echo "$@"
-    ' find-bash {} +
+$ find -exec bash -c '
+         print_echo() { printf "This is print_echo Function: %s\n" "$@"; };
+         print_echo "$@"
+       ' find-bash {} +
 ```
 
 ## printf

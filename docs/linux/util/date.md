@@ -17,6 +17,8 @@
   - [timestamps to epoch](#timestamps-to-epoch)
   - [epoch to timestamps](#epoch-to-timestamps)
   - [convert in different timezone](#convert-in-different-timezone)
+  - [get daylight saving](#get-daylight-saving)
+  - [how many days from timestamps](#how-many-days-from-timestamps)
   - [calculate time different](#calculate-time-different)
   - [transfer date format](#transfer-date-format)
 
@@ -288,6 +290,7 @@ Fri Oct  9 09:09:34 UTC 2020
 >   # or
 >   $ tree /usr/share/zoneinfo/
 >   ```
+> - [tzdb timezone descriptions](https://ftp.iana.org/tz/tzdb/zone.tab)
 
 ```bash
 $ date '+%Z'
@@ -317,6 +320,11 @@ $ timedatectl
 NTP synchronized: yes
  RTC in local TZ: no
       DST active: n/a
+
+$ date -d "2024-03-11" +"%Z"
+PDT
+$ date -d "2024-03-10" +"%Z"
+PST
 ```
 
 ### common formats
@@ -462,6 +470,65 @@ Sat Dec 31 16:00:00 PST 2022
   $ TZ="Asia/Shanghai" date -d 'TZ="America/Los_Angeles" 0:00 tomorrow'
   Tue Aug 22 15:00:00 CST 2023
   ```
+
+- [convert to different timezone with daylight saving](https://stackoverflow.com/a/72918271/2940319)
+  ```bash
+  $ getDateTime() { echo "$1 | "$( TZ="$1" date '+%Y-%m-%d-%H-%M-%S %Z %z' ); }
+
+  $ getDateTime Asia/Hong_Kong
+  Asia/Hong_Kong | 2024-03-01-13-08-02 HKT +0800
+
+  $ getDateTime America/Los_Angeles
+  America/Los_Angeles | 2024-02-29-21-08-08 PST -0800
+
+  $ getDateTime America/New_York
+  America/New_York | 2024-03-01-00-08-08 EST -0500
+
+  $ getDateTime Pacific/Honolulu
+  Pacific/Honolulu | 2024-02-29-19-08-08 HST -1000
+
+  $ getDateTime Asia/Hong_Kong
+  Asia/Hong_Kong | 2024-03-01-13-08-09 HKT +0800
+  ```
+
+### get daylight saving
+```bash
+$ date -d "2024-03-11" +%Z
+PDT
+$ date -d "2024-03-10" +%Z
+PST
+
+$ echo $(( ($(date -d "2024-03-10 UTC" +%s) - $(date -d "2024-03-10 PST" +%s))/(60*60) ))
+-8
+$ echo $(( ($(date -d "2024-03-11 UTC" +%s) - $(date -d "2024-03-11 PDT" +%s))/(60*60) ))
+-7
+```
+
+- [another](https://stackoverflow.com/a/19902806/2940319)
+  ```bash
+  $ if perl -e 'exit ((localtime)[8])' ; then
+      echo winter
+    else
+      echo summer
+    fi
+  ```
+
+
+### how many days from timestamps
+
+> [!NOTE|label:references:]
+> - [How to find the difference in days between two dates?](https://stackoverflow.com/a/6948865/2940319)
+
+```bash
+$ echo $(( ($(date --date="230301" +%s) - $(date --date="240301" +%s) )/(60*60*24) )) days
+-366 days
+
+# with timezone
+#                PST/PDT according to daylight saving
+#                                  v
+$ echo $(( ($(date -d "2024-03-01 PST" +%s) - $(date -d "2023-03-01 UTC" +%s)) / (60*60*24) ))
+366
+```
 
 ### calculate time different
 ```bash
