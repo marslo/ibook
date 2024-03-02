@@ -380,6 +380,22 @@ Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ope
 
 
 ## Linux
+
+> [!NOTE|label:references:]
+> - install vim9 via `apt` :
+>   ```bash
+>   $ sudo add-apt-repository ppa:jonathonf/vim
+>   $ sudo apt update
+>   $ sudo apt install vim
+>   ```
+> - references:
+>   - [Personal Package Archives for Ubuntu](https://launchpad.net/ubuntu/+ppas?name_filter=vim)
+>   - [How can I get a newer version of Vim on Ubuntu?](https://vi.stackexchange.com/a/10827/7389)
+>   - [How to Install Latest Vim 9.0 in Linux Systems](https://www.tecmint.com/install-vim-in-linux/)
+>   - [What is the command in the terminal to update Vim on Ubuntu?](https://askubuntu.com/a/1290827/92979)
+> - others:
+>   - [MordechaiHadad/bob](https://github.com/MordechaiHadad/bob)
+
 ### vim
 #### install python3.11 and vim9
 - python3.11
