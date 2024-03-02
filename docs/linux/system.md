@@ -1236,7 +1236,7 @@ $ sudo systemctl restart sssd
 $ getent passwd <username>
 
 # override
-$ sudo /usr/sbin/sss_override user-add <username> -s /new/shell
+$ sudo /usr/sbin/sss_override user-add <username> -h </original/home/directory> -s /new/shell
 $ sudo systemctl restart sssd
 ```
 
@@ -1390,6 +1390,20 @@ $ authconfig --enablesssd \
 - join the system
   ```bash
   $ realm join <my.domain> -U <account> [--membership-software=samba] [--verbose] [--install]
+  ```
+
+#### troubleshooting
+
+- `sudo: unable to dlopen /usr/lib/libsss_sudo.so`
+
+  > [!NOTE|label:issue:]
+  > ```bash
+  > sudo: unable to load /usr/lib/x86_64-linux-gnu/libsss_sudo.so: /usr/lib/x86_64-linux-gnu/libsss_sudo.so: cannot open shared object file: No such file or directory
+  > sudo: unable to initialize SSS source. Is SSSD installed on your machine?
+  > ```
+
+  ```bash
+  $ sudo apt install libsss-sudo
   ```
 
 ### local user
