@@ -6,6 +6,7 @@
   - [a list contains a sublist or not](#a-list-contains-a-sublist-or-not)
   - [grep](#grep)
   - [intersect & disjoint](#intersect--disjoint)
+  - [split and keep the delimiters](#split-and-keep-the-delimiters)
 - [filter](#filter)
   - [`findAll`](#findall)
   - [filter in list via additional conditions](#filter-in-list-via-additional-conditions)
@@ -99,6 +100,13 @@ List l3 = [ '1', '2', 'd' ]
 assert [ 'b', 'c' ] == l1.intersect(l2)
 assert ! l1.disjoint(l2)
 assert l1.disjoint(l3)
+```
+
+### [split and keep the delimiters](https://stackoverflow.com/a/2206432/2940319)
+```groovy
+assert 'x.y.z'.split( "(?<=\\.)" )           == [ 'x.', 'y.', 'z' ]
+assert 'x.y.z'.split( "(?=\\.)" )            == [ 'x', '.y', '.z' ]
+assert 'x.y.z'.split( "((?<=\\.)|(?=\\.))" ) == [ 'x', '.', 'y', '.', 'z' ]
 ```
 
 ## filter
