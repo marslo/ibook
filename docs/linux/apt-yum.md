@@ -43,16 +43,17 @@
 
 > [!NOTE|label:references:]
 > - [ubuntu: Package management](https://ubuntu.com/server/docs/package-management)
+> - for apt-file, execute `sudo apt-file update` first before start search
 
-| RPM                                                           | DPKG                                                                   | BREW                                           |
-|---------------------------------------------------------------|------------------------------------------------------------------------|------------------------------------------------|
-| `rpm -qa`                                                     | `dpkg -l`                                                              | `brew list`                                    |
-| `rpm -ql sofrwareanme`                                        | `dpkg -L name` <br> `dpkg --listfiles name` <br> `dpkg-qurery -L name` | `brew list name` <br> `brew ls --verbose name` |
-| `rpm -qf /path/to/file` <br> `yum whatprovides /path/to/file` | `dpkg -S /path/to/file`                                                | `brew which-formula name`                      |
-| `rpm -qip pkgfile.rpm` <br> `rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb` <br> `dpkg -c pkgfile.deb`                       |                                                |
-| `rpm -q name` <br> `rpm -qi name`                             | `dpkg -l name` <br> `dpkg -s name` <br> `dpkg -p name`                 | `brew info name`                               |
-| `rpm -e name`                                                 | `dpkg -r name` <br> `dpkg -P name`                                     | `brew uninstall name`                          |
-| `dnf --showduplicates <name>`                                 | `apt-cache madison <name>`                                             | -                                              |
+| RPM                                                         | DPKG                                                                                        | BREW                                         |
+|-------------------------------------------------------------|---------------------------------------------------------------------------------------------|----------------------------------------------|
+| `rpm -qa`                                                   | `dpkg -l`                                                                                   | `brew list`                                  |
+| `rpm -ql sofrwareanme`                                      | `dpkg -L name`<br>`dpkg --listfiles name`<br> `dpkg-qurery -L name`<br>`apt-file list name` | `brew list name`<br>`brew ls --verbose name` |
+| `rpm -qf /path/to/file`<br>`yum whatprovides /path/to/file` | `dpkg -S /path/to/file`<br>`apt-file search /path/to/file`                                  | `brew which-formula name`                    |
+| `rpm -qip pkgfile.rpm`<br>`rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb`<br>`dpkg -c pkgfile.deb`                                              |                                              |
+| `rpm -q name`<br>`rpm -qi name`                             | `dpkg -l name`<br>`dpkg -s name`<br>`dpkg -p name`                                          | `brew info name`                             |
+| `rpm -e name`                                               | `dpkg -r name`<br>`dpkg -P name`                                                            | `brew uninstall name`                        |
+| `dnf --showduplicates <name>`                               | `apt-cache madison <name>`                                                                  | -                                            |
 
 > [!NOTE|label:references:]
 > - [Google Linux Software Repositories](https://www.google.com/linuxrepositories/)
