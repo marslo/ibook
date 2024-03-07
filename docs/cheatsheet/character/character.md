@@ -64,6 +64,7 @@
   - [replace with position](#replace-with-position)
   - [check line ending](#check-line-ending)
   - [remove the ending '\n'](#remove-the-ending-%5Cn)
+  - [add '\n' to line-ending](#add-%5Cn-to-line-ending)
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
 - [insert new line](#insert-new-line)
@@ -2198,6 +2199,48 @@ aabaa
   $ od -c foo.txt
   0000000   a   b   c  \n   e   f   g
   0000007
+  ```
+
+## add '\n' to line-ending
+
+> [!TIP]
+> - for ssh private key issue:
+>   ```bash
+>   $ ssh -vT sample.host
+>   ...
+>   Load key "~/.ssh/id_ed25519": error in libcrypto
+>   ```
+> - references:
+>   - [How to add a newline to the end of a file?](https://unix.stackexchange.com/a/263965/29178)
+
+- check last char in the file
+  ```bash
+  # unqualified key
+  $ tail -c1 ~/.ssh/id_ed25519
+  -$ tail -c1 ~/.ssh/id_ed25519 | xxd -u -p
+  2D
+
+  # qualified key
+  $ tail -c1 ~/.ssh/id_ed25519
+
+  $ tail -c1 ~/.ssh/id_ed25519 | xxd -u -p
+  0A
+  $ tail -c1 ~/.ssh/id_ed25519 | hexdump -v -e '/1 "%02X"'
+  0A
+  ```
+
+- add new line
+  ```bash
+  $ [ -n "$(tail -c1 file)" ] && echo >> ~/.ssh/id_ed25519
+  # or
+  $ [ -z "$(tail -c1 file)" ] || printf '\n' >>file
+
+  # performance for various solutions
+  $ [ -n "$(tail -c1 file)" ] && printf '\n' >>file  0.013 sec
+  $ vi -ecwq file                                    2.544 sec
+  $ paste file 1<> file                             31.943 sec
+  $ ed -s file <<< w                             1m  4.422 sec
+  $ sed -i -e '$a\' file                         3m 20.931 sec
   ```
 
 # fold
