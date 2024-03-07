@@ -25,6 +25,10 @@
     - [upgrade via `n`](#upgrade-via-n)
   - [gradle](#gradle)
   - [rust](#rust)
+  - [haskell](#haskell)
+    - [haskell-platform](#haskell-platform)
+    - [haskell-stack](#haskell-stack)
+  - [hadolint](#hadolint)
   - [mysql](#mysql)
     - [built from source code](#built-from-source-code)
     - [install from apt repo](#install-from-apt-repo)
@@ -624,6 +628,42 @@ $ sudo apt upgrade gradle
 ## rust
 ```bash
 $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+## haskell
+
+> [!NOTE|label:references:]
+> - [#506 - Failed to build hadolint locally on Ubuntu 20.04.](https://github.com/hadolint/hadolint/issues/506)
+> - [haskell stack install and upgrade](https://docs.haskellstack.org/en/stable/install_and_upgrade/#using-an-http-proxy)
+
+### haskell-platform
+```bash
+$ sudo apt install -y haskell-platform
+```
+
+### haskell-stack
+```bash
+$ curl -sSL https://get.haskellstack.org/ | sh
+# or
+$ wget -qO- https://get.haskellstack.org/ | sh
+# or
+$ sudo apt install -y haskell-stack
+```
+
+- system dependency
+  ```bash
+  # ubuntu/debian
+  $ sudo apt-get install g++ gcc libc6-dev libffi-dev libgmp-dev make xz-utils zlib1g-dev git gnupg netbase
+  # centos/fedora
+  $ sudo dnf install perl make automake gcc gmp-devel libffi zlib zlib-devel xz tar git gnupg
+  ```
+
+## hadolint
+```bash
+# linux
+$ curl -o /usr/bin/hadolint \
+       -fsSL https://github.com/hadolint/hadolint/releases/download/v2.12.1-beta/hadolint-Linux-x86_64
+$ chmod +x /usr/bin/hadolint
 ```
 
 ## mysql
