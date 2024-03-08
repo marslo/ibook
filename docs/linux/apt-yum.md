@@ -171,7 +171,7 @@ $ curl -sL "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x54404762BBB6E
   $ cat armored-keys.asc | sudo apt-key add
   ```
 
-  ![manual download keyring](../../screenshot/linux/keyserver-pgp-keyring.png)
+  ![manual download keyring](../screenshot/linux/keyserver-pgp-keyring.png)
 
 ## gpg keys
 
