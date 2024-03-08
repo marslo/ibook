@@ -24,7 +24,12 @@
 > - [* Get Cli](https://jfrog.com/getcli/)
 > - [JFrog CLI](https://www.jfrog.com/confluence/display/CLI/JFrog+CLI)
 > - [INSTALL JFROG CLI](https://jfrog.com/getcli/)
+> - [Download and Install](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/install)
 > - [jfrog/jfrog-cli](https://github.com/jfrog/jfrog-cli)
+>   - [jfrog-cli/build/deb_rpm/v2-jf/build-scripts/pack.sh](https://github.com/jfrog/jfrog-cli/blob/dev/build/deb_rpm/v2-jf/build-scripts/pack.sh)
+>   - [jfrog-cli/build/deb_rpm/v2-jf/build-scripts/deb-install.sh](https://github.com/jfrog/jfrog-cli/blob/dev/build/deb_rpm/v2-jf/build-scripts/deb-install.sh)
+>   - [jfrog-cli/build/deb_rpm/v2-jf/build-scripts/rpm-install.sh](https://github.com/jfrog/jfrog-cli/blob/dev/build/deb_rpm/v2-jf/build-scripts/rpm-install.sh)
+>   - [jfrog-cli/build/deb_rpm/v2-jf/build-scripts/rpm-sign.sh](https://github.com/jfrog/jfrog-cli/blob/dev/build/deb_rpm/v2-jf/build-scripts/rpm-sign.sh)
 
 - windows
   ```powershell
@@ -63,16 +68,32 @@
   ```
 
 - ubuntu
+
+  > [!NOTE|label:references:]
+  > - [#1741 Installing CLI without apt-key](https://github.com/jfrog/jfrog-cli/issues/1741#issuecomment-1469754099)
+
   ```bash
   # via curl
   $ curl -fL https://install-cli.jfrog.io | sh
 
-  # or
+  # via apt
+  #                                                                                               dos2unix
+  #                                                                                                   v
+  $ curl -fsSL https://releases.jfrog.io/artifactory/jfrog-gpg-public/jfrog_public_gpg.key | tr -d '\015' | sudo tee /usr/share/keyrings/jfrog.asc >/dev/null
+  $ echo "deb [signed-by=/usr/share/keyrings/jfrog.asc] https://releases.jfrog.io/artifactory/jfrog-debs xenial contrib" > /etc/apt/source.list.d/jfrog.list >/dev/null
+  $ sudo apt update -y
+  $ sudo apt install jfrog-cli-v2-jf -y
+  ```
+
+  <!--sec data-title="deprecated for ubuntu 22.04" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  # deprecated for ubuntu 22.04
   $ wget -qO - https://releases.jfrog.io/artifactory/jfrog-gpg-public/jfrog_public_gpg.key | sudo apt-key add -
   $ echo "deb https://releases.jfrog.io/artifactory/jfrog-debs xenial contrib" | sudo tee -a /etc/apt/sources.list
   $ sudo apt update
   $ sudo apt install -y jfrog-cli-v2-jf
   ```
+  <!--endsec-->
 
 - docker
   ```bash
@@ -83,13 +104,12 @@
   $ docker run releases-docker.jfrog.io/jfrog/jfrog-cli-full-v2-jf jf -v
   ```
 
-
 - npm
   ```bash
   $ npm install -g jfrog-cli-v2-jf && jf intro
   ```
 
-<!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
 - npm
   ```bash
   $ npm i -g jfrog-cli-go
@@ -266,7 +286,7 @@
              --interactive=false
   ```
 
-  <!--sec data-title="deprecated" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="deprecated" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ jfrog rt c sample --url=https://artifactory.example.com/artifactory --apikey=***********
   JFrog Distribution URL (Optional):
@@ -332,7 +352,7 @@
   $ jfrog rt bdi --max-days=30 --delete-artifacts=true "my-job-build"
   ```
 
-  <!--sec data-title="deprecated" data-id="section2" data-show=true data-collapse=true ces-->
+  <!--sec data-title="deprecated" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   $ jfrog rt use sample
   $ jfrog rt bdi --max-days=30 --delete-artifacts=true "my-job-build"

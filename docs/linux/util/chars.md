@@ -13,6 +13,7 @@
   - [convert multiple line into one](#convert-multiple-line-into-one)
 - [others](#others)
   - [file ending crlf or lf](#file-ending-crlf-or-lf)
+    - [convert dos to unix](#convert-dos-to-unix)
   - [insert into the first line](#insert-into-the-first-line)
   - [find and replace](#find-and-replace)
   - [find and copy](#find-and-copy)
@@ -247,6 +248,10 @@ $ cat a | xargs
 
 # others
 ## file ending crlf or lf
+
+> [!NOTE]
+> - [How to test whether a file uses CRLF or LF without modifying it?](https://unix.stackexchange.com/a/79713/29178)
+
 - `cat -e`
   ```bash
   $ cat -e <file>
@@ -263,14 +268,160 @@ $ cat a | xargs
   format
   ```
 
+- [`less -u`](https://stackoverflow.com/a/31656611/2940319)
+  ```bash
+  $ less -u unix.txt
+  abc
+  $ less -u dos.txt
+  abc^M
+  ```
+
 - `file`
   ```bash
   $ file windows.txt
   windows.txt: ASCII text, with CRLF line terminators
 
+  $ dos2unix windows.txt
   $ file windows.txt
   windows.txt: ASCII text
   ```
+
+  - [with `--keep-going`](https://stackoverflow.com/a/47435767/2940319)
+    ```bash
+    $ file jfrog_public_gpg.key
+    jfrog_public_gpg.key: PGP public key block
+
+    $ file --keep-going jfrog_public_gpg.key
+    jfrog_public_gpg.key: PGP public key block\012- , ASCII text, with CRLF line terminators
+    # or
+    $ file -k jfrog_public_gpg.key
+    jfrog_public_gpg.key: PGP public key block\012- , ASCII text, with CRLF line terminators
+
+    $ [[ $(file -k dos.txt) =~ CRLF  ]] && echo dos || echo unix
+    dos
+    $ [[ $(file -k unix.txt) =~ CRLF ]] && echo dos || echo unix
+    unix
+
+    # or
+    $ [[ $(file -b -k - < dos.txt) =~ CRLF  ]] && echo dos || echo unix
+    dos
+    $ [[ $(file -b -k - < unix.txt) =~ CRLF ]] && echo dos || echo unix
+    unix
+    ```
+
+- `dos2unix`
+  ```bash
+  $ dos2unix --info=h -- *
+       DOS    UNIX     MAC  BOM       TXTBIN  FILE
+         1       0       0  no_bom    text    dos.txt
+        28       0       0  no_bom    text    jfrog_public_gpg.key
+         0       1       0  no_bom    text    unix.txt
+
+  # or `-ih` for short
+  $ dos2unix -ih jfrog_public_gpg.key
+       DOS    UNIX     MAC  BOM       TXTBIN  FILE
+        28       0       0  no_bom    text    jfrog_public_gpg.key
+  ```
+
+- `grep`
+
+  > [!TIP]
+  > - `grep -lU $'\x0D' * | xargs ...`
+
+  ```bash
+  $ cat a.txt | hexdump -cC
+  0000000   a  b  c  \r \n
+  00000000  61 62 63 0d 0a                                    |abc..|
+  00000005
+  #                  ^
+
+  # via hex
+  $ grep -qU $'\x0D' a.txt; echo $?
+  0
+  # via octal
+  $ grep -qU $'\015' a.txt; echo $?
+  0
+  # via `-c`
+  $ grep -c $'\r' a.txt
+  1
+
+  # verify
+  $ dos2unix a.txt
+  dos2unix: converting file a.txt to Unix format...
+  $ grep -qU $'\015' a.txt; echo $?
+  1
+  $ grep -qU $'\x0D' a.txt; echo $?
+  1
+  $ grep -c $'\r' a.txt
+  0
+  ```
+
+- can be
+  ```bash
+  $ grep -qU $'\015' a.txt && echo dos || echo unix
+  $ grep -qU $'\x0D' a.txt && echo dos || echo unix
+  $ [[ $(grep -c $'\r$' a.txt) -gt 0 ]] && echo dos || echo unix
+  ```
+
+- [awk](https://stackoverflow.com/a/18107490/2940319)
+  ```bash
+  $ awk '/\r$/ { exit(1) }'         a.txt && echo unix || echo dos
+  $ awk '/\r$/{exit 0;} 1{exit 1;}' a.txt && echo dos  || echo unix
+  ```
+
+- `od -c`
+  ```bash
+  $ od -c dos.txt
+  0000000   a   b   c  \r  \n
+  0000005
+  $ od -c -t a dos.txt
+  0000000   a   b   c  \r  \n
+            a   b   c  cr  nl
+  0000005
+
+  $ od -c unix.txt
+  0000000   a   b   c  \n
+  0000004
+  $ od -c -t a unix.txt
+  0000000   a   b   c  \n
+            a   b   c  nl
+  0000004
+  ```
+
+- `hexdump -c`
+  ```bash
+  $ od -c dos.txt
+  0000000   a   b   c  \r  \n
+  0000005
+  $ od -c -t a dos.txt
+  0000000   a   b   c  \r  \n
+            a   b   c  cr  nl
+  0000005
+  $ hexdump -cC dos.txt | column -t
+  0000000   a   b   c   \r  \n
+  00000000  61  62  63  0d  0a  |abc..|
+  00000005
+
+  $ od -c unix.txt
+  0000000   a   b   c  \n
+  0000004
+  $ hexdump -cC unix.txt | column -t
+  0000000   a   b   c   \n
+  00000000  61  62  63  0a  |abc.|
+  00000004
+  ```
+
+### convert dos to unix
+```bash
+$ dos2unix
+$ cat a.txt | tr -d '\015'
+
+# verify
+$ cat dos.txt | grep -qU $'\015' && echo dos || echo unix
+dos
+$ cat dos.txt | tr -d '\015' | grep -qU $'\015' && echo dos || echo unix
+unix
+```
 
 ## insert into the first line
 ```bash
