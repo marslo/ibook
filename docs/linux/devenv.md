@@ -20,6 +20,7 @@
   - [llvm](#llvm)
   - [go](#go)
   - [node && npm](#node--npm)
+    - [nodesource/distributions](#nodesourcedistributions)
     - [node/npm troubleshooting](#nodenpm-troubleshooting)
     - [install from private registry](#install-from-private-registry)
     - [upgrade via `n`](#upgrade-via-n)
@@ -542,6 +543,31 @@ $ sudo snap install node --classic --channel=15
 # upgrade version to 20.x
 $ sudo snap refresh --channel=20 node
 node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+```
+
+### [nodesource/distributions](https://github.com/nodesource/distributions)
+#### [nodejs for ubuntu/debian](https://deb.nodesource.com/)
+```bash
+# via apt
+$ sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg
+$ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+$ NODE_MAJOR=20
+$ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+$ sudo apt-get update && sudo apt-get install nodejs -y
+
+# via script
+$ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
+```
+
+#### [nodejs for centos/rhel](https://rpm.nodesource.com/)
+```bash
+# via rpm
+$ sudo yum install https://rpm.nodesource.com/pub_20.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm -y
+$ sudo yum install nsolid -y
+
+# via script
+$ curl -fsSL https://rpm.nodesource.com/setup_21.x | sudo bash -
+$ yum install -y nodejs
 ```
 
 ### node/npm troubleshooting
