@@ -21,6 +21,7 @@ search:
   - [`TypeError [ERR_INVALID_ARG_TYPE]` in `git init`](#typeerror-err_invalid_arg_type-in-git-init)
   - [`unexpected token: .`](#unexpected-token-)
   - [failed to install plugin "codegroup"](#failed-to-install-plugin-codegroup)
+  - [`Error: Failed to parse json` in higher version of nodejs](#error-failed-to-parse-json-in-higher-version-of-nodejs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -541,3 +542,90 @@ warning
 
   $ gitbook install
   ```
+
+### `Error: Failed to parse json` in higher version of nodejs
+- issue
+  ```bash
+  $ gitbook -V
+  # or
+  $ gitbook fetch 4.0.0-alpha.6
+
+  Error: Failed to parse json
+  Unexpected token 'u' at 1:1
+  uleon.fumika@gmail.com"
+  ^
+  ```
+
+- solution
+
+  > [!NOTE|label:references: Node v12.22.12 (LTS)]
+  > - [Node v12.22.12 (LTS) download](https://nodejs.org/en/blog/release/v12.22.12)
+
+  1. install node v12 ( i.e.: ubuntu 22.04 )
+    ```bash
+    $ curl -fsSL https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-x64.tar.xz | tar xJf - -C /opt/node/
+
+    $ sudo update-alternatives --install /usr/local/bin/npm12  npm12  /opt/node/node-v12.22.12-linux-x64/bin/npm  10
+    $ sudo update-alternatives --install /usr/local/bin/node12 node12 /opt/node/node-v12.22.12-linux-x64/bin/node 10
+    $ sudo update-alternatives --install /usr/local/bin/npx12  npx12  /opt/node/node-v12.22.12-linux-x64/bin/npx  10
+    ```
+
+  1. temporary modify global node/npm/npx to v12
+    ```bash
+    # backup current latst node/npm/npx
+    $ sudo mv /usr/local/bin/node{,21}
+    $ sudo mv /usr/local/bin/npm{,21}
+    $ sudo mv /usr/local/bin/npx{,21}
+
+    # setup global environment to v12 temporary
+    $ sudo ln -sf /usr/local/bin/npx12  /usr/local/bin/npx
+    $ sudo ln -sf /usr/local/bin/node12 /usr/local/bin/node
+    $ sudo ln -sf /usr/local/bin/npm12  /usr/local/bin/npm
+    ```
+
+  1. install gitbook
+    ```bash
+    $ sudo npm i -g gitbook-cli
+
+    # modify polyfills.js
+    $ vim /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js
+
+    # install gitbook
+    $ gitbook --version
+
+    # verify
+    $ which -a gitbook
+    /usr/local/bin/gitbook
+    $ gitbook --version
+    CLI version: 2.3.2
+    GitBook version: 3.2.3
+    ```
+
+  1. setup gitbook environment
+    ```bash
+    $ cd /path/to/your/book
+    $ gitbook install
+
+    # or npm install from ./package.json
+    $ npm install
+
+    # or manual install failure packages without `-g`
+    $ npm i gitbook-plugin-codegroup@2.3.5
+    $ npm i gitbook-plugin-emphasize@1.1.0
+    $ npm i gitbook-plugin-tbfed-pagefooter@0.0.1
+    ...
+
+    # try gitbook commands to check local packages
+    $ gitbook build --log=debug --debug
+    $ gitbook serve
+    ```
+
+  1. revert back global node/npm/npx to latest ( v21 )
+    ```bash
+    $ sudo ln -sf /usr/local/bin/node21 /usr/local/bin/node
+    $ sudo ln -sf /usr/local/bin/npm21  /usr/local/bin/npm
+    $ sudo ln -sf /usr/local/bin/npx21  /usr/local/bin/npx
+
+    # verify
+    $ nvim
+    ```
