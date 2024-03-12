@@ -12,6 +12,7 @@
   - [check current status](#check-current-status)
   - [add new pv ( Physical Volume )](#add-new-pv--physical-volume-)
   - [moving home with lvm](#moving-home-with-lvm)
+  - [extend lv](#extend-lv)
   - [remove LVM](#remove-lvm)
   - [example](#example)
 - [performance](#performance)
@@ -377,6 +378,41 @@ $ sudo pvs
 > [!NOTE|label:references]
 > - [Moving /home with LVM](https://askubuntu.com/a/923943/92979)
 
+### extend lv
+```bash
+# check status
+$ sudo pvs
+   PV         VG        Fmt  Attr PSize    PFree
+    /dev/vda3  ubuntu-vg lvm2 a--   <38.00g     0
+    /dev/vdb1  ubuntu-vg lvm2 a--  <275.00g     0
+$ sudo vgs
+    VG        #PV #LV #SN Attr   VSize    VFree
+    ubuntu-vg   2   2   0 wz--n- <313.00g     0
+$ sudo lvs
+   LV             VG        Attr       LSize    Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+    ubuntu-lv      ubuntu-vg -wi-ao---- <100.00g
+    ubuntu-lv-home ubuntu-vg -wi-ao----  100.00g
+    ubuntu-lv-var  ubuntu-vg -wi-ao----  100.00g
+$ sudo dmidecode -t1
+$ sudo blkid
+$ lsblk
+
+# enable qemu-guest-agent
+$ sudo apt-get install qemu-guest-agent
+$ sudo systemctl restart qemu-guest-agent.service
+$ sudo systemctl enable qemu-guest-agent.service
+$ sudo systemctl status qemu-guest-agent.service
+
+# create pv
+$ sudo pvcreate /dev/temp
+
+# extend vg
+$ sudo vgextend ubuntu-vg /dev/temp
+
+# extend lv
+$ sudo lvextend -L +100G /dev/ubuntu-vg/ubuntu-lv-home
+$ sudo resize2fs /dev/ubuntu-vg/ubuntu-lv-home
+```
 
 ### remove LVM
 
