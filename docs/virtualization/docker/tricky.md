@@ -20,6 +20,8 @@
   - [get contents](#get-contents)
   - [list item](#list-item)
   - [execute](#execute)
+- [troubleshooting](#troubleshooting)
+  - [`permission denied while trying to connect to the Docker daemon socket`](#permission-denied-while-trying-to-connect-to-the-docker-daemon-socket)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -481,3 +483,54 @@ $ docker run <...> ${VOLUME_OPTION}
 # or redirect via `Out-File`
 > docker exec [-w 'C:\workspace'] <docker-id> powershell "Invoke-Expression '.\_cmd.ps1' | Out-File -FilePath log.txt"
 ```
+
+## troubleshooting
+### `permission denied while trying to connect to the Docker daemon socket`
+
+> [!NOTE|label:see also:]
+> - [* imarslo: linux/system/change group](../../linux/system.html#modify-group)
+
+- issue shows even if the account exists in `docker` group
+  ```bash
+  # account already been added in `docker` group
+  $ id marslo
+  uid=1100(marslo) gid=1100(marslo) groups=1100(marslo),994(docker)
+  $ docker ps
+  permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.44/containers/json": dial unix /var/run/docker.sock: connect: permission denied
+
+  # group info
+  $ getent group docker
+  docker:x:994:devops,marslo
+  $ getent group 994
+  docker:x:994:devops,marslo
+
+  # remote
+  $ sudo gpasswd -d marslo docker
+  Removing user marslo from group docker
+  $ id marslo
+  uid=1100(marslo) gid=1100(marslo) groups=1100(marslo)
+
+  # re-added
+  $ sudo usermod -aG docker marslo
+  $ id marslo
+  uid=1100(marslo) gid=1100(marslo) groups=1100(marslo),994(docker)
+  $ docker ps
+  permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.44/containers/json": dial unix /var/run/docker.sock: connect: permission denied
+  ```
+
+- root cause
+  ```bash
+  # docker group-id was 990, and it was changed to 994; but the `/var/run/docker.sock` wasn't been changed
+  $ ls -asltrh /var/run/docker.sock
+  0 srw-rw---- 1 root redwillow 0 Mar  7 15:27 /var/run/docker.sock
+  ```
+
+- solution
+  ```bash
+  $ sudo chown -R root:docker /var/run/docker.sock
+  $ docker ps
+  CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+  # to change all after GID changed
+  $ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
+  ```
