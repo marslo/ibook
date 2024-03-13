@@ -1613,8 +1613,15 @@ $ sudo groupadd -o -g <new_gid> <group_name>
   ```
 
 ### modify group
+
+> [!NOTE|label:references:]
+> - [Change gid of a specific group](https://unix.stackexchange.com/a/33874/29178)
+
 ```bash
 $ sudo groupmod -o -g <gid> <group_name>
+
+# change file mode
+$ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
 ```
 
 - `groupmod: group 'xxx' does not exist in /etc/group`
