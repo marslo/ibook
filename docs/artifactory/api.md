@@ -82,6 +82,9 @@ $ curl -fsSL -XGET https://artifactory.example.com/artifactory/api/docker/devops
 
 > [!NOTE|label:references:]
 > - [List Docker Repositories](https://jfrog.com/help/r/jfrog-rest-apis/list-docker-repositories)
+>   ```bash
+>   GET /api/docker/{repo-key}/v2/_catalog?n=<n from the request>&last=<last tag value from previous response>
+>   ```
 
 ```bash
 $ curl -fsSL -XGET https://artifactory.example.com/artifactory/api/docker/devops-docker/v2/_catalog |
@@ -91,6 +94,14 @@ $ curl -fsSL -XGET https://artifactory.example.com/artifactory/api/docker/devops
   "centos",
   ...
 ]
+
+# or
+$ curl -fsSL -XGET https://artifactory.example.com/artifactory/api/docker/devops-docker/v2/_catalog |
+       jq -r .repositories[]
+devops/jenkins
+devops/jnlp
+devops/ubuntu
+...
 ```
 
 ## repo
