@@ -11,6 +11,7 @@
   - [ping](#ping)
   - [discarding old builds from artifactory](#discarding-old-builds-from-artifactory)
   - [search with aql](#search-with-aql)
+  - [delete docker images](#delete-docker-images)
   - [deploy docker image via cli](#deploy-docker-image-via-cli)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -333,6 +334,11 @@
                         --password=mypassword
   ```
 
+#### set default
+```bash
+$ jf rt use <SERVER_ID>
+```
+
 ### ping
 - check configuration or remote server
   ```bash
@@ -395,6 +401,40 @@ $ jfrog rt s --spec spec.json
   ```bash
   $ jfrog rt del --spec spec.json
   ```
+
+### delete docker images
+```bash
+#              registry name  image name    tag
+#              +-----------+ +-----------+ +---+
+$ jf rt delete docker-local/devops/ubuntu/4.0.0**
+  docker-local/devops/ubuntu/4.0.0-py310-jammy-dind-v95-94d13a3db/
+  docker-local/devops/ubuntu/4.0.0-py310-jammy-dind/
+  docker-local/devops/ubuntu/4.0.0-py310-jammy/
+Are you sure you want to delete the above paths? (y/n) [n]? y
+{
+  "status": "success",
+  "totals": {
+    "success": 3,
+    "failure": 0
+  }
+}
+
+# or remote all v4.0.0* tags via
+$ jf rt delete docker-local/devops/*/4.0.0**
+  docker-local/devops/clang/4.0.0-py310-jammy-dind-v95-94d13a3db/
+  docker-local/devops/clang/4.0.0-py310-jammy-dind/
+  docker-local/devops/clang/4.0.0-py310-jammy-v95-94d13a3db/
+  docker-local/devops/clang/4.0.0-py310-jammy/
+  docker-local/devops/doxygen/4.0.0-py310-jammy-dind-v95-94d13a3db/
+  docker-local/devops/doxygen/4.0.0-py310-jammy-dind/
+  docker-local/devops/doxygen/4.0.0-py310-jammy-v95-94d13a3db/
+  docker-local/devops/doxygen/4.0.0-py310-jammy/
+  docker-local/devops/jnlp/4.0.0-py310-jammy-dind-v95-94d13a3db/
+  docker-local/devops/jnlp/4.0.0-py310-jammy-dind/
+  docker-local/devops/jnlp/4.0.0-py310-jammy-v95-94d13a3db/
+  docker-local/devops/jnlp/4.0.0-py310-jammy/
+Are you sure you want to delete the above paths? (y/n) [n]?
+```
 
 ### [deploy docker image via cli](https://philippart-s.github.io/blog/articles/dev/docker-artificatory-promote/)
 
