@@ -34,6 +34,7 @@
   - [tools installation](#tools-installation)
     - [resolve conflict](#resolve-conflict)
     - [`File "/usr/libexec/urlgrabber-ext-down", line 28`](#file-usrlibexecurlgrabber-ext-down-line-28)
+    - [centos eol](#centos-eol)
   - [CentOS 8 -> CentOS 9](#centos-8---centos-9)
 - [snap](#snap)
 
@@ -739,6 +740,74 @@ $ yum groupremove <groupName>
   $ ls -altrh /etc/alternatives/python
   lrwxrwxrwx 1 root root 16 Jul 10 02:29 /etc/alternatives/python -> /usr/bin/python3
   ```
+
+### centos eol
+
+> [!NOTE|label:references:]
+> - [Error: Failed to download metadata for repo 'baseos' / 'appstream' - Centos 8](https://www.linode.com/community/questions/22398/error-failed-to-download-metadata-for-repo-baseos-appstream-centos-8#:~:text=The%20reason%20you're%20seeing,keep%20mirrors%20for%20this%20anymore.)
+> - [CentOS 8: Failed to download metadata for repo 'appstream'](https://forums.centos.org/viewtopic.php?t=78708&start=30)
+>   ```bash
+>   $ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+>   $ sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+>   ```
+> - [CentOS Linux EOL](https://www.centos.org/centos-linux-eol/)
+>   - At that time, or in the event of a serious security bug in this time window (Defined as anything with a VCSS v3 score of 9 or greater), this content will be removed from our mirrors, and moved to [vault.centos.org](https://vault.centos.org/) where it will be archived permanently, since we will not be able to provide updates to the content after the EOL date.
+> - [How To Fix Error Failed to download metadata for repo in CentOS 8](https://netshop-isp.com.cy/blog/how-to-fix-error-failed-to-download-metadata-for-repo-in-centos-8/)
+
+
+```bash
+$ cat CentOS-Stream-BaseOS.repo
+[baseos]
+name=CentOS Stream $releasever - BaseOS
+#mirrorlist=http://mirrorlist.centos.org/?release=$stream&arch=$basearch&repo=BaseOS&infra=$infra
+#baseurl=http://mirror.centos.org/$contentdir/$stream/BaseOS/$basearch/os/
+baseurl=http://vault.centos.org/$contentdir/$releasever/BaseOS/$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+
+$ cat CentOS-Stream-AppStream.repo
+[appstream]
+name=CentOS Stream $releasever - AppStream
+#mirrorlist=http://mirrorlist.centos.org/?release=$stream&arch=$basearch&repo=AppStream&infra=$infra
+#baseurl=http://mirror.centos.org/$contentdir/$stream/AppStream/$basearch/os/
+baseurl=http://vault.centos.org/$contentdir/$releasever/AppStream/$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+```
+
+- [solution for gpg key issue](https://forums.centos.org/viewtopic.php?t=78708&start=30#p331015)
+  ```bash
+  # -- This downloads the Stream repo files.
+  $ sudo dnf install centos-release-stream -y --disablerepo=* --enablerepo='extras'
+
+  # -- Enabling Stream-* allows you to download the latest gpg key
+  $ sudo dnf swap centos-{linux,stream}-repos -y --disablerepo=* --enablerepo=extras,Stream-*
+
+  # -- Only necessary if you're using epel repos
+  $ sudo dnf config-manager --set-enabled powertools
+
+  $ sudo dnf distro-sync -y
+  $ sudo reboot
+
+  # -- Not all packages are upgradeable during the distro-sync. I had 28 packages on one server, including gcc-c++, gcc-fortran, and mysql-server
+  $ sudo dnf upgrade -y
+
+  # -- Optional. There's no need to keep these files, but if you don't mind your directory being messy, you can leave them.
+  $ sudo rm -f /etc/yum.repos.d/*rpmsave
+
+  # -- Optional. The *.repo.rpmnew files have $releasever in the Name directive, so this is just to keep the display names consistent across repos and servers (if you build new Stream systems, they'll have $releasever in the display name); the actual repo names are the same in both files.
+  $ ls *rpmnew | awk -F '.' '{ print $1 }' | while read -r REPO ; do /usr/bin/cp  $REPO.repo.rpmnew $REPO.repo ; done
+  ```
+
+  - [or](https://forums.centos.org/viewtopic.php?t=78708&start=30#p331159)
+    ```bash
+    $ curl https://vault.centos.org/8.5.2111/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-3.el8.noarch.rpm -o centos-gpg-keys-8-3.el8.noarch.rpm
+    $ sudo rpm -i centos-gpg-keys-8-3.el8.noarch.rpm
+    $ sudo dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+    $ sudo dnf distro-sync
+    ```
 
 ## CentOS 8 -> CentOS 9
 
