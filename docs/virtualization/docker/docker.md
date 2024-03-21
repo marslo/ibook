@@ -458,8 +458,33 @@ WantedBy=multi-user.target
 
 {% hint style='tip' %}
 > references:
+> - [* contrib/completion/bash/docker](https://github.com/docker/cli/blob/master/contrib/completion/bash/docker)
 > - [command-line completion](https://docs.docker.com/compose/completion/)
+> - [Enable Docker command-line auto completion in bash on Centos/Ubuntu](https://ismailyenigul.medium.com/enable-docker-command-line-auto-completion-in-bash-on-centos-ubuntu-5f1ac999a8a6)
+> - [archived: contrib/completion/bash/docker](https://github.com/docker/docker-ce/blob/master/components/cli/contrib/completion/bash/docker)
 {% endhint %}
+
+- linux universal solution
+  ```bash
+  $ curl -o /etc/bash_completion.d/docker \
+         -fsSL https://github.com/docker/docker-ce/raw/master/components/cli/contrib/completion/bash/docker
+  ```
+
+- ubuntu
+  ```bash
+  # check completion file location
+  $ dpkg -L docker-ce-cli |grep completion
+  /usr/share/bash-completion
+  /usr/share/bash-completion/completions
+  /usr/share/bash-completion/completions/docker
+  /usr/share/fish/vendor_completions.d
+  /usr/share/fish/vendor_completions.d/docker.fish
+  /usr/share/zsh/vendor-completions
+  /usr/share/zsh/vendor-completions/_docker
+
+  # link file to `/etc/bash_completion.d`
+  $ ln -sf /usr/share/bash-completion/completions/docker /etc/bash_completion.d/docker
+  ```
 
 ### complete alias
 {% hint style='tip' %}
