@@ -378,6 +378,17 @@
 {% endhint %}
 
 ### [get ltoken](https://docs.roguewave.com/en/klocwork/2020/klocworkltoken)
+
+> [!NOTE|label:references:]
+> - [Command Reference](https://help.klocwork.com/current/en-us/concepts/commandreference.htm)
+> - [Support Portal](https://portal.perforce.com/s/topic/0TO5Y00000ByxvlWAB/klocwork)
+>   - [Klocwork Downloads: 2023.3](https://portal.perforce.com/s/article/Klocwork-Downloads-2023-3)
+>     - [kwbuildtools.23.3.0.57.linux64.zip](https://dslwuu69twiif.cloudfront.net/klocwork/23.3.0.57/kwbuildtools.23.3.0.57.linux64.zip)
+>     - [kwbuildtools.23.3.0.57.win64.zip](https://dslwuu69twiif.cloudfront.net/klocwork/23.3.0.57/kwbuildtools.23.3.0.57.win64.zip)
+>   - [Klocwork Downloads: 2023.2](https://portal.perforce.com/s/article/Klocwork-Downloads-2023-2)
+>     - [kwbuildtools.23.2.0.66.linux64.zip](https://dslwuu69twiif.cloudfront.net/klocwork/23.2.0.66/kwbuildtools.23.2.0.66.linux64.zip)
+>     - [kwbuildtools.23.2.0.66.win64.zip](https://dslwuu69twiif.cloudfront.net/klocwork/23.2.0.66/kwbuildtools.23.2.0.66.win64.zip)
+
 ```bash
 $ export KLOCWORK_LTOKEN=/home/marslo/.klocwork/ltoken
 $ kwauth --url https://klocwork.domain.com:443
