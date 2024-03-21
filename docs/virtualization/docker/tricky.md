@@ -359,6 +359,48 @@ lts-centos
            sort
     ```
 
+- get multiple pages
+  ```bash
+  $ while read -r _i; do
+      curl -sSgk "https://registry.hub.docker.com/v2/repositories/jenkins/jenkins/tags?&page=${_i}&page_size=100" |
+           jq -r '.results[] | select( .name | contains("-lts-") ) | .name';
+    done < <(echo {1..10} | fmt -1)
+  ```
+
+- via [docker registry tags/list API v2](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#content-discovery)
+
+  > [!NOTE|label:references:]
+  > - [an OAuth bearer token](https://docs.docker.com/registry/spec/auth/token/)
+  > - [Docker Registry API V2](https://docs.docker.com/registry/spec/api/#tags)
+  > - samples:
+  >   - [How can I list all tags for a Docker image on a remote registry?](https://stackoverflow.com/a/51921869/2940319)
+  >   - [Get list of docker tags available to pull from command line?](https://stackoverflow.com/a/69873756/2940319)
+  >   - [robv8r/docker_tags.sh](https://gist.github.com/robv8r/fa66f5e0fdf001f425fe9facf2db6d49)
+
+  ```bash
+  $ cat > docker-tags.sh << EOF
+  #!/usr/bin/env bash
+  set -eu -o pipefail
+  docker_tags() {
+    item="$1"
+    case "$item" in
+        */*) :                    ;; # namespace/repository syntax, leave as is
+          *) item="library/$item" ;; # bare repository name (docker official image); must convert to namespace/repository syntax
+    esac
+    authUrl="https://auth.docker.io/token?service=registry.docker.io&scope=repository:$item:pull"
+    token="$(curl -fsSL "$authUrl" | jq --raw-output '.token')"
+    tagsUrl="https://registry-1.docker.io/v2/$item/tags/list"
+    curl -fsSL -H "Accept: application/json" -H "Authorization: Bearer $token" "$tagsUrl" | jq --raw-output '.tags[]'
+  }
+  docker_tags "$@"
+  EOF
+
+  $ bash docker-tags.sh jenkins/jenkins | sort -r | grep --color=never -- '-lts-jdk11' | head -3
+  2.440.2-lts-jdk11
+  2.440.1-lts-jdk11
+  2.426.3-lts-jdk11
+  ```
+
 #### simple script for get tags
 ```bash
 #!/bin/sh

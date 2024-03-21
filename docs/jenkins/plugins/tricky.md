@@ -1,12 +1,47 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [git clone](#git-clone)
+  - [setup to fetch `refs/changes` only](#setup-to-fetch-refschanges-only)
+  - [setup to fetch only `refs/heads/sandbox/marslo/*`](#setup-to-fetch-only-refsheadssandboxmarslo)
+  - [fetch gerrit changes](#fetch-gerrit-changes)
 - [downgrade](#downgrade)
   - [jsch](#jsch)
   - [grgit](#grgit)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## git clone
+
+> [!NOTE|label:references:]
+> - [Git - What is "Refspec"](https://stackoverflow.com/q/44333437/2940319)
+> - [Jenkins Git Refspec not correctly substituted for branch specifier](https://stackoverflow.com/q/50640603/2940319)
+> - [Why does "git clone" not take a refspec?](https://stackoverflow.com/a/43759576/2940319)
+> - [Jenkins gerrit trigger not fetching my change when building](https://stackoverflow.com/a/45976830/2940319)
+> - [How to execute Jenkinsfile with gerrit trigger plugin for changeset in jenkins?](https://stackoverflow.com/a/46205264/2940319)
+
+### setup to fetch `refs/changes` only
+```bash
+# Refspec
+refs/changes/*:refs/remotes/origin/changes/*
+```
+
+### setup to fetch only `refs/heads/sandbox/marslo/*`
+```bash
+# Refspec
+refs/heads/sandbox/marslo/*:refs/remotes/origin/heads/sandbox/marslo/*
+```
+
+### fetch gerrit changes
+```bash
+# Refspec
+$GERRIT_REFSPEC:$GERRIT_REFSPEC
+
+# branch
+$GERRIT_REFSPEC
+# or
+FETCH_HEAD
+```
 
 ## downgrade
 ### jsch
