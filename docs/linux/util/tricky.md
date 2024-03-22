@@ -17,6 +17,7 @@
   - [show term](#show-term)
   - [show terminal width](#show-terminal-width)
   - [customized colorful output](#customized-colorful-output)
+- [`Operation not permitted`](#operation-not-permitted)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -203,3 +204,28 @@ $ export GREP_COLORS="sl=0;33;49:ms=1;34;49"
 $ find /etc/ -type f | head | grep --color=always '^\|[^/]*$'
 ```
 ![customized color output](../../screenshot/linux/colorful-tricky.png)
+
+## `Operation not permitted`
+
+> [!NOTE|label:references:]
+> - [How to Fix 'rm: cannot remove '/etc/resolv.conf': Operation not permitted'](https://support.tools/post/fix-stuck-resolv-conf/)
+> - [Can not edit resolv.conf](https://askubuntu.com/a/1276691/92979)
+> - [Un-removable /etc/resolv.conf](https://askubuntu.com/questions/125847/un-removable-etc-resolv-conf)
+
+```bash
+$ sudo lsattr /etc/resolv.conf
+----i-------------- /etc/resolv.conf
+$ sudo rm -rf /etc/resolv.conf
+rm: cannot remove '/etc/resolv.conf': Operation not permitted
+
+# solution
+$ sudo chattr -i /etc/resolv.conf
+$ sudo lsattr /etc/resolv.conf
+------------------- /etc/resolv.conf
+$ sudo mv /etc/resolv.conf{,.bak}
+
+# revert back
+$ sudo chattr +i /etc/resolv.conf
+$ sudo lsattr /etc/resolv.conf
+----i-------------- /etc/resolv.conf
+```
