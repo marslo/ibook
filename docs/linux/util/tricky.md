@@ -211,6 +211,15 @@ $ find /etc/ -type f | head | grep --color=always '^\|[^/]*$'
 > - [How to Fix 'rm: cannot remove '/etc/resolv.conf': Operation not permitted'](https://support.tools/post/fix-stuck-resolv-conf/)
 > - [Can not edit resolv.conf](https://askubuntu.com/a/1276691/92979)
 > - [Un-removable /etc/resolv.conf](https://askubuntu.com/questions/125847/un-removable-etc-resolv-conf)
+>
+> - mac equivalent
+>   - [chflags](https://ss64.com/mac/chflags.html)
+>   - `/bin/ls -lO`
+>     ```bash
+>     $ /bin/ls -lO
+>     total 288
+>     -rwxr-xr-x@  1 marslo  staff  compressed,dataless 1116834851 Feb 21 17:00 Ubuntu2204-221101.AppxBundle
+>     ```
 
 ```bash
 $ sudo lsattr /etc/resolv.conf

@@ -38,6 +38,7 @@
 > wsl:
 > - [* How to install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
 > - [* Manual installation steps for older versions of WSL](https://learn.microsoft.com/en-us/windows/wsl/install-manual)
+> - [* Manual installation steps for older versions of WSL](https://github.com/MicrosoftDocs/WSL/blob/live/WSL/install-manual.md)
 > - [Windows Server Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install-on-server)
 > - [Windows10/11 三步安装wsl2 Ubuntu20.04（任意盘）](https://zhuanlan.zhihu.com/p/466001838)
 > - [WSL Linux 子系统，真香！完整实操](https://zhuanlan.zhihu.com/p/146545159)
@@ -45,13 +46,15 @@
 > - [在 Windows 10 上安装 Hyper-V](https://learn.microsoft.com/zh-cn/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)
 > - [Set up a WSL development environment](https://learn.microsoft.com/en-us/windows/wsl/setup/environment?source=recommendations)
 > - [Install Linux on Windows with WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
-> - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
-> - [Enable 256 colour support over SSH](https://github.com/cmderdev/cmder/issues/379)
 > - [* Windows Subsystem for Linux (WSL) explained](https://solidstudio.io/blog/windows-subsystem-for-linux-explained)
 > - [general profile settings in windows terminal](https://learn.microsoft.com/en-us/windows/terminal/customize-settings/profile-general)
 >   - by default: `"startingDirectory": "%USERPROFILE%"`
 >   - in wsl: `"startingDirectory": "\\\\wsl$\\DISTRO NAME\\home\\USERNAME"` or `"startingDirectory": "\\\\wsl.localhost\\DISTRO NAME\\home\\USERNAME"`
 >     - i.e.: `\\wsl.localhsot\Ubuntu\home\marslo`
+>
+> others:
+> - [WSL Error code: Wsl/Service/0x80040326](https://www.techtutsonline.com/how-to-fix-wsl-error-code-0x80040326/#:~:text=Error%20code%3A%20Wsl%2FService%2F0x80040326%20How%20to%20fix%20this%20error,in%20the%20same%20order%3A%20wsl%20--update%20wsl%20--shutdown)
+> - [Enable 256 colour support over SSH](https://github.com/cmderdev/cmder/issues/379)
 >
 > windows terminal:
 > - [Windows Terminal 下载，美化，完整配置](https://zhuanlan.zhihu.com/p/439437013)
@@ -90,6 +93,27 @@
     # or
     > wsl --install -d <DistroName>
     ```
+
+- import tar.gz
+
+  > [!NOTE|label:references:]
+  > - [#645 Please add download link to Ubuntu 20.04](https://github.com/MicrosoftDocs/WSL/issues/645)
+
+  ```powershell
+  > curl -fsSL -O https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-wsl.rootfs.tar.gz
+  > wsl.exe --import
+  ```
+
+- appx packages
+
+  > [!NOTE|label:download]
+  > - [Ubuntu2204-221101.AppxBundle](https://wslstorestorage.blob.core.windows.net/wslblob/Ubuntu2204-221101.AppxBundle)
+  > - [Downloading distributions: Manual installation steps for older versions of WSL](https://learn.microsoft.com/en-us/windows/wsl/install-manual#downloading-distributions)
+
+  ```powershell
+  > curl -fsSL -O https://wslstorestorage.blob.core.windows.net/wslblob/Ubuntu2204-221101.AppxBundle
+  > Add-AppxPackage -Path /path/to/Ubuntu2204-221101.AppxBundle
+  ```
 
 - reset
 
