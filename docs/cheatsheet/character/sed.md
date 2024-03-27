@@ -35,6 +35,7 @@
 
 > [!NOTE]
 > references:
+> - [sed, a stream editor](https://www.gnu.org/software/sed/manual/sed.html)
 > - [character classes](https://unix.stackexchange.com/a/102021/29178)
 >
 >

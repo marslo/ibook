@@ -32,10 +32,14 @@
   - [get line from pattern to the end](#get-line-from-pattern-to-the-end)
     - [get from first empty line to the end](#get-from-first-empty-line-to-the-end)
     - [get from last empty line ( `^$` ) to end](#get-from-last-empty-line--%5E--to-end)
+    - [reverse search empty line](#reverse-search-empty-line)
   - [return first matching pattern](#return-first-matching-pattern)
     - [sed](#sed-1)
     - [awk](#awk-1)
-  - [return second matching pattern](#return-second-matching-pattern)
+  - [return second matching pattern search range](#return-second-matching-pattern-search-range)
+  - [return the last matching pattern search range](#return-the-last-matching-pattern-search-range)
+    - [sed](#sed-2)
+    - [awk](#awk-2)
     - [replace the last matching pattern](#replace-the-last-matching-pattern)
 - [`xargs`](#xargs)
   - [complex commands with xargs](#complex-commands-with-xargs)
@@ -1257,6 +1261,10 @@ $ cat a.txt
   ```
 
 ### sed
+
+> [!NOTE|label:references:]
+> - [Print lines in file from the match line until end of file](https://stackoverflow.com/a/14074209/2940319)
+
 - include all patterns
   ```bash
   $ cat a.txt | sed -n '/3c/,/8h/p'
@@ -1282,12 +1290,18 @@ $ cat a.txt
   6f
   7g
 
+  #                     + delete from line 1 to /3c/
+  #                     |      + delete /8h/ to end `$`
+  #                  +-----+ +-----+
   $ cat a.txt | sed '1,/3c/d;/8h/,$d'
   4d
   5e
   6f
   7g
 
+  #                        + not delete since `/3c/` to `/8h`
+  #                        |      + delete all the others
+  #                  +---------+ +-+
   $ cat a.txt | sed '/3c/,/8h/!d;//d'
   4d
   5e
@@ -1315,7 +1329,8 @@ $ cat a.txt
 ### with empty line
 
 > [!NOTE]
-> use case : [* imarslo : show `top` summary](./sed.html#show-top-summary)
+> - use case :
+>   - [* imarslo : show `top` summary](./sed.html#show-top-summary)
 
 ```bash
 $ cat a.txt
@@ -1341,8 +1356,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 
 ## get line from pattern to the end
 
-> [!NOTE|label:references:]
-> - [Print lines in file from the match line until end of file](https://stackoverflow.com/a/3434563/2940319)
+> [!TIP|label:references:]
 > - sample content:
 >   ```bash
 >   $ echo -e '1\n2\n\n3\n4'
@@ -1354,6 +1368,10 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 >   ```
 
 ### get from first empty line to the end
+
+> [!NOTE|label:references:]
+> - [Print lines in file from the match line until end of file](https://stackoverflow.com/a/3434563/2940319)
+
 - including pattern
 
   > [TIP]
@@ -1367,26 +1385,44 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
   4
   ```
 
-  > [TIP]
-  > - solution: using line number to end: `n,$` -> `"n"',$p'`
-  >   - `head -n1` : for first matches pattern line number
-  >   - `tail -n1` : for the last matches pattern line number
-  > - [* iMarslo: sed get line number of pattern](./sed.html#print-line-number-of-matched-pattern)
+  - sed
 
-  ```bash
-  $ command cat -A a | nl
-       1  1^M$
-       2  ^M$
-       3  2^M$
-       4  3^M$
-       5  4^M$
+    > [TIP]
+    > - solution: using line number to end: `n,$` -> `"n"',$p'`
+    >   - `head -n1` : for first matches pattern line number
+    >   - `tail -n1` : for the last matches pattern line number
+    > - [* iMarslo: sed get line number of pattern](./sed.html#print-line-number-of-matched-pattern)
 
-  $ cat a | sed -n "$(sed -n '/^\s*$/ =' a | tail -n1)"' ,$p'
+    ```bash
+    $ command cat -A a | nl
+         1  1^M$
+         2  ^M$
+         3  2^M$
+         4  3^M$
+         5  4^M$
 
-  2
-  3
-  4
-  ```
+    $ cat a | sed -n "$(sed -n '/^\s*$/ =' a | tail -n1)"' ,$p'
+
+    2
+    3
+    4
+
+    # or
+    $ echo -e '1\n\n2\n\n3\n4' | sed -n '/^\s*$/h;/^\s*$/!H;$!b;x;p'
+
+    3
+    4
+    ```
+
+  - awk
+    ```bash
+    $ echo -e '1\n\n2\n\n3\n4' | awk '/^\s*$/,0'
+
+    2
+
+    3
+    4
+    ```
 
 - not including pattern
 
@@ -1398,12 +1434,25 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 
   ```bash
   # not print
+  #                              `-n`   + from 1st line to line of pattern `/^\s*$/`
+  #                               ^  +------+ + not print
   $ echo -e '1\n2\n\n3\n4' | sed -n '1,/^\s*$/!p'
   3
   4
 
   # delete
+  #                                  + from 1st line to line of pattern `/^\s*$/`
+  #                                  |     + delete
+  #                               +------+ |
   $ echo -e '1\n2\n\n3\n4' | sed '1,/^\s*$/d'
+  3
+  4
+
+  #                                      + not delete since `/^\s*$/` to end
+  #                                      |       + delete the others
+  #                                 +---------+ +-+
+  $ echo -e '1\n\n2\n\n3\n4' | sed '/^\s*$/,$!d;//d'
+  2
   3
   4
   ```
@@ -1430,10 +1479,11 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 ### get from last empty line ( `^$` ) to end
 
 > [!NOTE|label:references:]
-> - [How to get all lines from a file after the last empty line?](https://stackoverflow.com/a/54367325/2940319)
-> - [sed only the last match pattern](https://stackoverflow.com/a/17115550/2940319)
 > - [* iMarslo : get CRLF from linux](../../linux/util/chars.html#file-ending-crlf-or-lf)
 > - [* iMarslo: check line ending](#check-line-ending)
+> - [How to get all lines from a file after the last empty line?](https://stackoverflow.com/a/54367325/2940319)
+> - [sed only the last match pattern](https://stackoverflow.com/a/17115550/2940319)
+> - [sed: return last occurrence match until end of file](https://stackoverflow.com/a/7724969/2940319)
 
 - awk
   ```bash
@@ -1446,6 +1496,14 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
   ## CRLF
   $ echo -e '1\r\n\r\n2\r\n3\r\n4\r' | awk -v RS='\r\n\r\n' 'END{printf "%s",$0}'
   2
+  3
+  4
+
+  # or
+  $ echo -e '1\n\n2\n\n3\n4' |
+    awk '/^\s*$/ { buf = "" } { buf = buf "\n" $0 } END { print buf }' |
+    sed 1d
+
   3
   4
   ```
@@ -1483,6 +1541,44 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
   3
   4
   ```
+
+  - [or](https://stackoverflow.com/a/7724969/2940319)
+    ```bash
+    $ echo -e '1\n\n2\n\n3\n4' | sed -n '/^\s*$/{h;b};H;${x;p}'
+
+    3
+    4
+
+    # or
+    $ echo -e '1\n\n2\n\n3\n4' | sed -n '/^\s*$/h;/^\s*$/!H;$!b;x;p'
+
+    3
+    4
+
+    # or
+    $ echo -e '1\n\n2\n\n3\n4' | sed -n 'H; /^\s*$/h; ${g;p;}'
+
+    3
+    4
+    ```
+
+### reverse search empty line
+
+> [!NOTE|label:for show TODO]
+> - [How do I get sed to print a range of lines until it sees two consecutive blank lines?](https://stackoverflow.com/q/1938281/2940319)
+> - [#2916 possibility to suppress output if stdin is empty and set header manually](https://github.com/sharkdp/bat/issues/2916)
+
+```bash
+# without reverse search
+$ fd -tf --color never |
+  xargs -r -I{} bash -c "sed -ne '/TODO:/,/^\s*$/p' {} | bat -l groovy"
+
+# to suppress output if stdin for `bat`
+$ while read -r file; do
+  _content=$(sed -ne '/TODO:/,/^\s*$/p' "${file}");
+  [[ -n "${_content}" ]] && echo "${_content}" | bat -l groovy;
+done < <(fd -tf --color never)
+```
 
 ## return first matching pattern
 
@@ -1554,7 +1650,7 @@ first paragraph
 -----END CERTIFICATE-----
 ```
 
-## return second matching pattern
+## return second matching pattern search range
 
 {% hint style='tip' %}
 > references:
@@ -1577,6 +1673,90 @@ $ cat sample.crt | awk '/-BEGIN CERTIFICATE-/ && c++, /-END CERTIFICATE-/'
 -----BEGIN CERTIFICATE-----
 second paragraph
 -----END CERTIFICATE-----
+```
+
+## return the last matching pattern search range
+
+> [!NOTE|label:references:]
+> - [sed script to print lines between the last occurence of a pattern and an empty line](https://unix.stackexchange.com/a/647520/29178)
+
+```bash
+$ cat a
+pattern
+1
+2
+3
+
+pattern
+4
+5
+
+pattern    * (start: the last pattern)
+6
+7
+8
+9
+           * (end)
+10
+11
+```
+
+### sed
+```bash
+$ sed -ne '
+  /pattern/{
+    $d;n
+    :loop
+      s/\n$//;tdone
+      $bdone;N
+    bloop
+    :done
+    x
+  }
+  ${x;/./p;}
+' a
+6
+7
+8
+9
+
+# or
+$ sed -e '
+  /pattern/,/^$/!ba
+  /./!ba
+  H;/pattern/{z;x;}
+  :a
+  $!d;x;s/.//
+' a
+6
+7
+8
+9
+
+# or GNU sed
+$ sed -Ez '
+  s/.*pattern\n(([^\n]+\n)+)(\n.*)?/\1/
+' a
+6
+7
+8
+9
+```
+
+### awk
+```bash
+$ awk '/pattern/,/^$/ { arr[NR]=$0; if (/pattern/) line1=NR; if (/^$/) line2=NR}END{ if (line1) for(i=++line1;i<line2;i++) print arr[i]}' a
+6
+7
+8
+9
+
+# or
+$ awk -v RS='' -F '\n' '$1 ~ /pattern/ { hold = $0 } END { if (hold != "") print hold }' a | sed 1d
+6
+7
+8
+9
 ```
 
 ### replace the last matching pattern
