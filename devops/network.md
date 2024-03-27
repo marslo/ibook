@@ -243,7 +243,7 @@ $ sudo lshw -class network
 
 ## route
 ```bash
-$ nslookup my.gitlab.company.com
+$ nslookup gitlab.domain.com
 Server:     130.147.236.5
 Address:    130.147.236.5#53
 
