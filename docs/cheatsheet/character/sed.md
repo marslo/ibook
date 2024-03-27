@@ -220,6 +220,7 @@ KiB Swap:        0 total,        0 free,        0 used. 49136582+avail Mem
 
 > [!NOTE|label:references:]
 > - [sed replace last line matching pattern](https://stackoverflow.com/a/41844647/2940319)
+> - [Perform sed operations on given line numbers](https://unix.stackexchange.com/a/417285/29178)
 
 ```bash
 # original
@@ -248,6 +249,23 @@ $ printf "%s\r\n\r\n%s\r\n%s\r\n%s\r\n" 1 2 3 4 | sed -n '/^\s*\r$/ =' | head -n
 $ printf "%s\r\n\r\n%s\r\n%s\r\n\r\n%s\r\n" 1 2 3 4 | sed -n '/^\s*\r$/ =' | tail -n1
 5
 ```
+
+- [or](https://unix.stackexchange.com/a/605083/29178)
+  ```bash
+  # via sed
+  $ sed -n '10,20{=;p}'
+  ## or ##
+  $ nl file.txt | sed -n '10,20p'
+  ## or ##
+  $ sed -n '10,20{=;p}' file.txt | sed '{N; s/\n/ /}'
+
+  # via awk
+  $ awk 'FNR==10,FNR==20 {print FNR ":" $0}' file.txt
+  ## or ##
+  $ awk 'FNR >= 10 {print FNR ":" $0}; FNR == 20 {exit}' file.txt
+  ## or ##
+  $ awk -v OFS=: 'FNR >= 10 {print FILENAME, FNR, $0}; FNR == 20 {nextfile}' ./*.txt
+  ```
 
 ## delete
 ### delete all

@@ -6,6 +6,8 @@
   - [check attachment](#check-attachment)
   - [list all projects](#list-all-projects)
   - [search issue by JQL](#search-issue-by-jql)
+  - [[get email address](Get Email Addresses For Users)](#get-email-addressget-email-addresses-for-users)
+  - [api token](#api-token)
   - [generate OAuth consumer](#generate-oauth-consumer)
   - [icons](#icons)
 - [confluence](#confluence)
@@ -220,7 +222,176 @@ $ curl -fsSL -XGET https://jira.sample.com/rest/api/2/project |
   ```
   <!--endsec-->
 
+### [get email address](Get Email Addresses For Users)
+
+```bash
+$ curl GET https://jira.sample.com/rest/api/2/user?key=JIRAUSER10100 |
+  jq -r
+```
+
+### api token
+
+> [!NOTE|label:references:]
+> - [API Token Authentication Documentation](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api)
+
+- [list all tokens](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Listalltokens)
+
+  > [!NOTE]
+  > - to list all tokens for single user:
+  >   ```bash
+  >   $ curl -v -XGET \
+  >          https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token/ |
+  >     jq -r
+  >   ```
+  > - to list tokens for all users:
+  >   ```bash
+  >   $ curl -v \
+  >          -X GET \
+  >          https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/tokensByFilter |
+  >     jq -r
+  >   ```
+
+  ```bash
+  $ curl -s -D- \
+         -XGET \
+         -H "Content-Type: application/json"  \
+         https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+    sed '/^\s*$/,$!d;//d' |
+    jq -r
+  ```
+
+  - get created, last access, and valid timestamp
+    ```bash
+    $ curl -s -D- \
+           -XGET \
+           -H "Content-Type: application/json" \
+           https://essjira.marvell.com/rest/de.resolution.apitokenauth/latest/user/token |
+      sed '/^\s*$/,$!d;//d' |
+      jq -r '.content[] | [ .created, .lastAccessed, .validUntil ] | join("\n")' |
+      xargs -r -I{} bash -c "et=\"{}\"; date -d @\$(( \${et}/1000 )) +%c"
+    Mon 18 Dec 2023 10:25:58 AM PST
+    Tue 26 Mar 2024 10:21:30 PM PDT
+    Tue 18 Jun 2024 10:25:58 AM PDT
+
+    # or
+    $ while read -r _d; do
+        date -d @$(( ${_d}/1000 )) +%c;
+      done < <( curl -s -D- \
+                     -XGET \
+                     -H "Content-Type: application/json" \
+                     https://essjira.marvell.com/rest/de.resolution.apitokenauth/latest/user/token |
+                sed '/^\s*$/,$!d;//d' |
+                jq -r '.content[] | [ .created, .lastAccessed, .validUntil ] | join("\n")'
+              )
+    Mon 18 Dec 2023 10:25:58 AM PST
+    Tue 26 Mar 2024 10:14:58 PM PDT
+    Tue 18 Jun 2024 10:25:58 AM PDT
+    ```
+
+- [create new token](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Createanewtoken)
+
+  > [!TIP]
+  > - expiration keywords
+  >   - `tokenValidityTimeInMonths`
+  >   - `tokenExpirationDateTime`
+  >   - `tokenExpirationDateTimeMillis`
+
+  ```bash
+  $ curl -v -d '{"tokenDescription":"<token-description>"}' \
+         -X POST \
+         --header "Content-Type: application/json" \
+         https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+  ```
+
+  - create new token with expiration time
+    ```bash
+    $ curl -v \
+           -d '{"tokenDescription":"<token-description>", "tokenValidityTimeInMonths" : 1}' \
+           -X POST \
+           --header "Content-Type: application/json" \
+           https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+    ```
+
+  - with specific expiration date
+    ```bash
+    $ curl -v \
+           -d '{"tokenDescription":"Custom expiration", "tokenExpirationDateTime" : "2020-10-19T10:29:00.000+02:00"}' \
+           -X POST \
+           --header "Content-Type: application/json" \
+           https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+    ```
+
+  - [create token for another users](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-CreateTokensforotherUsers)
+    ```bash
+    $ curl -v \
+           -d '{"tokenDescription":"token for another user", "tokenForUserKey":"JIRAUSER10105"}' \
+           POST \
+           --header "Content-Type: application/json" \
+           https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+
+    # or with token validity time
+    $ curl -v \
+           -d '{"tokenDescription":"token for another user", "tokenForUserKey":"JIRAUSER10105","tokenValidityTimeInMonths":12}' \
+           POST \
+           --header "Content-Type: application/json" \
+           https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+    ```
+
+- [update token description](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Updateatokendescription)
+  ```bash
+  $ curl -v \
+         -d '{"tokenDescription":"Updated token description"}' \
+         -X PATCH \
+         --header "Content-Type: application/json" \
+         https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token/<token-id>
+  ```
+
+- [delete token](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Deleteatoken)
+  ```bash
+  $ curl -v \
+         -X DELETE \
+         https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token/<token-id>
+  ```
+
+  - [delete all tokens for a user](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Deletealltokensforauser)
+    ```bash
+    $ curl GET \
+           https://jira.sample.com/rest/api/2/user?username=some.username |
+       jq -r
+    ```
+
+- [filter](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Filterparameters)
+
+| PARAMETER            | VALUE                | COMMENT                                                                                                                                                                           |
+|----------------------|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userFilter`         | valid user key       | read above how to get a user key for a name or by email address;<br> if you want to filter for more than one user, repeat that parameter for as many users you want to filter for |
+| `descriptionFilter`  | search term          | string to search for in all token descriptions                                                                                                                                    |
+| `notValidAfter`      | epoch Unix timestamp | tokens not valid anymore after that date/ time in milliseconds                                                                                                                    |
+| `tokenScope`         | integer              | 0 = no scope (all pre 1.5.0 tokens), 1 = read-only, 2 = read/ write                                                                                                               |
+| `fromCreated`        | epoch Unix timestamp | -                                                                                                                                                                                 |
+| `untilCreated`       | epoch Unix timestamp | -                                                                                                                                                                                 |
+| `fromLastUsed`       | epoch Unix timestamp | -                                                                                                                                                                                 |
+| `untilLastUsed`      | epoch Unix timestamp | -                                                                                                                                                                                 |
+| `fromExpiresDuring`  | epoch Unix timestamp | -                                                                                                                                                                                 |
+| `untilExpiresDuring` | epoch Unix timestamp | -                                                                                                                                                                                 |
+
+  - [list token expired after certain time](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Retrievealltokensnotvalidafteracertaintime)
+    ```bash
+    $ curl "https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/tokensByFilter?notValidAfter=1688918956972" |
+      jq -r
+
+    # with limit and page
+    $ curl "https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/tokensByFilter?page=0&limit=1&notValidAfter=1688918956972" |
+      jq -r
+    ```
+
 ### [generate OAuth consumer](https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/)
+
+> [!NOTE|label:references:]
+> - [OAuth 1.0a for REST APIs (Deprecated)](https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/)
+> - [atlassian-oauth-examples](https://bitbucket.org/atlassianlabs/atlassian-oauth-examples/src/master/)
+
+
 ```bash
 $ openssl genrsa -out jira_privatekey.pem 1024
 $ openssl req -newkey rsa:1024 -x509 -key jira_privatekey.pem -out jira_publickey.cer -days 365

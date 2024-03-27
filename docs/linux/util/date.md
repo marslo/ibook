@@ -416,6 +416,17 @@ $ date -d @1602235097 -u
 Fri Oct  9 09:18:17 UTC 2020
 ```
 
+- epoch with 13 digits
+  ```bash
+  # wrong
+  $ date -d @1718731558409 +%c
+  Thu 08 Jun 56434 01:53:29 AM PDT
+
+  # solution: epoch/1000
+  $ date -d @$((1718731558409/1000)) +%c
+  Tue 18 Jun 2024 10:25:58 AM PDT
+  ```
+
 - convert epoch with milliseconds
 
   > [Convert unix timestamp to hh:mm:ss:SSS (where SSS is milliseconds)](https://unix.stackexchange.com/a/265956/29178)
