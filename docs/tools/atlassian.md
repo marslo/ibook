@@ -583,7 +583,7 @@ $ for _i in "blocker.png" "blocker.svg" "critical.png" "critical.svg" "high.png"
 
 ## confluence
 ```bash
-$ confluenceName='my.confluence.com'
+$ confluenceName='confluence.domain.com'
 $ pageID='143765713'
 ```
 > get page id:

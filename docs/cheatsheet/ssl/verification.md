@@ -28,23 +28,23 @@
 # verify local cert
 ## `s_client`
 ```bash
-$ openssl s_client -state -msg -connect my.server.com:443
+$ openssl s_client -state -msg -connect domain.sample.com:443
 ```
 
 ### with cert debug
 ```bash
 $ openssl s_client -state \
                    -debug \
-                   -connect my.server.com:443 \
-                   -cert my.server.com-server.crt \
-                   -key my.server.com-server.key \
+                   -connect domain.sample.com:443 \
+                   -cert domain.sample.com-server.crt \
+                   -key domain.sample.com-server.key \
 ```
 
 ## curl
 ```bash
 $ curl -vvv \
        [--cacert server.crt \]
-       https://my.server.com:443/artifactory
+       https://domain.sample.com:443/artifactory
 ```
 - or
   ```bash
@@ -52,7 +52,7 @@ $ curl -vvv \
          -i \
          -L \
          [--cacert server.crt \] \
-         https://my.server.com:443/artifactory
+         https://domain.sample.com:443/artifactory
   ```
 
 ## openssl

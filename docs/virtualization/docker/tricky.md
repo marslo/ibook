@@ -309,25 +309,35 @@ $ sudo curl -sSLg https://raw.githubusercontent.com/cykerway/complete-alias/mast
   > example: the docker registry in artifactory named `docker`
 
 ```bash
-$ curl -sS https://my.artifactory.com/v2/docker/_catalog |
+$ curl -sS https://artifactory.sample.com/v2/docker/_catalog |
        jq -r .repositories[]
 ```
 - or
   ```bash
-  $ curl -sS -X GET https://my.artifactory.com/artifactory/api/docker/docker/v2/_catalog |
+  $ curl -sS -X GET https://artifactory.sample.com/artifactory/api/docker/docker/v2/_catalog |
          jq -r .repositories[]
   ```
 
 - [list tags](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-ListDockerTags)
+
   > example: get tags from repo `devops/ubuntu`
 
-```bash
-$ curl -sS https://my.artifactory.com/artifactory/v2/docker/devops/ubuntu/tags/list [ | jq -r .tags[] ]
-```
-- or
   ```bash
-  $ curl -sS -X GET https://my.artifactory.com/artifactory/api/docker/docker/v2/devops/ubuntu/tags/list
+  $ curl -sS https://artifactory.sample.com/artifactory/v2/docker/devops/ubuntu/tags/list [ | jq -r .tags[] ]
   ```
+
+  - or
+    ```bash
+    $ curl -sS -X GET https://artifactory.sample.com/artifactory/api/docker/docker/v2/devops/ubuntu/tags/list
+    ```
+
+#### get image:tag via jf cli
+```bash
+$ jf rt search docker/devops/kwciagent/kw23.4-4.0.1** |
+  jq -r '.[].props | select(."docker.manifest" != null) | [ ."docker.manifest"[0], ."docker.repoName"[0] ] | "\(.[1]):\(.[0])"'
+devops/kwciagent:kw23.4-4.0.1-py310-jammy-dind
+devops/kwciagent:kw23.4-4.0.1-py310-jammy-dind-v96-906236c7d
+```
 
 ### from docker hub
 ```bash

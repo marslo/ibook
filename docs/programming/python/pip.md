@@ -178,7 +178,7 @@ rich:               https://github.com/willmcgugan/rich
 setuptools:         https://github.com/pypa/setuptools
 six:                https://github.com/benjaminp/six
 soupsieve:          https://github.com/facelessuser/soupsieve
-ssdfw-scripts:      https://my.gerrit.com/a/storage/ssdfw/devops/scripts/devkit
+ssdfw-scripts:      https://gerrit.sample.com/a/storage/ssdfw/devops/scripts/devkit
 tabulate:           https://github.com/astanin/python-tabulate
 typing-extensions:  https://github.com/python/typing/blob/master/typing_extensions/README.rst
 tzlocal:            https://github.com/regebro/tzlocal

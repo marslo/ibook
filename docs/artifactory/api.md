@@ -32,7 +32,7 @@
 
 ## variable
 ```bash
-$ rtUrl='https://my.artifactory.com/artifactory'
+$ rtUrl='https://artifactory.sample.com/artifactory'
 $ repoName='my-repo'
 $ buildName='my - repo'
 $ buildNumber=12345
@@ -121,7 +121,7 @@ $ /usr/bin/curl ${curlOpt} \
 ```bash
 $ curl -sSg \
        -X GET \
-       https://my.artifactory.com/artifactory/api/repositories |
+       https://artifactory.sample.com/artifactory/api/repositories |
        jq -r '.[] | .type + " ~> " + .key'
 LOCAL ~> local-repo
 REMOTE ~> remote-repo
@@ -133,7 +133,7 @@ VIRTUAL ~> virtual-repo
 ```bash
 $ curl -sSg \
        -X GET \
-       https://my.artifactory.com/artifactory/api/repositories |
+       https://artifactory.sample.com/artifactory/api/repositories |
        jq -r '.[] | select(.type == "LOCAL") | .key'
 ```
 
@@ -141,26 +141,26 @@ $ curl -sSg \
   ```bash
   $ curl -sSg \
          -X GET \
-         https://my.artifactory.com/artifactory/api/repositories |
+         https://artifactory.sample.com/artifactory/api/repositories |
          jq -r '.[] | select(.type == "VIRTUAL") | .key'
   ```
 
   - get all virtual repos, and repo name starts with '<project>'
     ```bash
     $ curl -sSg \
-          -X GET https://my.artifactory.com/artifactory/api/repositories |
+          -X GET https://artifactory.sample.com/artifactory/api/repositories |
           jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
     ```
   - get defaultDeployRepo for all virutal repos who named starts with '<project>'
     ```bash
     $ for i in $(curl -sSg \
-                      -XGET https://my.artifactory.com/artifactory/api/repositories |
+                      -XGET https://artifactory.sample.com/artifactory/api/repositories |
                       jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
       ); do
         echo "${i} : "
         curl -sSg \
              --netrc-file /home/marslo/.marslo/.netrc \
-             -XGET https://my.artifactory.com/artifactory/api/repositories/${i} |
+             -XGET https://artifactory.sample.com/artifactory/api/repositories/${i} |
           jq .defaultDeploymentRepo
         echo ' '
       done
@@ -170,7 +170,7 @@ $ curl -sSg \
   ```bash
   $ curl -sSg \
          -X GET \
-         https://my.artifactory.com/artifactory/api/repositories |
+         https://artifactory.sample.com/artifactory/api/repositories |
          jq -r '.[] | select(.type == "REMOTE") | .key'
   ```
 
@@ -248,7 +248,7 @@ $ curl -s \
 ### filter `"buildInfo.env.JOB_NAME"` in all builds
 ```bash
 $ BUILD_NAME='my - job'
-$ RT_URL='https://my.artifactory.com/artifactory'
+$ RT_URL='https://artifactory.sample.com/artifactory'
 $ for i in $(curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?.uri' ); do
     echo "~~~> ${i}"
     curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}${i}" | jq --raw-output '.buildInfo.properties."buildInfo.env.JOB_NAME"'
@@ -262,7 +262,7 @@ or
 
 BUILD_NAME='my - build'
 CURL_OPT="-sg --netrc-file $HOME/.marslo/.netrc"
-RT_URL='https://my.artifactory.com/artifactory'
+RT_URL='https://artifactory.sample.com/artifactory'
 for bid in $(curl ${CURL_OPT} -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?.uri'); do
   curl ${CURL_OPT}  -X GET "${RT_URL}/api/build/${BUILD_NAME}${bid}" \
        | jq -r '.buildInfo.properties | select(."buildInfo.env.JOB_NAME" | contains("marslo"))' \
@@ -286,7 +286,7 @@ done
          | jq -r '[."buildInfo.env.JOB_NAME" , ."buildInfo.env.BUILD_URL"]'
   [
     "marslo/rc",
-    "https://my.jenkins.com/job/marslo/job/rc/297/"
+    "https://jenkins.sample.com/job/marslo/job/rc/297/"
   ]
   ```
 
@@ -308,7 +308,7 @@ done
 
 - delete artifacts and buildinfo
   ```bash
-  rtURL='https://my.artifactory.com/artifactory'
+  rtURL='https://artifactory.sample.com/artifactory'
   cibuild='my-jenkins-build'
   repo='my-repo'
   curlOpt= '-s -g --netrc-file ~/.marslo/.netrc'
@@ -366,7 +366,7 @@ $ curl -s \
        -d @rotation.json \
        -H "Content-Type: application/json" \
        --netrc-file ~/.marslo/.netrc' \
-       "https://my.artifactory.com/artifactory/api/build/retention/build%20-%20name?async=false"
+       "https://artifactory.sample.com/artifactory/api/build/retention/build%20-%20name?async=false"
 ```
 
 ## promote

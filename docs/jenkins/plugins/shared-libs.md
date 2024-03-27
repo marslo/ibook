@@ -85,7 +85,7 @@ library (
               ]
             ]],
             credentialsId: 'SSH_CREDENTIAL',
-            remote: 'ssh://account@my.gerrit.com:29418/jenkins/libs'
+            remote: 'ssh://account@gerrit.sample.com:29418/jenkins/libs'
     )
   )
 ) _
@@ -98,7 +98,7 @@ library (
   retriever  : modernSCM ([
     $class        : 'GitSCMSource',
     credentialsId : 'SSH_CREDENTIAL',
-    remote        : 'ssh://account@my.gerrit.com:29418/jenkins/libs',
+    remote        : 'ssh://account@gerrit.sample.com:29418/jenkins/libs',
     traits        : [
       gitBranchDiscovery(),
       [

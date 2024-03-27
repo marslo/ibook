@@ -279,8 +279,8 @@ manager.getResources().findAll { r ->
 ### by cli
 ```bash
 $ resource='marslo'
-$ curl -XGET -uadmin:passwd https://my.jenkins.com/lockable-resources/reserve?resource=${resource}
-$ curl -XGET -uadmin:passwd https://my.jenkins.com/lockable-resources/unreserve?resource=${resource}
+$ curl -XGET -uadmin:passwd https://jenkins.sample.com/lockable-resources/reserve?resource=${resource}
+$ curl -XGET -uadmin:passwd https://jenkins.sample.com/lockable-resources/unreserve?resource=${resource}
 ```
 
 ### by api

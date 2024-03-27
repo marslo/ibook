@@ -149,12 +149,12 @@ JAVA_OPTS = -Dhttp.proxyHost=yourproxy -Dhttp.proxyPort=8080
 
 - setup `JAVA_OPTS` ( if necessary )
   ```bash
-  echo "JAVA_OPTS+='-Dhttp.proxyHost=my.proxy.com -Dhttp.proxyPort=80'" >> ~/.bashrc
+  echo "JAVA_OPTS+='-Dhttp.proxyHost=proxy.domain.com -Dhttp.proxyPort=80'" >> ~/.bashrc
   source ~/.bashrc
 
   # result
   $ echo $JAVA_OPTS
-  -Dhttp.proxyHost=my.proxy.com -Dhttp.proxyPort=80
+  -Dhttp.proxyHost=proxy.domain.com -Dhttp.proxyPort=80
   ```
 - download `pom` and `jar` to `~/.m2`
   ```bash

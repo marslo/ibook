@@ -78,13 +78,13 @@ $ if docker images ${name}:${tag} --format \"{{.Tag}}\" >/dev/null ; then
   fi
 ```
 
-- cleanup all image path with `my.artifactory.com/docker/marslo/`
+- cleanup all image path with `artifactory.sample.com/docker/marslo/`
   ```bash
-  $ docker rmi -f $(docker images my.artifactory.com/docker/marslo/* -q)
+  $ docker rmi -f $(docker images artifactory.sample.com/docker/marslo/* -q)
   ```
   - or
     ```bash
-    $ docker rmi -f $(docker images my.artifactory.com/docker/*/* -q)
+    $ docker rmi -f $(docker images artifactory.sample.com/docker/*/* -q)
     ```
 
 ## docker rm

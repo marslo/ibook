@@ -234,7 +234,7 @@ Time periods are specified with a number and one of the following suffixes:
 
   $ curl [-s] \
          -X POST \
-         -uadmin:password https://my.artifactory.com/artifactory/api/search/aql \
+         -uadmin:password https://artifactory.sample.com/artifactory/api/search/aql \
          -T find.aql
   ```
 
@@ -267,12 +267,12 @@ Time periods are specified with a number and one of the following suffixes:
   ```bash
   $ curl -s \
          --netrc-file ~/.marslo/.netrc \
-         -X POST https://my.artifactory.com/artifactory/api/search/aql \
+         -X POST https://artifactory.sample.com/artifactory/api/search/aql \
          -H "Content-Type: text/plain" \
          -d """items.find ({ \"repo\": \"my-repo\", \"type\" : \"folder\" , \"depth\" : \"1\", \"created\" : { \"\$before\" : \"4mo\" } }) """
 
   $ cat ~/.marslo/.netrc
-  machine my.artifactory.com
+  machine artifactory.sample.com
   login admin
   password password
   ```
@@ -306,7 +306,7 @@ Time periods are specified with a number and one of the following suffixes:
   ```bash
   $ curl -s \
          --netrc-file ~/.marslo/.netrc \
-         -X POST https://my.artifactory.com/artifactory/api/search/aql \
+         -X POST https://artifactory.sample.com/artifactory/api/search/aql \
          -H "Content-Type: text/plain" \
          -d """items.find ({ \
                  \"repo\": \"my-repo\", \
@@ -326,7 +326,7 @@ Time periods are specified with a number and one of the following suffixes:
          -k \
          -H 'Content-Type:text/plain' \
          -i \
-         'https://my.artifactory.com/artifactory/api/search/aql' \
+         'https://artifactory.sample.com/artifactory/api/search/aql' \
          -d 'items.find ({
                           "repo": "proj-1-local",
                           "type" : "folder" ,

@@ -165,7 +165,7 @@ $ ssh -vT \
 
 $ cat ~/.ssh/config
 Host  github.com
-      User                my.account@mail.com
+      User                username@domain.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
@@ -187,7 +187,7 @@ $ ssh -vT \
 
 $ cat ~/.ssh/config
 Host  github.com
-      User                my.account@mail.com
+      User                username@domain.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
@@ -205,7 +205,7 @@ $ ssh -vT \
 
 $ cat ~/.ssh/config
 Host  github.com
-      User                my.account@mail.com
+      User                username@domain.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
@@ -231,7 +231,7 @@ $ ssh -vT \
 
 $ cat ~/.ssh/config
 Host  github.com
-      User                my.account@mail.com
+      User                username@domain.com
       ServerAliveInterval 60
       Hostname            ssh.github.com
       Port                443
@@ -372,7 +372,7 @@ $ git -c core.sshCommand "ssh -v -o 'ProxyCommand=commect -H proxy.domain.com:80
 ```bash
 $ npm config set proxy http://proxy.domain.com:80/
 $ npm config set https-proxy http://proxy.domain.com:80/
-$ npm config set noproxy '127.0.0.1,my.noproxy.com'
+$ npm config set noproxy '127.0.0.1,noproxy.domain.com'
 
 # optional
 $ npm config set strict-ssl false

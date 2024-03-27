@@ -159,13 +159,13 @@ timestamps { ansiColor('xterm') {
 - via api
   ```bash
   $ curl -sSg \
-         https://my.jenkins.com/job/<group>/job/<pipeline>/<buildId>/api/json |
+         https://jenkins.sample.com/job/<group>/job/<pipeline>/<buildId>/api/json |
          jq -r .changeSets[]
 
   # or
 
   $ curl -sSg \
-         https://my.jenkins.com/job/<group>/job/<pipeline>/<buildId>/api/json?depth=100&&tree=changeSets[*[*]]
+         https://jenkins.sample.com/job/<group>/job/<pipeline>/<buildId>/api/json?depth=100&&tree=changeSets[*[*]]
   ```
 
 ### [manager.build.result.isBetterThan](https://stackoverflow.com/a/26410694/2940319)

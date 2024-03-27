@@ -343,7 +343,7 @@ $ which -a pip3
   $ sudo /usr/bin/python -m pip install --upgrade pip setuptools wheel
   DEPRECATION: Python 2.7 reached the end of its life on January 1st, 2020. Please upgrade your Python as Python 2.7 is no longer maintained. pip 21.0 will drop support for Python 2.7 in January 2021. More details about Python 2 support in pip can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support pip 21.0 will remove support for this functionality.
   WARNING: The directory '/Users/marslo/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you may want sudo's -H flag.
-  Looking in indexes: https://my.artifactory.dev.com/artifactory/api/pypi/tools/simple
+  Looking in indexes: https://artifactory.dev.domain.com/artifactory/api/pypi/tools/simple
   Requirement already up-to-date: pip in /Users/marslo/Library/Python/2.7/lib/python/site-packages (20.2.4)
   Requirement already up-to-date: setuptools in /Users/marslo/Library/Python/2.7/lib/python/site-packages (44.1.1)
   Requirement already up-to-date: wheel in /Users/marslo/Library/Python/2.7/lib/python/site-packages (0.35.1)
