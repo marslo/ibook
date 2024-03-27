@@ -187,7 +187,7 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
   >   # or
   >   $ find . -type f -printf "\n%Tm/%Td/%TY %TT %p" | sort -k1.8n -k1.1nr -k1
   >   ```
-  > - [* iMarslo : find printf](../cheatsheet/character/character.html#printf)
+  > - [* iMarslo : find printf](../cheatsheet/text-processing/text-processing.html#printf)
   > - [* `printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
   >   ```bash
   >   $ find . -printf "%T<format>\n"
@@ -223,7 +223,7 @@ $ find -iname "*.sh" -exec rename "s/.sh$/.shell/" {} \; -print
 ### find and copy
 
 > [!TIP]
-> - [* iMarslo: find by timestamp](../character/character.html#find-by-timestamp)
+> - [* iMarslo: find by timestamp](../text-processing/text-processing.html#find-by-timestamp)
 
 ```bash
 $ find . -type f -newermt '2023-10-16 00:00:00' -exec cp -a --parents -t /path/to/target "{}" \+
@@ -695,7 +695,7 @@ $ date | wc
 - String replacement
 
   > [!TIP]
-  > - [* iMarslo: add `'` or `"` to strings](../character/character.html#tricky)
+  > - [* iMarslo: add `'` or `"` to strings](../text-processing/text-processing.html#tricky)
 
   ```bash
   # a.sh

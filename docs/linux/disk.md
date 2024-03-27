@@ -165,7 +165,7 @@ Filesystem     Type 1024-blocks     Used  Available Capacity Mounted on
 - `/etc/fstab`
 
   > [!NOTE|label:references:]
-  > - [iMarslo : character#column](../cheatsheet/character/character.html#column)
+  > - [iMarslo : character#column](../cheatsheet/text-processing/text-processing.html#column)
 
   ```bash
   $ cat /etc/fstab

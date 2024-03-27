@@ -186,7 +186,7 @@ echo '123 : [foo] : 30'        | padRight
 ## get the common part
 
 > [!NOTE|label:see also:]
-> - [iMarslo: comm](../../cheatsheet/character/character.html#comm)
+> - [iMarslo: comm](../../cheatsheet/text-processing/text-processing.html#comm)
 
 ```bash
 $ cat a.txt
@@ -213,7 +213,7 @@ xunil
 ## format a file to a table
 
 > [!NOTE|label:see also:]
-> - [iMarslo: column](../../cheatsheet/character/character.html#column)
+> - [iMarslo: column](../../cheatsheet/text-processing/text-processing.html#column)
 
 ```bash
 $ cat a_b
@@ -230,8 +230,8 @@ $ column -tns: a_b
 
 
 > [!NOTE|label:see also:]
-> - [iMarslo: single line to multiple lines](../../cheatsheet/character/character.html#single-line-to-multiple-lines)
-> - [iMarlso: combine every 2 lines](../../cheatsheet/character/character.html#combine-every-2-lines)
+> - [iMarslo: single line to multiple lines](../../cheatsheet/text-processing/text-processing.html#single-line-to-multiple-lines)
+> - [iMarlso: combine every 2 lines](../../cheatsheet/text-processing/text-processing.html#combine-every-2-lines)
 
 ```bash
 $ cat a
