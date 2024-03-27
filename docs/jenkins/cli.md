@@ -30,13 +30,13 @@
 
 ## setup cli
 ```bash
-export JENKINS_DOMAIN=<my.jenkins.com>
+export JENKINS_DOMAIN=<jenkins.sample.com>
 ```
 
 ### get port
 ```bash
 $ curl -Lv https://${JENKINS_DOMAIN}/login 2>&1 | grep -i 'x-ssh-endpoint'
-< x-ssh-endpoint: my.jenkins.com:31232
+< x-ssh-endpoint: jenkins.sample.com:31232
 
 $ k -n ci get svc jenkins-discovery -o yaml
 apiVersion: v1
@@ -71,7 +71,7 @@ spec:
 * `~/.ssh/config`
 ```bash
 $ cat ~/.ssh/config
-Host  my.jenkins.com
+Host  jenkins.sample.com
       User                marslo
       IdentityFile        ~/.ssh/marslo
       Port                32123

@@ -30,12 +30,12 @@
 
 ### [ack](https://metacpan.org/pod/ack)
 ```bash
-$ curl -sg https://my.api.com | ack --passthru 'keyword'
+$ curl -sg https://api.domain.com | ack --passthru 'keyword'
 ```
 
 ### less
 ```bash
-$ curl -sg https://my.api.com | less -i -p 'keyword'
+$ curl -sg https://api.domain.com | less -i -p 'keyword'
 ```
 
 ### [grep](https://stackoverflow.com/a/981831/2940319)
@@ -46,10 +46,10 @@ $ command | egrep --color=always 'pattern|$'
 ```
 - example
   ```bash
-  $ curl -sg 'https://my.api.com | jq -r . | grep --color=always '.*keyword.*\|$'
+  $ curl -sg 'https://api.domain.com | jq -r . | grep --color=always '.*keyword.*\|$'
 
   # or
-  $ curl -sg 'https://my.api.com | jq -r . | grep --color=always -E '| .*keyword.*'
+  $ curl -sg 'https://api.domain.com | jq -r . | grep --color=always -E '| .*keyword.*'
   ```
 
 ### [highlight](http://www.andre-simon.de/doku/highlight/en/highlight.php)

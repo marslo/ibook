@@ -1060,7 +1060,7 @@ import hudson.Util
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 import org.jenkinsci.plugins.workflow.flow.BlockableResume
 
-String rootUrl = 'https://my.jenkins.com'
+String rootUrl = 'https://jenkins.sample.com'
 
 Map<String, WorkflowJob> jobs = jenkins.getJobs()
 println jobs
@@ -1087,7 +1087,7 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
 import com.cdancy.jenkins.rest.JenkinsClient
 
-String jenkinsUrl = 'https://my.jenkins.com'
+String jenkinsUrl = 'https://jenkins.sample.com'
 String userName   = 'admin'
 String password   = 'admin'
 

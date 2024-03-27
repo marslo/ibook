@@ -1201,10 +1201,10 @@ $ cat a.txt
 
   - or get second column of next line of pattern
     ```bash
-    $ awk '/my.company.com$/{getline; print}' ~/.marslo/.netrc
+    $ awk '/company.domain.com$/{getline; print}' ~/.marslo/.netrc
     login marslo
 
-    $ awk '/my.company.com$/{getline; print $2}' ~/.marslo/.netrc
+    $ awk '/company.domain.com$/{getline; print $2}' ~/.marslo/.netrc
     marslo
     ```
 

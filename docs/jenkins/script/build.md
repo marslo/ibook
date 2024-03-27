@@ -420,13 +420,13 @@ builds.each { build ->
   context           : com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.TriggerContext@6fbdc2a5
     build number    : 10121
     project name    : /path/to/project
-  description       : Retriggered by user marslo for Gerrit: https://my.gerrit.com/c/my/project/+/72667
-  url               : https://my.gerrit.com/c/my/project/+/72667
+  description       : Retriggered by user marslo for Gerrit: https://gerrit.sample.com/c/my/project/+/72667
+  url               : https://gerrit.sample.com/c/my/project/+/72667
   events            : class com.sonymobile.tools.gerrit.gerritevents.dto.events.CommentAdded
     byCommentAdded  : true
     byRefUpdated    : false
     byPathUpdated   : false
-    server hostname : my.gerrit.com
+    server hostname : gerrit.sample.com
     server port     : 29418
     server version  : 2.16.27-RP-1.10.1.1
   ..........
@@ -435,7 +435,7 @@ builds.each { build ->
     approvals       : [Approval: Verified 0, Approval: Code-Review 2]
     change          : Change-Id for #72667: I68e47b094e142a63cec7c698094320d79f5350f8
     usernmae        : marslo
-    description     : Retriggered by user marslo for Gerrit: https://my.gerrit.com/c/my/project/+/72667
+    description     : Retriggered by user marslo for Gerrit: https://gerrit.sample.com/c/my/project/+/72667
     changer account : Marslo Jiao
     changer email   : marslo@gmail.com
   ..........
@@ -445,13 +445,13 @@ builds.each { build ->
   context           : com.sonyericsson.hudson.plugins.gerrit.trigger.hudsontrigger.data.TriggerContext@26ab2c12
     build number    : 10120
     project name    : /path/to/project
-  description       : Triggered by Gerrit: https://my.gerrit.com/c/my/project/+/123069
-  url               : https://my.gerrit.com/c/my/project/+/123069
+  description       : Triggered by Gerrit: https://gerrit.sample.com/c/my/project/+/123069
+  url               : https://gerrit.sample.com/c/my/project/+/123069
   events            : class com.sonymobile.tools.gerrit.gerritevents.dto.events.CommentAdded
     byCommentAdded  : true
     byRefUpdated    : false
     byPathUpdated   : false
-    server hostname : my.gerrit.com
+    server hostname : gerrit.sample.com
     server port     : 29418
     server version  : 2.16.27-RP-1.10.1.1
   ..........
@@ -939,11 +939,11 @@ checkout([
   branches: [[ name: 'refs/heads/sandbox' ]],
   browser: [
     $class: 'GitWeb',
-    repoUrl: 'https://my.gerrit.com/path/to/repo'
+    repoUrl: 'https://gerrit.sample.com/path/to/repo'
   ],
   userRemoteConfigs: [[
       credentialsId: 'SSHCredential',
-      url: 'git://my.gerrit.com/path/to/repo.git'
+      url: 'git://gerrit.sample.com/path/to/repo.git'
   ]]
 ])
 ```
@@ -1083,11 +1083,11 @@ job.changeSets
   ```bash
   -----------------------------
 
-            repoUrl : https://my.gerrit.com/admin/repos/sandbox
-            repoUrl : https://my.gerrit.com/admin/repos/sandbox
-                url : https://my.gerrit.com/admin/repos/sandbox
+            repoUrl : https://gerrit.sample.com/admin/repos/sandbox
+            repoUrl : https://gerrit.sample.com/admin/repos/sandbox
+                url : https://gerrit.sample.com/admin/repos/sandbox
         ormalizeUrl : [null, false]
-        absoluteUrl : https://my.gerrit.com/admin/repos/sandbox?a=commit&h=095e4470964ee8ca6ab50ceea7acf88094dc08d4
+        absoluteUrl : https://gerrit.sample.com/admin/repos/sandbox?a=commit&h=095e4470964ee8ca6ab50ceea7acf88094dc08d4
            commitId : 095e4470964ee8ca6ab50ceea7acf88094dc08d4 : 095e4470964ee8ca6ab50ceea7acf88094dc08d4
   ```
 

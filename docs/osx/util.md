@@ -345,7 +345,7 @@ $ scutil --proxy
   HTTPEnable : 0
   HTTPSEnable : 0
   ProxyAutoConfigEnable : 1
-  ProxyAutoConfigURLString : http://my.pac.com/global-pac.pac
+  ProxyAutoConfigURLString : http://pac.domain.com/global-pac.pac
   SOCKSEnable : 0
 }
 ```

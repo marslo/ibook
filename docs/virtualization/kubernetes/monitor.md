@@ -124,7 +124,7 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
   |------------------------------|--------------------------------------------------------------------------|
   | `GF_INSTALL_PLUGINS`         | `grafana-kubernetes-app,grafana-piechart-panel,http://my.com/plugin.zip` |
   | `GF_PATHS_PLUGINS`           | `/data/grafana/plugins`                                                  |
-  | `GF_SERVER_ROOT_URL`         | `https://my.grafana.com`                                                 |
+  | `GF_SERVER_ROOT_URL`         | `https://grafana.domain.com`                                                 |
   | `GF_SECURITY_ADMIN_PASSWORD` | `admin`                                                                  |
   | `GF_DEFAULT_INSTANCE_NAME`   | -                                                                        |
   | `GF_SECURITY_ADMIN_USER`     | -                                                                        |

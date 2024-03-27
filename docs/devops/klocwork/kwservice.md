@@ -25,14 +25,14 @@
 > - <projects_root> is the projects_root where the servers are running
 
 ```bash
-$ kwservice set-service-property klocwork host my.klocwork.com
+$ kwservice set-service-property klocwork host klocwork.domain.com
 Using projects root: /projects/root
 # kwservice check
 Using projects root: /projects/root
 Local Host is: klocwork-server-7*********-****q [10.244.6.65]
 Checking License Server  [running on klocwork-license:443]
 Checking Database Server [running on localhost:3306] (projects root is /projects/root)
-Checking Klocwork Server [running on my.klocwork.com:8080]
+Checking Klocwork Server [running on klocwork.domain.com:8080]
 ```
 
 ## start/restart service
