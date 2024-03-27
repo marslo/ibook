@@ -29,10 +29,14 @@
     - [awk](#awk)
     - [sed](#sed)
     - [with empty line](#with-empty-line)
+  - [get line from pattern to the end](#get-line-from-pattern-to-the-end)
+    - [get from first empty line to the end](#get-from-first-empty-line-to-the-end)
+    - [get from last empty line ( `^$` ) to end](#get-from-last-empty-line--%5E--to-end)
   - [return first matching pattern](#return-first-matching-pattern)
     - [sed](#sed-1)
     - [awk](#awk-1)
   - [return second matching pattern](#return-second-matching-pattern)
+    - [replace the last matching pattern](#replace-the-last-matching-pattern)
 - [`xargs`](#xargs)
   - [complex commands with xargs](#complex-commands-with-xargs)
   - [multiple move](#multiple-move)
@@ -1335,6 +1339,151 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 6f
 ```
 
+## get line from pattern to the end
+
+> [!NOTE|label:references:]
+> - [Print lines in file from the match line until end of file](https://stackoverflow.com/a/3434563/2940319)
+> - sample content:
+>   ```bash
+>   $ echo -e '1\n2\n\n3\n4'
+>   1
+>   2
+>               * (start. pattern: `^\s*$`)
+>   3
+>   4
+>   ```
+
+### get from first empty line to the end
+- including pattern
+
+  > [TIP]
+  > - solution: to print from pattern to end `,$` == `,$p`
+  > - for both CRLF and LF
+
+  ```bahs
+  $ echo -e '1\n2\n\n3\n4' | sed -n '/^\s*$/,$p'
+
+  3
+  4
+  ```
+
+  > [TIP]
+  > - solution: using line number to end: `n,$` -> `"n"',$p'`
+  >   - `head -n1` : for first matches pattern line number
+  >   - `tail -n1` : for the last matches pattern line number
+  > - [* iMarslo: sed get line number of pattern](./sed.html#print-line-number-of-matched-pattern)
+
+  ```bash
+  $ command cat -A a | nl
+       1  1^M$
+       2  ^M$
+       3  2^M$
+       4  3^M$
+       5  4^M$
+
+  $ cat a | sed -n "$(sed -n '/^\s*$/ =' a | tail -n1)"' ,$p'
+
+  2
+  3
+  4
+  ```
+
+- not including pattern
+
+  > [TIP]
+  > - solution: to delete / not print from first line to pattern
+  >   - delete: `/d`
+  >   - not print: -n `/!p`
+  > - for both CRLF and LF
+
+  ```bash
+  # not print
+  $ echo -e '1\n2\n\n3\n4' | sed -n '1,/^\s*$/!p'
+  3
+  4
+
+  # delete
+  $ echo -e '1\n2\n\n3\n4' | sed '1,/^\s*$/d'
+  3
+  4
+  ```
+
+  > [!TIP]
+  > - solution: with matched line number + 1 : `"$(( n+1 ))"',$p'`
+  >   - `head -n1` : for first matches pattern line number
+  >   - `tail -n1` : for the last matches pattern line number
+
+  ```bash
+  $ command cat -A a | nl
+       1  1^M$
+       2  ^M$
+       3  2^M$
+       4  3^M$
+       5  4^M$
+
+  $ cat a | sed -n "$(( $(sed -n '/^\s*$/ =' a | head -n1 )+1 ))"' ,$p'
+  2
+  3
+  4
+  ```
+
+### get from last empty line ( `^$` ) to end
+
+> [!NOTE|label:references:]
+> - [How to get all lines from a file after the last empty line?](https://stackoverflow.com/a/54367325/2940319)
+> - [sed only the last match pattern](https://stackoverflow.com/a/17115550/2940319)
+> - [* iMarslo : get CRLF from linux](../../linux/util/chars.html#file-ending-crlf-or-lf)
+> - [* iMarslo: check line ending](#check-line-ending)
+
+- awk
+  ```bash
+  # awk
+  ## LF
+  $ echo -e '1\n\n2\n3\n4' | awk -v RS='\n\n' 'END{printf "%s",$0}'
+  2
+  3
+  4
+  ## CRLF
+  $ echo -e '1\r\n\r\n2\r\n3\r\n4\r' | awk -v RS='\r\n\r\n' 'END{printf "%s",$0}'
+  2
+  3
+  4
+  ```
+
+- tac + awk
+  ```bash
+  # tac + awk
+  ## LF
+  $ echo -e '1\n\n2\n3\n4' | tac | awk '/^$/{exit}1' | tac
+  2
+  3
+  4
+  ## CRLF
+  $ echo -e '1\r\n\r\n2\r\n3\r\n4\r' | tac | awk '/^\s*\r$/{exit}1'  | tac
+  2
+  3
+  4
+  ```
+
+- sed
+
+  > [!WARNING]
+  > - for LF only, not support CRLF `\r\n`
+
+  ```bash
+  $ echo -e '1\n\n2\n\n3\n4'
+  1
+
+  2
+
+  3
+  4
+
+  $ echo -e '1\n\n2\n\n3\n4' | sed -n '/^\s*$/{g;D;}; N; $p;'
+  3
+  4
+  ```
+
 ## return first matching pattern
 
 {% hint style='tip' %}
@@ -1428,6 +1577,18 @@ $ cat sample.crt | awk '/-BEGIN CERTIFICATE-/ && c++, /-END CERTIFICATE-/'
 -----BEGIN CERTIFICATE-----
 second paragraph
 -----END CERTIFICATE-----
+```
+
+### replace the last matching pattern
+```bash
+# the last `boy` -> `boys`
+$ printf "%s\n" boy girl boy girl boy girl | sed -z 's/.*boy/&s/'
+boy
+girl
+boy
+girl
+boys
+girl
 ```
 
 # `xargs`
@@ -2045,6 +2206,7 @@ aabaa
 ## check line ending
 
 > [!NOTE|label:references:]
+> - [* iMarslo : get CRLF from linux](../../linux/util/chars.html#file-ending-crlf-or-lf)
 > - check ascii via terminal
 >   - `$ man ascii`
 >   - `$ cat /usr/share/misc/ascii`

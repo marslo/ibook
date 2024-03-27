@@ -12,6 +12,7 @@
   - [print all lines](#print-all-lines)
   - [range print](#range-print)
   - [print matched pattern](#print-matched-pattern)
+  - [print line number of matched pattern](#print-line-number-of-matched-pattern)
 - [delete](#delete)
   - [delete all](#delete-all)
   - [range delete](#range-delete)
@@ -213,6 +214,39 @@ KiB Swap:        0 total,        0 free,        0 used. 49136582+avail Mem
   103,Raj Reddy,Sysadmin
   104,Anand Ram,Developer
   ```
+
+### print line number of matched pattern
+
+> [!NOTE|label:references:]
+> - [sed replace last line matching pattern](https://stackoverflow.com/a/41844647/2940319)
+
+```bash
+# original
+$ printf "%s\r\n\r\n%s\r\n%s\r\n\r\n%s\r\n" 1 2 3 4 | command cat -A | nl
+     1  1^M$
+     2  ^M$
+     3  2^M$
+     4  3^M$
+     5  ^M$
+     6  4^M$
+
+# result
+$ printf "%s\r\n\r\n%s\r\n%s\r\n\r\n%s\r\n" 1 2 3 4 | sed -n '/^\s*\r$/ ='
+2
+5
+# or
+$ sed -n '/^\s*\r$/ =' < <(printf "%s\r\n\r\n%s\r\n%s\r\n\r\n%s\r\n" 1 2 3 4)
+2
+5
+
+# first matched line number
+$ printf "%s\r\n\r\n%s\r\n%s\r\n%s\r\n" 1 2 3 4 | sed -n '/^\s*\r$/ =' | head -n1
+2
+
+# last matched line number
+$ printf "%s\r\n\r\n%s\r\n%s\r\n\r\n%s\r\n" 1 2 3 4 | sed -n '/^\s*\r$/ =' | tail -n1
+5
+```
 
 ## delete
 ### delete all
