@@ -1378,7 +1378,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
   > - solution: to print from pattern to end `,$` == `,$p`
   > - for both CRLF and LF
 
-  ```bahs
+  ```bash
   $ echo -e '1\n2\n\n3\n4' | sed -n '/^\s*$/,$p'
 
   3

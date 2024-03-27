@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [jira](#jira)
+  - [myself](#myself)
   - [check fields](#check-fields)
   - [check attachment](#check-attachment)
   - [list all projects](#list-all-projects)
@@ -9,15 +10,20 @@
   - [[get email address](Get Email Addresses For Users)](#get-email-addressget-email-addresses-for-users)
   - [api token](#api-token)
   - [generate OAuth consumer](#generate-oauth-consumer)
-  - [icons](#icons)
+  - [icons and priority](#icons-and-priority)
 - [confluence](#confluence)
+  - [myself](#myself-1)
   - [get info](#get-info)
   - [publish to confluence](#publish-to-confluence)
   - [plugins](#plugins)
+- [ACLI](#acli)
+  - [running with docker images](#running-with-docker-images)
+  - [create .acli.keystore](#create-aclikeystore)
+  - [acli.properties](#acliproperties)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> reference:
+> [!NOTE|label:reference:]
 > - [* Confluence REST API examples](https://developer.atlassian.com/server/confluence/confluence-rest-api-examples/)
 > - [* Jira REST API examples](https://developer.atlassian.com/server/jira/platform/jira-rest-api-examples/)
 > - [Confluence Server REST API](https://developer.atlassian.com/server/confluence/confluence-server-rest-api/)
@@ -56,6 +62,50 @@ $ jiraID='STORY-1'
 >   - `X-Atlassian-Token`
 >   - `X-Force-Accept-Language`
 >   - `X-AAccountId`
+
+### myself
+
+> [!NOTE|label:references:]
+> - [Myself api v3](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-myself/#api-group-myself)
+> - [Myself api v2](https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-myself/#api-group-myself)
+> - [Zapier & API Tokens](https://wiki.resolution.de/doc/api-token-authentication/latest/user-guide/knowledge-base?)
+> - [Add user preference keys to documentation for mypreferences endpoint in JIRA API](https://jira.atlassian.com/browse/JRASERVER-60067)
+
+```bash
+$ curl -s https://jira.sample.com/rest/api/2/myself
+# or via `user?username=<id>`
+$ curl -s https://jira.sample.com/rest/api/2/user?username=marslo
+```
+
+- get info
+  ```bash
+  # get timezone
+  $ curl -s https://jira.sample.com/rest/api/2/mypreferences?key=jira.user.timezone
+  Asia/Shanghai
+
+  # get locale
+  $ curl --request GET \
+         --url 'https://jira.sample.com/rest/api/2/mypreferences/locale' \
+         --header 'Accept: application/json'
+  ```
+
+- set info
+  ```bash
+  # set timezone
+  $ curl --request PUT \
+         --url 'https://jira.sample.com/rest/api/2/mypreferences?key={key}' \
+         --header 'Accept: application/json' \
+         --header 'Content-Type: application/json' \
+         --data '"<string>"'
+
+  # set local
+  $ curl --request PUT \
+         --url 'https://jira.sample.com/rest/api/2/mypreferences/locale' \
+         --user 'email@example.com:<api_token>' \
+         --header 'Accept: application/json' \
+         --header 'Content-Type: application/json' \
+         --data '{ "locale": "en_US" }'
+  ```
 
 ### check fields
 ```bash
@@ -232,7 +282,8 @@ $ curl GET https://jira.sample.com/rest/api/2/user?key=JIRAUSER10100 |
 ### api token
 
 > [!NOTE|label:references:]
-> - [API Token Authentication Documentation](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api)
+> - [API Token Authentication Documentation](https://wiki.resolution.de/doc/api-token-authentication/latest)
+> - [API Token Authentication Documentation - Rest API](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api)
 
 - [list all tokens](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Listalltokens)
 
@@ -260,35 +311,71 @@ $ curl GET https://jira.sample.com/rest/api/2/user?key=JIRAUSER10100 |
     jq -r
   ```
 
-  - get created, last access, and valid timestamp
+  - get id, created, last access, and valid timestamp
     ```bash
-    $ curl -s -D- \
-           -XGET \
-           -H "Content-Type: application/json" \
-           https://essjira.marvell.com/rest/de.resolution.apitokenauth/latest/user/token |
-      sed '/^\s*$/,$!d;//d' |
-      jq -r '.content[] | [ .created, .lastAccessed, .validUntil ] | join("\n")' |
-      xargs -r -I{} bash -c "et=\"{}\"; date -d @\$(( \${et}/1000 )) +%c"
-    Mon 18 Dec 2023 10:25:58 AM PST
-    Tue 26 Mar 2024 10:21:30 PM PDT
-    Tue 18 Jun 2024 10:25:58 AM PDT
+    function epoch2timestamp() {
+      [[ 0 != $1 ]] && echo $(date -d @$(( $1/1000 )) +%FT%T.%3N%Z) || echo "0";
+    }
 
-    # or
-    $ while read -r _d; do
-        date -d @$(( ${_d}/1000 )) +%c;
+    $ while read -r _id _created _lastAccess _validUntil; do
+        echo "${_id} $(epoch2timestamp ${_created}) $(epoch2timestamp ${_lastAccess}) $(epoch2timestamp ${_validUntil})";
       done < <( curl -s -D- \
                      -XGET \
                      -H "Content-Type: application/json" \
-                     https://essjira.marvell.com/rest/de.resolution.apitokenauth/latest/user/token |
+                     https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
                 sed '/^\s*$/,$!d;//d' |
-                jq -r '.content[] | [ .created, .lastAccessed, .validUntil ] | join("\n")'
-              )
-    Mon 18 Dec 2023 10:25:58 AM PST
-    Tue 26 Mar 2024 10:14:58 PM PDT
-    Tue 18 Jun 2024 10:25:58 AM PDT
+                jq -r '.content[] | [ .id, .created, .lastAccessed, .validUntil ] | join( "\t" )'
+              ) |
+      column -t
+    537  2024-01-31T21:32:51.000PST  2024-03-26T23:30:30.000PDT  2024-07-31T21:32:51.000PDT
+    579  2024-03-26T23:19:16.000PDT  0                           2024-09-26T23:19:16.000PDT
+
+    # with header
+    $ ( echo "ID CREATED LASTACCESS VALIDUNTIL";
+        while read -r _id _created _lastAccess _validUntil; do
+          echo "${_id} $(epoch2timestamp ${_created}) $(epoch2timestamp ${_lastAccess}) $(epoch2timestamp ${_validUntil})";
+        done < <( curl -s -D- \
+                       -XGET \
+                       -H "Content-Type: application/json" \
+                       https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+                  sed '/^\s*$/,$!d;//d' |
+                  jq -r '.content[] | [ .id, .created, .lastAccessed, .validUntil ] | join( "\t" )'
+                )
+      ) | column -t
+    ID   CREATED                     LASTACCESS                  VALIDUNTIL
+    537  2024-01-31T21:32:51.000PST  2024-03-26T23:33:33.000PDT  2024-07-31T21:32:51.000PDT
+    579  2024-03-26T23:19:16.000PDT  0                           2024-09-26T23:19:16.000PDT
     ```
 
-- [create new token](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Createanewtoken)
+    - or
+      ```bash
+      $ curl -s -D- \
+             -XGET \
+             -H "Content-Type: application/json" \
+             https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+        sed '/^\s*$/,$!d;//d' |
+        jq -r '.content[] | [ .created, .lastAccessed, .validUntil ] | join("\n")' |
+        xargs -r -I{} bash -c "et=\"{}\"; date -d @\$(( \${et}/1000 )) +%c"
+      Mon 18 Dec 2023 10:25:58 AM PST
+      Tue 26 Mar 2024 10:21:30 PM PDT
+      Tue 18 Jun 2024 10:25:58 AM PDT
+
+      # or
+      $ while read -r _d; do
+          date -d @$(( ${_d}/1000 )) +%c;
+        done < <( curl -s -D- \
+                       -XGET \
+                       -H "Content-Type: application/json" \
+                       https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+                  sed '/^\s*$/,$!d;//d' |
+                  jq -r '.content[] | [ .created, .lastAccessed, .validUntil ] | join("\n")'
+                )
+      Mon 18 Dec 2023 10:25:58 AM PST
+      Tue 26 Mar 2024 10:14:58 PM PDT
+      Tue 18 Jun 2024 10:25:58 AM PDT
+      ```
+
+- [create token](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Createanewtoken)
 
   > [!TIP]
   > - expiration keywords
@@ -304,21 +391,33 @@ $ curl GET https://jira.sample.com/rest/api/2/user?key=JIRAUSER10100 |
   ```
 
   - create new token with expiration time
-    ```bash
-    $ curl -v \
-           -d '{"tokenDescription":"<token-description>", "tokenValidityTimeInMonths" : 1}' \
-           -X POST \
-           --header "Content-Type: application/json" \
-           https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
-    ```
 
-  - with specific expiration date
+    > [!NOTE|label:references:]
+    > - with `tokenValidityTimeInMonths`
+    >   ```bash
+    >   $ curl -v \
+    >          -d '{"tokenDescription":"<token-description>", "tokenValidityTimeInMonths" : 1}' \
+    >          -X POST \
+    >          --header "Content-Type: application/json" \
+    >          https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+    >   ```
+    > - with `tokenExpirationDateTime`
+    >   ```bash
+    >   $ curl -v \
+    >          -d '{"tokenDescription":"Custom expiration", "tokenExpirationDateTime" : "2020-10-19T10:29:00.000+02:00"}' \
+    >          -X POST \
+    >          --header "Content-Type: application/json" \
+    >          https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+    >   ```
+
     ```bash
-    $ curl -v \
-           -d '{"tokenDescription":"Custom expiration", "tokenExpirationDateTime" : "2020-10-19T10:29:00.000+02:00"}' \
+    $ curl -s \
+           -d '{"tokenDescription":"marslo-token-api-test", "tokenValidityTimeInMonths" : 6}' \
            -X POST \
            --header "Content-Type: application/json" \
-           https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token
+           https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+     jq -r .plainTextToken
+    NdxEToKfDsjUE7tct1ePP6erE1xdDsEAa64BOT
     ```
 
   - [create token for another users](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-CreateTokensforotherUsers)
@@ -347,10 +446,78 @@ $ curl GET https://jira.sample.com/rest/api/2/user?key=JIRAUSER10100 |
   ```
 
 - [delete token](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Deleteatoken)
+
+  > [!NOTE|label:references:]
+  > ```bash
+  > $ curl -v \
+  >        -X DELETE \
+  >        https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token/<token-id>
+  > ```
+
   ```bash
-  $ curl -v \
+  # list before token deleted
+  $ ( echo "ID CREATED LASTACCESS VALIDUNTIL";
+      while read -r _id _created _lastAccess _validUntil; do
+        echo "${_id} $(epoch2timestamp ${_created}) $(epoch2timestamp ${_lastAccess}) $(epoch2timestamp ${_validUntil})";
+      done < <( curl -s -D- \
+                     -XGET \
+                     -H "Content-Type: application/json" \
+                     https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+                sed '/^\s*$/,$!d;//d' |
+                jq -r '.content[] | [ .id, .created, .lastAccessed, .validUntil ] | join( "\t" )'
+              )
+    ) | column -t
+  ID   CREATED                     LASTACCESS                  VALIDUNTIL
+  537  2024-01-31T21:32:51.000PST  2024-03-26T23:40:02.000PDT  2024-07-31T21:32:51.000PDT
+  579  2024-03-26T23:19:16.000PDT  0                           2024-09-26T23:19:16.000PDT
+  580  2024-03-26T23:36:02.000PDT  0                           2024-09-26T23:36:02.000PDT
+  581  2024-03-26T23:36:11.000PDT  0                           2024-09-26T23:36:11.000PDT
+
+  # delete
+  $ curl -s -D- \
          -X DELETE \
-         https://jira-or-confluence.sample.com/rest/de.resolution.apitokenauth/latest/user/token/<token-id>
+         https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token/581
+  HTTP/2 200
+  date: Wed, 27 Mar 2024 06:41:06 GMT
+  content-type: application/json;charset=UTF-8
+  x-arequestid: 1421x248002x2
+  x-anodeid: jiraprod5
+  referrer-policy: strict-origin-when-cross-origin
+  x-xss-protection: 1; mode=block
+  x-content-type-options: nosniff
+  x-frame-options: SAMEORIGIN
+  content-security-policy: sandbox
+  strict-transport-security: max-age=31536000
+  set-cookie: JSESSIONID=731380C1F17B2F9A59E211B0442AAFFB; Path=/; Secure; HttpOnly
+  x-seraph-loginreason: OK
+  set-cookie: atlassian.xsrf.token=A8KN-1NAU-M55V-EQSR_1811ae8601112c05430589e686032924599718c9_lin; Path=/; Secure; SameSite=None
+  x-asessionid: k5q153
+  x-ausername: marslo
+  cache-control: no-cache, no-store, no-transform
+
+  true
+
+  # curl without header
+  $ curl -s \
+         -X DELETE \
+         https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token/580
+  true
+
+  # verify
+  $ ( echo "ID CREATED LASTACCESS VALIDUNTIL";
+      while read -r _id _created _lastAccess _validUntil; do
+        echo "${_id} $(epoch2timestamp ${_created}) $(epoch2timestamp ${_lastAccess}) $(epoch2timestamp ${_validUntil})";
+      done < <( curl -s -D- \
+                     -XGET \
+                     -H "Content-Type: application/json" \
+                     https://jira.sample.com/rest/de.resolution.apitokenauth/latest/user/token |
+                sed '/^\s*$/,$!d;//d' |
+                jq -r '.content[] | [ .id, .created, .lastAccessed, .validUntil ] | join( "\t" )'
+              )
+    ) | column -t
+  ID   CREATED                     LASTACCESS                  VALIDUNTIL
+  537  2024-01-31T21:32:51.000PST  2024-03-26T23:44:32.000PDT  2024-07-31T21:32:51.000PDT
+  579  2024-03-26T23:19:16.000PDT  0                           2024-09-26T23:19:16.000PDT
   ```
 
   - [delete all tokens for a user](https://wiki.resolution.de/doc/api-token-authentication/latest/admin-guide/rest-api#id-.RESTAPIv2.5.x-Deletealltokensforauser)
@@ -399,7 +566,7 @@ $ openssl pkcs8 -topk8 -nocrypt -in jira_privatekey.pem -out jira_privatekey.pck
 $ openssl x509 -pubkey -noout -in jira_publickey.cer  > jira_publickey.pem
 ```
 
-### icons
+### icons and priority
 #### priority
 
 > [!NOTE|label:references:]
@@ -422,18 +589,26 @@ $ pageID='143765713'
 > get page id:
 > ![confluence page id](../screenshot/confluence-pageid.png)
 
+### [myself](https://wiki.resolution.de/doc/api-token-authentication/latest/user-guide/using-tokens-examples#id-.UsingTokensExamplesv1.7.0-Confluence)
+```bash
+$ curl -s https://${confluenceName}/rest/api/user/current | jq -r
+```
+
 ### get info
 ```bash
 $ curl -s -X GET https://${confluenceName}/rest/api/content/${pageID} | jq --raw-output
 ```
+
 - get space
   ```bash
   $ curl -s -X GET https://${confluenceName}/rest/api/content/${pageID} | jq .space.key
   ```
+
 - get title
   ```bash
   $ curl -s -X GET https://${confluenceName}/rest/api/content/${pageID} | jq .title
   ```
+
 - get page history
   ```bash
   $ curl -s -X GET https://${confluenceName}/rest/api/content/${pageID} | jq .version.number
@@ -446,7 +621,9 @@ $ curl -s -X GET https://${confluenceName}/rest/api/content/${pageID} | jq --raw
     ```
 
 ### publish to confluence
-> [sample script](https://raw.githubusercontent.com/marslo/mytools/master/itool/confluencePublisher.sh)
+
+> [!NOTE|label:references:]
+> - [sample script](https://raw.githubusercontent.com/marslo/mytools/master/itool/confluencePublisher.sh)
 
 ```bash
 $ url="https://${confluenceName}/rest/api/content/${pageID}"
@@ -494,3 +671,59 @@ $ curl -s \
 
 - result
   ![include excerpt](../screenshot/tools/jira/jira-plugin-Multiexcerpt-include-result.png)
+
+## ACLI
+
+> [!NOTE|label:references:]
+> - [acli: Appfire CLI](https://appfire.atlassian.net/wiki/spaces/ACLI/pages/60559862/Get+Started)
+>   - [acli download](https://appfire.atlassian.net/wiki/spaces/ACLI/pages/60560924/CLI+Client+Installation+and+Use)
+>     - [windows amd64: ACLI-11.3.0-amd64-installer.exe](https://appfire.atlassian.net/wiki/download/attachments/60562669/ACLI-11.3.0-amd64-installer.exe?api=v2)
+>     - [linux amd64: ACLI-11.3.0-amd64-installer.run](https://appfire.atlassian.net/wiki/download/attachments/60562669/ACLI-11.3.0-amd64-installer.run?api=v2)
+>     - [macos amd64: ACLI-11.3.0-amd64-installer.dmg](https://appfire.atlassian.net/wiki/download/attachments/60562669/ACLI-11.3.0-amd64-installer.dmg?api=v2)
+>     - [macos arm64: ACLI-11.3.0-arm64-installer.dmg](https://appfire.atlassian.net/wiki/download/attachments/60562669/ACLI-11.3.0-arm64-installer.dmg?api=v2)\
+>     - [docker image](https://appfire.atlassian.net/wiki/spaces/ACLI/pages/60559294/Docker+Images+for+ACLI)
+>   - [Action Examples](https://appfire.atlassian.net/wiki/spaces/ACLI/pages/60562181/Action+Examples)
+>     - [Action Examples - acli help using](https://appfire.atlassian.net/wiki/spaces/ACLI/pages/60563920/Action+Examples+-+acli+help+using)
+
+### running with docker images
+```bash
+$ $ docker run -ti bobswiftapps/acli:latest acli -a getClientInfo
+# or
+$ docker run -ti bobswiftapps/acli:latest /bin/bash
+bash-4.4# acli -a getClientInfo
+
+# with env
+$ cat .env
+examplegear=jira -s https://examplegear.atlassian.net -u anonymous
+examplegear_confluence=confluence -s https://examplegear.atlassian.net/wiki -u anonymous
+$ docker run --env-file=.env -ti bobswiftapps/acli:latest /bin/bash
+bash-5.0# acli $examplegear -a getServerInfo
+# or
+docker run -e examplegear='jira -s https://examplegear.atlassian.net -u anonymous' -ti bobswiftapps/acli:latest /bin/bash
+bash-4.4# acli ${examplegear} -a getServerInfo
+
+# with acli.properties
+$ docker run -v ${PWD}/acli.properties:/opt/acli/acli.properties \
+         -ti bobswiftapps/acli:latest
+# or prior to version 11.0.0, use:
+$ docker run -v ${PWD}/acli.properties:/opt/atlassian-cli/acli.properties \
+         -ti bobswiftapps/acli:latest
+# or with `ACLI_CONFIG` env
+$ docker run -v ${PWD}/acli.properties:/tmp/acli.properties \
+         -e ACLI_CONFIG=/tmp/acli.properties \
+         -ti bobswiftapps/acli:latest \
+         acli -a getServerInfo --outputFormat 2
+```
+
+### [create .acli.keystore](https://appfire.atlassian.net/wiki/spaces/SUPPORT/pages/349962465/How+to+use+Secure+Properties)
+```bash
+$ acli system setSecureProperty --name my.secret --secret -
+Enter secure value: <secret value prompt>
+Secure properties file does not yet exist. Creating...
+Enter new secure properties password: <new password prompt>
+Confirm secure properties password: <new password prompt>
+Secure properties file created.
+Value for key 'foo' set in secure properties file.
+```
+
+### [acli.properties](https://appfire.atlassian.net/wiki/spaces/SUPPORT/pages/349962465/How+to+use+Secure+Properties#Referencing-secrets-in-acli.properties)
