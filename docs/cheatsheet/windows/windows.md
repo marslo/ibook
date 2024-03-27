@@ -949,8 +949,8 @@ PS C:\> cat .\test.txt | ForEach-Object {
     >       DisableWindowsUpdateAccess    REG_DWORD    0x1
     >       TargetGroupEnabled            REG_DWORD    0x1
     >       TargetGroup                   REG_SZ       SC_Servers
-    >       WUServer                      REG_SZ       http://msi-wsus03.marvell.com
-    >       WUStatusServer                REG_SZ       http://msi-wsus03.marvell.com
+    >       WUServer                      REG_SZ       http://msi-wsus03.sample.com
+    >       WUStatusServer                REG_SZ       http://msi-wsus03.sample.com
     >   HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
     >
     >   > REG query HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\ /v DisableWindowsUpdateAccess

@@ -414,7 +414,7 @@ $ l -i a_b
   14994 /Users/marslo/Library/Co...icrosoft User Data/OneNote/15.0/cache
   13453 /Users/marslo/Library/Gr...s/Main Profile/Files/S0/1/Attachments
   4667  /Users/marslo/Library/Caches/Google/Chrome Canary/Default/Cache
-  4086  /Users/marslo/Library/Gro...ofiles/Marvell/Files/S0/1/Attachments
+  4086  /Users/marslo/Library/Gro...ofiles/Company/Files/S0/1/Attachments
   3912  /Users/marslo/Library/Con...476b0cb6d7b78ea9f492c743c1bdfa/Avatar
   3359  /Users/marslo/Library/Con...6d7b78ea9f492c743c1bdfa/Stickers/File
   3174  /Users/marslo/Library/App...versions/3.8.6/openssl/share/man/man3

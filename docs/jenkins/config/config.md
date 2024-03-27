@@ -660,7 +660,7 @@ System.getenv().JAVA_OPTS
 
   - full step
     ```bash
-    $ keytool -printcert -rfc -sslserver ssdfw-k8s-api.marvell.com:16443 > /run/secrets/additional/devops_kubernetes_api.crt
+    $ keytool -printcert -rfc -sslserver ssdfw-k8s-api.sample.com:16443 > /run/secrets/additional/devops_kubernetes_api.crt
     # or
-    $ echo -n | openssl s_client -connect ssdfw-k8s-api.marvell.com:16443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /run/secrets/additional/devops_kubernetes_api.crt
+    $ echo -n | openssl s_client -connect ssdfw-k8s-api.sample.com:16443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /run/secrets/additional/devops_kubernetes_api.crt
     ```

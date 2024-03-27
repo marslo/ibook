@@ -70,8 +70,8 @@ Name                   MemberType   Definition
 ----                   ----------   ----------
 AllUsersAllHosts       NoteProperty string AllUsersAllHosts=C:\Program Files\PowerShell\7\profile.ps1
 AllUsersCurrentHost    NoteProperty string AllUsersCurrentHost=C:\Program Files\PowerShell\7\Microsoft.Power…
-CurrentUserAllHosts    NoteProperty string CurrentUserAllHosts=C:\Users\marslo\OneDrive - Marvell\Documents\…
-CurrentUserCurrentHost NoteProperty string CurrentUserCurrentHost=C:\Users\marslo\OneDrive - Marvell\Documen…
+CurrentUserAllHosts    NoteProperty string CurrentUserAllHosts=C:\Users\marslo\OneDrive - Company\Documents\…
+CurrentUserCurrentHost NoteProperty string CurrentUserCurrentHost=C:\Users\marslo\OneDrive - Company\Documen…
 ```
 
 ### running powershell script
@@ -474,7 +474,7 @@ InstallLocation        : C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.
 IsFramework            : False
 PackageFamilyName      : Microsoft.549981C3F5F10_8wekyb3d8bbwe
 PublisherId            : 8wekyb3d8bbwe
-PackageUserInformation : {S-1-5-21-1801674531-527237240-682003330-164699 [MARVELL\marslo]: Installed}
+PackageUserInformation : {S-1-5-21-1801674531-527237240-682003330-164699 [Company\marslo]: Installed}
 IsResourcePackage      : False
 IsBundle               : False
 IsDevelopmentMode      : False
