@@ -86,7 +86,8 @@ Acquire::ftp::Proxy "http://proxy.domain.com:80";
 ## proxy for docker
 
 > [!TIP|label:see also]
-> - [* imarslo : docker proxy](../virtualization/docker/tricks.html#docker-with-proxy)
+> - [* imarslo : docker proxy](../virtualization/docker/tricky.html#docker-with-proxy)
+> - [* imarslo : setup proxy in daemon.json](../virtualization/docker/dockerd.html#proxy)
 
 ### for docker build
 

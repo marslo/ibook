@@ -4,6 +4,7 @@
 - [docker with proxy](#docker-with-proxy)
   - [docker pull](#docker-pull)
   - [docker build](#docker-build)
+  - [via `daemon.json`](#via-daemonjson)
   - [docker build with GPG key proxy](#docker-build-with-gpg-key-proxy)
 - [docker for osx](#docker-for-osx)
   - [`docker: command cannot be found`](#docker-command-cannot-be-found)
@@ -26,6 +27,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## docker with proxy
+
+> [!NOTE|label:references:]
+> - [Custom Docker daemon options](https://docs.docker.com/config/daemon/systemd/)
+>   - [control and configure Docker with systemd](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy)
+> - [Configure the Docker daemon to use a proxy server](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy)
+> - [Running a Docker daemon behind an HTTPS_PROXY](https://docs.docker.com/reference/cli/dockerd/#running-a-docker-daemon-behind-an-https_proxy)
+
 ### [docker pull](https://www.thegeekdiary.com/how-to-configure-docker-to-use-proxy/)
 ```bash
 $ sudo mkdir -p /etc/systemd/system/docker.service.d
@@ -116,6 +124,24 @@ EOF
   |  FTP_PROXY  | ENV FTP_PROXY="ftp://sample.proxy.com:80"        | --env FTP_PROXY="ftp://sample.proxy.com:80"                    |
   |   NO_PROXY  | ENV NO_PROXY="*.sample.domain1.com,.domain2.com" | --env NO_PROXY="*.sample.domain1.com,.domain2.com,127.0.0.0/8" |
 
+
+### via `daemon.json`
+
+> [!TIP]
+> - [* iMarslo: dockerd](./docker.html#daemonjson)
+> - [daemon.json](https://docs.docker.com/reference/cli/dockerd/#on-linux)
+> - [Proxy configuration](https://docs.docker.com/reference/cli/dockerd/#proxy-configuration)
+
+```bash
+$ cat /etc/docker/daemon.json
+{
+  "proxies": {
+    "http-proxy": "http://proxy.example.com:80",
+    "https-proxy": "https://proxy.example.com:443",
+    "no-proxy": "*.test.example.com,.example.org"
+  }
+}
+```
 
 ### docker build with GPG key proxy
 - without proxy
