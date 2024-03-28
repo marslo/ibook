@@ -25,6 +25,7 @@
 - [with](#with)
 - [sort](#sort)
 - [traverse](#traverse)
+- [subMap](#submap)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -641,3 +642,20 @@ assert map.b == 4
     a:r:p=4
     a:q=5
     ```
+
+## subMap
+
+> [!NOTE|label:references:]
+> - [Groovy - get map values for a list of keys](https://stackoverflow.com/a/39679454/2940319)
+
+```groovy
+Map m = [ one: 1, two: 2, three: 3, four: 4 ]
+
+assert [ two: 2, three: 3 ] == m.subMap(['two', 'three'])
+
+// with groovy flexible syntax
+assert [ two: 2, three: 3 ] == m.subMap('two', 'three')
+
+// or even simple syntax
+m.subMap 'two', 'three', 'non-existent'
+```
