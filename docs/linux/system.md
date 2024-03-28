@@ -1415,12 +1415,11 @@ $ authconfig --enablesssd \
   ```
 
 ## local user
-
 ### `subuid` & `subgid`
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [Podman](https://docs.podman.io/en/latest/markdown/podman.1.html#rootless-mode)
+> - check subuid and subgid from `/etc/subuid` and `/etc/subgid`
 
 ```bash
 # rootless mode

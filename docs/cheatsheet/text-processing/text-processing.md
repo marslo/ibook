@@ -25,6 +25,7 @@
 - [get lines](#get-lines)
   - [get second-to-last line](#get-second-to-last-line)
   - [get next line by the pattern](#get-next-line-by-the-pattern)
+    - [change next line of pattern](#change-next-line-of-pattern)
   - [get lines between 2 patterns](#get-lines-between-2-patterns)
     - [awk](#awk)
     - [sed](#sed)
@@ -1168,9 +1169,9 @@ barbarbar  3
 $ cat a.txt
 1a
 2b
-3c        * (2 lines after `^3c$`)
-4d
-5e
+3c        * (pattern /3c/)
+4d        > (wanted)
+5e        > (wanted)
 6f
 7g
 ```
@@ -1218,6 +1219,87 @@ $ cat a.txt
   3c
   4d
   5e
+  ```
+
+- to get docker registry mirrors
+  ```bash
+  # exclude the pattern
+  $ docker system info | sed -n '/Registry Mirrors:/{n;p;}'
+    https://artifactory.domain.com/
+
+  # including pattern
+  $ docker system info | sed -n '/Registry Mirrors:/{p;n;p;}'
+   Registry Mirrors:
+    https://artifactory.domain.com/
+  ```
+
+### change next line of pattern
+
+> [!NOTE|label:references:]
+> - [Find Matching Text and Replace the Next Line](https://www.baeldung.com/linux/find-matching-text-replace-next-line#:~:text=The%20key%20is%20the%20'n,line%20into%20the%20pattern%20space.)
+>   ```bash
+>   $ cat revenue.txt
+>   total 4000 dollars' revenue
+>   - Quarter 1:
+>     Revenue: 1200 dollars; Profit: 700 dollars
+>   - Quarter 2:
+>     Revenue: 1000 dollars; Profit: 650 dollars
+>   - Quarter 3:
+>     Revenue: 1200 dollars; Profit: 800 dollars
+>   - Quarter 4:
+>     Revenue: 600 dollars; Profit: -200 dollars
+>   Profit: 1950 dollars
+
+- replace `dollars` to `$` right after line of `/Quarter [1-4]/`
+  - sed
+    ```bash
+    #                        ╭╴ next
+    $ sed '/Quarter [1-4]:/{ n; s/dollars/$/g }' revenue.txt
+    total 4000 dollars' revenue
+    - Quarter 1:
+      Revenue: 1200 $; Profit: 700 $
+    - Quarter 2:
+      Revenue: 1000 $; Profit: 650 $
+    - Quarter 3:
+      Revenue: 1200 $; Profit: 800 $
+    - Quarter 4:
+      Revenue: 600 $; Profit: -200 $
+    Profit: 1950 dollars
+    ```
+
+  - awk
+    ```bash
+    #                              next
+    #                             ╭╴╴╴╴╮
+    $ awk '/Quarter [1-4]:/{ rl = NR + 1 } NR == rl { gsub( /dollars/,"$") } 1'
+    total 4000 dollars' revenue
+    - Quarter 1:
+      Revenue: 1200 $; Profit: 700 $
+    - Quarter 2:
+      Revenue: 1000 $; Profit: 650 $
+    - Quarter 3:
+      Revenue: 1200 $; Profit: 800 $
+    - Quarter 4:
+      Revenue: 600 $; Profit: -200 $
+    Profit: 1950 dollars
+    ```
+
+- replace `dollars` to `$` every 3 lines after `/Quarter [1-4]/`
+  ```bahs
+  #                        ╭╴ next
+  #                        ╷ ╭╴ next
+  #                        ╷ ╷ ╭╴ next
+  $ sed '/Quarter [1-4]:/{ n;n;n; s/dollars/$/g }' revenue.txt
+  total 4000 dollars' revenue
+  - Quarter 1:
+    Revenue: 1200 dollars; Profit: 700 dollars
+  - Quarter 2:
+    Revenue: 1000 $; Profit: 650 $
+  - Quarter 3:
+    Revenue: 1200 dollars; Profit: 800 dollars
+  - Quarter 4:
+    Revenue: 600 $; Profit: -200 $
+  Profit: 1950 dollars
   ```
 
 ## get lines between 2 patterns

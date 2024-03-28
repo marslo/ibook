@@ -475,10 +475,7 @@ marslo:x:1000:1000:Marslo,,,:/home/marslo:/bin/bash
 mysql:x:1001:1001::/home/mysql:/bin/sh
 ```
 
-
-
 # [shell parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
-
 ```bash
 $ x='aabbcc'
 

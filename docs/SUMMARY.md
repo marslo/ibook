@@ -138,6 +138,7 @@
     * [remove](virtualization/docker/remove.md)
     * [show info](virtualization/docker/show.md)
     * [dockerfile](virtualization/docker/dockerfile.md)
+    * [dockerd](virtualization/docker/dockerd.md)
     * [tricky](virtualization/docker/tricky.md)
     * [windows](virtualization/docker/windows.md)
   * [podman](virtualization/podman/podman.md)
