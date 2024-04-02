@@ -1285,7 +1285,7 @@ $ cat a.txt
     ```
 
 - replace `dollars` to `$` every 3 lines after `/Quarter [1-4]/`
-  ```bahs
+  ```bash
   #                        ╭╴ next
   #                        ╷ ╭╴ next
   #                        ╷ ╷ ╭╴ next

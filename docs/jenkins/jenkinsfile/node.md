@@ -6,12 +6,16 @@
   - [with `POD_LABEL`](#with-pod_label)
   - [default yaml](#default-yaml)
 - [container](#container)
+  - [multiple containerTemplate with resource limits](#multiple-containertemplate-with-resource-limits)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> reference:
+> [!TIP:label:reference:]
 > - [kubernetes](https://plugins.jenkins.io/kubernetes/)
 > - [Kubernetes plugin](https://www.jenkins.io/doc/pipeline/steps/kubernetes/)
+> - [kubernetes sample code](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes)
+>   - [pipeline](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes/pipeline)
+>   - [casc](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes/casc)
 
 ## yaml
 ```groovy
@@ -294,4 +298,145 @@ podTemplate(cloud: 'DevOps Kubernetes', containers: [
       """
     }
 }}
+```
+
+### multiple containerTemplate with resource limits
+
+> [!NOTE|label:add memory and cpu resources in containerTemplate:]
+> - [Changing container memory and cpu limits](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/cloudbees-ci-on-modern-cloud-platforms/changing-conatiner-memory-and-cpu-limits)
+> - [zh jenkins-kubernetes-plugin](https://github.com/jenkinsci/kubernetes-plugin/blob/db0e6b143898d11ca5ac10a2606f508a73311530/README_zh.md)
+> - [Kubernetes plugin](https://www.jenkins.io/doc/pipeline/steps/kubernetes/#kubernetes-plugin)
+> - TIPS
+>   - the `jnlp` container template will be enabled by default, however it contains only `requests`:
+>     ```yaml
+>     ---
+>     apiVersion: "v1"
+>     kind: "Pod"
+>     metadata:
+>       annotations:
+>         buildUrl: "https://jenkins.domain.com/job/devops/job/demo/job/container/7/"
+>         runUrl: "job/devops/job/demo/job/container/7/"
+>       labels:
+>         jenkins: "slave"
+>         jenkins/label-digest: "a170798a479a410811c24bd8c3bacac0dd709dff"
+>         jenkins/label: "devops_demo_container_7-7gfwb"
+>       name: "devops-demo-container-7-7gfwb-tjkzm-kfn2m"
+>       namespace: "marslo-test"
+>     spec:
+>       containers:
+>       - command:
+>         - "cat"
+>         image: "maven:3.3.9-jdk-8-alpine"
+>         imagePullPolicy: "IfNotPresent"
+>         name: "maven"
+>         resources:
+>           limits:
+>             memory: "1024Mi"
+>             cpu: "512m"
+>           requests:
+>             memory: "512Mi"
+>             cpu: "256m"
+>         tty: true
+>         volumeMounts:
+>         - mountPath: "/home/jenkins/agent"
+>           name: "workspace-volume"
+>           readOnly: false
+>       - command:
+>         - "cat"
+>         image: "golang:1.8.0"
+>         imagePullPolicy: "IfNotPresent"
+>         name: "golang"
+>         resources:
+>           limits:
+>             memory: "1024Mi"
+>             cpu: "512m"
+>           requests:
+>             memory: "512Mi"
+>             cpu: "256m"
+>         tty: true
+>         volumeMounts:
+>         - mountPath: "/home/jenkins/agent"
+>           name: "workspace-volume"
+>           readOnly: false
+>       - env:
+>         - name: "JENKINS_SECRET"
+>           value: "********"
+>         - name: "JENKINS_AGENT_NAME"
+>           value: "devops-demo-container-7-7gfwb-tjkzm-kfn2m"
+>         - name: "JENKINS_WEB_SOCKET"
+>           value: "true"
+>         - name: "JENKINS_NAME"
+>           value: "devops-demo-container-7-7gfwb-tjkzm-kfn2m"
+>         - name: "JENKINS_AGENT_WORKDIR"
+>           value: "/home/jenkins/agent"
+>         - name: "JENKINS_URL"
+>           value: "https://jenkins.domain.com/"
+>         image: "jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2"
+>         name: "jnlp"
+>         resources:
+>           requests:
+>             memory: "256Mi"
+>             cpu: "100m"
+>         volumeMounts:
+>         - mountPath: "/home/jenkins/agent"
+>           name: "workspace-volume"
+>           readOnly: false
+>       nodeSelector:
+>         jenkins.builder/loc: "dc5"
+>       restartPolicy: "Never"
+>       volumes:
+>       - emptyDir:
+>           medium: ""
+>         name: "workspace-volume"
+>     ```
+
+```bash
+podTemplate( cloud: 'DevOps Kubernetes',
+             namespace: 'devops',
+             nodeSelector: 'jenkins.builder/loc=dc5',
+             containers: [
+               containerTemplate(
+                 name: 'maven',
+                 image: 'maven:3.3.9-jdk-8-alpine',
+                 ttyEnabled: true,
+                 command: 'cat',
+                 resourceRequestCpu: '256m',
+                 resourceLimitCpu: '512m',
+                 resourceRequestMemory: '512Mi',
+                 resourceLimitMemory: '1024Mi'
+               ),
+               containerTemplate(
+                 name: 'golang',
+                 image: 'golang:1.8.0',
+                 ttyEnabled: true,
+                 command: 'cat',
+                 resourceRequestCpu: '256m',
+                 resourceLimitCpu: '512m',
+                 resourceRequestMemory: '512Mi',
+                 resourceLimitMemory: '1024Mi'
+               ),
+               containerTemplate(
+                 name: 'jnlp',
+                 image: 'jenkins/inbound-agent',
+                 ttyEnabled: true,
+                 resourceRequestCpu: '256m',
+                 resourceLimitCpu: '512m',
+                 resourceRequestMemory: '512Mi',
+                 resourceLimitMemory: '1024Mi'
+               )
+             ]
+) {
+    node(POD_LABEL) {
+      stage('maven') {
+        container('maven') {
+          sh """ which -a mvn """
+        }
+      }
+      stage('golang') {
+        container('golang') {
+          sh """ which -a go """
+        }
+      }
+    }
+}
 ```
