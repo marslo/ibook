@@ -52,13 +52,6 @@ life is hard, make it easier
   - [Set aliases in cmd](https://github.com/marslo/myColorfulWinCommandLine#set-aliases-in-command-linedefault-command-line)
 <!--endsec-->
 
-
-hello world
-
-| HEADER | HEADER |
-|:-------|--------|
-| a      | b      |
-
 <!---
 vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent
 -->
