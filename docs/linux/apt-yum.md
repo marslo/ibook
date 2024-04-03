@@ -25,6 +25,7 @@
   - [trouble shooting](#trouble-shooting)
 - [yum/dnf](#yumdnf)
   - [repo](#repo)
+    - [download package](#download-package)
     - [check configure](#check-configure)
     - [check variable](#check-variable)
     - [enable or disable repo](#enable-or-disable-repo)
@@ -296,6 +297,7 @@ google-chrome-unstable - The web browser from Google
 > - [CentOS Stream Mirror](https://mirror.stream.centos.org/)
 > - [8.4. Configuring Yum and Yum Repositories](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-configuring_yum_and_yum_repositories)
 > - [createrepo 建立本地源](https://www.cnblogs.com/xzongblogs/p/16858402.html)
+> - [sync repo 同步Yum源](https://www.kancloud.cn/pshizhsysu/linux/1789494)
 > - [variables in repo files](https://unix.stackexchange.com/a/20226/29178)
 >   ```bash
 >   # centos 8
@@ -346,6 +348,75 @@ $ sudo dnf install -y https://mirror.stream.centos.org/9-stream/BaseOS/aarch64/o
   EOF
 
   $ dnf --disablerepo=* --enablerepo=baseos reinstall centos-stream-repos
+  ```
+
+### download package
+
+> [!NOTE]
+> - [yum 源](https://www.kancloud.cn/pshizhsysu/linux/1788898)
+> - [yum 下载全量依赖 rpm 包及离线安装（终极解决方案）](https://cloud.tencent.com/developer/article/1614031)
+> - [yumdownloader vs repotrack](https://serverfault.com/q/470964/129815)
+> - tips
+>   ```bash
+>   # check dependencies
+>   $ yum deplist <PACKAGE>
+>
+>   # i.e.:
+>   $ yum deplist chrony
+>   package: chrony-3.5-1.el8.x86_64
+>     dependency: /bin/bash
+>      provider: bash-4.4.19-10.el8.x86_64
+>     dependency: /bin/sh
+>      provider: bash-4.4.19-10.el8.x86_64
+>     dependency: libc.so.6(GLIBC_2.4)(64bit)
+>      provider: glibc-2.28-72.el8_1.1.x86_64
+>     dependency: libcap.so.2()(64bit)
+>      provider: libcap-2.26-1.el8.x86_64
+>     dependency: libedit.so.0()(64bit)
+>      provider: libedit-3.1-23.20170329cvs.el8.x86_64
+>     dependency: libm.so.6()(64bit)
+>      provider: glibc-2.28-72.el8_1.1.x86_64
+>     dependency: libm.so.6(GLIBC_2.2.5)(64bit)
+>      provider: glibc-2.28-72.el8_1.1.x86_64
+>     dependency: libnettle.so.6()(64bit)
+>      provider: nettle-3.4.1-1.el8.x86_64
+>     dependency: libnettle.so.6(NETTLE_6)(64bit)
+>      provider: nettle-3.4.1-1.el8.x86_64
+>     dependency: libpthread.so.0()(64bit)
+>      provider: glibc-2.28-72.el8_1.1.x86_64
+>     dependency: libpthread.so.0(GLIBC_2.2.5)(64bit)
+>      provider: glibc-2.28-72.el8_1.1.x86_64
+>     dependency: libseccomp.so.2()(64bit)
+>      provider: libseccomp-2.4.1-1.el8.x86_64
+>     dependency: rtld(GNU_HASH)
+>      provider: glibc-2.28-72.el8_1.1.i686
+>      provider: glibc-2.28-72.el8_1.1.x86_64
+>     dependency: shadow-utils
+>      provider: shadow-utils-2:4.6-8.el8.x86_64
+>     dependency: systemd
+>      provider: systemd-239-18.el8_1.5.i686
+>      provider: systemd-239-18.el8_1.5.x86_64
+>   ```
+
+- yumdownloader
+  ```bash
+  $ sudo yum -y install yum-utils
+  $ yumdownloader <PACKAGE_NAME> --destdir ./                        # 下载xxx最新的包，放在当前目录下，不会下载依赖
+  ```
+- repotrack
+  ```bash
+  $ sudo yum -y install yum-utils
+   $ repotrack <PACKAGE_NAME>
+  ```
+- yum-download
+  ```bash
+  $ sudo yum -y install yum-download
+  $ yum -y install <PACKAGE_NAME> --downloadonly --downloaddir ./    # 下载xxx最新的包，放在当前目录下，会下载依赖
+  ```
+
+- install rpms
+  ```bash
+  $ sudo rpm -Uvh --force --nodeps *.rpm
   ```
 
 ### check configure

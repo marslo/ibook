@@ -15,6 +15,9 @@
   - [extend lv](#extend-lv)
   - [remove LVM](#remove-lvm)
   - [example](#example)
+- [others](#others)
+  - [NFS](#nfs)
+  - [squid](#squid)
 - [performance](#performance)
   - [check NFS performance](#check-nfs-performance)
   - [`iostat`](#iostat)
@@ -294,6 +297,7 @@ $ sudo umount /mnt/mynfs
 > - [CONFIGURING AND MANAGING LOGICAL VOLUMES](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index)
 > - [CHAPTER 5. MODIFYING THE SIZE OF A LOGICAL VOLUME](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/assembly_modifying-logical-volume-size-configuring-and-managing-logical-volumes)
 > - [LVM HOWTO](https://tldp.org/HOWTO/LVM-HOWTO/index.html)
+> - [磁盘与分区: LVM](https://www.kancloud.cn/pshizhsysu/linux/1799734)
 > - [* Logical Volume Manager Administration](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/logical_volume_manager_administration/index)
 > - [* LVM in Linux — Create and Extend a Logical Volume](https://medium.com/@yhakimi/lvm-how-to-create-and-extend-a-logical-volume-in-linux-9744f27eacfe)
 >
@@ -453,6 +457,22 @@ $ sudo vgremove <vg-name>
   lvextend -- doing automatic backup of volume group "myvg"
   lvextend -- logical volume "/dev/myvg/homevol" successfully extended
   ```
+
+## others
+
+### NFS
+
+{% hint style='tip' %}
+> references:
+> - [* NFS](https://www.kancloud.cn/pshizhsysu/linux/1799758)
+{% endhint %}
+
+### squid
+
+{% hint style='tip' %}
+> references:
+> - [* squid](https://www.kancloud.cn/pshizhsysu/linux/1799760)
+{% endhint %}
 
 ## performance
 ### check NFS performance

@@ -331,6 +331,10 @@ $ curl -sSL ${etcdDownloadUrl}/${etcdVer}/etcd-${etcdVer}-linux-amd64.tar.gz |
 {% hint style='tip' %}
 > references:
 > - [Step 26 - KeepAliveD](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-5/)
+> - [Keepalived](https://www.kancloud.cn/pshizhsysu/linux/1799759)
+>   - [单网卡多VIP](https://www.kancloud.cn/pshizhsysu/linux/2005698)
+>   - [双网卡绑VIP](https://www.kancloud.cn/pshizhsysu/linux/2005724)
+>   - [别名VIP和辅助VIP](https://www.kancloud.cn/pshizhsysu/linux/2005859)
 {% endhint %}
 
 ```bash

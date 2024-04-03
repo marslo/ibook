@@ -10,7 +10,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> [!TIP:label:reference:]
+> [!TIP|label:reference:]
 > - [kubernetes](https://plugins.jenkins.io/kubernetes/)
 > - [Kubernetes plugin](https://www.jenkins.io/doc/pipeline/steps/kubernetes/)
 > - [kubernetes sample code](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes)
