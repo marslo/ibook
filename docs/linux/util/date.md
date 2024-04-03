@@ -21,6 +21,16 @@
   - [how many days from timestamps](#how-many-days-from-timestamps)
   - [calculate time different](#calculate-time-different)
   - [transfer date format](#transfer-date-format)
+- [chrony](#chrony)
+  - [install](#install)
+  - [conf](#conf)
+  - [commands](#commands)
+  - [`/usr/libexec/chrony-helper`](#usrlibexecchrony-helper)
+  - [set local time with chrony](#set-local-time-with-chrony)
+- [systemd-timesyncd](#systemd-timesyncd)
+  - [install](#install-1)
+  - [config](#config)
+  - [commands](#commands-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -644,3 +654,675 @@ $ d1=$(date +'%Y%m%d%H%M%S')
 $ date --date "$(echo $d1 | sed -nr 's/(....)(..)(..)(..)(..)(..)/\1-\2-\3 \4:\5:\6/p')"
 Fri Oct  9 18:48:52 CST 2020
 ```
+
+## chrony
+
+### install
+- from package management
+  ```bash
+  # centos/rhel
+  $ sudo yum install -y chrony
+  ```
+- from source
+
+  > [!NOTE]
+  > - [asciidoctor 2.0.22](https://rubygems.org/gems/asciidoctor)
+  > - [asciidoctor](https://docs.asciidoctor.org/asciidoctor/latest/install/) is required to build docs
+  >   ```bash
+  >   $ gem install asciidoctor
+  >   ```
+
+  ```bash
+  $ mkdir -p /opt/chrony
+  $ git clone https://gitlab.com/chrony/chrony.git /opt/chrony && cd $_
+  $ ./configure --prefix=/usr/local --mandir=/usr/share/man
+  $ make && make docs
+  $ sudo make install && sudo make install docs
+  ```
+
+### conf
+
+> [!NOTE|label:references:]
+> - [chrony配置](https://www.cnblogs.com/mountain2011/p/9151667.html)
+> - [时钟同步](https://www.kancloud.cn/pshizhsysu/linux/2008045)
+> - [CentOS使用Chrony部署内网NTP时间服务器](https://www.osyunwei.com/archives/12126.html)
+> - [Chrony详解：代替ntp的时间同步服务](https://chegva.com/3265.html)
+> - [Systemd and ntpd problems](https://forums.centos.org/viewtopic.php?t=53335#p226237)
+> - [ntp pool project](https://www.ntppool.org/en/) | [授时中心](https://www.cnblogs.com/xzongblogs/p/14658895.html#%E4%BA%94%E6%8E%88%E6%97%B6%E4%B8%AD%E5%BF%83)
+>   - [North America — north-america.pool.ntp.org](https://www.ntppool.org/zone/north-america)
+>   - `210.72.145.44` 国家授时中心
+>   - `ntp.aliyun.com` 阿里云
+>   - `s1a.time.edu.cn` 北京邮电大学
+>   - `s1b.time.edu.cn` 清华大学
+>   - `s1c.time.edu.cn` 北京大学
+>   - `s1d.time.edu.cn` 东南大学
+>   - `s1e.time.edu.cn` 清华大学
+>   - `s2a.time.edu.cn` 清华大学
+>   - `s2b.time.edu.cn` 清华大学
+>   - `s2c.time.edu.cn` 北京邮电大学
+>   - `s2d.time.edu.cn` 西南地区网络中心
+>   - `s2e.time.edu.cn` 西北地区网络中心
+>   - `s2f.time.edu.cn` 东北地区网络中心
+>   - `s2g.time.edu.cn` 华东南地区网络中心
+>   - `s2h.time.edu.cn` 四川大学网络管理中心
+>   - `s2j.time.edu.cn` 大连理工大学网络中心
+>   - `s2k.time.edu.cn` CERNET桂林主节点
+>   - `s2m.time.edu.cn` 北京大学
+>   - `ntp.sjtu.edu.cn` | `202.120.2.101` 上海交通大学
+> - [How to configure chrony as an NTP client or server in Linux](https://www.redhat.com/sysadmin/chrony-time-services-linux)
+> - [Red Hat Training: Chapter 18. Configuring NTP Using the chrony Suite](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-configuring_ntp_using_the_chrony_suite)
+> - [How to Sync Time in CentOS 8 using Chrony](https://wiki.crowncloud.net/?How_to_Sync_Time_in_CentOS_8_using_Chrony)
+
+- `/etc/chrony.conf`
+  ```bash
+  # default
+  $ cat /etc/chrony.conf | sed -r '/^(#.*)$/d' | sed -r '/^\s*$/d'
+  pool 2.centos.pool.ntp.org iburst
+  driftfile /var/lib/chrony/drift
+  makestep 1.0 3
+  rtcsync
+  keyfile /etc/chrony.keys
+  leapsectz right/UTC
+  logdir /var/log/chrony
+
+  # modified
+  $ cat /etc/chrony.conf | sed -r '/^(#.*)$/d' | sed -r '/^\s*$/d'
+  pool 2.rhel.pool.ntp.org iburst
+  driftfile /var/lib/chrony/drift
+  makestep 1.0 3
+  stratumweight 0
+  rtcsync
+  hwtimestamp *
+  allow 0.0.0.0/0
+  bindcmdaddress 127.0.0.1
+  bindcmdaddress ::1
+  local stratum 10
+  keyfile /etc/chrony.keys
+  leapsectz right/UTC
+  logdir /var/log/chrony
+  generatecommandkey
+  maxdistance 600.0
+  ```
+
+- `/usr/lib/systemd/system/chronyd.service`
+  ```bash
+  $ cat /usr/lib/systemd/system/chronyd.service
+  [Unit]
+  Description=NTP client/server
+  Documentation=man:chronyd(8) man:chrony.conf(5)
+  After=ntpdate.service sntp.service ntpd.service
+  Conflicts=ntpd.service systemd-timesyncd.service
+  ConditionCapability=CAP_SYS_TIME
+
+  [Service]
+  Type=forking
+  PIDFile=/run/chrony/chronyd.pid
+  EnvironmentFile=-/etc/sysconfig/chronyd
+  ExecStart=/usr/sbin/chronyd $OPTIONS
+  ExecStartPost=/usr/libexec/chrony-helper update-daemon
+  PrivateTmp=yes
+  ProtectHome=yes
+  ProtectSystem=full
+
+  [Install]
+  WantedBy=multi-user.target
+  ```
+
+### commands
+
+- services
+  ```bash
+  $ sudo systemctl enable chronyd.service
+  Created symlink /etc/systemd/system/multi-user.target.wants/chronyd.service → /usr/lib/systemd/system/chronyd.service.
+
+  $ sudo systemctl is-active chronyd.service
+  active
+
+  $ sudo systemctl is-enabled chronyd.service
+  enabled
+  ```
+
+- server
+  ```bash
+  $ sudo chronyd -q 'server 0.north-america.pool.ntp.org iburst'
+  2024-04-02T23:51:52Z chronyd version 3.5 starting (+CMDMON +NTP +REFCLOCK +RTC +PRIVDROP +SCFILTER +SIGND +ASYNCDNS +SECHASH +IPV6 +DEBUG)
+  2024-04-02T23:51:52Z Initial frequency -19.492 ppm
+  2024-04-02T23:51:57Z System clock wrong by 0.003261 seconds (step)
+  2024-04-02T23:51:57Z chronyd exiting
+  ```
+
+- `chronyc`
+  ```bash
+  $ chronyc sources -v
+  210 Number of sources = 4
+
+    .-- Source mode  '^' = server, '=' = peer, '#' = local clock.
+   / .- Source state '*' = current synced, '+' = combined , '-' = not combined,
+  | /   '?' = unreachable, 'x' = time may be in error, '~' = time too variable.
+  ||                                                 .- xxxx [ yyyy ] +/- zzzz
+  ||      Reachability register (octal) -.           |  xxxx = adjusted offset,
+  ||      Log2(Polling interval) --.      |          |  yyyy = measured offset,
+  ||                                \     |          |  zzzz = estimated error.
+  ||                                 |    |           \
+  MS Name/IP address         Stratum Poll Reach LastRx Last sample
+  ===============================================================================
+  ^- 212.227.240.160               3   8   377   103  -5334us[-5080us] +/-  101ms
+  ^? ntp1.glypnod.com              2   6     3    37   -869us[ -609us] +/-   14ms
+  ^* LAX.CALTICK.NET               2   7   377    36   -408us[ -147us] +/-   12ms
+  ^- 131.153.171.22                2   8   377   101  -5931us[-5677us] +/-   60ms
+
+  $ chronyc sourcestats -v
+  210 Number of sources = 4
+                               .- Number of sample points in measurement set.
+                              /    .- Number of residual runs with same sign.
+                             |    /    .- Length of measurement set (time).
+                             |   |    /      .- Est. clock freq error (ppm).
+                             |   |   |      /           .- Est. error in freq.
+                             |   |   |     |           /         .- Est. offset.
+                             |   |   |     |          |          |   On the -.
+                             |   |   |     |          |          |   samples. \
+                             |   |   |     |          |          |             |
+  Name/IP Address            NP  NR  Span  Frequency  Freq Skew  Offset  Std Dev
+  ==============================================================================
+  212.227.240.160            25  17   31m     +0.029      0.853   -560us   586us
+  ntp1.glypnod.com            2   0    64     -0.104   2000.000   -869us  4000ms
+  LAX.CALTICK.NET            12   4  1099     +0.014      2.198   +654ns   614us
+  131.153.171.22             25  14   31m     -0.834      2.524  -4084us  1801us
+
+  $ chronyc tracking
+  Reference ID    : 2D3F360D (LAX.CALTICK.NET)
+  Stratum         : 3
+  Ref time (UTC)  : Tue Apr 02 22:53:49 2024
+  System time     : 0.000157978 seconds fast of NTP time
+  Last offset     : +0.000261040 seconds
+  RMS offset      : 0.001216694 seconds
+  Frequency       : 19.554 ppm slow
+  Residual freq   : +0.014 ppm
+  Skew            : 2.387 ppm
+  Root delay      : 0.024124343 seconds
+  Root dispersion : 0.000968660 seconds
+  Update interval : 128.2 seconds
+  Leap status     : Normal
+
+  $ sudo chronyc clients
+  Hostname                      NTP   Drop Int IntL Last     Cmd   Drop Int  Last
+  ===============================================================================
+  localhost                       0      0   -   -     -      13      0   4     1
+  ```
+
+### `/usr/libexec/chrony-helper`
+
+<!--sec data-title="/usr/libexec/chrony-helper" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ cat /usr/libexec/chrony-helper
+#!/bin/bash
+# This script configures running chronyd to use NTP servers obtained from
+# DHCP and _ntp._udp DNS SRV records. Files with servers from DHCP are managed
+# externally (e.g. by a dhclient script). Files with servers from DNS SRV
+# records are updated here using the dig utility. The script can also list
+# and set static sources in the chronyd configuration file.
+
+chronyc=/usr/bin/chronyc
+chrony_conf=/etc/chrony.conf
+chrony_service=chronyd.service
+helper_dir=/var/run/chrony-helper
+added_servers_file=$helper_dir/added_servers
+
+network_sysconfig_file=/etc/sysconfig/network
+dhclient_servers_files="/var/lib/dhclient/chrony.servers.*"
+dnssrv_servers_files="$helper_dir/dnssrv@*"
+dnssrv_timer_prefix=chrony-dnssrv@
+
+. $network_sysconfig_file &> /dev/null
+
+chrony_command() {
+    $chronyc -a -n -m "$1"
+}
+
+is_running() {
+    chrony_command "tracking" &> /dev/null
+}
+
+get_servers_files() {
+    [ "$PEERNTP" != "no" ] && echo "$dhclient_servers_files"
+    echo "$dnssrv_servers_files"
+}
+
+is_update_needed() {
+    for file in $(get_servers_files) $added_servers_file; do
+        [ -e "$file" ] && return 0
+    done
+    return 1
+}
+
+update_daemon() {
+    local all_servers_with_args all_servers added_servers
+
+    if ! is_running; then
+        rm -f $added_servers_file
+        return 0
+    fi
+
+    all_servers_with_args=$(cat $(get_servers_files) 2> /dev/null)
+
+    all_servers=$(
+        echo "$all_servers_with_args" |
+            while read -r server serverargs; do
+                echo "$server"
+            done | sort -u)
+    added_servers=$( (
+        cat $added_servers_file 2> /dev/null
+        echo "$all_servers_with_args" |
+            while read -r server serverargs; do
+                [ -z "$server" ] && continue
+                chrony_command "add server $server $serverargs" &> /dev/null &&
+                    echo "$server"
+            done) | sort -u)
+
+    comm -23 <(echo -n "$added_servers") <(echo -n "$all_servers") |
+        while read -r server; do
+            chrony_command "delete $server" &> /dev/null
+        done
+
+    added_servers=$(comm -12 <(echo -n "$added_servers") <(echo -n "$all_servers"))
+
+    if [ -n "$added_servers" ]; then
+        echo "$added_servers" > $added_servers_file
+    else
+        rm -f $added_servers_file
+    fi
+}
+
+get_dnssrv_servers() {
+    local name=$1 output
+
+    if ! command -v dig &> /dev/null; then
+        echo "Missing dig (DNS lookup utility)" >&2
+        return 1
+    fi
+
+    output=$(dig "$name" srv +short +ndots=2 +search 2> /dev/null) || return 0
+
+    echo "$output" | while read -r _ _ port target; do
+        server=${target%.}
+        [ -z "$server" ] && continue
+        echo "$server port $port ${NTPSERVERARGS:-iburst}"
+    done
+}
+
+check_dnssrv_name() {
+    local name=$1
+
+    if [ -z "$name" ]; then
+        echo "No DNS SRV name specified" >&2
+        return 1
+    fi
+
+    if [ "${name:0:9}" != _ntp._udp ]; then
+        echo "DNS SRV name $name doesn't start with _ntp._udp" >&2
+        return 1
+    fi
+}
+
+update_dnssrv_servers() {
+    local name=$1
+    local srv_file=$helper_dir/dnssrv@$name servers
+
+    check_dnssrv_name "$name" || return 1
+
+    servers=$(get_dnssrv_servers "$name")
+    if [ -n "$servers" ]; then
+        echo "$servers" > "$srv_file"
+    else
+        rm -f "$srv_file"
+    fi
+}
+
+set_dnssrv_timer() {
+    local state=$1 name=$2
+    local srv_file=$helper_dir/dnssrv@$name servers
+    local timer
+
+    timer=$dnssrv_timer_prefix$(systemd-escape "$name").timer || return 1
+
+    check_dnssrv_name "$name" || return 1
+
+    if [ "$state" = enable ]; then
+        systemctl enable "$timer"
+        systemctl start "$timer"
+    elif [ "$state" = disable ]; then
+        systemctl stop "$timer"
+        systemctl disable "$timer"
+        rm -f "$srv_file"
+    fi
+}
+
+list_dnssrv_timers() {
+    systemctl --all --full -t timer list-units | grep "^$dnssrv_timer_prefix" | \
+            sed "s|^$dnssrv_timer_prefix\(.*\)\.timer.*|\1|" |
+        while read -r name; do
+            systemd-escape --unescape "$name"
+        done
+}
+
+prepare_helper_dir() {
+    mkdir -p $helper_dir
+    exec 100> $helper_dir/lock
+    if ! flock -w 20 100; then
+        echo "Failed to lock $helper_dir" >&2
+        return 1
+    fi
+}
+
+is_source_line() {
+    local pattern="^[ \t]*(server|pool|peer|refclock)[ \t]+[^ \t]+"
+    [[ "$1" =~ $pattern ]]
+}
+
+list_static_sources() {
+    while read -r line; do
+        if is_source_line "$line"; then
+            echo "$line"
+        fi
+    done < $chrony_conf
+}
+
+set_static_sources() {
+    local new_config tmp_conf
+
+    new_config=$(
+        sources=$(
+            while read -r line; do
+                is_source_line "$line" && echo "$line"
+            done)
+
+        while read -r line; do
+            if ! is_source_line "$line"; then
+                echo "$line"
+                continue
+            fi
+
+            tmp_sources=$(
+                local removed=0
+
+                echo "$sources" | while read -r line2; do
+                    if [ "$removed" -ne 0 ] || [ "$line" != "$line2" ]; then
+                        echo "$line2"
+                    else
+                        removed=1
+                    fi
+                done)
+
+            [ "$sources" == "$tmp_sources" ] && continue
+            sources=$tmp_sources
+            echo "$line"
+        done < $chrony_conf
+
+        echo "$sources"
+    )
+
+    tmp_conf=${chrony_conf}.tmp
+
+    cp -a $chrony_conf $tmp_conf &&
+        echo "$new_config" > $tmp_conf &&
+        mv $tmp_conf $chrony_conf || return 1
+
+    systemctl try-restart $chrony_service
+}
+
+print_help() {
+    echo "Usage: $0 COMMAND"
+    echo
+    echo "Commands:"
+    echo "  update-daemon"
+    echo "  update-dnssrv-servers NAME"
+    echo "  enable-dnssrv NAME"
+    echo "  disable-dnssrv NAME"
+    echo "  list-dnssrv"
+    echo "  list-static-sources"
+    echo "  set-static-sources < sources.list"
+    echo "  is-running"
+    echo "  command CHRONYC-COMMAND"
+}
+
+case "$1" in
+    update-daemon|add-dhclient-servers|remove-dhclient-servers)
+        is_update_needed || exit 0
+        prepare_helper_dir && update_daemon
+        ;;
+    update-dnssrv-servers)
+        prepare_helper_dir && update_dnssrv_servers "$2" && update_daemon
+        ;;
+    enable-dnssrv)
+        set_dnssrv_timer enable "$2"
+        ;;
+    disable-dnssrv)
+        set_dnssrv_timer disable "$2" && prepare_helper_dir && update_daemon
+        ;;
+    list-dnssrv)
+        list_dnssrv_timers
+        ;;
+    list-static-sources)
+        list_static_sources
+        ;;
+    set-static-sources)
+        set_static_sources
+        ;;
+    is-running)
+        is_running
+        ;;
+    command|forced-command)
+        chrony_command "$2"
+        ;;
+    *)
+        print_help
+        exit 2
+esac
+
+exit $?
+```
+<!--endsec-->
+
+### set local time with chrony
+
+> [!NOTE|label:references:]
+> - [chrony 详解](https://www.cnblogs.com/xzongblogs/p/14658895.html)
+
+```bash
+$ sudo timedatectl set-time "2020-02-23 12:23:01"                # <<========设置系统时间，因为开启了时间同步所以报错
+Failed to set time: Automatic time synchronization is enabled
+$ sudo systemctl stop chronyd
+$ sudo timedatectl set-time "2020-02-23 12:23:01"                # <<==========stop chronyd 后修改系统时间，报错依旧
+Failed to set time: Automatic time synchronization is enabled
+$ sudo systemctl status chronyd
+● chronyd.service - NTP client/server
+   Loaded: loaded (/usr/lib/systemd/system/chronyd.service; enabled; vendor preset: enabled)
+   Active: inactive (dead) since 四 2021-04-15 15:45:37 CST; 21s ago
+     Docs: man:chronyd(8)
+           man:chrony.conf(5)
+  Process: 13722 ExecStartPost=/usr/libexec/chrony-helper update-daemon (code=exited, status=0/SUCCESS)
+  Process: 13716 ExecStart=/usr/sbin/chronyd $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 13720 (code=exited, status=0/SUCCESS)
+ ...
+
+$ date
+2021年 04月 15日 星期四 15:46:13 CST
+
+$ sudo timedatectl set-ntp false
+$ sudo timedatectl set-time "2020-02-23 12:23:01"
+$ sudo systemctl status chronyd
+● chronyd.service - NTP client/server
+   Loaded: loaded (/usr/lib/systemd/system/chronyd.service; disabled; vendor preset: enabled)
+   Active: inactive (dead)
+     Docs: man:chronyd(8)
+           man:chrony.conf(5)
+           ...
+
+$ sudo timedatectl status      　　　　                      # <<============ 显示当前系统和RTC设置
+      Local time: 日 2020-02-23 12:23:39 CST
+  Universal time: 日 2020-02-23 04:23:39 UTC
+        RTC time: 日 2020-02-23 04:23:39
+       Time zone: Asia/Shanghai (CST, +0800)
+     NTP enabled: no
+NTP synchronized: no
+ RTC in local TZ: no
+      DST active: n/a
+$ sudo timedatectl set-ntp true
+$ sudo timedatectl status
+      Local time: 日 2020-02-23 12:24:14 CST
+  Universal time: 日 2020-02-23 04:24:14 UTC
+        RTC time: 日 2020-02-23 04:24:14
+       Time zone: Asia/Shanghai (CST, +0800)
+     NTP enabled: yes
+NTP synchronized: no
+ RTC in local TZ: no
+      DST active: n/a
+$ sudo systemctl start chronyd
+
+$ sudo timedatectl status
+      Local time: 四 2021-04-15 15:48:52 CST
+  Universal time: 四 2021-04-15 07:48:52 UTC
+        RTC time: 日 2020-02-23 04:24:44
+       Time zone: Asia/Shanghai (CST, +0800)
+     NTP enabled: yes
+NTP synchronized: yes
+ RTC in local TZ: no
+      DST active: n/a
+$ sudo timedatectl set-time "2020-02-23 12:23:01"
+Failed to set time: Automatic time synchronization is enabled
+
+$ sudo timedatectl set-ntp false      　　　　               # <<============= 禁用基于NTP的网络时间同步
+$ sudo systemctl status chronyd
+● chronyd.service - NTP client/server
+   Loaded: loaded (/usr/lib/systemd/system/chronyd.service; disabled; vendor preset: enabled)
+   Active: inactive (dead)
+     Docs: man:chronyd(8)
+           man:chrony.conf(5)
+           ...
+
+$ sudo timedatectl set-time "2020-02-23 12:23:01"　　　　　　# <<=========== 再次设置时间成功
+$ sudo timedatectl set-ntp true  　　　　                    # <<============ 启用基于NTP的网络时间同步
+
+$ sudo systemctl status chronyd
+● chronyd.service - NTP client/server
+   Loaded: loaded (/usr/lib/systemd/system/chronyd.service; enabled; vendor preset: enabled)
+   Active: active (running) since 日 2020-02-23 12:23:25 CST; 4s ago
+     Docs: man:chronyd(8)
+           man:chrony.conf(5)
+  Process: 16110 ExecStartPost=/usr/libexec/chrony-helper update-daemon (code=exited, status=0/SUCCESS)
+  Process: 16103 ExecStart=/usr/sbin/chronyd $OPTIONS (code=exited, status=0/SUCCESS)
+ Main PID: 16105 (chronyd)
+    Tasks: 1
+   CGroup: /system.slice/chronyd.service
+           └─16105 /usr/sbin/chronyd
+           ...
+
+$ date
+2021年 04月 15日 星期四 15:52:14 CST
+```
+
+## systemd-timesyncd
+
+> [!NOTE]
+> - issue in `chrony` with timedatactl
+>   ```bash
+>   $ timedatectl
+>                  Local time: Tue 2024-04-02 16:11:02 PDT
+>              Universal time: Tue 2024-04-02 23:11:02 UTC
+>                    RTC time: Tue 2024-04-02 23:11:02
+>                   Time zone: America/Los_Angeles (PDT, -0700)
+>   System clock synchronized: yes
+>                 NTP service: n/a
+>             RTC in local TZ: no
+>
+>   $ sudo timedatectl set-ntp on
+>   Failed to set ntp: NTP not supported
+>   ```
+> - [systemd-timesyncd](https://wiki.archlinux.org/title/systemd-timesyncd#)
+
+### install
+
+> [!NOTE|label:references:]
+> - [* iMarslo: epel install](../apt-yum.html#tools-installation)
+
+```bash
+# centos 8
+$ sudo dnf reinstall https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+$ sudo yum install -y systemd-timesyncd
+```
+
+- enable and start services
+  ```bash
+  $ sudo systemctl enable systemd-timesyncd.service
+  Created symlink /etc/systemd/system/dbus-org.freedesktop.timesync1.service → /usr/lib/systemd/system/systemd-timesyncd.service.
+  Created symlink /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service → /usr/lib/systemd/system/systemd-timesyncd.service.
+
+  $ sudo systemctl start systemd-timesyncd.service
+
+  $ sudo systemctl is-active systemd-timesyncd.service
+  active
+  $ sudo systemctl is-enabled systemd-timesyncd.service
+  enabled
+  ```
+
+### config
+
+> [!NOTE]
+> - [NTP Pool Project](https://www.ntppool.org/zone/north-america)
+> - [timesyncd.conf](https://man.archlinux.org/man/timesyncd.conf.5)
+> - [systemd-timesyncd.service](https://man.archlinux.org/man/systemd-timesyncd.8)
+
+```bash
+$ cat /etc/systemd/timesyncd.conf | sed -r '/^(#.*)$/d' | sed -r '/^\s*$/d'
+[Time]
+NTP=0.north-america.pool.ntp.org 1.north-america.pool.ntp.org 2.north-america.pool.ntp.org 3.north-america.pool.ntp.org
+FallbackNTP=0.pool.ntp.org 1.pool.ntp.org 0.fr.pool.ntp.org
+
+# or
+$ sudo systemd-analyze cat-config systemd/timesyncd.conf | sed -r '/^(#.*)$/d' | sed -r '/^\s*$/d'
+[Time]
+NTP=0.north-america.pool.ntp.org 1.north-america.pool.ntp.org 2.north-america.pool.ntp.org 3.north-america.pool.ntp.org
+FallbackNTP=0.pool.ntp.org 1.pool.ntp.org 0.fr.pool.ntp.org
+```
+
+### commands
+
+- `show-timesync`
+  ```bash
+  $ timedatectl show-timesync --all
+  LinkNTPServers=
+  SystemNTPServers=0.north-america.pool.ntp.org 1.north-america.pool.ntp.org 2.north-america.pool.ntp.org 3.north-america.pool.ntp.org
+  RuntimeNTPServers=
+  FallbackNTPServers=0.pool.ntp.org 1.pool.ntp.org 0.fr.pool.ntp.org
+  ServerName=0.north-america.pool.ntp.org
+  ServerAddress=104.131.155.175
+  RootDistanceMaxUSec=5s
+  PollIntervalMinUSec=32s
+  PollIntervalMaxUSec=34min 8s
+  PollIntervalUSec=1min 4s
+  NTPMessage={ Leap=0, Version=4, Mode=4, Stratum=2, Precision=-30, RootDelay=3.097ms, RootDispersion=6.774ms, Reference=408E7A25, OriginateTimestamp=Tue 2024-04-02 16:59:33 PDT, ReceiveTimestamp=Tue 2024-04-02 16:59:33 PDT, TransmitTimestamp=Tue 2024-04-02 16:59:33 PDT, DestinationTimestamp=Tue 2024-04-02 16:59:33 PDT, Ignored=no PacketCount=1, Jitter=0 }
+  Frequency=1375360
+  ```
+
+- `timesync-status`
+  ```bash
+  $ timedatectl timesync-status
+         Server: 104.131.155.175 (0.north-america.pool.ntp.org)
+  Poll interval: 1min 4s (min: 32s; max 34min 8s)
+           Leap: normal
+        Version: 4
+        Stratum: 2
+      Reference: 408E7A25
+      Precision: 0 (-30)
+  Root distance: 8.322ms (max: 5s)
+         Offset: +4.077ms
+          Delay: 24.042ms
+         Jitter: 0
+   Packet count: 1
+      Frequency: +20.986ppm
+  ```
+
+- check log
+  ```bash
+  $ journalctl -u systemd-timesyncd --no-hostname --since "1 day ago"
+  ```
