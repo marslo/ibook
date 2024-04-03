@@ -295,6 +295,7 @@ google-chrome-unstable - The web browser from Google
 > - [CentOS Repositories](https://centos.pkgs.org/)
 > - [CentOS Stream Mirror](https://mirror.stream.centos.org/)
 > - [8.4. Configuring Yum and Yum Repositories](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/sec-configuring_yum_and_yum_repositories)
+> - [createrepo 建立本地源](https://www.cnblogs.com/xzongblogs/p/16858402.html)
 > - [variables in repo files](https://unix.stackexchange.com/a/20226/29178)
 >   ```bash
 >   # centos 8
