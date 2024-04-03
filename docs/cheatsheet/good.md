@@ -6,7 +6,7 @@
 - [time & date](#time--date)
   - [show date with timezone](#show-date-with-timezone)
   - [show cal](#show-cal)
-  - [synchronize date and time with another server over ssh](#synchronize-date-and-time-with-another-server-over-ssh)
+  - [synchronize date and time with over ssh](#synchronize-date-and-time-with-over-ssh)
 - [download and extract](#download-and-extract)
   - [check file without extract](#check-file-without-extract)
   - [extract `jar`](#extract-jar)
@@ -173,7 +173,7 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
                       30
 ```
 
-### synchronize date and time with another server over ssh
+### synchronize date and time with over ssh
 
 > [!NOTE]
 > inspired from
@@ -182,6 +182,16 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
 ```bash
 $ date --set="$(ssh [username]@[sshserver] date)"
 ```
+
+- verify
+  ```bash
+  $ date;
+    ssh username@sshserver date;
+    curl -fsSL "http://worldtimeapi.org/api/timezone/America/Los_Angeles" | jq -r .datetime
+  Tue Apr  2 20:03:32 PDT 2024
+  Tue Apr  2 20:03:33 PDT 2024
+  2024-04-02T20:03:33.405227-07:00
+  ```
 
 ## download and extract
 - `*.gz`
