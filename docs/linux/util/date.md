@@ -710,7 +710,9 @@ Fri Oct  9 18:48:52 CST 2020
 >   - `s2m.time.edu.cn` 北京大学
 >   - `ntp.sjtu.edu.cn` | `202.120.2.101` 上海交通大学
 > - [How to configure chrony as an NTP client or server in Linux](https://www.redhat.com/sysadmin/chrony-time-services-linux)
-> - [Red Hat Training: Chapter 18. Configuring NTP Using the chrony Suite](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-configuring_ntp_using_the_chrony_suite)
+> - [RedHat 7: Chapter 18. Configuring NTP Using the chrony Suite](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/ch-configuring_ntp_using_the_chrony_suite)
+> - [RedHad 8: Chapter 15. Configuring time synchronization](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/configuring-time-synchronization_configuring-basic-system-settings)
+> - [RedHat 9: Chapter 13. Configuring time synchronization](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/configuring_basic_system_settings/index#configuring-time-synchronization_configuring-basic-system-settings)
 > - [How to Sync Time in CentOS 8 using Chrony](https://wiki.crowncloud.net/?How_to_Sync_Time_in_CentOS_8_using_Chrony)
 
 - `/etc/chrony.conf`
