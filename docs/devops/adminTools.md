@@ -206,6 +206,10 @@ $ iostat
 ```
 
 ### `tcpdump`
+
+> [!NOTE|label:references:]
+> - [* Tcpdump](https://www.kancloud.cn/pshizhsysu/linux/1799754)
+
 ```bash
 $ sudo tcpdump -A -i en7
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode

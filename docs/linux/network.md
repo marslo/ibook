@@ -50,6 +50,7 @@
 > - [How do I add a DNS server via resolv.conf?](https://askubuntu.com/a/51332/92979)
 > - [How to Configure and Manage Network Connections Using ‘nmcli’ Tool](https://www.tecmint.com/configure-network-connections-using-nmcli-tool-in-linux/)
 > - [9 张动图让明白网络性能的四大指标：带宽、时延、抖动、丢包](https://zhuanlan.zhihu.com/p/404778160)
+> - [* 连接追踪](https://www.kancloud.cn/pshizhsysu/linux/1799632)
 {% endhint %}
 
 ## get into
@@ -292,6 +293,10 @@ $ sudo lshw -class network
 <!--endsec-->
 
 ### change interface name
+
+> [!NOTE|label:references:]
+> - [重命名网卡](https://www.kancloud.cn/pshizhsysu/linux/1799739)
+
 #### [Permanent Solution](https://wiki.archlinux.org/index.php/Network_configuration#Change_interface_name)
 ``` bash
 $ sudo touch /etc/udev/rules.d/10-network.rules
@@ -546,6 +551,10 @@ PORT     STATE SERVICE REASON
 >   ```
 > - [How to list all iptables rules with line numbers on Linux](https://www.cyberciti.biz/faq/how-to-list-all-iptables-rules-in-linux/)
 > - [How To Forward Ports through a Linux Gateway with Iptables](https://www.digitalocean.com/community/tutorials/how-to-forward-ports-through-a-linux-gateway-with-iptables)
+> - [* iptables 匹配条件](https://www.kancloud.cn/pshizhsysu/linux/1799485)
+>   - [基础匹配条件](https://www.kancloud.cn/pshizhsysu/linux/1799486)
+>   - [扩展匹配条件](https://www.kancloud.cn/pshizhsysu/linux/1799487) | [match extensions](https://ipset.netfilter.org/iptables-extensions.man.html#index)
+
 
 - show status
   ```bash
