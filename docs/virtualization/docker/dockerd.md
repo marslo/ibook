@@ -146,6 +146,11 @@ $ docker info | sed -n '/Registry Mirrors:/{p;n;p;}'
 ```
 
 ### logs
+
+> [!NOTE|label:references:]
+> - [Configure logging drivers](https://docs.docker.com/config/containers/logging/configure)
+> - [Docker: How to clear the logs properly for a Docker container?](https://stackoverflow.com/a/42510314/2940319)
+
 ```json
 {
    "log-driver": "json-file",

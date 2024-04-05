@@ -2,6 +2,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [prune](#prune)
+  - [prune build cache](#prune-build-cache)
+  - [prune containers](#prune-containers)
+  - [prune volumes](#prune-volumes)
+  - [prune images](#prune-images)
 - [docker rmi](#docker-rmi)
   - [docker rmi for keywords](#docker-rmi-for-keywords)
 - [docker rm](#docker-rm)
@@ -31,6 +35,61 @@ $ docker system prune --volumes
   ```bash
   $ docker system df
   ```
+
+### [prune build cache](https://docs.docker.com/reference/cli/docker/builder/prune/)
+```bash
+$ docker builder prune
+WARNING! This will remove all dangling build cache. Are you sure you want to continue? [y/N] y
+ID                               RECLAIMABLE SIZE    LAST ACCESSED
+inqm9ef8j6121j79yti92w2o5        true        0B      3 weeks ago
+...
+
+# or
+$ docker builder prune [ --all ] [ --force ] [ --keep-storage ]
+```
+
+### prune containers
+```bash
+$ docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+5619dd2ca2fda889dea74a7951715aebabe08c05863eff6a9be0b108394111ec
+e777013b304984b0315099f142cc24d942902ac42b62e53ebe1d52a6102912a9
+7c09bf8b650968557a975e2cd1f43f6612307af892b5b864ac7b795a59b02d2c
+ce2e8698d03f6d6b2a8afcd8655baadc5bb31fbe9eaf425e015e0e4f476e0872
+5ee7d62799822a708de6d6b11c2dfbf04114784a77b574da4aa88d63757c180a
+
+Total reclaimed space: 41.47MB
+
+# force
+$ docker container prune --force
+```
+
+### [prune volumes](https://docs.docker.com/reference/cli/docker/volume/prune/)
+```bash
+$ docker volume prune
+WARNING! This will remove all local volumes not used by at least one container.
+Are you sure you want to continue? [y/N] y
+...
+
+# all
+$ docker volume prune --all
+
+# force
+$ docker volume prune --all --force
+```
+
+### [prune images](https://docs.docker.com/reference/cli/docker/image/prune/)
+```bash
+$ docker image prune
+
+# all
+$ docker image prune --all
+
+# force
+$ docker image prune --all --force
+```
 
 ## docker rmi
 - remove via docker image
