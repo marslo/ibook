@@ -10,6 +10,7 @@
   - [to Octal](#to-octal)
   - [to Decimal](#to-decimal)
   - [to Hexadecimal](#to-hexadecimal)
+- [The Big Book of Small Python Projects](#the-big-book-of-small-python-projects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -154,3 +155,10 @@ $ python -c 'import sys; print (sys.path)'
     >>> '%x' % 15
     'f'
     ```
+
+## [The Big Book of Small Python Projects](https://inventwithpython.com/bigbookpython/)
+
+> [!NOTE|label:references:]
+> - [The Big Book of Small Python Projects](https://inventwithpython.com/bigbookpython/)
+> - [THE BIG BOOK OF SMALL PYTHON PROJECTS.pdf](https://edu.anarcho-copy.org/Programming%20Languages/Python/BigBookSmallPythonProjects.pdf)
+> - [nihathalici/The-Big-Book-of-Small-Python-Projects](https://github.com/nihathalici/The-Big-Book-of-Small-Python-Projects/tree/main)
