@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [list current fonts](#list-current-fonts)
 - [highly recommended](#highly-recommended)
   - [Monaco](#monaco)
   - [RecMonoCasual](#recmonocasual)
@@ -32,6 +33,15 @@
 > - [ArrowType](https://www.arrowtype.com/)
 > - [oldschool font list](https://int10h.org/oldschool-pc-fonts/fontlist/)
 > - [subframe7536/maple-font](https://github.com/subframe7536/Maple-font)
+
+## list current fonts
+
+> [!NOTE|label:references:]
+> - [Which font is used in Visual Studio Code Editor and how to change fonts?](https://stackoverflow.com/a/52789662/2940319)
+
+```bash
+$ fc-list | awk '{$1=""}1' | sed -re 's/^\s*([^:,]+:?,?[^,:]+).*$/\1/' | column -t -s:
+```
 
 ## highly recommended
 
