@@ -10,6 +10,7 @@
   - [disable/enable gatekeeper](#disableenable-gatekeeper)
 - [apps](#apps)
   - [java](#java)
+  - [keychain](#keychain)
 - [xcode](#xcode)
   - [downlaod xcode by wget](#downlaod-xcode-by-wget)
   - [developer tools](#developer-tools)
@@ -216,7 +217,7 @@ $ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_
     $ dscacheutil -q user
     ```
 
-#### create Guest and enable
+#### create guest and enable
 
 > [!NOTE]
 > scripts: https://github.com/sheagcraig/guestAccount/blob/master/guest_account
@@ -329,6 +330,18 @@ $ chflags -R nouchg <PATH of folder>
   ```bash
   $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
   ```
+
+### keychain
+
+> [!NOTE|label:references:]
+> - [Install CA Certificate](https://discussions.apple.com/thread/254786551?sortBy=best)
+
+```bash
+$ sudo security add-trusted-cert -d \
+                                 -r trustRoot \
+                                 -k /Library/Keychains/System.keychain \
+                                 /Users/Shared/NAMEOFYOURCERTIFICATE.cer
+```
 
 ## xcode
 ### downlaod xcode by wget

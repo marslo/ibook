@@ -6,11 +6,14 @@
   - [Nvim development (prerelease) build](#nvim-development-prerelease-build)
   - [building neovim from source](#building-neovim-from-source)
   - [package manager](#package-manager)
+    - [`brew install -v --debug`](#brew-install--v---debug)
+  - [neovim-nightly](#neovim-nightly)
 - [initialize](#initialize)
   - [provider](#provider)
-  - [vimrc](#vimrc)
+  - [init.vim/init.lua](#initviminitlua)
   - [config](#config)
     - [`config.lua`](#configlua)
+    - [standard-path](#standard-path)
   - [lua](#lua)
     - [lua-intro](#lua-intro)
     - [lua-commands](#lua-commands)
@@ -117,6 +120,36 @@ $ curl -fsSL -O http://archive.ubuntu.com/ubuntu/pool/universe/n/neovim/neovim_0
 $ sudo dpkg -i neovim_0.7.2-8_amd64.deb
 ```
 
+### `brew install -v --debug`
+```bash
+# download
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.2.17-33-g1bbfe76\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 14.4.1\)\ curl/8.4.0 --header Accept-Language:\ en --retry 3 --fail --location --silent --head https://raw.githubusercontent.com/Homebrew/homebrew-core/841811d678fcfef856f693a2ec90add1625a4c12/Formula/n/neovim.rb
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.2.17-33-g1bbfe76\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 14.4.1\)\ curl/8.4.0 --header Accept-Language:\ en --retry 3 --fail --location --silent --head --request GET https://raw.githubusercontent.com/Homebrew/homebrew-core/841811d678fcfef856f693a2ec90add1625a4c12/Formula/n/neovim.rb
+# clone
+$ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.git status -s
+$ /usr/bin/env git checkout -f master --
+$ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.git show -s --format=\%cD
+Wed, 10 Apr 2024 07:08:49 +0800
+
+# build
+$ cmake -S . -B build -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-f494084 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
+$ cmake --build build
+$ cmake --install build
+```
+
+## neovim-nightly
+
+> [!NOTE|label:references:]
+> - [#28125 No parser for 'lua' language when opening a lua file](https://github.com/neovim/neovim/issues/28125)
+> - [benjiwolff/homebrew-neovim-nightly](https://github.com/benjiwolff/homebrew-neovim-nightly)
+
+```bash
+$ brew unlink neovim
+Unlinking /usr/local/Cellar/neovim/HEAD-f494084... 35 symlinks removed.
+
+$ brew tap benjiwolff/neovim-nightly
+```
+
 # initialize
 
 > [!TIP]
@@ -147,14 +180,14 @@ $ gem install neovim
 $ npm install -g neovim
 ```
 
-## vimrc
+## init.vim/init.lua
 - create init.vim
   ```vim
   :exe 'edit '.stdpath('config').'/init.vim'
   :write ++p
   ```
 
-- add content
+- init.lua
   ```lua
   -- ~/.config/nvim/init.lua
   vim.cmd( 'set runtimepath^=~/.vim runtimepath+=~/.vim/after' )
@@ -162,19 +195,14 @@ $ npm install -g neovim
   vim.cmd( 'source ~/.vimrc' )
   vim.cmd( 'autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}' )
   ```
-  - or
-    ```vim
-    # ~/.config/nvim/init.vim
-    set runtimepath^=~/.vim runtimepath+=~/.vim/after
-    let &packpath = &runtimepath
-    source ~/.vimrc
-    autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}
-    ```
 
-- config file location
+- init.vim
   ```vim
-  :echo stdpath('config')
-  /Users/marslo/.config/nvim
+  # ~/.config/nvim/init.vim
+  set runtimepath^=~/.vim runtimepath+=~/.vim/after
+  let &packpath = &runtimepath
+  source ~/.vimrc
+  autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}
   ```
 
 ## config
@@ -199,6 +227,50 @@ $ npm install -g neovim
 $ cat ~/.config/nvim/lua/config.lua
 lua require('config')
 ```
+
+### standard-path
+
+> [!NOTE|label:references:]
+> - [`:help standard-path`](https://neovim.io/doc/user/starting.html#standard-path)
+> - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
+> - get data
+>   ```vim
+>   :echo stdpath("xxx")
+>
+>   " i.e.:
+>   :echo stdpath('config')
+>   /Users/marslo/.config/nvim
+>   ```
+> - using in `init.lua`
+>   ```vim
+>   -- ~/.config/nvim/init.lua
+>   -- to setup undodir to `$HOME/.config/nvim/undo`. debug via `:verbose set undodir`
+>   vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
+>   -- or specific path
+>   vim.opt.undodir = vim.fn.expand( '~/.vim/undo' )
+>   ```
+
+|           NAME           | LINUX/OSX                                      | WINDOWS                        |
+|:------------------------:|------------------------------------------------|--------------------------------|
+|    `stdpath("config")`   | `$HOME/.config/nvim`                           | `%LOCALAPPDATA%\nvim`          |
+|     `stdpath("data")`    | `$HOME/.local/share/nvim`                      | `%LOCALAPPDATA%\nvim-data`     |
+|    `stdpath("state")`    | `$HOME/.local/state/nvim`                      | `%LOCALAPPDATA%\nvim-data`     |
+|    `stdpath("cache")`    | `$HOME/.cache/nvim`                            | `%LOCALAPPDATA%\Temp\nvim`     |
+|     `stdpath("log")`     | `$HOME/.local/state/nvim/log`                  | `%LOCALAPPDATA%\nvim-data\log` |
+| `stdpath("config_dirs")` | `['/etc/xdg/nvim']`                            | -                              |
+|  `stdpath("data_dirs")`  | `['/usr/local/share/nvim', '/usr/share/nvim']` | -                              |
+
+
+- using linux slash in windows system
+
+  > [!NOTE|label:references:]
+  > - [#13787 - stdpath() returns mixed path separators with shellslash option](https://github.com/neovim/neovim/issues/13787#issue-788571043)
+
+  ```vim
+  :set shellslash
+  :echo stdpath('data')
+  C:/Users/marslo/Appdata/Local/nvim-data
+  ```
 
 ## lua
 
