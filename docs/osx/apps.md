@@ -25,6 +25,8 @@
   - [Alfred](#alfred)
   - [iTerm2](#iterm2)
   - [powerline](#powerline)
+  - [mangerlahn/Latest](#mangerlahnlatest)
+  - [dwarvesf/hidden](#dwarvesfhidden)
   - [backgroundmusic](#backgroundmusic)
   - [mac cli](#mac-cli)
   - [others](#others)
@@ -1283,18 +1285,61 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 >     - [deanishe/alfred-convert](https://github.com/deanishe/alfred-convert)
 >     - [units](https://units.dnsu.ch/)
 >     - [Unit converter](https://www.packal.org/workflow/unit-converter) | [wolph/alfred-converter](https://github.com/WoLpH/alfred-converter) | [Advanced calculator with fast off-line unit converter](https://www.alfredforum.com/topic/5256-advanced-calculator-with-fast-off-line-unit-converter/)
->  - calculate
->    - [Calculate Anything](https://alfred.app/workflows/biatidigital/calculate-anything/)
->  - system
->    - [Backup Preferences](https://alfred.app/workflows/alfredapp/backup-preferences/)
->    - [`pw`: Pass](https://alfred.app/workflows/chrisgrieser/pass/) | [pass: the standard unix password manager](https://www.passwordstore.org/)
->    - [HEIC to JPEG](https://alfred.app/workflows/alfredapp/heic-to-jpeg/)
->    - [Flush DNS](https://alfred.app/workflows/boneskull/flush-dns/)
->    - [IP Address](https://alfred.app/workflows/alexchantastic/ip-address/)
->  - dev tools
->    - [DevToys](https://alfred.app/workflows/cagechung/devtoys/)
->    - [Hacker News Search](https://alfred.app/workflows/jereze/hacker-news-search/)
->    - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
+>   - calculate
+>     - [Calculate Anything](https://alfred.app/workflows/biatidigital/calculate-anything/)
+>     - [aviaryan/alfred-clc](https://github.com/aviaryan/alfred-clc)
+>   - system
+>     - [Backup Preferences](https://alfred.app/workflows/alfredapp/backup-preferences/)
+>     - [`pw`: Pass](https://alfred.app/workflows/chrisgrieser/pass/) | [pass: the standard unix password manager](https://www.passwordstore.org/)
+>     - [HEIC to JPEG](https://alfred.app/workflows/alfredapp/heic-to-jpeg/)
+>     - [Flush DNS](https://alfred.app/workflows/boneskull/flush-dns/)
+>     - [IP Address](https://alfred.app/workflows/alexchantastic/ip-address/)
+>   - dev tools
+>     - [DevToys](https://alfred.app/workflows/cagechung/devtoys/)
+>     - [Hacker News Search](https://alfred.app/workflows/jereze/hacker-news-search/)
+>     - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
+> - references:
+>   - [Alfred 使用技巧之如何使用计算器](https://juejin.cn/post/6891445537968095246)
+>   - [Alfred神器使用手册](https://louiszhai.github.io/2018/05/31/alfred/)
+
+- mod
+  ```bash
+  =10%3
+  # or clc
+  clc 12.33%1.22
+  ```
+
+  [!calculate](../screenshot/osx/alfred-calc.png)
+
+- terminal
+  ```applescript
+  on alfred_script(q)
+      tell application "iTerm"
+          set _length to count window
+      if _length = 0 then
+          create window with default profile
+      end if
+      set aa to (get miniaturized of current window)
+      if aa then
+          set miniaturized of current window to false
+      end if
+      set bb to (get visible of current window)
+      if bb is false then
+          set visible of current window to true
+      end if
+      set cc to frontmost
+      if cc is false then
+          activate
+      end if
+          (*if _length = 0 then*)
+              set theResult to current tab of current window
+          (*else
+              set theResult to (create tab with default profile) of current window
+          end if*)
+          write session of theResult text q
+  end tell
+  end alfred_script
+  ```
 
 ### iTerm2
 - Install Shell Integration
@@ -1347,6 +1392,9 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
   > [!TIP]
   > - [* iMarlso : fonts](../tools/fonts.html)
   > - [* iMarslo : fonts : powerline fonts](../tools/fonts.html#powerline-fonts)
+
+### [mangerlahn/Latest](https://github.com/mangerlahn/Latest)
+### [dwarvesf/hidden](https://github.com/dwarvesf/hidden)
 
 ### [backgroundmusic](https://github.com/kyleneideck/BackgroundMusic)
 ```bash

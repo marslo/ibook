@@ -8,6 +8,8 @@
 - [application](#application)
   - [python](#python)
   - [vim](#vim)
+  - [nvim](#nvim)
+  - [copilot](#copilot)
   - [java](#java)
   - [groovy](#groovy)
   - [gcc](#gcc)
@@ -47,6 +49,7 @@
 - [env](#env)
   - [manpath](#manpath)
 - [others](#others)
+  - [GitHubDaily/GitHubDaily](#githubdailygithubdaily)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -94,6 +97,12 @@ $ sudo ln -s /var/lib/snapd/snap /snap
 * [osx](../vim/install.html#osx)
 * [linux](../vim/install.html#linux)
 * [windows](../vim/install.html#windows)
+
+## [nvim](../vim/nvim.html)
+## copilot
+
+> [!NOTE|label:references]
+> - [microsoft/Mastering-GitHub-Copilot-for-Paired-Programming](https://github.com/microsoft/Mastering-GitHub-Copilot-for-Paired-Programming)
 
 ## java
 * download jdk 1.8.0_121
@@ -1322,3 +1331,7 @@ proc:::exec-success
 
 > [!NOTE|label:references:]
 > - [Integralist/New Laptop Configuration. Summary.md](https://gist.github.com/Integralist/05e5415de6743e66b112574a1a5c1970)
+
+## [GitHubDaily/GitHubDaily](https://github.com/GitHubDaily/GitHubDaily)
+- [Stirling-Tools/Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF)
+- [xitanggg/open-resume](https://github.com/xitanggg/open-resume)

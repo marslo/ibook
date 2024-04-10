@@ -1116,13 +1116,15 @@ let g:NERDTreeIgnore = [ '^node_modules$' ]
 > - [Installing the GitHub Copilot extension in Vim/Neovim on macOS](https://docs.github.com/en/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vimneovim#prerequisites-3)
 > - [Managing billing for GitHub Copilot](https://docs.github.com/en/billing/managing-billing-for-github-copilot)
 > - [GitHub CoPilot self-signed certificate error in Intellij](https://sidd.io/2023/01/github-copilot-self-signed-cert-issue/)
-> - [Using Github Copilot with Vim](https://ovid.github.io/articles/using-github-copilot-with-vim.html)
+> - [* Using Github Copilot with Vim](https://ovid.github.io/articles/using-github-copilot-with-vim.html)
 > - [* Cautiously Configuring Copilot](https://code.kiwi.com/articles/cautiously-configuring-copilot/)
+> - [* Configuring GitHub Copilot in your environment](https://docs.github.com/en/copilot/configuring-github-copilot/configuring-github-copilot-in-your-environment?tool=vimneovim)
 
 
 - setup
   ```vim
   Plug 'github/copilot.vim'
+  let g:Copilot_proxy_strict_ssl = v:false
 
   " install via
   :Copilot setup
@@ -1138,6 +1140,24 @@ let g:NERDTreeIgnore = [ '^node_modules$' ]
   ```vim
   let g:Copilot_proxy = '192.168.100.1:8080'
   let g:Copilot_proxy_strict_ssl = v:false
+  ```
+
+- self-signed certificate error
+
+  > [!NOTE|label:references:]
+  > - [IntelliJ IDEA and Github Copilot: not working due to self signed certificate](https://stackoverflow.com/a/75247385/2940319)
+  > - [SSL Converter](https://www.sslshopper.com/ssl-converter.html)
+  > - [* Installing custom certificates](https://docs.github.com/en/copilot/configuring-github-copilot/configuring-network-settings-for-github-copilot#installing-custom-certificates)
+  >   - [Add certificates to a keychain using Keychain Access on Mac](https://support.apple.com/en-gb/guide/keychain-access/kyca2431/mac)
+  >   - [Installing a root CA certificate in the trust store](https://ubuntu.com/server/docs/security-trust-store)
+  >   - [Installing the trusted root certificate in windows](https://learn.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate)
+
+  ```vim
+  $ openssl x509 -inform der -in <exported_cert>.cer -out mycert.pem
+  $ export NODE_EXTRA_CA_CERTS="/path/to/mycert.pem"
+
+  # or
+  $ keytool -import -storepass changeit -keystore PATH_TO_YOUR_INTELLIJ_JRE/lib/security/cacerts -file PATH_TO_YOUR_CUSTOM_ROOTCA.pem
   ```
 
 - [vscode](https://stackoverflow.com/a/55191955/2940319)
