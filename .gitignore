@@ -21,7 +21,8 @@ _book
 ## https://github.com/GitbookIO/gitbook/blob/master/.gitignore
 # Logs
 # logs
-# *.log
+*.log
+logback.log
 
 # Runtime data
 pids

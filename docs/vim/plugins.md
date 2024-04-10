@@ -25,6 +25,7 @@
   - [neovim/nvim-lspconfig](#neovimnvim-lspconfig)
     - [manual install lsp](#manual-install-lsp)
   - [scrooloose/nerdtree](#scrooloosenerdtree)
+  - [copilot](#copilot)
   - [others](#others)
 - [utils](#utils)
   - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
@@ -1091,7 +1092,12 @@ Plug 'neovim/nvim-lspconfig'
   ```
 
 - [yamlls](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#yamlls)
-
+  ```bash
+  $ npm install -g yaml-language-server
+  ```
+  ```vim
+  require'lspconfig'.yamlls.setup{}
+  ```
 
 ## [scrooloose/nerdtree](https://github.com/preservim/nerdtree)
 ```vim
@@ -1102,6 +1108,42 @@ let g:NERDTreeIgnore = [ '^node_modules$' ]
 ```
 
 ![nvim nerdtree devicons coc lspconfig](../screenshot/vim/nvim-nerdtree-devicon-treesitter-coc-lspconfig.gif)
+
+## copilot
+
+> [!NOTE|label:references:]
+> - [Getting started with GitHub Copilot](https://docs.github.com/en/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vimneovim)
+> - [Installing the GitHub Copilot extension in Vim/Neovim on macOS](https://docs.github.com/en/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vimneovim#prerequisites-3)
+> - [Managing billing for GitHub Copilot](https://docs.github.com/en/billing/managing-billing-for-github-copilot)
+> - [GitHub CoPilot self-signed certificate error in Intellij](https://sidd.io/2023/01/github-copilot-self-signed-cert-issue/)
+> - [Using Github Copilot with Vim](https://ovid.github.io/articles/using-github-copilot-with-vim.html)
+> - [* Cautiously Configuring Copilot](https://code.kiwi.com/articles/cautiously-configuring-copilot/)
+
+
+- setup
+  ```vim
+  Plug 'github/copilot.vim'
+
+  " install via
+  :Copilot setup
+  ```
+
+  - others
+    ```vim
+    :Copilot status
+    Copilot: Ready
+    ```
+
+- config
+  ```vim
+  let g:Copilot_proxy = '192.168.100.1:8080'
+  let g:Copilot_proxy_strict_ssl = v:false
+  ```
+
+- [vscode](https://stackoverflow.com/a/55191955/2940319)
+  ```
+  "http.proxyStrictSSL": false
+  ```
 
 ## others
 
