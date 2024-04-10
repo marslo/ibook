@@ -7,6 +7,7 @@
   - [disable line number in terminal](#disable-line-number-in-terminal)
   - [automatic cleanup tailing space when save](#automatic-cleanup-tailing-space-when-save)
   - [automatic save](#automatic-save)
+  - [BufWritePost](#bufwritepost)
   - [edit binary using xxd-format](#edit-binary-using-xxd-format)
 - [system](#system)
   - [filetype in vim language](#filetype-in-vim-language)
@@ -70,6 +71,9 @@
 >   - `BufEnter`    : activate the new buffer
 >   - `BufWinEnter` : activate the new buffer's window
 >   - `InsertEnter` : swap into Insert mode
+> - references
+>   - [you must use augroup with autocmd in vim](https://waylonwalker.com/vim-augroup/)
+>   - [What's your best autocmd?](https://www.reddit.com/r/vim/comments/t9lm4x/whats_your_best_autocmd/)
 
 ### [autocmd BufWritePre except](https://stackoverflow.com/q/6496778/2940319)
 
@@ -196,6 +200,40 @@ autocmd  FocusLost  *.txt   :    endif
   autocmd  FocusGained  *.txt   :call Highlight_cursor()
   autocmd  FocusLost    *.txt   :call Autosave()
   ```
+
+### BufWritePost
+
+> [!NOTE|label:references:]
+> - [How to autocmd BufWritePost with CoffeeScript vim up a directory?](https://stackoverflow.com/a/6797897/2940319)
+>   ```vim
+>   :autocmd BufWritePost *.coffee
+>   \   silent execute 'CoffeeMake! -o ' .
+>   \   expand('<afile>:p:h') . '/../' . expand('<afile>:t:r') . 'js'
+>
+>   " or
+>   :autocmd BufWritePost,FileWritePost *.coffee silent execute 'CoffeeMake! -o '.expand('%:p:h:s?coffee?js?')
+>   ```
+> - [How do you reload your .vimrc file without restarting vim?](https://superuser.com/q/132029/112396)
+
+```vim
+# source $MYVIMRC or `~/.vimrc` if the libs changed
+if index( ['vimrc.d'], split(expand("%:p:h"), "/")[-1] ) >= 0
+  autocmd! BufWritePost ~/.marslo/vimrc.d/* silent! source $MYVIMRC
+        \| echohl WarningMsg
+        \| echom expand('%:p') . " changed! " . $MYVIMRC . " sourced!"
+        \| echohl None
+        \| silent !redraw
+endif
+
+# source $MYVIMRC or `~/.vimrc` if the lua.x.x changed. nvim only
+if has('nvim') && '/'.join(split(expand('%:p'), '/')[0:3], '/') == stdpath('config')
+  autocmd! BufWritePost ~/.config/nvim/*    silent! source $MYVIMRC
+        \| echohl WarningMsg
+        \| echom expand('%:p') . " changed! " . $MYVIMRC . " sourced!"
+        \| echohl None
+        \| execute 'silent !redraw'
+endif
+```
 
 ### [edit binary using xxd-format](https://vi.stackexchange.com/a/2237/7389)
 

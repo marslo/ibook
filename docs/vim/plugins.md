@@ -86,10 +86,68 @@
 ## ctrl-p
 - [Shougo/denite.nvim](https://github.com/Shougo/denite.nvim)
 
-## snippets
+## [snippets](https://github.com/rockerBOO/awesome-neovim#snippet)
+- [Snippets with CoC](https://www.chiarulli.me/Neovim/17-snippets/)
+
+  > [!NOTE|label:references:]
+  > - [Configure snippets workflow](https://github.com/neoclide/coc.nvim/wiki/Using-snippets#configure-snippets-workflow)
+  > - [Snippets with CoC](https://www.chiarulli.me/Neovim/17-snippets/)
+  > - [Coc.nvim completion and snippets are conflicting](https://www.reddit.com/r/neovim/comments/yl5t0o/cocnvim_completion_and_snippets_are_conflicting/)
+
+  ```vim
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+  Plug 'honza/vim-snippets'
+  let g:coc_global_extensions = [ 'coc-snippets' ]
+
+  " coc-snippets
+  imap <c-l> <Plug>(coc-snippets-expand)
+  vmap <C-j> <Plug>(coc-snippets-select)
+  let g:coc_snippet_next = '<c-j>'
+  let g:coc_snippet_prev = '<c-k>'
+  imap <C-j> <Plug>(coc-snippets-expand-jump)
+  inoremap <silent><expr> <TAB>
+        \ pumvisible() ? coc#_select_confirm() :
+        \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+        \ CheckBackSpace() ? "\<TAB>" :
+        \ coc#refresh()
+  function! CheckBackSpace() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
+  let g:coc_snippet_next = '<tab>'
+  ```
+  - commands
+    ```vim
+    :CocList snippets
+    :CocCommand snippets.editSnippets
+    :CocCommand snippets.openSnippetFiles
+    ```
+
 - [hrsh7th/vim-vsnip](https://github.com/hrsh7th/vim-vsnip) | [hrsh7th/vim-vsnip-integ](https://github.com/hrsh7th/vim-vsnip-integ)
 - [SirVer/UltiSnips](https://github.com/SirVer/ultisnips) | [thomasfaingnaert/vim-lsp-ultisnips](https://github.com/thomasfaingnaert/vim-lsp-ultisnips)
 - [Shougo/neosnippet.vim](https://github.com/Shougo/neosnippet.vim) | [thomasfaingnaert/vim-lsp-neosnippet](https://github.com/thomasfaingnaert/vim-lsp-neosnippet)
+- [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip) | [rafamadriz/friendly-snippets](https://github.com/rafamadriz/friendly-snippets) | [Neovim setting up snippets with luasnip](https://sbulav.github.io/vim/neovim-setting-up-luasnip/) | [dotfiles/nvim/lua/config/snippets.lua](https://github.com/sbulav/dotfiles/blob/master/nvim/lua/config/snippets.lua) | [LuaSnip/Examples/snippets.lua](https://github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua)
+  ```vim
+  " ~/.vimrc
+  Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.2.0', 'do': 'make install_jsregexp'}
+
+  " L3MON4D3/LuaSnip
+  imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
+  inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+  snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+  snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+  imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+  smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+  ```
+  ```lua
+  -- init.lua
+  require("luasnip").config.setup {
+      updateevents = "TextChanged,TextChangedI",
+      store_selection_keys = "<Tab>",
+  }
+  require("config.snippets")
+  -- require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.vim/snippet/groovy.lua" } })
+  ```
 
 ## cryptmethod
 - [kurotych/CCryptor.nvim](https://github.com/kurotych/ccryptor.nvim)

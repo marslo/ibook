@@ -3,6 +3,7 @@
 
 - [basic](#basic)
 - [config](#config)
+  - [font style](#font-style)
 - [plugins](#plugins)
   - [Settings Sync](#settings-sync)
   - [vim](#vim)
@@ -37,6 +38,42 @@
       "http.proxyStrictSSL": false,
   }
   ```
+
+### font style
+
+> [!NOTE|label:references:]
+> - [#42939 editor.tokenColorCustomizations not applying font style](https://github.com/Microsoft/vscode/issues/42939)
+
+- italic
+
+  > [!NOTE|label:references:]
+  > - [How do I get Visual Studio Code to display italic fonts in formatted code?](https://stackoverflow.com/a/50714195/2940319)
+  > - [kosimst/FiraFlott](https://github.com/kosimst/FiraFlott?tab=readme-ov-file#vscode-specific)
+  > - [kosimst/Firicico](https://github.com/kosimst/Firicico?tab=readme-ov-file#what-are-italics)
+  > - [#116 - Italics for keywords, etc](https://github.com/wesbos/cobalt2-vscode/issues/116)
+  > - [#51 - VSCode 自定义主题样式](https://github.com/vhxubo/blog/issues/51)
+
+  ```json
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          //following will be in italic (=FlottFlott)
+          "comment",
+          "entity.name.type.class", //class names
+          "keyword", //import, export, return…
+          "constant", //String, Number, Boolean…, this, super
+          "storage.modifier", //static keyword
+          "storage.type.class.js", //class keyword
+        ],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      },
+    ]
+  },
+  ```
+
 
 ## plugins
 ### [Settings Sync](https://code.visualstudio.com/docs/editor/settings-sync)

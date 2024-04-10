@@ -21,6 +21,7 @@
     - [true color](#true-color)
   - [config path](#config-path)
 - [builtin function details](#builtin-function-details)
+- [Various commands](#various-commands)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -42,6 +43,7 @@
 > - [HiPhish/nvim-config/init.vim](https://gitlab.com/HiPhish/nvim-config/-/blob/master/init.vim?ref_type=heads)
 >   - osx/linux: `~/.config/nvim/init.vim`
 >   - windows: `%LOCALAPPDATA%\nvim\init.vim`
+> - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim#snippet)
 
 # install
 
@@ -183,6 +185,14 @@ $ npm install -g neovim
 ```
 
 ## init.vim/init.lua
+
+> [!NOTE|label:references:]
+> - [Everything you need to know to configure neovim using lua](https://vonheikemen.github.io/devlog/tools/configuring-neovim-using-lua/)
+> - [Porting neovim config to lua](https://www.adrian.idv.hk/2022-05-07-nvim-lua/)
+> - [nanotee/nvim-lua-guide](https://github.com/nanotee/nvim-lua-guide)
+> - [dotfiles/.config/nvim/init.lua](https://github.com/fsareshwala/dotfiles/blob/master/.config/nvim/init.lua)
+> - [web-dev.nvim/src/init.lua](https://github.com/jonathandion/web-dev.nvim/blob/main/src/init.lua)
+
 - create init.vim
   ```vim
   :exe 'edit '.stdpath('config').'/init.vim'
@@ -583,3 +593,4 @@ xterm-256color truecolor
   3
   ```
 
+# [Various commands](https://neovim.io/doc/user/various.html#various-cmds)
