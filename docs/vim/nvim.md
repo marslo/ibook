@@ -6,8 +6,10 @@
   - [Nvim development (prerelease) build](#nvim-development-prerelease-build)
   - [building neovim from source](#building-neovim-from-source)
   - [package manager](#package-manager)
-    - [`brew install -v --debug`](#brew-install--v---debug)
   - [neovim-nightly](#neovim-nightly)
+  - [build from source](#build-from-source)
+    - [osx](#osx)
+    - [`brew install -v --debug`](#brew-install--v---debug)
 - [initialize](#initialize)
   - [provider](#provider)
   - [init.vim/init.lua](#initviminitlua)
@@ -87,6 +89,8 @@
   > - osx: avoid `unknown developer` warning
   >   ```bash
   >   $ xattr -c ./nvim-macos.tar.gz
+  >   # or
+  >   $ xattr -p com.apple.quarantine ./nvim-macos.tar.gz
   >   ```
 
   ```bash
@@ -124,6 +128,210 @@ $ curl -fsSL -O http://archive.ubuntu.com/ubuntu/pool/universe/n/neovim/neovim_0
 $ sudo dpkg -i neovim_0.7.2-8_amd64.deb
 ```
 
+- `brew install --head`
+
+  > [!NOTE|label:references:]
+  > - [02. `brew install nvim --HEAD --debug -v`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-02-brew-install-nvim-head-debug-v-md)
+
+  ```bash
+  $ brew install nvim --HEAD --debug -v
+  $ /usr/local/Cellar/neovim/HEAD-c6d1144/bin/nvim -V1 -v
+  NVIM v0.10.0-dev-2871+gc6d114451-Homebrew
+  Build type: Release
+  LuaJIT 2.1.1710088188
+
+     system vimrc file: "$VIM/sysinit.vim"
+    fall-back for $VIM: "/usr/local/Cellar/neovim/HEAD-c6d1144/share/nvim"
+
+  Run :checkhealth for more info
+  ```
+
+## neovim-nightly
+
+> [!NOTE|label:references:]
+> - [#28125 No parser for 'lua' language when opening a lua file](https://github.com/neovim/neovim/issues/28125)
+> - [benjiwolff/homebrew-neovim-nightly](https://github.com/benjiwolff/homebrew-neovim-nightly)
+> - [01. `brew install neovim-nightly -v --debug`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-01-brew-install-neovim-nightly-v-debug-md)
+
+```bash
+$ brew unlink neovim
+Unlinking /usr/local/Cellar/neovim/HEAD-f494084... 35 symlinks removed.
+
+$ brew tap benjiwolff/neovim-nightly
+$ brew install neovim-nightly [ -v --debug ]
+
+# verify
+$ /usr/local/Caskroom/neovim-nightly/nightly-7aa5637/nvim-macos-x86_64/bin/nvim -V1 -v
+NVIM v0.10.0-dev-2867+g7aa56370f
+Build type: RelWithDebInfo
+LuaJIT 2.1.1710088188
+Compilation: /Applications/Xcode_14.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -O2 -g -Og -g -flto=thin -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -fstack-protector-strong -Wimplicit-fallthrough -fdiagnostics-color=always -Wl,-export_dynamic -DUNIT_TESTING -DHAVE_UNIBILIUM -D_GNU_SOURCE -DINCLUDE_GENERATED_DECLARATIONS -I/Users/runner/work/neovim/neovim/.deps/usr/include/luajit-2.1 -I/Users/runner/work/neovim/neovim/.deps/usr/include -I/Users/runner/work/neovim/neovim/build/src/nvim/auto -I/Users/runner/work/neovim/neovim/build/include -I/Users/runner/work/neovim/neovim/build/cmake.config -I/Users/runner/work/neovim/neovim/src -I/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/include
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/usr/local/share/nvim"
+
+Run :checkhealth for more info
+```
+
+- `No such file or directory @ rb_file_s_rename`
+
+  > [!TIP|label:failure details]
+  > ```bash
+  > error: benjiwolff/neovim-nightly/neovim-nightly: No such file or directory @ rb_file_s_rename - (/usr/local/Caskroom/neovim-nightly/nightly-7aa5637, /usr/local/Caskroom/neovim-nightly/nightly-7aa5637.upgrading)
+  > ```
+
+  ```bash
+  # solution
+  $ brew remove neovim-nightly
+  $ rm -rf /usr/local/Caskroom/neovim-nightly
+
+  $ brew install neovim-nightly [ -v --debug --display-times ]
+  ```
+
+## build from source
+
+> [!NOTE|label:references:]
+> - [Building Neovim from source](https://dev.to/asyncedd/building-neovim-from-source-1794)
+> - [neovim/BUILD.md](https://github.com/neovim/neovim/blob/master/BUILD.md)
+>   - [Build prerequisites](https://github.com/neovim/neovim/blob/master/BUILD.md#build-prerequisites)
+
+
+### osx
+
+> [!NOTE|label:issue with wget certificate]
+> - [macOS versions less than 10.10](https://github.com/neovim/neovim/blob/master/BUILD.md#macos--homebrew)
+>   ```bash
+>   $ brew install curl-ca-bundle
+>   $ echo CA_CERTIFICATE=$(brew --prefix curl-ca-bundle)/share/ca-bundle.crt >> ~/.wgetrc
+>   ```
+> - ['stdio.h' file not found](https://github.com/neovim/neovim/blob/master/BUILD.md#macos--homebrew)
+>   ```bash
+>   $ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+>   ```
+
+```bash
+# prepare
+$ xcode-select --install
+$ brew install ninja libtool automake cmake pkg-config gettext curl
+# or
+$ brew install cmake gettext lpeg luarocks luajit luv msgpack tree-sitter unibilium \
+               libtermkey libuv libvterm
+
+# download
+$ git clone --recurse-submodules git@github.com:neovim/neovim.git /opt/neovim && cd $_
+
+# build
+$ cmake -S . \
+        -B build \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/neovim \
+        -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib \
+        -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib \
+        -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_FIND_FRAMEWORK=LAST \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -Wno-dev \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_OSX_SYSROOT=$(xcrun --show-sdk-path)
+$ cmake --build build
+$ sudo cmake --install build
+
+# verify
+$ /usr/local/neovim/bin/nvim -V1 -v
+NVIM v0.10.0-dev-2869+g4459e0cee
+Build type: Release
+LuaJIT 2.1.1710088188
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/usr/local/neovim/share/nvim"
+
+Run :checkhealth for more info
+
+# environment setup
+$ NVIM_HOME=/usr/local/neovim
+$ PATH=$NVIM_HOME/bin:$PATH
+$ export NVIM_HOME PATH
+```
+
+<!--sec data-title="brew install --head: install via cmake" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+# https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/n/neovim.rb
+$ cmake -S . \
+        -B build \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/neovim \
+        -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib \
+        -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib \
+        -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_FIND_FRAMEWORK=LAST \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -Wno-dev \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
+```
+<!--endsec-->
+
+<!--sec data-title="neovim-nighly: install via cc" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ /Applications/Xcode_14.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc \
+    -O2 -g -Og -g -flto=thin \
+    -Wall \
+    -Wextra -pedantic \
+    -Wno-unused-parameter \
+    -Wstrict-prototypes -std=gnu99 \
+    -Wshadow \
+    -Wconversion \
+    -Wvla \
+    -Wdouble-promotion \
+    -Wmissing-noreturn \
+    -Wmissing-format-attribute \
+    -Wmissing-prototypes -fsigned-char -fstack-protector-strong \
+    -Wimplicit-fallthrough -fdiagnostics-color=always \
+    -Wl,-export_dynamic \
+    -DUNIT_TESTING \
+    -DHAVE_UNIBILIUM \
+    -D_GNU_SOURCE \
+    -DINCLUDE_GENERATED_DECLARATIONS \
+    -I/Users/runner/work/neovim/neovim/.deps/usr/include/luajit-2.1 \
+    -I/Users/runner/work/neovim/neovim/.deps/usr/include \
+    -I/Users/runner/work/neovim/neovim/build/src/nvim/auto \
+    -I/Users/runner/work/neovim/neovim/build/include \
+    -I/Users/runner/work/neovim/neovim/build/cmake.config \
+    -I/Users/runner/work/neovim/neovim/src \
+    -I/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/include
+
+# details
+$ /usr/local/bin/nvim -V1 -v
+NVIM v0.10.0-dev-2867+g7aa56370f
+Build type: RelWithDebInfo
+LuaJIT 2.1.1710088188
+Compilation: /Applications/Xcode_14.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -O2 -g -Og -g -flto=thin -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -fstack-protector-strong -Wimplicit-fallthrough -fdiagnostics-color=always -Wl,-export_dynamic -DUNIT_TESTING -DHAVE_UNIBILIUM -D_GNU_SOURCE -DINCLUDE_GENERATED_DECLARATIONS -I/Users/runner/work/neovim/neovim/.deps/usr/include/luajit-2.1 -I/Users/runner/work/neovim/neovim/.deps/usr/include -I/Users/runner/work/neovim/neovim/build/src/nvim/auto -I/Users/runner/work/neovim/neovim/build/include -I/Users/runner/work/neovim/neovim/build/cmake.config -I/Users/runner/work/neovim/neovim/src -I/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/include
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/usr/local/share/nvim"
+
+Run :checkhealth for more info
+```
+<!--endsec-->
+
+- build with older MacOS
+  ```bash
+  $ make CMAKE_BUILD_TYPE=Release \
+         MACOSX_DEPLOYMENT_TARGET=10.13 \
+         DEPS_CMAKE_FLAGS="-DCMAKE_CXX_COMPILER=$(xcrun -find c++)"
+  ```
+
+- more settings
+  ```bash
+  $ brew unlink neovim
+  $ /usr/bin/env /bin/ln -h -s -f /usr/local/neovim/bin/nvim /usr/local/bin/nvim
+  $ /usr/bin/env /bin/ln -h -s -f /usr/local/neovim/bin/nvim /usr/local/bin/neovim
+  $ /usr/bin/env /bin/ln -h -s -f /usr/local/neovim/lib/nvim /usr/local/lib/nvim
+  $ /usr/bin/env /bin/ln -h -s -f /usr/local/neovim/share/nvim /usr/local/share/nvim
+  ```
+
 ### `brew install -v --debug`
 ```bash
 # download
@@ -132,6 +340,7 @@ $ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable 
 # clone
 $ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.git status -s
 $ /usr/bin/env git checkout -f master --
+$ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.git rev-parse --short=7 HEAD
 $ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.git show -s --format=\%cD
 Wed, 10 Apr 2024 07:08:49 +0800
 
@@ -141,18 +350,6 @@ $ cmake --build build
 $ cmake --install build
 ```
 
-## neovim-nightly
-
-> [!NOTE|label:references:]
-> - [#28125 No parser for 'lua' language when opening a lua file](https://github.com/neovim/neovim/issues/28125)
-> - [benjiwolff/homebrew-neovim-nightly](https://github.com/benjiwolff/homebrew-neovim-nightly)
-
-```bash
-$ brew unlink neovim
-Unlinking /usr/local/Cellar/neovim/HEAD-f494084... 35 symlinks removed.
-
-$ brew tap benjiwolff/neovim-nightly
-```
 
 # initialize
 
