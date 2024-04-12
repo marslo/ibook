@@ -925,7 +925,7 @@ $ date | wc
   -bash: complete: vim: no completion specification
   ```
 
-- list all completions
+- [list all completions](https://unix.stackexchange.com/a/94784/29178)
   ```bash
   $ complete
 
