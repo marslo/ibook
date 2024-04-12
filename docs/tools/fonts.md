@@ -17,6 +17,10 @@
   - [others](#others)
 - [powerline fonts](#powerline-fonts)
 - [devicons](#devicons)
+  - [coding](#coding)
+  - [folders](#folders)
+  - [platform](#platform)
+  - [misc.](#misc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -382,25 +386,38 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > - [* iMarslo: useful unicode](../cheatsheet/text-processing/text-processing.md#useful-unicode)
 > - [Private Use Area: E000-F8FF](https://jrgraphix.net/r/Unicode/E000-F8FF)
 > - [U+E000 ... U+F8FF: Private Use Area](https://utf8-chartable.de/unicode-utf8-table.pl)
+>   - [U+E600 ... U+E9FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=58880&number=1024&utf8=-)
 >   - [U+E5FA ... U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
 >   - [U+E9FA ... U+EDF9](https://utf8-chartable.de/unicode-utf8-table.pl?start=59898&number=1024&utf8=dec&unicodeinhtml=hex)
 >   - [U+EDFA ... U+F1F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=60922&number=1024&utf8=dec&unicodeinhtml=hex)
 >   - [U+F1FA to U+F5F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=61946&number=1024&utf8=dec&unicodeinhtml=hex)
 > - [Font Awesome 5 Code Icons](https://www.w3schools.com/icons/fontawesome5_icons_code.asp)
 
+### coding
+
 | UNICODE | ICON |
 |:-------:|:----:|
 |  `E614` |     |
 |  `F292` |     |
 |  `EA90` |     |
+|  `F198` |     |
+|  `F292` |     |
 |  `F295` |     |
 |  `E60C` |     |
 |  `E74E` |     |
-|  `E615` |     |
+|  `F81D` |     |
+|  `E781` |     |
+|  `F898` |     |
+|  `F81A` |     |
+|  `E648` |     |
+|  `E649` |     |
+|  `E64B` |     |
+|  `E651` |     |
 |  `E616` |     |
 |  `E612` |     |
 |  `E64E` |     |
 |  `F2C5` |     |
+|  `E6B2` |     |
 |  `EA8A` |     |
 |  `EA8B` |     |
 |  `E60B` |     |
@@ -410,6 +427,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E796` |     |
 |  `F121` |     |
 |  `EA92` |     |
+|  `E67C` |     |
 |  `F4B5` |     |
 |  `F120` |     |
 |  `E7A2` |     |
@@ -428,18 +446,36 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E62B` |     |
 |  `E7C5` |     |
 |  `E235` |     |
+|  `E73E` |     |
 |  `F853` |     |
 |  `F858` |     |
+|  `E673` |     |
+|  `E767` |     |
+|  `E66E` |     |
 |  `F4E5` |     |
+|  `F4A5` |     |
+|  `EB9D` |     |
+|  `F15C` |     |
+|  `E7B4` |     |
+|  `E73D` |     |
+
+### folders
+
+| UNICODE | ICON |
+|:-------:|:----:|
 |  `F07B` |     |
 |  `F07C` |     |
 |  `F114` |     |
 |  `F115` |     |
+|  `F067` |     |
+|  `F068` |     |
 |  `F2D1` |     |
 |  `F48B` |     |
-|  `F4A5` |     |
-|  `EB9D` |     |
-|  `F15C` |     |
+
+### platform
+
+| UNICODE | ICON |
+|:-------:|:----:|
 |  `F302` |     |
 |  `E711` |     |
 |  `F8FF` |     |
@@ -457,11 +493,20 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F17A` |     |
 |  `E70F` |     |
 |  `EBC5` |     |
+|  `F306` |     |
+|  `E722` |     |
+|  `F304` |     |
 |  `E70E` |     |
 |  `F17B` |     |
+
+### misc.
+
+| UNICODE | ICON |
+|:-------:|:----:|
 |  `E60A` |     |
 |  `E672` |     |
 |  `F023` |     |
+|  `F52A` |     |
 |  `EB74` |     |
 |  `EBE7` |     |
 |  `F09C` |     |
@@ -471,20 +516,15 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E69E` |     |
 |  `F361` |     |
 |  `F36F` |     |
-|  `E6B2` |     |
 |  `E765` |     |
-|  `E7B4` |     |
-|  `EB65` |     |
-|  `EB6D` |     |
-|  `F204` |     |
-|  `F205` |     |
 |  `F255` |     |
 |  `F256` |     |
 |  `F10D` |     |
 |  `F10E` |     |
 |  `F30C` |     |
-|  `F85A` |     |
 |  `F89F` |     |
+|  `E651` |     |
+|  `E66D` |     |
 |  `F8E2` |     |
 |  `F8FE` |     |
 |  `E22C` |     |
@@ -492,3 +532,22 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E279` |     |
 |  `E27A` |     |
 |  `E006` |     |
+|  `E374` |     |
+|  `F1D3` |     |
+|  `F852` |     |
+|  `E615` |     |
+|  `F893` |     |
+|  `F85A` |     |
+|  `EB65` |     |
+|  `EB6D` |     |
+|  `F204` |     |
+|  `F205` |     |
+|  `32DB` |  ㋛  |
+|  `32E1` |  ㋡  |
+|  `E61C` |     |
+|  `E668` |     |
+|  `E688` |     |
+|  `E6A2` |     |
+|  `E717` |     |
+|  `E719` |     |
+|  `E783` |     |
