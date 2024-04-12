@@ -693,8 +693,11 @@ vim /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/macvim.rb
 # or
 $ brew -v edit macvim-dev/macvim/macvim
 ```
+
 - manual install formula
-> [How to prevent homebrew from upgrading a package?](https://stackoverflow.com/a/48343355/2940319)
+
+  > [!NOTE|label:references:]
+  > [How to prevent homebrew from upgrading a package?](https://stackoverflow.com/a/48343355/2940319)
 
   ```bash
   $ brew -v edit macvim
@@ -703,11 +706,20 @@ $ brew -v edit macvim-dev/macvim/macvim
   $ brew pin macvim
   ```
 
+- via `brew --repo`
+  ```bash
+  $ brew --repo benjiwolff/neovim-nightly
+  /usr/local/Homebrew/Library/Taps/benjiwolff/homebrew-neovim-nightly
+
+  $ cat $(brew --repo benjiwolff/neovim-nightly)/Casks/*rb
+  ```
+
 #### brew debug
 - info
   ```bash
   $ brew info --analytics
   ```
+
 - doctor
   ```bash
   $ brew doctor
@@ -740,20 +752,42 @@ $ brew -v edit macvim-dev/macvim/macvim
   Xcode: 12.2
   ```
 
-- pathes
-  ```bash
-  $ brew --repository
-  /usr/local/Homebrew
+- paths
+  - repos
 
-  $ brew --prefix python@3
-  /usr/local/opt/python@3.9
+    ```bash
+    # repo
+    $ brew --repository
+    /usr/local/Homebrew
+    $ brew --repo
+    /usr/local/Homebrew
 
-  $ brew --cache
-  /Users/marslo/Library/Caches/Homebre
+    $ brew --prefix
+    /usr/local
 
-  $ brew --repo homebrew/core
-  /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
-  ```
+    $ brew --cellar
+    /usr/local/Cellar
+
+    $ brew --caskroom
+    /usr/local/Caskroom
+
+    $ brew --cache
+    /Users/marslo/Library/Caches/Homebre
+
+    $ brew --repo homebrew/core
+    /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
+    $ brew --repo benjiwolff/neovim-nightly
+    /usr/local/Homebrew/Library/Taps/benjiwolff/homebrew-neovim-nightly
+    ```
+
+  - formula
+    ```
+    $ brew --prefix python@3
+    /usr/local/opt/python@3.9
+
+    $ brew --cellar python@3
+    /usr/local/Cellar/python@3.9
+    ```
 
 - [cleanup](${brew_source}/brew/issues/3784#issuecomment-364675767)
   ```bash
@@ -813,7 +847,6 @@ $ brew -v edit macvim-dev/macvim/macvim
 
 - `brew gist-log`
 
-
   > [!TIP|label:generate token via:]
   > - [Create a GitHub personal access token](https://github.com/settings/tokens/new?scopes=gist&description=Homebrew)
 
@@ -825,6 +858,14 @@ $ brew -v edit macvim-dev/macvim/macvim
   https://gist.github.com/marslo/353904e6472536e94d0c8f51a8a23a84
   ```
 
+- get formula info
+  ```bash
+  $ brew info neovim-nightly
+
+  # or
+  $ brew desc neovim-nightly --cask --eval-all
+  ```
+
 ### check homebrew env
 ```bash
 $ brew shellenv
@@ -834,6 +875,20 @@ export HOMEBREW_REPOSITORY="/usr/local/Homebrew";
 export PATH="/usr/local/bin:/usr/local/sbin${PATH+:$PATH}";
 export MANPATH="/usr/local/share/man${MANPATH+:$MANPATH}:";
 export INFOPATH="/usr/local/share/info:${INFOPATH:-}";
+
+# or
+$ brew --env
+HOMEBREW_CC: clang
+HOMEBREW_CXX: clang++
+MAKEFLAGS: -j12
+CMAKE_PREFIX_PATH: /usr/local
+CMAKE_INCLUDE_PATH: /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers
+CMAKE_LIBRARY_PATH: /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries
+PKG_CONFIG_LIBDIR: /usr/lib/pkgconfig:/usr/local/Homebrew/Library/Homebrew/os/mac/pkgconfig/14
+HOMEBREW_GIT: git
+HOMEBREW_SDKROOT: /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
+ACLOCAL_PATH: /usr/local/share/aclocal
+PATH: /usr/local/Homebrew/Library/Homebrew/shims/mac/super:/usr/bin:/bin:/usr/sbin:/sbin
 ```
 
 ## install dmg

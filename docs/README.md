@@ -8,7 +8,7 @@ life is hard, make it easier
 ## Introduction
 
 > [!NOTE]
-> This is a book powered by [imarslo](https://imarslo.gitbook.io/handbook).
+> This is a book powered by [imarslo](https://imarslo.github.io/)
 
 ## The other docs
 
