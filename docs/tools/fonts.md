@@ -20,6 +20,8 @@
   - [coding](#coding)
   - [folders](#folders)
   - [platform](#platform)
+  - [math](#math)
+  - [graph](#graph)
   - [misc.](#misc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -391,6 +393,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 >   - [U+E9FA ... U+EDF9](https://utf8-chartable.de/unicode-utf8-table.pl?start=59898&number=1024&utf8=dec&unicodeinhtml=hex)
 >   - [U+EDFA ... U+F1F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=60922&number=1024&utf8=dec&unicodeinhtml=hex)
 >   - [U+F1FA to U+F5F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=61946&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+F0000 to U+F03FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=983040&number=1024&utf8=-)
 > - [Font Awesome 5 Code Icons](https://www.w3schools.com/icons/fontawesome5_icons_code.asp)
 
 ### coding
@@ -402,26 +405,47 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `EA90` |     |
 |  `F198` |     |
 |  `F292` |     |
+| `F0423` |   󰐣  |
+| `F0424` |   󰐤  |
+| `F1183` |   󱆃  |
+| `F1501` |   󱔁  |
+| `F12B7` |   󱊷  |
 |  `F295` |     |
+| `F03F0` |   󰏰  |
+|  `F852` |     |
+| `F0353` |   󰍓  |
 |  `E60C` |     |
 |  `E74E` |     |
 |  `F81D` |     |
 |  `E781` |     |
 |  `F898` |     |
+| `F0399` |   󰎙  |
+| `F06E6` |   󰛦  |
 |  `F81A` |     |
+| `F031B` |   󰌛  |
 |  `E648` |     |
 |  `E649` |     |
+| `F0671` |   󰙱  |
+| `F0672` |   󰙲  |
 |  `E64B` |     |
 |  `E651` |     |
+|  `FD42` |   ﵂  |
+| `F0844` |   󰡄  |
+| `F07D4` |   󰟔  |
 |  `E616` |     |
 |  `E612` |     |
 |  `E64E` |     |
 |  `F2C5` |     |
 |  `E6B2` |     |
 |  `EA8A` |     |
+| `F0A3E` |   󰨾  |
 |  `EA8B` |     |
 |  `E60B` |     |
+| `F0626` |   󰘦  |
 |  `E618` |     |
+| `F0761` |   󰝡  |
+| `F0694` |   󰚔  |
+| `F0171` |   󰅱  |
 |  `EAE9` |     |
 |  `F1C9` |     |
 |  `E796` |     |
@@ -434,22 +458,27 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E683` |     |
 |  `E285` |     |
 |  `E795` |     |
+| `F07B7` |   󰞷  |
 |  `E7A3` |     |
 |  `E758` |     |
 |  `E738` |     |
+| `F0B37` |   󰬷  |
 |  `E204` |     |
 |  `E005` |     |
 |  `E7B0` |     |
 |  `F308` |     |
 |  `E650` |     |
+| `F0868` |   󰡨  |
 |  `E7C5` |     |
 |  `E62B` |     |
 |  `E7C5` |     |
 |  `E235` |     |
+| `F0320` |   󰌠  |
 |  `E73E` |     |
 |  `F853` |     |
 |  `F858` |     |
 |  `E673` |     |
+| `F06F7` |   󰛷  |
 |  `E767` |     |
 |  `E66E` |     |
 |  `F4E5` |     |
@@ -458,6 +487,8 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F15C` |     |
 |  `E7B4` |     |
 |  `E73D` |     |
+| `F08C0` |   󰣀  |
+|  `F1D3` |     |
 
 ### folders
 
@@ -492,12 +523,77 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E62A` |     |
 |  `F17A` |     |
 |  `E70F` |     |
+| `F05B3` |   󰖳  |
+| `F0A21` |   󰨡  |
 |  `EBC5` |     |
 |  `F306` |     |
 |  `E722` |     |
 |  `F304` |     |
 |  `E70E` |     |
 |  `F17B` |     |
+
+### math
+
+| UNICODE | ICON |
+|:-------:|:----:|
+|  `F89F` |     |
+| `F03A0` |   󰎠  |
+| `F1052` |   󱁒  |
+| `F15CB` |   󱗋  |
+| `F1992` |   󱦒  |
+| `F01C9` |   󰇉  |
+| `F0195` |   󰆕  |
+| `F0871` |   󰡱  |
+| `F0963` |   󰥣  |
+| `F0871` |   󰡱  |
+| `F0C96` |   󰲖  |
+| `F0C97` |   󰲗  |
+| `F0C98` |   󰲘  |
+| `F0784` |   󰞄  |
+|  `F8FE` |     |
+|  `E22C` |     |
+| `F03FF` |   󰏿  |
+| `F0400` |   󰐀  |
+| `F0627` |   󰘧  |
+|  `E6B1` |     |
+| `F10EE` |   󱃮  |
+| `F00A1` |   󰂡  |
+| `F04A0` |   󰒠  |
+| `F0295` |   󰊕  |
+| `F03C9` |   󰏉  |
+
+### graph
+
+| UNICODE | ICON |
+|:-------:|:----:|
+|  `F85A` |     |
+| `F035B` |   󰍛  |
+| `F1362` |   󱍢  |
+|  `E241` |     |
+|  `E69E` |     |
+|  `F361` |     |
+| `F02AC` |   󰊬  |
+| `F0DFA` |   󰷺  |
+| `F0F52` |   󰽒  |
+| `F169D` |   󱚝  |
+| `F169E` |   󱚞  |
+| `F169F` |   󱚟  |
+| `F16A0` |   󱚠  |
+| `F16A1` |   󱚡  |
+| `F16A2` |   󱚢  |
+| `F16A3` |   󱚣  |
+| `F16A4` |   󱚤  |
+| `F16A5` |   󱚥  |
+| `F16A6` |   󱚦  |
+| `F1957` |   󱥗  |
+| `F01E5` |   󰇥  |
+| `F02CB` |   󰋋  |
+| `F04B2` |   󰒲  |
+| `F04B3` |   󰒳  |
+|  `E61C` |     |
+|  `E006` |     |
+|  `32DB` |  ㋛  |
+|  `32E1` |  ㋡  |
 
 ### misc.
 
@@ -512,42 +608,57 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F09C` |     |
 |  `F084` |     |
 |  `F43D` |     |
-|  `E241` |     |
-|  `E69E` |     |
-|  `F361` |     |
+| `F030B` |   󰌋  |
+| `F0306` |   󰌆  |
+| `F1184` |   󱆄  |
+| `F1185` |   󱆅  |
 |  `F36F` |     |
 |  `E765` |     |
 |  `F255` |     |
 |  `F256` |     |
+| `F027E` |   󰉾  |
 |  `F10D` |     |
 |  `F10E` |     |
+| `F11A7` |   󱆧  |
+| `F11A8` |   󱆨  |
 |  `F30C` |     |
-|  `F89F` |     |
 |  `E651` |     |
 |  `E66D` |     |
 |  `F8E2` |     |
-|  `F8FE` |     |
-|  `E22C` |     |
-|  `E6B1` |     |
 |  `E279` |     |
 |  `E27A` |     |
-|  `E006` |     |
 |  `E374` |     |
-|  `F1D3` |     |
-|  `F852` |     |
-|  `E615` |     |
 |  `F893` |     |
-|  `F85A` |     |
+|  `E615` |     |
 |  `EB65` |     |
 |  `EB6D` |     |
+| `F08EA` |   󰣪  |
 |  `F204` |     |
 |  `F205` |     |
-|  `E61C` |     |
+| `F0A19` |   󰨙  |
+| `F0A1A` |   󰨚  |
+| `F0521` |   󰔡  |
+| `F0522` |   󰔢  |
 |  `E668` |     |
 |  `E688` |     |
-|  `E6A2` |     |
 |  `E717` |     |
 |  `E719` |     |
 |  `E783` |     |
-|  `32DB` |  ㋛  |
-|  `32E1` |  ㋡  |
+| `F0274` |   󰉴  |
+| `F0504` |   󰔄  |
+| `F0505` |   󰔅  |
+| `F07E4` |   󰟤  |
+|  `E6A2` |     |
+| `F07EF` |   󰟯  |
+| `F07FD` |   󰟽  |
+| `F083E` |   󰠾  |
+| `F0A08` |   󰨈  |
+| `F0A6F` |   󰩯  |
+| `F0D6E` |   󰵮  |
+| `F100D` |   󱀍  |
+| `F132F` |   󱌯  |
+| `F12FE` |   󱋾  |
+| `F13A3` |   󱎣  |
+| `F147D` |   󱑽  |
+| `F172A` |   󱜪  |
+| `F1A1C` |   󱨜  |

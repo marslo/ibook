@@ -1504,11 +1504,91 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 >   - [zeorin/dotfiles/.vimrc](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc#L876)
 >   - [skbolton/titan/nvim/nvim/plugin/filesystem.vim](https://github.com/skbolton/titan/blob/b6c44d3c9b6aab2ae011d6072ca0e2a5a254a82a/nvim/nvim/plugin/filesystem.vim#L19)
 >   - [#276 - The symbol for opened folder in NERDTree is not working](https://github.com/ryanoasis/vim-devicons/issues/276#issue-470708269)
+>   - [NERDTreeExtensionHighlightColor](https://github.com/tiagofumo/vim-nerdtree-syntax-highlight/issues/6#issuecomment-242753362)
+>   - [* init.vim](https://gist.github.com/asilvadesigns/0882eb61977b24813fb3c6e4c6fbc8c7#file-init-vim-L380)
 > - icons:
 >   - [* iMarslo: devicons](../tools/fonts.md#devicons)
 >   - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
 > - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
 
+```vim
+" ryanoasis/vim-devicons
+let g:WebDevIconsOS                                                    = 'Darwin'
+let g:DevIconsEnableFoldersOpenClose                                   = 1
+let g:DevIconsEnableFolderExtensionPatternMatching                     = 0
+let g:DevIconsDefaultFolderOpenSymbol                                  = ''
+let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol               = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols              = {}
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['log']       = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['json']      = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['md']        = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['perm']      = '󰌋'
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['groovy']    = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['sh']        = '󱆃'
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yaml']      = '󱚥'
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yml']       = '󱚥'
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['gitcommit'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols                  = {}
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['jenkinsfile']   = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['vimrc.d']       = '󰷺'
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['vars']          = '󱆃'
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']           = '󰵮'
+if exists('g:loaded_webdevicons') | call webdevicons#refresh() | endif
+
+" tiagofumo/vim-nerdtree-syntax-highlight
+let g:NERDTreeSyntaxEnabledExtensions                = ['rb', 'lua', 'vim', 'sh', 'py', 'groovy', 'css', 'html', 'json', 'log']
+let g:NERDTreeSyntaxEnabledExactMatches              = ['.marslo', 'jenkins', 'virtualization', 'vimrc.d', 'devops', 'vars', 'jenkinsfile', '.vimrc']
+let g:NERDTreeExtensionHighlightColor                = {}
+let g:NERDTreeExtensionHighlightColor['groovy']      = '8FAA54'       " #8FAA54
+let g:NERDTreeExtensionHighlightColor['log']         = '44788E'       " #44788E
+let g:NERDTreeExtensionHighlightColor['yaml']        = '9370db'       " #9370db
+let g:NERDTreeExtensionHighlightColor['yml']         = '9370db'       " #9370db
+let g:NERDTreeExtensionHighlightColor['png']         = '719899'       " #719899
+let g:NERDTreeExactMatchHighlightColor               = {}
+let g:NERDTreeExactMatchHighlightColor['.gitignore'] = '3a346f'       " #3a346f
+```
+
+- default settings
+  ```vim
+  let g:WebDevIconsUnicodeDecorateFolderNodes        = 1
+  let g:WebDevIconsNerdTreeAfterGlyphPadding         = ' '
+  let g:webdevicons_enable_nerdtree                  = 1
+  let g:webdevicons_enable_unite                     = 1
+  let g:webdevicons_enable_vimfiler                  = 1
+  let g:webdevicons_conceal_nerdtree_brackets        = 1
+  let g:WebDevIconsNerdTreeGitPluginForceVAlign      = 1
+  let g:DevIconsEnableFolderExtensionPatternMatching = 0
+
+  :echo g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols
+  {'erl': '', 'styl': '', 'db': '', 'rmd': '', 'c++': '', 'pyc': '', 'pyd': '', 'go': '', 'suo':
+  '', 'lua': '', 'bash': '', 'pyo': '', 'mustache': '', 'gif': '', 'nix': '', 'jsx': '', 'leex':
+  '', 'lhs': '', 'sol': 'ﲹ', 'scala': '', 'zsh': '', 'jpeg': '', 'pem': '', 'ts': '', 'xcplaygroun
+  d': '', 'fsi': '', 'coffee': '', 'scss': '', 'js': '', 'gitcommit': '', 'xul': '', 'mdx': '', '
+  less': '', 'fish': '', 'htm': '', 'rb': '', 'f#': '', 'c': '', 'd': '', 'md': '', 'webp': '',
+  'h': '', 'mli': 'λ', 'mk': '', 'rs': '', 'haml': '', 'png': '', 'hh': '', 'php': '', 'cc': '',
+  't': '', 'jl': '', 'json': '', 'cljc': '', 'exs': '', 'jenkinsfile': '', 'hs': '', 'sql': '', '
+  ico': '', 'ps1': '', 'cs': '', 'bmp': '', 'sln': '', 'cljs': '', 'html': '', 'cpp': '', 'hrl':
+  '', 'ml': 'λ', 'sass': '', 'vue': '﵂', 'awk': '', 'conf': '', 'pl': '', 'pm': '', 'cp': '', 'rli
+  b': '', 'pp': '', 'tex': 'ﭨ', 'elm': '', 'jpg': '', 'toml': '', 'webmanifest': '', 'mjs': '', 's
+  wift': '', 'r': 'ﳒ', 'ai': '', 'fs': '', 'csh': '', 'psd': '', 'psb': '', 'heex': '', 'rss': ''
+  , 'cxx': '', 'css': '', 'log': '', 'rake': '', 'sh': '', 'hpp': '', 'bat': '', 'fsx': '', 'ini'
+  : '', 'gemspec': '', 'markdown': '', 'hbs': '', 'twig': '', 'rproj': '鉶', 'yaml': '', 'fsscript'
+  : '', 'ksh': '', 'vim': '', 'ejs': '', 'clj': '', 'ex': '', 'edn': '', 'slim': '', 'eex': '',
+  'tsx': '', 'dump': '', 'groovy': '', 'py': '', 'hxx': '', 'diff': '', 'dart': '', 'java': '', '
+  yml': ''}
+
+  :echo g:WebDevIconsUnicodeDecorateFileNodesExactSymbols
+  {'.vimrc': '', 'gruntfile.coffee': '', '_gvimrc': '', '_vimrc': '', 'dropbox': '', '.gvimrc': '',
+   'license': '󰌋', 'procfile': '', 'config.ru': '', 'gemfile': '', '.gitignore': '', 'COMMIT_EDITMSG'
+  : '', 'src': '', '.gitmodules': '', 'makefile': '', 'rakefile': '', '.bashprofile': '', 'gulpfile
+  .coffee': '', 'gruntfile.js': '', '.zshenv': '', 'gruntfile.ls': '', 'node_modules': '', 'gulpfile
+  .js': '', '.bashrc': '', 'robots.txt': '󰚩', '.zshrc': '', 'mix.lock': '', 'gulpfile.ls': '', 'exac
+  t-match-case-sensitive-2': '2', 'docker-compose.yml': '', '.gitconfig': '', '.gitattributes': '', 'r
+  eact.jsx': '', 'exact-match-case-sensitive-1.txt': '1', 'dockerfile': '', '.zprofile': '', 'cmakelis
+  ts.txt': '', '.ds_store': '', 'favicon.ico': ''}
+  ```
+
+<!--sec data-title="full config" data-id="section1" data-show=true data-collapse=true ces-->
 ```vim
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -1566,6 +1646,7 @@ let g:WebDevIconsDefaultFileSymbolColor                  = s:darkBlue
 let g:NERDTreeSyntaxEnabledExtensions                    = ['rb', 'sh', 'py', 'groovy', 'css', 'html']
 let g:NERDTreeSyntaxEnabledExactMatches                  = ['.marslo', 'jenkins', 'virtualization', 'devops']
 ```
+<!--endsec-->
 
 - [more settings for vim-devicon](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc)
   ```vim
