@@ -1514,40 +1514,57 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " ryanoasis/vim-devicons
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding  = ' '
+let g:WebDevIconsOS                                               = 'Darwin'
+let g:WebDevIconsUnicodeDecorateFolderNodes                       = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding                        = ' '
+let g:webdevicons_enable_nerdtree                                 = 1
+let g:webdevicons_enable_unite                                    = 1
+let g:webdevicons_enable_vimfiler                                 = 1
+let g:webdevicons_conceal_nerdtree_brackets                       = 1
+let g:DevIconsEnableFoldersOpenClose                              = 1
+let g:DevIconsDefaultFolderOpenSymbol                             = ''
+let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol          = ''
+let g:DevIconsEnableFolderExtensionPatternMatching                = 1
+let g:WebDevIconsNerdTreeGitPluginForceVAlign                     = 1
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols         = {}
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['log']  = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['json'] = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['md']   = ''
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols             = {}
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']      = ''
 if exists('g:loaded_webdevicons') | call webdevicons#refresh() | endif
 
 " tiagofumo/vim-nerdtree-syntax-highlight
-let s:brown       = "905532"
-let s:aqua        = "3AFFDB"
-let s:blue        = "689FB6"
-let s:darkBlue    = "44788E"
-let s:purple      = "834F79"
-let s:lightPurple = "834F79"
-let s:red         = "AE403F"
-let s:beige       = "F5C06F"
-let s:yellow      = "F09F17"
-let s:orange      = "D4843E"
-let s:darkOrange  = "F16529"
-let s:pink        = "CB6F6F"
-let s:salmon      = "EE6E73"
-let s:green       = "8FAA54"
-let s:lightGreen  = "31B53E"
-let s:white       = "FFFFFF"
-let s:rspec_red   = 'FE405F'
-let s:git_orange  = 'F54D27'
-let g:WebDevIconsDefaultFolderSymbolColor                = s:beige
-let g:WebDevIconsDefaultFileSymbolColor                  = s:blue
-let g:NERDTreeSyntaxEnabledExtensions                    = ['c', 'h', 'c++', 'cpp', 'php', 'rb', 'js', 'css', 'html']
-let g:NERDTreeSyntaxEnabledExactMatches                  = ['node_modules', 'favicon.ico']
+let s:brown       = "905532"                                      " #905532
+let s:aqua        = "3AFFDB"                                      " #3AFFDB
+let s:blue        = "689FB6"                                      " #689FB6
+let s:darkBlue    = "44788E"                                      " #44788E
+let s:purple      = "834F79"                                      " #834F79
+let s:lightPurple = "834F79"                                      " #834F79
+let s:red         = "AE403F"                                      " #AE403F
+let s:beige       = "F5C06F"                                      " #F5C06F
+let s:yellow      = "F09F17"                                      " #F09F17
+let s:orange      = "D4843E"                                      " #D4843E
+let s:darkOrange  = "F16529"                                      " #F16529
+let s:pink        = "CB6F6F"                                      " #CB6F6F
+let s:salmon      = "EE6E73"                                      " #EE6E73
+let s:green       = "8FAA54"                                      " #8FAA54
+let s:lightGreen  = "31B53E"                                      " #31B53E
+let s:white       = "FFFFFF"                                      " #FFFFFF
+let s:rspec_red   = 'FE405F'                                      " #FE405F
+let s:git_orange  = 'F54D27'                                      " #F54D27
 let g:NERDTreeHighlightCursorline                        = 1
 let g:NERDTreeExtensionHighlightColor                    = {}
+let g:NERDTreeExtensionHighlightColor['groovy']          = s:beige
+let g:NERDTreeExtensionHighlightColor['md']              = "CC6666"
 let g:NERDTreeExactMatchHighlightColor                   = {}
-let g:NERDTreePatternMatchHighlightColor                 = {}
-let g:NERDTreeExtensionHighlightColor['css']             = s:blue
 let g:NERDTreeExactMatchHighlightColor['.gitignore']     = s:git_orange
-let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red
+let g:NERDTreePatternMatchHighlightColor                 = {}
+let g:NERDTreePatternMatchHighlightColor['.*\.md$']      = s:yellow
+let g:WebDevIconsDefaultFolderSymbolColor                = s:beige
+let g:WebDevIconsDefaultFileSymbolColor                  = s:darkBlue
+let g:NERDTreeSyntaxEnabledExtensions                    = ['rb', 'sh', 'py', 'groovy', 'css', 'html']
+let g:NERDTreeSyntaxEnabledExactMatches                  = ['.marslo', 'jenkins', 'virtualization', 'devops']
 ```
 
 - [more settings for vim-devicon](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc)
