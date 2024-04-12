@@ -542,8 +542,6 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `EB6D` |     |
 |  `F204` |     |
 |  `F205` |     |
-|  `32DB` |  ㋛  |
-|  `32E1` |  ㋡  |
 |  `E61C` |     |
 |  `E668` |     |
 |  `E688` |     |
@@ -551,3 +549,5 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E717` |     |
 |  `E719` |     |
 |  `E783` |     |
+|  `32DB` |  ㋛  |
+|  `32E1` |  ㋡  |
