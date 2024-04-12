@@ -8,7 +8,7 @@ git command study and practice
   - [git alias](#git-alias)
   - [specifying ranges](#specifying-ranges)
 - [commit](#commit)
-  - [get commit id](#get-commit-id)
+  - [get revision number](#get-revision-number)
   - [get abbrev commit ids](#get-abbrev-commit-ids)
   - [get previous commit id](#get-previous-commit-id)
   - [get next commit id](#get-next-commit-id)
@@ -133,41 +133,58 @@ rlog    = "!bash -c 'while read branch; do \n\
 
 
 ## commit
-### get commit id
+### get revision number
 
-> the `<value>` can be:
+> [!TIP|label:the `<value>` can be:]
 > - commit id
 > - branch name
 > - `HEAD`, `HEAD~n`, `HEAD^^`
 
 ```bash
 $ git rev-parse <value>^{commit}
+
+# i.e.:
+$ git rev-parse HEAD
+e06b245740ac0c73f9454b6d96758e3a4a804901
 ```
 
 ### get abbrev commit ids
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [`--abbrev-commit`](https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt---abbrev-commit)
->
-> format:
-> - `%H` : commit hash
-> - `%h` : abbreviated commit hash
+> - format:
+>   - `%H` : commit hash
+>   - `%h` : abbreviated commit hash
 
-```bash
-$ git rev-list HEAD -n 3 --abbrev=11 --abbrev-commit
-446c656814d
-e747154df34
-22d0ee9b131
+- `rev-list`
+  ```bash
+  $ git rev-list HEAD -n 3 --abbrev=11 --abbrev-commit
+  446c656814d
+  e747154df34
+  22d0ee9b131
 
-# or via `git log`
-$ git log -n 3 --format='%h' --abbrev=11
-# or
-$ git log -3 --format='%h' --abbrev=11
-446c656814
-e747154df3
-22d0ee9b13
-```
+  # or via `git log`
+  $ git log -n 3 --format='%h' --abbrev=11
+  # or
+  $ git log -3 --format='%h' --abbrev=11
+  446c656814
+  e747154df3
+  22d0ee9b13
+  ```
+
+- `rev-parse`
+  ```bash
+  $ git rev-parse --short HEAD
+
+  # or
+  $ git rev-parse --short=7 HEAD
+
+  # i.e.:
+  $ git rev-parse --short HEAD
+  e06b24574
+  $ git rev-parse --short=7 HEAD
+  e06b245
+  ```
 
 ### get previous commit id
 ```bash
@@ -188,25 +205,20 @@ $ git rev-list --no-walk <commmit-id>..HEAD | tail -1
 ### [get current branch](https://stackoverflow.com/a/19585361/2940319)
 ```bash
 $ git branch --show-current
-```
-or
-```bash
+
+# or
 $ git rev-parse --abbrev-ref HEAD
-```
-or
-```bash
+
+# or
 $ git symbolic-ref --short HEAD
-```
-- or
-  ```bash
-  $ git symbolic-ref HEAD | sed -e "s/^refs\/heads\///"
-  ```
-- or
-  ```bash
-  $ git symbolic-ref --quiet --short HEAD || git rev-parse --short
-  ```
-[or](https://stackoverflow.com/a/33485172/2940319)
-```bash
+
+# or
+$ git symbolic-ref HEAD | sed -e "s/^refs\/heads\///"
+
+# or
+$ git symbolic-ref --quiet --short HEAD || git rev-parse --short
+
+# [or](https://stackoverflow.com/a/33485172/2940319)
 $ git name-rev --name-only HEAD
 ```
 
@@ -237,7 +249,7 @@ $ git branch --no-color \
   $ git name-rev --name-only HEAD |
         sed -rne 's:^[ \s]*([^\]+/){2}([^~]+).*$:\2:p'
 
- # or
+  # or
   $ git name-rev --name-only HEAD |
         sed -rne 's:^[ \s]*remotes/origin/([^~]+).*$:\1:p'
   ```
@@ -295,11 +307,11 @@ $ git branch --no-color \
   $ git branch -a --contains a3879d3
   * master
     remotes/origin/master
-  ```
-  or
-  ```bash
+
+  # or
   $ git branch -r --contains a3879d3
   origin/master
+
   ```
 
 - `name-rev`
@@ -313,37 +325,33 @@ $ git branch --no-color \
   ```bash
   $ git rev-parse --abbrev-ref --symbolic-full-name @{u}
   origin/marslo
+
+  # or
+  $ git for-each-ref --format='%(upstream)' $(git symbolic-ref -q HEAD)
+  refs/remotes/origin/marslo
+
+  # or for `meta/config`
+  $ git symbolic-ref -q HEAD
+  refs/heads/meta/config
+  $ git for-each-ref --format='%(upstream)' $(git symbolic-ref -q HEAD)
+  refs/remotes/origin/meta/config
+  $ git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
+  origin/meta/config
+
+  # [or](https://stackoverflow.com/a/49418399/2940319)
+  $ git status -bsuno
+  ## master...origin/master
   ```
-  - or
-    ```bash
-    $ git for-each-ref --format='%(upstream)' $(git symbolic-ref -q HEAD)
-    refs/remotes/origin/marslo
-    ```
-  - or for `meta/config`
-    ```bash
-    $ git symbolic-ref -q HEAD
-    refs/heads/meta/config
-    $ git for-each-ref --format='%(upstream)' $(git symbolic-ref -q HEAD)
-    refs/remotes/origin/meta/config
-    $ git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
-    origin/meta/config
-    ```
-  - [or](https://stackoverflow.com/a/49418399/2940319)
-    ```bash
-    $ git status -bsuno
-    ## master...origin/master
-    ```
 
 - get specific
   ```bash
   $ git rev-parse --abbrev-ref gh-pages@{upstream}
   origin/gh-pages
+
+  # or
+  $ git for-each-ref --format='%(upstream:short)' $(git rev-parse --symbolic-full-name meta/config)
+  origin/meta/config
   ```
-  - or
-    ```bash
-    $ git for-each-ref --format='%(upstream:short)' $(git rev-parse --symbolic-full-name meta/config)
-    origin/meta/config
-    ```
 
 ### [get local/remote branches](https://stackoverflow.com/a/40122019/2940319)
 - local
@@ -404,7 +412,7 @@ $ git branch --sort=committerdate   # ASC
   }
   ```
 
-#### git alias()
+#### gitalias
 ```bash
 [alias]
   sb          = "! git branch --sort=-committerdate --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset) - %(color:yellow)%(refname:short)%(color:reset) - %(subject) %(color:bold green)(%(committerdate:relative))%(color:reset) %(color:blue)<%(authorname)>%(color:reset)' --color=always"
@@ -438,7 +446,8 @@ $ git branch --sort=committerdate   # ASC
 ```
 
 ### [change head](https://stackoverflow.com/a/60102988/2940319)
-> reference:
+
+> [!NOTE|label:reference:]
 > - [warning: ignoring broken ref refs/remotes/origin/HEAD](https://stackoverflow.com/a/45867333/2940319)
 
 - check refs
@@ -449,17 +458,16 @@ $ git branch --sort=committerdate   # ASC
   $ git symbolic-ref refs/remotes/origin/HEAD
   refs/remotes/origin/new_master
   ```
+
 - fix warning
   ```bash
   $ git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/new_master
-  ```
-or
-  ```bash
+
+  # or
   $ git remote set-head origin --delete
   $ git remote set-head origin --auto
-  ```
-or
-  ```bash
+
+  # or
   $ git fetch --all --force
   $ git remote set-head origin refs/remotes/origin/new_master
   ```
@@ -589,11 +597,11 @@ or
   Would remove bin/
   ```
 
-
 ## log
 ### short stat
 ```bash
 $ git log --show-signature
+
 # or
 $ git log --shortstat
 ```
@@ -729,9 +737,7 @@ $ GIT_EDITOR="sed -i -e '2,$COUNT s/^pick /s /;/# This is the 2nd commit message
     sq = ! "f() { TARGET=$1 && GIT_EDITOR=\"sed -i -e '2,$TARGET s/^pick /s /;/# This is the 2nd commit message:/,$ {d}'\" git rebase -i HEAD~$TARGET; }; f"
   ```
 
-example
-
-![git rebase and squash automatic](../../screenshot/git/gitrebase-isquash-auto.png)
+  ![git rebase and squash automatic](../../screenshot/git/gitrebase-isquash-auto.png)
 
 - [or](https://stackoverflow.com/a/25941070/2940319)
   ```bash
@@ -1907,8 +1913,7 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
 
 #### color
 
-> [!TIP]
-> usage:
+> [!TIP|label:usage:]
 > - `%(color:<color_name>)`
 > - `%(color:reset)`
 
@@ -1928,7 +1933,7 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
 
 #### condition
 
-> [!TIP]
+> [!TIP|label:references:]
 > - `%(if)...%(then)...%(else)...%(end)`
 > - `%(align:<number>,left) ... %(end)`
 
@@ -1945,7 +1950,6 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
   [commit : sandbox/marslo/tag-1]              (2021-08-30 21:50) <marslo>
   ```
 
-
 #### alias
 ```bash
 [alias]
@@ -1957,7 +1961,3 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
   pb          = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color --count=10"
   pbs         = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color"
 ```
-
-
-
-

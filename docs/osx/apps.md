@@ -21,6 +21,8 @@
   - [whatprovides](#whatprovides)
 - [tools](#tools)
   - [java](#java)
+  - [xcode](#xcode)
+  - [xcrun](#xcrun)
 - [accessory](#accessory)
   - [Alfred](#alfred)
   - [iTerm2](#iterm2)
@@ -523,7 +525,7 @@ $ alias git="git -C ${hcore}"
     lrwxr-xr-x   1 marslo admin   52 Jun 26 15:34 libicuuc.dylib -> /usr/local/Cellar/icu4c@71.1/71.1/lib/libicuuc.dylib
     ```
 
-    <!--sec data-title="result" data-id="section2" data-show=true data-collapse=true ces-->
+    <!--sec data-title="result" data-id="section1" data-show=true data-collapse=true ces-->
     ```bash
     ==> Fetching marslo/icu4c-71-1/icu4c@71.1
     ==> Downloading https://github.com/unicode-org/icu/releases/download/release-71-1/icu4c-71_1-src.tgz
@@ -615,7 +617,7 @@ $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr
   Linked 1 app to /Applications
   ```
 
-  <!--sec data-title="macvim build install from sourcode" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="macvim build install from sourcode" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ brew install --HEAD macvim-dev/macvim/macvim
   ==> Installing macvim from macvim-dev/macvim
@@ -1276,6 +1278,431 @@ sudo rm -fr /Library/PreferencePanes/JavaControlPanel.prefPane
 sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 ```
 
+### xcode
+
+- path
+  ```bash
+  $ xcode-select --print-path
+  /Applications/Xcode.app/Contents/Developer
+  ```
+
+- version
+
+  > [!NOTE|label:list all tools pkgs]
+  > - [Determine xcode command line tools version](https://apple.stackexchange.com/a/181994/254265)
+  >   ```bash
+  >   $ pkgutil --pkgs | grep -i tools
+  >   com.apple.pkg.CLTools_SDK_macOS13
+  >   com.apple.pkg.CLTools_SDK_macOS12
+  >   com.apple.pkg.CLTools_Executables
+  >   com.apple.pkg.CLTools_SDK_macOS14
+  >   com.apple.pkg.CLTools_SwiftBackDeploy
+  >   com.apple.pkg.CLTools_macOS_SDK
+  >   com.microsoft.package.Proofing_Tools
+  >   ```
+
+  ```bash
+  $ xcodebuild -version
+  Xcode 15.2
+  Build version 15C500b
+
+  $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables | grep version
+  version: 15.3.0.0.1.1708646388
+  # full content
+  $ pkgutil --pkg-info=com.apple.pkg.CLTools_Executables
+  package-id: com.apple.pkg.CLTools_Executables
+  version: 15.3.0.0.1.1708646388
+  volume: /
+  location: /
+  install-time: 1709684830
+  # osx 10.8-
+  $ pkgutil --pkg-info=com.apple.pkg.DeveloperToolsCLI
+  ```
+
+#### sdk
+- sdk path
+  ```bash
+  $ xcrun --show-sdk-path
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+
+  $ xcrun --sdk macosx --show-sdk-path
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
+
+  $ xcrun --sdk macosx --show-sdk-platform-path
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+
+  $ xcodebuild -version $(xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}' | tail -1 | cut -f3) Path
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
+  ```
+
+  - [reset xcode-select](https://stackoverflow.com/a/69851931/2940319)
+    ```bash
+    # default
+    $ xcode-select --print-path
+    /Applications/Xcode.app/Contents/Developer
+
+    # switch
+    $ sudo xcode-select --switch /Library/Developer/CommandLineTools
+    $ xcode-select --print-path
+    /Library/Developer/CommandLineTools
+
+    # reset
+    $ sudo xcode-select --reset
+    $ xcode-select --print-path
+    /Applications/Xcode.app/Contents/Developer
+    ```
+
+- sdk version
+
+  > [!TIP|label:references:]
+  > - command lines for get info:
+  >   - `SDKVersion`
+  >   - `Path`
+  >   - `PlatformVersion`
+  >   - `PlatformPath`
+  >   - `BuildID`
+  >   - `ProductBuildVersion`
+  >   - `ProductCopyright`
+  >   - `ProductName`
+  >   - `ProductUserVisibleVersion`
+  >   - `ProductVersion`
+  >   - `iOSSupportVersion`
+  > - sample:
+  >   ```bash
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version SDKVersion
+  >   14.2
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version Path
+  >   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version PlatformVersion
+  >   14.2
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version PlatformPath
+  >   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version BuildID
+  >   A541C0AE-820A-11EE-A7B4-597349BFF88C
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductBuildVersion
+  >   23C53
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductCopyright
+  >   1983-2023 Apple Inc.
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductName
+  >   macOS
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductUserVisibleVersion
+  >   14.2
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version ProductVersion
+  >   14.2
+  >   $ xcodebuild -sdk $(xcrun --sdk macosx --show-sdk-path) -version iOSSupportVersion
+  >   17.2
+  >   ```
+
+  ```bash
+  $ xcrun --sdk macosx --show-sdk-version
+  14.2
+  # or
+  $ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version SDKVersion
+  14.2
+
+  $ xcrun --sdk macosx --show-sdk-build-version
+  23C53
+  # or
+  $ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version ProductBuildVersion
+  23C53
+
+  $ xcrun --sdk macosx --show-sdk-platform-version
+  14.2
+  # or
+  $ xcodebuild -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -version PlatformVersion
+  14.2
+  ```
+
+- list all sdk versions
+
+  > [!NOTE|label:references:]
+  > - [get sdk params](https://stackoverflow.com/a/18742844/2940319)
+  >   ```bash
+  >   $ xcodebuild -showsdks | awk '/^$/{p=0};p; /macOS SDKs:/{p=1}' | tail -1 | cut -f3
+  >   -sdk macosx14.2
+  >   ```
+
+  - `xcodebuild -showsdks`
+
+    <!--sec data-title="xcodebuild -showsdks" data-id="section3" data-show=true data-collapse=true ces-->
+    ```bash
+    $ xcodebuild -showsdks
+    DriverKit SDKs:
+      DriverKit 23.2                  -sdk driverkit23.2
+
+    iOS SDKs:
+      iOS 17.2                        -sdk iphoneos17.2
+
+    iOS Simulator SDKs:
+      Simulator - iOS 17.2            -sdk iphonesimulator17.2
+
+    macOS SDKs:
+      macOS 14.2                      -sdk macosx14.2
+      macOS 14.2                      -sdk macosx14.2
+
+    tvOS SDKs:
+      tvOS 17.2                       -sdk appletvos17.2
+
+    tvOS Simulator SDKs:
+      Simulator - tvOS 17.2           -sdk appletvsimulator17.2
+
+    visionOS SDKs:
+      visionOS 1.0                    -sdk xros1.0
+
+    visionOS Simulator SDKs:
+      Simulator - visionOS 1.0        -sdk xrsimulator1.0
+
+    watchOS SDKs:
+      watchOS 10.2                    -sdk watchos10.2
+
+    watchOS Simulator SDKs:
+      Simulator - watchOS 10.2        -sdk watchsimulator10.2
+    ```
+    <!--endsec-->
+
+
+  - `xcodebuild -sdk -version`
+
+    <!--sec data-title="xcodebuild -sdk -version" data-id="section4" data-show=true data-collapse=true ces-->
+    ```bash
+    $ xcodebuild -sdk -version
+    DriverKit23.2.sdk - DriverKit 23.2 (driverkit23.2)
+    SDKVersion: 23.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/DriverKit.platform/Developer/SDKs/DriverKit23.2.sdk
+    PlatformVersion: 23.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/DriverKit.platform
+
+    iPhoneOS17.2.sdk - iOS 17.2 (iphoneos17.2)
+    SDKVersion: 17.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.2.sdk
+    PlatformVersion: 17.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform
+    BuildID: 8142513E-8212-11EE-A6F2-082C27C73D12
+    ProductBuildVersion: 21C52
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: iPhone OS
+    ProductVersion: 17.2
+
+    iPhoneSimulator17.2.sdk - Simulator - iOS 17.2 (iphonesimulator17.2)
+    SDKVersion: 17.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator17.2.sdk
+    PlatformVersion: 17.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform
+    BuildID: 8142513E-8212-11EE-A6F2-082C27C73D12
+    ProductBuildVersion: 21C52
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: iPhone OS
+    ProductVersion: 17.2
+
+    MacOSX14.sdk - macOS 14.2 (macosx14.2)
+    SDKVersion: 14.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.sdk
+    PlatformVersion: 14.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+    BuildID: A541C0AE-820A-11EE-A7B4-597349BFF88C
+    ProductBuildVersion: 23C53
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: macOS
+    ProductUserVisibleVersion: 14.2
+    ProductVersion: 14.2
+    iOSSupportVersion: 17.2
+
+    MacOSX14.2.sdk - macOS 14.2 (macosx14.2)
+    SDKVersion: 14.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk
+    PlatformVersion: 14.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+    BuildID: A541C0AE-820A-11EE-A7B4-597349BFF88C
+    ProductBuildVersion: 23C53
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: macOS
+    ProductUserVisibleVersion: 14.2
+    ProductVersion: 14.2
+    iOSSupportVersion: 17.2
+
+    AppleTVOS17.2.sdk - tvOS 17.2 (appletvos17.2)
+    SDKVersion: 17.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.2.sdk
+    PlatformVersion: 17.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform
+    BuildID: 4675A566-8211-11EE-99FD-6142F6FFFD3A
+    ProductBuildVersion: 21K354
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: Apple TVOS
+    ProductVersion: 17.2
+
+    AppleTVSimulator17.2.sdk - Simulator - tvOS 17.2 (appletvsimulator17.2)
+    SDKVersion: 17.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator17.2.sdk
+    PlatformVersion: 17.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform
+    BuildID: 4675A566-8211-11EE-99FD-6142F6FFFD3A
+    ProductBuildVersion: 21K354
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: Apple TVOS
+    ProductVersion: 17.2
+
+    XROS1.0.sdk - visionOS 1.0 (xros1.0)
+    SDKVersion: 1.0
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform/Developer/SDKs/XROS1.0.sdk
+    PlatformVersion: 1.0
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/XROS.platform
+    BuildID: 12C63F4E-8060-11EE-9FFA-B80B914DE5F9
+    ProductBuildVersion: 21N301
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: xrOS
+    ProductVersion: 1.0
+    iOSSupportVersion: 17.1
+
+    XRSimulator1.0.sdk - Simulator - visionOS 1.0 (xrsimulator1.0)
+    SDKVersion: 1.0
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/XRSimulator.platform/Developer/SDKs/XRSimulator1.0.sdk
+    PlatformVersion: 1.0
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/XRSimulator.platform
+    BuildID: 12C63F4E-8060-11EE-9FFA-B80B914DE5F9
+    ProductBuildVersion: 21N301
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: xrOS
+    ProductVersion: 1.0
+    iOSSupportVersion: 17.1
+
+    WatchOS10.2.sdk - watchOS 10.2 (watchos10.2)
+    SDKVersion: 10.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS10.2.sdk
+    PlatformVersion: 10.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform
+    BuildID: FBDD719C-820F-11EE-B817-4780FBEA8434
+    ProductBuildVersion: 21S355
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: Watch OS
+    ProductVersion: 10.2
+
+    WatchSimulator10.2.sdk - Simulator - watchOS 10.2 (watchsimulator10.2)
+    SDKVersion: 10.2
+    Path: /Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator10.2.sdk
+    PlatformVersion: 10.2
+    PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform
+    BuildID: FBDD719C-820F-11EE-B817-4780FBEA8434
+    ProductBuildVersion: 21S355
+    ProductCopyright: 1983-2023 Apple Inc.
+    ProductName: Watch OS
+    ProductVersion: 10.2
+
+    Xcode 15.2
+    Build version 15C500b
+    ```
+    <!--endsec-->
+
+  - [`system_profiler SPDeveloperToolsDataType`](https://stackoverflow.com/a/33732043/2940319)
+
+    <!--sec data-title="system_profile SPDeveloperToolsDataType" data-id="section5" data-show=true data-collapse=true ces-->
+    ```bash
+    $ system_profiler SPDeveloperToolsDataType
+    Developer:
+
+        Developer Tools:
+
+          Version: 15.2 (15C500b)
+          Location: /Applications/Xcode.app
+          Applications:
+              Xcode: 15.2 (22503)
+              Instruments: 15.2 (64562.5)
+          SDKs:
+              DriverKit:
+                  23.2:
+              iOS:
+                  17.2: (21C52)
+              iOS Simulator:
+                  17.2: (21C52)
+              macOS:
+                  14.2: (23C53)
+              tvOS:
+                  17.2: (21K354)
+              tvOS Simulator:
+                  17.2: (21K354)
+              visionOS:
+                  1.0: (21N301)
+              visionOS Simulator:
+                  1.0: (21N301)
+              watchOS:
+                  10.2: (21S355)
+              watchOS Simulator:
+                  10.2: (21S355)
+    ```
+    <!--endsec-->
+
+
+- get more
+  ```bash
+  $ cat /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/SDKSettings.json | jq -r
+
+  # or
+  $ /usr/libexec/PlistBuddy -c print /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+  Dict {
+      FamilyName = macOS
+      CFBundleIdentifier = com.apple.platform.macosx
+      DefaultProperties = Dict {
+          DEPLOYMENT_TARGET_SETTING_NAME = MACOSX_DEPLOYMENT_TARGET
+          DEFAULT_COMPILER = com.apple.compilers.llvm.clang.1_0
+          GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64] = YES
+          COMPRESS_PNG_FILES = NO
+          STRIP_PNG_TEXT = NO
+      }
+      AdditionalInfo = Dict {
+          DTXcodeBuild = $(XCODE_PRODUCT_BUILD_VERSION)
+          DTPlatformVersion = 14.2
+          DTCompiler = $(GCC_VERSION)
+          DTSDKName = $(SDK_NAME)
+          BuildMachineOSBuild = $(MAC_OS_X_PRODUCT_BUILD_VERSION)
+          DTPlatformName = macosx
+          DTXcode = $(XCODE_VERSION_ACTUAL)
+          DTPlatformBuild = $(PLATFORM_PRODUCT_BUILD_VERSION)
+          DTSDKBuild = $(SDK_PRODUCT_BUILD_VERSION)
+          LSMinimumSystemVersion = $($(DEPLOYMENT_TARGET_SETTING_NAME))
+          CFBundleSupportedPlatforms = Array {
+              MacOSX
+          }
+      }
+      CFBundleVersion = 14.2
+      Description = macOS
+      Name = macosx
+      Version = 14.2
+      MinimumSDKVersion = 13.0
+      Icon = Icon.icns
+      Identifier = com.apple.platform.macosx
+      FamilyIdentifier = macosx
+      CFBundleShortVersionString = 14.2
+      Type = Platform
+      FamilyDisplayName = macOS
+      CFBundleDevelopmentRegion = English
+      CFBundleName = macOS Platform
+  }
+  ```
+
+### xcrun
+
+- tool path
+  ```bash
+  $ xcrun -find cc
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc
+
+  $ xcrun -find gcc
+  /Applications/Xcode.app/Contents/Developer/usr/bin/gcc
+
+  $ xcrun -find c++
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
+
+  $ xcrun -find cmake
+  /Users/marslo/Library/Python/3.12/bin/cmake
+  ```
+
+- show log
+  ```bash
+  $ xcrun -l python -c 'import site; print(site.USER_BASE)'
+  env SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk /usr/local/opt/python\@3.12/libexec/bin/python -c import\ site\;\ print\(site.USER_BASE\)
+  /Users/marslo/Library/Python/3.12
+  ```
+
 ## accessory
 ### Alfred
 
@@ -1657,7 +2084,7 @@ EOF
   Abort trap: 6
   ```
 
-  <!--sec data-title="details" data-id="section3" data-show=true data-collapse=true ces-->
+  <!--sec data-title="details" data-id="section6" data-show=true data-collapse=true ces-->
   ```bash
   # A fatal error has been detected by the Java Runtime Environment:
   #
@@ -2889,7 +3316,7 @@ EOF
         /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
         ```
 
-      <!--sec data-title="details" data-id="section4" data-show=true data-collapse=true ces-->
+      <!--sec data-title="details" data-id="section7" data-show=true data-collapse=true ces-->
       ```bash
       $ hdiutil attach jdk-21_macos-x64_bin.dmg
       Checksumming Protective Master Boot Record (MBR : 0)…

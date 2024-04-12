@@ -15,6 +15,7 @@
   - [swap usage](#swap-usage)
   - [show kernel version](#show-kernel-version)
   - [list printer status](#list-printer-status)
+  - [plist file](#plist-file)
 - [osx installation](#osx-installation)
   - [download older version](#download-older-version)
   - [create osx installer usb](#create-osx-installer-usb)
@@ -117,20 +118,20 @@ $ vm_stat
 ```bash
 $ top -l 1 -n 0
 ```
-example
-```bash
-$ top -l 1 -n 0
-Processes: 472 total, 3 running, 469 sleeping, 2589 threads
-2020/11/02 16:10:28
-Load Avg: 2.67, 2.88, 3.12
-CPU usage: 33.4% user, 20.46% sys, 46.49% idle
-SharedLibs: 268M resident, 69M data, 44M linkedit.
-MemRegions: 112888 total, 3016M resident, 90M private, 2802M shared.
-PhysMem: 16G used (3742M wired), 420M unused.
-VM: 3201G vsize, 1993M framework vsize, 44188(0) swapins, 49627(0) swapouts.
-Networks: packets: 1575080/1561M in, 1302980/954M out.
-Disks: 1368885/28G read, 648911/13G written.
-```
+- example
+  ```bash
+  $ top -l 1 -n 0
+  Processes: 472 total, 3 running, 469 sleeping, 2589 threads
+  2020/11/02 16:10:28
+  Load Avg: 2.67, 2.88, 3.12
+  CPU usage: 33.4% user, 20.46% sys, 46.49% idle
+  SharedLibs: 268M resident, 69M data, 44M linkedit.
+  MemRegions: 112888 total, 3016M resident, 90M private, 2802M shared.
+  PhysMem: 16G used (3742M wired), 420M unused.
+  VM: 3201G vsize, 1993M framework vsize, 44188(0) swapins, 49627(0) swapouts.
+  Networks: packets: 1575080/1561M in, 1302980/954M out.
+  Disks: 1368885/28G read, 648911/13G written.
+  ```
 
 - [or](https://apple.stackexchange.com/a/46655/254265)
   ```bash
@@ -257,6 +258,18 @@ kern.osrevision: 199506
 $ lpstat -a
 printer-01 accepting requests since Wed Feb  3 16:40:50 2021
 ```
+
+### plist file
+- read file
+  ```bash
+  $ plutil -p /path/to/file.plist
+  # i.e.:
+  $ plutil -p /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+
+  $ /usr/libexec/PlistBuddy -c print /path/to/file.plist
+  # i.e.:
+  $ /usr/libexec/PlistBuddy -c print /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Info.plist
+  ```
 
 ## osx installation
 ### [download older version](https://512pixels.net/2019/10/download-macos-installers-with-terminal/)
@@ -438,7 +451,7 @@ $ dot_clean -mvp <path>
 ## launchctl
 ### create new plist
 ```bash
-cat > ~/Library/LaunchAgents/i.marslo.updatedb.plist << EOF
+$ cat > ~/Library/LaunchAgents/i.marslo.updatedb.plist << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">

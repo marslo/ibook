@@ -10,6 +10,7 @@
   - [build from source](#build-from-source)
     - [osx](#osx)
     - [`brew install -v --debug`](#brew-install--v---debug)
+    - [uninstall](#uninstall)
 - [initialize](#initialize)
   - [provider](#provider)
   - [init.vim/init.lua](#initviminitlua)
@@ -350,6 +351,10 @@ $ cmake --build build
 $ cmake --install build
 ```
 
+### uninstall
+```bash
+$ sudo cmake --build build/ --target uninstall
+```
 
 # initialize
 
