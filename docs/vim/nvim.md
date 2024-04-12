@@ -394,6 +394,9 @@ $ npm install -g neovim
 > - [nanotee/nvim-lua-guide](https://github.com/nanotee/nvim-lua-guide)
 > - [dotfiles/.config/nvim/init.lua](https://github.com/fsareshwala/dotfiles/blob/master/.config/nvim/init.lua)
 > - [web-dev.nvim/src/init.lua](https://github.com/jonathandion/web-dev.nvim/blob/main/src/init.lua)
+> - config:
+>   - [bdryanovski/dotfiles/packages/vim](https://github.com/bdryanovski/dotfiles/tree/master/packages/vim)
+>   - [skbolton/titan/nvim](https://github.com/skbolton/titan/tree/b6c44d3c9b6aab2ae011d6072ca0e2a5a254a82a/nvim)
 
 - create init.vim
   ```vim

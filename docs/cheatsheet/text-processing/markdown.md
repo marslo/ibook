@@ -9,16 +9,18 @@
 
 ## useful unicode
 
-> reference
+> [!NOTE|label:reference]
+> - [* iMarslo: devicon](.../../tools/fonts.md#devicons)
 > - [HTML Symbols](https://www.w3schools.com/html/html_symbols.asp)
 > - [HTML Entities](https://www.w3schools.com/html/html_entities.asp)
 > - [UTF-8 Greek and Coptic](https://www.w3schools.com/charsets/ref_utf_greek.asp)
 > - [DerivedAge-14.0.0.txt](http://www.unicode.org/Public/UCD/latest/ucd/DerivedAge.txt)
 > - [Other Symbol](https://www.compart.com/en/unicode/category/So)
 > - [Other Neutral](https://www.compart.com/en/unicode/bidiclass/ON)
+> - [Complete list of github markdown emoji markup](https://gist.github.com/rxaviers/7360908)
 
 
-  | symbols   | unicode                        | HTML entity nubmer          | entity Name                                    | desc                                       |
+  | SYMBOLS   | UNICODE                        | HTML ENTITY NUBMER          | ENTITY NAME                                    | DESC                                       |
   | :-------: | :----------------------------: | :-------------------------: | :------------------------------------------:   | ------------------------------------------ |
   | &#160;    |                                | `&#160;`                    | `&nbsp;`                                       | space                                      |
   | &#60;     | `003C`                         | `&#60;` <br> `&#x3C;`       | `&lt;`                                         | less than                                  |
@@ -53,13 +55,13 @@
 
 ## [Combining Diacritical Marks](https://www.w3schools.com/html/html_entities.asp)
 
-|  mark  |  unicode |        character       | construct |  result |
+|  MARK  |  UNICODE |        CHARACTER       | CONSTRUCT |  RESULT |
 |:------:|:--------:|:----------------------:|:---------:|:-------:|
-| &#768; | `&#768;` | a +&nbsp;  ̀   &#xbb; à | `a&#768;` | a&#768; |
-| &#769; | `&#769;` | a +&nbsp;  ́   &#xbb; á | `a&#769;` | a&#769; |
-| &#770; | `&#770;` | a +&nbsp;  ̂   &#xbb; â | `a&#770;` | a&#770; |
-| &#771; | `&#771;` | a +&nbsp;  ̃   &#xbb; ã | `a&#771;` | a&#771; |
-| &#768; | `&#768;` | O +&nbsp;  ̀   &#xbb; Ò | `O&#768;` | O&#768; |
-| &#769; | `&#769;` | O +&nbsp;  ́   &#xbb; Ó | `O&#769;` | O&#769; |
-| &#770; | `&#770;` | O +&nbsp;  ̂   &#xbb; Ô | `O&#770;` | O&#770; |
-| &#771; | `&#771;` | O +&nbsp;  ̃   &#xbb; Õ | `O&#771;` | O&#771; |
+| &#768; | `&#768;` | a +&nbsp;     &#xbb; à | `a&#768;` | a&#768; |
+| &#769; | `&#769;` | a +&nbsp;     &#xbb; á | `a&#769;` | a&#769; |
+| &#770; | `&#770;` | a +&nbsp;     &#xbb; â | `a&#770;` | a&#770; |
+| &#771; | `&#771;` | a +&nbsp;     &#xbb; ã | `a&#771;` | a&#771; |
+| &#768; | `&#768;` | O +&nbsp;     &#xbb; Ò | `O&#768;` | O&#768; |
+| &#769; | `&#769;` | O +&nbsp;     &#xbb; Ó | `O&#769;` | O&#769; |
+| &#770; | `&#770;` | O +&nbsp;     &#xbb; Ô | `O&#770;` | O&#770; |
+| &#771; | `&#771;` | O +&nbsp;     &#xbb; Õ | `O&#771;` | O&#771; |

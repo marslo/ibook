@@ -17,6 +17,7 @@
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
   - [show ascii under cursor](#show-ascii-under-cursor)
 - [config](#config)
+  - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
   - [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
@@ -368,6 +369,43 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
 ![ascii](../screenshot/vim/vim-tricky-ascii.gif)
 
 ## config
+### get platform
+
+> [!NOTE|label:references:]
+> - [How to detect the OS from a Vim script?](https://stackoverflow.com/a/57015339/2940319)
+> - [zeorin/dotfiles/.vimrc](https://github.com/zeorin/dotfiles/blob/e5400e2d14b97d6073842f605370f5cf57722fca/.vimrc#L84-L92)
+
+```vim
+" to avoid `system('uname')` issue in powershell/gvim/cmd
+" previous solution: https://stackoverflow.com/a/57015339/2940319
+"   let uname = substitute(system('uname'),'\n','','')
+"   if uname == 'Linux'
+" to avoid `Can't open file /proc/version` in MacOS using:
+" - `has('linux')` instead of `has('unix')`
+" - `has('unix') && !has('macunix')` if `has('linux')` not supported
+function! IsWSL()
+  if has( 'linux' )
+    let lines = readfile( '/proc/version' )
+    if lines[0] =~ 'Microsoft'
+      return 1
+    endif
+  endif
+  return 0
+endfunction
+
+function! IsWindows()
+  return ( has('win32') || has('win64') )
+endfunction
+
+function! IsLinux()
+  return has('unix') && has('linux') && !has('macunix')
+endfunction
+
+function! IsMac()
+  return has('macunix')
+endfunction
+```
+
 ### disable vim beep
 ```vim
 # ~/.vimrc

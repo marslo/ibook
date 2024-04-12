@@ -24,7 +24,6 @@
   - [williamboman/nvim-lsp-installer](#williambomannvim-lsp-installer)
   - [neovim/nvim-lspconfig](#neovimnvim-lspconfig)
     - [manual install lsp](#manual-install-lsp)
-  - [scrooloose/nerdtree](#scrooloosenerdtree)
   - [copilot](#copilot)
   - [others](#others)
 - [utils](#utils)
@@ -40,6 +39,7 @@
   - [APZelos/blamer.nvim](#apzelosblamernvim)
   - [zivyangll/git-blame.vim](#zivyangllgit-blamevim)
 - [color and theme](#color-and-theme)
+  - [scrooloose/nerdtree](#scrooloosenerdtree)
   - [ryanoasis/vim-devicons](#ryanoasisvim-devicons)
   - [RRethy/vim-hexokinase](#rrethyvim-hexokinase)
   - [NvChad/nvim-colorizer.lua](#nvchadnvim-colorizerlua)
@@ -52,13 +52,18 @@
 > references:
 > - [* vimcolorschemes](https://vimcolorschemes.com/)
 > - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
-> - [* amix/vimrc](https://github.com/amix/vimrc)
-> - [deprecated plugins](./deprecated.html)
-> - [Code Completion for Neovim using Lazy](https://medium.com/@shaikzahid0713/code-completion-for-neovim-6127401ebec2)
+> - [iMarslo: deprecated plugins](./deprecated.html)
+> - dotfiles/vimrc
+>   - [* amix/vimrc](https://github.com/amix/vimrc)
+>   - [vim-devicon author: ryanoasis/dotfiles](https://github.com/ryanoasis/dotfiles/tree/master)
 {% endhint %}
 
 # plugin alternatives
 ## autocompletion
+
+> [!NOTE|label:references:]
+> - [Code Completion for Neovim using Lazy](https://medium.com/@shaikzahid0713/code-completion-for-neovim-6127401ebec2)
+
 - [* neoclide/coc.nvim](https://github.com/neoclide/coc.nvim)
 - [* hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | [Nvim-cmp configuration for auto-completion](https://neovim.discourse.group/t/nvim-cmp-configuration-for-auto-completion/1045/3)
 - [* ms-jpq/coq_nvim](https://github.com/ms-jpq/coq_nvim)
@@ -1157,16 +1162,6 @@ Plug 'neovim/nvim-lspconfig'
   require'lspconfig'.yamlls.setup{}
   ```
 
-## [scrooloose/nerdtree](https://github.com/preservim/nerdtree)
-```vim
-" scrooloose/nerdtree
-map <C-S-n> :NERDTreeToggle<CR>
-let g:NERDTreeWinPos = 'left'
-let g:NERDTreeIgnore = [ '^node_modules$' ]
-```
-
-![nvim nerdtree devicons coc lspconfig](../screenshot/vim/nvim-nerdtree-devicon-treesitter-coc-lspconfig.gif)
-
 ## copilot
 
 > [!NOTE|label:references:]
@@ -1465,11 +1460,144 @@ set guifont=Powerline_Consolas:h11
 set renderoptions=type:directx,gamma:1.5,contrast:0.5,geom:1,renmode:5,taamode:1,level:0.5
 ```
 
+## [scrooloose/nerdtree](https://github.com/preservim/nerdtree)
+
+> [!NOTE|label:references:]
+> - [#201 - File coloring based on type.](https://github.com/preservim/nerdtree/issues/201)
+> - configs
+>   - [bdryanovski/vimrc/vimsrc/_plugins.vim](https://github.com/bdryanovski/vimrc/blob/master/vimsrc/_plugins.vim#L128)
+
+```vim
+" scrooloose/nerdtree
+map <C-A-n> :NERDTreeToggle<CR>
+nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
+let g:NERDTreeWinPos              = 'left'
+let g:NERDTreeIgnore              = [ '^node_modules$', '^.git$' ]
+let NERDTreeShowHidden            = 1
+let g:NERDTreeWinSize             = 25
+let g:NERDTreeFileLines           = 1
+let g:NERDTreeDirArrowExpandable  = '+'
+let g:NERDTreeDirArrowCollapsible = '⏵'
+autocmd BufEnter * if winnr() == winnr('h') && bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+```
+
+![nvim nerdtree devicons coc lspconfig](../screenshot/vim/nvim-nerdtree-devicon-treesitter-coc-lspconfig.gif)
+
 ## [ryanoasis/vim-devicons](https://github.com/ryanoasis/vim-devicons)
 
 > [!NOTE|label:unicodes]
 > - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
 > - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
+> - [vim-devicon](https://github.com/ryanoasis/vim-devicons)
+>   - [FAQ & Troubleshooting](https://github.com/ryanoasis/vim-devicons/wiki/FAQ-&-Troubleshooting)
+>   - [Usage](https://github.com/ryanoasis/vim-devicons/wiki/usage)
+> - bracket issue in nerdtree
+>   - [Square brackets around icons](https://github.com/ryanoasis/vim-devicons/wiki/FAQ-&-Troubleshooting#square-brackets-around-icons)
+>   - [#37 - g:webdevicons_conceal_nerdtree_brackets](https://github.com/ryanoasis/vim-devicons/issues/37#issuecomment-93743685)
+>   - [#185 - docs(readme): fix conflict with NERDTree](https://github.com/luochen1990/rainbow/pull/185)
+>   - [Remove those rectangular bracket around folder icon?](https://www.reddit.com/r/neovim/comments/n31xfr/remove_those_rectangular_bracket_around_folder/)
+> - configs
+>   - [bdryanovski/vimrc/vimsrc/_plugins.vim](https://github.com/bdryanovski/vimrc/blob/master/vimsrc/_plugins.vim#L47-L70)
+>   - [LumpyChen/Conf-mac/Vim/.vimrc.bundles.local](https://github.com/LumpyChen/Conf-mac/blob/master/Vim/.vimrc.bundles.local#L8)
+>   - [zeorin/dotfiles/.vimrc](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc#L876)
+>   - [skbolton/titan/nvim/nvim/plugin/filesystem.vim](https://github.com/skbolton/titan/blob/b6c44d3c9b6aab2ae011d6072ca0e2a5a254a82a/nvim/nvim/plugin/filesystem.vim#L19)
+
+```vim
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" ryanoasis/vim-devicons
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding  = ' '
+if exists('g:loaded_webdevicons') | call webdevicons#refresh() | endif
+
+" tiagofumo/vim-nerdtree-syntax-highlight
+let s:brown       = "905532"
+let s:aqua        = "3AFFDB"
+let s:blue        = "689FB6"
+let s:darkBlue    = "44788E"
+let s:purple      = "834F79"
+let s:lightPurple = "834F79"
+let s:red         = "AE403F"
+let s:beige       = "F5C06F"
+let s:yellow      = "F09F17"
+let s:orange      = "D4843E"
+let s:darkOrange  = "F16529"
+let s:pink        = "CB6F6F"
+let s:salmon      = "EE6E73"
+let s:green       = "8FAA54"
+let s:lightGreen  = "31B53E"
+let s:white       = "FFFFFF"
+let s:rspec_red   = 'FE405F'
+let s:git_orange  = 'F54D27'
+let g:WebDevIconsDefaultFolderSymbolColor                = s:beige
+let g:WebDevIconsDefaultFileSymbolColor                  = s:blue
+let g:NERDTreeSyntaxEnabledExtensions                    = ['c', 'h', 'c++', 'cpp', 'php', 'rb', 'js', 'css', 'html']
+let g:NERDTreeSyntaxEnabledExactMatches                  = ['node_modules', 'favicon.ico']
+let g:NERDTreeHighlightCursorline                        = 1
+let g:NERDTreeExtensionHighlightColor                    = {}
+let g:NERDTreeExactMatchHighlightColor                   = {}
+let g:NERDTreePatternMatchHighlightColor                 = {}
+let g:NERDTreeExtensionHighlightColor['css']             = s:blue
+let g:NERDTreeExactMatchHighlightColor['.gitignore']     = s:git_orange
+let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red
+```
+
+- [more settings for vim-devicon](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc)
+  ```vim
+  Plug 'ryanoasis/vim-devicons'
+
+  let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+  let g:DevIconsEnableFoldersOpenClose = 1
+  if exists("g:loaded_webdevicons") | call webdevicons#refresh() | endif
+  augroup devicons
+    autocmd!
+    autocmd FileType nerdtree setlocal nolist
+    autocmd FileType nerdtree syntax match hideBracketsInNerdTree "\]" contained conceal containedin=ALL
+    autocmd FileType nerdtree syntax match hideBracketsInNerdTree "\[" contained conceal containedin=ALL
+    autocmd FileType nerdtree setlocal conceallevel=3
+    autocmd FileType nerdtree setlocal concealcursor=nvic
+  augroup END
+  function! DeviconsColors(config)
+    let colors = keys(a:config)
+    augroup devicons_colors
+      autocmd!
+      for color in colors
+        if color == 'normal'
+          exec 'autocmd FileType nerdtree,startify if &background == ''dark'' | '.
+            \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base01.' ctermfg='.g:sol.cterm.base01.' | '.
+            \ 'else | '.
+            \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base1.' ctermfg='.g:sol.cterm.base1.' | '.
+            \ 'endif'
+        elseif color == 'emphasize'
+          exec 'autocmd FileType nerdtree,startify if &background == ''dark'' | '.
+            \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base1.' ctermfg='.g:sol.cterm.base1.' | '.
+            \ 'else | '.
+            \ 'highlight devicons_'.color.' guifg='.g:sol.gui.base01.' ctermfg='.g:sol.cterm.base01.' | '.
+            \ 'endif'
+        else
+          exec 'autocmd FileType nerdtree,startify highlight devicons_'.color.' guifg='.g:sol.gui[color].' ctermfg='.g:sol.cterm[color]
+        endif
+        exec 'autocmd FileType nerdtree,startify syntax match devicons_'.color.' /\v'.join(a:config[color], '|').'/ containedin=ALL'
+      endfor
+    augroup END
+  endfunction
+  let g:devicons_colors = {
+    \'normal': ['', '', '', '', ''],
+    \'emphasize': ['', '', '', '', '', '', '', '', '', '', ''],
+    \'yellow': ['', '', ''],
+    \'orange': ['', '', '', 'λ', '', ''],
+    \'red': ['', '', '', '', '', '', '', '', ''],
+    \'magenta': [''],
+    \'violet': ['', '', '', ''],
+    \'blue': ['', '', '', '', '', '', '', '', '', '', '', '', ''],
+    \'cyan': ['', '', '', ''],
+    \'green': ['', '', '', '']
+  \}
+  call DeviconsColors(g:devicons_colors)
+  ```
 
 ## [RRethy/vim-hexokinase](https://github.com/RRethy/vim-hexokinase)
 ```vim

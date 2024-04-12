@@ -16,6 +16,7 @@
   - [symbole](#symbole)
   - [others](#others)
 - [powerline fonts](#powerline-fonts)
+- [devicons](#devicons)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -374,3 +375,120 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
            https://github.com/benbusby/anomaly-mono/raw/master/AnomalyMono-Powerline.otf &&
       fc-cache -f -v
     ```
+
+## devicons
+
+> [!NOTE|label:references:]
+> - [* iMarslo: useful unicode](../cheatsheet/text-processing/text-processing.md#useful-unicode)
+> - [Private Use Area: E000-F8FF](https://jrgraphix.net/r/Unicode/E000-F8FF)
+> - [U+E000 ... U+F8FF: Private Use Area](https://utf8-chartable.de/unicode-utf8-table.pl)
+>   - [U+E5FA ... U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+E9FA ... U+EDF9](https://utf8-chartable.de/unicode-utf8-table.pl?start=59898&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+EDFA ... U+F1F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=60922&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+F1FA to U+F5F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=61946&number=1024&utf8=dec&unicodeinhtml=hex)
+> - [Font Awesome 5 Code Icons](https://www.w3schools.com/icons/fontawesome5_icons_code.asp)
+
+| UNICODE | ICON |
+|:-------:|:----:|
+|  `E614` |     |
+|  `F292` |     |
+|  `EA90` |     |
+|  `F295` |     |
+|  `E60C` |     |
+|  `E74E` |     |
+|  `E615` |     |
+|  `E616` |     |
+|  `E612` |     |
+|  `E64E` |     |
+|  `F2C5` |     |
+|  `EA8A` |     |
+|  `EA8B` |     |
+|  `E60B` |     |
+|  `E618` |     |
+|  `EAE9` |     |
+|  `F1C9` |     |
+|  `E796` |     |
+|  `F121` |     |
+|  `EA92` |     |
+|  `F4B5` |     |
+|  `F120` |     |
+|  `E7A2` |     |
+|  `E683` |     |
+|  `E285` |     |
+|  `E795` |     |
+|  `E7A3` |     |
+|  `E758` |     |
+|  `E738` |     |
+|  `E204` |     |
+|  `E005` |     |
+|  `E7B0` |     |
+|  `F308` |     |
+|  `E650` |     |
+|  `E7C5` |     |
+|  `E62B` |     |
+|  `E7C5` |     |
+|  `E235` |     |
+|  `F853` |     |
+|  `F858` |     |
+|  `F4E5` |     |
+|  `F07B` |     |
+|  `F07C` |     |
+|  `F114` |     |
+|  `F115` |     |
+|  `F2D1` |     |
+|  `F48B` |     |
+|  `F4A5` |     |
+|  `EB9D` |     |
+|  `F15C` |     |
+|  `F302` |     |
+|  `E711` |     |
+|  `F8FF` |     |
+|  `F316` |     |
+|  `E7BB` |     |
+|  `E724` |     |
+|  `E712` |     |
+|  `F31A` |     |
+|  `EBC6` |     |
+|  `F31B` |     |
+|  `EBC9` |     |
+|  `F31C` |     |
+|  `E73A` |     |
+|  `E62A` |     |
+|  `F17A` |     |
+|  `E70F` |     |
+|  `EBC5` |     |
+|  `E70E` |     |
+|  `F17B` |     |
+|  `E60A` |     |
+|  `E672` |     |
+|  `F023` |     |
+|  `EB74` |     |
+|  `EBE7` |     |
+|  `F09C` |     |
+|  `F084` |     |
+|  `F43D` |     |
+|  `E241` |     |
+|  `E69E` |     |
+|  `F361` |     |
+|  `F36F` |     |
+|  `E6B2` |     |
+|  `E765` |     |
+|  `E7B4` |     |
+|  `EB65` |     |
+|  `EB6D` |     |
+|  `F204` |     |
+|  `F205` |     |
+|  `F255` |     |
+|  `F256` |     |
+|  `F10D` |     |
+|  `F10E` |     |
+|  `F30C` |     |
+|  `F85A` |     |
+|  `F89F` |     |
+|  `F8E2` |     |
+|  `F8FE` |     |
+|  `E22C` |     |
+|  `E6B1` |     |
+|  `E279` |     |
+|  `E27A` |     |
+|  `E006` |     |
