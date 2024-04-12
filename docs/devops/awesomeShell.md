@@ -2289,6 +2289,7 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 >   - [dansomething/dotfiles/.tmux.conf](https://github.com/dansomething/dotfiles/blob/main/home/.tmux.conf)
 > - [kenos1/tmux-cht-sh/bin/tmux-cht-sh.sh](https://github.com/kenos1/tmux-cht-sh/blob/main/bin/tmux-cht-sh.sh)
 > - [Integralist/dotfiles/.tmux.conf](https://github.com/Integralist/dotfiles/blob/main/.tmux.conf)
+> - [maximum-awesome/tmux.conf](https://github.com/square/maximum-awesome/blob/master/tmux.conf)
 > - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
 
 ```bash
