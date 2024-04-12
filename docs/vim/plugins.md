@@ -1488,11 +1488,11 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 ## [ryanoasis/vim-devicons](https://github.com/ryanoasis/vim-devicons)
 
 > [!NOTE|label:unicodes]
-> - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
-> - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
 > - [vim-devicon](https://github.com/ryanoasis/vim-devicons)
 >   - [FAQ & Troubleshooting](https://github.com/ryanoasis/vim-devicons/wiki/FAQ-&-Troubleshooting)
+>   - [Extra Configuration](https://github.com/ryanoasis/vim-devicons/wiki/Extra-Configuration#character-mappings)
 >   - [Usage](https://github.com/ryanoasis/vim-devicons/wiki/usage)
+>   - [vim-scripts/vim-webdevicons/readme.md](https://github.com/vim-scripts/vim-webdevicons/blob/master/readme.md)
 > - bracket issue in nerdtree
 >   - [Square brackets around icons](https://github.com/ryanoasis/vim-devicons/wiki/FAQ-&-Troubleshooting#square-brackets-around-icons)
 >   - [#37 - g:webdevicons_conceal_nerdtree_brackets](https://github.com/ryanoasis/vim-devicons/issues/37#issuecomment-93743685)
@@ -1503,6 +1503,11 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 >   - [LumpyChen/Conf-mac/Vim/.vimrc.bundles.local](https://github.com/LumpyChen/Conf-mac/blob/master/Vim/.vimrc.bundles.local#L8)
 >   - [zeorin/dotfiles/.vimrc](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc#L876)
 >   - [skbolton/titan/nvim/nvim/plugin/filesystem.vim](https://github.com/skbolton/titan/blob/b6c44d3c9b6aab2ae011d6072ca0e2a5a254a82a/nvim/nvim/plugin/filesystem.vim#L19)
+>   - [#276 - The symbol for opened folder in NERDTree is not working](https://github.com/ryanoasis/vim-devicons/issues/276#issue-470708269)
+> - icons:
+>   - [* iMarslo: devicons](../tools/fonts.md#devicons)
+>   - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
+> - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
 
 ```vim
 Plug 'ryanoasis/vim-devicons'
