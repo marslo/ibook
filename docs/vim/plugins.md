@@ -850,6 +850,8 @@ augroup END
     }
     ```
 
+![nvim coc copilot snippets](../screenshots/vim/nvim-coc-copilot-snippets.gif)
+
 ![nvim coc lspconfig](../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)
 
 - troubleshooting
@@ -951,28 +953,65 @@ augroup END
 $ cargo install tree-sitter-cli
 # or
 $ sudo npm i -g tree-sitter-cli
+# or
+$ brew install tree-sitter
 
 $ which -a tree-sitter
 ~/.cargo/bin/tree-sitter
+# macos
+$ which -a tree-sitter
+/usr/local/bin/tree-sitter
 ```
 
 - others
   ```bash
   $ pip3 install tree_sitter
-  # or
-  $ brew install tree_sitter
   ```
 
+- configure
   ```vim
   Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
   ```
 
-- install
+  ```lua
+  -- ~/.config/nvim/init.vim
+  require('config/nvim-treesitter')
+
+  -- ~/.config/nvim/lua/config/nvim-treesitter.lua
+  require'nvim-treesitter.configs'.setup {
+    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "python", "bash", "groovy", "java", "yaml", "xml", "cmake", "css", "dockerfile", "git_config", "gitcommit", "gitignore", "jq", "json", "markdown", "ssh_config", "vimdoc" },
+    sync_install = true,
+    -- install automatically
+    auto_install = true,
+    ignore_install = { "javascript" },
+    indent = {
+      enable = true,
+      disable = { "markdown" },
+    },
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = "<CR>",
+        node_incremental = "<CR>",
+        node_decremental = "<BS>",
+        scope_incremental = "<TAB>",
+      },
+    },
+    highlight = {
+      enable = true,
+      disable = { "markdown" },
+      additional_vim_regex_highlighting = false,
+    },
+  }
+  require("nvim-treesitter.install").prefer_git = true
+  ```
+
+- install manually
   ```vim
   :TSInstall bash css gitcommit git_config gpg html java jq lua python xml yaml
   ```
 
-- check via
+- commands
   ```vim
   :TSBufToggle highlight
   :TSInstallInfo
@@ -1183,7 +1222,7 @@ Plug 'neovim/nvim-lspconfig'
   :Copilot setup
   ```
 
-  - others
+  - check status
     ```vim
     :Copilot status
     Copilot: Ready
@@ -1533,19 +1572,32 @@ let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['jenkinsfile']   = ''
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['vimrc.d']       = '󰷺'
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['vars']          = '󱆃'
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']           = '󰵮'
+let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols                = {}
+let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*ignore$']   = ''
+let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*rc$']       = '󱔁'
+let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*git.*$']    = ''
 if exists('g:loaded_webdevicons') | call webdevicons#refresh() | endif
+autocmd filetype nerdtree set conceallevel=3
+autocmd filetype nerdtree set concealcursor=nvic
 
 " tiagofumo/vim-nerdtree-syntax-highlight
-let g:NERDTreeSyntaxEnabledExtensions                = ['rb', 'lua', 'vim', 'sh', 'py', 'groovy', 'css', 'html', 'json', 'log']
-let g:NERDTreeSyntaxEnabledExactMatches              = ['.marslo', 'jenkins', 'virtualization', 'vimrc.d', 'devops', 'vars', 'jenkinsfile', '.vimrc']
-let g:NERDTreeExtensionHighlightColor                = {}
-let g:NERDTreeExtensionHighlightColor['groovy']      = '8FAA54'       " #8FAA54
-let g:NERDTreeExtensionHighlightColor['log']         = '44788E'       " #44788E
-let g:NERDTreeExtensionHighlightColor['yaml']        = '9370db'       " #9370db
-let g:NERDTreeExtensionHighlightColor['yml']         = '9370db'       " #9370db
-let g:NERDTreeExtensionHighlightColor['png']         = '719899'       " #719899
-let g:NERDTreeExactMatchHighlightColor               = {}
-let g:NERDTreeExactMatchHighlightColor['.gitignore'] = '3a346f'       " #3a346f
+" #293739 #BDBB72 #808000 #ba55d3 #183172 #0d6efd #3a346f #fd7e14 #d63384
+let g:NERDTreeSyntaxEnabledExtensions                 = ['rb', 'lua', 'vim', 'sh', 'py', 'groovy', 'css', 'html', 'json', 'log']
+let g:NERDTreeSyntaxEnabledExactMatches               = ['.marslo', 'jenkins', 'virtualization', 'vimrc.d', 'devops', 'vars', 'jenkinsfile', '.vimrc']
+let g:NERDTreeExtensionHighlightColor                 = {}
+let g:NERDTreeExtensionHighlightColor['groovy']       = '8FAA54'       " #8FAA54
+let g:NERDTreeExtensionHighlightColor['log']          = '44788E'       " #44788E
+let g:NERDTreeExtensionHighlightColor['yaml']         = '9370db'       " #9370db
+let g:NERDTreeExtensionHighlightColor['yml']          = '9370db'       " #9370db
+let g:NERDTreeExtensionHighlightColor['png']          = '719899'       " #719899
+let g:NERDTreeExactMatchHighlightColor                = {}
+let g:NERDTreeExactMatchHighlightColor['README']      = '0099BD'       " #0099BD
+let g:NERDTreePatternMatchHighlightColor              = {}
+let g:NERDTreePatternMatchHighlightColor['.*rc$']     = '616E88'       " #616E88
+let g:NERDTreePatternMatchHighlightColor['.*git.*$']  = '6c71c4'       " #6c71c4
+let g:NERDTreePatternMatchHighlightColor['.*rc$']     = '4682b4'       " #4682b4
+let g:NERDTreePatternMatchHighlightColor['.*ignore$'] = 'cd853f'       " #cd853f
+let g:NERDTreePatternMatchHighlightColor['.*\.bak$']  = '293739'       " #293739
 ```
 
 - default settings

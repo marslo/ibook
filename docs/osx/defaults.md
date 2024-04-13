@@ -951,8 +951,6 @@ $ defaults write NSGlobalDomain "AppleSpacesSwitchOnActivate" -bool "true" && ki
 $ defaults write com.apple.spaces "spans-displays" -bool "true" && killall SystemUIServer
 ```
 
-
-
 ## keyboard & trackpad
 
 > [!NOTE|label:references:]
@@ -1059,6 +1057,18 @@ $ defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 ```bash
 $ defaults write com.apple.menuextra.battery ShowTime -string "YES"
 ```
+
+#### keyboard remapping to MacOS mode
+
+> [!NOTE|label:references:]
+> - ONLY for filco Minila
+>   - [How to remap modifier keys in macOS Ventura or Monterey](https://www.theverge.com/23591533/mac-remap-keyboard-how-to)
+> - for filco minila air, enable dip switch 2, 5 and 6
+>   - 2: change CapsLock and Esc
+>   - 5: Mac-specific mode
+>   - 6: power saving mode
+
+![keyboard remapping for macos](../screenshots/osx/osx-keyboard-remapping.png)
 
 ## browser
 ### chrome
