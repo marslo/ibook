@@ -4,7 +4,6 @@
 - [plugin alternatives](#plugin-alternatives)
   - [autocompletion](#autocompletion)
   - [language server protocol](#language-server-protocol)
-  - [ctrl-p](#ctrl-p)
   - [snippets](#snippets)
   - [cryptmethod](#cryptmethod)
   - [comments](#comments)
@@ -43,6 +42,8 @@
   - [ryanoasis/vim-devicons](#ryanoasisvim-devicons)
   - [RRethy/vim-hexokinase](#rrethyvim-hexokinase)
   - [NvChad/nvim-colorizer.lua](#nvchadnvim-colorizerlua)
+- [others](#others-1)
+  - [ctrl-p](#ctrl-p)
 - [troubleshooting](#troubleshooting)
   - [airline](#airline)
 
@@ -72,7 +73,6 @@
 - [ycm-core/YouCompleteMe](https://github.com/ycm-core/YouCompleteMe)
 - [prabirshrestha/asyncomplete.vim](https://github.com/prabirshrestha/asyncomplete.vim)
 - [Shougo/ddc.vim](https://github.com/Shougo/ddc.vim)
-- [L3MON4D3/LuaSnip](https://github.com/L3MON4D3/LuaSnip)
 
 ## [language server protocol](https://microsoft.github.io/language-server-protocol/)
 
@@ -88,9 +88,6 @@
 - [ycm-core/lsp-examples](https://github.com/ycm-core/lsp-examples)
 - [jose-elias-alvarez/null-ls.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim)
 
-## ctrl-p
-- [Shougo/denite.nvim](https://github.com/Shougo/denite.nvim)
-
 ## [snippets](https://github.com/rockerBOO/awesome-neovim#snippet)
 - [Snippets with CoC](https://www.chiarulli.me/Neovim/17-snippets/)
 
@@ -104,13 +101,13 @@
   Plug 'honza/vim-snippets'
   let g:coc_global_extensions = [ 'coc-snippets' ]
 
-  " coc-snippets
-  imap <c-l> <Plug>(coc-snippets-expand)
+  " coc-snippets ( ctrl-j )
+  imap <C-l> <Plug>(coc-snippets-expand)
   vmap <C-j> <Plug>(coc-snippets-select)
   let g:coc_snippet_next = '<c-j>'
   let g:coc_snippet_prev = '<c-k>'
   imap <C-j> <Plug>(coc-snippets-expand-jump)
-  inoremap <silent><expr> <TAB>
+  inoremap <silent><expr> <C-j>
         \ pumvisible() ? coc#_select_confirm() :
         \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
         \ CheckBackSpace() ? "\<TAB>" :
@@ -119,14 +116,15 @@
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~# '\s'
   endfunction
-  let g:coc_snippet_next = '<tab>'
   ```
-  - commands
-    ```vim
-    :CocList snippets
-    :CocCommand snippets.editSnippets
-    :CocCommand snippets.openSnippetFiles
-    ```
+- commands
+  ```vim
+  :CocList snippets
+  :CocCommand snippets.editSnippets
+  :CocCommand snippets.openSnippetFiles
+  ```
+
+  ![coc-snippets](../screenshot/vim/nvim-coc-snippet.gif)
 
 - [hrsh7th/vim-vsnip](https://github.com/hrsh7th/vim-vsnip) | [hrsh7th/vim-vsnip-integ](https://github.com/hrsh7th/vim-vsnip-integ)
 - [SirVer/UltiSnips](https://github.com/SirVer/ultisnips) | [thomasfaingnaert/vim-lsp-ultisnips](https://github.com/thomasfaingnaert/vim-lsp-ultisnips)
@@ -1212,6 +1210,7 @@ Plug 'neovim/nvim-lspconfig'
 > - [* Cautiously Configuring Copilot](https://code.kiwi.com/articles/cautiously-configuring-copilot/)
 > - [* Configuring GitHub Copilot in your environment](https://docs.github.com/en/copilot/configuring-github-copilot/configuring-github-copilot-in-your-environment?tool=vimneovim)
 
+![nvim copilot](../screenshot/vim/nvim-copilot.gif)
 
 - setup
   ```vim
@@ -1793,6 +1792,22 @@ require 'colorizer'.setup {
   buftypes = { "*", "!prompt", "!popup", }
 }
 ```
+
+# others
+
+> [!NOTE|label:references:]
+> - [Neovim for Newbs. FREE NEOVIM COURSE](https://www.youtube.com/playlist?list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn)
+>   - [From 0 to IDE in NEOVIM from scratch | FREE COURSE // EP 1](https://www.youtube.com/watch?v=zHTeCSVAFNY)
+>   - [A BEAUTIFUL neovim config with Lazy | FREE COURSE // EP 2](https://www.youtube.com/watch?v=4zyZ3sw_ulc&list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn&index=2)
+>   - [LSP in Neovim. Thanks to BILL GATES?! | FREE COURSE // EP 3](https://www.youtube.com/watch?v=S-xzYgTLVJE&list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn&index=3)
+>   - [What the hell is NULL-LS | FREE COURSE // EP 4](https://www.youtube.com/watch?v=SxuwQJ0JHMU&list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn&index=4)
+>   - [Autocomplete and Snippets in Neovim | FREE COURSE // EP 5](https://www.youtube.com/watch?v=iXIwm4mCpuc&list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn&index=5)
+>   - [How to configure Debuggers in Neovim | FREE COURSE // EP 6](https://www.youtube.com/watch?v=oYzZxi3SSnM&list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn&index=6)
+> - [Neovim Configuration](https://www.youtube.com/playlist?list=PLsz00TDipIffxsNXSkskknolKShdbcALR)
+
+
+## ctrl-p
+- [Shougo/denite.nvim](https://github.com/Shougo/denite.nvim)
 
 # troubleshooting
 ## airline
