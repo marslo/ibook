@@ -11,7 +11,7 @@
     - [osx](#osx)
     - [`brew install -v --debug`](#brew-install--v---debug)
     - [uninstall](#uninstall)
-- [initialize](#initialize)
+- [initialize and configure](#initialize-and-configure)
   - [provider](#provider)
   - [init.vim/init.lua](#initviminitlua)
   - [config](#config)
@@ -24,7 +24,7 @@
     - [true color](#true-color)
   - [config path](#config-path)
 - [builtin function details](#builtin-function-details)
-- [Various commands](#various-commands)
+- [various commands](#various-commands)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -356,7 +356,7 @@ $ cmake --install build
 $ sudo cmake --build build/ --target uninstall
 ```
 
-# initialize
+# initialize and configure
 
 > [!TIP]
 > - [Transitioning from Vim](https://neovim.io/doc/user/nvim.html#nvim-from-vim)
@@ -431,6 +431,9 @@ $ npm install -g neovim
 > - [LexSong/nvim](https://github.com/LexSong/nvim)
 > - [* How to Configure Neovim to make it Amazing -- complete tutorial](https://www.youtube.com/watch?v=J9yqSdvAKXY)
 >   - [cpow/cpow-dotfiles](https://github.com/cpow/cpow-dotfiles/tree/master)
+> - youtube courses
+>   - [Neovim for Newbs. FREE NEOVIM COURSE](https://www.youtube.com/playlist?list=PLsz00TDipIffreIaUNk64KxTIkQaGguqn)
+>   - [Neovim Configuration](https://www.youtube.com/playlist?list=PLsz00TDipIffxsNXSkskknolKShdbcALR)
 
 - check status
   ```vim
@@ -798,4 +801,4 @@ xterm-256color truecolor
   3
   ```
 
-# [Various commands](https://neovim.io/doc/user/various.html#various-cmds)
+# [various commands](https://neovim.io/doc/user/various.html#various-cmds)
