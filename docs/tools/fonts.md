@@ -48,8 +48,22 @@
 > - [Which font is used in Visual Studio Code Editor and how to change fonts?](https://stackoverflow.com/a/52789662/2940319)
 
 ```bash
+$ fc-list | sed -re 's/^.+\/([^:]+):\s?([^,:]+),?:?.*$/\1 : \2/g' | column -t -s: -o:
+
+# or
 $ fc-list | awk '{$1=""}1' | sed -re 's/^\s*([^:,]+:?,?[^,:]+).*$/\1/' | column -t -s:
 ```
+
+- i.e.:
+  ```bash
+  $ fc-list | sed -re 's/^.+\/([^:]+):\s?([^,:]+),?:?.*$/\1 : \2/g' | column -t -s: -o: | grep operator
+  OperatorMonoLig-LightItalic.otf                   : Operator Mono Lig
+  Operator Mono Light Nerd Font Complete.otf        : OperatorMono Nerd Font
+  Operator Pro Light Italic Nerd Font Complete.ttf  : OperatorPro Nerd Font
+  OperatorMonoLig-Light.otf                         : Operator Mono Lig
+  Operator Pro Light Nerd Font Complete.ttf         : OperatorPro Nerd Font
+  Operator Mono Light Italic Nerd Font Complete.otf : OperatorMono Nerd Font
+  ```
 
 ## highly recommended
 
@@ -135,21 +149,75 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 ### [Operator Mono](https://www.typography.com/fonts/operator/styles/operatormono)
 
 > [!NOTE|label:referencess:]
-> - [40huo/Patched-Fonts](https://github.com/40huo/Patched-Fonts) | [NF patched fonts](https://github.com/keyding/Operator-Mono)
-> - [xiyaowong/Operator-Fonts](https://github.com/xiyaowong/Operator-Fonts)
+> - [40huo/Patched-Fonts - otf](https://github.com/40huo/Patched-Fonts) | [NF patched fonts - otf](https://github.com/keyding/Operator-Mono/tree/c67835e29097946b19fb3061ba661ee3bf61e57e)
+> - [* xiyaowong/Operator-Fonts - ttf](https://github.com/xiyaowong/Operator-Fonts) | [mirror](https://github.com/marslo/Operator-Fonts)
+> - [* beichensky/Font](https://github.com/beichensky/Font) | [为VSCode 设置好看的字体：Operator Mono](https://blog.csdn.net/zgd826237710/article/details/94137781?spm=1001.2014.3001.5501) | [mirror](https://github.com/imarslo/Font)
+> - [补丁字体：Operator Mono的书呆子字体补丁](https://download.csdn.net/download/weixin_42104778/15068342)
+> - [ajaybhatia/operator-mono-nerd-fonts](https://github.com/ajaybhatia/operator-mono-nerd-fonts) | [mirror](https://github.com/imarslo/operator-mono-nerd-fonts)
+> - [TarunDaCoder/OperatorMono_NerdFont](https://github.com/TarunDaCoder/OperatorMono_NerdFont) | [mirror](https://github.com/imarslo/OperatorMono_NerdFont)
+> - [kiliman/operator-mono-lig](https://github.com/kiliman/operator-mono-lig/tree/master)
 
-```vim
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-Plug 'sainnhe/gruvbox-material'
-Plug 'scrooloose/nerdtree'
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+- NF
+  ```bash
+  # Mono NF otf
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/40huo/Patched-Fonts/raw/master/operator-mono-nerd-font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.otf
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/40huo/Patched-Fonts/raw/master/operator-mono-nerd-font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.otf
 
-set termguicolors
-set background=dark
-colorscheme gruvbox-material
-```
+  # Mono NF ttf
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Mono%20Nerd%20Font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.ttf
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Mono%20Nerd%20Font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.ttf
+
+  # Pro NF
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Pro%20Nerd%20Font/Operator%20Pro%20Light%20Italic%20Nerd%20Font%20Complete.ttf
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Pro%20Nerd%20Font/Operator%20Pro%20Light%20Nerd%20Font%20Complete.ttf
+
+  $ showfonts | grep -e ': Operator.*Nerd Font'
+  Operator Mono Light Nerd Font Complete.otf        : OperatorMono Nerd Font
+  Operator Pro Light Italic Nerd Font Complete.ttf  : OperatorPro Nerd Font
+  Operator Pro Light Nerd Font Complete.ttf         : OperatorPro Nerd Font
+  Operator Mono Light Italic Nerd Font Complete.otf : OperatorMono Nerd Font
+  ```
+
+- ligatures
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/beichensky/Font/raw/master/Operator%20Mono%20Lig/OperatorMonoLig-Light.otf
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         https://github.com/beichensky/Font/raw/master/Operator%20Mono%20Lig/OperatorMonoLig-LightItalic.otf
+  $ showfonts | grep -e ': operator.*lig'
+  OperatorMonoLig-LightItalic.otf                   : Operator Mono Lig
+  OperatorMonoLig-Light.otf                         : Operator Mono Lig
+  ```
+
+- vim configure
+  ```vim
+  Plug 'morhetz/gruvbox'                                              " ╮
+  Plug 'sainnhe/gruvbox-material'                                     " ├ theme
+  Plug 'luisiacc/gruvbox-baby', { 'branch': 'main' }                  " ╯
+  Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+
+  set go=                                                             " hide everything (go = guioptions)
+  set cpoptions+=n
+  set termguicolors
+  set guifont=OperatorMono\ Nerd\ Font:h29                            " ╭  nerd font ╮ keep only one
+  set guifont=Operator\ Mono\ Lig:h29                                 " ╰  ligatures ╯
+  set renderoptions=type:directx,renmode:5
+
+  if has( 'gui_running' ) || 'xterm-256color' == $TERM
+    set background=dark
+    colorscheme gruvbox-material                                      " sainnhe/gruvbox-material
+  endif
+  ```
 
 ![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)
+
+![nvim operator mono ligatures](../screenshot/tools/fonts/nvim-operatorMonoLig.png)
 
 ![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
 
@@ -666,7 +734,6 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `1D305` |   𝌅  |   `&#1D305;`  | -        |
 
 ### misc.
-
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS            |
 |:-------:|:----:|:-------------:|---------------------|
