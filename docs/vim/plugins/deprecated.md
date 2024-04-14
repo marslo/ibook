@@ -594,11 +594,11 @@ let g:ale_floating_preview                = 1
 let g:ale_close_preview_on_insert         = 1
 ```
 
-![ale error](../screenshot/vim/vim-ale-error.png)
+![ale error](../../screenshot/vim/vim-ale-error.png)
 
-![ale warning](../screenshot/vim/vim-ale-warning.png)
+![ale warning](../../screenshot/vim/vim-ale-warning.png)
 
-![ale info ](../screenshot/vim/vim-ale-info.png)
+![ale info ](../../screenshot/vim/vim-ale-info.png)
 
 - linter/checker install
   ```bash
