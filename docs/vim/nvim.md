@@ -4,13 +4,12 @@
 - [install](#install)
   - [dependencies](#dependencies)
   - [Nvim development (prerelease) build](#nvim-development-prerelease-build)
-  - [building neovim from source](#building-neovim-from-source)
-  - [package manager](#package-manager)
-  - [neovim-nightly](#neovim-nightly)
-  - [build from source](#build-from-source)
+  - [building from source](#building-from-source)
     - [osx](#osx)
     - [`brew install -v --debug`](#brew-install--v---debug)
     - [uninstall](#uninstall)
+  - [package manager](#package-manager)
+  - [neovim-nightly](#neovim-nightly)
 - [initialize and configure](#initialize-and-configure)
   - [provider](#provider)
   - [init.vim/init.lua](#initviminitlua)
@@ -103,99 +102,13 @@
   $ export PATH=$NVIM_HOME/bin:$PATH
   ```
 
-## building neovim from source
+## building from source
 
 > [!NOTE|label:references:]
 > - [Building Neovim from source](https://dev.to/asyncedd/building-neovim-from-source-1794)
 > - [homebrew-core/Formula/n/neovim.rb](https://github.com/Homebrew/homebrew-core/blob/841811d678fcfef856f693a2ec90add1625a4c12/Formula/n/neovim.rb)
-
-## package manager
-```bash
-# osx
-$ brew install nvim
-
-# ubuntu
-$ sudo add-apt-repository ppa:neovim-ppa/unstable
-$ sudo add-apt-repository ppa:neovim-ppa/stable
-$ sudo apt update
-$ sudo apt install neovim
-$ apt-cache madison neovim
-    neovim | 0.10.0~ubuntu1+git202401142109-310fb2efc-c60402a16-3c3072a0a~ubuntu20.04.1 | https://ppa.launchpadcontent.net/neovim-ppa/unstable/ubuntu focal/main amd64 Packages
-    neovim | 0.7.2-3~bpo22.04.1~ppa1 | https://ppa.launchpadcontent.net/neovim-ppa/stable/ubuntu jammy/main amd64 Packages
-    neovim | 0.6.1-3 | http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages
-
-# or
-$ curl -fsSL -O http://archive.ubuntu.com/ubuntu/pool/universe/n/neovim/neovim_0.7.2-8_amd64.deb
-$ sudo dpkg -i neovim_0.7.2-8_amd64.deb
-```
-
-- `brew install --head`
-
-  > [!NOTE|label:references:]
-  > - [02. `brew install nvim --HEAD --debug -v`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-02-brew-install-nvim-head-debug-v-md)
-
-  ```bash
-  $ brew install nvim --HEAD --debug -v
-  $ /usr/local/Cellar/neovim/HEAD-c6d1144/bin/nvim -V1 -v
-  NVIM v0.10.0-dev-2871+gc6d114451-Homebrew
-  Build type: Release
-  LuaJIT 2.1.1710088188
-
-     system vimrc file: "$VIM/sysinit.vim"
-    fall-back for $VIM: "/usr/local/Cellar/neovim/HEAD-c6d1144/share/nvim"
-
-  Run :checkhealth for more info
-  ```
-
-## neovim-nightly
-
-> [!NOTE|label:references:]
-> - [#28125 No parser for 'lua' language when opening a lua file](https://github.com/neovim/neovim/issues/28125)
-> - [benjiwolff/homebrew-neovim-nightly](https://github.com/benjiwolff/homebrew-neovim-nightly)
-> - [01. `brew install neovim-nightly -v --debug`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-01-brew-install-neovim-nightly-v-debug-md)
-
-```bash
-$ brew unlink neovim
-Unlinking /usr/local/Cellar/neovim/HEAD-f494084... 35 symlinks removed.
-
-$ brew tap benjiwolff/neovim-nightly
-$ brew install neovim-nightly [ -v --debug ]
-
-# verify
-$ /usr/local/Caskroom/neovim-nightly/nightly-7aa5637/nvim-macos-x86_64/bin/nvim -V1 -v
-NVIM v0.10.0-dev-2867+g7aa56370f
-Build type: RelWithDebInfo
-LuaJIT 2.1.1710088188
-Compilation: /Applications/Xcode_14.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -O2 -g -Og -g -flto=thin -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -fstack-protector-strong -Wimplicit-fallthrough -fdiagnostics-color=always -Wl,-export_dynamic -DUNIT_TESTING -DHAVE_UNIBILIUM -D_GNU_SOURCE -DINCLUDE_GENERATED_DECLARATIONS -I/Users/runner/work/neovim/neovim/.deps/usr/include/luajit-2.1 -I/Users/runner/work/neovim/neovim/.deps/usr/include -I/Users/runner/work/neovim/neovim/build/src/nvim/auto -I/Users/runner/work/neovim/neovim/build/include -I/Users/runner/work/neovim/neovim/build/cmake.config -I/Users/runner/work/neovim/neovim/src -I/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/include
-
-   system vimrc file: "$VIM/sysinit.vim"
-  fall-back for $VIM: "/usr/local/share/nvim"
-
-Run :checkhealth for more info
-```
-
-- `No such file or directory @ rb_file_s_rename`
-
-  > [!TIP|label:failure details]
-  > ```bash
-  > error: benjiwolff/neovim-nightly/neovim-nightly: No such file or directory @ rb_file_s_rename - (/usr/local/Caskroom/neovim-nightly/nightly-7aa5637, /usr/local/Caskroom/neovim-nightly/nightly-7aa5637.upgrading)
-  > ```
-
-  ```bash
-  # solution
-  $ brew remove neovim-nightly
-  $ rm -rf /usr/local/Caskroom/neovim-nightly
-
-  $ brew install neovim-nightly [ -v --debug --display-times ]
-  ```
-
-## build from source
-
-> [!NOTE|label:references:]
-> - [Building Neovim from source](https://dev.to/asyncedd/building-neovim-from-source-1794)
 > - [neovim/BUILD.md](https://github.com/neovim/neovim/blob/master/BUILD.md)
 >   - [Build prerequisites](https://github.com/neovim/neovim/blob/master/BUILD.md#build-prerequisites)
-
 
 ### osx
 
@@ -355,6 +268,89 @@ $ cmake --install build
 ```bash
 $ sudo cmake --build build/ --target uninstall
 ```
+
+
+## package manager
+```bash
+# osx
+$ brew install nvim
+
+# ubuntu
+$ sudo add-apt-repository ppa:neovim-ppa/unstable
+$ sudo add-apt-repository ppa:neovim-ppa/stable
+$ sudo apt update
+$ sudo apt install neovim
+$ apt-cache madison neovim
+    neovim | 0.10.0~ubuntu1+git202401142109-310fb2efc-c60402a16-3c3072a0a~ubuntu20.04.1 | https://ppa.launchpadcontent.net/neovim-ppa/unstable/ubuntu focal/main amd64 Packages
+    neovim | 0.7.2-3~bpo22.04.1~ppa1 | https://ppa.launchpadcontent.net/neovim-ppa/stable/ubuntu jammy/main amd64 Packages
+    neovim | 0.6.1-3 | http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages
+
+# or
+$ curl -fsSL -O http://archive.ubuntu.com/ubuntu/pool/universe/n/neovim/neovim_0.9.5-6ubuntu2_amd64.deb
+$ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
+```
+
+- `brew install --head`
+
+  > [!NOTE|label:references:]
+  > - [02. `brew install nvim --HEAD --debug -v`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-02-brew-install-nvim-head-debug-v-md)
+
+  ```bash
+  $ brew install nvim --HEAD --debug -v
+
+  # verify
+  $ $(brew --cellar nvim)/*/bin/nvim -V1 -v
+  NVIM v0.10.0-dev-2889+gf064e72b9-Homebrew
+  Build type: Release
+  LuaJIT 2.1.1710088188
+
+     system vimrc file: "$VIM/sysinit.vim"
+    fall-back for $VIM: "/usr/local/Cellar/neovim/HEAD-f064e72/share/nvim"
+
+  Run :checkhealth for more info
+  ```
+
+## neovim-nightly
+
+> [!NOTE|label:references:]
+> - [#28125 No parser for 'lua' language when opening a lua file](https://github.com/neovim/neovim/issues/28125)
+> - [benjiwolff/homebrew-neovim-nightly](https://github.com/benjiwolff/homebrew-neovim-nightly)
+> - [01. `brew install neovim-nightly -v --debug`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-01-brew-install-neovim-nightly-v-debug-md)
+
+```bash
+$ brew unlink neovim
+Unlinking /usr/local/Cellar/neovim/HEAD-f494084... 35 symlinks removed.
+
+$ brew tap benjiwolff/neovim-nightly
+$ brew install neovim-nightly [ -v --debug ]
+
+# verify
+$ /usr/local/Caskroom/neovim-nightly/nightly-7aa5637/nvim-macos-x86_64/bin/nvim -V1 -v
+NVIM v0.10.0-dev-2867+g7aa56370f
+Build type: RelWithDebInfo
+LuaJIT 2.1.1710088188
+Compilation: /Applications/Xcode_14.2.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -O2 -g -Og -g -flto=thin -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -fstack-protector-strong -Wimplicit-fallthrough -fdiagnostics-color=always -Wl,-export_dynamic -DUNIT_TESTING -DHAVE_UNIBILIUM -D_GNU_SOURCE -DINCLUDE_GENERATED_DECLARATIONS -I/Users/runner/work/neovim/neovim/.deps/usr/include/luajit-2.1 -I/Users/runner/work/neovim/neovim/.deps/usr/include -I/Users/runner/work/neovim/neovim/build/src/nvim/auto -I/Users/runner/work/neovim/neovim/build/include -I/Users/runner/work/neovim/neovim/build/cmake.config -I/Users/runner/work/neovim/neovim/src -I/Applications/Xcode_14.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk/usr/include
+
+   system vimrc file: "$VIM/sysinit.vim"
+  fall-back for $VIM: "/usr/local/share/nvim"
+
+Run :checkhealth for more info
+```
+
+- `No such file or directory @ rb_file_s_rename`
+
+  > [!TIP|label:failure details]
+  > ```bash
+  > error: benjiwolff/neovim-nightly/neovim-nightly: No such file or directory @ rb_file_s_rename - (/usr/local/Caskroom/neovim-nightly/nightly-7aa5637, /usr/local/Caskroom/neovim-nightly/nightly-7aa5637.upgrading)
+  > ```
+
+  ```bash
+  # solution
+  $ brew remove neovim-nightly
+  $ rm -rf /usr/local/Caskroom/neovim-nightly
+
+  $ brew install neovim-nightly [ -v --debug --display-times ]
+  ```
 
 # initialize and configure
 
