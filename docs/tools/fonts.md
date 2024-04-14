@@ -386,17 +386,21 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 > [!NOTE|label:references:]
 > - [* iMarslo: useful unicode](../cheatsheet/text-processing/text-processing.md#useful-unicode)
-> - [Private Use Area: E000-F8FF](https://jrgraphix.net/r/Unicode/E000-F8FF)
-> - [U+E000 ... U+F8FF: Private Use Area](https://utf8-chartable.de/unicode-utf8-table.pl)
->   - [U+E600 ... U+E9FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=58880&number=1024&utf8=-)
->   - [U+E5FA ... U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
->   - [U+E9FA ... U+EDF9](https://utf8-chartable.de/unicode-utf8-table.pl?start=59898&number=1024&utf8=dec&unicodeinhtml=hex)
->   - [U+EDFA ... U+F1F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=60922&number=1024&utf8=dec&unicodeinhtml=hex)
->   - [U+F1FA to U+F5F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=61946&number=1024&utf8=dec&unicodeinhtml=hex)
->   - [U+F0000 to U+F03FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=983040&number=1024&utf8=-)
+> - [Private Use Area: E000 - F8FF](https://jrgraphix.net/r/Unicode/E000-F8FF)
+> - [U+E000 - U+F8FF: Private Use Area](https://utf8-chartable.de/unicode-utf8-table.pl)
+>   - [U+E600 - U+E9FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=58880&number=1024&utf8=-)
+>   - [U+E5FA - U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+E9FA - U+EDF9](https://utf8-chartable.de/unicode-utf8-table.pl?start=59898&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+EDFA - U+F1F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=60922&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+F1FA - U+F5F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=61946&number=1024&utf8=dec&unicodeinhtml=hex)
+>   - [U+F0000 - U+F03FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=983040&number=1024&utf8=-)
 > - [Font Awesome 5 Code Icons](https://www.w3schools.com/icons/fontawesome5_icons_code.asp)
 
 ### coding
+
+| UNICODE | ICON | HTML ENCODING | COMMENTS  |
+|:-------:|:----:|:--------------|-----------|
+| `F0423` |   󰐣  | `&#xF0423;`   | &#xF0423; |
 
 | UNICODE | ICON |
 |:-------:|:----:|
