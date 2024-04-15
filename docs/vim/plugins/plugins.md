@@ -726,6 +726,12 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 > - [Configure snippets workflow](https://github.com/neoclide/coc.nvim/wiki/Using-snippets#configure-snippets-workflow)
 > - [Snippets with CoC](https://www.chiarulli.me/Neovim/17-snippets/)
 > - [Coc.nvim completion and snippets are conflicting](https://www.reddit.com/r/neovim/comments/yl5t0o/cocnvim_completion_and_snippets_are_conflicting/)
+> - ultisnips:
+>   - [ultisnips/doc/UltiSnips.txt](https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt)
+>   - [UltiSnips Screencast Episode 1](https://www.sirver.net/blog/2011/12/30/first-episode-of-ultisnips-screencast/)
+>   - [UltiSnips Screencast Episode 2](https://www.sirver.net/blog/2012/01/08/second-episode-of-ultisnips-screencast/)
+>   - [UltiSnips 2.0 and Screencast Episode 3](https://www.sirver.net/blog/2012/02/05/third-episode-of-ultisnips-screencast/)
+>   - [UltiSnips Screencast Episode 4](https://www.sirver.net/blog/2012/03/31/fourth-episode-of-ultisnips-screencast/)
 
 ![coc-snippets](../../screenshot/vim/nvim-coc-snippet.gif)
 

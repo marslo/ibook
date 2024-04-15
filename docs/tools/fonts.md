@@ -16,6 +16,7 @@
   - [symbole](#symbole)
   - [others](#others)
 - [powerline fonts](#powerline-fonts)
+- [others](#others-1)
 - [devicons](#devicons)
   - [coding](#coding)
   - [folders](#folders)
@@ -155,7 +156,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > - [补丁字体：Operator Mono的书呆子字体补丁](https://download.csdn.net/download/weixin_42104778/15068342)
 > - [ajaybhatia/operator-mono-nerd-fonts](https://github.com/ajaybhatia/operator-mono-nerd-fonts) | [mirror](https://github.com/imarslo/operator-mono-nerd-fonts)
 > - [TarunDaCoder/OperatorMono_NerdFont](https://github.com/TarunDaCoder/OperatorMono_NerdFont) | [mirror](https://github.com/imarslo/OperatorMono_NerdFont)
-> - [kiliman/operator-mono-lig](https://github.com/kiliman/operator-mono-lig/tree/master)
+> - ligatures:
+>   - [Operator Mono Ligatures Files](https://sourceforge.net/projects/operator-mono-ligatures.mirror/files/v2.5.2/)
+>   - [kiliman/operator-mono-lig](https://github.com/kiliman/operator-mono-lig/tree/master)
 
 - NF
   ```bash
@@ -451,6 +454,11 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
       fc-cache -f -v
     ```
 
+## others
+
+> [!NOTE|label:references:]
+> - [分享字体表中的部分中文字体，自取自用 #46](https://github.com/F9y4ng/GreasyFork-Scripts/discussions/46)
+
 ## devicons
 
 > [!NOTE|label:references:]
@@ -465,122 +473,201 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 >   - [U+F1FA - U+F5F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=61946&number=1024&utf8=dec&unicodeinhtml=hex)
 >   - [U+F0000 - U+F03FF](https://utf8-chartable.de/unicode-utf8-table.pl?start=983040&number=1024&utf8=-)
 > - [Font Awesome 5 Code Icons](https://www.w3schools.com/icons/fontawesome5_icons_code.asp)
+> - [nerdfont cheatsheet](https://www.nerdfonts.com/cheat-sheet)
+>   - `nf-ple`
+>   - `nf-md`
+>   - `nf-dev`
+>   - `nf-fa`
+>   - `nf-linux`
 
 ### coding
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS |
-|:-------:|:----:|:-------------:|----------|
-|  `E614` |     |   `&#xE614;`  | #        |
-|  `F292` |     |   `&#xF292;`  | #        |
-|  `EA90` |     |   `&#xEA90;`  | #        |
-|  `F198` |     |   `&#xF198;`  | #        |
-| `F0423` |   󰐣  |  `&#xF0423;`  | #        |
-| `F0423` |   󰐣  |  `&#xF0423;`  | #        |
-| `F0424` |   󰐤  |  `&#xF0424;`  | #        |
-| `10995` |   𐦕  |   `&#10995;`  | #        |
-| `10E98` |   𐺘  |  `&#x10E98;`  | #        |
-| `F1183` |   󱆃  |  `&#xF1183;`  | #!       |
-| `F1501` |   󱔁  |  `&#xF1501;`  | !?#      |
-| `F12B7` |   󱊷  |  `&#xF12B7;`  | ESC      |
-|  `F295` |     |   `&#xF295;`  | %        |
-| `F03F0` |   󰏰  |  `&#xF03F0;`  | %        |
-|  `F852` |     |   `&#xF852;`  | %        |
-| `F0353` |   󰍓  |  `&#xF0353;`  | %        |
-|  `E60C` |     |   `&#xE60C;`  | JS       |
-|  `E74E` |     |   `&#xE74E;`  | JS       |
-|  `F81D` |     |   `&#xF81D;`  | JS       |
-|  `E781` |     |   `&#xE781;`  | JS       |
-|  `F898` |     |   `&#xF898;`  | JS       |
-| `F0399` |   󰎙  |  `&#xF0399;`  | JS       |
-| `F06E6` |   󰛦  |  `&#xF06E6;`  | TS       |
-|  `E628` |     |   `&#xE628;`  | TS       |
-|  `F81A` |     |   `&#xF81A;`  | C#       |
-| `F031B` |   󰌛  |  `&#xF031B;`  | C#       |
-|  `E648` |     |   `&#xE648;`  | c#       |
-|  `E649` |     |   `&#xE649;`  | C        |
-| `F0671` |   󰙱  |  `&#xF0671;`  | C        |
-| `F0672` |   󰙲  |  `&#xF0672;`  | C++      |
-|  `E64B` |     |   `&#xE64B;`  | UDA      |
-|  `E651` |     |   `&#xE651;`  | D        |
-|  `FD42` |   ﵂  |   `&#xFD42;`  | V        |
-| `F0844` |   󰡄  |  `&#xF0844;`  | V        |
-| `F07D4` |   󰟔  |  `&#xF07D4;`  | R        |
-|  `E612` |     |   `&#xE612;`  | txt      |
-|  `E64E` |     |   `&#xE64E;`  | txt      |
-|  `F2C5` |     |   `&#xF2C5;`  | ()       |
-| `F0AE7` |   󰫧  |  `&#xF0AE7;`  | (x)      |
-|  `E6B2` |     |   `&#xE6B2;`  | [T]      |
-|  `EA8A` |     |   `&#xEA8A;`  | []       |
-| `F0A3E` |   󰨾  |  `&#xF0A3E;`  | [..]     |
-|  `EA8B` |     |   `&#xEA8B;`  | {}       |
-|  `E60B` |     |   `&#xE60B;`  | {}       |
-| `F0626` |   󰘦  |  `&#xF0626;`  | {..}     |
-|  `FB25` |   ﬥ  |   `&#xFB25;`  | {...}    |
-|  `E618` |     |   `&#xE618;`  | <>       |
-| `F0761` |   󰝡  |  `&#xF0761;`  | <>       |
-| `F0694` |   󰚔  |  `&#xF0694;`  | <>       |
-| `F0171` |   󰅱  |  `&#xF0171;`  | <>       |
-|  `EAE9` |     |   `&#xEAE9;`  | <>       |
-|  `E7A3` |     |   `&#xE7A3;`  | </>      |
-|  `F1C9` |     |   `&#xF1C9;`  | </>      |
-|  `E796` |     |   `&#xE796;`  | </>      |
-|  `F121` |     |   `&#xF121;`  | </>      |
-|  `EA92` |     |   `&#xEA92;`  | `<T>`    |
-|  `E67C` |     |   `&#xE67C;`  | (:a)     |
-|  `F4B5` |     |   `&#xF4B5;`  | >_       |
-|  `F120` |     |   `&#xF120;`  | >_       |
-|  `E7A2` |     |   `&#xE7A2;`  | >_       |
-|  `E683` |     |   `&#xE683;`  | >_       |
-|  `E795` |     |   `&#xE795;`  | >_       |
-| `F07B7` |   󰞷  |  `&#xF07B7;`  | >_       |
-|  `E285` |     |   `&#xE285;`  | >        |
-|  `E758` |     |   `&#xE758;`  | {less}   |
-|  `E738` |     |   `&#xE738;`  | java     |
-| `F0B37` |   󰬷  |  `&#xF0B37;`  | java     |
-|  `E204` |     |   `&#xE204;`  | java     |
-|  `E005` |     |   `&#xE005;`  | java     |
-|  `F2A5` |     |   `&#xF2A5;`  | g        |
-|  `F2A6` |     |   `&#xF2A6;`  | g        |
-|  `E7B0` |     |   `&#xE7B0;`  | docker   |
-|  `F308` |     |   `&#xF308;`  | docker   |
-|  `E650` |     |   `&#xE650;`  | docker   |
-| `F0868` |   󰡨  |  `&#xF0868;`  | docker   |
-|  `E7C5` |     |   `&#xE7C5;`  | vim      |
-|  `E62B` |     |   `&#xE62B;`  | vim      |
-|  `F194` |     |   `&#xF194;`  | vim      |
-|  `F27D` |     |   `&#xF27D;`  | vim      |
-|  `FA76` |  勇  |   `&#xFA76;`  | vim      |
-|  `FA77` |  勺  |   `&#xFA77;`  | vim      |
-|  `F1CA` |     |   `&#xF1CA;`  | vim      |
-|  `F36F` |     |   `&#xF36F;`  | neovim   |
-|  `E235` |     |   `&#xE235;`  | python   |
-| `F0320` |   󰌠  |  `&#xF0320;`  | python   |
-|  `E73E` |     |   `&#xE73E;`  | markdown |
-|  `F853` |     |   `&#xF853;`  | markdown |
-|  `F858` |     |   `&#xF858;`  | markdown |
-|  `E673` |     |   `&#xE673;`  | markdown |
-|  `E616` |     |   `&#xE616;`  | npm      |
-| `F06F7` |   󰛷  |  `&#xF06F7;`  | npm      |
-|  `E767` |     |   `&#xE767;`  | jenkins  |
-|  `E66E` |     |   `&#xE66E;`  | jenkins  |
-|  `F4E5` |     |   `&#xF4E5;`  | png      |
-|  `F4A5` |     |   `&#xF4A5;`  | file     |
-|  `EB9D` |     |   `&#xEB9D;`  | file     |
-|  `F15C` |     |   `&#xF15C;`  | file     |
-|  `E7B4` |     |   `&#xE7B4;`  | Ai       |
-|  `E73D` |     |   `&#xE73D;`  | php      |
-| `F08C0` |   󰣀  |  `&#xF08C0;`  | ssh      |
-|  `F1D3` |     |   `&#xF1D3;`  | git      |
-|  `F1D2` |     |   `&#xF1D2;`  | git      |
-|  `E776` |     |   `&#xE776;`  | ngix     |
-|  `E791` |     |   `&#xE791;`  | ruby     |
-|  `E724` |     |   `&#xE724;`  | go       |
-|  `E719` |     |   `&#xE719;`  | node     |
-| `F0AA9` |   󰪩  |  `&#xF0AA9;`  | database |
-| `F0AAA` |   󰪪  |  `&#xF0AAA;`  | database |
-|  `E7AA` |     |   `&#xE7AA;`  | S        |
-|  `E72C` |     |   `&#xE72C;`  | TC       |
-|  `E7BC` |     |   `&#xE7BC;`  | CS       |
+| UNICODE | ICON | HTML ENCODING | COMMENTS   |
+|:-------:|:----:|:-------------:|------------|
+|  `E614` |     |   `&#xE614;`  | # - css    |
+|  `F292` |     |   `&#xF292;`  | #          |
+|  `EA90` |     |   `&#xEA90;`  | #          |
+|  `F198` |     |   `&#xF198;`  | #          |
+| `F0423` |   󰐣  |  `&#xF0423;`  | #          |
+| `F0423` |   󰐣  |  `&#xF0423;`  | #          |
+| `F0424` |   󰐤  |  `&#xF0424;`  | #          |
+| `10995` |   𐦕  |   `&#10995;`  | #          |
+| `10E98` |   𐺘  |  `&#x10E98;`  | #          |
+| `F0F6D` |   󰽭  |  `&#xF0F6D;`  | #          |
+| `F1183` |   󱆃  |  `&#xF1183;`  | #!         |
+| `F1501` |   󱔁  |  `&#xF1501;`  | !?#        |
+| `F12B7` |   󱊷  |  `&#xF12B7;`  | ESC        |
+|  `F295` |     |   `&#xF295;`  | %          |
+| `F1278` |   󱉸  |  `&#xF1278;`  | %          |
+| `F03F0` |   󰏰  |  `&#xF03F0;`  | %          |
+|  `F852` |     |   `&#xF852;`  | %          |
+| `F0353` |   󰍓  |  `&#xF0353;`  | %          |
+| `F1033` |   󱀳  |  `&#xF1033;`  | %          |
+| `F046F` |   󰑯  |  `&#xF046F;`  | %          |
+|  `E60C` |     |   `&#xE60C;`  | JS         |
+|  `E74E` |     |   `&#xE74E;`  | JS         |
+|  `F81D` |     |   `&#xF81D;`  | JS         |
+|  `E781` |     |   `&#xE781;`  | JS         |
+|  `F898` |     |   `&#xF898;`  | JS         |
+| `F0399` |   󰎙  |  `&#xF0399;`  | JS         |
+| `F06E6` |   󰛦  |  `&#xF06E6;`  | TS         |
+|  `E628` |     |   `&#xE628;`  | TS         |
+|  `F81A` |     |   `&#xF81A;`  | C#         |
+| `F031B` |   󰌛  |  `&#xF031B;`  | C#         |
+|  `E648` |     |   `&#xE648;`  | c#         |
+|  `E649` |     |   `&#xE649;`  | C          |
+| `F0671` |   󰙱  |  `&#xF0671;`  | C          |
+| `F0672` |   󰙲  |  `&#xF0672;`  | C++        |
+|  `E61D` |     |   `&#xE61D;`  | C++        |
+|  `E646` |     |   `&#xE646;`  | C++        |
+|  `E64B` |     |   `&#xE64B;`  | UDA        |
+|  `E651` |     |   `&#xE651;`  | D          |
+|  `FD42` |   ﵂  |   `&#xFD42;`  | V          |
+| `F0844` |   󰡄  |  `&#xF0844;`  | V          |
+| `F07D4` |   󰟔  |  `&#xF07D4;`  | R          |
+|  `E612` |     |   `&#xE612;`  | txt        |
+|  `E64E` |     |   `&#xE64E;`  | txt        |
+|  `F2C5` |     |   `&#xF2C5;`  | (fire)     |
+|  `E242` |     |   `&#xE242;`  | (fire)     |
+| `F10D7` |   󱃗  |  `&#xF10d7;`  | ()         |
+| `F10FA` |   󱃺  |  `&#xF10FA;`  | ()         |
+| `F0172` |   󰅲  |  `&#xF0172;`  | ()         |
+| `F0AE7` |   󰫧  |  `&#xF0AE7;`  | (x)        |
+| `F1111` |   󱄑  |  `&#xF1111;`  | (x)        |
+|  `E6B2` |     |   `&#xE6B2;`  | [T]        |
+|  `EA8A` |     |   `&#xEA8A;`  | []         |
+| `F016A` |   󰅪  |  `&#xF016A;`  | []         |
+| `F0168` |   󰅨  |  `&#xF0168;`  | []         |
+| `F10F5` |   󱃵  |  `&#xF10F5;`  | []         |
+| `F10F6` |   󱃶  |  `&#xF10F6;`  | []         |
+| `F0A3E` |   󰨾  |  `&#xF0A3E;`  | [..]       |
+|  `EA8B` |     |   `&#xEA8B;`  | {}         |
+|  `EB0F` |     |   `&#xEB0F;`  | {}         |
+| `F10D6` |   󱃖  |  `&#xF10D6;`  | {}         |
+| `F10F7` |   󱃷  |  `&#xF10F7;`  | {}         |
+| `F10F8` |   󱃸  |  `&#xF10F8;`  | {}         |
+|  `E60B` |     |   `&#xE60B;`  | {}         |
+| `F0169` |   󰅩  |  `&#xF0169;`  | {}         |
+| `F07B5` |   󰞵  |  `&#xF07B5;`  | {}         |
+|  `EBE5` |     |   `&#xEBE5;`  | {}         |
+|  `EBE6` |     |   `&#xEBE6;`  | {}         |
+| `F0626` |   󰘦  |  `&#xF0626;`  | {..}       |
+|  `FB25` |   ﬥ  |   `&#xFB25;`  | {...}      |
+|  `E618` |     |   `&#xE618;`  | <>         |
+|  `F44F` |     |   `&#xF44F;`  | <>         |
+| `F0174` |   󰅴  |  `&#xF0174;`  | <>         |
+|  `E60E` |     |   `&#xE60E;`  | <>         |
+| `F0761` |   󰝡  |  `&#xF0761;`  | <>         |
+| `F054F` |   󰕏  |  `&#xF054F;`  | <>         |
+| `F0694` |   󰚔  |  `&#xF0694;`  | <>         |
+| `F0171` |   󰅱  |  `&#xF0171;`  | <>         |
+| `F022E` |   󰈮  |  `&#xF022E;`  | <>         |
+|  `F4b0` |     |   `&#xF4b0;`  | <>         |
+|  `F40D` |     |   `&#xF40D;`  | <>         |
+|  `EAE9` |     |   `&#xEAE9;`  | <>         |
+| `F102B` |   󱀫  |  `&#xF102B;`  | <>         |
+|  `E7A3` |     |   `&#xE7A3;`  | </>        |
+|  `F1C9` |     |   `&#xF1C9;`  | </>        |
+|  `E796` |     |   `&#xE796;`  | </>        |
+|  `F121` |     |   `&#xF121;`  | </>        |
+|  `EAC4` |     |   `&#xEAC4;`  | </>        |
+| `F05C0` |   󰗀  |  `&#xF05C0;`  | </>        |
+|  `EA92` |     |   `&#xEA92;`  | `<T>`      |
+|  `E67C` |     |   `&#xE67C;`  | (:a)       |
+|  `F4B5` |     |   `&#xF4B5;`  | >_         |
+|  `F120` |     |   `&#xF120;`  | >_         |
+|  `E7A2` |     |   `&#xE7A2;`  | >_         |
+|  `E683` |     |   `&#xE683;`  | >_         |
+| `F07B7` |   󰞷  |  `&#xF07B7;`  | >_         |
+|  `F489` |     |   `&#xF489;`  | >_         |
+|  `EA85` |     |   `&#xEA85;`  | >_         |
+|  `E285` |     |   `&#xE285;`  | >          |
+|  `E795` |     |   `&#xE795;`  | >_         |
+|  `F460` |     |   `&#xF460;`  | >          |
+| `F016C` |   󰅬  |  `&#xF016C;`  | >          |
+|  `E758` |     |   `&#xE758;`  | {less}     |
+|  `E256` |     |   `&#xE256;`  | java       |
+|  `E738` |     |   `&#xE738;`  | java       |
+| `F0B37` |   󰬷  |  `&#xF0B37;`  | java       |
+|  `E204` |     |   `&#xE204;`  | java       |
+|  `E005` |     |   `&#xE005;`  | java       |
+|  `E66D` |     |   `&#xE66D;`  | java       |
+| `F0617` |   󰘗  |  `&#xF0617;`  | java       |
+|  `E61B` |     |   `&#xE61B;`  | cjsx       |
+|  `E65E` |     |   `&#xE65E;`  | go         |
+|  `E626` |     |   `&#xE626;`  | go         |
+|  `E724` |     |   `&#xE724;`  | go         |
+|  `F2A5` |     |   `&#xF2A5;`  | g          |
+|  `F2A6` |     |   `&#xF2A6;`  | g          |
+|  `F0D5` |     |   `&#xF0D5;`  | g+         |
+| `F02BD` |   󰊽  |  `&#xF02BD;`  | g+         |
+|  `F0D4` |     |   `&#xF0D4;`  | g+         |
+|  `F2B3` |     |   `&#xF2B3;`  | g+         |
+| `F03BF` |   󰎿  |  `&#xF03BF;`  | g+         |
+| `F0CB2` |   󰲲  |  `&#xF0CB2;`  | g+         |
+|  `E7B0` |     |   `&#xE7B0;`  | docker     |
+|  `F308` |     |   `&#xF308;`  | docker     |
+|  `E650` |     |   `&#xE650;`  | docker     |
+| `F0868` |   󰡨  |  `&#xF0868;`  | docker     |
+|  `E7C5` |     |   `&#xE7C5;`  | vim        |
+|  `E62B` |     |   `&#xE62B;`  | vim        |
+|  `F194` |     |   `&#xF194;`  | vim        |
+|  `F27D` |     |   `&#xF27D;`  | vim        |
+|  `FA76` |  勇  |   `&#xFA76;`  | vim        |
+|  `FA77` |  勺  |   `&#xFA77;`  | vim        |
+|  `F194` |     |   `&#xF194;`  | vim        |
+|  `F1CA` |     |   `&#xF1CA;`  | vim        |
+|  `F36F` |     |   `&#xF36F;`  | neovim     |
+|  `E235` |     |   `&#xE235;`  | python     |
+| `F0320` |   󰌠  |  `&#xF0320;`  | python     |
+|  `E73E` |     |   `&#xE73E;`  | markdown   |
+|  `F853` |     |   `&#xF853;`  | markdown   |
+| `F0354` |   󰍔  |  `&#xF0354;`  | markdown   |
+| `F072F` |   󰜯  |  `&#xF072F;`  | markdown   |
+| `F0DFB` |   󰷻  |  `&#xF0DFB;`  | markdown   |
+|  `E673` |     |   `&#xE673;`  | makefile   |
+|  `F858` |     |   `&#xF858;`  | maxcdn     |
+|  `F136` |     |   `&#xF136;`  | maxcdn     |
+|  `E616` |     |   `&#xE616;`  | npm        |
+| `F06F7` |   󰛷  |  `&#xF06F7;`  | npm        |
+|  `E767` |     |   `&#xE767;`  | jenkins    |
+|  `E66E` |     |   `&#xE66E;`  | jenkins    |
+|  `F2EC` |     |   `&#xF2EC;`  | *jenkins   |
+|  `F4E5` |     |   `&#xF4E5;`  | png        |
+| `F0D78` |   󰵸  |  `&#xF0D78;`  | gif        |
+| `F0225` |   󰈥  |  `&#xF0225;`  | jpg        |
+| `F0E2D` |   󰸭  |  `&#xF0E2D;`  | png        |
+| `F0226` |   󰈦  |  `&#xF0226;`  | pdf        |
+|  `F4A5` |     |   `&#xF4A5;`  | file       |
+|  `EB9D` |     |   `&#xEB9D;`  | file       |
+|  `F15C` |     |   `&#xF15C;`  | file       |
+|  `EAE8` |     |   `&#xEAE8;`  | file       |
+|  `F471` |     |   `&#xF471;`  | file       |
+| `F1085` |   󱂅  |  `&#xF1085;`  | log        |
+|  `E7B4` |     |   `&#xE7B4;`  | Ai         |
+|  `E67F` |     |   `&#xE67F;`  | Ps         |
+|  `E73D` |     |   `&#xE73D;`  | php        |
+| `F08C0` |   󰣀  |  `&#xF08C0;`  | ssh        |
+|  `F1D3` |     |   `&#xF1D3;`  | git        |
+|  `F1D2` |     |   `&#xF1D2;`  | git        |
+|  `E776` |     |   `&#xE776;`  | ngix       |
+|  `E791` |     |   `&#xE791;`  | ruby       |
+|  `E739` |     |   `&#xE739;`  | ruby       |
+|  `E21E` |     |   `&#xE21E;`  | ruby       |
+|  `E719` |     |   `&#xE719;`  | node       |
+| `F0AA9` |   󰪩  |  `&#xF0AA9;`  | database   |
+| `F0AAA` |   󰪪  |  `&#xF0AAA;`  | database   |
+|  `E7AA` |     |   `&#xE7AA;`  | S          |
+|  `E72C` |     |   `&#xE72C;`  | TC         |
+|  `E7BC` |     |   `&#xE7BC;`  | CS         |
+| `F0AAE` |   󰪮  |  `&#xF0AAE;`  | .net       |
+|  `E69B` |     |   `&#xE69B;`  | tex        |
+| `F044D` |   󰑍  |  `&#xF044D;`  | reddit     |
+|  `E704` |     |   `&#xE704;`  | mysql      |
+|  `E7A6  |     |   `&#xE7A6;`  | mysql      |
+| `F12A7` |   󱊧  |   `&#F12A7;`  | 0x         |
+|  `E600` |     |   `&#xE600;`  | stylus     |
+|  `E759` |     |   `&#E759;`   | dev stylus |
 
 ### folders
 
@@ -589,9 +676,10 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F07B` |     |   `&#xF07B;`  | close     |
 |  `F07C` |     |   `&#xF07C;`  | open      |
 |  `F114` |     |   `&#xF114;`  | close     |
-|  `F115` |     |   `&#xF115;`  | open      |
+|  `y115` |     |   `&#xF115;`  | open      |
 |  `F067` |     |   `&#xF067;`  | close (+) |
 |  `F068` |     |   `&#xF068;`  | open (-)  |
+|  `F45B` |     |   `&#xF45B;`  | open (-)  |
 |  `F2D1` |     |   `&#xF2D1;`  | open (-)  |
 |  `F48B` |     |   `&#xF48B;`  | open (-)  |
 
@@ -602,11 +690,15 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F302` |     |   `&#xF302;`  | mac      |
 |  `E711` |     |   `&#xE711;`  | mac      |
 |  `F8FF` |     |   `&#xF8FF;`  | mac      |
+| `F0037` |   󰀷  |  `&#xF0037;`  | ios      |
 |  `F316` |     |   `&#xF316;`  | redhat   |
 |  `E7BB` |     |   `&#xE7BB;`  | redhat   |
 |  `E712` |     |   `&#xE712;`  | linux    |
 |  `F31A` |     |   `&#xF31A;`  | linux    |
 |  `EBC6` |     |   `&#xEBC6;`  | linux    |
+|  `F17C` |     |   `&#xF17C;`  | linux    |
+| `F033D` |   󰌽  |  `&#xF033D;`  | linux    |
+|  `F314` |     |   `&#xF314;`  | opensuse |
 |  `F31B` |     |   `&#xF31B;`  | ubuntu   |
 |  `EBC9` |     |   `&#xEBC9;`  | ubuntu   |
 |  `F31C` |     |   `&#xF31C;`  | ubuntu   |
@@ -620,6 +712,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F306` |     |   `&#xF306;`  | debian   |
 |  `E77D` |     |   `&#xE77D;`  | debian   |
 |  `E722` |     |   `&#xE722;`  | RPi      |
+|  `EF5C` |     |   `&#xEF5C;`  | RPi      |
 |  `F304` |     |   `&#xF304;`  | centos   |
 |  `E70E` |     |   `&#xE70E;`  | android  |
 |  `F17B` |     |   `&#xF17B;`  | android  |
@@ -630,18 +723,38 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |:-------:|:----:|:-------------:|---------------|
 |  `F89F` |     |   `&#xF89F;`  | 123           |
 | `F03A0` |   󰎠  |  `&#xF03A0;`  | 123           |
+|  `F4F7` |     |   `&#xF4F7;`  | 123           |
+| `F172A` |   󱜪  |  `&#xF172A;`  | 5.1.2         |
+| `F1729` |   󱜩  |  `&#xF1729;`  | 2.1           |
 | `F1052` |   󱁒  |  `&#xF1052;`  | -1            |
 | `F15CB` |   󱗋  |  `&#xF15CB;`  | +1            |
 | `F1992` |   󱦒  |  `&#xF1992;`  | 1/2           |
-| `F01C9` |   󰇉  |  `&#xF01C9;`  | R/B           |
+| `F01C9` |   󰇉  |  `&#xF01C9;`  | A/B           |
 | `F0195` |   󰆕  |  `&#xF0195;`  | +/-           |
+| `F14C9` |   󱓉  |  `&#xF14C9;`  | +/-           |
+|  `F440` |     |   `&#xF440;`  | +-            |
+|  `EB64` |     |   `&#xEB64;`  | +-x%          |
+| `F0993` |   󰦓  |  `&#xF0993;`  | +-            |
+| `F01D5` |   󰇕  |  `&#xF01D5;`  | ➗            |
+| `F12EA` |   󱋪  |  `&#xF12EA;`  | ➗            |
 | `F0963` |   󰥣  |  `&#xF0963;`  | x^y           |
+| `F0964` |   󰥤  |  `&#xF0964;`  | x^y           |
 |  `F12B` |     |   `&#xF12B;`  | x^2           |
+| `F0283` |   󰊃  |  `&#xF0283;`  | x^2           |
 |  `F12C` |     |   `&#xF12C;`  | x2 subscript  |
+| `F0282` |   󰊂  |  `&#xF0282;`  | x2 subscript  |
+|  `F506` |     |   `&#xF506;`  | ./            |
+| `F096E` |   󰥮  |  `&#xF096E;`  | >=            |
+| `F097D` |   󰥽  |  `&#xF097D;`  | <=            |
+| `F098E` |   󰦎  |  `&#xF098E;`  | !=            |
+| `F098D` |   󰦍  |  `&#xF098D;`  | !=            |
+| `F0170` |   󰅰  |  `&#xF0170;`  | !=            |
 | `F0C96` |   󰲖  |  `&#xF0C96;`  | cos           |
 | `F0C97` |   󰲗  |  `&#xF0C97;`  | sin           |
 | `F0C98` |   󰲘  |  `&#xF0C98;`  | tan           |
+| `F09A3` |   󰦣  |  `&#xF09A3;`  | square root   |
 | `F0784` |   󰞄  |  `&#xF0784;`  | square root   |
+|  `EEE0` |     |   `&#xEEE0;`  | square root   |
 |  `F8FE` |     |   `&#xF8FE;`  | pi            |
 |  `E22C` |     |   `&#xE22C;`  | pi            |
 | `F03FF` |   󰏿  |  `&#xF03FF;`  | pi            |
@@ -660,9 +773,11 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `10B3D` |   𐬽  |   `&#10B3D;`  | ∴             |
 | `10B3E` |   𐬾  |   `&#10B3E;`  | ∵             |
 | `10B3F` |   𐬿  |   `&#10B3F;`  | ∴             |
+| `F0FC9` |   󰿉  |  `&#xF0FC9;`  | function      |
 | `F0295` |   󰊕  |  `&#xF0295;`  | function      |
 | `F0871` |   󰡱  |  `&#xF0871;`  | function of x |
 | `1D6FB` |   𝛻  |   `&#1D6FB;`  | nabla         |
+| `F002B` |   󰀫  |   `&#F002B;`  | alpha         |
 | `1D6FC` |   𝛼  |   `&#1D6FC;`  | alpha         |
 | `1D6FD` |   𝛽  |   `&#1D6FD;`  | beta          |
 | `1D6FE` |   𝛾  |   `&#1D6FE;`  | gamma         |
@@ -688,39 +803,49 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 ### graph
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS     |
-|:-------:|:----:|:-------------:|--------------|
-|  `F85A` |     |   `&#xF85A;`  | chip         |
-| `F035B` |   󰍛  |  `&#xF035B;`  | chip         |
-|  `E266` |     |   `&#xE266;`  | chip         |
-| `F1362` |   󱍢  |  `&#xF1362;`  | dinosaur     |
-|  `E241` |     |   `&#xE241;`  | footsteps    |
-| `F0DFA` |   󰷺  |  `&#xF0DFA;`  | footsteps    |
-|  `E69E` |     |   `&#xE69E;`  | foot         |
-|  `F361` |     |   `&#xF361;`  | foot         |
-| `F02AC` |   󰊬  |  `&#xF02AC;`  | foot         |
-| `F0F52` |   󰽒  |  `&#xF0F52;`  | foot         |
-| `F169D` |   󱚝  |  `&#xF169D;`  | foot         |
-| `F169E` |   󱚞  |  `&#xF169E;`  | robot        |
-| `F169F` |   󱚟  |  `&#xF169F;`  | robot        |
-| `F16A0` |   󱚠  |  `&#xF16A0;`  | robot        |
-| `F16A1` |   󱚡  |  `&#xF16A1;`  | robot        |
-| `F16A2` |   󱚢  |  `&#xF16A2;`  | robot        |
-| `F16A3` |   󱚣  |  `&#xF16A3;`  | robot        |
-| `F16A4` |   󱚤  |  `&#xF16A4;`  | robot        |
-| `F16A5` |   󱚥  |  `&#xF16A5;`  | robot        |
-| `F16A6` |   󱚦  |  `&#xF16A6;`  | robot        |
-| `F1957` |   󱥗  |  `&#xF1957;`  | chips        |
-|  `E763` |     |   `&#xE763;`  | cola         |
-| `F01E5` |   󰇥  |  `&#xF01E5;`  | dark         |
-| `10996` |   𐦖  |   `&#10996;`  | dark         |
-| `F02CB` |   󰋋  |  `&#xF02CB;`  | earphone     |
-| `F04B2` |   󰒲  |  `&#xF04B2;`  | zzz          |
-| `F04B3` |   󰒳  |  `&#xF04B3;`  | no zzz       |
-|  `E61C` |     |   `&#xE61C;`  | grass        |
-|  `E006` |     |   `&#xE006;`  | coconut tree |
-|  `32DB` |  ㋛  |   `&#32DB;`   | smile        |
-|  `32E1` |  ㋡  |   `&#32E1;`   | smile        |
+| UNICODE | ICON | HTML ENCODING | COMMENTS          |
+|:-------:|:----:|:-------------:|-------------------|
+|  `F4BC` |     |   `&#xF4BC;`  | chip - cpu        |
+|  `F85A` |     |   `&#xF85A;`  | chip - cpu        |
+| `F035B` |   󰍛  |  `&#xF035B;`  | chip - cpu        |
+|  `F2DB` |     |   `&#xF2DB;`  | chip - 64bit      |
+|  `E266` |     |   `&#xE266;`  | chip              |
+| `F0EDF` |   󰻟  |  `&#xF0EDF;`  | chip - 32bit      |
+| `F0EE0` |   󰻠  |  `&#xF0EE0;`  | chip - 64bit      |
+| `F1362` |   󱍢  |  `&#xF1362;`  | google downasaur  |
+| `F1362` |   󱍢  |  `&#xF1362;`  | google downasaur  |
+| `F02A0` |   󰊠  |  `&#xF02A0;`  | ghost             |
+|  `E241` |     |   `&#xE241;`  | footprint         |
+| `F0DFA` |   󰷺  |  `&#xF0DFA;`  | footprint         |
+|  `E69E` |     |   `&#xE69E;`  | foot              |
+|  `F361` |     |   `&#xF361;`  | foot              |
+| `F02AC` |   󰊬  |  `&#xF02AC;`  | foot              |
+| `F0F52` |   󰽒  |  `&#xF0F52;`  | foot              |
+| `F169D` |   󱚝  |  `&#xF169D;`  | robot angry       |
+| `F169E` |   󱚞  |  `&#xF169E;`  | robot angry       |
+| `F169F` |   󱚟  |  `&#xF169F;`  | robot confused !? |
+| `F16A0` |   󱚠  |  `&#xF16A0;`  | robot confused !? |
+| `F16A1` |   󱚡  |  `&#xF16A1;`  | robot dead        |
+| `F16A2` |   󱚢  |  `&#xF16A2;`  | robot dead        |
+| `F1719` |   󱜙  |   `&#F1719;`  | robot happy       |
+| `F171A` |   󱜚  |   `&#F171A;`  | robot happy       |
+| `F16A3` |   󱚣  |  `&#xF16A3;`  | robot             |
+| `F16A4` |   󱚤  |  `&#xF16A4;`  | robot             |
+| `F16A5` |   󱚥  |  `&#xF16A5;`  | robot love        |
+| `F16A6` |   󱚦  |  `&#xF16A6;`  | robot love        |
+|  `F4BE` |     |   `&#xF4BE;`  | robot             |
+| `F1957` |   󱥗  |  `&#xF1957;`  | chips             |
+|  `E763` |     |   `&#xE763;`  | cola              |
+| `F01E5` |   󰇥  |  `&#xF01E5;`  | dark              |
+| `10996` |   𐦖  |   `&#10996;`  | dark              |
+| `F02CB` |   󰋋  |  `&#xF02CB;`  | headphone         |
+| `F1852` |   󱡒  |   `&#F1852;`  | earbuds           |
+| `F04B2` |   󰒲  |  `&#xF04B2;`  | sleep             |
+| `F04B3` |   󰒳  |  `&#xF04B3;`  | sleep off         |
+|  `E61C` |     |   `&#xE61C;`  | twig              |
+|  `E006` |     |   `&#xE006;`  | coconut tree      |
+|  `32DB` |  ㋛  |   `&#32DB;`   | smile             |
+|  `32E1` |  ㋡  |   `&#32E1;`   | smile             |
 
 ### tiaji
 
@@ -737,12 +862,13 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS            |
 |:-------:|:----:|:-------------:|---------------------|
+| `F1050` |   󱁐  |   `&#F1050;`  | space               |
 |  `E672` |     |   `&#xE672;`  | lock                |
 |  `F023` |     |   `&#xF023;`  | lock                |
-|  `F52A` |     |   `&#xF52A;`  | lock open           |
+|  `F52A` |     |   `&#xF52A;`  | unlock              |
 |  `EBE7` |     |   `&#xEBE7;`  | lock                |
-|  `EB74` |     |   `&#xEB74;`  | lock open           |
-|  `F09C` |     |   `&#xF09C;`  | lock open           |
+|  `EB74` |     |   `&#xEB74;`  | unlock              |
+|  `F09C` |     |   `&#xF09C;`  | unlock              |
 |  `F084` |     |   `&#xF084;`  | key                 |
 |  `F43D` |     |   `&#xF43D;`  | key                 |
 | `F030B` |   󰌋  |  `&#xF030B;`  | key                 |
@@ -753,10 +879,18 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F255` |     |   `&#xF255;`  | mouse drag          |
 |  `F256` |     |   `&#xF256;`  | mouse               |
 | `F027E` |   󰉾  |  `&#xF027E;`  | ”                   |
+| `F0757` |   󰝗  |  `&#xF0757;`  | “                   |
 |  `F10D` |     |   `&#xF10D;`  | “                   |
 |  `F10E` |     |   `&#xF10E;`  | ”                   |
 | `F11A8` |   󱆨  |  `&#xF11A8;`  | ”                   |
 | `F11A7` |   󱆧  |  `&#xF11A7;`  | “                   |
+|  `EB33` |     |   `&#xEB33;`  | “                   |
+| `F1022` |   󱀢  |   `&#F1022;`  | “                   |
+| `F1021` |   󱀡  |   `&#F1021;`  | “                   |
+| `F0E25` |   󰸥  |   `&#F0E25;`  | ,                   |
+| `F0E24` |   󰸤  |   `&#F0E24;`  | ,                   |
+| `F0E26` |   󰸦  |   `&#F0E26;`  | ,                   |
+| `F0E23` |   󰸣  |   `&#F0E23;`  | ,                   |
 |  `F30C` |     |   `&#xF30C;`  | monster             |
 |  `E651` |     |   `&#xE651;`  | D                   |
 |  `E66D` |     |   `&#xE66D;`  | J                   |
@@ -766,11 +900,20 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E374` |     |   `&#xE374;`  | N/A                 |
 |  `F893` |     |   `&#xF893;`  | menu                |
 |  `E615` |     |   `&#xE615;`  | tool                |
+|  `F013` |     |   `&#xF013;`  | tool                |
+| `F0493` |   󰒓  |  `&#xF0493;`  | tool                |
+| `F0494` |   󰒔  |  `&#xF0494;`  | tool                |
 |  `EB65` |     |   `&#xEB65;`  | tool                |
+| `F05B7` |   󰖷  |   `&#F05B7;`  | tool                |
 |  `EB6D` |     |   `&#xEB6D;`  | tool                |
+| `F1064` |   󱁤  |  `&#xF1064;`  | tool                |
 |  `F425` |     |   `&#xF425;`  | tool                |
+| `F0DDF` |   󰷟  |   `&#F0DDF;`  | tool - nail         |
 | `F08EA` |   󰣪  |  `&#xF08EA;`  | hammer              |
 |  `F0E3` |     |   `&#xF0E3;`  | hammer              |
+| `F1842` |   󱡂󠠂  |  `&#xF1842;`  | hammer              |
+| `F08B7` |   󰢷  |   `&#F08B7;`  | hammer              |
+|  `EEFF` |     |   `&#EEFF;`   | *hammer             |
 |  `F204` |     |   `&#xF204;`  | switch off          |
 |  `F205` |     |   `&#xF205;`  | switch on           |
 | `F0A19` |   󰨙  |  `&#xF0A19;`  | switch off          |
@@ -778,6 +921,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `F0521` |   󰔡  |  `&#xF0521;`  | switch on           |
 |  `E688` |     |   `&#xE688;`  | -                   |
 |  `E717` |     |   `&#xE717;`  | github              |
+|  `F4B8` |     |   `&#xF4B8;`  | copilot             |
 |  `F480` |     |   `&#xF480;`  | gist                |
 |  `E783` |     |   `&#xE783;`  | stretch             |
 | `F0274` |   󰉴  |  `&#xF0274;`  | H#                  |
@@ -786,35 +930,54 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `F0505` |   󰔅  |  `&#xF0505;`  | °F                  |
 |  `E341` |     |   `&#xE341;`  | °F                  |
 |  `E6A2` |     |   `&#xE6A2;`  | WA                  |
+| `F0435` |   󰐵  |   `&#F0435;`  | HQ                  |
+| `F0A0C` |   󰨌  |   `&#F0A0C;`  | LQ                  |
 | `F07EF` |   󰟯  |  `&#xF07EF;`  | SD                  |
 | `F07FD` |   󰟽  |  `&#xF07FD;`  | 3D                  |
 | `F1A1C` |   󱨜  |  `&#xF1A1C;`  | 2D                  |
 | `F083E` |   󰠾  |  `&#xF083E;`  | HK                  |
 | `F0A08` |   󰨈  |  `&#xF0A08;`  | police officer      |
+| `F0713` |   󰜓  |   `&#F0713;`  | 3G                  |
+| `F0714` |   󰜔  |   `&#F0714;`  | 4G                  |
 | `F0A6F` |   󰩯  |  `&#xF0A6F;`  | 5G                  |
 | `F0D6E` |   󰵮  |  `&#xF0D6E;`  | DEV                 |
 | `F100D` |   󱀍  |  `&#xF100D;`  | ABC                 |
+| `F002C` |   󰀬  |  `&#xF002C;`  | abc                 |
+|  `EA93` |     |   `&#xEA93;`  | abc                 |
+| `F100E` |   󱀎  |  `&#xF100E;`  | ABC off             |
+| `F132D` |   󱌭  |  `&#xF132D;`  | ab                  |
 | `F132F` |   󱌯  |  `&#xF132F;`  | ab                  |
+| `F0D47` |   󰵇  |  `&#xF0D47;`  | atm                 |
+| `F132E` |   󱌮  |  `&#xF132E;`  | abeta               |
 | `F07E4` |   󰟤  |  `&#xF07E4;`  | co2                 |
 | `F12FE` |   󱋾  |  `&#xF12FE;`  | CO                  |
 | `F13A3` |   󱎣  |  `&#xF13A3;`  | XS                  |
 | `F0A78` |   󰩸  |  `&#xF0A78;`  | TM                  |
 |  `F25C` |     |   `&#xF25C;`  | TM                  |
-|  `E765` |     |   `&#xE765;`  | electrocardiography |
-| `F147D` |   󱑽  |  `&#xF147D;`  | electrocardiography |
-| `F172A` |   󱜪  |  `&#xF172A;`  | 5.1.2               |
+|  `E765` |     |   `&#xE765;`  | cisco               |
+| `F147D` |   󱑽  |  `&#xF147D;`  | waveform            |
+|  `E3BE` |     |   `&#xE3BE;`  | earthquake          |
 | `F0A30` |   󰨰  |  `&#xF0A30;`  | bug                 |
+|  `EAAF` |     |   `&#xEAAF;`  | bug                 |
 | `F0A2F` |   󰨯  |  `&#xF0A2F;`  | bug fixed           |
 | `F0A2E` |   󰨮  |  `&#xF0A2E;`  | bug fixed           |
 | `F0A3F` |   󰨿  |  `&#xF0A3F;`  | ..]                 |
 | `F0A40` |   󰩀  |  `&#xF0A40;`  | [..                 |
 | `102E8` |   𐋨  |   `&#102E8;`  | b                   |
 | `102C9` |   𐋉  |   `&#102C9;`  | 6                   |
-|  `F444` |     |   `&#xF444;`  |                     |
+|  `F444` |     |   `&#xF444;`  | dot                 |
+|  `EB8A` |     |   `&#xEB8A;`  | dot                 |
 |  `F812` |     |   `&#xF812;`  | keyboard            |
+| `F09FA` |   󰧺  |   `&#F09FA;`  | keyboard            |
+| `F09F9` |   󰧹  |   `&#F09F9;`  | keyboard            |
+| `F0313` |   󰌓  |   `&#F0313;`  | keyboard            |
+|  `F11C` |     |   `&#F11C;`   | keyboard            |
+| `F0E4B` |   󰹋  |   `&#F0E4B;`  | keyboard off        |
 | `10669` |   𐙩  |   `&#10669;`  | 中                  |
 | `10AE3` |   𐫣  |   `&#10AE3;`  | -                   |
-| `16861` |   𖡡  |   `&#16861;`  | map location        |
+| `16861` |   𖡡  |   `&#16861;`  | map pin             |
+| `F0352` |   󰍒  |   `&#F0352;`  | map pin             |
+| `F034E` |   󰍎  |   `&#F034E;`  | map pin             |
 | `1BC05` |   𛰅  |   `&#1BC05;`  | -                   |
 | `1BC06` |   𛰆  |   `&#1BC06;`  | -                   |
 | `1BC0A` |   𛰊  |   `&#1BC0A;`  | -                   |
@@ -823,6 +986,11 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `1F001` |   🀁  |   `&#1F001;`  | majiang             |
 | `1F002` |   🀂  |   `&#1F002;`  | majiang             |
 | `1F003` |   🀃  |   `&#1F003;`  | majiang             |
+| `F17C5` |   󱟅  |   `&#F17C5;`  | pH                  |
+|  `EE3C` |     |   `&#xEE3C;`  | signature           |
+| `F0DFE` |   󰷾  |   `&#F0DFE;`  | signature           |
+| `F0DFC` |   󰷼  |   `&#F0DFC;`  | signature           |
+| `EE7F`  |     |   `&#EE7F;`   | signature           |
 | `1F718` |   🜘  |   `&#1F718;`  | -                   |
 | `1F73B` |   🜻  |   `&#1F73B;`  | -                   |
 |  `E245` |     |   `&#xE245;`  | -                   |
