@@ -1,22 +1,27 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [list current fonts](#list-current-fonts)
-- [highly recommended](#highly-recommended)
-  - [Monaco](#monaco)
-  - [RecMonoCasual](#recmonocasual)
-  - [Comic Mono](#comic-mono)
-  - [Agave](#agave)
-  - [Operator Mono](#operator-mono)
-  - [Gohu](#gohu)
-  - [Monaspace RN](#monaspace-rn)
-- [nerd-fonts](#nerd-fonts)
-  - [pixel](#pixel)
-  - [hand-writing](#hand-writing)
-  - [symbole](#symbole)
-  - [others](#others)
-- [powerline fonts](#powerline-fonts)
-- [others](#others-1)
+- [font patcher](#font-patcher)
+  - [patch fonts](#patch-fonts)
+    - [setup font-patcher](#setup-font-patcher)
+    - [patch fonts](#patch-fonts-1)
+  - [check fonts](#check-fonts)
+- [fonts](#fonts)
+  - [highly recommended](#highly-recommended)
+    - [Monaco](#monaco)
+    - [RecMonoCasual](#recmonocasual)
+    - [Comic Mono](#comic-mono)
+    - [Agave](#agave)
+    - [Operator Mono](#operator-mono)
+    - [Gohu](#gohu)
+    - [Monaspace RN](#monaspace-rn)
+  - [nerd-fonts](#nerd-fonts)
+    - [pixel](#pixel)
+    - [hand-writing](#hand-writing)
+    - [symbole](#symbole)
+    - [others](#others)
+  - [powerline fonts](#powerline-fonts)
+  - [others](#others-1)
 - [devicons](#devicons)
   - [coding](#coding)
   - [folders](#folders)
@@ -32,6 +37,7 @@
 > - [* 142 Programming Fonts](https://www.programmingfonts.org/)
 > - [* arrowtype/recursive](https://github.com/arrowtype/recursive)
 > - [* ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
+> - [* iMarslo NerdFonts](https://github.com/marslo/fonts/tree/fonts) | [install guild](https://github.com/marslo/fonts/tree/main)
 > - [Patch Fonts with Cursive Italic Styles](https://www.sainnhe.dev/post/patch-fonts-with-cursive-italic-styles/)
 > - [sainnhe/icursive-nerd-font](https://git.sainnhe.dev/sainnhe/icursive-nerd-font) | [thlineric/icursive-nerd-font](https://github.com/thlineric/icursive-nerd-font) | [sainnhe/mono-nerd-font](https://git.sainnhe.dev/sainnhe/mono-nerd-font) | [40huo/Patched-Fonts](https://github.com/40huo/Patched-Fonts)
 > - [INPUT™ fonts](https://input.djr.com/download/)
@@ -43,33 +49,137 @@
 > - [oldschool font list](https://int10h.org/oldschool-pc-fonts/fontlist/)
 > - [subframe7536/maple-font](https://github.com/subframe7536/Maple-font)
 
-## list current fonts
+# font patcher
+## patch fonts
+### setup font-patcher
+```bash
+$ brew install fontforge
+
+# install font-patcher v3.2.1.1
+$ [[ -d /opt/FontPatcher ]] || mkdir -p /opt/FontPatcher
+$ curl -o /opt/FontPatcher/FontPatcher.zip \
+       -fsSL https://github.com/marslo/fonts/raw/fonts/FontPatcher.v3.2.1.1.zip
+$ unzip -o /opt/FontPatcher/FontPatcher.zip /opt/FontPatcher
+
+# setup completion
+## osx
+$ cp /opt/FontPatcher/completion/font-patcher.sh /usr/local/etc/bash_completion.d/
+## centos/rhel/ubuntu/wsl
+$ cp /opt/FontPatcher/completion/font-patcher.sh /usr/share/bash-completion/completions/
+## centos/rhel
+$ cp /opt/FontPatcher/completion/font-patcher.sh /etc/bash_completion.d/
+
+# setup environment
+$ cat >> ~/.bashrc << EOF
+FONT_PATCHER='/opt/FontPatcher'
+test -d "${FONT_PATCHER}" && PATH+=":${FONT_PATCHER}"
+export $PATH
+EOF
+```
+
+![font-patcher 3.2.1.1 auto completion](https://github.com/marslo/fonts/raw/main/screenshots/font-patcher-v3.2.1.1-auto-completion.png)
+
+### patch fonts
+
+![font-patcher](../screenshot/tools/fonts/font-patcher.png)
+
+- mono
+  ```bash
+  $ font-patcher RecMonoSemicasual-Regular-1.085.ttf --mono --complete --quiet -ext ttf -out .
+
+  # or patch for folders
+  $ while read -r _f; do
+      for _e in otf ttf; do
+        outpath="$(dirname $(dirname $_f))_NF/$(basename $(dirname $_f))/${_e}";
+        [[ -d "${outpath}" ]] || mkdir -p "${outpath}";
+        echo ".. ${_e} » $(basename ${_f}) » ${outpath}";
+        /opt/FontPatcher/font-patcher $(realpath "${_f}") --mono --complete --quiet -ext ${_e} -out "${outpath}";
+      done;
+    done < <(fd -u -tf -e ttf -e otf --full-path /path/to/folder)
+  ```
+
+- san
+  - with name
+    ```bash
+    $ font-patcher --complete --progressbars --outputdir . --name 'Recursive Mono Casual Static Italic Nerd Font' /path/to/font.ttf 2>/dev/null
+
+    # using name dynamically
+    $ font='/path/to/font.ttf'
+    $ fontfamily="$(fc-query -f '%{family}' "$(realpath "${font}")" | awk -F, '{print $1}')";
+    $ style="$(fc-query -f '%{style}' "$(realpath "${font}")" | awk -F, '{print $1}')";
+    $ name="${fontfamily} ${style} Nerd Font";
+    $ font-patcher --complete --quiet --outputdir . --name "${name}" "${font}" 2>/dev/null
+    ```
+
+## check fonts
 
 > [!NOTE|label:references:]
 > - [Which font is used in Visual Studio Code Editor and how to change fonts?](https://stackoverflow.com/a/52789662/2940319)
 
-```bash
-$ fc-list | sed -re 's/^.+\/([^:]+):\s?([^,:]+),?:?.*$/\1 : \2/g' | column -t -s: -o:
-
-# or
-$ fc-list | awk '{$1=""}1' | sed -re 's/^\s*([^:,]+:?,?[^,:]+).*$/\1/' | column -t -s:
-```
-
-- i.e.:
+- list installed fonts
   ```bash
-  $ fc-list | sed -re 's/^.+\/([^:]+):\s?([^,:]+),?:?.*$/\1 : \2/g' | column -t -s: -o: | grep operator
-  OperatorMonoLig-LightItalic.otf                   : Operator Mono Lig
-  Operator Mono Light Nerd Font Complete.otf        : OperatorMono Nerd Font
-  Operator Pro Light Italic Nerd Font Complete.ttf  : OperatorPro Nerd Font
-  OperatorMonoLig-Light.otf                         : Operator Mono Lig
-  Operator Pro Light Nerd Font Complete.ttf         : OperatorPro Nerd Font
-  Operator Mono Light Italic Nerd Font Complete.otf : OperatorMono Nerd Font
+  $ fc-list | sed -re 's/^.+\/([^:]+):\s?([^,:]+),?:?.*$/\1 : \2/g' | column -t -s: -o: | sort -t: -k2
+
+  # or
+  $ fc-list | awk '{$1=""}1' | sed -re 's/^\s*([^:,]+:?,?[^,:]+).*$/\1/' | column -t -s:
   ```
 
+  - i.e.:
+    ```bash
+    $ fc-list | sed -re 's/^.+\/([^:]+):\s?([^,:]+),?:?.*$/\1 : \2/g' | column -t -s: -o: | sort -t: -k2 | grep operator
+    OperatorProNerdFont-Italic.ttf                : Operator Pro Nerd Font
+    OperatorProNerdFont-Regular.ttf               : Operator Pro Nerd Font
+    OperatorMonoNerdFontMono-Light.ttf            : OperatorMono Nerd Font Mono
+    OperatorMonoNerdFontMono-LightItalic.ttf      : OperatorMono Nerd Font Mono
+    OperatorMonoLigNerdFontMono-Light.otf         : OperatorMonoLig Nerd Font Mono
+    OperatorMonoLigNerdFontMono-LightItalic.otf   : OperatorMonoLig Nerd Font Mono
+    OperatorProNerdFont-Light.ttf                 : OperatorPro Nerd Font
+    OperatorProNerdFont-LightItalic.ttf           : OperatorPro Nerd Font
+    ```
+
+- list fonts properties
+  ```bash
+  $ fc-query /path/to/font.ttf
+  ```
+
+  - i.e.:
+    ```bash
+    $ fc-query Operator/OperatorMonoLigNF/OperatorMonoLigNerdFontMono-Light.ttf | grep -E 'family|style|fullname|weight|slant|spacing|file'
+      family: "OperatorMonoLig Nerd Font Mono"(s) "OperatorMonoLig Nerd Font Mono Light"(s)
+      familylang: "en"(s) "en"(s)
+      style: "Light"(s) "Regular"(s)
+      stylelang: "en"(s) "en"(s)
+      fullname: "OperatorMonoLig Nerd Font Mono Light"(s)
+      fullnamelang: "en"(s)
+      slant: 0(i)(s)
+      weight: 50(f)(s)
+      spacing: 100(i)(s)
+      file: "Operator/OperatorMonoLigNF/OperatorMonoLigNerdFontMono-Light.ttf"(s)
+    ```
+
+- [list particular field of fonts properties](https://stackoverflow.com/a/43614521/2940319)
+  ```bash
+  $ fc-query -f '%{family}\n' /path/to/font.ttf
+  ```
+
+  - i.e.:
+    ```bash
+    $ fc-query -f '%{family}\n%{style}\n%{fullname}' Recursive/Recursive_Desktop/RecursiveSansCslSt-LtItalic.ttf
+    Recursive Sans Casual Static,Recursive Sn Csl St Lt
+    Light Italic,Italic
+    Recursive Sn Csl St Lt Italic
+
+    $ fc-query -f '%{family}\n%{style}\n%{fullname}' Recursive/Recursive_Desktop/RecursiveSansCslSt-LtItalic.ttf | awk -F, '{print $1}'
+    Recursive Sans Casual Static
+    Light Italic
+    Recursive Sn Csl St Lt Italic
+    ```
+
+# fonts
 ## highly recommended
 
 > [!TIP]
-> - `fontPath`:
+> - `fontsPath`:
 >   - osx: `~/Library/Fonts` or `/System/Fonts`
 >   - Linux: `~/.fonts` or `~/.local/share/fonts` or `/usr/share/fonts`
 
@@ -80,6 +190,7 @@ $ fc-list | awk '{$1=""}1' | sed -re 's/^\s*([^:,]+:?,?[^,:]+).*$/\1/' | column 
 
 - [Monaco](https://www.cufonfonts.com/font/monaco)
 - Nerd-Fonts
+  - [iMarslo: MonacoNerdFontMono-Regular](https://github.com/marslo/fonts/tree/fonts/Monaco)
   - [Monaco Nerd Font Mono](https://github.com/Karmenzind/monaco-nerd-fonts)
   - [Monaco Nerd Font](https://github.com/thep0y/monaco-nerd-font)
 - Powerline
@@ -91,30 +202,73 @@ $ fc-list | awk '{$1=""}1' | sed -re 's/^\s*([^:,]+:?,?[^,:]+).*$/\1/' | column 
 ![Monaco bash](../screenshot/tools/fonts/bash-Monaco.png)
 
 ### [RecMonoCasual](https://github.com/arrowtype/recursive/tree/main/fonts/ArrowType-Recursive-1.085/Recursive_Code)
+
+> [!TIP|label:tips:]
+> - [iMarslo Recursive](https://github.com/marslo/fonts/tree/fonts/Recursive) support both `otf` and `ttf` format
+
+![devicon diff](https://github.com/marslo/fonts/raw/main/screenshots/devicons.png)
+
+![devicon with RecMonoCasual Nerd Font Mono](https://github.com/marslo/fonts/raw/main/screenshots/RecMonoCasualNF.png)
+
+```bash
+# RecMonoCasual
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       -fsSL --remote-name-all \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoCasual/RecMonoCasualNerdFontMono-Regular.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoCasual/RecMonoCasualNerdFontMono-Italic.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoCasual/RecMonoCasualNerdFontMono-Bold.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoCasual/RecMonoCasualNerdFontMono-BoldItalic.otf
+
+# RecMonoLinear
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       -fsSL --remote-name-all \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoLinear/RecMonoLinearNerdFontMono-Regular.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoLinear/RecMonoLinearNerdFontMono-Italic.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoLinear/RecMonoLinearNerdFontMono-Bold.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoLinear/RecMonoLinearNerdFontMono-BoldItalic.otf
+
+# RecMonoSemicasual
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       -fsSL --remote-name-all \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoSemicasual/RecMonoSmCasualNerdFontMono-Regular.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoSemicasual/RecMonoSmCasualNerdFontMono-Italic.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoSemicasual/RecMonoSmCasualNerdFontMono-Bold.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoSemicasual/RecMonoSmCasualNerdFontMono-BoldItalic.otf
+
+# RecMonoDuotone
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       -fsSL --remote-name-all \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoDuotone/RecMonoDuotoneNerdFontMono-Regular.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoDuotone/RecMonoDuotoneNerdFontMono-Italic.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoDuotone/RecMonoDuotoneNerdFontMono-Bold.otf \
+       https://github.com/marslo/fonts/raw/fonts/Recursive/Recursive_Code_NF/RecMonoDuotone/RecMonoDuotoneNerdFontMono-BoldItalic.otf
+```
+
+<!--sec data-title="original version" data-id="section0" data-show=true data-collapse=true ces-->
+
+![RecMonoCasual vim](../screenshot/vim/vim-airline-ale-3.png)
+
+![RecMonoCasual bash](../screenshot/tools/fonts/bash-RecMonoCasual.png)
+
 ```bash
 $ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoCasual/RecMonoCasual-Regular-1.085.ttf &&
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoDuotone/RecMonoDuotone-Regular-1.085.ttf &&
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoLinear/RecMonoLinear-Regular-1.085.ttf &&
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/arrowtype/recursive/blob/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoSemicasual/RecMonoSemicasual-Regular-1.085.ttf &&
+       -fsSL --remote-name-all \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoCasual/RecMonoCasual-Regular-1.085.ttf \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoDuotone/RecMonoDuotone-Regular-1.085.ttf \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoLinear/RecMonoLinear-Regular-1.085.ttf \
+       https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/RecMonoSemicasual/RecMonoSemicasual-Regular-1.085.ttf &&
   fc-cache -f -v
 
 # or
 $ version=1.085
-$ url='https://github.com/arrowtype/recursive/blob/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/'
+$ url='https://github.com/arrowtype/recursive/raw/main/fonts/ArrowType-Recursive-1.085/Recursive_Code/'
 $ while read -r _t; do
     curl --create-dirs -O --output-dir "${fontsPath}" \
          "${url}"/"RecMono${_t}/RecMono${_t}-Regular-1.085.ttf"
   done < <( echo 'Casual Duotone Linear Semicasual' | fmt -1 )
 $ fc-cache -f -v
 ```
-
-![RecMonoCasual vim](../screenshot/vim/vim-airline-ale-3.png)
-
-![RecMonoCasual bash](../screenshot/tools/fonts/bash-RecMonoCasual.png)
+<!--endsec-->
 
 ### [Comic Mono](https://dtinth.github.io/comic-mono-font/)
 
@@ -160,24 +314,38 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 >   - [Operator Mono Ligatures Files](https://sourceforge.net/projects/operator-mono-ligatures.mirror/files/v2.5.2/)
 >   - [kiliman/operator-mono-lig](https://github.com/kiliman/operator-mono-lig/tree/master)
 
-- NF
+
+![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
+
+![operator mono + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
+
+- patched via `Nerd Fonts Patcher v3.2.1.1 (4.13.1) (ff 20230101)`
+
+  ```bash
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         -fsSL --remote-name-all \
+         https://github.com/marslo/fonts/raw/fonts/Operator/OperatorMono/OperatorMono-Light.otf \
+         https://github.com/marslo/fonts/raw/fonts/Operator/OperatorMono/OperatorMono-LightItalic.otf
+  ```
+
+  <!--sec data-title="previous version" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
   # Mono NF otf
   $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/40huo/Patched-Fonts/raw/master/operator-mono-nerd-font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.otf
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         -fsSL --remote-name-all \
+         https://github.com/40huo/Patched-Fonts/raw/master/operator-mono-nerd-font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.otf \
          https://github.com/40huo/Patched-Fonts/raw/master/operator-mono-nerd-font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.otf
 
   # Mono NF ttf
   $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Mono%20Nerd%20Font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.ttf
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         -fsSL --remote-name-all \
+         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Mono%20Nerd%20Font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.ttf \
          https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Mono%20Nerd%20Font/Operator%20Mono%20Light%20Italic%20Nerd%20Font%20Complete.ttf
 
   # Pro NF
   $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Pro%20Nerd%20Font/Operator%20Pro%20Light%20Italic%20Nerd%20Font%20Complete.ttf
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         -fsSL --remote-name-all \
+         https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Pro%20Nerd%20Font/Operator%20Pro%20Light%20Italic%20Nerd%20Font%20Complete.ttf \
          https://github.com/xiyaowong/Operator-Fonts/raw/master/Operator%20Pro%20Nerd%20Font/Operator%20Pro%20Light%20Nerd%20Font%20Complete.ttf
 
   $ showfonts | grep -e ': Operator.*Nerd Font'
@@ -186,19 +354,37 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
   Operator Pro Light Nerd Font Complete.ttf         : OperatorPro Nerd Font
   Operator Mono Light Italic Nerd Font Complete.otf : OperatorMono Nerd Font
   ```
+  <!--endsec-->
 
 - ligatures
+
+  ```bash
+  $ ext='otf'             # or ext='ttf'
+  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         -fsSL --remote-name-all \
+         https://github.com/marslo/fonts/raw/fonts/Operator/OperatorMonoLigNF/OperatorMonoLigNerdFontMono-Light."${ext}" \
+         https://github.com/marslo/fonts/raw/fonts/Operator/OperatorMonoLigNF/OperatorMonoLigNerdFontMono-LightItalic."${ext}"
+  ```
+
+  <!--sec data-title="previous version" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ curl --create-dirs -O --output-dir "${fontsPath}" \
-         https://github.com/beichensky/Font/raw/master/Operator%20Mono%20Lig/OperatorMonoLig-Light.otf
-  $ curl --create-dirs -O --output-dir "${fontsPath}" \
+         -fsSL --remote-name-all \
+         https://github.com/beichensky/Font/raw/master/Operator%20Mono%20Lig/OperatorMonoLig-Light.otf \
          https://github.com/beichensky/Font/raw/master/Operator%20Mono%20Lig/OperatorMonoLig-LightItalic.otf
+
   $ showfonts | grep -e ': operator.*lig'
   OperatorMonoLig-LightItalic.otf                   : Operator Mono Lig
   OperatorMonoLig-Light.otf                         : Operator Mono Lig
   ```
+  <!--endsec-->
 
 - vim configure
+
+  ![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)
+
+  ![nvim operator mono ligatures](../screenshot/tools/fonts/nvim-operatorMonoLig.png)
+
   ```vim
   Plug 'morhetz/gruvbox'                                              " ╮
   Plug 'sainnhe/gruvbox-material'                                     " ├ theme
@@ -207,9 +393,8 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
   set go=                                                             " hide everything (go = guioptions)
   set cpoptions+=n
-  set termguicolors
-  set guifont=OperatorMono\ Nerd\ Font:h29                            " ╭  nerd font ╮ keep only one
-  set guifont=Operator\ Mono\ Lig:h29                                 " ╰  ligatures ╯
+  set guifont=OperatorMono\ Nerd\ Font\ Mono:h29                      " ╭ nerd font ╮ keep only one
+  set guifont=OperatorMonoLig\ Nerd\ Font\ Mono:h29                   " ╰ ligatures ╯
   set renderoptions=type:directx,renmode:5
 
   if has( 'gui_running' ) || 'xterm-256color' == $TERM
@@ -218,30 +403,21 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
   endif
   ```
 
-![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)
-
-![nvim operator mono ligatures](../screenshot/tools/fonts/nvim-operatorMonoLig.png)
-
-![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
-
-![operator mono + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
-
 ### [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
-```bash
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-14/GohuFontuni14NerdFontMono-Regular.ttf &&
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-11/GohuFontuni11NerdFontMono-Regular.ttf &&
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/14/GohuFont14NerdFontMono-Regular.ttf &&
-$ curl --create-dirs -O --output-dir "${fontsPath}" \
-       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/11/GohuFont11NerdFontMono-Regular.ttf &&
-  fc-cache -f -v
-```
 
 ![GohuNF vim](../screenshot/vim/vim-airline-ale-2.png)
 
 ![GohuNF bash](../screenshot/tools/fonts/bash-Gohu.png)
+
+```bash
+$ curl --create-dirs -O --output-dir "${fontsPath}" \
+       -fsSL --remote-name-all \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-14/GohuFontuni14NerdFontMono-Regular.ttf \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/uni-11/GohuFontuni11NerdFontMono-Regular.ttf \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/14/GohuFont14NerdFontMono-Regular.ttf \
+       https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Gohu/11/GohuFont11NerdFontMono-Regular.ttf &&
+  fc-cache -f -v
+```
 
 ### [Monaspace RN](https://monaspace.githubnext.com/)
 
@@ -264,7 +440,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 >   - `Nerd Font` (a somehow monospaced variant, maybe)
 >   - `Nerd Font Propo` (a not monospaced variant, created with `--variable-width-glyphs`)
 
-- [AgaveNerdFontMono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
+- [AgaveNerdFontMono](https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf)
   ```bash
   $ curl --create-dirs -O --output-dir "${fontsPath}" \
          https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf &&
@@ -459,7 +635,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > [!NOTE|label:references:]
 > - [分享字体表中的部分中文字体，自取自用 #46](https://github.com/F9y4ng/GreasyFork-Scripts/discussions/46)
 
-## devicons
+# devicons
 
 > [!NOTE|label:references:]
 > - [* iMarslo: useful unicode](../cheatsheet/text-processing/text-processing.md#useful-unicode)
@@ -480,7 +656,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 >   - `nf-fa`
 >   - `nf-linux`
 
-### coding
+## coding
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS   |
 |:-------:|:----:|:-------------:|------------|
@@ -669,7 +845,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E600` |     |   `&#xE600;`  | stylus     |
 |  `E759` |     |   `&#E759;`   | dev stylus |
 
-### folders
+## folders
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS  |
 |:-------:|:----:|:-------------:|-----------|
@@ -683,7 +859,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `F2D1` |     |   `&#xF2D1;`  | open (-)  |
 |  `F48B` |     |   `&#xF48B;`  | open (-)  |
 
-### platform
+## platform
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS |
 |:-------:|:----:|:-------------:|----------|
@@ -717,7 +893,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `E70E` |     |   `&#xE70E;`  | android  |
 |  `F17B` |     |   `&#xF17B;`  | android  |
 
-### math
+## math
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS      |
 |:-------:|:----:|:-------------:|---------------|
@@ -801,7 +977,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `1D710` |   𝜐  |   `&#1D710;`  | phi           |
 | `1D711` |   𝜑  |   `&#1D711;`  | chi           |
 
-### graph
+## graph
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS          |
 |:-------:|:----:|:-------------:|-------------------|
@@ -847,7 +1023,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 |  `32DB` |  ㋛  |   `&#32DB;`   | smile             |
 |  `32E1` |  ㋡  |   `&#32E1;`   | smile             |
 
-### tiaji
+## tiaji
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS |
 |:-------:|:----:|:-------------:|----------|
@@ -858,7 +1034,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 | `1D304` |   𝌄  |   `&#1D304;`  | -        |
 | `1D305` |   𝌅  |   `&#1D305;`  | -        |
 
-### misc.
+## misc.
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS            |
 |:-------:|:----:|:-------------:|---------------------|
