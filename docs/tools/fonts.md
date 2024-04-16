@@ -77,7 +77,7 @@ export $PATH
 EOF
 ```
 
-![font-patcher 3.2.1.1 auto completion](https://github.com/marslo/fonts/raw/main/screenshots/font-patcher-v3.2.1.1-auto-completion.png)
+[![font-patcher 3.2.1.1 auto completion](https://github.com/marslo/fonts/raw/main/screenshots/font-patcher-v3.2.1.1-auto-completion.png)](https://github.com/marslo/fonts/raw/main/screenshots/font-patcher-v3.2.1.1-auto-completion.png)
 
 ### patch fonts
 
@@ -197,18 +197,18 @@ EOF
   - [Monaco for Powerline.ttf](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466/raw/5be6ef0e44a3427fdb8343b4dacc29716449c59e/Monaco%2520for%2520Powerline.ttf)
   - [Monaco for Powerline.otf](https://github.com/supermarin/powerline-fonts/tree/master/Monaco)
 
-![Monaco vim](../screenshot/vim/vim-airline-ale-monaco.png)
+[![Monaco vim](../screenshot/vim/vim-airline-ale-monaco.png)](https://marslo.github.io/ibook/screenshot/vim/vim-airline-ale-monaco.png)
 
-![Monaco bash](../screenshot/tools/fonts/bash-Monaco.png)
+[![Monaco bash](../screenshot/tools/fonts/bash-Monaco.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-Monaco.png)
 
 ### [RecMonoCasual](https://github.com/arrowtype/recursive/tree/main/fonts/ArrowType-Recursive-1.085/Recursive_Code)
 
 > [!TIP|label:tips:]
 > - [iMarslo Recursive](https://github.com/marslo/fonts/tree/fonts/Recursive) support both `otf` and `ttf` format
 
-![devicon diff](https://github.com/marslo/fonts/raw/main/screenshots/devicons.png)
+[![devicon diff](https://github.com/marslo/fonts/raw/main/screenshots/devicons.png)](https://github.com/marslo/fonts/raw/main/screenshots/devicons.png)
 
-![devicon with RecMonoCasual Nerd Font Mono](https://github.com/marslo/fonts/raw/main/screenshots/RecMonoCasualNF.png)
+[![devicon with RecMonoCasual Nerd Font Mono](https://github.com/marslo/fonts/raw/main/screenshots/RecMonoCasualNF.png)](https://github.com/marslo/fonts/raw/main/screenshots/RecMonoCasualNF.png)
 
 ```bash
 # RecMonoCasual
@@ -246,9 +246,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 <!--sec data-title="original version" data-id="section0" data-show=true data-collapse=true ces-->
 
-![RecMonoCasual vim](../screenshot/vim/vim-airline-ale-3.png)
+[![RecMonoCasual vim](../screenshot/vim/vim-airline-ale-3.png)](https://marslo.github.io/ibook/screenshot/vim/vim-airline-ale-3.png)
 
-![RecMonoCasual bash](../screenshot/tools/fonts/bash-RecMonoCasual.png)
+[![RecMonoCasual bash](../screenshot/tools/fonts/bash-RecMonoCasual.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-RecMonoCasual.png)
 
 ```bash
 $ curl --create-dirs -O --output-dir "${fontsPath}" \
@@ -278,9 +278,9 @@ $ fc-cache -f -v
 - [Comic Mono](https://dtinth.github.io/comic-mono-font/ComicMono.ttf)
 - [Comic Mono for NF](https://github.com/xtevenx/ComicMonoNF) or [here](https://codeberg.org/knolljo/comic-mono-nerd/raw/branch/master/ComicMonoNerd.ttf)
 
-![ComicMono vim](../screenshot/vim/vim-airline-ale-comicmono.png)
+[![ComicMono vim](../screenshot/vim/vim-airline-ale-comicmono.png)](https://marslo.github.io/ibook/screenshot/vim/vim-airline-ale-comicmono.png)
 
-![ComicMonoNF bash](../screenshot/tools/fonts/bash-ComicMonoNF.png)
+[![ComicMonoNF bash](../screenshot/tools/fonts/bash-ComicMonoNF.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-ComicMonoNF.png)
 
 ### [Agave](https://github.com/blobject/agave)
 
@@ -297,9 +297,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
        https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Agave/AgaveNerdFontMono-Bold.ttf
 ```
 
-![Agave NF Mono](../screenshot/vim/vim-airline-ale-agave.png)
+[![Agave NF Mono](../screenshot/vim/vim-airline-ale-agave.png)](https://marslo.github.io/ibook/screenshot/vim/vim-airline-ale-agave.png)
 
-![AgaveNFM bash](../screenshot/tools/fonts/bash-AgaveNFM.png)
+[![AgaveNFM bash](../screenshot/tools/fonts/bash-AgaveNFM.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-AgaveNFM.png)
 
 ### [Operator Mono](https://www.typography.com/fonts/operator/styles/operatormono)
 
@@ -315,9 +315,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 >   - [kiliman/operator-mono-lig](https://github.com/kiliman/operator-mono-lig/tree/master)
 
 
-![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
+[![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
 
-![operator mono + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
+[![operator mono + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
 
 - patched via `Nerd Fonts Patcher v3.2.1.1 (4.13.1) (ff 20230101)`
 
@@ -381,9 +381,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 - vim configure
 
-  ![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)
+  [![operator mono](../screenshot/tools/fonts/bash-operatorMonoNerd.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-operatorMonoNerd.png)
 
-  ![nvim operator mono ligatures](../screenshot/tools/fonts/nvim-operatorMonoLig.png)
+  [![nvim operator mono ligatures](../screenshot/tools/fonts/nvim-operator-mono-lig.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/nvim-operator-mono-lig.png)
 
   ```vim
   Plug 'morhetz/gruvbox'                                              " ╮
@@ -405,9 +405,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 ### [Gohu](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Gohu)
 
-![GohuNF vim](../screenshot/vim/vim-airline-ale-2.png)
+[![GohuNF vim](../screenshot/vim/vim-airline-ale-2.png)](https://marslo.github.io/ibook/screenshot/vim/vim-airline-ale-2.png)
 
-![GohuNF bash](../screenshot/tools/fonts/bash-Gohu.png)
+[![GohuNF bash](../screenshot/tools/fonts/bash-Gohu.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-Gohu.png)
 
 ```bash
 $ curl --create-dirs -O --output-dir "${fontsPath}" \
@@ -425,9 +425,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > - [monaspace nerd font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monaspace)
 > - [Monaspace.zip](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.zip) | [Monaspace.tar.xz](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.tar.xz)
 
-![monaspace rn NF](../screenshot/tools/fonts/bash-MonaspaceRN.png)
+[![monaspace rn NF](../screenshot/tools/fonts/bash-MonaspaceRN.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-MonaspaceRN.png)
 
-![monaspace rn NF + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-MonaspaceRN-coc-nerdtree-hexokinase.png)
+[![monaspace rn NF + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-MonaspaceRN-coc-nerdtree-hexokinase.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-MonaspaceRN-coc-nerdtree-hexokinase.png)
 
 ## nerd-fonts
 
