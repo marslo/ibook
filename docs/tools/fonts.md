@@ -53,7 +53,10 @@
 ## patch fonts
 ### setup font-patcher
 ```bash
+# osx
 $ brew install fontforge
+# ubuntu
+$ sudo apt install python3-fontforge
 
 # install font-patcher v3.2.1.1
 $ [[ -d /opt/FontPatcher ]] || mkdir -p /opt/FontPatcher
@@ -317,7 +320,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
 [![operator mono + airline](../screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-operatorMonoNerd-airline.png)
 
-[![operator mono + coc + nerdtree + hexokinase](../screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/bash-operatorMonoNerd-coc-nerdtree-hexokinase.png)
+[![nvim python operator mono nf + coc + nerdtree + devicon](../screenshot/tools/fonts/nvim-operator-mono-nerdtree-devicon-coc.png)](https://marslo.github.io/ibook/screenshot/tools/fonts/nvim-operator-mono-nerdtree-devicon-coc.png)
 
 - patched via `Nerd Fonts Patcher v3.2.1.1 (4.13.1) (ff 20230101)`
 
