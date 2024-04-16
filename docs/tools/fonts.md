@@ -45,6 +45,7 @@
 > - [monaspace](https://monaspace.githubnext.com/)
 >   - [monaspace nerd font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monaspace) | [Monaspace.zip](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.zip) | [Monaspace.tar.xz](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.tar.xz)
 > - [ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols)
+>   ![extra symbols](https://github.com/ryanoasis/powerline-extra-symbols/blob/master/img/fontforge.png?raw=true)
 > - [ArrowType](https://www.arrowtype.com/)
 > - [oldschool font list](https://int10h.org/oldschool-pc-fonts/fontlist/)
 > - [subframe7536/maple-font](https://github.com/subframe7536/Maple-font)
