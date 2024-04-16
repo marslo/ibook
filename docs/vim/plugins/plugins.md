@@ -82,7 +82,7 @@ augroup DevOps
 augroup END
 ```
 
-![vim auto-pairs](../../screenshot/vim/vim-auto-pairs.gif)
+[![vim auto-pairs](../../screenshot/vim/vim-auto-pairs.gif)](../../screenshot/vim/vim-auto-pairs.gif)
 
 ## [junegunn/fzf.vim](https://github.com/junegunn/fzf.vim)
 ```vim
@@ -207,8 +207,6 @@ endif
 
 > [!NOTE|label:references:]
 > - [* iMarso : osx/apps/powerline](../osx/apps.html#powerline)
->   - [ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols)
->     ![extra symbols](https://github.com/ryanoasis/powerline-extra-symbols/blob/master/img/fontforge.png?raw=true)
 > - [* Getting started with vim-airline](https://tuckerchapman.com/2020/09/15/getting-started-vim-airline/)
 > - [How do I fix the status bar symbols in the Airline plugin?](https://vi.stackexchange.com/a/16512/7389)
 > - [Airline status line and tab line text changes colour when the vimrc is sourced.](https://www.reddit.com/r/vim/comments/q3ufc0/airline_status_line_and_tab_line_text_changes/)
@@ -284,7 +282,7 @@ endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 ```
 
-![airline + ale](../../screenshot/vim/vim-airline-ale-3.png)
+[![airline + ale](../../screenshot/vim/vim-airline-ale-3.png)](../../screenshot/vim/vim-airline-ale-3.png)
 
 - tips
   - [remove section_<x>](https://stackoverflow.com/a/45150368/2940319)
@@ -408,9 +406,9 @@ autocmd User AirlineAfterInit call AirlineInit()
   > - show relative path `%F` : `let g:airline_section_c = airline#section#create([ '%F' ])` -> `~/.vimrc`
   > - show filename only `%f` : `let g:airline_section_c = airline#section#create([ '%f' ])` -> `.vimrc`
 
-  ![section_a with default mode](../../screenshot/vim/vim-airline-section_a-default.png)
+  [![section_a with default mode](../../screenshot/vim/vim-airline-section_a-default.png)](../../screenshot/vim/vim-airline-section_a-default.png)
 
-  ![section_a with short mode](../../screenshot/vim/vim-airline-section_a-short.png)
+  [![section_a with short mode](../../screenshot/vim/vim-airline-section_a-short.png)](../../screenshot/vim/vim-airline-section_a-short.png)
 
   - via function
     ```vim
@@ -442,7 +440,7 @@ autocmd User AirlineAfterInit call AirlineInit()
       autocmd User AirlineAfterInit call AirlineInit()
       ```
 
-      ![airline section_a shortpath](../../screenshot/vim/vim-airline-section_a-shortpath-1.png)
+      [![airline section_a shortpath](../../screenshot/vim/vim-airline-section_a-shortpath-1.png)](../../screenshot/vim/vim-airline-section_a-shortpath-1.png)
 
   - via `%{}`
     ```vim
@@ -453,7 +451,7 @@ autocmd User AirlineAfterInit call AirlineInit()
     autocmd User AirlineAfterInit call AirlineInit()
     ```
 
-    ![airline section_a shortpath with '%{}'](../../screenshot/vim/vim-airline-section_a-shortpath-2.png)
+    [![airline section_a shortpath with '%{}'](../../screenshot/vim/vim-airline-section_a-shortpath-2.png)](../../screenshot/vim/vim-airline-section_a-shortpath-2.png)
 
 
 - sections with length limitation
@@ -477,7 +475,7 @@ autocmd User AirlineAfterInit call AirlineInit()
 > - [n-st/vim-airline-screenshots](https://github.com/n-st/vim-airline-screenshots)
 > - [* Change the vim-airline theme](https://github.com/vim-airline/vim-airline/wiki/Screenshots)
 >   - `:AirlineTheme random` : `let g:airline_theme='random'` : `:echo g:airline_theme`
->     ![pick up theme](../../screenshot/vim/vim-AirlineTheme-random.gif)
+>     [![pick up theme](../../screenshot/vim/vim-AirlineTheme-random.gif)](../../screenshot/vim/vim-AirlineTheme-random.gif)
 >   - [tomorrow](https://github.com/vim-airline/vim-airline/wiki/Screenshots#tomorrow-1)
 >   - [distinguished](https://github.com/vim-airline/vim-airline/wiki/Screenshots#distinguished)
 >   - [base16](https://github.com/vim-airline/vim-airline/wiki/Screenshots#base16)
@@ -488,19 +486,19 @@ autocmd User AirlineAfterInit call AirlineInit()
 
 - great themes
   - * base16_embers
-    ![base16_embers](../../screenshot/vim/vim-airline-base16_embers_2.gif)
+    [![base16_embers](../../screenshot/vim/vim-airline-base16_embers_2.gif)](../../screenshot/vim/vim-airline-base16_embers_2.gif)
 
   - * base16
-    ![base16](../../screenshot/vim/vim-airline-base16.gif)
+    [![base16](../../screenshot/vim/vim-airline-base16.gif)](../../screenshot/vim/vim-airline-base16.gif)
 
   - * apprentice
-    ![apprentice](../../screenshot/vim/vim-airline-apprentice.gif)
+    [![apprentice](../../screenshot/vim/vim-airline-apprentice.gif)](../../screenshot/vim/vim-airline-apprentice.gif)
 
   - * gruvbox
-    ![gruvbox](../../screenshot/vim/vim-airline-gruvbox.gif)
+    [![gruvbox](../../screenshot/vim/vim-airline-gruvbox.gif)](../../screenshot/vim/vim-airline-gruvbox.gif)
 
   - * zenburn
-    ![zenburn](../../screenshot/vim/vim-airline-zenburn.gif)
+    [![zenburn](../../screenshot/vim/vim-airline-zenburn.gif)](../../screenshot/vim/vim-airline-zenburn.gif)
 
   - angr
   - selenized/selenized_bw
@@ -532,9 +530,9 @@ autocmd User AirlineAfterInit call AirlineInit()
 >   :SyntasticInfo
 >   ```
 
-![style warning](../../screenshot/vim/vim-syntastic-style-warning.png)
+[![style warning](../../screenshot/vim/vim-syntastic-style-warning.png)](../../screenshot/vim/vim-syntastic-style-warning.png)
 
-![error](../../screenshot/vim/vim-syntastic-error.png)
+[![error](../../screenshot/vim/vim-syntastic-error.png)](../../screenshot/vim/vim-syntastic-error.png)
 
 ```vim
 Plug 'vim-syntastic/syntastic'
@@ -582,21 +580,14 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 
 ## [coc.nvim](https://github.com/neoclide/coc.nvim)
 
-> [!NOTE|label:references:]
+> [!TIP|label:references:]
 > - [CocList 入坑指南](https://zhuanlan.zhihu.com/p/71846145) | [coc.nvim 插件体系 - 介绍](https://zhuanlan.zhihu.com/p/65524706)
 > - [* Language servers](https://github.com/neoclide/coc.nvim/wiki/Language-servers)
-> - [#805 ALE diagnostic signs don't appear](https://github.com/neoclide/coc.nvim/issues/805)
-> - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
 > - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
 > - [dansomething/coc-groovy](https://github.com/dansomething/coc-groovy)
 > - [Manage coc extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#manage-coc-extensions)
-> - [Debug language server](https://github.com/neoclide/coc.nvim/wiki/Debug-language-server#using-output-channel)
 > - [nicknisi/dotfiles/config/nvim/coc-settings.json](https://github.com/nicknisi/dotfiles/blob/master/config/nvim/coc-settings.json)
 > - [YongJieYongJie/dotfiles/coc-settings.json](https://github.com/YongJieYongJie/dotfiles/blob/master/coc-settings.json)
-
-![nvim coc copilot snippets](../../screenshot/vim/nvim-coc-copilot-snippets.gif)
-
-![nvim coc lspconfig](../../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)
 
 - initialize
   ```bash
@@ -604,6 +595,7 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
   ```
 
   ```vim
+  " install
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
   " neoclide/coc.nvim
@@ -612,12 +604,11 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
   let g:coc_global_extensions = [
     \   'coc-sh',
     \   'coc-groovy', 'coc-java',
-    \   'coc-docker',
     \   'coc-json',
-    \   'coc-docker',
     \   'coc-css', 'coc-htmlhint', 'coc-html-css-support',
     \   'coc-pyright',
     \   'coc-snippets',
+    \   'coc-docker',
     \   'coc-emoji'
     \ ]
   function! CheckBackspace() abort
@@ -631,26 +622,38 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
       call feedkeys('K', 'in')
     endif
   endfunction
-  autocmd FileType   json syntax match Comment +\/\/.\+$+
-  autocmd FileType   html let b:coc_root_patterns = ['.git', '.env', 'tailwind.config.js', 'tailwind.config.cjs']
-  inoremap <silent><expr> <S-C-space> coc#refresh()
+  autocmd FileType json syntax match Comment +\/\/.\+$+
+  autocmd FileType html let b:coc_root_patterns = ['.git', '.env', 'tailwind.config.js', 'tailwind.config.cjs']
   inoremap <silent><expr> <DOWN>
-        \ coc#pum#visible() ? coc#pum#next(1) :
-        \ CheckBackspace() ? "\<Tab>" :
-        \ coc#refresh()
+        \ coc#pum#visible() ? coc#pum#next(1) : CheckBackspace()
+        \                   ? "\<DOWN>" : coc#refresh()
   inoremap <expr><UP> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-  inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#confirm()
-                                \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-  command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-  nmap     <silent> [g  <Plug>(coc-diagnostic-prev)
-  nmap     <silent> ]g  <Plug>(coc-diagnostic-next)
-  nmap     <silent> gd  <Plug>(coc-definition)
-  nmap     <silent> gy  <Plug>(coc-type-definition)
-  nmap     <silent> gi  <Plug>(coc-implementation)
-  nmap     <silent> gr  <Plug>(coc-references)
-  nnoremap <silent> K   :call ShowDocumentation()<CR>
+  inoremap <silent><expr> <C-M>
+       \ coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  command! -nargs=0 OR  :call CocActionAsync('runCommand', 'editor.action.organizeImport')
+  nmap     <silent>[g   <Plug>(coc-diagnostic-prev)
+  nmap     <silent>]g   <Plug>(coc-diagnostic-next)
+  nmap     <silent>gd   <Plug>(coc-definition)
+  nmap     <silent>gy   <Plug>(coc-type-definition)
+  nmap     <silent>gi   <Plug>(coc-implementation)
+  nmap     <silent>gr   <Plug>(coc-references)
+  nnoremap <silent>K    :call ShowDocumentation()<CR>
   nmap     <leader>cl   <Plug>(coc-codelens-action)
-  imap     <C-l>        <Plug>(coc-snippets-expand)
+  " coc-snippets ( ctrl-j )
+  imap <C-l> <Plug>(coc-snippets-expand)
+  vmap <C-j> <Plug>(coc-snippets-select)
+  let g:coc_snippet_next = '<c-j>'
+  let g:coc_snippet_prev = '<c-k>'
+  imap <C-j> <Plug>(coc-snippets-expand-jump)
+  inoremap <silent><expr> <C-j>
+        \ pumvisible() ? coc#_select_confirm() :
+        \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+        \ CheckBackSpace() ? "\<TAB>" :
+        \ coc#refresh()
+  function! CheckBackSpace() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+  endfunction
   ```
 
 - open configure file ( `coc-settings.json` )
@@ -688,18 +691,33 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
     "codeLens.enable": true,
     "java.referencesCodeLens.enabled": true,
     "diagnostic.displayByAle": false,
-    "diagnostic.errorSign": "✗",
-    "diagnostic.infoSign": "i",
-    "diagnostic.warningSign": "⚠",
-    "diagnostic.hintSign": "➤"
+    "diagnostic.errorSign": "✘",
+    "diagnostic.infoSign": "ᓆ",
+    "diagnostic.warningSign": "ᑹ",
+    "diagnostic.hintSign": "➤",
+    "diagnostic-languageserver.filetypes": {
+      "yaml": [ "yamllint" ],
+      "vim": "vint",
+      "sh": "shellcheck"
+    },
+    "html-css-support.styleSheets": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css",
+        "/style.css",
+        "style.css"
+    ],
+    "html-css-support.enabledLanguages": [ "html", "markdown" ],
+    "coc.source.file.ignoreHidden": false,
+    "snippets.userSnippetsDirectory": "~/.marslo/vimrc.d/snips"
   }
-  ```
+    ```
+
   - start completion from 2nd string
     ```json
     {
       "suggest.minTriggerInputLength": 2
     }
-    ```
+  ```
+
   - cause issue of trigger
 
     > [!TIP]
@@ -712,7 +730,17 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
     }
     ```
 
+[![nvim coc copilot snippets](../../screenshot/vim/nvim-coc-copilot-snippets.gif)](../../screenshot/vim/nvim-coc-copilot-snippets.gif)
+
+[![nvim coc lspconfig](../../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)](../../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)
+
 - troubleshooting
+
+  > [!NOTE|label:references:]
+  > - [#805 ALE diagnostic signs don't appear](https://github.com/neoclide/coc.nvim/issues/805)
+  > - [#3402 Can coc vim display all message diagnostic in lines of code](https://github.com/neoclide/coc.nvim/issues/3402)
+  > - [Debug language server](https://github.com/neoclide/coc.nvim/wiki/Debug-language-server#using-output-channel)
+
   ```bash
   $ rust-analyzer --help
   error: 'rust-analyzer' is not installed for the toolchain 'stable-x86_64-unknown-linux-gnu'
@@ -733,7 +761,7 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 >   - [UltiSnips 2.0 and Screencast Episode 3](https://www.sirver.net/blog/2012/02/05/third-episode-of-ultisnips-screencast/)
 >   - [UltiSnips Screencast Episode 4](https://www.sirver.net/blog/2012/03/31/fourth-episode-of-ultisnips-screencast/)
 
-![coc-snippets](../../screenshot/vim/nvim-coc-snippet.gif)
+[![coc-snippets](../../screenshot/vim/nvim-coc-snippet.gif)](../../screenshot/vim/nvim-coc-snippet.gif)
 
 ```vim
 " ~/.vimrc.d/extension
@@ -762,6 +790,7 @@ endfunction
 " coc-snippet
 highlight! link snipLeadingSpaces snipComment
 ```
+
 - commands
   ```vim
   :CocList snippets
@@ -845,7 +874,7 @@ highlight! link snipLeadingSpaces snipComment
 > - [#1097 tree-sitter executable not found](https://github.com/nvim-treesitter/nvim-treesitter/issues/1097)
 > - [Tree-sitter CLI](https://github.com/tree-sitter/tree-sitter/blob/master/cli/README.md)
 
-![nvim-treesitter](../../screenshot/vim/nvim-treesitter.gif)
+[![nvim-treesitter](../../screenshot/vim/nvim-treesitter.gif)](../../screenshot/vim/nvim-treesitter.gif)
 
 ```bash
 # tree-sitter executable not found
@@ -931,7 +960,7 @@ $ which -a tree-sitter
 > - [* Cautiously Configuring Copilot](https://code.kiwi.com/articles/cautiously-configuring-copilot/)
 > - [* Configuring GitHub Copilot in your environment](https://docs.github.com/en/copilot/configuring-github-copilot/configuring-github-copilot-in-your-environment?tool=vimneovim)
 
-![nvim copilot](../../screenshot/vim/nvim-copilot.gif)
+[![nvim copilot](../../screenshot/vim/nvim-copilot.gif)](../../screenshot/vim/nvim-copilot.gif)
 
 - setup
   ```vim
@@ -1087,7 +1116,7 @@ endif
 > - configs
 >   - [bdryanovski/vimrc/vimsrc/_plugins.vim](https://github.com/bdryanovski/vimrc/blob/master/vimsrc/_plugins.vim#L128)
 
-![nvim nerdtree devicons coc lspconfig](../../screenshot/vim/nvim-nerdtree-devicon-highlight-snippets-copilot.gif)
+[![nvim nerdtree devicons coc lspconfig](../../screenshot/vim/nvim-nerdtree-devicon-highlight-snippets-copilot.gif)](../../screenshot/vim/nvim-nerdtree-devicon-highlight-snippets-copilot.gif)
 
 ```vim
 Plug 'scrooloose/nerdtree'
@@ -1160,7 +1189,7 @@ autocmd VimEnter *  NERDTree
 >   - [filetype: U+E5FA to U+E9F9](https://utf8-chartable.de/unicode-utf8-table.pl?start=58874&number=1024&utf8=dec&unicodeinhtml=hex)
 > - requires [nerd fonts](https://github.com/ryanoasis/nerd-fonts) | [nerd fonts preview and download](https://www.nerdfonts.com/font-downloads)
 
-![nvim nerdtree devicon highlight](../../screenshot/vim/nvim-nerdtree-devicon-highlight.png)
+[![nvim nerdtree devicon highlight](../../screenshot/vim/nvim-nerdtree-devicon-highlight.png)](../../screenshot/vim/nvim-nerdtree-devicon-highlight.png)
 
 ```vim
 " ryanoasis/vim-devicons
@@ -1522,7 +1551,7 @@ endif
   nnoremap <leader>mp  :execute 'silent !git mp' \| redraw!<CR>
   ```
 
-![git blamer blame](../../screenshot/vim/nvim-git-blamer-blame.gif)
+[![git blamer blame](../../screenshot/vim/nvim-git-blamer-blame.gif)](../../screenshot/vim/nvim-git-blamer-blame.gif)
 
 ## [airblade/vim-gitgutter](https://github.com/airblade/vim-gitgutter)
 

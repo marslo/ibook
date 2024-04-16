@@ -32,7 +32,7 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
 > - [Tabular cheatsheet](https://devhints.io/tabular)
 > - [align with first space](https://stackoverflow.com/a/15915827/2940319) : `/^\s*\S\+\zs/l0c1l0`
 > - [align the second `=` to left](https://stackoverflow.com/a/5424784/2940319) : `/^\(.\{-}\zs=\)\{2}/l1l0`
->   ![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+>   ![align with the 2nd matches](../../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
 
 | specifier | comments                             |
 |:---------:|--------------------------------------|
@@ -63,7 +63,7 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
     :Tabularize /<sep>/r1c1l0
     ```
 
-  ![tabularize](../screenshot/vim/tabularize/tabu.gif)
+  ![tabularize](../../screenshot/vim/tabularize/tabu.gif)
 
 - align without `<sep>`
 
@@ -88,7 +88,7 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
     :Tabularize /:.*
     ```
 
-  ![tabularize-5](../screenshot/vim/tabularize/tabularize-5.gif)
+  ![tabularize-5](../../screenshot/vim/tabularize/tabularize-5.gif)
 
   - [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
 
@@ -107,7 +107,7 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
               `^` means start of the line
   ```
 
-  ![align with the 2nd matches](../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
+  ![align with the 2nd matches](../../screenshot/vim/tabularize/tabularize-the2ndmatches.gif)
 
 
   - or with `\v` (very magic)
@@ -156,8 +156,8 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
     runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
     type         : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
-    ![tabularize-1](../screenshot/vim/tabularize/tabularize-1.gif)
-    ![tabularize-2](../screenshot/vim/tabularize/tabularize-2.gif)
+    ![tabularize-1](../../screenshot/vim/tabularize/tabularize-1.gif)
+    ![tabularize-2](../../screenshot/vim/tabularize/tabularize-2.gif)
 
   - `/^[^:]*\zs/r1c1l0`
     ```groovy
@@ -229,5 +229,4 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
                 type : proc.type.split('^.*\\u00BB\\s*').last() ,
         ```
 
-    ![tabularize-4](../screenshot/vim/tabularize/tabularize-4.gif)
-
+    ![tabularize-4](../../screenshot/vim/tabularize/tabularize-4.gif)
