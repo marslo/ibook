@@ -2125,6 +2125,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 # [`bat`](https://github.com/sharkdp/bat)
 
 > [!NOTE|label:references:]
+> - [bat-extra](https://github.com/eth-p/bat-extras/blob/master/README.md#installation)
 > - [Install and Use the Linux bat Command](https://www.linode.com/docs/guides/how-to-install-and-use-the-bat-command-on-linux/)
 > - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
 >   - `unset PAGER`
@@ -2132,9 +2133,21 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
 - install
   ```bash
+  # osx
+  $ brew install bat
+  ## extra
+  $ brew install bat-extras
+
   # ubuntu
   $ sudo apt intall bat -y
   $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
+
+  # centos
+  $ dnf install bat
+  ## extra
+  $ sudo dnf install dnf-plugins-core
+  $ sudo dnf copr enable awood/bat-extras
+  $ sudo dnf install bat-extras
 
   # ubuntu latest version
   $ sudo apt instal -y https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-musl_0.23.0_amd64.deb
