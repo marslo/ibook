@@ -965,19 +965,46 @@ $ which -a tree-sitter
 - setup
   ```vim
   Plug 'github/copilot.vim'
-  let g:Copilot_proxy_strict_ssl = v:false
 
-  " install via
-  :Copilot setup
+  " github/copilot.vim
+  let g:Copilot_proxy_strict_ssl = v:false
+  let g:copilot_filetypes = {
+      \ '*': v:false,
+      \ 'gitcommit': v:true,
+      \ 'markdown': v:true,
+      \ 'yaml': v:true,
+      \ 'groovy': v:true,
+      \ 'python': v:true,
+      \ 'Jenkinsfile': v:true,
+      \ 'sh': v:true
+      \ }
+  " disable for extra large file
+  autocmd BufReadPre *
+      \ let f=getfsize(expand("<afile>"))
+      \ | if f > 100000 || f == -2
+      \ |   let b:copilot_enabled = v:false
+      \ | endif
+  noremap <leader>pp :set invpaste<cr>
   ```
 
-  - check status
-    ```vim
-    :Copilot status
-    Copilot: Ready
-    ```
+  ```bash
+  :Copilot setup
+
+  " check status
+  :Copilot status
+
+  Copilot: Ready
+  " or
+  Copilot: Disabled for filetype=c by g:copilot_filetypes
+  ```
 
 - config
+
+  > [!NOTE|label:references:]
+  > - copilot enable/disable for filetypes:
+  >   - [vimrc solution](https://github.com/orgs/community/discussions/29977#discussioncomment-3451927)
+  >   - [init.lua solution](https://github.com/orgs/community/discussions/38074#discussioncomment-8430826)
+
   ```vim
   let g:Copilot_proxy = '192.168.100.1:8080'
   let g:Copilot_proxy_strict_ssl = v:false
@@ -1012,8 +1039,7 @@ Plug 'tomtom/tcomment_vim'
 
 " tomtom/tcomment_vim
 " g:tcomment_mapleader1 = ','
-imap <leader>x gcc
-nmap <leader>x gcc
+map  <leader>x gcc
 vmap <leader>x <c-_>b
 nmap <C-/>     gcc
 imap <C-/>     <c-_><c-_>
@@ -1098,7 +1124,7 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 ```vim
 set encoding=UTF-8
 if has('win32') || has('win64')
-  set guifont=Monaco\ Nerd\ Font\ Mono:h18
+  set guifont=OperatorMonoLig\ Nerd\ Font\ Mono:h29
 else
   set guifont=OperatorMono\ Nerd\ Font:h29
   set renderoptions=type:directx,renmode:5
@@ -1106,6 +1132,9 @@ endif
 ```
 - more
   ```vim
+  set guifont=Agave\ Nerd\ Font\ Mono:h32
+  set guifont=JetBrainsMono\ Nerd\ Font\ Mono:h26
+  set guifont=OperatorMono\ Nerd\ Font:h29
   set renderoptions=type:directx,gamma:1.5,contrast:0.5,geom:1,renmode:5,taamode:1,level:0.5
   ```
 
