@@ -19,6 +19,7 @@
 - [config](#config)
   - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
+  - [pastetoggle](#pastetoggle)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
   - [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
   - [using vim as a man-page viewer under unix](#using-vim-as-a-man-page-viewer-under-unix)
@@ -412,6 +413,39 @@ endfunction
 set noerrorbells novisualbell visualbell                            " ┐ turn off
 set t_vb=                                                           " ┘ error/normal beep/flash
 ```
+
+### pastetoggle
+
+> [!NOTE|label:references:]
+> - [Automatically set paste mode in Vim when pasting in insert mode](https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode)
+> - [option.txt paste](https://vimhelp.org/options.txt.html#%27paste%27)
+
+- `:set paste`
+- `:set nopaste`
+- `:set pastetoggle=<F2>`
+
+- details
+
+  > When the ['paste'](https://vimhelp.org/options.txt.html#%27paste%27) option is switched on (also when it was already on):
+  >   - [mapping](https://vimhelp.org/map.txt.html#mapping) in [Insert](https://vimhelp.org/insert.txt.html#Insert) mode and [Command-line](https://vimhelp.org/cmdline.txt.html#Command-line) mode is disabled
+  >   - [abbreviations](https://vimhelp.org/map.txt.html#abbreviations) are disabled
+  >   - ['autoindent'](https://vimhelp.org/options.txt.html#%27autoindent%27) is reset
+  >   - ['expandtab'](https://vimhelp.org/options.txt.html#%27expandtab%27) is reset
+  >   - ['hkmap'](https://vimhelp.org/options.txt.html#%27hkmap%27) is reset
+  >   - ['revins'](https://vimhelp.org/options.txt.html#%27revins%27) is reset
+  >   - ['ruler'](https://vimhelp.org/options.txt.html#%27ruler%27) is reset
+  >   - ['showmatch'](https://vimhelp.org/options.txt.html#%27showmatch%27) is reset
+  >   - ['smarttab'](https://vimhelp.org/options.txt.html#%27smarttab%27) is reset
+  >   - ['softtabstop'](https://vimhelp.org/options.txt.html#%27softtabstop%27) is set to 0
+  >   - ['textwidth'](https://vimhelp.org/options.txt.html#%27textwidth%27) is set to 0
+  >   - ['wrapmargin'](https://vimhelp.org/options.txt.html#%27wrapmargin%27) is set to 0
+  >   - ['varsofttabstop'](https://vimhelp.org/options.txt.html#%27varsofttabstop%27) is made empty
+  > These options keep their value, but their effect is disabled:
+  >   - ['cindent'](https://vimhelp.org/options.txt.html#%27cindent%27)
+  >   - ['formatoptions'](https://vimhelp.org/options.txt.html#%27formatoptions%27) is used like it is empty
+  >   - ['indentexpr'](https://vimhelp.org/options.txt.html#%27indentexpr%27)
+  >   - ['lisp'](https://vimhelp.org/options.txt.html#%27lisp%27)
+  >   - ['smartindent'](https://vimhelp.org/options.txt.html#%27smartindent%27)
 
 ## run vim commands in terminal
 
