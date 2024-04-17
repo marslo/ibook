@@ -1031,7 +1031,18 @@ $ git push origin +<branch>
                        git commit --amend \
                                   --date="$(git log -n 1 --format=%aD)"' \
                                   --author="name<name@email.com>" \           # or --reset-author
-                       HEAD~9
+                       HEAD~9'
+  ```
+
+- [amend all commits with original commitDate and authorDate](https://stackoverflow.com/a/73314321/2940319)
+
+  > [!TIP|label:references:]
+  > - [How to update git commit author, but keep original date when amending?](https://stackoverflow.com/a/73314321/2940319)
+  > - [the Reddit thread](https://old.reddit.com/r/git/comments/jp59k5/deleted_by_user/)
+  > - [Rebase without changing commit timestamps](https://web.archive.org/web/20220930151232/https://reddit.com/r/git/comments/jp59k5/rebase_without_changing_commit_timestamps/)
+
+  ```bash
+  $ git -c rebase.instructionFormat='%s%nexec GIT_COMMITTER_DATE="%cD" GIT_AUTHOR_DATE="%aD" git commit --amend --no-edit --author 'marslo <marslo.jiao@gmail.com>' rebase
   ```
 
 #### check commits with author
