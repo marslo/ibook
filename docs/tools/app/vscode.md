@@ -5,7 +5,7 @@
 - [config](#config)
   - [font style](#font-style)
 - [plugins](#plugins)
-  - [Settings Sync](#settings-sync)
+  - [settings sync](#settings-sync)
   - [vim](#vim)
 - [shortcut](#shortcut)
 
@@ -16,7 +16,6 @@
 > - [How to Set Up Proxy Settings for Advise for Visual Studio Code](https://docs.mend.io/en-US/bundle/wsk/page/how_to_set_up_proxy_settings_for_advise_for_visual_studio_code.html)
 > - [Extension Marketplace](https://code.visualstudio.com/docs/editor/extension-marketplace#_disable-an-extension)
 {% endhint %}
-
 
 ## basic
 
@@ -76,12 +75,34 @@
 
 
 ## plugins
-### [Settings Sync](https://code.visualstudio.com/docs/editor/settings-sync)
+### [settings sync](https://code.visualstudio.com/docs/editor/settings-sync)
+
+> [!NOTE]
+> - [Code Settings Sync Configurations](https://dev.to/shanalikhan/visual-studio-code-settings-sync-configurations-mn0)
+
+- update github token
+
+  > [!NOTE|label:references:]
+  > - [#1313 - Update Expired token](https://github.com/shanalikhan/code-settings-sync/issues/1313#issuecomment-890602304)
+
+  1. generate new token for gist
+  1. vscode -> <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>p</kbd> -> `>Sync: Advanced Options`
+
+    ![sync: advanced options](../../screenshot/tools/vscode/sync-1.png)
+
+  1. `>Sync: Open Settings`
+
+    ![sync: advanced options](../../screenshot/tools/vscode/sync-1.png)
+
+  1. paste new token
+
+    ![paste new token](../../screenshot/tools/vscode/sync-3.png)
 
 ### [vim](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim)
 
 > [!NOTE|label:references:]
 > - [nstalling vim inside visual studio code](https://www.barbarianmeetscoding.com/boost-your-coding-fu-with-vscode-and-vim/installing-vim-in-vscode/)
+> - [Shan Khan/Settings Sync](https://marketplace.visualstudio.com/items?itemName=Shan.code-settings-sync)
 
 - install
   - mac
@@ -93,7 +114,7 @@
     $ defaults delete -g ApplePressAndHoldEnabled                                           # If necessary, reset global default
     ```
 
-- confiugre
+- configure
   ```json
   // vim
   "vim.changeWordIncludesWhitespace": true,

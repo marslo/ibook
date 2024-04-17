@@ -14,6 +14,8 @@
   - [System](#system)
   - [System Icon](#system-icon)
   - [user environment variables](#user-environment-variables)
+- [disable shortcuts](#disable-shortcuts)
+  - [disable <kbd>ctrl</kbd>+<kbd>,</kbd>](#disable-kbdctrlkbdkbdkbd)
 - [icons](#icons)
 - [reference](#reference)
 
@@ -217,7 +219,7 @@ reference :
 > control /name Microsoft.System
 ```
 
-or
+- or
 
   ```batch
   > control sysdm.cpl
@@ -232,6 +234,13 @@ or
 ```batch
 rundll32.exe sysdm.cpl,EditEnvironmentVariables
 ```
+
+## disable shortcuts
+### disable <kbd>ctrl</kbd>+<kbd>,</kbd>
+
+![disable sougou ctrl+,](../../screenshot/tools/sougou-ctrl-comma-1.png)
+
+![disable sougou ctrl+,](../../screenshot/tools/sougou-ctrl-comma-2.png)
 
 ## [icons](https://www.digitalcitizen.life/where-find-most-windows-10s-native-icons/)
 - `%SystemRoot%\System32\shell32.dll`
@@ -337,7 +346,8 @@ rundll32.exe sysdm.cpl,EditEnvironmentVariables
 - `%systemroot%\system32\wiashext.dll`
 
 ## reference
-| Control Panel Item                               | `Commands`                                                                                                                                                                                 |
+
+| CONTROL PANEL ITEM                               | `COMMANDS`                                                                                                                                                                                 |
 |:-------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Add a Device wizard                              | `%windir%\System32\DevicePairingWizard.exe`                                                                                                                                                |
 | Add Hardware wizard                              | `%windir%\System32\hdwwiz.exe`                                                                                                                                                             |
