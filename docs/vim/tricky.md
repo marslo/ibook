@@ -1,6 +1,9 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [mode](#mode)
+  - [`diff` mode](#diff-mode)
+  - [`terminal` mode](#terminal-mode)
 - [shortcuts](#shortcuts)
   - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
@@ -47,6 +50,80 @@
 > - [* vimtricks](https://vimtricks.com/)
 > - [* Best Vim Tips](https://vim.fandom.com/wiki/Best_Vim_Tips)
 > - [Vim run autocmd on all filetypes EXCEPT](https://stackoverflow.com/a/6496995/2940319)
+
+## mode
+### `diff` mode
+```vim
+:echo &diff
+1
+```
+
+- example:
+  ```vim
+  autocmd BufEnter * if &diff | let g:blamer_enabled=0 | endif            " ╮ disable git blame in diff mode
+  autocmd BufEnter * if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
+  ```
+
+### `terminal` mode
+
+> [!NOTE|label:references:]
+> - [Nvim_terminal_emulator](https://neovim.io/doc/user/nvim_terminal_emulator.html)
+>   - Options:          ['modified'](https://neovim.io/doc/user/options.html#'modified'), ['scrollback'](https://neovim.io/doc/user/options.html#'scrollback')
+>   - Events:           [TermOpen](https://neovim.io/doc/user/autocmd.html#TermOpen), [TermEnter](https://neovim.io/doc/user/autocmd.html#TermEnter), [TermLeave](https://neovim.io/doc/user/autocmd.html#TermLeave), [TermClose](https://neovim.io/doc/user/autocmd.html#TermClose)
+>   - Highlight groups: [hl-TermCursor](https://neovim.io/doc/user/syntax.html#hl-TermCursor), [hl-TermCursorNC](https://neovim.io/doc/user/syntax.html#hl-TermCursorNC)
+> - [autocmd-intro](https://neovim.io/doc/user/autocmd.html#TermOpen)
+> - [How to tell when in terminal mode?](https://www.reddit.com/r/neovim/comments/ca6ga3/comment/et6mz6t/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+> - [Why neovim's terminal is differ from vim's terminal?](https://www.reddit.com/r/neovim/comments/vjquxc/comment/idmmmr7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+> - [Map a key on a terminal buffer whose corresponding job is already finished](https://vi.stackexchange.com/q/25577/7389)
+> - [`buftype`](https://vimhelp.org/options.txt.html#%27buftype%27)
+>   - `<empty>`  : normal buffer
+>   - `acwrite`  : buffer will always be written with `BufWriteCmd`s
+>   - `help`     : help buffer (do not set this manually)
+>   - `nofile`   : buffer is not related to a file, will not be written
+>   - `nowrite`  : buffer will not be written
+>   - `quickfix` : list of errors `:cwindow` or locations `:lwindow`
+>   - `terminal` : `terminal-emulator` buffer
+>   - `prompt`   : buffer where only the last line can be edited, meant to be used by a plugin, see |prompt-buffer|
+
+```vim
+:echo &buftype
+terminal
+```
+
+- autocmd
+  ```vim
+  autocmd! TermOpen,TermEnter * :IndentLinesDisable
+  autocmd! TermOpen           * setlocal nonumber norelativenumber modifiable nospell
+
+  " others
+  autocmd! BufEnter * if &buftype ==# 'terminal' | setlocal ma | endif
+  autocmd! TermOpen,BufEnter term://* :IndentLinesDisable
+  autocmd TermClose * echom 'Terminal exited with status '..v:event.status
+  ```
+
+- keymap
+  ```vim
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
+  ```
+
+- usage:
+  - open `top` command line in vsplit
+    ```vim
+    :vsplit term://top
+    " or
+    :vnew | term top
+    ```
+
+  - [open terminal in top pannel](https://www.reddit.com/r/neovim/comments/wjnmpp/comment/ijigdvl/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+    ```vim
+    :split | resize 10 | terminal
+    ```
+
+  - [open terminal when vim start](https://neovim.io/doc/user/nvim_terminal_emulator.html#terminal-start)
+    ```vim
+    autocmd VimEnter * ++nested split term://bash
+    ```
 
 ## shortcuts
 ### combine multiple lines with or without space
