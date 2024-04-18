@@ -102,7 +102,40 @@ terminal
   autocmd TermClose * echom 'Terminal exited with status '..v:event.status
   ```
 
-- keymap
+  - more
+
+    > [!NOTE|label:more:]
+    > - [fabi1cazenave/termopen.vim](https://github.com/fabi1cazenave/termopen.vim)
+    > - [How to create <C-w> in Terminal mode?](https://www.reddit.com/r/neovim/comments/zudmd8/comment/j1j7thf/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) | [nomainchapou/nostalgic-term.nvim](https://github.com/romainchapou/nostalgic-term.nvim)
+    > - [to display a terminal split at the very bottom of vim window](https://www.reddit.com/r/vim/comments/8n5bzs/comment/dzt3fix/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+
+    ```bash
+    " go back to insert mode when entering the terminal window
+    autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif
+
+    function! NeovimTermOpen()
+      :split
+      :terminal
+      :startinsert
+    endfunction
+
+    cabbrev ter call NeovimTermOpen()
+    ```
+
+  - [startinsert](https://vi.stackexchange.com/a/3765/7389)
+    ```vim
+    autocmd BufWinEnter,WinEnter term://* startinsert
+    autocmd BufLeave term://* stopinsert
+
+    # or https://vi.stackexchange.com/q/25577/7389
+    autocmd TermOpen * startinsert
+    au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+
+    # or https://vi.stackexchange.com/a/25579/7389
+    autocmd TerminalOpen * nnoremap <buffer> <c-p> :bdelete!<CR>
+    ```
+
+- [keymap](https://www.reddit.com/r/neovim/comments/vjquxc/comment/idmmmr7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
   ```vim
   tnoremap <Esc> <C-\><C-n>
   tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
