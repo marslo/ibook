@@ -18,6 +18,7 @@
   - [redirect cmd](#redirect-cmd)
   - [format json in vim](#format-json-in-vim)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
+  - [close buffer when close window](#close-buffer-when-close-window)
   - [show ascii under cursor](#show-ascii-under-cursor)
 - [config](#config)
   - [get platform](#get-platform)
@@ -427,6 +428,20 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
   ```
 
 - force the `bufdo` to continue without saving files via `:bufdo!`
+
+### close buffer when close window
+- commands
+  ```vim
+  :windo bd
+  :%bd
+  :silent clear
+  ```
+
+- autocmd
+  ```vim
+  autocmd VimLeave * silent clear                                         " :windo bd
+  autocmd VimLeave * silent :%bd
+  ```
 
 ### show ascii under cursor
 
