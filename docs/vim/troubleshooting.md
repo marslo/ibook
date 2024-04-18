@@ -222,10 +222,17 @@
 >     - [`PYTHONPATH`](https://docs.python.org/3.7/using/cmdline.html#envvar-PYTHONPATH)
 
 - solution
-  - **Settings** -> **Apps** -> **Apps & features** -> **App Execution alias**
-  - enable both `python.exe` and `python3.exe`
+  - windows 10
+    - **Settings** -> **Apps** -> **Apps & features** -> **App Execution alias**
+    - disable both `python.exe` and `python3.exe`
 
-  ![Manage App Execution Aliases](../screenshot/win/win10-python-vim.png)
+    ![Manage App Execution Aliases](../screenshot/win/win10-python-vim.png)
+
+  - windows 11
+    - **Settings** -> **Apps** -> **Advanced app settings** -> **App Execution alias**
+    - disable both `python.exe` and `python3.exe`
+
+    ![Manage App Execution Aliases](../screenshot/win/win11-app-execution-aliases.png)
 
 - solution
   - delete both `python.exe` and `python3.exe` from `%LocalAppData%\Microsoft\WindowsApps`
