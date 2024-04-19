@@ -266,6 +266,7 @@
 
 > [!NOTE|label:references:]
 > - [why my option not working](https://codeinthehole.com/tips/debugging-vim-by-example/#why-isnt-my-option-working)
+> - [Vim Verbose Map](https://til.hashrocket.com/posts/hlnjrntqfq-vim-verbose-map)
 >
 > | VALUE | COMMENTS                                                     |
 > | ----- | ------------------------------------------------------------ |
