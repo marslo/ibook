@@ -9,7 +9,11 @@
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
   - [Switching case of characters](#switching-case-of-characters)
   - [counter](#counter)
+  - [delete line without copy to default register](#delete-line-without-copy-to-default-register)
+  - [`ctrl-k` delete to end of line in command mode](#ctrl-k-delete-to-end-of-line-in-command-mode)
+  - [g ctrl-g](#g-ctrl-g)
 - [commands](#commands)
+  - [paste command result to vim](#paste-command-result-to-vim)
   - [search (in)sensitive](#search-insensitive)
   - [search in visual mode](#search-in-visual-mode)
   - [sort lines](#sort-lines)
@@ -19,11 +23,18 @@
   - [format json in vim](#format-json-in-vim)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
   - [close buffer when close window](#close-buffer-when-close-window)
+  - [switch in buffers](#switch-in-buffers)
   - [show ascii under cursor](#show-ascii-under-cursor)
+  - [open vim with specific line Number](#open-vim-with-specific-line-number)
+  - [navigate to Nth column](#navigate-to-nth-column)
+  - [jumplist](#jumplist)
+  - [print path](#print-path)
+  - [encryption with Vim](#encryption-with-vim)
 - [config](#config)
   - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
   - [pastetoggle](#pastetoggle)
+  - [Change up to next underscore "_" in vim](#change-up-to-next-underscore-_-in-vim)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
   - [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
   - [using vim as a man-page viewer under unix](#using-vim-as-a-man-page-viewer-under-unix)
@@ -162,7 +173,7 @@ terminal
 ## shortcuts
 ### combine multiple lines with or without space
 - with space: `J`
-- without space: `gJ`
+- without space: `gJ` or [`:j!`](https://til.hashrocket.com/posts/5c3xzpe97z-preserve-whitespace-while-joining-in-vim)
 
 ![J-gJ](../screenshot/vim/J-gJ.gif)
 
@@ -254,7 +265,53 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
 
 ![vim calculator](../screenshot/vim/vim-leader-cr-count-expr.gif)
 
+### [delete line without copy to default register](https://til.hashrocket.com/posts/u86r0vdytl-deleting-lines-without-copying-to-default-register)
+
+> [!NOTE|label:references:]
+> - [Vim registers: The basics and beyond](https://www.brianstorti.com/vim-registers/)
+> - [How to delete (not cut) in Vim?](https://stackoverflow.com/a/11993928/2940319)
+> - [Registers](https://learnvim.irian.to/basics/registers)
+> - [`:@` Execute the contents of register](https://vimhelp.org/repeat.txt.html#%3A%40)
+
+```vim
+"_dd
+```
+
+- or `~/.vimrc`
+  ```vim
+  nnoremap rdd  "_dd
+  nnoremap rdw  "_dw
+  ```
+
+### [`ctrl-k` delete to end of line in command mode](https://unix.stackexchange.com/a/477697/29178)
+```vim
+cnoremap <C-k> <C-\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>
+```
+
+### [g ctrl-g](https://hashrocket.com/blog/posts/10-vim-commands-for-a-better-workflow)
+
+![g ctrl-g](../screenshot/vim/vim-g-c-g.gif)
+
 ## commands
+### [paste command result to vim](https://hashrocket.com/blog/posts/10-vim-commands-for-a-better-workflow)
+
+> [!NOTE|label:references:]
+> - [Open the output of a shell command in a split pane](https://superuser.com/a/868955/112396)
+> - [How to insert the result of a command into the text in vim?](https://unix.stackexchange.com/a/8104/29178)
+> - [:r! :read!](https://vimhelp.org/insert.txt.html#%3Ar%21)
+
+```vim
+" in cursor position"
+:.! <command>
+
+" read!
+:r! <command>
+
+" in new buffer"
+:new | 0read ! <command>
+```
+
+![vim-paste-command-output](../screenshot/vim/vim-read-cmd.gif)
 
 ### [search (in)sensitive](https://stackoverflow.com/a/2288438/2940319)
 
@@ -306,10 +363,17 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
 
 > [!NOTE|label:references:]
 > - [How to sort using visual blocks](https://vim.fandom.com/wiki/How_to_sort_using_visual_blocks)
+> - [Reverse sort lines in Vim](https://til.hashrocket.com/posts/kxno5ays5l-reverse-sort-lines-in-vim)
 
 - sort
   ```vim
   :{range}sort
+
+  " or
+  :sort n
+
+  " reverse sort
+  :sort nr
   ```
 
   ![sort lines](../screenshot/vim/sort-lines.gif)
@@ -476,6 +540,14 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
   autocmd VimLeave * silent :%bd
   ```
 
+### switch in buffers
+
+- next buffer: <kbd>ctrl</kbd> + <kbd>^</kbd>
+- previous buffer: <kbd>ctrl</kbd> + <kbd>6</kbd>
+- first: `:1b<CR>`
+- last: `:$b<CR>`
+
+
 ### show ascii under cursor
 
 > [!NOTE|label:references:]
@@ -488,11 +560,105 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
 - commands
   ```vim
   :as
+
   " or
   :ascii
+
+  " or shortcut `ga` : https://til.hashrocket.com/posts/lsqojsbmmn-get-character-without-diacritical-mark-in-vim
   ```
 
 ![ascii](../screenshot/vim/vim-tricky-ascii.gif)
+
+### open vim with specific line Number
+
+> [!NOTE|label:reference]
+> - [Edit A File Starting On The Last Line](https://til.hashrocket.com/posts/3ocvjcyneg-edit-a-file-starting-on-the-last-line)
+> - [Edit A File At A Specific Line Number In Vim](https://til.hashrocket.com/posts/uso1sxu4w6-edit-a-file-at-a-specific-line-number-in-vim)
+
+```bash
+# last line
+$ vim + /path/to/file
+
+# specific line
+$ vim +123 /path/to/file
+
+" or https://til.hashrocket.com/posts/joyovn3pau-go-to-file-with-line-number
+$ vim /path/to/file:123
+```
+
+### [navigate to Nth column](https://til.hashrocket.com/posts/mt22lzymns-navigate-to-the-nth-column-on-a-line-in-vim)
+```vim
+N|
+
+" i.e.: go to 15th column of current line
+15|
+```
+
+### jumplist
+
+> [!TIP|label:tips:]
+> - `:help ''`
+> - `:help ```
+
+```vim
+" check jump list
+:jumps
+
+" clear jump list
+:clearjumps
+
+" jump back https://til.hashrocket.com/posts/ue7f2hf8x2-jump-back-
+''
+
+" jump previous
+``
+```
+
+### [print path](https://til.hashrocket.com/posts/virxsxedc9-print-the-relative-path-of-the-current-file)
+
+- relative path:
+  <kbd>ctrl</kbd> + <kbd>g</kbd>
+  or
+  ```vim
+  :file
+  ```
+
+- [print filename](https://til.hashrocket.com/posts/bm2kh55onn-get-the-path-to-the-current-buffer-in-vim)
+
+  ```vim
+  :echo @%
+  ```
+
+- print full path
+
+  ```vim
+  :echo expand('%:p')
+  ```
+
+### encryption with Vim
+
+```vim
+set cryptmethod=blowfish2
+```
+
+- encrypt
+  ```bash
+  $ vim -x file.txt
+  :w!
+
+  # or
+  :set key=<password>
+  :wa!
+  ```
+
+- decrypt
+  ```bash
+  $ vim -X file.txt
+
+  " or in vim
+  :set key=
+  :wa!
+  ```
 
 ## config
 ### get platform
@@ -571,6 +737,13 @@ set t_vb=                                                           " ┘ error/
   >   - ['indentexpr'](https://vimhelp.org/options.txt.html#%27indentexpr%27)
   >   - ['lisp'](https://vimhelp.org/options.txt.html#%27lisp%27)
   >   - ['smartindent'](https://vimhelp.org/options.txt.html#%27smartindent%27)
+
+### [Change up to next underscore "_" in vim](https://til.hashrocket.com/posts/uanfzuizgu-change-up-to-next-underscore-in-vim)
+
+```vim
+set iskeyword-=_
+nnoremap <leader>e :set iskeyword-=_<cr>diw:set iskeyword+=_<cr>i
+```
 
 ## run vim commands in terminal
 
