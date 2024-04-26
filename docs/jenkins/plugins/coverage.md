@@ -3,14 +3,17 @@
 
 - [coverage](#coverage)
   - [cobertura-plugin](#cobertura-plugin)
+    - [sample Jenkinsfile](#sample-jenkinsfile)
   - [coverage-plugin](#coverage-plugin)
+    - [sample](#sample)
+    - [libs](#libs)
+    - [Jenkinsfile](#jenkinsfile)
 - [deprecated](#deprecated)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## coverage
-### cobertura-plugin
+# coverage
+## cobertura-plugin
 
 > [!NOTE|label:references:]
 > - [steps: Cobertura Plugin](https://www.jenkins.io/doc/pipeline/steps/cobertura/)
@@ -24,7 +27,7 @@
 >   - `LINE`
 >   - `METHOD`
 
-#### sample Jenkinsfile
+### sample Jenkinsfile
 - [Cobertura code coverage report for jenkins pipeline jobs](https://stackoverflow.com/a/44024599/2940319)
   ```groovy
   step([
@@ -69,12 +72,13 @@
   }
   ```
 
-### [coverage-plugin](https://github.com/jenkinsci/coverage-plugin)
+## [coverage-plugin](https://github.com/jenkinsci/coverage-plugin)
 
 > [!NOTE|label:references:]
+> - [Steps: Coverage Plugin](https://www.jenkins.io/doc/pipeline/steps/coverage/)
 > - [jenkinsci/coverage-model](https://github.com/jenkinsci/coverage-model)
 >   - [Index of incrementals/edu/hm/hafner](https://repo.jenkins-ci.org/incrementals/edu/hm/hafner/)
->   - [`public enum Metric`: src/main/java/edu/hm/hafner/coverage/Metric.java](https://github.com/jenkinsci/coverage-model/blob/main/src/main/java/edu/hm/hafner/coverage/Metric.java)
+>   - [`public enum Metric`: src/main/java/edu/hm/hafner/coverage/Metric.java](https://github.com/jenkinsci/coverage-model/blob/main/src/main/java/edu/hm/hafner/coverage/Metric.java) | [qualityGates](https://www.jenkins.io/doc/pipeline/steps/coverage/)
 >     - nodes that can have children
 >       - `CONTAINER`
 >       - `MODULE`
@@ -105,11 +109,52 @@
 >       - `JUNIT`
 >       - `XUNIT`
 
-#### sample
+### sample
 
 - [ci.jenkins.io: Core » jenkins » master #6073](https://ci.jenkins.io/job/Core/job/jenkins/job/master/6073/coverage/) | [#9194 Format 'admin' differently in the setup wizard for clarity](https://github.com/jenkinsci/jenkins/pull/9194) | [checkers](https://github.com/jenkinsci/jenkins/pull/9194/checks?check_run_id=24275010829)
+- [app.codecov.io/gh/jenkinsci/coverage-plugin](https://app.codecov.io/gh/jenkinsci/coverage-plugin?search=&trend=12%20months)
 
-#### Jenkinsfile
+### libs
+```groovy
+
+def showCoverageReport( String xmlPath, String sourcePath = '**/src', Map targets = [:] ) {
+  Map<String, String> benchmarks = [
+                                     conditional : '70, 0, 0' ,
+                                            line : '80, 0, 0' ,
+                                          method : '80, 0, 0' ,
+                                          branch : '60, 0, 0'
+                                   ]
+  benchmarks = benchmarks << targets
+
+  def file = findFiles( glob: xmlPath )
+  if ( file.size() ) {
+    String report = file.first().path
+    println "coverage report file found: ${report}"
+
+    discoverReferenceBuild()
+    recordCoverage( name: 'Cobertura Coverage',
+                    id: 'coverage',
+                    tools: [[ parser: 'COBERTURA', pattern: xmlPath ]],
+                    sourceDirectories: [[ path: sourcePath ]],
+                    ignoreParsingErrors: true,
+                    skipSymbolicLinks: false,
+                    calculateDiffForChangeRequests: true,
+                    failBuildIfCoverageDecreasedInChangeRequest: true,
+                    sourceCodeRetention: 'EVERY_BUILD',
+                    checksAnnotationScope: 'ALL_LINES',
+                    qualityGates: [
+                      [ threshold: benchmarks.line.split(',').first()   , metric: 'LINE'   , baseline: 'PROJECT'        , criticality: 'UNSTABLE' ] ,
+                      [ threshold: 0.01                                 , metric: 'LINE'   , baseline: 'MODIFIED_LINES' , criticality: 'UNSTABLE' ] ,
+                      [ threshold: benchmarks.branch.split(',').first() , metric: 'BRANCH' , baseline: 'PROJECT'        , criticality: 'UNSTABLE' ]
+                    ]
+                  )
+  } else {
+    error( "Could not find cobertura xml report in pattern: ${xmlPath}" )
+  }
+}
+```
+
+### Jenkinsfile
 
 > [!NOTE|label:references:]
 > - [EXPLAIN/Prototype feedback-component/Jenkinsfile](https://www.uni-hildesheim.de/gitlab/explain/prototyp-feedbackcomponent/-/blob/main/Jenkinsfile?ref_type=heads#L87)
@@ -127,7 +172,11 @@
   recordCoverage qualityGates: [[metric: 'LINE', threshold: 1.0], [metric: 'BRANCH', threshold: 1.0]], tools: [[parser: 'COBERTURA', pattern: 'src/output/test/coverage/cobertura-coverage.xml']]
   ```
 
-## deprecated
+# deprecated
+
+> [!NOTE|label:references:]
+> - [Steps: Code Coverage Plugin](https://www.jenkins.io/doc/pipeline/steps/code-coverage-api/#code-coverage-plugin)
+> - [failBuildIfCoverageDecreasedInChangeRequest](https://github.com/jenkinsci/code-coverage-api-plugin/pull/372)
 
 - [Code Coverage](https://plugins.jenkins.io/code-coverage-api/)
   ```groovy
