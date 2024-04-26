@@ -29,6 +29,10 @@
 > - [Jenkins X](https://www.youtube.com/playlist?list=PLvBBnHmZuNQJxNWu6X-5pqpAxRCQEWRGn)
 > - [CloudBees CI](https://docs.cloudbees.com/docs/cloudbees-ci/latest/)
 > - [ci.jenkins.io](https://ci.jenkins.io/)
+> - [Jenkins Code of Conduct](https://www.jenkins.io/project/conduct/)
+>   - [issues.jenkins.io](https://issues.jenkins.io/)
+>   - [Jenkins JIRA](https://issues.jenkins.io/)
+>   - [repo.jenkins-ci.org](https://repo.jenkins-ci.org/ui/)
 {% endhint %}
 
 ## basic

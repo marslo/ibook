@@ -16,6 +16,7 @@
 
 {% hint style='tip' %}
 > reference:
+> - [jenkins-infra/pipeline-library](https://github.com/jenkins-infra/pipeline-library)
 > - [Pipeline Examples](https://www.jenkins.io/doc/pipeline/examples/)
 > - [Jenkins Pipeline Syantx](https://kb.novaordis.com/index.php/Jenkins_Pipeline_Syntax)
 > - [Jenkins Pipeline Cookbook](https://e.printstacktrace.blog/jenkins-pipeline-cookbook/)
@@ -163,7 +164,6 @@ timestamps { ansiColor('xterm') {
          jq -r .changeSets[]
 
   # or
-
   $ curl -sSg \
          https://jenkins.sample.com/job/<group>/job/<pipeline>/<buildId>/api/json?depth=100&&tree=changeSets[*[*]]
   ```
@@ -195,8 +195,7 @@ currentBuild.description = 'this is whitebox'
 
 ## exception
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [Class Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
 > - [How to time out Jenkins Pipeline stage and keep the pipeline running?](https://e.printstacktrace.blog/how-to-time-out-jenkins-pipeline-stage-and-keep-the-pipeline-running/)
 
