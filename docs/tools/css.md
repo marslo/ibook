@@ -15,6 +15,7 @@
 - [font](#font)
 - [selector](#selector)
   - [attribute selectors](#attribute-selectors)
+  - [debug tooltips in inspect](#debug-tooltips-in-inspect)
   - [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -909,6 +910,18 @@ border-style: dotted dashed solid groove;
     [class^="dh"][class$="-bl"]  { color: green;  }
     [class^="dh"][class$="-br"]  { color: blue;   }
     ```
+
+### debug tooltips in inspect
+
+> [!NOTE|label:references:]
+> - [Freeze screen in chrome debugger / DevTools panel for popover inspection?](https://stackoverflow.com/a/73451157/2940319)
+
+1. select the element in the inspector
+2. select `Event-Liseners` tab in right panel
+3. delete the `mouseover` event
+4. re-hover the element in web page
+
+![debug tooltips](../screenshot/tools/styles/html-inspect-tooltips.gif)
 
 ### references
 
