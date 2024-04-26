@@ -107,6 +107,7 @@
     * [simple-theme](jenkins/plugins/simple-theme.md)
     * [build-timeline](jenkins/plugins/build-timeline.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
+    * [coverage](jenkins/plugins/coverage.md)
     * [tricky](jenkins/plugins/tricky.md)
 * [virtualization](virtualization/virtualization.md)
   * [kubernetes](virtualization/kubernetes/kubernetes.md)
