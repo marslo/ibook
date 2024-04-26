@@ -13,7 +13,7 @@
     - [coc-snippets](#coc-snippets)
     - [extensions management](#extensions-management)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
-  - [copilot](#copilot)
+  - [github/copilot.vim](#githubcopilotvim)
   - [tomtom/tcomment_vim](#tomtomtcomment_vim)
   - [dense-analysis/ale](#dense-analysisale)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic-1)
@@ -949,7 +949,7 @@ $ which -a tree-sitter
   ['/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua.so', '/usr/local/Cellar/neovim/0.9.5/lib/nvim/parser/lua.so']
   ```
 
-## copilot
+## [github/copilot.vim](https://github.com/github/copilot.vim)
 
 > [!NOTE|label:references:]
 > - [Getting started with GitHub Copilot](https://docs.github.com/en/copilot/using-github-copilot/getting-started-with-github-copilot?tool=vimneovim)
@@ -967,8 +967,9 @@ $ which -a tree-sitter
   Plug 'github/copilot.vim'
 
   " github/copilot.vim
-  let g:Copilot_proxy_strict_ssl = v:false
-  let g:copilot_filetypes = {
+  let g:copilot_proxy            = 'http://proxy.sample.com:8080'
+  let g:copilot_proxy_strict_ssl = v:false
+  let g:copilot_filetypes        = {
       \ '*': v:false,
       \ 'gitcommit': v:true,
       \ 'markdown': v:true,
@@ -984,18 +985,24 @@ $ which -a tree-sitter
       \ | if f > 100000 || f == -2
       \ |   let b:copilot_enabled = v:false
       \ | endif
+  " invpaste -> paste in insert/normal/visual mode
   noremap <leader>pp :set invpaste<cr>
+  map <silent> <F2>  :Copilot disable<CR>
   ```
 
-  ```bash
+  ```vim
   :Copilot setup
 
   " check status
   :Copilot status
-
   Copilot: Ready
   " or
   Copilot: Disabled for filetype=c by g:copilot_filetypes
+
+  :Copilot log
+  :resize -5
+
+  :Copilot panel
   ```
 
 - config
@@ -1006,8 +1013,8 @@ $ which -a tree-sitter
   >   - [init.lua solution](https://github.com/orgs/community/discussions/38074#discussioncomment-8430826)
 
   ```vim
-  let g:Copilot_proxy = '192.168.100.1:8080'
-  let g:Copilot_proxy_strict_ssl = v:false
+  let g:copilot_proxy = '192.168.100.1:8080'
+  let g:copilot_proxy_strict_ssl = v:false
   ```
 
 - self-signed certificate error
@@ -1029,8 +1036,12 @@ $ which -a tree-sitter
   ```
 
 - [vscode](https://stackoverflow.com/a/55191955/2940319)
-  ```
-  "http.proxyStrictSSL": false
+  ```json
+  // settings.json
+  {
+    "http.proxyStrictSSL": false,
+    "http.proxy": "http://proxy.sample.com:8080",
+  }
   ```
 
 ## [tomtom/tcomment_vim](https://github.com/tomtom/tcomment_vim)

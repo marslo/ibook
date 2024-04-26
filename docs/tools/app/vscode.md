@@ -30,6 +30,9 @@
 
 ## config
 
+> [!NOTE|label:references:]
+> - [#194694 - The Ports panel is opening by itself.](https://github.com/microsoft/vscode/issues/194694#issuecomment-1744810198)
+
 - proxy
   ```json
   {
