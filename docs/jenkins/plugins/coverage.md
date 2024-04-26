@@ -3,11 +3,13 @@
 
 - [coverage](#coverage)
   - [cobertura-plugin](#cobertura-plugin)
-    - [sample Jenkinsfile](#sample-jenkinsfile)
-  - [coverage-plugin](#coverage-plugin)
-    - [sample](#sample)
     - [libs](#libs)
     - [Jenkinsfile](#jenkinsfile)
+    - [tips](#tips)
+  - [coverage-plugin](#coverage-plugin)
+    - [sample](#sample)
+    - [libs](#libs-1)
+    - [Jenkinsfile](#jenkinsfile-1)
 - [deprecated](#deprecated)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -26,8 +28,70 @@
 >   - `CONDITIONAL`
 >   - `LINE`
 >   - `METHOD`
+> - [Jenkins Pipeline With Python](https://skamalakannan.dev/posts/jenkins-pipeline-python/)
 
-### sample Jenkinsfile
+### libs
+```groovy
+def showCoverageReport( String xmlPath, Map targets = [:], Boolean failNoReports = true ) {
+  Map<String, String> benchmarks = [
+                                     conditional : '70, 0, 0' ,
+                                            line : '80, 0, 0' ,
+                                          method : '80, 0, 0' ,
+                                          branch : '60, 0, 0'
+                                   ]
+  benchmarks = benchmarks << targets
+
+  def file = findFiles( glob: xmlPath )
+  if ( file.size() ) {
+    String report = file.first().path
+    println "coverage report file found in: ${report}"
+    cobertura coberturaReportFile: report ,
+              conditionalCoverageTargets: benchmarks.conditional ,
+              lineCoverageTargets: benchmarks.line ,
+              methodCoverageTargets: benchmarks.method ,
+              failNoReports: failNoReports ,
+              failUnhealthy: false,
+              failUnstable: false,
+              onlyStable: false,
+              autoUpdateStability: true,
+              autoUpdateHealth: false,
+              enableNewApi: false
+
+  } else {
+    error "Could not find cobertura xml report in pattern: ${xmlPath}"
+  }
+}
+```
+
+### Jenkinsfile
+recordCoverage qualityGates: [
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'MODULE'             , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'PACKAGE'            , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'FILE'               , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'CLASS'              , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'METHOD'             , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'LINE'               , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'BRANCH'             , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'INSTRUCTION'        , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'MUTATION'           , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'TEST_STRENGTH'      , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'COMPLEXITY'         , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'COMPLEXITY_MAXIMUM' , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'LOC'                , threshold: 30.0] ,
+                [criticality: 'NOTE' , integerThreshold: 30 , metric: 'TESTS'              , threshold: 30.0]
+              ],
+              tools: [[parser: 'COBERTURA', pattern: 'a.xml']]
+
+recordCoverage checksAnnotationScope: 'ALL_LINES',
+               enabledForFailure: true,
+               ignoreParsingErrors: true,
+               qualityGates: [
+                 [baseline: 'MODIFIED_LINES', criticality: 'NOTE', metric: 'LINE', threshold: 0.001]
+               ],
+               skipSymbolicLinks: true,
+               sourceCodeRetention: 'EVERY_BUILD',
+               sourceDirectories: [[path: '../Src']],
+               tools: [[parser: 'COBERTURA', pattern: 'a.xml']]
 - [Cobertura code coverage report for jenkins pipeline jobs](https://stackoverflow.com/a/44024599/2940319)
   ```groovy
   step([
@@ -72,6 +136,43 @@
   }
   ```
 
+### tips
+
+- unstable build when thresholds decreased
+
+  > [!NOTE|label:references:]
+  > - [Jenkins Cobertura Plugin - reset Ratcheting / autoUpdateHealth values](https://stackoverflow.com/q/65133756/2940319)
+  > - [#89 When coverage goes down threshold is updated and the build is not marked as unstable](https://github.com/jenkinsci/cobertura-plugin/issues/89#issuecomment-453506691)
+  > - [#124 Cannot reset ratcheted targets](https://github.com/jenkinsci/cobertura-plugin/issues/124)
+
+  ```groovy
+  cobertura(
+             ...
+             autoUpdateStability: true,
+             autoUpdateHealth: true,
+           )
+  ```
+
+  - result
+    ```
+    [Pipeline] cobertura
+    22:37:43  [Cobertura] Publishing Cobertura coverage report...
+    22:37:43
+    22:37:44  [Cobertura] Publishing Cobertura coverage results...
+    22:37:44
+    22:37:44  [Cobertura] Cobertura coverage report found.
+    22:37:44
+    22:37:45  [Cobertura] Code coverage enforcement failed for the following metrics:
+    22:37:45
+    22:37:45  [Cobertura]     Conditionals's stability is 41.83 and set mininum stability is 41.85.
+    22:37:45
+    22:37:45  [Cobertura] Setting Build to unstable.
+    22:37:45
+    [Pipeline] }
+    ```
+
+    [![cobertura decrease unstable](../../screenshot/jenkins/jenkins-cobertura-decrease-unstable.png)](../../screenshot/jenkins/jenkins-cobertura-decrease-unstable.png)
+
 ## [coverage-plugin](https://github.com/jenkinsci/coverage-plugin)
 
 > [!NOTE|label:references:]
@@ -108,6 +209,7 @@
 >       - `OPENCOVER`
 >       - `JUNIT`
 >       - `XUNIT`
+> - [sample workflow](https://github.com/jenkinsci/coverage-model/actions/runs/7781672728/workflow)
 
 ### sample
 
