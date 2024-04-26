@@ -29,6 +29,7 @@
 >   - `LINE`
 >   - `METHOD`
 > - [Jenkins Pipeline With Python](https://skamalakannan.dev/posts/jenkins-pipeline-python/)
+> - [Static Code Analysis Using SonarQube and Jenkins](https://www.opensourceforu.com/2021/08/static-code-analysis-using-sonarqube-and-jenkins/)
 
 ### libs
 ```groovy
@@ -80,7 +81,7 @@ recordCoverage qualityGates: [
                 [criticality: 'NOTE' , integerThreshold: 30 , metric: 'LOC'                , threshold: 30.0] ,
                 [criticality: 'NOTE' , integerThreshold: 30 , metric: 'TESTS'              , threshold: 30.0]
               ],
-              tools: [[parser: 'COBERTURA', pattern: 'a.xml']]
+              tools: [[parser: 'COBERTURA', pattern: '*.xml']]
 
 recordCoverage checksAnnotationScope: 'ALL_LINES',
                enabledForFailure: true,
@@ -132,6 +133,31 @@ recordCoverage checksAnnotationScope: 'ALL_LINES',
         classCoverageTargets: '80, 80, 80',
         fileCoverageTargets: '80, 80, 80',
       )
+    }
+  }
+  ```
+
+- [pipeline-library/vars/buildPlugin.groovy](https://github.com/jenkins-infra/pipeline-library/blob/master/vars/buildPlugin.groovy#L147C19-L166C18)
+  ```groovy
+  if (!skipTests) {
+      junit('**/target/surefire-reports/**/*.xml,**/target/failsafe-reports/**/*.xml,**/target/invoker-reports/**/*.xml')
+      if (first) {
+        discoverReferenceBuild()
+        // Default configuration for JaCoCo can be overwritten using a `jacoco` parameter (map).
+        // Configuration see: https://www.jenkins.io/doc/pipeline/steps/code-coverage-api/#recordcoverage-record-code-coverage-results
+        Map jacocoArguments = [tools: [[parser: 'JACOCO', pattern: '**/jacoco/jacoco.xml']], sourceCodeRetention: 'MODIFIED']
+        if (params?.jacoco) {
+          jacocoArguments.putAll(params.jacoco as Map)
+        }
+        recordCoverage jacocoArguments
+
+        if (pit) {
+          Map pitArguments = [tools: [[parser: 'PIT', pattern: '**/pit-reports/mutations.xml']], id: 'pit', name: 'Mutation Coverage', sourceCodeRetention: 'MODIFIED']
+          pitArguments.putAll(pit)
+          pitArguments.remove('skip')
+          recordCoverage(pitArguments)
+        }
+      }
     }
   }
   ```
