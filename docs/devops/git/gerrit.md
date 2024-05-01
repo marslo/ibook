@@ -22,6 +22,7 @@
   - [access list contains account](#access-list-contains-account)
   - [all reviews at a certain time](#all-reviews-at-a-certain-time)
   - [get review rate in certain time](#get-review-rate-in-certain-time)
+  - [list gerrit projects with certain account](#list-gerrit-projects-with-certain-account)
   - [reference](#reference)
 - [integrate in Jenkins](#integrate-in-jenkins)
 - [css for code block](#css-for-code-block)
@@ -728,6 +729,21 @@ echo "${sum} ${rnum} ${onum} $(( sum-onum ))" |
       awk '{ sum=$1; reviewed=$2; owned=$3; rsum=$4; rate=$2*100/$4 } END { printf("\t- gerrit review: %s/(%s-%s) ( %s% )\n", reviewed, sum, owned, rate) }'
 ```
 
+### list gerrit projects with certain account
+```bash
+$ account='marslo'
+$ id=1
+$ gerritUrl='https://gerrit.sample.com'
+
+$ while read -r _proj; do
+    output=$( curl -fsSL "${gerritUrl}"/a/projects/"${_proj}"/access |
+              tail -n+2 |
+              jq -r --arg ACCOUNT "${account}" '.. | ."rules"? | select(. != null) | keys[] | ascii_downcase | select(contains($ACCOUNT))';
+            )
+    [[ -n "${output}" ]] && echo "[${id}] >> "${gerritUrl}"/admin/repos/$(sed 's:%2F:/:g' <<< "${_proj}")" && ((id++));
+  done < <( curl -fsSL "${gerritUrl}"/a/projects/?d | tail -n+2 | jq -r '.[].id' )
+```
+
 ### reference
 - [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
 - [Gerrit Code Review - Access Controls](https://gerrit-review.googlesource.com/Documentation/access-control.html#_project_access_control_lists)
@@ -751,7 +767,7 @@ echo "${sum} ${rnum} ${onum} $(( sum-onum ))" |
 - `stream-events`
 
   ```bash
-  # permission requies
+  # permission requires
   $ ssh -i id_rsa jenkins@gerrit.domain.com -p 29418 gerrit stream-events
   stream events not permitted
 
