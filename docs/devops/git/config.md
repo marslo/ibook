@@ -7,6 +7,7 @@
   - [get locations](#get-locations)
 - [list](#list)
   - [get from all configure](#get-from-all-configure)
+  - [colors](#colors)
 - [default configuration](#default-configuration)
 - [tig](#tig)
   - [install from source](#install-from-source)
@@ -335,6 +336,101 @@ $ git config --show-origin --show-scope --get-all user.name
 global   file:/Users/marslo/.gitconfig   marslo
 local    file:.git/config    marslo
 ```
+
+### colors
+
+> [!NOTE|label:references:]
+> - [git config: Colored outputs](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config)
+> - [Color in git-log](https://stackoverflow.com/a/16844346/2940319)
+> - [Git-Config Colors And Include](https://tylercipriani.com/blog/2016/09/21/git-config-include-and-colors/)
+> - [* git config: colors](https://git-scm.com/docs/git-config#Documentation/git-config.txt-color)
+>   - attributes: `bold`, `dim`, `ul`, `blink`, `reverse`, `italic`, `strike`, `no-ul`, `no-reverse`, `no-dim`, ..
+>   - colors: ANSI 256-colors ( 0~255 ). specify 24-bit RGB values as hex, like #ff0ab3. color names, like red, green, ...
+
+- configure:
+  - `color.branch.<slot>`:
+    - `current`, `local`, `remote`, `upstream`, `plain`
+  - `color.diff.<slot>`:
+    - `context`, `meta`, `frag`, `old`, `new`, `plain`, `commit`, `whitespace`,
+    - `oldMoved`, `newMoved`, `oldMovedDimmed`, `newMovedDimmed`, `oldMovedAlternative`, `newMovedAlternative`, `oldMovedAlternativeDimmed`, `newMovedAlternativeDimmed`
+    - `contextDimmed`, `oldDimmed`, `newDimmed`, `contextBold`, `oldBold`, `newBold`
+  - `color.decorate.<slot>`:
+    - `branch`, `remoteBranch`, `tag`, `stash`, `HEAD`
+  - `color.grep.<slot>`
+    - `context`, `filename`, `function`, `lineNumber`, `match`, `matchContext`, `matchSelected`, `selected`, `separator`
+  - `color.interactive.<slot>`:
+    - `prompt`, `header`, `help`, `error`
+  - `color.status.<slot>`:
+    - `added`, `updated`, `changed`, `untracked`, `branch`, `nobranch`, `localBranch`, `remoteBranch`, `unmerged`
+  - `color.remote.<slot>`:
+    - `hint`, `warning`, `success`, `error`
+
+- list `color.*` config
+  ```bash
+  $ git config --get-regexp color.*
+  ```
+
+- [test colors](https://stackoverflow.com/a/22674150/2940319)
+
+  > [!TIP|label:see also:]
+  > - [* iMarslo: number conversion](../../cheatsheet/math.md#number-conversion)
+  > - [colortrans.py: Convert values between RGB hex codes and xterm-256 color codes.](https://gist.github.com/MicahElliott/719710)
+
+  ```bash
+  $ echo $(git config --get-color "" "120 bold reverse") color test $(git config --get-color "" reset)
+
+  # i.e.:
+  #                                    ╭─ 256 color code
+  #                                   ---
+  $ echo $(git config --get-color "" "120 bold italic") color test $(git config --get-color "" reset)| command cat -A
+  ^[[1;3;38;5;120m color test ^[[m$
+  #           ---
+  #            ╰─ 256 color code
+
+  # with 24bit hex
+  #                                    ╭─ R(decimal): 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
+  #                                    --╭─ G(decimal): 157: `$ echo -n "obase=10;ibase=16; 9D" | bc`
+  #                                      --╭─ B(decimal): 106: `$ echo -n "obase=10;ibase=16; 6A" | bc`
+  #                                        --
+  $ echo $(git config --get-color "" "#689d6a italic") color test $(git config --get-color "" reset) | command cat -A
+  ^[[3;38;2;104;157;106m color test ^[[m$
+  #  -      --- --- ---
+  #  ╵       R   G   B
+  #  ╰─ SGR (Select Graphic Rendition) parameters ( https://en.wikipedia.org/wiki/ANSI_escape_code ):
+  #         0 reset/normal; 1 bold; 2 dim/faint; 3 italic; 4 underline; 5 blink; 7 reverse; 8 hidden
+  ```
+
+- [`trueHexPrint()`](https://stackoverflow.com/a/55073732/2940319)
+  ```bash
+  trueHexPrint () {
+    # Generates Truecolor Escape Sequences from Hex Strings. (remove '\\' to use)
+    # -fg     Prints as a foreground color. (default)
+    # -bg     Prints as a background color.
+    # usage) `trueHexPrint -fg "11001A" ==> '\e[38;2;17;0;26m'
+    # usage) `trueHexPrint -bg "11001A" ==> '\e[48;2;17;0;26m'
+    if [[ ${1} =~ "-fg" || ${1} =~ "-f" ]]; then
+      fgbg=38; hexinput=${2};
+    elif [[ ${1} =~ "-bg" || ${1} =~ "-b" ]]; then
+      fgbg=48; hexinput=${2};
+    else
+      fgbg=38; hexinput=${1}
+    fi
+    hexinput=`echo ${hexinput} | tr '[:lower:]' '[:upper:]'`  # uppercase-ing
+    hexinput=`echo ${hexinput} | tr -d '#'`               # remove Hash if needed
+    a=`echo ${hexinput} | cut -c-2`
+    b=`echo ${hexinput} | cut -c3-4`
+    c=`echo ${hexinput} | cut -c5-6`
+    r=`echo "ibase=16; ${a}" | bc`
+    g=`echo "ibase=16; ${b}" | bc`
+    b=`echo "ibase=16; ${c}" | bc`
+    printf "\\\\e[${fgbg};2;${r};${g};${b}m" # Remove one set of '\\' to utilize
+  }
+
+  $ trueHexPrint "#689d6a"
+  \e[38;2;104;157;106m
+  $ echo -e "$(trueHexPrint "#689d6a") aa \e[0m"
+   aa
+  ```
 
 ## default configuration
 - `core.editor`

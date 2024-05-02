@@ -8,12 +8,18 @@
   - [jq](#jq)
   - [`$(())`](#)
 - [sum from file](#sum-from-file)
+- [number conversion](#number-conversion)
+  - [binary <> decimal <> hexadecimal](#binary--decimal--hexadecimal)
+  - [to decimal](#to-decimal)
+  - [to hexadecimal](#to-hexadecimal)
+  - [to octal](#to-octal)
+  - [to binary](#to-binary)
+  - [to unicode ( hexadecimal )](#to-unicode--hexadecimal-)
+  - [number converting from file](#number-converting-from-file)
 - [advanced computing](#advanced-computing)
   - [logarithm](#logarithm)
   - [power](#power)
   - [square](#square)
-  - [decimal to binary](#decimal-to-binary)
-  - [binary <> decimal <> hexadecimal](#binary--decimal--hexadecimal)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -164,6 +170,360 @@ $ echo $(( $( tr "\n" "+"  < /tmp/test) 0 ))
   331.58
   ```
 
+## number conversion
+
+> [!NOTE|label:references:]
+> - [Understand "ibase" and "obase" in case of conversions with bc?](https://unix.stackexchange.com/q/199615/29178)
+> - [Linux / UNIX: bc Convert Octal To Hexadecimal or Vise Versa](https://www.cyberciti.biz/faq/bc-convert-octal-to-hexadecimal-number/)
+> - tips
+>>  `ibase` and `obase` params order matters, but not always. Hex values must be in **UPPERCASE**.
+
+
+### binary <> decimal <> hexadecimal
+
+> [!NOTE]
+> - `obase` : `[o]utput base`
+> - `ibase` : `[i]utput base`
+
+```bash
+# bin -> dec
+$ bc <<< 'ibase=2;11111111;11111111;11000000;00000000' | paste -sd. -
+255.255.192.0
+
+# bin -> hex
+$ bc <<< 'obase=16;ibase=2;11111111;11111111;11000000;00000000' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
+00FF.00FF.00C0.0000
+
+# dec -> bin
+$ bc <<< 'ibase=10;obase=2;255;255;240;0' | numfmt --format %08f | paste -sd' ' -
+11111111 11111111 11110000 00000000
+
+# dec -> hex
+$ bc <<< 'ibase=10;obase=16;255;255;240;0' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
+00FF.00FF.00F0.0000
+
+# hex -> bin
+$ bc <<< 'ibase=16;obase=2;FF;FF;EE;0A' | numfmt --format %08f | paste -sd' ' -
+11111111 11111111 11101110 00001010
+
+# hex -> dec
+$ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
+255.255.238.10
+```
+### to decimal
+
+- from hexadecimal
+  ```bash
+  $ echo "ibase=16; F" | bc
+  15
+
+  # [o]utput base:      0xA -> 10
+  #                      ^
+  $ echo "ibase=16;obase=A; F" | bc
+  15
+
+  # or obase first
+  $ echo "obase=10; ibase=16; F" | bc
+  15
+
+  # or
+  $ echo $((0xF))
+  15
+  ```
+
+- from octal
+  ```bash
+  # obase (decimal) first
+  $ echo "obase=10; ibase=8; 17" | bc
+  15
+
+  # or
+  #                     ╭─ 012 -> 10
+  #                     --
+  $ echo "ibase=8;obase=12; 17" | bc
+  15
+
+  # or
+  $ echo $((017))
+  15
+  ```
+
+### to hexadecimal
+- from decimal
+  ```bash
+  $ echo "obase=16; 15" | bc
+  F
+
+  # or
+  $ echo "ibase=10;obase=16; 15" | bc
+  F
+  ```
+
+- from octal
+  ```bash
+  $ echo "obase=16; ibase=8; 17" | bc
+  F
+
+  # or
+  $ printf "%x\n" 017
+  f
+  ```
+
+
+### to octal
+- from hexadecimal
+  ```bash
+  $ echo "ibase=16;obase=8; F" | bc
+  17
+  ```
+
+- from decimal
+  ```bash
+  $ echo "obase=8; 15" | bc
+  17
+
+  # or
+  $ echo "ibase=10;obase=8; 15" | bc
+  17
+  ```
+
+### to binary
+
+> [!NOTE|label:references:]
+> - [Prevent bc from auto truncating leading zeros when converting from hex to binary](https://stackoverflow.com/a/12633973/2940319)
+> - [How to make `bc` output a desired number of base-2 binary digits](https://stackoverflow.com/a/71570190/2940319)
+
+- from decimal
+  ```bash
+  $ bc <<< 'obase=2;15'
+  1111
+
+  $ bc -l <<< 'obase=2;0;0;15;255' | xargs
+  0 0 1111 11111111
+
+  $ bc -l <<< 'obase=2;0;0;15;255' | awk '{ printf "%08d\n", $0 }' | xargs
+  00000000 00000000 00001111 11111111
+
+  $ printf "%08d\n" $(echo "obase=2; 0;0;15;255" | bc) | xargs
+  00000000 00000000 00001111 11111111
+
+  $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
+  00000000 00000000 00001111 11111111
+  ```
+
+### to unicode ( hexadecimal )
+
+> [!NOTE|label:references:]
+> - [Convert a character from and to its decimal, binary, octal, or hexadecimal representations in BASH / Shell](https://stackoverflow.com/a/73889450/2940319)
+
+```bash
+# 0x41 -> `A`; 0x61 -> `a`
+
+# decimal -> hexadecimal
+$ printf "$(printf %04x 65)\n"
+0041
+
+# \u<4-digits-hex>
+$ printf "\u$(printf %04x 65)\n"
+A
+
+# \U<8-digits-hex>
+$ printf "\U$(printf %08x 67147)\n"
+𐙋
+
+$ single_unicode_char="😈"
+$ printf %d "'$single_unicode_char"
+128520
+$ printf "$(printf %08x 128520)\n"
+0001f608
+$ printf "\U$(printf %08x 128520)\n"
+😈
+```
+
+- more
+  ```bash
+  $ single_unicode_char="😈"
+  ```
+
+- to hexadecimal
+  ```bash
+  #         ╭─ hexadecimal
+  $ printf %x "'$single_unicode_char'"
+  1f608
+  $ printf %08X "'$single_unicode_char'"
+  0001F608
+  #                                                               ╭─ hexadecimal
+  $ echo -n $single_unicode_char | iconv -t UTF-32LE | od -A n -t x4
+   0001f608
+  $ printf "\U0001f608"
+  😈
+
+  # or
+  $ printf %#x "'$single_unicode_char"
+  0x1f608
+  $ printf %#X "'$single_unicode_char"
+  0X1F608
+  $ printf "\U$(printf %08x 0X1F608)\n"
+  😈
+
+  # or
+  #                                           ╭─ hexadecimal
+  $ echo -n $single_unicode_char | od -A n -t x1
+   f0 9f 98 88
+  $ printf %b "\xf0\x9f\x98\x88"
+  😈
+  #       ╭─ works without `%b` as well
+  $ printf "\xf0\x9f\x98\x88"
+  😈
+  ```
+
+- to octal
+  ```bash
+  #         ╭─ octal
+  $ printf %o "'$single_unicode_char'"
+  373010
+  #                                                               ╭─ octal
+  $ echo -n $single_unicode_char | iconv -t UTF-32LE | od -A n -t o4
+   00000373010
+  $ printf "\U$(printf %08x "00000373010")"
+  😈
+
+  # or
+  #       ╭─ without `\n`
+  $ echo -n $single_unicode_char | od -A n -t o1
+   360 237 230 210
+  $ printf %b "\360\237\230\210"
+  😈
+  ```
+
+### number converting from file
+- octal
+  ```bash
+  $ cat -p octal-data-file.txt
+  7
+  10
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  20
+  21
+
+  # octal -> hexadecimal
+  $ ( echo "obase=16; ibase=8" ; cat octal-data-file.txt ) | bc
+  7
+  8
+  9
+  A
+  B
+  C
+  D
+  E
+  F
+  10
+  11
+
+  # octal -> decimal
+  $ ( echo "obase=10; ibase=8" ; cat octal-data-file.txt ) | bc
+  7
+  8
+  9
+  10
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  ```
+
+- hexadecimal
+  ```bash
+  $ cat -pp hex-data-file.txt
+  9
+  A
+  B
+  C
+  D
+  E
+  F
+  10
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  18
+  19
+  1A
+  1B
+  1C
+  1D
+  1E
+  1F
+  20
+
+  # hexadecimal -> octal
+  $ ( echo "obase=8; ibase=16" ; cat hex-data-file.txt ) | bc
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  20
+  21
+  22
+  23
+  24
+  25
+  26
+  27
+  30
+  31
+  32
+  33
+  34
+  35
+  36
+  37
+  40
+
+  # hexadecimal -> decimal
+  $ ( echo "obase=10; ibase=16" ; cat hex-data-file.txt ) | bc
+  9
+  10
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  18
+  19
+  20
+  21
+  22
+  23
+  24
+  25
+  26
+  27
+  28
+  29
+  30
+  31
+  32
+  ```
+
 ## advanced computing
 
 > [!NOTE|label:references:]
@@ -210,61 +570,4 @@ $ bc -l <<< 'sqrt(2)'
 
 $ bc <<< 'sqrt(2)'
 1
-```
-
-### decimal to binary
-
-> [!NOTE|label:references:]
-> - [Prevent bc from auto truncating leading zeros when converting from hex to binary](https://stackoverflow.com/a/12633973/2940319)
-> - [How to make `bc` output a desired number of base-2 binary digits](https://stackoverflow.com/a/71570190/2940319)
-
-- bc
-  ```bash
-  $ bc <<< 'obase=2;15'
-  1111
-
-  $ bc -l <<< 'obase=2;0;0;15;255' | xargs
-  0 0 1111 11111111
-
-  $ bc -l <<< 'obase=2;0;0;15;255' | awk '{ printf "%08d\n", $0 }' | xargs
-  00000000 00000000 00001111 11111111
-
-  $ printf "%08d\n" $(echo "obase=2; 0;0;15;255" | bc) | xargs
-  00000000 00000000 00001111 11111111
-
-  $ bc <<< 'obase=2; 0;0;15;255' | numfmt --format=%08f | xargs
-  00000000 00000000 00001111 11111111
-  ```
-
-
-### binary <> decimal <> hexadecimal
-
-> [!NOTE]
-> - `obase` : `[o]utput base`
-> - `ibase` : `[i]utput base`
-
-```bash
-# bin -> dec
-$ bc <<< 'ibase=2;11111111;11111111;11000000;00000000' | paste -sd. -
-255.255.192.0
-
-# bin -> hex
-$ bc <<< 'obase=16;ibase=2;11111111;11111111;11000000;00000000' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
-00FF.00FF.00C0.0000
-
-# dec -> bin
-$ bc <<< 'ibase=10;obase=2;255;255;240;0' | numfmt --format %08f | paste -sd' ' -
-11111111 11111111 11110000 00000000
-
-# dec -> hex
-$ bc <<< 'ibase=10;obase=16;255;255;240;0' | awk '{ printf "%04s\n", $1 }' | paste -sd. -
-00FF.00FF.00F0.0000
-
-# hex -> bin
-$ bc <<< 'ibase=16;obase=2;FF;FF;EE;0A' | numfmt --format %08f | paste -sd' ' -
-11111111 11111111 11101110 00001010
-
-# hex -> dec
-$ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
-255.255.238.10
 ```
