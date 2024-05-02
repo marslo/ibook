@@ -348,6 +348,13 @@ local    file:.git/config    marslo
 >   - colors: ANSI 256-colors ( 0~255 ). specify 24-bit RGB values as hex, like #ff0ab3. color names, like red, green, ...
 
 - configure:
+
+  > [!NOTE|label:references:]
+  > - [git-diff console default colors meanings](https://stackoverflow.com/a/69170401/2940319)
+  > - [Configuring git colors](https://shallowsky.com/blog/programming/gitcolors.html)
+  > - [git/Documentation/config/color.txt](https://github.com/git/git/blob/master/Documentation/config/color.txt)
+  > - [rab/.gitconfig](https://gist.github.com/rab/4067067)
+
   - `color.branch.<slot>`:
     - `current`, `local`, `remote`, `upstream`, `plain`
   - `color.diff.<slot>`:
@@ -375,6 +382,13 @@ local    file:.git/config    marslo
   > [!TIP|label:see also:]
   > - [* iMarslo: number conversion](../../cheatsheet/math.md#number-conversion)
   > - [colortrans.py: Convert values between RGB hex codes and xterm-256 color codes.](https://gist.github.com/MicahElliott/719710)
+  > - [git/t/t4026-color.sh](https://github.com/git/git/blob/master/t/t4026-color.sh)
+  >   - [`t4207-log-decoration-colors.sh`: Test for "git log --decorate" colors](https://github.com/git/git/blob/b3622a4ee94e4916cd05e6d96e41eeb36b941182/t/t4207-log-decoration-colors.sh#L11)
+  >   - [`t8012-blame-colors.sh`](https://github.com/git/git/blob/master/t/t8012-blame-colors.sh)
+  >   - [`t3205-branch-color.sh`](https://github.com/git/git/blob/master/t/t3205-branch-color.sh)
+  >   - [`p4002-diff-color-moved.sh`](https://github.com/git/git/blob/master/t/perf/p4002-diff-color-moved.sh)
+  >   - [`t5409-colorize-remote-messages.sh`](https://github.com/git/git/blob/master/t/t5409-colorize-remote-messages.sh)
+  > - [* dotfiles/j/config/auto.sh/git_aliases](https://github.com/joeytwiddle/dotfiles/blob/3081c5d034c6c11907b9b290d97f815848fceb68/j/config/auto.sh/git_aliases#L1430-L1432)
 
   ```bash
   $ echo $(git config --get-color "" "120 bold reverse") color test $(git config --get-color "" reset)
@@ -398,7 +412,15 @@ local    file:.git/config    marslo
   #  ╵       R   G   B
   #  ╰─ SGR (Select Graphic Rendition) parameters ( https://en.wikipedia.org/wiki/ANSI_escape_code ):
   #         0 reset/normal; 1 bold; 2 dim/faint; 3 italic; 4 underline; 5 blink; 7 reverse; 8 hidden
+
+  # [or](https://stackoverflow.com/a/18304605/2940319)
+  $ remote_branch_color="$(git config --get-color color.branch.remote white)"
+  $ echo "pushing to ${remote_branch_color} <branch name here> $(tput sgr0)"
+  $ echo "pushing to ${remote_branch_color} <branch name here> $(tput sgr0)" | command cat -A
+  pushing to ^[[2;3;38;5;213m <branch name here> ^[(B^[[m$
   ```
+
+  [![git config color test](../../screenshot/git/git-config-color-test.png)](../../screenshot/git/git-config-color-test.png)
 
 - [`trueHexPrint()`](https://stackoverflow.com/a/55073732/2940319)
   ```bash

@@ -285,6 +285,15 @@ $ git config --global https.sslVerify false                       # unable to ac
 $ git config --global http.sslVerify false                        # unable to access '...': Unknown SSL protocol error in connection to ...:443
 ```
 
+- or [`gitPorxy`](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/git-config.html#EXAMPLES)
+  ```bash
+  $ cat ~/.gitconfig
+  # Proxy settings
+  [core]
+          gitproxy=proxy-command for kernel.org
+          gitproxy=default-proxy ; for all the rest
+  ```
+
 - for specific url
   ```bash
   $ git config --global http.https://github.com http://proxy.domain.com:80
