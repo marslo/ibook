@@ -5,6 +5,8 @@
   - [vars](#vars)
   - [src](#src)
 - [asynchronous resource disposer](#asynchronous-resource-disposer)
+  - [get info](#get-info)
+  - [drop all resources](#drop-all-resources)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -52,6 +54,7 @@ import jenkins.model.Jenkins
 ```
 
 ## [asynchronous resource disposer](https://plugins.jenkins.io/resource-disposer)
+### get info
 ```groovy
 import org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer
 
@@ -91,4 +94,19 @@ disposer.getBacklog().each {
        getLastState : Unable to delete '/home/devops/workspace/marslo/testing_ws-cleanup_1650226067115'. Tried 3 times (of a maximum of 3) waiting 0.1 sec between attempts. (Discarded 32 additional exceptions)
        ...
   ```
+### [drop all resources](https://stackoverflow.com/a/78396789/2940319)
+```groovy
+import org.jenkinsci.plugins.resourcedisposer.AsyncResourceDisposer
+import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.Stapler
 
+AsyncResourceDisposer disposer = AsyncResourceDisposer.get()
+backlog = disposer.getBacklog()
+
+stap = Stapler
+resp = stap.getCurrentResponse()
+
+disposer.backlog.each { item ->
+  disposer.doStopTracking( item.id, resp )
+}
+```
