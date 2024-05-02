@@ -288,16 +288,54 @@
 > - [archived: contrib/completion/bash/docker](https://github.com/docker/docker-ce/blob/master/components/cli/contrib/completion/bash/docker)
 {% endhint %}
 
-- linux universal solution
+- `docker completion` : `_start_docker`
+
+  > [!NOTE|label:references:]
+  > - details: `docker completion <x> --help`. i.e.: `docker completion bash --help`
+  > - more info:
+  >  - [#3689 Docker completion missing in 4.9.1?](https://github.com/docker/cli/issues/3689)
+  >    ```bash
+  >    $ ls -1 /Applications/Docker.app/Contents/Resources/etc
+  >    docker-compose.bash-completion
+  >    docker-compose.fish-completion
+  >    docker-compose.zsh-completion
+  >    docker.bash-completion
+  >    docker.fish-completion
+  >    docker.zsh-completion
+  >    ```
+
   ```bash
+  # linux
+  $ docker completion bash > /etc/bash_completion.d/docker
+  $ complete -F _start_docker -o nosort -o bashdefault -o default docker
+
+  # osx
+  $ docker completion bash > /usr/local/etc/bash_completion.d/docker
+  # or
+  $ docker completion bash > $(brew --prefix)/etc/bash_completion.d/docker
+  $ complete -F _start_docker -o nosort -o bashdefault -o default docker
+  ```
+
+- universal solution : `_docker`
+  ```bash
+  # linux
+  $ curl -fsSL -o /etc/bash_completion.d/docker \
+               https://github.com/docker/cli/raw/master/contrib/completion/bash/docker
+  # osx
+  $ curl -fsSL -o $(brew --prefix)/etc/bash_completion.d/docker \
+               https://github.com/docker/cli/raw/master/contrib/completion/bash/docker
+  $ complete -F _docker -o nosort -o bashdefault -o default docker
+
+  # @deprecated
   $ curl -o /etc/bash_completion.d/docker \
          -fsSL https://github.com/docker/docker-ce/raw/master/components/cli/contrib/completion/bash/docker
+  $ complete -F _docker -o nosort -o bashdefault -o default docker
   ```
 
 - ubuntu
   ```bash
   # check completion file location
-  $ dpkg -L docker-ce-cli |grep completion
+  $ dpkg -L docker-ce-cli | grep completion
   /usr/share/bash-completion
   /usr/share/bash-completion/completions
   /usr/share/bash-completion/completions/docker
