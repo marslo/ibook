@@ -8,6 +8,8 @@
   - [others](#others)
 - [shortcut key](#shortcut-key)
   - [Open the quake mode window](#open-the-quake-mode-window)
+- [tricky](#tricky)
+  - [close the setting tab in quake](#close-the-setting-tab-in-quake)
 - [my settings](#my-settings)
   - [gruvbox-dark](#gruvbox-dark)
   - [global-wild togged hotkey](#global-wild-togged-hotkey)
@@ -313,6 +315,16 @@
   }
 }
 ```
+
+## tricky
+### close the setting tab in quake
+1. open another quake tab by shortcut,
+  1. <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>t</kbd>
+  1. <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> -> `new tab`
+2. open command plant via <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>
+3. select `close all other tabs`
+
+  ![wt-quake-close-setting-tab](../../screenshot/win/wt-quake-tabs.png)
 
 ## my settings
 ### gruvbox-dark
