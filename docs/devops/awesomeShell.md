@@ -2304,6 +2304,7 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 > - [Integralist/dotfiles/.tmux.conf](https://github.com/Integralist/dotfiles/blob/main/.tmux.conf)
 > - [maximum-awesome/tmux.conf](https://github.com/square/maximum-awesome/blob/master/tmux.conf)
 > - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
+> - [tpope/dotfiles/.tmux.conf](https://github.com/tpope/dotfiles/blob/master/.tmux.conf)
 
 ```bash
 # install

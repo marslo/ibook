@@ -836,6 +836,7 @@ $ export PATH=`echo -n $PATH | awk -v RS=":" '{ if (!x[$0]++) {printf s $0; s=":
 ## LS_COLORS
 
 > [!NOTE|label:references:]
+> - [tpope/dotfiles/.dir_colors](https://github.com/tpope/dotfiles/blob/master/.dir_colors)
 > - [benoit-pierre/ls_colors.py](https://gist.github.com/benoit-pierre/5cebb8bf5210b838ddc45f07da32943a)
 >
 > | pattern |     name     | comments          |
