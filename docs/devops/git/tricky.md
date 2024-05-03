@@ -596,6 +596,7 @@ $ git rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
 ### push to github with credential
 
 > [!NOTE]
+> - [7.14 Git Tools - Credential Storage](https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
 > - [`git config credential.helper store`](https://stackoverflow.com/a/65786142)
 > - [`git remote set-url`](https://stackoverflow.com/a/68783135)
 > - [credential.helper](https://stackoverflow.com/a/62184716)
@@ -608,6 +609,46 @@ $ git config credential.helper store
 # or
 git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 ```
+#### environment failed to `$ ssh -vT git@github.com -p 22`
+
+1. using https instead of ssh first
+   ```bash
+   $ cat ~/.gitconfig
+   [url "https://github.com/"]
+     insteadOf     = git@ssh.github.com:
+   [url "https://github.com/"]
+     insteadOf     = git@github.com:
+   ```
+
+2. setup credential
+   ```bash
+   $ git config --global credential.helper store
+
+   # or set the credential file in corss-platform
+   $ git config --global credential.helper 'store --file /path/to/.my-credentials'
+   $ git config --global credential.helper 'cache --timeout 30000'
+   ```
+
+3. create the credential file
+   ```bash
+   $ git credential-store --file /path/to/.my-credentials store
+   protocol=https ⏎
+   host=github.com ⏎
+   username=marslo ⏎
+   password=ghp_***********************************N ⏎
+   ⏎
+   ```
+
+   - to read the credentials file
+     ```bash
+     $ git credential-store --file /path/to/.my-credentials get
+     protocol=https ⏎
+     host=github.com ⏎
+     ⏎
+     # wil shows:
+     username=marslo
+     password=ghp_***********************************N
+     ```
 
 ### [How is git commit sha1 formed](https://gist.github.com/masak/2415865)
 
