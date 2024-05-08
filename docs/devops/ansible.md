@@ -36,6 +36,7 @@
 >   - [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)
 > - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
 > - [* Filters](https://docs.ansible.com/ansible/2.9/user_guide/playbooks_filters.html#filters)
+> - [用 Ansible 实现网络自动化](https://linux.cn/article-9964-1.html)
 
 ## environment
 

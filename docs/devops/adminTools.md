@@ -1,8 +1,22 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [utility](#utility)
+- [encryption](#encryption)
+  - [gpg](#gpg)
+    - [basic knowledge](#basic-knowledge)
+    - [create new key](#create-new-key)
+    - [list keys](#list-keys)
+    - [remove keys](#remove-keys)
+    - [export/import keys](#exportimport-keys)
+    - [usage](#usage)
   - [pass](#pass)
+    - [env](#env)
+    - [insert](#insert)
+    - [generate](#generate)
+    - [remove](#remove)
+    - [advanced usage](#advanced-usage)
+  - [PGP](#pgp)
+  - [passwd](#passwd)
 - [network tools](#network-tools)
   - [`vnstat`](#vnstat)
   - [`ipcalc`](#ipcalc)
@@ -14,6 +28,7 @@
   - [sar](#sar)
   - [netcat](#netcat)
   - [`ip`](#ip)
+- [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -41,16 +56,328 @@
 > - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
 {% endhint %}
 
+# encryption
+## gpg
 
-## utility
-### pass
+> [!NOTE|label:references:]
+> - [* The GNU Privacy Handbook](https://www.gnupg.org/gph/en/manual.html)
+> - [* The GNU Privacy Guard Manual](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration-Options.html)
+> - [GPG入门教程](https://www.ruanyifeng.com/blog/2013/07/gpg.html)
+> - [GPG(GnuPG)入门 ](https://www.cnblogs.com/time-is-life/p/9668999.html)
+> - [FlowCrypt: PGP Encryption for Gmail](https://flowcrypt.com/)
+
+### basic knowledge
+
+- [letters indicating](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration-Options.html)
+
+  > [!TIP|label:references:]
+  > - [简明 GPG 概念](https://zhuanlan.zhihu.com/p/137801979)
+  > - GPG 密钥的能力中， [C]、[S]、[A] 均属于签名方案，只有 [E] 是加密方案
+  > - [The GNU Privacy Guard Manual  : 4.2.1 How to change the configuration](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration-Options.html)
+  > - [OpenPGP Message Format : 5.2.3.21.  Key Flags](https://www.rfc-editor.org/rfc/rfc4880#section-5.2.3.21)
+  > - [How are the GPG usage flags defined in the key details listing?](https://unix.stackexchange.com/a/230859/29178)
+  > - [Anatomy of a GPG Key](https://davesteele.github.io/gpg/2014/09/20/anatomy-of-a-gpg-key/)
+
+
+  | LETTER | MEANING       | flag             | CONSTANT          | COMMENTS                                      |
+  |--------|---------------|------------------|-------------------|-----------------------------------------------|
+  | `[C]`  | Certification | `0x01`           | PUBKEY_USAGE_CERT | 认证其他秘钥/给其他证书签名                   |
+  | `[S]`  | Signing       | `0x02`           | PUBKEY_USAGE_SIG  | 签名,如给文件添加数字签名, 给 git commit 签名 |
+  | `[A]`  | Authenticate  | `0x20`           | PUBKEY_USAGE_AUTH | 身份验证, 如 ssh 登录                         |
+  | `[E]`  | Encryption    | `0x04` or `0x08` | PUBKEY_USAGE_ENC  | 加密, 如给文件加密, 给邮件加密                |
+
+
+### create new key
+
+> [!NOTE|label:references:]
+> - [Generating GPG Keys](https://www.files.com/docs/encryption/gpg-pgp/generating-gpg-keys)
+> - [How to create GPG keypairs](https://www.redhat.com/sysadmin/creating-gpg-keypairs)
+> - [Generating a new GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+
+```bash
+$ gpg --full-generate-key
+```
+
+- [or](https://superuser.com/a/1360557/112396)
+  ```bash
+  $ gpg --batch --gen-key <<EOF
+  %no-protection
+  Key-Type:1
+  Key-Length:2048
+  Subkey-Type:1
+  Subkey-Length:2048
+  Name-Real: <John Doe>
+  Name-Email: <john.doe@domain.com>
+  Expire-Date:0
+  EOF
+  ```
+
+### list keys
+- secret keys
+  ```bash
+  $ gpg --list-secret-keys --keyid-format=long
+  gpg: checking the trustdb
+  gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+  gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+  [keyboxd]
+  ---------
+  sec   ed25519/505104FC7CD6CA33 2024-05-08 [SC]
+        00D2F41050BF7D9BE6B27545505104FC7CD6CA33
+  uid                 [ultimate] marslo <marslo.jiao@gmail.com>
+  ssb   cv25519/188C36434D6B9F66 2024-05-08 [E]
+  ```
+
+- public keys
+  ```bash
+  $ gpg --list-public-keys --keyid-format=long
+  [keyboxd]
+  ---------
+  pub   ed25519/5C0980808D968494 2024-05-08 [SC]
+        6AADCD68E268DEF623C4DD7E5C0980808D968494
+  uid                 [ultimate] marslo <marslo.jiao@gmail.com>
+  sub   cv25519/F065036D0FF76ABA 2024-05-08 [E]
+  ```
+
+- list KEYID
+  ```bash
+  $ gpg --list-keys --with-colons |
+        awk -F: '$1 == "pub" && ($2 == "e" || $2 == "r" || $2 == "u") { print $5 }'
+  ```
+
+- with fingerprint
+  ```bash
+  $ gpg --list-secret-keys --with-colons --fingerprint
+  sec:u:255:22:5C0980808D968494:1715138996:::u:::scESC:::+::ed25519:::0:
+  fpr:::::::::6AADCD68E268DEF623C4DD7E5C0980808D968494:
+  grp:::::::::DA2F273B9FCDBCE44E8F5B1590CC29F774C557A5:
+  uid:u::::1715138996::689D1C164C7C46F315D0FF60C5CDE6E509C6D853::marslo <marslo.jiao@gmail.com>::::::::::0:
+  ssb:u:255:18:F065036D0FF76ABA:1715138996::::::e:::+::cv25519::
+  fpr:::::::::B6550514914F4E14976755BBF065036D0FF76ABA:
+  grp:::::::::C55CD6EE8B06EC939090352069AB9D37CFA0C7FA:
+
+  # list fingerprint only
+  $ gpg --list-keys --with-colons | awk -F: '$1 == "fpr" { print $10 }'
+  6AADCD68E268DEF623C4DD7E5C0980808D968494
+  B6550514914F4E14976755BBF065036D0FF76ABA
+
+  # or
+  $ gpg --list-secret-keys --with-colons --fingerprint | sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p'
+  6AADCD68E268DEF623C4DD7E5C0980808D968494
+  B6550514914F4E14976755BBF065036D0FF76ABA
+  ```
+
+### remove keys
+- remove all keys
+  ```bash
+  $ gpg --yes --delete-secret-and-public-key "marslo"
+  gpg (GnuPG) 2.4.5; Copyright (C) 2024 g10 Code GmbH
+  This is free software: you are free to change and redistribute it.
+  There is NO WARRANTY, to the extent permitted by law.
+
+  sec  ed25519/133597088DEF3074 2024-05-08 marslo (marslo) <marslo.jiao@gmail.com>
+
+  Delete this key from the keyring? (y/N) y
+  This is a secret key! - really delete? (y/N) y
+
+  pub  ed25519/133597088DEF3074 2024-05-08 marslo (marslo) <marslo.jiao@gmail.com>
+  Delete this key from the keyring? (y/N) y
+  ```
+
+- [or via `--batch`](https://superuser.com/a/1631427/112396)
+  ```bash
+  $ gpg --list-keys --with-colons \
+      | awk -F: '$1 == "pub" && ($2 == "e" || $2 == "r" || $2 == "u") { print $5 }' \
+      | xargs gpg --batch --yes --delete-secret-and-public-key
+  ```
+
+- [or via fingerprint](https://superuser.com/a/1192732/112396)
+  ```bash
+  $ gpg --fingerprint --with-colons ${GPG_KEY} |\
+        grep "^fpr" |\
+        sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p' |\
+        xargs gpg --batch --delete-secret-keys
+  ```
+
+### export/import keys
+#### export
+- export public key
+  ```bash
+  $ gpg --armor --export <KEYID>
+
+  # i.e.:
+  $ gpg --armor --export marslo
+  -----BEGIN PGP PUBLIC KEY BLOCK-----
+  ...
+  -----END PGP PUBLIC KEY BLOCK-----
+  ```
+
+- export secret key
+  ```bash
+  $ gpg --armor --export-secret-keys <KEYID>
+
+  # i.e.:
+  $ gpg --armor --export-secret-keys marslo
+  -----BEGIN PGP PRIVATE KEY BLOCK-----
+  ...
+  -----END PGP PRIVATE KEY BLOCK-----
+  ```
+
+#### import
+
+> [!NOTE|label:references:]
+> - [How to import secret keys into GPG keychain](https://unix.stackexchange.com/a/230859/29178)
+> - [pass and gpg: No public key](https://unix.stackexchange.com/a/232341/29178)
+
+```bash
+# export
+$ gpg --export-secret-keys > keyfile
+
+# import
+$ gpg --import keyfile
+
+# verify available
+$ gpg --edit-key <KEYID>
+
+# trust
+$ gpg --edit-key <KEYID>
+gpg> trust
+gpg> save
+gpg> quit
+```
+
+### usage
+
+> [!NOTE|label:references:]
+> - [GPG使用方法总结（密钥管理，加解密文件）](https://blog.csdn.net/vic_qxz/article/details/127225478)
+
+## pass
 
 > [!NOTE]
 > - [pass: the standard unix password manager](https://www.passwordstore.org/)
+> - [git repo: password-store](https://git.zx2c4.com/password-store/)
 > - [video: How to Use Pass Which Is a Command Line Password Manager](https://www.youtube.com/watch?v=w34xAnNdliE)
 > - [How to Use Pass Which Is a Command Line Password Manager](https://nickjanetakis.com/blog/how-to-use-pass-which-is-a-command-line-password-manager)
 > - [archlinux: pass](https://wiki.archlinux.org/title/Pass)
 > - [compatible clients](https://www.passwordstore.org/#other)
+> - [Clever uses of pass, the Unix password manager](https://vitalyparnas.com/guides/pass/#generate)
+> - [Configuring Pass, the Standard Unix Password Manager](https://ryan.himmelwright.net/post/setting-up-pass/)
+
+### env
+
+> [!NOTE|label:references:]
+> - [completion](https://git.zx2c4.com/password-store/tree/src/completion)
+
+```bash
+$ export PASSWORD_STORE_DIR=~/.password-store
+```
+
+- install
+  ```bash
+  # osx
+  $ brew install pass
+
+  # ubuntu/debian
+  $ sudo apt-get install pass
+
+  # fedora/rhel
+  $ sudo yum install pass
+  ```
+
+- init
+
+  > [!TIP|label:references:]
+  > - [How to manage Linux passwords with the pass command](https://www.redhat.com/sysadmin/management-password-store)
+  > - [I try to add passwords to the "pass" password manager. But my attempts fail with "no public key" GPG errors. Why?]()
+  > - to avoid the issue like:
+  >   ```bash
+  >   $ pass generate test 30
+  >   gpg: marslo: skipped: No public key
+  >   gpg: [stdin]: encryption failed: No public key
+  >   Password encryption aborted.
+  >   ```
+
+  ```bash
+  $ gpg --full-generate-key
+  ```
+
+### insert
+```bash
+$ pass insert <NAME>
+
+# i.e.:
+$ pass insert test
+Enter password for test: abc
+Retype password for test: abc
+$ pass test
+abc
+
+# copy
+$ pass -c test
+Copied test to clipboard. Will clear in 45 seconds.
+```
+
+![pass insert](../screenshot/linux/cmd-pass-insert.gif)
+
+
+### generate
+
+> [!NOTE|label:references:]
+> - [PASSWORD_STORE_CHARACTER_SET_NO_SYMBOLS isn't respected](https://lists.zx2c4.com/pipermail/password-store/2018-January/003170.html)
+> - [[pass] Provide symbol set as command line argument](https://lists.zx2c4.com/pipermail/password-store/2016-November/002429.html)
+> - [How to generate secure passwords using terminal (Mac/Linux) ?](https://mnzel.medium.com/how-to-generate-secure-passwords-using-terminal-mac-linux-3e823cff3cac#:~:text=Simply%2C%20type%20in%20pwgen%20on,generate%20a%20list%20of%20passwords.&text=The%20above%20command%20will%20generate%204%20secured%20passwords%20with%2010,at%20least%201%20special%20character.)
+> - [default and envs](https://git.zx2c4.com/password-store/tree/src/password-store.sh)
+>   - `PASSWORD_STORE_DIR=$HOME/.password-store`
+>   - `PASSWORD_STORE_EXTENSIONS_DIR=${PASSWORD_STORE_DIR}/.extensions`
+>   - `PASSWORD_STORE_CLIP_TIME=45`
+>   - `PASSWORD_STORE_GENERATED_LENGTH=25`
+>   - others:
+>     - `PASSWORD_STORE_CHARACTER_SET='[:alnum:].,!?&*%_~$#^@{}[]()<>|=/\+-'`
+
+- customize charset
+  ```bash
+  $ export PASSWORD_STORE_CHARACTER_SET='a-zA-Z0-9'
+  $ yes | pass generate test 30
+  The generated password for test is:
+  HnD7XyeFDtOrw5oDhn22U8AjHVV9cf
+  $ yes | pass generate test 30
+  The generated password for test is:
+  t57PYCw4r0tHSXCa4zW2DVGNuizQ1k
+
+  $ export PASSWORD_STORE_CHARACTER_SET='a-zA-Z0-9()'
+  $ yes | pass generate test 50
+  The generated password for test is:
+  wof1Hw92QXe(G3)MkMRp5Wx3UCMgHIpt)7ENNn(f8r(ZRcztQ1
+  $ yes | pass generate test 30
+  The generated password for test is:
+  60m2XHtqfTsvfJT(YYV1wKlBBoOJYb
+  ```
+
+- generate qrcode
+  ```bash
+  $ pass generate <name> --qrcode
+  ```
+
+- [generate via `/dev/urandom`](https://lists.zx2c4.com/pipermail/password-store/2016-November/002429.html)
+  ```bash
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()' | head -c 32 && echo
+  xGPqC%MeE2HU3NkH#JeA##RB^YbX49cd
+
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()' | head -c 32 && echo
+  6yeV1yy%3h4V!KHLf5e0vNAIl5oD#s!W
+
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32 && echo
+  +&7<o(zfE[WC30v'D[&RH~;qM-8J>oQC
+  ```
+
+### remove
+```bash
+$ pass rm test -f
+removed '/Users/marslo/.marslo/.password-store/test.gpg'
+```
+
+### advanced usage
+
+> [!NOTE|label:references:]
 > - extensions
 >   - [roddhjav/pass-tomb](https://github.com/roddhjav/pass-tomb)
 >   - [tadfisher/pass-otp)](https://github.com/tadfisher/pass-otp)
@@ -60,88 +387,82 @@
 >   - [ayushnix/pass-coffin](https://github.com/ayushnix/pass-coffin)
 >   - [ayushnix/pass-tessen](https://github.com/ayushnix/pass-tessen)
 
-- env
+- pw
   ```bash
-  $ export PASSWORD_STORE_DIR=~/.password-store
+  pw() {
+    export PASSWORD_STORE_CLIP_TIME=8
+    export PASSWORD_STORE_X_SELECTION=primary
+    pass -c2 $1; sleep 5; pass -c $1; sleep 5; pass otp -c $1; exit
+  }
   ```
 
-- insert
+- extend
+
   ```bash
-  $ pass insert <NAME>
+  # ~/.bashrc
+  $ alias passred="PASSWORD_STORE_DIR=~/.pass/red pass"
+  $ alias passblue="PASSWORD_STORE_DIR=~/.pass/blue pass"
 
-  # i.e.:
-  $ pass insert test
-  Enter password for test: abc
-  Retype password for test: abc
-  $ pass test
-  abc
-
-  # copy
-  $ pass -c test
-  Copied test to clipboard. Will clear in 45 seconds.
+  $ cat /usr/share/bash-completion/completions/pass
+  _passred(){
+      PASSWORD_STORE_DIR=~/.pass/red/ _pass
+  }
+  complete -o filenames -o nospace -F _passred passred
+  _passblue(){
+      PASSWORD_STORE_DIR=~/.pass/blue/ _pass
+  }
+  complete -o filenames -o nospace -F _passblue passblue
+  $ source /usr/share/bash-completion/completions/pass
   ```
 
-  ![pass insert](../screenshot/linux/cmd-pass-insert.gif)
+- git
+  ```bash
+  $ git config --global credential.helper /usr/bin/pass-git-helper
 
-- advanced usage
-  - pw
+  $ cat ~/.gitconfig
+  [github.com]
+  target=dev/github
+
+  [*.fooo-bar.*]
+  target=dev/fooo-bar
+  ```
+
+  - client
     ```bash
-    pw() {
-      export PASSWORD_STORE_CLIP_TIME=8
-      export PASSWORD_STORE_X_SELECTION=primary
-      pass -c2 $1; sleep 5; pass -c $1; sleep 5; pass otp -c $1; exit
-    }
+    # create local password store
+    $ pass init <gpg key id>
+    # enable management of local changes through git
+    $ pass git init
+    # add the the remote git repository as 'origin'
+    $ pass git remote add origin user@server:~/.password-store
+    # push your local pass history
+    $ pass git push -u --all
     ```
 
-  - extend
+## PGP
 
-    ```bash
-    # ~/.bashrc
-    $ alias passred="PASSWORD_STORE_DIR=~/.pass/red pass"
-    $ alias passblue="PASSWORD_STORE_DIR=~/.pass/blue pass"
+> [!NOTE|label:references:]
+> - Protecting Code Integrity with PGP
+>   - [Protecting Code Integrity with PGP — Part 1: Basic Concepts and Tools](https://www.linux.com/news/protecting-code-integrity-pgp-part-1-basic-pgp-concepts-and-tools/) | [用 PGP 保护代码完整性（一）： 基本概念和工具](https://linux.cn/article-9524-1.html)
+>   - [Protecting Code Integrity with PGP — Part 2: Generating Your Master Key](https://www.linux.com/news/protecting-code-integrity-pgp-part-2-generating-and-protecting-your-master-pgp-key/) | [用 PGP 保护代码完整性（二）：生成你的主密钥](https://linux.cn/article-9529-1.html)
+>   - [Protecting Code Integrity with PGP — Part 3: Generating PGP Subkeys](https://www.linux.com/news/protecting-code-integrity-pgp-part-3-generating-pgp-subkeys/) | [用 PGP 保护代码完整性（三）：生成 PGP 子密钥](https://linux.cn/article-9607-1.html)
+>   - [Protecting Code Integrity with PGP — Part 4: Moving Your Master Key to Offline Storage](https://www.linux.com/news/protecting-code-integrity-pgp-part-4-moving-your-master-key-offline-storage/) | [用 PGP 保护代码完整性（四）：将主密钥移到离线存储中](https://linux.cn/article-10402-1.html)
+>   - [Protecting Code Integrity with PGP — Part 5: Moving Subkeys to a Hardware Device](https://www.linux.com/training-tutorials/protecting-code-integrity-pgp-part-5-moving-subkeys-hardware-device) | [用 PGP 保护代码完整性（五）：将子密钥移到一个硬件设备中](https://linux.cn/article-10415-1.html)
+>   - [Protecting Code Integrity with PGP — Part 6: Using PGP with Git](https://www.linux.com/news/protecting-code-integrity-pgp-part-6-using-pgp-git/) | [用 PGP 保护代码完整性（六）：在 Git 上使用 PGP](https://linux.cn/article-10421-1.html)
+>   - [Protecting Code Integrity with PGP — Part 7: Protecting Online Accounts](https://www.linux.com/news/protecting-code-integrity-pgp-part-7-protecting-online-accounts/) | [用 PGP 保护代码完整性（七）：保护在线帐户](https://linux.cn/article-10432-1.html)
 
-    $ cat /usr/share/bash-completion/completions/pass
-    _passred(){
-        PASSWORD_STORE_DIR=~/.pass/red/ _pass
-    }
-    complete -o filenames -o nospace -F _passred passred
-    _passblue(){
-        PASSWORD_STORE_DIR=~/.pass/blue/ _pass
-    }
-    complete -o filenames -o nospace -F _passblue passblue
-    $ source /usr/share/bash-completion/completions/pass
-    ```
 
-  - git
-    ```bash
-    $ git config --global credential.helper /usr/bin/pass-git-helper
+## passwd
 
-    $ cat ~/.gitconfig
-    [github.com]
-    target=dev/github
+> [!NOTE|label:references:]
+> - [Managing Linux users with the passwd command](https://www.redhat.com/sysadmin/managing-users-passwd)
 
-    [*.fooo-bar.*]
-    target=dev/fooo-bar
-    ```
-
-    - client
-      ```bash
-      # create local password store
-      $ pass init <gpg key id>
-      # enable management of local changes through git
-      $ pass git init
-      # add the the remote git repository as 'origin'
-      $ pass git remote add origin user@server:~/.password-store
-      # push your local pass history
-      $ pass git push -u --all
-      ```
-
-## network tools
+# network tools
 
 > [!NOTE|label:see also:]
 > - [iMarslo : linux/network](../linux/network.html)
 
-### `vnstat`
+## `vnstat`
 
 ![vnstat](../screenshot/linux/vnstat.png)
 
@@ -169,7 +490,7 @@ Monitoring en7...    (press CTRL-C to stop)
   time                    10 seconds
 ```
 
-### `ipcalc`
+## `ipcalc`
 
 ![ipcalc](../screenshot/linux/ipcalc.png)
 
@@ -197,7 +518,7 @@ Broadcast: 10.25.131.255        00001010.00011001.1000001 1.11111111
 Hosts/Net: 510                   Class A, Private Internet
 ```
 
-### `iostat`
+## `iostat`
 ```bash
 $ iostat
               disk0       cpu    load average
@@ -205,7 +526,7 @@ $ iostat
    19.85   37  0.72   3  1 96  1.78 1.90 1.69
 ```
 
-### `tcpdump`
+## `tcpdump`
 
 > [!NOTE|label:references:]
 > - [* Tcpdump](https://www.kancloud.cn/pshizhsysu/linux/1799754)
@@ -241,11 +562,11 @@ E..GP....._.
       10.25.130.104.63447 > 10.69.78.140.29418: Flags [F.], cksum 0x8fe0 (correct), seq 2566890566, ack 4019765769, win 2058, options [nop,nop,TS val 1955309758 ecr 154499413], length 0
   ```
 
-### `dstat`
+## `dstat`
 
 ![dstat](../screenshot/linux/dstat.png)
 
-### strace
+## strace
 
 > [!NOTE|label:references:]
 > - [I have a tab completion that hangs, is it possible to use strace to find out what is going on?](https://unix.stackexchange.com/a/525582/29178)
@@ -338,7 +659,7 @@ $ sudo strace -fp $$ -o log &
   }
   ```
 
-### [`dtruss`](https://stackoverflow.com/a/31045613/2940319)
+## [`dtruss`](https://stackoverflow.com/a/31045613/2940319)
 
 > [!TIP]
 > - the MacOS alternatives `strace`
@@ -643,9 +964,9 @@ close_nocancel(0x2)    = 0 0
     # csrutil enable --without dtrace --without debug
     ```
 
-### sar
+## sar
 
-### netcat
+## netcat
 
 > [!NOTE]
 > references:
@@ -731,7 +1052,7 @@ close_nocancel(0x2)    = 0 0
 - [reverse proxy with netcat](https://www.baeldung.com/linux/netcat-command#reverse-proxy-with-netcat)
 
 
-### `ip`
+## `ip`
 ```bash
 $ ip addr show | sed -nE "s/inet\s(.*)\/[0-9]+.*\s(\w+)/\2 \1/p"
   lo0 127.0.0.1
@@ -742,3 +1063,11 @@ $ ip addr show | sed -nE "s/inet\s(.*)\/[0-9]+.*\s(\w+)/\2 \1/p" | column -to ' 
 lo0 => 127.0.0.1
 en0 => 192.168.1.71
 ```
+
+# others
+
+> [!NOTE|label:references:]
+> - [完全指南：在 Linux 中如何打印和管理打印机](https://linux.cn/article-9538-1.html)
+> - [440+ 个免费的编程 & 计算机科学的在线课程](https://linux.cn/article-9443-1.html)
+> - [在 Linux 上用 DNS 实现简单的负载均衡](https://linux.cn/article-9777-1.html)
+> - [Python 字节码介绍](https://linux.cn/article-9816-1.html)
