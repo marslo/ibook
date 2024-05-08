@@ -831,32 +831,75 @@ params.each { param ->
     ```
 
 ### get wanted parameter values in builds
+
+> [!TIPS]
+> - [Create a map in groovy having two collections - with keys and values](https://stackoverflow.com/a/49115344/2940319)
+
 ```groovy
+/**
+ * to show all build parameters when the wanted params are found with nice format
+**/
 final String PARAM = 'id'
-Map params = [:]
+Map params         = [:]
+Integer padding
 
 def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
-job.getBuilds().each { Run build ->
-  params."${build.getId()}" = build?.getActions(ParametersAction.class)?.parameters?.collectEntries {
-                                [ it.name , it.value ]
-                              }
+job.getBuilds().each { Run run ->
+   params."${run.getId()}" = run?.getActions(ParametersAction.class)?.parameters?.collectEntries {
+                               [ it.name , it.value ].transpose().collectEntries()
+                             }
 }
+params  = params.findAll { it.value.get(PARAM) }
 
-println params.collect { k , v ->
-  "build #${k} ~~> ${v ? "${PARAM} : ${v.getOrDefault(PARAM, "No '${PARAM}' found")}" : 'No Params Found'}"
-}.join('\n')
+padding = params.values().collect { it.keySet() }.flatten().unique().collect { it.size() }.max()
+params.collect {
+         "\nbuild #${it.key}:\n" + it.value.collect { b -> "- ${b.key.padRight(padding + 1)}: ${b.value}" }.join('\n')
+       }.join('\n')
 ```
 
-- result:
+- result
   ```
-  build #7 ~~> id : marslo
-  build #6 ~~> id : marslo
-  build #5 ~~> id : marslo
-  build #4 ~~> id : marslo
-  build #3 ~~> id : No 'id' found
-  build #2 ~~> id : No 'id' found
-  build #1 ~~> No Params Found
+  build #7
+  - id     : marslo
+  - gender : female
+  build #6
+  - id     : marslo
+  - gender : female
+  build #5
+  - id     : marslo
+  - gender : female
+  build #4
+  - id     : marslo
+  - gender : female
   ```
+
+- or simple version
+  ```groovy
+  final String PARAM = 'id'
+  Map params = [:]
+
+  def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+  job.getBuilds().each { Run build ->
+    params."${build.getId()}" = build?.getActions(ParametersAction.class)?.parameters?.collectEntries {
+                                  [ it.name , it.value ]
+                                }
+  }
+
+  println params.collect { k , v ->
+    "build #${k} ~~> ${v ? "${PARAM} : ${v.getOrDefault(PARAM, "No '${PARAM}' found")}" : 'No Params Found'}"
+  }.join('\n')
+  ```
+
+  - result:
+    ```
+    build #7 ~~> id : marslo
+    build #6 ~~> id : marslo
+    build #5 ~~> id : marslo
+    build #4 ~~> id : marslo
+    build #3 ~~> id : No 'id' found
+    build #2 ~~> id : No 'id' found
+    build #1 ~~> No Params Found
+    ```
 
 ### get only `String` type parameters
 ```groovy

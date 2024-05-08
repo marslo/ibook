@@ -1097,6 +1097,7 @@ $ sudo bash -c "/usr/bin/sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc
 > references:
 > - [SELinux笔记](https://my.oschina.net/u/589241/blog/2050011)
 > - [SELinux/Users and logins](https://wiki.gentoo.org/wiki/SELinux/Users_and_logins)
+> - [系统管理员的 SELinux 指南：这个大问题的 42 个答案](https://linux.cn/article-9906-1.html)
 {% endhint %}
 
 - installation
