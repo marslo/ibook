@@ -7,6 +7,9 @@
 - [color picker](#color-picker)
   - [iterm2-tab-set](#iterm2-tab-set)
   - [terminal-colors](#terminal-colors)
+- [Adobe Acrobat Font Packages](#adobe-acrobat-font-packages)
+  - [32-bits](#32-bits)
+  - [64-bits](#64-bits)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -113,3 +116,28 @@ bingo!
   ```
 
   ![terminal-colors](../../screenshot/osx/terminal-color.png)
+
+## Adobe Acrobat Font Packages
+
+> [!NOTE|label:references:]
+> - [Reader | 64-bit Font Pack and Spelling Dictionary](https://helpx.adobe.com/acrobat/kb/font-pack-spelling-dictionary-64-bit-windows.html)
+> - [32-bit Font Pack and Spelling Dictionary Pack for Acrobat Reader on Windows](https://helpx.adobe.com/acrobat/kb/windows-font-packs-32-bit-reader.html)
+
+### 32-bits
+- font pack
+  - [2023.x: FontPack2300820421_XtdAlf_Lang_DC.msi](https://ardownload3.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/FontPack2300820421_XtdAlf_Lang_DC.msi)
+  - [2022.x: FontPack2200120085_XtdAlf_Lang_DC.msi](https://ardownload3.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/FontPack2200120085_XtdAlf_Lang_DC.msi)
+  - [2021.x: FontPack2100120135_XtdAlf_Lang_DC.msi](https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/FontPack2100120135_XtdAlf_Lang_DC.msi)
+  - [2020.x, 2019.x: FontPack1902120058_XtdAlf_Lang_DC.msi](https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/FontPack1902120058_XtdAlf_Lang_DC.msi)
+  - [2018.x, 2017.x and 2015.x: FontPack1500720033_XtdAlf_Lang_DC.msi](https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/FontPack1500720033_XtdAlf_Lang_DC.msi)
+- spelling dictionary pack
+  - [2023.x: AcroRdrSD2300820421_all_DC.msi](https://ardownload3.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/AcroRdrSD2300820421_all_DC.msi)
+  - [2022.x: AcroRdrSD2200120085_all_DC.msi](https://ardownload3.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/AcroRdrSD2200120085_all_DC.msi)
+  - [21.x, 20.x and 19.x: AcroRdrSD1900820071_all_DC.msi](https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/AcroRdrSD1900820071_all_DC.msi)
+  - [15.x, 17.x and 18.x: AcroRdrSD1500720033_all_DC.msi](https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/misc/AcroRdrSD1500720033_all_DC.msi)
+
+### 64-bits
+- font pack and spelling dictionary
+  - [2023.x: AcroRdrALSDx64_2300820421_all_DC.msi](https://ardownload3.adobe.com/pub/adobe/acrobat/win/AcrobatDC/2300820421/AcroRdrALSDx64_2300820421_all_DC.msi)
+  - [2022.x: AcroRdrALSDx64_2200120085_all_DC.msi](https://ardownload3.adobe.com/pub/adobe/acrobat/win/AcrobatDC/2200120085/AcroRdrALSDx64_2200120085_all_DC.msi)
+  - [2021.x: AcroRdrALSDx64_2100120135_all_DC.msi](https://ardownload2.adobe.com/pub/adobe/acrobat/win/AcrobatDC/2100120135/AcroRdrALSDx64_2100120135_all_DC.msi)
