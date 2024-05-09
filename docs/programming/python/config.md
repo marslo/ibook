@@ -19,6 +19,10 @@
 - [python IDLE in MacOS Big Sur](#python-idle-in-macos-big-sur)
   - [`IDLE quit unexpectedly`](#idle-quit-unexpectedly)
   - [Python may not be configured for Tk](#python-may-not-be-configured-for-tk)
+- [venv](#venv)
+  - [PS1](#ps1)
+  - [init and setup](#init-and-setup)
+  - [install packages](#install-packages)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -611,3 +615,114 @@ ModuleNotFoundError: No module named '_tkinter'
   $ brew reinstall python@3.10
   ... ...
   ```
+
+## venv
+
+> [!NOTE|label:references:]
+> - [12. Virtual Environments and Packages](https://docs.python.org/3/tutorial/venv.html) | [zh-cn](https://docs.python.org/zh-cn/3/tutorial/venv.html)
+
+### PS1
+
+> [!NOTE|label:references:]
+> - [How do I change the default virtualenv prompt?](https://stackoverflow.com/a/20026992/2940319)
+> - [Python venv module cannot add virtual environment name to PS1, when using PROMPT_COMMAND?](https://stackoverflow.com/a/61682159/2940319)
+
+```bash
+$ export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+$ function _venv_info() {
+    local printf_format=' [%s]'
+    local venv=''
+    [[ $# -eq 1 ]] && printf_format="$1"
+    [[ -n "${VIRTUAL_ENV}" ]] && venv="${VIRTUAL_ENV##*/}"
+    if [[ -n "${venv}" ]]; then
+      # shellcheck disable=SC2059
+      printf -- "${printf_format}" "${venv}"
+    fi
+  }
+# usage
+$ _venv_info "--%s--"
+--rmk--
+$ _venv_info "(\033[38;5;6;3m%s\033[0m)"
+(rmk)
+```
+
+[![pyvenv ps1](../../screenshot/python/pyvenv-ps1.png)](../../screenshot/python/pyvenv-ps1.png)
+
+- or using `PROMPT_COMMAND`
+  ```bash
+  $ cat ~/.bashrc
+  # for venv info
+  function _venv_info() {
+    local printf_format=' [%s]'
+    local venv=''
+    [[ $# -eq 1 ]] && printf_format="$1"
+    [[ -n "${VIRTUAL_ENV}" ]] && venv="${VIRTUAL_ENV##*/}"
+    if [[ -n "${venv}" ]]; then
+      # shellcheck disable=SC2059
+      printf -- "${printf_format}" "${venv}"
+    fi
+  }
+
+  export VIRTUAL_ENV_DISABLE_PROMPT=1
+  COL_SD_PURPLE='\[\033[38;5;98;3m\]'
+  COL_SD_GREEN='\[\033[32;2m\]'
+  COL_NONE='\[\033[0m\]'
+  COL_DEFAULT="\[\033[38;5;240m\]"
+  COL_RESET='\[\033[1m\]'
+
+  PS1="\\n${COL_RESET}${COL_DEFAULT}(\\u@\\h${COL_RESET} \\w${COL_RESET}${COL_DEFAULT}) "
+  PS1+="\$(__git_ps1 \"- (${COL_SD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
+  PS1+="\$(_venv_info \"- (${COL_SD_PURPLE}%s${COL_NONE}${COL_DEFAULT}) \")"
+  PS1+="\\$ ${COL_NONE}"
+  export PS1
+  ```
+
+  [![full ps1 with pyenv and `__git_ps1`](../../screenshot/python/pyenv-full-ps1.png)](../../screenshot/python/pyenv-full-ps1.png)
+
+
+### init and setup
+
+> [!NOTE|label:references:]
+> - [python3.11: venv — Creation of virtual environments](https://docs.python.org/3.11/library/venv.html) | [python3.11: venv --- 创建虚拟环境](https://docs.python.org/zh-cn/3.11/library/venv.html)
+>
+> | PLATFORM | SHELL      | HOW TO ACTIVATE                   |
+> |----------|------------|-----------------------------------|
+> | posix    | bash/zsh   | `source <venv>/bin/activate`      |
+> | posix    | fish       | `source <venv>/bin/activate.fish` |
+> | posix    | csh/tcsh   | `source <venv>/bin/activate.csh`  |
+> | posix    | PowerShell | `<venv>/Scripts/Activate.ps1`     |
+> | Windows  | cmd.exe    | `<venv>\Scripts\activate.bat`     |
+> | Windows  | PowerShell | `<venv>\Scripts\Activate.ps1`     |
+>
+> - [vscode python venv - activate.ps1 is used instead of activate.bat](https://stackoverflow.com/a/76809701/2940319) | [Make venv default terminal for Project in VSCode](https://stackoverflow.com/q/78005138/2940319)
+
+```bash
+# init
+$ python3 -m venv ~/.venv/rmk
+
+# enable
+$ source ~/.venv/rmk/bin/activate
+
+# disable
+$ deactivate
+```
+
+- [tips for `g:python3_host_prog` in nvim](https://vi.stackexchange.com/q/44770/7389)
+  ```vim
+  let g:python3_host_prog = expand( substitute(system('command -v python3'), '\n\+$', '', '') )
+  ```
+
+- [check status](https://blog.csdn.net/Long_xu/article/details/135117395)
+  ```bash
+  $ pip config -v list
+  For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
+  For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
+  For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
+  For variant 'site', will try loading '/Users/marslo/.venv/rmk/pip.conf'
+  ```
+
+### install packages
+
+> [!NOTE|label:references:]
+> - [Install packages in a virtual environment using pip and venv](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/)
