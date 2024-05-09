@@ -10,6 +10,9 @@
   - [`index-url` & `extra-index-url`](#index-url--extra-index-url)
   - [list pip package with url](#list-pip-package-with-url)
   - [installing from local packages](#installing-from-local-packages)
+- [remove](#remove)
+  - [remove package and dependencies](#remove-package-and-dependencies)
+- [download](#download)
 - [config](#config)
   - [list all configs](#list-all-configs)
 - [tricky](#tricky)
@@ -203,6 +206,66 @@ xattr:              http://github.com/xattr/xattr
   # --no-index && --find-links
   $ py -m pip install --no-index --find-links=DIR -r requirements.txt
   ```
+
+## remove
+
+### [remove package and dependencies](https://stackoverflow.com/a/27713702/2940319)
+```bash
+$ pip install pip-autoremove
+# or
+$ python3 -m pip install pip-autoremove
+
+# remove package and dependencies
+$ pip-autoremove <package-name> -y
+```
+
+- [another solution](https://stackoverflow.com/a/78038667/2940319)
+  ```python
+  # pip-uninstall-with-dependencies.py
+
+  #
+  # usage: python pip-uninstall-with-dependencies.py pkg1 [pkg2 ...]
+  #
+
+  from sys import argv
+  from pip._internal.commands.show import search_packages_info
+  from pip._internal.cli.main import main
+  from typing import List, Dict
+
+  if len(argv) < 2:
+      print(f"Usage: {argv[0]} pkg1 [pkg2 ...]")
+      exit(1)
+
+  def get_dependency_tree(packages: List[str], candidates: Dict[str, List[str]] = dict()) -> Dict[str, List[str]]:
+      for package in packages:
+          if not candidates.get(package):
+              pkg_info = next(search_packages_info([package]))
+              candidates[package] = pkg_info.required_by
+              for package in pkg_info.requires:
+                  get_dependency_tree([package])
+
+      return candidates
+
+  candidates = get_dependency_tree(argv[1:])
+
+  # eliminate required
+  for package in list(candidates):
+      diff = set(candidates[package]).difference(list(candidates))
+      if diff:
+          print(f"Package {package} cannot be removed, it is required by {diff}")
+          del candidates[package]
+
+  print("Uninstalling packages and dependencies:", *candidates)
+  for package in candidates:
+      main(['uninstall', '-y', package])
+  ```
+
+## download
+
+> [!NOTE|label:references:]
+> - [Is there a way to list pip dependencies/requirements?](https://stackoverflow.com/a/38531949/2940319)
+> - [使用pip下载非Python包资源](https://blog.csdn.net/Long_xu/article/details/135117395)
+> - [pip下载python依赖包](https://zhuanlan.zhihu.com/p/674000491)
 
 ## config
 ### list all configs
