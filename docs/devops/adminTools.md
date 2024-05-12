@@ -199,27 +199,64 @@ $ gpg --full-generate-key
   ```
 
 ### export/import keys
+
+> [!NOTE|label:references:]
+> - [How to export a GPG private key and public key to a file](https://unix.stackexchange.com/a/482559/29178)
+> - [Moving GPG Keys Privately](https://vhs.codeberg.page/post/moving-gpg-keys-privately/)
+
 #### export
 - export public key
   ```bash
-  $ gpg --armor --export <KEYID>
-
-  # i.e.:
-  $ gpg --armor --export marslo
-  -----BEGIN PGP PUBLIC KEY BLOCK-----
-  ...
-  -----END PGP PUBLIC KEY BLOCK-----
+  $ gpg --output public.pgp --armor --export <KEYID>
   ```
+
+  - check content
+    ```bash
+    $ gpg --armor --export <KEYID>
+
+    # i.e.:
+    $ gpg --armor --export marslo
+    -----BEGIN PGP PUBLIC KEY BLOCK-----
+    ...
+    -----END PGP PUBLIC KEY BLOCK-----
+    ```
 
 - export secret key
   ```bash
-  $ gpg --armor --export-secret-keys <KEYID>
+  $ gpg --output private.pgp --armor --export-secret-key <KEYID>
+  # or
+  $ gpg -o ~/private.asc --export-secret-key <KEYID>
+  ```
 
-  # i.e.:
-  $ gpg --armor --export-secret-keys marslo
-  -----BEGIN PGP PRIVATE KEY BLOCK-----
-  ...
-  -----END PGP PRIVATE KEY BLOCK-----
+  - [export and ssh](https://unix.stackexchange.com/a/618702/29178)
+    ```bash
+    $ gpg --export-secret-key SOMEKEYID | ssh othermachine gpg --import
+    ```
+
+  - [more](https://unix.stackexchange.com/a/618702/29178)
+    ```bash
+    $ gpg --output public.gpg --export SOMEKEYID && \
+    $ gpg --output - --export-secret-key SOMEKEYID |\
+          cat public.gpg - |\
+          gpg --armor --output keys.asc --symmetric --cipher-algo AES256
+    ```
+
+  - check content
+    ```bash
+    $ gpg --armor --export-secret-keys <KEYID>
+
+    # i.e.:
+    $ gpg --armor --export-secret-keys marslo
+    -----BEGIN PGP PRIVATE KEY BLOCK-----
+    ...
+    -----END PGP PRIVATE KEY BLOCK-----
+    ```
+
+- backup keys
+  ```bash
+  $ gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup <KEYID>
+  # or
+  $ gpg --output backupkeys.pgp --armor --export --export-options export-backup <KEYID>
   ```
 
 #### import
@@ -244,6 +281,11 @@ gpg> trust
 gpg> save
 gpg> quit
 ```
+
+- recover from backup keys
+  ```bash
+  $ gpg --import-options restore --import backupkeys.pgp
+  ```
 
 ### usage
 
