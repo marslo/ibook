@@ -29,6 +29,7 @@
   - [navigate to Nth column](#navigate-to-nth-column)
   - [jumplist](#jumplist)
   - [print path](#print-path)
+  - [format html](#format-html)
   - [encryption with Vim](#encryption-with-vim)
 - [config](#config)
   - [get platform](#get-platform)
@@ -634,6 +635,12 @@ N|
   ```vim
   :echo expand('%:p')
   ```
+
+### [format html](https://stackoverflow.com/a/63425256/2940319)
+```vim
+:%s/></>\r</g
+gg=G
+```
 
 ### encryption with Vim
 

@@ -17,6 +17,7 @@
   - [identity an image](#identity-an-image)
   - [convert svg to png](#convert-svg-to-png)
   - [convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
+  - [sed command to batch change fill and stroke of an SVG](#sed-command-to-batch-change-fill-and-stroke-of-an-svg)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -261,3 +262,26 @@ $ magick convert [-monitor] <name>.HEIC <new-name>.png
 # for batch convert
 $ magick mogrify [-monitor] -format png *.HEIC.
 ```
+
+### [sed command to batch change fill and stroke of an SVG](https://stackoverflow.com/a/60123629/2940319)
+```bash
+#!/usr/bin/env sh
+
+COLOR=yellow
+sed -i -E 's/fill\="[^"]+"//g; s/stroke\="[^"]+"//g' *.svg
+sed -i "s/<path/<path fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+```
+- or
+  ```bash
+  #!/usr/bin/env sh
+  COLOR=yellow
+  sed -i -E 's/fill\="[^"]+"//g; s/stroke\="[^"]+"//g' *.svg
+  sed -i "s/<path/<path fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+  sed -i "s/<rect/<rect fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+  sed -i "s/<polygon/<polygon fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+  sed -i "s/<circle/<circle fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+  sed -i "s/<ellipse/<ellipse fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+  sed -i "s/<polyline/<polyline fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
+  sed -i -E "s/stroke\:[^\;]+/stroke\:$COLOR/g" *.svg
+  sed -i -E "s/fill\:\#[0-9]+/fill\:$COLOR/g" *.svg
+  ```
