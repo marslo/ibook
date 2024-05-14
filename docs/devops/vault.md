@@ -29,6 +29,7 @@
 > - [How To Read Vault’s Secrets from Jenkin’s Declarative Pipeline](https://codeburst.io/read-vaults-secrets-from-jenkin-s-declarative-pipeline-50a690659d6)
 > - [Hashicorp vault how to list all roles](https://stackoverflow.com/a/60870106/2940319)
 > - [AppRole auth method](https://developer.hashicorp.com/vault/docs/auth/approle)
+> - [Signed SSH certificates](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#host-key-signing)
 
 ## environment
 
