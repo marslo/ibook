@@ -4,6 +4,8 @@
 - [fancy bash](#fancy-bash)
 - [alias](#alias)
   - [`bash -<parameter>`](#bash--parameter)
+- [array](#array)
+  - [sort array](#sort-array)
 - [shell expansions](#shell-expansions)
   - [IFS](#ifs)
   - [word splitting](#word-splitting)
@@ -18,8 +20,9 @@
   - [multiple directories creation](#multiple-directories-creation)
   - [copy single file to multipule folders](#copy-single-file-to-multipule-folders)
 - [pipe and stdin](#pipe-and-stdin)
+  - [trim and assign](#trim-and-assign)
   - [read stdin from pipe](#read-stdin-from-pipe)
-  - [`read -r var`](#read--r-var)
+  - [`read -r var` ( for `command | trim` )](#read--r-var--for-command--trim-)
 - [event designators](#event-designators)
   - [word designators](#word-designators)
 - [tilde expansion](#tilde-expansion)
@@ -30,23 +33,6 @@
 > [!NOTE]
 > references:
 > - [Bash scripting cheatsheet](https://devhints.io/bash)
-> - [Introduction to Bash Array](https://www.baeldung.com/linux/bash-array)
-> - [Bash For Loop Array: Iterate Through Array Values](https://www.cyberciti.biz/faq/bash-for-loop-array/)
->   ```bash
->   $ declare -A foo=(
->                      ["one"]="apple"
->                      ["two"]="orange"
->                      ["three"]="banana"
->                    )
->
->   # show keys
->   $ echo ${!foo[@]}
->   two three one
->
->   # show values
->   $ echo ${foo[@]}
->   orange banana apple
->   ```
 
 ## fancy bash
 
@@ -71,6 +57,116 @@ ls --color=always
   ```bash
   $ bash -i --rcfile="$HOME/.marslo/.imarslo"
   ```
+
+## array
+
+> [!NOTE|label:references:]
+> - [Introduction to Bash Array](https://www.baeldung.com/linux/bash-array)
+> - [Bash For Loop Array: Iterate Through Array Values](https://www.cyberciti.biz/faq/bash-for-loop-array/)
+>   ```bash
+>   $ declare -A foo=(
+>                      ["one"]="apple"
+>                      ["two"]="orange"
+>                      ["three"]="banana"
+>                    )
+>
+>   # show keys
+>   $ echo ${!foo[@]}
+>   two three one
+>
+>   # show values
+>   $ echo ${foo[@]}
+>   orange banana apple
+>   ```
+
+### sort array
+
+> [!NOTE|label:references:]
+> - sample array:
+>   ```bash
+>   declare -A authors
+>   declare -i i=0
+>   for ((r = 0; r <= 255; r+=40)); do
+>     authors[$i]+="$r";
+>     (( i++ ));
+>   done
+>
+>   # output
+>   $ for k in "${!authors[@]}"; do echo "$k  -  ${authors["$k"]}"; done
+>   6  -  240
+>   5  -  200
+>   4  -  160
+>   3  -  120
+>   2  -  80
+>   1  -  40
+>   0  -  0
+>   ```
+
+- sort array by key
+
+  > [!TIP]
+  > !! highly recommend !!
+
+  ```bash
+  $ for key in $(echo ${!authors[@]} | tr ' ' '\n' | sort -n); do
+    echo $key - ${authors[$key]};
+  done
+  0 - 0
+  1 - 40
+  2 - 80
+  3 - 120
+  4 - 160
+  5 - 200
+  6 - 240
+  ```
+
+- [or]()
+  ```bash
+  $ printf "%s\n" "${!authors[@]}" | sort -n | while read -r key; do
+    echo $key - ${authors[$key]};
+  done
+  0 - 0
+  1 - 40
+  2 - 80
+  3 - 120
+  4 - 160
+  5 - 200
+  6 - 240
+  ```
+
+- [or sort after for loop](https://stackoverflow.com/a/8217375/2940319)
+  ```bash
+  $ for k in "${!authors[@]}"; do
+    echo "$k  -  ${authors["$k"]}";
+  done | sort -n
+  0  -  0
+  1  -  40
+  2  -  80
+  3  -  120
+  4  -  160
+  5  -  200
+  6  -  240
+  ```
+
+- [or using IFS to sort key before loop](https://stackoverflow.com/questions/8217049/bash-associative-array-sorting-by-value#comment130445438_12681596)
+  ```bash
+  authors_indexes=( ${!authors[@]} )
+  oIFS="$IFS" IFS=$'\n' authors_sorted=( $( printf '%s\n' "${!authors[@]}" | sort ) ) IFS="$oIFS"
+
+  for k in "${!authors_sorted[@]}"; do
+    echo "$k  -  ${authors["$k"]}"
+  done
+
+  # result
+  0  -  0
+  1  -  40
+  2  -  80
+  3  -  120
+  4  -  160
+  5  -  200
+  6  -  240
+  ```
+
 
 ## [shell expansions](https://www.gnu.org/software/bash/manual/html_node/shell-expansions.html#shell-expansions)
 
@@ -348,6 +444,76 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 
 ## pipe and stdin
 
+### [trim and assign](https://stackoverflow.com/a/10527046/2940319)
+-  to multiple variables
+  ```bash
+  $ IFS=' ,' read -r x y z <<< "255, 100, 147"
+  $ echo "x - $x; y - $y; z - $z"
+  x - 255; y - 100; z - 147
+  ```
+
+- to array
+  ```bash
+  $ IFS=' ,' read -r -a arr <<< "255, 100, 147"
+  $ echo "0 - ${arr[0]}; 1 - ${arr[1]}; 2 - ${arr[2]}"
+  0 - 255; 1 - 100; 2 - 147
+  ```
+
+- every single char to array including spaces
+
+  > [!TIP]
+  > - tricky of sed
+  >   ```bash
+  >   $ echo "255, 100, 147" | sed $'s/./&\v/g'
+  >   2
+  >    5
+  >     5
+  >      ,
+  >
+  >        1
+  >         0
+  >          0
+  >           ,
+  >
+  >             1
+  >              4
+  >               7
+  >   ```
+
+  ```bash
+  $ IFS=$'\v' read -ra arr <<<"$(echo "255, 100, 147" | sed $'s/./&\v/g')"
+  $ for k in "${!arr[@]}"; do echo "$k -- ${arr[$k]}"; done
+  0 -- 2
+  1 -- 5
+  2 -- 5
+  3 -- ,
+  4 --
+  5 -- 1
+  6 -- 0
+  7 -- 0
+  8 -- ,
+  9 --
+  10 -- 1
+  11 -- 4
+  12 -- 7
+
+  # or using printf
+  $ for k in "${!arr[@]}"; do printf "%02s - %s;\n" "$k" "${arr[$k]}"; done
+  00 - 2;
+  01 - 5;
+  02 - 5;
+  03 - ,;
+  04 -  ;
+  05 - 1;
+  06 - 0;
+  07 - 0;
+  08 - ,;
+  09 -  ;
+  10 - 1;
+  11 - 4;
+  12 - 7;
+  ```
+
 ### read stdin from pipe
 
 {% hint style='tip' %}
@@ -386,7 +552,7 @@ $ echo dir{1..10} | xargs -n 1 cp file1
 > hello..world
 > ```
 
-### `read -r var`
+### `read -r var` ( for `command | trim` )
 - script as command line
   ```bash
   $ cat trim.sh
@@ -399,6 +565,7 @@ $ echo dir{1..10} | xargs -n 1 cp file1
   IFS='' read -r myvar
   trim "${myvar}"
   ```
+
   - result
     ```bash
     $ IFS=''
@@ -429,6 +596,16 @@ $ echo dir{1..10} | xargs -n 1 cp file1
     ...aa..bb...
     aa..bb
     ```
+
+- [another trim solution for leading and trailing spaces](https://stackoverflow.com/a/3352015/2940319)
+  ```bash
+  trim() {
+    local var="$*"
+    var="${var#"${var%%[![:space:]]*}"}"        # remove leading whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"        # remove trailing whitespace characters
+    printf '%s' "$var"
+  }
+  ```
 
 ## [event designators](https://www.gnu.org/software/bash/manual/html_node/event-designators.html)
 
