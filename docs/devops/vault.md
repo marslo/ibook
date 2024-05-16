@@ -269,7 +269,7 @@ Keys
 ## usage
 ### API
 
-> [!NOET|label:references:]
+> [!NOTE|label:references:]
 > - [api v1.14.x](https://developer.hashicorp.com/vault/api-docs)
 
 ```bash
