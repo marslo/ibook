@@ -14,6 +14,7 @@
     - [smart copy](#smart-copy)
     - [others](#others)
   - [advanced usage](#advanced-usage)
+    - [venv selector](#venv-selector)
     - [chrome](#chrome)
     - [man page](#man-page)
     - [git alias](#git-alias)
@@ -891,6 +892,21 @@ function copy() {                          # smart copy
   <!--endsec-->
 
 ## advanced usage
+### venv selector
+```bash
+# activate venv - using `fzf` to list and activate python venv
+# @author      : marslo
+# @inspired    : https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/#virtual-env
+# @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+function avenv() {
+  # shellcheck disable=SC2155
+  local _venv=$(command ls --color=never "$HOME/.venv" | fzf)
+  [[ -n "${_venv}" ]] &&
+    source "$HOME/.venv/${_venv}/bin/activate" &&
+    echo -e "$(c Wd)>>$(c) $(c Gis)${_venv}$(c) $(c Wdi)has been activated ..$(c)"
+}
+```
+
 ### chrome
 - [Bookmarks](https://github.com/junegunn/fzf/wiki/Examples#bookmarks)
   ```bash
