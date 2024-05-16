@@ -10,7 +10,7 @@
   - [RGB colors](#rgb-colors)
   - [tools](#tools)
   - [256 colors table](#256-colors-table)
-- [xterm 256 color names](#xterm-256-color-names)
+- [color names](#color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
 - [man page colors](#man-page-colors)
@@ -44,7 +44,7 @@
 {% endhint %}
 
 > [!TIP]
-> - [* iMarslo : git clone](../devops/git/config.md#colors)
+> - [* iMarslo : git config colors](../devops/git/config.md)
 > - foreground colors
 >   ```
 >   ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -363,10 +363,9 @@
 
 - printf
   ```bash
-  #         \b      Write a <backspace> character.
-  #         |
-  #         |         0 - 255
-  #         v            v
+  #         ╭─ \b      Write a <backspace> character.
+  #         ╷            0 - 255
+  #         v               v
   $ printf "%-10b" "\e[38;5;3m**text**\e[0m"
 
   # or ignore `%b`
@@ -470,8 +469,8 @@
   $ echo -e "\033[38;2;255;100;100mhello world\033[0m"
   $ echo -e "\033[48;2;255;100;100mhello world\033[0m"
 
-  #                38;2;R;G;B   48;2;R;G;B
-  #               v------------v ---------------
+  #                 38;2;R;G;B     48;2;R;G;B
+  #               v------------v v-------------v
   $ echo -e "\033[38;2;155;106;0;48;2;255;100;100mhello world\033[0m"
 
   # https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
@@ -492,7 +491,7 @@
   $ ansi --color-codes
   ```
 
-  [![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)](../screenshot/colors/ansi/ansi-color-codes.png)
+  ![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)
 
 - [bash-colors `c()`](https://github.com/ppo/bash-colors)
   ```bash
@@ -534,7 +533,7 @@
   $ say @b@yellowWARNING @red..message..
   ```
 
-  [![say()](../screenshot/colors/ansi/ansi-color-say.png)](../screenshot/colors/ansi/ansi-color-say.png)
+  ![say()](../screenshot/colors/ansi/ansi-color-say.png)
 
 - [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
   ```bash
@@ -558,9 +557,9 @@
   $ terminal-colors -n -p
   ```
 
-  ![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)
+  [![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)](../screenshot/colors/ansi/terminal-colors-l.png)
 
-  ![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)
+  [![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)](../screenshot/colors/ansi/terminal-colors-n.png)
 
 - [colored](https://pypi.org/project/colored/)
   ```bash
@@ -589,7 +588,7 @@
   }
   ```
 
-  ![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)
+  [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](../screenshot/colors/ansi/ansicolor-256-0.png)
 
   ```bash
   #!/bin/bash
@@ -614,7 +613,7 @@
   exit 0
   ```
 
-  ![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)
+  [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](../screenshot/colors/ansi/ansicolor-256-1.png)
 
 - [colors and formatting](https://github.com/stevetarver/shell-scripts/blob/master/ux/color_formatting_display.sh)
 
@@ -649,7 +648,8 @@
   done
   exit 0
   ```
-  ![colors & formatting](../screenshot/colors/ansi/color-formatting.png)
+
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting.png)](../screenshot/colors/ansi/color-formatting.png)
 
   ```bash
   for attr in 0 1 2 3 4 5 6 7; do
@@ -665,7 +665,7 @@
   done
   ```
 
-  ![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)](../screenshot/colors/ansi/color-formatting-2.png)
 
 - [showColors](https://stackoverflow.com/a/69648792/2940319)
   ```bash
@@ -821,47 +821,47 @@
   }
   colors
   ```
+
   ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
 
-
-## xterm 256 color names
+## color names
 
 > [!TIP|label:references:]
 > - [Web colors](https://www.wikiwand.com/en/Web_colors)
 > - [The 256 color table and its partitioning](https://stackoverflow.com/a/27165165/2940319)
 
 - blue
-  ![blue](../screenshot/colors/blue.png)
+  [![blue](../screenshot/colors/blue.png)](../screenshot/colors/blue.png)
 
 - brown
-  ![brown](../screenshot/colors/brown.png)
+  [![brown](../screenshot/colors/brown.png)](../screenshot/colors/brown.png)
 
 - cyan
-  ![cyan](../screenshot/colors/cyan.png)
+  [![cyan](../screenshot/colors/cyan.png)](../screenshot/colors/cyan.png)
 
 - gray.black
-  ![gray.black](../screenshot/colors/gray.black.png)
+  [![gray.black](../screenshot/colors/gray.black.png)](../screenshot/colors/gray.black.png)
 
 - green
-  ![green](../screenshot/colors/green.png)
+  [![green](../screenshot/colors/green.png)](../screenshot/colors/green.png)
 
 - orange
-  ![orange](../screenshot/colors/orange.png)
+  [![orange](../screenshot/colors/orange.png)](../screenshot/colors/orange.png)
 
 - pink
-  ![pink](../screenshot/colors/pink.png)
+  [![pink](../screenshot/colors/pink.png)](../screenshot/colors/pink.png)
 
 - purple.magenta
-  ![purple.magenta](../screenshot/colors/purple.magenta.png)
+  [![purple.magenta](../screenshot/colors/purple.magenta.png)](../screenshot/colors/purple.magenta.png)
 
 - red
-  ![red](../screenshot/colors/red.png)
+  [![red](../screenshot/colors/red.png)](../screenshot/colors/red.png)
 
 - white
-  ![white](../screenshot/colors/white.png)
+  [![white](../screenshot/colors/white.png)](../screenshot/colors/white.png)
 
 - yellow
-  ![yellow](../screenshot/colors/yellow.png)
+  [![yellow](../screenshot/colors/yellow.png)](../screenshot/colors/yellow.png)
 
 ### xterm 256 colors chart
 
@@ -874,7 +874,7 @@
   <img width="666" alt="color name" src="../screenshot/colors/colors_2.0.svg.png">
 </a>
 
-![Xterm_256color_chart](../screenshot/colors/Xterm_256color_chart.svg.png)
+[![Xterm_256color_chart](../screenshot/colors/Xterm_256color_chart.svg.png)](../screenshot/colors/Xterm_256color_chart.svg.png)
 
 ### 256 colors cheat sheet
 
