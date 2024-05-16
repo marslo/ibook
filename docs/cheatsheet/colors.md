@@ -9,7 +9,7 @@
   - [xterm color code](#xterm-color-code)
   - [RGB colors](#rgb-colors)
   - [tools](#tools)
-  - [256 colors table](#256-colors-table)
+  - [256 color table](#256-color-table)
 - [color names](#color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
@@ -18,6 +18,7 @@
   - [using vim as man pager](#using-vim-as-man-pager)
   - [ansicolor issues in man page](#ansicolor-issues-in-man-page)
 - [others](#others)
+  - [grep colors](#grep-colors)
   - [generate color randomly](#generate-color-randomly)
   - [decolorize](#decolorize)
 
@@ -26,21 +27,12 @@
 {% hint style='tip' %}
 > reference:
 > - [* 256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
-> - [* 256 colors](https://robotmoon.com/256-colors/)
 > - [* XTerm Color Cheat Sheet](https://www.tweaking4all.com/software/linux-software/xterm-color-cheat-sheet/)
-> - [* Color names](https://proplot.readthedocs.io/en/stable/colors.html)
-> - [* Web colors](https://www.wikiwand.com/en/Web_colors)
 > - [* colors.sh](https://buildpy.readthedocs.io/en/latest/modules/core.html)
-> - [* fromhex() & tohex()](https://unix.stackexchange.com/a/269085/29178)
-> - [256 Foreground and Background Colors - Full Chart](https://pypi.org/project/colored/)
+> - [ThomasDickey/old-xterm](https://github.com/ThomasDickey/old-xterm/tree/master/vttests)
 > - [scripts/color-chart](https://github.com/adam8157/scripts/blob/master/color-chart)
-> - [Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
+> - [* Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
 > - [Bash Colors](https://www.shellhacks.com/bash-colors/)
-> - [color grid](http://www.quut.com/berlin/ht/cgrid.html)
-> - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
-> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
-> - [xterm 256color chart.svg](https://commons.wikimedia.org/wiki/File:Xterm_256color_chart.svg)
-> - [Modifying the color of grep](https://askubuntu.com/a/1042242/92979)
 {% endhint %}
 
 > [!TIP]
@@ -204,6 +196,7 @@
 > - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
 > - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
 > - [* iMarslo: marslo/color-utils.sh](https://gist.github.com/marslo/8e4e1988de79957deb12f0eecec588ec)
+> - [* fromhex() & tohex()](https://unix.stackexchange.com/a/269085/29178)
 
 - escape sequence
 
@@ -224,6 +217,10 @@
   [![normal & bright colors](../screenshot/colors/ansi/color-normal-bright.png)](../screenshot/colors/ansi/color-normal-bright.png)
 
 ### from rgb
+
+> [!NOTE|label:references:]
+> - [rgbToAnsi256(r, g, b)](https://stackoverflow.com/a/26665998/2940319)
+
 - rgb to hex
   ```bash
   # @author : Anthony Bourdain | https://stackoverflow.com/a/55073732/2940319
@@ -256,6 +253,8 @@
     # XTerm Color Number = 16 + 36 * R + 6 * G + B | 0 <= R,G,B <= 5
   }
   ```
+
+- [rgb to hsv](https://stackoverflow.com/a/70905494/2940319)
 
 ### from 256 colors
 - [xColorTable](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh#L114) | [original](https://stackoverflow.com/a/55073732/2940319)
@@ -375,8 +374,10 @@
 - `tput`
 
   > [!NOTE|label:references::]
-  > - [tput: Portable Terminal Control](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_node/tput_1.html)
   > - [* iMarslo: linux/nutshell](../linux/nutshell.md#tput)
+  > - [* 256 colors](https://robotmoon.com/256-colors/)
+  > - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
+  > - [tput: Portable Terminal Control](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_node/tput_1.html)
   > - use cases:
   >   - [* iMarslo: fman()](../devops/awesomeShell.md#man-page)
   >   - [* iMarslo: PS1](../linux/basic.md#colors)
@@ -392,6 +393,11 @@
   $ tput setaf 30 | command cat -A
   ^[[38;5;30m
   ```
+
+  - [background color](https://robotmoon.com/256-colors/)
+    ```bash
+    $ echo $(tput setab 214)256 $(tput setab 202)colors
+    ```
 
   - [to show color table](https://unix.stackexchange.com/a/438357/29178)
     ```bash
@@ -575,7 +581,12 @@
   - [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
   - [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
 
-### 256 colors table
+### 256 color table
+
+> [!NOTE|label:references:]
+> - [xterm 256color chart.svg](https://commons.wikimedia.org/wiki/File:Xterm_256color_chart.svg)
+> - [color grid](http://www.quut.com/berlin/ht/cgrid.html)
+
 - 256 colors
   ```bash
   function 256colors() {
@@ -634,22 +645,19 @@
   # To Public License, Version 2, as published by Sam Hocevar. See
   # http://sam.zoy.org/wtfpl/COPYING for more details.
 
-  #Background
-  for clbg in {40..47} {100..107} 49 ; do
-    #Foreground
-    for clfg in {30..37} {90..97} 39 ; do
-      #Formatting
-      for attr in 0 1 2 4 5 7 ; do
+  for clbg in {40..47} {100..107} 49 ; do   # background
+    for clfg in {30..37} {90..97} 39 ; do   # foreground
+      for attr in 0 1 2 3 4 5 7 ; do        # formatting
         #Print the result
         echo -en "\e[${attr};${clbg};${clfg}m ^[${attr};${clbg};${clfg}m \e[0m"
       done
-      echo #Newline
+      echo                                  # newline
     done
   done
   exit 0
   ```
 
-  [![colors & formatting](../screenshot/colors/ansi/color-formatting.png)](../screenshot/colors/ansi/color-formatting.png)
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](../screenshot/colors/ansi/color-formatting-1.png)
 
   ```bash
   for attr in 0 1 2 3 4 5 6 7; do
@@ -831,39 +839,54 @@
 > - [The 256 color table and its partitioning](https://stackoverflow.com/a/27165165/2940319)
 
 - blue
+
   [![blue](../screenshot/colors/blue.png)](../screenshot/colors/blue.png)
 
 - brown
+
   [![brown](../screenshot/colors/brown.png)](../screenshot/colors/brown.png)
 
 - cyan
+
   [![cyan](../screenshot/colors/cyan.png)](../screenshot/colors/cyan.png)
 
 - gray.black
+
   [![gray.black](../screenshot/colors/gray.black.png)](../screenshot/colors/gray.black.png)
 
 - green
+
   [![green](../screenshot/colors/green.png)](../screenshot/colors/green.png)
 
 - orange
+
   [![orange](../screenshot/colors/orange.png)](../screenshot/colors/orange.png)
 
 - pink
+
   [![pink](../screenshot/colors/pink.png)](../screenshot/colors/pink.png)
 
 - purple.magenta
+
   [![purple.magenta](../screenshot/colors/purple.magenta.png)](../screenshot/colors/purple.magenta.png)
 
 - red
+
   [![red](../screenshot/colors/red.png)](../screenshot/colors/red.png)
 
 - white
+
   [![white](../screenshot/colors/white.png)](../screenshot/colors/white.png)
 
 - yellow
+
   [![yellow](../screenshot/colors/yellow.png)](../screenshot/colors/yellow.png)
 
 ### xterm 256 colors chart
+
+> [!NOTE|label:references:]
+> - [* Color names](https://proplot.readthedocs.io/en/stable/colors.html)
+> - [* Web colors](https://www.wikiwand.com/en/Web_colors)
 
 <a title="Jasonm23, CC0, via Wikimedia Commons" href="https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg">
   <img width="666" alt="xterm 256color chart" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Xterm_256color_chart.svg/512px-Xterm_256color_chart.svg.png">
@@ -1229,6 +1252,21 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   ```
 
 ## others
+
+> [!TIP]
+> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
+
+### grep colors
+
+> [!NOTE|label:grep_colors]
+> - [Modifying the color of grep](https://askubuntu.com/a/1042242/92979)
+
+```bash
+$ export GREP_COLORS="ms=01;31;49:mc=01;31:sl=0;36:cx=:fn=35:ln=32:bn=32:se=36"
+$ echo $GREP_COLORS
+ms=01;31;49:mc=01;31:sl=0;36:cx=:fn=35:ln=32:bn=32:se=36
+```
+
 ### [generate color randomly](https://stackoverflow.com/q/40277918/2940319)
 ```bash
 $ echo "#$(openssl rand -hex 3)"

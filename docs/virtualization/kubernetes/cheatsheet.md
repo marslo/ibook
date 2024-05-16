@@ -622,7 +622,7 @@ spec:
 
 ## [AdmissionConfiguration](https://kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-admission-controller/)
 
-> [!NOET]
+> [!NOTE]
 > - [Migrate from PodSecurityPolicy to the Built-In PodSecurity Admission Controller](https://kubernetes.io/docs/tasks/configure-pod-container/migrate-from-psp/)
 
 ```yaml

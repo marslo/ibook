@@ -129,7 +129,7 @@ $ openssl x509 -req \
 
 ## nginx configure
 
-> [!NOET|label:references:]
+> [!NOTE|label:references:]
 > - [Configuring HTTPS servers](https://nginx.org/en/docs/http/configuring_https_servers.html)
 > - [How to Redirect HTTP to HTTPS in Nginx](https://phoenixnap.com/kb/redirect-http-to-https-nginx#:~:text=To%20redirect%20all%20websites%20from,directive%20to%20force%20a%20redirection.&text=The%20following%20is%20a%20breakdown,HTTP%20traffic%20on%20Port%2080.)
 > - [Module ngx_http_ssl_module](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_certificate)
