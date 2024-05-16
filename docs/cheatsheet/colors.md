@@ -2,18 +2,24 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [tools and basic grammar](#tools-and-basic-grammar)
+  - [from rgb](#from-rgb)
+  - [from 256 colors](#from-256-colors)
+  - [from hex](#from-hex)
 - [ansi colors](#ansi-colors)
   - [xterm color code](#xterm-color-code)
-  - [hex codes](#hex-codes)
+  - [RGB colors](#rgb-colors)
   - [tools](#tools)
-- [xterm 256 color table](#xterm-256-color-table)
+  - [256 colors table](#256-colors-table)
+- [xterm 256 color names](#xterm-256-color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
 - [man page colors](#man-page-colors)
   - [settings](#settings)
   - [using vim as man pager](#using-vim-as-man-pager)
   - [ansicolor issues in man page](#ansicolor-issues-in-man-page)
-- [decolorize](#decolorize)
+- [others](#others)
+  - [generate color randomly](#generate-color-randomly)
+  - [decolorize](#decolorize)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -193,6 +199,12 @@
 
 ## tools and basic grammar
 
+> [!NOTE|label:references:]
+> - [termstandard/colors](https://github.com/termstandard/colors)
+> - [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
+> - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
+> - [* iMarslo: marslo/color-utils.sh](https://gist.github.com/marslo/8e4e1988de79957deb12f0eecec588ec)
+
 - escape sequence
 
 |       | BASH    | HEX       | OCTAL     | NOTE                         |
@@ -211,10 +223,131 @@
 
   [![normal & bright colors](../screenshot/colors/ansi/color-normal-bright.png)](../screenshot/colors/ansi/color-normal-bright.png)
 
+### from rgb
+- rgb to hex
+  ```bash
+  # @author : Anthony Bourdain | https://stackoverflow.com/a/55073732/2940319
+  # @usage  :
+  # - `rgbtohex 17 0 26` ==> 1001A
+  # - `rgbtohex -h 17 0 26` ==> #1001A
+  function rgbtohex () {
+    addleadingzero () { awk '{if(length($0)<2){printf "0";} print $0;}';}
+    if [[ ${1} == "-h" ]]; then
+      r=${2}; g=${3}; b=${4};h='#';
+    else
+      r=${1}; g=${2}; b=${3};h='';
+    fi
+    r=$(echo "obase=16; ${r}" | bc | addleadingzero)
+    g=$(echo "obase=16; ${g}" | bc | addleadingzero)
+    b=$(echo "obase=16; ${b}" | bc | addleadingzero)
+    echo "${h}${r}${g}${b}"
+  }
+  ```
+
+- rgb to 256colors
+  ```bash
+  # @author : Anthony Bourdain | https://stackoverflow.com/a/55073732/2940319
+  # @usage  :
+  # - `rgbto256 0 95, 135` ==> 22
+  function rgbto256 () {
+    echo "define trunc(x){auto os;os=scale;scale=0;x/=1;scale=os;return x;};" \
+      "16 + 36 * trunc(${1}/51) + 6 * trunc(${2}/51) +" \
+      " trunc(${3}/51)" | bc
+    # XTerm Color Number = 16 + 36 * R + 6 * G + B | 0 <= R,G,B <= 5
+  }
+  ```
+
+### from 256 colors
+- [xColorTable](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh#L114) | [original](https://stackoverflow.com/a/55073732/2940319)
+  ```bash
+  $ xColorTable 30 45 100
+  30  = rgb(0, 135, 135)   => #008787
+  45  = rgb(0, 215, 255)   => #00D7FF
+  100 = rgb(135, 135, 0)   => #878700
+  ```
+
+  [![xColorTable](../screenshot/colors/ansi/xColorTable.png)](../screenshot/colors/ansi/xColorTable.png)
+
+- 256color to hex
+  ```bash
+  tohex(){
+    dec=$(($1%256))   ### input must be a number in range 0-255.
+    if [ "$dec" -lt "16" ]; then
+      bas=$(( dec%16 ))
+      mul=128
+      [ "$bas" -eq "7" ] && mul=192
+      [ "$bas" -eq "8" ] && bas=7
+      [ "$bas" -gt "8" ] && mul=255
+      a="$((  (bas&1)    *mul ))"
+      b="$(( ((bas&2)>>1)*mul ))"
+      c="$(( ((bas&4)>>2)*mul ))"
+      printf 'dec= %3s basic= #%02x%02x%02x\n' "$dec" "$a" "$b" "$c"
+    elif [ "$dec" -gt 15 ] && [ "$dec" -lt 232 ]; then
+      b=$(( (dec-16)%6  )); b=$(( b==0?0: b*40 + 55 ))
+      g=$(( (dec-16)/6%6)); g=$(( g==0?0: g*40 + 55 ))
+      r=$(( (dec-16)/36 )); r=$(( r==0?0: r*40 + 55 ))
+      printf 'dec= %3s color= #%02x%02x%02x\n' "$dec" "$r" "$g" "$b"
+    else
+      gray=$(( (dec-232)*10+8 ))
+      printf 'dec= %3s  gray= #%02x%02x%02x\n' "$dec" "$gray" "$gray" "$gray"
+    fi
+  }
+
+  for i in $(seq 0 255); do
+      tohex ${i}
+  done
+  ```
+
+### from hex
+- [hex to 256colors](https://unix.stackexchange.com/a/269085/29178)
+  ```bash
+  fromhex(){
+    hex=${1#"#"}
+    r=$(printf '0x%0.2s' "$hex")
+    g=$(printf '0x%0.2s' ${hex#??})
+    b=$(printf '0x%0.2s' ${hex#????})
+    printf '%03d' "$(( (r<75?0:(r-35)/40)*6*6 +
+                       (g<75?0:(g-35)/40)*6   +
+                       (b<75?0:(b-35)/40)     + 16 ))"
+  }
+
+  # verify
+  $ xColorTable 30
+  30  = rgb(0, 135, 135)   => #008787
+
+  $ fromhex 008787
+  030
+  $ fromhex 008766
+  029
+  $ fromhex 008788
+  030
+  ```
+
+- hex to rgb
+  ```bash
+  # @author : Anthony Bourdain | https://stackoverflow.com/a/55073732/2940319
+  # @usage  :
+  # - `hexttorgb "11001A" ==> 17 0 26
+  # - `hexttorgb "#11001A" ==> 17 0 26
+  function hextorgb () {
+    hexinput=$(echo "${1}" | tr '[:lower:]' '[:upper:]')           # uppercase-ing
+    hexinput=$(echo "${hexinput}" | tr -d '#')                     # remove Hash if needed
+    a=$(echo "${hexinput}" | cut -c-2)
+    b=$(echo "${hexinput}" | cut -c3-4)
+    c=$(echo "${hexinput}" | cut -c5-6)
+    r=$(echo "ibase=16; ${a}" | bc)
+    g=$(echo "ibase=16; ${b}" | bc)
+    b=$(echo "ibase=16; ${c}" | bc)
+    echo "${r} ${g} ${b}"
+  }
+  ```
+
 ## ansi colors
 
 > [!NOTE|label:references:]
 > - [How to have multiple colors in a Windows batch file?](https://stackoverflow.com/a/69924820/2940319)
+> - [How to get the RGB values of a 256-color palette terminal color](https://stackoverflow.com/q/69138165/2940319)
+> - [kenny-kvibe/ansi_colors.sh](https://gist.github.com/kenny-kvibe/d000f9e933da5e99d782b4cc7776ec3e)
 > - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
 
 ### xterm color code
@@ -261,7 +394,18 @@
   ^[[38;5;30m
   ```
 
-### hex codes
+  - [to show color table](https://unix.stackexchange.com/a/438357/29178)
+    ```bash
+    $ for c in {0..255}; do tput setaf $c; tput setaf $c | command cat -v; echo =$c; done
+    ```
+
+  - [show current terminal support](https://unix.stackexchange.com/a/521120/29178)
+    ```bash
+    $ tput colors
+    256
+    ```
+
+### RGB colors
 
 > [!NOTE|label:references:]
 > - [* iMarslo : git » config » colors](../devops/git/config.md#colors)
@@ -301,6 +445,37 @@
 
   # omit %b
   $ printf '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
+  ```
+
+- for PS1
+
+  > [!NOTE|label:references:]
+  > - [Using ANSI Color Codes to Colorize Your Bash Prompt on Linux](https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux)
+
+  ```bash
+  # additioanl \[ and \] for PS1 only
+  #  ^                     ^
+  #  --                    --
+  R='\[\e[38;2;255;100;100m\]'
+  G='\[\e[38;2;100;255;100m\]'
+  B='\[\e[38;2;100;100;255m\]'
+  W='\[\e[0m\]'
+  PS1="[$R\u$W@$B\h$W:$G\w$W]\$ "
+  ```
+
+- [RGB for both foreground and background](https://stackoverflow.com/a/33206814/2940319)
+  ```bash
+  # 38;2;R;G;B
+  # 48;2;R;G;B
+  $ echo -e "\033[38;2;255;100;100mhello world\033[0m"
+  $ echo -e "\033[48;2;255;100;100mhello world\033[0m"
+
+  #                38;2;R;G;B   48;2;R;G;B
+  #               v------------v ---------------
+  $ echo -e "\033[38;2;155;106;0;48;2;255;100;100mhello world\033[0m"
+
+  # https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
+  $ echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
   ```
 
 ### tools
@@ -361,16 +536,47 @@
 
   [![say()](../screenshot/colors/ansi/ansi-color-say.png)](../screenshot/colors/ansi/ansi-color-say.png)
 
+- [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
+  ```bash
+  function RGBcolor {
+    echo "16 + $1 * 36 + $2 * 6 + $3" | bc
+  }
+
+  fg=$(RGBcolor 1 0 2)  # Violet
+  bg=$(RGBcolor 5 3 0)  # Bright orange.
+
+  echo -e "\\033[1;38;5;$fg;48;5;${bg}mviolet on tangerine\\033[0m"
+  ```
+
+- [terminal-colors](https://pypi.org/project/terminal-colors/) | [eikenb/terminal-colors](https://github.com/eikenb/terminal-colors)
+  ```bash
+  $ python3 -m pip install terminal-colors
+
+  # usage
+  $ terminal-colors -l
+  $ terminal-colors -n
+  $ terminal-colors -n -p
+  ```
+
+  ![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)
+
+  ![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)
+
 - [colored](https://pypi.org/project/colored/)
   ```bash
   # install
-  $ pip install colored
+  $ python3 -m pip install colored
 
   # usage
   $ colored --help
   $ colored --color-codes
   ```
 
+- [topic: ansi-colors](https://github.com/topics/ansi-colors)
+  - [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
+  - [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
+
+### 256 colors table
 - 256 colors
   ```bash
   function 256colors() {
@@ -458,6 +664,7 @@
     printf '\033[0m'
   done
   ```
+
   ![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)
 
 - [showColors](https://stackoverflow.com/a/69648792/2940319)
@@ -536,6 +743,41 @@
 
   [![showcolors](../screenshot/colors/ansi/showcolors.png)](../screenshot/colors/ansi/showcolors.png)
 
+- [colorgrid](https://unix.stackexchange.com/a/285956/29178)
+  ```bash
+  function colorgrid() {
+      iter=16
+      while [ $iter -lt 52 ]
+      do
+          second=$[$iter+36]
+          third=$[$second+36]
+          four=$[$third+36]
+          five=$[$four+36]
+          six=$[$five+36]
+          seven=$[$six+36]
+          if [ $seven -gt 250 ];then seven=$[$seven-251]; fi
+
+          echo -en "\033[38;5;$(echo $iter)m█ "
+          printf "%03d" $iter
+          echo -en "   \033[38;5;$(echo $second)m█ "
+          printf "%03d" $second
+          echo -en "   \033[38;5;$(echo $third)m█ "
+          printf "%03d" $third
+          echo -en "   \033[38;5;$(echo $four)m█ "
+          printf "%03d" $four
+          echo -en "   \033[38;5;$(echo $five)m█ "
+          printf "%03d" $five
+          echo -en "   \033[38;5;$(echo $six)m█ "
+          printf "%03d" $six
+          echo -en "   \033[38;5;$(echo $seven)m█ "
+          printf "%03d" $seven
+
+          iter=$[$iter+1]
+          printf '\r\n'
+      done
+  }
+  ```
+
 - solarized color
   ```bash
   #!/bin/bash
@@ -582,10 +824,11 @@
   ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
 
 
-## xterm 256 color table
+## xterm 256 color names
 
-> [!TIP]
+> [!TIP|label:references:]
 > - [Web colors](https://www.wikiwand.com/en/Web_colors)
+> - [The 256 color table and its partitioning](https://stackoverflow.com/a/27165165/2940319)
 
 - blue
   ![blue](../screenshot/colors/blue.png)
@@ -985,7 +1228,18 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   $ sudo yum update man-pages man-db man
   ```
 
-## decolorize
+## others
+### [generate color randomly](https://stackoverflow.com/q/40277918/2940319)
+```bash
+$ echo "#$(openssl rand -hex 3)"
+# or
+$ hexdump -n 3 -v -e '"#" 3/1 "%02X" "\n"' /dev/urandom
+
+# sample
+$ echo -e "$(trueHexPrint $(echo "#$(openssl rand -hex 3)"))aaa\x1b[0m"
+```
+
+### decolorize
 
 > [!NOTE|label:decolorize]
 > - [Removing colors from output](https://stackoverflow.com/a/18000433/2940319)

@@ -50,6 +50,9 @@
 
 > [!TIP]
 > - [iMarslo : kubernetes - oneline cmd](../../virtualization/kubernetes/cheatsheet.html#oneline-command)
+> - [johnnypea/useful-one-liners.sh](https://gist.github.com/johnnypea/b0cd77e5734d65691fa21d93274b305b)
+> - [ITT: Post useful shell aliases/functions](https://4chanarchives.com/board/g/thread/51917516)
+> - [Post your handy self made command line utilities](https://bbs.archlinux.org/viewtopic.php?id=56646&p=56)
 
 ### cat and EOF
 
