@@ -264,23 +264,73 @@ $ gpg --full-generate-key
 > [!NOTE|label:references:]
 > - [How to import secret keys into GPG keychain](https://unix.stackexchange.com/a/230859/29178)
 > - [pass and gpg: No public key](https://unix.stackexchange.com/a/232341/29178)
+> - [How to import secret gpg key (copied from one machine to another)?](https://unix.stackexchange.com/a/184952/29178)
 
 ```bash
-# export
-$ gpg --export-secret-keys > keyfile
+# import private key
+$ gpg --import private.pgp
+gpg: /home/marslo/.gnupg/trustdb.gpg: trustdb created
+gpg: key 5C0980808D968494: public key "marslo <marslo.jiao@gmail.com>" imported
+gpg: key 5C0980808D968494: secret key imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+gpg:       secret keys read: 1
+gpg:   secret keys imported: 1
 
-# import
-$ gpg --import keyfile
-
-# verify available
-$ gpg --edit-key <KEYID>
+# list keys
+$ gpg --list-keys
+/home/marslo/.gnupg/pubring.kbx
+-------------------------------
+pub   ed25519 2024-05-08 [SC]
+      6AADCD68E268DEF623C4DD7E5C0980808D968494
+uid           [ unknown] marslo <marslo.jiao@gmail.com>
+sub   cv25519 2024-05-08 [E]
 
 # trust
-$ gpg --edit-key <KEYID>
-gpg> trust
-gpg> save
-gpg> quit
+$ gpg --edit-key 6AADCD68E268DEF623C4DD7E5C0980808D968494 trust quit
+  1 = I don't know or won't say
+  2 = I do NOT trust
+  3 = I trust marginally
+  4 = I trust fully
+  5 = I trust ultimately
+  m = back to the main menu
+
+gpg> Your decision? 5
+gpg> Do you really want to set this key to ultimate trust? (y/N) y
+
+# check key again
+$ gpg --list-keys
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+/home/marslo/.gnupg/pubring.kbx
+-------------------------------
+pub   ed25519 2024-05-08 [SC]
+      6AADCD68E268DEF623C4DD7E5C0980808D968494
+uid           [ultimate] marslo <marslo.jiao@gmail.com>
+sub   cv25519 2024-05-08 [E]
 ```
+
+- import publid key
+  ```bash
+  # import public key
+  $ gpg --import public.pgp
+  gpg: key 5C0980808D968494: "marslo <marslo.jiao@gmail.com>" not changed
+  gpg: Total number processed: 1
+  gpg:              unchanged: 1
+  ```
+
+- trust key
+  ```bash
+  # verify available
+  $ gpg --edit-key <KEYID>
+
+  # trust
+  $ gpg --edit-key <KEYID>
+  gpg> trust
+  gpg> save
+  gpg> quit
+  ```
 
 - recover from backup keys
   ```bash
