@@ -310,6 +310,10 @@ $ openssl rsa -in key.pem -out key.pem
     ```
 
   * `Cryptographic Message Syntax Standard - PKCS #7 Certificates (.P7B)`
+
+    > [!NOTE|label:references:]
+    > - [jmervine/cert_convert.sh](https://gist.github.com/jmervine/e4c9af3adb14b78856cc)
+
     ```bash
     $ openssl pkcs7 -inform DER -in certificate.p7b -out certificate.crt
     # or

@@ -14,6 +14,7 @@
     - [extensions management](#extensions-management)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
   - [github/copilot.vim](#githubcopilotvim)
+    - [CopilotChat.nvim](#copilotchatnvim)
   - [tomtom/tcomment_vim](#tomtomtcomment_vim)
   - [dense-analysis/ale](#dense-analysisale)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic-1)
@@ -982,6 +983,8 @@ $ which -a tree-sitter
 > - [* Using Github Copilot with Vim](https://ovid.github.io/articles/using-github-copilot-with-vim.html)
 > - [* Cautiously Configuring Copilot](https://code.kiwi.com/articles/cautiously-configuring-copilot/)
 > - [* Configuring GitHub Copilot in your environment](https://docs.github.com/en/copilot/configuring-github-copilot/configuring-github-copilot-in-your-environment?tool=vimneovim)
+> - [GitHub Copilot FAQs + Troubleshooting common issues](https://github.com/orgs/community/discussions/47318)
+> - [MariaSolOs/dotfiles - copilot.lua](https://github.com/MariaSolOs/dotfiles/blob/e9eb1f8e027840f872e69e00e082e2be10237499/.config/nvim/lua/plugins/copilot.lua)
 
 [![nvim copilot](../../screenshot/vim/nvim-copilot.gif)](../../screenshot/vim/nvim-copilot.gif)
 
@@ -1093,6 +1096,28 @@ $ which -a tree-sitter
     "http.proxy": "http://proxy.sample.com:8080",
   }
   ```
+
+### [CopilotChat.nvim](https://copilotc-nvim.github.io/CopilotChat.nvim/)
+
+> [!NOTE|label:references:]
+> - [CopilotC-Nvim/CopilotChat.nvim](https://github.com/CopilotC-Nvim/CopilotChat.nvim)
+> - [deathbeam/dotfiles - copilot.lua](https://github.com/deathbeam/dotfiles/blob/master/nvim/.config/nvim/lua/config/copilot.lua)
+
+```vim
+" install
+Plug 'CopilotC-Nvim/CopilotChat.nvim' , { 'branch': 'canary' }      " ╮
+Plug 'zbirenbaum/copilot.lua'                                       " ├ copilot chat
+Plug 'nvim-lua/plenary.nvim'                                        " ╯
+```
+
+```lua
+-- ~/.config/nvim/init.vim
+require("CopilotChat").setup {
+  debug = true,
+  allow_insecure = true,
+  show_folds = false,
+}
+```
 
 ## [tomtom/tcomment_vim](https://github.com/tomtom/tcomment_vim)
 ```vim
