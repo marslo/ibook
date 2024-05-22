@@ -758,6 +758,9 @@ $ nvim
 > - [Pasting from clipboard in vim](https://stackoverflow.com/q/33567746/2940319)
 
 ```bash
+# install wl-clipboard
+$ sudo apt install wl-clipboard -y
+
 $ sudo apt-get install vim-gtk
 $ vim --version | grep clipboard
 +clipboard         +keymap            +printer           +vertsplit
@@ -770,14 +773,17 @@ $ sudo apt install vim
 ```
 
 - vimrc
-  ```bash
-  set clipboard=unnamed
-  set clipboard=unnamedplus
+  - with `wl-clipboard`
+    ```bash
+    set clipboard=unnamed
+    set clipboard=unnamedplus
+    ```
 
-  " or
-  set clipboard^=unnamed
-  set clipboard^=unnamedplus
-  ```
+  - without `wl-clipboard`
+    ```bash
+    set clipboard^=unnamed
+    set clipboard^=unnamedplus
+    ```
 
 ### `wsl.conf`
 
