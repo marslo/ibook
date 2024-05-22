@@ -40,6 +40,19 @@
 - [compiler environment](#compiler-environment)
   - [pkg-config](#pkg-config)
   - [ldconfig](#ldconfig)
+- [auto completion](#auto-completion)
+  - [bash-completion](#bash-completion)
+  - [bash-completion@2](#bash-completion2)
+  - [tools](#tools)
+    - [fzf](#fzf)
+    - [npm](#npm)
+    - [python](#python-1)
+    - [ansible](#ansible)
+    - [git](#git)
+    - [vault CLI](#vault-cli)
+    - [others](#others)
+  - [script](#script)
+    - [groovy](#groovy-1)
 - [troubleshooting](#troubleshooting)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
@@ -48,7 +61,7 @@
     - [check *.o file](#check-o-file)
 - [env](#env)
   - [manpath](#manpath)
-- [others](#others)
+- [others](#others-1)
   - [GitHubDaily/GitHubDaily](#githubdailygithubdaily)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1064,6 +1077,188 @@ $ sudo ldconfig
 
 # show all
 $ sudo ldconfig --print-cache
+```
+
+# auto completion
+
+> [!NOTE|label:references:]
+> - check all commands: `compgen -c`
+
+## bash-completion
+
+> [!TIP|label:references:]
+> - [scop/bash-completion](https://github.com/scop/bash-completion) | [scop/bash-completion/bash_completion](https://github.com/scop/bash-completion/blob/main/bash_completion)
+> - [debian/bash-completion/bash_completion](https://salsa.debian.org/debian/bash-completion/blob/master/bash_completion)
+> - local files
+>   ```bash
+>   $ ls -Altrh /usr/local/etc/ | grep comp
+>   lrwxr-xr-x   1 marslo admin   51 Dec 15 12:19 bash_completion -> ../Cellar/bash-completion/1.3_3/etc/bash_completion
+>   drwxr-xr-x 226 marslo admin 7.1K May 21 17:39 bash_completion.d
+>   ```
+> - [Bash Completion](https://sourabhbajaj.com/mac-setup/BashCompletion/)
+> - `brew info bash-completion`
+>   ```bash
+>   ==> Caveats
+>   Add the following line to your ~/.bash_profile:
+>     [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+>
+>   Bash completion has been installed to:
+>     /usr/local/etc/bash_completion.d
+>   ```
+
+```bash
+# osx
+HOMEBREW_PREFIX="$(brew --prefix)"
+BASH_COMPLETION="$(brew --prefix bash-completion)/etc/bash_completion"       # for bash_completion 1.3_3 BASH_COMPLETION="${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+BASH_COMPLETION_DIR="$(brew --prefix)/etc/bash_completion.d"                 # BASH_COMPLETION="${HOMEBREW_PREFIX}/opt/bash-completion/etc/bash_completion"
+
+if [[ $(command -v brew) != '' ]] && [[  -f $(brew --prefix)/etc/bash_completion ]]; then
+  source $(brew --prefix)/etc/bash_completion;
+fi
+# or
+[[ -f '/usr/local/etc/bash_completion' ]] && source /usr/local/etc/bash_completion
+
+# debian
+BASH_COMPLETION_DIR=$(pkg-config --variable=completionsdir bash-completion)
+```
+
+## bash-completion@2
+
+> [!NOTE|label:references:]
+> - `brew info bash_completion@2`
+>   ```bash
+>   ==> Caveats
+>   Add the following line to your ~/.bash_profile:
+>     [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+>
+>   Bash completion has been installed to:
+>     /usr/local/etc/bash_completion.d
+>   ```
+> - local files:
+>   ```bash
+>   $ ls -Altrh /usr/local/etc/bash_completion
+>   lrwxr-xr-x 1 marslo admin 51 Dec 15 12:19 /usr/local/etc/bash_completion -> ../Cellar/bash-completion/1.3_3/etc/bash_completion
+>   $ ls -Altrh /usr/local/etc/profile.d/bash_completion.sh
+>   lrwxr-xr-x 1 marslo admin 70 May 21 16:47 /usr/local/etc/profile.d/bash_completion.sh -> ../../Cellar/bash-completion@2/2.14.0/etc/profile.d/bash_completion.sh
+>   $ ls -Altrh /usr/local/Cellar/bash-completion@2/2.14.0/share/bash-completion/bash_completion
+>   -rw-r--r-- 1 marslo staff 120K May 21 16:47 /usr/local/Cellar/bash-completion@2/2.14.0/share/bash-completion/bash_completion
+>   ```
+
+```bash
+BASH_COMPLETION="$(brew --prefix bash-completion@2)/etc/profile.d/bash_completion.sh"
+# or
+BASH_COMPLETION="$(brew --prefix)/opt/bash-completion@2/etc/profile.d/bash_completion.sh"
+BASH_COMPLETION_2_DIR="$(brew --prefix bash-completion@2)/share/bash-completion/completions"
+
+test -f "${BASH_COMPLETION}" && source "${BASH_COMPLETION}"
+if test -d "${BASH_COMPLETION_DIR}"; then
+  source <( cat "${BASH_COMPLETION_DIR}"/{brew,tmux,tig-completion.bash} )
+  if ls "${BASH_COMPLETION_DIR}"/*git*    >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*git* )    ; fi
+  if ls "${BASH_COMPLETION_DIR}"/*docker* >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*docker* ) ; fi
+fi
+```
+
+## tools
+### fzf
+```bash
+if test -f "$HOME"/.fzf.bash; then
+  source "$HOME"/.fzf.bash
+else
+  [[ '1' = "$(isOSX)" ]] && FZF_HOME="$(brew --prefix fzf)" || FZF_HOME="${iRCHOME}"/utils/fzf
+  command -v fzf >/dev/null                     && eval "$(fzf --bash)"
+  test -f "${FZF_HOME}/shell/key-bindings.bash" && source "${FZF_HOME}/shell/key-bindings.bash"
+fi
+
+## or `fzf --bash` can be also:
+[[ $- == *i* ]] && test -f "${FZF_HOME}/shell/completion.bash" && source "${FZF_HOME}/shell/completion.bash" 2> /dev/null
+```
+
+### npm
+
+> [!NOTE|label:references:]
+> - [npm-completion](https://docs.npmjs.com/cli/v7/commands/npm-completion)
+
+```bash
+command -v npm >/dev/null && source <( npm completion )
+# or
+NPM_COMPLETION_PATH="/usr/local/lib/node_modules/npm-completion"               # https://github.com/Jephuff/npm-bash-completion
+```
+
+### python
+- pipenv
+  ```bash
+  # $(brew --prefix bash-completion@2)/share/bash-completion/completions/_pipenv
+  $ brew install bash-completion@2
+
+  # or
+  $ command -v pipenv >/dev/null && eval "$(pipenv --completion)"
+  ```
+
+- pipx
+  ```bash
+  $ command -v pipx    >/dev/null && eval "$(register-python-argcomplete pipx)"
+  ```
+
+- pip
+  ```bash
+  $ command -v pip     >/dev/null && eval "$(pip completion --bash)"
+  ```
+
+### ansible
+```bash
+ANSIBLE_COMPLETION_PATH="${iRCHOME}/.completion/ansible-completion"            # https://github.com/dysosmus/ansible-completion
+test -d "${ANSIBLE_COMPLETION_PATH}" && source <( cat "${ANSIBLE_COMPLETION_PATH}"/*.bash )
+```
+
+### git
+```bash
+if ls "${BASH_COMPLETION_DIR}"/*git* >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*git* )    ; fi
+# or
+ls "${BASH_COMPLETION_DIR}"/*git* >/dev/null 2>&1; [ $? -eq 0 ] && source "${BASH_COMPLETION_DIR}"/*git*
+
+# or
+GIT_COMPLETION_DIR="$(brew --prefix)"/opt/git/etc/bash_completion.d
+# or
+GIT_COMPLETION_DIR="$(brew --prefix git)"/etc/bash_completion.d
+[[ -d "${GIT_COMPLETION_DIR}" ]] && source "${GIT_COMPLETION_DIR}/*git*"
+
+# or
+source $(brew --prefix git)/etc/bash_completion.d/git-prompt.sh
+source $(brew --prefix git)/etc/bash_completion.d/git-completion.bash
+```
+
+### [vault CLI](https://developer.hashicorp.com/vault/docs/commands#autocompletion)
+```bash
+$ vault -autocomplete-install
+$ vault -autocomplete-install
+Error executing CLI: 3 errors occurred:
+  * already installed in /Users/marslo/.bash_profile
+  * already installed in /Users/marslo/.zshrc
+  * already installed at /Users/marslo/.config/fish/completions/vault.fish
+
+# or
+command -v vault >/dev/null && complete -C /usr/local/bin/vault vault
+```
+
+### others
+```bash
+ADDITIONAL_COMPLETION="${iRCHOME}/.completion/bash_completion_init_completion" # workaround: https://github.com/mobile-shell/mosh/issues/675#issuecomment-156457108
+MACCLI_COMPLETION='/usr/local/bin/mac-cli/completion/bash_completion'
+VBOX_COMPLETION="${iRCHOME}/.completion/vbox/VBoxManage-completion.bash"       # ╮ https://github.com/gryf/vboxmanage-bash-completion
+                                                                               # ╯ https://github.com/mug896/virtualbox-bash-completion
+test -f "${ADDITIONAL_COMPLETION}"  && source "${ADDITIONAL_COMPLETION}"
+test -f "${MACCLI_COMPLETION}"      && source "${MACCLI_COMPLETION}"
+test -f "${VBOX_COMPLETION}"        && source "${VBOX_COMPLETION}"
+```
+
+## script
+### groovy
+```bash
+GROOVY_HOME="$(brew --prefix groovy)"
+
+test -d "${GROOVY_HOME}/bin" && source <( cat "${GROOVY_HOME}"/bin/*_completion )
+# or
+find "${GROOVY_HOME}/bin" -name '*_completion' -print0 | xargs -0 -I FILE bash -c "source FILE"
 ```
 
 # troubleshooting
