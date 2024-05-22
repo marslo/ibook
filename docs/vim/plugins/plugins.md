@@ -734,6 +734,28 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 
 [![nvim coc lspconfig](../../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)](../../screenshot/vim/nvim-treesitter-coc-lspconfig.gif)
 
+- shortcuts
+
+  ```vim
+  " neoclide/coc.nvim
+  nmap     <silent>[g    <Plug>(coc-diagnostic-prev)
+  nmap     <silent>]g    <Plug>(coc-diagnostic-next)
+  nmap     <silent>gd    <Plug>(coc-definition)
+  nmap     <silent>gy    <Plug>(coc-type-definition)
+  nmap     <silent>gi    <Plug>(coc-implementation)
+  nmap     <silent>gr    <Plug>(coc-references)
+  nmap     <leader>cl    <Plug>(coc-codelens-action)
+  nnoremap <silent>K     :call ShowDocumentation()<CR>
+  ```
+
+  - `<Plug>(coc-diagnostic-prev)` : <kbd>[</kbd> + <kbd>g</kbd> : previous diagnostic
+  - `<Plug>(coc-diagnostic-next)` : <kbd>]</kbd> + <kbd>g</kbd> : next diagnostic
+  - `<Plug>(coc-definition)` : <kbd>g</kbd> + <kbd>d</kbd> : go to definition
+  - `<Plug>(coc-type-definition)` : <kbd>g</kbd> + <kbd>y</kbd> : type definition
+  - `<Plug>(coc-implementation)` : <kbd>g</kbd> + <kbd>i</kbd> : implementation
+  - `<Plug>(coc-references)` : <kbd>g</kbd> + <kbd>r</kbd> : references
+  - `<Plug>(coc-codelens-action)` : <kbd>c</kbd> + <kbd>l</kbd> : code lens action
+
 - troubleshooting
 
   > [!NOTE|label:references:]
@@ -785,6 +807,7 @@ function! CheckBackSpace() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 ```
+
 ```vim
 " ~/.vimrc.d/hightlight
 " coc-snippet
@@ -1017,6 +1040,32 @@ $ which -a tree-sitter
   let g:copilot_proxy_strict_ssl = v:false
   ```
 
+- shortcuts
+
+  - `copilot#Accept("\<CR>")` : <kbd>Tab</kbd> : accept suggestion
+    ```vim
+    " to re-mapping
+    imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+    let g:copilot_no_tab_map = v:true
+    ```
+
+  - `<Plug>(copilot-accept-word)` : <kbd>Meta/Alt</kbd> + <kbd>⇢</kbd>: accept the next word of the current suggestion
+    ```vim
+    " to re-mapping
+    imap <C-L>   <Plug>(copilot-accept-word)
+    ```
+
+  - `<Plug>(copilot-accept-line)` : <kbd>Meta/Alt</kbd> + <kbd>Ctrl</kbd> + <kbd>⇢</kbd> : accept the next line of the current suggestion
+    ```vim
+    " to re-mapping
+    imap <C-M-L> <Plug>(copilot-accept-line)
+    ```
+
+  - `<Plug>(copilot-next)` : <kbd>Meta/Alt</kbd> + <kbd>]</kbd> : next suggestion
+  - `<Plug>(copilot-previous)` : <kbd>Meta/Alt</kbd> + <kbd>[</kbd> : previous suggestion
+  - `<Plug>(copilot-dismiss)` : <kbd>Control/Ctrl</kbd> + <kbd>]</kbd> : dismiss the current suggestion.
+  - `<Plug>(copilot-suggest)` : <kbd>Meta/Alt</kbd> + <kbd>\</kbd>> : explicitly request a suggestion, even if Copilot is disabled
+
 - self-signed certificate error
 
   > [!NOTE|label:references:]
@@ -1026,6 +1075,7 @@ $ which -a tree-sitter
   >   - [Add certificates to a keychain using Keychain Access on Mac](https://support.apple.com/en-gb/guide/keychain-access/kyca2431/mac)
   >   - [Installing a root CA certificate in the trust store](https://ubuntu.com/server/docs/security-trust-store)
   >   - [Installing the trusted root certificate in windows](https://learn.microsoft.com/en-us/skype-sdk/sdn/articles/installing-the-trusted-root-certificate)
+  > - [* iMarslo: convert and import windows certs into linux](../../cheatsheet/ssl/server.md#convert-from-windows-certmgrmsc)
 
   ```vim
   $ openssl x509 -inform der -in <exported_cert>.cer -out mycert.pem
@@ -1086,6 +1136,21 @@ let g:ale_hover_to_preview                = 1
 let g:ale_floating_preview                = 1
 let g:ale_close_preview_on_insert         = 1
 ```
+
+- shortcuts
+
+  ```vim
+  noremap  ]a   :ALENextWrap<CR>
+  noremap  [a   :ALEPreviousWrap<CR>
+  noremap  ]A   :ALELast<CR>
+  noremap  [A   :ALEFirst<CR>
+  ```
+
+  - `:ALENextWrap<CR>` : <kbd>]</kbd> + <kbd>a</kbd>
+  - `:ALEPreviousWrap<CR>` : <kbd>[</kbd> + <kbd>a</kbd>
+  - `:ALELast<CR>` : <kbd>]</kbd> + <kbd>A</kbd>
+  - `:ALEFirst<CR>` : <kbd>[</kbd> + <kbd>A</kbd>
+
 
 ## [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
 ```vim
@@ -1616,6 +1681,16 @@ else
 endif
 highlight clear SignColumn
 ```
+
+- shortcuts
+
+  ```vim
+  noremap  ]h :GitGutterNextHunk<CR>
+  noremap  [h :GitGutterPrevHunk<CR>
+  ```
+
+  - `:GitGutterNextHunk<CR>` : <kbd>]</kbd> + <kbd>h</kbd>
+  - `:GitGutterPrevHunk<CR>` : <kbd>[</kbd> + <kbd>h</kbd>
 
 ## [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
 ```vim
