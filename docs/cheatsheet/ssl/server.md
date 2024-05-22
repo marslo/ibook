@@ -318,6 +318,9 @@ $ openssl rsa -in key.pem -out key.pem
 
 #### [import to Linux](https://phumipatc.medium.com/how-to-convert-certificate-file-from-windows-to-linux-and-how-to-import-certificate-file-on-linux-4ae78a9740e2)
 
+> [!NOTE|label:references:]
+> - [Install a PEM-format certificate](https://ubuntu.com/server/docs/install-a-root-ca-certificate-in-the-trust-store)
+
 ```bash
 $ sudo cp certificate.crt /usr/local/share/ca-certificates/
 $ sudo chmod 755 /usr/local/share/ca-certificates/certificate.crt
