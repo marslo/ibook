@@ -16,6 +16,9 @@
   - [generate the random String](#generate-the-random-string)
   - [dynamic method names](#dynamic-method-names)
   - [`instanceof`](#instanceof)
+- [method and class](#method-and-class)
+  - [Named parameters](#named-parameters)
+  - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
 - [run groovy from docker](#run-groovy-from-docker)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
@@ -523,6 +526,54 @@ assert clz.isAssignableFrom( [:].getClass() ) == false
 
 assert clz.isInstance( '' )
 assert clz.isInstance( [] ) == false
+```
+
+## method and class
+
+> [!NOTE|label:references:]
+> - [Class members](http://groovy-lang.org/objectorientation.html#_class_members)
+>   - [Positional parameters](http://groovy-lang.org/objectorientation.html#_positional_parameters)
+>   - [Named parameters](http://groovy-lang.org/objectorientation.html#_named_parameters)
+> - [Varargs](http://groovy-lang.org/objectorientation.html#_varargs)
+
+### [Named parameters](http://docs.groovy-lang.org/latest/html/documentation/#_named_parameters_2)
+
+> [!TIP|label:references:]
+> To support this notation, a convention is used where the first argument to the method is a `Map`
+> - reference:
+>   - [Groovy Goodness: Named Parameters are Converted to Map](https://blog.mrhaki.com/2009/09/groovy-goodness-named-parameters-are.html)
+>   - [Groovy method with optional parameters](https://stackoverflow.com/questions/18149102/groovy-method-with-optional-parameters/18149299?noredirect=1#comment138402620_18149299)
+> - API:
+>   - [groovy.transform.NamedVariant](https://docs.groovy-lang.org/latest/html/api/groovy/transform/NamedVariant.html)
+>     - Use one or more `@NamedParam` annotations to explicitly identify such parameters
+>     - Use one or more `@NamedDelegate` annotations to explicitly identify such parameters as delegate parameters
+>     - If no parameters with `@NamedParam` or `@NamedDelegate` annotations are found then:
+>       - If `autoDelegate` is `false` (the default), all parameters are treated as if they were named parameters
+>       - If `autoDelegate` is `true`, the first parameter is treated as if it is a delegate parameter
+
+```groovy
+def foo(Map args) { "${args.name}: ${args.age}" }
+assert 'Marie: 1' == foo(name: 'Marie', age: 1)
+
+def foo(Map args) { "${args.name}: ${args?.age ?: -1}" }
+assert 'Marie: -1' == foo(name: 'Marie')
+
+def foo ( Map m ) { println "${m.name} : ${m.age}" }
+assert foo( name: 'marslo', age: '18' ) == 'marslo : 18'
+```
+
+### [Mixing named and positional parameters](http://docs.groovy-lang.org/latest/html/documentation/#_mixing_named_and_positional_parameters)
+```groovy
+def foo ( Map m, Integer i ) {
+  "${m.name} : ${m.age} : ${i}"
+}
+assert foo( name: 'marslo', age: '18', 123 ) == 'marslo : 18 : 123'
+
+def foo(Map args, Integer number) {
+  "${args.name}: ${args.age}, and the number is ${number}"
+}
+assert 'Marie: 1, and the number is 23' == foo(name: 'Marie', age: 1, 23)
+assert 'Marie: 1, and the number is 23' == foo(23, name: 'Marie', age: 1)
 ```
 
 ## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
