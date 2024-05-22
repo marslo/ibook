@@ -18,6 +18,7 @@
     - [from crt](#from-crt)
     - [remove password from extacted private key](#remove-password-from-extacted-private-key)
     - [from certificate](#from-certificate)
+    - [convert from windows `certmgr.msc`](#convert-from-windows-certmgrmsc)
   - [Code Signing Certificates](#code-signing-certificates)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -279,5 +280,48 @@ $ openssl rsa -in key.pem -out key.pem
   # or
   $ openssl x509 -x509toreq -in certificate.pem -out req.pem -signkey key.pem
   ```
+
+### convert from windows `certmgr.msc`
+
+1. <kbd>win</kbd> + <kbd>r</kbd> -> `certmgr.msc`
+1. `Certifacts - Current User` -> `Trusted Root Certification Authorities` -> `Certificates` -> the wanted CA
+1. right-click -> `open` or double-click
+
+   ![certmgr-1](../../screenshot/win/certmgr/certmgr.msc-1.png)
+
+1. `Details` -> `Copy to File...`
+
+   ![certmgr-2](../../screenshot/win/certmgr/certmgr.msc-2.png)
+
+1. Certificate Export Wizard -> `Next`
+
+   ![certmgr-3](../../screenshot/win/certmgr/certmgr.msc-3.png)
+
+1. convert to crt
+
+  * `DER encoded binary X.509 (.CER)`
+    ```bash
+    $ openssl x509 -inform DER -in certificate.cer -out certificate.crt
+    ```
+
+  * `Base-64 encoded X.509 (.CER)`
+    ```bash
+    $ openssl x509 -inform PEM -in certificate.cer -out certificate.crt
+    ```
+
+  * `Cryptographic Message Syntax Standard - PKCS #7 Certificates (.P7B)`
+    ```bash
+    $ openssl pkcs7 -inform DER -in certificate.p7b -out certificate.crt
+    # or
+    $ openssl pkcs7 -print_certs -in certificate.p7b -out certificate.crt
+    ```
+
+#### [import to Linux](https://phumipatc.medium.com/how-to-convert-certificate-file-from-windows-to-linux-and-how-to-import-certificate-file-on-linux-4ae78a9740e2)
+
+```bash
+$ sudo cp certificate.crt /usr/local/share/ca-certificates/
+$ sudo chmod 755 /usr/local/share/ca-certificates/certificate.crt
+$ sudo update-ca-certificates
+```
 
 ## [Code Signing Certificates](https://www.xolphin.com/support/signatures/Code_Signing_Certificates)
