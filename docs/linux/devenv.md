@@ -20,6 +20,7 @@
   - [mono](#mono)
   - [cmake](#cmake)
   - [llvm](#llvm)
+  - [clang++ in windows](#clang-in-windows)
   - [go](#go)
   - [node && npm](#node--npm)
     - [nodesource/distributions](#nodesourcedistributions)
@@ -527,6 +528,11 @@ $ sudo dnf install cmake make
 # dnf
 $ sudo dnf install llvm llvm-libs
 ```
+
+## clang++ in windows
+
+> [!NOTE|label:references:]
+> - [Installing clang++ to compile and link on Windows](http://blog.johannesmp.com/2015/09/01/installing-clang-on-windows-pt1/)
 
 ## go
 
