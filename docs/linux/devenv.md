@@ -43,6 +43,7 @@
 - [auto completion](#auto-completion)
   - [bash-completion](#bash-completion)
   - [bash-completion@2](#bash-completion2)
+    - [troubleshooting for `bash-completion@2`](#troubleshooting-for-bash-completion2)
   - [tools](#tools)
     - [fzf](#fzf)
     - [npm](#npm)
@@ -1156,6 +1157,30 @@ if test -d "${BASH_COMPLETION_DIR}"; then
   if ls "${BASH_COMPLETION_DIR}"/*git*    >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*git* )    ; fi
   if ls "${BASH_COMPLETION_DIR}"/*docker* >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*docker* ) ; fi
 fi
+```
+
+### troubleshooting for `bash-completion@2`
+
+> [!TIP|label:references:]
+> for issue:
+> - `-bash: [: too many arguments`
+
+- `vim /usr/local/etc/bash_completion.d/gcc`
+- `vim /usr/local/etc/bash_completion.d/ifupdown`
+- `vim /usr/local/etc/bash_completion.d/ipsec`
+- `vim /usr/local/etc/bash_completion.d/kldload`
+- `vim /usr/local/etc/bash_completion.d/man`
+- `vim /usr/local/etc/bash_completion.d/net-tools`
+- `vim /usr/local/etc/bash_completion.d/pkg_install`
+- `vim /usr/local/etc/bash_completion.d/procps`
+- `vim /usr/local/etc/bash_completion.d/wireless-tools`
+
+to modify:
+```bash
+[ ... = ...  ] to [[ ... = ... ]]
+
+# and
+[ ... = ... -o ... = ... ] to [[ ... = ... || ... = ... ]]
 ```
 
 ## tools
