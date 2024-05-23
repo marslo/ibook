@@ -15,6 +15,7 @@
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
   - [github/copilot.vim](#githubcopilotvim)
     - [CopilotChat.nvim](#copilotchatnvim)
+    - [troubleshooting](#troubleshooting)
   - [tomtom/tcomment_vim](#tomtomtcomment_vim)
   - [dense-analysis/ale](#dense-analysisale)
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic-1)
@@ -35,7 +36,7 @@
   - [tpope/vim-fugitive](#tpopevim-fugitive)
   - [APZelos/blamer.nvim](#apzelosblamernvim)
   - [zivyangll/git-blame.vim](#zivyangllgit-blamevim)
-- [troubleshooting](#troubleshooting)
+- [troubleshooting](#troubleshooting-1)
   - [airline](#airline)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1118,6 +1119,27 @@ require("CopilotChat").setup {
   show_folds = false,
 }
 ```
+
+### troubleshooting
+
+- No GitHub token found in WSL
+
+  - error message
+    ```bash
+    No GitHub token found, please use `:Copilot setup` to set it up from copilot.vim or copilot.lua
+    ```
+
+  - error log
+    ```bash
+    [CopilotChat.nvim] [ERROR 23:59:58] /home/marslo/.vim/plugged/CopilotChat.nvim/lua/CopilotChat/copilot.lua:275: No GitHub token found, please use `:Copilot setup` to set it up from copilot.vim or copilot.lua
+    ```
+
+  - solution
+    ```bash
+    $ user="$(jq -c -r 'to_entries[].value.user' < ~/.config/github-copilot/apps.json)"
+    $ token="$(jq -c -r 'to_entries[].value.oauth_token' < ~/.config/github-copilot/apps.json)"
+    $ echo "{\"github.com\":{\"user\":\"${user}\",\"oauth_token\":\"${token}\"}}" > ~/.config/github-copilot/hosts.json
+    ```
 
 ## [tomtom/tcomment_vim](https://github.com/tomtom/tcomment_vim)
 ```vim
