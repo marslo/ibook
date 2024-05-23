@@ -22,7 +22,7 @@
   - [apt-cache](#apt-cache)
     - [get package name by command](#get-package-name-by-command)
     - [search package name for apt-get](#search-package-name-for-apt-get)
-  - [trouble shooting](#trouble-shooting)
+  - [troubleshooting](#troubleshooting)
 - [yum/dnf](#yumdnf)
   - [repo](#repo)
     - [download package](#download-package)
@@ -258,9 +258,31 @@ google-chrome-stable - The web browser from Google
 google-chrome-unstable - The web browser from Google
 ```
 
-## trouble shooting
+## troubleshooting
 
 - [修复 apt-key deprecated 警告](https://taoshu.in/unix/apt-key-deprecated.html)
+
+- [The following packages have unmet dependencies!](https://askubuntu.com/a/1345598/92979)
+
+  - error
+    ```bash
+    $ sudo apt upgrade
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    You might want to run 'apt --fix-broken install' to correct these.
+    The following packages have unmet dependencies:
+     vim : Depends: vim-common (= 2:8.2.3995-1ubuntu2.15) but 2:8.2.3995-1ubuntu2.13 is installed
+           Depends: vim-runtime (= 2:8.2.3995-1ubuntu2.15) but 2:8.2.3995-1ubuntu2.13 is installed
+     vim-tiny : Depends: vim-common (= 2:8.2.3995-1ubuntu2.15) but 2:8.2.3995-1ubuntu2.13 is installed
+    E: Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution).
+    ```
+
+  - solution
+    ```bash
+    $ sudo rm -rf /var/lib/dpkg/info/vim-tiny.*
+    $ sudo apt --fix-broken install
+    ```
 
 # yum/dnf
 
