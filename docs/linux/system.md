@@ -16,10 +16,12 @@
   - [ps](#ps)
 - [set system info](#set-system-info)
   - [clear duplicated PATH](#clear-duplicated-path)
+  - [sysctl](#sysctl)
+    - [change max_user_watches](#change-max_user_watches)
+    - [change net.bridge](#change-netbridge)
   - [LS_COLORS](#ls_colors)
   - [set dns for ubuntu](#set-dns-for-ubuntu)
   - [disable firewall](#disable-firewall)
-  - [change net.bridge](#change-netbridge)
   - [off swap](#off-swap)
   - [disable selinux](#disable-selinux)
   - [confined and unconfined users](#confined-and-unconfined-users)
@@ -833,6 +835,40 @@ $ echo "${PATH//:/$'\n'}"
 $ export PATH=`echo -n $PATH | awk -v RS=":" '{ if (!x[$0]++) {printf s $0; s=":"} }'`
 ```
 
+## sysctl
+### [change max_user_watches](https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc)
+```bash
+# permanent
+$ sudo bash -c "echo fs.inotify.max_user_watches=524288 >> /etc/sysctl.conf"
+$ sudo sysctl -p
+
+# temporary
+$ sudo sysctl fs.inotify.max_user_watches=524288
+```
+
+- verify
+  ```bash
+  $ cat /proc/sys/fs/inotify/max_user_watches
+  ```
+
+### change net.bridge
+```bash
+$ sudo modprobe br_netfilter
+$ sudo sysctl net.bridge.bridge-nf-call-iptables=1
+$ sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
+
+# or
+$ sudo bash -c "cat >  /etc/sysctl.d/k8s.conf" << EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+```
+
+- check status
+  ```bash
+  $ sudo sysctl --system
+  ```
+
 ## LS_COLORS
 
 > [!NOTE|label:references:]
@@ -1059,24 +1095,6 @@ $ sudo systemctl mask firewalld
   $ sudo systemctl is-enabled firewalld
   $ sudo systemctl is-active firewalld
   $ sudo firewall-cmd --state
-  ```
-
-## change net.bridge
-```bash
-$ sudo modprobe br_netfilter
-$ sudo sysctl net.bridge.bridge-nf-call-iptables=1
-$ sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
-
-# or
-$ sudo bash -c "cat >  /etc/sysctl.d/k8s.conf" << EOF
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-EOF
-```
-
-- check status
-  ```bash
-  $ sudo sysctl --system
   ```
 
 ## off swap
