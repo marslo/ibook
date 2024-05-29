@@ -27,6 +27,7 @@
   - [vim-scripts/AuthorInfoDetect](#vim-scriptsauthorinfodetect)
   - [simnalamburt/vim-mundo](#simnalamburtvim-mundo)
   - [yegappan/mru](#yegappanmru)
+  - [amitds1997/remote-nvim.nvim](#amitds1997remote-nvimnvim)
 - [markdown](#markdown)
   - [preservim/vim-markdown](#preservimvim-markdown)
   - [dhruvasagar/vim-table-mode](#dhruvasagarvim-table-mode)
@@ -1614,6 +1615,14 @@ let MRU_Auto_Close    = 1                                           " most recen
 let MRU_Max_Entries   = 10
 let MRU_Exclude_Files = '^/tmp/.*\|^/temp/.*\|^/media/.*\|^/mnt/.*'
 ```
+
+## [amitds1997/remote-nvim.nvim](https://github.com/amitds1997/remote-nvim.nvim)
+
+> [!NOTE|label:references:]
+> - [#21635 remote ssh plugin (like vscode remote-ssh)](https://github.com/neovim/neovim/issues/21635)
+> - [DanielWeidinger/nvim-sshfs](https://github.com/DanielWeidinger/nvim-sshfs)
+> - [ipod825/ranger.nvim](https://github.com/ipod825/ranger.nvim) | [ipod825/vim-netranger](https://github.com/ipod825/vim-netranger)
+> - [ashwinvis/ssh.nvim](https://codeberg.org/ashwinvis/ssh.nvim)
 
 # markdown
 ## [preservim/vim-markdown](https://github.com/preservim/vim-markdown)

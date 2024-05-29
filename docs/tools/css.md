@@ -3,6 +3,7 @@
 
 - [stylus](#stylus)
   - [tricky](#tricky)
+  - [using bas64 string for svg](#using-bas64-string-for-svg)
 - [bootstrap](#bootstrap)
   - [using boostrap sytles](#using-boostrap-sytles)
 - [alert](#alert)
@@ -61,6 +62,23 @@
     ```bash
     h2 > :not(a[class*="btn"]),
     h2 > :is(a:not([class*="btn"]),
+    ```
+
+### using bas64 string for svg
+
+- original
+  ```css
+  background-image: url("https://path/to/icon.svg")
+  ```
+
+- using `data:image/svg+xml;base64`
+  - generate bas64 encoded string
+    ```bash
+    $ cat icon.svg | base64
+    ```
+  - using bas64 string in css
+    ```css
+    background-image: url(background-image: url("data:image/svg+xml;base64,......")
     ```
 
 ## bootstrap
