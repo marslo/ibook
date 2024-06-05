@@ -44,6 +44,7 @@
 > i.e.:
 > - [https://kubernetes.io/docs/setup/best-practices/](https://kubernetes.io/docs/setup/best-practices/)
 > - [https://kubernetes.io/docs/setup/best-practices/_print/](https://kubernetes.io/docs/setup/best-practices/_print/)
+> - [* ramitsurana/awesome-kubernetes](https://github.com/ramitsurana/awesome-kubernetes) | [Awesome Kubernetes](https://ramitsurana.github.io/awesome-kubernetes/)
 
 
 {% hint style='tip' %}

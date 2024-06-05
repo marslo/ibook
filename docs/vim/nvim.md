@@ -382,6 +382,17 @@ $ gem install neovim
 $ npm install -g neovim
 ```
 
+- for venv
+  ```bash
+  $ python3 -m pip install --upgrade pynvim
+
+  # verify
+  $ command python3 -c 'import sys; sys.path = [p for p in sys.path if p != ""]; import neovim; print(neovim.__file__)'
+
+  # to list all packages
+  $ pip list -v
+  ```
+
 ## init.vim/init.lua
 
 > [!NOTE|label:references:]
