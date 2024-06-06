@@ -8,6 +8,7 @@
   - [memory](#memory)
   - [bios](#bios)
   - [disk](#disk)
+    - [RAID Info](#raid-info)
   - [network](#network)
   - [environment variables](#environment-variables)
   - [graphics card driver](#graphics-card-driver)
@@ -314,6 +315,19 @@ $ sudo dmidecode -t 4 | grep -E 'Socket Designation|Count'
   Socket Designation: CPU2
   Core Count: 8
   Thread Count: 16
+
+# list clock speed
+$ sudo lscpu | grep --color=none -E '^(Thread|Core|Socket|CPU\(|NUMA\ node\(|Model\ name|CPU.+MHz|BogoMIPS)'
+CPU(s):              32
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           2
+NUMA node(s):        2
+Model name:          Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz
+CPU MHz:             1719.616
+CPU max MHz:         3600.0000
+CPU min MHz:         1200.0000
+BogoMIPS:            6399.86
 ```
 
 - others
@@ -407,11 +421,24 @@ $ vmstat -s
 #### list only installed RAM modules
 ```bash
 $ sudo dmidecode -t memory | grep  Size: | grep -v "No Module Installed"
+$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Manufacturer))' --color=never | grep -v -E 'Not Specified|No Module Installed|Unknow|None|OUT OF SPEC'
 ```
 
 #### memory information
 ```bash
 $ sudo dmidecode -t memory
+$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Configured Memory Speed:|Manufacturer))' --color=never
+Memory Device
+  Size: 16384 MB
+  Type: DDR4
+  Type Detail: Synchronous Registered (Buffered)
+  Manufacturer: 00AD063200AD
+  Serial Number: 44965EB1
+  Part Number: HMA82GR7DJR8N-XN
+  Configured Memory Speed: 2933 MT/s
+  Memory Technology: DRAM
+# or
+$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Configured Memory Speed:|Manufacturer))' --color=never | grep -v -E 'Not Specified|No Module|Unknow|None|<OUT OF SPEC>'
 
 # or
 $ sudo lshw -C memory
@@ -704,6 +731,49 @@ $ sudo dmidecode -t bios
 - `$ hwinfo --block --short`
 - `$ cat /proc/partitions`
 - `$ sudo hdparm -I /dev/sda`
+
+### RAID Info
+
+> [!NOTE|label:references:]
+> - [ubuntu bios raid卡管理界面 ubuntu raid驱动](https://blog.51cto.com/u_16099343/7908062)
+> - [Dell Lifecycle Controller Graphical User Interface Version 2.05.05.05 For 13th Generation Dell PowerEdge Servers User's Guide](https://www.dell.com/support/manuals/en-us/idrac8-with-lc-v2.05.05.05/lc_2.05.05.05_ug-v1/viewing-current-raid-configuration?guid=guid-0856216c-7a31-4f6d-9a4d-ec1ca2bfac69&lang=en-us)
+
+```bash
+$ sudo apt install -y smartmontools
+
+# RAID1
+$ sudo smartctl --scan
+/dev/sda -d scsi # /dev/sda, SCSI device
+/dev/bus/0 -d megaraid,0 # /dev/bus/0 [megaraid_disk_00], SCSI device
+/dev/bus/0 -d megaraid,1 # /dev/bus/0 [megaraid_disk_01], SCSI device
+```
+
+#### RAID details info
+```bash
+$ sudo smartctl --all -d megaraid,1 /dev/sda
+smartctl 7.1 2019-12-30 r5022 [x86_64-linux-5.15.0-107-generic] (local build)
+Copyright (C) 2002-19, Bruce Allen, Christian Franke, www.smartmontools.org
+
+=== START OF INFORMATION SECTION ===
+Device Model:     HF***********9N
+Serial Number:    EJ*************4P
+LU WWN Device Id: 5 ace42e 02565881c
+Add. Product Id:  DELL(tm)
+Firmware Version: DZ02
+User Capacity:    960,197,124,096 bytes [960 GB]
+Sector Sizes:     512 bytes logical, 4096 bytes physical
+Rotation Rate:    Solid State Device
+Form Factor:      2.5 inches
+Device is:        Not in smartctl database [for details use: -P showall]
+ATA Version is:   ACS-4 (minor revision not indicated)
+SATA Version is:  SATA 3.3, 6.0 Gb/s (current: 6.0 Gb/s)
+Local Time is:    Wed Jun  5 16:34:16 2024 PDT
+SMART support is: Available - device has SMART capability.
+SMART support is: Enabled
+
+# or even more details
+$ sudo smartctl --xall -d megaraid,1 /dev/sda
+```
 
 ## network
 
