@@ -15,6 +15,7 @@
 - [nginx](#nginx)
 - [nmap](#nmap)
   - [host discovery](#host-discovery)
+  - [check available IPs](#check-available-ips)
   - [scan `80` or `22` in particular setment](#scan-80-or-22-in-particular-setment)
   - [OS detection with verbosity](#os-detection-with-verbosity)
   - [find printer](#find-printer)
@@ -412,6 +413,17 @@ $ sudo ifconfig <NEW_INTERFACE_NAME>
 | `-sI <zombie host[:probeport]>` | Idlescan                                                             |
 |                            `-O` | Enable OS detection                                                  |
 
+
+### [check available IPs](https://serverfault.com/a/23743/129815)
+```bash
+$ nmap -sP -PR 1.2.3.*
+
+# or via IP range
+$ nmap -sP -PR 1.2.3.1-254
+
+# or via CIDR
+$ nmap -sP -PR 1.2.3.0/22
+```
 
 ### scan `80` or `22` in particular setment
 ```bash
