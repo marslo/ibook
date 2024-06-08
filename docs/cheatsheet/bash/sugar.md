@@ -32,6 +32,7 @@
   - [bash completion](#bash-completion)
     - [osx](#osx)
     - [linux](#linux)
+    - [troubleshooting](#troubleshooting)
 - [tricky](#tricky)
   - [alias for sudo](#alias-for-sudo)
   - [check file text or binary](#check-file-text-or-binary)
@@ -890,6 +891,15 @@ $ date | wc
 
 > [!NOTE|label:references]
 > - [* Creating a bash completion script](https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial)
+> - [* An introduction to bash completion: part 1](https://web.archive.org/web/20190722115536/https://debian-administration.org/article/316/An_introduction_to_bash_completion_part_1)
+> - [* An introduction to bash completion: part 2](https://web.archive.org/web/20200327211933/https://debian-administration.org/article/317/An_introduction_to_bash_completion_part_2)
+>   ```bash
+>   $ complete -W "--help --verbose --version" foo
+>   $ foo --<TAB>
+>   --help
+>   --verbose
+>   --version
+>   ```
 > - [8.7 Programmable Completion Builtins](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion-Builtins.html)
 > - [8.6 Programmable Completion](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
 > - [8.8 A Programmable Completion Example](https://www.gnu.org/software/bash/manual/html_node/A-Programmable-Completion-Example.html#A-Programmable-Completion-Example)
@@ -1534,6 +1544,122 @@ $ cat ~/.bash_profile
   - centos
     ```bash
     $ fd --gen-completions | sudo tee /etc/bash_completion.d/fd
+    ```
+
+### troubleshooting
+
+- `$ ssh bash_completion: _comp_compgen_known_hosts__impl: -F: an empty filename is specified`
+
+  > [!NOTE|label:references:]
+  > - [Problem with ssh and bash-completion](https://bbs.archlinux.org/viewtopic.php?pid=858200#p858200)
+  > - [Autocomplete server names for SSH and SCP](https://unix.stackexchange.com/a/181603/29178)
+  > - [`compgen -A hostname`](https://github.com/scop/bash-completion/blob/main/bash_completion#L2470)
+
+  - clear completion
+    ```bash
+    $ complete -r ssh
+    ```
+
+  - or add into `/usr/local/etc/bash_completion.d/ssh`
+
+    ```bash
+    # https://unix.stackexchange.com/a/181603/29178
+    _ssh_hosts()
+    {
+        local cur prev opts
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        opts=$(command grep '^Host' ~/.ssh/config ~/.ssh/config.d/* 2>/dev/null | command grep -v '[?*]' | cut -d ' ' -f 2-)
+
+        COMPREPLY=( $(compgen -W "$opts" -- ${cur}) )
+        return 0
+    }
+
+    _ssh()
+    {
+        local cur prev configfile
+        local -a config
+        # configfile="$HOME/.ssh/config"
+
+        COMPREPLY=()
+        _get_comp_words_by_ref -n : cur prev
+        #cur=`_get_cword :`
+        #prev=`_get_pword`
+
+        _ssh_suboption_check && return 0
+
+        case $prev in
+            -F|-i|-S)
+                _filedir
+                return 0
+                ;;
+            -c)
+                _ssh_ciphers
+                return 0
+                ;;
+            -m)
+                _ssh_macs
+                return 0
+                ;;
+            -l)
+                COMPREPLY=( $( compgen -u -- "$cur" ) )
+                return 0
+                ;;
+            -o)
+                _ssh_options
+                return 0
+                ;;
+            -w)
+                _available_interfaces
+                return 0
+                ;;
+            -b)
+                _ssh_bindaddress
+                return 0
+                ;;
+        esac
+
+        if [[ "$cur" == -F* ]]; then
+            cur=${cur#-F}
+            _filedir
+            # Prefix completions with '-F'
+            COMPREPLY=( "${COMPREPLY[@]/#/-F}" )
+            cur=-F$cur  # Restore cur
+        elif [[ "$cur" == -* ]]; then
+            COMPREPLY=( $( compgen -W '-1 -2 -4 -6 -A -a -C -f -g -K -k -M \
+                -N -n -q -s -T -t -V -v -X -v -Y -y -b -b -c -D -e -F \
+                -i -L -l -m -O -o -p -R -S -w' -- "$cur" ) )
+        else
+            # Search COMP_WORDS for '-F configfile' or '-Fconfigfile' argument
+            set -- "${COMP_WORDS[@]}"
+            while [ $# -gt 0 ]; do
+                if [ "${1:0:2}" = -F ]; then
+                    if [ ${#1} -gt 2 ]; then
+                        configfile="$(dequote "${1:2}")"
+                    else
+                        shift
+                        [ "$1" ] && configfile="$(dequote "$1")"
+                    fi
+                    break
+                fi
+                shift
+            done
+            # marslo >> disable _known_hosts_real from $configfile
+            # marslo >> using self-defined _ssh_hosts function
+            # _known_hosts_real -a -F "$configfile" "$cur"
+            _ssh_hosts
+            if [ $COMP_CWORD -ne 1 ]; then
+                _compopt_o_filenames
+                COMPREPLY=( "${COMPREPLY[@]}" $( compgen -c -- "$cur" ) )
+            fi
+        fi
+
+        return 0
+    }
+    shopt -u hostcomplete && complete -F _ssh ssh slogin autossh
+
+    $ complete -F _ssh ssh
     ```
 
 # tricky
