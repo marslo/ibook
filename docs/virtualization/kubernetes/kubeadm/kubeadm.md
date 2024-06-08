@@ -11,6 +11,8 @@
   - [show endpoint](#show-endpoint)
   - [show default kubeadm config](#show-default-kubeadm-config)
   - [kubeadm join](#kubeadm-join)
+  - [[kubeadm upgrade](Upgrading kubeadm clusters)](#kubeadm-upgradeupgrading-kubeadm-clusters)
+  - [reconfiguring kubeadm](#reconfiguring-kubeadm)
   - [CNI](#cni)
 - [troubleshooting](#troubleshooting)
 
@@ -92,6 +94,14 @@ EOF
 $ sudo sysctl -w net.ipv4.ip_forward=1
 $ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
 $ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
+# or
+$ sudo sysctl -w net.ipv4.ip_forward=1
+$ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+$ sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+$ sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+$ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
+$ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
+$ sudo sysctl --system
 ```
 
 - [or network setup](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-1/)
@@ -252,10 +262,15 @@ $ sudo systemctl is-enabled firewalld
 $ sudo systemctl is-active firewalld
 $ sudo firewall-cmd --state
 
+# disable swap
 $ sudo swapoff -a
+$ grep -q -E '^[^#]*swap' /etc/fstab && sudo sed -re 's:^[^#]*swap.*:# &:' -i /etc/fstab
+# or
+$ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
+
+# disable selinux
 $ sudo setenforce 0
 $ sudo bash -c "sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc/selinux/config"
-$ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
 
 $ sudo modprobe br_netfilter
 
@@ -469,10 +484,13 @@ $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfig
 > - [Uploading control-plane certificates to the cluster](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#uploading-control-plane-certificates-to-the-cluster)
 > - [kubeadm join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
 
-
+- swap off
+  ```bash
+  $ sudo swapoff -a
+  $ sudo sed -re 's:^/?swap.+$:# &:' -i /etc/fstab
+  ```
 
 - [install docker-ce](../../docker/docker.html#install)
-
 - install kubelet in node
   ```bash
   $ sudo bash -c 'cat > /etc/yum.repos.d/kubernetes.repo' <<EOF
@@ -533,6 +551,69 @@ $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfig
     ```bash
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
     ```
+
+#### troubleshooting
+
+- [`ERROR CRI`](https://forum.linuxfoundation.org/discussion/862825/kubeadm-init-error-cri-v1-runtime-api-is-not-implemented)
+
+  > [!NOTE|label:current system:]
+  > - os:
+  >   ```bash
+  >   $ printf "$(uname -srm)\n$(cat /etc/os-release)\n"
+  >   Linux 5.15.0-107-generic x86_64
+  >   NAME="Ubuntu"
+  >   VERSION="20.04.6 LTS (Focal Fossa)"
+  >   ID=ubuntu
+  >   ID_LIKE=debian
+  >   PRETTY_NAME="Ubuntu 20.04.6 LTS"
+  >   VERSION_ID="20.04"
+  >   HOME_URL="https://www.ubuntu.com/"
+  >   SUPPORT_URL="https://help.ubuntu.com/"
+  >   BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+  >   PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+  >   VERSION_CODENAME=focal
+  >   UBUNTU_CODENAME=focal
+  >   ```
+  > - packages:
+  >   ```bash
+  >   $ apt list --installed | grep -E 'kube|container|cri-tools|socat|cni'
+  >   containerd.io/focal,now 1.6.33-1 amd64 [installed]
+  >   cri-tools/unknown,now 1.28.0-1.1 amd64 [installed,automatic]
+  >   kubeadm/unknown,now 1.28.8-1.1 amd64 [installed,upgradable to: 1.28.10-1.1]
+  >   kubectl/unknown,now 1.28.8-1.1 amd64 [installed,upgradable to: 1.28.10-1.1]
+  >   kubelet/unknown,now 1.28.8-1.1 amd64 [installed,upgradable to: 1.28.10-1.1]
+  >   kubernetes-cni/unknown,now 1.2.0-2.1 amd64 [installed,automatic]
+  >   socat/focal,now 1.7.3.3-2 amd64 [installed,automatic]
+  >   ```
+
+  - error message
+    ```bash
+    $ sudo kubeadm join 192.168.1.100:6443 --token yspydx.6bhxbnvzojb9vxbr --discovery-token-ca-cert-hash sha256:ef2971478d52cfee63a543fe7ad6f97423d2a943456ff93641c705fc3e82b6c4 --v=5
+    [preflight] Running pre-flight checks
+      [WARNING Swap]: swap is enabled; production deployments should disable swap unless testing the NodeSwap feature gate of the kubelet
+    error execution phase preflight: [preflight] Some fatal errors occurred:
+      [ERROR CRI]: container runtime is not running: output: time="2024-06-07T19:42:13-07:00" level=fatal msg="validate service connection: validate CRI v1 runtime API for endpoint \"unix:///var/run/containerd/containerd.sock\": rpc error: code = Unimplemented desc = unknown service runtime.v1.RuntimeService"
+    , error: exit status 1
+    ```
+
+  - solution
+    ```bash
+    # uninstall `containerd` if necessary
+    $ sudo apt remove -y containerd
+
+    # install containerd.io instead of
+    $ sudo apt install -y containerd.io
+
+    # remove default config file
+    $ sudo mv /etc/containerd/config.toml{,.bak}
+
+    # restart containerd services
+    $ sudo systemctl restart containerd
+    ```
+
+### [kubeadm upgrade](Upgrading kubeadm clusters)
+
+### [reconfiguring kubeadm](https://v1-28.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-reconfigure/)
 
 ### CNI
 
