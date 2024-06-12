@@ -425,6 +425,7 @@ Copied test to clipboard. Will clear in 45 seconds.
 >   - others:
 >     - `PASSWORD_STORE_CHARACTER_SET='[:alnum:].,!?&*%_~$#^@{}[]()<>|=/\+-'`
 > - [Vim: word vs WORD](https://stackoverflow.com/a/54588479/2940319)
+>
 >   ![WORD VS. word](https://i.stack.imgur.com/7AZo6.png)
 
 - customize charset
