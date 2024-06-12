@@ -106,6 +106,7 @@
     * [shared-libs](jenkins/plugins/shared-libs.md)
     * [job-dsl](jenkins/plugins/dsl.md)
     * [simple-theme](jenkins/plugins/simple-theme.md)
+    * [customizable-header](jenkins/plugins/customizable-header.md)
     * [build-timeline](jenkins/plugins/build-timeline.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
     * [coverage](jenkins/plugins/coverage.md)
