@@ -314,6 +314,7 @@ $ kubectl get node --show-labels
   ```bash
   $ kubectl get node --label-columns <label-name>
   ```
+
   - e.g.:
     ```bash
     $ kubectl get nodes --label-columns jenkins
@@ -323,10 +324,30 @@ $ kubectl get node --show-labels
     k8s-node03    Ready     worker   217d    v1.12.3
     k8s-node04    Ready     worker   52d     v1.12.3
     k8s-node05    Ready     worker   589d    v1.12.3
-    k8s-node06    Ready     master   2y33d   v1.12.3   master
+    k8s-node06    Ready     master   2y33d   v1.12.3   controller
     k8s-node07    Ready     master   589d    v1.12.3
     k8s-node08    Ready     worker   535d    v1.12.3
     ```
+
+- with multiple label-columns
+  ```bash
+  $ kubectl get nodes --selector node-role.kubernetes.io/worker=worker  \
+                      --label-columns kubernetes.io/os \
+                      --label-columns kubernetes.io/arch \
+                      --label-columns devops/jenkins |
+            grep -v -E 'SchedulingDisabled|NotReady'
+
+  NAME          STATUS   STATUS    ROLES    VERSION   OS      ARCH    JENKINS
+  k8s-node01    Ready    Ready     worker   v1.19.6   linux   amd64
+  k8s-node02    Ready    Ready     worker   v1.19.6   linux   amd64
+  k8s-node03    Ready    Ready     worker   v1.19.6   linux   amd64   controller
+  k8s-node04    Ready    Ready     worker   v1.19.6   linux   amd64
+  k8s-node05    Ready    Ready     worker   v1.19.6   linux   amd64
+  k8s-node06    Ready    Ready     master   v1.19.6   linux   amd64
+  k8s-node07    Ready    Ready     master   v1.19.6   linux   amd64
+  k8s-node08    Ready    Ready     worker   v1.19.6   linux   amd64
+  ```
+
 - `-l`
   ```bash
   $ kubectl get node --show-labels -l node -role.kubernetes.io/master

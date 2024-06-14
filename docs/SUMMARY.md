@@ -183,6 +183,7 @@
     * [closure](programming/groovy/closure.md)
     * [enum](programming/groovy/enum.md)
     * [time](programming/groovy/time.md)
+    * [params](programming/groovy/params.md)
     * [utility](programming/groovy/utility.md)
     * [grape](programming/groovy/grape.md)
     * [syntactic sugar](programming/groovy/sugar.md)
