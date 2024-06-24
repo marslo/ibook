@@ -15,26 +15,29 @@
 - [ansible-galaxy](#ansible-galaxy)
 - [ansible-playbook](#ansible-playbook)
   - [tags](#tags)
+- [[vault CLI]](#vault-cli)
+  - [environment variables](#environment-variables)
+  - [kv get](#kv-get)
+  - [kv list](#kv-list)
 - [ansible-config](#ansible-config)
   - [get all default](#get-all-default)
 - [plugin](#plugin)
   - [lookup](#lookup)
+  - [Become](#become)
 - [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!NOTE|label:references:]
-> - [Ansible 详解（四）：Ansible-vault](https://zhuanlan.zhihu.com/p/39158667)
 > - [Ansible中文权威指南](http://www.ansible.com.cn/index.html)
 >   - [Vault](http://www.ansible.com.cn/docs/playbooks_vault.html)
 >   - [Playbooks](http://www.ansible.com.cn/docs/playbooks.html)
 > - [Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html)
 >   - [Installing Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
->   - [Protecting sensitive data with Ansible vault](https://docs.ansible.com/ansible/latest/vault_guide/index.html)
->   - [* Ansible Vault](https://docs.ansible.com/ansible/2.8/user_guide/vault.html)
 >   - [Tips and tricks](https://docs.ansible.com/ansible/3/user_guide/playbooks_best_practices.html#tip-for-variables-and-vaults)
 >   - [ansible.builtin.template](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)
-> - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
+> - [Sample Ansible setup](https://docs.ansible.com/ansible/latest/tips_tricks/sample_setup.html)
+> - [How to build your inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html)
 > - [* Filters](https://docs.ansible.com/ansible/2.9/user_guide/playbooks_filters.html#filters)
 > - [用 Ansible 实现网络自动化](https://linux.cn/article-9964-1.html)
 
@@ -52,6 +55,11 @@ $ sudo update-alternatives --config python3
 ### install
 ```bash
 $ python -m pip install --user ansible
+
+# or via pipx
+$ python3 -m pip install pipx
+$ pipx ensurepath
+$ pipx install ansible --include-deps
 ```
 
 - install for development
@@ -62,6 +70,9 @@ $ python -m pip install --user ansible
 ### upgrade
 ```bash
 $ python -m pip install --user --upgrade ansible
+
+# with pipx
+$ pipx upgrade --include-injected ansible
 ```
 
 ### [completion](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#adding-ansible-command-shell-completion)
@@ -99,9 +110,15 @@ EOF
 ## ansible-vault
 
 > [!NOTE]
-> - [Encrypting content with Ansible Vault](https://docs.ansible.com/ansible/3/user_guide/vault.html)
 > - [* iMarslo : check line ending](../cheatsheet/text-processing/text-processing.html#check-line-ending)
 > - [* iMarslo : remove the ending '\n'](../cheatsheet/text-processing/text-processing.html#remove-the-ending-%5Cn)
+> - [Ansible Documentation](https://docs.ansible.com/ansible/latest/index.html)
+>   - [* Ansible Vault](https://docs.ansible.com/ansible/2.8/user_guide/vault.html)
+>   - [Protecting sensitive data with Ansible vault](https://docs.ansible.com/ansible/latest/vault_guide/index.html)
+>   - [Encrypting content with Ansible Vault](https://docs.ansible.com/ansible/3/user_guide/vault.html)
+>   - [Using Vault in playbooks](https://docs.ansible.com/ansible/2.8/user_guide/playbooks_vault.html)
+> - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
+> - [Ansible 详解（四）：Ansible-vault](https://zhuanlan.zhihu.com/p/39158667)
 
 ### [encrypted files](https://docs.ansible.com/ansible/3/user_guide/vault.html#creating-encrypted-files)
 
@@ -401,6 +418,7 @@ $ ansible-galaxy install -r requirements.yml
 
 > [!NOTE|label:references:]
 > - [passwordless via environment variables](https://docs.ansible.com/archive/ansible/2.5/user_guide/playbooks_vault.html)
+> - [https://docs.ansible.com/ansible/latest/plugins/become.html#become-plugins](https://docs.ansible.com/ansible/latest/plugins/become.html#become-plugins)
 
 ```bash
 # without password
@@ -478,6 +496,53 @@ $ cat sample.yaml
   localhost           : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
   ```
 
+## [vault CLI]
+
+> [!NOTE|label:references:]
+> - [Vault CLI commands](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-vault-cli)
+> - [Vault commands (CLI)](https://developer.hashicorp.com/vault/docs/commands)
+> - [Using Ansible command line tools](https://docs.ansible.com/ansible/latest/command_guide/index.html)
+
+### environment variables
+```bash
+$ export VAULT_ADDR=https://vault.example.com
+$ export VAULT_TOKEN=s.s**********************K
+```
+
+### [kv get](https://developer.hashicorp.com/vault/docs/commands/kv/get)
+```bash
+$ vault kv get -mount=project service-account/account
+============= Secret Path =============
+project/data/service-account/account
+
+======= Metadata =======
+Key                Value
+---                -----
+created_time       2024-06-19T06:51:35.036120169Z
+custom_metadata    <nil>
+deletion_time      n/a
+destroyed          false
+version            9
+
+============= Data =============
+Key                       Value
+---                       -----
+email                     account@sample.com
+password                  eW7[xRF(rgA@x)n£LN75?R5b.k2z1+
+username                  account
+
+# with json foramt
+$ vault kv get -format=json -mount=project service-account/account
+```
+
+### [kv list](https://developer.hashicorp.com/vault/docs/commands/kv/list)
+```bash
+$ vault kv list project/service-account
+Keys
+----
+account
+```
+
 ## [ansible-config](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#inventory-unparsed-warning)
 
 > [!NOTE|label:referencs:]
@@ -543,7 +608,11 @@ Gathering Facts ----------------------------------------------------------------
 debug ----------------------------------------------------------------------------- 0.03s
 ```
 
+### [Become](https://docs.ansible.com/ansible/latest/plugins/become.html#become-plugins)
 
+> [!NOTE|label:references:]
+> - [Understanding privilege escalation: become](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_privilege_escalation.html#using-become)
+> - [Ansible Become](https://learning-ocean.com/tutorials/ansible/ansible-become/)
 
 ## troubleshooting
 - [generate the final yaml via `ansible.builtin.template`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html)
