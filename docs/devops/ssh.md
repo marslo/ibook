@@ -43,9 +43,10 @@
     - [displaying a special banner for users not in the staff group](#displaying-a-special-banner-for-users-not-in-the-staff-group)
     - [allowing root login from host rootallowed.example.com](#allowing-root-login-from-host-rootallowedexamplecom)
     - [allowing anyone to use gatewayports from the local net](#allowing-anyone-to-use-gatewayports-from-the-local-net)
-- [duebug](#duebug)
+- [debug](#debug)
   - [debug git](#debug-git)
   - [debug ssh](#debug-ssh)
+    - [check sshd log](#check-sshd-log)
   - [tips](#tips)
     - [disconnect](#disconnect)
 
@@ -674,7 +675,7 @@ Match Address 192.168.0.0/24
   GatewayPorts yes
 ```
 
-# duebug
+# debug
 ## debug git
 
 - GIT_SSH_COMMAND
@@ -751,6 +752,30 @@ Match Address 192.168.0.0/24
   # -t : test mode
   $ sudo /usr/sbin/sshd -t [-f /path/to/sshd_config]
   ```
+
+### check sshd log
+
+> [!NOTE|label:references:]
+> - [How to check sshd log?](https://serverfault.com/a/480433/129815)
+
+```bash
+# check `/var/log/auth.log`
+$ grep 'sshd' /var/log/auth.log
+# or
+$ tail -f -n 500 /var/log/auth.log | grep 'sshd'
+
+# check with journalctl
+## -t, --identifier
+$ journalctl -t sshd
+## -u, --unit
+$ journalctl -u ssh
+## -o json-pretty: with json format
+$ journalctl -t sshd -o json-pretty
+## -b0: since last boot
+$ journalctl -t sshd -b0
+## reserve order
+$ journalctl -t sshd -b0 -r
+```
 
 ## tips
 
