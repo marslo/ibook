@@ -31,6 +31,13 @@
 - `linear-gradient(90deg, rgba(192,36,37,1) 0%, rgba(240,203,53,1) 100%);` | `#e29b30` | [BacktotheFuture](https://uigradients.com/#BacktotheFuture)
 - `linear-gradient(90deg, rgba(253,200,48,1) 0%, rgba(243,115,53,1) 100%);` | `#f79733` | [CitrusPeel](https://uigradients.com/#CitrusPeel)
 - `linear-gradient(90deg, rgba(0,65,106,1) 0%, rgba(121,159,12,1) 50%, rgba(255,224,0,1) 100%);` | `#b2bb07` | [Earthly](https://uigradients.com/#Earthly)
+- `linear-gradient( 91deg,  rgba(72,154,78,1) 5.2%, rgba(251,206,70,1) 95.9% );`
+- `radial-gradient( circle farthest-corner at 10% 20%,  rgba(91,140,245,1) 0%, rgba(240,131,252,1) 79.4% );`
+- `linear-gradient( 129.1deg,  rgba(243,199,83,1) 26.8%, rgba(18,235,207,1) 114.1% );`
+- `linear-gradient( 65.9deg,  rgba(85,228,224,1) 5.5%, rgba(75,68,224,0.74) 54.2%, rgba(64,198,238,1) 55.2%, rgba(177,36,224,1) 98.4% );`
+- `linear-gradient(90deg, #FDBB2D 0%, #22C1C3 100%);` | [Retro Wagon](https://cssgradient.io/swatches/)
+- `linear-gradient( 90deg,  rgba(226,66,249,0.94) 10.2%, rgba(79,147,249,1) 77.3% );`
+- `radial-gradient( circle farthest-corner at 10% 20%,  rgba(171,102,255,1) 0%, rgba(116,182,247,1) 90% );`
 
 ## jcasc
 ```yaml
