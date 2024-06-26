@@ -15,7 +15,7 @@
 - [ansible-galaxy](#ansible-galaxy)
 - [ansible-playbook](#ansible-playbook)
   - [tags](#tags)
-- [[vault CLI]](#vault-cli)
+- [vault CLI](#vault-cli)
   - [environment variables](#environment-variables)
   - [kv get](#kv-get)
   - [kv list](#kv-list)
@@ -79,25 +79,29 @@ $ pipx upgrade --include-injected ansible
 ```bash
 $ python -m pip install --user argcomplete
 $ cat >> ~/.bashrc << EOF
-  command -v ansible > /dev/null && eval $(register-python-argcomplete ansible)
-                                 && eval $(register-python-argcomplete ansible-config)
-                                 && eval $(register-python-argcomplete ansible-console)
-                                 && eval $(register-python-argcomplete ansible-doc)
-                                 && eval $(register-python-argcomplete ansible-galaxy)
-                                 && eval $(register-python-argcomplete ansible-inventory)
-                                 && eval $(register-python-argcomplete ansible-playbook)
-                                 && eval $(register-python-argcomplete ansible-pull)
-                                 && eval $(register-python-argcomplete ansible-vault)
+  command -v ansible > /dev/null && eval $(register-python-argcomplete ansible)           &&
+                                    eval $(register-python-argcomplete ansible-config)    &&
+                                    eval $(register-python-argcomplete ansible-console)   &&
+                                    eval $(register-python-argcomplete ansible-doc)       &&
+                                    eval $(register-python-argcomplete ansible-galaxy)    &&
+                                    eval $(register-python-argcomplete ansible-inventory) &&
+                                    eval $(register-python-argcomplete ansible-playbook)  &&
+                                    eval $(register-python-argcomplete ansible-pull)      &&
+                                    eval $(register-python-argcomplete ansible-vault)
 EOF
 ```
 
 - [completion.bash](https://github.com/dysosmus/ansible-completion)
   ```bash
   $ mkdir -p ~/.marslo/.completion
+  # older version
   $ git clone git@github.com:dysosmus/ansible-completion.git ~/.marslo/.completion/ansible-completion
 
+  # new version
+  $ git clone git@github.com:marslo/ansible-completion.git   ~/.marslo/.completion/ansible-completion
+
   $ cat >> ~/.bashrc << EOF
-  [ -d '~/.marslo/.completion/ansible-completion' ] && source <( cat ~/.marslo/.completion/ansible-completion/*.bash )
+  [ -d '~/.marslo/.completion/ansible-completion' ] && eval $(cat ~/.marslo/.completion/ansible-completion/*.bash)
   EOF
   ```
 
@@ -151,6 +155,12 @@ EOF
 ```bash
 $ truncate -s -1 foo.yml
 
+## encrypt file
+$ ansible-vault encrypt --vault-id @prompt foo.yml
+New vault password (default):
+Confirm new vault password (default):
+
+## create new file
 $ ansible-vault create --vault-id @prompt foo.yml
 New vault password (default):
 Confirm new vault password (default):
@@ -496,7 +506,7 @@ $ cat sample.yaml
   localhost           : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
   ```
 
-## [vault CLI]
+## vault CLI
 
 > [!NOTE|label:references:]
 > - [Vault CLI commands](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-vault-cli)
