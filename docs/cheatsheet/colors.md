@@ -3,6 +3,7 @@
 
 - [tools and basic grammar](#tools-and-basic-grammar)
   - [from rgb](#from-rgb)
+  - [from rgba](#from-rgba)
   - [from 256 colors](#from-256-colors)
   - [from hex](#from-hex)
 - [ansi colors](#ansi-colors)
@@ -255,6 +256,28 @@
   ```
 
 - [rgb to hsv](https://stackoverflow.com/a/70905494/2940319)
+
+### from rgba
+
+> [!NOTE|label:references:]
+> - [Convert RGBA color to RGB](https://stackoverflow.com/q/2049230/2940319)
+> - [Convert RGBA to RGB taking background into consideration [duplicate]](https://stackoverflow.com/a/11615135/2940319)
+> - [How to convert RGBA to Hex color code using javascript](https://stackoverflow.com/a/49974627/2940319)
+> - [Convert RGB to RGBA over white](https://stackoverflow.com/q/6672374/2940319)
+> - [Convert RGBA to RGB in Python](https://stackoverflow.com/a/58748986/2940319)
+> - [Alpha compositing](https://en.wikipedia.org/wiki/Alpha_compositing)
+> - tools
+>   - [Converter for rgba/hsla-colors into hexadecimal-value](https://tdekoning.github.io/rgba-converter/)
+
+- to rgb
+
+  > [!NOTE|label:references:]
+  > ```
+  > alpha     = 1 - RGBA.alpha;
+  > RGB.red   = Math.round((RGBA.alpha * (RGBA.red / 255) + (alpha * (bg.red / 255))) * 255);
+  > RGB.green = Math.round((RGBA.alpha * (RGBA.green / 255) + (alpha * (bg.green / 255))) * 255);
+  > RGB.blue  = Math.round((RGBA.alpha * (RGBA.blue / 255) + (alpha * (bg.blue / 255))) * 255);
+  > ```
 
 ### from 256 colors
 - [xColorTable](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh#L114) | [original](https://stackoverflow.com/a/55073732/2940319)
