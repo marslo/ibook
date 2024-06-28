@@ -5,6 +5,7 @@
 - [mount](#mount)
   - [mount ios](#mount-ios)
   - [mount smb](#mount-smb)
+  - [mount cifs](#mount-cifs)
   - [mount nfs](#mount-nfs)
   - [remount](#remount)
   - [disconnect the mount](#disconnect-the-mount)
@@ -67,6 +68,9 @@ $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_6
 > - [如何在 macOS 中停用 SMB 1 或 NetBIOS](https://support.apple.com/zh-tw/HT211927)
 > - [Performance issues with SMB 2 and 3 connections](http://www.centralit-helpdesk.co.uk/index.php?pg=kb.page&id=240)
 > - [Linux系统运维: Samba 应用](https://www.yaolong.net/article/linux-ops-samba/)
+> - [How can I mount an SMB share from the command line?](https://apple.stackexchange.com/a/699/254265)
+> - [How to escape password for smb mount](https://apple.stackexchange.com/a/329712/254265)
+> - [URL Encoded Characters](https://www.degraeve.com/reference/urlencoding.php)
 
 #### macos
 - via GUI :
@@ -77,21 +81,37 @@ $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_6
   - `osascript`
     ```bash
     $ /usr/bin/osascript -e "try" -e "mount volume \"smb://guest@${host}\"" -e "end try"
+
+    # or with function
+    function mymount {
+        osascript <<EOF
+    mount volume "smb://user@fqdn1/volume1"
+    mount volume "smb://user@fqdn2/volume2"
+    EOF
+    }
     ```
-  - `mount`
+
+  - [`mount`](https://apple.stackexchange.com/a/699/254265)
     ```bash
     $ mkdir -p /Volumes/mount
     $ sudo mkdir -p $(whoami):staff /Volumes/mount
 
     # mount
-    $ mount -t smbfs //user1:<password>@<ip.address>/secured /Volumes/mount
+    $ mount -t smbfs //user1:<password>@<ip.address>/share /Volumes/mount
+    # or
+    $ mount -o nodev,nosuid -t smbfs //user:${PASSWORD}@<ip.address>/share /Volumes/mount
 
     # mount_smbfs
-    $ mount_smbfs //user1@<ip.address>/secured /Volumes/mount
+    $ mount_smbfs //user1@<ip.address>/share /Volumes/mount
     Password for <ip.address>: <password>
 
     # umount
     $ umount /Volumes/mount
+    ```
+
+  - [`open`](https://apple.stackexchange.com/a/171822/254265)
+    ```bash
+    $ open "smb://user1:<password>@<ip.address>/path"
     ```
 
 - check
@@ -108,6 +128,15 @@ $ smbclient --user=user1 -L //<ip.address>
 # or
 $ smbclient //<ip.address>/secured -U user1
 ```
+
+### mount cifs
+
+> [!NOTE|label:references:]
+> - [How do I pass credential file to mount.cifs?](https://serverfault.com/a/367942/129815)
+> - [mount.cifs(8) - Linux man page](https://linux.die.net/man/8/mount.cifs)
+> - [How do I use a credential file for CIFS in /etc/fstab?](https://askubuntu.com/q/1119819/92979)
+> - [Safer alternative to using .smbcredentials](https://askubuntu.com/questions/1262419/safer-alternative-to-using-smbcredentials)
+> - [CIFS vs SAMBA, What are the differences](https://unix.stackexchange.com/a/34793/29178)
 
 ### mount nfs
 
@@ -246,7 +275,6 @@ UUID=6C3A-C81A                                  /boot/efi       vfat  umask=0077
 - `/etc/nfsmount.conf`
 - `/etc/nfs.conf`
 - `/proc/mounts`
-
 
 ### [remount](https://unix.stackexchange.com/a/280543/29178)
 ```bash
