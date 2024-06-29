@@ -45,6 +45,7 @@
 > - [https://kubernetes.io/docs/setup/best-practices/](https://kubernetes.io/docs/setup/best-practices/)
 > - [https://kubernetes.io/docs/setup/best-practices/_print/](https://kubernetes.io/docs/setup/best-practices/_print/)
 > - [* ramitsurana/awesome-kubernetes](https://github.com/ramitsurana/awesome-kubernetes) | [Awesome Kubernetes](https://ramitsurana.github.io/awesome-kubernetes/)
+> - [ibm-cloud-architecture/refarch-cloudnative-devops-kubernetes](https://github.com/ibm-cloud-architecture/refarch-cloudnative-devops-kubernetes)
 
 
 {% hint style='tip' %}

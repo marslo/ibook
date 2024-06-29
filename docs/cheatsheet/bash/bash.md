@@ -381,7 +381,7 @@ $ echo {1..100..3}
 ```
 
 ### fast copy or moving or something ([detials](http://www.manpager.com/linux/man1/bash.1.html) -> brace expansion)
-- Example 1:
+- example 1:
   ```bash
   $ ls | grep foo
   $ touch foo{1,2,3}
@@ -390,7 +390,7 @@ $ echo {1..100..3}
   foo2
   foo3
   ```
-- Example 2
+- example 2
   ```bash
   $ ls | grep foo
   $ touch foo-{a..d}
@@ -401,16 +401,16 @@ $ echo {1..100..3}
   foo-d
   ```
 
-- Example 3
+- example 3
   ```bash
   $ ls foo-*
   foo-a  foo-b  foo-c  foo-d
   $ mv foo-{a,}
   $ ls foo-*
-  foo-  foo-b  foo-c  foo-d
+  foo-a  foo-b  foo-c  foo-d
   ```
 
-- Example 4
+- example 4
   ```bash
   $ mkdir -p test/{a,b,c,d}
   $ tree test/
