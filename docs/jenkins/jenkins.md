@@ -33,6 +33,7 @@
 >   - [issues.jenkins.io](https://issues.jenkins.io/)
 >   - [Jenkins JIRA](https://issues.jenkins.io/)
 >   - [repo.jenkins-ci.org](https://repo.jenkins-ci.org/ui/)
+> - [Dagger - a programmable CI/CD engine](https://archive.docs.dagger.io/0.9/)
 {% endhint %}
 
 ## basic

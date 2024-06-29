@@ -61,6 +61,7 @@
 > - [Java Performance](https://jenkov.com/tutorials/java-performance/index.html)
 > - [Java Regex - Java Regular Expressions](https://jenkov.com/tutorials/java-regex/index.html)
 > - [Java Unit Testing](https://jenkov.com/tutorials/java-unit-testing/index.html)
+> - [朝花夕拾——Groovy & Grails](http://www.blogjava.net/BlueSUN/archive/2007/12/archive/2007/04/23/112978.html)
 
 ## basic
 ### [Program structure](https://groovy-lang.org/structure.html)

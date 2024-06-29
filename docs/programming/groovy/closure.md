@@ -21,6 +21,8 @@
 > - [Groovy Goodness: Closure Arguments](https://blog.mrhaki.com/2009/11/groovy-goodness-closure-arguments.html)
 > - [Groovy Goodness: Identity Closure](https://blog.mrhaki.com/2016/10/groovy-goodness-identity-closure.html)
 > - [实战 Groovy: 用 curry 过的闭包进行函数式编程](https://wizardforcel.gitbooks.io/ibm-j-pg/content/10.html)
+> - [Groovy解惑——closure中的delegate](http://www.blogjava.net/BlueSUN/archive/2007/12/22/169580.html) | [Groovy 指南](https://wjw465150.github.io/blog/Groovy/)
+> - [Groovy解惑——closure中的owner](http://www.blogjava.net/BlueSUN/archive/2007/12/23/169683.html) | [Groovy 指南](https://wjw465150.github.io/blog/Groovy/)
 
 {% hint style='tip' %}
 > A closure definition follows this syntax:
