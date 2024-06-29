@@ -66,15 +66,56 @@
 
 ## mode
 ### `diff` mode
+
+> [!NOTE|label:references:]
+> - [Trigger OptionSet autocommand on entering diff mode](https://groups.google.com/g/vim_dev/c/x8yHR_EujV4/m/z6Jvi9w0BgAJ)
+> - [How to execute a function when a diff closes](https://vi.stackexchange.com/q/11057/7389)
+> - [How to change editor options when switching to diff mode?](https://vi.stackexchange.com/a/38300/7389)
+> - [#1545 - OptionSet diff is not invoked on closing the diff window](https://github.com/tpope/vim-fugitive/issues/1545)
+
 ```vim
 :echo &diff
 1
 ```
 
-- example:
+- example
   ```vim
   autocmd BufEnter * if &diff | let g:blamer_enabled=0 | endif            " ╮ disable git blame in diff mode
   autocmd BufEnter * if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
+  ```
+
+- [change cursor shape in diff mode](https://github.com/marslo/dotfiles/blob/main/.marslo/vimrc.d/theme#L77)
+  ```vim
+  " setup cursor shape to block in diff mode
+  function! CursorShapeInDiffMode()
+    if &diff
+      if $TERM_PROGRAM =~ "iTerm"
+        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+        let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+        let &t_EI = "\<Esc>]50;CursorShape=2\x7"
+      else
+        let &t_SI = "\e[1 q"
+        let &t_SR = "\e[2 q"
+        let &t_EI = "\e[2 q"
+      endif
+    endif
+  endfunction
+  autocmd BufRead,BufEnter,BufNewFile * :call CursorShapeInDiffMode()
+  ```
+
+- [disable cursor line in diff mode](https://vi.stackexchange.com/a/12852/7389)
+  ```vim
+  autocmd WinEnter * if &diff | set nocursorline | endif
+
+  " or
+  au OptionSet diff let &cul=!v:option_new
+
+  " or
+  augroup CursorLine
+    au!
+    au FilterWritePost * if &diff | let &cul=0 |endif
+    au BufEnter * if !&diff | let &cul=1 |endif
+  augroup end
   ```
 
 ### `terminal` mode

@@ -21,6 +21,8 @@
   - [kv list](#kv-list)
 - [ansible-config](#ansible-config)
   - [get all default](#get-all-default)
+- [ansible-lint](#ansible-lint)
+- [ansible-tools](#ansible-tools)
 - [plugin](#plugin)
   - [lookup](#lookup)
   - [Become](#become)
@@ -121,8 +123,12 @@ EOF
 >   - [Protecting sensitive data with Ansible vault](https://docs.ansible.com/ansible/latest/vault_guide/index.html)
 >   - [Encrypting content with Ansible Vault](https://docs.ansible.com/ansible/3/user_guide/vault.html)
 >   - [Using Vault in playbooks](https://docs.ansible.com/ansible/2.8/user_guide/playbooks_vault.html)
+>   - [Managing vault passwords](https://docs.ansible.com/ansible/latest/vault_guide/vault_managing_passwords.html)
+>   - [Community.Hashi_Vault](https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/index.html)
+>   - [community.hashi_vault.hashi_vault lookup - Retrieve secrets from HashiCorp’s Vault](https://docs.ansible.com/ansible/latest/collections/community/hashi_vault/hashi_vault_lookup.html)
 > - [10 ansible vault examples to decrypt/encrypt string & files](https://www.golinuxcloud.com/ansible-vault-example-encrypt-string-playbook/)
 > - [Ansible 详解（四）：Ansible-vault](https://zhuanlan.zhihu.com/p/39158667)
+> - [Ansible: How to pass multiple password files to playbook](https://stackoverflow.com/a/65684902/2940319)
 
 ### [encrypted files](https://docs.ansible.com/ansible/3/user_guide/vault.html#creating-encrypted-files)
 
@@ -429,6 +435,8 @@ $ ansible-galaxy install -r requirements.yml
 > [!NOTE|label:references:]
 > - [passwordless via environment variables](https://docs.ansible.com/archive/ansible/2.5/user_guide/playbooks_vault.html)
 > - [https://docs.ansible.com/ansible/latest/plugins/become.html#become-plugins](https://docs.ansible.com/ansible/latest/plugins/become.html#become-plugins)
+> - sample:
+>   - [gikeymarcia/ansible-role-neovim](https://github.com/gikeymarcia/ansible-role-neovim/blob/master/tasks/main.yml)
 
 ```bash
 # without password
@@ -557,6 +565,7 @@ account
 
 > [!NOTE|label:referencs:]
 > - [v2.4 Configuration file](https://docs.ansible.com/archive/ansible/2.4/intro_configuration.html)
+> - [Ansible Configuration Settings](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#envvar-ANSIBLE_VAULT_PAS)
 
 ### get all default
 ```bash
@@ -569,6 +578,25 @@ $ ansible-config init --disabled -t all
   [defaults]
   localhost_warning=false
   ```
+
+## ansible-lint
+
+> [!NOET|label:references:]
+> - [Yamllint Indentation Warning on Valid Ansible code](https://stackoverflow.com/q/47417743/2940319) | [`indent-sequences: false`](http://yamllint.readthedocs.io/en/latest/rules.html#module-yamllint.rules.indentation)
+> - [ansible-lint - Installing](https://ansible.readthedocs.io/projects/lint/installing/)
+> - vim/nvim plugins
+>   - [jctanner/ansible-tools](https://github.com/jctanner/ansible-tools)
+
+- [Configuration](https://ansible.readthedocs.io/projects/lint/configuring/)
+  - `.ansible-lint`
+  - `.config/ansible-lint.yml`
+  - `.config/ansible-lint.yaml`
+
+
+## ansible-tools
+
+> [!NOTE|label:references:]
+> - [jctanner/ansible-tools](https://github.com/jctanner/ansible-tools)
 
 ## plugin
 ### [lookup](https://docs.ansible.com/ansible/latest/plugins/lookup.html)

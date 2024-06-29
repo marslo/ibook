@@ -17,6 +17,9 @@
   - [list all configs](#list-all-configs)
 - [tricky](#tricky)
   - [get size of installed pip package](#get-size-of-installed-pip-package)
+- [pipx](#pipx)
+  - [setup pipx](#setup-pipx)
+  - [examles](#examles)
 - [troubleshooting](#troubleshooting)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -357,6 +360,83 @@ $ pip list |
 0     /usr/local/lib/python3.12/site-packages/filelock
 0     /usr/local/lib/python3.12/site-packages/docutils
 ```
+
+## pipx
+
+> [!NOTE|label:references:]
+> - [pipx](https://pipx.pypa.io/stable/)
+
+### setup pipx
+```bash
+$ python3 -m pip install pipx
+$ pipx ensurepath
+$ pipx install ansible --include-deps
+```
+
+### [examles](https://pipx.pypa.io/stable/examples/)
+- [pipx install](https://pipx.pypa.io/stable/examples/#pipx-install-examples)
+  ```bash
+  $ pipx install pycowsay
+  $ pipx install --python python3.10 pycowsay
+  $ pipx install --python 3.12 pycowsay
+  $ pipx install --fetch-missing-python --python 3.12 pycowsay
+  $ pipx install git+https://github.com/psf/black
+  $ pipx install git+https://github.com/psf/black.git@branch-name
+  $ pipx install git+https://github.com/psf/black.git@git-hash
+  $ pipx install git+ssh://<username>@<private-repo-domain>/<path-to-package.git>
+  $ pipx install https://github.com/psf/black/archive/18.9b0.zip
+  $ pipx install black[d]
+  $ pipx install --preinstall ansible-lint --preinstall mitogen ansible-core
+  $ pipx install 'black[d] @ git+https://github.com/psf/black.git@branch-name'
+  $ pipx install --suffix @branch-name 'black[d] @ git+https://github.com/psf/black.git@branch-name'
+  $ pipx install --include-deps jupyter
+  $ pipx install --pip-args='--pre' poetry
+  $ pipx install --pip-args='--index-url=<private-repo-host>:<private-repo-port> --trusted-host=<private-repo-host>:<private-repo-port>' private-repo-package
+  $ pipx install --index-url https://test.pypi.org/simple/ --pip-args='--extra-index-url https://pypi.org/simple/' some-package
+  $ pipx --global install pycowsay
+  $ pipx install .
+  $ pipx install path/to/some-project
+  ```
+
+- [pipx install-all](https://pipx.pypa.io/stable/examples/#pipx-install-all-example)
+  ```bash
+  $ pipx list --json > pipx.json
+  $ pipx instal-all pipx.json
+  ```
+
+- [pipx run](https://pipx.pypa.io/stable/examples/#pipx-run-examples)
+  ```bash
+  $ pipx run BINARY  # latest version of binary is run with python3
+  $ pipx run --spec PACKAGE==2.0.0 BINARY  # specific version of package is run
+  $ pipx run --python python3.10 BINARY  # Installed and invoked with specific Python version
+  $ pipx run --python python3.9 --spec PACKAGE=1.7.3 BINARY
+  $ pipx run --spec git+https://url.git BINARY  # latest version on default branch is run
+  $ pipx run --spec git+https://url.git@branch BINARY
+  $ pipx run --spec git+https://url.git@hash BINARY
+  $ pipx run pycowsay moo
+  $ pipx --version  # prints pipx version
+  $ pipx run pycowsay --version  # prints pycowsay version
+  $ pipx run --python pythonX pycowsay
+  $ pipx run pycowsay==2.0 --version
+  $ pipx run pycowsay[dev] --version
+  $ pipx run --spec git+https://github.com/psf/black.git black
+  $ pipx run --spec git+https://github.com/psf/black.git@branch-name black
+  $ pipx run --spec git+https://github.com/psf/black.git@git-hash black
+  $ pipx run --spec https://github.com/psf/black/archive/18.9b0.zip black --help
+  $ pipx run https://gist.githubusercontent.com/cs01/fa721a17a326e551ede048c5088f9e0f/raw/6bdfbb6e9c1132b1c38fdd2f195d4a24c540c324/pipx-demo.py
+  ```
+
+- [pipx inject](https://pipx.pypa.io/stable/examples/#pipx-inject-example)
+  ```bash
+  $ pipx install ptpython
+  $ pipx inject ptpython requests pendulum
+  ```
+
+- [pipx upgrade-shared](https://pipx.pypa.io/stable/examples/#pipx-upgrade-shared-examples)
+  ```bash
+  $ pipx upgrade-shared
+  $ pipx upgrade-shared --pip-args=pip==24.0
+  ```
 
 ## troubleshooting
 

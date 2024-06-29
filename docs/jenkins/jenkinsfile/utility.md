@@ -18,6 +18,7 @@
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
   - [ssh-agent(https://plugins.jenkins.io/ssh-agent)](#ssh-agenthttpspluginsjenkinsiossh-agent)
 - [code clone](#code-clone)
+- [groovy.io.FileType](#groovyiofiletype)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -635,3 +636,58 @@ try {
 }
 ```
 
+## groovy.io.FileType
+
+> [!NOTE|label:references:]
+> - [Groovy Goodness: Traversing a Directory](https://blog.mrhaki.com/2010/04/groovy-goodness-traversing-directory.html) | [Groovy Goodness: Traversing a Directory](https://wjw465150.github.io/blog/Groovy/my_data/Goodness/File-Traversing%20a%20Directory.html)
+> - [Recursive listing of all files matching a certain filetype in Groovy](https://stackoverflow.com/a/3665539/2940319)
+>   ```groovy
+>   import static groovy.io.FileType.FILES
+>   ```
+> - [Get a list of all the files in a directory (recursive)](https://stackoverflow.com/a/38526252/2940319)
+
+```groovy
+import groovy.io.FileType
+import static groovy.io.FileType.*
+
+/**
+ * Traverse the files or directories in the given path
+ *
+ * @param path      the path to be traversed
+ * @param filetype  the type of files to be traversed. can be {@code [ files | directories | any ]}
+ * @param depth     the depth of the traversal. default is 1
+ * @return          the list of files or directories in the given path
+**/
+@NonCPS
+def traverseInPath( String path, String filetype, Integer depth = 1 ) {
+  List<String> names = []
+  if ( ! [ 'files', 'directories', 'any' ].contains(filetype) ) {
+      currentBuild.description = "`filetype` support only ${[ 'files', 'directories', 'any' ].join(',')} !"
+      currentBuild.result = 'NOT_BUILT'
+      currentBuild.getRawBuild().getExecutor().interrupt(Result.NOT_BUILT)
+  }
+
+  Closure sortByTypeThenName = { a, b ->
+    a.isFile() != b.isFile() ? a.isFile() <=> b.isFile() : a.name.toLowerCase() <=> b.name.toLowerCase()
+  }
+  new File(path).traverse(
+    type     : FileType.valueOf( filetype.toUpperCase() ),
+    maxDepth : depth,
+    sort     : sortByTypeThenName
+  ) {
+    names << it
+  }
+  return names
+}
+```
+
+- way to call
+  ```groovy
+  String path = '/path/to/folder'
+
+  println ( ">> traverse all FILES/DIRECTORIES in ${path} in maxDepth 0 : " )
+  println traverseInPath( path, 'any', 0 ).join('\n')
+
+  println ( ">> traverse all FILES in ${path} in maxDepth 2 : " )
+  println traverseInPath( path, 'files', 2 ).join('\n')
+  ```
