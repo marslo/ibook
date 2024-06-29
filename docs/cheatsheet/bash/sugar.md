@@ -29,6 +29,7 @@
   - [echo](#echo)
     - [echo var name from variable](#echo-var-name-from-variable)
     - [echo var name](#echo-var-name)
+  - [ls](#ls)
   - [bash completion](#bash-completion)
     - [osx](#osx)
     - [linux](#linux)
@@ -886,6 +887,37 @@ $ date | wc
   $ superEcho bar
   bar = baz
   ```
+
+## ls
+
+> [!NOTE|label:references]
+> - [How can I make ls only display files?](https://askubuntu.com/a/1322137/92979)
+
+```bash
+# show file only
+$ ls -p | command grep -v /
+
+# show folder only
+$ ls -p | command grep / | command grep "^."
+
+# show all files ( including hidden )
+$ ls -Ap | command grep -v / | command grep "^."
+
+# show all folders ( including hidden )
+$ ls -Ap | command grep / | command grep "^."
+
+# show hidden folder only
+$ ls -Ap | command grep / | command grep "^\." | command grep "\."
+
+# show hidden file only
+$ ls -Ap | command grep -v / | command grep "^\." | command grep "\."
+
+# show all including hidden
+$ ls -Ap
+
+# show hidden file and folder
+$ ls -Ap | command grep "^\."
+```
 
 ## bash completion
 

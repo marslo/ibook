@@ -483,6 +483,7 @@ $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfig
 >     - `sudo kubeadm init phase control-plane --help`
 > - [Uploading control-plane certificates to the cluster](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#uploading-control-plane-certificates-to-the-cluster)
 > - [kubeadm join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
+> - [How do I find the join command for kubeadm on the master?](https://stackoverflow.com/a/55078533/2940319)
 
 - swap off
   ```bash
@@ -551,6 +552,42 @@ $ kubectl get cm kubeadm-config -n kube-system -o=jsonpath="{.data.ClusterConfig
     ```bash
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
     ```
+
+#### [find join command](https://stackoverflow.com/q/51126164/2940319)
+
+- token ca hash
+  ```bash
+  $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt \
+      | openssl rsa -pubin -outform der 2>/dev/null \
+      | openssl dgst -sha256 -hex \
+      | sed 's/^.* //'
+  ```
+
+- bootstrap token
+  ```bash
+  $ kubeadm token list
+  ```
+
+- final command
+  ```bash
+  $ kubeadm join <ip-address>:6443\
+      --token=<bootstrap-token> \
+      --discovery-token-ca-cert-hash sha256:<ca-hash>
+  ```
+
+- function
+  ```bash
+  # get the join command from the kube master
+  CERT_HASH=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt \
+                      | openssl rsa -pubin -outform der 2>/dev/null \
+                      | openssl dgst -sha256 -hex \
+                      | sed 's/^.* //')
+  TOKEN=$(kubeadm token list -o json | jq -r '.token' | head -1)
+  IP=$(kubectl get nodes -lnode-role.kubernetes.io/master -o json \
+               | jq -r '.items[0].status.addresses[] | select(.type=="InternalIP") | .address')
+  PORT=6443
+  echo "sudo kubeadm join $IP:$PORT --token=$TOKEN --discovery-token-ca-cert-hash sha256:$CERT_HASH"
+  ```
 
 #### troubleshooting
 
