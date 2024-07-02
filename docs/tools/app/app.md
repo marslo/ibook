@@ -122,6 +122,7 @@
 > - [B4J Tutorials](https://www.b4x.com/android/forum/forums/b4j-tutorials.57/)
 > - [Raspberry Pi with Java 11](https://www.b4x.com/android/forum/threads/raspberry-pi-with-java-11.99606/)
 > - [Liberica JDK.pdf](https://bell-sw.com/assets/files/Liberica_JDK_Whitepaper.pdf)
+>   - [Installation Guide](https://docs.bell-sw.com/liberica-jdk/17.0.11b12/general/install-guide/) | [pdf](https://download.bell-sw.com/documentation/liberica-jdk/17.0.11+12-psu//install-guide-17.0.11+12-psu-liberica-jdk.pdf)
 
 - [21.0.1+12](https://github.com/bell-sw/Liberica/releases/tag/21.0.1%2B12)
   - [bellsoft-jdk21.0.1+12-linux-arm32-vfp-hflt-full.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-arm32-vfp-hflt-full.deb)
@@ -129,6 +130,14 @@
   - [bellsoft-jdk21.0.1+12-linux-aarch64.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-aarch64.deb)
   - [bellsoft-jdk21.0.1+12-linux-amd64-full.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-amd64-full.deb)
   - [bellsoft-jdk21.0.1+12-linux-amd64.deb](https://github.com/bell-sw/Liberica/releases/download/21.0.1%2B12/bellsoft-jdk21.0.1+12-linux-amd64.deb)
+
+- [17.0.11+12](https://github.com/bell-sw/Liberica/releases/tag/17.0.11%2B12)
+  - [bellsoft-jdk17.0.11+12-linux-aarch64-full.debf](https://github.com/bell-sw/Liberica/releases/download/17.0.11%2B12/bellsoft-jdk17.0.11+12-linux-aarch64-full.deb)
+  - [bellsoft-jdk17.0.11+12-linux-aarch64.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.11%2B12/bellsoft-jdk17.0.11+12-linux-aarch64.deb)
+  - [bellsoft-jdk17.0.11+12-linux-amd64-full.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.11%2B12/bellsoft-jdk17.0.11+12-linux-amd64-full.deb)
+  - [bellsoft-jdk17.0.11+12-linux-amd64.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.11%2B12/bellsoft-jdk17.0.11+12-linux-amd64.deb)
+  - [bellsoft-jdk17.0.11+12-linux-arm32-vfp-hflt-full.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.11%2B12/bellsoft-jdk17.0.11+12-linux-arm32-vfp-hflt-full.deb)
+  - [bellsoft-jdk17.0.11+12-linux-arm32-vfp-hflt.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.11%2B12/bellsoft-jdk17.0.11+12-linux-arm32-vfp-hflt.deb)
 
 - [17.0.9+11](https://github.com/bell-sw/Liberica/releases/tag/17.0.9%2B11)
   - [bellsoft-jdk17.0.9+11-linux-aarch64-full.deb](https://github.com/bell-sw/Liberica/releases/download/17.0.9%2B11/bellsoft-jdk17.0.9+11-linux-aarch64-full.deb)
