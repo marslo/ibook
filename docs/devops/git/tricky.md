@@ -2,7 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [tricky](#tricky)
-  - [quick edit gitocnfig](#quick-edit-gitocnfig)
+  - [hidden feature](#hidden-feature)
+  - [quick edit gitconfig](#quick-edit-gitconfig)
   - [create git patch](#create-git-patch)
   - [get current branch](#get-current-branch)
   - [get previous branch](#get-previous-branch)
@@ -14,10 +15,15 @@
   - [git path](#git-path)
   - [`.gitattributes`](#gitattributes)
   - [git summaries](#git-summaries)
+- [trailers](#trailers)
+  - [git config](#git-config)
+  - [generate trailers](#generate-trailers)
+  - [show trailers](#show-trailers)
 - [scripts](#scripts)
   - [fetch merge all](#fetch-merge-all)
   - [gfall <branch>](#gfall-branch)
   - [iGitOpt](#igitopt)
+  - [hook](#hook)
 - [others](#others)
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
@@ -41,7 +47,18 @@
 > - [shell tricks: one git alias to rule them all](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
 {% endhint %}
 
-### quick edit gitocnfig
+### hidden feature
+#### [git var](https://git-scm.com/docs/git-var)
+```bash
+$ git var GIT_COMMITTER_IDENT
+marslo <marslo.jiao@gmail.com> 1719963678 -0700
+
+$ git var -l
+```
+
+#### [git verify-commit](https://git-scm.com/docs/git-verify-commit)
+
+### quick edit gitconfig
 ```bash
 $ git config --edit --global
 
@@ -349,6 +366,153 @@ $ git log --reverse --pretty=oneline --format="%ar" |
 4 months
 ```
 
+## trailers
+
+> [!NOTE|label:references:]
+> - [`git interpret-trailers`](https://git-scm.com/docs/git-interpret-trailers)
+> - [`git log`](https://git-scm.com/docs/git-log)
+> - [`git commit`](https://git-scm.com/docs/git-commit)
+> - [Git Trailers](https://alchemists.io/articles/git_trailers)
+> - [mmcclimon/git-slog.pl](https://gist.github.com/mmcclimon/9410bfa7ef7d4302edd3bb49414f0b88)
+> - [What is the Sign Off feature in Git for?](https://stackoverflow.com/a/35238070/2940319)
+> - [Git magic keywords in commit messages (Signed-off-by, Co-authored-by, Fixes, ...)](https://stackoverflow.com/a/67040353/2940319)
+
+### git config
+
+> [!TIP|label:tips:]
+> - if `trailer.sign.command` is not set, the default value is `git var GIT_COMMITTER_IDENT`
+> - if `trailer.sign.key` set as `"Signed-off-by: "`, it will impacted the `git log --format=%(trailers:key=Signed-off-by:,valueonly,separator=%x2C)`
+
+```bash
+$ git config --global trailer.sign.key "Signed-off-by"
+$ git config --global trailer.sign.ifmissing add
+$ git config --global trailer.sign.ifexists doNothing
+$ git config --global trailer.sign.command "echo \"$(git config user.name) <$(git config user.email)>\""
+
+# or
+$ cat ~/.gitconfig
+[trailer "sign"]
+  key               = Signed-off-by
+  ifmissing         = add
+  ifexists          = doNothing
+  command           = echo \"$(git config user.name) <$(git config user.email)>\"
+```
+
+### generate trailers
+
+> [!NOTE|label:references:]
+> - [Git sign off previous commits?](https://stackoverflow.com/a/15667644/2940319)
+
+```bash
+$ git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p'
+
+## commit-msg.sample
+
+# Uncomment the below to add a Signed-off-by line to the message.
+# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
+# hook is more suited to it.
+#
+# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+
+# This example catches duplicate Signed-off-by lines.
+test "" = "$(grep '^Signed-off-by: ' "$1" |
+         sort | uniq -c | sed -e '/^[   ]*1[    ]/d')" || {
+        echo >&2 Duplicate Signed-off-by lines.
+        exit 1
+}
+```
+
+- by template
+  ```bash
+  $ cat ~/.git-template
+  Signed-off-by: Your Name <your.email@example.com>
+
+  $ git config commit.template ~/.git-template
+  ```
+
+#### commit
+```bash
+$ git commit --signoff
+# or
+$ git commit -s
+```
+
+- with control
+  ```bash
+  declare signed="$(git log -n1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' | command grep -q "$(git config user.email)"; echo $?)";
+  if [ 0 -eq ${signed} ]; then
+    OPT='commit --amend --allow-empty';
+  else
+    OPT='commit --signoff --amend --allow-empty';
+  fi;
+  ```
+
+- i.e.:
+  ```bash
+  [alias]
+  ### [c]ommit [a]dd [a]all
+  caa         = "!f() { \
+                        git add --all; \
+                        declare signed=\"$(git log -n1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' | command grep -q \"$(git config user.email)\"; echo $?)\"; \
+                        if [ 0 -eq ${signed} ]; then \
+                          git commit --amend --no-edit --allow-empty;\
+                        else \
+                          git commit --signoff --amend --no-edit --allow-empty;\
+                        fi; \
+                      }; f \
+  ```
+
+### show trailers
+
+> [!NOTE|label:references:]
+> - [Git - Detect if commit is signed off](https://stackoverflow.com/q/31261884/2940319)
+> - [Git: How to list specific trailers (footers) in git-log format?](https://stackoverflow.com/a/60423945/2940319)
+
+```bash
+$ git log -n1 --format='%(trailers:key=Signed-off-by:,valueonly,separator=%x2C)'
+marslo <marslo.jiao@gmail.com>
+
+$ git log -n1 --format='%(trailers:key=Signed-off-by:,keyonly,separator=%x2C)'
+Signed-off-by
+
+# or
+$ git log -n1 --format=%B | git interpret-trailers --parse
+Signed-off-by: marslo <marslo.jiao@gmail.com>
+Change-Id: I3cc1cb4cfaf4300d2e7972eb39a7319e81012c65
+
+# or
+$ git log -1 --pretty=format:"%b"
+Signed-off-by: marslo <marslo.jiao@gmail.com>
+Change-Id: I3cc1cb4cfaf4300d2e7972eb39a7319e81012c65
+
+# or
+$ git log --pretty=format:"%b" | command grep -E "^(Signed-off-by|Co-authored-by):"
+```
+
+#### configure and format
+- `Signed-off-by: `
+  ```bash
+  $ git config --global trailer.sign.key 'Signed-off-by: '
+  $ git log -1 --format="%(trailers:key=Signed-off-by,valueonly,separator=%x2C)"
+
+  $ git log -1 --format="%(trailers:key=Signed-off-by: ,valueonly,separator=%x2C)"
+  marslo <marslo.jiao@gmail.com>
+  ```
+
+- `Signed-off-by`
+  ```bash
+  $ git config --global trailer.sign.key 'Signed-off-by'
+
+  $ git log -1 --format="%(trailers:key=Signed-off-by: ,valueonly,separator=%x2C)"
+
+  $ git log -1 --format="%(trailers:key=Signed-off-by:,valueonly,separator=%x2C)"
+  marslo <marslo.jiao@gmail.com>
+  $ git log -1 --format="%(trailers:key=Signed-off-by,valueonly,separator=%x2C)"
+  marslo <marslo.jiao@gmail.com>
+  ```
+
+
 ## scripts
 ### [fetch merge all](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.gitalias#L183)
 ```bash
@@ -446,8 +610,215 @@ $ git diff --shortstat HEAD^..HEAD
    7 files changed, 253 insertions(+), 24 deletions(-)
   ```
 
-## others
+### hook
 
+> [!NOTE|label:references:]
+> - [git提交待审核代码，报错没有change-id的解决方法](https://www.cnblogs.com/yzhihao/p/8392704.html)
+> - [git add Signed-off-by line using format.signoff not working](https://stackoverflow.com/a/46536244/2940319)
+
+- `commit-msg` for signed-off-by
+
+  <!--sec data-title="commit-message for change-id" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  #!/bin/sh
+
+  NAME=$(git config user.name)
+  EMAIL=$(git config user.email)
+
+  if [ -z "$NAME" ]; then
+    echo "empty git config user.name"
+    exit 1
+  fi
+
+  if [ -z "$EMAIL" ]; then
+    echo "empty git config user.email"
+    exit 1
+  fi
+
+  git interpret-trailers --if-exists doNothing --trailer \
+      "Signed-off-by: $NAME <$EMAIL>" \
+      --in-place "$1"
+  ```
+  <!--endsec-->
+
+- `commit-msg` for change-id
+
+  <!--sec data-title="commit-message for change-id" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  #!/bin/sh
+  # From Gerrit Code Review 2.6
+  #
+  # Part of Gerrit Code Review (http://code.google.com/p/gerrit/)
+  #
+  # Copyright (C) 2009 The Android Open Source Project
+  #
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  # http://www.apache.org/licenses/LICENSE-2.0
+  #
+  # Unless required by applicable law or agreed to in writing, software
+  # distributed under the License is distributed on an "AS IS" BASIS,
+  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  # See the License for the specific language governing permissions and
+  # limitations under the License.
+  #
+
+  unset GREP_OPTIONS
+
+  CHANGE_ID_AFTER="Bug|Issue"
+  MSG="$1"
+
+  # Check for, and add if missing, a unique Change-Id
+  #
+  add_ChangeId() {
+    clean_message=`sed -e '
+    /^diff --git a\/.*/{
+    s///
+    q
+    }
+    /^Signed-off-by:/d
+    /^#/d
+    ' "$MSG" | git stripspace`
+    if test -z "$clean_message"; then return; fi
+
+    # Does Change-Id: already exist? if so, exit (no change).
+    if grep -i '^Change-Id:' "$MSG" >/dev/null; then return; fi
+
+    id=`_gen_ChangeId`
+    T="$MSG.tmp.$$"
+    AWK=awk
+    if [ -x /usr/xpg4/bin/awk ]; then
+      # Solaris AWK is just too broken
+      AWK=/usr/xpg4/bin/awk
+    fi
+
+    # How this works:
+    # - parse the commit message as (textLine+ blankLine*)*
+    # - assume textLine+ to be a footer until proven otherwise
+    # - exception: the first block is not footer (as it is the title)
+    # - read textLine+ into a variable
+    # - then count blankLines
+    # - once the next textLine appears, print textLine+ blankLine* as these
+    # aren't footer
+    # - in END, the last textLine+ block is available for footer parsing
+    $AWK '
+    BEGIN {
+    # while we start with the assumption that textLine+
+    # is a footer, the first block is not.
+    isFooter = 0
+    footerComment = 0
+    blankLines = 0
+    }
+
+    # Skip lines starting with "#" without any spaces before it.
+    /^#/ { next }
+
+    # Skip the line starting with the diff command and everything after it,
+    # up to the end of the file, assuming it is only patch data.
+    # If more than one line before the diff was empty, strip all but one.
+    /^diff --git a/ {
+      blankLines = 0
+      while (getline) { }
+      next
+    }
+
+    # Count blank lines outside footer comments
+    /^$/ && (footerComment == 0) {
+      blankLines++
+      next
+    }
+
+    # Catch footer comment
+    /^\[[a-zA-Z0-9-]+:/ && (isFooter == 1) {
+      footerComment = 1
+    }
+
+    /]$/ && (footerComment == 1) {
+      footerComment = 2
+    }
+
+    # We have a non-blank line after blank lines. Handle this.
+    (blankLines > 0) {
+      print lines
+      for (i = 0; i < blankLines; i++) {
+        print ""
+      }
+
+      lines = ""
+      blankLines = 0
+      isFooter = 1
+      footerComment = 0
+    }
+
+    # Detect that the current block is not the footer
+    (footerComment == 0) && (!/^\[?[a-zA-Z0-9-]+:/ || /^[a-zA-Z0-9-]+:\/\//) {
+      isFooter = 0
+    }
+
+    {
+      # We need this information about the current last comment line
+      if (footerComment == 2) {
+        footerComment = 0
+      }
+      if (lines != "") {
+        lines = lines "\n";
+      }
+      lines = lines $0
+    }
+
+    # Footer handling:
+    # If the last block is considered a footer, splice in the Change-Id at the
+    # right place.
+    # Look for the right place to inject Change-Id by considering
+    # CHANGE_ID_AFTER. Keys listed in it (case insensitive) come first,
+    # then Change-Id, then everything else (eg. Signed-off-by:).
+    #
+    # Otherwise just print the last block, a new line and the Change-Id as a
+    # block of its own.
+    END {
+    unprinted = 1
+    if (isFooter == 0) {
+    print lines "\n"
+    lines = ""
+    }
+    changeIdAfter = "^(" tolower("'"$CHANGE_ID_AFTER"'") "):"
+    numlines = split(lines, footer, "\n")
+    for (line = 1; line <= numlines; line++) {
+    if (unprinted && match(tolower(footer[line]), changeIdAfter) != 1) {
+    unprinted = 0
+    print "Change-Id: I'"$id"'"
+    }
+    print footer[line]
+    }
+    if (unprinted) {
+    print "Change-Id: I'"$id"'"
+    }
+    }' "$MSG" > "$T" && mv "$T" "$MSG" || rm -f "$T"
+  }
+
+  _gen_ChangeIdInput() {
+    echo "tree `git write-tree`"
+    if parent=`git rev-parse "HEAD^0" 2>/dev/null`; then
+      echo "parent $parent"
+    fi
+    echo "author `git var GIT_AUTHOR_IDENT`"
+    echo "committer `git var GIT_COMMITTER_IDENT`"
+    echo
+    printf '%s' "$clean_message"
+  }
+  _gen_ChangeId() {
+    _gen_ChangeIdInput |
+    git hash-object -t commit --stdin
+  }
+
+  add_ChangeId
+  ```
+  <!--endsec-->
+
+
+## others
 ### alias
 
 {% hint style='tip' %}
