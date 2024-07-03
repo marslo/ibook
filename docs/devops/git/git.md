@@ -61,6 +61,10 @@ git command study and practice
   - [checkout specific commit](#checkout-specific-commit)
   - [checkout particular commit and submodules](#checkout-particular-commit-and-submodules)
   - [checkout single branch](#checkout-single-branch)
+- [remote](#remote)
+  - [fetch single branch](#fetch-single-branch)
+  - [clone with different refsepc](#clone-with-different-refsepc)
+  - [add more remotes](#add-more-remotes)
 - [blame](#blame)
   - [blame in line range](#blame-in-line-range)
   - [format](#format)
@@ -1437,20 +1441,128 @@ $ git checkout --recurse-submodules
 ### checkout single branch
 ```bash
 $ git clone --single-branch --branch <branch name> url://to/source/repository [target dir]
+
+# or
+# https://stackoverflow.com/a/13928822/2940319
+$ mkdir -p <repo> && cd <repo>
+$ git init
+$ git fetch origin refs/heads/<branch>:refs/remotes/origin/<branch>
+$ git checkout $(git rev-parse origin/<branch>^{commit})
 ```
+
 - [add more branches](https://stackoverflow.com/a/17714718/2940319)
   ```bash
   $ git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
   $ git fetch origin
   ```
-  [or](https://stackoverflow.com/a/35887986/2940319)
-  ```bash
-  $ cat ~/.marslo/.gitalias
-  [alias]
-    # [a]dd [f]etch [r]efs
-    afr = !bash -c 'git config --add remote.origin.fetch "+refs/heads/$1:refs/remotes/origin/$1"'
 
-  $ git afr 'sandbox/marslo/*'
+  - [or](https://stackoverflow.com/a/35887986/2940319)
+    ```bash
+    $ cat ~/.marslo/.gitalias
+    [alias]
+      # [a]dd [f]etch [r]efs
+      afr = !bash -c 'git config --add remote.origin.fetch "+refs/heads/$1:refs/remotes/origin/$1"'
+
+    $ git afr 'sandbox/marslo/*'
+    ```
+
+## remote
+### fetch single branch
+
+> [!NOTE|label:references:]
+> - [Why does "git clone" not take a refspec?](https://stackoverflow.com/a/43759576/2940319)
+> - [How do I "undo" a --single-branch clone?](https://stackoverflow.com/a/17714718/2940319)
+
+- with git remote
+  ```bash
+  $ mkdir -p <repo> && cd <repo>
+  $ git init
+
+  # set remote url
+  $ git remote add -f origin <repoUrl>
+
+  # set refsepc
+  $ git remote set-branches origin <branch>
+
+  # update local repo
+  $ git config core.sparseCheckout true
+  $ git fetch --all --progress
+  $ git checkout <branch>
+  ```
+
+- with git config
+  ```bash
+  $ mkdir -p <repo> && cd <repo>
+  $ git init
+
+  # set remote url
+  $ git config remote.origin.url <repoUrl>
+
+  # set refsepc
+  $ git config [--add] remote.origin.fetch "+refs/heads/<branch>:refs/remotes/origin/<branch>"
+
+  # update local repo
+  $ git config core.sparseCheckout true
+  $ git fetch --all --progress
+  $ git checkout <branch>
+  ```
+
+### [clone with different refsepc](https://stackoverflow.com/a/43759576/2940319)
+- `clone --config`
+  ```bash
+  $ git clone -c remote.origin.fetch=+refs/changes/*:refs/remotes/origin/changes/* <repoUrl>
+
+  # verify
+  $ git config --local --get-regexp origin.*
+  remote.origin.fetch +refs/changes/*:refs/remotes/origin/changes/*
+  remote.origin.url <repoUrl>
+  remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+  ```
+
+- `config --add`
+  ```bash
+  $ git config --local --get-regexp origin.*
+  remote.origin.url <repoUrl>
+  remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+
+  $ git config --add remote.origin.fetch "+refs/changes/*:refs/remotes/origin/changes/*"
+
+  $ git config --local --get-regexp origin.*
+  remote.origin.url <repoUrl>
+  remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+  remote.origin.fetch +refs/changes/*:refs/remotes/origin/changes/*
+  ```
+
+### add more remotes
+- push to multiple remotes
+  ```bash
+  #                       remote name
+  #                            v
+  $ git remote set-url --add origin <remoteUrl>
+
+  # before
+  $ git remote -v
+  origin  ssh://path/to/repoUrl (fetch)
+  origin  ssh://path/to/repoUrl (push)
+
+  # after
+  origin  ssh://path/to/repoUrl (fetch)
+  origin  ssh://path/to/repoUrl (push)
+  origin  ssh://path/to/remoteUrl (push)
+  ```
+
+- fetch and push to different repos
+  ```bash
+  $ git remote set-url --push origin ssh://path/to/remoteUrl
+
+  # before
+  $ git remote -v
+  origin  ssh://path/to/repoUrl (fetch)
+  origin  ssh://path/to/repoUrl (push)
+
+  # after
+  origin  ssh://path/to/repoUrl (fetch)
+  origin  ssh://path/to/remoteUrl (push)
   ```
 
 ## blame
