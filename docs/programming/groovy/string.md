@@ -38,6 +38,7 @@
   - [`size`](#size)
 - [random](#random)
   - [`shuffled`](#shuffled)
+  - [`java.util.Random`](#javautilrandom)
 - [file](#file)
 - [StringTokenizer](#stringtokenizer)
 
@@ -575,6 +576,8 @@ assert 11 == 'Hello world'.length()
 >
 > references:
 > - [How to generate a random password in Groovy?](https://e.printstacktrace.blog/how-to-generate-random-password-in-groovy/)
+> - [aelindeman/password.groovy](https://gist.github.com/aelindeman/7a9d78aea5ba0004d1b5401303e241c5)
+> - [groovy/example-01-generate-random-string.groovy](https://github.com/mszpiler/postman-soapui-training/blob/master/groovy/example-01-generate-random-string.groovy)
 >
 > NOTE:
 > - `shuffled()` supports for Groovy 3+
@@ -587,6 +590,14 @@ assert 11 == 'Hello world'.length()
   ```groovy
   (('a'..'z')+('A'..'Z')+(0..9)).shuffled().take(10).join()
   ```
+
+### `java.util.Random`
+```groovy
+new java.util.Random().with { r ->
+  def pool = ('a'..'z') + ('A'..'Z') + (0..9)
+  (1..10).collect { pool[r.nextInt(pool.size())] }.join('')
+}
+```
 
 ## file
 
