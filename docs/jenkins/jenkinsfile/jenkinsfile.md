@@ -31,6 +31,10 @@
 > - [Understanding the Differences Between Jenkins Scripted and Declarative Pipeline: A Comprehensive Guide with Real-World Examples](https://blog.devgenius.io/understanding-the-differences-between-jenkins-scripted-and-declarative-pipeline-a-comprehensive-960826e26c2)
 {% endhint %}
 
+> [!NOTE|label:good examples for pipeline flow:]
+> - [Setup triggers inside the Jenkins Pipeline flow](https://jonathandionne.com/posts/setup-triggers-inside-the-jenkins-pipeline-flow/) | [Setup triggers inside the Jenkins Pipeline flow](https://faun.pub/setup-triggers-inside-the-jenkins-pipeline-flow-62af440af93b)
+> - [Externalize the configuration of the Jenkins Pipeline flow](https://jonathandionne.com/posts/externalize-the-configuration-of-the-jenkins-pipeline-flow/) | [Externalize the configuration of the Jenkins Pipeline flow](https://medium.com/faun/externalize-the-configuration-of-the-jenkins-pipeline-flow-8f326c7cc9c4)
+
 ## jenkins API
 ### update node name
 - get label

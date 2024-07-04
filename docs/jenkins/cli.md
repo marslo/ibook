@@ -5,6 +5,7 @@
   - [get port](#get-port)
   - [ssh](#ssh)
   - [jenkins-cli.jar](#jenkins-clijar)
+  - [jnlp](#jnlp)
 - [execute groovy script via cli](#execute-groovy-script-via-cli)
   - [`ERROR: This command is requesting the -remoting mode which is no longer supported`](#error-this-command-is-requesting-the--remoting-mode-which-is-no-longer-supported)
   - [solution](#solution)
@@ -150,6 +151,12 @@ $ ssh -q ${JENKINS_DOMAIN} help
   $ export JENKINS_API_TOKEN=<MY-CLI-TOKEN>
   $ java -jar jenkins-cli.jar -s https://${JENKINS_DOMAIN}
   ```
+
+### jnlp
+
+> [!NOTE|label:references:]
+> - [How to find JNLP Node’s secret key remotely?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-find-agent-secret-key)
+> - [Structure of the JNLP File](https://docs.oracle.com/javase/tutorial/deployment/deploymentInDepth/jnlpFileSyntax.html)
 
 ## [execute groovy script via cli](https://xanderx.com/post/run-jenkins-script-console-scripts-from-command-line-without-remoting/)
 ### `ERROR: This command is requesting the -remoting mode which is no longer supported`

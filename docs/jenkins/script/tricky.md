@@ -13,6 +13,7 @@
   - [Automate configuring via Jenkins Script Console](#automate-configuring-via-jenkins-script-console)
   - [Jenkins search results missing /ci/ URL component](#jenkins-search-results-missing-ci-url-component)
   - [jenkins server info](#jenkins-server-info)
+  - [How to access Junit test counts in Jenkins Pipeline project](#how-to-access-junit-test-counts-in-jenkins-pipeline-project)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -437,4 +438,31 @@ new File(System.getProperty("user.home"),'.nestedViewsSearch').createNewFile()
 println("Jenkins: ${Jenkins.instance.getVersion()}")
 println("OS: ${System.getProperty('os.name')} - ${System.getProperty('os.version')}")
 println("Java: ${System.getProperty('java.version')} - ${System.getProperty('java.vm.vendor')} (${System.getProperty('java.vm.name')})")
+```
+
+### [How to access Junit test counts in Jenkins Pipeline project](https://stackoverflow.com/a/39958212/2940319)
+
+> [!NOTE|label:references:]
+> - [Using pipeline & groovy, How can I extract test results from Jenkins for my current build?](https://stackoverflow.com/a/39644201/2940319)
+
+```groovy
+import hudson.tasks.test.AbstractTestResultAction
+
+@NonCPS
+def testStatuses() {
+    def testStatus = ""
+    AbstractTestResultAction testResultAction = currentBuild.rawBuild.getAction(AbstractTestResultAction.class)
+    if (testResultAction != null) {
+        def total = testResultAction.totalCount
+        def failed = testResultAction.failCount
+        def skipped = testResultAction.skipCount
+        def passed = total - failed - skipped
+        testStatus = "Test Status:\n  Passed: ${passed}, Failed: ${failed} ${testResultAction.failureDiffString}, Skipped: ${skipped}"
+
+        if (failed == 0) {
+            currentBuild.result = 'SUCCESS'
+        }
+    }
+    return testStatus
+}
 ```
