@@ -6,6 +6,7 @@
     - [get current build actions](#get-current-build-actions)
   - [get build details](#get-build-details)
     - [setup next build number](#setup-next-build-number)
+  - [NODE_NAME and worksapce path](#node_name-and-worksapce-path)
   - [build cause](#build-cause)
     - [trigger cause](#trigger-cause)
     - [get build cause](#get-build-cause)
@@ -207,6 +208,23 @@ println build.getCulprits()
 jenkins.model.Jenkins.instance
        .getItemByFullName( '/path/to/job' )
        .updateNextBuildNumber( n )
+```
+
+## [NODE_NAME and worksapce path](https://stackoverflow.com/a/78705311/2940319)
+
+> [!NOTE|label:references:]
+> - [`getNodeWsUrl` - Get step id in Jenkins Pipeline for linking to BlueOcean or Pipeline Steps view (flowGraphTable)](https://stackoverflow.com/a/62843912/2940319)
+
+```bash
+import org.jenkinsci.plugins.workflow.support.actions.WorkspaceRunAction
+
+jenkins.model.Jenkins
+             .instance
+             .getItemByFullName( JOB_NAME )
+             .getBuildByNumber( BUILD_NUMBER )
+             .getAction(WorkspaceRunAction.class).getActions().each {
+                println "${it.node}: ${it.path}"
+             }
 ```
 
 ## build cause
