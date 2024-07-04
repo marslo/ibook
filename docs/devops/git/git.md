@@ -65,6 +65,7 @@ git command study and practice
   - [fetch single branch](#fetch-single-branch)
   - [clone with different refsepc](#clone-with-different-refsepc)
   - [add more remotes](#add-more-remotes)
+  - [remove remote repo](#remove-remote-repo)
 - [blame](#blame)
   - [blame in line range](#blame-in-line-range)
   - [format](#format)
@@ -1470,6 +1471,7 @@ $ git checkout $(git rev-parse origin/<branch>^{commit})
 ### fetch single branch
 
 > [!NOTE|label:references:]
+> - [* 10.5 Git Internals - The Refspec](https://git-scm.com/book/en/v2/Git-Internals-The-Refspec)
 > - [Why does "git clone" not take a refspec?](https://stackoverflow.com/a/43759576/2940319)
 > - [How do I "undo" a --single-branch clone?](https://stackoverflow.com/a/17714718/2940319)
 
@@ -1564,6 +1566,11 @@ $ git checkout $(git rev-parse origin/<branch>^{commit})
   origin  ssh://path/to/repoUrl (fetch)
   origin  ssh://path/to/remoteUrl (push)
   ```
+
+### [remove remote repo](https://stackoverflow.com/a/57943899/2940319)
+```bash
+$ git remote set-url --delete --push origin ssh://path/to/remoteUrl
+```
 
 ## blame
 ### blame in line range

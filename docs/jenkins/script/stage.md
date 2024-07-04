@@ -8,16 +8,32 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 # build stage
 
 > [!NOTE|label:references:]
+> - [CpsFlowExecution](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/CpsFlowExecution.html)
+>   ```
+>   CpsFlowExecution goes through the following states:
+>
+>                                       +----------------------+
+>                                       |                      |
+>                                       v                      |
+>    PERSISTED --> PREPARING --> SUSPENDED --> RUNNABLE --> RUNNING --> COMPLETE
+>                                                ^
+>                                                |
+>                                              INITIAL
+>   ```
 > - [Access Stage results in Workflow/ Pipeline plugin](https://stackoverflow.com/a/59854515/2940319)
 > - [pipeline中任务分段日志获取](https://gingkoleaf.github.io/2019/10/22/jenkins/jenkins-pipeline-stage-log/)
 > - [GuillaumeSmaha/build-stages-status.groovy](https://gist.github.com/GuillaumeSmaha/fdef2088f7415c60adf95d44073c3c88)
 > - [Access Stage name during the build in Jenkins pipeline](https://stackoverflow.com/a/45224119/2940319)
 > - [jenkinsci/plugins/workflow/cps/FlowDurabilityTest.java](https://github.com/jenkinsci/workflow-cps-plugin/blob/master/src/test/java/org/jenkinsci/plugins/workflow/cps/FlowDurabilityTest.java#L273)
+> - [pipeline-model-definition/src/main/groovy/org/jenkinsci/plugins/pipeline/modeldefinition/Utils.groovy](https://github.com/jenkinsci/pipeline-model-definition-plugin/blob/master/pipeline-model-definition/src/main/groovy/org/jenkinsci/plugins/pipeline/modeldefinition/Utils.groovy)
+>   - [`findStageFlowNodes`](https://github.com/jenkinsci/pipeline-model-definition-plugin/blob/master/pipeline-model-definition/src/main/groovy/org/jenkinsci/plugins/pipeline/modeldefinition/Utils.groovy#L230)
+>   - [`markStageWithTag`](https://github.com/jenkinsci/pipeline-model-definition-plugin/blob/master/pipeline-model-definition/src/main/groovy/org/jenkinsci/plugins/pipeline/modeldefinition/Utils.groovy#L311)
+> - [How to find the agent that a FlowNode is executing on?](https://groups.google.com/g/jenkinsci-dev/c/PCDHBDZDm90)
+> - [`FlowGraphWalker` - How to get workspace of jenkins pipeline plugin job (WorkflowRun object java API )](https://stackoverflow.com/a/43999292/2940319)
+> - [Jenkins API - Get current pipeline stage of the build](https://stackoverflow.com/a/68087806/2940319)
 
 ## show build stages details
 ```groovy
@@ -31,11 +47,10 @@ final String JOB_NAME  = '/marslo/sandbox'
 final int BUILD_NUMBER = 17
 
 WorkflowRun run = Jenkins.instance
-                   .getItemByFullName( JOB_NAME )
-                   .getBuildByNumber( BUILD_NUMBER )
+                         .getItemByFullName( JOB_NAME )
+                         .getBuildByNumber( BUILD_NUMBER )
 PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor(run)
-List<FlowNodeWrapper> flowNodes = visitor.getPipelineNodes()
-
+List<FlowNodeWrapper> flowNodes  = visitor.getPipelineNodes()
 
 flowNodes.each {
   println """

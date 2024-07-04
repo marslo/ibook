@@ -24,6 +24,7 @@
   - [gfall <branch>](#gfall-branch)
   - [iGitOpt](#igitopt)
   - [hook](#hook)
+- [refspec](#refspec)
 - [others](#others)
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
@@ -817,6 +818,11 @@ $ git diff --shortstat HEAD^..HEAD
   ```
   <!--endsec-->
 
+
+## refspec
+
+> [!NOTE|label:references:]
+> - [10.5 Git Internals - The Refspec](https://git-scm.com/book/en/v2/Git-Internals-The-Refspec)
 
 ## others
 ### alias

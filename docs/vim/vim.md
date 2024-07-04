@@ -62,6 +62,10 @@
 > - [:help guicorsor](https://vimdoc.sourceforge.net/htmldoc/options.html#'guicursor')
 > - [* iMarslo : redirect message into file](./tricky.html#redirect-cmd-result-into-file)
 
+- [revert cursor shape when exit vim/nvim](https://stackoverflow.com/a/71374251/2940319)
+  ```vim
+  autocmd VimLeave * silent !echo -ne "\e[6 q"
+  ```
 
 #### guicursor
 ```bash

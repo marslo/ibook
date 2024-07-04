@@ -3,6 +3,7 @@
 
 - [get build](#get-build)
   - [get WorkflowRun by build number](#get-workflowrun-by-build-number)
+    - [get current build actions](#get-current-build-actions)
   - [get build details](#get-build-details)
     - [setup next build number](#setup-next-build-number)
   - [build cause](#build-cause)
@@ -116,6 +117,9 @@
 
 # get build
 
+> [!NOTE|label:references:]
+> - [How to get Jenkins build job details?](https://faun.pub/how-to-get-jenkins-build-job-details-b8c918087030)
+
 ## get WorkflowRun by build number
 ```groovy
 final String JOB_NAME  = 'marslo/sandbox'
@@ -125,6 +129,25 @@ def build = jenkins.model.Jenkins.instance
                    .getItemByFullName( JOB_NAME )
                    .getBuildByNumber( BUILD_NUMBER )
 ```
+
+### get current build actions
+```groovy
+currentBuild.rawBuild.actions.collect { it.getClass() }.join('\n')
+```
+- result
+  ```
+  class hudson.model.CauseAction
+  class hudson.plugins.jobConfigHistory.JobConfigBadgeAction
+  class jenkins.metrics.impl.TimeInQueueAction
+  class org.jenkinsci.plugins.buildtriggerbadge.BuildTriggerBadgeAction
+  class org.jenkinsci.plugins.workflow.libs.LibrariesAction
+  class com.cloudbees.plugins.credentials.builds.CredentialsParameterBinder
+  class hudson.plugins.git.util.BuildData
+  class io.jenkins.plugins.forensics.git.reference.GitCommitsRecord
+  class hudson.plugins.ansicolor.action.ColorizedAction
+  class hudson.plugins.ansicolor.action.ColorizedAction
+  class org.jenkinsci.plugins.workflow.cps.EnvActionImpl
+  ```
 
 ## get build details
 ```groovy
