@@ -159,6 +159,12 @@ about:restartrequired
 > - [Tips & tricks for Chrome](https://support.google.com/chrome/answer/3098656?hl=enTips and shortcuts for better browsing)
 > - [Tips and shortcuts for better browsing](https://www.google.com/chrome/tips/)
 
+#### disable `is not secure` for http URL
+
+- settings -> privacy and security -> security -> `Always use secure connections`
+
+  ![http not secure](../../screenshot/tools/chrome-http-not-secure.png)
+
 #### remove "All Bookmarks"
 
 > [!NOTE|label:references:]
@@ -181,7 +187,7 @@ about:restartrequired
 - all in one
   - `chrome://about/`        or  `about:about`
   - `chrome://chrome-urls/`  or  `about:chrome-urls`
-  - `chrome://predictors/`   or `about:predictors`
+  - `chrome://predictors/`   or  `about:predictors`
 
 - quick open
   - `chrome://downloads/`  or  `about:download`
