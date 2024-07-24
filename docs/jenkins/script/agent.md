@@ -448,21 +448,28 @@ jenkins.model.Jenkins.instance.slaves.each { agent ->
 
 ### get agent labels
 ```groovy
-def getLabel( String label ){
-  for ( node in jenkins.model.Jenkins.instance.nodes ) {
-    if ( node.getNodeName().toString().equals(label) ) {
-      return node.getLabelString()
-    }
-  }
-}
+println jenkins.model.Jenkins.instance.nodes.collect { agent ->
+          "${agent.name} -> ${agent.getLabelString()}"
+        }.join('\n')
 ```
 
-- or
+- function
   ```groovy
   def getLabel( String label ){
     jenkins.model.Jenkins.instance.nodes.find { it.getNodeName().toString().equals(label) }.getLabelString()
   }
   ```
+
+  - or
+    ```groovy
+    def getLabel( String label ){
+      for ( node in jenkins.model.Jenkins.instance.nodes ) {
+        if ( node.getNodeName().toString().equals(label) ) {
+          return node.getLabelString()
+        }
+      }
+    }
+    ```
 
 ### [get a list of all Jenkins nodes assigned with label](https://stackoverflow.com/a/64106569/2940319)
 ```groovy

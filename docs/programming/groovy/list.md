@@ -526,7 +526,7 @@ after
 ## show
 ### print 2D matrix
 ```groovy
-(1..255).collect { color -> " █${color}█ " }
+(1..255).collect { color -> " █${String.format("%03d", color)}█ " }
         .eachWithIndex{ c, idx ->
           print c
           if ( 4 == (idx+1)%6 ) { println '' }
