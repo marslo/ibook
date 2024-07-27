@@ -47,8 +47,11 @@
   - [debug git](#debug-git)
   - [debug ssh](#debug-ssh)
     - [check sshd log](#check-sshd-log)
-  - [tips](#tips)
-    - [disconnect](#disconnect)
+- [tips](#tips)
+  - [disconnect](#disconnect)
+  - [execute shell commands via ssh](#execute-shell-commands-via-ssh)
+    - [ctrl-c to break while loop](#ctrl-c-to-break-while-loop)
+    - [execute local script via ssh](#execute-local-script-via-ssh)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -777,9 +780,9 @@ $ journalctl -t sshd -b0
 $ journalctl -t sshd -b0 -r
 ```
 
-## tips
+# tips
 
-### disconnect
+## disconnect
 
 > [!TIP]
 > <kbd>Enter</kbd> + <kbd>~</kbd> + <kbd>.</kbd> + <kbd>Enter</kbd>
@@ -804,4 +807,42 @@ Supported escape sequences:
  ~?   - this message
  ~~   - send the escape character by typing it twice
 (Note that escapes are only recognized immediately after newline.)
+```
+
+## execute shell commands via ssh
+
+> [!NOTE|label:references:]
+> - [* iMarslo: knrun](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L548)
+> - [Bash while read loop breaking early](https://stackoverflow.com/a/1396070/2940319)
+>   ```bash
+>   $ ssh -n username@hosts "cmd"
+>   ```
+> - [Source a file after ssh login drops to prompt](https://unix.stackexchange.com/a/607382/29178)
+>   ```bash
+>   $ ssh -t username@hosts "cmd"
+>   ```
+
+### ctrl-c to break while loop
+
+```bash
+trap exit SIGINT SIGTERM; while read -r _node; do
+  ssh -n username@${_node} "cmd"
+done <<< "${hostname}"
+```
+
+### execute local script via ssh
+
+> [!NOTE|label:references:]
+> - [How to use SSH to run a local shell script on a remote machine?](https://stackoverflow.com/a/2732991/2940319)
+
+```bash
+trap exit SIGINT SIGTERM; while read -r _node; do
+  ssh -q username@${_node} 'bash -s' < '/path/to/scipt.sh'
+done <<< "${hostname}"
+
+# with eval
+trap exit SIGINT SIGTERM; while read -r _node; do
+  declare sshCmd="ssh -q username@${_node} 'bash -s' < \"/path/to/scipt.sh\""
+  eval "${sshCmd}"
+done <<< "${hostname}"
 ```

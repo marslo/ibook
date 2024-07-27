@@ -1019,6 +1019,7 @@ a b
 
 > [!NOTE|label:references:]
 > - [How can I join elements of a Bash array into a delimited string?](https://stackoverflow.com/a/17841619/2940319)
+> - [How to join() array elements in a bash script](https://dev.to/meleu/how-to-join-array-elements-in-a-bash-script-303a)
 
 ```bash
 function join_by {
