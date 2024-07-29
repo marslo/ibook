@@ -40,6 +40,7 @@
   - [show all environment variables](#show-all-environment-variables)
   - [setup environment via config file by powershell](#setup-environment-via-config-file-by-powershell)
 - [tricky](#tricky)
+  - [create symbolic or hard link](#create-symbolic-or-hard-link)
   - [enable LongPaths in windows](#enable-longpaths-in-windows)
   - [Internet Explorer Enhanced Security Configuration is enabled](#internet-explorer-enhanced-security-configuration-is-enabled)
   - [powershell plugins](#powershell-plugins)
@@ -752,6 +753,21 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ```
 
 ## tricky
+### create symbolic or hard link
+
+> [!NOTE|label:references:]
+> - [mklink](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mklink)
+
+```batch
+> mklink /d c:\Users\marslo\pbustor \\dc1engcifs.sample.com\pbu_sdk_stor
+symbolic link created for c:\Users\marslo\pbustor <<===>> \\dc1engcifs.sample.com\pbu_sdk_stor
+```
+
+- remote link
+  ```batch
+  > rmdir c:\Users\marslo\pbustor
+  ```
+
 ### enable LongPaths in windows
 
 > [!NOTE|label:references:]
