@@ -753,7 +753,7 @@ PS C:\> cat .\test.txt | ForEach-Object {
   ```
 
 ## tricky
-### create symbolic or hard link
+### [create symbolic or hard link](https://superuser.com/a/1136369/112396)
 
 > [!NOTE|label:references:]
 > - [mklink](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mklink)

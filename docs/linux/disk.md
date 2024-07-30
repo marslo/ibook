@@ -137,29 +137,65 @@ $ smbclient //<ip.address>/secured -U user1
 > - [How do I use a credential file for CIFS in /etc/fstab?](https://askubuntu.com/q/1119819/92979)
 > - [Safer alternative to using .smbcredentials](https://askubuntu.com/questions/1262419/safer-alternative-to-using-smbcredentials)
 > - [CIFS vs SAMBA, What are the differences](https://unix.stackexchange.com/a/34793/29178)
+> - [How do you provide domain credentials to ansible's mount module?](https://stackoverflow.com/a/30037952/2940319)
+> - [How to access mounted network drive on Windows Linux Subsystem?](https://superuser.com/a/1565523/112396)
+
+- environment setup
+  ```bash
+  # centos
+  $ yum install cifs-utils
+
+  # ubuntu
+  $ sudo apt-get install cifs-utils
+  ```
+
+- create credential file
+  ```bash
+  $ echo "username=user1" > ~/.cifscredentials
+  $ echo "password=password1" >> ~/.cifscredentials
+  $ chmod 600 ~/.cifscredentials
+  ```
+
+- mount
+  ```bash
+  $ [[ -d /mnt/mynfs ]] || mkdir -p /mnt/mynfs
+  $ sudo mount -t cifs //domain.com/path/to/target /mnt/mynfs -o credentials=~/.cifscredentials
+  ```
+
+- NFS share info
+  ```bash
+  $ rpcinfo domain.com | egrep "service|nfs"
+  1:   program version netid     address             service    owner
+  8:    100003    3    udp       domain.com.8.1      nfs
+  9:    100003    3    tcp       domain.com.8.1      nfs
+  ```
 
 ### mount nfs
 
 {% hint style='tip' %}
-```bash
-# example
-nfs server: 1.2.3.4
-sub-folder: /a/b
-mount to local: /mnt/mynfs
-```
+> references
+> - [Network File System (NFS)](https://ubuntu.com/server/docs/network-file-system-nfs)
+> - [How To Set Up an NFS Mount on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nfs-mount-on-ubuntu-20-04)
+> - sample:
+>   - **nfs server**: `domain.com`
+>   - **sub-folder**: `/path/to/target`
+>   - **mount to local**: `/mnt/mynfs`
 {% endhint %}
 
 ```bash
 $ sudo mkdir -p /mnt/mynfs
-$ sudo mount -t nfs 1.2.3.4:/a/b /mnt/mynfs
+$ sudo mount -t nfs domain.com:/path/to/target /mnt/mynfs [-vvv]
 
 # or force using nfsversion 4
-$ sudo mount -t nfs -o nfsvers=4 1.2.3.4:/a/b /mnt/mynfs -vvv
+$ sudo mount -t nfs -o nfsvers=4 domain.com:/path/to/target /mnt/mynfs [-vvv]
+
+# or with permission (rw) and version 3
+$ sudo mount -o rw,vers=3 -t nfs domain.com:/path/to/target /mnt/mynfs -vvv
 ```
 
 - [test if sub-folder exists in remote nfs server](https://www.tecmint.com/how-to-setup-nfs-server-in-linux/)
   ```bash
-  $ showmount -e 1.2.3.4 | grep '/a/b'
+  $ showmount -e domain.com | grep '/path/to/target'
   ```
 
 - environment setup
@@ -167,11 +203,11 @@ $ sudo mount -t nfs -o nfsvers=4 1.2.3.4:/a/b /mnt/mynfs -vvv
   # centos
   $ yum install nfs-utils nfs-utils-lib
   $ yum install portmap (not required with NFSv4)
+  # ubuntu
+  $ sudo apt-get install nfs-common
 
   # for nfs4
-
-  # ubuntu
-  $ apt-get install nfs-utils nfs-utils-lib
+  $ sudo apt-get install nfs-utils nfs-utils-lib
   ```
 
 #### check mount
@@ -245,18 +281,18 @@ $ findmnt /mnt/mynfs
      100021    4   tcp  42699  nlockmgr
   ```
 
-- remote
+- [remote](https://unix.stackexchange.com/a/205736/29178)
   ```bash
-  $ rpcinfo 1.2.3.4 | egrep "service|nfs"
-     program version netid     address          service    owner
-      100003    3    udp       1.2.3.4.8.1      nfs
-      100003    3    tcp       1.2.3.4.8.1      nfs
+  $ rpcinfo domain.com | egrep "service|nfs"
+     program version netid     address             service    owner
+      100003    3    udp       domain.com.8.1      nfs
+      100003    3    tcp       domain.com.8.1      nfs
   ```
 
 #### setup nfs mount by default server boot
 ```bash
 $ sudo bash -c "cat > /etc/fstab" << EOF
-1.2.3.4:/a/b    /mnt/mynfs nfs defaults 0 0
+domain.com:/path/to/target    /mnt/mynfs nfs defaults 0 0
 EOF
 
 # i.e.:
@@ -266,7 +302,7 @@ UUID=18c35fe1-36ad-4d7e-aeb6-88bdb6b145af       /boot           ext4  defaults  
 UUID=6C3A-C81A                                  /boot/efi       vfat  umask=0077,shortname=winnt  0  2
 /dev/mapper/cl-home                             /home           xfs   defaults                    0  0
 /dev/mapper/cl-swap                             swap            swap  defaults                    0  0
-1.2.3.4:/a/b                                    /path/to/mount  nfs   defaults                    0  0
+domain.com:/path/to/target                      /path/to/mount  nfs   defaults                    0  0
 ```
 
 #### related configure
