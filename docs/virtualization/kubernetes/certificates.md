@@ -8,9 +8,10 @@
 - [show secrets tls.crt](#show-secrets-tlscrt)
   - [create secrets](#create-secrets)
   - [duplicate secrets to the other ns](#duplicate-secrets-to-the-other-ns)
-  - [show server.crt](#show-servercrt)
-  - [show all tls](#show-all-tls)
-  - [show ca.crt](#show-cacrt)
+  - [show tls](#show-tls)
+    - [show tls in all namespace](#show-tls-in-all-namespace)
+    - [show tls.crt](#show-tlscrt)
+    - [manually update server.crt and server.key](#manually-update-servercrt-and-serverkey)
 - [renew both certificates and kubeconfig](#renew-both-certificates-and-kubeconfig)
   - [check info](#check-info)
     - [crt](#crt)
@@ -152,7 +153,7 @@
 ## create secrets
 - by command
   ```bash
-  $ kubectl create secret tls my-certs \
+  $ kubectl create secret tls <SECRET_NAME> \
             --key .devops/certs/server.key \
             --cert .devops/certs/server.crt \
             -n ingress-nginx
@@ -181,41 +182,29 @@
 {% endhint %}
 
 ```bash
-$ kubectl -n ingress-nginx get secrets my-certs -o yaml --export | kubectl apply -n devops -f -
+$ kubectl -n ingress-nginx get secrets <SECRET_NAME> -o yaml --export | kubectl apply -n devops -f -
 ```
 
-## show server.crt
-```bash
-$ kubectl -n kube-system \
-          get secrets sample-tls \
-          -o yaml \
-          -o "jsonpath={.data['tls\.crt']}" |
-    base64 -d -w0 |
-    sed '/-----END CERTIFICATE-----/q' |
-    openssl x509 -text -noout |
-    grep 'Not'
-            Not Before: Sep 14 00:00:00 2021 GMT
-            Not After : Aug 18 23:59:59 2022 GM
-```
-
-## show all tls
+## show tls
+### show tls in all namespace
 ```bash
 $ kubectl get ingress --all-namespaces --no-headers |
           awk '{print $1}' |
           sort -u |
           while read -r ns; do
             echo "-- ${ns} --";
-              kubectl -n ${ns} get secret sample-tls -o yaml -o "jsonpath={.data['tls\.crt']}" |
+              kubectl -n ${ns} get secret <SECRET_NAME> -o yaml -o "jsonpath={.data['tls\.crt']}" |
                       base64 -d -w0 |
                       sed '/-----END CERTIFICATE-----/q' |
-                      openssl x509 -text -noout | grep 'Not'
+                      openssl x509 -text -noout |
+                      grep 'Not'
           done
 ```
 
-## show ca.crt
+### show tls.crt
 ```bash
 $ kubectl -n kube-system \
-          get secrets sample-tls \
+          get secrets <SECRET_NAME> \
           -o yaml \
           -o "jsonpath={.data['tls\.crt']}" |
     base64 -d -w0 |
@@ -224,6 +213,31 @@ $ kubectl -n kube-system \
     grep 'Not'
             Not Before: Apr 14 00:00:00 2021 GMT
             Not After : Apr 13 23:59:59 2031 GMT
+```
+- or
+  ```bash
+  $ kubectl -n kube-system \
+            get secrets <SECRET_NAME> \
+            -o yaml \
+            -o "jsonpath={.data['tls\.crt']}" |
+      base64 -d -w0 |
+      sed '/-----END CERTIFICATE-----/q' |
+      openssl x509 -text -noout |
+      grep 'Not'
+              Not Before: Sep 14 00:00:00 2021 GMT
+              Not After : Aug 18 23:59:59 2022 GM
+  ```
+
+### manually update server.crt and server.key
+
+> [!TIP|label:see also:]
+> - [* iMarslo: ssl certificate in kubenernets](../../cheatsheet/ssl/ssl.md#to-kubernetes-secrets)
+
+```bash
+$ kubectl -n kube-system get secrets <SECRET_NAME> -o yaml |
+    sed -r -e "s/(\s*tls.crt:)(.*)$/\1 $(cat server.crt | base64 -w0)/g" \
+           -e "s/(\s*tls.key:)(.*)$/\1 $(cat server.key | base64 -w0)/g" |
+  kubectl apply -f -
 ```
 
 # renew both certificates and kubeconfig

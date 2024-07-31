@@ -20,6 +20,7 @@
     - [check who has issued the ssl certificate](#check-who-has-issued-the-ssl-certificate)
     - [check whom the ssl certificate is issued to](#check-whom-the-ssl-certificate-is-issued-to)
     - [check for what dates the ssl certificate is valid](#check-for-what-dates-the-ssl-certificate-is-valid)
+    - [check serial number of the ssl certificate](#check-serial-number-of-the-ssl-certificate)
     - [show multiple informations](#show-multiple-informations)
     - [show fingerprint](#show-fingerprint)
     - [extract all information from the ssl certificate (decoded)](#extract-all-information-from-the-ssl-certificate-decoded)
@@ -35,6 +36,10 @@
   - [Windows](#windows)
   - [Linux](#linux)
     - [ubuntu](#ubuntu)
+- [Kubernetes](#kubernetes)
+  - [convert keys](#convert-keys)
+    - [from Kubernetes secrets](#from-kubernetes-secrets)
+    - [to Kubernetes secrets](#to-kubernetes-secrets)
 - [Artifactory HTTPS](#artifactory-https)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -57,7 +62,6 @@
 > - [generating SSL Certificates](https://github.com/nats-io/nats-operator/issues/119#issuecomment-462538507)
 > - [sethvargo/create-certs.sh](https://gist.github.com/sethvargo/81227d2316207b7bd110df328d83fad8)
 > - [How can I add a private key to my keychain?](https://apple.stackexchange.com/a/9011/254265)
-> - [Kubernetes Authentication and Authorization with X509 client certificates](https://medium.com/@sureshpalemoni/kubernetes-authentication-and-authorization-with-x509-client-certificates-edbc3517c10)
 > - [Proactively Handling Certificate Expiration With ssl-cert-check](https://prefetch.net/articles/checkcertificate.html)
 >   - [Matty9191/ssl-cert-check](https://github.com/Matty9191/ssl-cert-check)
 > - [Converting a Java Keystore into PEM Format](https://stackoverflow.com/a/656559/2940319)
@@ -576,6 +580,19 @@ notBefore=Sep  8 00:00:00 2021 GMT
 notAfter=Aug 18 23:59:59 2022 GMT
 ```
 
+### check serial number of the ssl certificate
+```bash
+$ echo -n |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
+       openssl x509 -noout -serial
+serial=038**************************9CE
+
+$ openssl x509 -noout -serial -in star_marvell_com.crt
+serial=038**************************9CE
+```
+
 ### show multiple informations
 ```bash
 $ echo -n |
@@ -879,6 +896,42 @@ Getting Private key
   $ sudo rm -rf /usr/local/share/ca-certificates/ca.crt
   $ sudo update-ca-certificates --fresh
   $ sudo systemctl restart docker.service
+  ```
+
+# Kubernetes
+
+> [!NOTE|label:references:]
+> - [Kubernetes Authentication and Authorization with X509 client certificates](https://medium.com/@sureshpalemoni/kubernetes-authentication-and-authorization-with-x509-client-certificates-edbc3517c10)
+
+## convert keys
+### from Kubernetes secrets
+- key
+  ```bash
+  $ kubectl -n kube-system get secrets <SECRET_NAME> -o yaml -o jsonpath="{.data.tls\.key}" | base64 -d > server.key
+  ```
+
+- crt
+  ```bash
+  $ kubectl -n kube-system get secrets marvell-tls -o yaml -o jsonpath="{.data.tls\.crt}" | base64 -d > server.crt
+  ```
+
+### to Kubernetes secrets
+- key
+  ```bash
+  $ cat server.key | base64 -w0
+  ```
+
+- crt
+  ```bash
+  $ cat server.crt | base64 -w0
+  ```
+
+- advanced usage
+  ```bash
+  $ kubectl -n kube-system get secrets <SECRET_NAME> -o yaml |
+      sed -r -e "s/(\s*tls.crt:)(.*)$/\1 $(cat server.crt | base64 -w0)/g" \
+             -e "s/(\s*tls.key:)(.*)$/\1 $(cat server.key | base64 -w0)/g" |
+    kubectl apply -f -
   ```
 
 # Artifactory HTTPS
