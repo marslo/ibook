@@ -97,12 +97,12 @@
       ]
     },
     "tbfed-pagefooter": {
-      "copyright": "Copyright © marslo 2020-2023",
+      "copyright": "Copyright © marslo 2020-2024",
       "modify_label": "Last Modified:",
       "modify_format": "YYYY-MM-DD HH:mm:ss"
     },
     "edit-link": {
-      "base": "https://github.com/marslo/ibook/edit/marslo",
+      "base": "https://github.com/marslo/ibook/edit/marslo/docs",
       "label": "Edit in Github"
     },
     "anchor-navigation-ex": {
