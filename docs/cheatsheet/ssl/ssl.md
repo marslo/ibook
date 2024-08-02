@@ -27,6 +27,11 @@
     - [show the ssl certificate](#show-the-ssl-certificate)
     - [check ssl certificate expiration date](#check-ssl-certificate-expiration-date)
     - [verifying the keys match](#verifying-the-keys-match)
+  - [bundle certificate](#bundle-certificate)
+    - [generic usage](#generic-usage)
+    - [get serial number](#get-serial-number)
+    - [get issuer and subject](#get-issuer-and-subject)
+    - [get dates](#get-dates)
 - [manage certificate in OS (client)](#manage-certificate-in-os-client)
   - [OSX](#osx)
     - [add](#add)
@@ -40,6 +45,7 @@
   - [convert keys](#convert-keys)
     - [from Kubernetes secrets](#from-kubernetes-secrets)
     - [to Kubernetes secrets](#to-kubernetes-secrets)
+- [Jenkins self-signed SSL](#jenkins-self-signed-ssl)
 - [Artifactory HTTPS](#artifactory-https)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -589,7 +595,7 @@ $ echo -n |
        openssl x509 -noout -serial
 serial=038**************************9CE
 
-$ openssl x509 -noout -serial -in star_marvell_com.crt
+$ openssl x509 -noout -serial -in server.crt
 serial=038**************************9CE
 ```
 
@@ -651,6 +657,103 @@ $ openssl pkey -pubout -in privateKey.key | openssl sha256
 $ openssl req -pubkey -in CSR.csr -noout | openssl sha256
 # or
 $ openssl x509 -pubkey -in certificate.crt -noout | openssl sha256
+```
+
+## bundle certificate
+
+> [!NOTE|label:references:]
+> - [How to view all ssl certificates in a bundle?](https://serverfault.com/q/590870/129815)
+
+### generic usage
+```bash
+$ awk -v cmd="openssl x509 -text -noout" \
+             '/-----BEGIN/ { c = $0; next } c { c = c "\n" $0 } /-----END/ { print c|cmd; close(cmd); c = 0 }' \
+      < server.bundle.crt
+
+# or
+$ awk < server.bundle.crt -v cmd="openssl x509 -issuer -subject -dates -noout" \
+        '/^-----BEGIN/,/^-----END/ {print|cmd} /^-----END/ {close(cmd)}'
+
+# or
+$ cat server.bundle.crt |
+  awk '{
+    if ($0 == "-----BEGIN CERTIFICATE-----") cert=""
+    else if ($0 == "-----END CERTIFICATE-----") print cert
+    else cert=cert$0
+  }' |
+  while read CERT; do echo "$CERT" | base64 -d | openssl x509 -inform DER -text -noout; done
+```
+
+### get serial number
+```bash
+# get from local
+$ awk -v cmd='openssl x509 -noout -serial' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+       < server.bundle.crt |
+       awk -F= '{print $2}' |
+       sed 's/../&:/g;s/:$//'
+03:81:9B:12:16:E1:CD:D5:09:59:7E:0F:6A:E9:39:CE
+0C:F5:BD:06:2B:56:02:F4:7A:B8:50:2C:23:CC:F0:66
+03:3A:F1:E6:A7:11:A9:A0:BB:28:64:B1:1D:09:FA:E5
+
+# get from remote
+$ openssl storeutl -noout -text -certs server.bundle.crt | sed -n '/Serial Number:/{n;p;}'
+            03:81:9b:12:16:e1:cd:d5:09:59:7e:0f:6a:e9:39:ce
+            0c:f5:bd:06:2b:56:02:f4:7a:b8:50:2c:23:cc:f0:66
+            03:3a:f1:e6:a7:11:a9:a0:bb:28:64:b1:1d:09:fa:e5
+```
+
+### [get issuer and subject](https://serverfault.com/a/755815/129815)
+```bash
+$ awk -v cmd='openssl x509 -noout -subject -issuer' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+      < server.bundle.crt
+subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
+issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+
+# or
+$ openssl crl2pkcs7 -nocrl -certfile server.bundle.crt | openssl pkcs7 -print_certs -noout
+subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
+issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+
+subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+
+subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+```
+
+### [get dates](https://serverfault.com/a/1079893/129815)
+```bash
+# get from local
+$ openssl storeutl -noout -text -certs server.bundle.crt | grep 'Not'
+            Not Before: Jul 30 00:00:00 2024 GMT
+            Not After : Aug 21 23:59:59 2025 GMT
+            Not Before: Mar 30 00:00:00 2021 GMT
+            Not After : Mar 29 23:59:59 2031 GMT
+            Not Before: Aug  1 12:00:00 2013 GMT
+            Not After : Jan 15 12:00:00 2038 GM
+
+# or
+$ awk -v cmd='openssl x509 -noout -dates' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+      < server.bundle.crt
+notBefore=Jul 30 00:00:00 2024 GMT
+notAfter=Aug 21 23:59:59 2025 GMT
+notBefore=Mar 30 00:00:00 2021 GMT
+notAfter=Mar 29 23:59:59 2031 GMT
+notBefore=Aug  1 12:00:00 2013 GMT
+notAfter=Jan 15 12:00:00 2038 GMT
+
+# get from remote
+$ echo -n | openssl s_client -showcerts -connect jenkins.sample.com:443 2>/dev/null | grep 'Not'
+   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
+   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
+   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
 ```
 
 # manage certificate in OS (client)
@@ -912,7 +1015,7 @@ Getting Private key
 
 - crt
   ```bash
-  $ kubectl -n kube-system get secrets marvell-tls -o yaml -o jsonpath="{.data.tls\.crt}" | base64 -d > server.crt
+  $ kubectl -n kube-system get secrets sample-tls -o yaml -o jsonpath="{.data.tls\.crt}" | base64 -d > server.crt
   ```
 
 ### to Kubernetes secrets
@@ -933,6 +1036,35 @@ Getting Private key
              -e "s/(\s*tls.key:)(.*)$/\1 $(cat server.key | base64 -w0)/g" |
     kubectl apply -f -
   ```
+
+# Jenkins self-signed SSL
+
+> [!NOTE|label:references:]
+> - [Configuring inbound agents using self-signed certificates](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/configure-ports-jnlp-agents#_configuring_inbound_agents_using_self_signed_certificates)
+
+- create a truststore
+  ```bash
+  $ keytool -import -v -trustcacerts -alias jenkins.sample.com \
+            -file jenkins.sample.com-certificate.pem \
+            -keystore cacerts.jks \
+            -storepass changeit
+  ```
+
+- add into JVM options
+  ```bash
+  -Djavax.net.ssl.trustStore=/var/jenkins_home/cacerts.jks
+  -Djavax.net.ssl.trustStorePassword=changeit
+  ```
+
+- Use the TrustStore when you execute the launch connection from the agent
+  ```bash
+  $ java -Djavax.net.ssl.trustStore=/var/jenkins_home/cacerts.jks \
+         -Djavax.net.ssl.trustStorePassword=changeit \
+         -jar agent.jar \
+         -jnlpURL https://jenkins.sample.com/cjoc/jnlpSharedSlaves/sharedagent/slave-agent.jnlp \
+         -secret xxx
+  ```
+
 
 # Artifactory HTTPS
 

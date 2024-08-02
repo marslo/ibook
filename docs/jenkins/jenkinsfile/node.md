@@ -23,9 +23,9 @@
 
 import groovy.transform.Field
 
-@Field final String CLUSTER = 'DevOps Kubernetes'
+@Field final String CLUSTER   = 'DevOps Kubernetes'
 @Field final String NAMESPACE = 'devops'
-String label = env.BUILD_TAG
+String label                  = env.BUILD_TAG
 
 ansiColor('xterm') { timestamps {
   podTemplate(
@@ -69,9 +69,9 @@ ansiColor('xterm') { timestamps {
 
 import groovy.transform.Field
 
-@Field final String CLUSTER = 'Jenkins Kubernetes'
+@Field final String CLUSTER   = 'Jenkins Kubernetes'
 @Field final String NAMESPACE = 'jenkins'
-String label = env.BUILD_TAG
+String label                  = env.BUILD_TAG
 
 ansiColor('xterm') { timestamps {
   podTemplate(
@@ -121,7 +121,7 @@ ansiColor('xterm') { timestamps {
 
 import groovy.transform.Field
 
-@Field final String CLUSTER = 'Jenkins Kubernetes'
+@Field final String CLUSTER   = 'Jenkins Kubernetes'
 @Field final String NAMESPACE = 'jenkins'
 
 ansiColor('xterm') { timestamps {
@@ -314,7 +314,7 @@ podTemplate(cloud: 'DevOps Kubernetes', containers: [
 >     kind: "Pod"
 >     metadata:
 >       annotations:
->         buildUrl: "https://jenkins.domain.com/job/devops/job/demo/job/container/7/"
+>         buildUrl: "https://jenkins.sample.com/job/devops/job/demo/job/container/7/"
 >         runUrl: "job/devops/job/demo/job/container/7/"
 >       labels:
 >         jenkins: "slave"
@@ -370,7 +370,7 @@ podTemplate(cloud: 'DevOps Kubernetes', containers: [
 >         - name: "JENKINS_AGENT_WORKDIR"
 >           value: "/home/jenkins/agent"
 >         - name: "JENKINS_URL"
->           value: "https://jenkins.domain.com/"
+>           value: "https://jenkins.sample.com/"
 >         image: "jenkins/inbound-agent:3206.vb_15dcf73f6a_9-2"
 >         name: "jnlp"
 >         resources:
