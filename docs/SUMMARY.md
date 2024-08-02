@@ -23,6 +23,7 @@
     * [keystore](cheatsheet/ssl/keystore.md)
     * [verification](cheatsheet/ssl/verification.md)
     * [server](cheatsheet/ssl/server.md)
+    * [client](cheatsheet/ssl/client.md)
   * [windows](cheatsheet/windows/windows.md)
     * [powershell](cheatsheet/windows/powershell.md)
     * [wsl](cheatsheet/windows/wsl.md)
