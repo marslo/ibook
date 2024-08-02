@@ -13,6 +13,11 @@
   - [get remote server certs](#get-remote-server-certs)
     - [keytool](#keytool)
     - [openssl](#openssl-1)
+  - [bundle certs](#bundle-certs)
+    - [generic usage](#generic-usage)
+    - [get serial number](#get-serial-number)
+    - [get issuer and subject](#get-issuer-and-subject)
+    - [get dates](#get-dates)
 - [cheatsheet](#cheatsheet)
     - [generate private key and csr](#generate-private-key-and-csr)
     - [generate a self-signed certificate](#generate-a-self-signed-certificate)
@@ -20,33 +25,19 @@
     - [get issuer](#get-issuer)
     - [get subject](#get-subject)
     - [get expiration date](#get-expiration-date)
-    - [get serial number](#get-serial-number)
+    - [get serial number](#get-serial-number-1)
     - [show multiple information](#show-multiple-information)
     - [show fingerprint](#show-fingerprint)
     - [extract from the ssl certificate (decoded)](#extract-from-the-ssl-certificate-decoded)
     - [show the ssl certificate](#show-the-ssl-certificate)
     - [verifying the keys match](#verifying-the-keys-match)
     - [check remote certificate chain](#check-remote-certificate-chain)
-  - [bundle certificate](#bundle-certificate)
-    - [generic usage](#generic-usage)
-    - [get serial number](#get-serial-number-1)
-    - [get issuer and subject](#get-issuer-and-subject)
-    - [get dates](#get-dates)
-- [manage certificate in OS (client)](#manage-certificate-in-os-client)
-  - [OSX](#osx)
-    - [add](#add)
-    - [search](#search)
-    - [remove](#remove)
-    - [others](#others)
-  - [Windows](#windows)
-  - [Linux](#linux)
-    - [ubuntu](#ubuntu)
-- [Kubernetes](#kubernetes)
-  - [convert keys](#convert-keys)
+- [services](#services)
+  - [Kubernetes](#kubernetes)
     - [from Kubernetes secrets](#from-kubernetes-secrets)
     - [to Kubernetes secrets](#to-kubernetes-secrets)
-- [Jenkins self-signed SSL](#jenkins-self-signed-ssl)
-- [Artifactory HTTPS](#artifactory-https)
+  - [jenkins self-signed SSL](#jenkins-self-signed-ssl)
+  - [Artifactory HTTPS](#artifactory-https)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -502,6 +493,111 @@ $ echo -n | openssl s_client \
   $ keytool -printcert -v -file cacert.crt
   ```
 
+## bundle certs
+
+> [!NOTE|label:references:]
+> - [How to view all ssl certificates in a bundle?](https://serverfault.com/q/590870/129815)
+
+### generic usage
+```bash
+$ awk -v cmd='openssl x509 -noout -serial' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+       < server.bundle.crt |
+
+# or
+$ awk -v cmd="openssl x509 -text -noout" \
+             '/-----BEGIN/ { c = $0; next } c { c = c "\n" $0 } /-----END/ { print c|cmd; close(cmd); c = 0 }' \
+      < server.bundle.crt
+
+# or
+$ awk < server.bundle.crt -v cmd="openssl x509 -issuer -subject -dates -noout" \
+        '/^-----BEGIN/,/^-----END/ {print|cmd} /^-----END/ {close(cmd)}'
+
+# or
+$ cat server.bundle.crt |
+  awk '{
+    if ($0 == "-----BEGIN CERTIFICATE-----") cert=""
+    else if ($0 == "-----END CERTIFICATE-----") print cert
+    else cert=cert$0
+  }' |
+  while read CERT; do echo "$CERT" | base64 -d | openssl x509 -inform DER -text -noout; done
+```
+
+### get serial number
+```bash
+# get from local
+$ awk -v cmd='openssl x509 -noout -serial' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+       < server.bundle.crt |
+       awk -F= '{print $2}' |
+       sed 's/../&:/g;s/:$//'
+03:81:9B:12:16:E1:CD:D5:09:59:7E:0F:6A:E9:39:CE
+0C:F5:BD:06:2B:56:02:F4:7A:B8:50:2C:23:CC:F0:66
+03:3A:F1:E6:A7:11:A9:A0:BB:28:64:B1:1D:09:FA:E5
+
+# get from remote
+$ openssl storeutl -noout -text -certs server.bundle.crt | sed -n '/Serial Number:/{n;p;}'
+            03:81:9b:12:16:e1:cd:d5:09:59:7e:0f:6a:e9:39:ce
+            0c:f5:bd:06:2b:56:02:f4:7a:b8:50:2c:23:cc:f0:66
+            03:3a:f1:e6:a7:11:a9:a0:bb:28:64:b1:1d:09:fa:e5
+```
+
+### [get issuer and subject](https://serverfault.com/a/755815/129815)
+```bash
+$ awk -v cmd='echo ""; openssl x509 -noout -subject -issuer' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+      < server.bundle.crt
+subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
+issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+
+subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+
+subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+
+# or
+$ openssl crl2pkcs7 -nocrl -certfile server.bundle.crt | openssl pkcs7 -print_certs -noout
+subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
+issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+
+subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+
+subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+```
+
+### [get dates](https://serverfault.com/a/1079893/129815)
+```bash
+# get from local
+$ openssl storeutl -noout -text -certs server.bundle.crt | grep 'Not'
+            Not Before: Jul 30 00:00:00 2024 GMT
+            Not After : Aug 21 23:59:59 2025 GMT
+            Not Before: Mar 30 00:00:00 2021 GMT
+            Not After : Mar 29 23:59:59 2031 GMT
+            Not Before: Aug  1 12:00:00 2013 GMT
+            Not After : Jan 15 12:00:00 2038 GM
+
+# or
+$ awk -v cmd='openssl x509 -noout -dates' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+      < server.bundle.crt
+notBefore=Jul 30 00:00:00 2024 GMT
+notAfter=Aug 21 23:59:59 2025 GMT
+notBefore=Mar 30 00:00:00 2021 GMT
+notAfter=Mar 29 23:59:59 2031 GMT
+notBefore=Aug  1 12:00:00 2013 GMT
+notAfter=Jan 15 12:00:00 2038 GMT
+
+# get from remote
+$ echo -n | openssl s_client -showcerts -connect domain.com:443 2>/dev/null | grep 'Not'
+   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
+   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
+   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
+```
+
+
 # cheatsheet
 ### generate private key and csr
 ```bash
@@ -695,361 +791,12 @@ Certificate chain
 ---
 ```
 
-## bundle certificate
-
-> [!NOTE|label:references:]
-> - [How to view all ssl certificates in a bundle?](https://serverfault.com/q/590870/129815)
-
-### generic usage
-```bash
-$ awk -v cmd='openssl x509 -noout -serial' \
-             '/BEGIN/{close(cmd)}; {print | cmd}' \
-       < server.bundle.crt |
-
-# or
-$ awk -v cmd="openssl x509 -text -noout" \
-             '/-----BEGIN/ { c = $0; next } c { c = c "\n" $0 } /-----END/ { print c|cmd; close(cmd); c = 0 }' \
-      < server.bundle.crt
-
-# or
-$ awk < server.bundle.crt -v cmd="openssl x509 -issuer -subject -dates -noout" \
-        '/^-----BEGIN/,/^-----END/ {print|cmd} /^-----END/ {close(cmd)}'
-
-# or
-$ cat server.bundle.crt |
-  awk '{
-    if ($0 == "-----BEGIN CERTIFICATE-----") cert=""
-    else if ($0 == "-----END CERTIFICATE-----") print cert
-    else cert=cert$0
-  }' |
-  while read CERT; do echo "$CERT" | base64 -d | openssl x509 -inform DER -text -noout; done
-```
-
-### get serial number
-```bash
-# get from local
-$ awk -v cmd='openssl x509 -noout -serial' \
-             '/BEGIN/{close(cmd)}; {print | cmd}' \
-       < server.bundle.crt |
-       awk -F= '{print $2}' |
-       sed 's/../&:/g;s/:$//'
-03:81:9B:12:16:E1:CD:D5:09:59:7E:0F:6A:E9:39:CE
-0C:F5:BD:06:2B:56:02:F4:7A:B8:50:2C:23:CC:F0:66
-03:3A:F1:E6:A7:11:A9:A0:BB:28:64:B1:1D:09:FA:E5
-
-# get from remote
-$ openssl storeutl -noout -text -certs server.bundle.crt | sed -n '/Serial Number:/{n;p;}'
-            03:81:9b:12:16:e1:cd:d5:09:59:7e:0f:6a:e9:39:ce
-            0c:f5:bd:06:2b:56:02:f4:7a:b8:50:2c:23:cc:f0:66
-            03:3a:f1:e6:a7:11:a9:a0:bb:28:64:b1:1d:09:fa:e5
-```
-
-### [get issuer and subject](https://serverfault.com/a/755815/129815)
-```bash
-$ awk -v cmd='echo ""; openssl x509 -noout -subject -issuer' \
-             '/BEGIN/{close(cmd)}; {print | cmd}' \
-      < server.bundle.crt
-subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
-issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-
-subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-
-subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-
-# or
-$ openssl crl2pkcs7 -nocrl -certfile server.bundle.crt | openssl pkcs7 -print_certs -noout
-subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
-issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-
-subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-
-subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-```
-
-### [get dates](https://serverfault.com/a/1079893/129815)
-```bash
-# get from local
-$ openssl storeutl -noout -text -certs server.bundle.crt | grep 'Not'
-            Not Before: Jul 30 00:00:00 2024 GMT
-            Not After : Aug 21 23:59:59 2025 GMT
-            Not Before: Mar 30 00:00:00 2021 GMT
-            Not After : Mar 29 23:59:59 2031 GMT
-            Not Before: Aug  1 12:00:00 2013 GMT
-            Not After : Jan 15 12:00:00 2038 GM
-
-# or
-$ awk -v cmd='openssl x509 -noout -dates' \
-             '/BEGIN/{close(cmd)}; {print | cmd}' \
-      < server.bundle.crt
-notBefore=Jul 30 00:00:00 2024 GMT
-notAfter=Aug 21 23:59:59 2025 GMT
-notBefore=Mar 30 00:00:00 2021 GMT
-notAfter=Mar 29 23:59:59 2031 GMT
-notBefore=Aug  1 12:00:00 2013 GMT
-notAfter=Jan 15 12:00:00 2038 GMT
-
-# get from remote
-$ echo -n | openssl s_client -showcerts -connect domain.com:443 2>/dev/null | grep 'Not'
-   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
-   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
-   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
-```
-
-# manage certificate in OS (client)
-## OSX
-### add
-```bash
-$ sudo security add-trusted-cert -d \
-                                 -r trustRoot \
-                                 -k "/Library/Keychains/System.keychain" \
-                                 "/Users/marslo/Downloads/ca.crt"
-```
-
-### search
-{% codetabs name="command", type="bash" -%}
-$ security find-certificate -a -c <artifactory> -Z
-$ security find-certificate -a -c artifactor -Z | grep SHA-1
-SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
-
-$ security list-keychain
-    "/Users/marslo/Library/Keychains/login.keychain-db"
-    "/Library/Keychains/System.keychain"
-{%- language name="more details", type="bash" -%}
-$ security find-certificate -a -c artifactor -Z
-SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
-keychain: "/Library/Keychains/System.keychain"
-version: 256
-class: 0x80001000
-attributes:
-    "alis"<blob>="marslo.jiao@mycompany.com"
-    "cenc"<uint32>=0x00000003
-    "ctyp"<uint32>=0x00000001
-    "hpky"<blob>=0x2332BC619E***  "#2\274a\236Q\216\224"0[\256h\212~\216S\322E|"
-    "issu"<blob>=0x3081A3310B*** "0\201\..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..sample.artifactory.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
-    "labl"<blob>="sample.artifactory.com"
-    "skid"<blob>=0x2332BC619E***  "#2\274a\236Q\216\224"0[\256h\212~\216S\322E|"
-    "snbr"<blob>=0x00D2305479***  "\000\3220Ty+1B\316"
-    "subj"<blob>=0x3081A3310B***  "0\201\..Sichuan1\0200\016\..Chengdu1\0200\016\..mycompany1\0140\012\..CDI1(0&\006\..sample.artifactory.com1&0$\006\011*\206H\206\..marslo.jiao@mycompany.com"
-
-$ security find-certificate -a -c artifactor -Z -p -m
-SHA-1 hash: 915D019F0993F369C09D75C6B8DA201B8DE2636E
-email addresses: marslo.jiao@mycompany.com
------BEGIN CERTIFICATE-----
-MIIELDCCAxSgAwIBAgIJANIwVHkrMULOMA0GCSqGSIb3DQEBCwUAMIGjMQswCQYD
-VQQGEwJDTjEQMA4GA1UECAwHU2ljaHVhbjEQMA4GA1UEBwwHQ2hlbmdkdTEQMA4G
-A1UECgwHUGhpbGlwczEMMAoGA1UECwwDQ0RJMSgwJgYDVQQDDB9wd3cuYXJ0aWZh
-Y3RvcnkuY2RpLnBoaWxpcHMuY29tMSYwJAYJKoZIhvcNAQkBFhdtYXJzbG8uamlh
-b0BwaGlsaXBzLmNvbTAeFw0xODAxMDIxMTM1MzFaFw0xOTAxMDIxMTM1MzFaMIGj
-MQswCQYDVQQGEwJDTjEQMA4GA1UECAwHU2ljaHVhbjEQMA4GA1UEBwwHQ2hlbmdk
-dTEQMA4GA1UECgwHUGhpbGlwczEMMAoGA1UECwwDQ0RJMSgwJgYDVQQDDB9wd3cu
-YXJ0aWZhY3RvcnkuY2RpLnBoaWxpcHMuY29tMSYwJAYJKoZIhvcNAQkBFhdtYXJz
-bG8uamlhb0BwaGlsaXBzLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-ggEBANA/tsXlUo3HJj/nCnpfwXEqnjQHfhBKPcRP999Ykw36AOghdW3RRX29J/LF
-CBOPT76RnygZfsOnQhv8tJYhijNZeSejzxM+zZINfrmfDQG/J1/ken3baaN4lqjD
-qS0xKJe6bCAXq+uFziwl6D6gi8ALsqnhrJ/hVzW7ZGqZLo8n8QRApxYyMU6tGF6e
-C91CF6+KWMYa6QBSl3t6JMyxgY25IGDkltV3ggdO35w6JpXV7aqhJJRkDpOanpvU
-eGtGUGkFGWr/ex0bD85rMDPHmZ1qMAz8+HQA32Vv+hskCnN3TZRFJ5uTpoE3V1dv
-6a7kXqi4vjEPc0ueG+14XEjsC6UCAwEAAaNhMF8wDwYDVR0RBAgwBocEgpPbEzAd
-BgNVHQ4EFgQUIzK8YZ5RjpQiMFuuaIp+jlPSRXwwHwYDVR0jBBgwFoAUIzK8YZ5R
-jpQiMFuuaIp+jlPSRXwwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEA
-aaP+NWOl6E7mPk+d9oI9c/KnIsFG5QleYYG3cDxiukN9vaxn0EHqp7hBRwS8QZpG
-NTE/YhB6WHNFOlk7QWsrHmJCt37Ba5IlKt8/abUmjsddxiSgZSG3Y3RgfzsOmoCk
-T6J5IBmSZGC3U1wJbkZuetfu7/QuJ3oaDtpbi3q/QFafFmNriatIZQdF4KAhfA9t
-nCqrytACBoo5eupluQQTD2vN6uWfWcXSBrLkw8urWWmqEeYISRLM1CkhK1nB3Lvm
-qX2WaKR7YXaKIalppYPVi/YITsA0ZGtllqztzcELVH2pVwd3DGpDnk/AbBKI6M80
-CGevHC+7SVQbF5WJsy3JXw==
------END CERTIFICATE-----
-{%- endcodetabs %}
-
-### remove
-```bash
-$ sudo security delete-certificate -Z 915D019F0993F369C09D75C6B8DA201B8DE2636E
-```
-
-### others
-- 1st:
-{% codetabs name="command", type="bash" -%}
-$ cd /etc/nginx/
-$ sudo openssl genrsa -des3 -out server.key 1024
-$ sudo openssl req -new -key server.key -out server.csr
-$ sudo cp server.key{,.org}
-$ sudo cp server.csr{,.org}
-$ sudo openssl rsa -in server.key.org \
-                   -out server.key
-$ sudo openssl x509 -req \
-                    -days 365 \
-                    -signkey server.key \
-                    -in server.csr \
-                    -out server.crt
-{%- language name="more details", type="bash" -%}
-
-$ ls -Altrh
-total 80K
--rw-r--r--   1 root root 3.0K May  3  2017 win-utf
--rw-r--r--   1 root root  664 May  3  2017 uwsgi_params
--rw-r--r--   1 root root  636 May  3  2017 scgi_params
--rw-r--r--   1 root root  180 May  3  2017 proxy_params
--rw-r--r--   1 root root 1.5K May  3  2017 nginx.conf
--rw-r--r--   1 root root 3.9K May  3  2017 mime.types
--rw-r--r--   1 root root 2.2K May  3  2017 koi-win
--rw-r--r--   1 root root 2.8K May  3  2017 koi-utf
--rw-r--r--   1 root root 1007 May  3  2017 fastcgi_params
--rw-r--r--   1 root root 1.1K May  3  2017 fastcgi.conf
-drwxr-xr-x   2 root root 4.0K Jul 27 04:11 modules-available
-drwxr-xr-x   2 root root 4.0K Jul 27 04:11 conf.d
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-available
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 snippets
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 sites-enabled
-drwxr-xr-x   2 root root 4.0K Dec 26 18:08 modules-enabled
-$ sudo openssl genrsa -des3 -out server.key 1024
-Generating RSA private key, 1024 bit long modulus
-.................................................................++++++
-......++++++
-e is 65537 (0x10001)
-Enter pass phrase for server.key: artifactory
-Verifying - Enter pass phrase for server.key: artifactory
-
-$ sudo openssl req -new \
-                   -key server.key \
-                   -out server.csr
-Enter pass phrase for server.key: artifactory
-You are about to be asked to enter information that will be incorporated into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
-*****
-Country Name (2 letter code) [AU]:CN
-State or Province Name (full name) [Some-State]:Sichuan
-Locality Name (eg, city) []:Chengdu
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
-Organizational Unit Name (eg, section) []:mycompany
-Common Name (e.g. server FQDN or YOUR name) []:docker-2.artifactory
-Email Address []:marslo.jiao@mycompany.com
-
-Please enter the following 'extra' attributes
-to be sent with your certificate request
-A challenge password []:artifactory
-An optional company name []:mycompany
-
-$ ls -Altrh
-total 80K
--rw-r--r-- 1 root root 3.0K May  3  2017 win-utf
--rw-r--r-- 1 root root  664 May  3  2017 uwsgi_params
--rw-r--r-- 1 root root  636 May  3  2017 scgi_params
--rw-r--r-- 1 root root  180 May  3  2017 proxy_params
--rw-r--r-- 1 root root 1.5K May  3  2017 nginx.conf
--rw-r--r-- 1 root root 3.9K May  3  2017 mime.types
--rw-r--r-- 1 root root 2.2K May  3  2017 koi-win
--rw-r--r-- 1 root root 2.8K May  3  2017 koi-utf
--rw-r--r-- 1 root root 1007 May  3  2017 fastcgi_params
--rw-r--r-- 1 root root 1.1K May  3  2017 fastcgi.conf
-drwxr-xr-x 2 root root 4.0K Jul 27 04:11 modules-available
-drwxr-xr-x 2 root root 4.0K Jul 27 04:11 conf.d
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-available
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 snippets
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 sites-enabled
-drwxr-xr-x 2 root root 4.0K Dec 26 18:08 modules-enabled
--rw-r--r-- 1 root root  951 Dec 26 18:32 server.key
--rw-r--r-- 1 root root  785 Dec 26 18:36 server.csr
--rw-r--r-- 1 root root  951 Dec 26 18:38 server.key.org
--rw-r--r-- 1 root root  785 Dec 26 18:38 server.csr.org
-
-$ sudo openssl rsa \
-              -in server.key.org \
-              -out server.key
-Enter pass phrase for server.key.org:
-writing RSA key
-
-$ sudo openssl x509 -req \
-                    -days 365 \
-                    -signkey server.key \
-                    -in server.csr \
-                    -out server.crt
-Signature ok
-subject=/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=mycompany/CN=docker-2.artifactory/emailAddress=marslo.jiao@mycompany.com
-Getting Private key
-{%- endcodetabs %}
-
-
-- 2nd:
-  ```bash
-  /etc/nginx$ sudo openssl req \
-                           -x509 \
-                           -nodes \
-                           -sha256 \
-                           -days 365 \
-                           -newkey rsa:2048 \
-                           -keyout certs/sample.artifactory.com.key \
-                           -out certs/sample.artifactory.com.crt
-  Generating a 2048 bit RSA private key
-  ........+++
-  ..............................................................+++
-  writing new private key to 'certs/sample.artifactory.com.key'
-  -----
-  You are about to be asked to enter information that will be incorporated
-  into your certificate request.
-  What you are about to enter is what is called a Distinguished Name or a DN.
-  There are quite a few fields but you can leave some blank
-  For some fields there will be a default value,
-  If you enter '.', the field will be left blank.
-
-  *****
-  Country Name (2 letter code) [AU]:CN
-  State or Province Name (full name) [Some-State]:Sichuan
-  Locality Name (eg, city) []:Chengdu
-  Organization Name (eg, company) [Internet Widgits Pty Ltd]:mycompany
-  Organizational Unit Name (eg, section) []:mycompany
-  Common Name (e.g. server FQDN or YOUR name) []:sample.artifactory.com
-  Email Address []:marslo.jiao@mycompany.com
-  ```
-
-- [3rd: genreate key and cert by one command](https://www.digicert.com/easy-csr/openssl.htm)
-  ```bash
-  $ openssl req -new \
-                -newkey rsa:2048 \
-                -nodes \
-                -out www_artifactory__mycompany_com.csr \
-                -keyout www_artifactory__mycompany_com.key \
-                -subj "/C=CN/ST=Sichuan/L=Chengdu/O=mycompany/OU=CDI/CN=sample.artifactory.com"
-  ```
-
-## Windows
-## Linux
-### ubuntu
-- add
-  ```bash
-  $ sudo cp ca.crt /usr/local/share/ca-certificates/
-  $ ls -Altrh !$
-  ls -altrh /usr/local/share/ca-certificates/
-  total 12K
-  -rw-r--r-- 1 root root 1.5K Jan  3 16:03 ca.crt
-
-  $ sudo update-ca-certificates
-  Updating certificates in /etc/ssl/certs...
-  1 added, 0 removed; done.
-  Running hooks in /etc/ca-certificates/update.d...
-  done.
-
-  $ sudo systemctl restart docker.service
-  ```
-- remove
-  ```bash
-  $ sudo rm -rf /usr/local/share/ca-certificates/ca.crt
-  $ sudo update-ca-certificates --fresh
-  $ sudo systemctl restart docker.service
-  ```
-
-# Kubernetes
+# services
+## Kubernetes
 
 > [!NOTE|label:references:]
 > - [Kubernetes Authentication and Authorization with X509 client certificates](https://medium.com/@sureshpalemoni/kubernetes-authentication-and-authorization-with-x509-client-certificates-edbc3517c10)
 
-## convert keys
 ### from Kubernetes secrets
 - key
   ```bash
@@ -1080,7 +827,7 @@ Getting Private key
     kubectl apply -f -
   ```
 
-# Jenkins self-signed SSL
+## jenkins self-signed SSL
 
 > [!NOTE|label:references:]
 > - [Configuring inbound agents using self-signed certificates](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/configure-ports-jnlp-agents#_configuring_inbound_agents_using_self_signed_certificates)
@@ -1109,7 +856,7 @@ Getting Private key
   ```
 
 
-# Artifactory HTTPS
+## Artifactory HTTPS
 
 {% codetabs name="command", type="bash" -%}
 $ sudo openssl genrsa -des3 -out artifactory.key 2048
