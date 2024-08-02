@@ -30,6 +30,7 @@
   - [find the zombie process](#find-the-zombie-process)
   - [about `whatis`](#about-whatis)
 - [user management](#user-management)
+  - [getent](#getent)
   - [sssd to use LDAP](#sssd-to-use-ldap)
     - [sss_override management](#sss_override-management)
     - [sssd config](#sssd-config)
@@ -1245,6 +1246,14 @@ whereis (1)          - locate the binary, source, and manual page files for a co
 
 # user management
 
+## getent
+
+> [!NOTE|label:references:]
+> - [difference between `getent passwd <USER>` and `getent passwd | grep <USER>`](https://serverfault.com/a/810945/129815)
+
+- `getent passwd <USER>` -> checking data in `/var/lib/sss/mc/passwd`
+- `getent passwd | grep <USER>` -> checking data in `/var/lib/sss/pipes/nss`
+
 ## [sssd to use LDAP](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_authentication_and_authorization_in_rhel/configuring-sssd-to-use-ldap-and-require-tls-authentication_configuring-authentication-and-authorization-in-rhel)
 
 {% hint style='tip' %}
@@ -1407,6 +1416,58 @@ $ sudo systemctl restart sssd
   $ systemctl restart sssd
   $ systemctl restart accounts-daemon
   ```
+
+- tricky
+  - sssd account cannot be deleted
+    ```bash
+    $ sudo /usr/sbin/sss_cache -u devops
+    $ sudo /usr/sbin/sss_cache -E
+    $ sudo systemctl restart sssd
+
+    # verify
+    $ getent passwd devops
+    devops:*:41032:10:Service Account-Block-chain:/user/devops:/bin/tcsh
+    $ id devops
+    uid=41032(devops) gid=10(uucp) groups=10(uucp),0(root),4(adm),1000(marvell),994(docker)
+    $ sudo useradd -m -d '/home/devops' -u 1000 -s /bin/bash devops
+    useradd: user 'devops' already exists
+
+    $ hexdump -C /var/lib/sss/mc/passwd
+    00000000  01 00 00 f0 01 00 00 00  01 00 00 00 01 00 00 00  |................|
+    00000010  b1 e9 04 d3 80 ff 7f 00  66 66 00 00 c0 cc 0c 00  |........ff......|
+    00000020  38 00 00 00 b8 ff 7f 00  20 66 80 00 00 00 00 00  |8....... f......|
+    00000030  01 00 00 f0 00 00 00 00  00 00 00 f0 74 00 00 00  |............t...|
+    00000040  a7 14 ac 66 00 00 00 00  ff ff ff ff ff ff ff ff  |...f............|
+    00000050  70 db 02 00 1c 36 02 00  ff ff ff ff 00 00 00 f0  |p....6..........|
+    00000060  10 00 00 00 48 a0 00 00  0a 00 00 00 3c 00 00 00  |....H.......<...|
+    00000070  64 65 76 6f 70 73 00 2a  00 53 65 72 76 69 63 65  |devops.*.Service|
+    00000080  20 41 63 63 6f 75 6e 74  2d 42 6c 6f 63 6b 2d 63  | Account-Block-c|
+    00000090  68 61 69 6e 00 2f 75 73  65 72 2f 64 65 76 6f 70  |hain./user/devop|
+    000000a0  73 00 2f 62 69 6e 2f 74  63 73 68 00 ff ff ff ff  |s./bin/tcsh.....|
+    000000b0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
+    *
+    ......
+    ```
+
+  - solution
+    ```bash
+    # clean cache
+    $ sudo /usr/sbin/sss_cache -u devops
+    $ sudo /usr/sbin/sss_cache -E
+    $ sudo systemctl restart sssd
+
+    # stop sssd service and remove /var/lib/sss/mc/passwd
+    $ sudo systemctl stop sssd.service
+    $ sudo mv /var/lib/sss/mc/passwd{,.bak}
+
+    # create local user
+    $ sudo useradd -m -d '/home/devops' -u 1001 -g devops -s /bin/bash devops
+    $ id devops
+    uid=1001(devops) gid=1001(devops) groups=1001(devops)
+
+    # start sssd service
+    $ sudo systemctl start sssd.service
+    ```
 
 #### backup and restore
 ```bash
@@ -1611,6 +1672,10 @@ $ useradd -c "comments here" \
   ```
 
 #### [`deluser`](http://manpages.ubuntu.com/manpages/trusty/man8/deluser.8.html) for ubunut
+
+> [!NOTE|label:references:]
+> - `deluser` - remove a user from the system
+> - `userdel` - delete a user account and group ( if possible )
 
 {% hint style='tip' %}
 `deluser`, `delgroup` - remove a user or group from the system
