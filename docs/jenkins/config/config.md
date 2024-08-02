@@ -373,6 +373,135 @@
 $ sudo update-alternatives --remove java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 ```
 
+#### show TCP inbound agent port
+```bash
+$ curl -Lv https://jenkins.sample.com/tcpSlaveAgentListener 2>&1 | grep -i X-Jenkins-JNLP-Port
+< x-jenkins-jnlp-port: 50000
+```
+
+#### using websocket for jnlp
+
+> [!NOTE|label:references:]
+> - [WebSocket](https://www.jenkins.io/blog/2020/02/02/web-socket/)
+> - [Connecting inbound agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/configure-ports-jnlp-agents)
+>   - [Configuring inbound agents using self-signed certificates](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/configure-ports-jnlp-agents#_configuring_inbound_agents_using_self_signed_certificates)
+> - [Launching inbound TCP agents](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/launch-inbound-agents)
+> - [How to access webSockets for Jenkins inbound agents?](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/how-to-access-websockets-for-jenkins-inbound-agents)
+
+```bash
+$ java -jar agent.jar -url https://jenkins.sample.com/ \
+       -secret 9d************************************************************cc \
+       -name "jenkins-agent" \
+       -workDir "/home/devops" \
+       -webSocket            # enable websocket
+
+# or
+
+$ java -cp agent.jar hudson.remoting.jnlp.Main -url ${JENKINS_URL} \
+       -webSocket \          # enable websocket
+       -workDir /tmp/jenkins \
+       -secret ${TOKEN} \
+       websocket-agent
+```
+
+#### `agent.jar`
+```bash
+$ java -jar agent.jar -help
+ -agentLog FILE                         : Local agent error log destination
+                                          (overrides workDir)
+ -auth user:pass                        : (deprecated) unused; use -credentials
+                                          or -proxyCredentials
+ -cert VAL                              : Specify additional X.509 encoded PEM
+                                          certificates to trust when connecting
+                                          to Jenkins root URLs. If starting
+                                          with @ then the remainder is assumed
+                                          to be the name of the certificate
+                                          file to read.
+ -connectTo HOST:PORT                   : (deprecated) make a TCP connection to
+                                          the given host and port, then start
+                                          communication.
+ -credentials (-jnlpCredentials)        : HTTP BASIC AUTH header to pass in for
+ USER:PASSWORD                            making HTTP requests.
+ -direct (-directConnection) HOST:PORT  : Connect directly to this TCP agent
+                                          port, skipping the HTTP(S) connection
+                                          parameter download. For example,
+                                          "myjenkins:50000".
+ -failIfWorkDirIsMissing                : Fails the initialization if the
+                                          requested workDir or internalDir are
+                                          missing ('false' by default)
+                                          (default: false)
+ -headless                              : (deprecated; now always headless)
+ -help                                  : Show this help message (default: true)
+ -instanceIdentity VAL                  : The base64 encoded InstanceIdentity
+                                          byte array of the Jenkins controller.
+                                          When this is set, the agent skips
+                                          connecting to an HTTP(S) port for
+                                          connection info.
+ -internalDir VAL                       : Specifies a name of the internal
+                                          files within a working directory
+                                          ('remoting' by default) (default:
+                                          remoting)
+ -jar-cache DIR                         : Cache directory that stores jar files
+                                          sent from the controller
+ -jnlpUrl URL                           : instead of talking to the controller
+                                          via stdin/stdout, emulate a JNLP
+                                          client by making a TCP connection to
+                                          the controller. Connection parameters
+                                          are obtained by parsing the JNLP file.
+ -loggingConfig FILE                    : Path to the property file with
+                                          java.util.logging settings
+ -name VAL                              : Name of the agent.
+ -noCertificateCheck (-disableHttpsCert : Ignore SSL validation errors - use as
+ Validation)                              a last resort only. (default: false)
+ -noKeepAlive                           : Disable TCP socket keep alive on
+                                          connection to the controller.
+                                          (default: false)
+ -noReconnect (-noreconnect)            : Doesn't try to reconnect when a
+                                          communication fail, and exit instead
+                                          (default: false)
+ -ping                                  : (deprecated; now always pings)
+ -protocols VAL                         : Specify the remoting protocols to
+                                          attempt when instanceIdentity is
+                                          provided.
+ -proxyCredentials USER:PASSWORD        : HTTP BASIC AUTH header to pass in for
+                                          making HTTP authenticated proxy
+                                          requests.
+ -secret HEX_SECRET                     : Agent connection secret.
+ -tcp FILE                              : (deprecated) instead of talking to
+                                          the controller via stdin/stdout,
+                                          listens to a random local port, write
+                                          that port number to the given file,
+                                          then wait for the controller to
+                                          connect to that port.
+ -text                                  : encode communication with the
+                                          controller with base64. Useful for
+                                          running agent over 8-bit unsafe
+                                          protocol like telnet
+ -tunnel HOST:PORT                      : Connect to the specified host and
+                                          port, instead of connecting directly
+                                          to Jenkins. Useful when connection to
+                                          Jenkins needs to be tunneled. Can be
+                                          also HOST: or :PORT, in which case
+                                          the missing portion will be
+                                          auto-configured like the default
+                                          behavior.
+ -url URL                               : Specify the Jenkins root URLs to
+                                          connect to.
+ -version                               : Shows the version of the remoting jar
+                                          and then exits (default: false)
+ -webSocket                             : Make a WebSocket connection to
+                                          Jenkins rather than using the TCP
+                                          port. (default: false)
+ -webSocketHeader NAME=VALUE            : Additional WebSocket header to set,
+                                          eg for authenticating with reverse
+                                          proxies. To specify multiple headers,
+                                          call this flag multiple times, one
+                                          with each header
+ -workDir FILE                          : Declares the working directory of the
+                                          remoting instance (stores cache and
+                                          logs by default)
+```
+
 
 ### Mailing format
 - Show the logs after building
