@@ -17,19 +17,19 @@
     - [generate private key and csr](#generate-private-key-and-csr)
     - [generate a self-signed certificate](#generate-a-self-signed-certificate)
     - [check ssl certificate](#check-ssl-certificate)
-    - [check who has issued the ssl certificate](#check-who-has-issued-the-ssl-certificate)
-    - [check whom the ssl certificate is issued to](#check-whom-the-ssl-certificate-is-issued-to)
-    - [check for what dates the ssl certificate is valid](#check-for-what-dates-the-ssl-certificate-is-valid)
-    - [check serial number of the ssl certificate](#check-serial-number-of-the-ssl-certificate)
-    - [show multiple informations](#show-multiple-informations)
+    - [get issuer](#get-issuer)
+    - [get subject](#get-subject)
+    - [get expiration date](#get-expiration-date)
+    - [get serial number](#get-serial-number)
+    - [show multiple information](#show-multiple-information)
     - [show fingerprint](#show-fingerprint)
-    - [extract all information from the ssl certificate (decoded)](#extract-all-information-from-the-ssl-certificate-decoded)
+    - [extract from the ssl certificate (decoded)](#extract-from-the-ssl-certificate-decoded)
     - [show the ssl certificate](#show-the-ssl-certificate)
-    - [check ssl certificate expiration date](#check-ssl-certificate-expiration-date)
     - [verifying the keys match](#verifying-the-keys-match)
+    - [check remote certificate chain](#check-remote-certificate-chain)
   - [bundle certificate](#bundle-certificate)
     - [generic usage](#generic-usage)
-    - [get serial number](#get-serial-number)
+    - [get serial number](#get-serial-number-1)
     - [get issuer and subject](#get-issuer-and-subject)
     - [get dates](#get-dates)
 - [manage certificate in OS (client)](#manage-certificate-in-os-client)
@@ -482,7 +482,7 @@ $ keytool -printcert \
 > - [iMarslo : Artifactory SSL Certification]( ../../artifactory/artifactory.html#artifactory-ssl-certification)
 
 ```bash
-$ echo |
+$ echo -n |
   openssl s_client -showcerts \
                    -servername <domain.com> \
                    -connect <domain.com>:<port> 2>/dev/null |
@@ -490,7 +490,7 @@ $ echo |
   > cacert.crt
 
 # or
-$ echo | openssl s_client \
+$ echo -n | openssl s_client \
                  -showcerts \
                  -connect <domain.com>:<port> 2>/dev/null |
          sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p; /-END CERTIFICATE-/q' |
@@ -540,24 +540,18 @@ $ openssl req -x509 \
 ### check ssl certificate
 - check private key info
   ```bash
-  $ openssl rsa -text \
-                -in privateKey.key \
-                -noout
+  $ openssl rsa -noout -text -in privateKey.key
   ```
 - check csr info
   ```bash
-  $ openssl req -text \
-                -in CSR.csr \
-                -noout
+  $ openssl req -text -noout -in CSR.csr
   ```
 - view ssl certificate info
   ```bash
-  $ openssl x509 -text \
-                 -in certificate.crt \
-                 -noout
+  $ openssl x509 -text -noout -in certificate.crt
   ```
 
-### check who has issued the ssl certificate
+### get issuer
 ```bash
 $ echo -n |
        openssl s_client \
@@ -566,7 +560,7 @@ $ echo -n |
        openssl x509 -noout -issuer
 ```
 
-### check whom the ssl certificate is issued to
+### get subject
 ```bash
 $ echo -n |
        openssl s_client \
@@ -575,8 +569,18 @@ $ echo -n |
        openssl x509 -noout -subject
 ```
 
-### check for what dates the ssl certificate is valid
+### get expiration date
 ```bash
+$ echo -n |
+       openssl s_client \
+               [-servername <domain.com>] \
+               -connect <domain.com>:<port> 2>/dev/null |
+       openssl x509 -noout -dates
+
+# or
+$ openssl x509 -enddate -noout -in /path/to/name.pem
+
+# i.e.:
 $ echo -n |
        openssl s_client \
                [-servername <domain.com>] \
@@ -586,7 +590,7 @@ notBefore=Sep  8 00:00:00 2021 GMT
 notAfter=Aug 18 23:59:59 2022 GMT
 ```
 
-### check serial number of the ssl certificate
+### get serial number
 ```bash
 $ echo -n |
        openssl s_client \
@@ -599,7 +603,7 @@ $ openssl x509 -noout -serial -in server.crt
 serial=038**************************9CE
 ```
 
-### show multiple informations
+### show multiple information
 ```bash
 $ echo -n |
        openssl s_client \
@@ -617,7 +621,7 @@ $ echo -n |
        openssl x509 -noout -fingerprint
 ```
 
-### extract all information from the ssl certificate (decoded)
+### extract from the ssl certificate (decoded)
 ```bash
 $ echo -n |
        openssl s_client \
@@ -638,18 +642,6 @@ $ echo -n |
 -----END CERTIFICATE-----
 ```
 
-### check ssl certificate expiration date
-```bash
-$ echo -n |
-       openssl s_client \
-               [-servername <domain.com>] \
-               -connect <domain.com>:<port> 2>/dev/null |
-       openssl x509 -noout -dates
-
-# or
-$ openssl x509 -enddate -noout -in /path/to/name.pem
-```
-
 ### verifying the keys match
 ```bash
 $ openssl pkey -pubout -in privateKey.key | openssl sha256
@@ -659,6 +651,50 @@ $ openssl req -pubkey -in CSR.csr -noout | openssl sha256
 $ openssl x509 -pubkey -in certificate.crt -noout | openssl sha256
 ```
 
+### check remote certificate chain
+
+> [!NOTE|label:see also:]
+> - [* iMarslo: get lines between 2 patterns](../../cheatsheet/text-processing/text-processing.md#get-lines-between-2-patterns)
+
+```bash
+$ echo -n |
+       openssl s_client -connect domain.com:443 2>/dev/null |
+       awk '/Certificate chain/,/---/'
+Certificate chain
+ 0 s:C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
+   i:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
+ 1 s:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
+ 2 s:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
+---
+
+# or
+$ echo -n |
+       openssl s_client -connect domain.com:443 2>/dev/null |
+       sed -n '/Certificate chain/,/---/p'
+Certificate chain
+ 0 s:C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
+   i:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
+ 1 s:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
+ 2 s:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
+---
+```
+
 ## bundle certificate
 
 > [!NOTE|label:references:]
@@ -666,6 +702,11 @@ $ openssl x509 -pubkey -in certificate.crt -noout | openssl sha256
 
 ### generic usage
 ```bash
+$ awk -v cmd='openssl x509 -noout -serial' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+       < server.bundle.crt |
+
+# or
 $ awk -v cmd="openssl x509 -text -noout" \
              '/-----BEGIN/ { c = $0; next } c { c = c "\n" $0 } /-----END/ { print c|cmd; close(cmd); c = 0 }' \
       < server.bundle.crt
@@ -705,13 +746,15 @@ $ openssl storeutl -noout -text -certs server.bundle.crt | sed -n '/Serial Numbe
 
 ### [get issuer and subject](https://serverfault.com/a/755815/129815)
 ```bash
-$ awk -v cmd='openssl x509 -noout -subject -issuer' \
+$ awk -v cmd='echo ""; openssl x509 -noout -subject -issuer' \
              '/BEGIN/{close(cmd)}; {print | cmd}' \
       < server.bundle.crt
 subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
 issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+
 subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
 issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+
 subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
 issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
 
@@ -750,7 +793,7 @@ notBefore=Aug  1 12:00:00 2013 GMT
 notAfter=Jan 15 12:00:00 2038 GMT
 
 # get from remote
-$ echo -n | openssl s_client -showcerts -connect jenkins.sample.com:443 2>/dev/null | grep 'Not'
+$ echo -n | openssl s_client -showcerts -connect domain.com:443 2>/dev/null | grep 'Not'
    v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
    v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
    v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
@@ -1044,8 +1087,8 @@ Getting Private key
 
 - create a truststore
   ```bash
-  $ keytool -import -v -trustcacerts -alias jenkins.sample.com \
-            -file jenkins.sample.com-certificate.pem \
+  $ keytool -import -v -trustcacerts -alias jenkins.domain.com \
+            -file domain.com-certificate.pem \
             -keystore cacerts.jks \
             -storepass changeit
   ```
@@ -1056,12 +1099,12 @@ Getting Private key
   -Djavax.net.ssl.trustStorePassword=changeit
   ```
 
-- Use the TrustStore when you execute the launch connection from the agent
+- use the truststore when connection from the agent
   ```bash
   $ java -Djavax.net.ssl.trustStore=/var/jenkins_home/cacerts.jks \
          -Djavax.net.ssl.trustStorePassword=changeit \
          -jar agent.jar \
-         -jnlpURL https://jenkins.sample.com/cjoc/jnlpSharedSlaves/sharedagent/slave-agent.jnlp \
+         -jnlpURL https://jenkins.domain.com/cjoc/jnlpSharedSlaves/sharedagent/slave-agent.jnlp \
          -secret xxx
   ```
 
