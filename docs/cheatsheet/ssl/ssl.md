@@ -178,7 +178,7 @@ Enter pass phrase for ca.key:artifactory
 unable to write 'random state'
 
 $ ls
-extfile.cnf                             ca.key      server.csr  www.srl
+extfile.cnf  ca.key  server.csr  www.srl
 ca.crt  server.crt  server.key
 {%- endcodetabs %}
 
@@ -237,12 +237,8 @@ unable to write 'random state'
 
 ### Update the file perm
 ```bash
-$ sudo chmod -v 0444 ca.crt \
-                     server.crt \
-                     client.cert
-$ sudo chmod -v 0400 ca.key \
-                     client.key \
-                     server.key
+$ sudo chmod -v 0444 ca.crt server.crt client.cert
+$ sudo chmod -v 0400 ca.key client.key server.key
 ```
 
 ### verify
@@ -450,10 +446,7 @@ ssl_certificate_key   /etc/nginx/certs/sample.artifactory.com/server.key;
 
 ### keytool
 ```bash
-$ keytool -printcert \
-          -rfc \
-          -sslserver <domain.com>:<port> \
-          > cacert.crt
+$ keytool -printcert -rfc -sslserver <domain.com>:<port> > cacert.crt
 ```
 - check
   ```bash
@@ -461,10 +454,7 @@ $ keytool -printcert \
   $ openssl x509 -inform PEM -in cacert.crt -out outcert.pem -text
 
   # or
-  $ openssl x509 \
-            -in cacert.crt \
-            -noout \
-            -text
+  $ openssl x509 -noout -text -in cacert.crt
   ```
 
 ### openssl
@@ -502,19 +492,19 @@ $ echo -n | openssl s_client \
 ```bash
 $ awk -v cmd='openssl x509 -noout -serial' \
              '/BEGIN/{close(cmd)}; {print | cmd}' \
-       < server.bundle.crt |
+       < /path/to/bundle.crt
 
 # or
 $ awk -v cmd="openssl x509 -text -noout" \
              '/-----BEGIN/ { c = $0; next } c { c = c "\n" $0 } /-----END/ { print c|cmd; close(cmd); c = 0 }' \
-      < server.bundle.crt
+      < /path/to/bundle.crt
 
 # or
-$ awk < server.bundle.crt -v cmd="openssl x509 -issuer -subject -dates -noout" \
+$ awk < /path/to/bundle.crt -v cmd="openssl x509 -issuer -subject -dates -noout" \
         '/^-----BEGIN/,/^-----END/ {print|cmd} /^-----END/ {close(cmd)}'
 
 # or
-$ cat server.bundle.crt |
+$ cat /path/to/bundle.crt |
   awk '{
     if ($0 == "-----BEGIN CERTIFICATE-----") cert=""
     else if ($0 == "-----END CERTIFICATE-----") print cert
@@ -525,76 +515,90 @@ $ cat server.bundle.crt |
 
 ### get serial number
 ```bash
-# get from local
 $ awk -v cmd='openssl x509 -noout -serial' \
              '/BEGIN/{close(cmd)}; {print | cmd}' \
-       < server.bundle.crt |
+       < /path/to/bundle.crt |
        awk -F= '{print $2}' |
        sed 's/../&:/g;s/:$//'
-03:81:9B:12:16:E1:CD:D5:09:59:7E:0F:6A:E9:39:CE
-0C:F5:BD:06:2B:56:02:F4:7A:B8:50:2C:23:CC:F0:66
-03:3A:F1:E6:A7:11:A9:A0:BB:28:64:B1:1D:09:FA:E5
+# or
+$ openssl storeutl -noout -text -certs </path/to/file.crt> | sed -n '/Serial Number:/{n;p;}'
 
-# get from remote
-$ openssl storeutl -noout -text -certs server.bundle.crt | sed -n '/Serial Number:/{n;p;}'
-            03:81:9b:12:16:e1:cd:d5:09:59:7e:0f:6a:e9:39:ce
-            0c:f5:bd:06:2b:56:02:f4:7a:b8:50:2c:23:cc:f0:66
-            03:3a:f1:e6:a7:11:a9:a0:bb:28:64:b1:1d:09:fa:e5
+# i.e.:
+$ awk -v cmd='openssl x509 -noout -serial' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' < google.crt |
+      awk -F= '{print $2}' |
+      sed 's/../&:/g;s/:$//'
+71:8D:F8:A4:D1:48:8A:78:09:CC:ED:27:10:7D:81:84
+7F:F0:05:A0:7C:4C:DE:D1:00:AD:9D:66:A5:10:7B:98
+77:BD:0D:6C:DB:36:F9:1A:EA:21:0F:C4:F0:58:D3:0D
+## or
+$ openssl storeutl -noout -text -certs google.crt | sed -n '/Serial Number:/{n;p;}'
+            71:8d:f8:a4:d1:48:8a:78:09:cc:ed:27:10:7d:81:84
+            7f:f0:05:a0:7c:4c:de:d1:00:ad:9d:66:a5:10:7b:98
+            77:bd:0d:6c:db:36:f9:1a:ea:21:0f:c4:f0:58:d3:0d
 ```
 
 ### [get issuer and subject](https://serverfault.com/a/755815/129815)
 ```bash
-$ awk -v cmd='echo ""; openssl x509 -noout -subject -issuer' \
+$ awk -v cmd='openssl x509 -noout -subject -issuer' \
              '/BEGIN/{close(cmd)}; {print | cmd}' \
-      < server.bundle.crt
-subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
-issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+      < /path/to/bundle.crt
+# or
+$ openssl crl2pkcs7 -nocrl -certfile /path/to/bundle.crt | openssl pkcs7 -print_certs -noout
 
-subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-
-subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+# i.e.:
+$ openssl s_client -showcerts -connect google.com:443 </dev/null 2>/dev/null |
+          sed -n -e '/BEGIN CERTIFICATE/,/END CERTIFICATE/ p' |
+          awk -v cmd='openssl x509 -noout -subject -issuer -dates; echo ""' \
+                     '/BEGIN/{close(cmd)}; {print | cmd}'
 
 # or
-$ openssl crl2pkcs7 -nocrl -certfile server.bundle.crt | openssl pkcs7 -print_certs -noout
-subject=C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
-issuer=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+$ openssl s_client -showcerts -connect google.com:443 </dev/null 2>/dev/null |
+          sed -n -e '/BEGIN CERTIFICATE/,/END CERTIFICATE/ p' > google.crt
+$:wa awk -v cmd='openssl x509 -noout -subject -issuer -dates; echo ""' \
+             '/BEGIN/{close(cmd)}; {print | cmd}' \
+      < google.crt
+subject=CN = *.google.com
+issuer=C = US, O = Google Trust Services, CN = WR2
+notBefore=Jul 30 12:32:53 2024 GMT
+notAfter=Oct 22 12:32:52 2024 GMT
 
-subject=C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+subject=C = US, O = Google Trust Services, CN = WR2
+issuer=C = US, O = Google Trust Services LLC, CN = GTS Root R1
+notBefore=Dec 13 09:00:00 2023 GMT
+notAfter=Feb 20 14:00:00 2029 GMT
 
-subject=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-issuer=C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
+subject=C = US, O = Google Trust Services LLC, CN = GTS Root R1
+issuer=C = BE, O = GlobalSign nv-sa, OU = Root CA, CN = GlobalSign Root CA
+notBefore=Jun 19 00:00:42 2020 GMT
+notAfter=Jan 28 00:00:42 2028 GMT
 ```
 
 ### [get dates](https://serverfault.com/a/1079893/129815)
 ```bash
-# get from local
-$ openssl storeutl -noout -text -certs server.bundle.crt | grep 'Not'
-            Not Before: Jul 30 00:00:00 2024 GMT
-            Not After : Aug 21 23:59:59 2025 GMT
-            Not Before: Mar 30 00:00:00 2021 GMT
-            Not After : Mar 29 23:59:59 2031 GMT
-            Not Before: Aug  1 12:00:00 2013 GMT
-            Not After : Jan 15 12:00:00 2038 GM
-
-# or
+# local
+$ openssl storeutl -noout -text -certs /path/to/bundle.crt | grep 'Not'
+## or
 $ awk -v cmd='openssl x509 -noout -dates' \
              '/BEGIN/{close(cmd)}; {print | cmd}' \
-      < server.bundle.crt
-notBefore=Jul 30 00:00:00 2024 GMT
-notAfter=Aug 21 23:59:59 2025 GMT
-notBefore=Mar 30 00:00:00 2021 GMT
-notAfter=Mar 29 23:59:59 2031 GMT
-notBefore=Aug  1 12:00:00 2013 GMT
-notAfter=Jan 15 12:00:00 2038 GMT
+      < /path/to/bundle.crt
+## remote
+$ echo -n | openssl s_client -showcerts -connect <domain.com>:<port> 2>/dev/null | grep 'Not'
 
-# get from remote
-$ echo -n | openssl s_client -showcerts -connect domain.com:443 2>/dev/null | grep 'Not'
-   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
-   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
-   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
+# i.e.:
+## local
+$ awk -v cmd='openssl x509 -noout -dates' '/BEGIN/{close(cmd)}; {print | cmd}' < google.crt
+notBefore=Jul 30 12:32:53 2024 GMT
+notAfter=Oct 22 12:32:52 2024 GMT
+notBefore=Dec 13 09:00:00 2023 GMT
+notAfter=Feb 20 14:00:00 2029 GMT
+notBefore=Jun 19 00:00:42 2020 GMT
+notAfter=Jan 28 00:00:42 2028 GMT
+## remote
+$ echo -n | openssl s_client -showcerts -connect google.com:443 2>/dev/null | command grep 'Not'
+   v:NotBefore: Jul 30 12:32:53 2024 GMT; NotAfter: Oct 22 12:32:52 2024 GMT
+   v:NotBefore: Dec 13 09:00:00 2023 GMT; NotAfter: Feb 20 14:00:00 2029 GMT
+   v:NotBefore: Jun 19 00:00:42 2020 GMT; NotAfter: Jan 28 00:00:42 2028 GMT
 ```
 
 
@@ -754,40 +758,30 @@ $ openssl x509 -pubkey -in certificate.crt -noout | openssl sha256
 
 ```bash
 $ echo -n |
-       openssl s_client -connect domain.com:443 2>/dev/null |
+       openssl s_client -connect <domain.com>:<port> 2>/dev/null |
        awk '/Certificate chain/,/---/'
-Certificate chain
- 0 s:C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
-   i:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
-   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
- 1 s:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
-   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
- 2 s:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
-   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
----
-
 # or
 $ echo -n |
-       openssl s_client -connect domain.com:443 2>/dev/null |
+       openssl s_client -connect <domain.com>:<port> 2>/dev/null |
        sed -n '/Certificate chain/,/---/p'
+
+# i.e.:
+$ echo -n |
+       openssl s_client -connect google.com:443 2>/dev/null |
+       awk '/Certificate chain/,/---/'
 Certificate chain
- 0 s:C=US, ST=California, L=Santa Clara, O=Company Name, Inc., CN=*.sample.com
-   i:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
+ 0 s:CN = *.google.com
+   i:C = US, O = Google Trust Services, CN = WR2
+   a:PKEY: id-ecPublicKey, 256 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Jul 30 12:32:53 2024 GMT; NotAfter: Oct 22 12:32:52 2024 GMT
+ 1 s:C = US, O = Google Trust Services, CN = WR2
+   i:C = US, O = Google Trust Services LLC, CN = GTS Root R1
    a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
-   v:NotBefore: Jul 30 00:00:00 2024 GMT; NotAfter: Aug 21 23:59:59 2025 GMT
- 1 s:C=US, O=DigiCert Inc, CN=DigiCert Global G2 TLS RSA SHA256 2020 CA1
-   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
-   v:NotBefore: Mar 30 00:00:00 2021 GMT; NotAfter: Mar 29 23:59:59 2031 GMT
- 2 s:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-   i:C=US, O=DigiCert Inc, OU=www.digicert.com, CN=DigiCert Global Root G2
-   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
-   v:NotBefore: Aug  1 12:00:00 2013 GMT; NotAfter: Jan 15 12:00:00 2038 GMT
+   v:NotBefore: Dec 13 09:00:00 2023 GMT; NotAfter: Feb 20 14:00:00 2029 GMT
+ 2 s:C = US, O = Google Trust Services LLC, CN = GTS Root R1
+   i:C = BE, O = GlobalSign nv-sa, OU = Root CA, CN = GlobalSign Root CA
+   a:PKEY: rsaEncryption, 4096 (bit); sigalg: RSA-SHA256
+   v:NotBefore: Jun 19 00:00:42 2020 GMT; NotAfter: Jan 28 00:00:42 2028 GMT
 ---
 ```
 
@@ -830,12 +824,13 @@ Certificate chain
 ## jenkins self-signed SSL
 
 > [!NOTE|label:references:]
+> - [* iMarslo: keystore](./keystore.html)
 > - [Configuring inbound agents using self-signed certificates](https://docs.cloudbees.com/docs/cloudbees-ci/latest/cloud-setup-guide/configure-ports-jnlp-agents#_configuring_inbound_agents_using_self_signed_certificates)
 
 - create a truststore
   ```bash
   $ keytool -import -v -trustcacerts -alias jenkins.domain.com \
-            -file domain.com-certificate.pem \
+            -file certificate.pem \
             -keystore cacerts.jks \
             -storepass changeit
   ```

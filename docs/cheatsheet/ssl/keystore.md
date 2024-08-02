@@ -59,13 +59,16 @@
 ```bash
 $ keytool -printcert \
           -rfc \
-          -sslserver google.com:443 > google.com.new.crt
+          -sslserver google.com:443 > google.com.crt
+# or
+$ openssl s_client -showcerts -connect google.com:443 </dev/null 2>/dev/null |
+          sed -n -e '/BEGIN CERTIFICATE/,/END CERTIFICATE/ p' > google.com.crt
 ```
 
 - check crt file
   ```bash
   $ openssl x509 \
-            -in google.com.new.crt \
+            -in google.com.crt \
             -noout \
             -text |
             grep "Not "
@@ -76,7 +79,7 @@ $ keytool -printcert \
   ```bash
   $ keytool -printcert \
             -v \
-            -file google.com.new.crt |
+            -file google.com.crt |
             head
   Certificate[1]:
   Owner: CN=*.google.com
@@ -110,7 +113,7 @@ $ keytool -importcert \
           -alias google.com \
           -keystore google.com.jks \
           -storepass changeit \
-          -file google.com.new.crt
+          -file google.com.crt
 
 Trust this certificate? [no]:  yes
 Certificate was added to keystore
@@ -143,7 +146,7 @@ $ keytool -import \
           -trustcacerts \
           -alias google.com \
           -keystore google.com.new.jks \
-          -file google.com.new.crt
+          -file google.com.crt
 ```
 
 ## import an entire keystore into another keystore

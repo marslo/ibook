@@ -2,8 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [verify local cert](#verify-local-cert)
-  - [`s_client`](#s_client)
-    - [with cert debug](#with-cert-debug)
+  - [`openssl s_client`](#openssl-s_client)
+    - [debug mode](#debug-mode)
   - [curl](#curl)
   - [openssl](#openssl)
     - [get crt information](#get-crt-information)
@@ -11,7 +11,7 @@
   - [java ssl](#java-ssl)
     - [InstallCert.java](#installcertjava)
 - [verify remote cert](#verify-remote-cert)
-  - [openssl & s_client](#openssl--s_client)
+  - [openssl s_client](#openssl-s_client)
     - [verify certs](#verify-certs)
   - [curl](#curl-1)
   - [keytool](#keytool)
@@ -26,25 +26,25 @@
 {% endhint %}
 
 # verify local cert
-## `s_client`
+## `openssl s_client`
 ```bash
-$ openssl s_client -state -msg -connect domain.sample.com:443
+$ openssl s_client -state -msg -connect domain.com:443
 ```
 
-### with cert debug
+### debug mode
 ```bash
 $ openssl s_client -state \
                    -debug \
-                   -connect domain.sample.com:443 \
-                   -cert domain.sample.com-server.crt \
-                   -key domain.sample.com-server.key \
+                   -connect domain.com:443 \
+                   -cert domain.com-server.crt \
+                   -key domain.com-server.key \
 ```
 
 ## curl
 ```bash
 $ curl -vvv \
        [--cacert server.crt \]
-       https://domain.sample.com:443/artifactory
+       https://domain.com:443/artifactory
 ```
 - or
   ```bash
@@ -52,7 +52,7 @@ $ curl -vvv \
          -i \
          -L \
          [--cacert server.crt \] \
-         https://domain.sample.com:443/artifactory
+         https://domain.com:443/artifactory
   ```
 
 ## openssl
@@ -212,15 +212,15 @@ $ javac InstallCert.java
 > - [How to extract SSL data from any website](https://securitytrails.com/blog/extract-ssl-data)
 {% endhint %}
 
-## openssl & s_client
+## openssl s_client
 ```bash
-$ openssl s_client -showcerts -connect www.domain.com:443
+$ openssl s_client -showcerts -connect <domain.com>:<port>
 ```
 - or
   ```bash
   $ openssl s_client -showcerts \
                      -starttls imap \
-                     -connect www.domain.com:443
+                     -connect <domain.com>:<port>
   CONNECTED(00000005)
   ```
 
@@ -229,11 +229,11 @@ $ openssl s_client -showcerts -connect www.domain.com:443
   $ openssl s_client -showcerts \
                      -cert cert.cer \
                      -key cert.key \
-                     -connect www.domain.com:443
+                     -connect <domain.com>:<port>
   ```
 - [or](https://stackoverflow.com/a/25274959/2940319)
   ```bash
-   $ openssl s_client -connect www.domain.com:443 |
+   $ openssl s_client -connect <domain.com>:<port> |
      openssl x509 -text -noout |
      grep -A 1 -i key
 ```
@@ -242,13 +242,13 @@ $ openssl s_client -showcerts -connect www.domain.com:443
   ```bash
   $ openssl s_client -showcerts \
                      -cipher DHE-RSA-AES256-SHA \
-                     -connect www.domain.com:443
+                     -connect <domain.com>:<port>
   ```
 
 - or get `enddate` only
   ```bash
   $ echo | openssl s_client \
-                   -connect www.domain.com:443 2>/dev/null |
+                   -connect <domain.com>:<port> 2>/dev/null |
            openssl x509 -noout -enddate
   notAfter=Nov 28 23:59:59 2020 GMT
   ```
@@ -257,14 +257,14 @@ $ openssl s_client -showcerts -connect www.domain.com:443
 ```bash
 $ echo | openssl s_client -showcerts \
                           -servername www.domain.com \
-                          -connect www.domain.com:443 2>/dev/null |
+                          -connect <domain.com>:<port> 2>/dev/null |
          openssl x509 -inform pem -noout -text
 ```
 
 - get ssl only
   ```bash
   $ echo | openssl s_client -showcerts \
-                            -connect www.domain.com:443 2>/dev/null |
+                            -connect <domain.com>:<port> 2>/dev/null |
                             sed -n '/BEGIN.*-/,/END.*-/p'
   ```
 
@@ -281,7 +281,7 @@ $ curl -vvI https://www.domain.com
 
 ## keytool
 ```bash
-$ keytool -printcert -sslserver www.domain.com:443
+$ keytool -printcert -sslserver <domain.com>:<port>
 ```
 
 ## nmap
