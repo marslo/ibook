@@ -2,13 +2,13 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [get time](#get-time)
-  - [current timestamp](#current-timestamp)
+  - [now](#now)
   - [data parse](#data-parse)
   - [get current time (timeInMillis)](#get-current-time-timeinmillis)
   - [localDateTime, LocalDate and Calendar](#localdatetime-localdate-and-calendar)
   - [Instant](#instant)
 - [Calendar](#calendar)
-  - [now](#now)
+  - [now](#now-1)
   - [delta time](#delta-time)
   - [specified time](#specified-time)
   - [get data by `ZonedDateTime`](#get-data-by-zoneddatetime)
@@ -38,6 +38,8 @@
     - [with `LocalDateTime`](#with-localdatetime)
     - [with `SimpleDateFormat`](#with-simpledateformat)
 - [formatting date](#formatting-date)
+  - [formatting with patterns](#formatting-with-patterns)
+  - [formatting with formatter](#formatting-with-formatter)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -65,29 +67,67 @@
 # get time
 
 > [!TIP]
-> references:
-> - [Java SimpleDateFormat](https://jenkov.com/tutorials/java-internationalization/simpledateformat.html)
-> - [Class SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
-> - [Class Date](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
-> - [Class TimeZone](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html)
-> - [Class SimpleDateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/SimpleDateFormat.html)
-> - [Class DateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DateFormat.html)
+> - references:
+>   - [Java SimpleDateFormat](https://jenkov.com/tutorials/java-internationalization/simpledateformat.html)
+>   - [Class SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
+>   - [Class Date](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Date.html)
+>   - [Class TimeZone](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/TimeZone.html)
+>   - [Class SimpleDateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/SimpleDateFormat.html)
+>   - [Class DateFormat](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/DateFormat.html)
+>   - [Date-time classes in Java](https://stackoverflow.com/a/35885084/2940319)
 >
-> usage in jenkins
-> - [* imarslo: get build time in Jenkins script](../../jenkins/script/build.html#get-build-time)
-> - [* imarslo: linux date](../../linux/util/date.html)
+>     ![Date-time classes in Java](../../screenshot/groovy/java-date-time.png)
+>
+> - usage in jenkins
+>   - [* imarslo: get build time in Jenkins script](../../jenkins/script/build.html#get-build-time)
+>   - [* imarslo: linux date](../../linux/util/date.html)
 
-## current timestamp
-```groovy
-// 20220706171701
-new Date().format( 'YYYYMMddHHmmss' )
+## now
 
-// Tuesday 02 August 2022 20:33:11.967 +0800
-new Date().format( 'EEEEE dd MMMMM yyyy HH:mm:ss.SSS Z' )
+> [!TIP]
+> - [* iMarslo: formatting data](#formatting-date)
 
-// Tuesday 02 August 2022 20:35:21.565 +0800, 214 days, week 32
-new Date().format( 'EEEEE dd MMMMM yyyy HH:mm:ss.SSS Z, DD' ) + ' days, week ' + new Date().format( 'w' )
-```
+- `LocalDateTime`
+  ```groovy
+  import java.time.LocalDateTime
+  import java.time.format.DateTimeFormatter
+  import java.time.ZoneId
+
+  // 2024-08-07T21:51:03.532338-07:00[America/Los_Angeles]
+  LocalDateTime.now()                                              // without timezone
+  LocalDateTime.now().atZone( ZoneId.of("America/Los_Angeles") )   // with timezone
+
+  // Wednesday, August 07, 2024 at 21:36:34 PM, PDT, GMT-07:00, 3rd quarter
+  LocalDateTime.now()
+               .atZone( ZoneId.of("America/Los_Angeles"))
+               .format( DateTimeFormatter.ofPattern( "EEEE, MMMM dd, YYYY 'at' HH:mm:ss a, z, ZZZZ, QQQQ" ) )
+  ```
+
+- `ZonedDateTime`
+  ```groovy
+  import java.time.ZonedDateTime
+  import java.time.ZoneId
+  import java.time.format.DateTimeFormatter
+
+  // 2024-08-07T21:50:45.862427-07:00[America/Los_Angeles]
+  ZonedDateTime.now()                                              // with timezone by default
+
+  // Wednesday, 24-08-07 09:28:45 PM, at night, week 32, Pacific Daylight Time, GMT-07:00, 3rd quarter
+  ZonedDateTime.now().format( DateTimeFormatter.ofPattern( "EEEE, YY-MM-dd hh:mm:ss a, B, 'week' w, zzzz, ZZZZ, QQQQ" ) )
+  ```
+
+- `OffsetDateTime`
+  ```groovy
+  import java.time.OffsetDateTime
+  import java.time.format.DateTimeFormatter
+  import java.time.ZoneId
+
+  // 2024-08-07T21:49:59.333865-07:00
+  OffsetDateTime.now()                                             // with Offset
+
+  // -07, -0700, -07:00 | -07, -0700, -07:00
+  DateTimeFormatter.ofPattern( 'x, xx, xxx | X, XX, XXX' ).format( OffsetDateTime.now() )
+  ```
 
 ## data parse
 ```groovy
@@ -188,6 +228,7 @@ println """
 ## Instant
 
 > [!NOTE|label:references:]
+> - [java.time.Instant](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html)
 
 ```groovy
 import java.time.Instant
@@ -434,9 +475,9 @@ println """
 > - `int getYear()`            – year
 > - `int getDayOfYear()`       – day of year as integer value, from `1` to `365`, or `366` in a leap year
 > - `Month getMonth()`         – month.
-> - `int getDayOfMonth()       – day of the month as integer value, from `1` to `31`
+> - `int getDayOfMonth()`      – day of the month as integer value, from `1` to `31`
 > - `DayOfWeek getDayOfWeek()` – day of the week.
-> - `int getHour()             – hour of the day, from `0` to `23`
+> - `int getHour()`            – hour of the day, from `0` to `23`
 > - `int getMinute()`          – minute of the hour, from `0` to `59`
 > - `int getSecond()           – second of the minute, from `0` to `59`
 > - `int getNano()`            – nanosecond, from `0` to `999,999,999`
@@ -546,9 +587,9 @@ println """
   currentDateTime : ${currentDateTime}
     localDateTime : ${localDateTime}
 
-  currentDataTime == localDateTime ? : ${currentDateTime.isEqual(localDateTime)}
-   currentDataTime > localDateTime ? : ${currentDateTime.isAfter(localDateTime)}
-   currentDataTime < localDateTime ? : ${currentDateTime.isBefore(localDateTime)}
+  currentDataTime == localDateTime ?: ${currentDateTime.isEqual(localDateTime)}
+   currentDataTime > localDateTime ?: ${currentDateTime.isAfter(localDateTime)}
+   currentDataTime < localDateTime ?: ${currentDateTime.isBefore(localDateTime)}
 """
 ```
 
@@ -557,9 +598,9 @@ println """
     currentDateTime : 2021-04-29T01:54:07.917
       localDateTime : 2021-04-30T01:54:07.917
 
-    currentDataTime == localDateTime ? : false
-     currentDataTime > localDateTime ? : false
-     currentDataTime < localDateTime ? : true
+    currentDataTime == localDateTime ?: false
+     currentDataTime > localDateTime ?: false
+     currentDataTime < localDateTime ?: true
   ```
 
 # convert time
@@ -1149,16 +1190,87 @@ println "${sdf.format(calendar.getTime())} : ${sdf.getTimeZone().getID()}"
 
 {% endhint %}
 
+## formatting with patterns
+- with `LocalDateTime`
 
+  > [!TIP]
+  > - [`LocalDateTime`: A date-time without a time-zone](https://stackoverflow.com/a/49459222/2940319)
+
+  ```groovy
+  import java.time.LocalDateTime
+  import java.time.format.DateTimeFormatter
+
+  // Wednesday, August 07, 2024 at 21:26:23 PM, 3rd quarter
+  LocalDateTime.now().format( DateTimeFormatter.ofPattern( "EEEE, MMMM dd, YYYY 'at' HH:mm:ss a, QQQQ" ) )
+
+  // Wednesday, 24-08-07 09:26:23 PM, at night, week 32, 3rd quarter
+  LocalDateTime.now().format( DateTimeFormatter.ofPattern( "EEEE, YY-MM-dd hh:mm:ss a, B, 'week' w, QQQQ" ) )
+
+  // -- with timezone --
+  // Wednesday, August 07, 2024 at 21:36:34 PM, PDT, GMT-07:00, 3rd quarter
+  LocalDateTime.now()
+               .atZone( ZoneId.of("America/Los_Angeles"))
+               .format( DateTimeFormatter.ofPattern( "EEEE, MMMM dd, YYYY 'at' HH:mm:ss a, z, ZZZZ, QQQQ" ) )
+  ```
+
+- with `ZonedDateTime`
+
+  ```groovy
+  import java.time.format.DateTimeFormatter
+  import java.time.ZonedDateTime
+
+  // Wednesday, August 07, 2024 at 21:26:23 PM, Pacific Time, 3rd quarter
+  ZonedDateTime.now().format( DateTimeFormatter.ofPattern( "EEEE, MMMM dd, YYYY 'at' HH:mm:ss a, vvvv, QQQQ" ) )
+
+  // Wednesday, 24-08-07 09:26:23 PM, at night, week 32, PDT, -0700, 3rd quarter
+  ZonedDateTime.now().format( DateTimeFormatter.ofPattern( "EEEE, YY-MM-dd hh:mm:ss a, B, 'week' w, z, Z, QQQQ" ) )
+
+  // Wednesday, 24-08-07 09:28:45 PM, at night, week 32, Pacific Daylight Time, GMT-07:00, 3rd quarter
+  ZonedDateTime.now().format( DateTimeFormatter.ofPattern( "EEEE, YY-MM-dd hh:mm:ss a, B, 'week' w, zzzz, ZZZZ, QQQQ" ) )
+  ```
+
+- with [`FormatStyle`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/FormatStyle.html)
+  ```groovy
+  import java.time.format.DateTimeFormatter
+  import java.time.ZonedDateTime
+  import java.time.format.FormatStyle
+
+  // Wednesday, August 7, 2024, 9:30:12 PM Pacific Daylight Time
+  ZonedDateTime.now().format( DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL) )
+  ```
+
+- with `OffsetDateTime`
+  ```groovy
+  import java.time.OffsetDateTime
+  import java.time.format.DateTimeFormatter
+  import java.time.ZoneId
+
+  // -07, -0700, -07:00 | -07, -0700, -07:00
+  DateTimeFormatter.ofPattern( 'x, xx, xxx | X, XX, XXX' ).format( OffsetDateTime.now() )
+  ```
+
+- with `Date`
+  ```groovy
+  // 20220706171701
+  new Date().format( 'YYYYMMddHHmmss' )
+
+  // Tuesday 02 August 2022 20:33:11.967 +0800
+  new Date().format( 'EEEEE dd MMMMM yyyy HH:mm:ss.SSS Z' )
+
+  // Tuesday 02 August 2022 20:35:21.565 +0800, 214 days, week 32
+  new Date().format( 'EEEEE dd MMMMM yyyy HH:mm:ss.SSS Z, DD' ) + ' days, week ' + new Date().format( 'w' )
+  ```
+
+## formatting with formatter
 ```groovy
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-LocalDateTime currentDateTime = LocalDateTime.now()
+LocalDateTime currentDateTime      = LocalDateTime.now()
 
-DateTimeFormatter basicISODate = DateTimeFormatter.BASIC_ISO_DATE
-DateTimeFormatter isoLocalDate = DateTimeFormatter.ISO_LOCAL_DATE
-DateTimeFormatter isoLocalTime = DateTimeFormatter.ISO_LOCAL_TIME
+DateTimeFormatter basicISODate     = DateTimeFormatter.BASIC_ISO_DATE
+DateTimeFormatter isoLocalDate     = DateTimeFormatter.ISO_LOCAL_DATE
+DateTimeFormatter isoLocalTime     = DateTimeFormatter.ISO_LOCAL_TIME
 DateTimeFormatter isoLocalDateTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
 println """
@@ -1170,6 +1282,7 @@ println """
   ISO_LOCAL_DATE_TIME : ${isoLocalDateTime.format(currentDateTime)}
 """
 ```
+
 - result
   ```
         currentDateTime : 2021-04-29T02:45:37.501
@@ -1179,4 +1292,3 @@ println """
          ISO_LOCAL_TIME : 02:45:37.501
     ISO_LOCAL_DATE_TIME : 2021-04-29T02:45:37.501
   ```
-
