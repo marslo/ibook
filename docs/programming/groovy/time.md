@@ -6,6 +6,9 @@
   - [data parse](#data-parse)
   - [get available timezone](#get-available-timezone)
   - [get current time (timeInMillis)](#get-current-time-timeinmillis)
+  - [localDateTime, LocalDate and Calendar](#localdatetime-localdate-and-calendar)
+- [Calendar](#calendar)
+  - [get data by `ZonedDateTime`](#get-data-by-zoneddatetime)
 - [LocalDateTime](#localdatetime)
   - [current LocalDataTime](#current-localdatatime)
   - [particular localDateTime](#particular-localdatetime)
@@ -146,6 +149,137 @@ println """
        dateTag : 2022-11-07                     : class java.time.LocalDate
       dateTime : 2022-11-07T00:36:36.418762     : class java.time.LocalDateTime
   ```
+
+## localDateTime, LocalDate and Calendar
+
+> [!NOTE|label:see more]
+> - [* iMarslo: build time in Jenkins script](../../jenkins/script/build.md#build-time)
+
+```groovy
+import java.time.LocalDateTime
+import java.time.LocalDate
+import java.util.Calendar
+
+
+final LocalDateTime DATE_TIME = LocalDateTime.now()
+final LocalDate DATE_TAG      = java.time.LocalDate.now()
+final long CURRENT_TIME       = System.currentTimeMillis()
+final long RIGHT_NOW          = Calendar.getInstance().getTimeInMillis()
+
+println """
+  >> current time :
+        DATE_TIME : ${DATE_TIME}
+         DATE_TAG : ${DATE_TAG}
+     CURRENT_TIME : ${CURRENT_TIME}
+        RIGHT_NOW : ${RIGHT_NOW}
+"""
+```
+
+- result
+  ```
+  >> current time :
+        DATE_TIME : 2024-08-07T18:26:08.905456
+         DATE_TAG : 2024-08-07
+     CURRENT_TIME : 1723080368905
+        RIGHT_NOW : 1723080368905
+
+  ```
+
+# Calendar
+
+> [!TIP|label:reference]
+> - [java.util.Calendar](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Calendar.html)
+> - [java.time.ZonedDateTime](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/ZonedDateTime.html)
+
+```groovy
+import java.util.Calendar
+Calendar calendar = Calendar.getInstance();
+
+println """
+  time                 : ${calendar.getTime()}
+  year                 : ${calendar.get(Calendar.YEAR)} | ${calendar.get(Calendar.YEAR) % 100 }
+  month                : ${calendar.get(Calendar.MONTH)} | ${calendar.get(Calendar.MONTH).toString().padLeft( 2, '0' ) }
+  date                 : ${calendar.get(Calendar.DATE)}
+  hour                 : ${calendar.get(Calendar.HOUR)}
+  minute               : ${calendar.get(Calendar.MINUTE)}
+  second               : ${calendar.get(Calendar.SECOND)}
+  millisecond          : ${calendar.get(Calendar.MILLISECOND)}
+  zone offset          : ${calendar.get(Calendar.ZONE_OFFSET)}
+  dst offset           : ${calendar.get(Calendar.DST_OFFSET)}
+  am/pm                : ${calendar.get(Calendar.AM_PM)}
+  am                   : ${Calendar.AM}
+  pm                   : ${Calendar.PM}
+  short                : ${calendar.get(Calendar.SHORT)}
+
+  day of month         : ${calendar.get(Calendar.DAY_OF_MONTH).toString().padLeft( 2, '0' )}
+  week of month        : ${calendar.get(Calendar.WEEK_OF_MONTH).toString().padLeft( 2, '0' )}
+
+  day of week          : ${calendar.get(Calendar.DAY_OF_WEEK).toString().padLeft( 2, '0' )}
+  day of week in month : ${calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)}
+  day of year          : ${calendar.get(Calendar.DAY_OF_YEAR)}
+"""
+```
+
+- result
+  ```
+  time                 : Wed Aug 07 18:04:38 PDT 2024
+  year                 : 2024 | 24
+  month                : 7 | 07
+  date                 : 7
+  hour                 : 6
+  minute               : 4
+  second               : 38
+  millisecond          : 125
+  zone offset          : -28800000
+  dst offset           : 3600000
+  am/pm                : 1
+  am                   : 0
+  pm                   : 1
+  short                : 2024
+
+  day of month         : 07
+  week of month        : 02
+
+  day of week          : 04
+  day of week in month : 1
+  day of year          : 220
+  ```
+
+## get data by `ZonedDateTime`
+
+```groovy
+import java.time.ZonedDateTime
+
+ZonedDateTime now = Calendar.getInstance().toZonedDateTime()
+
+println """
+  ${now.now()}
+  ${now.getYear()}/${now.getMonthValue()}/${now.getDayOfMonth()} | ${now.getYear()%100}/${now.getMonthValue().toString().padLeft(2, '0')}/${now.getDayOfMonth().toString().padLeft(2, '0')}
+  ${now.getHour()} : ${now.getMinute()} : ${now.getSecond()}
+
+  timezone   : ${now.getZone()} | ${now.getOffset()}
+  year       : ${now.getYear()}
+  month      : ${now.getMonth()} | ${now.getMonthValue()}
+  dayOfMonth : ${now.getDayOfMonth()}
+  dayOfWeek  : ${now.getDayOfWeek()}
+  dayOfYear  : ${now.getDayOfYear()}
+"""
+```
+
+- result:
+  ```
+  2024-08-07T18:21:31.157251-07:00[America/Los_Angeles]
+  2024/8/7 | 24/08/07
+  18 : 21 : 31
+
+  timezone   : America/Los_Angeles | -07:00
+  year       : 2024
+  month      : AUGUST | 8
+  dayOfMonth : 7
+  dayOfWeek  : WEDNESDAY
+  dayOfYear  : 220
+  ```
+
 
 # LocalDateTime
 
