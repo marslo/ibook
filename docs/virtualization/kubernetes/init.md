@@ -1,9 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [with CRI-O](#with-cri-o)
-  - [CRI-O](#cri-o)
-  - [kubeadm](#kubeadm)
 - [teardown](#teardown)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -23,36 +20,6 @@
 > - others:
 >   - [Kubernetes 1.28 震撼发布，Sidecar Containers 迎面而来](https://baijiahao.baidu.com/s?id=1774263469282248861)
 >   - [Manual installation on Kubernetes from scratch with kubectl](https://www.ibm.com/docs/en/cloud-paks/foundational-services/3.23?topic=software-manual-installation-kubernetes-from-scratch-kubectl)
-
-## with CRI-O
-
-> [!NOTE|label:references:]
-> - kubernetes official:
->   - [Container Runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
-> - others:
->   - [通过cri-o部署k8s集群环境](https://blog.csdn.net/weixin_64334766/article/details/133687425)
->   - [Cri-O方式部署Kubernetes集群](https://blog.csdn.net/weixin_72583321/article/details/139256731)
->   - [* 使用 Kubeadm 和 CRI-O 在 Rocky Linux 8 上安装 Kubernetes 集群](https://blog.csdn.net/wchbest/article/details/131038029)
->   - [K8S集群搭建——cri-dockerd版（包含问题解决方案）](https://blog.csdn.net/qq_61468858/article/details/139063860)
->   - [ubernetes那些事 —— 使用cri-o作为容器运行时](https://zhuanlan.zhihu.com/p/334766611)
->   - [Creating Kubernetes Cluster With CRI-O Container Runtime](https://cloudyuga.guru/blogs/creating-kubernetes-cluster-with-cri-o-container-runtime/)
->   - [Kubernetes 1.23 + CRI-O](https://blog.kubesimplify.com/kubernetes-crio)
->   - [How To Deploy a Kubernetes Cluster Using the CRI-O Container Runtime](https://earthly.dev/blog/deploy-kubernetes-cri-o-container-runtime/)
->   - [Using kubeadm with CRI-O](https://projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/)
-> - video:
->   - [Kubernetes cluster with CRI-O container runtime | Step by step tutorial](https://www.youtube.com/watch?v=bV5RcNiHlfw)
->   - [Kubernetes CRI-O Challenge | Ping permission denied | Are you root?](https://www.youtube.com/watch?v=ZKJ9oFwjosM)
-
-### CRI-O
-
-> [!NOTE|label:references:]
-> - [cri-o/cri-o-ansible](https://github.com/cri-o/cri-o-ansible)
-
-### kubeadm
-
-> [!NOTE|label:references:]
-> - [Installing Kubernetes with deployment tools](https://kubernetes.io/docs/setup/production-environment/tools/)
-> - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
 
 ## teardown
 

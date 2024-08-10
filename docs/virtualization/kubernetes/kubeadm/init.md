@@ -909,12 +909,12 @@ export HOST0=10.0.0.6
 export HOST1=10.0.0.7
 export HOST2=10.0.0.8
 
-# Update NAME0, NAME1 and NAME2 with the hostnames of your hosts
+# update NAME0, NAME1 and NAME2 with the hostnames of your hosts
 export NAME0="infra0"
 export NAME1="infra1"
 export NAME2="infra2"
 
-# Create temp directories to store files that will end up on other hosts.
+# create temp directories to store files that will end up on other hosts.
 mkdir -p /tmp/${HOST0}/ /tmp/${HOST1}/ /tmp/${HOST2}/
 
 HOSTS=(${HOST0} ${HOST1} ${HOST2})
@@ -958,7 +958,6 @@ done
   > to generate:
   > - `/etc/kubernetes/pki/etcd/ca.crt`
   > - `/etc/kubernetes/pki/etcd/ca.key`
-
 
   ```bash
   $ kubeadm init phase certs etcd-ca

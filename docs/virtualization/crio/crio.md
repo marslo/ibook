@@ -1,12 +1,63 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [config files](#config-files)
 - [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!NOTE|label:references:]
 > - [cri-o/cri-o](https://github.com/cri-o/cri-o)
+> - [Using the CRI-O Container Engine](https://docs.openshift.com/container-platform/3.11/crio/crio_runtime.html)
+> - [kubernetes/misc/kubernetes-with-crio](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
+
+## config files
+
+- `/etc/crictl.yaml`
+  ```bash
+  $ sudo cat /etc/crictl.yaml
+  runtime-endpoint: "unix:///var/run/crio/crio.sock"
+  timeout: 0
+  debug: false
+  ```
+
+  - [other version](https://github.com/cri-o/cri-o/issues/3791#issuecomment-826867283)
+    ```bash
+    $ sudo cat /etc/crictl.yaml
+    runtime-endpoint: "unix:///run/crio/crio.sock"
+    image-endpoint: "unix:///run/crio/crio.sock"
+    cgroup-manager: cgroupfs
+
+    timeout: 10
+    debug: true
+    pull-image-on-create: false
+    ```
+
+- [`/etc/modules-load.d/crio.conf`](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
+  ```bash
+  $ sudo cat /etc/modules-load.d/crio.conf
+  overlay
+  br_netfilter
+
+  $ sudo modprobe overlay
+  $ sudo modprobe br_netfilter
+  ```
+
+- [`/etc/crio/crio.conf.d/02-cgroup-manager.conf`](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
+  ```bash
+  $ sudo cat /etc/crio/crio.conf.d/02-cgroup-manager.conf
+  [crio.runtime]
+  conmon_cgroup = "pod"
+  cgroup_manager = "cgroupfs"
+
+  # or using `systemd` as default cgroup manager
+  $ sudo cat /etc/crio/crio.conf.d/02-cgroup-manager.conf
+  [crio.runtime]
+  conmon_cgroup = "pod"
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restart crio.service
+  ```
 
 ## tips
 
