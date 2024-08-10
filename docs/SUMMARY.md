@@ -170,6 +170,7 @@
   * [troubleshooting](linux/troubleshooting.md)
   * [system](linux/system.md)
     * [apt/yum/snap](linux/apt-yum.md)
+    * [authorization](linux/account.md)
     * [apps](linux/app.md)
     * [x11](linux/x11.md)
   * [ubuntu](linux/ubuntu/ubuntu.md)
