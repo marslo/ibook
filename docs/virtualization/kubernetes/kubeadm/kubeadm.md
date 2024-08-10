@@ -272,6 +272,8 @@ $ sudo bash -c "sed -e 's:^\\(.*swap.*\\)$:# \\1:' -i /etc/fstab"
 $ sudo setenforce 0
 $ sudo bash -c "sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc/selinux/config"
 
+# to avoid /proc/sys/net/bridge/bridge-nf-call-iptables: No such file or directory
+# https://gist.github.com/iamcryptoki/ed6925ce95f047673e7709f23e0b9939
 $ sudo modprobe br_netfilter
 
 $ sudo sysctl -w net.ipv4.ip_forward=1

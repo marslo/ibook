@@ -117,6 +117,7 @@
   * [kubernetes](virtualization/kubernetes/kubernetes.md)
     * [kubeadm](virtualization/kubernetes/kubeadm/kubeadm.md)
       * [init](virtualization/kubernetes/kubeadm/init.md)
+        * [init with crio](virtualization/kubernetes/kubeadm/init-crio.md)
       * [etcd](virtualization/kubernetes/kubeadm/etcd.md)
       * [ha](virtualization/kubernetes/kubeadm/ha.md)
     * [kubectl](virtualization/kubernetes/kubectl.md)
