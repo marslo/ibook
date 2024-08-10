@@ -147,6 +147,7 @@
     * [dockerd](virtualization/docker/dockerd.md)
     * [tricky](virtualization/docker/tricky.md)
     * [windows](virtualization/docker/windows.md)
+  * [crio](virtualization/crio/crio.md)
   * [podman](virtualization/podman/podman.md)
 * [osx](osx/osx.md)
   * [apps](osx/apps/apps.md)
