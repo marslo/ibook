@@ -24,6 +24,7 @@
 >   - [org.jenkinsci.plugins.workflow.steps](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/package-summary.html)
 > - [Pipeline Utility Steps](https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#pipeline-utility-steps)
 > - [Jenkins Pipeline Cookbook](https://e.printstacktrace.blog/jenkins-pipeline-cookbook/)
+> - [* declarative-pipeline-examples](https://github.com/devopscube/declarative-pipeline-examples)
 > - [Class Exception](https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
 >   - [Class TimeoutStepExecution](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.html)
 >   - [Class TimeoutStepExecution.ExceededTimeout](https://javadoc.jenkins.io/plugin/workflow-basic-steps/org/jenkinsci/plugins/workflow/steps/TimeoutStepExecution.ExceededTimeout.html)
