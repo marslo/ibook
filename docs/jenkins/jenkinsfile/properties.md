@@ -3,7 +3,10 @@
 
 - [parameters](#parameters)
 - [active choice parameters](#active-choice-parameters)
+  - [Active Choices Reactive Reference](#active-choices-reactive-reference)
 - [file paramter](#file-paramter)
+  - [create file parameter](#create-file-parameter)
+  - [use file parameter](#use-file-parameter)
 - [hidden parameter](#hidden-parameter)
 - [mixed parameters](#mixed-parameters)
 - [Jenkins 2.0 pipeline: Scripting active parameters for SCM](#jenkins-20-pipeline-scripting-active-parameters-for-scm)
@@ -21,7 +24,7 @@
 > - [use groovy to add an additional parameter to a jenkins job](https://stackoverflow.com/a/48962198/2940319)
 {% endhint %}
 
-### parameters
+## parameters
 ```groovy
 properties([
   parameters([
@@ -35,7 +38,7 @@ properties([
 ```
 ![parameters](../../screenshot/jenkins/properties-parameters.gif)
 
-### [active choice parameters](https://plugins.jenkins.io/uno-choice/)
+## [active choice parameters](https://plugins.jenkins.io/uno-choice/)
 ```groovy
 properties([
   parameters([
@@ -140,7 +143,222 @@ properties([
   ```
 ![active choice](../../screenshot/jenkins/active_choice.gif)
 
-### file paramter
+### [Active Choices Reactive Reference](https://github.com/jenkinsci/active-choices-plugin?tab=readme-ov-file#active-choices-reactive-reference)
+
+> [!TIP|label:references]
+> - [JENKINS-36806 - Extra comma character append at the end when passing Reactive Reference Values to the build](https://issues.jenkins.io/browse/JENKINS-36806)
+> - supported `choiceType`:
+>   - `ET_TEXT_BOX`
+>   - `ET_ORDERED_LIST`
+>   - `ET_UNORDERED_LIST`
+>   - `ET_FORMATTED_HTML`
+>   - `ET_FORMATTED_HIDDEN_HTML`
+> - [Class DynamicReferenceParameter](https://javadoc.jenkins.io/plugin/uno-choice/org/biouno/unochoice/DynamicReferenceParameter.html)
+> - read more:
+>   - [* iMarslo: get time/date from groovy](../../programming/groovy/time.md)
+
+![active choice reactive reference](../../screenshot/jenkins/active-choices-reactive-reference-parameter.gif)
+
+```groovy
+#!/usr/bin/env groovy
+
+import groovy.transform.Field
+import static groovy.json.JsonOutput.*
+
+def generateParameterDefinitions() {
+  final List newParams      = []
+  final List props          = []
+  String fallback           = "return ['script error !']"
+  String releaseIdScript    = """
+                                import java.time.LocalDateTime
+                                import java.time.format.DateTimeFormatter
+
+                                LocalDateTime ld = LocalDateTime.now()
+                                String version = ld.format( DateTimeFormatter.ofPattern('yy.MM') )
+                                String defaultValue = "v\${version}"
+
+                                return "<input name='value' placeholder='MANDATORY: example format: `v&lt;yy.MM&gt;`' value='\${defaultValue}' class='jenkins-input' type='text'>"
+                              """.stripIndent()
+  String todayScript        = """
+                                import java.time.LocalDateTime
+                                import java.time.format.DateTimeFormatter
+
+                                LocalDateTime ld = LocalDateTime.now()
+                                String today = ld.format( DateTimeFormatter.ofPattern('YYYY-MM-dd') )
+                                return "<input name='value' value='\${today}' class='setting-input' type='text'>"
+                              """.stripIndent()
+  String pathScript         = """
+                                String defaultValue = "\${today}/\${releaseId}"
+                                return "<input name='value' placeholder='MANDATORY: example format: `&lt;YYYY-MM-dd&gt;/v&lt;yy.MM&gt;`' value='\${defaultValue}' class='setting-input' type='text'>"
+                              """.stripIndent()
+  newParams += [
+                  $class : 'DynamicReferenceParameter' ,
+              choiceType : 'ET_FORMATTED_HTML'         ,
+                    name : 'releaseId'                 ,
+          omitValueField : true                        ,
+    referencedParameters : ''                          ,
+             description : 'the releaseId'             ,
+                  script : [
+                             $class         : 'GroovyScript'   ,
+                             fallbackScript : [ sandbox : true , script : fallback        ] ,
+                             script         : [ sandbox : true , script : releaseIdScript ]
+                           ]
+  ]
+
+  newParams += [
+                  $class : 'DynamicReferenceParameter' ,
+              choiceType : 'ET_FORMATTED_HIDDEN_HTML'  ,
+                    name : 'today'                     ,
+          omitValueField : true                        ,
+    referencedParameters : ''                          ,
+             description : 'the hidden params of today\'s date in format of &lt;YYYY-MM-dd&gt;',
+                  script : [
+                             $class         : 'GroovyScript'   ,
+                             fallbackScript : [ sandbox : true , script : fallback    ] ,
+                             script         : [ sandbox : true , script : todayScript ]
+                           ]
+  ]
+
+  newParams += [
+                  $class : 'DynamicReferenceParameter' ,
+              choiceType : 'ET_FORMATTED_HTML'         ,
+                    name : 'path'                      ,
+          omitValueField : true                        ,
+    referencedParameters : 'releaseId,today'           ,
+             description : 'the path'                  ,
+                  script : [
+                             $class         : 'GroovyScript'   ,
+                             fallbackScript : [ sandbox : true , script : fallback   ] ,
+                             script         : [ sandbox : true , script : pathScript ]
+                           ]
+  ]
+  props += [ $class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams ]
+  properties( properties: props )
+}
+
+generateParameterDefinitions()
+
+println prettyPrint(toJson( params.collect { "${it.key} ~~> ${it.value}" } ))
+
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
+```
+
+- `createDynamicReferenceDefinition` function
+  ```groovy
+  def createDynamicReferenceDefinition( String name        ,
+                                        String reference   ,
+                                        String groovy      ,
+                                        String fallback    ,
+                                        String description ,
+                                        String choiceType  ,
+                                        Boolean omit
+  ) {
+    List<String> choiceTypes = [ 'ET_TEXT_BOX', 'ET_ORDERED_LIST', 'ET_UNORDERED_LIST',  'ET_FORMATTED_HTML', 'ET_FORMATTED_HIDDEN_HTML' ]
+    if ( ! choiceTypes.contains(choiceType) ) util.showError( "choiceType MUST be one of ${choiceTypes}.join(', ') !" )
+
+    [
+                    $class : 'DynamicReferenceParameter' ,
+                choiceType : choiceType                  ,
+                      name : name                        ,
+            omitValueField : omit                        ,
+      referencedParameters : reference                   ,
+               description : description                 ,
+                    script : [
+                               $class         : 'GroovyScript'   ,
+                               fallbackScript : [ sandbox : true , script : fallback ] ,
+                               script         : [ sandbox : true , script : groovy   ]
+                             ]
+    ]
+  }
+
+  /**
+   * omit is true by default
+  **/
+  def createDynamicReferenceDefinition( String name, String reference, String groovy, String fallback, String description, String choiceType ) {
+    createDynamicReferenceDefinition( name, reference, groovy, fallback, description, choiceType, true )
+  }
+  ```
+
+- full jenkinsfile
+  ```groovy
+  #!/usr/bin/env groovy
+
+  import groovy.transform.Field
+  import static groovy.json.JsonOutput.*
+
+  def createDynamicReferenceDefinition( String name        ,
+                                        String reference   ,
+                                        String groovy      ,
+                                        String fallback    ,
+                                        String description ,
+                                        String choiceType  ,
+                                        Boolean omit
+  ) {
+    List<String> choiceTypes = [ 'ET_TEXT_BOX', 'ET_ORDERED_LIST', 'ET_UNORDERED_LIST',  'ET_FORMATTED_HTML', 'ET_FORMATTED_HIDDEN_HTML' ]
+    if ( ! choiceTypes.contains(choiceType) ) util.showError( "choiceType MUST be one of ${choiceTypes}.join(', ') !" )
+
+    [
+                    $class : 'DynamicReferenceParameter' ,
+                choiceType : choiceType                  ,
+                      name : name                        ,
+            omitValueField : omit                        ,
+      referencedParameters : reference                   ,
+               description : description                 ,
+                    script : [
+                               $class         : 'GroovyScript'   ,
+                               fallbackScript : [ sandbox : true , script : fallback ] ,
+                               script         : [ sandbox : true , script : groovy   ]
+                             ]
+    ]
+  }
+
+  def createDynamicReferenceDefinition( String name, String reference, String groovy, String fallback, String description, String choiceType ) {
+    createDynamicReferenceDefinition( name, reference, groovy, fallback, description, choiceType, true )
+  }
+
+  def generateParameterDefinitions() {
+    final List newParams = []
+    final List props     = []
+    String fallback      = "return ['script error !']"
+    String releaseId     = """
+                             import java.time.LocalDateTime
+                             import java.time.format.DateTimeFormatter
+
+                             LocalDateTime ld = LocalDateTime.now()
+                             String version = ld.format( DateTimeFormatter.ofPattern('yy.MM') )
+                             String defaultValue = "v\${version}"
+
+                             return "<input name='value' placeholder value='\${defaultValue}' class='jenkins-input' type='text'>"
+                           """.stripIndent()
+    String today         = """
+                             import java.time.LocalDateTime
+                             import java.time.format.DateTimeFormatter
+
+                             LocalDateTime ld = LocalDateTime.now()
+                             String today = ld.format( DateTimeFormatter.ofPattern('YYYY-MM-dd') )
+                             return "<input name='value' value='\${today}' class='setting-input' type='text'>"
+                           """.stripIndent()
+    String path          = """
+                             String defaultValue = "\${today}/\${releaseId}"
+                             return "<input name='value' placeholder='MANDATORY: example format: `&lt;YYYY-MM-dd&gt;/&lt;yy.MM&gt;`' value='\${defaultValue}' class='setting-input' type='text'>"
+                           """.stripIndent()
+
+    newParams += createDynamicReferenceDefinition( 'releaseId' , ''                , releaseId , fallback , '' , 'ET_FORMATTED_HTML'        )
+    newParams += createDynamicReferenceDefinition( 'today'     , ''                , today     , fallback , '' , 'ET_FORMATTED_HIDDEN_HTML' )
+    newParams += createDynamicReferenceDefinition( 'path'      , 'releaseId,today' , path      , fallback , '' , 'ET_FORMATTED_HTML'        )
+
+    props += [ $class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams ]
+    properties( properties: props )
+  }
+
+  generateParameterDefinitions()
+
+  println prettyPrint(toJson( params.collect { "${it.key} ~~> ${it.value}" } ))
+
+  // vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
+  ```
+
+## file paramter
 
 > [!NOTE|label:references]
 > - [* jenkinsci/file-parameters-plugin](https://github.com/jenkinsci/file-parameters-plugin)
@@ -152,7 +370,7 @@ properties([
 > - [How to overcome Jenkins pipeline inability to use file parameters](https://gvasanka.medium.com/how-to-overcome-jenkins-pipeline-inability-to-use-file-parameters-c46ba8cc3aec)
 > - [janvrany/jenkinsci-unstashParam-library](https://github.com/janvrany/jenkinsci-unstashParam-library)
 
-#### create file parameter
+### create file parameter
 ```groovy
 final List props     = []
 final List newParams = []
@@ -164,7 +382,7 @@ properties( properties: props )
 properties([ parameters([ stashedFile('FILE') ]) ])
 ```
 
-#### use file parameter
+### use file parameter
 ```groovy
 /**
  * get the original filename who was uploaded via File Parameter
@@ -195,7 +413,7 @@ Boolean unstashFile( String name ) {
 }
 ```
 
-### hidden parameter
+## hidden parameter
 
 > [!NOTE|label:references:]
 > - [Hidden Parameter](https://plugins.jenkins.io/hidden-parameter/)
@@ -218,7 +436,7 @@ Boolean unstashFile( String name ) {
   ])
   ```
 
-### mixed parameters
+## mixed parameters
 
 > [!NOTE|label:references:]
 > - [`$class: 'ValidatingStringParameterDefinition'`](https://stackoverflow.com/a/48303205/2940319)
@@ -301,7 +519,7 @@ String getFilename( String name ) {
 }
 ```
 
-### [Jenkins 2.0 pipeline: Scripting active parameters for SCM](https://technology.amis.nl/continuous-delivery/jenkins-2-0-pipeline-scripting-active-parameters-for-scm/)
+## [Jenkins 2.0 pipeline: Scripting active parameters for SCM](https://technology.amis.nl/continuous-delivery/jenkins-2-0-pipeline-scripting-active-parameters-for-scm/)
 ```groovy
 import groovy.transform.Field
 import org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SecureGroovyScript
