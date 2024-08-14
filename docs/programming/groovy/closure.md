@@ -6,10 +6,15 @@
 - [curry](#curry)
 - [Memoization](#memoization)
 - [composition](#composition)
+  - [double composition](#double-composition)
+  - [triple composition](#triple-composition)
 - [methods](#methods)
 - [delegate](#delegate)
 - [tricky](#tricky)
+  - [`this`](#this)
+  - [using Map to define the actions](#using-map-to-define-the-actions)
 - [example](#example)
+  - [Closure return Closure](#closure-return-closure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -39,7 +44,7 @@
 > ```
 {% endhint %}
 
-### [Closure VS. Method](https://www.baeldung.com/groovy-closures)
+## [Closure VS. Method](https://www.baeldung.com/groovy-closures)
 > closures have benefits over regular methods and are a powerful feature of Groovy:
 > - We can pass a Closure as an argument to a method
 > - Unary closures can use the implicit it parameter
@@ -62,7 +67,7 @@
   }
   ```
 
-### [break from closure](https://stackoverflow.com/a/19414187/2940319)
+## [break from closure](https://stackoverflow.com/a/19414187/2940319)
 {% hint style='tip' %}
 > tips:
 > - `return` means continue
@@ -82,7 +87,7 @@ list.any { element ->
 }
 ```
 
-### curry
+## curry
 - left curry
   ```groovy
   def multiply = { x, y -> return x * y }
@@ -149,7 +154,7 @@ list.any { element ->
     h: 4
     ```
 
-### Memoization
+## Memoization
 
 {% hint style='tip' %}
 **Fibonacci suite** :
@@ -179,8 +184,8 @@ list.any { element ->
   12586269025
   ```
 
-### composition
-#### double composition
+## composition
+### double composition
 ```groovy
 def plus2  = { it + 2 }
 def times3 = { it * 3 }
@@ -237,7 +242,7 @@ assert plus2times3(3) == times3(plus2(3))
     assert [2,4,5].inject(1, { a, b -> a + b }) == 12
     ```
 
-#### triple composition
+### triple composition
 ```groovy
 def multiply    = { x, y -> return x * y }
 def triple      = multiply.curry(3)
@@ -247,7 +252,7 @@ def twelveTimes = composition.curry(triple, quadruple)      //  twelveTimes = { 
 def threeDozen  = twelveTimes(3)
 ```
 
-### methods
+## methods
 - various method to call closure
   ```groovy
   def work( String input, Closure cl ) {
@@ -307,15 +312,15 @@ def threeDozen  = twelveTimes(3)
         gender : female
     ```
 
-  or
-  ```groovy
-  on('marslo').skip()
+  - or
+    ```groovy
+    on('marslo').skip()
 
-  // result
-  no params. skip
-  ```
+    // result
+    no params. skip
+    ```
 
-### delegate
+## delegate
 
 > [!NOTE]
 > references:
@@ -347,8 +352,8 @@ result = list.collectWithIndex { it, index -> "${index + 1}. ${it}" }
   }
   ```
 
-### tricky
-#### `this`
+## tricky
+### `this`
 ```groovy
 class Enclosing {
   void run() {
@@ -364,8 +369,61 @@ Enclosing e = new Enclosing()
 e.run()
 ```
 
-### example
-#### Closure return Closure
+### using Map to define the actions
+```groovy
+Map actions = [
+  'a': [ 'foo', 'bar' ],
+  'b': [ 'foo' ],
+  'c': [ 'bar' ]
+]
+
+def actionFunc() {
+  Closure aFoo = { -> println ".. foo" }
+  Closure aBar = { -> println ".. bar" }
+
+  [
+    'foo': { aFoo() },
+    'bar': { aBar() }
+  ]
+}
+
+// execute actions with associated closure
+actions.each {
+  println ">> ${it.key}:"
+  it.value.each { v -> actionFunc()["${v}"].call() }
+}
+```
+
+- results:
+  ```
+  >> a:
+  .. foo
+  .. bar
+  >> b:
+  .. foo
+  >> c:
+  .. bar
+  ```
+
+- same as using switch-case:
+  ```
+  actions.each {
+    println ">> ${it.key}:"
+    it.value.each { v ->
+      switch ( v ) {
+        case "foo":
+          actionFunc().foo()
+          break
+        case "bar":
+          actionFunc().bar()
+          break
+      }
+    }
+  }
+  ```
+
+## example
+### Closure return Closure
 - simple
   ```groovy
   def withClosure( Object object, Closure body ) {
