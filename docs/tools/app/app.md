@@ -14,6 +14,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## recommend apps
+
+> [!NOTE|label:references:]
+> - [XXMac](https://www.xxmac.com/) | 如遇打开下载文件需要密码为: `xxmac.com`
+>   - [GIF Brewery for Mac v3.9.5 英文破解 GIF制作工具](https://www.xxmac.com/gif-brewery.html) | [提取码: `iasr`](https://pan.baidu.com/s/1aPJCP4cRn0JbYLgU83rTRg) | [提取码: `tjtd`](https://pan.baidu.com/s/1cyG-bXc6NbCRZzfTAX9IBw?pwd=tjtd)
+>   - [Boxy SVG for Mac v4.37.0 英文破解 矢量图形编辑工具](https://www.xxmac.com/boxy-svg.html) | [提取码: `yqpy`](https://pan.baidu.com/s/11ft9BUO4vF4iJ9c128xOcw?pwd=yqpy)
+>   - [GIF’ted for Mac v1.1.3 英文破解 把视频做成GIF动画](https://www.xxmac.com/gifted.html) | [提取码: `nw2i`](https://pan.baidu.com/s/1KKONAMqvVvJjk3g34Jk-Nw)
+> - [MacX苹果电脑资讯站](https://www.macw.cn/down-view-2309-16157.html)
+
 ### screenshot
 - [jietu](https://jietu.qq.com/)
 - [snagit](https://www.techsmith.com/screen-capture.html)
@@ -34,6 +42,8 @@
 ### gif
 - [GIF Brewery 3 by Gfycat](https://gfycat.com/gifbrewery)
   > caches: `$HOME/Movies/GIF Brewery 3/*.mp4`
+  > - [GIF Brewery 3.9.5 功能强大的动图制作工具](https://xclient.info/s/gif-brewery.html) | [城通网盘](https://xclient.info/s/gif-brewery.html?a=dl&v=3.9.5&k=1&t=f7cda89238e1e645bdc60f7c5337e0fa629b8ddf) | [提取码: `456641`](https://url64.ctfile.com/f/13114864-656132467-6eacce?p=456641)
+  >   - 本站DMG、zip统一打开密码: `xclient.info`
 
   - [cn](https://apps.apple.com/cn/app/gif-brewery-3-by-gfycat/id1081413713?l=en&mt=12)
   - [us](https://apps.apple.com/us/app/gif-brewery-3-by-gfycat/id1081413713?mt=12)

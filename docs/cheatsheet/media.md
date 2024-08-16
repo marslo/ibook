@@ -18,6 +18,9 @@
   - [convert svg to png](#convert-svg-to-png)
   - [convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
   - [sed command to batch change fill and stroke of an SVG](#sed-command-to-batch-change-fill-and-stroke-of-an-svg)
+- [animation flow chart](#animation-flow-chart)
+  - [create animation flow](#create-animation-flow)
+  - [convert svg to gif](#convert-svg-to-gif)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -285,3 +288,47 @@ sed -i "s/<path/<path fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
   sed -i -E "s/stroke\:[^\;]+/stroke\:$COLOR/g" *.svg
   sed -i -E "s/fill\:\#[0-9]+/fill\:$COLOR/g" *.svg
   ```
+
+## animation flow chart
+
+### create animation flow
+
+> [!NOTE|label:references:]
+> - [#3739 - Export as a GIF](https://github.com/jgraph/drawio/issues/3739)
+> - [如何用drawio让自己的流程图线条产生动起来的效果](https://blog.csdn.net/Iammiky/article/details/113636410)
+> - [processflow.sharehoo.cn](https://processflow.sharehoo.cn/)
+
+- [draw.io](https://www.draw.io/)
+
+  ![flow animation](../screenshot/osx/svg/draw.io.flow.animation.gif)
+
+- export to svg
+
+  ![export to svg](../screenshot/osx/svg/draw.io.export.to.svg.png)
+
+### convert svg to gif
+
+- online tools
+
+  > [!NOTE|label:references:]
+  > - [Convert animated SVG to GIF free](https://medium.com/@somendraitgroup/convert-animated-svg-to-gif-free-3bf25f037f66)
+
+  - convert svg to gif with watermark in [html5animationtogif.com](https://html5animationtogif.com/svg-to-gif)
+    - increase the SVG image height to make the watermark shows below of original image
+
+    ![without increase height](../screenshot/osx/svg/html5animationtogif.com.without.increase.height.gif)
+
+    ![increase height](../screenshot/osx/svg/html5animationtogif.com.increase.height.gif)
+
+
+  - crop the watermark in [animated GIF editor and Gif maker](https://ezgif.com/crop)
+
+    ![crop gif](../screenshot/osx/svg/crop-gif.gif)
+
+- local tools
+
+  - chrome extension: [Chrome Capture - screenshot & GIF](https://chromewebstore.google.com/detail/ggaabchcecdbomdcnbahdfddfikjmphe)
+  - desktop application: [GIF Brewery](https://www.tumblr.com/gifbrewery): `.045s`, `0.50s` or `0.52s`
+    - [GIF Brewery for Mac v3.9.5 英文破解 GIF制作工具](https://www.xxmac.com/gif-brewery.html)
+      - [提取码: `iasr`](https://pan.baidu.com/s/1aPJCP4cRn0JbYLgU83rTRg)
+    - [Gifox](https://gifox.app/)
