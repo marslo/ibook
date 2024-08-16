@@ -52,6 +52,7 @@
   - [execute shell commands via ssh](#execute-shell-commands-via-ssh)
     - [ctrl-c to break while loop](#ctrl-c-to-break-while-loop)
     - [execute local script via ssh](#execute-local-script-via-ssh)
+  - [how ssh works](#how-ssh-works)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -67,6 +68,7 @@
 > - [ssh key](https://wiki.archlinux.org/index.php/SSH_keys)
 > - [6 ssh authentication methods to secure connection (sshd_config)](https://www.golinuxcloud.com/openssh-authentication-methods-sshd-config/)
 > - [8 ways to prevent brute force SSH attacks in Linux (CentOS/RHEL 7)](https://www.golinuxcloud.com/prevent-brute-force-ssh-attacks-centos-linux/)
+> - [* SSH 是如何工作的](https://mp.weixin.qq.com/s/oC3cD_xo5mWK-jYPtU_uhQ) | [How does SSH work](https://blog.bytebytego.com/p/ep124-how-does-ssh-work)
 {% endhint %}
 
 # ssh key
@@ -846,3 +848,7 @@ trap exit SIGINT SIGTERM; while read -r _node; do
   eval "${sshCmd}"
 done <<< "${hostname}"
 ```
+
+## [how ssh works](https://blog.bytebytego.com/p/ep124-how-does-ssh-work)
+
+![how ssh works](../screenshot/linux/ssh/how-ssh-works.webp)
