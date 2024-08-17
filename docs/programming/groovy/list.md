@@ -53,7 +53,7 @@ println( ('a'..'z').collect() )
 
 > [!NOTE]
 > references:
-> - [java.util.List](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/List.html#transpose())
+> - [java.util.List](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/List.html#transpose%28%29)
 > - [Groovy Goodness: the Grep Method](https://blog.mrhaki.com/2009/08/groovy-goodness-grep-method.html)
 
 ### a list contains a sublist or not
@@ -161,8 +161,8 @@ println parent.first()
 ```groovy
 List list = [ '1', '2', '3', 'a', 'b' ]
 Random random = new Random()
-println list.get(random.nextInt(list.size()))
-println list.get(random.nextInt(list.size()))
+println list.get( random.nextInt(list.size()) )
+println list.get( random.nextInt(list.size()) )
 
 // result
 // 1
@@ -340,13 +340,13 @@ assert [ '3', '1', '2' ] == l.swap(2, 1).swap(1, 0)
 
 > [!NOTE|label:references:]
 > - [Class groovy.util.GroovyCollections](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html)
->   - [combinations()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#combinations(java.lang.Iterable))
->   - [transpose()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#transpose(java.util.List))
->   - [sum()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#sum(java.lang.Iterable))
->   - [max()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#max(java.lang.Iterable))
->   - [min()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#min(java.lang.Iterable))
->   - [union()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#union(groovy.lang.Closure,java.lang.Iterable...))
->   - [subsequences()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#subsequences(java.util.List))
+>   - [combinations()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#combinations%28.java.lang.Iterable%29)
+>   - [transpose()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#transpose%28.java.util.List%29)
+>   - [sum()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#sum%28.java.lang.Iterable%29)
+>   - [max()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#max%28.java.lang.Iterable%29)
+>   - [min()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#min%28.java.lang.Iterable%29)
+>   - [union()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#union(groovy.lang.Closure,java.lang.Iterable...%29)
+>   - [subsequences()](https://docs.groovy-lang.org/latest/html/api/groovy/util/GroovyCollections.html#subsequences%28.java.util.List%29)
 
 ### `toSpreadMap` to Map
 ```groovy
@@ -364,7 +364,7 @@ assert [ '3', '1', '2' ] == l.swap(2, 1).swap(1, 0)
 
 > [!NOTE]
 > references:
-> - [list.transpose()](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/List.html#transpose())
+> - [list.transpose()](http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/List.html#transpose%28%29)
 > - [List.transpose() works like zip](https://stackoverflow.com/a/4586700/2940319)
 
 ```groovy
@@ -449,7 +449,7 @@ Map<String, String> reference = [
       .split('_')
       .collect {
           String c = it.trim()
-          reference.get(c) ? it.replace(c, reference.get(c)) : it
+          reference.get(c) ? it.replace( c, reference.get(c) ) : it
        }
       .join()
 
@@ -558,6 +558,7 @@ after
 ```
 
 ### show 2D list in alignment
+
 ```groovy
 List<List<String>> list = [
   [ 'aaaaaaaaaaa', 'bbbbbbbbbbbbbbbbb', 'cccccccccccccccccccccc' ],
@@ -571,9 +572,9 @@ println list.withIndex().collect { raw, idx ->
   }
 }.findAll().join('\n')
 
--- result --
-aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc
-1111        | 2222222222        | 3333333333
+// -- result --
+// aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc
+// 1111        | 2222222222        | 3333333333
 ```
 
 - or with table format
@@ -584,7 +585,6 @@ aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc
     [ '1111', '2222222222', '3333333333' ]
   ]
 
-
   list.add( 0, title )
   list.add( 0, list.transpose().collect { column -> column.collect{ it.size() }.max() } )
 
@@ -594,10 +594,10 @@ aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc
     }
   }.findAll().join( '\n' )
 
-  -- result --
-  | AGENT NAME  | NODE CREDENTIAL   | COMPUTER CREDENTIIAL   |
-  | aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc |
-  | 1111        | 2222222222        | 3333333333             |
+  // -- result --
+  // | AGENT NAME  | NODE CREDENTIAL   | COMPUTER CREDENTIIAL   |
+  // | aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc |
+  // | 1111        | 2222222222        | 3333333333             |
   ```
 
 - or
@@ -621,9 +621,9 @@ aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc
   println showTable( [ list.head(), list.head().collect { '-'*it.size() } ] )
   println showTable( list.tail() )
 
-  -- result --
-  | AGENT NAME  | NODE CREDENTIAL   | COMPUTER CREDENTIIAL   |
-  | ----------- | ----------------- | ---------------------- |
-  | aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc |
-  | 1111        | 2222222222        | 3333333333             |
+  // -- result --
+  // | AGENT NAME  | NODE CREDENTIAL   | COMPUTER CREDENTIIAL   |
+  // | ----------- | ----------------- | ---------------------- |
+  // | aaaaaaaaaaa | bbbbbbbbbbbbbbbbb | cccccccccccccccccccccc |
+  // | 1111        | 2222222222        | 3333333333             |
   ```

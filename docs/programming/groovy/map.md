@@ -26,6 +26,7 @@
 - [sort](#sort)
 - [traverse](#traverse)
 - [subMap](#submap)
+- [transpose](#transpose)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -506,11 +507,14 @@ def findValues( Map map, String keyword ) {
     [ name:'Jim'   , age:54   ] ,
     [ name:'Smith' , age:'53' ]
   ].collectEntries {[ it.name, it.age ]}
+  // result: [ 'John':35, 'Jim':54, 'Smith':'53' ]
+
+  // AND
+  [ ['hi': 1], ['hello': 2], ['bello': 3] ].collectEntries()
+  // or
+  [ ['hi': 1], ['hello': 2], ['bello': 3] ].sum()
+  // result: ['hi':1, 'hello':2, 'bello':3]
   ```
-  - result
-    ```
-    [ 'John':35, 'Jim':54, 'Smith':'53' ]
-    ```
 
 - merge two `List<String>` to single `Map<String, List<String>>`
   ```groovy
@@ -659,3 +663,36 @@ assert [ two: 2, three: 3 ] == m.subMap('two', 'three')
 // or even simple syntax
 m.subMap 'two', 'three', 'non-existent'
 ```
+
+## transpose
+
+> [!NOTE|label:references:]
+> - [Groovy Map of Lists into List of Maps](https://stackoverflow.com/a/15774835/2940319)
+>   ```groovy
+>   [                   ╮  [
+>     a: [ "c", "d" ],  ├    [ a: "c", b: "e" ],
+>     b: [ "e", "f" ]   ├    [ a: "d", b: "f" ]
+>   ]                   ╯  ]
+>
+>   ```
+>   assume: `Map x = [ a: [ "c","d" ], b: [ "e","f" ] ]`
+
+- jenkins solution
+  ```groovy
+  [ x.keySet() as List, x.values() as List ].transpose()                     // [['a', ['c', 'd']], ['b', ['e', 'f']]]
+                                            .collect { it.combinations() }   // [[['a', 'c'], ['a', 'd']], [['b', 'e'], ['b', 'f']]]
+                                            .transpose()                     // [[['a', 'c'], ['b', 'e']], [['a', 'd'], ['b', 'f']]]
+                                            .collect { it.flatten() }        // [['a', 'c', 'b', 'e'], ['a', 'd', 'b', 'f']]
+                                            .collect { it.toSpreadMap() }    // [['a':'c', 'b':'e'], ['a':'d', 'b':'f']]
+  ```
+
+- groovy solution
+  ```groovy
+  [ x*.key, x*.value ].transpose()*.combinations().transpose()*.flatten()*.toSpreadMap()
+  //                       ∙              ∙            ∙           ∙           ∙
+  //                       │              │            │           │           └─> // [['a':'c', 'b':'e'], ['a':'d', 'b':'f']]
+  //                       │              │            │           └─> // [['a', 'c', 'b', 'e'], ['a', 'd', 'b', 'f']]
+  //                       │              │            └─> // [[['a', 'c'], ['b', 'e']], [['a', 'd'], ['b', 'f']]]
+  //                       │              └─> // [[['a', 'c'], ['a', 'd']], [['b', 'e'], ['b', 'f']]]
+  //                       └─> // [['a', ['c', 'd']], ['b', ['e', 'f']]]
+  ```
