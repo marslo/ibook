@@ -490,6 +490,41 @@ total 4.0K
 -rw-r--r-- 1 marslo marslo 10 Feb 21 00:43 a_b
 ```
 
+- [delete string with find](https://unix.stackexchange.com/a/33282/29178)
+  ```bash
+  $ for file in sw.ras.*; do mv "$file" "${file/ras./}"; done
+  ```
+
+- `/usr/local/bin/rename` in OSX
+  ```bash
+  $ /usr/local/bin/rename -v 's/_xyz.com//g' *.txt
+  'a_xyz.com.txt' renamed to 'a.txt'
+  'b_xyz.com.txt' renamed to 'b.txt'
+  'c_xyz.com.txt' renamed to 'c.txt'
+  'd_xyz.com.txt' renamed to 'd.txt'
+  'e_xyz.com.txt' renamed to 'e.txt'
+  'f_xyz.com.txt' renamed to 'f.txt'
+  'g_xyz.com.txt' renamed to 'g.txt'
+  'h_xyz.com.txt' renamed to 'h.txt'
+  ```
+
+- [`rename` from `util-linux`](https://stackoverflow.com/q/31408764/2940319)
+
+  > [!NOTE|label:references:]
+  > - [Rename multiple files based on pattern in Unix](https://stackoverflow.com/a/1086509/2940319)
+
+  ```bash
+  $ /usr/local/opt/util-linux/bin/rename -v '_xyz.com' '' *.ttf
+  `a_xyz.com.ttf' -> `a.ttf'
+  `b_xyz.com.ttf' -> `b.ttf'
+  `c_xyz.com.ttf' -> `c.ttf'
+  `d_xyz.com.ttf' -> `d.ttf'
+  `e_xyz.com.ttf' -> `e.ttf'
+  `f_xyz.com.ttf' -> `f.ttf'
+  `g_xyz.com.ttf' -> `g.ttf'
+  `h_xyz.com.ttf' -> `h.ttf'
+  ```
+
 ### xargs rename
 ```bash
 $ shopt -s extglob
