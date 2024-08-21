@@ -258,6 +258,8 @@ properties([
 > - [Active Choices Reactive Reference Parameter in jenkins pipeline](https://stackoverflow.com/a/54104278/2940319)
 > - [Jenkins实践指南-10-Jenkins 插件](https://www.cnblogs.com/surpassme/p/17029269.html)
 > - [Class CascadeChoiceParameter](https://javadoc.jenkins.io/plugin/uno-choice/org/biouno/unochoice/CascadeChoiceParameter.html)
+> - [* iMarslo: convert Map to String](../../programming/groovy/map.md#convert-map-to-string)
+> - [* iMarslo: keeping quotes in Map or List](../../programming/groovy/sugar.md#keeping-quotes-in-map-or-list)
 
 ![Active Choices Reactive Parameter](../../screenshot/jenkins/active-choices-reactive-parameter.gif)
 
@@ -294,24 +296,19 @@ def createCascadeChoiceDefinition( String name        ,
   ]
 }
 
+@Field final Map<String, List<String>> map = [
+  'CA:selected' : [ 'Los Angeles' , 'San Diego'   , 'San Francisco:selected' ] ,
+  'NY'          : [ 'New York'    , 'Hempstead'                              ] ,
+  'TX'          : [ 'Houston'     , 'San Antonio' , 'Dallas'                 ]
+]
+
 def generateParameterDefinitions() {
   final List newParams = []
   final List props     = []
   String fallback      = "return ['script error !']"
-  String states        = """
-                          Map<String, List<String>> map = [
-                            'CA:selected' : [ 'Los Angeles' , 'San Diego'   , 'San Francisco:selected' ] ,
-                            'NY'          : [ 'New York'    , 'Hempstead'                              ] ,
-                            'TX'          : [ 'Houston'     , 'San Antonio' , 'Dallas'                 ]
-                          ]
-                          return map.keySet().toList()
-                         """.stripIndent()
+  String states        = "return ${map.inspect()}.keySet().toList()"
   String cities        = """
-                          Map<String, List<String>> map = [
-                            'CA:selected' : [ 'Los Angeles' , 'San Diego'   , 'San Francisco:selected' ] ,
-                            'NY'          : [ 'New York'    , 'Hempstead'                              ] ,
-                            'TX'          : [ 'Houston'     , 'San Antonio' , 'Dallas'                 ]
-                          ]
+                           Map<String, List<String>> map = ${map.inspect()}
                            return states.split(',').collect { e ->
                              map.find{ it.key.startsWith(e) }.value.collect{ "\${e}:\${it}".toString() }
                            }.flatten()
