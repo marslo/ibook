@@ -27,6 +27,8 @@
   - [`brew gist-log`](#brew-gist-log)
   - [get formula info](#get-formula-info)
   - [check homebrew env](#check-homebrew-env)
+- [troubleshooting](#troubleshooting)
+  - [`would clobber existing tag`](#would-clobber-existing-tag)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -878,3 +880,28 @@ HOMEBREW_SDKROOT: /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
 ACLOCAL_PATH: /usr/local/share/aclocal
 PATH: /usr/local/Homebrew/Library/Homebrew/shims/mac/super:/usr/bin:/bin:/usr/sbin:/sbin
 ```
+
+## troubleshooting
+
+### `would clobber existing tag`
+
+```bash
+$ brew install --HEAD neovim
+...
+==> Cloning https://github.com/neovim/neovim.git
+Updating /Users/marslo/Library/Caches/Homebrew/neovim--git
+From https://github.com/neovim/neovim
+ ! [rejected]            nightly    -> nightly  (would clobber existing tag)
+ ! [rejected]            stable     -> stable  (would clobber existing tag)
+Error: neovim: Failed to download resource "neovim"
+Failure while executing; `/usr/bin/env git fetch origin` exited with 1. Here's the output:
+From https://github.com/neovim/neovim
+ ! [rejected]            nightly    -> nightly  (would clobber existing tag)
+ ! [rejected]            stable     -> stable  (would clobber existing tag)
+```
+
+- solution
+  ```bash
+  $ rm -rf /Users/marslo/Library/Caches/Homebrew/neovim--git
+  $ brew install --HEAD neovim
+  ```
