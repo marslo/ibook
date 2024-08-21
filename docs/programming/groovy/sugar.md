@@ -16,6 +16,7 @@
   - [generate the random String](#generate-the-random-string)
   - [dynamic method names](#dynamic-method-names)
   - [`instanceof`](#instanceof)
+  - [keeping quotes in Map or List](#keeping-quotes-in-map-or-list)
 - [method and class](#method-and-class)
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
@@ -527,6 +528,45 @@ assert clz.isAssignableFrom( [:].getClass() ) == false
 assert clz.isInstance( '' )
 assert clz.isInstance( [] ) == false
 ```
+
+### keeping quotes in Map or List
+
+> [!NOTE|label:references:]
+> - [Add double quotes to list of strings](https://stackoverflow.com/a/39612566/2940319)
+> - [Class Object: public String inspect()](https://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/Object.html#inspect%28%29)
+> - [groovy-lang.org: Parsing and producing JSON](https://groovy-lang.org/processing-json.html)
+
+- Map
+  ```groovy
+  Map<String, List<String>> map = [
+      'CA:selected' : [ 'Los Angeles' , 'San Diego'   , 'San Francisco:selected' ] ,
+      'NY'          : [ 'New York'    , 'Hempstead'                              ] ,
+      'TX'          : [ 'Houston'     , 'San Antonio' , 'Dallas'                 ]
+  ]
+
+  println map.inspect()
+  println new groovy.json.JsonBuilder(map).toString()
+
+  // convert json `{}` to `[]`
+  String jsonStr = new groovy.json.JsonBuilder(map).toString()
+  println jsonStr.replace('{', '[').replace('}', ']')
+
+  // result:
+  // ['CA:selected':['Los Angeles', 'San Diego', 'San Francisco:selected'], 'NY':['New York', 'Hempstead'], 'TX':['Houston', 'San Antonio', 'Dallas']]
+  // {"CA:selected":["Los Angeles","San Diego","San Francisco:selected"],"NY":["New York","Hempstead"],"TX":["Houston","San Antonio","Dallas"]}
+  // ["CA:selected":["Los Angeles","San Diego","San Francisco:selected"],"NY":["New York","Hempstead"],"TX":["Houston","San Antonio","Dallas"]]
+  ```
+
+- List
+  ```groovy
+  List list = [ 'a', 'b', 'c' ]
+  println list.inspect()
+  println new groovy.json.JsonBuilder(list).toString()
+
+  // result:
+  // ['a', 'b', 'c']
+  // ["a","b","c"]
+  ```
 
 ## method and class
 
