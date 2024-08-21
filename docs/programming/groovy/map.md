@@ -1,7 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [change Map in condition](#change-map-in-condition)
+- [subMap](#submap)
+  - [change Map in condition](#change-map-in-condition)
 - [filter](#filter)
   - [filter via condition](#filter-via-condition)
   - [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
@@ -25,8 +26,11 @@
 - [with](#with)
 - [sort](#sort)
 - [traverse](#traverse)
-- [subMap](#submap)
+- [subMap](#submap-1)
 - [transpose](#transpose)
+- [convert](#convert)
+  - [convert Json to Map](#convert-json-to-map)
+  - [convert Map to String](#convert-map-to-string)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -36,7 +40,8 @@
 > - [Groovy Cookbook: How to merge two maps in Groovy?](https://e.printstacktrace.blog/how-to-merge-two-maps-in-groovy/)
 {% endhint %}
 
-## [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
+## subMap
+### [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
 ```groovy
 [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ "${it.key}" : 4 ] : it }
 ===> [a:1, b:4, c:4]
@@ -83,25 +88,24 @@ def isTargetExists( Map m, String subKey, String value ) {
 
 Map<String, Map<String, String>> matrix = [
   dev : [
-    user: ['dev1', 'dev2', 'dev3'] ,
-    passwd: '123456',
-    customer: ['yahoo', 'bing']
+    user     : ['dev1', 'dev2', 'dev3'] ,
+    passwd   : '123456',
+    customer : ['yahoo', 'bing']
   ] ,
   staging : [
-    user: ['stg1', 'stg2', 'stg3'] ,
-    passwd: 'abcdefg' ,
-    customer: ['google', 'huawei']
+    user     : ['stg1', 'stg2', 'stg3'] ,
+    passwd   : 'abcdefg' ,
+    customer : ['google', 'huawei']
   ] ,
   prod : [
-    user: ['prod1', 'prod2', 'prod3'] ,
-    passwd: 'a1b2c3d4'
+    user   : ['prod1', 'prod2', 'prod3'] ,
+    passwd : 'a1b2c3d4'
   ]
 ]
 
 assert isTargetExists( matrix, 'user', 'dev4' ) == false
 assert isTargetExists( matrix, 'customer', 'huawei' ) == true
 ```
-
 
 ## merge two maps
 ### for `<String, List<String>>`
@@ -372,9 +376,9 @@ def findValueBelongsTo( Map map, String keyword ) {
 ## findResult & findResults
 
 {% hint style='tip' %}
-> reference:
-> - [FindResults and FindResult Methods of Groovy](https://www.tothenew.com/blog/findresults-and-findresult-methods-of-groovy/)
-> - [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
+> - reference:
+>  - [FindResults and FindResult Methods of Groovy](https://www.tothenew.com/blog/findresults-and-findresult-methods-of-groovy/)
+>  - [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
 {% endhint %}
 
 - collect: return all result (with null)
@@ -396,67 +400,57 @@ def findValueBelongsTo( Map map, String keyword ) {
 
 ### [find deep in nested map](https://stackoverflow.com/a/39749720/2940319)
 {% hint style='tip' %}
-Example Map structure:
-```groovy
-Map map = [
-  'a': [
-    'b': [
-      'c': [
-        'd' : '1',
-        'e' : '2',
-        'f' : '3'
-      ], // c
-      'g': '4',
-      'h': [
-        'i': '5',
-        'j': '6',
-        'k': '7'
-      ] // h
-    ], // b
-    'l': [
-      'm': '8',
-      'n': '9'
-    ], // l
-    'o': '10'
-  ] // a
-]
-```
+> - example map structure:
+>   ```groovy
+>   Map map = [
+>     'a': [
+>       'b': [
+>         'c': [ 'd' : '1', 'e' : '2', 'f' : '3' ],
+>         'g': '4',
+>         'h': [ 'i': '5', 'j': '6', 'k': '7' ]
+>       ],
+>       'l': [ 'm': '8', 'n': '9' ],
+>       'o': '10'
+>     ]
+>   ]
+>   ```
 {% endhint %}
 
-find value via key name recursively
-> <kbd>[try online](https://onecompiler.com/groovy/3wfvvnjbq)</kbd>
+- find value via key name recursively
 
-```groovy
-def findValues( Map map, String keyword ) {
-  map.findResult { k, v ->
-    v instanceof Map
-      ? v.containsKey(keyword) ? v.getOrDefault(keyword, null) : findValues( v, keyword )
-      : null
-  }
-}
-```
+  > <kbd>[try online](https://onecompiler.com/groovy/3wfvvnjbq)</kbd>
 
-alternatives
-```groovy
-def findValues( Map map, String keyword ) {
-  if( map.containsKey(keyword) ) return map.getOrDefault( keyword, null )
-  map.findResult { k, v -> v instanceof Map ? findValues(v, keyword) : null }
-}
-```
-
-- result
   ```groovy
-  println "~~> findValues( map, 'f' )    : ${findValues( map, 'f' )} "
-  println "~~> findValues( map, 'o' )    : ${findValues( map, 'o' )} "
-  println "~~> findValues( map, 'aaaa' ) : ${findValues( map, 'aaaa' )} "
-
-  /**
-   * console output
-   * ~~> findValues( m, 'f' )    : 3
-   * ~~> findValues( m, 'o' )    : 10
-   * ~~> findValues( m, 'aaaa' ) : null
-  **/
+  def findValues( Map map, String keyword ) {
+    map.findResult { k, v ->
+      v instanceof Map
+        ? v.containsKey(keyword) ? v.getOrDefault(keyword, null) : findValues( v, keyword )
+        : null
+    }
+  }
   ```
+
+- alternatives
+  ```groovy
+  def findValues( Map map, String keyword ) {
+    if( map.containsKey(keyword) ) return map.getOrDefault( keyword, null )
+    map.findResult { k, v -> v instanceof Map ? findValues(v, keyword) : null }
+  }
+  ```
+
+  - result
+    ```groovy
+    println "~~> findValues( map, 'f' )    : ${findValues( map, 'f' )} "
+    println "~~> findValues( map, 'o' )    : ${findValues( map, 'o' )} "
+    println "~~> findValues( map, 'aaaa' ) : ${findValues( map, 'aaaa' )} "
+
+    /**
+     * console output
+     * ~~> findValues( m, 'f' )    : 3
+     * ~~> findValues( m, 'o' )    : 10
+     * ~~> findValues( m, 'aaaa' ) : null
+    **/
+    ```
 
 - alternatives
   > <kbd>[try online](https://onecompiler.com/groovy/3wfvvv42h)</kbd>
@@ -695,4 +689,37 @@ m.subMap 'two', 'three', 'non-existent'
   //                       │              │            └─> // [[['a', 'c'], ['b', 'e']], [['a', 'd'], ['b', 'f']]]
   //                       │              └─> // [[['a', 'c'], ['a', 'd']], [['b', 'e'], ['b', 'f']]]
   //                       └─> // [['a', ['c', 'd']], ['b', ['e', 'f']]]
+  ```
+
+## convert
+
+> [!NOTE|label:references:]
+> - [Parsing and producing JSON](https://groovy-lang.org/processing-json.html)
+
+### convert Json to Map
+```groovy
+Map map = new groovy.json.JsonSlurper().parseText '''
+  { "simple": 123,
+    "fraction": 123.66,
+    "exponential": 123e12
+  }'''
+
+assert map == ['simple':123, 'fraction':123.66, 'exponential':1.23E+14]
+```
+
+### convert Map to String
+
+- `map.inspect()`
+  ```groovy
+  Map map = [ 'a':1, 'b': 'test' ]
+  assert map.inspect() == "['a':1, 'b':'test']"
+  ```
+
+- `groovy.json.JsonBuilder(map)`
+  ```groovy
+  Map map = [ 'a':1, 'b': 'test' ]
+  assert new groovy.json.JsonBuilder(map)
+                        .toString()
+                        .replace('{', '[')
+                        .replace('}', ']') == '["a":1,"b":"test"]'
   ```
