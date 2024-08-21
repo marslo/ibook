@@ -76,7 +76,11 @@
   - [add '\n' to line-ending](#add-%5Cn-to-line-ending)
 - [fold](#fold)
   - [check the params valid](#check-the-params-valid)
-- [insert new line](#insert-new-line)
+- [insert](#insert)
+  - [insert new line](#insert-new-line)
+    - [insert right after the second match string](#insert-right-after-the-second-match-string)
+    - [insert after the matched string](#insert-after-the-matched-string)
+  - [insert new line base on pattern](#insert-new-line-base-on-pattern)
 - [write a file without indent space](#write-a-file-without-indent-space)
 - [cat](#cat)
   - [`<< -` and `<<`](#---and-)
@@ -2684,8 +2688,9 @@ for _p in $(echo "${param}" | fold -w1); do
 done
 ```
 
-# insert new line
-- insert right after the second match string
+# insert
+## insert new line
+### insert right after the second match string
 
 {% codetabs name="original", type="bash" -%}
 DCR
@@ -2701,6 +2706,129 @@ DCR
 ```bash
 $ echo -e "DCR\nDCR\nDCR" | awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2) { print "check" } }'
 ```
+
+### insert after the matched string
+
+- with `gsub`
+  ```bash
+  $ cat project.config |
+    awk '{
+      gsub( /.+access .(refs\/for\/|\^)refs\/heads\/main.+$/,
+            "&\n\tpush = block group Registered Users\n\tsubmit = block group Registered Users\n\tpushMerge = block group Registered Users",
+            $0 )
+    }1'
+  ```
+
+  <!--sec data-title="awk with gsub" data-id="section1" data-show=true data-collapse=true ces-->
+  <table><thead>
+    <tr>
+      <th style="text-align: center; vertical-align: middle;"><b>ORIGINAL</b></th>
+      <th style="text-align: center; vertical-align: middle;"><b>AFTER INSERT</b></th>
+    </tr></thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center; vertical-align: middle;"><pre><code>$ cat project.config</code></pre></td>
+      <td style="text-align: center; vertical-align: middle;"><pre><code>$ cat project.config | awk '{<br>      gsub( /.+access .(refs\/for\/|\^)refs\/heads\/main.+$/,<br>            "&amp;\n\t---a---\n\t---b---",<br>            $0 )<br>      }1'</code></pre></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: middle;"><pre><code>[access "^refs/heads/main"]<br>        label-Code-Review = -2..+2 group user/John Doe (jdoe)<br>        label-Verified = -1..+1 group user/John Doe (jdoe)<br>        push = group user/John Doe (jdoe)<br>        submit = group user/John Doe (jdoe)<br>[access "refs/for/refs/heads/main"]<br>        push = group user/John Doe (jdoe)<br>        addPatchSet = group user/John Doe (jdoe)<br>        abandon = group user/John Doe (jdoe)<br>        deleteOwnChanges = group user/John Doe (jdoe)<br>        editAssignee = group user/John Doe (jdoe)<br>        editTopicName = group user/John Doe (jdoe)<br>        label-Code-Review = -2..+2 group user/John Doe (jdoe)<br>        label-Verified = -1..+1 group user/John Doe (jdoe)<br>        owner = group user/John Doe (jdoe)<br>        read = group user/John Doe (jdoe)<br>        removeReviewer = group user/John Doe (jdoe)<br>        submit = group user/John Doe (jdoe)<br>        create = group user/John Doe (jdoe)<br>        pushMerge = group user/John Doe (jdoe)<br>[access "^refs/heads/user/jdoe/.*"]<br>        label-Code-Review = -2..+2 group user/John Doe (jdoe)<br>        label-Verified = -1..+1 group user/John Doe (jdoe)<br>        push = group user/John Doe (jdoe)<br>        submit = group user/John Doe (jdoe</code></pre></td>
+      <td style="vertical-align: middle;"><pre><code>[access "^refs/heads/main"]<br>        <font style="color:red">---a---<br>        ---b---</font><br>        label-Code-Review = -2..+2 group user/John Doe (jdoe)<br>        label-Verified = -1..+1 group user/John Doe (jdoe)<br>        push = group user/John Doe (jdoe)<br>        submit = group user/John Doe (jdoe)<br>[access "refs/for/refs/heads/main"]<br>        <font style="color:red">---a---<br>        ---b---</font><br>        push = group user/John Doe (jdoe)<br>        addPatchSet = group user/John Doe (jdoe)<br>        abandon = group user/John Doe (jdoe)<br>        deleteOwnChanges = group user/John Doe (jdoe)<br>        editAssignee = group user/John Doe (jdoe)<br>        editTopicName = group user/John Doe (jdoe)<br>        label-Code-Review = -2..+2 group user/John Doe (jdoe)<br>        label-Verified = -1..+1 group user/John Doe (jdoe)<br>        owner = group user/John Doe (jdoe)<br>        read = group user/John Doe (jdoe)<br>        removeReviewer = group user/John Doe (jdoe)<br>        submit = group user/John Doe (jdoe)<br>        create = group user/John Doe (jdoe)<br>        pushMerge = group user/John Doe (jdoe)<br>[access "^refs/heads/user/jdoe/.*"]<br>        label-Code-Review = -2..+2 group user/John Doe (jdoe)<br>        label-Verified = -1..+1 group user/John Doe (jdoe)<br>        push = group user/John Doe (jdoe)<br>        submit = group user/John Doe (jdoe)</code></pre></td>
+    </tr>
+  </tbody></table>
+  <!--endsec-->
+
+- with variable
+
+  > [!NOTE|label:references:]
+  > - [How to insert a line after a match using sed (or awk) in a formatted JSON file?](https://stackoverflow.com/a/74607325/2940319)
+
+  ```bash
+  #                                       + first line without extra space
+  #                                       |                  + the others new line requires 4 spaces
+  #                               +--------------+   +----------------+
+  $ cat sample.json | awk -v new='"gender": "male",\n    "state": "CA",' '{print} sub(/"name":.*John Doe.*$
+  /,""){print $0 new}'
+  {
+    "id": "1234567",
+    "properties": {
+      "name": "John Doe",
+      "gender": "male",
+      "state": "CA",
+      "age": 30
+    }
+  }
+
+  # or
+  $ cat sample.json |
+        awk -v insertVal="femal" '/"name":.+John.+Doe.*$/{$0=$0"\n    \"gender\": \""insertVal"\","} {print}'
+  {
+    "id": "1234567",
+    "properties": {
+      "name": "John Doe",
+      "gender": "femal",
+      "age": 30
+    }
+  }
+  ```
+
+  <!--sec data-title="awk with variable" data-id="section2" data-show=true data-collapse=true ces-->
+  <table><thead>
+    <tr>
+      <th style="text-align: center; vertical-align: middle;"><b>ORIGINAL</b></th>
+      <th style="text-align: center; vertical-align: middle;"><b>AFTER INSERT</b></th>
+      <th style="text-align: center; vertical-align: middle;"><b>INSERT TWO LINES</b></th>
+    </tr></thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center; vertical-align: middle;"><pre><code>$ cat sample.json</code></pre></td>
+      <td style="text-align: center; vertical-align: middle;"><pre><code>$ cat sample.json | <br>          awk -v new='"gender": "male",' '{print} sub(/"name":.*John Doe.*$/,""){print $0 new}'</code></pre></td>
+      <td style="text-align: center; vertical-align: middle;"><pre><code>$ cat sample.json | <br>          awk -v new='"gender": "male",\n    "state": "CA",' '{print} sub(/"name":.*John Doe.*$/,""){print $0 new}'</code></pre></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    "age": 30<br>  }<br>}</code></pre></td>
+      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    <font sytle="color:red">"gender": "male",</font><br>    "age": 30<br>  }<br>}</code></pre></td>
+      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    <font sytle="color:red">"gender": "male",<br>    "state": "CA",</font><br>    "age": 30<br>  }<br>}</code></pre></td>
+    </tr>
+  </tbody>
+  </table>
+  <!--endsec-->
+
+- with sed
+  ```bash
+  $ cat sample.json | sed -e '/John Doe/{p;s/name.*"/gender": "male"/' -e '}'
+  {
+    "id": "1234567",
+    "properties": {
+      "name": "John Doe",
+      "gender": "male",                   # new added
+      "age": 30
+    }
+  }
+  ```
+
+## insert new line base on pattern
+
+> [!NOTE|label:references:]
+> - [awk script for pattern match and line break](https://www.unix.com/unix-for-beginners-questions-and-answers/268742-awk-script-pattern-match-line-break.html)
+
+- awk
+  ```bash
+  $ echo "9089.00 ----- kl jkjjljk lkkk; (909099)  9097.00 ----- HGJJHHJ jcxkjlkjvhvlk jhdkjksdfkhfskd 898.00 ----- HHHH" |
+    awk '{ gsub("[0-9][0-9]*[.]00", RS "&");print }'
+
+  9089.00 ----- kl jkjjljk lkkk; (909099)
+  9097.00 ----- HGJJHHJ jcxkjlkjvhvlk jhdkjksdfkhfskd
+  898.00 ----- HHHH
+  ```
+- sed
+  ```bash
+  $ echo "9089.00 ----- kl jkjjljk lkkk; (909099)  9097.00 ----- HGJJHHJ jcxkjlkjvhvlk jhdkjksdfkhfskd 898.00 ----- HHHH" |
+    sed "s/\([0-9]*\.00\)/\n\1/g"
+
+  9089.00 ----- kl jkjjljk lkkk; (909099)
+  9097.00 ----- HGJJHHJ jcxkjlkjvhvlk jhdkjksdfkhfskd
+  898.00 ----- HHHH
+  ```
 
 # write a file without indent space
 ```bash
@@ -2754,7 +2882,7 @@ items.find ({
 # cat
 ## `<< -` and `<<`
 
-<!--sec data-title="doc for <<[-]word" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="doc for <<[-]word" data-id="section3" data-show=true data-collapse=true ces-->
  [Here Documents](https://en.wikipedia.org/wiki/Here_document#Unix_shells):
 > This type of redirection instructs the shell to read input from the current source until a line containing only delimiter (with no trailing blanks) is seen. All of the lines read up to that point are then used as the standard input for a command.
 >
