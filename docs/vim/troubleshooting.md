@@ -163,6 +163,14 @@
   the Python library could not be load
   ```
 
+- generic solution
+  ```vim
+  let g:python3_host_prog = '/path/to/python3'
+
+  # in linux/osx
+  let g:python3_host_prog = expand(trim( system('comamnd -v python3') ))
+  ```
+
 - environment
   - os: ubuntu 22.04.3 LTS
   - python
