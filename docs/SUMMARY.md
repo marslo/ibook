@@ -26,6 +26,7 @@
     * [client](cheatsheet/ssl/client.md)
   * [windows](cheatsheet/windows/windows.md)
     * [powershell](cheatsheet/windows/powershell.md)
+    * [choco](cheatsheet/windows/choco.md)
     * [wsl](cheatsheet/windows/wsl.md)
     * [wt](cheatsheet/windows/wt.md)
     * [shortcut](cheatsheet/windows/shortcut.md)

@@ -3,12 +3,13 @@
 
 - [install](#install)
   - [dependencies](#dependencies)
-  - [Nvim development (prerelease) build](#nvim-development-prerelease-build)
+  - [nvim development (prerelease) build](#nvim-development-prerelease-build)
   - [building from source](#building-from-source)
     - [osx](#osx)
     - [`brew install -v --debug`](#brew-install--v---debug)
     - [uninstall](#uninstall)
   - [package manager](#package-manager)
+    - [windows](#windows)
   - [neovim-nightly](#neovim-nightly)
 - [initialize and configure](#initialize-and-configure)
   - [provider](#provider)
@@ -16,6 +17,7 @@
   - [config](#config)
     - [`config.lua`](#configlua)
     - [standard-path](#standard-path)
+    - [list parser paths](#list-parser-paths)
   - [lua](#lua)
     - [lua-intro](#lua-intro)
     - [lua-commands](#lua-commands)
@@ -81,7 +83,7 @@
   └── unibilium
   ```
 
-## [Nvim development (prerelease) build](https://github.com/neovim/neovim/releases/nightly)
+## [nvim development (prerelease) build](https://github.com/neovim/neovim/releases/nightly)
 
 - tarball
 
@@ -310,6 +312,60 @@ $ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
   Run :checkhealth for more info
   ```
 
+### windows
+
+- dependencies
+
+  > [!NOTE|label:references:]
+  > - [Windows Install MSVC and clang](https://gist.github.com/mcandre/5ceb67ad44f6b974d33bcddedcb16e89)
+
+  - C Compiler
+    - llvm
+      ```powershell
+      # C:\Program Files\LLVM\bin
+      > choco install llvm
+
+      # https://gist.github.com/mcandre/5ceb67ad44f6b974d33bcddedcb16e89
+      > choco install cmake
+      ```
+
+    - mingw
+
+      > [!TIP|label:packages:]
+      > - [mingw 64 bit: x86_64-13.2.0-release-posix-seh-ucrt-rt_v11-rev0.7z](https://github.com/niXman/mingw-builds-binaries/releases/download/13.2.0-rt_v11-rev0/x86_64-13.2.0-release-posix-seh-ucrt-rt_v11-rev0.7z)
+
+      ```powershell
+      # C:\ProgramData\mingw64\mingw64
+      > choco install mingw
+      ```
+
+    - msvc
+
+      > [!TIP|label:packages:]
+      > - [visualstudio2022buildtools](https://download.visualstudio.microsoft.com/download/pr/db4c3f2d-694d-406b-8fb6-1924f3fc3580/02f7788cb00c9e0aa87ce0c1e923f7b12921aa1f06d9f78261ee0e3e5c794332/vs_BuildTools.exe)
+      >   - `chocolatey-dotnetfx.extension`: `C:\ProgramData\chocolatey\extensions\chocolatey-dotnetfx`
+      >   - `dotnetfx`
+      > - references:
+      >   - [Clang/LLVM support in Visual Studio projects](https://learn.microsoft.com/en-us/cpp/build/clang-support-msbuild?view=msvc-170)
+
+      ```powershell
+      # C:\Program Files (x86)\Microsoft Visual Studio\Installer
+      > choco install visualstudio2022buildtools
+
+      # former version
+      > choco install visualstudio2019buildtools
+
+      # for clang/llvm installation
+      # C:\Program Files (x86)\Microsoft Visual Studio\Installer
+      > choco install visualstudio-installer
+      ```
+- nvim
+  ```batch
+  > curl -fsSL -O https://github.com/neovim/neovim/releases/latest/download/nvim-win64.msi
+  REM install via msiexec as administrator
+  > msiexec /i nvim-setup.exe [/quiet] [/passive] [/norestart] [/log <log file>] [/l* <log file>]
+  ```
+
 ## neovim-nightly
 
 > [!NOTE|label:references:]
@@ -500,6 +556,31 @@ lua require('config')
   :echo stdpath('data')
   C:/Users/marslo/Appdata/Local/nvim-data
   ```
+
+### list parser paths
+```vim
+:echo nvim_get_runtime_file('parser/*.so', v:true)
+['/Users/marslo/.vim/plugged/nvim-treesitter/parser/bash.so', '/Users/marslo/.vim/plugged/nvim-treesitt
+er/parser/c.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/cmake.so', '/Users/marslo/.vim/plug
+ged/nvim-treesitter/parser/css.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/diff.so', '/User
+s/marslo/.vim/plugged/nvim-treesitter/parser/dockerfile.so', '/Users/marslo/.vim/plugged/nvim-treesitte
+r/parser/gitcommit.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/gitignore.so', '/Users/marsl
+o/.vim/plugged/nvim-treesitter/parser/git_config.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parse
+r/groovy.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/ini.so', '/Users/marslo/.vim/plugged/n
+vim-treesitter/parser/java.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/jq.so', '/Users/mars
+lo/.vim/plugged/nvim-treesitter/parser/json.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua
+.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/markdown.so', '/Users/marslo/.vim/plugged/nvim
+-treesitter/parser/python.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/query.so', '/Users/ma
+rslo/.vim/plugged/nvim-treesitter/parser/ssh_config.so', '/Users/marslo/.vim/plugged/nvim-treesitter/pa
+rser/vim.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/vimdoc.so', '/Users/marslo/.vim/plugge
+d/nvim-treesitter/parser/xml.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/yaml.so', '/usr/lo
+cal/Caskroom/neovim-nightly/latest/nvim-macos-x86_64/lib/nvim/parser/c.so', '/usr/local/Caskroom/neovim
+-nightly/latest/nvim-macos-x86_64/lib/nvim/parser/lua.so', '/usr/local/Caskroom/neovim-nightly/latest/n
+vim-macos-x86_64/lib/nvim/parser/markdown.so', '/usr/local/Caskroom/neovim-nightly/latest/nvim-macos-x8
+6_64/lib/nvim/parser/markdown_inline.so', '/usr/local/Caskroom/neovim-nightly/latest/nvim-macos-x86_64/
+lib/nvim/parser/query.so', '/usr/local/Caskroom/neovim-nightly/latest/nvim-macos-x86_64/lib/nvim/parser
+/vim.so', '/usr/local/Caskroom/neovim-nightly/latest/nvim-macos-x86_64/lib/nvim/parser/vimdoc.so']
+```
 
 ## lua
 
