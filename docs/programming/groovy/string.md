@@ -41,6 +41,7 @@
   - [`java.util.Random`](#javautilrandom)
 - [file](#file)
 - [StringTokenizer](#stringtokenizer)
+- [URI](#uri)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -678,3 +679,20 @@ while (st.hasMoreTokens()) { System.out.println(st.nextToken()); }
   for (int x=0; x<result.length; x++)
       System.out.println(result[x]);
   ```
+
+## URI
+
+- amend URL
+  ```groovy
+  Closure amendUrl = { String url, String authority ->
+    URI uri = new URI( url )
+    uri = new URI( uri.scheme, authority, uri.host, uri.port, uri.path, uri.query, uri.fragment )
+    uri.toString()
+  }
+
+  amendUrl ( 'ssh://github.com/marslo/dotfiles', 'marslo:token' )
+
+  // result
+  // ssh://marslo:token@github.com/marslo/dotfiles
+  ```
+

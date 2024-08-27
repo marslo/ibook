@@ -11,6 +11,7 @@
 - [exception](#exception)
   - [using `hudson.AbortException`](#using-hudsonabortexception)
   - [show catch message](#show-catch-message)
+- [withCredentials](#withcredentials)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -222,3 +223,38 @@ try {
   // throw e                // if not throw error, the catch process will only print the error message
 }
 ```
+
+## withCredentials
+```groovy
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+
+def sample( String credential ) {
+  [
+    inSSH   : { println ".. ${credential}: ssh credential"   } ,
+    inHttps : { println ".. ${credential}: git access token" }
+  ]
+}
+
+def runWithCredentials ( String credential ) {
+  Closure classifyCredential = { cid ->
+    [
+      ( com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl )   : {
+        sample( credential ).inHttps()
+      } ,
+      ( com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey ) : {
+        sample( credential ).inSSH()
+      }
+    ].find { it.key.isInstance(cid) }.value.call()
+  }
+  classifyCredential CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance ).find { credential == it.id }
+}
+
+[ 'GITHUB_ACCESS_TOKEN', 'GITHUB_SSH_CREDENTIAL' ].each { runWithCredentials(it) }
+```
+
+- result
+  ```groovy
+  .. GITHUB_ACCESS_TOKEN: git access token
+  .. GITHUB_SSH_CREDENTIAL: ssh credneital
+  ```
