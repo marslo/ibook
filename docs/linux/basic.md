@@ -3,6 +3,7 @@
 
 - [prompts](#prompts)
   - [settings](#settings)
+    - [PS4](#ps4)
   - [colors](#colors)
   - [functions](#functions)
 - [character](#character)
@@ -151,6 +152,44 @@ fi
 export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET}${COL_DEFAULT}) ->${COL_RESET}\n${COL_DEFAULT}└─ ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\\$ ${COL_RESET}; else echo ${COL_IF_SL_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
 ```
 <!-- endsec -->
+
+### PS4
+
+> [!NOTE|label:references:]
+> - [Setting $PS4 using `bash -c`](https://stackoverflow.com/a/50627260/2940319)
+> - [Why does Bash reset PS4 value to its default value when starting a script?](https://stackoverflow.com/a/74028357/2940319)
+
+- show timestamp
+  ```bash
+  $ bash -xc $'PS4=\'+ $(date "+%T %x ($LINENO) : ")\'; echo ABC; echo XYZ'
+  + PS4='+ $(date "+%T %x ($LINENO) : ")'
+  + 15:45:51 08/29/2024 (1) : echo ABC
+  ABC
+  + 15:45:51 08/29/2024 (1) : echo XYZ
+  XYZ
+
+  # or
+  $ PS4='+ \D{%s} ($LINENO) ' bash -xc 'echo ABC; echo XYZ'
+  + 1724971586 (1) echo ABC
+  ABC
+  + 1724971586 (1) echo XYZ
+  XYZ
+
+  # or
+  $ cmd=$(cat <<'EOF'
+  PS4='+ $(date "+%T %x ($LINENO) : ")'
+  echo ABC
+  echo XYZ
+  EOF
+  )
+
+  bash -xc "$cmd"
+  ```
+
+- show process id
+  ```bash
+  $ env -i SHELLOPTS=xtrace PS4='$(id)' ./test
+  ```
 
 ## colors
 
