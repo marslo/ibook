@@ -21,6 +21,8 @@ git command study and practice
   - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
   - [change head](#change-head)
   - [get first parent branch](#get-first-parent-branch)
+- [tag](#tag)
+  - [lightweight VS. annotated](#lightweight-vs-annotated)
 - [status](#status)
   - [list ignored](#list-ignored)
 - [log](#log)
@@ -50,7 +52,7 @@ git command study and practice
   - [`diff-highlight`](#diff-highlight)
   - [get difference between two branches](#get-difference-between-two-branches)
   - [diff ignore whitespace](#diff-ignore-whitespace)
-- [tag](#tag)
+- [tag](#tag-1)
   - [discribe](#discribe)
   - [get distance between tags](#get-distance-between-tags)
   - [get revision in particular branch](#get-revision-in-particular-branch)
@@ -483,6 +485,44 @@ $ git branch --sort=committerdate   # ASC
 > - [How to find the nearest parent of a Git branch](https://stackoverflow.com/q/3161204/2940319)
 > - [joechrysler/who_is_my_mummy.sh](https://gist.github.com/joechrysler/6073741)
 > - [* explainshell.com](https://explainshell.com)
+
+## tag
+
+### lightweight VS. annotated
+
+- show tags details
+  ```bash
+  #                                          + - commit: lightweight tag
+  #                                          + - tag: annotated tag
+  #                                          |
+  #                                       +-----+
+  $ git for-each-ref refs/tags
+  902fa933e4a9d018574cbb7b5783a130338b47b8 commit refs/tags/v1.0-light
+  1f486472ccac3250c19235d843d196a3a7fbd78b tag    refs/tags/v1.1-annot
+  fd3cf147ac6b0bb9da13ae2fb2b73122b919a036 commit refs/tags/v1.2-light
+  ```
+
+- show tag type via `git cat-file -t`
+  ```bash
+  # lightweight
+  $ git cat-file -t v1.0-light
+  commit
+
+  # annotated
+  $ git cat-file -t v1.1-annot
+  tag
+  ```
+
+- [or](https://stackoverflow.com/a/40480534/2940319)
+  ```bash
+  $ git show-ref -d --tags       |
+    cut -b 42-                   | # to remove the commit-id
+    sort                         |
+    sed 's/\^{}//'               | # remove ^{} markings
+    uniq -c                      | # count identical lines
+    sed 's/2\ refs\/tags\// a /' | # 2 identicals = annotated
+    sed 's/1\ refs\/tags\//lw /'
+  ```
 
 ## status
 ### list ignored
@@ -1741,6 +1781,15 @@ $ git remote set-url --delete --push origin ssh://path/to/remoteUrl
   ```
 
 ## for-each-ref
+
+> [!NOTE|label:references:]
+> - references:
+>   - [git-for-each-ref - Output information on each ref](https://git-scm.com/docs/git-for-each-ref) | [* examples](https://git-scm.com/docs/git-for-each-ref#_examples)
+> - `--sort`:
+>   - `authordate`
+>   - `committerdate`
+>   - `creatordate`
+>   - `taggerdate`
 
 ### get refs days ago
 ```bash

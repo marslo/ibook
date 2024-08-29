@@ -8,6 +8,11 @@
 - [list](#list)
   - [get from all configure](#get-from-all-configure)
   - [colors](#colors)
+- [gitconfig](#gitconfig)
+  - [help](#help)
+  - [credential](#credential)
+    - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
+    - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
 - [default configuration](#default-configuration)
 - [tig](#tig)
   - [install from source](#install-from-source)
@@ -26,7 +31,7 @@
 > - [10.8 Git Internals - Environment Variables](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
 {% endhint %}
 
-## installation
+# installation
 
 > [!NOTE|label:references:]
 > - [Download for Linux and Unix](https://git-scm.com/download/linux)
@@ -39,7 +44,7 @@
   $ sudo apt install git
   ```
 
-### from source
+## from source
 
 > [!NOTE|label:references:]
 > - [1.5 Getting Started - Installing Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -238,7 +243,7 @@
   ```
   <!--endsec-->
 
-## location
+# location
 
 > [!NOTE|label:locations]
 > - [Where system, global and local Git config files on Windows and Ubuntu Linux are](https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/Where-system-global-and-local-Windows-Git-config-files-are-saved)
@@ -254,7 +259,7 @@
 |      local     | `<git-repo>\.git\config`                    | `<git-repo>/.git/config`   |
 |    portable    | `%PROGRAMDATA%\Git\config`                  | -                          |
 
-### get locations
+## get locations
 - windows
   ```batch
     > git config --list --show-origin --name-only | sed -r 's/^file:(.+)\s+.*$/\1/g' | sort.exe /unique
@@ -284,7 +289,7 @@
   $ sudo git -c core.editor=ls\ -al config --system --edit
   ```
 
-## list
+# list
 
 - list all with scope
   ```bash
@@ -330,14 +335,14 @@
     filter.lfs.required=true
     ```
 
-### get from all configure
+## get from all configure
 ```bash
 $ git config --show-origin --show-scope --get-all user.name
 global   file:/Users/marslo/.gitconfig   marslo
 local    file:.git/config    marslo
 ```
 
-### colors
+## colors
 
 > [!NOTE|label:references:]
 > - [git config: Colored outputs](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-config)
@@ -454,7 +459,152 @@ local    file:.git/config    marslo
    aa
   ```
 
-## default configuration
+# gitconfig
+## help
+
+- `autocorrect`
+
+  > [!NOTE|label:references:]
+  > - [Git: How to enable autocorrect](https://adamj.eu/tech/2022/10/26/git-how-to-enable-autocorrect/)
+
+  ```
+  $ git config --global help.autocorrect immediate
+
+  # [y/N] ?
+  $ git config --global help.autocorrect prompt
+
+  # 2.0 seconds
+  $ git config --global help.autocorrect 20
+  ```
+
+## credential
+
+> [!NOTE]
+> - [7.14 Git Tools - Credential Storage](https://git-scm.com/book/en/v2/Git-Tools-Credential-Storage)
+> - [`git config credential.helper store`](https://stackoverflow.com/a/65786142)
+> - [`git remote set-url`](https://stackoverflow.com/a/68783135)
+> - [credential.helper](https://stackoverflow.com/a/62184716)
+> - [Credential stores](https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/credstores.md)
+>   - [GPG/pass compatible files](https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/credstores.md#gpgpass-compatible-files)
+
+```bash
+$ git config credential.helper store
+
+# or
+git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
+```
+
+### environment failed to `$ ssh -vT git@github.com -p 22`
+
+1. using https instead of ssh first
+   ```bash
+   $ cat ~/.gitconfig
+   [url "https://github.com/"]
+     insteadOf     = git@ssh.github.com:
+   [url "https://github.com/"]
+     insteadOf     = git@github.com:
+   ```
+
+2. setup credential
+   ```bash
+   $ git config --global credential.helper store
+
+   # or set the credential file in corss-platform
+   $ git config --global credential.helper 'store --file /path/to/.git-credentials'
+   $ git config --global credential.helper 'cache --timeout 30000'
+   ```
+
+3. create the credential file
+   ```bash
+   $ git credential-store --file /path/to/.git-credentials store
+   protocol=https ⏎
+   host=github.com ⏎
+   username=marslo ⏎
+   password=ghp_***********************************N ⏎
+   ⏎
+
+   # or
+   $ USERNAME='marslo'
+   $ PASSWORD='ghp_***********************************N'
+   $ echo -e "protocol=https\nhost=github.com\nusername=${USERNAME}\npassword=${PASSWORD}\n" |
+          git credential-store --file /path/to/.git-credentials store
+   ```
+
+   - to read the credentials file
+     ```bash
+     $ git credential-store --file /path/to/.git-credentials get
+     protocol=https ⏎
+     host=github.com ⏎
+     ⏎
+     # wil shows:
+     username=marslo
+     password=ghp_***********************************N
+
+     # or
+     $ echo -e 'protocol=https\nhost=github.com' |
+            git credential-store --file /path/to/.git-credentials get
+     username=marslo
+     password=ghp_***********************************N
+     ```
+
+### with `GIT_USERNAME` and `GIT_ASKPASS`
+
+> [!NOTE|label:references:]
+> - [REQUESTING CREDENTIALS](https://git-scm.com/docs/gitcredentials)
+>   * `env.GIT_ASKPASS`
+>   * `core.askPass`
+>   * `SSH_ASKPASS`
+> - [Class GitUsernamePasswordBinding.DescriptorImpl](https://javadoc.jenkins-ci.org/plugin/git/jenkins/plugins/git/GitUsernamePasswordBinding.DescriptorImpl.html) | [GitUsernamePasswordBinding.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/jenkins/plugins/git/GitUsernamePasswordBinding.java)
+>   - [JENKINS-47733 - Add a withGit pipeline step that provides git credentials](https://issues.jenkins.io/browse/JENKINS-47733)
+> - [JENKINS-56897 - Support general purpose authenticated git operations in Pipeline](https://issues.jenkins.io/browse/JENKINS-56897#comment-364399)
+
+- via config
+  ```
+  [url "https://github.com/username"]
+    insteadOf         = git@github.com:username
+  [credential "https://github.com/marslo"]
+    username          = marslo
+  [credential "https://github.com/username"]
+    username          = marslojiao-mvl
+    helper            = "!f() { test \"$1\" = get && echo \"password=gh************************************vr\"; }; f"
+  ```
+
+- via environment
+
+  > [!TIP]
+  > - `GIT_ASKPASS` must be a executable script
+
+  ```bash
+  $ export GIT_ASKPASS="$HOME/.git.askpass.sh"
+  # or
+  $ git config --global core.askPass "$HOME/.git.askpass.sh"
+  # or using in runtime
+  $ git -c core.askPass="$HOME/.git.askpass.sh" clone ...
+
+  $ cat ~/.git.askpass.sh
+  declare repoUrl="$(git remote get-url origin)"
+  declare pattern='.+github.com[:/]marslo/.+'
+
+  if [[ "${repoUrl}" =~ 'path/to/specific' ]]; then
+    echo 'gh************************************vr'
+  elif [[ "${repoUrl}" =~ ${pattern} ]]; then
+    echo 'gh************************************mx'
+  fi
+  $ chmod +x ~/.git.askpass.sh
+  ```
+
+  - [GitUsernamePasswordBinding solution](https://stackoverflow.com/a/68358639/2940319) | [JENKINS-56897](https://issues.jenkins.io/browse/JENKINS-56897#comment-364399)
+    ```bash
+    GIT_ASKPASS=$(mktemp) && chmod a+rx $GIT_ASKPASS && export GIT_ASKPASS
+    cat > $GIT_ASKPASS <<< '#!/bin/bash
+    case "$1" in
+        Username*) exec echo "$JENKINS_CREDENTIALS_USR" ;;
+        Password*) exec echo "$JENKINS_CREDENTIALS_PSW" ;;
+    esac
+    '
+    ```
+
+# default configuration
 - `core.editor`
 
   - use vim ( the ubiqutos text editor ) as Git's default editor
@@ -534,7 +684,7 @@ local    file:.git/config    marslo
   ![core.editor](../../screenshot/git/git-for-windows-11.png)
 
 
-## tig
+# tig
 
 > [!NOTE|label:references:]
 > - [How to fix "fatal error: ncursesw/ncurses.h: No such file or directory"](https://www.xmodulo.com/fatal-error-ncursesw-ncurses-no-file-directory.html)
@@ -556,7 +706,7 @@ tig version 2.5.8-5-g1894954
 ncursesw version 6.3.20211021
 ```
 
-### [install from source](https://jonas.github.io/tig/INSTALL.html)
+## [install from source](https://jonas.github.io/tig/INSTALL.html)
 
 ```bash
 $ git clone git@github.com:jonas/tig.git && cd tig
@@ -617,12 +767,12 @@ make[1]: Leaving directory '/home/marslo/iMarslo/tools/git/tools/tig'
   ncursesw version 6.1.20180224
   ```
 
-## troubleshooting
+# troubleshooting
 
 > [!TIP]
 > - [* iMarslo : devenv troubleshooting](../../linux/troubleshooting.html)
 
-### `ld: archive member '/' not a mach-o file`
+## `ld: archive member '/' not a mach-o file`
 
 > [!NOTE]
 > - [Clang archive or linking issue. Xcode 15.0.1](https://developer.apple.com/forums/thread/741149)
