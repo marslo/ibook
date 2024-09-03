@@ -672,6 +672,18 @@ $ curl -s \
 - result
   ![include excerpt](../screenshot/tools/jira/jira-plugin-Multiexcerpt-include-result.png)
 
+#### [HTML Macro](https://confluence.atlassian.com/conf719/html-macro-1157466770.html)
+
+- insert svg image
+
+  > [!TIP|label:get svg image:]
+  > - `...` -> `Attachments`
+  > - preview the image and get info from URL : `...&preview=/506105287/513281481/k8s-ha-cluster-stacked-etcd.v3.svg`
+
+  ```html
+  <img width="800" src="https://ewiki.sample.com/download/attachments/506105287/513281481/k8s-ha-cluster-stacked-etcd.v3.svg">
+  ```
+
 ## ACLI
 
 > [!NOTE|label:references:]
