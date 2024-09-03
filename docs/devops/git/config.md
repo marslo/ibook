@@ -557,6 +557,7 @@ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 > - [Class GitUsernamePasswordBinding.DescriptorImpl](https://javadoc.jenkins-ci.org/plugin/git/jenkins/plugins/git/GitUsernamePasswordBinding.DescriptorImpl.html) | [GitUsernamePasswordBinding.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/jenkins/plugins/git/GitUsernamePasswordBinding.java)
 >   - [JENKINS-47733 - Add a withGit pipeline step that provides git credentials](https://issues.jenkins.io/browse/JENKINS-47733)
 > - [JENKINS-56897 - Support general purpose authenticated git operations in Pipeline](https://issues.jenkins.io/browse/JENKINS-56897#comment-364399)
+> - [GIT_ASKPASS with user and password](https://stackoverflow.com/a/68358639/2940319) | JENKINS-56897 - Support general purpose authenticated git operations in Pipeline](https://issues.jenkins.io/browse/JENKINS-56897#comment-364399)
 
 - via config
   ```

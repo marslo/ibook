@@ -160,6 +160,8 @@ export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET
 > - [Why does Bash reset PS4 value to its default value when starting a script?](https://stackoverflow.com/a/74028357/2940319)
 
 - show timestamp
+
+  {% raw %}
   ```bash
   $ bash -xc $'PS4=\'+ $(date "+%T %x ($LINENO) : ")\'; echo ABC; echo XYZ'
   + PS4='+ $(date "+%T %x ($LINENO) : ")'
@@ -185,6 +187,7 @@ export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET
 
   bash -xc "$cmd"
   ```
+  {% endraw %}
 
 - show process id
   ```bash

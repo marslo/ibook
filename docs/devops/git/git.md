@@ -210,24 +210,41 @@ $ git rev-list --no-walk <commmit-id>..HEAD | tail -1
 
 ## branch
 ### [get current branch](https://stackoverflow.com/a/19585361/2940319)
-```bash
-$ git branch --show-current
+- full branch name
+  ```bash
+  $ git symbolic-ref HEAD
+  refs/heads/main
 
-# or
-$ git rev-parse --abbrev-ref HEAD
+  # [or](https://stackoverflow.com/a/62340432/2940319)
+  $ git rev-parse --symbolic-full-name HEAD
+  refs/heads/main
+  ```
 
-# or
-$ git symbolic-ref --short HEAD
+- branch name
+  ```bash
+  $ git branch --show-current
+  main
 
-# or
-$ git symbolic-ref HEAD | sed -e "s/^refs\/heads\///"
+  # or
+  $ git rev-parse --abbrev-ref HEAD
+  main
 
-# or
-$ git symbolic-ref --quiet --short HEAD || git rev-parse --short
+  # or
+  $ git symbolic-ref --short HEAD
+  main
 
-# [or](https://stackoverflow.com/a/33485172/2940319)
-$ git name-rev --name-only HEAD
-```
+  # or
+  $ git symbolic-ref --quiet --short HEAD || git rev-parse --short
+  main
+
+  # or
+  $ git symbolic-ref HEAD | sed -e "s/^refs\/heads\///"
+  main
+
+  # [or](https://stackoverflow.com/a/33485172/2940319)
+  $ git name-rev --name-only HEAD
+  main
+  ```
 
 #### [for detached branch](https://stackoverflow.com/a/19457164/2940319)
 ```bash
