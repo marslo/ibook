@@ -683,6 +683,10 @@ while (st.hasMoreTokens()) { System.out.println(st.nextToken()); }
 ## URI
 
 - amend URL
+
+  > [!TIP|label:references:]
+  > - [Java - Replace host in url?](https://stackoverflow.com/a/46669187/2940319)
+
   ```groovy
   Closure amendUrl = { String url, String authority ->
     URI uri = new URI( url )
@@ -695,4 +699,3 @@ while (st.hasMoreTokens()) { System.out.println(st.nextToken()); }
   // result
   // ssh://marslo:token@github.com/marslo/dotfiles
   ```
-
