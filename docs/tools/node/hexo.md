@@ -3,12 +3,12 @@
 
 - [prepare](#prepare)
 - [init](#init)
-- [theme](#theme)
-  - [clone code](#clone-code)
   - [install plugin](#install-plugin)
   - [generate new pages](#generate-new-pages)
   - [diable the default highlight settings](#diable-the-default-highlight-settings)
-  - [use theme](#use-theme)
+- [theme](#theme)
+  - [snark](#snark)
+  - [fix unreadable link](#fix-unreadable-link)
   - [theme for code](#theme-for-code)
 - [commands](#commands)
   - [new](#new)
@@ -25,6 +25,7 @@
 > [!NOTE|label:references:]
 > - [How to use Hexo and deploy to GitHub Pages](https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39)
 > - [hexojs/hexo-util](https://github.com/hexojs/hexo-util)
+> - [btfak/useHexo.md](https://gist.github.com/btfak/18938572f5df000ebe06fbd1872e4e39)
 
 ## prepare
 
@@ -63,31 +64,6 @@ found 0 vulnerabilities
 INFO  Start blogging with Hexo!
 ```
 <!--endsec-->
-
-## theme
-
-> [!NOTE]
-> - [Themes](https://hexo.io/themes/)
-> - credit belongs to [snark](https://github.com/Litreily/hexo-theme-snark)
-
-### clone code
-
-{% codetabs name="add submodule in git repo", type="bash" -%}
-$ git submodule add https://github.com/imarslo/hexo-theme-snark.git themes/snark
-{%- language name="clone into folder", type="bash" -%}
-$ git clone https://github.com/imarslo/hexo-theme-snark.git themes/snark
-$ sed '/highlight:/{n;s/^.*$/\ \ enable: false/}' -i _config.xml
-$ sed '/highlight:/{n;n;s/^.*$/\ \ line_number: false/}' -i _config.xml
-{%- language name="update theme via submodule", type="bash" -%}
-$ git submodule sync --recursive
-$ git submodule update --init --recursive
-{%- endcodetabs %}
-
-- using in `_config.xml`
-
-```yaml
-theme: snark
-```
 
 ### install plugin
 ```bash
@@ -132,10 +108,90 @@ highlight:
   hljs: false
 {%- endcodetabs %}
 
-### use theme
+
+## theme
+
+> [!NOTE]
+> - [Themes](https://hexo.io/themes/)
+
+### [snark](https://github.com/Litreily/hexo-theme-snark)
+
+#### clone code
+
+{% codetabs name="add submodule in git repo", type="bash" -%}
+$ git submodule add https://github.com/imarslo/hexo-theme-snark.git themes/snark
+{%- language name="clone into folder", type="bash" -%}
+$ git clone https://github.com/imarslo/hexo-theme-snark.git themes/snark
+$ sed '/highlight:/{n;s/^.*$/\ \ enable: false/}' -i _config.xml
+$ sed '/highlight:/{n;n;s/^.*$/\ \ line_number: false/}' -i _config.xml
+{%- language name="update theme via submodule", type="bash" -%}
+$ git submodule sync --recursive
+$ git submodule update --init --recursive
+{%- endcodetabs %}
+
+
+#### use snark
 ```bash
 $ sed 's/^theme: landscape/theme: snark/' -i _config.xml
 ```
+
+- `_config.xml`
+
+  ```yaml
+  theme: snark
+  ```
+
+### fix unreadable link
+
+> [!NOTE|label:references:]
+> - files: `themes/snark/layout/_partial/head.pug`
+> - [CDN vs. Kit](https://docs.fontawesome.com/v5/web/use-with/wordpress/install-manually)
+> - [BootstrapCDN](https://www.bootstrapcdn.com/) | [jsdelivr/bootstrapcdn](https://github.com/jsdelivr/bootstrapcdn)
+> - [font-awesome CDN](https://cdnjs.com/libraries/font-awesome) | [cdnjs](https://cdnjs.com) | [cdnjs/cdnjs](https://github.com/cdnjs/cdnjs)
+> - [jquery CDN](https://cdnjs.com/libraries/jquery) | [cdnjs](https://cdnjs.com) | [cdnjs/cdnjs](https://github.com/cdnjs/cdnjs)
+
+- font-awesome.min.css
+
+  > [!NOTE|label:references:]
+  > - deactive link:
+  >   - `https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css`
+  > - [workable link](https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css):
+  >   - 4.7.0:
+  >     - `https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css`
+  >     - `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css`
+  >     - `https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css`
+  >   - 6.6.0
+  >     - `https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css`
+  >     - `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css`
+  > - about the font-awesome:
+  >   - [fontawesome-free-6.6.0-web.zip](https://use.fontawesome.com/releases/v6.6.0/fontawesome-free-6.6.0-web.zip)
+  >   - [font-awesome-4.7.0.zip](https://fontawesome.com/v4/get-started/)
+  > - others:
+  >   - [tim-peterson/font-awesome.min.css](https://gist.github.com/tim-peterson/3772020)
+
+  ```pug
+  head
+      ...
+      link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+      ...
+  ```
+
+- jquery.min.js
+
+  > [!NOTE|label:references:]
+  > - [jquery/jquery-dist](https://github.com/jquery/jquery-dist)
+  > - activate link:
+  >   - `https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js`
+  >   - `https://code.jquery.com/jquery-4.0.0-beta.2.slim.min.js`
+  >   - `https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js`
+
+  ```pug
+  head
+      ...
+      script(type='text/javascript', src='//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js')
+      ...
+  ```
+
 
 ### theme for code
 
