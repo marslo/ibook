@@ -218,6 +218,7 @@
     * [gitbook](tools/node/gitbook.md)
     * [hexo](tools/node/hexo.md)
     * [github.page](tools/node/github.page.md)
+    * [code themes](tools/node/code-theme.md)
   * [app](tools/app/app.md)
     * [microsoft office](tools/app/ms.md)
     * [vscode](tools/app/vscode.md)

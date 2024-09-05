@@ -55,7 +55,7 @@
 | `rpm -qip pkgfile.rpm`<br>`rpm -qlp pkgfile.rpm`            | `dpkg -l pkgfile.deb`<br>`dpkg -c pkgfile.deb`                                              |                                              |
 | `rpm -q name`<br>`rpm -qi name`                             | `dpkg -l name`<br>`dpkg -s name`<br>`dpkg -p name`                                          | `brew info name`                             |
 | `rpm -e name`                                               | `dpkg -r name`<br>`dpkg -P name`                                                            | `brew uninstall name`                        |
-| `dnf --showduplicates <name>`                               | `apt-cache madison <name>`                                                                  | -                                            |
+| `dnf search --showduplicates <name>`                        | `apt-cache madison <name>`                                                                  | -                                            |
 
 > [!NOTE|label:references:]
 > - [Google Linux Software Repositories](https://www.google.com/linuxrepositories/)

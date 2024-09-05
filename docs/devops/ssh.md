@@ -819,7 +819,7 @@ Supported escape sequences:
 >   ```bash
 >   $ ssh -n username@hosts "cmd"
 >   ```
-> - [Source a file after ssh login drops to prompt](https://unix.stackexchange.com/a/607382/29178)
+> - [Source a file after ssh login drops to prompt](https://unix.stackexchange.com/a/607382/29178) | [docker run -it over ssh: the input device is not a TTY](https://stackoverflow.com/a/47025876/2940319)
 >   ```bash
 >   $ ssh -t username@hosts "cmd"
 >   ```
