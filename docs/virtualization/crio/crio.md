@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [config files](#config-files)
+- [install](#install)
 - [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -10,6 +11,7 @@
 > - [cri-o/cri-o](https://github.com/cri-o/cri-o)
 > - [Using the CRI-O Container Engine](https://docs.openshift.com/container-platform/3.11/crio/crio_runtime.html)
 > - [kubernetes/misc/kubernetes-with-crio](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
+> - [Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
 
 ## config files
 
@@ -57,6 +59,69 @@
 
   $ sudo systemctl daemon-reload
   $ sudo systemctl restart crio.service
+  ```
+
+## install
+
+> [!NOTE|label:references:]
+> - [CRI-O Packaging](https://github.com/cri-o/packaging/blob/main/README.md)
+> - [cri-o/packaging actions](https://github.com/cri-o/packaging/actions)
+> - version define:
+>   ```bash
+>   $ CRIO_VERSION='v1.30'
+>   ```
+
+- rhel
+  ```bash
+  $ cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
+  [cri-o]
+  name=CRI-O
+  baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
+  exclude=cri-o
+  EOF
+
+  $ sudo bash -c "cat >>/etc/modules-load.d/crio.conf" << EOF
+  overlay
+  br_netfilter
+  EOF
+
+  $ sudo dnf install -y container-selinux
+  $ sudo dnf install -y cri-o
+
+  $ sudo systemctl enable --now crio.service
+
+  # lock cri-o from auto upgrade
+  $ sudo tail -1 /etc/yum.repos.d/cri-o.repo
+  exclude=cri-o
+  ```
+
+- debian
+  ```bash
+  $ sudo apt-get update
+  $ sudo apt-get install -y software-properties-common curl
+
+  $ curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
+      gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+  $ echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
+      tee /etc/apt/sources.list.d/cri-o.list
+
+  $ apt-get update
+  $ apt-get install -y cri-o
+  ```
+
+- static binary bundles
+  ```bash
+  # latest
+  $ curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash
+
+  # specific version
+  $ curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -t v1.30.0
+
+  # specific architectures
+  $ curl https://raw.githubusercontent.com/cri-o/packaging/main/get | bash -s -- -a arm64
   ```
 
 ## tips
