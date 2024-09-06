@@ -114,7 +114,7 @@ scheduler: {}
 >   - [Kubernetes CRI-O Challenge | Ping permission denied | Are you root?](https://www.youtube.com/watch?v=ZKJ9oFwjosM)
 
 ```bash
-$ sudo kubeadm init --config kubeadm-config.yaml --upload-certs
+$ sudo kubeadm init --config kubeadm-config.yaml --upload-certs --v=5
 ```
 
 ### add another control plane node
@@ -167,13 +167,38 @@ $ sudo kubeadm init phase upload-certs --upload-certs --config=SOME_YAML_FILE
 
 > [!NOTE|label:references:]
 > - [Clean up](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down)
+> - ["Failed to setup network for pod \ using network plugins \"cni\": no IP addresses available in network: podnet; Skipping pod" #39557](https://github.com/kubernetes/kubernetes/issues/39557#issuecomment-271944481)
 
 ```bash
-$ sudo kubeadm reset --cri-socket /var/run/crio/crio.sock
+$ sudo kubeadm reset --cri-socket /var/run/crio/crio.sock --v=5
 $ sudo kubeadm reset
-$ iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
-$ ipvsadm -C
+$ sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+$ sudo ipvsadm -C
 ```
+
+- [cleanup interface](https://stackoverflow.com/a/46438072/2940319)
+
+  ```bash
+  # cni0
+  $ sudo ifconfig cni0 down
+  $ sudo ip link delete cni0
+
+  # calico
+  $ sudo ifconfig vxlan.calico down
+  $ sudo ip link delete vxlan.calico
+
+  # flannel
+  $ sudo ifconfig flannel.1 down
+  $ sudo ip link delete flannel.1
+  ```
+
+- clean up images
+  ```bash
+  $ crictl rmi --prune
+
+  # or
+  $ crictl rmi $(crictl images -q | uniq)
+  ```
 
 ## troubleshooting
 ### scheduler and controller-manager unhealthy
