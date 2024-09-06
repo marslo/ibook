@@ -11,6 +11,8 @@
   - [extend etcd](#extend-etcd)
 - [CNI](#cni)
 - [teardown](#teardown)
+- [troubleshooting](#troubleshooting)
+  - [scheduler and controller-manager unhealthy](#scheduler-and-controller-manager-unhealthy)
 - [other references](#other-references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -23,6 +25,8 @@
 >   - [K8S集群搭建——cri-dockerd版（包含问题解决方案）](https://blog.csdn.net/qq_61468858/article/details/139063860)
 >   - [ubernetes那些事 —— 使用cri-o作为容器运行时](https://zhuanlan.zhihu.com/p/334766611)
 >   - [* Kubernetes provisioning with CRI-O as container runtime](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
+>   - [kubeadm keepalived haproxy containerd部署高可用k8s集群](https://blog.csdn.net/shoujiyanzhen/article/details/120673624)
+>   - [* kubeadm-conf.yaml: 1、Kubernetes核心技术 - 高可用集群搭建（kubeadm+keepalived+haproxy）](https://blog.csdn.net/Weixiaohuai/article/details/135478349)
 
 ## CRI-O
 
@@ -171,7 +175,56 @@ $ iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
 $ ipvsadm -C
 ```
 
+## troubleshooting
+### scheduler and controller-manager unhealthy
+
+> [!NOTE|label:references:]
+> - **scheduler**: `/etc/kubernetes/manifests/kube-scheduler.yaml`
+> - **controller-manager**: `/etc/kubernetes/manifests/kube-controller-manager.yaml`
+> - references:
+>   - [(9-4)、查看集群状态](https://blog.csdn.net/Weixiaohuai/article/details/135478349)
+
+```bash
+$ sudo sed -re 's:^.+port=0$:# &:' -i /etc/kubernetes/manifests/kube-scheduler.yaml
+$ sudo sed -re 's:^.+port=0$:# &:' -i /etc/kubernetes/manifests/kube-controller-manager.yaml
+```
+
 ## other references
+
+- [`kubeadm-conf.yaml` for v1.21.3](https://blog.csdn.net/Weixiaohuai/article/details/135478349)
+  ```yaml
+  apiServer:
+    certSANs:
+      - k8s-master-01
+      - k8s-master-02
+      - k8s-master-03
+      - master.k8s.io
+      - 192.168.1.35
+      - 192.168.1.36
+      - 192.168.1.39
+      - 127.0.0.1
+    extraArgs:
+      authorization-mode: Node,RBAC
+    timeoutForControlPlane: 4m0s
+  apiVersion: kubeadm.k8s.io/v1beta2
+  certificatesDir: /etc/kubernetes/pki
+  clusterName: kubernetes
+  controlPlaneEndpoint: "master.k8s.io:16443"
+  controllerManager: {}
+  dns:
+    type: CoreDNS
+  etcd:
+    local:
+      dataDir: /var/lib/etcd
+  imageRepository: registry.aliyuncs.com/google_containers
+  kind: ClusterConfiguration
+  kubernetesVersion: v1.21.3
+  networking:
+    dnsDomain: cluster.local
+    podSubnet: 10.244.0.0/16
+    serviceSubnet: 10.1.0.0/16
+  scheduler: {}
+  ```
 
 - `kubeadm config print init-defaults --component-configs KubeletConfiguration`
 
