@@ -183,6 +183,11 @@
 
 ```bash
 $ kubectl -n ingress-nginx get secrets <SECRET_NAME> -o yaml --export | kubectl apply -n devops -f -
+
+# v1.14+
+$ kubectl --namespace=kube-system get secrets marvell-tls -o yaml |
+          grep -v '^\s*namespace:\s' |
+          kubectl apply --namespace=monitoring -f -
 ```
 
 ## show tls

@@ -68,6 +68,7 @@
 > - [CRI-O : How To Setup Kubernetes Cluster Using Kubeadm](https://devopscube.com/setup-kubernetes-cluster-kubeadm/)
 > - configuration
 >   - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
+> - [* coredns 被误删了，可以通过重新应用 coredns 的 Deployment 或 DaemonSet 配置文件来恢复](https://blog.csdn.net/u011197085/article/details/139395947)
 >
 {% endhint %}
 

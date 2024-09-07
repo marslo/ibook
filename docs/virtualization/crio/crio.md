@@ -1,10 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [config files](#config-files)
+- [config](#config)
 - [install](#install)
   - [prepare](#prepare)
-  - [install](#install-1)
+  - [install package](#install-package)
   - [verify](#verify)
 - [tips](#tips)
 
@@ -17,7 +17,7 @@
 > - [Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
 > - [在Kubernetes中使用CRI-O运行时](https://juejin.cn/post/6999405898980392996)
 
-## config files
+## config
 
 - `/etc/crictl.yaml`
   ```bash
@@ -114,6 +114,20 @@
   }
   ```
 
+- [`/etc/crio/crio.conf.d/01-metrics.conf`](https://github.com/cri-o/cri-o/blob/main/tutorials/metrics.md)
+  ```bash
+  $ sudo cat /etc/crio/crio.conf.d/01-metrics.conf
+  [crio.metrics]
+  enable_metrics = true
+  # default is 9090
+  metrics_port = 9090
+  ```
+
+  - verify:
+    ```bash
+    $ curl -s --unix-socket /var/run/crio/crio.sock http://localhost/metrics | grep -v '^#'
+    ```
+
 ## install
 
 ### prepare
@@ -139,7 +153,7 @@
   $ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
   ```
 
-### install
+### install package
 
 > [!NOTE|label:references:]
 > - [CRI-O Packaging](https://github.com/cri-o/packaging/blob/main/README.md)
@@ -168,6 +182,8 @@
 
   $ sudo dnf install -y container-selinux
   $ sudo dnf install -y cri-o
+  # or
+  $ sudo dnf install -y cri-o-1.30.3-150500.1.1.x86_64 --disableexcludes=cri-o
 
   $ sudo systemctl enable --now crio.service
 

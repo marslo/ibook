@@ -13,7 +13,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 > [!NOTE|label:references:]
 > - [kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray) | [kubespray.io](https://kubespray.io/)
 > - [Quick Start](https://kubespray.io/#/?id=quick-start)
@@ -42,6 +41,19 @@ $ CONFIG_FILE=inventory/sms-k8s/hosts.yaml python3 contrib/inventory_builder/inv
 ```
 
 ### install requirements
+
+- using container
+  ```bash
+  $ TAG_NAME='v2.26.0'
+  $ git clone --branch "${TAG_NAME}" https://github.com/kubernetes-sigs/kubespray.git kubespray-${TAG_NAME}
+  $ docker pull quay.io/kubespray/kubespray:${TAG_NAME}
+
+  $ cp -r sms-k8s ~/kubespary-${TAG_NAME}/inventory/
+  $ docker run --rm -it --mount type=bind,source="$(pwd)"/kubespray-${TAG_NAME}/inventory/sms-k8s,dst=/kubespray/inventory/sms-k8s \
+           --mount type=bind,source="${HOME}"/.ssh/sms-k8s-apiservers,dst=/root/.ssh/sms-k8s-apiservers \
+           quay.io/kubespray/kubespray:${TAG_NAME} bash
+  ```
+
 - using local environment
   ```bash
   $ python3 -m venv ~/.venv/kubespray
@@ -51,21 +63,11 @@ $ CONFIG_FILE=inventory/sms-k8s/hosts.yaml python3 contrib/inventory_builder/inv
   $ python3 -m pip install ruamel.yaml selinux
   ```
 
-- using container
-  ```bash
-  $ TAG_NAME='v2.26.0'
-  $ git clone --branch "${TAG_NAME}" https://github.com/kubernetes-sigs/kubespray.git
-  $ docker pull quay.io/kubespray/kubespray:${TAG_NAME}
-  $ docker run --rm -it --mount type=bind,source="$(pwd)"/kubespray,dst=/kubespray \
-           --mount type=bind,source="${HOME}"/.ssh/sms-k8s,dst=/root/.ssh/sms-k8s \
-           quay.io/kubespray/kubespray:${TAG_NAME} bash
-  ```
-
 ### reset
 ```bash
 $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
                    --become --become-user=root \
-                   --private-key /root/.ssh/sms-k8s \
+                   --private-key /root/.ssh/sms-k8s-apiservers \
                    reset.yml -v
 ```
 
@@ -73,18 +75,12 @@ $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
 ```bash
 $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
                    --become --become-user=root \
-                   --private-key /root/.ssh/sms-k8s \
+                   --private-key /root/.ssh/sms-k8s-apiservers \
                    cluster.yml -v
 ```
 
 ## tips
 ### CRIO
-- mapping crictl
-  ```bash
-  # in all control nodes
-  $ sudo ln -s /usr/bin/crictl /usr/local/bin/crictl
-  ```
-
 - `roles/kubernetes/preinstall/tasks/0080-system-configurations.yml`:
 
   > [!NOTE|label:references:]
@@ -128,6 +124,18 @@ $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
     {% endraw %}
 
   -  [another solution](https://github.com/kubernetes-sigs/kubespray/issues/10517#issuecomment-2155869733)
+
+- `/usr/local/bin/crictl` cannot be found
+  - `all/all.yaml`
+    ```bash
+    bin_dir: /usr/bin
+    ```
+
+  - or mapping crictl
+    ```bash
+    # in all control nodes
+    $ sudo ln -s /usr/bin/crictl /usr/local/bin/crictl
+    ```
 
 - `roles/kubernetes/node/tasks/facts.yml`
   - original:

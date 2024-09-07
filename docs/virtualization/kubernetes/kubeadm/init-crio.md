@@ -5,15 +5,28 @@
 - [kubeadm](#kubeadm)
   - [show default kubeadm-config.yaml](#show-default-kubeadm-configyaml)
 - [init](#init)
+  - [init first control pannel](#init-first-control-pannel)
   - [add another control plane node](#add-another-control-plane-node)
-  - [Uploading control-plane certificates to the cluster](#uploading-control-plane-certificates-to-the-cluster)
-- [HA Cluster](#ha-cluster)
+  - [reupload certificate](#reupload-certificate)
+  - [HA Cluster](#ha-cluster)
   - [extend etcd](#extend-etcd)
+  - [verify](#verify)
 - [CNI](#cni)
+- [addons](#addons)
+  - [helm](#helm)
+  - [TSL](#tsl)
+  - [kubernetes-dashboard](#kubernetes-dashboard)
+  - [ingress-nginx](#ingress-nginx)
+  - [grafana](#grafana)
+  - [metrics-server](#metrics-server)
 - [teardown](#teardown)
 - [troubleshooting](#troubleshooting)
   - [scheduler and controller-manager unhealthy](#scheduler-and-controller-manager-unhealthy)
 - [other references](#other-references)
+  - [calico tools](#calico-tools)
+  - [kubecolor](#kubecolor)
+  - [bash completion](#bash-completion)
+  - [kubeadm-conf.yaml](#kubeadm-confyaml)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -33,6 +46,15 @@
 > [!NOTE|label:references:]
 > - [cri-o/cri-o-ansible](https://github.com/cri-o/cri-o-ansible)
 > - [kubernetes/misc/kubernetes-with-crio](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
+
+```bash
+$ sudo dnf-3 install -y cri-o-1.30.4-150500.1.1 --disableexcludes=cri-o
+$ sudo sed -i 's/10.85.0.0/10.96.0.0/g' /etc/cni/net.d/11-crio-ipv4-bridge.conflist
+$ sudo systemctl daemon-reload
+
+$ sudo systemctl enable crio --now
+$ sudo systemctl status crio
+```
 
 ## kubeadm
 
@@ -92,7 +114,6 @@ scheduler: {}
 ```
 
 ## init
-
 > [!NOTE|label:references:]
 > - official doc:
 >   - [* Reconfiguring a kubeadm cluster](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-reconfigure/)
@@ -113,6 +134,7 @@ scheduler: {}
 >   - [Kubernetes cluster with CRI-O container runtime | Step by step tutorial](https://www.youtube.com/watch?v=bV5RcNiHlfw)
 >   - [Kubernetes CRI-O Challenge | Ping permission denied | Are you root?](https://www.youtube.com/watch?v=ZKJ9oFwjosM)
 
+### init first control pannel
 ```bash
 $ sudo kubeadm init --config kubeadm-config.yaml --upload-certs --v=5
 ```
@@ -131,12 +153,19 @@ $ kubeadm join 10.28.63.16:6443 --token abcdef.0123456789abcdef \
             openssl dgst -sha256 -hex | sed 's/^.* //'
   ```
 
-### [Uploading control-plane certificates to the cluster](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#uploading-control-plane-certificates-to-the-cluster)
+### reupload certificate
+
+> [!NOTE|label:references:]
+> - [uploading control-plane certificates to the cluster](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#uploading-control-plane-certificates-to-the-cluster)
+
 ```bash
-$ sudo kubeadm init phase upload-certs --upload-certs --config=SOME_YAML_FILE
+$ sudo kubeadm init phase upload-certs --upload-certs
+
+# or
+$ sudo kubeadm init phase upload-certs --upload-certs --config=/path/to/kubeadm-conf.yaml
 ```
 
-## HA Cluster
+### HA Cluster
 
 > [!TIP|label:references:]
 > - references:
@@ -152,6 +181,46 @@ $ sudo kubeadm init phase upload-certs --upload-certs --config=SOME_YAML_FILE
 > [!TIP|label:references:]
 > - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 
+
+### verify
+#### cluster
+- componentstatuses
+  ```bash
+  $ kubectl get cs
+  Warning: v1 ComponentStatus is deprecated in v1.19+
+  NAME                 STATUS    MESSAGE   ERROR
+  scheduler            Healthy   ok
+  controller-manager   Healthy   ok
+  etcd-0               Healthy   ok
+  ```
+
+#### crio
+```bash
+$ curl -s --unix-socket /var/run/crio/crio.sock http://localhost/info | jq -r
+{
+  "storage_driver": "overlay",
+  "storage_image": "",
+  "storage_root": "/var/lib/containers/storage",
+  "cgroup_driver": "systemd",
+  "default_id_mappings": {
+    "uids": [
+      {
+        "container_id": 0,
+        "host_id": 0,
+        "size": 4294967295
+      }
+    ],
+    "gids": [
+      {
+        "container_id": 0,
+        "host_id": 0,
+        "size": 4294967295
+      }
+    ]
+  }
+}
+```
+
 ## CNI
 
 > [!NOTE|label:references:]
@@ -162,6 +231,167 @@ $ sudo kubeadm init phase upload-certs --upload-certs --config=SOME_YAML_FILE
 > - [Declare Network Policy](https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/)
 
 
+## addons
+### helm
+```bash
+$ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+Downloading https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz
+Verifying checksum... Done.
+Preparing to install helm into /usr/local/bin
+helm installed into /usr/local/bin/helm
+```
+
+### TSL
+```bash
+$ cat star_sample_com.crt >> star_sample_com.full.crt
+$ cat DigiCertCA.crt      >> star_sample_com.full.crt
+$ cat TrustedRoot.crt     >> star_sample_com.full.crt
+
+# create secret yaml
+$ kubectl -n kube-system create secret tls sample-tls \
+          --cert star_sample_com.full.crt \
+          --key star_sample_com.key \
+          --dry-run=client -o yaml > kube-system.sample-tls.yaml
+
+# apply secret
+$ kubectl -n kube-system apply -f kube-system.sample-tls.yaml
+
+# copy to another namespace
+$ kubectl --namespace=kube-system get secrets sample-tls -o yaml |
+          grep -v '^\s*namespace:\s' |
+          kubectl apply --namespace=ingress-nginx -f -
+secret/sample-tls created
+```
+
+### kubernetes-dashboard
+
+> [!NOTE|label:references:]
+> - [Configure Kubernetes Dashboard Web UI hosted with Nginx Ingress Controller](https://gist.github.com/s-lyn/3aba97628c922ddc4a9796ac31a6df2d)
+
+#### install kube-dashboard
+```bash
+# add kubernetes-dashboard repository
+$ helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+
+# deploy a Helm Release named "kubernetes-dashboard" using the kubernetes-dashboard chart
+$ helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard
+```
+
+#### ingress for kubernetes-dashboard
+```bash
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - sms-k8s-dashboard.sample.com
+    secretName: sample-tls
+  rules:
+    - host: sms-k8s-dashboard.sample.com
+      http:
+        paths:
+        - path: /
+          backend:
+            service:
+              # or kubernetes-dashboard-kong-proxy for latest version
+              name: kubernetes-dashboard
+              port:
+                number: 443
+          pathType: Prefix
+```
+
+#### rbac
+- clusterrole
+  ```bash
+  $ kubectl get clusterrole kubernetes-dashboard -o yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    labels:
+      k8s-app: kubernetes-dashboard
+    name: kubernetes-dashboard
+  rules:
+  - apiGroups:
+    - '*'
+    resources:
+    - '*'
+    verbs:
+    - '*'
+  ```
+
+- clusterrolebinding
+  ```bash
+  $ kubectl -n kube-system get clusterrolebindings kubernetes-dashboard -o yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: kubernetes-dashboard
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: kubernetes-dashboard
+  subjects:
+  - kind: ServiceAccount
+    name: kubernetes-dashboard
+    namespace: kube-system
+  ```
+
+- serviceaccount
+  ```bash
+  $ kubectl -n kube-system get sa kubernetes-dashboard -o yaml
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    labels:
+      k8s-app: kubernetes-dashboard
+    name: kubernetes-dashboard
+    namespace: kube-system
+  ```
+
+- generate token
+  ```bash
+  $ kubectl -n kube-system create token kubernetes-dashboard
+  ey**********************WAA
+  ```
+
+### ingress-nginx
+```bash
+$ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+$ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
+```
+
+### grafana
+```bash
+$ helm repo add grafana https://grafana.github.io/helm-charts
+$ helm repo list
+NAME                    URL
+kubernetes-dashboard    https://kubernetes.github.io/dashboard/
+ingress-nginx           https://kubernetes.github.io/ingress-nginx
+grafana                 https://grafana.github.io/helm-charts
+
+$ helm repo update
+$ helm search repo grafana/grafana
+
+$ helm install grafana grafana/grafana --namespace monitoring --create-namespace
+```
+
+### metrics-server
+```bash
+$ helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+$ helm upgrade --install metrics-server metrics-server/metrics-server --namespace monitoring --create-namespace
+
+# without tls: https://github.com/kubernetes-sigs/metrics-server/issues/1221
+$ helm upgrade metrics-server metrics-server/metrics-server --set args="{--kubelet-insecure-tls}" --namespace monitoring
+```
 
 ## teardown
 
@@ -170,8 +400,7 @@ $ sudo kubeadm init phase upload-certs --upload-certs --config=SOME_YAML_FILE
 > - ["Failed to setup network for pod \ using network plugins \"cni\": no IP addresses available in network: podnet; Skipping pod" #39557](https://github.com/kubernetes/kubernetes/issues/39557#issuecomment-271944481)
 
 ```bash
-$ sudo kubeadm reset --cri-socket /var/run/crio/crio.sock --v=5
-$ sudo kubeadm reset
+$ sudo kubeadm reset --cri-socket /var/run/crio/crio.sock --v=5 -f
 $ sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
 $ sudo ipvsadm -C
 ```
@@ -216,6 +445,42 @@ $ sudo sed -re 's:^.+port=0$:# &:' -i /etc/kubernetes/manifests/kube-controller-
 
 ## other references
 
+### calico tools
+```bash
+# calicoctl
+$ curl -L https://github.com/projectcalico/calico/releases/download/v3.28.1/calicoctl-linux-amd64 -o calicoctl
+$ chmod +x calicoctl
+$ sudo mv calicoctl /usr/local/bin/
+
+# kubectl-calico
+$ curl -L https://github.com/projectcalico/calico/releases/download/v3.28.1/calicoctl-linux-amd64 -o kubectl-calico
+$ chmod +x kubectl-calico
+$ sudo mv kubectl-calico /usr/local/bin/
+```
+
+### kubecolor
+```bash
+$ sudo mkdir -p /tmp/kubecolor
+$ curl -fsSL https://github.com/hidetatz/kubecolor/releases/download/v0.0.25/kubecolor_0.0.25_Linux_x86_64.tar.gz | tar xzf - -C /tmp/kubecolor
+$ sudo mv /tmp/kubecolor /usr/local/bin/
+$ sudo chmod +x /usr/local/bin/kubecolor
+```
+
+### bash completion
+```bash
+$ sudo dnf install -y bash-completion
+$ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /etc/profile.d/complete_alias.sh
+
+$ sudo bash -c "cat >> /etc/bashrc" << EOF
+alias k='kubecolor'
+[[ -f /etc/profile.d/complete_alias.sh ]] && source /etc/profile.d/complete_alias.sh
+command -v kubectl >/dev/null && source <(kubectl completion bash)
+complete -o default -F __start_kubectl kubecolor
+complete -o nosort -o bashdefault -o default -F _complete_alias $(alias | sed -rn 's/^alias ([^=]+)=.+kubec.+$/\1/p' | xargs)
+EOF
+```
+
+### kubeadm-conf.yaml
 - [`kubeadm-conf.yaml` for v1.21.3](https://blog.csdn.net/Weixiaohuai/article/details/135478349)
   ```yaml
   apiServer:
