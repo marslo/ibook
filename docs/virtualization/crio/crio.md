@@ -75,6 +75,18 @@
   >   $ sudo systemctl daemon-reload
   >   $ sudo systemctl restart crio.service
   >   ```
+  > - [#6131 - contrib/cni/11-crio-ipv4-bridge.conf does not work out of the box](https://github.com/cri-o/cri-o/issues/6131)
+  >   ```bash
+  >   # debug via:
+  >   $ strace -s2048 -f -p $(pidof crio)
+  >   ```
+  > - [#2411 - cri-o w/ Kubernetes v1.14 connects pods to wrong subnets when using Weave or kube-router or Flannel CNI plugin](https://github.com/cri-o/cri-o/issues/2411)
+  > - [Kubernetes之network: failed to set bridge addr: “cni0“ already has an IP address different from xxx问题](https://blog.csdn.net/qq_40460909/article/details/114706367)
+  > - [解决k8s"failed to set bridge addr: "cni0" already has an IP address different from 10.244.1.1/24"](https://blog.csdn.net/Wuli_SmBug/article/details/104712653)
+  > - [#3555 - crio on minikube: could not add IP address to "cni0": permission denied](https://github.com/cri-o/cri-o/issues/3555)
+  > - [#5799 - what the Additional steps for crio when install Third party network plugin like calico flannel](https://github.com/cri-o/cri-o/issues/5799)
+  > - [#2572 - kubeadm init with pod-network-cidr but still remains using 10.85.0.0](https://github.com/kubernetes/kubeadm/issues/2572)
+  > - [#39557 - "Failed to setup network for pod \ using network plugins \"cni\": no IP addresses available in network: podnet; Skipping pod"](https://github.com/kubernetes/kubernetes/issues/39557)
 
   ```bash
   $ cat /etc/cni/net.d/11-crio-ipv4-bridge.conflist
@@ -211,6 +223,18 @@ $ curl -v --unix-socket /var/run/crio/crio.sock http://localhost/info
 <
 * Connection #0 to host localhost left intact
 {"storage_driver":"overlay","storage_image":"","storage_root":"/var/lib/containers/storage","cgroup_driver":"systemd","default_id_mappings":{"uids":[{"container_id":0,"host_id":0,"size":4294967295}],"gids":[{"container_id":0,"host_id":0,"size":4294967295}]}}
+
+# or
+$ crio status info
+INFO[2024-09-06 19:23:21.790806581-07:00] Starting CRI-O, version: 1.30.4, git: dbc00ffd41a487c847158032193b6dca9b49e821(clean)
+cgroup driver: systemd
+storage driver: overlay
+storage graph root: /var/lib/containers/storage
+storage image:
+default GID mappings (format <container>:<host>:<size>):
+  0:0:4294967295
+default UID mappings (format <container>:<host>:<size>):
+  0:0:4294967295
 ```
 
 ## tips

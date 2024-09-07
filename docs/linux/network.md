@@ -12,6 +12,7 @@
   - [check remote server dns](#check-remote-server-dns)
   - [show hardware spec](#show-hardware-spec)
   - [change interface name](#change-interface-name)
+  - [Clean up network interfaces](#clean-up-network-interfaces)
 - [nginx](#nginx)
 - [nmap](#nmap)
   - [host discovery](#host-discovery)
@@ -381,6 +382,11 @@ $ sudo ifconfig <NEW_INTERFACE_NAME>
   cni0                e557e9bc-754e-4dc9-b9db-4519a7b15c33  bridge    cni0
   docker0             47c195b8-4867-40d3-acec-c28223e2b013  bridge    docker0
   ```
+
+### [Clean up network interfaces](https://github.com/canonical/microk8s/issues/712#issue-504138458)
+```bash
+$ ip a | grep -o "veth[a-z0-9]\+" | xargs -I[] sudo ip link delete []
+```
 
 ## nginx
 
