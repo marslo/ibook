@@ -11,6 +11,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
+> - [* coredns 被误删了，可以通过重新应用 coredns 的 Deployment 或 DaemonSet 配置文件来恢复](https://blog.csdn.net/u011197085/article/details/139395947)
+> - [* k8s 中如何修改 pod-network-cidr 地址范围](https://blog.csdn.net/qq32048487/article/details/131068536)
 > - [Troubleshooting Applications](https://kubernetes.io/docs/tasks/debug/debug-application/)
 >   - [Debug Pods](https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/)
 >   - [Debug Service](https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/)
