@@ -8,6 +8,9 @@
   - [install requirements](#install-requirements)
   - [reset](#reset)
   - [deploy](#deploy)
+- [addons](#addons)
+  - [grafana](#grafana)
+  - [kubernetes-dashboard](#kubernetes-dashboard)
 - [tips](#tips)
   - [CRIO](#crio)
 
@@ -78,6 +81,114 @@ $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
                    --private-key /root/.ssh/sms-k8s-apiservers \
                    cluster.yml -v
 ```
+
+## addons
+### grafana
+```bash
+$ helm repo add grafana https://grafana.github.io/helm-charts
+$ helm repo list
+NAME                    URL
+kubernetes-dashboard    https://kubernetes.github.io/dashboard/
+ingress-nginx           https://kubernetes.github.io/ingress-nginx
+grafana                 https://grafana.github.io/helm-charts
+
+$ helm repo update
+$ helm search repo grafana/grafana
+
+$ helm install grafana grafana/grafana --namespace monitoring --create-namespace
+```
+
+### kubernetes-dashboard
+
+> [!NOTE|label:references:]
+> - [Configure Kubernetes Dashboard Web UI hosted with Nginx Ingress Controller](https://gist.github.com/s-lyn/3aba97628c922ddc4a9796ac31a6df2d)
+
+#### ingress for kubernetes-dashboard
+```bash
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - sms-k8s-dashboard.sample.com
+    secretName: sample-tls
+  rules:
+    - host: sms-k8s-dashboard.sample.com
+      http:
+        paths:
+        - path: /
+          backend:
+            service:
+              # or kubernetes-dashboard-kong-proxy for latest version
+              name: kubernetes-dashboard
+              port:
+                number: 443
+          pathType: Prefix
+```
+
+#### RBAC
+- clusterrole
+  ```bash
+  $ kubectl get clusterrole kubernetes-dashboard -o yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    labels:
+      k8s-app: kubernetes-dashboard
+    name: kubernetes-dashboard
+  rules:
+  - apiGroups:
+    - '*'
+    resources:
+    - '*'
+    verbs:
+    - '*'
+  ```
+
+- clusterrolebinding
+  ```bash
+  $ kubectl -n kube-system get clusterrolebindings kubernetes-dashboard -o yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: kubernetes-dashboard
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: kubernetes-dashboard
+  subjects:
+  - kind: ServiceAccount
+    name: kubernetes-dashboard
+    namespace: kube-system
+  ```
+
+- serviceaccount
+  ```bash
+  $ kubectl -n kube-system get sa kubernetes-dashboard -o yaml
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    labels:
+      k8s-app: kubernetes-dashboard
+    name: kubernetes-dashboard
+    namespace: kube-system
+  ```
+
+- generate token
+  ```bash
+  $ kubectl -n kube-system create token kubernetes-dashboard
+  ey**********************WAA
+  ```
+
 
 ## tips
 ### CRIO
