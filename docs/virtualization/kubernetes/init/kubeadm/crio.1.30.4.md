@@ -3,6 +3,7 @@
 
 - [CRI-O](#cri-o)
 - [kubeadm](#kubeadm)
+  - [install kuberentes](#install-kuberentes)
   - [show default kubeadm-config.yaml](#show-default-kubeadm-configyaml)
 - [init](#init)
   - [init first control pannel](#init-first-control-pannel)
@@ -30,7 +31,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 > [!NOTE|label:references:]
 > - kubernetes official:
 >   - [Container Runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/)
@@ -48,8 +48,19 @@
 > - [kubernetes/misc/kubernetes-with-crio](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
 
 ```bash
-$ sudo dnf-3 install -y cri-o-1.30.4-150500.1.1 --disableexcludes=cri-o
-$ sudo sed -i 's/10.85.0.0/10.96.0.0/g' /etc/cni/net.d/11-crio-ipv4-bridge.conflist
+$ CRIO_VERSION='v1.30'
+$ cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
+[cri-o]
+name=CRI-O
+baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
+exclude=cri-o
+EOF
+
+$ sudo dnf install -y cri-o-1.30.4-150500.1.1 --disableexcludes=cri-o
+$ sudo sed -i 's/10.85.0.0/10.185.0.0/g' /etc/cni/net.d/11-crio-ipv4-bridge.conflist
 $ sudo systemctl daemon-reload
 
 $ sudo systemctl enable crio --now
@@ -63,6 +74,26 @@ $ sudo systemctl status crio
 > - [Installing Kubernetes with deployment tools](https://kubernetes.io/docs/setup/production-environment/tools/)
 > - [Bootstrapping clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/)
 > - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
+
+### install kuberentes
+```bash
+$ cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+EOF
+
+$ sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+$ sudo systemctl enable --now kubelet.service
+
+# lock kube* for auto upgrade
+$ sudo tail -1 /etc/yum.repos.d/kubernetes.repo
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+```
 
 ### show default kubeadm-config.yaml
 

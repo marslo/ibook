@@ -14,7 +14,7 @@
 > - [cri-o/cri-o](https://github.com/cri-o/cri-o)
 > - [Using the CRI-O Container Engine](https://docs.openshift.com/container-platform/3.11/crio/crio_runtime.html)
 > - [kubernetes/misc/kubernetes-with-crio](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
-> - [Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
+> - [* Debugging Kubernetes nodes with crictl](https://kubernetes.io/docs/tasks/debug/debug-cluster/crictl/)
 > - [在Kubernetes中使用CRI-O运行时](https://juejin.cn/post/6999405898980392996)
 
 ## config
