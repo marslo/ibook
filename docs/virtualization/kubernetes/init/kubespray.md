@@ -1,16 +1,19 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [python3](#python3)
-- [ansible install](#ansible-install)
 - [kubespray](#kubespray)
-  - [modify configuration](#modify-configuration)
-  - [install requirements](#install-requirements)
-  - [reset](#reset)
-  - [deploy](#deploy)
+  - [modify inventory](#modify-inventory)
+  - [requirements](#requirements)
+    - [using container](#using-container)
+    - [using local environment](#using-local-environment)
+  - [execute ansible playbook](#execute-ansible-playbook)
+    - [reset](#reset)
+    - [deploy](#deploy)
 - [addons](#addons)
   - [grafana](#grafana)
   - [kubernetes-dashboard](#kubernetes-dashboard)
+    - [ingress for kubernetes-dashboard](#ingress-for-kubernetes-dashboard)
+    - [RBAC](#rbac)
 - [tips](#tips)
   - [CRIO](#crio)
 
@@ -20,44 +23,70 @@
 > - [kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray) | [kubespray.io](https://kubespray.io/)
 > - [Quick Start](https://kubespray.io/#/?id=quick-start)
 
-## python3
+# kubespray
 
-```bash
-$ sudo dnf install -y python3.12
-$ sudo update-alternatives --config python3
-$ python3 < <(curl -s https://bootstrap.pypa.io/get-pip.py)
-$ python3 -m pip install --upgrade pip
-```
-
-## ansible install
-```bash
-$ python3 -m pip install pipx
-$ pipx install ansible --include-deps
-```
-
-## kubespray
-
-### modify configuration
+## modify inventory
 ```bash
 $ declare -a IPS=(10.68.78.221 10.68.78.222 10.68.78.223)
 $ CONFIG_FILE=inventory/sms-k8s/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 ```
 
-### install requirements
+## requirements
+- ssh-key
+  ```bash
+  # generate ssh-key in first control node
+  $ ssh-keygen -t ed25519 -C "sms-k8s" -f ~/.ssh/sms-k8s -P ''
 
-- using container
+  # add ssh-key to root user
+  $ sudo cat ~/.ssh/sms-k8s.pub >> /root/.ssh/authorized_keys
+  # or generate public key by private key
+  $ sudo ssh-keygen -f ~/.ssh/sms-k8s -y >> /root/.ssh/sms-k8s.pub
+
+  # sync authorized_keys into all the other servers
+  $ echo {01..05} | fmt -1 | while read -r _id; do
+      sudo scp -r /root/.ssh/authorized_keys root@k8s-${_id}:/root/.ssh/
+    done
+  ```
+
+### using container
   ```bash
   $ TAG_NAME='v2.26.0'
+  $ INVENTORY_DIR='sms-k8s'
+  $ SSH_KEY_NAME='sms-k8s'
+
   $ git clone --branch "${TAG_NAME}" https://github.com/kubernetes-sigs/kubespray.git kubespray-${TAG_NAME}
   $ docker pull quay.io/kubespray/kubespray:${TAG_NAME}
 
-  $ cp -r sms-k8s ~/kubespary-${TAG_NAME}/inventory/
-  $ docker run --rm -it --mount type=bind,source="$(pwd)"/kubespray-${TAG_NAME}/inventory/sms-k8s,dst=/kubespray/inventory/sms-k8s \
-           --mount type=bind,source="${HOME}"/.ssh/sms-k8s-apiservers,dst=/root/.ssh/sms-k8s-apiservers \
-           quay.io/kubespray/kubespray:${TAG_NAME} bash
+  $ cp -r ${INVENTORY_DIR} ~/kubespary-${TAG_NAME}/inventory/
+  $ docker run --rm -it \
+           --mount type=bind,source="$(pwd)"/kubespray-${TAG_NAME}/inventory/${INVENTORY_DIR},dst=/kubespray/inventory/${INVENTORY_DIR} \
+           --mount type=bind,source="${HOME}"/.ssh/${SSH_KEY_NAME},dst=/kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
+           quay.io/kubespray/kubespray:${TAG_NAME} \
+           bash
+
+  # inside container
+  $ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
+                     --become --become-user=root \
+                     --private-key /kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
+                     <ACTION>.yml -v
   ```
 
-- using local environment
+### using local environment
+
+- python3
+  ```bash
+  $ sudo dnf install -y python3.12
+  $ sudo update-alternatives --config python3
+  $ python3 < <(curl -s https://bootstrap.pypa.io/get-pip.py)
+  $ python3 -m pip install --upgrade pip
+  ```
+
+- ansible install
+  ```bash
+  $ python3 -m pip install pipx
+  $ pipx install ansible --include-deps
+  ```
+
   ```bash
   $ python3 -m venv ~/.venv/kubespray
   $ source ~/.venv/kubespray/bin/activate
@@ -66,11 +95,12 @@ $ CONFIG_FILE=inventory/sms-k8s/hosts.yaml python3 contrib/inventory_builder/inv
   $ python3 -m pip install ruamel.yaml selinux
   ```
 
+## execute ansible playbook
 ### reset
 ```bash
 $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
                    --become --become-user=root \
-                   --private-key /root/.ssh/sms-k8s-apiservers \
+                   --private-key /root/.ssh/sms-k8s \
                    reset.yml -v
 ```
 
@@ -78,12 +108,12 @@ $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
 ```bash
 $ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
                    --become --become-user=root \
-                   --private-key /root/.ssh/sms-k8s-apiservers \
+                   --private-key /root/.ssh/sms-k8s \
                    cluster.yml -v
 ```
 
-## addons
-### grafana
+# addons
+## grafana
 ```bash
 $ helm repo add grafana https://grafana.github.io/helm-charts
 $ helm repo list
@@ -98,12 +128,12 @@ $ helm search repo grafana/grafana
 $ helm install grafana grafana/grafana --namespace monitoring --create-namespace
 ```
 
-### kubernetes-dashboard
+## kubernetes-dashboard
 
 > [!NOTE|label:references:]
 > - [Configure Kubernetes Dashboard Web UI hosted with Nginx Ingress Controller](https://gist.github.com/s-lyn/3aba97628c922ddc4a9796ac31a6df2d)
 
-#### ingress for kubernetes-dashboard
+### ingress for kubernetes-dashboard
 ```bash
 ---
 apiVersion: networking.k8s.io/v1
@@ -135,7 +165,7 @@ spec:
           pathType: Prefix
 ```
 
-#### RBAC
+### RBAC
 - clusterrole
   ```bash
   $ kubectl get clusterrole kubernetes-dashboard -o yaml
@@ -189,9 +219,8 @@ spec:
   ey**********************WAA
   ```
 
-
-## tips
-### CRIO
+# tips
+## CRIO
 - `roles/kubernetes/preinstall/tasks/0080-system-configurations.yml`:
 
   > [!NOTE|label:references:]
@@ -201,6 +230,7 @@ spec:
   >   The error was: AttributeError: module 'selinux' has no attribute 'selinux_getpolicytype'
   >   ```
   > - more info:
+  >   <!--sec data-title="rpm -ql python3-libselinux" data-id="section0" data-show=true data-collapse=true ces-->
   >   ```bash
   >   $ rpm -ql python3-libselinux
   >   /usr/lib/.build-id
@@ -217,8 +247,9 @@ spec:
   >   /usr/lib64/python3.6/site-packages/selinux/__pycache__/__init__.cpython-36.pyc
   >   /usr/lib64/python3.6/site-packages/selinux/audit2why.cpython-36m-x86_64-linux-gnu.so
   >   ```
+  >   <!--endsec-->
 
-  - remove task `Set selinux policy`
+  - remove task `Set selinux policy` in `roles/kubernetes/preinstall/tasks/0080-system-configurations.yml`
     {% raw %}
     ```bash
     14   - name: Set selinux policy
@@ -275,8 +306,7 @@ spec:
     {% raw %}
     ```bash
     57       - name: Download_container | Download image if required
-    58         command: "{{ image_pull_command_on_localhost if download_localhost else image_pull_command
-         }} {{ image_reponame }}"
+    58         command: "{{ image_pull_command_on_localhost if download_localhost else image_pull_command }} {{ image_reponame }}"
     59         delegate_to: "{{ download_delegate if download_run_once else inventory_hostname }}"
     60         delegate_facts: true
     61         run_once: "{{ download_run_once }}"
