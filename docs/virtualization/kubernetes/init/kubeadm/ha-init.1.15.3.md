@@ -24,7 +24,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-![How To Setup Kubernetes Cluster Using Kubeadm](../../../screenshot/k8s/Kubeadm-init.png)
+![How To Setup Kubernetes Cluster Using Kubeadm](../../../../screenshot/k8s/Kubeadm-init.png)
 
 {% hint style='tip' %}
 > references:

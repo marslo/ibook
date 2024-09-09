@@ -7,13 +7,13 @@
   - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
     - [sample kubeadm-config](#sample-kubeadm-config)
 - [kubeadm init](#kubeadm-init)
-  - [env setup](#env-setup)
-    - [docker-ce](#docker-ce)
-    - [cri-o](#cri-o)
+  - [environment](#environment)
+    - [basic environment](#basic-environment)
+    - [container runtime](#container-runtime)
     - [kubernetes packages](#kubernetes-packages)
-  - [init first control-plane node](#init-first-control-plane-node)
+  - [init first control plane](#init-first-control-plane)
 - [kubeadm join](#kubeadm-join)
-  - [join as control-plane node](#join-as-control-plane-node)
+  - [join as control plane](#join-as-control-plane)
   - [join as worker node](#join-as-worker-node)
   - [get join command](#get-join-command)
   - [retrive join command](#retrive-join-command)
@@ -113,7 +113,6 @@ I0508 20:24:29.967938  317181 version.go:236] remote version is much newer: v1.2
 [config/images] Pulled k8s.gcr.io/etcd:3.2.24
 [config/images] Pulled k8s.gcr.io/coredns:1.2.2
 ```
-
 
 ## [kubeadm config](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#save-the-kubeadm-clusterconfiguration-in-a-configmap-for-later-reference)
 
@@ -400,9 +399,18 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
 
 # kubeadm init
 
-![how kubeadm init](../../../screenshot/k8s/Kubeadm-init.png)
+![how kubeadm init](../../../../screenshot/k8s/kubeadm-init.png)
 
-## env setup
+## environment
+
+> [!TIP|label:see also]
+> - [* iMarslo: environment](./env.md)
+
+### basic environment
+
+> [!TIP|label:see also]
+> - [* iMarslo: environment setup](./env.md#environment-setup)
+
 - pre-install
   ```bash
   # rhel/centos
@@ -420,11 +428,6 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
   ```bash
   $ sudo setenforce 0
   $ sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
-  # verify
-  $ sestatus
-  SELinux status:                 disabled
-  $ getenforce
-  Disabled
   ```
 
 - sysctl
@@ -482,94 +485,70 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
   ```bash
   $ sudo systemctl stop firewalld
   $ sudo systemctl disable firewalld
+  $ sudo systemctl mask firewalld
   ```
 
-### [docker-ce](../../docker/docker.html#install)
-### [cri-o](../../../crio/crio.md)
-```bash
-$ CRIO_VERSION='v1.30'
-$ cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
-[cri-o]
-name=CRI-O
-baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/
-enabled=1
-gpgcheck=1
-gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
-exclude=cri-o
-EOF
+### container runtime
+- [docker-ce](../../../docker/docker.md)
 
-$ sudo bash -c "cat >>/etc/modules-load.d/crio.conf" << EOF
-overlay
-br_netfilter
-EOF
+- [cri-o](../../../crio/crio.md)
+  ```bash
+  $ CRIO_VERSION='v1.30'
+  $ cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
+  [cri-o]
+  name=CRI-O
+  baseurl=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/rpm/repodata/repomd.xml.key
+  exclude=cri-o
+  EOF
 
-$ sudo dnf install -y container-selinux
-$ sudo dnf install -y cri-o-1.30.4-150500.1.1 --disableexcludes=cri-o
+  $ sudo bash -c "cat >>/etc/modules-load.d/crio.conf" << EOF
+  overlay
+  br_netfilter
+  EOF
 
-$ sudo systemctl enable --now crio.service
-```
+  $ sudo dnf install -y container-selinux
+  $ sudo dnf install -y cri-o-1.30.4-150500.1.1 --disableexcludes=cri-o
+
+  $ sudo systemctl enable --now crio.service
+  ```
 
 ### kubernetes packages
 
-- el7 - v1.12.3
-  ```bash
-  $ sudo bash -c 'cat > /etc/yum.repos.d/kubernetes.repo' <<EOF
-  [kubernetes]
-  name=Kubernetes
-  baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-  enabled=1
-  gpgcheck=1
-  repo_gpgcheck=1
-  gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-  EOF
+> [!NOTE|label:more versions:]
+> - rhel/centos
+>   - [ol8 - v1.30.4](./env.md#ol8-v1304)
+>   - [el7 - v1.15.3](./env.md#el7-v1153)
+>   - [el7 - v1.12.3](./env.md#el7-v1123)
 
-  $ sudo yum makecache
-  $ sudo dnf install -y kubelet-1.12.3-0 \
-                        kubeadm-1.12.3-0 \
-                        kubectl-1.12.3-0 \
-                        --disableexcludes=kubernetes
+```bash
+# ol8 - v1.30.4
+$ cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+EOF
 
-  $ sudo systemctl enable --now kubelet
-  Created symlink /etc/systemd/system/multi-user.target.wants/kubelet.service → /etc/systemd/system/kubelet.service.
+# get version
+$ sudo dnf search --showduplicates kubeadm | grep 1.30.4
 
-  # verify
-  $ sudo dnf list --installed | grep kube
-  cri-tools.x86_64                                   1.26.0-0                                              @kubernetes
-  kubeadm.x86_64                                     1.12.3-0                                              @kubernetes
-  kubectl.x86_64                                     1.12.3-0                                              @kubernetes
-  kubelet.x86_64                                     1.12.3-0                                              @kubernetes
-  kubernetes-cni.x86_64                              0.6.0-0                                               @kubernetes
+# install
+$ VERSION='1.30.4-150500.1.1'
+$ sudo dnf install -y kubelet-${VERSION} kubeadm-${VERSION} kubectl-${VERSION} --disableexcludes=kubernetes
+$ sudo systemctl enable --now kubelet.service
 
-  $ journalctl -u kubelet -f
-  ```
+# lock kube* for auto upgrade
+$ sudo tail -1 /etc/yum.repos.d/kubernetes.repo
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+```
 
-- ol8 - 1.30.4
-  ```bash
-  # repo
-  $ cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-  [kubernetes]
-  name=Kubernetes
-  baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
-  enabled=1
-  gpgcheck=1
-  gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
-  exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
-  EOF
-
-  # get version
-  $ sudo dnf search --showduplicates kubeadm | grep 1.30.4
-
-  # install
-  $ VERSION='1.30.4-150500.1.1'
-  $ sudo dnf install -y kubelet-${VERSION} kubeadm-${VERSION} kubectl-${VERSION} --disableexcludes=kubernetes
-  $ sudo systemctl enable --now kubelet.service
-
-  # lock kube* for auto upgrade
-  $ sudo tail -1 /etc/yum.repos.d/kubernetes.repo
-  exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
-  ```
-
-## init first control-plane node
+## init first control plane
 ```bash
 $ sudo kubeadm init --config kubeadm-conf.yaml --ignore-preflight-errors=all --upload-certs --v=5
 
@@ -721,12 +700,12 @@ I0906 15:55:10.186100  451702 uploadconfig.go:112] [upload-config] Uploading the
 [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
 I0906 15:55:10.195759  451702 uploadconfig.go:126] [upload-config] Uploading the kubelet component config to a ConfigMap
 [kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
-I0906 15:55:10.202391  451702 uploadconfig.go:131] [upload-config] Preserving the CRISocket information for the control-plane node
+I0906 15:55:10.202391  451702 uploadconfig.go:131] [upload-config] Preserving the CRISocket information for the control plane
 I0906 15:55:10.202417  451702 patchnode.go:31] [patchnode] Uploading the CRI Socket information "unix:///var/run/crio/crio.sock" to the Node API object "k8s-01" as an annotation
 [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
 [upload-certs] Using certificate key:
 35c07b0896a3075ffa0df5f6dfbeb1a23119e3ffb9a6aa943135eb924601aea8
-[mark-control-plane] Marking the node k8s-01 as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
+[mark-control-plane] Marking the node k8s-01 as control-plane by adding the labels: [node-role.kubernetes.io/control plane.kubernetes.io/exclude-from-external-load-balancers]
 [mark-control-plane] Marking the node k8s-01 as control-plane by adding the taints [node-role.kubernetes.io/control-plane:NoSchedule]
 [bootstrap-token] Using token: umo0bu.h7c4rda7p2sovlk2
 [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
@@ -768,7 +747,7 @@ You should now deploy a pod network to the cluster.
 Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
   https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
-You can now join any number of the control-plane node running the following command on each as root:
+You can now join any number of the control plane running the following command on each as root:
 
   kubeadm join k8s-api.sample.com:16443 --token umo0bu.h7c4rda7p2sovlk2 \
         --discovery-token-ca-cert-hash sha256:16ec52ecec38a27cd42006451bf5403655f8f3c1fb74f54f1c019b5937ce8c87 \
@@ -797,7 +776,7 @@ kubeadm join k8s-api.sample.com:16443 --token umo0bu.h7c4rda7p2sovlk2 \
 > - [kubeadm join](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/#token-based-discovery-with-ca-pinning)
 > - [How do I find the join command for kubeadm on the master?](https://stackoverflow.com/a/55078533/2940319)
 
-## join as control-plane node
+## join as control plane
 
 > [!NOTE|label:join command:]
 > sync certs if init without `--upload-certs`
@@ -859,7 +838,7 @@ $ sudo kubeadm token list
     ```bash
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef 1.2.3.4:6443
     ```
-  - for control-plane nodes
+  - for control planes
     ```bash
     $ kubeadm join --discovery-token abcdef.1234567890abcdef --discovery-token-ca-cert-hash sha256:1234..cdef --control-plane 1.2.3.4:6443
     ```
@@ -918,10 +897,10 @@ $ sudo dnf install -y kubeadm-"${VERSION}-*" --disableexcludes=kubernetes
 # check upgrade plan
 $ sudo kubeadm upgrade plan
 
-# first control-plane node
+# first control plane
 $ sudo kubeadm upgrade apply v1.31.x
 
-# peers control-plane nodes
+# peers control planes
 $ sudo kubeadm upgrade node
 
 # drain the node
