@@ -6,7 +6,12 @@
   - [prepare](#prepare)
   - [install package](#install-package)
   - [verify](#verify)
+- [crictl](#crictl)
+  - [remove](#remove)
 - [tips](#tips)
+  - [get cgroups](#get-cgroups)
+- [troubleshooting](#troubleshooting)
+  - [cni0](#cni0)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +32,7 @@
   debug: false
   ```
 
-  - [other version](https://github.com/cri-o/cri-o/issues/3791#issuecomment-826867283)
+  - [or](https://github.com/cri-o/cri-o/issues/3791#issuecomment-826867283)
     ```bash
     $ sudo cat /etc/crictl.yaml
     runtime-endpoint: "unix:///run/crio/crio.sock"
@@ -69,24 +74,6 @@
 
   > [!NOTE|label:references:]
   > - [cri-o/cri-o](https://github.com/cri-o/cri-o/blob/main/contrib/cni/11-crio-ipv4-bridge.conflist)
-  > - modify via:
-  >   ```bash
-  >   $ sudo sed -i 's/10.85.0.0/10.244.0.0/g' /etc/cni/net.d/11-crio-ipv4-bridge.conflist
-  >   $ sudo systemctl daemon-reload
-  >   $ sudo systemctl restart crio.service
-  >   ```
-  > - [#6131 - contrib/cni/11-crio-ipv4-bridge.conf does not work out of the box](https://github.com/cri-o/cri-o/issues/6131)
-  >   ```bash
-  >   # debug via:
-  >   $ strace -s2048 -f -p $(pidof crio)
-  >   ```
-  > - [#2411 - cri-o w/ Kubernetes v1.14 connects pods to wrong subnets when using Weave or kube-router or Flannel CNI plugin](https://github.com/cri-o/cri-o/issues/2411)
-  > - [Kubernetes之network: failed to set bridge addr: “cni0“ already has an IP address different from xxx问题](https://blog.csdn.net/qq_40460909/article/details/114706367)
-  > - [解决k8s"failed to set bridge addr: "cni0" already has an IP address different from 10.244.1.1/24"](https://blog.csdn.net/Wuli_SmBug/article/details/104712653)
-  > - [#3555 - crio on minikube: could not add IP address to "cni0": permission denied](https://github.com/cri-o/cri-o/issues/3555)
-  > - [#5799 - what the Additional steps for crio when install Third party network plugin like calico flannel](https://github.com/cri-o/cri-o/issues/5799)
-  > - [#2572 - kubeadm init with pod-network-cidr but still remains using 10.85.0.0](https://github.com/kubernetes/kubeadm/issues/2572)
-  > - [#39557 - "Failed to setup network for pod \ using network plugins \"cni\": no IP addresses available in network: podnet; Skipping pod"](https://github.com/kubernetes/kubernetes/issues/39557)
 
   ```bash
   $ cat /etc/cni/net.d/11-crio-ipv4-bridge.conflist
@@ -112,6 +99,11 @@
       }
     ]
   }
+
+  # modify
+  $ sudo sed -i 's/10.85.0.0/10.185.0.0/g' /etc/cni/net.d/11-crio-ipv4-bridge.conflist
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restart crio.service
   ```
 
 - [`/etc/crio/crio.conf.d/01-metrics.conf`](https://github.com/cri-o/cri-o/blob/main/tutorials/metrics.md)
@@ -129,7 +121,6 @@
     ```
 
 ## install
-
 ### prepare
 
 - enable kernel
@@ -158,7 +149,7 @@
 > [!NOTE|label:references:]
 > - [CRI-O Packaging](https://github.com/cri-o/packaging/blob/main/README.md)
 > - [cri-o/packaging actions](https://github.com/cri-o/packaging/actions)
-> - version define:
+> - veriables:
 >   ```bash
 >   $ CRIO_VERSION='v1.30'
 >   ```
@@ -181,7 +172,7 @@
   EOF
 
   $ sudo dnf install -y container-selinux
-  $ sudo dnf install -y cri-o
+  $ sudo dnf install -y cri-o --disableexcludes=cri-o
   # or
   $ sudo dnf install -y cri-o-1.30.3-150500.1.1.x86_64 --disableexcludes=cri-o
 
@@ -221,7 +212,7 @@
 ### verify
 
 > [!NOTE|label:references:]
->
+> - [#2416 - server status: add cgroup manager](https://github.com/cri-o/cri-o/pull/2416)
 
 ```bash
 $ curl -v --unix-socket /var/run/crio/crio.sock http://localhost/info
@@ -253,6 +244,28 @@ default UID mappings (format <container>:<host>:<size>):
   0:0:4294967295
 ```
 
+## crictl
+
+### remove
+- stop all pods
+  ```bash
+  $ crictl pods -q | xargs -r crictl -t 60s stopp
+
+  # force remove all
+  $ crictl rmp -a -f
+
+  # or (rescue)
+  $ ip netns list | cut -d' ' -f 1 | xargs -n1 ip netns delete && crictl rmp -a -f
+  ```
+
+- remove all containers
+  ```bash
+  $ crictl ps -a -q | xargs crictl rm
+
+  # or
+  $ crictl rm -a -q
+  ```
+
 ## tips
 
 > [!NOTE|label:references:]
@@ -261,3 +274,26 @@ default UID mappings (format <container>:<host>:<size>):
 >   - CRI-O now runs containers without `NET_RAW` and `SYS_CHROOT` capabilities by default.
 >   - This can result in permission denied errors when the container tries to do something that would require either of these capabilities. For instance, using ping requires `NET_RAW`, unless the container is given the sysctl net.ipv4.ip_forward.
 > - [Kubernetes CRI-O Challenge | Ping permission denied | Are you root?](https://www.youtube.com/watch?v=ZKJ9oFwjosM)
+
+### get cgroups
+```bash
+$ curl -s --unix-socket /var/run/crio/crio.sock http://localhost/info | jq -r .cgroup_driver
+systemd
+```
+
+## troubleshooting
+### cni0
+
+> [!NOTE|label:references:]
+> - [#6131 - contrib/cni/11-crio-ipv4-bridge.conf does not work out of the box](https://github.com/cri-o/cri-o/issues/6131)
+>   ```bash
+>   # debug via:
+>   $ strace -s2048 -f -p $(pidof crio)
+>   ```
+> - [#2411 - cri-o w/ Kubernetes v1.14 connects pods to wrong subnets when using Weave or kube-router or Flannel CNI plugin](https://github.com/cri-o/cri-o/issues/2411)
+> - [Kubernetes之network: failed to set bridge addr: “cni0“ already has an IP address different from xxx问题](https://blog.csdn.net/qq_40460909/article/details/114706367)
+> - [解决k8s"failed to set bridge addr: "cni0" already has an IP address different from 10.244.1.1/24"](https://blog.csdn.net/Wuli_SmBug/article/details/104712653)
+> - [#3555 - crio on minikube: could not add IP address to "cni0": permission denied](https://github.com/cri-o/cri-o/issues/3555)
+> - [#5799 - what the Additional steps for crio when install Third party network plugin like calico flannel](https://github.com/cri-o/cri-o/issues/5799)
+> - [#2572 - kubeadm init with pod-network-cidr but still remains using 10.85.0.0](https://github.com/kubernetes/kubeadm/issues/2572)
+> - [#39557 - "Failed to setup network for pod \ using network plugins \"cni\": no IP addresses available in network: podnet; Skipping pod"](https://github.com/kubernetes/kubernetes/issues/39557)

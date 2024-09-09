@@ -12,6 +12,9 @@
   - [controller manager](#controller-manager)
     - [static Pod manifest](#static-pod-manifest)
     - [other flags](#other-flags)
+  - [flow](#flow)
+    - [pod creation](#pod-creation)
+    - [ingress traffic](#ingress-traffic)
 - [ports and protocols](#ports-and-protocols)
   - [contol plane](#contol-plane)
   - [worker node(s)](#worker-nodes)
@@ -146,6 +149,15 @@
   - `--cluster-signing-cert-file` to `ca.crt`, if External CA mode is disabled, otherwise to `""`
   - `--cluster-signing-key-file` to `ca.key`, if External CA mode is disabled, otherwise to `""`
   - `--service-account-private-key-file` to sa.key
+
+## flow
+### pod creation
+
+[![kubernetes pod creation flow](../../screenshot/k8s/create-pods-flow.png)](https://medium.com/jorgeacetozi/kubernetes-master-components-etcd-api-server-controller-manager-and-scheduler-3a0179fc8186)
+
+### ingress traffic
+
+![ingress traffic flow](../../screenshot/k8s/k8s-ingress-traffic-flow.png)
 
 # [ports and protocols](https://kubernetes.io/docs/reference/ports-and-protocols/)
 ## contol plane
