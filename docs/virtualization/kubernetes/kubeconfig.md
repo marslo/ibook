@@ -25,28 +25,26 @@
 
 
 {% hint style='info' %}
-> references:
-> - [* 创建 kubeconfig 文件](https://jimmysong.io/kubernetes-handbook/practice/create-kubeconfig.html)
-> - [创建k8s context](https://www.cnblogs.com/tiny1987/p/12018080.html)
-> - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
-> - [Organizing Cluster Access Using kubeconfig Files](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
-> - [kubectl config](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#config)
-> - [Kubectl Config Set-Context | Tutorial and Best Practices](https://www.containiq.com/post/kubectl-config-set-context-tutorial-and-best-practices)
-> - [Checklist: pros and cons of using multiple Kubernetes clusters, and how to distribute workloads between them](http://vadimeisenberg.blogspot.com/2019/03/multicluster-pros-and-cons.html)
-> - [kubectl config view](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_config_view/)
->
-> others:
-> - [Introducing kubectl](https://kubebyexample.com/learning-paths/application-development-kubernetes/lesson-1-running-containerized-applications)
->
-> more usage:
-> - [imarslo : kubectl config view](./certificates.html#basic-environment)
+> - references:
+>   - [* 创建 kubeconfig 文件](https://jimmysong.io/kubernetes-handbook/practice/create-kubeconfig.html)
+>   - [创建k8s context](https://www.cnblogs.com/tiny1987/p/12018080.html)
+>   - [Configure Access to Multiple Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
+>   - [Organizing Cluster Access Using kubeconfig Files](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/)
+>   - [kubectl config](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#config)
+>   - [Kubectl Config Set-Context | Tutorial and Best Practices](https://www.containiq.com/post/kubectl-config-set-context-tutorial-and-best-practices)
+>   - [Checklist: pros and cons of using multiple Kubernetes clusters, and how to distribute workloads between them](http://vadimeisenberg.blogspot.com/2019/03/multicluster-pros-and-cons.html)
+>   - [kubectl config view](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_config_view/)
+> - others:
+>   - [Introducing kubectl](https://kubebyexample.com/learning-paths/application-development-kubernetes/lesson-1-running-containerized-applications)
+> - more usage:
+>   - [imarslo : kubectl config view](./certificates.html#basic-environment)
 {% endhint %}
 
 ## step by step
 
 ### defining clusters
 ```bash
-$ kubectl config set-cluster my-cluster --server=127.0.0.1:8087
+$ kubectl config set-cluster k8s-cluster --server=127.0.0.1:8087
 ```
 
 #### [modify server](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl_config_set-cluster/)
@@ -74,12 +72,12 @@ $ kubectl config set-cluster $(kubectl config current-context) --server=https://
 
 ### defining contexts
 ```bash
-$ kubectl config set-context --cluster=my-cluster --user=my-user
+$ kubectl config set-context --cluster=k8s-cluster --user=my-user
 ```
 
 - by namespace
   ```bash
-  $ kubectl config set-context my-context --cluster=my-cluster --user=my-user --namespace=redhat-dev
+  $ kubectl config set-context my-context --cluster=k8s-cluster --user=my-user --namespace=redhat-dev
   ```
 
 ### [setup default namespace](https://www.cloudytuts.com/tutorials/kubernetes/how-to-set-default-kubernetes-namespace/)
@@ -117,7 +115,6 @@ $ kubectl config use-context my-context
 >             --auth-provider-arg=idp-certificate-authority=( path to your ca certificate ) \
 >             --auth-provider-arg=id-token=( your id_token )
 >   ```
-
 
 ```bash
 echo "-----BEGIN CERTIFICATE-----
@@ -351,7 +348,7 @@ kubectl config use-context kubernetes-staging
 > - [cheatsheet : Kubectl context and configuration](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#kubectl-context-and-configuration)
 
 ```bash
-$ kubectl config set-cluster <my-cluster-name> --proxy-url=<my-proxy-url>
+$ kubectl config set-cluster <k8s-cluster-name> --proxy-url=<my-proxy-url>
 
 # i.e.
 $ kubectl config set-cluster development --proxy-url=http://sample.proxy.com:3128

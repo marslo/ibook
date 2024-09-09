@@ -399,7 +399,7 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
 
 # kubeadm init
 
-![how kubeadm init](../../../../screenshot/k8s/kubeadm-init.png)
+![how kubeadm init](../../../../screenshot/k8s/Kubeadm-init.png)
 
 ## environment
 
@@ -957,6 +957,9 @@ $ kubectl delete po -n kube-system coredns.+
 ```
 
 # [kubeadm reset and teardown](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-reset/)
+
+> [!NOTE|label:see also:]
+> - [* iMarslo: tear down](../../kubernetes.md#tear-down)
 
 ```bash
 $ kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
