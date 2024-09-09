@@ -11,8 +11,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-![kubernetes high availability](../../../screenshot/k8s/kubeadm-ha.png)
-
+![kubernetes high availability](../../../../screenshot/k8s/kubeadm-ha.png)
 
 > [!TIP|label:references]
 > - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
@@ -112,4 +111,4 @@ done < <(echo helm tiller)
 
 ## external etcd
 
-![external etcd topology](../../../screenshot/k8s/external-etcd-topology.png)
+![external etcd topology](../../../../screenshot/k8s/external-etcd-topology.png)

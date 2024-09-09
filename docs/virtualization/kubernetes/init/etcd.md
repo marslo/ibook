@@ -37,7 +37,7 @@
 
 - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`
 
-  ![extenal etcd](../../../screenshot/k8s/kubeadm-ha-topology-external-etcd.svg.png)
+  ![extenal etcd](../../../screenshot/k8s/kubeadm-ha-topology-stacked-etcd.svg.png)
 
   > [!TIP]
   > You need:

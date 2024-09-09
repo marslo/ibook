@@ -1,10 +1,15 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [environment setup](#environment-setup)
+  - [swapoff](#swapoff)
+  - [selinux disable](#selinux-disable)
+  - [sysctl](#sysctl)
+  - [modules](#modules)
+  - [firewall disable](#firewall-disable)
 - [package install](#package-install)
   - [Ubuntu](#ubuntu)
-    - [basic](#basic)
-    - [repo sources](#repo-sources)
+    - [repos](#repos)
     - [apt install](#apt-install)
   - [CentOS/RHEL](#centosrhel)
     - [environment](#environment)
@@ -21,35 +26,78 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# package install
-## Ubuntu
-### basic
+# environment setup
+
+- pre-setup
+  ```bash
+  # debian
+  $ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+  # rhel/centos
+  $ sudo dnf install -y conntrack-tools socat ipvsadm ipset yum-utils jq \
+             bash-completion net-tools htop rsync rsync-daemon traceroute
+
+  $ sudo usermod -a -G root,adm,sudo "$(whoami)"
+  ```
+
+## swapoff
 ```bash
-$ sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+$ sudo swapoff -a
+$ grep -q -E '^[^#]*swap' /etc/fstab && sudo sed -re 's:^[^#]*swap.*:# &:' -i /etc/fstab
+```
 
-$ sudo usermod -a -G root,adm,sudo "$(whoami)"
+## selinux disable
+```bash
+$ sudo setenforce 0
+$ sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
-$ [ -f /etc/sysctl.conf ] && sudo mv /etc/sysctl.conf{,.bak.${TIMESTAMPE}}
+# verify
+$ sestatus
+SELinux status:                 disabled
+$ getenforce
+Disabled
+```
 
-$ sudo bash -c "cat >> /etc/sysctl.conf" << EOF
-net.ipv4.ip_forward=1
-net.bridge.bridge-nf-call-iptables=1
-net.bridge.bridge-nf-call-ip6tables=1
+## sysctl
+```bash
+$ sudo grep -q -E '^[^#]*ipv4.ip_forward' /etc/sysctl.conf && sudo sed -re 's:^[^#]*ipv4.ip_forward.*:# &:' -i /etc/sysctl.conf
+$ sudo bash -c "cat >> /etc/sysctl.d/k8s.conf" << EOF
+net.ipv4.ip_forward = 1
+net.ipv4.ip_nonlocal_bind = 1
+vm.swappiness = 0
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
 EOF
-# or
-$ sudo sysctl -w net.ipv4.ip_forward=1
-$ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
-$ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
-# or
-$ sudo sysctl -w net.ipv4.ip_forward=1
-$ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
-$ sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
-$ sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
-$ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
-$ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
 
+$ sudo sysctl -p /etc/sysctl.conf
+$ sudo sysctl -p /etc/sysctl.d/k8s.conf
 $ sudo sysctl --system
 ```
+- or
+  ```bash
+  $ [ -f /etc/sysctl.conf ] && sudo mv /etc/sysctl.conf{,.bak.${TIMESTAMPE}}
+
+  $ sudo bash -c "cat >> /etc/sysctl.conf" << EOF
+  net.ipv4.ip_forward=1
+  net.bridge.bridge-nf-call-iptables=1
+  net.bridge.bridge-nf-call-ip6tables=1
+  EOF
+
+  # or
+  $ sudo sysctl -w net.ipv4.ip_forward=1
+  $ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
+  $ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
+
+  # or
+  $ sudo sysctl -w net.ipv4.ip_forward=1
+  $ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+  $ sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+  $ sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+  $ sudo sysctl -w net.bridge.bridge-nf-call-ip6tables=1
+  $ sudo sysctl -w net.bridge.bridge-nf-call-iptables=1
+
+  $ sudo sysctl --system
+  ```
 
 - [or network setup](https://malaty.net/how-to-setup-and-configure-on-prem-kubernetes-high-available-cluster-part-1/)
   ```bash
@@ -66,28 +114,75 @@ $ sudo sysctl --system
   sysctl -p /etc/sysctl.d/99-sysctl.conf
   ```
 
-### repo sources
+## modules
 ```bash
-$ cat /etc/apt/sources.list
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful main restricted
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates main restricted
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful universe
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates universe
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful multiverse
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates multiverse
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-backports main restricted universe multiverse
-deb http://sample.artifactory.com/artifactory/debian-remote-canonical artful partner
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security main restricted
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security universe
-deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security multiverse
+$ sudo modprobe br_netfilter
+$ sudo modprobe overlay
+$ sudo modprobe bridge                   # optional
+$ sudo bash -c "cat /etc/modules-load.d/k8s.conf" << EOF
+overlay
+br_netfilter
+bridge
+EOF
 
-$ cat sources.list.d/kubernetes.list
-deb http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial main
+# check
+$ sudo lsmod | grep br_netfilter
 
-$ cat sources.list.d/docker.list
-deb [arch=amd64] http://sample.artifactory.com/artifactory/debian-remote-docker artful edge
-## deb [arch=amd64] https://download.docker.com/linux/ubuntu artful edge
+# module for ipvs (optional)
+$ cat << EOF >> ./ipvs.module
+modprobe -- ip_vs
+modprobe -- ip_vs_sh
+modprobe -- ip_vs_rr
+modprobe -- ip_vs_wrr
+modprobe -- nf_conntrack
+EOF
+$ chmod 755 ./ipvs.module && ./ipvs.module
+
+# or
+$ sudo bash -c "cat /etc/modules-load.d/ipvs.conf" << EOF
+ip_vs
+ip_vs_sh
+ip_vs_rr
+ip_vs_wrr
+nf_conntrack
+EOF
+$ sudo modprobe -- ip_vs
 ```
+
+## firewall disable
+```bash
+# rhel/centos
+$ sudo systemctl stop firewalld
+$ sudo systemctl disable firewalld
+$ sudo systemctl mask firewalld
+```
+
+# package install
+## Ubuntu
+
+### repos
+- via artifactory
+  ```bash
+  $ cat /etc/apt/sources.list
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful main restricted
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates main restricted
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful universe
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates universe
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful multiverse
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-updates multiverse
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu artful-backports main restricted universe multiverse
+  deb http://sample.artifactory.com/artifactory/debian-remote-canonical artful partner
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security main restricted
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security universe
+  deb http://sample.artifactory.com/artifactory/debian-remote-ubuntu-security artful-security multiverse
+
+  $ cat sources.list.d/kubernetes.list
+  deb http://sample.artifactory.com/artifactory/debian-remote-google kubernetes-xenial main
+
+  $ cat sources.list.d/docker.list
+  deb [arch=amd64] http://sample.artifactory.com/artifactory/debian-remote-docker artful edge
+  ## deb [arch=amd64] https://download.docker.com/linux/ubuntu artful edge
+  ```
 
 - package Search
   ```bash
@@ -104,8 +199,13 @@ deb [arch=amd64] http://sample.artifactory.com/artifactory/debian-remote-docker 
 ```bash
 $ sudo apt install kubeadm=1.10.0-00 -y
 # or
-$ sudo apt install kubeadm=1.10.0-00 kubectl=1.10.0-00 kubelet=1.10.0-00 -y
+$ sudo apt install kubeadm -y
 # or
+$ sudo apt install kubeadm=1.10.0-00 kubectl=1.10.0-00 kubelet=1.10.0-00 -y
+```
+
+<!--sec data-title="apt install log" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
 $ sudo apt install kubeadm -y
 Reading package lists... Done
 Building dependency tree
@@ -165,18 +265,19 @@ Setting up kubeadm (1.10.0-00) ...
 Processing triggers for systemd (234-2ubuntu12.3) ...
 Processing triggers for ureadahead (0.100.0-20) ...
 ```
+<!--endsec-->
 
-#### vesion lock
-```bash
-$ sudo apt-mark hold kubeadm
-$ sudo apt-mark hold kubelet
-$ sudo apt-mark hold kubectl
+- vesion lock
+  ```bash
+  $ sudo apt-mark hold kubeadm
+  $ sudo apt-mark hold kubelet
+  $ sudo apt-mark hold kubectl
 
-## check
-$ dpkg -l | grep ^h
-# or
-$ apt-mark showhold
-```
+  ## check
+  $ dpkg -l | grep ^h
+  # or
+  $ apt-mark showhold
+  ```
 
 ## CentOS/RHEL
 
@@ -250,7 +351,33 @@ $ lsmod | grep br_netfilter
 ```
 
 ### yum install
-#### kube el7
+
+#### ol8 v1.30.4
+```bash
+$ cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+EOF
+
+# get version
+$ sudo dnf search --showduplicates kubeadm | grep 1.30.4
+
+# install
+$ VERSION='1.30.4-150500.1.1'
+$ sudo dnf install -y kubelet-${VERSION} kubeadm-${VERSION} kubectl-${VERSION} --disableexcludes=kubernetes
+$ sudo systemctl enable --now kubelet.service
+
+# lock kube* for auto upgrade
+$ sudo tail -1 /etc/yum.repos.d/kubernetes.repo
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+```
+
+#### el7 v1.15.3
 ```bash
 $ sudo bash -c 'cat > /etc/yum.repos.d/kubernetes.repo' <<EOF
 [kubernetes]
@@ -299,6 +426,38 @@ $ sudo systemctl enable --now kubelet
   gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   exclude=kubelet kubeadm kubectl kubernetes-cni cri-tools
   ```
+
+#### el7 v1.12.3
+```bash
+$ sudo bash -c 'cat > /etc/yum.repos.d/kubernetes.repo' <<EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+
+$ sudo yum makecache
+$ sudo dnf install -y kubelet-1.12.3-0 \
+                      kubeadm-1.12.3-0 \
+                      kubectl-1.12.3-0 \
+                      --disableexcludes=kubernetes
+
+$ sudo systemctl enable --now kubelet
+Created symlink /etc/systemd/system/multi-user.target.wants/kubelet.service → /etc/systemd/system/kubelet.service.
+
+# verify
+$ sudo dnf list --installed | grep kube
+cri-tools.x86_64             1.26.0-0      @kubernetes
+kubeadm.x86_64               1.12.3-0      @kubernetes
+kubectl.x86_64               1.12.3-0      @kubernetes
+kubelet.x86_64               1.12.3-0      @kubernetes
+kubernetes-cni.x86_64        0.6.0-0       @kubernetes
+
+$ journalctl -u kubelet -f
+```
 
 #### version lock
 ```bash

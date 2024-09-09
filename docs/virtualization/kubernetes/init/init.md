@@ -4,6 +4,7 @@
 - [synopsis](#synopsis)
 - [options](#options)
 - [init workflow](#init-workflow)
+- [init steps](#init-steps)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -133,3 +134,29 @@ addon                        Install required addons for passing conformance tes
 1. [install addons](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#install-addons)
   * [proxy](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#proxy)
   * [dns](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#dns)
+
+## init steps
+
+1. [environment setup](./kubeadm/env.md)
+1. install container runtime
+  * [cri-o](../../crio/crio.md)
+  * [docker](../../docker/docker.md)
+1. High Availability
+  * [keepalived](./kubeadm/env.md#keepalived)
+  * [haproxy](./kubeadm/env.md#haproxy)
+  * [extenal etcd](./etcd.md#extenal-etcd)
+1. [kuberentes packates](./kubeadm/kubeadm.md#kubernetes-packages)
+1. [init first control plane](./kubeadm/kubeadm.md#init-first-control-plane-node)
+1. [join peer control planes](./kubeadm/kubeadm.md#join-as-control-plane-node)
+1. [join work nodes](./kubeadm/kubeadm.md#join-as-worker-node)
+1. [install network plugin](./addons.md#cni)
+  * [calico](./addons.md#calico)
+  * [flannel](./addons.md#flannel)
+1. [install ingress](./addons.md#ingress)
+  * [ingress-nginx](./addons.md#ingress-nginx)
+1. [addons](./addons.md)
+  * [monitoring](./addons.md#monitoring)
+    * [kubernetes-dashboard](./addons.md#kubernetes-dashboard)
+    * [grafana](./addons.md#grafana)
+    * [metrics-server](./addons.md#metrics-server)
+1. [setup tls](./addons.md#tls)
