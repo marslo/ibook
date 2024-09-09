@@ -1,35 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [kubeadm pre actions](#kubeadm-pre-actions)
-  - [list and pull images](#list-and-pull-images)
-  - [kubeadm config](#kubeadm-config)
-    - [show default kubeadm-conf](#show-default-kubeadm-conf)
-  - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
-    - [sample kubeadm-config](#sample-kubeadm-config)
-- [kubeadm init](#kubeadm-init)
-  - [environment](#environment)
-    - [basic environment](#basic-environment)
-    - [container runtime](#container-runtime)
-    - [kubernetes packages](#kubernetes-packages)
-  - [init first control plane](#init-first-control-plane)
-- [kubeadm join](#kubeadm-join)
-  - [join as control plane](#join-as-control-plane)
-  - [join as worker node](#join-as-worker-node)
-  - [get join command](#get-join-command)
-  - [retrive join command](#retrive-join-command)
-- [kubeadm upgrade](#kubeadm-upgrade)
-  - [upgrade kubeadm](#upgrade-kubeadm)
-  - [upgrade cluster](#upgrade-cluster)
-  - [upgrade kubelet and kubectl](#upgrade-kubelet-and-kubectl)
-- [reconfigure cluster](#reconfigure-cluster)
-- [kubeadm reset and teardown](#kubeadm-reset-and-teardown)
-- [troubleshooting](#troubleshooting)
-- [verify](#verify)
-- [references](#references)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # kubeadm pre actions
 
 {% hint style='tip' %}

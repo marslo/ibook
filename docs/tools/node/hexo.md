@@ -152,7 +152,7 @@ $ sed 's/^theme: landscape/theme: snark/' -i _config.xml
 
 - font-awesome.min.css
 
-  > [!NOTE|label:references:]
+  > [!TIP|label:references:]
   > - deactive link:
   >   - `https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css`
   > - [workable link](https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css):
