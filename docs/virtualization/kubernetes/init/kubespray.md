@@ -2,18 +2,19 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [kubespray](#kubespray)
-  - [modify inventory](#modify-inventory)
   - [requirements](#requirements)
+    - [setup ssh key to root user](#setup-ssh-key-to-root-user)
+    - [modify inventory](#modify-inventory)
     - [using container](#using-container)
     - [using local environment](#using-local-environment)
   - [execute ansible playbook](#execute-ansible-playbook)
     - [reset](#reset)
     - [deploy](#deploy)
+    - [add nodes](#add-nodes)
+    - [remove nodes](#remove-nodes)
+    - [upgrade cluster](#upgrade-cluster)
 - [addons](#addons)
   - [grafana](#grafana)
-  - [kubernetes-dashboard](#kubernetes-dashboard)
-    - [ingress for kubernetes-dashboard](#ingress-for-kubernetes-dashboard)
-    - [RBAC](#rbac)
 - [tips](#tips)
   - [CRIO](#crio)
 
@@ -25,51 +26,55 @@
 
 # kubespray
 
-## modify inventory
-```bash
-$ declare -a IPS=(10.68.78.221 10.68.78.222 10.68.78.223)
-$ CONFIG_FILE=inventory/sms-k8s/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
-```
+> [!NOTE|label:references:]
+> - variables:
+>   ```bash
+>   $ VERSION='v2.26.0'
+>   $ INVENTORY_DIR='sms-k8s'
+>   $ SSH_KEY_NAME='sms-k8s'
+>   ```
 
 ## requirements
-- ssh-key
-  ```bash
-  # generate ssh-key in first control node
-  $ ssh-keygen -t ed25519 -C "sms-k8s" -f ~/.ssh/sms-k8s -P ''
+### setup ssh key to root user
+```bash
+$ ssh-keygen -t ed25519 -C "${SSH_KEY_NAME}" -f ~/.ssh/"${SSH_KEY_NAME}" -P ''
 
-  # add ssh-key to root user
-  $ sudo cat ~/.ssh/sms-k8s.pub >> /root/.ssh/authorized_keys
-  # or generate public key by private key
-  $ sudo ssh-keygen -f ~/.ssh/sms-k8s -y >> /root/.ssh/sms-k8s.pub
+# copy to remote servers
+$ echo {01..05} | fmt -1 | while read -r _id; do
+    ssh root@k8s-${_id} "[[ -d /root/.ssh ]] || mkdir -p /root/.ssh; chmod 700 /root/.ssh; [[ -f /root/.ssh/authorized_keys ]] || touch /root/.ssh/authorized_keys; chmod 600 /root/.ssh/authorized_keys"
+    ssh root@k8s-${_id} "cat >> /root/.ssh/authorized_keys" < ~/.ssh/"${SSH_KEY_NAME}".pub
+  done
 
-  # sync authorized_keys into all the other servers
-  $ echo {01..05} | fmt -1 | while read -r _id; do
-      sudo scp -r /root/.ssh/authorized_keys root@k8s-${_id}:/root/.ssh/
-    done
-  ```
+# verify
+$ ssh -vT -i ~/.ssh/"${SSH_KEY_NAME}" root@k8s-01
+```
+
+### modify inventory
+```bash
+$ git clone --branch "${VERSION}" https://github.com/kubernetes-sigs/kubespray.git kubespray-${VERSION}
+
+$ declare -a IPS=(10.68.78.221 10.68.78.222 10.68.78.223)
+$ CONFIG_FILE=inventory/"${INVENTORY_DIR}"/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+```
 
 ### using container
-  ```bash
-  $ TAG_NAME='v2.26.0'
-  $ INVENTORY_DIR='sms-k8s'
-  $ SSH_KEY_NAME='sms-k8s'
+```bash
+# same version with kubespray ansbile playbook
+$ docker pull quay.io/kubespray/kubespray:${VERSION}
 
-  $ git clone --branch "${TAG_NAME}" https://github.com/kubernetes-sigs/kubespray.git kubespray-${TAG_NAME}
-  $ docker pull quay.io/kubespray/kubespray:${TAG_NAME}
+$ cp -r ${INVENTORY_DIR} ~/kubespary-${VERSION}/inventory/
+$ docker run --rm -it \
+         --mount type=bind,source="$(pwd)"/kubespray-${VERSION}/inventory/${INVENTORY_DIR},dst=/kubespray/inventory/${INVENTORY_DIR} \
+         --mount type=bind,source="${HOME}"/.ssh/${SSH_KEY_NAME},dst=/kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
+         quay.io/kubespray/kubespray:${VERSION} \
+         bash
 
-  $ cp -r ${INVENTORY_DIR} ~/kubespary-${TAG_NAME}/inventory/
-  $ docker run --rm -it \
-           --mount type=bind,source="$(pwd)"/kubespray-${TAG_NAME}/inventory/${INVENTORY_DIR},dst=/kubespray/inventory/${INVENTORY_DIR} \
-           --mount type=bind,source="${HOME}"/.ssh/${SSH_KEY_NAME},dst=/kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
-           quay.io/kubespray/kubespray:${TAG_NAME} \
-           bash
-
-  # inside container
-  $ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
-                     --become --become-user=root \
-                     --private-key /kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
-                     <ACTION>.yml -v
-  ```
+# inside container
+$ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
+                   --become --become-user=root \
+                   --private-key /kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
+                   <ACTION>.yml -v
+```
 
 ### using local environment
 
@@ -98,19 +103,61 @@ $ CONFIG_FILE=inventory/sms-k8s/hosts.yaml python3 contrib/inventory_builder/inv
 ## execute ansible playbook
 ### reset
 ```bash
-$ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
+$ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
-                   --private-key /root/.ssh/sms-k8s \
+                   --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
                    reset.yml -v
 ```
 
 ### deploy
 ```bash
-$ ansible-playbook -i inventory/sms-k8s/hosts.yaml \
+$ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
-                   --private-key /root/.ssh/sms-k8s \
+                   --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
                    cluster.yml -v
 ```
+
+### [add nodes](https://kubespray.io/#/docs/getting_started/getting-started?id=adding-nodes)
+```bash
+$ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
+                   --become --become-user=root \
+                   --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
+                   scale.yml -v
+```
+
+### [remove nodes](https://kubespray.io/#/docs/getting_started/getting-started?id=remove-nodes)
+```bash
+$ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
+                   --become --become-user=root \
+                   --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
+                   --extra-vars "node=nodename,nodename2" \
+                   remove-node.yml -b -v
+```
+
+### [upgrade cluster](https://kubespray.io/#/docs/operations/upgrades)
+- upgrade kubernetes
+  ```bash
+  # i.e.: v1.18.10 to v1.19.7
+  $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
+                     -e kube_version=v1.18.10 -e upgrade_cluster_setup=true \
+                     cluster.yml -v
+  $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
+                     -e kube_version=v1.19.7 -e upgrade_cluster_setup=true \
+                     cluster.yml
+  ```
+
+- gracefully upgrade
+  ```bash
+  $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
+                     -e kube_version=v1.19.7 \
+                     upgrade-cluster.yml -b
+
+  # upgrade one node at a time
+  $ ansible-playbook -i inventory/sample/hosts.yaml \
+                     -e kube_version=v1.20.7 \
+                     -e "serial=1" \                         # upgrade one node at a time
+                     upgrade-cluster.yml -b
+  ```
 
 # addons
 ## grafana
@@ -127,97 +174,6 @@ $ helm search repo grafana/grafana
 
 $ helm install grafana grafana/grafana --namespace monitoring --create-namespace
 ```
-
-## kubernetes-dashboard
-
-> [!NOTE|label:references:]
-> - [Configure Kubernetes Dashboard Web UI hosted with Nginx Ingress Controller](https://gist.github.com/s-lyn/3aba97628c922ddc4a9796ac31a6df2d)
-
-### ingress for kubernetes-dashboard
-```bash
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: kubernetes-dashboard
-  namespace: kube-system
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/secure-backends: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - sms-k8s-dashboard.sample.com
-    secretName: sample-tls
-  rules:
-    - host: sms-k8s-dashboard.sample.com
-      http:
-        paths:
-        - path: /
-          backend:
-            service:
-              # or kubernetes-dashboard-kong-proxy for latest version
-              name: kubernetes-dashboard
-              port:
-                number: 443
-          pathType: Prefix
-```
-
-### RBAC
-- clusterrole
-  ```bash
-  $ kubectl get clusterrole kubernetes-dashboard -o yaml
-  apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRole
-  metadata:
-    labels:
-      k8s-app: kubernetes-dashboard
-    name: kubernetes-dashboard
-  rules:
-  - apiGroups:
-    - '*'
-    resources:
-    - '*'
-    verbs:
-    - '*'
-  ```
-
-- clusterrolebinding
-  ```bash
-  $ kubectl -n kube-system get clusterrolebindings kubernetes-dashboard -o yaml
-  apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
-  metadata:
-    name: kubernetes-dashboard
-  roleRef:
-    apiGroup: rbac.authorization.k8s.io
-    kind: ClusterRole
-    name: kubernetes-dashboard
-  subjects:
-  - kind: ServiceAccount
-    name: kubernetes-dashboard
-    namespace: kube-system
-  ```
-
-- serviceaccount
-  ```bash
-  $ kubectl -n kube-system get sa kubernetes-dashboard -o yaml
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    labels:
-      k8s-app: kubernetes-dashboard
-    name: kubernetes-dashboard
-    namespace: kube-system
-  ```
-
-- generate token
-  ```bash
-  $ kubectl -n kube-system create token kubernetes-dashboard
-  ey**********************WAA
-  ```
 
 # tips
 ## CRIO

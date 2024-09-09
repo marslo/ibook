@@ -137,6 +137,8 @@ addon                        Install required addons for passing conformance tes
 
 ## init steps
 
+![kubeadm init](../../../screenshot/k8s/Kubeadm-init.png)
+
 1. [environment setup](./kubeadm/env.md)
 1. install container runtime
   * [cri-o](../../crio/crio.md)

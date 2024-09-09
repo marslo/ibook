@@ -4,6 +4,7 @@
 - [kubeadm pre actions](#kubeadm-pre-actions)
   - [list and pull images](#list-and-pull-images)
   - [kubeadm config](#kubeadm-config)
+    - [show default kubeadm-conf](#show-default-kubeadm-conf)
   - [show default `KubeletConfiguration`](#show-default-kubeletconfiguration)
     - [sample kubeadm-config](#sample-kubeadm-config)
 - [kubeadm init](#kubeadm-init)
@@ -42,57 +43,6 @@
 >   - [`kubeadm config images pull [flags]`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-config/#cmd-config-images-pull)
 {% endhint %}
 
-- show default kubeadm-conf
-  ```bash
-  $ sudo kubeadm config print init-defaults
-  ```
-
-  <!--sec data-title="kubeadm config" data-id="section0" data-show=true data-collapse=true ces-->
-  ```bash
-  # v1.30.4
-  $ sudo kubeadm config print init-defaults
-  apiVersion: kubeadm.k8s.io/v1beta3
-  bootstrapTokens:
-  - groups:
-    - system:bootstrappers:kubeadm:default-node-token
-    token: abcdef.0123456789abcdef
-    ttl: 24h0m0s
-    usages:
-    - signing
-    - authentication
-  kind: InitConfiguration
-  localAPIEndpoint:
-    advertiseAddress: 1.2.3.4                                 # current IP
-    bindPort: 6443
-  nodeRegistration:
-    criSocket: unix:///var/run/containerd/containerd.sock     # cri socket
-    imagePullPolicy: IfNotPresent
-    name: node
-    taints: null
-  ---
-  apiServer:
-    timeoutForControlPlane: 4m0s
-                                                              # certSANs: []
-  apiVersion: kubeadm.k8s.io/v1beta3
-  certificatesDir: /etc/kubernetes/pki
-  clusterName: kubernetes
-  controllerManager: {}
-  dns: {}
-  etcd:
-    local:
-      dataDir: /var/lib/etcd
-                                                              # controlPlaneEndpoint: vip:port
-  imageRepository: registry.k8s.io
-  kind: ClusterConfiguration
-  kubernetesVersion: 1.30.0
-  networking:
-    dnsDomain: cluster.local
-    serviceSubnet: 10.96.0.0/12
-                                                              # add podSubnet
-  scheduler: {}
-  ```
-  <!--endsec-->
-
 ## [list and pull images](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#custom-images)
 ```bash
 # list
@@ -104,27 +54,18 @@ $ kubeadm config images list --config=kubeadm-config.yml
 $ kubeadm config images pull
 # or
 $ kubeadm config images pull --config=kubeadm-config.yml
-I0508 20:24:29.967938  317181 version.go:236] remote version is much newer: v1.27.1; falling back to: stable-1.12
-[config/images] Pulled k8s.gcr.io/kube-apiserver:v1.12.10
-[config/images] Pulled k8s.gcr.io/kube-controller-manager:v1.12.10
-[config/images] Pulled k8s.gcr.io/kube-scheduler:v1.12.10
-[config/images] Pulled k8s.gcr.io/kube-proxy:v1.12.10
-[config/images] Pulled k8s.gcr.io/pause:3.1
-[config/images] Pulled k8s.gcr.io/etcd:3.2.24
-[config/images] Pulled k8s.gcr.io/coredns:1.2.2
 ```
 
 ## [kubeadm config](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#save-the-kubeadm-clusterconfiguration-in-a-configmap-for-later-reference)
 
 > [!TIP]
 > kubeadm saves the configuration passed to `kubeadm init` in a ConfigMap named `kubeadm-config` under `kube-system` namespace.
-> This will ensure that kubeadm actions executed in future (e.g `kubeadm upgrade`) will be able to determine the actual/current cluster state and make new decisions based on that data.
 > <p>
+> This will ensure that kubeadm actions executed in future (e.g `kubeadm upgrade`) will be able to determine the actual/current cluster state and make new decisions based on that data.
+> <p>;
 > Please note that:
 > - Before saving the `ClusterConfiguration`, sensitive information like the token is stripped from the configuration
 > - Upload of control plane node configuration can be invoked individually with the [`kubeadm init phase upload-config`](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init-phase/#cmd-phase-upload-config) command
-> <p>
-> <p>
 > - [**get current `kubeadm-cfg.yml`**](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/#kubeconfig-additional-users)
 >   ```bash
 >   $ kubectl get cm kubeadm-config -n kube-system -o yaml
@@ -134,7 +75,74 @@ I0508 20:24:29.967938  317181 version.go:236] remote version is much newer: v1.2
 > - references:
 >   - [kubeadm kubeconfig](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-kubeconfig/)
 
+### show default kubeadm-conf
+```bash
+$ sudo kubeadm config print init-defaults
+```
+
+<!--sec data-title="kubeadm config" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+# v1.30.4
+$ sudo kubeadm config print init-defaults
+apiVersion: kubeadm.k8s.io/v1beta3
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: abcdef.0123456789abcdef                            # placeholder
+  ttl: 24h0m0s
+  usages:
+  - signing
+  - authentication
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 1.2.3.4                                 # current IP
+  bindPort: 6443
+nodeRegistration:
+  criSocket: unix:///var/run/containerd/containerd.sock     # cri socket
+  imagePullPolicy: IfNotPresent
+  name: node
+  taints: null
+---
+apiServer:
+  timeoutForControlPlane: 4m0s
+                                                            # certSANs: []
+apiVersion: kubeadm.k8s.io/v1beta3
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+controllerManager: {}
+dns: {}
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+                                                            # controlPlaneEndpoint: vip:port
+imageRepository: registry.k8s.io
+kind: ClusterConfiguration
+kubernetesVersion: 1.30.0
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+                                                            # add podSubnet
+scheduler: {}
+```
+<!--endsec-->
+
+
 ## [show default `KubeletConfiguration`](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#configure-kubelets-using-kubeadm)
+
+{% hint style='tip' %}
+> - for v1.12.3
+>   ```bash
+>   [apis]
+>     Available values: [ InitConfiguration
+>                         ClusterConfiguration
+>                         JoinConfiguration
+>                         KubeProxyConfiguration
+>                         KubeletConfiguration
+>                         MasterConfiguration
+>     ]
+>   ```
+{% endhint %}
+
 ```bash
 $ sudo kubeadm config print init-defaults --component-configs KubeletConfiguration
 $ sudo kubeadm config print init-defaults --component-configs KubeProxyConfiguration
@@ -145,21 +153,17 @@ $ sudo kubeadm config print-defaults
 $ sudo kubeadm config print-defaults --api-objects [apis]
 ```
 
-{% hint style='tip' %}
-```bash
-[apis]
-  Available values: [ InitConfiguration
-                      ClusterConfiguration
-                      JoinConfiguration
-                      KubeProxyConfiguration
-                      KubeletConfiguration
-                      MasterConfiguration
-  ]
-```
-{% endhint %}
-
-
 ### sample kubeadm-config
+```bash
+# verify
+$ sudo kubeadm config validate --config /etc/kubernetes/kubeadm-config.yaml
+W0909 00:02:51.443429 1809154 utils.go:69] The recommended value for "clusterDNS" in "KubeletConfiguration" is: [172.21.0.10]; the provided value is: [172.21.0.3]
+ok
+# or
+$ kubeadm config validate --config kubeadm-conf.yaml
+ok
+```
+
 - stacked etcd
   <!--sec data-title="v1.30.4" data-id="section1" data-show=true data-collapse=true ces-->
   ```bash
@@ -196,7 +200,6 @@ $ sudo kubeadm config print-defaults --api-objects [apis]
   clusterName: kubernetes
   ```
   <!--endsec-->
-
 
 - extenal etcd
 
