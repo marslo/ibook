@@ -1,16 +1,16 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Core design principles](#core-design-principles)
-  - [Constants and well-known values and paths](#constants-and-well-known-values-and-paths)
+- [core design principles](#core-design-principles)
+  - [constants and well-known values and paths](#constants-and-well-known-values-and-paths)
     - [`/etc/kubernetes/manifests`](#etckubernetesmanifests)
     - [`/etc/kubernetes`](#etckubernetes)
     - [names of certificates and key files](#names-of-certificates-and-key-files)
   - [API server](#api-server)
-    - [static Pod manifest](#static-pod-manifest)
+    - [static pod manifest](#static-pod-manifest)
     - [other api server flags](#other-api-server-flags)
   - [controller manager](#controller-manager)
-    - [static Pod manifest](#static-pod-manifest-1)
+    - [static Pod manifest](#static-pod-manifest)
     - [other flags](#other-flags)
 - [ports and protocols](#ports-and-protocols)
   - [contol plane](#contol-plane)
@@ -30,12 +30,14 @@
 - [options](#options)
   - [explain](#explain)
 - [kubectl alias](#kubectl-alias)
-    - [`__start_kubectl`](#__start_kubectl)
-    - [`_complete_alias`](#_complete_alias)
+  - [`__start_kubectl`](#__start_kubectl)
+  - [`_complete_alias`](#_complete_alias)
+  - [kubecolor](#kubecolor)
 - [token](#token)
   - [check token](#check-token)
   - [generate token](#generate-token)
 - [tear down](#tear-down)
+- [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -47,59 +49,13 @@
 > - [* ramitsurana/awesome-kubernetes](https://github.com/ramitsurana/awesome-kubernetes) | [Awesome Kubernetes](https://ramitsurana.github.io/awesome-kubernetes/)
 > - [ibm-cloud-architecture/refarch-cloudnative-devops-kubernetes](https://github.com/ibm-cloud-architecture/refarch-cloudnative-devops-kubernetes)
 
-
-{% hint style='tip' %}
-> reference
-> - [* Play with Kubernetes](https://labs.play-with-k8s.com/)
-> - [* Glossary](https://kubernetes.io/docs/reference/glossary/?fundamental=true)
-> - [* Install Kubernetes Cluster on Centos 8 With Kubeadm and CRI-O](https://tayeh.me/posts/install-kubernetes-cluster-on-centos-8-with-kubeadm-crio/)
-> - [* 在 CentOS 上部署 Kubernetes 集群](https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html)
-> - [* Kubernetes 中文指南/云原生应用架构实战手册](https://jimmysong.io/kubernetes-handbook/)
-> - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
-> - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
-> - [* Scheduling, Preemption and Eviction](https://kubernetes.io/docs/concepts/scheduling-eviction/_print/)
-> - [* Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
-> - [* Administer a Cluster](https://kubernetes.io/docs/tasks/administer-cluster/)
-> - [* Kubernetes概念辨析](https://cloud-atlas.readthedocs.io/zh_CN/latest/kubernetes/concepts/index.html)
-> - [* Step by step installation of 3-nodes Kubernetes Cluster on CentOS 8](https://akyriako.medium.com/how-to-install-a-kubernetes-cluster-on-centos-8-1f9c5acd9c0e)
-> - [* KUBERNETES INSTALLATION ON CENTOS 8](https://www.topcoder.com/thrive/articles/kubernetes-installation-on-centos-8)
-> - [* Reference > Configuration APIs](https://kubernetes.io/docs/reference/config-api/)
-> - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
-> - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
-> - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)
-> - [Boosting your kubectl productivity](https://learnk8s.io/blog/kubectl-productivity/)
-> - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
-> - [8 Kubernetes Tips and Tricks](https://www.ibm.com/cloud/blog/8-kubernetes-tips-and-tricks)
-> - [Linux namespace简介](https://blog.csdn.net/chenleiking/article/details/87915185)
-> - [Well-Known Labels, Annotations and Taints](https://kubernetes.io/docs/reference/labels-annotations-taints)
-> - [* best practices](https://kubernetes.io/docs/setup/best-practices/_print/)
-> - [12 Kubernetes Configuration Best Practices](https://cloud.redhat.com/blog/12-kubernetes-configuration-best-practices)
-> - [Best Kubernetes Certifications for 2023 [Ranked]](https://devopscube.com/best-kubernetes-certifications/)
-> - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
-> - Kubernetes Architecture
->   - [Kubernetes Architecture Explained [Comprehensive Guide]](https://devopscube.com/kubernetes-architecture-explained/)
-> - [* How to Access Kubernetes API Server](https://blog.codefarm.me/2021/12/18/access-kubernetes/)
-> - [Kubernetes（k8s）基础概念介绍](https://www.cnblogs.com/liugp/p/16345473.html)
-> - [Migrating a cluster from flannel to Calico](https://docs.projectcalico.org/v3.9/getting-started/kubernetes/installation/migration-from-flannel)
-> - [Kubernetes 网络组件](https://linux.cn/article-10003-1.html)
->
-> resources:
-> - [Free Kubernetes Ebook: Kubernetes up and running](https://devopscube.com/free-kubernetes-ebook/)
-> - [How to Learn Kubernetes (Complete Roadmap & Resources)](https://devopscube.com/learn-kubernetes-complete-roadmap/)
-> - [kelseyhightower/kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
-> - [* Kubernetes Tutorials For Beginners: 43 Comprehensive Guides](https://devopscube.com/kubernetes-tutorials-beginners/)
-> - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
-> - [Kubernetes Learning Resources](https://devopscube.com/kubernetes/)
-> - [Kubernetes Documentation/Tasks](https://kubernetes.io/docs/tasks/)
-{% endhint %}
-
 ![kubernetes orchestration control panel](../../screenshot/k8s/kubernetes-control-plane.png)
 
 ![kubernetes technology](../../screenshot/k8s/kubernetes-architecture.jpeg)
 
 
-# [Core design principles](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
-## [Constants and well-known values and paths](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#constants-and-well-known-values-and-paths)
+# [core design principles](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
+## [constants and well-known values and paths](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#constants-and-well-known-values-and-paths)
 
 ### `/etc/kubernetes/manifests`
 
@@ -113,7 +69,7 @@
 ### `/etc/kubernetes`
 
 > [!TIP]
-> - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
+> - [important kubernetes cluster configurations](https://devopscube.com/kubernetes-cluster-configurations/)
 > `/etc/kubernetes/` as the path where kubeconfig files with identities for control plane components are stored. Names of kubeconfig files are:
 > - `kubelet.conf` (bootstrap-kubelet.conf during TLS bootstrap)
 > - `controller-manager.conf`
@@ -132,7 +88,7 @@
 
 ## [API server](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#api-server)
 
-### [static Pod manifest](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+### [static pod manifest](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
 
 > [!TIP]
 > - `apiserver-advertise-address` and `apiserver-bind-port` to bind to; if not provided, those value defaults to the IP address of the default network interface on the machine and port `6443`
@@ -302,7 +258,7 @@ FIELDS:
   ```
 
 # [kubectl alias](https://learnk8s.io/blog/kubectl-productivity/)
-### `__start_kubectl`
+## `__start_kubectl`
 ```bash
 $ echo 'source <(kubectl completion bash)' >> ~/.bashrc
 $ cat >> ~/.bashrc <<EOF
@@ -310,34 +266,45 @@ alias k='kubectl'
 alias kc='kubectl -n kube-system'
 alias ki='kubectl -n ingress-ngxin'
 alias kk='kubectl -n kubernetes-dashboard'
-
-for _i in k kc ki kk; do
-  complete -F __start_kubectl "${_i}"
-done
+for _i in k kc ki kk; do complete -F __start_kubectl "${_i}"; done
 EOF
 $ source ~/.bashrc
 ```
 
-### `_complete_alias`
+## `_complete_alias`
 ```bash
- download bash_completion.sh for kubectl
-$ curl -fsSL https://raw.githubusercontent.com/cykerway/complete-alias/master/bash_completion.sh > ~/.bash_completion.sh
+$ sudo dnf install -y bash-completion
+
+# download bash_completion.sh for kubectl
+$ curl -fsSL https://github.com/cykerway/complete-alias/raw/master/complete_alias -o ~/.bash_completion.sh
+# or rhel/centos
+$ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /etc/profile.d/complete_alias.sh
 $ chmod +x !$
 
 $ cat >> ~/.bashrc << EOF
 source <(kubectl completion bash)
 source ~/.bash_completion.sh
+# or
+# source /etc/profile.d/complete_alias.sh
 
 alias k='kubectl'
 alias kc='kubectl -n kube-system'
 alias ki='kubectl -n ingress-ngxin'
 alias kk='kubectl -n kubernetes-dashboard'
 
-while read -r _i; do
-  complete -F _complete_alias "${_i}"
-done < <(sed '/^alias /!d;s/^alias //;s/=.*$//' '~/.bashrc')
+complete -o nosort -o bashdefault -o default -F _complete_alias $(alias | sed -rn 's/^alias ([^=]+)=.+kubec.+$/\1/p' | xargs)
 EOF
+
 $ source ~/.bashrc
+```
+
+## kubecolor
+
+```bash
+$ sudo mkdir -p /tmp/kubecolor
+$ curl -fsSL https://github.com/hidetatz/kubecolor/releases/download/v0.0.25/kubecolor_0.0.25_Linux_x86_64.tar.gz | tar xzf - -C /tmp/kubecolor
+$ sudo mv /tmp/kubecolor /usr/local/bin/
+$ sudo chmod +x /usr/local/bin/kubecolor
 ```
 
 # token
@@ -350,6 +317,11 @@ khhfwa.jvkvrpiknx4o6ffy   19h         2018-07-13T11:37:43+08:00   authentication
 ```
 
 ## generate token
+
+> [!NOET|label:see also:]
+> - [* iMarslo: get join command](./init/kubeadm/kubeadm.md#get-join-command)
+> - [* iMarslo: retrive join command](./init/kubeadm/kubeadm.md#retrive-join-command)
+
 ```bash
 $ sudo kubeadm token create --print-join-command
 kubeadm join 192.168.1.100:6443 --token lhb1ln.oj0fqwgd1yl7l9xp --discovery-token-ca-cert-hash sha256:cba8df87dcb70c83c19af72c02e4886fcc7b0cf05319084751e6ece688443bde
@@ -362,6 +334,7 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
 
 > [!TIP]
 > - [How to completely uninstall kubernetes](https://stackoverflow.com/a/71503087/2940319)
+> - [* iMarslo: kubeadm reset and teardown](./init/kubeadm/kubeadm.md#kubeadm-reset-and-teardown)
 
 - ubuntu
   ```bash
@@ -399,17 +372,31 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
   $ kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
   $ kubectl delete node <node name>
 
-  $ sudo kubeadm reset
+  $ sudo kubeadm reset -f --v=5
   $ docker system prune -a -f
 
+  # stop and disable services
   $ systemctl stop kubelet
   $ systemctl disable kubelet
   $ systemctl stop docker
   $ systemctl disable docker
+  $ systemctl stop crio
+  # or
+  $ systemctl disable crio
+  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/kubelet.service
+  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/docker.service
+  $ sudo rm -rf /usr/lib/systemd/system/docker.service
+  $ sudo rm -rf /usr/lib/systemd/system/kubelet.service.d/
 
+  # network interface
   $ sudo ifconfig cni0 down
+  $ sudo ip link delete cni0
   $ sudo ifconfig flannel.1 down
+  $ sudo ip link delete flannel.1
   $ sudo ifconfig docker0 down
+  $ sudo ip link delete docker0
+  $ sudo ifconfig vxlan.calico down
+  $ sudo ip link delete vxlan.calico
 
   $ sudo yum versionlock delete docker-ce
   $ sudo yum versionlock delete docker-ce-cli
@@ -417,28 +404,16 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
   $ sudo yum versionlock delete kubelet
   $ sudo yum versionlock delete kubectl
   $ sudo yum versionlock delete kubernetes-cni
+  # or
+  $ sudo yum versionlock clear
   $ sudo yum remove -y docker-ce docker-ce-cli containerd.io kubectl kubeadm kubelet kubernetes-cni
   $ sudo yum autormeove
 
-  $ rm -rf /home/devops/.kube/
-  $ sudo rm -rf /etc/cni
-  $ sudo rm -rf /etc/kubernetes/
-  $ sudo rm -rf /etc/docker/
-
-  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/kubelet.service
-  $ sudo rm -rf /etc/systemd/system/multi-user.target.wants/docker.service
-  $ sudo rm -rf /usr/lib/systemd/system/docker.service
-  $ sudo rm -rf /usr/lib/systemd/system/kubelet.service.d/
-
-  $ sudo rm -rf /usr/libexec/docker/
-  $ sudo rm -rf /usr/libexec/kubernetes/
+  $ sudo rm -rf /etc/cni /etc/kubernetes /etc/docker $HOME/.kube
+  $ sudo rm -rf /usr/libexec/docker /usr/libexec/kubernetes
 
   $ sudo rm -rf /var/lib/etcd/               # optional
-  $ sudo rm -rf /var/lib/kubelet/
-  $ sudo rm -rf /var/lib/dockershim/
-  $ sudo rm -rf /var/lib/yum/repos/x86_64/7/kubernetes/
-  $ sudo rm -rf /var/log/pods/
-  $ sudo rm -rf /var/log/containers/
+  $ sudo rm -rf /var/lib/kubelet/ /var/lib/dockershim /var/lib/yum/repos/x86_64/7/kubernetes /var/log/pods /var/log/containers
   $ sudo rm -rf /var/run/docker.sock
   $ sudo rm -rf /var/cache/yum/x86_64/7/kubernetes
 
@@ -447,3 +422,50 @@ kubeadm join 192.168.1.100:6443 --token bop765.brol9nsrw820gmbi --discovery-toke
   $ sudo yum makecache
   $ sudo yum check-update
   ```
+
+# references
+
+{% hint style='tip' %}
+> - references:
+>   - [* Play with Kubernetes](https://labs.play-with-k8s.com/)
+>   - [* Glossary](https://kubernetes.io/docs/reference/glossary/?fundamental=true)
+>   - [* Install Kubernetes Cluster on Centos 8 With Kubeadm and CRI-O](https://tayeh.me/posts/install-kubernetes-cluster-on-centos-8-with-kubeadm-crio/)
+>   - [* 在 CentOS 上部署 Kubernetes 集群](https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html)
+>   - [* Kubernetes 中文指南/云原生应用架构实战手册](https://jimmysong.io/kubernetes-handbook/)
+>   - [* Create static Pods](https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/)
+>   - [* Implementation details](https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/#core-design-principles)
+>   - [* Scheduling, Preemption and Eviction](https://kubernetes.io/docs/concepts/scheduling-eviction/_print/)
+>   - [* Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
+>   - [* Administer a Cluster](https://kubernetes.io/docs/tasks/administer-cluster/)
+>   - [* Kubernetes概念辨析](https://cloud-atlas.readthedocs.io/zh_CN/latest/kubernetes/concepts/index.html)
+>   - [* Step by step installation of 3-nodes Kubernetes Cluster on CentOS 8](https://akyriako.medium.com/how-to-install-a-kubernetes-cluster-on-centos-8-1f9c5acd9c0e)
+>   - [* KUBERNETES INSTALLATION ON CENTOS 8](https://www.topcoder.com/thrive/articles/kubernetes-installation-on-centos-8)
+>   - [* Reference > Configuration APIs](https://kubernetes.io/docs/reference/config-api/)
+>   - [KUBERNETES: AN OVERVIEW](https://thenewstack.io/kubernetes-an-overview)
+>   - [What Is Kubernetes: A Container Orchestration Platform](https://www.metricfire.com/blog/what-is-kubernetes-a-container-orchestration-platform/)
+>   - [KUBERNETES, OPEN-SOURCE CONTAINER ORCHESTRATION TECHNOLOGY](https://quintagroup.com/cms/technology/kubernetes)
+>   - [Boosting your kubectl productivity](https://learnk8s.io/blog/kubectl-productivity/)
+>   - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
+>   - [8 Kubernetes Tips and Tricks](https://www.ibm.com/cloud/blog/8-kubernetes-tips-and-tricks)
+>   - [Linux namespace简介](https://blog.csdn.net/chenleiking/article/details/87915185)
+>   - [Well-Known Labels, Annotations and Taints](https://kubernetes.io/docs/reference/labels-annotations-taints)
+>   - [* best practices](https://kubernetes.io/docs/setup/best-practices/_print/)
+>   - [12 Kubernetes Configuration Best Practices](https://cloud.redhat.com/blog/12-kubernetes-configuration-best-practices)
+>   - [Best Kubernetes Certifications for 2023 [Ranked]](https://devopscube.com/best-kubernetes-certifications/)
+>   - [Important Kubernetes Cluster Configurations](https://devopscube.com/kubernetes-cluster-configurations/)
+>   - Kubernetes Architecture
+>     - [Kubernetes Architecture Explained [Comprehensive Guide]](https://devopscube.com/kubernetes-architecture-explained/)
+>   - [* How to Access Kubernetes API Server](https://blog.codefarm.me/2021/12/18/access-kubernetes/)
+>   - [Kubernetes（k8s）基础概念介绍](https://www.cnblogs.com/liugp/p/16345473.html)
+>   - [Migrating a cluster from flannel to Calico](https://docs.projectcalico.org/v3.9/getting-started/kubernetes/installation/migration-from-flannel)
+>   - [Kubernetes 网络组件](https://linux.cn/article-10003-1.html)
+>
+> - resources:
+>   - [Free Kubernetes Ebook: Kubernetes up and running](https://devopscube.com/free-kubernetes-ebook/)
+>   - [How to Learn Kubernetes (Complete Roadmap & Resources)](https://devopscube.com/learn-kubernetes-complete-roadmap/)
+>   - [kelseyhightower/kubernetes-the-hard-way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
+>   - [* Kubernetes Tutorials For Beginners: 43 Comprehensive Guides](https://devopscube.com/kubernetes-tutorials-beginners/)
+>   - [* How to Setup Jenkins Build Agents on Kubernetes Pods](https://devopscube.com/jenkins-build-agents-kubernetes/)
+>   - [Kubernetes Learning Resources](https://devopscube.com/kubernetes/)
+>   - [Kubernetes Documentation/Tasks](https://kubernetes.io/docs/tasks/)
+{% endhint %}
