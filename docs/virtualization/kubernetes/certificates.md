@@ -179,15 +179,23 @@
 > reference:
 > - [others](https://github.com/jetstack/cert-manager/issues/494)
 > - [Pro-Tip – Copying Kubernetes Secrets Between Namespaces](https://www.revsys.com/tidbits/copying-kubernetes-secrets-between-namespaces/)
+> - [Is there a way to share secrets across namespaces in Kubernetes?](https://stackoverflow.com/a/52326812/2940319)
+> - [#73787 - Deprecate --export flag from get command](https://github.com/kubernetes/kubernetes/pull/73787)
 {% endhint %}
 
 ```bash
+# v1.14-
 $ kubectl -n ingress-nginx get secrets <SECRET_NAME> -o yaml --export | kubectl apply -n devops -f -
 
 # v1.14+
 $ kubectl --namespace=kube-system get secrets marvell-tls -o yaml |
           grep -v '^\s*namespace:\s' |
           kubectl apply --namespace=monitoring -f -
+
+# or with jq
+$ kubectl get secret cure-for-covid-19 -n china -o json |
+          jq 'del(.metadata["namespace","creationTimestamp","resourceVersion","selfLink","uid"])' |
+          kubectl apply -n rest-of-world -f -
 ```
 
 ## show tls
