@@ -40,6 +40,7 @@
 >   - [* Kubernetes provisioning with CRI-O as container runtime](https://github.com/justmeandopensource/kubernetes/tree/master/misc/kubernetes-with-crio)
 >   - [kubeadm keepalived haproxy containerd部署高可用k8s集群](https://blog.csdn.net/shoujiyanzhen/article/details/120673624)
 >   - [* kubeadm-conf.yaml: 1、Kubernetes核心技术 - 高可用集群搭建（kubeadm+keepalived+haproxy）](https://blog.csdn.net/Weixiaohuai/article/details/135478349)
+>   - [* kubeadm部署3master3node centos7的crio(1.24.0)+k8s(1.26.0)](https://blog.csdn.net/weixin_43323107/article/details/128535741)
 
 ## CRI-O
 
