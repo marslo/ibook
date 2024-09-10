@@ -8,6 +8,7 @@
   - [shortcut](#shortcut)
   - [download](#download)
   - [tips](#tips)
+  - [switch recently used tab](#switch-recently-used-tab)
 - [chromium](#chromium)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -246,6 +247,11 @@ about:restartrequired
 @="\"C:\\Program Files\\Internet Explorer\\iexplore.exe\" -incognito %1"
 "DelegateExecute"="{17FE9752-0B5A-4665-84CD-569794602F5C}"
 ```
+
+### [switch recently used tab](https://superuser.com/a/433532/112396)
+
+> [!NOTE|label:references:]
+> - [Recent Tabs](https://chromewebstore.google.com/detail/recent-tabs/ocllfmhjhfmogablefmibmjcodggknml)
 
 ## chromium
 - download page : https://download-chromium.appspot.com

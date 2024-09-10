@@ -17,6 +17,7 @@
     - [copy multiple files to remote server](#copy-multiple-files-to-remote-server)
     - [`find` && `tar`](#find--tar)
     - [tar all and extra in remote](#tar-all-and-extra-in-remote)
+    - [copy local file content into remote](#copy-local-file-content-into-remote)
   - [with proxy](#with-proxy)
     - [using command directly](#using-command-directly)
 - [ssh certificate](#ssh-certificate)
@@ -203,6 +204,9 @@ $ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@targe
 ### [copy multiple files to remote server](https://superuser.com/a/116031/112396)
 ```bash
 $ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -
+
+# or
+$ tar cvf - /path/*.jpg | ssh foo@bar.com "tar xvf -"
 ```
 
 ### `find` && `tar`
@@ -245,6 +249,21 @@ Warning: Permanently added '10.69.78.40' (ECDSA) to the list of known hosts.
 #       |          |
 #       v          v
 $ tar cfz - . | ssh hostname "cd ~/.marslo/test/; tar xvzf -"
+```
+
+### copy local file content into remote
+
+> [!NOTE|label:references:]
+> - [How to copy a file without using scp inside an ssh session?](https://superuser.com/a/291425/112396)
+
+```bash
+$ ssh user@remote 'cat > /path/to/remote/file' < /path/to/local/file
+
+# or
+$ cat /path/to/local/file | ssh user@remote 'cat > /path/to/remote/file'
+
+# to retrieve the file
+$ ssh user@remote 'cat /path/to/remote/file' > pbcopy
 ```
 
 ## with proxy
