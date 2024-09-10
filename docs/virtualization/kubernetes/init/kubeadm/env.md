@@ -115,6 +115,11 @@ $ sudo sysctl --system
   ```
 
 ## modules
+
+> [!NOTE|label:references:]
+> - [kubespray/roles/kubernetes/node/defaults/main.yml](https://github.com/kubernetes-sigs/kubespray/blob/master/roles/kubernetes/node/defaults/main.yml#L256)
+> - [Kubernetes接入CRI-O](https://www.cnblogs.com/layzer/articles/kubernetes-crio.html)
+
 ```bash
 $ sudo modprobe br_netfilter
 $ sudo modprobe overlay

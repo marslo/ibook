@@ -17,7 +17,7 @@
 
 {% hint style='tip' %}
 > reference:
-> - [jenkins-infra/pipeline-library](https://github.com/jenkins-infra/pipeline-library)
+> - [* jenkinsci/jenkins/jenkinsfile](https://github.com/jenkinsci/jenkins/blob/master/Jenkinsfile) | [* jenkins-infra/pipeline-library](https://github.com/jenkins-infra/pipeline-library)
 > - [Pipeline Examples](https://www.jenkins.io/doc/pipeline/examples/)
 > - [Jenkins Pipeline Syantx](https://kb.novaordis.com/index.php/Jenkins_Pipeline_Syntax)
 > - [Jenkins Pipeline Cookbook](https://e.printstacktrace.blog/jenkins-pipeline-cookbook/)
