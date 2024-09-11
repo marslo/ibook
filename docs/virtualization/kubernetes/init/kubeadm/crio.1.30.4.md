@@ -6,7 +6,7 @@
   - [install kuberentes](#install-kuberentes)
   - [show default kubeadm-config.yaml](#show-default-kubeadm-configyaml)
 - [init](#init)
-  - [init first control pannel](#init-first-control-pannel)
+  - [init first control plane](#init-first-control-plane)
   - [add another control plane node](#add-another-control-plane-node)
   - [reupload certificate](#reupload-certificate)
   - [HA Cluster](#ha-cluster)
@@ -167,7 +167,7 @@ scheduler: {}
 >   - [Kubernetes cluster with CRI-O container runtime | Step by step tutorial](https://www.youtube.com/watch?v=bV5RcNiHlfw)
 >   - [Kubernetes CRI-O Challenge | Ping permission denied | Are you root?](https://www.youtube.com/watch?v=ZKJ9oFwjosM)
 
-### init first control pannel
+### init first control plane
 ```bash
 $ sudo kubeadm init --config kubeadm-config.yaml --upload-certs --v=5
 ```

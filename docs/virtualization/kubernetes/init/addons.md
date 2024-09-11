@@ -8,16 +8,21 @@
 - [ingress](#ingress)
   - [ingress-nginx](#ingress-nginx)
 - [monitoring](#monitoring)
+  - [metrics-server](#metrics-server)
   - [kubernetes-dashboard](#kubernetes-dashboard)
     - [ingress for kubernetes-dashboard](#ingress-for-kubernetes-dashboard)
     - [RBAC](#rbac)
-  - [grafana](#grafana)
-  - [metrics-server](#metrics-server)
+  - [prometheus stack](#prometheus-stack)
+    - [grafana](#grafana)
 - [tls](#tls)
   - [import tls](#import-tls)
   - [copy tls](#copy-tls)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+> [!TIP|label:references]
+> - [see also: iMarlso: tools](../tools.md)
 
 # helm
 ```bash
@@ -102,10 +107,24 @@ $ helm show values ingress-nginx --repo https://kubernetes.github.io/ingress-ngi
 ```
 
 # monitoring
+## metrics-server
+```bash
+$ helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+$ helm upgrade --install metrics-server metrics-server/metrics-server --namespace monitoring --create-namespace
+
+# without tls: https://github.com/kubernetes-sigs/metrics-server/issues/1221
+$ helm upgrade metrics-server metrics-server/metrics-server --set args="{--kubelet-insecure-tls}" --namespace monitoring
+```
+
 ## kubernetes-dashboard
 
 > [!NOTE|label:references:]
 > - [Configure Kubernetes Dashboard Web UI hosted with Nginx Ingress Controller](https://gist.github.com/s-lyn/3aba97628c922ddc4a9796ac31a6df2d)
+> - [Enabling Kubernetes Dashboard over HTTPS with RBAC Authorization](https://blog.zachinachshon.com/k8s-dashboard/)
+>   - Admin User
+>   - Cluster Admin User
+>   - Ready-only User
+>   - Access via kubeconfig
 
 ```bash
 # add kubernetes-dashboard repository
@@ -183,11 +202,12 @@ spec:
 
 ### RBAC
 
-#### [create admin user for kuberentes-dashboard](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
+#### [create admin user for kubernetes-dashboard](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
 
 > [!NOTE|label:references:]
 > - [Creating sample user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md#creating-sample-user)
 >   - using `ClusterRole` : `cluster-admin` for `kubernetes-dashboard-admin`
+> - [Kubernetes - Dashboard 配置用户名密码方式登录](https://blog.csdn.net/lookboydfw/article/details/138320111)
 
 - create ServiceAccount in namespace
   ```bash
@@ -241,6 +261,9 @@ spec:
   $ kubectl -n monitoring get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='kubernetes-dashboard-admin')].data.token}" | base64 -d
   # or
   $ kubectl -n monitoring get secrets -o jsonpath="{.items[?(@.metadata.annotations.kubernetes\.io/service-account\.name=='kubernetes-dashboard-admin')].data.token}" | base64 -d
+
+  # or get token by describe token
+  $ kubectl -n monitoring describe secrets $(kubectl -n monitoring get secret | grep kubernetes-dashboard-admin | awk '{print $1}') | grep 'token' | awk '{print $2}'
   ```
 
 - or modify ClusterRole `kubernetes-dashboard-metrics-scraper` manually
@@ -404,7 +427,143 @@ spec:
       ```
     <!--endsec-->
 
-## grafana
+
+## prometheus stack
+
+> [!NOTE|label:references:]
+> - [assign different port for node-exporter in kube-prometheus-stack](https://stackoverflow.com/a/75427221/2940319)
+> - [Prometheus+Grafana监控K8S集群(基于K8S环境部署)](https://blog.csdn.net/weixin_45623111/article/details/135381921)
+> - [Grafana dashboard best practices](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/best-practices/):
+>   - [* iMarslo: grafana dashboard](../monitor.md#dashboard)
+>  - cluster level: 13332、13824、14518
+
+```bash
+$ helm repo add prometheus-stack https://prometheus-community.github.io/helm-charts
+"prometheus-stack" has been added to your repositories
+
+$ helm upgrade --install prometheus-stack prometheus-stack/kube-prometheus-stack --namespace monitoring
+
+# if node-exporter has been deployed by kubespary, assign another port for kube-prometheus-stack
+$ helm upgrade --install prometheus-stack prometheus-stack/kube-prometheus-stack \
+               --namespace monitoring \
+               --set prometheus-node-exporter.service.port=9200
+Release "prometheus-stack" has been upgraded. Happy Helming!
+NAME: prometheus-stack
+LAST DEPLOYED: Tue Sep 10 22:53:40 2024
+NAMESPACE: monitoring
+STATUS: deployed
+REVISION: 2
+NOTES:
+kube-prometheus-stack has been installed. Check its status by running:
+  kubectl --namespace monitoring get pods -l "release=prometheus-stack"
+
+Visit https://github.com/prometheus-operator/kube-prometheus for instructions on how to create & configure Alertmanager and Prometheus instances using the Operator.
+```
+
+#### ingress
+
+- grafana
+
+  > [!NOTE|label:references]
+  > - [#1748 - Expose Grafana with Ingress](https://github.com/prometheus-operator/kube-prometheus/issues/1748)
+
+  ```yaml
+  ---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: prometheus-stack-grafana
+    namespace: monitoring
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      nginx.ingress.kubernetes.io/secure-backends: "true"
+  spec:
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - sms-k8s-grafana.sample.com
+      secretName: sample-tls
+    rules:
+      - host: sms-k8s-grafana.sample.com
+        http:
+          paths:
+          - path: /
+            backend:
+              service:
+                name: prometheus-stack-grafana
+                port:
+                  number: 80
+            pathType: Prefix
+  ```
+
+- prometheus
+  ```yaml
+  ---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: prometheus
+    namespace: monitoring
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+  spec:
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - sms-k8s-prometheus.marvell.com
+      secretName: marvell-tls
+    rules:
+      - host: sms-k8s-prometheus.marvell.com
+        http:
+          paths:
+          - path: /
+            backend:
+              service:
+                name: prometheus-stack-kube-prom-prometheus
+                port:
+                  number: 9090
+            pathType: Prefix
+  ```
+
+- alertmanager
+  ```yaml
+  ---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: alertmanager
+    namespace: monitoring
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+  spec:
+    ingressClassName: nginx
+    tls:
+    - hosts:
+      - sms-k8s-alertmgr.marvell.com
+      secretName: marvell-tls
+    rules:
+      - host: sms-k8s-alertmgr.marvell.com
+        http:
+          paths:
+          - path: /
+            backend:
+              service:
+                name: prometheus-stack-kube-prom-alertmanager
+                port:
+                  number: 9093
+            pathType: Prefix
+  ```
+
+#### admin account for grafana
+```bash
+# account
+$ kubectl get secret --namespace monitoring prometheus-stack-grafana -o jsh='{.data.admin-user}' | base64 -d; echo
+
+# password
+$ kubectl get secret --namespace monitoring prometheus-stack-grafana -o jsonpath='{.data.admin-password}' | base64 -d; echo
+```
+
+### grafana
 ```bash
 $ helm repo add grafana https://grafana.github.io/helm-charts
 $ helm repo list
@@ -417,15 +576,6 @@ $ helm repo update
 $ helm search repo grafana/grafana
 
 $ helm install grafana grafana/grafana --namespace monitoring --create-namespace
-```
-
-## metrics-server
-```bash
-$ helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-$ helm upgrade --install metrics-server metrics-server/metrics-server --namespace monitoring --create-namespace
-
-# without tls: https://github.com/kubernetes-sigs/metrics-server/issues/1221
-$ helm upgrade metrics-server metrics-server/metrics-server --set args="{--kubelet-insecure-tls}" --namespace monitoring
 ```
 
 # tls

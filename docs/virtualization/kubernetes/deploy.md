@@ -10,6 +10,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!TIP|label:reference:]
+> - [A visual guide on troubleshooting Kubernetes deployments](https://learnk8s.io/troubleshooting-deployments) | [pdf](https://static.learnk8s.io/dac10c60ec5d2fe6bd3d3f8736cf0ce0.pdf) | [cn pdf](https://static.learnk8s.io/168db7d27bbf0e31a0bd038bf98757fd.pdf)
+
 ## get
 - check origial
   ```bash

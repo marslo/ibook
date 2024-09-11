@@ -38,6 +38,11 @@
 
 ## prometheus
 
+> [!NOTE|label:references:]
+> - [#973 - [prometheus-kube-stack] Prometheus ingress is missing pathType](https://github.com/prometheus-community/helm-charts/issues/973)
+> - [Setting Up Kube-Prometheus-Stack on Kubernetes Services](https://srivastavasuman8.medium.com/setting-up-kube-prometheus-stack-on-kubernetes-services-5acc10fbb535)
+> - [charts/kube-prometheus-stack/templates/prometheus/ingress.yaml](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/templates/prometheus/ingress.yaml)
+
 ### [prometheus architecture](https://blog.codefarm.me/2020/02/10/kubernetes-crash-course-6/)
 ![prometheus architecture](../../screenshot/k8s/prometheus-architecture.png)
 
@@ -45,6 +50,7 @@
 
 {% hint style='tip' %}
 > references:
+> - [* play.grafana.org](https://play.grafana.org/)
 > - [* Setting Up Kubernetes Dashboard](https://www.youtube.com/watch?v=aB0TagEzTAw)
 > - [* Deploy Grafana Enterprise on Kubernetes](https://grafana.com/docs/grafana/latest/installation/kubernetes/#deploy-grafana-enterprise-on-kubernetes)
 > - [* Deploy Grafana on Kubernetes](https://grafana.com/docs/grafana/latest/installation/kubernetes/)
@@ -67,7 +73,6 @@
 > - [How To Setup Grafana On Kubernetes](https://devopscube.com/setup-grafana-kubernetes/)
 > - [How To Setup Kube State Metrics on Kubernetes](https://devopscube.com/setup-kube-state-metrics/)
 {% endhint %}
-
 
 ### environment
 
@@ -337,6 +342,9 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 
 ### dashboard
 
+> [!NOTE|label:references:]
+> - [nodejs/eks/dashboard/kubernetes-dashboard.yaml](https://github.com/pulumi/pulumi-eks/blob/master/nodejs/eks/dashboard/kubernetes-dashboard.yaml)
+
 #### kubernetes cluster monitoring
 - [devopsprodigy-kubegraf-app](https://grafana.com/grafana/plugins/devopsprodigy-kubegraf-app/)
   - install via `grafana-cli`
@@ -423,14 +431,6 @@ kubems-01 ~ $ sudo chown -R 472:472 $_
 #### jenkins
 - [`9524` - a Jenkins performance and health overview for jenkinsci/prometheus-plugin](https://grafana.com/grafana/dashboards/9524)
 - [`9964` - Jenkins: Performance and Health Overview](https://grafana.com/grafana/dashboards/9964)
-
-
-
-
-
-
-
-
 
 ### grafana settings
 
