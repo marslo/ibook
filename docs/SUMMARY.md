@@ -138,6 +138,7 @@
     * [kubelet](virtualization/kubernetes/kubelet.md)
     * [troubleshooting](virtualization/kubernetes/troubleshooting.md)
     * [cheatsheet](virtualization/kubernetes/cheatsheet.md)
+    * [auth](virtualization/kubernetes/auth.md)
     * [api](virtualization/kubernetes/api.md)
     * [tools](virtualization/kubernetes/tools.md)
       * [monitor](virtualization/kubernetes/monitor.md)

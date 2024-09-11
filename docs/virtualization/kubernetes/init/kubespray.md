@@ -17,6 +17,7 @@
   - [grafana](#grafana)
 - [tips](#tips)
   - [CRIO](#crio)
+  - [manual remove kubernetes-dashboard](#manual-remove-kubernetes-dashboard)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -53,6 +54,7 @@ $ ssh -vT -i ~/.ssh/"${SSH_KEY_NAME}" root@k8s-01
 ```bash
 $ git clone --branch "${VERSION}" https://github.com/kubernetes-sigs/kubespray.git kubespray-${VERSION}
 
+# setup hosts.yaml
 $ declare -a IPS=(10.68.78.221 10.68.78.222 10.68.78.223)
 $ CONFIG_FILE=inventory/"${INVENTORY_DIR}"/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 ```
@@ -73,7 +75,7 @@ $ docker run --rm -it \
 $ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
                    --become --become-user=root \
                    --private-key /kubespray/inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
-                   <ACTION>.yml -v
+                   <ACTION>.yml --flush-cache -v
 ```
 
 ### using local environment
@@ -93,11 +95,14 @@ $ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
   ```
 
   ```bash
+  # venv
   $ python3 -m venv ~/.venv/kubespray
   $ source ~/.venv/kubespray/bin/activate
 
+  # install requirements
   $ python3 -m pip install -U -r requirements.txt
-  $ python3 -m pip install ruamel.yaml selinux
+  $ python3 -m pip isntall -U -r contrib/inventory_builder/requirements.txt
+  $ python3 -m pip install selinux
   ```
 
 ## execute ansible playbook
@@ -106,7 +111,7 @@ $ ansible-playbook -i inventory/${INVENTORY_DIR}/hosts.yaml \
 $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
                    --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
-                   reset.yml -v
+                   reset.yml --flush-cache -v
 ```
 
 ### deploy
@@ -114,7 +119,7 @@ $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
 $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
                    --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
-                   cluster.yml -v
+                   cluster.yml --flush-cache -v
 ```
 
 ### [add nodes](https://kubespray.io/#/docs/getting_started/getting-started?id=adding-nodes)
@@ -122,7 +127,7 @@ $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
 $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
                    --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
-                   scale.yml -v
+                   scale.yml --flush-cache -v
 ```
 
 ### [remove nodes](https://kubespray.io/#/docs/getting_started/getting-started?id=remove-nodes)
@@ -131,7 +136,7 @@ $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
                    --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
                    --extra-vars "node=nodename,nodename2" \
-                   remove-node.yml -b -v
+                   remove-node.yml --flush-cache -v
 ```
 
 ### [upgrade cluster](https://kubespray.io/#/docs/operations/upgrades)
@@ -140,23 +145,23 @@ $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
   # i.e.: v1.18.10 to v1.19.7
   $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                      -e kube_version=v1.18.10 -e upgrade_cluster_setup=true \
-                     cluster.yml -v
+                     cluster.yml --flush-cache -v
   $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                      -e kube_version=v1.19.7 -e upgrade_cluster_setup=true \
-                     cluster.yml
+                     cluster.yml --flush-cache -v
   ```
 
 - gracefully upgrade
   ```bash
   $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                      -e kube_version=v1.19.7 \
-                     upgrade-cluster.yml -b
+                     upgrade-cluster.yml --flush-cache --become
 
   # upgrade one node at a time
   $ ansible-playbook -i inventory/sample/hosts.yaml \
                      -e kube_version=v1.20.7 \
                      -e "serial=1" \                         # upgrade one node at a time
-                     upgrade-cluster.yml -b
+                     upgrade-cluster.yml --flush-cache --become
   ```
 
 # addons
@@ -277,3 +282,25 @@ $ helm install grafana grafana/grafana --namespace monitoring --create-namespace
     70           - not image_is_cached
     ```
     {% endraw %}
+
+## manual remove kubernetes-dashboard
+
+> [!NOTE|label:references:]
+> - [roles/kubernetes-apps/ansible/templates/dashboard.yml.j2](https://github.com/kubernetes-sigs/kubespray/blob/master/roles/kubernetes-apps/ansible/templates/dashboard.yml.j2)
+
+```bash
+$ kubectl -n kubernetes-dashboard delete deploy       kubernetes-metrics-scraper
+$ kubectl -n kubernetes-dashboard delete deploy       kubernetes-dashboard
+$ kubectl -n kubernetes-dashboard delete service      dashboard-metrics-scraper
+$ kubectl -n kubernetes-dashboard delete service      kubernetes-dashboard
+$ kubectl -n kubernetes-dashboard delete sa           kubernetes-dashboard
+$ kubectl -n kubernetes-dashboard delete rolebindings kubernetes-dashboard
+$ kubectl -n kubernetes-dashboard delete role         kubernetes-dashboard
+$ kubectl -n kubernetes-dashboard delete cm           kubernetes-dashboard-settings
+$ kubectl -n kubernetes-dashboard delete secrets      kubernetes-dashboard-key-holder
+$ kubectl -n kubernetes-dashboard delete secrets      kubernetes-dashboard-csrf
+$ kubectl -n kubernetes-dashboard delete secrets      kubernetes-dashboard-certs
+
+$ kubectl delete ClusterRoleBinding kubernetes-dashboard
+$ kubectl delete ClusterRole        kubernetes-dashboard
+```
