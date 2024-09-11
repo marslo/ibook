@@ -12,6 +12,7 @@
   - [HA Cluster](#ha-cluster)
   - [extend etcd](#extend-etcd)
   - [verify](#verify)
+  - [taint control plane](#taint-control-plane)
 - [CNI](#cni)
 - [addons](#addons)
   - [helm](#helm)
@@ -251,6 +252,11 @@ $ curl -s --unix-socket /var/run/crio/crio.sock http://localhost/info | jq -r
     ]
   }
 }
+```
+
+### taint control plane
+```bash
+$ kubectl taint node k8s-01 node-role.kubernetes.io/control-plane-
 ```
 
 ## CNI
