@@ -770,7 +770,7 @@ $ sudo kubeadm join k8s-api.sample.com:16443 --token umo0bu.h7c4rda7p2sovlk2 \
         --control-plane --certificate-key 35c07b0896a3075ffa0df5f6dfbeb1a23119e3ffb9a6aa943135eb924601aea8 \
         --v=5
 
-$ [[ -f $HOME/.kube ]] && rm -rf $HOME/.kube
+$ [[ -d $HOME/.kube ]] && rm -rf $HOME/.kube
 $ mkdir -p $HOME/.kube
 $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config

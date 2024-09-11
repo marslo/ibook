@@ -152,3 +152,15 @@ addon                        Install required addons for passing conformance tes
     * [grafana](./addons.md#grafana)
     * [metrics-server](./addons.md#metrics-server)
 1. [setup tls](./addons.md#tls)
+
+## troubleshooting
+
+- [curl/curl-container](https://github.com/curl/curl-container)
+
+  ```bash
+  $ kubectl run curl-deploy --image=quay.io/curl/curl:latest -i --tty -- sh
+  $ curl <clusterIP>:<svcPort>
+
+  # resume
+  $ kubectl attach curl-deploy -c curl-deploy -i -t
+  ```

@@ -16,6 +16,7 @@
   - [troubleshooting](#troubleshooting)
   - [check](#check)
   - [helm show](#helm-show)
+  - [install with tolerations](#install-with-tolerations)
 - [history](#history)
 - [status](#status)
 - [get](#get)
@@ -1428,6 +1429,19 @@ helmtest:
   ```bash
   $ helm show values jenkins/jenkins
   ```
+
+
+### install with tolerations
+
+> [!NOTE|label:references:]
+> - [Helm fails to pass double quotes into values.yaml from the command line?](https://stackoverflow.com/a/65373377/2940319)
+> - [Breadcrumbsloki/production/helm/promtail/values.yaml](https://github.com/grafana/loki/blob/v2.0.0/production/helm/promtail/values.yaml#L119-L124)
+> - [#2298 - Helm: set tolerations for promtail in loki-stack chart](https://github.com/grafana/loki/issues/2298#issuecomment-664511354)
+> - [How to set node taint for memcached using mcrouter helm chart?](https://stackoverflow.com/a/53073901/2940319)
+> - [#10068 - How to set affinity via the helm CLI command using --set?](https://github.com/helm/helm/issues/10068#issuecomment-907536070)
+> - [* #9453 - helm install cannot set tolerations](https://gist.github.com/so0k/42313dbb3b547a0f51a547bb968696ba)
+> - [kubespray/roles/kubernetes-apps/ansible/templates/dashboard.yml.j2](https://github.com/kubernetes-sigs/kubespray/blob/master/roles/kubernetes-apps/ansible/templates/dashboard.yml.j2)
+> - [Install Certificate Manager Controller in Kubernetes](https://blog.zachinachshon.com/cert-manager/)
 
 ## history
 

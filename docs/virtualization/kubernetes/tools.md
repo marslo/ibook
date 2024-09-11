@@ -21,8 +21,8 @@
 > references:
 > - [Operating etcd clusters for Kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 > - [Set up a High Availability etcd Cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
+> - [etcd.io: How to Add and Remove Members](https://etcd.io/docs/v3.6/tutorials/how-to-deal-with-membership/)
 {% endhint %}
-
 
 ### [check healthy](https://faun.pub/kubectl-commands-cheatsheet-43ce8f13adfb)
 ```bash

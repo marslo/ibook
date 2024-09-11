@@ -4,6 +4,7 @@
 - [get info](#get-info)
   - [list all warning events](#list-all-warning-events)
   - [list particular events](#list-particular-events)
+  - [list events for pods](#list-events-for-pods)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -18,4 +19,9 @@ $ kubectl get events --field-selector type=Warning --all-namespaces --sort-by='{
 ### list particular events
 ```bash
 $ kubectl get event --field-selector=involvedObject.name =foo -w
+```
+
+### list events for pods
+```bash
+$ kubectl -n monitoring events --for pods/prometheus-stack-prometheus-node-exporter-9764m --watch
 ```
