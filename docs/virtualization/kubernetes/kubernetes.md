@@ -230,11 +230,11 @@
 
 # jsonpath
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [JSONPath Support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
 > - [how to make kubectl jsonpath output on separate lines](https://downey.io/notes/dev/kubectl-jsonpath-new-lines/)
 > - [JSONPath Reference](https://support.smartbear.com/readyapi/docs/testing/jsonpath-reference.html)
+> - [Basic JSONPath Rules](https://docs.vmware.com/en/VMware-Carbon-Black-Cloud/services/carbon-black-cloud-user-guide/GUID-FBC6C73E-3807-4207-96FF-CF7EE7CE7AB8.html)
 
 # options
 ## explain

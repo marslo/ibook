@@ -40,6 +40,7 @@
 > - [23 Advanced kubectl commands](https://medium.com/faun/kubectl-commands-cheatsheet-43ce8f13adfb)
 > - [使用 kubectl 管理 Secret](https://kubernetes.io/zh-cn/docs/tasks/configmap-secret/managing-secret-using-kubectl/)
 > - [JSONPath Support](https://kubernetes.io/docs/reference/kubectl/jsonpath/)
+> - [Basic JSONPath Rules](https://docs.vmware.com/en/VMware-Carbon-Black-Cloud/services/carbon-black-cloud-user-guide/GUID-FBC6C73E-3807-4207-96FF-CF7EE7CE7AB8.html)
 > - [Command line tool (kubectl)](https://kubernetes.io/docs/reference/kubectl)
 >   - [* Custom columns](https://kubernetes.io/docs/reference/kubectl/#custom-columns)
 {% endhint %}
