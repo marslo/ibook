@@ -145,7 +145,6 @@ spec:
               port:
                 number: 443
           pathType: Prefix
-
 ```
 
 <!--sec data-title="older version" data-id="section0" data-show=true data-collapse=true ces-->
@@ -184,65 +183,65 @@ spec:
 
 ### RBAC
 
-- [create admin user for kuberentes-dashboard](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
+#### [create admin user for kuberentes-dashboard](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
 
-  > [!NOTE|label:references:]
-  > - [Creating sample user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md#creating-sample-user)
-  >   - using `ClusterRole` : `cluster-admin` for `kubernetes-dashboard-admin`
+> [!NOTE|label:references:]
+> - [Creating sample user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md#creating-sample-user)
+>   - using `ClusterRole` : `cluster-admin` for `kubernetes-dashboard-admin`
 
-  - create ServiceAccount in namespace
-    ```bash
-    $ kubectl -n monitoring create serviceaccount kubernetes-dashboard-admin
-    ```
+- create ServiceAccount in namespace
+  ```bash
+  $ kubectl -n monitoring create serviceaccount kubernetes-dashboard-admin
+  ```
 
-  - create ClusterRoleBinding for ServiceAccount
-    ```bash
-    $ kubectl create clusterrolebinding kubernetes-dashboard-admin \
-              --clusterrole=cluster-admin \                              # default ClusterRole
-              --serviceaccount=monitoring:kubernetes-dashboard-admin     # service account
+- create ClusterRoleBinding for ServiceAccount
+  ```bash
+  $ kubectl create clusterrolebinding kubernetes-dashboard-admin \
+            --clusterrole=cluster-admin \                              # default ClusterRole
+            --serviceaccount=monitoring:kubernetes-dashboard-admin     # service account
 
-    $ kubectl get clusterrolebinding kubernetes-dashboard-admin -o yaml | grep -v -E 'uid:|resourceVersion:|creationTimestamp:'
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: ClusterRoleBinding
-    metadata:
-      name: kubernetes-dashboard-admin
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: ClusterRole
-      name: cluster-admin
-    subjects:
-    - kind: ServiceAccount
-      name: kubernetes-dashboard-admin
-      namespace: monitoring
-    ```
+  $ kubectl get clusterrolebinding kubernetes-dashboard-admin -o yaml | grep -v -E 'uid:|resourceVersion:|creationTimestamp:'
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: kubernetes-dashboard-admin
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cluster-admin
+  subjects:
+  - kind: ServiceAccount
+    name: kubernetes-dashboard-admin
+    namespace: monitoring
+  ```
 
-  - generate token
-    ```bash
-    # admin
-    $ kubectl -n monitoring create token kubernetes-dashboard-admin
+- generate token
+  ```bash
+  # admin
+  $ kubectl -n monitoring create token kubernetes-dashboard-admin
 
-    # normal user
-    $ kubectl -n monitoring create token kubernetes-dashboard-metrics-scraper
-    ```
+  # normal user
+  $ kubectl -n monitoring create token kubernetes-dashboard-metrics-scraper
+  ```
 
-  - [manually create a long-lived api token for a serviceaccount](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#manually-create-a-long-lived-api-token-for-a-serviceaccount)
-    ```bash
-    $ kubectl -n monitoring apply -f - <<EOF
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: kubernetes-dashboard-admin-token
-      namespace: monitoring
-      annotations:
-        kubernetes.io/service-account.name: kubernetes-dashboard-admin
-    type: kubernetes.io/service-account-token
-    EOF
+- [manually create a long-lived api token for a serviceaccount](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#manually-create-a-long-lived-api-token-for-a-serviceaccount)
+  ```bash
+  $ kubectl -n monitoring apply -f - <<EOF
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: kubernetes-dashboard-admin-token
+    namespace: monitoring
+    annotations:
+      kubernetes.io/service-account.name: kubernetes-dashboard-admin
+  type: kubernetes.io/service-account-token
+  EOF
 
-    # get token by service account
-    $ kubectl -n monitoring get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='kubernetes-dashboard-admin')].data.token}" | base64 -d
-    # or
-    $ kubectl -n monitoring get secrets -o jsonpath="{.items[?(@.metadata.annotations.kubernetes\.io/service-account\.name=='kubernetes-dashboard-admin')].data.token}" | base64 -d
-    ```
+  # get token by service account
+  $ kubectl -n monitoring get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='kubernetes-dashboard-admin')].data.token}" | base64 -d
+  # or
+  $ kubectl -n monitoring get secrets -o jsonpath="{.items[?(@.metadata.annotations.kubernetes\.io/service-account\.name=='kubernetes-dashboard-admin')].data.token}" | base64 -d
+  ```
 
 - or modify ClusterRole `kubernetes-dashboard-metrics-scraper` manually
 
@@ -275,32 +274,30 @@ spec:
     ```
 
     - original
-      <!--sec data-title="original ClusterRole" data-id="section1" data-show=true data-collapse=true ces-->
-        ```yaml
-        apiVersion: rbac.authorization.k8s.io/v1
-        kind: ClusterRole
-        metadata:
-          annotations:
-            meta.helm.sh/release-name: kubernetes-dashboard
-            meta.helm.sh/release-namespace: monitoring
-          labels:
-            app.kubernetes.io/instance: kubernetes-dashboard
-            app.kubernetes.io/managed-by: Helm
-            app.kubernetes.io/part-of: kubernetes-dashboard
-            helm.sh/chart: kubernetes-dashboard-7.5.0
-          name: kubernetes-dashboard-metrics-scraper
-        rules:
-        - apiGroups:
-          - metrics.k8s.io
-          resources:
-          - pods
-          - nodes
-          verbs:
-          - get
-          - list
-          - watch
-        ```
-      <!--endsec-->
+      ```yaml
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRole
+      metadata:
+        annotations:
+          meta.helm.sh/release-name: kubernetes-dashboard
+          meta.helm.sh/release-namespace: monitoring
+        labels:
+          app.kubernetes.io/instance: kubernetes-dashboard
+          app.kubernetes.io/managed-by: Helm
+          app.kubernetes.io/part-of: kubernetes-dashboard
+          helm.sh/chart: kubernetes-dashboard-7.5.0
+        name: kubernetes-dashboard-metrics-scraper
+      rules:
+      - apiGroups:
+        - metrics.k8s.io
+        resources:
+        - pods
+        - nodes
+        verbs:
+        - get
+        - list
+        - watch
+      ```
 
   - clusterrolebinding: `kubernetes-dashboard-metrics-scraper`
     ```bash

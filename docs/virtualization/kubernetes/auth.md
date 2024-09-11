@@ -1,5 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [RBAC](#rbac)
+- [auth](#auth)
+  - [`auth can-i`](#auth-can-i)
+  - [can-i --as](#can-i---as)
+  - [rakkess](#rakkess)
+- [OpenID Connect Tokens](#openid-connect-tokens)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## RBAC
+
+> [!NOTE|label:references:]
+> - [Authorization modes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
+> - [RBAAC: Role-based access control](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+> - [ABAC: Attribute-based access control](https://kubernetes.io/docs/reference/access-authn-authz/abac/)
 
 - kubernetes-dashboard admin
 
@@ -9,11 +25,14 @@
 ## auth
 
 > [!NOTE|label:references:]
+> - [Authenticating](https://kubernetes.io/docs/reference/access-authn-authz/authentication/)
 > - [Adding permission to exec commands in containers inside pods in a certain namespace](https://discuss.kubernetes.io/t/adding-permission-to-exec-commands-in-containers-inside-pods-in-a-certain-namespace/22821)
+> - [Limiting access to Kubernetes resources with RBAC](https://learnk8s.io/rbac-kubernetes)
 
 ### `auth can-i`
 
 > [!NOTE|label:references:]
+> - [Checking API access](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#checking-api-access)
 > - [kubectl-auth-can-i - Man Page](https://www.mankier.com/1/kubectl-auth-can-i)
 > - [printTable](https://stackoverflow.com/a/49180405/2940319)
 
@@ -212,4 +231,26 @@ no
 
 - [`kcani`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L1110)
 
+### [can-i --as]()
+```bash
+#          pods namespace                                         service account namespace
+#                v                                                             v
+$ kubectl -n monitoring  a:wauth can-i get pods --as=system:serviceaccount:monitoring:kubernetes-dashboard-web
+no
+$ kubectl -n monitoring  auth can-i get pods --as=system:serviceaccount:monitoring:kubernetes-dashboard-admin
+yes
+
+$ kubectl -n kube-system auth can-i get pods --as=system:serviceaccount:monitoring:kubernetes-dashboard-admin
+yes
+```
+
 ### [rakkess](https://github.com/corneliusweig/rakkess)
+
+## [OpenID Connect Tokens](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
+
+![id_token from the OAuth2](../../screenshot/k8s/auth-openid-id_token.png)
+
+> [!NOTE|label:references:]
+> - [Kubernetes Authentication Through Dex](https://dexidp.io/docs/guides/kubernetes/)
+> - [alexbrand/gangway-dex-tutorial](https://github.com/alexbrand/gangway-dex-tutorial)
+> - [Kubernetes Authentication and Authorization through Dex & LDAP and RBAC rules](https://medium.com/trendyol-tech/kubernetes-authentication-and-authorization-through-dex-ldap-and-rbac-rules-c2e03111b408)
