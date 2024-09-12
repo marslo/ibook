@@ -1260,13 +1260,15 @@ source $(brew --prefix git)/etc/bash_completion.d/git-completion.bash
 
 ### [vault CLI](https://developer.hashicorp.com/vault/docs/commands#autocompletion)
 ```bash
-$ vault -autocomplete-install
+$ vocomplete-installault -autocomplete-install
 $ vault -autocomplete-install
 Error executing CLI: 3 errors occurred:
   * already installed in /Users/marslo/.bash_profile
   * already installed in /Users/marslo/.zshrc
   * already installed at /Users/marslo/.config/fish/completions/vault.fish
 
+# or for bash
+$ vault -autocomplete-install --bash
 # or
 command -v vault >/dev/null && complete -C /usr/local/bin/vault vault
 ```

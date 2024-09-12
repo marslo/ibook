@@ -1448,6 +1448,9 @@ bind '"\C-w":kill-region'
   ```bash
   $ bind -q re-read-init-file
   re-read-init-file can be invoked via "\C-x\C-r".
+
+  # or https://unix.stackexchange.com/a/246422/29178
+  $ bind -f ~/.inputrc
   ```
 
 - `glob-list-expansions`
