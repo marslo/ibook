@@ -8,10 +8,23 @@
 - [get info](#get-info)
   - [auth](#auth)
   - [security](#security)
-- [create approle](#create-approle)
+  - [list](#list)
+- [approle](#approle)
   - [via CLI](#via-cli)
   - [via API](#via-api)
   - [get secret_id and role_id](#get-secret_id-and-role_id)
+- [operator](#operator)
+  - [tokens](#tokens)
+    - [root tokens](#root-tokens)
+  - [init](#init)
+- [ssh](#ssh)
+  - [client key sign](#client-key-sign)
+    - [signing key & role configuration](#signing-key--role-configuration)
+    - [client ssh authentication](#client-ssh-authentication)
+  - [host key sign](#host-key-sign)
+    - [verify](#verify)
+  - [troubleshooting](#troubleshooting)
+  - [ssh secrets engine (API)](#ssh-secrets-engine-api)
 - [usage](#usage)
   - [API](#api)
   - [CLI](#cli)
@@ -29,11 +42,10 @@
 > - [How To Read Vault’s Secrets from Jenkin’s Declarative Pipeline](https://codeburst.io/read-vaults-secrets-from-jenkin-s-declarative-pipeline-50a690659d6)
 > - [Hashicorp vault how to list all roles](https://stackoverflow.com/a/60870106/2940319)
 > - [AppRole auth method](https://developer.hashicorp.com/vault/docs/auth/approle)
-> - [Signed SSH certificates](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#host-key-signing)
 
-## environment
+# environment
 
-### install
+## install
 - macos
   ```bash
   $ brew tap hashicorp/tap
@@ -54,12 +66,12 @@
   $ sudo yum -y install vault
   ```
 
-### compltion
+## compltion
 ```bash
 $ vault -autocomplete-install
 ```
 
-### status
+## status
 ```bash
 $ vault status
 Key             Value
@@ -77,9 +89,9 @@ Cluster ID      e034c5c3-53c6-2d38-2adf-e9bbd57ad87c
 HA Enabled      false
 ```
 
-## get info
+# get info
 
-### auth
+## auth
 
 - list role type
   ```bash
@@ -121,7 +133,38 @@ HA Enabled      false
   token_type                 default
   ```
 
-### security
+## security
+
+- get token
+  ```bash
+  $ vault auth list
+  Path        Type       Accessor                 Description                Version
+  ----        ----       --------                 -----------                -------
+  approle/    approle    auth_approle_375212fa    n/a                        n/a
+  ldap/       ldap       auth_ldap_8fc0eb82       n/a                        n/a
+  token/      token      auth_token_f61ed5a6      token based credentials    n/a
+
+  $ vault token lookup
+  Key                 Value
+  ---                 -----
+  accessor            Wf********************5y
+  creation_time       1640161759
+  creation_ttl        0s
+  display_name        root
+  entity_id           n/a
+  expire_time         <nil>
+  explicit_max_ttl    0s
+  id                  s.s**********************K
+  meta                <nil>
+  num_uses            0
+  orphan              true
+  path                auth/token/root
+  policies            [root]
+  ttl                 0s
+  type                service
+  ```
+
+## list
 
 - list all path
   ```bash
@@ -140,6 +183,7 @@ HA Enabled      false
   read-write
   read-write-delete
   ```
+
 - get contents
   ```bash
   $ vault kv get devops/service-account/read-only
@@ -165,14 +209,19 @@ HA Enabled      false
   username                 read-only
   ```
 
-## create approle
+# approle
 
-### via CLI
+> [!NOTE|label:references:]
+> - [Integrate HashiCorp Vault with CICD tool(Jenkins)](https://medium.com/geekculture/integrate-hashicorp-vault-with-cicd-tool-jenkins-4bf712ad3f45)
+
+## via CLI
 
 - pre-setup
   ```bash
   $ export VAULT_ADDR='https://vault.domain.com'
   $ export VAULT_TOKEN='s.s**********************K'
+
+  # VAULT_TOKEN=$(vault print token)
   ```
 
 - setup
@@ -203,7 +252,7 @@ HA Enabled      false
   token_type                 default
   ```
 
-### [via API](https://developer.hashicorp.com/vault/docs/auth/approle#via-the-api-1)
+## [via API](https://developer.hashicorp.com/vault/docs/auth/approle#via-the-api-1)
 ```bash
 # enable auth method
 $ curl \
@@ -244,7 +293,7 @@ $ curl \
 }
 ```
 
-### get secret_id and role_id
+## get secret_id and role_id
 ```bash
 # read for role-id
 $ vault read auth/approle/role/devops/role-id
@@ -266,8 +315,306 @@ Keys
 9*******-****-****-****-***********b
 ```
 
-## usage
-### API
+# operator
+## tokens
+
+> [!NOTE|label:references:]
+> - [Tokens](https://developer.hashicorp.com/vault/docs/concepts/tokens)
+> - [token prefixes](https://developer.hashicorp.com/vault/docs/concepts/tokens#token-prefixes)
+>
+> | TOKEN TYPE      | VAULT 1.9.X + | VAULT 1.10 -   |
+> |-----------------|---------------|----------------|
+> | Service tokens  | `s.<random>`  | `hvs.<random>` |
+> | Batch tokens    | `b.<random>`  | `hvb.<random>` |
+> | Recovery tokens | `r.<random>`  | `hvr.<random>` |
+
+### [root tokens](https://developer.hashicorp.com/vault/docs/concepts/tokens#root-tokens)
+
+> [!TIP]
+> - [Regenerate a Vault root token](https://developer.hashicorp.com/vault/docs/troubleshoot/generate-root-token)
+> - [/sys/generate-root](https://developer.hashicorp.com/vault/api-docs/system/generate-root) the API key for root tokens
+
+- initial root token with no expiration
+  ```bash
+  $ vault operator init
+  ```
+
+- generate root token with share holders ( with unseal key )
+
+  > [!NOTE|label:references:]
+  > - unseal key is necessary to generate root token
+  > - [operator generate-root](https://developer.hashicorp.com/vault/docs/commands/operator/generate-root)
+
+  ```bash
+  $ vault operator generate-root
+  ```
+
+  - example:
+
+    - generate an otp code for the final token
+      ```bash
+      $ vault operator generate-root -generate-otp
+      ```
+
+    - start a root token generation:
+      ```bash
+      $ vault operator generate-root -init
+      ```
+
+    - enter an unseal key to progress root token generation:
+      ```bash
+      $ vault operator generate-root
+      ```
+
+- check status
+  ```bash
+  $ vault operator generate-root -status
+  Nonce         n/a
+  Started       false
+  Progress      0/3
+  Complete      false
+  OTP Length    26
+  ```
+
+## [init](https://developer.hashicorp.com/vault/docs/commands/operator)
+```bash
+$ vault operator init
+Unseal Key 1: p******************************************Y
+Unseal Key 2: /******************************************y
+Unseal Key 3: j******************************************I
+Unseal Key 4: V******************************************K
+Unseal Key 5: l******************************************M
+
+Initial Root Token: s.s**********************K
+```
+
+- [check status](https://developer.hashicorp.com/vault/docs/commands/operator/key-status)
+  ```bash
+  $ vault operator key-status
+  Key Term            1
+  Install Time        22 Dec 21 08:29 UTC
+  Encryption Count    211817
+  ```
+
+- [generate new unseal key](https://developer.hashicorp.com/vault/docs/commands/operator/rekey)
+  ```bash
+  $ vault operator rekey
+  ```
+
+- seal/unseal
+  ```bash
+  $ vault operator seal
+  $ vault operator unseal
+  ```
+
+# ssh
+
+> [!NOTE|label:references:]
+> - [Signed SSH certificates](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#host-key-signing)
+> - [Managing SSH Access at Scale with HashiCorp Vault](https://www.hashicorp.com/blog/managing-ssh-access-at-scale-with-hashicorp-vault)
+
+## client key sign
+### [signing key & role configuration](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#signing-key-role-configuration)
+
+- mount ssh secret engine
+  ```bash
+  $ vault secrets enable -path=devops-ssh ssh
+  ```
+
+- configure vault with a ca
+  ```bash
+  $ vault write devops-ssh/config/ca generate_signing_key=true
+  # or with private/public key pairs
+  $ vault write devops-ssh/config/ca \
+          private_key="..." \
+          public_key="..."
+
+  ```
+
+- add CA to all servers
+  ```bash
+  # download pem
+  $ curl -o /etc/ssh/trusted-user-ca-keys.pem http://vault.sample.com:8200/v1/ssh-client-signer/public_key
+  # or
+  $ vault read -field=public_key devops-ssh/config/ca > /etc/ssh/trusted-user-ca-keys.pem
+
+  # modify sshd_config to `TrustedUserCAKeys`
+  $ sudo vim /etc/ssh/sshd_config
+  ...
+  TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+
+  # restart sshd
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restart sshd.service
+  ```
+
+- create role
+  ```bash
+  $ vault write devops-ssh/roles/my-role -<<"EOH"
+  {
+    "algorithm_signer": "rsa-sha2-256",
+    "allow_user_certificates": true,
+    "allowed_users": "*",
+    "allowed_extensions": "permit-pty,permit-port-forwarding",
+    "default_extensions": {
+      "permit-pty": ""
+    },
+    "key_type": "ca",
+    "default_user": "ubuntu",
+    "ttl": "30m0s"
+  }
+  EOH
+  ```
+
+### [client ssh authentication](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#client-ssh-authentication)
+- create ssh-key paire
+  ```bash
+  $ ssh-keygen -t ed25519 -C "user@example.com"
+  ```
+
+- sign the public key
+  ```bash
+  $ vault write ssh-client-signer/sign/my-role \
+      public_key=@$HOME/.ssh/id_ed25519.pub
+
+  Key             Value
+  ---             -----
+  serial_number   c73f26d2340276aa
+  signed_key      ssh-rsa-cert-v01@openssh.com AAAAHHNzaC1...
+
+  # or customerize
+  $ vault write ssh-client-signer/sign/my-role -<<"EOH"
+  {
+    "public_key": "ssh-rsa AAA...",
+    "valid_principals": "my-user",
+    "key_id": "custom-prefix",
+    "extensions": {
+      "permit-pty": "",
+      "permit-port-forwarding": ""
+    }
+  }
+  EOH
+  ```
+
+- saved the signed keys
+  ```bash
+  $ vault write -field=signed_key ssh-client-signer/sign/my-role \
+      public_key=@$HOME/.ssh/id_ed25519.pub > signed-cert.pub
+
+  # verify
+  $ ssh-keygen -Lf ~/.ssh/signed-cert.pub
+
+  # ssh
+  $ ssh -i signed-cert.pub -i ~/.ssh/id_ed25519 username@10.0.23.5
+  ```
+
+## host key sign
+
+- mount ssh security
+  ```bash
+  $ vault secrets enable -path=devops-ssh-hosts ssh
+  Successfully mounted 'ssh' at 'devops-ssh-hosts'!
+  ```
+
+- configure CA
+  ```bash
+  $ vault write devops-ssh-hosts/config/ca generate_signing_key=true
+  Key             Value
+  ---             -----
+  public_key      ssh-rsa AAAAB3NzaC1yc2EA...
+
+  # or with key pairs
+  $ vault write devops-ssh-hosts/config/ca \
+          private_key="..." \
+          public_key="..."
+  ```
+
+- extend host key certificate ttls
+  ```bash
+  $ vault secrets tune -max-lease-ttl=87600h devops-ssh-hosts
+  ```
+
+- create role
+  ```bash
+  $ vault write devops-ssh-hosts/roles/hostrole \
+      key_type=ca \
+      algorithm_signer=rsa-sha2-256 \
+      ttl=87600h \
+      allow_host_certificates=true \
+      allowed_domains="localdomain,example.com" \
+      allow_subdomains=true
+  ```
+
+- sign ssh public key
+  ```bash
+  $ vault write devops-ssh-hosts/sign/hostrole \
+      cert_type=host \
+      public_key=@/etc/ssh/ssh_host_ed25519_key.pub
+  Key             Value
+  ---             -----
+  serial_number   3746eb17371540d9
+  signed_key      ssh-rsa-cert-v01@openssh.com AAAAHHNzaC1y...
+  ```
+
+- signed certificate as `HostCertificate`
+  ```bash
+  $ vault write -field=signed_key devops-ssh-hosts/sign/hostrole \
+      cert_type=host \
+      public_key=@/etc/ssh/ssh_host_ed25519_key.pub > /etc/ssh/ssh_host_ed25519_key-cert.pub
+
+  $ chmod 0640 /etc/ssh/ssh_host_ed25519_key-cert.pub
+
+  # modify sshd_config
+  $ sudo vim /etc/ssh/sshd_config
+  ...
+  # For client keys
+  TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+  ...
+  # For host keys
+  HostKey /etc/ssh/ssh_host_ed25519_key
+  HostCertificate /etc/ssh/ssh_host_ed25519_key-cert.pub
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restasrt sshd.service
+  ```
+
+### verify
+- retrieve the host signing ca public key
+  ```bash
+  $ curl http://127.0.0.1:8200/v1/devops-ssh-hosts/public_key
+
+  # or
+  $ vault read -field=public_key devops-ssh-hosts/config/ca
+  ```
+
+- add into ~/.ssh/authorized_keys
+  ```bash
+  $ cat >> ~/.ssh/known_hosts << EOF
+  @cert-authority *.example.com ssh-rsa AAAAB3NzaC1yc2EAAA...
+  EOF
+  ```
+
+## [troubleshooting](https://developer.hashicorp.com/vault/docs/secrets/ssh/signed-ssh-certificates#troubleshooting)
+
+- set verbose log level
+  ```bash
+  $ sudo vim /etc/ssh/sshd_config
+  ...
+  LogLevel VERBOSE
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl restart sshd.services
+  ```
+
+- check in `/var/log/auth.log`
+  ```bash
+  $ tail -f /var/log/auth.log | grep --line-buffered "sshd"
+  ```
+
+## [ssh secrets engine (API)](https://developer.hashicorp.com/vault/api-docs/secret/ssh)
+
+# usage
+## API
 
 > [!NOTE|label:references:]
 > - [api v1.14.x](https://developer.hashicorp.com/vault/api-docs)
@@ -280,15 +627,13 @@ $ curl \
       http://127.0.0.1:8200/v1/secret/foo
 
 # or
-
-
 $ curl \
       -H "X-Vault-Token: f3b09679-3001-009d-2b80-9c306ab81aa6" \
       -X GET \
       http://127.0.0.1:8200/v1/ns1/ns2/secret/foo
 ```
 
-### CLI
+## CLI
 
 > [!NOTE|label:references:]
 > - [* Vault commands (CLI)](https://developer.hashicorp.com/vault/docs/commands)
@@ -313,7 +658,7 @@ $ curl \
 >   }
 >   ```
 
-### [path-help](https://developer.hashicorp.com/vault/docs/commands#api-help)
+## [path-help](https://developer.hashicorp.com/vault/docs/commands#api-help)
 ```bash
  $ vault path-help devops
    ...
@@ -363,7 +708,7 @@ $ curl \
           Unmount the specified mount point.
   ```
 
-### [stdin](https://developer.hashicorp.com/vault/docs/commands#stdin)
+## [stdin](https://developer.hashicorp.com/vault/docs/commands#stdin)
 ```bash
 $ echo -n '{"value":"itsasecret"}' | vault kv put secret/password -
 
@@ -371,7 +716,7 @@ $ echo -n '{"value":"itsasecret"}' | vault kv put secret/password -
 $ echo -n "itsasecret" | vault kv put secret/password value=-
 ```
 
-### [Files](https://developer.hashicorp.com/vault/docs/commands#files)
+## [Files](https://developer.hashicorp.com/vault/docs/commands#files)
 ```bash
 $ vault kv put secret/password @data.json
 
@@ -379,7 +724,7 @@ $ vault kv put secret/password @data.json
 $ vault kv put secret/password value=@data.txt
 ```
 
-### basic usage
+## basic usage
 ```bash
 $ export VAULT_ADDR='http://127.0.0.1:8200'
 $ export VAULT_TOKEN=root
