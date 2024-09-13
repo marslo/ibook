@@ -498,9 +498,9 @@ $ sudo mv kubectl-calico /usr/local/bin/
 
 ### kubecolor
 ```bash
-$ sudo mkdir -p /tmp/kubecolor
+$ [[ -d /tmp/kubecolor ]] && sudo mkdir -p /tmp/kubecolor
 $ curl -fsSL https://github.com/hidetatz/kubecolor/releases/download/v0.0.25/kubecolor_0.0.25_Linux_x86_64.tar.gz | tar xzf - -C /tmp/kubecolor
-$ sudo mv /tmp/kubecolor /usr/local/bin/
+$ sudo mv /tmp/kubecolor/kubecolor /usr/local/bin/
 $ sudo chmod +x /usr/local/bin/kubecolor
 ```
 

@@ -292,19 +292,21 @@ $ sudo dnf install -y bash-completion
 $ curl -fsSL https://github.com/cykerway/complete-alias/raw/master/complete_alias -o ~/.bash_completion.sh
 # or rhel/centos
 $ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /etc/profile.d/complete_alias.sh
-$ chmod +x !$
+$ sudo chmod +x !$
 
 $ cat >> ~/.bashrc << EOF
-source <(kubectl completion bash)
-source ~/.bash_completion.sh
+command -v kubectl >/dev/null && source <(kubectl completion bash)
+test -f ~/.bash_completion.sh && source ~/.bash_completion.sh
 # or
-# source /etc/profile.d/complete_alias.sh
+# test -f /etc/profile.d/complete_alias.sh && source /etc/profile.d/complete_alias.sh
 
 alias k='kubectl'
 alias kc='kubectl -n kube-system'
 alias ki='kubectl -n ingress-ngxin'
 alias kk='kubectl -n kubernetes-dashboard'
+alias km='kubectl -n monitoring'
 
+complete -o default -F __start_kubectl kubecolor
 complete -o nosort -o bashdefault -o default -F _complete_alias $(alias | sed -rn 's/^alias ([^=]+)=.+kubec.+$/\1/p' | xargs)
 EOF
 
@@ -314,9 +316,9 @@ $ source ~/.bashrc
 ## kubecolor
 
 ```bash
-$ sudo mkdir -p /tmp/kubecolor
+$ [[ -d /tmp/kubecolor ]] && sudo mkdir -p /tmp/kubecolor
 $ curl -fsSL https://github.com/hidetatz/kubecolor/releases/download/v0.0.25/kubecolor_0.0.25_Linux_x86_64.tar.gz | tar xzf - -C /tmp/kubecolor
-$ sudo mv /tmp/kubecolor /usr/local/bin/
+$ sudo mv /tmp/kubecolor/kubecolor /usr/local/bin/
 $ sudo chmod +x /usr/local/bin/kubecolor
 ```
 
