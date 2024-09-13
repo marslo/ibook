@@ -120,7 +120,67 @@ $ ansible-playbook -i inventory/"${INVENTORY_DIR}"/hosts.yaml \
                    --become --become-user=root \
                    --private-key inventory/${INVENTORY_DIR}/.ssh/${SSH_KEY_NAME} \
                    cluster.yml --flush-cache -v
+
+# running in k8s control plane
+$ [[ -d $HOME/.kube ]] && rm -rf $HOME/.kube
+$ mkdir -p $HOME/.kube
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
+
+<!--sec data-title="steps" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+PLAY RECAP *********************************************************************************************************************************
+k8s-01              : ok=664  changed=104  unreachable=0    failed=0    skipped=1075 rescued=0    ignored=5
+k8s-02              : ok=565  changed=90   unreachable=0    failed=0    skipped=952  rescued=0    ignored=2
+k8s-03              : ok=567  changed=93   unreachable=0    failed=0    skipped=950  rescued=0    ignored=2
+k8s-04              : ok=403  changed=50   unreachable=0    failed=0    skipped=622  rescued=0    ignored=0
+k8s-05              : ok=403  changed=50   unreachable=0    failed=0    skipped=618  rescued=0    ignored=0
+
+Friday 13 September 2024  02:36:27 +0000 (0:00:00.283)       3:06:50.832 ******
+===============================================================================
+etcd : Gen_certs | Write etcd member/admin and kube_control_plane client certs to other etcd nodes ------------------------------- 1412.84s
+/kubespray/roles/etcd/tasks/gen_certs_script.yml:87 ---------------------------------------------------------------------------------------
+kubernetes-apps/ingress_controller/ingress_nginx : NGINX Ingress Controller | Create manifests ------------------------------------ 779.09s
+/kubespray/roles/kubernetes-apps/ingress_controller/ingress_nginx/tasks/main.yml:49 -------------------------------------------------------
+kubernetes-apps/ansible : Kubernetes Apps | Lay Down CoreDNS templates ------------------------------------------------------------ 778.89s
+/kubespray/roles/kubernetes-apps/ansible/tasks/coredns.yml:2 ------------------------------------------------------------------------------
+network_plugin/calico : Calico | Create calico manifests -------------------------------------------------------------------------- 424.96s
+/kubespray/roles/network_plugin/calico/tasks/install.yml:371 ------------------------------------------------------------------------------
+policy_controller/calico : Create calico-kube-controllers manifests --------------------------------------------------------------- 280.41s
+/kubespray/roles/kubernetes-apps/policy_controller/calico/tasks/main.yml:2 ----------------------------------------------------------------
+etcd : Gen_certs | Gather etcd member/admin and kube_control_plane client certs from first etcd node ------------------------------ 210.21s
+/kubespray/roles/etcd/tasks/gen_certs_script.yml:63 ---------------------------------------------------------------------------------------
+kubernetes/control-plane : Joining control plane node to the cluster. ------------------------------------------------------------- 128.20s
+/kubespray/roles/kubernetes/control-plane/tasks/kubeadm-secondary.yml:86 ------------------------------------------------------------------
+kubernetes-apps/ingress_controller/ingress_nginx : NGINX Ingress Controller | Apply manifests ------------------------------------- 113.23s
+/kubespray/roles/kubernetes-apps/ingress_controller/ingress_nginx/tasks/main.yml:59 -------------------------------------------------------
+etcdctl_etcdutl : Copy etcdctl and etcdutl binary from download dir ---------------------------------------------------------------- 81.16s
+/kubespray/roles/etcdctl_etcdutl/tasks/main.yml:30 ----------------------------------------------------------------------------------------
+kubernetes/control-plane : Kubeadm | Initialize first master ----------------------------------------------------------------------- 73.56s
+/kubespray/roles/kubernetes/control-plane/tasks/kubeadm-setup.yml:192 ---------------------------------------------------------------------
+kubernetes/control-plane : Install script to renew K8S control plane certificates -------------------------------------------------- 70.95s
+/kubespray/roles/kubernetes/control-plane/tasks/main.yml:100 ------------------------------------------------------------------------------
+container-engine/nerdctl : Nerdctl | Install nerdctl configuration ----------------------------------------------------------------- 70.88s
+/kubespray/roles/container-engine/nerdctl/tasks/main.yml:29 -------------------------------------------------------------------------------
+container-engine/crictl : Install crictl config ------------------------------------------------------------------------------------ 70.86s
+/kubespray/roles/container-engine/crictl/tasks/crictl.yml:7 -------------------------------------------------------------------------------
+etcdctl_etcdutl : Create etcdctl wrapper script ------------------------------------------------------------------------------------ 70.85s
+/kubespray/roles/etcdctl_etcdutl/tasks/main.yml:41 ----------------------------------------------------------------------------------------
+kubernetes/node : Write kubelet systemd init file ---------------------------------------------------------------------------------- 70.83s
+/kubespray/roles/kubernetes/node/tasks/kubelet.yml:31 -------------------------------------------------------------------------------------
+kubernetes/preinstall : NetworkManager | Prevent NetworkManager from managing Calico interfaces (cali*/tunl*/vxlan.calico) --------- 70.82s
+/kubespray/roles/kubernetes/preinstall/tasks/0062-networkmanager-unmanaged-devices.yml:8 --------------------------------------------------
+kubernetes/preinstall : NetworkManager | Prevent NetworkManager from managing K8S interfaces (kube-ipvs0/nodelocaldns) ------------- 70.82s
+/kubespray/roles/kubernetes/preinstall/tasks/0062-networkmanager-unmanaged-devices.yml:21 -------------------------------------------------
+kubernetes-apps/cluster_roles : Kubernetes Apps | Add ClusterRoleBinding to admit nodes -------------------------------------------- 70.81s
+/kubespray/roles/kubernetes-apps/cluster_roles/tasks/main.yml:14 --------------------------------------------------------------------------
+etcd : Configure | Copy etcd.service systemd file ---------------------------------------------------------------------------------- 70.79s
+/kubespray/roles/etcd/tasks/configure.yml:48 ----------------------------------------------------------------------------------------------
+etcd : Gen_certs | write openssl config -------------------------------------------------------------------------------------------- 70.78s
+/kubespray/roles/etcd/tasks/gen_certs_script.yml:20 ---------------------------------------------------------------------------------------
+```
+<!--endsec-->
 
 ### [add nodes](https://kubespray.io/#/docs/getting_started/getting-started?id=adding-nodes)
 ```bash
@@ -191,7 +251,7 @@ $ helm install grafana grafana/grafana --namespace monitoring --create-namespace
   >   The error was: AttributeError: module 'selinux' has no attribute 'selinux_getpolicytype'
   >   ```
   > - more info:
-  >   <!--sec data-title="rpm -ql python3-libselinux" data-id="section0" data-show=true data-collapse=true ces-->
+  >   <!--sec data-title="rpm -ql python3-libselinux" data-id="section1" data-show=true data-collapse=true ces-->
   >   ```bash
   >   $ rpm -ql python3-libselinux
   >   /usr/lib/.build-id
