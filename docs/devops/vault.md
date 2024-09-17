@@ -213,6 +213,9 @@ HA Enabled      false
 
 > [!NOTE|label:references:]
 > - [Integrate HashiCorp Vault with CICD tool(Jenkins)](https://medium.com/geekculture/integrate-hashicorp-vault-with-cicd-tool-jenkins-4bf712ad3f45)
+> - [AppRole pull authentication](https://developer.hashicorp.com/vault/tutorials/auth-methods/approle)
+> - [AppRole usage best practices](https://developer.hashicorp.com/vault/tutorials/auth-methods/approle-best-practices)
+> - [AppRole auth method](https://developer.hashicorp.com/vault/docs/auth/approle)
 
 ## via CLI
 
@@ -320,6 +323,7 @@ Keys
 
 > [!NOTE|label:references:]
 > - [Tokens](https://developer.hashicorp.com/vault/docs/concepts/tokens)
+> - [Authentication](https://developer.hashicorp.com/vault/tutorials/getting-started/getting-started-authentication)
 > - [token prefixes](https://developer.hashicorp.com/vault/docs/concepts/tokens#token-prefixes)
 >
 > | TOKEN TYPE      | VAULT 1.9.X + | VAULT 1.10 -   |
