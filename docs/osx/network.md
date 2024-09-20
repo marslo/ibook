@@ -36,13 +36,18 @@ IPv4 network interface information
 IPv6 network interface information
    No IPv6 states found
 
-
    REACH : flags 0x00000000 (Not Reachable)
 
 Network interfaces: en8 en0
 ```
 
 ### get interface
+
+> [!NOTE|label:references:]
+> - [* iMarslo: get interface](../linux/network.md#get-interface-by-command)
+> - [#340 - Multiple unused utun interfaces after macOS upgrade](https://github.com/Tunnelblick/Tunnelblick/issues/340)
+> - [Who creates utun0 adapter?](https://apple.stackexchange.com/a/310221/254265)
+
 ```bash
 # default route
 $ ip route get $(dig +short github.com | head -1) | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
@@ -51,10 +56,25 @@ $ ip route get $(nslookup "${githubIp}" | grep Server | awk -F' ' '{print $NF}')
 en8
 
 # all active interface
-$ netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}'
+$ netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk '{print $NF}'
 en0
 en8
+# osx 15.0
+$ netstat -nr | command grep -E '^0.0.0|^default|UG|UGScg' | awk '$2 ~ /([0-9]{1,3}\.){3}[0-9]{1,3}/' | awk '{print $NF}'
+en8
+en0
+
+$ networksetup -listnetworkserviceorder | grep --color=none 'Hardware Port' | awk -F'(, )|(: )|[)]' '{print $2, "~>", $4}'
+USB 10/100/1000 LAN ~> en8
+Wi-Fi ~> en0
+Thunderbolt Bridge ~> bridge0
 ```
+
+- get default interface
+  ```bash
+  $ ip route get 1.1.1.1 | sed -n -re 's/.+via.+dev ([0-9a-zA-Z]+) src.+$/\1/p'
+  en8
+  ```
 
 - list all interfaces
   ```bash
@@ -86,8 +106,8 @@ $ ip link show ${interface} | sed -rn 's|.*ether ([0-9a-fA-F:]{17}).*$|\1|p' | s
 #!/bin/bash
 
 while read -r line; do
-    sname=$(echo "$line" | awk -F  "(, )|(: )|[)]" '{print $2}')
-    sdev=$(echo "$line" | awk -F  "(, )|(: )|[)]" '{print $4}')
+    sname=$(echo "$line" | awk -F "(, )|(: )|[)]" '{print $2}')
+    sdev=$(echo "$line" | awk -F "(, )|(: )|[)]" '{print $4}')
     # echo "Current service: $sname, $sdev, $currentservice"
     if [ -n "$sdev" ]; then
         ifout="$(/sbin/ifconfig "$sdev" 2>/dev/null)"
@@ -119,7 +139,6 @@ done <<< "$(networksetup -listnetworkserviceorder | grep --color=none 'Hardware 
 
 - route flags
 
-
   | FLAG | DESCRIPTION                                                               |
   |:----:|---------------------------------------------------------------------------|
   |   U  | Up—Route is valid                                                         |
@@ -138,8 +157,12 @@ done <<< "$(networksetup -listnetworkserviceorder | grep --color=none 'Hardware 
   ```bash
   # linux-like route -n
   $ netstat -nr
-  # or
+
+  # ipv4
   $ netstat -nr -f inet
+
+  # ipv6
+  $ netstat -nr -f inet6
 
   # via `ip route`
   $ ip route show

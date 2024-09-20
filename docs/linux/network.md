@@ -63,12 +63,16 @@
 
 ### get interface by command
 ```bash
-$ interface=$(netstat -nr | grep -E 'UG|UGSc' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+$ interface=$(netstat -nr | grep -E 'UG|UGScg' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+# or
+$ intreface=$(netstat -nr | command grep -E '^0.0.0|default|UG|UGScg' | awk '$2 ~ /([0-9]{1,3}\.){3}[0-9]{1,3}/' | awk '{print $NF}')
 
 # or get the route to github
 $ interface=$(ip route get $(nslookup github.com | grep Server | awk -F' ' '{print $NF}') | sed -rn 's|.*dev\s+(\S+)\s+src.*$|\1|p')
 # or
 $ ip route get 1.1.1.1 | grep --color=never 'via' | sed -re 's/.+via.+dev ([0-9a-zA-Z]+) src.+$/\1/'
+# or
+$ ip route get 1.1.1.1 | sed -n -re 's/.+via.+dev ([0-9a-zA-Z]+) src.+$/\1/p'
 
 # or via nmcli
 $ interface=$(nmcli device | grep --color=never -w connected | awk '{print $1}')
@@ -102,9 +106,20 @@ $ interface=$(nmcli device | grep --color=never -w connected | awk '{print $1}')
 
 ### get gateway
 ```bash
-$ getway=$(route -n | grep --color=never -E 'UG|UGSc' | awk '{print $2}')
+$ getway=$(route -n | grep --color=never -E 'UG|UGScg' | awk '{print $2}')
 $ echo ${gateway}
 10.111.22.1
+
+# filter gateway by ip range
+$ netstat -nr | command grep -E 'UGScg|UG' | awk '$2 ~ /10\.(85|86|87|68|78)\.[0-9]{1,3}\.[0-9]{1,3}/'
+
+# dual network gateway
+# intranet: 10.85/86/87/68/78.x.x
+$ netstat -nr -f inet | awk '$3 ~ /UGScg|UG/' | awk '$2 ~ /10\.(85|86|87|68|78)\.[0-9]{1,3}\.[0-9]{1,3}/' | awk '{print $2}'
+10.85.48.1
+# internet: 172.x.x.x
+$ netstat -nr -f inet | awk '$3 ~ /UGScg|UG/' | awk '$2 ~ /172\.([0-9]{1,3}\.){2}[0-9]{1,3}/' | awk '{print $2}'
+172.16.0.1
 ```
 
 ### get ipv4 address
