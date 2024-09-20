@@ -1,8 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [subMap](#submap)
-  - [change Map in condition](#change-map-in-condition)
 - [filter](#filter)
   - [filter via condition](#filter-via-condition)
   - [find a `string` in a nested `Map` by using recursive function](#find-a-string-in-a-nested-map-by-using-recursive-function)
@@ -26,7 +24,9 @@
 - [with](#with)
 - [sort](#sort)
 - [traverse](#traverse)
-- [subMap](#submap-1)
+- [subMap](#submap)
+  - [change Map in condition](#change-map-in-condition)
+  - [check if subMap belongs to the Map](#check-if-submap-belongs-to-the-map)
 - [transpose](#transpose)
 - [convert](#convert)
   - [convert Json to Map](#convert-json-to-map)
@@ -39,21 +39,6 @@
 > - [Groovy Cookbook](https://e.printstacktrace.blog/groovy-cookbook/)
 > - [Groovy Cookbook: How to merge two maps in Groovy?](https://e.printstacktrace.blog/how-to-merge-two-maps-in-groovy/)
 {% endhint %}
-
-## subMap
-### [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
-```groovy
-[ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ "${it.key}" : 4 ] : it }
-===> [a:1, b:4, c:4]
-```
-- or `[ it.key, 4 ]`
-  ```groovy
-  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ it.key, 4 ] : it }
-  ```
-- or `[ (it.key) : 4 ]`
-  ```groovy
-  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ (it.key) : 4 ] : it }
-  ```
 
 ## filter
 ### filter via condition
@@ -656,6 +641,53 @@ assert [ two: 2, three: 3 ] == m.subMap('two', 'three')
 
 // or even simple syntax
 m.subMap 'two', 'three', 'non-existent'
+```
+
+### [change Map in condition](https://stackoverflow.com/a/20534222/2940319)
+```groovy
+[ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ "${it.key}" : 4 ] : it }
+===> [a:1, b:4, c:4]
+```
+- or `[ it.key, 4 ]`
+  ```groovy
+  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ it.key, 4 ] : it }
+  ```
+- or `[ (it.key) : 4 ]`
+  ```groovy
+  [ 'a': 1, 'b': 2, 'c': 3 ].collectEntries { ( it.value > 1 ) ? [ (it.key) : 4 ] : it }
+  ```
+
+### check if subMap belongs to the Map
+
+> [!NOTE|label:references:]
+> - [How to Check if a TreeMap is submap of another TreeMap in Java](https://stackoverflow.com/a/36513926/2940319)
+
+```groovy
+Map map = [
+  '1': [ a: '1', b: '2' ],
+  '2': [ a: '2', b: '3' ],
+  '3': [ a: '3', b: '4' ]
+]
+Map pattern = [ a: '2' ]
+```
+
+```groovy
+map.findAll {
+  it.value.subMap(pattern.keySet()).any{ v -> pattern.equals([ (v.key): v.value ]) }
+}
+// Result: ['2':['a':'2', 'b':'3']]
+
+map.findAll {
+  pattern.any { p ->
+    it.value.any { v -> p.key == v.key && p.value == v.value }
+  }
+}
+// Result: ['2':['a':'2', 'b':'3']]
+
+map.findAll {
+  it.value.entrySet().containsAll( pattern.entrySet() )
+}
+// Result: ['2':['a':'2', 'b':'3']]
 ```
 
 ## transpose

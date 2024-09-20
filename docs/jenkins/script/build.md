@@ -23,7 +23,8 @@
     - [check last N logs](#check-last-n-logs)
   - [build parameters](#build-parameters)
     - [get build parameters](#get-build-parameters)
-    - [get builds parameters](#get-builds-parameters)
+    - [get builds parameters in Jenkinsfile](#get-builds-parameters-in-jenkinsfile)
+    - [filter expected parameters and values](#filter-expected-parameters-and-values)
     - [get wanted parameter values in builds](#get-wanted-parameter-values-in-builds)
     - [get only `String` type parameters](#get-only-string-type-parameters)
     - [retrieving parameters and triggering another build](#retrieving-parameters-and-triggering-another-build)
@@ -848,7 +849,7 @@ job.builds.each { Run run ->
     STOP_START_AS
     ```
 
-### get builds parameters
+### get builds parameters in Jenkinsfile
 
 > [!TIP]
 > running following snippet in Jenkinsfile
@@ -871,9 +872,31 @@ params.each { param ->
     def parameters = currentBuild.rawBuild?.actions.find{ it instanceof ParametersAction }?.parameters
     ```
 
+### filter expected parameters and values
+
+> [!NOTE|label:reference:]
+> - [check if subMap belongs to the Map](../../programming/groovy/map.md#check-if-submap-belongs-to-the-map)
+
+```groovy
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Map pattern = [ gender : 'female' ]
+
+WorkflowJob job = Jenkins.getInstance().getItemByFullName( '/marslo/sandbox' )
+job.builds.collectEntries { Run run ->
+  [
+    (run.id), run?.getAction(ParametersAction.class)?.parameters?.collectEntries {
+                [ it.name, it.value ]
+              }
+  ]
+}.findAll { it.value.entrySet().containsAll( pattern.entrySet() ) }
+ .collect { "#${it.key}:\n\t${it.value.collect { v -> "${v.key}: ${v.value}" }.join('\n\t') }" }
+ .join('\n')
+```
+
 ### get wanted parameter values in builds
 
-> [!TIPS]
+> [!TIP|label:reference:]
 > - [Create a map in groovy having two collections - with keys and values](https://stackoverflow.com/a/49115344/2940319)
 
 ```groovy
