@@ -364,7 +364,8 @@ $ sudo security add-trusted-cert -d \
          --save-cookies=cookies.txt \
          https://download.developer.apple.com/Developer_Tools/Xcode_11.2_beta_2/Xcode_11.2_beta_2.xip
   ```
-  * exmaple
+
+  * example
     ```bash
     $ wget --cookies=on \
     >          --load-cookies=cookies.txt \
@@ -384,6 +385,23 @@ $ sudo security add-trusted-cert -d \
 
     $ ls -altrh Xcode_11.2_beta_2.xip
     -rw-rw-r-- 1 devops devops 7.3G Oct  9 13:27 Xcode_11.2_beta_2.xip
+    ```
+
+* [install](https://stackoverflow.com/a/56913909/2940319)
+  ```bash
+  $ xip --expand Xcode_11.2_beta_2.xip
+  xip: signing certificate was "Software Update" (validation not attempted)
+  xip: expanded items from "~/Xcode_11.2_beta_2.xip"
+
+  $ mv ~/Xcode.app /Applications/Xcode.app
+  ```
+
+  * switch xcode version
+    ```bash
+    $ sudo xcode-select -switch /Applications/Xcode_11.2_beta_2.app
+
+    # check version
+    $ /usr/bin/xcodebuild -version
     ```
 
 ### developer tools
