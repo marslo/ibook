@@ -18,10 +18,30 @@
 ## version capatibility
 
 #### Supported Ubuntu and Python Versions
-- Ubuntu 18.04 (bionic) Python2.3 - Python 2.6, Python 3.1 - Python 3.5, Python3.7 - Python3.11
-- Ubuntu 20.04 (focal) Python3.5 - Python3.7, Python3.9 - Python3.11
-- Ubuntu 22.04 (jammy) Python3.7 - Python3.9, Python3.11
-- Note: Python2.7 (all), Python 3.6 (bionic), Python 3.8 (focal), Python 3.10 (jammy) are not provided by deadsnakes as upstream ubuntu provides those packages.
+
+> [!NOTE|label:references:]
+> - [Ubuntu releases](https://ubuntu.com/about/release-cycle)
+> - NOTE: Python2.7 (all), Python 3.6 (bionic), Python 3.8 (focal), Python 3.10 (jammy) are not provided by deadsnakes as upstream ubuntu provides those packages.
+
+|      -      | UBUNTU 18.04 ( BIONIC ) | UBUNTU 20.04 ( FOCAL ) | UBUNTU 22.04 ( JAMMY ) |
+|:-----------:|:-----------------------:|:----------------------:|:----------------------:|
+|  python 2.3 |            ✔            |                        |                        |
+|  python 2.4 |            ✔            |                        |                        |
+|  python 2.5 |            ✔            |                        |                        |
+|  python 2.6 |            ✔            |                        |                        |
+|  python 2.7 |            ✔            |                        |                        |
+|  python 3.1 |            ✔            |                        |                        |
+|  python 3.2 |            ✔            |                        |                        |
+|  python 3.3 |            ✔            |                        |                        |
+|  python 3.4 |            ✔            |                        |                        |
+|  python 3.5 |            ✔            |            ✔           |                        |
+|  python 3.6 |            ✔            |            ✔           |                        |
+|  python 3.7 |            ✔            |            ✔           |            ✔           |
+|  python 3.8 |            ✔            |            ✔           |            ✔           |
+|  python 3.9 |            ✔            |            ✔           |            ✔           |
+| python 3.10 |            ✔            |            ✔           |            ✔           |
+| python 3.11 |            ✔            |            ✔           |            ✔           |
+| python 3.12 |            ✔            |            ✔           |            ✔           |
 
 
 ## environment
@@ -45,20 +65,22 @@ $ python -c 'import sys; print (sys.path)'
 
 ## [Positional notation](https://en.wikipedia.org/wiki/Positional_notation)
 ### to Binary
-- Octal to Binary
+- octal to binary
   ```python
   >>> bin( int('0o10', 8) )
   '0b1000'
   >>> bin( int('0o17', 8) )
   '0b1111'
   ```
-- Decimal to Binary
+
+- decimal to binary
   ```python
   >>> bin(2)
   '0b10'
   >>> bin(10)
   '0b1010'
   ```
+
   - or
     ```python
     >>> format( 3, 'b' )
@@ -66,7 +88,8 @@ $ python -c 'import sys; print (sys.path)'
     >>> format( 15, 'b' )
     '1111'
     ```
--  Hexadecimal to Binary
+
+-  hexadecimal to binary
   ```python
   >>> bin( int('a', 16) )
   '0b1010'
@@ -75,18 +98,20 @@ $ python -c 'import sys; print (sys.path)'
   ```
 
 ### to Octal
-- Binary to Octal
+- binary to octal
   ```python
   >>> oct( int(str(111), 2) )
   '0o7'
   >>> oct( int(str(1000), 2) )
   '0o10'
   ```
-- Decimal to Octal
+
+- decimal to octal
   ```python
   >>> oct(8)
   '0o10'
   ```
+
   - or
     ```python
     >>> format( 15, 'o' )
@@ -94,21 +119,23 @@ $ python -c 'import sys; print (sys.path)'
     >>> format( 8, 'o' )
     '10'
     ```
--  Hexadecimal to Octal
+
+- hexadecimal to octal
   ```python
   >>> oct( 0xf )
   '0o17'
   ```
 
 ### to Decimal
-- Binary to Decimal
+- binary to decimal
   ```python
   >>> int( str(11), 2 )
   3
   >>> int( str(1010), 2 )
   10
   ```
-- Octal to Decimal
+
+- octal to decimal
   ```python
   >>> 0o10
   8
@@ -117,39 +144,44 @@ $ python -c 'import sys; print (sys.path)'
   >>> int ( str(10), 8 )
   8
   ```
--  Hexadecimal to Decimal
+
+- hexadecimal to decimal
   ```python
   >>> int( 0xf )
   15
   ```
 
 ### to Hexadecimal
-- Binary to Hexadecimal
+- binary to hexadecimal
   ```python
   >>> hex( int(str(1010), 2) )
   '0xa'
   >>> hex( int(str(1111), 2) )
   '0xf'
   ```
-- Octal to Hexadecimal
+
+- octal to hexadecimal
   ```python
   >>> hex(0o10)
   '0x8'
   >>> hex( int('0o17', 8 ))
   '0xf'
   ```
-- Decimal to Hexadecimal
+
+- decimal to hexadecimal
   ```python
   >>> hex(15)
   '0xf'
   >>> hex(66)
   '0x42'
   ```
+
   - [or](https://stackoverflow.com/a/16414603/2940319)
     ```python
     >>> format( 15, 'x' )
     'f'
     ```
+
   - [or](https://stackoverflow.com/a/10218221/2940319)
     ```python
     >>> '%x' % 15

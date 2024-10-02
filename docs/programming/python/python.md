@@ -50,8 +50,10 @@
 ## Pythonic
 
 {% hint style='tip' %}
-> Inspired from [what are same example of beautiful 'Pythonic' code?](https://www.quora.com/What-are-some-examples-of-beautiful-Pythonic-code) and [如何让你的Python代码更加pythonic?](http://www.pythontab.com/html/2015/pythonhexinbiancheng_1029/970.html)
-> [run python code online](https://reqbin.com/code/python)
+> inspired from
+> - [what are same example of beautiful 'Pythonic' code?](https://www.quora.com/What-are-some-examples-of-beautiful-Pythonic-code)
+> - [如何让你的Python代码更加pythonic?](http://www.pythontab.com/html/2015/pythonhexinbiancheng_1029/970.html)
+> - [run python code online](https://reqbin.com/code/python)
 {% endhint %}
 
 ### zip/unzip
@@ -370,6 +372,9 @@ is_palindrome = word.find(word[-1::-1])
   ```
 
 ## [hidden features](http://stackoverflow.com/questions/101268/hidden-features-of-python)
+
+> [!NOTE|label:references:]
+> - [Hidden features of Python [closed]](https://stackoverflow.com/q/101268/2940319)
 
 ### numbers
 #### round

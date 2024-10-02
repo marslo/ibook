@@ -24,6 +24,7 @@
   - [Apply proper uppercase and lowercase on a String](#apply-proper-uppercase-and-lowercase-on-a-string)
 - [split](#split)
   - [split string by Capital Letters](#split-string-by-capital-letters)
+  - [split via digits](#split-via-digits)
   - [split via patten](#split-via-patten)
 - [trim](#trim)
   - [`stripIndent()`](#stripindent)
@@ -419,6 +420,18 @@ assert 'This Is A Test' == m.appendTail(sb).toString()
     May5            : [May 5]
     BFG9000         : [BFG 9000]
     ```
+
+### split via digits
+
+> [!NOTE|label:references:]
+> - [How to split the string into string and integer in java?](https://stackoverflow.com/q/16787099/2940319)
+>   - [`(?<=\\D)(?=\\d)`](https://stackoverflow.com/a/16787236/2940319)
+>   - [`(?=\\d)(?<!\\d)`](https://stackoverflow.com/a/16787286/2940319)
+
+```groovy
+assert ['aabb', '123'] == 'aabb123'.split("(?<=\\D)(?=\\d)")
+assert ['aabb', '123'] == 'aabb123'.split("(?=\\d)(?<!\\d)")
+```
 
 ### split via patten
 

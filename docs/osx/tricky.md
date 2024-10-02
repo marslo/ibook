@@ -28,6 +28,7 @@
   - [modify font in plist](#modify-font-in-plist)
   - [show process details](#show-process-details)
   - [launch iOS simulator](#launch-ios-simulator)
+  - [`/usr/bin/xattr`](#usrbinxattr)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -899,3 +900,36 @@ $ open -a Simulator --args -CurrentDeviceUDID <your device UDID>
     ```bash
     $ open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
     ```
+
+### `/usr/bin/xattr`
+
+> [!NOTE|label:references:]
+> - [xattr](https://www.oreilly.com/library/view/macintosh-terminal-pocket/9781449328962/re38.html)
+> - [How do I remove the "extended attributes" on a file in Mac OS X?](https://stackoverflow.com/a/58616002/2940319)
+
+- init
+  ```bash
+  $ touch test.txt
+  $ /usr/bin/xattr -l test.txt
+  ```
+
+- create attributes
+  ```bash
+  $ /usr/bin/xattr -w com.example.color blue test.txt
+  $ /usr/bin/xattr -l test.txt
+  com.example.color: blue
+  ```
+
+- print attributes
+  ```bash
+  $ /usr/bin/xattr -p com.example.color test.txt
+  blue
+  ```
+
+- clear attributes
+  ```bash
+  $ /usr/bin/xattr -d com.example.color test.txt
+
+  # or
+  $ /usr/bin/xattr -c test.txt
+  ```
