@@ -11,6 +11,7 @@
     - [xCode](#xcode)
     - [iTerm2](#iterm2)
     - [terminal](#terminal)
+    - [developer mode](#developer-mode)
   - [utilities](#utilities)
   - [screenshot](#screenshot)
   - [finder](#finder)
@@ -246,6 +247,22 @@ $ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 $ defaults write com.apple.Terminal ShowLineMarks -int 0
 ```
 
+### developer mode
+
+> [!NOTE|label:references:]
+> - [MacOS Catalina "Developer Tools" tab is hidden](https://stackoverflow.com/a/65240575/2940319)
+> - [Authorize a non-admin developer in Xcode / Mac OS](https://stackoverflow.com/a/1837935/2940319)
+
+```bash
+$ sudo spctl developer-mode enable-terminal
+Terminal added as a developer tool. Enable in the Privacy & Security Settings.
+
+# or
+$ sudo /usr/sbin/DevToolsSecurity --enable
+```
+
+![developer mode](../screenshot/osx/spctl-developer-mode.png)
+
 ## utilities
 
 #### [startup sounds](https://www.youtube.com/watch?v=_OjQIh4Ro5A)
@@ -272,14 +289,6 @@ $ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenteru
 ```
 
 #### are you sure you want to open this application?
-```bash
-$ defaults write com.apple.LaunchServices LSQuarantine -bool false
-
-# or
-$ sudo spctl --master-disable
-```
-
-#### avoid install resource validation
 
 {% hint style='tip' %}
 > references:
@@ -288,11 +297,21 @@ $ sudo spctl --master-disable
 {% endhint %}
 
 ```bash
+# old version
 $ sudo spctl --master-disable
+# new version
+$ sudo spctl --global-disable
+Globally disabling the assessment system needs to be confirmed in System Settings
+
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 ```
 
-#### none warning for unknown resource open
+![allow application from](../screenshot/osx/allow-application-from-1.png)
+
+![allow application from](../screenshot/osx/allow-application-from-2.png)
+
+
+#### disable warning for unknown resource open
 ```bash
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 ```
@@ -1140,6 +1159,7 @@ $ defaults write com.apple.Safari IncludeInternalDebugMenu 1
 ```
 
 ![debug mode](../screenshot/osx/osx-safari-debug.png)
+
 
 #### standard deply
 ```bash
