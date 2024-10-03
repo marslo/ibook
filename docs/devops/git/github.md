@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [workflow && checkers](#workflow--checkers)
 - [hooks](#hooks)
 - [jenkins](#jenkins)
   - [branch](#branch)
@@ -29,13 +30,17 @@
 >   - [* Lonor/kubernetes-springboot-demo](https://github.com/Lonor/kubernetes-springboot-demo/blob/master/Jenkinsfile)
 {% endhint %}
 
-- workflow && checkers
+## workflow && checkers
 
-  > [!NOTE|label:workflow && checkers]
-  > - [Commit Message Checker for pull request](https://github.com/marketplace/actions/commit-message-checker-for-pull-request)
-  > - [GS Commit Message Checker](https://github.com/marketplace/actions/gs-commit-message-checker)
-  > - [Skipping workflow runs](https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs)
-  > - [* api: Commit statuses](https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28)
+> [!NOTE|label:workflow && checkers]
+> - [Commit Message Checker for pull request](https://github.com/marketplace/actions/commit-message-checker-for-pull-request)
+> - [GS Commit Message Checker](https://github.com/marketplace/actions/gs-commit-message-checker)
+> - [Skipping workflow runs](https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs)
+> - [* api: Commit statuses](https://docs.github.com/en/rest/commits/statuses?apiVersion=2022-11-28)
+> - [Awesome GitHub Action Workflows](https://dev.to/tungbq/awesome-github-action-workflows-2fi0)
+> - [* Use cases and examples](https://docs.github.com/en/actions/use-cases-and-examples)
+> - [* Writing workflows](https://docs.github.com/en/actions/writing-workflows)
+> - [* sdras/awesome-actions](https://github.com/sdras/awesome-actions)
 
 - ci/jenkins:
 

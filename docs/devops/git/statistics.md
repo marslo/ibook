@@ -40,6 +40,7 @@
 > - [Which Git commit stats are easy to pull](https://stackoverflow.com/questions/1486819/which-git-commit-stats-are-easy-to-pull)
 > - [GET CONTRIBUTOR STATS FROM GIT](https://www.lostindetails.com/articles/get-contributor-stats-from-git)
 > - [How to count total lines changed by a specific author in a Git repository?](https://stackoverflow.com/a/7010890/2940319)
+> - [arzzen/git-quick-stats](https://github.com/arzzen/git-quick-stats)
 {% endhint %}
 
 ## list all user commits history with line changes
