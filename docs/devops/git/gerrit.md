@@ -23,6 +23,7 @@
   - [all reviews at a certain time](#all-reviews-at-a-certain-time)
   - [get review rate in certain time](#get-review-rate-in-certain-time)
   - [list gerrit projects with certain account](#list-gerrit-projects-with-certain-account)
+  - [list project configure](#list-project-configure)
   - [reference](#reference)
 - [integrate in Jenkins](#integrate-in-jenkins)
 - [css for code block](#css-for-code-block)
@@ -742,6 +743,12 @@ $ while read -r _proj; do
             )
     [[ -n "${output}" ]] && echo "[${id}] >> "${gerritUrl}"/admin/repos/$(sed 's:%2F:/:g' <<< "${_proj}")" && ((id++));
   done < <( curl -fsSL "${gerritUrl}"/a/projects/?d | tail -n+2 | jq -r '.[].id' )
+```
+
+### list project configure
+```bash
+$ project='path/to/project'
+$ curl -g -fsSL "https://vgitcentral.marvell.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/config" | tail -n+2 | jq -r
 ```
 
 ### reference

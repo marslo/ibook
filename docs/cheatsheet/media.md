@@ -10,6 +10,7 @@
   - [combine video and audio](#combine-video-and-audio)
   - [compression mov](#compression-mov)
   - [convert mov to mp4](#convert-mov-to-mp4)
+  - [slice video to images](#slice-video-to-images)
   - [convert video to gif](#convert-video-to-gif)
   - [convert pngs into gif](#convert-pngs-into-gif)
 - [image](#image)
@@ -125,6 +126,11 @@ $ ffmpeg -i {in-video}.mov -vcodec h264 -acodec aac {out-video}.mp4
 $ ffmpeg -i input.mov -c copy -movflags +faststart output.mp4
 ```
 
+### slice video to images
+```bash
+$ ffmpeg -i video.mp4 -vf "fps=24" css_%04d.png
+```
+
 ### convert video to gif
 
 > [!NOTE|label:references:]
@@ -207,6 +213,9 @@ $ convert in.mp4 out.gif
 ### convert pngs into gif
 ```bash
 $ convert -delay 5 -loop 0 -dither None -colors 80 "frames/ffout*.png" -fuzz "40%" -layers OptimizeFrame  "output.gif"
+
+# simple version
+$ convert -delay 10 *.png sample.gif
 ```
 
 ## image
@@ -235,6 +244,7 @@ $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 > - [Command-line application for converting SVG to PNG on Mac OS X](https://superuser.com/a/142082/112396)
 > - ["Bake" an SVG image into a PNG at a given resolution? [closed]](https://superuser.com/a/516112/112396)
 > - [Converting large SVG to PNG file](https://superuser.com/a/569235/112396)
+> - [tomkwok/svgasm](https://github.com/tomkwok/svgasm)
 {% endhint %}
 
 - qlmanage
