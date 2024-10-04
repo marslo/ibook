@@ -9,10 +9,21 @@
   - [update meta/config if remotes update](#update-metaconfig-if-remotes-update)
   - [reset to remotes](#reset-to-remotes)
   - [useful refs](#useful-refs)
-  - [restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push](#restriction-for-branches-feature1-feature2-and-master-for-only-allow-code-review-merge-forbidden-code-push)
+  - [only allow code review merge, forbidden code push](#only-allow-code-review-merge-forbidden-code-push)
+  - [Code-Review 1+1=2](#code-review-112)
+  - [optional label vote](#optional-label-vote)
+  - [sections](#sections)
+  - [Submit Requirements](#submit-requirements)
+  - [plugin](#plugin)
 - [rules.pl](#rulespl)
   - [submit by a non author](#submit-by-a-non-author)
+  - [Labels and Submit Requirements](#labels-and-submit-requirements)
   - [ticket check](#ticket-check)
+- [tips](#tips)
+  - [generate changeId](#generate-changeid)
+  - [Auto-submit reviews](#auto-submit-reviews)
+  - [Translating Gerrit Change-Ids using the CLI](#translating-gerrit-change-ids-using-the-cli)
+  - [Signed-off-by Lines](#signed-off-by-lines)
 - [api](#api)
   - [basic usage](#basic-usage)
   - [change](#change)
@@ -43,7 +54,7 @@ $ git config --global gitreview.username <UserName>
 $ git config --global gitreview.remote origin
 ```
 
-### [default groups](https://github.com/bpollack/gerrit/blob/master/Documentation/access-control.txt)
+### default groups
 
 > [!TIP]
 > - [Gerrit Code Review - Access Controls](https://git.eclipse.org/r/Documentation/access-control.html#non-interactive_users)
@@ -59,14 +70,14 @@ $ git config --global gitreview.remote origin
   - [Non-Interactive Users](https://gerrit.cloudera.org/Documentation/access-control.html#non-interactive_users)
   - ~Service Users~
 
-#### Special references
+#### special references
 
 * `refs/changes/*`
 * `refs/meta/config`
 * `refs/meta/dashboards/*`
-* `refs/notes/review`
+* [`refs/notes/review`](https://gerrit.googlesource.com/plugins/reviewnotes/+/refs/heads/master/src/main/resources/Documentation/refs-notes-review.md)
 
-#### Magic references
+#### magic references
 
 * `refs/for/<branch ref>`
 
@@ -194,7 +205,7 @@ refs/heads/sandbox/${username}/*
   link = "#/q/$1"
 ```
 
-#### freeze `master` branch
+#### freeze `main` branch
 
 > [!TIP]
 > One quirk is that the shortest possible pattern expansion must be a valid ref name<br>
@@ -211,7 +222,7 @@ About the `refs/for` namespace
 
 - `project.config`
   ```bash
-  [access "refs/for/refs/heads/master"]
+  [access "refs/for/refs/heads/main"]
     push = block group user/Marslo Jiao (marslo)
     push = block group Registered Users
     submit = block group Registered Users
@@ -248,14 +259,14 @@ About the `refs/for` namespace
 
   - or using `exclusiveGroupPermissions`
     ```
-    [access "^refs/heads/backup/(master|dev|staging|stable)/.+$"]
+    [access "^refs/heads/backup/(main|dev|staging|stable)/.+$"]
            exclusiveGroupPermissions = create delete push pushMerge
            create = group Project Owners
            create = block group Registered Users
            delete = block group Registered Users
            push = block group Registered Users
            pushMerge = block group Registered Users
-    [access "^refs/for/refs/heads/backup/(master|dev|staging|stable)/.+$"]
+    [access "^refs/for/refs/heads/backup/(main|dev|staging|stable)/.+$"]
            exclusiveGroupPermissions = addPatchSet create push pushMerge submit
            addPatchSet = block group Registered Users
            create = block group Registered Users
@@ -274,7 +285,11 @@ About the `refs/for` namespace
   ...
   ```
 
-### restriction for branches (`feature1`, `feature2` and `master`) for only allow code review merge, forbidden code push
+### only allow code review merge, forbidden code push
+
+> [!TIP|label:references:]
+> - restriction for branches (`feature1`, `feature2` and `main`)
+
 - `project.config`
   ```bash
   [access "refs/*"]
@@ -287,7 +302,7 @@ About the `refs/for` namespace
     push = group user/Marslo Jiao (marslo)
     pushMerge = group Project Owners
     pushMerge = group user/Marslo Jiao (marslo)
-  [access "^refs/heads/(feature1|feature2|master)$"]
+  [access "^refs/heads/(feature1|feature2|main)$"]
     push = block group Registered Users
     pushMerge = block group Registered Users
     submit = group Change Owner
@@ -303,8 +318,13 @@ About the `refs/for` namespace
   ...
   ```
 
-#### example of `project.config`
-- [project.config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
+- [example](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
+
+  <!--sec data-title="`project.config` example" data-id="section0" data-show=true data-collapse=true ces-->
+
+  > [!TIP|label:references:]
+  > - [project.config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config/project.config)
+
   ```bash
   [project]
     description = Gerrit Code Review
@@ -382,30 +402,182 @@ About the `refs/for` namespace
   [access "refs/heads/infra/config"]
     push = group gerrit-tricium-admins
   ```
+  <!--endsec-->
+
+### Code-Review 1+1=2
+
+> [!NOTE|label:references:]
+> - [How to config 1+1=2 Code-Review with Submit Requirements?](https://groups.google.com/g/repo-discuss/c/-AuPt50vR70/m/CaZXQH3uAwAJ)
+
+```bash
+[label "Code-Review"]
+  function = NoOp
+  copyMinScore = true
+  value = -2 This shall not be merged
+  value = -1 I would prefer this is not merged as is
+  value = 0 No score
+  value = +1 Looks good to me, but someone else must approve
+  value = +2 Looks good to me, approved
+  defaultValue = 0
+[submit-requirement "Code-Review"]
+  submittableIf = (label:Code-Review=+1,count>=2 OR label:Code-Review=MAX) AND -label:Code-Review=MIN
+```
+
+### optional label vote
+
+> [!NOTE|label:references:]
+> - [Customized Labels](https://gerrit-review.googlesource.com/Documentation/config-labels.html#label_custom)
+> - [`label.Label-Name.function (deprecated)`](https://gerrit-review.googlesource.com/Documentation/config-labels.html#label_function)
+>   - `MaxWithBlock` ( default )
+>   - `AnyWithBlock`
+>   - `MaxNoBlock`
+>   - `NoOp` / `NoBlock`
+>   - `PatchSetLock`
+
+```bash
+[label "Klocwork"]
+  function = NoOp
+  value = -1 Fails
+  value = 0 No score
+  value = +1 Success
+  defaultValue = 0
+  copyAllScoresIfNoCodeChange = true
+```
+
+### sections
+
+> [!NOTE|label:references:]
+> - [project.config sections](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#file-project_config)
+> - [Gerrit Code Review - Configuration - `etc/gerrit.config`](https://gerrit-review.googlesource.com/Documentation/config-gerrit.html)
+
+#### [`commentlink`](https://gerrit-review.googlesource.com/Documentation/config-gerrit.html#commentlink)
+```bash
+[commentlink "changeid"]
+  match = (I[0-9a-f]{8,40})
+  link = "/q/$1"
+
+[commentlink "bugzilla"]
+  match = "(^|\\s)(bug\\s+#?)(\\d+)($|\\s)"
+  link = http://bugs.example.com/show_bug.cgi?id=$3
+  prefix = $1
+  suffix = $4
+  text = $2$3
+
+[commentlink "its-jira"]
+  match = ^[ \\t]*([A-Za-z]*-[0-9]{1,5}):
+  link = https://jira.domain.com/browse/$1
+```
+
+#### [`receive`](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#receive-section)
+```bash
+[receive]
+  requireChangeId = true
+  createNewChangeForAllNotInTarget = false
+  rejectImplicitMerges = false
+  requireSignedOffBy = true
+  maxObjectSizeLimit = 6m
+  maxBatchChanges = 1
+```
+
+#### [`change`](https://gerrit-review.googlesource.com/Documentation/config-project-config.html#change-section)
+```bash
+[change]
+  privateByDefault = false
+  workInProgressByDefault = false
+```
+
+### [Submit Requirements](https://gerrit-review.googlesource.com/Documentation/config-submit-requirements.html#exempt-branch-example)
+
+> [!NOTE|label:references:]
+> - [#51263 - Core library review Gerrit condition should consider CL creator.](https://github.com/dart-lang/sdk/issues/51263#issuecomment-1423847018)
+
+- [exempt a branch example](https://gerrit-review.googlesource.com/Documentation/config-submit-requirements.html#exempt-branch-example)
+  ```bash
+  [submit-requirement "Code-Style"]
+    description = Code is properly styled and formatted
+    applicableIf = -branch:refs/meta/config
+    submittableIf = label:Code-Style=+1 AND -label:Code-Style=-1
+    canOverrideInChildProjects = true
+  ```
+
+  - or setup in `label: LABEL`
+    ```
+    [label "Verified"]
+      branch = refs/heads/release/*
+
+    # same as
+    [submit-requirement "Verified"]
+      submittableIf = label:Verified=MAX AND -label:Verified=MIN
+      applicableIf = branch:^refs/heads/release/.*
+    ```
+
+- complex rule
+
+  > [!NOTE|label:references:]
+  > - [Gerrit 3.7-Submit Rules How to apply multiple branches.](https://groups.google.com/g/repo-discuss/c/a2DsDVeYyBY)
+
+  ```
+   [submit-requirement "Core-Library-Review"]
+      description = "SDK core library changes need to be approved for each platform or have a 'CoreLibraryReviewExempt: <reason>' footer. See also: https://github.com/dart-lang/sdk/wiki/Gerrit-Submit-Requirements#core-library-review"
+      applicableIf = NOT ownerin:bots AND NOT is:pure-revert AND path:\"^sdk/lib/[^_].*\\.dart$\"
+      submittableIf = hasfooter:CoreLibraryReviewExempt OR ((label:Code-Review=+1,group=mdb/dart-core-library-change-approvers-api OR ownerin:mdb/dart-core-library-change-approvers-api) AND (label:Code-Review=+1,group=mdb/dart-core-library-change-approvers-vm OR ownerin:mdb/dart-core-library-change-approvers-vm) AND (label:Code-Review=+1,group=mdb/dart-core-library-change-approvers-wasm OR ownerin:mdb/dart-core-library-change-approvers-wasm) AND (label:Code-Review=+1,group=mdb/dart-core-library-change-approvers-web OR ownerin:mdb/dart-core-library-change-approvers-web))
+      canOverrideInChildProjects = false
+  ```
+
+- [commit message format](https://groups.google.com/g/golang-checkins/c/4ZWyQdcB1Og)
+  ```
+  applicableIf = message:\"^.*(D|d)(O|o) (N|n)(O|o)(T|t) (R|r)(E|e)(V|v)(I|i)(E|e)(W|w).*\"
+  ```
+
+- [branch regex](https://groups.google.com/g/golang-checkins/c/H_xlE2ar0_4/m/o6FJMleXAQAJ)
+  ```
+  applicableIf = branch:\"^refs/heads/release-branch.+\"
+  ```
+
+### plugin
+```bash
+[plugin "its-jira"]
+  association = OPTIONAL
+  branch = ^refs/heads/.*
+  commentOnChangeAbandoned = false
+  commentOnChangeCreated = true
+  commentOnChangeMerged = true
+  commentOnChangeRestored = false
+  commentOnCommentAdded = true
+  commentOnFirstLinkedPatchSetCreated = true
+  commentOnPatchSetCreated = false
+  commentOnRefUpdatedGitWeb = true
+  enabled = enforced
+```
 
 ## [rules.pl](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html)
 
+> [!NOTE|label:references:]
+> - [Prolog Submit Rules Cookbook](https://gerrit.cloudera.org/Documentation/prolog-cookbook.html#SubmitRule)
+
 ### [submit by a non author](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#NonAuthorCodeReview)
 
-> [!TIP]
-> check also:
+> [!TIP|label:references:]
 > - [Exclude author from gerrit review](https://stackoverflow.com/a/47887713/2940319)
+> - [`submittableIf = ..,user=non_uploader`](https://gerrit-review.googlesource.com/Documentation/config-submit-requirements.html#code-review-example)
 
-```
-submit_rule(S) :-
-    gerrit:default_submit(X),
-    X =.. [submit | Ls],
-    add_non_author_approval(Ls, R),
-    S =.. [submit | R].
+- by `rules.pl`
+  ```
+  submit_rule(S) :-
+      gerrit:default_submit(X),
+      X =.. [submit | Ls],
+      add_non_author_approval(Ls, R),
+      S =.. [submit | R].
 
-add_non_author_approval(S1, S2) :-
-    gerrit:commit_author(A),
-    gerrit:commit_label(label('Code-Review', 2), R),
-    R \= A, !,
-    S2 = [label('Non-Author-Code-Review', ok(R)) | S1].
-add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
-```
-![non author cr](../../screenshot/gerrit/none-author-CR.png)
+  add_non_author_approval(S1, S2) :-
+      gerrit:commit_author(A),
+      gerrit:commit_label(label('Code-Review', 2), R),
+      R \= A, !,
+      S2 = [label('Non-Author-Code-Review', ok(R)) | S1].
+  add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
+  ```
+
+  ![non author cr](../../screenshot/gerrit/none-author-CR.png)
 
 - by `project.config`
   ```
@@ -413,6 +585,31 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
     label-Code-Review = block -2..+2 group Change Owner
     exclusiveGroupPermissions = label-Code-Review
   ```
+
+- by `submit-requirement`
+  ```
+  [submit-requirement "Code-Review"]
+    description = A maximum vote from a non-uploader is required for the \
+                  'Code-Review' label. A minimum vote is blocking.
+    submittableIf = label:Code-Review=MAX,user=non_uploader AND -label:Code-Review=MIN
+    canOverrideInChildProjects = true
+  ```
+
+### [Labels and Submit Requirements](https://gerrit-review.googlesource.com/Documentation/config-submit-requirements.html#labels)
+```bash
+[label "Code-Review"]
+  function = NoBlock
+  value = -2 This shall not be submitted
+  value = -1 I would prefer this is not merged as is
+  value = 0 No score
+  value = +1 Looks good to me, but someone else must approve
+  value = +2 Looks good to me, approved
+  defaultValue = 0
+[submit-requirement "Code-Review"]
+  description = At least one maximum vote for label 'Code-Review' is required
+  submittableIf = label:Code-Review=MAX,user=non_uploader AND -label:Code-Review=MIN
+  canOverrideInChildProjects = true
+```
 
 ### [ticket check](https://gerrit-review.googlesource.com/Documentation/prolog-cookbook.html#_example_7_make_change_submittable_if_commit_message_starts_with_fix)
 
@@ -480,11 +677,54 @@ add_non_author_approval(S1, [label('Non-Author-Code-Review', need(_)) | S1]).
 
 ![mandatory check](../../screenshot/gerrit/mandatory_ticket_check-autovote-2.png)
 
+## tips
+
+### [generate changeId](https://github.com/dart-lang/sdk/issues/51263#issuecomment-1424153906)
+```bash
+$ echo Change-Id: I$({ git var GIT_COMMITTER_IDENT ; echo "$refhash" ; git show HEAD; } | git hash-object --stdin)
+Change-Id: I86a371ebf8d29fd1634ed9191d594ce22b1f0953
+```
+
+### [Auto-submit reviews](https://stackoverflow.com/a/17782124/2940319)
+```groovy
+if(manager.build.result.isBetterThan(hudson.model.Result.UNSTABLE)) {
+    def cmd = 'ssh -p 29418 HOST gerrit review --verified +1 --code-review +2 --submit --project $GERRIT_PROJECT $GIT_COMMIT'
+    cmd = manager.build.environment.expand(cmd)
+    manager.listener.logger.println("Merge review: '$cmd'")
+    def p = "$cmd".execute()
+    manager.listener.logger.println(p.in.text)
+    manager.addShortText("M")
+}
+```
+
+### [Translating Gerrit Change-Ids using the CLI](https://www.coreboot.org/Git#Commit_messages)
+```bash
+$ # setup (only needed once)
+$ git config --global alias.gerrit-id '!f() { git log |egrep "^(commit | *Change-Id:)" |grep -B1 $1 |head -1 |sed "s,^commit ,,"; }; f'
+$ # use:
+$ git gerrit-id Ifeb277
+a3ea1e45902b64b45e141ebae2f59b94e745d187
+```
+
+### [Signed-off-by Lines](https://gerrit-review.googlesource.com/Documentation/user-signedoffby.html)
+
+> [!NOTE|label:references:]
+> - [Reported-by:, Tested-by: and Reviewed-by:](https://gerrit-review.googlesource.com/Documentation/user-signedoffby.html#Reviewed-by)
+>   - `Reported-by:`
+>   - `Tested-by:`
+>   - `Reviewed-by:`
+> - [The refs/notes/review namespace](https://gerrit.googlesource.com/plugins/reviewnotes/+/refs/heads/master/src/main/resources/Documentation/refs-notes-review.md)
+> - [Git: Gerrit Code Review](https://gist.github.com/afbjorklund/b120164312c7353de549)
+> - [refs/notes/review](https://gerrit-review.googlesource.com/Documentation/access-control.html#references_special)
+>   - Autogenerated copy of review notes for all changes in the git. Each log entry on the refs/notes/review branch also references the patch set on which the review is made. This functionality is provided by the review-notes plugin.
+
 ## api
 {% hint 'info' %}
 > reference:
 > - [Gerrit Code Review - REST API Developers' Notes](https://gerrit-review.googlesource.com/Documentation/dev-rest-api.html)
 > - [Gerrit Code Review - REST API](https://gerrit-review.googlesource.com/Documentation/rest-api.html)
+> - [go gerrit - index](https://pkg.go.dev/github.com/andygrunwald/go-gerrit#pkg-index)
+> - [Class com.google.gerrit.extensions.api.access.ProjectAccessInfo](https://javadoc.io/static/com.google.gerrit/gerrit-plugin-api/2.14.2/com/google/gerrit/extensions/api/access/ProjectAccessInfo.html)
 {% endhint %}
 
 ### [basic usage](https://gerrit-review.googlesource.com/Documentation/dev-rest-api.html#_basic_testing)
@@ -752,17 +992,19 @@ $ curl -g -fsSL "https://vgitcentral.marvell.com/a/projects/$(printf %s "${proje
 ```
 
 ### reference
-- [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
-- [Gerrit Code Review - Access Controls](https://gerrit-review.googlesource.com/Documentation/access-control.html#_project_access_control_lists)
-- [Gerrit Code Review - Uploading Changes](https://www.gerritcodereview.com/user-upload.html)
-- [The refs/for namespace](https://gerrit-review.googlesource.com/Documentation/concept-refs-for-namespace.html)
-- [gerrit/gerrit/refs/meta/config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config)
-- [gerrit 权限控制](https://blog.csdn.net/chenjh213/article/details/50571190)
-- [its-jira plugin md](https://gerrit.googlesource.com/plugins/its-jira/+/refs/heads/stable-3.0/src/main/resources/Documentation/config.md)
-- [Rule base configuration](https://review.opendev.org/plugins/its-storyboard/Documentation/config-rulebase-common.html)
-- [Gerrit push not working. Remote rejected, prohibited by gerrit](https://stackoverflow.com/a/31297860/2940319)
-- [Gerrit Code Review - Project Configuration File Format](https://gerrit-review.googlesource.com/Documentation/config-project-config.html)
-- [Review UI](https://gerrit-review.googlesource.com/Documentation/user-review-ui.html)
+
+> [!NOTE|lbael:references:]
+> - [project owner guide](https://www.gerritcodereview.com/intro-project-owner.html)
+> - [Gerrit Code Review - Access Controls](https://gerrit-review.googlesource.com/Documentation/access-control.html#_project_access_control_lists)
+> - [Gerrit Code Review - Uploading Changes](https://www.gerritcodereview.com/user-upload.html)
+> - [The refs/for namespace](https://gerrit-review.googlesource.com/Documentation/concept-refs-for-namespace.html)
+> - [gerrit/gerrit/refs/meta/config](https://gerrit.googlesource.com/gerrit/+/refs/meta/config)
+> - [gerrit 权限控制](https://blog.csdn.net/chenjh213/article/details/50571190)
+> - [its-jira plugin md](https://gerrit.googlesource.com/plugins/its-jira/+/refs/heads/stable-3.0/src/main/resources/Documentation/config.md)
+> - [Rule base configuration](https://review.opendev.org/plugins/its-storyboard/Documentation/config-rulebase-common.html)
+> - [Gerrit push not working. Remote rejected, prohibited by gerrit](https://stackoverflow.com/a/31297860/2940319)
+> - [Gerrit Code Review - Project Configuration File Format](https://gerrit-review.googlesource.com/Documentation/config-project-config.html)
+> - [Review UI](https://gerrit-review.googlesource.com/Documentation/user-review-ui.html)
 
 
 ## integrate in Jenkins
