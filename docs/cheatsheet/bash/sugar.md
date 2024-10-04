@@ -37,6 +37,7 @@
 - [tricky](#tricky)
   - [alias for sudo](#alias-for-sudo)
   - [check file text or binary](#check-file-text-or-binary)
+  - [get md5sum](#get-md5sum)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1720,3 +1721,18 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _'
 # verify
 $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E '\.db$'
 ```
+
+## get md5sum
+
+- [get file in tar without extacting](https://unix.stackexchange.com/a/208509/29178)
+  ```bash
+  $ tar -O -xf file.tar.gz file.txt | md5sum
+
+  # or
+  $ tar xfO file.tar.gz file.txt | md5sum
+  ```
+
+- [get file in zip without extracting](https://stackoverflow.com/a/68703145/2940319)
+  ```bash
+  $ unzip -p file.zip file.txt | md5sum
+  ```
