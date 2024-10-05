@@ -5,6 +5,7 @@
   - [install](#install)
     - [n](#n)
     - [nvm](#nvm)
+    - [volta](#volta)
   - [upgrade](#upgrade)
   - [purge node](#purge-node)
     - [macOS](#macos)
@@ -64,13 +65,59 @@ $ curl -L https://bit.ly/n-install | N_PREFIX=~/util/n bash -s -- -y
 > - [nvm-sh/nvm](https://github.com/nvm-sh/nvm)
 
 ```bash
-$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 # or
-$ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
+$ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 # or
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
-$ nvm install v12
+
+# or
+$ brew install nvm
+```
+
+- configure
+```bash
+$ cat >> ~/.bash_profile <<EOF
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+EOF
+
+# or
+$ cat >> ~/.bash_profile <<EOF
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+EOF
+
+$ source ~/.bash_profile
+```
+
+- verify
+  ```bash
+  $ nvm install v12
+  ```
+
+### volta
+
+> [!NOTE|label:references:]
+> - [volta.sh](https://volta.sh/)
+
+```bash
+# install volta
+$ curl https://get.volta.sh | bash
+$ tail -n 2 ~/.bash_profile
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
+# install node@12
+$ volta install node@12
+success: installed and set node@12.22.12 (with npm@6.14.16) as default
+
+# verify
+$ node --version
+v12.22.12
+$ command -v node
+/Users/marslo/.volta/bin/node
 ```
 
 ## upgrade

@@ -7,7 +7,7 @@ search:
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [gitbook-cli](#gitbook-cli)
-  - [installation](#installation)
+  - [install](#install)
   - [initial `book.json`](#initial-bookjson)
 - [gitbook format](#gitbook-format)
   - [hint](#hint)
@@ -90,7 +90,10 @@ search:
 {% endhint %}
 
 ## gitbook-cli
-### installation
+### install
+
+> [!NOTE|label:references:]
+> - [* iMarslo: install node v12.22.12 in ubuntu 22.04](https://github.com/marslo/ibook/blob/marslo/README.md)
 
 - install
   ```bash
