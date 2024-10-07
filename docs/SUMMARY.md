@@ -56,6 +56,7 @@
     * [eol](devops/git/eol.md)
     * [example](devops/git/example.md)
     * [gerrit](devops/git/gerrit.md)
+      * [gerrit API](devops/git/gerritApi.md)
     * [github](devops/git/github.md)
     * [troubleshooting](devops/git/troubleshooting.md)
     * [tricky](devops/git/tricky.md)
