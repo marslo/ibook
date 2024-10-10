@@ -17,6 +17,7 @@
   - [dynamic method names](#dynamic-method-names)
   - [`instanceof`](#instanceof)
   - [keeping quotes in Map or List](#keeping-quotes-in-map-or-list)
+  - [get checksum](#get-checksum)
 - [method and class](#method-and-class)
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
@@ -566,6 +567,22 @@ assert clz.isInstance( [] ) == false
   // result:
   // ['a', 'b', 'c']
   // ["a","b","c"]
+  ```
+
+### get checksum
+
+> [!NOTE|label:references:]
+> - [Groovy Goodness: Calculate MD5 And SHA Hash Values](https://blog.mrhaki.com/2018/06/groovy-goodness-calculate-md5-and-sha.html)
+> - [How to generate a MD5 hash in Groovy](https://gist.github.com/ikarius/299062/85b6540c99878f50f082aaee236ef15fc78e527c)
+
+- md5
+  ```bash
+  import java.security.MessageDigest
+  String str = 'hello'
+
+  MessageDigest.getInstance("MD5").digest(str.bytes).encodeHex().toString()
+  // or
+  str.md5()
   ```
 
 ## method and class

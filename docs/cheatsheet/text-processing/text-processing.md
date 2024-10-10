@@ -2641,12 +2641,13 @@ aabaa
 >   ```
 > - references:
 >   - [How to add a newline to the end of a file?](https://unix.stackexchange.com/a/263965/29178)
+>   - [Add new line character at the end of file in bash](https://stackoverflow.com/a/23056914/2940319)
 
 - check last char in the file
   ```bash
   # unqualified key
   $ tail -c1 ~/.ssh/id_ed25519
-  -$ tail -c1 ~/.ssh/id_ed25519 | xxd -u -p
+  $ tail -c1 ~/.ssh/id_ed25519 | xxd -u -p
   2D
 
   # qualified key
@@ -2664,12 +2665,34 @@ aabaa
   # or
   $ [ -z "$(tail -c1 file)" ] || printf '\n' >>file
 
+  # or: https://stackoverflow.com/a/35279563/2940319
+  $ echo \ >> file.txt
+
+  # or: https://stackoverflow.com/a/65136212/2940319
+  $ sed -i -z 's/$/\n/g' file.txt
+
   # performance for various solutions
   $ [ -n "$(tail -c1 file)" ] && printf '\n' >>file  0.013 sec
   $ vi -ecwq file                                    2.544 sec
   $ paste file 1<> file                             31.943 sec
   $ ed -s file <<< w                             1m  4.422 sec
   $ sed -i -e '$a\' file                         3m 20.931 sec
+  ```
+
+- add new line ending without modifying the file
+  ```bash
+  $ echo -n "$(cat ~/.ssh/id_ed25519)"$'\n' | tail -c1 | xxd -u -p
+  0A
+
+  # or
+  $ cat file.txt | sed -e '$a\'
+
+  # or: https://stackoverflow.com/a/65136212/2940319
+  $ cat a.org.txt | sed -z 's/$/\n/g'
+
+  # or
+  $ echo '' >> file                               # fix the last line line-ending
+  $ sed '${/^[[:space:]]*$/d;}' -i file           # remove the empty lines at end of file
   ```
 
 # fold
