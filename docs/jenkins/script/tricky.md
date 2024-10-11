@@ -59,11 +59,11 @@ import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
  * INSERT "Launch Method" SNIPPET HERE
 **/
 // define a "Permanent Agent"
-Slave agent = new DumbSlave(
-                "agent-node",
-                "/home/jenkins",
-                launcher
-              )
+Slave agent = new DumbSlave (
+                              "agent-node",
+                              "/home/jenkins",
+                              launcher
+                            )
 agent.nodeDescription   = "Agent node description"
 agent.numExecutors      = 1
 agent.labelString       = "agent-node-label"
@@ -71,14 +71,14 @@ agent.mode              = Node.Mode.NORMAL
 agent.retentionStrategy = new RetentionStrategy.Always()
 
 List<Entry> env = new ArrayList<Entry>()
-env.add(new Entry("key1","value1"))
-env.add(new Entry("key2","value2"))
+env.add( new Entry('key1','value1') )
+env.add( new Entry('key2','value2') )
 EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(env)
 
-agent.getNodeProperties().add(envPro)
+agent.getNodeProperties().add( envPro )
 
 // create a "Permanent Agent"
-Jenkins.instance.addNode(agent)
+Jenkins.instance.addNode( agent )
 
 return "Node has been created successfully."
 ```
@@ -90,9 +90,9 @@ return "Node has been created successfully."
   // Pick one of the strategies from the comments below this line
   ServerKeyVerificationStrategy serverKeyVerificationStrategy = new TrustInitialConnectionVerificationStrategy(false)
   // = new TrustInitialConnectionVerificationStrategy(false /* "Require manual verification of initial connection" */) // "Manually trusted key verification Strategy"
-  // = new ManuallyConnectionVerificationStrategy("<your-key-here>") // "Manually provided key verification Strategy"
-  // = new KnownHostsConnectionVerificationStrategy()                // "~/.ssh/known_hosts file Verification Strategy"
-  // = new BlindTrustConnectionVerificationStrategy()                // "Non-verifying Verification Strategy"
+  // = new ManuallyConnectionVerificationStrategy("<your-key-here>")            // "Manually provided key verification Strategy"
+  // = new KnownHostsConnectionVerificationStrategy()                           // "~/.ssh/known_hosts file Verification Strategy"
+  // = new BlindTrustConnectionVerificationStrategy()                           // "Non-verifying Verification Strategy"
 
   // define a "Launch method": "Launch agents via SSH"
   ComputerLauncher launcher = new com.cloudbees.jenkins.plugins.sshslaves.SSHLauncher(
@@ -161,7 +161,7 @@ def sendMail ( agent, cause ) {
 
 def getEnviron( computer ) {
   def env
-  def thread = Thread.start("Getting env from ${computer.name}", { env = computer.environment })
+  def thread = Thread.start( "Getting env from ${computer.name}", { env = computer.environment } )
   thread.join(2000)
   if ( thread.isAlive() ) thread.interrupt()
   env
