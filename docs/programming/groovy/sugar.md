@@ -576,13 +576,31 @@ assert clz.isInstance( [] ) == false
 > - [How to generate a MD5 hash in Groovy](https://gist.github.com/ikarius/299062/85b6540c99878f50f082aaee236ef15fc78e527c)
 
 - md5
+
+  > [!NOTE|label:references:]
+  > - * Interface CharSequence - `md5()`
+  >   - [The md5() method was introduced in Groovy 2.5](https://community.sap.com/t5/technology-q-a/convert-body-into-string-with-md5/qaq-p/12624534)
+  >   - v2.4.21 : [Interface CharSequence](https://docs.groovy-lang.org/2.4.21/html/groovy-jdk/java/lang/CharSequence.html) | [Class org.codehaus.groovy.runtime.EncodingGroovyMethods](https://docs.groovy-lang.org/2.4.21/html/gapi/org/codehaus/groovy/runtime/EncodingGroovyMethods.html)
+  >   - v2.5.0  : [Interface CharSequence](https://docs.groovy-lang.org/2.5.0/html/groovy-jdk/java/lang/CharSequence.html) | [Class org.codehaus.groovy.runtime.EncodingGroovyMethods](https://docs.groovy-lang.org/2.5.0/html/gapi/org/codehaus/groovy/runtime/EncodingGroovyMethods.html)
+  > - [Class EncodingGroovyMethods](https://docs.groovy-lang.org/latest/html/gapi/org/codehaus/groovy/runtime/EncodingGroovyMethods.html%23md5%28byte%5B%5D%29%0A)
+  > - [How to calculate md5 checksum on directory with java or groovy?](https://stackoverflow.com/a/3024454/2940319)
+  > - [fast md5](https://www.twmacinta.com/myjava/fast_md5_javadocs/)
+
   ```bash
-  import java.security.MessageDigest
   String str = 'hello'
 
-  MessageDigest.getInstance("MD5").digest(str.bytes).encodeHex().toString()
-  // or
-  str.md5()
+  import java.security.MessageDigest
+  assert '5d41402abc4b2a76b9719d911017c592' == MessageDigest.getInstance("MD5").digest(str.bytes).encodeHex().toString()
+
+  /** for groovy 2.5+ **/
+  // Interface CharSequence: https://docs.groovy-lang.org/latest/html/groovy-jdk/java/lang/CharSequence.html
+  assert '5d41402abc4b2a76b9719d911017c592' == str.md5()
+  assert '5d41402abc4b2a76b9719d911017c592' == str.bytes.md5()
+
+  // https://docs.groovy-lang.org/latest/html/api/org/codehaus/groovy/runtime/EncodingGroovyMethods.html
+  import org.codehaus.groovy.runtime.EncodingGroovyMethods
+  assert '5d41402abc4b2a76b9719d911017c592' == EncodingGroovyMethods.md5(str)
+  assert '5d41402abc4b2a76b9719d911017c592' == EncodingGroovyMethods.md5(str.getBytes())
   ```
 
 ## method and class
