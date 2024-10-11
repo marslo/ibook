@@ -240,9 +240,20 @@ $ find . -type f -daystart -mtime -$((diff+1)) -exec cp -a --parents -t /path/to
 ```
 
 ### download and extract
+
+> [!TIP|label:references:]
+> - [* see also: iMarslo: download and extract](../good.md#download-and-extract)
+
+- gz
+  ```bash
+  $ wget -O - http://example.com/a.gz  | tar xz
+  # or
+  $ curl -fsSL http://example.com/a.gz | tar xz
+  ```
+
 - tar.gz
   ```bash
-  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz | tar xzf - -C /path/to/target
+  $ curl -fsSL https://dlcdn.apache.org/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz | tar xzf - -C /path/to/targeT
   ```
 
 - tar.xz
@@ -253,6 +264,9 @@ $ find . -type f -daystart -mtime -$((diff+1)) -exec cp -a --parents -t /path/to
 - zip
   ```bash
   $ curl -fsSL https://downloads.gradle.org/distributions/gradle-8.4-bin.zip | bsdtar xzf - -C /path/to/target
+
+  # with password
+  $ curl -fsSL https://path/to/file.zip | bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
   ```
 
 ### [mirror website](https://explainshell.com/explain?cmd=wget+--mirror+--page-requisites+--html-extension+--convert-links++example.com)
@@ -1724,7 +1738,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 
 ## get md5sum
 
-- [get file in tar without extacting](https://unix.stackexchange.com/a/208509/29178)
+- [get file in tar without exacting](https://unix.stackexchange.com/a/208509/29178)
   ```bash
   $ tar -O -xf file.tar.gz file.txt | md5sum
 

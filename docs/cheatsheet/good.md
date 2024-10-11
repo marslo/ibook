@@ -134,7 +134,13 @@ $ TZ=America/Los_Angeles date
 
 ### show cal
 ```bash
-$ cal -y | tr '\n' '|' | sed "s/^/ /;s/$/ /;s/ $(date +%e) / $(date +%e | sed 's/./#/g') /$(date +%m | sed s/^0//)" | tr '|' '\n'
+$ cal -y
+
+# or
+$ cal -y |
+      tr '\n' '|' |
+      sed "s/^/ /;s/$/ /;s/ $(date +%e) / $(date +%e | sed 's/./#/g') /$(date +%m | sed s/^0//)" |
+      tr '|' '\n'
                              2014
       January               February               March
 Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
@@ -194,6 +200,10 @@ $ date --set="$(ssh [username]@[sshserver] date)"
   ```
 
 ## download and extract
+
+> [!NOTE|label:references:]
+> - [* see also: iMarslo: oneline command](./bash/sugar.md#oneline-commands)
+
 - `*.gz`
   ```bash
   $ wget -O - http://example.com/a.gz | tar xz
@@ -217,10 +227,7 @@ $ date --set="$(ssh [username]@[sshserver] date)"
   ```
   - example
     ```bash
-    $ curl -fsSL \
-           -j \
-           -k \
-           -L \
+    $ curl -fsSL -j -k \
            -H "Cookie: oraclelicense=accept-securebackup-cookie" \
            http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz \
            | tar xzf - -C '/opt/java'
