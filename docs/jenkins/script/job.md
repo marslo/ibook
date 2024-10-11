@@ -48,7 +48,7 @@
 ## list items
 ### get name and classes
 ```groovy
-Jenkins.instance.getAllItems( Job.class ).each {
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).each {
   println it.name + " -> " + it.fullName + ' ~> ' + it.class
 }
 ```
@@ -86,7 +86,7 @@ jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).each {
 {% endhint %}
 
 ```groovy
-Jenkins.instance.getAllItems( AbstractProject.class ).each {
+jenkins.model.Jenkins.instance.getAllItems( AbstractProject.class ).each {
   println it.fullName
 }
 ```
@@ -95,7 +95,7 @@ Jenkins.instance.getAllItems( AbstractProject.class ).each {
 ```groovy
 import com.cloudbees.hudson.plugins.folder.Folder
 
-Jenkins.instance.getAllItems( Folder.class ).each {
+jenkins.model.Jenkins.instance.getAllItems( Folder.class ).each {
   println it.fullName + ' ~> ' + it.getClass()
 }
 ```
@@ -134,7 +134,7 @@ jenkins.model.Jenkins.instance
 final long CURRENT_TIME  = System.currentTimeMillis()
 final long BENCH_MARK    = 6*30*24*60*60
 
-Jenkins.instance.getAllItems( Job.class ).collect { project ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).collect { project ->
   project.getLastBuild()
 }.findAll { build ->
   build && ( CURRENT_TIME - build.startTimeInMillis ) / 1000 > BENCH_MARK
@@ -168,7 +168,7 @@ import hudson.model.*
 import hudson.triggers.*
 
 TriggerDescriptor TIMER_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie( TimerTrigger.class )
-Jenkins.instance.getAllItems(Job).findAll { item ->
+jenkins.model.Jenkins.instance.getAllItems(Job).findAll { item ->
   item.getTriggers().get( TIMER_TRIGGER_DESCRIPTOR )
 }.each { item ->
   if ( item instanceof hudson.model.FreeStyleProject ) {
@@ -189,7 +189,7 @@ Jenkins.instance.getAllItems(Job).findAll { item ->
 
   TriggerDescriptor TIMER_TRIGGER_DESCRIPTOR = Hudson.instance.getDescriptorOrDie( TimerTrigger.class )
 
-  for( item in Jenkins.instance.getAllItems(Job) ) {
+  for( item in jenkins.model.Jenkins.instance.getAllItems(Job) ) {
     def timertrigger = item.getTriggers().get( TIMER_TRIGGER_DESCRIPTOR )
     if ( timertrigger ) {
       if (item.class.canonicalName == "hudson.model.FreeStyleProject") {
@@ -205,7 +205,7 @@ Jenkins.instance.getAllItems(Job).findAll { item ->
 
 - example 2:
   ```groovy
-  Jenkins.instance.getAllItems(Job).each {
+  jenkins.model.Jenkins.instance.getAllItems(Job).each {
     def jobBuilds=it.getBuilds()
 
     // Check the last build only
@@ -274,7 +274,7 @@ marslo/sandbox/dump           */dev               jenkinsfile/dump              
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
   it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
 }.each {
   println it.fullName.toString().padRight(30) + ' ~> ' + it?.definition?.getScriptPath()
@@ -341,7 +341,7 @@ marslo/sandbox/dump                                : refs/heads/utility
 >   - `getLastSuccessfulBuild` ?: `getLastCompletedBuild` ?: `definedSCMs`
 
 ```groovy
-Jenkins.instance.getAllItems( Job.class ).findAll {
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll {
   it.SCMs &&
   it.SCMs.any { scm -> scm instanceof hudson.plugins.git.GitSCM }
 }.each { job ->
@@ -358,7 +358,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
 
 - or without lastBuild
   ```groovy
-  Jenkins.instance.getAllItems( Job.class ).findAll {
+  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll {
     it.hasProperty( 'typicalSCM' ) &&
     it.typicalSCM instanceof hudson.plugins.git.GitSCM
   }.each { job ->
@@ -377,7 +377,7 @@ Jenkins.instance.getAllItems( Job.class ).findAll {
 
 - or
   ```groovy
-  Jenkins.instance.getAllItems( Job.class ).findAll {
+  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll {
     it.hasProperty( 'typicalSCM' ) &&
     it.typicalSCM instanceof hudson.plugins.git.GitSCM
   }.each { job ->
@@ -410,7 +410,7 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
 String branch = 'develop'
 
-Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
   it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition &&
   ! ( it.definition.scm instanceof hudson.scm.NullSCM )
 }.findAll {
@@ -431,7 +431,7 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 ```bash
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
   it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
 }.each {
   println it.fullName.toString().padRight(30) + ' ~> ' + it?.definition?.getScript()
@@ -442,7 +442,7 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 
 ### get particular job status
 ```groovy
-def job = Jenkins.instance.getItemByFullName('<group>/<name>')
+def job = jenkins.model.Jenkins.instance.getItemByFullName('<group>/<name>')
 println """
   Last success : ${job.getLastSuccessfulBuild()}
     All builds : ${job.getBuilds().collect{ it.getNumber() }}
@@ -457,7 +457,7 @@ println """
 > [Java Code Examples for jenkins.model.Jenkins#getItemByFullName()](https://www.programcreek.com/java-api-examples/?class=jenkins.model.Jenkins&method=getItemByFullName)
 
 ```groovy
-def job = Jenkins.instance.getItemByFullName('<group>/<name>')
+def job = jenkins.model.Jenkins.instance.getItemByFullName('<group>/<name>')
 println """
        job.getClass() : ${job.getClass()}
     job.isBuildable() : ${job.isBuildable()}
@@ -483,7 +483,7 @@ import hudson.tasks.LogRotator
 
 String JOB_PATTERN = 'pattern'
 
-Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
   it.fullName.startsWith( JOB_PATTERN ) && it.buildDiscarder
 }.each { job ->
   LogRotator discarder = job.buildDiscarder
@@ -499,7 +499,7 @@ Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 ```groovy
 List<String> projects = [ 'project' ]
 
-Jenkins.instance.getAllItems(Job.class).findAll {
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll {
   projects.any { p -> it.fullName.startsWith(p) }
 }.each {
   println """
@@ -619,7 +619,7 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
                         .any { newCredId == it.id }
 ) {
 
-  Jenkins.instance.getAllItems( WorkflowJob.class ).findAll {
+  jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).findAll {
     it.definition instanceof org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition &&
     ! it.definition?.scm?.userRemoteConfigs.collect { it.credentialsId }.contains( newCredId )
   }.each { job ->
@@ -659,7 +659,7 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-Jenkins.instance.getAllItems(Job.class).findAll {
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll {
   projects.any { p -> it.fullName.startsWith(p) }
 }.each {
   println "~~> ${it.fullName}"
@@ -672,7 +672,7 @@ Jenkins.instance.getAllItems(Job.class).findAll {
 ```groovy
 List<String> projects = [ 'project-1', 'project-2', 'project-n' ]
 
-Jenkins.instance.getAllItems(Job.class).findAll {
+jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll {
   it.disabled && projects.any{ p -> it.fullName.startsWith(p) }
 }.each {
   println "~~> ${it.fullName}"

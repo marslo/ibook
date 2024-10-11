@@ -112,7 +112,7 @@ jenkins.model.Jenkins.instance.computers.each { agent ->
 #### example for `Computer` Object
 - get description
   ```groovy
-  Jenkins.instance.getNode('<AGENT_NAME>').toComputer().description
+  jenkins.model.Jenkins.instance.getNode('<AGENT_NAME>').toComputer().description
   ```
 
 - get all info
@@ -121,7 +121,7 @@ jenkins.model.Jenkins.instance.computers.each { agent ->
 
   String agentName = <AGENT_NAME>
 
-  Jenkins.instance.computers.findAll { computer ->
+  jenkins.model.Jenkins.instance.computers.findAll { computer ->
     agentName == computer.name
   }.each { computer ->
     String moreinfo = computer.online
@@ -297,16 +297,14 @@ jenkins.model.Jenkins.instance.getNode(name)?.computer?.allExecutors?.size
 ```groovy
 import hudson.model.Computer.ListPossibleNames
 
-println jenkins.model
-               .Jenkins.instance
+println jenkins.model.Jenkins.instance
                .getNode( '<AGENT_NAME>' ).computer
                .getChannel().call(new ListPossibleNames())
 ```
 
 or
 ```groovy
-println jenkins.model
-               .Jenkins.instance
+println jenkins.model.Jenkins.instance
                .getNode( '<AGENT_NAME>' ).computer
                .getHostName()
 ```
@@ -389,7 +387,7 @@ println showTable( agentCredentials.tail() )
   ```groovy
   println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
 
-  Jenkins.instance.computers.findAll { computer ->
+  jenkins.model.Jenkins.instance.computers.findAll { computer ->
     ! jenkins.model.Jenkins.MasterComputer.isInstance(computer) &&
     computer?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
   }.each { computer ->
@@ -404,7 +402,7 @@ println showTable( agentCredentials.tail() )
   ```groovy
   println "   AGENT".padRight(33) + "ONLINE".padRight(15) + "CREDENTIAL ID"
 
-  Jenkins.instance.nodes.findAll { node ->
+  jenkins.model.Jenkins.instance.nodes.findAll { node ->
     ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
     node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher
   }.each { node ->
@@ -493,7 +491,7 @@ def nodes = jenkins.model.Jenkins.get().computers
   ```
 - [or](https://stackoverflow.com/a/53429175/2940319)
   ```groovy
-  Jenkins.instance.getLabel('my-label').getNodes().collect{ it.getNodeName() }
+  jenkins.model.Jenkins.instance.getLabel('my-label').getNodes().collect{ it.getNodeName() }
   ```
 
 ## cloud agents
@@ -608,7 +606,7 @@ jenkins.model.Jenkins.instance.computers.findAll{ it instanceof KubernetesComput
 
 ### basic usage
 ```groovy
-List<List<hudson.model.Executor>> executors = Jenkins.instance.computers.collect {c -> c.executors}
+List<List<hudson.model.Executor>> executors = jenkins.model.Jenkins.instance.computers.collect {c -> c.executors}
 println executors.collect{ e -> e.collect{ it.getClass() } }
 
 // Result:
@@ -622,7 +620,7 @@ import jenkins.model.Jenkins
 int active_builds      = 0
 int inactive_executors = 0
 
-Jenkins.instance.slaves.findAll { agent ->
+jenkins.model.Jenkins.instance.slaves.findAll { agent ->
   ! agent.computer.isOffline()
 }.each { agent ->
   def executors = agent.computer.executors
@@ -636,7 +634,7 @@ Jenkins.instance.slaves.findAll { agent ->
 }
 
 println """
-           Queue : ${Jenkins.instance.queue.items.size()}
+           Queue : ${jenkins.model.Jenkins.instance.queue.items.size()}
           Active : ${active_builds}
   Free executors : ${inactive_executors}
 """
@@ -740,8 +738,8 @@ jenkins.model.Jenkins.instance
 > - using `WorkflowRun.finish` might cause issue : https://stackoverflow.com/q/75651552/2940319
 
 ```groovy
-List<List<hudson.model.Executor>> executors = Jenkins.instance.computers.collect { c -> c.executors }
-List<hudson.model.Executor> busyExecutors   = Jenkins.instance.computers.collect { c -> c.executors }.collectMany { it.findAll{ it.isBusy() } }
+List<List<hudson.model.Executor>> executors = jenkins.model.Jenkins.instance.computers.collect { c -> c.executors }
+List<hudson.model.Executor> busyExecutors   = jenkins.model.Jenkins.instance.computers.collect { c -> c.executors }.collectMany { it.findAll{ it.isBusy() } }
 
 busyExecutors.each {
   org.jenkinsci.plugins.workflow.job.WorkflowRun run = it?.currentExecutable?.parentExecutable
@@ -752,8 +750,8 @@ busyExecutors.each {
 
 ### force interrupt executors
 ```groovy
-List<List<hudson.model.Executor>> executors = Jenkins.instance.computers.collect { c -> c.executors }
-List<hudson.model.Executor> busyExecutors   = Jenkins.instance.computers.collect { c -> c.executors }.collectMany { it.findAll{ it.isBusy() } }
+List<List<hudson.model.Executor>> executors = jenkins.model.Jenkins.instance.computers.collect { c -> c.executors }
+List<hudson.model.Executor> busyExecutors   = jenkins.model.Jenkins.instance.computers.collect { c -> c.executors }.collectMany { it.findAll{ it.isBusy() } }
 busyExecutors.each { it.interrupt() }
 
 // or simply in one line
@@ -800,7 +798,7 @@ jenkins.model.Jenkins.instance.computers.findAll { computer ->
 
 ### to `Computer`
 ```groovy
-Jenkins.instance.computers.findAll { computer ->
+jenkins.model.Jenkins.instance.computers.findAll { computer ->
   '<agentName>' == computer.name
 }.collect { it.executors }
  .flatten()
@@ -913,7 +911,7 @@ EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(e
 agent.getNodeProperties().add(envPro)
 
 // create a "Permanent Agent"
-Jenkins.instance.addNode(agent)
+jenkins.model.Jenkins.instance.addNode(agent)
 
 return "Node has been created successfully."
 ```
@@ -967,7 +965,7 @@ return "Node has been created successfully."
   )
 
   agent.getNodeProperties().add(envPro)
-  Jenkins.instance.addNode(agent)
+  jenkins.model.Jenkins.instance.addNode(agent)
   ```
 
 ### update agent label
@@ -1112,7 +1110,7 @@ jenkins.model.Jenkins.instance.nodes.findAll { node ->
     agent.retentionStrategy = node.retentionStrategy
     node.computer.doDoDelete()
     Thread.sleep( 5*1000 )
-    Jenkins.instance.addNode( agent )
+    jenkins.model.Jenkins.instance.addNode( agent )
 
     // restart agent
     if ( node.computer.isOnline() && node.computer.countBusy() == 0 ) {
@@ -1232,7 +1230,7 @@ import hudson.slaves.OfflineCause
 String newCredId = 'NEW_CREDENTIAL'
 String nodeName  = 'AGENT_NAME'
 
-Jenkins.instance.nodes.findAll { node ->
+jenkins.model.Jenkins.instance.nodes.findAll { node ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
   node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
   nodeName == node.name
@@ -1309,7 +1307,7 @@ import hudson.slaves.ComputerLauncher
 
 String nodeName = <AGENT_NAME>
 
-Jenkins.instance.nodes.findAll { node ->
+jenkins.model.Jenkins.instance.nodes.findAll { node ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
   node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
   nodeName == node.name
@@ -1367,7 +1365,7 @@ import hudson.slaves.OfflineCause
 
 String nodeName = '<AGENT_NAME>'
 
-Jenkins.instance.nodes.findAll { node ->
+jenkins.model.Jenkins.instance.nodes.findAll { node ->
   ! jenkins.model.Jenkins.MasterComputer.isInstance(node) &&
   node?.launcher instanceof hudson.plugins.sshslaves.SSHLauncher &&
   nodeName == node.name
@@ -1459,7 +1457,7 @@ import javax.mail.internet.*;
 import javax.mail.*
 import javax.activation.*
 
-jenkins = Jenkins.instance
+jenkins = jenkins.model.Jenkins.instance
 
 def sendMail ( agent, cause ) {
   message = agent + " agent is down. Check http://JENKINS_HOSTNAME:JENKINS_PORT/computer/" + agent + "\nBecause " + cause
