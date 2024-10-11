@@ -69,6 +69,8 @@
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
   - [remove empty lines](#remove-empty-lines)
+    - [remove empty line at the end of file](#remove-empty-line-at-the-end-of-file)
+    - [remove duplicate empty lines](#remove-duplicate-empty-lines)
   - [search and replace](#search-and-replace)
   - [replace with position](#replace-with-position)
   - [check line ending](#check-line-ending)
@@ -1461,7 +1463,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 
 - including pattern
 
-  > [TIP]
+  > [!TIP]
   > - solution: to print from pattern to end `,$` == `,$p`
   > - for both CRLF and LF
 
@@ -1474,7 +1476,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 
   - sed
 
-    > [TIP]
+    > [!TIP]
     > - solution: using line number to end: `n,$` -> `"n"',$p'`
     >   - `head -n1` : for first matches pattern line number
     >   - `tail -n1` : for the last matches pattern line number
@@ -1513,7 +1515,7 @@ $ cat a.txt | sed -n '/3c/,/^$/p'
 
 - not including pattern
 
-  > [TIP]
+  > [!TIP]
   > - solution: to delete / not print from first line to pattern
   >   - delete: `/d`
   >   - not print: -n `/!p`
@@ -2361,14 +2363,15 @@ $ echo .$(echo "$str" | sed 's:^ *::; s: *$::').
 >     - `'/^\s*$/d'`
 >     - `'/^$/d'`
 >     - `-n '/^\s*$/!p'`
->   - `grep`
+>   - [`grep`](https://stackoverflow.com/a/14570521/2940319)
 >     - `.`
 >     - `-v '^$'`
 >     - `-v '^\s*$'`
 >     - `-v '^[[:space:]]*$'`
->   - `awk`
+>   - [`awk`](https://stackoverflow.com/a/16331260/2940319)
 >     - `/./`
->     - `'NF'`
+>     - `'NF'` or `'NF > 0'`
+>     - `'!/^$/'`
 >     - `'length'`
 >     - `'/^[ \t]*$/ {next;} {print}'`
 >     - `'!/^[ \t]*$/'`
@@ -2404,6 +2407,79 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
 14·15·16·17·18·19·20␊
 21·22·23·24·25·26·27␊
 28·29·30·31·········␊
+```
+
+### remove empty line at the end of file
+
+> [!NOTE|label:references:]
+> - [Remove an empty line at the end of a file (bash)](https://stackoverflow.com/a/42861570/2940319)
+
+```bash
+$ cat a.txt | sed '${/^[[:space:]]*$/d;}'
+a
+b
+
+c
+d
+```
+
+### remove duplicate empty lines
+
+> [!NOTE|label:references:]
+> - [Removing duplicate blank lines with awk](https://stackoverflow.com/q/61048751/2940319)
+
+```bash
+# original file
+$ cat a.txt --style='numbers'
+   1 a
+   2 b
+   3
+   4
+   5
+   6 c
+   7
+   8 d
+   9
+  10
+
+$ awk 'NF || p; { p = NF }' p=1 a.txt | bat --style='numbers'
+   1 a
+   2 b
+   3
+   4 c
+   5
+   6 d
+   7
+
+# or
+$ awk 'NF{c=1} (c++)<3' a.txt | bat --style='numbers'
+   1 a
+   2 b
+   3
+   4 c
+   5
+   6 d
+   7
+
+# or
+$ awk -v RS= -v ORS='\n\n' '1' a.txt | bat --style='numbers'
+   1 a
+   2 b
+   3
+   4 c
+   5
+   6 d
+   7
+
+# or
+$ awk '!NF{found++} found>1 && !NF{next} NF{found=""} 1' a.txt | bat --style='numbers'
+   1 a
+   2 b
+   3
+   4 c
+   5
+   6 d
+   7
 ```
 
 ## [search and replace](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
@@ -2647,13 +2723,13 @@ aabaa
   ```bash
   # unqualified key
   $ tail -c1 ~/.ssh/id_ed25519
-  $ tail -c1 ~/.ssh/id_ed25519 | xxd -u -p
+  $ tail -c1 ~/.ssh/id_ed25519 | /usr/bin/xxd -u -p
   2D
 
   # qualified key
   $ tail -c1 ~/.ssh/id_ed25519
 
-  $ tail -c1 ~/.ssh/id_ed25519 | xxd -u -p
+  $ tail -c1 ~/.ssh/id_ed25519 | /usr/bin/xxd -u -p
   0A
   $ tail -c1 ~/.ssh/id_ed25519 | hexdump -v -e '/1 "%02X"'
   0A
@@ -2681,7 +2757,7 @@ aabaa
 
 - add new line ending without modifying the file
   ```bash
-  $ echo -n "$(cat ~/.ssh/id_ed25519)"$'\n' | tail -c1 | xxd -u -p
+  $ echo -n "$(cat ~/.ssh/id_ed25519)"$'\n' | tail -c1 | /usr/bin/xxd -u -p
   0A
 
   # or

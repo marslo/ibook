@@ -3,7 +3,7 @@
 
 - [script console](#script-console)
   - [usage](#usage)
-  - [setup system (temporary)](#setup-system-temporary)
+  - [setup system property (temporary)](#setup-system-property-temporary)
   - [extend built-in node executor](#extend-built-in-node-executor)
   - [execute shell script in console](#execute-shell-script-in-console)
   - [read & write files](#read--write-files)
@@ -148,7 +148,7 @@
     r = requests.post('https://jenkins/scriptText', auth=('username', 'api-token'), data={'script': data})
     ```
 
-### setup system (temporary)
+### setup system property (temporary)
 
 > [!TIP|label:references:]
 > - [Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
@@ -156,22 +156,22 @@
 
 - timestampe
   ```groovy
-  System.setProperty('org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles')
+  System.setProperty( 'org.apache.commons.jelly.tags.fmt.timeZone', 'America/Los_Angeles' )
   ```
 
 - [shell step aborts](https://issues.jenkins.io/browse/JENKINS-48300)
   ```groovy
-  System.setProperty("org.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL", 36000)
+  System.setProperty( 'org.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL', 36000 )
   ```
 
 - to clear property
   ```groovy
-  System.clearProperty("hudson.model.DirectoryBrowserSupport.CSP")
+  System.clearProperty( 'hudson.model.DirectoryBrowserSupport.CSP' )
   ```
 
 - to get property
   ```groovy
-  System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+  System.getProperty( 'hudson.model.DirectoryBrowserSupport.CSP' )
   ```
 
 - to get all properties
@@ -196,10 +196,10 @@ Jenkins.instance.setNumExecutors(5)
 > - [Run scripts from controller Script Console on agents](https://www.jenkins.io/doc/book/managing/script-console/#run-scripts-from-controller-script-console-on-agents)
 
 ```groovy
-println ("uname -a".execute().text)
+println ( 'uname -a'.execute().text )
 
 // or
-println ("printenv".execute().in.text)
+println ( 'printenv'.execute().in.text )
 ```
 
 - result
@@ -213,17 +213,17 @@ println ("printenv".execute().in.text)
   import jenkins.model.Jenkins
 
   String agentName = 'your agent name'
-  //groovy script you want executed on an agent
-  groovy_script = '''
-  println System.getenv("PATH")
-  println "uname -a".execute().text
-  '''.trim()
+  // groovy script you want executed on an agent
+  groovyScript = '''
+    println System.getenv("PATH")
+    println "uname -a".execute().text
+  '''.stripIndent()
 
   String result
   Jenkins.instance.slaves.find { agent ->
-      agent.name == agentName
+    agent.name == agentName
   }.with { agent ->
-      result = RemotingDiagnostics.executeGroovy(groovy_script, agent.channel)
+    result = RemotingDiagnostics.executeGroovy( groovyScript, agent.channel )
   }
   println result
   ```
@@ -250,13 +250,13 @@ new File('/tmp/file.txt').text
   import jenkins.model.Jenkins
 
   String agentName = 'some-agent'
-  String filePath = '/tmp/file.txt'
+  String filePath  = '/tmp/file.txt'
 
   Channel agentChannel = Jenkins.instance.slaves.find { agent ->
     agent.name == agentName
   }.channel
 
-  new FilePath(agentChannel, filePath).write().with { os ->
+  new FilePath( agentChannel, filePath ).write().with { os ->
     try {
       os << 'hello world\n'
     } finally {
@@ -277,7 +277,7 @@ new File('/tmp/file.txt').text
   import java.util.stream.Collectors
 
   String agentName = 'some-agent'
-  String filePath = '/tmp/file.txt'
+  String filePath  = '/tmp/file.txt'
 
   Channel agentChannel = Jenkins.instance.slaves.find { it.name == agentName }.channel
 
@@ -350,17 +350,18 @@ sshd.save()
 
 ### [get system info](https://www.jenkins.io/participate/report-issue/#what-information-to-provide-for-environment-and-description)
 ```groovy
-println("Jenkins: ${Jenkins.instance.getVersion()}")
-println("OS: ${System.getProperty('os.name')} - ${System.getProperty('os.version')}")
-println("Java: ${System.getProperty('java.version')} - ${System.getProperty('java.vm.vendor')} (${System.getProperty('java.vm.name')})")
+println( "Groovy: ${GroovySystem.version}" )
+println( "Jenkins: ${jenkins.model.Jenkins.instance.getVersion()}" )
+println( "OS: ${System.getProperty('os.name')} - ${System.getProperty('os.version')}" )
+println( "Java: ${System.getProperty('java.version')} - ${System.getProperty('java.vm.vendor')} (${System.getProperty('java.vm.name')})" )
 println "---"
 
-Jenkins.instance.pluginManager.plugins
-    .collect()
-    .sort { it.getShortName() }
-    .each {
-        plugin -> println("${plugin.getShortName()}:${plugin.getVersion()}")
-    }
+jenkins.model.Jenkins.instance.pluginManager.plugins
+       .collect()
+       .sort { it.getShortName() }
+       .each {
+           plugin -> println("${plugin.getShortName()}:${plugin.getVersion()}")
+       }
 return
 ```
 
@@ -375,23 +376,23 @@ return
 {% endhint %}
 
 ```groovy
-System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header", "error");
-System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "error");
-System.setProperty("log4j.logger.org.apache.http", "error");
-System.setProperty("log4j.logger.org.apache.http.wire", "error");
-System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient", "error");
+System.setProperty( 'org.apache.commons.logging.Log', 'org.apache.commons.logging.impl.SimpleLog'     );
+System.setProperty( 'org.apache.commons.logging.simplelog.showdatetime', 'true'                       );
+System.setProperty( 'org.apache.commons.logging.simplelog.log.httpclient.wire.header', 'error'        );
+System.setProperty( 'org.apache.commons.logging.simplelog.log.org.apache.http', 'error'               );
+System.setProperty( 'log4j.logger.org.apache.http', 'error'                                           );
+System.setProperty( 'log4j.logger.org.apache.http.wire', 'error'                                      );
+System.setProperty( 'org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient', 'error' );
 ```
 - check log level
   ```groovy
-  println System.getProperty("org.apache.commons.logging.Log");
-  println System.getProperty("org.apache.commons.logging.simplelog.showdatetime");
-  println System.getProperty("org.apache.commons.logging.simplelog.log.httpclient.wire.header");
-  println System.getProperty("org.apache.commons.logging.simplelog.log.org.apache.http");
-  println System.getProperty("log4j.logger.org.apache.http");
-  println System.getProperty("log4j.logger.org.apache.http.wire");
-  println System.getProperty("org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient");
+  println System.getProperty( 'org.apache.commons.logging.Log'                                         );
+  println System.getProperty( 'org.apache.commons.logging.simplelog.showdatetime'                      );
+  println System.getProperty( 'org.apache.commons.logging.simplelog.log.httpclient.wire.header'        );
+  println System.getProperty( 'org.apache.commons.logging.simplelog.log.org.apache.http'               );
+  println System.getProperty( 'log4j.logger.org.apache.http'                                           );
+  println System.getProperty( 'log4j.logger.org.apache.http.wire'                                      );
+  println System.getProperty( 'org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient' );
   ```
 
 ### RABC
@@ -436,31 +437,33 @@ hudson.FilePath workspace = hudson.model.Executor.currentExecutor().getCurrentWo
 
 - [get absolute path](https://github.com/jenkinsci/job-dsl-plugin/wiki/Job-DSL-Commands#script-location)
   ```groovy
-  println("script directory: ${new File(__FILE__).parent.absolutePath}")
+  println( "script directory: ${new File(__FILE__).parent.absolutePath}" )
   ```
 
 ### [shelve jobs](https://support.cloudbees.com/hc/en-us/articles/236353928-Groovy-Scripts-To-Shelve-Jobs)
 ```groovy
-//You have to install the Shelve Project Plugin on your Jenkins Master
-//The maximum value for daysBack is 365, going beyond 365 will break the script.
+// you have to install the Shelve Project Plugin on your Jenkins Master
+// the maximum value for daysBack is 365, going beyond 365 will break the script.
 
 import org.jvnet.hudson.plugins.shelveproject.ShelveProjectTask
 
-def daysBack=365;
-Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
+def daysBack = 365;
+Jenkins.instance.getAllItems( AbstractProject.class ).each { it ->
   def lastBuild = it.getLastBuild()
   if( lastBuild != null ) {
     def back = Calendar.getInstance()
-      back.set( Calendar.DAY_OF_YEAR,back.get(Calendar.DAY_OF_YEAR) - daysBack )
-      if ( lastBuild.getTime().compareTo(back.getTime()) < 0 ) {
-        println it.name + " was built over " + daysBack + " days ago: " + lastBuild.getTime()
-          if ( it instanceof AbstractProject ){
-            def spt=  new ShelveProjectTask(it)
-            Hudson.getInstance().getQueue().schedule(spt , 0 );
-          } else {
-            println it.name + " was not shelved----------- "
-          }
+    back.set( Calendar.DAY_OF_YEAR,back.get(Calendar.DAY_OF_YEAR) - daysBack )
+
+    if ( lastBuild.getTime().compareTo(back.getTime()) < 0 ) {
+      println it.name + " was built over " + daysBack + " days ago: " + lastBuild.getTime()
+      if ( it instanceof AbstractProject ){
+        def spt=  new ShelveProjectTask(it)
+        Hudson.getInstance().getQueue().schedule(spt , 0 );
+      } else {
+        println it.name + " was not shelved ----------- "
       }
+    }
+
   }
 }
 ```
@@ -469,7 +472,7 @@ Jenkins.instance.getAllItems(AbstractProject.class).each { it ->
 ### via api : [imarslo: list plugins](../api.html#list-plugins)
 ### [simple list](https://stackoverflow.com/a/35292719/2940319)
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .pluginManager
        .plugins
        .each { plugin ->
@@ -479,7 +482,7 @@ Jenkins.instance
 
 ### list for helm-value.yaml
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .pluginManager
        .plugins
        .sort(false) { a, b ->
@@ -588,7 +591,7 @@ println Jenkins.instance.pluginManager.plugins
 
 - [others](https://stackoverflow.com/a/56864983/2940319)
   ```groovy
-  def plugins = Jenkins.instance
+  def plugins = jenkins.model.Jenkins.instance
                        .pluginManager
                        .plugins
                        .sort(false) { a, b ->
@@ -596,14 +599,12 @@ println Jenkins.instance.pluginManager.plugins
                        }
 
   println "jenkins instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
-          "installed plugins:\n" +
-          "=================="
+          "installed plugins:\n=================="
   plugins.each { plugin ->
     println "  ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}"
   }
 
-  println "\nplugins dependency tree (...: dependencies; +++: dependants) :\n" +
-          "======================="
+  println "\nplugins dependency tree (...: dependencies; +++: dependants) :\n======================="
   plugins.each { plugin ->
     println """
       ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}
@@ -616,7 +617,7 @@ println Jenkins.instance.pluginManager.plugins
 
 - or
   ```groovy
-  def jenkins = Jenkins.instance
+  def jenkins = jenkins.model.Jenkins.instance
 
   println """
     Jenkins Instance : ${jenkins.getComputer('').hostName} + ${jenkins.rootUrl}
@@ -786,7 +787,7 @@ println Jenkins.instance.pluginManager.plugins
 
   }} // ansiColor | timestamps
 
-  // vim: ft=Jenkinsfile ts=2 sts=2 sw=2 et
+  // vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Jenkinsfile
   ```
 
   - automatic approval
