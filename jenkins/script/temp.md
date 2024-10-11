@@ -96,7 +96,7 @@ import hudson.model.Queue
 import jenkins.model.Jenkins
 
 println("================================================")
-for (Job job : Jenkins.instanceOrNull.getAllItems(Job.class)) {
+for (Job job : jenkins.model.Jenkins.instanceOrNull.getAllItems(Job.class)) {
     if (job.isInQueue()) {
         println("------------------------------------------------")
         println("InQueue " + job.name)
