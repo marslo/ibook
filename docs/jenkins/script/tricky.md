@@ -78,7 +78,7 @@ EnvironmentVariablesNodeProperty envPro = new EnvironmentVariablesNodeProperty(e
 agent.getNodeProperties().add( envPro )
 
 // create a "Permanent Agent"
-Jenkins.instance.addNode( agent )
+jenkins.model.Jenkins.instance.addNode( agent )
 
 return "Node has been created successfully."
 ```
@@ -281,7 +281,7 @@ JSONArray sitesConf = [
 ] as JSONArray
 
 // get global Jenkins configuration
-JiraStepsConfig.ConfigDescriptorImpl config = Jenkins.instance.getExtensionList(JiraStepsConfig.ConfigDescriptorImpl.class)[0]
+JiraStepsConfig.ConfigDescriptorImpl config = jenkins.model.Jenkins.instance.getExtensionList(JiraStepsConfig.ConfigDescriptorImpl.class)[0]
 
 ArrayList<Site> sites = new ArrayList<Site>()
 

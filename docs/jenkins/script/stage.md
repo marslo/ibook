@@ -46,7 +46,7 @@ import org.jenkinsci.plugins.workflow.graph.FlowNode;
 final String JOB_NAME  = '/marslo/sandbox'
 final int BUILD_NUMBER = 17
 
-WorkflowRun run = Jenkins.instance
+WorkflowRun run = jenkins.model.Jenkins.instance
                          .getItemByFullName( JOB_NAME )
                          .getBuildByNumber( BUILD_NUMBER )
 PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor(run)
@@ -62,7 +62,7 @@ flowNodes.each {
                              getId : ${it.getId()}
                           isActive : ${it.node.active}
                          searchUrl : ${it.node.getSearchUrl()}
-                            getUrl : ${Jenkins.instance.getRootUrl() + it.node.getUrl()}
+                            getUrl : ${jenkins.model.Jenkins.instance.getRootUrl() + it.node.getUrl()}
                          iconColor : ${it.node.getIconColor()}
   """
 // println """
@@ -100,7 +100,7 @@ import io.jenkins.blueocean.rest.model.*
 import io.jenkins.blueocean.rest.model.BlueRun.*
 
 def withFlowNodes( String name, int buildNumber, Closure body ) {
-  WorkflowRun run = Jenkins.instance
+  WorkflowRun run = jenkins.model.Jenkins.instance
                            .getItemByFullName( name )
                            .getBuildByNumber( buildNumber )
   PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor( run )
@@ -145,14 +145,14 @@ def on( String job, int buildNumber ) {
 }
 
 Boolean isBuilding( String job, int buildNumber ) {
-  Jenkins.instance
+  jenkins.model.Jenkins.instance
          .getItemByFullName( job )
          .getBuildByNumber( buildNumber )
          .isInProgress()
 }
 
 def withFlowNodes( String name, int buildNumber, Closure body ) {
-  WorkflowRun run = Jenkins.instance
+  WorkflowRun run = jenkins.model.Jenkins.instance
                            .getItemByFullName( name )
                            .getBuildByNumber( buildNumber )
   PipelineNodeGraphVisitor visitor = new PipelineNodeGraphVisitor( run )

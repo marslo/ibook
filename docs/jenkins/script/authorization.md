@@ -141,7 +141,7 @@ println strategy.getClass()
 
 ### get raw authorization and permissions info
 ```groovy
-Jenkins.instance
+jenkins.model.Jenkins.instance
        .authorizationStrategy
        .grantedPermissions
        .collect{ p, u -> [ (p.id), u ] }
@@ -149,7 +149,7 @@ Jenkins.instance
 ```
 - or
   ```groovy
-  Jenkins.instance
+  jenkins.model.Jenkins.instance
          .authorizationStrategy
          .grantedPermissions
          .each { p, u -> println "\n${p} :\n\t${u}" }
@@ -169,8 +169,8 @@ String user = 'marslo'
 authorizationStrategy.add( Permission.fromId(id), user )
 
 // save strategy
-Jenkins.instance.authorizationStrategy = authorizationStrategy
-Jenkins.instance.save()
+jenkins.model.Jenkins.instance.authorizationStrategy = authorizationStrategy
+jenkins.model.Jenkins.instance.save()
 ```
 
 #### [add new configurations according to Map structure](https://gist.github.com/marslo/8eef5efc667785aaf338395b636a609d)
@@ -231,7 +231,7 @@ String admin = 'admin'
 // Turn security on
 RoleBasedAuthorizationStrategy authorizationStrategy = new RoleBasedAuthorizationStrategy()
 // ProjectMatrixAuthorizationStrategy authorizationStrategy = new ProjectMatrixAuthorizationStrategy()
-Jenkins.instance.setAuthorizationStrategy(authorizationStrategy)
+jenkins.model.Jenkins.instance.setAuthorizationStrategy(authorizationStrategy)
 
 Constructor[] constrs = Role.class.getConstructors()
 for (Constructor<?> c : constrs) {
@@ -297,7 +297,7 @@ disposer.backlog.each { item ->
   AsyncResourceDisposer disposer = AsyncResourceDisposer.get()
   StrictCrumbIssuer issuer = jenkins.model.Jenkins.instance.crumbIssuer
   String jenkinsCrumb = "${issuer.crumbRequestField}:${issuer.crumb}"
-  String url = Jenkins.instance.rootUrl + disposer.url
+  String url = jenkins.model.Jenkins.instance.rootUrl + disposer.url
 
   disposer.getBacklog().each { item ->
     println "\n${item.id} : \t${url}/stopTracking/?id=${item.id} : \t${item.class.simpleName} : \n" +

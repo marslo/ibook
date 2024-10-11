@@ -187,7 +187,7 @@
 ### extend built-in node executor
 ```groovy
 import jenkins.model.*
-Jenkins.instance.setNumExecutors(5)
+jenkins.model.Jenkins.instance.setNumExecutors(5)
 ```
 
 ### execute shell script in console
@@ -220,7 +220,7 @@ println ( 'printenv'.execute().in.text )
   '''.stripIndent()
 
   String result
-  Jenkins.instance.slaves.find { agent ->
+  jenkins.model.Jenkins.instance.slaves.find { agent ->
     agent.name == agentName
   }.with { agent ->
     result = RemotingDiagnostics.executeGroovy( groovyScript, agent.channel )
@@ -252,7 +252,7 @@ new File('/tmp/file.txt').text
   String agentName = 'some-agent'
   String filePath  = '/tmp/file.txt'
 
-  Channel agentChannel = Jenkins.instance.slaves.find { agent ->
+  Channel agentChannel = jenkins.model.Jenkins.instance.slaves.find { agent ->
     agent.name == agentName
   }.channel
 
@@ -279,7 +279,7 @@ new File('/tmp/file.txt').text
   String agentName = 'some-agent'
   String filePath  = '/tmp/file.txt'
 
-  Channel agentChannel = Jenkins.instance.slaves.find { it.name == agentName }.channel
+  Channel agentChannel = jenkins.model.Jenkins.instance.slaves.find { it.name == agentName }.channel
 
   String fileContents = ''
   new FilePath(agentChannel, filePath).read().with { is ->
@@ -448,7 +448,7 @@ hudson.FilePath workspace = hudson.model.Executor.currentExecutor().getCurrentWo
 import org.jvnet.hudson.plugins.shelveproject.ShelveProjectTask
 
 def daysBack = 365;
-Jenkins.instance.getAllItems( AbstractProject.class ).each { it ->
+jenkins.model.Jenkins.instance.getAllItems( AbstractProject.class ).each { it ->
   def lastBuild = it.getLastBuild()
   if( lastBuild != null ) {
     def back = Calendar.getInstance()
@@ -507,7 +507,7 @@ ExtensionList.lookup( UnprotectedRootAction ).each {
 
 ### list plugin and dependencies
 ```groovy
-println Jenkins.instance.pluginManager.plugins
+println jenkins.model.Jenkins.instance.pluginManager.plugins
                .sort(false) { a, b ->
                                 a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
                             }
@@ -523,7 +523,7 @@ println Jenkins.instance.pluginManager.plugins
   ```groovy
   List<String> keywords = [ 'jsch' ]
 
-  println Jenkins.instance.pluginManager.plugins
+  println jenkins.model.Jenkins.instance.pluginManager.plugins
                  .findAll { plugin -> keywords.any { it == plugin.shortName } }
                  .sort(false) { a, b ->
                                   a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
@@ -598,7 +598,7 @@ println Jenkins.instance.pluginManager.plugins
                          a.getShortName().toLowerCase() <=> b.getShortName().toLowerCase()
                        }
 
-  println "jenkins instance : ${Jenkins.instance.getComputer('').hostName} + ${Jenkins.instance.rootUrl}\n" +
+  println "jenkins instance : ${jenkins.model.Jenkins.instance.getComputer('').hostName} + ${jenkins.model.Jenkins.instance.rootUrl}\n" +
           "installed plugins:\n=================="
   plugins.each { plugin ->
     println "  ${plugin.getShortName()} : ${plugin.getVersion()} | ${plugin.getDisplayName()}"
@@ -824,7 +824,7 @@ println Jenkins.instance.pluginManager.plugins
   ```groovy
   import jenkins.model.Jenkins
 
-  def scriptApproval = Jenkins.instance
+  def scriptApproval = jenkins.model.Jenkins.instance
                               .getExtensionList('org.jenkinsci.plugins.scriptsecurity.scripts.ScriptApproval')[0]
   def hashesToApprove = scriptApproval.pendingScripts
                                       .findAll{ it.script.startsWith(approvalPrefix) }
