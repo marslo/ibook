@@ -2,6 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [startup scripts](#startup-scripts)
+  - [v9 logfile](#v9-logfile)
+  - [step debug](#step-debug)
+  - [list startup files](#list-startup-files)
+  - [list all shortcut mapping](#list-all-shortcut-mapping)
+  - [check customized completion](#check-customized-completion)
+  - [show terminal type](#show-terminal-type)
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
@@ -35,50 +41,50 @@
 > - [* iMarslo : redirect cmd](./tricky.html#redirect-cmd)
 > - [Debug unexpected option settings](https://vim.fandom.com/wiki/Debug_unexpected_option_settings)
 
-- [v9 logfile](https://vi.stackexchange.com/a/3595/7389)
-  ```bash
-  $ vim -V9logfile.log
-  ```
+### [v9 logfile](https://vi.stackexchange.com/a/3595/7389)
+```bash
+$ vim -V9logfile.log
+```
 
-- [step debug](https://vi.stackexchange.com/a/2064/7389)
-  ```bash
-  $ vim --noplugin -D
-  ```
+### [step debug](https://vi.stackexchange.com/a/2064/7389)
+```bash
+$ vim --noplugin -D
+```
 
-- list startup script files
+### [list startup files](https://superuser.com/a/686268/112396)
+```vim
+:scriptnames
+```
+
+### list all shortcut mapping
+```vim
+:verbose map
+:map
+:nmap
+:vmap
+:imap
+```
+
+- [redirect all contents to a file](https://stackoverflow.com/a/15756785/2940319)
   ```vim
-  :scriptnames
+  :redir > ~/Desktop/debug.txt
+  :silent verbose map
+  :redir END
   ```
 
-- list all shortcut mapping
-  ```vim
-  :verbose map
-  :map
-  :nmap
-  :vmap
-  :imap
-  ```
+### [check customized completion](https://github.com/xavierd/clang_complete/issues/452#issuecomment-139872204)
+```vim
+:set completefunc?
+completefunc=youcompleteme#CompleteFunc
+```
 
-  - [redirect all contents to a file](https://stackoverflow.com/a/15756785/2940319)
-    ```vim
-    :redir > ~/Desktop/debug.txt
-    :silent verbose map
-    :redir END
-    ```
+### show terminal type
+```vim
+:TERM_PROGRAM
+iTerm.app
+```
 
-- [check customized completion](https://github.com/xavierd/clang_complete/issues/452#issuecomment-139872204)
-  ```vim
-  :set completefunc?
-  completefunc=youcompleteme#CompleteFunc
-  ```
-
-- show terminal type
-  ```vim
-  :TERM_PROGRAM
-  iTerm.app
-  ```
-
-- [How to prevent MacVim from inheriting .profile as if it was Bash itself?](https://apple.stackexchange.com/a/137354/254265)
+- [prevent MacVim from inheriting .profile as if it was Bash itself?](https://apple.stackexchange.com/a/137354/254265)
   ```bash
   $ defaults write org.vim.MacVim MMLoginShell 0
   ```

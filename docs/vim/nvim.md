@@ -170,7 +170,7 @@ $ PATH=$NVIM_HOME/bin:$PATH
 $ export NVIM_HOME PATH
 ```
 
-<!--sec data-title="brew install --head: install via cmake" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="brew install --head with macOS SDk14" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 # https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/n/neovim.rb
 $ cmake -S . \
@@ -277,6 +277,10 @@ $ sudo cmake --build build/ --target uninstall
 # osx
 $ brew install nvim
 
+# nvim nightly
+$ brew install --HEAD utf8proc
+$ brew install --HEAD neovim
+
 # ubuntu
 $ sudo add-apt-repository ppa:neovim-ppa/unstable
 $ sudo add-apt-repository ppa:neovim-ppa/stable
@@ -298,6 +302,7 @@ $ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
   > - [02. `brew install nvim --HEAD --debug -v`.md](https://gist.github.com/marslo/540d3462b2b9d117083e0b6346426308#file-02-brew-install-nvim-head-debug-v-md)
 
   ```bash
+  $ brew install --HEAD utf8proc
   $ brew install nvim --HEAD --debug -v
 
   # verify
@@ -311,6 +316,65 @@ $ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
 
   Run :checkhealth for more info
   ```
+
+  <!--sec data-title="brew install --head with macOS SDK15 ( xcode v16 )" data-id="section2" data-show=true data-collapse=true ces-->
+
+  > [!NOTE|label:to get macOS SDK:]
+  > - [* iMarslo: osx/xcode/sdk](../osx/apps/apps.md#sdk)
+
+  ```bash
+  # handle tree-sitter-c-0.23.0.tar.gz
+  $ /usr/bin/env tar --extract --no-same-owner --file /Users/marslo/Library/Caches/Homebrew/downloads/7afcc045b55375a996ccb8e98606e426e9c8a5465e82babf7997513a7763e077--tree-sitter-c-0.23.0.tar.gz --directory /private/tmp/homebrew-unpack20241014-59765-o7ouz3
+  $ /usr/bin/env cp -al /private/tmp/homebrew-unpack20241014-59765-o7ouz3/tree-sitter-c-0.23.0 /private/tmp/treesitter-c-20241014-59765-41iwid
+
+  # deps: treesitter-c
+  $ cmake -S        /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/src/treesitter-c -B /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-c -DPARSERLANG=c -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build   /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-c
+  $ cmake --install /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-c
+
+  # deps: treesitter-lua
+  $ cmake -S        /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/src/treesitter-lua -B /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-lua -DPARSERLANG=lua -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build   /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-lua
+  $ cmake --install /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-lua
+
+  # deps: treesitter-vim
+  $ cmake -S        /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/src/treesitter-vim -B /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-vim -DPARSERLANG=vim -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build   /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-vim
+  $ cmake --install /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-vim
+
+  # deps: treesitter-vimdoc
+  $ cmake -S /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/src/treesitter-vimdoc -B /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-vimdoc -DPARSERLANG=vimdoc -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-vimdoc
+  $ cmake --install /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-vimdoc
+
+  # deps: treesitter-query
+  $ cmake -S /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/src/treesitter-query -B /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-query -DPARSERLANG=query -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-query
+  $ cmake --install /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-query
+
+  # deps: treesitter-markdown
+  $ cmake -S /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/src/treesitter-markdown -B /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-markdown -DPARSERLANG=markdown -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-markdown
+  $ cmake --install /private/tmp/neovim-20241014-59765-vs8k2v/deps-build/build/treesitter-markdown
+
+  # nvim
+  $ cmake -S . \
+          -B build \
+          -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib \
+          -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib \
+          -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib \
+          -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-4846bf0_1 \
+          -DCMAKE_INSTALL_LIBDIR=lib \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_FIND_FRAMEWORK=LAST \
+          -DCMAKE_VERBOSE_MAKEFILE=ON \
+          -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake \
+          -Wno-dev \
+          -DBUILD_TESTING=OFF \
+          -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+  $ cmake --build build
+  ```
+  <!--endsec-->
 
 ### windows
 
