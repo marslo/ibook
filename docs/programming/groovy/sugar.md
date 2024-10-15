@@ -18,6 +18,7 @@
   - [`instanceof`](#instanceof)
   - [keeping quotes in Map or List](#keeping-quotes-in-map-or-list)
   - [get checksum](#get-checksum)
+  - [break from loop](#break-from-loop)
 - [method and class](#method-and-class)
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
@@ -602,6 +603,11 @@ assert clz.isInstance( [] ) == false
   assert '5d41402abc4b2a76b9719d911017c592' == EncodingGroovyMethods.md5(str)
   assert '5d41402abc4b2a76b9719d911017c592' == EncodingGroovyMethods.md5(str.getBytes())
   ```
+
+### break from loop
+
+> [!NOTE|label:references:]
+> - [Why I hate Groovy? Part 3](https://medium.com/@dove.young/why-i-hate-groovy-part-3-6f7f5a5ea201)
 
 ## method and class
 

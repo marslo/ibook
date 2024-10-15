@@ -9,6 +9,7 @@
   - [get current authorization strategy class](#get-current-authorization-strategy-class)
   - [get raw authorization and permissions info](#get-raw-authorization-and-permissions-info)
   - [ProjectMatrixAuthorizationStrategy](#projectmatrixauthorizationstrategy)
+  - [add new configurations according to Map structure](#add-new-configurations-according-to-map-structure)
   - [RoleBasedAuthorizationStrategy](#rolebasedauthorizationstrategy)
 - [crumb issuer](#crumb-issuer)
   - [get crumb issuer](#get-crumb-issuer)
@@ -40,7 +41,7 @@ import hudson.security.*
 import jenkins.security.*
 import jenkins.model.Jenkins
 
-def jenkins = jenkins.model.Jenkins.getInstance()
+def jenkins = jenkins.model.Jenkins.instance
 println jenkins.securityRealm
 println jenkins.authorizationStrategy
 
@@ -84,8 +85,8 @@ hudson.util.Secret.fromString('{..string..}').getEncryptedValue()
 ### [list all Jenkins supported authorization permissions](https://stackoverflow.com/a/58035811/2940319)
 ```groovy
 hudson.security.Permission.getAll().each { p ->
-  println "${p.name} :\n" +
-          "\t${p.id} : ${p.description}"
+  println "${p.name} :" +
+          "\n\t${p.id} : ${p.description}"
 }
 ```
 
@@ -119,9 +120,7 @@ hudson.security.Permission.getAll().each { p ->
   }.sum()
 
   // show result
-  println permissionIds.collect {
-    it.key + ' : ' + it.value.id
-  }.join ('\n')
+  println permissionIds.collect { it.key + ' : ' + it.value.id }.join ('\n')
 
   'DONE'
   ```
@@ -131,8 +130,8 @@ hudson.security.Permission.getAll().each { p ->
 import hudson.model.*
 import hudson.security.*
 
-Hudson instance = Jenkins.getInstance()
-def strategy = instance.getAuthorizationStrategy()
+Hudson instance = jenkins.model.Jenkins.instance
+def strategy    = instance.getAuthorizationStrategy()
 println strategy.getClass()
 
 // result
@@ -173,7 +172,7 @@ jenkins.model.Jenkins.instance.authorizationStrategy = authorizationStrategy
 jenkins.model.Jenkins.instance.save()
 ```
 
-#### [add new configurations according to Map structure](https://gist.github.com/marslo/8eef5efc667785aaf338395b636a609d)
+### [add new configurations according to Map structure](https://gist.github.com/marslo/8eef5efc667785aaf338395b636a609d)
 
 #### create new instance
 - `new`
@@ -187,7 +186,7 @@ jenkins.model.Jenkins.instance.save()
   import hudson.model.*
   import hudson.security.*
 
-  def strategy = Jenkins.getInstance().getAuthorizationStrategy()
+  def strategy = jenkins.model.Jenkins.instance.getAuthorizationStrategy()
   def authorizationStrategy = strategy.class.newInstance()
   ```
 
@@ -228,15 +227,13 @@ import com.michelin.cio.hudson.plugins.rolestrategy.*
 
 String admin = 'admin'
 
-// Turn security on
+// turn security on
 RoleBasedAuthorizationStrategy authorizationStrategy = new RoleBasedAuthorizationStrategy()
 // ProjectMatrixAuthorizationStrategy authorizationStrategy = new ProjectMatrixAuthorizationStrategy()
 jenkins.model.Jenkins.instance.setAuthorizationStrategy(authorizationStrategy)
 
 Constructor[] constrs = Role.class.getConstructors()
-for (Constructor<?> c : constrs) {
-  c.setAccessible(true)
-}
+constrs.each { Constructor c -> c.setAccessible(true) }
 
 Method assignRoleMethod = RoleBasedAuthorizationStrategy.class.getDeclaredMethod( "assignRole", String.class, Role.class, String.class )
 assignRoleMethod.setAccessible( true )
@@ -248,7 +245,7 @@ authorizationStrategy.addRole( RoleBasedAuthorizationStrategy.GLOBAL, adminRole 
 
 ## crumb issuer
 
-> reference:
+> [!NOTE|label:references:]
 > - [hudson.security.csrf.CrumbIssuer](https://javadoc.jenkins.io/hudson/security/csrf/CrumbIssuer.html)
 > - [ivan-pinatti/jenkins-set-default-crumb-issuer.groovy](https://gist.github.com/ivan-pinatti/7d8a877aff42350f16fcb1eb094818d9)
 
@@ -394,8 +391,7 @@ disposer.backlog.each { item ->
 > - [Accessing and dumping Jenkins credentials](https://www.codurance.com/publications/2019/05/30/accessing-and-dumping-jenkins-credentials)
 {% endhint %}
 
-> [!TIP]
-> something else :
+> [!TIP|label:something else :]
 > - [kubernetes-credentials-provider-plugin](https://jenkinsci.github.io/kubernetes-credentials-provider-plugin/examples/)
 > - scripts:
 >   - [* tuxfight3r/jenkins-decrypt.groovy](https://gist.github.com/tuxfight3r/eca9442ff76649b057ab)
@@ -618,32 +614,32 @@ CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.
                       }
   ```
 
-- [or](https://devops.stackexchange.com/a/8692/3503)
+- [* or](https://devops.stackexchange.com/a/8692/3503)
   ```groovy
   import com.cloudbees.plugins.credentials.CredentialsProvider
   import com.cloudbees.plugins.credentials.Credentials
   import com.cloudbees.plugins.credentials.domains.Domain
   import jenkins.model.Jenkins
-  def indent = { String text, int indentationCount ->
-    def replacement = "\t" * indentationCount
-    text.replaceAll("(?m)^", replacement)
+
+  Closure indent = { String text, int indentationCount ->
+    text.replaceAll( "(?m)^", "\t" * indentationCount )
   }
 
-  Jenkins.get().allItems().collectMany{ CredentialsProvider.lookupStores(it).toList()}.unique().forEach { store ->
+  Jenkins.get().allItems().collectMany{ CredentialsProvider.lookupStores(it).toList() }.unique().forEach { store ->
     Map<Domain, List<Credentials>> domainCreds = [:]
     store.domains.each { domainCreds.put(it, store.getCredentials(it))}
-    if (domainCreds.collectMany{ it.value}.empty) {
+    if ( domainCreds.collectMany{it.value}.empty ) {
       return
     }
     def shortenedClassName = store.getClass().name.substring(store.getClass().name.lastIndexOf(".") + 1)
     println "Credentials for store context: ${store.contextDisplayName}, of type $shortenedClassName"
     domainCreds.forEach { domain , creds ->
-      println indent("Domain: ${domain.name}", 1)
+      println indent( "Domain: ${domain.name}", 1 )
       creds.each { cred ->
         cred.properties.each { prop, val ->
-          println indent("$prop = \"$val\"", 2)
+          println indent( "$prop = \"$val\"", 2 )
         }
-        println indent("-----------------------", 2)
+        println indent( '-----------------------', 2 )
       }
     }
   }
@@ -670,7 +666,7 @@ creds.sort{it.id}.each {
   """
 }
 
-"DONE"
+'DONE'
 ```
 
 ### BasicSSHUserPrivateKey
@@ -723,7 +719,7 @@ CredentialsProvider.lookupCredentials(
     """
 }
 
-"DONE"
+'DONE'
 ```
 
 ### SystemCredentialsProvider
@@ -742,6 +738,8 @@ systemCredentialsProvider.credentials.each {
          secret : ${it.secret}
   """
 }
+
+'DONE'
 ```
 
 ### vault
@@ -778,6 +776,8 @@ creds.each {
            roleId : ${it.roleId}
   """
 }
+
+'DONE'
 ```
 
 #### [VaultUsernamePasswordCredential](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
@@ -805,6 +805,8 @@ creds.each {
     usernameSecret : ${it.usernameSecret ?: 'false'}
   """
 }
+
+'DONE'
 ```
 
 #### [VaultUsernamePasswordCredentialImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultUsernamePasswordCredentialImpl.html)
@@ -833,6 +835,8 @@ creds.each {
     usernameSecret : ${it.usernameSecret ?: 'false'}
   """
 }
+
+'DONE'
 ```
 
 #### [VaultSSHUserPrivateKeyImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultSSHUserPrivateKeyImpl.html)
@@ -863,6 +867,8 @@ creds.each {
          passphrase : ${ it.passphrase}
   """
 }
+
+'DONE'
 ```
 
 #### [VaultStringCredentialImpl](https://javadoc.jenkins.io/plugin/hashicorp-vault-plugin/com/datapipe/jenkins/vault/credentials/common/VaultStringCredentialImpl.html)
@@ -889,6 +895,8 @@ creds.each {
            secret : ${it.secret}
   """
 }
+
+'DONE'
 ```
 
 ### encrypt/decrypt password
@@ -909,8 +917,8 @@ println """
 //   original : marslo
 //  encrypted : {AQAAABAAAAAQyF78QAdq9bWCAeUi1VdYO7cB0CfG29KrvwZUU506zig=}
 //  decrypted : marslo
-
 ```
+
 - or
   ```groovy
   println hudson.util.Secret.fromString('marslo').getEncryptedValue()

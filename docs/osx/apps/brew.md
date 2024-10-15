@@ -29,6 +29,7 @@
   - [check homebrew env](#check-homebrew-env)
 - [troubleshooting](#troubleshooting)
   - [`would clobber existing tag`](#would-clobber-existing-tag)
+  - [Cask `firefox-nightly` is not installed.](#cask-firefox-nightly-is-not-installed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -904,4 +905,23 @@ From https://github.com/neovim/neovim
   ```bash
   $ rm -rf /Users/marslo/Library/Caches/Homebrew/neovim--git
   $ brew install --HEAD neovim
+  ```
+
+### Cask `firefox-nightly` is not installed.
+
+```bash
+$ brew uninstall firefox-nightly
+Warning: Formula homebrew/cask-versions/firefox-nightly was renamed to homebrew/cask/firefox@nightly.
+Warning: Cask homebrew/cask-versions/firefox-nightly was renamed to firefox@nightly.
+Error: Cask 'firefox@nightly' is not installed.
+```
+
+- solution
+  ```bash
+  # check
+  $ ls -Altrh /usr/local/Caskroom | grep firefox-nightly
+  lrwxr-xr-x  1 marslo admin  15 May 28 17:13 firefox-nightly -> firefox@nightly
+
+  # fix
+  $ command rm -rf /usr/local/Caskroom/firefox-nightly
   ```
