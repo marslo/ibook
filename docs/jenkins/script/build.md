@@ -10,7 +10,7 @@
   - [build cause](#build-cause)
     - [trigger cause](#trigger-cause)
     - [get build cause](#get-build-cause)
-    - [get builds cause (within 24 hours)](#get-builds-cause-within-24-hours)
+    - [get builds cause within 24 hours](#get-builds-cause-within-24-hours)
     - [details on `Cause.UserIdCause`](#details-on-causeuseridcause)
     - [GerritCause](#gerritcause)
   - [abort cause](#abort-cause)
@@ -38,15 +38,18 @@
     - [sort last build](#sort-last-build)
     - [sort all buildable jobs](#sort-all-buildable-jobs)
 - [list builds](#list-builds)
-  - [list all running builds](#list-all-running-builds)
+  - [last N builds](#last-n-builds)
+    - [list last built N jobs](#list-last-built-n-jobs)
+    - [list last N builds](#list-last-n-builds)
+  - [running builds](#running-builds)
     - [list all running builds via pattern](#list-all-running-builds-via-pattern)
     - [list builds running more than 24 hours via executor](#list-builds-running-more-than-24-hours-via-executor)
     - [list builds running more than 24 hours via pattern](#list-builds-running-more-than-24-hours-via-pattern)
-  - [list builds via job pattern](#list-builds-via-job-pattern)
-    - [list all builds byTimestamp ( within 24 hours )](#list-all-builds-bytimestamp--within-24-hours-)
+  - [via job pattern](#via-job-pattern)
+    - [list all builds byTimestamp within 24 hours](#list-all-builds-bytimestamp-within-24-hours)
     - [get last 24 hours failure builds](#get-last-24-hours-failure-builds)
-    - [get last 24 hours failure builds via Map structure](#get-last-24-hours-failure-builds-via-map-structure)
-  - [list build with results](#list-build-with-results)
+    - [get last 24 hours failure builds in Map structure](#get-last-24-hours-failure-builds-in-map-structure)
+  - [via results](#via-results)
     - [get all builds result percentage](#get-all-builds-result-percentage)
     - [get builds result percentage ( within 24 hours )](#get-builds-result-percentage--within-24-hours-)
     - [get builds result data range](#get-builds-result-data-range)
@@ -310,7 +313,7 @@ jeniins.model.jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll {
   "DONE"
   ```
 
-### get builds cause (within 24 hours)
+### get builds cause within 24 hours
 ```groovy
 import hudson.model.Job
 import hudson.model.Run
@@ -657,7 +660,7 @@ jenkins.model.Jenkins.instance
 ```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
-workflowJob job = Jenkins.getInstance().getItemByFullName( '/sandbox/job' )
+workflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( '/sandbox/job' )
 job.builds.findAll { Run run -> run.isKeepLog() }
           .collect { Run run -> run.id }
 ```
@@ -775,7 +778,7 @@ jenkins.model.Jenkins.instance.getItemByFullName( <JOB_PATTERN> )
 {% endhint %}
 
 ```groovy
-def job = Jenkins.getInstance().getItemByFullName( '/marlso/sandbox' )
+def job = jenkins.model.Jenkins.instance.getItemByFullName( '/marlso/sandbox' )
 job.builds.each { Run run ->
   String parameters = run?.getAction(ParametersAction.class)?.parameters?.collectEntries {
     [ it.name, it.value ]
@@ -806,7 +809,7 @@ job.builds.each { Run run ->
 
 - or via `action instanceof ParametersAction`
   ```groovy
-  def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+  def job = jenkins.model.Jenkins.instance.getItemByFullName( 'others-tests/sandbox' )
   job.getBuilds().each { Run build ->
     String parameters = build?.actions.find{ it instanceof ParametersAction }?.parameters?.collectEntries {
       [ it.name, it.value ]
@@ -882,7 +885,7 @@ import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
 Map pattern = [ gender : 'female' ]
 
-WorkflowJob job = Jenkins.getInstance().getItemByFullName( '/marslo/sandbox' )
+WorkflowJob job = jenkins.model.Jenkins.instance.getItemByFullName( '/marslo/sandbox' )
 job.builds.collectEntries { Run run ->
   [
     (run.id), run?.getAction(ParametersAction.class)?.parameters?.collectEntries {
@@ -907,7 +910,7 @@ final String PARAM = 'id'
 Map params         = [:]
 Integer padding
 
-def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+def job = jenkins.model.Jenkins.instance.getItemByFullName( 'others-tests/sandbox' )
 job.getBuilds().each { Run run ->
    params."${run.getId()}" = run?.getActions(ParametersAction.class)?.parameters?.collectEntries {
                                [ it.name , it.value ].transpose().collectEntries()
@@ -942,7 +945,7 @@ params.collect {
   final String PARAM = 'id'
   Map params = [:]
 
-  def job = Jenkins.getInstance().getItemByFullName( 'others-tests/sandbox' )
+  def job = jenkins.model.Jenkins.instance.getItemByFullName( 'others-tests/sandbox' )
   job.getBuilds().each { Run build ->
     params."${build.getId()}" = build?.getActions(ParametersAction.class)?.parameters?.collectEntries {
                                   [ it.name , it.value ]
@@ -1385,7 +1388,64 @@ jenkins.model.Jenkins.instance
 ```
 
 # list builds
-## list all running builds
+
+## last N builds
+### list last built N jobs
+```groovy
+Integer count = N
+jenkins.model.Jenkins.instance.getAllItems( hudson.model.Job.class )
+       .findAll { it.lastBuild }
+       .collectEntries{[ (it.lastBuild.startTimeInMillis): it.lastBuild.absoluteUrl ]}
+       .sort{ a, b -> a.key <=> b.key }
+       .iterator().reverse().take(count).collect{ it.value }
+
+// or
+jenkins.model.Jenkins.instance.getAllItems( hudson.model.Job.class )
+       .findAll { it.lastBuild }
+       .collectEntries{[ (it.lastBuild.startTimeInMillis): it.lastBuild ]}
+       .sort{ a, b -> a.key <=> b.key }
+       .collect { it.value }.reverse().take(count)
+       .collect { it.fullDisplayName }
+```
+
+### list last N builds
+```bash
+Integer count = 5
+
+jenkins.model.Jenkins.instance.getAllItems( hudson.model.Job.class )
+       .findAll { it.lastBuild }
+       .collectEntries {
+          def build = it.lastBuild
+          (0..<count).inject([:]) { builds, x ->
+            if ( build ) {
+              builds << [ (build.startTimeInMillis): build ]
+              build = build?.previousBuild ?: null
+            }
+            builds
+          }
+       }.sort{ a, b -> a.key <=> b.key }
+        .collect { it.value }.reverse().take(count)
+        .collect { it.fullDisplayName }
+
+// or
+jenkins.model.Jenkins.instance.getAllItems( hudson.model.Job.class )
+       .findAll { it.lastBuild }
+       .collectEntries {
+         Map builds   = [:]
+         def build    = it.lastBuild
+         Boolean flag = build || false
+         while ( flag ) {
+           builds << [ (build.startTimeInMillis): build ]
+           build  = build?.previousBuild ?: null
+           flag   = build && ( it.lastBuild.number - build.number < count )
+         }
+         builds
+       }.sort{ a, b -> a.key <=> b.key }
+        .collect { it.value }.reverse().take(count)
+        .collect { it.fullDisplayName }
+```
+
+## running builds
 
 > [!NOTE|label:references:]
 > - [find-running-pipeline-jobs.groovy](https://github.com/samrocketman/jenkins-script-console-scripts/blob/main/find-running-pipeline-jobs.groovy)
@@ -1513,7 +1573,7 @@ jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 }.sum()
 ```
 
-## list builds via job pattern
+## via job pattern
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
@@ -1532,7 +1592,7 @@ jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
 "DONE"
 ```
 
-### [list all builds byTimestamp ( within 24 hours )](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
+### [list all builds byTimestamp within 24 hours](https://gist.github.com/batmat/91faa3201ad2ae88e3d8)
 
 > [!TIP|label:references:]
 > - [hudson.util.RunList<R>](https://javadoc.jenkins.io/hudson/util/RunList.html)
@@ -1623,7 +1683,7 @@ marslo » sample #505              | https://jenkins.sample.com/job/marslo/job/s
   }.sum()
   ```
 
-### get last 24 hours failure builds via Map structure
+### get last 24 hours failure builds in Map structure
 ```groovy
 import hudson.model.Job
 import hudson.model.Result
@@ -1632,11 +1692,10 @@ import java.util.Calendar
 import jenkins.model.Jenkins
 import static groovy.json.JsonOutput.*
 
-final Calendar RIGHT_NOW  = Calendar.getInstance()
+final Calendar RIGHT_NOW = Calendar.getInstance()
 final long BENCH_MARK    = 1*24*60*60*1000
 final String JOB_PATTERN = '<group>'
-
-Map results = [:]
+Map results              = [:]
 
 jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
@@ -1664,6 +1723,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   final long CURRENT_TIME  = java.util.Calendar.getInstance().getTimeInMillis()
   final long BENCH_MARK    = 1*24*60*60*1000
   final String JOB_PATTERN = '<group>'
+
   Map results = [:]
 
   jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
@@ -1691,6 +1751,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   final long CURRENT_TIME  = java.util.Calendar.getInstance().getTimeInMillis()
   final long BENCH_MARK    = 1*24*60*60*1000
   final String JOB_PATTERN = '<group>'
+
   Map results = [:]
 
   jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll { Job job ->
@@ -1710,7 +1771,7 @@ println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   println prettyPrint( toJson(results.findAll{ !it.value.isEmpty() }) )
   ```
 
-## list build with results
+## via results
 ### [get all builds result percentage](https://stackoverflow.com/a/28039134/2940319)
 ```groovy
 final String JOB_PATTERN = '<group>/<name>'

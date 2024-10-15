@@ -401,7 +401,7 @@ config.save()
     def pluginParameter = "gitlab-plugin hipchat swarm"
     def plugins = pluginParameter.split()
     logger.info( "" + plugins )
-    def instance = Jenkins.getInstance()
+    def instance = jenkins.model.Jenkins.instance
     def pm       = instance.getPluginManager()
     def uc       = instance.getUpdateCenter()
     uc.updateAllSites()
