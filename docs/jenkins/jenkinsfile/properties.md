@@ -25,11 +25,15 @@
 >   - [How to retrieve Jenkins build parameters using the Groovy API?](https://stackoverflow.com/a/19564602/2940319)
 >   - [use groovy to add an additional parameter to a jenkins job](https://stackoverflow.com/a/48962198/2940319)
 > - APIs:
->   - Core
->     - [Class BooleanParameterDefinition](https://javadoc.jenkins-ci.org/hudson/model/BooleanParameterDefinition.html)
->     - [Class StringParameterDefinition](https://javadoc.jenkins.io/hudson/model/StringParameterDefinition.html)
->     - [Class ChoiceParameterDefinition](https://javadoc.jenkins.io/hudson/model/ChoiceParameterDefinition.html)
->     - [Class PasswordParameterDefinition](https://javadoc.jenkins.io/hudson/model/PasswordParameterDefinition.html)
+>   - [Core](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/ParameterDefinition.java) | [Class ParameterDefinition](https://javadoc.jenkins.io/hudson/model/ParameterDefinition.html)
+>     - [Class ParametersDefinitionProperty](https://javadoc.jenkins-ci.org/hudson/model/ParametersDefinitionProperty.html) | [ParametersDefinitionProperty.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/ParametersDefinitionProperty.java)
+>     - [Class BooleanParameterDefinition](https://javadoc.jenkins-ci.org/hudson/model/BooleanParameterDefinition.html) | [BooleanParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/BooleanParameterDefinition.java)
+>     - [Class StringParameterDefinition](https://javadoc.jenkins.io/hudson/model/StringParameterDefinition.html) | [StringParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/StringParameterDefinition.java)
+>     - [Class ChoiceParameterDefinition](https://javadoc.jenkins.io/hudson/model/ChoiceParameterDefinition.html) | [ChoiceParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/ChoiceParameterDefinition.java)
+>     - [Class TextParameterDefinition](https://javadoc.jenkins.io/hudson/model/TextParameterDefinition.html) | [TextParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/TextParameterDefinition.java)
+>     - [Class PasswordParameterDefinition](https://javadoc.jenkins.io/hudson/model/PasswordParameterDefinition.html) | [PasswordParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/PasswordParameterDefinition.java)
+>     - [Class FileParameterDefinition](https://javadoc.jenkins.io/hudson/model/FileParameterDefinition.html) | [FileParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/FileParameterDefinition.java)
+>     - [Class SimpleParameterDefinition](https://javadoc.jenkins.io/hudson/model/SimpleParameterDefinition.html) | [SimpleParameterDefinition.java](https://github.com/jenkinsci/jenkins/blob/master/core/src/main/java/hudson/model/SimpleParameterDefinition.java)
 >   - [Extended Choice Parameter](https://plugins.jenkins.io/extended-choice-parameter/)
 >     - [Class ExtendedChoiceParameterDefinition](https://javadoc.jenkins.io/plugin/extended-choice-parameter/com/cwctravel/hudson/plugins/extended_choice_parameter/ExtendedChoiceParameterDefinition.html)
 >   - [Active Choices Plugin](https://plugins.jenkins.io/uno-choice/)
@@ -693,6 +697,11 @@ Boolean unstashFile( String name ) {
   newParams += [ $class: 'WHideParameterDefinition'     , name: 'HIDDEN_PARAM', description: 'Hidden param' ]
   props     += [ $class: 'ParametersDefinitionProperty' , parameterDefinitions: newParams                   ]
   properties( properties: props )
+
+  // or
+  final List newParams = []
+  newParams += hidden( name: 'HIDDEN_PARAM', description: 'Hidden param' )
+  properties([ parameters(newParams) ])
 
   // or
   properties([
