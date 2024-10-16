@@ -661,6 +661,7 @@ m.subMap 'two', 'three', 'non-existent'
 
 > [!NOTE|label:references:]
 > - [How to Check if a TreeMap is submap of another TreeMap in Java](https://stackoverflow.com/a/36513926/2940319)
+> - [Check whether a map contains all contents of another map](https://stackoverflow.com/a/43217096/2940319)
 
 ```groovy
 Map map = [
