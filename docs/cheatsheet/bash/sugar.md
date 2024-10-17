@@ -407,7 +407,7 @@ $ printenv
   $ echo -e "${!codeMap["${icon:0:-1}"]}"
   ```
 
-  ![using string as var name](../../screenshot/tools/widget/bash-map-var-is-string.png)
+  ![using string as var name](../../screenshot/widget/bash-map-var-is-string.png)
 
 
 ## `<<<`, `< <(..)`
