@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [OSX](#osx)
+  - [`--HEAD` from brew](#--head-from-brew)
 - [Linux](#linux)
   - [vim](#vim)
   - [gvim](#gvim)
@@ -245,8 +246,9 @@ $ make -j$(nproc)
 $ sudo make install
 # or uninstall if necessary
 $ sudo make uninstall && sudo make install
-# optional
-$ sudo cp src/vim /usr/local/vim/bin/vim
+
+# if /usr/local/vim/bin/vim is not updated, manaual copy src/vim to /usr/local/vim/bin/vim
+$ [[ 1 -ne $(md5sum src/vim /usr/local/vim/bin/vim | awk '{print $1}' | uniq | wc -l) ]] && sudo command cp -fv src/vim /usr/local/vim/bin/vim
 
 ## ... validate ...
 $ src/vim --version
@@ -378,6 +380,64 @@ Linking: gcc -L/usr/local/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/ope
   > - `/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Headers/Carbon.h`
   > - `/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Carbon.framework/Versions/A/Headers/Carbon.h`
 
+
+### `--HEAD` from brew
+
+> [!NOTE|label:references:]
+> - taps: `homebrew/cask/macvim`
+> - [Building MacVim](https://github.com/macvim-dev/macvim/wiki/Building#building-macvim)
+
+```bash
+## ... dependencies ...
+$ xcodebuild -runFirstLaunch
+
+$ brew install macvim --HEAD --debug -v
+
+## ... build ...
+$ ./configure --with-features=huge \
+              --enable-multibyte \
+              --enable-perlinterp \
+              --enable-rubyinterp \
+              --enable-tclinterp \
+              --enable-terminal \
+              --with-tlib=ncurses \
+              --with-compiledby=Homebrew \
+              --with-local-dir=/usr/local \
+              --enable-cscope \
+              --enable-luainterp \
+              --with-lua-prefix=/usr/local/opt/lua \
+              --enable-luainterp \
+              --enable-python3interp \
+              --disable-sparkle \
+              --with-macarchs=x86_64
+$ make
+
+$ cd /tmp/macvim-20241016-10795-v4fko9/src/MacVim
+$ builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-unsigned-binaries -strip-deterministic -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks -remove-static-executable /tmp/macvim-20241016-10795-v4fko9/src/MacVim/macvim-askpass /tmp/macvim-20241016-10795-v4fko9/src/MacVim/build/Release/MacVim.app/Contents/Resources
+
+# codesigning
+$ /usr/bin/codesign --force --sign - --entitlements /tmp/macvim-20241016-10795-v4fko9/src/MacVim/build/MacVim.build/Release/MacVim.build/MacVim.app.xcent --timestamp\=none --generate-entitlement-der /tmp/macvim-20241016-10795-v4fko9/src/MacVim/build/Release/MacVim.app
+$ builtin-RegisterExecutionPolicyException /tmp/macvim-20241016-10795-v4fko9/src/MacVim/build/Release/MacVim.app
+# validate
+$ cd /tmp/macvim-20241016-10795-v4fko9/src/MacVim
+$ builtin-validationUtility /tmp/macvim-20241016-10795-v4fko9/src/MacVim/build/Release/MacVim.app -no-validate-extension -infoplist-subpath Contents/Info.plist
+
+# RegisterWithLaunchServices
+$ cd /tmp/macvim-20241016-10795-v4fko9/src/MacVim
+$ /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister -f -R -trusted /tmp/macvim-20241016-10795-v4fko9/src/MacVim/build/Release/MacVim.app
+
+## ... additional steps ...
+# changing dylib ID
+$ /usr/bin/env codesign --verify /usr/local/Cellar/macvim/HEAD-a24ac02/MacVim.app/Contents/Frameworks/PSMTabBarControl.framework/Versions/A/PSMTabBarControl
+
+# codesigning
+$ /usr/bin/env codesign --display --file-list - /usr/local/Cellar/macvim/HEAD-a24ac02/MacVim.app/Contents/Frameworks/PSMTabBarControl.framework/Versions/A/PSMTabBarControl
+```
+
+- copy `MacVim.app` to `/Applications`
+  ```bash
+  $ cp -r /usr/local/Cellar/macvim/HEAD-a24ac02/MacVim.app /Applications/
+  ```
 
 ## Linux
 
