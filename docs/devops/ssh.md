@@ -20,6 +20,9 @@
     - [copy local file content into remote](#copy-local-file-content-into-remote)
   - [with proxy](#with-proxy)
     - [using command directly](#using-command-directly)
+  - [start app remotely](#start-app-remotely)
+    - [launch firefox](#launch-firefox)
+  - [create a persistent connection to a machine](#create-a-persistent-connection-to-a-machine)
 - [ssh certificate](#ssh-certificate)
   - [SSH User Certificates](#ssh-user-certificates)
     - [ca](#ca)
@@ -44,11 +47,15 @@
     - [displaying a special banner for users not in the staff group](#displaying-a-special-banner-for-users-not-in-the-staff-group)
     - [allowing root login from host rootallowed.example.com](#allowing-root-login-from-host-rootallowedexamplecom)
     - [allowing anyone to use gatewayports from the local net](#allowing-anyone-to-use-gatewayports-from-the-local-net)
+    - [avoid ssh timeout by sending a keepalive message](#avoid-ssh-timeout-by-sending-a-keepalive-message)
 - [debug](#debug)
   - [debug git](#debug-git)
   - [debug ssh](#debug-ssh)
     - [check sshd log](#check-sshd-log)
 - [tips](#tips)
+  - [play video via ssh](#play-video-via-ssh)
+  - [displays failed login via SSH](#displays-failed-login-via-ssh)
+  - [compare files via ssh](#compare-files-via-ssh)
   - [disconnect](#disconnect)
   - [execute shell commands via ssh](#execute-shell-commands-via-ssh)
     - [ctrl-c to break while loop](#ctrl-c-to-break-while-loop)
@@ -292,6 +299,21 @@ $ ssh user@remote 'cat /path/to/remote/file' > pbcopy
     $ ssh -o 'ProxyCommand nc -X connect -x proxy.url.com:proxy-port %h %p' -vT git@github.com
     ```
 
+## [start app remotely](https://www.commandlinefu.com/commands/view/3465/start-an-x-app-remotely)
+```bash
+$ ssh -f user@remote.ip DISPLAY=:0.0 smplayer movie.avi
+```
+
+### [launch firefox](https://www.commandlinefu.com/commands/view/5750/launch-firefox-on-a-remote-linux-server)
+```bash
+$ ssh -fY user@REMOTESERVER firefox -no-remote
+```
+
+## [create a persistent connection to a machine](https://www.commandlinefu.com/commands/view/1233/create-a-persistent-connection-to-a-machine)
+```bash
+$ ssh -MNf <user>@<host>
+```
+
 # ssh certificate
 
 > [!NOTE|label:references:]
@@ -420,7 +442,7 @@ Host example sample.server.com
 > - [SSH 通过跳板机直接访问内网机器](https://zhuanlan.zhihu.com/p/74193910)
 {% endhint %}
 
-> [!TIP]
+> [!TIP|label:references:]
 > - key point:
 >   - `-L` : `<--`
 >   - `-R` : `-->`
@@ -432,6 +454,12 @@ Host example sample.server.com
 > - usage:
 >   - `1 -> [2 ->] 3` : `ssh host2:port2:host3:port3 host1:port1`
 >   - if ignore `host2`. default using local.host
+>
+> - references:
+>   - [SSH connection through host in the middle](https://www.commandlinefu.com/commands/view/1339/ssh-connection-through-host-in-the-middle)
+>     ```bash
+>     $ ssh -t reachable_host ssh unreachable_host
+>     ```
 
 ## two servers
 
@@ -652,7 +680,6 @@ UsePAM no
   fi
   ```
 
-
 ### disallow group to use password
 
 > [!TIP|label:references:]
@@ -697,6 +724,14 @@ Match Host rootallowed.example.com
 ```less
 Match Address 192.168.0.0/24
   GatewayPorts yes
+```
+
+### [avoid ssh timeout by sending a keepalive message](https://www.commandlinefu.com/commands/view/5229/avoids-ssh-timeouts-by-sending-a-keep-alive-message-to-the-server-every-60-seconds)
+```bash
+$ echo 'ServerAliveInterval 60' >> /etc/ssh/ssh_config
+
+# https://www.commandlinefu.com/commands/view/28/command-to-keep-an-ssh-connection-open
+$ watch -n 30 uptime
 ```
 
 # debug
@@ -803,6 +838,25 @@ $ journalctl -t sshd -b0 -r
 
 # tips
 
+## [play video via ssh](https://www.commandlinefu.com/commands/view/12955/securely-stream-and-save-a-file-from-a-remote-server)
+```bash
+$ ssh USER@HOST cat REMOTE_FILE.mp4 | tee LOCAL_FILE.mp4 | mplayer -
+```
+
+## [displays failed login via SSH](https://www.commandlinefu.com/commands/view/1918/displays-the-attempted-user-name-ip-address-and-time-of-ssh-failed-logins-on-debian-machines)
+
+> [!NOTE|label:references:]
+> - [* iMarslo: check local failed login](../cheatsheet/bash/sugar.md#system)
+
+```bash
+$ awk '/sshd/ && /Failed/ {gsub(/invalid user/,""); printf "%-12s %-16s %s-%s-%s\n", $9, $11, $1, $2, $3}' /var/log/auth.log
+```
+
+## [compare files via ssh](https://www.commandlinefu.com/commands/view/47/compare-a-remote-file-with-a-local-file)
+```bash
+$ ssh user@host cat /path/to/remotefile | diff /path/to/localfile -
+```
+
 ## disconnect
 
 > [!TIP]
@@ -866,6 +920,9 @@ trap exit SIGINT SIGTERM; while read -r _node; do
   declare sshCmd="ssh -q username@${_node} 'bash -s' < \"/path/to/scipt.sh\""
   eval "${sshCmd}"
 done <<< "${hostname}"
+
+# or: https://www.commandlinefu.com/commands/view/5772/run-complex-remote-shell-cmds-over-ssh-without-escaping-quotes
+$ ssh host -l user $(<cmd.txt)
 ```
 
 ## [how ssh works](https://blog.bytebytego.com/p/ep124-how-does-ssh-work)

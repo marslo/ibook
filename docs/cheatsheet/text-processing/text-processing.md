@@ -60,11 +60,17 @@
   - [find and exclude](#find-and-exclude)
   - [`find` && `tar`](#find--tar)
   - [find by timestamp](#find-by-timestamp)
+    - [in a date range](#in-a-date-range)
     - [via `mtime`](#via-mtime)
     - [via `newermt`](#via-newermt)
+    - [latest 5 modified files recursively](#latest-5-modified-files-recursively)
   - [inject commands inside find](#inject-commands-inside-find)
   - [printf](#printf)
     - [time formats](#time-formats)
+  - [tips](#tips)
+    - [faster find and replace string](#faster-find-and-replace-string)
+    - [find duplicate files](#find-duplicate-files)
+    - [random nubmer between X to 1](#random-nubmer-between-x-to-1)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -799,6 +805,11 @@ $ git log --author="marslo" --format=tformat: --numstat | q -t "select sum(c1), 
 > - [Print two files in two columns side-by-side](https://unix.stackexchange.com/q/392655/29178)
 > - [11.4. Side-by-Side diffs: sdiff](https://docstore.mik.ua/orelly/unix3/upt/ch11_04.htm)
 
+- [merge files line by line](https://www.commandlinefu.com/commands/view/2432/merges-given-files-line-by-line)
+  ```bash
+  $ paste -d ',:' file1 file2 file3
+  ```
+
 ## echo
 
 > [!TIP]
@@ -996,6 +1007,16 @@ a b
   < f
   ---
   > e
+  ```
+
+- [diff dirs](https://www.commandlinefu.com/commands/view/2251/compare-two-directory-trees.)
+  ```bash
+  $ diff <(cd dir1 && find | sort) <(cd dir2 && find | sort)
+  ```
+
+- [colordiff side-by-side](https://www.commandlinefu.com/commands/view/4163/use-colordiff-in-side-by-side-mode-and-with-automatic-column-widths.)
+  ```bash
+  $ colordiff -yW"`tput cols`" /path/to/file1 /path/to/file2
   ```
 
 ## comm
@@ -2145,6 +2166,11 @@ $ find . -regextype posix-egrep -regex ".*\.(js|vue|s?css|php|html|json)$" -and 
 >   -366 days
 >   ```
 
+### [in a date range](https://www.commandlinefu.com/commands/view/8721/find-files-in-a-date-range)
+```bash
+$ find . -type f -newermt "2010-01-01" ! -newermt "2010-06-01"
+```
+
 ### via `mtime`
 
 > [!TIP|label:tricky on `-mtime`:]
@@ -2168,6 +2194,12 @@ $ find . -type f -daystart -mtime -$((diff+1)) -exec cp -a --parents -t /path/to
 
 # with timezone
 $ diff=$(( ($(date -d "2015-03-11 UTC" +%s) - $(date -d "2015-03-05 UTC" +%s)) / (60*60*24) ))
+
+# find older than x days
+$ find . -type f -mtime +7 -exec ls -l {} \;
+
+# delete older than x days: https://www.commandlinefu.com/commands/view/1394/delete-files-older-than..
+$ find /dir_name -mtime +5 -exec rm {} \
 ```
 
 ### via `newermt`
@@ -2209,6 +2241,11 @@ $ find . -type f -newermt "@$(date +%s -d '10/16/2023 0:00:00 PDT')" -printf "%T
 
 # copy all files modified since 2023-10-16
 $ find . -type f -newermt '2023-10-16 00:00:00' -exec cp -a --parents -t /path/to/target "{}" \+
+```
+
+### [latest 5 modified files recursively](https://www.commandlinefu.com/commands/view/15928/list-latest-5-modified-files-recursively)
+```bash
+$ find . -type f -printf '%T@ %TY-%Tm-%Td %TH:%TM:%.2TS %p\n' | sort -nr | head -n 5 | cut -f2- -d" "
 ```
 
 ## inject commands inside find
@@ -2300,6 +2337,38 @@ $ find -exec bash -c '
     # more
     find . -type d -printf "%d    %-30p %-10u %-10g %-5m %T+\n" | sort
     ```
+
+## tips
+### [faster find and replace string](https://www.commandlinefu.com/commands/view/3691/fast-search-and-replace-for-strings-in-all-files-in-directory)
+```bash
+$ sh -c 'S=askapache R=htaccess; find . -mount -type f | xargs -P5 -iFF grep -l -m1 "$S" FF | xargs -P5 -iFF sed -i -e "s%${S}%${R}%g" FF'
+```
+
+### [find duplicate files](https://www.commandlinefu.com/commands/view/3555/find-duplicate-files-based-on-size-first-then-md5-hash)
+
+> [!TIP|label:rules:]
+> size first, then md5 hash
+
+```bash
+$ find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate
+```
+
+### [random nubmer between X to 1](https://www.commandlinefu.com/commands/view/6267/random-number-between-1-and-x)
+```bash
+$ echo $[RANDOM%X+1]
+
+# or: https://www.commandlinefu.com/commands/view/14051/random-number-between-1-and-x
+$ (od -An -t u8 -N8 </dev/urandom; echo X '* 2 64^/1+p') | dc
+
+# or: https://www.commandlinefu.com/commands/view/6297/random-number-between-1-and-x
+$ echo "$(od -An -N4 -tu4 /dev/urandom) % 5 + 1" | bc
+
+# between 1 - 256: https://www.commandlinefu.com/commands/view/12702/random-number-between-1-and-256
+$ od -An -N1 -tu1 /dev/random
+
+# decimal in 1 - 2d6: https://www.commandlinefu.com/commands/view/6269/random-decimal-in-the-interval-0-n-1-and-2d6-dice-roll
+$ awk 'BEGIN { srand(); print rand() }'
+```
 
 # trim
 ## trim tailing chars

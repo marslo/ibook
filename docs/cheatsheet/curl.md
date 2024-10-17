@@ -34,6 +34,7 @@
   - [send a CORS request](#send-a-cors-request)
   - [send Cookies](#send-cookies)
   - [set the User-Agent string](#set-the-user-agent-string)
+  - [watch web server returns](#watch-web-server-returns)
 - [convert](#convert)
   - [convert to python requests](#convert-to-python-requests)
   - [convert to javascript/ajax calls](#convert-to-javascriptajax-calls)
@@ -670,6 +671,11 @@ $ curl --cookie "Name=Value" https://reqbin.com/echo
 ```bash
 $ curl https://reqbin.com/echo \
        -A "ReqBin Curl Client/1.0"
+```
+
+### [watch web server returns](https://www.commandlinefu.com/commands/view/419/watch-for-when-your-web-server-returns)
+```bash
+$ watch -n 15 curl -s --connect-timeout 10 http://www.google.com/
 ```
 
 ## convert

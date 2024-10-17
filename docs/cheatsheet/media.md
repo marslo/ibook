@@ -4,6 +4,7 @@
 - [highly recommanded](#highly-recommanded)
 - [video](#video)
   - [get audio from video](#get-audio-from-video)
+  - [download video](#download-video)
   - [convert flv to mp4](#convert-flv-to-mp4)
   - [convert png to mp4](#convert-png-to-mp4)
   - [scale the media](#scale-the-media)
@@ -13,6 +14,8 @@
   - [slice video to images](#slice-video-to-images)
   - [convert video to gif](#convert-video-to-gif)
   - [convert pngs into gif](#convert-pngs-into-gif)
+  - [record a screencast and convert to mpeg](#record-a-screencast-and-convert-to-mpeg)
+  - [tips](#tips)
 - [image](#image)
   - [convert webp to png](#convert-webp-to-png)
   - [identity an image](#identity-an-image)
@@ -22,6 +25,9 @@
 - [animation flow chart](#animation-flow-chart)
   - [create animation flow](#create-animation-flow)
   - [convert svg to gif](#convert-svg-to-gif)
+- [others](#others)
+  - [create manpage pdf](#create-manpage-pdf)
+  - [save command output to image](#save-command-output-to-image)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -30,9 +36,32 @@
 
 ## video
 ### get audio from video
+
+> [!NOTE|label:references:]
+> - `ffmpeg` params:
+>   - `-acodec copy -vn`
+>   - `-ab 12800 -ar 44100`
+
 ```bash
 $ ffmpeg -i source.mpg -f s16le -acodec pcm_s16le audio.raw
+
+# https://www.commandlinefu.com/commands/view/52/rip-audio-from-a-video-file.
+$ mplayer -ao pcm -vo null -vc dummy -dumpaudio -dumpfile <output.file> <input.file>
+
+# or
+$ ffmpeg -i file.video file.audio
 ```
+
+### download video
+- [download video and extract with sepcific time](https://www.commandlinefu.com/commands/view/32814/download-video-extract-only-a-specific-time-of-it)
+  ```bash
+  $ yt-dlp --external-downloader ffmpeg --external-downloader-args "-ss 00:05:00 -t 00:01:00" "https://www.youtube.com/watch?v=Y6DGABIcB3w"
+  ```
+
+- [convert youtube video to mp3](https://www.commandlinefu.com/commands/view/9701/convert-youtube-videos-to-mp3)
+  ```bash
+  $ youtube-dl -t --extract-audio --audio-format mp3 YOUTUBE_URL_HERE
+  ```
 
 ### convert flv to mp4
 ```bash
@@ -210,6 +239,12 @@ $ convert in.mp4 out.gif
   ffmpeg -i $src -i $palette -lavfi paletteuse -y $dest
   ```
 
+- [create an animated gif from a youtube video](https://www.commandlinefu.com/commands/view/6110/create-an-animated-gif-from-a-youtube-video)
+  ```bash
+  $ url=http://www.youtube.com/watch?v=V5bYDhZBFLA;
+  youtube-dl -b $url; mplayer $(ls ${url##*=}*| tail -n1) -ss 00:57 -endpos 10 -vo gif89a:fps=5:output=output.gif -vf scale=400:300 -nosound
+  ```
+
 ### convert pngs into gif
 ```bash
 $ convert -delay 5 -loop 0 -dither None -colors 80 "frames/ffout*.png" -fuzz "40%" -layers OptimizeFrame  "output.gif"
@@ -217,6 +252,50 @@ $ convert -delay 5 -loop 0 -dither None -colors 80 "frames/ffout*.png" -fuzz "40
 # simple version
 $ convert -delay 10 *.png sample.gif
 ```
+
+### [record a screencast and convert to mpeg](https://www.commandlinefu.com/commands/view/2365/record-a-screencast-and-convert-it-to-an-mpeg)
+```bash
+$ ffmpeg -f x11grab -r 25 -s 800x600 -i :0.0 /tmp/outputFile.mpg
+
+# or: https://www.commandlinefu.com/commands/view/7109/capture-video-of-a-linux-desktop
+$ ffmpeg -y -f alsa -ac 2 -i pulse -f x11grab -r 30 -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -i :0.0 -acodec pcm_s16le output.wav -an -vcodec libx264 -vpre lossless_ultrafast -threads 0 output.mp4
+
+# or: https://www.commandlinefu.com/commands/view/5189/capture-video-of-a-linux-desktop
+$ ffmpeg -f x11grab -s `xdpyinfo | grep 'dimensions:'|awk '{print $2}'` -r 25 -i :0.0 -sameq /tmp/out.mpg > /root/howto/capture_screen_video_ffmpeg
+
+# or: https://www.commandlinefu.com/commands/view/24389/capture-video-of-a-linux-desktop
+$ ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i :0.0+100,200 output.mp4
+
+# or: https://www.commandlinefu.com/commands/view/12572/capture-video-of-a-linux-desktop
+ffmpeg -f x11grab -s wxga -r 25 -i :0.0+1366,0 -qscale 0 /tmp/out.mpg
+```
+
+
+### tips
+
+- [get the total length of time](https://www.commandlinefu.com/commands/view/3612/get-the-total-length-of-time-in-hoursminutesseconds-hhmmss-of-all-video-or-audio-in-the-current-dir-and-below)
+  ```bash
+  $ find -type f -name "*.avi" -print0 | xargs -0 mplayer -vo dummy -ao dummy -identify 2>/dev/null | perl -nle '/ID_LENGTH=([0-9\.]+)/ && ($t +=$1) && printf "%02d:%02d:%02d\n",$t/3600,$t/60%60,$t%60' | tail -n 1
+  ```
+
+- [edit video by cutting the part you like without transcoding](https://www.commandlinefu.com/commands/view/4546/edit-video-by-cutting-the-part-you-like-without-transcoding.)
+  ```bash
+  $ mencoder -ss <start point> -endpos <time from start point> -oac copy -ovc copy <invid> -o <outvid>
+
+  # i.e.: take frames starting at 15.2 seconds for a total of 45.9 seconds
+  $ mencoder -ss 15.2 -endpos 30.7 -oac copy -ovc copy origin.avi -o new.avi
+
+  # i.e.: total 3m3s length
+  $ mencoder -ss 1 minute -endpos 2 minutes 3 seconds -oac copy -ovc copy origin.avi -o new.avi
+  ```
+
+- [stream and copy a video from lan](https://www.commandlinefu.com/commands/view/12954/stream-and-copy-a-video-from-lan)
+  ```bash
+  $ nc HOST PORT | tee movie.mp4 | mplayer -
+
+  # via ssh: https://www.commandlinefu.com/commands/view/12955/securely-stream-and-save-a-file-from-a-remote-server
+  $ ssh USER@HOST cat REMOTE_FILE.mp4 | tee LOCAL_FILE.mp4 | mplayer -
+  ```
 
 ## image
 ### [convert webp to png](http://tutorialshares.com/converting-webp-images-with-the-command-line/)
@@ -342,3 +421,25 @@ sed -i "s/<path/<path fill=\"$COLOR\" stroke=\"$COLOR\"/g" *.svg
     - [GIF Brewery for Mac v3.9.5 英文破解 GIF制作工具](https://www.xxmac.com/gif-brewery.html)
       - [提取码: `iasr`](https://pan.baidu.com/s/1aPJCP4cRn0JbYLgU83rTRg)
     - [Gifox](https://gifox.app/)
+
+## others
+### [create manpage pdf](https://www.commandlinefu.com/commands/view/7355/create-a-pdf-version-of-a-manpage)
+```bash
+$ man -t manpage | ps2pdf - filename.pdf
+
+# https://www.commandlinefu.com/commands/view/9751/save-man-page-as-pdf
+$ man -t awk | ps2pdf - awk.pdf
+```
+
+### [save command output to image](https://www.commandlinefu.com/commands/view/9104/save-command-output-to-image)
+```bash
+$ ifconfig | convert label:@- ip.png
+# or: https://www.commandlinefu.com/commands/view/18168/save-command-output-to-image
+$ convert label:"$(ifconfig)" output.png
+
+# and more
+$ ifconfig | convert -background none label:@- miff:- | composite -tile pattern:checkerboard - -compose Dst_Over ip.png
+
+# and more with fonts: `convert -list font | grep Font:`
+$ /usr/bin/lynx -dump -nolist http://www.commandlinefu.com/ | /usr/bin/convert -font "FreeMono-Medium" label:@- output.png
+```

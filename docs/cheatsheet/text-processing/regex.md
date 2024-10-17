@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [special chars](#special-chars)
-- [samples](#samples)
+- [cheatsheet](#cheatsheet)
   - [get URL](#get-url)
   - [matches if exits](#matches-if-exits)
   - [not matche a word](#not-matche-a-word)
@@ -27,16 +27,19 @@
 |   `?<=`   | positive look behind |
 |   `?<!`   | negative look behind |
 
-## samples
+## cheatsheet
+
+> [!NOTE|label:references:]
+> - [cheat-sheet for password crackers](https://www.unix-ninja.com/p/A_cheat-sheet_for_password_crackers)
 
 ### get URL
 ```bash
 $ echo http://www.baidu.com | awk '{for(i=1;i<=NF;i++){if($i~/^(http|ftp):\/\//)print $i}}'
 http://www.baidu.com
-```
 
-> references:
-> - [cheat-sheet for password crackers](https://www.unix-ninja.com/p/A_cheat-sheet_for_password_crackers)
+# or: https://www.commandlinefu.com/commands/view/4174/match-a-url
+$ egrep 'https?://([[:alpha:]]([-[:alnum:]]+[[:alnum:]])*\.)+[[:alpha:]]{2,3}(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?'
+```
 
 ### matches if exits
 

@@ -30,8 +30,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
+> - [commandlinefu](https://www.commandlinefu.com/commands/browse/sort-by-votes)
 > - [Bash scripting cheatsheet](https://devhints.io/bash)
 
 ## fancy bash

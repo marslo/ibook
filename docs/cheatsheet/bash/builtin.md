@@ -21,7 +21,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 > [!TIP|label:references:]
 > - [3.5.3 Shell Parameter Expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
 >   - [How can I use variable variables (indirect variables, pointers, references) or associative arrays?](http://mywiki.wooledge.org/BashFAQ/006)
@@ -526,6 +525,11 @@
   # shopt -u xpg_echo
   $ shopt -q xpg_echo; echo $?
   1
+  ```
+
+- [save terminal commands in bash history in real time](https://www.commandlinefu.com/commands/view/8555/save-your-terminal-commands-in-bash-history-in-real-time)
+  ```bash
+  $ shopt -s histappend ; PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
   ```
 
 ## [readline](https://www.gnu.org/software/bash/manual/html_node/Command-Line-Editing.html) && [bind](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-bind)

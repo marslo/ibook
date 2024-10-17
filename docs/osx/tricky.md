@@ -15,6 +15,7 @@
 - [others](#others)
   - [install font via command](#install-font-via-command)
   - [shutdown mac via commands](#shutdown-mac-via-commands)
+  - [alert on mac when server is up](#alert-on-mac-when-server-is-up)
   - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
   - [launch apps](#launch-apps)
   - [extra pkg](#extra-pkg)
@@ -431,6 +432,11 @@ $ curl --create-dirs \
 ### shutdown mac via commands
 ```bash
 $ osascript -e 'tell app 'loginwindow' to «event aevtrsdn»'
+```
+
+### [alert on mac when server is up](https://www.commandlinefu.com/commands/view/2853/alert-on-mac-when-server-is-up)
+```bash
+$ ping -o -i 30 HOSTNAME && osascript -e 'tell app "Terminal" to display dialog "Server is up" buttons "It?s about time" default button 1'
 ```
 
 ### [turn off the screen without sleeping](https://apple.stackexchange.com/a/266103/254265)

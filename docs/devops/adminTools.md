@@ -685,6 +685,17 @@ $ sudo strace -fp $$ -o log &
   $ PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
   ```
 
+- [intercept stdout/stderr of another process](https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process)
+  ```bash
+  $ strace -ff -e trace=write -e write=1,2 -p SOME_PID
+
+  # https://www.commandlinefu.com/commands/view/5450/intercept-stdoutstderr-of-another-process
+  $ strace -ff -e write=1,2 -s 1024 -p PID 2>&1 | grep "^ |" | cut -c11-60 | sed -e 's/ //g' | xxd -r -p
+
+  # https://www.commandlinefu.com/commands/view/6743/intercept-stdoutstderr-of-another-process-or-disowned-process
+  $ strace -e write=1,2 -p $PID 2>&1 | sed -un "/^ |/p" | sed -ue "s/^.\{9\}\(.\{50\}\).\+/\1/g" -e 's/ //g' | xxd -r -p
+  ```
+
 - [debug script](https://askubuntu.com/a/678919/92979)
 
   <!--sec data-title="debug script" data-id="section0" data-show=true data-collapse=true ces-->
@@ -1146,6 +1157,10 @@ close_nocancel(0x2)    = 0 0
 
 - [reverse proxy with netcat](https://www.baeldung.com/linux/netcat-command#reverse-proxy-with-netcat)
 
+- [emulating netcat -e](https://www.commandlinefu.com/commands/view/11061/emulating-netcat-e-netcat-traditional-or-netcat-openbsd-with-the-gnu-netcat)
+  ```bash
+  $ mkfifo foo ; nc -lk 2600 0<foo | /bin/bash 1>foo
+  ```
 
 ## `ip`
 ```bash
