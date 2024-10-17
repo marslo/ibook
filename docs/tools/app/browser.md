@@ -3,6 +3,7 @@
 
 - [firefox](#firefox)
   - [restart firefox](#restart-firefox)
+  - [cleanup firefox databbase](#cleanup-firefox-databbase)
   - [customized firefox style](#customized-firefox-style)
 - [chrome](#chrome)
   - [shortcut](#shortcut)
@@ -28,6 +29,11 @@
 ### [restart firefox](https://www.msftnext.com/how-to-restart-firefox-without-closing-tabs/)
 ```
 about:restartrequired
+```
+
+### [cleanup firefox databbase](https://www.commandlinefu.com/commands/view/3147/cleanup-firefoxs-database.)
+```bash
+$ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(while read -e f; do echo 'vacuum;'|sqlite3 "$f" ; done)
 ```
 
 ### customized firefox style

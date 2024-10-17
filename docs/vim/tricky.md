@@ -49,10 +49,12 @@
   - [stop macro at the end of line](#stop-macro-at-the-end-of-line)
 - [others](#others)
   - [startup-options](#startup-options)
+  - [save sessions resume later](#save-sessions-resume-later)
   - [How to Open Files with Vim](#how-to-open-files-with-vim)
   - [comments](#comments)
   - [statueline](#statueline)
   - [ctags](#ctags)
+  - [edit file in remove server](#edit-file-in-remove-server)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1065,6 +1067,15 @@ NOTICE: after using `\v` the `=` should using `\=` instead
   - `modeline` off
   - `expandtab` off
 
+### [save sessions resume later](https://www.commandlinefu.com/commands/view/1226/save-your-sessions-in-vim-to-resume-later)
+```vim
+:mksession! <filename>
+```
+- or
+  ```bash
+  $ vim -S <filename>
+  ```
+
 ### [How to Open Files with Vim](https://tuckerchapman.com/2021/02/16/vim-open-files/)
 
 ### comments
@@ -1116,4 +1127,9 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 function genctags () {
   ctags --c++-kinds=+p --extras=+q -L -
 }
+```
+
+### [edit file in remove server](https://www.commandlinefu.com/commands/view/946/edit-a-file-on-a-remote-host-using-vim)
+```bash
+$ vim scp://username@host//path/to/somefile
 ```

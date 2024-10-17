@@ -855,6 +855,15 @@
 
   ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
 
+- [show 256 colors](https://www.commandlinefu.com/commands/view/3958/unbelievable-shell-colors-shading-backgrounds-effects-for-non-x)
+
+  > [!NOTE|label:references:]
+  > - [Terminal colour highlights](https://www.pixelbeat.org/docs/terminal_colours/)
+
+  ```bash
+  $ for c in `seq 0 255`; do t=5; [[ $c -lt 108 ]] && t=0; for i in `seq $t 5`; do echo -e "\e[0;48;$i;${c}m|| $i:$c `seq -s+0 $(($COLUMNS/2))|tr -d '[0-9]'`\e[0m"; done;done
+  ```
+
 ## color names
 
 > [!TIP|label:references:]

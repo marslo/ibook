@@ -7,6 +7,7 @@
   - [mount smb](#mount-smb)
   - [mount cifs](#mount-cifs)
   - [mount nfs](#mount-nfs)
+  - [mount temporary ram](#mount-temporary-ram)
   - [remount](#remount)
   - [disconnect the mount](#disconnect-the-mount)
 - [LVM](#lvm)
@@ -58,7 +59,38 @@
 $ [[ -z $(findmnt /mnt/tmp) ]] || umount -f /mnt/tmp
 $ mkdir /mnt/tmp
 $ mount -t iso9660 -o loop /vol/builds/os/linux/RHEL-6.6-20140926.0-Server-x86_64-dvd1.iso  /mnt/tmp/
+
+# or: https://www.commandlinefu.com/commands/view/152/mount-a-.iso-file-in-unixlinux
+$ mount /path/to/file.iso /mnt/tmp -o loop
 ```
+
+- [create cd/dvd iso](https://www.commandlinefu.com/commands/view/1396/create-a-cddvd-iso-image-from-disk.)
+  ```bash
+  $ readom dev=/dev/scd0 f=/path/to/image.iso
+
+  # https://www.commandlinefu.com/commands/view/12852/create-a-cddvd-iso-image-from-disk.
+  $ dd bs=1M if=/dev/scd0 of=./filename.iso OR readom -v dev='D:' f='./filename.iso' speed=2 retries=8
+
+  # https://www.commandlinefu.com/commands/view/12726/create-a-cddvd-iso-image-from-disk.
+  $ cat /dev/cdrom > ~/img.iso
+
+  # https://www.commandlinefu.com/commands/view/8564/create-a-cddvd-iso-image-from-disk.
+  $ cp /dev/cdrom file.iso
+
+  # or
+  $ mkisofs -o /tmp/cd.iso /tmp/directory/
+  ```
+
+- [copy iso to local](https://www.commandlinefu.com/commands/view/3352/how-to-copy-cddvd-into-hard-disk-.iso)
+  ```bash
+  $ dd if=/dev/cdrom of=whatever.iso
+  ```
+
+- [rip cd/dvd to iso](https://www.commandlinefu.com/commands/view/10957/rip-a-cddvd-to-iso-format.)
+  ```bash
+  $ dd if=/dev/cdrom of=~/cdrom_image.iso
+  ```
+
 
 ### mount smb
 
@@ -312,6 +344,11 @@ domain.com:/path/to/target                      /path/to/mount  nfs   defaults  
 - `/etc/nfs.conf`
 - `/proc/mounts`
 
+### [mount temporary ram](https://www.commandlinefu.com/commands/view/224/mount-a-temporary-ram-partition)
+```bash
+$ mount -t tmpfs tmpfs /mnt -o size=1024m
+```
+
 ### [remount](https://unix.stackexchange.com/a/280543/29178)
 ```bash
 $ sudo mount -oremount,rw /
@@ -320,6 +357,15 @@ $ sudo mount -oremount,rw /
 $ sudo mount -oremount,ro /
 ```
 
+- [remount nfs](https://www.commandlinefu.com/commands/view/5763/check-a-nfs-mountpoint-and-force-a-remount-if-it-does-not-reply-after-a-given-timeout.)
+  ```bash
+  $ NFSPATH=/mountpoint TIMEOUT=5; perl -e "alarm $TIMEOUT; exec @ARGV" "test -d $NFSPATH" || (umount -fl $NFSPATH; mount $NFSPATH)
+
+  # remount if 5 secs no response
+  $ NFSPATH=/mountpoint TIMEOUT=5;
+  $ perl -e "alarm $TIMEOUT;
+  $ exec @ARGV" "test -d $NFSPATH" || (umount -fl $NFSPATH; mount $NFSPATH) # TIMEOUT=5 SCRIPT_NAME=$(basename $0) for i in $@; do echo "Checking $i..." if ! perl -e "alarm $TIMEOUT; exec @ARGV" "test -d $i" > /dev/null 2>&1; then echo "$SCRIPT_NAME: $i is failing with retcode $?."1>&2 echo "$SCRIPT_NAME: Submmiting umount -fl $i" 1>&2 umount -fl $i; echo "$SCRIPT_NAME: Submmiting mount $i" 1>&2 mount $i; fi done
+  ```
 
 ### disconnect the mount
 ```bash
@@ -564,6 +610,13 @@ $ sudo vgremove <vg-name>
 - [`iozone -aRcU /mnt/nfs/ -f /mnt/nfs/testfile > logfile`](https://serverfault.com/a/324489/129815)
 
 ### `iostat`
+
+> [!TIP|label:references:]
+> - [show vmstat with timestamp](https://www.commandlinefu.com/commands/view/2682/vmstatiostat-with-timestamp)
+>   ```bash
+>   $ iostat <--params> | awk '{now=strftime("%Y-%m-%d %T "); print now $0}'
+>   ```
+
 ```bash
 $ iostat -x -d 1
 Linux 3.10.0-957.27.2.el7.x86_64 (dc5-ssdfwtst3)  01/15/2021  _x86_64_  (4 CPU)
@@ -612,9 +665,9 @@ $ sudo hdparm -Tt /dev/sda3
 
 ### dd
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [Linux and Unix Test Disk I/O Performance With dd Command](https://www.cyberciti.biz/faq/howto-linux-unix-test-disk-performance-with-dd-command/)
+> - [network speed without wasting disk](https://www.commandlinefu.com/commands/view/5799/test-network-speed-without-wasting-disk)
 
 ```bash
 $ flush
@@ -625,7 +678,17 @@ $ time dd if=/path/to/bigfile of=/dev/null bs=8k
 - write speed
   ```bash
   $ dd if=/dev/zero of=/tmp/test1.img bs=1G count=1 oflag=dsync
+
+  # for NFS ( 2Gb )
+  $ time dd if=/dev/zero of=/mnt/nfs/testfile bs=16k count=128k
   ```
+
+- read spead
+  ```bash
+  # for NFS ( 2Gb )
+  $ time dd if=/mnt/nfs/testfile of=/dev/null bs=16k
+  ```
+
 - server latency time
   ```bash
   $ dd if=/dev/zero of=/tmp/test2.img bs=512 count=1000 oflag=dsync

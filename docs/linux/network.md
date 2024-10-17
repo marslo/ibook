@@ -12,17 +12,23 @@
   - [check remote server dns](#check-remote-server-dns)
   - [show hardware spec](#show-hardware-spec)
   - [change interface name](#change-interface-name)
-  - [Clean up network interfaces](#clean-up-network-interfaces)
+  - [clean up network interfaces](#clean-up-network-interfaces)
+  - [benchmark web server](#benchmark-web-server)
+  - [check port](#check-port)
+  - [show internet connection](#show-internet-connection)
+  - [tips](#tips)
 - [nginx](#nginx)
 - [nmap](#nmap)
   - [host discovery](#host-discovery)
   - [check available IPs](#check-available-ips)
   - [scan `80` or `22` in particular setment](#scan-80-or-22-in-particular-setment)
+  - [scan network for rogue APs](#scan-network-for-rogue-aps)
   - [OS detection with verbosity](#os-detection-with-verbosity)
   - [find printer](#find-printer)
   - [list hostname with mac address](#list-hostname-with-mac-address)
   - [get all server up ip address](#get-all-server-up-ip-address)
   - [scan ip/host](#scan-iphost)
+  - [ping scanning without nmap](#ping-scanning-without-nmap)
 - [route](#route)
   - [iptables](#iptables)
   - [port forwarding](#port-forwarding)
@@ -30,7 +36,8 @@
   - [nslookup](#nslookup)
 - [traceroute](#traceroute)
   - [traceroute for port](#traceroute-for-port)
-  - [No route to host](#no-route-to-host)
+  - [no route to host](#no-route-to-host)
+  - [ping as traceroute](#ping-as-traceroute)
 - [DNS](#dns)
   - [add new DNS permanently](#add-new-dns-permanently)
 - [wifi](#wifi)
@@ -141,6 +148,11 @@ $ ipAddr=$(ip a s "${interface}" | sed -rn 's|.*inet ([0-9\.]{7,15})/[0-9]{2} br
   $ dig github.com | awk '/^;; ANSWER SECTION:$/ { getline ; print $5 }'
   ```
 
+  - [find the fastest free DNS server](https://www.commandlinefu.com/commands/view/14188/a-function-to-find-the-fastest-free-dns-server)
+    ```bash
+    $ timeDNS() { parallel -j0 --tag dig @{} "$*" ::: 208.67.222.222 208.67.220.220 198.153.192.1 198.153.194.1 156.154.70.1 156.154.71.1 8.8.8.8 8.8.4.4 | grep Query | sort -nk5; }
+    ```
+
 - `nslookup`
   ```bash
   $ nslookup github.com | awk '/Name:/{getline; print $2;}'
@@ -177,6 +189,16 @@ $ ifstat -n -i en7
     6.05      0.80
     8.36      1.78
 ```
+
+- [bandwidth statistics](https://www.commandlinefu.com/commands/view/2058/display-current-bandwidth-statistics)
+  ```bash
+  $ ifstat -nt
+  ```
+
+- [via ssh](https://www.commandlinefu.com/commands/view/5799/test-network-speed-without-wasting-disk)
+  ```bash
+  $ dd if=/dev/zero bs=4096 count=1048576 | ssh user@host.tld 'cat > /dev/null'
+  ```
 
 ### check remote server dns
 ```bash
@@ -398,10 +420,67 @@ $ sudo ifconfig <NEW_INTERFACE_NAME>
   docker0             47c195b8-4867-40d3-acec-c28223e2b013  bridge    docker0
   ```
 
-### [Clean up network interfaces](https://github.com/canonical/microk8s/issues/712#issue-504138458)
+### [clean up network interfaces](https://github.com/canonical/microk8s/issues/712#issue-504138458)
 ```bash
 $ ip a | grep -o "veth[a-z0-9]\+" | xargs -I[] sudo ip link delete []
 ```
+
+### [benchmark web server](https://www.commandlinefu.com/commands/view/2921/benchmark-web-server-with-apache-benchmarking-tool)
+```bash
+$ ab -n 9000 -c 900 localhost:8080/index.php
+```
+
+### [check port](https://www.commandlinefu.com/commands/view/10985/complete-tcp-handshake-on-a-given-host-port)
+```bash
+$ nc -zv host port
+# or
+$ nc -zvw 1 host port
+```
+
+- [port knocking](https://www.commandlinefu.com/commands/view/2785/port-knocking)
+  ```bash
+  $ knock <host> 3000 4000 5000 && ssh -p <port> user@host && knock <host> 5000 4000 3000
+  ```
+
+### show internet connection
+```bash
+# https://www.commandlinefu.com/commands/view/3546/show-apps-that-use-internet-connection-at-the-moment.-multi-language
+$ ss -p
+# or
+$ ss -p | grep STA
+$ ss -p | cut -f2 -sd\"
+
+# https://www.commandlinefu.com/commands/view/3542/show-apps-that-use-internet-connection-at-the-moment.-multi-language
+$ lsof -P -i -n
+
+# https://www.commandlinefu.com/commands/view/3543/show-apps-that-use-internet-connection-at-the-moment.
+$ lsof -P -i -n | cut -f 1 -d " "| uniq | tail -n +2
+
+# https://www.commandlinefu.com/commands/view/13921/show-apps-that-use-internet-connection-at-the-moment.
+$ sudo lsof -P -i -n | awk '{print $1,$5,$8}' | tail -n +2 | uniq -c | sort -nr
+
+# https://www.commandlinefu.com/commands/view/3539/show-apps-that-use-internet-connection-at-the-moment.-multi-language
+$ netstat -lantp | grep -i stab | awk -F/ '{print $2}' | sort | uniq
+```
+
+### tips
+- [check KeepAlive counters on tcp connections](https://www.commandlinefu.com/commands/view/11358/see-keepalive-counters-on-tcp-connections)
+  ```bash
+  $ netstat -town
+  ```
+
+- [get TIME_WAIT and ESTABLISHED nums of the network](https://www.commandlinefu.com/commands/view/5453/see-the-time_wait-and-established-nums-of-the-network)
+  ```bash
+  $ netstat -n | awk '/^tcp/ {++B[$NF]} END {for(a in B) print a, B[a]}'
+  ```
+
+- [share file with http 80 port via nc](https://www.commandlinefu.com/commands/view/870/sharing-file-through-http-80-port)
+  ```bash
+  $ nc -v -l 80 < file.ext
+
+  # or
+  $ nc -q 1 -w 5 -v -l -p 80 < file.ext
+  ```
 
 ## nginx
 
@@ -414,7 +493,6 @@ $ ip a | grep -o "veth[a-z0-9]\+" | xargs -I[] sudo ip link delete []
 > - [SOLUTION: Scan a Large Network for a Certain Open TCP Port](https://nmap.org/book/solution-find-open-port.html)
 > - [Nmap Network Scanning](http://nmap.org/book/man-host-discovery.html)
 {% endhint %}
-
 
 ### [host discovery](https://nmap.org/book/man-host-discovery.html)
 
@@ -450,6 +528,11 @@ $ nmap -sP -PR 1.2.3.0/22
 ```bash
 $ nmap -sT -p 80 -oG - 10 - 1.2.3.* [| grep open]
 $ nmap -sT -p 22 -oG - 10 - 1.2.3.* [| grep open]
+```
+
+### [scan network for rogue APs](https://www.commandlinefu.com/commands/view/2498/scan-network-for-rogue-aps.)
+```bash
+$ nmap -A -p1-85,113,443,8080-8100 -T4 --min-hostgroup 50 --max-rtt-timeout 2000 --initial-rtt-timeout 300 --max-retries 3 --host-timeout 20m --max-scan-delay 1000 -oA wapscan 10.0.0.0/8
 ```
 
 ### [OS detection with verbosity](https://nmap.org/book/osdetect-usage.html)
@@ -530,6 +613,13 @@ $ sudo nmap -sP 172.31.201.0/24 | awk '/Nmap scan report for/{printf $5;}/MAC Ad
   ...
   ```
 
+- [get random mac address](https://www.commandlinefu.com/commands/view/2678/resets-your-mac-to-a-random-mac-address-to-make-you-harder-to-find.)
+  ```bash
+  $ ran=$(head /dev/urandom | md5sum); MAC=00:07:${ran:0:2}:${ran:3:2}:${ran:5:2}:${ran:7:2};
+  # reset mac address for wlan0
+  $ sudo ifconfig wlan0 down hw ether $MAC; sudo ifconfig wlan0 up; echo ifconfig wlan0:0]
+  ```
+
 ### [get all server up ip address](https://serverfault.com/a/586721/129815)
 ```bash
 $ sudo nmap -v -sn -n 192.168.1.0/24 -oG - | awk '/Status: Up/{print $2}'
@@ -570,6 +660,11 @@ PORT     STATE SERVICE REASON
   $ nmap --reason -p 16000 192.168.0.104
   ```
 
+### [ping scanning without nmap](https://www.commandlinefu.com/commands/view/5298/ping-scanning-without-nmap)
+```bash
+$ for i in {1..254}; do ping -c 1 -W 1 10.1.1.$i | grep 'from'; done
+```
+
 ## route
 ### iptables
 
@@ -587,7 +682,6 @@ PORT     STATE SERVICE REASON
 > - [* iptables 匹配条件](https://www.kancloud.cn/pshizhsysu/linux/1799485)
 >   - [基础匹配条件](https://www.kancloud.cn/pshizhsysu/linux/1799486)
 >   - [扩展匹配条件](https://www.kancloud.cn/pshizhsysu/linux/1799487) | [match extensions](https://ipset.netfilter.org/iptables-extensions.man.html#index)
-
 
 - show status
   ```bash
@@ -615,6 +709,24 @@ PORT     STATE SERVICE REASON
 - flush
   ```bash
   $ sudo iptables -F
+  ```
+
+- [redirect incoming traffic to ssh, from a port of your choosing](https://www.commandlinefu.com/commands/view/2453/redirect-incoming-traffic-to-ssh-from-a-port-of-your-choosing)
+  ```bash
+  $ iptables -t nat -A PREROUTING -p tcp --dport [port of your choosing] -j REDIRECT --to-ports 22
+
+  # i.e.:
+  $ iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 22
+  ```
+
+- [watch iptables counters](https://www.commandlinefu.com/commands/view/3150/watch-iptables-counters)
+  ```bash
+  $ watch --interval 0 'iptables -nvL | grep -v "0 0"'
+  ```
+
+- [block ip range](https://www.commandlinefu.com/commands/view/41/block-an-ip-address-from-connecting-to-a-server)
+  ```bash
+  $ iptables -A INPUT -s 222.35.138.25/32 -j DROP
   ```
 
 ### port forwarding
@@ -868,7 +980,7 @@ traceroute to 1.2.3.4 (1.2.3.4), 30 hops max, 60 byte packets
  6  host.example.com (1.2.3.4)  23.093 ms  14.725 ms  14.625 ms
 ```
 
-### No route to host
+### no route to host
 
 > [!NOTE|label:references:]
 > - [Linux系统运维: 防火墙 - Firewalld](https://www.yaolong.net/article/linux-ops-firewalld/)
@@ -990,6 +1102,10 @@ traceroute to 1.2.3.4 (1.2.3.4), 30 hops max, 60 byte packets
   $ sudo sysctl -w net.ipv4.conf.all.route_localnet=1
   ```
 
+### [ping as traceroute](https://www.commandlinefu.com/commands/view/10267/ping-as-traceroute)
+```bash
+$ for i in {1..30}; do ping -t $i -c 1 google.com; done | grep "Time to live exceeded"
+```
 
 ## DNS
 ### add new DNS permanently

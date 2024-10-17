@@ -5,6 +5,7 @@
   - [convert row to column](#convert-row-to-column)
     - [`rs -T`](#rs--t)
     - [datamash](#datamash)
+    - [tail -f file with timestamp](#tail--f-file-with-timestamp)
   - [reverse words](#reverse-words)
   - [align](#align)
     - [add header](#add-header)
@@ -173,6 +174,11 @@ job   salary
 c++   13
 java  14
 php   12
+```
+
+### [tail -f file with timestamp](https://www.commandlinefu.com/commands/view/7151/monitor-a-file-with-tail-with-timestamps-added)
+```bash
+$ tail -f file | awk '{now=strftime("%F %T%z\t");sub(/^/, now);print}'
 ```
 
 ## reverse words

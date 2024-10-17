@@ -7,7 +7,7 @@
   - [setup hostname and localhostname](#setup-hostname-and-localhostname)
   - [setup bash as default SHELL](#setup-bash-as-default-shell)
   - [disable guest user](#disable-guest-user)
-  - [GO TO HIDDEN PATH IN FINDER](#go-to-hidden-path-in-finder)
+  - [go to hidden path in finder](#go-to-hidden-path-in-finder)
   - [reindex spotlight](#reindex-spotlight)
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
@@ -122,7 +122,7 @@ $ sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess
 $ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server AllowGuestAccess -bool NO
 ```
 
-### GO TO HIDDEN PATH IN FINDER
+### go to hidden path in finder
 
 <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd>
 

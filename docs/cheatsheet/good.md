@@ -14,7 +14,7 @@
 - [compress](#compress)
   - [zip package with dot-file](#zip-package-with-dot-file)
   - [remove dot-file without `skipping '..' '.'` issue](#remove-dot-file-without-skipping---issue)
-- [echo 256 colors](#echo-256-colors)
+- [show 256 colors](#show-256-colors)
 - [commands](#commands)
   - [`ls`](#ls)
   - [PWD's secrets](#pwds-secrets)
@@ -43,11 +43,9 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## redirect
-
 ### show stdout but redirect all to file
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [redirect overview](https://askubuntu.com/a/731237)
 >   ```bash
 >             || visible in terminal ||   visible in file   || existing
@@ -123,6 +121,11 @@ bash: line 1: bhas: command not found
   ```
 
 ## time & date
+
+> [!TIP|label:see also:]
+> - [* iMarslo: date](../linux/util/date.md)
+> - [* iMarslo: clock/date/time](./cmd.md#clocktimedate)
+
 ### [show date with timezone](https://unix.stackexchange.com/a/48104/29178)
 ```bash
 # with quotes
@@ -181,8 +184,7 @@ Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa
 
 ### synchronize date and time with over ssh
 
-> [!NOTE]
-> inspired from
+> [!NOTE|label:inspired from:]
 > - [commandlinefu.com](http://www.commandlinefu.com/commands/view/9153/synchronize-date-and-time-with-a-server-over-ssh))
 
 ```bash
@@ -212,26 +214,24 @@ $ date --set="$(ssh [username]@[sshserver] date)"
 - `*.zip`
   ```bash
   $ curl -fsSL https://services.gradle.org/distributions/gradle-4.7-all.zip | bsdtar xzf - -C <EXTRACT_PATH>
+
+  # with password
+  $ curl -fsSL \
+         -u<user>:<passwd> \
+         https://path/to/file.zip |
+    bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
   ```
-  - with zip password
-    ```bash
-    $ curl -fsSL \
-           -u<user>:<passwd> \
-           https://path/to/file.zip \
-           | bsdtar -xzf- --passphrase <PASSWD_OF_ZIP> - -C <EXTRACT_PATH>
-    ```
 
 - `*.tar.gz`
   ```bash
   $ curl -fsSL https://path/to/file.tar.gz | tar xzf - -C <EXTRACT_PATH>
+
+  # example
+  $ curl -fsSL -j -k \
+         -H "Cookie: oraclelicense=accept-securebackup-cookie" \
+         http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz |
+    tar xzf - -C '/opt/java'
   ```
-  - example
-    ```bash
-    $ curl -fsSL -j -k \
-           -H "Cookie: oraclelicense=accept-securebackup-cookie" \
-           http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz \
-           | tar xzf - -C '/opt/java'
-    ```
 
 ### check file without extract
 ```bash
@@ -381,27 +381,32 @@ $ wget -r --no-parent --no-host-directories --cut-dirs=1 https://www.baeldung.co
 >   ```
 
 - [`shopt -s dotglob`](https://unix.stackexchange.com/a/289393/29179)
-    ```bash
-    $ shopt -s dotglob
-    $ rm [-rf] *
-    ```
+  ```bash
+  $ shopt -s dotglob
+  $ rm [-rf] *
+  ```
 
 - `.[^.]*`
-    ```bash
-    $ rm [-rf] .[^.]*
-    ```
+  ```bash
+  $ rm [-rf] .[^.]*
+  ```
 
 - [`.[!.]*`](https://unix.stackexchange.com/a/310951/29178)
-    ```bash
-    $ rm [-rf] .[!.]*
-    ```
+  ```bash
+  $ rm [-rf] .[!.]*
+  ```
 
 - [`.??*`](https://unix.stackexchange.com/a/310763/29178)
-    ```bash
-    $ rm [-rf] .??*
-    ```
+  ```bash
+  $ rm [-rf] .??*
+  ```
 
-## echo 256 colors
+- [copy all including hidden files](https://www.commandlinefu.com/commands/view/9918/copy-all-files-including-hidden-files-recursively-without-traversing-backward)
+  ```bash
+  $ cp -r * .??* /dest
+  ```
+
+## show 256 colors
 
 > [!TIP]
 > see also:
@@ -412,6 +417,24 @@ $ wget -r --no-parent --no-host-directories --cut-dirs=1 https://www.baeldung.co
 $ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
 # or
 $ yes "$(seq 1 255)" | while read i; do printf "\x1b[48;5;${i}m\n"; sleep .01; done
+
+# or: https://www.commandlinefu.com/commands/view/5879/show-numerical-values-for-each-of-the-256-colors-in-bash
+$ for code in {0..255}; do echo -e "\e[38;05;${code}m $code: Test"; done)
+
+# or: https://www.commandlinefu.com/commands/view/6138/show-numerical-values-for-each-of-the-256-colors-in-bash
+$ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
+
+# or: https://www.commandlinefu.com/commands/view/11759/show-numerical-values-for-each-of-the-256-colors-in-bash-for-bold-and-normal-fonts
+$ for code in $(seq -w 0 255); do for attr in 0 1; do printf "%s-%03s %bTest%b\n" "${attr}" "${code}" "\e[${attr};38;05;${code}m" "\e[m"; done; done | column -c $((COLUMNS*2))
+# better vesion
+$ for code in $(seq -w 0 255); do for attr in 0 1; do printf "%b%s-%03s%b\n"  "\e[${attr};38;05;${code}m" "${attr}" "${code}" "\e[m"; done; done | column -c $((COLUMNS*3))
+
+# .. zsh ..
+# or: https://www.commandlinefu.com/commands/view/5876/show-numerical-values-for-each-of-the-256-colors-in-zsh
+$ for code in {000..255}; do print -P -- "$code: %F{$code}Test%f"; done
+
+# or: https://www.commandlinefu.com/commands/view/12471/show-numerical-values-for-each-of-the-256-colors-in-zsh
+for i in {0..255}; do echo -e "\e[38;05;${i}m\\\e[38;05;${i}m"; done | column -c 80 -s ' '; echo -e "\e[m"
 ```
 
 ## commands

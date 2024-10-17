@@ -597,6 +597,11 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
   $ find [PATH] -type f -printf "%s %p\n" | sort -rn | head -n 5
   ```
 
+- [du with colored bar graph](https://www.commandlinefu.com/commands/view/9797/du-with-colored-bar-graph)
+  ```bash
+  $ t=$(df|awk 'NR!=1{sum+=$2}END{print sum}'); sudo du / --max-depth=1 | sed '$d' | sort -rn -k1 | awk -v t=$t 'OFMT="%d" {M=64; for (a=0;a<$1;a++){if (a>c){c=a}}br=a/c;b=M*br;for(x=0;x<b;x++){printf "\033[1;31m" "|" "\033[0m"}print " "$2" "(a/t*100)"% total"}'
+  ```
+
 ## sort
 ### [sort result via human-readable format](https://www.redhat.com/sysadmin/sort-du-output)
 ```bash
@@ -884,23 +889,39 @@ $ echo -e "�" | hexdump -C
   ```bash
   function extract () {
     case $1 in
-      *.tar.bz2) tar xjf "$1" ;;
-      *.tar.gz) tar xzf "$1" ;;
-      *.tar.xz) tar Jxvf "$1" ;;
-      *.tar.Z) tar xzf "$1" ;;
-      *.tar) tar xf "$1" ;;
-      *.taz) tar xzf "$1" ;;
-      *.tb2) tar xjf "$1" ;;
-      *.tbz) tar xjf "$1" ;;
-      *.tbz2) tar xjf "$1" ;;
-      *.tgz) tar xzf "$1" ;;
-      *.txz) tar Jxvf "$1" ;;
-      *.zip) unzip "$1" ;;
-      *.gz) gunzip "$1" ;;
-      *) echo "'$1' cannot be extracted" ;;
+      *.tar.bz2 ) tar xjf  "$1" ;;
+      *.tar.gz  ) tar xzf  "$1" ;;
+      *.tar.xz  ) tar Jxvf "$1" ;;
+      *.tar.Z   ) tar xzf  "$1" ;;
+      *.tar     ) tar xf   "$1" ;;
+      *.taz     ) tar xzf  "$1" ;;
+      *.tb2     ) tar xjf  "$1" ;;
+      *.tbz     ) tar xjf  "$1" ;;
+      *.tbz2    ) tar xjf  "$1" ;;
+      *.tgz     ) tar xzf  "$1" ;;
+      *.txz     ) tar Jxvf "$1" ;;
+      *.zip     ) unzip    "$1" ;;
+      *.gz      ) gunzip   "$1" ;;
+      *         ) echo "'$1' cannot be extracted" ;;
     esac
   }
   ```
+
+- [up to parent folder](https://www.commandlinefu.com/commands/view/10751/quickly-cd-out-of-directories-without-5-aliases)
+  ```bash
+  $ up() { local x=''; for i in $(seq ${1:-1}); do x="$x../"; done; cd $x; }
+
+  # usage
+  $ up
+  $ up 3
+  ```
+
+- [generate cron time format](https://www.commandlinefu.com/commands/view/9294/print-a-cron-formatted-time-for-2-minutes-in-the-future-for-crontab-testing)
+  ```bash
+  # 2 minutes in the future
+  $ echocron () { date '-d +2 minutes' +'%M %k %d %m *'; }
+  ```
+
 ## search manual page
 - `whatis -r <string>`
 - `apropos -r <string>`

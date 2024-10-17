@@ -22,6 +22,8 @@
   - [apt-cache](#apt-cache)
     - [get package name by command](#get-package-name-by-command)
     - [search package name for apt-get](#search-package-name-for-apt-get)
+  - [tips](#tips)
+    - [save all debian packages](#save-all-debian-packages)
   - [troubleshooting](#troubleshooting)
 - [yum/dnf](#yumdnf)
   - [repo](#repo)
@@ -256,6 +258,13 @@ libjs-jquery-jush - jQuery Syntax Highlighter
 google-chrome-beta - The web browser from Google
 google-chrome-stable - The web browser from Google
 google-chrome-unstable - The web browser from Google
+```
+
+## tips
+
+### [save all debian packages](https://www.commandlinefu.com/commands/view/25126/save-a-copy-of-all-debian-packages-in-the-form-in-which-they-are-installed-and-configured-on-your-system)
+```bash
+$ for a in $(sudo dpkg --get-selections|cut -f1); do dpkg-repack $a|awk '{if (system("sleep .5 && exit 2") != 2) exit; print}';done
 ```
 
 ## troubleshooting

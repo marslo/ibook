@@ -21,6 +21,7 @@
   - [how many days from timestamps](#how-many-days-from-timestamps)
   - [calculate time different](#calculate-time-different)
   - [transfer date format](#transfer-date-format)
+  - [since now](#since-now)
 - [chrony](#chrony)
   - [install](#install)
   - [conf](#conf)
@@ -36,8 +37,9 @@
 
 {% hint style='tip' %}
 > references:
-> - [* imarslo: groovy time ](../../programming/groovy/time.html)
-> - [https://en.wikipedia.org/wiki/Unix_time](https://en.wikipedia.org/wiki/Unix_time):
+> - [* imarslo: groovy time](../../programming/groovy/time.html)
+> - [* iMarslo: clock/date/time](../../cheatsheet/cmd.md#clocktimedate)
+> - [Unix_time](https://en.wikipedia.org/wiki/Unix_time)
 {% endhint %}
 
 ## timezone
@@ -424,7 +426,19 @@ Fri Oct  9 17:18:17 CST 2020
 
 $ date -d @1602235097 -u
 Fri Oct  9 09:18:17 UTC 2020
+
+$ date -d @1602235097 -R
+Fri, 09 Oct 2020 02:18:17 -0700
 ```
+
+- [via awk](https://www.commandlinefu.com/commands/view/3183/convert-unixtime-to-human-readable-with-awk)
+  ```bash
+  $ date -d @1602235097 +%c
+  Fri Oct  9 02:18:17 2020
+
+  $ echo 1602235097 | awk '{ print strftime("%c", $0); }'
+  Fri Oct  9 02:18:17 2020
+  ```
 
 - epoch with 13 digits
   ```bash
@@ -585,6 +599,12 @@ Sun Dec  9 18:39:55 CST 2018
 
 $ date -d '2023-01-01 - 1 year' +"%Y-%m-%d %H:%M:%S"
 2022-01-01 00:00:00
+
+# or: https://www.commandlinefu.com/commands/view/2336/get-yesterdays-date-or-a-previous-time
+$ date -d '1 day ago'
+$ date -d '11 hour ago'
+$ date -d '2 hour ago - 3 minute'
+$ date -d '16 hour'
 ```
 
 #### two times different
@@ -653,6 +673,12 @@ $ awk -v t=$(( $(date -d $(date +"%Y-%m-%dT%H:%M:%SZ") +%s) - $(date -d $(date +
 $ d1=$(date +'%Y%m%d%H%M%S')
 $ date --date "$(echo $d1 | sed -nr 's/(....)(..)(..)(..)(..)(..)/\1-\2-\3 \4:\5:\6/p')"
 Fri Oct  9 18:48:52 CST 2020
+```
+
+### [since now](https://www.commandlinefu.com/commands/view/3719/convert-unix-timestamp-to-date)
+```bash
+$ date -ud "1970-01-01 + 1234567890 seconds"
+Fri Feb 13 23:31:30 UTC 2009
 ```
 
 ## chrony

@@ -15,6 +15,7 @@
 - [get system info](#get-system-info)
   - [top](#top)
   - [ps](#ps)
+    - [find the zombie process](#find-the-zombie-process)
 - [set system info](#set-system-info)
   - [clear duplicated PATH](#clear-duplicated-path)
   - [sysctl](#sysctl)
@@ -26,9 +27,10 @@
   - [off swap](#off-swap)
   - [disable selinux](#disable-selinux)
   - [confined and unconfined users](#confined-and-unconfined-users)
-- [process](#process)
-  - [find the zombie process](#find-the-zombie-process)
+- [tips](#tips)
   - [about `whatis`](#about-whatis)
+  - [Synchronous system and hardware clock](#synchronous-system-and-hardware-clock)
+  - [backup hard disk timely](#backup-hard-disk-timely)
 - [service](#service)
   - [enable/disable service](#enabledisable-service)
   - [start/stop service](#startstop-service)
@@ -84,7 +86,7 @@
 
 # hardware spec
 
-> [!TIP]
+> [!TIP|label:hardware spec]
 > list info
 > - `glances`
 > - `hwinfo`
@@ -112,6 +114,7 @@
 >   - `/proc/version`
 >   - `/proc/scsi/scsi`
 >   - `/proc/partitions`
+>
 > performance & analysis
 > - [* imarslo : adminTools](../devops/adminTools.html)
 > - `vmstat` - shows system memory, processes, interrupts, paging, block I/O, and CPU info
@@ -373,6 +376,13 @@ CPU:
 {% endhint %}
 
 #### list total memory
+
+> [!TIP|label:references:]
+> - [show vmstat with timestamp](https://www.commandlinefu.com/commands/view/2682/vmstatiostat-with-timestamp)
+>   ```bash
+>   $ vmstat 1 | awk '{now=strftime("%Y-%m-%d %T "); print now $0}'
+>   ```
+
 ```bash
 $ hwinfo --memory | grep 'Memory Size'
   Memory Size: 128 GB
@@ -857,11 +867,16 @@ $ echo "${PATH//:/$'\n'}"
 
 ## ps
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [Command to check top CPU consuming process](https://www.golinuxcloud.com/check-top-memory-cpu-consuming-process-script/)
+> - [Run TOP in Color, split 4 ways for x seconds - the ultimate ps command. Great for init scripts](https://www.commandlinefu.com/commands/view/5442/run-top-in-color-split-4-ways-for-x-seconds-the-ultimate-ps-command.-great-for-init-scripts)
 
-- cpu
+- [ultimate ps command](https://www.commandlinefu.com/commands/view/5442/run-top-in-color-split-4-ways-for-x-seconds-the-ultimate-ps-command.-great-for-init-scripts)
+  ```bash
+  $ G=$(stty -g); stty rows $((${LINES:-50}/2)); top -n1; stty $G; unset G
+  ```
+
+- get cpu
   ```bash
   $ ps -eocomm,pcpu | egrep -v '(0.0)|(%CPU)'
   systemd          0.2
@@ -874,7 +889,7 @@ $ echo "${PATH//:/$'\n'}"
   ...
   ```
 
-- memory
+- get memory
   ```bash
   $ ps -eocomm,pmem | egrep -v '(0.0)|(%MEM)'
   java             0.1
@@ -883,6 +898,46 @@ $ echo "${PATH//:/$'\n'}"
   gvfs-udisks2-vo  0.1
   kube-apiserver   0.1
   ```
+
+- sort process by PID
+  ```bash
+  $ ps -axww
+  ```
+
+- check the group PID
+  ```bash
+  $ ps -xj
+  ```
+
+- [top 10 process](https://www.commandlinefu.com/commands/view/3/display-the-top-ten-running-processes-sorted-by-memory-usage)
+  ```bash
+  $ ps aux | sort -nk +4 | tail
+  ```
+
+- [discover the process start time](https://www.commandlinefu.com/commands/view/12417/discover-the-process-start-time)
+  ```bash
+  $ ps -eo pid,lstart,cmd
+  ```
+
+- [get date of latest prcess startup time](https://www.commandlinefu.com/commands/view/6829/display-date-of-last-time-a-process-was-started-in-date-format)
+  ```bash
+  $ ps -o lstart <pid>
+  ```
+
+- [real-time process monitoring](https://www.commandlinefu.com/commands/view/24677/perform-real-time-process-monitoring-using-watch-utility)
+  ```bash
+  $ watch -n 1 'ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head'
+  ```
+
+- [using tee for process](https://www.commandlinefu.com/commands/view/6334/use-tee-to-process-a-pipe-with-two-or-more-processes)
+  ```bash
+  $ echo "tee can split a pipe in two"|tee >(rev) >(tr ' ' '_')
+  ```
+
+### find the zombie process
+```bash
+$ ps aux | awk '{ print $8 " " $2 " " $11}' | grep -w Z
+```
 
 # set system info
 ## clear duplicated PATH
@@ -1201,23 +1256,7 @@ $ sudo bash -c "/usr/bin/sed 's/^SELINUX=enforcing$/SELINUX=permissive/' -i /etc
   $ semanage user -l
   ```
 
-# process
-
-## find the zombie process
-```bash
-$ ps aux | awk '{ print $8 " " $2 " " $11}' | grep -w Z
-```
-
-#### sort process by PID
-```bash
-$ ps -axww
-```
-
-#### check the group PID
-```bash
-$ ps -xj
-```
-
+# tips
 ## about `whatis`
 ```bash
 $ whatis whois
@@ -1226,6 +1265,16 @@ $ whatis which
 which (1)            - locate a command
 $ whatis whereis
 whereis (1)          - locate the binary, source, and manual page files for a command
+```
+
+## [Synchronous system and hardware clock](https://www.commandlinefu.com/commands/view/2358/synchronize-both-your-system-clock-and-hardware-clock-and-calculateadjust-time-drift)
+```bash
+$ ntpdate pool.ntp.org && hwclock --systohc && hwclock --adjust
+```
+
+## [backup hard disk timely](https://www.commandlinefu.com/commands/view/4741/how-to-backup-hard-disk-timely)
+```bash
+$ rsync -a --link-dest=/media/backup/$HOSTNAME/$PREVDATE '--exclude=/[ps][ry][os]' --exclude=/media/backup/$HOSTNAME / /media/backup/$HOSTNAME/$DATE/
 ```
 
 # service
