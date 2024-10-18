@@ -11,7 +11,12 @@
   - [show network information](#show-network-information)
   - [change order of networks](#change-order-of-networks)
   - [list hardware](#list-hardware)
-  - [wifi](#wifi)
+  - [list localtion](#list-localtion)
+- [wifi](#wifi)
+  - [scan available wifi network](#scan-available-wifi-network)
+  - [disable ipv6](#disable-ipv6)
+  - [show network connection history](#show-network-connection-history)
+  - [get wifi password](#get-wifi-password)
 - [DNS](#dns)
   - [firewall](#firewall)
 - [route](#route)
@@ -190,7 +195,27 @@ Wi-Fi:
       ...
 ```
 
-### wifi
+### list localtion
+```bash
+$ networksetup -listlocations
+work
+automatic
+home
+
+$ networksetup -getcurrentlocation
+automatic
+
+# create
+$ networksetup -createlocation <name>
+
+# delete
+$ networksetup -deletelocation <name>
+
+# switch localtion
+$ networksetup -switchtolocation <name>
+```
+
+## wifi
 
 > [!NOTE|label:references:]
 > - [Mac Terminal WIFI Commands](https://www.mattcrampton.com/blog/managing_wifi_connections_using_the_mac_osx_terminal_command_line/)
@@ -264,47 +289,51 @@ Wi-Fi:
   Wi-Fi Power (en0): Off
   ```
 
-- scan available wifi network
-  ```bash
-  $ networksetup -setairportpower en0 on
-  $ sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
-                              SSID BSSID             RSSI CHANNEL HT CC SECURITY (auth/unicast/group)
-                          Customer **:**:**:**:**:** -75  11      N  CN WEP
-                          CorpWLAN **:**:**:**:**:** -72  1       Y  CN WPA2(802.1x,Unrecognized(0)/AES/AES)
-                             Guest **:**:**:**:**:** -71  1       Y  CN NONE
-  ```
+### scan available wifi network
+```bash
+$ networksetup -setairportpower en0 on
 
-- disable ipv6
-  ```bash
-  $ networksetup -listallnetworkservices
-  An asterisk (*) denotes that a network service is disabled.
-  USB 10/100/1000 LAN
-  Wi-Fi
-  Bluetooth PAN
-  Thunderbolt Bridge
+# not available anymore
+$ sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+                            SSID BSSID             RSSI CHANNEL HT CC SECURITY (auth/unicast/group)
+                        Customer **:**:**:**:**:** -75  11      N  CN WEP
+                        CorpWLAN **:**:**:**:**:** -72  1       Y  CN WPA2(802.1x,Unrecognized(0)/AES/AES)
+                           Guest **:**:**:**:**:** -71  1       Y  CN NONE
+```
 
-  $ networksetup -setv6off 'USB 10/100/1000 LAN'
-  $ networksetup -setv6off Wi-fi
-  ```
-  - undo
-    ```bash
-    $ networksetup -setv6automatic 'USB 10/100/1000 LAN'
-    $ networksetup -setv6automatic Wi-Fi
-    ```
+### disable ipv6
+```bash
+$ networksetup -listallnetworkservices
+An asterisk (*) denotes that a network service is disabled.
+USB 10/100/1000 LAN
+Wi-Fi
+Bluetooth PAN
+Thunderbolt Bridge
 
-- [show network connection history](https://apple.stackexchange.com/a/469507/254265)
+# disable
+$ networksetup -setv6off 'USB 10/100/1000 LAN'
+$ networksetup -setv6off Wi-fi
+
+# undo
+$ networksetup -setv6automatic 'USB 10/100/1000 LAN'
+$ networksetup -setv6automatic Wi-Fi
+```
+
+### [show network connection history](https://apple.stackexchange.com/a/469507/254265)
+```bash
+$ networksetup -listpreferredwirelessnetworks en0
+
+# older version
+$ defaults read /Library/Preferences/SystemConfiguration/com.apple.airport.preferences \
+           | grep LastConnected -A 7
+```
+
+### get wifi password
+
+- list connected Wifi
   ```bash
   $ networksetup -listpreferredwirelessnetworks en0
 
-  # older version
-  $ defaults read /Library/Preferences/SystemConfiguration/com.apple.airport.preferences \
-             | grep LastConnected -A 7
-  ```
-
-#### get wifi password
-- list all Wifi
-  ```bash
-  $ networksetup -listpreferredwirelessnetworks en0
   # older version
   $ defaults read /Library/Preferences/SystemConfiguration/com.apple.airport.preferences | \grep SSIDString
   ...
@@ -320,6 +349,7 @@ Wi-Fi:
 
 
 ## DNS
+
 - get info
   ```bash
   $ scutil --dns
@@ -341,6 +371,7 @@ Wi-Fi:
 
 - setup DNS
 
+  > [!NOTE|label:references:]
   > ```bash
   > $ networksetup -getdnsservers Wi-Fi
   > There aren't any DNS Servers set on Wi-Fi.
@@ -385,19 +416,20 @@ Wi-Fi:
 >   - [Routing table flags](https://library.netapp.com/ecmdocs/ECMP1155586/html/GUID-07F1F043-7AB7-4749-8F8D-727929233E62.html)
 > - [* Chapter 4 Administering TCP/IP (Task)](https://docs.oracle.com/cd/E19683-01/806-4075/6jd69oa7h/index.html)
 
+
 - route flags
 
-  | FLAG | DESCRIPTION                                                               |
-  |:----:|---------------------------------------------------------------------------|
-  |   U  | Up—Route is valid                                                         |
-  |   G  | Gateway—Route is to a gateway router                                      |
-  |   H  | Host name—Route is to a host rather than to a network                     |
-  |   R  | Reject—Set by ARP when an entry expires                                   |
-  |   D  | Dynamic—Route added by a route redirect or RIP                            |
-  |   M  | Modified—Route modified by a route redirect                               |
-  |   C  | Cloning—A new route is cloned from this entry when it is used             |
-  |   L  | Link—Link-level information, such as the Ethernet MAC address, is present |
-  |   S  | Static—Route added with the route command                                 |
+| FLAG | DESCRIPTION                                                               |
+|:----:|---------------------------------------------------------------------------|
+|  `U` | Up—Route is valid                                                         |
+|  `G` | Gateway—Route is to a gateway router                                      |
+|  `H` | Host name—Route is to a host rather than to a network                     |
+|  `R` | Reject—Set by ARP when an entry expires                                   |
+|  `D` | Dynamic—Route added by a route redirect or RIP                            |
+|  `M` | Modified—Route modified by a route redirect                               |
+|  `C` | Cloning—A new route is cloned from this entry when it is used             |
+|  `L` | Link—Link-level information, such as the Ethernet MAC address, is present |
+|  `S` | Static—Route added with the route command                                 |
 
 
 ### check route
@@ -460,14 +492,42 @@ $ sudo route delete <ip.address> <gateway>
 > [!NOTE|label:references:]
 > - [* use networksetup or scutil](https://apple.stackexchange.com/a/419190/254265)
 > - [* determining if the system is connected to a vpn from the command line under os x](https://support.moonpoint.com/os/os-x/vpn_connected.php)
+> - `scutil`
+>    ```bash
+>    $ scutil --help
+>       or: scutil --nc
+>           show VPN network configuration information. Use --nc help for full command list
+>
+>    $ scutil --nc help
+>    ```
 
 ### proxy setup
+
+> [!NOTE|label:references:]
+> ```bash
+> $ networksetup -printcommands
+> networksetup -getwebproxy <networkservice>
+> networksetup -setwebproxy <networkservice> <domain> <port number> <authenticated> <username> <password>
+> networksetup -setwebproxystate <networkservice> <on off>
+> networksetup -getsecurewebproxy <networkservice>
+> networksetup -setsecurewebproxy <networkservice> <domain> <port number> <authenticated> <username> <password>
+> networksetup -setsecurewebproxystate <networkservice> <on off>
+> networksetup -getsocksfirewallproxy <networkservice>
+> networksetup -setsocksfirewallproxy <networkservice> <domain> <port number> <authenticated> <username> <password>
+> networksetup -setsocksfirewallproxystate <networkservice> <on off>
+> networksetup -getproxybypassdomains <networkservice>
+> networksetup -setproxybypassdomains <networkservice> <domain1> [domain2] [...]
+> networksetup -getproxyautodiscovery <networkservice>
+> networksetup -setproxyautodiscovery <networkservice> <on off>
+> ```
+
 ```bash
 $ networksetup -getwebproxy Wi-Fi
 Enabled: No
 Server:
 Port: 0
 Authenticated Proxy Enabled: 0
+
 $ networksetup -getwebproxy Ethernet
 Enabled: No
 Server:
@@ -487,4 +547,3 @@ $ scutil --proxy
   SOCKSEnable : 0
 }
 ```
-
