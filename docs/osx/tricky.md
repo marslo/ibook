@@ -1,35 +1,39 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [copy path](#copy-path)
-  - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
-  - [Copy path from finder](#copy-path-from-finder)
-- [create app](#create-app)
-  - [groovyConsole](#groovyconsole)
-  - [python IDLE](#python-idle)
-  - [create dmg](#create-dmg)
-- [add snippets for input](#add-snippets-for-input)
-  - [enable Technical Symbols](#enable-technical-symbols)
-  - [and snippets](#and-snippets)
-  - [finally](#finally)
-- [others](#others)
-  - [install font via command](#install-font-via-command)
-  - [shutdown mac via commands](#shutdown-mac-via-commands)
-  - [alert on mac when server is up](#alert-on-mac-when-server-is-up)
-  - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
-  - [launch apps](#launch-apps)
-  - [extra pkg](#extra-pkg)
-  - [create image](#create-image)
-  - [disk](#disk)
-  - [disable startup music](#disable-startup-music)
-  - [3D lock screen](#3d-lock-screen)
-  - [take screenshot after 3 sec](#take-screenshot-after-3-sec)
-  - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
-  - [show message on desktop](#show-message-on-desktop)
-  - [modify font in plist](#modify-font-in-plist)
-  - [show process details](#show-process-details)
-  - [launch iOS simulator](#launch-ios-simulator)
-  - [`/usr/bin/xattr`](#usrbinxattr)
+  - [copy path](#copy-path)
+    - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
+    - [Copy path from finder](#copy-path-from-finder)
+  - [create app](#create-app)
+    - [groovyConsole](#groovyconsole)
+    - [python3 IDLE](#python3-idle)
+    - [create dmg](#create-dmg)
+  - [add snippets for input](#add-snippets-for-input)
+    - [enable Technical Symbols](#enable-technical-symbols)
+    - [and snippets](#and-snippets)
+    - [finally](#finally)
+  - [others](#others)
+    - [install font](#install-font)
+    - [create image](#create-image)
+    - [extract](#extract)
+    - [disk](#disk)
+- [FAT sectors    : 8192](#fat-sectors-----8192)
+- [Clusters       : 962984](#clusters--------962984)
+    - [modify font in plist](#modify-font-in-plist)
+    - [show process details](#show-process-details)
+    - [`/usr/bin/xattr`](#usrbinxattr)
+  - [tips](#tips)
+    - [shutdown mac via commands](#shutdown-mac-via-commands)
+    - [alert on mac when server is up](#alert-on-mac-when-server-is-up)
+    - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
+    - [disable startup music](#disable-startup-music)
+    - [3D lock screen](#3d-lock-screen)
+    - [take screenshot after 3 sec](#take-screenshot-after-3-sec)
+    - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
+    - [show message on desktop](#show-message-on-desktop)
+    - [launch iOS simulator](#launch-ios-simulator)
+    - [show startup launch apps](#show-startup-launch-apps)
+    - [check detail diskage usage](#check-detail-diskage-usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -276,25 +280,49 @@ $ vim groovyConsole.app/Contents/Info.plist
 #### additional
 - set the icon for new app
 
-  > optional
+  > [!NOTE|label:optional]
 
   ```bash
   $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
-  ```
-  - or
-    ```bash
-    $ ln -sf /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources/groovy.icns
-    ```
 
-### python IDLE
+  # or
+  $ ln -sf /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources/groovy.icns
+  ```
+
+- create dmg
+  ```bash
+  $ hdiutil create -volname 'groovyConsole' \
+                   -srcfolder ~/Desktop/groovyConsole.app \
+                   -ov groovyConsole.dmg
+  .......................
+  created: /Users/marslo/Desktop/groovyConsole.dmg
+  ```
+
+### python3 IDLE
+
+> [!NOTE|label:references:]
+> - `python-tk@version` is necessary for `IDLE` to work
+>   ```bash
+>   $ brew install python-tk@3.11
+>   $ brew install python-tk@3.12
+>   $ brew install python-tk@3.13
+>   ```
 
 #### via automator.app
 - script
-  ```bash
-  #/usr/bin/env bash
 
-  PYTHON_SHORT_VERSION=$(/usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
-  /usr/bin/open "$(/usr/local/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app
+  > [!TIP|label:tips:]
+  > - the IDLE python version is based on which python is linked to `/usr/local/bin/python3`
+
+  ```bash
+  #!/usr/bin/env bash
+
+  set -euo pipefail
+
+  PYTHON_SHORT_VERSION=$(/usr/bin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
+  /usr/bin/open "$(/usr/local/bin/brew --prefix python@"${PYTHON_SHORT_VERSION}")"/IDLE\ 3.app
+
+  # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
   ```
 
   ![script in automator.app](../screenshot/osx/pythonIdle-automator.png)
@@ -306,7 +334,7 @@ $ vim groovyConsole.app/Contents/Info.plist
 
   # modify IDLE.app/Contents/Info.plist
   <key>CFBundleIconFile</key>
-  <string>IDLE.icns</string>
+  <string>IDLE</string>
 
   ## original
   <key>CFBundleIconFile</key>
@@ -351,6 +379,30 @@ $ vim groovyConsole.app/Contents/Info.plist
 
 - more:
   - Info.plist
+    <!--sec data-title="macOS 15.x" data-id="section2" data-show=true data-collapse=true ces-->
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>CFBundleDevelopmentRegion</key>
+      <string>English</string>
+      <key>CFBundleExecutable</key>
+      <string>IDLE</string>
+      <key>CFBundleIconFile</key>
+      <string>IDLE</string>
+      <key>CFBundleIdentifier</key>
+      <string>com.apple.automator.Python3-IDLE</string>
+      <key>CFBundleName</key>
+      <string>Python3 IDLE</string>
+      <key>CFBundlePackageType</key>
+      <string>APPL</string>
+    </dict>
+    </plist>
+    ```
+    <!--endsec-->
+
+    <!--sec data-title="macOS 14.x" data-id="section3" data-show=true data-collapse=true ces-->
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -371,6 +423,7 @@ $ vim groovyConsole.app/Contents/Info.plist
     </dict>
     </plist>
     ```
+    <!--endsec-->
 
   - [create dmg](#create-image)
     ```bash
@@ -411,12 +464,13 @@ $ vim groovyConsole.app/Contents/Info.plist
   ![snippets](../screenshot/osx/snippets-3.png)
 
 ### finally
+
 ![test-1](../screenshot/osx/snippets-4.png)
 
 ![test-2](../screenshot/osx/snippets-5.png)
 
 ## others
-### [install font via command](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)
+### [install font](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)
 ```bash
 $ curl --create-dirs \
        -O \
@@ -429,132 +483,133 @@ $ curl --create-dirs \
   fc-cache -f -v
 ```
 
-### shutdown mac via commands
-```bash
-$ osascript -e 'tell app 'loginwindow' to «event aevtrsdn»'
-```
-
-### [alert on mac when server is up](https://www.commandlinefu.com/commands/view/2853/alert-on-mac-when-server-is-up)
-```bash
-$ ping -o -i 30 HOSTNAME && osascript -e 'tell app "Terminal" to display dialog "Server is up" buttons "It?s about time" default button 1'
-```
-
-### [turn off the screen without sleeping](https://apple.stackexchange.com/a/266103/254265)
-```bash
-$ pmset displaysleepnow
-```
-
-- sleep
-  ```bash
-  $ pmset sleepnow
-  ```
-
-- lock
-  ```bash
-  $ pmset lock
-  ```
-
-### launch apps
-```bash
-$ launchctl list
-```
-
-### [extra pkg](https://apple.stackexchange.com/a/309591/254265)
-```bash
-$ xar -xvf foo.pkg
-```
-
 ### create image
-- create dmg image
+
+> [!NOTE|label:references:]
+> - [How do I create a nice-looking DMG for Mac OS X using command-line tools?](https://stackoverflow.com/a/1513578/2940319)
+> - [andreyvit/create-dmg](https://github.com/andreyvit/create-dmg)
+> - [LinusU/node-appdmg](https://github.com/LinusU/node-appdmg)
+
+#### create dmg from app
+
+
+- via `hdiutil`
+
+  > [!NOTE|label:references:]
+  > - `-format`:
+  >   - `UDRW`: read/write image
+  >   - `UDRO`: read-only image
+  >   - `UDCO`: ADC-compressed image
+  >   - `UDZO`: zlib-compressed image
+  >   - `UDBZ`: bzip2-compressed image
+  >   - `ULFO`: lzfse-compressed image, introduced in macOS 10.11
+  >   - `ULMO`: lzma-compressed image, introduced in macOS 10.15
+  >   - `UDTO`: DVD/CD-R master for export
+  >   - `UDSP`: SPARSE (grows with content)
+  >   - `UDSB`: SPARSEBUNDLE (grows with content; bundle-backed)
+  >   - `UFBI`: UDIF entire image with MD5 checksum
+
   ```bash
+  $ hdiutil create -srcfolder "/Applications/Python3 IDLE.app" \
+                   -volname 'Python3 IDLE' \
+                   -fs HFS+ \
+                   -fsargs "-c c=64,a=16,e=16" \
+                   -format UDRW \
+                   "Python3 IDLE.dmg" [ --debug ] [ --verbose ]
+
+  # or
   $ hdiutil create -volname "Volume Name" \
                    -srcfolder /path/to/folder \
                    -ov diskimage.dmg
-  ```
-  - i.e.:
-    ```bash
-    $ hdiutil create -volname 'groovyConsole' \
-                     -srcfolder ~/Desktop/groovyConsole.app \
-                     -ov groovyConsole.dmg
-    .......................
-    created: /Users/marslo/Desktop/groovyConsole.dmg
-    ```
 
-- create encrypted image
-  ```bash
-  $ hdiutil create -encryption \
+  # create encrypted image
+  $ hdiutil create encrypted.dmg
+                   -encryption AES-128 \
                    -stdinpass \
                    -volname "Volume Name" \
                    -srcfolder /path/to/folder \
-                   -ov encrypted.dmg
-  ```
+                   -ov                       # overwrite any existing files
+  # i.e.:
+  $ hdiutil create mEncrypted.dmg \
+                   -encryption \
+                   -size 1g \
+                   -volname "mEncrypted Disk Image" \
+                   -fs JHFS+ \
+                   -srcfolder /path/to/folder \
+  Enter a new password to secure "mEncrypted.dmg":
+  Re-enter new password:
+  ....
+  created: /Users/marslo/Desktop/mEncrypted.dmg
 
-- create dvd (for .iso, .img, .dmg)
-  ```bash
-  $ hdiutil burn /path/to/image_file
-  ```
-
-#### create disk image from volume
-```bash
-$ sudo hdiutil create ~/Desktop/<name>.dmg -srcdevice /dev/<disk-identifier>
-```
-
-- i.e.:
-  ```bash
-  $ sudo hdiutil create ~/Desktop/Lion.dmg -srcdevice /dev/disk2s4
-  ```
-
-#### create disk image from a folder
-```bash
-$ hdiutil create <imagename>.dmg -volname "<name of volume>" -srcfolder /path/to/folder'
-```
-
-- i.e.:
-  ```bash
-  $ hdiutil create ~/Desktop/marsloTest.dmg -volname 'marslo test' -srcfolder ~/Desktop/marsloTest/
-  created: /Users/marslo/Desktop/marsloTest.dmg
-  ```
-  ![hdiutil create image](../screenshot/osx/hdiutil-create-image.png)
-
-- setup read & write dmg
-  ```bash
+  # create read/write image with specific size
   $ hdiutil create ~/Desktop/mTest.dmg \
             -volname "Marslo Test" \
             -srcfolder ~/Desktop/mTest \
             -size 1g \
-            -format UDRW
+            -format UDRW                     # UDRW: read/write image
   ```
 
-#### create encrypted disk image
-```bash
-$ hdiutil create mEncrypted.dmg \
-                 -encryption \
-                 -size 1g \
-                 -volname "mEncrypted Disk Image" \
-                 -fs JHFS+ \
-                 -srcfolder /path/to/folder \
+  ![hdiutil create image](../screenshot/osx/hdiutil-create-image.png)
 
-Enter a new password to secure "mEncrypted.dmg":
-Re-enter new password:
-....
-created: /Users/marslo/Desktop/mEncrypted.dmg
+  ![hdiutil create encrypted image](../screenshot/osx/hdiutil-create-encrypted.png)
+
+- via `create-dmg`
+  ```bash
+  $ brew install create-dmg
+  $ create-dmg --volname 'Python3 IDLE' \
+               --volicon /opt/dmg-backgound/.idle.icns \
+               --background /opt/dmg-backgound/.background.2.png \
+               --icon 'Python3 IDLE.app' 225 275 \
+               --app-drop-link 525 270 \
+               --window-size 750 500 \
+               --hide-extension 'Python3 IDLE.app' \
+               'Python3 IDLE.dmg' '/Applications/Python3 IDLE.app'
+  ```
+
+  ![create-dmg](../screenshot/osx/create-dmg.png)
+
+#### create dvd (for .iso, .img, .dmg)
+```bash
+$ hdiutil burn /path/to/image_file
 ```
 
-![hdiutil create encrypted image](../screenshot/osx/hdiutil-create-encrypted.png)
+#### create dmg for OS installer
+```bash
+$ sudo hdiutil create ~/Desktop/Lion.dmg -srcdevice /dev/disk2s4
+```
 
 #### resize the disk image
 ```bash
 $ hdiutil resize -size <new size> <imagename>.dmg
+
+# or
+$ hdiutil resize -size 2g mEncrypted.dmg
 ```
-- i.e.:
-  ```bash
-  $ hdiutil resize -size 2g mEncrypted.dmg
-  ```
 
 #### restore disk images
 ```bash
 $ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
 ```
+
+### extract
+
+- `.pkg`
+
+  > [!NOTE|label:references:]
+  > - [How can I open a .pkg file manually?](https://apple.stackexchange.com/a/309591/254265)
+
+  ```bash
+  $ xar -xvf foo.pkg
+  ```
+
+- `.dmg`
+
+  ```bash
+  $ 7z x foo.dmg
+
+  # or
+  $ hdiutil attach foo.dmg
+  ```
 
 ### disk
 
@@ -568,46 +623,40 @@ $ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
 #### check volumn info
 ```bash
 $ diskutil info <path/to/volumn>
-```
-- i.e.:
-  ```bash
-  $ diskutil info /Volumes/iMarsloOSX/
-     Device Identifier:         disk1s5
-     Device Node:               /dev/disk1s5
-     Whole:                     No
-     Part of Whole:             disk1
 
-     Volume Name:               iMarsloOSX
-     Mounted:                   Yes
-     Mount Point:               /
-  ```
+# i.e.:
+$ diskutil info /Volumes/iMarsloOSX/
+   Device Identifier:         disk1s5
+   Device Node:               /dev/disk1s5
+   Whole:                     No
+   Part of Whole:             disk1
+
+   Volume Name:               iMarsloOSX
+   Mounted:                   Yes
+   Mount Point:               /
+```
 
 - list disks and volumns
   ```bash
   $ diskutil list
-  ```
-  or
-  ```bash
+
+  # or
   $ diskutil list disk1
-  ```
 
-  - or [lsblk](https://command-not-found.com/lsblk)
-    ```bash
-    $ docker run cmd.cat/lsblk lsblk
-    NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-    vda    254:0    0  16G  0 disk
-    └─vda1 254:1    0  16G  0 part /etc/hosts
-    ```
+  # or via `lsblk`: https://command-not-found.com/lsblk
+  $ docker run cmd.cat/lsblk lsblk
+  NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+  vda    254:0    0  16G  0 disk
+  └─vda1 254:1    0  16G  0 part /etc/hosts
 
-  - or [lshw](https://command-not-found.com/lshw)
-    ```bash
-    $ docker run cmd.cat/lshw lshw -class disk
-      *-virtio1
-           description: Virtual I/O device
-           physical id: 0
-           bus info: virtio@1
-           logical name: vda
-           configuration: driver=virtio_blk
+  # or via `lshw`: https://command-not-found.com/lshw
+  $ docker run cmd.cat/lshw lshw -class disk
+    *-virtio1
+         description: Virtual I/O device
+         physical id: 0
+         bus info: virtio@1
+         logical name: vda
+         configuration: driver=virtio_blk
     ```
 
 #### list the apfs info
@@ -627,16 +676,6 @@ APFS Container (1 found)
     +-> ...
 ```
 
-#### check detail diskage usage
-```bash
-$ sudo fs_usage
-21:03:47  ioctl        0.000003   iTerm2
-21:03:47  ioctl        0.000003   iTerm2
-21:03:47  close        0.000031   privoxy
-21:03:47  select       0.000004   privoxy
-...
-```
-
 #### erase disk
 
 {% hint style='tip' %}
@@ -648,37 +687,37 @@ $ sudo fs_usage
 | MS-DOS fat32                |    `FAT32`   |
 | ExFAT                       |    `ExFAT`   |
 
-```bash
-$ diskutil listFilesystems
-...
--------------------------------------------------------------------------------
-PERSONALITY                     USER VISIBLE NAME
--------------------------------------------------------------------------------
-Case-sensitive APFS             APFS (Case-sensitive)
-  (or) APFSX
-APFS                            APFS
-  (or) APFSI
-ExFAT                           ExFAT
-Free Space                      Free Space
-  (or) FREE
-MS-DOS                          MS-DOS (FAT)
-MS-DOS FAT12                    MS-DOS (FAT12)
-MS-DOS FAT16                    MS-DOS (FAT16)
-MS-DOS FAT32                    MS-DOS (FAT32)
-  (or) FAT32
-HFS+                            Mac OS Extended
-Case-sensitive HFS+             Mac OS Extended (Case-sensitive)
-  (or) HFSX
-Case-sensitive Journaled HFS+   Mac OS Extended (Case-sensitive, Journaled)
-  (or) JHFSX
-Journaled HFS+                  Mac OS Extended (Journaled)
-  (or) JHFS+
-UFSD_NTFS                       Microsoft NTFS
-```
-
 {% endhint %}
+- to list file systems
+  ```bash
+  $ diskutil listFilesystems
+  ...
+  -------------------------------------------------------------------------------
+  PERSONALITY                     USER VISIBLE NAME
+  -------------------------------------------------------------------------------
+  Case-sensitive APFS             APFS (Case-sensitive)
+    (or) APFSX
+  APFS                            APFS
+    (or) APFSI
+  ExFAT                           ExFAT
+  Free Space                      Free Space
+    (or) FREE
+  MS-DOS                          MS-DOS (FAT)
+  MS-DOS FAT12                    MS-DOS (FAT12)
+  MS-DOS FAT16                    MS-DOS (FAT16)
+  MS-DOS FAT32                    MS-DOS (FAT32)
+    (or) FAT32
+  HFS+                            Mac OS Extended
+  Case-sensitive HFS+             Mac OS Extended (Case-sensitive)
+    (or) HFSX
+  Case-sensitive Journaled HFS+   Mac OS Extended (Case-sensitive, Journaled)
+    (or) JHFSX
+  Journaled HFS+                  Mac OS Extended (Journaled)
+    (or) JHFS+
+  UFSD_NTFS                       Microsoft NTFS
+  ```
 
-- ExFAT
+  <!--sec data-title="ExFAT" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
   $ diskutil eraseDisk ExFAT iMarsloUSB /dev/disk2
   Started erase on disk2
@@ -692,10 +731,10 @@ UFSD_NTFS                       Microsoft NTFS
   Bytes per sector : 512
   Bytes per cluster: 131072
   FAT offset       : 2048 sectors (1048576 bytes)
-  # FAT sectors    : 8192
+# FAT sectors    : 8192
   Number of FATs   : 1
   Cluster offset   : 10240 sectors (5242880 bytes)
-  # Clusters       : 962984
+# Clusters       : 962984
   Volume Serial #  : 5ff81490
   Bitmap start     : 2
   Bitmap file size : 120373
@@ -705,43 +744,46 @@ UFSD_NTFS                       Microsoft NTFS
   Mounting disk
   Finished erase on disk2
   ```
-  - check
-    ```bash
-    $ diskutil info disk2s1
-       Device Identifier:         disk2s1
-       Device Node:               /dev/disk2s1
-       Whole:                     No
-       Part of Whole:             disk2
+  <!--endsec-->
 
-       Volume Name:               EFI
-       Mounted:                   No
+  <!--sec data-title="check" data-id="section5" data-show=true data-collapse=true ces-->
+  ```bash
+  $ diskutil info disk2s1
+     Device Identifier:         disk2s1
+     Device Node:               /dev/disk2s1
+     Whole:                     No
+     Part of Whole:             disk2
 
-       Partition Type:            EFI
-       File System Personality:   MS-DOS FAT32
-       Type (Bundle):             msdos
-       Name (User Visible):       MS-DOS (FAT32)
-       ...
-       ...
+     Volume Name:               EFI
+     Mounted:                   No
 
-    $ diskutil info disk2s2
-       Device Identifier:         disk2s2
-       Device Node:               /dev/disk2s2
-       Whole:                     No
-       Part of Whole:             disk2
+     Partition Type:            EFI
+     File System Personality:   MS-DOS FAT32
+     Type (Bundle):             msdos
+     Name (User Visible):       MS-DOS (FAT32)
+     ...
+     ...
 
-       Volume Name:               iMarsloUSB
-       Mounted:                   Yes
-       Mount Point:               /Volumes/iMarsloUSB
+  $ diskutil info disk2s2
+     Device Identifier:         disk2s2
+     Device Node:               /dev/disk2s2
+     Whole:                     No
+     Part of Whole:             disk2
 
-       Partition Type:            Microsoft Basic Data
-       File System Personality:   ExFAT
-       Type (Bundle):             exfat
-       Name (User Visible):       ExFAT
-       ...
-       ...
-    ```
+     Volume Name:               iMarsloUSB
+     Mounted:                   Yes
+     Mount Point:               /Volumes/iMarsloUSB
 
-##### Verifying and Repairing Volumes
+     Partition Type:            Microsoft Basic Data
+     File System Personality:   ExFAT
+     Type (Bundle):             exfat
+     Name (User Visible):       ExFAT
+     ...
+     ...
+  ```
+  <!--endsec-->
+
+##### verifying and repairing volumes
 ```bash
 $ diskutil verifyVolume /Volumes/<volume name>
 $ diskutil repairVolume /Volumes/<volume name>
@@ -752,7 +794,7 @@ $ diskutil repairVolume /Volumes/<volume name>
 $ diskutil rename "<current name of volume>" "<new name>"
 ```
 
-#### Partitioning a Disk
+#### partitioning a disk
 
 {% hint style='tip' %}
 > reference:
@@ -774,138 +816,93 @@ $ diskutil partitionDisk /dev/disk2 GPT JHFS+ New 0b
              JHFS+ Fourth 10g \
              JHFS+ Fifth 0b
   ```
-- Splitting Partitions
+
+- splitting partitions
   ```bash
   $ diskutil splitPartition /dev/disk2s6 \
              JHFS+ Test 10GB \
              JHFS+ Test2 0b
   ```
 
-- Merging Partitions
+- merging partitions
   ```bash
   $ diskutil mergePartitions \
              JHFS+ \
              NewName \
              <first disk identifier in range> \
              <last disk identifier in range>
-  ```
-
-  i.e.:
-  ```bash
+  # i.e.:
   $ diskutil mergePartitions JHFS+ NewName disk2s4 disk2s6
   ```
 
 #### [check usb](https://apple.stackexchange.com/a/170118/254265)
 ```bash
 $ system_profiler SPUSBDataType
-```
-- or get xml format
-  ```bash
-  $ system_profiler -xml SPUSBDataType
-  ```
-- or
-  ```bash
-  $ ioreg -p IOUSB
-  ```
-- or
-  ```bash
-  $ ioreg -p IOUSB -w0 -l
-  ```
-  - or get device name
-    ```bash
-     $ ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*'
-    ```
 
-### disable startup music
-```bash
-$ sudo nvram SystemAudioVolume=" "
-```
+# get xml format
+$ system_profiler -xml SPUSBDataType
 
-### 3D lock screen
-```bash
-$ /System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
-```
+# or
+$ ioreg -p IOUSB
 
-### take screenshot after 3 sec
-```bash
-$ screencapture -T 3 -t jpg -P delayedpic.jpg
-```
+# or
+$ ioreg -p IOUSB -w0 -l
 
-### setup welcome text in login screen
-```bash
-$ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText 'Awesome Marslo!!'
-```
-
-### show message on desktop
-```bash
-$ sudo jamf displayMessage -message "Hello World!"
+# or get device name
+$ ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*'
 ```
 
 ### modify font in plist
-- original
-  ```bash
-  $ defaults read ~/Library/Preferences/groovy.console.ui.plist
-  {
-      "/groovy/console/ui/" =     {
-          autoClearOutput = true;
-          compilerPhase = 4;
-          currentFileChooserDir = "/Users/marslo/Desktop";
-          decompiledFontSize = 12;
-          fontSize = 18;
-          frameHeight = 600;
-          frameWidth = 800;
-          frameX = 198;
-          frameY = 201;
-          horizontalSplitterLocation = 100;
-          inputAreaHeight = 576;
-          inputAreaWidth = 1622;
-          outputAreaHeight = 354;
-          outputAreaWidth = 1676;
-          showClosureClasses = false;
-          showIndyBytecode = false;
-          showScriptClass = true;
-          showScriptFreeForm = false;
-          showScriptInOutput = false;
-          showTreeView = true;
-          threadInterrupt = true;
-          verticalSplitterLocation = 100;
-      };
-  }
-  ```
 
-  - [or](https://stackoverflow.com/a/56238780/2940319)
-    ```bash
-    $ /usr/libexec/PlistBuddy -c 'print ":/groovy/console/ui/:fontSize"' ~/Library/Preferences/groovy.console.ui.plist
-    18
-    ```
-- change
-  ```bash
-  $ /usr/libexec/PlistBuddy -c 'Set ":/groovy/console/ui/:fontSize" 24' ~/Library/Preferences/groovy.console.ui.plist
-  $ /usr/libexec/PlistBuddy -c 'Print ":/groovy/console/ui/:fontSize"' ~/Library/Preferences/groovy.console.ui.plist
-  24
-  ```
+> [!NOTE|label:references:]
+> - [How to read plist information (bundle id) from a shell script](https://stackoverflow.com/a/56238780/2940319)
+
+```bash
+# check
+$ /usr/libexec/PlistBuddy -c 'print ":/groovy/console/ui/:fontSize"' ~/Library/Preferences/groovy.console.ui.plist
+18
+
+# change
+$ /usr/libexec/PlistBuddy -c 'Set ":/groovy/console/ui/:fontSize" 24' ~/Library/Preferences/groovy.console.ui.plist
+$ /usr/libexec/PlistBuddy -c 'Print ":/groovy/console/ui/:fontSize"'  ~/Library/Preferences/groovy.console.ui.plist
+24
+```
+
+<!--sec data-title="original" data-id="section6" data-show=true data-collapse=true ces-->
+```bash
+$ defaults read ~/Library/Preferences/groovy.console.ui.plist
+{
+    "/groovy/console/ui/" =     {
+        autoClearOutput = true;
+        compilerPhase = 4;
+        currentFileChooserDir = "/Users/marslo/Desktop";
+        decompiledFontSize = 12;
+        fontSize = 18;
+        frameHeight = 600;
+        frameWidth = 800;
+        frameX = 198;
+        frameY = 201;
+        horizontalSplitterLocation = 100;
+        inputAreaHeight = 576;
+        inputAreaWidth = 1622;
+        outputAreaHeight = 354;
+        outputAreaWidth = 1676;
+        showClosureClasses = false;
+        showIndyBytecode = false;
+        showScriptClass = true;
+        showScriptFreeForm = false;
+        showScriptInOutput = false;
+        showTreeView = true;
+        threadInterrupt = true;
+        verticalSplitterLocation = 100;
+    };
+}
+```
+<!--endsec-->
 
 ### show process details
-![activity monitor](../screenshot/osx/activity-monitor.png)
 
-### [launch iOS simulator](https://medium.com/@abrisad_it/how-to-launch-ios-simulator-and-android-emulator-on-mac-cd198295532e)
-```bash
-$ xcrun simctl list
-$ open -a Simulator --args -CurrentDeviceUDID <your device UDID>
-```
-- install the application on the device
-  ```bash
-  $ xcrun simctl install <your device UDID> <path to application bundle>
-  $ xcrun simctl launch <your device UDID> <app bundle identifier>
-  ```
-  - or
-    ```bash
-    $ open -a Simulator.app
-    ```
-  - or
-    ```bash
-    $ open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
-    ```
+![activity monitor](../screenshot/osx/activity-monitor.png)
 
 ### `/usr/bin/xattr`
 
@@ -939,3 +936,90 @@ $ open -a Simulator --args -CurrentDeviceUDID <your device UDID>
   # or
   $ /usr/bin/xattr -c test.txt
   ```
+
+## tips
+### shutdown mac via commands
+```bash
+$ osascript -e 'tell app 'loginwindow' to «event aevtrsdn»'
+```
+
+### [alert on mac when server is up](https://www.commandlinefu.com/commands/view/2853/alert-on-mac-when-server-is-up)
+```bash
+$ ping -o -i 30 HOSTNAME && osascript -e 'tell app "Terminal" to display dialog "Server is up" buttons "It?s about time" default button 1'
+```
+
+### [turn off the screen without sleeping](https://apple.stackexchange.com/a/266103/254265)
+```bash
+$ pmset displaysleepnow
+```
+
+- sleep
+  ```bash
+  $ pmset sleepnow
+  ```
+
+- lock
+  ```bash
+  $ pmset lock
+  ```
+
+### disable startup music
+```bash
+$ sudo nvram SystemAudioVolume=" "
+```
+
+### 3D lock screen
+```bash
+$ /System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend
+```
+
+### take screenshot after 3 sec
+```bash
+$ screencapture -T 3 -t jpg -P delayedpic.jpg
+```
+
+### setup welcome text in login screen
+```bash
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText 'Awesome Marslo!!'
+```
+
+### show message on desktop
+```bash
+$ sudo jamf displayMessage -message "Hello World!"
+```
+
+### [launch iOS simulator](https://medium.com/@abrisad_it/how-to-launch-ios-simulator-and-android-emulator-on-mac-cd198295532e)
+```bash
+$ xcrun simctl list
+$ open -a Simulator --args -CurrentDeviceUDID <your device UDID>
+```
+
+- install the application on the device
+  ```bash
+  $ xcrun simctl install <your device UDID> <path to application bundle>
+  $ xcrun simctl launch <your device UDID> <app bundle identifier>
+  ```
+  - or
+    ```bash
+    $ open -a Simulator.app
+    ```
+  - or
+    ```bash
+    $ open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
+    ```
+
+### show startup launch apps
+```bash
+$ launchctl list
+```
+
+### check detail diskage usage
+```bash
+$ sudo fs_usage
+21:03:47  ioctl        0.000003   iTerm2
+21:03:47  ioctl        0.000003   iTerm2
+21:03:47  close        0.000031   privoxy
+21:03:47  select       0.000004   privoxy
+...
+```
+
