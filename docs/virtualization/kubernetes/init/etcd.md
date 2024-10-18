@@ -18,21 +18,21 @@
 
 {% hint style='tip' %}
 > references:
-> - [clustering guide](https://etcd.io/docs/v2.3/clustering/)
-> - [clustering.md](https://github.com/etcd-io/etcd/blob/release-3.4/Documentation/op-guide/clustering.md)
+> - [* etcd tutorials](https://etcd.io/docs/v3.6/tutorials/)
+>   - [* How to Add and Remove Members](https://etcd.io/docs/v3.6/tutorials/how-to-deal-with-membership/)
+>   - [clustering guide](https://etcd.io/docs/v2.3/clustering/) | [clustering.md](https://github.com/etcd-io/etcd/blob/release-3.4/Documentation/op-guide/clustering.md)
+>   - [runtime reconfiguration](https://etcd.io/docs/v3.3/op-guide/runtime-configuration/)
+> - [* configuration flags](https://etcd.io/docs/v3.3/op-guide/configuration/)
+>   - [etcd.conf.yml.sample](https://github.com/etcd-io/etcd/blob/release-3.4/etcd.conf.yml.sample)
 > - [setting up etcd cluster with tls authentication enabled](https://medium.com/nirman-tech-blog/setting-up-etcd-cluster-with-tls-authentication-enabled-49c44e4151bb)
 > - [configuring etcd rbac](https://docs.projectcalico.org/reference/etcd-rbac/)
 > - [deploy a secure etcd cluster](https://pcocc.readthedocs.io/en/latest/deps/etcd-production.html)
 > - [set up a high availability etcd cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/)
 > - [creating highly available clusters with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)
 > - [etcd backup and restore in kubernetes: step by step](https://k21academy.com/docker-kubernetes/etcd-backup-restore-in-k8s-step-by-step/)
-> - [operating etcd clusters for kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd)
-> - [operating etcd clusters for kubernetes](https://pwittrock.github.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
+> - [operating etcd clusters for kubernetes](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd) | [operating etcd clusters for kubernetes](https://pwittrock.github.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 > - [understand how the etcd cluster is configured](https://docs.bitnami.com/kubernetes/infrastructure/etcd/get-started/understand-default-configuration/)
 > - [tutorial: set up a secure and highly available etcd cluster](https://thenewstack.io/tutorial-set-up-a-secure-and-highly-available-etcd-cluster/)
-> - [runtime reconfiguration](https://etcd.io/docs/v3.3/op-guide/runtime-configuration/)
-> - [* configuration flags](https://etcd.io/docs/v3.3/op-guide/configuration/)
->   - [etcd.conf.yml.sample](https://github.com/etcd-io/etcd/blob/release-3.4/etcd.conf.yml.sample)
 {% endhint %}
 
 - [extenal etcd topology](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/ha-topology/#external-etcd-topology) certificates located in : `/etc/etcd/ssl`

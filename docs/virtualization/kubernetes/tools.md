@@ -9,6 +9,7 @@
 - [jobs](#jobs)
 - [valut](#valut)
 - [eks](#eks)
+- [prometheus](#prometheus)
 - [others](#others)
   - [How To Create Kubernetes YAML Manifests Quickly](#how-to-create-kubernetes-yaml-manifests-quickly)
 
@@ -95,6 +96,14 @@ $ etcdctl --ca-file /etc/kubernetes/pki/etcd/ca.crt \
 > [!NOTE|label:references:]
 > - [How to Create AWS EKS Cluster Using eksctl](https://devopscube.com/create-aws-eks-cluster-eksctl/)
 
+## prometheus
+
+{% hint style='tip' %}
+> references:
+> - [Grafana Cloud documentation](https://grafana.com/docs/grafana-cloud/)
+> - [New in Kubernetes Monitoring: cost management, resource usage monitoring, and more](https://grafana.com/blog/2023/11/02/new-in-kubernetes-monitoring-cost-management-resource-usage-monitoring-and-more/)
+> - [Explore your infrastructure with Kubernetes Monitoring](https://grafana.com/docs/grafana-cloud/monitor-infrastructure/kubernetes-monitoring/navigate-k8s-monitoring/)
+{% endhint %}
 
 ## others
 ### [How To Create Kubernetes YAML Manifests Quickly](https://devopscube.com/create-kubernetes-yaml/)
