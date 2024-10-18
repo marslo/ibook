@@ -115,6 +115,15 @@ $ brew install file-formula
 >   $ chrome-cli list links | awk '{ print $2}' | grep viewkey | youtube-dl --external-downloader=aria2c --batch-file - # may cause wtf-mode on networking
 >   $ chrome-cli list links | awk '{ print $2}' | grep viewkey | youtube-dl --batch-file -
 >   ```
+> - [mas-cli/mas](https://github.com/mas-cli/mas)
+>   ```bash
+>   # signin not support macOS 10.13+
+>   $ mas signin user@sample.com
+>   # or
+>   $ mas signin --dialog user@sample.com
+>   # or
+>   $ mas signin user@sample.com samplepassword
+>   ```
 
 ```bash
 $ brew tap homebrew/dupes           # optional
@@ -122,7 +131,7 @@ $ brew tap macvim-dev/macvim
 
 $ brew install vim --override-system-vi
 $ brew install macvim --with-override-system-vim --HEAD
-# OR
+# or
 $ brew install --HEAD macvim-dev/macvim/macvim
 
 $ brew install jfrog-cli-go         # JFrog CLI OR $ CURL -FL HTTPS://XRAY.JFROG.IO | SH
@@ -148,6 +157,27 @@ $ mas install 944848654             # NeteaseMusic
 $ mas install 419330170             # Moom
 
 $ mas list
+1081413713  GIF Brewery 3        (3.9.5)
+523620159   CleanMyDrive 2       (2.2.3)
+944848654   NetEaseMusic         (2.3.22)
+978980906   Visualize            (1.1)
+836500024   WeChat               (3.8.8)
+1630034110  Bob                  (1.12.0)
+1516950324  Overlap              (2.1.3)
+1295203466  Windows App          (11.0.3)
+803453959   Slack                (4.40.133)
+419330170   Moom Classic         (3.2.28)
+491854842   网易有道翻译               (11.0.2)
+1545870783  Color Picker         (2.0.3)
+1551531632  AutoSwitchInput Pro  (2.2.2)
+956377119   World Clock          (1.21.2)
+498370702   RegExRX              (1.9.2)
+520993579   pwSafe               (10.4.0)
+```
+
+<!--sec data-title="legacy version" data-id="section5" data-show=true data-collapse=true ces-->
+```bash
+$ mas list
 1256503523 System Indicators (1.0.6)
 836500024 WeChat (2.3.5)
 1233593954 MailMaster (2.2.2)
@@ -158,8 +188,50 @@ $ mas list
 944848654 NeteaseMusic (1.5.7)
 419330170 Moom (3.2.10)
 ```
+<!--endsec-->
+
+<!--sec data-title="brew tap" data-id="section6" data-show=true data-collapse=true ces-->
+```bash
+$ brew tap
+beeftornado/rmtree
+benjiwolff/neovim-nightly
+buo/cask-upgrade
+carlocab/personal
+derailed/k9s
+harelba/q
+homebrew/bundle
+homebrew/cask
+homebrew/cask-versions
+homebrew/command-not-found
+homebrew/core
+jenkins-zh/jcli
+macvim-dev/macvim
+mkdryden/misc
+vitorgalvao/tiny-scripts
+```
+<!--endsec-->
 
 #### alternative list
+```bash
+$ find /Applications/*.app/Contents/_MASReceipt/receipt -maxdepth 4 -print | sed 's#.app/Contents/_MASReceipt/receipt#.app#g; s#/Applications/##'
+AutoSwitchInput Pro.app
+Bob.app
+CleanMyDrive 2.app
+Color Picker.app
+GIF Brewery 3.app
+Moom Classic.app
+NeteaseMusic.app
+Overlap.app
+RegExRX.app
+Slack.app
+Visualize.app
+WeChat.app
+Windows App.app
+World Clock.app
+pwSafe.app
+网易有道翻译.app```
+
+<!--sec data-title="legacy version" data-id="section7" data-show=true data-collapse=true ces-->
 ```bash
 $ find /Applications/*.app/Contents/_MASReceipt/receipt -maxdepth 4 -print | sed 's#.app/Contents/_MASReceipt/receipt#.app#g; s#/Applications/##'
 Alfred.app
@@ -173,7 +245,7 @@ WeChat.app
 Xcode.app
 pwSafe.app
 ```
-
+<!--endsec-->
 
 ## list formula
 
@@ -620,7 +692,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 
   - `xcodebuild -showsdks`
 
-    <!--sec data-title="xcodebuild -showsdks" data-id="section3" data-show=true data-collapse=true ces-->
+    <!--sec data-title="xcodebuild -showsdks" data-id="section0" data-show=true data-collapse=true ces-->
     ```bash
     $ xcodebuild -showsdks
     DriverKit SDKs:
@@ -659,7 +731,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 
   - `xcodebuild -sdk -version`
 
-    <!--sec data-title="xcodebuild -sdk -version" data-id="section4" data-show=true data-collapse=true ces-->
+    <!--sec data-title="xcodebuild -sdk -version" data-id="section1" data-show=true data-collapse=true ces-->
     ```bash
     $ xcodebuild -sdk -version
     DriverKit23.2.sdk - DriverKit 23.2 (driverkit23.2)
@@ -791,7 +863,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 
   - [`system_profiler SPDeveloperToolsDataType`](https://stackoverflow.com/a/33732043/2940319)
 
-    <!--sec data-title="system_profile SPDeveloperToolsDataType" data-id="section5" data-show=true data-collapse=true ces-->
+    <!--sec data-title="system_profile SPDeveloperToolsDataType" data-id="section2" data-show=true data-collapse=true ces-->
     ```bash
     $ system_profiler SPDeveloperToolsDataType
     Developer:
@@ -1280,7 +1352,7 @@ EOF
   Abort trap: 6
   ```
 
-  <!--sec data-title="details" data-id="section6" data-show=true data-collapse=true ces-->
+  <!--sec data-title="details" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   # A fatal error has been detected by the Java Runtime Environment:
   #
@@ -2512,7 +2584,7 @@ EOF
         /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
         ```
 
-      <!--sec data-title="details" data-id="section7" data-show=true data-collapse=true ces-->
+      <!--sec data-title="details" data-id="section4" data-show=true data-collapse=true ces-->
       ```bash
       $ hdiutil attach jdk-21_macos-x64_bin.dmg
       Checksumming Protective Master Boot Record (MBR : 0)…
