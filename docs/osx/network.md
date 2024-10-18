@@ -6,11 +6,20 @@
   - [get ip address](#get-ip-address)
   - [get mac address](#get-mac-address)
   - [get interface information](#get-interface-information)
+  - [find local device ip address](#find-local-device-ip-address)
+- [networksetup](#networksetup)
+  - [show network information](#show-network-information)
+  - [change order of networks](#change-order-of-networks)
+  - [list hardware](#list-hardware)
+  - [wifi](#wifi)
+- [DNS](#dns)
+  - [firewall](#firewall)
 - [route](#route)
   - [check route](#check-route)
   - [add a static route item](#add-a-static-route-item)
   - [delete a static route](#delete-a-static-route)
 - [vpn](#vpn)
+  - [proxy setup](#proxy-setup)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -125,6 +134,245 @@ while read -r line; do
 done <<< "$(networksetup -listnetworkserviceorder | grep --color=none 'Hardware Port')"
 ```
 
+### find local device ip address
+```bash
+$ arp -a
+```
+
+## networksetup
+### show network information
+```bash
+$ networksetup -listnetworkserviceorder
+An asterisk (*) denotes that a network service is disabled.
+(1) USB 10/100/1000 LAN
+(Hardware Port: USB 10/100/1000 LAN, Device: en7)
+
+(2) Wi-Fi
+(Hardware Port: Wi-Fi, Device: en0)
+
+...
+
+# or
+$ networksetup -listallnetworkservices
+An asterisk (*) denotes that a network service is disabled.
+USB 10/100/1000 LAN
+Wi-Fi
+Bluetooth PAN
+Thunderbolt Bridge
+```
+
+### change order of networks
+```bash
+$ networksetup -ordernetworkservices "Wi-Fi" "Ethernet" "USB Ethernet"
+```
+
+### list hardware
+```bash
+$ networksetup -listallhardwareports
+
+# list detail of hardware
+$ networksetup -getinfo 'USB 10/100/1000 LAN'
+DHCP Configuration
+IP address: 192.168.1.10
+Subnet mask: 255.255.255.0
+Router: 192.168.1.1
+Client ID:
+IPv6: Automatic
+IPv6 IP address: none
+IPv6 Router: none
+Ethernet Address: **:**:**:**:**:**
+
+# or: https://apple.stackexchange.com/a/368047/254265
+$ system_profiler SPAirPortDataType
+Wi-Fi:
+
+      Software Versions:
+      ...
+```
+
+### wifi
+
+> [!NOTE|label:references:]
+> - [Mac Terminal WIFI Commands](https://www.mattcrampton.com/blog/managing_wifi_connections_using_the_mac_osx_terminal_command_line/)
+
+- get wifi name
+  ```bash
+  $ networksetup -getairportnetwork en0
+  Current Wi-Fi Network: WLAN-PUB
+  ```
+
+- get wifi interface
+  ```bash
+  $ system_profiler SPAirPortDataType | awk -F: '/Interfaces:/{getline; print $1;}'
+    en0
+
+  $ ifconfig -i $(system_profiler SPAirPortDataType | awk -F: '/Interfaces:/{getline; print $1;}')
+  en0 (6):
+    inet address  172.16.5.27
+    netmask       255.255.0.0
+    broadcast     172.16.255.255
+    flags         UP BROADCAST NOTRAILERS RUNNING SIMPLEX MULTICAST
+    mtu           1500
+  ```
+
+- get current Wifi network
+  ```bash
+  $ networksetup -getairportnetwork en0
+  Current Wi-Fi Network: WLAN-PUB
+
+  $ system_profiler SPAirPortDataType | awk -F':' '/Current Network Information:/ {
+        getline
+        sub(/^ */, "")
+        sub(/:$/, "")
+        print
+    }'
+  WLAN-PUB
+  Network Type: Infrastructure
+  ```
+
+- connect to another
+  ```bash
+  $ networksetup -setairportnetwork en0 WLAN-PUB <wifi-password>
+  $ networksetup -getairportnetwork en0
+  Current Wi-Fi Network: WLAN-PUB
+
+  $ networksetup -setairportnetwork en0 Automation-4G <wifi-password>
+  $ networksetup -getairportnetwork en0
+  Current Wi-Fi Network: Automation-4G
+  ```
+
+- turn on/off wifi
+  ```bash
+  # check wifi status
+  $ system_profiler SPAirPortDataType | awk -F: '/Status:/{print $2}'
+   Connected
+  # or
+  $ networksetup -getairportpower en0
+  Wi-Fi Power (en0): On
+  # or
+  $ networksetup -getairportpower $(networksetup -listallhardwareports | awk -F: '/Wi-Fi/{getline; print $2;}')
+  Wi-Fi Power (en0): On
+
+  # turn on
+  $ networksetup -setairportpower en0 on
+  $ networksetup -getairportpower en0
+  Wi-Fi Power (en0): On
+
+  # turn off
+  $ networksetup -setairportpower en0 off
+  $ networksetup -getairportpower en0
+  Wi-Fi Power (en0): Off
+  ```
+
+- scan available wifi network
+  ```bash
+  $ networksetup -setairportpower en0 on
+  $ sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+                              SSID BSSID             RSSI CHANNEL HT CC SECURITY (auth/unicast/group)
+                          Customer **:**:**:**:**:** -75  11      N  CN WEP
+                          CorpWLAN **:**:**:**:**:** -72  1       Y  CN WPA2(802.1x,Unrecognized(0)/AES/AES)
+                             Guest **:**:**:**:**:** -71  1       Y  CN NONE
+  ```
+
+- disable ipv6
+  ```bash
+  $ networksetup -listallnetworkservices
+  An asterisk (*) denotes that a network service is disabled.
+  USB 10/100/1000 LAN
+  Wi-Fi
+  Bluetooth PAN
+  Thunderbolt Bridge
+
+  $ networksetup -setv6off 'USB 10/100/1000 LAN'
+  $ networksetup -setv6off Wi-fi
+  ```
+  - undo
+    ```bash
+    $ networksetup -setv6automatic 'USB 10/100/1000 LAN'
+    $ networksetup -setv6automatic Wi-Fi
+    ```
+
+- [show network connection history](https://apple.stackexchange.com/a/469507/254265)
+  ```bash
+  $ networksetup -listpreferredwirelessnetworks en0
+
+  # older version
+  $ defaults read /Library/Preferences/SystemConfiguration/com.apple.airport.preferences \
+             | grep LastConnected -A 7
+  ```
+
+#### get wifi password
+- list all Wifi
+  ```bash
+  $ networksetup -listpreferredwirelessnetworks en0
+  # older version
+  $ defaults read /Library/Preferences/SystemConfiguration/com.apple.airport.preferences | \grep SSIDString
+  ...
+  SSIDString = "Apple Network Guest";
+  ...
+  ```
+
+- get password
+  ```bash
+  $ sudo security find-generic-password -ga "Apple Network Guest"  | grep password\:
+  password: "guest@3742"
+  ```
+
+
+## DNS
+- get info
+  ```bash
+  $ scutil --dns
+  DNS configuration
+  resolver #1
+  ...
+  resolver #7
+
+  DNS configuration (for scoped queries)
+  resolver #1
+    search domain[0] : ...
+    nameserver[0] : ...
+    nameserver[1] : ...
+    nameserver[2] : ...
+    if_index : ...
+    flags    : ...
+    reach    : ...
+  ```
+
+- setup DNS
+
+  > ```bash
+  > $ networksetup -getdnsservers Wi-Fi
+  > There aren't any DNS Servers set on Wi-Fi.
+  > ```
+
+  ```bash
+  $ networksetup -setdnsservers Wi-Fi 192.168.236.5 192.168.35.78 192.168.2.69 192.168.200.139
+
+  $ networksetup -getdnsservers Wi-Fi
+  192.168.236.5
+  192.168.35.78
+  192.168.2.69
+  192.168.200.139
+
+  $ cat /etc/resolv.conf
+  nameserver 192.168.236.5
+  nameserver 192.168.35.78
+  nameserver 192.168.2.69
+  nameserver 192.168.200.139
+  ```
+
+### firewall
+- show status
+  ```bash
+  $ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
+  Firewall is disabled. (State = 0)
+  ```
+- enable firewall
+  ```bash
+  $ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+  ```
+
 ## route
 
 > [!NOTE|label:references:]
@@ -212,4 +460,31 @@ $ sudo route delete <ip.address> <gateway>
 > [!NOTE|label:references:]
 > - [* use networksetup or scutil](https://apple.stackexchange.com/a/419190/254265)
 > - [* determining if the system is connected to a vpn from the command line under os x](https://support.moonpoint.com/os/os-x/vpn_connected.php)
+
+### proxy setup
+```bash
+$ networksetup -getwebproxy Wi-Fi
+Enabled: No
+Server:
+Port: 0
+Authenticated Proxy Enabled: 0
+$ networksetup -getwebproxy Ethernet
+Enabled: No
+Server:
+Port: 0
+Authenticated Proxy Enabled: 0
+
+$ networksetup -getproxybypassdomains Ethernet
+*.local
+169.254/16
+
+$ scutil --proxy
+<dictionary> {
+  HTTPEnable : 0
+  HTTPSEnable : 0
+  ProxyAutoConfigEnable : 1
+  ProxyAutoConfigURLString : http://pac.domain.com/global-pac.pac
+  SOCKSEnable : 0
+}
+```
 

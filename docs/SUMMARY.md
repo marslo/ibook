@@ -162,7 +162,6 @@
   * [apps](osx/apps/apps.md)
     * [brew](osx/apps/brew.md)
   * [defaults](osx/defaults.md)
-  * [util](osx/util.md)
   * [system](osx/system.md)
   * [network](osx/network.md)
   * [script](osx/script.md)
