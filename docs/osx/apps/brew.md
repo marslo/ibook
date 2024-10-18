@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [brew command](#brew-command)
 - [homebrew installation](#homebrew-installation)
 - [alternative sources](#alternative-sources)
   - [homebrewCN](#homebrewcn)
@@ -27,16 +28,68 @@
   - [`brew gist-log`](#brew-gist-log)
   - [get formula info](#get-formula-info)
   - [check homebrew env](#check-homebrew-env)
+  - [force the link and overwrite everything](#force-the-link-and-overwrite-everything)
+  - [rerurn postinstall](#rerurn-postinstall)
+  - [check brew configure file](#check-brew-configure-file)
+  - [whatprovide alternatives](#whatprovide-alternatives)
+  - [tricky](#tricky-1)
+  - [brew analytics](#brew-analytics)
 - [troubleshooting](#troubleshooting)
   - [`would clobber existing tag`](#would-clobber-existing-tag)
   - [Cask `firefox-nightly` is not installed.](#cask-firefox-nightly-is-not-installed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+{% hint style='tip' %}
+> reference
+> - [Mac OS X Server Command-Line Administration](https://www.apple.com.cn/server/docs/Command_Line.pdf)
+{% endhint %}
 
-> [!TIP|label:references:]
-> - [Mac 下 brew 切换为国内源](https://cloud.tencent.com/developer/article/1614039)
-> - [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
+## brew command
+
+| COMMAND                                  | DESCRIPTION                                                                                                |
+|------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `brew --cache`                           | Print path to Homebrew’s download cache (usually ~/Library/Caches/Homebrew)                                |
+| `brew --cellar`                          | Print path to Homebrew’s Cellar (usually /usr/local/Cellar)                                                |
+| `brew --config`                          | Print system configuration info                                                                            |
+| `brew --env`                             | Print Homebrew’s environment                                                                               |
+| `brew --prefix`                          | Print path to Homebrew’s prefix (usually /usr/local)                                                       |
+| `brew --prefix [formula]`                | Print where formula is installed                                                                           |
+| `brew audit`                             | Audit all formulae for common code and style issues                                                        |
+| `brew cleanup [formula]`                 | Remove older versions from the Cellar for all (or specific) formulae1                                      |
+| `brew create [url]`                      | Generate formula for downloadable file at url and open it in $HOMEBREW_EDITOR or $EDITOR2                  |
+| `brew create [tarball-url] --cache`      | Generate formula (including MD5), then download the tarball                                                |
+| `brew create --fink [formula]`           | Open Fink’s search page in your browser, so you can see how they do formula                                |
+| `brew create --macports [formula]`       | Open MacPorts’ search page in your browser, so you can see how they do formula                             |
+| `brew deps [formula]`                    | List dependencies for formula                                                                              |
+| `brew doctor`                            | Check your Homebrew installation for common issues                                                         |
+| `brew edit`                              | Open all of Homebrew for editing in TextMate                                                               |
+| `brew edit [formula]`                    | Open [formula] in $HOMEBREW_EDITOR or $EDITOR                                                              |
+| `brew fetch --force -v --HEAD [formula]` | Download source package for formula; for tarballs, also prints MD5, SHA1, and SHA256 checksums             |
+| `brew home`                              | Open Homebrew’s homepage in your browser                                                                   |
+| `brew home [formula]`                    | Opens formula ’s homepage in your browser                                                                  |
+| `brew info`                              | Print summary of installed packages                                                                        |
+| `brew info [formula]`                    | Print info for formula (regardless of whether formula is installed)                                        |
+| `brew info --github [formula]`           | Open Github’s History page for formula in your browser                                                     |
+| `brew install [formula]`                 | Install formula                                                                                            |
+| `brew install --HEAD [formula]`          | Install the HEAD version of formula (if its formula defines HEAD)                                          |
+| `brew install --force --HEAD [formula]`  | Install a newer HEAD version of formula (if its formula defines HEAD)                                      |
+| `brew link [formula]`                    | Symlink all installed files for formula into the Homebrew prefix3                                          |
+| `brew list [formula]`                    | List all installed files for formula (or all installed formulae with no arguments )                        |
+| `brew options [formula]`                 | Display install options specific to formula                                                                |
+| `brew outdated`                          | List formulae that have an updated version available (brew install formula will install the newer version) |
+| `brew prune`                             | Remove dead symlinks from Homebrew’s prefix4                                                               |
+| `brew remove [formula]`                  | Uninstall formula                                                                                          |
+| `brew search`                            | List all available formula                                                                                 |
+| `brew search [formula]`                  | Search for formula in all available formulae                                                               |
+| `brew search /[formula]/`                | Search for /formula/ (as regex) in all available formulae                                                  |
+| `brew test [formula]`                    | If formula defines a test, run it                                                                          |
+| `brew unlink [formula]`                  | Unsymlink formula from Homebrew’s prefix                                                                   |
+| `brew update`                            | Update formulae and Homebrew itself                                                                        |
+| `brew upgrade`                           | Install newer versions of outdated packages                                                                |
+| `brew upgrade [formula]`                 | Install newer version of formula                                                                           |
+| `brew versions [formula]`                | List previous versions of formulae, along with a command to checkout each version                          |
+| `brew analytics [state]`                 | Display the current state of Homebrew's analytics                                                          |
 
 ## homebrew installation
 ```bash
@@ -55,6 +108,10 @@ $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/inst
   ```
 
 ## alternative sources
+
+> [!TIP|label:references:]
+> - [Mac 下 brew 切换为国内源](https://cloud.tencent.com/developer/article/1614039)
+> - [homebrew for additional source](https://frankindev.com/2020/05/15/replace-homebrew-source/)
 
 ### [homebrewCN](https://gitee.com/Busch/HomebrewCN)
 ```bash
@@ -829,12 +886,10 @@ $ brew leaves | xargs brew info | grep '^From:'
 # download manually due to proxy issue
 $ curl -O https://downloads.sourceforge.net/gptfdisk/gdisk-1.0.9.pkg
 $ mv gdisk-1.0.9.pkg $(brew --cache -s gdisk)
-```
 
-- check <formula> local cache path
-  ```bash
-  $ brew --cache -s <formula>
-  ```
+# check `formula` local cache path
+$ brew --cache -s <formula>
+```
 
 ### `brew gist-log`
 
@@ -880,6 +935,161 @@ HOMEBREW_GIT: git
 HOMEBREW_SDKROOT: /Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
 ACLOCAL_PATH: /usr/local/share/aclocal
 PATH: /usr/local/Homebrew/Library/Homebrew/shims/mac/super:/usr/bin:/bin:/usr/sbin:/sbin
+```
+
+### force the link and overwrite everything
+```bash
+$ brew link --overwrite <formula>
+
+# i.e.:
+$ brew link --overwrite --dry-run python@3.8
+Would remove:
+/usr/local/bin/python3 -> /usr/local/Cellar/python@3.9/3.9.0/bin/python3.9
+
+If you need to have this software first in your PATH instead consider running:
+  echo 'export PATH="/usr/local/opt/python@3.8/bin:$PATH"' >> /Users/marslo/.bash_profile
+```
+
+### rerurn postinstall
+```bash
+$ brew postinstall <formula>
+
+# i.e.:
+$ sudo chown marslo:admin -R /usr/local/lib/python3.8/site-packages
+$ brew postinstall python@3.8
+==> Postinstalling python@3.8
+==> /usr/local/Cellar/python@3.8/3.8.6_1/bin/python3 -s setup.py --no-user-cfg install --force --verbose --install-scripts=/usr/local/Cellar/python@3.8
+==> /usr/local/Cellar/python@3.8/3.8.6_1/bin/python3 -s setup.py --no-user-cfg install --force --verbose --install-scripts=/usr/local/Cellar/python@3.8
+==> /usr/local/Cellar/python@3.8/3.8.6_1/bin/python3 -s setup.py --no-user-cfg install --force --verbose --install-scripts=/usr/local/Cellar/python@3.8
+
+# update homebrew-cask
+$ git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch --unshallow
+```
+
+### check brew configure file
+```bash
+$ brew -v edit <formula>
+
+# i.e.:
+$ brew -v edit openjdk
+```
+
+![brew -v](../screenshot/osx/brew-v.png)
+
+#### manual install formula
+```bash
+$ brew -v edit macvim
+$ brew -v fetch --deps macvim
+$ brew -v install --build-from-source macvim
+$ brew pin macvim
+```
+
+### whatprovide alternatives
+```bash
+$ pkgutil --file-info /usr/bin/qlmanage
+volume: /
+path: /usr/bin/qlmanage
+
+pkgid: com.apple.pkg.Core
+pkg-version: 10.15.0.1.1.1569789135
+install-time: 1570542610
+uid: 0
+gid: 0
+mode: 755
+```
+
+- for brew formula
+  ```bash
+  $ while read formula; do
+      brew list --formula "${formula}" | grep -w magick;
+    done < <(brew list --formula)
+  ```
+
+### tricky
+
+> [!TIP|label:reference:]
+> - [Tips and Tricks](https://docs.brew.sh/Tips-N'-Tricks)
+
+- interactive homebrew shell
+  ```bash
+  $ brew irb
+  ==> Interactive Homebrew Shell
+  Example commands available with: brew irb --examples
+
+  WARNING: This version of ruby is included in macOS for compatibility with legacy software.
+  In future versions of macOS the ruby runtime will not be available by
+  default, and may require you to install an additional package.
+
+  irb(main):001:0>
+  ```
+
+- list dependencies
+  ```bash
+  $ brew deps macvim
+  Warning: Treating macvim as a formula. For the cask, use homebrew/cask/macvim
+  cscope
+  gdbm
+  gettext
+  libyaml
+  lua
+  openssl@1.1
+  python@3.9
+  readline
+  ruby
+  sqlite
+  xz
+  ```
+
+- list who depends on
+  ```bash
+  $ brew uses --installed cscope
+  macvim
+  ```
+
+- list all formula dpendencies
+  ```bash
+  $ brew list | while read cask; do
+      echo -e -n "\e[1;34m$cask ->\e[0m";
+      brew deps $cask | awk '{printf(" %s ", $0)}';
+      echo "";
+    done
+
+  # i.e.:
+  $ brew list | while read cask; do
+      echo -e -n "\e[1;34m$cask ->\e[0m";
+      brew deps $cask | awk '{printf(" %s ", $0)}';
+      echo "";
+    done
+
+  Warning: Calling `brew list` to only list formulae is deprecated! Use `brew list --formula` instead.
+  ack ->
+  adns ->
+  aom ->
+  autoconf ->
+  autoconf-archive -> autoconf
+  automake -> autoconf
+  bash ->
+  bash-completion ->
+  bash-completion@2 -> bash
+  bats ->
+  bdw-gc ->
+  berkeley-db -> openssl@1.1
+  binutils ->
+  cabal-install -> ghc
+  cairo -> fontconfig  freetype  gdbm  gettext  glib  libffi  libpng  lzo  openssl@1.1  pcre  pixman  python@3.8  readline  sqlite  xz
+  ...
+  ```
+
+### [brew analytics](https://stackoverflow.com/a/19688479/2940319)
+```bash
+# turn on/off
+$ export HOMEBREW_NO_ANALYTICS=1/0
+$ brew analytics off/on
+
+# check status
+$ brew analytics
+InfluxDB analytics are enabled.
+Google Analytics were destroyed.
 ```
 
 ## troubleshooting
