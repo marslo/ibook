@@ -154,8 +154,7 @@ $ command | decolorize
 ## [alias](https://askubuntu.com/a/871435)
 
 > [!NOTE|label:references:]
-> - [_complete_alias](https://unix.stackexchange.com/a/332522/29178)
->    - [cykerway/complete-alias](https://github.com/cykerway/complete-alias)
+> - [_complete_alias](https://unix.stackexchange.com/a/332522/29178) | [cykerway/complete-alias](https://github.com/cykerway/complete-alias)
 > - [How do I get bash completion for command aliases?](https://unix.stackexchange.com/a/332522/29178)
 > - [make-completion-wrapper](https://unix.stackexchange.com/a/4220/29178)
 > - [make-completion-wrapper](https://unix.stackexchange.com/a/310089/29178)

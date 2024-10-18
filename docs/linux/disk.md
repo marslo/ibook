@@ -107,6 +107,7 @@ $ mount /path/to/file.iso /mnt/tmp -o loop
 #### macos
 - via GUI :
   - Go -> Connect toServer -> `smb://<ip.address>/secured`
+
     ![samba](../screenshot/linux/samba-1.png)
 
 - via cmd

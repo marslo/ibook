@@ -92,6 +92,11 @@ $ kubectl get pods -n calico-system
   ```
 
 # ingress
+
+> [!NOTE|label:references:]
+> - [入门级实操教程！从概念到部署，全方位了解 K8S Ingress](https://www.infoq.cn/article/vl7SZGQc2JUaM6IisAhE)
+> - [k8s指南-Ingress](https://blog.csdn.net/xiaoyi52/article/details/128289679)
+
 ## ingress-nginx
 ```bash
 $ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx

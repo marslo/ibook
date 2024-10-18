@@ -16,6 +16,7 @@
 > - [Authorization modes](https://kubernetes.io/docs/reference/access-authn-authz/authorization/#authorization-modules)
 > - [RBAAC: Role-based access control](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 > - [ABAC: Attribute-based access control](https://kubernetes.io/docs/reference/access-authn-authz/abac/)
+> - [Enabling Kubernetes Dashboard over HTTPS with RBAC Authorization](https://blog.zachinachshon.com/k8s-dashboard/)
 
 - kubernetes-dashboard admin
 

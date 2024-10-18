@@ -85,6 +85,8 @@ $ java -jar jenkins-plugin-manager-$version.jar \
 - [Active Directory plugin](https://plugins.jenkins.io/active-directory/)
 - [Delivery Pipeline Plugin](https://plugins.jenkins.io/delivery-pipeline-plugin/)
 - [Log Parser Plugin](https://plugins.jenkins.io/log-parser/)
+- [httpRequest](https://plugins.jenkins.io/http_request/)
+  - [Streamlining Your Workflow With the Jenkins HTTP Request Plugin: A Guide to Replacing CURL in Scripts](https://dzone.com/articles/streamlining-your-workflow-with-the-jenkins-http-r-1)
 
 ### [CloudBees](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/)
 - [CloudBees Template plugin](https://docs.cloudbees.com/docs/admin-resources/latest/plugins/template)
