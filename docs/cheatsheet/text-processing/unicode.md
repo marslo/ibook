@@ -1,19 +1,20 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Unicode](#unicode)
+- [unicode](#unicode)
   - [useful unicode](#useful-unicode)
     - [combining diacritical marks](#combining-diacritical-marks)
-  - [simple arrows](#simple-arrows)
-  - [arrows with modifications](#arrows-with-modifications)
-  - [arrows with bent tips](#arrows-with-bent-tips)
-  - [keyboard symbols and circle arrows](#keyboard-symbols-and-circle-arrows)
-  - [harpoons](#harpoons)
-  - [paired arrows and harpoons](#paired-arrows-and-harpoons)
-  - [double arrows](#double-arrows)
-  - [miscellaneous arrows and keyboard symbols](#miscellaneous-arrows-and-keyboard-symbols)
-  - [white arrows and keyboard symbols](#white-arrows-and-keyboard-symbols)
-  - [miscellaneous arrows](#miscellaneous-arrows)
+  - [arrows](#arrows)
+    - [simple arrows](#simple-arrows)
+    - [arrows with modifications](#arrows-with-modifications)
+    - [arrows with bent tips](#arrows-with-bent-tips)
+    - [keyboard symbols and circle arrows](#keyboard-symbols-and-circle-arrows)
+    - [harpoons](#harpoons)
+    - [paired arrows and harpoons](#paired-arrows-and-harpoons)
+    - [double arrows](#double-arrows)
+    - [miscellaneous arrows and keyboard symbols](#miscellaneous-arrows-and-keyboard-symbols)
+    - [white arrows and keyboard symbols](#white-arrows-and-keyboard-symbols)
+    - [miscellaneous arrows](#miscellaneous-arrows)
 - [devicons](#devicons)
   - [coding](#coding)
   - [folders](#folders)
@@ -25,8 +26,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-# Unicode
+# unicode
 
 {% hint style="info" %}
 > references:
@@ -54,37 +54,37 @@
 > - [Complete list of github markdown emoji markup](https://gist.github.com/rxaviers/7360908)
 
 
-  | SYMBOLS   | UNICODE                        | HTML ENTITY NUBMER          | ENTITY NAME                                    | DESC                                       |
-  | :-------: | :----------------------------: | :-------------------------: | :------------------------------------------:   | ------------------------------------------ |
-  | &#160;    |                                | `&#160;`                    | `&nbsp;`                                       | space                                      |
-  | &#60;     | `003C`                         | `&#60;` <br> `&#x3C;`       | `&lt;`                                         | less than                                  |
-  | &#62;     | `003E`                         | `&#62;`  <br> `&#x3E;`      | `&gt;`                                         | greater than                               |
-  | «         | `00AB`                         | `&#171;` <br> `&#xab;`      | `&laquo;`                                      | left-pointing double angle quotation mark  |
-  | »         | `00BB`                         | `&#187` <br> `&#xbb;`       | `&raquo;`                                      | right-pointing Double angle quotation mark |
-  | ›         | `203A`                         | `&#8250;` <br> `&#x203a;`   | `&rsaquo;`                                     | right-pointing single guillemet            |
-  | ‹         | `2039`                         | `&#8249;` <br> `&#x2039;`   | `&lsaquo;`                                     | left-pointing single guillemet             |
-  | &#38;     | `0026`                         | `&#38;` <br> `&#x26;`       | `&amp;`                                        | ampersand                                  |
-  | &#124;    | `007C`                         | `&#124;` <br> `&#x7C;`      | `&verbar;` <br> `&vert;` <br> `&VerticalLine;` | vertical bar                               |
-  | ←         | `2190`                         | `&#8592;` <br> `&#x2190;`   | `&larr;` <br> `&ShortLeftArrow;`               | leftwards arrow                            |
-  | →         | `2192`                         | `&#8594;` <br> `&#x2192;`   | `&rarr;` <br> `&rightarrow;`                   | rightwards arrow                           |
-  | ↑         | `2191`                         | `&#8593;` <br> `&#x2191;`   | `&uarr;` <br> `&ShortUpArrow;`                 | upwards arrow                              |
-  | ↓         | `2193`                         | `&#8595;` <br> `&#x2193;`   | `&darr;` <br> `&ShortDownArrow;`               | downwards arrow                            |
-  | ☐         | `2610`                         | `&#9744;` <br> `&#x2610;`   | -                                              | Ballot Box                                 |
-  | &#8414;   | `20DE`                         | `&#8414;` <br> `&#x20DE;`   | -                                              | Combining Enclosing Square                 |
-  | ▢         | `25A2`                         | `&#9634;` <br> `&#x25A2;`   | -                                              | White Square with Rounded C<br>ners        |
-  | ⬚         | `2B1A`                         | `&#11034;` <br> `&#x2B1A;`  | -                                              | Dotted Square                              |
-  | ✅        | `2705`                         | `&#9989;` <br> `&#x2705;`   | -                                              | White Heavy Check Mark                     |
-  | ☑         | `2611`                         | `&#9745;` <br> `&#x2611;`   | -                                              | Ballot Box with Check                      |
-  | ☒         | `2612`                         | `&#9746;` <br> `&#x2612;`   | -                                              | Ballot Box with X                          |
-  | 𐄂         | `10102`                        | `&#65794;` <br> `&#x10102;` | -                                              | Aegean Check Mark                          |
-  | ☓         | `2613`                         | `&#9747;` <br> `&#x2613;`   | -                                              | Saltire                                    |
-  | ✓         | `2713`                         | `&#10003;` <br> `&#x2713;`  | `&check;`                                      | Check Mark                                 |
-  | ✔         | `2714`                         | `&#10004;` <br> `&#x2714;`  | -                                              | Heavy Check Mark                           |
-  | ⍻         | `237B`                         | `&#9083;` <br> `&#x237B;`   | -                                              | Not Check Mark                             |
-  | ✕         | `2715`                         | `&#10005;` <br> `&#x2715;`  | -                                              | Multiplication X                           |
-  | ✖         | `2716`                         | `&#10006;` <br> `&#x2716;`  | -                                              | Heavy Multiplication X                     |
-  | ✗         | `2717`                         | `&#10007;` <br> `&#x2717;`  | -                                              | Ballot X                                   |
-  | ✘         | `2718`                         | `&#10008;` <br> `&#x2718;`  | -                                              | Heavy Ballot X                             |
+| SYMBOLS | UNICODE | HTML ENTITY NUBMER          | ENTITY NAME                                    | DESC                                       |
+|:-------:|:-------:|:----------------------------|:-----------------------------------------------|:-------------------------------------------|
+|  &#160; |         | `&#160;`                    | `&nbsp;`                                       | space                                      |
+|  &#60;  | `003C`  | `&#60;` <br> `&#x3C;`       | `&lt;`                                         | less than                                  |
+|  &#62;  | `003E`  | `&#62;`  <br> `&#x3E;`      | `&gt;`                                         | greater than                               |
+|    «    | `00AB`  | `&#171;` <br> `&#xab;`      | `&laquo;`                                      | left-pointing double angle quotation mark  |
+|    »    | `00BB`  | `&#187` <br> `&#xbb;`       | `&raquo;`                                      | right-pointing Double angle quotation mark |
+|    ›    | `203A`  | `&#8250;` <br> `&#x203a;`   | `&rsaquo;`                                     | right-pointing single guillemet            |
+|    ‹    | `2039`  | `&#8249;` <br> `&#x2039;`   | `&lsaquo;`                                     | left-pointing single guillemet             |
+|  &#38;  | `0026`  | `&#38;` <br> `&#x26;`       | `&amp;`                                        | ampersand                                  |
+|  &#124; | `007C`  | `&#124;` <br> `&#x7C;`      | `&verbar;` <br> `&vert;` <br> `&VerticalLine;` | vertical bar                               |
+|    ←    | `2190`  | `&#8592;` <br> `&#x2190;`   | `&larr;` <br> `&ShortLeftArrow;`               | leftwards arrow                            |
+|    →    | `2192`  | `&#8594;` <br> `&#x2192;`   | `&rarr;` <br> `&rightarrow;`                   | rightwards arrow                           |
+|    ↑    | `2191`  | `&#8593;` <br> `&#x2191;`   | `&uarr;` <br> `&ShortUpArrow;`                 | upwards arrow                              |
+|    ↓    | `2193`  | `&#8595;` <br> `&#x2193;`   | `&darr;` <br> `&ShortDownArrow;`               | downwards arrow                            |
+|    ☐    | `2610`  | `&#9744;` <br> `&#x2610;`   | -                                              | Ballot Box                                 |
+| &#8414; | `20DE`  | `&#8414;` <br> `&#x20DE;`   | -                                              | Combining Enclosing Square                 |
+|    ▢    | `25A2`  | `&#9634;` <br> `&#x25A2;`   | -                                              | White Square with Rounded C<br>ners        |
+|    ⬚    | `2B1A`  | `&#11034;` <br> `&#x2B1A;`  | -                                              | Dotted Square                              |
+|    ✅   | `2705`  | `&#9989;` <br> `&#x2705;`   | -                                              | White Heavy Check Mark                     |
+|    ☑    | `2611`  | `&#9745;` <br> `&#x2611;`   | -                                              | Ballot Box with Check                      |
+|    ☒    | `2612`  | `&#9746;` <br> `&#x2612;`   | -                                              | Ballot Box with X                          |
+|    𐄂    | `10102` | `&#65794;` <br> `&#x10102;` | -                                              | Aegean Check Mark                          |
+|    ☓    | `2613`  | `&#9747;` <br> `&#x2613;`   | -                                              | Saltire                                    |
+|    ✓    | `2713`  | `&#10003;` <br> `&#x2713;`  | `&check;`                                      | Check Mark                                 |
+|    ✔    | `2714`  | `&#10004;` <br> `&#x2714;`  | -                                              | Heavy Check Mark                           |
+|    ⍻    | `237B`  | `&#9083;` <br> `&#x237B;`   | -                                              | Not Check Mark                             |
+|    ✕    | `2715`  | `&#10005;` <br> `&#x2715;`  | -                                              | Multiplication X                           |
+|    ✖    | `2716`  | `&#10006;` <br> `&#x2716;`  | -                                              | Heavy Multiplication X                     |
+|    ✗    | `2717`  | `&#10007;` <br> `&#x2717;`  | -                                              | Ballot X                                   |
+|    ✘    | `2718`  | `&#10008;` <br> `&#x2718;`  | -                                              | Heavy Ballot X                             |
 
 
 ### [combining diacritical marks](https://www.w3schools.com/html/html_entities.asp)
@@ -100,182 +100,182 @@
 | &#770; | `&#770;` | O +&nbsp;     &#xbb; Ô | `O&#770;` | O&#770; |
 | &#771; | `&#771;` | O +&nbsp;     &#xbb; Õ | `O&#771;` | O&#771; |
 
-## simple arrows
+## arrows
 
-| CODE | SYMBOLS | EXPLANATION                       |
-|:----:|:-------:|-----------------------------------|
-| 2190 |    ←    | LEFTWARDS ARROW                   |
-| 20EA |    ◌⃪    | combining leftwards arrow overlay |
-| 2191 |    ↑    | UPWARDS ARROW                     |
-| 2192 |    →    | RIGHTWARDS ARROW                  |
-| 2193 |    ↓    | DOWNWARDS ARROW                   |
-| 2194 |    ↔    | LEFT RIGHT ARROW                  |
-| 2195 |    ↕    | UP DOWN ARROW                     |
-| 2196 |    ↖    | NORTH WEST ARROW                  |
-| 2197 |    ↗    | NORTH EAST ARROW                  |
-| 2198 |    ↘    | SOUTH EAST ARROW                  |
-| 2199 |    ↙    | SOUTH WEST ARROW                  |
+### simple arrows
 
-## arrows with modifications
+|  CODE  | SYMBOLS | EXPLANATION                       |
+|:------:|:-------:|-----------------------------------|
+| `2190` |    ←    | leftwards arrow                   |
+| `20EA` |    ◌⃪    | combining leftwards arrow overlay |
+| `2191` |    ↑    | upwards arrow                     |
+| `2192` |    →    | rightwards arrow                  |
+| `2193` |    ↓    | downwards arrow                   |
+| `2194` |    ↔    | left right arrow                  |
+| `2195` |    ↕    | up down arrow                     |
+| `2196` |    ↖    | north west arrow                  |
+| `2197` |    ↗    | north east arrow                  |
+| `2198` |    ↘    | south east arrow                  |
+| `2199` |    ↙    | south west arrow                  |
 
-| CODE | SYMBOLS | EXPLANATION                       |
-|:----:|:-------:|-----------------------------------|
-| 219A |    ↚    | LEFTWARDS ARROW WITH STROKE       |
-| 219B |    ↛    | RIGHTWARDS ARROW WITH STROKE      |
-| 219C |    ↜    | LEFTWARDS WAVE ARROW              |
-| 2B3F |    ⬿    | wave arrow pointing directly left |
-| 219D |    ↝    | RIGHTWARDS WAVE ARROW             |
-| 219E |    ↞    | LEFTWARDS TWO HEADED ARROW        |
-| 219F |    ↟    | UPWARDS TWO HEADED ARROW          |
-| 21A0 |    ↠    | RIGHTWARDS TWO HEADED ARROW       |
-| 21A1 |    ↡    | DOWNWARDS TWO HEADED ARROW        |
-| 21A2 |    ↢    | LEFTWARDS ARROW WITH TAIL         |
-| 21A3 |    ↣    | RIGHTWARDS ARROW WITH TAIL        |
-| 21A4 |    ↤    | LEFTWARDS ARROW FROM BAR          |
-| 21A5 |    ↥    | UPWARDS ARROW FROM BAR            |
-| 21A6 |    ↦    | RIGHTWARDS ARROW FROM BAR         |
-| 21A7 |    ↧    | DOWNWARDS ARROW FROM BAR          |
-| 21A8 |    ↨    | UP DOWN ARROW WITH BASE           |
-| 21A9 |    ↩    | LEFTWARDS ARROW WITH HOOK         |
-| 21AA |    ↪    | RIGHTWARDS ARROW WITH HOOK        |
-| 21AB |    ↫    | LEFTWARDS ARROW WITH LOOP         |
-| 21AC |    ↬    | RIGHTWARDS ARROW WITH LOOP        |
-| 21AD |    ↭    | LEFT RIGHT WAVE ARROW             |
-| 21AE |    ↮    | LEFT RIGHT ARROW WITH STROKE      |
-| 21AF |    ↯    | DOWNWARDS ZIGZAG ARROW            |
+### arrows with modifications
+
+|  CODE  | SYMBOLS | EXPLANATION                       |
+|:------:|:-------:|-----------------------------------|
+| `219A` |    ↚    | leftwards arrow with stroke       |
+| `219B` |    ↛    | rightwards arrow with stroke      |
+| `219C` |    ↜    | leftwards wave arrow              |
+| `2B3F` |    ⬿    | wave arrow pointing directly left |
+| `219D` |    ↝    | rightwards wave arrow             |
+| `219E` |    ↞    | leftwards two headed arrow        |
+| `219F` |    ↟    | upwards two headed arrow          |
+| `21A0` |    ↠    | rightwards two headed arrow       |
+| `21A1` |    ↡    | downwards two headed arrow        |
+| `21A2` |    ↢    | leftwards arrow with tail         |
+| `21A3` |    ↣    | rightwards arrow with tail        |
+| `21A4` |    ↤    | leftwards arrow from bar          |
+| `21A5` |    ↥    | upwards arrow from bar            |
+| `21A6` |    ↦    | rightwards arrow from bar         |
+| `21A7` |    ↧    | downwards arrow from bar          |
+| `21A8` |    ↨    | up down arrow with base           |
+| `21A9` |    ↩    | leftwards arrow with hook         |
+| `21AA` |    ↪    | rightwards arrow with hook        |
+| `21AB` |    ↫    | leftwards arrow with loop         |
+| `21AC` |    ↬    | rightwards arrow with loop        |
+| `21AD` |    ↭    | left right wave arrow             |
+| `21AE` |    ↮    | left right arrow with stroke      |
+| `21AF` |    ↯    | downwards zigzag arrow            |
 
 
-## arrows with bent tips
+### arrows with bent tips
 
-> [!TIP]
+> [!TIP|label:references:]
 > Other arrows with bent tips to complete this set can be found in the Miscellaneous Symbols and Arrows block.
 
+|  CODE  | SYMBOLS | EXPLANATION                         |
+|:------:|:-------:|-------------------------------------|
+| `21B0` |    ↰    | upwards arrow with tip leftwards    |
+| `21B1` |    ↱    | upwards arrow with tip rightwards   |
+| `21B2` |    ↲    | downwards arrow with tip leftwards  |
+| `21B3` |    ↳    | downwards arrow with tip rightwards |
 
-| CODE | SYMBOLS | EXPLANATION                         |
-|:----:|:-------:|-------------------------------------|
-| 21B0 |    ↰    | UPWARDS ARROW WITH TIP LEFTWARDS    |
-| 21B1 |    ↱    | UPWARDS ARROW WITH TIP RIGHTWARDS   |
-| 21B2 |    ↲    | DOWNWARDS ARROW WITH TIP LEFTWARDS  |
-| 21B3 |    ↳    | DOWNWARDS ARROW WITH TIP RIGHTWARDS |
 
+### keyboard symbols and circle arrows
 
-## keyboard symbols and circle arrows
+|  CODE  | SYMBOLS | EXPLANATION                                         |
+|:------:|:-------:|-----------------------------------------------------|
+| `21B4` |    ↴    | rightwards arrow with corner downwards              |
+| `21B5` |    ↵    | downwards arrow with corner leftwards               |
+| `23CE` |    ⏎    | return symbol                                       |
+| `21B6` |    ↶    | anticlockwise top semicircle arrow                  |
+| `21B7` |    ↷    | clockwise top semicircle arrow                      |
+| `21B8` |    ↸    | north west arrow to long bar                        |
+| `21B9` |    ↹    | leftwards arrow to bar over rightwards arrow to bar |
+| `21BA` |    ↺    | anticlockwise open circle arrow                     |
+| `21BB` |    ↻    | clockwise open circle arrow                         |
 
-| CODE | SYMBOLS | EXPLANATION                                         |
-|:----:|:-------:|-----------------------------------------------------|
-| 21B4 |    ↴    | RIGHTWARDS ARROW WITH CORNER DOWNWARDS              |
-| 21B5 |    ↵    | DOWNWARDS ARROW WITH CORNER LEFTWARDS               |
-| 23CE |    ⏎    | return symbol                                       |
-| 21B6 |    ↶    | ANTICLOCKWISE TOP SEMICIRCLE ARROW                  |
-| 21B7 |    ↷    | CLOCKWISE TOP SEMICIRCLE ARROW                      |
-| 21B8 |    ↸    | NORTH WEST ARROW TO LONG BAR                        |
-| 21B9 |    ↹    | LEFTWARDS ARROW TO BAR OVER RIGHTWARDS ARROW TO BAR |
-| 21BA |    ↺    | ANTICLOCKWISE OPEN CIRCLE ARROW                     |
-| 21BB |    ↻    | CLOCKWISE OPEN CIRCLE ARROW                         |
+### harpoons
 
-## harpoons
+|  CODE  | SYMBOLS | EXPLANATION                            |
+|:------:|:-------:|----------------------------------------|
+| `21BC` |    ↼    | leftwards harpoon with barb upwards    |
+| `21BD` |    ↽    | leftwards harpoon with barb downwards  |
+| `21BE` |    ↾    | upwards harpoon with barb rightwards   |
+| `21BF` |    ↿    | upwards harpoon with barb leftwards    |
+| `21C0` |    ⇀    | rightwards harpoon with barb upwards   |
+| `21C1` |    ⇁    | rightwards harpoon with barb downwards |
+| `21C2` |    ⇂    | downwards harpoon with barb rightwards |
+| `21C3` |    ⇃    | downwards harpoon with barb leftwards  |
 
-| CODE | SYMBOLS | EXPLANATION                            |
-|:----:|:-------:|----------------------------------------|
-| 21BC |    ↼    | LEFTWARDS HARPOON WITH BARB UPWARDS    |
-| 21BD |    ↽    | LEFTWARDS HARPOON WITH BARB DOWNWARDS  |
-| 21BE |    ↾    | UPWARDS HARPOON WITH BARB RIGHTWARDS   |
-| 21BF |    ↿    | UPWARDS HARPOON WITH BARB LEFTWARDS    |
-| 21C0 |    ⇀    | RIGHTWARDS HARPOON WITH BARB UPWARDS   |
-| 21C1 |    ⇁    | RIGHTWARDS HARPOON WITH BARB DOWNWARDS |
-| 21C2 |    ⇂    | DOWNWARDS HARPOON WITH BARB RIGHTWARDS |
-| 21C3 |    ⇃    | DOWNWARDS HARPOON WITH BARB LEFTWARDS  |
+### paired arrows and harpoons
 
-## paired arrows and harpoons
+|  CODE  | SYMBOLS | EXPLANATION                                |
+|:------:|:-------:|--------------------------------------------|
+| `21C4` |    ⇄    | rightwards arrow over leftwards arrow      |
+| `21C5` |    ⇅    | upwards arrow leftwards of downwards arrow |
+| `21C6` |    ⇆    | leftwards arrow over rightwards arrow      |
+| `21C7` |    ⇇    | leftwards paired arrows                    |
+| `21C8` |    ⇈    | upwards paired arrows                      |
+| `21C9` |    ⇉    | rightwards paired arrows                   |
+| `21CA` |    ⇊    | downwards paired arrows                    |
+| `21CB` |    ⇋    | leftwards harpoon over rightwards harpoon  |
+| `21CC` |    ⇌    | rightwards harpoon over leftwards harpoon  |
 
-| CODE | SYMBOLS | EXPLANATION                                |
-|:----:|:-------:|--------------------------------------------|
-| 21C4 |    ⇄    | RIGHTWARDS ARROW OVER LEFTWARDS ARROW      |
-| 21C5 |    ⇅    | UPWARDS ARROW LEFTWARDS OF DOWNWARDS ARROW |
-| 21C6 |    ⇆    | LEFTWARDS ARROW OVER RIGHTWARDS ARROW      |
-| 21C7 |    ⇇    | LEFTWARDS PAIRED ARROWS                    |
-| 21C8 |    ⇈    | UPWARDS PAIRED ARROWS                      |
-| 21C9 |    ⇉    | RIGHTWARDS PAIRED ARROWS                   |
-| 21CA |    ⇊    | DOWNWARDS PAIRED ARROWS                    |
-| 21CB |    ⇋    | LEFTWARDS HARPOON OVER RIGHTWARDS HARPOON  |
-| 21CC |    ⇌    | RIGHTWARDS HARPOON OVER LEFTWARDS HARPOON  |
+### double arrows
 
-## double arrows
+|  CODE  | SYMBOLS | EXPLANATION                         |
+|:------:|:-------:|-------------------------------------|
+| `21CD` |    ⇍    | leftwards double arrow with stroke  |
+| `21CE` |    ⇎    | left right double arrow with stroke |
+| `21CF` |    ⇏    | rightwards double arrow with stroke |
+| `21D0` |    ⇐    | leftwards double arrow              |
+| `21D1` |    ⇑    | upwards double arrow                |
+| `21D2` |    ⇒    | rightwards double arrow             |
+| `21D3` |    ⇓    | downwards double arrow              |
+| `21D4` |    ⇔    | left right double arrow             |
+| `21D5` |    ⇕    | up down double arrow                |
+| `21D6` |    ⇖    | north west double arrow             |
+| `21D7` |    ⇗    | north east double arrow             |
+| `21D8` |    ⇘    | south east double arrow             |
+| `21D9` |    ⇙    | south west double arrow             |
 
-| CODE | SYMBOLS | EXPLANATION                         |
-|:----:|:-------:|-------------------------------------|
-| 21CD |    ⇍    | LEFTWARDS DOUBLE ARROW WITH STROKE  |
-| 21CE |    ⇎    | LEFT RIGHT DOUBLE ARROW WITH STROKE |
-| 21CF |    ⇏    | RIGHTWARDS DOUBLE ARROW WITH STROKE |
-| 21D0 |    ⇐    | LEFTWARDS DOUBLE ARROW              |
-| 21D1 |    ⇑    | UPWARDS DOUBLE ARROW                |
-| 21D2 |    ⇒    | RIGHTWARDS DOUBLE ARROW             |
-| 21D3 |    ⇓    | DOWNWARDS DOUBLE ARROW              |
-| 21D4 |    ⇔    | LEFT RIGHT DOUBLE ARROW             |
-| 21D5 |    ⇕    | UP DOWN DOUBLE ARROW                |
-| 21D6 |    ⇖    | NORTH WEST DOUBLE ARROW             |
-| 21D7 |    ⇗    | NORTH EAST DOUBLE ARROW             |
-| 21D8 |    ⇘    | SOUTH EAST DOUBLE ARROW             |
-| 21D9 |    ⇙    | SOUTH WEST DOUBLE ARROW             |
+### miscellaneous arrows and keyboard symbols
 
-## miscellaneous arrows and keyboard symbols
+|  CODE  | SYMBOLS | EXPLANATION                        |
+|:------:|:-------:|------------------------------------|
+| `21DA` |    ⇚    | leftwards triple arrow             |
+| `21DB` |    ⇛    | rightwards triple arrow            |
+| `21DC` |    ⇜    | leftwards squiggle arrow           |
+| `2B33` |    ⬳    | long leftwards squiggle arrow      |
+| `21DD` |    ⇝    | rightwards squiggle arrow          |
+| `21DE` |    ⇞    | upwards arrow with double stroke   |
+| `21DF` |    ⇟    | downwards arrow with double stroke |
+| `21E0` |    ⇠    | leftwards dashed arrow             |
+| `21E1` |    ⇡    | upwards dashed arrow               |
+| `21E2` |    ⇢    | rightwards dashed arrow            |
+| `21E3` |    ⇣    | downwards dashed arrow             |
+| `21E4` |    ⇤    | leftwards arrow to bar             |
+| `21E5` |    ⇥    | rightwards arrow to bar            |
 
-| CODE | SYMBOLS | EXPLANATION                        |
-|:----:|:-------:|------------------------------------|
-| 21DA |    ⇚    | LEFTWARDS TRIPLE ARROW             |
-| 21DB |    ⇛    | RIGHTWARDS TRIPLE ARROW            |
-| 21DC |    ⇜    | LEFTWARDS SQUIGGLE ARROW           |
-| 2B33 |    ⬳    | LONG LEFTWARDS SQUIGGLE ARROW      |
-| 21DD |    ⇝    | RIGHTWARDS SQUIGGLE ARROW          |
-| 21DE |    ⇞    | UPWARDS ARROW WITH DOUBLE STROKE   |
-| 21DF |    ⇟    | DOWNWARDS ARROW WITH DOUBLE STROKE |
-| 21E0 |    ⇠    | LEFTWARDS DASHED ARROW             |
-| 21E1 |    ⇡    | UPWARDS DASHED ARROW               |
-| 21E2 |    ⇢    | RIGHTWARDS DASHED ARROW            |
-| 21E3 |    ⇣    | DOWNWARDS DASHED ARROW             |
-| 21E4 |    ⇤    | LEFTWARDS ARROW TO BAR             |
-| 21E5 |    ⇥    | RIGHTWARDS ARROW TO BAR            |
+### white arrows and keyboard symbols
 
-## white arrows and keyboard symbols
+|  CODE  | SYMBOLS | EXPLANATION                                         |
+|:------:|:-------:|-----------------------------------------------------|
+| `21E6` |    ⇦    | leftwards white arrow                               |
+| `2B00` |    ⬀    | north east white arrow                              |
+| `21E7` |    ⇧    | upwards white arrow                                 |
+| `21E8` |    ⇨    | rightwards white arrow                              |
+| `21E9` |    ⇩    | downwards white arrow                               |
+| `21EA` |    ⇪    | upwards white arrow from bar                        |
+| `21EB` |    ⇫    | upwards white arrow on pedestal                     |
+| `21EC` |    ⇬    | upwards white arrow on pedestal with horizontal bar |
+| `21ED` |    ⇭    | upwards white arrow on pedestal with vertical bar   |
+| `21EE` |    ⇮    | upwards white double arrow                          |
+| `21EF` |    ⇯    | upwards white double arrow on pedestal              |
+| `21F0` |    ⇰    | rightwards white arrow from wall                    |
+| `21F1` |    ⇱    | north west arrow to corner                          |
+| `21F2` |    ⇲    | south east arrow to corner                          |
+| `21F3` |    ⇳    | up down white arrow                                 |
+| `2B04` |    ⬄    | left right white arrow                              |
 
-| CODE | SYMBOLS | EXPLANATION                                         |
-|:----:|:-------:|-----------------------------------------------------|
-| 21E6 |    ⇦    | LEFTWARDS WHITE ARROW                               |
-| 2B00 |    ⬀    | NORTH EAST WHITE ARROW                              |
-| 21E7 |    ⇧    | UPWARDS WHITE ARROW                                 |
-| 21E8 |    ⇨    | RIGHTWARDS WHITE ARROW                              |
-| 21E9 |    ⇩    | DOWNWARDS WHITE ARROW                               |
-| 21EA |    ⇪    | UPWARDS WHITE ARROW FROM BAR                        |
-| 21EB |    ⇫    | UPWARDS WHITE ARROW ON PEDESTAL                     |
-| 21EC |    ⇬    | UPWARDS WHITE ARROW ON PEDESTAL WITH HORIZONTAL BAR |
-| 21ED |    ⇭    | UPWARDS WHITE ARROW ON PEDESTAL WITH VERTICAL BAR   |
-| 21EE |    ⇮    | UPWARDS WHITE DOUBLE ARROW                          |
-| 21EF |    ⇯    | UPWARDS WHITE DOUBLE ARROW ON PEDESTAL              |
-| 21F0 |    ⇰    | RIGHTWARDS WHITE ARROW FROM WALL                    |
-| 21F1 |    ⇱    | NORTH WEST ARROW TO CORNER                          |
-| 21F2 |    ⇲    | SOUTH EAST ARROW TO CORNER                          |
-| 21F3 |    ⇳    | UP DOWN WHITE ARROW                                 |
-| 2B04 |    ⬄    | LEFT RIGHT WHITE ARROW                              |
+### miscellaneous arrows
 
-## miscellaneous arrows
-
-| CODE | SYMBOLS | EXPLANATION                                  |
-|:----:|:-------:|----------------------------------------------|
-| 21F4 |    ⇴    | RIGHT ARROW WITH SMALL CIRCLE                |
-| 2B30 |    ⬰    | LEFT ARROW WITH SMALL CIRCLE                 |
-| 21F5 |    ⇵    | DOWNWARDS ARROW LEFTWARDS OF UPWARDS ARROW   |
-| 21F6 |    ⇶    | THREE RIGHTWARDS ARROWS                      |
-| 2B31 |    ⬱    | THREE LEFTWARDS ARROWS                       |
-| 21F7 |    ⇷    | LEFTWARDS ARROW WITH VERTICAL STROKE         |
-| 21F8 |    ⇸    | RIGHTWARDS ARROW WITH VERTICAL STROKE        |
-| 21F9 |    ⇹    | LEFT RIGHT ARROW WITH VERTICAL STROKE        |
-| 21FA |    ⇺    | LEFTWARDS ARROW WITH DOUBLE VERTICAL STROKE  |
-| 21FB |    ⇻    | RIGHTWARDS ARROW WITH DOUBLE VERTICAL STROKE |
-| 21FC |    ⇼    | LEFT RIGHT ARROW WITH DOUBLE VERTICAL STROKE |
-| 21FD |    ⇽    | LEFTWARDS OPEN-HEADED ARROW                  |
-| 21FE |    ⇾    | RIGHTWARDS OPEN-HEADED ARROW                 |
-| 21FF |    ⇿    | LEFT RIGHT OPEN-HEADED ARROW                 |
-
+|  CODE  | SYMBOLS | EXPLANATION                                  |
+|:------:|:-------:|----------------------------------------------|
+| `21F4` |    ⇴    | right arrow with small circle                |
+| `2B30` |    ⬰    | left arrow with small circle                 |
+| `21F5` |    ⇵    | downwards arrow leftwards of upwards arrow   |
+| `21F6` |    ⇶    | three rightwards arrows                      |
+| `2B31` |    ⬱    | three leftwards arrows                       |
+| `21F7` |    ⇷    | leftwards arrow with vertical stroke         |
+| `21F8` |    ⇸    | rightwards arrow with vertical stroke        |
+| `21F9` |    ⇹    | left right arrow with vertical stroke        |
+| `21FA` |    ⇺    | leftwards arrow with double vertical stroke  |
+| `21FB` |    ⇻    | rightwards arrow with double vertical stroke |
+| `21FC` |    ⇼    | left right arrow with double vertical stroke |
+| `21FD` |    ⇽    | leftwards open-headed arrow                  |
+| `21FE` |    ⇾    | rightwards open-headed arrow                 |
+| `21FF` |    ⇿    | left right open-headed arrow                 |
 
 # devicons
 
