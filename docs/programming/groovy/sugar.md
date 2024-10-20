@@ -19,10 +19,12 @@
   - [keeping quotes in Map or List](#keeping-quotes-in-map-or-list)
   - [get checksum](#get-checksum)
   - [break from loop](#break-from-loop)
+  - [run groovy from docker](#run-groovy-from-docker)
 - [method and class](#method-and-class)
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
-- [run groovy from docker](#run-groovy-from-docker)
+  - [track the method call](#track-the-method-call)
+  - [get current method name](#get-current-method-name)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
   - [A Bit of metaClass DSL](#a-bit-of-metaclass-dsl)
@@ -609,6 +611,57 @@ assert clz.isInstance( [] ) == false
 > [!NOTE|label:references:]
 > - [Why I hate Groovy? Part 3](https://medium.com/@dove.young/why-i-hate-groovy-part-3-6f7f5a5ea201)
 
+### [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
+```bash
+$ docker run \
+         --rm \
+         -e hola=caracola \
+         -it \
+         groovy:latest groovy -e "System.getenv().each{ println it }"
+```
+
+- mount volume
+  ```bash
+  $ docker run \
+           --rm \
+           -v "$PWD":/home/marslo/scripts \
+           -w /home/marslo/scripts \
+           groovy:latest \
+           groovy DockerBasico.groovy -a
+  ```
+  - `DockerBasico.groovy`
+    ```groovy
+    if ( options.a ) {
+      println "------------------------------------------------------------------"
+      System.getenv().each{ println it }
+      println "------------------------------------------------------------------"
+    }
+    ```
+
+- with Json
+  ```bash
+  $ docker run \
+    --rm \
+    -v "$PWD":/home/marslo/scripts \
+    -w /home/marslo/scripts \
+    groovy:latest groovy DockerBasico.groovy -d
+  ```
+
+  - `DockerBasico.groovy`
+    {% hint style='tip' %}
+    > how to download the image via json
+    {% endhint %}
+
+    ```groovy
+    if( options.d ){
+      def json = new groovy.json.JsonSlurper().parse( new URL("https://dog.ceo/api/breed/hound/images/random")  )
+      if( json.status=='success' ){
+        new File('perrito.jpg').bytes =  new URL(json.message).bytes
+      }
+    }
+    ```
+
+
 ## method and class
 
 > [!NOTE|label:references:]
@@ -657,54 +710,53 @@ assert 'Marie: 1, and the number is 23' == foo(name: 'Marie', age: 1, 23)
 assert 'Marie: 1, and the number is 23' == foo(23, name: 'Marie', age: 1)
 ```
 
-## [run groovy from docker](https://groovy-lang.gitlab.io/101-scripts/docker/basico.html)
-```bash
-$ docker run \
-         --rm \
-         -e hola=caracola \
-         -it \
-         groovy:latest groovy -e "System.getenv().each{ println it }"
+### track the method call
+
+> [!NOTE|label:references:]
+> - [Class StackTraceElement](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/StackTraceElement.html)
+> - [Groovy, get enclosing function's name?](https://stackoverflow.com/a/12021663/2940319)
+
+```groovy
+import org.codehaus.groovy.runtime.StackTraceUtils
+
+// baz -> bar -> foo
+def foo() {
+  Throwable marker = new Throwable()
+  StackTraceUtils.sanitize(marker).stackTrace.eachWithIndex { e, i ->
+    println ">> [${i}] ${e.toString().padRight(40)}: ${e.className}.${e.methodName} #${e.lineNumber}"
+  }
+}
+def bar() { foo() }
+def baz() { bar() }
+
+foo()
+println '-'*10
+bar()
+println '-'*10
+baz()
+
+// -- result --
+// >> [0] ConsoleScript49.foo(ConsoleScript49:5)  : ConsoleScript49.foo #5
+// >> [1] ConsoleScript49.run(ConsoleScript49:13) : ConsoleScript49.run #13
+// ----------
+// >> [0] ConsoleScript49.foo(ConsoleScript49:5)  : ConsoleScript49.foo #5
+// >> [1] ConsoleScript49.bar(ConsoleScript49:10) : ConsoleScript49.bar #10
+// >> [2] ConsoleScript49.run(ConsoleScript49:15) : ConsoleScript49.run #15
+// ----------
+// >> [0] ConsoleScript49.foo(ConsoleScript49:5)  : ConsoleScript49.foo #5
+// >> [1] ConsoleScript49.bar(ConsoleScript49:10) : ConsoleScript49.bar #10
+// >> [2] ConsoleScript49.baz(ConsoleScript49:11) : ConsoleScript49.baz #11
+// >> [3] ConsoleScript49.run(ConsoleScript49:17) : ConsoleScript49.run #17
 ```
 
-- mount volume
-  ```bash
-  $ docker run \
-           --rm \
-           -v "$PWD":/home/marslo/scripts \
-           -w /home/marslo/scripts \
-           groovy:latest \
-           groovy DockerBasico.groovy -a
-  ```
-  - `DockerBasico.groovy`
-    ```groovy
-    if ( options.a ) {
-      println "------------------------------------------------------------------"
-      System.getenv().each{ println it }
-      println "------------------------------------------------------------------"
-    }
-    ```
-- with Json
-  ```bash
-  $ docker run \
-    --rm \
-    -v "$PWD":/home/marslo/scripts \
-    -w /home/marslo/scripts \
-    groovy:latest groovy DockerBasico.groovy -d
-  ```
+### [get current method name](https://stackoverflow.com/a/72550845/2940319)
 
-  - `DockerBasico.groovy`
-    {% hint style='tip' %}
-    > how to download the image via json
-    {% endhint %}
+> [!NOTE|label:references:]
+> - [How to Get a Name of a Method Being Executed?](https://www.baeldung.com/java-name-of-executing-method)
 
-    ```groovy
-    if( options.d ){
-      def json = new groovy.json.JsonSlurper().parse( new URL("https://dog.ceo/api/breed/hound/images/random")  )
-      if( json.status=='success' ){
-        new File('perrito.jpg').bytes =  new URL(json.message).bytes
-      }
-    }
-    ```
+```groovy
+new Object(){}.getClass().getEnclosingMethod().getName()
+```
 
 ## MetaClass
 
