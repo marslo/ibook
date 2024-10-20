@@ -944,6 +944,7 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 ## characters
 
 > [!NOTE|label:references:]
+> - [* iMarslo: unicode](../cheatsheet/text-processing/unicode.md) | [* iMarslo: unicode in bash](../linux/basic.md#unicode)
 > - [* digraph.txt:digraph-table](https://vimhelp.org/digraph.txt.html#digraph-table)
 > - [* :help i_CTRL-V](https://vimhelp.org/insert.txt.html#i_CTRL-V)
 > - [* :help i_CTRL-K](https://vimhelp.org/insert.txt.html#i_CTRL-K)

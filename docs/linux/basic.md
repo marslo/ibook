@@ -775,6 +775,7 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 
 {% hint style='tip' %}
 > references:
+> - [* iMarslo: Unicode](../cheatsheet/text-processing/unicode.md) | [* iMarslo: unicode in vim/nvim](../vim/tricky.md#characters)
 > - [How do you echo a 4-digit Unicode character in Bash?](https://stackoverflow.com/q/602912/2940319)
 > - [centos locale utf-8](https://unix.stackexchange.com/a/25237/29178)
 > - [How can I make iconv replace the input file with the converted output?](https://unix.stackexchange.com/q/10241/29178)
@@ -792,13 +793,13 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 ```bash
 $ echo $'\xe2\x98\xa0'
 ☠
-$ echo $'(U+2620) \U02620' | xxd
+$ echo $'(U+2620) \U02620' | /usr/bin/xxd
 00000000: 2855 2b32 3632 3029 20e2 98a0 0a         (U+2620) ....
 
 # test
-for (( i=0x2500; i<0x2600; i++ )); do
-    UnicodePointToUtf8 $i
-    [ "$(( i+1 & 0x1f ))" != 0 ] || echo ""
+$ for (( i=0x2500; i<0x2600; i++ )); do
+  UnicodePointToUtf8 $i
+  [ "$(( i+1 & 0x1f ))" != 0 ] || echo ""
 done
 ─━│┃┄┅┆┇┈┉┊┋┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟
 ┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿
@@ -810,77 +811,74 @@ done
 ◠◡◢◣◤◥◦◧◨◩◪◫◬◭◮◯◰◱◲◳◴◵◶◷◸◹◺◻◼◽◾◿
 
 ## test harness
-for (( i=0x2500; i<0x2600; i++ )); do
-    unichr $i
-done
+$ for (( i=0x2500; i<0x2600; i++ )); do unichr $i; done
 ─━│┃┄┅┆┇┈┉┊┋┌┍┎┏┐┑┒┓└┕┖┗┘┙┚┛├┝┞┟┠┡┢┣┤┥┦┧┨┩┪┫┬┭┮┯┰┱┲┳┴┵┶┷┸┹┺┻┼┽┾┿╀╁╂╃╄╅╆╇╈╉╊╋╌╍╎╏═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬╭╮╯╰╱╲╳╴╵╶╷╸╹╺╻╼╽╾╿▀▁▂▃▄▅▆▇█▉▊▋▌▍▎▏▐░▒▓▔▕▖▗▘▙▚▛▜▝▞▟■□▢▣▤▥▦▧▨▩▪▫▬▭▮▯▰▱▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅◆◇◈◉◊○◌◍◎●◐◑◒◓◔◕◖◗◘◙◚◛◜◝◞◟◠◡◢◣◤◥◦◧◨◩◪◫◬◭◮◯◰◱◲◳◴◵◶◷◸◹◺◻◼◽◾◿
 
 # https://stackoverflow.com/a/55639328/2940319
 $ echo -e "\U1F304"
 �
-$ echo -e "�" | hexdump -C
+$ echo -e "�" | /usr/bin/hexdump -C
 00000000  f0 9f 8c 84 0a                                    |.....|
 00000005
 ```
 
 - [unicode to utf8](https://stackoverflow.com/a/59040037/2940319)
   ```bash
-  UnicodePointToUtf8()
-  {
-      local x="$1"               # ok if '0x2620'
-      x=${x/\\u/0x}              # '\u2620' -> '0x2620'
-      x=${x/U+/0x}; x=${x/u+/0x} # 'U-2620' -> '0x2620'
-      x=$((x)) # from hex to decimal
-      local y=$x n=0
-      [ $x -ge 0 ] || return 1
-      while [ $y -gt 0 ]; do y=$((y>>1)); n=$((n+1)); done
-      if [ $n -le 7 ]; then       # 7
-          y=$x
-      elif [ $n -le 11 ]; then    # 5+6
-          y=" $(( ((x>> 6)&0x1F)+0xC0 )) \
-              $(( (x&0x3F)+0x80 ))"
-      elif [ $n -le 16 ]; then    # 4+6+6
-          y=" $(( ((x>>12)&0x0F)+0xE0 )) \
-              $(( ((x>> 6)&0x3F)+0x80 )) \
-              $(( (x&0x3F)+0x80 ))"
-      else                        # 3+6+6+6
-          y=" $(( ((x>>18)&0x07)+0xF0 )) \
-              $(( ((x>>12)&0x3F)+0x80 )) \
-              $(( ((x>> 6)&0x3F)+0x80 )) \
-              $(( (x&0x3F)+0x80 ))"
-      fi
-      printf -v y '\\x%x' $y
-      echo -n -e $y
+  UnicodePointToUtf8() {
+    local x="$1"                   # ok if '0x2620'
+    x=${x/\\u/0x}                  # '\u2620' -> '0x2620'
+    x=${x/U+/0x}; x=${x/u+/0x}     # 'U-2620' -> '0x2620'
+    x=$((x)) # from hex to decimal
+    local y=$x n=0
+    [ $x -ge 0 ] || return 1
+    while [ $y -gt 0 ]; do y=$((y>>1)); n=$((n+1)); done
+    if [ $n -le 7 ]; then          # 7
+        y=$x
+    elif [ $n -le 11 ]; then       # 5+6
+        y=" $(( ((x>> 6)&0x1F)+0xC0 )) \
+            $(( (x&0x3F)+0x80 ))"
+    elif [ $n -le 16 ]; then       # 4+6+6
+        y=" $(( ((x>>12)&0x0F)+0xE0 )) \
+            $(( ((x>> 6)&0x3F)+0x80 )) \
+            $(( (x&0x3F)+0x80 ))"
+    else                           # 3+6+6+6
+        y=" $(( ((x>>18)&0x07)+0xF0 )) \
+            $(( ((x>>12)&0x3F)+0x80 )) \
+            $(( ((x>> 6)&0x3F)+0x80 )) \
+            $(( (x&0x3F)+0x80 ))"
+    fi
+    printf -v y '\\x%x' $y
+    echo -n -e $y
   }
   ```
 
 - [unichr](https://stackoverflow.com/a/16509364/2940319)
   ```bash
   fast_chr() {
-      local __octal
-      local __char
-      printf -v __octal '%03o' $1
-      printf -v __char \\$__octal
-      REPLY=$__char
+    local __octal
+    local __char
+    printf -v __octal '%03o' $1
+    printf -v __char \\$__octal
+    REPLY=$__char
   }
 
   function unichr {
-      local c=$1  # Ordinal of char
-      local l=0   # Byte ctr
-      local o=63  # Ceiling
-      local p=128 # Accum. bits
-      local s=''  # Output string
+    local c=$1  # Ordinal of char
+    local l=0   # Byte ctr
+    local o=63  # Ceiling
+    local p=128 # Accum. bits
+    local s=''  # Output string
 
-      (( c < 0x80 )) && { fast_chr "$c"; echo -n "$REPLY"; return; }
+    (( c < 0x80 )) && { fast_chr "$c"; echo -n "$REPLY"; return; }
 
-      while (( c > o )); do
-          fast_chr $(( t = 0x80 | c & 0x3f ))
-          s="$REPLY$s"
-          (( c >>= 6, l++, p += o+1, o>>=1 ))
-      done
+    while (( c > o )); do
+      fast_chr $(( t = 0x80 | c & 0x3f ))
+      s="$REPLY$s"
+      (( c >>= 6, l++, p += o+1, o>>=1 ))
+    done
 
-      fast_chr $(( t = p | c ))
-      echo -n "$REPLY$s"
+    fast_chr $(( t = p | c ))
+    echo -n "$REPLY$s"
   }
   ```
 
