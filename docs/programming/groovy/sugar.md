@@ -14,13 +14,13 @@
   - [loop if not empty](#loop-if-not-empty)
   - [getField()](#getfield)
   - [generate the random String](#generate-the-random-string)
-  - [dynamic method names](#dynamic-method-names)
   - [`instanceof`](#instanceof)
   - [keeping quotes in Map or List](#keeping-quotes-in-map-or-list)
   - [get checksum](#get-checksum)
   - [break from loop](#break-from-loop)
   - [run groovy from docker](#run-groovy-from-docker)
 - [method and class](#method-and-class)
+  - [dynamic method names](#dynamic-method-names)
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
   - [track the method call](#track-the-method-call)
@@ -495,19 +495,6 @@ println new Random().with { (1..8).collect { alphabet[ nextInt( alphabet.length(
   randomValue = generator( charset, 15 )
   ```
 
-### [dynamic method names](https://docs.groovy-lang.org/latest/html/documentation/#_dynamic_method_names)
-```groovy
-def codecs = classes.findAll { it.name.endsWith('Codec') }
-
-codecs.each { codec ->
-    Object.metaClass."encodeAs${codec.name-'Codec'}" = { codec.newInstance().encode(delegate) }
-    Object.metaClass."decodeFrom${codec.name-'Codec'}" = { codec.newInstance().decode(delegate) }
-}
-
-def html = '<html><body>hello</body></html>'
-assert '<html><body>hello</body></html>' == html.encodeAsHTML()
-```
-
 ### `instanceof`
 
 > [!NOTE]
@@ -669,6 +656,24 @@ $ docker run \
 >   - [Positional parameters](http://groovy-lang.org/objectorientation.html#_positional_parameters)
 >   - [Named parameters](http://groovy-lang.org/objectorientation.html#_named_parameters)
 > - [Varargs](http://groovy-lang.org/objectorientation.html#_varargs)
+
+### [dynamic method names](https://docs.groovy-lang.org/latest/html/documentation/#_dynamic_method_names)
+
+> [!NOTE|label:references:]
+> - [call name of method contained in a string](https://stackoverflow.com/a/1357976/2940319)
+> - [Runtime and compile-time metaprogramming](https://groovy-lang.org/metaprogramming.html)
+
+```groovy
+def codecs = classes.findAll { it.name.endsWith('Codec') }
+
+codecs.each { codec ->
+    Object.metaClass."encodeAs${codec.name-'Codec'}" = { codec.newInstance().encode(delegate) }
+    Object.metaClass."decodeFrom${codec.name-'Codec'}" = { codec.newInstance().decode(delegate) }
+}
+
+def html = '<html><body>hello</body></html>'
+assert '<html><body>hello</body></html>' == html.encodeAsHTML()
+```
 
 ### [Named parameters](http://docs.groovy-lang.org/latest/html/documentation/#_named_parameters_2)
 
