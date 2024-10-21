@@ -36,6 +36,12 @@
 import org.springframework.jdbc.core.JdbcTemplate
 ```
 
+- [or](https://stackoverflow.com/a/40436265/2940319)
+  ```groovy
+  @Grab(group='org.jsoup', module='jsoup', version='1.10.1')
+  import org.jsoup.Jsoup
+  ```
+
 - or
   ```groovy
   @Grab('org.springframework:spring-orm:5.2.8.RELEASE')
@@ -74,8 +80,7 @@ groovy.grape.Grape.grab(group:'org.springframework', module:'spring', version:'2
 
 ### proxy settings
 
-> [!TIP]
-> reference:
+> [!TIP|label:reference:]
 > - [Java Networking and Proxies](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html)
 > - [Networking Properties](https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html)
 > - [The JAVA_TOOL_OPTIONS Environment Variable](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/envvars002.html)
@@ -84,7 +89,7 @@ groovy.grape.Grape.grab(group:'org.springframework', module:'spring', version:'2
 > - [Setting JVM Options for Application Servers](https://community.jaspersoft.com/documentation/jasperreports-server-community-install-guide/v56/setting-jvm-options-application)
 > - [java HotSpot VM Command-Line Options](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/clopts001.html)
 > - [The java Command](https://docs.oracle.com/en/java/javase/13/docs/specs/man/java.html)
->
+> <p>
 > - [`nonProxy`](https://stackoverflow.com/a/120802/2940319)
 >   ```
 >   -Dhttp.nonProxyHosts="localhost|127.0.0.1|10.*.*.*|*.example.com|etc"
@@ -198,23 +203,22 @@ println Util.XS_DATETIME_FORMATTER.format( new Date() )
     ```
   - solution
 
-    > [!TIP]
-    > solution:
+    > [!TIP|label:solutions]
     > - using [`org/connectbot/jbcrypt/1.0.2`](https://repo.jenkins-ci.org/artifactory/public/org/connectbot/jbcrypt/1.0.2/) instead of [`org/connectbot/jbcrypt/jbcrypt/1.0.0`](https://repo.jenkins-ci.org/artifactory/public/org/connectbot/jbcrypt/jbcrypt/1.0.0/)
 
     ```bash
     $ grep -n jbcrypt ~/.groovy/grapes/org.jenkins-ci.main/jenkins-core/ivy-2.377.xml
-    89:    <dependency org="org.connectbot.jbcrypt" name="jbcrypt" rev="1.0.0" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
-
-    |
-    v
-
-    89:    <dependency org="org.connectbot" name="jbcrypt" rev="1.0.2" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
+    # 89:    <dependency org="org.connectbot.jbcrypt" name="jbcrypt" rev="1.0.0" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
+    #
+    # |
+    # v
+    #
+    # 89:    <dependency org="org.connectbot" name="jbcrypt" rev="1.0.2" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
     ```
 
 ## CLI
 
-> [!NOTE]
+> [!NOTE|label:references:]
 > - [How to specify javax.xml.accessExternalSchema for the JAXB2 Maven plugin](https://stackoverflow.com/a/27823893/2940319)
 > - [Error grabbing Grapes ... unresolved dependency ... not found](https://stackoverflow.com/a/25205578/2940319)
 > - [~/.groovy/grapeConfig.xml](https://stackoverflow.com/a/15791969/2940319)
@@ -967,6 +971,11 @@ jenkins@devops-jenkins-7b9c76d564-s75tj:~$
 
 ```bash
 $ grape install org.ajoberstar.grgit 4.0.2 grgit-core
+```
+
+<!--sec data-title="grape install" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ grape install org.ajoberstar.grgit 4.0.2 grgit-core
 [0.005s][warning][gc] -XX:+PrintGC is deprecated. Will use -Xlog:gc instead.
 [0.005s][warning][gc] -XX:+PrintGCDetails is deprecated. Will use -Xlog:gc* instead.
 [0.017s][info   ][gc,heap] Heap region size: 8M
@@ -1246,8 +1255,14 @@ Resolving dependency: org.ajoberstar.grgit#4.0.2;grgit-core {default=[default]}
 [4.623s][info   ][gc,heap,exit  ]  Metaspace       used 27090K, capacity 27726K, committed 27904K, reserved 1075200K
 [4.623s][info   ][gc,heap,exit  ]   class space    used 2744K, capacity 2963K, committed 3072K, reserved 1048576K
 ```
+<!--endsec-->
 
 ### uninstall
+```bash
+$ grape uninstall org.ajoberstar.grgit grgit-core 4.0.2
+```
+
+<!--sec data-title="grape uninstall" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 $ grape uninstall org.ajoberstar.grgit grgit-core 4.0.2
 [0.006s][warning][gc] -XX:+PrintGC is deprecated. Will use -Xlog:gc instead.
@@ -1451,3 +1466,4 @@ Deleting grgit-core-4.0.2.jar
 [2.232s][info   ][gc,heap,exit ]  Metaspace       used 19909K, capacity 20431K, committed 20608K, reserved 1067008K
 [2.232s][info   ][gc,heap,exit ]   class space    used 1961K, capacity 2152K, committed 2176K, reserved 1048576K
 ```
+<!--endsec-->
