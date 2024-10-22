@@ -14,6 +14,7 @@
     - [developer mode](#developer-mode)
   - [utilities](#utilities)
   - [screenshot](#screenshot)
+    - [suppress "Allow For One Month"](#suppress-allow-for-one-month)
   - [finder](#finder)
     - [quit via ⌘ + Q](#quit-via-%E2%8C%98--q)
     - [default location](#default-location)
@@ -325,6 +326,46 @@ $ defaults write com.apple.finder AppleShowAllFiles YES
 ```
 
 ## screenshot
+
+### suppress "Allow For One Month"
+
+> [!NOTE|label:references:]
+> - [Stop macOS 15 Sequoia monthly screen recording prompts](https://lapcatsoftware.com/articles/2024/8/10.html)
+> - [How to stop "Allow For One Month" in macOS 15 Sequoia - especially when replayd ScreenCaptureApprovals.plist is missing?](https://apple.stackexchange.com/a/475541/254265)
+> - [screencapture-nag-remover](https://github.com/luckman212/screencapture-nag-remover)
+
+```bash
+# check info
+$ defaults read ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist
+{
+    "/Applications/Bob.app/Contents/MacOS/Bob" = "2024-09-19 22:33:43 +0000";
+    "/Applications/GIF Brewery 3.app/Contents/MacOS/GIF Brewery 3" = "2024-09-21 10:34:48 +0000";
+    "/Applications/Snipaste.app/Contents/MacOS/Snipaste" = "2024-10-22 07:04:02 +0000";
+    "/Applications/zoom.us.app/Contents/MacOS/zoom.us" = "2024-10-15 06:12:23 +0000";
+}
+
+# update one
+$ defaults write ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist \
+           "/Applications/Snipaste.app/Contents/MacOS/Snipaste" \
+           -date "3024-01-01 00:00:00 +0000":wa
+
+# update all
+$ defaults read ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist |
+  sed -nr 's|^\s*"([^"]+)".*$|\1|p' |
+  while read -r _name; do
+    defaults write ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist \
+             "${_name}" -date "3024-01-01 00:00:00 +0000" ;
+  done
+
+# verify
+$ defaults read ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist
+{
+    "/Applications/Bob.app/Contents/MacOS/Bob" = "3024-01-01 00:00:00 +0000";
+    "/Applications/GIF Brewery 3.app/Contents/MacOS/GIF Brewery 3" = "3024-01-01 00:00:00 +0000";
+    "/Applications/Snipaste.app/Contents/MacOS/Snipaste" = "3024-01-01 00:00:00 +0000";
+    "/Applications/zoom.us.app/Contents/MacOS/zoom.us" = "3024-01-01 00:00:00 +0000";
+}
+```
 
 #### set screenshot location
 ```bash
