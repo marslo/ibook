@@ -204,6 +204,38 @@ def removeSuffix( String str, int c ) {
 str.concat('substr')
 ```
 
+#### recursive the path
+```groovy
+# with String
+String ss = 'very/long/path/to/file'
+List list = ss.tokenize('/')
+println ( (1..list.size()-1).collect { list[0..it].join('/') }.join('\n') )
+
+// -- result --
+// very/long
+// very/long/path
+// very/long/path/to
+// very/long/path/to/file
+
+# with List
+List paths = [ 'very/long/path/to/file', 'very/long/path/to/folder', 'path/to/folder' ]
+println paths.collectMany {
+                List list = it.tokenize('/')
+                (0..list.size()-1).collect { list[0..it].join('/') }
+             }.unique().join('\n')
+
+// -- result --
+// very
+// very/long
+// very/long/path
+// very/long/path/to
+// very/long/path/to/file
+// very/long/path/to/folder
+// path
+// path/to
+// path/to/folder
+```
+
 ## comparation
 ### `equalsIgnoreCase`
 ```groovy
