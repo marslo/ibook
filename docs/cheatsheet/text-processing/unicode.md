@@ -3,6 +3,7 @@
 
 - [unicode](#unicode)
   - [useful unicode](#useful-unicode)
+    - [mac keys](#mac-keys)
     - [combining diacritical marks](#combining-diacritical-marks)
   - [arrows](#arrows)
     - [simple arrows](#simple-arrows)
@@ -35,6 +36,7 @@
 >   - `25A0 - 25FF`: [Geometric Shapes](https://www.unicode.org/charts/nameslist/n_25A0.html) | [Geometric Shapes.pdf](https://www.unicode.org/charts/PDF/U25A0.pdf)
 >   - `2B00 - 2BFF`: [Miscellaneous Symbols and Arrows](https://www.unicode.org/charts/nameslist/n_2B00.html) | [Miscellaneous Symbols and Arrows](https://www.unicode.org/charts/nameslist/n_2B00.html) | [Miscellaneous Symbols and Arrows.pdf](https://www.unicode.org/charts/PDF/U2B00.pdf)
 >   - `1F780 - 1F7FF`: [Geometric Shapes Extended](https://www.unicode.org/charts/nameslist/n_1F780.html) | [Geometric Shapes Extended.pdf](https://www.unicode.org/charts/PDF/U1F780.pdf)
+> - [Unicode](https://www.compart.com/en/unicode/block)
 > - [Unicode Character Table](https://unicode-table.com/en/)
 >   - [arrow](https://unicode-table.com/en/sets/arrow-symbols/)
 >   - [Arrows](https://unicode.org/charts/nameslist/n_2190.html)
@@ -57,35 +59,52 @@
 | SYMBOLS | UNICODE | HTML ENTITY NUBMER          | ENTITY NAME                                    | DESC                                       |
 |:-------:|:-------:|:----------------------------|:-----------------------------------------------|:-------------------------------------------|
 |  &#160; |         | `&#160;`                    | `&nbsp;`                                       | space                                      |
-|  &#60;  | `003C`  | `&#60;` <br> `&#x3C;`       | `&lt;`                                         | less than                                  |
-|  &#62;  | `003E`  | `&#62;`  <br> `&#x3E;`      | `&gt;`                                         | greater than                               |
-|    «    | `00AB`  | `&#171;` <br> `&#xab;`      | `&laquo;`                                      | left-pointing double angle quotation mark  |
-|    »    | `00BB`  | `&#187` <br> `&#xbb;`       | `&raquo;`                                      | right-pointing Double angle quotation mark |
-|    ›    | `203A`  | `&#8250;` <br> `&#x203a;`   | `&rsaquo;`                                     | right-pointing single guillemet            |
-|    ‹    | `2039`  | `&#8249;` <br> `&#x2039;`   | `&lsaquo;`                                     | left-pointing single guillemet             |
-|  &#38;  | `0026`  | `&#38;` <br> `&#x26;`       | `&amp;`                                        | ampersand                                  |
-|  &#124; | `007C`  | `&#124;` <br> `&#x7C;`      | `&verbar;` <br> `&vert;` <br> `&VerticalLine;` | vertical bar                               |
-|    ←    | `2190`  | `&#8592;` <br> `&#x2190;`   | `&larr;` <br> `&ShortLeftArrow;`               | leftwards arrow                            |
-|    →    | `2192`  | `&#8594;` <br> `&#x2192;`   | `&rarr;` <br> `&rightarrow;`                   | rightwards arrow                           |
-|    ↑    | `2191`  | `&#8593;` <br> `&#x2191;`   | `&uarr;` <br> `&ShortUpArrow;`                 | upwards arrow                              |
-|    ↓    | `2193`  | `&#8595;` <br> `&#x2193;`   | `&darr;` <br> `&ShortDownArrow;`               | downwards arrow                            |
-|    ☐    | `2610`  | `&#9744;` <br> `&#x2610;`   | -                                              | Ballot Box                                 |
-| &#8414; | `20DE`  | `&#8414;` <br> `&#x20DE;`   | -                                              | Combining Enclosing Square                 |
-|    ▢    | `25A2`  | `&#9634;` <br> `&#x25A2;`   | -                                              | White Square with Rounded C<br>ners        |
-|    ⬚    | `2B1A`  | `&#11034;` <br> `&#x2B1A;`  | -                                              | Dotted Square                              |
-|    ✅   | `2705`  | `&#9989;` <br> `&#x2705;`   | -                                              | White Heavy Check Mark                     |
-|    ☑    | `2611`  | `&#9745;` <br> `&#x2611;`   | -                                              | Ballot Box with Check                      |
-|    ☒    | `2612`  | `&#9746;` <br> `&#x2612;`   | -                                              | Ballot Box with X                          |
+|  &#60;  |  `003C` | `&#60;` <br> `&#x3C;`       | `&lt;`                                         | less than                                  |
+|  &#62;  |  `003E` | `&#62;`  <br> `&#x3E;`      | `&gt;`                                         | greater than                               |
+|    «    |  `00AB` | `&#171;` <br> `&#xab;`      | `&laquo;`                                      | left-pointing double angle quotation mark  |
+|    »    |  `00BB` | `&#187` <br> `&#xbb;`       | `&raquo;`                                      | right-pointing Double angle quotation mark |
+|    ›    |  `203A` | `&#8250;` <br> `&#x203a;`   | `&rsaquo;`                                     | right-pointing single guillemet            |
+|    ‹    |  `2039` | `&#8249;` <br> `&#x2039;`   | `&lsaquo;`                                     | left-pointing single guillemet             |
+|  &#38;  |  `0026` | `&#38;` <br> `&#x26;`       | `&amp;`                                        | ampersand                                  |
+|  &#124; |  `007C` | `&#124;` <br> `&#x7C;`      | `&verbar;` <br> `&vert;` <br> `&VerticalLine;` | vertical bar                               |
+|    ←    |  `2190` | `&#8592;` <br> `&#x2190;`   | `&larr;` <br> `&ShortLeftArrow;`               | leftwards arrow                            |
+|    →    |  `2192` | `&#8594;` <br> `&#x2192;`   | `&rarr;` <br> `&rightarrow;`                   | rightwards arrow                           |
+|    ↑    |  `2191` | `&#8593;` <br> `&#x2191;`   | `&uarr;` <br> `&ShortUpArrow;`                 | upwards arrow                              |
+|    ↓    |  `2193` | `&#8595;` <br> `&#x2193;`   | `&darr;` <br> `&ShortDownArrow;`               | downwards arrow                            |
+|    ☐    |  `2610` | `&#9744;` <br> `&#x2610;`   | -                                              | Ballot Box                                 |
+| &#8414; |  `20DE` | `&#8414;` <br> `&#x20DE;`   | -                                              | Combining Enclosing Square                 |
+|    ▢    |  `25A2` | `&#9634;` <br> `&#x25A2;`   | -                                              | White Square with Rounded C                |
+|    ⬚    |  `2B1A` | `&#11034;` <br> `&#x2B1A;`  | -                                              | Dotted Square                              |
+|    ✅   |  `2705` | `&#9989;` <br> `&#x2705;`   | -                                              | White Heavy Check Mark                     |
+|    ☑    |  `2611` | `&#9745;` <br> `&#x2611;`   | -                                              | Ballot Box with Check                      |
+|    ☒    |  `2612` | `&#9746;` <br> `&#x2612;`   | -                                              | Ballot Box with X                          |
 |    𐄂    | `10102` | `&#65794;` <br> `&#x10102;` | -                                              | Aegean Check Mark                          |
-|    ☓    | `2613`  | `&#9747;` <br> `&#x2613;`   | -                                              | Saltire                                    |
-|    ✓    | `2713`  | `&#10003;` <br> `&#x2713;`  | `&check;`                                      | Check Mark                                 |
-|    ✔    | `2714`  | `&#10004;` <br> `&#x2714;`  | -                                              | Heavy Check Mark                           |
-|    ⍻    | `237B`  | `&#9083;` <br> `&#x237B;`   | -                                              | Not Check Mark                             |
-|    ✕    | `2715`  | `&#10005;` <br> `&#x2715;`  | -                                              | Multiplication X                           |
-|    ✖    | `2716`  | `&#10006;` <br> `&#x2716;`  | -                                              | Heavy Multiplication X                     |
-|    ✗    | `2717`  | `&#10007;` <br> `&#x2717;`  | -                                              | Ballot X                                   |
-|    ✘    | `2718`  | `&#10008;` <br> `&#x2718;`  | -                                              | Heavy Ballot X                             |
+|    ☓    |  `2613` | `&#9747;` <br> `&#x2613;`   | -                                              | Saltire                                    |
+|    ✓    |  `2713` | `&#10003;` <br> `&#x2713;`  | `&check;`                                      | Check Mark                                 |
+|    ✔    |  `2714` | `&#10004;` <br> `&#x2714;`  | -                                              | Heavy Check Mark                           |
+|    ⍻    |  `237B` | `&#9083;` <br> `&#x237B;`   | -                                              | Not Check Mark                             |
+|    √    |  `221A` | `&#8730;` <br> `&#x221A;`   | `&Sqrt;`                                       | Square Root                                |
+|    ∛    |  `221B` | `&#8731;` <br> `&#x221B;`   | -                                              | Cube Root                                  |
+|    ∜    |  `221C` | `&#8732;` <br> `&#x221C;`   | -                                              | Fourth Root                                |
+|    ✕    |  `2715` | `&#10005;` <br> `&#x2715;`  | -                                              | Multiplication X                           |
+|    ✖    |  `2716` | `&#10006;` <br> `&#x2716;`  | -                                              | Heavy Multiplication X                     |
+|    ✗    |  `2717` | `&#10007;` <br> `&#x2717;`  | -                                              | Ballot X                                   |
+|    ✘    |  `2718` | `&#10008;` <br> `&#x2718;`  | -                                              | Heavy Ballot X                             |
+|    ⎅    |  `2385` | `&#9093;` <br> `&#x2385;`   | -                                              | White Square with Centre Vertical Line     |
+|    ⌗    |  `2317` | `&#8983;` <br> `&#x2317;`   | -                                              | viewdata square                            |
 
+### mac keys
+
+ | KEY | KEY CODE |  | KEY | KEY CODE |  | KEY | KEY CODE |
+ |:---:|:--------:|--|:---:|:--------:|--|:---:|:--------:|
+ | `␣` |  `2423`  |  | `⇥` |  `21E5`  |  | `⏎` |  `23CE`  |
+ | `⌫` |  `232B`  |  | `⌦` |  `2326`  |  | `␊` |  `240A`  |
+ | `⎋` |  `238B`  |  | `⌘` |  `2318`  |  | `⎇` |  `2387`  |
+ | `⇪` |  `21EA`  |  | `⇧` |  `21EF`  |  | `⇧` |  `21E7`  |
+ | `⌃` |   `62`   |  | `⌥` |  `2325`  |  | `⌃` |  `2303`  |
+ | `⇱` |  `21F1`  |  | `⇲` |  `21F2`  |  | `⇞` |  `21DE`  |
+ | `⇟` |  `21DF`  |  | `←` |  `2190`  |  | `→` |  `2192`  |
+ | `↓` |  `2193`  |  | `↑` |  `2191`  |  | `⌨` |  `2328`  |
 
 ### [combining diacritical marks](https://www.w3schools.com/html/html_entities.asp)
 
@@ -548,8 +567,20 @@
 | `F1729` |   󱜩  |  `&#xF1729;`  | 2.1           |
 | `F1052` |   󱁒  |  `&#xF1052;`  | -1            |
 | `F15CB` |   󱗋  |  `&#xF15CB;`  | +1            |
-|   `B2`  |   ²  |    `&#xB2;`   | ^2            |
-|   `B3`  |   ³  |    `&#xB3;`   | ^3            |
+|  `FF10` |  １  |   `&#xFF10;`  | 1             |
+|  `FF11` |  ２  |   `&#xFF11;`  | 2             |
+|  `FF12` |  ３  |   `&#xFF12;`  | 3             |
+|  `FF13` |  ４  |   `&#xFF13;`  | 4             |
+|  `FF14` |  ５  |   `&#xFF14;`  | 5             |
+|  `FF15` |  ６  |   `&#xFF15;`  | 6             |
+|  `FF16` |  ７  |   `&#xFF16;`  | 7             |
+|  `FF17` |  ８  |   `&#xFF17;`  | 8             |
+|  `FF18` |  ９  |   `&#xFF18;`  | 9             |
+|  `207F` |   ⁿ  |   `&#x207F;`  | ^n            |
+|  `00BA` |   º  |    `&#xBA;`   | ^0            |
+|  `00B9` |   ¹  |    `&#xB9;`   | ^1            |
+|  `00B2` |   ²  |    `&#xB2;`   | ^2            |
+|  `00B3` |   ³  |    `&#xB3;`   | ^3            |
 |  `2074` |   ⁴  |   `&#x2074;`  | ^4            |
 |  `2075` |   ⁵  |   `&#x2075;`  | ^5            |
 |  `2076` |   ⁶  |   `&#x2076;`  | ^6            |
@@ -589,8 +620,11 @@
 |  `2151` |   ⅑  |   `&#x2151;`  | 1/9           |
 |  `2152` |   ⅒  |   `&#x2152;`  | 1/10          |
 | `F01C9` |   󰇉  |  `&#xF01C9;`  | A/B           |
-|  `207A` |   ⁺  |   `&#x207A;`  | +             |
-|  `208A` |   ₊  |   `&#x208A;`  | +             |
+|  `208C` |   ₌  |   `&#x208C;`  | _=            |
+|  `208D` |   ₍  |   `&#x208D;`  | _(            |
+|  `208E` |   ₎  |   `&#x208E;`  | _)            |
+|  `207A` |   ⁺  |   `&#x207A;`  | ^+            |
+|  `208A` |   ₊  |   `&#x208A;`  | _+            |
 |  `FE62` |  ﹢  |   `&#xFE62;`  | +             |
 |  `FF0B` |  ＋  |   `&#xFF0B;`  | +             |
 | `F0195` |   󰆕  |  `&#xF0195;`  | +/-           |
@@ -622,6 +656,7 @@
 |  `29CC` |   ⧌  |   `&#x29CC;`  | triangle s    |
 |  `2A71` |   ⩱  |   `&#x2A71;`  | =+            |
 |  `2A72` |   ⩲  |   `&#x2A72;`  | +=            |
+|  `223B` |   ∻  |   `&#x223B;`  | ÷             |
 |   `F7`  |   ÷  |    `&#xF7;`   | ÷             |
 | `F01D5` |   󰇕  |  `&#xF01D5;`  | ÷             |
 | `F12EA` |   󱋪  |  `&#xF12EA;`  | ÷             |
@@ -636,6 +671,7 @@
 |  `2215` |   ∕  |   `&#x2215;`  | /             |
 |  `2242` |   ≂  |   `&#x2242;`  | -~            |
 |  `2A6C` |   ⩬  |   `&#x2A6C;`  | ~-~           |
+|  `FF5E` |  ～  |   `&#xFF5E;`  | ~             |
 | `F0963` |   󰥣  |  `&#xF0963;`  | x^y           |
 | `F0964` |   󰥤  |  `&#xF0964;`  | x^y           |
 |  `F12B` |     |   `&#xF12B;`  | x^2           |
@@ -682,6 +718,11 @@
 |  `2271` |   ≱  |   `&#x2271;`  | !>=           |
 |  `2272` |   ≲  |   `&#x2272;`  | ~<            |
 |  `2273` |   ≳  |   `&#x2273;`  | ~>            |
+|  `227E` |   ≾  |   `&#x227E;`  | !~            |
+|  `227F` |   ≿  |   `&#x227F;`  | !~            |
+|  `227D` |   ≽  |   `&#x227D;`  | !~            |
+|  `2280` |   ⊀  |   `&#x2280;`  | !>            |
+|  `2281` |   ⊁  |   `&#x2281;`  | !<            |
 |  `2A87` |   ⪇  |   `&#x2A87;`  | >!~           |
 |  `2A88` |   ⪈  |   `&#x2A88;`  | <!~           |
 |  `22E6` |   ⋦  |   `&#x22E6;`  | <!~           |
@@ -690,6 +731,7 @@
 |  `22E9` |   ⋩  |   `&#x22E9;`  | !~>           |
 |  `2274` |   ≴  |   `&#x2274;`  | !~<           |
 |  `2275` |   ≵  |   `&#x2275;`  | !~>           |
+|  `2278` |   ≸  |   `&#x2278;`  | !<>           |
 |  `29C0` |   ⧀  |   `&#x29C0;`  | O<            |
 |  `29C1` |   ⧁  |   `&#x29C1;`  | O>            |
 |  `2A79` |   ⩹  |   `&#x2A79;`  | o>            |
@@ -703,12 +745,26 @@
 |  `236F` |   ⍯  |   `&#x236F;`  | !=            |
 | `F098E` |   󰦎  |  `&#xF098E;`  | !=            |
 | `F098D` |   󰦍  |  `&#xF098D;`  | !=            |
+|  `2260` |   ≠  |   `&#x2260;`  | !=            |
+|  `2262` |   ≢  |   `&#x2262;`  | !=            |
 | `F0170` |   󰅰  |  `&#xF0170;`  | !=            |
 |  `29E3` |   ⧣  |   `&#x29E3;`  | //==          |
 |  `2248` |   ≈  |   `&#x2248;`  | ~=            |
 |  `2249` |   ≉  |   `&#x2249;`  | !~=           |
-|  `224C` |   ≌  |   `&#x224C;`  | ~==           |
+|  `223C` |   ∼  |   `&#x223C;`  | ~             |
+|  `223D` |   ∽  |   `&#x223D;`  | ~             |
+|  `223E` |   ∾  |   `&#x223E;`  | ~             |
+|  `2241` |   ≁  |   `&#x2241;`  | !~            |
 |  `22CD` |   ⋍  |   `&#x22CD;`  | ~=            |
+|  `2244` |   ≄  |   `&#x2244;`  | !~=           |
+|  `224C` |   ≌  |   `&#x224C;`  | ~==           |
+|  `2247` |   ≇  |   `&#x2247;`  | !~==          |
+|  `225F` |   ≟  |   `&#x225F;`  | =?            |
+|  `FE15` |  ︕  |   `&#xFE15;`  | !             |
+|  `FF01` |  ！  |   `&#xFF01;`  | !             |
+|  `FE16` |  ︖  |   `&#xFE16;`  | ?             |
+| `F0A3D` |   󰨽  |  `&#xF0A3D;`  | information   |
+|  `FF02` |  ＂  |   `&#xFF02;`  | "             |
 | `F0C96` |   󰲖  |  `&#xF0C96;`  | cos           |
 | `F0C97` |   󰲗  |  `&#xF0C97;`  | sin           |
 | `F0C98` |   󰲘  |  `&#xF0C98;`  | tan           |
@@ -922,6 +978,8 @@
 | `F13A3` |   󱎣  |  `&#xF13A3;`  | XS             |
 | `F0A78` |   󰩸  |  `&#xF0A78;`  | TM             |
 |  `F25C` |     |   `&#xF25C;`  | TM             |
+|  `2122` |   ™  |   `&#2122;`   | TM             |
+|  `2120` |   ℠  |   `&#2120;`   | SM             |
 |  `E765` |     |   `&#xE765;`  | cisco          |
 | `F147D` |   󱑽  |  `&#xF147D;`  | waveform       |
 |  `E3BE` |     |   `&#xE3BE;`  | earthquake     |
@@ -950,10 +1008,10 @@
 | `1BC06` |   𛰆  |   `&#1BC06;`  | -              |
 | `1BC0A` |   𛰊  |   `&#1BC0A;`  | -              |
 | `1BC0B` |   𛰋  |   `&#1BC0B;`  | -              |
-| `1F000` |   🀀  |   `&#1F000;`  | majiang        |
-| `1F001` |   🀁  |   `&#1F001;`  | majiang        |
-| `1F002` |   🀂  |   `&#1F002;`  | majiang        |
-| `1F003` |   🀃  |   `&#1F003;`  | majiang        |
+| `1F000` |  🀀  |   `&#1F000;`  | majiang        |
+| `1F001` |  🀁  |   `&#1F001;`  | majiang        |
+| `1F002` |  🀂  |   `&#1F002;`  | majiang        |
+| `1F003` |  🀃  |   `&#1F003;`  | majiang        |
 | `F17C5` |   󱟅  |   `&#F17C5;`  | pH             |
 |  `EE3C` |     |   `&#xEE3C;`  | signature      |
 | `F0DFE` |   󰷾  |   `&#F0DFE;`  | signature      |
@@ -991,3 +1049,4 @@
 |  `2A41` |   ⩁  |   `&#x2A41;`  | u-             |
 |  `2A4B` |   ⩋  |   `&#x2A4B;`  | m              |
 |  `2239` |   ∹  |   `&#x2239;`  | -:             |
+|  `2F45` |  ⽅  |   `&#2F45;`   | 方             |
