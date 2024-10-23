@@ -21,7 +21,8 @@
     - [symbole](#symbole)
     - [others](#others)
   - [powerline fonts](#powerline-fonts)
-  - [others](#others-1)
+  - [tips](#tips)
+    - [Mac Office Fonts](#mac-office-fonts)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -626,8 +627,15 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
       fc-cache -f -v
     ```
 
-## others
+## tips
 
 > [!NOTE|label:references:]
 > - [分享字体表中的部分中文字体，自取自用 #46](https://github.com/F9y4ng/GreasyFork-Scripts/discussions/46)
+> - [到底有哪些好看又免费的字体？这篇合集快收藏！](https://www.hellofont.cn/newsdetail?id=255)
+> - [好看的中文字体 - 字形预览](https://ifonts.com/font/haokandezhongwenziti.html)
+> - [字体天下](https://www.fonts.net.cn/)
 
+### Mac Office Fonts
+
+> [!TIP|label:references:]
+> - CloudFonts: `~/Library/Group Containers/UBF8T346G9.Office/FontCache/4/CloudFonts`
