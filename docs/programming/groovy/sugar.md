@@ -30,6 +30,8 @@
   - [A Bit of metaClass DSL](#a-bit-of-metaclass-dsl)
   - [get class name](#get-class-name)
   - [dynamically call methods](#dynamically-call-methods)
+- [macro](#macro)
+  - [groovy-macro-library](#groovy-macro-library)
 - [others](#others)
   - [groovy cli (args) with options](#groovy-cli-args-with-options)
   - [Get variable value for its name](#get-variable-value-for-its-name)
@@ -882,6 +884,52 @@ doPrint( 'dOCKER', 'awesome marslo!' )
   from Docker: awesome marslo!
   ```
 
+## macro
+
+> [!NOTE|label:references:]
+> - [MethodParameterSpy.java](https://docs.oracle.com/javase/tutorial/reflect/member/example/MethodParameterSpy.java)
+
+### groovy-macro-library
+
+> [!NOTE|label:references:]
+> - [Built-in macro methods](https://groovy-lang.org/releasenotes/groovy-4.0.html#Groovy4.0-new)
+>   - `SV`: [`org.codehaus.groovy.runtime.GStringImpl`](https://docs.groovy-lang.org/latest/html/api/org/codehaus/groovy/runtime/GStringImpl.html)
+>   - `NV`: [`groovy.lang.NamedValue`](https://docs.groovy-lang.org/latest/html/api/groovy/lang/NamedValue.html)
+>   - `SVI`: calls `inspect()`
+>   - `SVD`: calls `dump()`
+
+```groovy
+def string = 'foo'
+def num    = 42
+def list   = [1 ,2, 3]
+def range  = 0..5
+def string = 'foo'
+
+println SV(num, list, range, string)
+
+// -- result --
+// num=42, list=[1, 2, 3], range=[0, 1, 2, 3, 4, 5], string=foo
+```
+
+- [enhancement](https://stackoverflow.com/a/78058498/2940319)
+  ```bash
+  def printSomethingNV(def something) {
+      println("NV $something.name is : $something.val")
+  }
+
+  def printSomethingSV(def something) {
+      def (name, val) = something.split('=')
+      println("SV $name is : $val")
+  }
+
+  printSomethingSV(SV(string, num))
+  printSomethingNV(NV(string))
+
+  // -- result --
+  // SV string is : foo, num
+  // NV string is : foo
+  ```
+
 ## others
 ### groovy cli (args) with options
 
@@ -934,8 +982,13 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
 ```
 
 ### [groovy.lang.Binding](https://docs.groovy-lang.org/latest/html/api/groovy/lang/Binding.html)
+
+> [!NOTE|label:references:]
+> - [Groovy Scripts - Exploring Binding](https://blog.nareshak.com/groovy-scripts-exploring-binding/)
+
 - [`this.binding`](https://stackoverflow.com/a/293149/2940319)
-  > reference:
+
+  > [!TIP|label:reference:]
   > - [Binding variables access in Groovy script's defined classes](https://stackoverflow.com/a/14380610/2940319)
 
   ```groovy
@@ -946,6 +999,7 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
   println this.binding.hasVariable('baz')
   this.binding.variables.each{ println "${it.key} : ${it.value}" }
   ```
+
   - result
     ```
     true
@@ -968,13 +1022,12 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
   m = [ 'a' : '1', 'b' : '2' ]
   binding.setVariable("a", m)
   this.binding.variables.each{ println "${it.key} : ${it.value}" }
+
+  // -- result --
+  // args : []
+  // m : [a:1, b:2]
+  // a : [a:1, b:2]
   ```
-  - result
-    ```
-    args : []
-    m : [a:1, b:2]
-    a : [a:1, b:2]
-    ```
 
 ## load groovy file
 {% hint style='tip' %}
