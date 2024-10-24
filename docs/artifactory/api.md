@@ -4,6 +4,9 @@
 - [variable](#variable)
 - [list](#list)
   - [list subfolders in 1st depth](#list-subfolders-in-1st-depth)
+  - [lastModified](#lastmodified)
+  - [quick search](#quick-search)
+  - [pattern search](#pattern-search)
   - [list docker image tags](#list-docker-image-tags)
   - [list docker registry](#list-docker-registry)
 - [repo](#repo)
@@ -53,6 +56,39 @@ $ curlOpt="-s -g --netrc-file ~/.marslo/.netrc"
 $ /usr/bin/curl ${curlOpt} \
                 -X GET "${rtUrl}/api/storage/${repoName}-local?list&deep=1&listFolders=1&depth=1" |
                 jq -r '.files[].uri | split("/")[1])'
+```
+
+### [lastModified](https://jfrog.com/help/r/jfrog-rest-apis/get-last-modified-item)
+
+> [!NOTE|label:API:]
+> `GET /api/storage/{repoKey}/{item-path}?lastModified`
+
+
+```bash
+$ command curl -fsSL -g ${RT_URL}/api/storage/${repo}/${path}?lastModified |
+  jq -r .uri
+```
+
+### [quick search](https://jfrog.com/help/r/jfrog-rest-apis/artifact-search-quick-search)
+
+> [!NOTE|label:API:]
+> `GET /api/search/artifact?name=name[&repos=x[,y]]`
+
+```bash
+# it will return all artifacts with the name `name` in the `repo/path`
+$ command curl -fsSL -g "${RT_URL}/api/search/artifact?name=${name}&repos=${repo}/${path}" |
+  jq .results[].uri
+```
+
+### [pattern search](https://jfrog.com/help/r/jfrog-rest-apis/pattern-search)
+
+> [!NOTE|label:API:]
+> `GET /api/search/pattern?pattern=repo-key:this/is/a/*pattern*.war`
+
+```bash
+$ command curl -fsSL -g "${RT_URL}/api/search/pattern?pattern=${repo}:${env.JOB_NAME}/*/*original*" |
+  jq -r .files[] |
+  sort
 ```
 
 ### list docker image tags

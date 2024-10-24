@@ -938,10 +938,11 @@ agent:
     ```groovy
     pipeline {
       agent {
-          kubernetes {
-              inheritFrom 'maven'
-          }
+        kubernetes {
+          inheritFrom 'maven'
+        }
       }
+
       // ...
     }
     ```
@@ -952,12 +953,9 @@ $ kubectl exec -c jenkins myjenkins-0 -- tar czf /tmp/backup.tar.gz /var/jenkins
 $ kubectl cp -c jenkins myjenkins-0:/tmp/backup.tar.gz ./backup.tar.gz
 ```
 
-
-
-
 ## build Jenkins docker image
 
-> [!TIP]
+> [!TIP|label: references:]
 > - [jenkins-complete-image/Dockerfile](https://github.com/OctopusSamples/jenkins-complete-image/blob/main/Dockerfile)
 
 ```docker
