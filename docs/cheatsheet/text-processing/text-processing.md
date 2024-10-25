@@ -53,7 +53,8 @@
     - [ping multiple IPs](#ping-multiple-ips)
   - [read by char](#read-by-char)
 - [`find`](#find)
-  - [output file name only](#output-file-name-only)
+  - [output format](#output-format)
+    - [output file name only](#output-file-name-only)
   - [cat config file in all `.git` folder](#cat-config-file-in-all-git-folder)
   - [`exec` and `sed`](#exec-and-sed)
   - [find and rename](#find-and-rename)
@@ -2065,8 +2066,55 @@ $ printf 'mark spitz' | while read -r -n1 c; do printf "[%c]" "$c"; done
 > [!NOTE|label:reference:]
 > - [Everything CLI: FIND -EXEC VS. FIND | XARGS](https://www.everythingcli.org/find-exec-vs-find-xargs/)
 > - [How to get only names from find command without path](https://superuser.com/a/559827/112396)
+> - [Remove path from find command output](https://serverfault.com/a/354407/129815)
 
-## output file name only
+
+## output format
+
+> [!TIP|label:man find:]
+> - [`man find`](https://linux.die.net/man/1/find)
+>   - `%P     File's name with the name of the command line argument under which it was found removed.`
+>   - `%f     File's name with any leading directories removed (only the last element).`
+
+```bash
+# has `./` by default
+$ find . -type f -iname "*cfssl*"
+./cfssl/cfssl-scan
+./cfssl/cfssl-certinfo
+./cfssl/cfssl-bundle
+./cfssl/cfssl
+./cfssl/cfssl-newkey
+./cfssl/cfssljson
+
+# remove `./` by `-printf`
+$ find . -type f -iname "*cfssl*" -printf '%P\n'
+cfssl/cfssl-scan
+cfssl/cfssl-certinfo
+cfssl/cfssl-bundle
+cfssl/cfssl
+cfssl/cfssl-newkey
+cfssl/cfssljson
+
+# or remove `./` by sed
+$ find . -type f -iname "*cfssl*" | sed 's|^./||'
+cfssl/cfssl-scan
+cfssl/cfssl-certinfo
+cfssl/cfssl-bundle
+cfssl/cfssl
+cfssl/cfssl-newkey
+cfssl/cfssljson
+
+# filename only
+$ find . -type f -iname "*cfssl*" -printf '%f\n'
+cfssl-scan
+cfssl-certinfo
+cfssl-bundle
+cfssl
+cfssl-newkey
+cfssljson
+```
+
+### output file name only
 ```bash
 # has `./` by default
 $ find . -type f
