@@ -326,7 +326,13 @@ $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 > - [tomkwok/svgasm](https://github.com/tomkwok/svgasm)
 {% endhint %}
 
-- qlmanage
+- [`rsvg-convert`](https://superuser.com/a/723031/112396)
+  ```bash
+  $ brew install librsvg
+  $ rsvg-convert -h 256 file.svg > file.png
+  ```
+
+- [qlmanage](https://superuser.com/a/142082/112396)
   ```bash
   $ qlmanage -t -s 1000 -o . k-1.svg
   ```
@@ -339,6 +345,34 @@ $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
   $ convert -density 500 -resize 128x128 input.svg output.png
   $ convert -density 1200 -resize 10000x10000 your.svg your.png
   $ convert -background none -size 1024x1024 infile.svg outfile.png
+  ```
+
+- [`svgexport`](https://stackoverflow.com/a/26048343/2940319)
+  ```bash
+  $ npm install svgexport -g
+  $ svgexport input.svg output.png 256:256
+  ```
+
+- [`inkscape`](https://stackoverflow.com/a/14174624/2940319)
+
+  > [!NOTE]
+  > - `Warning: Option --without-gui= is deprecated`
+
+  ```bash
+  $ brew install inkscape
+  $ inkscape --shell -w 256 -h 256 code.svg -o code.png -background none
+
+  # or
+  $ inkscape -z -w 1024 -h 1024 input.svg -e output.png
+  ```
+
+- [`imagemagick`](https://stackoverflow.com/a/57512918/2940319)
+  ```bash
+  in_size=50
+  in_density=96
+  out_size=512
+
+  magick -density "%[fx:$in_density*$out_size/$in_size]" button.svg button3.png
   ```
 
 ### convert HEIC/HEIF to PNG
