@@ -37,6 +37,7 @@
   - [bash completion](#bash-completion)
     - [osx](#osx)
     - [linux](#linux)
+    - [completion for alias](#completion-for-alias)
     - [troubleshooting](#troubleshooting)
 - [tricky](#tricky)
   - [alias for sudo](#alias-for-sudo)
@@ -1685,9 +1686,44 @@ $ cat ~/.bash_profile
     $ fd --gen-completions | sudo tee /etc/bash_completion.d/fd
     ```
 
+### completion for alias
+
+> [!TIP|label:rerefences:]
+> - [* iMarslo: complete-alias](../../virtualization/kubernetes/kubernetes.md#completealias)
+> - [_complete_alias](https://unix.stackexchange.com/a/332522/29178) | [cykerway/complete-alias](https://github.com/cykerway/complete-alias)
+> - [How to work with `complete -F _start_kubectl` when alias contains `--kubeconfig`?](https://stackoverflow.com/q/78259041/2940319) | [How do I get bash completion for command aliases?](https://unix.stackexchange.com/a/332522/29178)
+
+- download/install
+  ```bash
+  # download bash_completion.sh for kubectl
+  $ curl -fsSL https://github.com/cykerway/complete-alias/raw/master/complete_alias -o ~/.bash_completion.sh
+  # or rhel/centos
+  $ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /etc/profile.d/complete_alias.sh
+  # or osx
+  $ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /usr/local/etc/bash_completion.d/complete_alias
+
+  $ sudo chmod +x !$
+  ```
+
+- setup for specific alias
+  ```bash
+  $ echo "complete -F _complete_alias <alias>" >> ~/.bash_profile
+  ```
+
+  - example
+    ```bash
+    # i.e.: for kubec* ( kubectl or kubecolor )
+    $ complete -o nosort -o bashdefault -o default -F _complete_alias $(alias | sed -rn 's/^alias ([^=]+)=.+kubec.+$/\1/p' | xargs)
+
+    # or
+    $ alias k=kubectl
+    $ echo "complete -F _complete_alias k" >> ~/.bash_profile
+    ```
+
 ### troubleshooting
 
 - [`-bash: _compopt_o_filenames: command not found`](../../linux/devenv.md#bash-compoptofilenames-command-not-found)
+
 - [`-bash: [: too many arguments`](../../linux/devenv.md#bash--too-many-arguments)
 
 - `$ ssh bash_completion: _comp_compgen_known_hosts__impl: -F: an empty filename is specified`
@@ -1695,7 +1731,7 @@ $ cat ~/.bash_profile
   > [!NOTE|label:references:]
   > - [Problem with ssh and bash-completion](https://bbs.archlinux.org/viewtopic.php?pid=858200#p858200)
   > - [Autocomplete server names for SSH and SCP](https://unix.stackexchange.com/a/181603/29178)
-  > - [`compgen -A hostname`](https://github.com/scop/bash-completion/blob/main/bash_completion#L2470)
+  > - [`compgen -A hostname`](https://github.com/scop/bash-completion/blob/main/bash_completion#L2470) | [`__fzf_list_hosts`](https://github.com/junegunn/fzf/blob/master/shell/completion.bash#L436)
 
   - clear completion
     ```bash
