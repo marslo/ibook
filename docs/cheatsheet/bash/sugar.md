@@ -14,6 +14,7 @@
     - [download and extract](#download-and-extract)
     - [mirror website](#mirror-website)
     - [kubectl apply from stdin](#kubectl-apply-from-stdin)
+    - [show 256 colors](#show-256-colors)
     - [rm and exclude](#rm-and-exclude)
   - [sync mirror](#sync-mirror)
   - [get all declare](#get-all-declare)
@@ -202,6 +203,14 @@ $ find . -name config\.xml -type f -print | tar czf ~/m.tar.gz --files-from -
 $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
 ```
 
+- [advanced ls](https://www.commandlinefu.com/commands/view/5815/advanced-ls-output-using-find-for-formattedsortable-file-stat-info)
+  ```bash
+  $ find $PWD -maxdepth 1 -printf '%.5m %10M %#9u:%-9g %#5U:%-5G [%AD | %TD | %CD] [%Y] %p\n'
+
+  # or
+  $ find $PWD -maxdepth 1 -printf '%.5m %10M %#9u:%-9g %#5U:%-5G [%AD | %TD | %CD] [%Y] %p\n' | sort -rgbS 50%
+  ```
+
 - [tar and ssh](https://www.commandlinefu.com/commands/view/37/scping-files-with-streamlines-compression-tar-gzip)
   ```bash
   $ tar czv file1 file2 file3 | ssh user@host 'tar xzv -C /target/dir'
@@ -344,6 +353,26 @@ data:
 EOF
 ```
 
+### [show 256 colors](https://www.commandlinefu.com/commands/view/5879/show-numerical-values-for-each-of-the-256-colors-in-bash)
+```bash
+$ for code in {0..255}; do echo -e "\e[38;05;${code}m $code: Test"; done)
+
+# or: https://www.commandlinefu.com/commands/view/6138/show-numerical-values-for-each-of-the-256-colors-in-bash
+$ for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 80 -s ' '; echo -e "\e[m"
+
+# or: https://www.commandlinefu.com/commands/view/11759/show-numerical-values-for-each-of-the-256-colors-in-bash-for-bold-and-normal-fonts
+$ for code in $(seq -w 0 255); do for attr in 0 1; do printf "%s-%03s %bTest%b\n" "${attr}" "${code}" "\e[${attr};38;05;${code}m" "\e[m"; done; done | column -c $((COLUMNS*2))
+# better vesion
+$ for code in $(seq -w 0 255); do for attr in 0 1; do printf "%b%s-%03s%b\n"  "\e[${attr};38;05;${code}m" "${attr}" "${code}" "\e[m"; done; done | column -c $((COLUMNS*3))
+
+# .. zsh ..
+# or: https://www.commandlinefu.com/commands/view/5876/show-numerical-values-for-each-of-the-256-colors-in-zsh
+$ for code in {000..255}; do print -P -- "$code: %F{$code}Test%f"; done
+
+# or: https://www.commandlinefu.com/commands/view/12471/show-numerical-values-for-each-of-the-256-colors-in-zsh
+for i in {0..255}; do echo -e "\e[38;05;${i}m\\\e[38;05;${i}m"; done | column -c 80 -s ' '; echo -e "\e[m"
+```
+
 ### [rm and exclude](https://www.commandlinefu.com/commands/view/5351/delete-all-files-in-a-folder-that-dont-match-a-certain-file-extension)
 ```bash
 $ rm !(*.foo|*.bar|*.baz)
@@ -358,7 +387,7 @@ $ ( shopt -s extglob; rm !(<PATTERN>) )
 ## sync mirror
 
 > [!NOTE]
-> - [How to create public mirrors for CentOS](https://wiki.centos.org/HowTos(2f)CreatePublicMirrors.html)
+> - [How to create public mirrors for CentOS](https://wiki.centos.org/HowTos%282f%29CreatePublicMirrors.html)
 > - [Configure DNF/Yum Mirror Server](https://www.server-world.info/en/note?os=CentOS_Stream_9&p=localrepo)
 
 ```bash
@@ -1018,8 +1047,10 @@ $ ls -Ap | command grep "^\."
 > - [Integralist/1. bash autocomplete for your custom programs.md](https://gist.github.com/Integralist/0500e6b5aabf95034cd83eff8c9e2ead)
 > - [8.6 Programmable Completion : `_completion_loader()` ](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
 > - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
+>
 > - paths:
 >   - osx: `/usr/local/etc/bash_completion.d`
+>     - completion files in `bash-completion@2`: `$(brew --prefix bash-completion@2)/share/bash-completion/completions/`
 >   - centos: `/usr/share/bash-completion/completions` or `/etc/bash_completion.d`
 >   - ubuntu: `/usr/share/bash-completion/completions`
 
@@ -1656,6 +1687,9 @@ $ cat ~/.bash_profile
 
 ### troubleshooting
 
+- [`-bash: _compopt_o_filenames: command not found`](../../linux/devenv.md#bash-compoptofilenames-command-not-found)
+- [`-bash: [: too many arguments`](../../linux/devenv.md#bash--too-many-arguments)
+
 - `$ ssh bash_completion: _comp_compgen_known_hosts__impl: -F: an empty filename is specified`
 
   > [!NOTE|label:references:]
@@ -1670,6 +1704,7 @@ $ cat ~/.bash_profile
 
   - or add into `/usr/local/etc/bash_completion.d/ssh`
 
+    <!--sec data-title="ssh completion script" data-id="section3" data-show=true data-collapse=true ces-->
     ```bash
     # https://unix.stackexchange.com/a/181603/29178
     _ssh_hosts()
@@ -1769,6 +1804,7 @@ $ cat ~/.bash_profile
 
     $ complete -F _ssh ssh
     ```
+    <!--endsec-->
 
 # tricky
 ## alias for sudo
@@ -1822,8 +1858,17 @@ alias sudo='sudo '
 
 ## man
 
-
 - [linux file system](https://www.commandlinefu.com/commands/view/4671/show-file-system-hierarchy)
   ```bash
   $ man hier
+  ```
+
+- show ascii
+  ```bash
+  $ man ascii
+  ```
+
+- [ASCII code of key](https://www.commandlinefu.com/commands/view/10109/quick-access-to-ascii-code-of-a-key)
+  ```bash
+  $ showkey -a
   ```

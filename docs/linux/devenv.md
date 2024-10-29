@@ -44,7 +44,7 @@
 - [auto completion](#auto-completion)
   - [bash-completion](#bash-completion)
   - [bash-completion@2](#bash-completion2)
-    - [troubleshooting for `bash-completion@2`](#troubleshooting-for-bash-completion2)
+    - [troubleshooting](#troubleshooting)
   - [tools](#tools)
     - [fzf](#fzf)
     - [npm](#npm)
@@ -55,7 +55,7 @@
     - [others](#others)
   - [script](#script)
     - [groovy](#groovy-1)
-- [troubleshooting](#troubleshooting)
+- [troubleshooting](#troubleshooting-1)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
     - [to use the bundled libc++ please add the following LDFLAGS](#to-use-the-bundled-libc-please-add-the-following-ldflags)
@@ -1171,7 +1171,7 @@ if test -d "${BASH_COMPLETION_DIR}"; then
 fi
 ```
 
-### troubleshooting for `bash-completion@2`
+### troubleshooting
 
 #### `-bash: [: too many arguments`
 
