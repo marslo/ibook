@@ -1132,6 +1132,11 @@ BASH_COMPLETION_DIR=$(pkg-config --variable=completionsdir bash-completion)
 ## bash-completion@2
 
 > [!NOTE|label:references:]
+> - completion files: `$(brew --prefix bash-completion@2)/share/bash-completion/completions`
+>   ```bash
+>   $ ls -Altrh $(brew --prefix bash-completion@2)/share/bash-completion/completions | wc -l
+>   918
+>   ```
 > - `brew info bash_completion@2`
 >   ```bash
 >   ==> Caveats
@@ -1141,6 +1146,7 @@ BASH_COMPLETION_DIR=$(pkg-config --variable=completionsdir bash-completion)
 >   Bash completion has been installed to:
 >     /usr/local/etc/bash_completion.d
 >   ```
+>
 > - local files:
 >   ```bash
 >   $ ls -Altrh /usr/local/etc/bash_completion
@@ -1167,27 +1173,106 @@ fi
 
 ### troubleshooting for `bash-completion@2`
 
-> [!TIP|label:references:]
-> for issue:
-> - `-bash: [: too many arguments`
+#### `-bash: [: too many arguments`
 
-- `vim /usr/local/etc/bash_completion.d/gcc`
-- `vim /usr/local/etc/bash_completion.d/ifupdown`
-- `vim /usr/local/etc/bash_completion.d/ipsec`
-- `vim /usr/local/etc/bash_completion.d/kldload`
-- `vim /usr/local/etc/bash_completion.d/man`
-- `vim /usr/local/etc/bash_completion.d/net-tools`
-- `vim /usr/local/etc/bash_completion.d/pkg_install`
-- `vim /usr/local/etc/bash_completion.d/procps`
-- `vim /usr/local/etc/bash_completion.d/wireless-tools`
+* files:
+  - `vim /usr/local/etc/bash_completion.d/gcc`
+  - `vim /usr/local/etc/bash_completion.d/ifupdown`
+  - `vim /usr/local/etc/bash_completion.d/ipsec`
+  - `vim /usr/local/etc/bash_completion.d/kldload`
+  - `vim /usr/local/etc/bash_completion.d/man`
+  - `vim /usr/local/etc/bash_completion.d/net-tools`
+  - `vim /usr/local/etc/bash_completion.d/pkg_install`
+  - `vim /usr/local/etc/bash_completion.d/procps`
+  - `vim /usr/local/etc/bash_completion.d/wireless-tools`
 
-to modify:
-```bash
-[ ... = ...  ] to [[ ... = ... ]]
+* modify to:
+  ```bash
+  [ ... = ...  ] to [[ ... = ... ]]
 
-# and
-[ ... = ... -o ... = ... ] to [[ ... = ... || ... = ... ]]
-```
+  # and
+  [ ... = ... -o ... = ... ] to [[ ... = ... || ... = ... ]]
+  ```
+
+#### `-bash: _compopt_o_filenames: command not found`
+
+> [!NOTE|label:references:]
+> - [bash: completion of env vars broken (leading slash is added)](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=272660#64)
+> - [zephyr/scripts/west_commands/completion/west-completion.bash](https://github.com/zephyrproject-rtos/zephyr/blob/main/scripts/west_commands/completion/west-completion.bash#L204)
+> - [brechtm/bash-completion : Commit 9f45e81 - Drop no longer needed _compopt_o_filenames()](https://github.com/brechtm/bash-completion/commit/9f45e81e65411b584f7ad4d629907c4118566b62#diff-a4757074ff650000804fd3eaabe9b0a9e02e33040ca5b8afd4c0275fc5f3e136)
+> - `_compopt_o_filenames` has been deprecated in bash-completion 2.0. Use `Use compopt -o filenames` directly instead.
+
+
+* solution 1
+
+  > [!TIP|label:highly recommended in OSX:]
+  > - using `bash-completion@2` instead of `bash-completion`
+
+  ```bash
+  # original
+  $ ls -Altrh /usr/local/etc/bash_completion.d | grep ssh
+  lrwxr-xr-x 1 marslo admin   60 Dec 15  2023 ssh -> ../../Cellar/bash-completion/1.3_3/etc/bash_completion.d/ssh
+  lrwxr-xr-x 1 marslo admin   62 Dec 15  2023 sshfs -> ../../Cellar/bash-completion/1.3_3/etc/bash_completion.d/sshfs
+
+  # using bash-completion@2
+  $ ln -sf $(brew --prefix bash-completion@2)/share/bash-completion/completions/ssh /usr/local/etc/bash_completion.d/ssh
+  ```
+
+* solution 2
+  - replace `_compopt_o_filenames` to `compopt -o filenames` in `/usr/local/etc/bash_completion.d/ssh`
+    - impacted files:
+      ```bash
+      $ rg -l _compopt_o_filenames /usr/local/etc/bash_completion.d/
+      /usr/local/etc/bash_completion.d/gdb
+      /usr/local/etc/bash_completion.d/perl
+      /usr/local/etc/bash_completion.d/monodevelop
+      /usr/local/etc/bash_completion.d/gzip
+      /usr/local/etc/bash_completion.d/xz
+      /usr/local/etc/bash_completion.d/lzop
+      /usr/local/etc/bash_completion.d/lrzip
+      /usr/local/etc/bash_completion.d/kldload
+      /usr/local/etc/bash_completion.d/mutt
+      /usr/local/etc/bash_completion.d/postfix
+      /usr/local/etc/bash_completion.d/rpm
+      /usr/local/etc/bash_completion.d/lzma
+      /usr/local/etc/bash_completion.d/ssh
+      /usr/local/etc/bash_completion.d/cpio
+      /usr/local/etc/bash_completion.d/bzip2
+      ```
+
+  - or workaround function to handle `_compopt_o_filenames`
+    ```bash
+    ## ~/.bash_profile
+    # workaround
+    if ! declare -f _compopt_o_filenames > /dev/null; then
+      _compopt_o_filenames() {
+        type compopt &>/dev/null && compopt -o filenames 2>/dev/null
+      }
+    fi
+    ```
+
+  - or workaround script to handle `_compopt_o_filenames`
+    ```bash
+    ## ~/.config/.completion/.legacy.sh
+
+    #!/usr/bin/env bash
+    _compopt_o_filenames() {
+      type compopt &> /dev/null && compopt -o filenames 2> /dev/null || compgen -f /non-existing-dir/ > /dev/null
+    }
+
+    # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
+    ```
+
+    ```bash
+    ## ~/.bash_profile
+    test -f "${HOME}/.config/.completion/.legacy.sh" && eval "$(cat "${HOME}/.config/.completion/.legacy.sh")"
+    ```
+
+#### `_comp_compgen_known_hosts__impl`
+
+> [!NOTE|label:references:]
+> - issue: `ssh bash_completion: _comp_compgen_known_hosts__impl: -F: an empty filename is specified`
+> - solution: [* iMarslo: bash-completion](../cheatsheet/bash/sugar.md#troubleshooting)
 
 ## tools
 ### fzf
