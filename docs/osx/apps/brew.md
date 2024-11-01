@@ -286,17 +286,59 @@ $ brew cu --all
 
 ```bash
 # utils
-$ brew install imagemagick coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop glances ack lsof trash
-$ brew install wget tmux corkscrew telnet figlet
-$ brew install gnu-sed jq
-$ brew install stow iproute2mac pandoc
-$ brew install macvim
+$ brew install imagemagick
+$ brew install tmux corkscrew telnet figlet toilet
+$ brew install stow iproute2mac pandoc ifstat nmap
+$ brew install --HEAD macvim         # to prevent 32bit vim + 64bit python
 $ brew install openjdk
+$ brew install pcre2 gettext libtool # for build vim from source
+$ brew install util-linux
+$ brew install gawk gnu-tar grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnutls coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop glances ack lsof trash
+$ brew install jq
+$ brew install colordiff diffutils wdiff
+$ brew install --HEAD diff-so-fancy highlight
+$ brew install gzip
+$ brew install --cask unrar
+$ brew install --HEAD rename whois watch wget
+$ sudo gem install iStats -n /usr/local/bin    # requires ruby to be installed
+$ brew install create-dmg
 
-$ brew install wdiff
+# dev tools
+## nvm for gitbook install: nvm install 12
+$ brew install nvm
+$ brew install gradle-completion
+$ brew install --HEAD ruby
 $ brew install less
+$ brwe install kubecolor
+$ brew install --HEAD kubectl
+$ brew install mongosh
+$ brew install gnu-indent
+$ brew install --HEAD git-flow git-extras
+$ brew install dos2unix
+
+$ brew install --HEAD fzf fzy bat ack ag rg
+
+# lint
+$ brew install --HEAD shellcheck
+$ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
+$ brew install --HEAD yamllint yamlfmt
+$ brew install hadolint              # for dockerfile
+$ brew install stylelint             # for css
+$ brew install jsonlint
+$ brew install ansible-lint
+# optional
+$ brew install actionlint            # for github action
+$ brew install libxml2               # for xmllint
+
+# cask
+$ brew install --cask keycastr
+
+# tap
+$ brew tap hashicorp/tap
+$ brew install hashicorp/tap/vault
 ```
 
+<!--sec data-title="deprecated (macvim)" data-id="section0" data-show=true data-collapse=true ces-->
 - deprecated (macvim)
   ```bash
   $ brew install macvim --with-override-system-vim --HEAD
@@ -305,11 +347,11 @@ $ brew install less
   $ brew install --HEAD macvim-dev/macvim/macvim
 
   $ brew linkapps macvim
-  # OR
+  # or
   $ brew linkapps
-  # OR
+  # or
   $ HOME_APPS = File.expand_path("/Applications")
-  # OR (Using none-link Info.plist and PkgInfo in *.app/Contents/)
+  # or (Using none-link Info.plist and PkgInfo in *.app/Contents/)
   $ mkdir -p /Applications/gVim.app/Contents
   $ ln -sf /usr/local/Cellar/macvim/HEAD-a5e0355/gVim.app/Contents/* /Applications/gVim.app/Contents/
   $ mv /Applications/gVim.app/Contents/Info.plist{,.link}
@@ -317,6 +359,7 @@ $ brew install less
   $ cp /Applications/gVim.app/Contents/Info.plist{.link,}
   $ cp /Applications/gVim.app/Contents/PkgInfo{.link,}
   ```
+<!--endsec-->
 
 - `brew upgrade` ignore specific formulas
 
@@ -444,7 +487,6 @@ $ alias git="git -C ${hcore}"
   ```bash
   $ brew tap-new marslo/icu4c-71-1
   Initialized empty Git repository in /usr/local/Homebrew/Library/Taps/marslo/homebrew-icu4c-71-1/.git/
-  .git/hooks/post-commit: line 8: git-stats: command not found
   [main (root-commit) ed01d30] Create marslo/icu4c-71-1 tap
    3 files changed, 90 insertions(+)
    create mode 100644 .github/workflows/publish.yml
@@ -553,7 +595,7 @@ Already downloaded: /Users/marslo/Library/Caches/Homebrew/downloads/ff9ece63f455
 $ ln -sf /usr/local/Cellar/icu4c@71.1/71.1/lib/*.dylib /usr/local/lib/
 ```
 
-<!--sec data-title="installation full log" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="installation full log" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
 $ HOMEBREW_NO_AUTO_UPDATE=1 brew install homebrew/cask/icu4c@71.1
 ==> Fetching homebrew/cask/icu4c@71.1
@@ -587,7 +629,7 @@ Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
 
 #### via url
 
-> [!INFO]
+> [!NOTE]
 > - url should be : `https://raw.githubusercontent.com/Homebrew/homebrew-core/<git-revision>/Formula/<formula-name>.rb`
 
 ```bash
@@ -666,7 +708,7 @@ $ osascript -e 'tell application "Finder" to make alias file to POSIX file "/usr
   Linked 1 app to /Applications
   ```
 
-  <!--sec data-title="macvim build install from sourcode" data-id="section2" data-show=true data-collapse=true ces-->
+  <!--sec data-title="macvim build install from sourcode" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   $ brew install --HEAD macvim-dev/macvim/macvim
   ==> Installing macvim from macvim-dev/macvim

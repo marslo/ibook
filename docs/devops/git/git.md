@@ -1096,6 +1096,17 @@ $ git push origin +<branch>
                        HEAD~9'
   ```
 
+- `-x '-CHEAD'`
+
+  > [!TIP]
+  > - [How to amend several commits in Git to change author](https://stackoverflow.com/a/25815116/2940319)
+  >   - `-CHEAD`: change the author but maintain the original timestamps
+
+  ```bash
+  $ git rebase -i BASE_SHA^ -x \
+        "git commit --amend --author 'John Doe <johndoe@example.com>' -CHEAD"
+  ```
+
 - [amend all commits with original commitDate and authorDate](https://stackoverflow.com/a/73314321/2940319)
 
   > [!TIP|label:references:]
