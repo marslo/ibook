@@ -41,6 +41,9 @@
     - [chrome](#chrome)
     - [safari](#safari)
   - [system](#system)
+    - [hot corners](#hot-corners)
+    - [modifiers](#modifiers)
+    - [keyboard remapping](#keyboard-remapping)
   - [others](#others-2)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
@@ -319,7 +322,7 @@ $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 #### enable the hidden file
 ```bash
-$ defaults write com.apple.finder AppleShowAllFiles TRUE && killall Finder
+$ defaults write com.apple.finder AppleShowAllFiles true && killall Finder
 
 # or
 $ defaults write com.apple.finder AppleShowAllFiles YES
@@ -347,7 +350,7 @@ $ defaults read ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptur
 # update one
 $ defaults write ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist \
            "/Applications/Snipaste.app/Contents/MacOS/Snipaste" \
-           -date "3024-01-01 00:00:00 +0000":wa
+           -date "3024-01-01 00:00:00 +0000"
 
 # update all
 $ defaults read ~/Library/Group\ Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist |
@@ -654,7 +657,7 @@ $ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 #### select && copy from quicklook
 ```bash
-$ defaults write com.apple.finder QLEnableTextSelection -bool TRUE; killall Finder
+$ defaults write com.apple.finder QLEnableTextSelection -bool true ; killall Finder
 ```
 
 #### spring loading
@@ -682,10 +685,10 @@ $ defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" &&
 
 #### [quick hidden desktop icons](https://www.defaults-write.com/os-x-how-to-quickly-hide-the-desktop-icons/)
 ```bash
-$ defaults write com.apple.finder CreateDesktop -bool FALSE && killall Finder
+$ defaults write com.apple.finder CreateDesktop -bool false && killall Finder
 
 # revert back
-$ defaults write com.apple.finder CreateDesktop TRUE && killall Finder
+$ defaults write com.apple.finder CreateDesktop true && killall Finder
 ```
 
 #### icons
@@ -850,7 +853,7 @@ $ defaults write com.apple.dock mru-spaces -bool false && killall Dock
 ### icon
 #### highlight icon
 ```bash
-$ defaults write com.apple.dock mouse-over-hilite-stack -bool TRUE && killall Dock
+$ defaults write com.apple.dock mouse-over-hilite-stack -bool true && killall Dock
 
 # revert
 $ defaults delete com.apple.dock mouse-over-hilite-stack && killall Dock
@@ -927,13 +930,13 @@ $ defaults write com.apple.dock autohide -bool false && killall Dock
 
 ```bash
 # `0.5`
-$ defaults write com.apple.dock autohide-time-modifier -float 0.5 && killall dock
+$ defaults write com.apple.dock autohide-time-modifier -float 0.5 && killall Dock
 
 # `2`
-$ defaults write com.apple.dock autohide-time-modifier -float 2 && killall dock
+$ defaults write com.apple.dock autohide-time-modifier -float 2 && killall Dock
 
 # `0`
-$ defaults write com.apple.dock autohide-time-modifier -float 0 && killall dock
+$ defaults write com.apple.dock autohide-time-modifier -float 0 && killall Dock
 
 # read current value
 $ defaults read com.apple.dock autohide-time-modifier
@@ -1017,6 +1020,7 @@ $ defaults write com.apple.spaces "spans-displays" -bool "true" && killall Syste
 > - [Key repeat in GitHub Codespaces](https://stackoverflow.com/a/76385233/2940319)
 > - [How can I disable `ApplePressAndHoldEnabled` for a specific application](https://stackoverflow.com/a/70911250/2940319)
 > - [#31919: Characters don't repeat when ApplePressAndHoldEnabled is disabled for VSCode](https://github.com/Microsoft/vscode/issues/31919#issuecomment-343897993)
+> - [How to Enable Key-Repeating for Vim](https://vimforvscode.com/enable-key-repeat-vim)
 
 #### [key repeat](https://blog.csdn.net/m290345792/article/details/110383724)
 ```bash
@@ -1100,11 +1104,11 @@ $ defaults write -g com.apple.mouse.scaling 2.5
 ## [battery](https://apple.stackexchange.com/a/35718/254265)
 ```bash
 # get display off timer
-$ pmset -g  | grep displaysleep
+$ sudo pmset -g | grep displaysleep
 displaysleep         180
 
 # set display off timer
-$ pmset -a displaysleep 30
+$ sudo pmset -a displaysleep 30
 ```
 
 #### battery percent
@@ -1117,18 +1121,6 @@ $ defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 ```bash
 $ defaults write com.apple.menuextra.battery ShowTime -string "YES"
 ```
-
-#### keyboard remapping to MacOS mode
-
-> [!NOTE|label:references:]
-> - ONLY for filco Minila
->   - [How to remap modifier keys in macOS Ventura or Monterey](https://www.theverge.com/23591533/mac-remap-keyboard-how-to)
-> - for filco minila air, enable dip switch 2, 5 and 6
->   - 2: change CapsLock and Esc
->   - 5: Mac-specific mode
->   - 6: power saving mode
-
-![keyboard remapping for macos](../screenshots/osx/osx-keyboard-remapping.png)
 
 ## browser
 ### chrome
@@ -1238,6 +1230,86 @@ $ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.We
 ```
 
 ## system
+### hot corners
+
+> [!TIP|label:references:]
+> - [Setting Mac hot corners in the terminal](https://dev.to/darrinndeal/setting-mac-hot-corners-in-the-terminal-3de)
+>   - `0`: No Option
+>   - `2`: Mission Control
+>   - `3`: Show application windows
+>   - `4`: Desktop
+>   - `5`: Start screen saver
+>   - `6`: Disable screen saver
+>   - `7`: Dashboard
+>   - `10`: Put display to sleep
+>   - `11`: Launchpad
+>   - `12`: Notification Center
+>   - `13`: Lock Screen
+> - [Hot Corners profiles](https://blog.jiayu.co/2018/12/quickly-configuring-hot-corners-on-macos/)
+
+```bash
+# bottom left - desktop
+$ defaults write com.apple.dock wvous-bl-corner -int 4 && killall Dock
+
+# bottom right - application windows
+$ defaults write com.apple.dock wvous-br-corner -int 3 && killall Dock
+
+# top right - mission control
+$ defaults write com.apple.dock wvous-tr-corner -int 2 && killall Dock
+
+# current settings
+$ defaults read com.apple.dock | grep corner
+    "wvous-bl-corner" = 4;
+    "wvous-br-corner" = 3;
+    "wvous-tr-corner" = 2;
+
+# or
+$ defaults read com.apple.dock | grep corner | sed -n -E 's/    "(.+)" = (.+);/\1=\2/p'
+wvous-bl-corner=4
+wvous-br-corner=3
+wvous-tr-corner=2
+```
+
+![hot corners](../screenshot/osx/osx-hot-cornor.png)
+
+### modifiers
+
+> [!TIP|label:references:]
+> - [Setting Mac hot corners in the terminal](https://dev.to/darrinndeal/setting-mac-hot-corners-in-the-terminal-3de)
+>   - `0`: No Modifier
+>   - `131072`: Shift Key
+>   - `262144`: Control Key
+>   - `524288`: Option Key
+>   - `1048576`: Command Key
+
+```bash
+# current settings
+$ defaults read com.apple.dock | grep 'modifier'
+    "autohide-time-modifier" = "0.5";
+    "wvous-bl-modifier" = 0;
+    "wvous-br-modifier" = 0;
+    "wvous-tr-modifier" = 0
+
+# or
+$ defaults read com.apple.dock | grep modifier | sed -n -E 's/    "(.+)" = (.+);/\1=\2/p'
+autohide-time-modifier="0.5"
+wvous-bl-modifier=0
+wvous-br-modifier=0
+wvous-tr-modifier=0
+```
+
+### keyboard remapping
+
+> [!NOTE|label:references:]
+> - ONLY for filco Minila
+>   - [How to remap modifier keys in macOS Ventura or Monterey](https://www.theverge.com/23591533/mac-remap-keyboard-how-to)
+> - for filco minila air, enable dip switch 2, 5 and 6
+>   - 2: change CapsLock and Esc
+>   - 5: Mac-specific mode
+>   - 6: power saving mode
+
+![keyboard remapping for macos](../screenshot/osx/osx-keyboard-remapping.png)
+
 #### reset dns cache
 
 > [!NOTE|label:references:]
@@ -1246,7 +1318,7 @@ $ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.We
 > - [How to reset the DNS cache in OS X](https://www.defaults-write.com/how-to-reset-the-dns-cache-in-os-x/)
 
 ```bash
-$ sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+$ sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
 ```
 
 | MACOS VERSION                | COMMAND                                                         |
@@ -1295,14 +1367,14 @@ $ defaults write -g NSRequiresAquaSystemAppearance -bool false
 
 #### reset launchpad
 ```bash
-$ defaults write com.apple.dock ResetLaunchPad -bool TRUE && killall Dock
+$ defaults write com.apple.dock ResetLaunchPad -bool true && killall Dock
 # or
 $ [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
 
 # revert back
 $ defaults delete com.apple.dock springboard-rows
 $ defaults delete com.apple.dock springboard-columns
-$ defaults write com.apple.dock ResetLaunchPad -bool TRUE && killall Dock
+$ defaults write com.apple.dock ResetLaunchPad -bool true && killall Dock
 ```
 
 #### automatic terminate inactive apps
@@ -1609,7 +1681,9 @@ $ sudo reboot
 
 #### [sidecar on incompatible macs](https://www.defaults-write.com/enable-sidecar-incompatible-macs/)
 ```bash
-$ defaults write com.apple.sidecar.display AllowAllDevices -bool true; defaults write com.apple.sidecar.display hasShownPref -bool true; open /System/Library/PreferencePanes/Sidecar.prefPane
+$ defaults write com.apple.sidecar.display AllowAllDevices -bool true;
+$ defaults write com.apple.sidecar.display hasShownPref -bool true;
+$ open /System/Library/PreferencePanes/Sidecar.prefPane
 ```
 
 #### open photos automatically

@@ -1176,15 +1176,15 @@ fi
 #### `-bash: [: too many arguments`
 
 * files:
-  - `vim /usr/local/etc/bash_completion.d/gcc`
-  - `vim /usr/local/etc/bash_completion.d/ifupdown`
-  - `vim /usr/local/etc/bash_completion.d/ipsec`
-  - `vim /usr/local/etc/bash_completion.d/kldload`
-  - `vim /usr/local/etc/bash_completion.d/man`
-  - `vim /usr/local/etc/bash_completion.d/net-tools`
-  - `vim /usr/local/etc/bash_completion.d/pkg_install`
-  - `vim /usr/local/etc/bash_completion.d/procps`
-  - `vim /usr/local/etc/bash_completion.d/wireless-tools`
+  - `vim $(brew --prefix)/etc/bash_completion.d/gcc`
+  - `vim $(brew --prefix)/etc/bash_completion.d/ifupdown`
+  - `vim $(brew --prefix)/etc/bash_completion.d/ipsec`
+  - `vim $(brew --prefix)/etc/bash_completion.d/kldload`
+  - `vim $(brew --prefix)/etc/bash_completion.d/man`
+  - `vim $(brew --prefix)/etc/bash_completion.d/net-tools`
+  - `vim $(brew --prefix)/etc/bash_completion.d/pkg_install`
+  - `vim $(brew --prefix)/etc/bash_completion.d/procps`
+  - `vim $(brew --prefix)/etc/bash_completion.d/wireless-tools`
 
 * modify to:
   ```bash
@@ -1210,19 +1210,19 @@ fi
 
   ```bash
   # original
-  $ ls -Altrh /usr/local/etc/bash_completion.d | grep ssh
+  $ ls -Altrh $(brew --prefix)/etc/bash_completion.d | grep ssh
   lrwxr-xr-x 1 marslo admin   60 Dec 15  2023 ssh -> ../../Cellar/bash-completion/1.3_3/etc/bash_completion.d/ssh
   lrwxr-xr-x 1 marslo admin   62 Dec 15  2023 sshfs -> ../../Cellar/bash-completion/1.3_3/etc/bash_completion.d/sshfs
 
   # using bash-completion@2
-  $ ln -sf $(brew --prefix bash-completion@2)/share/bash-completion/completions/ssh /usr/local/etc/bash_completion.d/ssh
+  $ ln -sf $(brew --prefix bash-completion@2)/share/bash-completion/completions/ssh $(brew --prefix)/etc/bash_completion.d/ssh
   ```
 
 * solution 2
-  - replace `_compopt_o_filenames` to `compopt -o filenames` in `/usr/local/etc/bash_completion.d/ssh`
+  - replace `_compopt_o_filenames` to `compopt -o filenames` in `$(brew --prefix)/etc/bash_completion.d/ssh`
     - impacted files:
       ```bash
-      $ rg -l _compopt_o_filenames /usr/local/etc/bash_completion.d/
+      $ rg -l _compopt_o_filenames $(brew --prefix)/etc/bash_completion.d/
       /usr/local/etc/bash_completion.d/gdb
       /usr/local/etc/bash_completion.d/perl
       /usr/local/etc/bash_completion.d/monodevelop

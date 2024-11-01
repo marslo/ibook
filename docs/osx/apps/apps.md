@@ -1147,8 +1147,19 @@ $ npm i -g --save markdown-toc --verbose
 ```
 
 #### [doctoc](https://github.com/thlorenz/doctoc)
+
+> [!NOTE|label:references:]
+> - the `prefix` setup for npm:
+>   ```bash
+>   $ npm config list | grep -E '^prefix'
+>   prefix = "/Users/marslo/.npm"
+>   ```
+
 ```bash
 $ npm install -g doctoc
+
+# if necessary
+$ sudo ln -sf ~/.npm/lib/node_modules/doctoc/doctoc.js /usr/local/bin/doctoc
 ```
 
 - usage
@@ -1202,8 +1213,19 @@ $ npm i -g
   ```
 
 #### [gnomon](https://www.npmjs.com/package/gnomon)
+
+> [!NOTE|label:references:]
+> - the `prefix` setup for npm:
+>   ```bash
+>   $ npm config list | grep -E '^prefix'
+>   prefix = "/Users/marslo/.npm"
+>   ```
+
 ```bash
 $ npm i -g gnomon
+
+# if necessary
+$ sudo ln -sf ~/.npm/lib/node_modules/gnomon/bin/gnomon /usr/local/bin/gnomon
 ```
 
 - usage
@@ -1223,11 +1245,16 @@ $ npm i -g gnomon
 #### [iStats](https://github.com/Chris911/iStats)
 ```bash
 $ sudo gem install iStats -n /usr/local/bin
+
+# or
+$ gem install iStats
+$ RUBY_GEM_HOME="$(brew --prefix)"/lib/ruby/gems/3.4.0+0
+$ export PATH="${RUBY_GEM_HOME}/bin"
 ```
 
 - usage
   ```bash
-  $ istats  all
+  $ istats all
   --- CPU Stats ---
   CPU temp:               57.19°C     ▁▂▃▅▆▇
 
@@ -1246,6 +1273,9 @@ $ sudo gem install iStats -n /usr/local/bin
   Battery temp:           35.8°C
 
   For more stats run `istats extra` and follow the instructions.
+
+  $ istats enable all
+  $ istats all
   ```
 
 ## trouble shooting

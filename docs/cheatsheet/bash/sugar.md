@@ -1050,7 +1050,7 @@ $ ls -Ap | command grep "^\."
 > - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
 >
 > - paths:
->   - osx: `/usr/local/etc/bash_completion.d`
+>   - osx: `$(brew --prefix)/etc/bash_completion.d`
 >     - completion files in `bash-completion@2`: `$(brew --prefix bash-completion@2)/share/bash-completion/completions/`
 >   - centos: `/usr/share/bash-completion/completions` or `/etc/bash_completion.d`
 >   - ubuntu: `/usr/share/bash-completion/completions`
@@ -1642,7 +1642,7 @@ $ cat ~/.bash_profile
 
 - add more completion files
   ```bash
-  $ fd --gen-completions | sudo tee /usr/local/etc/bash_completion.d/fd
+  $ fd --gen-completions | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
   ```
 
 - more
@@ -1700,7 +1700,7 @@ $ cat ~/.bash_profile
   # or rhel/centos
   $ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /etc/profile.d/complete_alias.sh
   # or osx
-  $ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o /usr/local/etc/bash_completion.d/complete_alias
+  $ sudo curl -fsSL https://github.com/marslo/dotfiles/raw/main/.marslo/.completion/complete_alias -o $(brew --prefix)/etc/bash_completion.d/complete_alias
 
   $ sudo chmod +x !$
   ```
@@ -1738,7 +1738,7 @@ $ cat ~/.bash_profile
     $ complete -r ssh
     ```
 
-  - or add into `/usr/local/etc/bash_completion.d/ssh`
+  - or add into `/usr/local/etc/bash_completion.d/ssh` or `$(brew --prefix)/etc/bash_completion.d/ssh`
 
     <!--sec data-title="ssh completion script" data-id="section3" data-show=true data-collapse=true ces-->
     ```bash

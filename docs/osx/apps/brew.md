@@ -286,14 +286,15 @@ $ brew cu --all
 
 ```bash
 # utils
-$ brew install imagemagick coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop ack lsof trash
+$ brew install imagemagick coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop glances ack lsof trash
 $ brew install wget tmux corkscrew telnet figlet
-$ brew install gnu-sed --with-default-names
+$ brew install gnu-sed jq
 $ brew install stow iproute2mac pandoc
 $ brew install macvim
+$ brew install openjdk
 
-$ brew install wdiff --with-gettext
-$ brew install less --with-pcre
+$ brew install wdiff
+$ brew install less
 ```
 
 - deprecated (macvim)

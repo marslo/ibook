@@ -14,6 +14,8 @@
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
 - [default configuration](#default-configuration)
+- [`__git_ps1`](#__git_ps1)
+  - [add to bash_completion.d](#add-to-bash_completiond)
 - [tig](#tig)
   - [install from source](#install-from-source)
 - [troubleshooting](#troubleshooting)
@@ -684,6 +686,17 @@ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 
   ![core.editor](../../screenshot/git/git-for-windows-11.png)
 
+
+# `__git_ps1`
+
+> [!NOTE|label:localtion]
+> - osx: `$(brew --prefix git)/etc/bash_completion.d/git-prompt.sh`
+
+## add to bash_completion.d
+```bash
+# if necessary
+$ ln -sf "$(brew --prefix git)"/etc/bash_completion.d/git-prompt.sh "$(brew --prefix)"/etc/bash_completion.d/
+```
 
 # tig
 
