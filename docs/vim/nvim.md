@@ -505,6 +505,8 @@ $ npm install -g neovim
 - for venv
   ```bash
   $ python3 -m pip install --upgrade pynvim
+  # if necesssary
+  $ python3 -m pip  install --upgrade greenlet
 
   # verify
   $ command python3 -c 'import sys; sys.path = [p for p in sys.path if p != ""]; import neovim; print(neovim.__file__)'

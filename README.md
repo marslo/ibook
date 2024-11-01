@@ -112,7 +112,7 @@ $ gitbook serve --config=book.json
 
 ## gitbook install in Linux
 
-> IMPORTANT !!
+> [!IMPORTANT]
 > maximum node version supported is v12
 
 ### install node v12.22.12
