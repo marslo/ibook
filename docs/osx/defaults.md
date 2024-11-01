@@ -16,14 +16,15 @@
   - [screenshot](#screenshot)
     - [suppress "Allow For One Month"](#suppress-allow-for-one-month)
   - [finder](#finder)
+    - [hidden file](#hidden-file)
     - [quit via ⌘ + Q](#quit-via-%E2%8C%98--q)
     - [default location](#default-location)
+    - [timestamp on zip filenames](#timestamp-on-zip-filenames)
     - [extension](#extension)
     - [view](#view)
     - [icon](#icon)
     - [bars](#bars)
     - [panel](#panel)
-    - [hidden file](#hidden-file)
     - [others](#others)
   - [desktop](#desktop)
   - [menu bar](#menu-bar)
@@ -43,7 +44,11 @@
   - [system](#system)
     - [hot corners](#hot-corners)
     - [modifiers](#modifiers)
+    - [Launchpad](#launchpad)
+    - [dashboard](#dashboard)
     - [keyboard remapping](#keyboard-remapping)
+    - [QuickTime](#quicktime)
+    - [App Store](#app-store)
   - [others](#others-2)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
@@ -67,6 +72,7 @@
 > - [mathiasbynens/dotfiles](https://github.com/mathiasbynens/dotfiles)
 >   - [.macos](https://github.com/mathiasbynens/dotfiles/blob/main/.macos)
 > - [akachrislee/osx](https://gist.github.com/akachrislee/3220956)
+> - [Clear and disable recent items in OS X dock and applications](https://simon.heimlicher.com/technology/disable-recent-items/)
 {% endhint %}
 
 # usage
@@ -182,11 +188,26 @@ $ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 $ defaults write com.apple.terminal StringEncodings -array 4
 
 # theme
-$ defaults write com.apple.Terminal "Default Window Settings" -string "gruvbox-dark"
-$ defaults write com.apple.Terminal "Startup Window Settings" -string "gruvbox-dark"
+$ defaults write com.apple.terminal "Default Window Settings" -string "gruvbox-dark"
+$ defaults write com.apple.terminal "Startup Window Settings" -string "gruvbox-dark"
 
 # more
-$ defaults read com.apple.Terminal
+$ defaults read com.apple.terminal
+```
+
+#### enable security keyboard
+
+> [!NOTE|label:references:]
+> - [How secure is "Secure Keyboard Entry" in Mac OS X's Terminal?](https://security.stackexchange.com/a/47786/8918)
+
+```bash
+$ defaults write com.apple.terminal SecureKeyboardEntry -bool true
+```
+
+#### line marks
+```bash
+# disable
+$ defaults write com.apple.terminal ShowLineMarks -int 0
 ```
 
 #### [modify theme](https://github.com/mathiasbynens/dotfiles/blob/main/.macos#L628C33-L628C53)
@@ -234,21 +255,6 @@ tell application "Terminal"
   end repeat
 end tell
 EOD
-```
-
-#### enable security keyboard
-
-> [!NOTE|label:references:]
-> - [How secure is "Secure Keyboard Entry" in Mac OS X's Terminal?](https://security.stackexchange.com/a/47786/8918)
-
-```bash
-$ defaults write com.apple.terminal SecureKeyboardEntry -bool true
-```
-
-#### line marks
-```bash
-# disable
-$ defaults write com.apple.Terminal ShowLineMarks -int 0
 ```
 
 ### developer mode
@@ -318,14 +324,6 @@ $ defaults write com.apple.LaunchServices LSQuarantine -bool false
 #### disable warning for unknown resource open
 ```bash
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
-```
-
-#### enable the hidden file
-```bash
-$ defaults write com.apple.finder AppleShowAllFiles true && killall Finder
-
-# or
-$ defaults write com.apple.finder AppleShowAllFiles YES
 ```
 
 ## screenshot
@@ -425,6 +423,58 @@ $ defaults write com.apple.screencapture type -string jpg
 ```
 
 ## finder
+
+### hidden file
+#### show hidden files
+```bash
+# show
+$ defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder
+# or
+$ defaults write com.apple.finder AppleShowAllFiles YES
+
+# disable
+$ defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder
+# or
+$ defaults write com.apple.Finder AppleShowAllFiles NO
+```
+
+#### disable the `.DS_Store` and `._*`
+
+> [!NOTE|label:references:]
+> - [Junk files created by macOS (or Finder)...](https://discussions.apple.com/thread/251428275?answerId=252779543022#252779543022)
+>   - You can disable MDS on a specific volume, but you need to create a hidden file to do it
+>     ```bash
+>     $ sudo touch /Volumes/{drive name}/.metadata_never_index
+>     ```
+> - [more details](https://apple.stackexchange.com/a/208495/254265)
+>   - `.DS_Store` – The name of a file in the Apple OS X operating system for storing custom attributes of a folder such as the position of icons or the choice of a background image (Read more)
+>   - `.Spotlight-V100` – This file holds information to speed up the 'Spotlight Search' feature. Deleting would simply force this information to be re-indexed if you performed another Spotlight Search for an item in this folder.
+>   - `.apDisk` – This file holds information about shared folders and can be safely removed as it will be automatically re-created if Apple needs it.
+>   - `.VolumeIcon.icns` – This file is used to store the icon of the volume (USB device) if the volume uses a custom icon and not the default icon. If you want the device to continue using this default icon, or if the folder/device you want to clean contains an application, you might want to keep this file in your system. As a side note, if you wanted to create a custom icon for your device you could create/download an .icns file and rename it .VolumeIcon.icns and place in your folder/device.
+>   - `.fseventsd` – This file is used as a buffer for the File System Events daemon. If you are using a program that is monitoring this folder/device, this file might be used to store temporary data.
+>   - `.Trash` & `.Trashes` – These folders are used to hold deleted items the same way that the 'Trash' icon from the dock works. If you don't need this feature on your folder/device, you can clean this folder to save space.
+>   - `.TemporaryItems` – This file is used by the OS to hold temporary data when files are being copied/moved/appended. If you are running any programs that are accessing the folder/device you want to clean, and you aren't copying or moving any files, then this file can simply hold old data for caching.
+
+```bash
+# network drives
+$ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+# usb drives
+$ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+# enable
+$ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool false
+$ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool false
+```
+
+- result
+  ```bash
+  $ defaults read com.apple.desktopservices
+  {
+      DSDontWriteNetworkStores = 1;
+      DSDontWriteUSBStores = 1;
+  }
+  ```
+
 ### [quit via ⌘ + Q](https://macos-defaults.com/finder/quitmenuitem.html)
 ```bash
 # hidden quite
@@ -438,6 +488,35 @@ $ defaults write com.apple.finder QuitMenuItem -bool true && killall Finder
 ```bash
 $ defaults write com.apple.finder NewWindowTarget -string "PfDe"
 $ defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+```
+
+### timestamp on zip filenames
+```bash
+# enable
+$ defaults write com.apple.Finder ArchiveTimestamp -bool true
+
+# disable
+$ defaults delete com.apple.Finder ArchiveTimestamp
+```
+
+#### [empty trashcan after 30 days](https://macos-defaults.com/finder/fxremoveoldtrashitems.html)
+```bash
+$ defaults write com.apple.finder "FXRemoveOldTrashItems" -bool "true" && killall Finder
+```
+
+#### finder sound
+```bash
+# turn on
+$ defaults write com.apple.Finder FinderSounds -bool false
+
+# turn off
+$ defaults delete com.apple.Finder FinderSounds
+```
+
+#### trash sounds
+```bash
+# disable
+$ defaults write com.apple.Finder WarnOnEmptyTrash -bool false
 ```
 
 ### extension
@@ -479,6 +558,12 @@ $ defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true" && killall 
 
 # for desktop
 $ defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" && killall Finder
+```
+
+#### animation when opening the Info window in Finder
+```bash
+# disable
+$ defaults write com.apple.Finder DisableAllAnimations -bool true
 ```
 
 ### icon
@@ -564,55 +649,6 @@ $ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 $ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 ```
 
-### hidden file
-#### show hidden files
-```bash
-# show
-$ defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder
-
-# disable
-$ defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder
-```
-
-#### disable the `.DS_Store` and `._*`
-
-> [!NOTE|label:references:]
-> - [Junk files created by macOS (or Finder)...](https://discussions.apple.com/thread/251428275?answerId=252779543022#252779543022)
->   - You can disable MDS on a specific volume, but you need to create a hidden file to do it
->     ```bash
->     $ sudo touch /Volumes/{drive name}/.metadata_never_index
->     ```
-> - [more details](https://apple.stackexchange.com/a/208495/254265)
->   - `.DS_Store` – The name of a file in the Apple OS X operating system for storing custom attributes of a folder such as the position of icons or the choice of a background image (Read more)
->   - `.Spotlight-V100` – This file holds information to speed up the 'Spotlight Search' feature. Deleting would simply force this information to be re-indexed if you performed another Spotlight Search for an item in this folder.
->   - `.apDisk` – This file holds information about shared folders and can be safely removed as it will be automatically re-created if Apple needs it.
->   - `.VolumeIcon.icns` – This file is used to store the icon of the volume (USB device) if the volume uses a custom icon and not the default icon. If you want the device to continue using this default icon, or if the folder/device you want to clean contains an application, you might want to keep this file in your system. As a side note, if you wanted to create a custom icon for your device you could create/download an .icns file and rename it .VolumeIcon.icns and place in your folder/device.
->   - `.fseventsd` – This file is used as a buffer for the File System Events daemon. If you are using a program that is monitoring this folder/device, this file might be used to store temporary data.
->   - `.Trash` & `.Trashes` – These folders are used to hold deleted items the same way that the 'Trash' icon from the dock works. If you don't need this feature on your folder/device, you can clean this folder to save space.
->   - `.TemporaryItems` – This file is used by the OS to hold temporary data when files are being copied/moved/appended. If you are running any programs that are accessing the folder/device you want to clean, and you aren't copying or moving any files, then this file can simply hold old data for caching.
-
-```bash
-# Network drives
-$ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-# USB drives
-$ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-```
-
-- enable
-  ```bash
-  $ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool false
-  $ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool false
-  ```
-
-- result
-  ```bash
-  $ defaults read com.apple.desktopservices
-  {
-      DSDontWriteNetworkStores = 1;
-      DSDontWriteUSBStores = 1;
-  }
-  ```
-
 ### others
 #### search scope
 
@@ -625,11 +661,6 @@ $ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 ```bash
 # use current directory as default search scope
 $ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-```
-
-#### [empty trashcan after 30 days](https://macos-defaults.com/finder/fxremoveoldtrashitems.html)
-```bash
-$ defaults write com.apple.finder "FXRemoveOldTrashItems" -bool "true" && killall Finder
 ```
 
 #### disk image verification
@@ -678,6 +709,15 @@ $ defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 ```
 
 ## desktop
+#### show wallpaper location
+```bash
+# show
+$ defaults write com.apple.dock desktop-picture-show-debug-text -bool true
+
+# not show
+$ defaults delete com.apple.dock desktop-picture-show-debug-text
+```
+
 #### [keep folders on top](https://macos-defaults.com/desktop/_fxsortfoldersfirstondesktop.html)
 ```bash
 $ defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true" && killall Finder
@@ -802,11 +842,22 @@ $ defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bo
 >   ```bash
 >   $ defaults delete com.apple.dock && killall Dock
 >   ```
+> - [macOS defaults](https://lupin3000.github.io/macOS/defaults/)
 
 ### show
 #### add a blank space
 ```bash
 $ defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}' && killall Dock
+```
+
+#### add recent items folder
+```bash
+$ defaults write com.apple.dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}' && killall Dock
+
+# current status
+$ defaults read com.apple.Dock persistent-others
+(
+)
 ```
 
 #### [group window by app](https://macos-defaults.com/mission-control/expose-group-apps.html)
@@ -821,10 +872,10 @@ $ defaults write com.apple.dock "expose-group-apps" -bool "true" && killall Dock
 
 ```bash
 # `left`
-$ defaults write com.apple.dock orientation -string left && killall Dock
+$ defaults write com.apple.dock orientation -string left   && killall Dock
 
 # `right`
-$ defaults write com.apple.dock orientation -string right && killall Dock
+$ defaults write com.apple.dock orientation -string right  && killall Dock
 
 # `bottom`
 $ defaults write com.apple.dock orientation -string bottom && killall Dock
@@ -876,7 +927,7 @@ $ defaults delete com.apple.dock mouse-over-hilite-stack && killall Dock
   $ defaults write com.apple.dock largesize -float 72 && killall Dock
   ```
 
-#### remove none-opened apps
+#### remove none-opened apps ( show only active Apps )
 ```bash
 $ defaults write com.apple.dock static-only -boolean true && killall Dock
 
@@ -884,11 +935,12 @@ $ defaults write com.apple.dock static-only -boolean true && killall Dock
 $ defaults delete com.apple.dock static-only && killall Dock
 ```
 
-#### hidden icon
+#### whether show hidden icon
 ```bash
+# show
 $ defaults write com.apple.dock showhidden -bool true && killall Dock
 
-# revert
+# not show
 $ defaults delete com.apple.Dock showhidden && killall Dock
 ```
 
@@ -900,6 +952,18 @@ $ defaults write com.apple.dock launchanim -bool true
 
 # disable
 $ defaults write com.apple.dock launchanim -bool false
+```
+
+#### animations when opening and closing windows
+```bash
+# disable
+$ defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+```
+
+#### animations when opening a Quick Look window
+```bash
+# disable
+$ defaults write -g QLPanelAnimationDuration -float 0
 ```
 
 #### animation of minimize windows
@@ -1069,6 +1133,9 @@ $ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 ```bash
 # disable
 $ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# enable
+$ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool true
 ```
 
 #### keyboard illumination
@@ -1230,6 +1297,7 @@ $ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.We
 ```
 
 ## system
+
 ### hot corners
 
 > [!TIP|label:references:]
@@ -1298,6 +1366,48 @@ wvous-br-modifier=0
 wvous-tr-modifier=0
 ```
 
+### Launchpad
+
+#### enlarge icon
+```bash
+# enlarge
+$ defaults write com.apple.Dock springboard-rows -int 4
+$ defaults write com.apple.Dock springboard-columns -int 4
+
+# shrink
+$ defaults write com.apple.Dock springboard-rows -int 10
+$ defaults write com.apple.Dock springboard-columns -int 10
+
+# reset
+$ defaults delete com.apple.Dock springboard-rows
+$ defaults delete com.apple.Dock springboard-columns
+$ defaults write com.apple.Dock ResetLaunchPad -bool true
+```
+
+#### reset launchpad
+```bash
+$ defaults write com.apple.dock ResetLaunchPad -bool true && killall Dock
+# or
+$ [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
+
+# revert back
+$ defaults delete com.apple.dock springboard-rows
+$ defaults delete com.apple.dock springboard-columns
+$ defaults write com.apple.dock ResetLaunchPad -bool true && killall Dock
+```
+
+### dashboard
+
+#### disable dashboard
+```bash
+# disable
+$ defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
+
+# enable
+$ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
+```
+
+
 ### keyboard remapping
 
 > [!NOTE|label:references:]
@@ -1365,18 +1475,6 @@ $ defaults write -g NSRequiresAquaSystemAppearance -bool true
 $ defaults write -g NSRequiresAquaSystemAppearance -bool false
 ```
 
-#### reset launchpad
-```bash
-$ defaults write com.apple.dock ResetLaunchPad -bool true && killall Dock
-# or
-$ [ -e ~/Library/Application\ Support/Dock/*.db ] && rm ~/Library/Application\ Support/Dock/*.db
-
-# revert back
-$ defaults delete com.apple.dock springboard-rows
-$ defaults delete com.apple.dock springboard-columns
-$ defaults write com.apple.dock ResetLaunchPad -bool true && killall Dock
-```
-
 #### automatic terminate inactive apps
 ```bash
 # disable
@@ -1402,7 +1500,6 @@ $ defaults write com.apple.TextEdit RichText -int 0
 # revert
 $ defaults delete com.apple.TextEdit RichText
 
-
 # UTF-8 in TextEdit
 $ defaults write com.apple.TextEdit PlainTextEncoding -int 4
 $ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
@@ -1415,13 +1512,48 @@ $ defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
 $ defaults write com.apple.DiskUtility advanced-image-options -bool true
 ```
 
-#### QuickTime
+### QuickTime
+
+> [!NOTE|label:references:]
+> - [QuickTime](https://lupin3000.github.io/macOS/defaults/#quicktime)
+
+#### auto-play
 ```bash
-# auto-play when open video
+# enable autostart movies
 $ defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
+
+# disable autostart movies
+$ defaults delete com.apple.QuickTimePlayerX MGPlayMovieOnOpen
 ```
 
-#### App Store
+#### rounded corners
+```bash
+# diable rounded corners
+$ defaults write com.apple.QuickTimePlayerX MGCinematicWindowDebugForceNoRoundedCorners -bool true
+
+# enable rounded corners
+$ defaults delete com.apple.QuickTimePlayerX MGCinematicWindowDebugForceNoRoundedCorners
+```
+
+#### controller bar
+```bash
+# disable controller bar
+$ defaults write com.apple.QuickTimePlayerX MGUIVisibilityNeverAutoshow -bool true
+
+# enable controller bar
+$ defaults delete com.apple.QuickTimePlayerX MGUIVisibilityNeverAutoshow
+```
+
+#### auto show subtitles
+```bash
+# enable auto show subtitles
+$ defaults write com.apple.QuickTimePlayerX MGEnableCCAndSubtitlesOnOpen -bool true
+
+# disable auto show subtitles
+$ defaults delete com.apple.QuickTimePlayerX MGEnableCCAndSubtitlesOnOpen
+```
+
+### App Store
 ```bash
 # enable the webkit developer tools
 $ defaults write com.apple.appstore WebKitDeveloperExtras -bool true
@@ -1531,12 +1663,19 @@ defaults write com.apple.spotlight orderedItems -array \
   '{"enabled" = 0;"name" = "MENU_EXPRESSION";}' \
   '{"enabled" = 0;"name" = "MENU_WEBSEARCH";}' \
   '{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}'
+
 # Load new settings before rebuilding the index
 killall mds > /dev/null 2>&1
-# Make sure indexing is enabled for the main volume
+# make sure indexing is enabled for the main volume
 sudo mdutil -i on / > /dev/null
-# Rebuild the index from scratch
+# rebuild the index from scratch
 sudo mdutil -E / > /dev/null
+```
+
+#### crash reporter
+```bash
+# disable
+$ defaults write com.apple.CrashReporter DialogType none
 ```
 
 #### notification center
@@ -1547,16 +1686,6 @@ $ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenteru
 # enable
 $ launchctl load -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist && killall NotificationCenter
 ```
-
-#### dashboard
-```bash
-# disable
-$ defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
-
-# enable
-$ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
-```
-
 #### time machine
 ```bash
 # disable dialog
@@ -1572,6 +1701,21 @@ $ hash tmutil &> /dev/null && sudo tmutil disablelocal
 $ defaults write NSGlobalDomain AppleShowScrollBars -string "Auto"
 ```
 
+#### rubber-band scrolling
+```bash
+# disable
+$ defaults write -g NSScrollViewRubberbanding -int 0
+
+# enable
+$ defaults delete -g NSScrollViewRubberbanding
+```
+
+#### airdrop
+```bash
+# enable airdrop from ethernet
+$ defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+```
+
 #### ASCII control characters using caret notation in standard text views
 
 > [!NOTE|label:references:]
@@ -1582,7 +1726,7 @@ $ defaults write NSGlobalDomain AppleShowScrollBars -string "Auto"
 $ defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
 ```
 
-#### system-wide resume
+#### system-wide resume ( disable tab memory )
 ```bash
 # disable
 $ defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool false
@@ -1734,6 +1878,14 @@ $ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool false
 # setup
 $ defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
 ```
+
+#### disable Recent Items
+
+> [!NOTE|label:references:]
+> - [Clear and disable recent items in OS X dock and applications](https://simon.heimlicher.com/technology/disable-recent-items/)
+> - [How to remove Apple Menu > Recent Items completely? — Servers entry stuck](https://discussions.apple.com/thread/254464926?answerId=258347063022&sortBy=rank#258347063022)
+
+![disable recent itmes](../screenshot/osx/osx-recents.png)
 
 # backup & restore
 ## [Moon](https://manytricks.com/osticket/kb/faq.php?id=53)
