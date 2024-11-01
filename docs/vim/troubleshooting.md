@@ -160,6 +160,17 @@ iTerm.app
 
 ### `MatchTagAlways unavaiable: requries python`
 
+> [!TIP]
+> - the python issue might caused by 32bit vim not match with 64bit python, in this case, install macvim via
+>   ```bash
+>   # if necessary
+>   $ sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+>
+>   $ brew intall --HEAD macvim
+>   $ sudo ln -sf /opt/homebrew/Cellar/macvim/HEAD-45c5509/MacVim.app /Application/MacVim.app
+>   ```
+> - [xcode-select: error: tool 'xcodebuild' requires Xcode](https://github.com/nodejs/node-gyp/issues/569#issuecomment-94917337)
+
 - issue
   ```vim
   $ vim

@@ -135,7 +135,7 @@ $ sudo mdutil -E /Volumes/marslo/
 
 - [or](https://www.macrumors.com/how-to/rebuild-spotlight-search-index-on-mac/)
   ```bash
-  $ sudo dutil -i off /
+  $ sudo mdutil -i off /
   $ sudo rm -rf /.Spotlight-V100
   $ sudo rm -rf /.Spotlight-V200
   $ sudo mdutil -i on /

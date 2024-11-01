@@ -220,7 +220,7 @@ $ ./configure --with-features=huge \
               --enable-rubyinterp=dynamic \
               --with-python3-config-dir=$(python3-config --configdir) \
               --enable-python3interp=dynamic \
-              --with-lua-prefix=/usr/local \
+              --with-lua-prefix=$(brew --prefix) \
               --enable-luainterp=dynamic \
               --enable-libsodium \
               --enable-multibyte \

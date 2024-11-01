@@ -191,6 +191,32 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
   ->   --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib
   -> EOF
 
+# or HOMEBREW_PREFIX='/opt/homebrew'
+#!/usr/bin/env bash
+
+HOMEBREW_PREFIX='/opt/homebrew'
+JAVA_HOME="${HOMEBREW_PREFIX}"/opt/openjdk
+export JAVA_HOME
+GROOVY_HOME="$("${HOMEBREW_PREFIX}"/bin/brew --prefix groovy)/libexec"
+GROOVY_VERSION="$(/usr/bin/sed -rn 's/^[^:]+:[[:blank:]]?([[:digit:].]+)[[:blank:]]?.+$/\1/p' < <("${GROOVY_HOME}"/bin/groovy --version))"
+"${JAVA_HOME}"/bin/java \
+    -Dsun.awt.keepWorkingSetOnMinimize=true \
+    -Xdock:name=GroovyConsole \
+    -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+    -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+    -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+    -Dprogram.name=groovyConsole \
+    -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+    -Dgroovy.home="${GROOVY_HOME}" \
+    -Dtools.jar="${JAVA_HOME}"/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+    --main groovy.console.ui.Console \
+    --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+    --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
+
+#--------------------------------------------------------------------------------------#
+
 $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
 $ ls -1 groovyConsole.app/Contents/MacOS/
 Automator Application Stub                    # ignore it
