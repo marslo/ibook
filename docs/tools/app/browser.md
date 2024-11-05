@@ -9,7 +9,7 @@
   - [shortcut](#shortcut)
   - [download](#download)
   - [tips](#tips)
-  - [switch recently used tab](#switch-recently-used-tab)
+  - [extensions](#extensions)
 - [chromium](#chromium)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -254,11 +254,44 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 "DelegateExecute"="{17FE9752-0B5A-4665-84CD-569794602F5C}"
 ```
 
-### [switch recently used tab](https://superuser.com/a/433532/112396)
+### extensions
+
+> [!NOTE|label:references:]
+> - [crx download](https://extensiondock.com/en)
+
+#### UUID
+
+- `bpojelgakakmcfmjfilgdlmhefphglae`: [Set Character Encoding](https://chromewebstore.google.com/search/bpojelgakakmcfmjfilgdlmhefphglae)
+- `caclkomlalccbpcdllchkeecicepbmbm`: [Advanced Font Settings](https://chromewebstore.google.com/search/caclkomlalccbpcdllchkeecicepbmbm)
+- `ckkdlimhmcjmikdlpkmbgfkaikojcbjk`: [Markdown View](https://chromewebstore.google.com/search/ckkdlimhmcjmikdlpkmbgfkaikojcbjk)
+- `clngdbkpkpeebahjckkjfobafhncgmne`: [Stylus](https://chromewebstore.google.com/search/clngdbkpkpeebahjckkjfobafhncgmne)
+- `fjnbnpbmkenffdnngjfgmeleoegfcffe`: [Stylish](https://chromewebstore.google.com/detail/stylish-custom-themes-for/fjnbnpbmkenffdnngjfgmeleoegfcffe)
+- `dbepggeogbaibhgnhhndojpepiihcmeb`: [Vimium](https://chromewebstore.google.com/search/dbepggeogbaibhgnhhndojpepiihcmeb)
+- `gbmdgpbipfallnflgajpaliibnhdgobh`: [JSON View](https://chromewebstore.google.com/search/gbmdgpbipfallnflgajpaliibnhdgobh)
+- `ggaabchcecdbomdcnbahdfddfikjmphe`: [Chrome Capture](https://chromewebstore.google.com/search/ggaabchcecdbomdcnbahdfddfikjmphe)
+- `ghgabhipcejejjmhhchfonmamedcbeod`: [Click&Clean](https://chromewebstore.google.com/search/ghgabhipcejejjmhhchfonmamedcbeod)
+- `gieabiemggnpnminflinemaickipbebg`: [CSS Scan](https://chromewebstore.google.com/search/gieabiemggnpnminflinemaickipbebg)
+- `ieelmcmcagommplceebfedjlakkhpden`: [Disable Content-Security-Policy](https://chromewebstore.google.com/search/ieelmcmcagommplceebfedjlakkhpden)
+- `jlgkpaicikihijadgifklkbpdajbkhjo`: [CrxMouse](https://chromewebstore.google.com/search/jlgkpaicikihijadgifklkbpdajbkhjo)
+- `kpppomnoahmhnmmamjfbnnnmeabkjcni`: [Color Picker](https://chromewebstore.google.com/search/kpppomnoahmhnmmamjfbnnnmeabkjcni)
+- `lobiadjfmkomemokdfhiaaaidgdhcded`: [Ultimate Color Picker](https://chromewebstore.google.com/search/lobiadjfmkomemokdfhiaaaidgdhcded)
+- `mcbpblocgmgfnpjjppndjkmgjaogfceg`: [FireShot](https://chromewebstore.google.com/search/mcbpblocgmgfnpjjppndjkmgjaogfceg)
+- `mnamhmcgcfflfjafflanbhbfffpmkmmm`: [Dream Afar New Tab](https://chromewebstore.google.com/search/mnamhmcgcfflfjafflanbhbfffpmkmmm)
+- `ocllfmhjhfmogablefmibmjcodggknml`: [Recent Tab](https://chromewebstore.google.com/search/ocllfmhjhfmogablefmibmjcodggknml)
+- `padekgcemlokbadohgkifijomclgjgif`: [Proxy SwitchOmega](https://chromewebstore.google.com/search/padekgcemlokbadohgkifijomclgjgif)
+
+- invalid
+  - `kdcjmllhmhnnadianfhhnoefgcdbpdap`: smooth gestures plus | [official website](https://smoothgesturesplus.com/)
+  - `njabckikapfpffapmjgojcnbfjonfjfg`: Export cookies.txt
+
+- theme
+  - `aghfnjkcakhmadgdomlmlhhaocbkloab`: [Just Black](https://chromewebstore.google.com/search/aghfnjkcakhmadgdomlmlhhaocbkloab)
+
+#### [switch recently used tab](https://superuser.com/a/433532/112396)
 
 > [!NOTE|label:references:]
 > - [Recent Tabs](https://chromewebstore.google.com/detail/recent-tabs/ocllfmhjhfmogablefmibmjcodggknml)
 
 ## chromium
 - download page : https://download-chromium.appspot.com
-- download for OSX : https://download-chromium.appspot.com/?platform=Mac&type=snapshots
+-kdcjmllhmhnnadianfhhnoefgcdbpdap download for OSX : https://download-chromium.appspot.com/?platform=Mac&type=snapshots

@@ -51,7 +51,7 @@
 
 ### development
 - [macvim](https://github.com/macvim-dev/macvim)
-- [RegExRX](https://www.macupdate.com/app/mac/33164/regexrx)
+- [RegExRX](http://www.mactechnologies.com/index.php?page=downloads#regexrx) | [macupdate](https://www.macupdate.com/app/mac/33164/regexrx)
   - [cn](https://apps.apple.com/cn/app/regexrx/id498370702?l=en&mt=12)
   - [us](https://apps.apple.com/us/app/regexrx/id498370702?mt=12)
 - [iTerm2](https://www.iterm2.com/)

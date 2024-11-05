@@ -60,7 +60,7 @@ $ unzip -o /opt/FontPatcher/FontPatcher.zip /opt/FontPatcher
 
 # setup completion
 ## osx
-$ cp /opt/FontPatcher/completion/font-patcher.sh /usr/local/etc/bash_completion.d/
+$ cp /opt/FontPatcher/completion/font-patcher.sh $(brew --prefix)/etc/bash_completion.d/
 ## centos/rhel/ubuntu/wsl
 $ cp /opt/FontPatcher/completion/font-patcher.sh /usr/share/bash-completion/completions/
 ## centos/rhel

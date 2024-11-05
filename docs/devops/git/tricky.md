@@ -16,6 +16,9 @@
   - [`.gitattributes`](#gitattributes)
   - [git summaries](#git-summaries)
   - [who-am-i](#who-am-i)
+  - [find bug with bisect](#find-bug-with-bisect)
+  - [view file at specific commit](#view-file-at-specific-commit)
+  - [edit .gitignore after committing](#edit-gitignore-after-committing)
 - [trailers](#trailers)
   - [git config](#git-config)
   - [generate trailers](#generate-trailers)
@@ -393,6 +396,25 @@ password=ghp_ppHq*************************g1PXSvr
   ```bash
   $ echo -e 'protocol=https\nhost=github.com' | git credential reject
   ```
+
+### [find bug with bisect](https://dev.to/jagroop2001/20-git-command-line-tricks-every-developer-should-know-1i21)
+```bash
+$ git bisect start
+$ git bisect bad                 # current commit is bad
+$ git bisect good <commit-hash>  # a known good commit
+```
+
+### [view file at specific commit](https://dev.to/jagroop2001/20-git-command-line-tricks-every-developer-should-know-1i21)
+```bash
+$ git show <commit-hash>:path/to/file
+```
+
+### [edit .gitignore after committing](https://dev.to/jagroop2001/20-git-command-line-tricks-every-developer-should-know-1i21)
+```bash
+$ echo "node_modules/" >> .gitignore
+$ git rm -r --cached node_modules/
+$ git commit -m "Update .gitignore"
+```
 
 ## trailers
 
