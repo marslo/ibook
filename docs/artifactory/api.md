@@ -30,6 +30,8 @@
   - [deploy single artifacts](#deploy-single-artifacts)
   - [deploy bundle artifact](#deploy-bundle-artifact)
   - [deploy docker image via API](#deploy-docker-image-via-api)
+- [access](#access)
+  - [generate access token](#generate-access-token)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -531,3 +533,40 @@ $ curl -X POST -H "X-JFrog-Art-Api:$ARTI_API_KEY" \
 
 Promotion ended successfully%
 ```
+
+## access
+### generate access token
+
+> [!NOTE|label:references:]
+> - [ARTIFACTORY: Creating Access Tokens in Artifactory](https://jfrog.com/help/r/how-to-generate-an-access-token-video/artifactory-creating-access-tokens-in-artifactory)
+> - authenticating via `Identify Token`
+
+- generate new
+  ```bash
+  $ export token='cm************************************************************w4'                   # Identify Token
+
+  # generate
+  $ curl -H "Authorization: Bearer $token " \
+         -XPOST "https://artifactory.sample.com/access/api/v1/tokens" \
+         -d '{"description" : "YOUR-DESCRIPTION", "token_id" : "YOUR-TOKEN-ID", "scope" : "applied-permissions/admin", "token_type" : "access_token", "include_reference_token" : "true"}' \
+         -H "Content-type: application/json"
+  {
+    "token_id" : "cf25f93d-e0b2-43ca-8adc-8e75c49b16d2",
+    "access_token" : "ey*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************Zw",
+    "expires_in" : 31536000,
+    "scope" : "applied-permissions/admin",
+    "token_type" : "Bearer",
+    "reference_token" : "cm************************************************************Zz",
+    "description" : "YOUR-DESCRIPTION"
+  }
+  ```
+
+- list all
+  ```bash
+  $ curl -XGET -H "Authorization: Bearer $token " \
+         https://artifactory.sample.com/access/api/v1/tokens
+
+  # to filter
+  $ curl -XGET -H "Authorization: Bearer $token " https://artifactory.sample.com/access/api/v1/tokens |
+         jq -r '.tokens[] | select( .scope == "applied-permissions/admin" )'
+  ```

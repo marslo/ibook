@@ -33,6 +33,8 @@
     - [haskell-platform](#haskell-platform)
     - [haskell-stack](#haskell-stack)
   - [hadolint](#hadolint)
+  - [docker](#docker)
+  - [jfrog-cli](#jfrog-cli)
   - [mysql](#mysql)
     - [built from source code](#built-from-source-code)
     - [install from apt repo](#install-from-apt-repo)
@@ -720,6 +722,29 @@ $ curl -o /usr/bin/hadolint \
        -fsSL https://github.com/hadolint/hadolint/releases/download/v2.12.1-beta/hadolint-Linux-x86_64
 $ chmod +x /usr/bin/hadolint
 ```
+
+## docker
+
+> [!NOTE|label:references:]
+> - [Install Docker Desktop on Mac](https://docs.docker.com/desktop/install/mac-install/)
+
+```bash
+# amd64
+$ curl -o /tmp/Docker.dmg -fsSL -g 'https://desktop.docker.com/mac/main/arm64/Docker.dmg?utm_source=docker&utm_medium=webreferral&utm_campaign=docs-driven-download-mac-arm64'
+
+# install
+$ sudo hdiutil attach Docker.dmg
+$ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
+$ sudo hdiutil detach /Volumes/Docker
+```
+
+## jfrog-cli
+
+- build from source
+  ```bash
+  $ git clone https://github.com/jfrog/jfrog-cli.git
+  $ go build -o=/opt/homebrew/Cellar/jfrog-cli/HEAD-ce298c1/bin/jf -ldflags=-s -w
+  ```
 
 ## mysql
 ### built from source code
