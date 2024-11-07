@@ -1,44 +1,45 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-  - [oneline commands](#oneline-commands)
-    - [cat and EOF](#cat-and-eof)
-    - [while read from input](#while-read-from-input)
-    - [tail and timestamp](#tail-and-timestamp)
-    - [backup multiple files](#backup-multiple-files)
-    - [ssh](#ssh)
-    - [find and tar](#find-and-tar)
-    - [find and rename](#find-and-rename)
-    - [find and sort](#find-and-sort)
-    - [find and copy](#find-and-copy)
-    - [download and extract](#download-and-extract)
-    - [mirror website](#mirror-website)
-    - [kubectl apply from stdin](#kubectl-apply-from-stdin)
-    - [show 256 colors](#show-256-colors)
-    - [rm and exclude](#rm-and-exclude)
-  - [sync mirror](#sync-mirror)
-  - [get all declare](#get-all-declare)
-    - [print env](#print-env)
-  - [using string as variable name](#using-string-as-variable-name)
-  - [`<<<`, `< <(..)`](#--)
-    - [`< <(..)` && `> >(..)`](#----)
-  - [parameter substitution](#parameter-substitution)
-    - [arguments substitution](#arguments-substitution)
-    - [quotas](#quotas)
-  - [string manipulations](#string-manipulations)
-  - [compound comparison](#compound-comparison)
-    - [SC2155](#sc2155)
-    - [SC2155](#sc2155-1)
-    - [escape code](#escape-code)
-  - [echo](#echo)
-    - [echo var name from variable](#echo-var-name-from-variable)
-    - [echo var name](#echo-var-name)
-  - [ls](#ls)
-  - [bash completion](#bash-completion)
-    - [osx](#osx)
-    - [linux](#linux)
-    - [completion for alias](#completion-for-alias)
-    - [troubleshooting](#troubleshooting)
+- [oneline commands](#oneline-commands)
+  - [cat and EOF](#cat-and-eof)
+  - [while read from input](#while-read-from-input)
+  - [tail and timestamp](#tail-and-timestamp)
+  - [backup multiple files](#backup-multiple-files)
+  - [ssh](#ssh)
+  - [find and tar](#find-and-tar)
+  - [find and rename](#find-and-rename)
+  - [find and sort](#find-and-sort)
+  - [find and copy](#find-and-copy)
+  - [download and extract](#download-and-extract)
+  - [mirror website](#mirror-website)
+  - [kubectl apply from stdin](#kubectl-apply-from-stdin)
+  - [show 256 colors](#show-256-colors)
+  - [rm and exclude](#rm-and-exclude)
+  - [split file to equal size](#split-file-to-equal-size)
+- [sync mirror](#sync-mirror)
+- [get all declare](#get-all-declare)
+  - [print env](#print-env)
+- [using string as variable name](#using-string-as-variable-name)
+- [`<<<`, `< <(..)`](#--)
+  - [`< <(..)` && `> >(..)`](#----)
+- [parameter substitution](#parameter-substitution)
+  - [arguments substitution](#arguments-substitution)
+  - [quotas](#quotas)
+- [string manipulations](#string-manipulations)
+- [compound comparison](#compound-comparison)
+  - [SC2155](#sc2155)
+  - [SC2155](#sc2155-1)
+  - [escape code](#escape-code)
+- [echo](#echo)
+  - [echo var name from variable](#echo-var-name-from-variable)
+  - [echo var name](#echo-var-name)
+- [ls](#ls)
+- [bash completion](#bash-completion)
+  - [osx](#osx)
+  - [linux](#linux)
+  - [completion for alias](#completion-for-alias)
+  - [troubleshooting](#troubleshooting)
 - [tricky](#tricky)
   - [alias for sudo](#alias-for-sudo)
   - [get md5sum](#get-md5sum)
@@ -383,6 +384,11 @@ $ find . ! -name <FILENAME> -delete
 
 # https://www.commandlinefu.com/commands/view/4570/remove-everything-except-that-file
 $ ( shopt -s extglob; rm !(<PATTERN>) )
+```
+
+### [split file to equal size](https://www.commandlinefu.com/commands/view/5106/split-a-file-into-equal-size-chunks-and-archive-to-email-account.)
+```bash
+$ split -b4m file.tgz file.tgz. ; for i in file.tgz.*; do SUBJ="Backup Archive"; MSG="Archive File Attached"; echo $MSG | mutt -a $i -s $SUBJ YourEmail@(E)mail.com
 ```
 
 ## sync mirror
@@ -1842,8 +1848,8 @@ $ cat ~/.bash_profile
     ```
     <!--endsec-->
 
-# tricky
-## alias for sudo
+## tricky
+### alias for sudo
 
 > [!TIP|label:references:]
 > - [Aliases not available when using sudo](https://askubuntu.com/a/22043/92979)
@@ -1853,7 +1859,7 @@ $ cat ~/.bash_profile
 alias sudo='sudo '
 ```
 
-## get md5sum
+### get md5sum
 
 - [get file in tar without exacting](https://unix.stackexchange.com/a/208509/29178)
   ```bash
@@ -1868,7 +1874,7 @@ alias sudo='sudo '
   $ unzip -p file.zip file.txt | md5sum
   ```
 
-## env
+### env
 
 - HISTTIMEFORMAT
   ```bash
@@ -1884,7 +1890,7 @@ alias sudo='sudo '
   $ GREP_OPTIONS='-D skip --binary-files=without-match --ignore-case'
   ```
 
-## shortcuts
+### shortcuts
 
 - [inserts the results of an autocompletion in the command line](https://www.commandlinefu.com/commands/view/2424/inserts-the-results-of-an-autocompletion-in-the-command-line)
   ```bash
@@ -1892,7 +1898,7 @@ alias sudo='sudo '
   ```
   - i.e.: `$ echo |` -> <kbd>esc</kbd> <kbd>*</kbd>
 
-## man
+### man
 
 - [linux file system](https://www.commandlinefu.com/commands/view/4671/show-file-system-hierarchy)
   ```bash

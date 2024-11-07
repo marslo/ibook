@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [I'm very busy](#im-very-busy)
+- [labyrinth pattern](#labyrinth-pattern)
 - [press any key to continue](#press-any-key-to-continue)
 - [fortune](#fortune)
 - [simulate type mechine (super cool!!)](#simulate-type-mechine-super-cool)
@@ -25,6 +26,11 @@ $ for i in `seq 0 100`; do timeout 6 dialog --gauge "Install..." 6 40 "$i"; done
 
 # show quota
 $ fortune | pv -qL 10
+```
+
+### [labyrinth pattern](https://www.commandlinefu.com/commands/view/13993/labyrinth-pattern)
+```bash
+$ while ( true ) ; do if [ $(expr $RANDOM % 2 ) -eq 0 ] ; then echo -ne "\xE2\x95\xB1" ; else echo -ne "\xE2\x95\xB2" ; fi ; done
 ```
 
 ### press any key to continue
@@ -56,19 +62,32 @@ $ sudo apt-get intall pv
 $ echo "Very very very very very long words" | pv -qL $[10+(-2 + RANDOM%5)]
 $ echo "You can simulate on-screen typing just like in the movies" | pv -qL 10
 
-# with mistake: https://www.commandlinefu.com/commands/view/11737/simulate-typing-but-with-mistakes
-$ echo -e "You are wa jerk\b\b\b\bwonderful person" | pv -qL $[10+(-2 + RANDOM%5)]
-
 # or
 $ sudo apt-get install randtype
 $ echo "Very very very very very long words" | randtype -m 4
 
 # or
 $ echo "hello world !" | while read x; do for(( i=0; i<${#x}; i++ )); do echo -n "${x:$i:1}"; sleep .06; done; done
-
-# or wth tclsh: https://www.commandlinefu.com/commands/view/13499/mac-osx-friendly-version-of-this-terminal-typing-command-at-200ms-per-key
-$ message="I have a nice easy typing pace"; for ((i=0; i<${#message}; i++)); do echo "after 100" | tclsh; printf "${message:$i:1}"; done; echo
 ```
+
+- [Simulate typing but with mistakes](https://www.commandlinefu.com/commands/view/11737/simulate-typing-but-with-mistakes)
+  ```bash
+  $ echo -e "You are wa jerk\b\b\b\bwonderful person" | pv -qL $[10+(-2 + RANDOM%5)]
+  ```
+
+- [Mac osx friendly version of this terminal typing command at 200ms per key](https://www.commandlinefu.com/commands/view/13499/mac-osx-friendly-version-of-this-terminal-typing-command-at-200ms-per-key)
+  ```bash
+  $ message="I have a nice easy typing pace"; for ((i=0; i<${#message}; i++)); do echo "after 100" | tclsh; printf "${message:$i:1}"; done; echo
+  ```
+
+- [continuously print string as if being entered from the keyboard](https://www.commandlinefu.com/commands/view/6777/continuously-print-string-as-if-being-entered-from-the-keyboard)
+  ```bash
+  $ cycle(){ while :;do((i++)); echo -n "${3:$(($i%${#3})):1}"; sleep .$(($RANDOM%$2+$1)); done; }
+
+  # usage
+  $ cycle 1 4 ' All work and no play makes Jack a dull boy.'
+  $ cycle 1 3 $(openssl rand 100 | xxd -p)
+  ```
 
 ### set volume by command
 ```bash

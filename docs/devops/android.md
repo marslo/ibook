@@ -11,6 +11,7 @@
   - [list local sdk](#list-local-sdk)
   - [update sdk](#update-sdk)
 - [manual download](#manual-download)
+- [convert adb to tar](#convert-adb-to-tar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -315,4 +316,12 @@ Tools:
 
         - Intel x86 Emulator Accelerator (HAXM Installer)
         http://mirrors.neusoft.edu.cn/android/repository/extras/intel/
+```
+
+## [convert adb to tar](https://www.commandlinefu.com/commands/view/13974/extract-android-adb-backup-to-tar-format-only-works-for-non-encrypted-backups)
+```bash
+$ dd if=backup.ab bs=24 skip=1 | zlib-flate -uncompress > backup.tar
+
+# or : https://www.commandlinefu.com/commands/view/11439/extract-android-adb-ab-backup-to-tar-format-only-works-for-non-encrypted-backups
+$ dd if=mybackup.ab bs=24 skip=1 | openssl zlib -d > mybackup.tar
 ```

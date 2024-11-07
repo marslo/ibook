@@ -77,6 +77,9 @@
 ## actions
 
 > [!NOTE|label:references]
+> -references:
+>   - [Advanced CI/CD Pipeline Optimization Techniques Using GitHub Actions](https://dzone.com/articles/advanced-cicd-pipeline-optimization-techniques)
+>   - [GitHub Actions vs. Jenkins](https://dev.to/spacelift/github-actions-vs-jenkins-41i4)
 > - [marketplace](https://github.com/marketplace)
 > - [First interaction](https://github.com/marketplace/actions/first-interaction)
 > - [github-action-auto-format](https://github.com/marketplace/actions/github-action-auto-format)
@@ -131,6 +134,7 @@
 >   - [Kubectl tool installer](https://github.com/marketplace/actions/kubectl-tool-installer)
 >   - [Kubernetes Set Context](https://github.com/marketplace/actions/kubernetes-set-context)
 >   - [Helm tool installer](https://github.com/marketplace/actions/helm-tool-installer)
+
 
 ## apps
 

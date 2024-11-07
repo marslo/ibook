@@ -333,6 +333,7 @@ $ brew install openldap
 $ brew install jq
 $ brew install openjdk
 $ brew install --HEAD fzf fzy bat ack ag rg
+$ brew install mkdocs                          # markdown docs, usage: `mkdocs build -d site -s`
 
 # --- lint ----
 $ brew install --HEAD shellcheck
@@ -348,10 +349,10 @@ $ brew install --HEAD shfmt                    # autoformat shell script source 
 $ brew install actionlint                      # for github action
 $ brew install libxml2                         # for xmllint
 
-# cask
+# --- cask ---
 $ brew install --cask keycastr
 
-# tap
+# --- tap ---
 $ brew tap hashicorp/tap
 $ brew install hashicorp/tap/vault
 $ brew tap homebrew/command-not-found          # brew which-formula && brew which-update
@@ -359,6 +360,10 @@ $ brew tap vitorgalvao/tiny-scripts
 
 # check tap info
 $ brew tap-info vitorgalvao/tiny-scripts --json | jq -r .[].formula_names
+
+# --- for fun ----
+$ brew install pv
+$ brew install fortune
 ```
 
 <!--sec data-title="deprecated (macvim)" data-id="section0" data-show=true data-collapse=true ces-->

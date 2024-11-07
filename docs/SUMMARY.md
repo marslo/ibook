@@ -26,6 +26,7 @@
     * [verification](cheatsheet/ssl/verification.md)
     * [server](cheatsheet/ssl/server.md)
     * [client](cheatsheet/ssl/client.md)
+    * [tricky](cheatsheet/ssl/tricky.md)
   * [windows](cheatsheet/windows/windows.md)
     * [powershell](cheatsheet/windows/powershell.md)
     * [choco](cheatsheet/windows/choco.md)

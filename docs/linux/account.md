@@ -512,6 +512,21 @@ $ useradd -c "comments here" \
 $ deluser <account> <group>
 ```
 
+#### [new user with root uid](https://www.commandlinefu.com/commands/view/15311/useradd-1-line-add-new-user-with-root-uid-test1password1-and-pipe-errors-to-tmperr)
+
+> [!TIP]
+> - username: `test1`
+> - password: `password1`
+
+```bash
+$ /usr/sbin/useradd -ou 0 -g root -d /root -s /bin/bash -p $(echo password1 | openssl passwd -1 -stdin) test 2>/tmp/err
+```
+
+- [generate secure password to userwith chpasswd](https://www.commandlinefu.com/commands/view/1491/generate-secure-password-to-userwith-chpasswd)
+  ```bash
+  $ echo "encryptedpassword" | openssl passwd -1 -stdin
+  ```
+
 ## group
 
 - `/etc/group`

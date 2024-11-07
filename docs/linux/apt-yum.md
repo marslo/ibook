@@ -48,6 +48,10 @@
 > [!NOTE|label:references:]
 > - [ubuntu: Package management](https://ubuntu.com/server/docs/package-management)
 > - for apt-file, execute `sudo apt-file update` first before start search
+> - [show dependents of formula](https://stackoverflow.com/a/66142860/2940319)
+>   ```bash
+>   $ brew uses --recursive --installed <name>
+>   ```
 
 | RPM                                                         | DPKG                                                                                        | BREW                                         |
 |-------------------------------------------------------------|---------------------------------------------------------------------------------------------|----------------------------------------------|

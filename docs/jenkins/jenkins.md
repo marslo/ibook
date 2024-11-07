@@ -20,7 +20,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 {% hint style='tip' %}
 > references:
 > - [CloudBeesTV](https://www.youtube.com/@CloudBeesTV)
@@ -363,6 +362,10 @@ $ curl -X POST \
 ```
 
 ### [restart Jenkins instance](https://support.cloudbees.com/hc/en-us/articles/216118748-How-to-Start-Stop-or-Restart-your-Instance-)
+
+> [!TIP]
+> - `https://jenkins.sample.com/safeRestart`
+> - `https://jenkins.sample.com/restart`
 
 {% hint style='tip' %}
 **@Current after [`2.176.2`](https://www.jenkins.io/security/advisory/2019-07-17/#SECURITY-626)**

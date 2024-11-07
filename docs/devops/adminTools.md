@@ -17,7 +17,7 @@
     - [advanced usage](#advanced-usage)
     - [plugins](#plugins)
   - [OTP](#otp)
-    - [](#)
+    - [pass-otp](#pass-otp)
   - [PGP](#pgp)
   - [passwd](#passwd)
 - [network tools](#network-tools)
@@ -361,6 +361,16 @@ sub   cv25519 2024-05-08 [E]
 
 > [!NOTE|label:references:]
 > - [completion](https://git.zx2c4.com/password-store/tree/src/completion)
+> - [environment variable](https://manpages.ubuntu.com/manpages/noble/man1/pass.1.html#environment%20variables)
+>   - `PASSWORD_STORE_DIR`
+>   - `PASSWORD_STORE_KEY`
+>   - `PASSWORD_STORE_GENERATED_LENGTH`
+>   - `PASSWORD_STORE_CHARACTER_SET`
+>   - `PASSWORD_STORE_CHARACTER_SET_NO_SYMBOLS`
+>   - `PASSWORD_STORE_CLIP_TIME`
+>   - `PASSWORD_STORE_EXTENSIONS_DIR`
+>   - `PASSWORD_STORE_ENABLE_EXTENSIONS`
+>   - `PASSWORD_STORE_SIGNING_KEY`
 
 ```bash
 $ export PASSWORD_STORE_DIR=~/.password-store
@@ -419,7 +429,7 @@ Copied test to clipboard. Will clear in 45 seconds.
 > [!NOTE|label:references:]
 > - [PASSWORD_STORE_CHARACTER_SET_NO_SYMBOLS isn't respected](https://lists.zx2c4.com/pipermail/password-store/2018-January/003170.html)
 > - [[pass] Provide symbol set as command line argument](https://lists.zx2c4.com/pipermail/password-store/2016-November/002429.html)
-> - [How to generate secure passwords using terminal (Mac/Linux) ?](https://mnzel.medium.com/how-to-generate-secure-passwords-using-terminal-mac-linux-3e823cff3cac#:~:text=Simply%2C%20type%20in%20pwgen%20on,generate%20a%20list%20of%20passwords.&text=The%20above%20command%20will%20generate%204%20secured%20passwords%20with%2010,at%20least%201%20special%20character.)
+> - [How to generate secure passwords using terminal (Mac/Linux) ?](https://mnzel.medium.com/how-to-generate-secure-passwords-using-terminal-mac-linux-3e823cff3cac)
 > - [default and envs](https://git.zx2c4.com/password-store/tree/src/password-store.sh)
 >   - `PASSWORD_STORE_DIR=$HOME/.password-store`
 >   - `PASSWORD_STORE_EXTENSIONS_DIR=${PASSWORD_STORE_DIR}/.extensions`
@@ -467,6 +477,15 @@ Copied test to clipboard. Will clear in 45 seconds.
   +&7<o(zfE[WC30v'D[&RH~;qM-8J>oQC
   ```
 
+- [generate via openssl](https://www.commandlinefu.com/commands/view/4204/generate-random-password)
+  ```bash
+  $ openssl rand -base64 32
+  DfXwoBz8UAel09qN1rR97luKy+aFuC8N0Fua+YaSW8A=
+
+  # or: https://www.commandlinefu.com/commands/view/24565/generate-a-random-password-30-characters-long
+  $ openssl rand -rand /dev/urandom -base64 32
+  ```
+
 ### remove
 ```bash
 $ pass rm test -f
@@ -486,6 +505,16 @@ removed '/Users/marslo/.marslo/.password-store/test.gpg'
 >   - [ayushnix/pass-tessen](https://github.com/ayushnix/pass-tessen)
 > - additional tools
 >   - [Pass for Alfred](https://alfred.app/workflows/chrisgrieser/pass/)
+
+- alfred workflow
+  ```bash
+  $ brew isntall --HEAD pinentry-mac
+
+  # using pinentry-mac instead of pinentry for alfred workflow
+  $ [[ -d "$HOME/.gnupg" ]] || mkdir "$HOME/.gnupg"
+  $ echo "pinentry-program $(brew --prefix)/bin/pinentry-mac" > $HOME/.gnupg/gpg-agent.conf
+  $ gpgconf --kill gpg-agent                           # restart the agent
+  ```
 
 - pw
   ```bash
@@ -564,7 +593,12 @@ removed '/Users/marslo/.marslo/.password-store/test.gpg'
 
 ## OTP
 
-###
+> [!NOTE|label:references:]
+> - [OATH-Toolkit](https://wiki.gentoo.org/wiki/OATH-Toolkit)
+> - [Use oathtool Linux command line for 2 step verification (2FA)](https://www.cyberciti.biz/faq/use-oathtool-linux-command-line-for-2-step-verification-2fa/)
+> - [One-Time-Passwords using oathtool on Ubuntu 14.04(+)](https://nerdyness2012.wordpress.com/2015/01/15/one-time-passwords-using-oathtool-on-ubuntu/)
+
+### pass-otp
 
 > [!NOTE|label:references:]
 > - tips:
