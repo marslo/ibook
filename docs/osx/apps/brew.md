@@ -285,27 +285,41 @@ $ brew cu --all
 >   ```
 
 ```bash
-# utils
+# --- utils ----
 $ brew install imagemagick
 $ brew install tmux corkscrew telnet figlet toilet
 $ brew install stow iproute2mac pandoc ifstat nmap
-$ brew install --HEAD macvim         # to prevent 32bit vim + 64bit python
-$ brew install openjdk
-$ brew install pcre2 gettext libtool # for build vim from source
+$ brew install pcre2 gettext libtool           # for build vim from source
 $ brew install util-linux
 $ brew install gawk gnu-tar grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnutls coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop glances ack lsof trash
-$ brew install jq
 $ brew install colordiff diffutils wdiff
 $ brew install --HEAD diff-so-fancy highlight
 $ brew install gzip
 $ brew install --cask unrar
 $ brew install --HEAD rename whois watch wget
-$ sudo gem install iStats -n /usr/local/bin    # requires ruby to be installed
 $ brew install create-dmg
+$ brew install fontforge
+$ sudo gem install iStats -n /usr/local/bin    # requires ruby to be installed
 
-# dev tools
-## nvm for gitbook install: nvm install 12
-$ brew install nvm
+$ brew install --HEAD pass
+$ brew install pass-otp
+$ brew install --HEAD pinentry-mac             # for alfred workflow
+
+# ---- editor ----
+## nvim
+$ brew install --HEAD utf8proc
+$ brew install --HEAD neovim
+$ brew install --cask vimr
+## macvim
+$ brew install --HEAD macvim                   # using `--HEAD` to prevent 32bit vim + 64bit python
+$ sudo cp -r $(brew --prefix macvim)/MacVim.app /Applications
+## vscode
+$ brew install --cask visual-studio-code
+# or link to cmd via
+$ sudo ln -sf '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' /usr/local/bin/code
+
+# ---- dev tools ----
+$ brew install nvm                             # nvm for gitbook install: nvm install 12
 $ brew install gradle-completion
 $ brew install --HEAD ruby
 $ brew install less
@@ -315,20 +329,24 @@ $ brew install mongosh
 $ brew install gnu-indent
 $ brew install --HEAD git-flow git-extras
 $ brew install dos2unix
-
+$ brew install openldap
+$ brew install jq
+$ brew install openjdk
 $ brew install --HEAD fzf fzy bat ack ag rg
 
-# lint
+# --- lint ----
 $ brew install --HEAD shellcheck
 $ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
 $ brew install --HEAD yamllint yamlfmt
-$ brew install hadolint              # for dockerfile
-$ brew install stylelint             # for css
+$ brew install hadolint                        # for dockerfile
+$ brew install stylelint                       # for css
 $ brew install jsonlint
 $ brew install ansible-lint
+$ brew install vint                            # vim script language lint
+$ brew install --HEAD shfmt                    # autoformat shell script source code
 # optional
-$ brew install actionlint            # for github action
-$ brew install libxml2               # for xmllint
+$ brew install actionlint                      # for github action
+$ brew install libxml2                         # for xmllint
 
 # cask
 $ brew install --cask keycastr
@@ -336,6 +354,11 @@ $ brew install --cask keycastr
 # tap
 $ brew tap hashicorp/tap
 $ brew install hashicorp/tap/vault
+$ brew tap homebrew/command-not-found          # brew which-formula && brew which-update
+$ brew tap vitorgalvao/tiny-scripts
+
+# check tap info
+$ brew tap-info vitorgalvao/tiny-scripts --json | jq -r .[].formula_names
 ```
 
 <!--sec data-title="deprecated (macvim)" data-id="section0" data-show=true data-collapse=true ces-->

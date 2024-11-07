@@ -15,6 +15,9 @@
     - [generate](#generate)
     - [remove](#remove)
     - [advanced usage](#advanced-usage)
+    - [plugins](#plugins)
+  - [OTP](#otp)
+    - [](#)
   - [PGP](#pgp)
   - [passwd](#passwd)
 - [network tools](#network-tools)
@@ -475,12 +478,14 @@ removed '/Users/marslo/.marslo/.password-store/test.gpg'
 > [!NOTE|label:references:]
 > - extensions
 >   - [roddhjav/pass-tomb](https://github.com/roddhjav/pass-tomb)
->   - [tadfisher/pass-otp)](https://github.com/tadfisher/pass-otp)
+>   - [tadfisher/pass-otp)](https://github.com/tadfisher/pass-otp) | [pass-otp.bash.completion](https://github.com/tadfisher/pass-otp/blob/develop/pass-otp.bash.completion)
 >   - [roddhjav/pass-import](https://github.com/roddhjav/pass-import)
 >   - [roddhjav/pass-update](https://github.com/roddhjav/pass-update)
 >   - [roddhjav/pass-audit](https://github.com/roddhjav/pass-audit)
 >   - [ayushnix/pass-coffin](https://github.com/ayushnix/pass-coffin)
 >   - [ayushnix/pass-tessen](https://github.com/ayushnix/pass-tessen)
+> - additional tools
+>   - [Pass for Alfred](https://alfred.app/workflows/chrisgrieser/pass/)
 
 - pw
   ```bash
@@ -533,6 +538,48 @@ removed '/Users/marslo/.marslo/.password-store/test.gpg'
     # push your local pass history
     $ pass git push -u --all
     ```
+
+### plugins
+
+- pass-otp
+
+  > [!NOTE|label:references:]
+  > - [#137 Bash completion](https://github.com/tadfisher/pass-otp/issues/137)
+
+  ```bash
+  # --- install ---
+  # osx
+  $ brew install pass-otp
+  $ brew uses --recursive --installed oath-toolkit
+  pass-otp
+
+  # --- usage ---
+  ## init
+  $ pass otp insert -e sandbox/otp
+  Enter otpauth:// URI for sandbox/otp: otpauth://totp/totp-secret?secret=sandbox
+  ## show otp code
+  $ pass otp sandbox/otp
+  148395
+  ```
+
+## OTP
+
+###
+
+> [!NOTE|label:references:]
+> - tips:
+>   ```bash
+>   $ brew which-formula oathtool
+>   oath-toolkit
+>
+>   $ brew uses --recursive --installed oath-toolkit
+>   pass-otp
+>   ```
+
+```bash
+$ oathtool $(openssl rand -hex 16)
+848050
+```
 
 ## PGP
 

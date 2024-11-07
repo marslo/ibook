@@ -976,6 +976,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 
 > [!NOTE]
 > - [workflow](https://www.alfredapp.com/workflows/) | [Alfred Gallery](https://alfred.app/)
+>   - [itorgalvao/requested-alfred-workflows](https://github.com/vitorgalvao/requested-alfred-workflows)
 >   - units convertor
 >     - [deanishe/alfred-convert](https://github.com/deanishe/alfred-convert)
 >     - [units](https://units.dnsu.ch/)
@@ -990,7 +991,8 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 >     - [Flush DNS](https://alfred.app/workflows/boneskull/flush-dns/)
 >     - [IP Address](https://alfred.app/workflows/alexchantastic/ip-address/)
 >   - dev tools
->     - [DevToys](https://alfred.app/workflows/cagechung/devtoys/)
+>     - [* DevToys](https://alfred.app/workflows/cagechung/devtoys/)
+>     - [* giovannicoppola/alfred-character-counter](48;29;106;2030;339248;29;106;2030;3392https://github.com/giovannicoppola/alfred-character-counter)
 >     - [Hacker News Search](https://alfred.app/workflows/jereze/hacker-news-search/)
 >     - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
 > - references:

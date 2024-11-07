@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [integrate terminal in Alfred](#integrate-terminal-in-alfred)
 - [tab](#tab)
   - [setup a colorful tab](#setup-a-colorful-tab)
   - [add favor color to a file (`~/.marslo/.colors`)](#add-favor-color-to-a-file-marslocolors)
@@ -11,6 +12,61 @@
 - [theme](#theme)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## integrate terminal in Alfred
+
+> [!NOTE|label:references:]
+> - [vitorgalvao/custom-alfred-iterm-scripts](https://github.com/vitorgalvao/custom-alfred-iterm-scripts)
+
+- v0.7
+  ```bash
+  -- This is v0.7 of the custom script for AlfredApp for iTerm 3.1.1+
+  -- Please see https://github.com/stuartcryan/custom-iterm-applescripts-for-alfred/
+  -- created by Sinan Eldem www.sinaneldem.com.tr
+
+  on alfred_script(q)
+    if application "iTerm2" is running or application "iTerm" is running then
+      run script "
+        on run {q}
+          tell application \"iTerm\"
+            activate
+            try
+              select first window
+              set onlywindow to true
+            on error
+              create window with default profile
+              select first window
+              set onlywindow to true
+            end try
+            tell the first window
+              if onlywindow is false then
+                create tab with default profile
+              end if
+              tell current session to write text q
+            end tell
+          end tell
+        end run
+      " with parameters {q}
+    else
+      run script "
+        on run {q}
+          tell application \"iTerm\"
+            activate
+            try
+              select first window
+            on error
+              create window with default profile
+              select first window
+            end try
+            tell the first window
+              tell current session to write text q
+            end tell
+          end tell
+        end run
+      " with parameters {q}
+    end if
+  end alfred_script
+  ```
 
 ## tab
 ### setup a colorful tab
