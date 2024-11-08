@@ -16,6 +16,11 @@
 - [authentication](#authentication)
   - [Special Characters in Usernames and Passwords](#special-characters-in-usernames-and-passwords)
 - [downlaods bookmark](#downlaods-bookmark)
+- [markdown icons](#markdown-icons)
+  - [programming](#programming)
+  - [tools](#tools)
+  - [file format](#file-format)
+  - [platform](#platform)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -237,3 +242,39 @@ $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q
 >   - [Advanced Bash-Scripting Guide](https://tldp.org/LDP/abs/abs-guide.pdf)
 >   - [Linux Bash Shell Cheat Sheet](https://oit.ua.edu/wp-content/uploads/2020/12/Linux_bash_cheat_sheet-1.pdf)
 > - [dye784/collection](https://github.com/dye784/collection)
+
+
+## markdown icons
+
+> [!NOTE|label:references:]
+> - [Ileriayo/markdown-badges](https://github.com/Ileriayo/markdown-badges)
+> - [VishwaGauravIn/pretty-readme-badges](https://github.com/VishwaGauravIn/pretty-readme-badges)
+
+### programming
+| NAME   | ICON                                                                                                                              | MARKDOWN                                                                                                                            |
+|:------:|-----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| python | ![](https://img.shields.io/badge/-PYTHON-3670A0?logo=python&logoColor=ffdd54&style=flat)                                          | `![](https://img.shields.io/badge/-PYTHON-3670A0?logo=python&logoColor=ffdd54&style=flat)`                                          |
+| groovy | ![](https://img.shields.io/badge/-GROOVY-4298B8.svg?style=flat&logo=Apache+Groovy&logoColor=white&labelColor=d6700a&color=d6700a) | `![](https://img.shields.io/badge/-GROOVY-4298B8.svg?style=flat&logo=Apache+Groovy&logoColor=white&labelColor=d6700a&color=d6700a)` |
+
+### tools
+|  NAME  | ICON                                                                                                 | MARKDOWN                                                                                               |
+|:------:|------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+|   vim  | ![](https://img.shields.io/badge/-VIM-5ca730?&style=flat&logo=vim&logoColor=white&labelColor=50932d) | `![](https://img.shields.io/badge/-VIM-5ca730?&style=flat&logo=vim&logoColor=white&labelColor=50932d)` |
+| neovim | ![](https://img.shields.io/badge/-NEOVIM-57A143?logo=neovim&logoColor=white&style=flat)              | `![](https://img.shields.io/badge/-NEOVIM-57A143?logo=neovim&logoColor=white&style=flat)`              |
+|   git  | ![](https://img.shields.io/badge/-GIT-%23F05033.svg?logo=git&logoColor=white&style=flat)             | `![](https://img.shields.io/badge/-GIT-%23F05033.svg?logo=git&logoColor=white&style=flat)`             |
+| iterm2 | ![](https://img.shields.io/badge/iTerm2-000000?logo=iterm2&logoColor=fff&style=flat)                 | `![](https://img.shields.io/badge/iTerm2-000000?logo=iterm2&logoColor=fff&style=flat)`                 |
+|  helm  | ![](https://img.shields.io/badge/-HELM-0F1689?logo=helm&logoColor=fff&style=flat)                    | `![](https://img.shields.io/badge/-HELM-0F1689?logo=helm&logoColor=fff&style=flat)`                    |
+
+### file format
+
+| NAME | ICON                                                                          | MARKDOWN                                                                           |
+|:----:|-------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| yaml | ![](https://img.shields.io/badge/YAML-CB171E?logo=yaml&logoColor=fff)         | `![](https://img.shields.io/badge/YAML-CB171E?logo=yaml&logoColor=fff&style=flat)` |
+| json | ![](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff&style=flat) | `![](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff&style=flat)`    |
+
+### platform
+|  NAME  | ICON                                                                                   | MARKDOWN                                                                                 |
+|:------:|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+|  macos | ![](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0&style=flat)  | `![](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0&style=flat)`  |
+|  linux | ![](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black&style=flat)   | `![](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black&style=flat)`   |
+| ubuntu | ![](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=flat) | `![](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=flat)` |
