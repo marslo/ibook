@@ -727,6 +727,9 @@ while (st.hasMoreTokens()) { System.out.println(st.nextToken()); }
 
 ## URI
 
+> [!TIP|label:references:]
+> - [Percent-encoding](https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding)
+
 - amend URL
 
   > [!TIP|label:references:]

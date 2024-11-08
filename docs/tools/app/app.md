@@ -25,7 +25,7 @@
 ### screenshot
 - [jietu](https://jietu.qq.com/)
 - [snagit](https://www.techsmith.com/screen-capture.html)
-- [snipaste](https://www.snipaste.com/)   ⇠ for windows
+- [snipaste](https://www.snipaste.com/)  | [iShot](https://www.better365.cn/ishot.html)
 
 ### keystore
 - Visualize
@@ -37,7 +37,6 @@
 
 - keyboard customized
   - [Karabiner-Elements](https://karabiner-elements.pqrs.org/)
-
 
 ### gif
 - [GIF Brewery 3 by Gfycat](https://gfycat.com/gifbrewery)
@@ -61,18 +60,29 @@
 - [Css Scan](https://getcssscan.com/)
 
 ### system
+
+> [!NOTE|label:references:]
+> - [better365](https://www.better365.cn/apps.html)
+>   - [Better And Better 2.0](https://www.better365.cn/bab2.html)
+>   - [LiuHai](https://www.better365.cn/LiuHai.html)
+
 - [psSafe](https://pwsafe.org/)
-- [iStat Menus](https://bjango.com/mac/istatmenus/)
-- [Moon](https://manytricks.com/moom/)
+- [iStat Menus](https://bjango.com/mac/istatmenus/) | [State](https://www.better365.cn/state.html)
+- [Moon](https://manytricks.com/moom/) | [BetterSnapTool](https://folivora.ai/bettersnaptool) | [Simple Window Manager - SWM](https://community.folivora.ai/t/simple-window-manager-swm/12796)
+- [Keyboard Maestro](https://www.keyboardmaestro.com/main/)
 - [Alfed](https://www.alfredapp.com/)
   - backup:
     - `user path`: `$HOME/Library/Application Support/Alfred`
+- [BetterTouchTool](https://folivora.ai/)
 - [Chrome Canary](https://www.google.com/chrome/canary/?platform=mac&standalone=1)
   - [chrome extension downloader](https://chrome-extension-downloader.com/)
 - [Chromium](https://www.chromium.org/getting-involved/download-chromium)
 - [Karabiner-Elements](https://karabiner-elements.pqrs.org/) Saviour of MadCatz R.A.T in MacOS
-- [System Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12) | [Just Color Picker](https://annystudio.com/software/colorpicker/)
+- [Sip](https://sipapp.io/) | [jonathaneunice/iterm2-tab-set](https://github.com/jonathaneunice/iterm2-tab-set) | [Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12) | [Just Color Picker](https://annystudio.com/software/colorpicker/)
+- [Bartender 5](https://www.macbartender.com/) | [iBar](https://www.better365.cn/ibar.html)
 - [Bob Translate](https://bobtranslate.com/) | [TTime Translate](https://ttime.timerecord.cn/)  ⇠ for windows
+- [Everything](https://www.voidtools.com/support/everything/) | [All](https://www.better365.cn/all.html)
+- [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html)
 
 ## app store
 - logout

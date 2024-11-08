@@ -635,6 +635,10 @@ v1
 ```
 
 ### [get urlencode](https://stackoverflow.com/a/34407620/2940319)
+
+> [!TIP|label:references:]
+> - [Percent-encoding](https://developer.mozilla.org/en-US/docs/Glossary/Percent-encoding)
+
 ```bash
 $ printf %s 'input text' | jq -sRr @uri
 input%20text

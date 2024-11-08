@@ -861,6 +861,10 @@ $ kubectl --namespace default port-forward svc/myjenkins 8080:8080
 ```
 
 #### show Load Balancer
+
+> [!TIP]
+> - [Load Balancers vs API Gateways](https://vaibhav342.hashnode.dev/load-balancers-vs-api-gateways)
+
 ```bash
 $ helm show values jenkins/jenkins
 ...

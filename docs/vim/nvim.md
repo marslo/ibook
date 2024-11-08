@@ -490,6 +490,7 @@ Run :checkhealth for more info
 > - [Integralist/dotfiles](https://github.com/Integralist/dotfiles)
 >   - [Integralist/nvim](https://github.com/Integralist/nvim)
 > - [m4xshen/dotfiles/nvim/nvim](https://github.com/m4xshen/dotfiles/tree/main/nvim/nvim)
+> - [~quaff/vim-dotfiles](https://sr.ht/~quaff/vim-dotfiles/)
 > - [Neovim for Beginners — LSP Inlay Hints](https://alpha2phi.medium.com/neovim-for-beginners-lsp-inlay-hints-bf4a8afa6f27)
 
 ## [provider](https://neovim.io/doc/user/provider.html)

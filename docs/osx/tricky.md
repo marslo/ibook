@@ -1,42 +1,41 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-  - [copy path](#copy-path)
-    - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
-    - [Copy path from finder](#copy-path-from-finder)
-  - [create app](#create-app)
-    - [groovyConsole](#groovyconsole)
-    - [python3 IDLE](#python3-idle)
-    - [create dmg](#create-dmg)
-  - [add snippets for input](#add-snippets-for-input)
-    - [enable Technical Symbols](#enable-technical-symbols)
-    - [and snippets](#and-snippets)
-    - [finally](#finally)
-  - [others](#others)
-    - [install font](#install-font)
-    - [create image](#create-image)
-    - [extract](#extract)
-    - [disk](#disk)
-- [FAT sectors    : 8192](#fat-sectors-----8192)
-- [Clusters       : 962984](#clusters--------962984)
-    - [modify font in plist](#modify-font-in-plist)
-    - [show process details](#show-process-details)
-    - [`/usr/bin/xattr`](#usrbinxattr)
-  - [tips](#tips)
-    - [shutdown mac via commands](#shutdown-mac-via-commands)
-    - [alert on mac when server is up](#alert-on-mac-when-server-is-up)
-    - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
-    - [disable startup music](#disable-startup-music)
-    - [3D lock screen](#3d-lock-screen)
-    - [take screenshot after 3 sec](#take-screenshot-after-3-sec)
-    - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
-    - [show message on desktop](#show-message-on-desktop)
-    - [launch iOS simulator](#launch-ios-simulator)
-    - [show startup launch apps](#show-startup-launch-apps)
-    - [check detail diskage usage](#check-detail-diskage-usage)
+- [copy path](#copy-path)
+  - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
+  - [Copy path from finder](#copy-path-from-finder)
+- [create app](#create-app)
+  - [groovyConsole](#groovyconsole)
+  - [python3 IDLE](#python3-idle)
+  - [create dmg](#create-dmg)
+- [add snippets for input](#add-snippets-for-input)
+  - [enable Technical Symbols](#enable-technical-symbols)
+  - [and snippets](#and-snippets)
+  - [finally](#finally)
+- [others](#others)
+  - [install font](#install-font)
+  - [create image](#create-image)
+  - [extract](#extract)
+  - [disk](#disk)
+  - [modify font in plist](#modify-font-in-plist)
+  - [show process details](#show-process-details)
+  - [`/usr/bin/xattr`](#usrbinxattr)
+- [tips](#tips)
+  - [shutdown mac via commands](#shutdown-mac-via-commands)
+  - [alert on mac when server is up](#alert-on-mac-when-server-is-up)
+  - [turn off the screen without sleeping](#turn-off-the-screen-without-sleeping)
+  - [disable startup music](#disable-startup-music)
+  - [3D lock screen](#3d-lock-screen)
+  - [take screenshot after 3 sec](#take-screenshot-after-3-sec)
+  - [setup welcome text in login screen](#setup-welcome-text-in-login-screen)
+  - [show message on desktop](#show-message-on-desktop)
+  - [launch iOS simulator](#launch-ios-simulator)
+  - [show startup launch apps](#show-startup-launch-apps)
+  - [check detail diskage usage](#check-detail-diskage-usage)
+- [notch](#notch)
+  - [reduce the menu bar item spacing](#reduce-the-menu-bar-item-spacing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## copy path
 ### copy STDOUT into clipboard
@@ -165,7 +164,6 @@ $ <cmd> | pbcopy
 >   ```
 >   <!--endsec-->
 
-
 ```bash
 $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
 
@@ -191,89 +189,89 @@ $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
   ->   --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib
   -> EOF
 
-# or HOMEBREW_PREFIX='/opt/homebrew'
-#!/usr/bin/env bash
+  # or HOMEBREW_PREFIX='/opt/homebrew'
+  #!/usr/bin/env bash
 
-HOMEBREW_PREFIX='/opt/homebrew'
-JAVA_HOME="${HOMEBREW_PREFIX}"/opt/openjdk
-export JAVA_HOME
-GROOVY_HOME="$("${HOMEBREW_PREFIX}"/bin/brew --prefix groovy)/libexec"
-GROOVY_VERSION="$(/usr/bin/sed -rn 's/^[^:]+:[[:blank:]]?([[:digit:].]+)[[:blank:]]?.+$/\1/p' < <("${GROOVY_HOME}"/bin/groovy --version))"
-"${JAVA_HOME}"/bin/java \
-    -Dsun.awt.keepWorkingSetOnMinimize=true \
-    -Xdock:name=GroovyConsole \
-    -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
-    -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
-    -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
-    -Dprogram.name=groovyConsole \
-    -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
-    -Dgroovy.home="${GROOVY_HOME}" \
-    -Dtools.jar="${JAVA_HOME}"/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
-    --main groovy.console.ui.Console \
-    --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
-    --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
+  HOMEBREW_PREFIX='/opt/homebrew'
+  JAVA_HOME="${HOMEBREW_PREFIX}"/opt/openjdk
+  export JAVA_HOME
+  GROOVY_HOME="$("${HOMEBREW_PREFIX}"/bin/brew --prefix groovy)/libexec"
+  GROOVY_VERSION="$(/usr/bin/sed -rn 's/^[^:]+:[[:blank:]]?([[:digit:].]+)[[:blank:]]?.+$/\1/p' < <("${GROOVY_HOME}"/bin/groovy --version))"
+  "${JAVA_HOME}"/bin/java \
+      -Dsun.awt.keepWorkingSetOnMinimize=true \
+      -Xdock:name=GroovyConsole \
+      -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+      -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+      -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+      -Dprogram.name=groovyConsole \
+      -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+      -Dgroovy.home="${GROOVY_HOME}" \
+      -Dtools.jar="${JAVA_HOME}"/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \
+      --main groovy.console.ui.Console \
+      --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+      --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
 
-# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
+  # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
 
-#--------------------------------------------------------------------------------------#
+  #--------------------------------------------------------------------------------------#
 
-$ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
-$ ls -1 groovyConsole.app/Contents/MacOS/
-Automator Application Stub                    # ignore it
-groovyConsole                                 # ╮ <key>CFBundleExecutable</key>
-                                              # ╯ <string>groovyConsole</string>
+  $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
+  $ ls -1 groovyConsole.app/Contents/MacOS/
+  Automator Application Stub                    # ignore it
+  groovyConsole                                 # ╮ <key>CFBundleExecutable</key>
+                                                # ╯ <string>groovyConsole</string>
 
-$ mv groovyConsole.app/ /Applications/
-```
+  $ mv groovyConsole.app/ /Applications/
+  ```
 
-<!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
-```bash
-$ touch groovyConsole.app/Contents/MacOS/groovyConsole
-$ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
-  -> #!/usr/bin/env bash
-  ->
-  -> JAVA_HOME="$(/usr/local/bin/brew --prefix java)"
-  -> # JAVA_HOME="$(/usr/local/bin/brew --prefix openjdk@17)"
-  -> GROOVY_VERSION="$(/usr/local/bin/groovy --version | /usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^[^:]+:\s*([0-9\.]+).*$/\1/p')"
-  -> GROOVY_HOME="$(/usr/local/bin/brew --prefix groovy)/libexec"
-  ->
-  -> "${JAVA_HOME}"/bin/java \
-  ->     -Dsun.awt.keepWorkingSetOnMinimize=true \
-  ->     -Xdock:name=GroovyConsole \
-  ->     -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
-  ->     -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
-  ->     -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
-  ->     -Dprogram.name=groovyConsole \
-  ->     -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
-  ->     -Dgroovy.home="${GROOVY_HOME}" \
-  ->     -Dtools.jar="${JAVA_HOME}"/lib/tools.jar \
-  ->     org.codehaus.groovy.tools.GroovyStarter \
-  ->         --main groovy.console.ui.Console \
-  ->         --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
-  ->         --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
-  -> EOF
+  <!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
+  ```bash
+  $ touch groovyConsole.app/Contents/MacOS/groovyConsole
+  $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
+    -> #!/usr/bin/env bash
+    ->
+    -> JAVA_HOME="$(/usr/local/bin/brew --prefix java)"
+    -> # JAVA_HOME="$(/usr/local/bin/brew --prefix openjdk@17)"
+    -> GROOVY_VERSION="$(/usr/local/bin/groovy --version | /usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^[^:]+:\s*([0-9\.]+).*$/\1/p')"
+    -> GROOVY_HOME="$(/usr/local/bin/brew --prefix groovy)/libexec"
+    ->
+    -> "${JAVA_HOME}"/bin/java \
+    ->     -Dsun.awt.keepWorkingSetOnMinimize=true \
+    ->     -Xdock:name=GroovyConsole \
+    ->     -Xdock:icon="${GROOVY_HOME}"/lib/groovy.icns \
+    ->     -classpath "${GROOVY_HOME}"/lib/groovy-"${GROOVY_VERSION}".jar \
+    ->     -Dscript.name="${GROOVY_HOME}"/bin/groovyConsole \
+    ->     -Dprogram.name=groovyConsole \
+    ->     -Dgroovy.starter.conf="${GROOVY_HOME}"/conf/groovy-starter.conf \
+    ->     -Dgroovy.home="${GROOVY_HOME}" \
+    ->     -Dtools.jar="${JAVA_HOME}"/lib/tools.jar \
+    ->     org.codehaus.groovy.tools.GroovyStarter \
+    ->         --main groovy.console.ui.Console \
+    ->         --conf "${GROOVY_HOME}"/conf/groovy-starter.conf \
+    ->         --classpath .:"${JAVA_HOME}"/lib/tools.jar:"${JAVA_HOME}"/lib/dt.jar:"${GROOVY_HOME}"/lib:.
+    -> EOF
 
-# or
-$ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
-  -> #!/bin/bash
-  -> /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java \\
-  ->         -Xdock:name=GroovyConsole \\
-  ->         -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \\
-  ->         -Dgroovy.jaxb=jaxb \\
-  ->         -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar \\
-  ->         -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \\
-  ->         -Dprogram.name=groovyConsole \\
-  ->         -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \\
-  ->         -Dgroovy.home=/usr/local/opt/groovy/libexec \\
-  ->         -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \\
-  ->         --main groovy.console.ui.Console \\
-  ->         --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \\
-  ->         --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
-  -> EOF
+  # or
+  $ cat > groovyConsole.app/Contents/MacOS/groovyConsole << EOF
+    -> #!/bin/bash
+    -> /Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/bin/java \\
+    ->         -Xdock:name=GroovyConsole \\
+    ->         -Xdock:icon=/usr/local/opt/groovy/libexec/lib/groovy.icns \\
+    ->         -Dgroovy.jaxb=jaxb \\
+    ->         -classpath /usr/local/opt/groovy/libexec/lib/groovy-3.0.6.jar \\
+    ->         -Dscript.name=/usr/local/opt/groovy/libexec/bin/groovyConsole \\
+    ->         -Dprogram.name=groovyConsole \\
+    ->         -Dgroovy.starter.conf=/usr/local/opt/groovy/libexec/conf/groovy-starter.conf \\
+    ->         -Dgroovy.home=/usr/local/opt/groovy/libexec \\
+    ->         -Dtools.jar=/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar org.codehaus.groovy.tools.GroovyStarter \\
+    ->         --main groovy.console.ui.Console \\
+    ->         --conf /usr/local/opt/groovy/libexec/conf/groovy-starter.conf \\
+    ->         --classpath .:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_211.jdk/Contents/Home/lib/dt.jar:/usr/local/opt/groovy/libexec/lib:.
+    -> EOF
 
-$ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
-```
-<!--endsec-->
+  $ chmod +x groovyConsole.app/Contents/MacOS/groovyConsole
+  ```
+  <!--endsec-->
 
 - try validate via execute `groovyConsole.app/Contents/MacOS/groovyConsole` directly. to see whether if the groovyConsole will be opened.
 
@@ -757,10 +755,10 @@ APFS Container (1 found)
   Bytes per sector : 512
   Bytes per cluster: 131072
   FAT offset       : 2048 sectors (1048576 bytes)
-# FAT sectors    : 8192
+  # FAT sectors    : 8192
   Number of FATs   : 1
   Cluster offset   : 10240 sectors (5242880 bytes)
-# Clusters       : 962984
+  # Clusters       : 962984
   Volume Serial #  : 5ff81490
   Bitmap start     : 2
   Bitmap file size : 120373
@@ -1049,3 +1047,33 @@ $ sudo fs_usage
 ...
 ```
 
+## notch
+
+> [!TIP|label:references:]
+> - [MacBook 刘海（Notch）增强工具推荐](https://utgd.net/article/20546)
+> - [* How to fix Mac menu bar icons hidden by the MacBook notch](https://www.jessesquires.com/blog/2023/12/16/macbook-notch-and-menu-bar-fixes/)
+> - [PSA: Reduce your menu bar spacing to fit more items](https://www.reddit.com/r/MacOS/comments/1dfu8w0/psa_reduce_your_menu_bar_spacing_to_fit_more_items/)
+> - [Change the Menu Bar Item Spacing](https://www.reddit.com/r/MacOS/comments/vx7wb1/change_the_menu_bar_item_spacing/)
+> - [2021 Macbook Pro 16" / 14" Menu Bar Size Limitation (Result of Display Notch)](https://discussions.apple.com/thread/253299524?sortBy=rank)
+
+### reduce the menu bar item spacing
+
+- read status
+  ```bash
+  $ defaults -currentHost read -globalDomain NSStatusItemSpacing
+  $ defaults -currentHost read -globalDomain NSStatusItemSelectionPadding
+  ```
+
+- setup spacing
+  ```bash
+  $ defaults -currentHost write -globalDomain NSStatusItemSpacing -int 12
+  $ defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 8
+  $ killall SystemUIServer
+  ```
+
+- revert
+  ```bash
+  $ defaults -currentHost delete -globalDomain NSStatusItemSpacing
+  $ defaults -currentHost delete -globalDomain NSStatusItemSelectionPadding
+  $ killall SystemUIServer
+  ```

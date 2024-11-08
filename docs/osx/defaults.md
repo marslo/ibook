@@ -44,6 +44,7 @@
   - [system](#system)
     - [hot corners](#hot-corners)
     - [modifiers](#modifiers)
+    - [reduce the menu bar item spacing](#reduce-the-menu-bar-item-spacing)
     - [Launchpad](#launchpad)
     - [dashboard](#dashboard)
     - [keyboard remapping](#keyboard-remapping)
@@ -1364,6 +1365,27 @@ autohide-time-modifier="0.5"
 wvous-bl-modifier=0
 wvous-br-modifier=0
 wvous-tr-modifier=0
+```
+
+### reduce the menu bar item spacing
+
+> [!TIP|label:see also]
+> - [* iMarslo: notch](./tricky.md#reduce-the-menu-bar-item-spacing)
+
+```bash
+# get current status
+$ defaults -currentHost read -globalDomain NSStatusItemSpacing
+$ defaults -currentHost read -globalDomain NSStatusItemSelectionPadding
+
+# setup spacing
+$ defaults -currentHost write -globalDomain NSStatusItemSpacing -int 12
+$ defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 8
+$ killall SystemUIServer
+
+# revert
+$ defaults -currentHost delete -globalDomain NSStatusItemSpacing
+$ defaults -currentHost delete -globalDomain NSStatusItemSelectionPadding
+$ killall SystemUIServer
 ```
 
 ### Launchpad

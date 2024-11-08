@@ -80,6 +80,14 @@
 {% endhint %}
 
 # ssh key
+
+> [!TIP|label:resolve ssh permission issue:]
+> ```bash
+> $ sudo su devops -c "restorecon -Rf ~/.ssh"
+> # or
+> $ /usr/sbin/restorecon .ssh/ .ssh/authorized_keys
+> ```
+
 ## [generate ssh key](https://gist.githubusercontent.com/risan/7c84941067171cef79944978f42b77c6/raw/4c14ef4d660ec84ba48af88c534b7a15439a643d/generate-ed25519-ssh-key.sh)
 ```bash
 $ keyname='marslo@china'
