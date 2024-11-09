@@ -28,7 +28,6 @@
     - [others](#others)
   - [desktop](#desktop)
   - [menu bar](#menu-bar)
-  - [trackpad](#trackpad)
   - [dock](#dock)
     - [show](#show)
     - [icon](#icon-1)
@@ -36,7 +35,8 @@
     - [autohide](#autohide)
     - [others](#others-1)
   - [mission control](#mission-control)
-  - [keyboard & trackpad](#keyboard--trackpad)
+  - [keyboard](#keyboard)
+  - [trackpad](#trackpad)
   - [battery](#battery)
   - [browser](#browser)
     - [chrome](#chrome)
@@ -48,6 +48,8 @@
     - [Launchpad](#launchpad)
     - [dashboard](#dashboard)
     - [keyboard remapping](#keyboard-remapping)
+    - [keyboard](#keyboard-1)
+    - [reset dns cache](#reset-dns-cache)
     - [QuickTime](#quicktime)
     - [App Store](#app-store)
   - [others](#others-2)
@@ -803,38 +805,6 @@ $ defaults write com.apple.menuextra.clock DateFormat -string "EEE HH:mm:ss"
 $ defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 ```
 
-## trackpad
-
-> [!TIP]
-> - [* Access Trackpad settings from macOS UI](x-apple.systempreferences:com.apple.preference.trackpad?trackpadTab)
-
-#### [click weight](https://macos-defaults.com/trackpad/firstclickthreshold.html)
-```bash
-# light: 0
-$ defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int "0"
-
-# medium: 1
-$ defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int "1"
-
-# firm: 2
-$ defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int "2"
-```
-
-#### [enable dragging with drag lock](https://macos-defaults.com/trackpad/draglock.html)
-```bash
-$ defaults write com.apple.AppleMultitouchTrackpad "DragLock" -bool "true"
-```
-
-#### [Enable dragging without drag lock](https://macos-defaults.com/trackpad/dragging.html)
-```bash
-$ defaults write com.apple.AppleMultitouchTrackpad "Dragging" -bool "true"
-```
-
-#### [enable dragging with three finger drag](https://macos-defaults.com/trackpad/trackpadthreefingerdrag.html)
-```bash
-$ defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
-```
-
 ## dock
 
 > [!NOTE|label:references:]
@@ -1079,7 +1049,7 @@ $ defaults write NSGlobalDomain "AppleSpacesSwitchOnActivate" -bool "true" && ki
 $ defaults write com.apple.spaces "spans-displays" -bool "true" && killall SystemUIServer
 ```
 
-## keyboard & trackpad
+## keyboard
 
 > [!NOTE|label:references:]
 > - [Key repeat in GitHub Codespaces](https://stackoverflow.com/a/76385233/2940319)
@@ -1109,6 +1079,12 @@ $ defaults write -g ApplePressAndHoldEnabled -bool false
   # vscode
   $ defaults delete com.microsoft.VSCode ApplePressAndHoldEnabled
   $ defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+  ```
+
+- read form NSGlobalDomain
+  ```bash
+  $ defaults read NSGlobalDomain KeyRepeat
+  2
   ```
 
 #### fast keyboard response
@@ -1150,12 +1126,75 @@ $ defaults write com.apple.BezelServices kDimTime -int 300
 $ defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
 ```
 
+## trackpad
+
+> [!TIP]
+> - [* Access Trackpad settings from macOS UI](x-apple.systempreferences:com.apple.preference.trackpad?trackpadTab)
+
+#### [click weight](https://macos-defaults.com/trackpad/firstclickthreshold.html)
+```bash
+# light: 0
+$ defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int "0"
+
+# medium: 1
+$ defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int "1"
+
+# firm: 2
+$ defaults write com.apple.AppleMultitouchTrackpad "FirstClickThreshold" -int "2"
+```
+
+#### [enable dragging with drag lock](https://macos-defaults.com/trackpad/draglock.html)
+```bash
+$ defaults write com.apple.AppleMultitouchTrackpad "DragLock" -bool "true"
+```
+
+#### [Enable dragging without drag lock](https://macos-defaults.com/trackpad/dragging.html)
+```bash
+$ defaults write com.apple.AppleMultitouchTrackpad "Dragging" -bool "true"
+```
+
+#### [enable dragging with three finger drag](https://macos-defaults.com/trackpad/trackpadthreefingerdrag.html)
+```bash
+$ defaults write com.apple.AppleMultitouchTrackpad "TrackpadThreeFingerDrag" -bool "true"
+```
+
 #### enable tap to click
+
+> [!NOTE|label:references:]
+> ```bash
+> $ defaults -currentHost read NSGlobalDomain  | grep trackpad
+>     "com.apple.trackpad.enableSecondaryClick" = 1;
+>     "com.apple.trackpad.fiveFingerPinchSwipeGesture" = 2;
+>     "com.apple.trackpad.fourFingerHorizSwipeGesture" = 2;
+>     "com.apple.trackpad.fourFingerPinchSwipeGesture" = 2;
+>     "com.apple.trackpad.fourFingerVertSwipeGesture" = 2;
+>     "com.apple.trackpad.momentumScroll" = 1;
+>     "com.apple.trackpad.pinchGesture" = 1;
+>     "com.apple.trackpad.rotateGesture" = 1;
+>     "com.apple.trackpad.scrollBehavior" = 2;
+>     "com.apple.trackpad.threeFingerDragGesture" = 0;
+>     "com.apple.trackpad.threeFingerHorizSwipeGesture" = 2;
+>     "com.apple.trackpad.threeFingerTapGesture" = 2;
+>     "com.apple.trackpad.threeFingerVertSwipeGesture" = 2;
+>     "com.apple.trackpad.twoFingerDoubleTapGesture" = 1;
+>     "com.apple.trackpad.twoFingerFromRightEdgeSwipeGesture" = 3;
+>     "com.apple.trackpad.version" = 5;
+> ```
+
 ```bash
 $ defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1
 $ defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 $ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 ```
+
+- or
+  ```bash
+  # read
+  $ defaults read NSGlobalDomain com.apple.trackpad.forceClick
+  0
+  # set via:
+  $ defaults write -g com.apple.trackpad.forceClick 0
+  ```
 
 #### enable three finger to drag
 ```bash
@@ -1167,6 +1206,12 @@ $ defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool
 ```bash
 $ defaults write -g com.apple.trackpad.scaling 2
 $ defaults write -g com.apple.mouse.scaling 2.5
+
+# read
+$ defaults read NSGlobalDomain com.apple.trackpad.scaling
+2
+$ defaults read NSGlobalDomain com.apple.mouse.scaling
+2.5
 ```
 
 ## [battery](https://apple.stackexchange.com/a/35718/254265)
@@ -1429,7 +1474,6 @@ $ defaults write com.apple.dashboard mcx-disabled -boolean YES && killall Dock
 $ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
 ```
 
-
 ### keyboard remapping
 
 > [!NOTE|label:references:]
@@ -1442,7 +1486,21 @@ $ defaults write com.apple.dashboard mcx-disabled -boolean NO && killall Dock
 
 ![keyboard remapping for macos](../screenshot/osx/osx-keyboard-remapping.png)
 
-#### reset dns cache
+### keyboard
+```bash
+# read
+$ defaults read NSGlobalDomain NSUserDictionaryReplacementItems
+
+# quote option
+$ defaults read NSGlobalDomain "KB_DoubleQuoteOption"
+"abc"
+$ defaults read NSGlobalDomain "KB_SingleQuoteOption"
+'abc'
+
+# repeat
+```
+
+### reset dns cache
 
 > [!NOTE|label:references:]
 > - [How to Flush DNS Cache on a Mac](https://www.lifewire.com/flush-dns-cache-on-a-mac-5209298)
@@ -1496,6 +1554,12 @@ $ defaults write -g NSRequiresAquaSystemAppearance -bool true
 # revert
 $ defaults write -g NSRequiresAquaSystemAppearance -bool false
 ```
+
+- read from `NSGlobalDomain`
+  ```bash
+  $ defaults read NSGlobalDomain AppleInterfaceStyle
+  Dark
+  ```
 
 #### automatic terminate inactive apps
 ```bash
