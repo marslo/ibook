@@ -525,6 +525,9 @@ $ /usr/sbin/useradd -ou 0 -g root -d /root -s /bin/bash -p $(echo password1 | op
 - [generate secure password to userwith chpasswd](https://www.commandlinefu.com/commands/view/1491/generate-secure-password-to-userwith-chpasswd)
   ```bash
   $ echo "encryptedpassword" | openssl passwd -1 -stdin
+
+  # or
+  $ echo "test:$(echo password | openssl passwd -1 -stdin -salt abcde)" | sudo chpasswd -e
   ```
 
 ## group

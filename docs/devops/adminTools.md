@@ -470,8 +470,8 @@ Copied test to clipboard. Will clear in 45 seconds.
   $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()' | head -c 32 && echo
   xGPqC%MeE2HU3NkH#JeA##RB^YbX49cd
 
-  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()' | head -c 32 && echo
-  6yeV1yy%3h4V!KHLf5e0vNAIl5oD#s!W
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()?:_-~+<=>' | head -c 32 && echo
+  e?XEGaD68^FNYI5#E^aFVgv:(6_pL>!I
 
   $ head /dev/urandom | tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32 && echo
   +&7<o(zfE[WC30v'D[&RH~;qM-8J>oQC

@@ -37,7 +37,6 @@
   - [mission control](#mission-control)
   - [keyboard](#keyboard)
   - [trackpad](#trackpad)
-  - [battery](#battery)
   - [browser](#browser)
     - [chrome](#chrome)
     - [safari](#safari)
@@ -52,6 +51,7 @@
     - [reset dns cache](#reset-dns-cache)
     - [QuickTime](#quicktime)
     - [App Store](#app-store)
+    - [sleep mode](#sleep-mode)
   - [others](#others-2)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
@@ -76,6 +76,7 @@
 >   - [.macos](https://github.com/mathiasbynens/dotfiles/blob/main/.macos)
 > - [akachrislee/osx](https://gist.github.com/akachrislee/3220956)
 > - [Clear and disable recent items in OS X dock and applications](https://simon.heimlicher.com/technology/disable-recent-items/)
+> - [* How to Factory Reset MacBook](https://mackeeper.com/blog/step-by-step-guide-to-reset-mac-to-factory-settings/)
 {% endhint %}
 
 # usage
@@ -1214,16 +1215,6 @@ $ defaults read NSGlobalDomain com.apple.mouse.scaling
 2.5
 ```
 
-## [battery](https://apple.stackexchange.com/a/35718/254265)
-```bash
-# get display off timer
-$ sudo pmset -g | grep displaysleep
-displaysleep         180
-
-# set display off timer
-$ sudo pmset -a displaysleep 30
-```
-
 #### battery percent
 ```bash
 # show battery percent
@@ -1540,12 +1531,6 @@ $ sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
   $ defaults delete -g NSTextInsertionPointBlinkPeriodOff
   ```
 
-#### set standby
-```bash
-# to 24 hours
-$ sudo pmset -a standbydelay 86400
-```
-
 #### active dark mode
 ```bash
 $ defaults write -g NSRequiresAquaSystemAppearance -bool true
@@ -1827,10 +1812,89 @@ $ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo H
 $ sudo defaults delete /Library/Preferences/com.apple.loginwindow AdminHostInfo
 ```
 
-#### sleep mode
+### sleep mode
+
+> [!TIP]
+> - check current status
+>   ```bash
+>   $ pmset -g
+>
+>   # show detail
+>   $ pmset -g assertions
+>
+>   # show log
+>   $ pmset -g log
+>   ```
+> - references:
+>   - [Prevent Mac from sleeping when lid closed on Mojave / Catalina](https://apple.stackexchange.com/a/361398/254265)
+>   - [Command-line stop MacBook from sleeping when lid is closed?](https://apple.stackexchange.com/a/374958/254265)
+>   - [How can I keep my Mac awake AND locked?](https://apple.stackexchange.com/a/380228/254265)
+>   - [Mac not sleeping when lid is closed](https://apple.stackexchange.com/a/367540/254265)
+>   - [man caffeinate](https://ss64.com/mac/caffeinate.html)
+
+<!--sec data-title="pmset sample data" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ pmset -g
+System-wide power settings:
+ DestroyFVKeyOnStandby    0
+Currently in use:
+ standby              1
+ Sleep On Power Button 1
+ hibernatefile        /var/vm/sleepimage
+ powernap             1
+ networkoversleep     0
+ disksleep            180
+ sleep                0 (sleep prevented by bluetoothd, sharingd, powerd, useractivityd, runningboardd)
+ hibernatemode        3
+ ttyskeepawake        1
+ displaysleep         30
+ tcpkeepalive         1
+ lowpowermode         0
+ womp                 1
+
+# or
+$ pmset -g
+System-wide power settings:
+ DestroyFVKeyOnStandby    0
+Currently in use:
+ standby              1
+ Sleep On Power Button 1
+ hibernatefile        /var/vm/sleepimage
+ powernap             1
+ networkoversleep     0
+ disksleep            180
+ sleep                0 (sleep prevented by sharingd, powerd, bluetoothd)
+ hibernatemode        3
+ ttyskeepawake        1
+ displaysleep         0
+ tcpkeepalive         1
+ lowpowermode         0
+ womp                 1
+```
+<!--endsec-->
+
+#### [check status](https://apple.stackexchange.com/a/464866/254265)
+```bash
+$ pmset -g assertions | grep SystemSleep
+   PreventSystemSleep             0
+   PreventUserIdleSystemSleep     1
+   pid 1253(sharingd): [0x00005c8600019765] 00:01:29 PreventUserIdleSystemSleep named: "Handoff"
+   pid 322(powerd): [0x0000329f000191ea] 03:00:17 PreventUserIdleSystemSleep named: "Powerd - Prevent sleep while display is on"
+   pid 371(bluetoothd): [0x00005cdb0001977b] 00:00:04 PreventUserIdleSystemSleep named: "com.apple.BTStack"
+```
+
+#### no idle
+```bash
+$ pmset noidle
+```
+
+#### never go to slepp mode
 ```bash
 # never go to sleep mode
-$ systemsetup -setcomputersleep Off > /dev/null
+$ sudo systemsetup -setcomputersleep Off > /dev/null
+# get
+$ sudo systemsetup -getcomputersleep
+Computer Sleep: Never
 
 # disable computer sleep and stop the display from shutting off
 $ sudo pmset -a sleep 0
@@ -1838,6 +1902,31 @@ $ sudo pmset -a displaysleep 0
 
 # disable hibernatemode to speeds up entering sleep mode
 $ sudo pmset -a hibernatemode 0
+```
+
+#### [battery](https://apple.stackexchange.com/a/35718/254265)
+```bash
+# get display off timer
+$ sudo pmset -g | grep displaysleep
+displaysleep         180
+```
+
+#### set standby
+```bash
+# to 24 hours
+$ sudo pmset -a standbydelay 86400
+```
+
+#### change display sleep
+```bash
+# set display off timer
+$ sudo pmset -a displaysleep 30
+
+$ sudo pmset -a displaysleep 180
+Warning: Idle sleep timings for "Battery Power" may not behave as expected.
+- Display sleep should have a lower timeout than system sleep.
+Warning: Idle sleep timings for "AC Power" may not behave as expected.
+- Display sleep should have a lower timeout than system sleep.
 ```
 
 #### power button in stand-by mode
@@ -1897,6 +1986,10 @@ $ defaults write NSGlobalDomain AppleFontSmoothing -int 2
 $ sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
 $ sudo reboot
 ```
+
+#### prevent automatic sleep when display is off
+
+![prevent automatic sleep when display is off](../screenshot/osx/prevent-automatic-sleep-when-display-off.png)
 
 ## others
 #### feedback assistant
