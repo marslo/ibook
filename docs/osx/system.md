@@ -1,6 +1,13 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [account](#account)
+  - [mark account to admin](#mark-account-to-admin)
+  - [check account](#check-account)
+  - [list all accounts](#list-all-accounts)
+  - [guest account](#guest-account)
+  - [enable root user](#enable-root-user)
+  - [add account](#add-account)
 - [system tools](#system-tools)
   - [`hostinfo`](#hostinfo)
   - [get human-readable vm_stat](#get-human-readable-vm_stat)
@@ -32,6 +39,171 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+
+## account
+### mark account to admin
+
+> [!TIP|label:references:]
+> - [Using Command Line how to make the user an Administrator](https://apple.stackexchange.com/a/268602/254265)
+> - [Making a user account an administrator on Mac (Terminal)](https://teamdynamix.umich.edu/TDClient/47/LSAPortal/KB/ArticleDet?ID=1981)
+
+```bash
+$ sudo dscl . -merge /Groups/admin GroupMembership <username>
+```
+
+- remove account from admin
+
+  > [!NOTE|label:references:]
+  > - [macOS Remove Admin Account with Terminal](https://clickpom.zendesk.com/hc/fr/articles/4407270628109-macOS-Remove-Admin-Account-with-Terminal)
+
+  ```bash
+  $ sudo dscl . -delete /Groups/admin GroupMembership <username>
+
+  # or
+  $ sudo dseditgroup -o edit -d <username> -t user admin
+  ```
+
+#### modify SHELL
+```bash
+# for current account
+$ chsh -s $(command -v bash)
+$ sudo bash -c "echo $(command -v bash) >> /etc/shells"
+
+# or for `<username>`
+$ sudo chsh -s $(command -v bash) <username>
+$ sudo bash -c "echo $(command -v bash) >> /etc/shells"
+```
+
+### check account
+- check admin accounts
+  ```bash
+  $ sudo dscl . -read /Groups/admin GroupMembership
+  GroupMembership: root _avectodaemon marslo
+  ```
+
+- check account info
+  ```bash
+  $ dscacheutil -q user -a name marslo
+  name: marslo
+  password: ********
+  uid: 503
+  gid: 20
+  dir: /Users/marslo
+  shell: /usr/local/bin/bash
+  gecos: Marslo Jiao
+
+  # or
+  $ sudo dscl . -read /Users/marslo
+  ```
+
+- read account from plist
+  ```bash
+  $ sudo defaults read /var/db/dslocal/nodes/Default/users/<account>.plist
+  ```
+
+- check account AuthenticationAuthority
+  ```bash
+  $ sudo dscl . -read /Users/<username> AuthenticationAuthority
+  AuthenticationAuthority: ;ShadowHash;HASHLIST:<SALTED-SHA512-PBKDF2,SRP-*******-****-SHA512-PBKDF2> ;Kerberosv5;;marslo@LKDC:SHA1.37************************************83;LKDC:SHA1.37************************************83; ;SecureToken;
+
+  $ sudo dscl . -read /Users/<username> AltSecurityIdentities
+  AltSecurityIdentities:
+   X509:<T>CN=Apple Root CA,OU=Apple Certification Authority,O=Apple Inc.,C=US<S>CN=com.apple.idms.appleid.prd.00****-**-********-****-****-****-**********e9
+  ```
+
+- check account policy
+  ```bash
+  $ sudo dscl . -read /Users/<username> dsAttrTypeNative:accountPolicyData
+  dsAttrTypeNative:accountPolicyData:
+   <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+  <dict>
+    <key>creationTime</key>
+    <real>1730235857.0728331</real>
+    <key>failedLoginCount</key>
+    <integer>0</integer>
+    <key>failedLoginTimestamp</key>
+    <integer>0</integer>
+    <key>passwordLastSetTime</key>
+    <real>1730752335.9585528</real>
+  </dict>
+  </plist>
+  ```
+
+### list all accounts
+
+> [!NOTE|label:references:]
+> - [Delete a standard user from Mac OS](https://apple.stackexchange.com/q/310308/254265)
+
+```bash
+$ sudo dscl . -list /Users
+
+# or
+$ sudo dscl . -list /Users GeneratedUID
+
+# or
+$ sudo dscacheutil -q user
+```
+
+> [!TIP]
+> - using `diskutil list` to get disk info
+
+![check which user is using the disk](../screenshot/osx/which-user-using-disk.png)
+
+### guest account
+
+#### create guest and enable
+
+> [!NOTE|label:references:]
+> - scripts: https://github.com/sheagcraig/guestAccount/blob/master/guest_account
+
+```bash
+$ dscl . -create /Users/Guest
+
+# keychain
+$ keychain='/Users/Guest/Library/Keychains/login.keychain'
+$ security create-keychain -p '' $keychain
+$ security login-keychain -s $keychain
+```
+
+### [enable root user](https://support.apple.com/en-us/HT204012)
+
+![Enable Root User](../screenshot/osx/enable-root-user.png)
+#### disable guest account
+```bash
+$ sudo dscl . delete /Users/Guest
+$ sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess -bool NO
+$ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server AllowGuestAccess -bool NO
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool FALSE
+
+# remove Other
+$ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool FALSE
+```
+- or
+  ```bash
+  $ sudo /usr/sbin/sysadminctl -deleteUse Guest
+  ```
+
+- [check status](https://apple.stackexchange.com/a/402502/254265)
+  ```bash
+  $ sysadminctl -guestAccount status
+  2020-12-30 20:27:59.524 sysadminctl[45327:844298] Guest account disabled.
+  $ sudo sysadminctl -guestAccount off
+  2020-12-30 20:28:39.645 sysadminctl[45479:846930] Guest account is already disabled
+  ```
+
+### add account
+
+- as admin
+  ```bash
+  $ sudo sysadminctl -addUser <username> -password <password> -admin
+  ```
+
+- as normal user
+  ```bash
+  $ sysadminctl -addUser <username> -fullName "<full name>" -password "<password>" -hint "<hint>"
+  ```
 
 ## system tools
 ### `hostinfo`

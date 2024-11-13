@@ -23,6 +23,7 @@
   - [dwarvesf/hidden](#dwarvesfhidden)
   - [backgroundmusic](#backgroundmusic)
   - [mac cli](#mac-cli)
+  - [screensaver](#screensaver)
   - [others](#others)
 - [trouble shooting](#trouble-shooting)
   - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
@@ -1142,6 +1143,21 @@ $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/marslo/mac-cli/master/ma
        4.2 Mbps ↓
   ```
 
+### screensaver
+
+> [!NOTE|label:references:]
+> - [agarrharr/awesome-macos-screensavers](https://github.com/agarrharr/awesome-macos-screensavers)
+
+#### fliqlo
+```bash
+$ brew install --cask fliqlo
+```
+
+#### xscreensaver
+```bash
+$ brew install --cask xscreensaver
+```
+
 ### others
 #### [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
 ```bash
@@ -1196,6 +1212,7 @@ $ npm install -g gitbook-summary
 ```bash
 $ npm i -g npm-completion
 ```
+
 - usage
   ```bash
   $ PATH_TO_NPM_COMPLETION="/usr/local/lib/node_modules/npm-completion"

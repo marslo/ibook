@@ -1904,7 +1904,7 @@ $ sudo pmset -a displaysleep 0
 $ sudo pmset -a hibernatemode 0
 ```
 
-#### [battery](https://apple.stackexchange.com/a/35718/254265)
+#### [display sleep](https://apple.stackexchange.com/a/35718/254265)
 ```bash
 # get display off timer
 $ sudo pmset -g | grep displaysleep

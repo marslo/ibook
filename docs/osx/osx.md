@@ -4,7 +4,6 @@
 - [system info](#system-info)
 - [system](#system)
   - [setup hostname](#setup-hostname)
-  - [disable guest user](#disable-guest-user)
   - [enable root user](#enable-root-user)
   - [system integrity protection](#system-integrity-protection)
   - [disable/enable gatekeeper](#disableenable-gatekeeper)
@@ -176,29 +175,6 @@ $ sudo shutdown -r now
   iMarsloPro
   ```
 
-### disable guest user
-```bash
-$ sudo dscl . delete /Users/Guest
-$ sudo defaults write /Library/Preferences/com.apple.AppleFileServer guestAccess -bool NO
-$ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server AllowGuestAccess -bool NO
-$ sudo defaults write /Library/Preferences/com.apple.loginwindow GuestEnabled -bool FALSE
-
-# remove Other
-$ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool FALSE
-```
-- or
-  ```bash
-  $ sudo /usr/sbin/sysadminctl -deleteUse Guest
-  ```
-
-- [check status](https://apple.stackexchange.com/a/402502/254265)
-  ```bash
-  $ sysadminctl -guestAccount status
-  2020-12-30 20:27:59.524 sysadminctl[45327:844298] Guest account disabled.
-  $ sudo sysadminctl -guestAccount off
-  2020-12-30 20:28:39.645 sysadminctl[45479:846930] Guest account is already disabled
-  ```
-
 - list all accounts
 
   > [!TIP]
@@ -210,12 +186,6 @@ $ sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_
   # or
   $ dscl . -list /Users GeneratedUID
   ```
-  ![check which user is using the disk](../screenshot/osx/which-user-using-disk.png)
-
-  - [or](https://apple.stackexchange.com/q/310308/254265)
-    ```bash
-    $ dscacheutil -q user
-    ```
 
 #### create guest and enable
 
