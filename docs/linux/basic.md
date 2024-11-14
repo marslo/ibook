@@ -24,6 +24,7 @@
   - [unicode](#unicode)
   - [useful functions](#useful-functions)
   - [search manual page](#search-manual-page)
+  - [show services](#show-services)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -923,3 +924,8 @@ $ echo -e "�" | /usr/bin/hexdump -C
 ## search manual page
 - `whatis -r <string>`
 - `apropos -r <string>`
+
+## [show services](https://bbs.archlinux.org/viewtopic.php?pid=1967721#p1967721)
+```bash
+$ systemctl list-unit-files -t service
+```

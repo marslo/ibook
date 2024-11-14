@@ -15,8 +15,13 @@
   - [docker pull](#docker-pull)
   - [docker push](#docker-push)
 - [X Windows](#x-windows)
+  - [show vnc info](#show-vnc-info)
   - [get screen solution](#get-screen-solution)
   - [desktop sharing](#desktop-sharing)
+  - [tightvncserver](#tightvncserver)
+  - [TigerVNC](#tigervnc)
+  - [x11vnc](#x11vnc)
+  - [AppleRemoteDesktop](#appleremotedesktop)
 - [utility](#utility)
   - [konsole](#konsole)
   - [Gnome-Terminal](#gnome-terminal)
@@ -413,6 +418,25 @@ $ docker push docker-1.artifactory/bello-marslo:2.0
 ```
 
 ## X Windows
+
+### show vnc info
+```bash
+# port
+$ systemctl --user show-environment | grep -e XAUTHORITY -e DISPLAY
+DISPLAY=:3
+
+# xauth
+$ xauth list
+$ xauth info
+Authority file:       /home/marslo/.Xauthority
+File new:             no
+File locked:          no
+Number of entries:    6
+Changes honored:      yes
+Changes made:         no
+Current input:        (argv):1
+```
+
 ### get screen solution
 ```bash
 $ xrandr --verbose
@@ -488,6 +512,608 @@ $ echo $XDG_SESSION_TYPE
 
 - Ubuntu: Wayland (Wayland)
 - Ubuntu on Xorg: Xorg (X11)
+
+### tightvncserver
+
+> [!NOTE|label:references:]
+> - [Setup VNC Server on Ubuntu: Complete Ubuntu Remote Desktop Guide](https://www.smarthomebeginner.com/setup-vnc-server-on-ubuntu-linux/)
+> - [install_tightvnc_server_on_ubuntu.md](https://gist.github.com/modellurgist/3816b5640e4093377a416577f7c89ad1)
+> - [Your Complete VNC Server Installation Guide for Ubuntu](https://www.redswitches.com/blog/install-vnc-server-on-ubuntu/)
+> - [VNC/Servers](https://help.ubuntu.com/community/VNC/Servers)
+>   - [tightvncserver](https://help.ubuntu.com/community/VNC/Servers#tightvncserver)
+> - [How to Install TightVNC to Access Remote Desktops in Linux](https://www.tecmint.com/install-tightvnc-access-remote-desktop-in-linux/)
+
+#### install
+- desktop environment
+  ```bash
+  # rhel
+  $ sudo dnf groupinstall "Server with GUI"
+
+  # debian
+  $ sudo apt install xfce4 xfce4-goodies
+
+  # or with Xubuntu
+  $ sudo apt-get install -y xubuntu-core^
+
+  # gnome desktop
+  $ sudo apt-get install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
+  ```
+
+- tightvncserver
+  ```bash
+  # debian
+  $ sudo apt install tightvncserver
+
+  # check details
+  $ apt-cache policy tightvncserver
+  tightvncserver:
+    Installed: 1.3.10-0ubuntu4
+    Candidate: 1.3.10-0ubuntu4
+    Version table:
+   *** 1.3.10-0ubuntu4 500
+          500 http://us.archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+          100 /var/lib/dpkg/status
+  ```
+
+- start vnc server
+  ```bash
+  $ vncserver
+
+  # or
+  $ vncserver :1
+  ```
+
+- check connection
+  ```bash
+  $ sudo netstat -peanut | grep "vnc"
+  ```
+
+- change password
+  ```bash
+  $ vncpassword
+  ```
+
+- [clipman](https://docs.xfce.org/panel-plugins/xfce4-clipman-plugin/start)
+  ```bash
+  $ xfconf-query -c xfce4-panel -p /plugins/clipman/property -s value
+  $ xfconf-query -c xfce4-panel -lv | grep /plugins/clipman
+  ```
+
+- icons
+  ```bash
+  $ gtk-update-icon-cache --force /usr/share/icons/<theme-name>
+  ```
+
+- setup
+
+  > [!TIP|label:references:]
+  > - `startxfce4 &` can be replaced by:
+  >   - `thunar &`
+  >   - `xfce4-panel &`
+  >   - `xterm &`
+  > - `gnome-session &` can be replaced by:
+  >   - `gnome-panel &`
+  >   - `gnome-settings-daemon &`
+  >   - `metacity &`
+  >   - `nautilus &`
+
+  ```bash
+  $ vncserver -kill :1
+  $ mv ~/.vnc/xstartup ~/.vnc/xstartup.bak
+  $ vim ~/.vnc/xstartup
+  #!/bin/sh
+  def
+  export XKL_XMODMAP_DISABLE=1
+  unset SESSION_MANAGER
+  unset DBUS_SESSION_BUS_ADDRESS
+  xrdb $HOME/.Xresources
+  xsetroot -solid grey
+  startxfce4 &
+  # gnome-session &
+
+  $ chmod +x ~/.vnc/xstartup
+
+  # start service
+  $ vncserver
+  $ vncserver -geometry 1600x1024 -depth 24
+  ```
+
+  <!--sec data-title="more ~/.vnc/xstartup" data-id="section0" data-show=true data-collapse=true ces-->
+  ```bash
+  $ cat ~/.vnc/xstartup
+  #!/bin/bash
+  xrdb $HOME/.Xresources
+  startxfce4 &
+  ```
+
+  # or: https://help.ubuntu.com/community/VNC/Servers#Customising_your_session
+  ```bash
+  #!/bin/sh
+
+  # Change "GNOME" to "KDE" for a KDE desktop, or "" for a generic desktop
+  MODE="GNOME"
+
+  # Uncommment this line if using Gnome and your keyboard mappings are incorrect.
+  # export XKL_XMODMAP_DISABLE=1
+
+  # Load X resources (if any)
+  if [ -e "$HOME/.Xresources" ]; then
+    xrdb "$HOME/.Xresources"
+  fi
+
+  # Try a GNOME session, or fall back to KDE
+  if [ "GNOME" = "$MODE" ]; then
+    if which gnome-session >/dev/null; then
+      gnome-session --session=ubuntu-2d &
+    else
+      MODE="KDE"
+    fi
+  fi
+
+  # try a kde session, or fall back to generic
+  if [ "KDE" = "$MODE" ]; then
+    if which startkde >/dev/null; then
+      startkde &
+    else
+      MODE=""
+    fi
+  fi
+
+  # Run a generic session
+  if [ -z "$MODE" ]; then
+    xsetroot -solid "#DAB082"
+    x-terminal-emulator -geometry "80x24+10+10" -ls -title "$VNCDESKTOP Desktop" &
+    x-window-manager &
+  fi
+  ```
+  <!--endsec-->
+
+#### configure
+```bash
+$ ps auxfww | grep -i x11
+Xtightvnc :3 -desktop X -auth /home/marslo/.Xauthority -geometry 1600x1024 -depth 24 -rfbwait 120000 -rfbauth /home/marslo/.vnc/passwd -rfbport 5903 -fp /usr/share/fonts/X11/misc/,/usr/share/fonts/X11/Type1/,/usr/share/fonts/X11/75dpi/,/usr/share/fonts/X11/100dpi/ -co /etc/X11/rgb
+ \_ /bin/sh /etc/xdg/xfce4/xinitrc -- /etc/X11/xinit/xserverrc
+
+$ which -a Xtightvnc
+/usr/bin/Xtightvnc
+
+$ echo $XDG_MENU_PREFIX
+xfce-
+
+$ echo $DESKTOP_SESSION
+xfce
+
+$ echo $XDG_CONFIG_DIRS
+/etc/xdg
+
+$ cat /etc/xdg/xfce4/Xft.xrdb
+! Those are fallback settings, use the ui plugin to change it
+! or add your overrides to ~/.Xresources
+! Xft.hintstyle: hintnone/hintslight/hintmedium/hintfull
+! Xft hinting: 1/0
+
+Xft.hinting: 1
+Xft.hintstyle: hintmedium
+```
+
+- tools
+  ```bash
+  $ xfdesktop-settings
+  $ xfce4-settings-manager
+
+  $ xfce4-session-settings
+  $ xfce4-session-editor
+  ```
+
+<!--sec data-title="rc files" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ sudo cat /etc/X11/xinit/xserverrc
+#!/bin/sh
+
+exec /usr/bin/X -nolisten tcp "$@"
+```
+
+```bash
+$ cat /etc/xdg/xfce4/xinitrc
+#!/bin/sh
+
+# fix broken $UID on some system...
+if test "x$UID" = "x"; then
+  if test -x /usr/xpg4/bin/id; then
+    UID=`/usr/xpg4/bin/id -u`;
+  else
+    UID=`id -u`;
+  fi
+fi
+
+# set $XDG_MENU_PREFIX to "xfce-" so that "xfce-applications.menu" is picked
+# over "applications.menu" in all Xfce applications.
+if test "x$XDG_MENU_PREFIX" = "x"; then
+  XDG_MENU_PREFIX="xfce-"
+  export XDG_MENU_PREFIX
+fi
+
+# set DESKTOP_SESSION so that one can detect easily if an Xfce session is running
+if test "x$DESKTOP_SESSION" = "x"; then
+  DESKTOP_SESSION="xfce"
+  export DESKTOP_SESSION
+fi
+
+# set XDG_CURRENT_DESKTOP so that Qt 5 applications can identify user set Xfce theme
+if test "x$XDG_CURRENT_DESKTOP" = "x"; then
+  XDG_CURRENT_DESKTOP="XFCE"
+  export XDG_CURRENT_DESKTOP
+fi
+
+# $XDG_CONFIG_HOME defines the base directory relative to which user specific
+# configuration files should be stored. If $XDG_CONFIG_HOME is either not set
+# or empty, a default equal to $HOME/.config should be used.
+if test "x$XDG_CONFIG_HOME" = "x" ; then
+  XDG_CONFIG_HOME=$HOME/.config
+fi
+[ -d "$XDG_CONFIG_HOME" ] || mkdir "$XDG_CONFIG_HOME"
+
+# $XDG_CACHE_HOME defines the base directory relative to which user specific
+# non-essential data files should be stored. If $XDG_CACHE_HOME is either not
+# set or empty, a default equal to $HOME/.cache should be used.
+if test "x$XDG_CACHE_HOME" = "x" ; then
+  XDG_CACHE_HOME=$HOME/.cache
+fi
+[ -d "$XDG_CACHE_HOME" ] || mkdir "$XDG_CACHE_HOME"
+
+# set up XDG user directores.  see
+# http://freedesktop.org/wiki/Software/xdg-user-dirs
+if which xdg-user-dirs-update >/dev/null 2>&1; then
+    xdg-user-dirs-update
+fi
+
+# Modify libglade and glade environment variables so that
+# it will find the files installed by Xfce
+GLADE_CATALOG_PATH="$GLADE_CATALOG_PATH:"
+GLADE_PIXMAP_PATH="$GLADE_PIXMAP_PATH:"
+GLADE_MODULE_PATH="$GLADE_MODULE_PATH:"
+export GLADE_CATALOG_PATH
+export GLADE_PIXMAP_PATH
+export GLADE_MODULE_PATH
+
+# For now, start with an empty list
+XRESOURCES=""
+
+# Has to go prior to merging Xft.xrdb, as its the "Defaults" file
+test -r "/etc/xdg/xfce4/Xft.xrdb" && XRESOURCES="$XRESOURCES /etc/xdg/xfce4/Xft.xrdb"
+test -r $HOME/.Xdefaults && XRESOURCES="$XRESOURCES $HOME/.Xdefaults"
+
+BASEDIR=$XDG_CONFIG_HOME/xfce4
+if test -r "$BASEDIR/Xft.xrdb"; then
+  XRESOURCES="$XRESOURCES $BASEDIR/Xft.xrdb"
+elif test -r "$XFCE4HOME/Xft.xrdb"; then
+  mkdir -p "$BASEDIR"
+  cp "$XFCE4HOME/Xft.xrdb" "$BASEDIR"/
+  XRESOURCES="$XRESOURCES $BASEDIR/Xft.xrdb"
+fi
+
+# merge in X cursor settings
+test -r "$BASEDIR/Xcursor.xrdb" && XRESOURCES="$XRESOURCES $BASEDIR/Xcursor.xrdb"
+
+# ~/.Xresources contains overrides to the above
+test -r "$HOME/.Xresources" && XRESOURCES="$XRESOURCES $HOME/.Xresources"
+
+# load all X resources (adds /dev/null to avoid an empty list that would hang the process)
+cat /dev/null $XRESOURCES | xrdb -merge -
+
+# load local modmap
+test -r $HOME/.Xmodmap && xmodmap $HOME/.Xmodmap
+
+# run xfce4-session if installed
+if which xfce4-session >/dev/null 2>&1; then
+
+  # check if we start xfce4-session with ck-launch-session. this is only
+  # required for starting from a console, not a login manager
+  if test "x$XFCE4_SESSION_WITH_CK" = "x1"; then
+    if which ck-launch-session >/dev/null 2>&1; then
+      ck-launch-session xfce4-session
+    else
+      echo
+      echo "You have tried to start Xfce with consolekit support, but"
+      echo "ck-launch-session is not installed."
+      echo "Aborted startup..."
+      echo
+
+      exit 1
+    fi
+  else
+    # start xfce4-session normally
+    xfce4-session
+  fi
+
+  exit 0
+fi
+
+##################
+# IMPORTANT NOTE #
+##################
+
+# Everything below here ONLY gets executed if you are NOT using xfce4-session
+# (Xfce's session manager).  If you are using the session manager, everything
+# below is handled by it, and the code below is not executed at all.  If you're
+# not sure if you're using the session manager, type 'ps -e|grep xfce4-session'
+# in a terminal while Xfce is running.
+
+##################
+
+# Use dbus-launch if installed.
+if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
+  if which dbus-launch >/dev/null 2>&1; then
+    eval `dbus-launch --sh-syntax --exit-with-session`
+    # some older versions of dbus don't export the var properly
+    export DBUS_SESSION_BUS_ADDRESS
+  else
+    echo "Could not find dbus-launch; Xfce will not work properly" >&2
+    fi
+fi
+
+# this is only necessary when running w/o xfce4-session
+xsetroot -solid black -cursor_name watch
+
+# or use old-fashioned startup script otherwise
+
+xfsettingsd &
+xfwm4 --daemon
+
+# start up stuff in $XDG_CONFIG_HOME/autostart/
+if test -d "$XDG_CONFIG_HOME/autostart"; then
+  for i in ${XDG_CONFIG_HOME}/autostart/*.desktop; do
+    grep -q -E "^Hidden=true" "$i" && continue
+    if grep -q -E "^OnlyShowIn=" "$i"; then
+      # need to test twice, as lack of the line entirely means we still run it
+      grep -E "^OnlyShowIn=" "$i" | grep -q 'XFCE;' || continue
+    fi
+    grep -E "^NotShowIn=" "$i" | grep -q 'XFCE;' && continue
+
+    # check for TryExec
+    trycmd=`grep -E "^TryExec=" "$i" | cut -d'=' -f2`
+    if test "$trycmd"; then
+      which "$trycmd" >/dev/null 2>&1 || continue
+    fi
+
+    cmd=`grep -E "^Exec=" "$i" | cut -d'=' -f2`
+    if test "$cmd" && which "$cmd" >/dev/null 2>&1; then
+      $cmd &
+    fi
+  done
+fi
+
+xfdesktop&
+orage &
+
+panel=`which xfce4-panel`
+case "x$panel" in
+  x|xno*)
+    ;;
+  *)
+    $panel
+    ret=$?
+    while test $ret -ne 0; do
+      xmessage -center -file - -timeout 20 -title Error <<EOF
+A crash occured in the panel
+Please report this to the xfce4-dev@xfce.org list
+or on http://bugs.xfce.org
+Meanwhile the panel will be restarted
+EOF
+      cat >&2 <<EOF
+A crash occured in the panel
+Please report this to the xfce4-dev@xfce.org list
+or on http://bugs.xfce.org
+Meanwhile the panel will be restarted
+EOF
+      $panel
+      ret=$?
+    done
+    ;;
+esac
+
+xsetroot -bg white -fg red  -solid black -cursor_name watch
+```
+<!--endsec-->
+
+#### tips
+
+- `gnome-session`
+  ```bash
+  $ sudo apt-get install ubuntu-gnome-desktop
+
+  # revert
+  $ sudo apt-get remove ubuntu-gnome-desktop
+  $ sudo dpkg-reconfigure lightdm                  # select lightdm
+  ```
+
+- ssh tunnel for vnc on linux client
+  ```bash
+  $ vncserver -localhost
+
+  $ ssh -L 5901:localhost:5901 -C -N -l <username> <remote-ip-address>
+  # ssh tunnel
+  $ ssh -L 5901:localhost:5901 -N -f -l USER IP/DOMAINNAME
+  ```
+
+- services
+
+  > [!TIP|label:references:]
+  > - [Running VNC as a System Service](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-22-04#step-4-running-vnc-as-a-system-service)
+
+  ```bash
+  $ sudo vim /etc/systemd/system/atavncserver.servic
+  [Unit]
+  Description=VNC Server
+  After=syslog.target network.target
+
+  [Service]
+  Type=forking
+  User=USERNAME
+  PAMName=login
+  PIDFile=/home/USERNAME/.vnc/%H:3.pid
+  ExecStartPre=-/usr/bin/vncserver -kill :3 > /dev/null 2>&1
+  ExecStart=/usr/bin/vncserver :3 -geometry 1600x1080 -depth 24 -nolisten tcp -localhost
+  ExecStop=/usr/bin/vncserver -kill :3
+
+  [Install]
+  WantedBy=multi-user.target
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl enable atavncserver.service
+  $ sudo systemctl start atavncserver
+  $ sudo systemctl status atavncserver
+  ```
+
+  <!--sec data-title="another service config" data-id="section2" data-show=true data-collapse=true ces-->
+  ```bash
+  $ sudo vim /etc/systemd/system/vncserver@.service
+  [Unit]
+  Description=Start TightVNC server at startup
+  After=syslog.target network.target
+
+  [Service]
+  Type=forking
+  User=sammy
+  Group=sammy
+  WorkingDirectory=/home/sammy
+
+  PIDFile=/home/sammy/.vnc/%H:%i.pid
+  ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
+  ExecStart=/usr/bin/vncserver -depth 24 -geometry 1280x800 -localhost :%i
+  ExecStop=/usr/bin/vncserver -kill :%i
+
+  [Install]
+  WantedBy=multi-user.target
+
+  $ sudo systemctl daemon-reload
+  $ sudo systemctl enable vncserver@1.service
+  $ sudo systemctl start vncserver@1.service
+  ```
+  <!--endsec-->
+
+- [change vncserver default geometry](https://stackoverflow.com/q/26489895/2940319)
+
+  ```bash
+  $ vncserver -geometry 1600x1024 -depth 24
+  ```
+
+  ```bash
+  $ echo "geometry=1920x1080" >> ~/.vnc/config
+  $ vncserver -kill :1 && vncserver
+  ```
+
+  ```bash
+  $ xrandr -s 1680x1050 # or
+  $ xrandr -s 3
+  ```
+
+- [autostart vnc session using cron](https://www.smarthomebeginner.com/setup-vnc-server-on-ubuntu-linux/)
+  ```bash
+  $ crontab -e
+  @reboot vncserver -geometry 1600x1024 -depth 24 :3
+  ```
+
+- [open vnc ports on firewall](https://www.tecmint.com/install-tightvnc-access-remote-desktop-in-linux/)
+  ```bash
+  $ sudo iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 5901 -j ACCEPT
+  # or
+  $ sudo firewall-cmd --zone=public --add-port=5901/tcp
+  # or
+  $ sudo ufw allow 5901/tcp
+
+  # for multiple users
+  $ sudo iptables -I INPUT 5 -m state --state NEW -m tcp -p tcp -m multiport --dports 5902:5904 -j ACCEPT
+  # or
+  $ sudo firewall-cmd --zone=public --add-port=5902-5904/tcp
+  # or
+  $ sudo ufw allow 5901:5910/tcp
+
+  # restart iptable service
+  $ sudo service iptables save
+  $ sudo service iptables restart
+  # or
+  $ sudo firewall-cmd --reload
+  $ sudo systemctl restart firewalld
+  ```
+
+<!--sec data-title="xfce4-panel" data-id="section3" data-show=true data-collapse=true ces-->
+```bash
+$ xfconf-query -c xfce4-panel -lv
+/configver                         2
+/panels                            <<UNSUPPORTED>>
+/panels/panel-1/length             100
+/panels/panel-1/plugin-ids         <<UNSUPPORTED>>
+/panels/panel-1/position           p=6;x=0;y=0
+/panels/panel-1/position-locked    true
+/panels/panel-1/size               30
+/panels/panel-2/plugin-ids         <<UNSUPPORTED>>
+/panels/panel-2/position           p=10;x=0;y=0
+/panels/panel-2/position-locked    true
+/plugins/plugin-1                  applicationsmenu
+/plugins/plugin-10                 launcher
+/plugins/plugin-10/items           <<UNSUPPORTED>>
+/plugins/plugin-11                 launcher
+/plugins/plugin-11/items           <<UNSUPPORTED>>
+/plugins/plugin-12                 launcher
+/plugins/plugin-12/items           <<UNSUPPORTED>>
+/plugins/plugin-13                 separator
+/plugins/plugin-13/style           1
+/plugins/plugin-14                 directorymenu
+/plugins/plugin-14/base-directory  /home/marslo
+/plugins/plugin-15                 separator
+/plugins/plugin-15/expand          true
+/plugins/plugin-15/style           0
+/plugins/plugin-2                  actions
+/plugins/plugin-3                  tasklist
+/plugins/plugin-4                  pager
+/plugins/plugin-5                  clock
+/plugins/plugin-6                  systray
+/plugins/plugin-7                  showdesktop
+/plugins/plugin-8                  separator
+/plugins/plugin-8/style            1
+/plugins/plugin-9                  launcher
+/plugins/plugin-9/items            <<UNSUPPORTED>>
+```
+<!--endsec-->
+
+### [TigerVNC](https://tigervnc.org/)
+
+```bash
+# rhel
+$ sudo yum -y install tigervnc-server xorg-x11-fonts-Type1
+
+# debian
+$ sudo apt install tigervnc-standalone-server tigervnc-viewer
+# or
+$ wget https://bintray.com/artifact/download/tigervnc/stable/ubuntu-14.04LTS/amd64/tigervncserver_1.6.0-3ubuntu1_amd64.deb
+$ sudo dpkg -i tigervncserver_1.6.0-3ubuntu1_amd64.deb
+$ sudo apt-get -f install
+```
+
+- replace x11vnc to attach the local display
+  ```bash
+  $ x0vncserver -display :0
+  ```
+
+### [x11vnc](https://en.wikipedia.org/wiki/X11vnc)
+
+- [tips](https://help.ubuntu.com/community/VNC)
+  ```bash
+  #!/bin/sh
+
+  ssh -C -f -L 5900:localhost:5900 rebecca@rebeccas-pc.dyndns.org \
+          x11vnc -safer -localhost -nopw -once -display :0 \
+          && sleep 5 \
+          && vncviewer localhost:0
+  ```
+
+### [AppleRemoteDesktop](https://help.ubuntu.com/community/AppleRemoteDesktop)
+
+- `Unknown authentication scheme`
+  ```bash
+  $ sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -verbose -activate -restart -agent -allowAccessFor -allUsers -privs -all -clientopts -setvnclegacy -vnclegacy yes -setvncpw -vncpw passwordYouWantToUse
+  ```
 
 ## utility
 
