@@ -8,7 +8,7 @@
   - [development](#development)
   - [system](#system)
 - [app store](#app-store)
-- [program](#program)
+- [development](#development-1)
   - [Java](#java)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -56,6 +56,7 @@
 - [iTerm2](https://www.iterm2.com/)
 - [dash](https://kapeli.com/dash)
 - [doctoc](https://github.com/thlorenz/doctoc)
+- [iStats](https://github.com/Chris911/iStats) | [see also](../../osx/apps/brew.md##brew-install)
 - [gnomon](https://www.npmjs.com/package/gnomon)
 - [Css Scan](https://getcssscan.com/)
 
@@ -66,22 +67,34 @@
 >   - [Better And Better 2.0](https://www.better365.cn/bab2.html)
 >   - [LiuHai](https://www.better365.cn/LiuHai.html)
 
-- [psSafe](https://pwsafe.org/)
-- [iStat Menus](https://bjango.com/mac/istatmenus/) | [State](https://www.better365.cn/state.html)
-- [Moon](https://manytricks.com/moom/) | [BetterSnapTool](https://folivora.ai/bettersnaptool) | [Simple Window Manager - SWM](https://community.folivora.ai/t/simple-window-manager-swm/12796)
-- [Keyboard Maestro](https://www.keyboardmaestro.com/main/)
+#### utilities
 - [Alfed](https://www.alfredapp.com/)
   - backup:
     - `user path`: `$HOME/Library/Application Support/Alfred`
+- [Keyboard Maestro](https://www.keyboardmaestro.com/main/)
+- [iStat Menus](https://bjango.com/mac/istatmenus/) | [State](https://www.better365.cn/state.html)
+- [Moon](https://manytricks.com/moom/) | [BetterSnapTool](https://folivora.ai/bettersnaptool) | [Simple Window Manager - SWM](https://community.folivora.ai/t/simple-window-manager-swm/12796)
+- [Bartender 5](https://www.macbartender.com/) | [iBar](https://www.better365.cn/ibar.html)
+- [Everything](https://www.voidtools.com/support/everything/) | [All](https://www.better365.cn/all.html)
+- [Bob Translate](https://bobtranslate.com/) | [TTime Translate](https://ttime.timerecord.cn/)  ⇠ for windows
 - [BetterTouchTool](https://folivora.ai/)
+- [Karabiner-Elements](https://karabiner-elements.pqrs.org/) Saviour of MadCatz R.A.T in MacOS
+
+#### browser
 - [Chrome Canary](https://www.google.com/chrome/canary/?platform=mac&standalone=1)
   - [chrome extension downloader](https://chrome-extension-downloader.com/)
 - [Chromium](https://www.chromium.org/getting-involved/download-chromium)
-- [Karabiner-Elements](https://karabiner-elements.pqrs.org/) Saviour of MadCatz R.A.T in MacOS
+
+#### password management
+- [psSafe](https://pwsafe.org/)
+
+#### color picker
 - [Sip](https://sipapp.io/) | [jonathaneunice/iterm2-tab-set](https://github.com/jonathaneunice/iterm2-tab-set) | [Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12) | [Just Color Picker](https://annystudio.com/software/colorpicker/)
-- [Bartender 5](https://www.macbartender.com/) | [iBar](https://www.better365.cn/ibar.html)
-- [Bob Translate](https://bobtranslate.com/) | [TTime Translate](https://ttime.timerecord.cn/)  ⇠ for windows
-- [Everything](https://www.voidtools.com/support/everything/) | [All](https://www.better365.cn/all.html)
+
+#### display
+- [Flux](https://justgetflux.com/)
+
+#### network
 - [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html)
 
 ## app store
@@ -90,7 +103,7 @@
 
   ![logout appstore in MacOS](../../screenshot/tools/appstore-logout.png)
 
-## program
+## development
 ### [Java](https://www.oracle.com/java/technologies/)
 
 > [!NOTE|label:references:]

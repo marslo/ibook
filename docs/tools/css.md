@@ -4,6 +4,7 @@
 - [stylus](#stylus)
   - [tricky](#tricky)
   - [using bas64 string for svg](#using-bas64-string-for-svg)
+  - [system font stack](#system-font-stack)
 - [bootstrap](#bootstrap)
   - [using boostrap sytles](#using-boostrap-sytles)
 - [alert](#alert)
@@ -80,6 +81,91 @@
     ```css
     background-image: url(background-image: url("data:image/svg+xml;base64,......")
     ```
+
+### system font stack
+
+> [!TIP|label:references:]
+> - [#665 - font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif](https://github.com/necolas/normalize.css/issues/665)
+>   - `-apple-system` targets `San Francisco` in Safari (on Mac OS X and iOS), and it targets Neue Helvetica and Lucida Grande on older versions of Mac OS X. It properly selects between San Francisco Text and San Francisco Display depending on the text’s size.
+>   - `system-ui` represents the default UI font on a given platform.
+>   - `BlinkMacSystemFont` is the equivalent for Chrome on Mac OS X.
+>   - `Segoe UI` targets Windows and Windows Phone.
+>   - `Roboto` targets Android and newer Chrome OS. It is deliberately listed after Segoe UI so that if you’re an Android developer on Windows and have Roboto installed, Segoe UI will be used instead.
+> - [The New System Font Stack?](https://bitsofco.de/the-new-system-font-stack/)
+> - [System Font Stack](https://css-tricks.com/snippets/css/system-font-stack/)
+
+```css
+body {
+  font-family: -apple-system,
+               system-ui,
+               BlinkMacSystemFont,
+               "Segoe UI",
+               Roboto,
+               "Helvetica Neue",
+               Arial,
+               sans-serif
+}
+
+/* Wordpress 4.6 */
+body {
+   font-family: -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Oxygen-Sans,
+                Ubuntu,
+                Cantarell,
+                "Helvetica Neue",
+                sans-serif;
+}
+
+/** github **/
+body {
+  font-family: -apple-system,
+               BlinkMacSystemFont,
+               "Segoe UI",
+               Roboto,
+               Helvetica,
+               Arial,
+               sans-serif,
+               "Apple Color Emoji",  /* Emojis*/
+               "Segoe UI Emoji",     /* Emojis*/
+               "Segoe UI Symbol";    /* Emojis*/
+}
+```
+
+- explain
+
+  | FONT                                 | DEVICE TARGETED                         |
+  |--------------------------------------|-----------------------------------------|
+  | `-apple-system` (San Francisco)      | iOS Safari, macOS Safari, macOS Firefox |
+  | `BlinkMacSystemFont` (San Francisco) | macOS Chrome                            |
+  | `Segoe UI`                           | Windows                                 |
+  | `Roboto`                             | Android, Chrome OS                      |
+  | `Oxygen` / `Oxygen-Sans`             | KDE                                     |
+  | `Fira Sans`                          | Firefox OS                              |
+  | `Droid Sans`                         | Older versions of Android               |
+  | `Ubuntu`                             | Ubuntu                                  |
+  | `Cantarell`                          | GNOME                                   |
+  | `Helvetica Neue`                     | macOS versions < 10.11                  |
+  | `Arial`                              | Any                                     |
+  | `sans-serif`                         | Any                                     |
+
+- comparison between the font stacks used by sites
+
+  | WORDPRESS            | MEDIUM               | GHOST                | GITHUB               |
+  |----------------------|----------------------|----------------------|----------------------|
+  | `-apple-system`      | `-apple-system`      | `-apple-system`      | `-apple-system`      |
+  | `BlinkMacSystemFont` | `BlinkMacSystemFont` | `BlinkMacSystemFont` | `BlinkMacSystemFont` |
+  | `"Segoe UI"`         | `"Segoe UI"`         | `"Segoe UI"`         | `"Segoe UI"`         |
+  | `Roboto`             | `Roboto`             | `Roboto`             | `Roboto`             |
+  | `Oxygen-Sans`        | `Oxygen`             | `Oxygen`             | `Helvetica`          |
+  | `Ubuntu`             | `Ubuntu`             | `Ubuntu`             | `Arial`              |
+  | `Cantarell`          | `Cantarell`          | `Cantarell`          | `sans-serif`         |
+  | `"Helvetica Neue"`   | `Open Sans`          | `"Fira Sans"`        |                      |
+  | `sans-serif`         | `Helvetica Neue"`    | `"Droid Sans"`       |                      |
+  |                      | `sans-serif`         | `"Helvetica Neue"`   |                      |
+  |                      |                      | `sans-serif`         |                      |
 
 ## bootstrap
 

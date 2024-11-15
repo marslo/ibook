@@ -15,6 +15,8 @@
 - [download](#download)
 - [config](#config)
   - [list all configs](#list-all-configs)
+  - [samples](#samples)
+  - [Authentication](#authentication)
 - [tricky](#tricky)
   - [get size of installed pip package](#get-size-of-installed-pip-package)
 - [pipx](#pipx)
@@ -301,6 +303,79 @@ user:
   For variant 'site', will try loading '/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/pip.conf'
   ```
 
+### samples
+
+> [!NOTE|label:references:]
+> - [Configuration](https://pip.pypa.io/en/stable/topics/configuration/)
+
+- `--ignore-installed`
+  ```bash
+  [install]
+  ignore-installed = true
+  ```
+
+- `--no-dependencies`
+  ```bash
+  [install]
+  no-dependencies = yes
+  ```
+
+- `--no-compile`
+  ```bash
+  [install]
+  no-compile = yes
+  ```
+
+- `--no-warn-script-location`
+  ```bash
+  [install]
+  no-warn-script-location = yes
+  ```
+
+- `--no-cache-dir`
+  ```bash
+  [global]
+  no-cache-dir = yes
+  ```
+
+- `--verbose` and `--quiet`
+
+  > [!NOTE|label:references:]
+  > - `verbose`: `export PIP_VERBOSE=<n>` == `pip install [-v, -vv, -vvv, -vvvv]`
+  >   - 0: no output
+  >   - 1: print only errors
+  >   - 2: print errors and warnings
+  >   - 3: print errors, warnings, and info
+  >   - 4: print everything
+
+  ```bash
+  [global]
+  verbose = 2
+  quiet = 0
+  ```
+
+- `--trusted-host`
+  ```bash
+  [install]
+  trusted-host =
+      mirror1.example.com
+      mirror2.example.com
+  ```
+
+- `--find-links`
+  ```bash
+  [global]
+  find-links =
+      http://download.example.com
+
+  [install]
+  find-links =
+      http://mirror1.example.com
+      http://mirror2.example.com
+  ```
+
+### [Authentication](https://pip.pypa.io/en/stable/topics/authentication/)
+
 ## tricky
 ### [get size of installed pip package](https://stackoverflow.com/a/60850841/2940319)
 ```bash
@@ -443,6 +518,8 @@ $ pipx install ansible --include-deps
 - `error: externally-managed-environment`
 
   > [!NOTE|label:references:]
+  > - [Python 3.11, pip and (breaking) system packages](https://veronneau.org/python-311-pip-and-breaking-system-packages.html)
+  >   - [pip environment variable](https://pip.pypa.io/en/stable/topics/configuration/#environment-variables)
   > - [pip(3) install，完美解决 externally-managed-environment](https://www.yaolong.net/article/pip-externally-managed-environment/)
   > - [Python教程：解决pip安装包时报错：error: externally-managed-environment This environment is externally managed](https://blog.csdn.net/a772304419/article/details/133469123)
   > - [How do I solve "error: externally-managed-environment" every time I use pip 3?](https://stackoverflow.com/a/76641565/2940319)
@@ -469,9 +546,60 @@ $ pipx install ansible --include-deps
     note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
     hint: See PEP 668 for the detailed specification.
     ```
-  - solution
+  - solution: [ignore by pip.config](https://stackoverflow.com/a/75722775/2940319)
+
+    > [!TIP|label:rerefences:]
+    > - `pip.config`:
+    >   - `~/.pip/pip.conf`
+    >   - `~/.config/pip/pip.conf`
+    > - check pip config:
+    >   ```bash
+    >   $ python3 -m pip config debug
+    >   env_var:
+    >   env:
+    >   global:
+    >     /opt/homebrew/share/pip:/Library/Application Support/pip/pip.conf, exists: False
+    >   site:
+    >     /opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/pip.conf, exists: False
+    >   user:
+    >     /Users/marslo/.pip/pip.conf, exists: True
+    >       global.break-system-package: true
+    >     /Users/marslo/.config/pip/pip.conf, exists: False
+    >   ```
+
     ```bash
+    # setup by command
+    $ python3 -m pip config set global.break-system-packages true
+
+    # or added manually
+    $ cat ~/.pip/pip.conf
+    [global]
+    break-system-package = true
+    ```
+
+  - solution: via option temporary
+    ```bash
+    $ python3 -m pip install --upgrade pip --break-system-packages
+
+    # or
+    $ python3 -m pip install --upgrade pip --system-site-packages
+    ```
+
+  - solution: via environment vaiable
+    ```bash
+    $ export PIP_BREAK_SYSTEM_PACKAGES=true
+    $ python3 -m pip install --upgrade pip
+
+    # or
+    $ PIP_BREAK_SYSTEM_PACKAGES=true python3 -m pip install --upgrade pip
+    ```
+
+  - solution: remove EXTERNALLY-MANAGED file
+    ```bash
+    # 3.12
     $ mv $(brew --prefix python@3.12)/Frameworks/Python.framework/Versions/3.12/lib/python3.12/EXTERNALLY-MANAGED{,.bak}
+    # 3.13
+    $ mv $(brew --prefix python@3.13)/Frameworks/Python.framework/Versions/3.13/lib/python3.13/EXTERNALLY-MANAGED{,.bak}
     ```
 
 - `Skipping ... due to invalid metadata entry 'name'`

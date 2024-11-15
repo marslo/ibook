@@ -351,6 +351,7 @@ $ brew install libxml2                         # for xmllint
 
 # --- cask ---
 $ brew install --cask keycastr
+$ brew install --cask fliqlo                   # flip clock screensaver
 
 # --- tap ---
 $ brew tap hashicorp/tap
