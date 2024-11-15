@@ -308,6 +308,7 @@ $ launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenteru
 > references:
 > - [How to fix: This is an application downloaded from the Internet. Are you sure you want to open it?](https://www.idownloadblog.com/2017/04/20/fix-application-from-internet-gatekeeper/)
 > - [disable application quarantine message](https://macos-defaults.com/misc/lsquarantine.html)
+> - [* iMarslo: xattr](./tricky.md#usrbinxattr)
 {% endhint %}
 
 ```bash
@@ -317,18 +318,17 @@ $ sudo spctl --master-disable
 $ sudo spctl --global-disable
 Globally disabling the assessment system needs to be confirmed in System Settings
 
+# disable quarantine
 $ defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+$ /usr/bin/xattr -c /path/to/app
+# or
+$ /usr/bin/xattr -d com.apple.quarantine /path/to/app
 ```
 
 ![allow application from](../screenshot/osx/allow-application-from-1.png)
 
 ![allow application from](../screenshot/osx/allow-application-from-2.png)
-
-
-#### disable warning for unknown resource open
-```bash
-$ defaults write com.apple.LaunchServices LSQuarantine -bool false
-```
 
 ## screenshot
 
@@ -1945,15 +1945,6 @@ $ sudo rm /Private/var/vm/sleepimage
 $ sudo touch /Private/var/vm/sleepimage
 # make sure be rewritten
 $ sudo chflags uchg /Private/var/vm/sleepimage
-```
-
-#### download apps security
-```bash
-# disable
-$ defaults write com.apple.LaunchServices LSQuarantine -bool NO
-
-# enable
-$ defaults write com.apple.LaunchServices LSQuarantine -bool YES
 ```
 
 #### un-useful sudden motion sensor for SSDs
