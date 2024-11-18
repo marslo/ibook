@@ -13,6 +13,7 @@
   - [search with aql](#search-with-aql)
   - [delete docker images](#delete-docker-images)
   - [deploy docker image via cli](#deploy-docker-image-via-cli)
+- [npm](#npm)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -447,3 +448,53 @@ $ jf rt docker-promote hello-world default-docker-local stef-docker-local \
                        --target-docker-image=hello-world \
                        --target-tag=prod
 ```
+
+## npm
+
+> [!NOTE|label:references:]
+> - [Step 2: Use the CLI in your project](https://jfrog.com/help/r/artifactory-how-to-use-an-access-token-environment-variable-with-the-jfrog-cli/step-2-use-the-cli-in-your-project)
+> - [Setting npm repositories](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory/package-managers-integration#setting-npm-repositories)
+> - [Use the npm Command Line](https://jfrog.com/help/r/jfrog-artifactory-documentation/use-the-npm-command-line)
+> - [npm Packages with JFrog CLI](https://jfrog.com/blog/npm-flies-with-jfrog-cli/)
+
+```bash
+$ cd path/to/project
+$ jf npm-config --repo-deploy <LOCAL-REPO> --repo-resolve <REMOTE-REPO>
+
+# i.e.:
+$ jf npm-config --repo-deploy npmjs-local --repo-resolve npmjs-remote
+
+# result
+$ cat .jfrog/projects/npm.yaml
+   1   version: 1
+   2   type: npm
+   3   resolver:
+   4       repo: poc-npmjs-remote
+   5       serverId: stg
+   6   deployer:
+   7       repo: poc-npmjs-local
+   8       serverId: stg
+```
+
+- using jf for npm
+
+  > [!NOTE|label:references:]
+  > ```bash
+  > $ jf npm --help
+  >
+  > Name:
+  >   jf npm - Run npm command.
+  >
+  > Usage:
+  >   jf npm <npm arguments> [command options]
+  >
+  > Arguments:
+  >   ci                        Run npm ci.
+  >   publish, p                Packs and deploys the npm package to the designated npm repository.
+  >   install, i, isntall, add  Run npm install.
+  >   help, h
+  > ```
+
+  ```bash
+  $ jf npm install
+  ```
