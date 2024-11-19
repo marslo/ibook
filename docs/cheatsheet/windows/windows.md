@@ -45,6 +45,7 @@
   - [Internet Explorer Enhanced Security Configuration is enabled](#internet-explorer-enhanced-security-configuration-is-enabled)
   - [powershell plugins](#powershell-plugins)
   - [openssh for windows](#openssh-for-windows)
+  - [mount NFS](#mount-nfs)
 - [troubleshooting](#troubleshooting)
   - [`Error code = 0x800f0954`](#error-code--0x800f0954)
 
@@ -1281,6 +1282,17 @@ symbolic link created for c:\Users\marslo\pbustor <<===>> \\dc1engcifs.sample.co
   # uninstall the OpenSSH Server
   > Remove-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
   ```
+
+### mount NFS
+
+> [!NOTE|label:references:]
+> - [Turning a folder into a drive letter](https://answers.microsoft.com/en-us/windows/forum/all/turning-a-folder-into-a-drive-letter/13b42aa7-1ea8-43ba-90f7-751eb10deaa7)
+>   ```bash
+>   $ SUBST W: C:\Users\Public\Documents
+>   ```
+> - [How to Mount and Unmount a Drive or Volume in Windows](https://www.tenforums.com/tutorials/158668-how-mount-unmount-drive-volume-windows.html)
+
+![mount windows nfs](../../screenshot/win/windows-nfs-mount.png)
 
 ## troubleshooting
 ### `Error code = 0x800f0954`
