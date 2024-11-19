@@ -45,7 +45,10 @@
   - [Internet Explorer Enhanced Security Configuration is enabled](#internet-explorer-enhanced-security-configuration-is-enabled)
   - [powershell plugins](#powershell-plugins)
   - [openssh for windows](#openssh-for-windows)
-  - [mount NFS](#mount-nfs)
+- [mount](#mount)
+  - [NFS](#nfs)
+  - [iso](#iso)
+  - [VHD or VHDX](#vhd-or-vhdx)
 - [troubleshooting](#troubleshooting)
   - [`Error code = 0x800f0954`](#error-code--0x800f0954)
 
@@ -1283,16 +1286,119 @@ symbolic link created for c:\Users\marslo\pbustor <<===>> \\dc1engcifs.sample.co
   > Remove-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
   ```
 
-### mount NFS
+## mount
+
+### NFS
 
 > [!NOTE|label:references:]
 > - [Turning a folder into a drive letter](https://answers.microsoft.com/en-us/windows/forum/all/turning-a-folder-into-a-drive-letter/13b42aa7-1ea8-43ba-90f7-751eb10deaa7)
->   ```bash
->   $ SUBST W: C:\Users\Public\Documents
+>   ```batch
+>   > SUBST W: C:\Users\Public\Documents
 >   ```
 > - [How to Mount and Unmount a Drive or Volume in Windows](https://www.tenforums.com/tutorials/158668-how-mount-unmount-drive-volume-windows.html)
 
 ![mount windows nfs](../../screenshot/win/windows-nfs-mount.png)
+
+
+#### change the diver letter
+
+> [!NOTE|label:references:]
+> - [How to Change and Assign Drive Letter in Windows 10](https://www.tenforums.com/tutorials/79064-change-assign-drive-letter-windows-10-a.html)
+
+```batch
+> diskpart
+
+DISKPART> list volume
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     C                NTFS   Partition    300 GB  Healthy    Boot
+  Volume 1     D                NTFS   Partition   5064 GB  Healthy    Pagefile
+  Volume 2                      NTFS   Partition    499 MB  Healthy    Hidden
+  Volume 3                      FAT32  Partition     99 MB  Healthy    System
+  Volume 4     Z                       Removable       0 B  No Media
+
+DISKPART> select volume 4
+
+Volume 4 is the selected volume.
+
+DISKPART> assign letter=H
+
+DiskPart successfully assigned the drive letter or mount point.
+
+DISKPART> list volume
+
+  Volume ###  Ltr  Label        Fs     Type        Size     Status     Info
+  ----------  ---  -----------  -----  ----------  -------  ---------  --------
+  Volume 0     C                NTFS   Partition    300 GB  Healthy    Boot
+  Volume 1     D                NTFS   Partition   5064 GB  Healthy    Pagefile
+  Volume 2                      NTFS   Partition    499 MB  Healthy    Hidden
+  Volume 3                      FAT32  Partition     99 MB  Healthy    System
+* Volume 4     H                       Removable       0 B  No Media
+
+DISKPART> exit
+
+Leaving DiskPart...
+```
+
+### iso
+
+> [!NOTE|label:references:]
+> - [How to Mount or Unmount ISO and IMG Files in Windows 10](https://www.tenforums.com/tutorials/3579-mount-unmount-iso-img-file-windows-10-a.html)
+
+```powershell
+# mount
+> Mount-DiskImage -ImagePath "Full path of ISO or IMG file"
+
+# umount
+> Dismount-DiskImage -DevicePath \\.\<drive letter>:
+# or
+> Dismount-DiskImage -ImagePath "Full path of ISO or IMG file"
+```
+
+- or
+  ```batch
+  REM mount
+  > PowerShell Mount-DiskImage -ImagePath """Full path of ISO or IMG file"""
+
+  REM umount
+  > PowerShell Dismount-DiskImage -DevicePath \\.\<drive letter>: >nul
+  REM or
+  > PowerShell Dismount-DiskImage -DevicePath \\.\<drive letter>:
+  REM or
+  > PowerShell Dismount-DiskImage -ImagePath """Full path of ISO or IMG file"""
+
+  REM i.e.:
+  > PowerShell Mount-DiskImage -ImagePath "G:\Win10_1903_V1_English_x64.iso"
+  ```
+
+### VHD or VHDX
+
+> [!NOTE|label:references:]
+> - [How to Mount or Unmount VHD and VHDX File in Windows 10](https://www.tenforums.com/tutorials/61391-mount-unmount-vhd-vhdx-file-windows-10-a.html)
+
+```powershell
+> Mount-VHD -Path "Full path of .vhd or .vhdx file"
+# i.e.:
+> Mount-VHD -Path "C:\Users\Brink\Desktop\Non-Insider W10.vhdx"
+
+# umount
+> Dismount-VHD -DiskNumber <#>
+# i.e.:
+> Dismount-VHD -DiskNumber 2
+
+# or umount from path
+> Dismount-VHD -Path "Full path of .vhd or .vhdx file"
+# i.e.:
+> Dismount-VHD -Path "C:\Users\Brink\Desktop\Non-Insider W10.vhdx"
+```
+
+- check
+  ```batch
+  > diskpart
+  DISKPART> list vdisk
+  DISKPART> exit
+  ```
 
 ## troubleshooting
 ### `Error code = 0x800f0954`
