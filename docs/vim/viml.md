@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [expr](#expr)
 - [autocmd](#autocmd)
   - [autocmd BufWritePre except](#autocmd-bufwritepre-except)
   - [stop gitblame in diff mode](#stop-gitblame-in-diff-mode)
@@ -39,8 +40,28 @@
 > - [Learn Vimscript the Hard Way](https://learnvimscriptthehardway.stevelosh.com/)
 > - [Learn Vim the Smart Way](https://learnvim.irian.to/)
 > - [Effective VimScript](https://www.arp242.net/effective-vimscript.html)
-> - [eval.txt:expr2](https://vimhelp.org/eval.txt.html#expr2)
 > - [syntax.txt](https://vimhelp.org/syntax.txt.html#syntax)
+
+## expr
+
+> [!NOTE|label:references:]
+> - [How do I alphabetically compare two strings](https://vi.stackexchange.com/a/11237/7389)
+> - [eval.txt: expr2](https://vimhelp.org/eval.txt.html#expr2)
+> - [eval.txt: expr4](https://vimhelp.org/eval.txt.html#expr4)
+> - [ProhibitEqualTildeOperator](https://github.com/Vimjas/vint/wiki/Vint-linting-policy-summary) | [Google Vimscript Style Guide](https://google.github.io/styleguide/vimscriptguide.xml?showone=Matching_Strings#Matching_Strings)
+
+| -                     | USE 'ignorecase' | MATCH CASE | IGNORE CASE |
+|-----------------------|:-----------------|:-----------|:------------|
+| equal                 | `==`             | `==#`      | `==?`       |
+| not equal             | `!=`             | `!=#`      | `!=?`       |
+| greater than          | `>`              | `>#`       | `>?`        |
+| greater than or equal | `>=`             | `>=#`      | `>=?`       |
+| smaller than          | `<`              | `<#`       | `<?`        |
+| smaller than or equal | `<=`             | `<=#`      | `<=?`       |
+| regexp matches        | `=~`             | `=~#`      | `=~?`       |
+| regexp doesn't match  | `!~`             | `!~#`      | `!~?`       |
+| same instance         | `is`             | `is#`      | `is?`       |
+| different instance    | `isnot`          | `isnot#`   | `isnot?`    |
 
 ## autocmd
 
