@@ -47,6 +47,7 @@
 > - [* vimcolorschemes](https://vimcolorschemes.com/)
 > - [Spelling And Grammar With Vim](https://www.vimfromscratch.com/articles/spell-and-grammar-vim)
 > - [iMarslo: deprecated plugins](./deprecated.html)
+> - [codicocodes/dotfyle](https://github.com/codicocodes/dotfyle) | [Trending Neovim Plugins](https://dotfyle.com/neovim/plugins/trending)
 > - dotfiles/vimrc
 >   - [* amix/vimrc](https://github.com/amix/vimrc)
 >   - [vim-devicon author: ryanoasis/dotfiles](https://github.com/ryanoasis/dotfiles/tree/master)
@@ -143,6 +144,10 @@ let g:fzf_colors                  = {
 ```
 
 ## [luochen1990/rainbow](https://github.com/luochen1990/rainbow)
+
+> [!NOTE|label:alternative:]
+> - [HiPhish/rainbow-delimiters.nvim](https://gitlab.com/HiPhish/rainbow-delimiters.nvim)
+
 ```vim
 Plug 'luochen1990/rainbow'
 
@@ -180,6 +185,15 @@ let g:rainbow_conf      = {
 ```
 
 ## [Yggdroot/indentLine](https://github.com/Yggdroot/indentLine)
+
+> [!NOTE|label:alternative:]
+> - [* glepnir/indent-guides.nvim](https://dotfyle.com/plugins/glepnir/indent-guides.nvim)
+> - [* shellRaining/hlchunk.nvim](https://github.com/shellRaining/hlchunk.nvim)
+> - [nvimdev/indentmini.nvim](https://github.com/nvimdev/indentmini.nvim)
+> - [lukas-reineke/indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)
+> - [preservim/vim-indent-guides](https://github.com/preservim/vim-indent-guides)
+> - [echasnovski/mini.indentscope](https://github.com/echasnovski/mini.indentscope)
+
 ```vim
 Plug 'Yggdroot/indentLine'
 
@@ -1141,6 +1155,44 @@ require("CopilotChat").setup {
     $ token="$(jq -c -r 'to_entries[].value.oauth_token' < ~/.config/github-copilot/apps.json)"
     $ echo "{\"github.com\":{\"user\":\"${user}\",\"oauth_token\":\"${token}\"}}" > ~/.config/github-copilot/hosts.json
     ```
+
+- [ghostText] Error on ghost text request: FetchError: CA signature digest algorithm too weak
+
+  - error log
+    ```bash
+    [2024-11-19 21:41:44] [INFO] [lsp] GitHub Copilot Language Server 1.236.0 initialized
+    [2024-11-19 21:41:54] [INFO] [certificates] Removed 2 expired certificates
+    [2024-11-19 21:41:54] [ERROR] [default] Error sending telemetry FetchError: CA signature digest algorithm too weak
+        at fetch (/Users/marslo/.vim/plugged/copilot.vim/node_modules/@adobe/helix-fetch/src/fetch/index.js:99:11)
+        at processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at cachingFetch (/Users/marslo/.vim/plugged/copilot.vim/node_modules/@adobe/helix-fetch/src/fetch/index.js:288:16)
+        at Dge.fetch (/Users/marslo/.vim/plugged/copilot.vim/lib/src/network/helix.ts:93:22) {
+      type: 'system',
+      _name: 'FetchError',
+      code: 'UNSPECIFIED',
+      errno: undefined,
+      erroredSysCall: undefined
+    }
+    [2024-11-19 21:41:56] [ERROR] [ghostText] Error on ghost text request: FetchError: CA signature digest algorithm too weak
+        at fetch (/Users/marslo/.vim/plugged/copilot.vim/node_modules/@adobe/helix-fetch/src/fetch/index.js:99:11)
+        at processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at cachingFetch (/Users/marslo/.vim/plugged/copilot.vim/node_modules/@adobe/helix-fetch/src/fetch/index.js:288:16)
+        at Dge.fetch (/Users/marslo/.vim/plugged/copilot.vim/lib/src/network/helix.ts:93:22)
+        at bte.fetchWithParameters (/Users/marslo/.vim/plugged/copilot.vim/lib/src/openai/fetch.ts:450:26)
+        at bte.fetchAndStreamCompletions (/Users/marslo/.vim/plugged/copilot.vim/lib/src/openai/fetch.ts:353:26)
+        at genericGetCompletionsFromNetwork (/Users/marslo/.vim/plugged/copilot.vim/lib/src/ghostText/ghostText.ts:149:21)
+        at getGhostText (/Users/marslo/.vim/plugged/copilot.vim/lib/src/ghostText/ghostText.ts:698:23)
+        at getGhostTextWithAbortHandling (/Users/marslo/.vim/plugged/copilot.vim/agent/src/methods/getCompletions.ts:313:16)
+        at handleChecked (/Users/marslo/.vim/plugged/copilot.vim/agent/src/methods/inlineCompletion.ts:86:33) {
+      type: 'system',
+      _name: 'FetchError',
+      code: 'UNSPECIFIED',
+      errno: undefined,
+      erroredSysCall: undefined
+    }
+    ```
+
+  - solutin
 
 ## [tomtom/tcomment_vim](https://github.com/tomtom/tcomment_vim)
 ```vim
