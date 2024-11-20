@@ -27,7 +27,6 @@
   - [get next line by the pattern](#get-next-line-by-the-pattern)
     - [change next line of pattern](#change-next-line-of-pattern)
   - [get lines between 2 patterns](#get-lines-between-2-patterns)
-    - [awk](#awk)
     - [sed](#sed)
     - [with empty line](#with-empty-line)
   - [get line from pattern to the end](#get-line-from-pattern-to-the-end)
@@ -36,11 +35,11 @@
     - [reverse search empty line](#reverse-search-empty-line)
   - [return first matching pattern](#return-first-matching-pattern)
     - [sed](#sed-1)
-    - [awk](#awk-1)
+    - [awk](#awk)
   - [return second matching pattern search range](#return-second-matching-pattern-search-range)
   - [return the last matching pattern search range](#return-the-last-matching-pattern-search-range)
     - [sed](#sed-2)
-    - [awk](#awk-2)
+    - [awk](#awk-1)
     - [replace the last matching pattern](#replace-the-last-matching-pattern)
 - [`xargs`](#xargs)
   - [complex commands with xargs](#complex-commands-with-xargs)
@@ -79,6 +78,7 @@
     - [remove empty line at the end of file](#remove-empty-line-at-the-end-of-file)
     - [remove duplicate empty lines](#remove-duplicate-empty-lines)
   - [search and replace](#search-and-replace)
+- [or](#or)
   - [replace with position](#replace-with-position)
   - [check line ending](#check-line-ending)
   - [remove the ending '\n'](#remove-the-ending-%5Cn)
@@ -2319,20 +2319,121 @@ $ find -exec bash -c '
 >   ```bash
 >   find . -printf "%T<format>\n"
 >   ```
+> - [printf format](https://man7.org/linux/man-pages/man1/find.1.html#EXPRESSION)
 
-- `@`: unix epoch
-- `a` | `A` : abbreviated | full weekday ( `Wed` | `Wednesday` )
-- `b`/`h` | `B` : abbreviated | full month name ( `Aug` | `August` )
-- `m` : month : `01..12`
-- `d` : day of month : `01..31`
-- `w` : day of week
-  - `01`: `Monday`
-  - `02`: `Tuesday`
-- `j`: day of year : `001..366`
-- `U` : week number of the year Sunday as first day of week: `00..53`
-- `W` : week number of the year Monday as first day of week: `00..53`
-- `y` | `Y` : last two digits of year | year : `00..99` | `1970..`
-- `r` : time in 12-hour format : `hh:mm:ss [AP]M`
+
+- time format
+
+
+  | FORMAT | DESCRIPTION                             | EXAMPLE                                 |
+  |:------:|-----------------------------------------|-----------------------------------------|
+  |  `%A`  | last access time                        | `%A+`: `2023-02-20+05:19:18.0000000000` |
+  |  `%T`  | last modification time                  | `%T@`: `1676899158.0000000000`          |
+  |  `%t`  | last modification time in ctime format  | `Mon Feb 20 05:19:18.0000000000 2023`   |
+  |  `%C`  | last status change time                 | `%C+`: `2024-11-20+03:30:18.8905999140` |
+  |  `%c`  | last status change time in ctime format | `Wed Nov 20 03:30:18.8905999140 2024`   |
+  |  `%B`  | birth time                              | `%B@`: `1676899158.0000000000`          |
+
+
+  ```bash
+  $ touch -d "2023-02-20 05:19:18" sample.txt
+  $ stat sample.txt
+  Access: 2023-02-20 05:19:18.000000000 -0800
+  Modify: 2023-02-20 05:19:18.000000000 -0800
+  Change: 2024-11-20 03:30:18.890599914 -0800
+   Birth: 2023-02-20 05:19:18.000000000 -0800
+
+  $ find . -maxdepth 1 -name 'sample.txt' -printf '%%A+: %A+\n%%A@: %A@\n%%T+: %T+\n%%T@: %T@\n%%C+: %C+\n%%C@: %C@\n%%B+: %B+\n%%B@: %B@\n%%t: %t\n%%c: %c\n'
+  %A+: 2023-02-20+05:19:18.0000000000
+  %A@: 1676899158.0000000000
+  %T+: 2023-02-20+05:19:18.0000000000
+  %T@: 1676899158.0000000000
+  %C+: 2024-11-20+03:30:18.8905999140
+  %C@: 1732102218.8905999140
+  %B+: 2023-02-20+05:19:18.0000000000
+  %B@: 1676899158.0000000000
+  %t: Mon Feb 20 05:19:18.0000000000 2023
+  %c: Wed Nov 20 03:30:18.8905999140 2024
+
+  $ find . -maxdepth 1 -name 'sample.txt' -printf 'week%AW %Aj/365 %Ax %Ar\n%%A+: %A+\n'
+  week08 051/365 02/20/2023 05:19:18 AM
+  %A+: 2023-02-20+05:19:18.0000000000
+  ```
+
+  - time field
+
+
+    |   FORMAT  | DESCRIPTION                      | EXAMPLE                          |
+    |:---------:|----------------------------------|----------------------------------|
+    |    `+`    | date time                        | `2023-02-20+05:19:18.0000000000` |
+    |    `@`    | unix epoch                       | `1676899158.0000000000`          |
+    |    `H`    | hour                             | `00..23`                         |
+    | `k` / `I` | hour in 24-hour / 12-hour format | `00..23` / `01..12`              |
+    |    `M`    | minute                           | `00..59`                         |
+    |    `S`    | second                           | `00..60`                         |
+    |    `p`    | AM/PM                            | `AM` / `PM`                      |
+    | `T` / `X` | time in 24-hour format           | `hh:mm:ss:xxxxxxxxxx`            |
+    |    `Z`    | timezone                         | `PST` / `PDT`                    |
+
+    ```bash
+    $ find . -maxdepth 1 -name 'sample.txt' -printf '%%TT: %TT\n%%TX: %TX\n'
+    %TT: 05:19:18.0000000000
+    %TX: 05:19:18.0000000000
+    ```
+
+  - data field
+
+
+    |     FORMAT     | DESCRIPTION                               | EXAMPLE                         |
+    |:--------------:|-------------------------------------------|---------------------------------|
+    |    `a` / `A`   | abbreviated / full weekday                | `Wed` / `Wednesday`             |
+    | `b`(`h`) / `B` | abbreviated / full month name             | `Jan` / `January`               |
+    |       `m`      | month                                     | `01..12`                        |
+    |       `d`      | day of month                              | `01..31`                        |
+    |       `w`      | day of week                               | `01`->`Monday`; `02`->`Tuesday` |
+    |       `j`      | day of year                               | `001..366`                      |
+    |    `U` / `W`   | week number: Sunday / Monday as first day | `00..53`                        |
+    |    `y` / `Y`   | last 2-digits-of-year / 4-digits-of-year  | `00..99` / `1970..`             |
+    |       `r`      | time in 12-hour format                    | `hh:mm:ss [A/P]M`               |
+    |       `F`      | full date; same as `%Y-%m-%d`             | `2023-02-20`                    |
+    |       `D`      | date; same as `%m/%d/%y`                  | `02/20/23`                      |
+    |       `x`      | locale date                               | `02/20/2023`                    |
+
+    ```bash
+    $ find . -maxdepth 1 -name 'sample.txt' -printf '%%TX: %TX\n%%Tx: %Tx\n%%TD: %TD\n%%TF: %TF\n%%Tr: %Tr\n'
+    %TX: 05:19:18.0000000000
+    %Tx: 02/20/2023
+    %TD: 02/20/23
+    %TF: 2023-02-20
+    %Tr: 05:19:18 AM
+    ```
+
+- name format
+
+
+  | FORMAT | DESCRIPTION                        | EXAMPLE        |
+  |:------:|------------------------------------|----------------|
+  |  `%p`  | file's name                        | `./sample.txt` |
+  |  `%P`  | file's name without starting-point | `sample.txt`   |
+  |  `%f`  | basename                           | `sample.txt`   |
+  |  `%h`  | leading directories of file's name | `.`            |
+
+  ```bash
+  $ find . -maxdepth 1 -name '.vimrc' -printf '%%p: %p\n%%P: %P\n%%f: %f\n%%h: %h\n'
+  %p: ./.vimrc
+  %P: .vimrc
+  %f: .vimrc
+  %h: .
+  ```
+
+- permision format
+
+
+  | FORMAT | DESCRIPTION                          | EXAMPLE      |
+  |:------:|--------------------------------------|--------------|
+  |  `%m`  | file's mode                          | `644`        |
+  |  `%M`  | file's mode in human-readable format | `-rw-r--r--` |
+
   ```bash
   $ find . -type f -printf "\n%Td-%Tm-%TY %Tr %p" | head -1
   4-10-2023 02:38:42 AM /Users/marslo/.marslo/.marslorc
