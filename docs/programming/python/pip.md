@@ -14,6 +14,7 @@
   - [remove package and dependencies](#remove-package-and-dependencies)
 - [download](#download)
 - [config](#config)
+  - [options](#options)
   - [list all configs](#list-all-configs)
   - [samples](#samples)
   - [Authentication](#authentication)
@@ -88,7 +89,6 @@ $ easy_install pip
   # or
   $ pip config set global.cache-dir false
   ```
-
 
 ### for global user [(or non user)](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONNOUSERSITE)
 
@@ -273,6 +273,55 @@ $ pip-autoremove <package-name> -y
 > - [pip下载python依赖包](https://zhuanlan.zhihu.com/p/674000491)
 
 ## config
+
+### [options](https://pip.pypa.io/en/latest/cli/pip_install/#options)
+
+| PARAMETER                    | VALUE                         | ENVIRONMENT VARIABLE                                              |
+|------------------------------|-------------------------------|-------------------------------------------------------------------|
+| `-r`, `--requirement`        | `<file>`                      | `PIP_REQUIREMENT`                                                 |
+| `-c`, `--constraint`         | `<file>`                      | `PIP_CONSTRAINT`                                                  |
+| `--no-deps`                  | -                             | `PIP_NO_DEPS`, `PIP_NO_DEPENDENCIES`                              |
+| `--pre`                      | -                             | `PIP_PRE`                                                         |
+| `-e`, `--editable`           | `<path/url>`                  | `PIP_EDITABLE`                                                    |
+| `--dry-run`                  | -                             | `PIP_DRY_RUN`                                                     |
+| `-t`, `--target`             | `<dir>`                       | `PIP_TARGET`                                                      |
+| `--platform`                 | `<platform>`                  | `PIP_PLATFORM`                                                    |
+| `--python-version`           | `<version>`                   | `PIP_PYTHON_VERSION`                                              |
+| `--implementation`           | `<implementation>`            | `PIP_IMPLEMENTATION`                                              |
+| `--abi`                      | `<abi>`                       | `PIP_ABI`                                                         |
+| `--user`                     | -                             | `PIP_USER`                                                        |
+| `--root`                     | `<dir>`                       | `PIP_ROOT`                                                        |
+| `--prefix`                   | `<dir>`                       | `PIP_PREFIX`                                                      |
+| `--src`                      | `<dir>`                       | `PIP_SRC`, `PIP_SOURCE`, `PIP_SOURCE_DIR`, `PIP_SOURCE_DIRECTORY` |
+| `-U`, `--upgrade`            | -                             | `PIP_UPGRADE`                                                     |
+| `--upgrade-strategy`         | **`only-if-needed`**, `eager` | `PIP_UPGRADE_STRATEGY`                                            |
+| `--force-reinstall`          | -                             | `PIP_FORCE_REINSTALL`                                             |
+| `-I`, `--ignore-installed`   | -                             | `PIP_IGNORE_INSTALLED`                                            |
+| `--ignore-requires-python`   | -                             | `PIP_IGNORE_REQUIRES_PYTHON`                                      |
+| `--no-build-isolation`       | -                             | `PIP_NO_BUILD_ISOLATION`                                          |
+| `--use-pep517`               | -                             | `PIP_USE_PEP517`                                                  |
+| `--check-build-dependencies` | -                             | `PIP_CHECK_BUILD_DEPENDENCIES`                                    |
+| `--break-system-packages`    | -                             | `PIP_BREAK_SYSTEM_PACKAGES`                                       |
+| `-C`, `--config-setting`     | `<settings>`                  | `PIP_CONFIG_SETTING`                                              |
+| `--global-option`            | `<options>`                   | `PIP_GLOBAL_OPTION`                                               |
+| `--compile`                  | -                             | `PIP_COMPILE`                                                     |
+| `--no-compile`               | -                             | `PIP_NO_COMPILE`                                                  |
+| `--no-warn-script-location`  | -                             | `PIP_NO_WARN_SCRIPT_LOCATION`                                     |
+| `--no-warn-conflicts`        | -                             | `PIP_NO_WARN_CONFLICTS`                                           |
+| `--no-binary`                | `:all`, `:none`               | `PIP_NO_BINARY`                                                   |
+| `--only-binary`              | `:all`, `:none`               | `PIP_ONLY_BINARY`                                                 |
+| `--prefer-binary`            | -                             | `PIP_PREFER_BINARY`                                               |
+| `--require-hashes`           | -                             | `PIP_REQUIRE_HASHES`                                              |
+| `--progress-bar`             | **`on`**, `off`, `raw`        | `PIP_PROGRESS_BAR`                                                |
+| `--root-user-action`         | **`warn`**, `ignore`          | `PIP_ROOT_USER_ACTION`                                            |
+| `--report`                   | `<file>`                      | `PIP_REPORT`                                                      |
+| `--no-clean`                 | -                             | `PIP_NO_CLEAN`                                                    |
+| `-i`, `--index-url`          | `<url>`                       | `PIP_INDEX_URL`                                                   |
+| `--extra-index-url`          | `<url>`                       | `PIP_EXTRA_INDEX_URL`                                             |
+| `--no-index`                 | -                             | `PIP_NO_INDEX`                                                    |
+| `-f`, `--find-links`         | `<url>`                       | `PIP_FIND_LINKS`                                                  |
+
+
 ### list all configs
 
 > [!NOTE]

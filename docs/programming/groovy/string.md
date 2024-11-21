@@ -671,23 +671,23 @@ new java.util.Random().with { r ->
 
 - dirname
   ```groovy
-  # via File
+  // via File
   assert '/a/b/c' == ( new File('/a/b/c/d.txt') ).getParentFile().toString()
   assert '/a/b/c' == ( new File('/a/b/c/d.txt') ).getParent()
   assert '/a/b/c' == ( new File('/a/b/c/d.txt') ).parent
 
-  # via java.nio.file.Paths
+  // via java.nio.file.Paths
   assert '/a/b/c' == java.nio.file.Paths.get( '/a/b/c/d.txt' ).getParent().toString()
   assert '/a/b/c' == jhava.nio.file.Paths.get( '/a/b/c/d.txt' ).parent.toString()
   ```
 
 - basename
   ```groovy
-  # via File
+  // via File
   assert 'd.txt' == (new File('/a/b/c/d.txt')).getName()
   assert 'd.txt' == (new File('/a/b/c/d.txt')).name
 
-  # via java.nio.file.Paths
+  // via java.nio.file.Paths
   assert 'd.txt' == java.nio.file.Paths.get( '/a/b/c/d.txt' ).getFileName().toString()
   assert 'd.txt' == java.nio.file.Paths.get( '/a/b/c/d.txt' ).fileName.toString()
   ```
