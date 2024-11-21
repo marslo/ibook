@@ -66,7 +66,7 @@
     - [latest 5 modified files recursively](#latest-5-modified-files-recursively)
   - [inject commands inside find](#inject-commands-inside-find)
   - [printf](#printf)
-    - [time formats](#time-formats)
+    - [formats](#formats)
   - [tips](#tips)
     - [faster find and replace string](#faster-find-and-replace-string)
     - [find duplicate files](#find-duplicate-files)
@@ -2312,7 +2312,7 @@ $ find -exec bash -c '
 > [!NOTE|label:references:]
 > - [How to Use find -printf in Linux?](https://www.codedodle.com/find-printf.html)
 
-### time formats
+### formats
 
 > [!NOTE|label:references:]
 > - [`printf` time formats](https://www.codedodle.com/find-printf.html#time-formats)
@@ -2320,7 +2320,6 @@ $ find -exec bash -c '
 >   find . -printf "%T<format>\n"
 >   ```
 > - [printf format](https://man7.org/linux/man-pages/man1/find.1.html#EXPRESSION)
-
 
 - time format
 
@@ -2360,53 +2359,47 @@ $ find -exec bash -c '
   %A+: 2023-02-20+05:19:18.0000000000
   ```
 
-  - time field
+  | TIME FIELD | DESCRIPTION                      | EXAMPLE                          |
+  |:----------:|----------------------------------|----------------------------------|
+  |     `+`    | date time                        | `2023-02-20+05:19:18.0000000000` |
+  |     `@`    | unix epoch                       | `1676899158.0000000000`          |
+  |     `H`    | hour                             | `00..23`                         |
+  |  `k` / `I` | hour in 24-hour / 12-hour format | `00..23` / `01..12`              |
+  |     `M`    | minute                           | `00..59`                         |
+  |     `S`    | second                           | `00..60`                         |
+  |     `p`    | AM/PM                            | `AM` / `PM`                      |
+  |  `T` / `X` | time in 24-hour format           | `hh:mm:ss:xxxxxxxxxx`            |
+  |     `Z`    | timezone                         | `PST` / `PDT`                    |
 
+  ```bash
+  $ find . -maxdepth 1 -name 'sample.txt' -printf '%%TT: %TT\n%%TX: %TX\n'
+  %TT: 05:19:18.0000000000
+  %TX: 05:19:18.0000000000
+  ```
 
-    |   FORMAT  | DESCRIPTION                      | EXAMPLE                          |
-    |:---------:|----------------------------------|----------------------------------|
-    |    `+`    | date time                        | `2023-02-20+05:19:18.0000000000` |
-    |    `@`    | unix epoch                       | `1676899158.0000000000`          |
-    |    `H`    | hour                             | `00..23`                         |
-    | `k` / `I` | hour in 24-hour / 12-hour format | `00..23` / `01..12`              |
-    |    `M`    | minute                           | `00..59`                         |
-    |    `S`    | second                           | `00..60`                         |
-    |    `p`    | AM/PM                            | `AM` / `PM`                      |
-    | `T` / `X` | time in 24-hour format           | `hh:mm:ss:xxxxxxxxxx`            |
-    |    `Z`    | timezone                         | `PST` / `PDT`                    |
+  |   DATA FIELD   | DESCRIPTION                               | EXAMPLE                         |
+  |:--------------:|-------------------------------------------|---------------------------------|
+  |    `a` / `A`   | abbreviated / full weekday                | `Wed` / `Wednesday`             |
+  | `b`(`h`) / `B` | abbreviated / full month name             | `Jan` / `January`               |
+  |       `m`      | month                                     | `01..12`                        |
+  |       `d`      | day of month                              | `01..31`                        |
+  |       `w`      | day of week                               | `01`->`Monday`; `02`->`Tuesday` |
+  |       `j`      | day of year                               | `001..366`                      |
+  |    `U` / `W`   | week number: Sunday / Monday as first day | `00..53`                        |
+  |    `y` / `Y`   | last 2-digits-of-year / 4-digits-of-year  | `00..99` / `1970..`             |
+  |       `r`      | time in 12-hour format                    | `hh:mm:ss [A/P]M`               |
+  |       `F`      | full date; same as `%Y-%m-%d`             | `2023-02-20`                    |
+  |       `D`      | date; same as `%m/%d/%y`                  | `02/20/23`                      |
+  |       `x`      | locale date                               | `02/20/2023`                    |
 
-    ```bash
-    $ find . -maxdepth 1 -name 'sample.txt' -printf '%%TT: %TT\n%%TX: %TX\n'
-    %TT: 05:19:18.0000000000
-    %TX: 05:19:18.0000000000
-    ```
-
-  - data field
-
-
-    |     FORMAT     | DESCRIPTION                               | EXAMPLE                         |
-    |:--------------:|-------------------------------------------|---------------------------------|
-    |    `a` / `A`   | abbreviated / full weekday                | `Wed` / `Wednesday`             |
-    | `b`(`h`) / `B` | abbreviated / full month name             | `Jan` / `January`               |
-    |       `m`      | month                                     | `01..12`                        |
-    |       `d`      | day of month                              | `01..31`                        |
-    |       `w`      | day of week                               | `01`->`Monday`; `02`->`Tuesday` |
-    |       `j`      | day of year                               | `001..366`                      |
-    |    `U` / `W`   | week number: Sunday / Monday as first day | `00..53`                        |
-    |    `y` / `Y`   | last 2-digits-of-year / 4-digits-of-year  | `00..99` / `1970..`             |
-    |       `r`      | time in 12-hour format                    | `hh:mm:ss [A/P]M`               |
-    |       `F`      | full date; same as `%Y-%m-%d`             | `2023-02-20`                    |
-    |       `D`      | date; same as `%m/%d/%y`                  | `02/20/23`                      |
-    |       `x`      | locale date                               | `02/20/2023`                    |
-
-    ```bash
-    $ find . -maxdepth 1 -name 'sample.txt' -printf '%%TX: %TX\n%%Tx: %Tx\n%%TD: %TD\n%%TF: %TF\n%%Tr: %Tr\n'
-    %TX: 05:19:18.0000000000
-    %Tx: 02/20/2023
-    %TD: 02/20/23
-    %TF: 2023-02-20
-    %Tr: 05:19:18 AM
-    ```
+  ```bash
+  $ find . -maxdepth 1 -name 'sample.txt' -printf '%%TX: %TX\n%%Tx: %Tx\n%%TD: %TD\n%%TF: %TF\n%%Tr: %Tr\n'
+  %TX: 05:19:18.0000000000
+  %Tx: 02/20/2023
+  %TD: 02/20/23
+  %TF: 2023-02-20
+  %Tr: 05:19:18 AM
+  ```
 
 - name format
 
