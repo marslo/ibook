@@ -151,7 +151,6 @@ Computer System Product  Computer System Product  S2xxxxxxxxxxxxx    SYS-xxxxU-E
 BiosCharacteristics                                                          BIOSVersion                                                  BuildNumber  Caption                                     CodeSet  CurrentLanguage  Description                                 EmbeddedControllerMajorVersion  EmbeddedControllerMinorVersion  IdentificationCode  InstallableLanguages  InstallDate  LanguageEdition  ListOfLanguages  Manufacturer              Name                                        OtherTargetOS  PrimaryBIOS  ReleaseDate                SerialNumber     SMBIOSBIOSVersion  SMBIOSMajorVersion  SMBIOSMinorVersion  SMBIOSPresent  SoftwareElementID                           SoftwareElementState  Status  SystemBiosMajorVersion  SystemBiosMinorVersion  TargetOperatingSystem  Version
 {7, 11, 12, 15, 16, 17, 19, 23, 24, 25, 26, 27, 28, 29, 32, 33, 40, 42, 43}  {"- 1072009", "BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B"}               BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B                            BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B  255                             255                                                                                                                      American Megatrends Inc.  BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B                 TRUE         20180608000000.000000+000  Sxxxxxxxxxxxxx2  3.1                3                   0                   TRUE           BIOS Date: 06/08/18 21:36:11 Ver: 05.0000B  3                     OK      5                       6                       0                      - 1072009
 
-
 > wmic cpu
 AddressWidth  Architecture  AssetTag  Availability  Caption                               Characteristics  ConfigManagerErrorCode  ConfigManagerUserConfig  CpuStatus  CreationClassName  CurrentClockSpeed  CurrentVoltage  DataWidth  Description                           DeviceID  ErrorCleared  ErrorDescription  ExtClock  Family  InstallDate  L2CacheSize  L2CacheSpeed  L3CacheSize  L3CacheSpeed  LastErrorCode  Level  LoadPercentage  Manufacturer  MaxClockSpeed  Name                                       NumberOfCores  NumberOfEnabledCore  NumberOfLogicalProcessors  OtherFamilyDescription  PartNumber  PNPDeviceID  PowerManagementCapabilities  PowerManagementSupported  ProcessorId       ProcessorType  Revision  Role  SecondLevelAddressTranslationExtensions  SerialNumber  SocketDesignation  Status  StatusInfo  Stepping  SystemCreationClassName  SystemName  ThreadCount  UniqueId  UpgradeMethod  Version  VirtualizationFirmwareEnabled  VMMonitorModeExtensions  VoltageCaps
 64            9                       3             Intel64 Family 6 Model 79 Stepping 1  252                                                               1          Win32_Processor    1200               18              64         Intel64 Family 6 Model 79 Stepping 1  CPU0                                      100       179                  2048                       25600        0                            6      2               GenuineIntel  3201           Intel(R) Xeon(R) CPU E5-2667 v4 @ 3.20GHz  8              8                    16                                                                                                       FALSE                     BFEBFBFF000406F1  3              20225     CPU   TRUE                                                   CPU1               OK      3                     Win32_ComputerSystem     MY-COMUTER  16                     43                      TRUE                           TRUE
@@ -194,11 +193,19 @@ Supermicro
 > wmic bios get serialnumber
 SerialNumber
 Sxxxxxxxxxxxxx2
+
+> wmic csproduct get IdentifyingNumber
+IdentifyingNumber
+Sxxxxxxxxxxxxx2
 ```
 
 ### product name
 ```batch
 > wmic computersystem get model,name,manufacturer,systemtype
+
+> wmic computersystem get Model,Name,Manufacturer,SystemType,SystemFamily,SystemSKUNumber
+Manufacturer  Model       Name        SystemFamily         SystemSKUNumber                                 SystemType
+LENOVO        20T1S4L10K  SC-L*****0  ThinkPad T14s Gen 1  LENOVO_MT_20T1_BU_Think_FM_ThinkPad T14s Gen 1  x64-based PC
 ```
 
 ### uuid
