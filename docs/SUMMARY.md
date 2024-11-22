@@ -197,6 +197,7 @@
     * [enum](programming/groovy/enum.md)
     * [time](programming/groovy/time.md)
     * [params](programming/groovy/params.md)
+    * [file](programming/groovy/file.md)
     * [utility](programming/groovy/utility.md)
     * [grape](programming/groovy/grape.md)
     * [syntactic sugar](programming/groovy/sugar.md)
