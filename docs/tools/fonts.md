@@ -638,4 +638,9 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 ### Mac Office Fonts
 
 > [!TIP|label:references:]
-> - CloudFonts: `~/Library/Group Containers/UBF8T346G9.Office/FontCache/4/CloudFonts`
+> - CloudFonts:
+>   - osx: `~/Library/Group Containers/UBF8T346G9.Office/FontCache/4/CloudFonts`
+>   - windows: `%LOCALAPPDATA%\Microsoft\FontCache\4\CloudFonts`
+> - OfficeFonts:
+>   - osx: `~/Library/Fonts`
+>   - windows: `%LOCALAPPDATA%\Microsoft\Windows\Fonts`
