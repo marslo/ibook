@@ -6,6 +6,9 @@
     - [setup font-patcher](#setup-font-patcher)
     - [patch fonts](#patch-fonts-1)
   - [check fonts](#check-fonts)
+  - [get font name by language](#get-font-name-by-language)
+  - [rename fonts to `postscriptname`](#rename-fonts-to-postscriptname)
+  - [get font version](#get-font-version)
 - [fonts](#fonts)
   - [highly recommended](#highly-recommended)
     - [Monaco](#monaco)
@@ -171,6 +174,128 @@ EOF
     Light Italic
     Recursive Sn Csl St Lt Italic
     ```
+
+## get font name by language
+
+> [!NOTE|label:references:]
+> - [How to get font information (ttf, otf) on the command line with fontconfig's fc-scan utility for my system language?](https://askubuntu.com/a/1284121/92979)
+> - [fc-scan format - fcpatternformat](https://linux.die.net/man/3/fcpatternformat)
+>   ```bash
+>   $ fc-scan --format "%-40{family}%{style}\n" Meslo-LG-M-Regular-for-Powerline.ttf
+>   Meslo LG M for Powerline                Regular
+>   ```
+
+- fullname & fullnamelang
+  ```bash
+  $ fc-scan --format "%{fullname}\n%{fullnamelang}" chinese.msyh.ttf
+  Microsoft YaHei,微软雅黑
+  en,zh-cn
+
+  $ fc-scan --format "%{fullname[0]}\n%{fullname[1]}" chinese.msyh.ttf
+  Microsoft YaHei
+  微软雅黑
+  ```
+
+- get index of lang
+  ```bash
+  $ lang="en"
+  $ sed -E "s/^(.*)${lang}.*/\1/;s/[^,]//g" <<< "$(fc-scan --format "%{fullnamelang}\n" chinese.msyh.ttf)" | wc -c
+  1
+
+  $ lang="zh-cn"
+  $ sed -E "s/^(.*)${lang}.*/\1/;s/[^,]//g" <<< "$(fc-scan --format "%{fullnamelang}\n" chinese.msyh.ttf)" | wc -c
+  2
+  ```
+
+- show font by lang
+  ```bash
+  $ lang="zh-cn"
+  $ font="chinese.msyh.ttf"
+  $ fc-scan --format "%{fullname[$(( $(sed -E "s/^(.*)${lang}.*/\1/;s/[^,]//g" <<<"$(fc-scan --format "%{fullnamelang}\n" "${font}")" | wc -c) -1 ))]}\n" "${font}"
+  微软雅黑
+
+  $ lang='en'
+  $ fc-scan --format "%{fullname[$(( $(sed -E "s/^(.*)${lang}.*/\1/;s/[^,]//g" <<<"$(fc-scan --format "%{fullnamelang}\n" "${font}")" | wc -c) -1 ))]}\n" "${font}"
+  Microsoft YaHei
+  ```
+
+## rename fonts to `postscriptname`
+
+- show font `fullname`
+  ```bash
+  $ fd --glob *.ttf -tf --color=never /path/to/font |
+    while read -r _f; do
+      echo -n ">> $(basename "${_f}") : "; fc-scan --format "%{fullname}\n" "${_f}";
+    done
+  ```
+
+```bash
+$ while read -r _f; do
+    echo ">> $_f <<";
+    name="$(fc-scan --format "%{postscriptname}" "$_f").ttf";
+    mv "${_f}" "${name}";
+  done < <(ls -1 --color=never)
+
+# or
+$ fd --glob *.ttf -tf --color=never /path/to/font |
+  while read -r _f; do
+    mv "${_f}" "$(fc-scan --format "%{postscriptname}" "$_f").ttf";
+  done
+```
+
+## get font version
+
+> [!NOTE|label:references:]
+> - [How to retrieve .ttf font version?](https://www.autohotkey.com/boards/viewtopic.php?style=19&t=132984)
+
+- windows
+  ```powershell
+  Add-Type -AssemblyName PresentationCore;
+  $font = New-Object -TypeName Windows.Media.GlyphTypeface -ArgumentList 'xxxx.ttf';
+  $font.VersionStrings.Values
+
+  # --- or ---
+  # Requires AutoHotkey v2.0
+
+  fontPath := A_WinDir . '\Fonts\Arial.ttf'
+  command := "Add-Type -AssemblyName PresentationCore;"
+             . "$font = New-Object -TypeName Windows.Media.GlyphTypeface -ArgumentList '" . fontPath . "';"
+           . "$font.VersionStrings.Values"
+
+  MsgBox CmdRet('powershell -Command "' . command . '"')
+
+  CmdRet(sCmd, callBackFunc := '', encoding := '') {
+      static flags := [HANDLE_FLAG_INHERIT := 0x1, CREATE_NO_WINDOW := 0x8000000], STARTF_USESTDHANDLES := 0x100
+
+      (encoding = '' && encoding := 'cp' . DllCall('GetOEMCP', 'UInt'))
+      DllCall('CreatePipe', 'PtrP', &hPipeRead := 0, 'PtrP', &hPipeWrite := 0, 'Ptr', 0, 'UInt', 0)
+      DllCall('SetHandleInformation', 'Ptr', hPipeWrite, 'UInt', flags[1], 'UInt', flags[1])
+
+      STARTUPINFO := Buffer(size := A_PtrSize*9 + 4*8, 0)
+      NumPut('UInt', size, STARTUPINFO)
+      NumPut('UInt', STARTF_USESTDHANDLES, STARTUPINFO, A_PtrSize*4 + 4*7)
+      NumPut('Ptr', hPipeWrite, 'Ptr', hPipeWrite, STARTUPINFO, size - A_PtrSize*2)
+
+      PROCESS_INFORMATION := Buffer(A_PtrSize*2 + 4*2, 0)
+      if !DllCall('CreateProcess', 'Ptr', 0, 'Str', sCmd, 'Ptr', 0, 'Ptr', 0, 'UInt', true, 'UInt', flags[2]
+                                 , 'Ptr', 0, 'Ptr', 0, 'Ptr', STARTUPINFO, 'Ptr', PROCESS_INFORMATION)
+      {
+          DllCall('CloseHandle', 'Ptr', hPipeRead)
+          DllCall('CloseHandle', 'Ptr', hPipeWrite)
+          throw OSError('CreateProcess is failed')
+      }
+      DllCall('CloseHandle', 'Ptr', hPipeWrite)
+      temp := Buffer(4096, 0), output := ''
+      while DllCall('ReadFile', 'Ptr', hPipeRead, 'Ptr', temp, 'UInt', 4096, 'UIntP', &size := 0, 'UInt', 0) {
+          output .= stdOut := StrGet(temp, size, encoding)
+          ( callBackFunc && callBackFunc(stdOut) )
+      }
+      DllCall('CloseHandle', 'Ptr', NumGet(PROCESS_INFORMATION, 'Ptr'))
+      DllCall('CloseHandle', 'Ptr', NumGet(PROCESS_INFORMATION, A_PtrSize, 'Ptr'))
+      DllCall('CloseHandle', 'Ptr', hPipeRead)
+      return output
+  }
+  ```
 
 # fonts
 ## highly recommended
@@ -641,6 +766,10 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > - CloudFonts:
 >   - osx: `~/Library/Group Containers/UBF8T346G9.Office/FontCache/4/CloudFonts`
 >   - windows: `%LOCALAPPDATA%\Microsoft\FontCache\4\CloudFonts`
+> - Default Fonts:
+>   - osx:
+>     - outlook: `/Applications/Microsoft Outlook.app/Contents/Resources/DFonts`
+>     - word: `/Applications/Microsoft Word.app/Contents/Resources/DFonts`
 > - OfficeFonts:
 >   - osx: `~/Library/Fonts`
 >   - windows: `%LOCALAPPDATA%\Microsoft\Windows\Fonts`
