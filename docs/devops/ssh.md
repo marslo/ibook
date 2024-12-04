@@ -13,6 +13,7 @@
   - [keys performance](#keys-performance)
 - [ssh](#ssh)
   - [force use password](#force-use-password)
+  - [force bypass `~/.ssh/config`](#force-bypass-sshconfig)
   - [ssh and tar](#ssh-and-tar)
     - [copy multiple files to remote server](#copy-multiple-files-to-remote-server)
     - [`find` && `tar`](#find--tar)
@@ -102,11 +103,11 @@ $ ssh-keygen -t ed25519 -o -a 100 -C "${keyname}" -f ~/.ssh/${keyname} -P '' -q
 
 ## get servers public key
 ```bash
-$ ssh-keyscan -H www.server.com
+$ ssh-keyscan -H www.sample.com
 
 # or
-$ ssh-keyscan -p 29418 -t rsa www.server.com
-$ ssh-keyscan -p 29418 -t rsa www.server.com >> ~/.ssh/known_hosts
+$ ssh-keyscan -p 29418 -t rsa www.sample.com
+$ ssh-keyscan -p 29418 -t rsa www.sample.com >> ~/.ssh/known_hosts
 ```
 
 - [upload the local ~/.ssh/know_hosts](https://github.com/orgs/community/discussions/27405#discussioncomment-5458902)
@@ -213,6 +214,26 @@ dsa 2048 bits 0.000333s 0.000301s   3004.0   3326.9
 ## force use password
 ```bash
 $ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@target.server
+```
+
+## force bypass `~/.ssh/config`
+
+> [!NOTE|label:references:]
+> - [How to tell ssh client to ignore ssh config file](https://www.cyberciti.biz/faq/tell-ssh-to-exclude-ignore-config-file/)
+> - `$ man ssh`
+>   ```bash
+>        -F configfile
+>                Specifies an alternative per-user configuration file.  If a configuration file is given on
+>                the command line, the system-wide configuration file (/etc/ssh/ssh_config) will be ignored.
+>                The default for the per-user configuration file is ~/.ssh/config.  If set to “none”, no
+>                configuration files will be read.
+>   ```
+
+```bash
+$ ssh -F none user@sample.com
+
+# or
+$ ssh -vvT -F /dev/null -i ~/.ssh/id_ed25519 user@sample.com
 ```
 
 ## [ssh and tar](https://superuser.com/a/116031/112396)

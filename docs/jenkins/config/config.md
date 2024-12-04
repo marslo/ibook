@@ -5,8 +5,9 @@
 - [java configuration](#java-configuration)
 - [threadDump](#threaddump)
 - [agent](#agent)
-- [Mailing format](#mailing-format)
-- [Properties in Jenkins Core for `JAVA_OPTS`](#properties-in-jenkins-core-for-java_opts)
+- [security](#security)
+- [mailing format](#mailing-format)
+- [properties in jenkins core for `JAVA_OPTS`](#properties-in-jenkins-core-for-java_opts)
 - [System Properties](#system-properties)
 - [Configuring HTTP](#configuring-http)
 - [tips](#tips)
@@ -503,8 +504,24 @@ $ java -jar agent.jar -help
 ```
 
 
-### Mailing format
-- Show the logs after building
+### security
+
+#### Git Host Key Verification Configuration
+
+> [!TIP|label:references:]
+> - [* iMarslo: get servers public key](../../devops/ssh.md#get-servers-public-key)
+
+```bash
+$ ssh-keyscan -H www.sample.com
+
+# or
+$ ssh-keyscan -p 29418 -t rsa www.sample.com
+$ ssh-keyscan -p 29418 -t rsa www.sample.com | pbcopy
+```
+
+### mailing format
+
+- show the logs after building
   - Format:
     ```
     ${BUILD_LOG, maxLines, escapeHtml}
@@ -515,9 +532,7 @@ $ java -jar agent.jar -help
     ${BUILD_LOG, maxLines=8000, escapeHtml=true}
     ```
 
-### [Properties in Jenkins Core for `JAVA_OPTS`](https://www.jenkins.io/doc/book/managing/system-properties/#properties-in-jenkins-core)
-
-
+### [properties in jenkins core for `JAVA_OPTS`](https://www.jenkins.io/doc/book/managing/system-properties/#properties-in-jenkins-core)
 #### disable the
 ```xml
 <useSecurity>true</useSecurity>
@@ -576,7 +591,24 @@ $ java -jar agent.jar -help
 -Djenkins.security.stapler.StaplerDispatchValidator.disabled=false
 ```
 
+#### [permissive-script-security.enabled](https://plugins.jenkins.io/permissive-script-security/)
+
+> [!NOTE|label:references:]
+> - [Permissive Script Security](https://plugins.jenkins.io/permissive-script-security/)
+> - [Permissive Script Plugin issues](https://www.reddit.com/r/jenkinsci/comments/bh6gl4/permissive_script_plugin_issues/)
+> - [Pipeline - Script Security](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/client-and-managed-controllers/pipeline-script-security)
+
+```bash
+# enable
+-Dpermissive-script-security.enabled=true
+
+# disable
+-Dpermissive-script-security.enabled=no_security
+```
+
 ### [System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
+
+> [!TIP|label:references:]
 > - [java.lang.System](https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty-java.lang.String-)
 > - [java.util.Properties](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html)
 > - [jenkins.util.SystemProperties](https://javadoc.jenkins.io/jenkins/util/SystemProperties.html)
@@ -637,6 +669,8 @@ System.getenv().JAVA_OPTS
 ### [Configuring HTTP](https://www.jenkins.io/doc/book/installing/initial-settings/#configuring-http)
 
 #### [remote configuration](https://github.com/jenkinsci/remoting/blob/master/docs/configuration.md)
+
+> [!NOTE|label:references:]
 > information:
 > - `${PROTOCOL_FULLY_QUALIFIED_NAME}.disabled`: <br>where `PROTOCOL_FULLY_QUALIFIED_NAME` equals `PROTOCOL_HANDLER_CLASSNAME` without the Handler suffix.
 > <p></p>
@@ -653,7 +687,7 @@ System.getenv().JAVA_OPTS
 >   - `org.jenkinsci.remoting.engine.JnlpAgentEndpointResolver.protocolNamesToTry` :<br> If specified, only the protocols from the list will be tried during the connection. The option provides protocol names, but the order of the check is defined internally and cannot be changed. |
 
 
-| System property                                                              | Default value            | Since  | Jenkins version(s) | Related issues             |
+| SYSTEM PROPERTY                                                              | DEFAULT VALUE            | SINCE  | JENKINS VERSION(S) | RELATED ISSUES             |
 |:-----------------------------------------------------------------------------|--------------------------|--------|--------------------|----------------------------|
 | `hudson.remoting.FlightRecorderInputStream.BUFFER_SIZE`                      | 1048576                  | 2.41   | 1.563              | JENKINS-22734              |
 | `hudson.remoting.Launcher.pingIntervalSec`                                   | 0 since 2.60, 600 before | 2.0    | 1.367              | JENKINS-35190              |
@@ -767,9 +801,7 @@ System.getenv().JAVA_OPTS
   > - [jenkins-scripts/scriptler/checkSSLConnection.groovy](https://github.com/jenkinsci/jenkins-scripts/blob/master/scriptler/checkSSLConnection.groovy)
   > - [JAVA_OPT: Jenkins Features Controlled with System Properties](https://www.jenkins.io/doc/book/managing/system-properties/)
 
-
   ```bash
-
   $ kubectl exec -it devops-jenkins-0 -- /bin/bash
   $ jrunscript -Djavax.net.ssl.trustStore=/opt/java/openjdk/lib/security/cacerts -Djavax.net.ssl.trustStorePassword=changeit -e "println(new java.net.URL(\"https://k8s-api.example.com:16443\").openConnection().getResponseCode())"
   Warning: Nashorn engine is planned to be removed from a future JDK release
