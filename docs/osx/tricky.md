@@ -8,6 +8,7 @@
   - [groovyConsole](#groovyconsole)
   - [python3 IDLE](#python3-idle)
   - [create dmg](#create-dmg)
+- [reset file associations](#reset-file-associations)
 - [add snippets for input](#add-snippets-for-input)
   - [enable Technical Symbols](#enable-technical-symbols)
   - [and snippets](#and-snippets)
@@ -471,6 +472,22 @@ $ vim groovyConsole.app/Contents/Info.plist
     ```
 
 ### [create dmg](#create-image)
+
+## reset file associations
+
+> [!NOTE|label:references:]
+> - [How to reset archive file associations to macOS defaults and get the default icons for archives?](https://discussions.apple.com/thread/251157128?answerId=252207174022&sortBy=rank#252207174022)
+> - [Removing obsolete file type associations from "Open With" menu](https://discussions.apple.com/thread/2608812?answerId=12400909022&sortBy=rank#12400909022)
+
+```bash
+# reloading generators list
+$ qlmanage -r
+
+# resets the quicklook database
+$ /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -seed
+# or
+$ find /System/Library/Frameworks -type f -name "lsregister" -exec {} -kill -seed -r \;
+```
 
 ## [add snippets for input](https://sspai.com/post/36203)
 ### enable Technical Symbols
