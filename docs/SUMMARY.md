@@ -75,6 +75,7 @@
     * [kwserver](devops/klocwork/kwservice.md)
     * [api](devops/klocwork/api.md)
     * [q&a](devops/klocwork/qa.md)
+  * [elk](devops/elastic.md)
   * [mongodb](devops/database/mongodb.md)
   * [android](devops/android.md)
   * [mobile](devops/mobile.md)
