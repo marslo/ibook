@@ -1,6 +1,12 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [get file metadata](#get-file-metadata)
+  - [mdls - metadata list](#mdls---metadata-list)
+  - [xattr](#xattr)
+  - [exiftool](#exiftool)
+  - [sips - images](#sips---images)
+  - [identify - images](#identify---images)
 - [copy path](#copy-path)
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
@@ -37,6 +43,158 @@
   - [reduce the menu bar item spacing](#reduce-the-menu-bar-item-spacing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+## get file metadata
+
+> [!NOTE|label:references:]
+> - [Terminal command to get all of a file's metadata?](https://apple.stackexchange.com/a/298974/254265)
+
+### mdls - metadata list
+
+```bash
+$ mdls nvim-macos-arm64.tar.gz
+_kMDItemDisplayNameWithExtensions  = "nvim-macos-arm64.tar.gz"
+kMDItemContentCreationDate         = 2024-12-07 05:41:06 +0000
+kMDItemContentCreationDate_Ranking = 2024-12-07 00:00:00 +0000
+kMDItemContentModificationDate     = 2024-12-07 05:41:07 +0000
+kMDItemContentType                 = "org.gnu.gnu-zip-archive"
+kMDItemContentTypeTree             = (
+    "org.gnu.gnu-zip-archive",
+    "public.data",
+    "public.item",
+    "public.archive"
+)
+kMDItemDateAdded                   = 2024-12-07 05:41:08 +0000
+kMDItemDisplayName                 = "nvim-macos-arm64.tar.gz"
+kMDItemDocumentIdentifier          = 0
+kMDItemFSContentChangeDate         = 2024-12-07 05:41:07 +0000
+kMDItemFSCreationDate              = 2024-12-07 05:41:06 +0000
+kMDItemFSCreatorCode               = ""
+kMDItemFSFinderFlags               = 0
+kMDItemFSHasCustomIcon             = (null)
+kMDItemFSInvisible                 = 0
+kMDItemFSIsExtensionHidden         = 0
+kMDItemFSIsStationery              = (null)
+kMDItemFSLabel                     = 0
+kMDItemFSName                      = "nvim-macos-arm64.tar.gz"
+kMDItemFSNodeCount                 = (null)
+kMDItemFSOwnerGroupID              = 20
+kMDItemFSOwnerUserID               = 503
+kMDItemFSSize                      = 8796470
+kMDItemFSTypeCode                  = ""
+kMDItemInterestingDate_Ranking     = 2024-12-07 00:00:00 +0000
+kMDItemKind                        = "gzip compressed archive"
+kMDItemLogicalSize                 = 8796470
+kMDItemPhysicalSize                = 8798208
+kMDItemWhereFroms                  = (
+    "https://objects.githubusercontent.com/github-production-release-asset-2e65be/16408992/ad802a23-1166-4836-8c5d-d9f285880360?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20241207%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241207T054106Z&X-Amz-Expires=300&X-Amz-Signature=86c4bbf765c39941538a221b8c3a11f89961aef680a05a0995545a9a03175656&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dnvim-macos-arm64.tar.gz&response-content-type=application%2Foctet-stream",
+    "https://github.com/neovim/neovim/releases/tag/v0.10.2"
+)
+```
+
+### xattr
+```bash
+$ xattr nvim-macos-arm64.tar.gz
+com.apple.macl
+com.apple.metadata:kMDItemWhereFroms
+com.apple.quarantine
+
+$ xattr -l nvim-macos-arm64.tar.gz
+com.apple.macl:
+com.apple.metadata:kMDItemWhereFroms: bplist00�_https://objects.githubusercontent.com/github-production-release-asset-2e65be/16408992/ad802a23-1166-4836-8c5d-d9f285880360?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20241207%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241207T054106Z&X-Amz-Expires=300&X-Amz-Signature=86c4bbf765c39941538a221b8c3a11f89961aef680a05a0995545a9a03175656&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dnvim-macos-arm64.tar.gz&response-content-type=application%2Foctet-stream_5https://github.com/neovim/neovim/releases/tag/v0.10.2
+com.apple.quarantine: 0081;6753dff2;Chrome;
+```
+
+### exiftool
+
+> [!NOTE|label:references:]
+> - install via:
+>   ```bash
+>   $ brew install exiftool
+>   ```
+
+```bash
+$ exiftool nvim-macos-arm64.tar.gz
+ExifTool Version Number         : 13.00
+File Name                       : nvim-macos-arm64.tar.gz
+Directory                       : .
+File Size                       : 8.8 MB
+File Modification Date/Time     : 2024:12:06 21:41:07-08:00
+File Access Date/Time           : 2024:12:06 21:41:10-08:00
+File Inode Change Date/Time     : 2024:12:06 21:41:09-08:00
+File Permissions                : -rw-r--r--
+File Type                       : GZIP
+File Type Extension             : gz
+MIME Type                       : application/x-gzip
+Compression                     : Deflated
+Flags                           : (none)
+Modify Date                     : 2024:10:03 02:00:52-07:00
+Extra Flags                     : (none)
+Operating System                : Unix
+```
+
+### sips - images
+```bash
+$ sips -g all kubernetes-operator.png
+/Users/marslo/Desktop/kubernetes-operator.png
+  pixelWidth: 2560
+  pixelHeight: 2560
+  typeIdentifier: public.png
+  format: png
+  formatOptions: default
+  dpiWidth: 72.000
+  dpiHeight: 72.000
+  samplesPerPixel: 3
+  bitsPerSample: 8
+  hasAlpha: no
+  space: RGB
+
+$ sips -g all JCasC.svg
+/Users/marslo/Desktop/JCasC.svg
+  pixelWidth: 825.640
+  pixelHeight: 1024.000
+  typeIdentifier: public.svg-image
+  format: svg
+  formatOptions: default
+  dpiWidth: 72.000
+  dpiHeight: 72.000
+  hasAlpha: no
+```
+
+### identify - images
+```bash
+$ identify -verbose kubernetes-operator.png
+Image:
+  Filename: kubernetes-operator.png
+  Permissions: rw-r--r--
+  Format: PNG (Portable Network Graphics)
+  Mime type: image/png
+  Class: DirectClass
+  Geometry: 2560x2560+0+0
+  Resolution: 28.34x28.34
+  Print size: 90.3317x90.3317
+  Units: PixelsPerCentimeter
+  Colorspace: sRGB
+  Type: TrueColor
+  ...
+
+$ identify -verbose JCasC.svg
+Image:
+  Filename: JCasC.svg
+  Permissions: rw-------
+  Format: SVG (Scalable Vector Graphics)
+  Mime type: image/svg+xml
+  Class: DirectClass
+  Geometry: 826x1024+0+0
+  Units: Undefined
+  Colorspace: sRGB
+  Type: TrueColorAlpha
+  Base type: Undefined
+  Endianness: Undefined
+  Depth: 16-bit
+  ...
+```
 
 ## copy path
 ### copy STDOUT into clipboard
