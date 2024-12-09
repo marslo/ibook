@@ -1890,8 +1890,17 @@ $ pmset noidle
 
 #### never go to slepp mode
 ```bash
+# default
+$ sudo systemsetup -getcomputersleep
+Computer Sleep: after 120 minutes
+
 # never go to sleep mode
+$ sudo systemsetup -setcomputersleep Off
+2024-12-09 14:20:14.400 systemsetup[18647:239595] ### Error:-99 File:/AppleInternal/Library/BuildRoots/289ffcb4-455d-11ef-953d-e2437461156c/Library/Caches/com.apple.xbs/Sources/Admin/InternetServices.m Line:379
+setcomputersleep: Never
+# or
 $ sudo systemsetup -setcomputersleep Off > /dev/null
+
 # get
 $ sudo systemsetup -getcomputersleep
 Computer Sleep: Never
@@ -1905,19 +1914,7 @@ $ sudo pmset -a hibernatemode 0
 ```
 
 #### [display sleep](https://apple.stackexchange.com/a/35718/254265)
-```bash
-# get display off timer
-$ sudo pmset -g | grep displaysleep
-displaysleep         180
-```
 
-#### set standby
-```bash
-# to 24 hours
-$ sudo pmset -a standbydelay 86400
-```
-
-#### change display sleep
 ```bash
 # set display off timer
 $ sudo pmset -a displaysleep 30
@@ -1927,6 +1924,16 @@ Warning: Idle sleep timings for "Battery Power" may not behave as expected.
 - Display sleep should have a lower timeout than system sleep.
 Warning: Idle sleep timings for "AC Power" may not behave as expected.
 - Display sleep should have a lower timeout than system sleep.
+
+# get display off timer
+$ sudo pmset -g | grep displaysleep
+displaysleep         180
+```
+
+#### set standby
+```bash
+# to 24 hours
+$ sudo pmset -a standbydelay 86400
 ```
 
 #### power button in stand-by mode
