@@ -16,7 +16,8 @@
   - [get info](#get-info)
   - [publish to confluence](#publish-to-confluence)
   - [plugins](#plugins)
-- [ACLI](#acli)
+  - [insert svg](#insert-svg)
+- [CLI](#cli)
   - [running with docker images](#running-with-docker-images)
   - [create .acli.keystore](#create-aclikeystore)
   - [acli.properties](#acliproperties)
@@ -672,6 +673,7 @@ $ curl -s \
 - result
   ![include excerpt](../screenshot/tools/jira/jira-plugin-Multiexcerpt-include-result.png)
 
+### insert svg
 #### [HTML Macro](https://confluence.atlassian.com/conf719/html-macro-1157466770.html)
 
 - insert svg image
@@ -684,7 +686,16 @@ $ curl -s \
   <img width="800" src="https://ewiki.sample.com/download/attachments/506105287/513281481/k8s-ha-cluster-stacked-etcd.v3.svg">
   ```
 
-## ACLI
+#### edit source via
+
+> [!TIP|label:references:]
+> - [CONFCLOUD-40672: Confluence File Preview does not allow setting custom size for SVG format](https://jira.atlassian.com/browse/CONFCLOUD-40672?focusedId=1232690&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-1232690)
+
+```html
+<p><ac:image ac:width="301"><ri:attachment ri:filename="SVG_logo.svg" /></ac:image></p>
+```
+
+## CLI
 
 > [!NOTE|label:references:]
 > - [acli: Appfire CLI](https://appfire.atlassian.net/wiki/spaces/ACLI/pages/60559862/Get+Started)

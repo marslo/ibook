@@ -7,9 +7,9 @@
   - [`ImportError: No module named pkg_resources`](#importerror-no-module-named-pkg_resources)
   - [`No module named pip`](#no-module-named-pip)
   - [python install with `tcl-tk`](#python-install-with-tcl-tk)
+  - [libpython3.12 : Depends: libpython3.12-stdlib (= 3.12.8-1+jammy1) but 3.12.7-1+jammy1 is installed](#libpython312--depends-libpython312-stdlib--3128-1jammy1-but-3127-1jammy1-is-installed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 
 ## Q&A
@@ -359,7 +359,6 @@ $ which -a pip3
   $ /usr/bin/python get-pip.py
   ```
 
-
 ### [python install with `tcl-tk`](https://stackoverflow.com/a/60469243/2940319)
 ```bash
 $ export PATH="/usr/local/opt/tcl-tk/bin:$PATH"
@@ -368,3 +367,71 @@ $ export CPPFLAGS="-I/usr/local/opt/tcl-tk/include"
 $ export PKG_CONFIG_PATH="/usr/local/opt/tcl-tk/lib/pkgconfig"
 $ brew reinstall python
 ```
+
+### libpython3.12 : Depends: libpython3.12-stdlib (= 3.12.8-1+jammy1) but 3.12.7-1+jammy1 is installed
+
+> [!TIP|label:references:]
+> - [Jammy - Upgrade python fail](https://askubuntu.com/a/1535015/92979)
+> - [`sudo dpkg -i --force-overwrite <file-path>`](https://askubuntu.com/a/176132/92979)
+> - [`apt-get -o Dpkg::Options::="--force-overwrite"`](https://askubuntu.com/a/491086/92979)
+
+
+- error message
+  ```bash
+  $ sudo apt upgrade -y
+  Reading package lists... Done
+  Building dependency tree... Done
+  Reading state information... Done
+  You might want to run 'apt --fix-broken install' to correct these.
+  The following packages have unmet dependencies:
+   libpython3.12 : Depends: libpython3.12-stdlib (= 3.12.8-1+jammy1) but 3.12.7-1+jammy1 is installed
+   libpython3.12-dev : Depends: libpython3.12-stdlib (= 3.12.8-1+jammy1) but 3.12.7-1+jammy1 is installed
+   python3.12-dev : Depends: python3.12 (= 3.12.8-1+jammy1) but 3.12.7-1+jammy1 is installed
+   python3.12-venv : Depends: python3.12 (= 3.12.8-1+jammy1) but 3.12.7-1+jammy1 is installed
+  E: Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution).
+  ```
+
+- solution 1 : `dpkg --force-depends`
+  ```bash
+  $ sudo dpkg --force-depends -r libpython3.12-minimal python3.12-minimal
+  dpkg: libpython3.12-minimal:amd64: dependency problems, but removing anyway as you requested:
+   python3.12-minimal depends on libpython3.12-minimal (= 3.12.7-1+jammy1).
+   libpython3.12-stdlib:amd64 depends on libpython3.12-minimal (= 3.12.7-1+jammy1).
+
+  (Reading database ... 329946 files and directories currently installed.)
+  Removing libpython3.12-minimal:amd64 (3.12.7-1+jammy1) ...
+  dpkg: python3.12-minimal: dependency problems, but removing anyway as you requested:
+   python3.12 depends on python3.12-minimal (= 3.12.7-1+jammy1).
+
+  Removing python3.12-minimal (3.12.7-1+jammy1) ...
+  Unlinking and removing bytecode for runtime python3.12
+  E: py3clean:65: cannot find magic tag for Python 3.12: python3.12 -c 'import imp; print(imp.get_tag())' failed with status code 1
+  Processing triggers for man-db (2.10.2-1) ...
+
+  $ sudo apt --fix-broken install
+
+  $ python3 --version
+  Python 3.12.8
+  ```
+
+- solution 2 : `dpkg --force-overwrite`
+  ```bash
+  $ sudo dpkg -i --force-overwrite /var/cache/apt/archives/libpython3.12-stdlib_3.12.8-1+jammy1_amd64.deb
+  # or
+  $ sudo apt-get -o Dpkg::Options::="--force-overwrite" install -f python3.12
+
+  $ sudo apt --fix-broken install
+  ```
+
+- solution 3 : `aptitude install`
+  ```bash
+  $ sudo apt update
+  $ sudo apt install aptitude
+
+  $ sudo aptitude install python3.12
+  python3.12 is already installed at the requested version (3.12.8-1+jammy1)
+  python3.12 is already installed at the requested version (3.12.8-1+jammy1)
+  No packages will be installed, upgraded, or removed.
+  0 packages upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+  Need to get 0 B of archives. After unpacking 0 B will be used.
+  ```

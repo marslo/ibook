@@ -54,3 +54,31 @@ statefulset.apps/logstash    1         1         2y130d
 > - [Elastic 技术栈之 Filebeat](https://www.yaolong.net/article/elastic-filebeat/)
 > - [Elasticsearch的内存调优与解析](https://www.yaolong.net/article/es-heap-sizing/)
 > - [理解Elasticsearch和面试总结](https://www.yaolong.net/article/elasticsearch-interview/)
+>
+> ELK
+> - [HA Cluster](https://medium.com/faun/https-medium-com-thakur-vaibhav23-ha-es-k8s-7e655c1b7b61)
+> - [Remote Cluster](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-remote-clusters.html#configuring-remote-clusters)
+> - [Nodes](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html)
+>
+> Shard/Index Routing
+> - [Cluster-level shard allocation filtering](https://www.elastic.co/guide/en/elasticsearch/reference/current/allocation-filtering.html)
+> - [Index-level shard allocation filtering](https://www.elastic.co/guide/en/elasticsearch/reference/current/shard-allocation-filtering.html)
+>
+> Open Distro
+> [Open Distro References](https://aws.amazon.com/blogs/opensource/category/analytics/open-distro-for-elasticsearch/)
+> [Open Distro on Kubernetes](https://aws.amazon.com/blogs/opensource/open-distro-for-elasticsearch-on-kubernetes/)
+> [Open Distro Kibana Multi Tenant](https://aws.amazon.com/blogs/opensource/multi-tenant-kibana-open-distro-for-elasticsearch/)
+>
+> Logstash
+> - [Grok filter pattern tester](https://grokdebug.herokuapp.com/)
+>
+> Filebeat
+> - [Multiline input pattern tester](https://play.golang.org/p/10hI64vVPNa)
+> - [Prebuilt RPI beats](https://github.com/RaoulDuke-Esq/Beats-Pi)
+> - [RPI beats build script](https://github.com/josh-thurston/easyBEATS)
+> - [beats with additional env_file processor](https://github.com/ccw/beats/tree/processor_env_file)
+>
+> Kubernetes - Helm Charts
+> - [Open Distro](https://github.com/opendistro-for-elasticsearch/community/pull/56)
+> - [Logstash](https://github.com/helm/charts/tree/master/stable/logstash)
+> - [ELK](https://github.com/helm/charts/tree/master/stable/elastic-stack)
