@@ -144,16 +144,16 @@ $ sudo mdutil -E /Volumes/marslo/
   ```
 
 ### copy STDOUT into clipboard
-> refer to: [osx/tricky](../osx/tricky.md#copy-stdout-into-clipboard)
+> refer to: [osx/tricky](../osx/tricky.html#copy-stdout-into-clipboard)
 
 ### Copy path from finder
-> refer to: [osx/tricky](../osx/tricky.md##copy-path-from-finder)
+> refer to: [osx/tricky](../osx/tricky.html##copy-path-from-finder)
 
 ## [System Integrity Protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
-> refer to: [osx/tricky](../osx/osx.md#system-integrity-protection)
+> refer to: [osx/tricky](../osx/osx.html#system-integrity-protection)
 
 ## change Mac default settings
-> refer to: [osx/defaults](../osx/defaults.md)
+> refer to: [osx/defaults](../osx/defaults.html)
 
 ## development environment
 ### [setup JAVA_HOME](https://docs.oracle.com/javase/9/install/installation-jdk-and-jre-macos.htm#JSJIG-GUID-C5F0BF25-3487-4F33-9275-7000C8E1C58C)
@@ -162,7 +162,7 @@ $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
 ```
 
 ### xCode
-> refer to [osx](../osx/osx.md#xcode)
+> refer to [osx](../osx/osx.html#xcode)
 
 #### xCode installation
 - Install from App Store
@@ -170,7 +170,7 @@ $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
   - [xCode 9.0.1](https://download.developer.apple.com/Developer_Tools/Xcode_9.0.1/Xcode_9.0.1.xip)
   - [Command_Line_Tools_macOS_10.13_for_Xcode_9.0.1](https://download.developer.apple.com/Developer_Tools/Command_Line_Tools_macOS_10.13_for_Xcode_9.0.1/Command_Line_Tools_macOS_10.13_for_Xcode_9.0.1.dmg)
   - [All Packages](https://developer.apple.com/download/more/)
-- [more details](../osx/osx.md#xcode)
+- [more details](../osx/osx.html#xcode)
 
 #### xCode setup
 ```bash
@@ -255,13 +255,13 @@ $ xcrun --show-sdk-path
 ```
 
 ## Homebrew
-> refer to: [osx/apps.md](../osx/apps.md#homebrew)
+> refer to: [osx/apps.html](../osx/apps.html#homebrew)
 
 ## system settings
-> refer to: [osx/apps](../osx/apps.md#system-settings)
+> refer to: [osx/apps](../osx/apps.html#system-settings)
 
 ## accessory
-> refer to: [osx/apps](../osx/apps.md#accessory)
+> refer to: [osx/apps](../osx/apps.html#accessory)
 
 ## q&a
 ### [x86_64 liblzma.dylib in nokogiri](http://www.nokogiri.org/tutorials/installing_nokogiri.html)
