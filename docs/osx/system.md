@@ -13,6 +13,7 @@
   - [get human-readable vm_stat](#get-human-readable-vm_stat)
   - [show system info](#show-system-info)
   - [show memory](#show-memory)
+  - [show adapter](#show-adapter)
   - [show Mach virtual memory statistics](#show-mach-virtual-memory-statistics)
   - [check process without interactive mode](#check-process-without-interactive-mode)
 - [show system](#show-system)
@@ -280,6 +281,58 @@ Battery temp:           36.5°C
 
 For more stats run `istats extra` and follow the instructions.
 ```
+
+### show adapter
+```bash
+$ pmset -g adapter            # or `pmset -g ac`
+ Wattage = 140W
+ Current = 4990mA
+ Voltage = 28000mV
+ AdapterID = 28697
+ Manufacturer = Apple Inc.
+ Family Code = 0xe000400a
+ Serial String = C4H430307PCQ41CA4
+ Adapter Name = 140W USB-C Power Adapter
+ Hardware Version = 1.0
+ Firmware Version = 01040073
+ ```
+
+- show charge status
+   ```
+  $ pmset -g ps            # or `pmset -g batt`
+  Now drawing from 'AC Power'
+   -InternalBattery-0 (id=66125923) 100%; charged; 0:00 remaining present: true
+
+  $ pmset -g rawbatt
+  12/12/2024 04:06:55
+   AC; Not Charging; 100%; Cap=100: FCC=100; Design=8579; Time=0:00; 0mA; Cycles=6/1000; Location=0;
+   Polled boot=12/11/2024 17:43:05; Full=12/12/2024 04:03:30; User visible=12/12/2024 04:06:30
+
+  $ system_profiler SPPowerDataType | sed -n '/Charge Information:/,/System Power Settings:/p' | sed '$d'
+        Charge Information:
+            The battery’s charge is below the warning level: No
+            Fully Charged: Yes
+            Charging: No
+            State of Charge (%): 100
+        Health Information:
+            Cycle Count: 6
+            Condition: Normal
+            Maximum Capacity: 100%
+
+  $ system_profiler SPPowerDataType | grep -A11 "AC Charger Information"
+      AC Charger Information:
+
+        Connected: Yes
+        ID: 0x7019
+        Wattage (W): 140
+        Family: 0xe000400a
+        Serial Number: C4H430307PCQ41CA4
+        Name: 140W USB-C Power Adapter
+        Manufacturer: Apple Inc.
+        Hardware Version: 1.0
+        Firmware Version: 1040073
+        Charging: No
+  ```
 
 ### show Mach virtual memory statistics
 ```bash

@@ -67,6 +67,22 @@
 >   - [Better And Better 2.0](https://www.better365.cn/bab2.html)
 >   - [LiuHai](https://www.better365.cn/LiuHai.html)
 
+- [caffeine](https://www.zhornsoftware.co.uk/caffeine/)
+
+  > [!TIP|label:references:]
+  > - Caffeine.app
+  >   ```bash
+  >   $ brew info --cask caffeine
+  >   ... ...
+  >   caffeine is built for Intel macOS and so requires Rosetta 2 to be installed.
+  >   You can install Rosetta 2 with:
+  >     softwareupdate --install-rosetta --agree-to-license
+  >   $ which -a caffeine
+  >   /usr/bin/caffeinate
+  >   ```
+  > - references:
+  >   - [Moving the mouse with applescript](https://blog.andrewparnell.com/2010/01/moving-the-mouse-with-applescript/)
+
 #### utilities
 - [Alfed](https://www.alfredapp.com/)
   - backup:
