@@ -1,6 +1,12 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [compress](#compress)
+  - [zip](#zip)
+  - [tar](#tar)
+- [extract](#extract)
+  - [unzip](#unzip)
+  - [tar](#tar-1)
 - [network](#network)
   - [ip address](#ip-address)
   - [check port](#check-port)
@@ -13,6 +19,196 @@
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## compress
+
+### zip
+
+> [!TIP|label:references:]
+> - [how to zip files (with pattern) from another zip archive without extracting in linux](https://stackoverflow.com/a/76092512/2940319)
+
+```bash
+$ zip -r file.zip /path/to/folder
+
+# with password
+$ zip -r -P password file.zip /path/to/folder
+
+# zip files via pipe ( with xargs )
+$ find . -name "*.txt" | xargs zip file.zip
+
+# repackage - zip specific files from another zip package
+#               pattern  --copy
+#              +--------+  ++
+$ zip org.zip '**/bin/*.o' -U -O new.zip
+
+# append new files into existing zip
+$ zip -u file.zip file.txt
+# or
+$ zip -ur file.zip !(file.zip)
+```
+- create zip from stdin
+
+  > [!NOTE|label:references:]
+  > - [* how to build Info-Zip for macos](https://stackoverflow.com/q/79273759/2940319)
+  > - [* How do you specify filenames within a zip when creating it on the command line from a pipe?](https://stackoverflow.com/a/41263140/2940319)
+  > - [stdin into zip command, how do I specify a file name?](https://stackoverflow.com/a/54702078/2940319)
+  > - [Problems with zipnote writing to files](https://www.linuxquestions.org/questions/linux-software-2/problems-with-zipnote-writing-to-files-4175502552/#post5157585)
+
+  ```bash
+  $ echo 'foo bar' | zip > file.zip
+  $ printf "@ -\n@=filename.txt\n" | zipnote -w file.zip
+  ```
+
+- delete after compress
+
+  > [!NOTE|label:references:]
+  > - `-m, --move` : delete files after adding to archive
+
+  ```bash
+  $ zip -m file.zip file.txt
+  # or
+  $ zip -mqj file.zip file.txt
+  ```
+
+### tar
+
+> [!NOTE|label:references:]
+> options:
+>
+> |   SUFFIX  | EXTRACT           | COMPRESS          |
+> |:---------:|-------------------|-------------------|
+> |   `tar`   | `-xf`             | `-cf`             |
+> |   `tgz`   | `-xzf`            | `-czf`            |
+> |  `tar.gz` | `-xzf`            | `-czf`            |
+> | `tar.bz2` | `-xjf`<br>`-xjSf` | `-cjf`<br>`-cjSf` |
+> |  `tar.xz` | `-xJf`            | `-cJf`            |
+> |  `tar.Z`  | `-xZf`            | `-cZf`            |
+> |  `tar.lz` | `-x --lzip`       | `-c --lzip`       |
+
+```bash
+$ tar -czf file.tar.gz /path/to/folder
+# or
+$ tar cvjSf file.tar.bz2 *
+```
+
+- delete files after compress
+  ```bash
+  $ tar -cvjf archive.tar.bz2 --remove-files archive/
+  ```
+
+- remove files from tar
+  ```bash
+  $ tar vf file.tar --delete file.txt
+  # or
+  $ tar --delete -f file.tar file.txt
+
+  # -- example --
+  $ tar tf file.tar
+  a.txt
+  b.txt
+  c.txt
+  d.txt
+  $ tar vf file.tar --delete a.txt
+  $ tar tf file.tar
+  b.txt
+  c.txt
+  d.txt
+  ```
+
+## extract
+### unzip
+```bash
+$ unzip file.zip
+
+# to specific folder
+$ unzip file.zip -d /path/to/extract/folder
+
+# with password
+$ unzip file.zip -P password -d /path/to/extract/folder
+
+# extract all zip files in a folder
+$ find . -name "*.zip" -exec unzip {} \;
+
+# extract specific `file.txt` in a zip file
+$ unzip -p file.zip file.txt
+# or
+$ unzip -j file.zip -d /path/to/extract/folder file.txt
+
+# unzip files via pipe ( with xargs )
+$ unzip -l file.zip | grep -v Archive | awk '{print $4}' | xargs -I {} unzip -j file.zip {}
+```
+
+- get shasum for individual file in zip
+  ```bash
+  # without file name ( single file )
+  $ unzip -p file.zip filename.txt | sha256sum
+  1f2ec52b774368781bed1d1fb140a92e0eb6348090619c9291f9a5a3c8e8d151  -
+  # or with wildcards
+  $ unzip -p file.zip '*.txt' | sha256sum
+  1f2ec52b774368781bed1d1fb140a92e0eb6348090619c9291f9a5a3c8e8d151  -
+
+  # with file name ( multiple files )
+  #                                          using `|` instead of `/` to avoid conflict with file path
+  $ unzip -l file.zip |                                                   | |  |
+          grep -E '.*.txt' --color=never |                                | |  |
+          awk '{print $NF}' |                                             v v  v
+          xargs -I '{}' bash -c "unzip -p file.zip {} | sha256sum | sed 's|-|{}|g'"
+  1f2ec52b774368781bed1d1fb140a92e0eb6348090619c9291f9a5a3c8e8d151  filename.txt
+  1f2ec52b774368781bed1d1fb140a92e0eb6348090619c9291f9a5a3c8e8d151  text.txt
+  ```
+
+### tar
+
+> [!NOTE|label:references:]
+> options:
+>
+> |   SUFFIX  | EXTRACT           | COMPRESS          |
+> |:---------:|-------------------|-------------------|
+> |   `tar`   | `-xf`             | `-cf`             |
+> |   `tgz`   | `-xzf`            | `-czf`            |
+> |  `tar.gz` | `-xzf`            | `-czf`            |
+> | `tar.bz2` | `-xjf`<br>`-xjSf` | `-cjf`<br>`-cjSf` |
+> |  `tar.xz` | `-xJf`            | `-cJf`            |
+> |  `tar.Z`  | `-xZf`            | `-cZf`            |
+> |  `tar.lz` | `-x --lzip`       | `-c --lzip`       |
+>
+> - references:
+>   - [Deleting empty files in tar.gz file in bash](https://stackoverflow.com/q/69612555/2940319)
+
+- check folder structure
+  ```bash
+  $ tar tf name.tar | awk -F'/' '{print $1}' | uniq
+  ```
+
+- strip path
+
+  > [!NOTE|label:references:]
+  > - [How do I extract files without folder structure using tar](https://stackoverflow.com/q/14295771/2940319)
+
+  ```bash
+  # -- using `--strip-*` --
+  $ tar xzf name.tar.gz -C /srv/www --strip-components 2
+  # old version
+  $ tar xzf name.tar.gz -C /srv/www --strip-path 2
+
+  # -- using `--transform` --
+  $ tar xzf name.tgz --transform='s/.*\///'
+  # or
+  $ tar -zxf name.tar.gz --absolute-names --no-anchored img*.gif --transform='s:^folder[1-3]/::'
+  # or
+  $ tar xf archpackage.tar --transform="s,usr/bin,myapp,;s,usr/share/doc/myapp,myapp," usr/bin/myapp  usr/share/doc/myapp/myapp-example-config.toml
+  ```
+
+- check shasum
+  ```bash
+  # shasum without file name
+  $ tar -O -xf name.tar --wildcards ./usr/bin/*.tgz | sha256sum
+
+  # shasum with file name
+  $ tar tf name.tar |
+        grep -E './usr/bin/.*.tgz' --color=never |
+        xargs -I '{}' bash -c "tar -O -xf name.tar --wildcards {} | sha256sum | sed 's|-|{}|g'"
+  ```
 
 ## network
 ### ip address

@@ -13,6 +13,9 @@
   - [java](#java)
   - [groovy](#groovy)
   - [gcc](#gcc)
+  - [info-zip](#info-zip)
+    - [brew install](#brew-install)
+    - [build from source](#build-from-source)
   - [glibc](#glibc)
     - [glibc troubleshooting](#glibc-troubleshooting)
   - [lua](#lua)
@@ -247,6 +250,139 @@ $ sudo ln -s /var/lib/snapd/snap /snap
   Copyright (C) 2023 Free Software Foundation, Inc.
   This is free software; see the source for copying conditions.  There is NO
   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ```
+
+## info-zip
+
+> [!TIP|label:references]
+> - src:
+>   - [zip30.zip](ftp://ftp.info-zip.org/pub/infozip/src/zip30.zip) | [zip30.tgz](ftp://ftp.info-zip.org/pub/infozip/src/zip30.tgz)
+>   - [unzip60.zip](ftp://ftp.info-zip.org/pub/infozip/src/unzip60.zip) | [unzip60.tgz](ftp://ftp.info-zip.org/pub/infozip/src/unzip60.tgz)
+>   - [gzip-1_2_4.tar](ftp://ftp.info-zip.org/pub/infozip/src/gzip-1_2_4.tar)
+>   - [maczip104.zip](ftp://ftp.info-zip.org/pub/infozip/src/maczip104.zip)
+>   - [zcrypt29.zip](ftp://ftp.info-zip.org/pub/infozip/src/zcrypt29.zip) | [zcrypt29-exportable.tgz](ftp://ftp.info-zip.org/pub/infozip/src/zcrypt29-exportable.tgz)
+> - mac:
+>   - [readme](ftp://ftp.info-zip.org/pub/infozip/mac/readme)
+>   - [maczip-docs.zip](ftp://ftp.info-zip.org/pub/infozip/mac/maczip-docs.zip)
+>   - [zip_tools_mac_os_x_dmg.gz](ftp://ftp.info-zip.org/pub/infozip/mac/zip_tools_mac_os_x_dmg.gz)
+>   - [maczip105c.hqx](ftp://ftp.info-zip.org/pub/infozip/mac/maczip105c.hqx)
+>   - [maczip105nc.hqx](ftp://ftp.info-zip.org/pub/infozip/mac/maczip105nc.hqx)
+> - beta:
+>   - [zip31d.zip](ftp://ftp.info-zip.org/pub/infozip/beta/zip31d.zip)
+>   - [zip31c.zip](ftp://ftp.info-zip.org/pub/infozip/beta/zip31c.zip)
+>   - [zip31b.zip](ftp://ftp.info-zip.org/pub/infozip/beta/zip31b.zip)
+>   - [zip31a.zip](ftp://ftp.info-zip.org/pub/infozip/beta/zip31a.zip)
+>   - [unzip610b.zip](ftp://ftp.info-zip.org/pub/infozip/beta/unzip610b.zip)
+>   - [unzip610a.zip](ftp://ftp.info-zip.org/pub/infozip/beta/unzip610a.zip)
+> - references:
+>   - [zipnote crashes when updating filename in a zip file](https://gitlab.alpinelinux.org/alpine/aports/-/issues/8602)
+
+### brew install
+
+> [!NOTE|label:references]
+> - [brew formula](https://formulae.brew.sh/formula/zip)
+> - [zip.rb](https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/z/zip.rb)
+
+```bash
+$ brew install zip [unzip]
+```
+
+<!--sec data-title="brew install zip -v --debug" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ brew install zip -v --debug
+...
+==> Downloading https://ghcr.io/v2/homebrew/core/zip/manifests/3.0-2
+/usr/bin/env /opt/homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.11-27-g9783ab0\ \(Macintosh\;\ arm64\ Mac\ OS\ X\ 14.7.2\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Accept:\ application/vnd.oci.image.index.v1+json --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/794b38c4c17afd41abe76b9b8dc73cabd3543bdb3816b4acca62ff0132aa1225--zip-3.0-2.bottle_manifest.json.incomplete --location https://ghcr.io/v2/homebrew/core/zip/manifests/3.0-2
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 11876  100 11876    0     0  26371      0 --:--:-- --:--:-- --:--:-- 26391
+==> Fetching zip
+==> Downloading https://ghcr.io/v2/homebrew/core/zip/blobs/sha256:99265457598a09b6312520471980b7b8429ebfef5be40d3e00a0980544ff12c2
+/usr/bin/env /opt/homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.11-27-g9783ab0\ \(Macintosh\;\ arm64\ Mac\ OS\ X\ 14.7.2\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/ebd73b309783778b2985d2b1cec6aa2ba756923db8dd48e300e04d6587ec9ef8--zip--3.0.arm64_sonoma.bottle.2.tar.gz.incomplete --location https://ghcr.io/v2/homebrew/core/zip/blobs/sha256:99265457598a09b6312520471980b7b8429ebfef5be40d3e00a0980544ff12c2
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  307k  100  307k    0     0   407k      0 --:--:-- --:--:-- --:--:--  870k
+==> Verifying checksum for 'ebd73b309783778b2985d2b1cec6aa2ba756923db8dd48e300e04d6587ec9ef8--zip--3.0.arm64_sonoma.bottle.2.tar.gz'
+==> Verifying attestation for zip
+/usr/bin/env GH_TOKEN=****** GH_HOST=github.com /opt/homebrew/bin/gh attestation verify /Users/marslo/Library/Caches/Homebrew/downloads/ebd73b309783778b2985d2b1cec6aa2ba756923db8dd48e300e04d6587ec9ef8--zip--3.0.arm64_sonoma.bottle.2.tar.gz --repo Homebrew/homebrew-core --format json
+==> falling back on backfilled attestation for #<Bottle:0x000000016ba57a00>
+/usr/bin/env GH_TOKEN=****** GH_HOST=github.com /opt/homebrew/bin/gh attestation verify /Users/marslo/Library/Caches/Homebrew/downloads/ebd73b309783778b2985d2b1cec6aa2ba756923db8dd48e300e04d6587ec9ef8--zip--3.0.arm64_sonoma.bottle.2.tar.gz --repo trailofbits/homebrew-brew-verify --format json
+/opt/homebrew/Library/Homebrew/brew.rb (Formulary::FromAPILoader): loading zip
+==> Pouring zip--3.0.arm64_sonoma.bottle.2.tar.gz
+/usr/bin/env tar --extract --no-same-owner --file /Users/marslo/Library/Caches/Homebrew/downloads/ebd73b309783778b2985d2b1cec6aa2ba756923db8dd48e300e04d6587ec9ef8--zip--3.0.arm64_sonoma.bottle.2.tar.gz --directory /private/tmp/homebrew-unpack-20241212-61524-9jfahk
+mv /private/tmp/homebrew-unpack-20241212-61524-9jfahk/zip /opt/homebrew/Cellar/zip
+==> Finishing up
+==> Caveats
+zip is keg-only, which means it was not symlinked into /opt/homebrew,
+because macOS already provides this software and installing another version in
+parallel can cause all kinds of trouble.
+
+If you need to have zip first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/zip/bin:$PATH"' >> /Users/marslo/.bash_profile
+==> Summary
+🦍  /opt/homebrew/Cellar/zip/3.0: 15 files, 871.6KB
+...
+```
+<!--endsec-->
+
+### build from source
+
+> [!NOTE|label:references]
+> - [* build info-zip from source](https://gist.github.com/marslo/70a3f6728633c49bed865da684378b31)
+> - [* how to build Info-Zip for macos](https://stackoverflow.com/a/79274638/2940319)
+
+- zip30
+  ```bash
+  $ curl -fsSL ftp://ftp.info-zip.org/pub/infozip/src/zip30.zip | bsdtar xzf - -C /tmp/
+  # for zipnote issue -- rename filename in zip
+  $ curl -o /tmp/zipinfo.patch -fsSL https://gist.githubusercontent.com/marslo/70a3f6728633c49bed865da684378b31/raw/cf402112315ededbfb58c0e17629e9a74708e370/zipinfo.patch
+  # for macOS
+  $ curl -o /tmp/xcode15.patch -fsSL https://raw.githubusercontent.com/Homebrew/formula-patches/d2b59930/zip/xcode15.diff
+
+  $ cd /tmp/zip30
+
+  # apply patches
+  $ patch -p1 < /tmp/zipinfo.patch
+  $ patch -p1 < /tmp/xcode15.patch
+  # or
+  $ patch -u zipnote.c -i /tmp/zipinfo.patch
+  $ patch -u unix/Makefile -i /tmp/xcode15.patch
+
+  # build
+  $ make -f unix/Makefile generic
+  # gcc
+  $ make -f unix/Makefile generic CC=gcc
+  # clang
+  $ make -f unix/Makefile generic CC=clang
+
+  # install
+  $ sudo make -f unix/Makefile install
+  # or customized BINDIR and MANDIR
+  $ sudo make -f unix/Makefile BINDIR=/tmp/bin MANDIR=/tmp/man install
+  ```
+
+- zip31d
+  ```bash
+  $ curl -fsSL ftp://ftp.info-zip.org/pub/infozip/beta/zip31d.zip | bsdtar xzf - -C /tmp/
+  $ curl -fsSL https://gist.githubusercontent.com/marslo/70a3f6728633c49bed865da684378b31/raw/cea315f1ae855c602515b79ddf205cba71fbb2b0/xcode15-zip31d.patch -o /tmp/xcode15-zip31d.patch
+
+  $ cd /tmp/zip31d
+  $ patch -p1 < /tmp/xcode15-zip31d.patch
+  # or
+  $ patch -u unix/configure -i /tmp/xcode15-zip31d.patch
+
+  # -- build --
+  $ make -f unix/Makefile generic
+  # gcc
+  $ make -f unix/Makefile generic CC=gcc
+  # clang
+  $ make -f unix/Makefile generic CC=clang
+
+  # install
+  $ sudo make -f unix/Makefile install
+  # or customized BINDIR and MANDIR
+  $ sudo make -f unix/Makefile BINDIR=/tmp/bin MANDIR=/tmp/man install
   ```
 
 ## glibc
@@ -832,7 +968,7 @@ $ pkg-config --variable pc_path pkg-config
 $ pkg-config --list-all
 ```
 
-<!--sec data-title="$ pkg-config --list-all" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="$ pkg-config --list-all" data-id="section1" data-show=true data-collapse=true ces-->
 ```bash
 $ pkg-config --list-all
 sqlite3                          SQLite - SQL database engine
@@ -1473,7 +1609,7 @@ InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault
 
 ### check *.o file
 
-<!--sec data-title="objdump" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="objdump" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
 $ objdump -d ar-test1.o
 ar-test1.o:     file format mach-o-x86-64
@@ -1491,7 +1627,7 @@ Disassembly of section .text:
 ```
 <!--endsec-->
 
-<!--sec data-title="execsnoop" data-id="section2" data-show=true data-collapse=true ces-->
+<!--sec data-title="execsnoop" data-id="section3" data-show=true data-collapse=true ces-->
 ```bash
 $ sudo execsnoop -a -c ar-test1.o
 dtrace: system integrity protection is on, some features will not be available
