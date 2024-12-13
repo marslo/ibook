@@ -13,10 +13,10 @@
   - [keys performance](#keys-performance)
 - [ssh](#ssh)
   - [force use password](#force-use-password)
+  - [allows ssh-rsa](#allows-ssh-rsa)
   - [force bypass `~/.ssh/config`](#force-bypass-sshconfig)
   - [ssh and tar](#ssh-and-tar)
     - [copy multiple files to remote server](#copy-multiple-files-to-remote-server)
-    - [`find` && `tar`](#find--tar)
     - [tar all and extra in remote](#tar-all-and-extra-in-remote)
     - [copy local file content into remote](#copy-local-file-content-into-remote)
   - [with proxy](#with-proxy)
@@ -216,6 +216,31 @@ dsa 2048 bits 0.000333s 0.000301s   3004.0   3326.9
 $ ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no user@target.server
 ```
 
+## allows ssh-rsa
+
+> [!TIP|label:references:]
+> - [openssh v8.8](https://www.openssh.com/txt/release-8.8)
+
+```bash
+$ ssh -o HostkeyAlgorithms=+ssh-rsa -p <port> -l <user> <host>
+```
+
+- for git commands
+
+  > [!NOTE|label:references:]
+  > - since [git v2.33.1](https://github.com/git-for-windows/git/releases/tag/v2.33.1.windows.1)
+
+  ```bash
+  $ GIT_SSH_COMMAND="ssh -o HostkeyAlgorithms=+ssh-rsa" git clone
+  # since v2.41.0
+  $ GIT_SSH_COMMAND="ssh -o HostkeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa" git clone
+
+  # or
+  $ git config [--global] core.sshCommand 'ssh -o HostKeyAlgorithms=+ssh-rsa'
+  # since v2.41.0
+  $ git config [--global] core.sshCommand 'ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa'
+  ```
+
 ## force bypass `~/.ssh/config`
 
 > [!NOTE|label:references:]
@@ -237,6 +262,10 @@ $ ssh -vvT -F /dev/null -i ~/.ssh/id_ed25519 user@sample.com
 ```
 
 ## [ssh and tar](https://superuser.com/a/116031/112396)
+
+> [!TIP|label:references:]
+> - [* iMarslo: bash sugar - find and tar for JENKINS_HOME](../cheatsheet/bash/sugar.md#find-and-tar)
+
 ### [copy multiple files to remote server](https://superuser.com/a/116031/112396)
 ```bash
 $ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -
@@ -244,26 +273,6 @@ $ tar cvzf - -T list_of_filenames | ssh hostname tar xzf -
 # or
 $ tar cvf - /path/*.jpg | ssh foo@bar.com "tar xvf -"
 ```
-
-### `find` && `tar`
-- backup all `config.xml` in JENKINS_HOME
-  ```bash
-  $ find ${JENKINS_HOME}/jobs \
-         -maxdepth 2 \
-         -name config\.xml \
-         -type f -print |
-    tar czf ~/config.xml.tar.gz --files-from -
-  ```
-
-- back build history
-  ```bash
-  $ find ${JENKINS_HOME}/jobs \
-         -name builds \
-         -prune -o \
-         -type f \
-         -print |
-    tar czf ~/m.tar.gz --files-from -
-  ```
 
 ### tar all and extra in remote
 ```bash
@@ -621,14 +630,14 @@ tcp6       0      0  ::1.7777               *.*                    LISTEN
 ```bash
 $ cat ~/.ssh/config
 HOST  *
-      LogLevel              ERROR
-      HostkeyAlgorithms     +ssh-rsa
-      GSSAPIAuthentication  no
-      StrictHostKeyChecking no
-      UserKnownHostsFile    /dev/null
-      IdentityFile          ~/.ssh/id_ed25519
-      IdentityFile          ~/.ssh/id_rsa         # keep the older key if necessary
-      # PubkeyAcceptedAlgorithms +ssh-rsa
+      LogLevel                   ERROR
+      HostkeyAlgorithms          +ssh-rsa
+      # PubkeyAcceptedAlgorithms +ssh-rsa              # since git v2.41.0
+      GSSAPIAuthentication       no
+      StrictHostKeyChecking      no
+      UserKnownHostsFile         /dev/null
+      IdentityFile               ~/.ssh/id_ed25519
+      IdentityFile               ~/.ssh/id_rsa         # keep the older key if necessary
 
 Include config.d/*
 
@@ -780,44 +789,45 @@ $ watch -n 30 uptime
   ^C
   ```
 
-- GIT_TRACE
-  ```bash
-  $ GIT_TRACE=1 git st
-  00:30:44.772137 git.c:703               trace: exec: git-st
-  00:30:44.772540 run-command.c:663       trace: run_command: git-st
-  00:30:44.772894 git.c:384               trace: alias expansion: st => status
-  00:30:44.772903 git.c:764               trace: exec: git status
-  00:30:44.772907 run-command.c:663       trace: run_command: git status
-  00:30:44.777379 git.c:440               trace: built-in: git status
-  On branch master
-  Your branch is up to date with 'origin/master'.
+<!--sec data-title="GIT_TRACE" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ GIT_TRACE=1 git st
+00:30:44.772137 git.c:703               trace: exec: git-st
+00:30:44.772540 run-command.c:663       trace: run_command: git-st
+00:30:44.772894 git.c:384               trace: alias expansion: st => status
+00:30:44.772903 git.c:764               trace: exec: git status
+00:30:44.772907 run-command.c:663       trace: run_command: git status
+00:30:44.777379 git.c:440               trace: built-in: git status
+On branch master
+Your branch is up to date with 'origin/master'.
 
-  00:30:44.782714 run-command.c:663       trace: run_command: GIT_INDEX_FILE=.git/index git submodule summary --cached --for-status --summary-limit -1 HEAD
-  00:30:44.787490 git.c:703               trace: exec: git-submodule summary --cached --for-status --summary-limit -1 HEAD
-  00:30:44.788038 run-command.c:663       trace: run_command: git-submodule summary --cached --for-status --summary-limit -1 HEAD
-  00:30:44.838222 git.c:440               trace: built-in: git rev-parse --git-dir
-  00:30:44.845054 git.c:440               trace: built-in: git rev-parse --git-path objects
-  00:30:44.852811 git.c:440               trace: built-in: git rev-parse -q --git-dir
-  00:30:44.870362 git.c:440               trace: built-in: git rev-parse --show-prefix
-  00:30:44.878755 git.c:440               trace: built-in: git rev-parse --show-toplevel
-  00:30:44.893984 git.c:440               trace: built-in: git rev-parse -q --verify --default HEAD HEAD
-  00:30:44.899709 git.c:440               trace: built-in: git rev-parse --show-toplevel
-  00:30:44.905200 git.c:440               trace: built-in: git rev-parse --sq --prefix  --
-  00:30:44.911762 git.c:440               trace: built-in: git diff-index --cached --ignore-submodules=dirty --raw 52c94664ffc09cde2308c6bf9824ca0355ff5ff7 --
-  00:30:44.917374 run-command.c:663       trace: run_command: GIT_INDEX_FILE=.git/index git submodule summary --files --for-status --summary-limit -1
-  00:30:44.922165 git.c:703               trace: exec: git-submodule summary --files --for-status --summary-limit -1
-  00:30:44.922568 run-command.c:663       trace: run_command: git-submodule summary --files --for-status --summary-limit -1
-  00:30:44.965375 git.c:440               trace: built-in: git rev-parse --git-dir
-  00:30:44.972784 git.c:440               trace: built-in: git rev-parse --git-path objects
-  00:30:44.979117 git.c:440               trace: built-in: git rev-parse -q --git-dir
-  00:30:44.991077 git.c:440               trace: built-in: git rev-parse --show-prefix
-  00:30:44.997718 git.c:440               trace: built-in: git rev-parse --show-toplevel
-  00:30:45.012365 git.c:440               trace: built-in: git rev-parse -q --verify --default HEAD
-  00:30:45.018759 git.c:440               trace: built-in: git rev-parse --show-toplevel
-  00:30:45.024687 git.c:440               trace: built-in: git rev-parse --sq --prefix  --
-  00:30:45.031664 git.c:440               trace: built-in: git diff-files --ignore-submodules=dirty --raw --
-  nothing to commit, working tree clean
-  ```
+00:30:44.782714 run-command.c:663       trace: run_command: GIT_INDEX_FILE=.git/index git submodule summary --cached --for-status --summary-limit -1 HEAD
+00:30:44.787490 git.c:703               trace: exec: git-submodule summary --cached --for-status --summary-limit -1 HEAD
+00:30:44.788038 run-command.c:663       trace: run_command: git-submodule summary --cached --for-status --summary-limit -1 HEAD
+00:30:44.838222 git.c:440               trace: built-in: git rev-parse --git-dir
+00:30:44.845054 git.c:440               trace: built-in: git rev-parse --git-path objects
+00:30:44.852811 git.c:440               trace: built-in: git rev-parse -q --git-dir
+00:30:44.870362 git.c:440               trace: built-in: git rev-parse --show-prefix
+00:30:44.878755 git.c:440               trace: built-in: git rev-parse --show-toplevel
+00:30:44.893984 git.c:440               trace: built-in: git rev-parse -q --verify --default HEAD HEAD
+00:30:44.899709 git.c:440               trace: built-in: git rev-parse --show-toplevel
+00:30:44.905200 git.c:440               trace: built-in: git rev-parse --sq --prefix  --
+00:30:44.911762 git.c:440               trace: built-in: git diff-index --cached --ignore-submodules=dirty --raw 52c94664ffc09cde2308c6bf9824ca0355ff5ff7 --
+00:30:44.917374 run-command.c:663       trace: run_command: GIT_INDEX_FILE=.git/index git submodule summary --files --for-status --summary-limit -1
+00:30:44.922165 git.c:703               trace: exec: git-submodule summary --files --for-status --summary-limit -1
+00:30:44.922568 run-command.c:663       trace: run_command: git-submodule summary --files --for-status --summary-limit -1
+00:30:44.965375 git.c:440               trace: built-in: git rev-parse --git-dir
+00:30:44.972784 git.c:440               trace: built-in: git rev-parse --git-path objects
+00:30:44.979117 git.c:440               trace: built-in: git rev-parse -q --git-dir
+00:30:44.991077 git.c:440               trace: built-in: git rev-parse --show-prefix
+00:30:44.997718 git.c:440               trace: built-in: git rev-parse --show-toplevel
+00:30:45.012365 git.c:440               trace: built-in: git rev-parse -q --verify --default HEAD
+00:30:45.018759 git.c:440               trace: built-in: git rev-parse --show-toplevel
+00:30:45.024687 git.c:440               trace: built-in: git rev-parse --sq --prefix  --
+00:30:45.031664 git.c:440               trace: built-in: git diff-files --ignore-submodules=dirty --raw --
+nothing to commit, working tree clean
+```
+<!--endsec-->
 
 ## debug ssh
 
@@ -847,20 +857,24 @@ $ watch -n 30 uptime
 > - [How to check sshd log?](https://serverfault.com/a/480433/129815)
 
 ```bash
-# check `/var/log/auth.log`
+# -- check `/var/log/auth.log` --
 $ grep 'sshd' /var/log/auth.log
 # or
 $ tail -f -n 500 /var/log/auth.log | grep 'sshd'
 
-# check with journalctl
+# -- check with journalctl --
 ## -t, --identifier
 $ journalctl -t sshd
+
 ## -u, --unit
 $ journalctl -u ssh
+
 ## -o json-pretty: with json format
 $ journalctl -t sshd -o json-pretty
+
 ## -b0: since last boot
 $ journalctl -t sshd -b0
+
 ## reserve order
 $ journalctl -t sshd -b0 -r
 ```

@@ -205,6 +205,26 @@ $ find . -name config\.xml -type f -print | tar czf ~/m.tar.gz --files-from -
 $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
 ```
 
+- for JENKINS_HOME
+  - backup all `config.xml` in JENKINS_HOME
+    ```bash
+    $ find ${JENKINS_HOME}/jobs \
+           -maxdepth 2 \
+           -name config\.xml \
+           -type f -print |
+      tar czf ~/config.xml.tar.gz --files-from -
+    ```
+
+  - back build history
+    ```bash
+    $ find ${JENKINS_HOME}/jobs \
+           -name builds \
+           -prune -o \
+           -type f \
+           -print |
+      tar czf ~/m.tar.gz --files-from -
+    ```
+
 - [advanced ls](https://www.commandlinefu.com/commands/view/5815/advanced-ls-output-using-find-for-formattedsortable-file-stat-info)
   ```bash
   $ find $PWD -maxdepth 1 -printf '%.5m %10M %#9u:%-9g %#5U:%-5G [%AD | %TD | %CD] [%Y] %p\n'
@@ -214,6 +234,13 @@ $ tar cf - . | ssh -C otherhost "cd /mydir; tar xvf -"
   ```
 
 - [tar and ssh](https://www.commandlinefu.com/commands/view/37/scping-files-with-streamlines-compression-tar-gzip)
+
+  > [!TIP|label:references:]
+  > - [* iMarslo: ssh and tar](../../devops/ssh.md#ssh-and-tar)
+  >   - [copy multiple files to remote server](../../devops/ssh.md#copy-multiple-files-to-remote-server)
+  >   - [tar all and extra in remote](../../devops/ssh.md#tar-all-and-extra-in-remote)
+  >   - [copy local file content into remote](../../devops/ssh.md#copy-local-file-content-into-remote)
+
   ```bash
   $ tar czv file1 file2 file3 | ssh user@host 'tar xzv -C /target/dir'
   ```
