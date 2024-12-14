@@ -82,6 +82,7 @@
 * [jenkins](jenkins/jenkins.md)
   * [config](jenkins/config/config.md)
     * [windows](jenkins/config/windows.md)
+  * [appearance](jenkins/appearance.md)
   * [troubleshooting](jenkins/troubleshooting.md)
   * [jenkinsfile](jenkins/jenkinsfile/jenkinsfile.md)
     * [utility](jenkins/jenkinsfile/utility.md)
