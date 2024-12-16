@@ -21,6 +21,8 @@
 - [accessory](#accessory)
 - [q&a](#qa)
   - [x86_64 liblzma.dylib in nokogiri](#x86_64-liblzmadylib-in-nokogiri)
+- [tips](#tips)
+  - [system tool upgrade](#system-tool-upgrade)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -285,3 +287,95 @@ $ xcrun --show-sdk-path
   $ brew link --force libxml2
   $ gem install nokogiri -v '1.7.0.1'  -- --use-system-libraries --with-xml2-include=/usr/include/libxml2 --with-xml2-lib=/usr/lib
   ```
+
+## tips
+
+
+### system tool upgrade
+
+#### cmd
+```bash
+$ /usr/sbin/softwareupdate --all --install --force
+
+# list history
+$ /usr/sbin/softwareupdate --history
+```
+
+- settings
+  ```bash
+  $ tail /private/var/log/install.log
+  ...
+  2024-12-13 00:55:45-08 HNWH3C04CX softwareupdated[572]: SUOSUMobileSoftwareUpdateController: Updating additionalUpdateMetricEventFields: {
+        autoUpdate = false;
+        buddy = false;
+        commandLine = true;
+        installTonight = false;
+        mdm = false;
+        notification = false;
+        settings = false;
+    }
+  ...
+  ```
+
+- install/uninstall package
+
+  - `*.pkg`
+    ```bash
+    $ sudo installer -pkg /path/to/package.pkg -target /
+    $ sudo installer -pkg /path/to/package.pkg -target / -uninstall
+    ```
+
+#### process
+- trustd
+  ```bash
+  $ ps aux | grep trustd
+  marslo             836  10.7  0.1 410449040  22240   ??  S    Thu12PM  11:20.83 /usr/libexec/trustd --agent
+  _trustd            414   5.4  0.1 410447680  23744   ??  Ss   Thu12PM  22:51.11 /usr/libexec/trustd
+  _spotlight        1768   0.0  0.0 410389120  14144   ??  S    Thu12PM   0:07.70 /usr/libexec/trustd --agent
+  _accessoryupdater   677   0.0  0.0 410380144   5728   ??  S    Thu12PM   0:00.93 /usr/libexec/trustd --agent
+  _cmiodalassistants   615   0.0  0.0 410380128   5840   ??  S    Thu12PM   0:00.88 /usr/libexec/trustd --agent
+  _locationd         570   0.0  0.0 410380144   5872   ??  S    Thu12PM   0:00.87 /usr/libexec/trustd --agent
+  marslo           20127   0.0  0.0 410593776   1232 s001  S+   11:31AM   0:00.00 grep -i --color=always trustd
+  root               423   0.0  0.0 410346128   3744   ??  Ss   Thu12PM   0:00.04 /usr/libexec/trustdFileHelper
+  ```
+
+- accountd
+  ```bash
+  $ ps aux | grep account
+  marslo           34564   0.0  0.0 411096384  12752   ??  Ss   Thu09PM   0:00.12 /System/Library/PrivateFrameworks/RemoteManagement.framework/XPCServices/AccountSubscriber.xpc/Contents/MacOS/AccountSubscriber
+  marslo            2037   0.0  0.0 410400912  18096   ??  S    Thu12PM   0:00.61 /usr/libexec/appleaccountd
+  _rmd              2032   0.0  0.0 410902768   9696   ??  Ss   Thu12PM   0:00.06 /System/Library/PrivateFrameworks/RemoteManagement.framework/XPCServices/AccountSubscriber.xpc/Contents/MacOS/AccountSubscriber
+  root              1442   0.0  0.0 410993328  14272   ??  Ss   Thu12PM   0:08.17 /private/var/db/com.apple.xpc.roleaccountd.staging/exec/16777229.34120.xpc/Contents/MacOS/com.apple.NRD.UpdateBrainService
+  root              1443   0.0  0.0 410378000   4240   ??  Ss   Thu12PM   0:00.06 /usr/libexec/xpcroleaccountd -launchd
+  marslo             977   0.0  0.1 410442688  19280   ??  S    Thu12PM   0:14.47 /System/Library/PrivateFrameworks/AppleMediaServices.framework/Resources/amsaccountsd
+  marslo             817   0.0  0.2 410643792  82720   ??  S    Thu12PM   1:41.97 /System/Library/Frameworks/Accounts.framework/Versions/A/Support/accountsd
+  root               601   0.0  0.0 410400864   3984   ??  Ss   Thu12PM   0:00.05 /System/Library/PrivateFrameworks/AccountPolicy.framework/XPCServices/com.apple.AccountPolicyHelper.xpc/Contents/MacOS/com.apple.AccountPolicyHelper
+  marslo           13632   0.0  0.0 410433248  12704   ??  S    11:14AM   0:00.11 /System/Library/PrivateFrameworks/CommerceKit.framework/Versions/A/Resources/storeaccountd
+  ```
+
+- installd
+  ```bash
+  $ ps aux | grep installd
+  root              1165  92.5  1.8 411273744 668928   ??  Rs   Thu12PM   8:45.34 /System/Library/PrivateFrameworks/PackageKit.framework/Resources/installd
+  root              1166   0.0  0.0 410387200  10016   ??  Ss   Thu12PM   0:02.80 /System/Library/PrivateFrameworks/PackageKit.framework/Resources/system_installd
+  root               584   0.0  0.0 410360448   6624   ??  Ss   Thu12PM   0:00.04 /usr/libexec/bootinstalld
+  root               413   0.0  0.0 411112672   3920   ??  Ss   Thu12PM   0:00.19 /usr/libexec/containermanagerd_system --runmode=privileged --user-container-mode=current --bundle-container-mode=global --bundle-container-owner=_appinstalld --system-container-mode=none
+  root               311   0.0  0.0 410189360   4384   ??  Ss   Thu12PM   0:14.45 /System/Library/PrivateFrameworks/Uninstall.framework/Resources/uninstalld
+  ```
+
+#### GUI
+- Software Update
+  ```bash
+  $ open "/System/Library/CoreServices/Software Update.app"
+  $ open "/System/Library/CoreServices/Software Update.app/Contents/Resources/softwareupdated"
+  ```
+
+- SoftwareUpdateNotificationManager
+  ```bash
+  $ open /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app
+  $ open /System/Library/PrivateFrameworks/SoftwareUpdate.framework/Versions/A/Resources/SoftwareUpdateNotificationManager.app/Contents/MacOS/SoftwareUpdateNotificationManager
+  ```
+
+- patch
+
+  - 14.7.2: `https://swscan.apple.com/content/catalogs/others/index-14-13-12-10.16-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz`
