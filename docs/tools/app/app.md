@@ -66,6 +66,15 @@
 > - [better365](https://www.better365.cn/apps.html)
 >   - [Better And Better 2.0](https://www.better365.cn/bab2.html)
 >   - [LiuHai](https://www.better365.cn/LiuHai.html)
+> - [setapp](https://setapp.com/)
+>   - [Bartender](https://setapp.com/apps/bartender)
+>   - [core shell](https://setapp.com/apps/core-shell) | [Dash](https://setapp.com/apps/dash)
+>   - [Paste](https://setapp.com/apps/paste) | [PopClip](https://setapp.com/apps/popclip)
+>   - [Keysmith](https://setapp.com/apps/keysmith)
+>   - [CleanMyMac](https://setapp.com/apps/cleanmymac) | [iStat Menus](https://setapp.com/apps/istat-menus)
+>   - [Lungo](https://setapp.com/apps/lungo) -> keep your mac awake
+
+- [mas](https://github.com/mas-cli/mas)
 
 - [caffeine](https://www.zhornsoftware.co.uk/caffeine/)
 
@@ -82,6 +91,12 @@
   >   ```
   > - references:
   >   - [Moving the mouse with applescript](https://blog.andrewparnell.com/2010/01/moving-the-mouse-with-applescript/)
+
+- awake
+  - [Post2Fix/TerminalWake](https://github.com/Post2Fix/TerminalWake)
+  - [Amphetamine](https://apps.apple.com/us/app/amphetamine/id937984704?mt=12)
+  - [KeepingYouAwake](https://keepingyouawake.app/) | [newmarcel/KeepingYouAwake](https://github.com/newmarcel/KeepingYouAwake)
+  - [Caffeinated](https://apps.apple.com/us/app/caffeinated-anti-sleep-app/id1362171212?mt=12)
 
 #### utilities
 - [Alfed](https://www.alfredapp.com/)
