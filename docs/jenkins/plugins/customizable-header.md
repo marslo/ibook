@@ -19,12 +19,13 @@
 > - [CSS Gradient Generator](https://www.colorzilla.com/gradient-editor/)
 > - [RGBA to RGB converter](https://borderleft.com/toolbox/rgba/)
 > - [tumblr/colorfulgradients](https://www.tumblr.com/colorfulgradients)
+> - [NilStack/NilColorKit](https://github.com/NilStack/NilColorKit)
 
 ### gradient
+
 - `linear-gradient( 68.2deg,  rgba(255,202,88,1) 0%, rgba(139,73,255,1) 100.2% );`
 
   ![header - 1](../../screenshot/jenkins/header/header-1.png)
-
 
 - `linear-gradient( 90deg,  rgba(188,120,236,1) -2.2%, rgba(29,133,163,1) 83.5% );`
 
@@ -207,6 +208,18 @@
 
   ![header - 46](../../screenshot/jenkins/header/header-46.png)
 
+- `linear-gradient( 109.6deg,  rgba(245,56,56,1) 11.2%, rgba(234,192,117,1) 78% );`
+
+  ![header - 47](../../screenshot/jenkins/header/header-47.png)
+
+- `linear-gradient( 105.5deg,  rgba(31,212,248,1) 11%, rgba(218,15,183,1) 74.9% );`
+
+  ![header - 48](../../screenshot/jenkins/header/header-48.png)
+
+- `radial-gradient( circle farthest-corner at 10% 20%,  rgba(235,131,130,1) 0%, rgba(235,131,130,0.75) 38.6%, rgba(211,177,125,0.52) 72.1%, rgba(211,177,125,0.24) 94.7% );`
+
+  ![header - 49](../../screenshot/jenkins/header/header-49.png)
+
 ## jcasc
 ```yaml
 appearance:
@@ -214,9 +227,9 @@ appearance:
     enabled: true
     header: "logo"
     headerColor:
-      backgroundColor: "linear-gradient(135deg, #92FFC0 10%, #002661 100%);"
+      backgroundColor: "linear-gradient( 90deg,  rgba(188,120,236,1) -2.2%, rgba(29,133,163,1) 83.5% );"
       color: "white"
-      hoverColor: "#2a647c"
+      hoverColor: "#617fc2"
     logo:
       svg:
         logoPath: "https://artifactory.sample.com/artifactory/devops/jenkins/icon/header/logo-vert-padded-square-BLACK.svg"
