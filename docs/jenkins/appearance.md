@@ -2,8 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [appearance](#appearance)
-  - [badge plugin](#badge-plugin)
+  - [customizable header](#customizable-header)
   - [custom folder icon](#custom-folder-icon)
+  - [badge](#badge)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -25,15 +26,17 @@
   > - [Icon path to icon class migration](https://www.jenkins.io/doc/developer/views/icon-path-to-icon-class-migration/)
 
 
-### badge plugin
+### customizable header
 
 > [!TIP|label:references]
-> - [#184 - Add a font-awesome example](https://github.com/jenkinsci/badge-plugin/pull/184)
-> - [README.md](https://github.com/jenkinsci/badge-plugin/blob/55e3f5a9f4547e26262f4cb54757bc56a97ab272/README.md)
-> - [Badge Steps](https://www.jenkins.io/doc/pipeline/steps/badge/#addbadge-add-badge)
-
+> - [Customizable Header](https://plugins.jenkins.io/customizable-header/)
 
 ### custom folder icon
 
 > [!TIP|label:references]
 > - [Custom Folder Icon](https://plugins.jenkins.io/custom-folder-icon/)
+
+### badge
+
+> [!TIP|label:references]
+> - [* iMarslo: plugins/badge](./plugins/badge.md)

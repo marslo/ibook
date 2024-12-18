@@ -1,8 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [addBadge](#addbadge)
-- [addSummary](#addsummary)
+- [badge plugin](#badge-plugin)
+  - [addBadge](#addbadge)
+  - [addSummary](#addsummary)
+- [jenkins core symbols](#jenkins-core-symbols)
 - [ionicons api](#ionicons-api)
 - [dev tools symbols api](#dev-tools-symbols-api)
 - [font awesome api](#font-awesome-api)
@@ -13,17 +15,166 @@
 > [!NOTE|label:references:]
 > - [badge](https://plugins.jenkins.io/badge/)
 
-## addBadge
+## badge plugin
+
+> [!TIP|label:references]
+> - [#184 - Add a font-awesome example](https://github.com/jenkinsci/badge-plugin/pull/184)
+> - [README.md](https://github.com/jenkinsci/badge-plugin/blob/55e3f5a9f4547e26262f4cb54757bc56a97ab272/README.md)
+> - [Badge Steps](https://www.jenkins.io/doc/pipeline/steps/badge/#addbadge-add-badge)
+
+
+### addBadge
 
 ```groovy
+// regular badge
 addBadge icon: 'symbol-regular/thumbs-up plugin-font-awesome-api', text: '<code>symbol-regular/thumbs-up plugin-font-awesome-api</code>'
+
+// warning badge
+addWarningBadge(text: 'Houston, we have a problem ...', link: 'https://youtu.be/2Q_ZzBGPdqE')
+
+// error badge
+addErrorBadge(text: 'Transmission failed!')
 ```
 
-## addSummary
+### addSummary
 
 ```groovy
 addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbol-brands/git plugin-font-awesome-api</code>'
 ```
+
+## jenkins core symbols
+
+> [!TIP|label:references:]
+> - [symbols](https://weekly.ci.jenkins.io/design-library/Symbols/) | [jenkins core symbols](https://github.com/jenkinsci/jenkins/tree/master/war/src/main/resources/images/symbols)
+> - format:
+>   ```groovy
+>   symbol-<NAME>
+>   ```
+
+<!--sec data-title="jenkins core symbols" data-id="section0" data-show=true data-collapse=true ces-->
+```groovy
+[
+  'add',
+  'analytics',
+  'arrow-left',
+  'arrow-right',
+  'arrow-up',
+  'browsers',
+  'brush-outline',
+  'build-history',
+  'build-steps',
+  'build',
+  'changes',
+  'check',
+  'chevron-down',
+  'chevron-up',
+  'close-circle',
+  'close',
+  'cloud',
+  'code-working',
+  'compatible',
+  'computer-disconnected',
+  'computer-not-accepting',
+  'computer-offline',
+  'computer-paused',
+  'computer',
+  'cube',
+  'details',
+  'disconnect',
+  'document-text',
+  'downgrade-circle',
+  'download',
+  'edit-note',
+  'edit',
+  'ellipse',
+  'environment',
+  'error',
+  'expand',
+  'external',
+  'eye-off-outline',
+  'file-tray',
+  'fingerprint',
+  'flask',
+  'folder',
+  'freestyle-project',
+  'hammer',
+  'heart',
+  'help-circle',
+  'hourglass',
+  'id-card',
+  'indeterminate',
+  'information-circle',
+  'jenkins',
+  'journal',
+  'key',
+  'link',
+  'list',
+  'lock-closed',
+  'log-out',
+  'logs',
+  'menu',
+  'none',
+  'notifications',
+  'paper-plane-outline',
+  'parameters',
+  'pause',
+  'people',
+  'person-circle',
+  'person',
+  'play',
+  'plugins',
+  'post-build',
+  'power',
+  'project-relationship',
+  'redo',
+  'refresh',
+  'reload',
+  'ribbon',
+  'rss',
+  'search-shortcut',
+  'search',
+  'server',
+  'settings',
+  'shield-warning',
+  'shopping-bag',
+  'source-code-management',
+  'status-aborted-anime',
+  'status-aborted',
+  'status-blue-anime',
+  'status-blue',
+  'status-disabled-anime',
+  'status-disabled',
+  'status-nobuilt-anime',
+  'status-nobuilt',
+  'status-red-anime',
+  'status-red',
+  'status-yellow-anime',
+  'status-yellow',
+  'swap',
+  'tag',
+  'terminal',
+  'trash-bin',
+  'trash',
+  'trigger',
+  'undo',
+  'up-to-date',
+  'view',
+  'weather-icon-health-00to19',
+  'weather-icon-health-20to39',
+  'weather-icon-health-40to59',
+  'weather-icon-health-60to79',
+  'weather-icon-health-80plus',
+  'windows'
+].each {
+  String str = "symbol-${it}"
+  addSummary icon: str, text: "<code>${str}</code>"
+}
+```
+<!--endsec-->
+
+![jenkins core symbols - 1](../../screenshot/jenkins/badge/jenkins-core-1.png)
+
+![jenkins core symbols - 2](../../screenshot/jenkins/badge/jenkins-core-2.png)
 
 ## ionicons api
 
@@ -34,7 +185,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 >   symbol-<NAME> plugin-ionicons-api
 >   ```
 
-<!--sec data-title="ionicons" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="ionicons" data-id="section1" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'accessibility',
@@ -1485,8 +1636,6 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 
 ![ionicons - 27](../../screenshot/jenkins/badge/ionicons-27.png)
 
-![ionicons - 28](../../screenshot/jenkins/badge/ionicons-28.png)
-
 
 ## dev tools symbols api
 
@@ -1497,7 +1646,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 >   symbol-<NAME> plugin-oss-symbols-api
 >   ```
 
-<!--sec data-title="oss-symbols" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="oss-symbols" data-id="section2" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'android-icon-color',
@@ -2090,7 +2239,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 ## font awesome api
 
 > [!TIP|label:references]
-> - [Font Awesome API](https://plugins.jenkins.io/font-awesome-api/)
+> - [Font Awesome API](https://plugins.jenkins.io/font-awesome-api/) | [font awesome icon set](https://fontawesome.com/)
 > - format:
 >   ```
 >   symbol-brands/<NAME> plugin-font-awesome-api
@@ -2100,7 +2249,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 
 
 - brands
-  <!--sec data-title="font-awesome-api - brands" data-id="section2" data-show=true data-collapse=true ces-->
+  <!--sec data-title="font-awesome-api - brands" data-id="section3" data-show=true data-collapse=true ces-->
   ```groovy
   [
     'brands/42-group',
@@ -2628,7 +2777,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 
 
 - regular
-  <!--sec data-title="font-awesome-api - regular" data-id="section3" data-show=true data-collapse=true ces-->
+  <!--sec data-title="font-awesome-api - regular" data-id="section4" data-show=true data-collapse=true ces-->
   ```groovy
   [
     'regular/address-book',
@@ -2809,7 +2958,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 
 
 - solid
-  <!--sec data-title="font-awesome-api - solid" data-id="section4" data-show=true data-collapse=true ces-->
+  <!--sec data-title="font-awesome-api - solid" data-id="section5" data-show=true data-collapse=true ces-->
   ```groovy
   [
     'solid/0',
@@ -4304,7 +4453,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 ## emoji symbols api
 
 > [!TIP|label:references:]
-> - [emoji-symbols-api](https://plugins.jenkins.io/emoji-symbols-api/)
+> - [emoji-symbols-api](https://plugins.jenkins.io/emoji-symbols-api/) | [Unicode emojis](https://unicode.org/emoji/charts/full-emoji-list.html)
 > - format
 >   ```groovy
 >   symbol-emoji_<NAME> plugin-emoji-symbols-api
@@ -4359,7 +4508,7 @@ addSummary icon: 'symbol-brands/git plugin-font-awesome-api', text: '<code>symbo
 
 ![emoji-symbols-api - 1](../../screenshot/jenkins/badge/emoji.png)
 
-<!--sec data-title="emoji-symbols-api" data-id="section5" data-show=true data-collapse=true ces-->
+<!--sec data-title="emoji-symbols-api" data-id="section6" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'alien_monster',
