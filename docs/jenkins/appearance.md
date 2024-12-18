@@ -29,7 +29,8 @@
 ### customizable header
 
 > [!TIP|label:references]
-> - [Customizable Header](https://plugins.jenkins.io/customizable-header/) | [CSS Gradient](https://cssgradient.io/)
+> - [Customizable Header](https://plugins.jenkins.io/customizable-header/)
+> - [CSS Gradient](https://cssgradient.io/) | [gradient backgrounds](https://cssgradient.io/gradient-backgrounds/)
 > - [* iMarslo: plugins/customizable-header](./plugins/customizable-header.md)
 
 - `linear-gradient( 68.2deg,  rgba(255,202,88,1) 0%, rgba(139,73,255,1) 100.2% );`
