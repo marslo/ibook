@@ -65,6 +65,7 @@ def showCoverageReport( String xmlPath, Map targets = [:], Boolean failNoReports
 ```
 
 ### Jenkinsfile
+```groovy
 recordCoverage qualityGates: [
                 [criticality: 'NOTE' , integerThreshold: 30 , metric: 'MODULE'             , threshold: 30.0] ,
                 [criticality: 'NOTE' , integerThreshold: 30 , metric: 'PACKAGE'            , threshold: 30.0] ,
@@ -93,6 +94,8 @@ recordCoverage checksAnnotationScope: 'ALL_LINES',
                sourceCodeRetention: 'EVERY_BUILD',
                sourceDirectories: [[path: '../Src']],
                tools: [[parser: 'COBERTURA', pattern: 'a.xml']]
+```
+
 - [Cobertura code coverage report for jenkins pipeline jobs](https://stackoverflow.com/a/44024599/2940319)
   ```groovy
   step([
