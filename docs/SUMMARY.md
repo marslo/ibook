@@ -107,6 +107,7 @@
     * [kubernetes](jenkins/plugins/kubernetes.md)
     * [docker](jenkins/plugins/docker.md)
     * [lockable-resource](jenkins/plugins/lockable-resource.md)
+    * [badge](jenkins/plugins/badge.md)
     * [postbuild](jenkins/plugins/postbuild.md)
     * [artifactory](jenkins/plugins/artifactory.md)
     * [jira-steps](jenkins/plugins/jira-steps.md)

@@ -3,10 +3,7 @@
 
 - [appearance](#appearance)
   - [badge plugin](#badge-plugin)
-  - [ionicons api](#ionicons-api)
-  - [dev tools symbols api](#dev-tools-symbols-api)
   - [custom folder icon](#custom-folder-icon)
-  - [font awesome api](#font-awesome-api)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -36,23 +33,7 @@
 > - [Badge Steps](https://www.jenkins.io/doc/pipeline/steps/badge/#addbadge-add-badge)
 
 
-### ionicons api
-
-> [!TIP|label:references]
-> - [Ionicons API](https://plugins.jenkins.io/ionicons-api/dependencies/) | [ionicons](https://ionic.io/ionicons)
-
-### dev tools symbols api
-
-> [!TIP|label:references]
-> - [Dev Tools Symbols API](https://plugins.jenkins.io/oss-symbols-api/)
-
 ### custom folder icon
 
 > [!TIP|label:references]
 > - [Custom Folder Icon](https://plugins.jenkins.io/custom-folder-icon/)
-
-
-### font awesome api
-
-> [!TIP|label:references]
-> - [Font Awesome API](https://plugins.jenkins.io/font-awesome-api/)
