@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [system messages](#system-messages)
+  - [gradient](#gradient)
 - [jcasc](#jcasc)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -18,6 +19,7 @@
 > - [CSS Gradient Generator](https://www.colorzilla.com/gradient-editor/)
 > - [RGBA to RGB converter](https://borderleft.com/toolbox/rgba/)
 
+### gradient
 - `linear-gradient(135deg, #92FFC0 10%, #002661 100%);` | `#2a647c`
 - `linear-gradient(90deg, rgba(72,97,91,1) 27%, rgba(131,148,97,1) 100%);` | `#48615b`
 - `linear-gradient(90deg, rgba(100,145,115,1) 0%, rgba(219,213,164,1) 100%);` | `#a8b88f`
