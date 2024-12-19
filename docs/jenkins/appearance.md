@@ -4,13 +4,14 @@
 - [appearance](#appearance)
   - [customizable header](#customizable-header)
 - [badge](#badge)
-  - [custom folder icon](#custom-folder-icon)
+  - [jenkins built-in](#jenkins-built-in)
   - [jenkins core symbols](#jenkins-core-symbols)
   - [ionicons api](#ionicons-api)
   - [dev tools symbols api](#dev-tools-symbols-api)
   - [font awesome api](#font-awesome-api)
   - [emoji symbols api](#emoji-symbols-api)
   - [oneline badges](#oneline-badges)
+- [custom folder icon](#custom-folder-icon)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -115,10 +116,93 @@
   ![header - 19](../screenshot/jenkins/header/header-19.png)
 
 ## badge
-### custom folder icon
 
-> [!TIP|label:references]
-> - [Custom Folder Icon](https://plugins.jenkins.io/custom-folder-icon/)
+### jenkins built-in
+
+> [!TIP|label:references:]
+> - svg paths ( `${webroot}/images` ):
+>   - `/var/jenkins_cache/war/images`
+>   - `/var/jenkins_home/war/images`
+> - format:
+>   ```groovy
+>   icon-<NAME>
+>   ```
+
+<!--sec data-title="jenkins built-in icons" data-id="section0" data-show=true data-collapse=true ces-->
+```groovy
+[
+  'accept',
+  'application-certificate',
+  'attribute',
+  'bookmark-new',
+  'certificate',
+  'clipboard',
+  'clipboard-list-solid',
+  'clock',
+  'computer',
+  'computer-user-offline',
+  'computer-x',
+  'delete-document',
+  'document',
+  'document-properties',
+  'edit-delete',
+  'emblem-urgent',
+  'error',
+  'fingerprint',
+  'folder',
+  'folder-delete',
+  'gear',
+  'gear2',
+  'go-down',
+  'go-up',
+  'graph',
+  'headshot',
+  'help',
+  'hourglass',
+  'installer',
+  'keys',
+  'lock',
+  'logo',
+  'monitor',
+  'network',
+  'new-computer',
+  'new-document',
+  'new-package',
+  'new-user',
+  'next',
+  'notepad',
+  'orange-square',
+  'package',
+  'person',
+  'plugin',
+  'previous',
+  'redo',
+  'refresh',
+  'save',
+  'save-new',
+  'search',
+  'secure',
+  'setting',
+  'shield',
+  'star',
+  'star-gold',
+  'star-large',
+  'star-large-gold',
+  'stop',
+  'system-log-out',
+  'terminal',
+  'undo',
+  'up',
+  'user',
+  'video',
+  'warning',
+].eachWithIndex { i, idx ->
+    manager.createSummary("icon-${i}").appendText("<code>${idx}</code> -> <b><code>icon-${i}</code></b>")
+}
+```
+<!--endsec-->
+
+![built-in badges](../screenshot/jenkins/badge/badge.built-in.png)
 
 ### jenkins core symbols
 
@@ -129,7 +213,7 @@
 >   symbol-<NAME>
 >   ```
 
-<!--sec data-title="jenkins core symbols" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="jenkins core symbols" data-id="section1" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'add',
@@ -263,7 +347,7 @@
 >   symbol-<NAME> plugin-ionicons-api
 >   ```
 
-<!--sec data-title="ionicons" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="ionicons" data-id="section2" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'accessibility',
@@ -1724,7 +1808,7 @@
 >   symbol-<NAME> plugin-oss-symbols-api
 >   ```
 
-<!--sec data-title="oss-symbols" data-id="section2" data-show=true data-collapse=true ces-->
+<!--sec data-title="oss-symbols" data-id="section3" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'android-icon-color',
@@ -2327,7 +2411,7 @@
 
 
 - brands
-  <!--sec data-title="font-awesome-api - brands" data-id="section3" data-show=true data-collapse=true ces-->
+  <!--sec data-title="font-awesome-api - brands" data-id="section4" data-show=true data-collapse=true ces-->
   ```groovy
   [
     'brands/42-group',
@@ -2855,7 +2939,7 @@
 
 
 - regular
-  <!--sec data-title="font-awesome-api - regular" data-id="section4" data-show=true data-collapse=true ces-->
+  <!--sec data-title="font-awesome-api - regular" data-id="section5" data-show=true data-collapse=true ces-->
   ```groovy
   [
     'regular/address-book',
@@ -3036,7 +3120,7 @@
 
 
 - solid
-  <!--sec data-title="font-awesome-api - solid" data-id="section5" data-show=true data-collapse=true ces-->
+  <!--sec data-title="font-awesome-api - solid" data-id="section6" data-show=true data-collapse=true ces-->
   ```groovy
   [
     'solid/0',
@@ -4586,7 +4670,7 @@
 
 ![emoji-symbols-api - 1](../../screenshot/jenkins/badge/emoji.png)
 
-<!--sec data-title="emoji-symbols-api" data-id="section6" data-show=true data-collapse=true ces-->
+<!--sec data-title="emoji-symbols-api" data-id="section7" data-show=true data-collapse=true ces-->
 ```groovy
 [
   'alien_monster',
@@ -4652,4 +4736,10 @@
 >   - [Virtual Pet 8bit Vectors Collection](https://www.svgrepo.com/collection/virtual-pet-8bit-vectors/)
 >   - [Kids Interface Collection](https://www.svgrepo.com/collection/kids-interface)
 > - [image editor](https://www.iloveimg.com/)
+
+
+## custom folder icon
+
+> [!TIP|label:references]
+> - [Custom Folder Icon](https://plugins.jenkins.io/custom-folder-icon/)
 
