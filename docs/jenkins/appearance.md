@@ -10,6 +10,7 @@
   - [dev tools symbols api](#dev-tools-symbols-api)
   - [font awesome api](#font-awesome-api)
   - [emoji symbols api](#emoji-symbols-api)
+  - [oneline badges](#oneline-badges)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -4633,4 +4634,22 @@
 }
 ```
 <!--endsec-->
+
+### oneline badges
+
+> [!NOTE|label:references]
+> - [icon-icons](https://icon-icons.com/)
+> - [pngwing](https://www.pngwing.com/)
+> - [svg repo](https://www.svgrepo.com/)
+>   - [Carbon Design Line Icons Collection](https://www.svgrepo.com/collection/carbon-design-line-icons)
+>   - [Doodle Icons Collection](https://www.svgrepo.com/collection/doodle-icons)
+>   - [Universal 05 Collection](https://www.svgrepo.com/collection/universal-05)
+>   - [Universal 08 Collection](https://www.svgrepo.com/collection/universal-08)
+>   - [Universal 12 Collection](https://www.svgrepo.com/collection/universal-12)
+>   - [Pixelated Interface Icons Collection](https://www.svgrepo.com/collection/pixelated-interface-icons/)
+>   - [Essential Basic Icons Collection](https://www.svgrepo.com/collection/essential-basic-icons)
+>   - [Statistics Icons Collection](https://www.svgrepo.com/collection/statistics-icons)
+>   - [Virtual Pet 8bit Vectors Collection](https://www.svgrepo.com/collection/virtual-pet-8bit-vectors/)
+>   - [Kids Interface Collection](https://www.svgrepo.com/collection/kids-interface)
+> - [image editor](https://www.iloveimg.com/)
 

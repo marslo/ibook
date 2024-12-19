@@ -5,6 +5,7 @@
   - [setup badge from another plugins](#setup-badge-from-another-plugins)
   - [more on badges](#more-on-badges)
 - [badge images](#badge-images)
+  - [svgs](#svgs)
   - [icons and badges from url](#icons-and-badges-from-url)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -24,7 +25,7 @@ manager.addBadge( '/plugin/artifactory/images/artifactory-promote.png', 'promote
 
 ### more on badges
 
-> [!NOTE]
+> [!NOTE|label:references:]
 > ```groovy
 > '/plugin/badge/images/completed.gif', '/plugin/badge/images/db_in.gif', '/plugin/badge/images/db_out.gif', '/plugin/badge/images/delete.gif', '/plugin/badge/images/error.gif', '/plugin/badge/images/folder.gif', '/plugin/badge/images/green.gif', '/plugin/badge/images/info.gif', '/plugin/badge/images/red.gif', '/plugin/badge/images/save.gif', '/plugin/badge/images/success.gif', '/plugin/badge/images/text.gif', '/plugin/badge/images/warning.gif', '/plugin/badge/images/yellow.gif'
 > // same as
@@ -68,59 +69,132 @@ def showBadges( String... badges ) {
 }
 ```
 
-![addBadges](../../screenshot/jenkins/postgroovy.addBadges.png)
+![addBadges](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild.addBadges.png)
 
 ## badge images
-- to generate the images
-  ```groovy
-  String png = 'aborted accept attribute blue clipboard computer-x computer copy dark-grey disabled document empty error fingerprint folder-delete folder freestyleproject gear2 graph grey health-00to19 health-20to39 health-40to59 health-60to79 health-80plus help installer light-grey lock monitor network nobuilt notepad orange-square package plugin red redo refresh search secure setting star-gold star system-log-out terminal user warning yellow'
-  png.split().each {
-    manager.createSummary("${it}.png").appendText("<b><code>${it}.png</code></pre>")
-  }
-  ```
+
+> [!TIP|label:system incos]
+> - `/var/jenkins_cache/war` or `/var/jenkins_home/war/images`
+
+```groovy
+String png = 'aborted accept attribute blue clipboard computer-x computer copy dark-grey disabled document empty error fingerprint folder-delete folder freestyleproject gear2 graph grey health-00to19 health-20to39 health-40to59 health-60to79 health-80plus help installer light-grey lock monitor network nobuilt notepad orange-square package plugin red redo refresh search secure setting star-gold star system-log-out terminal user warning yellow'
+png.split().each {
+  manager.createSummary("${it}.png").appendText("<b><code>${it}.png</code></pre>")
+}
+```
 
 - dark theme
-![image for dark theme](../../screenshot/jenkins/postgroovy-darktheme-images.png)
+
+  ![image for dark theme](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild-darktheme-images.png)
 
 - [jenkins material theme](http://afonsof.com/jenkins-material-theme/)
-![images](../../screenshot/jenkins/postgroovy-default-images.png)
 
+  ![images](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild-default-images.png)
+
+
+### svgs
+
+> [!TIP|label:references:]
+> - for Jenkins newer version, you can use `svg` images
+
+```groovy
+List svgs = [
+  'fingerprint.svg',
+  'star-gold.svg',
+  'plugin.svg',
+  'headshot.svg',
+  'go-down.svg',
+  'folder.svg',
+  'computer-user-offline.svg',
+  'application-certificate.svg',
+  'stop.svg',
+  'setting.svg',
+  'new-user.svg',
+  'new-document.svg',
+  'new-computer.svg',
+  'folder-delete.svg',
+  'clipboard-list-solid.svg',
+  'save-new.svg',
+  'notepad.svg',
+  'new-package.svg',
+  'document.svg',
+  'delete-document.svg',
+  'attribute.svg',
+  'star-large-gold.svg',
+  'search.svg',
+  'keys.svg',
+  'hourglass.svg',
+  'gear.svg',
+  'error.svg',
+  'document-properties.svg',
+  'clipboard.svg',
+  'undo.svg',
+  'star-large.svg',
+  'refresh.svg',
+  'previous.svg',
+  'monitor.svg',
+  'logo.svg',
+  'help.svg',
+  'clock.svg',
+  'warning.svg',
+  'video.svg',
+  'user.svg',
+  'terminal.svg',
+  'redo.svg',
+  'package.svg',
+  'computer.svg',
+  'accept.svg',
+  'up.svg',
+  'star.svg',
+  'network.svg',
+  'installer.svg',
+  'emblem-urgent.svg',
+  'computer-x.svg',
+  'shield.svg',
+  'secure.svg',
+  'save.svg',
+  'person.svg',
+  'next.svg',
+  'lock.svg',
+  'go-up.svg',
+  'gear2.svg',
+  'edit-delete.svg',
+  'bookmark-new.svg',
+  'system-log-out.svg',
+  'orange-square.svg',
+  'graph.svg',
+  'certificate.svg'
+].eachWithIndex { i, idx ->
+  manager.createSummary("${i}").appendText("<code>${idx}</code> -> <b><code>${i}</code></b>")
+}
+```
+
+![svgs](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild-svgs.png)
+
+![pngs](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild-pngs.png)
 
 ### icons and badges from url
 
-> [!NOTE]
-> - [icon-icons](https://icon-icons.com/)
-> - [pngwing](https://www.pngwing.com/)
-> - [svg repo](https://www.svgrepo.com/)
->   - [Carbon Design Line Icons Collection](https://www.svgrepo.com/collection/carbon-design-line-icons)
->   - [Doodle Icons Collection](https://www.svgrepo.com/collection/doodle-icons)
->   - [Universal 05 Collection](https://www.svgrepo.com/collection/universal-05)
->   - [Universal 08 Collection](https://www.svgrepo.com/collection/universal-08)
->   - [Universal 12 Collection](https://www.svgrepo.com/collection/universal-12)
->   - [Pixelated Interface Icons Collection](https://www.svgrepo.com/collection/pixelated-interface-icons/)
->   - [Essential Basic Icons Collection](https://www.svgrepo.com/collection/essential-basic-icons)
->   - [Statistics Icons Collection](https://www.svgrepo.com/collection/statistics-icons)
->   - [Virtual Pet 8bit Vectors Collection](https://www.svgrepo.com/collection/virtual-pet-8bit-vectors/)
->   - [Kids Interface Collection](https://www.svgrepo.com/collection/kids-interface)
-> - [image editor](https://www.iloveimg.com/)
+> [!TIP|label:references:]
+> - [* iMarslo: oneline badge](../appearance.md#oneline-badges)
 
 ```groovy
 String url = 'https://artifactory.domain.com/artifactory/tools/jenkins/icon/'
 
-manager.createSummary( "${url}/jira.png" ).appendText ( 'jira' )
-manager.createSummary( "${url}/confluence.png" ).appendText ( 'confluence' )
-manager.createSummary( "${url}/git-1.png" ).appendText ( 'git-1' )
-manager.createSummary( "${url}/git-2.png" ).appendText ( 'git-2' )
-manager.createSummary( "${url}/git-3.png" ).appendText ( 'git-3' )
-manager.createSummary( "${url}/pipe.png" ).appendText ( 'pipeline' )
+manager.createSummary( "${url}/jira.png"                ) .appendText ( 'jira' )
+manager.createSummary( "${url}/confluence.png"          ) .appendText ( 'confluence' )
+manager.createSummary( "${url}/git-1.png"               ) .appendText ( 'git-1' )
+manager.createSummary( "${url}/git-2.png"               ) .appendText ( 'git-2' )
+manager.createSummary( "${url}/git-3.png"               ) .appendText ( 'git-3' )
+manager.createSummary( "${url}/pipe.png"                ) .appendText ( 'pipeline' )
 
-manager.addBadge( "${url}/jira.png", 'jira' )
-manager.addBadge( "${url}/confluence.png", 'confluence' )
-manager.addBadge( "${url}/git-1.png", 'git-1' )
-manager.addBadge( "${url}/git-2.png", 'git-2' )
-manager.addBadge( "${url}/git-3.png", 'git-3' )
+manager.addBadge( "${url}/jira.png"       , 'jira'       )
+manager.addBadge( "${url}/confluence.png" , 'confluence' )
+manager.addBadge( "${url}/git-1.png"      , 'git-1'      )
+manager.addBadge( "${url}/git-2.png"      , 'git-2'      )
+manager.addBadge( "${url}/git-3.png"      , 'git-3'      )
 ```
 
-![additional icons](../../screenshot/jenkins/postgroovy-additional-icon-png-1.png)
+![additional icons](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild-additional-icon-png-1.png)
 
-![additional icons](../../screenshot/jenkins/postgroovy-additional-icon-png-2.png)
+![additional icons](../../screenshot/jenkins/groovy-postbuild/groovy-postbuild-additional-icon-png-2.png)
