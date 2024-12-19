@@ -181,12 +181,12 @@ List svgs = [
 ```groovy
 String url = 'https://artifactory.domain.com/artifactory/tools/jenkins/icon/'
 
-manager.createSummary( "${url}/jira.png"                ) .appendText ( 'jira' )
-manager.createSummary( "${url}/confluence.png"          ) .appendText ( 'confluence' )
-manager.createSummary( "${url}/git-1.png"               ) .appendText ( 'git-1' )
-manager.createSummary( "${url}/git-2.png"               ) .appendText ( 'git-2' )
-manager.createSummary( "${url}/git-3.png"               ) .appendText ( 'git-3' )
-manager.createSummary( "${url}/pipe.png"                ) .appendText ( 'pipeline' )
+manager.createSummary( "${url}/jira.png"       ).appendText( 'jira'       )
+manager.createSummary( "${url}/confluence.png" ).appendText( 'confluence' )
+manager.createSummary( "${url}/git-1.png"      ).appendText( 'git-1'      )
+manager.createSummary( "${url}/git-2.png"      ).appendText( 'git-2'      )
+manager.createSummary( "${url}/git-3.png"      ).appendText( 'git-3'      )
+manager.createSummary( "${url}/pipe.png"       ).appendText( 'pipeline'   )
 
 manager.addBadge( "${url}/jira.png"       , 'jira'       )
 manager.addBadge( "${url}/confluence.png" , 'confluence' )

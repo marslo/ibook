@@ -11,6 +11,7 @@
 - [jenkins system](#jenkins-system)
   - [get system info](#get-system-info)
   - [modify log level](#modify-log-level)
+  - [theme management](#theme-management)
   - [RABC](#rabc)
 - [jobs & builds](#jobs--builds)
   - [list build status with percentage](#list-build-status-with-percentage)
@@ -394,6 +395,29 @@ System.setProperty( 'org.apache.commons.logging.simplelog.log.org.apache.commons
   println System.getProperty( 'log4j.logger.org.apache.http.wire'                                      );
   println System.getProperty( 'org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient' );
   ```
+
+### theme management
+```bash
+import jenkins.model.*
+
+def theme = null
+
+// Check if Simple Theme Plugin is installed
+def themeManager = Jenkins.instance.getExtensionList('org.codefirst.SimpleThemeDecorator')
+if (themeManager && themeManager.size() > 0) {
+  theme = themeManager[0].getUrl()
+  println( "Current theme URL: ${theme}" )
+} else {
+  println("No theme plugin detected, using default Jenkins theme.")
+}
+
+// Example logic to infer Dark Theme
+if (theme && theme.toLowerCase().contains("dark")) {
+    println("Jenkins is using a Dark Theme.")
+} else {
+    println("Jenkins is not using a Dark Theme.")
+}
+```
 
 ### RABC
 

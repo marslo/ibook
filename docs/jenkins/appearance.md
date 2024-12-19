@@ -4742,4 +4742,3 @@
 
 > [!TIP|label:references]
 > - [Custom Folder Icon](https://plugins.jenkins.io/custom-folder-icon/)
-
