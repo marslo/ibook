@@ -19,6 +19,7 @@
   - [enable Technical Symbols](#enable-technical-symbols)
   - [and snippets](#and-snippets)
   - [finally](#finally)
+  - [unicode hex input](#unicode-hex-input)
 - [others](#others)
   - [install font](#install-font)
   - [create image](#create-image)
@@ -650,9 +651,11 @@ $ find /System/Library/Frameworks -type f -name "lsregister" -exec {} -kill -see
 ## [add snippets for input](https://sspai.com/post/36203)
 ### enable Technical Symbols
 - Input Method ⇢ **Show emoji and symbols**
+
   ![show emoji & symbols](../screenshot/osx/snippets-0.png)
 
 - Open **Customized List** ⇢ **Technical Symbols**
+
   ![customized list](../screenshot/osx/snippets-1.png)
 
   ![technical symbols](../screenshot/osx/snippets-2.png)
@@ -667,6 +670,25 @@ $ find /System/Library/Frameworks -type f -name "lsregister" -exec {} -kill -see
 ![test-1](../screenshot/osx/snippets-4.png)
 
 ![test-2](../screenshot/osx/snippets-5.png)
+
+### unicode hex input
+
+> [!NOTE|label:references:]
+> - [3 Ways to Insert the Mac Command Symbol](https://instructionaltechtalk.com/3-ways-to-insert-the-mac-command-symbol/)
+
+
+![unicode hex input](../screenshot/osx/osx-input-unicode-hex.gif)
+
+#### settings
+
+- click **input method** ⇢ **Open Keyboard Settings...**
+
+  ![keyboard settings](../screenshot/osx/osx-input-unicode-hex-1.png)
+
+- click **+** ⇢ **Others** ⇢ **Unicode Hex Input**
+
+  ![unicode hex input](../screenshot/osx/osx-input-unicode-hex-2.png)
+
 
 ## others
 ### [install font](https://www.reddit.com/r/programming/comments/kj0prs/comment/ggvwadd/?utm_source=share&utm_medium=web2x&context=3)

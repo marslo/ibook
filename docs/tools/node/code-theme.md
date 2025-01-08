@@ -1,3 +1,10 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [fonts](#fonts)
+- [themes](#themes)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## fonts
 
@@ -7,7 +14,7 @@
 
 ## themes
 
-> [!TIP]
+> [!TIP|label:themes]
 > - [highlight.js](https://highlightjs.org/) | [highlightjs/highlight.js](https://github.com/highlightjs/highlight.js)
 > - [root loops](https://rootloops.sh/)
 > - [Let's Create a Terminal Color Scheme](https://hamvocke.com/blog/lets-create-a-terminal-color-scheme/)
@@ -16,6 +23,9 @@
 >   - [base16-apprentice](https://highlightjs.org/demo#lang=bash&v=1&theme=base16-apprentice&code=IyEvdXNyL2Jpbi9lbnYgYmFzaAojIHNoZWxsY2hlY2sgc291cmNlPS9kZXYvbnVsbAoKd2hpbGUgW1sgJCMgLWd0IDAgXV07IGRvCiAgY2FzZSAiJDEiIGluCiAgICAtciB8IC0tcmVtb3RlLWxvZyApIHJsb2c9J3RydWUnOyBzaGlmdCA7OwogIGVzYWMKZG9uZQoKZ2RpZmY9JChnaXQgLS1uby1wYWdlciDEFiAtLXN0YcQXcmVsYXRpdmUgfCBoZWFkIC1uLTEpCmF3ayAnRk5SPT1OUiB7IGs9JDE7ICQxPSIiOyBtYXBba109JDA7IG5leHQgfSB7IHByaW50ICQwxR0kMl0gfScgXOUAvDwoZWNobyAt5ADSe%2BUAkn0iKSA85QCV5ACDdXMgLXNiKQojIHwgY29sdW1uIC10IC1zICd8JyAtb8UHfCBzZWTEQycxIHMvfCQvLycKCmlm5AE%2BLXrLWOUBQ3RoZeQBNmJyYW5jaOcA%2FnJldi1wYXJzZSAtLWFiYsQPcmVmIEhFQUQp5AE06ACiXG4kKGMgV2RpKX5%2BPiQoYykgxBBZaSkke8ZQfckVxCU6xQ4iCiAg7wFj5AGjLS1jb2xvciAtLWdyYXBoIC0tcHJldHR5PXRmb3JtYXQ6JyVDKDYpJWglQyhyZXNldCkgLSVDKHllbGxvdyklZMoXJXMgJUMoZ3JlZW4pKCVjcinED2JsdWUpPCVhbj7JKSfqAN5jb21t5QCTZGF0ZT3pAeQtLW1heC1jb3VudD0zCiAg5gFE5gJGID3kAUrkAlfuAUn%2FAR%2FlAR%2FmAppzL29yaWdpbi%2F%2FAS4g%2FwEw%2FwEw%2FwEw%2FwEw%2FwEw%2BwEwIO8A5iLpAOfkANRmaQpmaQoKIyB2aW06dGFic3RvcD0yOnNvZnTLDuQDqHdpZHRoPTI6ZXhwYW5kdGFiOmZpbGV0eXBlPXNo)
 >   - [base16-sandcastle](https://highlightjs.org/demo#lang=bash&v=1&theme=base16-sandcastle&code=IyEvdXNyL2Jpbi9lbnYgYmFzaAojIHNoZWxsY2hlY2sgc291cmNlPS9kZXYvbnVsbAoKd2hpbGUgW1sgJCMgLWd0IDAgXV07IGRvCiAgY2FzZSAiJDEiIGluCiAgICAtciB8IC0tcmVtb3RlLWxvZyApIHJsb2c9J3RydWUnOyBzaGlmdCA7OwogIGVzYWMKZG9uZQoKZ2RpZmY9JChnaXQgLS1uby1wYWdlciDEFiAtLXN0YcQXcmVsYXRpdmUgfCBoZWFkIC1uLTEpCmF3ayAnRk5SPT1OUiB7IGs9JDE7ICQxPSIiOyBtYXBba109JDA7IG5leHQgfSB7IHByaW50ICQwxR0kMl0gfScgXOUAvDwoZWNobyAt5ADSe%2BUAkn0iKSA85QCV5ACDdXMgLXNiKQojIHwgY29sdW1uIC10IC1zICd8JyAtb8UHfCBzZWTEQycxIHMvfCQvLycKCmlm5AE%2BLXrLWOUBQ3RoZeQBNmJyYW5jaOcA%2FnJldi1wYXJzZSAtLWFiYsQPcmVmIEhFQUQp5AE06ACiXG4kKGMgV2RpKX5%2BPiQoYykgxBBZaSkke8ZQfckVxCU6xA4iCiAg7wFi5AGiLS1jb2xvciAtLWdyYXBoIC0tcHJldHR5PXRmb3JtYXQ6JyVDKDYpJWglQyhyZXNldCkgLSVDKHllbGxvdyklZMoXJXMgJUMoZ3JlZW4pKCVjcinED2JsdWUpPCVhbj7JKSfqAN1jb21t5QCTZGF0ZT3pAeMtLW1heC1jb3VudD0zCiAg5gFD5gJFID3kAUnkAlbuAUj%2FAR7lAR7mAplzL29yaWdpbi%2F7AS0g5AEu%2FwEw%2FwEw%2FwEw%2FwEw%2FwEw%2BwEwIO8A5iLpAOfkANRmaQpmaQoKIyB2aW06dGFic3RvcD0yOnNvZnTLDuQDp3dpZHRoPTI6ZXhwYW5kdGFiOmZpbGV0eXBlPXNo)
 >   - [base16-solarized-dark](https://highlightjs.org/demo#lang=bash&v=1&theme=base16-solarized-dark&code=IyEvdXNyL2Jpbi9lbnYgYmFzaAojIHNoZWxsY2hlY2sgc291cmNlPS9kZXYvbnVsbAoKd2hpbGUgW1sgJCMgLWd0IDAgXV07IGRvCiAgY2FzZSAiJDEiIGluCiAgICAtciB8IC0tcmVtb3RlLWxvZyApIHJsb2c9J3RydWUnOyBzaGlmdCA7OwogIGVzYWMKZG9uZQoKZ2RpZmY9JChnaXQgLS1uby1wYWdlciDEFiAtLXN0YcQXcmVsYXRpdmUgfCBoZWFkIC1uLTEpCmF3ayAnRk5SPT1OUiB7IGs9JDE7ICQxPSIiOyBtYXBba109JDA7IG5leHQgfSB7IHByaW50ICQwxR0kMl0gfScgXOUAvDwoZWNobyAt5ADSe%2BUAkn0iKSA85QCV5ACDdXMgLXNiKQojIHwgY29sdW1uIC10IC1zICd8JyAtb8UHfCBzZWTEQycxIHMvfCQvLycKCmlm5AE%2BLXrLWOUBQ3RoZeQBNmJyYW5jaOcA%2FnJldi1wYXJzZSAtLWFiYsQPcmVmIEhFQUQp5AE06ACiXG4kKGMgV2RpKX5%2BPiQoYykgxBBZaSkke8ZQfckVxCU6xA4iCiAg7wFi5AGiLS1jb2xvciAtLWdyYXBoIC0tcHJldHR5PXRmb3JtYXQ6JyVDKDYpJWglQyhyZXNldCkgLSVDKHllbGxvdyklZMoXJXMgJUMoZ3JlZW4pKCVjcinED2JsdWUpPCVhbj7JKSfqAN1jb21t5QCTZGF0ZT3pAeMtLW1heC1jb3VudD0zCiAg5gFD5gJFID3kAUnkAlbuAUj%2FAR7lAR7mAplzL29yaWdpbi%2F7AS0g5AEu%2FwEw%2FwEw%2FwEw%2FwEw%2FwEw%2BwEwIO8A5iLpAOfkANRmaQpmaQoKIyB2aW06dGFic3RvcD0yOnNvZnTLDuQDp3dpZHRoPTI6ZXhwYW5kdGFiOmZpbGV0eXBlPXNo)
+> - [* iMarslo: see also : iterm2 » theme](../../tools/app/iterm2.md#theme)
+>   - [Gogh : Color scheme for your terminal](https://gogh-co.github.io/Gogh/)
+>   - [Iterm2-color-schemes](https://iterm2colorschemes.com/)
 
 - [agate](https://github.com/highlightjs/highlight.js/blob/main/src/styles/agate.css)
 

@@ -355,13 +355,10 @@ $ defaults write com.googlecode.iterm2 AIHotKey -int 121
 
 ### shortcut
 
-- wake up AI
-
-
-  |                  SHORTCUT                  | DESCRIPTION                    |
-  |:------------------------------------------:|--------------------------------|
-  |         <kbd>⌘</kbd> + <kbd>y</kbd>        | Engage Artificial Intelligence |
-  | <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>.</kbd> | Engage Artificial Intelligence |
+|                  SHORTCUT                  | DESCRIPTION                    |
+|:------------------------------------------:|--------------------------------|
+|         <kbd>⌘</kbd> + <kbd>y</kbd>        | Engage Artificial Intelligence |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>.</kbd> | Engage Artificial Intelligence |
 
 
 - ⌘ + y
@@ -377,23 +374,20 @@ $ defaults write com.googlecode.iterm2 AIHotKey -int 121
 
   ![ai shortcut - 4](../../screenshot/iterm2/ai/iterm2-ai-4.png)
 
-- shortcuts in AI Prompt
-
-
-  | SHORTCUT                                   | DESCRIPTION                |
-  |--------------------------------------------|----------------------------|
-  | <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↑</kbd> | Add cursor above           |
-  | <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↓</kbd> | Add cursor below           |
-  | <kbd>^</kbd> + <kbd>⇧</kbd> + click        | Add cursor                 |
-  | <kbd>⌥</kbd> + drag                        | Add cursors                |
-  | <kbd>⌘</kbd> + <kbd>Y</kbd>                | Natural language AI lookup |
-  | <kbd>⌘</kbd> + <kbd>F</kbd>                | Open Find bar              |
-  | <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>V</kbd> | Open in Advanced Paste     |
-  | <kbd>⌘</kbd> + click                       | Open in explainshell.com   |
-  | <kbd>⇧</kbd> + <kbd>↩</kbd>                | Send contents or selection |
-  | <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>↩</kbd> | Send command at cursor     |
-  | <kbd>⌥</kbd> + <kbd>↩</kbd>                | Enqueue command at cursor  |
-  | <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>;</kbd> | View command history       |
+| SHORTCUT                                   | DESCRIPTION                |
+|--------------------------------------------|----------------------------|
+| <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↑</kbd> | Add cursor above           |
+| <kbd>^</kbd> + <kbd>⇧</kbd> + <kbd>↓</kbd> | Add cursor below           |
+| <kbd>^</kbd> + <kbd>⇧</kbd> + click        | Add cursor                 |
+| <kbd>⌥</kbd> + drag                        | Add cursors                |
+| <kbd>⌘</kbd> + <kbd>Y</kbd>                | Natural language AI lookup |
+| <kbd>⌘</kbd> + <kbd>F</kbd>                | Open Find bar              |
+| <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>V</kbd> | Open in Advanced Paste     |
+| <kbd>⌘</kbd> + click                       | Open in explainshell.com   |
+| <kbd>⇧</kbd> + <kbd>↩</kbd>                | Send contents or selection |
+| <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>↩</kbd> | Send command at cursor     |
+| <kbd>⌥</kbd> + <kbd>↩</kbd>                | Enqueue command at cursor  |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>;</kbd> | View command history       |
 
 ## [iTerm2 Python REPL](https://iterm2.com/python-api/tutorial/running.html)
 ```bash
@@ -415,6 +409,7 @@ await iterm2.Window.async_create(connection)
 ## theme
 
 > [!NOTE|label:references:]
+> - [* iMarslo: see also code-theme](../node/code-theme.md#themes)
 > - [Iterm2-color-schemes](https://iterm2colorschemes.com/)
 > - [mbadolato/iTerm2-Color-Schemes](https://github.com/mbadolato/iTerm2-Color-Schemes)
 > - [Alan/iTerm2-Color-Schemes](https://gitee.com/glp800/iTerm2-Color-Schemes)
