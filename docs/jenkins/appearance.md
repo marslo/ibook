@@ -4668,7 +4668,7 @@
 }
 ```
 
-![emoji-symbols-api - 1](../../screenshot/jenkins/badge/emoji.png)
+![emoji-symbols-api - 1](../screenshot/jenkins/badge/emoji.png)
 
 <!--sec data-title="emoji-symbols-api" data-id="section7" data-show=true data-collapse=true ces-->
 ```groovy
