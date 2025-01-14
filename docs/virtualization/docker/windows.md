@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [sample command](#sample-command)
 - [docker-ee](#docker-ee)
   - [install](#install)
   - [upgrade](#upgrade)
@@ -40,6 +41,18 @@
 > - [* Remote Management of a Windows Docker Host](https://learn.microsoft.com/en-us/virtualization/windowscontainers/management/manage_remotehost)
 > - [* slonopotamus/stevedore](https://github.com/slonopotamus/stevedore)
 {% endhint %}
+
+## [sample command](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/#topics-for-windows)
+```powershell
+> docker run --rm -ti -v C:\Users\user\work:/work alpine
+# unix-like path
+> docker run --rm -ti -v /c/Users/user/work:/work alpine ls /work
+# gitbash
+> docker run --rm -ti -v C:\\Users\\user\\work:/work alpine
+
+# -- to identify the errors are generated from your script or not --
+> MSYS_NO_PATHCONV=1 docker run --rm -ti -v $(pwd):/work alpine ls /work
+```
 
 ## docker-ee
 

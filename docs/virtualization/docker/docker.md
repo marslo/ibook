@@ -7,6 +7,10 @@
 - [init](#init)
   - [install](#install)
   - [troubleshooting](#troubleshooting)
+- [upgrade](#upgrade)
+  - [Upgrade to Docker Desktop version 4.37.2 (recommended)](#upgrade-to-docker-desktop-version-4372-recommended)
+  - [Install a patch if you have version 4.32 - 4.36](#install-a-patch-if-you-have-version-432---436)
+  - [MDM script](#mdm-script)
 - [auto-completion](#auto-completion)
   - [complete alias](#complete-alias)
   - [Linux](#linux)
@@ -277,6 +281,59 @@
   docker-scan-plugin.x86_64                          0.23.0-3.el8                                          @docker-ce-stable
   systemd-container.x86_64                           239-76.el8                                            @anaconda
   ```
+
+## upgrade
+### [Upgrade to Docker Desktop version 4.37.2 (recommended)](https://docs.docker.com/desktop/cert-revoke-solution/#upgrade-to-docker-desktop-version-4372-recommended)
+```bash
+$ sudo launchctl bootout system/com.docker.vmnetd 2>/dev/null || true
+$ sudo launchctl bootout system/com.docker.socket 2>/dev/null || true
+
+$ sudo rm /Library/PrivilegedHelperTools/com.docker.vmnetd || true
+$ sudo rm /Library/PrivilegedHelperTools/com.docker.socket || true
+
+$ ps aux | grep -i docker | awk '{print $2}' | sudo xargs kill -9 2>/dev/null
+```
+
+### [Install a patch if you have version 4.32 - 4.36](https://docs.docker.com/desktop/cert-revoke-solution/#install-a-patch-if-you-have-version-432---436)
+```bash
+$ sudo launchctl bootout system/com.docker.vmnetd 2>/dev/null || true
+$ sudo launchctl bootout system/com.docker.socket 2>/dev/null || true
+
+$ sudo rm /Library/PrivilegedHelperTools/com.docker.vmnetd || true
+$ sudo rm /Library/PrivilegedHelperTools/com.docker.socket || true
+
+$ ps aux | grep docker | awk '{print $2}' | sudo xargs kill -9 2>/dev/null
+```
+
+### [MDM script](https://docs.docker.com/desktop/cert-revoke-solution/#mdm-script)
+```bash
+#!/bin/bash
+
+# Stop the docker services
+echo "Stopping Docker..."
+sudo pkill -i docker
+
+# Stop the vmnetd service
+echo "Stopping com.docker.vmnetd service..."
+sudo launchctl bootout system /Library/LaunchDaemons/com.docker.vmnetd.plist
+
+# Stop the socket service
+echo "Stopping com.docker.socket service..."
+sudo launchctl bootout system /Library/LaunchDaemons/com.docker.socket.plist
+
+# Remove vmnetd binary
+echo "Removing com.docker.vmnetd binary..."
+sudo rm -f /Library/PrivilegedHelperTools/com.docker.vmnetd
+
+# Remove socket binary
+echo "Removing com.docker.socket binary..."
+sudo rm -f /Library/PrivilegedHelperTools/com.docker.socket
+
+# Install new binaries
+echo "Install new binaries..."
+sudo cp /Applications/Docker.app/Contents/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools/
+sudo cp /Applications/Docker.app/Contents/MacOS/com.docker.socket /Library/PrivilegedHelperTools/
+```
 
 ## auto-completion
 

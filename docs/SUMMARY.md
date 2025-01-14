@@ -159,6 +159,7 @@
     * [dockerfile](virtualization/docker/dockerfile.md)
     * [dockerd](virtualization/docker/dockerd.md)
     * [tricky](virtualization/docker/tricky.md)
+    * [troubleshooting](virtualization/docker/troubleshooting.md)
     * [windows](virtualization/docker/windows.md)
   * [crio](virtualization/crio/crio.md)
   * [podman](virtualization/podman/podman.md)

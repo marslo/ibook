@@ -299,7 +299,6 @@ tems.find ({
          -H "Content-Type: text/plain" \
          -d """items.find ({ \"repo\": \"my-repo\", \"type\" : \"folder\" , \"depth\" : \"1\", \"created\" : { \"\$before\" : \"4mo\" } }) """
 
-
   # -- or --
   $ curl -s \
          --netrc-file ~/.marslo/.netrc \
@@ -422,9 +421,10 @@ items.find().include("stat", "property")
 items.find().include("name", "repo", "stat")
 
 // Find all builds that generated items with an Apache license, and display the build fields as well as the item "name" fields. Click below to view the output of this query
-builds.find({
-                "module.artifact.item.@license":{"$match":"Apache*"}
-            }
+builds.find(
+  {
+    "module.artifact.item.@license":{"$match":"Apache*"}
+  }
 ).include("module.artifact.item.name")
 ```
 
@@ -490,5 +490,3 @@ builds.find({
 >
 >          curl -T "img[1-1000].png" ftp://ftp.example.com/upload/
 <!--endsec-->
-
-
