@@ -729,12 +729,13 @@ Labels:
 
 ## Hyper-V
 
-> [!TIP]
+> [!TIP|label:references:]
 > - [* Hyper-V Technology Overview](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-technology-overview)
 > - [* Install the Hyper-V role on Windows Server](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/install-the-hyper-v-role-on-windows-server)
 > - [* Docker Linux Container running on Windows Server 2019](https://mountainss.wordpress.com/2020/03/31/docker-linux-container-running-on-windows-server-2019-winserv-docker-containers/)
 > - [System requirements for Hyper-V on Windows Server](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/system-requirements-for-hyper-v-on-windows#general-requirements)
 > - [* Create Virtual Machine with Hyper-V on Windows 10](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/create-virtual-machine)
+> - [Hyper-V](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/#hyper-v) | [Hypervisor enabled at Windows startup](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/#hypervisor-enabled-at-windows-startup)
 
 ### install
 #### in windows servers

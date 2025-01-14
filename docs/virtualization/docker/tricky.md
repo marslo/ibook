@@ -1,6 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [configure files](#configure-files)
+  - [docker desktop](#docker-desktop)
 - [docker with proxy](#docker-with-proxy)
   - [docker pull](#docker-pull)
   - [docker build](#docker-build)
@@ -23,8 +25,183 @@
   - [execute](#execute)
 - [troubleshooting](#troubleshooting)
   - [`permission denied while trying to connect to the Docker daemon socket`](#permission-denied-while-trying-to-connect-to-the-docker-daemon-socket)
+  - [Malware Blocked - 'com.docker.vmnetd'](#malware-blocked---comdockervmnetd)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## configure files
+
+### docker desktop
+
+> [!TIP|label:references:]
+> - [Change your Docker Desktop settings](https://docs.docker.com/desktop/settings-and-maintenance/settings/)
+
+| FILE                                              | MACOS                                                                                | WINDOWS                                | LINUX                           |
+|---------------------------------------------------|--------------------------------------------------------------------------------------|----------------------------------------|---------------------------------|
+| `settings-store.json`<br>`settings.json`(<=v4.34) | `~/Library/Group Containers/group.com.docker/settings-store.json`                    | `%APPDATA%\Docker\settings-store.json` | `~/.docker/settings-store.json` |
+| `.com.apple.containermanagerd.metadata.plist`     | `~/Library/Containers/com.docker.docker/.com.apple.containermanagerd.metadata.plist` | -                                      | -                               |
+
+<!--sec data-title="settings-store.json" data-id="section0" data-show=true data-collapse=true ces-->
+```json
+{
+  "AcceptCanaryUpdates": false,
+  "ActiveOrganizationName": "",
+  "AllowBetaFeatures": true,
+  "AllowExperimentalFeatures": true,
+  "AnalyticsEnabled": true,
+  "AutoDownloadUpdates": false,
+  "AutoPauseTimedActivitySeconds": 30,
+  "AutoPauseTimeoutSeconds": 300,
+  "AutoStart": false,
+  "BackupData": false,
+  "BlockDockerLoad": false,
+  "ContainerTerminal": "integrated",
+  "ContainersOverrideProxyExclude": "",
+  "ContainersOverrideProxyHTTP": "",
+  "ContainersOverrideProxyHTTPS": "",
+  "ContainersOverrideProxyPAC": "",
+  "ContainersOverrideProxyTCP": "",
+  "ContainersOverrideProxyTransparentPorts": "80,443",
+  "ContainersProxyHTTPMode": "",
+  "Cpus": 12,
+  "CredentialHelper": "docker-credential-osxkeychain",
+  "CustomWslDistroDir": "",
+  "DataFolder": "/Users/marslo/Library/Containers/com.docker.docker/Data/vms/0/data",
+  "DefaultSnapshotter": "overlayfs",
+  "DeprecatedCgroupv1": false,
+  "DesktopTerminalEnabled": false,
+  "DevEnvironmentsEnabled": false,
+  "DisableHardwareAcceleration": false,
+  "DisableUpdate": false,
+  "DiskFlush": "os",
+  "DiskSizeMiB": 61035,
+  "DiskStats": "",
+  "DiskTRIM": true,
+  "DisplayRestartDialog": true,
+  "DisplaySwitchWinLinContainers": false,
+  "Displayed18362Deprecation": false,
+  "DisplayedElectronPopup": [],
+  "DisplayedOnboarding": true,
+  "DockerAppLaunchPath": "/Applications/Docker.app",
+  "DockerBinInstallPath": "system",
+  "DockerDebugDefaultEnabled": false,
+  "DogfoodFeatureFlagsEnabled": false,
+  "ECIDockerSocketAllowDerivedImages": true,
+  "ECIDockerSocketCmdList": [],
+  "ECIDockerSocketCmdListType": "deny",
+  "ECIDockerSocketImgList": [],
+  "EnableDefaultDockerSocket": true,
+  "EnableIntegrationWithDefaultWslDistro": false,
+  "EnableIntegrityCheck": true,
+  "EnableSegmentDebug": false,
+  "EnableWasmShims": false,
+  "EnhancedContainerIsolation": false,
+  "ExposeDockerAPIOnTCP2375": false,
+  "ExtensionsEnabled": true,
+  "ExtensionsPrivateMarketplace": false,
+  "ExtensionsPrivateMarketplaceAdminContactURL": "",
+  "FilesharingDirectories": [
+    "/Users",
+    "/Volumes",
+    "/private",
+    "/tmp",
+    "/var/folders"
+  ],
+  "HostNetworkingEnabled": false,
+  "IPv4Only": false,
+  "IPv6Only": false,
+  "KernelForUDP": false,
+  "KubernetesEnabled": false,
+  "KubernetesImagesRepository": "",
+  "KubernetesMode": "",
+  "KubernetesNodesCount": 0,
+  "LastContainerdSnapshotterEnable": 1730830362,
+  "LastLoginDate": 0,
+  "LatestBannerKey": "",
+  "LicenseTermsVersion": 2,
+  "LifecycleTimeoutSeconds": 600,
+  "MemoryMiB": 8092,
+  "NetworkType": "gvisor",
+  "OnlyMarketplaceExtensions": true,
+  "OpenUIOnStartupDisabled": false,
+  "OverrideProxyExclude": "",
+  "OverrideProxyHTTP": "",
+  "OverrideProxyHTTPS": "",
+  "OverrideProxyPAC": "",
+  "OverrideProxyTCP": "",
+  "OverrideWindowsDockerdPort": -1,
+  "ProxyEnableKerberosNTLM": false,
+  "ProxyHTTPMode": "system",
+  "ProxyLocalhostPort": 0,
+  "RequireVmnetd": true,
+  "RunWinServiceInWslMode": false,
+  "SbomIndexing": true,
+  "ScoutNotificationPopupsEnabled": true,
+  "ScoutOsNotificationsEnabled": false,
+  "SettingsVersion": 40,
+  "ShowAnnouncementNotifications": true,
+  "ShowExtensionsSystemContainers": false,
+  "ShowGeneralNotifications": true,
+  "ShowInstallScreen": false,
+  "ShowKubernetesSystemContainers": false,
+  "ShowPromotionalNotifications": true,
+  "ShowSurveyNotifications": true,
+  "SkipUpdateToWSLPrompt": false,
+  "SkipWSLMountPerfWarning": false,
+  "SocksProxyPort": 0,
+  "SwapMiB": 1024,
+  "SynchronizedDirectories": [],
+  "ThemeSource": "system",
+  "UpdateAvailableTime": 0,
+  "UpdateHostsFile": false,
+  "UpdateInstallTime": 0,
+  "UseBackgroundIndexing": false,
+  "UseContainerdSnapshotter": true,
+  "UseCredentialHelper": true,
+  "UseGrpcfuse": true,
+  "UseLibkrun": false,
+  "UseNightlyBuildUpdates": false,
+  "UseResourceSaver": true,
+  "UseVirtualizationFramework": true,
+  "UseVirtualizationFrameworkRosetta": true,
+  "UseVirtualizationFrameworkVirtioFS": true,
+  "UseVpnkit": true,
+  "UseWindowsContainers": false,
+  "VpnKitAllowedBindAddresses": "0.0.0.0",
+  "VpnKitMTU": 1500,
+  "VpnKitMaxConnections": 2000,
+  "VpnKitMaxPortIdleTime": 300,
+  "VpnKitTransparentProxy": true,
+  "VpnkitCIDR": "192.168.65.0/24",
+  "WslDiskCompactionThresholdGb": 0,
+  "WslEnableGrpcfuse": false,
+  "WslEngineEnabled": false,
+  "WslInstallMode": "installLatestWsl",
+  "WslUpdateRequired": false
+}
+```
+<!--endsec-->
+
+<!--sec data-title=".com.apple.containermanagerd.metadata.plist" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+$ defaults read ~/Library/Containers/com.docker.docker/.com.apple.containermanagerd.metadata.plist
+{
+    MCMMetadataActiveDPClass = "-1";
+    MCMMetadataContentClass = 2;
+    MCMMetadataIdentifier = "com.docker.docker";
+    MCMMetadataSchemaVersion = 0;
+    MCMMetadataUUID = "386F734E-BD40-4755-87A2-DDF4ABD17A64";
+    MCMMetadataUserIdentity =     {
+        personaUniqueString = "2EDCF936-1321-4383-A54D-3784F660E452";
+        posixGID = 20;
+        posixUID = 503;
+        type = 0;
+        version = 2;
+    };
+    MCMMetadataVersion = 7;
+}
+```
+<!--endsec-->
 
 ## docker with proxy
 
@@ -563,6 +740,46 @@ $ docker run <...> ${VOLUME_OPTION}
 ```
 
 ## troubleshooting
+
+> [!NOTE|label:references:]
+> - [Troubleshoot topics for Docker Desktop](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/)
+> - [Troubleshoot Docker Desktop](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/)
+> - osx:
+>   - [Incompatible CPU detected](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/#incompatible-cpu-detected)
+>   - [VPNKit keeps breaking](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/#vpnkit-keeps-breaking)
+> - [windows](https://docs.docker.com/desktop/troubleshoot-and-support/troubleshoot/topics/#topics-for-windows)
+
+```bash
+# -- osx --
+$ /Applications/Docker.app/Contents/MacOS/com.docker.diagnose
+# create and upload the diagnostics id
+$ /Applications/Docker.app/Contents/MacOS/com.docker.diagnose gather -upload
+# self diagnose
+$ /Applications/Docker.app/Contents/MacOS/com.docker.diagnose check
+# check log
+$ pred='process matches ".*(ocker|vpnkit).*" || (process in {"taskgated-helper", "launchservicesd", "kernel"} && eventMessage contains[c] "docker")'
+$ /usr/bin/log stream --style syslog --level=debug --color=always --predicate "$pred"
+
+# -- linux --
+$ /opt/docker-desktop/bin/com.docker.diagnose
+# create and upload the diagnostics id
+$ /opt/docker-desktop/bin/com.docker.diagnose gather -upload
+# self diagnose
+$ /opt/docker-desktop/bin/com.docker.diagnose check
+# check log
+$ journalctl --user --unit=docker-desktop
+
+# -- windows --
+> C:\Program Files\Docker\Docker\resources\com.docker.diagnose.exe
+# create and upload the diagnostics id
+> & "C:\Program Files\Docker\Docker\resources\com.docker.diagnose.exe" gather -upload
+> Expand-Archive -LiteralPath "%TEMP%\5DE9978A-3848-429E-8776-950FC869186F\20230607101602.zip" -DestinationPath "%TEMP%\5DE9978A-3848-429E-8776-950FC869186F\20230607101602"
+# self diagnose
+> & "C:\Program Files\Docker\Docker\resources\com.docker.diagnose.exe" check
+# check log
+> code $Env:LOCALAPPDATA\Docker\log
+```
+
 ### `permission denied while trying to connect to the Docker daemon socket`
 
 > [!NOTE|label:see also:]
@@ -612,3 +829,77 @@ $ docker run <...> ${VOLUME_OPTION}
   # to change all after GID changed
   $ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
   ```
+
+### Malware Blocked - 'com.docker.vmnetd'
+
+> [!NOTE|label:references:]
+> - [#7520 - [Workaround in description] Mac is detecting Docker as a malware and keeping it from starting](https://github.com/docker/for-mac/issues/7520)
+> - [Malware Blocked: “com.docker.vmnetd” was not opened because it contains malware](https://forums.docker.com/t/malware-blocked-com-docker-vmnetd-was-not-opened-because-it-contains-malware/145930)
+
+![vmnetd was not opened](../../screenshot/docker/com.docker.vmnetd.png)
+
+- status
+  ```bash
+  $ sha256sum /Library/PrivilegedHelperTools/com.docker.vmnetd
+  bed1a0468de21d1189ab560fbfcd3432b396143c067831e096553057401fac67  /Library/PrivilegedHelperTools/com.docker.vmnetd
+  ```
+
+- workaround
+  ```bash
+  #!/bin/bash
+
+  # Stop the docker services
+  echo "Stopping Docker..."
+  sudo pkill '[dD]ocker'
+
+  # Stop the vmnetd service
+  echo "Stopping com.docker.vmnetd service..."
+  sudo launchctl bootout system /Library/LaunchDaemons/com.docker.vmnetd.plist
+
+  # Stop the socket service
+  echo "Stopping com.docker.socket service..."
+  sudo launchctl bootout system /Library/LaunchDaemons/com.docker.socket.plist
+
+  # Remove vmnetd binary
+  echo "Removing com.docker.vmnetd binary..."
+  sudo rm -f /Library/PrivilegedHelperTools/com.docker.vmnetd
+
+  # Remove socket binary
+  echo "Removing com.docker.socket binary..."
+  sudo rm -f /Library/PrivilegedHelperTools/com.docker.socket
+
+  # Install new binaries
+  echo "Install new binaries..."
+  sudo cp /Applications/Docker.app/Contents/Library/LaunchServices/com.docker.vmnetd /Library/PrivilegedHelperTools/
+  sudo cp /Applications/Docker.app/Contents/MacOS/com.docker.socket /Library/PrivilegedHelperTools/
+  ```
+
+  - result
+    ```bash
+    $ sudo sha256sum /Library/PrivilegedHelperTools/com.docker.*
+    ec9c5cbef5bf903e17569393cabe452499370b5ec89bdd819054806e20a0dca1  /Library/PrivilegedHelperTools/com.docker.socket
+    be868fea1cf597f45ecc1892564ccac333c79c94d0c49f26c28fc7931bede017  /Library/PrivilegedHelperTools/com.docker.vmnetd
+    ```
+
+- solution
+
+  > [!NOTE|label:references:]
+  > - [Uninstall Docker Desktop](https://docs.docker.com/desktop/uninstall/)
+
+  - remove docker desktop
+    ```bash
+    $ /Applications/Docker.app/Contents/MacOS/uninstall
+    Password:
+    Uninstalling Docker Desktop...
+    Error: unlinkat /Users/<USER_HOME>/Library/Containers/com.docker.docker/.com.apple.containermanagerd.metadata.plist: operation not permitted
+
+    $ rm -rf ~/Library/Group\ Containers/group.com.docker
+    $ rm -rf ~/.docker
+    ```
+
+  - re-intall docker desktop
+    ```bash
+    $ sudo hdiutil attach Docker.dmg
+    $ sudo /Volumes/Docker/Docker.app/Contents/MacOS/install
+    $ sudo hdiutil detach /Volumes/Docker
+    ```
