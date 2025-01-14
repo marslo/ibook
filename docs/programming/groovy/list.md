@@ -158,9 +158,22 @@ println parent.first()
 ```
 
 #### `Random().nextInt`
+
+> [!TIP|label:references:]
+> - [npm-groovy-lint: InsecureRandom Rule](https://codenarc.org/codenarc-rules-security.html#insecurerandom-rule)
+> - [klocwork: SV.RANDOM](https://help.klocwork.com/2024/en-us/reference/sv.random.htm)
+> - instead of using `Random()` directly, use `SecureRandom()`:
+>   ```groovy
+>   # Random
+>   Random random = new Random()
+>
+>   # SecureRandom
+>   java.security.SecureRandom a = new java.security.SecureRandom()
+>   ```
+
 ```groovy
 List list = [ '1', '2', '3', 'a', 'b' ]
-Random random = new Random()
+java.security.SecureRandom random = new java.security.SecureRandom()
 println list.get( random.nextInt(list.size()) )
 println list.get( random.nextInt(list.size()) )
 

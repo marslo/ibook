@@ -41,6 +41,8 @@
 > - [Learn Vim the Smart Way](https://learnvim.irian.to/)
 > - [Effective VimScript](https://www.arp242.net/effective-vimscript.html)
 > - [syntax.txt](https://vimhelp.org/syntax.txt.html#syntax)
+> - [vimcasts.org](http://vimcasts.org/)
+>   - [Creating colorschemes for Vim](http://vimcasts.org/episodes/creating-colorschemes-for-vim/)
 
 ## expr
 

@@ -31,6 +31,7 @@
   - [sar](#sar)
   - [netcat](#netcat)
   - [`ip`](#ip)
+  - [datadog](#datadog)
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -627,7 +628,6 @@ $ oathtool $(openssl rand -hex 16)
 >   - [Protecting Code Integrity with PGP — Part 6: Using PGP with Git](https://www.linux.com/news/protecting-code-integrity-pgp-part-6-using-pgp-git/) | [用 PGP 保护代码完整性（六）：在 Git 上使用 PGP](https://linux.cn/article-10421-1.html)
 >   - [Protecting Code Integrity with PGP — Part 7: Protecting Online Accounts](https://www.linux.com/news/protecting-code-integrity-pgp-part-7-protecting-online-accounts/) | [用 PGP 保护代码完整性（七）：保护在线帐户](https://linux.cn/article-10432-1.html)
 
-
 ## passwd
 
 > [!NOTE|label:references:]
@@ -758,13 +758,11 @@ $ sudo strace -fp ${pid} -o log
 # or
 $ sudo -v
 $ sudo strace -fp $$ -o log &
-```
 
-- more
-  ```bash
-  $ set -o functrace xtrace
-  $ PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
-  ```
+# -- more --
+$ set -o functrace xtrace
+$ PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
+```
 
 - [intercept stdout/stderr of another process](https://www.commandlinefu.com/commands/view/5410/intercept-stdoutstderr-of-another-process)
   ```bash
@@ -837,18 +835,18 @@ $ sudo strace -fp $$ -o log &
 - [xtrace](https://unix.stackexchange.com/a/441389/29178)
   ```bash
   xtrace() {
-      local eval_cmd
-      printf -v eval_cmd '%q' "${@}"
-      { set -x
-        eval "${eval_cmd}"
-      } 2>&1 | grep '^++'
-      return "${PIPESTATUS[0]}"
+    local eval_cmd
+    printf -v eval_cmd '%q' "${@}"
+    { set -x
+      eval "${eval_cmd}"
+    } 2>&1 | grep '^++'
+    return "${PIPESTATUS[0]}"
   }
   ```
 
 ## [`dtruss`](https://stackoverflow.com/a/31045613/2940319)
 
-> [!TIP]
+> [!TIP|label:references:]
 > - the MacOS alternatives `strace`
 > - [Using modified dtruss.sh](https://stackoverflow.com/q/73724074/2940319)
 
@@ -1155,8 +1153,7 @@ close_nocancel(0x2)    = 0 0
 
 ## netcat
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [the netcat command in linux](https://www.baeldung.com/linux/netcat-command)
 
 - check particular port
@@ -1230,7 +1227,6 @@ close_nocancel(0x2)    = 0 0
   Referer: http://localhost:1234/
   Accept-Encoding: gzip, deflate, br
   Accept-Language: en,zh-CN;q=0.9,zh;q=0.8,en-US;q=0.7
-
   ...
   ```
 
@@ -1254,6 +1250,8 @@ $ ip addr show | sed -nE "s/inet\s(.*)\/[0-9]+.*\s(\w+)/\2 \1/p" | column -to ' 
 lo0 => 127.0.0.1
 en0 => 192.168.1.71
 ```
+
+## [datadog](https://www.datadoghq.com/)
 
 # others
 

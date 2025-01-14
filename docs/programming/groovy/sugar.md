@@ -479,17 +479,31 @@ groovy:000 > 'aaa'.getClass().getFields()
 
 ### generate the random String
 
-> [!NOTE]
-> check also in [* imarslo : random](string.html#random)
+> [!TIP|label:using `SecureRandom` instead of `Random`:]
+> - check also in [* imarslo : random](string.html#random)
+> - [npm-groovy-lint: InsecureRandom Rule](https://codenarc.org/codenarc-rules-security.html#insecurerandom-rule)
+> - [klocwork: SV.RANDOM](https://help.klocwork.com/2024/en-us/reference/sv.random.htm)
+> - instead of using `Random()` directly, use `SecureRandom()`:
+>   ```groovy
+>   # Random
+>   Random random = new Random()
+>
+>   # SecureRandom
+>   java.security.SecureRandom a = new java.security.SecureRandom()
+>   ```
 
 ```groovy
 String alphabet = (('a'..'z') + ('A'..'Z') + ('0'..'9')).join()
+
+// with SecureRandom -- recommended
+println new java.security.SecureRandom().with { (1..8).collect { alphabet[ nextInt( alphabet.length() ) ] }.join() }
+// with Random -- not recommended
 println new Random().with { (1..8).collect { alphabet[ nextInt( alphabet.length() ) ] }.join() }
 ```
 - [or](https://newbedev.com/groovy-generate-random-string-from-given-character-set)
   ```groovy
   Closure generator = { String alphabet, int n ->
-    new Random().with {
+    new java.security.SecureRandom().with {
       (1..n).collect { alphabet[ nextInt( alphabet.length() ) ] }.join()
     }
   }
