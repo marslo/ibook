@@ -9,6 +9,7 @@
   - [load result from both windows and linux](#load-result-from-both-windows-and-linux)
   - [using kwwrap plus kwinject to generate a build specification](#using-kwwrap-plus-kwinject-to-generate-a-build-specification)
   - [when editing the makefile is not an option](#when-editing-the-makefile-is-not-an-option)
+  - [download](#download)
 - [authentication](#authentication)
   - [get ltoken](#get-ltoken)
 - [import your projects and server settings](#import-your-projects-and-server-settings)
@@ -25,6 +26,7 @@
 {% hint style='tip' %}
 > reference:
 > - [* Klocwork Documentation](https://help.klocwork.com/current/en-us/concepts/home.htm)
+> - [PiCache MongoDB Backup/Recovery Procedure](https://portal.perforce.com/s/article/PiCache-MongoDB-Backup-Recovery-Procedure)
 > - [Klocwork Build integration for C Cplus plus projects EN](https://www.youtube.com/watch?v=2f4CfEU5CEI)
 > - [Command Reference](https://docs.roguewave.com/en/klocwork/2020/commandreference)
 > - [Troubleshooting an incomplete kwinject build specification](https://docs.roguewave.com/en/klocwork/2020/troubleshootinganincompletekwinjectbuildspecification)
@@ -70,7 +72,8 @@
 {% endhint %}
 
 ## environment
-> reference:
+
+> [!NOTE|label:references:]
 > - [Install and Configure Klocwork cmd client](https://scmabhishek.wordpress.com/2016/07/04/install-and-configure-klocwork-cmd-client/)
 > - [User manual | Installation and Upgrade](https://manualzz.com/doc/44373012/installation-and-upgrade?__cf_chl_jschl_tk__=b7f12f6befde4217b2830af5cb69055d40841a0c-1619442763-0-AXJ6A-8dLrK6mjM4v5IvfVIbgptM2fMku23COnaWX2AXiowy0H1aVcEuRXfkHCy52vr0N6RqKejPmriTUTLIsGPCo9AldMujCF8gJflvp-uX-CiweHa5c3fP1KNvKgeOvVzhe-wBWDfbrJ0MyEvEks8cEHXjRj6cRnlP5ibFYByNE7jX3KXtH5tRZVr386HX0bcPCx5nyu_FgY-xEFCpuMmnEaP0Rhr_zeoQn85YrY61j7lGJAgnzdqgz1rC4ktkZ1i7ijdYgUTFNAFG_1_vQ4ox8Wj7hdab890-Tw-NtdrGoMoEq-4CeMxDEzlLYmFNNX1kM0EVJIv50J2v2H7GIdUNd_rV7y_wyhllUPbRe1COFvk1Ey7eAgsfJyKAW-Il6Z8NRlSaO-RdRcnZ6wpk2L2s6uuAzcNNWQM-8DiljKhGu9OT-FjeGtEXyBUxZPjY2LWF1k_fX2tb4S0GJGO7T09QPnlbAZa9VBFueEVeVSdzDocBByzn-BwknWpMr-dIJA)
 > - [Klocwork Desktop for C/C++ project setup overview](https://docs.roguewave.com/en/klocwork/current/klocworkdesktopforccprojectsetupoverview)
@@ -81,6 +84,8 @@
 > - [bwinhwang/PyKW](https://github.com/bwinhwang/PyKW)
 
 ## analysis
+
+> [!NOTE|label:references:]
 > [issue severity](http://docs.klocwork.com/Insight-10.0/Issue_severity)
 > - 1 - Critical
 > - 2 - Error
@@ -94,6 +99,8 @@
 > - 10 - Severity 10
 
 ### [initial a klocwork analysis](https://docs.roguewave.com/en/klocwork/2020/runningyourfirstintegrationbuildanalysis1)
+
+> [!NOTE|label:references:]
 > [sample code](http://cdn-devnet.klocwork.com/cbt/10.0/C_CPP_integration_build_analysis/samples/newProject.txt)
 
 - capture build settings
@@ -136,8 +143,9 @@
       $ kwauth --log-out
       ```
 
-
 ### [full build analysis](https://docs.roguewave.com/en/klocwork/2020/runningyournextintegrationbuildanalysis1#Runningafullbuildanalysis)
+
+> [!NOTE|label:references:]
 > [sample code](http://cdn-devnet.klocwork.com/cbt/10.0/C_CPP_integration_build_analysis/samples/fullBuildAnalysis.txt)
 
 - re-create the build spec
@@ -172,6 +180,8 @@
     ```
 
 ### [incremental build analysis](https://docs.roguewave.com/en/klocwork/2020/runningyournextintegrationbuildanalysis1#Runningincrementalanalysis)
+
+> [!NOTE|label:references:]
 > [sample code](http://cdn-devnet.klocwork.com/cbt/10.0/C_CPP_integration_build_analysis/samples/incremental.txt)
 
 - update the build settings
@@ -206,6 +216,8 @@
     ```
 
 ### load result from both windows and linux
+
+> [!NOTE|label:references:]
 > [sample code](http://cdn-devnet.klocwork.com/cbt/10.0/C_CPP_integration_build_analysis/samples/Windows-Unix.txt)
 > [kwbuildproject](https://bullwhip.physio-control.com/documentation/help/reference/kwbuildproject.htm)
 
@@ -263,7 +275,8 @@
     ```
 
 ### [using kwwrap plus kwinject to generate a build specification](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification)
-> reference:
+
+> [!NOTE|label:references:]
 > - [Using a build trace to troubleshoot build specification problems](https://docs.roguewave.com/en/klocwork/current/usingabuildtracetotroubleshootbuildspecificationproblems#concept972)
 > - [Can I concatenate the results of more than one kwinject.out file?](https://developer.klocwork.com/community/forums/klocwork-insight/general-discussion/can-i-concatenate-results-more-one-kwinjectout)
 > - [Running a distributed analysis](https://bullwhip.physio-control.com/documentation/help/concepts/runningadistributedanalysis.htm)
@@ -299,6 +312,7 @@
     ```
 
 ### [when editing the makefile is not an option](https://docs.roguewave.com/en/klocwork/current/usingkwwrappluskwinjecttogenerateabuildspecification#Wheneditingthemakefileisnotanoption)
+
 {% hint style='tip' %}
 > i.e.: <path_to_kwwrap_trace_file> is `/temp/kwwrap.trace`
 {% endhint %}
@@ -349,10 +363,17 @@
   $ kwinject --trace-in /temp/kwwrap.trace --output kwinject.out
   ```
 
+### [download](https://portal.perforce.com/s/klocworkdownloads)
+
+> [!NOTE|label:homepages:]
+> - [24.4.0.43](https://portal.perforce.com/s/detail/a8rPA0000000Lu5YAE?tabset-8554ba8r=2)
+> - [23.4.0.69 - 3/29/2024](https://portal.perforce.com/s/article/Klocwork-Downloads-2023-4)
+> - [23.3.0.57 - 1/24/2024](https://portal.perforce.com/s/article/Klocwork-Downloads-2023-3)
+> - [23.2.0.66 - 1/24/2024](https://portal.perforce.com/s/article/Klocwork-Downloads-2023-2)
+
 ## authentication
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [Authentication using the ltoken](https://analyst.phyzdev.net/documentation/help/concepts/klocworkltoken.htm)
 > <br>
 > Failing authentication if host name is not found<br>
@@ -438,12 +459,12 @@ klocwork.domain.com;443;marslo;abcdefg1234567***********************************
   $ kwxsync --url https://klocwork.domain.com:443 -f -c project project-backup
   ```
 
-
 ## report
 ### [creating a report](https://docs.roguewave.com/en/klocwork/current/creatingareport)
 
 ## CI
-> reference:
+
+> [!NOTE|label:reference:]
 > - [Klocwork Jenkins CI plugin](https://docs.roguewave.com/en/klocwork/2020/jenkinsci)
 > - [Continuous integration and Klocwork analysis](https://docs.roguewave.com/en/klocwork/2020/continuousintegration)
 > - Ebook: [klocwork ci/cd best practice.pdf](https://www.perforce.com/sites/default/files/pdfs/ebook-klocwork-ci-cd-best-practices%20%281%29.pdf)

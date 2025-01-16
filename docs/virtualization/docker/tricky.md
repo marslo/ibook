@@ -3,6 +3,8 @@
 
 - [configure files](#configure-files)
   - [docker desktop](#docker-desktop)
+- [check docker layer](#check-docker-layer)
+  - [install](#install)
 - [docker with proxy](#docker-with-proxy)
   - [docker pull](#docker-pull)
   - [docker build](#docker-build)
@@ -199,6 +201,18 @@ $ defaults read ~/Library/Containers/com.docker.docker/.com.apple.containermanag
 }
 ```
 <!--endsec-->
+
+## check docker layer
+
+> [!NOTE|label:references:]
+> - [wagoodman/dive](https://github.com/wagoodman/dive)
+
+### install
+```bash
+$ DIVE_VERSION=$(curl -sL "https://api.github.com/repos/wagoodman/dive/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+$ curl -OL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb
+$ sudo apt install ./dive_${DIVE_VERSION}_linux_amd64.deb
+```
 
 ## docker with proxy
 

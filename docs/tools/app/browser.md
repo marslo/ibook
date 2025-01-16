@@ -168,9 +168,15 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 
 #### disable `is not secure` for http URL
 
-- settings -> privacy and security -> security -> `Always use secure connections`
+- **[settings](chrome://settings)** -> **[Privacy and security](chrome://settings/security)** -> **[Security](chrome://settings/security)** -> **Secure connections** -> `Always use secure connections`
 
   ![http not secure](../../screenshot/tools/chrome-http-not-secure.png)
+
+#### disable input box auto-fill
+
+- **[settings](chrome://settings)** -> **[Autofill and passwords](chrome://settings/autofill)** -> **[Addresses and more](chrome://settings/addresses)** -> `Save and fill addresses`
+
+  ![disable autofill](../../screenshot/tools/chrome-disable-auto-fill-inputbox.png)
 
 #### remove "All Bookmarks"
 

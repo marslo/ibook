@@ -7,6 +7,7 @@
   - [slicing and filtering](#slicing-and-filtering)
   - [mapping and transforming](#mapping-and-transforming)
 - [join](#join)
+  - [join with getOrDefault](#join-with-getordefault)
 - [split](#split)
 - [replacing](#replacing)
 - [builtin operators](#builtin-operators)
@@ -169,6 +170,119 @@ thing:like
   Michael 2
   ```
 
+### join with getOrDefault
+
+> [!TIP|label:references:]
+> - orignal wihtout `getOrDefault`
+>   ```bash
+>   $ echo '[
+>           {"id": "1", "version": "v1"},
+>           {"id": "2", "version": "v2"},
+>           {"id": "3", "version": null}
+>           ]
+>          ' |
+>     jq -r '.[] | .id + " -> " + .version'
+>   1 -> v1
+>   2 -> v2
+>   3 ->
+>   ```
+
+- using `//`
+
+  > [!TIP|label:references:]
+  > - [Get or default function in JQ?](https://stackoverflow.com/a/56555296/2940319)
+
+  ```bash
+  $ echo '[
+            {"id": "1", "version": "v1"},
+            {"id": "2", "version": "v2"},
+            {"id": "3", "version": null}
+          ]' |
+    jq -r '.[] | .id + " -> " + ( .version // "UNKNOWN" )'
+  1 -> v1
+  2 -> v2
+  3 -> UNKNOWN
+  ```
+
+- using `if then else end`
+
+  > [!TIP|label:references:]
+  > - [Filter empty and/or null values with jq](https://stackoverflow.com/a/73827807/2940319)
+  > - [Get or default function in JQ?](https://stackoverflow.com/a/56555442/2940319)
+
+  ```bash
+  $ echo '[
+            { "id": "1", "version": "v1" } ,
+            { "id": "2", "version": "v2" } ,
+            { "id": "3", "version": null } ,
+            { "id": "4", "version": ""   }
+          ]' |
+    jq -r '.[] |
+           .id + " -> " +
+           if (.version != null and .version != "") then .version
+           else "UNKNOWN"
+           end'
+
+  # or
+  $ echo '[
+            { "id": "1", "version": "v1" } ,
+            { "id": "2", "version": "v2" } ,
+            { "id": "3", "version": null } ,
+            { "id": "4", "version": ""   }
+          ]' |
+    jq -r '.[] |
+           .id + " -> " +
+           if .version == null or .version == "" then "UNKNOWN"
+           else .version
+           end'
+  1 -> v1
+  2 -> v2
+  3 -> UNKNOWN
+  4 -> UNKNOWN
+
+  # or using `empty`
+  #                           `empty` will not output anything for id==3 and id==4
+  #                                                     v
+  $ echo '[
+            { "id": "1", "version": "v1" } ,
+            { "id": "2", "version": "v2" } ,
+            { "id": "3", "version": null } ,
+            { "id": "4", "version": ""   }
+          ]
+         ' |
+    jq -r '.[] |
+           .id + " -> " +
+           if .version == null or .version == "" then empty
+           else .version
+           end
+          '
+  1 -> v1
+  2 -> v2
+  // `empty` will not output anything for id==3 and id==4
+
+  # or including non-exists key
+  $ echo '[
+            { "id": "1", "version": "v1" } ,
+            { "id": "2", "version": "v2" } ,
+            { "id": "3", "version": null } ,
+            { "id": "4", "version": ""   } ,
+            { "id": "5"                  }
+          ]
+         ' |
+    jq -r '.[] |
+           .id + " -> " +
+           if ( has("version") and .version != null and .version != "" ) then
+             .version
+           else "UNKNOWN"
+           end
+          '
+  1 -> v1
+  2 -> v2
+  3 -> UNKNOWN
+  4 -> UNKNOWN
+  5 -> UNKNOWN
+  ```
+
 ## split
 
 > [!TIP]
@@ -176,7 +290,7 @@ thing:like
 > - [remove a substring from a string](https://stackoverflow.com/a/72064504/2940319)
 > - [`split(str)`](https://stedolan.github.io/jq/manual/#split(str))
 >   - Splits an input string on the separator argument.
->   - [example](https://jqplay.org/jq?q=split(%22%2C%20%22)&j=%22a%2C%20b%2Cc%2Cd%2C%20e%2C%20%22)
+>   - [example](https://jqplay.org/s/yR6wNlR6p0bAFGs)
 >     ```
 >     jq 'split(", ")'
 >     Input "a, b,c,d, e, "
@@ -207,6 +321,7 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' |
   "2"
   ""
   "3"
+
   $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' |
           jq -r '.[].uri | split("/")'
   [
@@ -282,8 +397,9 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' |
 > - [imarslo: example on jenkins api analysis](../../jenkins/script/api.html#get-all-parameters-via-json-format)
 > - [imarslo: example on gerrit api analysis](../../devops/git/gerrit.html#get-all-vote-cr-2)
 > - [jq tips : remove emtpy line](https://stackoverflow.com/a/44289083/2940319)
+> - [Remove all null values](https://stackoverflow.com/a/39501001/2940319)
 > - [Filter empty and/or null values with jq](https://stackoverflow.com/a/56694468/2940319)
->   ```bash
+>   ```jq
 >   to_entries[]
 >   | select(.value | . == null or . == "")
 >   | if .value == "" then .value |= "\"\(.)\"" else . end
@@ -291,7 +407,7 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' |
 >   ```
 
 ```bash
-$ echo "[1,5,3,0,7]" |
+$ echo '[1,5,3,0,7]' |
        jq 'map(select(. >= 2))'
 [
   5,
@@ -316,8 +432,9 @@ $ echo "[1,5,3,0,7]" |
   > - [`any(.attributes; .enabled == true)` == `any(.attributes; .enabled)` == `.attributes.enabled == true` == `.attributes.enabled`](https://stackoverflow.com/a/70302139/2940319)
   > - [<kbd>try online</kbd>](https://jqplay.org/s/61S_UA_ZEVM3Ykh)
 
-  ```bash
-  $ cat sample.json
+
+  ```json
+  // sample.json
   [
     {
       "attributes": {
@@ -346,7 +463,9 @@ $ echo "[1,5,3,0,7]" |
       "tags": {}
     }
   ]
+  ```
 
+  ```bash
   # get [{.id}] format
   $ cat sample.json |
         jq -r 'map(select(any(.attributes; .enabled)) | {id})'
@@ -357,17 +476,20 @@ $ echo "[1,5,3,0,7]" |
   ]
 
   # get [.id] format
-  $ cat sample.json | jq -r 'map(select(any(.attributes; .enabled)) | .id)'
+  $ cat sample.json |
+        jq -r 'map(select(any(.attributes; .enabled)) | .id)'
   [
     "https://kjkljk./secrets/-/1"
   ]
 
   # get .id format ( without `map()` )
-  $ cat sample.json | jq -r '.[] | select(any(.attributes; .enabled)) | .id'
+  $ cat sample.json |
+        jq -r '.[] | select(any(.attributes; .enabled)) | .id'
   https://kjkljk./secrets/-/1
 
   # re-format
-  $ cat sample.json | jq -r '{"ids": .[] | select(any(.attributes; .enabled)) | .id}'
+  $ cat sample.json |
+        jq -r '{"ids": .[] | select(any(.attributes; .enabled)) | .id}'
   {
     "ids": "https://kjkljk./secrets/-/1"
   }
@@ -380,7 +502,7 @@ $ echo "[1,5,3,0,7]" |
 > - [imarslo: example on list Error pods in kuberetnes](../../virtualization/kubernetes/pod.html#list-all-error-status-pods)
 
 ```bash
-$ echo '''[{"id": "first", "val": 1}, {"id": "second", "val": 2},  {"id": "second-one", "val": 3}]''' |
+$ echo '[{"id": "first", "val": 1}, {"id": "second", "val": 2},  {"id": "second-one", "val": 3}]' |
        jq '.[] | select( .id | contains("second") )'
 {
   "id": "second",
@@ -483,8 +605,8 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
 
 - example to get `key` and `value`
   ```bash
-  $ echo '{ "some": "thing", "json": "like" }' \
-         | jq -r 'to_entries[] | "\(.key)\t\(.value)"'
+  $ echo '{ "some": "thing", "json": "like" }' |
+         jq -r 'to_entries[] | "\(.key)\t\(.value)"'
   some    thing
   json    like
   ```
@@ -534,8 +656,8 @@ $ echo '{"a": 1, "b": 2}' | jq -r to_entries
 
 ### [try to_entries](https://stackoverflow.com/a/71358256/2940319)
 
-```bash
-$ cat sample.json
+```json
+// sample.json
 [
   {
     "name": "x",
@@ -548,7 +670,9 @@ $ cat sample.json
     "name": "y"                    // < no hobby
   }
 ]
+```
 
+```bash
 # to_entries[] directly will cause issue
 $ cat sample.json |
       jq '.[] | .name as $n | .hobby | to_entries[] | [$n, .value]'

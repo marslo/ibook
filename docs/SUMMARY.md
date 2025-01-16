@@ -102,6 +102,7 @@
     * [monitor](jenkins/script/monitor.md)
     * [tricky](jenkins/script/tricky.md)
   * [api](jenkins/api.md)
+    * [blueocean](jenkins/blueocean.md)
   * [cli](jenkins/cli.md)
   * [plugins](jenkins/plugins/plugins.md)
     * [kubernetes](jenkins/plugins/kubernetes.md)
