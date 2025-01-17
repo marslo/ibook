@@ -74,6 +74,7 @@
 > - [show Command Output Redirection.pdf](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/fundamentals/configuration/xe-3se/cat3650/fundamentals-xe-3se-3650-book/cf-shw-cmd-out-redirect.pdf)
 > - [3.6 Redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html)
 > - [* Beyond Linux From Scratch](https://www.linuxfromscratch.org/museum/blfs-museum/5.1/BLFS-5.1/index.html)
+> - [How do I write standard error to a file while using "tee" with a pipe?](https://stackoverflow.com/a/692407/2940319)
 >
 > tips:
 > - echo to stderr

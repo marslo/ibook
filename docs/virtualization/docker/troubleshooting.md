@@ -106,6 +106,7 @@ $ journalctl --user --unit=docker-desktop
 > - [Incident Update: Docker Desktop for Mac](https://www.docker.com/blog/incident-update-docker-desktop-for-mac/)
 
 ![vmnetd was not opened](../../screenshot/docker/com.docker.vmnetd.png)
+![socket was not opened](../../screenshot/docker/com.docker.socket.png)
 
 - status
   ```bash
