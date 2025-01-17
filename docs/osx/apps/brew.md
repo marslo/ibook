@@ -37,6 +37,7 @@
 - [troubleshooting](#troubleshooting)
   - [`would clobber existing tag`](#would-clobber-existing-tag)
   - [Cask `firefox-nightly` is not installed.](#cask-firefox-nightly-is-not-installed)
+  - [Error: Unexpected method 'appcast' called on Cask adoptopenjdk-jre](#error-unexpected-method-appcast-called-on-cask-adoptopenjdk-jre)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1207,3 +1208,78 @@ Error: Cask 'firefox@nightly' is not installed.
   # fix
   $ command rm -rf /usr/local/Caskroom/firefox-nightly
   ```
+
+### Error: Unexpected method 'appcast' called on Cask adoptopenjdk-jre
+
+- cause
+  ```bash
+  $ brew install --cask adoptopenjdk/openjdk/adoptopenjdk8
+  ```
+
+- solution
+  ```bash
+  $ brew unisntall --cask adoptopenjdk/openjdk/adoptopenjdk8
+
+  $ brew tap
+  adoptopenjdk/openjdk
+  buo/cask-upgrade
+  carlocab/personal
+  hashicorp/tap
+  homebrew/command-not-found
+  vitorgalvao/tiny-scripts
+
+  $ brew untap adoptopenjdk/openjdk
+  ```
+
+<!--sec data-title="analysis status" data-id="section4" data-show=true data-collapse=true ces-->
+```bash
+$ brew config
+HOMEBREW_VERSION: 4.4.16-58-gf0f03f9
+ORIGIN: https://github.com/Homebrew/brew
+HEAD: f0f03f9d7cf75510ee6ea3bc1c2efc7e62ee4e06
+Last commit: 9 hours ago
+Branch: master
+Core tap JSON: 17 Jan 22:01 UTC
+Core cask tap JSON: 17 Jan 22:01 UTC
+HOMEBREW_PREFIX: /opt/homebrew
+HOMEBREW_BAT_THEME: gruvbox-dark
+HOMEBREW_CASK_OPTS: []
+HOMEBREW_EDITOR: nvim
+HOMEBREW_GITHUB_API_TOKEN: set
+HOMEBREW_INSTALL_BADGE: 🦍
+HOMEBREW_MAKE_JOBS: 12
+HOMEBREW_SORBET_RUNTIME: set
+Homebrew Ruby: 3.3.7 => /opt/homebrew/Library/Homebrew/vendor/portable-ruby/3.3.7/bin/ruby
+CPU: dodeca-core 64-bit arm_lobos
+Clang: 16.0.0 build 1600
+Git: 2.48.0 => /opt/homebrew/bin/git
+Curl: 8.7.1 => /usr/bin/curl
+macOS: 14.7.2-arm64
+CLT: 16.2.0.0.1.1733547573
+Xcode: 16.2
+Rosetta 2: false
+
+$ brew doctor
+Please note that these warnings are just used to help the Homebrew maintainers
+with debugging if you file an issue. If everything you use Homebrew for is
+working fine: please don't worry or file an issue; just ignore this. Thanks!
+
+Warning: Some installed formulae are deprecated or disabled.
+You should find replacements for the following formulae:
+  libassuan@2
+  youtube-dl
+
+Warning: Putting non-prefixed coreutils in your path can cause GMP builds to fail.
+
+Warning: Putting non-prefixed findutils in your path can cause python builds to fail.
+
+Warning: You have unlinked kegs in your Cellar.
+Leaving kegs unlinked can lead to build-trouble and cause formulae that depend on
+those kegs to fail to run properly once built. Run `brew link` on these:
+  certifi
+  macvim
+
+Warning: Broken symlinks were found. Remove them with `brew cleanup`:
+  /opt/homebrew/bin/git-copy
+```
+<!--endsec-->
