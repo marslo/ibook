@@ -494,6 +494,16 @@ $ /usr/bin/env codesign --display --file-list - /usr/local/Cellar/macvim/HEAD-a2
   > [!TIP]
   > - [iMarslo: build lua with shared lib](../linux/devenv.html#lua)
 
+  ```bash
+  # ubuntu 22.04
+  #      using `--enable-luainterp=dynamic --with-lua-prefix=/usr`
+  #      lua.h located in /usr/include/lua5.4/lua.h
+  #                              v
+  $ sudo apt install lua5.4 liblua5.4-dev
+  # to provide lua.h, lauxlib.h, lualib.h, luaconf.h
+  $ sudo ln -sf /usr/include/lua5.4/*.h /usr/include/
+  ```
+
   <!--sec data-title="build lua with shared lib" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   $ mkdir /opt/lua
@@ -531,6 +541,26 @@ $ /usr/bin/env codesign --display --file-list - /usr/local/Cellar/macvim/HEAD-a2
   <!--endsec-->
 
 - vim9
+
+  > [!NOTE|label:optional:]
+  > - [No acceptable C compiler found](https://stackoverflow.com/a/19816655/2940319)
+  >   ```bash
+  >   # ubuntu
+  >   $ sudo apt-get install build-essential
+  >
+  >   # centos/rhel
+  >   $ sudo yum groupinstall "Development Tools"
+  >   # or
+  >   $ sudo yum install gcc glibc glibc-common gd gd-devel -y
+  >
+  >   # openSUSE
+  >   $ sudo zypper install --type pattern devel_basis
+  >
+  >   # alpine
+  >   $ sudo apk add build-base
+  >   # or
+  >   $ apk --update add gcc make g++ zlib-dev
+  >   ```
 
   ```bash
   $ git clone https://github.com/vim/vim && cd vim
