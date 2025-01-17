@@ -1116,6 +1116,18 @@ $ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 $ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool true
 ```
 
+#### auto-capitalization
+
+![auto capitalization](../screenshot/osx/system-capitalization.png)
+
+```bash
+# disable
+$ defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+
+# enable
+$ defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool true
+```
+
 #### keyboard illumination
 ```bash
 # turn off keyboard illumination when computer is not used for 5 minutes
