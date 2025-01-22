@@ -203,6 +203,8 @@ $ npm i -g git-stats
 > node scripts/migration/2.0.0.js
 + git-stats@3.1.1
 added 100 packages from 57 contributors in 15.748s
+# or
+$ sudo ln -sf "$(npm root -g)"/git-stats/bin/git-stats /usr/local/bin/git-stats
 
 # optional
 $ npm i -g git-stats-importer
@@ -218,7 +220,7 @@ Successfully set up git-stats hook at /Users/marslo/.git-templates/hooks/post-co
 ### [git fame](https://github.com/casperdcl/git-fame#readme)
 ```bash
 # install
-pip install git-fame
+$ pip install git-fame
 
 # completion
 # osx
