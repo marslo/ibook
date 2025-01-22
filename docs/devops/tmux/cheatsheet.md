@@ -8,21 +8,22 @@
   - [tmux commands](#tmux-commands)
   - [shortcuts](#shortcuts)
 - [windows](#windows)
-  - [shortcuts](#shortcuts-1)
-  - [tmux commands](#tmux-commands-1)
+  - [shortcuts for windows](#shortcuts-for-windows)
+  - [tmux commands for windows](#tmux-commands-for-windows)
 - [panes](#panes)
-  - [shortcuts](#shortcuts-2)
-  - [tmux commands](#tmux-commands-2)
+  - [shortcuts for panes](#shortcuts-for-panes)
+  - [tmux commands for panes](#tmux-commands-for-panes)
 - [copy mode](#copy-mode)
-  - [shortcuts](#shortcuts-3)
-  - [tmux commands](#tmux-commands-3)
+  - [shortcuts for copy mode](#shortcuts-for-copy-mode)
+  - [tmux commands for copy mode](#tmux-commands-for-copy-mode)
 - [misc](#misc)
-  - [shortcuts](#shortcuts-4)
-  - [tmux commands](#tmux-commands-4)
+  - [shortcuts for misc](#shortcuts-for-misc)
+  - [tmux commands for misc](#tmux-commands-for-misc)
 - [help](#help)
-  - [linux commands](#linux-commands-1)
-  - [tmux commands](#tmux-commands-5)
-  - [shortcuts](#shortcuts-5)
+  - [linux commands for help](#linux-commands-for-help)
+  - [tmux commands for help](#tmux-commands-for-help)
+  - [shortcuts for help](#shortcuts-for-help)
+- [tmux format](#tmux-format)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -110,7 +111,7 @@
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>)</kbd>    | move to next session             |
 
 # windows
-## shortcuts
+## shortcuts for windows
 
 | SHORTCUTS                                      | DESCRIPTION                     |
 |------------------------------------------------|---------------------------------|
@@ -123,7 +124,7 @@
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>0..9</kbd> | switch to window 0..9           |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>l</kbd>    | toggle between last two windows |
 
-## tmux commands
+## tmux commands for windows
 
 | COMMAND                                         | DESCRIPTION                                        |
 |-------------------------------------------------|----------------------------------------------------|
@@ -138,7 +139,7 @@
 | `:movew -r`                                     | renumber windows to remove gap in the sequence     |
 
 # panes
-## shortcuts
+## shortcuts for panes
 
 | SHORTCUTS                                                     | DESCRIPTION                  |
 |---------------------------------------------------------------|------------------------------|
@@ -166,7 +167,7 @@
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>ctrl</kbd> + <kbd>↑</kbd> | resize current pane height   |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>x</kbd>                   | close/kill the current pane  |
 
-## tmux commands
+## tmux commands for panes
 
 | COMMAND                   | DESCRIPTION                                                                                                                 |
 |---------------------------|-----------------------------------------------------------------------------------------------------------------------------|
@@ -177,7 +178,7 @@
 | `:setw synchronize-panes` | toggle synchronize panes (send command to all panes)                                                                        |
 
 # copy mode
-## shortcuts
+## shortcuts for copy mode
 
 | SHORTCUTS                                      | DESCRIPTION                               |
 |------------------------------------------------|-------------------------------------------|
@@ -203,7 +204,7 @@
 | <kbd>⏎</kbd>                                   | copy selection to clipboard               |
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>]</kbd>    | paste selection                           |
 
-## tmux commands
+## tmux commands for copy mode
 
 | COMMAND                 | DESCRIPTION                                      |
 |-------------------------|--------------------------------------------------|
@@ -216,13 +217,13 @@
 | `:delete-buffer -b 1`   | delete buffer 1                                  |
 
 # misc
-## shortcuts
+## shortcuts for misc
 
 | SHORTCUTS                                   | DESCRIPTION        |
 |---------------------------------------------|--------------------|
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>:</kbd> | enter command mode |
 
-## tmux commands
+## tmux commands for misc
 
 | COMMAND           | DESCRIPTION                 |
 |-------------------|-----------------------------|
@@ -231,21 +232,103 @@
 | `:set mouse on`   | enable mouse mode           |
 
 # help
-## linux commands
+## linux commands for help
 
-| COMMAND            | DESCRIPTION                                |
-|--------------------|--------------------------------------------|
-| `$ tmux list-keys` | list key bindings ( shortcuts )            |
-| `$ tmux info`      | show every session, window, panes, etc ... |
+| COMMAND                  | DESCRIPTION                                |
+|--------------------------|--------------------------------------------|
+| `$ tmux list-keys`       | list key bindings ( shortcuts )            |
+| `$ tmux info`            | show every session, window, panes, etc ... |
+| `$ tmux show -g`         | show global options                        |
+| `$ tmux show-options -g` | show global options                        |
 
-## tmux commands
+## tmux commands for help
 
 | COMMAND      | DESCRIPTION                     |
 |--------------|---------------------------------|
 | `:list-keys` | list key bindings ( shortcuts ) |
 
-## shortcuts
+## shortcuts for help
 
 | SHORTCUTS                                   | DESCRIPTION |
 |---------------------------------------------|-------------|
 | <kbd>ctrl</kbd> + <kbd>b</kbd> <kbd>?</kbd> | show help   |
+
+
+# [tmux format](https://github.com/greymd/tmux-xpanes/wiki/Tmux-Format)
+
+| VARIABLE NAME          | REPLACED WITH                                          |
+|------------------------|--------------------------------------------------------|
+| alternate_on           | If pane is in alternate screen                         |
+| alternate_saved_x      | Saved cursor X in alternate screen                     |
+| alternate_saved_y      | Saved cursor Y in alternate screen                     |
+| buffer_sample          | First 50 characters from the specified buffer          |
+| buffer_size            | Size of the specified buffer in bytes                  |
+| client_activity        | Integer time client last had activity                  |
+| client_activity_string | String time client last had activity                   |
+| client_created         | Integer time client created                            |
+| client_created_string  | String time client created                             |
+| client_cwd             | Working directory of client                            |
+| client_height          | Height of client                                       |
+| client_last_session    | Name of the client's last session                      |
+| client_prefix          | 1 if prefix key has been pressed                       |
+| client_readonly        | 1 if client is readonly                                |
+| client_session         | Name of the client's session                           |
+| client_termname        | Terminal name of client                                |
+| client_tty             | Pseudo terminal of client                              |
+| client_utf8            | 1 if client supports utf8                              |
+| client_width           | Width of client                                        |
+| cursor_flag            | Pane cursor flag                                       |
+| cursor_x               | Cursor X position in pane                              |
+| cursor_y               | Cursor Y position in pane                              |
+| history_bytes          | Number of bytes in window history                      |
+| history_limit          | Maximum window history lines                           |
+| history_size           | Size of history in bytes                               |
+| host                   | Hostname of local host                                 |
+| insert_flag            | Pane insert flag                                       |
+| keypad_cursor_flag     | Pane keypad cursor flag                                |
+| keypad_flag            | Pane keypad flag                                       |
+| line                   | Line number in the list                                |
+| mouse_any_flag         | Pane mouse any flag                                    |
+| mouse_button_flag      | Pane mouse button flag                                 |
+| mouse_standard_flag    | Pane mouse standard flag                               |
+| mouse_utf8_flag        | Pane mouse UTF-8 flag                                  |
+| pane_active            | 1 if active pane                                       |
+| pane_current_command   | Current command if available                           |
+| pane_current_path      | Current path if available                              |
+| pane_dead              | 1 if pane is dead                                      |
+| pane_height            | Height of pane                                         |
+| pane_id                | Unique pane ID                                         |
+| pane_in_mode           | If pane is in a mode                                   |
+| pane_index             | Index of pane                                          |
+| pane_pid               | PID of first process in pane                           |
+| pane_start_command     | Command pane started with                              |
+| pane_start_path        | Path pane started with                                 |
+| pane_tabs              | Pane tab positions                                     |
+| pane_title             | Title of pane                                          |
+| pane_tty               | Pseudo terminal of pane                                |
+| pane_width             | Width of pane                                          |
+| saved_cursor_x         | Saved cursor X in pane                                 |
+| saved_cursor_y         | Saved cursor Y in pane                                 |
+| scroll_region_lower    | Bottom of scroll region in pane                        |
+| scroll_region_upper    | Top of scroll region in pane                           |
+| session_attached       | 1 if session attached                                  |
+| session_created        | Integer time session created                           |
+| session_created_string | String time session created                            |
+| session_group          | Number of session group                                |
+| session_grouped        | 1 if session in a group                                |
+| session_height         | Height of session                                      |
+| session_id             | Unique session ID                                      |
+| session_name           | Name of session                                        |
+| session_width          | Width of session                                       |
+| session_windows        | Number of windows in session                           |
+| window_active          | 1 if window active                                     |
+| window_find_matches    | Matched data from the find-window command if available |
+| window_flags           | Window flags                                           |
+| window_height          | Height of window                                       |
+| window_id              | Unique window ID                                       |
+| window_index           | Index of window                                        |
+| window_layout          | Window layout description                              |
+| window_name            | Name of window                                         |
+| window_panes           | Number of panes in window                              |
+| window_width           | Width of window                                        |
+| wrap_flag              | Pane wrap flag                                         |

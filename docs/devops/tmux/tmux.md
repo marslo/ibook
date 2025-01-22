@@ -1,7 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [configure](#configure)
+  - [plugins](#plugins)
+  - [theme](#theme)
+- [troubleshooting](#troubleshooting)
+  - [2.8.x to 2.9.x migration](#28x-to-29x-migration)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP|label:references:]
 > - [rothgar/awesome-tmux](https://github.com/rothgar/awesome-tmux)
+> - [* Getting Started](https://github.com/tmux/tmux/wiki/Getting-Started) | [Advanced Use](https://github.com/tmux/tmux/wiki/Advanced-Use)
 > - [man page: tmux — terminal multiplexer](https://man.openbsd.org/tmux)
 
 # configure
@@ -12,6 +22,12 @@
 > - [oh my tmux](https://github.com/gpakosz/.tmux)
 > - [Guide to customizing tmux.conf](https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/) | [hamvocke/dotfiles](https://github.com/hamvocke/dotfiles)
 > - [Use System Clipboard for Vi Copy Mode in Tmux in macOS and Linux](https://www.grailbox.com/2020/08/use-system-clipboard-for-vi-copy-mode-in-tmux-in-macos-and-linux/)
+
+```bash
+$ tmux show -g | grep -v --color=never '^#' | grep -v --color=never '^$'
+# or
+$ tmux show-options -g | grep -v --color=never '^#' | grep -v --color=never '^$'
+```
 
 ## plugins
 
