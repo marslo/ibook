@@ -2,6 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [configure](#configure)
+  - [alias](#alias)
+    - [show alias](#show-alias)
+    - [setup alias](#setup-alias)
   - [plugins](#plugins)
   - [theme](#theme)
 - [troubleshooting](#troubleshooting)
@@ -27,6 +30,30 @@
 $ tmux show -g | grep -v --color=never '^#' | grep -v --color=never '^$'
 # or
 $ tmux show-options -g | grep -v --color=never '^#' | grep -v --color=never '^$'
+```
+
+## alias
+
+### show alias
+```bash
+$ tmux show -s command-alias
+command-alias[0] split-pane=split-window
+command-alias[1] splitp=split-window
+command-alias[2] "server-info=show-messages -JT"
+command-alias[3] "info=show-messages -JT"
+command-alias[4] "choose-window=choose-tree -w"
+command-alias[5] "choose-session=choose-tree -s"
+command-alias[99] "ls=list-sessions -F \"(created #{t/f/%y-%m-%d %H#:%M#:%S:window_activity}) - #{session_name}: #{session_windows} windows#{?session_grouped - (group ,}#{session_group}#{?session_grouped,),}#{?session_attached, [attached],}\""
+```
+
+### setup alias
+
+> [!NOTE|label:references:]
+> - [modify default `ls` alias](https://stackoverflow.com/a/79366791/2940319)
+
+```bash
+$ grep -nH alias ~/.tmux.conf
+/Users/marslo/.tmux.conf:74:set -s command-alias[99] 'ls=list-sessions -F "(created #{t/f/%y-%m-%d %H#:%M#:%S:window_activity}) - #{session_name}: #{session_windows} windows#{?session_grouped - (group ,}#{session_group}#{?session_grouped,),}#{?session_attached, [attached],}"'
 ```
 
 ## plugins
