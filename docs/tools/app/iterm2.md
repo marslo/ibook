@@ -8,6 +8,7 @@
 - [hidden settings](#hidden-settings)
 - [advanced paste](#advanced-paste)
   - [remove the last newline character when pasting](#remove-the-last-newline-character-when-pasting)
+- [broadcast input](#broadcast-input)
 - [AI](#ai)
   - [configure](#configure)
   - [shortcut](#shortcut)
@@ -315,6 +316,19 @@ $ defaults read com.googlecode.iterm2 PasteSpecialSubstitution
 ![advanced paste](../../screenshot/tools/iterm2-advanced-paste.png)
 
 ![paste without newline](../../screenshot/tools/iterm2-paste-without-newline.png)
+
+## broadcast input
+
+| SHORTCUT                                                                 | DESCRIPTION                               |
+|--------------------------------------------------------------------------|-------------------------------------------|
+| <kbd>⇧</kbd> + <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                | send input to current session only        |
+| <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                               | broadcast input to all panes in all tabs  |
+| <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                               | broadcast input to all panes in the tab   |
+| <kbd>⌃</kbd> + <kbd>⌥</kbd> + <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd> | toggle broadcast input to current session |
+
+![broadcast input](../../screenshot/iterm2/iterm2-broadcast.png)
+
+![broadcast input](../../screenshot/iterm2/iterm2-broadcast.gif)
 
 ## AI
 
