@@ -79,8 +79,8 @@ function rebuiltToc() {
 }
 
 function rePush(){
-  git add --all "$(git rev-parse --show-toplevel)"
-  git commit --amend --no-edit
+  git add --signoff --all "$(git rev-parse --show-toplevel)"
+  git commit --signoff --amend --no-edit
   git push -u --force origin "$(git rev-parse --abbrev-ref HEAD)"
 }
 
