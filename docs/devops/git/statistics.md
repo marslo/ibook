@@ -12,9 +12,11 @@
   - [file changes](#file-changes)
 - [tools](#tools)
   - [git-stat](#git-stat)
-  - [`nova_git_stats`](#nova_git_stats)
+  - [nova_git_stats](#nova_git_stats)
   - [git-stats](#git-stats)
   - [git fame](#git-fame)
+  - [git-user-stats](#git-user-stats)
+  - [git-quick-stats](#git-quick-stats)
   - [gitstats.exe](#gitstatsexe)
 - [extra](#extra)
   - [git effort](#git-effort)
@@ -183,7 +185,7 @@ $ git log --pretty=format: --name-only | sort | uniq -c | sort /R | head -100
 >   ![git stat --help](../../screenshot/git/git-stat-result.png)
 
 
-### [`nova_git_stats`](https://github.com/mishina2228/nova_git_stats?tab=readme-ov-file)
+### [nova_git_stats](https://github.com/mishina2228/nova_git_stats?tab=readme-ov-file)
 ```bash
 $ gem install nova_git_stats
 $ /usr/local/lib/ruby/gems/3.3.0/gems/nova_git_stats-2.4.1/bin/git_stats generate -o stats
@@ -216,6 +218,8 @@ Setting up git-stats hooks.
 Set new global git template dir at /Users/marslo/.git-templates
 Successfully set up git-stats hook at /Users/marslo/.git-templates/hooks/post-commit.
 ```
+
+![git-stats](../../screenshot/git/git-stat.png)
 
 ### [git fame](https://github.com/casperdcl/git-fame#readme)
 ```bash
@@ -258,6 +262,41 @@ vim $ git fame --cost hour,month --since='5 days ago'
     | Melker Ulander     |     2 |      0 |    11 |      1 |      1 | 0.6/ 4.3/ 0.8   |
     | gi1242             |     2 |      0 |     4 |      1 |      1 | 0.2/ 4.3/ 0.8   |
 ```
+
+### [git-user-stats](https://gist.github.com/shitchell/783cc8a892ed1591eca2afeb65e8720a)
+
+> [!NOTE|label:references:]
+> - [How do I show statistics for author's contributions in git?](https://stackoverflow.com/a/73781404/2940319)
+
+```bash
+vim $ git user-stats --since="4 days ago"
+    Email                           Commits     Files       Insertions  Deletions   Total Lines
+    -----                           -------     -----       ----------  ---------   -----------
+    dougkearns@gmail.com            2           72          439         409         848
+    anton.sharonov@gmail.com        1           6           483         83          566
+    seandewar@users.noreply.github.com  3           19          200         31          231
+    dapeng.mao@qq.com               1           5           87          6           93
+    cb@256bit.org                   2           5           93          0           93
+    gi1242@gmail.com                1           1           12          7           19
+    github.e41mv@aleeas.com         1           2           13          1           14
+    azc100@gmail.com                1           1           4           7           11
+    zeertzjq@outlook.com            1           1           2           2           4
+    zoltan.arpadffy@gmail.com       1           1           1           1           2
+```
+
+- install
+  ```bash
+  $ curl -o /path/to/bin/git-user-stats -fsSL https://gist.githubusercontent.com/shitchell/783cc8a892ed1591eca2afeb65e8720a/raw/git-user-stats
+
+  # i.e.:
+  $ curl -o ~/.marslo/bin/git-user-stats \
+         -fsSL https://gist.githubusercontent.com/shitchell/783cc8a892ed1591eca2afeb65e8720a/raw/git-user-stats
+  ```
+
+![git user-stats](../../screenshot/git/git-user-stats.png)
+
+
+### [git-quick-stats](https://github.com/git-quick-stats/git-quick-stats)
 
 ### [gitstats.exe](https://gitcontributors.com/)
 
@@ -380,9 +419,9 @@ docs/linux/ubuntu/apps.md                                                       
 
 ### [git stat](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-stat)
 
-> [!NOTE]
+> [!NOTE|label:references:]
 > - [* mishina2228/nova_git_stats](https://github.com/mishina2228/nova_git_stats)
-> - [How do I show statistics for author's contributions in git?](https://stackoverflow.com/q/42715785/2940319)
+> - [How do I show statistics for author's contributions in git?](https://stackoverflow.com/q/42715785/2940319) | [another answer](https://stackoverflow.com/a/42715893/2940319)
 > - [IonicaBizau/git-stats](https://github.com/IonicaBizau/git-stats)
 > - [GitStats - git history statistics generator](https://gitstats.sourceforge.net/)
 >   - [hoxu/gitstats](https://github.com/hoxu/gitstats)
@@ -443,23 +482,6 @@ docs/linux/ubuntu/apps.md                                                       
   $ git log --pretty=format:%an \
     | awk '{ ++c[$0]; } END { for(cc in c) printf "%5d %s\n",c[cc],cc; }'\
     | sort -r
-  ```
-
-- [git user-stats](https://gist.github.com/shitchell/783cc8a892ed1591eca2afeb65e8720a)
-  ```bash
-  vim $ git user-stats --since="4 days ago"
-      Email                           Commits     Files       Insertions  Deletions   Total Lines
-      -----                           -------     -----       ----------  ---------   -----------
-      dougkearns@gmail.com            2           72          439         409         848
-      anton.sharonov@gmail.com        1           6           483         83          566
-      seandewar@users.noreply.github.com  3           19          200         31          231
-      dapeng.mao@qq.com               1           5           87          6           93
-      cb@256bit.org                   2           5           93          0           93
-      gi1242@gmail.com                1           1           12          7           19
-      github.e41mv@aleeas.com         1           2           13          1           14
-      azc100@gmail.com                1           1           4           7           11
-      zeertzjq@outlook.com            1           1           2           2           4
-      zoltan.arpadffy@gmail.com       1           1           1           1           2
   ```
 
 ### others

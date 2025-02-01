@@ -39,6 +39,8 @@
   - [use less as tail -f](#use-less-as-tail--f)
   - [netcat & nmap-ncat](#netcat--nmap-ncat)
   - [alternatives & update-alternatives](#alternatives--update-alternatives)
+  - [polar clock](#polar-clock)
+  - [take screenshots of websites from terminal](#take-screenshots-of-websites-from-terminal)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -889,3 +891,23 @@ $ less +F <filename>
 
   Enter to keep the current selection[+], or type selection number: 1
   ```
+
+### [polar clock](https://dmitrybaranovskiy.github.io/raphael/polar-clock.html)
+
+![polar clock](../screenshot/linux/polar-clock.png)
+
+
+### take screenshots of websites from terminal
+
+> [!NOTE|label:references:]
+> - [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) | [pageres-cli](https://github.com/sindresorhus/pageres-cli) | [break-shot](https://github.com/victorferraz/break-shot)
+> - [Take screenshots of websites from terminal](https://www.reddit.com/r/commandline/comments/17jtp1s/take_screenshots_of_websites_from_terminal/)
+> - [Scrot: Linux command-line screen grabs made simple](https://opensource.com/article/17/11/taking-screen-captures-linux-command-line-scrot)
+
+
+- firefox
+  ```bash
+  $ firefox -screenshot http://example.com
+  ```
+
+48;30;106;2040;339248;30;106;2040;3392

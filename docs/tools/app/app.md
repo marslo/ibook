@@ -26,6 +26,7 @@
 - [jietu](https://jietu.qq.com/)
 - [snagit](https://www.techsmith.com/screen-capture.html)
 - [snipaste](https://www.snipaste.com/)  | [iShot](https://www.better365.cn/ishot.html)
+- [pageres-cli](https://github.com/sindresorhus/pageres-cli) | [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) | [CutyCapt](https://cutycapt.sourceforge.net/)
 
 ### keystore
 - Visualize
