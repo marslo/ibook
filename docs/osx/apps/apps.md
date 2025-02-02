@@ -1147,6 +1147,15 @@ $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/marslo/mac-cli/master/ma
 
 > [!NOTE|label:references:]
 > - [agarrharr/awesome-macos-screensavers](https://github.com/agarrharr/awesome-macos-screensavers)
+> - [how can i start the screensaver (and lock the screen) from the os x terminal?](https://stackoverflow.com/a/37063872/2940319)
+>   - macOS High Sierra: `/System/Library/CoreServices/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine`
+>   - or: /System/Library/Frameworks/ScreenSaver.framework/Resources/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine``
+>   ```bash
+>   # trigger screensaver
+>   $ open -a ScreenSaverEngine
+>   # or
+>   $ open -b com.apple.ScreenSaver.Engine
+>   ```
 
 #### fliqlo
 ```bash

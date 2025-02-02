@@ -52,6 +52,7 @@
     - [QuickTime](#quicktime)
     - [App Store](#app-store)
     - [sleep mode](#sleep-mode)
+    - [screensaver](#screensaver)
   - [others](#others-2)
 - [backup & restore](#backup--restore)
   - [Moon](#moon)
@@ -2000,6 +2001,35 @@ $ sudo reboot
 #### prevent automatic sleep when display is off
 
 ![prevent automatic sleep when display is off](../screenshot/osx/prevent-automatic-sleep-when-display-off.png)
+
+### screensaver
+
+> [!NOTE|label:references:]
+> - [#1332 MacOS Sonoma Screen Saver Configuration plist](https://github.com/JohnCoates/Aerial/issues/1332)
+> - [phaselden/FlipIt](https://github.com/phaselden/FlipIt) | [alexanderk23/gluqlo](https://github.com/alexanderk23/gluqlo)
+
+```bash
+$ defaults -currentHost read com.apple.screensaver
+{
+    CleanExit = 1;
+    idleTime = 3600;
+    moduleDict =     {
+        moduleName = Shell;
+        path = "/System/Library/ExtensionKit/Extensions/Shell.appex";
+        type = 0;
+    };
+    tokenRemovalAction = 0;
+}
+
+$ cd ~/Library/Application\ Support/com.apple.wallpaper/Store; \
+  plutil -extract "AllSpacesAndDisplays.Idle.Content.Choices.0.Configuration" raw Index.plist | base64 --decode > temp.plist; \
+  plutil -p temp.plist
+{
+  "module" => {
+    "relative" => "file:///System/Library/ExtensionKit/Extensions/Shell.appex"
+  }
+}
+```
 
 ## others
 #### feedback assistant
