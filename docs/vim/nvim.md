@@ -249,6 +249,11 @@ Run :checkhealth for more info
   ```
 
 ### `brew install -v --debug`
+
+> [!NOTE|label:references:]
+> - [full step](https://gist.github.com/marslo/4eca369df245ad0b7cdd01de2a09f61c)
+> - [Build failing after upgrading to HEAD-efa664c on Sequoia with homebrew #32255](https://github.com/neovim/neovim/issues/32255#issuecomment-2629157646)
+
 ```bash
 # download
 $ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.2.17-33-g1bbfe76\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 14.4.1\)\ curl/8.4.0 --header Accept-Language:\ en --retry 3 --fail --location --silent --head https://raw.githubusercontent.com/Homebrew/homebrew-core/841811d678fcfef856f693a2ec90add1625a4c12/Formula/n/neovim.rb
@@ -261,10 +266,172 @@ $ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.
 Wed, 10 Apr 2024 07:08:49 +0800
 
 # build
-$ cmake -S . -B build -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-f494084 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
+# MacOSX15
+$ cmake -S . -B build \
+        -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib \
+        -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib \
+        -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_FIND_FRAMEWORK=LAST \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake \
+        -Wno-dev \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build build
+$ cmake --install build
+
+# MacOSX14
+$ cmake -S . -B build \
+        -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib \
+        -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib \
+        -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib \
+        -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-f494084 \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_FIND_FRAMEWORK=LAST \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
+        -Wno-dev \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
 $ cmake --build build
 $ cmake --install build
 ```
+
+<!--sec data-title="full steps" data-id="section2" data-show=true data-collapse=true ces-->
+```bash
+# -- package downlaod --
+# downloading https://ghcr.io/v2/homebrew/core/lpeg/manifests/1.1.0-1
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Accept:\ application/vnd.oci.image.index.v1+json --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/5906a2786f22dd74352335366e9b152ed78248ffa0b9aefb61209bbcdfb96581--lpeg-1.1.0-1.bottle_manifest.json.incomplete --location https://ghcr.io/v2/homebrew/core/lpeg/manifests/1.1.0-1
+
+# downloading https://ghcr.io/v2/homebrew/core/lpeg/blobs/sha256:8d5ac91544867d83ce0ec6f407e6a3ead572ccbd523234d2673322da355435fb
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/64b9165704b80c38d985d9114800b67538d74206e753479a064d1de4274783ae--lpeg--1.1.0.sonoma.bottle.1.tar.gz.incomplete --location https://ghcr.io/v2/homebrew/core/lpeg/blobs/sha256:8d5ac91544867d83ce0ec6f407e6a3ead572ccbd523234d2673322da355435fb
+
+# downloading https://ghcr.io/v2/homebrew/core/luajit/manifests/2.1.1736781742
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Accept:\ application/vnd.oci.image.index.v1+json --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/24274d382a6b6a99d66237d64e3c2780fcd4fc179873af1c030640f8fa3272c7--luajit-2.1.1736781742.bottle_manifest.json.incomplete --location https://ghcr.io/v2/homebrew/core/luajit/manifests/2.1.1736781742
+
+# downloading https://ghcr.io/v2/homebrew/core/luajit/blobs/sha256:fbcaa9ad4a184e2e4f1926f46e9917dbf81b7809eeb373eb9478e1ca57fbc572
+$ /uSr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/44e0a7fb4ea0b9964daff356cd16a93de40d4bf096cce47fada80235095eee61--luajit--2.1.1736781742.sonoma.bottle.tar.gz.incomplete --location https://ghcr.io/v2/homebrew/core/luajit/blobs/sha256:fbcaa9ad4a184e2e4f1926f46e9917dbf81b7809eeb373eb9478e1ca57fbc572
+
+# downloading https://ghcr.io/v2/homebrew/core/luv/manifests/1.50.0-0
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Accept:\ application/vnd.oci.image.index.v1+json --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/f7df8fdec3d84a4438fb414d9be8a6412a897c493ed21aa06a3704137c3d9abf--luv-1.50.0-0.bottle_manifest.json.incomplete --location https://ghcr.io/v2/homebrew/core/luv/manifests/1.50.0-0
+
+# downloading https://ghcr.io/v2/homebrew/core/luv/blobs/sha256:29aa7d58757c2219fc4f5a80ee7b9626e24830536ee03fa44a50da5a19b16c4a
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/96e3e0360db63fef9052f78aa5cb84c1124897bdd06071ace3be33c74d11df19--luv--1.50.0-0.sonoma.bottle.tar.gz.incomplete --location https://ghcr.io/v2/homebrew/core/luv/blobs/sha256:29aa7d58757c2219fc4f5a80ee7b9626e24830536ee03fa44a50da5a19b16c4a
+
+# downloading https://ghcr.io/v2/homebrew/core/unibilium/manifests/2.1.2
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Accept:\ application/vnd.oci.image.index.v1+json --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/2d9cd8927f7cd1da5e432d934cb2f5c4d09314fba2531033031bca58d817cb1c--unibilium-2.1.2.bottle_manifest.json.incomplete --location https://ghcr.io/v2/homebrew/core/unibilium/manifests/2.1.2
+
+# downloading https://ghcr.io/v2/homebrew/core/unibilium/blobs/sha256:19a58769977601b8bbc47959efeefb4bad5cc938d7dcde0c083c8227d8296026
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --fail --retry 3 --header Authorization:\ Bearer\ QQ== --remote-time --output /Users/marslo/Library/Caches/Homebrew/downloads/a3d626c1761646e68b628b37bedc590b31a45e036fce5d7dbbb6a95eef2eb3bf--unibilium--2.1.2.sonoma.bottle.tar.gz.incomplete --location https://ghcr.io/v2/homebrew/core/unibilium/blobs/sha256:19a58769977601b8bbc47959efeefb4bad5cc938d7dcde0c083c8227d8296026
+
+# downloading https://raw.githubusercontent.com/Homebrew/homebrew-core/e0883566a68ab8403f399fc4e616977ecdfe7c66/Formula/n/neovim.rb
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --retry 3 -V
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --retry 3 --fail --location --silent --head https://raw.githubusercontent.com/Homebrew/homebrew-core/e0883566a68ab8403f399fc4e616977ecdfe7c66/Formula/n/neovim.rb
+$ /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --disable --cookie /dev/null --globoff --show-error --user-agent Homebrew/4.4.19-77-g7ce65c2\ \(Macintosh\;\ Intel\ Mac\ OS\ X\ 15.1.1\)\ curl/8.7.1 --header Accept-Language:\ en --retry 3 --fail --location --silent --head --request GET --http1.1 https://raw.githubusercontent.com/Homebrew/homebrew-core/e0883566a68ab8403f399fc4e616977ecdfe7c66/Formula/n/neovim.rb
+
+# cloning https://github.com/neovim/neovim.git
+$ /usr/bin/env git --git-dir /Users/marslo/Library/Caches/Homebrew/neovim--git/.git status -s
+
+# installing neovim --head
+$ /usr/bin/env hdiutil imageinfo -format /Users/marslo/Library/Caches/Homebrew/neovim--git
+$ /usr/bin/env cp -pR /Users/marslo/Library/Caches/Homebrew/neovim--git/.git-blame-ignore-revs /Users/marslo/Library/Caches/Homebrew/neovim--git/.clangd /Users/marslo/Library/Caches/Homebrew/neovim--git/cmake.config /Users/marslo/Library/Caches/Homebrew/neovim--git/.styluaignore /Users/marslo/Library/Caches/Homebrew/neovim--git/cmake.deps /Users/marslo/Library/Caches/Homebrew/neovim--git/CMakeLists.txt /Users/marslo/Library/Caches/Homebrew/neovim--git/test /Users/marslo/Library/Caches/Homebrew/neovim--git/cmake /Users/marslo/Library/Caches/Homebrew/neovim--git/Makefile /Users/marslo/Library/Caches/Homebrew/neovim--git/.luacheckrc /Users/marslo/Library/Caches/Homebrew/neovim--git/.clang-tidy /Users/marslo/Library/Caches/Homebrew/neovim--git/runtime /Users/marslo/Library/Caches/Homebrew/neovim--git/cmake.packaging /Users/marslo/Library/Caches/Homebrew/neovim--git/INSTALL.md /Users/marslo/Library/Caches/Homebrew/neovim--git/contrib /Users/marslo/Library/Caches/Homebrew/neovim--git/.editorconfig /Users/marslo/Library/Caches/Homebrew/neovim--git/README.md /Users/marslo/Library/Caches/Homebrew/neovim--git/CMakePresets.json /Users/marslo/Library/Caches/Homebrew/neovim--git/.luarc.json /Users/marslo/Library/Caches/Homebrew/neovim--git/.gitignore /Users/marslo/Library/Caches/Homebrew/neovim--git/CONTRIBUTING.md /Users/marslo/Library/Caches/Homebrew/neovim--git/BUILD.md /Users/marslo/Library/Caches/Homebrew/neovim--git/BSDmakefile /Users/marslo/Library/Caches/Homebrew/neovim--git/scripts /Users/marslo/Library/Caches/Homebrew/neovim--git/.clang-format /Users/marslo/Library/Caches/Homebrew/neovim--git/.github /Users/marslo/Library/Caches/Homebrew/neovim--git/.gitattributes /Users/marslo/Library/Caches/Homebrew/neovim--git/.cirrus.yml /Users/marslo/Library/Caches/Homebrew/neovim--git/.luacov /Users/marslo/Library/Caches/Homebrew/neovim--git/.mailmap /Users/marslo/Library/Caches/Homebrew/neovim--git/.git /Users/marslo/Library/Caches/Homebrew/neovim--git/LICENSE.txt /Users/marslo/Library/Caches/Homebrew/neovim--git/MAINTAIN.md /Users/marslo/Library/Caches/Homebrew/neovim--git/.stylua.toml /Users/marslo/Library/Caches/Homebrew/neovim--git/src /private/tmp/homebrew-unpack-20250201-3864-3o66e4
+...
+$ /usr/bin/env tar --extract --no-same-owner --file /Users/marslo/Library/Caches/Homebrew/downloads/39864b4f45c47ab339c58d6b5a5cae1916dbe2f3815880744242b0956624e829--tree-sitter-c-0.23.2.tar.gz --directory /private/tmp/homebrew-unpack-20250201-3864-fjuv0m
+
+# -- dependencies build --
+# treesitter-c
+$ cmake -S /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/src/treesitter-c -B /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-c -DPARSERLANG=c -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-c
+$ cmake --install /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-c
+
+# treesitter-lua
+$ cmake -S /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/src/treesitter-lua -B /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-lua -DPARSERLANG=lua -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-lua
+$ cmake --install /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-lua
+
+# treesitter-vim
+$ cmake -S /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/src/treesitter-vim -B /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-vim -DPARSERLANG=vim -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-vim
+$ cmake --install /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-vim
+
+# treesitter-vimdoc
+$ cmake -S /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/src/treesitter-vimdoc -B /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-vimdoc -DPARSERLANG=vimdoc -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-vimdoc
+$ cmake --install /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-vimdoc
+
+# treesitter-query
+$ cmake -S /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/src/treesitter-query -B /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-query -DPARSERLANG=query -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-query
+$ cmake --install /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-query
+
+# treesitter-markdown
+$ cmake -S /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/src/treesitter-markdown -B /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-markdown -DPARSERLANG=markdown -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-markdown
+$ cmake --install /private/tmp/neovim-20250201-3864-gtr04h/deps-build/build/treesitter-markdown
+
+# -- neovim build --
+$ cmake -S . -B build -DLUV_LIBRARY=/usr/local/opt/luv/lib/libluv.dylib -DLIBUV_LIBRARY=/usr/local/opt/libuv/lib/libuv.dylib -DLPEG_LIBRARY=/usr/local/opt/lpeg/lib/liblpeg.dylib -DCMAKE_INSTALL_PREFIX=/usr/local/Cellar/neovim/HEAD-0985e78 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_FRAMEWORK=LAST -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=/usr/local/Homebrew/Library/Homebrew/cmake/trap_fetchcontent_provider.cmake -Wno-dev -DBUILD_TESTING=OFF -DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk
+$ cmake --build build
+$ cmake --install build
+
+# -- link --
+$ ln -s ../Cellar/neovim/HEAD-0985e78/bin/nvim nvim
+$ ln -s ../../../../../Cellar/neovim/HEAD-0985e78/share/icons/hicolor/128x128/apps/nvim.png nvim.png
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/af/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/ca/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/cs/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/cs.cp1250
+$ mkdir -p /usr/local/share/locale/cs.cp1250/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/cs.cp1250/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/da/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/de/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/en_GB/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/eo/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/es/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/fi/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/fr/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/ga/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/it/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/ja/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/ja.euc-jp
+$ mkdir -p /usr/local/share/locale/ja.euc-jp/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/ja.euc-jp/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/ko.UTF-8
+$ mkdir -p /usr/local/share/locale/ko.UTF-8/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/ko.UTF-8/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/nb/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/nl/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/no
+$ mkdir -p /usr/local/share/locale/no/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/no/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/pl.UTF-8
+$ mkdir -p /usr/local/share/locale/pl.UTF-8/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/pl.UTF-8/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/pt_BR/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/ru/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/sk/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/sk.cp1250
+$ mkdir -p /usr/local/share/locale/sk.cp1250/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/sk.cp1250/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/sv/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/tr/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/uk/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/vi/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/zh_CN.UTF-8
+$ mkdir -p /usr/local/share/locale/zh_CN.UTF-8/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/zh_CN.UTF-8/LC_MESSAGES/nvim.mo nvim.mo
+$ mkdir -p /usr/local/share/locale/zh_TW.UTF-8
+$ mkdir -p /usr/local/share/locale/zh_TW.UTF-8/LC_MESSAGES
+$ ln -s ../../../../Cellar/neovim/HEAD-0985e78/share/locale/zh_TW.UTF-8/LC_MESSAGES/nvim.mo nvim.mo
+$ ln -s ../../../Cellar/neovim/HEAD-0985e78/share/man/man1/nvim.1 nvim.1
+$ ln -s ../Cellar/neovim/HEAD-0985e78/share/nvim nvim
+$ ln -s ../Cellar/neovim/HEAD-0985e78/lib/nvim nvim
+```
+
+<!--endsec-->
 
 ### uninstall
 ```bash
@@ -277,8 +444,9 @@ $ sudo cmake --build build/ --target uninstall
 # osx
 $ brew install nvim
 
-# nvim nightly
+# nvim head
 $ brew install --HEAD utf8proc
+$ brew install --HEAD tree-sitter
 $ brew install --HEAD neovim
 
 # ubuntu
@@ -303,21 +471,24 @@ $ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
 
   ```bash
   $ brew install --HEAD utf8proc
+  $ brew install tree-sitter --HEAD
   $ brew install nvim --HEAD --debug -v
+  # or
+  $ brew install --build-from-source --HEAD --force --fetch-HEAD --keep-tmp neovim -v --debug
 
   # verify
   $ $(brew --cellar nvim)/*/bin/nvim -V1 -v
-  NVIM v0.10.0-dev-2889+gf064e72b9-Homebrew
+  NVIM v0.11.0-dev-1668+g0985e784d8-Homebrew
   Build type: Release
-  LuaJIT 2.1.1710088188
+  LuaJIT 2.1.1736781742
 
      system vimrc file: "$VIM/sysinit.vim"
-    fall-back for $VIM: "/usr/local/Cellar/neovim/HEAD-f064e72/share/nvim"
+    fall-back for $VIM: "/usr/local/Cellar/neovim/HEAD-0985e78/share/nvim"
 
   Run :checkhealth for more info
   ```
 
-  <!--sec data-title="brew install --head with macOS SDK15 ( xcode v16 )" data-id="section2" data-show=true data-collapse=true ces-->
+  <!--sec data-title="brew install --head with macOS SDK15 ( xcode v16 )" data-id="section3" data-show=true data-collapse=true ces-->
 
   > [!NOTE|label:to get macOS SDK:]
   > - [* iMarslo: osx/xcode/sdk](../osx/apps/apps.md#sdk)

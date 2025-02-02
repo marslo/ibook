@@ -38,6 +38,7 @@
   - [`would clobber existing tag`](#would-clobber-existing-tag)
   - [Cask `firefox-nightly` is not installed.](#cask-firefox-nightly-is-not-installed)
   - [Error: Unexpected method 'appcast' called on Cask adoptopenjdk-jre](#error-unexpected-method-appcast-called-on-cask-adoptopenjdk-jre)
+  - [treesitter.c: error: call to undeclared function 'ts_language_abi_version'](#treesitterc-error-call-to-undeclared-function-ts_language_abi_version)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1283,3 +1284,86 @@ Warning: Broken symlinks were found. Remove them with `brew cleanup`:
   /opt/homebrew/bin/git-copy
 ```
 <!--endsec-->
+
+### treesitter.c: error: call to undeclared function 'ts_language_abi_version'
+
+> [!NOTE|label:references]
+> - error message
+>   ```bash
+>   $ brew install --HEAD neovim
+>   /tmp/neovim-20250201-47979-gpibky/src/nvim/lua/treesitter.c:221:27: error: call to undeclared function 'ts_language_abi_version'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>     221 |   uint32_t lang_version = ts_language_abi_version(lang);
+>         |                           ^
+>   /tmp/neovim-20250201-47979-gpibky/src/nvim/lua/treesitter.c:221:27: note: did you mean 'ts_language_version'?
+>   /usr/local/include/tree_sitter/api.h:1135:10: note: 'ts_language_version' declared here
+>    1135 | uint32_t ts_language_version(const TSLanguage *self);
+>         |          ^
+>   /tmp/neovim-20250201-47979-gpibky/src/nvim/lua/treesitter.c:303:22: error: call to undeclared function 'ts_language_abi_version'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>     303 |   lua_pushinteger(L, ts_language_abi_version(lang));  // [retval, version]
+>         |                      ^
+>   [ 80%] Building C object src/nvim/CMakeFiles/nvim_bin.dir/math.c.o
+>   cd /tmp/neovim-20250201-47979-gpibky/build/src/nvim && /usr/local/Homebrew/Library/Homebrew/shims/mac/super/clang -DINCLUDE_GENERATED_DECLARATIONS -DUNIT_TESTING -DUTF8PROC_STATIC -D_GNU_SOURCE -Dnvim_bin_EXPORTS -I/tmp/neovim-20250201-47979-gpibky/build/src/nvim/auto -I/tmp/neovim-20250201-47979-gpibky/build/include -I/tmp/neovim-20250201-47979-gpibky/build/cmake.config -I/tmp/neovim-20250201-47979-gpibky/src -isystem /usr/local/include/luajit-2.1 -isystem /usr/local/opt/gettext/include -O3 -DNDEBUG -flto=thin -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk -mmacosx-version-min=15.1.1 -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -fstack-protector-strong -Wimplicit-fallthrough -fdiagnostics-color=auto -MD -MT src/nvim/CMakeFiles/nvim_bin.dir/math.c.o -MF CMakeFiles/nvim_bin.dir/math.c.o.d -o CMakeFiles/nvim_bin.dir/math.c.o -c /tmp/neovim-20250201-47979-gpibky/src/nvim/math.c
+>   2 errors generated.
+>   make[2]: *** [src/nvim/CMakeFiles/nvim_bin.dir/lua/treesitter.c.o] Error 1
+>   make[2]: *** Waiting for unfinished jobs....
+>   [ 80%] Building C object src/nvim/CMakeFiles/nvim_bin.dir/mbyte.c.o
+>   cd /tmp/neovim-20250201-47979-gpibky/build/src/nvim && /usr/local/Homebrew/Library/Homebrew/shims/mac/super/clang -DINCLUDE_GENERATED_DECLARATIONS -DUNIT_TESTING -DUTF8PROC_STATIC -D_GNU_SOURCE -Dnvim_bin_EXPORTS -I/tmp/neovim-20250201-47979-gpibky/build/src/nvim/auto -I/tmp/neovim-20250201-47979-gpibky/build/include -I/tmp/neovim-20250201-47979-gpibky/build/cmake.config -I/tmp/neovim-20250201-47979-gpibky/src -isystem /usr/local/include/luajit-2.1 -isystem /usr/local/opt/gettext/include -O3 -DNDEBUG -flto=thin -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk -mmacosx-version-min=15.1.1 -Wall -Wextra -pedantic -Wno-unused-parameter -Wstrict-prototypes -std=gnu99 -Wshadow -Wconversion -Wvla -Wdouble-promotion -Wmissing-noreturn -Wmissing-format-attribute -Wmissing-prototypes -fsigned-char -fstack-protector-strong -Wimplicit-fallthrough -fdiagnostics-color=auto -MD -MT src/nvim/CMakeFiles/nvim_bin.dir/mbyte.c.o -MF CMakeFiles/nvim_bin.dir/mbyte.c.o.d -o CMakeFiles/nvim_bin.dir/mbyte.c.o -c /tmp/neovim-20250201-47979-gpibky/src/nvim/mbyte.c
+>   make[1]: *** [src/nvim/CMakeFiles/nvim_bin.dir/all] Error 2
+>   make: *** [all] Error 2
+>
+>   /usr/bin/env /usr/local/Homebrew/Library/Homebrew/shims/shared/curl --version
+>   /usr/local/Homebrew/Library/Homebrew/ignorable.rb:27:in `block in raise'
+>   BuildError: Failed executing: cmake --build build
+>   ```
+> - references:
+>   - [#32255 - Build failing after upgrading to HEAD-efa664c on Sequoia with homebrew](https://github.com/neovim/neovim/issues/32255#issuecomment-2624019228)
+>   - [#17658 - macOS homebrew nightly build failed because of treesitter.c:134:3: error: implicit declaration of function 'ts_set_allocator' is invalid in C99 [-Werror,-Wimplicit-function-declaration] error](https://github.com/neovim/neovim/issues/17658#issuecomment-1063613793)
+
+#### solution
+- install tree-sitter from HEAD
+  ```bash
+  $ brew install tree-sitter --HEAD
+  $ brew install neovim --HEAD
+  ```
+
+- using `ts_language_version` to replace `ts_language_abi_version` in `src/nvim/lua/treesitter.c`
+
+  > [!NOTE|label:references]
+  > - [eb60cd74fb5caa997e6253bef6a1f0b58e1b6ec6](https://github.com/neovim/neovim/commit/eb60cd74fb5caa997e6253bef6a1f0b58e1b6ec6#diff-16dee61e321f8c2f4f679ec6ad780c54ddf362070c0540a63a22b35f84c3fd0dL221)
+
+  ```bash
+  $ brew unlink neovim && \
+    brew install --build-from-source --HEAD --force --fetch-HEAD --keep-tmp neovim -v --debug
+  ...
+  ...
+  BuildError: Failed executing: cmake --build build
+  1. raise
+  2. ignore
+  3. backtrace
+  4. irb
+  5. shell
+  Choose an action: 5                 # go to shell ( temp folder ) and execute sed command
+  bash-5.2$ if grep -q ts_language_abi_version src/nvim/lua/treesitter.c; then
+    /usr/local/opt/gnu-sed/libexec/gnubin/sed 's/ts_language_abi_version/ts_language_version/g' -i src/nvim/lua/treesitter.c;
+  fi
+  bash-5.2$ cmake --build build       # re-built
+  ...
+  ...
+  make[2]: Nothing to be done for 'CMakeFiles/nvim.dir/build'.
+  [100%] Built target nvim
+  /usr/local/opt/cmake/bin/cmake -E cmake_progress_start /tmp/neovim-20250201-47979-gpibky/build/CMakeFiles 0           # build succeed
+  bash-5.2$ exit
+  exit
+  1. raise
+  2. ignore
+  3. backtrace
+  4. irb
+  5. shell
+  Choose an action: 2                 # select `2` to ignore and keep continuous to install
+  ==> cmake --install build
+  -- Install configuration: "Release"
+  ...                                 # succeed here
+
+  $ which -a nvim
+  /usr/local/bin/nvim
+  ```
