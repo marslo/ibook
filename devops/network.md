@@ -497,6 +497,7 @@ $ ifstat -n -i en7
 > [!NOTE|label:references:]
 > - [ipcalc online](https://jodies.de/ipcalc?host=10.0.0.0&mask1=29&mask2=)
 > - [ipcalc brew install](https://formulae.brew.sh/formula/ipcalc)
+> - [A Crash Course in IPv4 Addressing](https://blog.bytebytego.com/p/a-crash-course-in-ipv4-addressing)
 
 ### conversion
 
