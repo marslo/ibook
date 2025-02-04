@@ -21,6 +21,7 @@
   - [newline `\r`](#newline-%5Cr)
   - [redirect cmd](#redirect-cmd)
   - [format json in vim](#format-json-in-vim)
+  - [multiple repalce in silent mode](#multiple-repalce-in-silent-mode)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
   - [close buffer when close window](#close-buffer-when-close-window)
   - [switch in buffers](#switch-in-buffers)
@@ -540,6 +541,12 @@ cnoremap <C-k> <C-\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>
 
 " or
 :%!python -m json.tool
+```
+
+### multiple repalce in silent mode
+
+```vim
+:silent! %s/old/new/g | %s/old2/new2/g
 ```
 
 ### [run command in multiple buffers](https://vim.fandom.com/wiki/Run_a_command_in_multiple_buffers)
