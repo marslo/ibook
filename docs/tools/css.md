@@ -136,6 +136,7 @@ body {
 
 - explain
 
+
   | FONT                                 | DEVICE TARGETED                         |
   |--------------------------------------|-----------------------------------------|
   | `-apple-system` (San Francisco)      | iOS Safari, macOS Safari, macOS Firefox |
@@ -151,7 +152,9 @@ body {
   | `Arial`                              | Any                                     |
   | `sans-serif`                         | Any                                     |
 
+
 - comparison between the font stacks used by sites
+
 
   | WORDPRESS            | MEDIUM               | GHOST                | GITHUB               |
   |----------------------|----------------------|----------------------|----------------------|
