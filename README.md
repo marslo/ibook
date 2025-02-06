@@ -14,6 +14,9 @@
 - [gitbook others](#gitbook-others)
   - [basic usage](#basic-usage)
 - [troubleshooting](#troubleshooting)
+  - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
+  - [`Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`](#error-enoent-no-such-file-or-directory-stat-_bookgitbookgitbook-plugin-github-buttonspluginjs)
+  - [`TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined``](#typeerror-err_invalid_arg_type-the-path-argument-must-be-of-type-string-received-undefined)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -254,44 +257,67 @@ $ gitbook --version --gitbook=2.6.7
 
 ## troubleshooting
 
-- fix `if (cb) cb.apply(this, arguments)` issue
-  ```bash
-  $ vim $(npm root -g)/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js
-  # or
-  $ vim /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js
-  62   // fs.stat = statFix(fs.stat)
-  63   // fs.fstat = statFix(fs.fstat)
-  64   // fs.lstat = statFix(fs.lstat)
+### `if (cb) cb.apply(this, arguments)`
+```bash
+$ vim $(npm root -g)/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js
+# or
+$ vim /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js
+62   // fs.stat = statFix(fs.stat)
+63   // fs.fstat = statFix(fs.fstat)
+64   // fs.lstat = statFix(fs.lstat)
+```
+
+### `Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`
+
+> [!NOTE]
+> - [gitbook serve error with ENOENT: no such file or directory(fontsettings.js&website.css) #55](https://github.com/GitbookIO/gitbook-cli/issues/55) | [Fixing write race condition #57](https://github.com/davglass/cpr/pull/57)
+
+* [set `confirm` to `false`](https://github.com/GitbookIO/gitbook-cli/issues/55#issuecomment-455150519)
+  ```javascript
+  // ~/.gitbook/versions/3.2.3/lib/output/website/copyPluginAssets.js
+  78  function copyResources(output, plugin) {
+          ...
+  106     return fs.copyDir(
+  107         assetsFolder,
+  108         assetOutputFolder,
+  109         {
+  110             deleteFirst: false,
+  111             overwrite: true,
+  112             confirm: true                        // set it to false
+  113         }
+  114     );
+  115 }
   ```
 
-- `Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`
+* upgrade `cpr@3`
+  ```bash
+  $ npx --version
+  10.9.0
 
-  > [!NOTE]
-  > - [gitbook serve error with ENOENT: no such file or directory(fontsettings.js&website.css) #55](https://github.com/GitbookIO/gitbook-cli/issues/55) | [Fixing write race condition #57](https://github.com/davglass/cpr/pull/57)
+  $ cd ~/.gitbook/versions/3.2.3
+  $ npx npm install cpr@3
+  ```
 
-  * [set `confirm` to `false`](https://github.com/GitbookIO/gitbook-cli/issues/55#issuecomment-455150519)
-    ```javascript
-    // ~/.gitbook/versions/3.2.3/lib/output/website/copyPluginAssets.js
-    78  function copyResources(output, plugin) {
-            ...
-    106     return fs.copyDir(
-    107         assetsFolder,
-    108         assetOutputFolder,
-    109         {
-    110             deleteFirst: false,
-    111             overwrite: true,
-    112             confirm: true                        // set it to false
-    113         }
-    114     );
-    115 }
-    ```
+### `TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined``
 
-  * upgrade `cpr@3`
-    ```bash
-    $ npx --version
-    10.9.0
+> [!NOTE]
+> - error message:
+>   ```bash
+>   error: error while generating page "virtualization/docker/docker.md":
+>   TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+>       at Object.normalize (node:path:1218:5)
+>       at normalize (/Users/marslo/.gitbook/versions/3.2.3/lib/utils/location.js:39:17)
+>       at Object.toAbsolute (/Users/marslo/.gitbook/versions/3.2.3/lib/utils/location.js:72:13)
+>       at /Users/marslo/.gitbook/versions/3.2.3/lib/output/modifiers/resolveImages.js:24:29
+>       at /Users/marslo/.gitbook/versions/3.2.3/lib/output/modifiers/editHTMLElement.js:11:16
+>       at /Users/marslo/.gitbook/versions/3.2.3/lib/utils/promise.js:36:16
+>       at /Users/marslo/.gitbook/versions/3.2.3/lib/utils/promise.js:22:20
+>       at _fulfilled (/Users/marslo/.gitbook/versions/3.2.3/node_modules/q/q.js:834:54)
+>       at /Users/marslo/.gitbook/versions/3.2.3/node_modules/q/q.js:863:30
+>       at Promise.promise.promiseDispatch (/Users/marslo/.gitbook/versions/3.2.3/node_modules/q/q.js:796:13)
+>   ```
 
-    $ cd ~/.gitbook/versions/3.2.3
-    $ npx npm install cpr@3
-    ```
+#### how to fix
 
+- change `<..>` to <code>\`<..>\`</code>
+- example: [73fdcce1242a9f3df4b099c69f2c474015521068](https://github.com/marslo/ibook/commit/73fdcce1242a9f3df4b099c69f2c474015521068#diff-c356607107b73939f9b513b702862f42b48f45325b87b456e4e40423d97791fdL544)

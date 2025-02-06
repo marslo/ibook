@@ -540,7 +540,7 @@ $ docker ps -aq --no-trunc
 > | FILTER                | DESCRIPTION                                                                                                                     |
 > |-----------------------|---------------------------------------------------------------------------------------------------------------------------------|
 > | `id`                  | container's id                                                                                                                  |
-> | *`name`               | container's name                                                                                                                |
+> | `name`                | container's name                                                                                                                |
 > | `label`               | an arbitrary string representing either a key or a key-value pair. Expressed as `<key>` or `<key>=<value>`                      |
 > | `exited`              | an integer representing the container's exit code. Only useful with --all.                                                      |
 > | `status`              | one of created, restarting, running, removing, paused, exited, or dead                                                          |
