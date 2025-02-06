@@ -108,7 +108,7 @@ def traverseInPath( String path, String filetype, Integer depth = 1 ) {
 
 - jenkinsfile
 
-  ```Jenkinsfile
+  ```groovy
   String path = '/mnt/to/path/1'
   String path2 = '/mnt/to/path/2'
 
