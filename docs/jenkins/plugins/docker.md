@@ -7,9 +7,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
-
 {% hint style='info' %}
 > references:
 > - [* org.jenkinsci.plugins.docker.workflow.Docker](https://github.com/jenkinsci/docker-workflow-plugin/blob/master/src/main/resources/org/jenkinsci/plugins/docker/workflow/Docker.groovy)

@@ -1038,7 +1038,7 @@ symbolic link created for c:\Users\marslo\pbustor <<===>> \\dc1engcifs.sample.co
     > - [* provision.ps1](https://github.com/pymor/conda-forge-windows-vagrant-builder/blob/3d00a653d2172977b0520a37d7d0bd940262555d/basebox/provision.ps1)
     > - [ssh-pubkey.ps1](https://github.com/y0rune/webi-installers/blob/e5685b902576c50549a9eb32d24d0d82bf0f6948/ssh-pubkey/ssh-pubkey.ps1)
     > - [Static-Binaries/openssh/INFO.md](https://github.com/Azathothas/Static-Binaries/blob/637bafdd49b9ceb922c105f70d99cc43f09898d4/openssh/INFO.md)
-    >   ```PowerShell
+    >   ```powershell
     >   > curl -qfSLO "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/openssh/openssh_amd_x86_Windows.msi"
     >   > curl -qfSLO "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/openssh/openssh_amd_x86_Windows.zip"
     >   # or

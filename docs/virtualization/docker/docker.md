@@ -537,21 +537,21 @@ $ docker ps -aq --no-trunc
 > [!NOTE|label:references:]
 > - [Filtering](https://docs.docker.com/engine/reference/commandline/ps/#filter)
 >
-> | FILTER                | DESCRIPTION                                                                                                                   |
-> | --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-> | `id`                  | Container's ID                                                                                                                |
-> | `name`                | Container's name                                                                                                              |
-> | `label`               | An arbitrary string representing either a key or a key-value pair. Expressed as <key> or <key>=<value>                        |
-> | `exited`              | An integer representing the container's exit code. Only useful with --all.                                                    |
-> | `status`              | One of created, restarting, running, removing, paused, exited, or dead                                                        |
-> | `ancestor`            | Filters containers which share a given image as an ancestor. Expressed as <image-name>[:<tag>], <image id>, or <image@digest> |
-> | `before` or `since`   | Filters containers created before or after a given container ID or name                                                       |
-> | `volume`              | Filters running containers which have mounted a given volume or bind mount.                                                   |
-> | `network`             | Filters running containers connected to a given network.                                                                      |
-> | `publish` or `expose` | Filters containers which publish or expose a given port. Expressed as <port>[/<proto>] or <startport-endport>/[<proto>]       |
-> | `health`              | Filters containers based on their healthcheck status. One of starting, healthy, unhealthy or none.                            |
-> | `isolation`           | Windows daemon only. One of default, process, or hyperv.                                                                      |
-> | `is-task`             | Filters containers that are a "task" for a service. Boolean option (true or false)                                            |
+> | FILTER                | DESCRIPTION                                                                                                                     |
+> |-----------------------|---------------------------------------------------------------------------------------------------------------------------------|
+> | `id`                  | container's id                                                                                                                  |
+> | *`name`               | container's name                                                                                                                |
+> | `label`               | an arbitrary string representing either a key or a key-value pair. Expressed as `<key>` or `<key>=<value>`                      |
+> | `exited`              | an integer representing the container's exit code. Only useful with --all.                                                      |
+> | `status`              | one of created, restarting, running, removing, paused, exited, or dead                                                          |
+> | `ancestor`            | filters containers which share a given image as an ancestor. Expressed as `<image-name>[:<tag>], <image id>, or <image@digest>` |
+> | `before` or `since`   | filters containers created before or after a given container ID or name                                                         |
+> | `volume`              | filters running containers which have mounted a given volume or bind mount.                                                     |
+> | `network`             | filters running containers connected to a given network.                                                                        |
+> | `publish` or `expose` | filters containers which publish or expose a given port. Expressed as `<port>[/<proto>] or <startport-endport>/[<proto>]`       |
+> | `health`              | filters containers based on their healthcheck status. One of starting, healthy, unhealthy or none.                              |
+> | `isolation`           | windows daemon only. One of default, process, or hyperv.                                                                        |
+> | `is-task`             | filters containers that are a "task" for a service. Boolean option (true or false)                                              |
 
 - [via name](https://stackoverflow.com/a/34497614/2940319)
   ```bash

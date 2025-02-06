@@ -95,7 +95,9 @@ $ npm install
 ```bash
 $ npm install
 
-# or install individual pacakge
+# -- or install individual pacakge --
+$ npm install gitbook-plugin-codegroup@^2.3.5
+# or
 $ npm install gitbook-plugin-codegroup
 $ npm install string-width@^4.2.0
 $ npm install gitbook-plugin-emphasize
@@ -120,21 +122,32 @@ $ gitbook serve --config=book.json
 # install node v12.22.12 (LTS)
 $ [[ -d /opt/node ]] || mkdir -p /opt/node
 $ curl -fsSL https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-x64.tar.xz | tar xJf - -C /opt/node/
-$ sudo update-alternatives --install /usr/local/bin/npm12  npm12  /opt/node/node-v12.22.12-linux-x64/bin/npm  10
-$ sudo update-alternatives --install /usr/local/bin/node12 node12 /opt/node/node-v12.22.12-linux-x64/bin/node 10
-$ sudo update-alternatives --install /usr/local/bin/npx12  npx12  /opt/node/node-v12.22.12-linux-x64/bin/npx  10
 
-# setup v12.22.12 as global version temporary
-## backup current latst node/npm/npx
-$ sudo mv /usr/local/bin/node{,21}
-$ sudo mv /usr/local/bin/npm{,21}
-$ sudo mv /usr/local/bin/npx{,21}
-
-## setup global environment to v12 temporary
-$ sudo ln -sf /usr/local/bin/npx12  /usr/local/bin/npx
-$ sudo ln -sf /usr/local/bin/node12 /usr/local/bin/node
-$ sudo ln -sf /usr/local/bin/npm12  /usr/local/bin/npm
+# setup node v12.22.12 as global version
+$ OLD_PATH="$PATH"
+$ export PATH="/opt/node/node-v12.22.12-linux-x64/bin/:$PATH"
 ```
+
+- previous version
+  ```bash
+  # install node v12.22.12 (LTS)
+  $ [[ -d /opt/node ]] || mkdir -p /opt/node
+  $ curl -fsSL https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-x64.tar.xz | tar xJf - -C /opt/node/
+  $ sudo update-alternatives --install /usr/local/bin/npm12  npm12  /opt/node/node-v12.22.12-linux-x64/bin/npm  10
+  $ sudo update-alternatives --install /usr/local/bin/node12 node12 /opt/node/node-v12.22.12-linux-x64/bin/node 10
+  $ sudo update-alternatives --install /usr/local/bin/npx12  npx12  /opt/node/node-v12.22.12-linux-x64/bin/npx  10
+
+  # setup v12.22.12 as global version temporary
+  ## backup current latst node/npm/npx
+  $ sudo mv /usr/local/bin/node{,21}
+  $ sudo mv /usr/local/bin/npm{,21}
+  $ sudo mv /usr/local/bin/npx{,21}
+
+  ## setup global environment to v12 temporary
+  $ sudo ln -sf /usr/local/bin/npx12  /usr/local/bin/npx
+  $ sudo ln -sf /usr/local/bin/node12 /usr/local/bin/node
+  $ sudo ln -sf /usr/local/bin/npm12  /usr/local/bin/npm
+  ```
 
 ### install gitbook
 
@@ -162,11 +175,14 @@ GitBook version: 3.2.3
 $ cd /path/to/repo
 
 # install dependencies
+$ export PATH="/opt/node/node-v12.22.12-linux-x64/bin/:$PATH"
 $ gitbook install
 # or
 $ npm install
 # or
 $ npm12 install
+# or
+$ /opt/node/node-v12.22.12-linux-x64/bin/npm install
 ```
 
 - verify local node/gitbook environment
