@@ -1981,6 +1981,10 @@ $ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 ```
 
 #### requiring password immediately
+
+> [!NOTE|label:references:]
+> - [Disable screensaver password requirement from command line](https://apple.stackexchange.com/a/51454/254265)
+
 ```bash
 $ defaults write com.apple.screensaver askForPassword -int 1
 $ defaults write com.apple.screensaver askForPasswordDelay -int 0

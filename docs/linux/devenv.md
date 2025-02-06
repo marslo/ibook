@@ -12,6 +12,8 @@
   - [copilot](#copilot)
   - [java](#java)
   - [groovy](#groovy)
+    - [groovy completions](#groovy-completions)
+    - [npm-groovy-lint](#npm-groovy-lint)
   - [gcc](#gcc)
   - [info-zip](#info-zip)
     - [brew install](#brew-install)
@@ -58,8 +60,6 @@
     - [git](#git)
     - [vault CLI](#vault-cli)
     - [others](#others)
-  - [script](#script)
-    - [groovy](#groovy-1)
 - [troubleshooting](#troubleshooting-1)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
@@ -186,6 +186,39 @@ $ sudo ln -s /var/lib/snapd/snap /snap
   # or
   $ sudo alternatives --config groovy
   ```
+
+### groovy completions
+```bash
+# .bash_profile
+GROOVY_HOME="$(brew --prefix groovy)"
+
+test -d "${GROOVY_HOME}/bin" && source <( cat "${GROOVY_HOME}"/bin/*_completion )
+# or
+find "${GROOVY_HOME}/bin" -name '*_completion' -print0 | xargs -0 -I FILE bash -c "source FILE"
+```
+
+### npm-groovy-lint
+
+> [!NOTE|label:rerefences]
+> - [Configuration in MegaLinter](https://megalinter.io/v8/descriptors/groovy_npm_groovy_lint/)
+
+| VARIABLE                                             | DESCRIPTION                                                                                                                                                                                                                                                     | DEFAULT VALUE                                   |
+|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `GROOVY_NPM_GROOVY_LINT_ARGUMENTS`                   | User custom arguments to add in linter CLI call. Ex: `-s --foo "bar"`                                                                                                                                                                                           | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_COMMAND_REMOVE_ARGUMENTS`    | User custom arguments to remove from command line before calling the linter. Ex: `-s --foo "bar"`                                                                                                                                                               | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_FILTER_REGEX_INCLUDE`        | Custom regex including filter. Ex: `(src\|lib)`                                                                                                                                                                                                                 | include every file                              |
+| `GROOVY_NPM_GROOVY_LINT_FILTER_REGEX_EXCLUDE`        | Custom regex excluding filter. Ex: `(test\|examples)`                                                                                                                                                                                                           | exclude no file                                 |
+| `GROOVY_NPM_GROOVY_LINT_CLI_LINT_MODE`               | Override default CLI lint mode <ul><li><code>file</code>: Calls the linter for each file</li><li><code>list_of_files</code>: Call the linter with the list of files as argument</li><li><code>project</code>: Call the linter from the root of the project</li> | `list_of_files`                                 |
+| `GROOVY_NPM_GROOVY_LINT_FILE_EXTENSIONS`             | Allowed file extensions. "*" matches any extension, "" matches empty extension. Empty list excludes all files. Ex: `[".py", ""]`                                                                                                                                | `[".groovy", ".gvy", ".gradle", ".nf"]`         |
+| `GROOVY_NPM_GROOVY_LINT_FILE_NAMES_REGEX`            | File name regex filters. Regular expression list for filtering files by their base names using regex full match. Empty list includes all files. Ex: `["Dockerfile(-.+)?", "Jenkinsfile"]`                                                                       | `["Jenkinsfile"]`                               |
+| `GROOVY_NPM_GROOVY_LINT_PRE_COMMANDS`                | List of bash commands to run before the linter                                                                                                                                                                                                                  | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_UNSECURED_ENV_VARIABLES`     | List of env variables explicitly not filtered before calling GROOVY_NPM_GROOVY_LINT and its pre/post commands                                                                                                                                                   | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_CONFIG_FILE`                 | npm-groovy-lint configuration file nameUse LINTER_DEFAULT to let the linter find it                                                                                                                                                                             | .groovylintrc.json                              |
+| `GROOVY_NPM_GROOVY_LINT_RULES_PATH`                  | Path where to find linter configuration file                                                                                                                                                                                                                    | workspace folder, then megalinter default rules |
+| `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS`              | Run linter but consider errors as warnings                                                                                                                                                                                                                      | `false`                                         |
+| `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS_IF_LESS_THAN` | Maximum number of errors allowed                                                                                                                                                                                                                                | `0`                                             |
+| `GROOVY_NPM_GROOVY_LINT_CLI_EXECUTABLE`              | Override CLI executable                                                                                                                                                                                                                                         | `['npm-groovy-lint']`                           |
+
 
 ## gcc
 
@@ -1530,16 +1563,6 @@ VBOX_COMPLETION="${iRCHOME}/.completion/vbox/VBoxManage-completion.bash"       #
 test -f "${ADDITIONAL_COMPLETION}"  && source "${ADDITIONAL_COMPLETION}"
 test -f "${MACCLI_COMPLETION}"      && source "${MACCLI_COMPLETION}"
 test -f "${VBOX_COMPLETION}"        && source "${VBOX_COMPLETION}"
-```
-
-## script
-### groovy
-```bash
-GROOVY_HOME="$(brew --prefix groovy)"
-
-test -d "${GROOVY_HOME}/bin" && source <( cat "${GROOVY_HOME}"/bin/*_completion )
-# or
-find "${GROOVY_HOME}/bin" -name '*_completion' -print0 | xargs -0 -I FILE bash -c "source FILE"
 ```
 
 # troubleshooting
