@@ -1255,6 +1255,8 @@ $ sudo ldconfig --print-cache
 ## bash-completion
 
 > [!TIP|label:references:]
+> - [* iMarslo: bash completion](../cheatsheet/bash/sugar.md#bash-completion)
+> - [iMarslo: bash completion troubleshooting for linux](../linux/troubleshooting.md#bash_completion)
 > - [scop/bash-completion](https://github.com/scop/bash-completion) | [scop/bash-completion/bash_completion](https://github.com/scop/bash-completion/blob/main/bash_completion)
 > - [debian/bash-completion/bash_completion](https://salsa.debian.org/debian/bash-completion/blob/master/bash_completion)
 > - local files

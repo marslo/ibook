@@ -20,6 +20,7 @@
   - [troubleshooting](#troubleshooting)
 - [security](#security)
   - [backup security](#backup-security)
+- [bash-completion@2](#bash-completion2)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -540,3 +541,29 @@ Build version 15C500b
   $ cat bundleCA.pem selfSignedCAbundle.pem >> allCAbundle.pem
   $ export REQUESTS_CA_BUNDLE=/path/to/allCAbundle.pem
   ```
+
+## bash-completion@2
+
+> [!NOTE|label:references:]
+> - entry script: `$(brew --prefix)/etc/profile.d/bash_completion.sh`
+> - bash_completion.d: `$(brew --prefix)/etc/bash_completion.d`
+> - see also:
+>   - [* iMarslo: bash completion](../cheatsheet/bash/sugar.md#bash-completion)
+>   - [iMarslo: setup auto-completion for linux](../linux/devenv.md#auto-completion)
+>   - [iMarslo: bash completion troubleshooting for linux](../linux/troubleshooting.md#bash_completion)
+
+```bash
+$ brew info bash-completion@2
+...
+
+==> Caveats
+Add the following line to your ~/.bash_profile:
+  [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+...
+
+# or
+$ grep -n bash_completion ~/.bash_profile
+9:  [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+29:  command -v brew >/dev/null && source "$(brew --prefix git)"/etc/bash_completion.d/git-*.sh \
+30:                             || source "$(brew --prefix git)"/etc/bash_completion.d/git-prompt.sh
+```

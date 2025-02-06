@@ -1855,7 +1855,10 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   ```bash
   # osx
   $ brew install fd
-  # v9.0.0
+  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd $(brew --prefix)/etc/bash_completion.d/fd
+  # or
+  $ fd --gen-completions bash | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
+  # or - v9.0.0
   $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
 
   # debine
@@ -1879,6 +1882,15 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     >   $ cargo --version
     >   cargo 1.74.1 (ecb9851af 2023-10-18)
     >   ```
+    > - [generate auto-completion](https://github.com/sharkdp/fd/blob/master/Makefile)
+    >
+    > |    SHELL   | COMMAND                           |
+    > |:----------:|-----------------------------------|
+    > |    bash    | `fd --gen-completions bash`       |
+    > |    fish    | `fd --gen-completions fish`       |
+    > |     zsh    | `fd --gen-completions zsh`        |
+    > |   elvsih   | `fd --gen-completions elvish`     |
+    > | powershell | `fd --gen-completions powershell` |
 
     ```bash
     $ git clone https://github.com/sharkdp/fd && cd fd
@@ -1897,11 +1909,11 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 
     # completion ( >= 9.0.0 )
     # wsl/ubuntu/centos
-    $ fd --gen-completions | sudo tee /usr/share/bash-completion/completions/fd
+    $ fd --gen-completions bash | sudo tee /usr/share/bash-completion/completions/fd
     # or centos
-    $ fd --gen-completions | sudo tee /etc/bash_completion.d/fd
+    $ fd --gen-completions bash | sudo tee /etc/bash_completion.d/fd
     # osx
-    $ fd --gen-completions | sudo tee /usr/local/etc/bash_completion.d/fd
+    $ fd --gen-completions bash | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
     ```
 
 - verify

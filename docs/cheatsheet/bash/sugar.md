@@ -1061,26 +1061,29 @@ $ ls -Ap | command grep "^\."
 ## bash completion
 
 > [!NOTE|label:references]
-> - [* Creating a bash completion script](https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial)
-> - [* An introduction to bash completion: part 1](https://web.archive.org/web/20190722115536/https://debian-administration.org/article/316/An_introduction_to_bash_completion_part_1)
-> - [* An introduction to bash completion: part 2](https://web.archive.org/web/20200327211933/https://debian-administration.org/article/317/An_introduction_to_bash_completion_part_2)
->   ```bash
->   $ complete -W "--help --verbose --version" foo
->   $ foo --<TAB>
->   --help
->   --verbose
->   --version
->   ```
-> - [8.7 Programmable Completion Builtins](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion-Builtins.html)
-> - [8.6 Programmable Completion](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
-> - [8.8 A Programmable Completion Example](https://www.gnu.org/software/bash/manual/html_node/A-Programmable-Completion-Example.html#A-Programmable-Completion-Example)
-> - [cykerway/complete-alias](https://github.com/cykerway/complete-alias)
-> - [Multi Level Bash Completion](https://stackoverflow.com/a/5303225/2940319)
-> - [List all commands that a shell knows](https://unix.stackexchange.com/a/94825/29178)
+> - [* iMarslo: bash completion](../cheatsheet/bash/sugar.md#bash-completion)
+> - [* iMarslo: bash completion troubleshooting for linux](../linux/troubleshooting.md#bash_completion)
 > - [* iMarslo : `_vim()`](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.completion/vim.sh)
-> - [Integralist/1. bash autocomplete for your custom programs.md](https://gist.github.com/Integralist/0500e6b5aabf95034cd83eff8c9e2ead)
-> - [8.6 Programmable Completion : `_completion_loader()` ](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
-> - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
+> - create bash completion
+>   - [* Creating a bash completion script](https://iridakos.com/programming/2018/03/01/bash-programmable-completion-tutorial)
+>   - [* An introduction to bash completion: part 1](https://web.archive.org/web/20190722115536/https://debian-administration.org/article/316/An_introduction_to_bash_completion_part_1)
+>   - [* An introduction to bash completion: part 2](https://web.archive.org/web/20200327211933/https://debian-administration.org/article/317/An_introduction_to_bash_completion_part_2)
+>     ```bash
+>     $ complete -W "--help --verbose --version" foo
+>     $ foo --<TAB>
+>     --help
+>     --verbose
+>     --version
+>     ```
+>   - [8.7 Programmable Completion Builtins](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion-Builtins.html)
+>   - [8.6 Programmable Completion](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
+>   - [8.8 A Programmable Completion Example](https://www.gnu.org/software/bash/manual/html_node/A-Programmable-Completion-Example.html#A-Programmable-Completion-Example)
+>   - [cykerway/complete-alias](https://github.com/cykerway/complete-alias)
+>   - [Multi Level Bash Completion](https://stackoverflow.com/a/5303225/2940319)
+>   - [List all commands that a shell knows](https://unix.stackexchange.com/a/94825/29178)
+>   - [Integralist/1. bash autocomplete for your custom programs.md](https://gist.github.com/Integralist/0500e6b5aabf95034cd83eff8c9e2ead)
+>   - [8.6 Programmable Completion : `_completion_loader()` ](https://www.gnu.org/software/bash/manual/html_node/Programmable-Completion.html)
+>   - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
 >
 > - paths:
 >   - osx: `$(brew --prefix)/etc/bash_completion.d`
@@ -1112,6 +1115,13 @@ $ ls -Ap | command grep "^\."
   ```
 
 - [list all completions](https://unix.stackexchange.com/a/94784/29178)
+
+  > [!TIP|label:references:]
+  > ```bash
+  > $ compgen --help
+  > Display possible completions depending on the options
+  > ```
+
   ```bash
   $ complete
 
@@ -1119,23 +1129,15 @@ $ ls -Ap | command grep "^\."
   $ compgen -c
   ```
 
-  - more
-    ```bash
-    # aliases
-    $ compgen -a
+  |            COMMAND            | DESCRIPTION |
+  |:------------------------------|-------------|
+  | `$ compgen -c`                | commands    |
+  | `$ compgen -a`                | aliases     |
+  | `$ compgen -b`                | built-ins   |
+  | `$ compgen -k`                | keywords    |
+  | `$ compgen -A function`       | functions   |
+  | `$ compgen -A function -abck` | all above   |
 
-    # built-ins
-    $ compgen -b
-
-    # keywords
-    $ compgen -k
-
-    # functions
-    $ compgen -A function
-
-    # list all the above
-    $ compgen -A function -abck
-    ```
 
   <!--sec data-title="details..." data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
@@ -1651,13 +1653,20 @@ $ ls -Ap | command grep "^\."
 
 ### osx
 
-> [!NOTE]
+> [!NOTE|label:references:]
 > - [Bash Completion](https://sourabhbajaj.com/mac-setup/BashCompletion/)
 > - [How to Enable Bash Completion on macOS](https://tecadmin.net/enable-bash-completion-on-macos/)
+> - [iMarslo: brew bash-completion@2](../../osx/osx.md#bash-completion2)
 
 ```bash
 $ brew install bash-completion
+# or
+$ brew install bash-completion@2
 
+# -- add to bash_profile --
+$ echo '[[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"' >> ~/.bash_profile
+$ echo 'command -v brew >/dev/null && source "$(brew --prefix git)"/etc/bash_completion.d/git-*.sh || source "$(brew --prefix git)"/etc/bash_completion.d/git-prompt.sh' >> ~/.bash_profile
+# or
 $ echo "[ -f /usr/local/etc/bash_completion  ] && . /usr/local/etc/bash_completion" >> ~/.bash_profile
 $ cat ~/.bash_profile
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
@@ -1675,7 +1684,7 @@ $ cat ~/.bash_profile
 
 - add more completion files
   ```bash
-  $ fd --gen-completions | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
+  $ fd --gen-completions bash | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
   ```
 
 - more
@@ -1711,12 +1720,12 @@ $ cat ~/.bash_profile
 
 - add more completion files
   ```bash
-  $ fd --gen-completions | sudo tee /usr/share/bash-completion/completions/fd
+  $ fd --gen-completions bash | sudo tee /usr/share/bash-completion/completions/fd
   ```
 
   - centos
     ```bash
-    $ fd --gen-completions | sudo tee /etc/bash_completion.d/fd
+    $ fd --gen-completions bash | sudo tee /etc/bash_completion.d/fd
     ```
 
 ### completion for alias
