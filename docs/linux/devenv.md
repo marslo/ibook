@@ -13,7 +13,6 @@
   - [java](#java)
   - [groovy](#groovy)
     - [groovy completions](#groovy-completions)
-    - [npm-groovy-lint](#npm-groovy-lint)
   - [gcc](#gcc)
   - [info-zip](#info-zip)
     - [brew install](#brew-install)
@@ -60,6 +59,8 @@
     - [git](#git)
     - [vault CLI](#vault-cli)
     - [others](#others)
+- [lint](#lint)
+    - [npm-groovy-lint](#npm-groovy-lint)
 - [troubleshooting](#troubleshooting-1)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
@@ -196,29 +197,6 @@ test -d "${GROOVY_HOME}/bin" && source <( cat "${GROOVY_HOME}"/bin/*_completion 
 # or
 find "${GROOVY_HOME}/bin" -name '*_completion' -print0 | xargs -0 -I FILE bash -c "source FILE"
 ```
-
-### npm-groovy-lint
-
-> [!NOTE|label:rerefences]
-> - [Configuration in MegaLinter](https://megalinter.io/v8/descriptors/groovy_npm_groovy_lint/)
-
-| VARIABLE                                             | DESCRIPTION                                                                                                                                                                                                                                                     | DEFAULT VALUE                                   |
-|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| `GROOVY_NPM_GROOVY_LINT_ARGUMENTS`                   | User custom arguments to add in linter CLI call. Ex: `-s --foo "bar"`                                                                                                                                                                                           | -                                               |
-| `GROOVY_NPM_GROOVY_LINT_COMMAND_REMOVE_ARGUMENTS`    | User custom arguments to remove from command line before calling the linter. Ex: `-s --foo "bar"`                                                                                                                                                               | -                                               |
-| `GROOVY_NPM_GROOVY_LINT_FILTER_REGEX_INCLUDE`        | Custom regex including filter. Ex: `(src\|lib)`                                                                                                                                                                                                                 | include every file                              |
-| `GROOVY_NPM_GROOVY_LINT_FILTER_REGEX_EXCLUDE`        | Custom regex excluding filter. Ex: `(test\|examples)`                                                                                                                                                                                                           | exclude no file                                 |
-| `GROOVY_NPM_GROOVY_LINT_CLI_LINT_MODE`               | Override default CLI lint mode <ul><li><code>file</code>: Calls the linter for each file</li><li><code>list_of_files</code>: Call the linter with the list of files as argument</li><li><code>project</code>: Call the linter from the root of the project</li> | `list_of_files`                                 |
-| `GROOVY_NPM_GROOVY_LINT_FILE_EXTENSIONS`             | Allowed file extensions. "*" matches any extension, "" matches empty extension. Empty list excludes all files. Ex: `[".py", ""]`                                                                                                                                | `[".groovy", ".gvy", ".gradle", ".nf"]`         |
-| `GROOVY_NPM_GROOVY_LINT_FILE_NAMES_REGEX`            | File name regex filters. Regular expression list for filtering files by their base names using regex full match. Empty list includes all files. Ex: `["Dockerfile(-.+)?", "Jenkinsfile"]`                                                                       | `["Jenkinsfile"]`                               |
-| `GROOVY_NPM_GROOVY_LINT_PRE_COMMANDS`                | List of bash commands to run before the linter                                                                                                                                                                                                                  | -                                               |
-| `GROOVY_NPM_GROOVY_LINT_UNSECURED_ENV_VARIABLES`     | List of env variables explicitly not filtered before calling GROOVY_NPM_GROOVY_LINT and its pre/post commands                                                                                                                                                   | -                                               |
-| `GROOVY_NPM_GROOVY_LINT_CONFIG_FILE`                 | npm-groovy-lint configuration file nameUse LINTER_DEFAULT to let the linter find it                                                                                                                                                                             | .groovylintrc.json                              |
-| `GROOVY_NPM_GROOVY_LINT_RULES_PATH`                  | Path where to find linter configuration file                                                                                                                                                                                                                    | workspace folder, then megalinter default rules |
-| `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS`              | Run linter but consider errors as warnings                                                                                                                                                                                                                      | `false`                                         |
-| `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS_IF_LESS_THAN` | Maximum number of errors allowed                                                                                                                                                                                                                                | `0`                                             |
-| `GROOVY_NPM_GROOVY_LINT_CLI_EXECUTABLE`              | Override CLI executable                                                                                                                                                                                                                                         | `['npm-groovy-lint']`                           |
-
 
 ## gcc
 
@@ -1564,6 +1542,170 @@ test -f "${ADDITIONAL_COMPLETION}"  && source "${ADDITIONAL_COMPLETION}"
 test -f "${MACCLI_COMPLETION}"      && source "${MACCLI_COMPLETION}"
 test -f "${VBOX_COMPLETION}"        && source "${VBOX_COMPLETION}"
 ```
+
+# lint
+
+> [!NOTE|label:references:]
+> - [MegaLinter](https://megalinter.io/8.4.0/)
+
+| LANGUAGE   | LINTER                                                                                             |
+|------------|----------------------------------------------------------------------------------------------------|
+| BASH       | [bash-exec](https://megalinter.io/8.4.0/descriptors/bash_bash_exec/)                               |
+| BASH       | [shellcheck](https://github.com/koalaman/shellcheck)                                               |
+| BASH       | [shfmt](https://github.com/koalaman/shellcheck)                                                    |
+| C/C++      | [cpplint](https://github.com/cpplint/cpplint)                                                      |
+| C/C++      | [clang-format](https://github.com/llvm/llvm-project)                                               |
+| CLOJURE    | [clj-kondo](https://github.com/clj-kondo/clj-kondo)                                                |
+| CLOJURE    | [cljstyle](https://github.com/greglook/cljstyle)                                                   |
+| COFFEE     | [coffeelint](https://github.com/clutchski/coffeelint)                                              |
+| C#         | [dotnet-format](https://github.com/dotnet/sdk)                                                     |
+| C#         | [csharpier](https://github.com/belav/csharpier)                                                    |
+| C#         | [roslynator](https://github.com/dotnet/Roslynator)                                                 |
+| DART       | [dartanalyzer](https://github.com/dart-lang/sdk)                                                   |
+| GO         | [golangci-lint](https://github.com/golangci/golangci-lint)                                         |
+| GO         | [revive](https://github.com/mgechev/revive)                                                        |
+| GROOVY     | [npm-groovy-lint](https://github.com/nvuillam/npm-groovy-lint)                                     |
+| JAVA       | [checkstyle](https://github.com/checkstyle/checkstyle)                                             |
+| JAVA       | [pmd](https://github.com/pmd/pmd)                                                                  |
+| JAVASCRIPT | [eslint](https://github.com/eslint/eslint)                                                         |
+| JAVASCRIPT | [standard](https://github.com/standard/standard)                                                   |
+| JAVASCRIPT | [prettier](https://github.com/prettier/prettier)                                                   |
+| JSX        | [eslint](https://github.com/jsx-eslint/eslint-plugin-react)                                        |
+| KOTLIN     | [ktlint](https://github.com/pinterest/ktlint)                                                      |
+| KOTLIN     | [detekt](https://github.com/detekt/detekt)                                                         |
+| LUA        | [luacheck](https://github.com/lunarmodules/luacheck)                                               |
+| LUA        | [selene](https://github.com/Kampfkarren/selene)                                                    |
+| LUA        | [stylua](https://github.com/JohnnyMorganz/StyLua)                                                  |
+| MAKEFILE   | [checkmake](https://github.com/mrtazz/checkmake)<br>![](https://shields.io/badge/-disabled-orange) |
+| PERL       | [perlcritic](https://github.com/Perl-Critic/Perl-Critic)                                           |
+| PHP        | [phpcs](https://github.com/PHPCSStandards/PHP_CodeSniffer)                                         |
+| PHP        | [phpstan](https://github.com/phpstan/phpstan)                                                      |
+| PHP        | [psalm](https://github.com/vimeo/psalm)                                                            |
+| PHP        | [phplint](https://github.com/overtrue/phplint)                                                     |
+| PHP        | [php-cs-fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer)                                       |
+| POWERSHELL | [powershell](https://github.com/PowerShell/PSScriptAnalyzer)                                       |
+| POWERSHELL | [powershell_formatter](https://github.com/PowerShell/PSScriptAnalyzer)                             |
+| PYTHON     | [pylint](https://github.com/pylint-dev/pylint)                                                     |
+| PYTHON     | [black](https://github.com/psf/black)                                                              |
+| PYTHON     | [flake8](https://github.com/PyCQA/flake8)                                                          |
+| PYTHON     | [isort](https://github.com/PyCQA/isort)                                                            |
+| PYTHON     | [bandit](https://github.com/PyCQA/bandit)                                                          |
+| PYTHON     | [mypy](https://github.com/python/mypy)                                                             |
+| PYTHON     | [pyright](https://github.com/microsoft/pyright)                                                    |
+| PYTHON     | [ruff](https://github.com/astral-sh/ruff)                                                          |
+| PYTHON     | [ruff-format](https://github.com/astral-sh/ruff)                                                   |
+| R          | [lintr](https://github.com/r-lib/lintr)                                                            |
+| RAKU       | [raku](https://github.com/rakudo/rakudo)                                                           |
+| RUBY       | [rubocop](https://github.com/rubocop/rubocop)                                                      |
+| RUST       | [clippy](https://github.com/rust-lang/rust-clippy)                                                 |
+| SALESFORCE | [sfdx-scanner-apex](https://github.com/forcedotcom/sfdx-scanner)                                   |
+| SALESFORCE | [sfdx-scanner-aura](https://github.com/forcedotcom/sfdx-scanner)                                   |
+| SALESFORCE | [sfdx-scanner-lwc](https://github.com/forcedotcom/sfdx-scanner)                                    |
+| SALESFORCE | [lightning-flow-scanner](https://github.com/Lightning-Flow-Scanner/lightning-flow-scanner-sfdx)    |
+| SCALA      | [scalafix](https://github.com/scalacenter/scalafix)                                                |
+| SQL        | [sqlfluff](https://github.com/sqlfluff/sqlfluff)                                                   |
+| SQL        | [tsqllint](https://github.com/tsqllint/tsqllint)                                                   |
+| SWIFT      | [swiftlint](https://github.com/realm/SwiftLint)                                                    |
+| TSX        | [eslint](https://github.com/jsx-eslint/eslint-plugin-react)                                        |
+| TYPESCRIPT | [eslint](https://github.com/typescript-eslint/typescript-eslint)                                   |
+| TYPESCRIPT | [ts-standard](https://github.com/standard/ts-standard)                                             |
+| TYPESCRIPT | [prettier](https://github.com/prettier/prettier)                                                   |
+| .Net       | [dotnet-format](https://github.com/dotnet/sdk)                                                     |
+
+
+| FORMAT   | LINTER                                                                                                          |
+|----------|-----------------------------------------------------------------------------------------------------------------|
+| CSS      | [stylelint](https://github.com/stylelint/stylelint)                                                             |
+| ENV      | [dotenv-linter](https://github.com/dotenv-linter/dotenv-linter)                                                 |
+| GRAPHQL  | [graphql-schema-linter](https://github.com/cjoudrey/graphql-schema-linter)                                      |
+| HTML     | [djlint](https://github.com/djlint/djLint)                                                                      |
+| HTML     | [htmlhint](https://github.com/htmlhint/HTMLHint)                                                                |
+| JSON     | [jsonlint](https://github.com/prantlf/jsonlint)                                                                 |
+| JSON     | [eslint-plugin-jsonc](https://github.com/ota-meshi/eslint-plugin-jsonc)                                         |
+| JSON     | [v8r](https://github.com/chris48s/v8r)                                                                          |
+| JSON     | [prettier](https://github.com/prettier/prettier)                                                                |
+| JSON     | [npm-package-json-lint](https://github.com/tclindner/npm-package-json-lint)                                     |
+| LATEX    | [chktex](https://megalinter.io/8.4.0/descriptors/latex_chktex)                                                  |
+| MARKDOWN | [markdownlint](https://github.com/DavidAnson/markdownlint)                                                      |
+| MARKDOWN | [remark-lint](https://github.com/remarkjs/remark-lint)<br>![](https://shields.io/badge/-disabled-orange)        |
+| MARKDOWN | [markdown-link-check](https://github.com/tcort/markdown-link-check)                                             |
+| MARKDOWN | [markdown-table-formatter](https://github.com/nvuillam/markdown-table-formatter)                                |
+| PROTOBUF | [protolint](https://github.com/yoheimuta/protolint)                                                             |
+| RST      | [rst-lint](https://github.com/twolfson/restructuredtext-lint)                                                   |
+| RST      | [rstcheck](https://github.com/rstcheck/rstcheck)                                                                |
+| RST      | [rstfmt](https://megalinter.io/8.4.0/descriptors/rst_rstfmt/)<br>![](https://shields.io/badge/-format-yellow)   |
+| XML      | [xmllint](https://megalinter.io/8.4.0/descriptors/xml_xmllint/)<br>![](https://shields.io/badge/-autofix-green) |
+| YAML     | [prettier](https://github.com/prettier/prettier)<br>![](https://shields.io/badge/-format-yellow)                |
+| YAML     | [yamllint](https://github.com/adrienverge/yamllint)                                                             |
+| YAML     | [v8r](https://github.com/chris48s/v8r)                                                                          |
+
+| TOOLING FORMAT | LINTER                                                                                                   | ADDITIONAL
+|----------------|----------------------------------------------------------------------------------------------------------|
+| ACTION         | [actionlint](https://github.com/rhysd/actionlint)                                                        |
+| ANSIBLE        | [ansible-lint](https://github.com/ansible/ansible-lint)                                                  |
+| API            | [spectral](https://github.com/stoplightio/spectral)                                                      |
+| ARM            | [arm-ttk](https://github.com/Azure/arm-ttk)                                                              |
+| BICEP          | [bicep_linter](https://github.com/Azure/bicep)                                                           |
+| CLOUDFORMATION | [cfn-lint](https://github.com/aws-cloudformation/cfn-lint)                                               |
+| DOCKERFILE     | [hadolint](https://github.com/hadolint/hadolint)                                                         |
+| EDITORCONFIG   | [editorconfig-checker](https://github.com/editorconfig-checker/editorconfig-checker)                     |
+| GHERKIN        | [gherkin-lint](https://github.com/gherkin-lint/gherkin-lint)                                             |
+| KUBERNETES     | [kubeconform](https://github.com/yannh/kubeconform)                                                      |
+| KUBERNETES     | [helm](https://github.com/helm/helm)                                                                     |
+| KUBERNETES     | [kubescape](https://github.com/kubescape/kubescape)                                                      |
+| PUPPET         | [puppet-lint](https://github.com/puppetlabs/puppet-lint)                                                 |
+| SNAKEMAKE      | [snakemake](https://github.com/snakemake/snakemake)<br>![](https://shields.io/badge/-disabled-orange)    |
+| SNAKEMAKE      | [snakefmt](https://github.com/snakemake/snakemake)<br>![](https://shields.io/badge/-format-yellow)       |
+| TEKTON         | [tekton-lint](https://github.com/IBM/tekton-lint)                                                        |
+| TERRAFORM      | [tflint](https://github.com/terraform-linters/tflint)                                                    |
+| TERRAFORM      | [terrascan](https://github.com/tenable/terrascan)                                                        |
+| TERRAFORM      | [terragrunt](https://github.com/gruntwork-io/terragrunt)<br>![](https://shields.io/badge/-autofix-green) |
+| TERRAFORM      | [terraform-fmt](https://github.com/hashicorp/terraform)<br>![](https://shields.io/badge/-format-yellow)  |
+
+| CODE QUALITY CHECKER | LINTER                                                      |
+|----------------------|-------------------------------------------------------------|
+| COPYPASTE            | [jscpd](https://github.com/kucherenko/jscpd)                |
+| REPOSITORY           | [checkov](https://github.com/bridgecrewio/checkov)          |
+| REPOSITORY           | [devskim](https://github.com/microsoft/DevSkim)             |
+| REPOSITORY           | [dustilock](https://github.com/Checkmarx/dustilock)         |
+| REPOSITORY           | [git_diff](https://github.com/git/git)                      |
+| REPOSITORY           | [gitleaks](https://github.com/gitleaks/gitleaks)            |
+| REPOSITORY           | [grype](https://github.com/anchore/grype)                   |
+| REPOSITORY           | [kics](https://github.com/checkmarx/kics)                   |
+| REPOSITORY           | [ls-lint](https://github.com/loeffel-io/ls-lint)            |
+| REPOSITORY           | [secretlint](https://github.com/secretlint/secretlint)      |
+| REPOSITORY           | [semgrep](https://github.com/semgrep/semgrep)               |
+| REPOSITORY           | [syft](https://github.com/anchore/syft)                     |
+| REPOSITORY           | [trivy](https://github.com/aquasecurity/trivy)              |
+| REPOSITORY           | [trivy-sbom](https://github.com/aquasecurity/trivy)         |
+| REPOSITORY           | [trufflehog](https://github.com/trufflesecurity/trufflehog) |
+| SPELL                | [cspell](https://github.com/streetsidesoftware/cspell)      |
+| SPELL                | [proselint](https://github.com/amperser/proselint)          |
+| SPELL                | [vale](https://github.com/errata-ai/vale)                   |
+| SPELL                | [lychee](https://github.com/lycheeverse/lychee)             |
+
+### npm-groovy-lint
+
+> [!NOTE|label:rerefences]
+> - [Configuration in MegaLinter](https://megalinter.io/v8/descriptors/groovy_npm_groovy_lint/)
+
+| VARIABLE                                             | DESCRIPTION                                                                                                                                                                                                                                                     | DEFAULT VALUE                                   |
+|------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
+| `GROOVY_NPM_GROOVY_LINT_ARGUMENTS`                   | User custom arguments to add in linter CLI call. Ex: `-s --foo "bar"`                                                                                                                                                                                           | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_COMMAND_REMOVE_ARGUMENTS`    | User custom arguments to remove from command line before calling the linter. Ex: `-s --foo "bar"`                                                                                                                                                               | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_FILTER_REGEX_INCLUDE`        | Custom regex including filter. Ex: `(src\|lib)`                                                                                                                                                                                                                 | include every file                              |
+| `GROOVY_NPM_GROOVY_LINT_FILTER_REGEX_EXCLUDE`        | Custom regex excluding filter. Ex: `(test\|examples)`                                                                                                                                                                                                           | exclude no file                                 |
+| `GROOVY_NPM_GROOVY_LINT_CLI_LINT_MODE`               | Override default CLI lint mode <ul><li><code>file</code>: Calls the linter for each file</li><li><code>list_of_files</code>: Call the linter with the list of files as argument</li><li><code>project</code>: Call the linter from the root of the project</li> | `list_of_files`                                 |
+| `GROOVY_NPM_GROOVY_LINT_FILE_EXTENSIONS`             | Allowed file extensions. "*" matches any extension, "" matches empty extension. Empty list excludes all files. Ex: `[".py", ""]`                                                                                                                                | `[".groovy", ".gvy", ".gradle", ".nf"]`         |
+| `GROOVY_NPM_GROOVY_LINT_FILE_NAMES_REGEX`            | File name regex filters. Regular expression list for filtering files by their base names using regex full match. Empty list includes all files. Ex: `["Dockerfile(-.+)?", "Jenkinsfile"]`                                                                       | `["Jenkinsfile"]`                               |
+| `GROOVY_NPM_GROOVY_LINT_PRE_COMMANDS`                | List of bash commands to run before the linter                                                                                                                                                                                                                  | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_UNSECURED_ENV_VARIABLES`     | List of env variables explicitly not filtered before calling GROOVY_NPM_GROOVY_LINT and its pre/post commands                                                                                                                                                   | -                                               |
+| `GROOVY_NPM_GROOVY_LINT_CONFIG_FILE`                 | npm-groovy-lint configuration file nameUse LINTER_DEFAULT to let the linter find it                                                                                                                                                                             | .groovylintrc.json                              |
+| `GROOVY_NPM_GROOVY_LINT_RULES_PATH`                  | Path where to find linter configuration file                                                                                                                                                                                                                    | workspace folder, then megalinter default rules |
+| `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS`              | Run linter but consider errors as warnings                                                                                                                                                                                                                      | `false`                                         |
+| `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS_IF_LESS_THAN` | Maximum number of errors allowed                                                                                                                                                                                                                                | `0`                                             |
+| `GROOVY_NPM_GROOVY_LINT_CLI_EXECUTABLE`              | Override CLI executable                                                                                                                                                                                                                                         | `['npm-groovy-lint']`                           |
+
 
 # troubleshooting
 ## issues
