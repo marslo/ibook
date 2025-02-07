@@ -896,7 +896,6 @@ $ less +F <filename>
 
 ![polar clock](../screenshot/linux/polar-clock.png)
 
-
 ### take screenshots of websites from terminal
 
 > [!NOTE|label:references:]
@@ -909,5 +908,3 @@ $ less +F <filename>
   ```bash
   $ firefox -screenshot http://example.com
   ```
-
-48;30;106;2040;339248;30;106;2040;3392

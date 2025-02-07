@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [dotfiles](#dotfiles)
 - [highlight output](#highlight-output)
   - [ack](#ack)
   - [less](#less)
@@ -25,6 +26,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## dotfiles
+
+> [!TIP|label:references:]
+> - [webpro/awesome-dotfiles](https://github.com/webpro/awesome-dotfiles)
+> - [dotfiles.github.io](https://dotfiles.github.io)
+
 ## highlight output
 
 >[!TIP]
@@ -32,7 +39,6 @@
 > - [Colorized grep -- viewing the entire file with highlighted matches](https://stackoverflow.com/questions/981601/colorized-grep-viewing-the-entire-file-with-highlighted-matches)
 > - [Highlight text similar to grep, but don't filter out text [duplicate]](https://stackoverflow.com/questions/7393906/highlight-text-similar-to-grep-but-dont-filter-out-text)
 > - [kilobyte/colorized-logs](https://github.com/kilobyte/colorized-logs)
-
 
 ### [ack](https://metacpan.org/pod/ack)
 ```bash

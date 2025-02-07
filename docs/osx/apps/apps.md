@@ -1084,7 +1084,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 
 - settings in iTerm2: `Use a different font for non-ASCII text`
 
-  ![non-ascii in iterm2](../screenshot/osx/iterm2-non-ascii.png)
+  ![non-ascii in iterm2](../../screenshot/osx/iterm2-non-ascii.png)
 
 - font
   > [!TIP]
