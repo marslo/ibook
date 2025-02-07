@@ -29,6 +29,7 @@
 ## dotfiles
 
 > [!TIP|label:references:]
+> - [dotfiles](https://www.joshmedeski.com/categories/dotfiles/)
 > - [webpro/awesome-dotfiles](https://github.com/webpro/awesome-dotfiles)
 > - [dotfiles.github.io](https://dotfiles.github.io)
 
