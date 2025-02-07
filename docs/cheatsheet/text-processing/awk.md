@@ -1,6 +1,9 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [syntax](#syntax)
+  - [FR & FNR](#fr--fnr)
+  - [FILENAME](#filename)
 - [output](#output)
   - [convert row to column](#convert-row-to-column)
     - [`rs -T`](#rs--t)
@@ -13,6 +16,7 @@
     - [alignment with fixed column](#alignment-with-fixed-column)
     - [append space](#append-space)
     - [convert csv format](#convert-csv-format)
+  - [unique](#unique)
   - [removal](#removal)
     - [remove non-duplicated lines](#remove-non-duplicated-lines)
   - [combination](#combination)
@@ -45,6 +49,9 @@
   - [FS/OFS](#fsofs)
 - [parser](#parser)
   - [csv](#csv)
+- [cheatsheet](#cheatsheet)
+  - [print lines by defined line numbers](#print-lines-by-defined-line-numbers)
+  - [join and calculate](#join-and-calculate)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -56,6 +63,82 @@
 > - [4.5 Specifying How Fields Are Separated](https://www.gnu.org/software/gawk/manual/html_node/Field-Separators.html)
 > - [awk裡好用的變數：FS, OFS, RS, ORS, NR, NF, FILENAME, FNR](https://weitinglin.com/2016/10/17/awk%E8%A3%A1%E5%A5%BD%E7%94%A8%E7%9A%84%E8%AE%8A%E6%95%B8%EF%BC%9Afs-ofs-rs-ors-nr-nf-filename-fnr/comment-page-1/)
 {% endhint %}
+
+# syntax
+## FR & FNR
+
+> [!NOTE|label:references:]
+> - tips
+>   - `NR == FNR`: first file
+>   - `NR != FNR`: all files except the first one
+>
+> - [What are NR and FNR and what does "NR==FNR" imply?](https://stackoverflow.com/a/32482224/2940319)
+> - [Explain the AWK syntax in detail(NR,FNR,NF)](https://stackoverflow.com/a/71217507/2940319)
+>   ```bash
+>   awk '                      # use awk
+>   (NR == FNR) {              # process 1st file
+>       s[$0]                  # hash the whole record to array s
+>       next                   # process the next record of the first file
+>   }
+>   {                          # process the second file
+>       for (i=1; i<=NF; i++)  # for each field in record
+>           if ($i in s)       # if field value found in the hash
+>               delete s[$i]   # delete the value from the hash
+>   }
+>   END {                      # after processing both files
+>       for (i in s)           # all leftover values in s
+>           print i            # are output
+>   }' tests1 tests2
+>   ```
+> - [Explain the AWK syntax in detail(NR,FNR,NF)](https://community.unix.com/t/explain-the-awk-syntax-in-detail-nr-fnr-nf/385527)
+
+
+```bash
+$ cat a.txt b.txt
+       File: a.txt
+   1   a
+   2   b
+   3   c
+
+       File: b.txt
+   1   d
+   2   e
+
+$ awk '{print FILENAME, NR, FNR, $0}' a.txt b.txt
+a.txt 1 1 a
+a.txt 2 2 b
+a.txt 3 3 c
+b.txt 4 1 d
+b.txt 5 2 e
+
+# or
+$ awk '{ printf "FILENAME:%s, Line:%s, NR:%d, FNR:%d, NF:%d\n", FILENAME, $0, NR, FNR, NF}'  a.txt b.txt
+FILENAME:a.txt, Line:a, NR:1, FNR:1, NF:1
+FILENAME:a.txt, Line:b, NR:2, FNR:2, NF:1
+FILENAME:a.txt, Line:c, NR:3, FNR:3, NF:1
+FILENAME:b.txt, Line:d, NR:4, FNR:1, NF:1
+FILENAME:b.txt, Line:e, NR:5, FNR:2, NF:1
+
+# or
+$ awk 'NR==FNR { a[$0]; }
+       { if($0 in a) print FILENAME " " NR " " FNR " " $0 }
+      ' a.txt b.txt
+a.txt 1 1 a
+a.txt 2 2 b
+a.txt 3 3 c
+```
+
+## FILENAME
+
+> [!NOTE|label:references:]
+> - [Input File Index vs. Filename](https://www.baeldung.com/linux/awk-multiple-input-files#3-input-file-index-vs-filename)
+
+```bash
+$ echo "a dummy line" > dummy.txt
+$ awk '{print FILENAME}' dummy.txt <(cat dummy.txt)
+dummy.txt
+/dev/fd/63
+```
 
 # output
 
@@ -402,6 +485,27 @@ DATA
 a   b   c
     x   y
 dd  ee  ff
+```
+
+## unique
+```bash
+$ awk '!seen[$0]++' file
+
+# sample
+$ awk '!a[$0]++' <<< 'a
+b
+a
+b
+d
+'
+a
+b
+d
+# or
+$ awk '!a[$0]++' < <(echo -e 'a\nb\na\nb\nc')
+a
+b
+c
 ```
 
 ## removal
@@ -1247,3 +1351,124 @@ foo|bar
 > - [AWK CSV Parser](http://lorance.freeshell.org/csv/)
 > - [Parse a csv using awk and ignoring commas inside a field](https://stackoverflow.com/questions/4205431/parse-a-csv-using-awk-and-ignoring-commas-inside-a-field)
 > - [Output in CSV format using AWK command](https://unix.stackexchange.com/questions/710558/output-in-csv-format-using-awk-command)
+
+# cheatsheet
+
+## [print lines by defined line numbers](https://www.baeldung.com/linux/awk-multiple-input-files#2-print-lines-by-defined-line-numbers)
+
+> [!NOTE|label:references:]
+> - sample code
+>   ```bash
+>   $ head file1.txt file2.txt
+>   ==> file1.txt <==
+>   line-01
+>   line-02
+>   line-03
+>   line-04
+>   line-05
+>   line-06
+>   line-07
+>   line-08
+>   line-09
+>   line-10
+>
+>   ==> file2.txt <==
+>   2
+>   3
+>   4
+>   5
+>   7
+>   ```
+
+```bash
+$ awk 'NR==FNR { out[$1]=1; next } { if (out[FNR]==1) print $0 }' file2.txt file1.txt
+line-02
+line-03
+line-04
+line-05
+line-07
+
+# or
+$ awk 'NR==FNR { out[$1]=1; next } out[FNR]' file2.txt file1.txt
+line-02
+line-03
+line-04
+line-05
+line-07
+```
+
+## [join and calculate](https://www.baeldung.com/linux/awk-multiple-input-files#3-join-and-calculate)
+
+> [!NOTE|label:references:]
+> - sample code:
+>   ```bash
+>   $ head price.txt purchasing.txt
+>   ==> price.txt <==
+>   Product Price(USD/Kg) Supplier
+>   Apple 3.20 Supplier_X
+>   Orange 3.00 Supplier_Y
+>   Peach 5.35 Supplier_Y
+>   Pear 5.00 Supplier_X
+>   Mango 12.00 Supplier_Y
+>   Pineapple 7.70 Supplier_X
+>
+>   ==> purchasing.txt <==
+>   Product Volume(Kg) Date
+>   Orange 120 2020-04-02
+>   Apple 400 2020-04-03
+>   Peach 70 2020-04-05
+>   Pear 50 2020-04-17
+>
+>   ==> discount.txt <==
+>   Supplier Discount
+>   Supplier_X 0.10
+>   Supplier_Y 0.20
+>   ```
+> - [awk array explanation?](https://unix.stackexchange.com/questions/602644/awk-array-explanation)
+
+```bash
+# FNR>1 to skip the header lines from input files
+$ awk 'BEGIN { print "PRODUCT COST DATE" }
+       FNR>1 && NR==FNR { price[$1]=$2; next }
+       FNR>1 { printf "%s $%.2f %s\n",$1, price[$1]*$2, $3}' price.txt purchasing.txt |
+  column -t
+PRODUCT  COST      DATE
+Orange   $360.00   2020-04-02
+Apple    $1280.00  2020-04-03
+Peach    $374.50   2020-04-05
+Pear     $250.00   2020-04-17
+
+# FNR>1 to skip the header lines from input files
+$ awk 'fname != FILENAME { fname = FILENAME; idx++ }
+        FNR > 1 && idx == 1 { discount[$1] = $2 }
+        FNR > 1 && idx == 2 { price[$1] = $2 * ( 1 - discount[$3] ) }
+        FNR > 1 && idx == 3 { printf "%s $%.2f %s\n",$1, price[$1]*$2, $3 }
+       ' discount.txt price.txt purchasing.txt |
+  column -t
+Orange  $288.00   2020-04-02
+Apple   $1152.00  2020-04-03
+Peach   $299.60   2020-04-05
+Pear    $225.00   2020-04-17
+```
+
+```bash
+$ cat file{z,x}
+       File: filez
+   1   111,111
+   2   112,114
+   3   113,113
+
+       File: filex
+   1   A,bb,111,xxx,nnn
+   2   A,cc,112,yyy,nnn
+   3   A,dd,113,zzz,ppp
+
+$ awk 'BEGIN { OFS=FS="," }                  # sets input and output field separators to `,`
+       NR==FNR {                             # for 1st file only
+         a[$1]=$2;next                       # put $1 as index and $2 as value in array a
+       } $3 in a && $3 = a[$3]               # if the third field is a key of the array a, replace the third field with a[$3]
+      ' filez filex
+A,bb,111,xxx,nnn
+A,cc,114,yyy,nnn
+A,dd,113,zzz,ppp
+```

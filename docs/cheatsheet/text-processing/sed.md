@@ -28,6 +28,7 @@
   - [remove both '#' and empty lines](#remove-both--and-empty-lines)
   - [remove tailing spaces](#remove-tailing-spaces)
   - [show `top` summary](#show-top-summary)
+  - [transform literal string in regex](#transform-literal-string-in-regex)
   - [escape](#escape)
 - [tricky](#tricky)
 
@@ -517,8 +518,7 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
 
 - without empty line
 
-  > [!TIP]
-  > references:
+  > [!TIP|label:references:]
   > - [Exiting with "q" and "d" - SED Tutorial](https://www.linkedin.com/learning/sed-essential-training/exiting-with-q-and-d)
   >
   > manual:
@@ -540,6 +540,12 @@ Su·Mo·Tu·We·Th·Fr·Sa␊
   KiB Mem : 52802012+total, 11151089+free, 24546520 used, 39196272+buff/cache
   KiB Swap:        0 total,        0 free,        0 used. 49136291+avail Mem
   ```
+
+### transform literal string in regex
+```bash
+$ echo 'Hello (world) $100 + 20?' | sed -r 's/[.[\*^$(){}+?|]/\\&/g'
+Hello \(world\) \$100 \+ 20\?
+```
 
 ### escape
 
