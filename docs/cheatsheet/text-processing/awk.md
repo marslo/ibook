@@ -52,6 +52,7 @@
 - [cheatsheet](#cheatsheet)
   - [print lines by defined line numbers](#print-lines-by-defined-line-numbers)
   - [join and calculate](#join-and-calculate)
+  - [array diff](#array-diff)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1471,4 +1472,18 @@ $ awk 'BEGIN { OFS=FS="," }                  # sets input and output field separ
 A,bb,111,xxx,nnn
 A,cc,114,yyy,nnn
 A,dd,113,zzz,ppp
+```
+
+## [array diff](https://stackoverflow.com/a/2330002/2940319)
+```bash
+diff(){
+  awk 'BEGIN{RS=ORS=" "}
+       {NR==FNR?a[$0]++:a[$0]--}
+       END{for(k in a)if(a[k])print k}' <(echo -n "${!1}") <(echo -n "${!2}")
+}
+
+Array1=( "key1" "key2" "key3" "key4" "key5" "key6" "key7" "key8" "key9" "key10" )
+Array2=( "key1" "key2" "key3" "key4" "key5" "key6" )
+Array3=($(diff Array1[@] Array2[@]))
+echo ${Array3[@]}
 ```

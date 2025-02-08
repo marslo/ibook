@@ -105,12 +105,53 @@ $ mount /path/to/file.iso /mnt/tmp -o loop
 > - [URL Encoded Characters](https://www.degraeve.com/reference/urlencoding.php)
 
 #### macos
+
+> [!NOTE|label:references:]
+> - [Secure way to mount a password protected cifs share in mac](https://serverfault.com/a/368527/129815)
+>   ```bash
+>   $ sudo security add-internet-password -a "username_here" -D "Network Password" -r "smb " -l "cifs_share" -s "myserver.com" -p "cifs_share" -w "password_here"  -T "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthAgent"
+>   $ sudo security add-internet-password -a "username_here" -D "Network Password" -r "afp " -l "cifs_share" -s "myserver.com" -p "cifs_share" -w "password_here"  -T "/System/Library/CoreServices/NetAuthAgent.app/Contents/MacOS/NetAuthAgent"
+>   ```
+>   - [`~/Library/Preferences/nsmb.conf`](https://serverfault.com/a/367956/129815)
+>     ```bash
+>     $ cat ~/Library/Preferences/nsmb.conf
+>     [myserver.com]
+>     username=username_here
+>     password=password_here
+>     ```
+
 - via GUI :
-  - Go -> Connect toServer -> `smb://<ip.address>/secured`
+  - Go -> Connect toServer -> `smb://<domain.com>/secured`
 
     ![samba](../screenshot/linux/samba-1.png)
 
 - via cmd
+  - [`mount`](https://apple.stackexchange.com/a/699/254265)
+    ```bash
+    $ mkdir -p /Volumes/mount
+    $ sudo mkdir -p $(whoami):staff /Volumes/mount
+
+    # mount
+    $ mount -t smbfs //user1:<password>@<domain.com>/share /Volumes/mount
+    $ mount -t smbfs -o -d=755,-f=755 //<domain.com>/<path> /Volumes/mount
+    # or
+    $ mount -o nodev,nosuid -t smbfs //user:${PASSWORD}@<domain.com>/share /Volumes/mount
+
+    # mount_smbfs
+    $ mount_smbfs //user1@<domain.com>/share /Volumes/mount
+    Password for <domain.com>: <password>
+
+    # umount
+    $ umount /Volumes/mount
+    # force umount
+    $ diskutil unmountDisk force "${mount_point}"
+    ```
+
+  - [`open`](https://apple.stackexchange.com/a/171822/254265)
+    ```bash
+    $ open "smb://user1:<password>@<domain.com>/path"
+    ```
+
   - `osascript`
     ```bash
     $ /usr/bin/osascript -e "try" -e "mount volume \"smb://guest@${host}\"" -e "end try"
@@ -124,42 +165,29 @@ $ mount /path/to/file.iso /mnt/tmp -o loop
     }
     ```
 
-  - [`mount`](https://apple.stackexchange.com/a/699/254265)
-    ```bash
-    $ mkdir -p /Volumes/mount
-    $ sudo mkdir -p $(whoami):staff /Volumes/mount
-
-    # mount
-    $ mount -t smbfs //user1:<password>@<ip.address>/share /Volumes/mount
-    # or
-    $ mount -o nodev,nosuid -t smbfs //user:${PASSWORD}@<ip.address>/share /Volumes/mount
-
-    # mount_smbfs
-    $ mount_smbfs //user1@<ip.address>/share /Volumes/mount
-    Password for <ip.address>: <password>
-
-    # umount
-    $ umount /Volumes/mount
-    ```
-
-  - [`open`](https://apple.stackexchange.com/a/171822/254265)
-    ```bash
-    $ open "smb://user1:<password>@<ip.address>/path"
-    ```
-
 - check
   ```bash
   $ mount
   ...
-  //user1@<ip.address>/secured on /Volumes/mount (smbfs, nodev, nosuid, mounted by user1)
+  //user1@<domain.com>/secured on /Volumes/mount (smbfs, nodev, nosuid, mounted by user1)
+
+  # get hostname
+  #                        handle for both mount format:  //marslo@domain.com/share
+  #                                                       //domain.com/share
+  #                                                                   v
+  #                                                       +----------------------+
+  $ mount -t nfs,cifs,smbfs | awk '{print $1}' | sed -rn 's:^//([^@/]*@)?([^/]+).*:\2:p'
+  domain.com
+  domain.com
+  $ mount -t nfs,cifs,smbfs | awk '{print $1}' | sed -rn 's:^//([^@/]*@)?([^/]+).*:\2:p' | paste -sd'|'
   ```
 
 #### linux
 ```bash
-$ smbclient --user=user1 -L //<ip.address>
+$ smbclient --user=user1 -L //<domain.com>
 
 # or
-$ smbclient //<ip.address>/secured -U user1
+$ smbclient //<domain.com>/secured -U user1
 ```
 
 ### mount cifs
