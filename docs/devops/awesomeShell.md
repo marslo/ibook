@@ -27,6 +27,7 @@
     - [`ctrl-t`](#ctrl-t)
     - [theme](#theme)
   - [tips](#tips)
+  - [fzf with git](#fzf-with-git)
 - [`fd`](#fd)
   - [advanced usage](#advanced-usage-1)
 - [`rg` the faster `mg`](#rg-the-faster-mg)
@@ -104,15 +105,15 @@
 >     - [Git](https://github.com/junegunn/fzf/wiki/Examples#git)
 >   - [Advanced fzf examples](https://github.com/junegunn/fzf/blob/master/ADVANCED.md) | [Advanced fzf examples](https://fossies.org/linux/fzf/ADVANCED.md)
 > - usage
->   - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
+>   - [** A Practical Guide to fzf: Building a File Explorer](https://thevaluable.dev/practical-guide-fzf-example/)
 >   - [* Find anything you need with fzf, the Linux fuzzy finder tool](https://www.redhat.com/sysadmin/fzf-linux-fuzzy-finder)
+>   - [* Improving shell workflows with fzf](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
+>   - [Introduction to fzf command](https://www.baeldung.com/linux/fzf-command)
 >   - [Why you should be using fzf, the command line fuzzy finder](https://www.freecodecamp.org/news/fzf-a-command-line-fuzzy-finder-missing-demo-a7de312403ff/)
 >   - [Linux下搜索神器fzf的配置和使用](https://blog.csdn.net/qq_39852676/article/details/126820806)
 >   - [serenevoid/fzf_config.md](https://gist.github.com/serenevoid/13239752cfa41a75a69446b7beb26d7a)
 >   - [4 Useful fzf Tricks for Your Terminal](https://pragmaticpineapple.com/four-useful-fzf-tricks-for-your-terminal/)
->   - [* Improving shell workflows with fzf](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
 >   - [Day 18 - Awesome command-line fuzzy finding with fzf](https://sysadvent.blogspot.com/2017/12/day-18-awesome-command-line-fuzzy.html)
->   - [* A Practical Guide to fzf: Building a File Explorer](https://thevaluable.dev/practical-guide-fzf-example/)
 > - more tools
 >   - [ggVGc/fzf_browser](https://github.com/ggVGc/fzf_browser/tree/master)
 >   - [garybernhardt/selecta](https://github.com/garybernhardt/selecta)
@@ -1840,6 +1841,13 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     fi
   }
   ```
+
+## fzf with git
+
+> [!NOTE|label:references:]
+> - [Make Git better with FZF](https://fortes.com/2022/make-git-better-with-fzf/)
+> - [A Practical Guide to fzf: Building a Git Explorer](https://thevaluable.dev/fzf-git-integration/)
+> - [jesseduffield/lazygit](https://github.com/jesseduffield/lazygit)
 
 # [`fd`](https://github.com/sharkdp/fd)
 
