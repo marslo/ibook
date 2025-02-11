@@ -4,15 +4,13 @@
 - [shadowsocks service](#shadowsocks-service)
   - [CentOS](#centos)
 - [copy artical content from csdn](#copy-artical-content-from-csdn)
-- [color picker](#color-picker)
-  - [iterm2-tab-set](#iterm2-tab-set)
-  - [terminal-colors](#terminal-colors)
+- [beyond compare](#beyond-compare)
+  - [whitespace and line-ending](#whitespace-and-line-ending)
 - [Adobe Acrobat Font Packages](#adobe-acrobat-font-packages)
   - [32-bits](#32-bits)
   - [64-bits](#64-bits)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## [shadowsocks service](https://github.com/shadowsocks/shadowsocks/tree/master)
 
@@ -67,55 +65,16 @@ $ sudo yum install -y git
 
 bingo!
 
-## color picker
+## beyond compare
+### whitespace and line-ending
 
-{% hint style='tip' %}
-> references:
-> - [* imarslo: colors](../../linux/util/colors.html)
-> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
-> - [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
-{% endhint %}
+* **Session** ⇢ **Session Settings...** ⇢ **Importance**
 
-### [iterm2-tab-set](https://www.npmjs.com/package/iterm2-tab-set)
-- installation
-  ```bash
-  $ npm i iterm2-tab-set
-  ```
-- usage
-  ```bash
-  $ tabset --pick
-  ```
+  ![Session Settings](../../screenshot/tools/bcomp-line-ending.png)
 
-  ![tabset --pick](../../screenshot/osx/tabset--pick.png)
+* **View** ⇢ **Visible Whitespace**
 
-  ```bash
-  function cpick() {
-    if test tabset; then
-      rgb=$(tabset -p | sed -nr "s:.*rgb\(([^)]+)\).*$:\1:p");
-      hexc=$(for c in $(echo "${rgb}" | sed -re 's:,: :g'); do printf '%02x' "$c"; done);
-      echo -e """\t$rgb ~~> $hexc""";
-    fi
-  }
-  ```
-
-  - result
-    ```bash
-    $ cpick
-      125,199,53 ~~> 7dc735
-    ```
-
-### [terminal-colors](https://pypi.org/project/terminal-colors/)
-- install
-  ```bash
-  $ python3 -m pip install terminal-colors
-  ```
-
-- usage
-  ```bash
-  $ terminal-colors -l
-  ```
-
-  ![terminal-colors](../../screenshot/osx/terminal-color.png)
+  ![Visible Whitespace](../../screenshot/tools/bcomp-visible-whitespace.png)
 
 ## Adobe Acrobat Font Packages
 

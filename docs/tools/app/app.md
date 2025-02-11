@@ -121,7 +121,7 @@
 - [psSafe](https://pwsafe.org/)
 
 #### color picker
-- [Sip](https://sipapp.io/) | [jonathaneunice/iterm2-tab-set](https://github.com/jonathaneunice/iterm2-tab-set) | [Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12) | [Just Color Picker](https://annystudio.com/software/colorpicker/)
+- [Sip](https://sipapp.io/) | [jonathaneunice/iterm2-tab-set](https://github.com/jonathaneunice/iterm2-tab-set) | [Color Picker](https://apps.apple.com/us/app/system-color-picker/id1545870783?mt=12) | [Just Color Picker](https://annystudio.com/software/colorpicker/) | [Aquarelo](https://setapp.com/apps/aquarelo)
 
 #### display
 - [Flux](https://justgetflux.com/)

@@ -10,6 +10,7 @@
   - [xterm color code](#xterm-color-code)
   - [RGB colors](#rgb-colors)
   - [tools](#tools)
+  - [color picker](#color-picker)
   - [256 color table](#256-color-table)
 - [color names](#color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
@@ -557,7 +558,6 @@
          -e "s/@u/$(tput sgr 0 1)/g"
   }
 
-  # example
   $ say @b@green[[Success]]
   $ say @b@yellowWARNING @red..message..
   ```
@@ -604,6 +604,44 @@
   - [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
   - [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
 
+### color picker
+
+{% hint style='tip' %}
+> references:
+> - [* imarslo: colors](../../linux/util/colors.html)
+> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
+> - [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
+{% endhint %}
+
+- [iterm2-tab-set](https://www.npmjs.com/package/iterm2-tab-set)
+  - installation
+    ```bash
+    $ npm i iterm2-tab-set
+    ```
+  - usage
+    ```bash
+    $ tabset --pick
+    ```
+
+    ![tabset --pick](../screenshot/osx/tabset--pick.png)
+
+    ```bash
+    function cpick() {
+      if test tabset; then
+        rgb=$(tabset -p | sed -nr "s:.*rgb\(([^)]+)\).*$:\1:p");
+        hexc=$(for c in $(echo "${rgb}" | sed -re 's:,: :g'); do printf '%02x' "$c"; done);
+        echo -e """\t$rgb ~~> $hexc""";
+      fi
+    }
+    ```
+
+  - result
+    ```bash
+    $ cpick
+      125,199,53 ~~> 7dc735
+    ```
+
+
 ### 256 color table
 
 > [!NOTE|label:references:]
@@ -634,15 +672,15 @@
   # http://sam.zoy.org/wtfpl/COPYING for more details.
 
   for fgbg in 38 48 ; do # Foreground / Background
-      for color in {0..255} ; do # Colors
-          # Display the color
-          printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
-          # Display 6 colors per lines
-          if [ $((($color + 1) % 6)) == 4 ] ; then
-              echo # New line
-          fi
-      done
-      echo # New line
+    for color in {0..255} ; do # Colors
+      # Display the color
+      printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
+      # Display 6 colors per lines
+      if [ $((($color + 1) % 6)) == 4 ] ; then
+        echo # New line
+      fi
+    done
+    echo # New line
   done
   exit 0
   ```
