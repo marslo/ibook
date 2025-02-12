@@ -1842,12 +1842,26 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   }
   ```
 
+- [`localhost:$FZF_PORT`](https://github.com/junegunn/fzf/releases/tag/v0.54.0)
+
+  ```bash
+  $ fzf --listen --sync --bind 'focus:transform-header:curl -s localhost:$FZF_PORT?limit=0 | jq .' --height 100%
+  ```
+
+- [`--style`]
+
+  > [!NOTE|label:references:]
+  > - [#4160 Add style presets](https://github.com/junegunn/fzf/issues/4160)
+
+  ![fzf style](../screenshot/linux/fzf/fzf-style-full-1.png)
+
 ## fzf with git
 
 > [!NOTE|label:references:]
 > - [Make Git better with FZF](https://fortes.com/2022/make-git-better-with-fzf/)
 > - [A Practical Guide to fzf: Building a Git Explorer](https://thevaluable.dev/fzf-git-integration/)
 > - [jesseduffield/lazygit](https://github.com/jesseduffield/lazygit)
+> - [Examples - Git](https://github.com/junegunn/fzf/wiki/examples#git)
 
 # [`fd`](https://github.com/sharkdp/fd)
 

@@ -4,7 +4,7 @@
 #   FileName : deploy.sh
 #     Author : marslo.jiao@gmail.com
 #    Created : 2020-09-27 22:03:34
-# LastChange : 2023-12-22 00:08:45
+# LastChange : 2025-02-12 10:48:30
 # =============================================================================
 
 # shellcheck disable=SC2154,SC1091
@@ -80,7 +80,7 @@ function rebuiltToc() {
 
 function rePush(){
   git add --all "$(git rev-parse --show-toplevel)"
-  git commit --signoff --amend --no-edit
+  git commit --signoff --amend --no-edit --allow-empty
   git push -u --force origin "$(git rev-parse --abbrev-ref HEAD)"
 }
 
@@ -116,11 +116,13 @@ function updateBook() {
 
     git add --all .
     targetMsg=$(git show remotes/origin/gh-pages --no-patch --format="%s")
+    signed="$(git log -n1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' | command grep -q "$(git config user.email)"; echo $?)";
+    [ 0 -eq "${signed}" ] && sopt='--signoff' || sopt='';
     if [ "${targetMsg}" = "${msg}" ]; then
       echo '~~> force push without create new commit: '
-      git commit --amend --no-edit
+      eval "git commit ${sopt} --amend --no-edit --allow-empty"
     else
-      git commit -am "${msg}"
+      eval "git commit ${sopt} -am '${msg}'"
     fi
     git push origin gh-pages --force
 
