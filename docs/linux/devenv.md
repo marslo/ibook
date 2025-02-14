@@ -27,10 +27,12 @@
   - [clang++ in windows](#clang-in-windows)
   - [go](#go)
   - [node && npm](#node--npm)
+    - [config](#config)
     - [nodesource/distributions](#nodesourcedistributions)
     - [node/npm troubleshooting](#nodenpm-troubleshooting)
     - [install from private registry](#install-from-private-registry)
     - [upgrade via `n`](#upgrade-via-n)
+    - [node warnings](#node-warnings)
   - [gradle](#gradle)
   - [rust](#rust)
   - [haskell](#haskell)
@@ -723,6 +725,32 @@ $ sudo snap refresh --channel=20 node
 node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
 ```
 
+### config
+- list all configure
+  ```bash
+  $ npm config list -l
+  # or
+  $ npm info
+  ```
+
+- npm prefix
+  ```bash
+  export NPM_CONFIG_PREFIX="$HOME/.npm"
+
+  # or
+  $ cat ~/.npmrc
+  prefix = "$HOME/.npm"
+  ```
+
+- registry
+
+  ```bash
+  $ npm --registry=https://registry.npm.taobao.org install <package-name>
+
+  # set in config
+  $ npm config set registry https://registry.npm.taobao.org
+  ```
+
 ### [nodesource/distributions](https://github.com/nodesource/distributions)
 #### [nodejs for ubuntu/debian](https://deb.nodesource.com/)
 ```bash
@@ -804,6 +832,34 @@ v20.8.1
 $ /usr/bin/node --version
 v12.22.5
 ```
+
+### node warnings
+
+> [!NOTE|label:references:]
+> - [#5253 suppress unnecessary npm WARN related to package.json fields](https://github.com/npm/npm/issues/5253)
+> - [#30810 Ability to suppress warnings by type (or just experimental warnings)](https://github.com/nodejs/node/issues/30810)
+> - [#10802 Cannot disable warnings when node is launched via a shell script.](https://github.com/nodejs/node/issues/10802)
+> - [#47478 Ability to suppress warnings by type](https://github.com/nodejs/node/issues/47478)
+> - [#50661 src: add --disable-warning option](https://github.com/nodejs/node/pull/50661)
+
+- `ExperimentalWarning`
+
+  > [!NOTE|label:references:]
+  > - to prevent warning as below:
+  >   ```bash
+  >   Updating...(node:69018) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+  >   (Use `node --trace-warnings ...` to show where the warning was created)
+  >   ```
+
+  - [using `shebang`](https://github.com/nodejs/node/issues/30810#issuecomment-1893074931)
+    ```bash
+    #!/usr/bin/env node --no-warnings=ExperimentalWarning
+    ```
+
+  - [using `NODE_NO_WARNINGS`](https://github.com/nodejs/node/issues/10802#issuecomment-472691201)
+    ```bash
+    export NODE_NO_WARNINGS=1
+    ```
 
 ## gradle
 

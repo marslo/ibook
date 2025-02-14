@@ -67,6 +67,9 @@
 >   - `*.pem` - all keys and certs from keystore, in PEM format.
 > - [Additional Keystore Formats (PKCS12)](https://docs.oracle.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html#InstallProbs)
 > - [How to setup Microsoft Active Directory Certificate Services [AD CS]](https://www.virtuallyboring.com/setup-microsoft-active-directory-certificate-services-ad-cs/)
+> - [* OpenSSL Command Reference Guide](https://www.pujan.net/posts/openssl-command-reference-guide/)
+>
+>   ![ssl cert management](../../screenshot/tools/openssl/ssl-cert-management.png)
 {% endhint %}
 
 # openssl

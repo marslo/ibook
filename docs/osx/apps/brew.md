@@ -122,7 +122,6 @@ $ /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homeb
 
 - official
 
-
   > [!NOTE|label:revert back]
   > ```bash
   > $ brew doctor
@@ -229,6 +228,8 @@ $ brew cask outdated
 $ brew tap buo/cask-upgrade
 $ brew update
 $ brew cu --all
+# or
+$ brew cu -a -y -f
 ```
 
 - home brew cask upgrade
@@ -287,7 +288,7 @@ $ brew cu --all
 >   ```
 
 ```bash
-# --- utils ----
+# --- utils ---
 $ brew install imagemagick
 $ brew install tmux corkscrew telnet figlet toilet
 $ brew install stow iproute2mac pandoc ifstat nmap
@@ -307,7 +308,7 @@ $ brew install --HEAD pass
 $ brew install pass-otp
 $ brew install --HEAD pinentry-mac             # for alfred workflow
 
-# ---- editor ----
+# --- editor ---
 ## nvim
 $ brew install --HEAD utf8proc
 $ brew install --HEAD neovim
@@ -320,12 +321,12 @@ $ brew install --cask visual-studio-code
 # or link to cmd via
 $ sudo ln -sf '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' /usr/local/bin/code
 
-# ---- dev tools ----
+# --- dev tools ---
 $ brew install nvm                             # nvm for gitbook install: nvm install 12
 $ brew install gradle-completion
 $ brew install --HEAD ruby
 $ brew install less
-$ brwe install kubecolor
+$ brew install kubecolor
 $ brew install --HEAD kubectl
 $ brew install mongosh
 $ brew install gnu-indent
@@ -336,8 +337,19 @@ $ brew install jq
 $ brew install openjdk
 $ brew install --HEAD fzf fzy bat ack ag rg
 $ brew install mkdocs                          # markdown docs, usage: `mkdocs build -d site -s`
+$ curl -o "$HOME/.local/bin/cht.sh" -fsSL 'https://cht.sh/:cht.sh' && chmod +x "$HOME/.local/bin/cht.sh"
 
-# --- lint ----
+# --- npm packages ---
+$ npm i -g tldr                                # or $ brew install tlrc; or $ python3 -m pip install tldr
+$ npm i -g gnomon
+$ npm i -g tabset
+$ npm i -g doctoc
+$ npm i -g git-stats
+$ npm i -g svgexport
+# - optional -
+$ sudo ln -sf $(npm get prefix)/bin/* /usr/local/bin/
+
+# --- lint ---
 $ brew install --HEAD shellcheck
 $ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
 $ brew install --HEAD yamllint yamlfmt
@@ -364,7 +376,7 @@ $ brew tap vitorgalvao/tiny-scripts
 # check tap info
 $ brew tap-info vitorgalvao/tiny-scripts --json | jq -r .[].formula_names
 
-# --- for fun ----
+# --- for fun ---
 $ brew install pv
 $ brew install fortune
 ```

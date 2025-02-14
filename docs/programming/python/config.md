@@ -8,6 +8,7 @@
   - [`pip.conf`](#pipconf)
   - [pip config file](#pip-config-file)
   - [list python path](#list-python-path)
+  - [python site](#python-site)
   - [python libs](#python-libs)
   - [multiple versions](#multiple-versions)
 - [version change](#version-change)
@@ -19,8 +20,6 @@
 - [python IDLE in MacOS Big Sur](#python-idle-in-macos-big-sur)
   - [`IDLE quit unexpectedly`](#idle-quit-unexpectedly)
   - [Python may not be configured for Tk](#python-may-not-be-configured-for-tk)
-- [venv](#venv)
-  - [PS1](#ps1)
   - [init and setup](#init-and-setup)
   - [install packages](#install-packages)
 
@@ -266,34 +265,35 @@ $ python -vvE -c "import sys; print sys.path"
 $ python -vvEsS -c "import sys; print sys.path"
 ```
 
+### [python site]()
+- macos
+```bash
+# -- HOMEBREW_PREFIX --
+$ echo "$(brew --prefix)"
+/opt/homebrew
+
+$ python3 -c "import site; print (site.getsitepackages())"
+['/opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages']
+
+$ python3 -c "import site; print (site.getusersitepackages())"
+/Users/marslo/Library/Python/3.13/lib/python/site-packages
+
+$ readlink /Users/marslo/Library/Python/3.13/lib/python/site-packages
+
+$ readlink -f /opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages
+/opt/homebrew/lib/python3.13/site-packages
+```
+
 ### python libs
 #### MacOS
 - global
  ```bash
-  $ ls -ld /usr/local/lib/python*/
-  drwxr-xr-x 3 marslo admin 96 May 17  2019 /usr/local/lib/python2.7/
-  drwxr-xr-x 3 marslo admin 96 May 17  2019 /usr/local/lib/python3.7/
-  drwxr-xr-x 3 marslo admin 96 Jan 13  2020 /usr/local/lib/python3.8/
-  drwxr-xr-x 3 marslo admin 96 Oct 10 17:06 /usr/local/lib/python3.9/
-
-  $ ls -ld /Library/Python/2.7/site-packages/
-  drwxr-xr-x 9 root wheel 288 Aug  6 18:16 /Library/Python/2.7/site-packages/
+  $ ls -1d "$(brew --prefix)"/lib/python*/
+  /opt/homebrew/lib/python3.11/
+  /opt/homebrew/lib/python3.12/
+  /opt/homebrew/lib/python3.13/
+  /opt/homebrew/lib/python3.9/
  ```
-  - or
-    ```bash
-      $ ls $(brew --prefix)/lib/python*
-      /usr/local/lib/python2.7:
-      site-packages
-
-      /usr/local/lib/python3.7:
-      site-packages
-
-      /usr/local/lib/python3.8:
-      site-packages
-
-      /usr/local/lib/python3.9:
-      site-packages
-    ```
 
 - local
   ```bash
