@@ -38,6 +38,9 @@
   - [usage](#usage-2)
   - [config](#config-1)
   - [theme](#theme-1)
+- [tldr](#tldr)
+  - [install](#install-1)
+  - [config](#config-2)
 - [`cheat.sh`](#cheatsh)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [theme and colors](#theme-and-colors)
@@ -2337,6 +2340,66 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
 
   # Update the binary cache
   $ bat cache --build
+  ```
+
+# tldr
+
+> [!NOTE|label:references:]
+> - [tldr.sh](https://tldr.sh/) | [tlrc](https://tldr.sh/tlrc) | [python version](https://pypi.org/project/tldr/)
+> - [client](https://github.com/tldr-pages/tldr/wiki/Clients)
+
+## install
+```bash
+# node version
+$ npm install -g tldr
+# -- usage --
+$ $(npm config get prefix)/bin/tldr --theme ocean <cmd>
+
+# rust version
+$ brew install --HEAD tlrc
+
+# c version
+$ brew install --HEAD tldr
+
+# python version
+$ python3 -m pip intall tldr
+```
+
+## config
+- rust version
+
+  > [!TIP|label:references:]
+  > - config file :
+  >   - linux and bsd: `$XDG_CONFIG_HOME/tlrc/config.toml` or `~/.config/tlrc/config.toml` if `$XDG_CONFIG_HOME` is unset
+  >   - macos: `~/Library/Application Support/tlrc/config.toml`
+  >   - windows: `%ROAMINGAPPDATA%\tlrc\config.toml`
+  > - [iMarslo: .tlrc.toml](https://github.com/marslo/dotfiles/blob/main/.marslo/.tlrc.toml)
+  >   `export TLRC_CONFIG="$HOME/.marslo/.tlrc.toml"`
+
+  ```bash
+  # rust version
+  # -- default configure --
+  $ tldr --gen-config > $(tldr --config-path)
+
+  # -- user defined configure --
+  $ export TLRC_CONFIG="$HOME/.marslo/.tlrc.toml"
+  # or
+  $ tldr --config "$HOME/.marslo/.tlrc.toml" <cmd>
+  ```
+
+- python version
+  ```bash
+  # tldr-pypi : https://pypi.org/project/tldr/
+  export TLDR_COLOR_NAME='cyan'
+  export TLDR_COLOR_DESCRIPTION='white'
+  export TLDR_COLOR_EXAMPLE='green'
+  export TLDR_COLOR_COMMAND='red'
+  export TLDR_COLOR_PARAMETER='white'
+  export TLDR_LANGUAGE='en'
+  export TLDR_CACHE_ENABLED=1
+  export TLDR_CACHE_MAX_AGE=720
+  export TLDR_PAGES_SOURCE_LOCATION='https://raw.githubusercontent.com/tldr-pages/tldr/main/pages'
+  export TLDR_DOWNLOAD_CACHE_LOCATION='https://tldr-pages.github.io/assets/tldr.zip'
   ```
 
 # `cheat.sh`

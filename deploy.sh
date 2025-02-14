@@ -117,7 +117,7 @@ function updateBook() {
     git add --all .
     targetMsg=$(git show remotes/origin/gh-pages --no-patch --format="%s")
     signed="$(git log -n1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' | command grep -q "$(git config user.email)"; echo $?)";
-    [ 0 -eq "${signed}" ] && sopt='--signoff' || sopt='';
+    [ 0 -ne "${signed}" ] && sopt='--signoff' || sopt='';
     if [ "${targetMsg}" = "${msg}" ]; then
       echo '~~> force push without create new commit: '
       eval "git commit ${sopt} --amend --no-edit --allow-empty"
