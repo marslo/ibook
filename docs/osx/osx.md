@@ -207,6 +207,10 @@ $ security login-keychain -s $keychain
 ![Enable Root User](../screenshot/osx/enable-root-user.png)
 
 ### [system integrity protection](https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/)
+
+> [!NOTE|label:references:]
+> - [fxgst/writeable_root - make your Mac yours again!](https://github.com/fxgst/writeable_root)
+
 ```bash
 $ csrutil disable
 Successfully disabled System Integrity Protection. Please restart the machine for the changes to take effect.

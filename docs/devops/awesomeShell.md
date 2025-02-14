@@ -38,10 +38,13 @@
   - [usage](#usage-2)
   - [config](#config-1)
   - [theme](#theme-1)
-- [tldr](#tldr)
+- [`tldr`](#tldr)
   - [install](#install-1)
   - [config](#config-2)
-- [`cheat.sh`](#cheatsh)
+- [`cht.sh`](#chtsh)
+- [`cheat`](#cheat)
+  - [configure](#configure)
+    - [theme](#theme-2)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [theme and colors](#theme-and-colors)
   - [`c`: bash-color](#c-bash-color)
@@ -52,7 +55,6 @@
   - [`duf`](#duf)
   - [`enhancd`](#enhancd)
   - [watchman](#watchman)
-  - [tmux](#tmux)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -2342,7 +2344,7 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
   $ bat cache --build
   ```
 
-# tldr
+# `tldr`
 
 > [!NOTE|label:references:]
 > - [tldr.sh](https://tldr.sh/) | [tlrc](https://tldr.sh/tlrc) | [python version](https://pypi.org/project/tldr/)
@@ -2402,22 +2404,15 @@ $ python3 -m pip intall tldr
   export TLDR_DOWNLOAD_CACHE_LOCATION='https://tldr-pages.github.io/assets/tldr.zip'
   ```
 
-# `cheat.sh`
+# `cht.sh`
 
 > [!NOTE]
-> - [chubin/cheat.sh](https://github.com/chubin/cheat.sh)
-> - [cheat.sh](https://cheat.sh/)
->   - [cheat.sh/fzf](https://cheat.sh/fzf)
+> - [chubin/cheat.sh](https://github.com/chubin/cheat.sh) | [cheat.sh](https://cheat.sh/) | - [cheat.sh/fzf](https://cheat.sh/fzf)
 > - [gotbletu/fzf-cheat.sh](https://gist.github.com/gotbletu/538ffd9565bc38b5426dd9071ff1eecd)
 > - [youtube: I made the greatest tool ever! | tmux & cht.sh & fzf](https://www.youtube.com/watch?v=hJzqEAf2U4I)
 >   - [ThePrimeagen/.dotfiles/tmux-cht.sh](https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-cht.sh)
->   - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
->   - [dansomething/dotfiles/.tmux.conf](https://github.com/dansomething/dotfiles/blob/main/home/.tmux.conf)
 > - [kenos1/tmux-cht-sh/bin/tmux-cht-sh.sh](https://github.com/kenos1/tmux-cht-sh/blob/main/bin/tmux-cht-sh.sh)
-> - [Integralist/dotfiles/.tmux.conf](https://github.com/Integralist/dotfiles/blob/main/.tmux.conf)
-> - [maximum-awesome/tmux.conf](https://github.com/square/maximum-awesome/blob/master/tmux.conf)
 > - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
-> - [tpope/dotfiles/.tmux.conf](https://github.com/tpope/dotfiles/blob/master/.tmux.conf)
 
 ```bash
 # install
@@ -2431,6 +2426,48 @@ $ source ~/.marslo/.completion/cht.sh
 # added in .bashrc
 $ [[ -f "${iRCHOME}"/.completion/cht.sh ]] && source "${iRCHOME}"/.completion/cht.sh
 ```
+
+# `cheat`
+
+> [!NOTE|label:references:]
+> - [cheat/chet](https://github.com/cheat/cheat) | [cheat/cheatsheets](https://github.com/cheat/cheatsheets)
+> - [Related Projects](https://github.com/cheat/cheat/wiki/Related-Projects)
+> - [docopt](http://docopt.org/)
+
+```bash
+$ brew install cheat
+```
+
+## configure
+```bash
+$ mkdir -p ~/.config/cheat && cheat --init > ~/.config/cheat/conf.yml
+
+# -- config path --
+$ cheat --conf
+```
+
+- reset cheatsheets repo
+  ```bash
+  $ cd ~/.config/cheat/cheatsheets
+  $ rm -rf community
+  $ git clone https://github.com/cheat/cheatsheets.git community
+  ```
+
+### theme
+
+- arduino
+- github-dark
+- gruvbox
+- native
+- onedark
+
+- optional
+  - doom-one
+  - evergarden
+  - lovelace
+  - nord
+  - solarized-dark256
+  - vulcan
 
 # [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
 
@@ -2524,7 +2561,6 @@ Version      : 1.4.2
 ```
 
 # utility
-
 ## `elinks`
 
 > [!NOTE|label:references:]
@@ -2618,9 +2654,3 @@ $ elinks https://google.com
   ![enhancd](../screenshot/linux/ecd-ec.gif)
 
 ## [watchman](https://facebook.github.io/watchman/)
-
-## tmux
-
-> [!NOTE|label:references]
-> - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
-> - [Michał Mieszczak/.dotfiles/.tmux.conf](https://gitlab.com/LongerHV/.dotfiles/-/blob/master/.tmux.conf?ref_type=heads)

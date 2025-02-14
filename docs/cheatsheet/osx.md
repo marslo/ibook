@@ -40,6 +40,12 @@
 > - [Locking files and folders to prevent changes ](http://hints.macworld.com/article.php?story=20031017061722471)
 
 ## system information
+
+> [!NOTE|label:references:]
+> - [* iMarslo: osx system](../osx/system.md)
+> - [`system_profiler -usage`](https://gist.github.com/dive/3070807)
+> - [tips and tricks](https://gist.github.com/dive/3070807)
+
 ### get osx info
 ```bash
 $ sw_vers

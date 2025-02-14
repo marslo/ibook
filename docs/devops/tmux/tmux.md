@@ -25,6 +25,14 @@
 > - [oh my tmux](https://github.com/gpakosz/.tmux)
 > - [Guide to customizing tmux.conf](https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/) | [hamvocke/dotfiles](https://github.com/hamvocke/dotfiles)
 > - [Use System Clipboard for Vi Copy Mode in Tmux in macOS and Linux](https://www.grailbox.com/2020/08/use-system-clipboard-for-vi-copy-mode-in-tmux-in-macos-and-linux/)
+> - dotfiles
+>   - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
+>   - [dansomething/dotfiles/.tmux.conf](https://github.com/dansomething/dotfiles/blob/main/home/.tmux.conf)
+>   - [maximum-awesome/tmux.conf](https://github.com/square/maximum-awesome/blob/master/tmux.conf)
+>   - [Integralist/dotfiles/.tmux.conf](https://github.com/Integralist/dotfiles/blob/main/.tmux.conf)
+>   - [tpope/dotfiles/.tmux.conf](https://github.com/tpope/dotfiles/blob/master/.tmux.conf)
+>   - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
+>   - [Michał Mieszczak/.dotfiles/.tmux.conf](https://gitlab.com/LongerHV/.dotfiles/-/blob/master/.tmux.conf?ref_type=heads)
 
 ```bash
 $ tmux show -g | grep -v --color=never '^#' | grep -v --color=never '^$'

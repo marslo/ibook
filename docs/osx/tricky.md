@@ -45,6 +45,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+> [!TIP|label:references]
+> - [tips and tricks](https://gist.github.com/dive/3070807)
 
 ## get file metadata
 
@@ -1057,6 +1059,11 @@ $ diskutil partitionDisk /dev/disk2 GPT JHFS+ New 0b
   ```
 
 #### [check usb](https://apple.stackexchange.com/a/170118/254265)
+
+> [!NOTE|label:references:]
+> - [tips and tricks](https://gist.github.com/dive/3070807)
+> - [`system_profiler -usage`](https://gist.github.com/dive/3070807)
+
 ```bash
 $ system_profiler SPUSBDataType
 
