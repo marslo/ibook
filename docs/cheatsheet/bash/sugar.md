@@ -46,6 +46,7 @@
   - [env](#env)
   - [shortcuts](#shortcuts)
   - [man](#man)
+  - [debugging a script](#debugging-a-script)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1949,4 +1950,65 @@ alias sudo='sudo '
 - [ASCII code of key](https://www.commandlinefu.com/commands/view/10109/quick-access-to-ascii-code-of-a-key)
   ```bash
   $ showkey -a
+  ```
+
+### [debugging a script](https://web.archive.org/web/20230401201759/https://wiki.bash-hackers.org/scripting/debuggingtips#making_xtrace_more_useful)
+
+- [making xtrace more useful](https://web.archive.org/web/20230401201759/https://wiki.bash-hackers.org/scripting/debuggingtips#making_xtrace_more_useful)
+
+  > [!TIP]
+  > - [`PS4` has to be start with `+`](https://gist.github.com/marslo/8e25d3250c13ecd5147787d38a5b85f8) | [and](https://stackoverflow.com/a/17805088/2940319)
+  > - [5.2 Bash Variables - PS4](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html#index-PS4)
+  >
+  >   PS4
+  >     The value of this parameter is expanded like PS1 and the expanded value is the prompt printed before the command line is echoed when the -x option is set (see The Set Builtin). The first character of the expanded value is replicated multiple times, as necessary, to indicate multiple levels of indirection. The default is ‘+ ’.
+
+  ```bash
+  $ export PS4='+\033[37;2;3m(${BASH_SOURCE}:${LINENO})\033[0m: \033[35;2;3m${FUNCNAME[0]:+${FUNCNAME[0]}():}\033[0m '
+  # or
+  $ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+  # even more:
+  $ export PS4='Line $LINENO @ $(date +%s.%N): '
+  ```
+
+- [LINENO and BASH_LINENO](https://stackoverflow.com/a/17804850/2940319)
+
+  > [!NOTE|label:references:]
+  > - [Bash Variables](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html)
+  >   **BASH_LINENO**
+  >     An array variable whose members are the line numbers in source files where each corresponding member of `FUNCNAME` was invoked. `${BASH_LINENO[$i]}` is the line number in the source file (`${BASH_SOURCE[$i+1]}`) where `${FUNCNAME[$i]}` was called (or `${BASH_LINENO[$i-1]}` if referenced within another shell function).
+  >     Use `LINENO` to obtain the current line number.
+  >
+  >   **FUNCNAME**
+  >     An array variable containing the names of all shell functions currently in the execution call stack. The element with index 0 is the name of any currently-executing shell function. The bottom-most element (the one with the highest index) is "main". This variable exists only when a shell function is executing. Assignments to `FUNCNAME` have no effect.
+  >     If `FUNCNAME` is unset, it loses its special properties, even if it is subsequently reset.
+  >
+  >     This variable can be used with `BASH_LINENO` and `BASH_SOURCE`. Each element of `FUNCNAME` has corresponding elements in `BASH_LINENO` and `BASH_SOURCE` to describe the call stack. For instance, `${FUNCNAME[$i]}` was called from the file `${BASH_SOURCE[$i+1]}` at line number `${BASH_LINENO[$i]}`.
+  >     The `caller` builtin displays the current call stack using this information.
+
+  ```bash
+  #!/usr/bin/env bash
+
+  function log() {
+    echo "LINENO: ${LINENO}"
+    echo "BASH_LINENO: ${BASH_LINENO[*]}; LINENO: ${LINENO}"
+  }
+
+  function foo() {
+    log "$@"
+  }
+
+  foo "$@"
+  ```
+
+  ```bash
+  # result
+  $ bash -x debug.sh
+  +(debug.sh:12):  foo
+  +(debug.sh:9): foo(): log
+  +(debug.sh:4): log(): echo 'LINENO: 4'
+  LINENO: 4
+  +(debug.sh:5): log(): echo 'BASH_LINENO: 9 12 0; LINENO: 5'
+  BASH_LINENO: 9 12 0; LINENO: 5
   ```

@@ -59,6 +59,12 @@ $ curl https://bootstrap.pypa.io/get-pip.py | python - 'pip==8.0.0'
 - linux
   ```bash
   $ [sudo [-H]] pip install --upgrade pip
+
+  # or - https://github.com/Homebrew/homebrew-core/blob/master/Formula/p/python%403.13.rb#L324
+  $ python3 -Im pip install -v --no-index --upgrade --isolated \
+    --target=/usr/local/lib/python3.13/site-packages \
+    /usr/local/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/ensurepip/_bundled/pip-25.0-py3-none-any.whl \
+    /usr/local/Cellar/python@3.13/3.13.2/libexec/wheel-0.45.1-py3-none-any.whl
   ```
 - windows
   ```batch
@@ -67,7 +73,7 @@ $ curl https://bootstrap.pypa.io/get-pip.py | python - 'pip==8.0.0'
 
 #### from easy_install
 ```bash
-$ cd <PythonInstallHome>\Scripts
+$ cd /path/to/install/home/Scripts
 $ easy_install pip
 ```
 - [or](https://pypi.org/project/ez_setup/#modal-close)
@@ -108,7 +114,7 @@ $ sudo -H pip install <pacakge-name>
 
 ### [re-install package in `site.USER_BASE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE)
 
-> [!NOTE]
+> [!NOTE|label:references:]
 > ```bash
 > $ python -c 'import site; print(site.USER_BASE)'
 > /Users/marslo/Library/Python/3.9
@@ -144,7 +150,7 @@ global.index-url='https://private.artifactory.com/artifactory/api/pypi/tools/sim
 
 ### [list pip package with url](https://stackoverflow.com/a/46838082/2940319)
 
-> [!NOTE]
+> [!NOTE|label:references:]
 > ```bash
 > $ sudo yum install util-linux -y
 > ```
@@ -346,10 +352,15 @@ user:
 - or
   ```bash
   $ pip config -v list
-  For variant 'global', will try loading '/Library/Application Support/pip/pip.conf'
+  For variant 'global', will try loading '/opt/homebrew/share/pip:/Library/Application Support/pip/pip.conf'
   For variant 'user', will try loading '/Users/marslo/.pip/pip.conf'
   For variant 'user', will try loading '/Users/marslo/.config/pip/pip.conf'
-  For variant 'site', will try loading '/usr/local/opt/python@3.11/Frameworks/Python.framework/Versions/3.11/pip.conf'
+  For variant 'site', will try loading '/opt/homebrew/opt/python@3.13/Frameworks/Python.framework/Versions/3.13/pip.conf'
+  :env:.break-system-packages='true'
+  global.break-system-package='true'
+
+  $ echo $PIP_BREAK_SYSTEM_PACKAGES
+  true
   ```
 
 ### samples

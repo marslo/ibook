@@ -32,6 +32,7 @@
   - [stdin](#stdin)
   - [Files](#files)
   - [basic usage](#basic-usage)
+  - [using vault with curl](#using-vault-with-curl)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -773,3 +774,22 @@ $ vault write auth/azure/login \
   token_meta_role                   rotation-role
   token_meta_subscription_id        XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXX
   ```
+
+## using vault with curl
+
+
+> [!TIP|label:references]
+> - [Passing certs to curl from an environment variable](https://stackoverflow.com/a/63958288/2940319)
+
+```bash
+CACERT=$(vault kv get -field crt my/cert/path/CACERT)
+CERT=$(vault kv get -field crt my/cert/path/TESTCERT)
+KEY=$(vault kv get -field key my/cert/path/TESTCERT)
+
+curl -v \
+    --cacert <(echo "$CACERT") \
+    --cert <(echo "$CERT") \
+    --key <(echo "$KEY") \
+    --location \
+    --request GET 'https://my.end.point'
+```

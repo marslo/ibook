@@ -18,6 +18,7 @@
   - [`inputrc`](#inputrc)
   - [unbind](#unbind)
   - [tips](#tips)
+- [test](#test)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -26,6 +27,7 @@
 >   - [How can I use variable variables (indirect variables, pointers, references) or associative arrays?](http://mywiki.wooledge.org/BashFAQ/006)
 >   - [risk](https://stackoverflow.com/a/55331060/2940319)
 >   - [Eval command and security issues](http://mywiki.wooledge.org/BashFAQ/048)
+> - [Builtin Commands](https://web.archive.org/web/20230328220001/https://wiki.bash-hackers.org/start)
 
 ## eval
 
@@ -1517,3 +1519,31 @@ bind '"\C-w":kill-region'
   $ bind -q display-shell-version
   display-shell-version can be invoked via "\C-x\C-v".
   ```
+
+## test
+
+> [!NOTE|label:references:]
+> - [The classic test command](https://web.archive.org/web/20230401094700/https://wiki.bash-hackers.org/commands/classictest#the_classic_test_command)
+
+| OPERATOR SYNTAX       | DESCRIPTION                                                                  |
+|-----------------------|------------------------------------------------------------------------------|
+| `-a <FILE>`           | True if <FILE> exists.  (* not recommended, may collide with `-a` for `AND`) |
+| `-e <FILE>`           | True if <FILE> exists.                                                       |
+| `-f <FILE>`           | True, if <FILE> exists and is a regular file.                                |
+| `-d <FILE>`           | True, if <FILE> exists and is a directory.                                   |
+| `-c <FILE>`           | True, if <FILE> exists and is a character special file.                      |
+| `-b <FILE>`           | True, if <FILE> exists and is a block special file.                          |
+| `-p <FILE>`           | True, if <FILE> exists and is a named pipe (FIFO).                           |
+| `-S <FILE>`           | True, if <FILE> exists and is a socket file.                                 |
+| `-L <FILE>`           | True, if <FILE> exists and is a symbolic link.                               |
+| `-h <FILE>`           | True, if <FILE> exists and is a symbolic link.                               |
+| `-g <FILE>`           | True, if <FILE> exists and has sgid bit set.                                 |
+| `-u <FILE>`           | True, if <FILE> exists and has suid bit set.                                 |
+| `-r <FILE>`           | True, if <FILE> exists and is readable.                                      |
+| `-w <FILE>`           | True, if <FILE> exists and is writable.                                      |
+| `-x <FILE>`           | True, if <FILE> exists and is executable.                                    |
+| `-s <FILE>`           | True, if <FILE> exists and has size bigger than 0 (not empty).               |
+| `-t <fd>  `           | True, if file descriptor <fd> is open and refers to a terminal.              |
+| `<FILE1> -nt <FILE2>` | True, if <FILE1> is newer than <FILE2> (mtime).                              |
+| `<FILE1> -ot <FILE2>` | True, if <FILE1> is older than <FILE2> (mtime).                              |
+| `<FILE1> -ef <FILE2>` | True, if <FILE1> and <FILE2> refer to the same device and inode numbers.     |
