@@ -1093,6 +1093,10 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
     ```
 
 ### [`GroovyClassLoader()`](https://stackoverflow.com/a/15904699/2940319)
+
+> [!NOTE|label:references:]
+> - [How to get classpath in Groovy?](https://stackoverflow.com/a/27131375/2940319)
+
 - `new GroovyClassLoader().parseClass("/path/to/sample.groovy" as File)`
   ```groovy
   Class clazz = new GroovyClassLoader().parseClass("/path/to/sample.groovy" as File)
@@ -1134,6 +1138,104 @@ println new SimpleTemplateEngine().createTemplate( template ).make( binding ).to
               gClass.getClass() : class java.lang.Class
     gClass.newInstance().SAMPLE : [k1:[k11:v11], k2:[k21:v21, k22:v22]]
     ```
+
+- [`java.class.path`](https://stackoverflow.com/a/5212462/2940319)
+  ```groovy
+  System.getProperty('java.class.path')
+  // Result: '/opt/homebrew/opt/groovy/libexec/lib/groovy-4.0.25.jar'
+
+  // -- or --
+  System.getProperty("java.class.path", ".").tokenize(File.pathSeparator).each { println it }
+  // Result: ['/opt/homebrew/opt/groovy/libexec/lib/groovy-4.0.25.jar']
+  ```
+
+- `this.class.classLoader`
+  ```groovy
+  def printClassPath(classLoader) {
+    println "-- $classLoader"
+    println classLoader.getURLs().collect {"- ${it.toString()}" }.join('\n\t')
+    if (classLoader.parent) {
+       printClassPath(classLoader.parent)
+    }
+  }
+  printClassPath this.class.classLoader
+  ```
+
+  <!--sec data-title="result of -- this.class.$classLoade" data-id="section0" data-show=true data-collapse=true ces-->
+  ```
+  -- groovy.lang.GroovyClassLoader$InnerLoader@37c84fea
+
+  -- groovy.lang.GroovyClassLoader@2e27d72f
+
+  -- org.codehaus.groovy.tools.RootLoader@4517d9a3
+  - file:/./
+    - file:/opt/homebrew/opt/groovy/libexec/lib/
+    - file:/opt/homebrew/opt/groovy/libexec/lib/gpars-1.2.1.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jquery-3.5.1.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/testng-7.5.1.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-ginq-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-sql-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-testng-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jackson-annotations-2.18.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jsr166y-1.7.0.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jackson-databind-2.18.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/snakeyaml-2.3.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/javaparser-core-3.26.3.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-cli-picocli-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jcommander-1.78.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-groovysh-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/junit-platform-launcher-1.11.4.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-jmx-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-xml-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-templates-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-dateutil-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/multiverse-core-0.7.0.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-macro-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/junit-4.13.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-datetime-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/ant-launcher-1.10.15.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jackson-dataformat-yaml-2.18.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jline-2.14.6.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/qdox-1.12.1.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-toml-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/mxparser-1.2.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-cli-commons-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-test-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/junit-jupiter-api-5.11.4.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/org.abego.treelayout.core-1.0.3.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/commons-cli-1.6.0.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-contracts-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-astbuilder-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-docgenerator-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-test-junit5-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/junit-jupiter-engine-5.11.4.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/ivy-2.5.3.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-yaml-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-servlet-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/slf4j-api-2.0.16.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jackson-dataformat-toml-2.18.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/ant-junit-1.10.15.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-ant-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-typecheckers-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/hamcrest-core-1.3.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-json-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/opentest4j-1.3.0.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-jsr223-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/junit-platform-engine-1.11.4.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-macro-library-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-swing-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jackson-core-2.18.2.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-console-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/ant-antlr-1.10.15.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/xstream-1.4.21.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/ant-1.10.15.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/junit-platform-commons-1.11.4.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/jansi-2.4.1.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-nio-4.0.25.jar
+    - file:/opt/homebrew/opt/groovy/libexec/lib/groovy-groovydoc-4.0.25.jar
+  ```
+  <!--endsec-->
 
 ### metaClass
 ```groovy

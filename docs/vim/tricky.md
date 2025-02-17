@@ -20,6 +20,7 @@
   - [list all `filetype`](#list-all-filetype)
   - [newline `\r`](#newline-%5Cr)
   - [redirect cmd](#redirect-cmd)
+  - [insert hex code](#insert-hex-code)
   - [format json in vim](#format-json-in-vim)
   - [multiple repalce in silent mode](#multiple-repalce-in-silent-mode)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
@@ -529,6 +530,177 @@ cnoremap <C-k> <C-\>e(strpart(getcmdline(), 0, getcmdpos() - 1))<CR>
   ```
 
 ![redir to debug](../screenshot/vim/vim-redir.gif)
+
+### insert hex code
+
+| METHOD          | PROS                            | CONS                                        |
+|-----------------|---------------------------------|---------------------------------------------|
+| `statusline %B` | native support                  | only shows current cursor position          |
+| `char2nr()`     | batch processing capability     | requires manual handling of encoding ranges |
+| `:ascii`        | displays complete encoding info | requires parsing multi-line output          |
+
+```vim
+:%s/^./\=submatch(0).printf(' : %04X', char2nr(submatch(0)))/
+
+" -- result --
+"  : F27D
+" 󱆃 : F1183
+"  : E702
+"  : E62B
+```
+
+```vim
+" using 000xxxxx instead of xxxxx
+"                                                                  X: uppercase x: lowercase              X: uppercase x: lowercase
+"                                                                              v                                      v
+:g/^./s/^\(.\)/\=submatch(1).' : '.(char2nr(submatch(1)) > 0xFFFF ? printf('%08X', char2nr(submatch(1))) : printf('%04X', char2nr(submatch(1))))/
+" or using `:s`
+:%s/^./\=submatch(0).' : '.(char2nr(submatch(0)) > 0xFFFF ? printf('%08X', char2nr(submatch(0))) : printf('%04X', char2nr(submatch(0))))/
+
+" -- result --
+"  : F27D
+" 󱆃 : 000F1183
+"  : E702
+"  : E62B
+```
+
+```vim
+" or simulator `%B` in statusline
+"                             add 0x
+"                               v
+:%s/^./\=submatch(0).printf(' : 0x%04X', char2nr(submatch(0)))/
+
+" -- result --
+"  : 0xF27D
+" 󱆃 : 0xF1183
+"  : 0xE702
+"  : 0xE62B
+```
+
+```vim
+" insert result of `:ascii`
+:%s/.*/\=printf('%s : <%s>  %d,  Hex %x,  Octal %o', submatch(0), submatch(0), char2nr(submatch(0)), char2nr(submatch(0)), char2nr(submatch(0)))/
+
+" -- result --
+"  : <>  62077,  Hex f27d,  Octal 171175
+" 󱆃 : <󱆃>  987523,  Hex f1183,  Octal 3610603
+"  : <>  59138,  Hex e702,  Octal 163402
+"  : <>  58923,  Hex e62b,  Octal 163053
+```
+
+#### using `:g /./ :ascii`
+
+```vim
+:g /./ :ascii
+
+" redirect via TabMessage
+:TabMessage g /./ :ascii
+```
+
+![get hex code of char](../screenshot/vim/vim-batch-g-ascii.gif)
+
+#### with function
+
+> [!NOTE|label:references:]
+> performance:
+>
+> | SOLUTION    | SPEED  | PROS                                | CONS                   |
+> |-------------|--------|-------------------------------------|------------------------|
+> | `:ascii`    | ~1.2s  | exactly matches the official format | slow                   |
+> | `char2nr()` | ~0.03s | fast                                | requires custom format |
+> | hybrid      | ~0.5s  | balancing speed and format          | requires custom format |
+
+```vim
+" simple version"
+function! GetAsciiInfo(char) abort
+  let code = char2nr(a:char)
+  let hex = printf('%X', code)
+  let octal= printf('%o', code)
+  return printf("'%s' %d 0x%s %o", a:char, code, hex, octal)
+endfunction
+
+" usage
+:%s/^\(.\)/\=submatch(1) . ' ' . GetAsciiInfo(submatch(1))/g
+```
+
+```vim
+" support unicode
+function! AppendFullCode() range
+  for lnum in range(a:firstline, a:lastline)
+    let char = getline(lnum)[0]
+    let code = char2nr(char)
+    let hex = code > 0xffff ? printf("Hex %06x", code) : printf("Hex %04x", code)
+    let oct = printf("Octal %o", code)
+    call setline( lnum, printf("%s: %d, %s, %s", char, code, hex, oct) )
+  endfor
+endfunction
+
+" usage
+:%call AppendFullCode()
+```
+
+```vim
+" full version
+function! AppendFullAscii() range
+  for lnum in range(a:firstline, a:lastline)
+    let char = getline(lnum)[0]
+    let code = char2nr(char)
+
+    " get code
+    let dec = code
+    let hex = code > 0xffff ? printf("%08x", code) : printf("%04x", code)
+    let oct = printf("%o", code)
+
+    " UTF-8 coding
+    let utf8_bytes = []
+    let n = code
+    while n > 0
+      call insert(utf8_bytes, n % 0x100)
+      let n = n / 0x100
+    endwhile
+
+    " get final string
+    let result = printf("%s : DEC %d | HEX %s | OCT %o | UTF-8 %s",
+          \ char, dec, hex, oct, join(map(utf8_bytes, 'printf("%02x", v:val)'), ''))
+    call setline(lnum, result)
+  endfor
+endfunction
+
+" usage
+:%call AppendAscii()
+```
+
+```vim
+" using `:ascii` command and redirect
+function! AppendAscii() range
+  let save = @a
+  for lnum in range(a:firstline, a:lastline)
+    let char = getline(lnum)[0]
+
+    " go to first column
+    execute lnum . 'normal! 0'
+
+    " capture ascii result
+    redir @a
+    silent! ascii
+    redir END
+
+    " format output
+    let output = substitute(@a, '\n', '', 'g')
+    " remove <x>
+    let output = substitute(output, '^<.*>\s*', '', '')
+    let output = substitute(output, ',\s*Hex\s*', ', Hex ', '')
+    let output = substitute(output, ',\s*Octal\s*', ', Octal ', '')
+
+    " join string
+    call setline(lnum, printf("%s: %s", char, output))
+  endfor
+  let @a = save
+endfunction
+
+" usage
+:%call AppendAscii()
+```
 
 ### format json in vim
 
