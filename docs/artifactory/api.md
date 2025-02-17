@@ -505,9 +505,7 @@ $ curl -gsSL \
 
 ### [deploy bundle artifact](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifactsfromArchive)
 ```bash
-$ curl -g \
-       -s \
-       -SL \
+$ curl -gfsSL \
        -H "X-Explode-Archive-Atomic: true" \
        -X PUT \
        "https://artifactory.sample.com/artifactory/<repo-name>/<path>/" \

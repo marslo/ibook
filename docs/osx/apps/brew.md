@@ -335,6 +335,7 @@ $ brew install dos2unix
 $ brew install openldap
 $ brew install jq
 $ brew install openjdk
+$ brew install gradle
 $ brew install --HEAD fzf fzy bat ack ag rg
 $ brew install mkdocs                          # markdown docs, usage: `mkdocs build -d site -s`
 $ curl -o "$HOME/.local/bin/cht.sh" -fsSL 'https://cht.sh/:cht.sh' && chmod +x "$HOME/.local/bin/cht.sh"
@@ -358,6 +359,7 @@ $ brew install stylelint                       # for css
 $ brew install jsonlint
 $ brew install ansible-lint
 $ brew install vint                            # vim script language lint
+$ brew install --HEAD eslint
 $ brew install --HEAD shfmt                    # autoformat shell script source code
 # optional
 $ brew install actionlint                      # for github action

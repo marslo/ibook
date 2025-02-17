@@ -42,9 +42,15 @@
   - [install](#install-1)
   - [config](#config-2)
 - [`cht.sh`](#chtsh)
+  - [links](#links)
+  - [.cht.sh.conf](#chtshconf)
+    - [CHTSH environment](#chtsh-environment)
+    - [theme](#theme-2)
+    - [mode](#mode)
+  - [`--shell`](#--shell)
 - [`cheat`](#cheat)
   - [configure](#configure)
-    - [theme](#theme-2)
+    - [theme](#theme-3)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [theme and colors](#theme-and-colors)
   - [`c`: bash-color](#c-bash-color)
@@ -2413,6 +2419,8 @@ $ python3 -m pip intall tldr
 >   - [ThePrimeagen/.dotfiles/tmux-cht.sh](https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-cht.sh)
 > - [kenos1/tmux-cht-sh/bin/tmux-cht-sh.sh](https://github.com/kenos1/tmux-cht-sh/blob/main/bin/tmux-cht-sh.sh)
 > - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
+> - [From FZF file preview to a browser for cht.sh to discovering the ideal solution](https://dev.to/melopilosyan/from-fzf-file-preview-to-a-browser-for-chtsh-to-discovering-the-ideal-solution-3ann)
+> - [melopilosyan/confNest - cs](https://github.com/melopilosyan/confNest/blob/main/bin/cs)
 
 ```bash
 # install
@@ -2425,6 +2433,95 @@ $ source ~/.marslo/.completion/cht.sh
 
 # added in .bashrc
 $ [[ -f "${iRCHOME}"/.completion/cht.sh ]] && source "${iRCHOME}"/.completion/cht.sh
+```
+
+## links
+
+- [:intro](https://cht.sh/:intro)
+- [~snapshot](https://cht.sh/~snapshot)
+- [:vim](https://cht.sh/:vim)
+- [:styles](https://cht.sh/:styles)
+- [:styles-demo](https://cht.sh/:styles-demo)
+- :list
+  - i.e.: [python/:list](https://cht.sh/python/:list)
+- :learn
+  - i.e.: [python/:learn](https://cht.sh/python/:learn)
+
+## .cht.sh.conf
+
+> [!NOTE|label:references:]
+> - path: `~/.cht.sh/`
+> - file : `~/.cht.sh/cht.sh.conf`
+> - [cht.sh](https://cht.sh/:cht.sh)
+>   configuration is stored in `~/.cht.sh/` (can be overridden with `CHTSH` env var.)
+
+### CHTSH environment
+
+| ENVIRONMENT VAIRABLE        | VALUE                                         |
+|-----------------------------|-----------------------------------------------|
+| `CHTSH_HOME`                | `~/.cht.sh/`                                  |
+| `CHTSH_CONF`                | `$CHTSH_HOME/cht.sh.conf`                     |
+| `CHTSH_URL`                 | `https://cht.sh`                              |
+| `CHTSH_MODE`                | `$(cat "$CHTSH_HOME/mode 2>/dev/null")`       |
+| `CHTSH_CURL_OPTIONS`        | -                                             |
+| `CHEATSH_INSTALLATION`      | `$(cat "$CHTSH_HOME/standalone" 2>/dev/null)` |
+| `CHEATSH_TEST_STANDALONE`   | `YES/NO`                                      |
+| `CHEATSH_TEST_SKIP_ONLINE`  | `YES/NO`                                      |
+| `CHEATSH_TEST_SHOW_DETAILS` | `YES/NO`                                      |
+
+### theme
+- list themes
+  ```bash
+  $ cht.sh :styles
+
+  # or
+  $ curl cht.sh/:styles
+  ```
+
+- show themes
+  ```bash
+  $ cht.sh :styles-demo
+
+  # or
+  $ cht.sh :styles |
+    while read -r _s; do
+      echo -e "\n---";
+      echo -e "${_s}";
+      echo -e "---";
+      curl "cheat.sh/bash/advanced?style=${_s}";
+    done
+  ```
+
+- configure theme
+  ```bash
+  $ cat ~/.cht.sh/cht.sh.conf
+  CHTSH_QUERY_OPTIONS="style=arduino"
+  ```
+
+- themes
+  - algol_nu
+  - arduino
+  - native
+  - solarized-dark
+  - stata-dark
+
+### mode
+
+> [!NOTE|label:references:]
+> - path : `~/.cht.sh/mode`
+
+```bash
+$ cht.sh --mode lite      # use https://cheat.sh/ only
+$ cht.sh --mode auto      # use local installation
+```
+
+## `--shell`
+
+> [!NOTE|label:references:]
+
+```bash
+$ brew install --HEAD rlwrap
+$ cht.sh --shell python
 ```
 
 # `cheat`
