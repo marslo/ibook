@@ -37,7 +37,7 @@
     - [from Kubernetes secrets](#from-kubernetes-secrets)
     - [to Kubernetes secrets](#to-kubernetes-secrets)
   - [jenkins self-signed SSL](#jenkins-self-signed-ssl)
-  - [Artifactory HTTPS](#artifactory-https)
+  - [artifactory https](#artifactory-https)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -840,6 +840,21 @@ Certificate chain
             -storepass changeit
   ```
 
+- remove alias
+  ```bash
+  # get alias
+  $ $JAVA_HOME/bin/keytool -list -keystore $JAVA_HOME/lib/security/cacerts | grep <alias.name>
+  # or
+  $ $JAVA_HOME/bin/keytool -list -cacerts | grep <alias.name>
+  # or
+  $ keytool -list -v -keystore /path/to/cacerts.jks | grep 'Alias name:' | grep -i <alias.name>
+
+  # delete alias
+  $ $JAVA_HOME/bin/keytool -noprompt -trustcacerts -cacerts -delete -alias <the-alias-name>
+  # or
+  $ $JAVA_HOME/bin/keytool -noprompt -trustcacerts -keystore /path/to/cacerts.jks -delete -alias <the-alias-name>
+  ```
+
 - add into JVM options
   ```bash
   -Djavax.net.ssl.trustStore=/var/jenkins_home/cacerts.jks
@@ -855,8 +870,7 @@ Certificate chain
          -secret xxx
   ```
 
-
-## Artifactory HTTPS
+## artifactory https
 
 {% codetabs name="command", type="bash" -%}
 $ sudo openssl genrsa -des3 -out artifactory.key 2048

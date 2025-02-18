@@ -698,6 +698,7 @@ $ npm install -g neovim
 > - config:
 >   - [bdryanovski/dotfiles/packages/vim](https://github.com/bdryanovski/dotfiles/tree/master/packages/vim)
 >   - [skbolton/titan/nvim](https://github.com/skbolton/titan/tree/b6c44d3c9b6aab2ae011d6072ca0e2a5a254a82a/nvim)
+>   - [knid/nvim](https://github.com/knid/nvim)
 
 - create init.vim
   ```vim

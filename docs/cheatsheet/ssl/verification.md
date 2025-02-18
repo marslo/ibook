@@ -83,6 +83,8 @@ $ openssl req -noout -text -in server.csr
 {% hint style='tip' %}
 to add cert into Java for Java services (i.e.: Jenkins)
 > reference:
+> - [Unable to Connect to SSL Services Due to 'PKIX Path Building Failed' Error](https://confluence.atlassian.com/kb/unable-to-connect-to-ssl-services-due-to-pkix-path-building-failed-error-779355358.html)
+>   - [* SSLPoke.class](https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class)
 > - [4ndrej/SSLPoke.java](https://gist.github.com/4ndrej/4547029)
 > - [bric3/SSLPoke.java](https://gist.github.com/bric3/4ac8d5184fdc80c869c70444e591d3de)
 > - [klasen/sslpoke](https://github.com/klasen/sslpoke)
@@ -139,26 +141,29 @@ public class SSLPoke {
 
 - extract cert from server:
   ```bash
-  $ openssl s_client -connect server:443
+  $ openssl s_client -connect server.domain.com:443
   ```
+
 - negative test cert/keytool:
   ```bash
-  $ java SSLPoke server 443
+  $ java SSLPoke server.domain.com 443
   ```
   - you should get something like
     ```bash
     javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
     ```
+
 - import cert into default keytool:
   ```bash
   $ keytool -import -alias alias.server.com -keystore $JAVA_HOME/jre/lib/security/cacerts
   ```
+
 - positive test cert / keytool:
   ```bash
-  java SSLPoke server 443
+  $ java SSLPoke server 443
 
-  // you should get this:
-  // Successfully connected
+  # you should get this:
+  # Successfully connected
   ```
 
 - import certificate into your local TrustStore
@@ -184,22 +189,24 @@ public class SSLPoke {
 
 ### [InstallCert.java](https://github.com/escline/InstallCert)
 
-> reference:
+> [!NOTE|label:reference:]
 > - [unable to find valid certification path to requested target](https://blogs.oracle.com/gc/unable-to-find-valid-certification-path-to-requested-target)
 
-compile first
 ```bash
+# compile
 $ javac InstallCert.java
 ```
-- Access server, and retrieve certificate (accept default certificate 1)
+- access server, and retrieve certificate (accept default certificate 1)
   ```bash
   $ java InstallCert [host]:[port]
   ```
-- Extract certificate from created jssecacerts keystore
+
+- extract certificate from created jssecacerts keystore
   ```bash
   $ keytool -exportcert -alias [host]-1 -keystore jssecacerts -storepass changeit -file [host].cer
   ```
-- Import certificate into system keystore
+
+- import certificate into system keystore
   ```bash
   $ keytool -importcert -alias [host] -keystore [path to system keystore] -storepass changeit -file [host].cer
   ```
@@ -282,6 +289,9 @@ $ curl -vvI https://www.domain.com
 ## keytool
 ```bash
 $ keytool -printcert -sslserver <domain.com>:<port>
+
+# or
+$ keytool -printcert -rfc -sslserver <domain.com>:<port>
 ```
 
 ## nmap

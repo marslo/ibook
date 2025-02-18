@@ -34,6 +34,7 @@
     - [upgrade via `n`](#upgrade-via-n)
     - [node warnings](#node-warnings)
   - [gradle](#gradle)
+    - [flags for gradle](#flags-for-gradle)
   - [rust](#rust)
   - [haskell](#haskell)
     - [haskell-platform](#haskell-platform)
@@ -883,6 +884,35 @@ $ sudo update-alternatives --auto gradle
 $ sudo add-apt-repository ppa:cwchien/gradle
 $ sudo apt-get update
 $ sudo apt upgrade gradle
+```
+
+### flags for gradle
+
+> [!NOTE|label:references:]
+> - [#5736 Wrapper 4.1-4.8 cause SSL handshake failure MacOs](https://github.com/gradle/gradle/issues/5736)
+>   - `-Djavax.net.debug=ssl:handshake:verbose`
+>   - `-Djavax.net.debug=ssl`
+>   - `-Djavax.net.debug=all`
+> - `SSLPoke`
+>   - [Unable to Connect to SSL Services Due to 'PKIX Path Building Failed' Error](https://confluence.atlassian.com/kb/unable-to-connect-to-ssl-services-due-to-pkix-path-building-failed-779355358.html)
+>   - [download SSLPoke.class](https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class)
+
+```bash
+$ curl -fsSL -O https://confluence.atlassian.com/kb/files/779355358/779355357/1/1441897666313/SSLPoke.class
+
+$ $JAVA_HOME/bin/java SSLPoke services.gradle.org 443
+Successfully connected
+
+$ $JAVA_HOME/bin/java -Djavax.net.debug=ssl SSLPoke services.gradle.org 443
+javax.net.ssl|DEBUG|10|main|2025-02-17 21:53:53.169 PST|SSLCipher.java:432|jdk.tls.keyLimits:  entry = AES/GCM/NoPadding KeyUpdate 2^37. AES/GCM/NOPADDING:KEYUPDATE = 137438953472
+javax.net.ssl|DEBUG|10|main|2025-02-17 21:53:53.176 PST|SSLCipher.java:432|jdk.tls.keyLimits:  entry =  ChaCha20-Poly1305 KeyUpdate 2^37. CHACHA20-POLY1305:KEYUPDATE = 137438953472
+Successfully connected
+
+# with `truststore`
+$ $JAVA_HOME/bin/java -Djavax.net.ssl.trustStore=$JAVA_HOME/lib/security/cacerts -Djavax.net.debug=ssl SSLPoke services.gradle.org 443
+javax.net.ssl|DEBUG|10|main|2025-02-17 21:55:55.826 PST|SSLCipher.java:432|jdk.tls.keyLimits:  entry = AES/GCM/NoPadding KeyUpdate 2^37. AES/GCM/NOPADDING:KEYUPDATE = 137438953472
+javax.net.ssl|DEBUG|10|main|2025-02-17 21:55:55.833 PST|SSLCipher.java:432|jdk.tls.keyLimits:  entry =  ChaCha20-Poly1305 KeyUpdate 2^37. CHACHA20-POLY1305:KEYUPDATE = 137438953472
+Successfully connected
 ```
 
 ## rust

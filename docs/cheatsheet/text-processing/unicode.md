@@ -524,6 +524,7 @@
 |  `2225` |   ∥  |   `&#2225;`   | airline_symbols.paste      |
 |  `2387` |   ⎇  |   `&#2387;`   | airline_symbols.branch     |
 |  `E0A0` |     |   `&#E0A0;`   | airline_symbols.branch     |
+|  `29FC` |   ⧼  |   `&#29FC;`   | airline_symbols.branch     |
 |  `00B6` |   ¶  |   `&#00B6;`   | airline_symbols.linenr     |
 |  `240A` |   ␊  |   `&#240A;`   | airline_symbols.linenr     |
 |  `2424` |   ␤  |   `&#2424;`   | airline_symbols.linenr     |

@@ -7,6 +7,7 @@
   - [generate a certificate](#generate-a-certificate)
   - [create java keystore from cert file](#create-java-keystore-from-cert-file)
   - [append to existing java keystore](#append-to-existing-java-keystore)
+  - [remove alias](#remove-alias)
 - [import an entire keystore into another keystore](#import-an-entire-keystore-into-another-keystore)
 - [export items to cert file](#export-items-to-cert-file)
 
@@ -39,20 +40,20 @@
 
 |  KEYTOOL OPTIONS  | DESCRIPTION                                                    |
 |:-----------------:|----------------------------------------------------------------|
-|     `-delete`     | Deletes an entry from the Keystore                             |
-|   `-exportcert`   | Exports a certificate from a Keystore                          |
-|   `-genkeypair`   | Generates a key pair                                           |
-|    `-genseckey`   | Generates a secret key pair                                    |
-|     `-gencert`    | Generates a certificate from a certificate request             |
-|   `-importcert`   | Import a certificate or a certificate chain to keystore        |
-|   `-importpass`   | Imports a password                                             |
-| `-importkeystore` | Imports one or all entries from another keystore to a keystore |
-|    `-keypasswd`   | Changes the key password of an entry in keystore               |
-|      `-list`      | Lists entries in a keystore                                    |
-|    `-printcert`   | Prints the content of a certificate                            |
-|  `-printcertreq`  | Prints the content of a certificate request                    |
-|    `-printcrl`    | Prints the content of a CRL file                               |
-|   `-storepasswd`  | Changes the store password of a keystore                       |
+|     `-delete`     | deletes an entry from the keystore                             |
+|   `-exportcert`   | exports a certificate from a keystore                          |
+|   `-genkeypair`   | generates a key pair                                           |
+|    `-genseckey`   | generates a secret key pair                                    |
+|     `-gencert`    | generates a certificate from a certificate request             |
+|   `-importcert`   | import a certificate or a certificate chain to keystore        |
+|   `-importpass`   | imports a password                                             |
+| `-importkeystore` | imports one or all entries from another keystore to a keystore |
+|    `-keypasswd`   | changes the key password of an entry in keystore               |
+|      `-list`      | lists entries in a keystore                                    |
+|    `-printcert`   | prints the content of a certificate                            |
+|  `-printcertreq`  | prints the content of a certificate request                    |
+|    `-printcrl`    | prints the content of a crl file                               |
+|   `-storepasswd`  | changes the store password of a keystore                       |
 
 
 ## get cert from domain
@@ -74,9 +75,8 @@ $ openssl s_client -showcerts -connect google.com:443 </dev/null 2>/dev/null |
             grep "Not "
               Not Before: Aug 30 01:36:08 2021 GMT
               Not After : Nov 22 01:36:07 2021 GMT
-  ```
-  or
-  ```bash
+
+  # -- or --
   $ keytool -printcert \
             -v \
             -file google.com.crt |
@@ -147,6 +147,22 @@ $ keytool -import \
           -alias google.com \
           -keystore google.com.new.jks \
           -file google.com.crt
+```
+
+
+### remove alias
+```bash
+# get alias
+$ $JAVA_HOME/bin/keytool -list -keystore $JAVA_HOME/lib/security/cacerts | grep <alias.name>
+# or
+$ $JAVA_HOME/bin/keytool -list -cacerts | grep <alias.name>
+# or
+$ keytool -list -v -keystore /path/to/cacerts.jks | grep 'Alias name:' | grep -i <alias.name>
+
+# delete alias
+$ $JAVA_HOME/bin/keytool -noprompt -trustcacerts -cacerts -delete -alias <the-alias-name>
+# or
+$ $JAVA_HOME/bin/keytool -noprompt -trustcacerts -keystore /path/to/cacerts.jks -delete -alias <the-alias-name>
 ```
 
 ## import an entire keystore into another keystore

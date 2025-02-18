@@ -694,6 +694,59 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
     }
     ```
 
+  - sample for groovy
+
+    > [!TIP|label:references:]
+    > - [#17 unable to resolve base groovy classes](https://github.com/GroovyLanguageServer/groovy-language-server/issues/17)
+
+    ```json
+    {
+      "langageserver": {
+        "groovy": {
+          "filetypes": ["groovy"],
+          "module": "/Users/marslo/.config/coc/extensions/node_modules/coc-groovy/server/groovy-language-server-all.jar",
+          "trace.server": "verbose",
+          "settings": {
+            "groovy": {
+              "classpath": [
+                "/opt/homebrew/opt/groovy/libexec/lib",
+                "/opt/jenkins/latest/WEB-INF/lib",
+                "/opt/jenkins/plugins/credentials/WEB-INF/lib",
+                "./libs"
+              ]
+            }
+          }
+        }
+      }
+    }
+    ```
+
+    ```json
+    {
+      "languageserver": {
+        "groovy": {
+          "trace.server": "off",
+          "command": "java",
+          "args": [
+            "-jar",
+            "/path/to/groovy-language-server/build/libs/groovy-language-server-all.jar"
+          ],
+          "filetypes": ["groovy"],
+          "settings": {
+            "groovy": {
+              "classpath": [
+                "/path/to/.groovy/grapes/org.codehaus.groovy/groovy-sql/jars/groovy-sql-3.0.1.jar",
+                "/path/to/.groovy/grapes/org.codehaus.groovy/groovy/jars/groovy-3.0.1.jar",
+                "/path/to/libs",
+                "./libs"
+              ]
+            }
+          }
+        }
+      }
+    }
+    ```
+
 - check information
   ```vim
   :CocInfo
