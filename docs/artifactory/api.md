@@ -37,7 +37,7 @@
 
 ## variable
 ```bash
-$ rtUrl='https://artifactory.sample.com/artifactory'
+$ rtUrl='https://artifactory.domain.com/artifactory'
 $ repoName='my-repo'
 $ buildName='my - repo'
 $ buildNumber=12345
@@ -159,7 +159,7 @@ $ /usr/bin/curl ${curlOpt} \
 ```bash
 $ curl -sSg \
        -X GET \
-       https://artifactory.sample.com/artifactory/api/repositories |
+       https://artifactory.domain.com/artifactory/api/repositories |
        jq -r '.[] | .type + " ~> " + .key'
 LOCAL ~> local-repo
 REMOTE ~> remote-repo
@@ -171,7 +171,7 @@ VIRTUAL ~> virtual-repo
 ```bash
 $ curl -sSg \
        -X GET \
-       https://artifactory.sample.com/artifactory/api/repositories |
+       https://artifactory.domain.com/artifactory/api/repositories |
        jq -r '.[] | select(.type == "LOCAL") | .key'
 ```
 
@@ -179,26 +179,26 @@ $ curl -sSg \
   ```bash
   $ curl -sSg \
          -X GET \
-         https://artifactory.sample.com/artifactory/api/repositories |
+         https://artifactory.domain.com/artifactory/api/repositories |
          jq -r '.[] | select(.type == "VIRTUAL") | .key'
   ```
 
   - get all virtual repos, and repo name starts with '<project>'
     ```bash
     $ curl -sSg \
-          -X GET https://artifactory.sample.com/artifactory/api/repositories |
+          -X GET https://artifactory.domain.com/artifactory/api/repositories |
           jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
     ```
   - get defaultDeployRepo for all virutal repos who named starts with '<project>'
     ```bash
     $ for i in $(curl -sSg \
-                      -XGET https://artifactory.sample.com/artifactory/api/repositories |
+                      -XGET https://artifactory.domain.com/artifactory/api/repositories |
                       jq -r '.[] | select((.type == "VIRTUAL") and select(.key | startswith("<project>"))) | .key'
       ); do
         echo "${i} : "
         curl -sSg \
              --netrc-file /home/marslo/.marslo/.netrc \
-             -XGET https://artifactory.sample.com/artifactory/api/repositories/${i} |
+             -XGET https://artifactory.domain.com/artifactory/api/repositories/${i} |
           jq .defaultDeploymentRepo
         echo ' '
       done
@@ -208,7 +208,7 @@ $ curl -sSg \
   ```bash
   $ curl -sSg \
          -X GET \
-         https://artifactory.sample.com/artifactory/api/repositories |
+         https://artifactory.domain.com/artifactory/api/repositories |
          jq -r '.[] | select(.type == "REMOTE") | .key'
   ```
 
@@ -286,7 +286,7 @@ $ curl -s \
 ### filter `"buildInfo.env.JOB_NAME"` in all builds
 ```bash
 $ BUILD_NAME='my - job'
-$ RT_URL='https://artifactory.sample.com/artifactory'
+$ RT_URL='https://artifactory.domain.com/artifactory'
 $ for i in $(curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?.uri' ); do
     echo "~~~> ${i}"
     curl -sg -X GET "${RT_URL}/api/build/${BUILD_NAME}${i}" | jq --raw-output '.buildInfo.properties."buildInfo.env.JOB_NAME"'
@@ -300,7 +300,7 @@ or
 
 BUILD_NAME='my - build'
 CURL_OPT="-sg --netrc-file $HOME/.marslo/.netrc"
-RT_URL='https://artifactory.sample.com/artifactory'
+RT_URL='https://artifactory.domain.com/artifactory'
 for bid in $(curl ${CURL_OPT} -X GET "${RT_URL}/api/build/${BUILD_NAME}" | jq -r '.[][]?.uri'); do
   curl ${CURL_OPT}  -X GET "${RT_URL}/api/build/${BUILD_NAME}${bid}" \
        | jq -r '.buildInfo.properties | select(."buildInfo.env.JOB_NAME" | contains("marslo"))' \
@@ -346,7 +346,7 @@ done
 
 - delete artifacts and buildinfo
   ```bash
-  rtURL='https://artifactory.sample.com/artifactory'
+  rtURL='https://artifactory.domain.com/artifactory'
   cibuild='my-jenkins-build'
   repo='my-repo'
   curlOpt= '-s -g --netrc-file ~/.marslo/.netrc'
@@ -404,7 +404,7 @@ $ curl -s \
        -d @rotation.json \
        -H "Content-Type: application/json" \
        --netrc-file ~/.marslo/.netrc' \
-       "https://artifactory.sample.com/artifactory/api/build/retention/build%20-%20name?async=false"
+       "https://artifactory.domain.com/artifactory/api/build/retention/build%20-%20name?async=false"
 ```
 
 ## promote
@@ -485,7 +485,7 @@ $ curl -s \
        -k \
        -X POST \
        -H 'Content-Type:text/plain' \
-       'https://artifactory.sample.com/artifactory/api/search/aql' \
+       'https://artifactory.domain.com/artifactory/api/search/aql' \
        -d 'builds.find({
                "name": "my - build - dev",
                "created": {"$before": "3days"}
@@ -499,18 +499,24 @@ $ curl -s \
 $ curl -gsSL \
        --netrc-file ~/.marslo/.netrc \
        -XPUT \
-       "https://artifactory.sample.com/artifactory/<repo-name>/<path/to/file.txt>" \
+       "https://artifactory.domain.com/artifactory/<repo-name>/<path/to/file.txt>" \
        -T <artifacts>.txt
 ```
 
 ### [deploy bundle artifact](https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-DeployArtifactsfromArchive)
+
+> [!NOTE|label:references:]
+> - [Deploy Artifacts from Archive](https://jfrog.com/help/r/jfrog-rest-apis/deploy-artifacts-from-archive)
+>   - `X-Explode-Archive: true`: archive will be exploded upon deployment
+>   - `X-Explode-Archive-Atomic: true`: archive will be exploded in an atomic operation upon deployment
+
 ```bash
 $ curl -gfsSL \
        -H "X-Explode-Archive-Atomic: true" \
        -X PUT \
-       "https://artifactory.sample.com/artifactory/<repo-name>/<path>/" \
-       -T <artifacts>.[zip\|tar.gz\|tgz]               #             ^
-                                                       #     `/` is mandatory
+       "https://artifactory.domain.com/artifactory/<repo-name>/<path>/" \
+       -T <artifacts>.[zip\|tar\|tar.gz\|tgz\|7z\|tar.bz2]  #        ^
+                                                            # `/` is mandatory
 ```
 
 ### [deploy docker image via API](https://philippart-s.github.io/blog/articles/dev/docker-artificatory-promote/)
@@ -527,7 +533,7 @@ $ curl -X POST -H "X-JFrog-Art-Api:$ARTI_API_KEY" \
                     "tag" : "1.0.0",
                     "targetTag" : "prod",
                     "copy": false    }' \
-               https://xxxx.jfrog.io/artifactory/api/docker/default-docker-local/v2/promote
+               https://artifactory.domain.com/artifactory/api/docker/default-docker-local/v2/promote
 
 Promotion ended successfully%
 ```
@@ -545,7 +551,7 @@ Promotion ended successfully%
 
   # generate
   $ curl -H "Authorization: Bearer $token " \
-         -XPOST "https://artifactory.sample.com/access/api/v1/tokens" \
+         -XPOST "https://artifactory.domain.com/access/api/v1/tokens" \
          -d '{"description" : "YOUR-DESCRIPTION", "token_id" : "YOUR-TOKEN-ID", "scope" : "applied-permissions/admin", "token_type" : "access_token", "include_reference_token" : "true"}' \
          -H "Content-type: application/json"
   {
@@ -562,9 +568,9 @@ Promotion ended successfully%
 - list all
   ```bash
   $ curl -XGET -H "Authorization: Bearer $token " \
-         https://artifactory.sample.com/access/api/v1/tokens
+         https://artifactory.domain.com/access/api/v1/tokens
 
   # to filter
-  $ curl -XGET -H "Authorization: Bearer $token " https://artifactory.sample.com/access/api/v1/tokens |
+  $ curl -XGET -H "Authorization: Bearer $token " https://artifactory.domain.com/access/api/v1/tokens |
          jq -r '.tokens[] | select( .scope == "applied-permissions/admin" )'
   ```

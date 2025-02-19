@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [transparent background](#transparent-background)
 - [linux terminal with solarized](#linux-terminal-with-solarized)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -12,6 +13,26 @@
 > - [rgb.txt: color with name](http://fugal.net/vim/rgbtxt.html) | [rgb.txt with RGB format](https://github.com/marslo/MarsloVimOthers/blob/master/AboutGvimColors/rgb/rgb.txt)
 > - [Xterm256 color names for console Vim](https://vim.fandom.com/wiki/Xterm256_color_names_for_console_Vim)
 > - [Highlight multiple words](https://vim.fandom.com/wiki/Highlight_multiple_words)
+
+## transparent background
+
+> [!NOTE|label:references:]
+> - [#375 - Transparent background not working.](https://github.com/morhetz/gruvbox/issues/375)
+> - [#287 - Transparent background, cursor_column background and selection background options](https://github.com/morhetz/gruvbox/pull/287)
+
+```vim
+augroup TransparentBackground
+  autocmd VimEnter * hi Normal ctermbg=NONE guibg=NONE
+augroup END
+
+" or
+hi Normal     guibg=NONE ctermbg=NONE
+hi NonText    guibg=NONE ctermbg=NONE  " non-text transparent ( optional )
+hi LineNr     guibg=NONE ctermbg=NONE  " line number transparent
+hi SignColumn guibg=NONE ctermbg=NONE  " sign column transparent
+```
+
+![vim/nvim transparent background](../screenshot/vim/vim-nvim-transparent.png)
 
 ## linux terminal with solarized
 - bundle

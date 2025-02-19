@@ -22,6 +22,7 @@
   - [memory](#memory)
   - [swap usage](#swap-usage)
   - [show kernel version](#show-kernel-version)
+  - [show resolution](#show-resolution)
   - [list printer status](#list-printer-status)
   - [plist file](#plist-file)
 - [osx installation](#osx-installation)
@@ -477,6 +478,12 @@ kern.osrevision: 199506
   $ uname -a
   Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
   ```
+
+### show resolution
+```bash
+$ system_profiler SPDisplaysDataType | awk '/Resolution:/ {print $2"x"$4" "}'
+3456x2234
+```
 
 ### [list printer status](https://unix.stackexchange.com/q/140009/29178)
 ```bash
