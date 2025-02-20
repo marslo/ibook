@@ -464,6 +464,9 @@ body {
 
 - warning
   - 5.x
+
+    ![warning alert 5.x](../screenshot/jenkins/css/warning-5.x.png)
+
     ```html
     <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; -bs-alert-color:#664d03;--bs-alert-bg:#fff3cd;--bs-alert-border-color:#ffecb5">
       <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Warning Alert !</h4>
@@ -479,6 +482,11 @@ body {
       ```
 
   - 4.x
+
+    ![warning alert 4.x](../screenshot/jenkins/css/warning-4.x.png)
+
+    ![warning alert 4.x with 5.x color](../screenshot/jenkins/css/warning-4.x-with-5.x-color.png)
+
     ```html
     <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#856404; background-color:#fff3cd; border-color:#ffeeba">
       <h4 style="font-size: 1.5rem; color:inherit">Warning Alert !</h4>
@@ -501,6 +509,9 @@ body {
 
 - success
   - 5.x
+
+    ![success alert 5.x](../screenshot/jenkins/css/success-5.x.png)
+
     ```html
     <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#0f5132;--bs-alert-bg:#d1e7dd;--bs-alert-border-color:#badbcc">
       <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Success Alert !</h4>
@@ -516,6 +527,11 @@ body {
       ```
 
   - 4.x
+
+    ![success alert 4.x](../screenshot/jenkins/css/success-4.x.png)
+
+    ![success alert 4.x with 5.x color](../screenshot/jenkins/css/success-4.x-with-5.x-color.png)
+
     ```html
     <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#155724; background-color:#d4edda; border-color:#c3e6cb">
       <h4 style="color:inherit">Success Alert !</h4>
@@ -539,6 +555,9 @@ body {
 
 - danger
   - 5.x
+
+    ![danger alert 5.x](../screenshot/jenkins/css/danger-5.x.png)
+
     ```html
     <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#842029;--bs-alert-bg:#f8d7da;--bs-alert-border-color:#f5c2c7">
       <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Danger Alert !</h4>
@@ -554,6 +573,11 @@ body {
       ```
 
   - 4.x
+
+    ![danger alert 4.x](../screenshot/jenkins/css/danger-4.x.png)
+
+    ![danger alert 4.x with 5.x color](../screenshot/jenkins/css/danger-4.x-with-5.x-color.png)
+
     ```html
     <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#721c24; background-color:#f8d7da; border-color:#f5c6cb">
       <h4 style="font-size: 1.5rem; color:inherit">Danger Alter !</h4>
@@ -576,6 +600,9 @@ body {
 
 - primary
   - 5.x
+
+    ![primary alert 5.x](../screenshot/jenkins/css/primary-5.x.png)
+
     ```html
     <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#084298;--bs-alert-bg:#cfe2ff;--bs-alert-border-color:#b6d4fe">
       <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Primary Alert !</h4>
@@ -591,6 +618,11 @@ body {
       ```
 
   - 4.x
+
+    ![primary alert 4.x](../screenshot/jenkins/css/primary-4.x.png)
+
+    ![primary alert 4.x with 5.x color](../screenshot/jenkins/css/primary-4.x-with-5.x-color.png)
+
     ```html
     <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#004085; background-color:#cce5ff; border-color:#b8daff">
       <h4 style="font-size: 1.5rem; color:inherit">Primary Alert !</h4>
@@ -613,6 +645,9 @@ body {
 
 - info
   - 5.x
+
+    ![info alert 5.x](../screenshot/jenkins/css/info-5.x.png)
+
     ```html
     <div style="--bs-alert-bg:transparent;--bs-alert-padding-x:1rem;--bs-alert-padding-y:1rem;--bs-alert-margin-bottom:1rem;--bs-alert-color:inherit;--bs-alert-border-color:transparent;--bs-alert-border:1px solid var(--bs-alert-border-color);--bs-alert-border-radius:0.375rem;position:relative;padding:var(--bs-alert-padding-y) var(--bs-alert-padding-x);margin-bottom:var(--bs-alert-margin-bottom);color:var(--bs-alert-color);background-color:var(--bs-alert-bg);border:var(--bs-alert-border);border-radius:var(--bs-alert-border-radius); padding-right:3rem; --bs-alert-color:#055160;--bs-alert-bg:#cff4fc;--bs-alert-border-color:#b6effb">
       <h4 style="color:inherit; margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2">Info Alert !</h4>
@@ -628,6 +663,11 @@ body {
       ```
 
   - 4.x
+
+    ![info alert 4.x](../screenshot/jenkins/css/info-4.x.png)
+
+    ![info alert 4.x with 5.x color](../screenshot/jenkins/css/info-4.x-with-5.x-color.png)
+
     ```html
     <div style="position:relative; padding:.75rem 1.25rem; margin-bottom:1rem; border:1px solid transparent; border-radius:.25rem; color:#0c5460;background-color:#d1ecf1;border-color:#bee5eb">
       <h4 style="font-size: 1.5rem; color:inherit">Info Alter !</h4>
