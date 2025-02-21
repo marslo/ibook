@@ -42,6 +42,7 @@ life is hard, make it easier
   - [Q&A](https://github.com/marslo/myvim#4-qa)
 <!--endsec-->
 
+
 <!--sec data-title="colorful windows command line" data-id="section1" data-show=true data-collapse=true ces-->
 ### colorful windows command line
 - [Colorful Prompt](https://github.com/marslo/myColorfulWinCommandLine#colorful_commandline_windows)
@@ -51,6 +52,7 @@ life is hard, make it easier
   - [Specified Cursor Size](https://github.com/marslo/myColorfulWinCommandLine#specified-the-cursor-size)
   - [Set aliases in cmd](https://github.com/marslo/myColorfulWinCommandLine#set-aliases-in-command-linedefault-command-line)
 <!--endsec-->
+
 
 <!---
 vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent

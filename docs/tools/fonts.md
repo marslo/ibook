@@ -10,6 +10,8 @@
   - [rename fonts to `postscriptname`](#rename-fonts-to-postscriptname)
   - [get font version](#get-font-version)
 - [fonts](#fonts)
+  - [cn](#cn)
+    - [fonts](#fonts-1)
   - [highly recommended](#highly-recommended)
     - [Monaco](#monaco)
     - [RecMonoCasual](#recmonocasual)
@@ -42,12 +44,18 @@
 > - [monaspace](https://monaspace.githubnext.com/)
 >   - [monaspace nerd font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Monaspace) | [Monaspace.zip](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.zip) | [Monaspace.tar.xz](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Monaspace.tar.xz)
 > - [ryanoasis/powerline-extra-symbols](https://github.com/ryanoasis/powerline-extra-symbols)
->   ![extra symbols](https://github.com/ryanoasis/powerline-extra-symbols/blob/master/img/fontforge.png?raw=true)
+>
+>   [![extra symbols](https://github.com/ryanoasis/powerline-extra-symbols/blob/master/img/fontforge.png?raw=true)](https://github.com/ryanoasis/powerline-extra-symbols?tab=readme-ov-file)
+>
 > - [ArrowType](https://www.arrowtype.com/)
 > - [oldschool font list](https://int10h.org/oldschool-pc-fonts/fontlist/)
 > - [subframe7536/maple-font](https://github.com/subframe7536/Maple-font)
 
 # font patcher
+
+> [!TIP|label:references:]
+> - [小白教程，如何使用FontForge修改字体的名称?](https://www.maoken.com/knowledge/fontforge/ff-articles/19009.html)
+
 ## patch fonts
 ### setup font-patcher
 ```bash
@@ -299,6 +307,31 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
   ```
 
 # fonts
+
+## cn
+
+> [!TIP|label:references:]
+> - [中文网字计划 - 字图 CDN](https://chinese-font.netlify.app/zh-cn/cdn/) | [github](https://github.com/KonghaYao/chinese-free-web-font-storage)
+> - [猫啃](https://www.maoken.com/)
+> - [自由字体网](https://ziyouziti.com/index-index-all.html)
+> - [找字体](https://zfont.cn/cn/font_286.html)
+> - [自改免费开源字体一览](https://lxgw.github.io/2021/01/15/Lxgw-Opensource-Chinese-Fonts/) | [开源字体一览(图文版)](https://github.com/lxgw/lxgw/blob/main/fonts.md)
+> - [npm - chinese-fonts](https://www.npmjs.com/search?q=keywords:chinese-fonts)
+
+### fonts
+
+> [!NOTE|label:references:]
+> - [霞鹜漫黑 - lxgw/LxgwMarkerGothic](https://github.com/lxgw/LxgwMarkerGothic)
+> - [霞鹜文楷](https://github.com/lxgw/LxgwWenKai) | [霞鹜文楷 Bright](https://github.com/lxgw/LxgwBright)
+> - [霞鹜臻楷](https://github.com/lxgw/LxgwZhenKai)
+> - [霞鹜新晰黑](https://github.com/lxgw/LxgwNeoXiHei)
+> - [霞鹜漫黑](https://github.com/lxgw/LxgwMarkerGothic)
+> - [芫荽](https://github.com/ButTaiwan/iansui)
+> - [猫啃网糖圆体](https://www.maoken.com/tangyuan)
+> - [抖音美好体](https://ziyouziti.com/index-ziti-xiazai-id-451.html) | [quark](https://pan.quark.cn/s/5f2b4e9d6da9)
+> - [小赖字体](https://github.com/lxgw/kose-font)
+> - [悠哉字体](https://github.com/lxgw/yozai-font)
+
 ## highly recommended
 
 > [!TIP]
