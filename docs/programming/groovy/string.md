@@ -16,12 +16,15 @@
 - [comparation](#comparation)
   - [`equalsIgnoreCase`](#equalsignorecase)
   - [`compareToIgnoreCase`](#comparetoignorecase)
+- [regex](#regex)
+  - [show grouped result](#show-grouped-result)
+  - [Named-Capturing Group](#named-capturing-group)
 - [repalce](#repalce)
   - [`reverse`](#reverse)
   - [`replaceAll`](#replaceall)
   - [`replaceFirst`](#replacefirst)
   - [replaceAll with case-insensitive](#replaceall-with-case-insensitive)
-  - [Apply proper uppercase and lowercase on a String](#apply-proper-uppercase-and-lowercase-on-a-string)
+  - [apply proper uppercase and lowercase on a string](#apply-proper-uppercase-and-lowercase-on-a-string)
 - [split](#split)
   - [split string by Capital Letters](#split-string-by-capital-letters)
   - [split via digits](#split-via-digits)
@@ -246,6 +249,68 @@ assert true == "HELLO World".equalsIgnoreCase( 'hello world' )
 assert 0 == "Hello World".compareToIgnoreCase( 'hello world' )
 ```
 
+## regex
+
+> [!TIP|label:references:]
+> - [regex-capture.groovy](https://gist.github.com/EwanDawson/2407215)
+> - [Methods of the Matcher Class](https://docs.oracle.com/javase/tutorial/essential/regex/matcher.html)
+
+### show grouped result
+```groovy
+def matcher = ( 'Hello World' =~ /(\w+)\s(\w+)/ )
+println matcher[0].withIndex().collect { "${it.last()} -- ${it.first()}" }.join('\n')
+
+// -- result --
+// 0 -- Hello World
+// 1 -- Hello
+// 2 -- World
+```
+
+### Named-Capturing Group
+
+> [!NOTE|label:references:]
+> - [Named Capturing Groups and Backreferences](https://www.regular-expressions.info/named.html)
+> - [Class java.util.regex.Matcher](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Matcher.html)
+>   - [`public String group(String name)`](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Matcher.html#group%28java.lang.String%29)
+> - [Class java.util.regex.Pattern](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html)
+>   ```
+>   A capturing group can also be assigned a "name", a named-capturing group, and then be back-referenced later by the "name". Group names are composed of the following characters. The first character must be a letter.
+>   ```
+>  - [Special constructs (named-capturing and non-capturing)](https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html)
+>
+>  | CONSTRUCT            | MATCHES                                                                            |
+>  |----------------------|------------------------------------------------------------------------------------|
+>  | `(?<name>X)`         | X, as a named-capturing group                                                      |
+>  | `(?:X)`              | X, as a non-capturing group                                                        |
+>  | `(?idmsuxU-idmsuxU)` | Nothing, but turns match flags `i` `d` `m` `s` `u` `x` `U` on - off                |
+>  | `(?idmsux-idmsux:X)` | X, as a non-capturing group with the given flags `i` `d` `m` `s` `u` `x` on - off |
+>  | `(?=X)`              | X, via zero-width positive lookahead                                               |
+>  | `(?!X)`              | X, via zero-width negative lookahead                                               |
+>  | `(?<=X)`             | X, via zero-width positive lookbehind                                              |
+>  | `(?<!X)`             | X, via zero-width negative lookbehind                                              |
+>  | `(?>X)`              | X, as an independent, non-capturing group                                          |
+> - [Regex Named Groups in Java](https://stackoverflow.com/a/415635/2940319)
+> - [Java Joy: Using Named Capturing Groups In Regular Expressions](https://jdriven.com/blog/2020/04/Java-Joy-Using-Named-Capturing-Groups-In-Regular-Expressions)
+
+```groovy
+[
+  'https://marslo@google.com:443/admin/repos',
+  'http://userid@github.com:8080/admin/repos',
+].each { url ->
+    def matcher = ( url =~ '(?<protocal>https?):\\/\\/(?<account>[^@]+)?@?(?<domain>[^:]+):?(?<port>\\d+)?\\/?.*$' )
+    if ( matcher.matches() ) {
+        println "protocal: ${(matcher.group('protocal')).padRight(5)} " +
+                "| account: ${(matcher.group('account')).padRight(8)} " +
+                "| domain: ${(matcher.group ('domain')).padRight(15)} "  +
+                "| port: ${(matcher.group ('port')).padRight(4)} "
+    }
+}
+
+// -- result --
+// protocal: https | account: marslo   | domain: google.com      | port: 443
+// protocal: http  | account: userid   | domain: github.com      | port: 8080
+```
+
 ## repalce
 
 ### `reverse`
@@ -349,7 +414,7 @@ assert '++==@@-- | ==##--$$' == p.inject('') { injected, k, v ->
   assert '<WINDOWS>aaa</WINDOWS>' == Pattern.compile(label, Pattern.CASE_INSENSITIVE).matcher(html).replaceAll("WINDOWS");
   ```
 
-### [Apply proper uppercase and lowercase on a String](http://www.java2s.com/Code/Java/Regular-Expressions/ApplyproperuppercaseandlowercaseonaString.htm)
+### [apply proper uppercase and lowercase on a string](http://www.java2s.com/Code/Java/Regular-Expressions/ApplyproperuppercaseandlowercaseonaString.htm)
 
 ```groovy
 import java.util.regex.Matcher

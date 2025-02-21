@@ -106,3 +106,5 @@ highlight CursorColumn ctermfg=White ctermbg=gray cterm=bold guifg=white guibg=g
 ### vimrc examples
 
 - [reiter/.vim-files/vimrc](https://github.com/jreiter/.vim-files/blob/master/vimrc)
+- [lilydjwg/dotvim](https://github.com/lilydjwg/dotvim/blob/master/vimrc) |[依云 - lilydjwg](https://blog.lilydjwg.me/)
+- [Yggdroot/dotvim](https://github.com/Yggdroot/dotvim/blob/master/vimrc)

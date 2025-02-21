@@ -11,6 +11,7 @@
   - [vim-syntastic/syntastic](#vim-syntasticsyntastic)
   - [coc.nvim](#cocnvim)
     - [coc-snippets](#coc-snippets)
+    - [coc-word](#coc-word)
     - [extensions management](#extensions-management)
   - [nvim-treesitter/nvim-treesitter](#nvim-treesitternvim-treesitter)
   - [github/copilot.vim](#githubcopilotvim)
@@ -900,6 +901,23 @@ highlight! link snipLeadingSpaces snipComment
   [Info  - 04:39:06.009] Loading textmate snippets from filetypes: groovy
   ```
 
+### [coc-word](https://github.com/neoclide/coc-sources)
+
+> [!NOTE|label:references:]
+> - [#1183 - Enable or disable coc extensions per language](https://github.com/neoclide/coc.nvim/issues/1183)
+
+```vim
+" via command
+:CocInstall coc-word
+
+" or .vimrc
+let g:coc_global_extensions = [ 'coc-word' ]
+```
+
+```json
+"coc.source.word.filetypes": [ "text", "markdown" , "python" ],
+```
+
 ### extensions management
 
 > [!NOTE|label:references:]
@@ -917,6 +935,16 @@ highlight! link snipLeadingSpaces snipComment
   $ ls ~/.config/coc/extensions/node_modules
   coc-css     coc-emoji   coc-html-css-support  coc-java  coc-omni     coc-sh        coc-tag
   coc-docker  coc-groovy  coc-htmlhint          coc-json  coc-pyright  coc-snippets
+  ```
+
+- show stauts
+
+  > [!TIP|label:references:]
+  > - [`TabMessage`](../viml.md#tabmessage)
+
+  ```vim
+  :echo CocAction('extensionStats')
+  :TabMessage echo CocAction('extensionStats')
   ```
 
 - add/remove execute:
