@@ -24,6 +24,7 @@
     - [symbole](#symbole)
     - [others](#others)
   - [powerline fonts](#powerline-fonts)
+  - [google fonts](#google-fonts)
   - [tips](#tips)
     - [Mac Office Fonts](#mac-office-fonts)
 
@@ -640,6 +641,11 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 - [EnvyCodeR](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/EnvyCodeR)
 - [IBMPlexMono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/IBMPlexMono)
 - JetBrains [original](https://www.jetbrains.com/lp/mono/) | [JetBrains Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
+- [FantasqueSansM](https://github.com/belluzj/fantasque-sans) | [NF download](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FantasqueSansMono.zip)
+
+  [![FantasqueSansM](https://user-images.githubusercontent.com/5492542/55062310-a7ba9580-50b0-11e9-9f4a-5e09de32bdb8.png)](https://github.com/iamcco/coc-svg?tab=readme-ov-file)
+
+- [lekton](https://www.fontsquirrel.com/fonts/lekton) | [download NF](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Lekton.zip)
 
 ## powerline fonts
 
@@ -751,6 +757,12 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
            https://github.com/benbusby/anomaly-mono/raw/master/AnomalyMono-Powerline.otf &&
       fc-cache -f -v
     ```
+
+## google fonts
+
+> [!NOTE|label:references:]
+> - [google/fonts](https://github.com/google/fonts)
+> - [fonts.google.com](https://fonts.google.com/)
 
 ## tips
 
