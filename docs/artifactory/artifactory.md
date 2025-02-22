@@ -8,6 +8,8 @@
 - [configuration](#configuration)
   - [allow partial folder in particular repo](#allow-partial-folder-in-particular-repo)
   - [access token](#access-token)
+- [setup repository](#setup-repository)
+  - [debian/ubuntu](#debianubuntu)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -135,3 +137,10 @@ $ sudo keytool -importcert \
 - from version 7.21.1, this can be specified by setting the `token.max-expiry` parameter in the `$JFROG_HOME/artifactory/var/etc/artifactory/access.config.yml` file ( prior to version 7.21.1, the parameter to set was `artifactory.access.token.non.admin.max.expires.in` ).
 - if the `token.max-expiry` is equal to 0 (which is the default), there is no limitation to the token expiry. However, if the maximum expiry is greater than 0, the user cannot create a non-expirable token.
 - the `token.max-expiry` parameter must be set to a value higher than the `token.default-expiry` parameter value.
+
+## setup repository
+
+### debian/ubuntu
+
+> [!NOTE|label:references:]
+> - [Setting_up_Debian_repositories_with_JFrog_Artifactory.md](https://gist.github.com/kumlali/930fe7ef60af0a491d0671756e53d9c3)

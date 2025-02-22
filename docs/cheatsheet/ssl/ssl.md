@@ -49,6 +49,7 @@
 >   - [openssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#openssl)
 >   - [cfssl](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#cfssl)
 > - [* 手动生成证书](https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/certificates/)
+> - [如何简单快速地申请ssl证书](https://jqtmviyu.github.io/post/applying_for_an_ssl_certificate/)
 
 {% hint style='tip' %}
 > reference:

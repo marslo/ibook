@@ -32,7 +32,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-> [!TIP]
+> [!TIP|label:references:]
+> - format:
+>   - `ttf`: `TrueType Font`
+>   - `otf`: `OpenType Font`
+>   - `woff`: `Web Open Font Format`
 > - [* 142 Programming Fonts](https://www.programmingfonts.org/)
 > - [* arrowtype/recursive](https://github.com/arrowtype/recursive)
 > - [* ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
@@ -50,6 +54,9 @@
 > - [ArrowType](https://www.arrowtype.com/)
 > - [oldschool font list](https://int10h.org/oldschool-pc-fonts/fontlist/)
 > - [subframe7536/maple-font](https://github.com/subframe7536/Maple-font)
+> - [字体查看器](https://tophix.com/zh-cn/font-tools/font-viewer)
+> - [LUC DEVROYE](https://luc.devroye.org/italy-index.html)
+> - [* Iosevka Customizer](https://typeof.net/Iosevka/customizer) | [be5invis/Iosevka](https://github.com/be5invis/Iosevka)
 
 # font patcher
 
@@ -317,6 +324,16 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 > - [找字体](https://zfont.cn/cn/font_286.html)
 > - [自改免费开源字体一览](https://lxgw.github.io/2021/01/15/Lxgw-Opensource-Chinese-Fonts/) | [开源字体一览(图文版)](https://github.com/lxgw/lxgw/blob/main/fonts.md)
 > - [npm - chinese-fonts](https://www.npmjs.com/search?q=keywords:chinese-fonts)
+> - [字库星球](https://www.mfonts.cn/)
+
+| TYPE        | VALUE                                                                                           | COMMENTS |
+|-------------|-------------------------------------------------------------------------------------------------|----------|
+| style       | `Gothic`, `UI`, `Mono`, `Term`, `Fixed`                                                         |          |
+| Serif       | `slab serif`, `old style`, `transitional serif`                                                 | 字体衬线 |
+| orthography | `CL` - Classic<br> `SC` - Simplified Chinese<br> `TC` - TW<br> `HC` - Hong Kong<br> `J` - Japan | 汉字字形 |
+| weight      | `Light`, `Regular`, `Medium`, `Bold`, `Black`                                                   | 字体粗细 |
+| suffix      | `ttf` - TrueType Font<br> `otf` - OpenType Font<br> `woff` - Web Open Font Format               | 后缀     |
+
 
 ### fonts
 
@@ -331,6 +348,11 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 > - [抖音美好体](https://ziyouziti.com/index-ziti-xiazai-id-451.html) | [quark](https://pan.quark.cn/s/5f2b4e9d6da9)
 > - [小赖字体](https://github.com/lxgw/kose-font)
 > - [悠哉字体](https://github.com/lxgw/yozai-font)
+> - [优设鲨鱼菲特健康体](https://www.uisdc.com/uisdc-sharkfit-font) | [download - `sxir`](https://pan.baidu.com/s/112BWtQDAhsDGUrf25xXjgA)
+> - [更纱黑体](https://github.com/be5invis/Sarasa-Gothic) | [更纱黑体 NF](https://github.com/laishulu/Sarasa-Term-SC-Nerd) | [vscode等宽字体选择:更纱黑体](https://jqtmviyu.github.io/post/vscode-mono-font/)
+>
+>   [![sarasa gothic](https://picx.zhimg.com/v2-a1f928e4f2b741e8e01137a8b523c731_r.jpg)](https://zhuanlan.zhihu.com/p/627059922)
+>   [![serasa font naming conversion](https://pic2.zhimg.com/v2-e16dd72c6434730d5f250d6692e7dc0b_r.jpg)](https://zhuanlan.zhihu.com/p/627059922)
 
 ## highly recommended
 
@@ -678,7 +700,7 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 
   [![FantasqueSansM](https://user-images.githubusercontent.com/5492542/55062310-a7ba9580-50b0-11e9-9f4a-5e09de32bdb8.png)](https://github.com/iamcco/coc-svg?tab=readme-ov-file)
 
-- [lekton](https://www.fontsquirrel.com/fonts/lekton) | [download NF](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Lekton.zip)
+- [lekton](https://www.fontsquirrel.com/fonts/lekton) | [download NF](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Lekton.zip) | [Lekton info](https://online-fonts.com/fonts/lekton)
 
 ## powerline fonts
 
