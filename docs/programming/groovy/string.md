@@ -301,7 +301,7 @@ println matcher[0].withIndex().collect { "${it.last()} -- ${it.first()}" }.join(
     if ( matcher.matches() ) {
         println "protocal: ${(matcher.group('protocal')).padRight(5)} " +
                 "| account: ${(matcher.group('account')).padRight(8)} " +
-                "| domain: ${(matcher.group ('domain')).padRight(15)} "  +
+                "| domain: ${(matcher.group ('domain')).padRight(15)} " +
                 "| port: ${(matcher.group ('port')).padRight(4)} "
     }
 }

@@ -33,8 +33,8 @@ life is hard, make it easier
 
 ## windows
 
-<!--sec data-title="build vim/gvim from source code" data-id="section0" data-show=true ces-->
 ### build vim/gvim from source code
+<!--sec data-title="build vim/gvim from source code" data-id="section0" data-show=true ces-->
 - [Compile vim/gvim by source code](https://github.com/marslo/myvim#compile-vimgvim-by-source-code)
   - [Precondiction](https://github.com/marslo/myvim#1-prepare-environment)
   - [Compile and Install](https://github.com/marslo/myvim#2-compile-and-install)
@@ -42,9 +42,8 @@ life is hard, make it easier
   - [Q&A](https://github.com/marslo/myvim#4-qa)
 <!--endsec-->
 
-
-<!--sec data-title="colorful windows command line" data-id="section1" data-show=true data-collapse=true ces-->
 ### colorful windows command line
+<!--sec data-title="colorful windows command line" data-id="section1" data-show=true data-collapse=true ces-->
 - [Colorful Prompt](https://github.com/marslo/myColorfulWinCommandLine#colorful_commandline_windows)
   - [Needed Tools and files](https://github.com/marslo/myColorfulWinCommandLine#needed-tools-and-files)
   - [Steps](https://github.com/marslo/myColorfulWinCommandLine#steps)
@@ -52,7 +51,6 @@ life is hard, make it easier
   - [Specified Cursor Size](https://github.com/marslo/myColorfulWinCommandLine#specified-the-cursor-size)
   - [Set aliases in cmd](https://github.com/marslo/myColorfulWinCommandLine#set-aliases-in-command-linedefault-command-line)
 <!--endsec-->
-
 
 <!---
 vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent

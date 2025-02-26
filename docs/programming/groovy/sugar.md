@@ -20,6 +20,7 @@
   - [break from loop](#break-from-loop)
   - [run groovy from docker](#run-groovy-from-docker)
 - [method and class](#method-and-class)
+  - [get jar file location for a class](#get-jar-file-location-for-a-class)
   - [dynamic method names](#dynamic-method-names)
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
@@ -672,6 +673,14 @@ $ docker run \
 >   - [Positional parameters](http://groovy-lang.org/objectorientation.html#_positional_parameters)
 >   - [Named parameters](http://groovy-lang.org/objectorientation.html#_named_parameters)
 > - [Varargs](http://groovy-lang.org/objectorientation.html#_varargs)
+
+### get jar file location for a class
+```groovy
+println hudson.model.Result.class.protectionDomain.codeSource.location
+
+// -- result --
+// file:/Users/marslo/.groovy/lib/jenkins-core-2.497.jar
+```
 
 ### [dynamic method names](https://docs.groovy-lang.org/latest/html/documentation/#_dynamic_method_names)
 

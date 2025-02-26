@@ -33,6 +33,7 @@
 >   - [tpope/dotfiles/.tmux.conf](https://github.com/tpope/dotfiles/blob/master/.tmux.conf)
 >   - [ThePrimeagen/.dotfiles/.tmux.conf](https://github.com/ThePrimeagen/.dotfiles/blob/master/tmux/.tmux.conf)
 >   - [Michał Mieszczak/.dotfiles/.tmux.conf](https://gitlab.com/LongerHV/.dotfiles/-/blob/master/.tmux.conf?ref_type=heads)
+>   - [gpakosz/.tmux - oh my tmux](https://github.com/gpakosz/.tmux)
 
 ```bash
 $ tmux show -g | grep -v --color=never '^#' | grep -v --color=never '^$'

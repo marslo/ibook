@@ -679,8 +679,8 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 
 > [!NOTE|label:references:]
 > - [Linux / UNIX Crontab File Location](https://www.cyberciti.biz/faq/where-is-the-crontab-file/)
-> - [* cron.help](https://cron.help/)
->   - [Cron Examples](https://crontab.guru/examples.html)
+> - [* cron.help](https://cron.help/) | [* cron analysis](https://crontab.guru/)
+>   - [cron examples](https://crontab.guru/examples.html)
 > - [Cron Jobs: The Complete Guide for 2023](https://cronitor.io/guides/cron-jobs?utm_source=crontabguru&utm_campaign=cron_reference)
 
 - format
