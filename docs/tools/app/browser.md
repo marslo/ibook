@@ -3,6 +3,7 @@
 
 - [firefox](#firefox)
   - [restart firefox](#restart-firefox)
+  - [to show injected web content](#to-show-injected-web-content)
   - [cleanup firefox databbase](#cleanup-firefox-databbase)
   - [customized firefox style](#customized-firefox-style)
 - [chrome](#chrome)
@@ -30,6 +31,16 @@
 ```
 about:restartrequired
 ```
+
+### to show injected web content
+
+> [!NOTE|label:references:]
+> - [website will not allow firefox to display the page if another site has embedded it](https://support.mozilla.org/en-US/kb/xframe-neterror-page?as=u&utm_source=inproduct)
+
+- go to `about:config`
+- search for `security.csp.enable`, and set it to `false`
+
+  ![firefox disable security.csp.enable](../../screenshot/tools/firefox-security-csp-disable.png)
 
 ### [cleanup firefox databbase](https://www.commandlinefu.com/commands/view/3147/cleanup-firefoxs-database.)
 ```bash
