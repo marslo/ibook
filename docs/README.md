@@ -34,6 +34,7 @@ life is hard, make it easier
 ## windows
 
 ### build vim/gvim from source code
+
 <!--sec data-title="build vim/gvim from source code" data-id="section0" data-show=true ces-->
 - [Compile vim/gvim by source code](https://github.com/marslo/myvim#compile-vimgvim-by-source-code)
   - [Precondiction](https://github.com/marslo/myvim#1-prepare-environment)
@@ -43,6 +44,7 @@ life is hard, make it easier
 <!--endsec-->
 
 ### colorful windows command line
+
 <!--sec data-title="colorful windows command line" data-id="section1" data-show=true data-collapse=true ces-->
 - [Colorful Prompt](https://github.com/marslo/myColorfulWinCommandLine#colorful_commandline_windows)
   - [Needed Tools and files](https://github.com/marslo/myColorfulWinCommandLine#needed-tools-and-files)

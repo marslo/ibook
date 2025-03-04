@@ -1915,6 +1915,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     >   $ cargo --version
     >   cargo 1.74.1 (ecb9851af 2023-10-18)
     >   ```
+    >
     > - [generate auto-completion](https://github.com/sharkdp/fd/blob/master/Makefile)
     >
     > |    SHELL   | COMMAND                           |

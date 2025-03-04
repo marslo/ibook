@@ -7,6 +7,9 @@
 - [word](#word)
   - [logs](#logs)
   - [disable animations](#disable-animations)
+- [powerpoint](#powerpoint)
+  - [create and add new template](#create-and-add-new-template)
+  - [import new template](#import-new-template)
 - [excel](#excel)
   - [shortcuts](#shortcuts)
 
@@ -107,6 +110,22 @@ Windows Registry Editor Version 5.00
 [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\Graphics]
 "DisableAnimations"=dword:00000001
 ```
+
+## powerpoint
+
+> [!TIP|label:references]
+> - template location in mac (Version 16.94 (25020927)): `"$HOME/Library/Group Containers/UBF8T346G9.Office/User Content.localized/Templates.localized"`
+
+### create and add new template
+
+- open pptx file with `PowerPoint`
+- `File` -> `Save As` -> `PowerPoint Template (*.potx)`
+- restart the *PowerPoint*
+
+### import new template
+
+- copy the template file ( `.potx` ) to `"$HOME/Library/Group Containers/UBF8T346G9.Office/User Content.localized/Templates.localized"`
+- open *PowerPoint* -> `File` -> `New from Template` -> `Personal` -> choose the template
 
 ## excel
 ### shortcuts
