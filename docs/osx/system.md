@@ -391,11 +391,15 @@ Hardware:
 ### hardware
 - cpu manufacture
   ```bash
+  # intel cpu
   $ sysctl -n machdep.cpu.brand_string
   Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
-  ```
-  or
-  ```bash
+
+  # apple silicon
+  $ sysctl -n machdep.cpu.brand_string
+  Apple M3 Pro
+
+  # or
   $ sysctl machdep.cpu
   machdep.cpu.max_basic: 22
   machdep.cpu.max_ext: 2147483656
@@ -403,6 +407,13 @@ Hardware:
   machdep.cpu.brand_string: Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
   machdep.cpu.family: 6
   ...
+  # ------
+  $ sysctl machdep.cpu
+  machdep.cpu.cores_per_package: 12
+  machdep.cpu.core_count: 12
+  machdep.cpu.logical_per_package: 12
+  machdep.cpu.thread_count: 12
+  machdep.cpu.brand_string: Apple M3 Pro
   ```
 
 ### memory
@@ -411,6 +422,11 @@ $ system_profiler SPHardwareDataType | grep  "Memory:\|Cores:\|Processors:"
       Number of Processors: 1
       Total Number of Cores: 6
       Memory: 16 GB
+
+# M3
+$ system_profiler SPHardwareDataType | grep  "Memory:\|Cores:\|Processors:"
+      Total Number of Cores: 12 (6 performance and 6 efficiency)
+      Memory: 36 GB
 ```
 
 - or
@@ -451,6 +467,14 @@ Memory:
           Manufacturer: Micron
           Part Number: **********-*****
           Serial Number:
+
+# -- M3 --
+$ system_profiler SPMemoryDataType
+Memory:
+
+      Memory: 36 GB
+      Type: LPDDR5
+      Manufacturer: Micron
 ```
 
 ### [swap usage](https://apple.stackexchange.com/a/110459/254265)
@@ -461,8 +485,12 @@ vm.swapusage: total = 1024.00M  used = 34.00M  free = 990.00M  (encrypted)
 
 ### [show kernel version](https://apple.stackexchange.com/a/368722/254265)
 ```bash
+# -- i7 --
 $ sysctl kern.version
 kern.version: Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64
+# -- M3 --
+$ sysctl kern.version
+kern.version: Darwin Kernel Version 23.6.0: Thu Dec 19 20:47:53 PST 2024; root:xnu-10063.141.1.703.2~1/RELEASE_ARM64_T6030
 
 $ sysctl kern.ostype
 kern.ostype: Darwin
@@ -473,15 +501,24 @@ kern.osrelease: 20.1.0
 $ sysctl kern.osrevision
 kern.osrevision: 199506
 ```
+
 - or
   ```bash
   $ uname -a
   Darwin iMarslo 20.1.0 Darwin Kernel Version 20.1.0: Sat Oct 31 00:07:11 PDT 2020; root:xnu-7195.50.7~2/RELEASE_X86_64 x86_64 i386 MacBookPro15,1 Darwin
+
+  # -- kern.version --
+  $ uname -v
+  Darwin Kernel Version 23.6.0: Thu Dec 19 20:47:53 PST 2024; root:xnu-10063.141.1.703.2~1/RELEASE_ARM64_T6030
+
+  # -- kern.ostype --
+  $ uname -s
+  Darwin
   ```
 
 ### show resolution
 ```bash
-$ system_profiler SPDisplaysDataType | awk '/Resolution:/ {print $2"x"$4" "}'
+$ system_profiler SPDisplaysDataType | awk '/Resolution:/ {print $2"x"$4}'
 3456x2234
 ```
 
