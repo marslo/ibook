@@ -36,6 +36,7 @@
 - [`fzy`](#fzy)
 - [`bat`](#bat)
   - [usage](#usage-2)
+  - [tips](#tips-1)
   - [config](#config-1)
   - [theme](#theme-1)
 - [`tldr`](#tldr)
@@ -2298,6 +2299,26 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     done
     command bat "${args[@]}"
   }
+  ```
+
+## tips
+
+- manpages themes
+  ```bash
+  $ bat --list-themes |
+    fzf --preview="man git-checkout | sed -r 's/\x1B\[(([0-9]+)(;[0-9]+)*)?[mGKHfJ]//g' | bat --theme={} --color=always --plain --language=help" \
+        --height 100% \
+        --preview-window=up,85%,nofollow \
+        --preview-label-pos='bottom'
+  ```
+
+- script themes
+  ```bash
+  $ bat --list-themes |
+    fzf --preview="bat --theme={} --color=always /path/to/script" \
+        --height 100% \
+        --preview-window=up,85%,nofollow \
+        --preview-label-pos='bottom'
   ```
 
 ## config

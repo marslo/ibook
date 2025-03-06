@@ -11,7 +11,7 @@
     - [tail -f file with timestamp](#tail--f-file-with-timestamp)
   - [reverse words](#reverse-words)
   - [align](#align)
-    - [add header](#add-header)
+    - [merge every 2 lines](#merge-every-2-lines)
     - [right/left alignment](#rightleft-alignment)
     - [alignment with fixed column](#alignment-with-fixed-column)
     - [append space](#append-space)
@@ -331,7 +331,14 @@ $ echo -e '5 5 0 0 622 20\n6 3 2 0 439 8\n5 2 3 0 450 12' |
 > [!NOTE]
 > - [format the shell script output as a table](https://unix.stackexchange.com/a/568130/29178)
 
-### add header
+### merge every 2 lines
+
+```bash
+$ echo {a..f} | fmt -1 | awk '{ x=$0; getline; print x " : " $0; }'
+a : b
+c : d
+e : f
+```
 
 > [!NOTE|label:references:]
 > - [bash: how to add header to its corresponding lines](https://stackoverflow.com/a/46703062/2940319)
