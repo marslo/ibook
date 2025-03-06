@@ -315,6 +315,30 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 
 # fonts
 
+> [!TIP|label:references:]
+> - [Proportional vs. Monospaced Numbers: When to use which one in order to avoid “Wiggling Labels”](https://azi.medium.com/proportional-vs-monospaced-numbers-when-to-use-which-one-in-order-to-avoid-wiggling-labels-e31b1c83e4d0)
+> - [Type Classifications](https://www.myfonts.com/pages/fontscom-learning-fontology-level-1-type-anatomy-type-classifications)
+
+| TYPE        | VALUE                                                                                           | COMMENTS |
+|-------------|-------------------------------------------------------------------------------------------------|----------|
+| style       | `Gothic`<br>`UI`<br>`Mono`<br>`Term`<br>`Fixed`                                                 |          |
+| serif       | `slab serif`<br>`old style`<br>`transitional serif`                                             | 字体衬线 |
+| orthography | `CL` - Classic<br> `SC` - Simplified Chinese<br> `TC` - TW<br> `HC` - Hong Kong<br> `J` - Japan | 汉字字形 |
+| weight      | `Light`<br>`Regular`<br>`Medium`<br>`Bold`<br>`Black`                                           | 字体粗细 |
+| suffix      | `ttf` - TrueType Font<br> `otf` - OpenType Font<br> `woff` - Web Open Font Format               | 后缀     |
+
+- slab serif vs sans serif
+
+  [![slab serif](https://lg-assets.myfonts.com/fdc/images/d206b67118e23ef5/slab.jpg)](https://www.myfonts.com/pages/fontscom-learning-fontology-level-1-type-anatomy-type-classifications)
+
+  [![sans-serif](https://lg-assets.myfonts.com/fdc/images/79c7188496fdf6d5/grotesque.jpg)](https://www.myfonts.com/pages/fontscom-learning-fontology-level-1-type-anatomy-type-classifications)
+
+- proportional vs monospaced
+
+  [![proportional](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*Dj_3ASLj0ES7Krp6cXNbZg.png)](https://azi.medium.com/proportional-vs-monospaced-numbers-when-to-use-which-one-in-order-to-avoid-wiggling-labels-e31b1c83e4d0)
+
+  [![monospaced](https://miro.medium.com/v2/resize:fit:1100/format:webp/1*56zqTNr8nC-XIWFtVCeCxQ.png)](https://azi.medium.com/proportional-vs-monospaced-numbers-when-to-use-which-one-in-order-to-avoid-wiggling-labels-e31b1c83e4d0)
+
 ## cn
 
 > [!TIP|label:references:]
@@ -325,14 +349,6 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 > - [自改免费开源字体一览](https://lxgw.github.io/2021/01/15/Lxgw-Opensource-Chinese-Fonts/) | [开源字体一览(图文版)](https://github.com/lxgw/lxgw/blob/main/fonts.md)
 > - [npm - chinese-fonts](https://www.npmjs.com/search?q=keywords:chinese-fonts)
 > - [字库星球](https://www.mfonts.cn/)
-
-| TYPE        | VALUE                                                                                           | COMMENTS |
-|-------------|-------------------------------------------------------------------------------------------------|----------|
-| style       | `Gothic`, `UI`, `Mono`, `Term`, `Fixed`                                                         |          |
-| Serif       | `slab serif`, `old style`, `transitional serif`                                                 | 字体衬线 |
-| orthography | `CL` - Classic<br> `SC` - Simplified Chinese<br> `TC` - TW<br> `HC` - Hong Kong<br> `J` - Japan | 汉字字形 |
-| weight      | `Light`, `Regular`, `Medium`, `Bold`, `Black`                                                   | 字体粗细 |
-| suffix      | `ttf` - TrueType Font<br> `otf` - OpenType Font<br> `woff` - Web Open Font Format               | 后缀     |
 
 
 ### fonts
