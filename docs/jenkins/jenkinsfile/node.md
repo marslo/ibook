@@ -15,6 +15,8 @@
 > - [Kubernetes plugin](https://www.jenkins.io/doc/pipeline/steps/kubernetes/)
 > - [kubernetes sample code](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes)
 >   - [pipeline](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes/pipeline)
+>   - [samples](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/main/resources/org/csanchez/jenkins/plugins/kubernetes/pipeline/samples)
+>     - [windows.groovy](https://github.com/jenkinsci/kubernetes-plugin/blob/master/src/main/resources/org/csanchez/jenkins/plugins/kubernetes/pipeline/samples/windows.groovy)
 >   - [casc](https://github.com/jenkinsci/kubernetes-plugin/tree/master/src/test/resources/org/csanchez/jenkins/plugins/kubernetes/casc)
 
 ## yaml
@@ -181,11 +183,15 @@ podTemplate(cloud: 'DevOps Kubernetes') {
 }
 ```
 - windows (kubernetes)
+
+  > [!TIP|label:windows pod:]
+  > - [windows.groovy](https://github.com/jenkinsci/kubernetes-plugin/blob/master/src/main/resources/org/csanchez/jenkins/plugins/kubernetes/pipeline/samples/windows.groovy)
+
   ```groovy
-  /*
+  /**
    * Runs a build on a Windows pod.
    * Tested in EKS: https://docs.aws.amazon.com/eks/latest/userguide/windows-support.html
-   */
+  **/
   podTemplate(yaml: '''
   apiVersion: v1
   kind: Pod
@@ -231,44 +237,44 @@ podTemplate(cloud: 'DevOps Kubernetes') {
       node(POD_LABEL) {
           // or, for example: git 'https://github.com/jglick/simple-maven-project-with-tests'
           writeFile file: 'pom.xml', text: '''
-  <project xmlns="http://maven.apache.org/POM/4.0.0">
-      <modelVersion>4.0.0</modelVersion>
-      <groupId>sample</groupId>
-      <artifactId>sample</artifactId>
-      <version>1.0-SNAPSHOT</version>
-      <build>
-          <plugins>
-              <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-surefire-plugin</artifactId>
-                  <version>2.18.1</version>
-              </plugin>
-          </plugins>
-      </build>
-      <dependencies>
-          <dependency>
-              <groupId>junit</groupId>
-              <artifactId>junit</artifactId>
-              <version>4.12</version>
-              <scope>test</scope>
-          </dependency>
-      </dependencies>
-      <properties>
-          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-          <maven.compiler.source>1.8</maven.compiler.source>
-          <maven.compiler.target>1.8</maven.compiler.target>
-      </properties>
-  </project>
-          '''
+            <project xmlns="http://maven.apache.org/POM/4.0.0">
+                <modelVersion>4.0.0</modelVersion>
+                <groupId>sample</groupId>
+                <artifactId>sample</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>2.18.1</version>
+                        </plugin>
+                    </plugins>
+                </build>
+                <dependencies>
+                    <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>4.12</version>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
+                <properties>
+                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                    <maven.compiler.source>1.8</maven.compiler.source>
+                    <maven.compiler.target>1.8</maven.compiler.target>
+                </properties>
+            </project>
+          '''.stripIndent()
           writeFile file: 'src/test/java/sample/SomeTest.java', text: '''
-  package sample;
-  public class SomeTest {
-      @org.junit.Test
-      public void checks() {}
-  }
-          '''
+            package sample;
+            public class SomeTest {
+                @org.junit.Test
+                public void checks() {}
+            }
+          '''.stripIndent()
           container('maven') {
-              sh 'mvn -B -ntp -Dmaven.test.failure.ignore verify'
+            sh 'mvn -B -ntp -Dmaven.test.failure.ignore verify'
           }
           junit '**/target/surefire-reports/TEST-*.xml'
           archiveArtifacts '**/target/*.jar'
@@ -306,6 +312,7 @@ podTemplate(cloud: 'DevOps Kubernetes', containers: [
 > - [Changing container memory and cpu limits](https://docs.cloudbees.com/docs/cloudbees-ci-kb/latest/cloudbees-ci-on-modern-cloud-platforms/changing-conatiner-memory-and-cpu-limits)
 > - [zh jenkins-kubernetes-plugin](https://github.com/jenkinsci/kubernetes-plugin/blob/db0e6b143898d11ca5ac10a2606f508a73311530/README_zh.md)
 > - [Kubernetes plugin](https://www.jenkins.io/doc/pipeline/steps/kubernetes/#kubernetes-plugin)
+> - [Container hangs in podTemplate in jenkinsfile](https://community.jenkins.io/t/container-hangs-in-podtemplate-in-jenkinsfile/334)
 > - TIPS
 >   - the `jnlp` container template will be enabled by default, however it contains only `requests`:
 >     ```yaml
@@ -423,6 +430,45 @@ podTemplate( cloud: 'DevOps Kubernetes',
                  resourceLimitCpu: '512m',
                  resourceRequestMemory: '512Mi',
                  resourceLimitMemory: '1024Mi'
+               )
+             ]
+) {
+    node(POD_LABEL) {
+      stage('maven') {
+        container('maven') {
+          sh """ which -a mvn """
+        }
+      }
+      stage('golang') {
+        container('golang') {
+          sh """ which -a go """
+        }
+      }
+    }
+}
+```
+
+```groovy
+podTemplate( cloud: 'DevOps Kubernetes',
+             namespace: 'devops',
+             nodeSelector: 'devops.domain/loc=dc5',
+             containers: [
+              containerTemplate(
+                 name: 'jnlp',
+                 image: 'artifactory.domain.com/docker/devops/jnlp:4.1.0-py310-jammy',
+                 args: '${computer.jnlpmac} ${computer.name}'
+               ),
+               containerTemplate(
+                 name: 'maven',
+                 image: 'artifactory.domain.com/dockerub-remote/maven:3.8.4-openjdk-17-slim',
+                 ttyEnabled: true,
+                 command: 'cat'
+               ),
+               containerTemplate(
+                 name: 'golang',
+                 image: 'artifactory.domain.com/dockerub-remote/golang:latest',
+                 ttyEnabled: true,
+                 command: 'cat'
                )
              ]
 ) {

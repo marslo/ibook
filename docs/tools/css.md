@@ -922,7 +922,7 @@ padding: 1px 2px 3px 4px;
 ```
 
 ### border-style
-```bash
+```css
 /*            + top, right, bottom, left */
 border-style: dotted;
 
@@ -1050,18 +1050,15 @@ border-style: dotted dashed solid groove;
     .dh-tl-br {}
     .dh-tl-bl {}
     .dh-tr-tl {}
-    ...
     .dh-br-tl {}
-    ...
     .dh-bl-tl {}
-    ...
     ```
   - elegant way
     ```css
     [class^="dh-"][class$="-tl"] { color: red;    }
-    [class^="dh"][class$="-tr"]  { color: orange; }
-    [class^="dh"][class$="-bl"]  { color: green;  }
-    [class^="dh"][class$="-br"]  { color: blue;   }
+    [class^="dh-"][class$="-tr"] { color: orange; }
+    [class^="dh-"][class$="-bl"] { color: green;  }
+    [class^="dh-"][class$="-br"] { color: blue;   }
     ```
 
 
@@ -1076,7 +1073,6 @@ border-style: dotted dashed solid groove;
 4. re-hover the element in web page
 
 ![debug tooltips](../screenshot/tools/styles/html-inspect-tooltips.gif)
-
 
 ### references
 
