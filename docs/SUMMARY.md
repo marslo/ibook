@@ -168,6 +168,7 @@
   * [podman](virtualization/podman/podman.md)
 * [osx](osx/osx.md)
   * [apps](osx/apps/apps.md)
+    * [init](osx/init.md)
     * [brew](osx/apps/brew.md)
   * [defaults](osx/defaults.md)
   * [system](osx/system.md)
