@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+
+Pandoc转PDF</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <link rel="shortcut icon" href="https://chatboxai.app/icon.png">
+</head>
+<body class='bg-slate-100'>
+    <div class='mx-auto max-w-5xl shadow-md prose bg-white px-2 py-4'>
+        <h1 class='flex flex-row justify-between items-center my-4 h-8'>
+            <span>
+
+Pandoc转PDF</span>
+            <a href="https://chatboxai.app" target="_blank" >
+                <img src='https://chatboxai.app/icon.png' class="w-12">
+            </a>
+        </h1>
+        <hr />
+        <div class="prose-sm">
+<h2>1. 
+
+Pandoc转PDF</h2>
+<div class="mb-4">
+<p class="text-green-500 text-lg"><b>SYSTEM: </b></p>
+<div class="break-words "><p>You are a helpful assistant.</p></div></div>
+<div class="mb-4">
+<p class="text-green-500 text-lg"><b>USER: </b></p>
+<div class="break-words "><p>我使用如下命令将 markdown 转换为 pdf:</p>
+<pre><div><div class="py-0.5 px-1" style="display:flex;justify-content:space-between;width:100%;background-color:rgb(50, 50, 50);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;border-top-left-radius:0.3rem;border-top-right-radius:0.3rem;border-bottom-left-radius:0;border-bottom-right-radius:0"><div class="flex items-center"><span class="text-gray-400/30 mx-1" style="font-size:1rem">TEXT</span></div><div class="flex items-center"></div></div><div style="position:relative" class="group"><div class=""><div style="color:#f8f8f2;background:#2b2b2b;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:0;overflow:auto;border-radius:0.3em;margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:0.3rem;border-bottom-right-radius:0.3rem;border:none"><code class="language-text" style="color:#f8f8f2;background:none;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span>$ pandoc -f gfm -t html5 --embed-resources --standalone  --metadata title=&quot;文档标题&quot;   --metadata author=&quot;作者名称&quot;   --metadata date=&quot;2025-03-13&quot;   --toc   --css github.css   input.md -o output.v3.pdf
+</span></code></div></div></div></div></pre>
+<p>其中的 github.css 是从 <a href="https://raw.githubusercontent.com/simov/markdown-viewer/master/themes/github.css" target="_blank" rel="noreferrer">https://raw.githubusercontent.com/simov/markdown-viewer/master/themes/github.css</a> 下载而来.</p>
+<p>我现在想添加页眉页尾, 要求是:</p>
+<ol>
+<li>保持代码高亮</li>
+<li>页眉: 居中, 显示内容从参数获取</li>
+<li>页尾: 向右看齐, 显示内容为: <code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">当前页码/总页码 . 作者名称</code>, 只有作者名称从参数中获取, 页码自动计算</li>
+<li>最好能使用默认的 pdf 引擎: <code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">weasyprint</code>, <code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">wkhtmltopdf</code> 也可以接受</li>
+<li>当前 md 文档大约有十几页, 考虑多页pdf 的问题</li>
+</ol>
+<p>请给出解决方案</p></div></div>
+<div class="mb-4">
+<p class="text-blue-500 text-lg"><b>ASSISTANT: </b></p>
+<div class="break-words "><p>为了实现带有自定义页眉页脚的Markdown转PDF，以下是分步解决方案：</p>
+<h3>步骤1：准备CSS文件</h3>
+<p>创建两个CSS文件（保留原有代码高亮样式并添加页眉页脚）：</p>
+<ol>
+<li><strong>github.css</strong>（保持原样，用于代码高亮）</li>
+<li><strong>custom.css</strong>（新增页面布局）：</li>
+</ol>
+<pre><div><div class="py-0.5 px-1" style="display:flex;justify-content:space-between;width:100%;background-color:rgb(50, 50, 50);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;border-top-left-radius:0.3rem;border-top-right-radius:0.3rem;border-bottom-left-radius:0;border-bottom-right-radius:0"><div class="flex items-center"><span class="text-gray-400/30 mx-1" style="font-size:1rem">CSS</span></div><div class="flex items-center"></div></div><div style="position:relative" class="group"><div class=""><div style="color:#f8f8f2;background:#2b2b2b;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:0;overflow:auto;border-radius:0.3em;margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:0.3rem;border-bottom-right-radius:0.3rem;border:none"><code class="language-css" style="color:#f8f8f2;background:none;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token" style="color:#d4d0ab">/* custom.css */</span><span>
+</span><span></span><span class="token rule" style="color:#ffd700">@page</span><span> </span><span class="token" style="color:#fefefe">{</span><span>
+</span><span>    </span><span class="token" style="color:#ffa07a">size</span><span class="token" style="color:#fefefe">:</span><span> A4</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>    </span><span class="token" style="color:#ffa07a">margin-top</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#00e0e0">3</span><span class="token unit">cm</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>    </span><span class="token" style="color:#ffa07a">margin-bottom</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#00e0e0">3</span><span class="token unit">cm</span><span class="token" style="color:#fefefe">;</span><span>
+</span>    
+<span>    </span><span class="token rule" style="color:#ffd700">@top-center</span><span> </span><span class="token" style="color:#fefefe">{</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">content</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#ffd700">var</span><span class="token" style="color:#fefefe">(</span><span class="token" style="color:#00e0e0">--title</span><span class="token" style="color:#fefefe">)</span><span class="token" style="color:#fefefe">;</span><span> </span><span class="token" style="color:#d4d0ab">/* 从元数据获取标题 */</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">font-family</span><span class="token" style="color:#fefefe">:</span><span> DejaVu Sans</span><span class="token" style="color:#fefefe">,</span><span> sans-serif</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">font-size</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#00e0e0">11</span><span class="token unit">pt</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>    </span><span class="token" style="color:#fefefe">}</span><span>
+</span>    
+<span>    </span><span class="token rule" style="color:#ffd700">@bottom-right</span><span> </span><span class="token" style="color:#fefefe">{</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">content</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#abe338">&quot;第&quot;</span><span> </span><span class="token" style="color:#ffd700">counter</span><span class="token" style="color:#fefefe">(</span><span>page</span><span class="token" style="color:#fefefe">)</span><span> </span><span class="token" style="color:#abe338">&quot;页/共&quot;</span><span> </span><span class="token" style="color:#ffd700">counter</span><span class="token" style="color:#fefefe">(</span><span>pages</span><span class="token" style="color:#fefefe">)</span><span> </span><span class="token" style="color:#abe338">&quot;页 · &quot;</span><span> </span><span class="token" style="color:#ffd700">var</span><span class="token" style="color:#fefefe">(</span><span class="token" style="color:#00e0e0">--author</span><span class="token" style="color:#fefefe">)</span><span class="token" style="color:#fefefe">;</span><span> </span><span class="token" style="color:#d4d0ab">/* 自动页码+作者 */</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">font-family</span><span class="token" style="color:#fefefe">:</span><span> DejaVu Sans</span><span class="token" style="color:#fefefe">,</span><span> sans-serif</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">font-size</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#00e0e0">9</span><span class="token unit">pt</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>        </span><span class="token" style="color:#ffa07a">color</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token hexcode color">#666</span><span class="token" style="color:#fefefe">;</span><span>
+</span><span>    </span><span class="token" style="color:#fefefe">}</span><span>
+</span><span></span><span class="token" style="color:#fefefe">}</span><span>
+</span>
+<span></span><span class="token" style="color:#abe338">body</span><span> </span><span class="token" style="color:#fefefe">{</span><span>
+</span><span>    </span><span class="token" style="color:#ffa07a">font-family</span><span class="token" style="color:#fefefe">:</span><span> DejaVu Sans</span><span class="token" style="color:#fefefe">,</span><span> sans-serif</span><span class="token" style="color:#fefefe">;</span><span> </span><span class="token" style="color:#d4d0ab">/* 确保中文字体 */</span><span>
+</span><span>    </span><span class="token" style="color:#ffa07a">padding</span><span class="token" style="color:#fefefe">:</span><span> </span><span class="token" style="color:#00e0e0">0</span><span> </span><span class="token" style="color:#00e0e0">1</span><span class="token unit">cm</span><span class="token" style="color:#fefefe">;</span><span> </span><span class="token" style="color:#d4d0ab">/* 正文左右留白 */</span><span>
+</span><span></span><span class="token" style="color:#fefefe">}</span><span>
+</span></code></div></div></div></div></pre>
+<h3>步骤2：生成动态Header</h3>
+<p>通过shell脚本动态注入CSS变量（兼容元数据参数）：</p>
+<pre><div><div class="py-0.5 px-1" style="display:flex;justify-content:space-between;width:100%;background-color:rgb(50, 50, 50);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;border-top-left-radius:0.3rem;border-top-right-radius:0.3rem;border-bottom-left-radius:0;border-bottom-right-radius:0"><div class="flex items-center"><span class="text-gray-400/30 mx-1" style="font-size:1rem">BASH</span></div><div class="flex items-center"></div></div><div style="position:relative" class="group"><div class=""><div style="color:#f8f8f2;background:#2b2b2b;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:0;overflow:auto;border-radius:0.3em;margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:0.3rem;border-bottom-right-radius:0.3rem;border:none"><code class="language-bash" style="color:#f8f8f2;background:none;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span class="token shebang" style="color:#ffd700;font-weight:bold">#!/bin/bash</span><span>
+</span>
+<span></span><span class="token" style="color:#d4d0ab"># 定义元数据</span><span>
+</span><span></span><span class="token assign-left" style="color:#00e0e0">TITLE</span><span class="token" style="color:#00e0e0">=</span><span class="token" style="color:#abe338">&quot;文档标题&quot;</span><span>
+</span><span></span><span class="token assign-left" style="color:#00e0e0">AUTHOR</span><span class="token" style="color:#00e0e0">=</span><span class="token" style="color:#abe338">&quot;作者名称&quot;</span><span>
+</span><span></span><span class="token assign-left" style="color:#00e0e0">DATE</span><span class="token" style="color:#00e0e0">=</span><span class="token" style="color:#abe338">&quot;2025-03-13&quot;</span><span>
+</span>
+<span></span><span class="token" style="color:#d4d0ab"># 生成动态CSS变量</span><span>
+</span><span></span><span class="token" style="color:#ffd700">cat</span><span> </span><span class="token" style="color:#00e0e0">&lt;&lt;</span><span> </span><span class="token" style="color:#abe338">EOF</span><span class="token bash" style="color:#fefefe"> </span><span class="token bash" style="color:#00e0e0">&gt;</span><span class="token bash" style="color:#fefefe"> header.html</span><span class="token" style="color:#abe338">
+</span><span class="token" style="color:#abe338">&lt;style&gt;
+</span><span class="token" style="color:#abe338">:root {
+</span><span class="token" style="color:#abe338">    --title: &quot;</span><span class="token" style="color:#00e0e0">$TITLE</span><span class="token" style="color:#abe338">&quot;;
+</span><span class="token" style="color:#abe338">    --author: &quot;</span><span class="token" style="color:#00e0e0">$AUTHOR</span><span class="token" style="color:#abe338">&quot;;
+</span><span class="token" style="color:#abe338">}
+</span><span class="token" style="color:#abe338">&lt;/style&gt;
+</span><span class="token" style="color:#abe338">EOF</span><span>
+</span></code></div></div></div></div></pre>
+<h3>步骤3：执行转换命令</h3>
+<p>使用WeasyPrint引擎的完整Pandoc命令：</p>
+<pre><div><div class="py-0.5 px-1" style="display:flex;justify-content:space-between;width:100%;background-color:rgb(50, 50, 50);font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace;border-top-left-radius:0.3rem;border-top-right-radius:0.3rem;border-bottom-left-radius:0;border-bottom-right-radius:0"><div class="flex items-center"><span class="text-gray-400/30 mx-1" style="font-size:1rem">BASH</span></div><div class="flex items-center"></div></div><div style="position:relative" class="group"><div class=""><div style="color:#f8f8f2;background:#2b2b2b;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;padding:1em;margin:0;overflow:auto;border-radius:0.3em;margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:0.3rem;border-bottom-right-radius:0.3rem;border:none"><code class="language-bash" style="color:#f8f8f2;background:none;font-family:Consolas, Monaco, &#x27;Andale Mono&#x27;, &#x27;Ubuntu Mono&#x27;, monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none"><span>pandoc -f gfm -t html5 </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--embed-resources --standalone </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--metadata </span><span class="token assign-left" style="color:#00e0e0">title</span><span class="token" style="color:#00e0e0">=</span><span class="token" style="color:#abe338">&quot;</span><span class="token" style="color:#00e0e0">$TITLE</span><span class="token" style="color:#abe338">&quot;</span><span> </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--metadata </span><span class="token assign-left" style="color:#00e0e0">author</span><span class="token" style="color:#00e0e0">=</span><span class="token" style="color:#abe338">&quot;</span><span class="token" style="color:#00e0e0">$AUTHOR</span><span class="token" style="color:#abe338">&quot;</span><span> </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--metadata </span><span class="token assign-left" style="color:#00e0e0">date</span><span class="token" style="color:#00e0e0">=</span><span class="token" style="color:#abe338">&quot;</span><span class="token" style="color:#00e0e0">$DATE</span><span class="token" style="color:#abe338">&quot;</span><span> </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--toc </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--css github.css </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--css custom.css </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>-H header.html </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>input.md -o output.pdf </span><span class="token" style="color:#fefefe">\</span><span>
+</span><span>--pdf-engine</span><span class="token" style="color:#00e0e0">=</span><span>weasyprint
+</span></code></div></div></div></div></pre>
+<h3>验证要点说明</h3>
+<ol>
+<li>
+<p><strong>字体兼容性</strong>：</p>
+<ul>
+<li>添加<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">DejaVu Sans</code>字体声明确保中文显示</li>
+<li>如需其他字体，需在系统安装对应字体文件</li>
+</ul>
+</li>
+<li>
+<p><strong>页码逻辑验证</strong>：</p>
+<ul>
+<li><code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">counter(page)</code>：当前页码</li>
+<li><code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">counter(pages)</code>：总页数</li>
+<li>WeasyPrint官方确认支持这两个计数器</li>
+</ul>
+</li>
+<li>
+<p><strong>布局安全区</strong>：</p>
+<ul>
+<li>通过<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">margin-top</code>/<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">margin-bottom</code>确保内容不重叠</li>
+<li>正文区添加<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">padding</code>作为二次保护</li>
+</ul>
+</li>
+<li>
+<p><strong>多CSS文件优先级</strong>：</p>
+<ul>
+<li>后引用的CSS（custom.css）会覆盖先引用的样式</li>
+<li>重要样式使用<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">!important</code>标签（如无需覆盖则免）</li>
+</ul>
+</li>
+</ol>
+<h3>常见问题排查</h3>
+<p>Q：页眉页脚不显示？<br/>
+A：检查顺序：</p>
+<ol>
+<li>确认<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">--css custom.css</code>参数存在</li>
+<li>查看生成HTML源码是否包含<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">:root</code>变量</li>
+<li>尝试在命令行添加<code style="background-color:#f1f1f1;padding:2px 4px;margin:0 4px;border-radius:4px;border:1px solid;border-color:#ddd">--verbose</code>查看编译日志</li>
+</ol>
+<p>Q：中文显示乱码？<br/>
+A：解决方案：</p>
+<ol>
+<li>在CSS中添加中文字体声明</li>
+<li>安装系统中文字体包</li>
+<li>或改用wkhtmltopdf引擎（需额外配置）</li>
+</ol>
+<p>最终效果：在保持代码高亮的前提下，实现居中标题页眉和包含动态页码的右对齐页脚。</p></div></div>
+<hr />
+</div>
+
+        <hr />
+        <a href="https://chatboxai.app" style="display: flex; align-items: center;" class="text-sky-500" target="_blank">
+            <img src='https://chatboxai.app/icon.png' class="w-12 pr-2">
+            <b style='font-size:30px'>Chatbox AI</b>
+        </a>
+        <p><a a href="https://chatboxai.app" target="_blank">https://chatboxai.app</a></p>
+    </div>
+</body>
+</html>
