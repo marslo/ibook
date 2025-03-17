@@ -39,9 +39,11 @@
   - [haskell](#haskell)
     - [haskell-platform](#haskell-platform)
     - [haskell-stack](#haskell-stack)
-  - [hadolint](#hadolint)
   - [docker](#docker)
   - [jfrog-cli](#jfrog-cli)
+  - [pandoc](#pandoc)
+    - [to pdf](#to-pdf)
+    - [to pdf with page header and footer](#to-pdf-with-page-header-and-footer)
   - [mysql](#mysql)
     - [built from source code](#built-from-source-code)
     - [install from apt repo](#install-from-apt-repo)
@@ -63,7 +65,10 @@
     - [vault CLI](#vault-cli)
     - [others](#others)
 - [lint](#lint)
-    - [npm-groovy-lint](#npm-groovy-lint)
+  - [hadolint](#hadolint)
+  - [npm-groovy-lint](#npm-groovy-lint)
+  - [commitlint](#commitlint)
+  - [Checkpatch](#checkpatch)
 - [troubleshooting](#troubleshooting-1)
   - [issues](#issues)
   - [cheatsheet](#cheatsheet)
@@ -948,14 +953,6 @@ $ sudo apt install -y haskell-stack
   $ sudo dnf install perl make automake gcc gmp-devel libffi zlib zlib-devel xz tar git gnupg
   ```
 
-## hadolint
-```bash
-# linux
-$ curl -o /usr/bin/hadolint \
-       -fsSL https://github.com/hadolint/hadolint/releases/download/v2.12.1-beta/hadolint-Linux-x86_64
-$ chmod +x /usr/bin/hadolint
-```
-
 ## docker
 
 > [!NOTE|label:references:]
@@ -977,6 +974,155 @@ $ sudo hdiutil detach /Volumes/Docker
   ```bash
   $ git clone https://github.com/jfrog/jfrog-cli.git
   $ go build -o=/opt/homebrew/Cellar/jfrog-cli/HEAD-ce298c1/bin/jf -ldflags=-s -w
+  ```
+
+## pandoc
+
+> [!NOTE|label:references:]
+> - extra themes
+>   - [sindresorhus/github-markdown-css](https://github.com/sindresorhus/github-markdown-css)
+>   - [simov/markdown-viewer - themes](https://github.com/simov/markdown-viewer/tree/master/themes)
+>   - [cab-1729/Pandoc-Themes](https://github.com/cab-1729/Pandoc-Themes)
+>   - [richleland/pygments-css](https://github.com/richleland/pygments-css)
+> - [pandoc](https://github.com/jgm/pandoc)/templates
+>   - [templates](https://github.com/jgm/pandoc/tree/master/data/templates)
+>   - [docx](https://github.com/jgm/pandoc/tree/master/data/docx)
+>   - [pptx](https://github.com/jgm/pandoc/tree/master/data/pptx)
+
+```bash
+$ brew install pandoc
+# or
+$ brew install pandoc --HEAD
+
+# -- optional --
+$ brew install librsvg python homebrew/cask/basictex
+```
+
+### to pdf
+
+> [!NOTE|label:references:]
+> - themes:
+>   - [simov/markdown-viewer - theme](https://github.com/simov/markdown-viewer/tree/master/themes)
+>   - [github.css](https://github.com/simov/markdown-viewer/blob/master/themes/github.css)
+>   - [github-dark.css](https://github.com/simov/markdown-viewer/blob/master/themes/github-dark.css)
+>   - [* iMarslo: github.css]
+> - [How to convert Markdown + CSS -> PDF?](https://stackoverflow.com/a/64257218/2940319)
+
+```bash
+# download github.css
+$ curl -fsSL -O https://raw.githubusercontent.com/simov/markdown-viewer/master/themes/github.css
+# or
+$ curl -fsSL -O https://github.com/simov/markdown-viewer/raw/master/themes/github.css
+
+# with default pdf engine - weasyprint
+$ python3 -m pip install weasyprint
+$ pandoc -f gfm -t html5 --metadata pagetitle="test.md" --css github.css input.md -o input.pdf
+
+# with wkhtmltopdf pdf engine
+$ brew install wkhtmltopdf
+$ pandoc -f gfm -t html5 --metadata pagetitle="test.md" --css github.css input.md -o input.pdf --pdf-engine=wkhtmltopdf
+
+# -- highly recommended --
+$ pandoc -f gfm -t html5 \
+         --embed-resources --standalone \
+         --metadata pagetitle="Title Here" \
+         --css github.inter.css \
+         input.md -o input-new.pdf
+
+# -- or --
+$ pandoc -f gfm -t html5 \
+         --embed-resources --standalone \
+         --metadata title="Title Here" \
+         --metadata date="2025-03-13" \
+         --toc --toc-depth=4 \
+         --css github.css \
+         --css custom.css \
+         -H header.html \
+         --pdf-engine=weasyprint \
+         input.md -o output.pdf             # or output.html, to generate the html format
+```
+
+### to pdf with page header and footer
+
+- css
+  ```bash
+  # download github.css
+  $ curl -fsSL -O https://raw.githubusercontent.com/simov/markdown-viewer/master/themes/github.css
+  # or
+  $ curl -fsSL -O https://github.com/simov/markdown-viewer/raw/master/themes/github.css
+
+  # custom.css
+  $ cat custom.css
+  /* custom.css */
+  @page {
+    size: A4;
+    margin-top: 3cm;
+    margin-bottom: 3cm;
+
+    @top-center {
+      content: var(--title);                                         /* 从元数据获取标题 */
+      font-family: DejaVu Sans, sans-serif;
+      font-size: 11pt;
+    }
+
+    @bottom-right {
+      content: counter(page) "/" counter(pages) " · " var(--author); /* 自动页码+作者 */
+      font-family: DejaVu Sans, sans-serif;
+      font-size: 9pt;
+      color: #666;
+    }
+  }
+
+  /* optional */
+  body {
+    font-family: DejaVu Sans, sans-serif;                            /* 确保中文字体 */
+    padding: 0 1cm;                                                  /* 正文左右留白 */
+  }
+  ```
+
+- header.html
+  ```bash
+  #!/bin/bash
+
+  TITLE="文档标题"
+  AUTHOR="作者名称"
+  DATE="2025-03-13"
+
+  cat << EOF > header.html
+  <style>
+  :root {
+    --title: "$TITLE";
+    --author: "$AUTHOR";
+  }
+  </style>
+  EOF
+  ```
+
+  ```html
+  <style>
+  :root {
+    --title: "interview questions";
+    --author: "marslo";
+  }
+  </style>
+  ```
+
+- convert to pdf with header and footer
+  ```bash
+  $ TITLE='TITLE HERE'
+  $ AUTHOR='marslo'
+  $ DATE='2025-03-13'
+  $ pandoc -f gfm -t html5 \
+    --embed-resources --standalone \
+    --metadata title="$TITLE" \
+    --metadata author="$AUTHOR" \
+    --metadata date="$DATE" \
+    --toc \
+    --css github.css \
+    --css custom.css \
+    -H header.html \
+    --pdf-engine=weasyprint
+    input.md -o output.pdf \
   ```
 
 ## mysql
@@ -1770,7 +1916,16 @@ test -f "${VBOX_COMPLETION}"        && source "${VBOX_COMPLETION}"
 | SPELL                | [vale](https://github.com/errata-ai/vale)                   |
 | SPELL                | [lychee](https://github.com/lycheeverse/lychee)             |
 
-### npm-groovy-lint
+
+## hadolint
+```bash
+# linux
+$ curl -o /usr/bin/hadolint \
+       -fsSL https://github.com/hadolint/hadolint/releases/download/v2.12.1-beta/hadolint-Linux-x86_64
+$ chmod +x /usr/bin/hadolint
+```
+
+## npm-groovy-lint
 
 > [!NOTE|label:rerefences]
 > - [Configuration in MegaLinter](https://megalinter.io/v8/descriptors/groovy_npm_groovy_lint/)
@@ -1792,6 +1947,35 @@ test -f "${VBOX_COMPLETION}"        && source "${VBOX_COMPLETION}"
 | `GROOVY_NPM_GROOVY_LINT_DISABLE_ERRORS_IF_LESS_THAN` | Maximum number of errors allowed                                                                                                                                                                                                                                | `0`                                             |
 | `GROOVY_NPM_GROOVY_LINT_CLI_EXECUTABLE`              | Override CLI executable                                                                                                                                                                                                                                         | `['npm-groovy-lint']`                           |
 
+
+## commitlint
+
+> [!NOTE|label:references:]
+> - [Getting started](https://commitlint.js.org/guides/getting-started.html)
+
+```bash
+# -- install --
+$ npm install -g @commitlint/{cli,config-conventional}
+
+# -- config --
+$ echo "export default { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+# or
+$ echo "module.exports = {extends: ['@commitlint/config-conventional']};" > .commitlintrc.js
+```
+
+## Checkpatch
+
+> [!NOTE|label:references:]
+> - [scripts/checkpatch.pl](https://github.com/torvalds/linux/blob/master/scripts/checkpatch.pl)
+> - [Checkpatch](https://docs.kernel.org/dev-tools/checkpatch.html)
+
+```bash
+# generate patch
+$ git format-patch -n1 -q -o patches
+# usage
+$ ./scripts/checkpatch.pl --list-types
+$ ./scripts/checkpatch.pl --ignore NEW_TYPEDEFS,SUBJECT_LINES,MAINTAINERS,FILE_PATH_CHANGES --max-line-length=1000 --no-tree patchs/*
+```
 
 # troubleshooting
 ## issues

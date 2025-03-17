@@ -347,6 +347,7 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 > - [自由字体网](https://ziyouziti.com/index-index-all.html)
 > - [找字体](https://zfont.cn/cn/font_286.html)
 > - [自改免费开源字体一览](https://lxgw.github.io/2021/01/15/Lxgw-Opensource-Chinese-Fonts/) | [开源字体一览(图文版)](https://github.com/lxgw/lxgw/blob/main/fonts.md)
+> - [落霞孤鹜 - lxgw](https://fonts.zeoseven.com/designer/s/2/)
 > - [npm - chinese-fonts](https://www.npmjs.com/search?q=keywords:chinese-fonts)
 > - [字库星球](https://www.mfonts.cn/)
 

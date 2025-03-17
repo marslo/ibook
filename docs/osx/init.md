@@ -75,6 +75,7 @@ $ sudo ln -sf $(npm get prefix)/bin/* /usr/local/bin/
 $ brew install --HEAD shellcheck
 $ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
 $ npm i -g @commitlint/{cli,config-conventional}  # for commitlint
+$ npm i -g css-validator                          # for css validation
 $ brew install --HEAD yamllint yamlfmt
 $ brew install hadolint                           # for dockerfile
 $ brew install stylelint                          # for css

@@ -431,11 +431,18 @@ $ defaults write com.apple.screencapture type -string jpg
 
 ### hidden file
 #### show hidden files
+
+> [!TIP|label:shortcuts:]
+> - <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>.</kbd> ( <kbd>shift</kbd> + <kbd>command</kbd> + <kbd>.</kbd> )
+
 ```bash
 # show
 $ defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder
 # or
 $ defaults write com.apple.finder AppleShowAllFiles YES
+
+# -- global mode --
+$ defaults write -g AppleShowAllFiles -bool true
 
 # disable
 $ defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder
