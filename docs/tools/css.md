@@ -18,6 +18,7 @@
 - [selector](#selector)
   - [attribute selectors](#attribute-selectors)
   - [debug tooltips in inspect](#debug-tooltips-in-inspect)
+  - [debug `Popover` in github](#debug-popover-in-github)
   - [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1073,6 +1074,58 @@ border-style: dotted dashed solid groove;
 4. re-hover the element in web page
 
 ![debug tooltips](../screenshot/tools/styles/html-inspect-tooltips.gif)
+
+### debug `Popover` in github
+
+> [!NOTE|label:references:]
+> - sample html:
+>   ```html
+>   <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none; left: 956.862px; z-index: 100; top: 426.119px !important; bottom: auto !important; opacity: 1;" aria-label="Hovercard" role="region">
+>     <div class="Popover-message Popover-message--large Box color-shadow-large Popover-message--top-right" style="width: 360px; display: block; opacity: 1; visibility: visible;"></div>
+>   </div>
+>   ```
+> - [references - chatgpt answer](https://chatgpt.com/share/67d8c57c-7dd8-8010-b6f1-6c0cebb0274d)
+
+1. <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd> to open the `DevTools`
+2. go to `Console` tab
+3. paste and execute following javascript code
+  ```javascript
+  // 1. 监听并阻止 `mouseleave` 事件，防止 Popover 被 GitHub 隐藏
+  document.querySelectorAll('.Popover').forEach(el => {
+      el.addEventListener('mouseleave', e => e.stopPropagation(), true);
+  });
+
+  // 2. 监听 DOM 变化，防止 Popover 被 GitHub 代码修改 `display`
+  const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+          mutation.target.querySelectorAll('.Popover').forEach(popover => {
+              if (popover.style.display === 'none') {
+                  console.log('Detected hidden Popover, restoring...');
+                  popover.style.display = 'block';
+                  popover.style.opacity = '1';
+                  popover.style.visibility = 'visible';
+              }
+          });
+      });
+  });
+
+  // 开始监听整个页面的 DOM 变化
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // 3. 持续检查 `Popover` 是否被 GitHub 代码隐藏
+  setInterval(() => {
+      document.querySelectorAll('.Popover').forEach(popover => {
+          if (popover.style.display === 'none') {
+              console.log('Forcing Popover to be visible...');
+              popover.style.display = 'block';
+              popover.style.opacity = '1';
+              popover.style.visibility = 'visible';
+          }
+      });
+  }, 100);
+  ```
+
+![popover debug](../screenshot/tools/styles/html-github-Popover.gif)
 
 ### references
 

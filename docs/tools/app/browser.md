@@ -53,7 +53,7 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 > - [How To Customise Firefox 57+ UI with userChrome.css](http://forums.mozillazine.org/viewtopic.php?f=38&t=3037817&sid=ac9ffa618d12e89c0346c1f4963d2bba)
 > - [Aris-t2/CustomCSSforFx](https://github.com/Aris-t2/CustomCSSforFx/tree/master/classic)
 
-- Steps:
+- steps:
   - open your currently active [profile folder](http://kb.mozillazine.org/Profile_folder#Folders)
   - create a new folder named chrome
   - create a desktop shortcut (alias) to the chrome folder for easier future access
@@ -61,16 +61,16 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
   - create a new text file inside the chrome folder named [userChrome.css](http://kb.mozillazine.org/UserChrome.css)
   - change a preference in Firefox so it looks for your files at startup (in Firefox 69+)
 
-- [Unlock custom CSS usage in Firefox 69 and newer](https://github.com/Aris-t2/CustomCSSforFx#unlock-custom-css-usage-in-firefox-69-and-newer)
+- [unlock custom css usage in firefox 69 and newer](https://github.com/Aris-t2/CustomCSSforFx#unlock-custom-css-usage-in-firefox-69-and-newer)
   - `about:config`
   - `toolkit.legacyUserProfileCustomizations.stylesheets`
   - `true`
 
-- [Where to find Firefox profile folder? The correct location for user styles](https://github.com/Aris-t2/CustomCSSforFx#where-to-find-firefox-profile-folder-the-correct-location-for-user-styles)
+- [where to find firefox profile folder? the correct location for user styles](https://github.com/Aris-t2/CustomCSSforFx#where-to-find-firefox-profile-folder-the-correct-location-for-user-styles)
   - `about:support` > `Profile Folder` > `Open Folder` or `about:profiles` > `Root Directory` > `Open Folder`
   - User styles belong into `<profile_folder>\chrome\` folder
 
-- [Inspect ui or web content](https://github.com/Aris-t2/CustomCSSforFx)
+- [inspect ui or web content](https://github.com/Aris-t2/CustomCSSforFx)
   - Enable once
     - `Tools` > `WebDeveloper` > `Toggle Tools` > `'Customize Tools and get help button'` > `Settings` > `Enable browser chrome and add-on debugging toolboxes`
     - `Tools` > `WebDeveloper` > `Toggle Tools` > `'Customize Tools and get help button'` > `Settings` > `Enable remote debugging`
@@ -96,12 +96,14 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
       display: none !important;
   }
   ```
+
   or
   ```css
   #TabsToolbar .tabbrowser-tab .tab-line {
       display: none !important;
   }
   ```
+
 - [[help] The blue line on top of active tab is back in Firefox 60](https://www.reddit.com/r/FirefoxCSS/comments/8hrpaf/help_the_blue_line_on_top_of_active_tab_is_back/)
   ```css
   #tabbrowser-tabs {
@@ -115,18 +117,21 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
     <do something>
   }
   ```
+
 - [How to remove the thin blue bar on top of active tabs?](http://forums.mozillazine.org/viewtopic.php?f=38&t=3035591)
   ```css
   .tab-line {
       background-color:#f5f6f7 !important;
   }
   ```
+
   or
   ```css
   .tabbrowser-tab:not([selected="true"]):hover .tab-line {
      background-color: #cccdcf !important;
   }
   ```
+
 - [[SOLVED] How to change active tab background color in css?](http://forums.mozillazine.org/viewtopic.php?f=38&t=3048845)
   ```css
   #main-window[lwthemetextcolor=bright] tab[selected="true"] {
@@ -137,6 +142,7 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
     background-image: none !important;
   }
   ```
+
   or
   ```css
   /* ACTIVE TAB BACKGROUND COLOR */
@@ -154,14 +160,17 @@ $ pgrep -u `id -u` firefox-bin || find ~/.mozilla/firefox -name '*.sqlite'|(whil
 > - [Keyboard shortcut to pull Google Chrome tab into its own window](https://superuser.com/a/745584/112396)
 > - [duplicate tab in same window](https://superuser.com/a/1501694/112396)
 
-- <kbd>shift</kbd> + <kbd>w</kbd> : move tab to new windows by using Vimium
-- <kbd>cmd</kbd>+<kbd>l</kbd> -> <kbd>shift</kbd>+<kbd>enter</kbd> : duplicate tab to new window
-- <kbd>cmd</kbd>+<kbd>l</kbd> -> <kbd>opt</kbd>+<kbd>enter</kbd> : duplicate tab to same window
+| KEY                                                       | DESCRIPTION                             | COMMENTS                                                         |
+|-----------------------------------------------------------|-----------------------------------------|------------------------------------------------------------------|
+| <kbd>⇧</kbd> + <kbd>w</kbd>                               | move tab to new windows by using Vimium | <kbd>shift</kbd> + <kbd>w</kbd>                                  |
+| <kbd>⌘</kbd> + <kbd>l</kbd> ⇢ <kbd>⇧</kbd> + <kbd>⏎</kbd> | duplicate tab to new window             | <kbd>cmd</kbd>+<kbd>l</kbd> ⇢ <kbd>shift</kbd>+<kbd>enter</kbd>  |
+| <kbd>⌘</kbd> + <kbd>l</kbd> ⇢ <kbd>⌥</kbd> + <kbd>⏎</kbd> | duplicate tab to same window            | <kbd>cmd</kbd>+<kbd>l</kbd> ⇢ <kbd>option</kbd>+<kbd>enter</kbd> |
+| <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>i</kbd>                | open developer tools                    | <kbd>option</kbd> + <kbd>command</kbd> + <kbd>i</kbd>            |
+
 
 ### download
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [Google Chrome Older Versions Download](https://www.slimjet.com/chrome/google-chrome-old-version.php)
 > - [How to Download and Install Google Chrome On Mac OS](https://www.youtube.com/watch?v=BhmmLG_ZvGI)
 

@@ -3,6 +3,7 @@
 
 - [redirect](#redirect)
   - [show stdout but redirect all to file](#show-stdout-but-redirect-all-to-file)
+  - [get output with color code from stderr](#get-output-with-color-code-from-stderr)
 - [time & date](#time--date)
   - [show date with timezone](#show-date-with-timezone)
   - [show cal](#show-cal)
@@ -51,7 +52,7 @@
 > - [redirect overview](https://askubuntu.com/a/731237)
 >   ```bash
 >             || visible in terminal ||   visible in file   || existing
->     Syntax  ||  StdOut  |  StdErr  ||  StdOut  |  StdErr  ||   file
+>     SYNTAX  ||  STDOUT  |  STDERR  ||  STDOUT  |  STDERR  ||   FILE
 >   ==========++==========+==========++==========+==========++===========
 >       >     ||    no    |   yes    ||   yes    |    no    || overwrite
 >       >>    ||    no    |   yes    ||   yes    |    no    ||  append
@@ -122,6 +123,15 @@ bash: line 1: bhas: command not found
   a
   bash: line 1: bahs: command not found
   ```
+
+### get output with color code from stderr
+```bash
+$ command kubecolor get pod 2> >(/opt/homebrew/opt/coreutils/libexec/gnubin/cat -v)
+^[[31mE^[[0m^[[90;3m0317 14:50:30.321015^[[0m   19219 ^[[90;3mmemcache.go:287^[[0m] ^[[93m"Unhandled Error"^[[0m ^[[96merr^[[0m=^[[93m"couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request"^[[0m
+^[[31mE^[[0m^[[90;3m0317 14:50:31.317212^[[0m   19219 ^[[90;3mmemcache.go:121^[[0m] ^[[93m"Unhandled Error"^[[0m ^[[96merr^[[0m=^[[93m"couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request"^[[0m
+^[[31mE^[[0m^[[90;3m0317 14:50:31.440696^[[0m   19219 ^[[90;3mmemcache.go:121^[[0m] ^[[93m"Unhandled Error"^[[0m ^[[96merr^[[0m=^[[93m"couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request"^[[0m
+^[[31mE^[[0m^[[90;3m0317 14:50:31.558730^[[0m   19219 ^[[90;3mmemcache.go:121^[[0m] ^[[93m"Unhandled Error"^[[0m ^[[96merr^[[0m=^[[93m"couldn't get resource list for metrics.k8s.io/v1beta1: the server is currently unable to handle the request"^[[0m
+```
 
 ## time & date
 
