@@ -917,10 +917,10 @@ $ defaults delete com.apple.dock static-only && killall Dock
 
 #### whether show hidden icon
 ```bash
-# show
+# show semi-transparent icon in hide mode
 $ defaults write com.apple.dock showhidden -bool true && killall Dock
 
-# not show
+# show no differences with non-hide
 $ defaults delete com.apple.Dock showhidden && killall Dock
 ```
 

@@ -18,6 +18,7 @@
 > - [* highlight.js](https://highlightjs.org/) | [highlightjs/highlight.js](https://github.com/highlightjs/highlight.js)
 > - [* vscodethemes](https://vscodethemes.com/)
 > - [* tmTheme-Editor](https://tmtheme-editor.glitch.me/) | [#275 - app not working?](https://github.com/aziz/tmTheme-Editor/issues/275)
+> - [mjswensen/themer](https://github.com/mjswensen/themer) | [themer.dev](https://themer.dev/) | [themer.dev/victor-mono](https://themer.dev/victor-mono)
 > - [root loops](https://rootloops.sh/)
 > - [Let's Create a Terminal Color Scheme](https://hamvocke.com/blog/lets-create-a-terminal-color-scheme/)
 > - [demo](https://highlightjs.org/demo)

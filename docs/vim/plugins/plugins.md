@@ -606,6 +606,8 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 > - [Manage coc extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions#manage-coc-extensions)
 > - [nicknisi/dotfiles/config/nvim/coc-settings.json](https://github.com/nicknisi/dotfiles/blob/master/config/nvim/coc-settings.json)
 > - [YongJieYongJie/dotfiles/coc-settings.json](https://github.com/YongJieYongJie/dotfiles/blob/master/coc-settings.json)
+> - [Ways to configure Coc (Neoclide / coc.nvim)](https://www.reddit.com/r/vim/comments/ip6vpf/ways_to_configure_coc_neoclide_cocnvim/)
+> - [* coc-example-config.vim](https://github.com/neoclide/coc.nvim/blob/master/doc/coc-example-config.vim)
 
 - initialize
   ```bash
@@ -675,9 +677,56 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
   ```
 
 - open configure file ( `coc-settings.json` )
+
+  > [!NOTE|label:references:]
+  > - [Using the configuration file](https://github.com/neoclide/coc.nvim/wiki/Using-the-configuration-file)
+
   ```vim
   :CocConfig
   ```
+
+  - setup sources priority
+
+    > [!NOTE|label:references:]
+    > - [#964 - Configuring priority of completion sources doesn't work](https://github.com/neoclide/coc.nvim/issues/964)
+    > - [#2063 - Limit Number of Autocomplete Suggestions Displayed](https://github.com/neoclide/coc.nvim/issues/2063)
+    >   ```vim
+    >   " coc-settings.json
+    >   {
+    >     "suggest.maxCompleteItemCount": 20
+    >   }
+    >
+    >   " or vimrc
+    >   :set pumheight=20
+    >   ```
+
+    ```yaml
+    // coc-settings.json
+    {
+      "coc.source.around.priority": 85,
+      "coc.source.file.priority": 80,
+      "coc.source.buffer.priority": 70,
+      "coc.source.word.priority": 1,
+      "coc.source.dictionary.priority": 1,
+    }
+    ```
+    ```vim
+    " check sources priority
+    :CocList sources
+    * html-css-support       [HCS]                 99  html,markdown
+    * emoji                  [T]        :          3   markdown
+    * word                   [10K]                 1
+    * dictionary             [D]                   1
+    * tag                    [T]                   3
+    * snippets               [S]                   90
+    * snippets-source        [S]        $          90  snippets
+    * around                 [A]                   85
+    * buffer                 [B]                   70
+    * file                   [F]        /          80
+    * issues                 [[I]]      #          99  gitcommit,gina-commit
+    * semantic-commit        [Commit]              99  gitcommit,gina-commit
+    * vimlsp                 [LS]       .:#[&$<"'  99  vim
+    ```
 
   - [language server setup](https://www.narga.net/how-to-set-up-code-completion-for-vim/)
     ```json
