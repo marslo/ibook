@@ -28,6 +28,7 @@
   - [gfall <branch>](#gfall-branch)
   - [iGitOpt](#igitopt)
   - [hook](#hook)
+- [git message](#git-message)
 - [refspec](#refspec)
 - [others](#others)
   - [alias](#alias)
@@ -866,6 +867,38 @@ $ git diff --shortstat HEAD^..HEAD
   add_ChangeId
   ```
   <!--endsec-->
+
+
+## git message
+
+> [!NOTE|label:references:]
+> - [Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
+> - [AngularJS Git Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1&tab=t.0#heading=h.uyo6cb12dt6w)
+> - [Add Choice [ chore, revert ] to question "Select the type of change you are committing" #36](https://github.com/commitizen-tools/commitizen/issues/36#issuecomment-520243444)
+
+| TYPE       | FULL NAME     | DESCRIPTION                                                                                                 |
+|------------|---------------|-------------------------------------------------------------------------------------------------------------|
+| `build`    |               | Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
+| `ci`       |               | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) |
+| `docs`     | documentation | Documentation only changes                                                                                  |
+| `feat`     | feature       | A new feature                                                                                               |
+| `fix`      | bugfix        | A bug fix                                                                                                   |
+| `perf`     |               | A code change that improves performance                                                                     |
+| `refactor` |               | A code change that neither fixes a bug nor adds a feature                                                   |
+| `style`    | formatting    | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |
+| `test`     |               | Adding missing tests or correcting existing tests                                                           |
+| `chore`    | maintain      | Changes to the build process or auxiliary tools and libraries such as documentation generation              |
+
+- sample
+  ```
+  docs(changelog): update changelog to beta.5
+  ```
+
+  ```
+  fix(release): need to depend on latest rxjs and zone.js
+
+  The version in our package.json gets copied to the one we publish, and users need the latest of these.
+  ```
 
 
 ## refspec

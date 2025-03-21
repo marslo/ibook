@@ -76,6 +76,151 @@
   },
   ```
 
+  ```json
+  "editor.fontFamily": "Dank Mono, Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.tokenColorCustomizations": {
+      "textMateRules": [
+          {
+              "scope": [
+                //following will be in italic
+                "comment",
+                "emphasis",
+                "entity.name.method.js",
+                "entity.name.class.js",
+                "entity.name.tag.doctype",
+                "entity.other.attribute-name",
+                "entity.other.attribute-name.tag.jade",
+                "entity.other.attribute-name.tag.pug",
+                "keyword",
+                "keyword.control",
+                "keyword.operator.comparison",
+                "keyword.control.flow.js",
+                "keyword.control.flow.ts",
+                "keyword.control.flow.tsx",
+                "keyword.control.ruby",
+                "keyword.control.module.ruby",
+                "keyword.control.class.ruby",
+                "keyword.control.def.ruby",
+                "keyword.control.loop.js",
+                "keyword.control.loop.ts",
+                "keyword.control.import.js",
+                "keyword.control.import.ts",
+                "keyword.control.import.tsx",
+                "keyword.control.from.js",
+                "keyword.control.from.ts",
+                "keyword.control.from.tsx",
+                "keyword.operator.expression.delete",
+                "keyword.operator.new",
+                "keyword.operator.expression",
+                "keyword.operator.cast",
+                "keyword.operator.relational",
+                "keyword.operator.sizeof",
+                "keyword.operator.logical.python",
+                "italic",
+                "markup.italic",
+                "markup.quote",
+                "markup.changed",
+                "markup.italic.markdown",
+                "markup.quote.markdown",
+                "markup.deleted.diff",
+                "markup.inserted.diff",
+                "meta.delimiter.period",
+                "meta.diff.header.git",
+                "meta.diff.header.from-file",
+                "meta.diff.header.to-file",
+                "meta.tag.sgml.doctype",
+                "meta.var.expr",
+                "meta.class meta.method.declaration meta.var.expr storage.type.js",
+                "meta.decorator punctuation.decorator",
+                "meta.selector",
+                "punctuation.accessor",
+                "punctuation.definition.comment",
+                "punctuation.definition.template-expression.begin",
+                "punctuation.definition.template-expression.end",
+                "punctuation.section.embedded",
+                "quote",
+                "source.js constant.other.object.key.js string.unquoted.label.js",
+                "source.go keyword.package.go",
+                "source.go keyword.import.go",
+                "source.go keyword.function.go",
+                "source.go keyword.type.go",
+                "source.go keyword.struct.go",
+                "source.go keyword.interface.go",
+                "source.go keyword.const.go",
+                "source.go keyword.var.go",
+                "source.go keyword.map.go",
+                "source.go keyword.channel.go",
+                "source.go keyword.control.go",
+                "storage",
+                "storage.type",
+                "storage.modifier",
+                "storage.type.property.js",
+                "storage.type.property.ts",
+                "storage.type.property.tsx",
+                "tag.decorator.js entity.name.tag.js",
+                "tag.decorator.js",
+                "text.html.basic entity.other.attribute-name.html",
+                "text.html.basic entity.other.attribute-name",
+                "variable.language",
+                "variable.other.object.property"
+              ],
+              "settings": {
+                "fontStyle": "italic"
+              }
+          }
+      ]
+  }
+  ```
+
+  ```json
+  "editor.fontFamily": "Operator Mono Medium",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "window.zoomLevel": 1,
+  "cSpell.languageSettings": [
+
+  ],
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          //following will be in italic (=FlottFlott)
+          "comment",
+          "entity.name.type.class",      // class names
+
+          "keyword",                     // import, export, return
+          "constant",                    // String, Number, Boolean, this, super
+          "storage.modifier",            // static keyword
+          "storage.type.class.js",       // class keyword
+          "entity.name.method.js",
+          "entity.name.class.js",
+          "entity.name.tag.doctype",
+          "entity.other.attribute-name",
+          "entity.other.attribute-name.tag.jade",
+          "entity.other.attribute-name.tag.pug",
+        ],
+        "settings": {
+          "fontStyle": "italic"
+        }
+      },
+      {
+        "scope": [
+          //following will be excluded from italics (VSCode has some defaults for italics)
+          "invalid",
+          "keyword.operator",
+          "constant.numeric.css",
+          "keyword.other.unit.px.css",
+          "constant.numeric.decimal.js",
+          "constant.numeric.json"
+        ],
+        "settings": {
+          "fontStyle": ""
+        }
+      }
+    ]
+  ```
+
 
 ## plugins
 ### [settings sync](https://code.visualstudio.com/docs/editor/settings-sync)
