@@ -872,6 +872,7 @@ $ git diff --shortstat HEAD^..HEAD
 ## git message
 
 > [!NOTE|label:references:]
+> - [* Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 > - [Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
 > - [AngularJS Git Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1&tab=t.0#heading=h.uyo6cb12dt6w)
 > - [Add Choice [ chore, revert ] to question "Select the type of change you are committing" #36](https://github.com/commitizen-tools/commitizen/issues/36#issuecomment-520243444)

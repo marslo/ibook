@@ -72,6 +72,9 @@
 
 ### basic knowledge
 
+> [!NOTE|label:references:]
+> - to show `--dump-options`: `gpg --dump-options`
+
 - [letters indicating](https://www.gnupg.org/documentation/manuals/gnupg/GPG-Configuration-Options.html)
 
   > [!TIP|label:references:]

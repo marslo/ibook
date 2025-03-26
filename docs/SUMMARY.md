@@ -166,6 +166,8 @@
     * [windows](virtualization/docker/windows.md)
   * [crio](virtualization/crio/crio.md)
   * [podman](virtualization/podman/podman.md)
+* [ai](ai/ai.md)
+  * [prompt](ai/prompt.md)
 * [osx](osx/osx.md)
   * [apps](osx/apps/apps.md)
     * [init](osx/init.md)

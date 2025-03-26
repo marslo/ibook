@@ -13,6 +13,7 @@
   - [credential](#credential)
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
+  - [http.cookiefile](#httpcookiefile)
 - [default configuration](#default-configuration)
 - [`__git_ps1`](#__git_ps1)
   - [add to bash_completion.d](#add-to-bash_completiond)
@@ -606,6 +607,12 @@ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
     esac
     '
     ```
+
+## http.cookiefile
+
+> [!NOTE|label:references:]
+> - [When do you need ./gitcookies?](https://stackoverflow.com/q/48603575/2940319)
+> - [336b352d6fe4de90392691d892557d5fa2cd07d4](https://github.com/hashicorp/terraform/commit/336b352d6fe4de90392691d892557d5fa2cd07d4)
 
 # default configuration
 - `core.editor`
