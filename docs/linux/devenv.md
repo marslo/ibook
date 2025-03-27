@@ -10,6 +10,8 @@
   - [vim](#vim)
   - [nvim](#nvim)
   - [copilot](#copilot)
+    - [CLI](#cli)
+    - [GitHub Copilot CLI](#github-copilot-cli)
   - [java](#java)
   - [groovy](#groovy)
     - [groovy completions](#groovy-completions)
@@ -132,6 +134,22 @@ $ sudo ln -s /var/lib/snapd/snap /snap
 
 > [!NOTE|label:references]
 > - [microsoft/Mastering-GitHub-Copilot-for-Paired-Programming](https://github.com/microsoft/Mastering-GitHub-Copilot-for-Paired-Programming)
+> - [Configuring GitHub Copilot in the CLI](https://docs.github.com/en/copilot/managing-copilot/configure-personal-settings/configuring-github-copilot-in-the-cli)
+> - [GitHub Copilot documentation](https://docs.github.com/en/copilot)
+>   - [Generate unit tests](https://docs.github.com/en/copilot/copilot-chat-cookbook/testing-code/generate-unit-tests)
+>   - [Finding existing vulnerabilities in code](https://docs.github.com/en/copilot/copilot-chat-cookbook/security-analysis/finding-existing-vulnerabilities-in-code)
+>   - [Handling API rate limits](https://docs.github.com/en/copilot/copilot-chat-cookbook/debugging-errors/handling-api-rate-limits)
+
+### CLI
+```bash
+
+```
+
+### [GitHub Copilot CLI](https://www.npmjs.com/package/@githubnext/github-copilot-cli)
+```bash
+$ npm install -g @github/copilot-cli
+$ copilot review --pr ${{ github.event.pull_request.number }} --repo ${{ github.repository }} > review_output.txt
+```
 
 ## java
 * download jdk 1.8.0_121
@@ -1193,6 +1211,10 @@ $ sudo mysql_secure_installation
   ```
 
 ## vncserver
+
+> [!NOTE|label:see more:]
+> - [* iMarslo: tightvncserver](../linux/app.md#tightvncserver)
+
 ```bash
 $ sudo apt install vnc4server
 $ sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal

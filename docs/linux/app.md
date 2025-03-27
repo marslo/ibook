@@ -668,6 +668,26 @@ $ echo $XDG_SESSION_TYPE
   ```
   <!--endsec-->
 
+#### list vnc servers
+```bash
+$ ps auxfww | grep Xtightvnc
+marslo    1040 29.8  0.1 208052 66872 pts/1    S    18:57  23:57 Xtightvnc :3 -desktop X -auth /home/marslo/.Xauthority -geometry 1600x1080 -depth 24 -rfbwait 120000 -rfbauth /home/marslo/.vnc/passwd -rfbport 5903 -fp /usr/share/fonts/X11/misc/,/usr/share/fonts/X11/Type1/,/usr/share/fonts/X11/75dpi/,/usr/share/fonts/X11/100dpi/ -co /etc/X11/rgb
+
+# or
+$ pgrep -a Xtightvnc
+1040 Xtightvnc :3 -desktop X -auth /home/marslo/.Xauthority -geometry 1600x1080 -depth 24 -rfbwait 120000 -rfbauth /home/marslo/.vnc/passwd -rfbport 5903 -fp /usr/share/fonts/X11/misc/,/usr/share/fonts/X11/Type1/,/usr/share/fonts/X11/75dpi/,/usr/share/fonts/X11/100dpi/ -co /etc/X11/rgb
+```
+
+#### kill service
+```bash
+$ vncserver -kill :3
+
+# or
+$ rm -rf /tmp/.X3-lock
+# - or -
+$ rm -rf /tmp/.X11-unix/X3
+```
+
 #### configure
 ```bash
 $ ps auxfww | grep -i x11
@@ -942,7 +962,7 @@ xsetroot -bg white -fg red  -solid black -cursor_name watch
   > - [Running VNC as a System Service](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-22-04#step-4-running-vnc-as-a-system-service)
 
   ```bash
-  $ sudo vim /etc/systemd/system/atavncserver.servic
+  $ sudo vim /etc/systemd/system/atavncserver.service
   [Unit]
   Description=VNC Server
   After=syslog.target network.target
@@ -952,9 +972,9 @@ xsetroot -bg white -fg red  -solid black -cursor_name watch
   User=USERNAME
   PAMName=login
   PIDFile=/home/USERNAME/.vnc/%H:3.pid
-  ExecStartPre=-/usr/bin/vncserver -kill :3 > /dev/null 2>&1
-  ExecStart=/usr/bin/vncserver :3 -geometry 1600x1080 -depth 24 -nolisten tcp -localhost
-  ExecStop=/usr/bin/vncserver -kill :3
+  ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
+  ExecStart=/usr/bin/vncserver -geometry 1600x1080 -depth 24 -nolisten tcp -localhost :%i
+  ExecStop=/usr/bin/vncserver -kill :%i
 
   [Install]
   WantedBy=multi-user.target
@@ -996,6 +1016,8 @@ xsetroot -bg white -fg red  -solid black -cursor_name watch
 
   ```bash
   $ vncserver -geometry 1600x1024 -depth 24
+  # or
+  $ vncserver -geometry 1600x1080 -depth 24 :3
   ```
 
   ```bash

@@ -33,12 +33,10 @@
 {% hint style='tip' %}
 > references:
 > - [* git-quick stats](https://github.com/arzzen/git-quick-stats.git)
-> - [* IonicaBizau/git-stats](https://github.com/IonicaBizau/git-stats)
 > - [* shitchell/git-user-stats](https://gist.github.com/shitchell/783cc8a892ed1591eca2afeb65e8720a)
 > - [* Git statistics for repo per author](https://coderwall.com/p/pek-yg/git-statistics-for-repo-per-author)
 > - [eyecatchup/git-commit-log-stats.md](https://gist.github.com/eyecatchup/3fb7ef0c0cbdb72412fc)
 > - [Counting your contribution to a git repository](https://shinglyu.com/web/2018/12/25/counting-your-contribution-to-a-git-repository.html)
-> - [pstadler/.git-stats.sh](https://gist.github.com/pstadler/4722416)
 > - [Which Git commit stats are easy to pull](https://stackoverflow.com/questions/1486819/which-git-commit-stats-are-easy-to-pull)
 > - [GET CONTRIBUTOR STATS FROM GIT](https://www.lostindetails.com/articles/get-contributor-stats-from-git)
 > - [How to count total lines changed by a specific author in a Git repository?](https://stackoverflow.com/a/7010890/2940319)
@@ -194,6 +192,13 @@ $ /usr/local/lib/ruby/gems/3.3.0/gems/nova_git_stats-2.4.1/bin/git_stats generat
 ![git_stats](../../screenshot/git/git-st-NovaGitStats.png)
 
 ### git-stats
+
+{% hint style='tip' %}
+> references:
+> - [* IonicaBizau/git-stats](https://github.com/IonicaBizau/git-stats)
+> - [pstadler/.git-stats.sh](https://gist.github.com/pstadler/4722416)
+{% endhint %}
+
 ```bash
 $ export NODE_TLS_REJECT_UNAUTHORIZED=0
 $ npm config set strict-ssl false
@@ -208,15 +213,16 @@ added 100 packages from 57 contributors in 15.748s
 # or
 $ sudo ln -sf "$(npm root -g)"/git-stats/bin/git-stats /usr/local/bin/git-stats
 
-# optional
-$ npm i -g git-stats-importer
-$ npm i -g git-stats-html         # usage $ git-stats --raw | git-stats-html -o out.html
-$ npm i -g pageres-cli            # usage $ pageres out.html 775x250
-
+# -- setup post-commit hook --
 $ curl -sk https://raw.githubusercontent.com/IonicaBizau/git-stats/master/scripts/init-git-post-commit | bash
 Setting up git-stats hooks.
 Set new global git template dir at /Users/marslo/.git-templates
 Successfully set up git-stats hook at /Users/marslo/.git-templates/hooks/post-commit.
+
+# optional
+$ npm i -g git-stats-importer     # usage: $ cd /path/to/git-repo; git-stats-importer [ -e <email;wa> ]
+$ npm i -g git-stats-html         # usage: $ git-stats --raw | git-stats-html -o out.html
+$ npm i -g pageres-cli            # usage: $ pageres out.html 775x250
 ```
 
 ![git-stats](../../screenshot/git/git-stat.png)

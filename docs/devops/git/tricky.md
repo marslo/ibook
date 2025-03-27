@@ -877,18 +877,18 @@ $ git diff --shortstat HEAD^..HEAD
 > - [AngularJS Git Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1&tab=t.0#heading=h.uyo6cb12dt6w)
 > - [Add Choice [ chore, revert ] to question "Select the type of change you are committing" #36](https://github.com/commitizen-tools/commitizen/issues/36#issuecomment-520243444)
 
-| TYPE       | FULL NAME     | DESCRIPTION                                                                                                 |
-|------------|---------------|-------------------------------------------------------------------------------------------------------------|
-| `build`    |               | Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
-| `ci`       |               | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) |
-| `docs`     | documentation | Documentation only changes                                                                                  |
-| `feat`     | feature       | A new feature                                                                                               |
-| `fix`      | bugfix        | A bug fix                                                                                                   |
-| `perf`     |               | A code change that improves performance                                                                     |
-| `refactor` |               | A code change that neither fixes a bug nor adds a feature                                                   |
-| `style`    | formatting    | Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |
-| `test`     |               | Adding missing tests or correcting existing tests                                                           |
-| `chore`    | maintain      | Changes to the build process or auxiliary tools and libraries such as documentation generation              |
+| TYPE       | FULL NAME     | SIMPLE DESCRIPTION                   | DESCRIPTION                                                                                                 |
+|------------|---------------|--------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `build`    |               | 构建系统或外部依赖项的变化           | changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
+| `ci`       |               | CI 配置文件和脚本的更改              | changes to our ci configuration files and scripts (example scopes: travis, circle, browserstack, saucelabs) |
+| `docs`     | documentation | 仅文档修改                           | documentation only changes                                                                                  |
+| `feat`     | feature       | 新功能                               | a new feature                                                                                               |
+| `fix`      | bugfix        | 修复问题                             | a bug fix                                                                                                   |
+| `perf`     |               | 性能提高                             | a code change that improves performance                                                                     |
+| `refactor` |               | 重构 (即不是新增功能, 也不是修改bug) | a code change that neither fixes a bug nor adds a feature                                                   |
+| `style`    | formatting    | 格式 (不影响代码运行的变动)          | changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |
+| `test`     |               | 增加测试                             | adding missing tests or correcting existing tests                                                           |
+| `chore`    | maintain      | 构建过程或辅助工具的变动             | changes to the build process or auxiliary tools and libraries such as documentation generation              |
 
 - sample
   ```

@@ -14,6 +14,7 @@
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
   - [http.cookiefile](#httpcookiefile)
+  - [`commit.template`](#committemplate)
 - [default configuration](#default-configuration)
 - [`__git_ps1`](#__git_ps1)
   - [add to bash_completion.d](#add-to-bash_completiond)
@@ -360,7 +361,7 @@ local    file:.git/config    marslo
   > [!NOTE|label:references:]
   > - [git-diff console default colors meanings](https://stackoverflow.com/a/69170401/2940319)
   > - [Configuring git colors](https://shallowsky.com/blog/programming/gitcolors.html)
-  > - [git/Documentation/config/color.txt](https://github.com/git/git/blob/master/Documentation/config/color.txt)
+  > - [git/Documentation/config/color.txt](https://github.com/git/git/blob/master/Documentation/config/color.txt) | [git/Documentation/config/color.adoc](https://github.com/git/git/blob/master/Documentation/config/color.adoc)
   > - [rab/.gitconfig](https://gist.github.com/rab/4067067)
 
   - `color.branch.<slot>`:
@@ -379,6 +380,8 @@ local    file:.git/config    marslo
     - `added`, `updated`, `changed`, `untracked`, `branch`, `nobranch`, `localBranch`, `remoteBranch`, `unmerged`
   - `color.remote.<slot>`:
     - `hint`, `warning`, `success`, `error`
+  - `color.grep.<slot>`:
+    - `context`, `filename`, `function`, `lineNumber`, `column`, `match`, `matchContext`, `matchSelected`, `selected`, `separator`
 
 - list `color.*` config
   ```bash
@@ -410,9 +413,9 @@ local    file:.git/config    marslo
   #            ╰─ 256 color code
 
   # with 24bit hex
-  #                                    ╭─ R(decimal): 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
-  #                                    --╭─ G(decimal): 157: `$ echo -n "obase=10;ibase=16; 9D" | bc`
-  #                                      --╭─ B(decimal): 106: `$ echo -n "obase=10;ibase=16; 6A" | bc`
+  #                                    ╭─ R(decimal)     : 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
+  #                                    --╭─ G(decimal)   : 157 : `$ echo -n "obase=10;ibase=16; 9D" | bc`
+  #                                      --╭─ B(decimal) : 106 : `$ echo -n "obase=10;ibase=16; 6A" | bc`
   #                                        --
   $ echo $(git config --get-color "" "#689d6a italic") color test $(git config --get-color "" reset) | command cat -A
   ^[[3;38;2;104;157;106m color test ^[[m$
@@ -613,6 +616,50 @@ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 > [!NOTE|label:references:]
 > - [When do you need ./gitcookies?](https://stackoverflow.com/q/48603575/2940319)
 > - [336b352d6fe4de90392691d892557d5fa2cd07d4](https://github.com/hashicorp/terraform/commit/336b352d6fe4de90392691d892557d5fa2cd07d4)
+
+## `commit.template`
+
+```bash
+$ git config [--global] commit.template ~/.git-template/commit.template
+```
+
+```bash
+# ~/.git-template/commit.template:
+# Please write your commit message following the Conventional Commits format.
+#
+# Type (choose one):
+#   feat:     A new feature
+#   fix:      A bug fix
+#   docs:     Documentation changes only
+#   style:    Changes that do not affect the meaning of the code (e.g., formatting)
+#   refactor: A code change that neither fixes a bug nor adds a feature
+#   test:     Adding or updating tests
+#   chore:    Changes to the build process or auxiliary tools
+#
+# Scope (optional): The specific area of the code affected (e.g., component, module)
+#
+# Examples:
+#   feat(parser): support new syntax rules
+#   fix(ui): resolve unresponsive button issue
+#
+# Guidelines:
+# - Limit the subject line to 50 characters
+# - Leave a blank line between subject and body
+# - Use the body to explain *what* and *why*, not *how* (optional)
+
+<type>(<scope>): <short summary>
+
+<detailed description, optional — what changed and why>
+
+BREAKING CHANGE: <description of breaking change, if any>
+
+Footer: <e.g., Closes #123, Ref #456>
+```
+
+- usage
+  ```bash
+  $ git commit
+  ```
 
 # default configuration
 - `core.editor`
