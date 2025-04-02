@@ -10,6 +10,7 @@
   - [automatic save](#automatic-save)
   - [BufWritePost](#bufwritepost)
   - [edit binary using xxd-format](#edit-binary-using-xxd-format)
+  - [set option and value in autocmd](#set-option-and-value-in-autocmd)
 - [system](#system)
   - [filetype in vim language](#filetype-in-vim-language)
   - [show path of current file](#show-path-of-current-file)
@@ -283,6 +284,71 @@ augroup Binary
   au BufWritePost *.bin set nomod  | endif
 augroup END
 ```
+
+### set option and value in autocmd
+```vim
+let s:ft_settings = {
+      \ 'help': {'foldenable': 0},
+      \ 'vim-plug': {'number': 0, 'relativenumber': 0},
+      \ 'markdown': {'spell': 1},
+      \ }
+
+function! s:ApplyFTSettings() abort
+  if has_key(s:ft_settings, &filetype)
+    for [opt, val] in items(s:ft_settings[&filetype])
+      if getbufvar('%', '&'.opt) != val
+        execute 'setlocal' opt.'='.val
+      endif
+    endfor
+  endif
+endfunction
+
+augroup LAST_OVERRIDE
+  autocmd!
+  autocmd BufWinEnter * call s:ApplyFTSettings()
+augroup END
+```
+
+```vim
+" to support 'option': v:true
+let s:ft_settings = {
+    \ 'help': {'foldenable': 0},
+    \ 'vim-plug': {'foldenable': 0, 'relativenumber': 0, 'number': v:false },
+    \ 'markdown': {'spell': 1},
+    \ }
+
+function! s:ApplyFTSettings() abort
+  if has_key(s:ft_settings, &filetype)
+    for [opt, val] in items(s:ft_settings[&filetype])
+      let current_val = getbufvar('%', '&' . opt)
+      if type(val) == v:t_bool
+        " if `val = v:false`, the option will be `no{opt}`
+        execute 'setlocal' (val ? '' : 'no') . opt
+      else
+        if current_val != val | execute 'setlocal ' . opt . '=' . val | endif
+      endif
+    endfor
+  else
+    setlocal foldmethod=indent
+  endif
+endfunction
+
+augroup LAST_OVERRIDE
+autocmd!
+autocmd FileType    *        ++nested call s:ApplyFTSettings()
+autocmd BufWinEnter *        call s:ApplyFTSettings()
+autocmd BufWinEnter __Plug__ setlocal nofoldenable nonumber relativenumber=0
+augroup END
+```
+
+- simple version
+  ```vim
+  augroup LAST_OVERRIDE
+    autocmd!
+    autocmd BufWinEnter *
+            \ if &filetype ==# 'help' && &foldenable | setlocal nofoldenable | endif
+  augroup END
+  ```
 
 ## system
 

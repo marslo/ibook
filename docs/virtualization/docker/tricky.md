@@ -209,8 +209,15 @@ $ defaults read ~/Library/Containers/com.docker.docker/.com.apple.containermanag
 
 ### install
 ```bash
+$ DOWNLOAD_URL="$(curl -fsSL https://api.github.com/repos/wagoodman/dive/releases/latest |
+   jq -r '.assets[] | select(.name | endswith("_linux_amd64.deb")) | .browser_download_url')"
+$ curl -OL "${DOWNLOAD_URL}"
+
+$ DIVE_VERSION="$(curl -fsSL https://api.github.com/repos/wagoodman/dive/releases/latest | jq -r .tag_name)"
+# or
 $ DIVE_VERSION=$(curl -sL "https://api.github.com/repos/wagoodman/dive/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
 $ curl -OL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb
+
 $ sudo apt install ./dive_${DIVE_VERSION}_linux_amd64.deb
 ```
 

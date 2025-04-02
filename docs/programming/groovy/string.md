@@ -1,7 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [convert](#convert)
+- [format](#format)
+  - [format int](#format-int)
   - [`capitalize`](#capitalize)
   - [`uncapitalize`](#uncapitalize)
   - [`toLowerCase`](#tolowercase)
@@ -20,7 +21,6 @@
   - [show grouped result](#show-grouped-result)
   - [Named-Capturing Group](#named-capturing-group)
 - [repalce](#repalce)
-  - [`reverse`](#reverse)
   - [`replaceAll`](#replaceall)
   - [`replaceFirst`](#replacefirst)
   - [replaceAll with case-insensitive](#replaceall-with-case-insensitive)
@@ -64,7 +64,14 @@
 > - [Three Groovy String methods that will make your life Groovier!](https://e.printstacktrace.blog/groovy-string-methods-that-will-make-your-life-groovier/)
 {% endhint %}
 
-## convert
+## format
+
+### format int
+```groovy
+int num = 2
+assert '002' == String.format('%03d', num)
+```
+
 ### `capitalize`
 ```groovy
 assert 'Groovy' == 'groovy'.capitalize()
@@ -185,6 +192,12 @@ assert 'He224 W4r2d!' == 'Hello World!'.tr('lloo', '1234')
 ```
 
 ### tricky
+
+#### `reverse`
+```groovy
+assert '1234' == '4321'.reverse()
+```
+
 #### [remove the last x chars](http://grails.asia/groovy-substring)
 ```groovy
 def removeSuffix( String str ) {
@@ -204,6 +217,8 @@ def removeSuffix( String str, int c ) {
 #### [add char(s) in the end of string](https://dzone.com/articles/concatenate-strings-in-groovy)
 ```groovy
 str.concat('substr')
+
+assert '123substr' == '123'.concat('substr')
 ```
 
 #### recursive the path
@@ -313,11 +328,6 @@ println matcher[0].withIndex().collect { "${it.last()} -- ${it.first()}" }.join(
 
 ## repalce
 
-### `reverse`
-```groovy
-assert '1234' == '4321'.reverse()
-```
-
 ### `replaceAll`
 
 > [!TIP]
@@ -399,7 +409,7 @@ assert '++==@@-- | ==##--$$' == p.inject('') { injected, k, v ->
   import java.util.regex.Pattern
 
   String parentPath = 'D:\\ifs\\APP\\Checkout'
-  String path = 'D:\\IFS\\APP\\Checkout\\trvexp\\client\\Ifs.App\\text.txt'
+  String path       = 'D:\\IFS\\APP\\Checkout\\trvexp\\client\\Ifs.App\\text.txt'
 
   assert '\\trvexp\\client\\Ifs.App\\text.txt' == path.replaceAll( "(?i)" + Pattern.quote(parentPath), '' )
   ```

@@ -8,6 +8,7 @@
   - [list all shortcut mapping](#list-all-shortcut-mapping)
   - [check customized completion](#check-customized-completion)
   - [show terminal type](#show-terminal-type)
+  - [check buffer info](#check-buffer-info)
 - [chars](#chars)
   - [`listchars` shows `▯` ( unknown character )](#listchars-shows-%E2%96%AF--unknown-character-)
 - [python](#python)
@@ -88,6 +89,11 @@ iTerm.app
   ```bash
   $ defaults write org.vim.MacVim MMLoginShell 0
   ```
+
+### check buffer info
+```vim
+:echo getbufinfo()->filter({_,v -> v.terminal})
+```
 
 ## chars
 

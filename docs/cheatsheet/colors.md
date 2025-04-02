@@ -12,6 +12,7 @@
   - [tools](#tools)
   - [color picker](#color-picker)
   - [256 color table](#256-color-table)
+  - [ansi to hex](#ansi-to-hex)
 - [color names](#color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
@@ -901,6 +902,184 @@
   ```bash
   $ for c in `seq 0 255`; do t=5; [[ $c -lt 108 ]] && t=0; for i in `seq $t 5`; do echo -e "\e[0;48;$i;${c}m|| $i:$c `seq -s+0 $(($COLUMNS/2))|tr -d '[0-9]'`\e[0m"; done;done
   ```
+
+### ansi to hex
+
+> [!TIP|label:references:]
+> the enhancement xColorTable
+
+<!--sec data-title="ansi2hex.sh" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+#=============================================================================
+#     FileName : ansi2hex
+#       Author : marslo.jiao@gmail.com
+#      Created : 2025-03-24 14:30:33
+#   LastChange : 2025-03-25 07:59:29
+#=============================================================================
+
+source "${HOME}"/.marslo/bin/bash-color.sh
+
+declare isPreview=false
+declare noColor=false
+declare showHelp=false
+declare style=''
+declare alpha=''
+declare index=''
+# shellcheck disable=SC2155
+declare help="""
+NAME
+  $(c Ys)ansi2hex$(c) - convert ANSI color index to HEX color code
+
+SYNOPSIS
+  $(c Ys)\$ ansi2hex$(c) $(c Wd)<$(c)$(c Gi)0$(c)$(c Wd)-$(c)$(c Gi)255$(c)$(c Wd)>$(c) $(c Wd)[ $(c)$(c Gi)style$(c) $(c Wd)] [$(c) $(c Gis)--alpha$(c)$(c Gis)=$(c)$(c Mi)<float>$(c) $(c Wd)] [$(c) $(c Gis)--no-color$(c) $(c Wd)]$(c)
+  $(c Ys)\$ ansi2hex$(c) $(c Gis)--preview$(c) $(c Wd)[$(c) $(c Gi)style$(c) $(c Wd)] [$(c) $(c Gis)--alpha$(c)$(c Gis)=$(c)$(c Mi)<float>$(c) $(c Wd)] [$(c) $(c Gis)--no-color$(c) $(c Wd)]$(c)
+
+ARGUMENTS
+  $(c Wd)<$(c)$(c Gi)0$(c)$(c Wd)-$(c)$(c Gi)255$(c)$(c Wd)>$(c)             ANSI color index to convert
+  $(c Wd)[$(c)$(c Gi)style$(c)$(c Wd)]$(c)             color style: $(c Mi)normal$(c) (default), $(c Mi)dim$(c), $(c Mi)bright$(c) (also accepts $(c Mi)bold$(c)/$(c Mi)light$(c))
+  $(c Gis)--alpha$(c)$(c Gis)=$(c)$(c Mi)<float>$(c)     brightness scale (overrides style). E.g., $(c Mi)0.65$(c) (dim), $(c Mi)1.35$(c) (bright)
+  $(c Gis)--preview$(c)           show all 256 colors in table
+  $(c Gis)--no-color$(c)          disable colorized output
+  $(c Gis)--help$(c), $(c Gis)-h$(c)          show this help message
+
+EXAMPLES
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Mi)dim$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)--alpha=$(c)$(c Mi)1.15$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Mi)dim$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Gi)--alpha=$(c)$(c Wi)0.85$(c) $(c Gi)--no-color$(c)
+"""
+
+# Parse args
+for arg in "$@"; do
+  if [[ "$arg" == "--preview" ]]; then
+    isPreview=true
+  elif [[ "$arg" == "--no-color" ]]; then
+    noColor=true
+  elif [[ "$arg" == "--help" || "$arg" == "-h" ]]; then
+    showHelp=true
+  elif [[ "$arg" =~ ^--alpha= ]]; then
+    alpha="${arg#--alpha=}"
+  elif [[ "$arg" =~ ^[0-9]+$ ]]; then
+    index="$arg"
+  elif [[ "$arg" =~ ^[a-zA-Z]+$ ]]; then
+    style="$arg"
+  fi
+done
+
+# normalize style
+case "$style" in
+  bright|bold|light ) style="bright" ;;
+  dim               ) style="dim"    ;;
+  *                 ) style="normal" ;;
+esac
+
+# set default alpha if not provided
+if [[ -z "$alpha" ]]; then
+  case "$style" in
+    dim    ) alpha=0.65 ;;
+    bright ) alpha=1.35 ;;
+    *      ) alpha=1.0  ;;
+  esac
+fi
+
+# brightness adjustment
+function adjust() {
+  local val="$1"
+  local alpha="$2"
+  awk -v v="$val" -v a="$alpha" 'BEGIN {
+    if (a < 1.0)
+      printf "%d", v * a
+    else if (a > 1.0)
+      printf "%d", v + (255 - v) * (a - 1)
+    else
+      print v
+  }'
+}
+
+# convert ansi index to rgb
+function ansiToRgb() {
+  local idx="$1" alpha="$2"
+  local r g b
+
+  if (( idx < 16 )); then
+    local colors=(
+      0 0 0       128 0 0     0 128 0     128 128 0
+      0 0 128     128 0 128   0 128 128   192 192 192
+      128 128 128 255 0 0     0 255 0     255 255 0
+      0 0 255     255 0 255   0 255 255   255 255 255
+    )
+    r=${colors[idx*3]}
+    g=${colors[idx*3+1]}
+    b=${colors[idx*3+2]}
+
+  elif (( idx >= 16 && idx <= 231 )); then
+    local base=$(( idx - 16 ))
+    local r6=$(( base / 36 ))
+    local g6=$(( (base % 36) / 6 ))
+    local b6=$(( base % 6 ))
+
+    r=$(( r6 == 0 ? 0 : r6 * 40 + 55 ))
+    g=$(( g6 == 0 ? 0 : g6 * 40 + 55 ))
+    b=$(( b6 == 0 ? 0 : b6 * 40 + 55 ))
+
+  else
+    local gray=$(( 8 + (idx - 232) * 10 ))
+    r=$gray; g=$gray; b=$gray
+  fi
+
+  r=$(adjust "$r" "$alpha")
+  g=$(adjust "$g" "$alpha")
+  b=$(adjust "$b" "$alpha")
+
+  echo "$r $g $b"
+}
+
+# RGB to HEX
+function rgbToHex() {
+  printf "#%02X%02X%02X\n" "$1" "$2" "$3"
+}
+
+# reusable print function
+function printColorInfo() {
+  local idx="$1"
+  read -r r g b <<< "$(ansiToRgb "$idx" "$alpha")"
+  local hex
+  hex=$(rgbToHex "$r" "$g" "$b")
+
+  if ${noColor}; then
+    printf "%3s => rgba(%3d, %3d, %3d, %.2f) => %s\n" "$idx" "$r" "$g" "$b" "$alpha" "$hex"
+  else
+    local ansi_color="\033[38;5;${idx}m"
+    local truecolor="\033[38;2;${r};${g};${b}m"
+    local reset="\033[0m"
+    printf "${ansi_color}%3s${reset} => ${truecolor}rgba(%3d, %3d, %3d, %.2f)${reset} => ${truecolor}%s${reset}\n" \
+      "$idx" "$r" "$g" "$b" "$alpha" "$hex"
+  fi
+}
+
+# show usage
+function showUsage() { echo -e "${help}"; exit 0; }
+
+# preview mode: loop through 0–255
+if ${isPreview}; then
+  for i in {0..255}; do
+    printColorInfo "$i"
+  done
+  exit 0
+fi
+
+# standard single output
+[[ -z "${index}" ]] && showUsage
+[[ "$showHelp" == true ]] && showUsage
+
+printColorInfo "$index"
+```
+<!--endsec-->
+
+![ansi2hex.sh](../screenshot/colors/ansi2hex.png)
 
 ## color names
 

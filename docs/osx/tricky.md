@@ -712,9 +712,17 @@ $ curl --create-dirs \
 > - [How do I create a nice-looking DMG for Mac OS X using command-line tools?](https://stackoverflow.com/a/1513578/2940319)
 > - [andreyvit/create-dmg](https://github.com/andreyvit/create-dmg)
 > - [LinusU/node-appdmg](https://github.com/LinusU/node-appdmg)
+> - [Mac打包dmg文件(更换背景图)](https://blog.csdn.net/u011236348/article/details/88772966)
+
+#### background images
+
+![image 1](https://github.com/marslo/mytools/blob/master/raw/Applications/dmg-backgound/.background.1.png)
+
+![image 2](https://github.com/marslo/mytools/blob/master/raw/Applications/dmg-backgound/.background.2.png)
+
+![image 3](https://github.com/marslo/mytools/blob/master/raw/Applications/dmg-backgound/.background.3.png)
 
 #### create dmg from app
-
 
 - via `hdiutil`
 
