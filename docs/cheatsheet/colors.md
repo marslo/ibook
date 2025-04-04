@@ -4,17 +4,37 @@
 - [tools and basic grammar](#tools-and-basic-grammar)
   - [from rgb](#from-rgb)
   - [from rgba](#from-rgba)
-  - [from 256 colors](#from-256-colors)
+    - [rgba to hex](#rgba-to-hex)
+  - [from ansicolor](#from-ansicolor)
+    - [ansi to hex](#ansi-to-hex)
+    - [xColorTable | original](#xcolortable--original)
+    - [256color to hex](#256color-to-hex)
   - [from hex](#from-hex)
+    - [hex to rgba](#hex-to-rgba)
+    - [hex to ansicolor](#hex-to-ansicolor)
+    - [hex to rgb](#hex-to-rgb)
 - [ansi colors](#ansi-colors)
-  - [xterm color code](#xterm-color-code)
+  - [xterm color code output](#xterm-color-code-output)
+    - [echo](#echo)
+    - [printf](#printf)
+    - [`tput`](#tput)
   - [RGB colors](#rgb-colors)
+    - [echo](#echo-1)
+    - [printf](#printf-1)
+    - [for PS1](#for-ps1)
+    - [RGB for both foreground and background](#rgb-for-both-foreground-and-background)
   - [tools](#tools)
+    - [fidian/ansi](#fidianansi)
+    - [bash-colors `c()`](#bash-colors-c)
+    - [`say()`](#say)
+    - [RGBcolor](#rgbcolor)
+    - [terminal-colors](#terminal-colors)
+    - [colored - python libs](#colored---python-libs)
+    - [topic: ansi-colors](#topic-ansi-colors)
   - [color picker](#color-picker)
-  - [256 color table](#256-color-table)
-  - [ansi to hex](#ansi-to-hex)
-  - [hex to rgba](#hex-to-rgba)
-  - [rgba to hex](#rgba-to-hex)
+    - [iterm2-tab-set](#iterm2-tab-set)
+  - [other scripts](#other-scripts)
+    - [256 color table](#256-color-table)
 - [color names](#color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
@@ -194,7 +214,7 @@
 >   $ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
 >   ```
 
-## tools and basic grammar
+# tools and basic grammar
 
 > [!NOTE|label:references:]
 > - [termstandard/colors](https://github.com/termstandard/colors)
@@ -221,7 +241,7 @@
 
   [![normal & bright colors](../screenshot/colors/ansi/color-normal-bright.png)](../screenshot/colors/ansi/color-normal-bright.png)
 
-### from rgb
+## from rgb
 
 > [!NOTE|label:references:]
 > - [rgbToAnsi256(r, g, b)](https://stackoverflow.com/a/26665998/2940319)
@@ -261,7 +281,7 @@
 
 - [rgb to hsv](https://stackoverflow.com/a/70905494/2940319)
 
-### from rgba
+## from rgba
 
 > [!NOTE|label:references:]
 > - [Convert RGBA color to RGB](https://stackoverflow.com/q/2049230/2940319)
@@ -272,1027 +292,6 @@
 > - [Alpha compositing](https://en.wikipedia.org/wiki/Alpha_compositing)
 > - tools
 >   - [Converter for rgba/hsla-colors into hexadecimal-value](https://tdekoning.github.io/rgba-converter/)
-
-- to rgb
-
-  > [!NOTE|label:references:]
-  > ```
-  > alpha     = 1 - RGBA.alpha;
-  > RGB.red   = Math.round((RGBA.alpha * (RGBA.red / 255) + (alpha * (bg.red / 255))) * 255);
-  > RGB.green = Math.round((RGBA.alpha * (RGBA.green / 255) + (alpha * (bg.green / 255))) * 255);
-  > RGB.blue  = Math.round((RGBA.alpha * (RGBA.blue / 255) + (alpha * (bg.blue / 255))) * 255);
-  > ```
-
-### from 256 colors
-- [xColorTable](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh#L114) | [original](https://stackoverflow.com/a/55073732/2940319)
-  ```bash
-  $ xColorTable 30 45 100
-  30  = rgb(0, 135, 135)   => #008787
-  45  = rgb(0, 215, 255)   => #00D7FF
-  100 = rgb(135, 135, 0)   => #878700
-  ```
-
-  [![xColorTable](../screenshot/colors/ansi/xColorTable.png)](../screenshot/colors/ansi/xColorTable.png)
-
-- 256color to hex
-  ```bash
-  tohex(){
-    dec=$(($1%256))   ### input must be a number in range 0-255.
-    if [ "$dec" -lt "16" ]; then
-      bas=$(( dec%16 ))
-      mul=128
-      [ "$bas" -eq "7" ] && mul=192
-      [ "$bas" -eq "8" ] && bas=7
-      [ "$bas" -gt "8" ] && mul=255
-      a="$((  (bas&1)    *mul ))"
-      b="$(( ((bas&2)>>1)*mul ))"
-      c="$(( ((bas&4)>>2)*mul ))"
-      printf 'dec= %3s basic= #%02x%02x%02x\n' "$dec" "$a" "$b" "$c"
-    elif [ "$dec" -gt 15 ] && [ "$dec" -lt 232 ]; then
-      b=$(( (dec-16)%6  )); b=$(( b==0?0: b*40 + 55 ))
-      g=$(( (dec-16)/6%6)); g=$(( g==0?0: g*40 + 55 ))
-      r=$(( (dec-16)/36 )); r=$(( r==0?0: r*40 + 55 ))
-      printf 'dec= %3s color= #%02x%02x%02x\n' "$dec" "$r" "$g" "$b"
-    else
-      gray=$(( (dec-232)*10+8 ))
-      printf 'dec= %3s  gray= #%02x%02x%02x\n' "$dec" "$gray" "$gray" "$gray"
-    fi
-  }
-
-  for i in $(seq 0 255); do
-      tohex ${i}
-  done
-  ```
-
-### from hex
-- [hex to 256colors](https://unix.stackexchange.com/a/269085/29178)
-  ```bash
-  fromhex(){
-    hex=${1#"#"}
-    r=$(printf '0x%0.2s' "$hex")
-    g=$(printf '0x%0.2s' ${hex#??})
-    b=$(printf '0x%0.2s' ${hex#????})
-    printf '%03d' "$(( (r<75?0:(r-35)/40)*6*6 +
-                       (g<75?0:(g-35)/40)*6   +
-                       (b<75?0:(b-35)/40)     + 16 ))"
-  }
-
-  # verify
-  $ xColorTable 30
-  30  = rgb(0, 135, 135)   => #008787
-
-  $ fromhex 008787
-  030
-  $ fromhex 008766
-  029
-  $ fromhex 008788
-  030
-  ```
-
-- hex to rgb
-  ```bash
-  # @author : Anthony Bourdain | https://stackoverflow.com/a/55073732/2940319
-  # @usage  :
-  # - `hexttorgb "11001A" ==> 17 0 26
-  # - `hexttorgb "#11001A" ==> 17 0 26
-  function hextorgb () {
-    hexinput=$(echo "${1}" | tr '[:lower:]' '[:upper:]')           # uppercase-ing
-    hexinput=$(echo "${hexinput}" | tr -d '#')                     # remove Hash if needed
-    a=$(echo "${hexinput}" | cut -c-2)
-    b=$(echo "${hexinput}" | cut -c3-4)
-    c=$(echo "${hexinput}" | cut -c5-6)
-    r=$(echo "ibase=16; ${a}" | bc)
-    g=$(echo "ibase=16; ${b}" | bc)
-    b=$(echo "ibase=16; ${c}" | bc)
-    echo "${r} ${g} ${b}"
-  }
-  ```
-
-## ansi colors
-
-> [!NOTE|label:references:]
-> - [How to have multiple colors in a Windows batch file?](https://stackoverflow.com/a/69924820/2940319)
-> - [How to get the RGB values of a 256-color palette terminal color](https://stackoverflow.com/q/69138165/2940319)
-> - [kenny-kvibe/ansi_colors.sh](https://gist.github.com/kenny-kvibe/d000f9e933da5e99d782b4cc7776ec3e)
-> - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
-
-### xterm color code
-- echo
-  ```bash
-  #                 0 - 255
-  #                    v
-  $ echo -e "\033[38;5;3mhello world\033[0m"
-
-  # for all
-  $ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
-  ```
-
-- printf
-  ```bash
-  #         ╭─ \b      Write a <backspace> character.
-  #         ╷            0 - 255
-  #         v               v
-  $ printf "%-10b" "\e[38;5;3m**text**\e[0m"
-
-  # or ignore `%b`
-  $ printf "\e[38;5;3m**text**\e[0m"
-  ```
-
-- `tput`
-
-  > [!NOTE|label:references::]
-  > - [* iMarslo: linux/nutshell](../linux/nutshell.md#tput)
-  > - [* 256 colors](https://robotmoon.com/256-colors/)
-  > - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
-  > - [tput: Portable Terminal Control](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_node/tput_1.html)
-  > - use cases:
-  >   - [* iMarslo: fman()](../devops/awesomeShell.md#man-page)
-  >   - [* iMarslo: PS1](../linux/basic.md#colors)
-
-  ```bash
-  #          0 - 255                       reset
-  #            v                             v
-  $ tput setaf 30; echo "hello world"; tput sgr0
-  # or
-  $ echo -e "$(tput setaf 30)hello world$(tput sgr0)"
-
-  # more
-  $ tput setaf 30 | command cat -A
-  ^[[38;5;30m
-  ```
-
-  - [background color](https://robotmoon.com/256-colors/)
-    ```bash
-    $ echo $(tput setab 214)256 $(tput setab 202)colors
-    ```
-
-  - [to show color table](https://unix.stackexchange.com/a/438357/29178)
-    ```bash
-    $ for c in {0..255}; do tput setaf $c; tput setaf $c | command cat -v; echo =$c; done
-    ```
-
-  - [show current terminal support](https://unix.stackexchange.com/a/521120/29178)
-    ```bash
-    $ tput colors
-    256
-    ```
-
-### RGB colors
-
-> [!NOTE|label:references:]
-> - [* iMarslo : git » config » colors](../devops/git/config.md#colors)
-> - [* iMarslo: math » number conversion » to decimal](../cheatsheet/math.md#to-decimal)
-
-- echo
-  ```bash
-  # #689d6a
-  #                       ╭─ R(decimal)         : 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
-  #                       ╷   ╭─ G(decimal)     : 157 : `$ echo -n "obase=10;ibase=16; 9D" | bc`
-  #                       ╷   ╷   ╭─ B(decimal) : 106 : `$ echo -n "obase=10;ibase=16; 6A" | bc`
-  #                      --- --- ---
-  $ echo -e '\x1b[3;38;2;104;157;106m hello world \x1b[m'
-  #               -      --- --- ---
-  #               ╵      68  9D  6A
-  #               ╰─ SGR (Select Graphic Rendition) parameters ( https://en.wikipedia.org/wiki/ANSI_escape_code ):
-  #                      0 reset/normal ; 1 bold      ; 2 dim/faint ;
-  #                      3 italic       ; 4 underline ; 5 blink     ;
-  #                      7 reverse      ; 8 hidden
-
-  # or
-  $ echo $(git config --get-color "" "#689d6a italic") color test $(git config --get-color "" reset) | command cat -A
-  ^[[3;38;2;104;157;106m color test ^[[m$
-  #         --- --- ---
-  #         68  9D  6A   : hex
-  #         104 157 106  : decimal
-  ```
-
-- printf
-  ```bash
-  $ hextorgb '#6A5ACD'
-  106 90 205
-
-  #                        6A  5A CD
-  #                        --- -- ---
-  $ printf "%b" '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
-
-  # omit %b
-  $ printf '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
-  ```
-
-- for PS1
-
-  > [!NOTE|label:references:]
-  > - [Using ANSI Color Codes to Colorize Your Bash Prompt on Linux](https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux)
-
-  ```bash
-  # additioanl \[ and \] for PS1 only
-  #  ^                     ^
-  #  --                    --
-  R='\[\e[38;2;255;100;100m\]'
-  G='\[\e[38;2;100;255;100m\]'
-  B='\[\e[38;2;100;100;255m\]'
-  W='\[\e[0m\]'
-  PS1="[$R\u$W@$B\h$W:$G\w$W]\$ "
-  ```
-
-- [RGB for both foreground and background](https://stackoverflow.com/a/33206814/2940319)
-  ```bash
-  # 38;2;R;G;B
-  # 48;2;R;G;B
-  $ echo -e "\033[38;2;255;100;100mhello world\033[0m"
-  $ echo -e "\033[48;2;255;100;100mhello world\033[0m"
-
-  #                 38;2;R;G;B     48;2;R;G;B
-  #               v------------v v-------------v
-  $ echo -e "\033[38;2;155;106;0;48;2;255;100;100mhello world\033[0m"
-
-  # https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
-  $ echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
-  ```
-
-### tools
-
-- [fidian/ansi](https://github.com/fidian/ansi/blob/master/ansi)
-  ```bash
-  # install
-  $ [[ ! -f /opt/ansi ]] && curl -sL git.io/ansi -o /opt/ansi
-  $ chmod +x /opt/ansi
-  $ ln -sf /opt/ansi /usr/local/bin/ansi
-
-  # usage
-  $ ansi --color-table
-  $ ansi --color-codes
-  ```
-
-  ![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)
-
-- [bash-colors `c()`](https://github.com/ppo/bash-colors)
-  ```bash
-  # install
-  $ curl -o /opt/bash-colors.sh -fsSL https://github.com/ppo/bash-colors/blob/master/bash-colors.sh
-  $ echo "[[ -f \"/opt/bash-colors.sh\" ]] && source \"/opt/bash-colors.sh\" >> ~/.bashrc"
-
-  # or using source code directly
-  # shellcheck disable=SC2015,SC2059
-  c() { [ $# == 0 ] && printf "\e[0m" || printf "$1" | sed 's/\(.\)/\1;/g;s/\([SDIUFNHT]\)/2\1/g;s/\([KRGYBMCW]\)/3\1/g;s/\([krgybmcw]\)/4\1/g;y/SDIUFNHTsdiufnhtKRGYBMCWkrgybmcw/12345789123457890123456701234567/;s/^\(.*\);$/\\e[\1m/g'; }
-  # shellcheck disable=SC2086
-  cecho() { echo -e "$(c $1)${2}\e[0m"; }
-
-  # sample
-  $ echo -e "$(c Gs)bold green$(c) and $(c i)Italic$(c) and normal"
-  ```
-
-  [![bash-colors c() for help info](../screenshot/colors/ansi/bash-colors-c.png)](../screenshot/colors/ansi/bash-colors-c.png)
-
-- [`say()`](https://stackoverflow.com/a/46331700/2940319)
-  ```bash
- say() {
-   echo "$@" | sed \
-         -e "s/\(\(@\(red\|green\|yellow\|blue\|magenta\|cyan\|white\|reset\|b\|u\)\)\+\)[[]\{2\}\(.*\)[]]\{2\}/\1\4@reset/g" \
-         -e "s/@red/$(tput setaf 1)/g" \
-         -e "s/@green/$(tput setaf 2)/g" \
-         -e "s/@yellow/$(tput setaf 3)/g" \
-         -e "s/@blue/$(tput setaf 4)/g" \
-         -e "s/@magenta/$(tput setaf 5)/g" \
-         -e "s/@cyan/$(tput setaf 6)/g" \
-         -e "s/@white/$(tput setaf 7)/g" \
-         -e "s/@reset/$(tput sgr0)/g" \
-         -e "s/@b/$(tput bold)/g" \
-         -e "s/@u/$(tput sgr 0 1)/g"
-  }
-
-  $ say @b@green[[Success]]
-  $ say @b@yellowWARNING @red..message..
-  ```
-
-  ![say()](../screenshot/colors/ansi/ansi-color-say.png)
-
-- [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
-  ```bash
-  function RGBcolor {
-    echo "16 + $1 * 36 + $2 * 6 + $3" | bc
-  }
-
-  fg=$(RGBcolor 1 0 2)  # Violet
-  bg=$(RGBcolor 5 3 0)  # Bright orange.
-
-  echo -e "\\033[1;38;5;$fg;48;5;${bg}mviolet on tangerine\\033[0m"
-  ```
-
-- [terminal-colors](https://pypi.org/project/terminal-colors/) | [eikenb/terminal-colors](https://github.com/eikenb/terminal-colors)
-  ```bash
-  $ python3 -m pip install terminal-colors
-
-  # usage
-  $ terminal-colors -l
-  $ terminal-colors -n
-  $ terminal-colors -n -p
-  ```
-
-  [![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)](../screenshot/colors/ansi/terminal-colors-l.png)
-
-  [![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)](../screenshot/colors/ansi/terminal-colors-n.png)
-
-- [colored](https://pypi.org/project/colored/)
-  ```bash
-  # install
-  $ python3 -m pip install colored
-
-  # usage
-  $ colored --help
-  $ colored --color-codes
-  ```
-
-- [topic: ansi-colors](https://github.com/topics/ansi-colors)
-  - [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
-  - [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
-
-### color picker
-
-{% hint style='tip' %}
-> references:
-> - [* imarslo: colors](../../linux/util/colors.html)
-> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
-> - [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
-{% endhint %}
-
-- [iterm2-tab-set](https://www.npmjs.com/package/iterm2-tab-set)
-  - installation
-    ```bash
-    $ npm i iterm2-tab-set
-    ```
-  - usage
-    ```bash
-    $ tabset --pick
-    ```
-
-    ![tabset --pick](../screenshot/osx/tabset--pick.png)
-
-    ```bash
-    function cpick() {
-      if test tabset; then
-        rgb=$(tabset -p | sed -nr "s:.*rgb\(([^)]+)\).*$:\1:p");
-        hexc=$(for c in $(echo "${rgb}" | sed -re 's:,: :g'); do printf '%02x' "$c"; done);
-        echo -e """\t$rgb ~~> $hexc""";
-      fi
-    }
-    ```
-
-  - result
-    ```bash
-    $ cpick
-      125,199,53 ~~> 7dc735
-    ```
-
-
-### 256 color table
-
-> [!NOTE|label:references:]
-> - [xterm 256color chart.svg](https://commons.wikimedia.org/wiki/File:Xterm_256color_chart.svg)
-> - [color grid](http://www.quut.com/berlin/ht/cgrid.html)
-
-- 256 colors
-  ```bash
-  function 256colors() {
-    local bar='█'                                          # ctrl+v -> u2588 ( full block )
-    if uname -r | grep -q "microsoft"; then bar='▌'; fi    # ctrl+v -> u258c ( left half block )
-    for i in {0..255}; do
-      echo -e "\e[38;05;${i}m${bar}${i}";
-    done | column -c 180 -s ' ';
-    echo -e "\e[m"
-  }
-  ```
-
-  [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](../screenshot/colors/ansi/ansicolor-256-0.png)
-
-  ```bash
-  #!/bin/bash
-
-  # This program is free software. It comes without any warranty, to
-  # the extent permitted by applicable law. You can redistribute it
-  # and/or modify it under the terms of the Do What The Fuck You Want
-  # To Public License, Version 2, as published by Sam Hocevar. See
-  # http://sam.zoy.org/wtfpl/COPYING for more details.
-
-  for fgbg in 38 48 ; do # Foreground / Background
-    for color in {0..255} ; do # Colors
-      # Display the color
-      printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
-      # Display 6 colors per lines
-      if [ $((($color + 1) % 6)) == 4 ] ; then
-        echo # New line
-      fi
-    done
-    echo # New line
-  done
-  exit 0
-  ```
-
-  [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](../screenshot/colors/ansi/ansicolor-256-1.png)
-
-- [colors and formatting](https://github.com/stevetarver/shell-scripts/blob/master/ux/color_formatting_display.sh)
-
-  {% hint style='tip' %}
-  > reference:
-  > - [256-colors.sh](https://misc.flogisoft.com/bash/tip_colors_and_formatting#colors2)
-  {% endhint %}
-
-  ```bash
-  #!/bin/sh
-
-  # From: https://misc.flogisoft.com/bash/tip_colors_and_formatting#colors2
-  # Modified by steve.tarver@gmail.com to work in Alpine Linux ash
-
-  # This program is free software. It comes without any warranty, to
-  # the extent permitted by applicable law. You can redistribute it
-  # and/or modify it under the terms of the Do What The Fuck You Want
-  # To Public License, Version 2, as published by Sam Hocevar. See
-  # http://sam.zoy.org/wtfpl/COPYING for more details.
-
-  for clbg in {40..47} {100..107} 49 ; do   # background
-    for clfg in {30..37} {90..97} 39 ; do   # foreground
-      for attr in 0 1 2 3 4 5 7 ; do        # formatting
-        #Print the result
-        echo -en "\e[${attr};${clbg};${clfg}m ^[${attr};${clbg};${clfg}m \e[0m"
-      done
-      echo                                  # newline
-    done
-  done
-  exit 0
-  ```
-
-  [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](../screenshot/colors/ansi/color-formatting-1.png)
-
-  ```bash
-  for attr in 0 1 2 3 4 5 6 7; do
-    echo "------------------------------------------------"
-    printf "ESC[%s;Foreground;Background - \n" $attr
-    for fore in 30 31 32 33 34 35 36 37; do
-        for back in 40 41 42 43 44 45 46 47; do
-            printf '\033[%s;%s;%sm %02s;%02s\033[0m' $attr $fore $back $fore $back
-        done
-    printf '\n'
-    done
-    printf '\033[0m'
-  done
-  ```
-
-  [![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)](../screenshot/colors/ansi/color-formatting-2.png)
-
-- [showColors](https://stackoverflow.com/a/69648792/2940319)
-  ```bash
-  # @author : https://stackoverflow.com/a/69648792/2940319
-  # @usage  :
-  #   - `showcolors fg` : default
-  #   - `showcolors bg`
-  # @alternative: `ansi --color-codes`
-  function showcolors() {
-    local row col blockrow blockcol red green blue
-    local showcolor=_showcolor_${1:-fg}
-    local white="\033[1;37m"
-    local reset="\033[0m"
-
-    echo -e "set foreground color: \\\\033[38;5;${white}NNN${reset}m"
-    echo -e "set background color: \\\\033[48;5;${white}NNN${reset}m"
-    echo -e "reset color & style:  \\\\033[0m"
-    echo
-
-    echo 16 standard color codes:
-    for row in {0..1}; do
-      for col in {0..7}; do
-        $showcolor $(( row*8 + col )) "${row}"
-      done
-      echo
-    done
-    echo
-
-    echo 6·6·6 RGB color codes:
-    for blockrow in {0..2}; do
-      for red in {0..5}; do
-        for blockcol in {0..1}; do
-          green=$(( blockrow*2 + blockcol ))
-          for blue in {0..5}; do
-            $showcolor $(( red*36 + green*6 + blue + 16 )) $green
-          done
-          echo -n "  "
-        done
-        echo
-      done
-      echo
-    done
-
-    echo 24 grayscale color codes:
-    for row in {0..1}; do
-      for col in {0..11}; do
-        $showcolor $(( row*12 + col + 232 )) "${row}"
-      done
-      echo
-    done
-    echo
-  }
-
-  function _showcolor_fg() {
-    # shellcheck disable=SC2155
-    local code=$( printf %03d "$1" )
-    echo -ne "\033[38;5;${code}m"
-    echo -nE " $code "
-    echo -ne "\033[0m"
-  }
-
-  function _showcolor_bg() {
-    if (( $2 % 2 == 0 )); then
-      echo -ne "\033[1;37m"
-    else
-      echo -ne "\033[0;30m"
-    fi
-    # shellcheck disable=SC2155
-    local code=$( printf %03d "$1" )
-    echo -ne "\033[48;5;${code}m"
-    echo -nE " $code "
-    echo -ne "\033[0m"
-  }
-  ```
-
-  [![showcolors](../screenshot/colors/ansi/showcolors.png)](../screenshot/colors/ansi/showcolors.png)
-
-- [colorgrid](https://unix.stackexchange.com/a/285956/29178)
-  ```bash
-  function colorgrid() {
-      iter=16
-      while [ $iter -lt 52 ]
-      do
-          second=$[$iter+36]
-          third=$[$second+36]
-          four=$[$third+36]
-          five=$[$four+36]
-          six=$[$five+36]
-          seven=$[$six+36]
-          if [ $seven -gt 250 ];then seven=$[$seven-251]; fi
-
-          echo -en "\033[38;5;$(echo $iter)m█ "
-          printf "%03d" $iter
-          echo -en "   \033[38;5;$(echo $second)m█ "
-          printf "%03d" $second
-          echo -en "   \033[38;5;$(echo $third)m█ "
-          printf "%03d" $third
-          echo -en "   \033[38;5;$(echo $four)m█ "
-          printf "%03d" $four
-          echo -en "   \033[38;5;$(echo $five)m█ "
-          printf "%03d" $five
-          echo -en "   \033[38;5;$(echo $six)m█ "
-          printf "%03d" $six
-          echo -en "   \033[38;5;$(echo $seven)m█ "
-          printf "%03d" $seven
-
-          iter=$[$iter+1]
-          printf '\r\n'
-      done
-  }
-  ```
-
-- solarized color
-  ```bash
-  #!/bin/bash
-
-  # solarized ansicolors (exporting for grins)
-  export base03='\033[0;30;40m'
-  export base02='\033[1;30;40m'
-  export base01='\033[0;32;40m'
-  export base00='\033[0;33;40m'
-  export base0='\033[0;34;40m'
-  export base1='\033[0;36;40m'
-  export base2='\033[0;37;40m'
-  export base3='\033[1;37;40m'
-  export yellow='\033[1;33;40m'
-  export orange='\033[0;31;40m'
-  export red='\033[1;31;40m'
-  export magenta='\033[1;35;40m'
-  export violet='\033[0;35;40m'
-  export blue='\033[1;34;40m'
-  export cyan='\033[1;36;40m'
-  export green='\033[1;32;40m'
-  export reset='\033[0m'
-
-  colors () {
-    echo -e "base03  ${base03}Test$reset"
-    echo -e "base02  ${base02}Test$reset"
-    echo -e "base01  ${base01}Test$reset"
-    echo -e "base00  ${base00}Test$reset"
-    echo -e "base0   ${base0}Test$reset"
-    echo -e "base1   ${base1}Test$reset"
-    echo -e "base2   ${base2}Test$reset"
-    echo -e "base3   ${base3}Test$reset"
-    echo -e "yellow  ${yellow}Test$reset"
-    echo -e "orange  ${orange}Test$reset"
-    echo -e "red     ${red}Test$reset"
-    echo -e "magenta ${magenta}Test$reset"
-    echo -e "violet  ${violet}Test$reset"
-    echo -e "blue    ${blue}Test$reset"
-    echo -e "cyan    ${cyan}Test$reset"
-    echo -e "green   ${green}Test$reset"
-  }
-  colors
-  ```
-
-  ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
-
-- [show 256 colors](https://www.commandlinefu.com/commands/view/3958/unbelievable-shell-colors-shading-backgrounds-effects-for-non-x)
-
-  > [!NOTE|label:references:]
-  > - [Terminal colour highlights](https://www.pixelbeat.org/docs/terminal_colours/)
-
-  ```bash
-  $ for c in `seq 0 255`; do t=5; [[ $c -lt 108 ]] && t=0; for i in `seq $t 5`; do echo -e "\e[0;48;$i;${c}m|| $i:$c `seq -s+0 $(($COLUMNS/2))|tr -d '[0-9]'`\e[0m"; done;done
-  ```
-
-### ansi to hex
-
-![ansi2hex](../screenshot/colors/ansi2hex.png)
-
-![ansi2hex --help](../screenshot/colors/ansi2hex-help.png)
-
-> [!TIP|label:references:]
-> the enhancement xColorTable
-
-<!--sec data-title="ansi2hex.sh" data-id="section0" data-show=true data-collapse=true ces-->
-```bash
-#!/usr/bin/env bash
-# shellcheck source=/dev/null
-#=============================================================================
-#     FileName : ansi2hex
-#       Author : marslo.jiao@gmail.com
-#      Created : 2025-03-24 14:30:33
-#   LastChange : 2025-03-31 11:22:01
-#=============================================================================
-
-source "${HOME}"/.marslo/bin/bash-color.sh
-
-declare isPreview=false
-declare noColor=false
-declare showHelp=false
-declare style=''
-declare alpha=''
-declare -a indices=()
-# shellcheck disable=SC2155
-declare help="""
-NAME
-  $(c Ys)ansi2hex$(c) - convert ANSI color index to HEX color code
-
-SYNOPSIS
-  $(c Ys)\$ ansi2hex$(c) $(c Gi)<index>...$(c) [$(c Gi)style$(c)] [$(c Gis)--alpha=$(c)$(c Mi)<float>$(c)] [$(c Gis)--no-color$(c)]
-  $(c Ys)\$ ansi2hex$(c) $(c Gis)--preview$(c) [$(c Gi)style$(c)] [$(c Gis)--alpha=$(c)$(c Mi)<float>$(c)] [$(c Gis)--no-color$(c)]
-
-ARGUMENTS
-  $(c Gi)<index>$(c)              one or more ANSI color indices ($(c Wdi)0$(c) ~ $(c Wdi)255$(c))
-  $(c Gi)style$(c)                optional color style: $(c Mi)normal$(c) (default), $(c Mi)dim$(c), $(c Mi)bright$(c), $(c Mi)bold$(c), $(c Mi)light$(c)
-  $(c Gis)--alpha=$(c)$(c Mi)<float>$(c)      brightness adjustment factor (overrides style), e.g., $(c Wi)0.65$(c) ($(c Mi)dim$(c)), $(c Wi)1.35$(c) ($(c Mi)bright$(c))
-  $(c Gis)--no-color$(c)           disable colorized output
-  $(c Gis)--preview$(c)            show all 256 ANSI colors with the specified style and alpha
-  $(c Gis)--help$(c), $(c Gis)-h$(c)           show this help message
-
-VALIDATION
-  - Each $(c Wd)<index>$(c) must be an integer between 0 and 255.
-  - Unknown arguments will result in an error.
-  - Multiple indices and options can be combined.
-
-EXAMPLES
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)45$(c) $(c Gi)100$(c)
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Mi)dim$(c)
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)45$(c) $(c Gi)--alpha=$(c)$(c Mi)1.15$(c)
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Mi)dim$(c)
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Gi)--alpha=$(c)$(c Wi)0.85$(c) $(c Gi)--no-color$(c)
-"""
-
-function isValidIndex() {
-  [[ "$1" =~ ^[0-9]+$ && "$1" -ge 0 && "$1" -le 255 ]]
-}
-
-# parse args
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --alpha=*                    ) alpha="${1#--alpha=}" ;  shift ;;
-    --preview                    ) isPreview=true        ;  shift ;;
-    --no-color                   ) noColor=true          ;  shift ;;
-    --help|-h                    ) showHelp=true         ;  shift ;;
-    dim|bright|bold|light|normal ) style="$1"            ;  shift ;;
-    [0-9]*                       ) if isValidIndex "$1"; then
-                                     indices+=("$1")
-                                   else
-                                     echo "Invalid color index: $1" >&2
-                                     exit 1
-                                   fi
-                                   shift
-                                   ;;
-    *                            ) showUsage             ; exit 0  ;;
-  esac
-done
-
-# normalize style
-case "$style" in
-  bright|bold|light ) style="bright" ;;
-  dim               ) style="dim"    ;;
-  *                 ) style="normal" ;;
-esac
-
-# set default alpha if not provided
-if [[ -z "$alpha" ]]; then
-  case "$style" in
-    dim    ) alpha=0.65 ;;
-    bright ) alpha=1.35 ;;
-    *      ) alpha=1.0  ;;
-  esac
-fi
-
-# brightness adjustment
-function adjust() {
-  local val="$1"
-  awk -v v="$val" -v a="$alpha" 'BEGIN {
-    if (a < 1.0)
-      printf "%d", v * a
-    else if (a > 1.0)
-      printf "%d", v + (255 - v) * (a - 1)
-    else
-      print v
-  }'
-}
-
-# convert ansi index to rgb
-function ansiToRgb() {
-  local idx="$1"
-  local r g b
-
-  if (( idx < 16 )); then
-    local colors=(
-      0 0 0       128 0 0     0 128 0     128 128 0
-      0 0 128     128 0 128   0 128 128   192 192 192
-      128 128 128 255 0 0     0 255 0     255 255 0
-      0 0 255     255 0 255   0 255 255   255 255 255
-    )
-    r=${colors[idx*3]}
-    g=${colors[idx*3+1]}
-    b=${colors[idx*3+2]}
-  elif (( idx >= 16 && idx <= 231 )); then
-    local base=$(( idx - 16 ))
-    local r6=$(( base / 36 ))
-    local g6=$(( (base % 36) / 6 ))
-    local b6=$(( base % 6 ))
-
-    r=$(( r6 == 0 ? 0 : r6 * 40 + 55 ))
-    g=$(( g6 == 0 ? 0 : g6 * 40 + 55 ))
-    b=$(( b6 == 0 ? 0 : b6 * 40 + 55 ))
-  else
-    local gray=$(( 8 + (idx - 232) * 10 ))
-    r=$gray; g=$gray; b=$gray
-  fi
-
-  r=$(adjust "$r")
-  g=$(adjust "$g")
-  b=$(adjust "$b")
-
-  echo "$r $g $b"
-}
-
-# RGB to HEX
-function rgbToHex() { printf "#%02X%02X%02X\n" "$1" "$2" "$3"; }
-
-# print function
-function printColorInfo() {
-  local idx="$1"
-  read -r r g b <<< "$(ansiToRgb "$idx")"
-  local hex
-  hex=$(rgbToHex "$r" "$g" "$b")
-
-  if ${noColor}; then
-    printf "%3s => rgba(%3d, %3d, %3d, %.2f) => %s\n" "$idx" "$r" "$g" "$b" "$alpha" "$hex"
-  else
-    local ansi_color="\033[38;5;${idx}m"
-    local truecolor="\033[38;2;${r};${g};${b}m"
-    local reset="\033[0m"
-    printf "${ansi_color}%3s${reset} => ${truecolor}rgba(%3d, %3d, %3d, %.2f)${reset} => ${truecolor}%s${reset}\n" \
-      "$idx" "$r" "$g" "$b" "$alpha" "$hex"
-  fi
-}
-
-showUsage() { echo -e "${help}"; exit 0; }
-
-[[ "$showHelp" == true ]] && showUsage
-
-if ${isPreview}; then
-  for i in {0..255}; do printColorInfo "$i"; done
-  exit 0
-fi
-
-# if no index provided
-if [[ ${#indices[@]} -eq 0 ]]; then showUsage; fi
-
-# loop over indices
-for idx in "${indices[@]}"; do printColorInfo "${idx}"; done
-
-# vim: tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
-```
-<!--endsec-->
-
-### hex to rgba
-
-![hex2rgba](../screenshot/colors/hex2rgba.png)
-
-![hex2rgba --help](../screenshot/colors/hex2rgba-help.png)
-
-<!--sec data-title="hex2rgba" data-id="section1" data-show=true data-collapse=true ces-->
-```bash
-#!/usr/bin/env bash
-# shellcheck source=/dev/null disable=SC2155
-#=============================================================================
-#     FileName : hex2rgba
-#       Author : marslo.jiao@gmail.com
-#      Created : 2025-04-03 00:21:35
-#   LastChange : 2025-04-04 00:07:47
-#=============================================================================
-
-set -euo pipefail
-source "${HOME}"/.marslo/bin/bash-color.sh
-
-# shellcheck disable=SC2155
-declare usage="""
-NAME
-  $(c Ys)hex2rgba$(c) - HEX to RGBA Converter with ANSI Color Preview
-
-USAGE
-  $(c Ys)hex2rgba$(c) $(c Gis)[OPTIONS]$(c) $(c Ms)'HEX_COLOR_CODE'$(c)
-
-OPTIONS
-  $(c Gis)-a$(c), $(c Gis)--alpha$(c)       override alpha value ( $(c Wdi)0.00$(c) ~ $(c Wdi)1.00$(c) )
-  $(c Gis)-b$(c), $(c Gis)--background$(c)  set background color ( $(c Wdi)#FFFFFF$(c)/$(c Wdi)#FFF$(c) or $(c Wdi)R,G,B$(c), default: $(c Wi)#FFFFFF$(c) )
-  $(c Gis)-h$(c), $(c Gis)--help$(c)        show this help message
-
-EXAMPLES
-  $(c Wi)# show the RGBA values of alphas from 0.0 to 1.0 sequentially.$(c)
-  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c)
-
-  $(c Wi)# show the RGBA values with alpha 0.5.$(c)
-  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c) $(c Gis)--alpha 0.5$(c)
-
-  $(c Wi)# show the RGBA values for alphas from 0.1 to 1.0 sequentially with background color #000000.$(c)
-  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c) $(c Gis)--background '#000000'$(c)
-
-  $(c Wi)# show the RGBA values with alpha 0.3 with background color red ( #FF0000 ).$(c)
-  \$ $(c Yis)hex2rgba$(c) $(c Ms)D3869B$(c) $(c Gis)--background 255,0,0$(c) $(c Gis)--alpha 0.3$(c)
-
-NOTES
-  • Alpha values will clamp to [ $(c Gi)0.00$(c) ~ $(c Gi)1.00$(c) ]
-  • The hex color code and background color code support both $(c Mi)with$(c) or $(c Mi)without hashtag$(c) ( $(c Wi)'#'$(c) )
-  • Using $(c Mi)single quotes$(c) for color code with $(c Wi)'#'$(c) to avoid shell command line break
-  • Output includes ANSI color preview (requires truecolor terminal support)
-"""
-
-function die() {
-  echo -e "$(c Rsi)ERROR$(c) : $*. try $(c Gi)-h$(c)/$(c Gi)--help$(c). exit ..." >&2;
-  exit 2;
-}
-
-function parseColor() {
-  local input="$1"
-
-  # for RGB format: R,G,B
-  if [[ "$input" == *,*,* ]]; then
-    IFS=',' read -ra parts <<< "$input"
-    [[ ${#parts[@]} -ne 3 ]] && die "Invalid RGB format: $input"
-    local r=${parts[0]} g=${parts[1]} b=${parts[2]}
-
-    # verify the range of RGB values
-    for c in $r $g $b; do
-      if [[ ! $c =~ ^[0-9]+$ ]] || (( c < 0 || c > 255 )); then
-        die "invalid RGB value: $c"
-      fi
-    done
-
-    echo "${r} ${g} ${b}"
-    return 0
-  fi
-
-  # for HEX format
-  local hex="${input^^}"
-  hex="${hex//#/}"
-  local len=${#hex}
-
-  # extend XYZ to XXYYZZ
-  if [[ $len -eq 3 ]]; then
-    hex="${hex:0:1}${hex:0:1}${hex:1:1}${hex:1:1}${hex:2:1}${hex:2:1}"
-    len=6
-  fi
-
-  [[ $len -ne 6 ]] && die "invalid color format: ${input}" >&2
-
-  local r="$(( 16#${hex:0:2} ))"
-  local g="$(( 16#${hex:2:2} ))"
-  local b="$(( 16#${hex:4:2} ))"
-
-  echo "${r} ${g} ${b}"
-}
-
-function parseBackground() {
-  local bg="$1"
-  if ! IFS=' ' read -r bgR bgG bgB <<< "$(parseColor "${bg}")"; then
-    exit 1
-  fi
-}
-
-function getMixedRGB() {
-  local fgR=$1
-  local fgG=$2
-  local fgB=$3
-  local alpha=$4
-  rMixed=$(echo "scale=0; (${fgR} * ${alpha} + ${bgR} * (1 - ${alpha})) / 1" | bc)
-  gMixed=$(echo "scale=0; (${fgG} * ${alpha} + ${bgG} * (1 - ${alpha})) / 1" | bc)
-  bMixed=$(echo "scale=0; (${fgB} * ${alpha} + ${bgB} * (1 - ${alpha})) / 1" | bc)
-  rMixed=$(( rMixed < 0 ? 0 : ( rMixed > 255 ? 255 : rMixed ) ))
-  gMixed=$(( gMixed < 0 ? 0 : ( gMixed > 255 ? 255 : gMixed ) ))
-  bMixed=$(( bMixed < 0 ? 0 : ( bMixed > 255 ? 255 : bMixed ) ))
-  echo "${rMixed} ${gMixed} ${bMixed}"
-}
-
-function rgbToHex() {
-  printf "#%02X%02X%02X" "${1}" "${2}" "${3}"
-}
-
-function showOutput() {
-  local alphaValue=$1
-  local precision=$2
-
-  # format alphaValue to 2 decimal places
-  local formattedAlpha=$(printf "%.${precision}f" "${alphaValue}")
-
-  # get mixed RGB values
-  local rgbMixed=$(getMixedRGB "${r}" "${g}" "${b}" "${alphaValue}")
-
-  # analysis the mixed RGB values with IFS
-  IFS=' ' read -r rMixed gMixed bMixed <<< "${rgbMixed}"
-
-  # generate HEX color code
-  local hexResult=$(rgbToHex "${rMixed}" "${gMixed}" "${bMixed}")
-
-  # generate ANSI color code
-  local ansiMixed="\033[38;2;${rMixed};${gMixed};${bMixed}m"
-
-  # output
-  echo -e "${ansiHexOrg}#${hexOrg//#/}\033[0m -> ${ansiMixed}rgba(${r}, ${g}, ${b}, ${formattedAlpha})\033[0m -> ${ansiMixed}${hexResult}\033[0m"
-}
-
-main() {
-  local hex=''
-  local alpha=''
-  local background='#FFFFFF'
-  local hexOrg=''
-
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-        -a | --alpha      ) alpha="$2"            ; shift 2 ;;
-        -b | --background ) background="${2//#/}" ; shift 2 ;;
-        -h | --help       ) echo -e "${usage}"    ; exit 0  ;;
-        *                 ) if [[ -z "$hex" ]]; then
-                              hexOrg="$1"
-                              hex="${1//#/}"
-                            else
-                              echo "ERROR: Unexpected argument: $1" >&2
-                              exit 1
-                            fi
-                            shift
-                        ;;
-    esac
-  done
-
-  if ! IFS=' ' read -r r g b <<< "$(parseColor "${hex}")"; then
-    exit 1
-  fi
-
-  if [[ -n "${background}" ]]; then
-    parseBackground "${background}"
-  else
-    bgR=255
-    bgG=255
-    bgB=255
-  fi
-
-  local ansiHexOrg="\033[38;2;${r};${g};${b}m"
-
-  if [[ -n "${alpha}" ]]; then
-    if ! [[ "${alpha}" =~ ^[0]?\.?[0-9]+$ ]] || (( $(echo "$alpha < 0.0 || $alpha > 1.0" | bc -l) )); then
-      echo "Invalid alpha value: $alpha" >&2
-      exit 1
-    fi
-    showOutput "${alpha}" 2
-  else
-    for alpha in $(seq 0 0.1 1.0); do
-      showOutput "${alpha}" 1
-    done
-  fi
-}
-
-main "$@"
-
-# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
-```
-<!--endsec-->
 
 ### rgba to hex
 
@@ -1621,7 +620,1043 @@ function showHelp() { echo -e "$usage"; }
 ```
 <!--endsec-->
 
-## color names
+
+- to rgb
+
+  > [!NOTE|label:references:]
+  > ```
+  > alpha     = 1 - RGBA.alpha;
+  > RGB.red   = Math.round((RGBA.alpha * (RGBA.red / 255) + (alpha * (bg.red / 255))) * 255);
+  > RGB.green = Math.round((RGBA.alpha * (RGBA.green / 255) + (alpha * (bg.green / 255))) * 255);
+  > RGB.blue  = Math.round((RGBA.alpha * (RGBA.blue / 255) + (alpha * (bg.blue / 255))) * 255);
+  > ```
+
+## from ansicolor
+
+### ansi to hex
+
+![ansi2hex](../screenshot/colors/ansi2hex.png)
+
+![ansi2hex --help](../screenshot/colors/ansi2hex-help.png)
+
+> [!TIP|label:references:]
+> the enhancement xColorTable
+
+<!--sec data-title="ansi2hex.sh" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+#=============================================================================
+#     FileName : ansi2hex
+#       Author : marslo.jiao@gmail.com
+#      Created : 2025-03-24 14:30:33
+#   LastChange : 2025-03-31 11:22:01
+#=============================================================================
+
+source "${HOME}"/.marslo/bin/bash-color.sh
+
+declare isPreview=false
+declare noColor=false
+declare showHelp=false
+declare style=''
+declare alpha=''
+declare -a indices=()
+# shellcheck disable=SC2155
+declare help="""
+NAME
+  $(c Ys)ansi2hex$(c) - convert ANSI color index to HEX color code
+
+SYNOPSIS
+  $(c Ys)\$ ansi2hex$(c) $(c Gi)<index>...$(c) [$(c Gi)style$(c)] [$(c Gis)--alpha=$(c)$(c Mi)<float>$(c)] [$(c Gis)--no-color$(c)]
+  $(c Ys)\$ ansi2hex$(c) $(c Gis)--preview$(c) [$(c Gi)style$(c)] [$(c Gis)--alpha=$(c)$(c Mi)<float>$(c)] [$(c Gis)--no-color$(c)]
+
+ARGUMENTS
+  $(c Gi)<index>$(c)              one or more ANSI color indices ($(c Wdi)0$(c) ~ $(c Wdi)255$(c))
+  $(c Gi)style$(c)                optional color style: $(c Mi)normal$(c) (default), $(c Mi)dim$(c), $(c Mi)bright$(c), $(c Mi)bold$(c), $(c Mi)light$(c)
+  $(c Gis)--alpha=$(c)$(c Mi)<float>$(c)      brightness adjustment factor (overrides style), e.g., $(c Wi)0.65$(c) ($(c Mi)dim$(c)), $(c Wi)1.35$(c) ($(c Mi)bright$(c))
+  $(c Gis)--no-color$(c)           disable colorized output
+  $(c Gis)--preview$(c)            show all 256 ANSI colors with the specified style and alpha
+  $(c Gis)--help$(c), $(c Gis)-h$(c)           show this help message
+
+VALIDATION
+  - Each $(c Wd)<index>$(c) must be an integer between 0 and 255.
+  - Unknown arguments will result in an error.
+  - Multiple indices and options can be combined.
+
+EXAMPLES
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)45$(c) $(c Gi)100$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Mi)dim$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)45$(c) $(c Gi)--alpha=$(c)$(c Mi)1.15$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Mi)dim$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Gi)--alpha=$(c)$(c Wi)0.85$(c) $(c Gi)--no-color$(c)
+"""
+
+function isValidIndex() {
+  [[ "$1" =~ ^[0-9]+$ && "$1" -ge 0 && "$1" -le 255 ]]
+}
+
+# parse args
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --alpha=*                    ) alpha="${1#--alpha=}" ;  shift ;;
+    --preview                    ) isPreview=true        ;  shift ;;
+    --no-color                   ) noColor=true          ;  shift ;;
+    --help|-h                    ) showHelp=true         ;  shift ;;
+    dim|bright|bold|light|normal ) style="$1"            ;  shift ;;
+    [0-9]*                       ) if isValidIndex "$1"; then
+                                     indices+=("$1")
+                                   else
+                                     echo "Invalid color index: $1" >&2
+                                     exit 1
+                                   fi
+                                   shift
+                                   ;;
+    *                            ) showUsage             ; exit 0  ;;
+  esac
+done
+
+# normalize style
+case "$style" in
+  bright|bold|light ) style="bright" ;;
+  dim               ) style="dim"    ;;
+  *                 ) style="normal" ;;
+esac
+
+# set default alpha if not provided
+if [[ -z "$alpha" ]]; then
+  case "$style" in
+    dim    ) alpha=0.65 ;;
+    bright ) alpha=1.35 ;;
+    *      ) alpha=1.0  ;;
+  esac
+fi
+
+# brightness adjustment
+function adjust() {
+  local val="$1"
+  awk -v v="$val" -v a="$alpha" 'BEGIN {
+    if (a < 1.0)
+      printf "%d", v * a
+    else if (a > 1.0)
+      printf "%d", v + (255 - v) * (a - 1)
+    else
+      print v
+  }'
+}
+
+# convert ansi index to rgb
+function ansiToRgb() {
+  local idx="$1"
+  local r g b
+
+  if (( idx < 16 )); then
+    local colors=(
+      0 0 0       128 0 0     0 128 0     128 128 0
+      0 0 128     128 0 128   0 128 128   192 192 192
+      128 128 128 255 0 0     0 255 0     255 255 0
+      0 0 255     255 0 255   0 255 255   255 255 255
+    )
+    r=${colors[idx*3]}
+    g=${colors[idx*3+1]}
+    b=${colors[idx*3+2]}
+  elif (( idx >= 16 && idx <= 231 )); then
+    local base=$(( idx - 16 ))
+    local r6=$(( base / 36 ))
+    local g6=$(( (base % 36) / 6 ))
+    local b6=$(( base % 6 ))
+
+    r=$(( r6 == 0 ? 0 : r6 * 40 + 55 ))
+    g=$(( g6 == 0 ? 0 : g6 * 40 + 55 ))
+    b=$(( b6 == 0 ? 0 : b6 * 40 + 55 ))
+  else
+    local gray=$(( 8 + (idx - 232) * 10 ))
+    r=$gray; g=$gray; b=$gray
+  fi
+
+  r=$(adjust "$r")
+  g=$(adjust "$g")
+  b=$(adjust "$b")
+
+  echo "$r $g $b"
+}
+
+# RGB to HEX
+function rgbToHex() { printf "#%02X%02X%02X\n" "$1" "$2" "$3"; }
+
+# print function
+function printColorInfo() {
+  local idx="$1"
+  read -r r g b <<< "$(ansiToRgb "$idx")"
+  local hex
+  hex=$(rgbToHex "$r" "$g" "$b")
+
+  if ${noColor}; then
+    printf "%3s => rgba(%3d, %3d, %3d, %.2f) => %s\n" "$idx" "$r" "$g" "$b" "$alpha" "$hex"
+  else
+    local ansi_color="\033[38;5;${idx}m"
+    local truecolor="\033[38;2;${r};${g};${b}m"
+    local reset="\033[0m"
+    printf "${ansi_color}%3s${reset} => ${truecolor}rgba(%3d, %3d, %3d, %.2f)${reset} => ${truecolor}%s${reset}\n" \
+      "$idx" "$r" "$g" "$b" "$alpha" "$hex"
+  fi
+}
+
+showUsage() { echo -e "${help}"; exit 0; }
+
+[[ "$showHelp" == true ]] && showUsage
+
+if ${isPreview}; then
+  for i in {0..255}; do printColorInfo "$i"; done
+  exit 0
+fi
+
+# if no index provided
+if [[ ${#indices[@]} -eq 0 ]]; then showUsage; fi
+
+# loop over indices
+for idx in "${indices[@]}"; do printColorInfo "${idx}"; done
+
+# vim: tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+<!--endsec-->
+
+
+### [xColorTable](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh#L114) | [original](https://stackoverflow.com/a/55073732/2940319)
+```bash
+$ xColorTable 30 45 100
+30  = rgb(0, 135, 135)   => #008787
+45  = rgb(0, 215, 255)   => #00D7FF
+100 = rgb(135, 135, 0)   => #878700
+```
+
+[![xColorTable](../screenshot/colors/ansi/xColorTable.png)](../screenshot/colors/ansi/xColorTable.png)
+
+### 256color to hex
+```bash
+tohex(){
+  dec=$(($1%256))   ### input must be a number in range 0-255.
+  if [ "$dec" -lt "16" ]; then
+    bas=$(( dec%16 ))
+    mul=128
+    [ "$bas" -eq "7" ] && mul=192
+    [ "$bas" -eq "8" ] && bas=7
+    [ "$bas" -gt "8" ] && mul=255
+    a="$((  (bas&1)    *mul ))"
+    b="$(( ((bas&2)>>1)*mul ))"
+    c="$(( ((bas&4)>>2)*mul ))"
+    printf 'dec= %3s basic= #%02x%02x%02x\n' "$dec" "$a" "$b" "$c"
+  elif [ "$dec" -gt 15 ] && [ "$dec" -lt 232 ]; then
+    b=$(( (dec-16)%6  )); b=$(( b==0?0: b*40 + 55 ))
+    g=$(( (dec-16)/6%6)); g=$(( g==0?0: g*40 + 55 ))
+    r=$(( (dec-16)/36 )); r=$(( r==0?0: r*40 + 55 ))
+    printf 'dec= %3s color= #%02x%02x%02x\n' "$dec" "$r" "$g" "$b"
+  else
+    gray=$(( (dec-232)*10+8 ))
+    printf 'dec= %3s  gray= #%02x%02x%02x\n' "$dec" "$gray" "$gray" "$gray"
+  fi
+}
+
+for i in $(seq 0 255); do tohex ${i}; done
+```
+
+## from hex
+
+### hex to rgba
+
+![hex2rgba](../screenshot/colors/hex2rgba.png)
+
+![hex2rgba --help](../screenshot/colors/hex2rgba-help.png)
+
+<!--sec data-title="hex2rgba" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+# shellcheck source=/dev/null disable=SC2155
+#=============================================================================
+#     FileName : hex2rgba
+#       Author : marslo.jiao@gmail.com
+#      Created : 2025-04-03 00:21:35
+#   LastChange : 2025-04-04 00:07:47
+#=============================================================================
+
+set -euo pipefail
+source "${HOME}"/.marslo/bin/bash-color.sh
+
+# shellcheck disable=SC2155
+declare usage="""
+NAME
+  $(c Ys)hex2rgba$(c) - HEX to RGBA Converter with ANSI Color Preview
+
+USAGE
+  $(c Ys)hex2rgba$(c) $(c Gis)[OPTIONS]$(c) $(c Ms)'HEX_COLOR_CODE'$(c)
+
+OPTIONS
+  $(c Gis)-a$(c), $(c Gis)--alpha$(c)       override alpha value ( $(c Wdi)0.00$(c) ~ $(c Wdi)1.00$(c) )
+  $(c Gis)-b$(c), $(c Gis)--background$(c)  set background color ( $(c Wdi)#FFFFFF$(c)/$(c Wdi)#FFF$(c) or $(c Wdi)R,G,B$(c), default: $(c Wi)#FFFFFF$(c) )
+  $(c Gis)-h$(c), $(c Gis)--help$(c)        show this help message
+
+EXAMPLES
+  $(c Wi)# show the RGBA values of alphas from 0.0 to 1.0 sequentially.$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c)
+
+  $(c Wi)# show the RGBA values with alpha 0.5.$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c) $(c Gis)--alpha 0.5$(c)
+
+  $(c Wi)# show the RGBA values for alphas from 0.1 to 1.0 sequentially with background color #000000.$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c) $(c Gis)--background '#000000'$(c)
+
+  $(c Wi)# show the RGBA values with alpha 0.3 with background color red ( #FF0000 ).$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)D3869B$(c) $(c Gis)--background 255,0,0$(c) $(c Gis)--alpha 0.3$(c)
+
+NOTES
+  • Alpha values will clamp to [ $(c Gi)0.00$(c) ~ $(c Gi)1.00$(c) ]
+  • The hex color code and background color code support both $(c Mi)with$(c) or $(c Mi)without hashtag$(c) ( $(c Wi)'#'$(c) )
+  • Using $(c Mi)single quotes$(c) for color code with $(c Wi)'#'$(c) to avoid shell command line break
+  • Output includes ANSI color preview (requires truecolor terminal support)
+"""
+
+function die() {
+  echo -e "$(c Rsi)ERROR$(c) : $*. try $(c Gi)-h$(c)/$(c Gi)--help$(c). exit ..." >&2;
+  exit 2;
+}
+
+function parseColor() {
+  local input="$1"
+
+  # for RGB format: R,G,B
+  if [[ "$input" == *,*,* ]]; then
+    IFS=',' read -ra parts <<< "$input"
+    [[ ${#parts[@]} -ne 3 ]] && die "Invalid RGB format: $input"
+    local r=${parts[0]} g=${parts[1]} b=${parts[2]}
+
+    # verify the range of RGB values
+    for c in $r $g $b; do
+      if [[ ! $c =~ ^[0-9]+$ ]] || (( c < 0 || c > 255 )); then
+        die "invalid RGB value: $c"
+      fi
+    done
+
+    echo "${r} ${g} ${b}"
+    return 0
+  fi
+
+  # for HEX format
+  local hex="${input^^}"
+  hex="${hex//#/}"
+  local len=${#hex}
+
+  # extend XYZ to XXYYZZ
+  if [[ $len -eq 3 ]]; then
+    hex="${hex:0:1}${hex:0:1}${hex:1:1}${hex:1:1}${hex:2:1}${hex:2:1}"
+    len=6
+  fi
+
+  [[ $len -ne 6 ]] && die "invalid color format: ${input}" >&2
+
+  local r="$(( 16#${hex:0:2} ))"
+  local g="$(( 16#${hex:2:2} ))"
+  local b="$(( 16#${hex:4:2} ))"
+
+  echo "${r} ${g} ${b}"
+}
+
+function parseBackground() {
+  local bg="$1"
+  if ! IFS=' ' read -r bgR bgG bgB <<< "$(parseColor "${bg}")"; then
+    exit 1
+  fi
+}
+
+function getMixedRGB() {
+  local fgR=$1
+  local fgG=$2
+  local fgB=$3
+  local alpha=$4
+  rMixed=$(echo "scale=0; (${fgR} * ${alpha} + ${bgR} * (1 - ${alpha})) / 1" | bc)
+  gMixed=$(echo "scale=0; (${fgG} * ${alpha} + ${bgG} * (1 - ${alpha})) / 1" | bc)
+  bMixed=$(echo "scale=0; (${fgB} * ${alpha} + ${bgB} * (1 - ${alpha})) / 1" | bc)
+  rMixed=$(( rMixed < 0 ? 0 : ( rMixed > 255 ? 255 : rMixed ) ))
+  gMixed=$(( gMixed < 0 ? 0 : ( gMixed > 255 ? 255 : gMixed ) ))
+  bMixed=$(( bMixed < 0 ? 0 : ( bMixed > 255 ? 255 : bMixed ) ))
+  echo "${rMixed} ${gMixed} ${bMixed}"
+}
+
+function rgbToHex() {
+  printf "#%02X%02X%02X" "${1}" "${2}" "${3}"
+}
+
+function showOutput() {
+  local alphaValue=$1
+  local precision=$2
+
+  # format alphaValue to 2 decimal places
+  local formattedAlpha=$(printf "%.${precision}f" "${alphaValue}")
+
+  # get mixed RGB values
+  local rgbMixed=$(getMixedRGB "${r}" "${g}" "${b}" "${alphaValue}")
+
+  # analysis the mixed RGB values with IFS
+  IFS=' ' read -r rMixed gMixed bMixed <<< "${rgbMixed}"
+
+  # generate HEX color code
+  local hexResult=$(rgbToHex "${rMixed}" "${gMixed}" "${bMixed}")
+
+  # generate ANSI color code
+  local ansiMixed="\033[38;2;${rMixed};${gMixed};${bMixed}m"
+
+  # output
+  echo -e "${ansiHexOrg}#${hexOrg//#/}\033[0m -> ${ansiMixed}rgba(${r}, ${g}, ${b}, ${formattedAlpha})\033[0m -> ${ansiMixed}${hexResult}\033[0m"
+}
+
+main() {
+  local hex=''
+  local alpha=''
+  local background='#FFFFFF'
+  local hexOrg=''
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -a | --alpha      ) alpha="$2"            ; shift 2 ;;
+        -b | --background ) background="${2//#/}" ; shift 2 ;;
+        -h | --help       ) echo -e "${usage}"    ; exit 0  ;;
+        *                 ) if [[ -z "$hex" ]]; then
+                              hexOrg="$1"
+                              hex="${1//#/}"
+                            else
+                              echo "ERROR: Unexpected argument: $1" >&2
+                              exit 1
+                            fi
+                            shift
+                        ;;
+    esac
+  done
+
+  if ! IFS=' ' read -r r g b <<< "$(parseColor "${hex}")"; then
+    exit 1
+  fi
+
+  if [[ -n "${background}" ]]; then
+    parseBackground "${background}"
+  else
+    bgR=255
+    bgG=255
+    bgB=255
+  fi
+
+  local ansiHexOrg="\033[38;2;${r};${g};${b}m"
+
+  if [[ -n "${alpha}" ]]; then
+    if ! [[ "${alpha}" =~ ^[0]?\.?[0-9]+$ ]] || (( $(echo "$alpha < 0.0 || $alpha > 1.0" | bc -l) )); then
+      echo "Invalid alpha value: $alpha" >&2
+      exit 1
+    fi
+    showOutput "${alpha}" 2
+  else
+    for alpha in $(seq 0 0.1 1.0); do
+      showOutput "${alpha}" 1
+    done
+  fi
+}
+
+main "$@"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+<!--endsec-->
+
+
+### [hex to ansicolor](https://unix.stackexchange.com/a/269085/29178)
+```bash
+fromhex(){
+  hex=${1#"#"}
+  r=$(printf '0x%0.2s' "$hex")
+  g=$(printf '0x%0.2s' ${hex#??})
+  b=$(printf '0x%0.2s' ${hex#????})
+  printf '%03d' "$(( (r<75?0:(r-35)/40)*6*6 +
+                     (g<75?0:(g-35)/40)*6   +
+                     (b<75?0:(b-35)/40)     + 16 ))"
+}
+
+# verify
+$ xColorTable 30
+30  = rgb(0, 135, 135)   => #008787
+
+$ fromhex 008787
+030
+$ fromhex 008766
+029
+$ fromhex 008788
+030
+```
+
+### hex to rgb
+```bash
+# @author : Anthony Bourdain | https://stackoverflow.com/a/55073732/2940319
+# @usage  :
+# - `hexttorgb "11001A" ==> 17 0 26
+# - `hexttorgb "#11001A" ==> 17 0 26
+function hextorgb () {
+  hexinput=$(echo "${1}" | tr '[:lower:]' '[:upper:]')           # uppercase-ing
+  hexinput=$(echo "${hexinput}" | tr -d '#')                     # remove Hash if needed
+  a=$(echo "${hexinput}" | cut -c-2)
+  b=$(echo "${hexinput}" | cut -c3-4)
+  c=$(echo "${hexinput}" | cut -c5-6)
+  r=$(echo "ibase=16; ${a}" | bc)
+  g=$(echo "ibase=16; ${b}" | bc)
+  b=$(echo "ibase=16; ${c}" | bc)
+  echo "${r} ${g} ${b}"
+}
+```
+
+# ansi colors
+
+> [!NOTE|label:references:]
+> - [How to have multiple colors in a Windows batch file?](https://stackoverflow.com/a/69924820/2940319)
+> - [How to get the RGB values of a 256-color palette terminal color](https://stackoverflow.com/q/69138165/2940319)
+> - [kenny-kvibe/ansi_colors.sh](https://gist.github.com/kenny-kvibe/d000f9e933da5e99d782b4cc7776ec3e)
+> - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
+
+## xterm color code output
+### echo
+```bash
+#                 0 - 255
+#                    v
+$ echo -e "\033[38;5;3mhello world\033[0m"
+
+# for all
+$ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
+```
+
+### printf
+```bash
+#         ╭─ \b      Write a <backspace> character.
+#         ╷            0 - 255
+#         v               v
+$ printf "%-10b" "\e[38;5;3m**text**\e[0m"
+
+# or ignore `%b`
+$ printf "\e[38;5;3m**text**\e[0m"
+```
+
+### `tput`
+
+> [!NOTE|label:references::]
+> - [* iMarslo: linux/nutshell](../linux/nutshell.md#tput)
+> - [* 256 colors](https://robotmoon.com/256-colors/)
+> - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
+> - [tput: Portable Terminal Control](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_node/tput_1.html)
+> - use cases:
+>   - [* iMarslo: fman()](../devops/awesomeShell.md#man-page)
+>   - [* iMarslo: PS1](../linux/basic.md#colors)
+
+```bash
+#          0 - 255                       reset
+#            v                             v
+$ tput setaf 30; echo "hello world"; tput sgr0
+# or
+$ echo -e "$(tput setaf 30)hello world$(tput sgr0)"
+
+# more
+$ tput setaf 30 | command cat -A
+^[[38;5;30m
+```
+
+- [background color](https://robotmoon.com/256-colors/)
+  ```bash
+  $ echo $(tput setab 214)256 $(tput setab 202)colors
+  ```
+
+- [to show color table](https://unix.stackexchange.com/a/438357/29178)
+  ```bash
+  $ for c in {0..255}; do tput setaf $c; tput setaf $c | command cat -v; echo =$c; done
+  ```
+
+- [show current terminal support](https://unix.stackexchange.com/a/521120/29178)
+  ```bash
+  $ tput colors
+  256
+  ```
+
+## RGB colors
+
+> [!NOTE|label:references:]
+> - [* iMarslo : git » config » colors](../devops/git/config.md#colors)
+> - [* iMarslo: math » number conversion » to decimal](../cheatsheet/math.md#to-decimal)
+
+### echo
+```bash
+# #689d6a
+#                       ╭─ R(decimal)         : 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
+#                       ╷   ╭─ G(decimal)     : 157 : `$ echo -n "obase=10;ibase=16; 9D" | bc`
+#                       ╷   ╷   ╭─ B(decimal) : 106 : `$ echo -n "obase=10;ibase=16; 6A" | bc`
+#                      --- --- ---
+$ echo -e '\x1b[3;38;2;104;157;106m hello world \x1b[m'
+#               -      --- --- ---
+#               ╵      68  9D  6A
+#               ╰─ SGR (Select Graphic Rendition) parameters ( https://en.wikipedia.org/wiki/ANSI_escape_code ):
+#                      0 reset/normal ; 1 bold      ; 2 dim/faint ;
+#                      3 italic       ; 4 underline ; 5 blink     ;
+#                      7 reverse      ; 8 hidden
+
+# or
+$ echo $(git config --get-color "" "#689d6a italic") color test $(git config --get-color "" reset) | command cat -A
+^[[3;38;2;104;157;106m color test ^[[m$
+#         --- --- ---
+#         68  9D  6A   : hex
+#         104 157 106  : decimal
+```
+
+### printf
+```bash
+$ hextorgb '#6A5ACD'
+106 90 205
+
+#                        6A  5A CD
+#                        --- -- ---
+$ printf "%b" '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
+
+# omit %b
+$ printf '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
+```
+
+### for PS1
+
+> [!NOTE|label:references:]
+> - [Using ANSI Color Codes to Colorize Your Bash Prompt on Linux](https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux)
+
+```bash
+# additioanl \[ and \] for PS1 only
+#  ^                     ^
+#  --                    --
+R='\[\e[38;2;255;100;100m\]'
+G='\[\e[38;2;100;255;100m\]'
+B='\[\e[38;2;100;100;255m\]'
+W='\[\e[0m\]'
+PS1="[$R\u$W@$B\h$W:$G\w$W]\$ "
+```
+
+### [RGB for both foreground and background](https://stackoverflow.com/a/33206814/2940319)
+```bash
+# 38;2;R;G;B
+# 48;2;R;G;B
+$ echo -e "\033[38;2;255;100;100mhello world\033[0m"
+$ echo -e "\033[48;2;255;100;100mhello world\033[0m"
+
+#                 38;2;R;G;B     48;2;R;G;B
+#               v------------v v-------------v
+$ echo -e "\033[38;2;155;106;0;48;2;255;100;100mhello world\033[0m"
+
+# https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
+$ echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
+```
+
+## tools
+
+### [fidian/ansi](https://github.com/fidian/ansi/blob/master/ansi)
+
+![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)
+
+```bash
+# install
+$ [[ ! -f /opt/ansi ]] && curl -sL git.io/ansi -o /opt/ansi
+$ chmod +x /opt/ansi
+$ ln -sf /opt/ansi /usr/local/bin/ansi
+
+# usage
+$ ansi --color-table
+$ ansi --color-codes
+```
+
+### [bash-colors `c()`](https://github.com/ppo/bash-colors)
+
+[![bash-colors c() for help info](../screenshot/colors/ansi/bash-colors-c.png)](../screenshot/colors/ansi/bash-colors-c.png)
+
+```bash
+# install
+$ curl -o /opt/bash-colors.sh -fsSL https://github.com/ppo/bash-colors/blob/master/bash-colors.sh
+$ echo "[[ -f \"/opt/bash-colors.sh\" ]] && source \"/opt/bash-colors.sh\" >> ~/.bashrc"
+
+# or using source code directly
+# shellcheck disable=SC2015,SC2059
+c() { [ $# == 0 ] && printf "\e[0m" || printf "$1" | sed 's/\(.\)/\1;/g;s/\([SDIUFNHT]\)/2\1/g;s/\([KRGYBMCW]\)/3\1/g;s/\([krgybmcw]\)/4\1/g;y/SDIUFNHTsdiufnhtKRGYBMCWkrgybmcw/12345789123457890123456701234567/;s/^\(.*\);$/\\e[\1m/g'; }
+# shellcheck disable=SC2086
+cecho() { echo -e "$(c $1)${2}\e[0m"; }
+
+# sample
+$ echo -e "$(c Gs)bold green$(c) and $(c i)Italic$(c) and normal"
+```
+
+### [`say()`](https://stackoverflow.com/a/46331700/2940319)
+
+![say()](../screenshot/colors/ansi/ansi-color-say.png)
+
+```bash
+say() {
+ echo "$@" | sed \
+       -e "s/\(\(@\(red\|green\|yellow\|blue\|magenta\|cyan\|white\|reset\|b\|u\)\)\+\)[[]\{2\}\(.*\)[]]\{2\}/\1\4@reset/g" \
+       -e "s/@red/$(tput setaf 1)/g" \
+       -e "s/@green/$(tput setaf 2)/g" \
+       -e "s/@yellow/$(tput setaf 3)/g" \
+       -e "s/@blue/$(tput setaf 4)/g" \
+       -e "s/@magenta/$(tput setaf 5)/g" \
+       -e "s/@cyan/$(tput setaf 6)/g" \
+       -e "s/@white/$(tput setaf 7)/g" \
+       -e "s/@reset/$(tput sgr0)/g" \
+       -e "s/@b/$(tput bold)/g" \
+       -e "s/@u/$(tput sgr 0 1)/g"
+}
+
+$ say @b@green[[Success]]
+$ say @b@yellowWARNING @red..message..
+```
+
+### [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
+
+```bash
+function RGBcolor {
+  echo "16 + $1 * 36 + $2 * 6 + $3" | bc
+}
+
+fg=$(RGBcolor 1 0 2)  # Violet
+bg=$(RGBcolor 5 3 0)  # Bright orange.
+
+echo -e "\\033[1;38;5;$fg;48;5;${bg}mviolet on tangerine\\033[0m"
+```
+
+### [terminal-colors](https://pypi.org/project/terminal-colors/)
+
+> [!NOTE]
+> - [eikenb/terminal-colors](https://github.com/eikenb/terminal-colors)
+
+[![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)](../screenshot/colors/ansi/terminal-colors-l.png)
+
+[![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)](../screenshot/colors/ansi/terminal-colors-n.png)
+
+```bash
+$ python3 -m pip install terminal-colors
+
+# usage
+$ terminal-colors -l
+$ terminal-colors -n
+$ terminal-colors -n -p
+```
+
+### [colored - python libs](https://pypi.org/project/colored/)
+```bash
+# install
+$ python3 -m pip install colored
+
+# usage
+$ colored --help
+$ colored --color-codes
+```
+
+### [topic: ansi-colors](https://github.com/topics/ansi-colors)
+- [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
+- [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
+
+## color picker
+
+{% hint style='tip' %}
+> references:
+> - [* imarslo: colors](../../linux/util/colors.html)
+> - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
+> - [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
+{% endhint %}
+
+### [iterm2-tab-set](https://www.npmjs.com/package/iterm2-tab-set)
+- installation
+  ```bash
+  $ npm i iterm2-tab-set
+  ```
+- usage
+  ```bash
+  $ tabset --pick
+  ```
+
+  ![tabset --pick](../screenshot/osx/tabset--pick.png)
+
+  ```bash
+  function cpick() {
+    if test tabset; then
+      rgb=$(tabset -p | sed -nr "s:.*rgb\(([^)]+)\).*$:\1:p");
+      hexc=$(for c in $(echo "${rgb}" | sed -re 's:,: :g'); do printf '%02x' "$c"; done);
+      echo -e """\t$rgb ~~> $hexc""";
+    fi
+  }
+  ```
+
+- result
+  ```bash
+  $ cpick
+    125,199,53 ~~> 7dc735
+  ```
+
+
+## other scripts
+### 256 color table
+
+> [!NOTE|label:references:]
+> - [xterm 256color chart.svg](https://commons.wikimedia.org/wiki/File:Xterm_256color_chart.svg)
+> - [color grid](http://www.quut.com/berlin/ht/cgrid.html)
+
+- 256 colors
+
+  [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](../screenshot/colors/ansi/ansicolor-256-0.png)
+
+  ```bash
+  function 256colors() {
+    local bar='█'                                          # ctrl+v -> u2588 ( full block )
+    if uname -r | grep -q "microsoft"; then bar='▌'; fi    # ctrl+v -> u258c ( left half block )
+    for i in {0..255}; do
+      echo -e "\e[38;05;${i}m${bar}${i}";
+    done | column -c 180 -s ' ';
+    echo -e "\e[m"
+  }
+  ```
+
+  [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](../screenshot/colors/ansi/ansicolor-256-1.png)
+
+  ```bash
+  #!/bin/bash
+
+  # This program is free software. It comes without any warranty, to
+  # the extent permitted by applicable law. You can redistribute it
+  # and/or modify it under the terms of the Do What The Fuck You Want
+  # To Public License, Version 2, as published by Sam Hocevar. See
+  # http://sam.zoy.org/wtfpl/COPYING for more details.
+
+  for fgbg in 38 48 ; do # Foreground / Background
+    for color in {0..255} ; do # Colors
+      # Display the color
+      printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
+      # Display 6 colors per lines
+      if [ $((($color + 1) % 6)) == 4 ] ; then
+        echo # New line
+      fi
+    done
+    echo # New line
+  done
+  exit 0
+  ```
+
+- [colors and formatting](https://github.com/stevetarver/shell-scripts/blob/master/ux/color_formatting_display.sh)
+
+  {% hint style='tip' %}
+  > reference:
+  > - [256-colors.sh](https://misc.flogisoft.com/bash/tip_colors_and_formatting#colors2)
+  {% endhint %}
+
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](../screenshot/colors/ansi/color-formatting-1.png)
+
+  ```bash
+  #!/bin/sh
+
+  # From: https://misc.flogisoft.com/bash/tip_colors_and_formatting#colors2
+  # Modified by steve.tarver@gmail.com to work in Alpine Linux ash
+
+  # This program is free software. It comes without any warranty, to
+  # the extent permitted by applicable law. You can redistribute it
+  # and/or modify it under the terms of the Do What The Fuck You Want
+  # To Public License, Version 2, as published by Sam Hocevar. See
+  # http://sam.zoy.org/wtfpl/COPYING for more details.
+
+  for clbg in {40..47} {100..107} 49 ; do   # background
+    for clfg in {30..37} {90..97} 39 ; do   # foreground
+      for attr in 0 1 2 3 4 5 7 ; do        # formatting
+        #Print the result
+        echo -en "\e[${attr};${clbg};${clfg}m ^[${attr};${clbg};${clfg}m \e[0m"
+      done
+      echo                                  # newline
+    done
+  done
+  exit 0
+  ```
+
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)](../screenshot/colors/ansi/color-formatting-2.png)
+
+  ```bash
+  for attr in 0 1 2 3 4 5 6 7; do
+    echo "------------------------------------------------"
+    printf "ESC[%s;Foreground;Background - \n" $attr
+    for fore in 30 31 32 33 34 35 36 37; do
+        for back in 40 41 42 43 44 45 46 47; do
+            printf '\033[%s;%s;%sm %02s;%02s\033[0m' $attr $fore $back $fore $back
+        done
+    printf '\n'
+    done
+    printf '\033[0m'
+  done
+  ```
+
+- [showColors](https://stackoverflow.com/a/69648792/2940319)
+
+  [![showcolors](../screenshot/colors/ansi/showcolors.png)](../screenshot/colors/ansi/showcolors.png)
+
+  ```bash
+  # @author : https://stackoverflow.com/a/69648792/2940319
+  # @usage  :
+  #   - `showcolors fg` : default
+  #   - `showcolors bg`
+  # @alternative: `ansi --color-codes`
+  function showcolors() {
+    local row col blockrow blockcol red green blue
+    local showcolor=_showcolor_${1:-fg}
+    local white="\033[1;37m"
+    local reset="\033[0m"
+
+    echo -e "set foreground color: \\\\033[38;5;${white}NNN${reset}m"
+    echo -e "set background color: \\\\033[48;5;${white}NNN${reset}m"
+    echo -e "reset color & style:  \\\\033[0m"
+    echo
+
+    echo 16 standard color codes:
+    for row in {0..1}; do
+      for col in {0..7}; do
+        $showcolor $(( row*8 + col )) "${row}"
+      done
+      echo
+    done
+    echo
+
+    echo 6·6·6 RGB color codes:
+    for blockrow in {0..2}; do
+      for red in {0..5}; do
+        for blockcol in {0..1}; do
+          green=$(( blockrow*2 + blockcol ))
+          for blue in {0..5}; do
+            $showcolor $(( red*36 + green*6 + blue + 16 )) $green
+          done
+          echo -n "  "
+        done
+        echo
+      done
+      echo
+    done
+
+    echo 24 grayscale color codes:
+    for row in {0..1}; do
+      for col in {0..11}; do
+        $showcolor $(( row*12 + col + 232 )) "${row}"
+      done
+      echo
+    done
+    echo
+  }
+
+  function _showcolor_fg() {
+    # shellcheck disable=SC2155
+    local code=$( printf %03d "$1" )
+    echo -ne "\033[38;5;${code}m"
+    echo -nE " $code "
+    echo -ne "\033[0m"
+  }
+
+  function _showcolor_bg() {
+    if (( $2 % 2 == 0 )); then
+      echo -ne "\033[1;37m"
+    else
+      echo -ne "\033[0;30m"
+    fi
+    # shellcheck disable=SC2155
+    local code=$( printf %03d "$1" )
+    echo -ne "\033[48;5;${code}m"
+    echo -nE " $code "
+    echo -ne "\033[0m"
+  }
+  ```
+
+- [colorgrid](https://unix.stackexchange.com/a/285956/29178)
+  ```bash
+  function colorgrid() {
+      iter=16
+      while [ $iter -lt 52 ]
+      do
+          second=$[$iter+36]
+          third=$[$second+36]
+          four=$[$third+36]
+          five=$[$four+36]
+          six=$[$five+36]
+          seven=$[$six+36]
+          if [ $seven -gt 250 ];then seven=$[$seven-251]; fi
+
+          echo -en "\033[38;5;$(echo $iter)m█ "
+          printf "%03d" $iter
+          echo -en "   \033[38;5;$(echo $second)m█ "
+          printf "%03d" $second
+          echo -en "   \033[38;5;$(echo $third)m█ "
+          printf "%03d" $third
+          echo -en "   \033[38;5;$(echo $four)m█ "
+          printf "%03d" $four
+          echo -en "   \033[38;5;$(echo $five)m█ "
+          printf "%03d" $five
+          echo -en "   \033[38;5;$(echo $six)m█ "
+          printf "%03d" $six
+          echo -en "   \033[38;5;$(echo $seven)m█ "
+          printf "%03d" $seven
+
+          iter=$[$iter+1]
+          printf '\r\n'
+      done
+  }
+  ```
+
+- solarized color
+
+  ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
+
+  ```bash
+  #!/bin/bash
+
+  # solarized ansicolors (exporting for grins)
+  export base03='\033[0;30;40m'
+  export base02='\033[1;30;40m'
+  export base01='\033[0;32;40m'
+  export base00='\033[0;33;40m'
+  export base0='\033[0;34;40m'
+  export base1='\033[0;36;40m'
+  export base2='\033[0;37;40m'
+  export base3='\033[1;37;40m'
+  export yellow='\033[1;33;40m'
+  export orange='\033[0;31;40m'
+  export red='\033[1;31;40m'
+  export magenta='\033[1;35;40m'
+  export violet='\033[0;35;40m'
+  export blue='\033[1;34;40m'
+  export cyan='\033[1;36;40m'
+  export green='\033[1;32;40m'
+  export reset='\033[0m'
+
+  colors () {
+    echo -e "base03  ${base03}Test$reset"
+    echo -e "base02  ${base02}Test$reset"
+    echo -e "base01  ${base01}Test$reset"
+    echo -e "base00  ${base00}Test$reset"
+    echo -e "base0   ${base0}Test$reset"
+    echo -e "base1   ${base1}Test$reset"
+    echo -e "base2   ${base2}Test$reset"
+    echo -e "base3   ${base3}Test$reset"
+    echo -e "yellow  ${yellow}Test$reset"
+    echo -e "orange  ${orange}Test$reset"
+    echo -e "red     ${red}Test$reset"
+    echo -e "magenta ${magenta}Test$reset"
+    echo -e "violet  ${violet}Test$reset"
+    echo -e "blue    ${blue}Test$reset"
+    echo -e "cyan    ${cyan}Test$reset"
+    echo -e "green   ${green}Test$reset"
+  }
+  colors
+  ```
+
+- [show 256 colors](https://www.commandlinefu.com/commands/view/3958/unbelievable-shell-colors-shading-backgrounds-effects-for-non-x)
+
+  > [!NOTE|label:references:]
+  > - [Terminal colour highlights](https://www.pixelbeat.org/docs/terminal_colours/)
+
+  ```bash
+  $ for c in `seq 0 255`; do t=5; [[ $c -lt 108 ]] && t=0; for i in `seq $t 5`; do echo -e "\e[0;48;$i;${c}m|| $i:$c `seq -s+0 $(($COLUMNS/2))|tr -d '[0-9]'`\e[0m"; done;done
+  ```
+
+# color names
 
 > [!TIP|label:references:]
 > - [Web colors](https://www.wikiwand.com/en/Web_colors)
@@ -1671,7 +1706,7 @@ function showHelp() { echo -e "$usage"; }
 
   [![yellow](../screenshot/colors/yellow.png)](../screenshot/colors/yellow.png)
 
-### xterm 256 colors chart
+## xterm 256 colors chart
 
 > [!NOTE|label:references:]
 > - [* Color names](https://proplot.readthedocs.io/en/stable/colors.html)
@@ -1688,7 +1723,7 @@ function showHelp() { echo -e "$usage"; }
 
 [![Xterm_256color_chart](../screenshot/colors/Xterm_256color_chart.svg.png)](../screenshot/colors/Xterm_256color_chart.svg.png)
 
-### 256 colors cheat sheet
+## 256 colors cheat sheet
 
 | XTERM NUMBER |                XTERM NAME                |    HEX    | RGB              | HSL               | ANSI COLOR CODE |
 |:------------:|:----------------------------------------:|:---------:|------------------|-------------------|:---------------:|
@@ -1950,7 +1985,7 @@ function showHelp() { echo -e "$usage"; }
 |      255     |             grey_93<br>Grey93            | `#eeeeee` | rgb(238,238,238) | hsl(0,0%,93%)     |  `\e[38;5;255m` |
 
 
-## man page colors
+# man page colors
 
 {% hint style='tip' %}
 > references:
@@ -1963,7 +1998,7 @@ function showHelp() { echo -e "$usage"; }
 > - [Documentation on LESS_TERMCAP_* variables?](https://unix.stackexchange.com/a/108840)
 {% endhint %}
 
-### settings
+## settings
 - printf
   ```bash
   # The color of man page
@@ -2010,7 +2045,7 @@ function showHelp() { echo -e "$usage"; }
   export LESS_TERMCAP_us=$'\e[4;93m'        # start underlining
   ```
 
-### using vim as man pager
+## using vim as man pager
 
 > [!TIP]
 > - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
@@ -2022,7 +2057,7 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
     -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
 ```
 
-### ansicolor issues in man page
+## ansicolor issues in man page
 - error
   ```bash
   1mNAME0m       <-- BAD
@@ -2040,12 +2075,12 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   $ sudo yum update man-pages man-db man
   ```
 
-## others
+# others
 
 > [!TIP]
 > - [The 5 Best Color Picker Apps for Mac](https://www.makeuseof.com/tag/color-picker-apps-mac/)
 
-### grep colors
+## grep colors
 
 > [!NOTE|label:grep_colors]
 > - [Modifying the color of grep](https://askubuntu.com/a/1042242/92979)
@@ -2056,7 +2091,7 @@ $ echo $GREP_COLORS
 ms=01;31;49:mc=01;31:sl=0;36:cx=:fn=35:ln=32:bn=32:se=36
 ```
 
-### [generate color randomly](https://stackoverflow.com/q/40277918/2940319)
+## [generate color randomly](https://stackoverflow.com/q/40277918/2940319)
 ```bash
 $ echo "#$(openssl rand -hex 3)"
 # or
@@ -2066,7 +2101,7 @@ $ hexdump -n 3 -v -e '"#" 3/1 "%02X" "\n"' /dev/urandom
 $ echo -e "$(trueHexPrint $(echo "#$(openssl rand -hex 3)"))aaa\x1b[0m"
 ```
 
-### decolorize
+## decolorize
 
 > [!NOTE|label:decolorize]
 > - [Removing colors from output](https://stackoverflow.com/a/18000433/2940319)
