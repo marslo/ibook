@@ -1092,8 +1092,6 @@ for idx in "${indices[@]}"; do printColorInfo "${idx}"; done
 ```
 <!--endsec-->
 
-![ansi2hex.sh](../screenshot/colors/ansi2hex.png)
-
 ### hex to rgba
 
 ![hex2rgba](../screenshot/colors/hex2rgba.png)

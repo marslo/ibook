@@ -9,6 +9,7 @@
   - [`$(())`](#)
 - [sum from file](#sum-from-file)
 - [number conversion](#number-conversion)
+  - [Common Bases](#common-bases)
   - [binary <> decimal <> hexadecimal](#binary--decimal--hexadecimal)
   - [to decimal](#to-decimal)
   - [to hexadecimal](#to-hexadecimal)
@@ -177,7 +178,117 @@ $ echo $(( $( tr "\n" "+"  < /tmp/test) 0 ))
 > - [Linux / UNIX: bc Convert Octal To Hexadecimal or Vise Versa](https://www.cyberciti.biz/faq/bc-convert-octal-to-hexadecimal-number/)
 > - tips
 >>  `ibase` and `obase` params order matters, but not always. Hex values must be in **UPPERCASE**.
+>
+> - the decimal can be ignored in `ibase` or `obase`, or we can say, the default `ibase` and `obase` are all 10.
+>
+> | CONVERT           | IN BC                                              | OUTPUT |
+> |-------------------|----------------------------------------------------|--------|
+> | 八进制 → 二进制   | <code>echo "ibase=8; obase=2; 77" &#124; bc</code> | 111111 |
+> | 十进制 → 十六进制 | <code>echo "obase=16; 255" &#124; bc</code>        | FF     |
+> | 十六进制 → 十进制 | <code>echo "ibase=16; FF" &#124; bc</code>         | 255    |
+> | 二进制 → 十进制   | <code>echo "ibase=2; 101010" &#124; bc</code>      | 42     |
 
+
+<!--sec data-title="base-converter" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+
+function convertBase() {
+  local from_base=''
+  local to_base=''
+  local value=''
+  local upper=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -f|--from  ) from_base="$2" ;  shift 2 ;;
+      -t|--to    ) to_base="$2"   ;  shift 2 ;;
+      -v|--value ) value="$2"     ;  shift 2 ;;
+      -u|--upper ) upper=true     ;  shift   ;; # uppercase hex
+      -h|--help  ) echo "Usage: convertBase -f <from_base> -t <to_base> -v <value> [-u]"
+                   echo "Supported bases: bin, dec, oct, hex"
+                   return 0
+                   ;;
+      *          ) echo "Unknown option: $1" >&2; return 1 ;;
+    esac
+  done
+
+  # Map base names to numeric bases for bc
+  declare -A base_map=(
+    [bin]=2
+    [oct]=8
+    [dec]=10
+    [hex]=16
+  )
+
+  local ibase="${base_map[$from_base]}"
+  local obase="${base_map[$to_base]}"
+
+  if [[ -z "$ibase" || -z "$obase" ]]; then
+    echo "Error: Unsupported base. Use bin, dec, oct, hex." >&2
+    return 1
+  fi
+
+  # For hex input, force uppercase since bc expects that
+  if [[ "$from_base" == "hex" ]]; then
+    value="${value^^}"
+  fi
+
+  # Use bc to convert
+  result=$(echo "obase=$obase; ibase=$ibase; $value" | bc)
+
+  # Format output (uppercase optional)
+  if [[ "$upper" == true && "$to_base" == "hex" ]]; then
+    result="${result^^}"
+  fi
+
+  echo "$result"
+}
+```
+
+```bash
+# usage
+$ convertBase -f hex -t dec -v FF         # → 255
+$ convertBase -f bin -t dec -v 1011       # → 11
+$ convertBase -f dec -t hex -v 255        # → ff
+$ convertBase -f dec -t hex -v 255 -u     # → FF
+$ convertBase -f dec -t bin -v 42         # → 101010
+$ convertBase -f oct -t hex -v 77         # → 3F
+$ convertBase -f bin -t oct -v 110101     # → 65
+```
+
+- supported base keywords
+
+| NAME | BASE | DESCRIPTION |
+|------|------|-------------|
+| bin  | 2    | Binary      |
+| oct  | 8    | Octal       |
+| dec  | 10   | Decimal     |
+| hex  | 16   | Hexadecimal |
+<!--endsec-->
+
+### Common Bases
+
+| CONVERSION TYPE  | TOOL / METHOD               | EXAMPLE                                 |
+|------------------|-----------------------------|-----------------------------------------|
+| Base → Decimal   | `$((base#value))`           | `echo $((2#1010))` → `10`               |
+| Decimal → Hex    | `printf`                    | `printf "%X\n" 255` → `FF`              |
+| Decimal → Binary | `bc`                        | `bc < <(echo "obase=2; 42")` → `101010` |
+| Octal → Decimal  | `$((8#17))`<br>`$((017))`   | `echo $((8#17))` → `15`                 |
+| Hex → Decimal    | `$((16#FF))`<br>`$((0xFF))` | `echo $((16#FF))` → `255`               |
+
+-  base → decimal
+
+| BASE | TO | SYNTAX         | INTERPRETED NUMBER | OUTPUT (DECIMAL) |    DESCRIPTION   |
+|:----:|:--:|----------------|--------------------|------------------|:----------------:|
+|   2  | 10 | `$((2#1011))`  | `1011`             | `11`             |      BINARY      |
+|   8  | 10 | `$((8#17))`    | `17`               | `15`             |       OCTAL      |
+|   8  | 10 | `$((017))`     | `17`               | `15`             |       OCTAL      |
+|  10  | 10 | `$((10#42))`   | `42`               | `42`             |      DECIMAL     |
+|  16  | 10 | `$((16#1A3F))` | `1A3F`             | `6719`           |    HEXADECIMAL   |
+|  16  | 10 | `$((0x1A3F))`  | `1A3F`             | `6719`           |    HEXADECIMAL   |
+|  36  | 10 | `$((36#Z))`    | `Z`                | `35`             | ALPHANUMERIC MAX |
+|  64  | 10 | `$((64#_))`    | _                  | `63`             | MAX BASE IN BASH |
 
 ### binary <> decimal <> hexadecimal
 
@@ -210,16 +321,25 @@ $ bc <<< 'ibase=16;obase=2;FF;FF;EE;0A' | numfmt --format %08f | paste -sd' ' -
 $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 255.255.238.10
 ```
+
 ### to decimal
+
+| FROM   | TO      | COMMAND (BASH)     | EXAMPLE  | OUTPUT | COMMENT                  |
+|--------|---------|--------------------|----------|--------|--------------------------|
+| Binary | Decimal | `echo $((2#1010))` | `2#1010` | `10`   | -                        |
+| Hex    | Decimal | `echo $((16#FF))`  | `16#FF`  | `255`  | -                        |
+| Hex    | Decimal | `echo $((0xFF))`   | `16#FF`  | `255`  | `0x` - convert from hex  |
+| Octal  | Decimal | `echo $((8#77))`   | `8#77`   | `63`   | -                        |
+| Octal  | Decimal | `echo $((077))`    | `8#77`   | `63`   | `0` - convert from octal |
 
 - from hexadecimal
   ```bash
   $ echo "ibase=16; F" | bc
   15
 
-  # [o]utput base:      0xA -> 10
-  #                      ^
-  $ echo "ibase=16;obase=A; F" | bc
+  # [o]utput base:       0xA -> 10
+  #                       ^
+  $ echo "ibase=16; obase=A; F" | bc
   15
 
   # or obase first
@@ -249,6 +369,17 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
   ```
 
 ### to hexadecimal
+
+> [!TIP]
+> - if convert from **decimal**, the `ibase` can be ignored, or we can say, the default `ibase` is 10.
+
+| FROM    | TO  | COMMAND                                                 | EXAMPLE            | OUTPUT |
+|---------|-----|---------------------------------------------------------|--------------------|--------|
+| Binary  | Hex | <Code>echo "obase=16; ibase=2; 101011" &#124; bc</code> | `101011` → hex     | `2B`   |
+| Octal   | Hex | <code>echo "obase=16; ibase=8; 77" &#124; bc</code>     | `77` (octal) → hex | `3F`   |
+| Decimal | Hex | <code>echo "obase=16; 255" &#124; bc</code>             | `255`              | `FF`   |
+| Decimal | Hex | `printf "%X\n" 255`                                     | `255`              | `FF`   |
+
 - from decimal
   ```bash
   $ echo "obase=16; 15" | bc
@@ -271,6 +402,13 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 
 
 ### to octal
+
+| FROM    | TO    | COMMAND                                              | EXAMPLE                | OUTPUT |
+|---------|-------|------------------------------------------------------|------------------------|--------|
+| Binary  | Octal | <code>echo "obase=8; ibase=2; 1010" &#124; bc</code> | 1010 → base 2 → base 8 | `12`   |
+| Decimal | Octal | `printf "%o\n" 42`                                   | 42                     | `52`   |
+| Hex     | Octal | <code>echo "obase=8; ibase=16; FF" &#124; bc</code>  | FF → hex to octal      | `377`  |
+
 - from hexadecimal
   ```bash
   $ echo "ibase=16;obase=8; F" | bc
@@ -292,6 +430,12 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 > [!NOTE|label:references:]
 > - [Prevent bc from auto truncating leading zeros when converting from hex to binary](https://stackoverflow.com/a/12633973/2940319)
 > - [How to make `bc` output a desired number of base-2 binary digits](https://stackoverflow.com/a/71570190/2940319)
+
+| FROM    | TO     | COMMAND                                             | EXAMPLE                | OUTPUT     |
+|---------|--------|-----------------------------------------------------|------------------------|------------|
+| Octal   | Binary | <code>echo "obase=2; ibase=8; 77" &#124; bc</code>  | 8#77 → obase=2         | `111111`   |
+| Decimal | Binary | <code>echo "obase=2; 42" &#124; bc`</code>          | 42                     | `101010`   |
+| Hex     | Binary | <code>echo "obase=2; ibase=16; FF" &#124; bc</code> | ibase=16; FF → obase=2 | `11111111` |
 
 - from decimal
   ```bash
@@ -378,6 +522,7 @@ $ printf "\U$(printf %08x 128520)\n"
   ```
 
 - to octal
+
   ```bash
   #         ╭─ octal
   $ printf %o "'$single_unicode_char'"
