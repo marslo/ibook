@@ -11,7 +11,7 @@
   - [get font version](#get-font-version)
 - [fonts](#fonts)
   - [cn](#cn)
-    - [cn fonts](#cn-fonts)
+    - [chinese fonts](#chinese-fonts)
   - [highly recommended](#highly-recommended)
     - [Monaco](#monaco)
     - [RecMonoCasual](#recmonocasual)
@@ -27,6 +27,7 @@
     - [others](#others)
   - [powerline fonts](#powerline-fonts)
   - [google fonts](#google-fonts)
+  - [LaTeX fonts](#latex-fonts)
   - [tips](#tips)
     - [Mac Office Fonts](#mac-office-fonts)
 
@@ -351,8 +352,7 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 > - [npm - chinese-fonts](https://www.npmjs.com/search?q=keywords:chinese-fonts)
 > - [字库星球](https://www.mfonts.cn/)
 
-
-### cn fonts
+### chinese fonts
 
 > [!NOTE|label:references:]
 > - [霞鹜漫黑 - lxgw/LxgwMarkerGothic](https://github.com/lxgw/LxgwMarkerGothic)
@@ -835,6 +835,11 @@ $ curl --create-dirs -O --output-dir "${fontsPath}" \
 > [!NOTE|label:references:]
 > - [google/fonts](https://github.com/google/fonts)
 > - [fonts.google.com](https://fonts.google.com/)
+
+## LaTeX fonts
+
+> [!NOTE|label:references:]
+> - [The LATEX Font Catalogue](https://tug.org/FontCatalogue/mathfonts.html)
 
 ## tips
 

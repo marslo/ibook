@@ -4,15 +4,17 @@
 - [shell parameter parsers](#shell-parameter-parsers)
 - [pass parameters to another script](#pass-parameters-to-another-script)
 - [Manual Case-Loop Parser](#manual-case-loop-parser)
+  - [Bash Equals-Separated](#bash-equals-separated)
   - [with one or more values](#with-one-or-more-values)
+  - [additional params on `--`](#additional-params-on---)
   - [shift with uncertain params](#shift-with-uncertain-params)
 - [POSIX `getopts` Parser](#posix-getopts-parser)
-- [GNU getopt Parser](#gnu-getopt-parser)
-  - [additional params on `--`](#additional-params-on---)
+- [GNU `getopt` Parser](#gnu-getopt-parser)
 - [`bash-argparse` Library](#bash-argparse-library)
 - [`docopts`](#docopts)
 - [`argbash` Code Generator](#argbash-code-generator)
 - [`shflags` (Google-style shell option lib)](#shflags-google-style-shell-option-lib)
+- [references](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -209,6 +211,24 @@ $@  : 4 5
 $@  : 5
 ```
 
+### Bash Equals-Separated
+```bash
+for i in "$@"; do
+  case $i in
+    -e=* | --extension=*  ) EXTENSION="${i#*=}"  ;  shift    ;;
+    -s=* | --searchpath=* ) SEARCHPATH="${i#*=}" ;  shift    ;;
+    --default             ) DEFAULT=YES          ;  shift    ;;
+    -* | --*              ) echo "Unknown option $i"; exit 1 ;;
+    *                     )                                  ;;
+  esac
+done
+
+echo "FILE EXTENSION  = ${EXTENSION}"
+echo "SEARCH PATH     = ${SEARCHPATH}"
+echo "DEFAULT         = ${DEFAULT}"
+echo "Number files in SEARCH PATH with EXTENSION:" $(ls -1 "${SEARCHPATH}"/*."${EXTENSION}" | wc -l)
+```
+
 ### with one or more values
 
 > [!TIP]
@@ -228,6 +248,46 @@ while [[ $# -gt 0 ]]; do
     *            ) positional_args+=("$1")       ;  shift   ;;
   esac
 done
+```
+
+### additional params on `--`
+```bash
+#!/usr/bin/env bash
+# shellcheck disable=SC2051,SC2086
+
+VERBOSE=false
+DEBUG=false
+MEMORY=
+AOPT=
+while true; do
+  case "$1" in
+    -v | --verbose ) VERBOSE=true ; shift   ;;
+    -d | --debug   ) DEBUG=true   ; shift   ;;
+    -m | --memory  ) MEMORY="$2"  ; shift 2 ;;
+    --             ) shift        ; AOPT=$@  ;  break ;;
+    *              ) break                  ;;
+  esac
+done
+
+echo """
+  VERBOSE       : ${VERBOSE}
+  DEBUG         : ${DEBUG}
+  MEMORY        : ${MEMORY}
+  AOPT          : ${AOPT}
+"""
+
+# example
+$ ./param.sh -v -m '256Gi' -- --author 'marslo'
+  VERBOSE       : true
+  DEBUG         : false
+  MEMORY        : 256Gi
+  AOPT          : --author marslo
+
+$ ./param.sh -v -- -m '256Gi' --author 'marslo'
+  VERBOSE       : true
+  DEBUG         : false
+  MEMORY        :
+  AOPT          : -m 256Gi --author marslo
 ```
 
 ### shift with uncertain params
@@ -287,8 +347,27 @@ done
 shift $((OPTIND -1))
 ```
 
+```bash
+# Reset in case getopts has been used previously in the shell.
+OPTIND=1
+output_file=''
+verbose=0
 
-## GNU getopt Parser
+while getopts "h?vf:" opt; do
+  case "$opt" in
+    h|\? ) show_help; exit 0   ;;
+    v    ) verbose=1           ;;
+    f    ) output_file=$OPTARG ;;
+  esac
+done
+
+shift $((OPTIND-1))
+[ "${1:-}" = "--" ] && shift
+
+echo "verbose=$verbose, output_file='$output_file', Leftovers: $@"
+```
+
+## GNU `getopt` Parser
 
 > [!NOTE]
 > - MacOS: `brew install gnu-getopt`
@@ -313,44 +392,40 @@ while true; do
 done
 ```
 
-### additional params on `--`
 ```bash
-#!/usr/bin/env bash
-# shellcheck disable=SC2051,SC2086
+# option --output/-o requires 1 argument
+LONGOPTS=debug,force,output:,verbose
+OPTIONS=dfo:v
 
-VERBOSE=false
-DEBUG=false
-MEMORY=
-AOPT=
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+  # e.g. return value is 1
+  #  then getopt has complained about wrong arguments to stdout
+  exit 2
+fi
+# read getopt’s output this way to handle the quoting right:
+eval set -- "$PARSED"
+
+d=n f=n v=n outFile=-
+# now enjoy the options in order and nicely split until we see --
 while true; do
   case "$1" in
-    -v | --verbose ) VERBOSE=true ; shift   ;;
-    -d | --debug   ) DEBUG=true   ; shift   ;;
-    -m | --memory  ) MEMORY="$2"  ; shift 2 ;;
-    --             ) shift        ; AOPT=$@  ;  break ;;
-    *              ) break                  ;;
+    -d|--debug   ) d=y          ;  shift            ;;
+    -f|--force   ) f=y          ;  shift            ;;
+    -v|--verbose ) v=y          ;  shift            ;;
+    -o|--output  ) outFile="$2" ;  shift 2          ;;
+    --           ) shift        ;  break            ;;
+    *            ) echo "Programming error"; exit 3 ;;
   esac
 done
 
-echo """
-  VERBOSE       : ${VERBOSE}
-  DEBUG         : ${DEBUG}
-  MEMORY        : ${MEMORY}
-  AOPT          : ${AOPT}
-"""
+# handle non-option arguments
+if [[ $# -ne 1 ]]; then
+    echo "$0: A single input file is required."
+    exit 4
+fi
 
-# example
-$ ./param.sh -v -m '256Gi' -- --author 'marslo'
-  VERBOSE       : true
-  DEBUG         : false
-  MEMORY        : 256Gi
-  AOPT          : --author marslo
-
-$ ./param.sh -v -- -m '256Gi' --author 'marslo'
-  VERBOSE       : true
-  DEBUG         : false
-  MEMORY        :
-  AOPT          : -m 256Gi --author marslo
+echo "verbose: $v, force: $f, debug: $d, in: $1, out: $outFile"
 ```
 
 ## `bash-argparse` Library
@@ -434,3 +509,7 @@ eval set -- "${FLAGS_ARGV}"
 
 echo "File: ${FLAGS_file}"
 ```
+
+## references
+
+> - [如何在 Bash 中解析命令行参数？](https://blog.csdn.net/kalman2019/article/details/128575319)
