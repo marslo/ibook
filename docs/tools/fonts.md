@@ -11,7 +11,7 @@
   - [get font version](#get-font-version)
 - [fonts](#fonts)
   - [cn](#cn)
-    - [fonts](#fonts-1)
+    - [cn fonts](#cn-fonts)
   - [highly recommended](#highly-recommended)
     - [Monaco](#monaco)
     - [RecMonoCasual](#recmonocasual)
@@ -352,11 +352,11 @@ $ fd --glob *.ttf -tf --color=never /path/to/font |
 > - [字库星球](https://www.mfonts.cn/)
 
 
-### fonts
+### cn fonts
 
 > [!NOTE|label:references:]
 > - [霞鹜漫黑 - lxgw/LxgwMarkerGothic](https://github.com/lxgw/LxgwMarkerGothic)
-> - [霞鹜文楷](https://github.com/lxgw/LxgwWenKai) | [霞鹜文楷 Bright](https://github.com/lxgw/LxgwBright)
+> - [霞鹜文楷 包括 LXGWWenKaiMono](https://github.com/lxgw/LxgwWenKai) | [霞鹜文楷 Bright](https://github.com/lxgw/LxgwBright)
 > - [霞鹜臻楷](https://github.com/lxgw/LxgwZhenKai)
 > - [霞鹜新晰黑](https://github.com/lxgw/LxgwNeoXiHei)
 > - [霞鹜漫黑](https://github.com/lxgw/LxgwMarkerGothic)

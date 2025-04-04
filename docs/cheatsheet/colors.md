@@ -13,6 +13,8 @@
   - [color picker](#color-picker)
   - [256 color table](#256-color-table)
   - [ansi to hex](#ansi-to-hex)
+  - [hex to rgba](#hex-to-rgba)
+  - [rgba to hex](#rgba-to-hex)
 - [color names](#color-names)
   - [xterm 256 colors chart](#xterm-256-colors-chart)
   - [256 colors cheat sheet](#256-colors-cheat-sheet)
@@ -905,6 +907,10 @@
 
 ### ansi to hex
 
+![ansi2hex](../screenshot/colors/ansi2hex.png)
+
+![ansi2hex --help](../screenshot/colors/ansi2hex-help.png)
+
 > [!TIP|label:references:]
 > the enhancement xColorTable
 
@@ -916,7 +922,7 @@
 #     FileName : ansi2hex
 #       Author : marslo.jiao@gmail.com
 #      Created : 2025-03-24 14:30:33
-#   LastChange : 2025-03-25 07:59:29
+#   LastChange : 2025-03-31 11:22:01
 #=============================================================================
 
 source "${HOME}"/.marslo/bin/bash-color.sh
@@ -926,47 +932,59 @@ declare noColor=false
 declare showHelp=false
 declare style=''
 declare alpha=''
-declare index=''
+declare -a indices=()
 # shellcheck disable=SC2155
 declare help="""
 NAME
   $(c Ys)ansi2hex$(c) - convert ANSI color index to HEX color code
 
 SYNOPSIS
-  $(c Ys)\$ ansi2hex$(c) $(c Wd)<$(c)$(c Gi)0$(c)$(c Wd)-$(c)$(c Gi)255$(c)$(c Wd)>$(c) $(c Wd)[ $(c)$(c Gi)style$(c) $(c Wd)] [$(c) $(c Gis)--alpha$(c)$(c Gis)=$(c)$(c Mi)<float>$(c) $(c Wd)] [$(c) $(c Gis)--no-color$(c) $(c Wd)]$(c)
-  $(c Ys)\$ ansi2hex$(c) $(c Gis)--preview$(c) $(c Wd)[$(c) $(c Gi)style$(c) $(c Wd)] [$(c) $(c Gis)--alpha$(c)$(c Gis)=$(c)$(c Mi)<float>$(c) $(c Wd)] [$(c) $(c Gis)--no-color$(c) $(c Wd)]$(c)
+  $(c Ys)\$ ansi2hex$(c) $(c Gi)<index>...$(c) [$(c Gi)style$(c)] [$(c Gis)--alpha=$(c)$(c Mi)<float>$(c)] [$(c Gis)--no-color$(c)]
+  $(c Ys)\$ ansi2hex$(c) $(c Gis)--preview$(c) [$(c Gi)style$(c)] [$(c Gis)--alpha=$(c)$(c Mi)<float>$(c)] [$(c Gis)--no-color$(c)]
 
 ARGUMENTS
-  $(c Wd)<$(c)$(c Gi)0$(c)$(c Wd)-$(c)$(c Gi)255$(c)$(c Wd)>$(c)             ANSI color index to convert
-  $(c Wd)[$(c)$(c Gi)style$(c)$(c Wd)]$(c)             color style: $(c Mi)normal$(c) (default), $(c Mi)dim$(c), $(c Mi)bright$(c) (also accepts $(c Mi)bold$(c)/$(c Mi)light$(c))
-  $(c Gis)--alpha$(c)$(c Gis)=$(c)$(c Mi)<float>$(c)     brightness scale (overrides style). E.g., $(c Mi)0.65$(c) (dim), $(c Mi)1.35$(c) (bright)
-  $(c Gis)--preview$(c)           show all 256 colors in table
-  $(c Gis)--no-color$(c)          disable colorized output
-  $(c Gis)--help$(c), $(c Gis)-h$(c)          show this help message
+  $(c Gi)<index>$(c)              one or more ANSI color indices ($(c Wdi)0$(c) ~ $(c Wdi)255$(c))
+  $(c Gi)style$(c)                optional color style: $(c Mi)normal$(c) (default), $(c Mi)dim$(c), $(c Mi)bright$(c), $(c Mi)bold$(c), $(c Mi)light$(c)
+  $(c Gis)--alpha=$(c)$(c Mi)<float>$(c)      brightness adjustment factor (overrides style), e.g., $(c Wi)0.65$(c) ($(c Mi)dim$(c)), $(c Wi)1.35$(c) ($(c Mi)bright$(c))
+  $(c Gis)--no-color$(c)           disable colorized output
+  $(c Gis)--preview$(c)            show all 256 ANSI colors with the specified style and alpha
+  $(c Gis)--help$(c), $(c Gis)-h$(c)           show this help message
+
+VALIDATION
+  - Each $(c Wd)<index>$(c) must be an integer between 0 and 255.
+  - Unknown arguments will result in an error.
+  - Multiple indices and options can be combined.
 
 EXAMPLES
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)45$(c) $(c Gi)100$(c)
   $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Mi)dim$(c)
-  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)--alpha=$(c)$(c Mi)1.15$(c)
+  $(c Yis)\$ ansi2hex$(c) $(c Gi)213$(c) $(c Gi)45$(c) $(c Gi)--alpha=$(c)$(c Mi)1.15$(c)
   $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Mi)dim$(c)
   $(c Yis)\$ ansi2hex$(c) $(c Gi)--preview$(c) $(c Gi)--alpha=$(c)$(c Wi)0.85$(c) $(c Gi)--no-color$(c)
 """
 
-# Parse args
-for arg in "$@"; do
-  if [[ "$arg" == "--preview" ]]; then
-    isPreview=true
-  elif [[ "$arg" == "--no-color" ]]; then
-    noColor=true
-  elif [[ "$arg" == "--help" || "$arg" == "-h" ]]; then
-    showHelp=true
-  elif [[ "$arg" =~ ^--alpha= ]]; then
-    alpha="${arg#--alpha=}"
-  elif [[ "$arg" =~ ^[0-9]+$ ]]; then
-    index="$arg"
-  elif [[ "$arg" =~ ^[a-zA-Z]+$ ]]; then
-    style="$arg"
-  fi
+function isValidIndex() {
+  [[ "$1" =~ ^[0-9]+$ && "$1" -ge 0 && "$1" -le 255 ]]
+}
+
+# parse args
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --alpha=*                    ) alpha="${1#--alpha=}" ;  shift ;;
+    --preview                    ) isPreview=true        ;  shift ;;
+    --no-color                   ) noColor=true          ;  shift ;;
+    --help|-h                    ) showHelp=true         ;  shift ;;
+    dim|bright|bold|light|normal ) style="$1"            ;  shift ;;
+    [0-9]*                       ) if isValidIndex "$1"; then
+                                     indices+=("$1")
+                                   else
+                                     echo "Invalid color index: $1" >&2
+                                     exit 1
+                                   fi
+                                   shift
+                                   ;;
+    *                            ) showUsage             ; exit 0  ;;
+  esac
 done
 
 # normalize style
@@ -988,7 +1006,6 @@ fi
 # brightness adjustment
 function adjust() {
   local val="$1"
-  local alpha="$2"
   awk -v v="$val" -v a="$alpha" 'BEGIN {
     if (a < 1.0)
       printf "%d", v * a
@@ -1001,7 +1018,7 @@ function adjust() {
 
 # convert ansi index to rgb
 function ansiToRgb() {
-  local idx="$1" alpha="$2"
+  local idx="$1"
   local r g b
 
   if (( idx < 16 )); then
@@ -1014,7 +1031,6 @@ function ansiToRgb() {
     r=${colors[idx*3]}
     g=${colors[idx*3+1]}
     b=${colors[idx*3+2]}
-
   elif (( idx >= 16 && idx <= 231 )); then
     local base=$(( idx - 16 ))
     local r6=$(( base / 36 ))
@@ -1024,28 +1040,25 @@ function ansiToRgb() {
     r=$(( r6 == 0 ? 0 : r6 * 40 + 55 ))
     g=$(( g6 == 0 ? 0 : g6 * 40 + 55 ))
     b=$(( b6 == 0 ? 0 : b6 * 40 + 55 ))
-
   else
     local gray=$(( 8 + (idx - 232) * 10 ))
     r=$gray; g=$gray; b=$gray
   fi
 
-  r=$(adjust "$r" "$alpha")
-  g=$(adjust "$g" "$alpha")
-  b=$(adjust "$b" "$alpha")
+  r=$(adjust "$r")
+  g=$(adjust "$g")
+  b=$(adjust "$b")
 
   echo "$r $g $b"
 }
 
 # RGB to HEX
-function rgbToHex() {
-  printf "#%02X%02X%02X\n" "$1" "$2" "$3"
-}
+function rgbToHex() { printf "#%02X%02X%02X\n" "$1" "$2" "$3"; }
 
-# reusable print function
+# print function
 function printColorInfo() {
   local idx="$1"
-  read -r r g b <<< "$(ansiToRgb "$idx" "$alpha")"
+  read -r r g b <<< "$(ansiToRgb "$idx")"
   local hex
   hex=$(rgbToHex "$r" "$g" "$b")
 
@@ -1060,26 +1073,555 @@ function printColorInfo() {
   fi
 }
 
-# show usage
-function showUsage() { echo -e "${help}"; exit 0; }
+showUsage() { echo -e "${help}"; exit 0; }
 
-# preview mode: loop through 0–255
+[[ "$showHelp" == true ]] && showUsage
+
 if ${isPreview}; then
-  for i in {0..255}; do
-    printColorInfo "$i"
-  done
+  for i in {0..255}; do printColorInfo "$i"; done
   exit 0
 fi
 
-# standard single output
-[[ -z "${index}" ]] && showUsage
-[[ "$showHelp" == true ]] && showUsage
+# if no index provided
+if [[ ${#indices[@]} -eq 0 ]]; then showUsage; fi
 
-printColorInfo "$index"
+# loop over indices
+for idx in "${indices[@]}"; do printColorInfo "${idx}"; done
+
+# vim: tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
 ```
 <!--endsec-->
 
 ![ansi2hex.sh](../screenshot/colors/ansi2hex.png)
+
+### hex to rgba
+
+![hex2rgba](../screenshot/colors/hex2rgba.png)
+
+![hex2rgba --help](../screenshot/colors/hex2rgba-help.png)
+
+<!--sec data-title="hex2rgba" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+# shellcheck source=/dev/null disable=SC2155
+#=============================================================================
+#     FileName : hex2rgba
+#       Author : marslo.jiao@gmail.com
+#      Created : 2025-04-03 00:21:35
+#   LastChange : 2025-04-04 00:07:47
+#=============================================================================
+
+set -euo pipefail
+source "${HOME}"/.marslo/bin/bash-color.sh
+
+# shellcheck disable=SC2155
+declare usage="""
+NAME
+  $(c Ys)hex2rgba$(c) - HEX to RGBA Converter with ANSI Color Preview
+
+USAGE
+  $(c Ys)hex2rgba$(c) $(c Gis)[OPTIONS]$(c) $(c Ms)'HEX_COLOR_CODE'$(c)
+
+OPTIONS
+  $(c Gis)-a$(c), $(c Gis)--alpha$(c)       override alpha value ( $(c Wdi)0.00$(c) ~ $(c Wdi)1.00$(c) )
+  $(c Gis)-b$(c), $(c Gis)--background$(c)  set background color ( $(c Wdi)#FFFFFF$(c)/$(c Wdi)#FFF$(c) or $(c Wdi)R,G,B$(c), default: $(c Wi)#FFFFFF$(c) )
+  $(c Gis)-h$(c), $(c Gis)--help$(c)        show this help message
+
+EXAMPLES
+  $(c Wi)# show the RGBA values of alphas from 0.0 to 1.0 sequentially.$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c)
+
+  $(c Wi)# show the RGBA values with alpha 0.5.$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c) $(c Gis)--alpha 0.5$(c)
+
+  $(c Wi)# show the RGBA values for alphas from 0.1 to 1.0 sequentially with background color #000000.$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)'#D3869B'$(c) $(c Gis)--background '#000000'$(c)
+
+  $(c Wi)# show the RGBA values with alpha 0.3 with background color red ( #FF0000 ).$(c)
+  \$ $(c Yis)hex2rgba$(c) $(c Ms)D3869B$(c) $(c Gis)--background 255,0,0$(c) $(c Gis)--alpha 0.3$(c)
+
+NOTES
+  • Alpha values will clamp to [ $(c Gi)0.00$(c) ~ $(c Gi)1.00$(c) ]
+  • The hex color code and background color code support both $(c Mi)with$(c) or $(c Mi)without hashtag$(c) ( $(c Wi)'#'$(c) )
+  • Using $(c Mi)single quotes$(c) for color code with $(c Wi)'#'$(c) to avoid shell command line break
+  • Output includes ANSI color preview (requires truecolor terminal support)
+"""
+
+function die() {
+  echo -e "$(c Rsi)ERROR$(c) : $*. try $(c Gi)-h$(c)/$(c Gi)--help$(c). exit ..." >&2;
+  exit 2;
+}
+
+function parseColor() {
+  local input="$1"
+
+  # for RGB format: R,G,B
+  if [[ "$input" == *,*,* ]]; then
+    IFS=',' read -ra parts <<< "$input"
+    [[ ${#parts[@]} -ne 3 ]] && die "Invalid RGB format: $input"
+    local r=${parts[0]} g=${parts[1]} b=${parts[2]}
+
+    # verify the range of RGB values
+    for c in $r $g $b; do
+      if [[ ! $c =~ ^[0-9]+$ ]] || (( c < 0 || c > 255 )); then
+        die "invalid RGB value: $c"
+      fi
+    done
+
+    echo "${r} ${g} ${b}"
+    return 0
+  fi
+
+  # for HEX format
+  local hex="${input^^}"
+  hex="${hex//#/}"
+  local len=${#hex}
+
+  # extend XYZ to XXYYZZ
+  if [[ $len -eq 3 ]]; then
+    hex="${hex:0:1}${hex:0:1}${hex:1:1}${hex:1:1}${hex:2:1}${hex:2:1}"
+    len=6
+  fi
+
+  [[ $len -ne 6 ]] && die "invalid color format: ${input}" >&2
+
+  local r="$(( 16#${hex:0:2} ))"
+  local g="$(( 16#${hex:2:2} ))"
+  local b="$(( 16#${hex:4:2} ))"
+
+  echo "${r} ${g} ${b}"
+}
+
+function parseBackground() {
+  local bg="$1"
+  if ! IFS=' ' read -r bgR bgG bgB <<< "$(parseColor "${bg}")"; then
+    exit 1
+  fi
+}
+
+function getMixedRGB() {
+  local fgR=$1
+  local fgG=$2
+  local fgB=$3
+  local alpha=$4
+  rMixed=$(echo "scale=0; (${fgR} * ${alpha} + ${bgR} * (1 - ${alpha})) / 1" | bc)
+  gMixed=$(echo "scale=0; (${fgG} * ${alpha} + ${bgG} * (1 - ${alpha})) / 1" | bc)
+  bMixed=$(echo "scale=0; (${fgB} * ${alpha} + ${bgB} * (1 - ${alpha})) / 1" | bc)
+  rMixed=$(( rMixed < 0 ? 0 : ( rMixed > 255 ? 255 : rMixed ) ))
+  gMixed=$(( gMixed < 0 ? 0 : ( gMixed > 255 ? 255 : gMixed ) ))
+  bMixed=$(( bMixed < 0 ? 0 : ( bMixed > 255 ? 255 : bMixed ) ))
+  echo "${rMixed} ${gMixed} ${bMixed}"
+}
+
+function rgbToHex() {
+  printf "#%02X%02X%02X" "${1}" "${2}" "${3}"
+}
+
+function showOutput() {
+  local alphaValue=$1
+  local precision=$2
+
+  # format alphaValue to 2 decimal places
+  local formattedAlpha=$(printf "%.${precision}f" "${alphaValue}")
+
+  # get mixed RGB values
+  local rgbMixed=$(getMixedRGB "${r}" "${g}" "${b}" "${alphaValue}")
+
+  # analysis the mixed RGB values with IFS
+  IFS=' ' read -r rMixed gMixed bMixed <<< "${rgbMixed}"
+
+  # generate HEX color code
+  local hexResult=$(rgbToHex "${rMixed}" "${gMixed}" "${bMixed}")
+
+  # generate ANSI color code
+  local ansiMixed="\033[38;2;${rMixed};${gMixed};${bMixed}m"
+
+  # output
+  echo -e "${ansiHexOrg}#${hexOrg//#/}\033[0m -> ${ansiMixed}rgba(${r}, ${g}, ${b}, ${formattedAlpha})\033[0m -> ${ansiMixed}${hexResult}\033[0m"
+}
+
+main() {
+  local hex=''
+  local alpha=''
+  local background='#FFFFFF'
+  local hexOrg=''
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -a | --alpha      ) alpha="$2"            ; shift 2 ;;
+        -b | --background ) background="${2//#/}" ; shift 2 ;;
+        -h | --help       ) echo -e "${usage}"    ; exit 0  ;;
+        *                 ) if [[ -z "$hex" ]]; then
+                              hexOrg="$1"
+                              hex="${1//#/}"
+                            else
+                              echo "ERROR: Unexpected argument: $1" >&2
+                              exit 1
+                            fi
+                            shift
+                        ;;
+    esac
+  done
+
+  if ! IFS=' ' read -r r g b <<< "$(parseColor "${hex}")"; then
+    exit 1
+  fi
+
+  if [[ -n "${background}" ]]; then
+    parseBackground "${background}"
+  else
+    bgR=255
+    bgG=255
+    bgB=255
+  fi
+
+  local ansiHexOrg="\033[38;2;${r};${g};${b}m"
+
+  if [[ -n "${alpha}" ]]; then
+    if ! [[ "${alpha}" =~ ^[0]?\.?[0-9]+$ ]] || (( $(echo "$alpha < 0.0 || $alpha > 1.0" | bc -l) )); then
+      echo "Invalid alpha value: $alpha" >&2
+      exit 1
+    fi
+    showOutput "${alpha}" 2
+  else
+    for alpha in $(seq 0 0.1 1.0); do
+      showOutput "${alpha}" 1
+    done
+  fi
+}
+
+main "$@"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+<!--endsec-->
+
+### rgba to hex
+
+![rgba2hex](../screenshot/colors/rgba2hex.png)
+
+![rgba2hex --help](../screenshot/colors/rgba2hex-help.png)
+
+<!--sec data-title="rgba2hex" data-id="section2" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+# shellcheck source=/dev/null disable=SC2155
+#=============================================================================
+#     FileName : rgba2hex
+#       Author : marslo.jiao@gmail.com
+#      Created : 2025-04-02 22:02:37
+#   LastChange : 2025-04-03 23:48:01
+#=============================================================================
+
+set -euo pipefail
+source "${HOME}"/.marslo/bin/bash-color.sh
+source "${HOME}"/.marslo/bin/rgba2hex-help
+
+declare alpha=''
+declare colorCode=''
+# default background - #FFFFFF ( white )
+declare bgR=255 bgG=255 bgB=255
+
+function die() {
+  echo -e "$(c Rsi)ERROR$(c) : $*. try $(c Gi)-h$(c)/$(c Gi)--help$(c). exit ..." >&2;
+  exit 2;
+}
+
+# generate the hex color code: $1 - R, $2 - G, $3 - B
+function toHex() { printf "#%02X%02X%02X" "$1" "$2" "$3"; }
+
+function parseArguments() {
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -a | --alpha      ) if ! awk -v a="$2" 'BEGIN{exit (a >= 0 && a <= 1) ? 0 : 1}' ; then
+                            die "$(c Gi)--alpha$(c) value must be between $(c Bi)0.00$(c) and $(c Bi)1.00$(c). $(c Mi)'${2}'$(c) is invalid" >&2
+                          fi
+                          alpha="$2"
+                          shift 2
+                          ;;
+      -b | --background ) local inputBG="$2"
+                          local bgRGB
+                          bgRGB=$(parseBackground "$inputBG")
+                          IFS=' ' read -r bgR bgG bgB <<< "${bgRGB}"
+                          shift 2
+                          ;;
+      -h | --help       ) showHelp; exit 0 ;;
+      *                 ) if [[ -z "${colorCode}" ]]; then
+                            colorCode="$1"
+                            shift
+                          else
+                            die 'multiple color input arguments detected'
+                          fi
+                          ;;
+    esac
+  done
+}
+
+# background color analysis
+function parseBackground() {
+  local inputBG="$1"
+  local r g b
+
+  # numerical format checking
+  if [[ "${inputBG}" =~ ^[0-9]+$ ]]; then
+    r="${inputBG}"
+    g="${inputBG}"
+    b="${inputBG}"
+  elif [[ "${inputBG}" =~ ^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$ ]]; then
+    local hex=${inputBG#\#}
+    if [ "${#hex}" -eq 3 ]; then
+      hex="${hex:0:1}${hex:0:1}${hex:1:1}${hex:1:1}${hex:2:1}${hex:2:1}"
+    fi
+    r=$((16#${hex:0:2}))
+    g=$((16#${hex:2:2}))
+    b=$((16#${hex:4:2}))
+  elif [[ "${inputBG}" =~ ^[0-9]+,[0-9]+,[0-9]+$ ]]; then
+    IFS=',' read -r r g b <<< "${inputBG}"
+  else
+    die "invalid background format: ${inputBG}"
+  fi
+
+  verifyRange "${r}" "Background R" "${r}"
+  verifyRange "${g}" "Background G" "${g}"
+  verifyRange "${b}" "Background B" "${b}"
+
+  echo "${r} ${g} ${b}"
+}
+
+function parseColor() {
+  local input="$1"
+  local trimmed=$(echo "${input}" | sed -E '
+             s/^[^(]*\(([^)]+)\).*$/\1/;             # extract content within parentheses
+             s/^[[:space:]]+//;                      # remove leading spaces
+             s/[[:space:]]+$//;                      # remove trailing spaces
+             s/[[:space:]]*,[[:space:]]*/,/g;        # remove spaces around commas (,)
+             s/,+/,/g;                               # combine multiple/consecutive commas
+             s/^,//; s/,$//;                         # remove leading/trailing commas
+         ')
+
+  IFS=',' read -ra parts <<< "${trimmed}"
+  local pCount=${#parts[@]}
+
+  # RGBA
+  if [[ "$(awk -F ',' '{print NF-1}' <<< "${trimmed}")" -eq 3 ]];then
+    if (( pCount != 4 )); then echo "INVALID_RGBA_FORMAT|4" >&2; return 1; fi
+
+    # verify alpha value is numeric
+    local alpha="${parts[3]}"
+    if [[ ! "${alpha}" =~ ^-?[0-9]*\.?[0-9]+$ ]]; then echo "INVALID_ALPHA|${alpha}" >&2; return 1; fi
+
+    # verify alpha value is in range [0.0-1.0]
+    if awk -v a="${alpha}" 'BEGIN { if (a < 0 || a > 1) exit 1 }'; then
+      :
+    else
+      echo "ALPHA_OUT_OF_RANGE|${alpha}" >&2
+      return 1
+    fi
+
+  # RGB
+  elif [[ "$(awk -F ',' '{print NF-1}' <<< "${trimmed}")" -eq 2 ]];then
+    if (( pCount != 3 )); then echo "INVALID_RGB_FORMAT|3" >&2; return 1; fi
+  fi
+
+  # cleaned - remove non-numeric characters and trim spaces
+  echo "${trimmed}" | sed -E 's/[^0-9.,-]//g; s/^[[:space:]]+//; s/[[:space:]]+$//;'
+  return 0
+}
+
+# numeric processing (return decimal)
+function formatNumber() {
+  awk -v n="$1" 'BEGIN {
+    n = (n == "" ? 0 : n)
+    if (n ~ /\..*5$/) { printf "%.0f", n + 0.5 }
+    else { printf "%.0f", n }
+  }'
+}
+
+# verify the range of RGB ( 0 - 255 )
+function verifyRange() {
+  local value="$1"
+  local name="$2"
+  local original="$3"
+  if [[ "${value}" -lt 0 || "${value}" -gt 255 ]]; then
+    die "invalid ${name} value '${original}' (0-255)"
+  fi
+}
+
+# verify alpha value range ( 0.00 ~ 1.00 )
+function clampAlpha() {
+  local alphaInput=$(parseColor "$1") || exit 2
+
+  local numericValue
+  numericValue=$(awk -v a="${alphaInput}" 'BEGIN { print a + 0 }')
+
+  # clamp to range [0.0, 1.0]
+  if (( $(echo "${numericValue} < 0.0" | bc -l) )); then
+      numericValue=0.0
+  elif (( $(echo "${numericValue} > 1.0" | bc -l) )); then
+      numericValue=1.0
+  fi
+
+  # format to 2 decimal places
+  printf "%.2f" "${numericValue}"
+}
+
+# mix channel: $1 - color, $2 - alpha, $3 - background
+function mixChannel() {
+  awk -v c="$1" -v a="$2" -v bg="$3" 'BEGIN {
+    result = c * a + bg * (1 - a)
+    printf "%d\n", (result < 0 ? 0 : (result > 255 ? 255 : result))
+  }'
+}
+
+# show output with alpha mixing
+function showOutput() {
+  local inputA="$1"
+  local r="$2" g="$3" b="$4"
+  local bgR="$5" bgG="$6" bgB="$7"
+
+  local a=$(clampAlpha "${inputA}")
+  local mixedR=$(mixChannel "${r}" "${a}" "${bgR}")
+  local mixedG=$(mixChannel "${g}" "${a}" "${bgG}")
+  local mixedB=$(mixChannel "${b}" "${a}" "${bgB}")
+
+  local hexCode=$(toHex "${mixedR}" "${mixedG}" "${mixedB}")
+  local rgbDisplay="rgba(${r}, ${g}, ${b}, $(printf "%.2f" "${a}"))"
+  local ansiStart="\033[38;2;${mixedR};${mixedG};${mixedB}m"
+  local ansiReset="\033[0m"
+
+  echo -e "${ansiStart}${rgbDisplay}${ansiReset} -> ${ansiStart}${hexCode}${ansiReset}"
+}
+
+function main() {
+  # read input
+  parseArguments "$@"
+  [ -z "${colorCode}" ] && { die 'missing color input'; }
+
+  # capture both errTag and errValue, to avoid `exit 1` cannot stop in subshell
+  local parsedColor
+  if ! parsedColor=$(parseColor "${colorCode}" 2>&1); then
+    IFS='|' read -r errTag errValue <<< "$parsedColor"
+    case "${errTag}" in
+      INVALID_RGBA_FORMAT  ) die "invalid RGBA format: expected ${errValue:-4} components $(c Mi)rgba(R,G,B,A)$(c)" ;;
+      INVALID_RGB_FORMAT   ) die "invalid rgb format: Expected ${errValue:-3} components $(c Mi)rgb(R,G,B)$(c)" ;;
+      INVALID_ALPHA        ) die "invalid $(c ui)alpha$(c) value $(c Mi)'${errValue}'$(c) in R,G,B,$(c Mi)A$(c)" ;;
+      ALPHA_OUT_OF_RANGE   ) die "invalid $(c ui)alpha$(c) value $(c Mi)${errValue}$(c), must be between $(c Bi)0.00$(c) and $(c Bi)1.00$(c)" ;;
+      INVALID_COLOR_FORMAT ) die "Unrecognized color format" ;;
+      *                    ) die "Unknown error in color parsing" ;;
+    esac
+  fi
+  IFS=',' read -ra vals <<< "${parsedColor}"
+
+  # input verify
+  if [[ ${#vals[@]} -lt 3 || ${#vals[@]} -gt 4 ]]; then
+    die "expected 3 or 4 values, got $(c Mi)${#vals[@]}$(c)"
+  fi
+
+  # format numbers
+  local orgR="$(formatNumber "${vals[0]}")"
+  local orgG="$(formatNumber "${vals[1]}")"
+  local orgB="$(formatNumber "${vals[2]}")"
+
+  verifyRange "${orgR}" "R" "${vals[0]}"
+  verifyRange "${orgG}" "G" "${vals[1]}"
+  verifyRange "${orgB}" "B" "${vals[2]}"
+
+  # alpha
+  if [[ ${#vals[@]} -eq 3 && -z "${alpha}" ]]; then
+    for a in $(seq 0.0 0.1 1.0); do
+      showOutput "${a}" \
+                 "${orgR}" "${orgG}" "${orgB}" \
+                 "${bgR}" "${bgG}" "${bgB}"
+    done
+  else
+    local finalAlpha="${alpha:-${vals[3]:-1.0}}"
+    showOutput "${finalAlpha}" \
+               "${orgR}" "${orgG}" "${orgB}" \
+               "${bgR}" "${bgG}" "${bgB}"
+  fi
+}
+
+main "$@"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
+```
+<!--endsec-->
+
+<!--sec data-title="rgba2hex-help" data-id="section3" data-show=true data-collapse=true ces-->
+```
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+
+source "${HOME}"/.marslo/bin/bash-color.sh
+
+# shellcheck disable=SC2155
+declare usage="""
+NAME
+  $(c Ys)rgba2hex$(c) - RGBA to HEX Converter with ANSI Color Preview
+
+USAGE
+  $(c Ys)rgba2hex$(c) $(c Gis)[OPTIONS]$(c) $(c Ms)'COLOR_INPUT'$(c)
+
+OPTIONS
+  $(c Gis)-a$(c), $(c Gis)--alpha$(c)       override alpha value ( $(c Wdi)0.00$(c)-$(c Wdi)1.00$(c) )
+  $(c Gis)-b$(c), $(c Gis)--background$(c)  set background color ( $(c Wdi)0-255$(c)/$(c Wdi)R,G,B$(c)/$(c Wdi)#RGB/#RRGGBB$(c), default: $(c Wi)255,255,255$(c) )
+  $(c Gis)-h$(c), $(c Gis)--help$(c)        show this help message
+
+COLOR INPUT FORMATS
+  • $(c Msi)'rgba(R, G, B, A)'$(c)
+  • $(c Msi)'R, G, B, A'$(c)
+  • $(c Msi)'rgb(R, G, B)'$(c)  $(c Wdi)generates alpha from 0.0 to 1.0 sequentially$(c)
+  • $(c Msi)'R, G, B'$(c)       $(c Wdi)generates alpha from 0.0 to 1.0 sequentially$(c)
+
+EXAMPLES
+  $(c iu)WITH$(c) $(c Bs)ALPHA$(c) $(c i)- SHOW SINGLE HEX COLOR CODE$(c)
+    $(c Wi)# show the HEX color code with given RGBA.$(c)
+    \$ $(c Yis)rgba2hex$(c) $(c Ms)'rgba(255, 200.5, 100, 0.8)'$(c)
+    \033[38;2;255;211;131mrgba(255, 200.5, 100, 0.80)\033[0m -> \033[38;2;255;211;131m#FFD383\033[0m
+
+    $(c Wi)# show the HEX color code with alpha mixed background: $(c)\033[48;2;128;0;128m#800080\033[0m
+    \$ $(c Yis)rgba2hex$(c) $(c Ms)'204 , 108 , 204 , 0.8'$(c) $(c Gis)-b 128,0,128$(c)
+    \033[38;2;188;86;188mrgba(204, 108, 204, 0.80)\033[0m -> \033[38;2;188;86;188m#BC56BC\033[0m
+
+  $(c iu)WITHOUT$(c) $(c Bs)ALPHA$(c) $(c i)- SHOW WITH ALPHA FROM 0.1 TO 1.0 SEQUENTIALLY$(c)
+    $(c Wi)# show HEX color codes with default background: $(c) \033[48;2;255;255;255;3m#FFFFFF\033[0m
+    \$ $(c Yis)rgba2hex$(c) $(c Ms)'250, 240, 170'$(c) == \$ $(c Yis)rgba2hex$(c) $(c Ms)'rgb(250, 240, 170)'$(c) $(c Gis)--background 255$(c)
+    \033[38;2;255;255;255mrgba(250, 240, 170, 0.00)\033[0m -> \033[38;2;255;255;255m#FFFFFF\033[0m
+    \033[38;2;254;253;246mrgba(250, 240, 170, 0.10)\033[0m -> \033[38;2;254;253;246m#FEFDF6\033[0m
+    \033[38;2;254;252;238mrgba(250, 240, 170, 0.20)\033[0m -> \033[38;2;254;252;238m#FEFCEE\033[0m
+    \033[38;2;253;250;229mrgba(250, 240, 170, 0.30)\033[0m -> \033[38;2;253;250;229m#FDFAE5\033[0m
+    \033[38;2;253;249;221mrgba(250, 240, 170, 0.40)\033[0m -> \033[38;2;253;249;221m#FDF9DD\033[0m
+    \033[38;2;252;247;212mrgba(250, 240, 170, 0.50)\033[0m -> \033[38;2;252;247;212m#FCF7D4\033[0m
+    \033[38;2;252;246;204mrgba(250, 240, 170, 0.60)\033[0m -> \033[38;2;252;246;204m#FCF6CC\033[0m
+    \033[38;2;251;244;195mrgba(250, 240, 170, 0.70)\033[0m -> \033[38;2;251;244;195m#FBF4C3\033[0m
+    \033[38;2;251;243;187mrgba(250, 240, 170, 0.80)\033[0m -> \033[38;2;251;243;187m#FBF3BB\033[0m
+    \033[38;2;250;241;178mrgba(250, 240, 170, 0.90)\033[0m -> \033[38;2;250;241;178m#FAF1B2\033[0m
+    \033[38;2;250;240;170mrgba(250, 240, 170, 1.00)\033[0m -> \033[38;2;250;240;170m#FAF0AA\033[0m
+
+    $(c Wi)# show HEX color codes with given background: $(c) \033[48;2;34;85;102;3m#225566\033[0m
+    \$ $(c Yis)rgba2hex$(c) $(c Ms)'250,240,170'$(c) $(c Gis)--background '#256'$(c) == \$ $(c Yis)rgba2hex$(c) $(c Gis)--background '#256'$(c) $(c Ms)'rgb(250,240,170)'$(c)
+    \033[38;2;34;85;102mrgba(250, 240, 170, 0.00)\033[0m -> \033[38;2;34;85;102m#225566\033[0m
+    \033[38;2;55;100;93mrgba(250, 240, 170, 0.10)\033[0m -> \033[38;2;55;100;93m#37645D\033[0m
+    \033[38;2;77;116;102mrgba(250, 240, 170, 0.20)\033[0m -> \033[38;2;77;116;102m#4D7466\033[0m
+    \033[38;2;98;131;110mrgba(250, 240, 170, 0.30)\033[0m -> \033[38;2;98;131;110m#62836E\033[0m
+    \033[38;2;120;147;119mrgba(250, 240, 170, 0.40)\033[0m -> \033[38;2;120;147;119m#789377\033[0m
+    \033[38;2;142;162;127mrgba(250, 240, 170, 0.50)\033[0m -> \033[38;2;142;162;127m#8EA27F\033[0m
+    \033[38;2;163;178;136mrgba(250, 240, 170, 0.60)\033[0m -> \033[38;2;163;178;136m#A3B288\033[0m
+    \033[38;2;185;193;144mrgba(250, 240, 170, 0.70)\033[0m -> \033[38;2;185;193;144m#B9C190\033[0m
+    \033[38;2;206;209;153mrgba(250, 240, 170, 0.80)\033[0m -> \033[38;2;206;209;153m#CED199\033[0m
+    \033[38;2;228;224;161mrgba(250, 240, 170, 0.90)\033[0m -> \033[38;2;228;224;161m#E4E0A1\033[0m
+    \033[38;2;250;240;170mrgba(250, 240, 170, 1.00)\033[0m -> \033[38;2;250;240;170m#FAF0AA\033[0m
+
+NOTES
+  • All color components clamp to [ $(c Gi)0$(c) ~ $(c Gi)255$(c) ]
+  • Alpha values clamp to [ $(c Gi)0.00$(c) ~ $(c Gi)1.00$(c) ]
+  • RGB values are rounded to nearest integer
+  • ANSI preview requires truecolor terminal support
+"""
+
+function showHelp() { echo -e "$usage"; }
+```
+<!--endsec-->
 
 ## color names
 
