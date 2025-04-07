@@ -375,7 +375,7 @@ $ bc <<< 'ibase=16;FF;FF;EE;0A' | paste -sd. -
 
 | FROM    | TO  | COMMAND                                                 | EXAMPLE            | OUTPUT |
 |---------|-----|---------------------------------------------------------|--------------------|--------|
-| Binary  | Hex | <Code>echo "obase=16; ibase=2; 101011" &#124; bc</code> | `101011` → hex     | `2B`   |
+| Binary  | Hex | <code>echo "obase=16; ibase=2; 101011" &#124; bc</code> | `101011` → hex     | `2B`   |
 | Octal   | Hex | <code>echo "obase=16; ibase=8; 77" &#124; bc</code>     | `77` (octal) → hex | `3F`   |
 | Decimal | Hex | <code>echo "obase=16; 255" &#124; bc</code>             | `255`              | `FF`   |
 | Decimal | Hex | `printf "%X\n" 255`                                     | `255`              | `FF`   |

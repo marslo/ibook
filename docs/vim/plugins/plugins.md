@@ -905,6 +905,25 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 
 [![coc-snippets](../../screenshot/vim/nvim-coc-snippet.gif)](../../screenshot/vim/nvim-coc-snippet.gif)
 
+> [!TIP|label:default snippets]
+> ```bash
+> $ fd all.snippets ~/.config/nvim ~/.vim ~/.local/share/nvim
+> /Users/marslo/.vim/plugged/vim-snippets/UltiSnips/all.snippets
+> /Users/marslo/.vim/plugged/vim-snippets/snippets/all.snippets
+> ```
+
+| OPTIONS | DESCRIPTION                                           |
+|:-------:|-------------------------------------------------------|
+|   `b`   | beginning of line                                     |
+|   `i`   | In-word explansion                                    |
+|   `w`   | Word boundary                                         |
+|   `r`   | Regular Expression                                    |
+|   `t`   | Do NOT expand tabs                                    |
+|   `s`   | Remove Whitespace immediately before the cursor       |
+|   `t`   | Trim all whitespaces from right side of snippet lines |
+|   `c`   | Custom context snippet                                |
+|   `A`   | Snippet will be triggered automatically               |
+
 ```vim
 " ~/.vimrc.d/extension
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
@@ -934,21 +953,55 @@ endfunction
 highlight! link snipLeadingSpaces snipComment
 ```
 
-- commands
-  ```vim
-  :CocList snippets
-  :CocCommand snippets.openSnippetFiles
-  :CocCommand snippets.editSnippets
-  :CocCommand snippets.openOutput
+#### snippets
+```
+snippet "mode(line)?( (\S+))?" "vim modeline" br
+${1:#} vim`!v ':set '. (&expandtab ? printf('expandtab shiftwidth=%i tabstop=%i softtabstop=%i', &sw, &ts, &sts) : printf('noexpandtab:sts=%i:sw=%i:ts=%i', &sts, &sw, &ts)) . (&tw ? ':tw='. &tw : '') . (':filetype=')`${2:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "sh"`}:
+endsnippet
 
-  :CocCommand workspace.showOutput snippets
-  [Info  - 04:39:05.988] Using ultisnips directories:
-  [
-    "UltiSnips",
-    "/Users/marslo/.config/coc/ultisnips"
-  ]
-  [Info  - 04:39:06.009] Loading textmate snippets from filetypes: groovy
-  ```
+snippet "be(gin)?( (\S+))?" "begin{} / end{}" br
+\begin{${1:`!p
+snip.rv = match.group(3) if match.group(2) is not None else "something"`}}
+  ${2:${VISUAL}}
+\end{$1}$0
+endsnippet
+
+snippet wow
+${1:Text}`!p snip.rv = (75-2*len(t[1]))*' '+t[1].upper()`
+endsnippet
+
+snippet case
+case ${1:word} in
+  ${2:pattern} ) $0;;
+esac
+endsnippet
+
+snippet query
+Your age: ${1|<18,18~60,>60|}
+Your height: ${2|<120cm,120cm~180cm,>180cm|}
+endsnippet
+```
+
+#### commands
+```vim
+:CocList snippets
+:CocCommand snippets.openSnippetFiles
+:CocCommand snippets.editSnippets
+:CocCommand snippets.openOutput
+
+:CocCommand workspace.showOutput snippets
+[Info  - 04:10:41.632] Using ultisnips directories:
+[
+  "UltiSnips",
+  "/Users/marslo/.marslo/vimrc.d/snips"
+]
+[Info  - 04:10:41.663] Loading textmate snippets from filetypes: jenkinsfile
+[Info  - 04:10:41.666] Loaded 23 _ snipmate snippets from: /Users/marslo/.vim/plugged/vim-snippets/snippets/_.snippets
+[Info  - 04:10:41.666] Loaded 9 UltiSnip snippets from: /Users/marslo/.marslo/vimrc.d/snips/all.snippets
+[Info  - 04:10:41.667] Loaded 14 UltiSnip snippets from: /Users/marslo/.vim/plugged/vim-snippets/UltiSnips/all.snippets
+[Info  - 04:10:41.667] Execute python file /var/folders/8g/68t3rg090jd2tpqjcwm9vskh0000gq/T/nvim.marslo/HFc9S7/coc-snippets-7398faf046499cfcea484a37fe5c9294.py from: /Users/marslo/.vim/plugged/vim-snippets/UltiSnips/all.snippets
+```
 
 ### [coc-word](https://github.com/neoclide/coc-sources)
 

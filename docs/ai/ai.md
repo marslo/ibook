@@ -7,6 +7,8 @@
   - [using chatgpt to generate git commits](#using-chatgpt-to-generate-git-commits)
   - [using chatgpt to review git diff](#using-chatgpt-to-review-git-diff)
 - [RAG](#rag)
+- [ChatGPT](#chatgpt)
+  - [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -134,3 +136,108 @@ jq -r '.choices[0].message.content'
 
 > [!TIP]
 > - [RAG - Retrieval-Augmented Generation](https://aws.amazon.com/what-is/retrieval-augmented-generation/)
+
+## ChatGPT
+
+### tips
+
+<!--sec data-title="create package todownload" data-id="section2" data-show=true data-collapse=true ces-->
+[see details](https://chatgpt.com/c/67f07846-04f8-8010-bce9-27150bfb1382)
+
+```bash
+import os
+from pathlib import Path
+
+# Define script contents
+table_script = """#!/usr/bin/env bash
+
+# print_table.sh — CLI 表格打印工具，支持列对齐和彩色输出
+
+_strip_ansi() {
+  sed 's/\\x1B\\[[0-9;]*[mK]//g'
+}
+
+_str_length() {
+  echo -e "$1" | _strip_ansi | awk '{ print length }'
+}
+
+repeat_char() {
+  printf "%*s" "$2" '' | tr ' ' "$1"
+}
+
+print_table() {
+  local -n _headers=$1
+  local -n _rows=$2
+  local -n _aligns=$3
+
+  local cols=${#_headers[@]}
+  local -a widths
+
+  # 计算每列最大宽度
+  for ((i = 0; i < cols; i++)); do
+    widths[i]=$(_str_length "${_headers[i]}")
+  done
+
+  for row in "${_rows[@]}"; do
+    IFS='|' read -r -a fields <<<"$row"
+    for ((i = 0; i < cols; i++)); do
+      len=$(_str_length "${fields[i]}")
+      ((len > widths[i])) && widths[i]=$len
+    done
+  done
+
+  # 打印分割线
+  _print_line() {
+    for ((i = 0; i < cols; i++)); do
+      printf "+-%s" "$(repeat_char '-' "${widths[i]}")"
+    done
+    echo "+"
+  }
+
+  # 打印一行
+  _print_row() {
+    local -a fields=("$@")
+    for ((i = 0; i < cols; i++)); do
+      local raw="${fields[i]}"
+      local clean=$(_str_length "$raw")
+      local pad=${widths[i]}
+      case "${_aligns[i]}" in
+        right)
+          printf "| %*s " "$pad" "$raw"
+          ;;
+        center)
+          local left=$(( (pad - clean) / 2 ))
+          local right=$(( pad - clean - left ))
+          printf "| %*s%s%*s " "$left" "" "$raw" "$right" ""
+          ;;
+        *)
+          printf "| %-*s " "$pad" "$raw"
+          ;;
+      esac
+    done
+    echo "|"
+  }
+
+  # 打印整张表格
+  _print_line
+  _print_row "${_headers[@]}"
+  _print_line
+  for row in "${_rows[@]}"; do
+    IFS='|' read -r -a fields <<<"$row"
+    _print_row "${fields[@]}"
+  done
+  _print_line
+}
+"""
+
+# Define output path
+output_path = Path("/mnt/data/cli-ui/print_table.sh")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+# Save script to file
+with open(output_path, "w") as f:
+    f.write(table_script)
+
+output_path.name
+```
+<!--endsec-->

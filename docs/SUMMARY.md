@@ -246,6 +246,7 @@
     * [skype](tools/app/skype.md)
     * [teamviewer](tools/app/teamviewer.md)
     * [others](tools/app/others.md)
+* [quotes](quotes/quotes.md)
 * [english](english/symbols.md)
 
 <!---

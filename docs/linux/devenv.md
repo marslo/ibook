@@ -79,6 +79,7 @@
     - [check *.o file](#check-o-file)
 - [env](#env)
   - [manpath](#manpath)
+    - [manual add man.1](#manual-add-man1)
 - [others](#others-1)
   - [GitHubDaily/GitHubDaily](#githubdailygithubdaily)
 
@@ -2259,6 +2260,19 @@ proc:::exec-success
   -- Using manual path: /Users/marslo/perl5/man:/Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/opt/llvm/share/man:/usr/local/opt/util-linux/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/Cellar/node/21.1.0/share/man:/usr/local/Cellar/openjdk/21.0.2/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/git-extras/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/openldap/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/local/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
   /Users/marslo/perl5/man:/Users/marslo/.local/share/man:/usr/local/Cellar/icu4c@71.1/71.1/share/man:/usr/local/vim/share/man:/Applications/MacVim.app/Contents/man:/usr/local/opt/llvm/share/man:/usr/local/opt/util-linux/share/man:/usr/local/opt/gnu-getopt/share/man:/usr/local/opt/binutils/share/man:/usr/local/opt/ruby/share/man:/usr/local/opt/tcl-tk/share/man:/usr/local/Cellar/node/21.1.0/share/man:/usr/local/Cellar/openjdk/21.0.2/libexec/openjdk.jdk/Contents/Home/man:/usr/local/opt/ed/share/man:/usr/local/opt/git-extras/share/man:/usr/local/opt/gettext/share/man:/usr/local/opt/file-formula/share/man:/usr/local/opt/openldap/share/man:/usr/local/opt/curl/share/man:/usr/local/opt/openssl/share/man:/usr/local/opt/libiconv/share/man:/usr/local/opt/sqlite/share/man:/usr/local/share/man:/usr/local/man:/usr/share/man:/Library/Apple/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man
   ```
+
+### manual add man.1
+```bash
+$ mkdir -p ~/.local/share/man/man1
+$ cp bat.1 ~/.local/share/man/man1/
+
+# run manpath to check
+$ manpath
+/user/marslo/.local/share/man:/usr/local/share/man:/usr/share/man
+
+# or specific path with `MANPATH`
+$ export MANPATH=~/some/path/man:$MANPATH
+```
 
 # others
 
