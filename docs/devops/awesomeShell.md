@@ -32,11 +32,13 @@
   - [advanced usage](#advanced-usage-1)
 - [`rg` the faster `mg`](#rg-the-faster-mg)
   - [usage](#usage-1)
+  - [tips](#tips-1)
+  - [using inside in vim](#using-inside-in-vim)
 - [`ag` the faster `mg`](#ag-the-faster-mg)
 - [`fzy`](#fzy)
 - [`bat`](#bat)
   - [usage](#usage-2)
-  - [tips](#tips-1)
+  - [tips](#tips-2)
   - [config](#config-1)
   - [theme](#theme-1)
 - [`tldr`](#tldr)
@@ -2153,6 +2155,48 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   ```
 
   ![ag rg](../screenshot/osx/ag-rg.png)
+
+
+## tips
+- show file name only
+  ```bash
+  $ rg --hidden 'alias ping' --no-heading --files-with-matches
+  alias.d/utils
+  ```
+
+- in vimgrep format
+  ```bash
+  $ rg --hidden 'alias ping' --no-heading
+  alias.d/utils:13:  alias ping='/sbin/ping --apple-time -v'
+  # or
+  $ rg 'alias ping' --no-heading --line-number --with-filename
+  alias.d/utils:13:  alias ping='/sbin/ping --apple-time -v'
+
+  $ rg --hidden 'alias ping' --vimgrep
+  alias.d/utils:13:3:  alias ping='/sbin/ping --apple-time -v'
+  ```
+
+## using inside in vim
+
+> [!NOTE|label:references:]
+> - [Extending Vim with ripgrep](https://phelipetls.github.io/posts/extending-vim-with-ripgrep/)
+> - [#425 - How to use inside vim?](https://github.com/BurntSushi/ripgrep/issues/425#issuecomment-381446152)
+> - [jremmen/vim-ripgrep](https://github.com/jremmen/vim-ripgrep)
+
+```vim
+if executable("rg")
+  set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
+  set grepformat=%f:%l:%c:%m
+endif
+
+" -- more --
+" handling search and replace boilerplate using ripgrep
+if executable('rg') | set grepformat+=%f:%l:%c:%m grepprg=rg\ --vimgrep\ --no-heading\ --smart-case | endif
+" use feedkeys because we don't want to press enter at the end of this command
+command! -nargs=1 FindReplaceAll :silent grep <args> | copen | call feedkeys(":cdo %s/" . <q-args> . "/") | redraw!
+" use feedkeys because otherwise the screen isn't redrawn
+nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
+```
 
 # [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
 - install

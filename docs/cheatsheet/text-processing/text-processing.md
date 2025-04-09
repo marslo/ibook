@@ -3,6 +3,7 @@
 
 - [charset](#charset)
   - [escape](#escape)
+  - [control character](#control-character)
 - [encryption](#encryption)
   - [`base64`](#base64)
 - [show](#show)
@@ -108,18 +109,18 @@
 > - [The difference between "binary" and "text" files](https://dev.to/sharkdp/what-is-a-binary-file-2cf5)
 > - [control character](https://en.wikipedia.org/wiki/Control_character)
 >
-> |   HEX  | NAME            | ABBREVIATION | ESCAPE | CODE |
-> |:------:|-----------------|:------------:|:------:|:----:|
-> | `0x00` | null            |      NUL     |  `\0`  | `^@` |
-> | `0x07` | bell            |      BEL     |  `\a`  | `^G` |
-> | `0x08` | backspace       |      BS      |  `\b`  | `^H` |
-> | `0x09` | horizontal tab  |      HT      |  `\t`  | `^I` |
-> | `0x0a` | line feed       |      LF      |  `\n`  | `^J` |
-> | `0x0b` | vertical tab    |      VT      |  `\v`  | `^K` |
-> | `0x0c` | form feed       |      FF      |  `\f`  | `^L` |
-> | `0x0d` | carriage return |      CR      |  `\r`  | `^M` |
-> | `0x1a` | Control-Z       |      SUB     |    -   | `^Z` |
-> | `0x1b` | escape          |      ESC     |  `\e`  | `^[` |
+>> |   HEX  | NAME            | ABBREVIATION | ESCAPE | CODE |
+>> |:------:|-----------------|:------------:|:------:|:----:|
+>> | `0x00` | null            |      NUL     |  `\0`  | `^@` |
+>> | `0x07` | bell            |      BEL     |  `\a`  | `^G` |
+>> | `0x08` | backspace       |      BS      |  `\b`  | `^H` |
+>> | `0x09` | horizontal tab  |      HT      |  `\t`  | `^I` |
+>> | `0x0a` | line feed       |      LF      |  `\n`  | `^J` |
+>> | `0x0b` | vertical tab    |      VT      |  `\v`  | `^K` |
+>> | `0x0c` | form feed       |      FF      |  `\f`  | `^L` |
+>> | `0x0d` | carriage return |      CR      |  `\r`  | `^M` |
+>> | `0x1a` | Control-Z       |      SUB     |    -   | `^Z` |
+>> | `0x1b` | escape          |      ESC     |  `\e`  | `^[` |
 
 - list all charset
   ```bash
@@ -170,6 +171,42 @@
   $ echo -e "Let\x22s get coding!"
   Let"s get coding!
   ```
+
+## control character
+
+```bash
+$ read -rep "$(printf "\033[37;3m%s\033[0m" 'input: ')" input
+```
+
+![read without `\001` and `\002`](../../screenshot/shell/read-1.gif)
+
+```bash
+#                      SOH           STX  SOH         STX
+#                      +--+          +--+  +--+       +--+
+$ read -rep "$(printf "\001\033[37;3m\002%s\001\033[0m\002" 'input: ')" input
+```
+
+![read with `\001` and `\002`](../../screenshot/shell/read-2.gif)
+
+| CHAR/SEQUENCE  | ASCII                                  | USAGE/MEANING                                                         | EXAMPLE                               | TYPICAL SCENARIO                                              |
+|----------------|----------------------------------------|-----------------------------------------------------------------------|---------------------------------------|---------------------------------------------------------------|
+| `\001`         | `SOH` (`Start Of Heading`)<br>(`0x01`) | start of non-printing section<br> (== `\[` in PS1)                    | `\001\033[31m\002`                    | Wrap ANSI color codes to avoid cursor position miscalculation |
+| `\002`         | `STX` (`Start Of Text`)<br>(`0x02`)    | end of non-printing section<br> (== `\]` in PS1)                      | `\001\033[0m\002`                     | Wrap ANSI color codes to avoid cursor position miscalculation |
+| `\e`<br>`\033` | `ESC` (`Escape`, `0x1B`)<br>(`0x1B`)   | begins an ANSI escape sequence                                        | `\e[31m` (set text red)               | Control text color, cursor position, terminal behavior        |
+| `\a`           | `BEL` (`BELL`)<br>(`0x07`)             | triggers terminal bell sound                                          | `echo -e "\a"`                        | Alert user with sound                                         |
+| `\r`           | `CR` (`Carriage Return`)<br>(`0x0D`)   | returns cursor to beginning of line                                   | `printf "Progress: 50%%\r"`           | Overwrite text on same line ( i.e. spinner/progress bar )     |
+| `\n`           | `LF` (`line feed`)<br>(`0x0A`)         | newline                                                               | `echo -e "Line1\nLine2"`              | Standard line break                                           |
+| `\t`           | `TAB` (`Horizontal Tab`)<br>(`0x09`)   | horizontal tab                                                        | `echo -e "Name:\tJohn"`               | Column-style output, Align text                               |
+| `\b`           | `BS` (`Delete`)<br>(`0x08`)            | deletes one character backward                                        | `echo -e "abc\b\bxyz"` (result: axyz) | Inline deletions                                              |
+| `\xHH`         | Hex Byte                               | represents a character by its hex value                               | `\x1B` == `\e`<br>`\x41` → `A`        | Injecting arbitrary bytes                                     |
+| `\uXXXX`       | Unicode Char                           | 4-digit Unicode character (Bash extension, requires terminal support) | `\u2714` → ✔️                         | Emojis or symbols in terminal                                 |
+| `\nnn`         | Octal Char                             | 3-digit octal character                                               | `\101` → `A`                          | Injecting arbitrary bytes                                     |
+| `\033[XXm`     | SGR (Select Graphic Rendition)         | text color/style control<br>(i.e.: 31m=red，1m=bold，0m=reset)        | `\033[32;1mSuccess!\033[0m`           | Highlight key information                                     |
+| `\033[K`       | -                                      | erase to end of line                                                  | `echo -e "Loading...\033[K"`          | Clear the content at the end of each line dynamically         |
+| `\033[nA`      | -                                      | cursor up `n` lines                                                   | `\033[2A`                             | Multi-line Output Control                                     |
+| `\033[nB`      | -                                      | cursor down `n` lines                                                 | `\033[3B`                             | Multi-line Output Control                                     |
+| `\033[nC`      | -                                      | cursor forward `n` columns                                            | `\033[10C`                            | Align complex output                                          |
+| `\033[nD`      | -                                      | cursor backward `n` columns                                           | `\033[5D`                             | Rollback Edit                                                 |
 
 # encryption
 ## `base64`
@@ -2059,6 +2096,10 @@ round-trip min/avg/max/stddev = 1.016/1.016/1.016/0.000 ms
 ```bash
 $ printf 'mark spitz' | while read -r -n1 c; do printf "[%c]" "$c"; done
 [m][a][r][k][][s][p][i][t][z]
+
+# or
+$ while read -r -n1 c; do printf "[%c]" "$c"; done <<< "mark spitz"
+[m][a][r][k][][s][p][i][t][z][]
 ```
 
 # `find`

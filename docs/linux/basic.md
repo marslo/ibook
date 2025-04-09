@@ -12,7 +12,6 @@
   - [example: run script without download](#example-run-script-without-download)
   - [example: merge lines of file](#example-merge-lines-of-file)
     - [nstalling tools via running random scripts from unknown sites](#nstalling-tools-via-running-random-scripts-from-unknown-sites)
-  - [`strace`](#strace)
 - [basic commands](#basic-commands)
   - [`du`](#du)
   - [sort](#sort)
@@ -572,24 +571,23 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
     fetch -o - http://pi.dk/3 ) > install.sh
 ```
 
-## `strace`
-> [!NOTE|label:reference]
-> - [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
-
 # basic commands
 ## `du`
 - top biggest directories under _[path]_
   ```bash
   $ du -a [path] | sort -n -r | head -n 5
   ```
+
 - display the largest files according to human-readable format
   ```bash
   $ du -hs * | sort -rh | head -5
   ```
+
 - display the largest folders/files including the sub-directories
   ```bash
   $ du -Sh | sort -rh | head -5
   ```
+
 - biggest file sizes
   ```bash
   $ find -type f -exec du -Sh {} + | sort -rh | head -n 5

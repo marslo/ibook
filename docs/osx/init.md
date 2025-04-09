@@ -23,6 +23,7 @@ $ brew install gzip
 $ brew install carlocab/personal/unrar
 $ brew install zip unzip                          # Info-ZIP
 $ brew install --HEAD rename whois watch wget curl
+$ brew install --HEAD hexyl                       # a hex viewer for the terminal
 $ brew install create-dmg
 $ brew install fontforge
 $ sudo gem install iStats -n /usr/local/bin       # requires ruby to be installed

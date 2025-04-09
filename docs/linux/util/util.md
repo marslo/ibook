@@ -405,6 +405,7 @@ $ l -i a_b
   /dev/disk1s6                          apfs     2.3G    16  2.3G    1% /System/Volumes/Update
   /Library/Input Methods/SogouInput.app nullfs   2.3G  1.8M  2.3G    1% /private/var/folders/s3/mg_f3cv54nn7y758j_t46zt40000gn/T/AppTranslocation/1E49F6C4-251F-443B-8D8A-86DA8F531F09
   ```
+
 - [`du`](https://unix.stackexchange.com/a/117098/29178)
   ```bash
   $ sudo du --inodes -S ~ \
@@ -453,7 +454,8 @@ Journal backup:           inode blocks
 
 ## readline & bind
 
-> [!NOTE]
+> [!NOTE|label:references:]
+> - [* iMarslo: charset](../../cheatsheet/text-processing/text-processing.md#control-character)
 > - [8.4.6 Letting Readline Type For You](https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html)
 
 ### get info
@@ -463,14 +465,14 @@ Journal backup:           inode blocks
   vi-insert
   ```
 
-  - [tricky for switch keymap](https://unix.stackexchange.com/a/409866/29178)
-    ```bash
-    set keymap emacs
-    "\ee": vi-editing-mode
+- [tricky for switch keymap](https://unix.stackexchange.com/a/409866/29178)
+  ```bash
+  set keymap emacs
+  "\ee": vi-editing-mode
 
-    set keymap vi-insert
-    "\e": vi-movement-mode
+  set keymap vi-insert
+  "\e": vi-movement-mode
 
-    set keymap vi-command
-    "\ee": emacs-editing-mode
-    ```
+  set keymap vi-command
+  "\ee": emacs-editing-mode
+  ```

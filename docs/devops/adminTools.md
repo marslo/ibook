@@ -750,6 +750,15 @@ E..GP....._.
 > [!NOTE|label:references:]
 > - [I have a tab completion that hangs, is it possible to use strace to find out what is going on?](https://unix.stackexchange.com/a/525582/29178)
 > - [Resolve nested aliases to their source commands](https://unix.stackexchange.com/a/441389/29178)
+> - [What's the difference between <<, <<< and < < in bash?](https://askubuntu.com/a/678919)
+
+| LINUX                              | MACOS                                                        | COMPARISON                   |
+|------------------------------------|--------------------------------------------------------------|------------------------------|
+| `strace`                           | `dtruss`/`dtrace`                                            | System Call Tracking Tool    |
+| `ltrace`                           | `dyldtrace`                                                  | Dynamic Link Library Tracing |
+| Flexible                           | Limited by System Integrity Protection                       | Kernel Module Support        |
+| Regular users can partially use it | Most features require root access or `CSRUTIL` configuration | Permission Requirements      |
+| high                               | Reliance on BSD-specific syntax                              | Script Portability           |
 
 ```bash
 $ ... run cmd ...
