@@ -15,6 +15,9 @@
 - [list all projects](#list-all-projects)
 - [list gerrit projects with certain account](#list-gerrit-projects-with-certain-account)
 - [list project configure](#list-project-configure)
+- [comments](#comments)
+  - [get inline comments](#get-inline-comments)
+  - [set review](#set-review)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -295,6 +298,57 @@ $ while read -r _proj; do
 ```bash
 $ project='path/to/project'
 $ curl -g -fsSL "https://${gerritUrl}/a/projects/$(printf %s "${project}" | jq -sRr @uri)/config" | tail -n+2 | jq -r
+```
+
+## comments
+
+### get inline comments
+
+> [!NOTE|label:references:]
+> - [get comment](https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#get-comment)
+>> APIs:
+>> - `'GET /changes/{change-id}/comments'`
+>> - `'GET /changes/{change-id}/revisions/{revision-id}/comments'`
+>> - `'GET /changes/{change-id}/revisions/{revision-id}/comments/{comment-id}'`
+
+### set review
+
+> [!NOTE|label:references:]
+> - [set review](https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#set-review)
+>> APIs:
+>> - `POST /changes/{change-id}/revisions/{revision-id}/review`
+
+```json
+{
+  "tag": "jenkins",
+  "message": "<OVERALL_MESSAGE>",
+  "comments": {
+    "<path/to/file>": [
+      {
+        "line": 7,
+        "message": "<SINGLE_LINE_COMMENT>"
+      },
+      {
+        "range": {
+          "start_line": 9,
+          "start_character": 0,
+          "end_line": 11,
+          "end_character": 20
+        },
+        "message": "<MULTI_LINE_COMMENT>"
+      }
+    ]
+  }
+}
+```
+
+```bash
+$ CHAGE_ID=I82aca7c1979b930b5a2b902166ccd7d82442e2ef
+$ REVISION_NUMBER=465dde65d2376f9f5f84a011473578b12d5a0350
+$ curl -XPOST \
+       -H "Content-Type: application/json" \
+       --data-binary @gerrit-review.json \
+       https://gerrit.domain.com/a/changes/${CHAGE_ID}/revisions/${REVISION_NUMBER}/review
 ```
 
 ## reference
