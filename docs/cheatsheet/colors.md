@@ -1,7 +1,18 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [tools and basic grammar](#tools-and-basic-grammar)
+- [grammar](#grammar)
+  - [3-bit or 4-bit](#3-bit-or-4-bit)
+  - [8-bit](#8-bit)
+  - [24-bit](#24-bit)
+    - [RGB colors](#rgb-colors)
+    - [RGB for both foreground and background](#rgb-for-both-foreground-and-background)
+  - [code output ( xterm )](#code-output--xterm-)
+    - [echo](#echo)
+    - [printf](#printf)
+    - [`tput`](#tput)
+  - [for PS1](#for-ps1)
+- [scripts](#scripts)
   - [from rgb](#from-rgb)
   - [from rgba](#from-rgba)
     - [rgba to hex](#rgba-to-hex)
@@ -13,24 +24,14 @@
     - [hex to rgba](#hex-to-rgba)
     - [hex to ansicolor](#hex-to-ansicolor)
     - [hex to rgb](#hex-to-rgb)
-- [ansi colors](#ansi-colors)
-  - [xterm color code output](#xterm-color-code-output)
-    - [echo](#echo)
-    - [printf](#printf)
-    - [`tput`](#tput)
-  - [RGB colors](#rgb-colors)
-    - [echo](#echo-1)
-    - [printf](#printf-1)
-    - [for PS1](#for-ps1)
-    - [RGB for both foreground and background](#rgb-for-both-foreground-and-background)
-  - [tools](#tools)
-    - [fidian/ansi](#fidianansi)
-    - [bash-colors `c()`](#bash-colors-c)
-    - [`say()`](#say)
-    - [RGBcolor](#rgbcolor)
-    - [terminal-colors](#terminal-colors)
-    - [colored - python libs](#colored---python-libs)
-    - [topic: ansi-colors](#topic-ansi-colors)
+- [tools](#tools)
+  - [fidian/ansi](#fidianansi)
+  - [bash-colors `c()`](#bash-colors-c)
+  - [`say()`](#say)
+  - [RGBcolor](#rgbcolor)
+  - [terminal-colors](#terminal-colors)
+  - [colored - python libs](#colored---python-libs)
+  - [topic: ansi-colors](#topic-ansi-colors)
   - [color picker](#color-picker)
     - [iterm2-tab-set](#iterm2-tab-set)
   - [other scripts](#other-scripts)
@@ -209,12 +210,12 @@
 >   └─────────┴──────────────────────────────┴────────────────────────────────────────────────────────────────────────┘
 >   ```
 >
-> - quick show colors:
->   ```bash
->   $ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
->   ```
+> quick show colors sample:
+>>   ```bash
+>>   $ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
+>>   ```
 
-# tools and basic grammar
+# grammar
 
 > [!NOTE|label:references:]
 > - [termstandard/colors](https://github.com/termstandard/colors)
@@ -241,6 +242,225 @@
 
   [![normal & bright colors](../screenshot/colors/ansi/color-normal-bright.png)](../screenshot/colors/ansi/color-normal-bright.png)
 
+## 3-bit or 4-bit
+
+> [!TIP|label:format:]
+>> ```bash
+>> ESC[3⟨n⟩m      # foreground
+>> ESC[4⟨n⟩m      # background
+>> ```
+
+```bash
+$ echo -e "\033[31mHello World\033[0m"
+
+#               ++ foreground - 31 - red
+#               ++ ++ background - 43 - yellow
+$ echo -e "\033[31;43mHello World\033[0m"
+```
+
+![3-bit or 4-bit](../screenshot/colors/3-bit-4-bit-sample.png)
+
+## 8-bit
+
+> [!TIP|label:format:]
+>> ```bash
+>>        + flag `5` is necessary, `38;5` means it's a 8-bit ANSI SGR ( Select Graphic Rendition )
+>>        v
+>> ESC[38;5;⟨n⟩m  # foreground
+>> ESC[48;5;⟨n⟩m  # background
+>> ```
+> - `⟨n⟩`:
+>   - `0 - 7`: standard colors (as in `ESC [ 30–37 m`)
+>   - `8 - 15`: high intensity colors (as in `ESC [ 90–97 m`)
+>   - `16 - 231`: 6 × 6 × 6 cube (216 colors): `16 + 36 × r + 6 × g + b` (`0 ≤ r, g, b ≤ 5`)
+>   - `232 - 255`: grayscale from dark to light in 24 steps
+
+```bash
+#             the 219th color
+#                  v
+#               +------+
+$ echo -e "\033[38;5;219mHello\033[0m"
+
+#               + 3: italic == `\033[3m`
+#               | + 4: underline == `\033[4m`
+#               | |    + the 219th color
+#               | | +------+
+$ echo -e "\033[3;4;38;5;219mHello\033[0m"
+# == equal to ==
+$ echo -e "\033[3m\033[4m\033[38;5;219mHello\033[0m"
+```
+
+![8-bit with font-style](../screenshot/colors/8-bit-font-style.png)
+
+## 24-bit
+
+> [!TIP|label:format:]
+>> ```bash
+>>        + flag `2` is necessary, `38;2` means it's a 24-bit ANSI SGR ( Select Graphic Rendition )
+>>        v
+>> ESC[38;2;⟨r⟩;⟨g⟩;⟨b⟩m   # foreground
+>> ESC[48;2;⟨r⟩;⟨g⟩;⟨b⟩m   # background
+>> ```
+
+```bash
+$ for i in {1..9} 21; do echo -e "\033[$i;38;2;128;255;128mfont-style: $i\033[0m"; done
+font-style: 1         # bold or increased intensity
+font-style: 2         # faint, decreased intensity, or dim
+font-style: 3         # italic
+font-style: 4         # underline
+font-style: 5         # slow blink
+font-style: 6         # -- rapid blink -- not widely supported
+font-style: 7         # reverse or invert
+font-style: 8         # conceal or hide or invisible
+font-style: 9         # strike
+font-style: 21        # doubly underlined; or: not bold
+```
+
+![24-bit with font-style](../screenshot/colors/24-bit-font-style.png)
+
+### RGB colors
+
+> [!NOTE|label:references:]
+> - [* iMarslo : git » config » colors](../devops/git/config.md#colors)
+> - [* iMarslo: math » number conversion » to decimal](../cheatsheet/math.md#to-decimal)
+
+
+> [!NOTE|label:references:]
+> - [How to have multiple colors in a Windows batch file?](https://stackoverflow.com/a/69924820/2940319)
+> - [How to get the RGB values of a 256-color palette terminal color](https://stackoverflow.com/q/69138165/2940319)
+> - [kenny-kvibe/ansi_colors.sh](https://gist.github.com/kenny-kvibe/d000f9e933da5e99d782b4cc7776ec3e)
+> - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
+
+#### echo
+```bash
+# #689d6a
+#                       ╭─ R(decimal)         : 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
+#                       ╷   ╭─ G(decimal)     : 157 : `$ echo -n "obase=10;ibase=16; 9D" | bc`
+#                       ╷   ╷   ╭─ B(decimal) : 106 : `$ echo -n "obase=10;ibase=16; 6A" | bc`
+#                      --- --- ---
+$ echo -e '\x1b[3;38;2;104;157;106m hello world \x1b[m'
+#               -      --- --- ---
+#               ╵      68  9D  6A
+#               ╰─ SGR (Select Graphic Rendition) parameters ( https://en.wikipedia.org/wiki/ANSI_escape_code ):
+#                      0 reset/normal ; 1 bold      ; 2 dim/faint ;
+#                      3 italic       ; 4 underline ; 5 blink     ;
+#                      7 reverse      ; 8 hidden
+
+# or
+$ echo $(git config --get-color "" "#689d6a italic") color test $(git config --get-color "" reset) | command cat -A
+^[[3;38;2;104;157;106m color test ^[[m$
+#         --- --- ---
+#         68  9D  6A   : hex
+#         104 157 106  : decimal
+```
+
+#### printf
+```bash
+$ hextorgb '#6A5ACD'
+106 90 205
+
+#                        6A  5A CD
+#                        --- -- ---
+$ printf "%b" '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
+
+# omit %b
+$ printf '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
+```
+
+
+### [RGB for both foreground and background](https://stackoverflow.com/a/33206814/2940319)
+```bash
+# 38;2;R;G;B
+# 48;2;R;G;B
+$ echo -e "\033[38;2;255;100;100mhello world\033[0m"
+$ echo -e "\033[48;2;255;100;100mhello world\033[0m"
+
+#                 38;2;R;G;B     48;2;R;G;B
+#               v------------v v-------------v
+$ echo -e "\033[38;2;155;106;0;48;2;255;100;100mhello world\033[0m"
+
+# https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
+$ echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
+```
+
+## code output ( xterm )
+### echo
+```bash
+#                 0 - 255
+#                    v
+$ echo -e "\033[38;5;3mhello world\033[0m"
+
+# for all
+$ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
+```
+
+### printf
+```bash
+#         ╭─ \b      Write a <backspace> character.
+#         ╷            0 - 255
+#         v               v
+$ printf "%-10b" "\e[38;5;3m**text**\e[0m"
+
+# or ignore `%b`
+$ printf "\e[38;5;3m**text**\e[0m"
+```
+
+### `tput`
+
+> [!NOTE|label:references::]
+> - [* iMarslo: linux/nutshell](../linux/nutshell.md#tput)
+> - [* 256 colors](https://robotmoon.com/256-colors/)
+> - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
+> - [tput: Portable Terminal Control](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_node/tput_1.html)
+> - use cases:
+>   - [* iMarslo: fman()](../devops/awesomeShell.md#man-page)
+>   - [* iMarslo: PS1](../linux/basic.md#colors)
+
+```bash
+#          0 - 255                       reset
+#            v                             v
+$ tput setaf 30; echo "hello world"; tput sgr0
+# or
+$ echo -e "$(tput setaf 30)hello world$(tput sgr0)"
+
+# more
+$ tput setaf 30 | command cat -A
+^[[38;5;30m
+```
+
+- [background color](https://robotmoon.com/256-colors/)
+  ```bash
+  $ echo $(tput setab 214)256 $(tput setab 202)colors
+  ```
+
+- [to show color table](https://unix.stackexchange.com/a/438357/29178)
+  ```bash
+  $ for c in {0..255}; do tput setaf $c; tput setaf $c | command cat -v; echo =$c; done
+  ```
+
+- [show current terminal support](https://unix.stackexchange.com/a/521120/29178)
+  ```bash
+  $ tput colors
+  256
+  ```
+
+## for PS1
+
+> [!NOTE|label:references:]
+> - [Using ANSI Color Codes to Colorize Your Bash Prompt on Linux](https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux)
+
+```bash
+# additioanl \[ and \] for PS1 only
+#  ^                     ^
+#  --                    --
+R='\[\e[38;2;255;100;100m\]'
+G='\[\e[38;2;100;255;100m\]'
+B='\[\e[38;2;100;100;255m\]'
+W='\[\e[0m\]'
+PS1="[$R\u$W@$B\h$W:$G\w$W]\$ "
+```
+
+# scripts
 ## from rgb
 
 > [!NOTE|label:references:]
@@ -1107,151 +1327,8 @@ function hextorgb () {
 }
 ```
 
-# ansi colors
-
-> [!NOTE|label:references:]
-> - [How to have multiple colors in a Windows batch file?](https://stackoverflow.com/a/69924820/2940319)
-> - [How to get the RGB values of a 256-color palette terminal color](https://stackoverflow.com/q/69138165/2940319)
-> - [kenny-kvibe/ansi_colors.sh](https://gist.github.com/kenny-kvibe/d000f9e933da5e99d782b4cc7776ec3e)
-> - [* iMarslo: icolor.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/icolor.sh)
-
-## xterm color code output
-### echo
-```bash
-#                 0 - 255
-#                    v
-$ echo -e "\033[38;5;3mhello world\033[0m"
-
-# for all
-$ for i in {0..255}; do echo -e "\033[38;5;${i}m $i \033[0m"; done
-```
-
-### printf
-```bash
-#         ╭─ \b      Write a <backspace> character.
-#         ╷            0 - 255
-#         v               v
-$ printf "%-10b" "\e[38;5;3m**text**\e[0m"
-
-# or ignore `%b`
-$ printf "\e[38;5;3m**text**\e[0m"
-```
-
-### `tput`
-
-> [!NOTE|label:references::]
-> - [* iMarslo: linux/nutshell](../linux/nutshell.md#tput)
-> - [* 256 colors](https://robotmoon.com/256-colors/)
-> - [Colours and Cursor Movement With tput](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x405.html)
-> - [tput: Portable Terminal Control](https://www.gnu.org/software/termutils/manual/termutils-2.0/html_node/tput_1.html)
-> - use cases:
->   - [* iMarslo: fman()](../devops/awesomeShell.md#man-page)
->   - [* iMarslo: PS1](../linux/basic.md#colors)
-
-```bash
-#          0 - 255                       reset
-#            v                             v
-$ tput setaf 30; echo "hello world"; tput sgr0
-# or
-$ echo -e "$(tput setaf 30)hello world$(tput sgr0)"
-
-# more
-$ tput setaf 30 | command cat -A
-^[[38;5;30m
-```
-
-- [background color](https://robotmoon.com/256-colors/)
-  ```bash
-  $ echo $(tput setab 214)256 $(tput setab 202)colors
-  ```
-
-- [to show color table](https://unix.stackexchange.com/a/438357/29178)
-  ```bash
-  $ for c in {0..255}; do tput setaf $c; tput setaf $c | command cat -v; echo =$c; done
-  ```
-
-- [show current terminal support](https://unix.stackexchange.com/a/521120/29178)
-  ```bash
-  $ tput colors
-  256
-  ```
-
-## RGB colors
-
-> [!NOTE|label:references:]
-> - [* iMarslo : git » config » colors](../devops/git/config.md#colors)
-> - [* iMarslo: math » number conversion » to decimal](../cheatsheet/math.md#to-decimal)
-
-### echo
-```bash
-# #689d6a
-#                       ╭─ R(decimal)         : 104 : `$ echo -n "obase=10;ibase=16; 68" | bc`
-#                       ╷   ╭─ G(decimal)     : 157 : `$ echo -n "obase=10;ibase=16; 9D" | bc`
-#                       ╷   ╷   ╭─ B(decimal) : 106 : `$ echo -n "obase=10;ibase=16; 6A" | bc`
-#                      --- --- ---
-$ echo -e '\x1b[3;38;2;104;157;106m hello world \x1b[m'
-#               -      --- --- ---
-#               ╵      68  9D  6A
-#               ╰─ SGR (Select Graphic Rendition) parameters ( https://en.wikipedia.org/wiki/ANSI_escape_code ):
-#                      0 reset/normal ; 1 bold      ; 2 dim/faint ;
-#                      3 italic       ; 4 underline ; 5 blink     ;
-#                      7 reverse      ; 8 hidden
-
-# or
-$ echo $(git config --get-color "" "#689d6a italic") color test $(git config --get-color "" reset) | command cat -A
-^[[3;38;2;104;157;106m color test ^[[m$
-#         --- --- ---
-#         68  9D  6A   : hex
-#         104 157 106  : decimal
-```
-
-### printf
-```bash
-$ hextorgb '#6A5ACD'
-106 90 205
-
-#                        6A  5A CD
-#                        --- -- ---
-$ printf "%b" '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
-
-# omit %b
-$ printf '\x1b[38;2;106;90;205m-hello world-\x1b[0m'
-```
-
-### for PS1
-
-> [!NOTE|label:references:]
-> - [Using ANSI Color Codes to Colorize Your Bash Prompt on Linux](https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux)
-
-```bash
-# additioanl \[ and \] for PS1 only
-#  ^                     ^
-#  --                    --
-R='\[\e[38;2;255;100;100m\]'
-G='\[\e[38;2;100;255;100m\]'
-B='\[\e[38;2;100;100;255m\]'
-W='\[\e[0m\]'
-PS1="[$R\u$W@$B\h$W:$G\w$W]\$ "
-```
-
-### [RGB for both foreground and background](https://stackoverflow.com/a/33206814/2940319)
-```bash
-# 38;2;R;G;B
-# 48;2;R;G;B
-$ echo -e "\033[38;2;255;100;100mhello world\033[0m"
-$ echo -e "\033[48;2;255;100;100mhello world\033[0m"
-
-#                 38;2;R;G;B     48;2;R;G;B
-#               v------------v v-------------v
-$ echo -e "\033[38;2;155;106;0;48;2;255;100;100mhello world\033[0m"
-
-# https://web.archive.org/web/20131009193526/http://bitmote.com/index.php?post/2012/11/19/Using-ANSI-Color-Codes-to-Colorize-Your-Bash-Prompt-on-Linux
-$ echo -e "testing \033[38;5;196;48;5;21mCOLOR1\033[38;5;208;48;5;159mCOLOR2\033[m"
-```
-
-## tools
-
-### [fidian/ansi](https://github.com/fidian/ansi/blob/master/ansi)
+# tools
+## [fidian/ansi](https://github.com/fidian/ansi/blob/master/ansi)
 
 ![ansi color codes](../screenshot/colors/ansi/ansi-color-codes.png)
 
@@ -1266,7 +1343,7 @@ $ ansi --color-table
 $ ansi --color-codes
 ```
 
-### [bash-colors `c()`](https://github.com/ppo/bash-colors)
+## [bash-colors `c()`](https://github.com/ppo/bash-colors)
 
 [![bash-colors c() for help info](../screenshot/colors/ansi/bash-colors-c.png)](../screenshot/colors/ansi/bash-colors-c.png)
 
@@ -1285,7 +1362,7 @@ cecho() { echo -e "$(c $1)${2}\e[0m"; }
 $ echo -e "$(c Gs)bold green$(c) and $(c i)Italic$(c) and normal"
 ```
 
-### [`say()`](https://stackoverflow.com/a/46331700/2940319)
+## [`say()`](https://stackoverflow.com/a/46331700/2940319)
 
 ![say()](../screenshot/colors/ansi/ansi-color-say.png)
 
@@ -1309,7 +1386,7 @@ $ say @b@green[[Success]]
 $ say @b@yellowWARNING @red..message..
 ```
 
-### [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
+## [RGBcolor](https://unix.stackexchange.com/a/124409/29178)
 
 ```bash
 function RGBcolor {
@@ -1322,7 +1399,7 @@ bg=$(RGBcolor 5 3 0)  # Bright orange.
 echo -e "\\033[1;38;5;$fg;48;5;${bg}mviolet on tangerine\\033[0m"
 ```
 
-### [terminal-colors](https://pypi.org/project/terminal-colors/)
+## [terminal-colors](https://pypi.org/project/terminal-colors/)
 
 > [!NOTE]
 > - [eikenb/terminal-colors](https://github.com/eikenb/terminal-colors)
@@ -1340,7 +1417,7 @@ $ terminal-colors -n
 $ terminal-colors -n -p
 ```
 
-### [colored - python libs](https://pypi.org/project/colored/)
+## [colored - python libs](https://pypi.org/project/colored/)
 ```bash
 # install
 $ python3 -m pip install colored
@@ -1350,7 +1427,7 @@ $ colored --help
 $ colored --color-codes
 ```
 
-### [topic: ansi-colors](https://github.com/topics/ansi-colors)
+## [topic: ansi-colors](https://github.com/topics/ansi-colors)
 - [trapd00r/colorcoke](https://github.com/trapd00r/colorcoke)
 - [shakibamoshiri/bline](https://github.com/shakibamoshiri/bline)
 
@@ -1403,6 +1480,7 @@ $ colored --color-codes
 
   [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](../screenshot/colors/ansi/ansicolor-256-0.png)
 
+  <!--sec data-title="256colors" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   function 256colors() {
     local bar='█'                                          # ctrl+v -> u2588 ( full block )
@@ -1413,9 +1491,11 @@ $ colored --color-codes
     echo -e "\e[m"
   }
   ```
+  <!--endsec-->
 
   [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](../screenshot/colors/ansi/ansicolor-256-1.png)
 
+  <!--sec data-title="256color" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
   #!/bin/bash
 
@@ -1438,6 +1518,7 @@ $ colored --color-codes
   done
   exit 0
   ```
+  <!--endsec-->
 
 - [colors and formatting](https://github.com/stevetarver/shell-scripts/blob/master/ux/color_formatting_display.sh)
 
@@ -1448,6 +1529,7 @@ $ colored --color-codes
 
   [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](../screenshot/colors/ansi/color-formatting-1.png)
 
+  <!--sec data-title="colors_and_formatting" data-id="section5" data-show=true data-collapse=true ces-->
   ```bash
   #!/bin/sh
 
@@ -1471,6 +1553,7 @@ $ colored --color-codes
   done
   exit 0
   ```
+  <!--endsec-->
 
   [![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)](../screenshot/colors/ansi/color-formatting-2.png)
 
@@ -1492,6 +1575,7 @@ $ colored --color-codes
 
   [![showcolors](../screenshot/colors/ansi/showcolors.png)](../screenshot/colors/ansi/showcolors.png)
 
+  <!--sec data-title="showcolors" data-id="section6" data-show=true data-collapse=true ces-->
   ```bash
   # @author : https://stackoverflow.com/a/69648792/2940319
   # @usage  :
@@ -1564,8 +1648,11 @@ $ colored --color-codes
     echo -ne "\033[0m"
   }
   ```
+  <!--endsec-->
 
 - [colorgrid](https://unix.stackexchange.com/a/285956/29178)
+
+  <!--sec data-title="colorgrid" data-id="section7" data-show=true data-collapse=true ces-->
   ```bash
   function colorgrid() {
       iter=16
@@ -1599,11 +1686,13 @@ $ colored --color-codes
       done
   }
   ```
+  <!--endsec-->
 
 - solarized color
 
   ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
 
+  <!--sec data-title="solarized-colors" data-id="section8" data-show=true data-collapse=true ces-->
   ```bash
   #!/bin/bash
 
@@ -1646,6 +1735,7 @@ $ colored --color-codes
   }
   colors
   ```
+  <!--endsec-->
 
 - [show 256 colors](https://www.commandlinefu.com/commands/view/3958/unbelievable-shell-colors-shading-backgrounds-effects-for-non-x)
 
