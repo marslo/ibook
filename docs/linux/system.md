@@ -638,7 +638,7 @@ $ sudo dmidecode -t bios
     sda     1       0B SMC3108
     ```
 
-  - `smartctl` ( `$ yum install smartmontools` )
+  - `smartctl` ( `$ yum install smartmontools; $ apt install smartmontools` )
     ```bash
     $ sudo smartctl -a /dev/sdb1
     smartctl 7.0 2018-12-30 r4883 [x86_64-linux-4.19.12-1.el7.elrepo.x86_64] (local build)
