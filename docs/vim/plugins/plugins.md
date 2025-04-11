@@ -90,6 +90,7 @@ augroup END
 [![vim auto-pairs](../../screenshot/vim/vim-auto-pairs.gif)](../../screenshot/vim/vim-auto-pairs.gif)
 
 ## [junegunn/fzf.vim](https://github.com/junegunn/fzf.vim)
+
 ```vim
 set runtimepath+=/usr/local/opt/fzf                                         " $ brew install fzf
 Plug '/usr/local/opt/fzf'
@@ -292,6 +293,9 @@ if !exists('g:airline_symbols') | let g:airline_symbols = {} | endif
 let g:airline_symbols.dirty                        = ' ♪'
 let g:airline_left_sep                             = ''
 let g:airline_right_sep                            = ''
+" +----------------------------------+
+" | A | B | C            | X | Y | Z |
+" +----------------------------------+
 function! AirlineInit()
   let g:airline_section_a = airline#section#create([ '[', 'mode', ']' ])
   let g:airline_section_y = airline#section#create([ '%{strftime("%H:%M %b-%d %a")} ', '['.&ff.']' ])
@@ -318,71 +322,77 @@ autocmd User AirlineAfterInit call AirlineInit()
 
     > [!NOTE|label:symbols]
     > - [`:help airline`](https://github.com/vim-airline/vim-airline/blob/master/doc/airline.txt)
-    >   ```vim
-    >   " powerline symbols
-    >   let g:airline_left_sep          = ''     " \ue0b0
-    >   let g:airline_left_alt_sep      = ''     " \ue0b1
-    >   let g:airline_right_sep         = ''     " \ue0b2
-    >   let g:airline_right_alt_sep     = ''     " \ue0b3
-    >   let g:airline_symbols.branch    = ''     " \ue0a0
-    >   let g:airline_symbols.colnr     = ' ℅:'   " \u2105 \u3a
-    >   let g:airline_symbols.readonly  = ''     " \ue0a2
-    >   let g:airline_symbols.linenr    = ' :'   " \ue0a1
-    >   let g:airline_symbols.maxlinenr = '☰ '    " \u2630
-    >   let g:airline_symbols.dirty     = '⚡'    " \u26a1
     >
-    >   " old vim-powerline symbols
-    >   let g:airline_left_sep          = '⮀'     " \u2b80
-    >   let g:airline_left_alt_sep      = '⮁'     " \u2b81
-    >   let g:airline_right_sep         = '⮂'     " \u2b82
-    >   let g:airline_right_alt_sep     = '⮃'     " \u2b83
-    >   let g:airline_symbols.branch    = '⭠'     " \u2b60
-    >   let g:airline_symbols.readonly  = '⭤'     " \u2b64
-    >   let g:airline_symbols.linenr    = '⭡'     " \u2b61
-    >
-    >   " unicode symbols
-    >   let g:airline_left_sep           = '»'    " \u00bb
-    >   let g:airline_left_sep           = '▶'    " \u25b6
-    >   let g:airline_right_sep          = '«'    " \u00ab
-    >   let g:airline_right_sep          = '◀'    " \u25c0
-    >   let g:airline_symbols.colnr      = ' ㏇:' " \u33C7
-    >   let g:airline_symbols.colnr      = ' ℅:'  " \u2105
-    >   let g:airline_symbols.crypt      = '🔒'   " \U0001f512
-    >   let g:airline_symbols.linenr     = '☰'    " \u2630
-    >   let g:airline_symbols.linenr     = ' ␊:'  " \u240a
-    >   let g:airline_symbols.linenr     = ' ␤:'  " \u2424
-    >   let g:airline_symbols.linenr     = '¶'    " \u00b6
-    >   let g:airline_symbols.maxlinenr  = ''
-    >   let g:airline_symbols.maxlinenr  = '㏑'   " \u33d1
-    >   let g:airline_symbols.branch     = '⎇'    " \u2387
-    >   let g:airline_symbols.paste      = 'ρ'    " \u03c1
-    >   let g:airline_symbols.paste      = 'Þ'    " \u00de
-    >   let g:airline_symbols.paste      = '∥'    " \u2225
-    >   let g:airline_symbols.spell      = 'Ꞩ'    " \ua7a8
-    >   let g:airline_symbols.notexists  = 'Ɇ'    " \u0246
-    >   let g:airline_symbols.notexists  = '∄'    " \u2204
-    >   let g:airline_symbols.whitespace = 'Ξ'    " \u039e
-    >   ```
+    >>   ```vim
+    >>   " powerline symbols
+    >>   let g:airline_left_sep          = ''     " U+E0B0
+    >>   let g:airline_left_alt_sep      = ''     " U+E0B1
+    >>   let g:airline_right_sep         = ''     " U+E0B2
+    >>   let g:airline_right_alt_sep     = ''     " U+E0B3
+    >>   let g:airline_symbols.branch    = ''     " U+E0A0
+    >>   let g:airline_symbols.colnr     = ' ℅:'   " U+2105 U+003A
+    >>   let g:airline_symbols.readonly  = ''     " U+E0A2
+    >>   let g:airline_symbols.linenr    = ' :'   " U+E0A1
+    >>   let g:airline_symbols.maxlinenr = '☰ '   " U+2630
+    >>   let g:airline_symbols.dirty     = '⚡'    " U+26A1
+    >>   ```
+    >>
+    >>   ```vim
+    >>   " old vim-powerline symbols
+    >>   let g:airline_left_sep          = '⮀'     " U+2B80
+    >>   let g:airline_left_alt_sep      = '⮁'     " U+2B81
+    >>   let g:airline_right_sep         = '⮂'     " U+2B82
+    >>   let g:airline_right_alt_sep     = '⮃'     " U+2B83
+    >>   let g:airline_symbols.branch    = '⭠'     " U+2B60
+    >>   let g:airline_symbols.readonly  = '⭤'     " U+2B64
+    >>   let g:airline_symbols.linenr    = '⭡'     " U+2B61
+    >>   ```
+    >>
+    >>   ```vim
+    >>   " unicode symbols
+    >>   let g:airline_left_sep           = '»'    " U+00BB
+    >>   let g:airline_left_sep           = '▶'    " U+25B6
+    >>   let g:airline_right_sep          = '«'    " U+00AB
+    >>   let g:airline_right_sep          = '◀'    " U+25C0
+    >>   let g:airline_symbols.colnr      = ' ㏇:' " U+33C7
+    >>   let g:airline_symbols.colnr      = ' ℅:'  " U+2105
+    >>   let g:airline_symbols.crypt      = '🔒'   " U+0001F512
+    >>   let g:airline_symbols.linenr     = '☰'   " U+2630
+    >>   let g:airline_symbols.linenr     = ' ␊:'  " U+240A
+    >>   let g:airline_symbols.linenr     = ' ␤:'  " U+2424
+    >>   let g:airline_symbols.linenr     = '¶'    " U+00B6
+    >>   let g:airline_symbols.maxlinenr  = ''
+    >>   let g:airline_symbols.maxlinenr  = '㏑'   " U+33D1
+    >>   let g:airline_symbols.branch     = '⎇'    " U+2387
+    >>   let g:airline_symbols.paste      = 'ρ'    " U+03C1
+    >>   let g:airline_symbols.paste      = 'Þ'    " U+00DE
+    >>   let g:airline_symbols.paste      = '∥'    " U+2225
+    >>   let g:airline_symbols.spell      = 'Ꞩ'    " U+A7A8
+    >>   let g:airline_symbols.notexists  = 'Ɇ'    " U+0246
+    >>   let g:airline_symbols.notexists  = '∄'    " U+2204
+    >>   let g:airline_symbols.whitespace = 'Ξ'    " U+039E
+    >>   ```
     >
     > - [`:help airline-customization`](https://vi.stackexchange.com/a/3363/7389)
-    >   ```vim
-    >   " unicode symbols
-    >   let g:airline_left_sep           = '»'
-    >   let g:airline_left_sep           = '▶'
-    >   let g:airline_right_sep          = '«'
-    >   let g:airline_right_sep          = '◀'
-    >   let g:airline_symbols.linenr     = '␊'
-    >   let g:airline_symbols.linenr     = '␤'
-    >   let g:airline_symbols.linenr     = '¶'
-    >   let g:airline_symbols.branch     = '⎇'
-    >   let g:airline_symbols.paste      = 'ρ'
-    >   let g:airline_symbols.paste      = 'Þ'
-    >   let g:airline_symbols.paste      = '∥'
-    >   let g:airline_symbols.whitespace = 'Ξ'
-    >   ```
+    >
+    >>   ```vim
+    >>   " unicode symbols
+    >>   let g:airline_left_sep           = '»'    " U+00BB
+    >>   let g:airline_left_sep           = '▶'    " U+25B6
+    >>   let g:airline_right_sep          = '«'    " U+00AB
+    >>   let g:airline_right_sep          = '◀'    " U+25C0
+    >>   let g:airline_symbols.linenr     = '␊'    " U+240A
+    >>   let g:airline_symbols.linenr     = '␤'    " U+2424
+    >>   let g:airline_symbols.linenr     = '¶'    " U+00B6
+    >>   let g:airline_symbols.branch     = '⎇''   " U+2387
+    >>   let g:airline_symbols.paste      = 'ρ'    " U+03C1
+    >>   let g:airline_symbols.paste      = 'Þ'    " U+00DE
+    >>   let g:airline_symbols.paste      = '∥'    " U+2225
+    >>   let g:airline_symbols.whitespace = 'Ξ'    " U+039E
+    >>   ```
 
     ```vim
-    let g:airline_symbols.branch         = '⎇'                    " ╮
+    let g:airline_symbols.branch         = '⎇'                   " ╮
     let g:airline_symbols.paste          = 'ρ'                    " ├ unicode symbols
     let g:airline_symbols.dirty          = ' ↯'                   " ╯
     ```
@@ -552,6 +562,7 @@ autocmd User AirlineAfterInit call AirlineInit()
 
 [![error](../../screenshot/vim/vim-syntastic-error.png)](../../screenshot/vim/vim-syntastic-error.png)
 
+<!--sec data-title="vimrc for vim-syntastic" data-id="section1" data-show=true data-collapse=true ces-->
 ```vim
 Plug 'vim-syntastic/syntastic'
 
@@ -577,8 +588,9 @@ highlight link SyntasticWarningSign      GruvboxYellow
 highlight link SyntasticStyleErrorSign   GruvboxRedSign
 highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 ```
+<!--endsec-->
 
-<!--sec data-title="former version" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
   ```vim
   Bundle 'vim-syntastic/syntastic'
 
@@ -594,7 +606,7 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
   let g:syntastic_ignore_files              = ['\.py$']
   let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
   ```
-<!--endsec-->
+  <!--endsec-->
 
 ## [coc.nvim](https://github.com/neoclide/coc.nvim)
 
@@ -610,6 +622,7 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 > - [* coc-example-config.vim](https://github.com/neoclide/coc.nvim/blob/master/doc/coc-example-config.vim)
 
 - initialize
+
   ```bash
   $ pip install jedi
   ```
@@ -1665,6 +1678,8 @@ let g:NERDTreePatternMatchHighlightColor['.*\.bak$']  = '293739'       " #293739
 ```
 
 - default settings
+
+  <!--sec data-title="default settings" data-id="section3" data-show=true data-collapse=true ces-->
   ```vim
   let g:WebDevIconsUnicodeDecorateFolderNodes        = 1
   let g:WebDevIconsNerdTreeAfterGlyphPadding         = ' '
@@ -1703,8 +1718,9 @@ let g:NERDTreePatternMatchHighlightColor['.*\.bak$']  = '293739'       " #293739
   eact.jsx': '', 'exact-match-case-sensitive-1.txt': '1', 'dockerfile': '', '.zprofile': '', 'cmakelis
   ts.txt': '', '.ds_store': '', 'favicon.ico': ''}
   ```
+  <!--endsec-->
 
-<!--sec data-title="full config" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="full config" data-id="section4" data-show=true data-collapse=true ces-->
 ```vim
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -1765,6 +1781,8 @@ let g:NERDTreeSyntaxEnabledExactMatches                  = ['.marslo', 'jenkins'
 <!--endsec-->
 
 - [more settings for vim-devicon](https://github.com/zeorin/dotfiles/blob/e01cebffcd11763ac647aad160eeba861758b348/.vimrc#L850) | [latest](https://github.com/zeorin/dotfiles/blob/b5bddeef0694acaf7cbb1da3e48862d1d0cd8a3e/.vimrc)
+
+  <!--sec data-title="more settings" data-id="section5" data-show=true data-collapse=true ces-->
   ```vim
   Plug 'ryanoasis/vim-devicons'
 
@@ -1817,6 +1835,7 @@ let g:NERDTreeSyntaxEnabledExactMatches                  = ['.marslo', 'jenkins'
   \}
   call DeviconsColors(g:devicons_colors)
   ```
+  <!--endsec-->
 
 ## [RRethy/vim-hexokinase](https://github.com/RRethy/vim-hexokinase)
 ```vim
@@ -1975,7 +1994,7 @@ endif
 # git
 - call bash cmd in silent mode
   ```vim
-  nnoremap <leader>mp  :execute 'silent !git push --force' \| redraw!<CR>
+  nnoremap <leader>mp  :execute 'silent !git push --force' \| redraw! \| echohl Function \| echo 'change committed !!'<CR>
   " or to call gitalias
   nnoremap <leader>mp  :execute 'silent !git mp' \| redraw!<CR>
   ```
@@ -2017,6 +2036,7 @@ highlight clear SignColumn
   - `:GitGutterPrevHunk<CR>` : <kbd>[</kbd> + <kbd>h</kbd>
 
 ## [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)
+
 ```vim
 Plug 'tpope/vim-fugitive'
 
@@ -2067,18 +2087,19 @@ nnoremap <Leader>ebb :<C-u>call gitblame#echo()<CR>
 >   - [Why vim-airline is not showing symbols properly?](https://stackoverflow.com/a/34210791/2940319)
 >   - [The powerline font symbols are not showing up](https://github.com/vim-airline/vim-airline/wiki/FAQ#the-powerline-font-symbols-are-not-showing-up)
 >   - [lujiacn/Monaco for Powerline.md](https://gist.github.com/lujiacn/32b598b1a6a43c996cbd93d42d466466)
->     ```vim
->     if has("mac") || has("macunix")
->         set guifont=Monaco\ for\ Powerline:h24
->     elseif has("win32") || has("win64")
->         set guifont=Monaco\ for\ Powerline:h14:cANSI
->         set renderoptions=type:directx,renmode:5
->     endif
->     ```
+>
+>>     ```vim
+>>     if has("mac") || has("macunix")
+>>         set guifont=Monaco\ for\ Powerline:h24
+>>     elseif has("win32") || has("win64")
+>>         set guifont=Monaco\ for\ Powerline:h14:cANSI
+>>         set renderoptions=type:directx,renmode:5
+>>     endif
+>>     ```
 
 - solution : install powerline fonts
 
-  > [!NOTE]
+  > [!NOTE|label:references:]
   > - [* powerline/fonts](https://github.com/powerline/fonts)
   > - [supermarin/powerline-fonts](https://github.com/supermarin/powerline-fonts)
 

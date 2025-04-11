@@ -37,6 +37,9 @@ $ brew install --HEAD pinentry-mac                # for alfred workflow
 $ brew install --HEAD utf8proc
 $ brew install --HEAD neovim
 $ brew install --cask vimr
+$ python3 -m pip install jedi
+$ python3 -m pip install --upgrade pynvim
+$ GEM_HOME="$HOME/.gem" gem install neovim --user-install
 ## macvim
 $ brew install --HEAD macvim                      # using `--HEAD` to prevent 32bit vim + 64bit python
 $ sudo cp -r $(brew --prefix macvim)/MacVim.app /Applications
