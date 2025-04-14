@@ -2181,6 +2181,24 @@ $ echo $GREP_COLORS
 ms=01;31;49:mc=01;31:sl=0;36:cx=:fn=35:ln=32:bn=32:se=36
 ```
 
+| FIELD | DESCRIPTION                                 | NOTES                      |
+|-------|---------------------------------------------|----------------------------|
+| `mt`  | Matched text (default match highlight)      | 匹配到的文本(默认匹配高亮) |
+| `ms`  | Matched text in context lines               | 匹配文本(上下文行中)       |
+| `mc`  | Matched text in regular (non-context) lines | 匹配文本(普通行中)         |
+| `fn`  | Filename (when using `-H`)                  | 文件名(带 `-H` 时)         |
+| `ln`  | Line number (when using `-n`)               | 行号(带 `-n`)              |
+| `bn`  | Byte offset (when using `-b`)               | 字节偏移量(带 `-b`)        |
+| `se`  | Separator (such as `:`)                     | 分隔符(如 `:`)             |
+
+```bash
+# more example
+$ echo "hello grep world" |
+  GREP_COLORS='ms=3;34:fn=3;35:ln=3;32:se=3' grep --color=always 'grep' -nH
+```
+
+![grep colors](../screenshot/colors/GREP_COLORS.png)
+
 ## [generate color randomly](https://stackoverflow.com/q/40277918/2940319)
 ```bash
 $ echo "#$(openssl rand -hex 3)"

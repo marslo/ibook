@@ -19,6 +19,7 @@
 - [image](#image)
   - [convert webp to png](#convert-webp-to-png)
   - [identity an image](#identity-an-image)
+  - [convert png to svg](#convert-png-to-svg)
   - [convert svg to png](#convert-svg-to-png)
   - [convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
   - [sed command to batch change fill and stroke of an SVG](#sed-command-to-batch-change-fill-and-stroke-of-an-svg)
@@ -314,6 +315,15 @@ $ ffmpeg -i file.webp out.png
 ```bash
 $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 1024x768
+```
+
+### convert png to svg
+```bash
+$ convert -background none \
+          -density 300 \
+          -filter Lanczos \
+          -resize 400x \
+          -antialias input.svg output.png
 ```
 
 ### convert svg to png
