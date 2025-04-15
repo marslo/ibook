@@ -516,116 +516,116 @@
 
 ### airline
 
-| UNICODE |   ICON   | HTML ENCODING | COMMENTS                   |
-|:-------:|:--------:|:-------------:|----------------------------|
-|  `0246` |     Ɇ    |   `&#0246;`   | airline_symbols.notexists  |
-|  `2204` |     ∄    |   `&#2204;`   | airline_symbols.notexists  |
-|  `00DE` |     Þ    |   `&#00DE;`   | airline_symbols.paste      |
-|  `03C1` |     ρ    |   `&#03C1;`   | airline_symbols.paste      |
-|  `2225` |     ∥    |   `&#2225;`   | airline_symbols.paste      |
-|  `2387` |     ⎇    |   `&#2387;`   | airline_symbols.branch     |
-|  `E0A0` |         |   `&#E0A0;`   | airline_symbols.branch     |
-|  `E725` |         |   `&#E725;`   | airline_symbols.branch     |
-|  `29FC` |     ⧼    |   `&#29FC;`   | airline_symbols.branch     |
-|  `00B6` |     ¶    |   `&#00B6;`   | airline_symbols.linenr     |
-|  `240A` |     ␊    |   `&#240A;`   | airline_symbols.linenr     |
-|  `2424` | &#x2424; |   `&#2424;`   | airline_symbols.linenr     |
-|  `E0A1` |         |   `&#E0A1;`   | airline_symbols.linenr     |
-|  `2630` |    ☰    |   `&#2630;`   | airline_symbols.maxlinenr  |
-|  `33D1` |    ㏑    |   `&#33D1;`   | airline_symbols.maxlinenr  |
-|  `2105` |     ℅    |   `&#2105;`   | airline_symbols.colnr      |
-|  `33C7` |    ㏇    |   `&#33C7;`   | airline_symbols.colnr      |
-|  `039E` |     Ξ    |   `&#039E;`   | airline_symbols.whitespace |
-|  `A7A8` |     Ꞩ    |   `&#A7A8;`   | airline_symbols.spell      |
-|  `26A1` |    ⚡    |   `&#26A1;`   | airline_symbols.dirty      |
-|  `21AF` |     ↯    |   `&#21AF;`   | airline_symbols.dirty      |
-|  `266A` |     ♪    |   `&#266A;`   | airline_symbols.dirty      |
-|  `E0A2` |         |   `&#E0A2;`   | airline_symbols.readonly   |
-|  `E0B0` |         |   `&#E0B0;`   | airline_left_sep           |
-|  `E0B1` |         |   `&#E0B1;`   | airline_left_alt_sep       |
-|  `E0B2` |         |   `&#E0B2;`   | airline_right_sep          |
-|  `E0B3` |         |   `&#E0B3;`   | airline_right_alt_sep      |
-|  `2B60` |     ⭠    |   `&#2B60;`   | airline_symbols.branch     |
-|  `2B61` |     ⭡    |   `&#2B61;`   | airline_symbols.linenr     |
-|  `2B64` |     ⭤    |   `&#2B64;`   | airline_symbols.readonly   |
-|  `2B80` |     ⮀    |   `&#2B80;`   | airline_left_sep           |
-|  `2B81` |     ⮁    |   `&#2B81;`   | airline_left_alt_sep       |
-|  `2B82` |     ⮂    |   `&#2B82;`   | airline_right_sep          |
-|  `2B83` |     ⮃    |   `&#2B83;`   | airline_right_alt_sep      |
+| UNICODE |   ICON   | HTML ENCODING | COMMENTS                     |
+|:-------:|:--------:|:-------------:|------------------------------|
+|  `0246` |     Ɇ    |   `&#0246;`   | `airline_symbols.notexists`  |
+|  `2204` |     ∄    |   `&#2204;`   | `airline_symbols.notexists`  |
+|  `00DE` |     Þ    |   `&#00DE;`   | `airline_symbols.paste`      |
+|  `03C1` |     ρ    |   `&#03C1;`   | `airline_symbols.paste`      |
+|  `2225` |     ∥    |   `&#2225;`   | `airline_symbols.paste`      |
+|  `2387` |     ⎇    |   `&#2387;`   | `airline_symbols.branch`     |
+|  `E0A0` |         |   `&#E0A0;`   | `airline_symbols.branch`     |
+|  `E725` |         |   `&#E725;`   | `airline_symbols.branch`     |
+|  `29FC` |     ⧼    |   `&#29FC;`   | `airline_symbols.branch`     |
+|  `00B6` |     ¶    |   `&#00B6;`   | `airline_symbols.linenr`     |
+|  `240A` |     ␊    |   `&#240A;`   | `airline_symbols.linenr`     |
+|  `2424` | &#x2424; |   `&#2424;`   | `airline_symbols.linenr`     |
+|  `E0A1` |         |   `&#E0A1;`   | `airline_symbols.linenr`     |
+|  `2630` |    ☰    |   `&#2630;`   | `airline_symbols.maxlinenr`  |
+|  `33D1` |    ㏑    |   `&#33D1;`   | `airline_symbols.maxlinenr`  |
+|  `2105` |     ℅    |   `&#2105;`   | `airline_symbols.colnr`      |
+|  `33C7` |    ㏇    |   `&#33C7;`   | `airline_symbols.colnr`      |
+|  `039E` |     Ξ    |   `&#039E;`   | `airline_symbols.whitespace` |
+|  `A7A8` |     Ꞩ    |   `&#A7A8;`   | `airline_symbols.spell`      |
+|  `26A1` |    ⚡    |   `&#26A1;`   | `airline_symbols.dirty`      |
+|  `21AF` |     ↯    |   `&#21AF;`   | `airline_symbols.dirty`      |
+|  `266A` |     ♪    |   `&#266A;`   | `airline_symbols.dirty`      |
+|  `E0A2` |         |   `&#E0A2;`   | `airline_symbols.readonly`   |
+|  `E0B0` |         |   `&#E0B0;`   | `airline_left_sep`           |
+|  `E0B1` |         |   `&#E0B1;`   | `airline_left_alt_sep`       |
+|  `E0B2` |         |   `&#E0B2;`   | `airline_right_sep`          |
+|  `E0B3` |         |   `&#E0B3;`   | `airline_right_alt_sep`      |
+|  `2B60` |     ⭠    |   `&#2B60;`   | `airline_symbols.branch`     |
+|  `2B61` |     ⭡    |   `&#2B61;`   | `airline_symbols.linenr`     |
+|  `2B64` |     ⭤    |   `&#2B64;`   | `airline_symbols.readonly`   |
+|  `2B80` |     ⮀    |   `&#2B80;`   | `airline_left_sep`           |
+|  `2B81` |     ⮁    |   `&#2B81;`   | `airline_left_alt_sep`       |
+|  `2B82` |     ⮂    |   `&#2B82;`   | `airline_right_sep`          |
+|  `2B83` |     ⮃    |   `&#2B83;`   | `airline_right_alt_sep`      |
 
 
 ### diagnostic
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS               |
-|:-------:|:----:|:-------------:|------------------------|
-|  `2718` |   ✘  |   `&#2718;`   | diagnostic.errorSign   |
-|  `2714` |   ✔  |   `&#2714;`   | -                      |
-|  `14C6` |   ᓆ  |   `&#14C6;`   | diagnostic.infoSign    |
-|  `1479` |   ᑹ  |   `&#1479;`   | diagnostic.warningSign |
-|  `27A4` |   ➤  |   `&#27A4;`   | diagnostic.hintSign    |
+| UNICODE | ICON | HTML ENCODING | COMMENTS                 |
+|:-------:|:----:|:-------------:|--------------------------|
+|  `2718` |   ✘  |   `&#2718;`   | `diagnostic.errorSign`   |
+|  `2714` |   ✔  |   `&#2714;`   | -                        |
+|  `14C6` |   ᓆ  |   `&#14C6;`   | `diagnostic.infoSign`    |
+|  `1479` |   ᑹ  |   `&#1479;`   | `diagnostic.warningSign` |
+|  `27A4` |   ➤  |   `&#27A4;`   | `diagnostic.hintSign`    |
 
 ### ale
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS               |
-|:-------:|:----:|:-------------:|------------------------|
-| `1F4A2` |  💢  |   `&#1F4A2;`  | ale_sign_error         |
-|  `2718` |   ✘  |   `&#2718;`   | ale_sign_error         |
-| `1F47E` |  👾  |   `&#1F47E;`  | ale_sign_error         |
-| `1F4A3` |  💣  |   `&#1F4A3;`  | ale_sign_error         |
-| `1F645` |  🙅  |   `&#1F645;`  | ale_sign_error         |
-| `1F926` |  🤦  |   `&#1F926;`  | ale_sign_error         |
-|  `1479` |   ᑹ  |   `&#1479;`   | ale_sign_warning       |
-|  `26A0` |   ⚠  |   `&#26A0;`   | ale_sign_warning       |
-|  `2E2E` |   ⸮  |   `&#2E2E;`   | ale_sign_warning       |
-|  `2E18` |   ⸘  |   `&#2E18;`   | ale_sign_warning       |
-|  `2639` |   ☹  |   `&#2639;`   | ale_sign_warning       |
-|  `14C6` |   ᓆ  |   `&#14C6;`   | ale_sign_info          |
-|  `2365` |   ⍥  |   `&#2365;`   | ale_sign_style_error   |
-|  `14CD` |   ᓍ  |   `&#14CD;`   | ale_sign_style_warning |
+| UNICODE | ICON | HTML ENCODING | COMMENTS                 |
+|:-------:|:----:|:-------------:|--------------------------|
+| `1F4A2` |  💢  |   `&#1F4A2;`  | `ale_sign_error`         |
+|  `2718` |   ✘  |   `&#2718;`   | `ale_sign_error`         |
+| `1F47E` |  👾  |   `&#1F47E;`  | `ale_sign_error`         |
+| `1F4A3` |  💣  |   `&#1F4A3;`  | `ale_sign_error`         |
+| `1F645` |  🙅  |   `&#1F645;`  | `ale_sign_error`         |
+| `1F926` |  🤦  |   `&#1F926;`  | `ale_sign_error`         |
+|  `1479` |   ᑹ  |   `&#1479;`   | `ale_sign_warning`       |
+|  `26A0` |   ⚠  |   `&#26A0;`   | `ale_sign_warning`       |
+|  `2E2E` |   ⸮  |   `&#2E2E;`   | `ale_sign_warning`       |
+|  `2E18` |   ⸘  |   `&#2E18;`   | `ale_sign_warning`       |
+|  `2639` |   ☹  |   `&#2639;`   | `ale_sign_warning`       |
+|  `14C6` |   ᓆ  |   `&#14C6;`   | `ale_sign_info`          |
+|  `2365` |   ⍥  |   `&#2365;`   | `ale_sign_style_error`   |
+|  `14CD` |   ᓍ  |   `&#14CD;`   | `ale_sign_style_warning` |
 
 ### syntastic
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS                       |
-|:-------:|:----:|:-------------:|--------------------------------|
-|  `03CA` |   ϊ  |   `&#03CA;`   | syntastic_info_symbol          |
-|  `0835` |   ࠵  |   `&#0835;`   | syntastic_info_symbol          |
-|  `0CF2` |   ೲ  |   `&#0CF2;`   | syntastic_info_symbol          |
-|  `2717` |   ✗  |   `&#2717;`   | syntastic_error_symbol         |
-|  `0FBE` |   ྾  |   `&#0FBE;`   | syntastic_error_symbol         |
-|  `0B93` |   ஓ  |   `&#0B93;`   | syntastic_error_symbol         |
-|  `0BD0` |   ௐ  |   `&#0BD0;`   | syntastic_error_symbol         |
-|  `2368` |   ⍨  |   `&#2368;`   | syntastic_warning_symbol       |
-|  `14C6` |   ᓆ  |   `&#14C6;`   | syntastic_warning_symbol       |
-|  `14CD` |   ᓍ  |   `&#14CD;`   | syntastic_warning_symbol       |
-| `1063F` |   𐘿  |   `&#1063F;`  | syntastic_warning_symbol       |
-|  `2365` |   ⍥  |   `&#2365;`   | syntastic_style_error_symbol   |
-|  `0C20` |   ఠ  |   `&#0C20;`   | syntastic_style_warning_symbol |
-|  `2364` |   ⍤  |   `&#2364;`   | syntastic_style_warning_symbol |
-|  `0D60` |   ൠ  |   `&#0D60;`   | syntastic_style_warning_symbol |
+| UNICODE | ICON | HTML ENCODING | COMMENTS                         |
+|:-------:|:----:|:-------------:|----------------------------------|
+|  `03CA` |   ϊ  |   `&#03CA;`   | `syntastic_info_symbol`          |
+|  `0835` |   ࠵  |   `&#0835;`   | `syntastic_info_symbol`          |
+|  `0CF2` |   ೲ  |   `&#0CF2;`   | `syntastic_info_symbol`          |
+|  `2717` |   ✗  |   `&#2717;`   | `syntastic_error_symbol`         |
+|  `0FBE` |   ྾  |   `&#0FBE;`   | `syntastic_error_symbol`         |
+|  `0B93` |   ஓ  |   `&#0B93;`   | `syntastic_error_symbol`         |
+|  `0BD0` |   ௐ  |   `&#0BD0;`   | `syntastic_error_symbol`         |
+|  `2368` |   ⍨  |   `&#2368;`   | `syntastic_warning_symbol`       |
+|  `14C6` |   ᓆ  |   `&#14C6;`   | `syntastic_warning_symbol`       |
+|  `14CD` |   ᓍ  |   `&#14CD;`   | `syntastic_warning_symbol`       |
+| `1063F` |   𐘿  |   `&#1063F;`  | `syntastic_warning_symbol`       |
+|  `2365` |   ⍥  |   `&#2365;`   | `syntastic_style_error_symbol`   |
+|  `0C20` |   ఠ  |   `&#0C20;`   | `syntastic_style_warning_symbol` |
+|  `2364` |   ⍤  |   `&#2364;`   | `syntastic_style_warning_symbol` |
+|  `0D60` |   ൠ  |   `&#0D60;`   | `syntastic_style_warning_symbol` |
 
 ### vim-devicons
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS                                                         |
-|:-------:|:----:|:-------------:|------------------------------------------------------------------|
-|  `F115` |     |   `&#xF115;`  | DevIconsDefaultFolderOpenSymbol                                  |
-|  `F114` |     |   `&#xF114;`  | WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol               |
-|  `E241` |     |   `&#xE241;`  | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['log']       |
-|  `E60B` |     |   `&#xE60B;`  | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['json']      |
-|  `F295` |     |   `&#xF295;`  | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['md']        |
-| `F030B` |   󰌋  |   `&#F030B;`  | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['perm']      |
-|  `E005` |     |   `&#E005;`   | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['groovy']    |
-|  `E005` |     |   `&#E005;`   | WebDevIconsUnicodeDecorateFileNodesExactSymbols['jenkinsfile']   |
-| `F1183` |   󱆃  |   `&#F1183;`  | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['sh']        |
-| `F16A5` |   󱚥  |   `&#F16A5;`  | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yaml']      |
-|  `F1D3` |     |   `&#F1D3;`   | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yml']       |
-|  `E204` |     |   `&#E204;`   | WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['gitcommit'] |
-| `F0626` |   󰘦  |   `&#F0626;`  | WebDevIconsUnicodeDecorateFileNodesExactSymbols['devops']        |
-| `F0DFA` |   󰷺  |   `&#F0DFA;`  | WebDevIconsUnicodeDecorateFileNodesExactSymbols['vimrc.d']       |
-| `F1183` |   󱆃  |   `&#F1183;`  | WebDevIconsUnicodeDecorateFileNodesExactSymbols['vars']          |
-| `F0D6E` |   󰵮  |   `&#F0D6E;`  | WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']           |
-|  `EA92` |     |   `&#EA92;`   | WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*ignore$']   |
-| `F1501` |   󱔁  |   `&#F1501;`  | WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*rc$']       |
-|  `F1D3` |     |   `&#F1D3;`   | g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*git.*$']  |
+| UNICODE | ICON | HTML ENCODING | COMMENTS                                                           |
+|:-------:|:----:|:-------------:|--------------------------------------------------------------------|
+|  `F115` |     |   `&#xF115;`  | `DevIconsDefaultFolderOpenSymbol`                                  |
+|  `F114` |     |   `&#xF114;`  | `WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol`               |
+|  `E241` |     |   `&#xE241;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['log']`       |
+|  `E60B` |     |   `&#xE60B;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['json']`      |
+|  `F295` |     |   `&#xF295;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['md']`        |
+| `F030B` |   󰌋  |   `&#F030B;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['perm']`      |
+|  `E005` |     |   `&#E005;`   | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['groovy']`    |
+|  `E005` |     |   `&#E005;`   | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['jenkinsfile']`   |
+| `F1183` |   󱆃  |   `&#F1183;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['sh']`        |
+| `F16A5` |   󱚥  |   `&#F16A5;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yaml']`      |
+|  `F1D3` |     |   `&#F1D3;`   | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yml']`       |
+|  `E204` |     |   `&#E204;`   | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['gitcommit']` |
+| `F0626` |   󰘦  |   `&#F0626;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['devops']`        |
+| `F0DFA` |   󰷺  |   `&#F0DFA;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['vimrc.d']`       |
+| `F1183` |   󱆃  |   `&#F1183;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['vars']`          |
+| `F0D6E` |   󰵮  |   `&#F0D6E;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']`           |
+|  `EA92` |     |   `&#EA92;`   | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*ignore$']`   |
+| `F1501` |   󱔁  |   `&#F1501;`  | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*rc$']`       |
+|  `F1D3` |     |   `&#F1D3;`   | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*git.*$']`    |
 
 
 - `:echo g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols`

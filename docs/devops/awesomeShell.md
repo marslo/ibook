@@ -182,6 +182,30 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 
 ![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf/fzf-color-theme-gruvbox-marslo.png)
 
+```bash
+# -- or --
+FZF_DEFAULT_OPTS+="--marker='󱍢 ' --pointer='▌' "
+FZF_DEFAULT_OPTS+="--prompt='󰩀 ' --info='inline: 󰨿 ' "
+
+# -- or --
+FZF_DEFAULT_OPTS+="--prompt='󰝗 ' --info='inline: 󰉾 ' "
+
+# -- or --
+FZF_DEFAULT_OPTS+="--prompt='ᑹ ∷ ' "
+# or
+FZF_DEFAULT_OPTS+="--prompt='󰊠 ' "
+
+# -- or --
+FZF_DEFAULT_OPTS+='--style full --layout reverse '
+FZF_DEFAULT_OPTS+='--header-lines-border bottom --no-list-border '
+
+# -- or --
+FZF_DEFAULT_OPTS+="--no-bold "
+
+# -- or --
+FZF_DEFAULT_OPTS+="--color=fg+:#ebdbb2,pointer:#e6db74,hl+:#fb4934,prompt:#334D35"
+```
+
 - install from source code for wsl
 
   > [!NOTE|label:this solution for install latest fzf in wsl]

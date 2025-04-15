@@ -27,6 +27,8 @@ $ brew install --HEAD hexyl                       # a hex viewer for the termina
 $ brew install create-dmg
 $ brew install fontforge
 $ sudo gem install iStats -n /usr/local/bin       # requires ruby to be installed
+$ brew install lynx
+$ brew install fdupes                             # find duplicate files
 
 $ brew install --HEAD pass
 $ brew install pass-otp
