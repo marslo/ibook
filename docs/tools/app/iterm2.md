@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [shortcuts](#shortcuts)
 - [integrate terminal in Alfred](#integrate-terminal-in-alfred)
 - [tab](#tab)
   - [setup a colorful tab](#setup-a-colorful-tab)
@@ -16,6 +17,15 @@
 - [theme](#theme)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## shortcuts
+
+> [!NOTE|label:references:]
+> - [squarism/iTerm2.md](https://gist.github.com/squarism/ae3613daf5c01a98ba3a)
+
+| SHORTCUT                    | DESCRIPTION                   |
+|-----------------------------|-------------------------------|
+| <kbd>⌘</kbd> + <kbd>u</kbd> | background transparent toggle |
 
 ## integrate terminal in Alfred
 
