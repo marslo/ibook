@@ -18,6 +18,9 @@
   - [show terminal width](#show-terminal-width)
   - [customized colorful output](#customized-colorful-output)
 - [`Operation not permitted`](#operation-not-permitted)
+- [array](#array)
+  - [differences in bash parameter calls](#differences-in-bash-parameter-calls)
+  - [wildcard expansion](#wildcard-expansion)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -238,3 +241,129 @@ $ sudo chattr +i /etc/resolv.conf
 $ sudo lsattr /etc/resolv.conf
 ----i-------------- /etc/resolv.conf
 ```
+
+## array
+
+### differences in bash parameter calls
+
+> [!NOTE:label:thinking:]
+> I got a issue with/without `eval` commands like:
+>> ```#!/bin/bash
+>> local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
+>> local ignores=(
+>>   '*.pem' '*.p12'
+>>   '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg'
+>>   '*.zip' '*.tar' '*.gz' '*.bz2' '*.xz' '*.7z' '*.rar'
+>>   'Music' '.target_book' '_book' 'OneDrive*'
+>> )
+>> while read -r pattern; do fdOpt+=" --exclude '${pattern}'"; done <<< "$(printf '%s\n' "${ignores[@]}")"
+>> fdOpt+=' --exec-batch ls -t'
+>> ```
+> - the `--exclude` options are not passed correctly when using :
+>>   ```#!/bin/bash
+>>   fd . ${fdOpt} | fzf ${foption} --bind="enter:become(${VIM} {+})"
+>>   ```
+> - but it works when using `eval` :
+>>   ```#!/bin/bash
+>>   eval "fd . ${fdOpt}" | fzf ${foption} --bind="enter:become(${VIM} {+})"
+>>   ```
+
+> [!TIP|label:tips:]
+>> since `fdOpt` is a single string (containing multiple arguments), Bash treats it as one single argument when passed to `fd`. This leads to the following issues:
+>>
+>> `--exclude '*.png'` is treated as **one single argument**, rather than **two separate ones**: `--exclude` and `'*.png'`;
+>>
+>> As a result, fd cannot correctly interpret the glob pattern and treats it as a literal string;
+>> Therefore, `--exclude '*.png'` does not actually exclude anything.
+>
+> recommend using arrays to store multiple arguments and then pass them to the command.
+>>   ```bash
+>>   # array
+>>   local -a fdArgs=(--type f --hidden --follow --unrestricted --ignore-file "${HOME}/.fdignore")
+>>   local ignores=(
+>>     '*.pem' '*.p12'
+>>     '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg'
+>>     '*.zip' '*.tar' '*.gz' '*.bz2' '*.xz' '*.7z' '*.rar'
+>>     'Music' '.target_book' '_book' 'OneDrive*'
+>>   )
+>>
+>>   for pattern in "${ignores[@]}"; do fdArgs+=(--exclude "${pattern}"); done
+>>   fdArgs+=(--exec-batch ls -t)
+>>
+>>   #      array call
+>>   #    +------------+
+>>   fd . "${fdArgs[@]}" | fzf ${foption} --bind="enter:become(${VIM} {+})"
+>>   ```
+> details:
+>
+> | FORM                   | WORKS?                 | REASON                                                             |
+> |------------------------|------------------------|--------------------------------------------------------------------|
+> | `fd . ${fdOpt}`        | ❌ No                  | ${fdOpt} is a single string; arguments are not properly split      |
+> | `eval "fd . ${fdOpt}"` | ✅ Yes                 | Bash re-splits the command string before execution, but it’s risky |
+> | `fd . "${fdArgs[@]}"`  | ✅✅ Yes (Recommended) | Uses an argument array — most recommended, safe, and clean         |
+
+| METHOD        | ARGUMENT PARSING                          | SAFETY  | WILDCARD EXPANSION   | RECOMMENDED USE CASE                                             |
+|---------------|-------------------------------------------|---------|----------------------|------------------------------------------------------------------|
+| `$cmd`        | ❌ Incorrect, treated as a single command | ❌ Low  | ❌ No                | Avoid using                                                      |
+| `eval "$cmd"` | ✅ Correctly splits arguments             | ⚠️ Low  | ✅ Yes               | Quick testing or executing ad-hoc command strings                |
+| `"${cmd[@]}"` | ✅ Correct and safe argument passing      | ✅ High | ❌ No (no expansion) | Recommended for building command argument lists programmatically |
+
+```bash
+$ ls
+bar.bak  bar.txt  demo.sh  foo.log  foo.txt
+
+$ bash demo.sh
+→ Running: echo Listing *.txt with excludes: --exclude '*.log' --exclude '*.bak'
+Listing bar.txt foo.txt with excludes: --exclude '*.log' --exclude '*.bak'
+#       +-------------+
+#     *.txt got expanded
+
+→ Running with eval: echo Listing *.txt with excludes: --exclude '*.log' --exclude '*.bak'
+Listing bar.txt foo.txt with excludes: --exclude *.log --exclude *.bak
+#       +-------------+
+#     *.txt got expanded
+
+→ Running with array: echo Listing *.txt with excludes: --exclude *.log --exclude *.bak
+Listing *.txt with excludes: --exclude *.log --exclude *.bak
+```
+
+```bash
+$ cat -c demo.sh
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function plainString() {
+  local cmd="echo Listing *.txt with excludes: --exclude '*.log' --exclude '*.bak'"
+  echo "→ Running: $cmd"
+  $cmd
+}
+
+function evalString() {
+  local cmd="echo Listing *.txt with excludes: --exclude '*.log' --exclude '*.bak'"
+  echo "→ Running with eval: $cmd"
+  eval "$cmd"
+}
+
+function arrayCall() {
+  local -a cmd=("echo" "Listing" "*.txt" "with" "excludes:" "--exclude" "*.log" "--exclude" "*.bak")
+  echo "→ Running with array: ${cmd[*]}"
+  "${cmd[@]}"
+}
+
+plainString
+echo ''
+evalString
+echo ''
+arrayCall
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+
+### wildcard expansion
+
+| METHOD                | WILDCARD EXPANDED? | EXPLANATION                                                    |
+|-----------------------|--------------------|----------------------------------------------------------------|
+| `eval "echo *.txt"`   | ✅ Yes             | Shell expands the wildcard during evaluation                   |
+| `eval "echo '*.txt'"` | ❌ No              | `'*.txt'` is a quoted string literal, not subject to expansion |
+| `"${arr[@]}"`         | ❌ No              | Arguments are passed as literal strings, no globbing applied   |
