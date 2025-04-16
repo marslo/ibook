@@ -7,6 +7,10 @@
   - [with `[###----]`](#with-----)
   - [with `|\|/`](#with-%5C)
   - [Integralist/python progress bar.py](#integralistpython-progress-barpy)
+- [spinner](#spinner)
+  - [Braille Patterns](#braille-patterns)
+  - [others](#others)
+  - [bash script](#bash-script)
 - [save & restore screen](#save--restore-screen)
   - [`tput`](#tput)
   - [`echo`](#echo)
@@ -126,6 +130,338 @@ done
 ![progress bar with `|\|/`](../../screenshot/shell/shell-waiting-progress-bar4.gif)
 
 ### [Integralist/python progress bar.py](https://gist.github.com/Integralist/01aed051251476c4bd6daa4b076eb23a)
+
+## spinner
+
+> [!TIP|label:check more:]
+> - [* iMarslo: gist/_spinner.md](https://gist.github.com/marslo/3f4b1eae28902394ad3201d1b5ea5537)
+
+### Braille Patterns
+
+> [!NOTE|label:references:]
+> - [unicode - Braille Patterns](https://symbl.cc/en/unicode/blocks/braille-patterns/)
+> - [wikipedia - Braille Patterns](https://en.wikipedia.org/wiki/Braille_Patterns)
+> - [SamEureka/spinner.sh](https://gist.github.com/SamEureka/3e61942d37256550b40d0ffe75bc22c4)
+>
+>> ![Braille 8 dot Cell Numbering](../../screenshot/shell/unicode-Braille8dotCellNumbering.png)
+>>
+>> ```
+>> +---+---+
+>> | 1 | 4 |
+>> +---+---+
+>> | 2 | 5 |
+>> +---+---+
+>> | 3 | 6 |
+>> +---+---+
+>> | 7 | 8 |
+>> +---+---+
+>> ```
+
+#### 4-dots
+
+| UNICODE | ICON | HTML ENCODING | COMMENTS |
+|:-------:|:----:|:-------------:|----------|
+|  `28C4` |   ⣄  |   `&#x28C4;`  | `378`    |
+|  `28C6` |   ⣆  |   `&#x28C6;`  | `2378`   |
+|  `2847` |   ⡇  |   `&#x2847;`  | `1237`   |
+|  `280F` |   ⠏  |   `&#x280F;`  | `1234`   |
+|  `280B` |   ⠋  |   `&#x280B;`  | `124`    |
+|  `2839` |   ⠹  |   `&#x2839;`  | `1456`   |
+|  `28B8` |   ⢸  |   `&#x28B8;`  | `4568`   |
+|  `28F0` |   ⣰  |   `&#x28F0;`  | `5678`   |
+|  `28E0` |   ⣠  |   `&#x28E0;`  | `678`    |
+
+
+[![4-dots](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-8.gif)](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-8.gif)
+
+```bash
+local spinner=( '⣄' '⣆' '⡇' '⠏' '⠋' '⠹' '⢸' '⣰' '⣠' )
+local spinner=(
+  "$(c Rs)⣄$(c)"    # red
+  "$(c Ys)⣆$(c)"    # yellow
+  "$(c Gs)⡇$(c)"    # green
+  "$(c Bs)⠏$(c)"    # blue
+  "$(c Ms)⠋$(c)"    # magenta
+  "$(c Ys)⠹$(c)"    # yellow
+  "$(c Gs)⢸$(c)"    # green
+  "$(c Bs)⣰$(c)"    # blue
+  "$(c Ms)⣠$(c)"    # magenta
+)
+```
+
+#### 7-dots
+
+| UNICODE | ICON | HTML ENCODING | COMMENTS  |
+|:-------:|:----:|:-------------:|-----------|
+|  `28FE` |   ⣾  |   `&#x28FE;`  | `2345678` |
+|  `28FD` |   ⣽  |   `&#x28FD;`  | `1345678` |
+|  `28FB` |   ⣻  |   `&#x28FB;`  | `1245678` |
+|  `28BF` |   ⢿  |   `&#x28BF;`  | `1234568` |
+|  `287F` |   ⡿  |   `&#x287F;`  | `1234567` |
+|  `28DF` |   ⣟  |   `&#x28DF;`  | `1234578` |
+|  `28EF` |   ⣯  |   `&#x28EF;`  | `1234678` |
+|  `28F7` |   ⣷  |   `&#x28F7;`  | `1235678` |
+
+[![7-dots](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-5.gif)](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-5.gif)
+
+```bash
+local spinner=( '⣾' '⣽' '⣻' '⢿' '⡿' '⣟' '⣯' '⣷' '⣿' )
+local spinner=(
+  "$(c Rs)⣾$(c)"     # red
+  "$(c Ys)⣽$(c)"     # yellow
+  "$(c Gs)⣻$(c)"     # green
+  "$(c Cs)⢿$(c)"     # cyan
+  "$(c Rs)⡿$(c)"     # red
+  "$(c Ys)⣟$(c)"     # yellow
+  "$(c Gs)⣯$(c)"     # green
+  "$(c Cs)⣷$(c)"     # cyan
+)
+```
+
+#### 1-dot
+
+[![1-dot](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-6.gif)](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-6.gif)
+
+```bash
+local spinner=( '⠁' '⠂' '⠄' '⡀' '⢀' '⠠' '⠐' '⠈' )
+local spinner=(
+  "$(c Ys)⠁$(c)"     # yellow
+  "$(c Gs)⠂$(c)"     # green
+  "$(c Cs)⠄$(c)"     # cyan
+  "$(c Ms)⡀$(c)"     # magenta
+  "$(c Ys)⢀$(c)"     # yellow
+  "$(c Gs)⠠$(c)"     # green
+  "$(c Cs)⠐$(c)"     # cyan
+  "$(c Ms)⠈$(c)"     # magenta
+)
+```
+
+### others
+
+[![](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-2.gif)](https://github.com/marslo/iDevOps/raw/master/screenshot/spinner/spinner-2.gif)
+
+```bash
+local spinner=( '∙∙∙∙∙' '●∙∙∙∙' '∙●∙∙∙' '∙∙●∙∙' '∙∙∙●∙' '∙∙∙∙●' )
+local spinner=(
+  "∙∙∙∙∙"
+  "$(c Ys)●$(c)∙∙∙∙"     # yellow
+  "∙$(c Gs)●$(c)∙∙∙"     # green
+  "∙∙$(c Cs)●$(c)∙∙"     # cyan
+  "∙∙∙$(c Bs)●$(c)∙"     # blue
+  "∙∙∙∙$(c Ms)●$(c)"     # magenta
+)
+local spinner=(
+  "$(c Rs)∙∙∙∙∙$(c)"     # red
+  "$(c Ys)●∙∙∙∙$(c)"     # yellow
+  "$(c Gs)∙●∙∙∙$(c)"     # green
+  "$(c Cs)∙∙●∙∙$(c)"     # cyan
+  "$(c Bs)∙∙∙●∙$(c)"     # blue
+  "$(c Ms)∙∙∙∙●$(c)"     # magenta
+)
+```
+
+### bash script
+
+#### [with stdout](https://gist.github.com/marslo/3f4b1eae28902394ad3201d1b5ea5537#file-spinner-with-stdout-sh)
+
+> [!TIP|label:use case:]
+> - [* iMarslo: ccm.sh - copilot commit message](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ccm.sh)
+
+<!--sec data-title="spinner with stdout from sub-process/sub-command" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+
+# credit: https://github.com/ppo/bash-colors
+# shellcheck disable=SC2015,SC2059
+c() { [ $# == 0 ] && printf "\e[0m" || printf "$1" | sed 's/\(.\)/\1;/g;s/\([SDIUFNHT]\)/2\1/g;s/\([KRGYBMCW]\)/3\1/g;s/\([krgybmcw]\)/4\1/g;y/SDIUFNHTsdiufnhtKRGYBMCWkrgybmcw/12345789123457890123456701234567/;s/^\(.*\);$/\\e[\1m/g'; }
+
+# capture ctrl-c to exit the sub-process
+# return the sub-process stdout ( to external variable )
+function withSpinner() {
+  local msg="$1"; shift
+  local __resultvar="$1"; shift
+  local spinner=(
+    "$(c Rs)⣾$(c)"
+    "$(c Ys)⣽$(c)"
+    "$(c Gs)⣻$(c)"
+    "$(c Cs)⢿$(c)"
+    "$(c Rs)⡿$(c)"
+    "$(c Ys)⣟$(c)"
+    "$(c Gs)⣯$(c)"
+    "$(c Cs)⣷$(c)"
+  )
+  local frame=0
+  local output
+  local cmdPid
+  local pgid=''
+  local interrupted=0
+
+  # define the cursor recovery function
+  restoreCursor() { printf "\033[?25h" >&2; }
+
+  # make sure that any exit restores the cursor
+  trap 'restoreCursor' EXIT
+
+  # hide cursor
+  printf "\033[?25l" >&2
+  printf "%s " "$msg" >&2
+
+  set -m
+  trap 'interrupted=1; [ -n "$pgid" ] && kill -TERM -- -$pgid 2>/dev/null' INT
+
+  # use file descriptor to capture output
+  local tmpout
+  tmpout=$(mktemp)
+  exec 3<> "${tmpout}"
+
+  # shellcheck disable=SC2031,SC2030
+  output="$(
+    {
+      # execute command and redirect output to file descriptor 3
+      "$@" >&3 2>/dev/null &
+      cmdPid=$!
+      pgid=$(ps -o pgid= "$cmdPid" | tr -d ' ')
+
+      # update the spinner while the command is running
+      while kill -0 "$cmdPid" 2>/dev/null && (( interrupted == 0 )); do
+        printf "\r\033[K%s %b" "${msg}" "${spinner[frame]}" >&2
+        ((frame = (frame + 1) % ${#spinner[@]}))
+        sleep 0.08
+      done
+
+      wait "$cmdPid" 2>/dev/null
+      # show the captured content
+      cat "${tmpout}"
+    }
+  )"
+
+  # clean the temporary file
+  exec 3>&-
+  rm -f "${tmpout}"
+
+  # \r : beginning of line
+  # \033[K : clear current position to end of line
+  # shellcheck disable=SC2031
+  if (( interrupted )); then
+    printf "\r\033[K\033[31m✗\033[0m Interrupted!\033[K\n" >&2
+    [ -n "${pgid}" ] && kill -TERM -- -"${pgid}" 2>/dev/null
+  else
+    # or using `printf "\r" >&2` directly without sub-progress status output
+    printf "\r\033[K\033[32m✓\033[0m Done!\033[K\n" >&2
+  fi
+
+  # assign the result to an external variable
+  printf -v "$__resultvar" "%s" "$output"
+}
+
+function main() {
+  # shellcheck disable=SC2155
+  local tmpfile=$(mktemp)
+  trap 'rm -f "${tmpfile}"' EXIT
+
+  local response
+  withSpinner "Loading..." response \
+    curl -s https://<API> ...
+
+  # check curl output
+  echo "${response}"
+}
+
+main "$@"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+<!--endsec-->
+
+#### [with exitcode](https://gist.github.com/marslo/3f4b1eae28902394ad3201d1b5ea5537#file-spinner-with-exitcode-sh)
+
+<!--sec data-title="bash spinner with exitcode from sub-process/sub-command" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+#!/usr/bin/env bash
+
+# credit: https://github.com/ppo/bash-colors
+# shellcheck disable=SC2015,SC2059
+c() { [ $# == 0 ] && printf "\e[0m" || printf "$1" | sed 's/\(.\)/\1;/g;s/\([SDIUFNHT]\)/2\1/g;s/\([KRGYBMCW]\)/3\1/g;s/\([krgybmcw]\)/4\1/g;y/SDIUFNHTsdiufnhtKRGYBMCWkrgybmcw/12345789123457890123456701234567/;s/^\(.*\);$/\\e[\1m/g'; }
+
+# capture ctrl-c to exit the sub-process
+function withSpinner() {
+  local msg="$1"; shift
+  local __resultvar="$1"; shift
+  local spinner=(
+    "$(c Rs)⣄$(c)"
+    "$(c Ys)⣆$(c)"
+    "$(c Gs)⡇$(c)"
+    "$(c Bs)⠏$(c)"
+    "$(c Ms)⠋$(c)"
+    "$(c Ys)⠹$(c)"
+    "$(c Gs)⢸$(c)"
+    "$(c Bs)⣰$(c)"
+    "$(c Ms)⣠$(c)"
+  )
+  local frame=0
+  local output
+  local cmdPid
+  local pgid=""
+  local interrupted=0
+
+  # explicit recovery cursor
+  function restoreCursor() { printf "\033[?25h" >&2; }
+
+  # ensure that any exit restores the cursor.
+  trap 'restoreCursor' EXIT
+
+  # hide cursor
+  printf "\033[?25l" >&2
+  printf "%s " "${msg}" >&2
+
+  set -m
+  trap 'interrupted=1; [ -n "${pgid}" ] && kill -TERM -- -${pgid} 2>/dev/null' INT
+
+  # shellcheck disable=SC2034,SC2030
+  output="$(
+    {
+      "$@" 2>/dev/null &
+      cmdPid=$!
+      pgid=$(ps -o pgid= ${cmdPid} | tr -d ' ')
+      echo "${pgid}" > "${tmpfile}"
+
+      while kill -0 "$cmdPid" 2>/dev/null && (( interrupted == 0 )); do
+        printf "\r\033[K%s %b" "${msg}" "${spinner[frame]}" >&2
+        ((frame = (frame + 1) % ${#spinner[@]}))
+        sleep 0.1
+      done
+
+      wait "${cmdPid}" 2>/dev/null
+    }
+  )"
+
+  # \r : beginning of line
+  # \033[K : clear current position to end of line
+  if (( interrupted )); then
+    printf "\r\033[K\033[31m✗\033[0m Interrupted!\033[K\n" >&2
+    # shellcheck disable=SC2031
+    [ -n "${pgid}" ] && kill -TERM -- -"${pgid}" 2>/dev/null
+  else
+    printf "\r\033[K\033[32m✓\033[0m Done!\033[K\n" >&2
+  fi
+
+  # a separate recovery cursor is no longer required because the exit trap is handled
+}
+
+# main function
+function main() {
+  tmpfile=$(mktemp)
+  trap 'rm -f "${tmpfile}"' EXIT
+
+  withSpinner "Loading..." result sleep 5
+  echo "Exit code: $?"
+}
+
+main "$@"
+
+# vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh:
+```
+<!--endsec-->
 
 ## save & restore screen
 {% hint style='tip' %}

@@ -186,6 +186,10 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 
 ![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf/fzf-color-theme-gruvbox-marslo.png)
 
+| NAME    | VALUE                                       |
+|---------|---------------------------------------------|
+| pointer | `▏`, `▕`, `┃`, `▎`, `▌`, `▊`, `▉`, `▒`, `ⵗ` |
+
 ```bash
 # -- or --
 FZF_DEFAULT_OPTS+="--prompt='󰝗 ' --info='inline: 󰉾 ' "
