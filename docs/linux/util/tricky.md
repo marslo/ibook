@@ -269,7 +269,7 @@ $ sudo lsattr /etc/resolv.conf
 >>   ```
 
 > [!TIP|label:tips:]
->> since `fdOpt` is a single string (containing multiple arguments), Bash treats it as one single argument when passed to `fd`. This leads to the following issues:
+>> since `fdOpt` is **a single string** (containing multiple arguments), Bash treats it as **one single argument** when passed to `fd`. This leads to the following issues:
 >>
 >> `--exclude '*.png'` is treated as **one single argument**, rather than **two separate ones**: `--exclude` and `'*.png'`;
 >>
@@ -277,6 +277,7 @@ $ sudo lsattr /etc/resolv.conf
 >> Therefore, `--exclude '*.png'` does not actually exclude anything.
 >
 > recommend using arrays to store multiple arguments and then pass them to the command.
+>
 >>   ```bash
 >>   # array
 >>   local -a fdArgs=(--type f --hidden --follow --unrestricted --ignore-file "${HOME}/.fdignore")
@@ -294,6 +295,7 @@ $ sudo lsattr /etc/resolv.conf
 >>   #    +------------+
 >>   fd . "${fdArgs[@]}" | fzf ${foption} --bind="enter:become(${VIM} {+})"
 >>   ```
+>
 > details:
 >
 > | FORM                   | WORKS?                 | REASON                                                             |
@@ -301,6 +303,7 @@ $ sudo lsattr /etc/resolv.conf
 > | `fd . ${fdOpt}`        | ❌ No                  | ${fdOpt} is a single string; arguments are not properly split      |
 > | `eval "fd . ${fdOpt}"` | ✅ Yes                 | Bash re-splits the command string before execution, but it’s risky |
 > | `fd . "${fdArgs[@]}"`  | ✅✅ Yes (Recommended) | Uses an argument array — most recommended, safe, and clean         |
+
 
 | METHOD        | ARGUMENT PARSING                          | SAFETY  | WILDCARD EXPANSION   | RECOMMENDED USE CASE                                             |
 |---------------|-------------------------------------------|---------|----------------------|------------------------------------------------------------------|

@@ -164,17 +164,21 @@ $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc
 # debine
 $ sudo apt install fd
 
-$ FZF_DEFAULT_OPTS="--height 35%"
-$ FZF_DEFAULT_OPTS+=" --layout=reverse"
-$ FZF_DEFAULT_OPTS+=" --pointer='→' --marker='» ' --prompt='$ '"
-$ FZF_DEFAULT_OPTS+=" --multi"
-$ FZF_DEFAULT_OPTS+=" --inline-info"
-$ FZF_DEFAULT_OPTS+=" --color=spinner:#e6db74,hl:#928374,fg:#ebdbb2,header:#928374,info:#504945,pointer:#98971a,marker:#d79921,fg+:#ebdbb2,prompt:#404945,hl+:#fb4934"
-$ FZF_DEFAULT_COMMAND="fd --type f"
-$ FZF_DEFAULT_COMMAND+=" --strip-cwd-prefix"
-$ FZF_DEFAULT_COMMAND+=" --hidden"
-$ FZF_DEFAULT_COMMAND+=" --follow"
-$ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
+$ FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS} "
+$ FZF_DEFAULT_OPTS+="--height 35% --min-height 8+ "             # https://github.com/junegunn/fzf/issues/4226
+$ FZF_DEFAULT_OPTS+="--layout=reverse --multi --cycle --ansi "
+$ FZF_DEFAULT_OPTS+="--marker='󱍢 ' --pointer='▌' "
+$ FZF_DEFAULT_OPTS+="--prompt='󰩀 ' --info='inline: 󰨿 ' "
+$ FZF_DEFAULT_OPTS+="--info-command='echo \"\x1b[33;1m\$FZF_POS\x1b[m ~ \$FZF_INFO\"' "
+$ FZF_DEFAULT_OPTS+="--bind 'ctrl-s:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all' "
+$ FZF_DEFAULT_OPTS+="--bind 'ctrl-y:execute-silent(/bin/echo -n {+} | ${COPY})' "
+$ FZF_DEFAULT_OPTS+="--color=gutter:-1,bg+:-1,spinner:#e6db74,prompt:#404945,header:italic:#504945,info:#928374,pointer:#A66584,marker:#d79921,fg:#ebdbb2:dim,fg+:#A7A44E:regular,hl:#845069:italic,hl+:#A66584:bold:italic"
+$
+$ FZF_DEFAULT_COMMAND="fd --type f "
+$ FZF_DEFAULT_COMMAND+="--strip-cwd-prefix "
+$ FZF_DEFAULT_COMMAND+="--hidden "
+$ FZF_DEFAULT_COMMAND+="--follow "
+$ FZF_DEFAULT_COMMAND+="--exclude .git --exclude node_modules"
 $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ```
 
@@ -183,10 +187,6 @@ $ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf/fzf-color-theme-gruvbox-marslo.png)
 
 ```bash
-# -- or --
-FZF_DEFAULT_OPTS+="--marker='󱍢 ' --pointer='▌' "
-FZF_DEFAULT_OPTS+="--prompt='󰩀 ' --info='inline: 󰨿 ' "
-
 # -- or --
 FZF_DEFAULT_OPTS+="--prompt='󰝗 ' --info='inline: 󰉾 ' "
 
@@ -205,6 +205,23 @@ FZF_DEFAULT_OPTS+="--no-bold "
 # -- or --
 FZF_DEFAULT_OPTS+="--color=fg+:#ebdbb2,pointer:#e6db74,hl+:#fb4934,prompt:#334D35"
 ```
+
+
+<!--sec data-title="older version of FZF environment variable" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ FZF_DEFAULT_OPTS="--height 35%"
+$ FZF_DEFAULT_OPTS+=" --layout=reverse"
+$ FZF_DEFAULT_OPTS+=" --pointer='→' --marker='» ' --prompt='$ '"
+$ FZF_DEFAULT_OPTS+=" --multi"
+$ FZF_DEFAULT_OPTS+=" --inline-info"
+$ FZF_DEFAULT_OPTS+=" --color=spinner:#e6db74,hl:#928374,fg:#ebdbb2,header:#928374,info:#504945,pointer:#98971a,marker:#d79921,fg+:#ebdbb2,prompt:#404945,hl+:#fb4934"
+$ FZF_DEFAULT_COMMAND="fd --type f"
+$ FZF_DEFAULT_COMMAND+=" --strip-cwd-prefix"
+$ FZF_DEFAULT_COMMAND+=" --hidden"
+$ FZF_DEFAULT_COMMAND+=" --follow"
+$ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
+```
+<!--endsec-->
 
 - install from source code for wsl
 
@@ -898,7 +915,7 @@ function copy() {                          # smart copy
   }
   ```
 
-  <!--sec data-title="deprecated `fd`" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="deprecated `fd`" data-id="section1" data-show=true data-collapse=true ces-->
   - `fd`
     > [!DANGER]
     > **conflict with fd-find**
