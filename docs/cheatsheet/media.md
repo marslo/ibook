@@ -19,7 +19,6 @@
 - [image](#image)
   - [convert webp to png](#convert-webp-to-png)
   - [identity an image](#identity-an-image)
-  - [convert png to svg](#convert-png-to-svg)
   - [convert svg to png](#convert-svg-to-png)
   - [convert HEIC/HEIF to PNG](#convert-heicheif-to-png)
   - [sed command to batch change fill and stroke of an SVG](#sed-command-to-batch-change-fill-and-stroke-of-an-svg)
@@ -317,15 +316,6 @@ $ identify arms009.jpg | grep -o "[[:digit:]]*x[[:digit:]]*" | tail -1
 1024x768
 ```
 
-### convert png to svg
-```bash
-$ convert -background none \
-          -density 300 \
-          -filter Lanczos \
-          -resize 400x \
-          -antialias input.svg output.png
-```
-
 ### convert svg to png
 
 {% hint style='tip' %}
@@ -349,6 +339,13 @@ $ convert -background none \
 
 - convert
   ```bash
+  $ convert -background none \           # transparent background
+            -density 300 \               # DPI (dots per inch) to 300, default is 72
+            -filter Lanczos \            # lanczos provides high-quality resampling
+            -resize 400x \               # width of 400 pixels x height is auto-calculated
+            -antialias \                 # antialiasing
+            input.svg output.png
+
   $ convert -resize 128x128 input.svg output.png
 
   # or

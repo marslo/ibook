@@ -519,7 +519,7 @@ PS1="[$R\u$W@$B\h$W:$G\w$W]\$ "
 
 ![rgba2hex --help](../screenshot/colors/rgba2hex-help.png)
 
-<!--sec data-title="rgba2hex" data-id="section2" data-show=true data-collapse=true ces-->
+<!--sec data-title="rgba2hex" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 #!/usr/bin/env bash
 # shellcheck source=/dev/null disable=SC2155
@@ -764,7 +764,7 @@ main "$@"
 ```
 <!--endsec-->
 
-<!--sec data-title="rgba2hex-help" data-id="section3" data-show=true data-collapse=true ces-->
+<!--sec data-title="rgba2hex-help" data-id="section1" data-show=true data-collapse=true ces-->
 ```
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
@@ -862,7 +862,7 @@ function showHelp() { echo -e "$usage"; }
 > [!TIP|label:references:]
 > the enhancement xColorTable
 
-<!--sec data-title="ansi2hex.sh" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="ansi2hex.sh" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
@@ -1087,7 +1087,7 @@ for i in $(seq 0 255); do tohex ${i}; done
 
 ![hex2rgba --help](../screenshot/colors/hex2rgba-help.png)
 
-<!--sec data-title="hex2rgba" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="hex2rgba" data-id="section3" data-show=true data-collapse=true ces-->
 ```bash
 #!/usr/bin/env bash
 # shellcheck source=/dev/null disable=SC2155
@@ -1480,7 +1480,7 @@ $ colored --color-codes
 
   [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](../screenshot/colors/ansi/ansicolor-256-0.png)
 
-  <!--sec data-title="256colors" data-id="section3" data-show=true data-collapse=true ces-->
+  <!--sec data-title="256colors" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
   function 256colors() {
     local bar='█'                                          # ctrl+v -> u2588 ( full block )
@@ -1495,7 +1495,7 @@ $ colored --color-codes
 
   [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](../screenshot/colors/ansi/ansicolor-256-1.png)
 
-  <!--sec data-title="256color" data-id="section4" data-show=true data-collapse=true ces-->
+  <!--sec data-title="256color" data-id="section5" data-show=true data-collapse=true ces-->
   ```bash
   #!/bin/bash
 
@@ -1529,7 +1529,7 @@ $ colored --color-codes
 
   [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](../screenshot/colors/ansi/color-formatting-1.png)
 
-  <!--sec data-title="colors_and_formatting" data-id="section5" data-show=true data-collapse=true ces-->
+  <!--sec data-title="colors_and_formatting" data-id="section6" data-show=true data-collapse=true ces-->
   ```bash
   #!/bin/sh
 
@@ -1575,7 +1575,7 @@ $ colored --color-codes
 
   [![showcolors](../screenshot/colors/ansi/showcolors.png)](../screenshot/colors/ansi/showcolors.png)
 
-  <!--sec data-title="showcolors" data-id="section6" data-show=true data-collapse=true ces-->
+  <!--sec data-title="showcolors" data-id="section7" data-show=true data-collapse=true ces-->
   ```bash
   # @author : https://stackoverflow.com/a/69648792/2940319
   # @usage  :
@@ -1652,7 +1652,7 @@ $ colored --color-codes
 
 - [colorgrid](https://unix.stackexchange.com/a/285956/29178)
 
-  <!--sec data-title="colorgrid" data-id="section7" data-show=true data-collapse=true ces-->
+  <!--sec data-title="colorgrid" data-id="section8" data-show=true data-collapse=true ces-->
   ```bash
   function colorgrid() {
       iter=16
@@ -1692,7 +1692,7 @@ $ colored --color-codes
 
   ![solarized colors](../screenshot/colors/ansi/solarized-colors.png)
 
-  <!--sec data-title="solarized-colors" data-id="section8" data-show=true data-collapse=true ces-->
+  <!--sec data-title="solarized-colors" data-id="section9" data-show=true data-collapse=true ces-->
   ```bash
   #!/bin/bash
 
