@@ -1,0 +1,268 @@
+tap "buo/cask-upgrade"
+tap "carlocab/personal"
+tap "hashicorp/tap"
+tap "homebrew/command-not-found"
+tap "vitorgalvao/tiny-scripts"
+# Search tool like grep, but optimized for programmers
+brew "ack"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck", args: ["HEAD"]
+# Static checker for GitHub Actions workflow files
+brew "actionlint"
+# Checks ansible playbooks for practices and behaviour
+brew "ansible-lint"
+# Powerful, clean, object-oriented scripting language
+brew "ruby", args: ["HEAD"]
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
+# Programmable completion for Bash 4.2+
+brew "bash-completion@2"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat", args: ["HEAD"]
+# Color-highlighted diff(1) output
+brew "colordiff"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Tunnel SSH through HTTP proxies
+brew "corkscrew"
+# Shell script to build fancy DMGs
+brew "create-dmg"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl", args: ["HEAD"]
+# Good-lookin' diffs with diff-highlight and more
+brew "diff-so-fancy", args: ["HEAD"]
+# File comparison utilities
+brew "diffutils"
+# Convert text between DOS, UNIX, and Mac formats
+brew "dos2unix"
+# AST-based pattern checker for JavaScript
+brew "eslint", args: ["HEAD"]
+# Simple, fast and user-friendly alternative to find
+brew "fd", args: ["HEAD"]
+# Identify or delete duplicate files
+brew "fdupes"
+# Banner-like program prints strings as ASCII art
+brew "figlet"
+# Collection of GNU find, xargs, and locate
+brew "findutils"
+# Command-line outline and bitmap font editor/converter
+brew "fontforge"
+# Infamous electronic fortune-cookie generator
+brew "fortune"
+# Command-line fuzzy finder written in Go
+brew "fzf", args: ["HEAD"]
+# Fast, simple fuzzy text selector with an advanced scoring algorithm
+brew "fzy", args: ["HEAD"]
+# GNU awk utility
+brew "gawk"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
+brew "git", args: ["HEAD"]
+# Small git utilities
+brew "git-extras", args: ["HEAD"]
+# Alternative to top/htop
+brew "glances"
+# Command-line option parsing utility
+brew "gnu-getopt"
+# C code prettifier
+brew "gnu-indent"
+# GNU implementation of the famous stream editor
+brew "gnu-sed"
+# GNU version of the tar archiving utility
+brew "gnu-tar"
+# GNU implementation of which utility
+brew "gnu-which"
+# GNU Transport Layer Security (TLS) Library
+brew "gnutls"
+# Bash and Zsh completion for Gradle
+brew "gradle-completion"
+# GNU grep, egrep and fgrep
+brew "grep"
+# Tool for glamorous shell scripts
+brew "gum", args: ["HEAD"]
+# Popular GNU data compression program
+brew "gzip"
+# Smarter Dockerfile linter to validate best practices
+brew "hadolint"
+# Command-line hex viewer
+brew "hexyl", args: ["HEAD"]
+# Convert source code to formatted text with syntax highlighting
+brew "highlight", args: ["HEAD"]
+# Improved top (interactive process viewer)
+brew "htop"
+# Tool to report network interface bandwidth
+brew "ifstat"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Calculate various network masks, etc. from a given IP address
+brew "ipcalc"
+# CLI wrapper for basic network utilities on macOS - ip command
+brew "iproute2mac"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# JSON parser and validator with a CLI
+brew "jsonlint"
+# Colorize your kubectl output
+brew "kubecolor"
+# Kubernetes command-line interface
+brew "kubernetes-cli", args: ["HEAD"]
+# Pager program similar to more
+brew "less"
+# GNOME XML library
+brew "libxml2"
+# Utility to list open files
+brew "lsof"
+# Text-based web browser
+brew "lynx"
+# GUI for vim, made for macOS
+brew "macvim", args: ["HEAD"]
+# Project documentation with Markdown
+brew "mkdocs"
+# MongoDB Shell to connect, configure, query, and work with your MongoDB database
+brew "mongosh"
+# Collection of tools that nobody wrote when UNIX was young
+brew "moreutils"
+# Lightweight PDF and XPS viewer
+brew "mupdf-tools", args: ["HEAD"]
+# NCurses Disk Usage
+brew "ncdu"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim", args: ["HEAD"]
+# Port scanning utility for large networks
+brew "nmap"
+# Manage multiple Node.js versions
+brew "nvm"
+# Development kit for the Java programming language
+brew "openjdk"
+# Open source suite of directory software
+brew "openldap"
+# Swiss-army knife of markup format conversion
+brew "pandoc", args: ["HEAD"]
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Password manager
+brew "pass", args: ["HEAD"]
+# PDF processor written in Go
+brew "pdfcpu"
+# Pinentry for GPG on Mac
+brew "pinentry-mac", args: ["HEAD"]
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler", args: ["HEAD"]
+# OpenBSD and Darwin versions of pgrep, pkill, and pfind
+brew "proctools"
+# Show ps output as a tree
+brew "pstree"
+# Monitor data's progress through a pipe
+brew "pv"
+# Python interface to Tcl/Tk
+brew "python-tk@3.13"
+# Perl-powered file rename script with many helpful built-ins
+brew "rename", args: ["HEAD"]
+# Search tool like grep and The Silver Searcher
+brew "ripgrep", args: ["HEAD"]
+# Autoformat shell script source code
+brew "shfmt", args: ["HEAD"]
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Modern CSS linter
+brew "stylelint"
+# User interface to the TELNET protocol
+brew "telnet"
+# Code-search similar to ack
+brew "the_silver_searcher", args: ["HEAD"]
+# Text interface for Git repositories
+brew "tig", args: ["HEAD"]
+# Terminal multiplexer
+brew "tmux"
+# Color-based alternative to figlet (uses libcaca)
+brew "toilet"
+# CLI tool that moves files or folder to the trash
+brew "trash"
+# Extraction utility for .zip compressed archives
+brew "unzip"
+# Collection of Linux utilities
+brew "util-linux"
+# Vim script Language Lint
+brew "vint"
+# Console-based network traffic monitor
+brew "vnstat"
+# Pager/text based browser
+brew "w3m", args: ["HEAD"]
+# Executes a program periodically, showing output fullscreen
+brew "watch"
+# Display word differences between text files
+brew "wdiff"
+# Internet file retriever
+brew "wget"
+# Lookup tool for domain names and other internet resources
+brew "whois", args: ["HEAD"]
+# Linter for YAML files
+brew "yamllint", args: ["HEAD"]
+# Compression and file packaging/archive utility
+brew "zip"
+# Extract, view, and test RAR archives
+brew "carlocab/personal/unrar"
+# Vault
+brew "hashicorp/tap/vault"
+# Application launcher and productivity software
+cask "alfred"
+cask "baiduinput"
+# Compare files and folders
+cask "beyond-compare"
+# Desktop app for GPT-4 / GPT-3.5 (OpenAI API)
+cask "chatbox"
+# Desktop client that supports multiple LLM providers
+cask "cherry-studio"
+# Tool to remove unnecessary files and folders from disk
+cask "cleanmymac"
+# Write, edit, and chat about your code with AI
+cask "cursor"
+# API documentation browser and code snippet manager
+cask "dash"
+# Web browser
+cask "google-chrome@canary"
+# System monitoring app
+cask "istat-menus"
+# Keep your computer awake
+cask "jiggler"
+# Open-source keystroke visualiser
+cask "keycastr"
+# Utility to move and zoom windows—on one display
+cask "moom"
+# Screenshot measurement and annotation tool
+cask "shottr"
+# Snip or pin screenshots
+cask "snipaste"
+# GUI for the Neovim text editor
+cask "vimr"
+# Free messaging and calling application
+cask "wechat"
+vscode "argylewolflabs.vscode-groovy"
+vscode "dave-hagedorn.jenkins-runner"
+vscode "deerawan.vscode-dash"
+vscode "eamodio.gitlens"
+vscode "github.copilot"
+vscode "github.copilot-chat"
+vscode "ivory-lab.jenkinsfile-support"
+vscode "janjoerke.jenkins-pipeline-linter-connector"
+vscode "jdinhlife.gruvbox"
+vscode "jonathanharty.gruvbox-material-icon-theme"
+vscode "maarti.jenkins-doc"
+vscode "mellowmarshmallow.groovy"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-python.python"
+vscode "ms-vscode.cpptools"
+vscode "ms-vscode.cpptools-extension-pack"
+vscode "ms-vscode.cpptools-themes"
+vscode "nicolasvuillamy.vscode-groovy-lint"
+vscode "paulvarache.vscode-jenkins"
+vscode "redhat.java"
+vscode "sainnhe.gruvbox-material"
+vscode "secanis.jenkinsfile-support"
+vscode "shan.code-settings-sync"
+vscode "tomsaunders.vscode-workspace-explorer"
+vscode "valiantsin.operatormonodarktheme"
+vscode "vscjava.vscode-java-debug"
+vscode "vscjava.vscode-java-pack"
+vscode "vscodevim.vim"
