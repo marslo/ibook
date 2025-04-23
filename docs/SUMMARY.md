@@ -63,6 +63,7 @@
     * [troubleshooting](devops/git/troubleshooting.md)
     * [tricky](devops/git/tricky.md)
     * [statistics](devops/git/statistics.md)
+  * [pre-commit](devops/pre-commit.md)
   * [tmux](devops/tmux/tmux.md)
     * [cheatsheet](devops/tmux/cheatsheet.md)
   * [ansible](devops/ansible.md)

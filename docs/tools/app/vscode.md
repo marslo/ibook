@@ -318,7 +318,7 @@
 |      shift + cmd + o      |       ⇧ + ⌘ + o       | go to symbol                  |
 |      shift + cmd + m      |       ⇧ + ⌘ + m       | show problem panel            |
 |      shift + cmd + y      |       ⇧ + ⌘ + y       | show debug console panel      |
-|      shift + cmd + u      |       ⇧ + ⌘ + u       | show output  panel            |
+|      shift + cmd + u      |       ⇧ + ⌘ + u       | show output panel             |
 |          ctrl + ^         |         ⌃ + ^         | show terminal panel           |
 | cmd + k + 0 / cmd + k + j | ⌘ + k + 0 / ⌘ + k + j | fold/unfold all methods       |
 |       alt + cmd + o       |       ⌥ + ⌘ + o       | connect to ...                |

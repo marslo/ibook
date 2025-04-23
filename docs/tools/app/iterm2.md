@@ -128,8 +128,8 @@ $ while read -r i; do
 > done < ~/.marslo/.colors
 ```
 
-result:
 ```bash
+# result
 $ ./rgb2hex.sh
 yellowgreen   : 154, 205, 50  : 9acd32
 wheat         : 245, 222, 179 : f5deb3

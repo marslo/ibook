@@ -23,6 +23,7 @@
   - [file format](#file-format)
   - [platform](#platform)
   - [github readme status](#github-readme-status)
+- [extract fonts from pdf](#extract-fonts-from-pdf)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -315,3 +316,70 @@ $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q
 |:------------:|:----------------------------------------------------------------:|:--------------------------------------------------------------:|
 | streak-stats | `![](https://streak-stats.demolab.com/?user=marslo&theme=light)` | ![](https://streak-stats.demolab.com/?user=marslo&theme=light) |
 
+
+## extract fonts from pdf
+
+```bash
+$ python3 -m pip install pdfminer
+$ python3 -m pip install pdfminer.six
+$ python3 pdf_font_report.py input.pdf --format csv --output result.csv
+```
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import argparse
+import csv
+from pdfminer.high_level import extract_pages
+from pdfminer.layout import LTTextContainer, LTChar, LTTextLine, LTTextBox
+
+def analyze_pdf_fonts(pdf_path, output_format=None, output_file=None):
+    rows = []
+
+    for page_number, page_layout in enumerate(extract_pages(pdf_path), start=1):
+        for element in page_layout:
+            if isinstance(element, LTTextContainer):
+                for text_line in element:
+                    if hasattr(text_line, "__iter__"):
+                        for character in text_line:
+                            if isinstance(character, LTChar):
+                                char = character.get_text()
+                                font = character.fontname
+                                size = round(character.size, 2)
+                                rows.append((page_number, char, font, size))
+                    elif isinstance(text_line, LTChar):
+                        # handle case where element is directly a character
+                        char = text_line.get_text()
+                        font = text_line.fontname
+                        size = round(text_line.size, 2)
+                        rows.append((page_number, char, font, size))
+
+    if output_format == "markdown":
+        print("| Page | Char | Font | Size |")
+        print("|------|------|------|------|")
+        for row in rows:
+            print(f"| {row[0]} | `{row[1]}` | `{row[2]}` | {row[3]} |")
+
+    elif output_format == "csv":
+        if not output_file:
+            output_file = "font_report.csv"
+        with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Page", "Char", "Font", "Size"])
+            writer.writerows(rows)
+        print(f"[✓] CSV report saved to: {output_file}")
+
+    else:
+        # Default: plain text output
+        for row in rows:
+            print(f"Page {row[0]}: '{row[1]}' → {row[2]} ({row[3]}pt)")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Extract character-font-size info from PDF")
+    parser.add_argument("pdf", help="Path to input PDF file")
+    parser.add_argument("-f", "--format", choices=["markdown", "csv"], help="Output format")
+    parser.add_argument("-o", "--output", help="Output file (for CSV)")
+    args = parser.parse_args()
+
+    analyze_pdf_fonts(args.pdf, args.format, args.output)
+```

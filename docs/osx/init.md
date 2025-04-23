@@ -4,6 +4,7 @@
 - [packages installation](#packages-installation)
 - [tap](#tap)
 - [cask](#cask)
+- [backup and restore](#backup-and-restore)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -11,24 +12,26 @@
 
 ```bash
 # --- utils ---
-$ brew install imagemagick
+$ brew install --HEAD bash-completion@2
+$ brew install util-linux coreutils moreutils bash less proctools pstree vnstat ncdu ipcalc htop glances lsof trash
+$ brew install gawk grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnu-indent gnutls iproute2mac ifstat stow netcat nmap
+$ brew install dos2unix openldap
 $ brew install tmux corkscrew telnet figlet toilet
-$ brew install stow iproute2mac pandoc ifstat nmap
-$ brew install pcre2 gettext libtool              # for build vim from source
-$ brew install util-linux
-$ brew install gawk gnu-tar grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnutls coreutils moreutils bash proctools pstree vnstat ncdu ipcalc htop glances ack lsof trash
 $ brew install colordiff diffutils wdiff
 $ brew install --HEAD diff-so-fancy highlight
-$ brew install gzip
-$ brew install carlocab/personal/unrar
-$ brew install zip unzip                          # Info-ZIP
+$ brew install gnu-tar gzip carlocab/personal/unrar
+$ brew install zip unzip                          # info-zip
 $ brew install --HEAD rename whois watch wget curl
 $ brew install --HEAD hexyl                       # a hex viewer for the terminal
-$ brew install create-dmg
-$ brew install fontforge
-$ sudo gem install iStats -n /usr/local/bin       # requires ruby to be installed
-$ brew install lynx
+$ brew install lynx                               # text-based web browser
 $ brew install fdupes                             # find duplicate files
+$ brew install --HEAd pandoc poppler fontforge
+$ brew install --HEAD mupdf-tools                 # pdf viewer
+$ brew install pdfcpu &&                          # extract font from pdf
+  mkdir -p "$HOME/Library/Application Support/pdfcpu"
+$ brew install create-dmg
+$ brew install imagemagick
+$ sudo gem install iStats -n /usr/local/bin       # requires ruby to be installed
 
 $ brew install --HEAD pass
 $ brew install pass-otp
@@ -42,7 +45,8 @@ $ brew install --cask vimr
 $ python3 -m pip install jedi
 $ python3 -m pip install --upgrade pynvim
 $ GEM_HOME="$HOME/.gem" gem install neovim --user-install
-## macvim
+## macvim/vim
+$ brew install pcre2 gettext libtool              # for build vim from source
 $ brew install --HEAD macvim                      # using `--HEAD` to prevent 32bit vim + 64bit python
 $ sudo cp -r $(brew --prefix macvim)/MacVim.app /Applications
 ## vscode
@@ -51,25 +55,24 @@ $ brew install --cask visual-studio-code
 $ sudo ln -sf '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code' /usr/local/bin/code
 
 # --- dev tools ---
-$ brew install nvm                                # nvm for gitbook install: nvm install 12
-$ brew install gradle-completion
 $ brew install --HEAD ruby
-$ brew install less
+# nvm for gitbook install: nvm install 12
+$ brew install openjdk gradle jq nvm mongosh
+$ brew install gradle-completion
 $ brew install kubecolor
 $ brew install --HEAD kubectl
-$ brew install mongosh
-$ brew install gnu-indent
 $ brew install --HEAD git-flow git-extras
-$ brew install dos2unix
-$ brew install openldap
-$ brew install jq
-$ brew install openjdk
-$ brew install gradle
-$ brew install --HEAD fzf fzy bat ack ag rg
+$ brew install --HEAD fzf fzy bat ack ag rg gum fd
 $ brew install mkdocs                             # markdown docs, usage: `mkdocs build -d site -s`
 $ curl -o "$HOME/.local/bin/cht.sh" -fsSL 'https://cht.sh/:cht.sh' && chmod +x "$HOME/.local/bin/cht.sh"
-$ brew install --HEAD gum
 $ brew install hashicorp/tap/vault
+
+# --- pipx and tools ---
+$ python3 -m pip install --user -U pipx
+$ python3 -m pipx ensurepath
+$ python3 -m pipx install poetry                  # python packaging and dependency management made easy
+$ python3 -m pipx install pre-commit
+$ python3 -m pipx install commitizen              # optional
 
 # --- npm packages ---
 $ npm i -g tldr                                   # or $ brew install tlrc; or $ python3 -m pip install tldr
@@ -92,8 +95,7 @@ $ npm i -g css-validator                          # for css validation
 $ brew install --HEAD yamllint yamlfmt
 $ brew install hadolint                           # for dockerfile
 $ brew install stylelint                          # for css
-$ brew install jsonlint
-$ brew install ansible-lint
+$ brew install jsonlint ansible-lint
 $ brew install vint                               # vim script language lint
 $ brew install --HEAD eslint
 $ brew install --HEAD shfmt                       # autoformat shell script source code
@@ -153,4 +155,16 @@ vitorgalvao/tiny-scripts
 19/21  snipaste              2.10.6        2.10.6         Y   [   OK   ]
 20/21  vimr                  0.52.0        0.52.0         Y   [   OK   ]
 21/21  wechat                3.8.10.17     3.8.10.17      Y   [   OK   ]
+```
+
+## backup and restore
+```bash
+# backup
+$ brew bundle dump --file=./brew.backup.all.txt --describe
+
+# restore
+$ brew bundle --file=./brew.backup.all.txt
+
+# [BE CAREFUL] cleanup not been listed in brew.backup.all.txt
+$ brew bundle cleanup --file=./brew.backup.all.txt
 ```
