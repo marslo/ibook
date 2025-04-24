@@ -1,0 +1,30 @@
+# yamllint disable rule:indentation
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+        name: End Of File Fixer
+      - id: check-yaml
+        name: Check YAML
+        args: ["--unsafe"]
+      - id: check-json
+        name: Check JSON
+      - id: check-merge-conflict
+        name: Check Merge Conflict
+      - id: check-case-conflict
+        name: Check Case Conflict
+      - id: mixed-line-ending
+        name: Mixed Line Ending
+        args: ["--fix=lf"]
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        name: Python Black
+        language_version: python3

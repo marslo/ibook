@@ -160,7 +160,9 @@
 
 ```bash
 $ brew install fzf fd
-$ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
+$ type -P fzf >/dev/null && eval "$(command fzf --bash)"
+# -- or --
+$ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd "$(brew --prefix)"/etc/bash_completion.d/fd
 # debine
 $ sudo apt install fd
 
@@ -1936,11 +1938,13 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   ```bash
   # osx
   $ brew install fd
-  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd $(brew --prefix)/etc/bash_completion.d/fd
-  # or
+  $ type -P fd >/dev/null && eval "$(fd --gen-completions bash)"
+  # -- or --
   $ fd --gen-completions bash | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
+  # -- or --
+  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd $(brew --prefix)/etc/bash_completion.d/fd
   # or - v9.0.0
-  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd /usr/local/etc/bash_completion.d/fd
+  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd "$(brew --prefix)"/etc/bash_completion.d/fd
 
   # debine
   $ sudo apt install fd-find                  # ubuntu 22.04 : fd 8.3.1
@@ -2016,11 +2020,11 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 ## advanced usage
 - crontab for delete '*\.DS_*'
   ```bash
-  /usr/local/bin/fd -IH --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
+  $ "$(type -P fd)" -IH --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
   # or
-  /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
+  $ "$(type -P fd)" -Iu --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
   # or
-  /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r -i rm '{}'
+  $ "$(type -P fd)" --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r -i rm '{}'
   ```
 
 - [`ff`](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/ff)
@@ -2333,6 +2337,10 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
 - completion
   {% raw %}
   ```bash
+  # -- recommended --
+  $ type -P bat >/dev/null && eval "$(bat --completion bash)"
+
+  # -- others --
   $ sed 's/{{PROJECT_EXECUTABLE}}/bat/'                                     "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" | sudo tee /etc/bash_completion.d/bat
   # or
   $ sed 's/{{PROJECT_EXECUTABLE}}/-o nosort -o bashdefault -o default bat/' "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" | sudo tee /etc/bash_completion.d/bat

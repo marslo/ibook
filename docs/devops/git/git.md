@@ -25,15 +25,21 @@ git command study and practice
   - [lightweight VS. annotated](#lightweight-vs-annotated)
 - [status](#status)
   - [list ignored](#list-ignored)
+- [filter in history](#filter-in-history)
+  - [list all renamed files](#list-all-renamed-files)
+  - [list all deleted files](#list-all-deleted-files)
+  - [list files changed by specific users](#list-files-changed-by-specific-users)
 - [log](#log)
   - [short stat](#short-stat)
-  - [show renamed status](#show-renamed-status)
   - [show files and status without comments](#show-files-and-status-without-comments)
   - [show submodule changes](#show-submodule-changes)
   - [get change from `.git/objects`](#get-change-from-gitobjects)
   - [get change history for deleted files](#get-change-history-for-deleted-files)
   - [search by contents](#search-by-contents)
   - [search by message](#search-by-message)
+- [show](#show)
+  - [show file change details](#show-file-change-details)
+  - [show file status only](#show-file-status-only)
 - [rebase](#rebase)
   - [automatic edit by `git rebase -i`](#automatic-edit-by-git-rebase--i)
   - [auto rebaes](#auto-rebaes)
@@ -50,6 +56,7 @@ git command study and practice
   - [clean untracked directory and item in `.gitignore`](#clean-untracked-directory-and-item-in-gitignore)
 - [diff](#diff)
   - [`diff-highlight`](#diff-highlight)
+  - [get diff from particular author](#get-diff-from-particular-author)
   - [get difference between two branches](#get-difference-between-two-branches)
   - [diff ignore whitespace](#diff-ignore-whitespace)
 - [tag](#tag-1)
@@ -659,6 +666,116 @@ $ git branch --sort=committerdate   # ASC
   Would remove bin/
   ```
 
+## filter in history
+
+> [!NOTE|label:--diff-filter:]
+> - [`--diff-filter`](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt-code--diff-filterACDMRTUXBcode)
+>   - `UPPERCASE` : **include** the changes in the diff output
+>   - `lowercase` : **exclude** the changes in the diff output
+>
+>>   | CHAR | MEANING        | DESCRIPTION                                                                                              |
+>>   |:----:|----------------|----------------------------------------------------------------------------------------------------------|
+>>   |  `A` | Added          | a newly added file (staged into the Git index)                                                           |
+>>   |  `C` | Copied         | a file that was recognized as copied from another file                                                   |
+>>   |  `D` | Deleted        | a file that was deleted                                                                                  |
+>>   |  `M` | Modified       | a file that was modified                                                                                 |
+>>   |  `R` | Renamed        | a file that was renamed (Git detected a renaming operation)                                              |
+>>   |  `T` | Type changed   | a file whose type changed (e.g., from regular file to symlink)                                           |
+>>   |  `U` | Unmerged       | a file with unresolved merge conflicts (typically during a merge)                                        |
+>>   |  `X` | Unknown        | other unknown types of changes (rare cases)                                                              |
+>>   |  `B` | Broken pairing | a previously recognized rename/copy relationship that is now broken<br>(e.g., rename no longer detected) |
+
+
+> [!NOTE|label:Git Change Detection Strategy:]
+>
+>> |              OPTION             | MEANING                        | DESCRIPTION                                                                             |
+>> |:-------------------------------:|--------------------------------|-----------------------------------------------------------------------------------------|
+>> | `-M[N]`, `--find-renames[=<N>]` | detect Renames                 | Detects renamed files (rename detection)<br>e.g., from a.txt → b.txt.                   |
+>> |  `-C[N]`, `--find-copies[=<N>]` | detect Copies                  | Detects file copies (copy detection)<br>e.g., a.txt → b.txt with similar content.       |
+>> |      `--find-copies-harder`     | more aggressive copy detection | Attempts copy detection even for newly added files, not just tracked ones.              |
+>> |  `-D`, `--irreversible-delete`  | irreversible delete            | Treats deleted files as untracked<br>i.e., no longer in the index.                      |
+>> |          `--no-renames`         | disable rename detection       | Explicitly disables rename detection (equivalent to default behavior when not enabled). |
+
+### list all renamed files
+
+> [!NOTE|label:references:]
+>> `-M[<n>]`, `--find-renames[=<n>]`
+>>     If generating diffs, detect and report renames for each commit. For following files across
+>>     renames while traversing history, see `--follow`. If <n> is specified, it is a threshold on the
+>>     similarity index (i.e. amount of addition/deletions compared to the file’s size). For
+>>     example, `-M90%` means Git should consider a delete/add pair to be a rename if more than 90% of
+>>     the file hasn’t changed. Without a `%` sign, the number is to be read as a fraction, with a
+>>     decimal point before it. I.e., `-M5` becomes 0.5, and is thus the same as `-M50%`. Similarly,
+>>     `-M05` is the same as `-M5%`. To limit detection to exact renames, use `-M100%`. The default
+>>     similarity index is 50%.
+
+```bash
+$ git log -M --summary | grep -iE '^ rename'
+
+# or
+$ git log -M --summary | grep -E '^\s*rename.*{.*=>.*}'
+```
+
+### list all deleted files
+
+```bash
+$ git log --diff-filter=D --summary --pretty=format:'--COMMIT-- %h • %s'
+--COMMIT-- d90e478baf • add deploy script to deploy _book to gh-pages branch
+ delete mode 100644 _book/artifactory/artifactory.html
+ delete mode 100644 _book/cheatsheet/good.html
+ delete mode 100644 _book/cheatsheet/havefun.html
+ delete mode 100644 _book/cheatsheet/markdown.html
+ delete mode 100644 _book/cheatsheet/media.html
+ ...
+
+# or
+$ git log --diff-filter=D --summary | find "delete" | grep <filename>
+```
+
+### list files changed by specific users
+
+> [!TIP]
+> - see also [get diff from particular author](#get-diff-from-particular-author)
+
+```bash
+$ git log --author='user1\|user2' \
+          --pretty=format:'--COMMIT-- %h %an <%ae>' \
+          --name-status
+
+# -- or antoher format --
+$ git log --author='user1\|user2' --pretty=format:'%H' |
+      while read -r commit; do
+        echo "=== ${commit} ==="
+        git show --pretty=medium --name-status "${commit}" | grep --color=never -E '^(A|M)[[:space:]]' | while read -r status file; do
+          echo -e "--- [\033[33m${status}\033[0m] \033[34m${file}\033[0m"
+        done
+        echo
+      done
+
+# -- or with diff : file by file --
+$ git log --author='user1\|user2' --pretty=format:'%H' |
+      while read -r commit; do
+        echo "=== ${commit} ==="
+        git show --pretty=medium --name-status "${commit}" | grep --color=never -E '^(A|M)[[:space:]]' | while read -r status file; do
+          echo -e "--- [\033[33m${status}\033[0m] \033[34m${file}\033[0m"
+          git diff "${commit}^:${file}..${commit}:${file}" --unified=0 2>/dev/null || echo "[Deleted or Binary]"
+        done
+        echo
+      done
+
+
+# -- or with diff : commit by commit --
+$ git log --author='user1\|user2' --pretty=format:'%H' |
+      while read -r commit; do
+        echo "=== ${commit} ==="
+        git show --pretty=medium --name-status "${commit}" | grep --color=never -E '^(A|M)[[:space:]]' | while read -r status file; do
+          echo -e "--- [\033[33m${status}\033[0m] \033[34m${file}\033[0m"
+        done
+        git diff "${commit}^..${commit}" --unified=0 2>/dev/null || echo "[Deleted or Binary]"
+        echo
+      done
+```
+
 ## log
 ### short stat
 ```bash
@@ -666,14 +783,6 @@ $ git log --show-signature
 
 # or
 $ git log --shortstat
-```
-
-### show renamed status
-```bash
-$ git log -M --summary | grep rename
-
-# or
-$ git log -M --summary | grep -E '^\s*rename.*{.*=>.*}'
 ```
 
 ### show files and status without comments
@@ -721,29 +830,20 @@ $ find .git/objects -type f -printf "%P\n" | sed s,/,,
 
 ### get change history for deleted files
 
-- [`full-history`](https://stackoverflow.com/a/7203551/2940319)
+- [`full-history`](https://stackoverflow.com/a/7203551/2940319) | [or](https://stackoverflow.com/a/60993503/2940319)
   ```bash
   $ git log --all --full-history -- <path/to/file>
+
+  # or
+  $ git log --all --full-history --oneline -- <path/to/file>
   ```
-
-  - [or](https://stackoverflow.com/a/60993503/2940319)
-    ```bash
-    $ git log --all --full-history --oneline -- <path/to/file>
-    ```
-
-  - [or](https://stackoverflow.com/a/42582877/2940319)
-    ```bash
-    $ git log --oneline --follow -- <path/to/file>
-    ```
-
-  - or
-    ```bash
-    $ git log --diff-filter=D --summary | find "delete" | grep <filename>
-    ```
 
 - [`--follow`](https://stackoverflow.com/a/36561814/2940319)
   ```bash
   $ git log --follow <path/to/file>
+
+  # or
+  $ git log --oneline --follow -- <path/to/file>
   ```
 
 ### [search by contents](https://www.atlassian.com/git/tutorials/git-log#filtering-the-commit-history)
@@ -772,6 +872,58 @@ d17dd3aa add jira api
   ```bash
   $ git pls --grep='jira'
   ```
+
+## show
+```bash
+#       --no-patch
+#           v
+$ git show -s <commit-id>
+
+$ git show --shortstat <commit-id>
+
+# show with specific file in particular commit
+$ git show <commit-id>:<path/to/file>
+```
+
+### show file change details
+```bash
+# for commited changes
+$ git show --pretty= --stat
+ docs/SUMMARY.md              |   1 +
+ docs/cheatsheet/tricky.md    |  68 ++++++++++++++++++
+ docs/devops/pre-commit.md    | 171 ++++++++++++++++++++++++++++++++++++++++++++
+ docs/osx/init.md             |  66 ++++++++++-------
+ docs/tools/app/iterm2.md     |   2 +-
+ docs/tools/app/vscode.md     |   2 +-
+ 7 files changed, 550 insertions(+), 28 deletions(-)
+
+# for uncommited changes
+# -- stat --
+$ git --no-pager diff --stat --relative
+ devops/awesomeShell.md |  22 +++++++----
+ devops/git/git.md      | 152 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------
+ vim/tricky.md          |  29 +++++++++++++++
+ 3 files changed, 172 insertions(+), 31 deletions(-)
+
+# -- numstat --
+$ git --no-pager diff --relative --numstat
+15    7   devops/awesomeShell.md
+135   24  devops/git/git.md
+29    0   vim/tricky.md
+```
+
+### show file status only
+```bash
+$ git show --pretty= --stat
+ docs/SUMMARY.md              |   1 +
+ docs/cheatsheet/tricky.md    |  68 ++++++++++++++++++
+ docs/devops/pre-commit.md    | 171 ++++++++++++++++++++++++++++++++++++++++++++
+ docs/osx/brew.backup.all.txt | 268 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ docs/osx/init.md             |  66 ++++++++++-------
+ docs/tools/app/iterm2.md     |   2 +-
+ docs/tools/app/vscode.md     |   2 +-
+ 7 files changed, 550 insertions(+), 28 deletions(-)
+```
 
 ## rebase
 
@@ -1211,6 +1363,21 @@ $ rpm -ql git | grep diff-highlight
 $ dpkg -L git | grep diff-highlight
 
 $ sudo ln -sf /usr/share/git-core/contrib/diff-highlight /usr/local/bin/diff-highlight
+```
+
+### get diff from particular author
+
+> [!TIP]
+> - see also [list files changed by specific users](#list-files-changed-by-specific-users)
+
+```bash
+#                                                        exclude the deleted files
+#                                                                    v
+$ git log --author='user1\|user2' --pretty=format:'%H' --diff-filter=d |
+      while read -r commit; do
+        echo -e "\n\033[1;33m=> ${commit}: $(git log -1 --pretty=%s ${commit})\033[0m"
+        git diff --color "${commit}^" "${commit}"
+      done
 ```
 
 ### [get difference between two branches](https://til.hashrocket.com/posts/18139f4f20-list-different-commits-between-two-branches)

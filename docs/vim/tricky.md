@@ -33,6 +33,7 @@
   - [print path](#print-path)
   - [format html](#format-html)
   - [encryption with Vim](#encryption-with-vim)
+  - [open vim with specific commands](#open-vim-with-specific-commands)
 - [config](#config)
   - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
@@ -888,6 +889,34 @@ set cryptmethod=blowfish2
   :set key=
   :wa!
   ```
+
+### open vim with specific commands
+
+> [!NOTE|label:references:]
+> - using vim to format git commit message
+
+```bash
+$ vim -c "set ft=gitcommit" \
+      -c "setlocal buftype=nofile" \
+      -c "setlocal bufhidden=unload" \
+      -c "setlocal noswapfile" \
+      -c "setlocal nowrap" \
+      -c "setlocal nobuflisted" \
+      -c "setlocal nomodifiable" \
+      -c "setlocal nospell" \
+      -c "setlocal foldmethod=expr" \
+      -c "setlocal foldexpr=getline(1)" \
+      -c "normal! ggVGgq" \
+      -c 'silent execute "%s/--COMMIT-- //g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*m//g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*K//g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*G//g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*h//g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*l//g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*r//g"' \
+      -c 'silent execute "%s/\x1b\[[0-9;]*m//g"' \
+      "${files}"
+```
 
 ## config
 ### get platform
