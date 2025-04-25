@@ -7,6 +7,16 @@ repos:
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
         args: [--markdown-linebreak-ext=md]
+        exclude: |
+          (?x)^(
+            (.+/)?(buildinfo\.delete\.sh|shadowsocks-all\.sh)$|
+            .*\.(
+              png|jpg|jpeg|gif|bmp|
+              pdf|zip|tar|gz|xz|7z|
+              exe|dll|so|dylib|bin|dat
+            )$
+          )$
+        exclude_types: [binary]
       - id: end-of-file-fixer
         name: End Of File Fixer
       - id: check-merge-conflict
