@@ -29,6 +29,7 @@ git command study and practice
   - [list all renamed files](#list-all-renamed-files)
   - [list all deleted files](#list-all-deleted-files)
   - [list files changed by specific users](#list-files-changed-by-specific-users)
+  - [list files changes by pattern](#list-files-changes-by-pattern)
 - [log](#log)
   - [short stat](#short-stat)
   - [show files and status without comments](#show-files-and-status-without-comments)
@@ -775,6 +776,61 @@ $ git log --author='user1\|user2' --pretty=format:'%H' |
         echo
       done
 ```
+
+### list files changes by pattern
+```bash
+$ git log --name-status --all --full-history -- *.txt*
+
+# -- nice output --
+$ git log --name-status --all --full-history \
+      --pretty=format:$'\033[3;38;5;241m--COMMIT--\033[0m \033[0;35m%h\033[0m • \033[0;36m%s\033[0m \033[3;34m<%aN>\033[0m \033[3;38;5;241m(%ad)\033[0m' \
+      --date=format:'%Y-%m-%d %H:%M' \
+      -- '*.current*' |
+  fileStatus
+```
+
+<!--sec data-title="function fileStatus" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+function fileStatus() {
+  awk '
+    BEGIN {
+      COLOR_RESET = "\033[0m"
+      COLOR_ADD   = "\033[1;32m"
+      COLOR_MOD   = "\033[1;33m"
+      COLOR_DEL   = "\033[1;31m"
+      COLOR_REN   = "\033[1;35m"
+    }
+
+    function trimAnsi(str) {
+      gsub(/\033\[[0-9;]*m/, "", str)
+      return str
+    }
+    { plain = trimAnsi($0) }
+
+    plain ~ /^--COMMIT--/ { print $0; next; }
+    plain ~ /^[A-Z]/ {
+      split(plain, fields, /\t+/)
+      status = fields[1]
+      file = substr($0, index(plain, fields[2]))
+
+      if (status == "A") color = COLOR_ADD
+      else if (status == "M") color = COLOR_MOD
+      else if (status == "D") color = COLOR_DEL
+      else if (status ~ /^R/) color = COLOR_REN
+      else color = COLOR_RESET
+
+      printf "  %s%-4s%s %s\n", color, status, COLOR_RESET, file
+      next
+    }
+
+    # fallback
+    { print }
+  '
+}
+```
+<!--endsec-->
+
+![filter files from git history](../../screenshot/git/git-filter-files-in-history.png)
 
 ## log
 ### short stat
