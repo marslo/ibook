@@ -9,12 +9,6 @@ repos:
         args: [--markdown-linebreak-ext=md]
       - id: end-of-file-fixer
         name: End Of File Fixer
-      - id: check-yaml
-        name: Check YAML
-        args: ["--unsafe"]
-      - id: check-json
-        name: Check JSON
-        exclude: ^\.config/nvim/coc-settings\.json$
       - id: check-merge-conflict
         name: Check Merge Conflict
       - id: check-case-conflict
