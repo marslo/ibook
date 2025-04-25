@@ -1,4 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [setup](#setup)
+  - [install](#install)
+- [run](#run)
+- [migrate-config](#migrate-config)
+- [hooks](#hooks)
+  - [copyright manager](#copyright-manager)
+  - [checker and fixer](#checker-and-fixer)
+  - [convert tab to spaces](#convert-tab-to-spaces)
+  - [typos](#typos)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## setup
 
@@ -21,6 +34,11 @@ $ pre-commit run --all-files
 $ pre-commit run <hook_id> --all-files
 # i.e.:
 $ pre-commit run trailing-whitespace --all-files
+```
+
+## migrate-config
+```bash
+$ pre-commit migrate-config
 ```
 
 ## hooks

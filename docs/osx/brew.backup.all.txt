@@ -11,6 +11,8 @@ brew "shellcheck", args: ["HEAD"]
 brew "actionlint"
 # Checks ansible playbooks for practices and behaviour
 brew "ansible-lint"
+# Strip or convert ANSI codes into HTML, (La)Tex, RTF, or BBCode
+brew "ansifilter"
 # Powerful, clean, object-oriented scripting language
 brew "ruby", args: ["HEAD"]
 # Bourne-Again SHell, a UNIX command interpreter
@@ -19,6 +21,10 @@ brew "bash"
 brew "bash-completion@2"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat", args: ["HEAD"]
+# Perl compatible regular expressions library with a new API
+brew "pcre2"
+# Create and view interactive cheat sheets for *nix commands
+brew "cheat", args: ["HEAD"]
 # Color-highlighted diff(1) output
 brew "colordiff"
 # GNU File, Shell, and Text utilities
@@ -43,6 +49,8 @@ brew "fd", args: ["HEAD"]
 brew "fdupes"
 # Banner-like program prints strings as ASCII art
 brew "figlet"
+# Utility to determine file types
+brew "file-formula"
 # Collection of GNU find, xargs, and locate
 brew "findutils"
 # Command-line outline and bitmap font editor/converter
@@ -79,6 +87,10 @@ brew "gnutls"
 brew "gradle-completion"
 # GNU grep, egrep and fgrep
 brew "grep"
+# Development kit for the Java programming language
+brew "openjdk"
+# Java-based scripting language
+brew "groovy"
 # Tool for glamorous shell scripts
 brew "gum", args: ["HEAD"]
 # Popular GNU data compression program
@@ -99,8 +111,10 @@ brew "imagemagick"
 brew "ipcalc"
 # CLI wrapper for basic network utilities on macOS - ip command
 brew "iproute2mac"
+# Command-line interface for JFrog products
+brew "jfrog-cli", args: ["HEAD"]
 # Lightweight and flexible command-line JSON processor
-brew "jq"
+brew "jq", args: ["HEAD"]
 # JSON parser and validator with a CLI
 brew "jsonlint"
 # Colorize your kubectl output
@@ -116,13 +130,15 @@ brew "lsof"
 # Text-based web browser
 brew "lynx"
 # GUI for vim, made for macOS
-brew "macvim", args: ["HEAD"]
+brew "macvim", args: ["HEAD"], link: false
 # Project documentation with Markdown
 brew "mkdocs"
 # MongoDB Shell to connect, configure, query, and work with your MongoDB database
 brew "mongosh"
 # Collection of tools that nobody wrote when UNIX was young
 brew "moreutils"
+# 'traceroute' and 'ping' in a single tool
+brew "mtr", args: ["HEAD"]
 # Lightweight PDF and XPS viewer
 brew "mupdf-tools", args: ["HEAD"]
 # NCurses Disk Usage
@@ -133,8 +149,6 @@ brew "neovim", args: ["HEAD"]
 brew "nmap"
 # Manage multiple Node.js versions
 brew "nvm"
-# Development kit for the Java programming language
-brew "openjdk"
 # Open source suite of directory software
 brew "openldap"
 # Swiss-army knife of markup format conversion
@@ -143,6 +157,8 @@ brew "pandoc", args: ["HEAD"]
 brew "tree"
 # Password manager
 brew "pass", args: ["HEAD"]
+# Pass extension for managing one-time-password tokens
+brew "pass-otp"
 # PDF processor written in Go
 brew "pdfcpu"
 # Pinentry for GPG on Mac
@@ -173,6 +189,8 @@ brew "telnet"
 brew "the_silver_searcher", args: ["HEAD"]
 # Text interface for Git repositories
 brew "tig", args: ["HEAD"]
+# Official tldr client written in Rust
+brew "tlrc", args: ["HEAD"]
 # Terminal multiplexer
 brew "tmux"
 # Color-based alternative to figlet (uses libcaca)
@@ -197,6 +215,8 @@ brew "wdiff"
 brew "wget"
 # Lookup tool for domain names and other internet resources
 brew "whois", args: ["HEAD"]
+# Extensible command-line tool to format YAML files
+brew "yamlfmt", args: ["HEAD"]
 # Linter for YAML files
 brew "yamllint", args: ["HEAD"]
 # Compression and file packaging/archive utility
@@ -228,8 +248,12 @@ cask "istat-menus"
 cask "jiggler"
 # Open-source keystroke visualiser
 cask "keycastr"
+# Text editor
+cask "macvim"
 # Utility to move and zoom windows—on one display
 cask "moom"
+# Image editor
+cask "paintbrush"
 # Screenshot measurement and annotation tool
 cask "shottr"
 # Snip or pin screenshots

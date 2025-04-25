@@ -12,13 +12,16 @@
 
 ```bash
 # --- utils ---
-$ brew install --HEAD bash-completion@2
+$ brew install --HEAD bash-completion@2 file-formula mtr
 $ brew install util-linux coreutils moreutils bash less proctools pstree vnstat ncdu ipcalc htop glances lsof trash
 $ brew install gawk grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnu-indent gnutls iproute2mac ifstat stow netcat nmap
 $ brew install dos2unix openldap
-$ brew install tmux corkscrew telnet figlet toilet
+$ brew install tmux corkscrew telnet
+$ brew install figlet
+$ brew install --HEAD toilet
 $ brew install colordiff diffutils wdiff
 $ brew install --HEAD diff-so-fancy highlight
+$ brew install ansifilter                         # decolorize
 $ brew install gnu-tar gzip carlocab/personal/unrar
 $ brew install zip unzip                          # info-zip
 $ brew install --HEAD rename whois watch wget curl
@@ -57,14 +60,15 @@ $ sudo ln -sf '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/c
 # --- dev tools ---
 $ brew install --HEAD ruby
 # nvm for gitbook install: nvm install 12
-$ brew install openjdk gradle jq nvm mongosh
+$ brew install openjdk gradle nvm mongosh groovy
 $ brew install gradle-completion
 $ brew install kubecolor
-$ brew install --HEAD kubectl
+$ brew install --HEAD kubectl jfrog-cli jq
 $ brew install --HEAD git-flow git-extras
 $ brew install --HEAD fzf fzy bat ack ag rg gum fd
 $ brew install mkdocs                             # markdown docs, usage: `mkdocs build -d site -s`
 $ curl -o "$HOME/.local/bin/cht.sh" -fsSL 'https://cht.sh/:cht.sh' && chmod +x "$HOME/.local/bin/cht.sh"
+$ brew install --HEAD cheat
 $ brew install hashicorp/tap/vault
 
 # --- pipx and tools ---
@@ -75,7 +79,8 @@ $ python3 -m pipx install pre-commit
 $ python3 -m pipx install commitizen              # optional
 
 # --- npm packages ---
-$ npm i -g tldr                                   # or $ brew install tlrc; or $ python3 -m pip install tldr
+$ brew install --HEAD tlrc
+$ npm i -g tldr                                   # or $ python3 -m pip install tldr
 $ npm i -g gnomon
 $ npm i -g tabset
 $ npm i -g doctoc
@@ -88,11 +93,10 @@ $ npm i -g npm-completion
 $ sudo ln -sf $(npm get prefix)/bin/* /usr/local/bin/
 
 # --- lint ---
-$ brew install --HEAD shellcheck
+$ brew install --HEAD shellcheck yamllint yamlfmt
 $ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
 $ npm i -g @commitlint/{cli,config-conventional}  # for commitlint
 $ npm i -g css-validator                          # for css validation
-$ brew install --HEAD yamllint yamlfmt
 $ brew install hadolint                           # for dockerfile
 $ brew install stylelint                          # for css
 $ brew install jsonlint ansible-lint
@@ -134,6 +138,30 @@ vitorgalvao/tiny-scripts
 ## cask
 ```bash
        Cask                  Current       Latest        A/U    Result
+ 1/19  alfred                5.6           5.6            Y   [   OK   ]
+ 2/19  baiduinput            6.0.3.66      6.0.3.66           [   OK   ]
+ 3/19  beyond-compare        5.0.7.30840   5.0.7.30840    Y   [   OK   ]
+ 4/19  chatbox               1.12.0        1.12.0         Y   [   OK   ]
+ 5/19  cherry-studio         1.2.7         1.2.7          Y   [   OK   ]
+ 6/19  cleanmymac            5.0.7         5.0.7          Y   [   OK   ]
+ 7/19  cursor                0.49.5        0.49.5         Y   [   OK   ]
+ 8/19  dash                  7.3.5         7.3.5          Y   [   OK   ]
+ 9/19  google-chrome@canary  137.0.7145.0  137.0.7145.0   Y   [   OK   ]
+10/19  istat-menus           7.10.2        7.10.2         Y   [   OK   ]
+11/19  jiggler               1.9           1.9                [   OK   ]
+12/19  keycastr              0.10.3        0.10.3         Y   [   OK   ]
+13/19  macvim                181           181            Y   [   OK   ]
+14/19  moom                  4.1.3         4.1.3          Y   [   OK   ]
+15/19  paintbrush            2.6.0         2.6.0              [   OK   ]
+16/19  shottr                1.8.1         1.8.1          Y   [   OK   ]
+17/19  snipaste              2.10.6        2.10.6         Y   [   OK   ]
+18/19  vimr                  0.52.0        0.52.0         Y   [   OK   ]
+19/19  wechat                4.0.3.93      4.0.3.93       Y   [   OK   ]
+```
+
+<!--sec data-title="cask list - older version" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+       Cask                  Current       Latest        A/U    Result
  1/21  alfred                5.6           5.6            Y   [   OK   ]
  2/21  baiduinput            6.0.3.66      6.0.3.66           [   OK   ]
  3/21  beyond-compare        5.0.6.30713   5.0.6.30713    Y   [   OK   ]
@@ -156,6 +184,7 @@ vitorgalvao/tiny-scripts
 20/21  vimr                  0.52.0        0.52.0         Y   [   OK   ]
 21/21  wechat                3.8.10.17     3.8.10.17      Y   [   OK   ]
 ```
+<!--endsec-->
 
 ## backup and restore
 ```bash
