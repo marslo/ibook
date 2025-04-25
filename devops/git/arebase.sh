@@ -6,7 +6,7 @@ COMMIT=$(git rev-parse --short $2)
 CORRECT=
 for A in p pick r reword e edit s squash f fixup d drop t split; do
      [[ $ACTION == $A ]] && CORRECT=1
-done 
+done
 [[ "$CORRECT" ]] || exit 1
 git merge-base --is-ancestor $COMMIT HEAD || exit 1
 if [[ $ACTION == "drop" || $ACTION == "d" ]]; then

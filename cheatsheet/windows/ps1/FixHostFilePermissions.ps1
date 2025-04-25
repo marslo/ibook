@@ -14,7 +14,7 @@ else
 {
     Write-host "$sshdConfigPath does not exist"  -ForegroundColor Yellow
 }
- 
+
 #check host keys
 <#
 $warning = @"

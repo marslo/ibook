@@ -13,4 +13,3 @@ colors.setTheme({
 });
 
 module.exports = colors;
-

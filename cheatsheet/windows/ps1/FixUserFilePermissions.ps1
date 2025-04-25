@@ -17,13 +17,13 @@ Get-ChildItem ~\.ssh\* -Include "id_rsa","id_dsa","id_ecdsa","id_ed25519" -Error
 
 
 $sshdAdministratorsAuthorizedKeysPath = join-path $env:ProgramData\ssh "administrators_authorized_keys"
-if(Test-Path $sshdAdministratorsAuthorizedKeysPath -PathType Leaf) 
+if(Test-Path $sshdAdministratorsAuthorizedKeysPath -PathType Leaf)
 {
     if (([bool]([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")))
     {
         Repair-AdministratorsAuthorizedKeysPermission -FilePath $sshdAdministratorsAuthorizedKeysPath @psBoundParameters
     }
-    else 
+    else
     {
         Write-host "To fix file permissions for $sshdAdministratorsAuthorizedKeysPath, run this script in elevated mode" -ForegroundColor Yellow
     }

@@ -26,7 +26,7 @@ require([
         var codeGroupStore = getCodeGroupStore();
         var codeGroupId = $codeGroup.attr('id');
 
-        if ($codeGroup.attr('data-remember-tabs') === 'true') {   
+        if ($codeGroup.attr('data-remember-tabs') === 'true') {
             codeGroupStore.rememberTabs[codeGroupId] = selectorId;
         } else {
             delete codeGroupStore.rememberTabs[codeGroupId];
@@ -40,7 +40,7 @@ require([
         $selectors.click(self.showtab);
 
         var $codeGroups = $('.gbcg-codegroup');
-    
+
         $codeGroups.each(function () {
             var $group = $(this);
             var codeGroupStore = getCodeGroupStore();
