@@ -985,4 +985,3 @@ helmtest:
     # Bash Automated Testing System (BATS)
     image: "bats/bats"
     tag: "1.9.0"
-
