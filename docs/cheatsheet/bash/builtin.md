@@ -2,6 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [eval](#eval)
+- [bash variables](#bash-variables)
+  - [to check the script is been sourced or run directly](#to-check-the-script-is-been-sourced-or-run-directly)
+  - [PS4](#ps4)
 - [set](#set)
   - [show current status](#show-current-status)
   - [option name](#option-name)
@@ -51,12 +54,16 @@
   - with `eval`:
     ```bash
     $ foo='ls | less'
-    $ eval $foo
+    $ eval "${foo}"
     Applications
     Library
     System
     Users
     ...
+    ```
+  - or with `bash -c`
+    ```bash
+    $ bash -c "${foo}"
     ```
 
 - example
@@ -79,6 +86,101 @@
   $ echo $foo
   $x
   ```
+
+## [bash variables](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html)
+
+| VARIABLES           | DESCRIPTION                                                                         |
+|---------------------|-------------------------------------------------------------------------------------|
+| `${BASH_SOURCE[0]}` | Path to the source file where the current script or function definition resides     |
+| `${FUNCNAME[0]}`    | Name of the currently executing function                                            |
+| `${LINENO}`         | Current line number within the script or function where this variable is referenced |
+| `${BASH_VERSION}`   | Version string of the running Bash interpreter                                      |
+| `${BASH_LINENO[@]}` | Line numbers of each function call in the call stack                                |
+| `${BASH_ARGV[@]}`   | All passed arguments (in reverse order)                                             |
+| `${BASH_ARGC[@]}`   | Number of arguments received by each function in the call stack                     |
+
+```bash
+$ cat main.sh
+echo "\$0                : $0"
+echo "\${BASH_SOURCE[0]} : ${BASH_SOURCE[0]}"
+
+# -- run directly --
+$ bash main.sh
+$0                : main.sh
+${BASH_SOURCE[0]} : main.sh
+
+# -- source --
+$ source main.sh
+$0                : -bash
+${BASH_SOURCE[0]} : main.sh
+```
+
+### to check the script is been sourced or run directly
+
+```bash
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "Script is being run directly"
+else
+  echo "Script is being sourced"
+fi
+```
+
+### PS4
+
+> [!NOTE]
+> - main.sh
+>>   ```bash
+>>   set -o pipefail
+>>
+>>   function foo() { echo "\$0 : $0"; }
+>>   function bar() { echo "\${BASH_SOURCE[0]} : ${BASH_SOURCE[0]}"; }
+>>
+>>   foo
+>>   bar
+>>   ```
+> - [ansi color](../colors.md)
+>   - [3-bit or 4-bit](../colors.md#3-bit-or-4-bit)
+>   - [8-bit](../colors.md#8-bit)
+>   - [24-bit](../colors.md#24-bit)
+
+```bash
+#                         using basename to avoid the long full path
+#                                 +---------------------+
+$ export PS4='+\033[38;5;240;3m($(basename ${BASH_SOURCE})\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
+#                   +------+ + italic                                  |  | + italic                                                    |  | + italic
+#                         |                                            |  + dim                                                         |  + dim
+#                         + the #240 color (dark gray)                 + cyan                                                           + magenta
+$ echo -e $PS4
++($(basename ${BASH_SOURCE}):$(printf "%3d" ${LINENO})):${FUNCNAME[0]:+ ${FUNCNAME[0]}():}
+
+$ bash -x $HOME/main.sh
++(main.sh:  3): set -o pipefail
++(main.sh: 12): main
++(main.sh:  8): main(): foo
++(main.sh:  5): foo(): echo '$0 : /Users/marslo/main.sh'
+$0 : /Users/marslo/main.sh
++(main.sh:  9): main(): bar
++(main.sh:  6): bar(): echo '${BASH_SOURCE[0]} : /Users/marslo/main.sh'
+${BASH_SOURCE[0]} : /Users/marslo/main.sh
+```
+
+![bash ps4](../../screenshot/linux/bash-ps4-1.png)
+
+```bash
+$ export PS4='+\033[38;5;245m[\033[38;5;243m$(basename "${BASH_SOURCE}")\033[38;5;245m:\033[0;36m${LINENO}\033[38;5;245m]\033[0;35m${FUNCNAME[0]:+ ${FUNCNAME[0]}()}\033[0;32m ▶ \033[0m'
+
+$ bash -x $HOME/main.sh
++[main.sh:3] ▶ set -o pipefail
++[main.sh:12] ▶ main
++[main.sh:8] main() ▶ foo
++[main.sh:5] foo() ▶ echo '$0 : /Users/marslo/main.sh'
+$0 : /Users/marslo/main.sh
++[main.sh:9] main() ▶ bar
++[main.sh:6] bar() ▶ echo '${BASH_SOURCE[0]} : /Users/marslo/main.sh'
+${BASH_SOURCE[0]} : /Users/marslo/main.sh
+```
+
+![bash ps4 - 2](../../screenshot/linux/bash-ps4-2.png)
 
 ## [set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 

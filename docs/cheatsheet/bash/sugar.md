@@ -1995,9 +1995,7 @@ alias sudo='sudo '
     echo "BASH_LINENO: ${BASH_LINENO[*]}; LINENO: ${LINENO}"
   }
 
-  function foo() {
-    log "$@"
-  }
+  function foo() { log "$@"; }
 
   foo "$@"
   ```

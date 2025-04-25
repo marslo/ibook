@@ -276,8 +276,8 @@ $ echo -e "\033[31;43mHello World\033[0m"
 >   - `232 - 255`: grayscale from dark to light in 24 steps
 
 ```bash
-#             the 219th color
-#                  v
+#                the 219th color
+#                     v
 #               +------+
 $ echo -e "\033[38;5;219mHello\033[0m"
 
