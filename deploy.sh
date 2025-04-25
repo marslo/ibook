@@ -114,6 +114,9 @@ function updateBook() {
 
     cd "${target}" || exit
 
+    command -v pre-commit >/dev/null 2>&1 && test -f "$(git rev-parse --show-toplevel)/.pre-commit-config.yaml" && {
+      pre-commit run --all-files
+    }
     git add --all .
     targetMsg=$(git show remotes/origin/gh-pages --no-patch --format="%s")
     signed="$(git log -n1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' | command grep -q "$(git config user.email)"; echo $?)";
