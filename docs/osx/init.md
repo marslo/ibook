@@ -10,6 +10,12 @@
 
 ## packages installation
 
+> [!TIP|label:build from local source]
+> - encounter the branch name issue or submodule fetch issue in `--HEAD`, can modify manaully and execute :
+>>   ```bash
+>>   $ brew install --HEAD <formula> --build-from-source -v --debug
+>>   ```
+
 ```bash
 # --- utils ---
 $ brew install --HEAD bash-completion@2 file-formula mtr
