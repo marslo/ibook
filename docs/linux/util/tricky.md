@@ -142,6 +142,7 @@ done
 > - [unicode - Braille Patterns](https://symbl.cc/en/unicode/blocks/braille-patterns/)
 > - [wikipedia - Braille Patterns](https://en.wikipedia.org/wiki/Braille_Patterns)
 > - [SamEureka/spinner.sh](https://gist.github.com/SamEureka/3e61942d37256550b40d0ffe75bc22c4)
+> - [Braille Patterns - U2800.pdf](https://unicode.org/charts/PDF/U2800.pdf)
 >
 >> ![Braille 8 dot Cell Numbering](../../screenshot/shell/unicode-Braille8dotCellNumbering.png)
 >>

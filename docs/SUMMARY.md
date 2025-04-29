@@ -123,6 +123,7 @@
     * [build-timeline](jenkins/plugins/build-timeline.md)
     * [crumbIssuer](jenkins/plugins/crumbIssuer.md)
     * [coverage](jenkins/plugins/coverage.md)
+    * [uno-choice](jenkins/plugins/uno-choice.md)
     * [tricky](jenkins/plugins/tricky.md)
 * [virtualization](virtualization/virtualization.md)
   * [kubernetes](virtualization/kubernetes/kubernetes.md)

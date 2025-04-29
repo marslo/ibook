@@ -62,11 +62,11 @@
         "scope": [
           //following will be in italic (=FlottFlott)
           "comment",
-          "entity.name.type.class", //class names
-          "keyword", //import, export, return…
-          "constant", //String, Number, Boolean…, this, super
-          "storage.modifier", //static keyword
-          "storage.type.class.js", //class keyword
+          "entity.name.type.class", // class names
+          "keyword",                // import, export, return…
+          "constant",               // String, Number, Boolean…, this, super
+          "storage.modifier",       // static keyword
+          "storage.type.class.js",  // class keyword
         ],
         "settings": {
           "fontStyle": "italic"
@@ -188,7 +188,6 @@
           //following will be in italic (=FlottFlott)
           "comment",
           "entity.name.type.class",      // class names
-
           "keyword",                     // import, export, return
           "constant",                    // String, Number, Boolean, this, super
           "storage.modifier",            // static keyword
@@ -206,7 +205,7 @@
       },
       {
         "scope": [
-          //following will be excluded from italics (VSCode has some defaults for italics)
+          // following will be excluded from italics (VSCode has some defaults for italics)
           "invalid",
           "keyword.operator",
           "constant.numeric.css",
@@ -221,6 +220,51 @@
     ]
   ```
 
+  ```json
+  // https://www.cnblogs.com/wangdaodao/p/12902648.html
+  "editor.fontLigatures": true,           // whether if ligatures are enabled
+  "editor.tokenColorCustomizations": {
+      "textMateRules": [
+          {
+              "name": "italic font",
+              "scope": [
+                  "comment",
+                  "keyword",
+                  "storage",
+                  "keyword.control.import",
+                  "keyword.control.default",
+                  "keyword.control.from",
+                  "keyword.operator.new",
+                  "keyword.control.export",
+                  "keyword.control.flow",
+                  "storage.type.class",
+                  "storage.type.function",
+                  "storage.type",
+                  "storage.type.class",
+                  "variable.language",
+                  "variable.language.super",
+                  "variable.language.this",
+                  "meta.class",
+                  "meta.var.expr",
+                  "constant.language.null",
+                  "support.type.primitive",
+                  "entity.name.method.js",
+                  "entity.other.attribute-name",
+                  "punctuation.definition.comment",
+                  "text.html.basic entity.other.attribute-name.html",
+                  "text.html.basic entity.other.attribute-name",
+                  "tag.decorator.js entity.name.tag.js",
+                  "tag.decorator.js punctuation.definition.tag.js",
+                  "source.js constant.other.object.key.js string.unquoted.label.js",
+              ],
+              "settings": {
+                  "fontStyle": "italic",
+              }
+          },
+      ]
+  },
+  "terminal.integrated.fontFamily": "monospace",
+  ```
 
 ## plugins
 ### [settings sync](https://code.visualstudio.com/docs/editor/settings-sync)
