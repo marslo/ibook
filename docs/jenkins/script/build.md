@@ -1145,6 +1145,37 @@ jenkins.model.Jenkins.instance
 >   - [killing-hanging-polling.groovy](https://github.com/cloudbees/jenkins-scripts/blob/master/killing-hanging-polling)
 {% endhint %}
 
+
+> [!TIP]
+> - 2 ways to get SCM info
+>   - `WorkflowRun` → `WorkflowJob` → `SCM` ( `currentBuild.rawBuild` → `getParent()` → `getDefinition()?.getScm()` )
+>   - `WorkflowRun` → `BuildData` ( `currentBuild.rawBuild` → `getAction(hudson.plugins.git.util.BuildData)` )
+>>     - **branches**:
+>>       - `getBuildsByBranchName()` → `[ java.lang.String: hudson.plugins.git.util.Build ]`
+>>       - `getLastBuiltRevision()?.getBranches()` → `[ hudson.plugins.git.Branch ]`
+>>     - **urls**:
+>>       - `getRemoteUrls()` → `[ java.lang.String ]`
+> - APIs:
+>>   - [hudson.plugins.git.util.BuildData](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/util/BuildData.html)
+>>   - [hudson.plugins.git.util.Build](https://javadoc.jenkins.io/plugin/git/hudson/plugins/git/util/Build.html)
+
+```groovy
+// via `getParent()?.getDefinition()?.getScm()`
+hudson.scm.SCM scm    = currentBuild.rawBuild.parent?.definition?.scm
+List<String> branches = scm?.branches ?: []
+List<Map<String, String>> repos = scm?.userRemoteConfigs?.collect {[
+  url: it.getUrl(),
+  credentialsId: it.getCredentialsId()
+]} ?: []
+[ branches, repos ].transpose().collect { def (branch, repo) = it; repo + [branch: branch] }
+
+// via `getAction(hudson.plugins.git.util.BuildData)` -- no credntialsId
+hudson.plugins.git.util.BuildData builddata = currentBuild.rawBuild.getAction(hudson.plugins.git.util.BuildData)
+List<hudson.plugins.git.Branch> branches = builddata?.getLastBuiltRevision()?.getBranches()
+List urls     = builddata?.getRemoteUrls()?.toList()         // java.util.HashSet
+[ branches, repos ].transpose().collect { def (branch, repo) = it; [ branch: branch.getName(), repo: repo  ]}
+```
+
 ```groovy
 jenkins.model.Jenkins.instance
        .getItemByFullName( '/path/to/pipeline' )
