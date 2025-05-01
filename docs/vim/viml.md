@@ -18,6 +18,8 @@
   - [map overview](#map-overview)
   - [check `MACHTYPE`](#check-machtype)
 - [functions](#functions)
+  - [yank highlight](#yank-highlight)
+  - [paste highlight](#paste-highlight)
   - [TwiddleCase](#twiddlecase)
   - [open html in terminal](#open-html-in-terminal)
   - [OpenInFreshWindowOrNewTab](#openinfreshwindowornewtab)
@@ -29,6 +31,7 @@
   - [TriggerYCM](#triggerycm)
   - [DeleteCurBufferNotCloseWindow](#deletecurbuffernotclosewindow)
   - [WordCount](#wordcount)
+  - [search](#search)
 - [commands](#commands)
   - [get path](#get-path)
 - [settings](#settings)
@@ -53,18 +56,18 @@
 > - [eval.txt: expr4](https://vimhelp.org/eval.txt.html#expr4)
 > - [ProhibitEqualTildeOperator](https://github.com/Vimjas/vint/wiki/Vint-linting-policy-summary) | [Google Vimscript Style Guide](https://google.github.io/styleguide/vimscriptguide.xml?showone=Matching_Strings#Matching_Strings)
 
-| -                     | USE 'ignorecase' | MATCH CASE | IGNORE CASE |
-|-----------------------|:-----------------|:-----------|:------------|
-| equal                 | `==`             | `==#`      | `==?`       |
-| not equal             | `!=`             | `!=#`      | `!=?`       |
-| greater than          | `>`              | `>#`       | `>?`        |
-| greater than or equal | `>=`             | `>=#`      | `>=?`       |
-| smaller than          | `<`              | `<#`       | `<?`        |
-| smaller than or equal | `<=`             | `<=#`      | `<=?`       |
-| regexp matches        | `=~`             | `=~#`      | `=~?`       |
-| regexp doesn't match  | `!~`             | `!~#`      | `!~?`       |
-| same instance         | `is`             | `is#`      | `is?`       |
-| different instance    | `isnot`          | `isnot#`   | `isnot?`    |
+| -                     | USE 'ignorecase' | MATCH CASE | CASE INSENSITIVE |
+|-----------------------|:-----------------|:-----------|:-----------------|
+| equal                 | `==`             | `==#`      | `==?`            |
+| not equal             | `!=`             | `!=#`      | `!=?`            |
+| greater than          | `>`              | `>#`       | `>?`             |
+| greater than or equal | `>=`             | `>=#`      | `>=?`            |
+| smaller than          | `<`              | `<#`       | `<?`             |
+| smaller than or equal | `<=`             | `<=#`      | `<=?`            |
+| regexp matches        | `=~`             | `=~#`      | `=~?`            |
+| regexp doesn't match  | `!~`             | `!~#`      | `!~?`            |
+| same instance         | `is`             | `is#`      | `is?`            |
+| different instance    | `isnot`          | `isnot#`   | `isnot?`         |
 
 ## autocmd
 
@@ -491,6 +494,120 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
   ```
 
 ## functions
+### yank highlight
+```lua
+vim.cmd( 'autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=true}' )
+
+-- or --
+vim.api.nvim_create_autocmd("TextYankPost", {
+  pattern = "*",
+  callback = function()
+    vim.highlight.on_yank({ timeout = 150, on_visual = true })
+  end,
+})
+
+-- with different highlight group (Search) --
+vim.api.nvim_create_autocmd("TextYankPost", {
+  pattern = "*",
+  callback = function()
+    vim.highlight.on_yank({ higroup = "Search", on_visual = true })
+  end,
+})
+
+-- or with callback --
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function(args)
+    local event = args.event
+    local regtype = vim.v.event.regtype
+    local lines = vim.v.event.regcontents
+    local lnum = vim.fn.line(".")
+    local col = vim.fn.col(".")
+
+    local ns = vim.api.nvim_create_namespace("yank_hl")
+
+    if regtype == "v" then
+      local text = table.concat(lines, "\n")
+      vim.highlight.range(0, ns, "IncSearch", {lnum - 1, col - 1}, {lnum - 1, col - 1 + #text}, {inclusive = true})
+    elseif regtype == "V" then
+      vim.highlight.range(0, ns, "IncSearch", {lnum - 1, 0}, {lnum - 1 + #lines, 0}, {inclusive = true})
+    end
+
+    vim.defer_fn(function()
+      vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+    end, 200)
+  end,
+})
+
+-- or create new namespace everytime --
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    local regtype = vim.v.event.regtype
+    local lines = vim.v.event.regcontents
+    local lnum = vim.fn.line(".")
+    local col = vim.fn.col(".")
+
+    if not lines or vim.tbl_isempty(lines) then return end
+
+    local ns = vim.api.nvim_create_namespace("")  -- 不传 name = 每次新 ID
+    local bufnr = 0
+    local hl_group = "IncSearch"
+
+    if regtype == "v" then
+      local text = table.concat(lines, "\n")
+      vim.api.nvim_buf_add_highlight(bufnr, ns, hl_group, lnum - 1, col - 1, col - 1 + #text)
+    elseif regtype == "V" then
+      for i = 0, #lines - 1 do
+        vim.api.nvim_buf_add_highlight(bufnr, ns, hl_group, lnum - 1 + i, 0, -1)
+      end
+    end
+
+    vim.defer_fn(function()
+      vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+    end, 200)
+  end,
+})
+```
+
+### paste highlight
+```vim
+" highlight whole line
+function! PasteHighlight() abort
+  let l:start = getpos("'[")
+  let l:end   = getpos("']")
+  if l:start[1] == 0 || l:end[1] == 0 | return | endif
+  let l:pattern = '\%'.l:start[1].'l\_.*\%'.l:end[1].'l'
+  let l:match_id = matchadd('Search', l:pattern)
+  call timer_start(150, {-> matchdelete(l:match_id)})
+  call setpos('.', l:start)
+endfunction
+nnoremap <silent> p p:call PasteHighlight()<CR>
+nnoremap <silent> P P:call PasteHighlight()<CR>
+
+" full version
+function! PasteHighlight() abort
+  let l:start = getpos("'[")
+  let l:end   = getpos("']")
+
+  if l:start[1] == 0 || l:end[1] == 0 | return | endif
+
+  let l:start_lnum = l:start[1]
+  let l:start_col  = l:start[2]
+  let l:end_lnum   = l:end[1]
+  let l:end_col    = l:end[2]
+
+  if l:start_lnum == l:end_lnum
+    let l:len = l:end_col - l:start_col + 1
+    let l:match_id = matchaddpos('IncSearch', [[l:start_lnum, l:start_col, l:len]])
+  else
+    let l:pattern = '\%'.l:start_lnum.'l\_.*\%'.l:end_lnum.'l'
+    let l:match_id = matchadd('IncSearch', l:pattern)
+  endif
+
+  call timer_start(150, {-> matchdelete(l:match_id)})
+  call setpos('.', l:start)
+endfunction
+```
+
 ### [TwiddleCase](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
 
 > [!TIP|label:references:]
@@ -807,6 +924,23 @@ set updatetime=500
 
 " modify as you please...
 set statusline=%{WordCount()}\ words
+```
+
+### search
+
+> [!NOTE|label:references:]
+> - [Search for visually selected text](https://vim.fandom.com/wiki/Search_for_visually_selected_text)
+
+```vim
+function! VSetSearch()
+  let l:cursor = getpos('.')       " save cursor position
+  let l:temp = @s                  " save to @s (s register)
+  normal! gv"sy                    " yank the visual selection to @s
+  let @/ = '\V' . substitute(escape(@s, '/|'), '\n', '\\n', 'g')
+  let @s = l:temp                  " recover @s (s register)
+  call setpos('.', l:cursor)       " recover cursor position
+endfunction
+xnoremap *         :<C-u>call VSetSearch()<CR>/<C-R>=@/<CR><CR>:normal! N<CR>
 ```
 
 ## commands

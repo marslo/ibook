@@ -94,9 +94,10 @@
   >   - [Moving the mouse with applescript](https://blog.andrewparnell.com/2010/01/moving-the-mouse-with-applescript/)
 
 - awake
+  - [jiggler](https://www.sticksoftware.com/software/Jiggler.html) - `$ brew install --cask jiggler`
   - [Post2Fix/TerminalWake](https://github.com/Post2Fix/TerminalWake)
   - [Amphetamine](https://apps.apple.com/us/app/amphetamine/id937984704?mt=12)
-  - [KeepingYouAwake](https://keepingyouawake.app/) | [newmarcel/KeepingYouAwake](https://github.com/newmarcel/KeepingYouAwake)
+  - [KeepingYouAwake](https://keepingyouawake.app/) | [newmarcel/KeepingYouAwake](https://github.com/newmarcel/KeepingYouAwake) - `$ brew install --cask keepingyouawake`
   - [Caffeinated](https://apps.apple.com/us/app/caffeinated-anti-sleep-app/id1362171212?mt=12)
 
 #### utilities

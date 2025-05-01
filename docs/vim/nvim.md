@@ -14,6 +14,7 @@
 - [initialize and configure](#initialize-and-configure)
   - [provider](#provider)
   - [init.vim/init.lua](#initviminitlua)
+    - [yank/paste highlight](#yankpaste-highlight)
   - [config](#config)
     - [`config.lua`](#configlua)
     - [standard-path](#standard-path)
@@ -723,6 +724,12 @@ $ npm install -g neovim
   source ~/.vimrc
   autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}
   ```
+
+### yank/paste highlight
+
+> [!NOTE|label:references:]
+> - [* iMarslo: yank highlight function](./viml.md#yank-highlight)
+> - [* iMarslo: paste highlight function](./viml.md#paste-highlight)
 
 ## config
 
