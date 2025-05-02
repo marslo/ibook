@@ -9,6 +9,14 @@
 - [CLI](#cli-1)
   - [configuration](#configuration)
   - [ping](#ping)
+  - [deploy](#deploy)
+  - [download](#download)
+  - [copy](#copy)
+  - [move](#move)
+  - [remove](#remove)
+  - [search](#search)
+  - [manage properties](#manage-properties)
+- [usage](#usage)
   - [discarding old builds from artifactory](#discarding-old-builds-from-artifactory)
   - [search with aql](#search-with-aql)
   - [delete docker images](#delete-docker-images)
@@ -351,6 +359,53 @@ $ jf rt use <SERVER_ID>
   OK
   ```
 
+### deploy
+
+> [!NOTE|label:references:]
+> - [Placeholders](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/using-placeholders)
+> - [Uploading Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#uploading-files)
+
+```bash
+$ jf rt u \
+     --recursive=true \
+     --threads=8 \
+     --retries=3 \
+     --exclusions="*backup*;*sandbox*" \
+     <LOCAL_PATH>/(*) <REPO>/<TARGET_PATH>/{1} \
+```
+
+### download
+
+> [!NOTE|label:references:]
+> - [Downloading Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#downloading-files)
+
+### copy
+
+> [!NOTE|label:references:]
+> - [Copying Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#copying-files)
+
+### move
+
+> [!NOTE|label:references:]
+> - [Moving Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#moving-files)
+
+### remove
+
+> [!NOTE|label:references:]
+> - [Deleting Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#deleting-files)
+
+### search
+
+> [!NOTE|label:references:]
+> - [Searching Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#searching-files)
+
+### manage properties
+
+> [!NOTE|label:references:]
+> - [Setting Properties on Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#setting-properties-on-files)
+> - [Deleting Properties from Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#deleting-properties-from-files)
+
+## usage
 ### discarding old builds from artifactory
 - clean build info and artifacts 30 days before
 
