@@ -52,8 +52,9 @@
   - [via results](#via-results)
     - [get all builds result percentage](#get-all-builds-result-percentage)
     - [get builds result percentage ( within 24 hours )](#get-builds-result-percentage--within-24-hours-)
-    - [get builds result data range](#get-builds-result-data-range)
+    - [get builds result data range with parameters](#get-builds-result-data-range-with-parameters)
     - [get builds result and percentage in data range](#get-builds-result-and-percentage-in-data-range)
+    - [get builds result and percentage with params name](#get-builds-result-and-percentage-with-params-name)
 - [stop builds](#stop-builds)
   - [abort single build](#abort-single-build)
   - [abort previous running builds by params condition](#abort-previous-running-builds-by-params-condition)
@@ -1840,115 +1841,118 @@ results.each{ name, status ->
 ![build status](../../screenshot/jenkins/job-successful-failure-percentage.png)
 
 ### [get builds result percentage ( within 24 hours )](https://stackoverflow.com/a/28039134/2940319)
+
 ```groovy
 final String JOB_PATTERN = '<group>'
 final long CURRENT_TIME  = System.currentTimeMillis()
 final int BENCH_MARK     = 1*24*60*60*1000
 
-Map<String, Map<String, List<String>>> results = [:]
+Map<String, Map<String, String>> results = [:]
 int sum = 0
 
-jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { project ->
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
   project.fullName.startsWith( JOB_PATTERN )
+  // or
+  // project.fullName.contains( JOB_PATTERN )
 }.each { project ->
   if ( project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
-    results."${project.fullName}" = [:]
+    results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
     def build = project.getLastBuild()
+
     while ( build && (CURRENT_TIME - build.startTimeInMillis) <= BENCH_MARK ) {
-      String key = build.isBuilding() ? 'INPROGRESS' : "${build.result}"
-      results."${project.fullName}"."${key}" = ( results."${project.fullName}".getOrDefault( key, [] ) << build )
+      if ( build.isBuilding() ) {
+        results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
+      } else {
+        results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
+      } // if job is building, then results."${project.fullName}"."${build.result}" will be null
       build = build.getPreviousBuild()
-    }
+    } // traverse in the whole traverse builds
+
+  } // if there's builds within 24 hours
+}
+
+results.each{ name, status ->
+  sum = status.values().sum()
+  println "\n>> ${name}: ${sum} : "
+  status.each{ r, c ->
+    if ( c ) println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " +
+                     ( sum ? "${String.format("%5.2f", c * 100 / sum )}%" : '0%' )
   }
 }
 
-results.each { name, status ->
-  sum = status.values().flatten().size()
-  println "\n>> ${name}: ${sum} : "
-  println status.collect { r, b ->
-    "\t${r.padRight(10)}: ${b.size()}: ( " + ( sum ? "${b.size()*100/sum}%" : '0%' ) + ' )' +
-    '\n\t  -' + b.collect {"\t${it.id} : " + new Date(it.startTimeInMillis).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}.join('\n\t  -')
-  }.join('\n')
-}
-
 "DONE"
-
--- result --
->> marslo/whitebox/sample: 5 :
-  SUCCESS   : 3: ( 60% )
-    - 193 : 2024-02-20T01:15:48.536Z
-    - 192 : 2024-02-19T22:19:12.759Z
-    - 190 : 2024-02-19T20:37:42.204Z
-  FAILURE   : 1: ( 20% )
-    - 191 : 2024-02-19T21:53:17.644Z
-  NOT_BUILT : 1: ( 20% )
-    - 189 : 2024-02-19T06:01:43.875Z
-
->> marslo/sandbox/script: 3 :
-  FAILURE   : 3: ( 100% )
-    - 84 : 2024-02-20T00:38:18.385Z
-    - 83 : 2024-02-19T21:01:42.314Z
-    - 82 : 2024-02-19T03:00:13.123Z
-
->> marslo/sandbox/pipeline: 8 :
-  NOT_BUILT : 5: ( 62.5% )
-    - 3553 : 2024-02-20T21:51:00.713Z
-    - 3552 : 2024-02-20T15:51:00.727Z
-    - 3551 : 2024-02-20T09:51:00.729Z
-    - 3548 : 2024-02-19T15:51:00.721Z
-    - 3547 : 2024-02-19T09:51:00.726Z
-  SUCCESS   : 2: ( 25% )
-    - 3550 : 2024-02-20T03:51:00.713Z
-    - 3546 : 2024-02-19T03:51:00.707Z
-  FAILURE   : 1: ( 12.5% )
-    - 3549 : 2024-02-19T21:51:00.722Z
 ```
 
-- with percentage only
+![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
+
+- with timestamp only
   ```groovy
   final String JOB_PATTERN = '<group>'
   final long CURRENT_TIME  = System.currentTimeMillis()
   final int BENCH_MARK     = 1*24*60*60*1000
 
-  Map<String, Map<String, String>> results = [:]
+  Map<String, Map<String, List<String>>> results = [:]
   int sum = 0
 
-  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll{ project ->
+  jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { project ->
     project.fullName.startsWith( JOB_PATTERN )
-    // or
-    // project.fullName.contains( JOB_PATTERN )
   }.each { project ->
     if ( project.getBuilds().byTimestamp(CURRENT_TIME - BENCH_MARK, CURRENT_TIME).size() > 0 ) {
-      results."${project.fullName}" = [ SUCCESS:0, UNSTABLE:0, FAILURE:0, ABORTED:0, INPROGRESS:0, NOT_BUILT:0 ]
+      results."${project.fullName}" = [:]
       def build = project.getLastBuild()
-
       while ( build && (CURRENT_TIME - build.startTimeInMillis) <= BENCH_MARK ) {
-        if ( build.isBuilding() ) {
-          results."${project.fullName}".INPROGRESS = results."${project.fullName}".INPROGRESS + 1
-        } else {
-          results."${project.fullName}"."${build.result}" = results."${project.fullName}"."${build.result}" + 1
-        } // if job is building, then results."${project.fullName}"."${build.result}" will be null
+        String key = build.isBuilding() ? 'INPROGRESS' : "${build.result}"
+        results."${project.fullName}"."${key}" = ( results."${project.fullName}".getOrDefault( key, [] ) << build )
         build = build.getPreviousBuild()
-      } // traverse in the whole traverse builds
-
-    } // if there's builds within 24 hours
+      }
+    }
   }
 
-  results.each{ name, status ->
-    sum = status.values().sum()
+  results.each { name, status ->
+    sum = status.values().flatten().size()
     println "\n>> ${name}: ${sum} : "
-    status.each{ r, c ->
-      if ( c ) println "\t${r.padRight(11)}: ${c.toString().padRight(5)}: percentage: " +
-                       ( sum ? "${c * 100 / sum}%" : '0%' )
-    }
+    println status.collect { r, b ->
+      "\t${r.padRight(10)}: ${b.size()}: ( " + ( sum ? "${b.size()*100/sum}%" : '0%' ) + ' )' +
+      '\n\t  -' + b.collect {"\t${it.id} : " + new Date(it.startTimeInMillis).format("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")}.join('\n\t  -')
+    }.join('\n')
   }
 
   "DONE"
   ```
 
-![build status for jobs within 24 hours](../../screenshot/jenkins/jobs-status-within-24hours.png)
+  ```groovy
+  -- result --
+  >> marslo/whitebox/sample: 5 :
+    SUCCESS   : 3: ( 60% )
+      - 193 : 2024-02-20T01:15:48.536Z
+      - 192 : 2024-02-19T22:19:12.759Z
+      - 190 : 2024-02-19T20:37:42.204Z
+    FAILURE   : 1: ( 20% )
+      - 191 : 2024-02-19T21:53:17.644Z
+    NOT_BUILT : 1: ( 20% )
+      - 189 : 2024-02-19T06:01:43.875Z
 
-### get builds result data range
+  >> marslo/sandbox/script: 3 :
+    FAILURE   : 3: ( 100% )
+      - 84 : 2024-02-20T00:38:18.385Z
+      - 83 : 2024-02-19T21:01:42.314Z
+      - 82 : 2024-02-19T03:00:13.123Z
+
+  >> marslo/sandbox/pipeline: 8 :
+    NOT_BUILT : 5: ( 62.5% )
+      - 3553 : 2024-02-20T21:51:00.713Z
+      - 3552 : 2024-02-20T15:51:00.727Z
+      - 3551 : 2024-02-20T09:51:00.729Z
+      - 3548 : 2024-02-19T15:51:00.721Z
+      - 3547 : 2024-02-19T09:51:00.726Z
+    SUCCESS   : 2: ( 25% )
+      - 3550 : 2024-02-20T03:51:00.713Z
+      - 3546 : 2024-02-19T03:51:00.707Z
+    FAILURE   : 1: ( 12.5% )
+      - 3549 : 2024-02-19T21:51:00.722Z
+  ```
+
+### get builds result data range with parameters
 
 > [!TIP]
 > - find only `String` type parameters:
@@ -1972,7 +1976,7 @@ final String START_DATE = '2021-04-26 00:00:00'
 final String END_DATE   = '2021-04-27 00:00:00'
 
 long start = simpleDateFormat.parse( START_DATE ).getTime()
-long end   = simpleDateFormat.parse( END_DATE ).getTime()
+long end   = simpleDateFormat.parse( END_DATE   ).getTime()
 
 jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
   job.fullName.contains( JOB_PATTERN )
@@ -2091,7 +2095,7 @@ results.each { name, values ->
   Map wanted = values.findAll { k, v -> v.get('paramsExist') == true }
   wanted.each { k, v -> status."${name}"."${v.status}" += 1 }
 
-  println "\n>> ${name} : ${wanted.size()} : "
+  if ( wanted ) println ( "\n>> ${name} : ${wanted.size()} :" )
   status."${name}".each { r, c ->
     if (c) {
       println '\t\t' + r +
@@ -2099,6 +2103,7 @@ results.each { name, values ->
               '\tpercentage : ' + (wanted.size() ? "${df.format(c * 100 / wanted.size())}%" : '0%') + '\n' +
               '\t\t\t\tbuilds :\t' +  wanted.findAll { k, v -> v.get('status') == r }?.keySet()?.collect{ "#${it}" }.join(', ')
     }  // print only exists status
+  }
 }
 
 "DONE"
@@ -2107,6 +2112,236 @@ results.each { name, values ->
 ![build-history-with-status-and-percentage-for-params](../../screenshot/jenkins/build-history-with-status-and-percentage-for-params.png)
 
 ![build-history-with-status-and-percentage-for-all-builds](../../screenshot/jenkins/build-history-with-status-and-percentage-for-all.png)
+
+### get builds result and percentage with params name
+```groovy
+#!/usr/bin/env groovy
+
+import java.util.Date
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
+import static groovy.json.JsonOutput.*
+import groovy.transform.Field
+
+/* groovylint-disable VariableName */
+
+SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss", Locale.US )
+
+final String JOB_PATTERN = 'gerrit'
+final List<String> PARAM = [ 'GERRIT_REFSPEC', 'GERRIT_PROJECT', 'GERRIT_CHANGE_ID' ]
+
+final long START
+final long END
+final long NOW_TIME     = System.currentTimeMillis()
+final int BENCH_MARK    = 1*24*60*60*1000
+
+Map<String, Map<String, String>> results = [:]
+
+if ( NOW_TIME && BENCH_MARK ) {
+  START = NOW_TIME - BENCH_MARK
+  END   = NOW_TIME
+} else if ( START_TIME && END_TIME ) {
+  START = simpleDateFormat.parse( START_TIME ).getTime()
+  END   = simpleDateFormat.parse( END_TIME ).getTime()
+} else {
+  return
+}
+
+// group builds by patchset
+Closure actions = { List builds ->
+  builds.groupBy { it.PATCHSET_NUMBER }
+        .collect { patchset, pBuilds ->
+           [
+             PATCHSET_NUMBER: patchset,
+             BUILDS         : pBuilds.collectEntries {[ (it.BUILD_NUBMER): [status: it.status, time: it.time] ]}
+           ]
+         }
+}
+
+jenkins.model.Jenkins.instance.getAllItems( Job.class ).findAll { Job job ->
+  job.fullName.startsWith( JOB_PATTERN )
+}.each { Job job ->
+  results."${job.fullName}" = [:]
+  job.getBuilds().byTimestamp( START, END ).each { Run build ->
+    Map params = PARAM
+                  ? build?.getAction( ParametersAction.class )?.parameters?.findAll{ StringParameterValue.isCase(it) }?.collectEntries {
+                      [ it.name, it.value ]
+                    }
+                  : [:]
+    results."${job.fullName}"."${build.getId()}" = [
+             'time' : build.getTime().toString() ,
+           'params' : params.findAll { PARAM.contains(it.key) && it.value }
+    ]
+    if ( build.isBuilding() ) {
+      results."${job.fullName}"."${build.getId()}" << [ 'status' : 'INPROGRESS' ]
+    } else {
+      results."${job.fullName}"."${build.getId()}" << [ 'status' : build.getResult().toString() ]
+    }
+  }
+}
+
+// reformat the results
+Map stats = results.collectEntries { k, v -> [
+    (k): v.collect {
+            [
+              BUILD_NUBMER     : it.key,
+              time             : it.value.time,
+              status           : it.value.status,
+              PATCHSET_NUMBER  : it.value.params.GERRIT_REFSPEC.split('/').last()
+            ] + it.value.params
+          }.groupBy { it.GERRIT_PROJECT }
+           .collectEntries { project, builds ->
+              [ (project): builds.groupBy { it.GERRIT_CHANGE_ID } ]
+          }
+]}.collectEntries {[
+  (it.key): it.value.collectEntries { project, changes ->
+              [
+                (project): changes.collectEntries { cid, builds -> [ (cid): actions(builds) ] }
+              ]
+            }
+]}
+
+// find all the changes with more than 1 builds
+Map rerunStats = stats.findResults { name, contents ->
+  Map temp = contents.findResults { project, changes ->
+    Map newChanges = changes.findAll { it.value.sum { it.BUILDS?.size() ?: 0 } > 1 }
+    newChanges ? [(project): newChanges] : null
+  }.collectEntries()
+  temp ? [(name): temp] : null
+}.collectEntries()
+
+
+def showResult( Map map ) {
+  map.each { name, contents ->
+    if ( contents ) println ("\n>> ${name} <${contents.values().collectMany { it.values() }.flatten().sum { it.BUILDS.size() }}> <<")
+    contents.each { project, changes ->
+      println "\t-- ${project} <${changes.values().flatten().sum{ it.BUILDS.size() }}> --:"
+      changes.each { changeId, patchsets ->
+        println "\t\t- ${changeId} <${patchsets.sum { it.BUILDS.size() }}>"
+        patchsets.each {
+          total = it.BUILDS.size()
+          println "\t\t\t- PATCHSET #${it.PATCHSET_NUMBER} (${it.BUILDS.size()})"
+
+          it.BUILDS.groupBy { it.value.status }
+                   .collectEntries { result, entries -> [result, entries.keySet()] }
+                   .each { result, numbers ->
+                      String percent = (numbers.size() * 100 / total).toString().padLeft(3)
+                      println "\t\t\t\t${result.padRight(10)} : ${numbers.size()}/${total} (${percent}%)".padRight(35) +
+                              "builds : ${numbers.collect { "#${it} (${result})" }.join(', ')}"        // groovylint-disable NestedBlockDepth
+                      // println "\t\t\t\t${'builds'.padRight(10)} : ${numbers.collect { "#${it} (${result})" }.join(', ')}"
+                   }
+        }
+      }
+    }
+  }
+}
+
+def getTotal( Map map ) {
+  Map temp = map.values()
+                .collectMany { it.values() }
+                .collectMany { it.values() }.flatten()
+                .collectMany { it.BUILDS.values() }
+                .groupBy { it.status }
+                .collectEntries { [(it.key): it.value.size()] }
+  temp.collect {
+    String percent = String.format("%5.2f", it.value * 100 / temp.values().sum() )
+    [ status: it.key, count: it.value, percent: percent, total: temp.values().sum() ]
+  }
+}
+
+
+println '== ' + simpleDateFormat.format(START) + ' ~ ' + simpleDateFormat.format(END) + " <${getTotal(stats).collect { it.count }.sum()} builds> =="
+println getTotal(stats).collect{
+  "\t- ${it.status.padRight(10)} : ${it.count.toString().padLeft(3)}/${it.total} (${it.percent.padLeft(3)}%)"
+}.join('\n')
+
+showResult( stats )
+showResult( rerunStats )
+
+"DONE"
+
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=groovy:
+```
+
+```
+//-- rerun result --//
+
+== 2025-05-01 03:48:18 ~ 2025-05-02 03:48:18 <80 builds> ==
+  - FAILURE    :  31/80 (38.75%)
+  - ABORTED    :   6/80 ( 7.50%)
+  - INPROGRESS :  18/80 (22.50%)
+  - SUCCESS    :  25/80 (31.25%)
+
+>> gerrit-project <6> <<
+  -- path/to/project <6> --:
+    - Ib10678c3f646f346e9847d59247208eefbedc0f1 <2>
+      - PATCHSET #13 (1)
+        FAILURE    : 1/1 (100%)        builds : #5500 (FAILURE)
+      - PATCHSET #12 (1)
+        ABORTED    : 1/1 (100%)        builds : #5496 (ABORTED)
+    - Id31c464d3dda9c4b11f2eca432a1dbfbe3caff4a <2>
+      - PATCHSET #3 (1)
+        FAILURE    : 1/1 (100%)        builds : #5499 (FAILURE)
+      - PATCHSET #2 (1)
+        ABORTED    : 1/1 (100%)        builds : #5495 (ABORTED)
+    - I9e0348aba816239ba3db6c960308d75ce91c73bb <2>
+      - PATCHSET #3 (2)
+        FAILURE    : 1/2 ( 50%)        builds : #5498 (FAILURE)
+        ABORTED    : 1/2 ( 50%)        builds : #5497 (ABORTED)
+
+>> gerrit-sandbox <3> <<
+  -- path/to/sandbox <3> --:
+    - I877452c2307d9d72ee772a9c7fad5c029bf67b3c <3>
+      - PATCHSET #3 (1)
+        INPROGRESS : 1/1 (100%)        builds : #2622 (INPROGRESS)
+      - PATCHSET #2 (1)
+        ABORTED    : 1/1 (100%)        builds : #2621 (ABORTED)
+      - PATCHSET #1 (1)
+        INPROGRESS : 1/1 (100%)        builds : #2616 (INPROGRESS)
+
+>> gerrit-whitebox <2> <<
+  -- path/to/whitebox <2> --:
+    - Ia7c0b2a0166cb2d8b113ce9eb1f4c4352dd97c28 <2>
+      - PATCHSET #2 (1)
+        INPROGRESS : 1/1 (100%)        builds : #5125 (INPROGRESS)
+      - PATCHSET #1 (1)
+        ABORTED    : 1/1 (100%)        builds : #5124 (ABORTED)
+
+>> gerrit-test <5> <<
+  -- path/to/test/project1 <2> --:
+    - I064adb1df5860d77f7a0577e7ad51b1d6a1c5939 <2>
+      - PATCHSET #15 (1)
+        INPROGRESS : 1/1 (100%)        builds : #2935 (INPROGRESS)
+      - PATCHSET #14 (1)
+        FAILURE    : 1/1 (100%)        builds : #2933 (FAILURE)
+  -- path/to/test/project2 <3> --:
+    - If068df304523e610f519ee4cb30fe8150ded167c <3>
+      - PATCHSET #15 (1)
+        SUCCESS    : 1/1 (100%)        builds : #2934 (SUCCESS)
+      - PATCHSET #14 (1)
+        SUCCESS    : 1/1 (100%)        builds : #2932 (SUCCESS)
+      - PATCHSET #13 (1)
+        ABORTED    : 1/1 (100%)        builds : #2931 (ABORTED)
+
+>> gerrit-something-else <4> <<
+  -- path/to/something/else <4> --:
+    - Ib28adc6ed668f6124abaee09ff72600b8202fbf8 <2>
+      - PATCHSET #2 (2)
+        FAILURE    : 2/2 (100%)        builds : #380 (FAILURE), #373 (FAILURE)
+    - Ibed3e8a23cb6d619f75aae335a85e68fc96b0fb3 <2>
+      - PATCHSET #2 (2)
+        FAILURE    : 2/2 (100%)        builds : #379 (FAILURE), #374 (FAILURE)
+
+>> gerrit-extra <2> <<
+  -- path/to/extra <2> --:
+    - I74450ed30554c425ce3edea1399b8b493f6c01fb <2>
+      - PATCHSET #4 (1)
+        FAILURE    : 1/1 (100%)        builds : #10330 (FAILURE)
+      - PATCHSET #1 (1)
+        FAILURE    : 1/1 (100%)        builds : #10325 (FAILURE)
+Result: DONE
+```
 
 # stop builds
 
