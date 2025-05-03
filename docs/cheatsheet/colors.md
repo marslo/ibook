@@ -2181,15 +2181,20 @@ $ echo $GREP_COLORS
 ms=01;31;49:mc=01;31:sl=0;36:cx=:fn=35:ln=32:bn=32:se=36
 ```
 
-| FIELD | DESCRIPTION                                 | NOTES                      |
-|-------|---------------------------------------------|----------------------------|
-| `mt`  | Matched text (default match highlight)      | 匹配到的文本(默认匹配高亮) |
-| `ms`  | Matched text in context lines               | 匹配文本(上下文行中)       |
-| `mc`  | Matched text in regular (non-context) lines | 匹配文本(普通行中)         |
-| `fn`  | Filename (when using `-H`)                  | 文件名(带 `-H` 时)         |
-| `ln`  | Line number (when using `-n`)               | 行号(带 `-n`)              |
-| `bn`  | Byte offset (when using `-b`)               | 字节偏移量(带 `-b`)        |
-| `se`  | Separator (such as `:`)                     | 分隔符(如 `:`)             |
+| CAPABILITY | DESCRIPTION                                | NOTES                                                                                                       |
+|------------|--------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `sl`       | selected Line                              | 匹配的整行<br> 应用于包含匹配项的整行文本的样式                                                             |
+| `cx`       | context Line                               | 上下文行<br> 应用于使用 `-A`, `-B`, `-C` 选项时显示的上下文行(非匹配行)的样式                               |
+| `mt`       | matched Text in selected and context lines | 匹配文本 (在匹配行和上下文行中)<br>这是默认的匹配项. 如果 `ms` 和 `mc` 没有设置, 则使用此项                 |
+| `ms`       | matched text in a Selected line            | 匹配行中的匹配文本<br>覆盖 `mt`, 专门用于匹配行 (`sl`) 中的匹配部分                                         |
+| `mc`       | matched text in a Context line             | 上下文行中的匹配文本<br>覆盖 `mt`, 专门用于上下文行 (`cx`) 中的匹配部分                                     |
+| `fn`       | file Name ( when using `-H` )              | 文件名<br>当同时搜索多个文件或使用 `-H` 选项时显示的文件名样式                                              |
+| `ln`       | line Number ( when using `-n` )            | 行号<br>当使用 `-n` 选项时显示的行号样式.                                                                   |
+| `bn`       | byte Offset ( when using `-b` )            | 字节偏移量<br>当使用 `-b` 选项时显示的字节偏移量样式.                                                       |
+| `se`       | separator ( i.e.: `:` )                    | 分隔符<br>用于分隔字段的符号(如文件名和行号之间的 `:`, 或上下文组之间的 `--`)的样式                         |
+| `rv`       | reverse sl and cx capabilities             | 反转 `sl` 和 `cx` 的默认值<br>如果设置了此项, 则 `sl` 和 `cx` 的默认前景色/背景色会互换. 通常不直接设置颜色 |
+| `ne`       | no End-of-line clear                       | 不清除到行尾<br>默认情况下, grep 会使用"清除到行尾"的转义序列. 设置此项可禁用该行为. 通常不需要设置         |
+
 
 ```bash
 # more example
