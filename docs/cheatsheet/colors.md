@@ -248,9 +248,9 @@
   done
   ```
 
-  [![color with flag](../screenshot/colors/ansi/color-normal-bright.gif)](./ansi/color-normal-bright.gif)
+  [![color with flag](../screenshot/colors/ansi/color-normal-bright.gif)](../screenshot/colors/ansi/color-normal-bright.gif)
 
-  [![normal & bright colors](../screenshot/colors/ansi/color-normal-bright.png)](./ansi/color-normal-bright.png)
+  [![normal & bright colors](../screenshot/colors/ansi/color-normal-bright.png)](../screenshot/colors/ansi/color-normal-bright.png)
 
 ## 3-bit or 4-bit
 
@@ -1059,7 +1059,7 @@ $ xColorTable 30 45 100
 100 = rgb(135, 135, 0)   => #878700
 ```
 
-[![xColorTable](../screenshot/colors/ansi/xColorTable.png)](ansi/xColorTable.png)
+[![xColorTable](../screenshot/colors/ansi/xColorTable.png)](../screenshot/colors/ansi/xColorTable.png)
 
 ### 256color to hex
 ```bash
@@ -1355,7 +1355,7 @@ $ ansi --color-codes
 
 ## [bash-colors `c()`](https://github.com/ppo/bash-colors)
 
-[![bash-colors c() for help info](../screenshot/colors/ansi/bash-colors-c.png)](./ansi/bash-colors-c.png)
+[![bash-colors c() for help info](../screenshot/colors/ansi/bash-colors-c.png)](../screenshot/colors/ansi/bash-colors-c.png)
 
 ```bash
 # install
@@ -1414,9 +1414,9 @@ echo -e "\\033[1;38;5;$fg;48;5;${bg}mviolet on tangerine\\033[0m"
 > [!NOTE]
 > - [eikenb/terminal-colors](https://github.com/eikenb/terminal-colors)
 
-[![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)](./ansi/terminal-colors-l.png)
+[![terminal-colors -l](../screenshot/colors/ansi/terminal-colors-l.png)](../screenshot/colors/ansi/terminal-colors-l.png)
 
-[![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)](./ansi/terminal-colors-n.png)
+[![terminal-colors -n](../screenshot/colors/ansi/terminal-colors-n.png)](../screenshot/colors/ansi/terminal-colors-n.png)
 
 ```bash
 $ python3 -m pip install terminal-colors
@@ -1460,7 +1460,7 @@ $ colored --color-codes
   $ tabset --pick
   ```
 
-  ![tabset --pick](./osx/tabset--pick.png)
+  ![tabset --pick](../screenshot/osx/tabset--pick.png)
 
   ```bash
   function cpick() {
@@ -1487,7 +1487,7 @@ $ colored --color-codes
 
 - 256 colors
 
-  [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](./ansi/ansicolor-256-0.png)
+  [![256 colors](../screenshot/colors/ansi/ansicolor-256-0.png)](../screenshot/colors/ansi/ansicolor-256-0.png)
 
   <!--sec data-title="256colors" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
@@ -1536,7 +1536,7 @@ $ colored --color-codes
   > - [256-colors.sh](https://misc.flogisoft.com/bash/tip_colors_and_formatting#colors2)
   {% endhint %}
 
-  [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](./ansi/color-formatting-1.png)
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting-1.png)](../screenshot/colors/ansi/color-formatting-1.png)
 
   <!--sec data-title="colors_and_formatting" data-id="section6" data-show=true data-collapse=true ces-->
   ```bash
@@ -1564,7 +1564,7 @@ $ colored --color-codes
   ```
   <!--endsec-->
 
-  [![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)](./ansi/color-formatting-2.png)
+  [![colors & formatting](../screenshot/colors/ansi/color-formatting-2.png)](../screenshot/colors/ansi/color-formatting-2.png)
 
   ```bash
   for attr in 0 1 2 3 4 5 6 7; do
@@ -1582,7 +1582,7 @@ $ colored --color-codes
 
 - [showColors](https://stackoverflow.com/a/69648792/2940319)
 
-  [![showcolors](../screenshot/colors/ansi/showcolors.png)](./ansi/showcolors.png)
+  [![showcolors](../screenshot/colors/ansi/showcolors.png)](../screenshot/colors/ansi/showcolors.png)
 
   <!--sec data-title="showcolors" data-id="section7" data-show=true data-collapse=true ces-->
   ```bash
@@ -1699,7 +1699,7 @@ $ colored --color-codes
 
 - solarized color
 
-  [![solarized colors](../screenshot/colors/ansi/solarized-colors.png)](./ansi/solarized-colors.png)
+  [![solarized colors](../screenshot/colors/ansi/solarized-colors.png)](../screenshot/colors/ansi/solarized-colors.png)
 
   <!--sec data-title="solarized-colors" data-id="section9" data-show=true data-collapse=true ces-->
   ```bash
