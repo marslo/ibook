@@ -12,6 +12,7 @@
   - [edit binary using xxd-format](#edit-binary-using-xxd-format)
   - [set option and value in autocmd](#set-option-and-value-in-autocmd)
 - [system](#system)
+  - [system file path](#system-file-path)
   - [filetype in vim language](#filetype-in-vim-language)
   - [show path of current file](#show-path-of-current-file)
   - [Putting the current file on the Windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
@@ -164,8 +165,8 @@
 > - [Make vim switch to other window after opening a diff](https://vi.stackexchange.com/a/8606/7389)
 
 ```vim
-autocmd BufEnter              *                      if &diff         | let g:blamer_enabled=0 | endif    " ╮ disable diff mode
-autocmd BufEnter              *                      if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
+autocmd BufEnter * if &diff         | let g:blamer_enabled=0 | endif    " ╮ disable diff mode
+autocmd BufEnter * if ! empty(&key) | let g:blamer_enabled=0 | endif    " ╯ and encrypt mode
 ```
 
 ### disable line number in terminal
@@ -354,6 +355,19 @@ augroup END
   ```
 
 ## system
+
+### system file path
+
+```vim
+substitute(system('<cmd>'), '\n\+$', '', '')
+" or
+expand(trim( system('<cmd>') ))
+
+" i.e.:
+substitute(system('brew --prefix fzf'), '\n\+$', '', '')
+" or
+expand(trim( system('command -v python3') ))
+```
 
 ### [filetype in vim language](https://stackoverflow.com/a/63255521/2940319)
 ```vim

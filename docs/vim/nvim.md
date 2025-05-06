@@ -22,6 +22,7 @@
   - [lua](#lua)
     - [lua-intro](#lua-intro)
     - [lua-commands](#lua-commands)
+    - [tiktoken_core missing](#tiktoken_core-missing)
   - [Tips](#tips)
     - [true color](#true-color)
   - [config path](#config-path)
@@ -840,12 +841,61 @@ lib/nvim/parser/query.so', '/usr/local/Caskroom/neovim-nightly/latest/nvim-macos
 
 ### [lua-commands](https://neovim.io/doc/user/lua.html#lua-commands)
 
+> [!TIP]
+> lua version in nvim is not using local lua version
+
 ```vim
 :lua print(_VERSION)
 Lua 5.1
 
 :lua =jit.version
 LuaJIT 2.1.1703358377
+
+:lua print(package.cpath)
+./?.so;/usr/local/lib/lua/5.1/?.so;/opt/homebrew/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so
+
+" local lua version
+$ lua -v
+Lua 5.4.7  Copyright (C) 1994-2024 Lua.org, PUC-Rio
+```
+
+### tiktoken_core missing
+
+> [!TIP]
+> 1. matches to lua version inside nvim, not the system lua version
+>> ```vim
+>> :lua print(_VERSION)
+>> Lua 5.1
+>> ```
+> 2. using so instead of dylib
+>> ```vim
+>> :lua print(package.cpath)
+>> ./?.so;/usr/local/lib/lua/5.1/?.so;/opt/homebrew/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so
+>> ```
+
+```bash
+$ VERSION=$(curl --silent 'https://api.github.com/repos/gptlang/lua-tiktoken/releases/latest' | jq -r .tag_name)
+$ curl -fsSL --create-dirs -o ~/.config/nvim/lua/tiktoken_core.dylib \
+       https://github.com/gptlang/lua-tiktoken/releases/download/${VERSION}/tiktoken_core-macOS-arm64-lua51.dylib
+$ ln -sf ~/.config/nvim/lua/tiktoken_core.dylib ~/.config/nvim/lua/tiktoken_core.so
+
+$ echo 'require('tiktoken_core')' >> ~/.config/nvim/init.lua
+```
+
+```vim
+:lua print(require('tiktoken_core'))
+table: 0x010090a190
+
+:lua =require("tiktoken_core")
+{
+  encode = <function 1>,
+  new = <function 2>
+}
+```
+
+```bash
+$ nm -gU ~/.config/nvim/lua/tiktoken_core.dylib | grep luaopen
+000000000000a314 T _luaopen_tiktoken_core
 ```
 
 ## [Tips](https://neovim.io/doc/user/tips.html#tips)

@@ -54,6 +54,8 @@ $ brew install --cask vimr
 $ python3 -m pip install jedi
 $ python3 -m pip install --upgrade pynvim
 $ GEM_HOME="$HOME/.gem" gem install neovim --user-install
+$ brew install --HEAD viu
+$ brew install chafa
 ## macvim/vim
 $ brew install pcre2 gettext libtool              # for build vim from source
 $ brew install --HEAD macvim                      # using `--HEAD` to prevent 32bit vim + 64bit python
