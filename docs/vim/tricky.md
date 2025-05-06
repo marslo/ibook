@@ -9,6 +9,7 @@
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
   - [Switching case of characters](#switching-case-of-characters)
   - [counter](#counter)
+  - [insert vim expression](#insert-vim-expression)
   - [delete line without copy to default register](#delete-line-without-copy-to-default-register)
   - [`ctrl-k` delete to end of line in command mode](#ctrl-k-delete-to-end-of-line-in-command-mode)
   - [g ctrl-g](#g-ctrl-g)
@@ -311,6 +312,37 @@ nnoremap <leader>cr  0yt=A<C-r>=<C-r>"<CR><Esc>
 ```
 
 ![vim calculator](../screenshot/vim/vim-leader-cr-count-expr.gif)
+
+### insert vim expression
+
+- `i`/`I`/`a`/`A`/`o`/`O` to insert mode
+- <kbd>ctrl</kbd> + <kbd>r</kbd> + <kbd>=</kbd> to insert expression
+- <kbd>ctrl</kbd> + <kbd>r</kbd>> + <kbd>"</kbd> ( <kbd>⌘</kbd> + <kbd>v</kbd> ) to insert the contents of the default register
+- <kbd>enter</kbd>
+
+![vim ctrl-r insert expression](../screenshot/vim/vim-ctrl-r-expr.gif)
+
+```vim
+" mapping
+nnoremap <leader>ev  A<C-R>=printf(" = %s", eval(getline('.')))<CR><Esc>
+nnoremap <leader>Iev I<C-R>=printf("%s", eval(getline('.')))<CR><Esc>
+" -- or --
+nnoremap <leader>ev  :s/$/\=printf(" = %s", eval(getline('.')))/<CR><Esc>
+xnoremap <leader>ev  :s/$/\=printf(" = %s", eval(getline('.')))/<CR><Esc>
+
+" execute
+:'<,'> normal ,ev
+:'<,'> normal ,Iev
+```
+
+#### batch insert vim expression
+```vim
+:g/^echo strftime/execute "normal! A # \=" . substitute(getline('.'), '^echo\s\+', '', '')
+
+" or
+:g/^echo strftime/let @e = substitute(getline('.'), '^echo\s\+', '', '') | execute 'normal! A  # ' . eval(@e)
+```
+
 
 ### [delete line without copy to default register](https://til.hashrocket.com/posts/u86r0vdytl-deleting-lines-without-copying-to-default-register)
 

@@ -1502,7 +1502,7 @@ $ colored --color-codes
   ```
   <!--endsec-->
 
-  [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](./ansi/ansicolor-256-1.png)
+  [![256 colors](../screenshot/colors/ansi/ansicolor-256-1.png)](../screenshot/colors/ansi/ansicolor-256-1.png)
 
   <!--sec data-title="256color" data-id="section5" data-show=true data-collapse=true ces-->
   ```bash

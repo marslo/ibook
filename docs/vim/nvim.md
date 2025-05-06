@@ -23,10 +23,11 @@
     - [lua-intro](#lua-intro)
     - [lua-commands](#lua-commands)
     - [tiktoken_core missing](#tiktoken_core-missing)
+    - [api info](#api-info)
   - [Tips](#tips)
     - [true color](#true-color)
   - [config path](#config-path)
-- [builtin function details](#builtin-function-details)
+    - [tips](#tips)
 - [various commands](#various-commands)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -36,19 +37,19 @@
 > - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
 > - [The Best Neovim GUI](https://www.reddit.com/r/neovim/comments/zut77y/the_best_neovim_gui/) | [neovide/neovide](https://github.com/neovide/neovide) | [#neovim-guis](https://github.com/topics/neovim-guis)
 > - different between nvim and vim
->   - [Vim_diff](https://neovim.io/doc/user/vim_diff.html#'ttymouse')
->   - [Remove cryptography](https://github.com/neovim/neovim/commit/85338fe1d5a56f82546e16c305c2048c081771e0)
->   - [How is NeoVim Different From Vim?](https://www.baeldung.com/linux/vim-vs-neovim)
->   - [Why Neovim is Better than Vim](https://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/) | [我为什么选择 NeoVim](https://taoshu.in/vim/why-neovim.html)
+>> - [Vim_diff](https://neovim.io/doc/user/vim_diff.html#'ttymouse')
+>> - [Remove cryptography](https://github.com/neovim/neovim/commit/85338fe1d5a56f82546e16c305c2048c081771e0)
+>> - [How is NeoVim Different From Vim?](https://www.baeldung.com/linux/vim-vs-neovim)
+>> - [Why Neovim is Better than Vim](https://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/) | [我为什么选择 NeoVim](https://taoshu.in/vim/why-neovim.html)
 > - migration
->   - [Transitioning from Vim](https://neovim.io/doc/user/nvim.html#nvim-from-vim)
->   - [Migrating from vim to neovim](https://otavio.dev/2018/09/30/migrating-from-vim-to-neovim/)
->   - [Share Config Between Vim and Neovim](https://www.baeldung.com/linux/vim-neovim-configs)
->   - [How to share config between Vim and Neovim](https://vi.stackexchange.com/a/15548/7389)
+>> - [Transitioning from Vim](https://neovim.io/doc/user/nvim.html#nvim-from-vim)
+>> - [Migrating from vim to neovim](https://otavio.dev/2018/09/30/migrating-from-vim-to-neovim/)
+>> - [Share Config Between Vim and Neovim](https://www.baeldung.com/linux/vim-neovim-configs)
+>> - [How to share config between Vim and Neovim](https://vi.stackexchange.com/a/15548/7389)
 > - [init.vim](https://vi.stackexchange.com/a/15548)
 > - [HiPhish/nvim-config/init.vim](https://gitlab.com/HiPhish/nvim-config/-/blob/master/init.vim?ref_type=heads)
->   - osx/linux: `~/.config/nvim/init.vim`
->   - windows: `%LOCALAPPDATA%\nvim\init.vim`
+>> - osx/linux: `~/.config/nvim/init.vim`
+>> - windows: `%LOCALAPPDATA%\nvim\init.vim`
 > - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim#snippet)
 
 # install
@@ -112,20 +113,20 @@
 > - [Building Neovim from source](https://dev.to/asyncedd/building-neovim-from-source-1794)
 > - [homebrew-core/Formula/n/neovim.rb](https://github.com/Homebrew/homebrew-core/blob/841811d678fcfef856f693a2ec90add1625a4c12/Formula/n/neovim.rb)
 > - [neovim/BUILD.md](https://github.com/neovim/neovim/blob/master/BUILD.md)
->   - [Build prerequisites](https://github.com/neovim/neovim/blob/master/BUILD.md#build-prerequisites)
+>> - [Build prerequisites](https://github.com/neovim/neovim/blob/master/BUILD.md#build-prerequisites)
 
 ### osx
 
 > [!NOTE|label:issue with wget certificate]
 > - [macOS versions less than 10.10](https://github.com/neovim/neovim/blob/master/BUILD.md#macos--homebrew)
->   ```bash
->   $ brew install curl-ca-bundle
->   $ echo CA_CERTIFICATE=$(brew --prefix curl-ca-bundle)/share/ca-bundle.crt >> ~/.wgetrc
->   ```
+>> ```bash
+>> $ brew install curl-ca-bundle
+>> $ echo CA_CERTIFICATE=$(brew --prefix curl-ca-bundle)/share/ca-bundle.crt >> ~/.wgetrc
+>> ```
 > - ['stdio.h' file not found](https://github.com/neovim/neovim/blob/master/BUILD.md#macos--homebrew)
->   ```bash
->   $ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
->   ```
+>> ```bash
+>> $ open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+>> ```
 
 ```bash
 # prepare
@@ -440,7 +441,6 @@ $ ln -s ../Cellar/neovim/HEAD-0985e78/lib/nvim nvim
 $ sudo cmake --build build/ --target uninstall
 ```
 
-
 ## package manager
 ```bash
 # osx
@@ -580,10 +580,10 @@ $ sudo dpkg -i neovim_0.9.5-6ubuntu2_amd64.deb
 
       > [!TIP|label:packages:]
       > - [visualstudio2022buildtools](https://download.visualstudio.microsoft.com/download/pr/db4c3f2d-694d-406b-8fb6-1924f3fc3580/02f7788cb00c9e0aa87ce0c1e923f7b12921aa1f06d9f78261ee0e3e5c794332/vs_BuildTools.exe)
-      >   - `chocolatey-dotnetfx.extension`: `C:\ProgramData\chocolatey\extensions\chocolatey-dotnetfx`
-      >   - `dotnetfx`
+      >> - `chocolatey-dotnetfx.extension`: `C:\ProgramData\chocolatey\extensions\chocolatey-dotnetfx`
+      >> - `dotnetfx`
       > - references:
-      >   - [Clang/LLVM support in Visual Studio projects](https://learn.microsoft.com/en-us/cpp/build/clang-support-msbuild?view=msvc-170)
+      >> - [Clang/LLVM support in Visual Studio projects](https://learn.microsoft.com/en-us/cpp/build/clang-support-msbuild?view=msvc-170)
 
       ```powershell
       # C:\Program Files (x86)\Microsoft Visual Studio\Installer
@@ -655,13 +655,13 @@ Run :checkhealth for more info
 > - [NeoVim for Java Development (COC)](https://javadev.org/devtools/ide/neovim/coc/)
 > - [nanotee/nvim-lua-guide](https://github.com/nanotee/nvim-lua-guide)
 > - [nshen/learn-neovim-lua](https://github.com/nshen/learn-neovim-lua)
->   - [Neovim 代码高亮插件 nvim-treesitter 的安装与配置](https://www.zhihu.com/tardis/bd/art/441818052?source_id=1001)
->   - [Neovim 内置 LSP 配置 (二)：自动代码补全](https://zhuanlan.zhihu.com/p/445331508)
+>> - [Neovim 代码高亮插件 nvim-treesitter 的安装与配置](https://www.zhihu.com/tardis/bd/art/441818052?source_id=1001)
+>> - [Neovim 内置 LSP 配置 (二)：自动代码补全](https://zhuanlan.zhihu.com/p/445331508)
 > - [nshen/InsisVim](https://github.com/nshen/InsisVim)
 > - [fanxy1/nvim-dotfile](https://github.com/fanxy1/nvim-dotfile)
 > - [Java in Neovim](https://www.chiarulli.me/Neovim/24-neovim-and-java/)
 > - [Integralist/dotfiles](https://github.com/Integralist/dotfiles)
->   - [Integralist/nvim](https://github.com/Integralist/nvim)
+>> - [Integralist/nvim](https://github.com/Integralist/nvim)
 > - [m4xshen/dotfiles/nvim/nvim](https://github.com/m4xshen/dotfiles/tree/main/nvim/nvim)
 > - [~quaff/vim-dotfiles](https://sr.ht/~quaff/vim-dotfiles/)
 > - [Neovim for Beginners — LSP Inlay Hints](https://alpha2phi.medium.com/neovim-for-beginners-lsp-inlay-hints-bf4a8afa6f27)
@@ -766,32 +766,70 @@ lua require('config')
 > - [`:help standard-path`](https://neovim.io/doc/user/starting.html#standard-path)
 > - [XDG Base Directory Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
 > - get data
->   ```vim
->   :echo stdpath("xxx")
->
->   " i.e.:
->   :echo stdpath('config')
->   /Users/marslo/.config/nvim
->   ```
+>> ```vim
+>> :echo stdpath("xxx")
+>>
+>> " i.e.:
+>> :echo stdpath('config')
+>> /Users/marslo/.config/nvim
+>> ```
 > - using in `init.lua`
->   ```vim
->   -- ~/.config/nvim/init.lua
->   -- to setup undodir to `$HOME/.config/nvim/undo`. debug via `:verbose set undodir`
->   vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
->   -- or specific path
->   vim.opt.undodir = vim.fn.expand( '~/.vim/undo' )
->   ```
+>> ```vim
+>> -- ~/.config/nvim/init.lua
+>> -- to setup undodir to `$HOME/.config/nvim/undo`. debug via `:verbose set undodir`
+>> vim.opt.undodir = vim.fn.stdpath('config') .. '/undo'
+>> -- or specific path
+>> vim.opt.undodir = vim.fn.expand( '~/.vim/undo' )
+>> ```
 
-|           NAME           | LINUX/OSX                                      | WINDOWS                        |
-|:------------------------:|------------------------------------------------|--------------------------------|
-|    `stdpath("config")`   | `$HOME/.config/nvim`                           | `%LOCALAPPDATA%\nvim`          |
-|     `stdpath("data")`    | `$HOME/.local/share/nvim`                      | `%LOCALAPPDATA%\nvim-data`     |
-|    `stdpath("state")`    | `$HOME/.local/state/nvim`                      | `%LOCALAPPDATA%\nvim-data`     |
-|    `stdpath("cache")`    | `$HOME/.cache/nvim`                            | `%LOCALAPPDATA%\Temp\nvim`     |
-|     `stdpath("log")`     | `$HOME/.local/state/nvim/log`                  | `%LOCALAPPDATA%\nvim-data\log` |
-| `stdpath("config_dirs")` | `['/etc/xdg/nvim']`                            | -                              |
-|  `stdpath("data_dirs")`  | `['/usr/local/share/nvim', '/usr/share/nvim']` | -                              |
+| NAME                         | COMMAND                  | LINUX/OSX                                      | WINDOWS                        |
+|------------------------------|:-------------------------|------------------------------------------------|--------------------------------|
+| CONFIG DIRECTORY             | `stdpath("config")`      | `$HOME/.config/nvim`                           | `%LOCALAPPDATA%\nvim`          |
+| DATA DIRECTORY               | `stdpath("data")`        | `$HOME/.local/share/nvim`                      | `%LOCALAPPDATA%\nvim-data`     |
+| RUN DIRECTORY                | `:echo stdpath('run')`   | `/tmp/nvim.user/xxx`                           | `%TEMP%\nvim.user\xxx`         |
+| STATE DIRECTORY              | `stdpath("state")`       | `$HOME/.local/state/nvim`                      | `%LOCALAPPDATA%\nvim-data`     |
+| CACHE DIRECTORY              | `stdpath("cache")`       | `$HOME/.cache/nvim`                            | `%LOCALAPPDATA%\Temp\nvim`     |
+| LOG FILE                     | `stdpath("log")`         | `$HOME/.local/state/nvim/log`                  | `%LOCALAPPDATA%\nvim-data\log` |
+| ADDITIONAL CONFIGS DIRECTORY | `stdpath("config_dirs")` | `['/etc/xdg/nvim']`                            | -                              |
+| ADDITIONAL DATA DIRECTORY    | `stdpath("data_dirs")`   | `['/usr/local/share/nvim', '/usr/share/nvim']` | -                              |
 
+
+```vim
+" config path
+:lua print(vim.fn.stdpath('config'))
+/Users/marslo/.config/nvim
+:echo stdpath('config')
+/Users/marslo/.config/nvim
+
+" runtimepath
+:lua print(vim.o.runtimepath)
+:lua for _, path in ipairs(vim.split(vim.o.runtimepath, ',')) do print(path) end
+:echo &runtimepath
+:set runtimepath?
+:echo split(&runtimepath, ',')
+
+" package path
+:lua print(vim.o.packpath)
+:echo &packpath
+:set packpath?
+
+" rumtime
+:lua print(vim.env.VIMRUNTIME)
+:echo $VIMRUNTIME
+
+" data dir
+:lua vim.print(vim.fn.stdpath('data_dirs'))
+:echo stdpath("data_dirs")
+
+" config dir
+:lua vim.print(vim.fn.stdpath('config_dirs'))
+:echo stdpath("config_dirs")
+
+" log
+:lua print(vim.fn.stdpath('log'))
+:echo stdpath('log')
+:echo $NVIM_LOG_FILE
+```
 
 - using linux slash in windows system
 
@@ -806,6 +844,45 @@ lua require('config')
 
 ### list parser paths
 ```vim
+:lua for _, path in ipairs(vim.api.nvim_get_runtime_file('parser/*.so', true)) do print(path) end
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/awk.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/bash.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/c.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/cmake.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/css.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/diff.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/dockerfile.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/gitcommit.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/gitignore.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/git_config.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/git_rebase.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/groovy.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/html.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/ini.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/java.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/jq.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/json.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/lua.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/markdown.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/php.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/properties.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/python.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/query.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/ruby.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/ssh_config.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/toml.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/vim.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/vimdoc.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/xml.so
+/Users/marslo/.vim/plugged/nvim-treesitter/parser/yaml.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/c.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/lua.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/markdown.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/markdown_inline.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/query.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/vim.so
+/opt/homebrew/Cellar/neovim/HEAD-43f3c4a/lib/nvim/parser/vimdoc.so
+
 :echo nvim_get_runtime_file('parser/*.so', v:true)
 ['/Users/marslo/.vim/plugged/nvim-treesitter/parser/bash.so', '/Users/marslo/.vim/plugged/nvim-treesitt
 er/parser/c.so', '/Users/marslo/.vim/plugged/nvim-treesitter/parser/cmake.so', '/Users/marslo/.vim/plug
@@ -898,6 +975,22 @@ $ nm -gU ~/.config/nvim/lua/tiktoken_core.dylib | grep luaopen
 000000000000a314 T _luaopen_tiktoken_core
 ```
 
+### api info
+```vim
+:lua vim.print(vim.fn.api_info())
+{
+  error_types = {
+    Exception = {
+      id = 0
+    },
+    Validation = {
+      id = 1
+    }
+  },
+  ...
+}
+```
+
 ## [Tips](https://neovim.io/doc/user/tips.html#tips)
 
 ### true color
@@ -927,262 +1020,11 @@ xterm-256color truecolor
 > - SYNTAX FILES: `~/.config/nvim/syntax`
 > - ruby : `~/.config/nvim/ruby`
 
-# [builtin function details](https://neovim.io/doc/user/builtin.html#builtin-function-details)
+### tips
 
-#### math
-```vim
-:echo abs(1.456)
-1.456
-:echo abs(-5.456)
-5.456
-
-:echo acos(0)
-1.570796
-:echo acos(-0.5)
-2.094395
-
-:echo asin(0.8)
-0.927295
-:echo asin(-0.5)
--0.523599
-
-:echo cosh(0.5)
-1.127626
-:echo cosh(-0.5)
-1.127626
-
-" exponential
-:echo exp(2)
-7.389056
-:echo exp(-1)
-0.367879
-
-" x/y
-:echo fmod(12.33, 1.22)
-0.13
-
-" smallest integral value greater than or equal to {expr} as a Float
-:echo ceil(1.456)
-2.0
-:echo ceil(-5.456)
--5.0
-
-" largest integral value less than or equal to
-:echo floor(1.856)
-1.0
-:echo floor(-5.456)
--6.0
+#### [run Nvim without creating any directories or data files](https://neovim.io/doc/user/starting.html#standard-path)
+```bash
+$ NVIM_LOG_FILE=/dev/null nvim -n -i NONE
 ```
-
-#### assert
-```vim
-:echo assert_equal('foo', 'bar')
-1
-
-:echo assert_match('^f.*o$', 'foobar')
-1
-```
-
-#### list
-```vim
-:echo blob2list(0z0102.0304)
-[1, 2, 3, 4]
-:echo blob2list(0z)
-[]
-```
-
-- exists
-  ```vim
-  :let l = [1, 2, 3]
-  :echo exists("l[5]")
-  0
-  :echo exists("l[2]")
-  1
-  ```
-
-- basic
-  ```vim
-  :let newlist = [1, 2, 3] + [4, 5]
-  :echo newlist
-  [1, 2, 3, 4, 5]
-  :call extend(newlist, [2, 3], 1)
-  :echo newlist
-  [1, 2, 3, 2, 3, 4, 5]
-
-  " sort
-  :echo sort(extend(newlist, [7, 5]))
-  [1, 2, 3, 4, 5, 5, 7]
-
-  " flatten
-  :echo flatten([1, [2, [3, 4]], 5])
-  [1, 2, 3, 4, 5]
-  :echo flatten([1, [2, [3, 4]], 5], 1)
-  [1, 2, [3, 4], 5]
-  ```
-
-#### system
-- api info
-  ```vim
-  :lua vim.print(vim.fn.api_info())
-  {
-    error_types = {
-      Exception = {
-        id = 0
-      },
-      Validation = {
-        id = 1
-      }
-    },
-    ...
-  }
-  ```
-
-- exists
-  ```vim
-  :echo exists("&mouse")
-  1
-  :echo exists("$HOSTNAME")
-  0
-  :echo exists("*strftime")
-  1
-  :echo exists("*s:MyFunc")
-  0
-  :echo exists("*MyFunc")
-  0
-  :echo exists("*v:lua.Func")
-  0
-  :echo exists("bufcount")
-  0
-  :echo exists(":Make")
-  0
-  :echo exists(":make")
-  2
-  :echo exists("#CursorHold")
-  1
-  :echo exists("#BufReadPre#*.gz")
-  1
-  :echo exists("#filetypeindent")
-  1
-  :echo exists("#filetypeindent#FileType")
-  1
-  :echo exists("#filetypeindent#FileType#*")
-  1
-  :echo exists("##ColorScheme")
-  1
-  ```
-
-- file
-  ```vim
-  :echo filereadable('~/.vimrc')
-  0
-  :echo filereadable(expand('~/.vimrc'))
-  1
-
-  " get first line
-  :getline(1)
-  <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-  " get current line
-  :echo getline(".")
-
-  " get matches
-  :echo getmatches()
-  " more
-  :let m = getmatches()
-  :call clearmatches()
-  :echo getmatches()
-  ```
-
-- returns the character index of the column position
-  ```vim
-  "                + cursor
-  "                v
-  :echo charcol('.')
-  22
-  :echo col('.')
-  22
-  ```
-
-- line length
-  ```vim
-  " corsor can be anywhere of following line
-  :echo col("$")
-  17
-  ```
-
-- env
-  ```vim
-  :echo has_key(environ(), 'HOME')
-  1
-  :echo index(keys(environ()), 'HOME', 0, 1) != -1
-  1
-
-  :echo escape('c:\program files\vim', ' \')
-  c:\\program\ files\\vim
-  ```
-
-- execute
-  ```vim
-  :echo execute('echon "foo"')
-  foo
-
-  :echo execute(['echon "foo"', 'echon "bar"'])
-  foobar
-
-  :echo execute('args')->split("\n")
-  ['[nvim.md] ']
-  ```
-
-- path
-  ```vim
-  :echo expandcmd('make %<.o')
-  make nvim.o
-  :echo expandcmd('make %<.o', {'errmsg': v:true})
-  make nvim.o
-
-  :echo fnameescape('+some str%nge|name')
-  \+some\ str\%nge\|name
-  :let fname = '+some str%nge|name'
-  :exe "edit " .. fnameescape(fname)
-
-  :echo fnamemodify("main.c", ":p:h")
-  /home/marslo/ibook/docs/vim
-  ```
-
-#### others
-- buffer name
-  ```bash
-  :echo bufname("#")
-  nvim.md
-
-  :echo bufname("#")
-  cmd
-  ```
-
-- buffer number
-  ```vim
-  :echo "A window containing buffer 1 is " .. (bufwinnr(1))
-  A window containing buffer 1 is 1
-
-  :echo "A window containing buffer 1 is " .. (bufwinid(1))
-  A window containing buffer 1 is 1000
-  ```
-
-- others
-  ```vim
-  :echo byteidx('a😊😊', 2)
-  5
-  :echo byteidx('a😊😊', 2, 1)
-  1
-  :echo byteidx('a😊😊', 3, 1)
-  5
-
-  :let s = 'e' .. nr2char(0x301)
-  :echo byteidx(s, 1)
-  3
-  :echo byteidxcomp(s, 1)
-  1
-  :echo byteidxcomp(s, 2)
-  3
-  ```
 
 # [various commands](https://neovim.io/doc/user/various.html#various-cmds)

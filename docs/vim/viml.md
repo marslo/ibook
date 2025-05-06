@@ -2,6 +2,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [expr](#expr)
+- [builtin function details](#builtin-function-details)
+  - [math](#math)
+  - [assert](#assert)
+  - [list](#list)
+  - [system info](#system-info)
+  - [others](#others)
 - [autocmd](#autocmd)
   - [autocmd BufWritePre except](#autocmd-bufwritepre-except)
   - [stop gitblame in diff mode](#stop-gitblame-in-diff-mode)
@@ -18,6 +24,7 @@
   - [Putting the current file on the Windows clipboard](#putting-the-current-file-on-the-windows-clipboard)
   - [map overview](#map-overview)
   - [check `MACHTYPE`](#check-machtype)
+  - [time](#time)
 - [functions](#functions)
   - [yank highlight](#yank-highlight)
   - [paste highlight](#paste-highlight)
@@ -69,6 +76,255 @@
 | regexp doesn't match  | `!~`             | `!~#`      | `!~?`            |
 | same instance         | `is`             | `is#`      | `is?`            |
 | different instance    | `isnot`          | `isnot#`   | `isnot?`         |
+
+
+
+## [builtin function details](https://neovim.io/doc/user/builtin.html#builtin-function-details)
+
+### math
+```vim
+:echo abs(1.456)
+1.456
+:echo abs(-5.456)
+5.456
+
+:echo acos(0)
+1.570796
+:echo acos(-0.5)
+2.094395
+
+:echo asin(0.8)
+0.927295
+:echo asin(-0.5)
+-0.523599
+
+:echo cosh(0.5)
+1.127626
+:echo cosh(-0.5)
+1.127626
+
+" exponential
+:echo exp(2)
+7.389056
+:echo exp(-1)
+0.367879
+
+" x/y
+:echo fmod(12.33, 1.22)
+0.13
+
+" smallest integral value greater than or equal to {expr} as a Float
+:echo ceil(1.456)
+2.0
+:echo ceil(-5.456)
+-5.0
+
+" largest integral value less than or equal to
+:echo floor(1.856)
+1.0
+:echo floor(-5.456)
+-6.0
+```
+
+### assert
+```vim
+:echo assert_equal('foo', 'bar')
+1
+
+:echo assert_match('^f.*o$', 'foobar')
+1
+```
+
+### list
+```vim
+:echo blob2list(0z0102.0304)
+[1, 2, 3, 4]
+:echo blob2list(0z)
+[]
+
+" string to list
+:echo str2list("ABC")
+[65, 66, 67]
+```
+
+```vim
+" exists
+:let l = [1, 2, 3]
+:echo exists("l[5]")
+0
+:echo exists("l[2]")
+1
+```
+
+```vim
+" basic
+:let newlist = [1, 2, 3] + [4, 5]
+:echo newlist
+[1, 2, 3, 4, 5]
+:call extend(newlist, [2, 3], 1)
+:echo newlist
+[1, 2, 3, 2, 3, 4, 5]
+
+" sort
+:echo sort(extend(newlist, [7, 5]))
+[1, 2, 3, 4, 5, 5, 7]
+
+" flatten
+:echo flatten([1, [2, [3, 4]], 5])
+[1, 2, 3, 4, 5]
+:echo flatten([1, [2, [3, 4]], 5], 1)
+[1, 2, [3, 4], 5]
+```
+
+### system info
+- exists
+  ```vim
+  :echo exists("&mouse")
+  1
+  :echo exists("$HOSTNAME")
+  0
+  :echo exists("*strftime")
+  1
+  :echo exists("*s:MyFunc")
+  0
+  :echo exists("*MyFunc")
+  0
+  :echo exists("*v:lua.Func")
+  0
+  :echo exists("bufcount")
+  0
+  :echo exists(":Make")
+  0
+  :echo exists(":make")
+  2
+  :echo exists("#CursorHold")
+  1
+  :echo exists("#BufReadPre#*.gz")
+  1
+  :echo exists("#filetypeindent")
+  1
+  :echo exists("#filetypeindent#FileType")
+  1
+  :echo exists("#filetypeindent#FileType#*")
+  1
+  :echo exists("##ColorScheme")
+  1
+  ```
+
+- file
+  ```vim
+  :echo filereadable('~/.vimrc')
+  0
+  :echo filereadable(expand('~/.vimrc'))
+  1
+
+  " get first line
+  :getline(1)
+  <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+  " get current line
+  :echo getline(".")
+
+  " get matches
+  :echo getmatches()
+  " more
+  :let m = getmatches()
+  :call clearmatches()
+  :echo getmatches()
+  ```
+
+- returns the character index of the column position
+  ```vim
+  "                + cursor
+  "                v
+  :echo charcol('.')
+  22
+  :echo col('.')
+  22
+  ```
+
+- line length
+  ```vim
+  " corsor can be anywhere of following line
+  :echo col("$")
+  17
+  ```
+
+- env
+  ```vim
+  :echo has_key(environ(), 'HOME')
+  1
+  :echo index(keys(environ()), 'HOME', 0, 1) != -1
+  1
+
+  :echo escape('c:\program files\vim', ' \')
+  c:\\program\ files\\vim
+  ```
+
+- execute
+  ```vim
+  :echo execute('echon "foo"')
+  foo
+
+  :echo execute(['echon "foo"', 'echon "bar"'])
+  foobar
+
+  :echo execute('args')->split("\n")
+  ['[nvim.md] ']
+  ```
+
+- path
+  ```vim
+  :echo expandcmd('make %<.o')
+  make nvim.o
+  :echo expandcmd('make %<.o', {'errmsg': v:true})
+  make nvim.o
+
+  :echo fnameescape('+some str%nge|name')
+  \+some\ str\%nge\|name
+  :let fname = '+some str%nge|name'
+  :exe "edit " .. fnameescape(fname)
+
+  :echo fnamemodify("main.c", ":p:h")
+  /home/marslo/ibook/docs/vim
+  ```
+
+### others
+- buffer name
+  ```bash
+  :echo bufname("#")
+  nvim.md
+
+  :echo bufname("#")
+  cmd
+  ```
+
+- buffer number
+  ```vim
+  :echo "A window containing buffer 1 is " .. (bufwinnr(1))
+  A window containing buffer 1 is 1
+
+  :echo "A window containing buffer 1 is " .. (bufwinid(1))
+  A window containing buffer 1 is 1000
+  ```
+
+- others
+  ```vim
+  :echo byteidx('a😊😊', 2)
+  5
+  :echo byteidx('a😊😊', 2, 1)
+  1
+  :echo byteidx('a😊😊', 3, 1)
+  5
+
+  :let s = 'e' .. nr2char(0x301)
+  :echo byteidx(s, 1)
+  3
+  :echo byteidxcomp(s, 1)
+  1
+  :echo byteidxcomp(s, 2)
+  3
+  ```
+
 
 ## autocmd
 
@@ -358,6 +614,13 @@ augroup END
 
 ### system file path
 
+> [!TIP]
+> - slice string
+>> ```vim
+>> :echo strcharpart('abc', -1, 2)
+>> a
+>> ```
+
 ```vim
 substitute(system('<cmd>'), '\n\+$', '', '')
 " or
@@ -506,6 +769,25 @@ nn <silent><C-G> :let @*=expand('%:p')<CR>:f<CR>
 
   Press ENTER or type command to continue
   ```
+
+### time
+
+```vim
+:echo strftime("%c")
+Tue May  6 12:00:53 2025
+
+:echo strftime("%Y %b %d %X")
+2025 May 06 12:02:27
+
+:echo strftime("%y%m%d %T")
+250506 12:03:16
+
+:echo strftime("%H:%M")
+12:03
+
+:echo strftime("%c", getftime("file.c"))
+Wed Dec 31 15:59:59 1969
+```
 
 ## functions
 ### yank highlight
