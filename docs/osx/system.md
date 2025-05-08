@@ -36,6 +36,9 @@
 - [clean OSX native dot file](#clean-osx-native-dot-file)
 - [launchctl](#launchctl)
   - [create new plist](#create-new-plist)
+- [printer](#printer)
+  - [Xerox WorkCentre 7545](#xerox-workcentre-7545)
+  - [Xerox VersaLink C7130 Multifunction Printer](#xerox-versalink-c7130-multifunction-printer)
 - [Q&A](#qa)
   - [`SUPreferenceManager: Failed to set object of class: __NSCFString`](#supreferencemanager-failed-to-set-object-of-class-__nscfstring)
 
@@ -761,6 +764,38 @@ EOF
   ```bash
   $ launchctl remove i.marslo.updatedb
   ```
+
+## printer
+
+### Xerox WorkCentre 7545
+
+1. download driver in [https://www.support.xerox.com](https://www.support.xerox.com)
+2. go to [`Drivers & Downloads - WorkCentre 7525/7530/7535/7545/7556`](https://www.support.xerox.com/en-us/product/workcentre-7545-7556/downloads)
+
+  ![Xerox WorkCentre 7545](../screenshot/osx/printer/7545-driver-1.png)
+
+3. filter by MacOS version, and download `macOS Print and Scan Driver Installer` ( [XeroxDrivers_5.16.0_2486.dmg](https://download.support.xerox.com/pub/drivers/ALB80XX/drivers/macOS12/pt_BR/XeroxDrivers_5.16.0_2486.dmg) )
+
+  ```bash
+  $ curl -fsSL -O https://download.support.xerox.com/pub/drivers/ALB80XX/drivers/macOS12/pt_BR/XeroxDrivers_5.16.0_2486.dmg
+  ```
+
+  ![Xerox WorkCentre 7545](../screenshot/osx/printer/7545-driver-2.png)
+
+### Xerox VersaLink C7130 Multifunction Printer
+
+1. search `VersaLink C7130` in driver page [https://www.support.xerox.com](https://www.support.xerox.com)
+2. go to [`Drivers & Downloads - VersaLink C7120/C7125/C7130 Color Multifunction Printer`](https://www.support.xerox.com/en-us/product/versalink-c7100-series/downloads?language=en)
+
+  ![Xerox VersaLink C7130](../screenshot/osx/printer/c7130-driver-1.png)
+
+3. filter by MacOS version, and download `macOS Print and Scan Driver Installer` ( [XeroxDrivers_5.16.0_2486.dmg](https://download.support.xerox.com/pub/drivers/ALB80XX/drivers/macOS12/pt_BR/XeroxDrivers_5.16.0_2486.dmg) )
+
+  ```bash
+  $ curl -fsSL -O https://download.support.xerox.com/pub/drivers/ALB80XX/drivers/macOS12/pt_BR/XeroxDrivers_5.16.0_2486.dmg
+  ```
+
+  ![Xerox VersaLink C7130](../screenshot/osx/printer/c7130-driver-2.png)
 
 ## Q&A
 ### `SUPreferenceManager: Failed to set object of class: __NSCFString`
