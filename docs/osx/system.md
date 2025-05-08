@@ -43,6 +43,8 @@
   - [prints all configuration profiles](#prints-all-configuration-profiles)
   - [show expanded information for profiles](#show-expanded-information-for-profiles)
   - [shwo device enrollment configuration](#shwo-device-enrollment-configuration)
+- [log](#log)
+  - [check log stream](#check-log-stream)
 - [Q&A](#qa)
   - [`SUPreferenceManager: Failed to set object of class: __NSCFString`](#supreferencemanager-failed-to-set-object-of-class-__nscfstring)
 
@@ -825,6 +827,23 @@ $ sudo profiles show -type configuration
 ### shwo device enrollment configuration
 ```bash
 $ sudo profiles show -type enrollment
+```
+
+
+## log
+
+### check log stream
+
+```bash
+$ sudo log stream
+# or
+$ sudo log stream --predicate 'eventMessage contains "error"' --info
+
+# last 5 mins
+$ sudo log show --style syslog --predicate 'eventMessage contains "account"' --last 5m
+
+# check appstore ~= `tail -f | grep`
+$ log stream --predicate 'eventMessage contains "account" OR eventMessage contains "store" OR senderImagePath contains "appstore"' --info
 ```
 
 ## Q&A
