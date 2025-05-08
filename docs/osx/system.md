@@ -39,6 +39,10 @@
 - [printer](#printer)
   - [Xerox WorkCentre 7545](#xerox-workcentre-7545)
   - [Xerox VersaLink C7130 Multifunction Printer](#xerox-versalink-c7130-multifunction-printer)
+- [profiles](#profiles)
+  - [prints all configuration profiles](#prints-all-configuration-profiles)
+  - [show expanded information for profiles](#show-expanded-information-for-profiles)
+  - [shwo device enrollment configuration](#shwo-device-enrollment-configuration)
 - [Q&A](#qa)
   - [`SUPreferenceManager: Failed to set object of class: __NSCFString`](#supreferencemanager-failed-to-set-object-of-class-__nscfstring)
 
@@ -643,6 +647,13 @@ $ sudo purge
 > - [How to safely clear cache on Mac](https://setapp.com/how-to/clear-cache-on-mac)
 > - [How to Flush DNS](https://blog.hubspot.com/website/flush-dns)
 
+| VERSION           | COMMAND                                                         |
+|-------------------|-----------------------------------------------------------------|
+| macOS 10.10+      | `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder` |
+| macOS 10.7 ~ 10.9 | `sudo killall -HUP mDNSResponder`                               |
+| macOS 10.6        | `sudo dscacheutil -flushcache`                                  |
+| macOS 10.5-       | `lookupd -flushcache` ( deprecated )                            |
+
 ```bash
 $ sudo killall -HUP mDNSResponder
 # or
@@ -796,6 +807,25 @@ EOF
   ```
 
   ![Xerox VersaLink C7130](../screenshot/osx/printer/c7130-driver-2.png)
+
+## profiles
+
+### prints all configuration profiles
+```bash
+$ sudo profiles -P
+```
+
+### show expanded information for profiles
+```bash
+$ sudo profiles show
+# or
+$ sudo profiles show -type configuration
+```
+
+### shwo device enrollment configuration
+```bash
+$ sudo profiles show -type enrollment
+```
 
 ## Q&A
 ### `SUPreferenceManager: Failed to set object of class: __NSCFString`
