@@ -957,7 +957,26 @@ $ curl -fsSL --create-dirs -o ~/.config/nvim/lua/tiktoken_core.dylib \
 $ ln -sf ~/.config/nvim/lua/tiktoken_core.dylib ~/.config/nvim/lua/tiktoken_core.so
 
 $ echo 'require('tiktoken_core')' >> ~/.config/nvim/init.lua
+# optional
+$ sudo xattr -rd com.apple.quarantine ~/.config/nvim/lua/tiktoken_core.dylib
 ```
+
+<!--sec data-title="xattr" data-id="section4" data-show=true data-collapse=true ces-->
+```bash
+$ xattr ~/.config/nvim/lua/tiktoken_core.dylib
+com.apple.macl
+com.apple.metadata:kMDItemWhereFroms
+com.apple.provenance
+com.apple.quarantine
+
+$ sudo xattr -rd com.apple.quarantine ~/.config/nvim/lua/tiktoken_core.dylib
+
+$ xattr ~/.config/nvim/lua/tiktoken_core.dylib
+com.apple.macl
+com.apple.metadata:kMDItemWhereFroms
+com.apple.provenance
+```
+<!--endsec-->
 
 ```vim
 :lua print(require('tiktoken_core'))

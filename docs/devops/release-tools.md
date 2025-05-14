@@ -86,19 +86,8 @@ $ npm install -g conventional-changelog-angular
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md"
-      }
-    ],
-    [
-      "@semantic-release/git",
-      {
-        "assets": ["CHANGELOG.md"],
-        "message": "chore(release): v${nextRelease.version}"
-      }
-    ],
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/git", { "assets": ["CHANGELOG.md"], "message": "chore(release): v${nextRelease.version}" }],
     "@semantic-release/github"
   ]
 }
@@ -129,19 +118,8 @@ $ npm install -g conventional-changelog-angular
         }
       }
     ],
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogFile": "CHANGELOG.md"
-      }
-    ],
-    [
-      "@semantic-release/git",
-      {
-        "assets": ["CHANGELOG.md"],
-        "message": "chore(release): v${nextRelease.version}"
-      }
-    ],
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/git", { "assets": ["CHANGELOG.md"], "message": "chore(release): v${nextRelease.version}" }],
     "@semantic-release/github"
   ]
 }
