@@ -54,7 +54,7 @@ $ brew install --cask vimr
 $ python3 -m pip install jedi
 $ python3 -m pip install --upgrade pynvim
 $ GEM_HOME="$HOME/.gem" gem install neovim --user-install
-$ brew install --HEAD viu
+$ brew install --HEAD viu                         # imgcat
 $ brew install chafa
 ## macvim/vim
 $ brew install pcre2 gettext libtool              # for build vim from source
@@ -129,7 +129,7 @@ $ brew tap buo/cask-upgrade                       # brew cu
 $ brew tap-info vitorgalvao/tiny-scripts --json | jq -r .[].formula_names
 
 # --- for fun ---
-$ brew install pv
+$ brew install pv dialog zenity
 $ brew install fortune
 ```
 

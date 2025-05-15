@@ -19,6 +19,7 @@
   - [Alfred](#alfred)
   - [iTerm2](#iterm2)
   - [powerline](#powerline)
+  - [UI](#ui)
   - [mangerlahn/Latest](#mangerlahnlatest)
   - [dwarvesf/hidden](#dwarvesfhidden)
   - [backgroundmusic](#backgroundmusic)
@@ -156,6 +157,11 @@ $ mas install 736473980             # Paint
 $ mas install 520993579             # pwSafe
 $ mas install 944848654             # NeteaseMusic
 $ mas install 419330170             # Moom
+$ mas install 1516950324
+==> Downloading Overlap: World Clock (2.3)
+==> Downloaded Overlap: World Clock (2.3)
+==> Installing Overlap: World Clock (2.3)
+==> Installed Overlap: World Clock (2.3)
 
 $ mas list
 1081413713  GIF Brewery 3        (3.9.5)
@@ -168,12 +174,25 @@ $ mas list
 1295203466  Windows App          (11.0.3)
 803453959   Slack                (4.40.133)
 419330170   Moom Classic         (3.2.28)
-491854842   网易有道翻译               (11.0.2)
+491854842   网易有道翻译         (11.0.2)
 1545870783  Color Picker         (2.0.3)
 1551531632  AutoSwitchInput Pro  (2.2.2)
 956377119   World Clock          (1.21.2)
 498370702   RegExRX              (1.9.2)
 520993579   pwSafe               (10.4.0)
+
+$ mas config
+mas ▁▁▁▁ 2.2.2-65-g8c556c5
+arch ▁▁▁ arm64
+from ▁▁▁ homebrew/core/mas
+origin ▁ https://github.com/mas-cli/mas.git
+rev ▁▁▁▁ 8c556c55a09fa96e4e723e30b1353f51ec44d203
+driver ▁ 1.115.1
+swift ▁▁ 6.0.3 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
+region ▁ US
+macos ▁▁ 14.7.5 (23H527)
+mac ▁▁▁▁ Mac15,7
+cpu ▁▁▁▁ Apple M3 Pro
 ```
 
 <!--sec data-title="legacy version" data-id="section5" data-show=true data-collapse=true ces-->
@@ -214,7 +233,8 @@ vitorgalvao/tiny-scripts
 
 #### alternative list
 ```bash
-$ find /Applications/*.app/Contents/_MASReceipt/receipt -maxdepth 4 -print | sed 's#.app/Contents/_MASReceipt/receipt#.app#g; s#/Applications/##'
+$ find /Applications/*.app/Contents/_MASReceipt/receipt -maxdepth 4 -print |
+  sed 's#.app/Contents/_MASReceipt/receipt#.app#g; s#/Applications/##'
 AutoSwitchInput Pro.app
 Bob.app
 CleanMyDrive 2.app
@@ -230,7 +250,19 @@ WeChat.app
 Windows App.app
 World Clock.app
 pwSafe.app
-网易有道翻译.app```
+网易有道翻译.app
+
+# or find from $HOME/Applications
+$ find $HOME/Applications/*.app/Contents/_MASReceipt/receipt -maxdepth 4 -print |
+  sed 's#.app/Contents/_MASReceipt/receipt#.app#g;'
+/Users/marslo/Applications/AutoSwitchInput Pro.app
+/Users/marslo/Applications/Bob.app
+/Users/marslo/Applications/Plain Text Editor.app
+/Users/marslo/Applications/RegExRX.app
+/Users/marslo/Applications/Visualize.app
+/Users/marslo/Applications/Week Number.app
+/Users/marslo/Applications/iShot Pro.app
+```
 
 <!--sec data-title="legacy version" data-id="section7" data-show=true data-collapse=true ces-->
 ```bash
@@ -1090,6 +1122,46 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
   > [!TIP]
   > - [* iMarlso : fonts](../tools/fonts.html)
   > - [* iMarslo : fonts : powerline fonts](../tools/fonts.html#powerline-fonts)
+
+### UI
+
+```bash
+$ zenity --calendar --date-format=%F
+```
+
+![zenity calendar](../../screenshot/osx/zenity-calendar.png)
+
+```bash
+$ (
+    for i in {1..100}; do
+      echo $i
+      sleep 0.05
+    done
+  ) | zenity --progress --title="in progress" --percentage=0
+```
+
+![zenity progress bar](../../screenshot/osx/zenity-progress-bar.gif)
+
+```bash
+$ gum spin --title "deploying ..." -- sleep 5
+```
+
+![gum spin](../../screenshot/osx/gum-spin-1.gif)
+
+```bash
+# pv + dialog
+$ seq 100 | pv -L 10 -s 100 2>/dev/null | dialog --gauge "in progress ..." 10 50
+
+# or
+{
+  for i in $(seq 1 100); do
+    echo $i
+    sleep 0.05
+  done
+} | pv -L 10 -s 100 2>/dev/null | dialog --gauge "in progress ..." 10 50
+```
+
+![pv + dialog](../../screenshot/osx/pv+dialog.gif)
 
 ### [mangerlahn/Latest](https://github.com/mangerlahn/Latest)
 ### [dwarvesf/hidden](https://github.com/dwarvesf/hidden)
@@ -2548,7 +2620,7 @@ EOF
 - analysis
   - issue is due to java 8u391 ( version 8 Update 391 (build 1.8.0_391-b13) )
 
-    ![java 8u391](../screenshot/osx/groovyConsole-java8u391.png)
+    ![java 8u391](../../screenshot/osx/groovyConsole-java8u391.png)
 
   - [details info](http://java.sun.com/products/autodl/j2se)
     ```bash
@@ -2566,7 +2638,7 @@ EOF
     > - [* iMarslo : remove old version java](#remove-old-version-java)
 
     - manual
-      ![manual remove java 8u391](../screenshot/osx/groovyConsole-java8u391-remove.png)
+      ![manual remove java 8u391](../../screenshot/osx/groovyConsole-java8u391-remove.png)
 
     - cmd
       ```bash
