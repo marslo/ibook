@@ -585,7 +585,7 @@ $ sudo lsattr /etc/resolv.conf
 
 > [!NOTE:label:thinking:]
 > I got a issue with/without `eval` commands like:
->> ```#!/bin/bash
+>> ```bash
 >> local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
 >> local ignores=(
 >>   '*.pem' '*.p12'
@@ -597,11 +597,11 @@ $ sudo lsattr /etc/resolv.conf
 >> fdOpt+=' --exec-batch ls -t'
 >> ```
 > - the `--exclude` options are not passed correctly when using :
->>   ```#!/bin/bash
+>>   ```bash
 >>   fd . ${fdOpt} | fzf ${foption} --bind="enter:become(${VIM} {+})"
 >>   ```
 > - but it works when using `eval` :
->>   ```#!/bin/bash
+>>   ```bash
 >>   eval "fd . ${fdOpt}" | fzf ${foption} --bind="enter:become(${VIM} {+})"
 >>   ```
 
