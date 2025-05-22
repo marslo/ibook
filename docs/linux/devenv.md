@@ -1718,6 +1718,28 @@ fi
 [[ $- == *i* ]] && test -f "${FZF_HOME}/shell/completion.bash" && source "${FZF_HOME}/shell/completion.bash" 2> /dev/null
 ```
 
+#### `_comp_compgen_split: command not found`
+
+> [!NOTE|label:in ubnut 22.04]
+>> ```bash
+>> $ apt policy bash-completion
+>> bash-completion:
+>>   Installed: 1:2.11-5ubuntu1
+>>   Candidate: 1:2.11-5ubuntu1
+>>   Version table:
+>>  *** 1:2.11-5ubuntu1 500
+>>         500 https://artifactory.domain.com/artifactory/ubuntu-repo/ubuntu jammy/main amd64 Packages
+>>         100 /var/lib/dpkg/status
+>>
+>> $ type _comp_compgen_split
+>> -bash: type: _comp_compgen_split: not found
+>> ```
+
+```bash
+# solution
+$ sudo apt install --reinstall bash-completion
+```
+
 ### npm
 
 > [!NOTE|label:references:]
