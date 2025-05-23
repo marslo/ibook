@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [charset](#charset)
+  - [echo ascii in bash](#echo-ascii-in-bash)
   - [escape](#escape)
   - [control character](#control-character)
 - [encryption](#encryption)
@@ -131,6 +132,27 @@
   ```bash
   $ iconv --from-code=UTF-8 --to-code=ISO-8859-1 inputfile.txt > outputfile.txt
   ```
+
+## echo ascii in bash
+```bash
+# single echo
+#              ' is necessary
+#              v
+$ printf "%d" "'${var}"
+
+# more example
+$ printf "%s\n" {a..z} |
+  while read -r c; do printf "%s = %d\n" "$c" "'$c"; done
+
+# or format output
+$ printf "%s\n" {a..z} {A..Z} |
+  while read -r c; do   printf "%s = %-3d\n" "$c" "'$c"; done |
+  awk 'ORS=(NR%13?" ":"\n")'
+a = 97  b = 98  c = 99  d = 100 e = 101 f = 102 g = 103 h = 104 i = 105 j = 106 k = 107 l = 108 m = 109
+n = 110 o = 111 p = 112 q = 113 r = 114 s = 115 t = 116 u = 117 v = 118 w = 119 x = 120 y = 121 z = 122
+A = 65  B = 66  C = 67  D = 68  E = 69  F = 70  G = 71  H = 72  I = 73  J = 74  K = 75  L = 76  M = 77
+N = 78  O = 79  P = 80  Q = 81  R = 82  S = 83  T = 84  U = 85  V = 86  W = 87  X = 88  Y = 89  Z = 90
+```
 
 ## escape
 
@@ -2805,6 +2827,7 @@ aabaa
 > - check ascii via terminal
 >   - `$ man ascii`
 >   - `$ cat /usr/share/misc/ascii`
+>   - `$ printf "%d" "'${char}"`, i.e.: `$ printf "%d" "'a" => 97`
 > - [How Hexdump works](https://opensource.com/article/19/8/dig-binary-files-hexdump)
 > - [ASCII Table](https://bytetool.web.app/en/ascii/)
 >   - [ASCII/Binary of 0x0a](https://bytetool.web.app/en/ascii/code/0x0a/)
@@ -2812,7 +2835,7 @@ aabaa
 >
 > | OS                       | CHARACTER ENCODING | ABBREVIATION | HEX   | DEC   | ESCAPE SEQUENCE |
 > |--------------------------|--------------------|--------------|-------|-------|-----------------|
-> | UNIX  or Unix-like       | ASCII              | LF           | 0A    | 10    | \n              |
+> | UNIX or Unix-like        | ASCII              | LF           | 0A    | 10    | \n              |
 > | MS-DOS                   | ASCII              | CR LF        | 0D 0A | 13 10 | \r\n            |
 > | Commodore 8-bit machines | ASCII              | CR           | 0D    | 13    | \r              |
 > | QNX pre-POSIX            | ASCII              | RS           | 1E    | 30    | \036            |
