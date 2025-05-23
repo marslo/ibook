@@ -38,11 +38,11 @@ life is hard, make it easier
 > build vim/gvim from source code
 {% endhint %}
 
-- [Compile vim/gvim by source code](https://github.com/marslo/myvim#compile-vimgvim-by-source-code)
-  - [Precondiction](https://github.com/marslo/myvim#1-prepare-environment)
-  - [Compile and Install](https://github.com/marslo/myvim#2-compile-and-install)
-  - [Make compiled vim as default text editor](https://github.com/marslo/myvim#3-make-the-compiled-gvim-as-the-default-text-editor-in-ubunut)
-  - [Q&A](https://github.com/marslo/myvim#4-qa)
+- [compile vim/gvim by source code](https://github.com/marslo/myvim/tree/master?tab=readme-ov-file#compile-vimgvim-by-source-code)
+  - [precondiction](https://github.com/marslo/myvim/tree/master?tab=readme-ov-file#1-prepare-environment)
+  - [compile and install](https://github.com/marslo/myvim/tree/master?tab=readme-ov-file#2-compile-and-install)
+  - [make compiled vim as default text editor](https://github.com/marslo/myvim/tree/master?tab=readme-ov-file#3-make-the-compiled-gvim-as-the-default-text-editor-in-ubunut)
+  - [troulleshooting](https://github.com/marslo/myvim/tree/master?tab=readme-ov-file#4-qa)
 
 ### colorful windows command line
 {% hint style='tip' %}
@@ -50,11 +50,11 @@ life is hard, make it easier
 {% endhint %}
 
 - [Colorful Prompt](https://github.com/marslo/myColorfulWinCommandLine#colorful_commandline_windows)
-  - [Needed Tools and files](https://github.com/marslo/myColorfulWinCommandLine#needed-tools-and-files)
-  - [Steps](https://github.com/marslo/myColorfulWinCommandLine#steps)
-  - [Specified Font](https://github.com/marslo/myColorfulWinCommandLine#change-font-in-commandline)
-  - [Specified Cursor Size](https://github.com/marslo/myColorfulWinCommandLine#specified-the-cursor-size)
-  - [Set aliases in cmd](https://github.com/marslo/myColorfulWinCommandLine#set-aliases-in-command-linedefault-command-line)
+  - [needed tools and files](https://github.com/marslo/myColorfulWinCommandLine#needed-tools-and-files)
+  - [steps](https://github.com/marslo/myColorfulWinCommandLine#steps)
+  - [specified font](https://github.com/marslo/myColorfulWinCommandLine#change-font-in-commandline)
+  - [specified cursor size](https://github.com/marslo/myColorfulWinCommandLine#specified-the-cursor-size)
+  - [set aliases in cmd](https://github.com/marslo/myColorfulWinCommandLine#set-aliases-in-command-linedefault-command-line)
 
 <!---
 vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent
