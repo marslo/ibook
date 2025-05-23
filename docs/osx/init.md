@@ -69,7 +69,7 @@ $ sudo ln -sf '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/c
 $ brew install --HEAD ruby
 # nvm for gitbook install: nvm install 12
 $ brew install openjdk gradle nvm mongosh groovy
-$ brew install gradle-completion
+$ brew install --HEAD gradle-completion open-completion docker-completion gem-completion
 $ brew install kubecolor
 $ brew install --HEAD kubectl jfrog-cli jq
 $ brew install --HEAD git-flow git-extras

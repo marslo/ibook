@@ -57,6 +57,7 @@
 - [auto completion](#auto-completion)
   - [bash-completion](#bash-completion)
   - [bash-completion@2](#bash-completion2)
+    - [tools completion install](#tools-completion-install)
     - [troubleshooting](#troubleshooting)
   - [tools](#tools)
     - [fzf](#fzf)
@@ -1599,6 +1600,16 @@ if test -d "${BASH_COMPLETION_DIR}"; then
   if ls "${BASH_COMPLETION_DIR}"/*docker* >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*docker* ) ; fi
 fi
 ```
+
+### tools completion install
+
+- gpg
+  ```bash
+  # the latest gpg completion has issue with multipe `--` options, using v2.11 instead of
+  $ curl -fsSL --create-dirs -O ~/.marslo/.completion/gpg.v2.11 \
+         https://github.com/scop/bash-completion/raw/2.11/completions/gpg
+  $ ln -sf ~/.marslo/.completion/gpg.v2.11 "${HOMEBREW_PREFIX}/etc/bash_completion.d/gpg"
+  ```
 
 ### troubleshooting
 
