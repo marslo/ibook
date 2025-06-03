@@ -23,8 +23,14 @@
   - [get apiresources](#get-apiresources)
   - [check etcd](#check-etcd)
 - [output format](#output-format)
+- [patch](#patch)
+  - [json patch path](#json-patch-path)
 - [apply](#apply)
 - [rollback](#rollback)
+  - [check history](#check-history)
+  - [upgrade with CHANGE-CAUSE](#upgrade-with-change-cause)
+  - [check comments](#check-comments)
+  - [check replicasets](#check-replicasets)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -434,6 +440,61 @@ ok
 > - [Kubectl output options](https://gist.github.com/so0k/42313dbb3b547a0f51a547bb968696ba)
 > - [Getting Custom Output From Kubectl With Examples](https://technekey.com/customizing-the-kubectl-output/)
 
+
+## patch
+
+```bash
+
+$ kubectl patch deploy dev-jenkins -n devops-ci \
+          --type='json' \
+          -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/image", "value": "jenkins/jenkins:2.461-jdk17"}]'
+```
+
+### json patch path
+
+> [!TIP]
+> - jsonpath vs. json patch path
+>> ```
+>> {.spec.template.spec.containers[0].image}
+>> →
+>> /spec/template/spec/containers/0/image
+>> ```
+
+```bash
+$ kubectl -n devops-ci get deployment dev-jenkins -o json |
+          jq -r 'paths(scalars) as $p | select(getpath($p) | tostring | test(".*jenkins.*")) |
+          "/"+($p | map(tostring) | join("/")) + " = " + (getpath($p) | tostring)'
+/metadata/labels/app = dev-jenkins
+/metadata/name = dev-jenkins
+/metadata/selfLink = /apis/extensions/v1beta1/namespaces/devops-ci/deployments/dev-jenkins
+/spec/selector/matchLabels/app = dev-jenkins
+/spec/template/metadata/labels/app = dev-jenkins
+/spec/template/spec/containers/0/env/0/value = -Duser.timezone='America/Los_Angeles' -Dhudson.model.DirectoryBrowserSupport.CSP="" -Djenkins.slaves.NioChannelSelector.disabled=true -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=false -Djava.awt.headless=true -Djenkins.security.ClassFilterImpl.SUPPRESS_WHITELIST=true -Dhudson.model.ParametersAction.keepUndefinedParameters=true -Dcom.cloudbees.workflow.rest.external.ChangeSetExt.resolveCommitAuthors=true -Djenkins.install.runSetupWizard=true -Dpermissive-script-security.enabled=true -DsessionTimeout=1440 -DsessionEviction=43200 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=utf-8 -Dgroovy.grape.report.downloads=true -Divy.message.logger.level=4 -Dhudson.plugins.active_directory.ActiveDirectorySecurityRealm.forceLdaps=false -Djenkins.model.Jenkins.logStartupPerformance=true -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true -Djsch.client_pubkey='ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256' -Djsch.server_host_key='ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256' -Xms32g -Xmx32g -XX:+AlwaysPreTouch -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/jenkins_home/logs -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+ParallelRefProcEnabled -XX:+DisableExplicitGC -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -verbose:gc -XX:+PrintGC -XX:+PrintGCDetails -XX:ErrorFile=/var/jenkins_home/logs/hs_err_%p.log -XX:+LogVMOutput -XX:LogFile=/var/jenkins_home/logs/jvm.log -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=50.0 -Xlog:gc*=info,gc+heap=debug,gc+ref*=debug,gc+ergo*=trace,gc+age*=trace:file=/var/jenkins_home/logs/gc-%t.log:utctime,pid,level,tags:filecount=2,filesize=100M
+/spec/template/spec/containers/0/env/1/value = -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=false
+/spec/template/spec/containers/0/image = artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21
+/spec/template/spec/containers/0/name = dev-jenkins
+/spec/template/spec/containers/0/volumeMounts/0/mountPath = /var/jenkins_home
+/spec/template/spec/containers/0/volumeMounts/0/name = dev-jenkins-home
+/spec/template/spec/serviceAccount = dev-jenkins-admin
+/spec/template/spec/serviceAccountName = dev-jenkins-admin
+/spec/template/spec/volumes/0/name = dev-jenkins-home
+/spec/template/spec/volumes/0/persistentVolumeClaim/claimName = dev-jenkins-pvc
+/status/conditions/0/message = ReplicaSet "dev-jenkins-569fcd784c" has successfully progressed.
+```
+
+| **PURPOSE**               | **JSON PATCH PATH**                                                      | **JSONPATH EXPRESSION**                                                                 |
+| ------------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Used for                  | Modifying fields in `kubectl patch --type=json`                          | Reading/querying values in `kubectl get -o jsonpath=...`                                |
+| Syntax                    | Slash-separated path (`/a/b/0/c`)                                        | Dot notation with array indexing (`{.a.b[0].c}`)                                        |
+| Array access              | Index with `/0/`                                                         | Index with `[0]`                                                                        |
+| Wildcards / filters       | Not supported                                                            | Supported                                                                               |
+| Field quoting or escaping | Follows [RFC 6902 JSON Patch](https://tools.ietf.org/html/rfc6902) rules | Follows [JSONPath syntax](https://kubernetes.io/docs/reference/kubectl/jsonpath/) rules |
+
+| **FIELD**       | **JSON PATCH PATH**                      | **JSONPATH EXPRESSION**                     |
+| --------------- | ---------------------------------------- | ------------------------------------------- |
+| Container image | `/spec/template/spec/containers/0/image` | `{.spec.template.spec.containers[0].image}` |
+| Container name  | `/spec/template/spec/containers/0/name`  | `{.spec.template.spec.containers[0].name}`  |
+
 ## apply
 
 > [!NOTE|label:referenecs]
@@ -470,3 +531,97 @@ ok
 
 > [!NOTE|label:references:]
 > -[** How do you rollback deployments in Kubernetes?](https://learnk8s.io/kubernetes-rollbacks)
+
+```bash
+# format
+$ kubectl rollout undo deployment <name> --to-revision=<n>
+
+# -- i.e.: --
+# rollout to specific version ( 3 )
+$ kubectl -n devops-ci rollout undo deployment/devops-dev-jenkins --to-revision=3
+
+# -- check rollout status --
+$ kubectl -n devops-ci rollout status deployment/devops-dev-jenkins
+# or
+$ kubectl -n devops-ci get deploy devops-dev-jenkins -o jsonpath='{.spec.template.spec.containers[*].image}'
+```
+
+### check history
+```bash
+$ kubectl -n devops-ci rollout history deployment/dev-jenkins
+deployment.extensions/dev-jenkins
+REVISION  CHANGE-CAUSE
+...
+48        <none>
+49        <none>
+
+$ kubectl -n devops-ci get replicasets -l app=dev-jenkins --sort-by=.metadata.creationTimestamp
+NAME                            DESIRED   CURRENT   READY   AGE
+...
+dev-jenkins-f6846c86d    0         0         0       31d
+dev-jenkins-569fcd784c   1         1         1       5h21m
+```
+
+### upgrade with CHANGE-CAUSE
+```bash
+# with --record
+$ kubectl -n devops-ci set image deployment/dev-jenkins dev-jenkins=artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --record
+Flag --record has been deprecated, --record will be removed in the future
+deployment.extensions/dev-jenkins image updated
+
+$ kubectl -n devops-ci rollout history deployment/dev-jenkins
+deployment.extensions/dev-jenkins
+REVISION  CHANGE-CAUSE
+...
+48        <none>
+49        kubectl set image deployment/dev-jenkins dev-jenkins=artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --kubeconfig=/Users/marslo/iMarslo/job/devops/env/linux/dc5-ssdfw8/.kube/config --namespace=devops-ci --record=tru
+
+# with annotate
+# -- update --
+$ kubectl -n devops-ci set image deployment/dev-jenkins dev-jenkins=artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --record
+# -- annotate --
+$ kubectl -n devops-ci annotate deployment dev-jenkins kubernetes.io/change-cause="Upgrade Jenkins to 2.512-jdk21 @ $(date +'%F %T')"
+
+$ kubectl -n devops-ci rollout history deployment/dev-jenkins
+$ kubectl -n devops-ci rollout history deployment/dev-jenkins
+deployment.extensions/dev-jenkins
+REVISION  CHANGE-CAUSE
+...
+48        <none>
+49        upgrade dev jenkins to 2.512-jdk21 @ 2025-06-02 20:45:16
+```
+
+### check comments
+```bash
+$ kubectl -n devops-ci get rs -l app=dev-jenkins \
+          -o jsonpath='{range .items[*]}{"REV: "}{.metadata.annotations.deployment\.kubernetes\.io/revision}{"  CAUSE: "}{.metadata.annotations.kubernetes\.io/change-cause}{"\n"}{end}'
+Warning: short name "rs" could also match lower priority resource replicasets.apps
+REV: 49  CAUSE: upgrade dev jenkins to 2.512-jdk21 @ 2025-06-02 20:45:16
+REV: 44  CAUSE:
+...
+
+# or
+$ kubectl -n devops-ci rollout history deployment/dev-jenkins
+deployment.extensions/dev-jenkins
+REVISION  CHANGE-CAUSE
+...
+48        <none>
+49        upgrade dev jenkins to 2.512-jdk21 @ 2025-06-02 20:45:16
+```
+
+### check replicasets
+```bash
+$ kubectl -n devops-ci get replicasets -l app=dev-jenkins --sort-by=.metadata.creationTimestamp
+NAME                     DESIRED   CURRENT   READY   AGE
+...
+dev-jenkins-f6846c86d    0         0         0       31d
+dev-jenkins-569fcd784c   1         1         1       5h30m
+
+# show timestamp
+$ kubectl -n devops-ci get replicasets -l app=devops-dev-jenkins \
+          -o=jsonpath='{range .items[*]}{"REVISION: "}{.metadata.annotations.deployment\.kubernetes\.io/revision}{"\tCREATED: "}{.metadata.creationTimestamp}{"\n"}{end}' |
+  sort
+...
+REVISION: 48  CREATED: 2025-05-02T23:36:56Z
+REVISION: 49  CREATED: 2025-06-02T22:19:17Z
+```
