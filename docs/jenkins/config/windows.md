@@ -10,6 +10,8 @@
     - [prepare](#prepare)
     - [install and start agent service](#install-and-start-agent-service)
     - [stop services](#stop-services)
+  - [tools](#tools)
+    - [curl](#curl)
   - [Q&A](#qa)
     - [`a windows service must first be installed ( using installutil.exe )`](#a-windows-service-must-first-be-installed--using-installutilexe-)
 
@@ -484,6 +486,68 @@ SERVICE_NAME: jenkins
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 ```
+
+## tools
+
+> [!TIP]
+> if Environment Variable changed in jenkins agent, the service requires to reboot again.
+
+### curl
+
+> [!NOTE|label:references:]
+> - [curl](https://curl.se/windows/)
+>> - [curl-8.14.0_1-win64-mingw.zip](https://curl.se/windows/dl-8.14.0_1/curl-8.14.0_1-win64-mingw.zip)
+
+- via scoop
+  ```powershell
+  # normal user
+  > Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+  > iwr -useb get.scoop.sh | iex
+
+  # setup proxy if applicate
+  > $env:SCOOP_PROXY="http://proxy.example.com:8080"
+
+  # install curl
+  > scoop install curl
+  ```
+
+- via chocolatey
+  ```powershell
+  # admin user
+  > Set-ExecutionPolicy Bypass -Scope Process -Force; `
+  [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; `
+  iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+  # install curl
+  > choco install curl
+  ```
+
+- via manually
+
+  * download from [https://curl.se/windows](https://curl.se/windows/)
+  * manually extract ( i.e. `c:\tools\curl` )
+  * add `c:\tools\curl\bin` into Environment Variable
+  * restart jenkins agent service
+
+  | RETURN | ARCHITECTURE | SYSTEM TYPE      | DOWNLOAD |
+  |--------|--------------|------------------|----------|
+  | `9`    | x64 (AMD64)  | `x64-based PC`   | `64-bit` |
+  | `5`    | ARM          | `ARM64-based PC` | `ARM64`  |
+  | `0`    | x86          | `x86-based PC`   | `32-bit` |
+
+  ```powershell
+  # 64-bit or 32-bit
+  > [System.Environment]::Is64BitOperatingSystem
+  True
+
+  # is arm
+  > (Get-CimInstance Win32_Processor).Architecture
+  9
+
+  # system type
+  > systeminfo | findstr /C:"System Type"
+  System Type:               x64-based PC
+  ```
 
 ## Q&A
 ### `a windows service must first be installed ( using installutil.exe )`
