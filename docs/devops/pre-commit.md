@@ -2,7 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [setup](#setup)
-  - [install](#install)
+  - [install pre-commit](#install-pre-commit)
+  - [init hook in repo](#init-hook-in-repo)
 - [run](#run)
 - [migrate-config](#migrate-config)
 - [hooks](#hooks)
@@ -15,7 +16,7 @@
 
 ## setup
 
-### install
+### install pre-commit
 ```bash
 $ python -m pip install --user pipx
 $ pipx ensurepath
@@ -25,10 +26,21 @@ $ pipx install pre-commit
 $ brew install --HEAD pre-commit
 ```
 
+### init hook in repo
+```bash
+$ pre-commit install
+
+# or
+$ pre-commit install --install-hook
+pre-commit installed at .git/hooks/pre-commit
+```
+
 ## run
 ```bash
 # -- all files --
 $ pre-commit run --all-files
+# or
+$ pre-commit run --all-files --show-diff-on-failure --color always
 
 # -- all files with specific hook --
 $ pre-commit run <hook_id> --all-files
@@ -42,6 +54,28 @@ $ pre-commit migrate-config
 ```
 
 ## hooks
+
+> [!NOTE|labels:reference:]
+> - sample config
+>> ```bash
+>> $ pre-commit sample-config
+>> # See https://pre-commit.com for more information
+>> # See https://pre-commit.com/hooks.html for more hooks
+>> repos:
+>> -   repo: https://github.com/pre-commit/pre-commit-hooks
+>>     rev: v3.2.0
+>>     hooks:
+>>     -   id: trailing-whitespace
+>>     -   id: end-of-file-fixer
+>>     -   id: check-yaml
+>>     -   id: check-added-large-files
+>> ```
+> - update to repo's latest version
+>> ```bash
+>> $ pre-commit autoupdate
+>> [https://github.com/pre-commit/pre-commit-hooks] already up to date!
+>> [https://github.com/psf/black] already up to date!
+>> ```
 
 ### copyright manager
 
