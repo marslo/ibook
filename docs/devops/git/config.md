@@ -14,6 +14,8 @@
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
   - [http.cookiefile](#httpcookiefile)
+    - [generate cookies](#generate-cookies)
+    - [verify](#verify)
   - [`commit.template`](#committemplate)
 - [default configuration](#default-configuration)
 - [`__git_ps1`](#__git_ps1)
@@ -616,6 +618,87 @@ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 > [!NOTE|label:references:]
 > - [When do you need ./gitcookies?](https://stackoverflow.com/q/48603575/2940319)
 > - [336b352d6fe4de90392691d892557d5fa2cd07d4](https://github.com/hashicorp/terraform/commit/336b352d6fe4de90392691d892557d5fa2cd07d4)
+> - [gogetcookie.sh](https://github.com/ewilde/terraform-provider-runscope/blob/master/scripts/gogetcookie.sh)
+
+```bash
+# format
+#     DOMAIN                    INCLUDE  PATH SECURE   EXPIRATION COOKIE                                      COOKIE VALUE
+#       |                      SUBDOMAINS  |   ONLY        |      NAME         ACCOUNT                                                           TOKEN
+#       v                           v      v    v          v       v       +---------------+    +--------------------------------------------------------------------------------------------------+
+.googlesource.com                  TRUE    /   TRUE    2147483647  o   git-account.gmail.com=1//0***************************-*****************-*******************************************-********A
+# -- another fomat -- #
+gerrit.googlesource.com           FALSE    /   TRUE    2147483647  o   git-account.gmail.com=1//0***************************-**********-***********************************************************k
+gerrit-review.googlesource.com    FALSE    /   TRUE    2147483647  o   git-account.gmail.com=1//0***************************-**********-***********************************************************k
+```
+
+> [!TIP|label:check expiration]
+> ```bash
+> $ date -d @2147483647
+> Mon Jan 18 19:14:07 PST 2038
+> ```
+
+| FIELD # | VALUE (EXAMPLE)             | PURPOSE                                                                     |
+| ------- | --------------------------- | --------------------------------------------------------------------------- |
+| 1       | `.googlesource.com`         | **Domain**: target domain the cookie applies to (including subdomains)      |
+| 2       | `TRUE`                      | **Include Subdomains**: if `TRUE`, the cookie is sent to subdomains         |
+| 3       | `/`                         | **Path**: url path prefix the cookie is valid for                           |
+| 4       | `TRUE`                      | **Secure Only**: if `TRUE`, cookie is only sent over HTTPS                  |
+| 5       | `2147483647`                | **Expiration (Unix time)**: when the cookie expires (here: 2038-01-19)      |
+| 6       | `o`                         | **Cookie Name**: gerrit expects the cookie to be named `o`                  |
+| 7       | `git-account.gmail.com=...` | **Cookie Value**: key-value pair used for authentication (`username=token`) |
+
+
+cookie value explaination
+
+| COMPONENT             | EXAMPLE                 | DESCRIPTION                   |
+| --------------------- | ----------------------- | ----------------------------- |
+| Username / Identifier | `git-account.gmail.com` | identity used by Gerrit       |
+| Authentication Token  | `1//0ABC...XYZ`         | oAuth-style or Gerrit token   |
+| Separator             | `=`                     | separates identity from token |
+
+### generate cookies
+
+> [!TIP|label:references:]
+> - open [https://www.googlesource.com/new-password](https://www.googlesource.com/new-password) URL to generate new token/password if [HTTP Credentials](https://gerrit-review.googlesource.com/settings/#HTTPCredentials) -> `Obtain password` is not working
+
+```powershell
+# windows
+git config --global http.cookiefile "%USERPROFILE%\.gitcookies"
+powershell -noprofile -nologo -command Write-Output ".googlesource.com`tTRUE`t/`tTRUE`t2147483647`to`tgit-account.gmail.com=1//0***************************-**********-**************************-**********-*********************o" >>"%USERPROFILE%\.gitcookies"
+```
+
+```bash
+eval 'set +o history' 2>/dev/null || setopt HIST_IGNORE_SPACE 2>/dev/null
+touch ~/.gitcookies
+chmod 0600 ~/.gitcookies
+
+git config --global http.cookiefile ~/.gitcookies
+
+tr , \\t <<\__END__ >>~/.gitcookies
+.googlesource.com,TRUE,/,TRUE,2147483647,o,git-account.gmail.com=1//0***************************-**********-**************************-**********-*********************o
+__END__
+eval 'set -o history' 2>/dev/null || unsetopt HIST_IGNORE_SPACE 2>/dev/null
+```
+
+### verify
+
+> [!NOTE|label:googlesource repos]
+> - [Google Open Source](https://opensource.google/)
+> - [Git repositories on gerrit](https://gerrit.googlesource.com/) | [gerrit-review](https://gerrit-review.googlesource.com/)
+> - [Git repositories on chromium](https://chromium.googlesource.com/) | [chromium-review](https://chromium-review.googlesource.com/)
+> - [Git repositories on android](https://android.googlesource.com/) | [android-review](https://android-review.googlesource.com/)
+> - [Git repositories on go](https://go.googlesource.com/) | [go-review](https://go-review.googlesource.com/)
+
+```bash
+$ bash setup.gitcookies.sh
+$ GIT_CURL_VERBOSE=1 git clone https://gerrit-review.googlesource.com/a/gerrit
+...
+== Info: [HTTP/2] [1] [cookie: o=<redacted>]    # libcurl (used by Git) has picked up a cookie named o from your configured cookiefile
+...
+=> Send header: Cookie: o=<redacted>            # the actual HTTP request header Git (via libcurl) sends to the Gerrit server
+...
+<= Recv header: HTTP/2 200                      # the response from the server: HTTP/2 200 OK, indicating that the server accepted your cookie, authenticated
+```
 
 ## `commit.template`
 
