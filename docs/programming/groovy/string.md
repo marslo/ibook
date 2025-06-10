@@ -7,6 +7,7 @@
   - [`uncapitalize`](#uncapitalize)
   - [`toLowerCase`](#tolowercase)
   - [`toUpperCase`](#touppercase)
+  - [titleCase](#titlecase)
 - [substring](#substring)
   - [string indexing](#string-indexing)
   - [`minus`](#minus)
@@ -92,6 +93,39 @@ assert 'groovy' == 'GRoOvy'.toLowerCase()
 ### `toUpperCase`
 ```groovy
 assert 'GROOVY' == 'gRoovy'.toUpperCase()
+```
+
+### titleCase
+
+> [!TIP|label:references:]
+> - this function will ignore to capitalize the works if it stats with single `~`
+
+```groovy
+String titleCase( String input ) {
+  List<String> lWords = ['and', 'or', 'in', 'on', 'at', 'of', 'for', 'with', 'a', 'an', 'the', 'to', 'by', 'from']
+  // .abc -> .Abc
+  Closure toCap = { String s -> s.replaceFirst(/\w+/) { it.capitalize() } }
+
+  String result = input.replaceAll(/(~+)([^\s]+)/) {
+    // groovylint-disable-next-line UnusedVariable
+    def ( full, tildes, word ) = it             // lower groovy version
+    if ( tildes.length() == 1 ) {
+      lWords << word
+      word
+    } else {
+      tildes[1..-1] + word
+    }
+  }
+
+  result.findAll(/\S+|\s+/).inject([ out: new StringBuilder(), nextCap: true ]) { acc, token ->
+    def lower  = token.toLowerCase()
+    def isWord = lower.trim() && lower ==~ /[^\s]+/
+
+    acc.out << ( isWord ? lower in lWords ? lower : toCap(token) : token )
+    acc.nextCap = isWord ? false : token == ':'
+    acc
+  }.out.toString()
+}
 ```
 
 ## substring
