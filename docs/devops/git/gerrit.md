@@ -31,10 +31,12 @@
 
 > [!NOTE|label:references:]
 > - [Gerrit Code Review - Access Controls](https://gerrit.cloudera.org/Documentation/access-control.html)
->   - [Special and magic references](https://gerrit.cloudera.org/Documentation/access-control.html#references)
->     - [Magic references](https://gerrit.cloudera.org/Documentation/access-control.html#references_magic)
->   - [Access Categories](https://gerrit.cloudera.org/Documentation/access-control.html#access_categories)
-
+>> - [Special and magic references](https://gerrit.cloudera.org/Documentation/access-control.html#references)
+>>> - [Magic references](https://gerrit.cloudera.org/Documentation/access-control.html#references_magic)
+>> - [Access Categories](https://gerrit.cloudera.org/Documentation/access-control.html#access_categories)
+> - [Working with Gerrit: An example](https://gerrit-review.googlesource.com/Documentation/intro-gerrit-walkthrough.html)
+>> - [[PUBLIC] Git – Concepts and Workflows.pptx](https://docs.google.com/presentation/d/1IQCRPHEIX-qKo7QFxsD3V62yhyGA9_5YsYXFOiBpgkk/edit?usp=sharing)
+>> - [[PUBLIC] Gerrit - Concepts and Workflows.pptx](https://docs.google.com/presentation/d/1C73UgQdzZDw0gzpaEqIC6SPujZJhqamyqO1XOHjH-uk/edit?usp=sharing)
 
 ## .gitconfig
 ```bash
