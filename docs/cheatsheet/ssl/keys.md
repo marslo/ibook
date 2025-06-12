@@ -1,4 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [Root CA](#root-ca)
+- [Intermediate CA](#intermediate-ca)
+- [check certificate chain](#check-certificate-chain)
+  - [fetch cert file from chain](#fetch-cert-file-from-chain)
+  - [fetch the last certificate from chain ( root CA )](#fetch-the-last-certificate-from-chain--root-ca-)
+- [transform](#transform)
+  - [tips](#tips)
+  - [keys](#keys)
+  - [key type](#key-type)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Root CA
 
@@ -112,3 +125,106 @@ $ openssl s_client -showcerts -connect proxy.business.githubcopilot.com:443 </de
     END { printf "%s", cert }
   '
 ```
+
+## transform
+
+|  TO | FROM                                                                 | COMMAND                                                                    |
+|:---:|----------------------------------------------------------------------|----------------------------------------------------------------------------|
+| PEM | DER encoded binary X.509 (.CER)                                      | `$ openssl x509 -outform PEM -in <NAME>.cer -out <NAME>.pem -inform DER `  |
+| PEM | Base-64 encoded X.509 (.CER)                                         | `$ openssl x509 -outform PEM -in <NAME>.cer -out <NAME>.pem -inform PEM `  |
+| PEM | Cryptographic Message Syntax Standard<br>PKCS #7 Certificates (.P7B) | `$ openssl pkcs7 -outform PEM -in <NAME>.p7b -out <NAME>.pem -inform DER ` |
+
+|  TO | FROM                                                                 | COMMAND                                                      |
+|:---:|----------------------------------------------------------------------|--------------------------------------------------------------|
+| CRT | DER encoded binary X.509 (.CER)                                      | `$ openssl x509 -in <NAME>.cer -out <NAME>.crt -inform DER`  |
+| CRT | Base-64 encoded X.509 (.CER)                                         | `$ openssl x509 -in <NAME>.cer -out <NAME>.crt -inform PEM`  |
+| CRT | Cryptographic Message Syntax Standard<br>PKCS #7 Certificates (.P7B) | `$ openssl pkcs7 -in <NAME>.p7b -out <NAME>.crt -inform DER` |
+
+|  TO | FROM                                                                 | COMMAND                                                                   |
+|:---:|----------------------------------------------------------------------|---------------------------------------------------------------------------|
+| PEM | DER encoded binary X.509 (.CER)                                      | `$ openssl x509 -in <NAME>.crt -out <NAME>.pem -outform PEM -inform DER`  |
+| PEM | Base-64 encoded X.509 (.CER)                                         | `$ openssl x509 -in <NAME>.crt -out <NAME>.pem -outform PEM -inform PEM ` |
+| PEM | Cryptographic Message Syntax Standard<br>PKCS #7 Certificates (.P7B) | `$ openssl pkcs7 -in <NAME>.p7b -out <NAME>.pem -outform PEM -inform DER` |
+
+### tips
+
+- using base64 to convert DER to PEM format:
+
+  ```bash
+  $ file <NAME>.crt
+  <NAME>.crt: Certificate, Version=3
+
+  $ {
+      echo "-----BEGIN CERTIFICATE-----";
+      base64 -w 64 <NAME>.crt;
+      echo "-----END CERTIFICATE-----"
+    } > <NAME>.pem
+  # or
+  $ {
+      echo "-----BEGIN CERTIFICATE-----";
+      base64 -w0 <NAME>.crt | fold -w 64;
+      echo "-----END CERTIFICATE-----"
+    } > <NAME>.pem
+
+  # verify
+  $ diff <( { echo "-----BEGIN CERTIFICATE-----"; base64 -w 64 <NAME>.crt; echo "-----END CERTIFICATE-----"; } ) \
+         <( openssl x509 -in <NAME>.crt -inform der -outform pem )
+  ```
+
+### keys
+
+<table><thead>
+  <tr>
+    <th style="text-align:center;vertical-align:middle">KEYS</th>
+    <th style="text-align:center;vertical-align:middle">FORMAT</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>CRT</td>
+    <td>binary file</td>
+  </tr>
+  <tr>
+    <td>PEM</td>
+    <td><pre><code class="lang-bash">-----BEGIN CERTIFICATE-----
+&lt;.. 64 characters ..&gt;
+-----END CERTIFICATE-----</code></pre></td>
+  </tr>
+</tbody>
+</table>
+
+### key type
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:center;vertical-align:middle">KEY FORMAT</th>
+      <th style="text-align:center;vertical-align:middle">KEY TYPE</th>
+      <th style="text-align:center;vertical-align:middle">DETAILS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align:center;vertical-align:middle" rowspan="2">CRT</td>
+      <td style="text-align:center;vertical-align:middle">DER</td>
+      <td style="text-align:left;vertical-align:middle">
+        <pre><code class="lang-bash">$ file file.crt
+<NAME>.crt: Certificate, Version=3</code></pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center;vertical-align:middle">PEM</td>
+      <td style="text-align:left;vertical-align:middle">
+        <pre><code class="lang-bash">$ file <NAME>.crt
+<NAME>.crt: PEM certificate</code></pre>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:center;vertical-align:middle">P7B</td>
+      <td style="text-align:center;vertical-align:middle">DER</td>
+      <td style="text-align:left;vertical-align:middle">
+        <pre><code class="lang-bash">$ file <NAME>.p7b
+<NAME>.p7b: DER Encoded PKCS#7 Signed Data</code></pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
