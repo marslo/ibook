@@ -16,7 +16,7 @@
   - [check git branch exists in local repo](#check-git-branch-exists-in-local-repo)
 - [withCredentials](#withcredentials)
   - [push with ssh private credentials](#push-with-ssh-private-credentials)
-  - [ssh-agent(https://plugins.jenkins.io/ssh-agent)](#ssh-agenthttpspluginsjenkinsiossh-agent)
+  - [ssh-agent](#ssh-agent)
 - [code clone](#code-clone)
 - [groovy.io.FileType](#groovyiofiletype)
 
@@ -489,17 +489,17 @@ references:
 > - [Pipeline - Equivalent to Git Publisher](https://support.cloudbees.com/hc/en-us/articles/360027646491-Pipeline-Equivalent-to-Git-Publisher)
 > - [Git from Jenkins pipeline is using wrong SSH private key to push back into Git repository](https://stackoverflow.com/a/66800070/2940319)
 > - [Credentials Binding Plugin](https://www.jenkins.io/doc/pipeline/steps/credentials-binding/)
->
-> for username & password by `gitUsernamePassword` :
-> ```groovy
-> withCredentials([
->   gitUsernamePassword( credentialsId: 'my-credentials-id', gitToolName: 'git-tool' )
-> ]) {
->   bat 'git submodule update --init --recursive'
-> }
-> ```
+> - [GitUsernamePasswordBinding.java](https://github.com/jenkinsci/git-plugin/blob/master/src/main/java/jenkins/plugins/git/GitUsernamePasswordBinding.java) | [Class GitUsernamePasswordBinding](https://javadoc.jenkins.io/plugin/git/jenkins/plugins/git/GitUsernamePasswordBinding.html)
 {% endhint %}
 
+#### gitUsernamePassword
+```groovy
+withCredentials([
+  gitUsernamePassword( credentialsId: 'CREDENTIALS_ID', gitToolName: 'git-tool' )
+]) {
+  bat 'git submodule update --init --recursive'
+}
+```
 
 > [!NOTE]
 > If for any particular reason, the push must be done using a different method the URL needs to be configured accordingly: <br>
@@ -524,12 +524,10 @@ references:
 > .replace("\"", "^\"")
 > ```
 
+#### sshUserPrivateKey
 ```groovy
-withCredentials([ sshUserPrivateKey(
-                       credentialsId : 'GITSSHPRIVATEKEY',
-                     keyFileVariable : 'SSHKEY',
-                    usernameVariable : 'USERNAME'
-                  )
+withCredentials([
+  sshUserPrivateKey( credentialsId : 'GIT_SSH_PRIVATE_KEY', keyFileVariable : 'SSHKEY', usernameVariable : 'USERNAME' )
 ]) {
   sh """
     GIT_SSH_COMMAND="ssh -i ${SSHKEY} -o User=${USERNAME} -o StrictHostKeyChecking=no" \
@@ -545,11 +543,11 @@ withCredentials([ sshUserPrivateKey(
       [
         run : { command ->
           if ( verbose ) println ( "~~> run '${command}' with credential ${credential} :" )
-          withCredentials([ sshUserPrivateKey(
-                                 credentialsId : credentialsId ,
-                               keyFileVariable : 'SSHKEY'      ,
-                              usernameVariable : 'USERNAME'
-                            )
+          withCredentials([
+            sshUserPrivateKey( credentialsId    : 'CREDENTIALS_ID',
+                               keyFileVariable  : 'SSHKEY',
+                               usernameVariable : 'USERNAME'
+                             )
           ]) {
             String sshCommand = "GIT_SSH_COMMAND=\"ssh -i '${SSHKEY}'   " +
                                                       "-l '${USERNAME}' " +
@@ -566,7 +564,7 @@ withCredentials([ sshUserPrivateKey(
   // withSSHCredential( 'credentialID' ).run( 'git ls-remote git@github.com:sample/repo.git' )
   ```
 
-### ssh-agent(https://plugins.jenkins.io/ssh-agent)
+### [ssh-agent](https://plugins.jenkins.io/ssh-agent)
 
 {% hint style='tip' %}
 > references:
@@ -577,11 +575,11 @@ withCredentials([ sshUserPrivateKey(
 - sample code
   ```groovy
   steps {
-    sshagent (credentials: ['jenkins-generated-ssh-key']) {
-      sh("""
-        git tag ${props['DATE_TAG']}
-        git push --tags
-      """)
+    sshagent( credentials: ['SSH_CREDENTIALS_ID'] ) {
+      sh """
+           git tag ${props['DATE_TAG']}
+           git push --tags
+         """
     }
   }
   ```
@@ -610,9 +608,9 @@ try {
                   ]
     ],
     userRemoteConfigs: [[
-      credentialsId  : <credential_id> ,
-            refspec  : branch ,
-                url  : repo
+      credentialsId : CREDENTIALS_ID ,
+            refspec : branch ,
+                url : repo
     ]]
   ])
 } catch ( Exception e ) {
@@ -641,9 +639,9 @@ try {
 > [!NOTE|label:references:]
 > - [Groovy Goodness: Traversing a Directory](https://blog.mrhaki.com/2010/04/groovy-goodness-traversing-directory.html) | [Groovy Goodness: Traversing a Directory](https://wjw465150.github.io/blog/Groovy/my_data/Goodness/File-Traversing%20a%20Directory.html)
 > - [Recursive listing of all files matching a certain filetype in Groovy](https://stackoverflow.com/a/3665539/2940319)
->   ```groovy
->   import static groovy.io.FileType.FILES
->   ```
+>> ```groovy
+>> import static groovy.io.FileType.FILES
+>> ```
 > - [Get a list of all the files in a directory (recursive)](https://stackoverflow.com/a/38526252/2940319)
 
 ```groovy
