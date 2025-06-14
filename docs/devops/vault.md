@@ -217,6 +217,8 @@ HA Enabled      false
 > - [AppRole pull authentication](https://developer.hashicorp.com/vault/tutorials/auth-methods/approle)
 > - [AppRole usage best practices](https://developer.hashicorp.com/vault/tutorials/auth-methods/approle-best-practices)
 > - [AppRole auth method](https://developer.hashicorp.com/vault/docs/auth/approle)
+> - [AppRole API](https://developer.hashicorp.com/vault/api-docs/auth/approle)
+> - [Use AppRole authentication](https://developer.hashicorp.com/vault/docs/auth/approle)
 
 ## via CLI
 
@@ -226,6 +228,23 @@ HA Enabled      false
   $ export VAULT_TOKEN='s.s**********************K'
 
   # VAULT_TOKEN=$(vault print token)
+  ```
+
+- list
+  ```bash
+  $ vault list auth/approle/role
+  Keys
+  ----
+  jenkins
+  jenkins-role
+  ...
+
+  # or
+  $ curl -s --header "X-Vault-Token: $VAULT_TOKEN" \
+            --request LIST "$VAULT_ADDR/v1/auth/approle/role" |
+    jq -r .data.keys[]
+  jenkins
+  jenkins-role
   ```
 
 - setup
