@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [basic](#basic)
+  - [get environment](#get-environment)
   - [Program structure](#program-structure)
   - [Customizable Operators](#customizable-operators)
   - [Special Operators](#special-operators)
@@ -64,6 +65,51 @@
 > - [朝花夕拾——Groovy & Grails](http://www.blogjava.net/BlueSUN/archive/2007/12/archive/2007/04/23/112978.html)
 
 ## basic
+### get environment
+```groovy
+$ groovy -e "println System.getProperty('java.specification.version')"
+24
+```
+
+```groovy
+$ groovy -e "println System.getProperties().findAll { it.key.toLowerCase().contains( 'java' ) && it.key != 'sun.java.command' }.collect { \">> \${it.key} -> \${it.value}\" }.join('\n')"
+>> java.specification.version -> 24
+>> java.runtime.version -> 24.0.1
+>> java.class.path -> /opt/groovy/current/lib/groovy-4.0.26.jar
+>> java.vm.vendor -> Homebrew
+>> java.runtime.name -> OpenJDK Runtime Environment
+>> java.vendor.url -> https://github.com/Homebrew/homebrew-core/issues
+>> java.vm.specification.version -> 24
+>> java.vm.name -> OpenJDK 64-Bit Server VM
+>> java.vendor.version -> Homebrew
+>> sun.java.launcher -> SUN_STANDARD
+>> java.vendor.url.bug -> https://github.com/Homebrew/homebrew-core/issues
+>> java.io.tmpdir -> /var/folders/8g/68t3rg090jd2tpqjcwm9vskh0000gq/T/
+>> java.version -> 24.0.1
+>> java.specification.vendor -> Oracle Corporation
+>> java.vm.specification.name -> Java Virtual Machine Specification
+>> java.version.date -> 2025-04-15
+>> java.home -> /opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home
+>> java.vm.compressedOopsMode -> Zero based
+>> java.library.path -> /Users/marslo/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+>> java.vm.specification.vendor -> Oracle Corporation
+>> java.specification.name -> Java Platform API Specification
+>> java.vm.info -> mixed mode, sharing
+>> java.vendor -> Homebrew
+>> java.vm.version -> 24.0.1
+>> java.class.version -> 68.0
+```
+
+```groovy
+// sun.java.comman in groovyConsole
+println System.getProperty("sun.java.command")
+// org.codehaus.groovy.tools.GroovyStarter --main groovy.console.ui.Console --conf /opt/homebrew/opt/groovy/libexec/conf/groovy-starter.conf --classpath .:/opt/homebrew/opt/openjdk/lib/tools.jar:/opt/homebrew/opt/openjdk/lib/dt.jar:/opt/homebrew/opt/groovy/libexec/lib:.
+
+// sun.java.command in cmd
+$ groovy -e 'println System.getProperty("sun.java.command")'
+// org.codehaus.groovy.tools.GroovyStarter --main groovy.ui.GroovyMain --conf /opt/groovy/current/conf/groovy-starter.conf \ --classpath .:/opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home/lib/tools.jar:/opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home/lib/dt.jar:/opt/groovy/current/lib/...jar:/opt/jenkins/latest/WEB-INF/lib/...jar:/opt/jenkins/plugins/credentials/WEB-INF/lib/...jar:. -e println System.getProperty("sun.java.command")
+```
+
 ### [Program structure](https://groovy-lang.org/structure.html)
 ### Customizable Operators
 | Operator         | Method            |
