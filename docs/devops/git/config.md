@@ -11,6 +11,7 @@
 - [gitconfig](#gitconfig)
   - [help](#help)
   - [credential](#credential)
+    - [.git-credentials file keeping revert back](#git-credentials-file-keeping-revert-back)
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
   - [http.cookiefile](#httpcookiefile)
@@ -500,6 +501,38 @@ $ git config credential.helper store
 
 # or
 git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
+```
+
+### .git-credentials file keeping revert back
+
+
+> [!TIP|label:reason:]
+> - in macOS, the `osxkeychain` helper is used by default, which stores credentials in the macOS Keychain. even if the `.git-credentials` file is manual updated, the `osxkeychain` helper will overwrite it with the credentials stored in the Keychain.
+> - solutions:
+>> - completely disable the `osxkeychain` helper in global config
+>>   ```bash
+>>   $ git config --global --unset credential.helper osxkeychain
+>>   ```
+>>
+>> - update the password in keychain
+>>   ```bash
+>>   # update the token
+>>   $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${GITHUB_TOKEN}\n\n" | git credential-osxkeychain store
+>>
+>>   # check the credential
+>>   $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\n" | git credential-osxkeychain get
+>>
+>>   # erase the credential
+>>   $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\n" | git credential-osxkeychain erase
+>>   ```
+
+```bash
+$ git config --show-origin --get-all credential.helper
+file:/opt/homebrew/etc/gitconfig osxkeychain
+file:/Users/marslo/.gitconfig    store --file ~/.marslo/.git-credentials
+
+# update the token in keychain
+$ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${GITHUB_TOKEN}\n\n" | git credential-osxkeychain store
 ```
 
 ### environment failed to `$ ssh -vT git@github.com -p 22`
