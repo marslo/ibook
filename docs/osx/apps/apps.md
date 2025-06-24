@@ -26,7 +26,7 @@
   - [mac cli](#mac-cli)
   - [screensaver](#screensaver)
   - [others](#others)
-- [trouble shooting](#trouble-shooting)
+- [troubleshooting](#troubleshooting)
   - [`failed to connect to raw.githubusercontent.com port 443: connection refused`](#failed-to-connect-to-rawgithubusercontentcom-port-443-connection-refused)
   - [failure in `brew search` for cask formula](#failure-in-brew-search-for-cask-formula)
   - [A fatal error has been detected by the Java Runtime Environment : `SIGILL (0x4)`](#a-fatal-error-has-been-detected-by-the-java-runtime-environment--sigill-0x4)
@@ -1240,6 +1240,30 @@ $ brew install --cask xscreensaver
 ```
 
 ### others
+
+#### Bob
+
+> [!NOTE|label:references:]
+> the `bobconfig` file is a zip archive data
+
+> [!TIP]
+> - the zip Magic Bytes : `50 4B 03 04`, if the `xxd -l 64 xxx` is starts with `00000000: 504b 0304`, it will be a zip archive
+> - `504B 0304` = `PK\x03\x04` ( PK = Phil Katz )
+
+```bash
+$ file config.bobconfig
+config-1750713147.bobconfig: Zip archive data, made by v0.0 OS X, extract using at least v2.0, last modified, last modified Sun, Jun 23 2025 14:12:26, uncompressed size 3317, method=deflate
+
+$ xxd -l 64 config.bobconfig
+00000000: 504b 0304 1400 0808 0800 8d71 d75a 0000  PK.........q.Z..
+00000010: 0000 0000 0000 0000 0000 0b00 0000 636f  ..............co
+00000020: 6e66 6967 2e6a 736f 6ea5 56cb 56e3 3810  nfig.json.V.V.8.
+00000030: fd95 39de 0e61 fc8c 93ec 2040 27dd 3c32  ..9..a.... @'.<2
+
+# check config json
+$ unzip -p config.bobconfig config.json | jq
+```
+
 #### [markdown-toc](https://github.com/jonschlinkert/markdown-toc)
 ```bash
 $ npm i -g --save markdown-toc --verbose
@@ -1378,7 +1402,7 @@ $ export PATH="${RUBY_GEM_HOME}/bin"
   $ istats all
   ```
 
-## trouble shooting
+## troubleshooting
 ### [`failed to connect to raw.githubusercontent.com port 443: connection refused`](https://www.cnblogs.com/Dylansuns/p/12309847.html)
 - issue
   ```bash

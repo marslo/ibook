@@ -25,12 +25,134 @@
 
 ### model
 
+> [!NOTE|label:references:]
+> - [token limits](https://platform.openai.com/settings/organization/limits)
+
+
 | MODEL NAME        | MAX CONTEXT |
 |-------------------|-------------|
 | gpt-3.5-turbo-16k | 16,384      |
 | gpt-4-32k         | 32,768      |
 | gpt-4-turbo       | 128,000     |
 
+
+<table><thead>
+  <tr>
+    <th style="text-align: center;">MODEL</th>
+    <th style="text-align: center;">TOKEN LIMITS</th>
+    <th style="text-align: center;">REQUEST AND OTHER LIMITS</th>
+    <th style="text-align: center;">BATCH QUEUE LIMITS</th>
+  </tr></thead>
+<tbody>
+  <tr>
+    <td>gpt-3.5-turbo</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-3.5-turbo-0125</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-3.5-turbo-1106</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-3.5-turbo-16k</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-3.5-turbo-instruct</td>
+    <td>90,000 TPM</td>
+    <td>3,500 RPM</td>
+    <td>200,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-3.5-turbo-instruct-0914</td>
+    <td>90,000 TPM</td>
+    <td>3,500 RPM</td>
+    <td>200,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4</td>
+    <td>10,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>100,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4-0613</td>
+    <td>10,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>100,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4-turbo<br>- gpt-4-turbo-2024-04-09<br>- gpt-4-turbo-preview<br>- gpt-4-0125-preview<br>- gpt-4-1106-preview</td>
+    <td>30,000 TPM</td>
+    <td>500 RPM</td>
+    <td>90,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.1<br>- gpt-4.1-2025-04-14</td>
+    <td>30,000 TPM</td>
+    <td>500 RPM</td>
+    <td>900,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.1 (long context)</td>
+    <td>200,000 TPM</td>
+    <td>100 RPM</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.1-mini<br>- gpt-4.1-mini-2025-04-14</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.1-mini (long context)</td>
+    <td>400,000 TPM</td>
+    <td>200 RPM</td>
+    <td>4,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.1-nano<br>- gpt-4.1-nano-2025-04-14</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.1-nano (long context)</td>
+    <td>400,000 TPM</td>
+    <td>200 RPM</td>
+    <td>4,000,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4.5-preview<br>- gpt-4.5-preview-2025-02-27</td>
+    <td>125,000 TPM</td>
+    <td>1,000 RPM</td>
+    <td>50,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4o<br>- gpt-4o-2024-05-13<br>- gpt-4o-2024-08-06<br>- gpt-4o-2024-11-20<br>- gpt-4o-audio-preview<br>- gpt-4o-audio-preview-2024-10-01<br>- gpt-4o-audio-preview-2024-12-17</td>
+    <td>30,000 TPM</td>
+    <td>500 RPM</td>
+    <td>90,000 TPD</td>
+  </tr>
+  <tr>
+    <td>gpt-4o-mini<br>- gpt-4o-mini-2024-07-18<br>- gpt-4o-mini-audio-preview<br>- gpt-4o-mini-audio-preview-2024-12-17</td>
+    <td>200,000 TPM</td>
+    <td>500 RPM<br>10,000 RPD</td>
+    <td>2,000,000 TPD</td>
+  </tr>
+</tbody></table>
 
 ### using chatgpt to generate git commits
 

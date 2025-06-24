@@ -41,6 +41,7 @@ $ brew install pdfcpu &&                          # extract font from pdf
 $ brew install create-dmg
 $ brew install imagemagick
 $ sudo gem install iStats -n /usr/local/bin       # requires ruby to be installed
+$ brew install hfsutils p7zip                     # for dmg
 
 $ brew install --HEAD pass
 $ brew install pass-otp
