@@ -36,14 +36,33 @@
 
 > [!NOTE|label:references:]
 > - [token limits](https://platform.openai.com/settings/organization/limits)
+> - [models](https://platform.openai.com/docs/models)
 
+| ABBREVIATION | DESCRIPTION                |
+|--------------|----------------------------|
+| `RPM`        | Requests Per Minute        |
+| `TPM`        | Tokens Per Minute          |
+| `IPM`        | Images Per Minute          |
+| `AMPM`       | Audio Megabytes Per Minute |
+| `RPD`        | Requests Per Day           |
+| `TPD`        | Tokens Per Day             |
+| -            | Batch Tokens Per Day       |
 
-| MODEL NAME        | MAX CONTEXT |
-|-------------------|-------------|
-| gpt-3.5-turbo-16k | 16,384      |
-| gpt-4-32k         | 32,768      |
-| gpt-4-turbo       | 128,000     |
-
+| MODEL NAME                                                             | MAX CONTEXT | MAX OUTPUT TOKENS |
+|------------------------------------------------------------------------|-------------|-------------------|
+| [gpt-3.5-turbo](https://platform.openai.com/docs/models/gpt-3.5-turbo) | 16,385      | 4,096             |
+| gpt-3.5-turbo-16k                                                      | 16,385      | -                 |
+| [gpt-4](https://platform.openai.com/docs/models/gpt-4)                 | 8,192       | 8,192             |
+| gpt-4-32k                                                              | 32,768      | -                 |
+| [gpt-4-turbo](https://platform.openai.com/docs/models/gpt-4-turbo)     | 128,000     | 4,096             |
+| gpt-4-32k                                                              | 32,768      | -                 |
+| gpt-4-32k-0613                                                         | 32,768      | -                 |
+| [gpt-4 turbo](https://platform.openai.com/docs/models/gpt-4-turbo)     | 128,000     | 4,096             |
+| [gpt-4o](https://platform.openai.com/docs/models/gpt-4o)               | 128,000     | 16,384            |
+| [gpt-4o-mini](https://platform.openai.com/docs/models/gpt-4o-mini)     | 128,000     | 100,000           |
+| [gpt-4.1](https://platform.openai.com/docs/models/gpt-4.1)             | 1,047,576   | 32,768            |
+| [gpt-o3](https://platform.openai.com/docs/models/gpt-o3)               | 200,000     | 100,000           |
+| [gpt-4.1 nano](https://platform.openai.com/docs/models/gpt-4.1-nano)   | 1,047,576   | 32,768            |
 
 <table><thead>
   <tr>
@@ -300,17 +319,6 @@ $ (
 
 > [!TIP|label:references:]
 > - [rate limits in headers](https://platform.openai.com/docs/guides/rate-limits#rate-limits-in-headers)
->
-> | ABBREVIATION   | DESCRIPTION          |
-> |----------------|----------------------|
-> | `RPM`          | Requests Per Minute  |
-> | `TPM`          | Tokens Per Minute    |
-> | `IPM`          | Images Per Minute    |
-> | `MB/min`       | Megabytes Per Minute |
-> | `BATCH_TOKENS` | Batch Tokens Per Day |
-> | `RPD`          | Requests Per Day     |
-> | `TPD`          | Tokens Per Day       |
->
 
 ```bash
 $ curl -s https://api.openai.com/dashboard/rate_limits \

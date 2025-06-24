@@ -12,6 +12,15 @@
 > [!NOTE|label:references:]
 > - [rates limits](https://platform.openai.com/settings/organization/limits)
 
+| DESCRIPTION          | ABBREVIATION |
+|----------------------|--------------|
+| Requests Per Minute  | RPM          |
+| Tokens Per Minute    | TPM          |
+| Images Per Minute    | IPM          |
+| Audio MB Per Minute  | AMPM         |
+| Requests Per Day     | RPD          |
+| Batch Tokens Per Day | -            |
+
 <!--sec data-title="curl API call" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 $ curl -s https://api.openai.com/dashboard/rate_limits \
@@ -20,111 +29,111 @@ $ curl -s https://api.openai.com/dashboard/rate_limits \
        -H 'Accept: application/json' \
        -H 'Content-Type: application/json' |
   jq -r 'to_entries |
-         (["MODEL", "RPM", "TPM", "IMAGES/MIN", "AUDIO_MB/MIN", "RPD", "BATCH_TOKENS"]),
+         (["MODEL", "RPM", "TPM", "IPM", "AMPM", "RPD", "BATCH TOKENS"]),
          (.[] | [
            .key,
            (.value.max_requests_per_1_minute        // "-" | if . == "-" then . else (. | tostring + " RPM") end),
            (.value.max_tokens_per_1_minute          // "-" | if . == "-" then . else (. | tostring + " TPM") end),
            (.value.max_images_per_1_minute          // "-" | if . == "-" then . else (. | tostring + " IPM") end),
-           (.value.max_audio_megabytes_per_1_minute // "-" | if . == "-" then . else (. | tostring + " MB/min") end),
-           (.value.max_requests_per_1_day           // "-" | if . == "-" then . else (. | tostring + " req/day") end),
+           (.value.max_audio_megabytes_per_1_minute // "-" | if . == "-" then . else (. | tostring + " AMPM") end),
+           (.value.max_requests_per_1_day           // "-" | if . == "-" then . else (. | tostring + " RPD") end),
            (.value.batch_1_day_max_input_tokens     // "-" | if . == "-" then . else (. | tostring + " tokens") end)
          ]) | @tsv' |
   column -t -s $'\t'
 ```
 <!--endsec-->
 
-| MODEL                                   | RPM        | TPM              | IMAGES/MIN       | AUDIO_MB/MIN | RPD                  | BATCH_TOKENS     |
-|-----------------------------------------|------------|------------------|------------------|--------------|----------------------|------------------|
-| babbage-002                             | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| dall-e-2                                | 500.0 RPM  | 2147483647.0 TPM | 5.0 IPM          | -            | -                    | -                |
-| gpt-4o-mini-2024-07-18                  | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | 10000.0 req/day      | 2000000.0 tokens |
-| gpt-4o-mini                             | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | 10000.0 req/day      | 2000000.0 tokens |
-| gpt-4o-2024-11-20                       | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| gpt-4o-mini-search-preview              | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| gpt-4o-mini-search-preview-2025-03-11   | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| davinci-002                             | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| gpt-4-turbo                             | 500.0 RPM  | 30000.0 TPM      | 500.0 IPM        | -            | 2147483647.0 req/day | 90000.0 tokens   |
-| o3-mini-2025-01-31                      | 500.0 RPM  | 200000.0 TPM     | -                | -            | -                    | 2000000.0 tokens |
-| gpt-4.1                                 | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 900000.0 tokens  |
-| gpt-3.5-turbo-instruct-0914             | 3500.0 RPM | 90000.0 TPM      | 2147483647.0 IPM | -            | -                    | 200000.0 tokens  |
-| gpt-4.1-mini-2025-04-14                 | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4.1-mini                            | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-3.5-turbo-instruct                  | 3500.0 RPM | 90000.0 TPM      | 2147483647.0 IPM | -            | -                    | 200000.0 tokens  |
-| gpt-4o-mini-tts                         | 500.0 RPM  | 50000.0 TPM      | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| gpt-4.1-nano-2025-04-14                 | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4-turbo-2024-04-09                  | 500.0 RPM  | 30000.0 TPM      | 500.0 IPM        | -            | 2147483647.0 req/day | 90000.0 tokens   |
-| gpt-image-1                             | -          | 100000.0 TPM     | 5.0 IPM          | -            | -                    | -                |
-| o4-mini-2025-04-16                      | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4                                   | 500.0 RPM  | 10000.0 TPM      | -                | -            | 10000.0 req/day      | 100000.0 tokens  |
-| o1-2024-12-17                           | 500.0 RPM  | 30000.0 TPM      | -                | -            | -                    | 90000.0 tokens   |
-| o3-mini                                 | 500.0 RPM  | 200000.0 TPM     | -                | -            | -                    | 2000000.0 tokens |
-| gpt-4.1-2025-04-14                      | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 900000.0 tokens  |
-| gpt-4o-audio-preview                    | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| gpt-4o-2024-05-13                       | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| gpt-4o-search-preview-2025-03-11        | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| gpt-4o-search-preview                   | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| gpt-4o-mini-transcribe                  | 500.0 RPM  | 50000.0 TPM      | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| gpt-3.5-turbo-16k                       | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| o1-mini                                 | 500.0 RPM  | 200000.0 TPM     | -                | -            | -                    | 2000000.0 tokens |
-| o1-mini-2024-09-12                      | 500.0 RPM  | 200000.0 TPM     | -                | -            | -                    | 2000000.0 tokens |
-| gpt-4.1-nano                            | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4.5-preview                         | 1000.0 RPM | 125000.0 TPM     | 50000.0 IPM      | -            | -                    | 50000.0 tokens   |
-| gpt-4.5-preview-2025-02-27              | 1000.0 RPM | 125000.0 TPM     | 50000.0 IPM      | -            | -                    | 50000.0 tokens   |
-| gpt-4o-realtime-preview-2024-10-01      | 200.0 RPM  | 40000.0 TPM      | -                | -            | 1000.0 req/day       | -                |
-| gpt-3.5-turbo                           | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| chatgpt-4o-latest                       | 200.0 RPM  | 500000.0 TPM     | -                | -            | -                    | -                |
-| o4-mini                                 | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4o-audio-preview-2025-06-03         | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| gpt-4o-audio-preview-2024-12-17         | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| o1-pro-2025-03-19                       | 500.0 RPM  | 30000.0 TPM      | -                | -            | -                    | 90000.0 tokens   |
-| gpt-4o-mini-audio-preview-2024-12-17    | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | 10000.0 req/day      | 2000000.0 tokens |
-| gpt-3.5-turbo-1106                      | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| o1                                      | 500.0 RPM  | 30000.0 TPM      | -                | -            | -                    | 90000.0 tokens   |
-| gpt-4o-audio-preview-2024-10-01         | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| o1-pro                                  | 500.0 RPM  | 30000.0 TPM      | -                | -            | -                    | 90000.0 tokens   |
-| tts-1                                   | 500.0 RPM  | 2147483647.0 TPM | -                | -            | -                    | -                |
-| gpt-3.5-turbo-0125                      | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| codex-mini-latest                       | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4o-mini-realtime-preview            | 200.0 RPM  | 40000.0 TPM      | -                | -            | 1000.0 req/day       | -                |
-| text-embedding-3-small                  | 3000.0 RPM | 1000000.0 TPM    | -                | -            | -                    | 3000000.0 tokens |
-| tts-1-hd                                | 500.0 RPM  | 2147483647.0 TPM | 2147483647.0 IPM | -            | -                    | -                |
-| whisper-1                               | 500.0 RPM  | 2147483647.0 TPM | -                | -            | -                    | -                |
-| gpt-4-0613                              | 500.0 RPM  | 10000.0 TPM      | -                | -            | 10000.0 req/day      | 100000.0 tokens  |
-| tts-1-hd-1106                           | 500.0 RPM  | 2147483647.0 TPM | 2147483647.0 IPM | -            | -                    | -                |
-| gpt-4o-realtime-preview-2025-06-03      | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| gpt-4-1106-preview                      | 500.0 RPM  | 150000.0 TPM     | -                | -            | 10000.0 req/day      | -                |
-| text-embedding-ada-002                  | 3000.0 RPM | 1000000.0 TPM    | -                | -            | -                    | 3000000.0 tokens |
-| gpt-4o-realtime-preview-2024-12-17      | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| o1-preview-2024-09-12                   | 500.0 RPM  | 30000.0 TPM      | -                | -            | -                    | 90000.0 tokens   |
-| gpt-4o-mini-realtime-preview-2024-12-17 | 200.0 RPM  | 40000.0 TPM      | -                | -            | 1000.0 req/day       | -                |
-| gpt-4o-mini-audio-preview               | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | 10000.0 req/day      | 2000000.0 tokens |
-| text-embedding-3-large                  | 3000.0 RPM | 1000000.0 TPM    | -                | -            | -                    | 3000000.0 tokens |
-| gpt-4o                                  | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| gpt-4o-2024-08-06                       | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| gpt-4-turbo-preview                     | 500.0 RPM  | 30000.0 TPM      | 500.0 IPM        | -            | 2147483647.0 req/day | 90000.0 tokens   |
-| gpt-4o-transcribe                       | 500.0 RPM  | 10000.0 TPM      | 0.0 IPM          | -            | -                    | 0.0 tokens       |
-| dall-e-3                                | 500.0 RPM  | 2147483647.0 TPM | 5.0 IPM          | -            | -                    | -                |
-| gpt-4-0125-preview                      | 500.0 RPM  | 10000.0 TPM      | -                | -            | 10000.0 req/day      | 100000.0 tokens  |
-| omni-moderation-2024-09-26              | 500.0 RPM  | 10000.0 TPM      | -                | -            | 10000.0 req/day      | -                |
-| gpt-4o-realtime-preview                 | 200.0 RPM  | 40000.0 TPM      | -                | -            | 1000.0 req/day       | -                |
-| omni-moderation-latest                  | 500.0 RPM  | 10000.0 TPM      | -                | -            | 10000.0 req/day      | -                |
-| o1-preview                              | 500.0 RPM  | 30000.0 TPM      | -                | -            | -                    | 90000.0 tokens   |
-| tts-1-1106                              | 500.0 RPM  | 2147483647.0 TPM | -                | -            | -                    | -                |
-| text-moderation-latest                  | 1000.0 RPM | 150000.0 TPM     | -                | -            | -                    | -                |
-| text-moderation-stable                  | 1000.0 RPM | 150000.0 TPM     | -                | -            | -                    | -                |
-| *                                       | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| ft:gpt-3.5-turbo-0613                   | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| ft:gpt-3.5-turbo-1106                   | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| ft:gpt-3.5-turbo-0125                   | 500.0 RPM  | 200000.0 TPM     | -                | -            | 10000.0 req/day      | 2000000.0 tokens |
-| ft:gpt-4-0613                           | 500.0 RPM  | 10000.0 TPM      | -                | -            | 10000.0 req/day      | 100000.0 tokens  |
-| ft:gpt-4o-2024-05-13                    | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -            | -                    | 90000.0 tokens   |
-| ft:gpt-4o-mini-2024-07-18               | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | 10000.0 req/day      | 2000000.0 tokens |
-| ft:davinci-002                          | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| ft:babbage-002                          | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -            | -                    | -                |
-| gpt-4.1-long-context                    | 100.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -            | -                    | 2000000.0 tokens |
-| gpt-4.1-mini-long-context               | 200.0 RPM  | 400000.0 TPM     | 50000.0 IPM      | -            | -                    | 4000000.0 tokens |
-| gpt-4.1-nano-long-context               | 200.0 RPM  | 400000.0 TPM     | 50000.0 IPM      | -            | -                    | 4000000.0 tokens |
+| MODEL                                   | RPM        | TPM              | IPM              | AMPM | RPD              | BATCH TOKENS     |
+|-----------------------------------------|------------|------------------|------------------|------|------------------|------------------|
+| babbage-002                             | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| dall-e-2                                | 500.0 RPM  | 2147483647.0 TPM | 5.0 IPM          | -    | -                | -                |
+| gpt-4o-mini-2024-07-18                  | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | 10000.0 RPD      | 2000000.0 tokens |
+| gpt-4o-mini                             | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | 10000.0 RPD      | 2000000.0 tokens |
+| gpt-4o-2024-11-20                       | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| gpt-4o-mini-search-preview              | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| gpt-4o-mini-search-preview-2025-03-11   | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| davinci-002                             | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| gpt-4-turbo                             | 500.0 RPM  | 30000.0 TPM      | 500.0 IPM        | -    | 2147483647.0 RPD | 90000.0 tokens   |
+| o3-mini-2025-01-31                      | 500.0 RPM  | 200000.0 TPM     | -                | -    | -                | 2000000.0 tokens |
+| gpt-4.1                                 | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 900000.0 tokens  |
+| gpt-3.5-turbo-instruct-0914             | 3500.0 RPM | 90000.0 TPM      | 2147483647.0 IPM | -    | -                | 200000.0 tokens  |
+| gpt-4.1-mini-2025-04-14                 | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4o-mini-tts                         | 500.0 RPM  | 50000.0 TPM      | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| gpt-4.1-mini                            | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-3.5-turbo-instruct                  | 3500.0 RPM | 90000.0 TPM      | 2147483647.0 IPM | -    | -                | 200000.0 tokens  |
+| gpt-4.1-nano-2025-04-14                 | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4-turbo-2024-04-09                  | 500.0 RPM  | 30000.0 TPM      | 500.0 IPM        | -    | 2147483647.0 RPD | 90000.0 tokens   |
+| gpt-image-1                             | -          | 100000.0 TPM     | 5.0 IPM          | -    | -                | -                |
+| o4-mini-2025-04-16                      | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4                                   | 500.0 RPM  | 10000.0 TPM      | -                | -    | 10000.0 RPD      | 100000.0 tokens  |
+| o1-2024-12-17                           | 500.0 RPM  | 30000.0 TPM      | -                | -    | -                | 90000.0 tokens   |
+| o3-mini                                 | 500.0 RPM  | 200000.0 TPM     | -                | -    | -                | 2000000.0 tokens |
+| gpt-4.1-2025-04-14                      | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 900000.0 tokens  |
+| gpt-4o-audio-preview                    | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| gpt-4o-2024-05-13                       | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| gpt-4o-search-preview-2025-03-11        | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| gpt-4o-search-preview                   | 100.0 RPM  | 6000.0 TPM       | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| gpt-4o-mini-transcribe                  | 500.0 RPM  | 50000.0 TPM      | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| gpt-3.5-turbo-16k                       | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| o1-mini                                 | 500.0 RPM  | 200000.0 TPM     | -                | -    | -                | 2000000.0 tokens |
+| o1-mini-2024-09-12                      | 500.0 RPM  | 200000.0 TPM     | -                | -    | -                | 2000000.0 tokens |
+| gpt-4.1-nano                            | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4.5-preview                         | 1000.0 RPM | 125000.0 TPM     | 50000.0 IPM      | -    | -                | 50000.0 tokens   |
+| gpt-4.5-preview-2025-02-27              | 1000.0 RPM | 125000.0 TPM     | 50000.0 IPM      | -    | -                | 50000.0 tokens   |
+| gpt-4o-realtime-preview-2024-10-01      | 200.0 RPM  | 40000.0 TPM      | -                | -    | 1000.0 RPD       | -                |
+| gpt-3.5-turbo                           | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| chatgpt-4o-latest                       | 200.0 RPM  | 500000.0 TPM     | -                | -    | -                | -                |
+| o4-mini                                 | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4o-audio-preview-2025-06-03         | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| gpt-4o-audio-preview-2024-12-17         | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| o1-pro-2025-03-19                       | 500.0 RPM  | 30000.0 TPM      | -                | -    | -                | 90000.0 tokens   |
+| gpt-4o-mini-audio-preview-2024-12-17    | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | 10000.0 RPD      | 2000000.0 tokens |
+| gpt-3.5-turbo-1106                      | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| o1                                      | 500.0 RPM  | 30000.0 TPM      | -                | -    | -                | 90000.0 tokens   |
+| gpt-4o-audio-preview-2024-10-01         | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| o1-pro                                  | 500.0 RPM  | 30000.0 TPM      | -                | -    | -                | 90000.0 tokens   |
+| tts-1                                   | 500.0 RPM  | 2147483647.0 TPM | -                | -    | -                | -                |
+| gpt-3.5-turbo-0125                      | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| codex-mini-latest                       | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4o-mini-realtime-preview            | 200.0 RPM  | 40000.0 TPM      | -                | -    | 1000.0 RPD       | -                |
+| text-embedding-3-small                  | 3000.0 RPM | 1000000.0 TPM    | -                | -    | -                | 3000000.0 tokens |
+| tts-1-hd                                | 500.0 RPM  | 2147483647.0 TPM | 2147483647.0 IPM | -    | -                | -                |
+| whisper-1                               | 500.0 RPM  | 2147483647.0 TPM | -                | -    | -                | -                |
+| gpt-4-0613                              | 500.0 RPM  | 10000.0 TPM      | -                | -    | 10000.0 RPD      | 100000.0 tokens  |
+| tts-1-hd-1106                           | 500.0 RPM  | 2147483647.0 TPM | 2147483647.0 IPM | -    | -                | -                |
+| gpt-4o-realtime-preview-2025-06-03      | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| gpt-4-1106-preview                      | 500.0 RPM  | 150000.0 TPM     | -                | -    | 10000.0 RPD      | -                |
+| text-embedding-ada-002                  | 3000.0 RPM | 1000000.0 TPM    | -                | -    | -                | 3000000.0 tokens |
+| gpt-4o-realtime-preview-2024-12-17      | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| o1-preview-2024-09-12                   | 500.0 RPM  | 30000.0 TPM      | -                | -    | -                | 90000.0 tokens   |
+| gpt-4o-mini-realtime-preview-2024-12-17 | 200.0 RPM  | 40000.0 TPM      | -                | -    | 1000.0 RPD       | -                |
+| gpt-4o-mini-audio-preview               | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | 10000.0 RPD      | 2000000.0 tokens |
+| text-embedding-3-large                  | 3000.0 RPM | 1000000.0 TPM    | -                | -    | -                | 3000000.0 tokens |
+| gpt-4o                                  | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| gpt-4o-2024-08-06                       | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| gpt-4-turbo-preview                     | 500.0 RPM  | 30000.0 TPM      | 500.0 IPM        | -    | 2147483647.0 RPD | 90000.0 tokens   |
+| gpt-4o-transcribe                       | 500.0 RPM  | 10000.0 TPM      | 0.0 IPM          | -    | -                | 0.0 tokens       |
+| dall-e-3                                | 500.0 RPM  | 2147483647.0 TPM | 5.0 IPM          | -    | -                | -                |
+| gpt-4-0125-preview                      | 500.0 RPM  | 10000.0 TPM      | -                | -    | 10000.0 RPD      | 100000.0 tokens  |
+| omni-moderation-2024-09-26              | 500.0 RPM  | 10000.0 TPM      | -                | -    | 10000.0 RPD      | -                |
+| gpt-4o-realtime-preview                 | 200.0 RPM  | 40000.0 TPM      | -                | -    | 1000.0 RPD       | -                |
+| omni-moderation-latest                  | 500.0 RPM  | 10000.0 TPM      | -                | -    | 10000.0 RPD      | -                |
+| o1-preview                              | 500.0 RPM  | 30000.0 TPM      | -                | -    | -                | 90000.0 tokens   |
+| tts-1-1106                              | 500.0 RPM  | 2147483647.0 TPM | -                | -    | -                | -                |
+| text-moderation-latest                  | 1000.0 RPM | 150000.0 TPM     | -                | -    | -                | -                |
+| text-moderation-stable                  | 1000.0 RPM | 150000.0 TPM     | -                | -    | -                | -                |
+| *                                       | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| ft:gpt-3.5-turbo-0613                   | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| ft:gpt-3.5-turbo-1106                   | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| ft:gpt-3.5-turbo-0125                   | 500.0 RPM  | 200000.0 TPM     | -                | -    | 10000.0 RPD      | 2000000.0 tokens |
+| ft:gpt-4-0613                           | 500.0 RPM  | 10000.0 TPM      | -                | -    | 10000.0 RPD      | 100000.0 tokens  |
+| ft:gpt-4o-2024-05-13                    | 500.0 RPM  | 30000.0 TPM      | 50000.0 IPM      | -    | -                | 90000.0 tokens   |
+| ft:gpt-4o-mini-2024-07-18               | 500.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | 10000.0 RPD      | 2000000.0 tokens |
+| ft:davinci-002                          | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| ft:babbage-002                          | 3000.0 RPM | 250000.0 TPM     | 10.0 IPM         | -    | -                | -                |
+| gpt-4.1-long-context                    | 100.0 RPM  | 200000.0 TPM     | 50000.0 IPM      | -    | -                | 2000000.0 tokens |
+| gpt-4.1-mini-long-context               | 200.0 RPM  | 400000.0 TPM     | 50000.0 IPM      | -    | -                | 4000000.0 tokens |
+| gpt-4.1-nano-long-context               | 200.0 RPM  | 400000.0 TPM     | 50000.0 IPM      | -    | -                | 4000000.0 tokens |
 
 ## model_limits
 
