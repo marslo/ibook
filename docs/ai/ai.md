@@ -200,6 +200,8 @@
 4. check the item one by one, untile find the one with `Authorization: Bearer sess-****************************************` header in the `Request Headers`
 5. double confirm the *Response* tab has the model limits data
 
+![chrom devtool](../screenshot/ai/private-api-rate-limits.png)
+
 as long as found the correct item, check the *Request Headers* tab, it will be ( example ):
 
 | KEY             | VALUE                    |

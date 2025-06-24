@@ -173,6 +173,7 @@
   * [podman](virtualization/podman/podman.md)
 * [ai](ai/ai.md)
   * [prompt](ai/prompt.md)
+  * [model](ai/models.md)
 * [osx](osx/osx.md)
   * [apps](osx/apps/apps.md)
     * [init](osx/init.md)
