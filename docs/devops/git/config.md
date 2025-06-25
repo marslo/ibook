@@ -505,10 +505,10 @@ $ git config credential.helper store
 $ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 ```
 
-| TOKEN TYPE           | GIT OPERATIONS (`clone/push`) | GIT LFS UPLOAD/DOWNLOAD                    | GITHUB ACTIONS (WORKFLOW) | `semantic-release` | GITHUB API (REST/GRAPHQL) | PRIVATE SUBMODULES | GITHUB CLI (`GH`)      | NOTES                                                                   |
-|----------------------|-------------------------------|--------------------------------------------|---------------------------|--------------------|---------------------------|--------------------|------------------------|-------------------------------------------------------------------------|
-| **Fine-grained PAT** | ✓                             | ✗ **Fails** (LFS lock verification denied) | ✓                         | ✓                  | ✓                         | ✗                  | ⚠️ Partially supported | Secure and scoped, but limited in CLI/automation contexts like Git LFS  |
-| **Classic PAT**      | ✓                             | ✓                                          | ✓                         | ✓                  | ✅ Fully supported        | ✅ Fully supported | ✓                      | Recommended for CLI tools, LFS, CI/CD, automation, and broad API access |
+| TOKEN TYPE           | GIT OPERATIONS<br>(`clone/push`) | GIT LFS UPLOAD/DOWNLOAD                       | GITHUB ACTIONS (WORKFLOW) | `semantic-release` | GITHUB API (REST/GRAPHQL) | PRIVATE SUBMODULES | GITHUB CLI (`GH`)         | NOTES                                                                   |
+|----------------------|----------------------------------|-----------------------------------------------|---------------------------|--------------------|---------------------------|--------------------|---------------------------|-------------------------------------------------------------------------|
+| **Fine-grained PAT** | ✓                                | ✗<br>**Fails** (LFS lock verification denied) | ✓                         | ✓                  | ✓                         | ✗                  | ⚠️<br>Partially supported | Secure and scoped, but limited in CLI/automation contexts like Git LFS  |
+| **Classic PAT**      | ✓                                | ✓                                             | ✓                         | ✓                  | ✓                         | ✓                  | ✓                         | Recommended for CLI tools, LFS, CI/CD, automation, and broad API access |
 
 ### using specific PAT
 
