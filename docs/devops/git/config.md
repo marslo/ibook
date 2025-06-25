@@ -12,8 +12,10 @@
   - [help](#help)
   - [credential](#credential)
     - [.git-credentials file keeping revert back](#git-credentials-file-keeping-revert-back)
+    - [git lfs](#git-lfs)
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
+    - [local setup](#local-setup)
   - [http.cookiefile](#httpcookiefile)
     - [generate cookies](#generate-cookies)
     - [verify](#verify)
@@ -500,11 +502,15 @@ local    file:.git/config    marslo
 $ git config credential.helper store
 
 # or
-git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
+$ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 ```
 
-### .git-credentials file keeping revert back
+| TOKEN TYPE           | GIT OPERATIONS (`clone/push`) | GIT LFS UPLOAD/DOWNLOAD                    | GITHUB ACTIONS (WORKFLOW) | `semantic-release` | GITHUB API (REST/GRAPHQL) | PRIVATE SUBMODULES | GITHUB CLI (`GH`)      | NOTES                                                                   |
+|----------------------|-------------------------------|--------------------------------------------|---------------------------|--------------------|---------------------------|--------------------|------------------------|-------------------------------------------------------------------------|
+| **Fine-grained PAT** | ✓                             | ✗ **Fails** (LFS lock verification denied) | ✓                         | ✓                  | ✓                         | ✗                  | ⚠️ Partially supported | Secure and scoped, but limited in CLI/automation contexts like Git LFS  |
+| **Classic PAT**      | ✓                             | ✓                                          | ✓                         | ✓                  | ✅ Fully supported        | ✅ Fully supported | ✓                      | Recommended for CLI tools, LFS, CI/CD, automation, and broad API access |
 
+### .git-credentials file keeping revert back
 
 > [!TIP|label:reason:]
 > - in macOS, the `osxkeychain` helper is used by default, which stores credentials in the macOS Keychain. even if the `.git-credentials` file is manual updated, the `osxkeychain` helper will overwrite it with the credentials stored in the Keychain.
@@ -533,6 +539,42 @@ file:/Users/marslo/.gitconfig    store --file ~/.marslo/.git-credentials
 
 # update the token in keychain
 $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${GITHUB_TOKEN}\n\n" | git credential-osxkeychain store
+```
+
+### git lfs
+
+> [!NOTE|label:references:]
+> - git-lfs not support *Fine-grained Token (FGPAT)* credential, reason:
+>> - git lfs is NOT push into the git repo, but push the LFS objects to the sepcific endpoint:
+>>   ```bash
+>>   https://github.com/<owner>/<repo>.git/info/lfs
+>>   ```
+>> - the git-lfs will try to execute:
+>>   - `/locks/verify` : require write access
+>>   - `/info/lfs/objects/batch` (deploy LFS object) : require read/write access
+>>   - have to use the token in `Authorization: Basic` header
+>> - but the *Fine-grained Token (FGPAT)* only support `git push` and `git pull` operations, not support the private API:
+>>   - `/info/lfs/objects/batch`
+>>   - `/locks/verify`
+> - why Classic Token (PAT) works, since it will not restrict the access to endpoint:
+>>   - `repo` scope: read/write access to code
+>>   - `write:packages` scope: write access to packages
+>>   - `read:packages` scope: read access to packages
+> - references:
+>> - [git lfs](https://git-lfs.com/)
+
+```bash
+# install
+$ brew install git-lfs
+
+# using specific Classic Token (PAT) for git-lfs
+$ git config lfs.url "https://marslo:ghp_xxx@github.com/marslo/fonts.git/info/lfs"
+$ git push origin HEAD
+# check
+$ git config --get lfs.url
+
+# -- or --
+$ git -c lfs.url="https://marslo:ghp_xxxx@github.com/marslo/fonts.git/info/lfs" lfs push origin HEAD
 ```
 
 ### environment failed to `$ ssh -vT git@github.com -p 22`
@@ -600,6 +642,9 @@ $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${G
 > - [JENKINS-56897 - Support general purpose authenticated git operations in Pipeline](https://issues.jenkins.io/browse/JENKINS-56897#comment-364399)
 > - [GIT_ASKPASS with user and password](https://stackoverflow.com/a/68358639/2940319) | JENKINS-56897 - Support general purpose authenticated git operations in Pipeline](https://issues.jenkins.io/browse/JENKINS-56897#comment-364399)
 
+> [!TIP]
+> - the `git-lfs` **NOT** support `core.askPass`. it use `credential.helper` only
+
 - via config
   ```
   [url "https://github.com/username"]
@@ -645,6 +690,34 @@ $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${G
     esac
     '
     ```
+
+### local setup
+
+```bash
+$ cat ~/.git-askpass.sh
+export GIT_USERNAME="marslo"
+export GIT_PASSWORD="ghp_xxx"
+export GIT_ASKPASS="$(mktemp)"
+
+cat > "${GIT_ASKPASS}" <<EOF
+#!/bin/sh
+case "\$1" in
+  *Username*) echo "\$GIT_USERNAME" ;;
+  *Password*) echo "\$GIT_PASSWORD" ;;
+esac
+EOF
+chmod +x "${GIT_ASKPASS}"
+
+$ chmod +x ~/.git-askpass.sh
+
+# go to repo
+$ cd /path/to/repo
+$ git -c core.askPass="${GIT_ASKPASS}" push
+
+# cleanup
+$ rm "${GIT_ASKPASS}"
+$ unset GIT_USERNAME GIT_PASSWORD GIT_ASKPASS
+```
 
 ## http.cookiefile
 

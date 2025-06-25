@@ -980,15 +980,15 @@ a b
 
     # beging-end
     $ diff --old-group-format='\begin{em}
-      -> %<\end{em}
-      -> ' --new-group-format='\begin{bf}
-      -> %>\end{bf}
-      -> ' --changed-group-format='\begin{em}
-      -> %<\end{em}
-      -> \begin{bf}
-      -> %>\end{bf}
-      -> ' --unchanged-group-format='%=' \
-      -> <(sort a.txt) <(sort b.txt)
+        %<\end{em}
+        ' --new-group-format='\begin{bf}
+        %>\end{bf}
+        ' --changed-group-format='\begin{em}
+        %<\end{em}
+        \begin{bf}
+        %>\end{bf}
+        ' --unchanged-group-format='%=' \
+        <(sort a.txt) <(sort b.txt)
     a
     b
     \begin{bf}

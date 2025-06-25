@@ -716,11 +716,11 @@ $ curl --create-dirs \
 
 #### background images
 
-![image 1](https://github.com/marslo/mytools/blob/master/raw/Applications/dmg-backgound/.background.1.png)
+![image 1](https://github.com/marslo/mytools/raw/main/osx/Applications/dmg-backgound/.background.1.png)
 
-![image 2](https://github.com/marslo/mytools/blob/master/raw/Applications/dmg-backgound/.background.2.png)
+![image 2](https://github.com/marslo/mytools/raw/main/osx/Applications/dmg-backgound/.background.2.png)
 
-![image 3](https://github.com/marslo/mytools/blob/master/raw/Applications/dmg-backgound/.background.3.png)
+![image 3](https://github.com/marslo/mytools/raw/main/osx/Applications/dmg-backgound/.background.3.png)
 
 #### create dmg from app
 
