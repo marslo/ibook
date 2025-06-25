@@ -618,6 +618,14 @@ $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${G
 # -- install --
 $ brew install git-lfs
 
+# -- init in repo --
+$ git lfs install
+
+# -- manual merge hooks in repo --
+$ git lfs update --manual
+```
+
+```bash
 # -- setup the tracking --
 $ git lfs track "LXGW-WenKai/mono/*.otf"
 
@@ -626,7 +634,13 @@ $ git rm --cached LXGW-WenKai/mono/*.otf
 
 # -- add and commit --
 $ git add LXGW-WenKai/mono/*.otf .gitattributes
-$ git commit -m "..."
+$ git commit -m 'fix: re-add .otf fonts with LFS hook active'
+
+# -- check --
+$ git lfs ls-files
+35ea3bc707 * LXGW-WenKai/mono/LXGWWenKaiMonoNerdFontMono-Light.otf
+843abcc10e * LXGW-WenKai/mono/LXGWWenKaiMonoNerdFontMono-Medium.otf
+be05b21a74 * LXGW-WenKai/mono/LXGWWenKaiMonoNerdFontMono-Regular.otf
 
 # -- push --
 # using specific Classic Token (PAT) for git-lfs
@@ -635,6 +649,9 @@ $ git push origin HEAD
 # check
 $ git config --get lfs.url
 # - or -
+# for git push
+$ git -c lfs.url="https://marslo:ghp_xxxx@github.com/marslo/fonts.git/info/lfs" push origin HEAD
+# for git lfs push
 $ git -c lfs.url="https://marslo:ghp_xxxx@github.com/marslo/fonts.git/info/lfs" lfs push origin HEAD
 ```
 

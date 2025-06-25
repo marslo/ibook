@@ -7,6 +7,7 @@
     - [patch fonts](#patch-fonts-1)
   - [check fonts](#check-fonts)
   - [get font name by language](#get-font-name-by-language)
+  - [check font version](#check-font-version)
   - [rename fonts to `postscriptname`](#rename-fonts-to-postscriptname)
   - [get font version](#get-font-version)
 - [fonts](#fonts)
@@ -235,6 +236,42 @@ EOF
   $ fc-scan --format "%{fullname[$(( $(sed -E "s/^(.*)${lang}.*/\1/;s/[^,]//g" <<<"$(fc-scan --format "%{fullnamelang}\n" "${font}")" | wc -c) -1 ))]}\n" "${font}"
   Microsoft YaHei
   ```
+
+## check font version
+
+| FIELDS       | DESCRIPTION                                                                                                                                                                                            |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `platformID` | `1`: Unicode<br>`2`: Macintosh<br>`3`: Windows                                                                                                                                                         |
+| `platEncID`  | `0`: Unicode<br>`1`: Roman<br>`2`: ShiftJIS<br>`3`: PRC<br>`4`: Big5<br>`5`: Wansung<br>`6`: Johab                                                                                                     |
+| `langID`     | `0x0`: Unicode<br>`0x409`: English (US)<br>`0x804`: Chinese (PRC)<br>`0x804`: Chinese (Taiwan)<br>`0x411`: Japanese<br>`0x412`: Korean<br>`0x804`: Chinese (Hong Kong)<br>`0xC04`: Chinese (Singapore) |
+| `unicode`    | `True`: Unicode<br>`False`: non-Unicode                                                                                                                                                                |
+| `nameID`     | `5`: Version<br>`6`: PostScript name<br>`7`: Trademark<br>`8`: Manufacturer<br>`9`: Designer<br>`10`: Description<br>`11`: URL Vendor<br>`12`: URL Designer<br>`13`: License<br>`14`: License URL      |
+
+```bash
+# -- install --
+$ pip install fonttools
+$ brew install fonttools
+```
+
+```bash
+# -- check --
+$ ttx -o - -t name LXGWWenKaiMono-Regular.ttf | sed -n '/<namerecord nameID="5"/,/<\/namerecord>/p'
+Dumping "LXGWWenKaiMono-Regular.ttf" to "<stdout>"...
+Dumping 'name' table...
+    <namerecord nameID="5" platformID="3" platEncID="1" langID="0x409">
+      Version 1.520; June 14, 2025
+    </namerecord>
+
+$ ttx -o - -t name LXGWWenKaiMonoNerdFontMono-Regular.otf | sed -n '/<namerecord nameID="5"/,/<\/namerecord>/p'
+Dumping "LXGWWenKaiMonoNerdFontMono-Regular.otf" to "<stdout>"...
+Dumping 'name' table...
+    <namerecord nameID="5" platformID="1" platEncID="0" langID="0x0" unicode="True">
+      Version 1.520; June 14, 2025;Nerd Fonts 3.4.0.1
+    </namerecord>
+    <namerecord nameID="5" platformID="3" platEncID="1" langID="0x409">
+      Version 1.520; June 14, 2025;Nerd Fonts 3.4.0.1
+    </namerecord>
+```
 
 ## rename fonts to `postscriptname`
 
