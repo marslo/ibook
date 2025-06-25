@@ -11,11 +11,11 @@
 - [gitconfig](#gitconfig)
   - [help](#help)
   - [credential](#credential)
+    - [using specific PAT](#using-specific-pat)
     - [.git-credentials file keeping revert back](#git-credentials-file-keeping-revert-back)
     - [git lfs](#git-lfs)
     - [environment failed to `$ ssh -vT git@github.com -p 22`](#environment-failed-to--ssh--vt-gitgithubcom--p-22)
     - [with `GIT_USERNAME` and `GIT_ASKPASS`](#with-git_username-and-git_askpass)
-    - [local setup](#local-setup)
   - [http.cookiefile](#httpcookiefile)
     - [generate cookies](#generate-cookies)
     - [verify](#verify)
@@ -510,6 +510,57 @@ $ git remote set-url origin https://[TOKEN]@github.com/path/to/repo.git
 | **Fine-grained PAT** | ✓                             | ✗ **Fails** (LFS lock verification denied) | ✓                         | ✓                  | ✓                         | ✗                  | ⚠️ Partially supported | Secure and scoped, but limited in CLI/automation contexts like Git LFS  |
 | **Classic PAT**      | ✓                             | ✓                                          | ✓                         | ✓                  | ✅ Fully supported        | ✅ Fully supported | ✓                      | Recommended for CLI tools, LFS, CI/CD, automation, and broad API access |
 
+### using specific PAT
+
+- `include.path`
+
+  ```bash
+  $ cat > /tmp/lfs-only-config <<EOF
+  [credential]
+    helper = store --file=/Users/marslo/.marslo/.git-credentials-lfs
+  EOF
+
+  $ git -c include.path=/tmp/lfs-only-config lfs push origin HEAD
+  ```
+
+- `GIT_CREDENTIAL_HELPER`
+
+  ```bash
+  $ cat > /tmp/classic-lfs-creds <<EOF
+  https://marslo:ghp_xxxxxxxx@github.com
+  EOF
+
+  $ GIT_CREDENTIAL_HELPER="store --file=/tmp/classic-lfs-creds" git push origin HEAD
+  ```
+
+- `GIT_ASKPASS` and `core.askPass`
+
+  ```bash
+  # create file
+  $ cat ~/.git-askpass.sh
+  export GIT_USERNAME="marslo"
+  export GIT_PASSWORD="ghp_YourClassicPATGoesHere"
+  export GIT_ASKPASS="$(mktemp)"
+
+  cat > "${GIT_ASKPASS}" <<EOF
+  #!/bin/sh
+  case "\$1" in
+    *Username*) echo "\$GIT_USERNAME" ;;
+    *Password*) echo "\$GIT_PASSWORD" ;;
+  esac
+  EOF
+
+  chmod +x "${GIT_ASKPASS}"
+
+  # go to repo
+  $ source ~/.git-askpass.sh
+  $ git -c core.askPass="${GIT_ASKPASS}" push
+
+  # cleanup
+  $ rm "${GIT_ASKPASS}"
+  $ unset GIT_USERNAME GIT_PASSWORD GIT_ASKPASS
+  ```
+
 ### .git-credentials file keeping revert back
 
 > [!TIP|label:reason:]
@@ -564,17 +615,33 @@ $ printf "protocol=https\nhost=github.com\nusername=${GITHUB_USER}\npassword=${G
 >> - [git lfs](https://git-lfs.com/)
 
 ```bash
-# install
+# -- install --
 $ brew install git-lfs
 
+# -- setup the tracking --
+$ git lfs track "LXGW-WenKai/mono/*.otf"
+
+# -- remote the lfs objects --
+$ git rm --cached LXGW-WenKai/mono/*.otf
+
+# -- add and commit --
+$ git add LXGW-WenKai/mono/*.otf .gitattributes
+$ git commit -m "..."
+
+# -- push --
 # using specific Classic Token (PAT) for git-lfs
 $ git config lfs.url "https://marslo:ghp_xxx@github.com/marslo/fonts.git/info/lfs"
 $ git push origin HEAD
 # check
 $ git config --get lfs.url
-
-# -- or --
+# - or -
 $ git -c lfs.url="https://marslo:ghp_xxxx@github.com/marslo/fonts.git/info/lfs" lfs push origin HEAD
+```
+
+#### tips
+```bash
+$ git lfs env
+$ git lfs ls-files
 ```
 
 ### environment failed to `$ ssh -vT git@github.com -p 22`
@@ -690,34 +757,6 @@ $ git -c lfs.url="https://marslo:ghp_xxxx@github.com/marslo/fonts.git/info/lfs" 
     esac
     '
     ```
-
-### local setup
-
-```bash
-$ cat ~/.git-askpass.sh
-export GIT_USERNAME="marslo"
-export GIT_PASSWORD="ghp_xxx"
-export GIT_ASKPASS="$(mktemp)"
-
-cat > "${GIT_ASKPASS}" <<EOF
-#!/bin/sh
-case "\$1" in
-  *Username*) echo "\$GIT_USERNAME" ;;
-  *Password*) echo "\$GIT_PASSWORD" ;;
-esac
-EOF
-chmod +x "${GIT_ASKPASS}"
-
-$ chmod +x ~/.git-askpass.sh
-
-# go to repo
-$ cd /path/to/repo
-$ git -c core.askPass="${GIT_ASKPASS}" push
-
-# cleanup
-$ rm "${GIT_ASKPASS}"
-$ unset GIT_USERNAME GIT_PASSWORD GIT_ASKPASS
-```
 
 ## http.cookiefile
 
