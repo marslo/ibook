@@ -25,7 +25,7 @@ $ brew install dos2unix openldap
 $ brew install tmux corkscrew telnet
 $ brew install figlet
 $ brew install --HEAD toilet
-$ brew install colordiff diffutils wdiff
+$ brew install colordiff diffutils wdiff difftastic
 $ brew install --HEAD diff-so-fancy highlight
 $ brew install ansifilter                         # decolorize
 $ brew install gnu-tar gzip carlocab/personal/unrar

@@ -112,6 +112,26 @@ $ sdk install gradle
 $ curl https://sh.rustup.rs -sSf | sh
 ```
 
+```bash
+# check cache and clean cache
+$ cargo install cargo-cache
+# -- check --
+$ cargo cache
+Cargo cache '/Users/marslo/.cargo':
+
+Total:                            75.65 MB
+  1 installed binaries:            3.75 MB
+  Registry:                       71.89 MB
+    Registry index:                7.70 MB
+    106 crate archives:           10.66 MB
+    106 crate source checkouts:   53.54 MB
+  Git db:                             0  B
+    0 bare git repos:                 0  B
+    0 git repo checkouts:             0  B
+
+$ cargo cache -a
+```
+
 ## [snap](https://snapcraft.io/)
 ```bash
 # debine
