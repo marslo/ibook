@@ -1441,6 +1441,15 @@ vmap <C-/>     <c-_>b
 >   - [* iMarslo: ~/.config/yamllint/config](https://github.com/marslo/dotfiles/blob/main/.config/yamllint/config)
 >   - [* iMarslo: yamllint.yaml](https://github.com/marslo/dotfiles/blob/main/.yamllint.yaml)
 
+> [!TIP]
+> to reset the ale_lsit_window_size via autocmd:
+>> ```vim
+>> augroup ALEResizeLocList
+>>   autocmd!
+>>   autocmd BufWinEnter * if &buftype ==# 'quickfix' && getloclist(0) != [] | execute "resize 2" | endif
+>> augroup END
+>> ```
+
 ```vim
 " ~/.vimrc.d/extension
 Plug 'stephpy/vim-yaml'                                             " ╮ yaml
@@ -1451,14 +1460,16 @@ Plug 'dense-analysis/ale'
 set foldlevelstart=20
 
 " dense-analysis/ale
-" error: ✘ 👾 💣  🙅 🤦; warning: ⚠ ⸮ ⸘ ☹ info: ⸚ ϔ 𐘿 𐰦 ; style_error: ᑹ ; style_warning: ᓏ
+" error: 💢 ✘ 👾 💣  🙅 🤦; warning: ⚠ ⸮ ⸘ ☹; info: ⸚ ϔ 𐘿 𐰦 ; style_error: ᑹ; " style_warning: ᓏ ᓍ ఠ ൠ;
+let g:ale_open_list                       = 1                       " ╮ whether if open
+let g:ale_list_window_size                = 2                       " ╯ diagnostics windows
 let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%] '
 let g:ale_virtualtext_prefix              = '%comment% %type% [%code%]: '
-let g:ale_sign_error                      = '💢'
-let g:ale_sign_warning                    = 'ᑹᑹ'
+let g:ale_sign_error                      = '✗'
+let g:ale_sign_warning                    = 'ᑹ'
 let g:ale_sign_info                       = 'ᓆ'
 let g:ale_sign_style_error                = '⍥'
-let g:ale_sign_style_warning              = 'ᓍ'
+let g:ale_sign_style_warning              = '⍨'
 let g:ale_lint_on_text_changed            = 'never'
 let g:ale_fix_on_save                     = 0
 let g:ale_lint_on_save                    = 1
@@ -1468,6 +1479,12 @@ let g:ale_set_balloons                    = 1
 let g:ale_hover_to_preview                = 1
 let g:ale_floating_preview                = 1
 let g:ale_close_preview_on_insert         = 1
+let g:ale_groovy_npmgroovylint_options    = '--loglevel warning --config ~/.groovylintrc.json'
+let g:ale_use_neovim_diagnostics_api      = 0
+" for ansbile.yaml
+let g:ale_ansible_ansible_lint_executable = 'ansible-lint'
+let g:ale_ansible_language_server_config = {}
+let g:ale_ansible_language_server_executable = 'ansible-language-server'
 ```
 
 - shortcuts
