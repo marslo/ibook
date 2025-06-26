@@ -19,7 +19,6 @@
     - [troubleshooting](#troubleshooting)
   - [tomtom/tcomment_vim](#tomtomtcomment_vim)
   - [dense-analysis/ale](#dense-analysisale)
-  - [vim-syntastic/syntastic](#vim-syntasticsyntastic-1)
 - [color and theme](#color-and-theme)
   - [scrooloose/nerdtree](#scrooloosenerdtree)
   - [ryanoasis/vim-devicons](#ryanoasisvim-devicons)
@@ -549,6 +548,7 @@ autocmd User AirlineAfterInit call AirlineInit()
   - peaksea ( no background color change )
 
 # programming
+
 ## [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
 
 > [!NOTE|label:references:]
@@ -590,23 +590,51 @@ highlight link SyntasticStyleWarningSign GruvboxPurpleSign
 ```
 <!--endsec-->
 
-  <!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
-  ```vim
-  Bundle 'vim-syntastic/syntastic'
+<!--sec data-title="former version" data-id="section2" data-show=true data-collapse=true ces-->
+```vim
+Bundle 'vim-syntastic/syntastic'
 
-  " configure syntastic syntax checking to check on open as well as save
-  set statusline+=%#warningmsg#
-  set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
-  set statusline+=\ %* |
-  let g:syntastic_always_populate_loc_list  = 1
-  let g:syntastic_auto_loc_list             = 1
-  let g:syntastic_check_on_open             = 1
-  let g:syntastic_check_on_wq               = 0
-  let g:syntastic_loc_list_height           = 2
-  let g:syntastic_ignore_files              = ['\.py$']
-  let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
-  ```
-  <!--endsec-->
+" configure syntastic syntax checking to check on open as well as save
+set statusline+=%#warningmsg#
+set statusline+=\ %{SyntasticStatuslineFlag()}                      " vim-syntastic/syntastic
+set statusline+=\ %* |
+let g:syntastic_always_populate_loc_list  = 1
+let g:syntastic_auto_loc_list             = 1
+let g:syntastic_check_on_open             = 1
+let g:syntastic_check_on_wq               = 0
+let g:syntastic_loc_list_height           = 2
+let g:syntastic_ignore_files              = ['\.py$']
+let g:syntastic_html_tidy_ignore_errors   = [" proprietary attribute \"ng-"]
+```
+<!--endsec-->
+
+```vim
+" vim-syntastic/syntastic
+" info: ࠵ ೲ; error: ஓ ௐ ྾; warning ᓆ ᓍ 𐘿; style_warning: ⍤ ൠ
+set statusline+=%#warningmsg#
+if has('unix')
+  set statusline+=\ %{SyntasticStatuslineFlag()}
+endif
+set statusline+=\ %* |
+let g:syntastic_always_populate_loc_list = 0                        " ╮ whether if open
+let g:syntastic_auto_loc_list            = 0                        " ╯ diagnostics windows
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
+let g:syntastic_loc_list_height          = 2
+let g:syntastic_ignore_files             = ['\.py$']
+let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
+let g:syntastic_enable_signs             = 1
+let g:syntastic_info_symbol              = 'ϊ'
+let g:syntastic_error_symbol             = '✗'
+let g:syntastic_warning_symbol           = '⍨'
+let g:syntastic_style_error_symbol       = '⍥'
+let g:syntastic_style_warning_symbol     = 'ఠ'
+let g:syntastic_dockerfile_checkers      = [ 'hadolint' ]
+highlight link SyntasticErrorSign        Error
+highlight link SyntasticWarningSign      GruvboxYellow
+highlight link SyntasticStyleErrorSign   GruvboxRedSign
+highlight link SyntasticStyleWarningSign GruvboxPurpleSign
+```
 
 ## [coc.nvim](https://github.com/neoclide/coc.nvim)
 
@@ -1480,35 +1508,6 @@ let g:ale_close_preview_on_insert         = 1
 
 ![ale info ](../../screenshot/vim/vim-ale-info.png)
 
-
-## [vim-syntastic/syntastic](https://github.com/vim-syntastic/syntastic)
-```vim
-" vim-syntastic/syntastic
-" info: ࠵ ೲ; error: ஓ ௐ ྾; warning ᓆ ᓍ 𐘿; style_warning: ⍤ ൠ
-set statusline+=%#warningmsg#
-if has('unix')
-  set statusline+=\ %{SyntasticStatuslineFlag()}
-endif
-set statusline+=\ %* |
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list            = 1
-let g:syntastic_check_on_open            = 1
-let g:syntastic_check_on_wq              = 0
-let g:syntastic_loc_list_height          = 2
-let g:syntastic_ignore_files             = ['\.py$']
-let g:syntastic_html_tidy_ignore_errors  = [" proprietary attribute \"ng-"]
-let g:syntastic_enable_signs             = 1
-let g:syntastic_info_symbol              = 'ϊ'
-let g:syntastic_error_symbol             = '✗'
-let g:syntastic_warning_symbol           = '⍨'
-let g:syntastic_style_error_symbol       = '⍥'
-let g:syntastic_style_warning_symbol     = 'ఠ'
-let g:syntastic_dockerfile_checkers      = [ 'hadolint' ]
-highlight link SyntasticErrorSign        Error
-highlight link SyntasticWarningSign      GruvboxYellow
-highlight link SyntasticStyleErrorSign   GruvboxRedSign
-highlight link SyntasticStyleWarningSign GruvboxPurpleSign
-```
 
 # color and theme
 
