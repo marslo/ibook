@@ -24,9 +24,8 @@
 ```bash
 $ npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
 
-# optional
-$ npm install -g conventional-changelog-cli
-$ npm install -g conventional-changelog-angular
+# or full install
+$ npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/github
 ```
 
 ## plugins

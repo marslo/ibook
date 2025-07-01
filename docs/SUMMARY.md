@@ -55,6 +55,7 @@
   * [ssh](devops/ssh.md)
   * [git](devops/git/git.md)
     * [config](devops/git/config.md)
+      * [multiple accounts](devops/git/multiple-accounts.md)
     * [alias](devops/git/alias.md)
     * [submodule](devops/git/submodule.md)
     * [eol](devops/git/eol.md)
@@ -257,5 +258,5 @@
 * [english](english/symbols.md)
 
 <!---
-vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent
+vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=markdown:foldmethod=indent:
 -->

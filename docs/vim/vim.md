@@ -10,6 +10,7 @@
 
 {% hint style='tip' %}
 > reference:
+> - [mhinz/vim-galore](https://github.com/mhinz/vim-galore) | [Vim 从入门到精通](https://wsdjeg.net/vim-galore-zh-cn/)
 > - [* Vim help files](https://vimhelp.org/#reference_toc)
 > - [mhinz/vim-galore](https://github.com/mhinz/vim-galore)
 > - [Bram Moolenaar](https://www.moolenaar.net/)
