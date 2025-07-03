@@ -57,22 +57,21 @@
 > [!TIP|label:references:]
 > - [Using Command Line how to make the user an Administrator](https://apple.stackexchange.com/a/268602/254265)
 > - [Making a user account an administrator on Mac (Terminal)](https://teamdynamix.umich.edu/TDClient/47/LSAPortal/KB/ArticleDet?ID=1981)
+> - [macOS Remove Admin Account with Terminal](https://clickpom.zendesk.com/hc/fr/articles/4407270628109-macOS-Remove-Admin-Account-with-Terminal)
 
 ```bash
 $ sudo dscl . -merge /Groups/admin GroupMembership <username>
+# i.e.
+$ sudo dscl . -merge /Groups/admin GroupMembership marslo
+
+# check
+$ sudo dscl . -read /Groups/admin GroupMembership
+
+# remove
+$ sudo dscl . -delete /Groups/admin GroupMembership <username>
+# -- or --
+$ sudo dseditgroup -o edit -d <username> -t user admin
 ```
-
-- remove account from admin
-
-  > [!NOTE|label:references:]
-  > - [macOS Remove Admin Account with Terminal](https://clickpom.zendesk.com/hc/fr/articles/4407270628109-macOS-Remove-Admin-Account-with-Terminal)
-
-  ```bash
-  $ sudo dscl . -delete /Groups/admin GroupMembership <username>
-
-  # or
-  $ sudo dseditgroup -o edit -d <username> -t user admin
-  ```
 
 #### modify SHELL
 ```bash
@@ -90,6 +89,10 @@ $ sudo bash -c "echo $(command -v bash) >> /etc/shells"
   ```bash
   $ sudo dscl . -read /Groups/admin GroupMembership
   GroupMembership: root _avectodaemon marslo
+
+  # or
+  $ id -Gn <username>
+  $ id -Gn <username> | grep -qw admin
   ```
 
 - check account info

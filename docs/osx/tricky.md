@@ -851,10 +851,35 @@ $ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
 > - [Disk Management From the Command-Line, Part 3](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-3)
 {% endhint %}
 
+#### list disks and volumns
+```bash
+$ diskutil list
+
+# or
+$ diskutil list disk1
+
+# or via `lsblk`: https://command-not-found.com/lsblk
+$ docker run cmd.cat/lsblk lsblk
+NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+vda    254:0    0  16G  0 disk
+└─vda1 254:1    0  16G  0 part /etc/hosts
+
+# or via `lshw`: https://command-not-found.com/lshw
+$ docker run cmd.cat/lshw lshw -class disk
+  *-virtio1
+       description: Virtual I/O device
+       physical id: 0
+       bus info: virtio@1
+       logical name: vda
+       configuration: driver=virtio_blk
+
+# or
+$ system_profiler SPStorageDataType
+```
+
 #### check volumn info
 ```bash
 $ diskutil info <path/to/volumn>
-
 # i.e.:
 $ diskutil info /Volumes/iMarsloOSX/
    Device Identifier:         disk1s5
@@ -866,29 +891,6 @@ $ diskutil info /Volumes/iMarsloOSX/
    Mounted:                   Yes
    Mount Point:               /
 ```
-
-- list disks and volumns
-  ```bash
-  $ diskutil list
-
-  # or
-  $ diskutil list disk1
-
-  # or via `lsblk`: https://command-not-found.com/lsblk
-  $ docker run cmd.cat/lsblk lsblk
-  NAME   MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-  vda    254:0    0  16G  0 disk
-  └─vda1 254:1    0  16G  0 part /etc/hosts
-
-  # or via `lshw`: https://command-not-found.com/lshw
-  $ docker run cmd.cat/lshw lshw -class disk
-    *-virtio1
-         description: Virtual I/O device
-         physical id: 0
-         bus info: virtio@1
-         logical name: vda
-         configuration: driver=virtio_blk
-    ```
 
 #### list the apfs info
 ```bash
@@ -905,6 +907,51 @@ APFS Container (1 found)
     +-< Physical Store...>
     |
     +-> ...
+
+$ diskutil apfs list
+APFS Containers (3 found)
+|
++-- Container disk3 8FD21D62-C7F0-4554-B7C7-AE85BE52D8AA
+    ====================================================
+    APFS Container Reference:     disk3
+    Size (Capacity Ceiling):      494384795648 B (494.4 GB)
+    Capacity In Use By Volumes:   289735741440 B (289.7 GB) (58.6% used)
+    Capacity Not Allocated:       204649054208 B (204.6 GB) (41.4% free)
+    |
+    +-< Physical Store disk0s2 1*******-****-****-****-***********8
+    |   -----------------------------------------------------------
+    |   APFS Physical Store Disk:   disk0s2
+    |   Size:                       494384795648 B (494.4 GB)
+    |
+    +-> Volume disk3s1 2*******-****-****-****-***********E
+        ---------------------------------------------------
+        APFS Volume Disk (Role):   disk3s1 (Data)
+        Name:                      Macintosh HD - Data (Case-insensitive)
+        Mount Point:               /System/Volumes/Data
+        Capacity Consumed:         256742236160 B (256.7 GB)
+        Sealed:                    No
+        FileVault:                 Yes (Unlocked)
+```
+
+#### create volume for case-sensitive APFS
+
+> [!NOTE]
+> - volume name: `CaseSensitive`
+> - volume size: `4000m` (4GB)
+> - disk identifier: `disk3`
+> - case-sensitive:
+>
+> | CASE SENSITIVE | CASE INSENSITIVE |
+> |:--------------:|:----------------:|
+> | APFSX          | APFS             |
+
+```bash
+# for case-sensitive APFS
+$ diskutil apfs addVolume disk3 APFSX CaseSensitive -quota 4000m
+
+# remove
+$ diskutil unmount /Volumes/CaseSensitive
+$ diskutil apfs deleteVolume disk3s7
 ```
 
 #### erase disk

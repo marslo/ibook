@@ -26,14 +26,14 @@
 > - `~/.gitconfig.d/.gitconfig` is used to distinguish the **git remote URLs** by `includeIf hasconfig:remote.*.url`
 > - `~/.ssh/config.d/github` is used to distinguish the ssh key by host-alias
 
-{% hint style="info" %}
+
+> [!NOTE]
 > - to check git the git clone debug log via:
 >> ```bash
 >> GIT_TRACE=true GIT_CURL_VERBOSE=true GIT_TRACE_PACK_ACCESS=true GIT_TRACE_SETUP=true GIT_TRACE_SHALLOW=true \
 >> git clone <repo-url>
 >> ```
 > - check more details in [* iMarslo - troubleshooting](./troubleshooting.md#git-debug-options)
-{% endhint %}
 
 ## with ssh
 
@@ -212,9 +212,8 @@ $ chmod +x ~/.git-templates/hooks/post-checkout ~/.git-templates/set-git-user.sh
 
 ```bash
 #!/usr/bin/env bash
-# ~/.git-template/set-git-user.sh
 #=============================================================================
-#     FileName : set-git-user.sh
+#     FileName : ~/.git-template/set-git-user.sh
 #       Author : marslo.jiao@gmail.com
 #      Created : 2025-06-30 21:54:24
 #   LastChange : 2025-07-01 00:16:22
