@@ -11,6 +11,7 @@
 - [jenkins system](#jenkins-system)
   - [get system info](#get-system-info)
   - [modify log level](#modify-log-level)
+  - [sshd port](#sshd-port)
   - [theme management](#theme-management)
   - [RABC](#rabc)
 - [jobs & builds](#jobs--builds)
@@ -396,15 +397,73 @@ System.setProperty( 'org.apache.commons.logging.simplelog.log.org.apache.commons
   println System.getProperty( 'org.apache.commons.logging.simplelog.log.org.apache.commons.httpclient' );
   ```
 
+### sshd port
+```groovy
+def descriptor = jenkins.model.Jenkins.instance.getDescriptor("org.jenkinsci.main.modules.sshd.SSHD")
+if ( descriptor == null ) {
+  return "SSHD not enabled or plugin not installed"
+}
+println "Configured SSHD port: ${descriptor.port}"
+println "Actual SSHD port: ${descriptor.sshd?.port ?: 'Not started'}"
+```
+
+- [`org.jenkinsci.main.modules.sshd.SSHD`](https://javadoc.jenkins.io/plugin/sshd/org/jenkinsci/main/modules/sshd/package-summary.html)
+  ```groovy
+  def desc = jenkins.model.Jenkins.instance.getDescriptor("org.jenkinsci.main.modules.sshd.SSHD")
+  if (desc == null) { return "SSHD not enabled or plugin not installed" }
+
+  println """
+    getDisplayName       : ${desc.getDisplayName()}
+    getHelpFile          : ${desc.getHelpFile()}
+    getCategory          : ${desc.getCategory()}
+    getDescriptorFullUrl : ${desc.getDescriptorFullUrl()}
+    getDescriptorUrl     : ${desc.getDescriptorUrl()}
+    getGlobalConfigPage  : ${desc.getGlobalConfigPage()}
+    getKlass             : ${desc.getKlass()}
+    getJsonSafeClassName : ${desc.getJsonSafeClassName()}
+  """
+
+  // output
+  // getDisplayName       : SSHD
+  // getHelpFile          : null
+  // getCategory          : jenkins.model.GlobalConfigurationCategory$Security@2c78d177
+  // getDescriptorFullUrl : /descriptorByName/org.jenkinsci.main.modules.sshd.SSHD
+  // getDescriptorUrl     : descriptorByName/org.jenkinsci.main.modules.sshd.SSHD
+  // getGlobalConfigPage  : /org/jenkinsci/main/modules/sshd/SSHD/config.groovy
+  // getKlass             : class org.jenkinsci.main.modules.sshd.SSHD
+  // getJsonSafeClassName : org-jenkinsci-main-modules-sshd-SSHD
+  ```
+
+- [`org.apache.sshd.server.SshServer`](https://javadoc.io/doc/org.apache.sshd/sshd-core/2.3.0/org/apache/sshd/server/SshServer.html)
+  ```grovoy
+  def desc = jenkins.model.Jenkins.instance.getDescriptor("org.jenkinsci.main.modules.sshd.SSHD")
+  if (desc == null) { return "SSHD not enabled or plugin not installed" }
+
+  println ">> getBoundAddresses        : ${desc.sshd.getBoundAddresses()}"
+  println ">> getCipherFactories       : ${desc.sshd.getCipherFactories()}"
+  println ">> getGlobalRequestHandlers : ${desc.sshd.getGlobalRequestHandlers()}"
+  println ">> getPasswordAuthenticator : ${desc.sshd.getPasswordAuthenticator()}"
+  println ">> getPort                  : ${desc.sshd.getPort()}"
+  println ">> getSignatureFactories    : ${desc.sshd.getSignatureFactories()}"
+  println ">> getVersion               : ${desc.sshd.getVersion()}"
+
+  // output
+  // >> getBoundAddresses        : [/0.0.0.0:38239]
+  // >> getCipherFactories       : [aes128-ctr, aes192-ctr, aes256-ctr]
+  // >> getGlobalRequestHandlers : [org.apache.sshd.common.global.KeepAliveHandler@38152e54, org.apache.sshd.server.global.NoMoreSessionsHandler@f813145, org.apache.sshd.server.global.TcpipForwardHandler@259d054c, org.apache.sshd.server.global.CancelTcpipForwardHandler@4f856efd, hostkeys-prove-00@openssh.com]
+  // >> getPasswordAuthenticator : null
+  // >> getPort                  : 38239
+  // >> getSignatureFactories    : [ecdsa-sha2-nistp256-cert-v01@openssh.com, ecdsa-sha2-nistp384-cert-v01@openssh.com, ecdsa-sha2-nistp521-cert-v01@openssh.com, ssh-ed25519-cert-v01@openssh.com, rsa-sha2-512-cert-v01@openssh.com, rsa-sha2-256-cert-v01@openssh.com, ecdsa-sha2-nistp256, ecdsa-sha2-nistp384, ecdsa-sha2-nistp521, ssh-ed25519, sk-ecdsa-sha2-nistp256@openssh.com, sk-ssh-ed25519@openssh.com, rsa-sha2-512, rsa-sha2-256, ssh-rsa]
+  // >> getVersion               : APACHE-SSHD-2.15.0
+  ```
+
 ### theme management
 ```bash
-import jenkins.model.*
-
 def theme = null
 
 // Check if Simple Theme Plugin is installed
-def themeManager = Jenkins.instance.getExtensionList('org.codefirst.SimpleThemeDecorator')
-if (themeManager && themeManager.size() > 0) {
+def themeManager = jenkins.model.Jenkins.instance.getExtensionList('org.codefirst.SimpleThemeDecorator')
+if ( themeManager && themeManager.size() > 0 ) {
   theme = themeManager[0].getUrl()
   println( "Current theme URL: ${theme}" )
 } else {
@@ -412,10 +471,10 @@ if (themeManager && themeManager.size() > 0) {
 }
 
 // Example logic to infer Dark Theme
-if (theme && theme.toLowerCase().contains("dark")) {
-    println("Jenkins is using a Dark Theme.")
+if ( theme && theme.toLowerCase().contains("dark") ) {
+  println("Jenkins is using a Dark Theme.")
 } else {
-    println("Jenkins is not using a Dark Theme.")
+  println("Jenkins is not using a Dark Theme.")
 }
 ```
 

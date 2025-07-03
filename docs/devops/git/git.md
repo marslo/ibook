@@ -96,7 +96,6 @@ git command study and practice
 > - [schacon/plumbing.md](https://gist.github.com/schacon/1153310)
 > - [git-tips/tips](https://github.com/git-tips/tips)
 > - [521xueweihan/git-tips](https://github.com/521xueweihan/git-tips)
-> - [CS Visualized: Useful Git Commands](https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1)
 > - [10.8 Git Internals - Environment Variables](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
 > - [GitHub Flow Like a Pro with these 13 Git Aliases](http://haacked.com/archive/2014/07/28/github-flow-aliases/)
 > - [gitglossary(7) Manual Page](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/gitglossary.html)
