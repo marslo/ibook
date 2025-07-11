@@ -31,6 +31,7 @@
   - [configure](#configure)
   - [firewall is necessary](#firewall-is-necessary)
   - [enable services](#enable-services)
+  - [smbclient](#smbclient)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -840,4 +841,27 @@ $ sudo systemctl status nmb
   [default]
   signing_required=no
   file_ids_off=yes
+  ```
+
+### smbclient
+```bash
+$ smbclient -L //domain.com -U marslo -W domain.com
+Password for [DOMAIN.COM\marslo]:
+
+  Sharename       Type      Comment
+  ---------       ----      -------
+  ADMIN$          Disk      Remote Admin
+  C$              Disk      Default share
+  data            Disk
+  IPC$            IPC       Remote IPC
+  NETLOGON        Disk      Logon server share
+  SYSVOL          Disk      Logon server share
+SMB1 disabled -- no workgroup available
+```
+
+- if no permission
+  ```bash
+  $ smbclient -L //domain.com -U account -W domain.com
+  Password for [DOMAIN.COM\account]:
+  session setup failed: NT_STATUS_LOGON_FAILURE
   ```

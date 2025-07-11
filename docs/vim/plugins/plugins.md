@@ -1267,6 +1267,12 @@ $ which -a tree-sitter
 
   :Copilot log
   :resize -5
+  " or
+  :autocmd BufWinEnter * if bufname('%') ==# 'copilot:///log' | resize -5 | endif
+  " or
+  autocmd BufWinEnter copilot:///log execute 'resize -5'
+  " or
+  autocmd BufWinEnter copilot:///log call timer_start(50, {-> execute('resize -5')})
 
   :Copilot panel
   ```
