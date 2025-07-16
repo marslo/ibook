@@ -30,7 +30,8 @@
   - [go](#go)
   - [node && npm](#node--npm)
     - [config](#config)
-    - [nodesource/distributions](#nodesourcedistributions)
+    - [channel via snap](#channel-via-snap)
+    - [nodesource/distributions via apt](#nodesourcedistributions-via-apt)
     - [node/npm troubleshooting](#nodenpm-troubleshooting)
     - [install from private registry](#install-from-private-registry)
     - [upgrade via `n`](#upgrade-via-n)
@@ -763,13 +764,9 @@ EOF
 ```
 
 ## node && npm
-```bash
-# snap
-$ sudo snap install node --classic --channel=15
-# upgrade version to 20.x
-$ sudo snap refresh --channel=20 node
-node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
-```
+
+> [!NOTE|label:see also:]
+> - [* iMarslo:](../tools/node/node.md)
 
 ### config
 - list all configure
@@ -797,7 +794,16 @@ node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
   $ npm config set registry https://registry.npm.taobao.org
   ```
 
-### [nodesource/distributions](https://github.com/nodesource/distributions)
+### channel via snap
+```bash
+# snap
+$ sudo snap install node --classic --channel=15
+# upgrade version to 20.x
+$ sudo snap refresh --channel=20 node
+node (20/stable) 20.8.0 from OpenJS Foundation (iojs✓) refreshed
+```
+
+### [nodesource/distributions](https://github.com/nodesource/distributions) via apt
 #### [nodejs for ubuntu/debian](https://deb.nodesource.com/)
 ```bash
 # via apt
