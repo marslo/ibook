@@ -203,6 +203,7 @@
     * [x11](linux/x11.md)
   * [ubuntu](linux/ubuntu/ubuntu.md)
     * [init](linux/ubuntu/init.md)
+    * [file system](linux/ubuntu/fileserver.md)
     * [systemctl](linux/ubuntu/systemctl.md)
     * [x](linux/ubuntu/x.md)
   * [rpi](linux/rpi.md)

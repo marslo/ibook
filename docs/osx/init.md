@@ -19,7 +19,7 @@
 ```bash
 # --- utils ---
 $ brew install --HEAD bash-completion@2 file-formula mtr mas
-$ brew install util-linux coreutils moreutils bash less proctools pstree vnstat ncdu ipcalc htop glances lsof trash
+$ brew install util-linux inetutils coreutils moreutils bash less proctools pstree vnstat ncdu ipcalc htop glances lsof trash
 $ brew install gawk grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnu-indent gnutls iproute2mac ifstat stow netcat nmap
 $ brew install dos2unix openldap
 $ brew install tmux corkscrew telnet
