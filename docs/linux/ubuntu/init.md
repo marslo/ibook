@@ -8,6 +8,7 @@
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install -y ca-certificates curl gnupg bash-completion jq python3 python3-pip xclip xsel tree dstat shellcheck tig
+$ sudo apt-get install -y cifs-utils nfs-common
 
 # vim 9.x
 $ sudo add-apt-repository ppa:jonathonf/vim
