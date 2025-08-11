@@ -180,6 +180,7 @@
   * [apps](osx/apps/apps.md)
     * [init](osx/init.md)
     * [brew](osx/apps/brew.md)
+    * [xcode](osx/apps/xcode.md)
   * [defaults](osx/defaults.md)
   * [system](osx/system.md)
   * [network](osx/network.md)
