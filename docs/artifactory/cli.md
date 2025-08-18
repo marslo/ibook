@@ -59,6 +59,9 @@
 - homebrew
   ```bash
   $ brew install jfrog-cli
+
+  # old version
+  $ brew install jfrog-cli-go
   ```
 
 - centos
@@ -112,30 +115,18 @@
 
   # full
   $ docker run releases-docker.jfrog.io/jfrog/jfrog-cli-full-v2-jf jf -v
+
+  # old version
+  $ docker run docker.bintray.io/jfrog/jfrog-cli-go:latest jfrog <COMMAND>
   ```
 
 - npm
   ```bash
   $ npm install -g jfrog-cli-v2-jf && jf intro
-  ```
 
-<!--sec data-title="older version" data-id="section1" data-show=true data-collapse=true ces-->
-- npm
-  ```bash
+  # old version
   $ npm i -g jfrog-cli-go
   ```
-
-- homebrew
-  ```bash
-  $ brew install jfrog-cli-go
-  ```
-
-- docker
-  ```bash
-  $ docker run docker.bintray.io/jfrog/jfrog-cli-go:latest jfrog <COMMAND>
-  ```
-<!--endsec-->
-
 
 ### completion
 - bash
