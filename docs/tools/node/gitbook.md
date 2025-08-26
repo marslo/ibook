@@ -13,7 +13,6 @@ search:
   - [hint](#hint)
   - [tab](#tab)
   - [code](#code)
-  - [emoji](#emoji)
 - [plugins](#plugins)
   - [Flexible Alerts](#flexible-alerts)
 - [Q&A](#qa)
@@ -342,23 +341,6 @@ warning
   {%- endcodetabs %}
   ```
   {% endraw %}
-
-### emoji
-
-> **reference**:
-> - [gist](https://gist.github.com/rxaviers/7360908)
-> - [Emoji](https://github.com/StylishThemes/GitHub-Dark/wiki/Emoji)
-> - [broken & new emojis](https://github.com/WebpageFX/emoji-cheat-sheet.com/issues/429)
-> - [Emojis list from https://api.github.com/emojis](https://awes0mem4n.github.io/emojis-github.html)
-> - [emoji-cheat-sheet.com](https://github.com/WebpageFX/emoji-cheat-sheet.com)
-
-| **emoji**          | **code**             |
-| :-:                | :-:                  |
-| :joy:              | `:joy:`              |
-| :u7981:            | `:u7981:`            |
-| :u7121:            | `:u7121:`            |
-| :white_check_mark: | `:white_check_mark:` |
-| :four_leaf_clover: | `:four_leaf_clover:` |
 
 ## plugins
 ### Flexible Alerts
