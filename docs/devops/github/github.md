@@ -1,7 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [api](#api)
 - [workflow && checkers](#workflow--checkers)
 - [hooks](#hooks)
 - [jenkins](#jenkins)
@@ -30,11 +29,6 @@
 > - sample code:
 >   - [* Lonor/kubernetes-springboot-demo](https://github.com/Lonor/kubernetes-springboot-demo/blob/master/Jenkinsfile)
 {% endhint %}
-
-## api
-
-> [!TIP|label:api]
-> - `https://api.github.com/repos/:owner/:repo/statuses/:ref`
 
 ## workflow && checkers
 
@@ -69,7 +63,6 @@
   > - [GitHubCommitStatusSetter](https://stackoverflow.com/a/51003334/2940319)
   > - [githubPRComment](https://github.com/Lonor/kubernetes-springboot-demo/blob/master/Jenkinsfile)
   > - [GitHub Checks](https://plugins.jenkins.io/github-checks/)
-
 
 ## hooks
 - in github
