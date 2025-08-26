@@ -2,38 +2,46 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [dotfiles](#dotfiles)
-- [highlight output](#highlight-output)
-  - [ack](#ack)
-  - [less](#less)
-  - [grep](#grep)
-  - [highlight](#highlight)
-  - [ccat](#ccat)
-  - [render visualization of hexadecimal colors](#render-visualization-of-hexadecimal-colors)
-  - [others](#others)
-- [remove highlight](#remove-highlight)
+- [highlight](#highlight)
+  - [highlight output](#highlight-output)
+    - [ack](#ack)
+    - [less](#less)
+    - [grep](#grep)
+    - [highlight](#highlight-1)
+    - [ccat](#ccat)
+    - [render visualization of hexadecimal colors](#render-visualization-of-hexadecimal-colors)
+    - [others](#others)
+  - [remove highlight](#remove-highlight)
+- [terminal ui](#terminal-ui)
+  - [dialog](#dialog)
+  - [gum](#gum)
+  - [zenity](#zenity)
+  - [bubbles](#bubbles)
 - [alias](#alias)
   - [`bash -<parameter>`](#bash--parameter)
-- [get cookie from firefox](#get-cookie-from-firefox)
 - [authentication](#authentication)
   - [special characters in usernames and passwords](#special-characters-in-usernames-and-passwords)
-- [downlaods bookmark](#downlaods-bookmark)
 - [markdown icons](#markdown-icons)
   - [programming](#programming)
   - [tools](#tools)
   - [file format](#file-format)
   - [platform](#platform)
   - [github readme status](#github-readme-status)
-- [extract fonts from pdf](#extract-fonts-from-pdf)
+- [others](#others-1)
+  - [get cookie from firefox](#get-cookie-from-firefox)
+  - [downlaods bookmark](#downlaods-bookmark)
+  - [extract fonts from pdf](#extract-fonts-from-pdf)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## dotfiles
+# dotfiles
 
 > [!TIP|label:references:]
 > - [dotfiles](https://www.joshmedeski.com/categories/dotfiles/)
 > - [webpro/awesome-dotfiles](https://github.com/webpro/awesome-dotfiles)
 > - [dotfiles.github.io](https://dotfiles.github.io)
 
+# highlight
 ## highlight output
 
 >[!TIP]
@@ -165,7 +173,207 @@ $ command | decolorize
     remotes/origin/sample$
   ```
 
-## [alias](https://askubuntu.com/a/871435)
+# terminal ui
+
+## dialog
+
+> [!NOTE|label:references:]
+> - [dialog](https://invisible-island.net/dialog/dialog.html)
+
+![dialog](../screenshot/linux/tui/dialog.png)
+
+```bash
+# macos
+$ brew install dialog
+
+# ubuntu/debian
+$ sudo apt-get install dialog
+```
+
+- create a yes/no dialog box
+  ```bash
+  if dialog --title "Confirm" --yesno "Are you sure you want to continue?" 7 50; then
+    echo "Confirmed"
+  else
+    echo "Cancelled"
+  fi
+  ```
+
+- input box
+  ```bash
+  input=$(dialog --inputbox "Enter your name:" 8 40 "e.g. marslo" 3>&1 1>&2 2>&3)
+  echo $input
+  ```
+
+- multiple choice
+  ```bash
+  choices=$(dialog --checklist "Select options:" 10 40 3 \
+    1 "Option 1" off \
+    2 "Option 2" on \
+    3 "Option 3" off \
+    3>&1 1>&2 2>&3)
+  echo $choices
+  ```
+
+- multiple lines input box
+  ```bash
+  tempfile=$(mktemp)
+  dialog --editbox "$tempfile" 20 60 2> "$tempfile"
+  content=$(< "$tempfile")
+  rm -f "$tempfile"
+  echo "Edited content:"
+  echo "$content"
+  ```
+
+## gum
+
+> [!NOTE|label:references:]
+> - [charmbracelet/gum](https://github.com/charmbracelet/gum)
+> - [examples](https://github.com/charmbracelet/gum/tree/main/examples)
+>   - [demo example](https://github.com/charmbracelet/gum/blob/main/examples/demo.sh)
+>   - [git commit example](https://github.com/charmbracelet/gum/blob/main/examples/commit.sh)
+
+![gum choose](../screenshot/linux/tui/gum-choose.png)
+
+- spinner
+  ```bash
+  $ gum spin --spinner dot --title "Loading..." -- sleep 3
+  ```
+
+- filter
+  ```bash
+  $ find . -type f | gum filter --placeholder "Search file..."
+  ```
+
+- single select
+  ```bash
+  $ gum choose "fix" "feat" "docs" "style" "refactor" "test" "chore" "revert"
+  ```
+
+- multiple select
+  ```bash
+  $ echo -e "red\ngreen\nblue" | gum choose --no-limit
+  ```
+
+- input box
+  ```bash
+  $ gum input --placeholder "Enter your commit message"
+  ```
+
+- multiple line input box
+  ```bash
+  $ gum write --placeholder "Enter your commit message"
+  ```
+
+- yes or no
+  ```bash
+  $ gum confirm "Commit changes?" && git commit -m "$SUMMARY" -m "$DESCRIPTION"
+
+  # or
+  $ if gum confirm "Are you sure you want to continue?"; then
+      echo "Confirmed"
+    else
+      echo "Cancelled"
+    fi
+  ```
+
+## zenity
+
+> [!NOTE|label:references:]
+> - [zenity](https://help.gnome.org/users/zenity/stable/)
+> - [GNOME/zenity](https://help.gnome.org/users/zenity/stable/calendar.html.en)
+
+- calendar
+  ```bash
+  $ zenity --calendar --title="Select a Date" --text="Click on a date to select that date." --day=$(date +%d) --month=$(date +%-m) --year=$(date +%Y) 2>/dev/null
+  ```
+
+  ![zenity calendar](../screenshot/linux/tui/zenity--calendar.png)
+
+
+- color picker
+  ```bash
+  $ zenity --color-selection --show-palette 2>/dev/null
+  ```
+
+  ![zenity color picker](../screenshot/linux/tui/zenity--color-selection.png)
+
+- password
+  ```bash
+  $ zenity --password --username 2>/dev/null
+
+  # or
+  $ zenity --password --title="Authentication Required" 2>/dev/null
+  ```
+
+  ![zenity password](../screenshot/linux/tui/zenity-password.png)
+
+- progress bar
+  ```bash
+  (
+  echo "10" ; sleep 1
+  echo "# Updating mail logs" ; sleep 1
+  echo "20" ; sleep 1
+  echo "# Resetting cron jobs" ; sleep 1
+  echo "50" ; sleep 1
+  echo "This line will just be ignored" ; sleep 1
+  echo "75" ; sleep 1
+  echo "# Rebooting system" ; sleep 1
+  echo "100" ; sleep 1
+  ) |
+  zenity --progress \
+    --title="Update System Logs" \
+    --text="Scanning mail logs..." \
+    --percentage=0 2>/dev/null
+
+  if [ "$?" = -1 ] ; then
+    zenity --error --text="Update canceled."
+  fi
+  ```
+
+  ![zenity progress bar](../screenshot/linux/tui/zenity--progress.png)
+
+- list
+  ```bash
+  $ zenity --list \
+           --title="Choose the Bugs You Wish to View" \
+           --column="Bug Number" --column="Severity" --column="Description" \
+             992383 Normal "GtkTreeView crashes on multiple selections" \
+             293823 High "GNOME Dictionary does not handle proxy" \
+             393823 Critical "Menu editing does not work in GNOME 2.0" \
+           2>/dev/null
+
+  # or
+  $ zenity --list --title="Select an option" --column="Options" "Option 1" "Option 2" "Option 3" 2>/dev/null
+  ```
+
+  ![zenity list](../screenshot/linux/tui/zenity--list.png)
+
+- entry
+  ```bash
+  $ zenity --entry --title="User Input" --text="Enter your name:" --entry-text="e.g. marslo" 2>/dev/null
+  ```
+
+  ![zenity entry](../screenshot/linux/tui/zenity--entry.png
+
+- text info
+  ```bash
+  $ zenity --text-info --title="File Content" --filename="/path/to/file.txt" --width=600 --height=400 2>/dev/null
+  ```
+
+- info/warning/error
+  ```bash
+  $ zenity --info --title="Information" --text="Operation completed successfully." 2>/dev/null
+  ```
+
+## bubbles
+
+> [!NOTE|label:references:]
+> - [charmbracelet/bubbles](https://github.com/charmbracelet/bubbles)
+> - [examples](https://github.com/charmbracelet/bubbletea/tree/main/examples)
+> - [marslo/mtui](https://github.com/marslo/mtui)
+
+# [alias](https://askubuntu.com/a/871435)
 
 > [!NOTE|label:references:]
 > - [_complete_alias](https://unix.stackexchange.com/a/332522/29178) | [cykerway/complete-alias](https://github.com/cykerway/complete-alias)
@@ -179,7 +387,7 @@ $ echo ${BASH_ALIASES[ls]}
 ls --color=always
 ```
 
-### [`bash -<parameter>`](https://unix.stackexchange.com/a/38363/29178)
+## [`bash -<parameter>`](https://unix.stackexchange.com/a/38363/29178)
 - get bash login log ( for rc script debug )
   ```bash
   $ bash -l -v
@@ -190,18 +398,13 @@ ls --color=always
   $ bash -i --rcfile="$HOME/.marslo/.imarslo"
   ```
 
-## get cookie from firefox
-```bash
-$ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
-```
-
-## authentication
-### [special characters in usernames and passwords](https://zencoder.support.brightcove.com/general-information/special-characters-usernames-and-passwords.html)
+# authentication
+## [special characters in usernames and passwords](https://zencoder.support.brightcove.com/general-information/special-characters-usernames-and-passwords.html)
 
 {% hint style='tip' %}
 > references:
 > - [percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding)
-> - [* iMarslo - get unicode](./text-processing/json.md##get-urlencode)
+> - [* iMarslo - get unicode](./text-processing/json.md#get-urlencode)
 >   ```bash
 >   $ echo -n '] [ ? /' |
 >     fmt -1 |
@@ -247,6 +450,67 @@ $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q
 |     `space`    |      `%20`      |
 
 
+# markdown icons
+
+> [!NOTE|label:references:]
+> - [* Simple Icons](https://simpleicons.org/)
+> - [* Primer Design System](https://primer.style/foundations/css-utilities/details) | [github - custom-icon-badges](https://github.com/DenverCoder1/custom-icon-badges)
+> - [Ileriayo/markdown-badges](https://github.com/Ileriayo/markdown-badges)
+> - [VishwaGauravIn/pretty-readme-badges](https://github.com/VishwaGauravIn/pretty-readme-badges)
+> - [inttter/md-badges](https://github.com/inttter/md-badges)
+> - [Simple Icons slugs](https://github.com/simple-icons/simple-icons/blob/master/slugs.md)
+
+## programming
+
+|  NAME  | ICON                                                                                                                              | MARKDOWN                                                                                                                            |
+|:------:|-----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| python | ![](https://img.shields.io/badge/-PYTHON-3670A0?logo=python&logoColor=ffdd54&style=flat&labelColor=416790)                        | `![](https://img.shields.io/badge/-PYTHON-3670A0?logo=python&logoColor=ffdd54&style=flat&labelColor=416790)`                        |
+| groovy | ![](https://img.shields.io/badge/-GROOVY-4298B8.svg?style=flat&logo=Apache+Groovy&logoColor=white&labelColor=c96908&color=d6700a) | `![](https://img.shields.io/badge/-GROOVY-4298B8.svg?style=flat&logo=Apache+Groovy&logoColor=white&labelColor=c96908&color=d6700a)` |
+
+## tools
+
+|  NAME  | ICON                                                                                                       | MARKDOWN                                                                                                     |
+|:------:|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+|   vim  | ![](https://img.shields.io/badge/-VIM-5ca730?&style=flat&logo=vim&logoColor=white&labelColor=50932d)       | `![](https://img.shields.io/badge/-VIM-5ca730?&style=flat&logo=vim&logoColor=white&labelColor=50932d)`       |
+| neovim | ![](https://img.shields.io/badge/-NEOVIM-57A143?logo=neovim&logoColor=white&style=flat)                    | `![](https://img.shields.io/badge/-NEOVIM-57A143?logo=neovim&logoColor=white&style=flat)`                    |
+|   git  | ![](https://img.shields.io/badge/-GIT-%23F05033.svg?logo=git&logoColor=white&style=flat)                   | `![](https://img.shields.io/badge/-GIT-%23F05033.svg?logo=git&logoColor=white&style=flat)`                   |
+|   git  | ![](https://img.shields.io/badge/-GIT-%238957E5.svg?logo=git&logoColor=white&style=flat&labelColor=7C4ED0) | `![](https://img.shields.io/badge/-GIT-%238957E5.svg?logo=git&logoColor=white&style=flat&labelColor=7C4ED0)` |
+| iterm2 | ![](https://img.shields.io/badge/iTerm2-000000?logo=iterm2&logoColor=fff&style=flat)                       | `![](https://img.shields.io/badge/iTerm2-000000?logo=iterm2&logoColor=fff&style=flat)`                       |
+|  helm  | ![](https://img.shields.io/badge/-HELM-0F1689?logo=helm&logoColor=fff&style=flat)                          | `![](https://img.shields.io/badge/-HELM-0F1689?logo=helm&logoColor=fff&style=flat)`                          |
+
+## file format
+
+| NAME | ICON                                                                          | MARKDOWN                                                                           |
+|:----:|-------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| yaml | ![](https://img.shields.io/badge/YAML-CB171E?logo=yaml&logoColor=fff)         | `![](https://img.shields.io/badge/YAML-CB171E?logo=yaml&logoColor=fff&style=flat)` |
+| json | ![](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff&style=flat) | `![](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff&style=flat)`    |
+
+## platform
+
+|  NAME  | ICON                                                                                   | MARKDOWN                                                                                 |
+|:------:|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+|  macos | ![](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0&style=flat)  | `![](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0&style=flat)`  |
+|  linux | ![](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black&style=flat)   | `![](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black&style=flat)`   |
+| ubuntu | ![](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=flat) | `![](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=flat)` |
+
+## github readme status
+
+> [!NOTE|label:references:]
+> - [github-readme-stats](https://github.com/anuraghazra/github-readme-stats)
+> - [github-readme-streak-stats](https://github.com/DenverCoder1/github-readme-streak-stats)
+
+
+|     TOOL     |                             MARKDOWN                             |                              IMAGE                             |
+|:------------:|:----------------------------------------------------------------:|:--------------------------------------------------------------:|
+| streak-stats | `![](https://streak-stats.demolab.com/?user=marslo&theme=light)` | ![](https://streak-stats.demolab.com/?user=marslo&theme=light) |
+
+
+# others
+## get cookie from firefox
+```bash
+$ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
+```
+
 ## downlaods bookmark
 
 > [!TIP|label:references:]
@@ -260,62 +524,6 @@ $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q
 >   - [Advanced Bash-Scripting Guide](https://tldp.org/LDP/abs/abs-guide.pdf)
 >   - [Linux Bash Shell Cheat Sheet](https://oit.ua.edu/wp-content/uploads/2020/12/Linux_bash_cheat_sheet-1.pdf)
 > - [dye784/collection](https://github.com/dye784/collection)
-
-
-## markdown icons
-
-> [!NOTE|label:references:]
-> - [* Simple Icons](https://simpleicons.org/)
-> - [* Primer Design System](https://primer.style/foundations/css-utilities/details) | [github - custom-icon-badges](https://github.com/DenverCoder1/custom-icon-badges)
-> - [Ileriayo/markdown-badges](https://github.com/Ileriayo/markdown-badges)
-> - [VishwaGauravIn/pretty-readme-badges](https://github.com/VishwaGauravIn/pretty-readme-badges)
-> - [inttter/md-badges](https://github.com/inttter/md-badges)
-> - [Simple Icons slugs](https://github.com/simple-icons/simple-icons/blob/master/slugs.md)
-
-### programming
-
-|  NAME  | ICON                                                                                                                              | MARKDOWN                                                                                                                            |
-|:------:|-----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| python | ![](https://img.shields.io/badge/-PYTHON-3670A0?logo=python&logoColor=ffdd54&style=flat&labelColor=416790)                        | `![](https://img.shields.io/badge/-PYTHON-3670A0?logo=python&logoColor=ffdd54&style=flat&labelColor=416790)`                        |
-| groovy | ![](https://img.shields.io/badge/-GROOVY-4298B8.svg?style=flat&logo=Apache+Groovy&logoColor=white&labelColor=c96908&color=d6700a) | `![](https://img.shields.io/badge/-GROOVY-4298B8.svg?style=flat&logo=Apache+Groovy&logoColor=white&labelColor=c96908&color=d6700a)` |
-
-### tools
-
-|  NAME  | ICON                                                                                                       | MARKDOWN                                                                                                     |
-|:------:|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-|   vim  | ![](https://img.shields.io/badge/-VIM-5ca730?&style=flat&logo=vim&logoColor=white&labelColor=50932d)       | `![](https://img.shields.io/badge/-VIM-5ca730?&style=flat&logo=vim&logoColor=white&labelColor=50932d)`       |
-| neovim | ![](https://img.shields.io/badge/-NEOVIM-57A143?logo=neovim&logoColor=white&style=flat)                    | `![](https://img.shields.io/badge/-NEOVIM-57A143?logo=neovim&logoColor=white&style=flat)`                    |
-|   git  | ![](https://img.shields.io/badge/-GIT-%23F05033.svg?logo=git&logoColor=white&style=flat)                   | `![](https://img.shields.io/badge/-GIT-%23F05033.svg?logo=git&logoColor=white&style=flat)`                   |
-|   git  | ![](https://img.shields.io/badge/-GIT-%238957E5.svg?logo=git&logoColor=white&style=flat&labelColor=7C4ED0) | `![](https://img.shields.io/badge/-GIT-%238957E5.svg?logo=git&logoColor=white&style=flat&labelColor=7C4ED0)` |
-| iterm2 | ![](https://img.shields.io/badge/iTerm2-000000?logo=iterm2&logoColor=fff&style=flat)                       | `![](https://img.shields.io/badge/iTerm2-000000?logo=iterm2&logoColor=fff&style=flat)`                       |
-|  helm  | ![](https://img.shields.io/badge/-HELM-0F1689?logo=helm&logoColor=fff&style=flat)                          | `![](https://img.shields.io/badge/-HELM-0F1689?logo=helm&logoColor=fff&style=flat)`                          |
-
-### file format
-
-| NAME | ICON                                                                          | MARKDOWN                                                                           |
-|:----:|-------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| yaml | ![](https://img.shields.io/badge/YAML-CB171E?logo=yaml&logoColor=fff)         | `![](https://img.shields.io/badge/YAML-CB171E?logo=yaml&logoColor=fff&style=flat)` |
-| json | ![](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff&style=flat) | `![](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff&style=flat)`    |
-
-### platform
-
-|  NAME  | ICON                                                                                   | MARKDOWN                                                                                 |
-|:------:|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-|  macos | ![](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0&style=flat)  | `![](https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0&style=flat)`  |
-|  linux | ![](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black&style=flat)   | `![](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black&style=flat)`   |
-| ubuntu | ![](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=flat) | `![](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=flat)` |
-
-### github readme status
-
-> [!NOTE|label:references:]
-> - [github-readme-stats](https://github.com/anuraghazra/github-readme-stats)
-> - [github-readme-streak-stats](https://github.com/DenverCoder1/github-readme-streak-stats)
-
-
-|     TOOL     |                             MARKDOWN                             |                              IMAGE                             |
-|:------------:|:----------------------------------------------------------------:|:--------------------------------------------------------------:|
-| streak-stats | `![](https://streak-stats.demolab.com/?user=marslo&theme=light)` | ![](https://streak-stats.demolab.com/?user=marslo&theme=light) |
-
 
 ## extract fonts from pdf
 

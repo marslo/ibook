@@ -39,6 +39,7 @@
   - [Cask `firefox-nightly` is not installed.](#cask-firefox-nightly-is-not-installed)
   - [Error: Unexpected method 'appcast' called on Cask adoptopenjdk-jre](#error-unexpected-method-appcast-called-on-cask-adoptopenjdk-jre)
   - [treesitter.c: error: call to undeclared function 'ts_language_abi_version'](#treesitterc-error-call-to-undeclared-function-ts_language_abi_version)
+  - [You have pkgconf installed that was built on macOS 14 but you are running macOS 15.](#you-have-pkgconf-installed-that-was-built-on-macos-14-but-you-are-running-macos-15)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -1287,3 +1288,19 @@ Warning: Broken symlinks were found. Remove them with `brew cleanup`:
   $ which -a nvim
   /usr/local/bin/nvim
   ```
+
+### You have pkgconf installed that was built on macOS 14 but you are running macOS 15.
+
+> [!TIP|label:error message]
+> ```bash
+> $ brew doctor
+> Warning: You have pkgconf installed that was built on macOS 14
+>          but you are running macOS 15.
+> ```
+
+```bash
+$ brew reinstall pkgconf
+
+# or
+$ brew reinstall --build-from-source pkgconf
+```
