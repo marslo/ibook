@@ -7,6 +7,8 @@
 - [repo](#repo)
 - [pull request](#pull-request)
 - [commits / branches](#commits--branches)
+- [revision and tags](#revision-and-tags)
+  - [get HEAD of branch](#get-head-of-branch)
 - [get actions runners](#get-actions-runners)
 - [version](#version)
   - [release version](#release-version)
@@ -23,7 +25,8 @@
 
 > [!NOTE|label:headers]
 > - `-H "Accept: application/vnd.github.v3+json"`
-> - `-H "Authorization: token YOUR_TOKEN"`
+> - `-H "Authorization: token <TOKEN>"`
+> - `-H "Authorization: Bearer <TOKEN>"`
 > - `-H "Content-Type: application/json"`
 > - `-H "Time-Zone: Europe/Amsterdam"`
 > - `-H "X-GitHub-Api-Version: 2022-11-28"`
@@ -31,10 +34,10 @@
 ## user
 ### get username from token
 ```bash
-$ curl -s -H "Authorization: token ghp_v**********************************n" https://api.github.com/user | jq -r .login
-username
+$ curl -s -H "Authorization: token <TOKEN>" https://api.github.com/user | jq -r .login
+# or
+$ curl -s -H "Authorization: Bearer <TOKEN>" https://api.github.com/user | jq -r .login
 ```
-
 
 ## metadata
 ```bash
@@ -43,6 +46,29 @@ $ curl -sL https://api.github.com/meta | jq -r '.ssh_keys | .[]'  | sed -e 's/^/
 ```
 
 ## repo
+
+- list all repos and permissions
+
+  > [!TIP]
+  > - list all repos: `GET /user/repos`
+  > - list repos in special <ORG>/<OWNER>: `GET /orgs/<ORG>/repos`
+
+  ```bash
+  $ curl -sS -g -H "Authorization: Bearer <TOKEN>" \
+         -H "Accept: application/vnd.github+json"
+         'https://api.github.com/user/repos?per_page=100&type=all' |
+    jq -r '.[] | select(.permissions != null)
+               | (
+                   if   p.admin     then "ADMIN"
+                   elif p.maintain  then "MAINTAIN"
+                   elif p.push      then "WRITE"
+                   elif p.triage    then "TRIAGE"
+                   elif p.pull      then "READ"
+                   else "NONE" end
+                 )
+                 + "\t" + .html_url' |
+    sort
+  ```
 
 - get repo info
 
@@ -134,6 +160,23 @@ $ curl -sL https://api.github.com/meta | jq -r '.ssh_keys | .[]'  | sed -e 's/^/
   # i.e.:
   $ curl -fsSL https://api.github.com/repos/marslo/ibook/branches/main
   ```
+
+## revision and tags
+
+### get HEAD of branch
+
+> [!TIP]
+> `GET /repos/{owner}/{repo}/git/refs/heads/{branch}`
+
+```bash
+$ curl -fsSL https://api.github.com/repos/<OWNER>/<REPO>/git/refs/heads/<BRANCH>
+# i.e.:
+$ curl -fsSL https://api.github.com/repos/marslo/ibook/git/refs/heads/marslo  | jq -r .object.sha
+
+$ gh api "repos/<OWNER>/<REPO>/refs/heads/<BRANCH>"
+# i.e.:
+$ gh api "repos/marslo/ibook/git/refs/heads/marslo" | jq -r .object.sha
+```
 
 ## get actions runners
 
