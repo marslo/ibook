@@ -26,7 +26,7 @@
 - [patch](#patch)
   - [json patch path](#json-patch-path)
 - [apply](#apply)
-- [rollback](#rollback)
+- [upgrade and rollback](#upgrade-and-rollback)
   - [check history](#check-history)
   - [upgrade with CHANGE-CAUSE](#upgrade-with-change-cause)
   - [check comments](#check-comments)
@@ -527,7 +527,7 @@ $ kubectl -n devops-ci get deployment dev-jenkins -o json |
   kubectl apply edit-last-applied -f deploy.yaml -o json
   ```
 
-## rollback
+## upgrade and rollback
 
 > [!NOTE|label:references:]
 > -[** How do you rollback deployments in Kubernetes?](https://learnk8s.io/kubernetes-rollbacks)

@@ -41,6 +41,7 @@
 - [management](#management)
   - [execute in pod](#execute-in-pod)
   - [restart po](#restart-po)
+- [upgrade and rollback](#upgrade-and-rollback)
 - [resource managemenet](#resource-managemenet)
   - [resource management for pods and containers](#resource-management-for-pods-and-containers)
   - [assign cpu resources to containers and pods](#assign-cpu-resources-to-containers-and-pods)
@@ -739,6 +740,11 @@ $ kubectl -n <namespace> get po <po-name> -o yaml | kubectl replace --force -f -
     ```bash
     $ kubectl -n <namespace> scale deployment <name> --replicas=0
     ```
+
+## upgrade and rollback
+
+> [!NOTE|label:references:]
+> - [* iMarslo: upgrade and rollback](./kubectl.md#upgrade-and-rollback)
 
 ## resource managemenet
 
