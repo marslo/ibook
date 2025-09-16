@@ -164,8 +164,26 @@ $ sudo mdutil -E /Volumes/marslo/
 > refer to: [osx/defaults](../osx/defaults.html)
 
 ## development environment
+
 ### [setup JAVA_HOME](https://docs.oracle.com/javase/9/install/installation-jdk-and-jre-macos.htm#JSJIG-GUID-C5F0BF25-3487-4F33-9275-7000C8E1C58C)
 ```bash
+# register java version
+# -- -v 24 --
+$ brew install openjdk
+$ sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk-24.jdk
+
+# -- -v 21 --
+$ brew install openjdk@21
+$ sudo ln -sfn "$(brew --prefix openjdk@21)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+
+# check
+$ /usr/libexec/java_home -V
+Matching Java Virtual Machines (2):
+    24.0.2 (arm64) "Homebrew" - "OpenJDK 24.0.2" /opt/homebrew/Cellar/openjdk/24.0.2/libexec/openjdk.jdk/Contents/Home
+    21.0.8 (arm64) "Homebrew" - "OpenJDK 21.0.8" /opt/homebrew/Cellar/openjdk@21/21.0.8/libexec/openjdk.jdk/Contents/Home
+/opt/homebrew/Cellar/openjdk/24.0.2/libexec/openjdk.jdk/Contents/Home
+
+# legacy java version
 $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
 ```
 

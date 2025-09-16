@@ -493,6 +493,20 @@ EOF
 
 #### various versions
 
+> [!TIP|label:register openjdk to /usr/libexec/java_home]
+> ```bash
+> # -- -v 24 --
+> $ brew install openjdk
+> $ sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk-24.jdk
+>
+> # -- -v 21 --
+> $ brew install openjdk@21
+> $ sudo ln -sfn "$(brew --prefix openjdk@21)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+>
+> # check
+> $ /usr/libexec/java_home -V
+> ```
+
 - `/Library/Java/JavaVirtualMachines`
   ```bash
   $ ls -Altrh /Library/Java/JavaVirtualMachines

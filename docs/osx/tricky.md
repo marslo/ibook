@@ -326,6 +326,22 @@ $ <cmd> | pbcopy
 >   ```
 >   <!--endsec-->
 
+
+
+> [!TIP|label:register openjdk]
+> ```bash
+> # -- -v 21 --
+> $ brew install openjdk@21
+> $ sudo ln -sfn "$(brew --prefix openjdk@21)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+>
+> # -- -v 24 --
+> $ brew install openjdk
+> $ sudo ln -sfn "$(brew --prefix openjdk)/libexec/openjdk.jdk" /Library/Java/JavaVirtualMachines/openjdk-24.jdk
+>
+> # check
+> $ /usr/libexec/java_home -V
+> ```
+
 ```bash
 $ cp /usr/local/opt/groovy/libexec/lib/groovy.icns groovyConsole.app/Contents/Resources
 
