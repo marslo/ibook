@@ -10,14 +10,16 @@
   - [get all vote CR-2](#get-all-vote-cr-2)
   - [who approval the V+1](#who-approval-the-v1)
   - [list change comments](#list-change-comments)
-- [access list contains account](#access-list-contains-account)
-- [all reviews at a certain time](#all-reviews-at-a-certain-time)
-- [get review rate in certain time](#get-review-rate-in-certain-time)
+- [access](#access)
+  - [list contains account](#list-contains-account)
+- [statistics](#statistics)
+  - [all reviews at a certain time](#all-reviews-at-a-certain-time)
+  - [get review rate in certain time](#get-review-rate-in-certain-time)
 - [projects](#projects)
   - [list all projects](#list-all-projects)
   - [list gerrit projects with certain account](#list-gerrit-projects-with-certain-account)
   - [list project configure](#list-project-configure)
-- [comments](#comments)
+- [inline comments](#inline-comments)
   - [get inline comments](#get-inline-comments)
   - [set inline review](#set-inline-review)
 - [lock/unlock branch](#lockunlock-branch)
@@ -38,13 +40,21 @@
 {% endhint %}
 
 ## [basic usage](https://gerrit-review.googlesource.com/Documentation/dev-rest-api.html#_basic_testing)
+
+| HEADER                                          |
+|-------------------------------------------------|
+| `Content-Type: application/json`                |
+| `Content-Type: text/plain`                      |
+| `Content-Type: application/json; charset=UTF-8` |
+| `Content-Disposition: attachment`               |
+
 ### regular options
 ```bash
                                   a might means [a]pi
                                     ⇡
-$ curl -X PUT    http://domain.name/a/path/to/api/
-$ curl -X POST   http://domain.name/a/path/to/api/
-$ curl -X DELETE http://domain.name/a/path/to/api/
+$ curl -X PUT    http://gerrit.domain.com/a/path/to/api/
+$ curl -X POST   http://gerrit.domain.com/a/path/to/api/
+$ curl -X DELETE http://gerrit.domain.com/a/path/to/api/
 ```
 
 ### sending data
@@ -53,13 +63,13 @@ $ curl -X DELETE http://domain.name/a/path/to/api/
   $ curl -X PUT \
          -d@testdata.json \
          --header "Content-Type: application/json" \
-         http://domain.name/a/path/to/api/
+         http://gerrit.domain.com/a/path/to/api/
   ```
 
 - json with string
   ```bash
   $ curl -X POST \
-         -H "Content-Type: application/json" https://domain.name/a/changes/<number>/move \
+         -H "Content-Type: application/json" https://gerrit.domain.com/a/changes/<number>/move \
          -d '{ "destination_branch" : "target/branch/name" }'
   )]}'
   {
@@ -87,7 +97,7 @@ $ curl -X DELETE http://domain.name/a/path/to/api/
 
   # or
   $ curl -X POST \
-         -H "Content-Type: application/json" https://domain.name/a/changes/<number>/move \
+         -H "Content-Type: application/json" https://gerrit.domain.com/a/changes/<number>/move \
          -d '{
               "destination_branch" : "target/branch/name"
              }' |
@@ -100,12 +110,12 @@ $ curl -X DELETE http://domain.name/a/path/to/api/
   $ curl -X PUT \
          --data-binary @testdata.txt \
          --header "Content-Type: text/plain" \
-         http://domain.name/a/path/to/api/
+         http://gerrit.domain.com/a/path/to/api/
   ```
 
 ### verifying header content
   ```bash
-  $ curl -v -n -X DELETE http://domain.name/a/path/to/api/
+  $ curl -v -n -X DELETE http://gerrit.domain.com/a/path/to/api/
   ```
 
 ## [change](https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html)
@@ -128,7 +138,7 @@ $ curl -X DELETE http://domain.name/a/path/to/api/
 
 ### who approval the CR+2
 ```bash
-$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+$ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r '.labels."Code-Review".approved.name'
 ```
@@ -170,7 +180,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 > - [How to select items in JQ based on value in array](https://stackoverflow.com/a/44867184/2940319)
 
 ```bash
-$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+$ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r '.labels."Code-Review".all[] | select ( .value == -2 ) | .username'
 #                                         : |⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂| :
@@ -181,7 +191,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 #                                        pipe                     pipe
 
 # or
-$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+$ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
        tail -n +2 |
       jq -r '( .labels."Code-Review".all[] | select ( .value == -2 ) ).username'
 #            :                                                       :
@@ -189,7 +199,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 #        expression                                              expression
 
 # or
-$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+$ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
        tail -n +2 |
       jq -r '[ .labels."Code-Review".all[] | select ( .value == -2 ) ][].username'
 #            :                                                       :
@@ -197,7 +207,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 #        expression                                              expression
 
 # or
-$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+$ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r '.labels."Code-Review".all[] | select ( .value == -2 )' |
        jq -r .username                                            #  :
@@ -207,7 +217,7 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
 
 ### who approval the V+1
 ```bash
-$ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
+$ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r .labels.Verified.approved.username
 ```
@@ -223,7 +233,8 @@ $ curl -fsSL https://sj1git1.cavium.com/a/changes/137640/detail |
   jq -r '.messages[] | [.author.username, .message] | join(": \t")'
 ```
 
-## access list contains account
+## access
+### list contains account
 
 > [!NOTE]
 > - [list projects](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#list-projects)
@@ -244,7 +255,9 @@ $ while read -r _proj; do
           )
 ```
 
-## all reviews at a certain time
+## statistics
+
+### all reviews at a certain time
 
 > [!NOTE|label:references:]
 > - [How to change the limit numbers of gerrit query](https://stackoverflow.com/a/66810126/2940319)
@@ -269,7 +282,7 @@ done < <( eval "curl ${curlOpt} 'https://gerrit.sample.com/a/changes/?q=${query}
  )
 ```
 
-## get review rate in certain time
+### get review rate in certain time
 ```bash
 gerritUrl='https://gerrit.sample.com'
 sum=0
@@ -318,7 +331,7 @@ $ project='path/to/project'
 $ curl -g -fsSL "https://${gerritUrl}/a/projects/$(printf %s "${project}" | jq -sRr @uri)/config" | tail -n+2 | jq -r
 ```
 
-## comments
+## inline comments
 
 ### get inline comments
 
@@ -376,14 +389,14 @@ $ curl -XPOST \
 > - [List Access Rights for Project](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#get-access)
 > - [Add, Update and Delete Access Rights for Project](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#set-access)
 
-- to lock git
+to lock/unlock git
 
 | REFERENCES                    | PERMISSIONS                                                                                                                                                                                                                                                                                                             | SCOPE                                                                                                         |
 |-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | `^refs/heads/<BRANCH_NAME>$ ` | [`submit`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_submit)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br>[`pushMerge`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push_merge) | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
 
 
-- to lock gerrit
+to lock/unlock gerrit
 
 | REFERENCES                             | PERMISSIONS                                                                                                                                                                                                              | SCOPE                                                                                                         |
 |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
@@ -426,7 +439,7 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
   jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
 ```
 
-<!--sec data-title="block.json - gerrit" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="gerrit - block.json" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
 {
   "add": {
@@ -453,12 +466,12 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
       }
     }
   },
-  "message": "block sandbox/marslo/devel for Registered-Users for gerrit"
+  "message": "block sandbox/marslo/* for Registered-Users for gerrit"
 }
 ```
 <!--endsec-->
 
-<!--sec data-title="block.json - git" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="git - block.json" data-id="section1" data-show=true data-collapse=true ces-->
 ```json
 {
   "add": {
@@ -519,7 +532,7 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
   jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
 ```
 
-<!--sec data-title="revert.json - gerrit" data-id="section2" data-show=true data-collapse=true ces-->
+<!--sec data-title="gerrit - revert.json" data-id="section2" data-show=true data-collapse=true ces-->
 ```json
 {
   "remove": {
@@ -544,12 +557,12 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
       }
     }
   },
-  "message": "block sandbox/marslo/devel for Registered-Users"
+  "message": "block sandbox/marslo/* for Registered-Users for gerrit"
 }
 ```
 <!--endsec-->
 
-<!--sec data-title="revert.json - git" data-id="section3" data-show=true data-collapse=true ces-->
+<!--sec data-title="git - revert.json" data-id="section3" data-show=true data-collapse=true ces-->
 ```json
 {
   "remove": {
@@ -582,7 +595,7 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
       }
     }
   },
-  "message": "block sandbox/marslo/devel for Registered-Users"
+  "message": "block sandbox/marslo/devel for Registered-Users for git"
 }
 ```
 <!--endsec-->

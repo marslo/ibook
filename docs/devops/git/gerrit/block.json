@@ -1,0 +1,58 @@
+{
+  "add": {
+    "refs/heads/sandbox/marslo/IPBUSW-46967":{
+      "permissions": {
+        "submit": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "pushMerge": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    },
+    "refs/for/refs/heads/sandbox/marslo/*": {
+      "permissions": {
+        "addPatchSet": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "message": "block sandbox/marslo/IPBUSW-46967 for Registered-Users"
+}
