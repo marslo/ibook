@@ -6,18 +6,20 @@
   - [sending data](#sending-data)
   - [verifying header content](#verifying-header-content)
 - [change](#change)
-- [who approval the CR+2](#who-approval-the-cr2)
-- [get all vote CR-2](#get-all-vote-cr-2)
-- [who approval the V+1](#who-approval-the-v1)
+  - [who approval the CR+2](#who-approval-the-cr2)
+  - [get all vote CR-2](#get-all-vote-cr-2)
+  - [who approval the V+1](#who-approval-the-v1)
+  - [list change comments](#list-change-comments)
 - [access list contains account](#access-list-contains-account)
 - [all reviews at a certain time](#all-reviews-at-a-certain-time)
 - [get review rate in certain time](#get-review-rate-in-certain-time)
-- [list all projects](#list-all-projects)
-- [list gerrit projects with certain account](#list-gerrit-projects-with-certain-account)
-- [list project configure](#list-project-configure)
+- [projects](#projects)
+  - [list all projects](#list-all-projects)
+  - [list gerrit projects with certain account](#list-gerrit-projects-with-certain-account)
+  - [list project configure](#list-project-configure)
 - [comments](#comments)
   - [get inline comments](#get-inline-comments)
-  - [set review](#set-review)
+  - [set inline review](#set-inline-review)
 - [lock/unlock branch](#lockunlock-branch)
   - [get access](#get-access)
   - [lock](#lock)
@@ -124,14 +126,14 @@ $ curl -X DELETE http://domain.name/a/path/to/api/
   $ curl -X GET "https://domina.name/a/changes/${project}~${branch}~${changeid}"
   ```
 
-## who approval the CR+2
+### who approval the CR+2
 ```bash
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r '.labels."Code-Review".approved.name'
 ```
 
-## get all vote CR-2
+### get all vote CR-2
 {% hint style='tip' %}
 > - example output for `.labels.<tag>.all[]`
 >
@@ -203,11 +205,22 @@ $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
                                                                   # pipe
 ```
 
-## who approval the V+1
+### who approval the V+1
 ```bash
 $ curl -s -X GET https://domain.name/a/changes/${changeid}/detail |
        tail -n +2 |
        jq -r .labels.Verified.approved.username
+```
+
+### list change comments
+
+> [!TIP|label:API]
+> `GET /changes/{change-id}/detail`
+
+```bash
+$ curl -fsSL https://sj1git1.cavium.com/a/changes/137640/detail |
+  tail -n+2 |
+  jq -r '.messages[] | [.author.username, .message] | join(": \t")'
 ```
 
 ## access list contains account
@@ -278,12 +291,13 @@ echo "${sum} ${rnum} ${onum} $(( sum-onum ))" |
       awk '{ sum=$1; reviewed=$2; owned=$3; rsum=$4; rate=$2*100/$4 } END { printf("\t- gerrit review: %s/(%s-%s) ( %s% )\n", reviewed, sum, owned, rate) }'
 ```
 
-## list all projects
+## projects
+### list all projects
 ```bash
 $ curl -fsSL "${gerritUrl}"/a/projects/?d | tail -n+2 | jq -r '.[].id'
 ```
 
-## list gerrit projects with certain account
+### list gerrit projects with certain account
 ```bash
 $ account='marslo'
 $ id=1
@@ -298,7 +312,7 @@ $ while read -r _proj; do
   done < <( curl -fsSL "${gerritUrl}"/a/projects/?d | tail -n+2 | jq -r '.[].id' )
 ```
 
-## list project configure
+### list project configure
 ```bash
 $ project='path/to/project'
 $ curl -g -fsSL "https://${gerritUrl}/a/projects/$(printf %s "${project}" | jq -sRr @uri)/config" | tail -n+2 | jq -r
@@ -315,7 +329,7 @@ $ curl -g -fsSL "https://${gerritUrl}/a/projects/$(printf %s "${project}" | jq -
 >> - `'GET /changes/{change-id}/revisions/{revision-id}/comments'`
 >> - `'GET /changes/{change-id}/revisions/{revision-id}/comments/{comment-id}'`
 
-### set review
+### set inline review
 
 > [!NOTE|label:references:]
 > - [set review](https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#set-review)
@@ -364,16 +378,16 @@ $ curl -XPOST \
 
 - to lock git
 
-  | REFERENCES                    | PERMISSIONS                                                                                                                                                                                                                                                                                                             | SCOPE                                                                                                         |
-  |-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-  | `^refs/heads/<BRANCH_NAME>$ ` | [`submit`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_submit)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br>[`pushMerge`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push_merge) | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
+| REFERENCES                    | PERMISSIONS                                                                                                                                                                                                                                                                                                             | SCOPE                                                                                                         |
+|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| `^refs/heads/<BRANCH_NAME>$ ` | [`submit`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_submit)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br>[`pushMerge`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push_merge) | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
 
 
 - to lock gerrit
 
-  | REFERENCES                             | PERMISSIONS                                                                                                                                                                                                              | SCOPE                                                                                                         |
-  |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-  | `^refs/for/refs/heads/<BRANCH_NAME>$ ` | [`addPatchSet`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_add_patch_set)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br> | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
+| REFERENCES                             | PERMISSIONS                                                                                                                                                                                                              | SCOPE                                                                                                         |
+|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| `^refs/for/refs/heads/<BRANCH_NAME>$ ` | [`addPatchSet`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_add_patch_set)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br> | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
 
 ### get access
 
@@ -412,7 +426,39 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
   jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
 ```
 
-<!--sec data-title="block.json" data-id="section0" data-show=true data-collapse=true ces-->
+<!--sec data-title="block.json - gerrit" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+{
+  "add": {
+    "refs/for/refs/heads/sandbox/marslo/*": {
+      "permissions": {
+        "addPatchSet": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "message": "block sandbox/marslo/devel for Registered-Users for gerrit"
+}
+```
+<!--endsec-->
+
+<!--sec data-title="block.json - git" data-id="section1" data-show=true data-collapse=true ces-->
 ```json
 {
   "add": {
@@ -446,31 +492,9 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
           }
         }
       }
-    },
-    "refs/for/refs/heads/sandbox/marslo/*": {
-      "permissions": {
-        "addPatchSet": {
-          "exclusive": true,
-          "rules": {
-            "global:Registered-Users": {
-              "action": "BLOCK",
-              "force": false
-            }
-          }
-        },
-        "push": {
-          "exclusive": true,
-          "rules": {
-            "global:Registered-Users": {
-              "action": "BLOCK",
-              "force": false
-            }
-          }
-        }
-      }
     }
   },
-  "message": "block sandbox/marslo/devel for Registered-Users"
+  "message": "block sandbox/marslo/devel for Registered-Users for git"
 }
 ```
 <!--endsec-->
@@ -495,7 +519,37 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
   jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
 ```
 
-<!--sec data-title="revert.json" data-id="section1" data-show=true data-collapse=true ces-->
+<!--sec data-title="revert.json - gerrit" data-id="section2" data-show=true data-collapse=true ces-->
+```json
+{
+  "remove": {
+    "refs/for/refs/heads/sandbox/marslo/*": {
+      "permissions": {
+        "addPatchSet": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "message": "block sandbox/marslo/devel for Registered-Users"
+}
+```
+<!--endsec-->
+
+<!--sec data-title="revert.json - git" data-id="section3" data-show=true data-collapse=true ces-->
 ```json
 {
   "remove": {
@@ -518,26 +572,6 @@ $ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq 
           }
         },
         "pushMerge": {
-          "rules": {
-            "global:Registered-Users": {
-              "action": "BLOCK",
-              "force": false
-            }
-          }
-        }
-      }
-    },
-    "refs/for/refs/heads/sandbox/marslo/*": {
-      "permissions": {
-        "addPatchSet": {
-          "rules": {
-            "global:Registered-Users": {
-              "action": "BLOCK",
-              "force": false
-            }
-          }
-        },
-        "push": {
           "rules": {
             "global:Registered-Users": {
               "action": "BLOCK",
