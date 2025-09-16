@@ -18,6 +18,10 @@
 - [comments](#comments)
   - [get inline comments](#get-inline-comments)
   - [set review](#set-review)
+- [lock/unlock branch](#lockunlock-branch)
+  - [get access](#get-access)
+  - [lock](#lock)
+  - [unlock](#unlock)
 - [reference](#reference)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -350,6 +354,204 @@ $ curl -XPOST \
        --data-binary @gerrit-review.json \
        https://gerrit.domain.com/a/changes/${CHAGE_ID}/revisions/${REVISION_NUMBER}/review
 ```
+
+## lock/unlock branch
+
+> [!NOTE|label:references:]
+> - [Access Rights Endpoints](https://gerrit-review.googlesource.com/Documentation/rest-api-access.html)
+> - [List Access Rights for Project](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#get-access)
+> - [Add, Update and Delete Access Rights for Project](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#set-access)
+
+- to lock git
+
+  | REFERENCES                    | PERMISSIONS                                                                                                                                                                                                                                                                                                             | SCOPE                                                                                                         |
+  |-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+  | `^refs/heads/<BRANCH_NAME>$ ` | [`submit`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_submit)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br>[`pushMerge`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push_merge) | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
+
+
+- to lock gerrit
+
+  | REFERENCES                             | PERMISSIONS                                                                                                                                                                                                              | SCOPE                                                                                                         |
+  |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+  | `^refs/for/refs/heads/<BRANCH_NAME>$ ` | [`addPatchSet`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_add_patch_set)<br>[`push`](https://gerrit-review.googlesource.com/Documentation/access-control.html#category_push)<br> | [Registered users](https://gerrit-review.googlesource.com/Documentation/access-control.html#registered_users) |
+
+### get access
+
+> [!TIP|label:API]
+> `GET /projects/{project-name}/access`
+
+```bash
+$ project='path/to/project'
+$ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/access
+
+# or
+$ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/access |
+  tail -n+2 |
+  jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
+#                                              +--------------------+
+#                                                     pattern
+```
+
+### lock
+
+> [!TIP|label:API]
+> `POST /projects/{project-name}/access`
+
+```bash
+$ project='path/to/project'
+
+# lock
+$ curl -fsSL -X POST \
+       --header "Content-Type: application/json" \
+       -d @block.json \
+       https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/access
+
+# verify
+$ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/access |
+  tail -n+2 |
+  jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
+```
+
+<!--sec data-title="block.json" data-id="section0" data-show=true data-collapse=true ces-->
+```json
+{
+  "add": {
+    "refs/heads/sandbox/marslo/devel":{
+      "permissions": {
+        "submit": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "pushMerge": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    },
+    "refs/for/refs/heads/sandbox/marslo/*": {
+      "permissions": {
+        "addPatchSet": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "exclusive": true,
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "message": "block sandbox/marslo/devel for Registered-Users"
+}
+```
+<!--endsec-->
+
+### unlock
+
+> [!TIP|label:API]
+> `POST /projects/{project-name}/access`
+
+```bash
+$ project='path/to/project'
+
+# post revert.json
+$ curl -fsSL -X POST \
+       --header "Content-Type: application/json" \
+       -d @revert.json \
+       https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/access
+
+# verify
+$ curl -fsSL https://gerrit.domain.com/a/projects/$(printf %s "${project}" | jq -sRr @uri)/access |
+  tail -n+2 |
+  jq -r '.local | with_entries( if(.key | test("^.+sandbox/marslo.+$")) then ( {key: .key, value: .value } ) else empty end )'
+```
+
+<!--sec data-title="revert.json" data-id="section1" data-show=true data-collapse=true ces-->
+```json
+{
+  "remove": {
+    "refs/heads/sandbox/marslo/devel":{
+      "permissions": {
+        "submit": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "pushMerge": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    },
+    "refs/for/refs/heads/sandbox/marslo/*": {
+      "permissions": {
+        "addPatchSet": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        },
+        "push": {
+          "rules": {
+            "global:Registered-Users": {
+              "action": "BLOCK",
+              "force": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "message": "block sandbox/marslo/devel for Registered-Users"
+}
+```
+<!--endsec-->
 
 ## reference
 
