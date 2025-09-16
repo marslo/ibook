@@ -12,6 +12,8 @@
   - [import new template](#import-new-template)
 - [excel](#excel)
   - [shortcuts](#shortcuts)
+- [sharepoint](#sharepoint)
+  - [download from sharepoint](#download-from-sharepoint)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -139,3 +141,61 @@ Windows Registry Editor Version 5.00
 |:---------------------------------:|------------------|
 | <kbd>control</kbd> + <kbd>5</kbd> | strikethrough    |
 | <kbd>command</kbd> + <kbd>1</kbd> | Open Format Cells |
+
+## sharepoint
+
+### download from sharepoint
+
+#### URL
+
+- visit in web: `https://domain.sharepoint.com/sites/<site>/<library>/<folder>/<file>?web=1`
+- download link: `https://domain.sharepoint.com/sites/<site>/<library>/<folder>/<file>?download=1`
+
+if the file in `Shared Documents` library, the URL will be like:
+- visit in web: `https://domain.sharepoint.com/sites/<site>/Shared%20Documents/<folder>/<file>?web=1`
+- download link: `https://domain.sharepoint.com/sites/<site>/Shared%20Documents/<folder>/<file>?download=1`
+
+
+#### get cookie
+
+> [!TIP|label:references]
+> chrome extension
+> - [Get cookies.txt Clean](https://chromewebstore.google.com/detail/get-cookiestxt-clean/ahmnmhfbokciafffnknlekllgcnafnie?hl=en)
+> - [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc?hl=en)
+> - [EditThisCookie (fork)](https://chromewebstore.google.com/detail/editthiscookie-fork/ihfmcbadakjehneaijebhpogkegajgnk?hl=en)
+
+1. open the the file link in Chrome
+2. <kbd>F12</kbd> to open Developer Tools -> `Network` tab
+3. refresh the page, and filter the filename
+4. select the request, and copy the `Request Headers` -> `Cookie`
+
+![get cookie](../../screenshot/tools/ms/sp-cookie.png)
+
+#### download
+
+1. copy the `rtFa=...;` and `FedAuth=...;`
+   ```bash
+   $ curl -L -OJ --cookie "rtFa=...; FedAuth=..." "https://domain.sharepoint.com/sites/<site>/Shared%20Documents/<folder>/<file>?download=1"
+   ```
+
+2. create cookie.txt with whole cookie string
+   ```bash
+   $ curl -L -OJ -H "Cookie: $(cat cookie.txt)" "https://domain.sharepoint.com/sites/<site>/Shared%20Documents/<folder>/<file>?download=1"
+   ```
+
+3. create cookie.txt with `rtFa` and `FedAuth` only
+
+   >[!TIP|label:references]
+   > cookie.txt format ( using <kbd>tab</kbd> to separate fields ), using [Netscape HTTP Cookie File](http://justsolve.archiveteam.org/wiki/Netscape_cookies.txt)
+   > ```bash
+   > <DOMAMIN>.sharepoint.com  TRUE  /sites/<site>  TRUE  0 rtFa  <value>
+   > <DOMAMIN>.sharepoint.com  TRUE  /sites/<site>  TRUE  0 FedAuth <value>
+   > ```
+
+   ```bash
+   $ cat coookie.txt
+   domain.sharepoint.com TRUE  / TRUE  0 rtFa  <value>
+   domain.sharepoint.com TRUE  / TRUE  0 FedAuth <value>
+
+   $ curl -L -OJ -b cookie.txt "https://domain.sharepoint.com/sites/<site>/Shared%20Documents/<folder>/<file>?download=1"
+   ```

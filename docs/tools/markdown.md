@@ -7,6 +7,7 @@
   - [file format](#file-format)
   - [platform](#platform)
   - [github readme status](#github-readme-status)
+- [readme](#readme)
 - [emoji](#emoji)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -65,6 +66,11 @@
 |:------------:|:----------------------------------------------------------------:|:--------------------------------------------------------------:|
 | streak-stats | `![](https://streak-stats.demolab.com/?user=marslo&theme=light)` | ![](https://streak-stats.demolab.com/?user=marslo&theme=light) |
 
+
+# readme
+
+> [!NOTE|label:references:]
+> - [ankddev/ankddev](https://github.com/ankddev/ankddev/blob/main/README.md)
 
 # emoji
 
