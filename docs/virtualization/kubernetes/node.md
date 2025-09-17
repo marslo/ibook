@@ -16,7 +16,10 @@
   - [show only scheduled nodes](#show-only-scheduled-nodes)
   - [show common/diff images between nodes](#show-commondiff-images-between-nodes)
 - [delete node](#delete-node)
-- [cleanup label](#cleanup-label)
+  - [re-join](#re-join)
+- [label](#label)
+  - [cleanup label](#cleanup-label)
+  - [copy label](#copy-label)
 - [sort](#sort)
   - [sort via kubelet version](#sort-via-kubelet-version)
 
@@ -42,7 +45,7 @@ $ kubectl get nodes -o 'jsonpath={.items[*].metadata.name} | fmt -1
 > - [List container images in Kubernetes cluster with SIZE (like docker image ls)](https://stackoverflow.com/a/64920893/2940319)
 
 ```bash
-$ kubectl get node <node_name> -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]'
+$ kubectl get node <NODE_NAME> -o json | jq -re '.status.images[] | select(.names[1]) | .names[1]'
 ```
 
 ### list all Ready nodes
@@ -275,7 +278,7 @@ $ kubectl get nodes -o jsonpath='{range .items[*]} {.metadata.name} {"\t"} {.sta
 
 ## list node with label
 ```bash
-$ kubectl get node -l <label>=<value>
+$ kubectl get node -l <LABLE>=<value>
 ```
 
 ### [list node with multiple labels](https://stackoverflow.com/a/68479227/2940319)
@@ -284,23 +287,23 @@ $ kubectl get node -l <label>=<value>
 > - [* LIST and WATCH filtering](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#list-and-watch-filtering)
 
 ```bash
-$ kubectl get node --selector <label>=<value>,<label>=<value>
+$ kubectl get node --selector <LABLE>=<value>,<LABLE>=<value>
 
 # or
-$ kubectl get node -l '<label> in (<value>), <label> in (<value>)'
+$ kubectl get node -l '<LABLE> in (<value>), <LABLE> in (<value>)'
 
 # or for same label, different values
-$ kubectl get node -l '<label> in (<value_1>, <value_2>)'
+$ kubectl get node -l '<LABLE> in (<value_1>, <value_2>)'
 # i.e.:
 $ kubectl get pods -l 'environment in (production, qa)'
 
 # or `notin`
-$ kubectl get node -l '<label> notin (<value>)'
+$ kubectl get node -l '<LABLE> notin (<value>)'
 ```
 
 ### update label of node
 ```bash
-$ kubectl label node <name> <label>=<value> [--overwrite]
+$ kubectl label node <name> <LABLE>=<value> [--overwrite]
 ```
 
 ## show
@@ -401,18 +404,52 @@ $ kubectl get node \
 # get info
 $ kubectl get nodes
 
-$ kubectl cordon <node_name>
+$ kubectl cordon <NODE_NAME>
 
-$ kubectl drain <node_name>
+$ kubectl drain <NODE_NAME>
 # or
-$ kubectl drain <node_name> --ignore-daemonsets --delete-local-data
+$ kubectl drain <NODE_NAME> --ignore-daemonsets --delete-local-data
 
-$ kubectl delete node <node_name>
+$ kubectl delete node <NODE_NAME>
 ```
 
-## cleanup label
+### re-join
+
+- in kubernetes controller
+  ```bash
+  # drain node
+  $ kubectl drain <NODE_NAME> --ignore-daemonsets --delete-emptydir-data
+
+  # delete node
+  $ kubectl delete node <NODE_NAME>
+
+  # get join command
+  $ sudo kubeadm token create --print-join-command
+  ```
+
+- in server
+  ```bash
+  # stop kubelet
+  $ sudo systemctl stop kubelet
+
+  # cleanup legacy data
+  $ sudo rm -rf /etc/cni/net.d/*
+  $ sudo rm -rf /var/lib/cni/*
+  $ sudo rm -rf /var/lib/kubelet/*
+  $ sudo rm -rf /etc/kubernetes/*
+
+  # OPTIONAL - cleanup iptables / flannel
+  $ sudo ip link del flannel.1 2>/dev/null || true
+  $ sudo ip link del cni0 2>/dev/null || true
+
+  # re-join
+  $ sudo kubeadm join ...
+  ```
+
+## label
+### cleanup label
 ```bash
-$ kubectl label node <node_name> <label>-
+$ kubectl label node <NODE_NAME> <LABLE>-
 ```
 - example
   ```bash
@@ -424,6 +461,71 @@ $ kubectl label node <node_name> <label>-
   $ kubectl get node -l jenkins.master
   k8s-node02    Ready    worker   1d     v1.12.3
   k8s-node03    Ready    worker   1d     v1.12.3
+  ```
+
+### copy label
+
+> [!NOTE|label:references:]
+> list labels :
+> ```bash
+> $ kubectl get node <NODE_NAME> -o json | jq -r '.metadata.labels'
+> ```
+
+- list labels
+  ```bash
+  # get all labels
+  $ kubectl get node "${OLD}" -o json |
+    jq -r '
+      .metadata.labels
+      | to_entries
+      | map(select(.key != "kubernetes.io/hostname"))
+      | .[]
+      | "\(.key)=\(.value)"
+    '
+
+  # get labels without default labels
+  $ kubectl get node "${OLD}" -o json |
+    jq -r '
+      .metadata.labels
+      | to_entries
+      | map(select(
+          (.key | test("^(kubernetes\\.io/|k8s\\.io/|beta\\.kubernetes\\.io/|node\\.kubernetes\\.io/|topology\\.kubernetes\\.io/)") | not)
+        ))
+      | .[]
+      | "\(.key)=\(.value)"
+    '
+  ```
+
+- copy labels
+  ```bash
+  $ OLD="node-01"
+  $ NEW="node-02"
+
+  # -- without default labels --
+  $ kubectl get node "${OLD}" -o json |
+    jq -r '
+      .metadata.labels
+      | to_entries
+      | map(select(
+          (.key | test("^(kubernetes\\.io/|k8s\\.io/|beta\\.kubernetes\\.io/|node-role\\.kubernetes\\.io/|node\\.kubernetes\\.io/|topology\\.kubernetes\\.io/)") | not)
+        ))
+      | .[]
+      | "\(.key)=\(.value)"
+    ' \
+    | xargs -r -n100 kubectl label node "${NEW}" --overwrite
+
+  # -- or using whitelist --
+  $ kubectl get node "${OLD}" -o json |
+    jq -r '
+      .metadata.labels
+      | to_entries
+      | map(select(
+          (.key | test("^(team/|env/|role/|owner/)"))
+        ))
+      | .[]
+      | "\(.key)=\(.value)"
+    ' \
+    | xargs -r -n100 kubectl label node "${NEW}" --overwrite
   ```
 
 ## sort
