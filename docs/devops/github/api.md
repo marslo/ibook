@@ -266,6 +266,7 @@ $ curl --silent 'https://api.github.com/repos/sharkdp/bat/releases/latest' | jq 
 
 > [!NOTE|label:references:]
 > - [REST API endpoints for protected branches](https://docs.github.com/en/rest/branches/branch-protection?apiVersion=2022-11-28)
+> - [About protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)
 
 ### get branch protection
 
@@ -370,6 +371,12 @@ $ jq -n \
 ```
 
 ## rulesets
+
+> [!NOTE|label:references:]
+> - [About rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)
+> - [Creating rulesets for a repository](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)
+>   - [github/ruleset-recipes](https://github.com/github/ruleset-recipes)
+> - [Troubleshooting rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/troubleshooting-rules)
 
 ### list all rulesets
 ```bash
