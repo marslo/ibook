@@ -1000,9 +1000,10 @@ $ ln -sf "$(brew --prefix git)"/etc/bash_completion.d/git-prompt.sh "$(brew --pr
 # tig
 
 > [!NOTE|label:references:]
+> - [tig/tigrc](https://github.com/jonas/tig/blob/master/tigrc)
 > - [How to fix "fatal error: ncursesw/ncurses.h: No such file or directory"](https://www.xmodulo.com/fatal-error-ncursesw-ncurses-no-file-directory.html)
 > - [tig : Installation instructions](https://jonas.github.io/tig/INSTALL.html)
-> - [Tig - cheat sheet](https://www.mendelowski.com/docs/git/tig-cheat-sheet/)
+> - [Tig - cheat sheet](https://devhints.io/tig)
 
 ```bash
 # ubuntu
