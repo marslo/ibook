@@ -90,3 +90,18 @@ $ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugi
 $ sudo usermod -aG docker "$(whoami)"
 # re-login to apply group changes
 ```
+
+## setup needrestart dialog off
+
+```bash
+# default - (i)nteractive
+$ grep 'nrconf{restart}' /etc/needrestart/needrestart.conf
+#$nrconf{restart} = 'i';
+
+# set off - (a)utomatically
+$ sudo sed 's/^#\?\$nrconf{restart}.*/$nrconf{restart} = "a";/' -i /etc/needrestart/needrestart.conf
+
+# check
+$ grep 'nrconf{restart}' /etc/needrestart/needrestart.conf
+$nrconf{restart} = "a";
+```

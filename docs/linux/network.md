@@ -70,8 +70,21 @@
 
 ### get interface by command
 ```bash
-$ interface=$(netstat -nr | grep -E 'UG|UGScg' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+# best solution in Linux
+$ ip route show default | awk '{print $5}'
+# -- or --
+$ ip route list default | awk '{print $5}'
+
+# best solution in MacOS
+$ ip route list | awk '/^default/{print $5; exit}'
+# -- or --
+$ route -n get default | awk '/^\s*interface/{print $2; exit}'
+
+# solution with netstat
+$ interface=$(netstat -rn | awk '$1=="0.0.0.0"||$1=="default"{print $NF; exit}')
 # or
+$ interface=$(netstat -nr | grep -E 'UG|UGScg' | grep -E '^0.0.0|default' | grep -E '[0-9.]{7,15}' | awk -F' ' '{print $NF}')
+# or ( will contains `flannel.1` )
 $ intreface=$(netstat -nr | command grep -E '^0.0.0|default|UG|UGScg' | awk '$2 ~ /([0-9]{1,3}\.){3}[0-9]{1,3}/' | awk '{print $NF}')
 
 # or get the route to github
@@ -87,7 +100,13 @@ $ interface=$(nmcli device | grep --color=never -w connected | awk '{print $1}')
 
 - list all interfaces
   ```bash
-  $ ip l show
+  $ ip link show
+  # or
+  $ ip l s
+
+  $ ip route list
+  # or
+  $ ip r l
   ```
 
 - show active via `nmcli`
