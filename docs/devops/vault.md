@@ -11,6 +11,10 @@
   - [list](#list)
 - [approle](#approle)
   - [via CLI](#via-cli)
+    - [get approle mount path](#get-approle-mount-path)
+    - [list role-id and approle](#list-role-id-and-approle)
+    - [get approle from role-id](#get-approle-from-role-id)
+    - [get policies from role](#get-policies-from-role)
   - [via API](#via-api)
   - [get secret_id and role_id](#get-secret_id-and-role_id)
 - [operator](#operator)
@@ -274,6 +278,40 @@ HA Enabled      false
   token_ttl                  0s
   token_type                 default
   ```
+
+### get approle mount path
+```bash
+$ vault auth list -format=json | jq -r 'to_entries[] | select(.value.type=="approle") | .key'
+approle/
+```
+
+### list role-id and approle
+```bash
+mount="approle"
+for r in $(vault list -format=json "auth/${mount}/role" | jq -r '.[]'); do
+  rid=$(vault read -format=json "auth/${mount}/role/${r}/role-id" | jq -r '.data.role_id')
+  echo "${rid} | ${r}"
+done
+```
+
+### get approle from role-id
+```bash
+mount='approle'
+FOUND_ROLE=''
+for r in $(vault list -format=json "auth/${mount}/role" | jq -r '.[]'); do
+  rid=$(vault read -format=json "auth/${mount}/role/${r}/role-id" | jq -r '.data.role_id')
+  if [[ "${rid}" == "${ROLE_ID}" ]]; then
+    FOUND_ROLE="${r}"
+    break
+  fi
+done
+```
+
+### get policies from role
+```bash
+$ vault read -format=json "auth/approle/role/${ROLE_NAME}" |
+        jq -r '.data.token_policies // .data.policies'
+```
 
 ## [via API](https://developer.hashicorp.com/vault/docs/auth/approle#via-the-api-1)
 ```bash
