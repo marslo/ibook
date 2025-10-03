@@ -13,6 +13,7 @@
 - [file](#file)
   - [check file text or binary](#check-file-text-or-binary)
 - [system](#system)
+  - [shasum](#shasum)
 - [clock/time/date](#clocktimedate)
 - [download](#download)
 - [backup](#backup)
@@ -428,6 +429,31 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
   $ gunzip -c /var/log/auth.log.*.gz | cat - /var/log/auth.log /var/log/auth.log.0 | grep "Invalid user" | awk '{print $8;}' | sort | uniq -c | less
   ```
 
+### shasum
+
+- verify all files
+
+  > [!NOTE|label:references:]
+  > ```bash
+  >    -c, --check
+  >           read checksums from the FILEs and check them
+  > ```
+
+  ```bash
+  $ sha256sum -c sha256sums.txt
+
+  # or
+  $ sha256sum --check sha256sums.txt --ignore-missing file.txt
+  ```
+
+- verify single file
+  ```bash
+  $ sha256sum shasum.txt -- file.txt
+
+  # or
+  $ grep 'file.txt$' shasum.txt | sha256sum -c -
+  ```
+
 ## clock/time/date
 
 > [!TIP|lavel:see also:]
@@ -452,7 +478,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 
 - [put a console clock in top right corner](https://www.commandlinefu.com/commands/view/7916/put-a-console-clock-in-top-right-corner)
   ```bash
-  $ while sleep 1;do tput sc;tput cup 0 $(($(tput cols)-29));date;tput rc;done &
+  $ while sleep 1; do tput sc; tput cup 0 $(( $(tput cols)-29 )); date; tput rc; done &
   ```
 
 - [remind yourself to leave in 15 minutes](https://www.commandlinefu.com/commands/view/1476/remind-yourself-to-leave-in-15-minutes)
@@ -462,7 +488,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 
 - [binary clock](https://www.commandlinefu.com/commands/view/3969/binary-clock)
   ```bash
-  $ watch -n 1 'echo "obase=2;`date +%s`" | bc'
+  $ watch -n 1 'echo "obase=2; `date +%s`" | bc'
   ```
 
 - [countdown clock](https://www.commandlinefu.com/commands/view/5886/countdown-clock)
@@ -472,7 +498,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
 
 - [countdown clock for new year](https://www.commandlinefu.com/commands/view/4455/climagics-new-years-countdown-clock)
   ```bash
-  $ while V=$((`date +%s -d"2025-01-01"`-`date +%s`));do if [ $V == 0 ];then figlet 'Happy New Year!';break;else figlet $V;sleep 1;clear;fi;done
+  $ while V=$((`date +%s -d"2025-01-01"`-`date +%s`)); do if [ $V == 0 ]; then figlet 'Happy New Year!'; break; else figlet $V; sleep 1; clear; fi; done
   ```
 
 ## download
@@ -626,6 +652,7 @@ $ find . -type f -print0 | perl -0nE 'say if -f and -s _ and -T _' | grep -a -E 
   ```bash
   # usage: clfavs username password num_favourite_commands /path/to/file
   $ clfavs(){ URL="http://www.commandlinefu.com"; wget -O - --save-cookies c --post-data "username=$1&password=$2&submit=Let+me+in" $URL/users/signin; for i in `seq 0 25 $3`; do wget -O - --load-cookies c $URL/commands/favourites/plaintext/$i >>$4; done; rm -f c; }
+
   # or
   $ clfavs(){ URL="http://www.commandlinefu.com"; wget -O - --save-cookies c --post-data "openid=$1&submit=Let+me+in" $URL/users/openid; for i in `seq 0 25 $3`; do wget -O - --load-cookies c $URL/commands/favourites/plaintext/$i >>$4; done; rm -f c; }
   ```
