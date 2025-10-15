@@ -12,7 +12,6 @@
 - [map withDefault](#map-withdefault)
   - [merge maps](#merge-maps)
 - [get key or value from nested Map](#get-key-or-value-from-nested-map)
-  - [find parent key via sub-key:](#find-parent-key-via-sub-key)
   - [find value belongs to which key](#find-value-belongs-to-which-key)
 - [findResult & findResults](#findresult--findresults)
   - [find deep in nested map](#find-deep-in-nested-map)
@@ -411,6 +410,28 @@ def findValueBelongsTo( Map map, String keyword ) {
       v instanceof Map
         ? v.containsKey(keyword) ? v.getOrDefault(keyword, null) : findValues( v, keyword )
         : null
+    }
+  }
+
+  // or
+  def findValueBelongsTo(Map map, Object value) {
+    map.findResult { k, v ->
+      if ( v == value ) return k
+      if ( v in Map )   return v.containsValue(value) ? k : findValueBelongsTo(v, value)
+      if ( v in List )  return v.contains(value) ? k : v.findResult { ( it in Map || it in List ) ? findValueBelongsTo(it, value) : null }
+      return null
+    }
+  }
+
+  def findRootKeyBelongsTo(Map map, Object value) {
+    map = ( map in LinkedHashMap ) ? map : new LinkedHashMap(map)
+    map.findResult { k, v ->
+      if ( v == value ) return k
+      if ( v in Map )   return v.containsValue(value) ? k : findRootKeyBelongsTo(v, value) ? k : null
+      if ( v in List )  return v.contains(value)
+          ? k
+          : v.findResult { ( it in Map || it in List ) && findRootKeyBelongsTo(it, value) } ? k : null
+      return null
     }
   }
   ```

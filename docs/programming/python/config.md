@@ -3,6 +3,7 @@
 
 - [installation](#installation)
   - [command completion](#command-completion)
+  - [with pyenv](#with-pyenv)
   - [install from source code](#install-from-source-code)
 - [environment in MacOS](#environment-in-macos)
   - [`pip.conf`](#pipconf)
@@ -43,6 +44,49 @@ $ python -m pip completion --bash >> ~/.bashrc
 - or
   ```bash
   $ eval "`pip completion --bash`"
+  ```
+
+### with pyenv
+```bash
+# install pyenv
+$ curl https://pyenv.run | bash
+# or
+$ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+# setup environment
+# -- ~/.bash_profile -- #
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - bash)"
+
+
+# install python
+$ pyenv install 3.12.11
+$ pyenv global 3.12.11
+
+# pip/pipx
+$ python -m pip install --upgrade pip pipx
+$ python -m pipx ensurepath
+
+# -- others -- #
+$ pyenv install --list
+```
+
+- using system python version
+  ```bash
+  $ mkdir -p ~/.pyenv/versions/system-3.11/bin
+  $ ln -sf /bin/python3.11 ~/.pyenv/versions/system-3.11/bin/python
+  $ ln -sf /bin/python3.11 ~/.pyenv/versions/system-3.11/bin/python3
+  $ ln -sf /bin/python3.11 ~/.pyenv/versions/system-3.11/bin/python3.11
+
+  # swith to system python
+  $ pyenv rehash
+  $ pyenv global system-3.11
+
+  # check
+  $ pyenv which python
+  $ pyenv which python3
+  $ pyenv which python3.11
   ```
 
 ### [install from source code](https://blog.eldernode.com/install-python-3-8-on-centos/)

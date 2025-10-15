@@ -22,6 +22,7 @@
   - [get size of installed pip package](#get-size-of-installed-pip-package)
 - [pipx](#pipx)
   - [setup pipx](#setup-pipx)
+  - [show info](#show-info)
   - [examles](#examles)
 - [troubleshooting](#troubleshooting)
 
@@ -506,6 +507,19 @@ $ pip list |
 $ python3 -m pip install pipx
 $ pipx ensurepath
 $ pipx install ansible --include-deps
+
+# re-install pipx if system python version changed
+$ pipx reinstall-all --python /bin/python3.11
+# or
+$ pipx reinstall-all --python "$(command -v python3)"
+
+# -- upgrade pipx -- #
+$ python3 -m pip install --user --upgrade pipx
+```
+
+### show info
+```bash
+$ pipx environment
 ```
 
 ### [examles](https://pipx.pypa.io/stable/examples/)

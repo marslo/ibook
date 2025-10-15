@@ -894,6 +894,9 @@ $ kubectl create secret generic test-secret \
   # or
   $ go get -u github.com/hidetatz/kubecolor/cmd/kubecolor
 
+  # install in different GOBIN
+  $ GOBIN="${HOME}/.local/bin" go install github.com/kubecolor/kubecolor@latest
+
   # brew
   $ brew install hidetatz/tap/kubecolor
   ```
