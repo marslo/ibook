@@ -5,8 +5,8 @@
   - [completion](#completion)
 - [Environment Variables](#environment-variables)
   - [jf options](#jf-options)
-  - [CLI](#cli)
-- [CLI](#cli-1)
+  - [rt environment variables](#rt-environment-variables)
+- [CLI](#cli)
   - [configuration](#configuration)
   - [ping](#ping)
   - [deploy](#deploy)
@@ -151,36 +151,49 @@
 
 ## Environment Variables
 
-### [jf options](https://jfrog.com/help/r/jfrog-cli/environment-variables?tocId=Wrf0qmhAPWtQ7XAWK8~zgw)
+### jf options
 
-| VARIABLE NAME              | DEFAULT             | SUPPORTED                        |
-| -------------------------- | ------------------- | -------------------------------- |
-| `JFROG_CLI_LOG_LEVEL`      | `INFO`              | `DEBUG`, `INFO`, `WARN`, `ERROR` |
-| `JFROG_CLI_LOG_TIMESTAMP`  | `TIME`              | `TIME`, `DATE_AND_TIME`, `OFF`   |
-| `JFROG_CLI_HOME_DIR`       | `~/.jfrog`          | -                                |
-| `JFROG_CLI_TEMP_DIR`       | -                   | -                                |
-| `JFROG_CLI_PLUGINS_SERVER` | -                   | -                                |
-| `JFROG_CLI_PLUGINS_REPO`   | `jfrog-cli-plugins` | -                                |
-| `JFROG_CLI_RELEASES_REPO`  | -                   | -                                |
-| `JFROG_CLI_SERVER_ID`      | -                   | -                                |
-| `CI`                       | `false`             | -                                |
+> [!NOTE|label:references:]
+> - [JFrog CLI Environment Variables](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/usage)
+
+```bash
+$ jf options
+```
+
+| VARIABLE NAME                          | DEFAULT               | SUPPORTED                        |
+|----------------------------------------|-----------------------|----------------------------------|
+| `CI`                                   | `false`               | -                                |
+| `JFROG_CLI_ANALYZER_MANAGER_VERSION`   | latest stable version | -                                |
+| `JFROG_CLI_AVOID_NEW_VERSION_WARNING`  | `false`               | -                                |
+| `JFROG_CLI_COMMAND_SUMMARY_OUTPUT_DIR` | -                     | -                                |
+| `JFROG_CLI_ENCRYPTION_KEY`             | -                     | -                                |
+| `JFROG_CLI_FAIL_NO_OP`                 | `false`               | -                                |
+| `JFROG_CLI_GITHUB_TOKEN`               | -                     | -                                |
+| `JFROG_CLI_HIDE_SURVEY`                | `false`               | -                                |
+| `JFROG_CLI_HOME_DIR`                   | `~/.jfrog`            | -                                |
+| `JFROG_CLI_LOG_LEVEL`                  | `INFO`                | `DEBUG`, `INFO`, `WARN`, `ERROR` |
+| `JFROG_CLI_LOG_TIMESTAMP`              | `TIME`                | `TIME`, `DATE_AND_TIME`, `OFF`   |
+| `JFROG_CLI_PLUGINS_REPO`               | `jfrog-cli-plugins`   | -                                |
+| `JFROG_CLI_PLUGINS_SERVER`             | -                     | -                                |
+| `JFROG_CLI_TEMP_DIR`                   | -                     | -                                |
 
 
-### CLI
+### rt environment variables
 
-| VARIABLE NAME                                | DEFAULT                             |
-| -------------------------------------------- | ----------------------------------- |
-| `JFROG_CLI_MIN_CHECKSUM_DEPLOY_SIZE_KB`      | `10`                                |
-| `JFROG_CLI_RELEASES_REPO`                    | -                                   |
-| `JFROG_CLI_DEPENDENCIES_DIR`                 | `$JFROG_CLI_HOME_DIR/dependencies`  |
-| `JFROG_CLI_REPORT_USAGE`                     | `true`                              |
-| `JFROG_CLI_SERVER_ID`                        | -                                   |
-| `JFROG_CLI_BUILD_NAME`                       | -                                   |
-| `JFROG_CLI_BUILD_NUMBER`                     | -                                   |
-| `JFROG_CLI_BUILD_PROJECT`                    | -                                   |
-| `JFROG_CLI_BUILD_URL`                        | -                                   |
-| `JFROG_CLI_ENV_EXCLUDE`                      | `*password*;*secret*;*key*;*token*` |
-| `JFROG_CLI_TRANSITIVE_DOWNLOAD_EXPERIMENTAL` | `false`                             |
+| VARIABLE NAME                           | DEFAULT                                          |
+|-----------------------------------------|--------------------------------------------------|
+| `JFROG_CLI_MIN_CHECKSUM_DEPLOY_SIZE_KB` | `10`                                             |
+| `JFROG_CLI_RELEASES_REPO`               | -                                                |
+| `JFROG_CLI_DEPENDENCIES_DIR`            | `$JFROG_CLI_HOME_DIR/dependencies`               |
+| `JFROG_CLI_REPORT_USAGE`                | `true`                                           |
+| `JFROG_CLI_SERVER_ID`                   | -                                                |
+| `JFROG_CLI_BUILD_NAME`                  | -                                                |
+| `JFROG_CLI_BUILD_NUMBER`                | -                                                |
+| `JFROG_CLI_BUILD_PROJECT`               | -                                                |
+| `JFROG_CLI_BUILD_URL`                   | -                                                |
+| `JFROG_CLI_ENV_EXCLUDE`                 | `*password*;*psw*;*secret*;*key*;*token*;*auth*` |
+| `JFROG_CLI_TRANSITIVE_DOWNLOAD`         | `false`                                          |
+| `JFROG_CLI_UPLOAD_EMPTY_ARCHIVE`        | `false`                                          |
 
 ## CLI
 > reference:
