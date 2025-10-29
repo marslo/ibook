@@ -8,6 +8,7 @@
     - [osx](#osx)
     - [`brew install -v --debug`](#brew-install--v---debug)
     - [uninstall](#uninstall)
+  - [install from binary](#install-from-binary)
   - [package manager](#package-manager)
     - [windows](#windows)
   - [neovim-nightly](#neovim-nightly)
@@ -22,7 +23,7 @@
   - [lua](#lua)
     - [lua-intro](#lua-intro)
     - [lua-commands](#lua-commands)
-    - [tiktoken_core missing](#tiktoken_core-missing)
+    - [tiktoken_core](#tiktoken_core)
     - [api info](#api-info)
   - [Tips](#tips)
     - [true color](#true-color)
@@ -439,6 +440,19 @@ $ ln -s ../Cellar/neovim/HEAD-0985e78/lib/nvim nvim
 ### uninstall
 ```bash
 $ sudo cmake --build build/ --target uninstall
+```
+
+## install from binary
+
+```bash
+# ubuntu
+# -- latest --
+$ VERSION="$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | jq -r .tag_name)"
+# -- pre-release --
+$ VERSION="$(curl -s https://api.github.com/repos/neovim/neovim/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')"
+
+$ curl -fsSL https://github.com/neovim/neovim/releases/download/${VERSION}/nvim-linux-$(uname -m).tar.gz | tar xzf - -C /opt/nvim
+$ sudo /bin/ln -sf /opt/nvim/nvim-linux-$(uname -m) /usr/local/nvim
 ```
 
 ## package manager
@@ -936,7 +950,18 @@ $ lua -v
 Lua 5.4.7  Copyright (C) 1994-2024 Lua.org, PUC-Rio
 ```
 
-### tiktoken_core missing
+```bash
+$ nvim --headless --clean +"lua io.write(jit and jit.version or _VERSION)" +q
+LuaJIT 2.1.1760617492
+
+$ nvim --headless --clean +"lua io.write(_VERSION)" +q
+Lua 5.1
+
+$ nvim --headless --clean +'lua io.write(_VERSION)' +q | tr -cd 0-9
+51
+```
+
+### tiktoken_core
 
 > [!TIP]
 > 1. matches to lua version inside nvim, not the system lua version
@@ -952,12 +977,20 @@ Lua 5.4.7  Copyright (C) 1994-2024 Lua.org, PUC-Rio
 
 ```bash
 $ VERSION=$(curl --silent 'https://api.github.com/repos/gptlang/lua-tiktoken/releases/latest' | jq -r .tag_name)
+$ LUA_VERSION=$(nvim --headless --clean +"lua io.write((_VERSION:match('%d+%.%d+'):gsub('%.','')))" +q)
+
+# macos
 $ curl -fsSL --create-dirs -o ~/.config/nvim/lua/tiktoken_core.dylib \
-       https://github.com/gptlang/lua-tiktoken/releases/download/${VERSION}/tiktoken_core-macOS-arm64-lua51.dylib
+       https://github.com/gptlang/lua-tiktoken/releases/download/${VERSION}/tiktoken_core-macOS-$(uname -m)-lua${LUA_VERSION}.dylib
 $ ln -sf ~/.config/nvim/lua/tiktoken_core.dylib ~/.config/nvim/lua/tiktoken_core.so
 
+# linux(ubuntu)
+$ curl -fsSL --create-dirs -o ~/.config/nvim/lua/tiktoken_core.so \
+       https://github.com/gptlang/lua-tiktoken/releases/download/${VERSION}/tiktoken_core-linux-$(uname -m)-lua${LUA_VERSION}.so
+
 $ echo 'require('tiktoken_core')' >> ~/.config/nvim/init.lua
-# optional
+
+# optional -- macos
 $ sudo xattr -rd com.apple.quarantine ~/.config/nvim/lua/tiktoken_core.dylib
 ```
 
