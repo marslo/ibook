@@ -11,6 +11,7 @@
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
   - [Copy path from finder](#copy-path-from-finder)
 - [create app](#create-app)
+  - [cleanup icon cache and rebuild](#cleanup-icon-cache-and-rebuild)
   - [groovyConsole](#groovyconsole)
   - [python3 IDLE](#python3-idle)
   - [create dmg](#create-dmg)
@@ -255,6 +256,13 @@ $ <cmd> | pbcopy
 > - [9 Automator Apps You Can Create in Under 5 Minutes](https://www.makeuseof.com/tag/10-automator-applications-create-5-minutes-mac/)
 > - [How to create an OSX Application to wrap a call to a shell script?](https://apple.stackexchange.com/a/201309/254265)
 > - [CREATE YOUR OWN CUSTOM ICONS IN OS X 10.7.5 OR LATER [UPDATED]](https://eshop.macsales.com/blog/28492-create-your-own-custom-icons-in-10-7-5-or-later/)
+
+### cleanup icon cache and rebuild
+```bash
+$ sudo rm -rf "/Library/Caches/com.apple.iconservices.store"
+$ killall -KILL iconservicesd
+$ killall Finder Dock
+```
 
 ### groovyConsole
 
@@ -508,6 +516,7 @@ $ vim groovyConsole.app/Contents/Info.plist
 >   $ brew install python-tk@3.11
 >   $ brew install python-tk@3.12
 >   $ brew install python-tk@3.13
+>   $ brew install python-tk@3.14
 >   ```
 
 #### via automator.app
@@ -521,8 +530,18 @@ $ vim groovyConsole.app/Contents/Info.plist
 
   set -euo pipefail
 
-  PYTHON_SHORT_VERSION=$(/usr/bin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
-  /usr/bin/open "$(/usr/local/bin/brew --prefix python@"${PYTHON_SHORT_VERSION}")"/IDLE\ 3.app
+  die() { printf >&2 ">> ERROR [IDLE] %s\n" "$*"; exit 1; }
+
+  HOMEBREW_PREFIX="/opt/homebrew"
+  PYTHON_SHORT_VERSION=$(/usr/bin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <("${HOMEBREW_PREFIX}"/bin/python3 --version) )
+  PYTHON_TK_HOME="${HOMEBREW_PREFIX}/opt/python-tk@${PYTHON_SHORT_VERSION}"
+  TCLTK_HOME="${HOMEBREW_PREFIX}/opt/tcl-tk"
+
+  test -d "${PYTHON_TK_HOME}" || die "The python-tk@${PYTHON_SHORT_VERSION} formula is not installed. Please install it with '\$ brew install python-tk@${PYTHON_SHORT_VERSION}' and try again."
+  test -f "${TCLTK_HOME}/lib/pkgconfig/tk.pc" || die "The tcl-tk formula is not installed. Please install it with '\$ brew install tcl-tk' and try again."
+  command -v "${TCLTK_HOME}/bin/wish" || die "wish not found under ${TCLTK_PREFIX}/bin, please check your tcl-tk installation."
+
+  /usr/bin/open "$("${HOMEBREW_PREFIX}"/bin/brew --prefix python@"${PYTHON_SHORT_VERSION}")"/IDLE\ 3.app
 
   # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
   ```
@@ -531,16 +550,28 @@ $ vim groovyConsole.app/Contents/Info.plist
 
 - icon
   ```bash
-  $ PYTHON_SHORT_VERSION=$(/usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
-  $ cp "$(/usr/local/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app/Contents/Resources/IDLE.icns IDLE.app/Contents/Resources/
+  $ PYTHON_SHORT_VERSION=$(/usr/bin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <("${HOMEBREW_PREFIX}"/bin/python3 --version) )
+  $ cp "$("${HOMEBREW_PREFIX}"/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app/Contents/Resources/IDLE.icns Python3\ IDLE.app/Contents/Resources/
 
-  # modify IDLE.app/Contents/Info.plist
+  # modify "Python3 IDLE.app/Contents/Info.plist"
+  $ PLIST="Python3 IDLE.app/Contents/Info.plist"
+  $ /usr/libexec/PlistBuddy -c 'Delete :CFBundleIconName' "${PLIST}" 2>/dev/null || true
+  $ /usr/libexec/PlistBuddy -c 'Set :CFBundleIconFile IDLE' "${PLIST}"
+  # -- verify --
+  $ /usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "${PLIST}" 2>/dev/null
+  IDLE
+  $ plutil -p "${PLIST}" | rg 'CFBundleIcon(File|Name)'
+  "CFBundleIconFile" => "IDLE"
+
+  # -- result --
   <key>CFBundleIconFile</key>
   <string>IDLE</string>
-
-  ## original
+  # -- original --
   <key>CFBundleIconFile</key>
   <string>ApplicationStub</string>
+
+  # refresh icon cache
+  $ /usr/bin/touch Python3\ IDLE.app
   ```
 
   - others
@@ -565,8 +596,22 @@ $ vim groovyConsole.app/Contents/Info.plist
   $ cat > ~/IDLE << EOF
   #!/usr/bin/env bash
 
-  PYTHON_SHORT_VERSION=$(/usr/local/opt/gnu-sed/libexec/gnubin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <(/usr/local/bin/python3 --version) )
-  /usr/bin/open "$(/usr/local/bin/brew --prefix python@${PYTHON_SHORT_VERSION})"/IDLE\ 3.app
+  set -euo pipefail
+
+  die() { printf >&2 ">> ERROR [IDLE] %s\n" "$*"; exit 1; }
+
+  HOMEBREW_PREFIX="/opt/homebrew"
+  PYTHON_SHORT_VERSION=$(/usr/bin/sed -rn 's/^([^[0-9]+)([0-9]+\.[0-9]+).*$/\2/p' < <("${HOMEBREW_PREFIX}"/bin/python3 --version) )
+  PYTHON_TK_HOME="${HOMEBREW_PREFIX}/opt/python-tk@${PYTHON_SHORT_VERSION}"
+  TCLTK_HOME="${HOMEBREW_PREFIX}/opt/tcl-tk"
+
+  test -d "${PYTHON_TK_HOME}" || die "The python-tk@${PYTHON_SHORT_VERSION} formula is not installed. Please install it with '\$ brew install python-tk@${PYTHON_SHORT_VERSION}' and try again."
+  test -f "${TCLTK_HOME}/lib/pkgconfig/tk.pc" || die "The tcl-tk formula is not installed. Please install it with '\$ brew install tcl-tk' and try again."
+  command -v "${TCLTK_HOME}/bin/wish" || die "wish not found under ${TCLTK_PREFIX}/bin, please check your tcl-tk installation."
+
+  /usr/bin/open "$("${HOMEBREW_PREFIX}"/bin/brew --prefix python@"${PYTHON_SHORT_VERSION}")"/IDLE\ 3.app
+
+  # vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=sh
   EOF
   ```
 
@@ -632,6 +677,9 @@ $ vim groovyConsole.app/Contents/Info.plist
     $ hdiutil create -volname IDLE -srcfolder ~/Desktop/IDLE.app -ov IDLE.dmg
     ....
     created: /Users/marslo/Desktop/IDLE.dmg
+
+    # -- or --
+    $ hdiutil create -volname 'Python3 IDLE' -srcfolder "$HOME/Desktop/Python3 IDLE.app" -ov "Python3 IDLE.dmg"
     ```
 
   - change default python3
