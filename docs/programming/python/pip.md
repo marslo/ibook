@@ -19,6 +19,7 @@
   - [samples](#samples)
   - [Authentication](#authentication)
 - [tricky](#tricky)
+  - [argcomplete](#argcomplete)
   - [get size of installed pip package](#get-size-of-installed-pip-package)
 - [pipx](#pipx)
   - [setup pipx](#setup-pipx)
@@ -438,6 +439,20 @@ user:
 ### [Authentication](https://pip.pypa.io/en/stable/topics/authentication/)
 
 ## tricky
+### argcomplete
+```bash
+$ python3 -m pip install -U argcomplete
+
+$ sudo mkdir -p $(brew --prefix)/etc/bash_completion.d
+$ activate-global-python-argcomplete --dest=$(brew --prefix)/etc/bash_completion.d
+
+$ grep bash_completion.sh ~/.bash_profile ~/.bashrc
+/Users/marslo/.bash_profile:  [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh"      ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+
+# enable completion for pipx
+echo 'eval "$(register-python-argcomplete pipx)"' >> ~/.bashrc
+```
+
 ### [get size of installed pip package](https://stackoverflow.com/a/60850841/2940319)
 ```bash
 $ pip list |
