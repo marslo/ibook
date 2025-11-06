@@ -4,8 +4,11 @@
 - [setup](#setup)
   - [install pre-commit](#install-pre-commit)
   - [init hook in repo](#init-hook-in-repo)
+  - [automatic upgrade to latest version](#automatic-upgrade-to-latest-version)
+  - [migrate-config](#migrate-config)
+  - [clean and uninstall](#clean-and-uninstall)
 - [run](#run)
-- [migrate-config](#migrate-config)
+  - [run with manual stage](#run-with-manual-stage)
 - [hooks](#hooks)
   - [copyright manager](#copyright-manager)
   - [checker and fixer](#checker-and-fixer)
@@ -35,7 +38,37 @@ $ pre-commit install --install-hook
 pre-commit installed at .git/hooks/pre-commit
 ```
 
+### automatic upgrade to latest version
+```bash
+$ pre-commit autoupdate
+[https://github.com/pre-commit/pre-commit-hooks] already up to date!
+[https://github.com/psf/black] already up to date!
+
+# or
+$ pre-commit autoupdate --repo https://github.com/pre-commit/pre-commit-hooks
+[https://github.com/pre-commit/pre-commit-hooks] updating v4.6.0 -> v6.0.0
+```
+
+### migrate-config
+```bash
+$ pre-commit migrate-config
+```
+
+### clean and uninstall
+
+> [!NOTE]
+> - default `PRE_COMMIT_HOME` is `~/.cache/pre-commit`
+
+```bash
+# clean pre-commit cache and environment ( $PRE_COMMIT_HOME )
+$ pre-commit clean
+
+# uninstall pre-commit hook from git repo
+$ pre-commit uninstall
+```
+
 ## run
+
 ```bash
 # -- all files --
 $ pre-commit run --all-files
@@ -48,9 +81,17 @@ $ pre-commit run <hook_id> --all-files
 $ pre-commit run trailing-whitespace --all-files
 ```
 
-## migrate-config
+### run with manual stage
 ```bash
-$ pre-commit migrate-config
+$ cat .pre-commit-config.yaml
+...
+hooks:
+  - id: end-of-file-fixer
+    stages: [manual]
+
+$ pre-commit run --hook-stage <stage_name> --all-files
+# e.g.:
+$ pre-commit run --hook-stage manual --all-files
 ```
 
 ## hooks
@@ -69,12 +110,6 @@ $ pre-commit migrate-config
 >>     -   id: end-of-file-fixer
 >>     -   id: check-yaml
 >>     -   id: check-added-large-files
->> ```
-> - update to repo's latest version
->> ```bash
->> $ pre-commit autoupdate
->> [https://github.com/pre-commit/pre-commit-hooks] already up to date!
->> [https://github.com/psf/black] already up to date!
 >> ```
 
 ### copyright manager
@@ -209,6 +244,10 @@ repos:
   ```
 
 ### typos
+
+> [!NOTE|labels:reference:]
+> - [docs/pre-commit.md](https://github.com/crate-ci/typos/blob/master/docs/pre-commit.md)
+
 ```yaml
 # yamllint disable rule:indentation
 ---
