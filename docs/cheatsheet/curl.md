@@ -11,21 +11,22 @@
   - [get `size_download`](#get-size_download)
   - [get time](#get-time)
 - [post](#post)
-  - [post JSON data using Curl](#post-json-data-using-curl)
-  - [post a file using Curl](#post-a-file-using-curl)
-  - [post form data using Curl](#post-form-data-using-curl)
+  - [post JSON data using curl](#post-json-data-using-curl)
+  - [post a file using curl](#post-a-file-using-curl)
+  - [post form data using curl](#post-form-data-using-curl)
   - [post XML](#post-xml)
 - [put](#put)
   - [send PUT request](#send-put-request)
 - [delete](#delete)
   - [send a DELETE request](#send-a-delete-request)
 - [authorization](#authorization)
-  - [Basic Auth Credentials](#basic-auth-credentials)
-  - [Bearer Token Authorization Header](#bearer-token-authorization-header)
-  - [Curl with a proxy](#curl-with-a-proxy)
+  - [basic auth credentials](#basic-auth-credentials)
+  - [bearer token authorization header](#bearer-token-authorization-header)
+  - [curl with a proxy](#curl-with-a-proxy)
 - [content type](#content-type)
-  - [set the content type for a Curl request](#set-the-content-type-for-a-curl-request)
+  - [set the content type for a curl request](#set-the-content-type-for-a-curl-request)
 - [others](#others)
+  - [speed test](#speed-test)
   - [ssl](#ssl)
   - [send http header with curl request](#send-http-header-with-curl-request)
   - [set a timeout](#set-a-timeout)
@@ -40,9 +41,9 @@
   - [convert to javascript/ajax calls](#convert-to-javascriptajax-calls)
   - [convert to php code](#convert-to-php-code)
   - [convert to http request](#convert-to-http-request)
-- [12 Essential Curl Commands for Linux, Windows and macOS](#12-essential-curl-commands-for-linux-windows-and-macos)
+- [12 Essential curl Commands for Linux, Windows and macOS](#12-essential-curl-commands-for-linux-windows-and-macos)
 - [references](#references)
-  - [Top 20 Curl Flags](#top-20-curl-flags)
+  - [Top 20 curl Flags](#top-20-curl-flags)
   - [write-out](#write-out)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -532,19 +533,19 @@ results:
 ```
 
 ## post
-### [post JSON data using Curl](https://reqbin.com/req/c-dwjszac0/curl-post-json-example)
+### [post JSON data using curl](https://reqbin.com/req/c-dwjszac0/curl-post-json-example)
 ```bash
 $ curl -X POST https://reqbin.com/echo/post/json \
        -H 'Content-Type: application/json' \
        -d '{"login":"my_login","password":"my_password"}'
 ```
 
-### [post a file using Curl](https://reqbin.com/req/c-dot4w5a2/curl-post-file)
+### [post a file using curl](https://reqbin.com/req/c-dot4w5a2/curl-post-file)
 ```bash
 $ curl -d @data.json https://reqbin.com/echo/post/json
 ```
 
-### [post form data using Curl](https://reqbin.com/req/c-sma2qrvp/curl-post-form-example)
+### [post form data using curl](https://reqbin.com/req/c-sma2qrvp/curl-post-form-example)
 ```bash
 $ curl -X POST https://reqbin.com/echo/post/form \
        -H "Content-Type: application/x-www-form-urlencoded" \
@@ -582,29 +583,28 @@ $ curl -X DELETE http://reqbin.com/sample/delete/json?id=1 \
 ```
 
 ## authorization
-### [Basic Auth Credentials](https://reqbin.com/req/c-haxm0xgr/curl-basic-auth-example)
+### [basic auth credentials](https://reqbin.com/req/c-haxm0xgr/curl-basic-auth-example)
 ```bash
 $ curl https://reqbin.com/echo \
        -u "login:password"
 ```
 
-### [Bearer Token Authorization Header](https://reqbin.com/req/c-hlt4gkzd/curl-bearer-token-authorization-header-example)
+### [bearer token authorization header](https://reqbin.com/req/c-hlt4gkzd/curl-bearer-token-authorization-header-example)
 ```bash
 $ curl https://reqbin.com/echo/get/json \
        -H "Accept: application/json" \
        -H "Authorization: Bearer {token}"
 ```
 
-### [Curl with a proxy](https://reqbin.com/req/c-ddxflki5/curl-proxy-server)
+### [curl with a proxy](https://reqbin.com/req/c-ddxflki5/curl-proxy-server)
 ```bash
 $ curl https://reqbin.com/echo \
        -x myproxy.com:8080 \
        -U login:password
 ```
 
-
 ## content type
-### [set the content type for a Curl request](https://reqbin.com/req/c-woh4qwov/curl-content-type)
+### [set the content type for a curl request](https://reqbin.com/req/c-woh4qwov/curl-content-type)
 ```bash
 $ curl -X POST https://reqbin.com/echo/post/json \
        -H 'Content-Type: application/json' \
@@ -613,14 +613,50 @@ $ curl -X POST https://reqbin.com/echo/post/json \
 ```
 
 ## others
+### speed test
+
+- [Cloudflare](https://speed.cloudflare.com/)
+  ```bash
+  $ time curl -fsSL -o /dev/null https://speed.cloudflare.com/__down?bytes=1000000000
+
+  # -- or --
+  $ curl -L -w "\nSpeed: %{speed_download} bytes/sec\nTime: %{time_total} sec\n" -o /dev/null https://speed.cloudflare.com/__down?bytes=1000000000
+  Speed: 152675112 bytes/sec
+  Time: 6.549856 sec
+
+  # -- or --
+  $ curl -sL -w "%{speed_download}\n" -o /dev/null https://speed.cloudflare.com/__down?bytes=1000000000 |
+    awk '{printf "\nAverage speed: %.2f Mbit/s\n", $1*8/1000000}'
+  Average speed: 732.32 Mbit/s
+
+  # -- or --
+  $ BYTES=1000000000
+  $ time curl -sL -o /dev/null -w "%{speed_download}\n" "https://speed.cloudflare.com/__down?bytes=${BYTES}" |
+         awk -v n="${BYTES}" '{mbps=$1*8/1000000; t=n/$1; printf "Average: %.2f Mbit/s | Time: %.2f s\n", mbps, t}'
+  Average: 1330.89 Mbit/s | Time: 6.01 s
+
+  real  0m6.029s
+  user  0m1.174s
+  sys   0m1.444s
+  ```
+
+- others
+  ```bash
+  # Oracle/Tele2
+  $ time curl -fsSL -o /dev/null https://speedtest.tele2.net/1GB.zip
+  $ time curl -fsSL -o /dev/null https://speedtest.bbned.nl/1GB.bin
+
+  # or
+  $ time curl -fsSL -o /dev/null https://fsn1-speed.hetzner.com/1GB.bin
+  ```
 
 ### ssl
-#### [ignore invalid and self-signed SSL certificate errors in Curl](https://reqbin.com/req/c-ug1qqqwh/curl-ignore-certificate-checks)
+#### [ignore invalid and self-signed SSL certificate errors in curl](https://reqbin.com/req/c-ug1qqqwh/curl-ignore-certificate-checks)
 ```bash
 $ curl -k https://expired.badssl.com
 ```
 
-#### [make HTTPS requests with Curl](https://reqbin.com/req/c-lfozgltr/curl-https-request)
+#### [make HTTPS requests with curl](https://reqbin.com/req/c-lfozgltr/curl-https-request)
 ```bash
 $ curl -k https://expired.badssl.com
 ```
@@ -670,7 +706,7 @@ $ curl --cookie "Name=Value" https://reqbin.com/echo
 ### [set the User-Agent string](https://reqbin.com/req/c-ekublyqq/curl-user-agent)
 ```bash
 $ curl https://reqbin.com/echo \
-       -A "ReqBin Curl Client/1.0"
+       -A "ReqBin curl Client/1.0"
 ```
 
 ### [watch web server returns](https://www.commandlinefu.com/commands/view/419/watch-for-when-your-web-server-returns)
@@ -707,7 +743,7 @@ $ curl https://reqbin.com/echo/get/json \
        -H "Accept: application/json"
 ```
 
-## [12 Essential Curl Commands for Linux, Windows and macOS](https://reqbin.com/req/c-kdnocjul/curl-commands)
+## [12 Essential curl Commands for Linux, Windows and macOS](https://reqbin.com/req/c-kdnocjul/curl-commands)
 * get resource content by url
   ```bash
   $ curl https://reqbin.com/echo
@@ -757,7 +793,7 @@ $ curl https://reqbin.com/echo/get/json \
   ```
 
 ## references
-### [Top 20 Curl Flags](https://reqbin.com/req/c-skhwmiil/curl-flags-example)
+### [Top 20 curl Flags](https://reqbin.com/req/c-skhwmiil/curl-flags-example)
 
 |         Flags        | Description                                                         | Syntax                                                 |
 |:--------------------:|---------------------------------------------------------------------|--------------------------------------------------------|
@@ -772,8 +808,8 @@ $ curl https://reqbin.com/echo/get/json \
 |      `--cookie`      | Send HTTP cookies                                                   | `curl --cookie "Name=Value" [URL]`                     |
 |    `-x or --proxy`   | Use a proxy server to upload files                                  | `curl -x "[protocol://][host][:port]" [URL] [options]` |
 |    `--limit-rate`    | Limit the download speed                                            | `curl --limit-rate [speed] -O [URL]`                   |
-|  `-L or --location`  | Follow Curl redirect using HTTP Location header                     | `curl -L [URL]`                                        |
-|         `-v`         | Makes Curl verbose                                                  | `curl -v [URL]`                                        |
+|  `-L or --location`  | Follow curl redirect using HTTP Location header                     | `curl -L [URL]`                                        |
+|         `-v`         | Makes curl verbose                                                  | `curl -v [URL]`                                        |
 |  `-m or --max-time`  | Set a limit in seconds for the entire operation                     | `curl -m [SECONDS] [URL]`                              |
 |  `--connect-timeout` | Set a limit in seconds for a connection request                     | `curl --connect-timeout [SECONDS] [URL]`               |
 |         `-T`         | Transfers the specified local file to a remote URL                  | `curl -T [file name] [URL]`                            |
