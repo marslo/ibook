@@ -4,7 +4,10 @@
 - [setup server config](#setup-server-config)
 - [start/restart service](#startrestart-service)
   - [start database](#start-database)
-- [check license status](#check-license-status)
+- [check status](#check-status)
+  - [license](#license)
+  - [database](#database)
+  - [connect to database](#connect-to-database)
 - [get properity](#get-properity)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -27,10 +30,10 @@
 > - <PROJECT_ROOT> is the projects_root where the servers are running. can be get via `$ /opt/Klocwork/Server/bin/kwservice check`
 
 ```bash
-$ kwservice set-service-property klocwork host klocwork.domain.com
+$ /opt/Klocwork/Server/bin/kwservice set-service-property klocwork host klocwork.domain.com
 Using projects root: /projects/root
 
-$ kwservice check
+$ /opt/Klocwork/Server/bin/kwservice check
 Using projects root: /projects/root
 Local Host is: klocwork-server-7*********-****q [10.244.6.65]
 Checking License Server  [running on klocwork-license:443]
@@ -46,12 +49,12 @@ Checking Klocwork Server [running on klocwork.domain.com:8080]
 
 - start
   ```bash
-  $ kwservice --projects-root /projects/root start
+  $ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root start
   ```
 
 - restart
   ```bash
-  $ kwservice --projects-root /projects/root restart
+  $ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root restart
   Using projects root: /projects/root
   Local Host is: klocwork-server-7*********-****4 [10.244.6.68]
   Re-starting License Server  [already running on klocwork-license:443]
@@ -61,7 +64,7 @@ Checking Klocwork Server [running on klocwork.domain.com:8080]
 
 - stop
   ```bash
-  $ kwservice --projects-root /projects/root stop
+  $ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root stop
   Using projects root: /projects/root
   Local Host is: devops-klocwork-7********b-s***b [10.244.6.81]
   Stopping License Server  [running on l******2:3***8]
@@ -77,9 +80,14 @@ Checking Klocwork Server [running on klocwork.domain.com:8080]
 ```bash
 $ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root stop database
 $ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root start database
+
+# check status
+$ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root check database
 ```
 
-## check license status
+## check status
+
+### license
 
 > [!TIP]
 > references:
@@ -92,11 +100,124 @@ $ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root start databa
 > - [How Structure101 licensing works](https://analyst.phyzdev.net/documentation/help/concepts/howkw101licensingworks.htm)
 
 ```bash
-$ kwservice --projects-root /projects/root check license
+$ /opt/Klocwork/Server/bin/kwservice --projects-root /projects/root check license
 Using projects root: /projects/root
 Local Host is: klocwork-server-755dc7966b-ndb94 [10.244.6.68]
 Checking License Server  [running on klocwork-license:443]
 ```
+
+### database
+#### check port and connection status
+```bash
+$ ( : > /dev/tcp/127.0.0.1/3306 ) 2>/dev/null && echo "MYSQL TCP OK" || echo "MYSQL TCP FAIL"
+
+# or
+$ echo > /dev/tcp/127.0.0.1/3306
+
+# or with python
+$ python3 - <<EOF
+import socket,sys
+try:
+    socket.create_connection(("127.0.0.1",3306), 3).close()
+    print("OK"); sys.exit(0)
+except Exception as e:
+    print("FAIL:", e); sys.exit(1)
+EOF
+```
+
+### connect to database
+```bash
+# get username and port
+$ /opt/Klocwork/Server/bin/kwservice get-service-properties database
+#Database Server properties
+host=localhost
+port=3306
+type=mysql
+user=kw
+
+# no password
+#                                      TCP protocol - MANDATORY
+#                                                v
+$ /opt/Klocwork/Server/3rdparty/bin/mysql --protocol=TCP -h127.0.0.1 -P3306 -u<user>
+```
+
+#### check database
+- basic info
+
+  ```mysql
+  MariaDB [(none)]> SHOW DATABASES;
+  MariaDB [(none)]> SHOW VARIABLES LIKE 'datadir';
+  +---------------+----------------------+
+  | Variable_name | Value                |
+  +---------------+----------------------+
+  | datadir       | /projects_root/data/ |
+  +---------------+----------------------+
+  1 row in set (0.001 sec)
+
+  MariaDB [(none)]> SHOW VARIABLES LIKE 'log_error';
+  +---------------+-------+
+  | Variable_name | Value |
+  +---------------+-------+
+  | log_error     |       |
+  +---------------+-------+
+  1 row in set (0.001 sec)
+
+  MariaDB [(none)]> SHOW GLOBAL STATUS LIKE 'Uptime';
+  +---------------+---------+
+  | Variable_name | Value   |
+  +---------------+---------+
+  | Uptime        | 1307319 |
+  +---------------+---------+
+  1 row in set (0.001 sec)
+
+  MariaDB [(none)]> SHOW VARIABLES LIKE 'wait_timeout';
+  +---------------+-------+
+  | Variable_name | Value |
+  +---------------+-------+
+  | wait_timeout  | 28800 |
+  +---------------+-------+
+  1 row in set (0.001 sec)
+
+  MariaDB [(none)]> SHOW VARIABLES LIKE 'interactive_timeout';
+  +---------------------+-------+
+  | Variable_name       | Value |
+  +---------------------+-------+
+  | interactive_timeout | 28800 |
+  +---------------------+-------+
+  1 row in set (0.001 sec)
+  ```
+
+- check klocwork table
+  ```mysql
+  MariaDB [(none)]> USE kw_central;
+  MariaDB [kw_central]> CHECK TABLE db_schema;
+  +----------------------+-------+----------+----------+
+  | Table                | Op    | Msg_type | Msg_text |
+  +----------------------+-------+----------+----------+
+  | kw_central.db_schema | check | status   | OK       |
+  +----------------------+-------+----------+----------+
+  1 row in set (0.025 sec)
+  ```
+
+- check shared table
+  ```bash
+  MariaDB [kw_central]> USE <PROJECT>__shared;
+  MariaDB [<PROJECT>__shared]> CHECK TABLE build;
+  +-------------------------+-------+----------+----------+
+  | Table                   | Op    | Msg_type | Msg_text |
+  +-------------------------+-------+----------+----------+
+  | <project>__shared.build | check | status   | OK       |
+  +-------------------------+-------+----------+----------+
+  1 row in set (0.198 sec)
+
+  MariaDB [<PROJECT>__shared]> CHECK TABLE views;
+  +-------------------------+-------+----------+----------+
+  | Table                   | Op    | Msg_type | Msg_text |
+  +-------------------------+-------+----------+----------+
+  | <project>__shared.views | check | status   | OK       |
+  +-------------------------+-------+----------+----------+
+  1 row in set (0.024 sec)
+  ```
 
 ## get properity
 
