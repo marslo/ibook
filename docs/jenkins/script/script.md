@@ -435,7 +435,7 @@ println "Actual SSHD port: ${descriptor.sshd?.port ?: 'Not started'}"
   ```
 
 - [`org.apache.sshd.server.SshServer`](https://javadoc.io/doc/org.apache.sshd/sshd-core/2.3.0/org/apache/sshd/server/SshServer.html)
-  ```grovoy
+  ```groovy
   def desc = jenkins.model.Jenkins.instance.getDescriptor("org.jenkinsci.main.modules.sshd.SSHD")
   if (desc == null) { return "SSHD not enabled or plugin not installed" }
 

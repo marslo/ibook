@@ -52,13 +52,14 @@ $ python -m pip completion --bash >> ~/.bashrc
 $ curl https://pyenv.run | bash
 # or
 $ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+# or
+$ brew install pyenv
 
 # setup environment
 # -- ~/.bash_profile -- #
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - bash)"
-
+test -d "${HOME}/.pyenv"  && export PYENV_ROOT="$HOME/.pyenv"
+test -d "$PYENV_ROOT/bin" && export PATH="$PYENV_ROOT/bin:$PATH"
+type -P pyenv >/dev/null  && eval "$(pyenv init - bash)"
 
 # install python
 $ pyenv install 3.12.11
@@ -70,7 +71,25 @@ $ python -m pipx ensurepath
 
 # -- others -- #
 $ pyenv install --list
+$ pyenv versions
 ```
+
+- using in local or shell
+  ```bash
+  # local
+  $ pyenv local 3.10.14
+  # shell
+  $ pyenv shell 3.10.14
+
+  # install modules with pipx
+  $ pipx install --python "$(pyenv which python)" --suffix=@3.10 pre-commit
+
+  # using poetry with pyenv
+  $ poetry env use "$(pyenv which python)"
+  $ poetry install
+  # execute
+  $ poetry run python -m cli.crm --help
+  ```
 
 - using system python version
   ```bash

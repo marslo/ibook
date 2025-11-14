@@ -12,6 +12,18 @@
   - [usage](#usage)
     - [check preset loader](#check-preset-loader)
 - [poetry](#poetry)
+  - [install and upgrade](#install-and-upgrade)
+    - [enviornment](#enviornment)
+    - [cleanup](#cleanup)
+  - [new project and init](#new-project-and-init)
+    - [new pyproject.toml](#new-pyprojecttoml)
+    - [init](#init)
+  - [requests management](#requests-management)
+    - [load requests](#load-requests)
+    - [remove requests](#remove-requests)
+    - [update requests](#update-requests)
+  - [use poetry](#use-poetry)
+    - [activate env](#activate-env)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -87,6 +99,31 @@ $ npm install -g semantic-release @semantic-release/commit-analyzer @semantic-re
     "@semantic-release/release-notes-generator",
     ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
     ["@semantic-release/git", { "assets": ["CHANGELOG.md"], "message": "chore(release): v${nextRelease.version}" }],
+    "@semantic-release/github"
+  ]
+}
+```
+
+```json
+// will update version in pyproject.toml and poetry.lock via poetry
+{
+  "branches": [
+    { "name": "main" },
+    { "name": "next", "channel": "beta", "prerelease": true }
+  ],
+  "tagFormat": "v${version}",
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "angular",
+      "releaseRules": [
+        { "type": "docs", "release": "patch" },
+        { "type": "ci",   "release": "patch" }
+      ]
+    }],
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/changelog", { "changelogFile": "CHANGELOG.md" }],
+    ["@semantic-release/exec", { "prepareCmd": "poetry version ${nextRelease.version} && poetry lock" }],
+    ["@semantic-release/git", { "assets": ["CHANGELOG.md", "pyproject.toml", "poetry.lock"], "message": "chore(release): v${nextRelease.version}" }],
     "@semantic-release/github"
   ]
 }
@@ -397,3 +434,129 @@ $ npm ls conventional-changelog-preset-loader -g
 
 > [!TIP]
 > - for python only
+
+| COMMAND                                | DESCRIPTION                                                                                                                       |
+|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `$ poetry run python -m cli.crm <cmd>` | requires `$ poetry install`                                                                                                       |
+| `$ python -m cli.crm <cmd>`            | requires `$ poetry install && source "$(poetry env info --path)/bin/activate"`                                                    |
+| `$ cr-manager <cmd>`                   | requires `$ poetry install && source "$(poetry env info --path)/bin/activate"`, or `pip install --user -e .`, or `pipx install .` |
+
+## install and upgrade
+```bash
+# pipx
+$ pipx install poetry
+
+# pip
+$ python3 -m pip install --user poetry
+
+# curl
+$ curl -sSL https://install.python-poetry.org | python3 -
+# -- windows --
+> (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+
+# upgrade
+$ poetry self update
+
+# unintall
+$ poetry self uninstall
+```
+
+### enviornment
+```bash
+# check env
+$ poetry env info
+$ poetry env info --path
+
+# list envs
+$ poetry env list
+```
+
+### cleanup
+```bash
+# remove unused envs
+$ poetry env remove <PYTHON_VERSION>
+# or
+$ poetry env remove --all
+
+# cache
+$ poetry cache clear --all pypi
+```
+
+## new project and init
+
+### new pyproject.toml
+```bash
+$ poetry new <NEW_PROJECT>
+
+# or with src
+$ poetry new --src <NEW_PROJECT>
+```
+
+### init
+```bash
+$ cd /path/to/project
+$ poetry init
+
+# or interactive mode
+$ poetry init --name "<NEW_PROJECT>" --dependency requests^2.32 --dev-dependency pytest^8.3 -n
+```
+
+## requests management
+### load requests
+```bash
+$ poetry add $(cat requirements.txt)
+
+# or
+$ poetry add requests
+
+# or manually added
+$ poetry add "requests^2.32"
+$ poetry add "Django>=5.0,<5.2"
+
+# -- add tool.poetry.group.dev.dependencies --
+$ poetry add --group dev pytest
+# or
+$ poetry add --dev pytest
+```
+
+### remove requests
+```bash
+$ poetry remove requests
+# or
+$ poetry remove pytest --group dev
+```
+
+### update requests
+```bash
+poetry update
+
+# single package
+poetry update requests pytest
+
+# upgrade group
+poetry update --only dev
+```
+
+## use poetry
+```bash
+$ cd /path/to/project
+
+$ poetry install
+# or
+$ poetry install --without dev
+# or
+$ poetry install --no-root
+```
+
+### activate env
+```bash
+$ poetry env use python
+$ poetry env use /usr/local/bin/python3.12
+
+# with pyenv
+$ pyenv local <VERSION>
+$ poetry env use $(pyenv which python)
+
+# actrive venv
+$ source "$(poetry env info --path)/bin/activate"
+```
