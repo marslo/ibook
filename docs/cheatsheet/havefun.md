@@ -19,7 +19,8 @@
 $ cat /dev/urandom | hexdump -C | grep "ca fe"
 
 # or: https://www.commandlinefu.com/commands/view/6771/pretend-to-be-busy-in-office-to-enjoy-a-cup-of-coffee
-$ j=0; while true; do let j=$j+1; for i in $(seq 0 20 100); do echo $i;sleep 1; done | dialog --gauge "Install part $j : `sed $(perl -e "print int rand(99999)")"q;d" /usr/share/dict/words`" 6 40;done
+$ j=0; while true; do let j=$j+1; for i in $(seq 0 20 100); do echo $i;sleep 1; done |
+  dialog --gauge "Install part $j : `sed $(perl -e "print int rand(99999)")"q;d" /usr/share/dict/words`" 6 40;done
 
 # or: https://www.commandlinefu.com/commands/view/6673/pretend-to-be-busy-in-office-to-enjoy-a-cup-of-coffee
 $ for i in `seq 0 100`; do timeout 6 dialog --gauge "Install..." 6 40 "$i"; done
@@ -72,7 +73,7 @@ $ echo "hello world !" | while read x; do for(( i=0; i<${#x}; i++ )); do echo -n
 
 - [Simulate typing but with mistakes](https://www.commandlinefu.com/commands/view/11737/simulate-typing-but-with-mistakes)
   ```bash
-  $ echo -e "You are wa jerk\b\b\b\bwonderful person" | pv -qL $[10+(-2 + RANDOM%5)]
+  $ echo -e "You are a jerk\b\b\b\bwonderful person" | pv -qL $[10+(-2 + RANDOM%5)]
   ```
 
 - [Mac osx friendly version of this terminal typing command at 200ms per key](https://www.commandlinefu.com/commands/view/13499/mac-osx-friendly-version-of-this-terminal-typing-command-at-200ms-per-key)
@@ -97,17 +98,39 @@ Welcome to PulseAudio! Use "help" for usage information.
 
 ### cat and tac
 ```bash
-$ cat a_b
+$ cat file.txt
 1
 2
 3
-$ tac a_b
+$ tac file.txt
 3
 2
 1
 ```
 
 ### ASCII chart
+
+> [!NOTE|label:more info:]
+> - `figlet` : `$(brew --prefix)/share/figlet`
+> - `toilet` : `$(brew --prefix toilet)/share/figlet`
+> - see also : [* iMarslo: widget](./widget.md#others)
+
+```bash
+# list all figlet fonts
+$ while read -r _font; do
+    echo -e "\n\n>> ${_font}";
+    date +"%I:%M %P"  | figlet -w 300 -f ${_font} -d "$(brew --prefix)"/share/figlet;
+  done < <(fd . "$(brew --prefix)"/share/figlet --follow -e tlf -e flf --color never)
+
+# list all toilet fonts
+$ while read -r _path; do
+    _n=$(basename $_path);
+    _fname=${_n//\.?lf/};
+    echo -e "\n\n>> ${_fname}";
+    date +"%I:%M %P" | toilet -f "${_fname}";
+  done < <(fd . $(brew --prefix toilet)/share/figlet --color never)
+```
+
 ```bash
 $ figlet Marslo
  __  __                _
@@ -124,7 +147,7 @@ $ toilet marslo
  # # #  "mm"#   #     "mmm"    "mm  "#m#"
 
 # with fonts
-$ date +"%I:%M %P" | figlet -f /usr/local/share/figlet/future.tlf
+$ date +"%I:%M %P" | figlet -f "$(brew --prefix)"/share/figlet/future.tlf
 ┏━┓┏━┓ ┏━┓┏━┓   ┏━┓┏┳┓
 ┃┃┃╺━┫╹╺━┫  ┃   ┣━┫┃┃┃
 ┗━┛┗━┛╹┗━┛  ╹   ╹ ╹╹ ╹

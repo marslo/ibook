@@ -948,8 +948,8 @@ mist='''
   ```bash
   $ while read -r _font; do
       echo -e "\n\n>> ${_font}";
-      date +"%I:%M %P"  | figlet -w 300 -f ${_font} -d /usr/local/share/figlet;
-    done < <(fd . /usr/local/share/figlet --follow -e tlf -e flf --color never)
+      date +"%I:%M %P"  | figlet -w 300 -f ${_font} -d "$(brew --prefix)"/share/figlet;
+    done < <(fd . "$(brew --prefix)"/share/figlet --follow -e tlf -e flf --color never)
   ```
 
   - result

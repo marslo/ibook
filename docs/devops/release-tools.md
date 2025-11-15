@@ -24,6 +24,9 @@
     - [update requests](#update-requests)
   - [use poetry](#use-poetry)
     - [activate env](#activate-env)
+- [publish to PyPI](#publish-to-pypi)
+  - [setup token](#setup-token)
+  - [build and publish](#build-and-publish)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -559,4 +562,64 @@ $ poetry env use $(pyenv which python)
 
 # actrive venv
 $ source "$(poetry env info --path)/bin/activate"
+```
+
+# publish to PyPI
+
+## setup token
+```bash
+$ poetry config pypi-token.pypi pypi-xxxxxxxxxx
+
+# optional
+$ poetry check
+```
+
+## build and publish
+```bash
+$ poetry install
+$ poetry build
+$ poetry publish --build
+# or
+$ poetry publish --build --no-interaction --verbose
+```
+
+```bash
+$ poetry install
+Installing dependencies from lock file
+
+Package operations: 8 installs, 0 updates, 0 removals
+
+  - Installing astroid (4.0.2)
+  - Installing dill (0.4.0)
+  - Installing isort (7.0.0)
+  - Installing mccabe (0.7.0)
+  - Installing platformdirs (4.5.0)
+  - Installing tomlkit (0.13.3)
+  - Installing pylint (4.0.2)
+  - Installing wcwidth (0.2.14)
+
+Installing the current project: cr-manager (3.0.3)
+
+$ poetry build
+Building cr-manager (3.0.3)
+Building sdist
+  - Building sdist
+  - Built cr_manager-3.0.3.tar.gz
+Building wheel
+  - Building wheel
+  - Built cr_manager-3.0.3-py3-none-any.whl
+
+$ poetry publish --build
+There are 2 files ready for publishing. Build anyway? (yes/no) [no] y
+Building cr-manager (3.0.3)
+Building sdist
+  - Building sdist
+  - Built cr_manager-3.0.3.tar.gz
+Building wheel
+  - Building wheel
+  - Built cr_manager-3.0.3-py3-none-any.whl
+
+Publishing cr-manager (3.0.3) to PyPI
+ - Uploading cr_manager-3.0.3-py3-none-any.whl 100%
+ - Uploading cr_manager-3.0.3.tar.gz 100%
 ```
