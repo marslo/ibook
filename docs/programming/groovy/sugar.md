@@ -34,6 +34,7 @@
 - [macro](#macro)
   - [groovy-macro-library](#groovy-macro-library)
 - [others](#others)
+  - [debug recursive function](#debug-recursive-function)
   - [groovy cli (args) with options](#groovy-cli-args-with-options)
   - [Get variable value for its name](#get-variable-value-for-its-name)
   - [groovy.lang.Binding](#groovylangbinding)
@@ -954,6 +955,48 @@ println SV(num, list, range, string)
   ```
 
 ## others
+
+### debug recursive function
+
+```groovy
+List<List> diffSegments( List base, List compare, Boolean identical = true, int depth = 0 ) {
+  base    = base    ?: []
+  compare = compare ?: []
+  if ( !base && !compare ) return []
+
+  String common = compare.find { base.contains(it) }
+  if ( !common ) return [ [ base.collect{ it }, compare.collect{ it } ] ]
+
+  def ( bi, ci )      = [ base.indexOf(common), compare.indexOf(common) ]
+  def ( left, right ) = identical ? [ base[0..bi],  compare[0..ci] ] : [ base[0..<bi], compare[0..<ci] ]
+
+  List<List> segments = []
+  if ( left || right ) {
+    segments << [ left, right ]
+  }
+  println "${'  ' * depth}>> depth=${depth}, segments(before) = ${segments.inspect()}"
+
+  segments += diffSegments( base.drop(bi + 1), compare.drop(ci + 1), identical, depth+1 )
+  println "${'  ' * depth}** depth=${depth}, segments(after)  = ${segments.inspect()}"
+
+  return segments
+}
+
+// output
+// >> depth=0, segments(before) = [[['A', 'B', 'C'], ['Y', 'C']]]
+//   >> depth=1, segments(before) = [[['D'], ['D']]]
+//     >> depth=2, segments(before) = [[['E'], ['E']]]
+//       >> depth=3, segments(before) = [[['4'], ['5', '4']]]
+//         >> depth=4, segments(before) = [[['3', '2'], ['2']]]
+//           >> depth=5, segments(before) = [[['1'], ['1']]]
+//           ** depth=5, segments(after)  = [[['1'], ['1']]]
+//         ** depth=4, segments(after)  = [[['3', '2'], ['2']], [['1'], ['1']]]
+//       ** depth=3, segments(after)  = [[['4'], ['5', '4']], [['3', '2'], ['2']], [['1'], ['1']]]
+//     ** depth=2, segments(after)  = [[['E'], ['E']], [['4'], ['5', '4']], [['3', '2'], ['2']], [['1'], ['1']]]
+//   ** depth=1, segments(after)  = [[['D'], ['D']], [['E'], ['E']], [['4'], ['5', '4']], [['3', '2'], ['2']], [['1'], ['1']]]
+// ** depth=0, segments(after)  = [[['A', 'B', 'C'], ['Y', 'C']], [['D'], ['D']], [['E'], ['E']], [['4'], ['5', '4']], [['3', '2'], ['2']], [['1'], ['1']]]
+```
+
 ### groovy cli (args) with options
 
 > reference:

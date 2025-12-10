@@ -223,10 +223,7 @@ $ /usr/libexec/java_home -v 1.8.0.162 -exec javac -versioin
   ```
 
 ## tips
-
-
 ### system tool upgrade
-
 #### cmd
 ```bash
 $ /usr/sbin/softwareupdate --all --install --force

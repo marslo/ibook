@@ -1,7 +1,9 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [fancy bash](#fancy-bash)
+- [fancy bash and tips](#fancy-bash-and-tips)
+  - [re-login with homebrew bash](#re-login-with-homebrew-bash)
+  - [to set static homebrew path in VSCode/Cursor terminal](#to-set-static-homebrew-path-in-vscodecursor-terminal)
 - [alias](#alias)
   - [`bash -<parameter>`](#bash--parameter)
 - [array](#array)
@@ -34,12 +36,44 @@
 > - [commandlinefu](https://www.commandlinefu.com/commands/browse/sort-by-votes)
 > - [Bash scripting cheatsheet](https://devhints.io/bash)
 
-## fancy bash
+## fancy bash and tips
 
 > [!NOTE]
 > - [ohmybash/oh-my-bash](https://github.com/ohmybash/oh-my-bash)
 > - [Bash-it/bash-it](https://github.com/Bash-it/bash-it?tab=readme-ov-file)
 > - [akinomyoga/ble.sh](https://github.com/akinomyoga/ble.sh)
+
+### re-login with homebrew bash
+```bash
+# ~/.bash_profile
+
+if test -d "/opt/homebrew"; then HOMEBREW_PREFIX="/opt/homebrew"; fi
+if test -d "/usr/local";    then HOMEBREW_PREFIX="/usr/local";    fi
+
+if [[ "${-}" == *i* && -z "${BASH_EXECUTION_STRING:-}" && \
+      'Darwin' = "$(/usr/bin/uname -s)" && -n "${HOMEBREW_PREFIX}" && \
+      -x "${HOMEBREW_PREFIX}/bin/bash" && "${BASH:-}" != "${HOMEBREW_PREFIX}/bin/bash" && \
+      "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  exec "${HOMEBREW_PREFIX}"/bin/bash -l
+fi
+```
+
+### to set static homebrew path in VSCode/Cursor terminal
+```bash
+# ~/.bash_profile
+
+if test -d "/opt/homebrew"; then HOMEBREW_PREFIX="/opt/homebrew"; fi
+if test -d "/usr/local";    then HOMEBREW_PREFIX="/usr/local";    fi
+
+if [[ -n "${VSCODE_RESOLVING_ENVIRONMENT}" ]]; then
+  if [[ -n "${HOMEBREW_PREFIX}" ]]; then
+    export PATH="${HOMEBREW_PREFIX}/bin:${HOMEBREW_PREFIX}/sbin:${PATH}"
+    export MANPATH="${HOMEBREW_PREFIX}/share/man:${MANPATH}"
+    export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH}"
+  fi
+  return 0 2>/dev/null
+fi
+```
 
 ## [alias](https://askubuntu.com/a/871435)
 ```bash

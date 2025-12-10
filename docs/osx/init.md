@@ -22,7 +22,7 @@ $ brew install --HEAD bash-completion@2 file-formula mtr mas
 $ brew install util-linux inetutils coreutils moreutils bash less proctools pstree vnstat ncdu ipcalc htop glances lsof trash
 $ brew install gawk grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnu-indent gnutls iproute2mac ifstat stow netcat nmap
 $ brew install dos2unix openldap
-$ brew install tmux corkscrew telnet
+$ brew install tmux corkscrew telnet tcptraceroute
 $ brew install figlet
 $ brew install --HEAD toilet
 $ brew install colordiff diffutils wdiff difftastic
@@ -70,6 +70,8 @@ $ sudo ln -sf '/Applications/Visual Studio Code.app/Contents/Resources/app/bin/c
 $ brew install --HEAD ruby
 # nvm for gitbook install: nvm install 12
 $ brew install openjdk gradle nvm mongosh groovy
+$ brew install python@3.xx python-tk@3.xx         # python-tk is necessary for Python IDLE
+$ brew install pyenv
 $ brew install --HEAD gradle-completion open-completion docker-completion gem-completion
 $ brew install kubecolor
 $ brew install --HEAD kubectl jfrog-cli jq
@@ -98,7 +100,9 @@ $ npm i -g svgexport
 $ npm i -g iterm2-tab-set
 $ npm i -g neovim
 $ npm i -g npm-completion
+$ npm i -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/exec
 # - optional -
+$ npm i -g conventional-changelog-cli conventional-changelog-angular
 $ sudo ln -sf $(npm get prefix)/bin/* /usr/local/bin/
 
 # --- lint ---
@@ -106,13 +110,14 @@ $ brew install --HEAD shellcheck yamllint yamlfmt
 $ npm i -g npm-groovy-lint && sudo ln -sf $(npm get prefix)/bin/npm-groovy-lint /usr/local/bin/npm-groovy-lint
 $ npm i -g @commitlint/{cli,config-conventional}  # for commitlint
 $ npm i -g css-validator                          # for css validation
+$ npm i -g vscode-langservers-extracted           # for vscodejson/vscodehtml/vscodecss/vscodemarkdown for ALE
 $ brew install hadolint                           # for dockerfile
 $ brew install stylelint                          # for css
 $ brew install jsonlint ansible-lint
 $ brew install vint                               # vim script language lint
 $ brew install --HEAD eslint
 $ brew install --HEAD shfmt                       # autoformat shell script source code
-# optional
+# - optional -
 $ brew install actionlint                         # for github action
 $ brew install libxml2                            # for xmllint
 
