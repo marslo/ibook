@@ -36,6 +36,7 @@
   - [echo var name](#echo-var-name)
 - [ls](#ls)
 - [bash completion](#bash-completion)
+  - [pattens in load completion](#pattens-in-load-completion)
   - [osx](#osx)
   - [linux](#linux)
   - [completion for alias](#completion-for-alias)
@@ -1651,6 +1652,39 @@ $ ls -Ap | command grep "^\."
   complete -F _gradle gradle.bat
   ```
   <!--endsec-->
+
+### pattens in load completion
+
+```bash
+# i.e. *git*
+$ ls -1 "${BASH_COMPLETION_DIR}"/*git*
+/opt/homebrew/etc/bash_completion.d/git-completion.bash
+/opt/homebrew/etc/bash_completion.d/git-extras
+/opt/homebrew/etc/bash_completion.d/git-lfs
+/opt/homebrew/etc/bash_completion.d/git-prompt.sh
+
+# -- solution 1 --
+if test -d "${BASH_COMPLETION_DIR}"; then
+  if ls "${BASH_COMPLETION_DIR}"/*git*    >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*git*    ) ; fi
+  if ls "${BASH_COMPLETION_DIR}"/*docker* >/dev/null 2>&1; then source <( cat "${BASH_COMPLETION_DIR}"/*docker* ) ; fi
+fi
+
+# -- solution 2 --
+# `compgen -G "${pattern}"` == `ls ${pattern}`
+for pattern in '*git*' '*docker*'; do
+  if compgen -G "${BASH_COMPLETION_DIR}/${pattern}" > /dev/null; then
+    for f in "${BASH_COMPLETION_DIR}"/${pattern}; do source "${f}"; done
+  fi
+done
+
+# --solution 3 --
+# using `shopt -s nullglob` to avoid error when no match files
+shopt -s nullglob
+for script in "${BASH_COMPLETION_DIR}"/{*git*,*docker*}; do
+  [[ -f "${script}" ]] && source "${script}"
+done
+shopt -u nullglob
+```
 
 ### osx
 

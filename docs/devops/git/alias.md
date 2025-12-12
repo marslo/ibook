@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [alias](#alias)
 - [basic](#basic)
 - [pretty show](#pretty-show)
 - [branch](#branch)
@@ -15,6 +16,91 @@
 > - [Must Have Git Aliases: Advanced Examples](https://www.durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/)
 > - [mwhite/git-aliases.md](https://gist.github.com/mwhite/6887990)
 > - [How to make bash as default shell in git alias?](https://stackoverflow.com/a/73163369/2940319)
+
+### alias
+
+> [!NOTE|label:references:]
+> - [git-completion.bash](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash)
+>   ```
+>   # If you use complex aliases of form '!f() { ... }; f', you can use the null
+>   # command ':' as the first command in the function body to declare the desired
+>   # completion style.
+>   ```
+
+- using `:`
+
+  > [!TIP]
+  > `: git rebase;` is used to declare the desired completion style for `git rebase`.
+
+  ```bash
+  [alias]
+    rob = "!f() { \
+                  : git rebase ; \
+                  if [ 0 -eq $# ]; then \
+                    branch=$(git rev-parse --abbrev-ref HEAD); \
+                  else \
+                    branch=\"$*\"; \
+                  fi; \
+                  git ro ${branch}; \
+                  if [ 0 -ne $# ]; then \
+                    printf \"\\033[1;33m~~> rebase from : ${branch}\\033[0m\n\"; \
+                    git rebase \"${branch}\"; \
+                  fi; \
+                }; f \
+          "
+  ```
+
+- using `_git_${subcommand}`
+
+  > [!TIP]
+  > - this is for `git subcommand`
+  >   ```bash
+  >   # To add completion for git subcommands that are implemented in external
+  >   # scripts, define a function of the form '_git_${subcommand}' while replacing
+  >   # all dashes with underscores, and the main git completion will make use of it.
+  >   ```
+
+  ```bash
+  $ cat ~/.git-alias-completion.bash
+  # git rob -> git checkout completion
+  function _git_rob() {
+    _git_checkout
+  }
+
+  # git bb -> git checkout completion
+  function _git_bb() {
+    _git_checkout
+  }
+
+  $ source ~/.git-alias-completion.bash
+  ```
+
+- using `__git_complete`
+
+  > [!TIP]
+  > - this is for `command` instead of `git subcommand`
+  >   ```bash
+  >   # If you have a shell command that is not part of git (and is not called as a
+  >   # git subcommand), but you would still like git-style completion for it, use
+  >   # __git_complete. For example, to use the same completion as for 'git log' also
+  >   # for the 'gl' command:
+  >   #
+  >   #   __git_complete gl git_log
+  >   ```
+
+  ```bash
+  $ __git_complete abc git_branch
+
+  $ abc <TAB>
+  FETCH_HEAD                                  gh-pages
+  HEAD                                        marslo
+  ORIG_HEAD                                   origin/archive/gitbook
+  origin/archive/node_modules                 origin/archive/package-lock.json
+  origin/gh-pages                             origin/gitbook
+  origin/HEAD                                 origin/marslo
+  origin/pre-commit-ci-update-config          origin/sample
+  origin/sandbox/c0c25bb05                    origin/sandbox/marslo/2f8293596-issue-fix
+  ```
 
 ### basic
 ```

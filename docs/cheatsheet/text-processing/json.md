@@ -54,23 +54,23 @@
 
 |  SYNTAX  | DESCRIPTION                                                            |
 |:--------:|------------------------------------------------------------------------|
-|    `,`   | Filters separated by a comma will produce multiple independent outputs |
-|    `?`   | Will ignores error if the type is unexpected                           |
-|   `[]`   | Array construction                                                     |
-|   `{}`   | Object construction                                                    |
-|    `+`   | Concatenate or Add                                                     |
-|    `-`   | Difference of sets or Substract                                        |
-| `length` | Size of selected element                                               |
-|    `⎮`   | Pipes are used to chain commands in a similar fashion than bash        |
+|    `,`   | filters separated by a comma will produce multiple independent outputs |
+|    `?`   | will ignores error if the type is unexpected                           |
+|   `[]`   | array construction                                                     |
+|   `{}`   | object construction                                                    |
+|    `+`   | concatenate or Add                                                     |
+|    `-`   | difference of sets or Substract                                        |
+| `length` | size of selected element                                               |
+|    `⎮`   | pipes are used to chain commands in a similar fashion than bash        |
 
 ### [dealing with json objects](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4#dealing-with-json-objects)
 
 | DESCRIPTION                | COMMAND                            |
 |:---------------------------|:-----------------------------------|
-| Display all keys           | `jq 'keys'`                        |
-| Adds + 1 to all items      | `jq 'map_values(.+1)'`             |
-| Delete a key               | `jq 'del(.foo)'`                   |
-| Convert an object to array | `to_entries ⎮ map([.key, .value])` |
+| display all keys           | `jq 'keys'`                        |
+| adds + 1 to all items      | `jq 'map_values(.+1)'`             |
+| delete a key               | `jq 'del(.foo)'`                   |
+| convert an object to array | `to_entries ⎮ map([.key, .value])` |
 
 ### [slicing and filtering](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4#slicing-and-filtering)
 
@@ -79,33 +79,33 @@
 
 | DESCRIPTION                      | COMMAND                              |
 |:---------------------------------|:-------------------------------------|
-| All                              | `jq .[]`                             |
-| First                            | `jq '.[0]'`                          |
-| Range                            | `jq '.[2:4]'`                        |
-| First 3                          | `jq '.[:3]'`                         |
-| Last 2                           | `jq '.[-2:]'`                        |
-| Before Last                      | `jq '.[-2]'`                         |
+| all                              | `jq .[]`                             |
+| first                            | `jq '.[0]'`                          |
+| range                            | `jq '.[2:4]'`                        |
+| first 3                          | `jq '.[:3]'`                         |
+| last 2                           | `jq '.[-2:]'`                        |
+| before Last                      | `jq '.[-2]'`                         |
 | split                            | `jq '.[] ⎮ split("/")[1]'`           |
-| Select array of int by value     | `jq 'map(select(. >= 2))'`           |
-| Select array of objects by value | `jq '.[] ⎮ select(.id == "second")'` |
-| Select by type                   | `jq '.[] ⎮ numbers'`                 |
+| select array of int by value     | `jq 'map(select(. >= 2))'`           |
+| select array of objects by value | `jq '.[] ⎮ select(.id == "second")'` |
+| select by type                   | `jq '.[] ⎮ numbers'`                 |
 
 ### [mapping and transforming](https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4#mapping-and-transforming)
 
 | DESCRIPTION                          | COMMAND                                                                     |
 |:-------------------------------------|:----------------------------------------------------------------------------|
-| Add + 1 to all items                 | `jq 'map(.+1)'`                                                             |
-| Delete 2 items                       | `jq 'del(.[1, 2])'`                                                         |
-| Concatenate arrays                   | `jq 'add'`                                                                  |
-| Flatten an array                     | `jq 'flatten'`                                                              |
-| Create a range of numbers            | `jq '[range(2;4)]'`                                                         |
-| Display the type of each item        | `jq 'map(type)'`                                                            |
-| Sort an array of basic type          | `jq 'sort'`                                                                 |
-| Sort an array of objects             | `jq 'sort_by(.foo)'`                                                        |
-| Group by a key - opposite to flatten | `jq 'group_by(.foo)'`                                                       |
-| Minimun value of an array            | `jq 'min'`<br>See also  min, max, min_by(path_exp), max_by(path_exp)        |
-| Remove duplicates                    | `jq 'unique'` <br>or `jq 'unique_by(.foo)'` <br>or `jq 'unique_by(length)'` |
-| Reverse an array                     | `jq 'reverse'`                                                              |
+| add + 1 to all items                 | `jq 'map(.+1)'`                                                             |
+| delete 2 items                       | `jq 'del(.[1, 2])'`                                                         |
+| concatenate arrays                   | `jq 'add'`                                                                  |
+| flatten an array                     | `jq 'flatten'`                                                              |
+| create a range of numbers            | `jq '[range(2;4)]'`                                                         |
+| display the type of each item        | `jq 'map(type)'`                                                            |
+| sort an array of basic type          | `jq 'sort'`                                                                 |
+| sort an array of objects             | `jq 'sort_by(.foo)'`                                                        |
+| group by a key - opposite to flatten | `jq 'group_by(.foo)'`                                                       |
+| minimun value of an array            | `jq 'min'`<br>See also  min, max, min_by(path_exp), max_by(path_exp)        |
+| remove duplicates                    | `jq 'unique'` <br>or `jq 'unique_by(.foo)'` <br>or `jq 'unique_by(length)'` |
+| reverse an array                     | `jq 'reverse'`                                                              |
 
 ## join
 
@@ -176,18 +176,17 @@ thing:like
 > - orignal wihtout `getOrDefault`
 >   ```bash
 >   $ echo '[
->           {"id": "1", "version": "v1"},
->           {"id": "2", "version": "v2"},
->           {"id": "3", "version": null}
->           ]
->          ' |
+>             {"id": "1", "version": "v1"},
+>             {"id": "2", "version": "v2"},
+>             {"id": "3", "version": null}
+>           ]' |
 >     jq -r '.[] | .id + " -> " + .version'
 >   1 -> v1
 >   2 -> v2
 >   3 ->
 >   ```
 
-- using `//`
+- getOrDefault with `//`
 
   > [!TIP|label:references:]
   > - [Get or default function in JQ?](https://stackoverflow.com/a/56555296/2940319)
@@ -248,8 +247,7 @@ thing:like
             { "id": "2", "version": "v2" } ,
             { "id": "3", "version": null } ,
             { "id": "4", "version": ""   }
-          ]
-         ' |
+          ]' |
     jq -r '.[] |
            .id + " -> " +
            if .version == null or .version == "" then empty
@@ -267,8 +265,7 @@ thing:like
             { "id": "3", "version": null } ,
             { "id": "4", "version": ""   } ,
             { "id": "5"                  }
-          ]
-         ' |
+          ]' |
     jq -r '.[] |
            .id + " -> " +
            if ( has("version") and .version != null and .version != "" ) then
@@ -407,8 +404,7 @@ $ echo '[{"uri" : "/1" }, {"uri" : "/2"}, {"uri" : "/3"}]' |
 >   ```
 
 ```bash
-$ echo '[1,5,3,0,7]' |
-       jq 'map(select(. >= 2))'
+$ echo '[1,5,3,0,7]' | jq 'map(select( . >= 2 ))'
 [
   5,
   3,
