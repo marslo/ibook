@@ -16,6 +16,8 @@
   - [environment](#environment)
   - [get console details](#get-console-details)
   - [font](#font)
+- [others](#others)
+  - [list all functions in groovy files](#list-all-functions-in-groovy-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -573,3 +575,14 @@ UIManager.put("Panel.font", new FontUIResource(new Font ("Monaco", Font.PLAIN, 1
   setFont(new FontUIResource(new Font("Monaco", Font.PLAIN, 14)));
   ```
   <!--endsec-->
+
+## others
+
+### list all functions in groovy files
+```bash
+$ rg --no-messages -P \
+     -o '^(?:(?:public|protected|private|static|final|synchronized|abstract|native|transient|volatile|strictfp)[[:space:]]+)*(?:<[^>]+>[[:space:]]*)?(?:def|void|[A-Za-z_][A-Za-z0-9_$]*(?:<[^>]+>)?)[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)(?=[[:space:]]*\()' \
+     --glob 'vars/*.groovy' \
+     -r '$1' \
+     --vimgrep
+```
