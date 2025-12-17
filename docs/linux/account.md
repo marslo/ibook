@@ -242,7 +242,7 @@ $ sudo systemctl restart sssd
   $ getent passwd devops
   devops:*:41032:10:Service Account-Block-chain:/user/devops:/bin/tcsh
   $ id devops
-  uid=41032(devops) gid=10(uucp) groups=10(uucp),0(root),4(adm),1000(marvell),994(docker)
+  uid=41032(devops) gid=10(uucp) groups=10(uucp),0(root),4(adm),1000(company),994(docker)
   $ sudo useradd -m -d '/home/devops' -u 1000 -s /bin/bash devops
   useradd: user 'devops' already exists
 

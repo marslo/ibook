@@ -324,6 +324,6 @@ spinner=enabled
 ### list ssh-key
 ```bash
 $ gh ssh-key list
-TITLE           ID         KEY                                          TYPE            ADDED
-marslo@marvell  125897633  ssh-ed25519 AAAAC3Nz...luNwnWMQR+wMad11Dpiw  authentication  about 2 months ago
+TITLE          ID         KEY                                          TYPE            ADDED
+marslo@sample  125897633  ssh-ed25519 AAAAC3Nz...luNwnWMQR+wMad11Dpiw  authentication  about 2 months ago
 ```

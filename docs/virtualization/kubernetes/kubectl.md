@@ -1,4 +1,4 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<dc5-ssdfw8!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [what is kubectl](#what-is-kubectl)
@@ -471,7 +471,7 @@ $ kubectl -n devops-ci get deployment dev-jenkins -o json |
 /spec/template/metadata/labels/app = dev-jenkins
 /spec/template/spec/containers/0/env/0/value = -Duser.timezone='America/Los_Angeles' -Dhudson.model.DirectoryBrowserSupport.CSP="" -Djenkins.slaves.NioChannelSelector.disabled=true -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=false -Djava.awt.headless=true -Djenkins.security.ClassFilterImpl.SUPPRESS_WHITELIST=true -Dhudson.model.ParametersAction.keepUndefinedParameters=true -Dcom.cloudbees.workflow.rest.external.ChangeSetExt.resolveCommitAuthors=true -Djenkins.install.runSetupWizard=true -Dpermissive-script-security.enabled=true -DsessionTimeout=1440 -DsessionEviction=43200 -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=utf-8 -Dgroovy.grape.report.downloads=true -Divy.message.logger.level=4 -Dhudson.plugins.active_directory.ActiveDirectorySecurityRealm.forceLdaps=false -Djenkins.model.Jenkins.logStartupPerformance=true -Dhudson.security.csrf.DefaultCrumbIssuer.EXCLUDE_SESSION_ID=true -Djsch.client_pubkey='ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256' -Djsch.server_host_key='ssh-rsa,ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256' -Xms32g -Xmx32g -XX:+AlwaysPreTouch -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/jenkins_home/logs -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+ParallelRefProcEnabled -XX:+DisableExplicitGC -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -verbose:gc -XX:+PrintGC -XX:+PrintGCDetails -XX:ErrorFile=/var/jenkins_home/logs/hs_err_%p.log -XX:+LogVMOutput -XX:LogFile=/var/jenkins_home/logs/jvm.log -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=50.0 -Xlog:gc*=info,gc+heap=debug,gc+ref*=debug,gc+ergo*=trace,gc+age*=trace:file=/var/jenkins_home/logs/gc-%t.log:utctime,pid,level,tags:filecount=2,filesize=100M
 /spec/template/spec/containers/0/env/1/value = -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=false
-/spec/template/spec/containers/0/image = artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21
+/spec/template/spec/containers/0/image = artifactory.sample.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21
 /spec/template/spec/containers/0/name = dev-jenkins
 /spec/template/spec/containers/0/volumeMounts/0/mountPath = /var/jenkins_home
 /spec/template/spec/containers/0/volumeMounts/0/name = dev-jenkins-home
@@ -565,7 +565,7 @@ dev-jenkins-569fcd784c   1         1         1       5h21m
 ### upgrade with CHANGE-CAUSE
 ```bash
 # with --record
-$ kubectl -n devops-ci set image deployment/dev-jenkins dev-jenkins=artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --record
+$ kubectl -n devops-ci set image deployment/dev-jenkins dev-jenkins=artifactory.sample.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --record
 Flag --record has been deprecated, --record will be removed in the future
 deployment.extensions/dev-jenkins image updated
 
@@ -574,11 +574,11 @@ deployment.extensions/dev-jenkins
 REVISION  CHANGE-CAUSE
 ...
 48        <none>
-49        kubectl set image deployment/dev-jenkins dev-jenkins=artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --kubeconfig=/Users/marslo/iMarslo/job/devops/env/linux/dc5-ssdfw8/.kube/config --namespace=devops-ci --record=tru
+49        kubectl set image deployment/dev-jenkins dev-jenkins=artifactory.sample.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --kubeconfig=/home/devops/.kube/config --namespace=devops-ci --record=true
 
 # with annotate
 # -- update --
-$ kubectl -n devops-ci set image deployment/dev-jenkins dev-jenkins=artifactory.marvell.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --record
+$ kubectl -n devops-ci set image deployment/dev-jenkins dev-jenkins=artifactory.sample.com/it-devops-dockerub-remote/jenkins/jenkins:2.512-jdk21 --record
 # -- annotate --
 $ kubectl -n devops-ci annotate deployment dev-jenkins kubernetes.io/change-cause="Upgrade Jenkins to 2.512-jdk21 @ $(date +'%F %T')"
 
