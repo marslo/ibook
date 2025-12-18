@@ -10,6 +10,7 @@
   - [get all vote CR-2](#get-all-vote-cr-2)
   - [who approval the V+1](#who-approval-the-v1)
   - [list change comments](#list-change-comments)
+  - [check API response](#check-api-response)
 - [access](#access)
   - [list contains account](#list-contains-account)
 - [statistics](#statistics)
@@ -228,9 +229,20 @@ $ curl -s -X GET https://gerrit.domain.com/a/changes/${changeid}/detail |
 > `GET /changes/{change-id}/detail`
 
 ```bash
-$ curl -fsSL https://sj1git1.cavium.com/a/changes/137640/detail |
+$ curl -fsSL https://gerrit.domain.com/a/changes/${changeid}/detail |
   tail -n+2 |
   jq -r '.messages[] | [.author.username, .message] | join(": \t")'
+```
+
+### check API response
+```bash
+$ for opt in CHECK SUBMITTABLE CURRENT_REVISION ALL_REVISIONS ALL_FILES DETAILED_LABELS CURRENT_ACTIONS MESSAGES; do
+  echo -e "\n\n\033[33m== o=${opt} ==\033[0m";
+  curl -s -k --connect-timeout 5 --max-time 20 \
+       -o /dev/null \
+       -w '\nTTFB=%{time_starttransfer} TOTAL=%{time_total} RESPONSE='%{response_code}'\n' \
+       -D - "https://gerrit.domain.com/a/changes/248748?o=${opt}";
+done
 ```
 
 ## access
@@ -241,14 +253,14 @@ $ curl -fsSL https://sj1git1.cavium.com/a/changes/137640/detail |
 > - [List Access Rights for Project](https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#get-access)
 
 ```bash
-# i.e. : check all repos who contains account marslo@sample.com
+# i.e. : check all repos who contains account marslo@domain.com
 $ while read -r _proj; do
-    output=$( curl -fsSL https://gerrit.sample.com/a/projects/"${_proj}"/access |
+    output=$( curl -fsSL https://gerrit.domain.com/a/projects/"${_proj}"/access |
               tail -n+2 |
-              jq -r '.. | .rules? | select(. != null) | keys[] | ascii_downcase | select(contains("marslo@sample.com"))';
+              jq -r '.. | .rules? | select(. != null) | keys[] | ascii_downcase | select(contains("marslo@domain.com"))';
             )
-    [[ -z "${output}" ]] || echo ">> https://gerrit.sample.com/admin/repos/$(sed 's:%2F:/:g' <<< "${_proj}")"
-  done < <( curl -fsSL https://gerrit.sample.com/a/projects/?d |
+    [[ -z "${output}" ]] || echo ">> https://gerrit.domain.com/admin/repos/$(sed 's:%2F:/:g' <<< "${_proj}")"
+  done < <( curl -fsSL https://gerrit.domain.com/a/projects/?d |
                   tail -n+2 |
                   jq -r '.[].id' |
                   grep --color=never -E 'keyword-1|keyword-2'
@@ -276,7 +288,7 @@ query="${query}+is:closed+-is:abandoned"
 echo ">> ${project} ~ ${branch}"
 while IFS='|' read -r _change_id _id; do
   echo -e "\t- [${_id}] [_change_id]"
-done < <( eval "curl ${curlOpt} 'https://gerrit.sample.com/a/changes/?q=${query}'" |
+done < <( eval "curl ${curlOpt} 'https://gerrit.domain.com/a/changes/?q=${query}'" |
          tail -n +2 |
          jq -r '.[] | .change_id + "|" + .id'
  )
@@ -284,7 +296,7 @@ done < <( eval "curl ${curlOpt} 'https://gerrit.sample.com/a/changes/?q=${query}
 
 ### get review rate in certain time
 ```bash
-gerritUrl='https://gerrit.sample.com'
+gerritUrl='https://gerrit.domain.com'
 sum=0
 rnum=0
 onum=0
@@ -314,7 +326,7 @@ $ curl -fsSL "${gerritUrl}"/a/projects/?d | tail -n+2 | jq -r '.[].id'
 ```bash
 $ account='marslo'
 $ id=1
-$ gerritUrl='https://gerrit.sample.com'
+$ gerritUrl='https://gerrit.domain.com'
 
 $ while read -r _proj; do
     output=$( curl -fsSL "${gerritUrl}"/a/projects/"${_proj}"/access |
