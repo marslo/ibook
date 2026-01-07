@@ -12,6 +12,7 @@
     - [render visualization of hexadecimal colors](#render-visualization-of-hexadecimal-colors)
     - [others](#others)
   - [remove highlight](#remove-highlight)
+- [password encoding](#password-encoding)
 - [terminal ui](#terminal-ui)
   - [dialog](#dialog)
   - [gum](#gum)
@@ -167,8 +168,41 @@ $ command | decolorize
     remotes/origin/sample$
   ```
 
-# terminal ui
+# password encoding
 
+> [!TIP|label:references:]
+> - [A cheat-sheet for password crackers](https://www.unix-ninja.com/p/A_cheat-sheet_for_password_crackers)
+
+| CHARACTERS | PERCENT-ENCODED |  | CHARACTERS | PERCENT-ENCODED |  | CHARACTERS | PERCENT-ENCODED |
+|:----------:|:---------------:|--|:----------:|:---------------:|--|:----------:|:---------------:|
+|      @     |      `%40`      |  |      :     |      `%3A`      |  |      !     |      `%21`      |
+|    &#96;   |      `%60`      |  |      ?     |      `%3F`      |  |      ^     |      `%5E`      |
+|      #     |      `%23`      |  |      %     |      `%25`      |  |      $     |      `%24`      |
+|      &     |      `%26`      |  |      *     |      `%2A`      |  |      +     |      `%2B`      |
+|      (     |      `%28`      |  |      )     |      `%29`      |  |      "     |      `%22`      |
+|      {     |      `%7B`      |  |      }     |      `%7D`      |  |      '     |      `%27`      |
+|      <     |      `%3C`      |  |      >     |      `%3E`      |  |      :     |      `%3A`      |
+|      /     |      `%2F`      |  |      \     |      `%5C`      |  |     \|     |      `%7C`      |
+
+- check via jq
+  ```bash
+  $ jq -rn --arg s '!.@.#.$.%.^.&.*.(.)._.+.-.{.}.<.>.:."' '$s|@uri'
+  %21.%40.%23.%24.%25.%5E.%26.%2A.%28.%29._.%2B.-.%7B.%7D.%3C.%3E.%3A.%22
+
+  $ jq -rn --arg s "'" '$s|@uri'
+  %27
+  ```
+
+- check via python
+  ```python
+  import urllib.parse
+  print( urllib.parse.quote( '!.@.#.$.%.^.&.*.(.)._.+.-.{.}.<.>.:.".\./.|.`', safe="") )
+
+  # output:
+  %21.%40.%23.%24.%25.%5E.%26.%2A.%28.%29._.%2B.-.%7B.%7D.%3C.%3E.%3A.%22.%5C.%2F.%7C.
+  ```
+
+# terminal ui
 ## dialog
 
 > [!NOTE|label:references:]

@@ -23,6 +23,7 @@
   - [update lock_branch status](#update-lock_branch-status)
 - [rulesets](#rulesets)
   - [list all rulesets](#list-all-rulesets)
+  - [list ruleset with keywrods](#list-ruleset-with-keywrods)
   - [update ruleset](#update-ruleset)
   - [rulsets update history](#rulsets-update-history)
 - [rule suites](#rule-suites)
@@ -202,10 +203,10 @@ $ gh api "repos/marslo/ibook/git/refs/heads/marslo" --jq .object.sha
 > `GET /repos/{owner}/{repo}/commits/{sha}`
 
 ```bash
-$ gh api repos/{owner}/{repo}/commits/{sha}
+$ gh api repos/{owner}/${REPO}/commits/${sha}
 
 # i.e.:
-$ gh api repos/${OWNER}/${REPO}/commits/{sha} \
+$ gh api repos/${OWNER}/${REPO}/commits/${sha} \
      --jq '[
             "revision: \(.sha)",
             "author: \(.commit.author.name) <\(.commit.author.email)> - \(.commit.author.date)",
@@ -379,14 +380,35 @@ $ jq -n \
 > - [Troubleshooting rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/troubleshooting-rules)
 
 ### list all rulesets
+
+> [!TIP|label:URL]
+> the web URL of rulesets: https://github.com/<OWNER>/<REPO>/rules
+
 ```bash
-$ gh api "repos/{owner}/{repo}/rulesets"
+$ gh api "repos/${OWNER}/${REPO}/rulesets"
 
 # or: list id and name
-$ gh api "repos/{owner}/{repo}/rulesets" | jq -r '.[] | (.id|tostring) + ": " + .name'
+$ gh api "repos/${OWNER}/${REPO}/rulesets" | jq -r '.[] | (.id|tostring) + ": " + .name'
 7288536: BranchDeleteRule
 7288533: BranchNamingRule
 7288566: PRRuleSet
+```
+
+### list ruleset with keywrods
+
+```bash
+$ keyword='ci/verified'
+$ for id in $(gh api "repos/${OWNER}/${REPO}/rulesets" --jq '.[].id'); do
+>   gh api "repos/${OWNER}/${REPO}/rulesets/${id}" \
+>     | jq -r --arg id "${id}" --arg keyword "${keyword}" '
+>         if (tostring | contains($keyword)) then
+>           ($id|tostring) + ": " + .name
+>         else empty end
+>       '
+> done
+11286108: ProtectedBranchesDevelRelease
+11286106: ProtectedBranchesMain
+11286110: PRReviewRule
 ```
 
 ### update ruleset
