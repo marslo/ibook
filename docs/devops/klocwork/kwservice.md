@@ -144,7 +144,7 @@ $ /opt/Klocwork/Server/3rdparty/bin/mysql --protocol=TCP -h127.0.0.1 -P3306 -u<u
 #### check database
 - basic info
 
-  ```mysql
+  ```sql
   MariaDB [(none)]> SHOW DATABASES;
   MariaDB [(none)]> SHOW VARIABLES LIKE 'datadir';
   +---------------+----------------------+

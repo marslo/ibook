@@ -14,6 +14,10 @@
   - [shortcuts](#shortcuts)
 - [sharepoint](#sharepoint)
   - [download from sharepoint](#download-from-sharepoint)
+- [microsoft cli](#microsoft-cli)
+  - [install](#install)
+  - [setup in entra](#setup-in-entra)
+  - [login with m365](#login-with-m365)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -199,3 +203,81 @@ if the file in `Shared Documents` library, the URL will be like:
 
    $ curl -L -OJ -b cookie.txt "https://domain.sharepoint.com/sites/<site>/Shared%20Documents/<folder>/<file>?download=1"
    ```
+
+## microsoft cli
+
+### install
+
+> [!TIP|label:references]
+> - [pnp/cli-microsoft365](https://github.com/pnp/cli-microsoft365)
+> - [CLI for Microsoft 365](https://pnp.github.io/cli-microsoft365/)
+
+```bash
+$ npm i -g @pnp/cli-microsoft365
+
+# verify
+$ m365 version
+"v11.3.1"
+```
+
+### setup in entra
+
+#### create new app
+
+1. login to [https://entra.microsoft.com/#home](https://entra.microsoft.com/#home)
+2. go to **App registrations** -> **+ New registration**
+
+  ![new registration](../../screenshot/tools/ms/m365-cli-1.png)
+
+3. Add information as below:
+  - Name: `CLI for M365`
+  - Supported account types: `Accounts in this organizational directory only`
+  - Redirect URI:
+    - `Public client/native (mobile & desktop)`
+    - `https://login.microsoftonline.com/common/oauth2/nativeclient`
+
+  ![registration info](../../screenshot/tools/ms/m365-cli-2.png)
+
+4. click **Register** and final result as below
+
+  ![app info](../../screenshot/tools/ms/m365-cli-3.png)
+
+#### configure API permissions
+
+1. go to application page -> **API permissions** -> **+ Add a permission**
+
+  ![app info](../../screenshot/tools/ms/m365-cli-5.png)
+
+2. select **SharePoint** -> **Delegated permissions** -> **ALLSites** -> check **AllSites.Read**
+  - other options:
+    - **EnterpriseResource.Read**
+    - **MyFile.Read**
+    - **Project.Read**
+    - **Sites.Selected**
+
+  ![add permission](../../screenshot/tools/ms/m365-cli-6.png)
+
+### login with m365
+
+```bash
+$ export CLIMICROSOFT365_ENTRAAPPID="<CLIENT-ID>/<APPLICATION-ID>"
+$ export CLIMICROSOFT365_TENANT="<TENANT-ID>"
+
+$ m365 logout 2>/dev/null || true
+$ m365 login --authType browser
+$ m365 status
+
+$ m365 spo set --url "https://domain.sharepoint.com"
+
+# try list files
+$ m365 spo list list \
+       --webUrl "https://domain.sharepoint.com" \
+       --properties "Title,RootFolder/ServerRelativeUrl"
+
+# download file
+$ m365 spo file get \
+       --webUrl "https://domain.sharepoint.com" \
+       --url "/Shared Documents/path/to/file.zip" \
+       --asFile \
+       --path "./file.zip"
+```
