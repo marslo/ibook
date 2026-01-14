@@ -25,6 +25,7 @@
   - [Named parameters](#named-parameters)
   - [Mixing named and positional parameters](#mixing-named-and-positional-parameters)
   - [track the method call](#track-the-method-call)
+  - [traceCall for Jenkins shared-libs](#tracecall-for-jenkins-shared-libs)
   - [get current method name](#get-current-method-name)
 - [MetaClass](#metaclass)
   - [get supported methods](#get-supported-methods)
@@ -778,6 +779,104 @@ baz()
 // >> [1] ConsoleScript49.bar(ConsoleScript49:10) : ConsoleScript49.bar #10
 // >> [2] ConsoleScript49.baz(ConsoleScript49:11) : ConsoleScript49.baz #11
 // >> [3] ConsoleScript49.run(ConsoleScript49:17) : ConsoleScript49.run #17
+```
+
+### traceCall for Jenkins shared-libs
+
+```groovy
+// put the following functions into the vargs/<name>.groovy
+private long nextSeq(String key) {
+  String k = "__trace_seq__${key}"
+  long v = (binding?.hasVariable(k) ? (binding.getVariable(k) as long) : 0L)
+  v++
+  binding.setVariable(k, v)
+  return v
+}
+
+private void traceCall(String key, String label, Object payload = null, int limit = 20) {
+  long id = nextSeq(key)
+  Throwable t = new Throwable("${label} #${id}")
+
+  List<StackTraceElement> st = (t.stackTrace as List)
+      .drop(1)
+      .findAll { e -> ((e.fileName ?: '').toLowerCase().endsWith('.groovy')) }
+      .take(limit)
+
+  echo ">>> ${label} #${id} payload=${payload}"
+  st.each { e ->
+    echo "  at ${e.className}.${e.methodName}(${e.fileName}:${e.lineNumber})"
+  }
+  echo "<<< ${label} #${id} end"
+}
+
+// add following line into the function you want to trace - the first line
+def foo() {
+  traceCall( 'myFunc', 'name.foo ENTER' )
+  ...
+}
+```
+
+And another option to use `vars/trace.groovy`
+```groovy
+// vars/trace.groovy
+// calling example:
+//   trace( name: 'myFunc', match: 'vars.', limit: 50 )
+//   trace.call( name: "myFunc invoked", prefix: "org.company", oneLine: true )
+import groovy.transform.Field
+
+@Field static long __seq = 0L
+
+def call( Map cfg = [:] ) {
+  String name   = ( cfg.name ?: 'TRACE' )
+  String match  = ( cfg.match ?: '' )                     // 可选：只保留包含该字符串的栈帧（比如 "vars." / "myFunc"）
+  int    limit  = ( cfg.limit ?: 80 ) as int
+  boolean oneLine = ( cfg.oneLine ?: false ) as boolean
+  boolean showAll = ( cfg.showAll ?: false ) as boolean   // true: 不过滤 Jenkins/CPS
+
+  long id = ++__seq
+  Throwable t = new Throwable( "${name} #${id}" )
+
+  List<StackTraceElement> st = ( t.stackTrace as List )
+  if ( st && st.size() > 0 ) st = st.drop(1) // 去掉 trace 自己
+
+  if ( !showAll ) {
+    st = st.findAll { e ->
+      String c = ( e.className ?: '' )
+      return !(
+        c.startsWith( 'org.jenkinsci.' ) ||
+        c.startsWith( 'hudson.' ) ||
+        c.startsWith( 'jenkins.' ) ||
+        c.startsWith( 'com.cloudbees.groovy.cps.' ) ||
+        c.contains( 'workflow' ) ||
+        c.contains( 'cps' )
+      )
+    }
+  }
+
+  if ( match ) {
+    st = st.findAll { e ->
+      String c = ( e.className ?: '' )
+      String f = ( e.fileName ?: '' )
+      return c.contains(match) || f.contains(match)
+    }
+  }
+
+  if ( limit > 0 && st.size() > limit ) st = st.take(limit)
+
+  if ( oneLine ) {
+    String s = st.collect { e -> "${e.className}.${e.methodName}(${e.fileName}:${e.lineNumber})" }
+                 .join(' <- ')
+    echo ">>> ${name} #${id}: ${s}"
+  } else {
+    echo ">>> ${name} #${id} stack:"
+    st.each { e ->
+      echo "  at ${e.className}.${e.methodName}(${e.fileName}:${e.lineNumber})"
+    }
+    echo "<<< ${name} #${id} end"
+  }
+
+  return id
+}
 ```
 
 ### [get current method name](https://stackoverflow.com/a/72550845/2940319)
