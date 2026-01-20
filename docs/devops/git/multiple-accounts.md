@@ -40,21 +40,21 @@
 ### gitconfig
 
 {% codegroup rememberTabs=true, defaultTabName="Snippet" %}
-```work
+```
 # ~/.gitconfig.d/accounts/work
 [user]
     name  = John Doe
     email = john@work.com
 ```
 
-```jenkins
+```
 # ~/.gitconfig.d/accounts/jenkins
 [user]
     name  = jenkins
     email = jenkins@work.com
 ```
 
-```personal
+```
 # ~/.gitconfig.d/accounts/personal
 [user]
     name  = John Doe
