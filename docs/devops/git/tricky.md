@@ -19,6 +19,8 @@
   - [find bug with bisect](#find-bug-with-bisect)
   - [view file at specific commit](#view-file-at-specific-commit)
   - [edit .gitignore after committing](#edit-gitignore-after-committing)
+  - [check file in which branch](#check-file-in-which-branch)
+  - [check blob hash in which branch](#check-blob-hash-in-which-branch)
 - [trailers](#trailers)
   - [git config](#git-config)
   - [generate trailers](#generate-trailers)
@@ -415,6 +417,70 @@ $ git show <commit-hash>:path/to/file
 $ echo "node_modules/" >> .gitignore
 $ git rm -r --cached node_modules/
 $ git commit -m "Update .gitignore"
+```
+
+### check file in which branch
+```bash
+$ path='path/to/file.txt'
+
+# with detail info
+$ while read -r branch; do
+    foundit=$(git ls-tree -r "${branch}" "${path}");
+    [[ -n "${foundit:-}" ]] && echo -e ">> ${branch} <<\n${foundit}\n";
+  done< <(git branch --no-color -r)
+
+# with rev-parse
+$ while read -r branch; do
+    git rev-parse --verify -q "${branch}":"${path}" && echo -e "\n>> ${branch} <<"
+  done< <(git branch --no-color -r)
+
+# with cat-file
+$ while read -r branch; do
+    git cat-file -e "${branch}":"${path}" 2>/dev/null && echo -e ">> ${branch} <<"
+  done< <(git branch -r --no-color)
+
+# to show lfs files
+$ while read -r path; do
+    echo -e "\n\n\033[7;37m>> ${path}\033[0m"
+    git check-attr -a "${path}"; echo ''
+
+    while read -r branch; do
+      foundit=$(git ls-tree -r "${branch}" "${path}");
+      if [[ -n "${foundit:-}" ]]; then echo -e "\033[0;32m>> ${branch} <<\n${foundit}\033[0m\n"; fi;
+    done< <( git for-each-ref refs/remotes/origin --sort=-committerdate --format="%(refname:short)" | grep --color=never -v -E '^origin$' )
+  done< <( sed 's:^/::; /^#/d' "$(git rev-parse --show-toplevel)/.gitattributes" | awk '{print $1}' | sort -u )
+```
+
+### check blob hash in which branch
+
+> [!NOTE|label:references:]
+> hash getting older: `Branch (Ref)` -> `Commit` -> `Tree` -> `Blob` (file content)
+> scripts:
+> - [git-file-size](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-file-size)
+> - [git-blob-fd](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/git-blob-fd)
+
+```bash
+# find the largest files in the repo
+$ git rev-list --objects --all |
+  git cat-file --batch-check='%(objectname) %(objecttype) %(objectsize) %(rest)' |
+  awk '{printf "%s\t%.2f MB\t%s\n", $1, $3/1024/1024, $4}' |
+  sort -rn -k 2 |
+  head -5
+6e73f2d4dcfb223fe300c324f0f8ce90277a7397  405.65 MB   path/to/largefile.bin
+
+# check which branch contains the blob
+$ while read commit_hash; do
+    git for-each-ref --contains "${commit_hash}";
+  done< <(git log --all --find-object=6e73f2d4dcfb223fe300c324f0f8ce90277a7397 --pretty=format:"%H")
+5c70ecd90f3c9329a9f2ac035ed2ff8d979414f1 commit refs/heads/sandbox/temp
+08581b446ca928790c7c0f5b0829fe8253071c6c commit refs/heads/sandbox/emulator-20200713
+5c70ecd90f3c9329a9f2ac035ed2ff8d979414f1 commit refs/heads/sandbox/temp
+37cdb8df0df82db41056d8808bf4b1c0c01ebfa6 tag  refs/tags/sandbox/octeontx2-20200422
+4c36260dd076c5e45f29c211f674891daa7a36d7 tag  refs/tags/sandbox/temp-next-20200409-98xx-networking
+c8d82b97f17abe97d5054cb61ff6d82c43d56e10 commit refs/heads/sandbox/temp-next-ww09
+2c077958364bae76d84f11ea6288d0c7b203d399 commit refs/tags/sandbox/ww09-firmware-booting-20200319
+1e5a883c252c239812b47172306c96d9eda57d02 commit refs/heads/sandbox/temp-SDK-10.3.0.0-ED1007
+26b6604cfd80df7809509695300dba3042d323e2 commit refs/heads/sandbox/temp-next-new
 ```
 
 ## trailers

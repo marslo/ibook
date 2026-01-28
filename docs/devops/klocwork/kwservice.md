@@ -188,7 +188,7 @@ $ /opt/Klocwork/Server/3rdparty/bin/mysql --protocol=TCP -h127.0.0.1 -P3306 -u<u
   ```
 
 - check klocwork table
-  ```mysql
+  ```sql
   MariaDB [(none)]> USE kw_central;
   MariaDB [kw_central]> CHECK TABLE db_schema;
   +----------------------+-------+----------+----------+

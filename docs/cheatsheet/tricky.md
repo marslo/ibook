@@ -20,6 +20,8 @@
   - [bubbles](#bubbles)
 - [alias](#alias)
   - [`bash -<parameter>`](#bash--parameter)
+- [debugging](#debugging)
+  - [local echo](#local-echo)
 - [authentication](#authentication)
   - [special characters in usernames and passwords](#special-characters-in-usernames-and-passwords)
 - [others](#others-1)
@@ -425,6 +427,46 @@ ls --color=always
   ```bash
   $ bash -i --rcfile="$HOME/.marslo/.imarslo"
   ```
+
+# debugging
+
+## local echo
+
+
+> [!NOTE|label:references:]
+> - **Direct**: The "Movie" (Final rendered visual).
+> - **Redirection**: The "Script" (Just the dialogue/text).
+> - **Script/PTY**: The "Behind-the-Scenes Footage" (Includes the dialogue, plus stage directions, camera cues, and background noise).
+
+| SCENARIO                 | GH BEHAVIOR                     | TERMINAL BEHAVIOR                          | CAPTURED OUTPUT                         | PRIMARY USE CASE       |
+|--------------------------|---------------------------------|--------------------------------------------|-----------------------------------------|------------------------|
+| **Direct Execution**     | **Emits Effects**               | **Renders**                                | **Polished UI**                         | **User Experience**    |
+| (Interactive TTY)        | (Sends ANSI colors & spinners)  | (Interprets codes, hides protocol details) | (Visual interface)                      | (For Humans)           |
+| **Standard Redirection** | **Suppresses Effects**          | **Bypassed**                               | **Clean Text**                          | **Data Processing**    |
+| `> file` (`cat`)         | (Detects non-TTY & disables UI) | (Not involved in the stream)               | (Sanitized data)                        | (For Machines/Scripts) |
+| **PTY Emulation**        | **Emits Effects**               | **Local Echo**                             | **Raw Noise**                           | **Raw Debugging**      |
+| `$(script ...)`          | (Tricked by pseudo-terminal)    | (Reflects raw input/output streams)        | (Text + ANSI codes + Internal Protocol) | (For Hackers/Analysis) |
+
+> [!TIP|label:references:]
+> The 'garbled text' captured by `script` consists of **ANSI escape codes** and **terminal control sequences** ( **PTY control characters** ).
+> The artifacts ( like `^[]11;rgb...` ) are actually the terminal emulator responding to background color queries sent by the `gh` CLI.
+> While an interactive terminal hides these responses, `script` records the raw data stream, making them visible.
+
+```bash
+# script -q /dev/null <command> to simulate terminal behavior
+$ output=$(script -q /dev/null gh pr view 3 --web)
+⣾⣽⣻⢿⡿⣟Opening https://github.com/Marvell-GHE-Sandbox/re-merge-workflow/pull/3 in your browser.
+^[]11;rgb:2827/2827/2827^[\^[[24;1R^[]11;rgb:2827/2827/2827^[\^[[24;1R
+11;rgb:2827/2827/2827;1R11;rgb:2827/2827/2827;1R
+
+# in linux
+$ output=$(script -q -c "command" /dev/null)
+
+# using via unbuffer
+$ unbuffer gh pr view --web | tee output.log
+$ cat -A output.log
+^[]11;?^[\^[[6n^[]11;?^[\^[[6n^[[?25l^M^[[K^M^[[36mM-bM-#M->^[[0m^M^[[K^M^[[36mM-bM-#M-=^[[0m^M^[[K^M^[[36mM-bM-#M-;^[[0m^M^[[K^M^[[36mM-bM-"M-?^[[0m^[[?25h^M^[[KOpening https://github.com/Marvell-Lab/structera-build-setup/pull/169142 in your browser.$
+```
 
 # authentication
 ## [special characters in usernames and passwords](https://zencoder.support.brightcove.com/general-information/special-characters-usernames-and-passwords.html)
