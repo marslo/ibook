@@ -23,8 +23,12 @@
   - [set logrotator](#set-logrotator)
 - [update pipeline definition](#update-pipeline-definition)
   - [update SCM definition](#update-scm-definition)
+  - [update branch, credentialsId, repo url and browser in SCM definition](#update-branch-credentialsid-repo-url-and-browser-in-scm-definition)
+  - [add gitweb url](#add-gitweb-url)
   - [disable all particular projects jobs](#disable-all-particular-projects-jobs)
   - [undo disable jobs in particular projects](#undo-disable-jobs-in-particular-projects)
+  - [add build discarder](#add-build-discarder)
+  - [add build discarder for multiple projects](#add-build-discarder-for-multiple-projects)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -428,7 +432,7 @@ jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
 > [!TIP]
 > - [Class CpsFlowDefinition](https://javadoc.jenkins.io/plugin/workflow-cps/org/jenkinsci/plugins/workflow/cps/CpsFlowDefinition.html)
 
-```bash
+```groovy
 import org.jenkinsci.plugins.workflow.job.WorkflowJob
 
 jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
@@ -596,7 +600,7 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
 
 "DONE"
 
-// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=groovy:
 ```
 
 #### with output
@@ -652,7 +656,141 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
 
 "DONE"
 
-// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=Groovy
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=groovy:
+```
+
+### update branch, credentialsId, repo url and browser in SCM definition
+```groovy
+#!/usr/bin/env groovy
+
+import hudson.plugins.git.GitSCM
+import hudson.plugins.git.UserRemoteConfig
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+import com.cloudbees.plugins.credentials.common.StandardCredentials
+import com.cloudbees.plugins.credentials.CredentialsProvider
+import hudson.plugins.git.BranchSpec
+import hudson.plugins.git.browser.GithubWeb
+
+Map<String, String> config = [
+  url: 'https://github.com/OWNER/REPO.git',
+  branch: 'refs/heads/main',
+  credId: 'GITHUB_TOKEN'
+]
+Map<String, String> old = [
+  repo: 'OLD_OWNER/OLD_REPO',
+  branch: 'OLD_BRANCH'
+]
+Map done = [:]
+
+if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.model.Jenkins.instance )
+                        .any { config.credId == it.id }
+) {
+
+  done = jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).findAll {
+    it.definition in org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition &&
+    it.definition?.scm?.repositories?.collectMany{ it.getURIs() }.any{ it.toString().contains(old.repo) }
+  }.collectEntries { job ->
+    Map temp = [ origin: [:], updated: [:] ]
+
+    GitSCM orgScm          = job.definition?.scm
+    Boolean orgLightweight = job.definition?.lightweight
+
+    // urls and credentialsId
+    List<UserRemoteConfig> newUserRemoteConfigs = orgScm.userRemoteConfigs.collect {
+      temp.origin  << [ url: it.url, credId: it.credentialsId ]
+      temp.updated << [ url: config.url, credId: config.credId ]
+      new UserRemoteConfig( config.url, it.name, it.refspec, config.credId )
+    }
+
+    // branches
+    temp.origin.branches  = orgScm.branches.collect { it.name }
+    List<BranchSpec> newBranches = orgScm.branches.any { it.toString().contains(old.branch) } ? [ new BranchSpec(config.branch) ] : orgScm.branches
+    temp.updated.branches = newBranches.collect { it.name }
+
+    // browser
+    temp.origin.browser  = orgScm?.browser ?: '-'
+    GithubWeb newBrowser = it.definition.scm.browser in GithubWeb ? orgScm.browser : new GithubWeb( config.url - (/\.git$/) )
+    temp.updated.browser = newBrowser.toString()
+
+    // update
+    GitSCM newScm = new GitSCM(
+                      newUserRemoteConfigs,
+                      newBranches,
+                      orgScm.doGenerateSubmoduleConfigurations,
+                      orgScm.submoduleCfg,
+                      newBrowser,
+                      orgScm.gitTool,
+                      orgScm.extensions
+                    )
+    CpsScmFlowDefinition flowDefinition = new CpsScmFlowDefinition( newScm, job.definition.scriptPath )
+    job.definition = flowDefinition
+    job.definition.lightweight = orgLightweight
+    job.save()
+
+    [ (job.fullName.toString()): temp ]
+  }
+
+} else {
+  println "${config.credId} CANNOT be found !!"
+}
+
+// List keys = [ 'credId', 'branches', 'url', 'browser' ]
+List<String> keys = done.values().first().origin.keySet()
+println done.collect { item ->
+  def rows = [item.origin, item.updated].collect { row ->
+    keys.collectEntries {[ (it): ( row[it] in List ? row[it].join(',') : row[it].toString() ) ]}
+  }
+  def widths = keys.collectEntries { k -> [ (k): rows.collect { it[k].length() }.max() ] }
+  def printRow = { row -> keys.collect { row[it].padRight(widths[it]) }.join(' | ') }
+  ">> ${item.name} <<\n\t" + rows.collect(printRow).join('\n\t')
+}.join('\n\n')
+
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=groovy:
+```
+
+### add gitweb url
+```groovy
+#!/usr/bin/env groovy
+
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition
+import hudson.plugins.git.GitSCM
+import hudson.plugins.git.browser.GithubWeb
+
+String pattern = 'OWNER/REPO.git'
+
+jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).findAll {
+  it.definition in CpsScmFlowDefinition &&
+  it.definition?.scm?.repositories?.collectMany{ it.getURIs() }.any{ it.toString().endsWith(pattern) } &&
+  ! it.definition.scm.browser in GithubWeb
+}.collect{ job ->
+  GitSCM scm           = job.definition?.scm
+  Boolean lightweight  = job.definition?.lightweight
+  String repoUrl       = scm?.repositories?.collectMany{ it.getURIs() }.join() - (~/\.git$/)
+  GithubWeb newBrowser = new GithubWeb( repoUrl )
+
+  // update
+  GitSCM newScm        = new GitSCM(
+                             scm.userRemoteConfigs,
+                             scm.branches,
+                             scm.doGenerateSubmoduleConfigurations,
+                             scm.submoduleCfg,
+                             newBrowser,
+                             scm.gitTool,
+                             scm.extensions
+                           )
+  CpsScmFlowDefinition flowDefinition = new CpsScmFlowDefinition( newScm, job.definition.scriptPath )
+  job.definition = flowDefinition
+  job.definition.lightweight = lightweight
+  job.save()
+
+  println ">> updated browser for '${job.fullName}'"
+}
+
+"DONE"
+
+// vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=groovy:
 ```
 
 ### disable all particular projects jobs
@@ -679,4 +817,72 @@ jenkins.model.Jenkins.instance.getAllItems(Job.class).findAll {
   it.disabled = false
   it.save()
 }
+```
+
+### add build discarder
+```groovy
+import hudson.tasks.LogRotator
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Map<String, int> policy = [
+  daysToKeep: 15,
+  numToKeep: 20
+]
+String JOB_PATTERN = 'pattern'
+
+jenkins.model.Jenkins.instance.getAllItems(WorkflowJob.class).findAll{
+  it.fullName.startsWith( JOB_PATTERN ) && ! it.buildDiscarder
+}.each { job ->
+  // daysToKeep, numToKeep, artifactDaysToKeep, artifactNumToKeep
+  LogRotator newRotator = new LogRotator(
+                            policy.getOrDefault( 'daysToKeep'         , -1 ) ,
+                            policy.getOrDefault( 'numToKeep'          , -1 ) ,
+                            policy.getOrDefault( 'artifactDaysToKeep' , -1 ) ,
+                            policy.getOrDefault( 'artifactNumToKeep'  , -1 )
+                          )
+  job.buildDiscarder = newRotator
+  job.save()
+
+  println "updated ${job.fullName} : Set to 30 days / 50 builds"
+}
+
+"DONE"
+```
+
+### add build discarder for multiple projects
+```groovy
+import hudson.tasks.LogRotator:wa
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+Map<String, Map<String, int>> policies = [
+  'JOB_PATTERN_1': [ daysToKeep: 30 , numToKeep: 50 ] ,
+  'JOB_PATTERN_2': [ daysToKeep: 7  , numToKeep: 10 , artifactDaysToKeep: 30 , artifactNumToKeep: 20 ]
+]
+
+policies.each { pattern, policy ->
+
+  jenkins.model.Jenkins.instance.getAllItems( WorkflowJob.class ).findAll{
+    it.fullName.startsWith( pattern ) && ! it.buildDiscarder
+  }.each { job ->
+
+    int d  = policy.getOrDefault( 'daysToKeep'         , -1 )
+    int n  = policy.getOrDefault( 'numToKeep'          , -1 )
+    int ad = policy.getOrDefault( 'artifactDaysToKeep' , -1 )
+    int an = policy.getOrDefault( 'artifactNumToKeep'  , -1 )
+
+    // daysToKeep, numToKeep, artifactDaysToKeep, artifactNumToKeep
+    LogRotator newRotator = new LogRotator( d, n, ad, an )
+    job.buildDiscarder = newRotator
+    job.save()
+
+    println ">> updated ${job.fullName}:" +
+            ( d  != -1 ? "  daysToKeep=${d}"          : "" ) +
+            ( n  != -1 ? "  numToKeep=${n}"           : "" ) +
+            ( ad != -1 ? "  artifactDaysToKeep=${ad}" : "" ) +
+            ( an != -1 ? "  artifactNumToKeep=${an}"  : "" )
+  }
+
+}
+
+"DONE"
 ```
