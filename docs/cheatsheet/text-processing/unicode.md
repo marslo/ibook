@@ -19,6 +19,7 @@
 - [devicons](#devicons)
   - [coding](#coding)
     - [airline](#airline)
+    - [others](#others)
     - [diagnostic](#diagnostic)
     - [ale](#ale)
     - [syntastic](#syntastic)
@@ -48,6 +49,7 @@
 >   - [Arrows](https://unicode.org/charts/nameslist/n_2190.html)
 > - [amp-what](https://www.amp-what.com/unicode/search/down%20arrow)
 > - [devicons](https://devicons.github.io/devicon/) | `E000 - F8FF`: [Private Use Area](https://jrgraphix.net/r/Unicode/E000-F8FF)
+> - [nerdfonts](https://www.nerdfonts.com/cheat-sheet)
 {% endhint %}
 
 ## useful unicode
@@ -129,47 +131,125 @@
 
 ### simple arrows
 
-|  CODE  | SYMBOLS | EXPLANATION                       |
-|:------:|:-------:|-----------------------------------|
-| `2190` |    ←    | leftwards arrow                   |
-| `20EA` |    ◌⃪    | combining leftwards arrow overlay |
-| `2191` |    ↑    | upwards arrow                     |
-| `2192` |    →    | rightwards arrow                  |
-| `2193` |    ↓    | downwards arrow                   |
-| `2194` |    ↔    | left right arrow                  |
-| `2195` |    ↕    | up down arrow                     |
-| `2196` |    ↖    | north west arrow                  |
-| `2197` |    ↗    | north east arrow                  |
-| `2198` |    ↘    | south east arrow                  |
-| `2199` |    ↙    | south west arrow                  |
+|   CODE  | SYMBOLS | EXPLANATION                       |
+|:-------:|:-------:|-----------------------------------|
+|  `2190` |    ←    | leftwards arrow                   |
+|  `20EA` |    ◌⃪    | combining leftwards arrow overlay |
+|  `2191` |    ↑    | upwards arrow                     |
+|  `2192` |    →    | rightwards arrow                  |
+|  `2193` |    ↓    | downwards arrow                   |
+|  `2194` |    ↔    | left right arrow                  |
+|  `2195` |    ↕    | up down arrow                     |
+|  `2196` |    ↖    | north west arrow                  |
+|  `2197` |    ↗    | north east arrow                  |
+|  `2198` |    ↘    | south east arrow                  |
+|  `2199` |    ↙    | south west arrow                  |
+|  `E353` |        | heavy upwards arrow               |
+|  `E340` |        | heavy downwards arrow             |
+|  `E344` |        | heavy leftwards arrow             |
+|  `E349` |        | heavy rightwards arrow            |
+|  `E37F` |        | heavy north east arrow            |
+|  `E352` |        | heavy north west arrow            |
+|  `E380` |        | heavy south west arrow            |
+|  `E33F` |        | heavy south east arrow            |
+|  `EA99` |        | left-right                        |
+|  `F416` |        | left-right                        |
+|  `EAA1` |        | up                                |
+|  `EA9A` |        | down                              |
+|  `EA9B` |        | left                              |
+|  `EA9C` |        | right                             |
+|  `EA9D` |        | down                              |
+|  `EA9E` |        | left                              |
+|  `EA9F` |        | right                             |
+|  `EAA0` |        | up                                |
+| `F0441` |    󰑁    | left                              |
+| `F0443` |    󰑃    | right                             |
+|  `F176` |        | up                                |
+|  `F175` |        | down                              |
+|  `F424` |        | down-left                         |
+|  `F43E` |        | down-right                        |
+|  `F45C` |        | up-left                           |
+|  `F46C` |        | up-right                          |
+
 
 ### arrows with modifications
 
-|  CODE  | SYMBOLS | EXPLANATION                       |
-|:------:|:-------:|-----------------------------------|
-| `219A` |    ↚    | leftwards arrow with stroke       |
-| `219B` |    ↛    | rightwards arrow with stroke      |
-| `219C` |    ↜    | leftwards wave arrow              |
-| `2B3F` |    ⬿    | wave arrow pointing directly left |
-| `219D` |    ↝    | rightwards wave arrow             |
-| `219E` |    ↞    | leftwards two headed arrow        |
-| `219F` |    ↟    | upwards two headed arrow          |
-| `21A0` |    ↠    | rightwards two headed arrow       |
-| `21A1` |    ↡    | downwards two headed arrow        |
-| `21A2` |    ↢    | leftwards arrow with tail         |
-| `21A3` |    ↣    | rightwards arrow with tail        |
-| `21A4` |    ↤    | leftwards arrow from bar          |
-| `21A5` |    ↥    | upwards arrow from bar            |
-| `21A6` |    ↦    | rightwards arrow from bar         |
-| `21A7` |    ↧    | downwards arrow from bar          |
-| `21A8` |    ↨    | up down arrow with base           |
-| `21A9` |    ↩    | leftwards arrow with hook         |
-| `21AA` |    ↪    | rightwards arrow with hook        |
-| `21AB` |    ↫    | leftwards arrow with loop         |
-| `21AC` |    ↬    | rightwards arrow with loop        |
-| `21AD` |    ↭    | left right wave arrow             |
-| `21AE` |    ↮    | left right arrow with stroke      |
-| `21AF` |    ↯    | downwards zigzag arrow            |
+|   CODE  | SYMBOLS | EXPLANATION                       |
+|:-------:|:-------:|-----------------------------------|
+|  `219A` |    ↚    | leftwards arrow with stroke       |
+|  `219B` |    ↛    | rightwards arrow with stroke      |
+|  `219C` |    ↜    | leftwards wave arrow              |
+|  `2B3F` |    ⬿    | wave arrow pointing directly left |
+|  `219D` |    ↝    | rightwards wave arrow             |
+|  `219E` |    ↞    | leftwards two headed arrow        |
+|  `219F` |    ↟    | upwards two headed arrow          |
+|  `21A0` |    ↠    | rightwards two headed arrow       |
+|  `21A1` |    ↡    | downwards two headed arrow        |
+|  `21A2` |    ↢    | leftwards arrow with tail         |
+|  `21A3` |    ↣    | rightwards arrow with tail        |
+|  `21A4` |    ↤    | leftwards arrow from bar          |
+|  `21A5` |    ↥    | upwards arrow from bar            |
+|  `21A6` |    ↦    | rightwards arrow from bar         |
+|  `21A7` |    ↧    | downwards arrow from bar          |
+|  `21A8` |    ↨    | up down arrow with base           |
+|  `21A9` |    ↩    | leftwards arrow with hook         |
+|  `21AA` |    ↪    | rightwards arrow with hook        |
+|  `21AB` |    ↫    | leftwards arrow with loop         |
+|  `21AC` |    ↬    | rightwards arrow with loop        |
+|  `21AD` |    ↭    | left right wave arrow             |
+|  `21AE` |    ↮    | left right arrow with stroke      |
+|  `21AF` |    ↯    | downwards zigzag arrow            |
+|  `E630` |        | <=>                               |
+|  `E875` |        | <=>                               |
+|  `EA7D` |        | <-                                |
+|  `EAD4` |        | down                              |
+| `F01B9` |    󰆹    | down                              |
+|  `EAD5` |        | up                                |
+| `F01B8` |    󰆸    | up                                |
+|  `EAD6` |        | right                             |
+| `F01B7` |    󰆷    | right                             |
+|  `EB8F` |        | left                              |
+|  `EB18` |        | left/share                        |
+|  `F148` |        | turn up                           |
+|  `F149` |        | turn down                         |
+| `F17A1` |    󱞡    | left turn down                    |
+| `F17A3` |    󱞣    | right turn down                   |
+| `F17A5` |    󱞥    | up turn left                      |
+| `F17A9` |    󱞩    | up turn right                     |
+| `F17A7` |    󱞧    | down turn left                    |
+| `F17AB` |    󱞫    | down turn right                   |
+| `F17BD` |    󱞽    | left turn up                      |
+| `F17BF` |    󱞿    | right turn up                     |
+| `F17A2` |    󱞢    | right turn down                   |
+| `F17A4` |    󱞤    | left turn down                    |
+| `F17A6` |    󱞦    | up turn left                      |
+| `F17AA` |    󱞪    | up turn right                     |
+| `F17AC` |    󱞬    | down turn left                    |
+| `F17BE` |    󱞾    | right turn up                     |
+| `F17C0` |    󱟀    | left turn up                      |
+| `F17AD` |    󱞭    | turn down                         |
+| `F17AF` |    󱞯    | turn down                         |
+| `F17B1` |    󱞱    | turn left                         |
+| `F17B3` |    󱞳    | turn left                         |
+| `F17B5` |    󱞵    | turn right                        |
+| `F17B7` |    󱞷    | turn right                        |
+| `F17B9` |    󱞹    | turn up                           |
+| `F17BB` |    󱞻    | turn up                           |
+| `F17AE` |    󱞮    | turn down                         |
+| `F17B0` |    󱞰    | turn down                         |
+| `F17B2` |    󱞲    | turn left                         |
+| `F17B4` |    󱞴    | turn left                         |
+| `F17B6` |    󱞶    | turn right                        |
+| `F17B8` |    󱞸    | turn right                        |
+| `F17BA` |    󱞺    | turn up                           |
+| `F17BC` |    󱞼    | turn up                           |
+| `F0D4E` |    󰵎    | rotate                            |
+| `F0D53` |    󰵓    | rotate                            |
+| `F0D57` |    󰵗    | rotate                            |
+| `F09BB` |    󰦻    | arrow decision                    |
+| `F09BE` |    󰦾    | arrow decision                    |
+| `F09BC` |    󰦼    | arrow decision                    |
+| `F09BD` |    󰦽    | arrow decision                    |
 
 
 ### arrows with bent tips
@@ -177,12 +257,14 @@
 > [!TIP|label:references:]
 > Other arrows with bent tips to complete this set can be found in the Miscellaneous Symbols and Arrows block.
 
-|  CODE  | SYMBOLS | EXPLANATION                         |
-|:------:|:-------:|-------------------------------------|
-| `21B0` |    ↰    | upwards arrow with tip leftwards    |
-| `21B1` |    ↱    | upwards arrow with tip rightwards   |
-| `21B2` |    ↲    | downwards arrow with tip leftwards  |
-| `21B3` |    ↳    | downwards arrow with tip rightwards |
+|   CODE  | SYMBOLS | EXPLANATION                         |
+|:-------:|:-------:|-------------------------------------|
+|  `21B0` |    ↰    | upwards arrow with tip leftwards    |
+|  `21B1` |    ↱    | upwards arrow with tip rightwards   |
+|  `21B2` |    ↲    | downwards arrow with tip leftwards  |
+|  `21B3` |    ↳    | downwards arrow with tip rightwards |
+| `F060C` |    󰘌    | downwards arrow with tip leftwards  |
+| `F060D` |    󰘍    | downwards arrow with tip rightwards |
 
 
 ### keyboard symbols and circle arrows
@@ -198,6 +280,7 @@
 | `21B9` |    ↹    | leftwards arrow to bar over rightwards arrow to bar |
 | `21BA` |    ↺    | anticlockwise open circle arrow                     |
 | `21BB` |    ↻    | clockwise open circle arrow                         |
+| `E347` |        | down to up                                          |
 
 ### harpoons
 
@@ -321,287 +404,426 @@
 >   - `nf-dev`
 >   - `nf-fa`
 >   - `nf-linux`
-> - [Math Symbols](https://www.alt-codes.net/math-symbols-list)
+> - [Math Symbols](https://www.alt-codes.net/math-symbols-list) | [Mathematical Alphanumeric Symbols](https://jrgraphix.net/r/Unicode/1D400-1D7FF)
 >   - [Plus Sign Symbols](https://www.alt-codes.net/plus-sign-symbols)
 
 ## coding
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS   |
-|:-------:|:----:|:-------------:|------------|
-|  `E614` |     |   `&#xE614;`  | # - css    |
-|  `F292` |     |   `&#xF292;`  | #          |
-|  `EA90` |     |   `&#xEA90;`  | #          |
-|  `F198` |     |   `&#xF198;`  | #          |
-| `F0423` |   󰐣  |  `&#xF0423;`  | #          |
-| `F0423` |   󰐣  |  `&#xF0423;`  | #          |
-| `F0424` |   󰐤  |  `&#xF0424;`  | #          |
-| `10995` |   𐦕  |   `&#10995;`  | #          |
-| `10E98` |   𐺘  |  `&#x10E98;`  | #          |
-| `F0F6D` |   󰽭  |  `&#xF0F6D;`  | #          |
-| `F1183` |   󱆃  |  `&#xF1183;`  | #!         |
-| `F1501` |   󱔁  |  `&#xF1501;`  | !?#        |
-| `F12B7` |   󱊷  |  `&#xF12B7;`  | ESC        |
-|  `F295` |     |   `&#xF295;`  | %          |
-| `F1278` |   󱉸  |  `&#xF1278;`  | %          |
-| `F03F0` |   󰏰  |  `&#xF03F0;`  | %          |
-|  `F852` |     |   `&#xF852;`  | %          |
-| `F0353` |   󰍓  |  `&#xF0353;`  | %          |
-| `F1033` |   󱀳  |  `&#xF1033;`  | %          |
-| `F046F` |   󰑯  |  `&#xF046F;`  | %          |
-|  `2C03` |   Ⰳ  |   `&#x2C03;`  | %          |
-|  `E60C` |     |   `&#xE60C;`  | JS         |
-|  `E74E` |     |   `&#xE74E;`  | JS         |
-|  `F81D` |     |   `&#xF81D;`  | JS         |
-|  `E781` |     |   `&#xE781;`  | JS         |
-|  `F898` |     |   `&#xF898;`  | JS         |
-| `F0399` |   󰎙  |  `&#xF0399;`  | JS         |
-| `F06E6` |   󰛦  |  `&#xF06E6;`  | TS         |
-|  `E628` |     |   `&#xE628;`  | TS         |
-|  `F81A` |     |   `&#xF81A;`  | C#         |
-| `F031B` |   󰌛  |  `&#xF031B;`  | C#         |
-|  `E648` |     |   `&#xE648;`  | c#         |
-|  `E649` |     |   `&#xE649;`  | C          |
-| `F0671` |   󰙱  |  `&#xF0671;`  | C          |
-| `F0672` |   󰙲  |  `&#xF0672;`  | C++        |
-|  `E61D` |     |   `&#xE61D;`  | C++        |
-|  `E646` |     |   `&#xE646;`  | C++        |
-|  `E64B` |     |   `&#xE64B;`  | UDA        |
-|  `E651` |     |   `&#xE651;`  | D          |
-|  `FD42` |   ﵂  |   `&#xFD42;`  | V          |
-| `F0844` |   󰡄  |  `&#xF0844;`  | V          |
-| `F07D4` |   󰟔  |  `&#xF07D4;`  | R          |
-|  `E612` |     |   `&#xE612;`  | txt        |
-|  `E64E` |     |   `&#xE64E;`  | txt        |
-|  `F2C5` |     |   `&#xF2C5;`  | (fire)     |
-|  `E242` |     |   `&#xE242;`  | (fire)     |
-| `F10D7` |   󱃗  |  `&#xF10d7;`  | ()         |
-| `F10FA` |   󱃺  |  `&#xF10FA;`  | ()         |
-| `F0172` |   󰅲  |  `&#xF0172;`  | ()         |
-| `F0AE7` |   󰫧  |  `&#xF0AE7;`  | (x)        |
-| `F1111` |   󱄑  |  `&#xF1111;`  | (x)        |
-|  `E6B2` |     |   `&#xE6B2;`  | [T]        |
-|  `EA8A` |     |   `&#xEA8A;`  | []         |
-| `F016A` |   󰅪  |  `&#xF016A;`  | []         |
-| `F0168` |   󰅨  |  `&#xF0168;`  | []         |
-| `F10F5` |   󱃵  |  `&#xF10F5;`  | []         |
-| `F10F6` |   󱃶  |  `&#xF10F6;`  | []         |
-| `F0A3E` |   󰨾  |  `&#xF0A3E;`  | [..]       |
-|  `EA8B` |     |   `&#xEA8B;`  | {}         |
-|  `EB0F` |     |   `&#xEB0F;`  | {}         |
-| `F10D6` |   󱃖  |  `&#xF10D6;`  | {}         |
-| `F10F7` |   󱃷  |  `&#xF10F7;`  | {}         |
-| `F10F8` |   󱃸  |  `&#xF10F8;`  | {}         |
-|  `E60B` |     |   `&#xE60B;`  | {}         |
-| `F0169` |   󰅩  |  `&#xF0169;`  | {}         |
-| `F07B5` |   󰞵  |  `&#xF07B5;`  | {}         |
-|  `EBE5` |     |   `&#xEBE5;`  | {}         |
-|  `EBE6` |     |   `&#xEBE6;`  | {}         |
-| `F0626` |   󰘦  |  `&#xF0626;`  | {..}       |
-|  `FB25` |   ﬥ  |   `&#xFB25;`  | {...}      |
-|  `E618` |     |   `&#xE618;`  | <>         |
-|  `F44F` |     |   `&#xF44F;`  | <>         |
-| `F0174` |   󰅴  |  `&#xF0174;`  | <>         |
-|  `E60E` |     |   `&#xE60E;`  | <>         |
-| `F0761` |   󰝡  |  `&#xF0761;`  | <>         |
-| `F054F` |   󰕏  |  `&#xF054F;`  | <>         |
-| `F0694` |   󰚔  |  `&#xF0694;`  | <>         |
-| `F0171` |   󰅱  |  `&#xF0171;`  | <>         |
-| `F022E` |   󰈮  |  `&#xF022E;`  | <>         |
-|  `F4b0` |     |   `&#xF4b0;`  | <>         |
-|  `F40D` |     |   `&#xF40D;`  | <>         |
-|  `EAE9` |     |   `&#xEAE9;`  | <>         |
-| `F102B` |   󱀫  |  `&#xF102B;`  | <>         |
-|  `E7A3` |     |   `&#xE7A3;`  | </>        |
-|  `F1C9` |     |   `&#xF1C9;`  | </>        |
-|  `E796` |     |   `&#xE796;`  | </>        |
-|  `F121` |     |   `&#xF121;`  | </>        |
-|  `EAC4` |     |   `&#xEAC4;`  | </>        |
-| `F05C0` |   󰗀  |  `&#xF05C0;`  | </>        |
-|  `EA92` |     |   `&#xEA92;`  | `<T>`      |
-|  `E67C` |     |   `&#xE67C;`  | (:a)       |
-|  `F4B5` |     |   `&#xF4B5;`  | >_         |
-|  `F120` |     |   `&#xF120;`  | >_         |
-|  `E7A2` |     |   `&#xE7A2;`  | >_         |
-|  `E683` |     |   `&#xE683;`  | >_         |
-| `F07B7` |   󰞷  |  `&#xF07B7;`  | >_         |
-|  `F489` |     |   `&#xF489;`  | >_         |
-|  `EA85` |     |   `&#xEA85;`  | >_         |
-|  `E285` |     |   `&#xE285;`  | >          |
-|  `E795` |     |   `&#xE795;`  | >_         |
-|  `F460` |     |   `&#xF460;`  | >          |
-|  `E758` |     |   `&#xE758;`  | {less}     |
-|  `E256` |     |   `&#xE256;`  | java       |
-|  `E738` |     |   `&#xE738;`  | java       |
-| `F0B37` |   󰬷  |  `&#xF0B37;`  | java       |
-|  `E204` |     |   `&#xE204;`  | java       |
-|  `E005` |     |   `&#xE005;`  | java       |
-|  `E66D` |     |   `&#xE66D;`  | java       |
-| `F0617` |   󰘗  |  `&#xF0617;`  | java       |
-|  `E61B` |     |   `&#xE61B;`  | cjsx       |
-|  `E65E` |     |   `&#xE65E;`  | go         |
-|  `E626` |     |   `&#xE626;`  | go         |
-|  `E724` |     |   `&#xE724;`  | go         |
-|  `F2A5` |     |   `&#xF2A5;`  | g          |
-|  `F2A6` |     |   `&#xF2A6;`  | g          |
-|  `F0D5` |     |   `&#xF0D5;`  | g+         |
-| `F02BD` |   󰊽  |  `&#xF02BD;`  | g+         |
-|  `F0D4` |     |   `&#xF0D4;`  | g+         |
-|  `F2B3` |     |   `&#xF2B3;`  | g+         |
-| `F03BF` |   󰎿  |  `&#xF03BF;`  | g+         |
-| `F0CB2` |   󰲲  |  `&#xF0CB2;`  | g+         |
-|  `E7B0` |     |   `&#xE7B0;`  | docker     |
-|  `F308` |     |   `&#xF308;`  | docker     |
-|  `E650` |     |   `&#xE650;`  | docker     |
-| `F0868` |   󰡨  |  `&#xF0868;`  | docker     |
-|  `E7C5` |     |   `&#xE7C5;`  | vim        |
-|  `E62B` |     |   `&#xE62B;`  | vim        |
-|  `F194` |     |   `&#xF194;`  | vim        |
-|  `F27D` |     |   `&#xF27D;`  | vim        |
-|  `FA76` |  勇  |   `&#xFA76;`  | vim        |
-|  `FA77` |  勺  |   `&#xFA77;`  | vim        |
-|  `F194` |     |   `&#xF194;`  | vim        |
-|  `F1CA` |     |   `&#xF1CA;`  | vim        |
-|  `F36F` |     |   `&#xF36F;`  | neovim     |
-|  `E632` |     |   `&#xE632;`  | emacs      |
-|  `E235` |     |   `&#xE235;`  | python     |
-| `F0320` |   󰌠  |  `&#xF0320;`  | python     |
-|  `E73E` |     |   `&#xE73E;`  | markdown   |
-|  `F853` |     |   `&#xF853;`  | markdown   |
-| `F0354` |   󰍔  |  `&#xF0354;`  | markdown   |
-| `F072F` |   󰜯  |  `&#xF072F;`  | markdown   |
-| `F0DFB` |   󰷻  |  `&#xF0DFB;`  | markdown   |
-|  `E673` |     |   `&#xE673;`  | makefile   |
-|  `F858` |     |   `&#xF858;`  | maxcdn     |
-|  `F136` |     |   `&#xF136;`  | maxcdn     |
-|  `E616` |     |   `&#xE616;`  | npm        |
-| `F06F7` |   󰛷  |  `&#xF06F7;`  | npm        |
-|  `E767` |     |   `&#xE767;`  | jenkins    |
-|  `E66E` |     |   `&#xE66E;`  | jenkins    |
-|  `F2EC` |     |   `&#xF2EC;`  | *jenkins   |
-|  `F4E5` |     |   `&#xF4E5;`  | png        |
-| `F0D78` |   󰵸  |  `&#xF0D78;`  | gif        |
-| `F0225` |   󰈥  |  `&#xF0225;`  | jpg        |
-| `F0E2D` |   󰸭  |  `&#xF0E2D;`  | png        |
-| `F0226` |   󰈦  |  `&#xF0226;`  | pdf        |
-|  `F4A5` |     |   `&#xF4A5;`  | file       |
-|  `EB9D` |     |   `&#xEB9D;`  | file       |
-|  `F15C` |     |   `&#xF15C;`  | file       |
-|  `EAE8` |     |   `&#xEAE8;`  | file       |
-|  `F471` |     |   `&#xF471;`  | file       |
-| `F1085` |   󱂅  |  `&#xF1085;`  | log        |
-|  `E7B4` |     |   `&#xE7B4;`  | Ai         |
-|  `E67F` |     |   `&#xE67F;`  | Ps         |
-|  `E73D` |     |   `&#xE73D;`  | php        |
-| `F08C0` |   󰣀  |  `&#xF08C0;`  | ssh        |
-|  `F1D3` |     |   `&#xF1D3;`  | git        |
-|  `F1D2` |     |   `&#xF1D2;`  | git        |
-|  `E776` |     |   `&#xE776;`  | ngix       |
-|  `E791` |     |   `&#xE791;`  | ruby       |
-|  `E739` |     |   `&#xE739;`  | ruby       |
-|  `E21E` |     |   `&#xE21E;`  | ruby       |
-|  `E719` |     |   `&#xE719;`  | node       |
-| `F0AA9` |   󰪩  |  `&#xF0AA9;`  | database   |
-| `F0AAA` |   󰪪  |  `&#xF0AAA;`  | database   |
-|  `E7AA` |     |   `&#xE7AA;`  | S          |
-|  `E72C` |     |   `&#xE72C;`  | TC         |
-|  `E7BC` |     |   `&#xE7BC;`  | CS         |
-| `F0AAE` |   󰪮  |  `&#xF0AAE;`  | .net       |
-|  `E69B` |     |   `&#xE69B;`  | tex        |
-| `F044D` |   󰑍  |  `&#xF044D;`  | reddit     |
-|  `E704` |     |   `&#xE704;`  | mysql      |
-|  `E7A6  |     |   `&#xE7A6;`  | mysql      |
-| `F12A7` |   󱊧  |   `&#F12A7;`  | 0x         |
-|  `E600` |     |   `&#xE600;`  | stylus     |
-|  `E759` |     |   `&#E759;`   | dev stylus |
+| UNICODE | ICON | HTML ENCODING | COMMENTS                |
+|:-------:|:----:|:-------------:|-------------------------|
+|  `E614` |     |   `&#xE614;`  | # - css                 |
+|  `F292` |     |   `&#xF292;`  | #                       |
+|  `EA90` |     |   `&#xEA90;`  | #                       |
+|  `F198` |     |   `&#xF198;`  | #                       |
+| `F0423` |   󰐣  |  `&#xF0423;`  | #                       |
+| `F0423` |   󰐣  |  `&#xF0423;`  | #                       |
+| `F0424` |   󰐤  |  `&#xF0424;`  | #                       |
+| `10995` |   𐦕  |   `&#10995;`  | #                       |
+| `10E98` |   𐺘  |  `&#x10E98;`  | #                       |
+| `F0F6D` |   󰽭  |  `&#xF0F6D;`  | #                       |
+|  `E8C6` |     |   `&#xE8C6;`  | #                       |
+| `F1183` |   󱆃  |  `&#xF1183;`  | #!                      |
+| `F1501` |   󱔁  |  `&#xF1501;`  | !?#                     |
+|  `F295` |     |   `&#xF295;`  | %                       |
+| `F1278` |   󱉸  |  `&#xF1278;`  | %                       |
+| `F03F0` |   󰏰  |  `&#xF03F0;`  | %                       |
+|  `F852` |     |   `&#xF852;`  | %                       |
+| `F0353` |   󰍓  |  `&#xF0353;`  | %                       |
+| `F1033` |   󱀳  |  `&#xF1033;`  | %                       |
+| `F046F` |   󰑯  |  `&#xF046F;`  | %                       |
+|  `2C03` |   Ⰳ  |   `&#x2C03;`  | %                       |
+|  `FE6A` |  ﹪  |   `&#xfe6a;`  | %                       |
+|  `E60C` |     |   `&#xE60C;`  | JS                      |
+|  `E74E` |     |   `&#xE74E;`  | JS                      |
+|  `F81D` |     |   `&#xF81D;`  | JS                      |
+|  `E781` |     |   `&#xE781;`  | JS                      |
+|  `F898` |     |   `&#xF898;`  | JS                      |
+| `F0399` |   󰎙  |  `&#xF0399;`  | JS                      |
+| `F06E6` |   󰛦  |  `&#xF06E6;`  | TS                      |
+|  `E628` |     |   `&#xE628;`  | TS                      |
+|  `F81A` |     |   `&#xF81A;`  | C#                      |
+| `F031B` |   󰌛  |  `&#xF031B;`  | C#                      |
+|  `E648` |     |   `&#xE648;`  | c#                      |
+|  `E649` |     |   `&#xE649;`  | C                       |
+| `F0671` |   󰙱  |  `&#xF0671;`  | C                       |
+| `F0672` |   󰙲  |  `&#xF0672;`  | C++                     |
+|  `E61D` |     |   `&#xE61D;`  | C++                     |
+|  `E646` |     |   `&#xE646;`  | C++                     |
+|  `E64B` |     |   `&#xE64B;`  | UDA                     |
+|  `E651` |     |   `&#xE651;`  | D                       |
+|  `FD42` |   ﵂  |   `&#xFD42;`  | V                       |
+| `F0844` |   󰡄  |  `&#xF0844;`  | V                       |
+|  `ED1E` |     |   `&#xed1e;`  | re:                     |
+| `F07D4` |   󰟔  |  `&#xF07D4;`  | R                       |
+|  `E612` |     |   `&#xE612;`  | txt                     |
+|  `E64E` |     |   `&#xE64E;`  | txt                     |
+|  `F2C5` |     |   `&#xF2C5;`  | (fire)                  |
+|  `E242` |     |   `&#xE242;`  | (fire)                  |
+|  `E780` |     |   `&#xE780;`  | fire                    |
+| `F10D7` |   󱃗  |  `&#xF10d7;`  | ()                      |
+| `F10FA` |   󱃺  |  `&#xF10FA;`  | ()                      |
+| `F0172` |   󰅲  |  `&#xF0172;`  | ()                      |
+| `F0AE7` |   󰫧  |  `&#xF0AE7;`  | (x)                     |
+| `F10FB` |   󱃻  |  `&#xF10FB;`  | (x)                     |
+| `F1111` |   󱄑  |  `&#xF1111;`  | (x)                     |
+| `F10FC` |   󱃼  |  `&#xF10FC;`  | (x)                     |
+|  `E6B2` |     |   `&#xE6B2;`  | [T]                     |
+|  `EA88` |     |   `&#xEA88;`  | []                      |
+|  `EA8A` |     |   `&#xEA8A;`  | []                      |
+| `F0168` |   󰅨  |  `&#xF0168;`  | []                      |
+| `F016A` |   󰅪  |  `&#xF016A;`  | []                      |
+| `F10F5` |   󱃵  |  `&#xF10F5;`  | []                      |
+| `F10F6` |   󱃶  |  `&#xF10F6;`  | []                      |
+| `f0628` |   󰘨  |  `&#xf0628;`  | [1001]                  |
+| `F0A3E` |   󰨾  |  `&#xF0A3E;`  | [..]                    |
+|  `E60B` |     |   `&#xE60B;`  | {}                      |
+|  `EA8B` |     |   `&#xEA8B;`  | {}                      |
+|  `EB0F` |     |   `&#xEB0F;`  | {}                      |
+|  `EBE5` |     |   `&#xEBE5;`  | {}                      |
+|  `EBE6` |     |   `&#xEBE6;`  | {}                      |
+| `F0169` |   󰅩  |  `&#xF0169;`  | {}                      |
+| `F07B5` |   󰞵  |  `&#xF07B5;`  | {}                      |
+| `F10D6` |   󱃖  |  `&#xF10D6;`  | {}                      |
+| `F10F7` |   󱃷  |  `&#xF10F7;`  | {}                      |
+| `F10F8` |   󱃸  |  `&#xF10F8;`  | {}                      |
+| `F0626` |   󰘦  |  `&#xF0626;`  | {..}                    |
+|  `E8B8` |     |   `&#xE8B8;`  | {..}                    |
+|  `E850` |     |   `&#xE850;`  | {o}                     |
+|  `FB25` |   ﬥ  |   `&#xFB25;`  | {...}                   |
+|  `FE37` |  ︷  |   `&#xfe37;`  | {                       |
+|  `FE38` |  ︸  |   `&#xfe38;`  | }                       |
+|  `E60E` |     |   `&#xE60E;`  | <>                      |
+|  `E618` |     |   `&#xE618;`  | <>                      |
+|  `EAE9` |     |   `&#xEAE9;`  | <>                      |
+|  `EEA7` |     |   `&#xEEA7;`  | <>                      |
+|  `F40D` |     |   `&#xF40D;`  | <>                      |
+|  `F44F` |     |   `&#xF44F;`  | <>                      |
+|  `F4B1` |     |   `&#xF4b1;`  | <> - code scan          |
+|  `F4b0` |     |   `&#xF4b0;`  | <>                      |
+| `F0171` |   󰅱  |  `&#xF0171;`  | <>                      |
+| `F0174` |   󰅴  |  `&#xF0174;`  | <>                      |
+| `F022E` |   󰈮  |  `&#xF022E;`  | <>                      |
+| `F054F` |   󰕏  |  `&#xF054F;`  | <>                      |
+| `F0694` |   󰚔  |  `&#xF0694;`  | <>                      |
+| `F0694` |   󰚔  |  `&#xF0694;`  | <>                      |
+| `F0761` |   󰝡  |  `&#xF0761;`  | <>                      |
+| `F102B` |   󱀫  |  `&#xF102B;`  | <>                      |
+|  `F4AF` |     |   `&#xf4af;`  | <>                      |
+|  `E796` |     |   `&#xE796;`  | </>                     |
+|  `E7A3` |     |   `&#xE7A3;`  | </>                     |
+|  `E7C1` |     |   `&#xE7C1;`  | </>                     |
+|  `EAC4` |     |   `&#xEAC4;`  | </>                     |
+|  `F121` |     |   `&#xF121;`  | </>                     |
+|  `F1C9` |     |   `&#xF1C9;`  | </>                     |
+| `F05C0` |   󰗀  |  `&#xF05C0;`  | </>                     |
+|  `EA92` |     |   `&#xEA92;`  | `<T>`                   |
+|  `E67C` |     |   `&#xE67C;`  | (:a)                    |
+|  `F4B5` |     |   `&#xF4B5;`  | >_                      |
+|  `F120` |     |   `&#xF120;`  | >_                      |
+|  `E7A2` |     |   `&#xE7A2;`  | >_                      |
+|  `E683` |     |   `&#xE683;`  | >_                      |
+| `F07B7` |   󰞷  |  `&#xF07B7;`  | >_                      |
+|  `F489` |     |   `&#xF489;`  | >_                      |
+|  `EA85` |     |   `&#xEA85;`  | >_                      |
+|  `E285` |     |   `&#xE285;`  | >                       |
+|  `E795` |     |   `&#xE795;`  | >_                      |
+|  `E86C` |     |   `&#xE86C;`  | >_                      |
+|  `F460` |     |   `&#xF460;`  | >                       |
+|  `E758` |     |   `&#xE758;`  | {less}                  |
+|  `E256` |     |   `&#xE256;`  | java                    |
+|  `E738` |     |   `&#xE738;`  | java                    |
+| `F0B37` |   󰬷  |  `&#xF0B37;`  | java                    |
+|  `E204` |     |   `&#xE204;`  | java                    |
+|  `E005` |     |   `&#xE005;`  | java                    |
+|  `E66D` |     |   `&#xE66D;`  | java                    |
+| `F0617` |   󰘗  |  `&#xF0617;`  | java                    |
+|  `E61B` |     |   `&#xE61B;`  | cjsx                    |
+|  `E65E` |     |   `&#xE65E;`  | go                      |
+|  `E626` |     |   `&#xE626;`  | go                      |
+|  `E724` |     |   `&#xE724;`  | go                      |
+|  `F2A5` |     |   `&#xF2A5;`  | g                       |
+|  `F2A6` |     |   `&#xF2A6;`  | g                       |
+|  `F0D5` |     |   `&#xF0D5;`  | g+                      |
+| `F02BD` |   󰊽  |  `&#xF02BD;`  | g+                      |
+|  `F0D4` |     |   `&#xF0D4;`  | g+                      |
+|  `F2B3` |     |   `&#xF2B3;`  | g+                      |
+| `F03BF` |   󰎿  |  `&#xF03BF;`  | g+                      |
+| `F0CB2` |   󰲲  |  `&#xF0CB2;`  | g+                      |
+|  `E650` |     |   `&#xE650;`  | docker                  |
+|  `E7B0` |     |   `&#xE7B0;`  | docker                  |
+|  `F308` |     |   `&#xF308;`  | docker                  |
+|  `f21f` |     |   `&#xf21f;`  | docker                  |
+| `F0868` |   󰡨  |  `&#xF0868;`  | docker                  |
+|  `E81D` |     |   `&#xe81d;`  | kubernetes              |
+|  `E7C5` |     |   `&#xE7C5;`  | vim                     |
+|  `E62B` |     |   `&#xE62B;`  | vim                     |
+|  `F194` |     |   `&#xF194;`  | vim                     |
+|  `F27D` |     |   `&#xF27D;`  | vim                     |
+|  `FA76` |  勇  |   `&#xFA76;`  | vim                     |
+|  `FA77` |  勺  |   `&#xFA77;`  | vim                     |
+|  `F194` |     |   `&#xF194;`  | vim                     |
+|  `F1CA` |     |   `&#xF1CA;`  | vim                     |
+|  `F36F` |     |   `&#xF36F;`  | neovim                  |
+|  `E632` |     |   `&#xE632;`  | emacs                   |
+|  `E235` |     |   `&#xE235;`  | python                  |
+|  `E73C` |     |   `&#xe73c;`  | python                  |
+|  `E879` |     |   `&#xE879;`  | python                  |
+|  `e606` |     |   `&#xE606;`  | python
+| `F0320` |   󰌠  |  `&#xF0320;`  | python                  |
+|  `E73E` |     |   `&#xE73E;`  | markdown                |
+|  `F853` |     |   `&#xF853;`  | markdown                |
+| `F0354` |   󰍔  |  `&#xF0354;`  | markdown                |
+| `F072F` |   󰜯  |  `&#xF072F;`  | markdown                |
+| `F0DFB` |   󰷻  |  `&#xF0DFB;`  | markdown                |
+|  `E673` |     |   `&#xE673;`  | makefile                |
+|  `F858` |     |   `&#xF858;`  | maxcdn                  |
+|  `F136` |     |   `&#xF136;`  | maxcdn                  |
+|  `E616` |     |   `&#xE616;`  | npm                     |
+| `F06F7` |   󰛷  |  `&#xF06F7;`  | npm                     |
+|  `E767` |     |   `&#xE767;`  | jenkins                 |
+|  `E66E` |     |   `&#xE66E;`  | jenkins                 |
+|  `F2EC` |     |   `&#xF2EC;`  | *jenkins                |
+|  `E7E9` |     |   `&#xE7E9;`  | pipeline/workflow       |
+|  `E680` |     |   `&#xe680;`  | pipeline                |
+|  `F4E5` |     |   `&#xF4E5;`  | png                     |
+| `F0D78` |   󰵸  |  `&#xF0D78;`  | gif                     |
+| `F0225` |   󰈥  |  `&#xF0225;`  | jpg                     |
+| `F0E2D` |   󰸭  |  `&#xF0E2D;`  | png                     |
+|  `E60D` |     |   `&#xE60D;`  | image                   |
+| `F0226` |   󰈦  |  `&#xF0226;`  | pdf                     |
+|  `F4A5` |     |   `&#xF4A5;`  | file                    |
+|  `EB9D` |     |   `&#xEB9D;`  | file                    |
+|  `F15C` |     |   `&#xF15C;`  | file                    |
+|  `EAE8` |     |   `&#xEAE8;`  | file (binary)           |
+|  `F471` |     |   `&#xF471;`  | file (binary)           |
+|  `EA7F` |     |   `&#xEA7F;`  | new file                |
+| `F1085` |   󱂅  |  `&#xF1085;`  | log                     |
+|  `E67F` |     |   `&#xE67F;`  | Ps                      |
+|  `E73D` |     |   `&#xE73D;`  | php                     |
+| `F08C0` |   󰣀  |  `&#xF08C0;`  | ssh                     |
+|  `E65D` |     |   `&#xe65d;`  | git                     |
+|  `E702` |     |   `&#xe702;`  | git                     |
+|  `E8C4` |     |   `&#xE8C4;`  | git                     |
+|  `EFA0` |     |   `&#xEFA0;`  | git                     |
+|  `F1D2` |     |   `&#xF1D2;`  | git                     |
+|  `F1D3` |     |   `&#xF1D3;`  | git                     |
+| `F02A2` |   󰊢  |  `&#xF02A2;`  | git                     |
+|  `E776` |     |   `&#xE776;`  | ngix                    |
+|  `E791` |     |   `&#xE791;`  | ruby                    |
+|  `E739` |     |   `&#xE739;`  | ruby                    |
+|  `E21E` |     |   `&#xE21E;`  | ruby                    |
+|  `E719` |     |   `&#xE719;`  | node                    |
+|  `ED44` |     |   `&#xED44;`  | node                    |
+|  `ED48` |     |   `&#xED48;`  | less                    |
+|  `E826` |     |   `&#xe826;`  | lua                     |
+|  `E824` |     |   `&#xE824;`  | lodash                  |
+|  `E7C3` |     |   `&#xE7C3;`  | rest                    |
+|  `E7B5` |     |   `&#xE7B5;`  | intellij                |
+|  `E75B` |     |   `&#xe75b;`  | sql                     |
+| `F0AA9` |   󰪩  |  `&#xF0AA9;`  | database                |
+| `F0AAA` |   󰪪  |  `&#xF0AAA;`  | database                |
+|  `E8B0` |     |   `&#xE8B0;`  | database                |
+|  `E7AA` |     |   `&#xE7AA;`  | S                       |
+|  `E72C` |     |   `&#xE72C;`  | TC                      |
+|  `E7BC` |     |   `&#xE7BC;`  | CS                      |
+| `F0AAE` |   󰪮  |  `&#xF0AAE;`  | .net                    |
+|  `E69B` |     |   `&#xE69B;`  | tex                     |
+|  `E81F` |     |   `&#xE81F;`  | latex                   |
+| `F044D` |   󰑍  |  `&#xF044D;`  | reddit                  |
+|  `E74B` |     |   `&#xE74B;`  | saas                    |
+|  `E704` |     |   `&#xE704;`  | mysql                   |
+|  `E7A6` |     |   `&#xE7A6;`  | mysql                   |
+| `F12A7` |   󱊧  |  `&#xF12A7;`  | 0x                      |
+|  `E600` |     |   `&#xE600;`  | stylus                  |
+|  `E759` |     |   `&#xE759;`  | dev stylus              |
+|  `E0A0` |     |   `&#xe0a0;`  | git branch              |
+|  `E725` |     |   `&#xE725;`  | git branch              |
+|  `EA68` |     |   `&#xEA68;`  | git branch              |
+| `F062C` |   󰘬  |  `&#xF062C;`  | git branch              |
+|  `F126` |     |   `&#xF126;`  | git fork                |
+|  `F418` |     |   `&#xF418;`  | git fork                |
+| `F0CD0` |   󰳐  |  `&#xF0CD0;`  | git fork                |
+|  `EA63` |     |   `&#xEA63;`  | git forked              |
+| `F04C1` |   󰓁  |  `&#xF04C1;`  | git fork                |
+|  `E727` |     |   `&#xE727;`  | git merge               |
+|  `F419` |     |   `&#xF419;`  | git merge               |
+|  `EAFE` |     |   `&#xEAFE;`  | git merge               |
+|  `F17F` |     |   `&#xF17F;`  | git merge               |
+| `F062D` |   󰘭  |  `&#xF062D;`  | git merge               |
+|  `E728` |     |   `&#xE728;`  | git compare             |
+|  `EAFD` |     |   `&#xEAFD;`  | git compare             |
+|  `f47f` |     |   `&#xF47F;`  | git compare             |
+|  `E729` |     |   `&#xE729;`  | git commit              |
+|  `F417` |     |   `&#xF417;`  | git commit              |
+|  `F4B6` |     |   `&#xF4B6;`  | git commit              |
+|  `EAFC` |     |   `&#xEAFC;`  | git commit              |
+| `F0718` |   󰜘  |  `&#xF0718;`  | git commit              |
+|  `EB61` |     |   `&#xEB61;`  | git commit              |
+| `F071B` |   󰜛  |  `&#xF071B;`  | git commit              |
+| `F071C` |   󰜜  |  `&#xF071C;`  | git commit              |
+| `F071D` |   󰜝  |  `&#xF071D;`  | git commit start        |
+| `F0719` |   󰜙  |  `&#xF0719;`  | git commit end          |
+| `F071A` |   󰜚  |  `&#xF071A;`  | git commit end          |
+| `F10D9` |   󱃙  |  `&#xF10D9;`  | git commits             |
+|  `f4c7` |     |   `&#xF4C7;`  | git network             |
+|  `EA66` |     |   `&#xEA66;`  | git tag                 |
+|  `F4CE` |     |   `&#xF4CE;`  | git tag                 |
+|  `F412` |     |   `&#xF412;`  | git tag                 |
+| `F04C2` |   󰓂  |  `&#xF04C2;`  | git pull                |
+|  `E726` |     |   `&#xE726;`  | git pr                  |
+|  `EA64` |     |   `&#xEA64;`  | git pr                  |
+|  `F407` |     |   `&#xF407;`  | git pr                  |
+|  `EBBC` |     |   `&#xEBBC;`  | git pr create           |
+|  `EBDA` |     |   `&#xEBDA;`  | git pr close            |
+|  `F4DC` |     |   `&#xF4DC;`  | git pr close            |
+|  `EBDB` |     |   `&#xEBDB;`  | git pr draft            |
+|  `F4DD` |     |   `&#xF4DD;`  | git pr draft            |
+|  `F4DB` |     |   `&#xF4DB;`  | git merge query         |
+|  `EC1D` |     |   `&#xEC1D;`  | git fetch               |
+|  `EBAB` |     |   `&#xEBAB;`  | git merge               |
+| `F14CF` |   󱓏  |  `&#xF14CF;`  | git branch check        |
+| `F14CB` |   󱓋  |  `&#xF14CB;`  | git branch minus        |
+| `F14CA` |   󱓊  |  `&#xF14CA;`  | git plus                |
+| `F14CD` |   󱓍  |  `&#xF14CD;`  | git refresh             |
+| `F14CC` |   󱓌  |  `&#xF14CC;`  | git remove              |
+| `F14CE` |   󱓎  |  `&#xF14CE;`  | git sync                |
+|  `EB8B` |     |   `&#xEB8B;`  | debug stackframe        |
+|  `EB8A` |     |   `&#xEB8A;`  | dot                     |
+|  `EB89` |     |   `&#xEB89;`  | debug stackframe active |
+|  `EAA8` |     |   `&#xEAA8;`  | breakpoint              |
+|  `EBA8` |     |   `&#xEBA8;`  | debug                   |
+|  `EBC0` |     |   `&#xEBC0;`  | debug rerun             |
+|  `EB25` |     |   `&#xEB25;`  | code no new line        |
 
 ### airline
 
 | UNICODE |   ICON   | HTML ENCODING | COMMENTS                     |
 |:-------:|:--------:|:-------------:|------------------------------|
-|  `0246` |     Ɇ    |   `&#0246;`   | `airline_symbols.notexists`  |
-|  `2204` |     ∄    |   `&#2204;`   | `airline_symbols.notexists`  |
-|  `00DE` |     Þ    |   `&#00DE;`   | `airline_symbols.paste`      |
-|  `03C1` |     ρ    |   `&#03C1;`   | `airline_symbols.paste`      |
-|  `2225` |     ∥    |   `&#2225;`   | `airline_symbols.paste`      |
-|  `2387` |     ⎇    |   `&#2387;`   | `airline_symbols.branch`     |
-|  `E0A0` |         |   `&#E0A0;`   | `airline_symbols.branch`     |
-|  `E725` |         |   `&#E725;`   | `airline_symbols.branch`     |
-|  `29FC` |     ⧼    |   `&#29FC;`   | `airline_symbols.branch`     |
-|  `00B6` |     ¶    |   `&#00B6;`   | `airline_symbols.linenr`     |
-|  `240A` |     ␊    |   `&#240A;`   | `airline_symbols.linenr`     |
-|  `2424` | &#x2424; |   `&#2424;`   | `airline_symbols.linenr`     |
-|  `E0A1` |         |   `&#E0A1;`   | `airline_symbols.linenr`     |
-|  `2630` |    ☰    |   `&#2630;`   | `airline_symbols.maxlinenr`  |
-|  `33D1` |    ㏑    |   `&#33D1;`   | `airline_symbols.maxlinenr`  |
-|  `2105` |     ℅    |   `&#2105;`   | `airline_symbols.colnr`      |
-|  `33C7` |    ㏇    |   `&#33C7;`   | `airline_symbols.colnr`      |
-|  `039E` |     Ξ    |   `&#039E;`   | `airline_symbols.whitespace` |
-|  `A7A8` |     Ꞩ    |   `&#A7A8;`   | `airline_symbols.spell`      |
-|  `26A1` |    ⚡    |   `&#26A1;`   | `airline_symbols.dirty`      |
-|  `21AF` |     ↯    |   `&#21AF;`   | `airline_symbols.dirty`      |
-|  `266A` |     ♪    |   `&#266A;`   | `airline_symbols.dirty`      |
-|  `E0A2` |         |   `&#E0A2;`   | `airline_symbols.readonly`   |
-|  `E0B0` |         |   `&#E0B0;`   | `airline_left_sep`           |
-|  `E0B1` |         |   `&#E0B1;`   | `airline_left_alt_sep`       |
-|  `E0B2` |         |   `&#E0B2;`   | `airline_right_sep`          |
-|  `E0B3` |         |   `&#E0B3;`   | `airline_right_alt_sep`      |
-|  `2B60` |     ⭠    |   `&#2B60;`   | `airline_symbols.branch`     |
-|  `2B61` |     ⭡    |   `&#2B61;`   | `airline_symbols.linenr`     |
-|  `2B64` |     ⭤    |   `&#2B64;`   | `airline_symbols.readonly`   |
-|  `2B80` |     ⮀    |   `&#2B80;`   | `airline_left_sep`           |
-|  `2B81` |     ⮁    |   `&#2B81;`   | `airline_left_alt_sep`       |
-|  `2B82` |     ⮂    |   `&#2B82;`   | `airline_right_sep`          |
-|  `2B83` |     ⮃    |   `&#2B83;`   | `airline_right_alt_sep`      |
+|  `0246` |     Ɇ    |   `&#x0246;`   | `airline_symbols.notexists`  |
+|  `2204` |     ∄    |   `&#x2204;`   | `airline_symbols.notexists`  |
+|  `00DE` |     Þ    |   `&#x00DE;`   | `airline_symbols.paste`      |
+|  `03C1` |     ρ    |   `&#x03C1;`   | `airline_symbols.paste`      |
+|  `2225` |     ∥    |   `&#x2225;`   | `airline_symbols.paste`      |
+|  `2387` |     ⎇    |   `&#x2387;`   | `airline_symbols.branch`     |
+|  `E0A0` |         |   `&#xE0A0;`   | `airline_symbols.branch`     |
+|  `E725` |         |   `&#xE725;`   | `airline_symbols.branch`     |
+|  `29FC` |     ⧼    |   `&#x29FC;`   | `airline_symbols.branch`     |
+|  `00B6` |     ¶    |   `&#x00B6;`   | `airline_symbols.linenr`     |
+|  `240A` |     ␊    |   `&#x240A;`   | `airline_symbols.linenr`     |
+|  `2424` | &#x2424; |   `&#x2424;`   | `airline_symbols.linenr`     |
+|  `E0A1` |         |   `&#xE0A1;`   | `airline_symbols.linenr`     |
+|  `2630` |    ☰    |   `&#x2630;`   | `airline_symbols.maxlinenr`  |
+|  `33D1` |    ㏑    |   `&#x33D1;`   | `airline_symbols.maxlinenr`  |
+|  `2105` |     ℅    |   `&#x2105;`   | `airline_symbols.colnr`      |
+|  `33C7` |    ㏇    |   `&#x33C7;`   | `airline_symbols.colnr`      |
+|  `039E` |     Ξ    |   `&#x039E;`   | `airline_symbols.whitespace` |
+|  `A7A8` |     Ꞩ    |   `&#xA7A8;`   | `airline_symbols.spell`      |
+|  `26A1` |    ⚡    |   `&#x26A1;`   | `airline_symbols.dirty`      |
+|  `21AF` |     ↯    |   `&#x21AF;`   | `airline_symbols.dirty`      |
+|  `266A` |     ♪    |   `&#x266A;`   | `airline_symbols.dirty`      |
+|  `E0A2` |         |   `&#xE0A2;`   | `airline_symbols.readonly`   |
+|  `E0B0` |         |   `&#xE0B0;`   | `airline_left_sep`           |
+|  `E0B1` |         |   `&#xE0B1;`   | `airline_left_alt_sep`       |
+|  `E0B2` |         |   `&#xE0B2;`   | `airline_right_sep`          |
+|  `E0B3` |         |   `&#xE0B3;`   | `airline_right_alt_sep`      |
+|  `2B60` |     ⭠    |   `&#x2B60;`   | `airline_symbols.branch`     |
+|  `2B61` |     ⭡    |   `&#x2B61;`   | `airline_symbols.linenr`     |
+|  `2B64` |     ⭤    |   `&#x2B64;`   | `airline_symbols.readonly`   |
+|  `2B80` |     ⮀    |   `&#x2B80;`   | `airline_left_sep`           |
+|  `2B81` |     ⮁    |   `&#x2B81;`   | `airline_left_alt_sep`       |
+|  `2B82` |     ⮂    |   `&#x2B82;`   | `airline_right_sep`          |
+|  `2B83` |     ⮃    |   `&#x2B83;`   | `airline_right_alt_sep`      |
+
+### others
+
+| UNICODE | ICON | HTML ENCODING |
+|:-------:|:----:|:-------------:|
+|  `EE00` |     |   `&#xEE00;`  |
+|  `EE01` |     |   `&#xEE01;`  |
+|  `EE02` |     |   `&#xEE02;`  |
+|  `EE03` |     |   `&#xEE03;`  |
+|  `EE04` |     |   `&#xEE04;`  |
+|  `EE05` |     |   `&#xEE05;`  |
+|  `EE06` |     |   `&#xEE06;`  |
+|  `EE07` |     |   `&#xEE07;`  |
+|  `EE08` |     |   `&#xEE08;`  |
+|  `EE09` |     |   `&#xEE09;`  |
+|  `EE0A` |     |   `&#xEE0A;`  |
+|  `EE0B` |     |   `&#xEE0B;`  |
+|  `E0D4` |     |   `&#xE0D4;`  |
+|  `E0D2` |     |   `&#xE0D2;`  |
+|  `E0D6` |     |   `&#xE0D6;`  |
+|  `E0D7` |     |   `&#xE0D7;`  |
+|  `E0C5` |     |   `&#xE0C5;`  |
+|  `E0C4` |     |   `&#xE0C4;`  |
+|  `E0C7` |     |   `&#xE0C7;`  |
+|  `E0C6` |     |   `&#xE0C6;`  |
+|  `E0CA` |     |   `&#xE0CA;`  |
+|  `E0C8` |     |   `&#xE0C8;`  |
+|  `E0CD` |     |   `&#xE0CD;`  |
+|  `E0CC` |     |   `&#xE0CC;`  |
+|  `E0C3` |     |   `&#xE0C3;`  |
+|  `E0C1` |     |   `&#xE0C1;`  |
+|  `E0C2` |     |   `&#xE0C2;`  |
+|  `E0C0` |     |   `&#xE0C0;`  |
+|  `E0BE` |     |   `&#xE0BE;`  |
+|  `E0BA` |     |   `&#xE0BA;`  |
+|  `E0B8` |     |   `&#xE0B8;`  |
+|  `E0BC` |     |   `&#xE0BC;`  |
+|  `E0B5` |     |   `&#xE0B5;`  |
+|  `E0B7` |     |   `&#xE0B7;`  |
+|  `E0B4` |     |   `&#xE0B4;`  |
+|  `E0B6` |     |   `&#xE0B6;`  |
 
 
 ### diagnostic
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS                 |
 |:-------:|:----:|:-------------:|--------------------------|
-|  `2718` |   ✘  |   `&#2718;`   | `diagnostic.errorSign`   |
-|  `2714` |   ✔  |   `&#2714;`   | -                        |
-|  `14C6` |   ᓆ  |   `&#14C6;`   | `diagnostic.infoSign`    |
-|  `1479` |   ᑹ  |   `&#1479;`   | `diagnostic.warningSign` |
-|  `27A4` |   ➤  |   `&#27A4;`   | `diagnostic.hintSign`    |
+|  `2718` |   ✘  |   `&#x2718;`   | `diagnostic.errorSign`   |
+|  `2714` |   ✔  |   `&#x2714;`   | -                        |
+|  `14C6` |   ᓆ  |   `&#x14C6;`   | `diagnostic.infoSign`    |
+|  `1479` |   ᑹ  |   `&#x1479;`   | `diagnostic.warningSign` |
+|  `27A4` |   ➤  |   `&#x27A4;`   | `diagnostic.hintSign`    |
 
 ### ale
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS                 |
 |:-------:|:----:|:-------------:|--------------------------|
-| `1F4A2` |  💢  |   `&#1F4A2;`  | `ale_sign_error`         |
-|  `2718` |   ✘  |   `&#2718;`   | `ale_sign_error`         |
-| `1F47E` |  👾  |   `&#1F47E;`  | `ale_sign_error`         |
-| `1F4A3` |  💣  |   `&#1F4A3;`  | `ale_sign_error`         |
-| `1F645` |  🙅  |   `&#1F645;`  | `ale_sign_error`         |
-| `1F926` |  🤦  |   `&#1F926;`  | `ale_sign_error`         |
-|  `1479` |   ᑹ  |   `&#1479;`   | `ale_sign_warning`       |
-|  `26A0` |   ⚠  |   `&#26A0;`   | `ale_sign_warning`       |
-|  `2E2E` |   ⸮  |   `&#2E2E;`   | `ale_sign_warning`       |
-|  `2E18` |   ⸘  |   `&#2E18;`   | `ale_sign_warning`       |
-|  `2639` |   ☹  |   `&#2639;`   | `ale_sign_warning`       |
-|  `14C6` |   ᓆ  |   `&#14C6;`   | `ale_sign_info`          |
-|  `2365` |   ⍥  |   `&#2365;`   | `ale_sign_style_error`   |
-|  `14CD` |   ᓍ  |   `&#14CD;`   | `ale_sign_style_warning` |
+| `1F4A2` |  💢  |   `&#x1F4A2;`  | `ale_sign_error`         |
+|  `2718` |   ✘  |   `&#x2718;`   | `ale_sign_error`         |
+| `1F47E` |  👾  |   `&#x1F47E;`  | `ale_sign_error`         |
+| `1F4A3` |  💣  |   `&#x1F4A3;`  | `ale_sign_error`         |
+| `1F645` |  🙅  |   `&#x1F645;`  | `ale_sign_error`         |
+| `1F926` |  🤦  |   `&#x1F926;`  | `ale_sign_error`         |
+|  `1479` |   ᑹ  |   `&#x1479;`   | `ale_sign_warning`       |
+|  `26A0` |   ⚠  |   `&#x26A0;`   | `ale_sign_warning`       |
+|  `2E2E` |   ⸮  |   `&#x2E2E;`   | `ale_sign_warning`       |
+|  `2E18` |   ⸘  |   `&#x2E18;`   | `ale_sign_warning`       |
+|  `2639` |   ☹  |   `&#x2639;`   | `ale_sign_warning`       |
+|  `14C6` |   ᓆ  |   `&#x14C6;`   | `ale_sign_info`          |
+|  `2365` |   ⍥  |   `&#x2365;`   | `ale_sign_style_error`   |
+|  `14CD` |   ᓍ  |   `&#x14CD;`   | `ale_sign_style_warning` |
 
 ### syntastic
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS                         |
 |:-------:|:----:|:-------------:|----------------------------------|
-|  `03CA` |   ϊ  |   `&#03CA;`   | `syntastic_info_symbol`          |
-|  `0835` |   ࠵  |   `&#0835;`   | `syntastic_info_symbol`          |
-|  `0CF2` |   ೲ  |   `&#0CF2;`   | `syntastic_info_symbol`          |
-|  `2717` |   ✗  |   `&#2717;`   | `syntastic_error_symbol`         |
-|  `0FBE` |   ྾  |   `&#0FBE;`   | `syntastic_error_symbol`         |
-|  `0B93` |   ஓ  |   `&#0B93;`   | `syntastic_error_symbol`         |
-|  `0BD0` |   ௐ  |   `&#0BD0;`   | `syntastic_error_symbol`         |
-|  `2368` |   ⍨  |   `&#2368;`   | `syntastic_warning_symbol`       |
-|  `14C6` |   ᓆ  |   `&#14C6;`   | `syntastic_warning_symbol`       |
-|  `14CD` |   ᓍ  |   `&#14CD;`   | `syntastic_warning_symbol`       |
-| `1063F` |   𐘿  |   `&#1063F;`  | `syntastic_warning_symbol`       |
-|  `2365` |   ⍥  |   `&#2365;`   | `syntastic_style_error_symbol`   |
-|  `0C20` |   ఠ  |   `&#0C20;`   | `syntastic_style_warning_symbol` |
-|  `2364` |   ⍤  |   `&#2364;`   | `syntastic_style_warning_symbol` |
-|  `0D60` |   ൠ  |   `&#0D60;`   | `syntastic_style_warning_symbol` |
+|  `03CA` |   ϊ  |   `&#x03CA;`   | `syntastic_info_symbol`          |
+|  `0835` |   ࠵  |   `&#x0835;`   | `syntastic_info_symbol`          |
+|  `0CF2` |   ೲ  |   `&#x0CF2;`   | `syntastic_info_symbol`          |
+|  `2717` |   ✗  |   `&#x2717;`   | `syntastic_error_symbol`         |
+|  `0FBE` |   ྾  |   `&#x0FBE;`   | `syntastic_error_symbol`         |
+|  `0B93` |   ஓ  |   `&#x0B93;`   | `syntastic_error_symbol`         |
+|  `0BD0` |   ௐ  |   `&#x0BD0;`   | `syntastic_error_symbol`         |
+|  `2368` |   ⍨  |   `&#x2368;`   | `syntastic_warning_symbol`       |
+|  `14C6` |   ᓆ  |   `&#x14C6;`   | `syntastic_warning_symbol`       |
+|  `14CD` |   ᓍ  |   `&#x14CD;`   | `syntastic_warning_symbol`       |
+| `1063F` |   𐘿  |   `&#x1063F;`  | `syntastic_warning_symbol`       |
+|  `2365` |   ⍥  |   `&#x2365;`   | `syntastic_style_error_symbol`   |
+|  `0C20` |   ఠ  |   `&#x0C20;`   | `syntastic_style_warning_symbol` |
+|  `2364` |   ⍤  |   `&#x2364;`   | `syntastic_style_warning_symbol` |
+|  `0D60` |   ൠ  |   `&#x0D60;`   | `syntastic_style_warning_symbol` |
 
 ### vim-devicons
 
@@ -612,248 +834,264 @@
 |  `E241` |     |   `&#xE241;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['log']`       |
 |  `E60B` |     |   `&#xE60B;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['json']`      |
 |  `F295` |     |   `&#xF295;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['md']`        |
-| `F030B` |   󰌋  |   `&#F030B;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['perm']`      |
-|  `E005` |     |   `&#E005;`   | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['groovy']`    |
-|  `E005` |     |   `&#E005;`   | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['jenkinsfile']`   |
-| `F1183` |   󱆃  |   `&#F1183;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['sh']`        |
-| `F16A5` |   󱚥  |   `&#F16A5;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yaml']`      |
-|  `F1D3` |     |   `&#F1D3;`   | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yml']`       |
-|  `E204` |     |   `&#E204;`   | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['gitcommit']` |
-| `F0626` |   󰘦  |   `&#F0626;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['devops']`        |
-| `F0DFA` |   󰷺  |   `&#F0DFA;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['vimrc.d']`       |
-| `F1183` |   󱆃  |   `&#F1183;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['vars']`          |
-| `F0D6E` |   󰵮  |   `&#F0D6E;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']`           |
-|  `EA92` |     |   `&#EA92;`   | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*ignore$']`   |
-| `F1501` |   󱔁  |   `&#F1501;`  | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*rc$']`       |
-|  `F1D3` |     |   `&#F1D3;`   | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*git.*$']`    |
+| `F030B` |   󰌋  |  `&#xF030B;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['perm']`      |
+|  `E005` |     |   `&#xE005;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['groovy']`    |
+|  `E005` |     |   `&#xE005;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['jenkinsfile']`   |
+| `F1183` |   󱆃  |  `&#xF1183;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['sh']`        |
+| `F16A5` |     |  `&#xF16A5;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yaml']`      |
+| `F16A5` |     |  `&#xF16A5;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['yml']`       |
+|  `F1D3` |     |   `&#xF1D3;`  | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*git.*$']`    |
+|  `E204` |     |   `&#xE204;`  | `WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['gitcommit']` |
+| `F0626` |   󰘦  |  `&#xF0626;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['devops']`        |
+| `F0DFA` |   󰷺  |  `&#xF0DFA;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['vimrc.d']`       |
+| `F1183` |   󱆃  |  `&#xF1183;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['vars']`          |
+| `F0D6E` |   󰵮  |  `&#xF0D6E;`  | `WebDevIconsUnicodeDecorateFileNodesExactSymbols['src']`           |
+|  `EA92` |     |   `&#xEA92;`  | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*ignore$']`   |
+| `F1501` |   󱔁  |  `&#xF1501;`  | `WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*rc$']`       |
 
 
 - `:echo g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols`
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS     |
 |:-------:|:----:|:-------------:|--------------|
-|  `E7B1` |     |   `&#E7B1;`   | erl          |
-|  `E600` |     |   `&#E600;`   | styl         |
-|  `E706` |     |   `&#E706;`   | db           |
-| `F0DFA` |   󰷺  |   `&#F0DFA;`  | snippets     |
-|  `E73E` |     |   `&#E73E;`   | rmd          |
-|  `E61D` |     |   `&#E61D;`   | c++          |
-|  `E606` |     |   `&#E606;`   | pyc          |
-|  `E606` |     |   `&#E606;`   | pyd          |
-|  `E627` |     |   `&#E627;`   | go           |
-|  `E70C` |     |   `&#E70C;`   | suo          |
-|  `E620` |     |   `&#E620;`   | lua          |
-|  `E7A2` |     |   `&#E7A2;`   | bash         |
-|  `E606` |     |   `&#E606;`   | pyo          |
-|  `E60F` |     |   `&#E60F;`   | mustache     |
-|  `E7BA` |     |   `&#E7BA;`   | jsx          |
-|  `E60D` |     |   `&#E60D;`   | gif          |
-|  `F313` |     |   `&#F313;`   | nix          |
-|  `03BB` |   λ  |   `&#03BB;`   | ml           |
-|  `E62D` |     |   `&#E62D;`   | leex         |
-|  `E61F` |     |   `&#E61F;`   | lhs          |
-|  `FCB9` |   ﲹ  |   `&#FCB9;`   | sol          |
-|  `E737` |     |   `&#E737;`   | scala        |
-|  `E7A2` |     |   `&#E7A2;`   | zsh          |
-|  `E60D` |     |   `&#E60D;`   | jpeg         |
-|  `F80A` |     |   `&#F80A;`   | pem          |
-|  `E628` |     |   `&#E628;`   | ts           |
-|  `E755` |     |   `&#E755;`   | xcplayground |
-|  `E7A7` |     |   `&#E7A7;`   | fsi          |
-|  `E61B` |     |   `&#E61B;`   | coffee       |
-|  `E603` |     |   `&#E603;`   | scss         |
-|  `E781` |     |   `&#E781;`   | js           |
-|  `E745` |     |   `&#E745;`   | xul          |
-|  `E73E` |     |   `&#E73E;`   | mdx          |
-|  `E614` |     |   `&#E614;`   | less         |
-|  `E7A2` |     |   `&#E7A2;`   | fish         |
-|  `E60E` |     |   `&#E60E;`   | htm          |
-|  `F2EC` |     |   `&#F2EC;`   | Jenkinsfile  |
-|  `E791` |     |   `&#E791;`   | rb           |
-|  `E62D` |     |   `&#E62D;`   | heex         |
-|  `E7A7` |     |   `&#E7A7;`   | f#           |
-|  `E61E` |     |   `&#E61E;`   | c            |
-|  `E7AF` |     |   `&#E7AF;`   | d            |
-|  `F295` |     |   `&#F295;`   | md           |
-|  `E60D` |     |   `&#E60D;`   | webp         |
-|  `F0FD` |     |   `&#F0FD;`   | h            |
-|  `03BB` |   λ  |   `&#03BB;`   | mli          |
-|  `E615` |     |   `&#E615;`   | mk           |
-|  `E7A8` |     |   `&#E7A8;`   | rs           |
-|  `E60E` |     |   `&#E60E;`   | haml         |
-|  `E60D` |     |   `&#E60D;`   | png          |
-|  `F0FD` |     |   `&#F0FD;`   | hh           |
-|  `E608` |     |   `&#E608;`   | php          |
-|  `E61D` |     |   `&#E61D;`   | cc           |
-|  `E769` |     |   `&#E769;`   | t            |
-|  `E624` |     |   `&#E624;`   | jl           |
-|  `E768` |     |   `&#E768;`   | cljc         |
-|  `E62D` |     |   `&#E62D;`   | exs          |
-|  `E738` |     |   `&#E738;`   | jenkinsfile  |
-|  `E61F` |     |   `&#E61F;`   | hs           |
-|  `F472` |     |   `&#F472;`   | sql          |
-|  `E60D` |     |   `&#E60D;`   | ico          |
-|  `E7A2` |     |   `&#E7A2;`   | ps1          |
-|  `E60D` |     |   `&#E60D;`   | bmp          |
-|  `E70C` |     |   `&#E70C;`   | sln          |
-|  `E76A` |     |   `&#E76A;`   | cljs         |
-|  `E736` |     |   `&#E736;`   | html         |
-|  `E61D` |     |   `&#E61D;`   | cpp          |
-|  `E7B1` |     |   `&#E7B1;`   | hrl          |
-|  `F1D3` |     |   `&#F1D3;`   | gitcommit    |
-|  `E603` |     |   `&#E603;`   | sass         |
-|  `FD42` |   ﵂  |   `&#FD42;`   | vue          |
-|  `E7A2` |     |   `&#E7A2;`   | awk          |
-|  `E615` |     |   `&#E615;`   | conf         |
-|  `E769` |     |   `&#E769;`   | pl           |
-|  `E769` |     |   `&#E769;`   | pm           |
-|  `E61D` |     |   `&#E61D;`   | cp           |
-|  `E7A8` |     |   `&#E7A8;`   | rlib         |
-|  `F499` |     |   `&#F499;`   | pp           |
-|  `FB68` |   ﭨ  |   `&#FB68;`   | tex          |
-|  `E62C` |     |   `&#E62C;`   | elm          |
-|  `E60D` |     |   `&#E60D;`   | jpg          |
-|  `E615` |     |   `&#E615;`   | toml         |
-|  `E60B` |     |   `&#E60B;`   | webmanifest  |
-|  `E60C` |     |   `&#E60C;`   | mjs          |
-|  `E755` |     |   `&#E755;`   | swift        |
-|  `FCD2` |   ﳒ  |   `&#FCD2;`   | r            |
-|  `E7B4` |     |   `&#E7B4;`   | ai           |
-|  `E7A7` |     |   `&#E7A7;`   | fs           |
-|  `E7A2` |     |   `&#E7A2;`   | csh          |
-|  `E7B8` |     |   `&#E7B8;`   | psd          |
-| `F030B` |   󰌋  |   `&#F030B;`  | perm         |
-|  `E7B8` |     |   `&#E7B8;`   | psb          |
-|  `E60B` |     |   `&#E60B;`   | json         |
-|  `E619` |     |   `&#E619;`   | rss          |
-|  `E61D` |     |   `&#E61D;`   | cxx          |
-|  `E749` |     |   `&#E749;`   | css          |
-|  `E241` |     |   `&#E241;`   | log          |
-|  `E791` |     |   `&#E791;`   | rake         |
-| `F1183` |   󱆃  |   `&#F1183;`  | sh           |
-|  `F0FD` |     |   `&#F0FD;`   | hpp          |
-|  `E615` |     |   `&#E615;`   | bat          |
-|  `E7A7` |     |   `&#E7A7;`   | fsx          |
-|  `E615` |     |   `&#E615;`   | ini          |
-|  `E791` |     |   `&#E791;`   | gemspec      |
-|  `E73E` |     |   `&#E73E;`   | markdown     |
-|  `E60F` |     |   `&#E60F;`   | hbs          |
-|  `E61C` |     |   `&#E61C;`   | twig         |
-| `F16A5` |   󱚥  |   `&#F16A5;`  | yaml         |
-|  `E7A7` |     |   `&#E7A7;`   | fsscript     |
-|  `E7A2` |     |   `&#E7A2;`   | ksh          |
-|  `F27D` |     |   `&#F27D;`   | vim          |
-|  `E60E` |     |   `&#E60E;`   | ejs          |
-|  `E768` |     |   `&#E768;`   | clj          |
-|  `E62D` |     |   `&#E62D;`   | ex           |
-|  `E76A` |     |   `&#E76A;`   | edn          |
-|  `E60E` |     |   `&#E60E;`   | slim         |
-|  `E62D` |     |   `&#E62D;`   | eex          |
-|  `E7BA` |     |   `&#E7BA;`   | tsx          |
-|  `E706` |     |   `&#E706;`   | dump         |
-|  `F2A6` |     |   `&#F2A6;`   | groovy       |
-|  `E606` |     |   `&#E606;`   | py           |
-|  `F0FD` |     |   `&#F0FD;`   | hxx          |
-|  `E728` |     |   `&#E728;`   | diff         |
-|  `E798` |     |   `&#E798;`   | dart         |
-|  `E738` |     |   `&#E738;`   | java         |
-| `F16A5` |   󱚥  |   `&#F16A5;`  | yml          |
-
+|  `03BB` |   λ  |   `&#x03BB;`  | ml           |
+|  `03BB` |   λ  |   `&#x03BB;`  | mli          |
+|  `E241` |     |   `&#xE241;`  | log          |
+|  `E600` |     |   `&#xE600;`  | styl         |
+|  `E603` |     |   `&#xE603;`  | sass         |
+|  `E603` |     |   `&#xE603;`  | scss         |
+|  `E606` |     |   `&#xE606;`  | py           |
+|  `E606` |     |   `&#xE606;`  | pyc          |
+|  `E606` |     |   `&#xE606;`  | pyd          |
+|  `E606` |     |   `&#xE606;`  | pyo          |
+|  `E608` |     |   `&#xE608;`  | php          |
+|  `E60B` |     |   `&#xE60B;`  | json         |
+|  `E60B` |     |   `&#xE60B;`  | webmanifest  |
+|  `E60C` |     |   `&#xE60C;`  | mjs          |
+|  `E60D` |     |   `&#xE60D;`  | bmp          |
+|  `E60D` |     |   `&#xE60D;`  | ico          |
+|  `E60D` |     |   `&#xE60D;`  | jpg          |
+|  `E60D` |     |   `&#xE60D;`  | webp         |
+|  `E60E` |     |   `&#xE60E;`  | ejs          |
+|  `E60E` |     |   `&#xE60E;`  | haml         |
+|  `E60E` |     |   `&#xE60E;`  | htm          |
+|  `E60E` |     |   `&#xE60E;`  | slim         |
+|  `E60F` |     |   `&#xE60F;`  | hbs          |
+|  `E60F` |     |   `&#xE60F;`  | mustache     |
+|  `E614` |     |   `&#xE614;`  | less         |
+|  `E615` |     |   `&#xE615;`  | bat          |
+|  `E615` |     |   `&#xE615;`  | conf         |
+|  `E615` |     |   `&#xE615;`  | ini          |
+|  `E615` |     |   `&#xE615;`  | mk           |
+|  `E615` |     |   `&#xE615;`  | toml         |
+|  `E619` |     |   `&#xE619;`  | rss          |
+|  `E61B` |     |   `&#xE61B;`  | coffee       |
+|  `E61C` |     |   `&#xE61C;`  | twig         |
+|  `E61D` |     |   `&#xE61D;`  | c++          |
+|  `E61D` |     |   `&#xE61D;`  | cc           |
+|  `E61D` |     |   `&#xE61D;`  | cp           |
+|  `E61D` |     |   `&#xE61D;`  | cpp          |
+|  `E61D` |     |   `&#xE61D;`  | cxx          |
+|  `E61E` |     |   `&#xE61E;`  | c            |
+|  `E61F` |     |   `&#xE61F;`  | hs           |
+|  `E61F` |     |   `&#xE61F;`  | lhs          |
+|  `E620` |     |   `&#xE620;`  | lua          |
+|  `E624` |     |   `&#xE624;`  | jl           |
+|  `E627` |     |   `&#xE627;`  | go           |
+|  `E628` |     |   `&#xE628;`  | ts           |
+|  `E62C` |     |   `&#xE62C;`  | elm          |
+|  `E62D` |     |   `&#xE62D;`  | eex          |
+|  `E62D` |     |   `&#xE62D;`  | ex           |
+|  `E62D` |     |   `&#xE62D;`  | exs          |
+|  `E62D` |     |   `&#xE62D;`  | heex         |
+|  `E62D` |     |   `&#xE62D;`  | leex         |
+|  `E706` |     |   `&#xE706;`  | db           |
+|  `E706` |     |   `&#xE706;`  | dump         |
+|  `E70C` |     |   `&#xE70C;`  | sln          |
+|  `E70C` |     |   `&#xE70C;`  | suo          |
+|  `E728` |     |   `&#xE728;`  | diff         |
+|  `E736` |     |   `&#xE736;`  | html         |
+|  `E737` |     |   `&#xE737;`  | scala        |
+|  `E738` |     |   `&#xE738;`  | java         |
+|  `E738` |     |   `&#xE738;`  | jenkinsfile  |
+|  `E73E` |     |   `&#xE73E;`  | markdown     |
+|  `E73E` |     |   `&#xE73E;`  | mdx          |
+|  `E73E` |     |   `&#xE73E;`  | rmd          |
+|  `E745` |     |   `&#xE745;`  | xul          |
+|  `E749` |     |   `&#xE749;`  | css          |
+|  `E74B` |     |   `&#xe74b;`  | sass         |
+|  `E755` |     |   `&#xE755;`  | swift        |
+|  `E755` |     |   `&#xE755;`  | xcplayground |
+|  `E768` |     |   `&#xE768;`  | clj          |
+|  `E768` |     |   `&#xE768;`  | cljc         |
+|  `E769` |     |   `&#xE769;`  | pl           |
+|  `E769` |     |   `&#xE769;`  | pm           |
+|  `E769` |     |   `&#xE769;`  | t            |
+|  `E76A` |     |   `&#xE76A;`  | cljs         |
+|  `E76A` |     |   `&#xE76A;`  | edn          |
+|  `E781` |     |   `&#xE781;`  | js           |
+|  `E791` |     |   `&#xE791;`  | gemspec      |
+|  `E791` |     |   `&#xE791;`  | rake         |
+|  `E791` |     |   `&#xE791;`  | rb           |
+|  `E798` |     |   `&#xE798;`  | dart         |
+|  `E7A2` |     |   `&#xE7A2;`  | awk          |
+|  `E7A2` |     |   `&#xE7A2;`  | bash         |
+|  `E7A2` |     |   `&#xE7A2;`  | csh          |
+|  `E7A2` |     |   `&#xE7A2;`  | fish         |
+|  `E7A2` |     |   `&#xE7A2;`  | ksh          |
+|  `E7A2` |     |   `&#xE7A2;`  | ps1          |
+|  `E7A2` |     |   `&#xE7A2;`  | zsh          |
+|  `E7A7` |     |   `&#xE7A7;`  | f#           |
+|  `E7A7` |     |   `&#xE7A7;`  | fs           |
+|  `E7A7` |     |   `&#xE7A7;`  | fsi          |
+|  `E7A7` |     |   `&#xE7A7;`  | fsscript     |
+|  `E7A7` |     |   `&#xE7A7;`  | fsx          |
+|  `E7A8` |     |   `&#xE7A8;`  | rlib         |
+|  `E7A8` |     |   `&#xE7A8;`  | rs           |
+|  `E7AF` |     |   `&#xE7AF;`  | d            |
+|  `E7B1` |     |   `&#xE7B1;`  | erl          |
+|  `E7B1` |     |   `&#xE7B1;`  | hrl          |
+|  `E7B4` |     |   `&#xE7B4;`  | Ai           |
+|  `E7B8` |     |   `&#xE7B8;`  | psb          |
+|  `E7B8` |     |   `&#xE7B8;`  | psd          |
+|  `E7BA` |     |   `&#xE7BA;`  | jsx          |
+|  `E7BA` |     |   `&#xE7BA;`  | tsx          |
+|  `E8BE` |     |   `&#xE8BE;`  | TEX          |
+|  `E8D0` |     |   `&#xe8d0;`  | vlang        |
+|  `E8D1` |     |   `&#xe8d1;`  | v            |
+|  `E8EA` |     |   `&#xE8EA;`  | xml          |
+|  `E8EB` |     |   `&#xE8EB;`  | yaml         |
+|  `F0FD` |     |   `&#xF0FD;`  | h            |
+|  `F0FD` |     |   `&#xF0FD;`  | hh           |
+|  `F0FD` |     |   `&#xF0FD;`  | hpp          |
+|  `F0FD` |     |   `&#xF0FD;`  | hxx          |
+|  `F27D` |     |   `&#xF27D;`  | vim          |
+|  `F295` |     |   `&#xF295;`  | md           |
+|  `F2A6` |     |   `&#xF2A6;`  | groovy       |
+|  `F2EC` |     |   `&#xF2EC;`  | Jenkinsfile  |
+|  `F313` |     |   `&#xF313;`  | nix          |
+|  `F472` |     |   `&#xF472;`  | sql          |
+|  `F499` |     |   `&#xF499;`  | pp           |
+|  `F80A` |     |   `&#xF80A;`  | pem          |
+|  `FB68` |   ﭨ  |   `&#xFB68;`  | tex          |
+|  `FCB9` |   ﲹ  |   `&#xFCB9;`  | sol          |
+|  `FCD2` |   ﳒ  |   `&#xFCD2;`  | r            |
+|  `FD42` |   ﵂  |   `&#xFD42;`  | vue          |
+| `F030B` |   󰌋  |  `&#xF030B;`  | perm         |
+| `F0DFA` |   󰷺  |  `&#xF0DFA;`  | snippets     |
+| `F1183` |   󱆃  |  `&#xF1183;`  | sh           |
+| `F16A5` |   󱚥  |  `&#xF16A5;`  | yaml         |
+| `F16A5` |   󱚥  |  `&#xF16A5;`  | yml          |
 
 - `:echo g:WebDevIconsUnicodeDecorateFileNodesExactSymbols`
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS                         |
 |:-------:|:----:|:-------------:|----------------------------------|
-|  `F27D` |     |   `&#F27D;`   | .vimrc                           |
-|  `E62B` |     |   `&#E62B;`   | _gvimrc                          |
-|  `E62B` |     |   `&#E62B;`   | _vimrc                           |
-|  `E62B` |     |   `&#E62B;`   | .gvimrc                          |
-| `F1183` |   󱆃  |   `&#F1183;`  | vars                             |
-|  `E702` |     |   `&#E702;`   | .gitignore                       |
-|  `E707` |     |   `&#E707;`   | dropbox                          |
-| `F030B` |   󰌋  |   `&#F030B;`  | license                          |
-|  `E607` |     |   `&#E607;`   | procfile                         |
-|  `E7A2` |     |   `&#E7A2;`   | .bashprofile                     |
-|  `E791` |     |   `&#E791;`   | config.ru                        |
-|  `E791` |     |   `&#E791;`   | gemfile                          |
-|  `E611` |     |   `&#E611;`   | gruntfile.coffee                 |
-|  `E702` |     |   `&#E702;`   | COMMIT_EDITMSG                   |
-| `F0D6E` |   󰵮  |   `&#F0D6E;`  | src                              |
-|  `E702` |     |   `&#E702;`   | .gitmodules                      |
-| `F0DFA` |   󰷺  |   `&#F0DFA;`  | snips                            |
-|  `E615` |     |   `&#E615;`   | makefile                         |
-|  `E791` |     |   `&#E791;`   | rakefile                         |
-| `F0626` |   󰘦  |   `&#F0626;`  | devops                           |
-|  `E610` |     |   `&#E610;`   | gulpfile.coffee                  |
-|  `E611` |     |   `&#E611;`   | gruntfile.js                     |
-|  `E7A2` |     |   `&#E7A2;`   | .zshenv                          |
-|  `E611` |     |   `&#E611;`   | gruntfile.ls                     |
-|  `E718` |     |   `&#E718;`   | node_modules                     |
-|  `E610` |     |   `&#E610;`   | gulpfile.js                      |
-|  `E7A2` |     |   `&#E7A2;`   | .bashrc                          |
-| `F06A9` |   󰚩  |   `&#F06A9;`  | robots.txt                       |
-|  `E7A2` |     |   `&#E7A2;`   | .zshrc                           |
-|  `E62D` |     |   `&#E62D;`   | mix.lock                         |
-|  `E610` |     |   `&#E610;`   | gulpfile.ls                      |
-|  `E7B0` |     |   `&#E7B0;`   | docker-compose.yml               |
-|  `E702` |     |   `&#E702;`   | .gitconfig                       |
-|  `E702` |     |   `&#E702;`   | .gitattributes                   |
-|  `E7BA` |     |   `&#E7BA;`   | react.jsx                        |
-|  `E7B0` |     |   `&#E7B0;`   | dockerfile                       |
-|  `E7A2` |     |   `&#E7A2;`   | .zprofile                        |
-|  `E615` |     |   `&#E615;`   | cmakelists.txt                   |
-|  `E615` |     |   `&#E615;`   | .ds_store                        |
-|  `E623` |     |   `&#E623;`   | favicon.ico                      |
-|  `0031` |   1  |   `&#0031;`   | exact-match-case-sensitive-1.txt |
-|  `0032` |   2  |   `&#0032;`   | exact-match-case-sensitive-2     |
+|  `F27D` |     |   `&#xF27D;`  | .vimrc                           |
+|  `E62B` |     |   `&#xE62B;`  | _gvimrc                          |
+|  `E62B` |     |   `&#xE62B;`  | _vimrc                           |
+|  `E62B` |     |   `&#xE62B;`  | .gvimrc                          |
+| `F1183` |   󱆃  |  `&#xF1183;`  | vars                             |
+|  `E702` |     |   `&#xE702;`  | .gitignore                       |
+|  `E707` |     |   `&#xE707;`  | dropbox                          |
+| `F030B` |   󰌋  |  `&#xF030B;`  | license                          |
+|  `E607` |     |   `&#xE607;`  | procfile                         |
+|  `E7A2` |     |   `&#xE7A2;`  | .bashprofile                     |
+|  `E791` |     |   `&#xE791;`  | config.ru                        |
+|  `E791` |     |   `&#xE791;`  | gemfile                          |
+|  `E611` |     |   `&#xE611;`  | gruntfile.coffee                 |
+|  `E702` |     |   `&#xE702;`  | COMMIT_EDITMSG                   |
+| `F0D6E` |   󰵮  |  `&#xF0D6E;`  | src/dev                          |
+|  `E702` |     |   `&#xE702;`  | .gitmodules                      |
+| `F0DFA` |   󰷺  |  `&#xF0DFA;`  | snips                            |
+|  `E615` |     |   `&#xE615;`  | makefile                         |
+|  `E791` |     |   `&#xE791;`  | rakefile                         |
+| `F0626` |   󰘦  |  `&#xF0626;`  | devops                           |
+|  `E610` |     |   `&#xE610;`  | gulpfile.coffee                  |
+|  `E611` |     |   `&#xE611;`  | gruntfile.js                     |
+|  `E7A2` |     |   `&#xE7A2;`  | .zshenv                          |
+|  `E611` |     |   `&#xE611;`  | gruntfile.ls                     |
+|  `E718` |     |   `&#xE718;`  | node_modules                     |
+|  `E610` |     |   `&#xE610;`  | gulpfile.js                      |
+|  `E7A2` |     |   `&#xE7A2;`  | .bashrc                          |
+| `F06A9` |   󰚩  |  `&#xF06A9;`  | robots.txt                       |
+|  `E7A2` |     |   `&#xE7A2;`  | .zshrc                           |
+|  `E62D` |     |   `&#xE62D;`  | mix.lock                         |
+|  `E610` |     |   `&#xE610;`  | gulpfile.ls                      |
+|  `E7B0` |     |   `&#xE7B0;`  | docker-compose.yml               |
+|  `E702` |     |   `&#xE702;`  | .gitconfig                       |
+|  `E702` |     |   `&#xE702;`  | .gitattributes                   |
+|  `E7BA` |     |   `&#xE7BA;`  | react.jsx                        |
+|  `E7B0` |     |   `&#xE7B0;`  | dockerfile                       |
+|  `E7A2` |     |   `&#xE7A2;`  | .zprofile                        |
+|  `E615` |     |   `&#xE615;`  | cmakelists.txt                   |
+|  `E615` |     |   `&#xE615;`  | .ds_store                        |
+|  `E623` |     |   `&#xE623;`  | favicon.ico                      |
+|  `0031` |   1  |   `&#x0031;`  | exact-match-case-sensitive-1.txt |
+|  `0032` |   2  |   `&#x0032;`  | exact-match-case-sensitive-2     |
 
 ## folders
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS  |
-|:-------:|:----:|:-------------:|-----------|
-|  `F07B` |     |   `&#xF07B;`  | close     |
-|  `F07C` |     |   `&#xF07C;`  | open      |
-|  `F114` |     |   `&#xF114;`  | close     |
-|  `y115` |     |   `&#xF115;`  | open      |
-|  `F067` |     |   `&#xF067;`  | close (+) |
-|  `F068` |     |   `&#xF068;`  | open (-)  |
-|  `F45B` |     |   `&#xF45B;`  | open (-)  |
-|  `F2D1` |     |   `&#xF2D1;`  | open (-)  |
-|  `F48B` |     |   `&#xF48B;`  | open (-)  |
+| UNICODE | ICON | HTML ENCODING | COMMENTS       |
+|:-------:|:----:|:-------------:|----------------|
+|  `F07B` |     |   `&#xF07B;`  | close          |
+|  `F07C` |     |   `&#xF07C;`  | open           |
+|  `F114` |     |   `&#xF114;`  | close          |
+|  `y115` |     |   `&#xF115;`  | open           |
+|  `F067` |     |   `&#xF067;`  | close (+)      |
+|  `F068` |     |   `&#xF068;`  | open (-)       |
+|  `F45B` |     |   `&#xF45B;`  | open (-)       |
+|  `F2D1` |     |   `&#xF2D1;`  | open (-)       |
+|  `F48B` |     |   `&#xF48B;`  | open (-)       |
+|  `E5FE` |     |   `&#xE5FE;`  | open           |
+|  `E5FF` |     |   `&#xE5FF;`  | close          |
+|  `E5FA` |     |   `&#xE5FA;`  | closed (npm)   |
+|  `E5FB` |     |   `&#xE5FB;`  | close (git)    |
+|  `e5fd` |     |   `&#xE5FD;`  | close (github) |
+|  `E5FC` |     |   `&#xE5FC;`  | closed (tools) |
+|  `E787` |     |   `&#xE787;`  | book           |
+|  `EA80` |     |   `&#xEA80;`  | new folder     |
+|  `EA83` |     |   `&#xEA83;`  | folder         |
+|  `EF81` |     |   `&#xEF81;`  | folder tree    |
+|  `F0E8` |     |   `&#xF0E8;`  | folder tree    |
+| `F06CF` |   󰛏  |  `&#xF06CF;`  | folder!        |
+|  `F50F` |     |   `&#xF50F;`  | share          |
+|  `F1E0` |     |   `&#xF1E0;`  | share          |
+|  `F1E1` |     |   `&#xF1E1;`  | share          |
 
 ## platform
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS |
-|:-------:|:----:|:-------------:|----------|
-|  `F302` |     |   `&#xF302;`  | mac      |
-|  `E711` |     |   `&#xE711;`  | mac      |
-|  `F8FF` |     |   `&#xF8FF;`  | mac      |
-| `F0037` |   󰀷  |  `&#xF0037;`  | ios      |
-|  `F316` |     |   `&#xF316;`  | redhat   |
-|  `E7BB` |     |   `&#xE7BB;`  | redhat   |
-|  `E712` |     |   `&#xE712;`  | linux    |
-|  `F31A` |     |   `&#xF31A;`  | linux    |
-|  `EBC6` |     |   `&#xEBC6;`  | linux    |
-|  `F17C` |     |   `&#xF17C;`  | linux    |
-| `F033D` |   󰌽  |  `&#xF033D;`  | linux    |
-|  `F314` |     |   `&#xF314;`  | opensuse |
-|  `F31B` |     |   `&#xF31B;`  | ubuntu   |
-|  `EBC9` |     |   `&#xEBC9;`  | ubuntu   |
-|  `F31C` |     |   `&#xF31C;`  | ubuntu   |
-|  `E73A` |     |   `&#xE73A;`  | ubuntu   |
-|  `E62A` |     |   `&#xE62A;`  | windows  |
-|  `F17A` |     |   `&#xF17A;`  | windows  |
-|  `E70F` |     |   `&#xE70F;`  | windows  |
-| `F05B3` |   󰖳  |  `&#xF05B3;`  | windows  |
-| `F0A21` |   󰨡  |  `&#xF0A21;`  | windows  |
-|  `EBC5` |     |   `&#xEBC5;`  | debian   |
-|  `F306` |     |   `&#xF306;`  | debian   |
-|  `E77D` |     |   `&#xE77D;`  | debian   |
-|  `E722` |     |   `&#xE722;`  | RPi      |
-|  `EF5C` |     |   `&#xEF5C;`  | RPi      |
-|  `F304` |     |   `&#xF304;`  | centos   |
-|  `E70E` |     |   `&#xE70E;`  | android  |
-|  `F17B` |     |   `&#xF17B;`  | android  |
+| UNICODE | ICON | HTML ENCODING | COMMENTS    |
+|:-------:|:----:|:-------------:|-------------|
+|  `F302` |     |   `&#xF302;`  | mac         |
+|  `E711` |     |   `&#xE711;`  | mac         |
+|  `F8FF` |     |   `&#xF8FF;`  | mac         |
+| `F0037` |   󰀷  |  `&#xF0037;`  | ios         |
+|  `F316` |     |   `&#xF316;`  | redhat      |
+|  `E7BB` |     |   `&#xE7BB;`  | redhat      |
+|  `E712` |     |   `&#xE712;`  | linux       |
+|  `F31A` |     |   `&#xF31A;`  | linux       |
+|  `EBC6` |     |   `&#xEBC6;`  | linux       |
+|  `F17C` |     |   `&#xF17C;`  | linux       |
+| `F033D` |   󰌽  |  `&#xF033D;`  | linux       |
+|  `F314` |     |   `&#xF314;`  | opensuse    |
+|  `F31B` |     |   `&#xF31B;`  | ubuntu      |
+|  `EBC9` |     |   `&#xEBC9;`  | ubuntu      |
+|  `F31C` |     |   `&#xF31C;`  | ubuntu      |
+|  `E73A` |     |   `&#xE73A;`  | ubuntu      |
+|  `E62A` |     |   `&#xE62A;`  | windows     |
+|  `F17A` |     |   `&#xF17A;`  | windows     |
+|  `E70F` |     |   `&#xE70F;`  | windows     |
+| `F05B3` |   󰖳  |  `&#xF05B3;`  | windows     |
+| `F0A21` |   󰨡  |  `&#xF0A21;`  | windows     |
+|  `EBC5` |     |   `&#xEBC5;`  | debian      |
+|  `F306` |     |   `&#xF306;`  | debian      |
+|  `E77D` |     |   `&#xE77D;`  | debian      |
+|  `E722` |     |   `&#xE722;`  | RPi         |
+|  `EF5C` |     |   `&#xEF5C;`  | RPi         |
+|  `F304` |     |   `&#xF304;`  | centos      |
+|  `E70E` |     |   `&#xE70E;`  | android     |
+|  `F17B` |     |   `&#xF17B;`  | android     |
 
 ## math
 
@@ -863,7 +1101,12 @@
 | `F03A0` |   󰎠  |  `&#xF03A0;`  | 123           |
 |  `F4F7` |     |   `&#xF4F7;`  | 123           |
 | `F172A` |   󱜪  |  `&#xF172A;`  | 5.1.2         |
+| `F07F0` |   󰟰  |  `&#xf07f0;`  | 2.0           |
 | `F1729` |   󱜩  |  `&#xF1729;`  | 2.1           |
+| `F07F1` |   󰟱  |  `&#xF07F1;`  | 3.1           |
+| `F07F2` |   󰟲  |  `&#xF07F2;`  | 5.1           |
+| `F07F3` |   󰟳  |  `&#xF07F3;`  | 7.1           |
+| `F0199` |   󰆙  |  `&#xF0199;`  | 123           |
 | `F1052` |   󱁒  |  `&#xF1052;`  | -1            |
 | `F15CB` |   󱗋  |  `&#xF15CB;`  | +1            |
 |  `FF10` |  １  |   `&#xFF10;`  | 1             |
@@ -875,6 +1118,25 @@
 |  `FF16` |  ７  |   `&#xFF16;`  | 7             |
 |  `FF17` |  ８  |   `&#xFF17;`  | 8             |
 |  `FF18` |  ９  |   `&#xFF18;`  | 9             |
+| `F0F10` |   󰼐  |  `&#xF0F10;`  | 2             |
+| `F0F11` |   󰼑  |  `&#xF0F11;`  | 3             |
+| `F0F12` |   󰼒  |  `&#xF0F12;`  | 4             |
+| `F0F13` |   󰼓  |  `&#xF0F13;`  | 5             |
+| `F0F14` |   󰼔  |  `&#xF0F14;`  | 6             |
+| `F0F15` |   󰼕  |  `&#xF0F15;`  | 7             |
+| `F0F16` |   󰼖  |  `&#xF0F16;`  | 8             |
+| `F0F17` |   󰼗  |  `&#xF0F17;`  | 9             |
+| `F0F18` |   󰼘  |  `&#xF0F18;`  | 9+            |
+| `F03C0` |   󰏀  |  `&#xF03C0;`  | 9+            |
+| `F0FEE` |   󰿮  |  `&#xF0FEE;`  | 9+
+| `F0FED` |   󰿭  |  `&#xF0FED;`  | 10            |
+| `F0FEC` |   󰿬  |  `&#xF0FEC;`  | 10            |
+| `F0FEB` |   󰿫  |  `&#xF0FEB;`  | 10            |
+| `F0FEA` |   󰿪  |  `&#xF0FEA;`  | 10            |
+| `F1153` |   󱅓  |  `&#xF1153;`  | 10            |
+| `F0FE9` |   󰿩  |  `&#xF0FE9;`  | 10            |
+| `F0D71` |   󰵱  |  `&#xF0D71;`  | 10            |
+| `F0AD2` |   󰫒  |  `&#xF0AD2;`  | 09            |
 |  `207F` |   ⁿ  |   `&#x207F;`  | ^n            |
 |  `00BA` |   º  |    `&#xBA;`   | ^0            |
 |  `00B9` |   ¹  |    `&#xB9;`   | ^1            |
@@ -897,6 +1159,18 @@
 |  `2087` |   ₇  |   `&#x2087;`  | _7            |
 |  `2088` |   ₈  |   `&#x2088;`  | _8            |
 |  `2089` |   ₉  |   `&#x2089;`  | _9            |
+| `F12AB` |   󱊫  |  `&#xF12AB;`  | F1            |
+| `F12AC` |   󱊬  |  `&#xF12AC;`  | F2            |
+| `F12AD` |   󱊭  |  `&#xF12AD;`  | F3            |
+| `F12AE` |   󱊮  |  `&#xF12AE;`  | F4            |
+| `F12AF` |   󱊯  |  `&#xF12AF;`  | F5            |
+| `F12B0` |   󱊰  |  `&#xF12B0;`  | F6            |
+| `F12B1` |   󱊱  |  `&#xF12B1;`  | F7            |
+| `F12B2` |   󱊲  |  `&#xF12B2;`  | F8            |
+| `F12B3` |   󱊳  |  `&#xF12B3;`  | F9            |
+| `F12B4` |   󱊴  |  `&#xF12B4;`  | F10           |
+| `F12B5` |   󱊵  |  `&#xF12B5;`  | F11           |
+| `F12B6` |   󱊶  |  `&#xF12B6;`  | F12           |
 |  `215F` |   ⅟  |   `&#x215F;`  | 1/            |
 |  `2189` |   ↉  |   `&#x2189;`  | 0/3           |
 | `F1992` |   󱦒  |  `&#xF1992;`  | 1/2           |
@@ -919,6 +1193,11 @@
 |  `2151` |   ⅑  |   `&#x2151;`  | 1/9           |
 |  `2152` |   ⅒  |   `&#x2152;`  | 1/10          |
 | `F01C9` |   󰇉  |  `&#xF01C9;`  | A/B           |
+| `10138` |   𐄸  |  `&#x10138;`  | 22            |
+| `F10A2` |   󱂢  |  `&#xF10A2;`  | .00           |
+| `F01B5` |   󰆵  |  `&#xF01B5;`  | .00           |
+| `F10A4` |   󱂤  |  `&#xF10A4;`  | .00           |
+| `F10A3` |   󱂣  |  `&#xF10A3;`  | .0            |
 |  `208C` |   ₌  |   `&#x208C;`  | _=            |
 |  `208D` |   ₍  |   `&#x208D;`  | _(            |
 |  `208E` |   ₎  |   `&#x208E;`  | _)            |
@@ -928,14 +1207,17 @@
 |  `FF0B` |  ＋  |   `&#xFF0B;`  | +             |
 | `F0195` |   󰆕  |  `&#xF0195;`  | +/-           |
 | `F14C9` |   󱓉  |  `&#xF14C9;`  | +/-           |
-|  `F440` |     |   `&#xF440;`  | +-            |
 |   `B1`  |   ±  |    `&#xB1;`   | +-            |
+|  `F440` |     |   `&#xF440;`  | +-            |
+|  `eb43` |     |   `&#xEB43;`  | +-            |
 | `F0993` |   󰦓  |  `&#xF0993;`  | +-            |
+| `F0A9A` |   󰪚  |  `&#xF0A9A;`  | +-x÷          |
 |  `2213` |   ∓  |   `&#x2213;`  | -+            |
 |  `2214` |   ∔  |   `&#x2214;`  | .+            |
 |  `29FA` |   ⧺  |   `&#x29FA;`  | ++            |
 |  `29FB` |   ⧻  |   `&#x29FB;`  | +++           |
 |  `EB64` |     |   `&#xEB64;`  | +-x%          |
+| `F11D6` |   󱇖  |  `&#xF11D6;`  | xx stragety   |
 |  `2295` |   ⊕  |   `&#x2295;`  | O+            |
 |  `2A01` |   ⨁  |   `&#x2A01;`  | O+            |
 |  `2A22` |   ⨢  |   `&#x2A22;`  | o+            |
@@ -957,6 +1239,7 @@
 |  `2A72` |   ⩲  |   `&#x2A72;`  | +=            |
 |  `223B` |   ∻  |   `&#x223B;`  | ÷             |
 |   `F7`  |   ÷  |    `&#xF7;`   | ÷             |
+|  `EDF3` |     |   `&#xEDF3;`  | ÷             |
 | `F01D5` |   󰇕  |  `&#xF01D5;`  | ÷             |
 | `F12EA` |   󱋪  |  `&#xF12EA;`  | ÷             |
 |  `2A2B` |   ⨫  |   `&#x2A2B;`  | ÷             |
@@ -979,12 +1262,14 @@
 | `F0282` |   󰊂  |  `&#xF0282;`  | x2 subscript  |
 |  `F506` |     |   `&#xF506;`  | ./            |
 | `F016C` |   󰅬  |  `&#xF016C;`  | >             |
+| `F016E` |   󰅮  |  `&#xF016E;`  | <             |
 |  `2A7B` |   ⩻  |   `&#x2A7B;`  | <?            |
 |  `2A7C` |   ⩼  |   `&#x2A7C;`  | >?            |
 | `F016D` |   󰅭  |  `&#xF016D;`  | >=            |
 | `F096E` |   󰥮  |  `&#xF096E;`  | >=            |
 | `F097D` |   󰥽  |  `&#xF097D;`  | <=            |
 |  `2264` |   ≤  |   `&#x2264;`  | <=            |
+|  `EFC4` |     |   `&#xEFC4;`  | <=            |
 |  `2265` |   ≥  |   `&#x2265;`  | >=            |
 |  `2266` |   ≦  |   `&#x2266;`  | <=            |
 |  `2267` |   ≧  |   `&#x2267;`  | >=            |
@@ -1039,14 +1324,17 @@
 |  `2A73` |   ⩳  |   `&#x2A73;`  | =+            |
 |  `2A74` |   ⩴  |   `&#x2A74;`  | ::=           |
 |  `2A75` |   ⩵  |   `&#x2A75;`  | ==            |
+| `F016B` |   󰅫  |  `&#xF016B;`  | ==            |
 |  `2A76` |   ⩶  |   `&#x2A76;`  | ===           |
 |  `2338` |   ⌸  |   `&#x2338;`  | ==            |
-|  `236F` |   ⍯  |   `&#x236F;`  | !=            |
-| `F098E` |   󰦎  |  `&#xF098E;`  | !=            |
-| `F098D` |   󰦍  |  `&#xF098D;`  | !=            |
+|  `E279` |     |   `&#xE279;`  | =             |
 |  `2260` |   ≠  |   `&#x2260;`  | !=            |
 |  `2262` |   ≢  |   `&#x2262;`  | !=            |
+|  `236F` |   ⍯  |   `&#x236F;`  | !=            |
+|  `EFCB` |     |   `&#xEFCB;`  | !=            |
 | `F0170` |   󰅰  |  `&#xF0170;`  | !=            |
+| `F098D` |   󰦍  |  `&#xF098D;`  | !=            |
+| `F098E` |   󰦎  |  `&#xF098E;`  | !=            |
 |  `29E3` |   ⧣  |   `&#x29E3;`  | //==          |
 |  `2248` |   ≈  |   `&#x2248;`  | ~=            |
 |  `2249` |   ≉  |   `&#x2249;`  | !~=           |
@@ -1063,7 +1351,6 @@
 |  `FF01` |  ！  |   `&#xFF01;`  | !             |
 |  `FE16` |  ︖  |   `&#xFE16;`  | ?             |
 | `F0A3D` |   󰨽  |  `&#xF0A3D;`  | information   |
-|  `FF02` |  ＂  |   `&#xFF02;`  | "             |
 | `F0C96` |   󰲖  |  `&#xF0C96;`  | cos           |
 | `F0C97` |   󰲗  |  `&#xF0C97;`  | sin           |
 | `F0C98` |   󰲘  |  `&#xF0C98;`  | tan           |
@@ -1097,40 +1384,43 @@
 |  `2A19` |   ⨙  |   `&#x2A19;`  | function      |
 | `F0295` |   󰊕  |  `&#xF0295;`  | function      |
 | `F0871` |   󰡱  |  `&#xF0871;`  | function of x |
-| `1D6FB` |   𝛻  |   `&#1D6FB;`  | nabla         |
-| `F002B` |   󰀫  |   `&#F002B;`  | alpha         |
-| `1D6FC` |   𝛼  |   `&#1D6FC;`  | alpha         |
-| `1D6FD` |   𝛽  |   `&#1D6FD;`  | beta          |
-| `1D6FE` |   𝛾  |   `&#1D6FE;`  | gamma         |
-| `1D6FF` |   𝛿  |   `&#1D6FF;`  | delta         |
-| `1D700` |   𝜀  |   `&#1D700;`  | epsilon       |
-| `1D701` |   𝜁  |   `&#1D701;`  | zeta          |
-| `1D702` |   𝜂  |   `&#1D702;`  | eta           |
-| `1D703` |   𝜃  |   `&#1D703;`  | theta         |
-| `1D704` |   𝜄  |   `&#1D704;`  | iota          |
-| `1D705` |   𝜅  |   `&#1D705;`  | kappa         |
-| `1D706` |   𝜆  |   `&#1D706;`  | lambda        |
-| `1D707` |   𝜇  |   `&#1D707;`  | mu            |
-| `1D708` |   𝜈  |   `&#1D708;`  | nu            |
-| `1D709` |   𝜉  |   `&#1D709;`  | xi            |
-| `1D70A` |   𝜊  |   `&#1D70A;`  | omicron       |
-| `1D70B` |   𝜋  |   `&#1D70B;`  | pi            |
-| `1D70C` |   𝜌  |   `&#1D70C;`  | rho           |
-| `1D70D` |   𝜍  |   `&#1D70D;`  | sigma         |
-| `1D70E` |   𝜎  |   `&#1D70E;`  | tau           |
-| `1D70F` |   𝜏  |   `&#1D70F;`  | upsilon       |
-| `1D710` |   𝜐  |   `&#1D710;`  | phi           |
-| `1D711` |   𝜑  |   `&#1D711;`  | chi           |
+| `1D6FB` |   𝛻  |  `&#x1D6FB;`  | nabla         |
+| `F002B` |   󰀫  |  `&#xF002B;`  | alpha         |
+| `1D6FC` |   𝛼  |  `&#x1D6FC;`  | alpha         |
+| `1D6FD` |   𝛽  |  `&#x1D6FD;`  | beta          |
+| `1D6FE` |   𝛾  |  `&#x1D6FE;`  | gamma         |
+| `1D6FF` |   𝛿  |  `&#x1D6FF;`  | delta         |
+| `1D700` |   𝜀  |  `&#x1D700;`  | epsilon       |
+| `1D701` |   𝜁  |  `&#x1D701;`  | zeta          |
+| `1D702` |   𝜂  |  `&#x1D702;`  | eta           |
+| `1D703` |   𝜃  |  `&#x1D703;`  | theta         |
+| `1D704` |   𝜄  |  `&#x1D704;`  | iota          |
+| `1D705` |   𝜅  |  `&#x1D705;`  | kappa         |
+| `1D706` |   𝜆  |  `&#x1D706;`  | lambda        |
+| `1D707` |   𝜇  |  `&#x1D707;`  | mu            |
+| `1D708` |   𝜈  |  `&#x1D708;`  | nu            |
+| `1D709` |   𝜉  |  `&#x1D709;`  | xi            |
+| `1D70A` |   𝜊  |  `&#x1D70A;`  | omicron       |
+| `1D70B` |   𝜋  |  `&#x1D70B;`  | pi            |
+| `1D70C` |   𝜌  |  `&#x1D70C;`  | rho           |
+| `1D70D` |   𝜍  |  `&#x1D70D;`  | sigma         |
+| `1D70E` |   𝜎  |  `&#x1D70E;`  | tau           |
+| `1D70F` |   𝜏  |  `&#x1D70F;`  | upsilon       |
+| `1D710` |   𝜐  |  `&#x1D710;`  | phi           |
+| `1D711` |   𝜑  |  `&#x1D711;`  | chi           |
 
 ## graph
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS          |
 |:-------:|:----:|:-------------:|-------------------|
+|  `EB1F` |     |   `&#xEB1F;`  | @                 |
+|  `F486` |     |   `&#xF486;`  | @                 |
 |  `F4BC` |     |   `&#xF4BC;`  | chip - cpu        |
 |  `F85A` |     |   `&#xF85A;`  | chip - cpu        |
 | `F035B` |   󰍛  |  `&#xF035B;`  | chip - cpu        |
-|  `F2DB` |     |   `&#xF2DB;`  | chip - 64bit      |
 |  `E266` |     |   `&#xE266;`  | chip              |
+|  `EC19` |     |   `&#xEC19;`  | chip              |
+|  `F2DB` |     |   `&#xF2DB;`  | chip              |
 | `F061A` |   󰘚  |  `&#xF061A;`  | chip              |
 | `F0EDF` |   󰻟  |  `&#xF0EDF;`  | chip - 32bit      |
 | `F0EE0` |   󰻠  |  `&#xF0EE0;`  | chip - 64bit      |
@@ -1139,6 +1429,7 @@
 | `F02A0` |   󰊠  |  `&#xF02A0;`  | ghost             |
 |  `E241` |     |   `&#xE241;`  | footprint         |
 | `F0DFA` |   󰷺  |  `&#xF0DFA;`  | footprint         |
+|  `EE14` |     |   `&#xEE14;`  | footprint/step    |
 |  `E69E` |     |   `&#xE69E;`  | foot              |
 |  `F361` |     |   `&#xF361;`  | foot              |
 | `F02AC` |   󰊬  |  `&#xF02AC;`  | foot              |
@@ -1156,29 +1447,42 @@
 | `F16A5` |   󱚥  |  `&#xF16A5;`  | robot love        |
 | `F16A6` |   󱚦  |  `&#xF16A6;`  | robot love        |
 |  `F4BE` |     |   `&#xF4BE;`  | robot             |
+|  `EB08` |     |   `&#xEB08;`  | robot             |
 | `F1957` |   󱥗  |  `&#xF1957;`  | chips             |
 |  `E763` |     |   `&#xE763;`  | cola              |
 | `F01E5` |   󰇥  |  `&#xF01E5;`  | dark              |
 | `10996` |   𐦖  |   `&#10996;`  | dark              |
 | `F02CB` |   󰋋  |  `&#xF02CB;`  | headphone         |
+|  `EE58` |     |   `&#xEE58;`  | headphone         |
+|  `EE59` |     |   `&#xEE59;`  | headphone         |
+|  `F025` |     |   `&#xF025;`  | headphone         |
+| `F02CC` |   󰋌  |  `&#xF02CC;`  | headphone         |
+| `F02CD` |   󰋍  |  `&#xF02CD;`  | headphone         |
+| `F02CF` |   󰋏  |  `&#xF02CF;`  | headset dock      |
 | `F1852` |   󱡒  |   `&#F1852;`  | earbuds           |
 | `F04B2` |   󰒲  |  `&#xF04B2;`  | sleep             |
 | `F04B3` |   󰒳  |  `&#xF04B3;`  | sleep off         |
 |  `E61C` |     |   `&#xE61C;`  | twig              |
 |  `E006` |     |   `&#xE006;`  | coconut tree      |
-|  `32DB` |  ㋛  |   `&#32DB;`   | smile             |
-|  `32E1` |  ㋡  |   `&#32E1;`   | smile             |
+|  `E2A2` |     |   `&#xE2A2;`  | palm tree         |
+|  `EE91` |     |   `&#xEE91;`  | vacation          |
+|  `E2A6` |     |   `&#xE2A6;`  | cactus            |
+|  `32DB` |  ㋛  |   `&#x32DB;`  | smile             |
+|  `32E1` |  ㋡  |   `&#x32E1;`  | smile             |
+| `100B7` |   𐂷  |  `&#x100B7;`  | tree              |
+| `100A9` |   𐂩  |  `&#x100a9;`  | tree              |
+| `F0DB5` |   󰶵  |  `&#xF0DB5;`  | cactus            |
 
 ## tiaji
 
 | UNICODE | ICON | HTML ENCODING | COMMENTS |
 |:-------:|:----:|:-------------:|----------|
-| `1D300` |   𝌀  |   `&#1D300;`  | -        |
-| `1D301` |   𝌁  |   `&#1D301;`  | -        |
-| `1D302` |   𝌂  |   `&#1D302;`  | -        |
-| `1D303` |   𝌃  |   `&#1D303;`  | -        |
-| `1D304` |   𝌄  |   `&#1D304;`  | -        |
-| `1D305` |   𝌅  |   `&#1D305;`  | -        |
+| `1D300` |   𝌀  |   `&#x1D300;`  | -        |
+| `1D301` |   𝌁  |   `&#x1D301;`  | -        |
+| `1D302` |   𝌂  |   `&#x1D302;`  | -        |
+| `1D303` |   𝌃  |   `&#x1D303;`  | -        |
+| `1D304` |   𝌄  |   `&#x1D304;`  | -        |
+| `1D305` |   𝌅  |   `&#x1D305;`  | -        |
 
 
 ## spinner
@@ -1228,172 +1532,263 @@
 |  `28EF` |   ⣯  |   `&#x28EF;`  | `1234678` |
 |  `28F7` |   ⣷  |   `&#x28F7;`  | `1235678` |
 
+
+| UNICODE | ICON | HTML ENCODING |
+|:-------:|:----:|:-------------:|
+| `F0E36` |   󰸶  |  `&#xF0E36;`  |
+| `F0E38` |   󰸸  |  `&#xF0E38;`  |
+| `F0E37` |   󰸷  |  `&#xF0E37;`  |
+| `F0E34` |   󰸴  |  `&#xF0E34;`  |
+| `F0E35` |   󰸵  |  `&#xF0E35;`  |
+| `F0E33` |   󰸳  |  `&#xF0E33;`  |
+
+
+| UNICODE | ICON | HTML ENCODING |
+|:-------:|:----:|:-------------:|
+| `F0ECA` |   󰻊  |  `&#xF0ECA;`  |
+| `F0EC9` |   󰻉  |  `&#xF0EC9;`  |
+
 ## misc.
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS       |
-|:-------:|:----:|:-------------:|----------------|
-| `F1050` |   󱁐  |   `&#F1050;`  | space          |
-|  `E672` |     |   `&#xE672;`  | lock           |
-|  `F023` |     |   `&#xF023;`  | lock           |
-|  `F52A` |     |   `&#xF52A;`  | unlock         |
-|  `EBE7` |     |   `&#xEBE7;`  | lock           |
-|  `EB74` |     |   `&#xEB74;`  | unlock         |
-|  `F09C` |     |   `&#xF09C;`  | unlock         |
-|  `F084` |     |   `&#xF084;`  | key            |
-|  `F43D` |     |   `&#xF43D;`  | key            |
-| `F030B` |   󰌋  |  `&#xF030B;`  | key            |
-| `F0306` |   󰌆  |  `&#xF0306;`  | key            |
-| `F1184` |   󱆄  |  `&#xF1184;`  | key            |
-| `F1185` |   󱆅  |  `&#xF1185;`  | key            |
-|  `E60A` |     |   `&#xE60A;`  | key            |
-|  `F255` |     |   `&#xF255;`  | mouse drag     |
-|  `F256` |     |   `&#xF256;`  | mouse          |
-| `F027E` |   󰉾  |  `&#xF027E;`  | ”              |
-| `F0757` |   󰝗  |  `&#xF0757;`  | “              |
-|  `F10D` |     |   `&#xF10D;`  | “              |
-|  `F10E` |     |   `&#xF10E;`  | ”              |
-| `F11A8` |   󱆨  |  `&#xF11A8;`  | ”              |
-| `F11A7` |   󱆧  |  `&#xF11A7;`  | “              |
-|  `EB33` |     |   `&#xEB33;`  | “              |
-| `F1022` |   󱀢  |   `&#F1022;`  | “              |
-| `F1021` |   󱀡  |   `&#F1021;`  | “              |
-| `F0E25` |   󰸥  |   `&#F0E25;`  | ,              |
-| `F0E24` |   󰸤  |   `&#F0E24;`  | ,              |
-| `F0E26` |   󰸦  |   `&#F0E26;`  | ,              |
-| `F0E23` |   󰸣  |   `&#F0E23;`  | ,              |
-|  `F30C` |     |   `&#xF30C;`  | monster        |
-|  `E651` |     |   `&#xE651;`  | D              |
-|  `E66D` |     |   `&#xE66D;`  | J              |
-|  `F8E2` |     |   `&#xF8E2;`  | P              |
-|  `E279` |     |   `&#xE279;`  | =              |
-|  `E27A` |     |   `&#xE27A;`  | =>             |
-|  `E374` |     |   `&#xE374;`  | N/A            |
-|  `F893` |     |   `&#xF893;`  | menu           |
-|  `E615` |     |   `&#xE615;`  | tool           |
-|  `F013` |     |   `&#xF013;`  | tool           |
-| `F0493` |   󰒓  |  `&#xF0493;`  | tool           |
-| `F0494` |   󰒔  |  `&#xF0494;`  | tool           |
-|  `EB65` |     |   `&#xEB65;`  | tool           |
-| `F05B7` |   󰖷  |   `&#F05B7;`  | tool           |
-|  `EB6D` |     |   `&#xEB6D;`  | tool           |
-| `F1064` |   󱁤  |  `&#xF1064;`  | tool           |
-|  `F425` |     |   `&#xF425;`  | tool           |
-| `F0DDF` |   󰷟  |   `&#F0DDF;`  | tool - nail    |
-| `F08EA` |   󰣪  |  `&#xF08EA;`  | hammer         |
-|  `F0E3` |     |   `&#xF0E3;`  | hammer         |
-| `F1842` |  󱡂󠠂  |  `&#xF1842;`  | hammer         |
-| `F08B7` |   󰢷  |   `&#F08B7;`  | hammer         |
-|  `EEFF` |     |   `&#EEFF;`   | *hammer        |
-|  `F204` |     |   `&#xF204;`  | switch off     |
-|  `F205` |     |   `&#xF205;`  | switch on      |
-| `F0A19` |   󰨙  |  `&#xF0A19;`  | switch off     |
-| `F0A1A` |   󰨚  |  `&#xF0A1A;`  | switch off     |
-| `F0521` |   󰔡  |  `&#xF0521;`  | switch on      |
-|  `E688` |     |   `&#xE688;`  | -              |
-|  `E717` |     |   `&#xE717;`  | github         |
-|  `F4B8` |     |   `&#xF4B8;`  | copilot        |
-|  `F480` |     |   `&#xF480;`  | gist           |
-|  `E783` |     |   `&#xE783;`  | stretch        |
-| `F0274` |   󰉴  |  `&#xF0274;`  | H#             |
-| `F0504` |   󰔄  |  `&#xF0504;`  | °C             |
-|  `E339` |     |   `&#xE339;`  | °C             |
-| `F0505` |   󰔅  |  `&#xF0505;`  | °F             |
-|  `E341` |     |   `&#xE341;`  | °F             |
-|  `E6A2` |     |   `&#xE6A2;`  | WA             |
-| `F0435` |   󰐵  |   `&#F0435;`  | HQ             |
-| `F0A0C` |   󰨌  |   `&#F0A0C;`  | LQ             |
-| `F07EF` |   󰟯  |  `&#xF07EF;`  | SD             |
-| `F07FD` |   󰟽  |  `&#xF07FD;`  | 3D             |
-| `F1A1C` |   󱨜  |  `&#xF1A1C;`  | 2D             |
-| `F083E` |   󰠾  |  `&#xF083E;`  | HK             |
-| `F0A08` |   󰨈  |  `&#xF0A08;`  | police officer |
-| `F0713` |   󰜓  |   `&#F0713;`  | 3G             |
-| `F0714` |   󰜔  |   `&#F0714;`  | 4G             |
-| `F0A6F` |   󰩯  |  `&#xF0A6F;`  | 5G             |
-| `F0D6E` |   󰵮  |  `&#xF0D6E;`  | DEV            |
-|  `EEF4` |     |   `&#xEEF4;`  | DEV            |
-| `F100D` |   󱀍  |  `&#xF100D;`  | ABC            |
-| `F002C` |   󰀬  |  `&#xF002C;`  | abc            |
-|  `EA93` |     |   `&#xEA93;`  | abc            |
-| `F100E` |   󱀎  |  `&#xF100E;`  | ABC off        |
-| `F132D` |   󱌭  |  `&#xF132D;`  | ab             |
-| `F132F` |   󱌯  |  `&#xF132F;`  | ab             |
-| `F0D47` |   󰵇  |  `&#xF0D47;`  | atm            |
-| `F132E` |   󱌮  |  `&#xF132E;`  | abeta          |
-| `F07E4` |   󰟤  |  `&#xF07E4;`  | co2            |
-| `F12FE` |   󱋾  |  `&#xF12FE;`  | CO             |
-| `F13A3` |   󱎣  |  `&#xF13A3;`  | XS             |
-| `F0A78` |   󰩸  |  `&#xF0A78;`  | TM             |
-|  `F25C` |     |   `&#xF25C;`  | TM             |
-|  `2122` |   ™  |   `&#2122;`   | TM             |
-|  `2120` |   ℠  |   `&#2120;`   | SM             |
-|  `E765` |     |   `&#xE765;`  | cisco          |
-| `F147D` |   󱑽  |  `&#xF147D;`  | waveform       |
-|  `E3BE` |     |   `&#xE3BE;`  | earthquake     |
-| `F0A30` |   󰨰  |  `&#xF0A30;`  | bug            |
-|  `EAAF` |     |   `&#xEAAF;`  | bug            |
-| `F0A2F` |   󰨯  |  `&#xF0A2F;`  | bug fixed      |
-| `F0A2E` |   󰨮  |  `&#xF0A2E;`  | bug fixed      |
-| `F0A3F` |   󰨿  |  `&#xF0A3F;`  | ..]            |
-| `F0A40` |   󰩀  |  `&#xF0A40;`  | [..            |
-| `102E8` |   𐋨  |   `&#102E8;`  | b              |
-| `102C9` |   𐋉  |   `&#102C9;`  | 6              |
-|  `F444` |     |   `&#xF444;`  | dot            |
-|  `EB8A` |     |   `&#xEB8A;`  | dot            |
-|  `F812` |     |   `&#xF812;`  | keyboard       |
-| `F09FA` |   󰧺  |   `&#F09FA;`  | keyboard       |
-| `F09F9` |   󰧹  |   `&#F09F9;`  | keyboard       |
-| `F0313` |   󰌓  |   `&#F0313;`  | keyboard       |
-|  `F11C` |     |   `&#F11C;`   | keyboard       |
-| `F0E4B` |   󰹋  |   `&#F0E4B;`  | keyboard off   |
-| `10669` |   𐙩  |   `&#10669;`  | 中             |
-| `10AE3` |   𐫣  |   `&#10AE3;`  | -              |
-| `16861` |   𖡡  |   `&#16861;`  | map pin        |
-| `F0352` |   󰍒  |   `&#F0352;`  | map pin        |
-| `F034E` |   󰍎  |   `&#F034E;`  | map pin        |
-| `1BC05` |   𛰅  |   `&#1BC05;`  | -              |
-| `1BC06` |   𛰆  |   `&#1BC06;`  | -              |
-| `1BC0A` |   𛰊  |   `&#1BC0A;`  | -              |
-| `1BC0B` |   𛰋  |   `&#1BC0B;`  | -              |
-| `1F000` |  🀀  |   `&#1F000;`  | majiang        |
-| `1F001` |  🀁  |   `&#1F001;`  | majiang        |
-| `1F002` |  🀂  |   `&#1F002;`  | majiang        |
-| `1F003` |  🀃  |   `&#1F003;`  | majiang        |
-| `F17C5` |   󱟅  |   `&#F17C5;`  | pH             |
-|  `EE3C` |     |   `&#xEE3C;`  | signature      |
-| `F0DFE` |   󰷾  |   `&#F0DFE;`  | signature      |
-| `F0DFC` |   󰷼  |   `&#F0DFC;`  | signature      |
-|  `EE7F` |     |   `&#EE7F;`   | signature      |
-| `1F718` |   🜘  |   `&#1F718;`  | -              |
-| `1F73B` |   🜻  |   `&#1F73B;`  | -              |
-|  `E245` |     |   `&#xE245;`  | -              |
-|  `29BF` |   ⦿  |   `&#x29BF;`  | circled .      |
-|  `2A00` |   ⨀  |   `&#x2A00;`  | circled .      |
-|  `29BE` |   ⦾  |   `&#x29BE;`  | circled o      |
-|  `29C2` |   ⧂  |   `&#x29C2;`  | circled o      |
-|  `29C3` |   ⧃  |   `&#x29C3;`  | circled =      |
-|  `2AF1` |   ⫱  |   `&#x2AF1;`  | circled bar    |
-|  `27DF` |   ⟟  |   `&#x27DF;`  | circled bar    |
-|  `2742` |   ❂  |   `&#x2742;`  | open circled   |
-|  `25EF` |   ◯  |   `&#x25EF;`  | circled        |
-|  `25D9` |   ◙  |   `&#x25D9;`  | circled        |
-|  `26AC` |   ⚬  |   `&#x26AC;`  | circled        |
-|  `25CC` |   ◌  |   `&#x25CC;`  | dotted circle  |
-|  `25E0` |   ◠  |   `&#x25E0;`  | half circled   |
-|  `25E1` |   ◡  |   `&#x25E1;`  | half circled   |
-|  `2B29` |   ⬩  |   `&#x2B29;`  | star           |
-|  `27E1` |   ⟡  |   `&#x27E1;`  | star           |
-|  `27E2` |   ⟢  |   `&#x27E2;`  | star           |
-|  `27E3` |   ⟣  |   `&#x27E3;`  | star           |
-|  `27D0` |   ⟐  |   `&#x27D0;`  | star           |
-|  `25C8` |   ◈  |   `&#x25C8;`  | star           |
-|  `2A40` |   ⩀  |   `&#x2A40;`  | u.             |
-|  `2A03` |   ⨃  |   `&#x2A03;`  | u.             |
-|  `228C` |   ⊌  |   `&#228C;`   | u<-            |
-|  `228D` |   ⊍  |   `&#228D;`   | u.             |
-|  `228E` |   ⊎  |   `&#228E;`   | u+             |
-|  `2A04` |   ⨄  |   `&#x2A04;`  | u+             |
-|  `2A41` |   ⩁  |   `&#x2A41;`  | u-             |
-|  `2A4B` |   ⩋  |   `&#x2A4B;`  | m              |
-|  `2239` |   ∹  |   `&#x2239;`  | -:             |
-|  `2F45` |  ⽅  |   `&#2F45;`   | 方             |
+| UNICODE | ICON | HTML ENCODING | COMMENTS          |
+|:-------:|:----:|:-------------:|-------------------|
+| `F1050` |   󱁐  |  `&#xF1050;`  | space             |
+| `f1295` |   󱊕  |  `&#xF1295;`  | tray              |
+|  `F0E7` |     |   `&#xF0E7;`  | lightning bolt
+| `F140B` |   󱐋  |  `&#xF140B;`  | lightning bolt    |
+| `F140C` |   󱐌  |  `&#xF140C;`  | lightning bolt    |
+|  `E672` |     |   `&#xE672;`  | lock              |
+|  `F023` |     |   `&#xF023;`  | lock              |
+|  `F52A` |     |   `&#xF52A;`  | unlock            |
+|  `EBE7` |     |   `&#xEBE7;`  | lock              |
+|  `EB74` |     |   `&#xEB74;`  | unlock            |
+|  `F09C` |     |   `&#xF09C;`  | unlock            |
+|  `F084` |     |   `&#xF084;`  | key               |
+|  `F43D` |     |   `&#xF43D;`  | key               |
+| `F030B` |   󰌋  |  `&#xF030B;`  | key               |
+| `F0306` |   󰌆  |  `&#xF0306;`  | key               |
+| `F1184` |   󱆄  |  `&#xF1184;`  | key               |
+| `F1185` |   󱆅  |  `&#xF1185;`  | key               |
+|  `E60A` |     |   `&#xE60A;`  | key               |
+| `F0307` |   󰌇  |  `&#xF0307;`  | keys              |
+|  `F255` |     |   `&#xF255;`  | mouse drag        |
+|  `F256` |     |   `&#xF256;`  | mouse             |
+|  `FF02` |  ＂  |   `&#xFF02;`  | "                 |
+| `F02C9` |   󰋉  |  `&#xF02C9;`  | ”                 |
+| `F027E` |   󰉾  |  `&#xF027E;`  | ”                 |
+| `F0757` |   󰝗  |  `&#xF0757;`  | “                 |
+|  `F10D` |     |   `&#xF10D;`  | “                 |
+|  `F10E` |     |   `&#xF10E;`  | ”                 |
+| `F11A8` |   󱆨  |  `&#xF11A8;`  | ”                 |
+| `F11A7` |   󱆧  |  `&#xF11A7;`  | “                 |
+|  `EB33` |     |   `&#xEB33;`  | “                 |
+| `F1022` |   󱀢  |  `&#xF1022;`  | “                 |
+| `F1021` |   󱀡  |  `&#xF1021;`  | “                 |
+| `F0E25` |   󰸥  |  `&#xF0E25;`  | ,                 |
+| `F0E24` |   󰸤  |  `&#xF0E24;`  | ,                 |
+| `f0e2b` |   󰸫  |  `&#xF0E2B;`  | ,                 |
+| `F0E26` |   󰸦  |  `&#xF0E26;`  | ,                 |
+| `F0E23` |   󰸣  |  `&#xF0E23;`  | ,                 |
+|  `F30C` |     |   `&#xF30C;`  | monster           |
+|  `E651` |     |   `&#xE651;`  | D                 |
+|  `E66D` |     |   `&#xE66D;`  | J                 |
+|  `F8E2` |     |   `&#xF8E2;`  | P                 |
+|  `E27A` |     |   `&#xE27A;`  | =>                |
+|  `E374` |     |   `&#xE374;`  | N/A               |
+|  `E640` |     |   `&#xE640;`  | empty box         |
+|  `F893` |     |   `&#xF893;`  | menu              |
+|  `E615` |     |   `&#xE615;`  | tool              |
+|  `F013` |     |   `&#xF013;`  | tool              |
+| `F0493` |   󰒓  |  `&#xF0493;`  | tool              |
+| `F0494` |   󰒔  |  `&#xF0494;`  | tool              |
+|  `EB65` |     |   `&#xEB65;`  | tool              |
+| `F05B7` |   󰖷  |   `&#F05B7;`  | tool              |
+|  `EB6D` |     |   `&#xEB6D;`  | tool              |
+| `F1064` |   󱁤  |  `&#xF1064;`  | tool              |
+|  `F425` |     |   `&#xF425;`  | tool              |
+| `F0DDF` |   󰷟  |   `&#F0DDF;`  | tool - nail       |
+| `F08EA` |   󰣪  |  `&#xF08EA;`  | hammer            |
+|  `F0E3` |     |   `&#xF0E3;`  | hammer            |
+| `F1842` |  󱡂󠠂  |  `&#xF1842;`  | hammer            |
+| `F08B7` |   󰢷  |   `&#F08B7;`  | hammer            |
+|  `EEFF` |     |   `&#EEFF;`   | *hammer           |
+|  `F204` |     |   `&#xF204;`  | switch off        |
+|  `F205` |     |   `&#xF205;`  | switch on         |
+| `F0A19` |   󰨙  |  `&#xF0A19;`  | switch off        |
+| `F0A1A` |   󰨚  |  `&#xF0A1A;`  | switch off        |
+| `F0521` |   󰔡  |  `&#xF0521;`  | switch on         |
+|  `E688` |     |   `&#xE688;`  | -                 |
+|  `f470` |     |   `&#xf470;`  | github            |
+|  `E717` |     |   `&#xE717;`  | github            |
+|  `E709` |     |   `&#xE709;`  | github            |
+|  `EA84` |     |   `&#xEA84;`  | github            |
+|  `EB00` |     |   `&#xEB00;`  | github            |
+|  `EBA1` |     |   `&#xEBA1;`  | github            |
+|  `F09B` |     |   `&#xF09B;`  | github            |
+|  `E65B` |     |   `&#xE65B;`  | github            |
+|  `F092` |     |   `&#xF092;`  | github            |
+|  `F408` |     |   `&#xF408;`  | github            |
+| `F02A4` |   󰊤  |  `&#xF02A4;`  | github            |
+|  `F4B8` |     |   `&#xF4B8;`  | copilot           |
+|  `EC1E` |     |   `&#xEC1E;`  | copilot           |
+|  `F4B9` |     |   `&#xF4B9;`  | copilot           |
+|  `F4BA` |     |   `&#xF4BA;`  | copilot           |
+|  `E7EA` |     |   `&#xE7EA;`  | github codespace  |
+|  `E7EB` |     |   `&#xE7EB;`  | gitlab            |
+|  `F198` |     |   `&#xF198;`  | slack             |
+| `F04B1` |   󰒱  |  `&#xf04b1;`  | slack             |
+|  `F480` |     |   `&#xF480;`  | gist              |
+|  `E783` |     |   `&#xE783;`  | stretch           |
+| `F0272` |   󰉲  |  `&#xF0272;`  | H=                |
+| `F0274` |   󰉴  |  `&#xF0274;`  | H#                |
+| `F0273` |   󰉳  |  `&#xF0273;`  | H>                |
+| `F0271` |   󰉱  |  `&#xF0271;`  | H<                |
+| `F0270` |   󰉰  |  `&#xF0270;`  | H6                |
+| `F0504` |   󰔄  |  `&#xF0504;`  | °C                |
+|  `E339` |     |   `&#xE339;`  | °C                |
+| `F0505` |   󰔅  |  `&#xF0505;`  | °F                |
+|  `E341` |     |   `&#xE341;`  | °F                |
+|  `E6A2` |     |   `&#xE6A2;`  | WA                |
+| `F0435` |   󰐵  |   `&#F0435;`  | HQ                |
+| `F0A0C` |   󰨌  |   `&#F0A0C;`  | LQ                |
+| `F07EF` |   󰟯  |  `&#xF07EF;`  | SD                |
+| `F07FD` |   󰟽  |  `&#xF07FD;`  | 3D                |
+| `F0EC7` |   󰻇  |  `&#xF0EC7;`  | 3D                |
+| `F1A1C` |   󱨜  |  `&#xF1A1C;`  | 2D                |
+| `F1A10` |   󱨐  |  `&#xF1A10;`  | raw off           |
+| `F12B7` |   󱊷  |  `&#xF12B7;`  | ESC               |
+| `F083E` |   󰠾  |  `&#xF083E;`  | HK                |
+| `F0A08` |   󰨈  |  `&#xF0A08;`  | police officer    |
+| `F0713` |   󰜓  |   `&#F0713;`  | 3G                |
+| `F0714` |   󰜔  |   `&#F0714;`  | 4G                |
+| `F0A6F` |   󰩯  |  `&#xF0A6F;`  | 5G                |
+| `F0D6E` |   󰵮  |  `&#xF0D6E;`  | DEV               |
+|  `EEF4` |     |   `&#xEEF4;`  | DEV               |
+| `F100D` |   󱀍  |  `&#xF100D;`  | ABC               |
+| `F002C` |   󰀬  |  `&#xF002C;`  | abc               |
+|  `EA93` |     |   `&#xEA93;`  | abc               |
+| `F100E` |   󱀎  |  `&#xF100E;`  | ABC off           |
+|  `EB80` |     |   `&#xEB80;`  | abc               |
+| `F132D` |   󱌭  |  `&#xF132D;`  | ab                |
+| `F132F` |   󱌯  |  `&#xF132F;`  | ab                |
+|  `EB2E` |     |   `&#xEB2E;`  | AB                |
+| `F0113` |   󰄓  |  `&#xF0113;`  | Ab                |
+| `F0D47` |   󰵇  |  `&#xF0D47;`  | atm               |
+| `F132E` |   󱌮  |  `&#xF132E;`  | abeta             |
+| `F07E4` |   󰟤  |  `&#xF07E4;`  | co2               |
+| `F12FE` |   󱋾  |  `&#xF12FE;`  | CO                |
+| `F13A3` |   󱎣  |  `&#xF13A3;`  | XS                |
+| `F13A2` |   󱎢  |  `&#xF13A2;`  | XXS               |
+| `F13A4` |   󱎤  |  `&#xF13A4;`  | S                 |
+| `F13A5` |   󱎥  |  `&#xF13A5;`  | M                 |
+| `F13A7` |   󱎧  |  `&#xF13A7;`  | XL                |
+| `F13A8` |   󱎨  |  `&#xF13A8;`  | XXL               |
+| `F13A9` |   󱎩  |  `&#xF13A9;`  | 3XL               |
+| `F0A78` |   󰩸  |  `&#xF0A78;`  | TM                |
+|  `F25C` |     |   `&#xF25C;`  | TM                |
+|  `2122` |   ™  |   `&#2122;`   | TM                |
+|  `2120` |   ℠  |   `&#2120;`   | SM                |
+| `F0CBE` |   󰲾  |  `&#xF0CBE;`  | AM                |
+| `F07CF` |   󰟏  |  `&#xf07cf;`  | HD                |
+|  `E0A3` |     |   `&#xE0A3;`  | CN                |
+|  `E0A1` |     |   `&#xE0A1;`  | LN                |
+| `F0EFE` |   󰻾  |  `&#xF0EFE;`  | ID                |
+|  `E765` |     |   `&#xE765;`  | cisco             |
+| `F147D` |   󱑽  |  `&#xF147D;`  | waveform          |
+|  `E3BE` |     |   `&#xE3BE;`  | earthquake        |
+| `F0A30` |   󰨰  |  `&#xF0A30;`  | bug               |
+|  `EAAF` |     |   `&#xEAAF;`  | bug               |
+| `F0A2F` |   󰨯  |  `&#xF0A2F;`  | bug fixed         |
+| `F0A2E` |   󰨮  |  `&#xF0A2E;`  | bug fixed         |
+| `F0A3F` |   󰨿  |  `&#xF0A3F;`  | ..]               |
+| `F0A40` |   󰩀  |  `&#xF0A40;`  | [..               |
+| `102E8` |   𐋨  |   `&#102E8;`  | b                 |
+| `102C9` |   𐋉  |   `&#102C9;`  | 6                 |
+|  `F444` |     |   `&#xF444;`  | dot               |
+|  `EB8A` |     |   `&#xEB8A;`  | dot               |
+|  `EA71` |     |   `&#xEA71;`  | dot               |
+|  `EA7C` |     |   `&#xEA7C;`  | dot dot dot       |
+|  `FFED` |   ￭  |   `&#xFFED;`  | square dot        |
+|  `FFEE` |   ￮  |   `&#xFFEE;`  | empty dot         |
+|  `F812` |     |   `&#xF812;`  | keyboard          |
+| `F09FA` |   󰧺  |  `&#xF09FA;`  | keyboard          |
+| `F09F9` |   󰧹  |  `&#xF09F9;`  | keyboard          |
+| `F0313` |   󰌓  |  `&#xF0313;`  | keyboard          |
+|  `F11C` |     |   `&#xF11C;`  | keyboard          |
+| `F0E4B` |   󰹋  |  `&#xF0E4B;`  | keyboard off      |
+| `10669` |   𐙩  |  `&#x10669;`  | 中                |
+| `10AE3` |   𐫣  |  `&#x10AE3;`  | -                 |
+| `16861` |   𖡡  |  `&#x16861;`  | map pin           |
+| `F0352` |   󰍒  |  `&#xF0352;`  | map pin           |
+| `F034E` |   󰍎  |  `&#xF034E;`  | map pin           |
+| `1BC05` |   𛰅  |  `&#x1BC05;`  | -                 |
+| `1BC06` |   𛰆  |  `&#x1BC06;`  | -                 |
+| `1BC0A` |   𛰊  |  `&#x1BC0A;`  | -                 |
+| `1BC0B` |   𛰋  |  `&#x1BC0B;`  | -                 |
+| `1F000` |   🀀  |  `&#x1F000;`  | majiang           |
+| `1F001` |   🀁  |  `&#x1F001;`  | majiang           |
+| `1F002` |   🀂  |  `&#x1F002;`  | majiang           |
+| `1F003` |   🀃  |  `&#x1F003;`  | majiang           |
+| `F17C5` |   󱟅  |  `&#xF17C5;`  | pH                |
+|  `EE3C` |     |  `&#xxEE3C;`  | signature         |
+| `F0DFE` |   󰷾  |  `&#xF0DFE;`  | signature         |
+| `F0DFC` |   󰷼  |  `&#xF0DFC;`  | signature         |
+|  `EE7F` |     |   `&#xEE7F;`  | signature         |
+| `F0F49` |   󰽉  |  `&#xF0F49;`  | signature         |
+| `1F718` |   🜘  |  `&#x1F718;`  | -                 |
+| `1F73B` |   🜻  |  `&#x1F73B;`  | -                 |
+|  `E245` |     |   `&#xE245;`  | -                 |
+|  `29BF` |   ⦿  |   `&#x29BF;`  | circled .         |
+|  `2A00` |   ⨀  |   `&#x2A00;`  | circled .         |
+|  `29BE` |   ⦾  |   `&#x29BE;`  | circled o         |
+|  `29C2` |   ⧂  |   `&#x29C2;`  | circled o         |
+|  `29C3` |   ⧃  |   `&#x29C3;`  | circled =         |
+|  `2AF1` |   ⫱  |   `&#x2AF1;`  | circled bar       |
+|  `27DF` |   ⟟  |   `&#x27DF;`  | circled bar       |
+|  `2742` |   ❂  |   `&#x2742;`  | open circled      |
+|  `25EF` |   ◯  |   `&#x25EF;`  | circled           |
+|  `25D9` |   ◙  |   `&#x25D9;`  | circled           |
+|  `26AC` |   ⚬  |   `&#x26AC;`  | circled           |
+|  `25CC` |   ◌  |   `&#x25CC;`  | dotted circle     |
+|  `25E0` |   ◠  |   `&#x25E0;`  | half circled      |
+|  `25E1` |   ◡  |   `&#x25E1;`  | half circled      |
+|  `2B29` |   ⬩  |   `&#x2B29;`  | star              |
+|  `27E1` |   ⟡  |   `&#x27E1;`  | star              |
+|  `27E2` |   ⟢  |   `&#x27E2;`  | star              |
+|  `27E3` |   ⟣  |   `&#x27E3;`  | star              |
+|  `27D0` |   ⟐  |   `&#x27D0;`  | star              |
+|  `25C8` |   ◈  |   `&#x25C8;`  | star              |
+|  `2A40` |   ⩀  |   `&#x2A40;`  | u.                |
+|  `2A03` |   ⨃  |   `&#x2A03;`  | u.                |
+|  `228C` |   ⊌  |   `&#x228C;`  | u<-               |
+|  `228D` |   ⊍  |   `&#x228D;`  | u.                |
+|  `228E` |   ⊎  |   `&#x228E;`  | u+                |
+|  `2A04` |   ⨄  |   `&#x2A04;`  | u+                |
+|  `2A41` |   ⩁  |   `&#x2A41;`  | u-                |
+|  `2A4B` |   ⩋  |   `&#x2A4B;`  | m                 |
+|  `2239` |   ∹  |   `&#x2239;`  | -:                |
+|  `2F45` |  ⽅  |   `&#x2F45;`  | 方                |
+|  `F0CB` |     |   `&#xF0CB;`  | list              |
+|  `F0CA` |     |   `&#xF0CA;`  | list              |
+| `F1384` |   󱎄  |  `&#xF1384;`  | list              |
+| `F0756` |   󰝖  |  `&#xF0756;`  | list              |
+| `F0D07` |   󰴇  |  `&#xF0D07;`  | list              |
+| `F0546` |   󰕆  |  `&#xF0546;`  | list              |
+| `F0545` |   󰕅  |  `&#xF0545;`  | list              |
+| `F15AB` |   󱖫  |  `&#xF15AB;`  | list              |
+| `f098f` |   󰦏  |  `&#xF098F;`  | list              |
+|  `F27F` |     |   `&#xF27F;`  | :)                |
+| `F09AF` |   󰦯  |  `&#xF09AF;`  | 2FA               |
+| `F001B` |   󰀛  |  `&#xF001B;`  | AC                |
+|  `F1A8` |     |   `&#xF1A8;`  | pied piper        |
+|  `EE24` |     |   `&#xEE24;`  | bezier curve      |
+|  `EBB6` |     |   `&#xebb6;`  | combine           |
+|  `F066` |     |   `&#xF066;`  | compress          |
+| `F011B` |   󰄛  |  `&#xF011B;`  | cat               |
+|  `F086` |     |   `&#xF086;`  | comments          |
+| `F0115` |   󰄕  |  `&#xF0115;`  | cash 100          |
+|  `EFCA` |     |   `&#xEFCA;`  | check             |
+| `F0C6F` |   󰱯  |  `&#xF0C6F;`  | devil             |
+| `F0CBF` |   󰲿  |  `&#xF0CBF;`  | fm                |
+| `F18C0` |   󱣀  |  `&#xF18C0;`  | sickls            |
+| `F1887` |   󱢇  |  `&#xF1887;`  | hammer and sickls |
