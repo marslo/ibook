@@ -288,30 +288,32 @@ $ brew cu -a -y -f
 >   gnulist="gnu-sed gnu-tar gnu-which grep ed findutils gnu-indent"
 >   ```
 
-check [init packages install](./init.md#packages-installation)
+check [init packages install](../init.md#packages-installation)
+
 
 <!--sec data-title="deprecated (macvim)" data-id="section0" data-show=true data-collapse=true ces-->
-- deprecated (macvim)
-  ```bash
-  $ brew install macvim --with-override-system-vim --HEAD
-  # OR
-  $ brew tap macvim-dev/macvim
-  $ brew install --HEAD macvim-dev/macvim/macvim
 
-  $ brew linkapps macvim
-  # or
-  $ brew linkapps
-  # or
-  $ HOME_APPS = File.expand_path("/Applications")
-  # or (Using none-link Info.plist and PkgInfo in *.app/Contents/)
-  $ mkdir -p /Applications/gVim.app/Contents
-  $ ln -sf /usr/local/Cellar/macvim/HEAD-a5e0355/gVim.app/Contents/* /Applications/gVim.app/Contents/
-  $ mv /Applications/gVim.app/Contents/Info.plist{,.link}
-  $ mv /Applications/gVim.app/Contents/PkgInfo{,.link}
-  $ cp /Applications/gVim.app/Contents/Info.plist{.link,}
-  $ cp /Applications/gVim.app/Contents/PkgInfo{.link,}
-  ```
+```bash
+$ brew install macvim --with-override-system-vim --HEAD
+# OR
+$ brew tap macvim-dev/macvim
+$ brew install --HEAD macvim-dev/macvim/macvim
+
+$ brew linkapps macvim
+# or
+$ brew linkapps
+# or
+$ HOME_APPS = File.expand_path("/Applications")
+# or (Using none-link Info.plist and PkgInfo in *.app/Contents/)
+$ mkdir -p /Applications/gVim.app/Contents
+$ ln -sf /usr/local/Cellar/macvim/HEAD-a5e0355/gVim.app/Contents/* /Applications/gVim.app/Contents/
+$ mv /Applications/gVim.app/Contents/Info.plist{,.link}
+$ mv /Applications/gVim.app/Contents/PkgInfo{,.link}
+$ cp /Applications/gVim.app/Contents/Info.plist{.link,}
+$ cp /Applications/gVim.app/Contents/PkgInfo{.link,}
+```
 <!--endsec-->
+
 
 - `brew upgrade` ignore specific formulas
 
@@ -969,7 +971,7 @@ $ brew -v edit <formula>
 $ brew -v edit openjdk
 ```
 
-![brew -v](../screenshot/osx/brew-v.png)
+![brew -v](../../screenshot/osx/brew-v.png)
 
 #### manual install formula
 ```bash

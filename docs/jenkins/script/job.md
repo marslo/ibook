@@ -710,8 +710,8 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
 
     // browser
     temp.origin.browser  = orgScm?.browser ?: '-'
-    GithubWeb newBrowser = it.definition.scm.browser in GithubWeb ? orgScm.browser : new GithubWeb( config.url - (/\.git$/) )
-    temp.updated.browser = newBrowser.toString()
+    GithubWeb newBrowser = job.definition.scm.browser in GithubWeb ? orgScm.browser : new GithubWeb( config.url - (/\.git$/) )
+    temp.updated.browser = newBrowser.url.toString()
 
     // update
     GitSCM newScm = new GitSCM(
@@ -738,12 +738,12 @@ if ( CredentialsProvider.lookupCredentials( StandardCredentials.class, jenkins.m
 // List keys = [ 'credId', 'branches', 'url', 'browser' ]
 List<String> keys = done.values().first().origin.keySet()
 println done.collect { item ->
-  def rows = [item.origin, item.updated].collect { row ->
+  def rows = [item.value.origin, item.value.updated].collect { row ->
     keys.collectEntries {[ (it): ( row[it] in List ? row[it].join(',') : row[it].toString() ) ]}
   }
   def widths = keys.collectEntries { k -> [ (k): rows.collect { it[k].length() }.max() ] }
-  def printRow = { row -> keys.collect { row[it].padRight(widths[it]) }.join(' | ') }
-  ">> ${item.name} <<\n\t" + rows.collect(printRow).join('\n\t')
+  Closure printRow = { row -> keys.collect { row[it].padRight(widths[it]) }.join(' | ') }
+  ">> ${item.key} <<\n\t" + rows.collect(printRow).join('\n\t')
 }.join('\n\n')
 
 // vim:tabstop=2:softtabstop=2:shiftwidth=2:expandtab:filetype=groovy:
