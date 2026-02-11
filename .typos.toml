@@ -1,0 +1,19 @@
+[files]
+extend-exclude = []
+ignore-hidden = true
+ignore-files = true
+ignore-dot = true
+ignore-vcs = true
+ignore-global = true
+ignore-parent = true
+
+[default]
+binary = false
+check-filename = true
+check-file = true
+unicode=true
+locale = "en"
+
+[default.extend-words]
+# <typo> = "<correction>"
+ba = 'ba'

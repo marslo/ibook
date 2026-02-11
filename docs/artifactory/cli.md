@@ -32,9 +32,9 @@
 > - [* JFrog CLI v2](https://jfrog.com/help/r/jfrog-cli/jfrog-cli-v2)
 > - [* Artifactory CLI](https://jfrog.com/help/r/jfrog-cli/jfrog-cli?tocId=BuJVcwbkUARNwOvFl9CuRg)
 > - [* Get Cli](https://jfrog.com/getcli/)
-> - [JFrog CLI](https://www.jfrog.com/confluence/display/CLI/JFrog+CLI)
+> - [JFrog CLI](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/jfrog-cli)
 > - [INSTALL JFROG CLI](https://jfrog.com/getcli/)
-> - [Download and Install](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/install)
+> - [Download and Install](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/download-and-install-the-jfrog-cli)
 > - [jfrog/jfrog-cli](https://github.com/jfrog/jfrog-cli)
 >   - [jfrog-cli/build/deb_rpm/v2-jf/build-scripts/pack.sh](https://github.com/jfrog/jfrog-cli/blob/dev/build/deb_rpm/v2-jf/build-scripts/pack.sh)
 >   - [jfrog-cli/build/deb_rpm/v2-jf/build-scripts/deb-install.sh](https://github.com/jfrog/jfrog-cli/blob/dev/build/deb_rpm/v2-jf/build-scripts/deb-install.sh)
@@ -292,7 +292,7 @@ $ jf options
 
 - [via password/api key](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory#authenticating-with-username-and-password-api-key)
   ```bash
-  $ jf c add --serverId rt-api-key \
+  $ jf c add --server-id rt-api-key \
              --artifactory-url=https://artifactory.sample.com/artifactory \
              --user=marslo \
              --password=A***********************************************************************x \
@@ -328,7 +328,7 @@ $ jf options
 
 - [access token](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory#authenticating-with-an-access-token)
   ```bash
-  $ jf c add --serverId sample
+  $ jf c add --server-id sample
              --artifactory-url=https://artifactory.sample.com/artifactory \
              --user=marslo \
              --access-token=c**************************************************************Q \
@@ -366,8 +366,9 @@ $ jf rt use <SERVER_ID>
 ### deploy
 
 > [!NOTE|label:references:]
-> - [Placeholders](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/using-placeholders)
-> - [Uploading Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#uploading-files)
+> - [Placeholders](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/using-placeholders)
+> - [Uploading Files](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/generic-files)
+> - [iMarslo: deploy bundle artifact](./api.md#deploy-bundle-artifact)
 
 ```bash
 $ jf rt u \
@@ -376,32 +377,80 @@ $ jf rt u \
      --retries=3 \
      --exclusions="*backup*;*sandbox*" \
      <LOCAL_PATH>/(*) <REPO>/<TARGET_PATH>/{1} \
+
+$ jf rt u file.zip repo-name/folder/
+
+# same as `-H "X-Explode-Archive: true"` in API
+$ jf rt file.tar repo-name/folder/ --explode
 ```
 
 ### download
 
 > [!NOTE|label:references:]
-> - [Downloading Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#downloading-files)
+> - [Downloading Files](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/generic-files)
+
+```bash
+# i.e.:
+$ jf rt dl repo-name/cool-froggy.zip --flat
+
+# download entire folder
+$ jf rt dl repo-name/all-my-frogs/ all-my-frogs/
+
+# download only `*.zip` files
+$ jf rt dl "repo-name/*.zip" all-my-frogs/
+
+# download the latest created file
+$ jf rt dl  "repo-name/all-my-frogs/" --sort-by=created --sort-order=desc --limit=1
+```
 
 ### copy
 
 > [!NOTE|label:references:]
-> - [Copying Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#copying-files)
+> - [Copying Files](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/generic-files)
+
+```bash
+$ jf rt cp source-frog-repo/rabbit/ target-frog-repo/rabbit/
+
+# copy with properties
+$ jf rt cp "source-frog-repo/rabbit/*.zip" target-frog-repo/rabbit/ --props=Version=1.0
+```
 
 ### move
 
 > [!NOTE|label:references:]
-> - [Moving Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#moving-files)
+> - [Moving Files](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/generic-files)
+
+```bash
+$ jf rt mv source-frog-repo/rabbit/ target-frog-repo/rabbit/
+
+# moving with flat structure
+$ jf rt mv "source-frog-repo/rabbit/*" target-frog-repo/rabbit/ --flat
+```
 
 ### remove
 
 > [!NOTE|label:references:]
-> - [Deleting Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#deleting-files)
+> - [Deleting Files](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/generic-files)
+
+```bash
+$ jf rt del frog-repo/rabbit/
+
+# delete zip only
+$ jf rt del "frog-repo/rabbit/*.zip"
+```
 
 ### search
 
 > [!NOTE|label:references:]
-> - [Searching Files](https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/generic-files#searching-files)
+> - [Searching Files](https://jfrog.com/help/r/jfrog-applications-and-cli-documentation/generic-files)
+
+```bash
+# to list all files
+$ jf rt s frog-repo/rabbit/
+
+# searching with fields
+$ jf rt s example-repo-local --include="actual_md5;modified_by;updated;depth"
+```
 
 ### manage properties
 
@@ -445,7 +494,7 @@ $ cat spec.json
   "files": [{
     "aql": {
       "items.find": {
-        "repo": "my-repo",
+        "repo": "repo-name",
         "type":"folder",
         "depth" : "1",
         "created": { "$before": "15d" }
@@ -550,7 +599,7 @@ $ cat .jfrog/projects/npm.yaml
   > Arguments:
   >   ci                        Run npm ci.
   >   publish, p                Packs and deploys the npm package to the designated npm repository.
-  >   install, i, isntall, add  Run npm install.
+  >   install, i, install, add  Run npm install.
   >   help, h
   > ```
 
