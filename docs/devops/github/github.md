@@ -7,6 +7,12 @@
   - [branch](#branch)
 - [actions](#actions)
 - [apps](#apps)
+- [gpg commit signature](#gpg-commit-signature)
+  - [generate gpg key pair](#generate-gpg-key-pair)
+  - [get gpg public key](#get-gpg-public-key)
+  - [local git config](#local-git-config)
+  - [verify](#verify)
+  - [tips](#tips)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -112,7 +118,7 @@
 >   - [Generate semver](https://github.com/marketplace/actions/generate-semver)
 > - [pre-commit](https://github.com/marketplace/actions/pre-commit)
 >   - [pre-commit ci](https://pre-commit.ci/)
-> - utillity
+> - utility
 >   - [Upload a Build Artifact](https://github.com/marketplace/actions/upload-a-build-artifact)
 >   - [Download a Build Artifact](https://github.com/marketplace/actions/download-a-build-artifact)
 >   - [GitHub API Request](https://github.com/marketplace/actions/github-api-request)
@@ -141,3 +147,187 @@
 > [!NOTE|label:references:]
 > - [Slack + GitHub](https://github.com/marketplace/slack-github)
 > - [CommitCheck](https://github.com/marketplace/commitcheck)
+
+
+## gpg commit signature
+
+> [!NOTE|label:references:]
+> - [Managing commit signature verification](https://docs.github.com/en/authentication/managing-commit-signature-verification)
+
+### generate gpg key pair
+
+> [!NOTE|label:references:]
+> `(9) ECC (sign and encrypt)` + `(1) Curve 25519` means:
+>  - `ed25519` for signing
+>  - `cv25519` for encryption
+
+```bash
+$ gpg --full-generate-key
+gpg (GnuPG) 2.4.9; Copyright (C) 2025 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  (14) Existing key from card
+Your selection? 9
+Please select which elliptic curve you want:
+   (1) Curve 25519 *default*
+   (4) NIST P-384
+   (6) Brainpool P-256
+Your selection? 1
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0) 0
+Key does not expire at all
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: marslo
+Email address: marslo@domain.com
+Comment:
+You selected this USER-ID:
+    "marslo <marslo@domain.com>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+gpg: directory '/Users/marslo/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/Users/marslo/.gnupg/openpgp-revocs.d/5**************************************3.rev'
+public and secret key created and signed.
+
+pub   ed25519 2026-02-11 [SC]
+      5**************************************3
+uid                      marslo <marslo@domain.com>
+sub   cv25519 2026-02-11 [E]
+```
+
+### get gpg public key
+
+```bash
+# export
+$ gpg --armor --export marslo@domain.com
+
+# or via keyid
+$ KEY_ID="$(gpg --list-secret-keys --with-colons marslo@domain.com | awk -F: '/^sec/ {print $5}')"
+$ KEY_ID="$(gpg --list-secret-keys --keyid-format LONG marslo@domain.com | sed -rn 's|^sec[^/]+ed25519/([^ ]+) .+]$|\1|p')"
+$ gpg --armor --export ${KEY_ID}
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+And copy the output into Github:
+1. Go to `Settings` -> `SSH and GPG keys` -> `New GPG key`
+2. Paste the public key into the `Key` field and click `Add GPG key`
+
+### local git config
+
+> [!TIP|label:references:]
+> - this configuration is sign with gpg key what particular repos with particular account automatically
+> - this mostly used when you have multiple accounts and want to sign commit with different gpg key for different account
+
+```git
+# ~/.gitconfig
+[include]
+  path              = ~/.marslo/gitconfig.d/account
+```
+
+```git
+# ~/.marslo/gitconfig.d/account
+[includeIf "hasconfig:remote.*.url:*com?marslo_ghe/**"]
+  path              = ~/.marslo/gitconfig.d/accounts/marslo_ghe
+[includeIf "gitdir/i:~/code/github/**"]
+  path              = ~/.marslo/gitconfig.d/accounts/marslo_ghe
+```
+
+> [!NOTE|label:references:]
+> ```bash
+> $ git help config
+>   gpg.format
+>       Specifies which key format to use when signing with --gpg-sign. Default is "openpgp". Other possible
+>       values are "x509", "ssh".
+> ```
+> - [Telling Git about your GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key#telling-git-about-your-gpg-key)
+> - [Telling Git about your SSH key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key#telling-git-about-your-ssh-key)
+> - [Telling Git about your X.509 key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key#telling-git-about-your-x509-key-1)
+
+```git
+# ~/.marslo/gitconfig.d/accounts/marslo_ghe
+[user]
+  name       = marslo
+  email      = marslo@domain.com
+  # signingkey => "${KEY_ID}"
+  signingkey = 7**************3
+
+[commit]
+    gpgsign  = true
+
+[tag]
+    gpgsign  = true
+```
+
+### verify
+```bash
+$ git me
+marslo <marslo@domain.com>     # accounts/marslo_ghe [G]
+
+$ git config user.signingkey
+7**************3
+
+$ git config commit.gpgsign
+true
+
+# create code change and commit
+$ git show --show-signature -s
+commit 09daeb35ddb7a78f395c0e2a323b300d7c565fce (origin/devel, origin/HEAD)
+gpg: Signature made Tue Feb 10 16:19:41 2026 PST
+gpg:                using EDDSA key 5**************************************3
+gpg: Good signature from "marslo <marslo@domain.com>" [ultimate]
+Author: marslo <marslo@domain.com>
+Date:   2026-02-10 16:19:41 -0800 Tuesday
+
+    test: verify gpg sign key
+
+    Signed-off-by: marslo <marslo@domain.com>
+```
+
+### tips
+
+- show signature in git log
+  ```bash
+  $ git config --global log.showSignature true
+  ```
+
+- list GPG public key via API/CLI via Github
+  ```bash
+  # API
+  $ curl -sL -u marslo_ghe:$GITHUB_API_TOKEN https://api.github.com/users/marslo_ghe/gpg_keys |
+    jq -r '.[] | .key_id + "\n" + .raw_key'
+  # -- or authentication with gh CLI --
+  $ curl -H "Authorization: Bearer $(gh auth token)" \
+         -sL https://api.github.com/users/marslo_ghe/gpg_keys |
+    jq -r '.[] | .key_id + "\n" + .raw_key'
+
+  # CLI
+  $ gh api users/marslo_ghe/gpg_keys --jq '.[] | .key_id + "\n" + .raw_key'
+  ```
