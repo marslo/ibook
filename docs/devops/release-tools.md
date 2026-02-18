@@ -3,6 +3,7 @@
 
 - [semantic-release](#semantic-release)
   - [install](#install)
+  - [conventional commits](#conventional-commits)
   - [plugins](#plugins)
     - [.releaserc.json](#releasercjson)
     - [with conventionalcommits](#with-conventionalcommits)
@@ -13,7 +14,7 @@
     - [check preset loader](#check-preset-loader)
 - [poetry](#poetry)
   - [install and upgrade](#install-and-upgrade)
-    - [enviornment](#enviornment)
+    - [environment](#environment)
     - [cleanup](#cleanup)
   - [new project and init](#new-project-and-init)
     - [new pyproject.toml](#new-pyprojecttoml)
@@ -41,6 +42,20 @@ $ npm install -g semantic-release @semantic-release/changelog @semantic-release/
 
 # or full install
 $ npm install -g semantic-release @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/changelog @semantic-release/exec @semantic-release/git @semantic-release/github
+```
+
+## conventional commits
+
+> [!TIP|label:references:]
+> - [* iMarslo: commit message](./git/tricky.html#commit-message)
+> - [commitlint](https://commitlint.js.org/)
+> - [commitlint configuration](https://commitlint.js.org/reference/configuration.html)
+
+```bash
+$ npm i -g @commitlint/config-conventional
+
+# or
+$ npm install -g @commitlint/cli @commitlint/config-conventional
 ```
 
 ## plugins
@@ -344,7 +359,7 @@ Signed-off-by: marslo <marslo.jiao@gmail.com>
   isCanceled: false,
   killed: false
 } +0ms
-  semantic-release:git commited files: [ 'CHANGELOG.md' ] +0ms
+  semantic-release:git committed files: [ 'CHANGELOG.md' ] +0ms
 [5:28:11 PM] [semantic-release] [@semantic-release/git] › ℹ  Prepared Git release: v2.0.0
 [5:28:11 PM] [semantic-release] › ✔  Completed step "prepare" of plugin "@semantic-release/git"
 [5:28:11 PM] [semantic-release] › ℹ  Start step "generateNotes" of plugin "@semantic-release/release-notes-generator"
@@ -460,11 +475,11 @@ $ curl -sSL https://install.python-poetry.org | python3 -
 # upgrade
 $ poetry self update
 
-# unintall
+# uninstall
 $ poetry self uninstall
 ```
 
-### enviornment
+### environment
 ```bash
 # check env
 $ poetry env info
@@ -589,7 +604,7 @@ Installing dependencies from lock file
 
 Package operations: 8 installs, 0 updates, 0 removals
 
-  - Installing astroid (4.0.2)
+  - Installing asteroid (4.0.2)
   - Installing dill (0.4.0)
   - Installing isort (7.0.0)
   - Installing mccabe (0.7.0)

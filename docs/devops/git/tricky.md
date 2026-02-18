@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+- [commit message](#commit-message)
 - [tricky](#tricky)
   - [hidden feature](#hidden-feature)
   - [quick edit gitconfig](#quick-edit-gitconfig)
@@ -40,6 +41,48 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## commit message
+
+> [!TIP|label:references:]
+> - [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+> - [@commitlint/config-conventional](https://www.npmjs.com/package/@commitlint/config-conventional)
+
+```bash
+$ npm i -g @commitlint/config-conventional
+
+# or
+$ npm install -g @commitlint/cli @commitlint/config-conventional
+```
+
+> [!TIP|label:references:]
+> - [commitlint](https://commitlint.js.org/)
+> - [commitlint configuration](https://commitlint.js.org/reference/configuration.html)
+
+```js
+// ~/.commitlintrc.js
+// CommonJS Syntax (most common)
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'header-max-length': [0],                   // disable the header-max-length rule
+    'body-max-line-length': [0],                // disable the body-max-line-length rule
+  }
+};
+```
+
+- for jira tickets
+  ```js
+  // .commitlintrc.disable-subject-case.js
+  module.exports = {
+    extends: ['@commitlint/config-conventional'],
+    rules: {
+      'header-max-length': [0],                   // disable the header-max-length rule
+      'body-max-line-length': [0],                // disable the body-max-line-length rule
+      'subject-case': [0],                        // disable the subject-case rule
+    },
+  };
+  ```
+
 ## tricky
 
 {% hint style='tip' %}
@@ -69,7 +112,7 @@ $ git var -l
 ```bash
 $ git config --edit --global
 
-# quick repalce config
+# quick replace config
 $ git config --global --replace-all core.pager cat
 ```
 
@@ -387,7 +430,7 @@ host=github.com
 username=marslo
 password=gho_jzuA**************************1VRqXz
 
-# show antoher credential with specific subpath
+# show another credential with specific subpath
 $ echo -e 'protocol=https\nhost=github.com/mdevapraba' | git credential fill
 protocol=https
 host=github.com/mdevapraba
@@ -568,7 +611,7 @@ $ git commit -s
 - i.e.:
   ```bash
   [alias]
-  ### [c]ommit [a]dd [a]all
+  ### [c]omit [a]dd [a]all
   caa         = "!f() { \
                         git add --all; \
                         declare signed=\"$(git log -n1 --format='%(trailers:key=Signed-off-by,valueonly,separator=%x2C)' | command grep -q \"$(git config user.email)\"; echo $?)\"; \

@@ -12,7 +12,7 @@
   - [file changes](#file-changes)
 - [tools](#tools)
   - [git-stat](#git-stat)
-  - [nova_git_stats](#nova_git_stats)
+  - [nova git stats](#nova-git-stats)
   - [git-stats](#git-stats)
   - [git fame](#git-fame)
   - [git-user-stats](#git-user-stats)
@@ -183,7 +183,7 @@ $ git log --pretty=format: --name-only | sort | uniq -c | sort /R | head -100
 >   ![git stat --help](../../screenshot/git/git-stat-result.png)
 
 
-### [nova_git_stats](https://github.com/mishina2228/nova_git_stats?tab=readme-ov-file)
+### [nova git stats](https://github.com/mishina2228/nova_git_stats?tab=readme-ov-file)
 ```bash
 $ gem install nova_git_stats
 $ /usr/local/lib/ruby/gems/3.3.0/gems/nova_git_stats-2.4.1/bin/git_stats generate -o stats
@@ -252,21 +252,21 @@ vim $ git fame --cost hour,month --since='5 days ago'
     Total hours: 28.3
     Total loc: 1838
     Total months: 5.5
-    | Author             |   hrs |   mths |   loc |   coms |   fils |  distribution   |
-    |:-------------------|------:|-------:|------:|-------:|-------:|:----------------|
-    | dkearns            |     2 |      2 |   658 |      3 |     20 | 35.8/13.0/15.0  |
-    | lilydjwg           |     3 |      1 |   325 |      2 |     15 | 17.7/ 8.7/11.3  |
-    | Christian Brabandt |     4 |      1 |   300 |      6 |     46 | 16.3/26.1/34.6  |
-    | zeertzjq           |     2 |      1 |   176 |      3 |     19 | 9.6/13.0/14.3   |
-    | Sergey Vlasov      |     2 |      0 |   126 |      1 |      9 | 6.9/ 4.3/ 6.8   |
-    | Casey Tucker       |     2 |      0 |    83 |      1 |     11 | 4.5/ 4.3/ 8.3   |
-    | thinca             |     2 |      0 |    61 |      1 |      4 | 3.3/ 4.3/ 3.0   |
-    | kawaii-Code        |     2 |      0 |    32 |      1 |      2 | 1.7/ 4.3/ 1.5   |
-    | user202729         |     2 |      0 |    28 |      1 |      1 | 1.5/ 4.3/ 0.8   |
-    | VanaIgr            |     2 |      0 |    18 |      1 |      3 | 1.0/ 4.3/ 2.3   |
-    | h_east             |     2 |      0 |    16 |      1 |      1 | 0.9/ 4.3/ 0.8   |
-    | Melker Ulander     |     2 |      0 |    11 |      1 |      1 | 0.6/ 4.3/ 0.8   |
-    | gi1242             |     2 |      0 |     4 |      1 |      1 | 0.2/ 4.3/ 0.8   |
+    | AUTHOR             | HRS | MTHS | LOC | COMS | FILES | DISTRIBUTION   |
+    |:-------------------|----:|-----:|----:|-----:|------:|:---------------|
+    | dkearns            |   2 |    2 | 658 |    3 |    20 | 35.8/13.0/15.0 |
+    | lilydjwg           |   3 |    1 | 325 |    2 |    15 | 17.7/ 8.7/11.3 |
+    | Christian Brabandt |   4 |    1 | 300 |    6 |    46 | 16.3/26.1/34.6 |
+    | zeertzjq           |   2 |    1 | 176 |    3 |    19 | 9.6/13.0/14.3  |
+    | Sergey Vlasov      |   2 |    0 | 126 |    1 |     9 | 6.9/ 4.3/ 6.8  |
+    | Casey Tucker       |   2 |    0 |  83 |    1 |    11 | 4.5/ 4.3/ 8.3  |
+    | thinca             |   2 |    0 |  61 |    1 |     4 | 3.3/ 4.3/ 3.0  |
+    | kawaii-Code        |   2 |    0 |  32 |    1 |     2 | 1.7/ 4.3/ 1.5  |
+    | user202729         |   2 |    0 |  28 |    1 |     1 | 1.5/ 4.3/ 0.8  |
+    | VanaIgr            |   2 |    0 |  18 |    1 |     3 | 1.0/ 4.3/ 2.3  |
+    | h_east             |   2 |    0 |  16 |    1 |     1 | 0.9/ 4.3/ 0.8  |
+    | Melker Ulander     |   2 |    0 |  11 |    1 |     1 | 0.6/ 4.3/ 0.8  |
+    | gi1242             |   2 |    0 |   4 |    1 |     1 | 0.2/ 4.3/ 0.8  |
 ```
 
 ### [git-user-stats](https://gist.github.com/shitchell/783cc8a892ed1591eca2afeb65e8720a)

@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1078,SC1079,SC2015,SC2216
+# shellcheck source=/dev/null disable=SC1078,SC1079,SC2015,SC2216
 # =============================================================================
 #   FileName : deploy.sh
 #     Author : marslo.jiao@gmail.com
 #    Created : 2020-09-27 22:03:34
-# LastChange : 2025-02-12 10:48:30
+# LastChange : 2026-02-17 17:31:47
 # =============================================================================
 
-# shellcheck disable=SC2154,SC1091
-source "${iRCHOME}"/bin/bash-color.sh
+# @credit: https://github.com/ppo/bash-colors
+# @usage:  or copy & paste the `c()` function from:
+#          https://github.com/ppo/bash-colors/blob/master/bash-colors.sh#L3
+# shellcheck disable=SC2015
+test -f "${HOME}/.marslo/bin/bash-colors.sh" && source "${HOME}/.marslo/bin/bash-colors.sh" || { c() { :; }; }
 
 root="$(git rev-parse --show-toplevel)"
 target="${root}/.target_book"
@@ -110,7 +113,7 @@ function updateBook() {
     exit 1
   else
     yes | rm -rf "${target:?}"/*
-    yes | cp -rf "${book}"/* "${target}"/
+    yes | cp -Rf "${book}"/* "${target}"/
 
     cd "${target}" || exit
 
