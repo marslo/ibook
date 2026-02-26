@@ -10,6 +10,7 @@
   - [comment on pr](#comment-on-pr)
   - [edit pr](#edit-pr)
   - [merge pr](#merge-pr)
+  - [list PR](#list-pr)
 - [issues](#issues)
   - [list issues](#list-issues)
   - [create issue](#create-issue)
@@ -167,6 +168,69 @@ $ gh pr merge <PR_NUMBER> --<merge_method> --delete-branch
 
 # i.e.:
 $ gh pr merge 4 --squash --delete-branch
+```
+
+### list PR
+
+> [!NOTE|label:options:]
+> - `--state` : open, closed, merged, all
+> - `--json` : specify the fields to output in json format
+> - `--jq` : filter the json output with jq
+
+```bash
+# --limit : number of PR to fetch
+$ gh pr list -R ${OWNER}/${REPO} --state merged --limit 30 \
+             --json number,title,createdAt,mergedAt \
+             --jq '.[] | "PR #\(.number) | createAt: \(.createdAt) | mergeAt \(.mergedAt)"'
+
+# filter by date
+$ gh pr list -R ${OWNER}/${REPO} --state merged \
+     --json number,title,createdAt,mergedAt \
+     --jq '.[] | select(.mergedAt | startswith("2026-02-17")) |
+          [
+            "PR : #\(.number)",
+            "createAt: \(.createdAt)",
+            "mergeAt: \(.mergedAt)"
+          ] | join("\n")'
+     ''
+
+# with more info
+$ gh pr list -R ${OWNER}/${REPO} --state merged \
+     --json number,title,url,createdAt,mergedAt,author,mergedBy,autoMergeRequest \
+     --jq '
+          .[] | select( .mergedAt | startswith("2026-02-17") ) |
+          [
+            "PR        : #\(.number) - \(.title)",
+            "URL       : \(.url)",
+            "Author    : \(.author.login)",
+            "MergedBy  : \(.mergedBy.login // "No Merged")",
+            "CreateAt  : \(.createdAt) UTC, \(.createdAt | fromdateiso8601 | localtime | strftime("%Y-%m-%d %H:%M:%S")) PST",
+            "MergeAt   : \(.mergedAt) UTC, \(.mergedAt | fromdateiso8601 | localtime | strftime("%Y-%m-%d %H:%M:%S")) PST",
+            "AutoMerge : \(.autoMergeRequest.mergeMethod // "Manual")",
+            "---"
+          ] | join("\n")
+     '
+```
+
+#### list PR info
+
+```bash
+$ gh api repos/${OWNER}/${REPO}/pulls/${PR_NUMBER} \
+  --jq '{
+    "author": .user.login,
+    "mergeBy": ( if .merged_by then .merged_by.login else "No Merged" end ),
+    "isAutoMerge": ( if .auto_merge != null then "Yes" else "No" end ),
+    "mergeMethod": ( if .auto_merge != null then .auto_merge.merge_method else "manual" end )
+  }'
+
+# or
+$ gh api repos/${OWNER}/${REPO}/pulls/${PR_NUMBER} \
+  --jq '{
+    "author": .user.login,
+    "mergeBy": (.merged_by.login // "No Merged"),
+    "isAutoMerge": (.auto_merge != null),
+    "mergeMethod": (.auto_merge.merge_method // "Manual")
+  }'
 ```
 
 ## issues

@@ -86,7 +86,7 @@
   > - [Anatomy of a GPG Key](https://davesteele.github.io/gpg/2014/09/20/anatomy-of-a-gpg-key/)
 
 
-  | LETTER | MEANING       | flag             | CONSTANT          | COMMENTS                                      |
+  | LETTER | MEANING       | FLAG             | CONSTANT          | COMMENTS                                      |
   |--------|---------------|------------------|-------------------|-----------------------------------------------|
   | `[C]`  | Certification | `0x01`           | PUBKEY_USAGE_CERT | 认证其他秘钥/给其他证书签名                   |
   | `[S]`  | Signing       | `0x02`           | PUBKEY_USAGE_SIG  | 签名,如给文件添加数字签名, 给 git commit 签名 |
@@ -130,7 +130,7 @@ $ gpg --full-generate-key
   ---------
   sec   ed25519/505104FC7CD6CA33 2024-05-08 [SC]
         00D2F41050BF7D9BE6B27545505104FC7CD6CA33
-  uid                 [ultimate] marslo <marslo.jiao@gmail.com>
+  uid                 [ultimate] marslo <marslo@domain.com>
   ssb   cv25519/188C36434D6B9F66 2024-05-08 [E]
   ```
 
@@ -141,7 +141,7 @@ $ gpg --full-generate-key
   ---------
   pub   ed25519/5C0980808D968494 2024-05-08 [SC]
         6AADCD68E268DEF623C4DD7E5C0980808D968494
-  uid                 [ultimate] marslo <marslo.jiao@gmail.com>
+  uid                 [ultimate] marslo <marslo@domain.com>
   sub   cv25519/F065036D0FF76ABA 2024-05-08 [E]
   ```
 
@@ -157,7 +157,7 @@ $ gpg --full-generate-key
   sec:u:255:22:5C0980808D968494:1715138996:::u:::scESC:::+::ed25519:::0:
   fpr:::::::::6AADCD68E268DEF623C4DD7E5C0980808D968494:
   grp:::::::::DA2F273B9FCDBCE44E8F5B1590CC29F774C557A5:
-  uid:u::::1715138996::689D1C164C7C46F315D0FF60C5CDE6E509C6D853::marslo <marslo.jiao@gmail.com>::::::::::0:
+  uid:u::::1715138996::689D1C164C7C46F315D0FF60C5CDE6E509C6D853::marslo <marslo@domain.com>::::::::::0:
   ssb:u:255:18:F065036D0FF76ABA:1715138996::::::e:::+::cv25519::
   fpr:::::::::B6550514914F4E14976755BBF065036D0FF76ABA:
   grp:::::::::C55CD6EE8B06EC939090352069AB9D37CFA0C7FA:
@@ -181,12 +181,12 @@ $ gpg --full-generate-key
   This is free software: you are free to change and redistribute it.
   There is NO WARRANTY, to the extent permitted by law.
 
-  sec  ed25519/133597088DEF3074 2024-05-08 marslo (marslo) <marslo.jiao@gmail.com>
+  sec  ed25519/133597088DEF3074 2024-05-08 marslo (marslo) <marslo@domain.com>
 
   Delete this key from the keyring? (y/N) y
   This is a secret key! - really delete? (y/N) y
 
-  pub  ed25519/133597088DEF3074 2024-05-08 marslo (marslo) <marslo.jiao@gmail.com>
+  pub  ed25519/133597088DEF3074 2024-05-08 marslo (marslo) <marslo@domain.com>
   Delete this key from the keyring? (y/N) y
   ```
 
@@ -214,7 +214,7 @@ $ gpg --full-generate-key
 #### export
 - export public key
   ```bash
-  $ gpg --output public.pgp --armor --export <KEYID>
+  $ gpg --output public.gpg --armor --export <KEYID>
   ```
 
   - check content
@@ -230,7 +230,7 @@ $ gpg --full-generate-key
 
 - export secret key
   ```bash
-  $ gpg --output private.pgp --armor --export-secret-key <KEYID>
+  $ gpg --output private.gpg --armor --export-secret-key <KEYID>
   # or
   $ gpg -o ~/private.asc --export-secret-key <KEYID>
   ```
@@ -261,9 +261,9 @@ $ gpg --full-generate-key
 
 - backup keys
   ```bash
-  $ gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup <KEYID>
+  $ gpg --output backupkeys.gpg --armor --export-secret-keys --export-options export-backup <KEYID>
   # or
-  $ gpg --output backupkeys.pgp --armor --export --export-options export-backup <KEYID>
+  $ gpg --output backupkeys.gpg --armor --export --export-options export-backup <KEYID>
   ```
 
 #### import
@@ -275,9 +275,9 @@ $ gpg --full-generate-key
 
 ```bash
 # import private key
-$ gpg --import private.pgp
+$ gpg --import private.gpg
 gpg: /home/marslo/.gnupg/trustdb.gpg: trustdb created
-gpg: key 5C0980808D968494: public key "marslo <marslo.jiao@gmail.com>" imported
+gpg: key 5C0980808D968494: public key "marslo <marslo@domain.com>" imported
 gpg: key 5C0980808D968494: secret key imported
 gpg: Total number processed: 1
 gpg:               imported: 1
@@ -290,7 +290,7 @@ $ gpg --list-keys
 -------------------------------
 pub   ed25519 2024-05-08 [SC]
       6AADCD68E268DEF623C4DD7E5C0980808D968494
-uid           [ unknown] marslo <marslo.jiao@gmail.com>
+uid           [ unknown] marslo <marslo@domain.com>
 sub   cv25519 2024-05-08 [E]
 
 # trust
@@ -314,15 +314,15 @@ gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
 -------------------------------
 pub   ed25519 2024-05-08 [SC]
       6AADCD68E268DEF623C4DD7E5C0980808D968494
-uid           [ultimate] marslo <marslo.jiao@gmail.com>
+uid           [ultimate] marslo <marslo@domain.com>
 sub   cv25519 2024-05-08 [E]
 ```
 
-- import publid key
+- import public key
   ```bash
   # import public key
-  $ gpg --import public.pgp
-  gpg: key 5C0980808D968494: "marslo <marslo.jiao@gmail.com>" not changed
+  $ gpg --import public.gpg
+  gpg: key 5C0980808D968494: "marslo <marslo@domain.com>" not changed
   gpg: Total number processed: 1
   gpg:              unchanged: 1
   ```
@@ -341,7 +341,7 @@ sub   cv25519 2024-05-08 [E]
 
 - recover from backup keys
   ```bash
-  $ gpg --import-options restore --import backupkeys.pgp
+  $ gpg --import-options restore --import backupkeys.gpg
   ```
 
 ### usage
@@ -512,7 +512,7 @@ removed '/Users/marslo/.marslo/.password-store/test.gpg'
 
 - alfred workflow
   ```bash
-  $ brew isntall --HEAD pinentry-mac
+  $ brew install --HEAD pinentry-mac
 
   # using pinentry-mac instead of pinentry for alfred workflow
   $ [[ -d "$HOME/.gnupg" ]] || mkdir "$HOME/.gnupg"

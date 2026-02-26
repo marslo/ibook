@@ -34,6 +34,7 @@ $ docker system prune --volumes
 
   ```bash
   $ docker system df
+  $ docker system df -v
   ```
 
 ### [prune build cache](https://docs.docker.com/reference/cli/docker/builder/prune/)
@@ -46,6 +47,12 @@ inqm9ef8j6121j79yti92w2o5        true        0B      3 weeks ago
 
 # or
 $ docker builder prune [ --all ] [ --force ] [ --keep-storage ]
+
+# or
+$ docker builder prune --filter "type=exec.cache
+
+# or
+$ docker builder prune --filter "unused-for=0h
 ```
 
 ### prune containers

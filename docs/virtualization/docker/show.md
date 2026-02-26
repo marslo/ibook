@@ -50,7 +50,7 @@
   5e5f59e3aff3        3129a2ca29d7        "/configmap-reload -…"   2 months ago        Exited (137) 2 months ago                       k8s_rules-configmap-reloader_prometheus-k8s-0_monitoring_aeba5164-dda4-11ec-b785-0cc47aff0b92_1
   ```
 
-- via foramt
+- via format
   {% raw %}
   ```bash
   $ docker ps -f 'status=exited' --format 'table {{.ID}}\t{{.Image}}\t{{.Command}}\t{{.RunningFor}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}' | head -2
@@ -225,6 +225,9 @@ Images          5         1         9.81GB    8.384GB (85%)
 Containers      1         0         0B        0B
 Local Volumes   4449      4         172.2GB   156.7GB (90%)
 Build Cache     0         0         0B        0B
+
+# or with verbose
+$ docker system df -v
 ```
 
 ### [events](https://docs.docker.com/engine/reference/commandline/system_events/)

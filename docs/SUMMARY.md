@@ -24,6 +24,7 @@
   * [ssl](cheatsheet/ssl/ssl.md)
     * [cheatsheet](cheatsheet/ssl/cheatsheet.md)
     * [keys](cheatsheet/ssl/keys.md)
+    * [ssh](cheatsheet/ssl/ssh.md)
     * [keystore](cheatsheet/ssl/keystore.md)
     * [verification](cheatsheet/ssl/verification.md)
     * [server](cheatsheet/ssl/server.md)

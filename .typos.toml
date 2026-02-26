@@ -13,8 +13,20 @@ check-filename = true
 check-file = true
 unicode=true
 locale = "en"
+extend-ignore-re = [
+  '(sed|awk|grep|tar|bash|set)\s+-[a-zA-Z]+',
+  '\s-[a-zA-Z]+',
+  # [c]ommit, d[i]ff, ...
+  "\\w*\\[\\w\\]\\w*",
+  # ansicolor
+  "\\w+=.*\\\\033.*",
+  "\\w*\\\\033\\S+",
+  # vim modeline
+  "(?m)^.*\\bvim:.*$"
+]
 
 [default.extend-words]
 # <typo> = "<correction>"
 ba = 'ba'
 certifi = 'certifi'
+fpr = 'fpr'
