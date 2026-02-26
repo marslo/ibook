@@ -5,8 +5,8 @@
   - [generate ssh public key](#generate-ssh-public-key)
   - [start gpg-agent with ssh support](#start-gpg-agent-with-ssh-support)
 - [git config](#git-config)
-  - [global config](#global-config)
-  - [multiple account and keys](#multiple-account-and-keys)
+  - [set config globally](#set-config-globally)
+  - [setup for multiple accounts and keys](#setup-for-multiple-accounts-and-keys)
   - [add gpg key to github](#add-gpg-key-to-github)
   - [verify](#verify)
 - [backup and restore gpg key](#backup-and-restore-gpg-key)
@@ -18,7 +18,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 > [!TIP]
-> - [* iMarslo: gpg](../../devops/adminTools.md#gpg)
+> - [* iMarslo: gpg](./gpg.md)
 
 | LETTER | MEANING       | FLAG             | CONSTANT          | COMMENTS                                      |
 |--------|---------------|------------------|-------------------|-----------------------------------------------|
@@ -102,7 +102,8 @@ HOST *
 
 ## git config
 
-### global config
+### set config globally
+
 ```bash
 $ git config --global user.signingkey 6**************D
 
@@ -113,7 +114,7 @@ $ git config --global commit.gpgsign true
 $ git config --global gpg.program $(which gpg)
 ```
 
-### multiple account and keys
+### setup for multiple accounts and keys
 
 ```bash
 $ cat ~/.gitconfig.d/person
@@ -138,9 +139,9 @@ $ cat ~/.gitconfig.d/work
 
 $ cat ~/.gitconfig
 [includeIf "gitdir/i:~/git/person/**"]
-  path              = ~/.gitconfig.d/person
+  path       = ~/.gitconfig.d/person
 [includeIf "gitdir/i:~/git/work/**"]
-  path              = ~/.gitconfig.d/work
+  path       = ~/.gitconfig.d/work
 ```
 
 ### add gpg key to github
