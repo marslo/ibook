@@ -105,7 +105,7 @@ $ brew install gnu-indent --with-default-names
 $ brew install file-formula
 ```
 
-#### applications(brew, cask and [mas](https://github.com/mas-cli/mas))
+#### applications(brew, cask and mas)
 
 > [!NOTE|label:youtube-dl example:]
 > - [devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
@@ -230,6 +230,21 @@ mkdryden/misc
 vitorgalvao/tiny-scripts
 ```
 <!--endsec-->
+
+#### App store outdated
+```bash
+$ mas outdated
+1611347086  iShot Pro  (2.6.6  -> 2.6.7)
+ 409203825  Numbers    (14.4   -> 14.5)
+ 520993579  pwSafe     (12.0.2 -> 12.0.4)
+
+$ mas upgrade 409203825
+Password:
+==> Downloading Numbers 14.5 (14.5)
+==> Downloaded Numbers 14.5 (14.5)
+==> Updating Numbers 14.5 (14.5)
+==> Updated Numbers 14.5 (14.5) in /Applications/Numbers.app
+```
 
 #### alternative list
 ```bash
@@ -595,7 +610,7 @@ sudo rm -fr ~/Library/Application\ Support/Oracle/Java
 
 ### xcode
 
-> [!NOTE|label:check in seperate page]
+> [!NOTE|label:check in separate page]
 > - [iMarslo: xcode](./xcode.md)
 
 ### xcrun
@@ -2364,7 +2379,7 @@ EOF
       Checksumming GPT Header (Primary GPT Header : 1)…
        GPT Header (Primary GPT Header : 1): verified   CRC32 $9E905196
       Checksumming GPT Partition Data (Primary GPT Table : 2)…
-      GPT Partition Data (Primary GPT Tabl: verified   CRC32 $29140A79
+      GPT Partition Data (Primary GPT Table: verified   CRC32 $29140A79
       Checksumming  (Apple_Free : 3)…
                           (Apple_Free : 3): verified   CRC32 $00000000
       Checksumming disk image (Apple_HFS : 4)…
