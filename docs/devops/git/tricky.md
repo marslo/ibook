@@ -98,6 +98,77 @@ module.exports = {
 {% endhint %}
 
 ### hidden feature
+
+#### [git --list-cmds](https://git-scm.com/docs/git#Documentation/git.txt---list-cmdsgroupgroup)
+
+> [!NOTE|label:references:]
+> - [git --list-cmds](https://git-scm.com/docs/git#Documentation/git.txt---list-cmdsgroupgroup)
+> - [command-list.txt](https://github.com/git/git/blob/master/command-list.txt)
+> - [git-completion.bash](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash)
+
+| CATEGORY               | DESCRIPTION                   | DESCRIPTION      | EXAMPLE                             |
+|------------------------|-------------------------------|------------------|-------------------------------------|
+| mainporcelain          | Primary User Commands         | 核心用户命令     | `add`, `commit`                     |
+| ancillaryinterrogators | Secondary Query Commands      | 辅助查询命令     | `blame`, `status`                   |
+| ancillarymanipulators  | Secondary Action Commands     | 辅助操作命令     | `clean`, `gc`                       |
+| plumbinginterrogators  | Low-Level Data Extraction     | 底层管道查询     | `cat-file`, `ls-tree`, `rev-parse`  |
+| plumbingmanipulators   | Low-Level Object Manipulation | 底层管道操作     | `hash-object`, `update-index`       |
+| synchingrepositories   | Network & Sync Commands       | 仓库同步命令     | `fetch`, `pull`, `push`             |
+| foreignscminterface    | External SCM Interfaces       | 异构 SCM 接口    | `svn`, `hg`, `p4`                   |
+| purehelpers            | Internal Utilities            | 纯内部辅助程序   | `credential`, `mergetool--lib`      |
+| synchelpers            | Transport Protocols           | 同步辅助协议     | `remote-http`, `upload-pack`        |
+| guide                  | Conceptual Manuals            | 官方指南与教程   | `tutorial`, `revisions`, `glossary` |
+| developerinterfaces    | Git Core Dev Tools            | 开发者接口       | -                                   |
+| userinterfaces         | Native GUIs                   | 图形化界面 (GUI) | `gitk`, `gui`                       |
+
+
+```bash
+$ git --list-cmds=builtins
+$ git --list-cmds=parseopt
+$ git --list-cmds=deprecated
+$ git --list-cmds=main
+$ git --list-cmds=others
+$ git --list-cmds=nohelpers
+$ git --list-cmds=alias
+$ git --list-cmds=config
+```
+
+```bash
+# list-<category>
+$ git --list-cmds=list-ancillaryinterrogators
+$ git --list-cmds=list-ancillarymanipulators
+$ git --list-cmds=list-developerinterfaces
+$ git --list-cmds=list-foreignscminterface
+$ git --list-cmds=list-guide
+$ git --list-cmds=list-mainporcelain
+$ git --list-cmds=list-plumbinginterrogators
+$ git --list-cmds=list-plumbingmanipulators
+$ git --list-cmds=list-purehelpers
+$ git --list-cmds=list-synchelpers
+$ git --list-cmds=list-synchingrepositories
+$ git --list-cmds=list-userinterfaces
+
+# i.e.:
+$ git --list-cmds=list-guide
+core-tutorial
+credentials
+cvs-migration
+diffcore
+everyday
+faq
+glossary
+namespaces
+remote-helpers
+submodules
+tutorial
+tutorial-2
+workflows
+
+# and
+$ git help tutorial-2
+$ git help help
+```
+
 #### [git var](https://git-scm.com/docs/git-var)
 ```bash
 $ git var GIT_COMMITTER_IDENT

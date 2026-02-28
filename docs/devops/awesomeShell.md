@@ -1910,7 +1910,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ fzf --listen --sync --bind 'focus:transform-header:curl -s localhost:$FZF_PORT?limit=0 | jq .' --height 100%
   ```
 
-- [`--style`]
+- `--style`
 
   > [!NOTE|label:references:]
   > - [#4160 Add style presets](https://github.com/junegunn/fzf/issues/4160)
