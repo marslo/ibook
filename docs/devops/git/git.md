@@ -5,7 +5,7 @@ git command study and practice
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [appoint](#appoint)
-  - [git alias](#git-alias)
+  - [environment](#environment)
   - [specifying ranges](#specifying-ranges)
 - [commit](#commit)
   - [get revision number](#get-revision-number)
@@ -22,6 +22,9 @@ git command study and practice
   - [change head](#change-head)
   - [get first parent branch](#get-first-parent-branch)
 - [tag](#tag)
+  - [show tags](#show-tags)
+  - [sort git tags](#sort-git-tags)
+  - [filter tags](#filter-tags)
   - [lightweight VS. annotated](#lightweight-vs-annotated)
 - [status](#status)
   - [list ignored](#list-ignored)
@@ -61,11 +64,8 @@ git command study and practice
   - [get difference between two branches](#get-difference-between-two-branches)
   - [diff ignore whitespace](#diff-ignore-whitespace)
 - [tag](#tag-1)
-  - [discribe](#discribe)
-  - [get distance between tags](#get-distance-between-tags)
+  - [describe](#describe)
   - [get revision in particular branch](#get-revision-in-particular-branch)
-  - [show all tags for particular revision](#show-all-tags-for-particular-revision)
-  - [get tag and distance (depth)](#get-tag-and-distance-depth)
 - [checkout](#checkout)
   - [sparse-checkout](#sparse-checkout)
   - [checkout specific commit](#checkout-specific-commit)
@@ -82,8 +82,10 @@ git command study and practice
   - [tricky](#tricky)
 - [for-each-ref](#for-each-ref)
   - [get refs days ago](#get-refs-days-ago)
-  - [format](#format-1)
+- [format](#format-1)
   - [date format](#date-format)
+  - [color](#color)
+  - [git alias](#git-alias)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -101,20 +103,25 @@ git command study and practice
 > - [gitglossary(7) Manual Page](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/gitglossary.html)
 {% endhint %}
 
+> [!NOTE|label:references:]
+> - [Git Cheat Sheet](https://git-scm.com/cheat-sheet)
+
 ## appoint
-### [git alias](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/.gitalias)
+### environment
 ```bash
-br      = branch
-co      = checkout
-coa     = commit --amend --no-edit
-pl      = !git --no-pager log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative --max-count=3
-pls     = log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative
-fpl     = log --color --graph --pretty=tformat:'%C(red)%H%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative
-fl      = log -p --graph --color --graph
-rlog    = "!bash -c 'while read branch; do \n\
-             git fetch --all --force; \n\
-             git pl remotes/origin/$branch; \n\
-           done < <(git rev-parse --abbrev-ref HEAD) '"
+# debug
+# export GIT_TRACE=1
+# export GIT_TRACE_PERFORMANCE=1
+export GIT_SSL_NO_VERIFY=true
+# unstaged (*) and staged (+)
+export GIT_PS1_SHOWDIRTYSTATE=true
+# %
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+# $
+export GIT_PS1_SHOWSTASHSTATE=true
+# for plumbing commands completion
+export GIT_COMPLETION_SHOW_ALL_COMMANDS=1
+export GIT_COMPLETION_SHOW_ALL=1
 ```
 
 ### [specifying ranges](https://git-scm.com/docs/gitrevisions#_specifying_ranges)
@@ -189,13 +196,8 @@ e06b245740ac0c73f9454b6d96758e3a4a804901
 - `rev-parse`
   ```bash
   $ git rev-parse --short HEAD
-
-  # or
-  $ git rev-parse --short=7 HEAD
-
-  # i.e.:
-  $ git rev-parse --short HEAD
   e06b24574
+
   $ git rev-parse --short=7 HEAD
   e06b245
   ```
@@ -212,7 +214,7 @@ $ git rev-list --no-walk <commit-id>^
 > - [xueliu/version-up.sh](https://gist.github.com/xueliu/e8dfacf22a4be0f7be58a27f094cadbe)
 
 ```bash
-$ git rev-list --no-walk <commmit-id>..HEAD | tail -1
+$ git rev-list --no-walk <commit-id>..HEAD | tail -1
 ```
 
 ## branch
@@ -222,7 +224,7 @@ $ git rev-list --no-walk <commmit-id>..HEAD | tail -1
   $ git symbolic-ref HEAD
   refs/heads/main
 
-  # [or](https://stackoverflow.com/a/62340432/2940319)
+  # or: https://stackoverflow.com/a/62340432/2940319
   $ git rev-parse --symbolic-full-name HEAD
   refs/heads/main
   ```
@@ -248,7 +250,7 @@ $ git rev-list --no-walk <commmit-id>..HEAD | tail -1
   $ git symbolic-ref HEAD | sed -e "s/^refs\/heads\///"
   main
 
-  # [or](https://stackoverflow.com/a/33485172/2940319)
+  # or: https://stackoverflow.com/a/33485172/2940319
   $ git name-rev --name-only HEAD
   main
   ```
@@ -274,16 +276,15 @@ $ git branch --no-color \
              --no-abbrev \
              --contains |
       sed -rne 's:^[ \s]*origin/([^\ ]+).*$:\1:p'
-```
-- or
-  ```bash
-  $ git name-rev --name-only HEAD |
-        sed -rne 's:^[ \s]*([^\]+/){2}([^~]+).*$:\2:p'
 
-  # or
-  $ git name-rev --name-only HEAD |
-        sed -rne 's:^[ \s]*remotes/origin/([^~]+).*$:\1:p'
-  ```
+# or
+$ git name-rev --name-only HEAD |
+      sed -rne 's:^[ \s]*([^\]+/){2}([^~]+).*$:\2:p'
+
+# or
+$ git name-rev --name-only HEAD |
+      sed -rne 's:^[ \s]*remotes/origin/([^~]+).*$:\1:p'
+```
 
 ### create empty branch
   - create an empty branch
@@ -298,7 +299,7 @@ $ git branch --no-color \
   - push to remote
     ```bash
     $ git add --all .
-    $ git commit -m 'inital an empty branch'
+    $ git commit -m 'initial an empty branch'
     $ git push --force -u origin HEAD:<BRANCH_NAME>
     ```
 
@@ -310,7 +311,7 @@ $ git branch --no-color \
                             USAGE: git init-repo <REMOTE_URL> [DEFAULT_BRANCH] [LOCAL_DIR] \n\
                             OPT: \n\
                                 REMOTE_URL: mandatory \n\
-                                DEFAULT_BRANCH: optinal. default is 'master' \n\
+                                DEFAULT_BRANCH: optional. default is 'master' \n\
                                 LOCAL_DIR: optional. default is current directory: '\"$(pwd)\"' \n\
                           \"\"\"; \
                           declare remoteURL=\"$1\"; \
@@ -333,7 +334,7 @@ $ git branch --no-color \
     ```
 
 ### get branch name from reversion
-- `branch -a --contians`
+- `branch -a --contains`
   ```bash
   $ git branch -a --contains a3879d3
   * master
@@ -369,7 +370,7 @@ $ git branch --no-color \
   $ git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)
   origin/meta/config
 
-  # [or](https://stackoverflow.com/a/49418399/2940319)
+  # or: https://stackoverflow.com/a/49418399/2940319
   $ git status -bsuno
   ## master...origin/master
   ```
@@ -512,6 +513,57 @@ $ git branch --sort=committerdate   # ASC
 
 ## tag
 
+### [show tags](https://stackoverflow.com/a/37497511/2940319)
+```bash
+$ git tag --points-at <revision>
+```
+
+```bash
+# get tags for `HEAD`:
+$ git tag --points-at HEAD
+
+# or: https://stackoverflow.com/a/23394114/2940319
+$ git name-rev --tags --name-only $(git rev-parse <revision>)
+
+# example
+$ git name-rev --tags --name-only $(git rev-parse HEAD)
+```
+
+### [sort git tags](https://andy-carter.com/blog/sort-git-tags-by-ascending-and-descending-semver)
+
+> [!TIP]
+> prepend "-" to reverse sort order.
+> - ascending  : `--sort=<type>`
+> - descending : `--sort=-<type>`
+>
+> references:
+> - [How to sort git tags by version string order of form rc-X.Y.Z.W?](https://stackoverflow.com/a/22634649/2940319)
+> - [How can I list all tags in my Git repository by the date they were created?](https://stackoverflow.com/a/test70112/2940319)
+> - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
+
+- via `v:refname` or `version:refname`
+- by created data
+  ```bash
+  $ git for-each-ref --sort=creatordate --format='%(refname) %(creatordate)' refs/tags
+
+  # or
+  $ git tag --format='%(creatordate:short)%09%(refname:strip=2)' --sort=creatordate
+
+  # or
+  $ git for-each-ref --sort=taggerdate --format='%(tag) %(taggerdate) %(taggername) %(subject)' refs/tags
+
+  # much better
+  $ git for-each-ref --sort=taggerdate \
+                     --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' refs/tags |
+        awk 'BEGIN { FS = "_,,,_"  } ; { t=strftime("%Y-%m-%d  %H:%M",$2); printf "%-20s %-18s %-25s %s\n", t, $1, $4, $3  }'
+  ```
+
+### [filter tags](https://www.reddit.com/r/git/comments/hj6s0j/find_tags_with_git_describe_on_other_branches/?utm_source=share&utm_medium=web2x&context=3)
+```bash
+$ git describe --dirty --tags --long --match *nightly*
+nightly#82-2001310818-1765-gc18894b193
+```
+
 ### lightweight VS. annotated
 
 - show tags details
@@ -535,16 +587,14 @@ $ git branch --sort=committerdate   # ASC
   # annotated
   $ git cat-file -t v1.1-annot
   tag
-  ```
 
-- [or](https://stackoverflow.com/a/40480534/2940319)
-  ```bash
+  # or: https://stackoverflow.com/a/40480534/2940319
   $ git show-ref -d --tags       |
     cut -b 42-                   | # to remove the commit-id
     sort                         |
     sed 's/\^{}//'               | # remove ^{} markings
     uniq -c                      | # count identical lines
-    sed 's/2\ refs\/tags\// a /' | # 2 identicals = annotated
+    sed 's/2\ refs\/tags\// a /' | # 2 identical = annotated
     sed 's/1\ refs\/tags\//lw /'
   ```
 
@@ -633,6 +683,7 @@ $ git branch --sort=committerdate   # ASC
 - `ls-files`
   ```bash
   $ git ls-files --others --ignored --exclude-standard
+
   # or
   $ git ls-files -o -i --exclude-standard
   bin/cfssl
@@ -661,6 +712,15 @@ $ git branch --sort=committerdate   # ASC
   ```
 
 - `clean`
+
+  > [!NOTE|label:references:]
+  > - `-X`: remove only files ignored by git
+  > - `-x`: remove all untracked files, including ignored ones (use with caution)
+  > - `-n`: dry-run, show what would be removed without actually removing them
+  > - `-d`: remove untracked directories in addition to untracked files
+  > - `-f`: force, required to actually remove the files (without this option, `git clean` will not delete anything)
+  > - `-ff`: force with more force, allows removing files even if they are ignored by git (use with caution)
+
   ```bash
   $ git clean -ndX
   Would remove bin/
@@ -689,12 +749,12 @@ $ git branch --sort=committerdate   # ASC
 > [!NOTE|label:Git Change Detection Strategy:]
 >
 >> |              OPTION             | MEANING                        | DESCRIPTION                                                                             |
->> |:-------------------------------:|--------------------------------|-----------------------------------------------------------------------------------------|
+>> |:------------------------------- |--------------------------------|-----------------------------------------------------------------------------------------|
 >> | `-M[N]`, `--find-renames[=<N>]` | detect Renames                 | Detects renamed files (rename detection)<br>e.g., from a.txt → b.txt.                   |
->> |  `-C[N]`, `--find-copies[=<N>]` | detect Copies                  | Detects file copies (copy detection)<br>e.g., a.txt → b.txt with similar content.       |
->> |      `--find-copies-harder`     | more aggressive copy detection | Attempts copy detection even for newly added files, not just tracked ones.              |
->> |  `-D`, `--irreversible-delete`  | irreversible delete            | Treats deleted files as untracked<br>i.e., no longer in the index.                      |
->> |          `--no-renames`         | disable rename detection       | Explicitly disables rename detection (equivalent to default behavior when not enabled). |
+>> | `-C[N]`, `--find-copies[=<N>]`  | detect Copies                  | Detects file copies (copy detection)<br>e.g., a.txt → b.txt with similar content.       |
+>> | `--find-copies-harder`          | more aggressive copy detection | Attempts copy detection even for newly added files, not just tracked ones.              |
+>> | `-D`, `--irreversible-delete`   | irreversible delete            | Treats deleted files as untracked<br>i.e., no longer in the index.                      |
+>> | `--no-renames`                  | disable rename detection       | Explicitly disables rename detection (equivalent to default behavior when not enabled). |
 
 ### list all renamed files
 
@@ -742,7 +802,7 @@ $ git log --author='user1\|user2' \
           --pretty=format:'--COMMIT-- %h %an <%ae>' \
           --name-status
 
-# -- or antoher format --
+# -- or another format --
 $ git log --author='user1\|user2' --pretty=format:'%H' |
       while read -r commit; do
         echo "=== ${commit} ==="
@@ -843,34 +903,29 @@ $ git log --shortstat
 ### show files and status without comments
 ```bash
 $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
+
+# or
+$ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%h %ad- %s [%an]"
+
+# or
+$ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format='%C(red)%h%Creset %C(yellow)(%ad)%Creset %s %C(blue)<%an>%Creset'
+
+# e.g.:
+$ git log -3 --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
+* 50ede51fcc3cf0311fd85b3e9c4a36d4beb89e69
+|
+|  devops/git/gerrit.md | 6 ++++--
+|  devops/git/git.md    | 5 +++++
+|  2 files changed, 9 insertions(+), 2 deletions(-)
+* 41d58dabcd0aaee33edd1de7793ffd82c7cffa89
+|
+|  SUMMARY.md | 2 +-
+|  1 file changed, 1 insertion(+), 1 deletion(-)
+* 4460a32d8fddbe7c5c434947aea153273ce215d4
+|
+|  devops/git/{gitStudy.md => git.md} | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+|  1 file changed, 116 insertions(+), 1 deletion(-)
 ```
-
-- more
-  ```bash
-  # or
-  $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format="%h %ad- %s [%an]"
-
-  # or
-  $ git log --color --stat --abbrev-commit --date=relative --graph --submodule --format='%C(red)%h%Creset %C(yellow)(%ad)%Creset %s %C(blue)<%an>%Creset'
-  ```
-
-- e.g.:
-  ```bash
-  $ git log -3 --color --stat --abbrev-commit --date=relative --graph --submodule --format="%H"
-  * 50ede51fcc3cf0311fd85b3e9c4a36d4beb89e69
-  |
-  |  devops/git/gerrit.md | 6 ++++--
-  |  devops/git/git.md    | 5 +++++
-  |  2 files changed, 9 insertions(+), 2 deletions(-)
-  * 41d58dabcd0aaee33edd1de7793ffd82c7cffa89
-  |
-  |  SUMMARY.md | 2 +-
-  |  1 file changed, 1 insertion(+), 1 deletion(-)
-  * 4460a32d8fddbe7c5c434947aea153273ce215d4
-  |
-  |  devops/git/{gitStudy.md => git.md} | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-  |  1 file changed, 116 insertions(+), 1 deletion(-)
-  ```
 
 ### show submodule changes
 ```bash
@@ -907,26 +962,23 @@ $ git log -S'add' --oneline  -3
 6f7877c2 update git for fetch more refs after cloned via --single-branch, and add tricky for vim
 30ce195e add jenkins plugin jira-steps
 913a7f29 update jenkins recommended plugins
-```
 
-- or
-  ```bash
-  # -p, --paginate
-  #     Pipe all output into less (or if set, $PAGER) if standard output is a terminal. This overrides the
-  #     pager.<cmd> configuration options (see the "Configuration Mechanism" section below)
-  $ git pls -S'add' -p
-  ```
+# -- or --
+# -p, --paginate
+#     Pipe all output into less (or if set, $PAGER) if standard output is a terminal. This overrides the
+#     pager.<cmd> configuration options (see the "Configuration Mechanism" section below)
+$ git pls -S'add' -p
+```
 
 ### [search by message](https://www.atlassian.com/git/tutorials/git-log#filtering-the-commit-history)
 ```bash
 $ git log --grep='jira' --oneline
 30ce195e add jenkins plugin jira-steps
 d17dd3aa add jira api
+
+# or
+$ git pls --grep='jira'
 ```
-- or
-  ```bash
-  $ git pls --grep='jira'
-  ```
 
 ## show
 ```bash
@@ -942,7 +994,7 @@ $ git show <commit-id>:<path/to/file>
 
 ### show file change details
 ```bash
-# for commited changes
+# for committed changes
 $ git show --pretty= --stat
  docs/SUMMARY.md              |   1 +
  docs/cheatsheet/tricky.md    |  68 ++++++++++++++++++
@@ -952,7 +1004,7 @@ $ git show --pretty= --stat
  docs/tools/app/vscode.md     |   2 +-
  7 files changed, 550 insertions(+), 28 deletions(-)
 
-# for uncommited changes
+# for uncommitted changes
 # -- stat --
 $ git --no-pager diff --stat --relative
  devops/awesomeShell.md |  22 +++++++----
@@ -993,6 +1045,7 @@ $ git show --pretty= --stat
 ![squash : `git rebase -i`](../../screenshot/git/gif-git-rebase--i-squash.gif)
 
 ### automatic edit by `git rebase -i`
+
 > inspired from [.gitconfig](https://github.com/brauliobo/gitconfig/blob/master/configs/.gitconfig#L220) & [Is there a way to squash a number of commits non-interactively?](https://stackoverflow.com/a/28789332/2940319)
 
 ```bash
@@ -1000,7 +1053,7 @@ $ COUNT=$1
 $ GIT_EDITOR="sed -i -e '2,$COUNT s/^pick /s /;/# This is the 2nd commit message:/d'" git rebase -i HEAD~$COUNT
 ```
 
-  [git alias](https://github.com/marslo/mylinux/blob/master/confs/home/git/.gitconfig.alias#L32)
+- [git alias](https://github.com/marslo/mylinux/blob/master/confs/home/git/.gitconfig.alias#L32)
   ```
   [alias]
     sq = ! "f() { TARGET=$1 && GIT_EDITOR=\"sed -i -e '2,$TARGET s/^pick /s /;/# This is the 2nd commit message:/,$ {d}'\" git rebase -i HEAD~$TARGET; }; f"
@@ -1049,7 +1102,7 @@ $ GIT_EDITOR="sed -i -e '2,$COUNT s/^pick /s /;/# This is the 2nd commit message
     GIT_SEQUENCE_EDITOR="sed -i -e 's/^pick $COMMIT/edit $COMMIT/'" git rebase -i $COMMIT^^ || exit 1
     git reset --soft HEAD^
     echo "Hints:"
-    echo "  Select files to be commited using 'git reset', 'git add' or 'git add -p'"
+    echo "  Select files to be committed using 'git reset', 'git add' or 'git add -p'"
     echo "  Commit using 'git commit -c $COMMIT'"
     echo "  Finish with 'git rebase --continue'"
   else
@@ -1060,25 +1113,23 @@ $ GIT_EDITOR="sed -i -e '2,$COUNT s/^pick /s /;/# This is the 2nd commit message
 ### [fix typo in commits](https://stackoverflow.com/a/12395024/2940319)
 ```bash
 $ EDITOR="sed -i -e 's/borken/broken/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
-```
 
-or:
-
-```bash
+# or
 $ VISUAL="sed -i -e '/^[[:blank:]]*Change-Id/ d'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
-```
 
-or:
+# or
 
-```bash
 $ GIT_EDITOR="sed -i -e 's/kyewrod/keyword/g'" GIT_SEQUENCE_EDITOR="sed -i -e 's/pick/reword/g'" git rebase -i --root
 ```
 
 ## undo
 ### [delete after push](https://ncona.com/2011/07/how-to-delete-a-commit-in-git-local-and-remote/)
 #### delete only the latest commit
+
 ```bash
 $ git push origin +<hash_for_delete>^:<branch>
+# or
+$ git push origin <hash_for_delete>^:<branch> --force
 
 # e.g.:
 $ git pl --pretty=format:"%h" --no-patch
@@ -1157,32 +1208,28 @@ $ git checkout origin/<branch> -- <path/to/file>
 #### revert changes in submodule
 ```bash
 $ git submodule update -f --init
-```
 
-- [or](https://stackoverflow.com/questions/10906554/how-do-i-revert-my-changes-to-a-git-submodule)
-  ```bash
-  $ git submodule foreach --recursive git reset --hard
-  ```
-- or
-  ```bash
-  $ git submodule update -f --recursive
-  ```
-- or
-  ```bash
-  $ git submodule foreach --recursive git reset --hard
-  $ git submodule update --recursive --init
-  ```
+# or: https://stackoverflow.com/questions/10906554/how-do-i-revert-my-changes-to-a-git-submodule
+$ git submodule foreach --recursive git reset --hard
+
+# or
+$ git submodule update -f --recursive
+
+# or
+$ git submodule foreach --recursive git reset --hard
+$ git submodule update --recursive --init
+```
 
 #### [Git Reset vs Revert vs Checkout reference](https://www.atlassian.com/git/tutorials/resetting-checking-out-and-reverting)
 
-|     Command    | Scope        | Common use cases                                                     |
-|:--------------:|--------------|----------------------------------------------------------------------|
-|   `git reset`  | Commit-level | Discard commits in a private branch or throw away uncommited changes |
-|   `git reset`  | File-level   | Unstage a file                                                       |
-| `git checkout` | Commit-level | Switch between branches or inspect old snapshots                     |
-| `git checkout` | File-level   | Discard changes in the working directory                             |
-|  `git revert`  | Commit-level | Undo commits in a public branch                                      |
-|  `git revert`  | File-level   | (N/A)                                                                |
+|     Command    | Scope        | Common use cases                                                      |
+|:--------------:|--------------|-----------------------------------------------------------------------|
+|   `git reset`  | Commit-level | Discard commits in a private branch or throw away uncommitted changes |
+|   `git reset`  | File-level   | Unstage a file                                                        |
+| `git checkout` | Commit-level | Switch between branches or inspect old snapshots                      |
+| `git checkout` | File-level   | Discard changes in the working directory                              |
+|  `git revert`  | Commit-level | Undo commits in a public branch                                       |
+|  `git revert`  | File-level   | (N/A)                                                                 |
 
 - `git reset` via `git reflog`
 
@@ -1345,10 +1392,8 @@ $ git log --oneline --author="<name@email.com>"
 
 - renmae
   ```bash
-  $ git mv Tig temp
-  $ git aa
-  $ git mv temp tig
-  $ git aa
+  $ git mv Tig temp && git aa
+  $ git mv temp tig && git aa
   $ git st
   On branch master
   Your branch is up to date with 'origin/master'.
@@ -1371,6 +1416,8 @@ $ git log --oneline --author="<name@email.com>"
 
 ```bash
 $ git clean -dfx
+# or
+$ git clean -dffx
 ```
 
 - quick generate .gitignore
@@ -1438,16 +1485,14 @@ $ git log --author='user1\|user2' --pretty=format:'%H' --diff-filter=d |
 ### [get difference between two branches](https://til.hashrocket.com/posts/18139f4f20-list-different-commits-between-two-branches)
 ```bash
 $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/<dev>
-```
 
-- [or](https://stackoverflow.com/a/20419458/2940319)
-  ```bash
-  $ git rev-list --reverse \
-                 --pretty="TO_TEST %h (<%ae>) %s" \
-                 --cherry-pick \
-                 --right-only origin/<release>...origin/<dev> \
-                 | grep "^TO_TEST "
-  ```
+# or: https://stackoverflow.com/a/20419458/2940319
+$ git rev-list --reverse \
+               --pretty="TO_TEST %h (<%ae>) %s" \
+               --cherry-pick \
+               --right-only origin/<release>...origin/<dev> \
+               | grep "^TO_TEST "
+```
 
 ### diff ignore whitespace
 
@@ -1486,10 +1531,19 @@ $ git log --left-right --graph --cherry-pick --oneline origin/<release>..origin/
 > - [git like a pro: sort git tags by date](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
 > - [How do you achieve a numeric versioning scheme with Git?](https://softwareengineering.stackexchange.com/a/141986/56124)
 
-### discribe
+### describe
+
+> reference:
+> - [Why does git-describe prefix the commit ID with the letter 'g'?](https://stackoverflow.com/questions/23939214/why-does-git-describe-prefix-the-commit-id-with-the-letter-g)
+
+{% hint style='tip' %}
+man of `git-describe`: <p>
+The hash suffix is "-g" + an unambiguous abbreviation for the tip commit of parent. <p>
+The length of the abbreviation scales as the repository grows, using the approximate number of objects in the repository and a bit of math around the birthday paradox, and defaults to a minimum of 7.
+{% endhint %}
+
 ```bash
 $ git describe --tags --long <revision>
-
 # v2.5-0-gdeadbee
 # ^    ^ ^^
 # |    | ||
@@ -1498,16 +1552,33 @@ $ git describe --tags --long <revision>
 # |    '----- distance : number of commits since last tag
 # |
 # '---------- last tag name
+
+$ git describe --long --tags
+# v1.0.0-epsilon-2-g46b7ebb
+#   |            |     + -g<has>
+#   |            + distance (commits on top)
+#   + tag name
+
+# or
+$ git describe --dirty --tags --long
+# v1.0.0-epsilon-2-g46b7ebb
+# |            | |  |
+#  \___    ___/  |  + commit hash of the current commit
+#       most     + commits on top
+#      recent
+#       tag
+
+# or `--all`
+$ git describe --all --long
 ```
 
-### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
+#### [get distance between tags](https://stackoverflow.com/a/9752885/2940319)
 ```bash
 $ git describe HEAD --tags
+
+# or
+$ git describe HEAD --all --long
 ```
-- or
-  ```bash
-  $ git describe HEAD --all --long
-  ```
 
 ### get revision in particular branch
 ```
@@ -1521,148 +1592,50 @@ $ git tag -l --sort='creatordate' --merged <branch>
 
 ```bash
 $ git tag -l --sort='creatordate' --merged <branch> | tail -1
-```
 
-or
-
-```bash
-# the command can be executed in .git folder (! -is-inside-work-tree)
+# or the command can be executed in .git folder (! -is-inside-work-tree)
 $ git describe --tags --abbrev=0 --always
-```
 
-or
-
-```bash
+# ro
 $ git for-each-ref --sort=taggerdate \
                    --format '%(tag)' \
                    refs/tags |
       tail -1
+
+# to get verbose output
+$ git for-each-ref --sort=taggerdate \
+                   --format '%(tag) %(taggerdate:raw) %(taggername) %(subject)' \
+                   refs/tags
+
+# or
+$ git for-each-ref --sort=taggerdate \
+                   --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' \
+                   refs/tags |
+      awk 'BEGIN { FS = "_,,,_"  } ; { printf "%-20s %-18s %-25s %s\n", $2, $1, $4, $3  }'
+
+# or
+$ git log --tags \
+          --simplify-by-decoration \
+          --pretty="format:%ai %d" |
+      sort
+
+# or or formatted date
+$ git for-each-ref --sort=taggerdate \
+                   --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' \
+                   refs/tags |
+      awk 'BEGIN { FS = "_,,,_"  } ; { t=strftime("%Y-%m-%d  %H:%M",$2); printf "%-20s %-18s %-25s %s\n", t, $1, $4, $3  }'
+
+# or using git alias
+tags = !"git for-each-ref \
+             --sort=taggerdate \
+             --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' refs/tags \
+             | awk 'BEGIN { FS = \"_,,,_\"  } ; { t=strftime(\"%Y-%m-%d  %H:%M\",$2); printf \"%-20s %-18s %-25s %s\\n\", t, $1, $4, $3  }'"
 ```
-- to get verbose output
-  ```bash
-  $ git for-each-ref --sort=taggerdate \
-                     --format '%(tag) %(taggerdate:raw) %(taggername) %(subject)' \
-                     refs/tags
-  ```
-  - or
-    ```bash
-    $ git for-each-ref --sort=taggerdate \
-                       --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' \
-                       refs/tags |
-          awk 'BEGIN { FS = "_,,,_"  } ; { printf "%-20s %-18s %-25s %s\n", $2, $1, $4, $3  }'
-    ```
-  - or
-    ```bash
-    $ git log --tags \
-              --simplify-by-decoration \
-              --pretty="format:%ai %d" |
-          sort
-    ```
-  - or formatted date
-    ```bash
-    $ git for-each-ref --sort=taggerdate \
-                       --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' \
-                       refs/tags |
-          awk 'BEGIN { FS = "_,,,_"  } ; { t=strftime("%Y-%m-%d  %H:%M",$2); printf "%-20s %-18s %-25s %s\n", t, $1, $4, $3  }'
-    ```
-  - or git alias
-    ```bash
-    tags = !"git for-each-ref \
-                 --sort=taggerdate \
-                 --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' refs/tags \
-                 | awk 'BEGIN { FS = \"_,,,_\"  } ; { t=strftime(\"%Y-%m-%d  %H:%M\",$2); printf \"%-20s %-18s %-25s %s\\n\", t, $1, $4, $3  }'"
-    ```
 
 #### get revision from latest tag in particular branch
 ```bash
 $ git rev-list -1 --no-patch $(git tag -l --sort='creatordate' --merged <branch> | tail -1)
 ```
-
-### [show all tags for particular revision](https://stackoverflow.com/a/37497511/2940319)
-```bash
-$ git tag --points-at <revision>
-```
-- get tags for `HEAD`:
-  ```bash
-  $ git tag --points-at HEAD
-  ```
-[or](https://stackoverflow.com/a/23394114/2940319)
-```bash
-$ git name-rev --tags --name-only $(git rev-parse <revision>)
-```
-- example
-  ```bash
-  $ git name-rev --tags --name-only $(git rev-parse HEAD)
-  ```
-
-### get tag and distance (depth)
-> reference:
-> - [Why does git-describe prefix the commit ID with the letter 'g'?](https://stackoverflow.com/questions/23939214/why-does-git-describe-prefix-the-commit-id-with-the-letter-g)
-
-{% hint style='tip' %}
-man of `git-describe`:
-<p>
-The hash suffix is "-g" + an unambigous abbreviation for the tip commit of parent.
-<p>
-The length of the abbreviation scales as the repository grows, using the approximate number of objects in the repository and a bit of math around the birthday paradox, and defaults to a minimum of 7.
-{% endhint %}
-
-```bash
-$ git describe --long --tags
-v1.0.0-epsilon-2-g46b7ebb
-  |            |     + -g<has>
-  |            + distance (commits on top)
-  + tag name
-
-# or
-$ git describe --dirty --tags --long
-v1.0.0-epsilon-2-g46b7ebb
-|            | |  |
- \___    ___/  |  + commit hash of the current commit
-      most     + commits on top
-     recent
-      tag
-```
-
-or `--all`
-```bash
-$ git describe --all --long
-```
-
-#### [to filter the tags](https://www.reddit.com/r/git/comments/hj6s0j/find_tags_with_git_describe_on_other_branches/?utm_source=share&utm_medium=web2x&context=3)
-```bash
-$ git describe --dirty --tags --long --match *nightly*
-nightly#82-2001310818-1765-gc18894b193
-```
-
-#### [sort git tags by ascending and descending semver](https://andy-carter.com/blog/sort-git-tags-by-ascending-and-descending-semver)
-
-> [!TIP]
-> prepend "-" to reverse sort order.
-> - ascending  : `--sort=<type>`
-> - descending : `--sort=-<type>`
->
-> references:
-> - [How to sort git tags by version string order of form rc-X.Y.Z.W?](https://stackoverflow.com/a/22634649/2940319)
-> - [How can I list all tags in my Git repository by the date they were created?](https://stackoverflow.com/a/test70112/2940319)
-> - [GIT LIKE A PRO: SORT GIT TAGS BY DATE](https://www.everythingcli.org/git-like-a-pro-sort-git-tags-by-date/)
-
-- via `v:refname` or `version:refname`
-- by created data
-  ```bash
-  $ git for-each-ref --sort=creatordate --format='%(refname) %(creatordate)' refs/tags
-
-  # or
-  $ git tag --format='%(creatordate:short)%09%(refname:strip=2)' --sort=creatordate
-
-  # or
-  $ git for-each-ref --sort=taggerdate --format='%(tag) %(taggerdate) %(taggername) %(subject)' refs/tags
-
-  # much better
-  $ git for-each-ref --sort=taggerdate \
-                     --format '%(tag)_,,,_%(taggerdate:raw)_,,,_%(taggername)_,,,_%(subject)' refs/tags |
-        awk 'BEGIN { FS = "_,,,_"  } ; { t=strftime("%Y-%m-%d  %H:%M",$2); printf "%-20s %-18s %-25s %s\n", t, $1, $4, $3  }'
-  ```
 
 ## checkout
 
@@ -1677,7 +1650,6 @@ nightly#82-2001310818-1765-gc18894b193
 >   ```
 > - [How to do submodule sparse-checkout with Git?](https://stackoverflow.com/a/45689692/2940319)
 > - [git sparse-checkout of a submodule from a root repo](https://stackoverflow.com/questions/59520196/git-sparse-checkout-of-a-submodule-from-a-root-repo)
-
 
 
 ### [checkout specific commit](https://stackoverflow.com/a/3489576/2940319)
@@ -1699,35 +1671,30 @@ git reset --hard FETCH_HEAD
 
 ### checkout particular commit and submodules
 
-> [!TIP]
-> references:
+> [!TIP|label:references:]
 > - [How to checkout old git commit including all submodules recursively?](https://stackoverflow.com/a/151244test/2940319)
 > - [nicktoumpelis/repo-rinse.sh](https://gist.github.com/nicktoumpelis/112143test)
 
 ```bash
 $ git checkout --recurse-submodules
+
+# -- or --
+# [optional] create new branch
+$ git branch <branch-name> <commit-id>
+$ git checkout <branch-name>
+
+$ git checkout <commit-id>
+
+$ git submodule init                 # optional
+$ git submodule update --recursive
+
+# -- or: https://gist.github.com/nicktoumpelis/112143test --
+$ git clean -xfd
+$ git submodule foreach --recursive git clean -xfd
+$ git reset --hard
+$ git submodule foreach --recursive git reset --hard
+$ git submodule update --init --recursive
 ```
-
-- or
-  ```bash
-  # [optional] create new branch
-  $ git branch <branch-name> <commit-id>
-  $ git checkout <branch-name>
-
-  $ git checkout <commit-id>
-
-  $ git submodule init                 # optional
-  $ git submodule update --recursive
-  ```
-
-- [or](https://gist.github.com/nicktoumpelis/112143test)
-  ```bash
-  $ git clean -xfd
-  $ git submodule foreach --recursive git clean -xfd
-  $ git reset --hard
-  $ git submodule foreach --recursive git reset --hard
-  $ git submodule update --init --recursive
-  ```
 
 ### checkout single branch
 ```bash
@@ -2043,47 +2010,44 @@ $ git remote set-url --delete --push origin ssh://path/to/remoteUrl
 
 ### get refs days ago
 ```bash
-while read revision branch commitDate; do
-  benchmark=$(date +%s --date="1 year ago")
-  # echo "benchmark: $benchmark"
-  if [[ commitDate -le benchmark ]]; then
-    git for-each-ref ${branch} --format='%(refname:short) - %(align:right,20)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(end)'
-  fi
-done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --format='%(objectname) %(refname) %(committerdate:unix)')
+$ while read revision branch commitDate; do
+    benchmark=$(date +%s --date="1 year ago")
+    # echo "benchmark: $benchmark"
+    if [[ commitDate -le benchmark ]]; then
+      git for-each-ref ${branch} --format='%(refname:short) - %(align:right,20)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(end)'
+    fi
+  done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --format='%(objectname) %(refname) %(committerdate:unix)')
+
+# -- to archive --
+$ git push origin refs/remotes/origin/sandbox/marslo/test:refs/remotes/archive/sandbox/marslo/test
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote: Processing changes: refs: 1, done
+remote: GitMS - update replicated.
+To ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
+ * [new reference]     origin/sandbox/marslo/test -> archive/sandbox/marslo/test
+
+# -- to delete: https://superuser.com/a/601486/112396 --
+# delete local refs
+$ git update-ref -d refs/remotes/origin/sandbox/marslo/test -m 'already archived in refs/remotes/archive/sandbox/marslo/test'
+# delete remote refs
+$ git push . :refs/remotes/origin/sandbox/marslo/test
+
+# or delete without `refs/remotes/`
+$ git push origin --delete archive/sandbox/marslo/test
+$ git push origin --delete origin/sandbox/marslo/test
 ```
-- to archive
+
+- delete via `origin` will get issue `internal server error`
   ```bash
-  $ git push origin refs/remotes/origin/sandbox/marslo/test:refs/remotes/archive/sandbox/marslo/test
-  Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+  $ git push origin --force :refs/remotes/origin/sandbox/marslo/test
   remote: Processing changes: refs: 1, done
-  remote: GitMS - update replicated.
+  remote: error: ref update is a no-op: DELETE: 0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 refs/remotes/origin/sandbox/marslo/test
   To ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
-   * [new reference]     origin/sandbox/marslo/test -> archive/sandbox/marslo/test
+   ! [remote rejected]   origin/sandbox/marslo/test (internal server error)
+  error: failed to push some refs to 'ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins'
   ```
 
-- [to delete](https://superuser.com/a/601486/112396)
-  ```
-  # delete local refs
-  $ git update-ref -d refs/remotes/origin/sandbox/marslo/test -m 'already archived in refs/remotes/archive/sandbox/marslo/test'
-  # delete remote refs
-  $ git push . :refs/remotes/origin/sandbox/marslo/test
-
-  # or delete without `refs/remotes/`
-  $ git push origin --delete archive/sandbox/marslo/test
-  $ git push origin --delete origin/sandbox/marslo/test
-  ```
-
-  - delete via `origin` will get issue `internal server error`
-    ```bash
-    $ git push origin --force :refs/remotes/origin/sandbox/marslo/test
-    remote: Processing changes: refs: 1, done
-    remote: error: ref update is a no-op: DELETE: 0000000000000000000000000000000000000000 0000000000000000000000000000000000000000 refs/remotes/origin/sandbox/marslo/test
-    To ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins
-     ! [remote rejected]   origin/sandbox/marslo/test (internal server error)
-    error: failed to push some refs to 'ssh://gerrit.domain.com:29418/storage/ssdfw/devops/jenkins'
-    ```
-
-- to retrive
+- to retrieve
   ```bash
   # fetch single ref
   $ git fetch origin refs/remotes/archive/sandbox/marslo/test
@@ -2104,8 +2068,7 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
    * [new ref]           archive/sandbox/marslo/sample     -> refs/archive/sandbox/marslo/sample
   ```
 
-
-### format
+## format
 
 {% hint style='tip' %}
 > - `(subject)`           : `"the subject line"`
@@ -2115,7 +2078,7 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
 
 > [!TIP]
 > - [field names](https://git-scm.com/docs/git-for-each-ref#_field_names)
-> - [foramtting]()https://git-scm.com/docs/git-for-each-ref/2.21.0#Documentation/git-for-each-ref.txt---formatltformatgt
+> - [formatting]()https://git-scm.com/docs/git-for-each-ref/2.21.0#Documentation/git-for-each-ref.txt---formatltformatgt
 > - [git/t/t6300-for-each-ref.sh](https://github.com/git/git/blob/c25fba986bfc737d775430d290b93136d390e067/t/t6300-for-each-ref.sh#L79-L216)
 > <br>
 > - format:
@@ -2305,60 +2268,57 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
 > - `%%` :     Percent sign
 > - `%z`, `%Z` : Either the time-zone name or time zone abbreviation, depending on registry settings
 
-- how to use
-  ```bash
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate)'
-  Mon Aug 30 21:50:57 2021 +0800
+```bash
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate)'
+Mon Aug 30 21:50:57 2021 +0800
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:relative)'
-  9 months ago
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:relative)'
+9 months ago
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:raw)'
-  1630331457 +0800
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:raw)'
+1630331457 +0800
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:iso)'
-  2021-08-30 21:50:57 +0800
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:iso)'
+2021-08-30 21:50:57 +0800
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:rfc)'
-  Mon, 30 Aug 2021 21:50:57 +0800
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:rfc)'
+Mon, 30 Aug 2021 21:50:57 +0800
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:local)'
-  Mon Aug 30 21:50:57 2021
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:local)'
+Mon Aug 30 21:50:57 2021
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:format:%Y-%m-%d %I:%M %p)'
-  2021-08-30 09:50 PM
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:format:%Y-%m-%d %I:%M %p)'
+2021-08-30 09:50 PM
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(committerdate:format:%Y-%m-%d %H:%M:%S)'
-  2021-08-30 21:50:57
-  ```
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(committerdate:format:%Y-%m-%d %H:%M:%S)'
+2021-08-30 21:50:57
+```
 
-#### color
+### color
 
 > [!TIP|label:usage:]
 > - `%(color:<color_name>)`
 > - `%(color:reset)`
 
-- example
-  ```bash
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(color:yellow)%(committerdate:iso)%(color:reset)' \
-                     --color
-  =always
-  2021-08-30 21:50:57 +0800
+```bash
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(color:yellow)%(committerdate:iso)%(color:reset)' \
+                   --color=always
+2021-08-30 21:50:57 +0800
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(color:blue)%(committerdate:iso)%(color:reset)' \
-                     --color=always
-  2021-08-30 21:50:57 +0800
-  ```
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(color:blue)%(committerdate:iso)%(color:reset)' \
+                   --color=always
+2021-08-30 21:50:57 +0800
+```
 
 #### condition
 
@@ -2366,27 +2326,36 @@ done < <(git for-each-ref refs/remotes/origin/sandbox --sort=committerdate --for
 > - `%(if)...%(then)...%(else)...%(end)`
 > - `%(align:<number>,left) ... %(end)`
 
-- example
-  ```bash
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(if)%(committerdate)%(then)%(committerdate:format:%Y-%m-%d %I:%M %p)%(else)%(taggerdate:format:%Y-%m-%d %I:%M %p)%(end)'
-  2021-08-30 09:50 PM
+```bash
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(if)%(committerdate)%(then)%(committerdate:format:%Y-%m-%d %I:%M %p)%(else)%(taggerdate:format:%Y-%m-%d %I:%M %p)%(end)'
+2021-08-30 09:50 PM
 
-  $ git for-each-ref --sort=-taggerdate refs/tags \
-                     --format='%(align:left,50)[%(objecttype) : %(refname:short)]%(end) (%(committerdate:format:%Y-%m-%d %H:%M)) <%(committername)>' \
-                     --color \
-                     --count=10
-  [commit : sandbox/marslo/tag-1]              (2021-08-30 21:50) <marslo>
-  ```
+$ git for-each-ref --sort=-taggerdate refs/tags \
+                   --format='%(align:left,50)[%(objecttype) : %(refname:short)]%(end) (%(committerdate:format:%Y-%m-%d %H:%M)) <%(committername)>' \
+                   --color \
+                   --count=10
+[commit : sandbox/marslo/tag-1]              (2021-08-30 21:50) <marslo>
+```
 
-#### alias
+### [git alias](https://github.com/marslo/dotfiles/blob/main/.marslo/gitconfig.d/gitalias)
 ```bash
 [alias]
-  ### [p]retty [t]ag
-  pt          = "!git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(align:left,38)%(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset)%(end) %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M)%(else)%(committerdate:format:%Y-%m-%d %H:%M)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color --count=10"
-  pts         = "!git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset) - %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M)%(else)%(committerdate:format:%Y-%m-%d %H:%M)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color"
+  br      = branch
+  co      = checkout --recurse-submodules
 
-  ### [p]retty [b]ranch
-  pb          = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color --count=10"
-  pbs         = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color"
+  ### [p]retty [l]og(s)
+  pl      = !git -c log.decorate=short --no-pager log --color --graph --abbrev-commit --date=relative --max-count=3 --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
+  pls     = !git -c log.decorate=full log  --decorate --color --graph --abbrev-commit --date=relative --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
+
+  ### [p]revious branch [p]retty [l]og
+  ppl     = !git --no-pager log --color --graph --abbrev-commit --date=relative --max-count=3 --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'" @{-1}
+
+  ### [f]ull [p]retty [l]log
+  fpl     = log --graph --abbrev-commit --decorate --format=format:"'%C(#83a598)%H%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n'""'          %C(italic white)%s%C(reset) %C(dim white)- %an%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
+  fl      = log -p --graph --color --graph
+  rlog    = "!bash -c 'while read branch; do \n\
+               git fetch --all --force; \n\
+               git pl remotes/origin/$branch; \n\
+             done < <(git rev-parse --abbrev-ref HEAD) '"
 ```
