@@ -29,10 +29,10 @@ git command study and practice
 - [status](#status)
   - [list ignored](#list-ignored)
 - [filter in history](#filter-in-history)
-  - [list all renamed files](#list-all-renamed-files)
-  - [list all deleted files](#list-all-deleted-files)
-  - [list files changed by specific users](#list-files-changed-by-specific-users)
-  - [list files changes by pattern](#list-files-changes-by-pattern)
+  - [all renamed files](#all-renamed-files)
+  - [all deleted files](#all-deleted-files)
+  - [files changed by specific users](#files-changed-by-specific-users)
+  - [files changes by pattern](#files-changes-by-pattern)
 - [log](#log)
   - [short stat](#short-stat)
   - [show files and status without comments](#show-files-and-status-without-comments)
@@ -54,10 +54,6 @@ git command study and practice
   - [change remote comments](#change-remote-comments)
   - [change root comments](#change-root-comments)
   - [change author and committer](#change-author-and-committer)
-- [mv](#mv)
-  - [case sensitive](#case-sensitive)
-- [clean](#clean)
-  - [clean untracked directory and item in `.gitignore`](#clean-untracked-directory-and-item-in-gitignore)
 - [diff](#diff)
   - [`diff-highlight`](#diff-highlight)
   - [get diff from particular author](#get-diff-from-particular-author)
@@ -82,10 +78,9 @@ git command study and practice
   - [tricky](#tricky)
 - [for-each-ref](#for-each-ref)
   - [get refs days ago](#get-refs-days-ago)
-- [format](#format-1)
-  - [date format](#date-format)
-  - [color](#color)
-  - [git alias](#git-alias)
+- [others](#others)
+  - [mv](#mv)
+  - [clean](#clean)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -756,7 +751,7 @@ nightly#82-2001310818-1765-gc18894b193
 >> | `-D`, `--irreversible-delete`   | irreversible delete            | Treats deleted files as untracked<br>i.e., no longer in the index.                      |
 >> | `--no-renames`                  | disable rename detection       | Explicitly disables rename detection (equivalent to default behavior when not enabled). |
 
-### list all renamed files
+### all renamed files
 
 > [!NOTE|label:references:]
 >> `-M[<n>]`, `--find-renames[=<n>]`
@@ -776,7 +771,7 @@ $ git log -M --summary | grep -iE '^ rename'
 $ git log -M --summary | grep -E '^\s*rename.*{.*=>.*}'
 ```
 
-### list all deleted files
+### all deleted files
 
 ```bash
 $ git log --diff-filter=D --summary --pretty=format:'--COMMIT-- %h • %s'
@@ -792,7 +787,7 @@ $ git log --diff-filter=D --summary --pretty=format:'--COMMIT-- %h • %s'
 $ git log --diff-filter=D --summary | find "delete" | grep <filename>
 ```
 
-### list files changed by specific users
+### files changed by specific users
 
 > [!TIP]
 > - see also [get diff from particular author](#get-diff-from-particular-author)
@@ -836,7 +831,7 @@ $ git log --author='user1\|user2' --pretty=format:'%H' |
       done
 ```
 
-### list files changes by pattern
+### files changes by pattern
 ```bash
 $ git log --name-status --all --full-history -- *.txt*
 
@@ -1381,74 +1376,6 @@ $ git log --oneline --author="name"
 $ git log --oneline --author="<name@email.com>"
 ```
 
-## mv
-### case sensitive
-- error with regular `git mv`
-  ```bash
-  $ git config --global core.ignorecase true
-  $ git mv Tig tig
-  fatal: renaming 'confs/home/Tig' failed: Invalid argument
-  ```
-
-- renmae
-  ```bash
-  $ git mv Tig temp && git aa
-  $ git mv temp tig && git aa
-  $ git st
-  On branch master
-  Your branch is up to date with 'origin/master'.
-
-  Changes to be committed:
-    (use "git restore --staged <file>..." to unstage)
-      renamed:    Tig/.tig/marslo.tigrc -> tig/.tig/marslo.tigrc
-      renamed:    Tig/.tigrc -> tig/.tigrc
-      renamed:    Tig/.tigrc_latest -> tig/.tigrc_latest
-      renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
-      renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
-  ```
-
-## clean
-### clean untracked directory and item in `.gitignore`
-
-{% hint style='tip' %}
-> [gitignore.io](https://gitignore.io)
-{% endhint %}
-
-```bash
-$ git clean -dfx
-# or
-$ git clean -dffx
-```
-
-- quick generate .gitignore
-  ```bash
-  # show result
-  $ curl -skL https://www.gitignore.io/api/groovy
-
-  # download
-  $ curl -skL https://www.toptal.com/developers/gitignore/api/groovy,java,python,go -o .gitignore
-  ```
-
-#### using `-f` twice if you really want to remove such a directory
-```bash
-$ git st
-On branch meta/config
-Your branch is based on 'origin/meta/config', but the upstream is gone.
-  (use "git branch --unset-upstream" to fixup)
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-    my-sbumodule/
-
-nothing added to commit but untracked files present (use "git add" to track)
-
-$ git clean -dfx
-Skipping repository my-submodule/
-
-$ git clean -dffx
-Removing my-submodule/
-```
-
 ## diff
 ### `diff-highlight`
 
@@ -1863,7 +1790,7 @@ $ git remote set-url --delete --push origin ssh://path/to/remoteUrl
   38327eac (marslo 2019-09-17 22:10:53 +0800 test3)   k8sInstallation
   ```
 
-- by keywords ( `git log -S` )
+- by keywords ( `git log -S` ) | [search by contents](#search-by-contents)
   ```bash
   $ git pls -S pkgInstallation belloHAKubeCluster.sh
   ...
@@ -2068,294 +1995,72 @@ $ git push origin --delete origin/sandbox/marslo/test
    * [new ref]           archive/sandbox/marslo/sample     -> refs/archive/sandbox/marslo/sample
   ```
 
-## format
+## others
+
+### mv
+#### case sensitive
+- error with regular `git mv`
+  ```bash
+  $ git config --global core.ignorecase true
+  $ git mv Tig tig
+  fatal: renaming 'confs/home/Tig' failed: Invalid argument
+  ```
+
+- renmae
+  ```bash
+  $ git mv Tig temp && git aa
+  $ git mv temp tig && git aa
+  $ git st
+  On branch master
+  Your branch is up to date with 'origin/master'.
+
+  Changes to be committed:
+    (use "git restore --staged <file>..." to unstage)
+      renamed:    Tig/.tig/marslo.tigrc -> tig/.tig/marslo.tigrc
+      renamed:    Tig/.tigrc -> tig/.tigrc
+      renamed:    Tig/.tigrc_latest -> tig/.tigrc_latest
+      renamed:    Tig/tigrc_2.4.1_1_example -> tig/tigrc_2.4.1_1_example
+      renamed:    Tig/tigrc_Marslo -> tig/tigrc_Marslo
+  ```
+
+### clean
+#### clean untracked directory and item in `.gitignore`
 
 {% hint style='tip' %}
-> - `(subject)`           : `"the subject line"`
-> - `%(subject:sanitize)` : `"the-subject-line"`
+> [gitignore.io](https://gitignore.io)
 {% endhint %}
 
-
-> [!TIP]
-> - [field names](https://git-scm.com/docs/git-for-each-ref#_field_names)
-> - [formatting]()https://git-scm.com/docs/git-for-each-ref/2.21.0#Documentation/git-for-each-ref.txt---formatltformatgt
-> - [git/t/t6300-for-each-ref.sh](https://github.com/git/git/blob/c25fba986bfc737d775430d290b93136d390e067/t/t6300-for-each-ref.sh#L79-L216)
-> <br>
-> - format:
->   - `%00`                        -> `\0` (NUL)
->   - `%09`                        -> `\t` (tab)
->   - `%0a`                        -> `\n` (LF)
-> <br>
-> - field names:
->   - head :
->     - `refname:`                 -> `refs/heads/master`
->     - `refname:short`            -> `master`
->     - `refname:lstrip=1`         -> `heads/master`
->     - `refname:lstrip=2`         -> `master`
->     - `refname:lstrip=-1`        -> `master`
->     - `refname:lstrip=-2`        -> `heads/master`
->     - `refname:rstrip=1`         -> `refs/heads`
->     - `refname:rstrip=2`         -> `refs`
->     - `refname:rstrip=-1`        -> `refs`
->     - `refname:rstrip=-2`        -> `refs/heads`
->     - `refname:strip=1`          -> `heads/master`
->     - `refname:strip=2`          -> `master`
->     - `refname:strip=-1`         -> `master`
->     - `refname:strip=-2`         -> `heads/master`
->     - `upstream`                 -> `refs/remotes/origin/master`
->     - `upstream:short`           -> `origin/master`
->     - `upstream:lstrip=2`        -> `origin/master`
->     - `upstream:lstrip=-2`       -> `origin/master`
->     - `upstream:rstrip=2`        -> `refs/remotes`
->     - `upstream:rstrip=-2`       -> `refs/remotes`
->     - `upstream:strip=2`         -> `origin/master`
->     - `upstream:strip=-2`        -> `origin/master`
->     - `push`                     -> `refs/remotes/myfork/master`
->     - `push:short`               -> `myfork/master`
->     - `push:lstrip=1`            -> `remotes/myfork/master`
->     - `push:lstrip=-1`           -> `master`
->     - `push:rstrip=1`            -> `refs/remotes/myfork`
->     - `push:rstrip=-1`           -> `refs`
->     - `push:strip=1`             -> `remotes/myfork/master`
->     - `push:strip=-1`            -> `master`
->     - `objecttype`               -> `commit`
->     - `objectsize`               -> `$((131 + hexlen))`
->     - `objectsize:disk`          -> `$disklen`
->     - `deltabase`                -> `$ZERO_OID`
->     - `parent`                   -> `''`
->     - `parent:short`             -> `''`
->     - `parent:short=1`           -> `''`
->     - `parent:short=10`          -> `''`
->     - `numparent`                -> `0`
->     - `object`                   -> `''`
->     - `type`                     -> `''`
->     - `'*objectname'`            -> `''`
->     - `'*objecttype'`            -> `''`
->     - `author`                   -> `'A U Thor <author@example.com> 1151968724 +0200'`
->     - `authorname`               -> `'A U Thor'`
->     - `authoremail`              -> `'<author@example.com>'`
->     - `authoremail:trim`         -> `'author@example.com'`
->     - `authoremail:localpart`    -> `'author'`
->     - `tag`                      -> `''`
->     - `tagger`                   -> `''`
->     - `taggername`               -> `''`
->     - `taggeremail`              -> `''`
->     - `taggeremail:trim`         -> `''`
->     - `taggeremail:localpart`    -> `''`
->     - `taggerdate`               -> `''`
->     - `subject`                  -> `'Initial'`
->     - `subject:sanitize`         -> `'Initial'`
->     - `contents:subject`         -> `'Initial'`
->     - `body`                     -> `''`
->     - `contents:body`            -> `''`
->     - `contents:signature`       -> `''`
->     - `contents`                 -> `'Initial'`
->     - `HEAD`                     -> `'*'`
->     - `objectname`               -> `$(git rev-parse refs/heads/master)`
->     - `objectname:short`         -> `$(git rev-parse --short refs/heads/master)`
->     - `objectname:short=1`       -> `$(git rev-parse --short=1 refs/heads/master)`
->     - `objectname:short=10`      -> `$(git rev-parse --short=10 refs/heads/master)`
->     - `tree`                     -> `$(git rev-parse refs/heads/master^{tree})`
->     - `tree:short`               -> `$(git rev-parse --short refs/heads/master^{tree})`
->     - `tree:short=1`             -> `$(git rev-parse --short=1 refs/heads/master^{tree})`
->     - `tree:short=10`            -> `$(git rev-parse --short=10 refs/heads/master^{tree})`
->     - `authordate`               -> `'Tue Jul 4 01:18:44 2006 +0200'`
->     - `committer`                -> `'C O Mitter <committer@example.com> 1151968723 +0200'`
->     - `committername`            -> `'C O Mitter'`
->     - `committeremail`           -> `'<committer@example.com>'`
->     - `committeremail:trim`      -> `'committer@example.com'`
->     - `committeremail:localpart` -> `'committer'`
->     - `committerdate`            -> `'Tue Jul 4 01:18:43 2006 +0200'`
->     - `objectname:short=1`       -> `$(git rev-parse --short=1 refs/heads/master)`
->     - `objectname:short=10`      -> `$(git rev-parse --short=10 refs/heads/master)`
->     - `creator`                  -> `'C O Mitter <committer@example.com> 1151968723 +0200'`
->     - `creatordate`              -> `'Tue Jul 4 01:18:43 2006 +0200'`
-> <br>
->   - tags:
->     - `refname`                  -> `refs/tags/testtag`
->     - `refname:short`            -> `testtag`
->     - `upstream`                 -> `''`
->     - `push`                     -> `''`
->     - `objecttype`               -> `tag`
->     - `objectsize`               -> `$((114 + hexlen))`
->     - `objectsize:disk`          -> `$disklen`
->     - `'*objectsize:disk'`       -> `$disklen`
->     - `deltabase`                -> `$ZERO_OID`
->     - `'*deltabase'`             -> `$ZERO_OID`
->     - `tree`                     -> `''`
->     - `tree:short`               -> `''`
->     - `tree:short=1`             -> `''`
->     - `tree:short=10`            -> `''`
->     - `parent`                   -> `''`
->     - `parent:short`             -> `''`
->     - `parent:short=1`           -> `''`
->     - `parent:short=10`          -> `''`
->     - `numparent`                -> `''`
->     - `type`                     -> `'commit'`
->     - `'*objecttype'`            -> `'commit'`
->     - `author`                   -> `''`
->     - `authorname`               -> `''`
->     - `authoremail`              -> `''`
->     - `authoremail:trim`         -> `''`
->     - `authoremail:localpart`    -> `''`
->     - `authordate`               -> `''`
->     - `committer`                -> `''`
->     - `committername`            -> `''`
->     - `committeremail`           -> `''`
->     - `committeremail:trim`      -> `''`
->     - `committeremail:localpart` -> `''`
->     - `committerdate`            -> `''`
->     - `tag`                      -> `'testtag'`
->     - `body`                     -> `''`
->     - `contents:body`            -> `''`
->     - `contents:signature`       -> `''`
->     - `contents`                 -> `'Tagging at 1151968727``
->     - `object`                   -> `$(git rev-parse refs/tags/testtag^0)`
->     - `objectname`               -> `$(git rev-parse refs/tags/testtag)`
->     - `objectname:short`         -> `$(git rev-parse --short refs/tags/testtag)`
->     - `'*objectname'`            -> `$(git rev-parse refs/tags/testtag^{})`
->     - `tagger`                   -> `'C O Mitter <committer@example.com> 1151968725 +0200'`
->     - `taggername`               -> `'C O Mitter'`
->     - `taggeremail`              -> `'<committer@example.com>'`
->     - `taggeremail:trim`         -> `'committer@example.com'`
->     - `taggeremail:localpart`    -> `'committer'`
->     - `taggerdate`               -> `'Tue Jul 4 01:18:45 2006 +0200'`
->     - `creator`                  -> `'C O Mitter <committer@example.com> 1151968725 +0200'`
->     - `creatordate`              -> `'Tue Jul 4 01:18:45 2006 +0200'`
->     - `subject`                  -> `'Tagging at 1151968727'`
->     - `subject:sanitize`         -> `'Tagging-at-1151968727'`
->     - `contents:subject`         -> `'Tagging at 1151968727'`
-
-### date format
-
-> [!TIP]
-> references:
-> - [Specification for syntax of git dates](https://stackoverflow.com/a/14025405/2940319)
-> - [strftime](https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strftime-wcsftime-strftime-l-wcsftime-l?redirectedfrom=MSDN&view=msvc-170)
-> - [strftime](http://www.cplusplus.com/reference/ctime/strftime/)
->
-> format:
-> - `relative`
-> - `local`
-> - `default`
-> - `iso` ( or `iso8601` )
-> - `rfc` ( or `rfc2822` )
-> - `short`
-> - `raw`
-> - `format:%Y-%m-%d %I:%M %p`
->
-> strftime :
-> - `%a` :     Abbreviated weekday name
-> - `%A` :     Full weekday name
-> - `%b` :     Abbreviated month name
-> - `%B` :     Full month name
-> - `%c` :     Date and time representation appropriate for locale
-> - `%d` :     Day of month as decimal number (01 – 31)
-> - `%H` :     Hour in 24-hour format (00 – 23)
-> - `%I` :     Hour in 12-hour format (01 – 12)
-> - `%j` :     Day of year as decimal number (001 – 366)
-> - `%m` :     Month as decimal number (01 – 12)
-> - `%M` :     Minute as decimal number (00 – 59)
-> - `%p` :     Current locale's A.M./P.M. indicator for 12-hour clock
-> - `%S` :     Second as decimal number (00 – 59)
-> - `%U` :     Week of year as decimal number, with Sunday as first day of week (00 – 53)
-> - `%w` :     Weekday as decimal number (0 – 6; Sunday is 0)
-> - `%W` :     Week of year as decimal number, with Monday as first day of week (00 – 53)
-> - `%x` :     Date representation for current locale
-> - `%X` :     Time representation for current locale
-> - `%y` :     Year without century, as decimal number (00 – 99)
-> - `%Y` :     Year with century, as decimal number
-> - `%%` :     Percent sign
-> - `%z`, `%Z` : Either the time-zone name or time zone abbreviation, depending on registry settings
-
 ```bash
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate)'
-Mon Aug 30 21:50:57 2021 +0800
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:relative)'
-9 months ago
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:raw)'
-1630331457 +0800
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:iso)'
-2021-08-30 21:50:57 +0800
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:rfc)'
-Mon, 30 Aug 2021 21:50:57 +0800
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:local)'
-Mon Aug 30 21:50:57 2021
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:format:%Y-%m-%d %I:%M %p)'
-2021-08-30 09:50 PM
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(committerdate:format:%Y-%m-%d %H:%M:%S)'
-2021-08-30 21:50:57
+$ git clean -dfx
+# or
+$ git clean -dffx
 ```
 
-### color
+- quick generate .gitignore
+  ```bash
+  # show result
+  $ curl -skL https://www.gitignore.io/api/groovy
 
-> [!TIP|label:usage:]
-> - `%(color:<color_name>)`
-> - `%(color:reset)`
+  # download
+  $ curl -skL https://www.toptal.com/developers/gitignore/api/groovy,java,python,go -o .gitignore
+  ```
 
+#### using `-f` twice if you really want to remove such a directory
 ```bash
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(color:yellow)%(committerdate:iso)%(color:reset)' \
-                   --color=always
-2021-08-30 21:50:57 +0800
+$ git st
+On branch meta/config
+Your branch is based on 'origin/meta/config', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
 
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(color:blue)%(committerdate:iso)%(color:reset)' \
-                   --color=always
-2021-08-30 21:50:57 +0800
-```
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+    my-sbumodule/
 
-#### condition
+nothing added to commit but untracked files present (use "git add" to track)
 
-> [!TIP|label:references:]
-> - `%(if)...%(then)...%(else)...%(end)`
-> - `%(align:<number>,left) ... %(end)`
+$ git clean -dfx
+Skipping repository my-submodule/
 
-```bash
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(if)%(committerdate)%(then)%(committerdate:format:%Y-%m-%d %I:%M %p)%(else)%(taggerdate:format:%Y-%m-%d %I:%M %p)%(end)'
-2021-08-30 09:50 PM
-
-$ git for-each-ref --sort=-taggerdate refs/tags \
-                   --format='%(align:left,50)[%(objecttype) : %(refname:short)]%(end) (%(committerdate:format:%Y-%m-%d %H:%M)) <%(committername)>' \
-                   --color \
-                   --count=10
-[commit : sandbox/marslo/tag-1]              (2021-08-30 21:50) <marslo>
-```
-
-### [git alias](https://github.com/marslo/dotfiles/blob/main/.marslo/gitconfig.d/gitalias)
-```bash
-[alias]
-  br      = branch
-  co      = checkout --recurse-submodules
-
-  ### [p]retty [l]og(s)
-  pl      = !git -c log.decorate=short --no-pager log --color --graph --abbrev-commit --date=relative --max-count=3 --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
-  pls     = !git -c log.decorate=full log  --decorate --color --graph --abbrev-commit --date=relative --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
-
-  ### [p]revious branch [p]retty [l]og
-  ppl     = !git --no-pager log --color --graph --abbrev-commit --date=relative --max-count=3 --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'" @{-1}
-
-  ### [f]ull [p]retty [l]log
-  fpl     = log --graph --abbrev-commit --decorate --format=format:"'%C(#83a598)%H%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n'""'          %C(italic white)%s%C(reset) %C(dim white)- %an%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
-  fl      = log -p --graph --color --graph
-  rlog    = "!bash -c 'while read branch; do \n\
-               git fetch --all --force; \n\
-               git pl remotes/origin/$branch; \n\
-             done < <(git rev-parse --abbrev-ref HEAD) '"
+$ git clean -dffx
+Removing my-submodule/
 ```

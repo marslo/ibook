@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [alias](#alias)
+- [alias completion](#alias-completion)
 - [basic](#basic)
 - [pretty show](#pretty-show)
 - [branch](#branch)
@@ -16,8 +16,9 @@
 > - [Must Have Git Aliases: Advanced Examples](https://www.durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/)
 > - [mwhite/git-aliases.md](https://gist.github.com/mwhite/6887990)
 > - [How to make bash as default shell in git alias?](https://stackoverflow.com/a/73163369/2940319)
+> - [gitconfig.d/gitalias](https://github.com/marslo/dotfiles/blob/main/.marslo/gitconfig.d/gitalias)
 
-### alias
+### alias completion
 
 > [!NOTE|label:references:]
 > - [git-completion.bash](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash)
@@ -53,6 +54,7 @@
 - using `_git_${subcommand}`
 
   > [!TIP]
+  > - [* iMarslo: gitalias.sh](https://github.com/marslo/dotfiles/blob/main/.marslo/bash_completion.d/gitalias.sh)
   > - this is for `git subcommand`
   >   ```bash
   >   # To add completion for git subcommands that are implemented in external
@@ -61,7 +63,7 @@
   >   ```
 
   ```bash
-  $ cat ~/.git-alias-completion.bash
+  $ cat ~/.marslo/bash_completion.d/gitalias.sh
   # git rob -> git checkout completion
   function _git_rob() {
     _git_checkout
@@ -72,7 +74,7 @@
     _git_checkout
   }
 
-  $ source ~/.git-alias-completion.bash
+  $ source ~/.marslo/bash_completion.d/gitalias.sh
   ```
 
 - using `__git_complete`
@@ -142,25 +144,29 @@
 ### pretty show
 ```
 [alias]
-  ### [p]retty [t]ag
-  ls          = log --stat --pretty=short --graph
   ### [p]retty [l]og(s)
-  pl          = !git --no-pager log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative --max-count=3
-  pls         = log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative
+  pl          = !git -c log.decorate=short --no-pager log --color --graph --abbrev-commit --date=relative --max-count=3 --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
+  pls         = !git -c log.decorate=full log  --decorate --color --graph --abbrev-commit --date=relative --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
+
   ### [p]revious branch [p]retty [l]og
-  ppl         = !git --no-pager log --color --graph --pretty=tformat:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative --max-count=3 @{-1}
+  ppl         = !git --no-pager log --color --graph --abbrev-commit --date=relative --max-count=3 --pretty=tformat:"'%C(#678963)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(italic blue)<%an>%C(reset) %C(italic #6971a3)[%G?]%C(reset)'" @{-1}
+
   ### [f]ull [p]retty [l]log
-  fpl         = log --color --graph --pretty=tformat:'%C(red)%H%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr)%C(reset) %C(blue)<%an>%C(reset)' --abbrev-commit --date=relative
-  ### Showing all branches and their relationshps
-  tree        = log --color --graph --pretty=oneline --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --decorate --abbrev-commit --all
+  fpl         = log --graph --abbrev-commit --decorate --format=format:"'%C(#83a598)%H%C(reset) - %C(cyan)%aD%C(reset) %C(green)(%ar)%C(reset)%C(auto)%d%C(reset)%n'""'          %C(italic white)%s%C(reset) %C(dim white)- %an%C(reset) %C(italic #6971a3)[%G?]%C(reset)'"
+
+  ### showing all branches and their relationshps
   clog        = log --color --graph --all --decorate --simplify-by-decoration --oneline
+  tree        = log --color --graph --all --decorate --abbrev-commit --pretty=oneline --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+
   ### [p]retty [t]ag(s)
   pt          = "! git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(align:left,38)%(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset)%(end) %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M:%S)%(else)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color --count=10"
   pts         = "! git for-each-ref --sort=-taggerdate refs/tags --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)[%(objecttype) : %(refname:short)]%(color:reset) - %(subject) %(color:green)(%(if)%(taggerdate)%(then)%(taggerdate:format:%Y-%m-%d %H:%M:%S)%(else)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(end))%(color:reset) %(color:blue)%(if)%(taggername)%(then)<%(taggername)>%(else)<%(committername)>%(end)%(color:reset)' --color"
+
   # https://stackoverflow.com/a/53535353/2940319
   ### [p]retty [b]ranch(s)
   pb          = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color --count=10"
   pbs         = "! git for-each-ref refs/heads refs/remotes --sort=-committerdate --format='%(color:red)%(objectname:short)%(color:reset) - %(color:bold yellow)%(committerdate:format:%Y-%m-%d %H:%M:%S)%(color:reset) - %(align:left,20)%(color:cyan)<%(authorname)>%(color:reset)%(end) %(color:bold red)%(if)%(HEAD)%(then)* %(else)  %(end)%(color:reset)%(refname:short)' --color"
+
   ### sort local/remote branch via committerdate (DESC). usage: $ git recent; $ git recent remotes 10
   recent      = "!f() { \
                         declare help=\"USAGE: git recent [remotes|tags] [count]\"; \
@@ -184,11 +190,16 @@
                         git for-each-ref \
                             --sort=-committerdate \
                             ${refs:='refs/heads'} \
-                            --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) %(color:green)(%(committerdate:relative))%(color:reset)' \
+                            --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:cyan)%(objectname:short)%(color:reset) - %(color:dim white)%(contents:subject)%(color:reset) - %(color:italic blue)<%(authorname)>%(color:reset) %(color:green)(%(committerdate:relative))%(color:reset)' \
                             --color=always \
                             --count=${count:=5}; \
                     }; f \
                 "
+  fl          = log -p --graph --color --graph
+  rlog        = "!bash -c 'while read branch; do \n\
+                   git fetch --all --force; \n\
+                   git pl remotes/origin/$branch; \n\
+                 done < <(git rev-parse --abbrev-ref HEAD) '"
 ```
 
 ### branch
@@ -212,7 +223,7 @@
   ### [c]omm[i]t --[a]mend
   cia         = "!f() { \
                         declare authorDate=\"${GIT_AUTHOR_DATE}\"; \
-                        declare commiterDate=\"${GIT_COMMITTER_DATE}\"; \
+                        declare committerDate=\"${GIT_COMMITTER_DATE}\"; \
                         OPT='commit --amend --allow-empty'; \
                         if [ 0 -eq $# ]; then \
                           git ${OPT} ; \

@@ -67,6 +67,7 @@
       * [cli](devops/github/cli.md)
       * [api](devops/github/api.md)
       * [workflow](devops/github/Workflow.md)
+    * [format](devops/git/format.md)
     * [troubleshooting](devops/git/troubleshooting.md)
     * [tricky](devops/git/tricky.md)
     * [statistics](devops/git/statistics.md)

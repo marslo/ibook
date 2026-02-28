@@ -3,6 +3,7 @@
 
 - [commit message](#commit-message)
 - [tricky](#tricky)
+  - [help and path](#help-and-path)
   - [hidden feature](#hidden-feature)
   - [quick edit gitconfig](#quick-edit-gitconfig)
   - [create git patch](#create-git-patch)
@@ -97,7 +98,17 @@ module.exports = {
 > - [shell tricks: one git alias to rule them all](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
 {% endhint %}
 
-### hidden feature
+### help and path
+```bash
+$ git --info-path
+/opt/homebrew/opt/git/share/info
+
+$ git --html-path
+/opt/homebrew/opt/git/share/doc/git-doc
+
+$ git --man-path
+/opt/homebrew/opt/git/share/man
+```
 
 #### [git --list-cmds](https://git-scm.com/docs/git#Documentation/git.txt---list-cmdsgroupgroup)
 
@@ -170,6 +181,8 @@ workflows
 $ git help tutorial-2
 $ git help help
 ```
+
+### hidden feature
 
 #### [git var](https://git-scm.com/docs/git-var)
 ```bash
@@ -272,11 +285,7 @@ $ git diff HEAD..@{-1}
 ### quick push to current branch
 
 {% hint style='tip' %}
-- `@`
-```bash
-@ alone is a shortcut for HEAD.
-```
-
+> - `@`: `@` alone is a shortcut for HEAD.
 > references:
 > - [gitrevisions(7) Manual Page](https://mirrors.edge.kernel.org/pub/software/scm/git/docs/gitrevisions.html)
 {% endhint %}
