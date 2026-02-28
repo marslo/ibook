@@ -513,9 +513,9 @@ username=marslo
 password=gho_jzuA**************************1VRqXz
 
 # show another credential with specific subpath
-$ echo -e 'protocol=https\nhost=github.com/mdevapraba' | git credential fill
+$ echo -e 'protocol=https\nhost=github.com/<account>' | git credential fill
 protocol=https
-host=github.com/mdevapraba
+host=github.com/<account>
 username=marslojiao-mvl
 password=ghp_ppHq*************************g1PXSvr
 ```

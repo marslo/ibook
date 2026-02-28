@@ -37,23 +37,24 @@
 - [`ag` the faster `mg`](#ag-the-faster-mg)
 - [`fzy`](#fzy)
 - [`bat`](#bat)
-  - [usage](#usage-2)
-  - [tips](#tips-2)
-  - [config](#config-1)
-  - [theme](#theme-1)
+  - [bat usage](#bat-usage)
+  - [bat tips](#bat-tips)
+  - [bat config](#bat-config)
+    - [tmTheme](#tmtheme)
+    - [syntaxes](#syntaxes)
 - [`tldr`](#tldr)
   - [install](#install-1)
-  - [config](#config-2)
+  - [config](#config-1)
 - [`cht.sh`](#chtsh)
   - [links](#links)
   - [.cht.sh.conf](#chtshconf)
     - [CHTSH environment](#chtsh-environment)
-    - [theme](#theme-2)
+    - [theme](#theme-1)
     - [mode](#mode)
   - [`--shell`](#--shell)
 - [`cheat`](#cheat)
   - [configure](#configure)
-    - [theme](#theme-3)
+    - [theme](#theme-2)
 - [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
 - [theme and colors](#theme-and-colors)
   - [`c`: bash-color](#c-bash-color)
@@ -2365,7 +2366,7 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
 
 ![bat cat](../screenshot/linux/bat-cat.png)
 
-## usage
+## bat usage
 - `help()`
   ```bash
   # in your .bashrc/.zshrc/*rc
@@ -2373,7 +2374,7 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
   help() { "$@" --help 2>&1 | bathelp }
 
   # calling in bash:
-  # $ help bat
+  $ help bat
   ```
 
   ![bat help](../screenshot/linux/bat-help.png)
@@ -2399,7 +2400,7 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
   }
   ```
 
-## tips
+## bat tips
 
 - manpages themes
   ```bash
@@ -2419,7 +2420,7 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
         --preview-label-pos='bottom'
   ```
 
-## config
+## bat config
 - [config-file](https://github.com/sharkdp/bat#format)
   ```bash
   $ bat --config-file
@@ -2447,7 +2448,8 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
      8   --map-syntax='/etc/apache2/**/*.conf:Apache Conf'
   ```
 
-## theme
+### tmTheme
+
 ```bash
 # list themes
 $ bat --list-themes
@@ -2466,9 +2468,27 @@ $ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
   # download a theme in '.tmtheme' format, for example:
   $ git clone https://github.com/greggb/sublime-snazzy
 
-  # Update the binary cache
+  # update the binary cache
   $ bat cache --build
   ```
+
+### syntaxes
+
+```bash
+# for commit message
+$ curl -fsSL --create-dirs \
+       -o $(bat --config-dir)/syntaxes/ConventionalCommits.sublime-syntax \
+       https://github.com/marslo/dotfiles/raw/main/.config/bat/syntaxes/ConventionalCommits.sublime-syntax
+
+# rebuild cache
+$ bat cache --build
+
+# verify
+$ echo 'docs(changelog): update changelog to beta.5' |
+  bat --plain --language COMMIT_EDITMSG --theme gruvbox-dark-marslo
+```
+
+![bat syntax for conventional commits](../screenshot/linux/bat-syntax-COMMIT_EDITMSG.png)
 
 # `tldr`
 
