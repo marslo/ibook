@@ -30,3 +30,5 @@ extend-ignore-re = [
 ba = 'ba'
 certifi = 'certifi'
 fpr = 'fpr'
+fo = 'fo'
+enhancd = 'enhancd'

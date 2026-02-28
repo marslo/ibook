@@ -157,6 +157,7 @@
 
 > [!NOTE|label:references:]
 > - [FZF_DEFAULT_OPTS](https://github.com/junegunn/fzf/issues/3053#issuecomment-1330285106)
+> - [fzf-color-theme.css](./fzf-color-theme.css)
 
 ```bash
 $ brew install fzf fd
@@ -470,9 +471,9 @@ $ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
 # @description :
 #   - if `nvim` installed using `nvim` instead of `vim`
 #     - using `-v` to force using `vim` instead of `nvim` even if nvim installed
-#   - if `vim` commands without paramters, then call fzf and using vim to open selected file
-#   - if `vim` commands with paramters
-#       - if single paramters and parameters is directlry, then call fzf in target directory and using vim to open selected file
+#   - if `vim` commands without parameters, then call fzf and using vim to open selected file
+#   - if `vim` commands with parameters
+#       - if single parameters and parameters is directlry, then call fzf in target directory and using vim to open selected file
 #       - otherwise call regular vim to open file(s)
 #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vim`
 # shellcheck disable=SC2155
@@ -615,11 +616,11 @@ function fzfInPath() {                   # return file name via fzf in particula
 # @author      : marslo
 # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
 # @description :
-#   - if any of paramters is directory, then get file path via fzf in target path first
+#   - if any of parameters is directory, then get file path via fzf in target path first
 #   - if `vimdiff` commands without parameter , then compare files in `.` and `~/.marslo`
 #   - if `vimdiff` commands with 1  parameter , then compare files in current path and `$1`
 #   - if `vimdiff` commands with 2  parameters, then compare files in `$1` and `$2`
-#   - otherwise ( if more than 2 parameters )  , then compare files in `${*: -2:1}` and `${*: -1}` with paramters of `${*: 1:$#-2}`
+#   - otherwise ( if more than 2 parameters )  , then compare files in `${*: -2:1}` and `${*: -1}` with parameters of `${*: 1:$#-2}`
 #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vimdiff`
 function vimdiff() {                       # smart vimdiff
   local lFile
@@ -681,8 +682,8 @@ function vd() {                            # vd - open vimdiff loaded files from
 # @description :
 #   - using `bat` by default if `command -v bat`
 #     - using `-c` ( `c`at ) as 1st parameter, to force using `type -P cat` instead of `type -P bat`
-#   - if `bat` without  paramter, then search file via `fzf` and shows via `bat`
-#   - if `bat` with 1   paramter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
+#   - if `bat` without  parameter, then search file via `fzf` and shows via `bat`
+#   - if `bat` with 1   parameter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
 #   - otherwise respect `bat` options, and shows via `bat`
 # shellcheck disable=SC2046,SC2155
 function cat() {                           # smart cat
@@ -1108,7 +1109,7 @@ function fman() {
   # @author      : marslo
   # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : list compilation environment variable via `fzf`, and export selected items
-  #   - if paramter is [ -f | --full ], then load full tool paths
+  #   - if parameter is [ -f | --full ], then load full tool paths
   # shellcheck disable=SC1090
   function mkexp() {                         # [m]a[k]e environment variable [e][x][p]ort
     if [[ 1 -eq $# ]] && [[ '-f' = "$1" || '--full' = "$1" ]]; then
@@ -1206,7 +1207,7 @@ function fman() {
   > - * alternative:
   >   ```bash
   >   $ unset ,,<TAB>
-  >   # by deafult
+  >   # by default
   >   $ unset **<TAB>
   >   ```
 
@@ -1214,7 +1215,7 @@ function fman() {
   # eclr - environment variable clear, support multiple select
   # @author      : marslo
   # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-  # @description : list all environment varialbe via `fzf`, and unset for selected items
+  # @description : list all environment variable via `fzf`, and unset for selected items
   function eclr() {                          # [e]nvironment variable [c][l]ea[r]
     while read -r _env; do
       echo -e "$(c Ys)>> unset ${_env}$(c)\n$(c Wdi).. $(eval echo \$${_env})$(c)"
@@ -1355,7 +1356,7 @@ $ (date; ps -ef) |
 ### kubectl
 - `kns`
   ```bash
-  # kns - kubectl set default namesapce
+  # kns - kubectl set default namespace
   # @author      : marslo
   # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
   # @description : using `fzf` to list all available namespaces and use the selected namespace as default
@@ -1374,7 +1375,7 @@ $ (date; ps -ef) |
 
   # or limited with `kubectl get namespace`
   function kns() {
-    echo 'namepsace-1 namespace-2 namespace-3 ...' |
+    echo 'namespace-1 namespace-2 namespace-3 ...' |
           fmt -1 |
           fzf -1 -0 --no-sort +m --prompt='namespace> ' |
           xargs -i bash -c "echo -e \"\033[1;33m~~> {}\\033[0m\";
@@ -1396,7 +1397,7 @@ $ (date; ps -ef) |
     local actions='list get watch create update delete'
     local components='sts deploy secrets configmap ingressroute ingressroutetcp'
 
-    namespaces=$( echo 'namepsace-1 namespace-2 namespace-3 ...' |
+    namespaces=$( echo 'namespace-1 namespace-2 namespace-3 ...' |
                       fmt -1 |
                       fzf -1 -0 --no-sort --prompt='namespace> ' \
                           --bind 'ctrl-y:execute-silent(echo -n {+} | pbcopy)+abort' \
@@ -1858,7 +1859,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 - [creating feature branches from JIRA issues](https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/)
   ```bash
   function create-branch() {
-    # The function expectes that username and password are stored using secret-tool.
+    # The function expects that username and password are stored using secret-tool.
     # To store these, use
     # secret-tool store --label="JIRA username" jira username
     # secret-tool store --label="JIRA password" jira password
@@ -2295,7 +2296,7 @@ nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
   $ brew install bat-extras
 
   # ubuntu
-  $ sudo apt intall bat -y
+  $ sudo apt install bat -y
   $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
 
   # centos
@@ -2489,7 +2490,7 @@ $ brew install --HEAD tlrc
 $ brew install --HEAD tldr
 
 # python version
-$ python3 -m pip intall tldr
+$ python3 -m pip install tldr
 ```
 
 ## config
@@ -2576,7 +2577,7 @@ $ [[ -f "${iRCHOME}"/.completion/cht.sh ]] && source "${iRCHOME}"/.completion/ch
 
 ### CHTSH environment
 
-| ENVIRONMENT VAIRABLE        | VALUE                                         |
+| ENVIRONMENT VARIABLE        | VALUE                                         |
 |-----------------------------|-----------------------------------------------|
 | `CHTSH_HOME`                | `~/.cht.sh/`                                  |
 | `CHTSH_CONF`                | `$CHTSH_HOME/cht.sh.conf`                     |

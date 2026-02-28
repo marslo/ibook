@@ -6,6 +6,7 @@
 - [authentication](#authentication)
   - [authentication scopes](#authentication-scopes)
 - [pr](#pr)
+  - [json field mapping](#json-field-mapping)
   - [create pr](#create-pr)
   - [comment on pr](#comment-on-pr)
   - [edit pr](#edit-pr)
@@ -117,6 +118,34 @@ $ gh auth refresh -s read:gpg_key
 
 > [!TIP|label:reference:]
 > - [gh pr](https://cli.github.com/manual/gh_pr)
+
+### json field mapping
+
+> [!NOTE|label:references:]
+> - `gh api` :
+>> - template: `template='"#\(.number) - \(.title)\tAuthor: \(.user.login)\nCreated: \(.created_at)\nUpdated: \(.updated_at)\n\n\(.body)"'`
+>> - example: `gh api 'repos/:owner/:repo/pulls' | jq -r ".[] | ${template}"` or `gh api repos/${OWNER}/${REPO}/pulls --jq ".[] | ${template}"`
+> - `gh pr list --json` :
+>> - template: `template=template='"#\(.number) - \(.title)\tAuthor: \(.author.login)\nCreated: \(.createdAt)\nUpdated: \(.updatedAt)\n\n\(.body)"'`
+>> - example: `gh pr list -R ${OWNER}/${REPO} --json 'number,title,author,createdAt,updatedAt,body' --jq ".[] | ${template}"`
+
+| `gh api`            | `gh pr list --json` |
+|---------------------|---------------------|
+| `number`            | `number`            |
+| `title`             | `title`             |
+| `body`              | `body`              |
+| `state`             | `state`             |
+| `user.login`        | `author.login`      |
+| `created_at`        | `createdAt`         |
+| `updated_at`        | `updatedAt`         |
+| `closed_at`         | `closedAt`          |
+| `merged_at`         | `mergedAt`          |
+| `html_url`          | `url`               |
+| `head.ref`          | `headRefName`       |
+| `base.ref`          | `baseRefName`       |
+| `draft`             | `isDraft`           |
+| `labels[].name`     | `labels[].name`     |
+| `assignees[].login` | `assignees[].login` |
 
 ### create pr
 ```bash
