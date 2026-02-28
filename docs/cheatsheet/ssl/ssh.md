@@ -2,18 +2,20 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [generate SCA gpg key](#generate-sca-gpg-key)
+- [backup and restore gpg key](#backup-and-restore-gpg-key)
+  - [backup](#backup)
+  - [restore](#restore)
+- [ssh support](#ssh-support)
   - [generate ssh public key](#generate-ssh-public-key)
-  - [start gpg-agent with ssh support](#start-gpg-agent-with-ssh-support)
-- [git config](#git-config)
+  - [start gpg-agent](#start-gpg-agent)
+  - [authorize public key](#authorize-public-key)
+- [git support](#git-support)
   - [set config globally](#set-config-globally)
   - [setup for multiple accounts and keys](#setup-for-multiple-accounts-and-keys)
   - [add gpg key to github](#add-gpg-key-to-github)
   - [verify](#verify)
-- [backup and restore gpg key](#backup-and-restore-gpg-key)
-  - [backup](#backup)
-  - [restore](#restore)
 - [tips](#tips)
-  - [View the exported private key structure](#view-the-exported-private-key-structure)
+  - [view the exported private key structure](#view-the-exported-private-key-structure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -63,6 +65,36 @@ uid                 [ultimate] marslo <marslo@domain.com>
 ssb   cv25519/4**************D 2026-02-12 [E]
 ```
 
+## backup and restore gpg key
+### backup
+
+```bash
+$ KEY_ID=6**************D
+
+# gpg keys
+$ gpg --armor --export ${KEY_ID} > ${KEY_ID}-public.asc
+$ gpg --armor --export-secret-keys ${KEY_ID} > ${KEY_ID}-secret.asc
+
+# ssh public key
+$ COMMENT='marslo@gpg'
+$ echo "$(gpg --export-ssh-key ${KEY_ID} | cut -d' ' -f1,2) ${COMMENT}" > ~/.ssh/"${COMMENT}".pub
+
+# trust database
+$ gpg --export-ownertrust > gpg-ownertrust.txt
+```
+
+### restore
+
+```bash
+# gpg keys
+$ gpg --import ./*.asc
+
+# trust database
+$ gpg --import-ownertrust < gpg-ownertrust.txt
+```
+
+## ssh support
+
 ### generate ssh public key
 
 ```bash
@@ -73,7 +105,7 @@ $ COMMENT='marslo@gpg'
 $ echo "$(gpg --export-ssh-key ${KEY_ID} | cut -d' ' -f1,2) ${COMMENT}" > ~/.ssh/${COMMENT}.pub
 ```
 
-### start gpg-agent with ssh support
+### start gpg-agent
 
 ```bash
 $ cat ~/.bash_profile
@@ -100,7 +132,19 @@ HOST *
   256 SHA256:V6nCfXgETxew3yUk7ids/pL7XH8BZjm4BZlL9hPrk3w (none) (ED25519)
   ```
 
-## git config
+### authorize public key
+
+```bash
+$ cat ~/.ssh/${COMMENT}.pub |
+  ssh <REMOET_SERVER> "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+# or
+$ ssh-copy-id -i ~/.ssh/${COMMENT}.pub <REMOET_SERVER>
+
+# verify
+$ ssh <REMOET_SERVER>
+```
+
+## git support
 
 ### set config globally
 
@@ -187,36 +231,9 @@ $ git show --show-signature [--no-patch]
 
   ![git pl with gpg sign](../../screenshot/git/git-pl-gpg.png)
 
-## backup and restore gpg key
-### backup
-
-```bash
-$ KEY_ID=6**************D
-
-# gpg keys
-$ gpg --armor --export ${KEY_ID} > ${KEY_ID}-public.asc
-$ gpg --armor --export-secret-keys ${KEY_ID} > ${KEY_ID}-secret.asc
-
-# ssh public key
-$ COMMENT='marslo@gpg'
-$ echo "$(gpg --export-ssh-key ${KEY_ID} | cut -d' ' -f1,2) ${COMMENT}" > ~/.ssh/"${COMMENT}".pub
-
-# trust database
-$ gpg --export-ownertrust > gpg-ownertrust.txt
-```
-
-### restore
-
-```bash
-# gpg keys
-$ gpg --import ./*.asc
-
-# trust database
-$ gpg --import-ownertrust < gpg-ownertrust.txt
-```
 
 ## tips
-### View the exported private key structure
+### view the exported private key structure
 
 ```bash
 $ gpg --list-packets <(gpg --export-secret-keys 6C549DA3FA02DB3D)

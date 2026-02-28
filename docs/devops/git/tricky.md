@@ -103,6 +103,8 @@ module.exports = {
 
 > [!NOTE|label:references:]
 > - [git --list-cmds](https://git-scm.com/docs/git#Documentation/git.txt---list-cmdsgroupgroup)
+>> - **porcelain** (High-Level): Designed for humans - pretty output, but may changes between versions
+>> - **plumbing** (Low-Level): Designed for machines - stable output, but may be more difficult to use
 > - [command-list.txt](https://github.com/git/git/blob/master/command-list.txt)
 > - [git-completion.bash](https://github.com/git/git/blob/master/contrib/completion/git-completion.bash)
 
