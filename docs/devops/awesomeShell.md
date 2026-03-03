@@ -12,6 +12,7 @@
     - [smart vimdiff](#smart-vimdiff)
     - [smart cat](#smart-cat)
     - [smart copy](#smart-copy)
+    - [open](#open)
     - [others](#others)
   - [advanced usage](#advanced-usage)
     - [venv selector](#venv-selector)
@@ -476,7 +477,7 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
 > - [v](https://github.com/junegunn/fzf/wiki/Examples#v)
 > - [Opening files](https://github.com/junegunn/fzf/wiki/Examples#opening-files)
 
-- [`vim()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L510-L550)
+- [`vim()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L536-L583)
 
   <!--sec data-title="vim()" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
@@ -511,20 +512,22 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   # shellcheck disable=SC2155
   function vim() {                           # magic vim - fzf list in most recent modified order
     local -a voption=()
-    local target
     local orgv=false                         # force using vim instead of nvim
 
-    local -a fdopt=( --type f --strip-cwd-prefix --hidden --follow --unrestricted --ignore-file "$HOME/.fdignore" )
+    local -a fdopt=( --type f --hidden --follow --unrestricted --ignore-file "$HOME/.fdignore" )
+    test -d "${1:-}" && [[ "$1" == "." || "$1" == ./* ]] && fdopt+=( --strip-cwd-prefix )
+
     local -a ignores=(
       '*.pem' '*.p12'
-      '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg'
+      '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg' '*.ico' '*.pdf' '*.mp4' '*.mp3'
       '*.zip' '*.tar' '*.gz' '*.bz2' '*.xz' '*.7z' '*.rar'
+      '*.o' '*.a' '*.so' '*.ko' '*.bin' '*.exe' '*.dll' '*.dylib'
+      '*.pyc' '*.pyd' '*.pyo' '*.node' '*.class' '*.jar' '*.db' '*.sqlite' '*.sqlite3'
       'Music' '.target_book' '_book' 'OneDrive*'
     )
-    while read -r pattern; do
-      fdopt+=(--exclude "${pattern}")
-    done <<< "$(printf '%s\n' "${ignores[@]}")"
-    [[ "$(pwd)" = "$HOME" ]] && fdopt+=( --max-depth 3 )
+    for pattern in "${ignores[@]}"; do fdopt+=( --exclude "${pattern}" ); done
+
+    { test "$HOME" = "$(pwd)" || [[ "$HOME" = $(realpath ${1:-}) ]]; } && fdopt+=( --max-depth 3 )
     isWSL || fdopt+=( --exec-batch ls -t )
 
     eval "$( _load_fzf_context )"
@@ -558,7 +561,7 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   ```
   <!--endsec-->
 
-- [`v()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L561-L568)
+- [`v()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L589-L595)
 
   <!--sec data-title="v()" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
@@ -577,7 +580,7 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   ```
   <!--endsec-->
 
-- [`vimr()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L578-L611)
+- [`vimr()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L605-LL638)
 
   <!--sec data-title="vimr()" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
@@ -626,7 +629,7 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   ```
   <!--endsec-->
 
-- [`vimrc()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L622-L644)
+- [`vimrc()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L649-L671)
 
   <!--sec data-title="vimrc()" data-id="section5" data-show=true data-collapse=true ces-->
   ```bash
@@ -671,22 +674,228 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
 
 ### smart vimdiff
 
-- [`vimdiff()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L656-L692)
-- [`vd()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L700-L710)
+- [`vimdiff()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L683-L719)
+
+  <!--sec data-title="vimdiff()" data-id="section6" data-show=true data-collapse=true ces-->
+  ```bash
+  # vimdiff      : magic vimdiff, using fzf list in recent modified order
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description :
+  #   - if any of parameters is directory, then get file path via fzf in target path first
+  #   - if `vimdiff` commands without parameter , then compare files in `.` and `~/.marslo`
+  #   - if `vimdiff` commands with 1  parameter , then compare files in current path and `$1`
+  #   - if `vimdiff` commands with 2  parameters, then compare files in `$1` and `$2`
+  #   - otherwise ( if more than 2 parameters )  , then compare files in `${*: -2:1}` and `${*: -1}` with parameters of `${*: 1:$#-2}`
+  #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vimdiff`
+  function vimdiff() {                       # smart vimdiff
+    local lFile
+    local rFile
+    local -a var=()
+    local -a options=()
+    local -a fzfopt=( --cycle --multi --header 'filter in rc paths:' )
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --help ) options+=( "$1" )      ; shift   ;;
+            -* ) options+=( "$1" "$2" ) ; shift 2 ;;
+             * ) break                            ;;
+      esac
+    done
+    fzfopt+=( "${options[@]}" )
+
+    if [[ 0 -eq $# ]]; then
+      lFile=$(fzfInPath '.' "${options[@]}" true)
+      [[ -z "${lFile}" ]] && return 1
+      rFile=$(fdInRC -x | sed -rn 's/^[^|]* \| (.+)$/\1/p' | fzf "${fzfopt[@]}" )
+    elif [[ 1 -eq $# ]]; then
+      lFile=$(fzfInPath '.' "${options[@]}" true)
+      [[ -z "${lFile}" ]] && return 1
+      [[ -d "$1"       ]] && rFile=$(fzfInPath "$1" "${options[@]}") || rFile="$1"
+    elif [[ 2 -eq $# ]]; then
+      [[ -d "$1"       ]] && lFile=$(fzfInPath "$1" "${options[@]}") || lFile="$1"
+      [[ -z "${lFile}" ]] && return 1
+      [[ -d "$2"       ]] && rFile=$(fzfInPath "$2" "${options[@]}") || rFile="$2"
+    else
+      var=( "${@:1:$#-2}" )
+      [[ -d "${*: -2:1}" ]] && lFile=$(fzfInPath "${*: -2:1}") || lFile="${*: -2:1}"
+      [[ -z "${lFile}"   ]] && return 1
+      [[ -d "${*: -1}"   ]] && rFile=$(fzfInPath "${*: -1}")   || rFile="${*: -1}"
+    fi
+
+    [[ -f "${lFile}" ]] && [[ -f "${rFile}" ]] && $(type -P vim) -d "${var[@]}" "${lFile}" "${rFile}"
+  }
+  ```
+  <!--endsec-->
+
+- [`vd()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L727-L737)
+
+  <!--sec data-title="vd()" data-id="section7" data-show=true data-collapse=true ces-->
+  ```bash
+  # vd           : open vimdiff loaded files from ~/.vim_mru_files
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description : list 10 most recently used files via fzf, and open by vimdiff
+  #   - if `vd` commands without parameter, list 10 most recently used files via fzf, and open selected files by vimdiff
+  #   - if `vd` commands with `-a` ( [q]uiet ) parameter, list 10 most recently used files via fzf and automatic select top 2, and open selected files by vimdiff
+  function vd() {                            # vd - open [v]im[d]iff loaded files from ~/.vim_mru_files
+    [[ 1 -eq $# ]] && [[ '-q' = "$1" ]] && opt='--bind start:select+down+select+accept' || opt=''
+
+    local -a files=()
+    mapfile -t files < <(
+      grep --color=none -v '^#' ~/.vim_mru_files |
+       xargs -r -d'\n' -I_ bash -c "sed 's:\~:$HOME:' <<< _" |
+       fzf --multi 3 --sync --cycle --reverse ${opt}
+    )
+    [[ ${#files[@]} -lt 2 ]] || vimdiff "${files[@]}"
+  }
+  ```
+  <!--endsec-->
 
 ![vimdiff](../screenshot/linux/fzf/fzf-vimdiff-vd.gif)
 
 ### smart cat
 
-- [`cat()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L147-L170)
+> [!NOTE|label:references:]
+> - [`cat()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L147-L170)
 
 ![smart cat](../screenshot/linux/fzf/fzf-smart-cat.gif)
 
+<!--sec data-title="cat()" data-id="section8" data-show=true data-collapse=true ces-->
+```bash
+# smart cat    : using bat by default for cat content, respect bat options
+# @author      : marslo
+# @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+# @description :
+#   - using `bat` by default if `command -v bat`
+#     - using `-c` ( `c`at ) as 1st parameter, to force using `type -P cat` instead of `type -P bat`
+#   - if `bat` without  parameter, then search file via `fzf` and shows via `bat`
+#   - if `bat` with 1   parameter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
+#   - otherwise respect `bat` options, and shows via `bat`
+# shellcheck disable=SC2046,SC2155
+function cat() {                           # smart cat
+  local -a CAT=( "$(type -P cat)" )
+  command -v bat >/dev/null && CAT=( "$(type -P bat)" --theme='gruvbox-dark' --color=always )
+
+  # reading from pipe == [[ -p /dev/stdin ]]
+  [[ ! -t 0      ]] && { "${CAT[@]}" "$@"; return; }
+  # force use cat
+  [[ '-c' = "$1" ]] && { $(type -P cat) "${@:2}"; return; }
+
+  eval "$( _load_fd_context  )"
+  eval "$( _load_fzf_context )"
+
+  # reading from fd + fzf
+  if [[ 0 -eq $# ]]; then
+    local selected=$( fd . "${fdopt[@]}" | fzf --exit-0 "${fzfopt[@]}" )
+    # using IFS to handle file name with space
+    [[ -n "${selected}" ]] && echo "${selected}" | xargs -d '\n' "${CAT[@]}"
+  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
+    local target=$1;
+    fd . "${target}" "${fdopt[@]}" | fzf --bind="enter:become(${CAT[*]} {+})" "${fzfopt[@]}";
+  else
+    "${CAT[@]}" "${@:1:$#-1}" "${@: -1}"
+  fi
+}
+```
+<!--endsec-->
+
 ### smart copy
 
-- [`copy()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L95-L114)
+> [!NOTE|label:references:]
+> - [`copy()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L95-L114)
 
 ![smart copy](../screenshot/linux/fzf/fzf-smart-copy.gif)
+
+<!--sec data-title="copy()" data-id="section9" data-show=true data-collapse=true ces-->
+```bash
+# smart copy   : using `fzf` to list files and copy the selected file
+# @author      : marslo
+# @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+# @description :
+#   - if `copy` without parameter, then list file via `fzf` and copy the content
+#     - "${COPY}"
+#       - `pbcopy` in osx
+#       - `/mnt/c/Windows/System32/clip.exe` in wsl
+#   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
+# shellcheck disable=SC2317
+function copy() {                          # smart copy
+  [[ -z "${COPY}" ]] && echo -e "$(c Rs)ERROR: 'copy' function NOT support :$(c) $(c Ri)$(uanme -v)$(c)$(c Rs). EXIT..$(c)" && return;
+
+  eval "$( _load_fd_context  )"
+  eval "$( _load_fzf_context )"
+
+  if [[ 0 -eq $# ]]; then
+    file=$( fd . "${fdopt[@]}" | fzf "${fzfopt[@]}" ) &&
+         "${COPY}" < "${file}" &&
+         printf "$(c Wd)>>$(c) $(c Gis)%s$(c) $(c Wdi)has been copied ..$(c)" "${file}"
+  elif [[ 1 -eq $# ]] && [[ -d "$1" ]]; then
+    local target=$1;
+    file=$( fd . "${target}" "${fdopt[@]}" | fzf "${fzfopt[@]}" ) &&
+         "${COPY}" < "${file}" &&
+         printf "$(c Wd)>>$(c) $(c Gis)%s$(c) $(c Wdi)has been copied ..$(c)" "${file}"
+  else
+    "${COPY}" < "$1" &&
+       printf "$(c Wd)>>$(c) $(c Gis)%s$(c) $(c Wdi)has been copied ..$(c)" "${1}"
+  fi
+}
+```
+<!--endsec-->
+
+### open
+
+![smart open](../screenshot/linux/fzf/fzf-smart-open.gif)
+
+<!--sec data-title="open()" data-id="section10" data-show=true data-collapse=true ces-->
+```bash
+# smart open   : using `fzf` to list files and open the selected file with default application
+# @author      : marslo
+# @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+# shellcheck disable=SC2317
+function open() {                          # smart open
+  [[ "Darwin" != "$(uname -s)" ]] && echo -e "$(c Rs)ERROR: 'open' function currently only support macOS :$(c) $(c Ri)$(uanme -v)$(c)$(c Rs). EXIT..$(c)" && return;
+
+  local ORG_OPEN=false
+  local USAGE='USAGE'
+  USAGE+="\n  $(c Cs)\$ open $(c 0G)[options] $(c 0Mi)[file|dir ...]$(c)"
+  USAGE+="\n\nOPTIONS"
+  USAGE+="\n  $(c G)-d$(c), $(c G)--no-fzf$(c)    open directory directly without fzf selection"
+  USAGE+="\n  $(c C)-- $(c 0G)-h$(c), $(c 0G)--help$(c)   show this help message"
+  USAGE+="\n\nEXAMPLES"
+  USAGE+="\n  $(c Y)\$ open$(c)                       $(c 0Wdi)# list files via fzf and open the selected file$(c)"
+  USAGE+="\n  $(c Y)\$ open $(c 0Mi)/path/to/dir$(c)          $(c 0Wdi)# list files in directory via fzf and open the selected file$(c)"
+  USAGE+="\n  $(c Y)\$ open $(c 0Gi)--no-fzf $(c 0Mi)/path/to/dir$(c) $(c 0Wdi)# open the directory directly without fzf selection$(c)"
+
+  eval "$( _load_fd_context  )"
+  eval "$( _load_fzf_context )"
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -d | --no-fzf ) ORG_OPEN=true     ; shift  ;;
+      --            ) shift;
+                      for arg in "$@"; do
+                        case "${arg}" in
+                          -h | --help ) echo -e "${USAGE}"; return ;;
+                        esac
+                      done; break   ;;
+      -*            ) command open "$1" ; return ;;
+      *             ) break                      ;;
+    esac
+  done
+
+  if [[ 0 -eq $# ]]; then
+    local selected=$( fd . "${fdopt[@]}" | fzf --exit-0 "${fzfopt[@]}" )
+    [[ -n "${selected}" ]] && echo "${selected}" | tr '\n' '\0' | xargs -0 command open
+  elif [[ -d "${1:-}" ]]; then
+    local target=$1;
+    "${ORG_OPEN}" && command open "${target}" && return;
+    fd . "${target}" "${fdopt[@]}" | fzf --bind="enter:become(command open {+})" "${fzfopt[@]}";
+  else
+    command open "${@}"
+  fi
+}
+```
+<!--endsec-->
 
 ### others
 
@@ -696,6 +905,29 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   > - [eddieantonio/imgcat](https://github.com/eddieantonio/imgcat)
 
 - [`imgview()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L356-L366)
+
+  <!--sec data-title="imgview()" data-id="section11" data-show=true data-collapse=true ces-->
+  ```bash
+  # imgview      : fzf list and preview images
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description :
+  #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default imgview`
+  #   - disable `gif` due to imgcat performance issue
+  # shellcheck disable=SC2215
+  function imgview() {                       # [view] [im]a[g]e via [imgcat](https://github.com/eddieantonio/imgcat)
+    fd --unrestricted --type f --exclude .git --exclude node_modules '^*\.(png|jpeg|jpg|xpm|bmp)$' |
+    fzf "$@" --height 100% \
+             --preview "imgcat -W \$FZF_PREVIEW_COLUMNS -H \$FZF_PREVIEW_LINES {}" \
+             --bind "ctrl-y:execute-silent(printf '%s' {+} | pbcopy)+abort" \
+             --bind 'ctrl-/:toggle-preview' \
+             --header 'Press CTRL-Y to copy name into clipboard' \
+             --preview-window 'up:80%:nowrap' \
+             --exit-0 \
+    >/dev/null || true
+  }
+  ```
+  <!--endsec-->
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
 
@@ -738,17 +970,26 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   > - [Switching to fzf-only search mode](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#switching-to-fzf-only-search-mode)
   > - [Switching between Ripgrep mode and fzf mode](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#switching-to-fzf-only-search-mode)
 
+  <!--sec data-title="fif()" data-id="section12" data-show=true data-collapse=true ces-->
   ```bash
+  # references:
+  # - https://github.com/junegunn/fzf/blob/master/ADVANCED.md#using-fzf-as-the-secondary-filter
+  # - https://github.com/junegunn/fzf/issues/3572#issuecomment-1887735150
+  # shellcheck disable=SC2154
   function fif() {                           # [f]ind-[i]n-[f]ile
-    if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
-    $(type -P rg) --files-with-matches --no-messages --hidden --follow --smart-case "$1" |
-    fzf --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
-        --bind "enter:become($(type -P vim) {+})" \
-        --header 'CTRL-N/CTRL-P or CTRL-↑/CTRL-↓ to view contents' \
-        --preview "bat --color=always --style=plain {} |
-                   rg --no-line-number --colors 'match:bg:yellow' --ignore-case --pretty --context 10 \"$1\" ||
-                   rg --no-line-number --ignore-case --pretty --context 10 \"$1\" {} \
-                  "
+    if [ ! "$#" -gt 0 ]; then
+      bash "${iRCHOME}"/bin/rfv
+    else
+      $(type -P rg) --files-with-matches --no-messages --hidden --follow --smart-case "$1" |
+      fzf --height 80% \
+          --bind 'ctrl-p:preview-up,ctrl-n:preview-down' \
+          --bind "enter:become($(type -P vim) {+})" \
+          --header 'CTRL-N/CTRL-P or CTRL-↑/CTRL-↓ to view contents' \
+          --preview "bat --color=always --style=plain {} |
+                     rg --no-line-number --colors 'match:bg:yellow' --ignore-case --pretty --context 10 \"$1\" ||
+                     rg --no-line-number --ignore-case --pretty --context 10 \"$1\" {} \
+                    "
+    fi
   }
 
   # or highlight as preview tool
@@ -762,6 +1003,7 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
                   "
   }
   ```
+  <!--endsec-->
 
   ![rg+fzf](../screenshot/linux/fzf/fzf-fif-rg.gif)
 
