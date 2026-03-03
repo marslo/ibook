@@ -1,98 +1,35 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [`fzf`](#fzf)
-  - [install](#install)
-  - [shortcuts](#shortcuts)
-    - [action and select](#action-and-select)
-    - [movement](#movement)
-    - [ctrl-t](#ctrl-t)
-  - [usage](#usage)
-    - [magic vim](#magic-vim)
-    - [smart vimdiff](#smart-vimdiff)
-    - [smart cat](#smart-cat)
-    - [smart copy](#smart-copy)
-    - [open](#open)
-    - [others](#others)
-  - [advanced usage](#advanced-usage)
-    - [venv selector](#venv-selector)
-    - [chrome](#chrome)
-    - [man page](#man-page)
-    - [git alias](#git-alias)
-    - [environment](#environment)
-    - [process](#process)
-    - [kubectl](#kubectl)
-    - [homebrew](#homebrew)
-  - [config](#config)
-    - [`ctrl-r`](#ctrl-r)
-    - [`ctrl-t`](#ctrl-t)
-    - [theme](#theme)
-  - [tips](#tips)
-  - [fzf with git](#fzf-with-git)
-- [`fd`](#fd)
-  - [advanced usage](#advanced-usage-1)
-- [`rg` the faster `mg`](#rg-the-faster-mg)
-  - [usage](#usage-1)
-  - [tips](#tips-1)
-  - [using inside in vim](#using-inside-in-vim)
-- [`ag` the faster `mg`](#ag-the-faster-mg)
-- [`fzy`](#fzy)
-- [`bat`](#bat)
-  - [bat usage](#bat-usage)
-  - [bat tips](#bat-tips)
-  - [bat config](#bat-config)
-    - [tmTheme](#tmtheme)
-    - [syntaxes](#syntaxes)
-- [`tldr`](#tldr)
-  - [install](#install-1)
-  - [config](#config-1)
-- [`cht.sh`](#chtsh)
-  - [links](#links)
-  - [.cht.sh.conf](#chtshconf)
-    - [CHTSH environment](#chtsh-environment)
-    - [theme](#theme-1)
-    - [mode](#mode)
-  - [`--shell`](#--shell)
-- [`cheat`](#cheat)
-  - [configure](#configure)
-    - [theme](#theme-2)
-- [`ncdu` : NCurses Disk Usage](#ncdu--ncurses-disk-usage)
-- [theme and colors](#theme-and-colors)
-  - [`c`: bash-color](#c-bash-color)
-  - [`ansi`](#ansi)
-  - [`diff-so-fancy`](#diff-so-fancy)
-- [utility](#utility)
-  - [`elinks`](#elinks)
-  - [`duf`](#duf)
-  - [`enhancd`](#enhancd)
-  - [watchman](#watchman)
+- [install](#install)
+- [shortcuts](#shortcuts)
+  - [action and select](#action-and-select)
+  - [movement](#movement)
+  - [ctrl-t](#ctrl-t)
+- [usage](#usage)
+  - [magic vim](#magic-vim)
+  - [smart vimdiff](#smart-vimdiff)
+  - [smart cat](#smart-cat)
+  - [smart copy](#smart-copy)
+  - [smart open](#smart-open)
+  - [others](#others)
+- [advanced usage](#advanced-usage)
+  - [venv selector](#venv-selector)
+  - [chrome](#chrome)
+  - [man page](#man-page)
+  - [git alias](#git-alias)
+  - [environment](#environment)
+  - [process](#process)
+  - [kubectl](#kubectl)
+  - [homebrew](#homebrew)
+- [config](#config)
+  - [`ctrl-r`](#ctrl-r)
+  - [`ctrl-t`](#ctrl-t)
+  - [theme](#theme)
+- [tips](#tips)
+- [fzf with git](#fzf-with-git)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-{% hint style='tip' %}
-> references:
-> - [Best UNIX shell-based tools](https://gist.github.com/mbbx6spp/1429161)
-> - [* alebcay/awesome-shell](https://github.com/alebcay/awesome-shell/tree/master) | [* zh-cn](https://github.com/alebcay/awesome-shell/blob/master/README_ZH-CN.md)
->   - [nosarthur/awesome-shell](https://github.com/nosarthur/awesome-shell)
-> - [* rockerBOO/awesome-neovim](https://github.com/rockerBOO/awesome-neovim)
-> - [sindresorhus/awesome](https://github.com/sindresorhus/awesome)
-> - [Sainnhe's Dashboard: os in web browser](https://dashboard.sainnhe.dev/)
->   - [osx](https://macos.sainnhe.dev/) | [windows](https://windows.sainnhe.dev/)
-> - others
->   - [bayandin/awesome-awesomeness](https://github.com/bayandin/awesome-awesomeness)
->   - [emijrp/awesome-awesome](https://github.com/emijrp/awesome-awesome)
->   - [kahun/awesome-sysadmin](https://github.com/kahun/awesome-sysadmin)
->   - [stup - Daily notes in the terminal](https://iridakos.com/programming/2020/04/20/stup-cli-notes)
->   - [Awesome Command-Line Tools](https://www.vimfromscratch.com/articles/awesome-command-line-tools)
-> - [My Minimalist Over-powered Linux Setup Guide](https://medium.com/@jonyeezs/my-minimal-over-powered-linux-setup-guide-710931efb75b)
-> - [* devynspencer/cute_commands.sh](https://gist.github.com/devynspencer/cfdce35b3230e72214ef)
-> - [Use Bash Strict Mode (Unless You Love Debugging)](http://redsymbol.net/articles/unofficial-bash-strict-mode/)
-> - [Learn Enough Command Line to Be Dangerous](https://www.learnenough.com/command-line-tutorial/basics)
-> - [jlevy/the-art-of-command-line](https://github.com/jlevy/the-art-of-command-line)
-> - [pv - Pipe Viewer](https://www.ivarch.com/programs/pv.shtml)
-{% endhint %}
-
-# [`fzf`](https://github.com/junegunn/fzf)
 
 {% hint style='tip' %}
 > - fuzzy completion in bash
@@ -102,6 +39,7 @@
 >   - `$ export **<tab>`
 >   - `$ ssh **<tab>`
 >   - `$ kill -9 **<tab>`
+> - [fzf](https://github.com/junegunn/fzf)
 {% endhint %}
 
 > [!NOTE|label:references:]
@@ -153,7 +91,7 @@
 >   - [* fzf-color-theme.css](./fzf-color-theme.css)
 >   - [#692 Custom selected character](https://github.com/junegunn/fzf/issues/692)
 
-![fzf and vim](../screenshot/linux/fzf/fzf-vim.gif)
+![fzf and vim](../../screenshot/linux/fzf/fzf-vim.gif)
 
 ## install
 
@@ -198,9 +136,9 @@ FZF_DEFAULT_COMMAND+="--exclude .git --exclude node_modules"
 export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ```
 
-![fzf color themes](../screenshot/linux/fzf/fzf-color-themes.png)
+![fzf color themes](../../screenshot/linux/fzf/fzf-color-themes.png)
 
-![fzf color theme: gruvbox-marslo](../screenshot/linux/fzf/fzf-color-theme-gruvbox-marslo.png)
+![fzf color theme: gruvbox-marslo](../../screenshot/linux/fzf/fzf-color-theme-gruvbox-marslo.png)
 
 | NAME    | VALUE                                       |
 |---------|---------------------------------------------|
@@ -668,9 +606,9 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   ```
   <!--endsec-->
 
-![fzf magic vim](../screenshot/linux/fzf/fzf-magic-vim.gif)
+![fzf magic vim](../../screenshot/linux/fzf/fzf-magic-vim.gif)
 
-![fzf vimrc](../screenshot/linux/fzf/fzf-vimrc.gif)
+![fzf vimrc](../../screenshot/linux/fzf/fzf-vimrc.gif)
 
 ### smart vimdiff
 
@@ -752,14 +690,14 @@ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
   ```
   <!--endsec-->
 
-![vimdiff](../screenshot/linux/fzf/fzf-vimdiff-vd.gif)
+![vimdiff](../../screenshot/linux/fzf/fzf-vimdiff-vd.gif)
 
 ### smart cat
 
 > [!NOTE|label:references:]
 > - [`cat()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L147-L170)
 
-![smart cat](../screenshot/linux/fzf/fzf-smart-cat.gif)
+![smart cat](../../screenshot/linux/fzf/fzf-smart-cat.gif)
 
 <!--sec data-title="cat()" data-id="section8" data-show=true data-collapse=true ces-->
 ```bash
@@ -805,7 +743,7 @@ function cat() {                           # smart cat
 > [!NOTE|label:references:]
 > - [`copy()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L95-L114)
 
-![smart copy](../screenshot/linux/fzf/fzf-smart-copy.gif)
+![smart copy](../../screenshot/linux/fzf/fzf-smart-copy.gif)
 
 <!--sec data-title="copy()" data-id="section9" data-show=true data-collapse=true ces-->
 ```bash
@@ -842,9 +780,9 @@ function copy() {                          # smart copy
 ```
 <!--endsec-->
 
-### open
+### smart open
 
-![smart open](../screenshot/linux/fzf/fzf-smart-open.gif)
+![smart open](../../screenshot/linux/fzf/fzf-smart-open.gif)
 
 <!--sec data-title="open()" data-id="section10" data-show=true data-collapse=true ces-->
 ```bash
@@ -1005,7 +943,7 @@ function open() {                          # smart open
   ```
   <!--endsec-->
 
-  ![rg+fzf](../screenshot/linux/fzf/fzf-fif-rg.gif)
+  ![rg+fzf](../../screenshot/linux/fzf/fzf-fif-rg.gif)
 
 - changing directory
 
@@ -1195,7 +1133,7 @@ function fman() {
     xargs man
   ```
 
-![fzf man](../screenshot/linux/fzf/fzf-fman.gif)
+![fzf man](../../screenshot/linux/fzf/fzf-fman.gif)
 
 ### git alias
 
@@ -1374,7 +1312,7 @@ function fman() {
   }
   ```
 
-  ![fzf for unset environment](../screenshot/linux/fzf/fzf-eclr.gif)
+  ![fzf for unset environment](../../screenshot/linux/fzf/fzf-eclr.gif)
 
 - print and copy
 
@@ -1425,7 +1363,7 @@ function fman() {
   }
   ```
 
-  ![penv](../screenshot/linux/fzf/fzf-penv.gif)
+  ![penv](../../screenshot/linux/fzf/fzf-penv.gif)
 
 ### process
 
@@ -1473,9 +1411,9 @@ $ (date; ps -ef) |
   }
   ```
 
-  ![ps fzf](../screenshot/linux/fzf/fzf-ps.png)
+  ![ps fzf](../../screenshot/linux/fzf/fzf-ps.png)
 
-  ![kill ps fzf](../screenshot/linux/fzf/fzf-kill-process.gif)
+  ![kill ps fzf](../../screenshot/linux/fzf/fzf-kill-process.gif)
 
 ### kubectl
 - `kns`
@@ -1601,7 +1539,7 @@ $ (date; ps -ef) |
   }
   ```
 
-  ![kcani](../screenshot/linux/fzf/fzf-kcani.png)
+  ![kcani](../../screenshot/linux/fzf/fzf-kcani.png)
 
 - [Log tailing : pods](https://github.com/junegunn/fzf/blob/master/ADVANCED.md#log-tailing)
   ```bash
@@ -1693,7 +1631,7 @@ export FZF_CTRL_R_OPTS="
   /usr/local/Cellar/fzf/0.42.0/shell/key-bindings.bash
   ```
 
-  ![fzf ctrl-r](../screenshot/linux/fzf/fzf-ctrl-r.gif)
+  ![fzf ctrl-r](../../screenshot/linux/fzf/fzf-ctrl-r.gif)
 
 ### [`ctrl-t`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 
@@ -1720,7 +1658,7 @@ export FZF_CTRL_T_OPTS="
   --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 ```
 
-![fzf ctrl-t](../screenshot/linux/fzf/fzf-ctrl-t.gif)
+![fzf ctrl-t](../../screenshot/linux/fzf/fzf-ctrl-t.gif)
 
 - `__fzf_select__`
   ```bash
@@ -1827,9 +1765,9 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ seq 100 | fzf --sync --bind 'start:pos(N)'
   ```
 
-  ![fzf start pos](../screenshot/linux/fzf/fzf-start-pos-1.png)
+  ![fzf start pos](../../screenshot/linux/fzf/fzf-start-pos-1.png)
 
-  ![fzf start pos](../screenshot/linux/fzf/fzf-start-pos-2.png)
+  ![fzf start pos](../../screenshot/linux/fzf/fzf-start-pos-2.png)
 
 
 - select by column
@@ -1865,7 +1803,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ echo {a..z} | fzf --with-nth='1..3'
   ```
 
-  ![fzf --with-nth](../screenshot/linux/fzf/fzf-with-nth.png)
+  ![fzf --with-nth](../../screenshot/linux/fzf/fzf-with-nth.png)
 
   ```bash
   # https://github.com/junegunn/fzf/issues/1323#issuecomment-499615418
@@ -1875,14 +1813,14 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     cut --delimiter=' ' --field=1
   ```
 
-  ![git with-nth for git comments](../screenshot/linux/fzf/fzf-with-nth-git.gif)
+  ![git with-nth for git comments](../../screenshot/linux/fzf/fzf-with-nth-git.gif)
 
   ```bash
   $ echo -e 'first line\tfirst preview\nsecond line\tsecond preview' |
     fzf --delimiter='\t' --with-nth=1 --preview='echo {2}'
   ```
 
-  ![fzf --with-nth for preview](../screenshot/linux/fzf/fzf-with-nth-preview.png)
+  ![fzf --with-nth for preview](../../screenshot/linux/fzf/fzf-with-nth-preview.png)
 
 - `--track`
   ```bash
@@ -1891,14 +1829,14 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
     fzf --ansi --track --no-sort --layout=reverse-list
   ```
 
-  ![fzf --track for git](../screenshot/linux/fzf/fzf---track.gif)
+  ![fzf --track for git](../../screenshot/linux/fzf/fzf---track.gif)
 
 - select-all
   ```bash
   $ seq 3 | fzf --multi --sync --bind start:last+select-all
   ```
 
-  ![fzf select-all](../screenshot/linux/fzf/fzf-select-all.png)
+  ![fzf select-all](../../screenshot/linux/fzf/fzf-select-all.png)
 
 
 - select-n
@@ -1914,9 +1852,9 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   $ seq 10 | fzf --multi --sync --reverse --bind start:select+down+select
   ```
 
-  ![select and move down](../screenshot/linux/fzf/fzf-bind-select.png)
+  ![select and move down](../../screenshot/linux/fzf/fzf-bind-select.png)
 
-  ![select](../screenshot/linux/fzf/fzf-bind-select-2.png)
+  ![select](../../screenshot/linux/fzf/fzf-bind-select-2.png)
 
 - for git
 
@@ -2039,7 +1977,7 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
   > [!NOTE|label:references:]
   > - [#4160 Add style presets](https://github.com/junegunn/fzf/issues/4160)
 
-  ![fzf style](../screenshot/linux/fzf/fzf-style-full-1.png)
+  ![fzf style](../../screenshot/linux/fzf/fzf-style-full-1.png)
 
 ## fzf with git
 
@@ -2048,969 +1986,3 @@ export FZF_DEFAULT_OPTS='--color=bg+:#293739,bg:#1B1D1E,border:#808080,spinner:#
 > - [A Practical Guide to fzf: Building a Git Explorer](https://thevaluable.dev/fzf-git-integration/)
 > - [jesseduffield/lazygit](https://github.com/jesseduffield/lazygit)
 > - [Examples - Git](https://github.com/junegunn/fzf/wiki/examples#git)
-
-# [`fd`](https://github.com/sharkdp/fd)
-
-> [!NOTE|label:references:]
-> - [Find Files With the fd Command](https://www.linode.com/docs/guides/finding-files-with-fd-command/)
-> - [How to Use the fd Command on Linux](https://www.howtogeek.com/682244/how-to-use-the-fd-command-on-linux/)
-> - [How to Find Files with fd Command in Linux](https://www.atlantic.net/vps-hosting/how-to-find-files-with-fd-command-in-linux/)
-> - [Fd – The Best Alternative to ‘Find’ Command for Quick File Searching](https://www.tecmint.com/fd-alternative-to-find-command/)
-> - [File list of package fd-find in noble of architecture amd64](https://packages.ubuntu.com/noble/amd64/fd-find/filelist)
-> - [Download Page for fd-find_9.0.0-1_amd64.deb on AMD64 machines](https://packages.ubuntu.com/noble/amd64/fd-find/download)
-
--  install
-  ```bash
-  # osx
-  $ brew install fd
-  $ type -P fd >/dev/null && eval "$(fd --gen-completions bash)"
-  # -- or --
-  $ fd --gen-completions bash | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
-  # -- or --
-  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd $(brew --prefix)/etc/bash_completion.d/fd
-  # or - v9.0.0
-  $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd "$(brew --prefix)"/etc/bash_completion.d/fd
-
-  # debine
-  $ sudo apt install fd-find                  # ubuntu 22.04 : fd 8.3.1
-  $ curl -fsSL -O http://ftp.osuosl.org/pub/ubuntu/pool/universe/r/rust-fd-find/fd-find_9.0.0-1_amd64.deb
-  $ sudo dpkg -i fd-find_9.0.0-1_amd64.deb    # ubuntu any: fd 9.0.0
-  $ ln -s $(which fdfind) ~/.local/bin/fd
-  $ export PATH=~/.local:$PATH
-
-  # centos
-  $ sudo dnf install fd-find
-  ```
-
-  - from source
-
-    > [!NOTE]
-    > - install rust via
-    >   ```bash
-    >   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    >   $ source "$HOME/.cargo/env"
-    >   $ cargo --version
-    >   cargo 1.74.1 (ecb9851af 2023-10-18)
-    >   ```
-    >
-    > - [generate auto-completion](https://github.com/sharkdp/fd/blob/master/Makefile)
-    >
-    > |    SHELL   | COMMAND                           |
-    > |:----------:|-----------------------------------|
-    > |    bash    | `fd --gen-completions bash`       |
-    > |    fish    | `fd --gen-completions fish`       |
-    > |     zsh    | `fd --gen-completions zsh`        |
-    > |   elvsih   | `fd --gen-completions elvish`     |
-    > | powershell | `fd --gen-completions powershell` |
-
-    ```bash
-    $ git clone https://github.com/sharkdp/fd && cd fd
-
-    # osx
-    $ brew install rust
-    $ cargo install amethyst_tools
-    # wsl/ubuntu
-    $ sudo apt install cargo
-
-    $ cargo build                     # build
-    $ cargo test                      # run unit tests and integration tests
-    $ cargo install --debug --path .  # install in osx
-    $ cargo install --path .          # install in ubuntu/wsl
-    $ ln -sf /home/marslo/.cargo/bin/fd /home/marslo/.local/bin/fd
-
-    # completion ( >= 9.0.0 )
-    # wsl/ubuntu/centos
-    $ fd --gen-completions bash | sudo tee /usr/share/bash-completion/completions/fd
-    # or centos
-    $ fd --gen-completions bash | sudo tee /etc/bash_completion.d/fd
-    # osx
-    $ fd --gen-completions bash | sudo tee $(brew --prefix)/etc/bash_completion.d/fd
-    ```
-
-- verify
-  ```bash
-  $ fd --version
-  fd 9.0.0
-  ```
-
-- usage
-  ```bash
-  $ fd --hidden ^.env$
-  .env
-
-  $ fd --type f --strip-cwd-prefix --hidden --follow --exclude .git --exclude node_modules ifunc
-  bin/ifunc.sh
-  ```
-
-## advanced usage
-- crontab for delete '*\.DS_*'
-  ```bash
-  $ "$(type -P fd)" -IH --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
-  # or
-  $ "$(type -P fd)" -Iu --glob '*\.DS_*' $HOME | xargs -r -i rm '{}'
-  # or
-  $ "$(type -P fd)" --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME  | xargs -r -i rm '{}'
-  ```
-
-- [`ff`](https://github.com/marslo/mylinux/raw/master/confs/home/.marslo/bin/ff)
-
-  ![fd-ffs](../screenshot/linux/fd-ff.png)
-
-- `ffs`
-  ```bash
-  # [f]ind [f]ile and [s]ort
-  function ffs() {
-    local opt=''
-    while [[ $# -gt 0 ]]; do
-      case "$1" in
-            -g ) opt+="$1 "   ; shift   ;;
-           -fg ) opt+="$1 "   ; shift   ;;
-            -f ) opt+="$1 "   ; shift   ;;
-           --* ) opt+="$1 $2 "; shift 2 ;;
-            -* ) opt+="$1 "   ; shift   ;;
-             * ) break                  ;;
-      esac
-    done
-
-    local path=${1:-~/.marslo}
-    local num=${2:-10}
-    num=${num//-/}
-    local depth=${3:-}
-    depth=${depth//-/}
-    local option='--type f'
-
-    if [[ "${opt}" =~ '-g ' ]]; then
-      # git show --name-only --pretty="format:" -"${num}" | awk 'NF' | sort -u
-      # references: https://stackoverflow.com/a/54677384/2940319
-      git log --date=iso-local --first-parent --pretty=%cd --name-status --relative |
-          awk 'NF==1{date=$1}NF>1 && !seen[$2]++{print date,$0}' FS=$'\t' |
-          head -"${num}"
-    elif [[ "${opt}" =~ '-fg ' ]]; then
-      # references: https://stackoverflow.com/a/63864280/2940319
-      git ls-tree -r --name-only HEAD -z |
-          TZ=PDT xargs -0 -I_ git --no-pager log -1 --date=iso-local --format="%ad | _" -- _ |
-          sort -r |
-          head -"${num}"
-    elif [[ "${opt}" =~ '-f ' ]]; then
-      option=${option: 1}
-      [[ -n "${depth}" ]] && option="-maxdepth ${depth} ${option}"
-      # shellcheck disable=SC2086
-      find "${path}" ${option} \
-                     -not -path '*/\.git/*' \
-                     -not -path '*/node_modules/*' \
-                     -not -path '*/go/pkg/*' \
-                     -not -path '*/git/git*/*' \
-                     -not -path '*/.marslo/utils/*' \
-                     -not -path '*/.marslo/.completion/*' \
-                     -printf "%10T+ | %p\n" |
-      sort -r |
-      head -"${num}"
-    else
-      if [[ "${opt}}" =~ .*-t.* ]] || [[ "${opt}" =~ .*--type.* ]]; then
-        option="${option//--type\ f/}"
-      fi
-      option="${opt} ${option} --hidden --follow --unrestricted --ignore-file ~/.fdignore"
-      [[ -n "${depth}"    ]] && option="--max-depth ${depth} ${option}"
-      [[ '.' != "${path}" ]] && option="${path} ${option}"
-      # shellcheck disable=SC2086,SC2027
-      eval """ fd . "${option}" --exec stat --printf='%y | %n\n' | sort -r | head -"${num}" """
-    fi
-  }
-  ```
-
-  ![fd-ffs](../screenshot/linux/fd-ffs.png)
-
-- search for multiple pattern
-
-  > [!NOTE]
-  > - [#1139 add support for matching multiple patterns](https://github.com/sharkdp/fd/pull/1139#issuecomment-1297725086)
-  > - [#315 Finding multiple patterns](https://github.com/sharkdp/fd/issues/315#issuecomment-841869872)
-
-  ```bash
-  $ fd --unrestricted '^*\.(png|gif|jpg)$'
-  $ fd --unrestricted --extension png --extension jpg --extension gif
-  ```
-
-# [`rg`](https://github.com/BurntSushi/ripgrep) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
-
-> [!NOTE]
-> - [#193: [Question] how to search by filenames only?](https://github.com/BurntSushi/ripgrep/issues/193#issuecomment-775059326)
-> - [How can I recursively find all files in current and subfolders based on wildcard matching?](https://stackoverflow.com/a/50840902/2940319)
-> - [chinanf-boy/ripgrep-zh](https://github.com/chinanf-boy/ripgrep-zh/tree/master)
->   - [ripgrep-zh/GUIDE.zh.md](https://github.com/chinanf-boy/ripgrep-zh/blob/master/GUIDE.zh.md)
-> - [How to get a git's branch with fuzzy finder?](https://stackoverflow.com/a/37007733/2940319)
-> - [Integralist/RipGrep inline file replacements.sh](https://gist.github.com/Integralist/89ad7fe05f72941b87c6e3512c30d940)
-> )
-
-- install
-  ```bash
-  # with cargo
-  $ cargo install ripgrep
-
-  # osx
-  $ brew install ripgrep
-
-  # rhel/centos
-  $ sudo yum install -y yum-utils
-  $ sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
-  $ sudo yum install ripgrep
-  # or via epel: https://marslo.github.io/ibook/linux/basic.html#tools-installation
-  $ sudo yum install -y yum-utils epel-release
-  $ sudo yum install ripgrep
-
-  # ubuntu
-  $ curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.0.3/ripgrep_14.0.3-1_amd64.deb
-  $ sudo dpkg -i ripgrep_14.0.3-1_amd64.deb
-  # or
-  $ sudo apt install -y ripgrep
-
-  # from source
-  $ git clone https://github.com/BurntSushi/ripgrep && cd ripgrep
-  $ cargo build --release
-  $ ./target/release/rg --version
-  0.1.3
-
-  # completion
-  # wsl/ubuntu/centos
-  $ rg --generate complete-bash | sudo tee /usr/share/bash-completion/completions/rg
-  # or centos
-  $ rg --generate complete-bash | sudo tee /etc/bash_completion.d/rg
-  # osx
-  $ rg --generate complete-bash | sudo tee /usr/local/etc/bash_completion.d/rg
-  ```
-
-## usage
-- crontab for delete '*\.DS_*'
-  ```bash
-  /usr/local/bin/rg --hidden --smart-case --files "$HOME" -g  '*\.DS_*' | xargs -r -i rm '{}'
-  ```
-
-- [search in dotfiles with ripgrep](https://til.hashrocket.com/posts/ezeddwpiso-search-in-dotfiles-with-ripgrep)
-
-  > [!NOTE|label:references:]
-  > - [#771 : .gitignore files might be searched without using '--hidden'](https://github.com/BurntSushi/ripgrep/issues/771)
-  > - [#919 : RipGrep does not show hidden files even with the --hidden flag](https://github.com/BurntSushi/ripgrep/issues/919)
-
-  ```bash
-  $ rg --hidden 'alias cat'
-
-  # or https://github.com/BurntSushi/ripgrep/issues/623#issuecomment-659909044
-  alias rg="rg --hidden --glob '!.git'"
-
-  # or `.ignore` or `.rgignore`
-  $ cat ~/.rgignore
-  .git/
-  .tox/
-  .github/
-  ```
-
-- info
-  ```bash
-  $ tree -a .
-  .
-  ├── .no-hidden
-  └── no-hidden
-
-  1 directory, 2 files
-
-  $ rg --files --debug
-  DEBUG|globset|crates/globset/src/lib.rs:416: glob converted to regex: Glob { glob: "**/.DS_Store?", re: "(?-u)^(?:/?|.*/)\\.DS_Store[^/]$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('D'), Literal('S'), Literal('_'), Literal('S'), Literal('t'), Literal('o'), Literal('r'), Literal('e'), Any]) }
-  DEBUG|globset|crates/globset/src/lib.rs:416: glob converted to regex: Glob { glob: "**/._*", re: "(?-u)^(?:/?|.*/)\\._[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('_'), ZeroOrMore]) }
-  DEBUG|globset|crates/globset/src/lib.rs:421: built glob set; 0 literals, 7 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 2 regexes
-  DEBUG|ignore::walk|crates/ignore/src/walk.rs:1741: ignoring ./.no-hidden: Ignore(IgnoreMatch(Hidden))
-  no-hidden
-
-  $ rg --files --debug --hidden
-  DEBUG|globset|crates/globset/src/lib.rs:416: glob converted to regex: Glob { glob: "**/.DS_Store?", re: "(?-u)^(?:/?|.*/)\\.DS_Store[^/]$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('D'), Literal('S'), Literal('_'), Literal('S'), Literal('t'), Literal('o'), Literal('r'), Literal('e'), Any]) }
-  DEBUG|globset|crates/globset/src/lib.rs:416: glob converted to regex: Glob { glob: "**/._*", re: "(?-u)^(?:/?|.*/)\\._[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('_'), ZeroOrMore]) }
-  DEBUG|globset|crates/globset/src/lib.rs:421: built glob set; 0 literals, 7 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 2 regexes
-  no-hidden
-  .no-hidden
-  ```
-
-  ![ag rg](../screenshot/osx/ag-rg.png)
-
-
-## tips
-- show file name only
-  ```bash
-  $ rg --hidden 'alias ping' --no-heading --files-with-matches
-  alias.d/utils
-  ```
-
-- in vimgrep format
-  ```bash
-  $ rg --hidden 'alias ping' --no-heading
-  alias.d/utils:13:  alias ping='/sbin/ping --apple-time -v'
-  # or
-  $ rg 'alias ping' --no-heading --line-number --with-filename
-  alias.d/utils:13:  alias ping='/sbin/ping --apple-time -v'
-
-  $ rg --hidden 'alias ping' --vimgrep
-  alias.d/utils:13:3:  alias ping='/sbin/ping --apple-time -v'
-  ```
-
-## using inside in vim
-
-> [!NOTE|label:references:]
-> - [Extending Vim with ripgrep](https://phelipetls.github.io/posts/extending-vim-with-ripgrep/)
-> - [#425 - How to use inside vim?](https://github.com/BurntSushi/ripgrep/issues/425#issuecomment-381446152)
-> - [jremmen/vim-ripgrep](https://github.com/jremmen/vim-ripgrep)
-
-```vim
-if executable("rg")
-  set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
-  set grepformat=%f:%l:%c:%m
-endif
-
-" -- more --
-" handling search and replace boilerplate using ripgrep
-if executable('rg') | set grepformat+=%f:%l:%c:%m grepprg=rg\ --vimgrep\ --no-heading\ --smart-case | endif
-" use feedkeys because we don't want to press enter at the end of this command
-command! -nargs=1 FindReplaceAll :silent grep <args> | copen | call feedkeys(":cdo %s/" . <q-args> . "/") | redraw!
-" use feedkeys because otherwise the screen isn't redrawn
-nnoremap <silent> <C-r> :call feedkeys(':FindReplaceAll ')<CR>
-```
-
-# [`ag`](https://github.com/ggreer/the_silver_searcher) the faster [`mg`](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/im.sh#L50)
-- install
-  ```bash
-  # osx
-  $ brew install the_silver_searcher
-
-  # ubuntu >= 13.10
-  $ apt-get install silversearcher-ag
-  ```
-
-# [`fzy`](https://github.com/jhawthorn/fzy)
-- install
-  ```bash
-  # osx
-  $ brew install fzy
-
-  # debine
-  $ sudo apt install fzy
-
-  # source code
-  $ git clone git@github.com:jhawthorn/fzy.git && cd fzy
-  $ make
-  $ sudo make install
-  ```
-
-- verify
-  ```bash
-  $ fzy --version
-  fzy 1.0 © 2014-2018 John Hawthorn
-  ```
-
-# [`bat`](https://github.com/sharkdp/bat)
-
-> [!NOTE|label:references:]
-> - [bat-extra](https://github.com/eth-p/bat-extras/blob/master/README.md#installation)
-> - [Install and Use the Linux bat Command](https://www.linode.com/docs/guides/how-to-install-and-use-the-bat-command-on-linux/)
-> - [Using vim as a man-page viewer under Unix](https://vim.fandom.com/wiki/Using_vim_as_a_man-page_viewer_under_Unix)
->   - `unset PAGER`
-> - [CentOS 7 - Installing the latest bat command release version from GitHub](https://github.com/sharkdp/bat/issues/325#issuecomment-697947031)
-
-- install
-  ```bash
-  # osx
-  $ brew install bat
-  ## extra
-  $ brew install bat-extras
-
-  # ubuntu
-  $ sudo apt install bat -y
-  $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
-
-  # centos
-  $ dnf install bat
-  ## extra
-  $ sudo dnf install dnf-plugins-core
-  $ sudo dnf copr enable awood/bat-extras
-  $ sudo dnf install bat-extras
-
-  # ubuntu latest version
-  $ sudo apt instal -y https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-musl_0.23.0_amd64.deb
-  $ ln -s /usr/bin/batcat ~/.marslo/bin/bat
-
-  # from release package
-  $ curl -fsSL https://github.com/sharkdp/bat/releases/download/v0.23.0/bat-v0.23.0-x86_64-unknown-linux-musl.tar.gz |
-         tar xzf - -C ${iRCHOME}/utils/bat-v0.23.0
-  $ ln -sf ${iRCHOME}/utils/bat-v0.23.0/bat ${iRCHOME}/bin/bat
-  # or
-  $ V=$(curl --silent "https://api.github.com/repos/sharkdp/bat/releases/latest" | grep -Eo '"tag_name": "v(.*)"' | sed -E 's/.*"([^"]+)".*/\1/') &&
-      curl -sOL "https://github.com/sharkdp/bat/releases/download/$V/bat-$V-x86_64-unknown-linux-musl.tar.gz" &&
-      tar xzvf "bat-$V-x86_64-unknown-linux-musl.tar.gz" -C . &&
-      sudo sh -c "cp ./bat-$V-x86_64-unknown-linux-musl/bat /usr/local/bin/bat" &&
-      rm bat-$V-x86_64-unknown-linux-musl.tar.gz &&
-      unset V
-
-  # from source
-  $ git clone git@github.com:sharkdp/bat.git && cd bat
-  $ git submodule update -f --init --recursive
-  # or
-  $ git clone --recurse-submodules git@github.com:sharkdp/bat.git && cd bat
-
-  $ cargo install --locked bat
-
-  # build a bat binary with modified syntaxes and themes
-  $ bash assets/create.sh
-  $ cargo install --path . --locked --force
-  ```
-
-- completion
-  {% raw %}
-  ```bash
-  # -- recommended --
-  $ type -P bat >/dev/null && eval "$(bat --completion bash)"
-
-  # -- others --
-  $ sed 's/{{PROJECT_EXECUTABLE}}/bat/'                                     "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" | sudo tee /etc/bash_completion.d/bat
-  # or
-  $ sed 's/{{PROJECT_EXECUTABLE}}/-o nosort -o bashdefault -o default bat/' "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" | sudo tee /etc/bash_completion.d/bat
-
-  # or
-  $ sed 's/{{PROJECT_EXECUTABLE}}/bat/'                                     -i "${iRCHOME}/utils/bat/assets/completions/bat.bash.in"
-  $ sed 's/{{PROJECT_EXECUTABLE}}/-o nosort -o bashdefault -o default bat/' -i "${iRCHOME}/utils/bat/assets/completions/bat.bash.in"
-  $ sudo ln -sf "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" /usr/share/bash-completion/completions/bat
-
-  # or without modify `bat.bash.in` and add complete into bashrc
-  $ sudo ln -sf "${iRCHOME}/utils/bat/assets/completions/bat.bash.in" /usr/share/bash-completion/completions/bat
-  $ echo 'type -t _bat >/dev/null 2>&1 && complete -F _bat -o nosort -o bashdefault -o default bat' >> ~/.bashrc
-  ```
-  {% endraw %}
-
-- verify
-  ```bash
-  $ bat --version
-  bat 0.24.0 (28990bc-modified)
-  ```
-
-![bat cat](../screenshot/linux/bat-cat.png)
-
-## bat usage
-- `help()`
-  ```bash
-  # in your .bashrc/.zshrc/*rc
-  alias bathelp='bat --plain --language=help'
-  help() { "$@" --help 2>&1 | bathelp }
-
-  # calling in bash:
-  $ help bat
-  ```
-
-  ![bat help](../screenshot/linux/bat-help.png)
-
-  - for zsh
-    ```bash
-    $ alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
-    $ alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
-    ```
-
-- [cygwin path issue](https://github.com/sharkdp/bat?tab=readme-ov-file#cygwin)
-  ```bash
-  bat() {
-    local index
-    local args=("$@")
-    for index in $(seq 0 ${#args[@]}) ; do
-      case "${args[index]}" in
-        -* ) continue;;
-         * ) [ -e "${args[index]}" ] && args[index]="$(cygpath --windows "${args[index]}") ";;
-      esac
-    done
-    command bat "${args[@]}"
-  }
-  ```
-
-## bat tips
-
-- manpages themes
-  ```bash
-  $ bat --list-themes |
-    fzf --preview="man git-checkout | sed -r 's/\x1B\[(([0-9]+)(;[0-9]+)*)?[mGKHfJ]//g' | bat --theme={} --color=always --plain --language=help" \
-        --height 100% \
-        --preview-window=up,85%,nofollow \
-        --preview-label-pos='bottom'
-  ```
-
-- script themes
-  ```bash
-  $ bat --list-themes |
-    fzf --preview="bat --theme={} --color=always /path/to/script" \
-        --height 100% \
-        --preview-window=up,85%,nofollow \
-        --preview-label-pos='bottom'
-  ```
-
-## bat config
-- [config-file](https://github.com/sharkdp/bat#format)
-  ```bash
-  $ bat --config-file
-  /Users/marslo/.config/bat/config
-
-  # if need modify
-  $ export BAT_CONFIG_PATH="$(bat --config-file)"
-
-  # generate standard config-file
-  $ bat --generate-config-file
-  Success! Config file written to /Users/marslo/.config/bat/config
-  ```
-
-- sample content
-  ```bash
-  $ bat $(bat --config-file) | sed -r '/^(#.*)$/d;/^\s*$/d'  | bat --language ini
-         STDIN
-     1   --theme="gruvbox-dark"
-     2   --style="numbers,changes,header"
-     3   --italic-text=always
-     4   --pager="less --RAW-CONTROL-CHARS --quit-if-one-screen --mouse"
-     5   --map-syntax "*.ino:C++"
-     6   --map-syntax ".ignore:Git Ignore"
-     7   --map-syntax='*.conf:INI'
-     8   --map-syntax='/etc/apache2/**/*.conf:Apache Conf'
-  ```
-
-### tmTheme
-
-```bash
-# list themes
-$ bat --list-themes
-
-# modify them
-$ export BAT_THEME='gruvbox-dark'
-# or
-$ echo '--theme="gruvbox-dark"' >> $(bat --config-file)
-```
-
-- [new theme](https://github.com/sharkdp/bat/blob/master/README.md#adding-new-themes)
-  ```bash
-  $ mkdir -p "$(bat --config-dir)/themes"
-  $ cd "$(bat --config-dir)/themes"
-
-  # download a theme in '.tmtheme' format, for example:
-  $ git clone https://github.com/greggb/sublime-snazzy
-
-  # update the binary cache
-  $ bat cache --build
-  ```
-
-### syntaxes
-
-```bash
-# for commit message
-$ curl -fsSL --create-dirs \
-       -o $(bat --config-dir)/syntaxes/ConventionalCommits.sublime-syntax \
-       https://github.com/marslo/dotfiles/raw/main/.config/bat/syntaxes/ConventionalCommits.sublime-syntax
-
-# rebuild cache
-$ bat cache --build
-
-# verify
-$ echo 'docs(changelog): update changelog to beta.5' |
-  bat --plain --language COMMIT_EDITMSG --theme gruvbox-dark-marslo
-```
-
-![bat syntax for conventional commits](../screenshot/linux/bat-syntax-COMMIT_EDITMSG.png)
-
-# `tldr`
-
-> [!NOTE|label:references:]
-> - [tldr.sh](https://tldr.sh/) | [tlrc](https://tldr.sh/tlrc) | [python version](https://pypi.org/project/tldr/)
-> - [client](https://github.com/tldr-pages/tldr/wiki/Clients)
-
-## install
-```bash
-# node version
-$ npm install -g tldr
-# -- usage --
-$ $(npm config get prefix)/bin/tldr --theme ocean <cmd>
-
-# rust version
-$ brew install --HEAD tlrc
-
-# c version
-$ brew install --HEAD tldr
-
-# python version
-$ python3 -m pip install tldr
-```
-
-## config
-- rust version
-
-  > [!TIP|label:references:]
-  > - config file :
-  >   - linux and bsd: `$XDG_CONFIG_HOME/tlrc/config.toml` or `~/.config/tlrc/config.toml` if `$XDG_CONFIG_HOME` is unset
-  >   - macos: `~/Library/Application Support/tlrc/config.toml`
-  >   - windows: `%ROAMINGAPPDATA%\tlrc\config.toml`
-  > - [iMarslo: .tlrc.toml](https://github.com/marslo/dotfiles/blob/main/.marslo/.tlrc.toml)
-  >   `export TLRC_CONFIG="$HOME/.marslo/.tlrc.toml"`
-
-  ```bash
-  # rust version
-  # -- default configure --
-  $ tldr --gen-config > $(tldr --config-path)
-
-  # -- user defined configure --
-  $ export TLRC_CONFIG="$HOME/.marslo/.tlrc.toml"
-  # or
-  $ tldr --config "$HOME/.marslo/.tlrc.toml" <cmd>
-  ```
-
-- python version
-  ```bash
-  # tldr-pypi : https://pypi.org/project/tldr/
-  export TLDR_COLOR_NAME='cyan'
-  export TLDR_COLOR_DESCRIPTION='white'
-  export TLDR_COLOR_EXAMPLE='green'
-  export TLDR_COLOR_COMMAND='red'
-  export TLDR_COLOR_PARAMETER='white'
-  export TLDR_LANGUAGE='en'
-  export TLDR_CACHE_ENABLED=1
-  export TLDR_CACHE_MAX_AGE=720
-  export TLDR_PAGES_SOURCE_LOCATION='https://raw.githubusercontent.com/tldr-pages/tldr/main/pages'
-  export TLDR_DOWNLOAD_CACHE_LOCATION='https://tldr-pages.github.io/assets/tldr.zip'
-  ```
-
-# `cht.sh`
-
-> [!NOTE]
-> - [chubin/cheat.sh](https://github.com/chubin/cheat.sh) | [cheat.sh](https://cheat.sh/) | - [cheat.sh/fzf](https://cheat.sh/fzf)
-> - [gotbletu/fzf-cheat.sh](https://gist.github.com/gotbletu/538ffd9565bc38b5426dd9071ff1eecd)
-> - [youtube: I made the greatest tool ever! | tmux & cht.sh & fzf](https://www.youtube.com/watch?v=hJzqEAf2U4I)
->   - [ThePrimeagen/.dotfiles/tmux-cht.sh](https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-cht.sh)
-> - [kenos1/tmux-cht-sh/bin/tmux-cht-sh.sh](https://github.com/kenos1/tmux-cht-sh/blob/main/bin/tmux-cht-sh.sh)
-> - [gohoyer/Alfred-Cheat.sh](https://github.com/gohoyer/Alfred-Cheat.sh)
-> - [From FZF file preview to a browser for cht.sh to discovering the ideal solution](https://dev.to/melopilosyan/from-fzf-file-preview-to-a-browser-for-chtsh-to-discovering-the-ideal-solution-3ann)
-> - [melopilosyan/confNest - cs](https://github.com/melopilosyan/confNest/blob/main/bin/cs)
-
-```bash
-# install
-$ curl -fsSL https://cht.sh/:cht.sh --create-dirs -o ~/.local/bin/cht.sh
-$ chmod +x ~/.local/bin/cht.sh
-
-# completion
-$ curl -fsSL https://cheat.sh/:bash_completion --create-dirs -o ~/.marslo/.completion/cht.sh
-$ source ~/.marslo/.completion/cht.sh
-
-# added in .bashrc
-$ [[ -f "${iRCHOME}"/.completion/cht.sh ]] && source "${iRCHOME}"/.completion/cht.sh
-```
-
-## links
-
-- [:intro](https://cht.sh/:intro)
-- [~snapshot](https://cht.sh/~snapshot)
-- [:vim](https://cht.sh/:vim)
-- [:styles](https://cht.sh/:styles)
-- [:styles-demo](https://cht.sh/:styles-demo)
-- :list
-  - i.e.: [python/:list](https://cht.sh/python/:list)
-- :learn
-  - i.e.: [python/:learn](https://cht.sh/python/:learn)
-
-## .cht.sh.conf
-
-> [!NOTE|label:references:]
-> - path: `~/.cht.sh/`
-> - file : `~/.cht.sh/cht.sh.conf`
-> - [cht.sh](https://cht.sh/:cht.sh)
->   configuration is stored in `~/.cht.sh/` (can be overridden with `CHTSH` env var.)
-
-### CHTSH environment
-
-| ENVIRONMENT VARIABLE        | VALUE                                         |
-|-----------------------------|-----------------------------------------------|
-| `CHTSH_HOME`                | `~/.cht.sh/`                                  |
-| `CHTSH_CONF`                | `$CHTSH_HOME/cht.sh.conf`                     |
-| `CHTSH_URL`                 | `https://cht.sh`                              |
-| `CHTSH_MODE`                | `$(cat "$CHTSH_HOME/mode 2>/dev/null")`       |
-| `CHTSH_CURL_OPTIONS`        | -                                             |
-| `CHEATSH_INSTALLATION`      | `$(cat "$CHTSH_HOME/standalone" 2>/dev/null)` |
-| `CHEATSH_TEST_STANDALONE`   | `YES/NO`                                      |
-| `CHEATSH_TEST_SKIP_ONLINE`  | `YES/NO`                                      |
-| `CHEATSH_TEST_SHOW_DETAILS` | `YES/NO`                                      |
-
-### theme
-- list themes
-  ```bash
-  $ cht.sh :styles
-
-  # or
-  $ curl cht.sh/:styles
-  ```
-
-- show themes
-  ```bash
-  $ cht.sh :styles-demo
-
-  # or
-  $ cht.sh :styles |
-    while read -r _s; do
-      echo -e "\n---";
-      echo -e "${_s}";
-      echo -e "---";
-      curl "cheat.sh/bash/advanced?style=${_s}";
-    done
-  ```
-
-- configure theme
-  ```bash
-  $ cat ~/.cht.sh/cht.sh.conf
-  CHTSH_QUERY_OPTIONS="style=arduino"
-  ```
-
-- themes
-  - algol_nu
-  - arduino
-  - native
-  - solarized-dark
-  - stata-dark
-
-### mode
-
-> [!NOTE|label:references:]
-> - path : `~/.cht.sh/mode`
-
-```bash
-$ cht.sh --mode lite      # use https://cheat.sh/ only
-$ cht.sh --mode auto      # use local installation
-```
-
-## `--shell`
-
-> [!NOTE|label:references:]
-
-```bash
-$ brew install --HEAD rlwrap
-$ cht.sh --shell python
-```
-
-# `cheat`
-
-> [!NOTE|label:references:]
-> - [cheat/chet](https://github.com/cheat/cheat) | [cheat/cheatsheets](https://github.com/cheat/cheatsheets)
-> - [Related Projects](https://github.com/cheat/cheat/wiki/Related-Projects)
-> - [docopt](http://docopt.org/)
-
-```bash
-$ brew install cheat
-```
-
-## configure
-```bash
-$ mkdir -p ~/.config/cheat && cheat --init > ~/.config/cheat/conf.yml
-
-# -- config path --
-$ cheat --conf
-```
-
-- reset cheatsheets repo
-  ```bash
-  $ cd ~/.config/cheat/cheatsheets
-  $ rm -rf community
-  $ git clone https://github.com/cheat/cheatsheets.git community
-  ```
-
-### theme
-
-- arduino
-- github-dark
-- gruvbox
-- native
-- onedark
-
-- optional
-  - doom-one
-  - evergarden
-  - lovelace
-  - nord
-  - solarized-dark256
-  - vulcan
-
-# [`ncdu` : NCurses Disk Usage](https://dev.yorhel.nl/ncdu)
-
-> [!TIP]
-> - [code.blicky.net/yorhel/ncdu](https://code.blicky.net/yorhel/ncdu/)
-> - [Ncdu 2: Less hungry and more Ziggy](https://dev.yorhel.nl/doc/ncdu2)
-
-```bash
-# deps install
-$ sudo snap install zig --class --beta
-$ sudo apt install libncurses-dev
-
-$ make
-$ sudo make install PREFIX=/usr/local
-
-# verify
-$ ncdu --version
-ncdu 2.3
-```
-
-![ncdu](../screenshot/linux/ncdu.png)
-
-> [!NOTE|label:Alternatives:]
-> - CLI
->   - [`dust`: bootandy/dust](https://github.com/bootandy/dust)
->   - [`dutree`: nachoparker/dutree](https://github.com/nachoparker/dutree)
->   - [`dua`: Byron/dua-cli](https://github.com/Byron/dua-cli)
->   - [`pdu`: KSXGitHub/parallel-disk-usage](https://github.com/KSXGitHub/parallel-disk-usage)
-> - TUI:
->   - [`ncdu`](https://dev.yorhel.nl/ncdu)
->   - [`ds`: scullionw/dirstat-rs](https://github.com/scullionw/dirstat-rs)
->   - [`gdu`: dundee/gdu](https://github.com/dundee/gdu)
->   - [`godu`: viktomas/godu](https://github.com/viktomas/godu)
->   - [`Vifm`](https://vifm.info/manual.shtml)
-
-
-# theme and colors
-## [`c`: bash-color](https://github.com/ppo/bash-colors)
-
-> [!TIP]
-> - flags
->   ```css
->   ┌───────┬────────────────┬─────────────────┐   ┌───────┬─────────────────┬───────┐
->   │ Fg/Bg │ Color          │ Octal           │   │ Code  │ Style           │ Octal │
->   ├───────┼────────────────┼─────────────────┤   ├───────┼─────────────────┼───────┤
->   │  K/k  │ Black          │ \e[ + 3/4  + 0m │   │  s/S  │ Bold (strong)   │ \e[1m │
->   │  R/r  │ Red            │ \e[ + 3/4  + 1m │   │  d/D  │ Dim             │ \e[2m │
->   │  G/g  │ Green          │ \e[ + 3/4  + 2m │   │  i/I  │ Italic          │ \e[3m │
->   │  Y/y  │ Yellow         │ \e[ + 3/4  + 3m │   │  u/U  │ Underline       │ \e[4m │
->   │  B/b  │ Blue           │ \e[ + 3/4  + 4m │   │  f/F  │ Blink (flash)   │ \e[5m │
->   │  M/m  │ Magenta        │ \e[ + 3/4  + 5m │   │  n/N  │ Negative        │ \e[7m │
->   │  C/c  │ Cyan           │ \e[ + 3/4  + 6m │   │  h/H  │ Hidden          │ \e[8m │
->   │  W/w  │ White          │ \e[ + 3/4  + 7m │   │  t/T  │ Strikethrough   │ \e[9m │
->   ├───────┴────────────────┴─────────────────┤   ├───────┼─────────────────┼───────┤
->   │  High intensity        │ \e[ + 9/10 + *m │   │   0   │ Reset           │ \e[0m │
->   └────────────────────────┴─────────────────┘   └───────┴─────────────────┴───────┘
->                                                   Uppercase = Reset a style: \e[2*m
->   ```
-
-![bash color](../screenshot/linux/bash-color.gif)
-
-## [`ansi`](https://github.com/fidian/ansi)
-
-> [!NOTE|label:references:]
-> - [example](https://github.com/fidian/ansi/tree/master/examples)
-
-- install
-  ```bash
-  $ curl -sL git.io/ansi -o "${iRCHOME}"/utils/ansi && chmod +x $_
-  $ ln -sf $(realpath "${iRCHOME}"/utils/ansi) $(realpath "${iRCHOME}"/bin)/ansi
-  ```
-
-  ![ansi color tables](../screenshot/osx/ansi-color-codes.png)
-
-## [`diff-so-fancy`](https://github.com/so-fancy/diff-so-fancy)
-
-> [!NOTE|label:references:]
-> - [Aos Dabbagh : diff-so-fancy](https://launchpad.net/~aos1/+archive/ubuntu/diff-so-fancy)
-
-```bash
-# ubuntu
-$ sudo add-apt-repository ppa:aos1/diff-so-fancy
-$ sudo apt update
-
-$ sudo apt install diff-so-fancy
-
-# verify
-$ diff-so-fancy --version
-Diff-so-fancy: https://github.com/so-fancy/diff-so-fancy
-Version      : 1.4.2
-```
-
-# utility
-## `elinks`
-
-> [!NOTE|label:references:]
-> - [ELinks](https://en.wikipedia.org/wiki/ELinks)
-> - MacOS:
->   ```bash
->   $ brew install felinks
->   $ which -a elinks
->   /usr/local/bin/elinks
->   ```
-> - [* iMarslo : open html in terminal](../vim/tricky.html#open-html-in-terminal)
-> - [ELinks - Full-Featured Text WWW Browser](http://elinks.or.cz/)
->   - [elinks.conf](http://elinks.or.cz/documentation/manpages/elinks.conf.5.html)
->   - [elinkskeys](http://elinks.or.cz/documentation/manpages/elinkskeys.5.html)
-
-```bash
-$ elinks https://google.com
-```
-
-![elinks google.com](../screenshot/linux/elinks.png)
-
-- configure
-
-  > [!NOTE|label:references:]
-  > - [Elinks: SSL Error](https://stackoverflow.com/a/40114376/2940319)
-
-  ```bash
-  $ cat ~/.elinks/elinks.conf
-  set connection.ssl.cert_verify = 0
-  ```
-
-## [`duf`](https://unix.stackexchange.com/a/612111/29178)
-
-![duf](../screenshot/linux/duf.png)
-
-## [`enhancd`](https://github.com/babarot/enhancd)
-
-> [!NOTE|label:references:]
-> - [mattn/ltsv.vim](https://gist.github.com/mattn/4737234)
-> - [* lfromanini/smartcd](https://github.com/lfromanini/smartcd)
-> - [* iMarslo : autocmd BufWritePre except](../vim/tricky.html#autocmd-bufwritepre-except)
->   ```vim
->   " original
->   autocmd BufWritePre * :retab!                                   " automatic retab
->
->   " for ltsv
->   if has( "autocmd" )
->     autocmd BufRead,BufNewFile  *.ltsv                 set filetype=ltsv syntax=groovy noexpandtab
->     autocmd BufWritePre         *\(.ltsv\|.diffs\)\@<! :retab!    " automatic retab
->   endif
->   ```
-
-- install
-  ```bash
-  $ git clone https://github.com/babarot/enhancd && source enhancd/init.sh
-
-  # or
-  $ curl -L git.io/enhancd | sh
-  ```
-
-- re-mapping cmd
-  ```bash
-  diff --git a/init.sh b/init.sh
-  index 55a9c95..bc3ae89 100644
-  --- a/init.sh
-  +++ b/init.sh
-  @@ -52,8 +52,8 @@ if [[ ! -f ${ENHANCD_DIR}/enhancd.log ]]; then
-     touch "${ENHANCD_DIR}/enhancd.log"
-   fi
-
-  -# alias to cd
-  -eval "alias ${ENHANCD_COMMAND:=cd}=__enhancd::cd"
-  +# alias to ce
-  +eval "alias ${ENHANCD_COMMAND:=ce}=__enhancd::cd"
-
-   # Set the filter if empty
-   if [[ -z ${ENHANCD_FILTER} ]]; then
-  ```
-
-- usage
-  ```bash
-  $ brew install fzy
-  # debine
-  $ sudo apt install fzy
-
-  $ export ENHANCD_FILTER="fzf --height 35%:fzy"
-  $ source /path/to/enhancd/init.sh
-  $ ce .
-  ```
-
-  ![enhancd](../screenshot/linux/ecd-ec.gif)
-
-## [watchman](https://facebook.github.io/watchman/)
