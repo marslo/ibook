@@ -165,25 +165,36 @@ $ brew install fzf fd
 $ type -P fzf >/dev/null && eval "$(command fzf --bash)"
 # -- or --
 $ ln -sf $(brew --prefix fd)/share/bash-completion/completions/fd "$(brew --prefix)"/etc/bash_completion.d/fd
-# debine
-$ sudo apt install fd
 
-$ FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS} "
-$ FZF_DEFAULT_OPTS+="--height 35% --min-height 8+ "             # https://github.com/junegunn/fzf/issues/4226
-$ FZF_DEFAULT_OPTS+="--layout=reverse --multi --cycle --ansi "
-$ FZF_DEFAULT_OPTS+="--marker='󱍢 ' --pointer='▌' "
-$ FZF_DEFAULT_OPTS+="--prompt='󰩀 ' --info='inline: 󰨿 ' "
-$ FZF_DEFAULT_OPTS+="--info-command='echo \"\x1b[33;1m\$FZF_POS\x1b[m ~ \$FZF_INFO\"' "
-$ FZF_DEFAULT_OPTS+="--bind 'ctrl-s:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all' "
-$ FZF_DEFAULT_OPTS+="--bind 'ctrl-y:execute-silent(/bin/echo -n {+} | ${COPY})' "
-$ FZF_DEFAULT_OPTS+="--color=gutter:-1,bg+:-1,spinner:#e6db74,prompt:#404945,header:italic:#504945,info:#928374,pointer:#A66584,marker:#d79921,fg:#ebdbb2:dim,fg+:#A7A44E:regular,hl:#845069:italic,hl+:#A66584:bold:italic"
-$
-$ FZF_DEFAULT_COMMAND="fd --type f "
-$ FZF_DEFAULT_COMMAND+="--strip-cwd-prefix "
-$ FZF_DEFAULT_COMMAND+="--hidden "
-$ FZF_DEFAULT_COMMAND+="--follow "
-$ FZF_DEFAULT_COMMAND+="--exclude .git --exclude node_modules"
-$ export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
+# linux
+$ DOWNLOAD_URL="$(curl -fsSL https://api.github.com/repos/junegunn/fzf/releases/latest | jq --arg pattern "linux_$(dpkg --print-architecture)" -r '.assets[] | select(.name | contains($pattern)) | .browser_download_url')"
+$ curl -fsSL "${DOWNLOAD_URL}" | sudo tar xz -C /usr/local/bin/ fzf
+$ sudo chmod +x /usr/local/bin/fzf
+$ command fzf --bash > /usr/share/bash-completion/completions/fzf
+$ sudo apt install fd
+# -- cleanup --
+$ rm -rf /tmp/fzf.tar.gz
+```
+
+```bash
+# config
+FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS} "
+FZF_DEFAULT_OPTS+="--height 35% --min-height 8+ "             # https://github.com/junegunn/fzf/issues/4226
+FZF_DEFAULT_OPTS+="--layout=reverse --multi --cycle --ansi --gutter ' ' "
+FZF_DEFAULT_OPTS+="--marker='󱍢 ' --pointer='▌' "
+FZF_DEFAULT_OPTS+="--prompt='󰩀 ' --info='inline: 󰨿 ' "
+FZF_DEFAULT_OPTS+="--info-command='printf \"\x1b[33;1m%s\x1b[m ~ %s\" \"\$FZF_POS\" \"\$FZF_INFO\"' "
+FZF_DEFAULT_OPTS+="--bind 'ctrl-s:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all' "
+FZF_DEFAULT_OPTS+="--bind 'ctrl-y:execute-silent(/bin/echo -n {+} | ${COPY})' "
+FZF_DEFAULT_OPTS+="--color=gutter:0,bg+:-1,query:italic,spinner:#e6db74,prompt:#404945,header:italic:#504945,info:#928374,pointer:#A66584,marker:#d79921,fg:#ebdbb2:dim,fg+:#A7A44E:regular,hl:#845069:italic,hl+:#A66584:bold:italic"
+
+FZF_DEFAULT_COMMAND="fd --type f "
+FZF_DEFAULT_COMMAND+="--strip-cwd-prefix "
+FZF_DEFAULT_COMMAND+="--hidden "
+FZF_DEFAULT_COMMAND+="--follow "
+FZF_DEFAULT_COMMAND+="--exclude .git --exclude node_modules"
+
+export FZF_DEFAULT_OPTS FZF_DEFAULT_COMMAND
 ```
 
 ![fzf color themes](../screenshot/linux/fzf/fzf-color-themes.png)
@@ -214,20 +225,20 @@ FZF_DEFAULT_OPTS+="--no-bold "
 FZF_DEFAULT_OPTS+="--color=fg+:#ebdbb2,pointer:#e6db74,hl+:#fb4934,prompt:#334D35"
 ```
 
-
 <!--sec data-title="older version of FZF environment variable" data-id="section0" data-show=true data-collapse=true ces-->
 ```bash
-$ FZF_DEFAULT_OPTS="--height 35%"
-$ FZF_DEFAULT_OPTS+=" --layout=reverse"
-$ FZF_DEFAULT_OPTS+=" --pointer='→' --marker='» ' --prompt='$ '"
-$ FZF_DEFAULT_OPTS+=" --multi"
-$ FZF_DEFAULT_OPTS+=" --inline-info"
-$ FZF_DEFAULT_OPTS+=" --color=spinner:#e6db74,hl:#928374,fg:#ebdbb2,header:#928374,info:#504945,pointer:#98971a,marker:#d79921,fg+:#ebdbb2,prompt:#404945,hl+:#fb4934"
-$ FZF_DEFAULT_COMMAND="fd --type f"
-$ FZF_DEFAULT_COMMAND+=" --strip-cwd-prefix"
-$ FZF_DEFAULT_COMMAND+=" --hidden"
-$ FZF_DEFAULT_COMMAND+=" --follow"
-$ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
+FZF_DEFAULT_OPTS="--height 35%"
+FZF_DEFAULT_OPTS+=" --layout=reverse"
+FZF_DEFAULT_OPTS+=" --pointer='→' --marker='» ' --prompt='$ '"
+FZF_DEFAULT_OPTS+=" --multi"
+FZF_DEFAULT_OPTS+=" --inline-info"
+FZF_DEFAULT_OPTS+=" --color=spinner:#e6db74,hl:#928374,fg:#ebdbb2,header:#928374,info:#504945,pointer:#98971a,marker:#d79921,fg+:#ebdbb2,prompt:#404945,hl+:#fb4934"
+
+FZF_DEFAULT_COMMAND="fd --type f"
+FZF_DEFAULT_COMMAND+=" --strip-cwd-prefix"
+FZF_DEFAULT_COMMAND+=" --hidden"
+FZF_DEFAULT_COMMAND+=" --follow"
+FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
 ```
 <!--endsec-->
 
@@ -465,280 +476,215 @@ $ FZF_DEFAULT_COMMAND+=" --exclude .git --exclude node_modules"
 > - [v](https://github.com/junegunn/fzf/wiki/Examples#v)
 > - [Opening files](https://github.com/junegunn/fzf/wiki/Examples#opening-files)
 
-```bash
-# magic vim - fzf list in recent modified order
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description :
-#   - if `nvim` installed using `nvim` instead of `vim`
-#     - using `-v` to force using `vim` instead of `nvim` even if nvim installed
-#   - if `vim` commands without parameters, then call fzf and using vim to open selected file
-#   - if `vim` commands with parameters
-#       - if single parameters and parameters is directlry, then call fzf in target directory and using vim to open selected file
-#       - otherwise call regular vim to open file(s)
-#   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vim`
-# shellcheck disable=SC2155
-function vim() {                           # magic vim - fzf list in most recent modified order
-  local voption
-  local target
-  local orgv                               # force using vim instead of nvim
-  local VIM="$(type -P vim)"
-  local foption='--multi --cycle '
-  local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore --exclude Music"
-  [[ "$(pwd)" = "$HOME" ]] && fdOpt+=' --max-depth 3'
-  if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
+- [`vim()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L510-L550)
 
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-                 -v ) orgv=1            ; shift   ;;
-        -h | --help ) voption+="$1 "    ; shift   ;;
-          --version ) voption+="$1 "    ; shift   ;;
-                 -c ) voption+="$1 $2"  ; shift   ;;
-      --startuptime ) voption+="$1 $2 " ; shift 2 ;;
-                -Nu ) voption+="$1 $2 " ; shift 2 ;;
-              --cmd ) voption+="$1 $2 " ; shift 2 ;;
-                 -* ) foption+="$1 $2 " ; shift 2 ;;
-                  * ) break                       ;;
-    esac
-  done
-
-  [[ 1 -ne "${orgv}" ]] && command -v nvim >/dev/null && VIM="$(type -P nvim)"
-
-  if [[ 0 -eq $# ]] && [[ -z "${voption}" ]]; then
-    fd . ${fdOpt} | fzf ${foption} --bind="enter:become(${VIM} {+})"
-  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
-    [[ '.' = "${1}" ]] && target="${1}" || target=". ${1}"
-    fd ${target} ${fdOpt} | fzf ${foption} --bind="enter:become(${VIM} {+})"
-  else
-    # shellcheck disable=SC2068
-    "${VIM}" ${voption} $@
-  fi
-}
-
-# v - open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description : list 10 most recently used files via fzf, and open by regular vim
-function v() {                             # v - open files in ~/.vim_mru_files
-  local files
-  files=$( grep --color=none -v '^#' ~/.vim_mru_files |
-           while read -r line; do [ -f "${line/\~/$HOME}" ] && echo "$line"; done |
-           fzf-tmux -d -m -q "$*" -1
-         ) &&
-  vim ${files//\~/$HOME}
-}
-
-# vimr - open files by [vim] in whole [r]epository
-#        same series: [`cdr`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L310-L318)
-#        similar with [`:Gfiles`](https://github.com/junegunn/fzf.vim?tab=readme-ov-file#commands)
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description :
-#   - if pwd inside the repo, then filter all files within current git repository via data modified and open by vim
-#   - if pwd not inside the repo, then call `vim`
-function vimr() {                          # vimr - open file(s) via [vim] in whole [r]epository
-  local repodir
-  isrepo=$(git rev-parse --is-inside-work-tree >/dev/null 2>&1; echo $?)
-  if [[ 0 = "${isrepo}" ]]; then
-    repodir="$(git rev-parse --show-toplevel)"
-    # shellcheck disable=SC2164
-    files=$( fd . "${repodir}" --type f --hidden --ignore-file ~/.fdignore --exec-batch ls -t |
-                  xargs -I{} bash -c "echo {} | sed \"s|${repodir}/||g\"" |
-                  fzf --multi -0 |
-                  xargs -I{} bash -c "echo ${repodir}/{}"
-           )
-    # shellcheck disable=SC2046
-    [[ -z "${files}" ]] || vim $(xargs <<< "${files}")
-  else
-    vim
-  fi
-}
-
-# vimrc - open rc files list from "${rcPaths}" to quick update/modify rc files
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description :
-#   - default rcPaths: ~/.marslo ~/.config/nvim ~/.*rc ~/.*profile ~/.*ignore
-#   - using nvim if `command -v nvim` is true
-#   - using `-v` force using `command vim` instead of `command nvim`
-# shellcheck disable=SC2155
-function vimrc() {                         # vimrc - fzf list all rc files in data modified order
-  local orgv                               # force using vim instead of nvim
-  local rcPaths="$HOME/.config/nvim $HOME/.marslo"
-  local VIM="$(type -P vim)"
-  local foption='--multi --cycle '
-  local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
-  if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
-
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -v ) orgv=1 ; shift ;;
-       * ) break          ;;
-    esac
-  done
-
-  [[ 1 -ne "${orgv}" ]] && command -v nvim >/dev/null && VIM="$(type -P nvim)"
-  fdInRC | sed -rn 's/^[^|]* \| (.+)$/\1/p' \
-         | fzf ${foption} --bind="enter:become(${VIM} {+})" \
-                          --bind "ctrl-y:execute-silent(echo -n {+} | ${COPY})+abort" \
-                          --header 'Press CTRL-Y to copy name into clipboard'
-}
-
-```
-
-- `fdInRC`
+  <!--sec data-title="vim()" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
-  # shellcheck disable=SC2089,SC2090
-  function fdInRC() {
-    local rcPaths="$HOME/.config/nvim $HOME/.marslo $HOME/.idlerc $HOME/.ssh"
-    local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
-    fdOpt+=' --exec stat --printf="%y | %n\n"'
-    (
-      eval "fd --max-depth 1 --hidden '.*rc|.*profile|.*ignore' $HOME ${fdOpt}";
-      echo "${rcPaths}" | fmt -1 | xargs -I{} bash -c "fd . {} --exclude ss/ --exclude log/ --exclude .completion/ --exclude bin/bash-completion/ ${fdOpt}" ;
-    ) |  sort -r
+  # usage: eval "$( _load_fzf_context )"
+  #        ... | fzf "${fzfopt[@]}"
+  function _load_fzf_context() {
+    local -a CAT=( "$(type -P cat)" )
+    type -P bat >/dev/null && CAT=( "$(type -P bat)" --theme='Nord' --color=always --line-range :500 )
+    local previewCmd="if file -bL --mime-encoding {} | grep -iq 'binary' && ! iconv -f utf-8 -t utf-8 {} >/dev/null 2>&1; then file -bL {}; else ${CAT[*]} {}; fi"
+    local -a fzfopt=( --exit-0
+                      --height 50%
+                      --multi --cycle
+                      --preview "${previewCmd}"
+                      --preview-window 'right,60%,nowrap,rounded,+15'
+                      --bind 'ctrl-/:toggle-preview'
+                      --bind='ctrl-o:execute(bat {} > /dev/tty)'
+                    )
+    typeset -p fzfopt
+  }
+
+  # magic vim    : fzf list in recent modified order
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description :
+  #   - if `nvim` installed using `nvim` instead of `vim`
+  #     - using `-v` to force using `vim` instead of `nvim` even if nvim installed
+  #   - if `vim` commands without parameters, then call fzf and using vim to open selected file
+  #   - if `vim` commands with parameters
+  #       - if single parameters and parameters is directory, then call fzf in target directory and using vim to open selected file
+  #       - otherwise call regular vim to open file(s)
+  #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vim`
+  # shellcheck disable=SC2155
+  function vim() {                           # magic vim - fzf list in most recent modified order
+    local -a voption=()
+    local target
+    local orgv=false                         # force using vim instead of nvim
+
+    local -a fdopt=( --type f --strip-cwd-prefix --hidden --follow --unrestricted --ignore-file "$HOME/.fdignore" )
+    local -a ignores=(
+      '*.pem' '*.p12'
+      '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg'
+      '*.zip' '*.tar' '*.gz' '*.bz2' '*.xz' '*.7z' '*.rar'
+      'Music' '.target_book' '_book' 'OneDrive*'
+    )
+    while read -r pattern; do
+      fdopt+=(--exclude "${pattern}")
+    done <<< "$(printf '%s\n' "${ignores[@]}")"
+    [[ "$(pwd)" = "$HOME" ]] && fdopt+=( --max-depth 3 )
+    isWSL || fdopt+=( --exec-batch ls -t )
+
+    eval "$( _load_fzf_context )"
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+                   -v ) orgv=true              ; shift   ;;
+          -h | --help ) voption+=( "$1" )      ; shift   ;;
+            --version ) voption+=( "$1" )      ; shift   ;;
+                   -c ) voption+=( "$1" "$2" ) ; shift   ;;
+        --startuptime ) voption+=( "$1" "$2" ) ; shift 2 ;;
+                  -Nu ) voption+=( "$1" "$2" ) ; shift 2 ;;
+                --cmd ) voption+=( "$1" "$2" ) ; shift 2 ;;
+                   -* ) fzfopt+=(  "$1" "$2" ) ; shift 2 ;;
+                    * ) break                            ;;
+      esac
+    done
+
+    local VIM="$(type -P vim)"
+    ! "${orgv}" && command -v nvim >/dev/null && VIM="$(type -P nvim)"
+
+    if [[ 0 -eq "$#" ]] && [[ 0 -eq "${#voption}" ]]; then
+      fd . "${fdopt[@]}" | fzf "${fzfopt[@]}" --bind="enter:become(${VIM} {+})"
+    elif [[ 1 -eq "$#" ]] && [[ -d "${1}" ]]; then
+      [[ '.' = "${1}" ]] && finalTarget=("${1}") || finalTarget=('.' "${1}")
+      fd "${finalTarget[@]}" "${fdopt[@]}" | fzf "${fzfopt[@]}" --bind="enter:become(${VIM} {+})"
+    else
+      "${VIM}" "${voption[@]}" "$@"
+    fi
   }
   ```
+  <!--endsec-->
+
+- [`v()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L561-L568)
+
+  <!--sec data-title="v()" data-id="section3" data-show=true data-collapse=true ces-->
+  ```bash
+  # v            : open files in ~/.vim_mru_files       # https://github.com/junegunn/fzf/wiki/Examples#v
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description : list 10 most recently used files via fzf, and open by regular vim
+  function v() {                             # v - open files in ~/.vim_mru_files
+    local files
+    files=$( grep --color=none -v '^#' ~/.vim_mru_files |
+             while read -r line; do [ -f "${line/\~/$HOME}" ] && echo "${line}"; done |
+             fzf-tmux -d -m -q "$*" -1
+           ) &&
+    vim ${files//\~/$HOME}
+  }
+  ```
+  <!--endsec-->
+
+- [`vimr()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L578-L611)
+
+  <!--sec data-title="vimr()" data-id="section4" data-show=true data-collapse=true ces-->
+  ```bash
+  # vimr         : open files by [vim] in whole [r]epository
+  #                same series: [`cdr`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L411-L419)
+  #                similar with [`:Gfiles`](https://github.com/junegunn/fzf.vim?tab=readme-ov-file#commands)
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description :
+  #   - if pwd inside the repo, then filter all files within current git repository via data modified and open by vim
+  #   - if pwd not inside the repo, then call `vim`
+  function vimr() {                          # vimr - open file(s) via [vim] in whole [r]epository
+    local repodir
+    # shellcheck disable=SC2155
+    local VIM="$(type -P vim)"
+    type -P nvim >/dev/null && VIM="$(type -P nvim)"
+
+    local -a fdopt=( --type f --hidden --ignore-file "$HOME/.fdignore" )
+    local -a ignores=(
+      '*.pem' '*.p12'
+      '*.png' '*.jpg' '*.jpeg' '*.gif' '*.svg'
+      '*.zip' '*.tar' '*.gz' '*.bz2' '*.xz' '*.7z' '*.rar'
+      'Music' '.target_book' '_book' 'OneDrive*'
+    )
+    while read -r pattern; do fdopt+=( --exclude "${pattern}" ); done <<< "$(printf '%s\n' "${ignores[@]}" | sort -u)"
+    fdopt+=( --exec-batch ls -t )
+
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      repodir="$( git rev-parse --show-toplevel )"
+      local -a files=()
+      mapfile -t files < <(
+        fd . "${repodir}" "${fdopt[@]}" |
+          sed "s|^${repodir}/||" |
+          fzf --multi \
+               --bind "ctrl-r:reload(fd . ${repodir} ${fdopt[*]@Q} | sed 's|^${repodir}/||')" \
+               --preview "cd \"${repodir}\" && bat --color=always --line-range :500 {}" \
+               --preview-window '60%:nowrap,+15' \
+               --height 50% |
+          awk -v prefix="${repodir}/" '{print prefix $0}'
+      )
+      [[ ${#files[@]} -gt 0 ]] && "${VIM}" "${files[@]}"
+    else
+      ${VIM}
+    fi
+  }
+  ```
+  <!--endsec-->
+
+- [`vimrc()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L622-L644)
+
+  <!--sec data-title="vimrc()" data-id="section5" data-show=true data-collapse=true ces-->
+  ```bash
+  # vimrc        : open rc files list from "${rcPaths}" to quick update/modify rc files
+  #                same series: runrc
+  # @author      : marslo
+  # @source      : https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh
+  # @description :
+  #   - default rcPaths: ~/.marslo ~/.config/nvim ~/.*rc ~/.*profile ~/.*ignore
+  #   - using nvim if `command -v nvim` is true
+  #   - using `-v` force using `command vim` instead of `command nvim`
+  # shellcheck disable=SC2155
+  function vimrc() {                         # vimrc - fzf list all rc files in data modified order
+    local orgv=false                         # force using vim instead of nvim
+    local VIM="$(type -P vim)"
+    local -a foption=( --multi --cycle )
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -v ) orgv=true               ; shift   ;;
+        -q ) foption+=(--query "$2") ; shift 2 ;;
+         * ) break                             ;;
+      esac
+    done
+
+    eval "$( _load_fzf_context  )"
+
+    "${orgv}" || command -v nvim >/dev/null && VIM="$(type -P nvim)"
+    fdInRC -x | sed -rn 's/^[^|]* \| (.+)$/\1/p' \
+              | fzf "${foption[@]}" "${fzfopt[@]}" \
+                    --bind="enter:become(${VIM} {+})" \
+                    --preview-window 'right,55%,nowrap,rounded,+15' \
+                    --bind "ctrl-y:execute-silent(printf '%s' {+} | ${COPY})" \
+                    --header 'Press CTRL-Y to copy name into clipboard'
+  }
+  ```
+  <!--endsec-->
 
 ![fzf magic vim](../screenshot/linux/fzf/fzf-magic-vim.gif)
 
 ![fzf vimrc](../screenshot/linux/fzf/fzf-vimrc.gif)
 
 ### smart vimdiff
-```bash
-function fzfInPath() {                   # return file name via fzf in particular folder
-  local fdOpt="--type f --hidden --follow --unrestricted --ignore-file $HOME/.fdignore"
-  if ! uname -r | grep -q 'Microsoft'; then fdOpt+=' --exec-batch ls -t'; fi
-  [[ '.' = "${1}" ]] && path="${1}" || path=". ${1}"
-  eval "fd ${path} ${fdOpt} | fzf --multi --cycle ${*:2} --header 'filter in ${1} :'"
-}
 
-# magic vimdiff - using fzf list in recent modified order
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description :
-#   - if any of parameters is directory, then get file path via fzf in target path first
-#   - if `vimdiff` commands without parameter , then compare files in `.` and `~/.marslo`
-#   - if `vimdiff` commands with 1  parameter , then compare files in current path and `$1`
-#   - if `vimdiff` commands with 2  parameters, then compare files in `$1` and `$2`
-#   - otherwise ( if more than 2 parameters )  , then compare files in `${*: -2:1}` and `${*: -1}` with parameters of `${*: 1:$#-2}`
-#   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default vimdiff`
-function vimdiff() {                       # smart vimdiff
-  local lFile
-  local rFile
-  local option
-  local var
-
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      --help ) option+="$1 "   ; shift   ;;
-          -* ) option+="$1 $2 "; shift 2 ;;
-           * ) break                     ;;
-    esac
-  done
-
-  if [[ 0 -eq $# ]]; then
-    lFile=$(fzfInPath '.' "${option}")
-    # shellcheck disable=SC2154
-    rFile=$(fzfInPath "${iRCHOME}" "${option}")
-  elif [[ 1 -eq $# ]]; then
-    lFile=$(fzfInPath '.' "${option}")
-    [[ -d "$1" ]] && rFile=$(fzfInPath "$1" "${option}") || rFile="$1"
-  elif [[ 2 -eq $# ]]; then
-    [[ -d "$1" ]] && lFile=$(fzfInPath "$1" "${option}") || lFile="$1"
-    [[ -d "$2" ]] && rFile=$(fzfInPath "$2" "${option}") || rFile="$2"
-  else
-    var="${*: 1:$#-2}"
-    [[ -d "${*: -2:1}" ]] && lFile=$(fzfInPath "${*: -2:1}") || lFile="${*: -2:1}"
-    [[ -d "${*: -1}"   ]] && rFile=$(fzfInPath "${*: -1}")   || rFile="${*: -1}"
-  fi
-
-  [[ -f "${lFile}" ]] && [[ -f "${rFile}" ]] && $(type -P vim) -d ${var} "${lFile}" "${rFile}"
-}
-
-# vd - open vimdiff loaded files from ~/.vim_mru_files
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description : list 10 most recently used files via fzf, and open by vimdiff
-#   - if `vd` commands without parameter, list 10 most recently used files via fzf, and open selected files by vimdiff
-#   - if `vd` commands with `-q` ( [q]uiet ) parameter, list 10 most recently used files via fzf and automatic select top 2, and open selected files by vimdiff
-function vd() {                            # vd - open vimdiff loaded files from ~/.vim_mru_files
-  [[ 1 -eq $# ]] && [[ '-q' = "$1" ]] && opt='--bind start:select+down+select+accept' || opt=''
-  # shellcheck disable=SC2046
-  files=$( grep --color=none -v '^#' ~/.vim_mru_files |
-           xargs -d'\n' -I_ bash -c "sed 's:\~:$HOME:' <<< _" |
-           fzf --multi 3 --sync --cycle --reverse ${opt}
-         ) &&
-  vimdiff $(xargs <<< "${files}")
-}
-```
+- [`vimdiff()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L656-L692)
+- [`vd()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L700-L710)
 
 ![vimdiff](../screenshot/linux/fzf/fzf-vimdiff-vd.gif)
 
 ### smart cat
-```bash
-# smart cat - using bat by default for cat content, respect bat options
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description :
-#   - using `bat` by default if `command -v bat`
-#     - using `-c` ( `c`at ) as 1st parameter, to force using `type -P cat` instead of `type -P bat`
-#   - if `bat` without  parameter, then search file via `fzf` and shows via `bat`
-#   - if `bat` with 1   parameter, and `$1` is directory, then search file via `fzf` from `$1` and shows via `bat`
-#   - otherwise respect `bat` options, and shows via `bat`
-# shellcheck disable=SC2046,SC2155
-function cat() {                           # smart cat
-  local fdOpt='--type f --hidden --follow --exclude .git --exclude node_modules'
-  local CAT="$(type -P cat)"
-  if ! uname -r | grep -q "Microsoft"; then fdOpt+=' --exec-batch ls -t'; fi
-  command -v nvim >/dev/null && CAT="$(type -P bat)"
 
-  if [[ 0 -eq $# ]]; then
-    "${CAT}" --theme='gruvbox-dark' $(fd . ${fdOpt} | fzf --multi --cycle --exit-1)
-  elif [[ '-c' = "$1" ]]; then
-    $(type -P cat) "${@:2}"
-  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
-    local target=$1;
-    fd . "${target}" ${fdOpt} |
-      fzf --multi --cycle --exit-1 --bind="enter:become(${CAT} --theme='gruvbox-dark' {+})" ;
-  else
-    "${CAT}" --theme='gruvbox-dark' "${@:1:$#-1}" "${@: -1}"
-  fi
-}
-```
+- [`cat()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L147-L170)
 
 ![smart cat](../screenshot/linux/fzf/fzf-smart-cat.gif)
 
 ### smart copy
-```bash
-# smart copy - using `fzf` to list files and copy the selected file
-# @author      : marslo
-# @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-# @description :
-#   - if `copy` without parameter, then list file via `fzf` and copy the content
-#     - "${COPY}"
-#       - `pbcopy` in osx
-#       - `/mnt/c/Windows/System32/clip.exe` in wsl
-#   - otherwise copy the content of parameter `$1` via `pbcopy` or `clip.exe`
-# shellcheck disable=SC2317
-function copy() {                          # smart copy
-  local fdOpt='--type f --hidden --follow --exclude .git --exclude node_modules'
-  [[ -z "${COPY}" ]] && echo -e "$(c Rs)ERROR: 'copy' function NOT support :$(c) $(c Ri)$(uanme -v)$(c)$(c Rs). EXIT..$(c)" && return;
 
-  if [[ 0 -eq $# ]]; then
-    file=$(fzf --cycle --exit-0) &&
-      "${COPY}" < "${file}" &&
-      echo -e "$(c Wd)>>$(c) $(c Gis)${file}$(c) $(c Wdi)has been copied ..$(c)"
-  elif [[ 1 -eq $# ]] && [[ -d $1 ]]; then
-    local target=$1;
-    file=$( fd . "${target}" ${fdOpt} | fzf --cycle --exit-0 ) &&
-      "${COPY}" < "${file}" &&
-      echo -e "$(c Wd)>>$(c) $(c Gis)${file}$(c) $(c Wdi)has been copied ..$(c)"
-  else
-    "${COPY}" < "$1"
-  fi
-}
-```
+- [`copy()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L95-L114)
 
 ![smart copy](../screenshot/linux/fzf/fzf-smart-copy.gif)
 
@@ -749,25 +695,7 @@ function copy() {                          # smart copy
   > [!NOTE]
   > - [eddieantonio/imgcat](https://github.com/eddieantonio/imgcat)
 
-  ```bash
-  # imgview - fzf list and preview images
-  # @author      : marslo
-  # @source      : https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ffunc.sh
-  # @description :
-  #   - to respect fzf options by: `type -t _fzf_opts_completion >/dev/null 2>&1 && complete -F _fzf_opts_completion -o bashdefault -o default imgview`
-  #   - disable `gif` due to imgcat performance issue
-  # shellcheck disable=SC2215
-  function imgview() {                       # view image via [imgcat](https://github.com/eddieantonio/imgcat)
-    fd --unrestricted --type f --exclude .git --exclude node_modules '^*\.(png|jpeg|jpg|xpm|bmp)$' |
-    fzf "$@" --height 100% \
-             --preview "imgcat -W \$FZF_PREVIEW_COLUMNS -H \$FZF_PREVIEW_LINES {}" \
-             --bind 'ctrl-y:execute-silent(echo -n {+} | pbcopy)+abort' \
-             --header 'Press CTRL-Y to copy name into clipboard' \
-             --preview-window 'down,80%,wrap' \
-             --exit-0 \
-    >/dev/null || true
-  }
-  ```
+- [`imgview()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L356-L366)
 
 - [open files](https://github.com/junegunn/fzf/wiki/examples#opening-files)
 
@@ -844,57 +772,10 @@ function copy() {                          # smart copy
   > - fuzzy-cd : [rumpelsepp/fcd.fish](https://gist.github.com/rumpelsepp/b1b416f52d6790de1aee) | [chrisnorris/fcd.fish](https://gist.github.com/chrisnorris/fe57c7855fd87a2636999edf1d4d735b)
   > - [l4u/autojump_fzf.fish](https://gist.github.com/l4u/06502cf680b9a3817efddfb0a9a6ede8)
 
-  - `cdp`
-    ```bash
-    # shellcheck disable=SC2034,SC2316
-    function cdp() {                           # cdp - [c][d] to selected [p]arent directory
-      local declare dirs=()
-      get_parent_dirs() {
-        if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
-        if [[ "${1}" == '/' ]]; then
-          for _dir in "${dirs[@]}"; do echo $_dir; done
-        else
-          # shellcheck disable=SC2046
-          get_parent_dirs $(dirname "$1")
-        fi
-      }
-      # shellcheck disable=SC2155,SC2046
-      local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
-      cd "$DIR" || return
-    }
-    ```
-
-  - `cdf`
-    ```bash
-    function cdf() {                           # [c][d] into the directory of the selected [f]ile
-      local file
-      local dir
-      # shellcheck disable=SC2164
-      file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
-    }
-    ```
-
-  - `cdd`
-    ```bash
-    function cdd() {                           # cdd - [c][d] to selected sub [d]irectory
-      local dir
-      # shellcheck disable=SC2164
-      dir=$(fd --type d --hidden --ignore-file ~/.fdignore | fzf --no-multi -0) && cd "${dir}"
-    }
-    ```
-
-  - `cdr`
-    ```bash
-    function cdr() {                           # cdd - [c][d] to selected [r]epo directory
-      local repodir
-      repodir="$(git rev-parse --show-toplevel)"
-      # shellcheck disable=SC2164
-      dir=$( ( echo './'; fd . "${repodir}" --type d --hidden --ignore-file ~/.fdignore |
-                         xargs -I{} bash -c "echo {} | sed \"s|${repodir}/||g\""
-             ) | fzf --no-multi -0
-           ) && cd "${repodir}/${dir}"
-    }
-    ```
+  - [`cdp()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L723-L737)
+  - [`cdf()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L772-L782)
+  - [`cdd()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L739-L743)
+  - [`cdr()`](https://github.com/marslo/dotfiles/blob/main/.marslo/bin/ffunc.sh#L745-L770)
 
 - [Interactive cd](https://github.com/junegunn/fzf/wiki/Examples#interactive-cd)
   ```bash
