@@ -2,18 +2,16 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [prompts](#prompts)
-  - [settings](#settings)
-    - [PS4](#ps4)
   - [colors](#colors)
   - [functions](#functions)
 - [character](#character)
-  - [metacharacter](#metacharacter)
+  - [meta character](#meta-character)
 - [process substitution](#process-substitution)
   - [example: run script without download](#example-run-script-without-download)
   - [example: merge lines of file](#example-merge-lines-of-file)
     - [installing tools via running random scripts from unknown sites](#installing-tools-via-running-random-scripts-from-unknown-sites)
 - [basic commands](#basic-commands)
-  - [`du`](#du)
+  - [du](#du)
   - [sort](#sort)
     - [sort result via human-readable format](#sort-result-via-human-readable-format)
   - [others](#others)
@@ -39,238 +37,6 @@
 {% endhint %}
 
 # prompts
-
-{% hint style='tip' %}
-> reference:
-> - [* imarslo: color](../cheatsheet/colors.html)
-> - [* Bash/Prompt customization](https://wiki.archlinux.org/title/Bash/Prompt_customization)
-> - [* Bash/Prompt customization](https://wiki.archlinux.org/index.php/Bash/Prompt_customization)
-> - [Colors using tput](https://wiki.bash-hackers.org/scripting/terminalcodes#colors_using_tput)
-> - [What color codes can I use in my PS1 prompt?](https://unix.stackexchange.com/a/124409/29178)
-> - [joseluisq/terminal-git-branch-name.md](https://gist.github.com/joseluisq/1e96c54fa4e1e5647940)
-> - [How to show git branch in terminal and change terminal colours](https://www.stijit.com/engineering/show-git-branch-colours-terminal-mac.html)
-> - [8 Useful and Interesting Bash Prompts](https://www.maketecheasier.com/8-useful-and-interesting-bash-prompts/)
-> - [* 2.5. Bash Prompt Escape Sequences](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html)
-> - [* My Ultimate PowerShell prompt with Oh My Posh and the Windows Terminal](https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal)
-{% endhint %}
-
-![bash prompts with change-mode and cursorshape](../screenshot/shell/bash-bind-mode-string-cursor-shape.gif)
-
-## settings
-
-> [!NOTE|label:inputrc]
-> - [* iMarlso: inputrc](../cheatsheet/bash/builtin.html#inputrc)
-> - [* marslo/mylinux/inputrc](https://github.com/marslo/mylinux/blob/main/confs/home/.inputrc)
-
-```bash
-# https://marslo.github.io/ibook/screenshot/colors/ansi/color-formatting.png
-fgc=$(RGBcolor 5 6 8)                             # 240;  fgc=$(RGBcolor 5 6 5)  # 237
-COL_SD_GREEN='\[\033[32;2m\]'                     # COL_SD_GREEN='\[\033[2;32m\]'
-COL_IF_SL_RED='\[\033[0\;31m\]'
-COL_DEFAULT="\[\033[38;5;${fgc}m\]"               # "\[$(tput setaf ${fgc})\]"; $"\e[38;5;${fgc}m";
-COL_IF_DEFAULT="\[\033[38\;5\;${fgc}m\]"          # COL_IF_DEFAULT="\[\033[1\;38\;5\;${fgc}m\]"  | COL_IF_DEFAULT="${COL_IF_SD_GREEN}"
-COL_RESET='\[\033[1m\]'                           # COL_RESET="\[$(tput sgr0)\]" | COL_RESET='\[\033[1m\]'
-COL_NONE='\[\033[0m\]'                            # COL_NONE='\[\033[38;5;3m\]'
-
-PROMPT_FULL="\\n${COL_DEFAULT}╭╶ (\\u@\\h ${COL_RED}\\w${COL_DEFAULT}) "
-PROMPT_NEXT="\$(__git_ps1 \"- (${COL_BD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
-PROMPT_NEXT+="\$(_venv_info \"- (${COL_BD_MAGENTA}%s${COL_NONE}${COL_DEFAULT}) \")"
-PROMPT_NEXT+="${COL_DEFAULT}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\-\>; else echo ${COL_IF_RED}\↯; fi\`"
-PROMPT_NEXT+="\\n${COL_DEFAULT}\$ ${COL_NONE}"
-
-function pstoggle() {
-  PROMPT_SIMPLE="\\n${COL_DEFAULT}╭╶ (\\u${COL_DEFAULT}) "
-  if echo "${PS1}" | grep --color=never -q '\\u@\\h'; then
-    export PS1="${PROMPT_SIMPLE}${PROMPT_NEXT}"
-  else
-    export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
-  fi
-}
-
-export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
-export PS2="${COL_DEFAULT}> ${COL_NONE}"
-export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE:+${BASH_SOURCE##*/}}\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
-```
-
-<!--sec data-title="for wsl" data-id="section0" data-show=true data-collapse=true ces-->
-```bash
-PS1="\\n${COL_RESET}${COL_DEFAULT}╭╶ (\\u@\\h${COL_RESET} "
-PS1+="${COL_SL_RED}\\w${COL_RESET}${COL_DEFAULT}) "
-PS1+="\`__git_ps1 '- (%s) '\`"
-PS1+="${COL_RESET}${COL_DEFAULT}->${COL_RESET}"
-PS1+="\\n${COL_DEFAULT}╰╶ ${COL_RESET}"
-PS1+="\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\\$; else echo ${COL_IF_SL_RED}\\$; fi\` ${COL_RESET}"
-PS1+="${COL_NONE}"
-# PS2="${COL_DEFAULT} |-> ${COL_RESET}${COL_NONE}"
-PS2="${COL_DEFAULT}  -> ${COL_RESET}${COL_NONE}"
-PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
-
-export PS1 PS2 PS4
-```
-<!-- endsec -->
-
-<!--sec data-title="deprecated" data-id="section2" data-show=true data-collapse=true ces-->
-```bash
-if [ -z "$DISPLAY" ]; then
-  export PS1="\n${COL_D_BLACK}┌─ (\u@\h ${COL_RESET} ${COL_D_RED}\w${COL_RESET}${COL_D_BLACK}) ->${COL_RESET}\n${COL_D_BLACK}└─ ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_SD_BLACK}\\$ ${COL_RESET}; else echo ${COL_SD_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
-  export PS2="${COL_D_BLACK} -> ${COL_RESET}${COL_NONE}"
-else
-  export PS1="\n${COL_D_BLACK}${UMARK}${LMARK} (\u@\h ${COL_RESET} ${COL_D_RED}\w${COL_RESET}${COL_D_BLACK}) ->${COL_RESET}\n${COL_D_BLACK}${DMARK}${LMARK} ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_SD_BLACK}\\$ ${COL_RESET}; else echo ${COL_SD_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
-  export PS2="${COL_D_BLACK} ->${LMARK} ${COL_RESET}${COL_NONE}"
-fi
-
-# for mac os -> Solarized Dark
-export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET}${COL_DEFAULT}) ->${COL_RESET}\n${COL_DEFAULT}└─ ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\\$ ${COL_RESET}; else echo ${COL_IF_SL_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
-```
-<!-- endsec -->
-
-### PS4
-
-> [!NOTE|label:references:]
-> - [Setting $PS4 using `bash -c`](https://stackoverflow.com/a/50627260/2940319)
-> - [Why does Bash reset PS4 value to its default value when starting a script?](https://stackoverflow.com/a/74028357/2940319)
-
-```bash
-$ export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE:+${BASH_SOURCE##*/}}\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
-
-# remove printf for better performance
-$ export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
-```
-
-![bash PS4](../screenshot/linux/bash-ps4-3.png)
-
-#### show timestamp
-
-> [!NOTE|label:references:]
-> - [Debugging Bash Scripts with $PS4](https://spencersmolen.com/debugging-bash/)
-
-![PS4 with timestamp](../screenshot/linux/bash-ps4-timestamp.png)
-
-{% raw %}
-```bash
-$ export PS4='$(tput setaf 4)$(printf "%-12s\\t%.3fs\\t@line\\t%-10s" $(date +%T) $(echo $(date "+%s.%3N")-'$(date "+%s.%3N")' | bc ) $LINENO)$(tput sgr 0)'
-$ bash -xc $'echo ABC; echo XYZ'
-22:39:26      13.469s @line 1         echo ABC
-ABC
-22:39:26      13.516s @line 1         echo XYZ
-XYZ
-
-# or
-$ bash -xc $'PS4=\'+ $(date "+%T %x ($LINENO) : ")\'; echo ABC; echo XYZ'
-+ PS4='+ $(date "+%T %x ($LINENO) : ")'
-+ 15:45:51 08/29/2024 (1) : echo ABC
-ABC
-+ 15:45:51 08/29/2024 (1) : echo XYZ
-XYZ
-
-# or
-$ PS4='+ \D{%s} ($LINENO) ' bash -xc 'echo ABC; echo XYZ'
-+ 1724971586 (1) echo ABC
-ABC
-+ 1724971586 (1) echo XYZ
-XYZ
-
-# or
-$ cmd=$(cat <<'EOF'
-PS4='+ $(date "+%T %x ($LINENO) : ")'
-echo ABC
-echo XYZ
-EOF
-)
-
-$ bash -xc "${cmd}"
-```
-{% endraw %}
-
-#### show process id
-
-> [!NOTE|label:references:]
-> - use `${BASHPID:-$$}` to show the current or subprocess id:
->   ```bash
->   PS4='+[${BASHPID:-$$}]
->   ```
-
-```bash
-$ env -i SHELLOPTS=xtrace PS4='+[PID:$$] ' ./test.sh
-+[PID:66538] set -euo pipefail
-+[PID:66538] foo 'This is a multi-line string.'
-+[PID:66538] echo -e '\033[7;37m>> This is a multi-line string.\033[0m'
->> This is a multi-line string.
-```
-
-#### show incremented trace level in function call
-
-> [!NOTE|label:references:]
-> - [$PS4 in bash - how can I reproduce the "level of indirection" behavior mentioned in the GNU docs?](https://unix.stackexchange.com/a/715855/29178)
-> - tips:
->   ```bash
->   _plus='****************'
->   PS4="${_plus:0:${#BASH_SOURCE[@]}}"
->   # or
->   PS4='+ ${_plus:0:${#FUNCNAME[@]}}${FUNCNAME[0]} '
->   ```
-
-```bash
-$ command cat sample.sh
-#!/usr/bin/env bash
-
-_plus='++++++++++++++++++++'
-export PS4='${_plus:0:${#BASH_SOURCE[@]}}\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
-set -x
-function foo() { echo -e "\033[0;32m$*\033[0m"; }
-foo "abc"
-
-# result
-$ bash sample.sh
-+[66140] (sample.sh:1): foo abc
-++[66140] (sample.sh:1): foo(): echo -e '\033[0;32mabc\033[0m'
-abc
-```
-
-```bash
-# or even add colors
-_plus='--------------------'
-export PS4='+ \033[36;1m${_plus:0:${#BASH_SOURCE[@]}}\033[0m\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
-```
-
-![bash PS4 with levels](../screenshot/linux/bash-ps4-BASH_SOURCEs.png)
-
-#### levels of indirection
-
-| SYNTAX/OPERATIONS              | BEHAVIOR                          | UNDERLYING REASON                     |
-|--------------------------------|-----------------------------------|---------------------------------------|
-| function call: `func()`        | + (NOT increment the trace level) | 只是改变了指令指针，没有嵌套解析。    |
-| foreground subshell: `(cmd)`   | + (NOT increment the trace level) | Fork 新进程，独立执行，继承父级深度。 |
-| background subshell: `(cmd) &` | + (NOT increment the trace level) | Fork 新进程，异步执行，继承父级深度。 |
-| command substitution: `$(cmd)` | ++ (increment the trace level)    | 求值挂起，等待内层结果替换字符串。    |
-| code evaluation: `eval cmd`    | ++ (increment the trace level)    | 字符串被二次解析为可执行代码。        |
-| source script: `source file`   | ++ (increment the trace level)    | 挂起当前文件，跳入新文件进行解析。    |
-
-> [!TIP|label:assume]
-> ```bash
-> export PS4='+'
-> ```
-
-```bash
-# command substitution
-$ bash -xc 'echo "Current dir: $(pwd)"'
-++pwd
-+echo 'Current dir: /Users/marslo/Desktop'
-Current dir: /Users/marslo/Desktop
-
-# code evaluation
-$ bash -xc 'eval "whoami"'
-+eval whoami
-++whoami
-marslo
-
-# foreground subshell
-$ bash -xc '(cd /tmp; ls | wc -l)'
-+cd /tmp
-+ls
-+wc -l
-16
-```
 
 ## colors
 
@@ -364,6 +130,7 @@ $ bash -xc '(cd /tmp; ls | wc -l)'
   ```
 
   ![bash ps1](../screenshot/colors/ansi/bash-ps1.png)
+
   - or ps1 with conditions
     ```bash
     $ DEFAULT="\[$(tput setaf 3)\]"         # or '\[\033[1;38;5;3m\]'     or '\[\e[1;33m\]'
@@ -400,7 +167,7 @@ PS1+="- [\$(tput sc; rightPrompt; tput rc)]"
   ![bash ps1 right-prompt](../screenshot/colors/ansi/bash-ps1-right-prompt.png)
 
 # character
-## [metacharacter](https://www.grymoire.com/Unix/Quote.html)
+## [meta character](https://www.grymoire.com/Unix/Quote.html)
 
 |         Character         | Where                | Meaning                                       |
 |:-------------------------:|----------------------|-----------------------------------------------|
@@ -515,8 +282,8 @@ $ cat file | while read line; do ((count++)); done
 $ while read line; do ((count++)); done < <(cat file)
 ```
 
-get diff in two folders
 ```bash
+# get diff in two folders
 $ diff <(ls ibook) <(ls mbook)
 1c1,2
 < book.json
@@ -540,20 +307,18 @@ $ bash < <(wget -qO - https://raw.githubusercontent.com/ubports/unity8-desktop-i
 - via curl
   ```bash
   $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
+
+  # or
+  $ curl -so - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
   ```
-  - or
-    ```bash
-    $ curl -so - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
-      ```
 
 - [via wget](http://alvinalexander.com/linux/unix-linux-crontab-every-minute-hour-day-syntax/)
   ```bash
   $ python < <(wget -O - -q -t 1 https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py)
+
+  # or
+  $ wget -qO - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
   ```
-  - or
-    ```bash
-    $ wget -qO - https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/meminfo.py | python
-    ```
 
 - [or](https://github.com/giampaolo/psutil/blob/master/scripts/meminfo.py)
   ```bash
@@ -577,10 +342,8 @@ $ bash < <(wget -qO - https://raw.githubusercontent.com/ubports/unity8-desktop-i
   Percent    :    26.3
   Sin        :   38.3G
   Sout       :   63.9M
-  ```
 
-- or
-  ```bash
+  # or
   $ python < <(curl -s https://raw.githubusercontent.com/giampaolo/psutil/master/scripts/disk_usage.py)
   Device               Total     Used     Free  Use %      Type  Mount
   /dev/disk1s5        233.5G    10.6G    70.6G    13%      apfs  /
@@ -590,6 +353,8 @@ $ bash < <(wget -qO - https://raw.githubusercontent.com/ubports/unity8-desktop-i
   ```
 
 ## example: merge lines of file
+
+> [!NOTE]
 > inspired by [here](https://apple.stackexchange.com/a/216657/254265) and [here](https://stackoverflow.com/q/31371672/2940319)
 
 ```bash
@@ -609,22 +374,18 @@ t1  11
 t2  22
 t3  33
 t4  44
+
+# another usage
+$ cat a | paste -d'\t' - - - -
+a b c d
+e f
+
+# another
+$ cat a | paste -d, - -
+a,b
+c,d
+e,f
 ```
-
-- additional usage
-  ```bash
-  $ cat a | paste -d'\t' - - - -
-  a b c d
-  e f
-  ```
-
-  or
-  ```bash
-  $ cat a | paste -d, - -
-  a,b
-  c,d
-  e,f
-  ```
 
 - `/dev/fd/63` is not a regular file
   ```bash
@@ -649,12 +410,11 @@ t4  44
 
 ### [installing tools via running random scripts from unknown sites](https://stackoverflow.com/a/12748630/2940319)
 ```bash
-$ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
-    fetch -o - http://pi.dk/3 ) > install.sh
+$ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || fetch -o - http://pi.dk/3 ) > install.sh
 ```
 
 # basic commands
-## `du`
+## du
 - top biggest directories under _[path]_
   ```bash
   $ du -a [path] | sort -n -r | head -n 5
@@ -685,6 +445,7 @@ $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
 
 ## sort
 ### [sort result via human-readable format](https://www.redhat.com/sysadmin/sort-du-output)
+
 ```bash
 $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 ```
@@ -692,20 +453,18 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
 - [or](https://unix.stackexchange.com/a/197821/29178)
   ```bash
   $ du -sk * | sort -g | awk '{
-
       numBytes = $1 * 1024;
       numUnits = split("B K M G T P", unit);
       num = numBytes;
       iUnit = 0;
 
       while(num >= 1024 && iUnit + 1 < numUnits) {
-          num = num / 1024;
-          iUnit++;
+        num = num / 1024;
+        iUnit++;
       }
 
       $1 = sprintf( ((num == 0) ? "%6d%s " : "%6.1f%s "), num, unit[iUnit + 1]);
       print $0;
-
   }'
 
   # or in one-line
@@ -716,15 +475,15 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
   ```bash
   #! /usr/bin/env bash
   ducks () {
-      du -cks -x | sort -n | while read size fname; do
-          for unit in k M G T P E Z Y; do
-              if [ $size -lt 1024 ]; then
-                  echo -e "${size}${unit}\t${fname}"
-                  break
-              fi
-              size=$((size/1024))
-          done
+    du -cks -x | sort -n | while read size fname; do
+      for unit in k M G T P E Z Y; do
+        if [ $size -lt 1024 ]; then
+          echo -e "${size}${unit}\t${fname}"
+          break
+        fi
+        size=$((size/1024))
       done
+    done
   }
   ducks > .ducks && tail .ducks
   ```
@@ -746,14 +505,12 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
   ? delete *
   No applicable messages.
   ? q
-  ```
 
-  - or
-    ```bash
-    $ mail -N
-    ? d *
-    ? quit
-    ```
+  # or
+  $ mail -N
+  ? d *
+  ? quit
+  ```
 
 ### crontab
 
@@ -780,67 +537,76 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
   Min(0-59)
   ```
 
-- tips
-  - every odd hours
-    ```bash
-    0 1-23/2 * * *
-    ```
-  - every even hours
-    ```bash
-    0 */2 * * *
-    ```
+```bash
+# every odd hours
+0 1-23/2 * * *
 
-- sample
-  - delete *.DS_*
-    ```bash
-    15 */2 * * 1-5 /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME | xargs -r rm
-    # or
-    30 */2 * * 1-5 /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r rm
-    # or
-    30 */2 * * 1-5 /usr/local/bin/rg --hidden --smart-case --color=never --files "$HOME" -g '*\.DS_*' | xargs -r rm
-    ```
+# every even hours
+0 */2 * * *
+```
 
-  - flush disk cache
-    ```bash
-    0 * * * * /usr/sbin/purge
-    ```
+#### sample
+- delete *.DS_*
+  ```bash
+  @hourly        command fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --exclude 'OneDrive*' --glob '*\.DS_*' $HOME --exec-batch rm -rf >/dev/null 2>&1
 
-  - flush DNS
-    ```bash
-    0 1-23/6 * * * /usr/bin/killall -HUP mDNSResponder
-    ```
+  # or
+  15 */2 * * 1-5 /usr/local/bin/fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --glob '*\.DS_*' $HOME | xargs -r rm
 
-- location
-  - macos
-    ```bash
-    $ sudo ls -Altrh /usr/lib/cron/tabs/<USERNAME>
-    ```
+  # or
+  30 */2 * * 1-5 /usr/local/bin/fd -Iu --glob '*\.DS_*' $HOME | xargs -r rm
 
-  - freebsd/openbsd/netbsd
-    ```bash
-    $ sudo ls -Altrh /var/cron/tabs/<USERNAME>
-    ```
+  # or
+  30 */2 * * 1-5 /usr/local/bin/rg --hidden --smart-case --color=never --files "$HOME" -g '*\.DS_*' | xargs -r rm
+  ```
 
-  - centos/rhel/fedora/scientific/rocky/alma linux
-    ```bash
-    $ sudo ls -Altrh /var/spool/cron/<USERNAME>
-    ```
+- flush disk cache
+  ```bash
+  0 * * * * /usr/sbin/purge
+  ```
 
-  - debian/ubuntu/mint linux
-    ```bash
-    $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
-    ```
+- flush DNS
+  ```bash
+  0 1-23/6 * * * /usr/bin/killall -HUP mDNSResponder
+  ```
 
-  - p-ux unix
-    ```bash
-    $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
-    ```
+#### location
+- macos
+  ```bash
+  $ sudo ls -Altrh /usr/lib/cron/tabs/<USERNAME>
 
-  - ibm aix unix
-    ```bash
-    $ sudo ls -Altrh /var/spool/cron/<USERNAME>
-    ```
+  $ sudo cat /usr/lib/cron/tabs/marslo
+  # DO NOT EDIT THIS FILE - edit the master and reinstall.
+  # (/tmp/crontab.XXozBNyNRf installed on Fri Mar  6 00:01:10 2026)
+  # (Cron version -- $FreeBSD: src/usr.sbin/cron/crontab/crontab.c,v 1.24 2006/09/03 17:52:19 ru Exp $)
+  # https://crontab.guru/#@hourly
+  @hourly command fd --type f --hidden --follow --unrestricted --color=never --exclude .Trash --exclude 'OneDrive*' --glob '*\.DS_*' $HOME --exec-batch rm -rf >/dev/null 2>&1
+  ```
 
+- freebsd/openbsd/netbsd
+  ```bash
+  $ sudo ls -Altrh /var/cron/tabs/<USERNAME>
+  ```
+
+- centos/rhel/fedora/scientific/rocky/alma linux
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/<USERNAME>
+  ```
+
+- debian/ubuntu/mint linux
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
+  ```
+
+- p-ux unix
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/crontabs/<USERNAME>
+  ```
+
+- ibm aix unix
+  ```bash
+  $ sudo ls -Altrh /var/spool/cron/<USERNAME>
+  ```
 
 # tricky
 

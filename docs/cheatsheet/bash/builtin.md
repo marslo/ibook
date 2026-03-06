@@ -4,7 +4,9 @@
 - [eval](#eval)
 - [bash variables](#bash-variables)
   - [to check the script is been sourced or run directly](#to-check-the-script-is-been-sourced-or-run-directly)
+  - [prompts](#prompts)
   - [PS4](#ps4)
+  - [debugging a script](#debugging-a-script)
 - [set](#set)
   - [show current status](#show-current-status)
   - [option name](#option-name)
@@ -126,42 +128,132 @@ else
 fi
 ```
 
+### prompts
+
+{% hint style='tip' %}
+> reference:
+> - [* imarslo: color](../cheatsheet/colors.html)
+> - [* Bash/Prompt customization](https://wiki.archlinux.org/title/Bash/Prompt_customization)
+> - [* Bash/Prompt customization](https://wiki.archlinux.org/index.php/Bash/Prompt_customization)
+> - [Colors using tput](https://wiki.bash-hackers.org/scripting/terminalcodes#colors_using_tput)
+> - [What color codes can I use in my PS1 prompt?](https://unix.stackexchange.com/a/124409/29178)
+> - [joseluisq/terminal-git-branch-name.md](https://gist.github.com/joseluisq/1e96c54fa4e1e5647940)
+> - [How to show git branch in terminal and change terminal colours](https://www.stijit.com/engineering/show-git-branch-colours-terminal-mac.html)
+> - [8 Useful and Interesting Bash Prompts](https://www.maketecheasier.com/8-useful-and-interesting-bash-prompts/)
+> - [* 2.5. Bash Prompt Escape Sequences](https://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html)
+> - [* My Ultimate PowerShell prompt with Oh My Posh and the Windows Terminal](https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal)
+{% endhint %}
+
+![bash prompts with change-mode and cursorshape](../screenshot/shell/bash-bind-mode-string-cursor-shape.gif)
+
+> [!NOTE|label:inputrc]
+> - [* iMarlso: inputrc](../cheatsheet/bash/builtin.html#inputrc)
+> - [* marslo/mylinux/inputrc](https://github.com/marslo/mylinux/blob/main/confs/home/.inputrc)
+
+```bash
+# https://marslo.github.io/ibook/screenshot/colors/ansi/color-formatting.png
+fgc=$(RGBcolor 5 6 8)                             # 240;  fgc=$(RGBcolor 5 6 5)  # 237
+COL_SD_GREEN='\[\033[32;2m\]'                     # COL_SD_GREEN='\[\033[2;32m\]'
+COL_IF_SL_RED='\[\033[0\;31m\]'
+COL_DEFAULT="\[\033[38;5;${fgc}m\]"               # "\[$(tput setaf ${fgc})\]"; $"\e[38;5;${fgc}m";
+COL_IF_DEFAULT="\[\033[38\;5\;${fgc}m\]"          # COL_IF_DEFAULT="\[\033[1\;38\;5\;${fgc}m\]"  | COL_IF_DEFAULT="${COL_IF_SD_GREEN}"
+COL_RESET='\[\033[1m\]'                           # COL_RESET="\[$(tput sgr0)\]" | COL_RESET='\[\033[1m\]'
+COL_NONE='\[\033[0m\]'                            # COL_NONE='\[\033[38;5;3m\]'
+
+PROMPT_FULL="\\n${COL_DEFAULT}╭╶ (\\u@\\h ${COL_RED}\\w${COL_DEFAULT}) "
+PROMPT_NEXT="\$(__git_ps1 \"- (${COL_BD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
+PROMPT_NEXT+="\$(_venv_info \"- (${COL_BD_MAGENTA}%s${COL_NONE}${COL_DEFAULT}) \")"
+PROMPT_NEXT+="${COL_DEFAULT}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\-\>; else echo ${COL_IF_RED}\↯; fi\`"
+PROMPT_NEXT+="\\n${COL_DEFAULT}\$ ${COL_NONE}"
+
+function pstoggle() {
+  PROMPT_SIMPLE="\\n${COL_DEFAULT}╭╶ (\\u${COL_DEFAULT}) "
+  if echo "${PS1}" | grep --color=never -q '\\u@\\h'; then
+    export PS1="${PROMPT_SIMPLE}${PROMPT_NEXT}"
+  else
+    export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
+  fi
+}
+
+export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
+export PS2="${COL_DEFAULT}> ${COL_NONE}"
+export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE:+${BASH_SOURCE##*/}}\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
+```
+
+<!--sec data-title="for wsl" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+PS1="\\n${COL_RESET}${COL_DEFAULT}╭╶ (\\u@\\h${COL_RESET} "
+PS1+="${COL_SL_RED}\\w${COL_RESET}${COL_DEFAULT}) "
+PS1+="\`__git_ps1 '- (%s) '\`"
+PS1+="${COL_RESET}${COL_DEFAULT}->${COL_RESET}"
+PS1+="\\n${COL_DEFAULT}╰╶ ${COL_RESET}"
+PS1+="\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\\$; else echo ${COL_IF_SL_RED}\\$; fi\` ${COL_RESET}"
+PS1+="${COL_NONE}"
+# PS2="${COL_DEFAULT} |-> ${COL_RESET}${COL_NONE}"
+PS2="${COL_DEFAULT}  -> ${COL_RESET}${COL_NONE}"
+PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
+
+export PS1 PS2 PS4
+```
+<!-- endsec -->
+
+<!--sec data-title="deprecated" data-id="section1" data-show=true data-collapse=true ces-->
+```bash
+if [ -z "$DISPLAY" ]; then
+  export PS1="\n${COL_D_BLACK}┌─ (\u@\h ${COL_RESET} ${COL_D_RED}\w${COL_RESET}${COL_D_BLACK}) ->${COL_RESET}\n${COL_D_BLACK}└─ ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_SD_BLACK}\\$ ${COL_RESET}; else echo ${COL_SD_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
+  export PS2="${COL_D_BLACK} -> ${COL_RESET}${COL_NONE}"
+else
+  export PS1="\n${COL_D_BLACK}${UMARK}${LMARK} (\u@\h ${COL_RESET} ${COL_D_RED}\w${COL_RESET}${COL_D_BLACK}) ->${COL_RESET}\n${COL_D_BLACK}${DMARK}${LMARK} ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_SD_BLACK}\\$ ${COL_RESET}; else echo ${COL_SD_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
+  export PS2="${COL_D_BLACK} ->${LMARK} ${COL_RESET}${COL_NONE}"
+fi
+
+# for mac os -> Solarized Dark
+export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET}${COL_DEFAULT}) ->${COL_RESET}\n${COL_DEFAULT}└─ ${COL_RESET}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\\$ ${COL_RESET}; else echo ${COL_IF_SL_RED}\\$ ${COL_RESET}; fi\`${COL_NONE}"
+```
+<!-- endsec -->
+
 ### PS4
 
-> [!NOTE]
+> [!TIP]
 > - main.sh
->>   ```bash
->>   set -o pipefail
->>
->>   function foo() { echo "\$0 : $0"; }
->>   function bar() { echo "\${BASH_SOURCE[0]} : ${BASH_SOURCE[0]}"; }
->>
->>   foo
->>   bar
->>   ```
+>   ```bash
+>   set -o pipefail
+>
+>   function foo() { echo "\$0 : $0"; }
+>   function bar() { echo "\${BASH_SOURCE[0]} : ${BASH_SOURCE[0]}"; }
+>
+>   foo
+>   bar
+>   ```
 > - [ansi color](../colors.md)
 >   - [3-bit or 4-bit](../colors.md#3-bit-or-4-bit)
 >   - [8-bit](../colors.md#8-bit)
 >   - [24-bit](../colors.md#24-bit)
 
-```bash
-#                         using basename to avoid the long full path
-#                                 +---------------------+
-$ export PS4='+\033[38;5;240;3m($(basename ${BASH_SOURCE})\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
-#                   +------+ + italic                                  |  | + italic                                                    |  | + italic
-#                         |                                            |  + dim                                                         |  + dim
-#                         + the #240 color (dark gray)                 + cyan                                                           + magenta
-$ echo -e $PS4
-+($(basename ${BASH_SOURCE}):$(printf "%3d" ${LINENO})):${FUNCNAME[0]:+ ${FUNCNAME[0]}():}
 
-$ bash -x $HOME/main.sh
-+(main.sh:  3): set -o pipefail
-+(main.sh: 12): main
-+(main.sh:  8): main(): foo
-+(main.sh:  5): foo(): echo '$0 : /Users/marslo/main.sh'
+> [!NOTE|label:references:]
+> - [Setting $PS4 using `bash -c`](https://stackoverflow.com/a/50627260/2940319)
+> - [Why does Bash reset PS4 value to its default value when starting a script?](https://stackoverflow.com/a/74028357/2940319)
+
+![bash PS4](../screenshot/linux/bash-ps4-3.png)
+
+```bash
+#                           process id                        `##*/` avoid the long full path
+#                         +------------+                      +------------------------------+
+$ export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[38;5;242;3m(${BASH_SOURCE:+${BASH_SOURCE##*/}}\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
+#                   |  |                              +------+ + italic                                          |  | + italic                                                    |  | + italic
+#                   |  + dim                              |                                                      |  + dim                                                         |  + dim
+#                   + yellow                              + the #242 color (dark gray)                           + cyan                                                           + magenta
+$ echo -e $PS4
++[${BASHPID:-$$}] (${BASH_SOURCE:+${BASH_SOURCE##*/}}:$(printf "%3d" ${LINENO})):${FUNCNAME[0]:+ ${FUNCNAME[0]}():}
+
+$ bash -x "$HOME"/main.sh
++[52947] (main.sh:  3): set -o pipefail
++[52947] (main.sh:  8): foo
++[52947] (main.sh:  5): foo(): echo '$0 : /Users/marslo/main.sh'
 $0 : /Users/marslo/main.sh
-+(main.sh:  9): main(): bar
-+(main.sh:  6): bar(): echo '${BASH_SOURCE[0]} : /Users/marslo/main.sh'
++[52947] (main.sh:  9): bar
++[52947] (main.sh:  6): bar(): echo '${BASH_SOURCE[0]} : /Users/marslo/main.sh'
 ${BASH_SOURCE[0]} : /Users/marslo/main.sh
 ```
 
@@ -182,6 +274,198 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
 ```
 
 ![bash ps4 - 2](../../screenshot/linux/bash-ps4-2.png)
+
+#### show timestamp
+
+> [!NOTE|label:references:]
+> - [Debugging Bash Scripts with $PS4](https://spencersmolen.com/debugging-bash/)
+
+![PS4 with timestamp](../screenshot/linux/bash-ps4-timestamp.png)
+
+{% raw %}
+```bash
+$ export PS4='$(tput setaf 4)$(printf "%-12s\\t%.3fs\\t@line\\t%-10s" $(date +%T) $(echo $(date "+%s.%3N")-'$(date "+%s.%3N")' | bc ) $LINENO)$(tput sgr 0)'
+$ bash -xc $'echo ABC; echo XYZ'
+22:39:26      13.469s @line 1         echo ABC
+ABC
+22:39:26      13.516s @line 1         echo XYZ
+XYZ
+
+# or
+$ bash -xc $'PS4=\'+ $(date "+%T %x ($LINENO) : ")\'; echo ABC; echo XYZ'
++ PS4='+ $(date "+%T %x ($LINENO) : ")'
++ 15:45:51 08/29/2024 (1) : echo ABC
+ABC
++ 15:45:51 08/29/2024 (1) : echo XYZ
+XYZ
+
+# or
+$ PS4='+ \D{%s} ($LINENO) ' bash -xc 'echo ABC; echo XYZ'
++ 1724971586 (1) echo ABC
+ABC
++ 1724971586 (1) echo XYZ
+XYZ
+
+# or
+$ cmd=$(cat <<'EOF'
+PS4='+ $(date "+%T %x ($LINENO) : ")'
+echo ABC
+echo XYZ
+EOF
+)
+
+$ bash -xc "${cmd}"
+```
+{% endraw %}
+
+#### show process id
+
+> [!NOTE|label:references:]
+> - use `${BASHPID:-$$}` to show the current or subprocess id:
+>   ```bash
+>   PS4='+[${BASHPID:-$$}]
+>   ```
+
+```bash
+$ env -i SHELLOPTS=xtrace PS4='+[PID:$$] ' ./test.sh
++[PID:66538] set -euo pipefail
++[PID:66538] foo 'This is a multi-line string.'
++[PID:66538] echo -e '\033[7;37m>> This is a multi-line string.\033[0m'
+>> This is a multi-line string.
+```
+
+#### show incremented trace level in function call
+
+> [!NOTE|label:references:]
+> - [$PS4 in bash - how can I reproduce the "level of indirection" behavior mentioned in the GNU docs?](https://unix.stackexchange.com/a/715855/29178)
+> - tips:
+>   ```bash
+>   _plus='****************'
+>   PS4="${_plus:0:${#BASH_SOURCE[@]}}"
+>   # or
+>   PS4='+ ${_plus:0:${#FUNCNAME[@]}}${FUNCNAME[0]} '
+>   ```
+
+```bash
+$ command cat sample.sh
+#!/usr/bin/env bash
+
+_plus='++++++++++++++++++++'
+export PS4='${_plus:0:${#BASH_SOURCE[@]}}\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
+set -x
+function foo() { echo -e "\033[0;32m$*\033[0m"; }
+foo "abc"
+
+# result
+$ bash sample.sh
++[66140] (sample.sh:1): foo abc
+++[66140] (sample.sh:1): foo(): echo -e '\033[0;32mabc\033[0m'
+abc
+```
+
+```bash
+# or even add colors
+_plus='--------------------'
+export PS4='+ \033[36;1m${_plus:0:${#BASH_SOURCE[@]}}\033[0m\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
+```
+
+![bash PS4 with levels](../screenshot/linux/bash-ps4-BASH_SOURCEs.png)
+
+#### levels of indirection
+
+| SYNTAX/OPERATIONS              | BEHAVIOR                          | UNDERLYING REASON                     |
+|--------------------------------|-----------------------------------|---------------------------------------|
+| function call: `func()`        | + (NOT increment the trace level) | 只是改变了指令指针，没有嵌套解析。    |
+| foreground subshell: `(cmd)`   | + (NOT increment the trace level) | Fork 新进程，独立执行，继承父级深度。 |
+| background subshell: `(cmd) &` | + (NOT increment the trace level) | Fork 新进程，异步执行，继承父级深度。 |
+| command substitution: `$(cmd)` | ++ (increment the trace level)    | 求值挂起，等待内层结果替换字符串。    |
+| code evaluation: `eval cmd`    | ++ (increment the trace level)    | 字符串被二次解析为可执行代码。        |
+| source script: `source file`   | ++ (increment the trace level)    | 挂起当前文件，跳入新文件进行解析。    |
+
+> [!TIP|label:assume]
+> ```bash
+> export PS4='+'
+> ```
+
+```bash
+# command substitution
+$ bash -xc 'echo "Current dir: $(pwd)"'
+++pwd
++echo 'Current dir: /Users/marslo/Desktop'
+Current dir: /Users/marslo/Desktop
+
+# code evaluation
+$ bash -xc 'eval "whoami"'
++eval whoami
+++whoami
+marslo
+
+# foreground subshell
+$ bash -xc '(cd /tmp; ls | wc -l)'
++cd /tmp
++ls
++wc -l
+16
+```
+
+### [debugging a script](https://web.archive.org/web/20230401201759/https://wiki.bash-hackers.org/scripting/debuggingtips#making_xtrace_more_useful)
+
+- [making xtrace more useful](https://web.archive.org/web/20230401201759/https://wiki.bash-hackers.org/scripting/debuggingtips#making_xtrace_more_useful)
+
+  > [!TIP]
+  > - [`PS4` has to be start with `+`](https://gist.github.com/marslo/8e25d3250c13ecd5147787d38a5b85f8) | [and](https://stackoverflow.com/a/17805088/2940319)
+  > - [5.2 Bash Variables - PS4](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html#index-PS4)
+  >
+  >   PS4
+  >     The value of this parameter is expanded like PS1 and the expanded value is the prompt printed before the command line is echoed when the -x option is set (see The Set Builtin). The first character of the expanded value is replicated multiple times, as necessary, to indicate multiple levels of indirection. The default is ‘+ ’.
+
+  ```bash
+  $ export PS4='+\033[37;2;3m(${BASH_SOURCE}:${LINENO})\033[0m: \033[35;2;3m${FUNCNAME[0]:+${FUNCNAME[0]}():}\033[0m '
+  # or
+  $ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+  # even more:
+  $ export PS4='Line $LINENO @ $(date +%s.%N): '
+  ```
+
+- [LINENO and BASH_LINENO](https://stackoverflow.com/a/17804850/2940319)
+
+  > [!NOTE|label:references:]
+  > - [Bash Variables](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html)
+  >   **BASH_LINENO**
+  >     An array variable whose members are the line numbers in source files where each corresponding member of `FUNCNAME` was invoked. `${BASH_LINENO[$i]}` is the line number in the source file (`${BASH_SOURCE[$i+1]}`) where `${FUNCNAME[$i]}` was called (or `${BASH_LINENO[$i-1]}` if referenced within another shell function).
+  >     Use `LINENO` to obtain the current line number.
+  >
+  >   **FUNCNAME**
+  >     An array variable containing the names of all shell functions currently in the execution call stack. The element with index 0 is the name of any currently-executing shell function. The bottom-most element (the one with the highest index) is "main". This variable exists only when a shell function is executing. Assignments to `FUNCNAME` have no effect.
+  >     If `FUNCNAME` is unset, it loses its special properties, even if it is subsequently reset.
+  >
+  >     This variable can be used with `BASH_LINENO` and `BASH_SOURCE`. Each element of `FUNCNAME` has corresponding elements in `BASH_LINENO` and `BASH_SOURCE` to describe the call stack. For instance, `${FUNCNAME[$i]}` was called from the file `${BASH_SOURCE[$i+1]}` at line number `${BASH_LINENO[$i]}`.
+  >     The `caller` builtin displays the current call stack using this information.
+
+  ```bash
+  #!/usr/bin/env bash
+
+  function log() {
+    echo "LINENO: ${LINENO}"
+    echo "BASH_LINENO: ${BASH_LINENO[*]}; LINENO: ${LINENO}"
+  }
+
+  function foo() { log "$@"; }
+
+  foo "$@"
+  ```
+
+  ```bash
+  # result
+  $ bash -x debug.sh
+  +(debug.sh:12):  foo
+  +(debug.sh:9): foo(): log
+  +(debug.sh:4): log(): echo 'LINENO: 4'
+  LINENO: 4
+  +(debug.sh:5): log(): echo 'BASH_LINENO: 9 12 0; LINENO: 5'
+  BASH_LINENO: 9 12 0; LINENO: 5
+  ```
 
 ## [set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 
@@ -243,7 +527,7 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
   $ set -o
   ```
 
-  <!--sec data-title="set -o details" data-id="section0" data-show=true data-collapse=true ces-->
+  <!--sec data-title="set -o details" data-id="section2" data-show=true data-collapse=true ces-->
   ```bash
   $ set -o
   allexport       off
@@ -281,7 +565,7 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
   $ set +o
   ```
 
-  <!--sec data-title="set +o details" data-id="section1" data-show=true data-collapse=true ces-->
+  <!--sec data-title="set +o details" data-id="section3" data-show=true data-collapse=true ces-->
   ```bash
   $ set +o
   set +o allexport
@@ -499,7 +783,7 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
   $ shopt -p
   ```
 
-  <!--sec data-title="shopt | column -t" data-id="section2" data-show=true data-collapse=true ces-->
+  <!--sec data-title="shopt | column -t" data-id="section4" data-show=true data-collapse=true ces-->
   ```bash
   $ shopt | column -t
   autocd                   off
@@ -562,7 +846,7 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
   ```
   <!--endsec-->
 
-  <!--sec data-title="shopt | column -t" data-id="section3" data-show=true data-collapse=true ces-->
+  <!--sec data-title="shopt | column -t" data-id="section5" data-show=true data-collapse=true ces-->
   ```bash
   $ shopt -p
   shopt -u autocd
@@ -1070,7 +1354,7 @@ $ bind -l
 
 ### inputrc
 
-<!--sec data-title="~/.inputrc" data-id="section4" data-show=true data-collapse=true ces-->
+<!--sec data-title="~/.inputrc" data-id="section6" data-show=true data-collapse=true ces-->
 ```bash
 # https://www.gnu.org/software/bash/manual/bash.html#index-show_002dmode_002din_002dprompt
 set show-mode-in-prompt on
@@ -1162,7 +1446,7 @@ set keymap vi-insert
 ```
 <!--endsec-->
 
-<!--sec data-title="~/.inputrc.if-endif" data-id="section5" data-show=true data-collapse=true ces-->
+<!--sec data-title="~/.inputrc.if-endif" data-id="section7" data-show=true data-collapse=true ces-->
 ```bash
 # https://www.gnu.org/software/bash/manual/bash.html#index-show_002dmode_002din_002dprompt
 set show-mode-in-prompt on
@@ -1284,7 +1568,7 @@ $endif
 ```
 <!--endsec-->
 
-<!--sec data-title="~/.inputrc.old" data-id="section6" data-show=true data-collapse=true ces-->
+<!--sec data-title="~/.inputrc.old" data-id="section8" data-show=true data-collapse=true ces-->
 ```bash
 $ cat ~/.inputrc
 set convert-meta off                          # allow iso-latin1 characters to be inserted
@@ -1362,7 +1646,7 @@ $endif
 ```
 <!--endsec-->
 
-<!--sec data-title="/etc/inputrc" data-id="section7" data-show=true data-collapse=true ces-->
+<!--sec data-title="/etc/inputrc" data-id="section9" data-show=true data-collapse=true ces-->
 ```bash
 $ cat /etc/inputrc
 # do not bell on tab-completion

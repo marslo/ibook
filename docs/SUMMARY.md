@@ -4,6 +4,7 @@
   * [bash](cheatsheet/bash/bash.md)
     * [builtin](cheatsheet/bash/builtin.md)
     * [syntactic sugar](cheatsheet/bash/sugar.md)
+    * [completion](cheatsheet/bash/completion.md)
     * [cmd](cheatsheet/cmd.md)
     * [havefun](cheatsheet/havefun.md)
   * [text-processing](cheatsheet/text-processing/text-processing.md)

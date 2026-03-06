@@ -212,29 +212,47 @@
   test -f "${BASH_COMPLETION}" && source "${BASH_COMPLETION}"
   ```
 
-  - result
-    ```bash
-    $ type _filedir
-    _filedir is a function
-    _filedir ()
-    {
-        local i IFS='
-    ' xspec;
-        _tilde "$cur" || return 0;
-        local -a toks;
-        local quoted tmp;
-        _quote_readline_by_ref "$cur" quoted;
-        toks=(${toks[@]-} $(compgen -d -- "$cur" | { while read -r tmp; do
-        printf '%s\n' $tmp;
-    done; }));
-        if [[ "$1" != -d ]]; then
-            [[ ${BASH_VERSINFO[0]} -ge 4 ]] && xspec=${1:+"!*.@($1|${1^^})"} || xspec=${1:+"!*.@($1|$(printf %s $1 | tr '[:lower:]' '[:upper:]'))"};
-            toks=(${toks[@]-} $(compgen -f -X "$xspec" -- $quoted));
-        fi;
-        [ ${#toks[@]} -ne 0 ] && _compopt_o_filenames;
-        COMPREPLY=("${COMPREPLY[@]}" "${toks[@]}")
-    }
+  ```
+  # verify
+  $ compgen -A function | grep _filedir
+  _comp_compgen_filedir
+  _comp_compgen_filedir_xspec
+  _comp_complete_filedir_xspec
+  _filedir
+  _filedir_xspec
 
-    $ fcf _filedir
-    _filedir 632 /usr/local/opt/bash-completion/etc/bash_completion
-    ```
+  # or
+  $ declare -F | grep _filedir
+  declare -f _comp_compgen_filedir
+  declare -f _comp_compgen_filedir_xspec
+  declare -f _comp_complete_filedir_xspec
+  declare -f _filedir
+  declare -f _filedir_xspec
+  ```
+
+  ```bash
+  # result
+  $ type _filedir
+  _filedir is a function
+  _filedir ()
+  {
+      local i IFS='
+  ' xspec;
+      _tilde "$cur" || return 0;
+      local -a toks;
+      local quoted tmp;
+      _quote_readline_by_ref "$cur" quoted;
+      toks=(${toks[@]-} $(compgen -d -- "$cur" | { while read -r tmp; do
+      printf '%s\n' $tmp;
+  done; }));
+      if [[ "$1" != -d ]]; then
+          [[ ${BASH_VERSINFO[0]} -ge 4 ]] && xspec=${1:+"!*.@($1|${1^^})"} || xspec=${1:+"!*.@($1|$(printf %s $1 | tr '[:lower:]' '[:upper:]'))"};
+          toks=(${toks[@]-} $(compgen -f -X "$xspec" -- $quoted));
+      fi;
+      [ ${#toks[@]} -ne 0 ] && _compopt_o_filenames;
+      COMPREPLY=("${COMPREPLY[@]}" "${toks[@]}")
+  }
+
+  $ fcf _filedir
+  _filedir 632 /usr/local/opt/bash-completion/etc/bash_completion
+  ```
