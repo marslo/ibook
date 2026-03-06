@@ -144,11 +144,14 @@ fi
 > - [* My Ultimate PowerShell prompt with Oh My Posh and the Windows Terminal](https://www.hanselman.com/blog/my-ultimate-powershell-prompt-with-oh-my-posh-and-the-windows-terminal)
 {% endhint %}
 
-![bash prompts with change-mode and cursorshape](../screenshot/shell/bash-bind-mode-string-cursor-shape.gif)
+![bash prompts with change-mode and cursorshape](../../screenshot/shell/bash-bind-mode-string-cursor-shape.gif)
 
 > [!NOTE|label:inputrc]
 > - [* iMarlso: inputrc](../cheatsheet/bash/builtin.html#inputrc)
 > - [* marslo/mylinux/inputrc](https://github.com/marslo/mylinux/blob/main/confs/home/.inputrc)
+
+
+![color formats](../../screenshot/colors/ansi/color-formatting.png
 
 ```bash
 # https://marslo.github.io/ibook/screenshot/colors/ansi/color-formatting.png
@@ -231,11 +234,13 @@ export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET
 >   - [24-bit](../colors.md#24-bit)
 
 
-> [!NOTE|label:references:]
+{% hint style='tip' %}
+> references:
 > - [Setting $PS4 using `bash -c`](https://stackoverflow.com/a/50627260/2940319)
 > - [Why does Bash reset PS4 value to its default value when starting a script?](https://stackoverflow.com/a/74028357/2940319)
+{% endhint %}
 
-![bash PS4](../screenshot/linux/bash-ps4-3.png)
+![bash PS4](../../screenshot/linux/bash-ps4-3.png)
 
 ```bash
 #                           process id                        `##*/` avoid the long full path
@@ -280,7 +285,7 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
 > [!NOTE|label:references:]
 > - [Debugging Bash Scripts with $PS4](https://spencersmolen.com/debugging-bash/)
 
-![PS4 with timestamp](../screenshot/linux/bash-ps4-timestamp.png)
+![PS4 with timestamp](../../screenshot/linux/bash-ps4-timestamp.png)
 
 {% raw %}
 ```bash
@@ -369,7 +374,7 @@ _plus='--------------------'
 export PS4='+ \033[36;1m${_plus:0:${#BASH_SOURCE[@]}}\033[0m\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
 ```
 
-![bash PS4 with levels](../screenshot/linux/bash-ps4-BASH_SOURCEs.png)
+![bash PS4 with levels](../../screenshot/linux/bash-ps4-BASH_SOURCEs.png)
 
 #### levels of indirection
 

@@ -6,6 +6,7 @@
   - [install gitbook](#install-gitbook)
   - [init gitbook](#init-gitbook)
   - [verify](#verify)
+  - [revert node back](#revert-node-back)
 - [gitbook install in Linux](#gitbook-install-in-linux)
   - [install node v12.22.12](#install-node-v122212)
   - [install gitbook](#install-gitbook-1)
@@ -98,7 +99,7 @@ $ npm install
 ```bash
 $ npm install
 
-# -- or install individual pacakge --
+# -- or install individual package --
 $ npm install gitbook-plugin-codegroup@^2.3.5
 # or
 $ npm install gitbook-plugin-codegroup
@@ -113,6 +114,11 @@ $ npm install gitbook-plugin-hide-element
 ### verify
 ```bash
 $ gitbook serve --config=book.json
+```
+
+### revert node back
+```bash
+$ nvm use system
 ```
 
 ## gitbook install in Linux
@@ -141,7 +147,7 @@ $ export PATH="/opt/node/node-v12.22.12-linux-x64/bin/:$PATH"
   $ sudo update-alternatives --install /usr/local/bin/npx12  npx12  /opt/node/node-v12.22.12-linux-x64/bin/npx  10
 
   # setup v12.22.12 as global version temporary
-  ## backup current latst node/npm/npx
+  ## backup current latest node/npm/npx
   $ sudo mv /usr/local/bin/node{,21}
   $ sudo mv /usr/local/bin/npm{,21}
   $ sudo mv /usr/local/bin/npx{,21}
