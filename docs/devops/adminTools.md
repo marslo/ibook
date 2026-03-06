@@ -183,6 +183,9 @@ Copied test to clipboard. Will clear in 45 seconds.
 
   $ head /dev/urandom | tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32 && echo
   +&7<o(zfE[WC30v'D[&RH~;qM-8J>oQC
+
+  # or
+  $ dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64 | head -c 32 && echo
   ```
 
 - [generate via openssl](https://www.commandlinefu.com/commands/view/4204/generate-random-password)

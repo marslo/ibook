@@ -81,6 +81,14 @@
 > - [Geek to Live: Encrypt your data](https://lifehacker.com/geek-to-live-encrypt-your-data-178005)
 > - [Geek to Live: Encrypt your web browsing session (with an SSH SOCKS proxy)](https://lifehacker.com/geek-to-live-encrypt-your-web-browsing-session-with-a-237227)
 
+```bash
+# encrypt
+$ tar czf - /path/to/repos_folder | openssl enc -aes-256-cbc -pbkdf2 -salt -pass pass:<PASSWORD> -out <name>.tar.gz.enc
+
+# decrypt
+$ openssl enc -aes-256-cbc -pbkdf2 -d -pass pass:<PASSWORD> -in <name>.tar.gz.enc | tar xzf -
+```
+
 - [encrypted archive with openssl and tar](https://www.commandlinefu.com/commands/view/11584/encrypted-archive-with-openssl-and-tar)
   ```bash
   # encrypt
@@ -134,7 +142,7 @@
 
 - [encrypt data over net](https://www.commandlinefu.com/commands/view/3341/send-data-securly-over-the-net.)
   ```bash
-  $ cat /etc/passwd | openssl aes-256-cbc -a -e -pass pass:password | netcat -l -p 8080
+  $ cat /etc/passwd | openssl aes-256-cbc -a -e -pass pass:<PASSWORD> | netcat -l -p 8080
   ```
 
 - [Encrypted chat with netcat and openssl (one-liner)](https://www.commandlinefu.com/commands/view/13058/encrypted-chat-with-netcat-and-openssl-one-liner)
@@ -168,22 +176,22 @@
   $ openssl rand 6 | xxd -p | sed 's/\(..\)/\1:/g; s/:$//'
   ```
 
-- [generat a random mac address](https://www.commandlinefu.com/commands/view/745/generat-a-random-mac-address)
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/745/generat-a-random-mac-address)
   ```bash
   $ (date; cat /proc/interrupts) | md5sum | sed -r 's/^(.{12}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'
   ```
 
-- [generat a random mac address](https://www.commandlinefu.com/commands/view/13995/generat-a-random-mac-address)
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/13995/generat-a-random-mac-address)
   ```bash
   $ hexdump -n6 -e '/1 ":%02X"' /dev/random|sed s/^://g
   ```
 
-- [generat a random mac address](https://www.commandlinefu.com/commands/view/6618/generat-a-random-mac-address)
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/6618/generat-a-random-mac-address)
   ```bash
   $ od -An -N12 -x /dev/random | md5sum | sed -r 's/^(.{12}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'
   ```
 
-- [generat a random mac address](https://www.commandlinefu.com/commands/view/8462/generat-a-random-mac-address)
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/8462/generat-a-random-mac-address)
   ```bash
   $ od /dev/urandom -w6 -tx1 -An | sed -e 's/ //' -e 's/ /:/g' | head -n 1
   ```

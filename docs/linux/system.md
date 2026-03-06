@@ -388,7 +388,7 @@ $ hwinfo --memory | grep 'Memory Size'
   Memory Size: 128 GB
 
 $ sudo lshw -short | grep 'System Memory'
-/0/2c                           memory         128GiB System Memor
+/0/2c                           memory         128GiB System Memory
 
 $ vmstat -s -S M | egrep -ie 'total memory'
        128817 M total memory
@@ -416,7 +416,7 @@ $ vmstat -s
 #### list only installed RAM modules
 ```bash
 $ sudo dmidecode -t memory | grep  Size: | grep -v "No Module Installed"
-$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Manufacturer))' --color=never | grep -v -E 'Not Specified|No Module Installed|Unknow|None|OUT OF SPEC'
+$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Manufacturer))' --color=never | grep -v -E 'Not Specified|No Module Installed|Unknown|None|OUT OF SPEC'
 ```
 
 #### memory information
@@ -433,7 +433,7 @@ Memory Device
   Configured Memory Speed: 2933 MT/s
   Memory Technology: DRAM
 # or
-$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Configured Memory Speed:|Manufacturer))' --color=never | grep -v -E 'Not Specified|No Module|Unknow|None|<OUT OF SPEC>'
+$ sudo dmidecode -t memory | grep -E '(^Memory Device|^\s+(Size:|Type:|Type Detail:|Serial Number:|Part Number:|Memory Technology:|Configured Memory Speed:|Manufacturer))' --color=never | grep -v -E 'Not Specified|No Module|Unknown|None|<OUT OF SPEC>'
 
 # or
 $ sudo lshw -C memory
@@ -478,6 +478,120 @@ $ dmesg | grep "Memory"
 [    0.995127] Memory: 131882904K/134101416K available (12300K kernel code, 2504K rwdata, 3684K rodata, 2340K init, 3240K bss, 2218512K reserved, 0K cma-reserved)
 [    1.139890] x86/mm: Memory block size: 2048MB
 ```
+
+#### analysis detail info
+
+```bash
+echo -en "\033[1;32m>> MEMORY OVERALL:\033[0m "
+sudo lshw -short | grep --color=never 'System Memory' | sed -E 's/.*\s([0-9]+[A-Za-z]+) System Memory/\1/'
+sudo dmidecode -t memory | awk -v RS="" '
+/^Handle [^\n]*\nMemory Device/ {
+  # size and unit
+  if (match($0, /Size: [0-9]+ [MG]B/)) {
+    s_part = substr($0, RSTART, RLENGTH);
+    split(s_part, f, " ");
+    size = f[2]; unit = f[3];
+  } else next;
+
+  # original type
+  type = "Unknown";
+  if (match($0, /Type: [^\n]+/)) {
+    type = substr($0, RSTART+6, RLENGTH-6);
+    gsub(/[[:space:]]+$/, "", type);
+  }
+
+  # Speed
+  sp = "";
+  if (match($0, /Configured Memory Speed: [0-9]+/)) {
+    m = substr($0, RSTART, RLENGTH);
+    split(m, f, ": "); sp = f[2];
+  } else if (match($0, /Speed: [0-9]+/)) {
+    m = substr($0, RSTART, RLENGTH);
+    split(m, f, ": "); sp = f[2];
+  }
+
+  # voltage (for predicted)
+  volt = 0;
+  if (match($0, /Configured Voltage: [0-9.]+/)) {
+    m = substr($0, RSTART, RLENGTH);
+    split(m, f, ": "); volt = f[2];
+  }
+
+  # smart correction of type (for other/unknown)
+  if (type == "Other" || type == "Unknown") {
+    if (volt == 1.2 || (sp >= 2133 && sp <= 3200)) type = "DDR4 (Predicted)";
+    else if (volt >= 1.35 || (sp >= 800 && sp < 2133)) type = "DDR3 (Predicted)";
+    else if (volt == 1.1 || sp >= 4800) type = "DDR5 (Predicted)";
+  }
+
+  # summary
+  szGB = (unit == "MB") ? int(size/1024) : size+0;
+  if (szGB > 0) {
+    key = szGB "GB|" type "|" sp;
+    cnt[key]++; total += szGB;
+  }
+} END {
+  for (k in cnt) {
+    split(k, a, "|");
+    printf "• %dx%s %s", cnt[k], a[1], a[2];
+    if (a[3] != "") printf " @ %s MT/s", a[3];
+    print "";
+  }
+  if (total > 0) printf "Total: %d GB\n", total;
+}'
+
+echo -e "\033[1;32m>> MEMORY USAGE:\033[0m"
+```
+
+```bash
+# result
+>> MEMORY OVERALL: 128GiB
+• 8x16GB DDR4 (Predicted) @ 2133 MT/s
+Total: 128 GB
+```
+
+<!--sec data-title="older version for DDR4" data-id="section0" data-show=true data-collapse=true ces-->
+```bash
+$ sudo dmidecode -t memory | awk -v RS="" '
+/^Handle [^\n]*\nMemory Device/ {
+  size=""; unit=""; type=""; sp="";
+  # Size: 16384 MB
+  if (match($0, /Size:[[:space:]]+[0-9]+[[:space:]]+(GB|MB)/)) {
+    seg = substr($0, RSTART, RLENGTH);
+    sub(/^Size:[[:space:]]+/, "", seg);
+    n = split(seg, f, /[[:space:]]+/);
+    size = f[1]; unit = f[2];
+  } else next;
+  # Type: DDR4
+  if (match($0, /Type:[[:space:]]+DDR[0-9]+/)) {
+    seg = substr($0, RSTART, RLENGTH);
+    sub(/^Type:[[:space:]]+/, "", seg);
+    type = seg;
+  } else next;
+  # Speed or Configured Memory Speed
+  if (match($0, /Speed:[[:space:]]+[0-9]+[[:space:]]+MT\/s/)) {
+    seg = substr($0, RSTART, RLENGTH);
+    gsub(/[^0-9]/, "", seg); sp = seg;
+  } else if (match($0, /Configured Memory Speed:[[:space:]]+[0-9]+[[:space:]]+MT\/s/)) {
+    seg = substr($0, RSTART, RLENGTH);
+    gsub(/[^0-9]/, "", seg); sp = seg;
+  }
+  # to GB
+  szGB = (unit=="MB") ? int(size/1024) : size+0;
+  if (type != "" && szGB > 0) {
+    key = szGB "GB|" type "|" sp;
+    cnt[key]++; total += szGB;
+  }
+} END {
+  for (k in cnt) {
+}'if (total>0) printf "Total: %d GB\n", total;e, a[3]=speed
+```
+result:
+```bash
+• 2x16GB DDR4 @ 3200 MT/s
+Total: 32 GB
+```
+<!--endsec-->
 
 ## bios
 ```bash
@@ -879,13 +993,13 @@ $ echo "${PATH//:/$'\n'}"
 - get cpu
   ```bash
   $ ps -eocomm,pcpu | egrep -v '(0.0)|(%CPU)'
-  systemd          0.2
-  rcu_sched        0.2
-  sshd             0.5
-  java             8.2
-  java             0.6
-  dockerd         16.1
-  docker-containe  0.6
+  systemd            0.2
+  rcu_sched          0.2
+  sshd               0.5
+  java               8.2
+  java               0.6
+  dockerd           16.1
+  docker-containerd  0.6
   ...
   ```
 
@@ -919,7 +1033,7 @@ $ echo "${PATH//:/$'\n'}"
   $ ps -eo pid,lstart,cmd
   ```
 
-- [get date of latest prcess startup time](https://www.commandlinefu.com/commands/view/6829/display-date-of-last-time-a-process-was-started-in-date-format)
+- [get date of latest process startup time](https://www.commandlinefu.com/commands/view/6829/display-date-of-last-time-a-process-was-started-in-date-format)
   ```bash
   $ ps -o lstart <pid>
   ```
@@ -1121,13 +1235,13 @@ EOF
   $ cat ~/.bashrc
   LS_COLORS='bd=38;5;68:ca=38;5;17:cd=38;5;113;1:di=38;5;108:do=38;5;127:ex=38;5;31;1:pi=38;5;126:fi=0:ln=target:mh=38;5;222;1:no=0:or=48;5;196;38;5;232;1:ow=38;5;220;1:sg=48;5;3;38;5;0:su=38;5;220;1;3;100;1:so=38;5;197:st=38;5;86;48;5;234:tw=48;5;235;38;5;139;3:'
   LS_COLORS+='*.7z=38;5;64:*.WARC=38;5;64:*.a=38;5;64:*.arj=38;5;64:*.br=38;5;64:*.bz2=38;5;64:*.cpio=38;5;64:*.gz=38;5;64:*.lrz=38;5;64:*.lz=38;5;64:*.lzma=38;5;64:*.lzo=38;5;64:*.rar=38;5;64:*.s7z=38;5;64:*.sz=38;5;64:*.tar=38;5;64:*.tbz=38;5;64:*.tgz=38;5;64:*.warc=38;5;64:*.xz=38;5;64:*.z=38;5;64:*.zip=38;5;64:*.zipx=38;5;64:*.zoo=38;5;64:*.zpaq=38;5;64:*.zst=38;5;64:*.zstd=38;5;64:*.zz=38;5;64:*@.service=38;5;45:'
-  LS_COLORS+='*.pub=1;3:*.1p=38;5;7:*.32x=38;5;213:*.3g2=38;5;115:*.3ga=38;5;137;1:*.3gp=38;5;115:*.3p=38;5;7:*.82p=38;5;121:*.83p=38;5;121:*.8eu=38;5;121:*.8xe=38;5;121:*.8xp=38;5;121:*.A64=38;5;213:*.BUP=38;5;241:*.CFUserTextEncoding=38;5;239:*.F=38;5;81:*.F03=38;5;81:*.F08=38;5;81:*.F90=38;5;81:*.F95=38;5;81:*.IFO=38;5;114:*.M=38;5;110:*.PDF=38;5;141:*.PFA=38;5;66:*.PL=38;5;160:*.RData=38;5;178:*.Rproj=38;5;11:*.S=38;5;110:*.S3M=38;5;137;1:*.SKIP=38;5;244:*.TIFF=38;5;97:*.VOB=38;5;115;1:*.a00=38;5;213:*.a52=38;5;213:*.a64=38;5;213:*.a78=38;5;213:*.aac=38;5;137;1:*.accdb=38;5;60:*.accde=38;5;60:*.accdr=38;5;60:*.accdt=38;5;60:*.adf=38;5;213:*.adoc=38;5;184:*.afm=38;5;66:*.agda=38;5;81:*.agdai=38;5;110:*.ai=38;5;99:*.aiff=38;5;136;1:*.alac=38;5;136;1:*.allow=38;5;112:*.am=38;5;242;3:*.amr=38;5;137;1:*.application=38;5;116:*.aria2=38;5;241:*.asciidoc=38;5;184:*.asf=38;5;115:*.asm=38;5;81:*.ass=38;5;117:*.astro=38;5;135;1:*.atr=38;5;213:*.au=38;5;137;1:*.automount=38;5;45:*.bib=38;5;178:*.bsp=38;5;215:*.cab=38;5;215:*.caf=38;5;137;1:*.cap=38;5;29:*.car=38;5;57:*.cbr=38;5;141:*.cbz=38;5;141:*.cda=38;5;136;1:*.cdi=38;5;213:*.cdr=38;5;97:*.chm=38;5;141:*.cjs=38;5;074;1:*.cl=38;5;81:*.clj=38;5;41:*.cljc=38;5;41:*.cljs=38;5;41:*.cljw=38;5;41:*.cnc=38;5;7:*.coffee=38;5;079;1:*.comp=38;5;136:*.cp=38;5;75:*.cr=38;5;81:*.crx=38;5;215:*.cs=38;5;81:*.csv=38;5;78:*.ctp=38;5;81:*.cue=38;5;116:*.dart=38;5;51:*.dat=38;5;137;1:*.db=38;5;60:*.def=38;5;7:*.deny=38;5;196:*.description=38;5;116:*.device=38;5;45:*.dhall=38;5;178:*.dicom=38;5;97:*.diff=38;5;197;3;4:*.directory=38;5;116:*.divx=38;5;114:*.djvu=38;5;141:*.dmp=38;5;29:*.doc=38;5;111:*.docm=38;5;111;4:*.docx=38;5;111:*.drw=38;5;99:*.dtd=38;5;178:*.dts=38;5;137;1:*.dwg=38;5;216:*.dylib=38;5;241:*.ear=38;5;215:*.ejs=38;5;135;1:*.el=38;5;81:*.elc=38;5;241:*.eln=38;5;241:*.eml=38;5;90;1:*.entitlements=1:*.epf=1:*.eps=38;5;99:*.epsf=38;5;99:*.epub=38;5;141:*.err=38;5;160;1:*.error=38;5;160;1:*.etx=38;5;184:*.ex=38;5;7:*.example=38;5;7:*.f=38;5;81:*.f03=38;5;81:*.f08=38;5;81:*.f4v=38;5;115:*.f90=38;5;81:*.f95=38;5;81:*.fcm=38;5;137;1:*.feature=38;5;7:*.flac=38;5;136;1:*.flif=38;5;97:*.flv=38;5;115:*.fm2=38;5;213:*.fmp12=38;5;60:*.fnt=38;5;66:*.fon=38;5;66:*.for=38;5;81:*.fp7=38;5;60:*.frag=38;5;136:*.ftn=38;5;81:*.fvd=38;5;202:*.fxml=38;5;178:*.gb=38;5;213:*.gba=38;5;213:*.gbc=38;5;213:*.gbr=38;5;7:*.gel=38;5;213:*.gemspec=38;5;41:*.ger=38;5;7:*.gg=38;5;213:*.ggl=38;5;213:*.gp3=38;5;115:*.gp4=38;5;115:*.gs=38;5;81:*.hi=38;5;110:*.hidden-color-scheme=38;5;241;3:*.hidden-tmTheme=38;5;241;3:*.hin=38;5;242;3:*.hjson=38;5;178:*.hpp=38;5;110:*.hs=38;5;81:*.htm=38;5;125;1:*.http=38;5;90;1:*.hxx=38;5;110:*.ii=38;5;110:*.iml=38;5;166:*.in=38;5;242;3:*.info=38;5;184:*.ini=1:*.ipa=38;5;215:*.ipk=38;5;213:*.ipynb=38;5;41:*.j64=38;5;213:*.jad=38;5;215:*.jhtm=38;5;125;1:*.jsm=38;5;079;1:*.jsonc=38;5;178:*.jsonl=38;5;178:*.jsonnet=38;5;178:*.jsp=38;5;079;1:*.jsx=38;5;074;1:*.jxl=38;5;97:*.kak=38;5;172:*.key=38;5;166:*.lagda=38;5;81:*.lagda.rst=38;5;81:*.lagda.tex=38;5;81:*.last-run=1:*.lhs=38;5;81:*.libsonnet=38;5;142:*.lisp=38;5;81:*.lnk=38;5;97;5:*.localized=38;5;239:*.localstorage=38;5;60:*.m=38;5;110:*.m2v=38;5;114:*.m3u=38;5;116:*.m3u8=38;5;116:*.m4=38;5;242;3:*.m4a=38;5;137;1:*.m4v=38;5;114:*.map=38;5;7:*.md5=38;5;116:*.mdb=38;5;60:*.mde=38;5;60:*.mdx=38;5;184:*.merged-ca-bundle=1:*.mf=38;5;7:*.mfasl=38;5;7:*.mht=38;5;125;1:*.mi=38;5;7:*.mid=38;5;136;1:*.midi=38;5;136;1:*.mjs=38;5;074;1:*.mkd=38;5;184:*.mkv=38;5;114:*.ml=38;5;81:*.mm=38;5;7:*.mobi=38;5;141:*.mod=38;5;137;1:*.moon=38;5;81:*.mount=38;5;45:*.mpg=38;5;114:*.msg=38;5;178:*.mtx=38;5;7:*.mustache=38;5;135;1:*.mysql=38;5;222:*.nc=38;5;60:*.ndjson=38;5;178:*.nds=38;5;213:*.nes=38;5;213:*.nfo=38;5;184:*.nib=38;5;57:*.nim=38;5;81:*.nimble=38;5;81:*.nix=38;5;155:*.nrg=38;5;202:*.nth=38;5;97:*.numbers=38;5;112:*.o=38;5;241:*.odb=38;5;111:*.odp=38;5;166:*.ods=38;5;112:*.odt=38;5;111:*.oga=38;5;137;1:*.ogg=38;5;137;1:*.ogm=38;5;114:*.ogv=38;5;115:*.opus=38;5;137;1:*.otf=38;5;66:*.pacnew=38;5;33:*.pages=38;5;111:*.pak=38;5;215:*.part=38;5;239:*.patch=38;5;197;3;4:*.path=38;5;45:*.pbxproj=1:*.pc=38;5;7:*.pcap=38;5;29:*.pcb=38;5;7:*.pcf=1:*.pcm=38;5;136;1:*.pdf=38;5;141:*.pfa=38;5;66:*.pfb=38;5;66:*.pfm=38;5;66:*.pgn=38;5;178:*.pgsql=38;5;222:*.pi=38;5;7:*.pid=38;5;248:*.pk3=38;5;215:*.pl=38;5;208:*.plist=1:*.plt=38;5;7:*.ply=38;5;216:*.pm=38;5;203:*.png=38;5;97:*.pod=38;5;184:*.pot=38;5;7:*.pps=38;5;166:*.ppt=38;5;166:*.ppts=38;5;166:*.pptsm=38;5;166;4:*.pptx=38;5;166:*.pptxm=38;5;166;4:*.prisma=38;5;222:*.properties=38;5;116:*.prql=38;5;222:*.ps=38;5;99:*.psd=38;5;97:*.psf=1:*.pug=38;5;135;1:*.pxd=38;5;97:*.pxm=38;5;97:*.qcow=38;5;202:*.rdata=38;5;178:*.rdf=38;5;7:*.rkt=38;5;81:*.rlib=38;5;241:*.rmvb=38;5;114:*.rnc=38;5;178:*.rng=38;5;178:*.rom=38;5;213:*.rss=38;5;178:*.rst=38;5;184:*.rstheme=1:*.rtf=38;5;111:*.s3m=38;5;137;1:*.sample=38;5;114:*.sc=38;5;41:*.scan=38;5;242;3:*.sch=38;5;7:*.scm=38;5;7:*.scpt=38;5;219:*.scss=38;5;105;1:*.sed=38;5;172:*.service=38;5;45:*.sfv=38;5;116:*.sgml=38;5;178:*.sid=38;5;137;1:*.sis=38;5;7:*.sms=38;5;213:*.socket=38;5;45:*.sparseimage=38;5;202:*.spl=38;5;7:*.spv=38;5;217:*.srt=38;5;117:*.ssa=38;5;117:*.st=38;5;213:*.state=38;5;248:*.stderr=38;5;160;1:*.stl=38;5;216:*.storyboard=38;5;196:*.strings=1:*.sty=38;5;7:*.sub=38;5;117:*.sublime-*=1:*.sug=38;5;7:*.sup=38;5;117:*.svelte=38;5;135;1:*.svg=38;5;99:*.swo=38;5;244:*.sx=38;5;81:*.target=38;5;45:*.tdy=38;5;7:*.tfnt=38;5;7:*.tfstate=38;5;168:*.tfvars=38;5;168:*.tg=38;5;7:*.theme=38;5;116:*.tif=38;5;97:*.tiff=38;5;97:*.timer=38;5;45:*.tmTheme=1:*.toast=38;5;202:*.tsv=38;5;78:*.tsx=38;5;074;1:*.ttf=38;5;66:*.twig=38;5;81:*.typelib=38;5;60:*.urlview=38;5;116:*.user-ca-bundle=1:*.v=38;5;81:*.vala=38;5;81:*.vapi=38;5;81:*.vcard=38;5;7:*.vcd=38;5;202:*.vcf=38;5;7:*.vdf=38;5;215:*.vdi=38;5;202:*.vert=38;5;136:*.vfd=38;5;202:*.vhd=38;5;202:*.vhdx=38;5;202:*.vmdk=38;5;202:*.vob=38;5;115;1:*.vpk=38;5;215:*.vtt=38;5;117:*.vue=38;5;135;1:*.wav=38;5;136;1:*.webloc=38;5;116:*.webm=38;5;115:*.webp=38;5;97:*.wgsl=38;5;97:*.woff=38;5;66:*.woff2=38;5;66:*.wrl=38;5;216:*.wv=38;5;136;1:*.wvc=38;5;136;1:*.xcf=38;5;7:*.xcsettings=1:*.xcuserstate=1:*.xcworkspacedata=1:*.xib=38;5;208:*.xla=38;5;76:*.xln=38;5;7:*.xls=38;5;112:*.xlsx=38;5;112:*.xlsxm=38;5;112;4:*.xltm=38;5;73;4:*.xltx=38;5;73:*.xpi=38;5;215:*.xpm=38;5;97:*.xsd=38;5;178:*.xsh=38;5;41:*.z[0-9]{0,2}=38;5;239:*.zig=38;5;81:*.zwc=38;5;241:*.zx[0-9]{0,2}=38;5;239:'
+  LS_COLORS+='*.pub=1;3:*.1p=38;5;7:*.32x=38;5;213:*.3g2=38;5;115:*.3ga=38;5;137;1:*.3gp=38;5;115:*.3p=38;5;7:*.82p=38;5;121:*.83p=38;5;121:*.8eu=38;5;121:*.8xe=38;5;121:*.8xp=38;5;121:*.A64=38;5;213:*.BUP=38;5;241:*.CFUserTextEncoding=38;5;239:*.F=38;5;81:*.F03=38;5;81:*.F08=38;5;81:*.F90=38;5;81:*.F95=38;5;81:*.IFO=38;5;114:*.M=38;5;110:*.PDF=38;5;141:*.PFA=38;5;66:*.PL=38;5;160:*.RData=38;5;178:*.Rproj=38;5;11:*.S=38;5;110:*.S3M=38;5;137;1:*.SKIP=38;5;244:*.TIFF=38;5;97:*.VOB=38;5;115;1:*.a00=38;5;213:*.a52=38;5;213:*.a64=38;5;213:*.a78=38;5;213:*.aac=38;5;137;1:*.accdb=38;5;60:*.accde=38;5;60:*.accdr=38;5;60:*.accdt=38;5;60:*.adf=38;5;213:*.adoc=38;5;184:*.afm=38;5;66:*.agda=38;5;81:*.agdai=38;5;110:*.ai=38;5;99:*.aiff=38;5;136;1:*.alac=38;5;136;1:*.allow=38;5;112:*.am=38;5;242;3:*.amr=38;5;137;1:*.application=38;5;116:*.aria2=38;5;241:*.asciidoc=38;5;184:*.asf=38;5;115:*.asm=38;5;81:*.ass=38;5;117:*.astro=38;5;135;1:*.atr=38;5;213:*.au=38;5;137;1:*.automount=38;5;45:*.bib=38;5;178:*.bsp=38;5;215:*.cab=38;5;215:*.calf=38;5;137;1:*.cap=38;5;29:*.car=38;5;57:*.cbr=38;5;141:*.cbz=38;5;141:*.cda=38;5;136;1:*.cdi=38;5;213:*.cdr=38;5;97:*.chm=38;5;141:*.cjs=38;5;074;1:*.cl=38;5;81:*.clj=38;5;41:*.cljc=38;5;41:*.cljs=38;5;41:*.cljw=38;5;41:*.cnc=38;5;7:*.coffee=38;5;079;1:*.comp=38;5;136:*.cp=38;5;75:*.cr=38;5;81:*.crx=38;5;215:*.cs=38;5;81:*.csv=38;5;78:*.ctp=38;5;81:*.cue=38;5;116:*.dart=38;5;51:*.dat=38;5;137;1:*.db=38;5;60:*.def=38;5;7:*.deny=38;5;196:*.description=38;5;116:*.device=38;5;45:*.dhall=38;5;178:*.dicom=38;5;97:*.diff=38;5;197;3;4:*.directory=38;5;116:*.divx=38;5;114:*.djvu=38;5;141:*.dmp=38;5;29:*.doc=38;5;111:*.docm=38;5;111;4:*.docx=38;5;111:*.drw=38;5;99:*.dtd=38;5;178:*.dts=38;5;137;1:*.dwg=38;5;216:*.dylib=38;5;241:*.ear=38;5;215:*.ejs=38;5;135;1:*.el=38;5;81:*.elc=38;5;241:*.eln=38;5;241:*.eml=38;5;90;1:*.entitlements=1:*.epf=1:*.eps=38;5;99:*.epsf=38;5;99:*.epub=38;5;141:*.err=38;5;160;1:*.error=38;5;160;1:*.etx=38;5;184:*.ex=38;5;7:*.example=38;5;7:*.f=38;5;81:*.f03=38;5;81:*.f08=38;5;81:*.f4v=38;5;115:*.f90=38;5;81:*.f95=38;5;81:*.fcm=38;5;137;1:*.feature=38;5;7:*.flac=38;5;136;1:*.flif=38;5;97:*.flv=38;5;115:*.fm2=38;5;213:*.fmp12=38;5;60:*.fnt=38;5;66:*.fon=38;5;66:*.for=38;5;81:*.fp7=38;5;60:*.frag=38;5;136:*.ftn=38;5;81:*.fvd=38;5;202:*.fxml=38;5;178:*.gb=38;5;213:*.gba=38;5;213:*.gbc=38;5;213:*.gbr=38;5;7:*.gel=38;5;213:*.gemspec=38;5;41:*.ger=38;5;7:*.gg=38;5;213:*.ggl=38;5;213:*.gp3=38;5;115:*.gp4=38;5;115:*.gs=38;5;81:*.hi=38;5;110:*.hidden-color-scheme=38;5;241;3:*.hidden-tmTheme=38;5;241;3:*.hin=38;5;242;3:*.hjson=38;5;178:*.hpp=38;5;110:*.hs=38;5;81:*.htm=38;5;125;1:*.http=38;5;90;1:*.hxx=38;5;110:*.ii=38;5;110:*.iml=38;5;166:*.in=38;5;242;3:*.info=38;5;184:*.ini=1:*.ipa=38;5;215:*.ipk=38;5;213:*.ipynb=38;5;41:*.j64=38;5;213:*.jad=38;5;215:*.jhtm=38;5;125;1:*.jsm=38;5;079;1:*.jsonc=38;5;178:*.jsonl=38;5;178:*.jsonnet=38;5;178:*.jsp=38;5;079;1:*.jsx=38;5;074;1:*.jxl=38;5;97:*.kak=38;5;172:*.key=38;5;166:*.lagda=38;5;81:*.lagda.rst=38;5;81:*.lagda.tex=38;5;81:*.last-run=1:*.lhs=38;5;81:*.libsonnet=38;5;142:*.lisp=38;5;81:*.lnk=38;5;97;5:*.localized=38;5;239:*.localstorage=38;5;60:*.m=38;5;110:*.m2v=38;5;114:*.m3u=38;5;116:*.m3u8=38;5;116:*.m4=38;5;242;3:*.m4a=38;5;137;1:*.m4v=38;5;114:*.map=38;5;7:*.md5=38;5;116:*.mdb=38;5;60:*.mde=38;5;60:*.mdx=38;5;184:*.merged-ca-bundle=1:*.mf=38;5;7:*.mfasl=38;5;7:*.mht=38;5;125;1:*.mi=38;5;7:*.mid=38;5;136;1:*.midi=38;5;136;1:*.mjs=38;5;074;1:*.mkd=38;5;184:*.mkv=38;5;114:*.ml=38;5;81:*.mm=38;5;7:*.mobi=38;5;141:*.mod=38;5;137;1:*.moon=38;5;81:*.mount=38;5;45:*.mpg=38;5;114:*.msg=38;5;178:*.mtx=38;5;7:*.mustache=38;5;135;1:*.mysql=38;5;222:*.nc=38;5;60:*.ndjson=38;5;178:*.nds=38;5;213:*.nes=38;5;213:*.nfo=38;5;184:*.nib=38;5;57:*.nim=38;5;81:*.nimble=38;5;81:*.nix=38;5;155:*.nrg=38;5;202:*.nth=38;5;97:*.numbers=38;5;112:*.o=38;5;241:*.odb=38;5;111:*.odp=38;5;166:*.ods=38;5;112:*.odt=38;5;111:*.oga=38;5;137;1:*.ogg=38;5;137;1:*.ogm=38;5;114:*.ogv=38;5;115:*.opus=38;5;137;1:*.otf=38;5;66:*.pacnew=38;5;33:*.pages=38;5;111:*.pak=38;5;215:*.part=38;5;239:*.patch=38;5;197;3;4:*.path=38;5;45:*.pbxproj=1:*.pc=38;5;7:*.pcap=38;5;29:*.pcb=38;5;7:*.pcf=1:*.pcm=38;5;136;1:*.pdf=38;5;141:*.pfa=38;5;66:*.pfb=38;5;66:*.pfm=38;5;66:*.pgn=38;5;178:*.pgsql=38;5;222:*.pi=38;5;7:*.pid=38;5;248:*.pk3=38;5;215:*.pl=38;5;208:*.plist=1:*.plt=38;5;7:*.ply=38;5;216:*.pm=38;5;203:*.png=38;5;97:*.pod=38;5;184:*.pot=38;5;7:*.pps=38;5;166:*.ppt=38;5;166:*.ppts=38;5;166:*.pptsm=38;5;166;4:*.pptx=38;5;166:*.pptxm=38;5;166;4:*.prisma=38;5;222:*.properties=38;5;116:*.prql=38;5;222:*.ps=38;5;99:*.psd=38;5;97:*.psf=1:*.pug=38;5;135;1:*.pxd=38;5;97:*.pxm=38;5;97:*.qcow=38;5;202:*.rdata=38;5;178:*.rdf=38;5;7:*.rkt=38;5;81:*.rlib=38;5;241:*.rmvb=38;5;114:*.rnc=38;5;178:*.rng=38;5;178:*.rom=38;5;213:*.rss=38;5;178:*.rst=38;5;184:*.rstheme=1:*.rtf=38;5;111:*.s3m=38;5;137;1:*.sample=38;5;114:*.sc=38;5;41:*.scan=38;5;242;3:*.sch=38;5;7:*.scm=38;5;7:*.scpt=38;5;219:*.scss=38;5;105;1:*.sed=38;5;172:*.service=38;5;45:*.sfv=38;5;116:*.sgml=38;5;178:*.sid=38;5;137;1:*.sis=38;5;7:*.sms=38;5;213:*.socket=38;5;45:*.sparseimage=38;5;202:*.spl=38;5;7:*.spv=38;5;217:*.srt=38;5;117:*.ssa=38;5;117:*.st=38;5;213:*.state=38;5;248:*.stderr=38;5;160;1:*.stl=38;5;216:*.storyboard=38;5;196:*.strings=1:*.sty=38;5;7:*.sub=38;5;117:*.sublime-*=1:*.sug=38;5;7:*.sup=38;5;117:*.svelte=38;5;135;1:*.svg=38;5;99:*.swo=38;5;244:*.sx=38;5;81:*.target=38;5;45:*.tdy=38;5;7:*.tfnt=38;5;7:*.tfstate=38;5;168:*.tfvars=38;5;168:*.tg=38;5;7:*.theme=38;5;116:*.tif=38;5;97:*.tiff=38;5;97:*.timer=38;5;45:*.tmTheme=1:*.toast=38;5;202:*.tsv=38;5;78:*.tsx=38;5;074;1:*.ttf=38;5;66:*.twig=38;5;81:*.typelib=38;5;60:*.urlview=38;5;116:*.user-ca-bundle=1:*.v=38;5;81:*.vala=38;5;81:*.vapi=38;5;81:*.vcard=38;5;7:*.vcd=38;5;202:*.vcf=38;5;7:*.vdf=38;5;215:*.vdi=38;5;202:*.vert=38;5;136:*.vfd=38;5;202:*.vhd=38;5;202:*.vhdx=38;5;202:*.vmdk=38;5;202:*.vob=38;5;115;1:*.vpk=38;5;215:*.vtt=38;5;117:*.vue=38;5;135;1:*.wav=38;5;136;1:*.webloc=38;5;116:*.webm=38;5;115:*.webp=38;5;97:*.wgsl=38;5;97:*.woff=38;5;66:*.woff2=38;5;66:*.wrl=38;5;216:*.wv=38;5;136;1:*.wvc=38;5;136;1:*.xcf=38;5;7:*.xcsettings=1:*.xcuserstate=1:*.xcworkspacedata=1:*.xib=38;5;208:*.xla=38;5;76:*.xln=38;5;7:*.xls=38;5;112:*.xlsx=38;5;112:*.xlsxm=38;5;112;4:*.xltm=38;5;73;4:*.xltx=38;5;73:*.xpi=38;5;215:*.xpm=38;5;97:*.xsd=38;5;178:*.xsh=38;5;41:*.z[0-9]{0,2}=38;5;239:*.zig=38;5;81:*.zwc=38;5;241:*.zx[0-9]{0,2}=38;5;239:'
   # encrypted files
   LS_COLORS+='*.enc=38;5;69;3:*.gpg=38;5;69;3:*.p12=38;5;69;3:*.p7s=38;5;69;3:*.pem=38;5;69;3:*.pgp=38;5;69;3:*.sig=38;5;69;3:*.signature=38;5;69;3:*.asc=38;5;69;3:*.bfe=38;5;69;3:*.current=38;5;69;3:'
   # packages
   LS_COLORS+='*.apk=38;5;215:*.deb=38;5;215:*.dll=38;5;241:*.dmg=38;5;215:*.rpm=38;5;215:*.war=38;5;215:*.bin=38;5;202:*.iso=38;5;202:*.jar=38;5;215:*.out=38;5;242;3:'
   # dump/log
-  LS_COLORS+='*.bak=38;5;241;3:*.dump=38;5;241;3:*.mdump=38;5;241;3:*.stackdump=38;5;241;3:*.zcompdump=38;5;241;3:*.snapshot=38;5;45:*.swap=38;5;241;3:*.swp=38;5;241;3:*.tmp=38;5;241;3:*.viminfo=1;3:*vim_mru_files=1;3:*.DS_Store=38;5;239;3:*.old=38;5;239;3:*.org=38;5;241;3:*.norg=38;5;241;3:*.orig=38;5;241;3:*.sav=38;5;241;3:*.log=38;5;241;3:*.un~=38;5;241;3:'
+  LS_COLORS+='*.bak=38;5;241;3:*.dump=38;5;241;3:*.mdump=38;5;241;3:*.stackdump=38;5;241;3:*.zcompdump=38;5;241;3:*.snapshot=38;5;45:*.swap=38;5;241;3:*.swp=38;5;241;3:*.tmp=38;5;241;3:*.viminfo=1;3:*vim_mru_files=1;3:*.DS_Store=38;5;239;3:*.old=38;5;239;3:*.org=38;5;241;3:*.norg=38;5;241;3:*.orig=38;5;241;3:*.save=38;5;241;3:*.log=38;5;241;3:*.un~=38;5;241;3:'
   # audio/video
   LS_COLORS+='*.wma=38;5;137;1:*.wmv=38;5;114:*.JPG=38;5;97:*.MOV=38;5;114:*.ape=38;5;136;1:*.avi=38;5;114:*.bmp=38;5;97:*.gif=38;5;97:*.icns=38;5;97:*.ico=38;5;97:*.ics=38;5;7:*.img=38;5;202:*.jpeg=38;5;97:*.jpg=38;5;97:*.mov=38;5;114:*.mp3=38;5;137;1:*.mp4=38;5;114:*.mp4a=38;5;137;1:*.mpeg=38;5;114:*.torrent=38;5;116:*.ts=38;5;074;1:'
   # docs
@@ -1468,7 +1582,7 @@ $ sudo localedef -c -f UTF-8 -i en_US en_US.UTF-8
   $ yum list available | grep glibc-langpack
   ```
 
-#### get infomation
+#### get information
 ```bash
 $ locale -k LC_TIME
 $ locale -k LC_TELEPHONE
@@ -1714,7 +1828,7 @@ $ gnome-terminal --geometry=123x42+0+0
    ...
   ```
 
-- fix with erase conflict packges permanently
+- fix with erase conflict packages permanently
   ```bash
   $ sudo dnf repolist
   repo id                                       repo name
@@ -1841,7 +1955,7 @@ Hugetlb:               0 kB
   # append default_hugepagesz=1G to kernelopts
   kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet default_hugepagesz=1G
   ```
-  - rebuid bios & efi
+  - rebuild bios & efi
     ```bash
     # for bios booting
     $ sudo grub2-mkconfig -o /boot/grub/grub.cfg

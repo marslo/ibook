@@ -110,7 +110,6 @@ $ rg --generate complete-bash | sudo tee /usr/local/etc/bash_completion.d/rg
 
   ![ag rg](../../screenshot/osx/ag-rg.png)
 
-
 ## tips
 - show file name only
   ```bash
