@@ -165,41 +165,25 @@ $ openssl enc -aes-256-cbc -pbkdf2 -d -pass pass:<PASSWORD> -in <name>.tar.gz.en
 
 ### random string
 
+> [!NOTE|label:references:]
+> - [* more: random string](../text-processing/text-processing.md#random-string)
+> - [random mac aaddress](https://www.commandlinefu.com/commands/view/6619/generate-a-random-mac-address)
+> - [random unsigned integer](https://www.commandlinefu.com/commands/view/6988/random-unsigned-integer)
+
+
 > [!TIP]
 > - using: `openssl rand ...`
 
-- [random macaddress](https://www.commandlinefu.com/commands/view/6619/generate-a-random-mac-address)
-  ```bash
-  $ openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
-  b7:85:cc:3e:bc:fa
-  # or FreeBSD
-  $ openssl rand 6 | xxd -p | sed 's/\(..\)/\1:/g; s/:$//'
-  ```
+```bash
+$ openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
+b7:85:cc:3e:bc:fa
+# or FreeBSD
+$ openssl rand 6 | xxd -p | sed 's/\(..\)/\1:/g; s/:$//'
+```
 
-- [generate a random mac address](https://www.commandlinefu.com/commands/view/745/generat-a-random-mac-address)
-  ```bash
-  $ (date; cat /proc/interrupts) | md5sum | sed -r 's/^(.{12}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'
-  ```
-
-- [generate a random mac address](https://www.commandlinefu.com/commands/view/13995/generat-a-random-mac-address)
-  ```bash
-  $ hexdump -n6 -e '/1 ":%02X"' /dev/random|sed s/^://g
-  ```
-
-- [generate a random mac address](https://www.commandlinefu.com/commands/view/6618/generat-a-random-mac-address)
-  ```bash
-  $ od -An -N12 -x /dev/random | md5sum | sed -r 's/^(.{12}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'
-  ```
-
-- [generate a random mac address](https://www.commandlinefu.com/commands/view/8462/generat-a-random-mac-address)
-  ```bash
-  $ od /dev/urandom -w6 -tx1 -An | sed -e 's/ //' -e 's/ /:/g' | head -n 1
-  ```
-
-- [random unsigned integer](https://www.commandlinefu.com/commands/view/6988/random-unsigned-integer)
-  ```bash
-  $ echo $(openssl rand 4 | od -DAn)
-  ```
+```bash
+$ echo $(openssl rand 4 | od -DAn)
+```
 
 ### measure cpu performance
 ```bash

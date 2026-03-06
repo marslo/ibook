@@ -24,7 +24,7 @@
   - [`&`](#)
   - [substitution grouping](#substitution-grouping)
 - [cheatsheet](#cheatsheet)
-  - [get first matching patten ( for `CERTIFICATE` )](#get-first-matching-patten--for-certificate-)
+  - [get first matching pattern ( for `CERTIFICATE` )](#get-first-matching-pattern--for-certificate-)
   - [remove both '#' and empty lines](#remove-both--and-empty-lines)
   - [remove tailing spaces](#remove-tailing-spaces)
   - [show `top` summary](#show-top-summary)
@@ -137,7 +137,7 @@ KiB Swap:        0 total,        0 free,        0 used. 49137280+avail Mem
 
   | pattern | matches        | comments                              |
   |:-------:|:--------------:|---------------------------------------|
-  |  `1~2`  | `1,3,5,7,...`  | start frmo `1`, print every `2` lines |
+  |  `1~2`  | `1,3,5,7,...`  | start from `1`, print every `2` lines |
   |  `2~2`  | `2,4,6,8,...`  | start from `2`, print every `2` lines |
   |  `1~3`  | `1,4,7,10,...` | start from `1`, print every `3` lines |
   |  `2~3`  | `2,5,8,11,...` | start from `2`, print every `3` lines |
@@ -364,7 +364,7 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
 > - [* imarslo : get lines between 2 matched patterns](./character.html#get-lines-between-2-matched-patterns)
 {% endhint %}
 
-### get first matching patten ( for `CERTIFICATE` )
+### get first matching pattern ( for `CERTIFICATE` )
 
 > [!TIP]
 > - sample.crt
@@ -401,7 +401,7 @@ $ sed -nr 's/^([0-9][0-9][0-9])(.*)/<\1>\2/gp' employee.txt
 - get first
 
   > [!TIP]
-  > - [How to print the text between the first occurence of a pair of strings? [duplicate]](https://unix.stackexchange.com/a/362068/29178)
+  > - [How to print the text between the first occurrence of a pair of strings? [duplicate]](https://unix.stackexchange.com/a/362068/29178)
   > - [How to select first occurrence between two patterns including them](https://unix.stackexchange.com/a/180729/29178)
   >
   > more :

@@ -149,6 +149,10 @@ Copied test to clipboard. Will clear in 45 seconds.
 >
 >   ![WORD VS. word](../screenshot/linux/wordvsword.png)
 
+
+> [!TIP|label:see also]
+> - [* iMarslo: random string](../cheatsheet/text-processing/text-processing.md#random-string)
+
 - customize charset
   ```bash
   $ export PASSWORD_STORE_CHARACTER_SET='a-zA-Z0-9'
@@ -171,30 +175,6 @@ Copied test to clipboard. Will clear in 45 seconds.
 - generate qrcode
   ```bash
   $ pass generate <name> --qrcode
-  ```
-
-- [generate via `/dev/urandom`](https://lists.zx2c4.com/pipermail/password-store/2016-November/002429.html)
-  ```bash
-  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()' | head -c 32 && echo
-  xGPqC%MeE2HU3NkH#JeA##RB^YbX49cd
-
-  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()?:_-~+<=>' | head -c 32 && echo
-  e?XEGaD68^FNYI5#E^aFVgv:(6_pL>!I
-
-  $ head /dev/urandom | tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32 && echo
-  +&7<o(zfE[WC30v'D[&RH~;qM-8J>oQC
-
-  # or
-  $ dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64 | head -c 32 && echo
-  ```
-
-- [generate via openssl](https://www.commandlinefu.com/commands/view/4204/generate-random-password)
-  ```bash
-  $ openssl rand -base64 32
-  DfXwoBz8UAel09qN1rR97luKy+aFuC8N0Fua+YaSW8A=
-
-  # or: https://www.commandlinefu.com/commands/view/24565/generate-a-random-password-30-characters-long
-  $ openssl rand -rand /dev/urandom -base64 32
   ```
 
 ### remove

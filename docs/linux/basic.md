@@ -11,7 +11,7 @@
 - [process substitution](#process-substitution)
   - [example: run script without download](#example-run-script-without-download)
   - [example: merge lines of file](#example-merge-lines-of-file)
-    - [nstalling tools via running random scripts from unknown sites](#nstalling-tools-via-running-random-scripts-from-unknown-sites)
+    - [installing tools via running random scripts from unknown sites](#installing-tools-via-running-random-scripts-from-unknown-sites)
 - [basic commands](#basic-commands)
   - [`du`](#du)
   - [sort](#sort)
@@ -72,14 +72,24 @@ COL_IF_DEFAULT="\[\033[38\;5\;${fgc}m\]"          # COL_IF_DEFAULT="\[\033[1\;38
 COL_RESET='\[\033[1m\]'                           # COL_RESET="\[$(tput sgr0)\]" | COL_RESET='\[\033[1m\]'
 COL_NONE='\[\033[0m\]'                            # COL_NONE='\[\033[38;5;3m\]'
 
-PS1="\\n${COL_RESET}${COL_DEFAULT}╭╶ (\\u@\\h${COL_RESET} "
-PS1+="${COL_SL_RED}\\w${COL_RESET}${COL_DEFAULT}) "
-PS1+="\$(__git_ps1 \"- (${COL_SD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")${COL_RESET}"
-PS1+="${COL_DEFAULT}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\⏵; else echo ${COL_IF_SL_RED}\⏵; fi\`${COL_RESET}"
-PS1+="\\n${COL_DEFAULT} \$ ${COL_RESET}"
-PS1+="${COL_NONE}"
-PS2="${COL_DEFAULT}  -> ${COL_RESET}${COL_NONE}"
-PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
+PROMPT_FULL="\\n${COL_DEFAULT}╭╶ (\\u@\\h ${COL_RED}\\w${COL_DEFAULT}) "
+PROMPT_NEXT="\$(__git_ps1 \"- (${COL_BD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
+PROMPT_NEXT+="\$(_venv_info \"- (${COL_BD_MAGENTA}%s${COL_NONE}${COL_DEFAULT}) \")"
+PROMPT_NEXT+="${COL_DEFAULT}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\-\>; else echo ${COL_IF_RED}\↯; fi\`"
+PROMPT_NEXT+="\\n${COL_DEFAULT}\$ ${COL_NONE}"
+
+function pstoggle() {
+  PROMPT_SIMPLE="\\n${COL_DEFAULT}╭╶ (\\u${COL_DEFAULT}) "
+  if echo "${PS1}" | grep --color=never -q '\\u@\\h'; then
+    export PS1="${PROMPT_SIMPLE}${PROMPT_NEXT}"
+  else
+    export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
+  fi
+}
+
+export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
+export PS2="${COL_DEFAULT}> ${COL_NONE}"
+export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE:+${BASH_SOURCE##*/}}\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
 ```
 
 <!--sec data-title="for wsl" data-id="section0" data-show=true data-collapse=true ces-->
@@ -98,45 +108,6 @@ PS4=' ${BASH_SOURCE}:$FUNCNAME:$LINENO: '
 export PS1 PS2 PS4
 ```
 <!-- endsec -->
-
-<!--sec data-title="colors" data-id="section1" data-show=true data-collapse=true ces-->
-```bash
-UMARK='\[\033(0\]l\[\033(B\]'
-DMARK='\[\033(0\]m\[\033(B\]'
-LMARK='\[\033(0\]q\[\033(B\]'
-
-COL_SL_GREEN='\[\033[32;0m\]'
-COL_SD_GREEN='\[\033[32;2m\]'                     # COL_SD_GREEN='\[\033[2;32m\]'
-COL_SD_YELLOW='\[\033[2;33m\]'
-COL_SL_YELLOW='\[\033[0;33m\]'
-COL_B_YELLOW='\[\033[2;33m\]'
-COL_IF_SD_YELLOW='\[\033[2\;33m\]'
-
-COL_D_BLACK='\[\033[30;1m\]'
-COL_L_BLACK='\[\033[30;0m\]'
-COL_SD_BLACK='\[\033[1;30m\]'
-COL_SL_BLACK='\[\033[0;30m\]'
-COL_SD_RED='\[\033[1;31m\]'
-COL_SL_RED='\[\033[0;31m\]'
-COL_SD_BLUE='\[\033[1;34m\]'
-COL_SL_BLUE='\[\033[0;34m\]'
-COL_L_RED='\[\033[31;0m\]'
-COL_D_RED='\[\033[31;1m\]'
-
-COL_IF_D_BLACK='\[\033[30\;1m\]'
-COL_IF_L_BLACK='\[\033[30\;0m\]'
-COL_IF_SD_BLACK='\[\033[1\;30m\]'
-COL_IF_SL_BLACK='\[\033[0\;30m\]'
-COL_IF_SL_YELLOW='\[\033[0\;33m\]'
-COL_IF_D_RED='\[\033[31\;1m\]'
-COL_IF_SD_RED='\[\033[1\;31m\]'
-COL_IF_SL_RED='\[\033[0\;31m\]'
-COL_IF_SL_GREEN='\[\033[0\;32m\]'
-COL_IF_SD_GREEN='\[\033[2\;32m\]'
-COL_IF_SL_BLUE='\[\033[0\;34m\]'
-COL_IF_SD_BLUE='\[\033[1\;34m\]'
-```
-<!--endsec-->
 
 <!--sec data-title="deprecated" data-id="section2" data-show=true data-collapse=true ces-->
 ```bash
@@ -159,42 +130,152 @@ export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET
 > - [Setting $PS4 using `bash -c`](https://stackoverflow.com/a/50627260/2940319)
 > - [Why does Bash reset PS4 value to its default value when starting a script?](https://stackoverflow.com/a/74028357/2940319)
 
-- show timestamp
+```bash
+$ export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE:+${BASH_SOURCE##*/}}\033[0m:\033[36;2;3m$(printf "%3d" ${LINENO})\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
 
-  {% raw %}
-  ```bash
-  $ bash -xc $'PS4=\'+ $(date "+%T %x ($LINENO) : ")\'; echo ABC; echo XYZ'
-  + PS4='+ $(date "+%T %x ($LINENO) : ")'
-  + 15:45:51 08/29/2024 (1) : echo ABC
-  ABC
-  + 15:45:51 08/29/2024 (1) : echo XYZ
-  XYZ
+# remove printf for better performance
+$ export PS4='+\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME[0]:+ ${FUNCNAME[0]}():}\033[0m '
+```
 
-  # or
-  $ PS4='+ \D{%s} ($LINENO) ' bash -xc 'echo ABC; echo XYZ'
-  + 1724971586 (1) echo ABC
-  ABC
-  + 1724971586 (1) echo XYZ
-  XYZ
+![bash PS4](../screenshot/linux/bash-ps4-3.png)
 
-  # or
-  $ cmd=$(cat <<'EOF'
-  PS4='+ $(date "+%T %x ($LINENO) : ")'
-  echo ABC
-  echo XYZ
-  EOF
-  )
+#### show timestamp
 
-  bash -xc "$cmd"
-  ```
-  {% endraw %}
+> [!NOTE|label:references:]
+> - [Debugging Bash Scripts with $PS4](https://spencersmolen.com/debugging-bash/)
 
-- show process id
-  ```bash
-  $ env -i SHELLOPTS=xtrace PS4='$(id)' ./test
-  ```
+![PS4 with timestamp](../screenshot/linux/bash-ps4-timestamp.png)
+
+{% raw %}
+```bash
+$ export PS4='$(tput setaf 4)$(printf "%-12s\\t%.3fs\\t@line\\t%-10s" $(date +%T) $(echo $(date "+%s.%3N")-'$(date "+%s.%3N")' | bc ) $LINENO)$(tput sgr 0)'
+$ bash -xc $'echo ABC; echo XYZ'
+22:39:26      13.469s @line 1         echo ABC
+ABC
+22:39:26      13.516s @line 1         echo XYZ
+XYZ
+
+# or
+$ bash -xc $'PS4=\'+ $(date "+%T %x ($LINENO) : ")\'; echo ABC; echo XYZ'
++ PS4='+ $(date "+%T %x ($LINENO) : ")'
++ 15:45:51 08/29/2024 (1) : echo ABC
+ABC
++ 15:45:51 08/29/2024 (1) : echo XYZ
+XYZ
+
+# or
+$ PS4='+ \D{%s} ($LINENO) ' bash -xc 'echo ABC; echo XYZ'
++ 1724971586 (1) echo ABC
+ABC
++ 1724971586 (1) echo XYZ
+XYZ
+
+# or
+$ cmd=$(cat <<'EOF'
+PS4='+ $(date "+%T %x ($LINENO) : ")'
+echo ABC
+echo XYZ
+EOF
+)
+
+$ bash -xc "${cmd}"
+```
+{% endraw %}
+
+#### show process id
+
+> [!NOTE|label:references:]
+> - use `${BASHPID:-$$}` to show the current or subprocess id:
+>   ```bash
+>   PS4='+[${BASHPID:-$$}]
+>   ```
+
+```bash
+$ env -i SHELLOPTS=xtrace PS4='+[PID:$$] ' ./test.sh
++[PID:66538] set -euo pipefail
++[PID:66538] foo 'This is a multi-line string.'
++[PID:66538] echo -e '\033[7;37m>> This is a multi-line string.\033[0m'
+>> This is a multi-line string.
+```
+
+#### show incremented trace level in function call
+
+> [!NOTE|label:references:]
+> - [$PS4 in bash - how can I reproduce the "level of indirection" behavior mentioned in the GNU docs?](https://unix.stackexchange.com/a/715855/29178)
+> - tips:
+>   ```bash
+>   _plus='****************'
+>   PS4="${_plus:0:${#BASH_SOURCE[@]}}"
+>   # or
+>   PS4='+ ${_plus:0:${#FUNCNAME[@]}}${FUNCNAME[0]} '
+>   ```
+
+```bash
+$ command cat sample.sh
+#!/usr/bin/env bash
+
+_plus='++++++++++++++++++++'
+export PS4='${_plus:0:${#BASH_SOURCE[@]}}\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
+set -x
+function foo() { echo -e "\033[0;32m$*\033[0m"; }
+foo "abc"
+
+# result
+$ bash sample.sh
++[66140] (sample.sh:1): foo abc
+++[66140] (sample.sh:1): foo(): echo -e '\033[0;32mabc\033[0m'
+abc
+```
+
+```bash
+# or even add colors
+_plus='--------------------'
+export PS4='+ \033[36;1m${_plus:0:${#BASH_SOURCE[@]}}\033[0m\033[33;2m[${BASHPID:-$$}]\033[0m \033[37;2;3m(${BASH_SOURCE##*/}\033[0m:\033[36;2;3m${#LINENO}\033[0m\033[37;2;3m):\033[0m\033[35;2;3m${FUNCNAME:+ ${FUNCNAME}():}\033[0m '
+```
+
+![bash PS4 with levels](../screenshot/linux/bash-ps4-BASH_SOURCEs.png)
+
+#### levels of indirection
+
+| SYNTAX/OPERATIONS              | BEHAVIOR                          | UNDERLYING REASON                     |
+|--------------------------------|-----------------------------------|---------------------------------------|
+| function call: `func()`        | + (NOT increment the trace level) | 只是改变了指令指针，没有嵌套解析。    |
+| foreground subshell: `(cmd)`   | + (NOT increment the trace level) | Fork 新进程，独立执行，继承父级深度。 |
+| background subshell: `(cmd) &` | + (NOT increment the trace level) | Fork 新进程，异步执行，继承父级深度。 |
+| command substitution: `$(cmd)` | ++ (increment the trace level)    | 求值挂起，等待内层结果替换字符串。    |
+| code evaluation: `eval cmd`    | ++ (increment the trace level)    | 字符串被二次解析为可执行代码。        |
+| source script: `source file`   | ++ (increment the trace level)    | 挂起当前文件，跳入新文件进行解析。    |
+
+> [!TIP|label:assume]
+> ```bash
+> export PS4='+'
+> ```
+
+```bash
+# command substitution
+$ bash -xc 'echo "Current dir: $(pwd)"'
+++pwd
++echo 'Current dir: /Users/marslo/Desktop'
+Current dir: /Users/marslo/Desktop
+
+# code evaluation
+$ bash -xc 'eval "whoami"'
++eval whoami
+++whoami
+marslo
+
+# foreground subshell
+$ bash -xc '(cd /tmp; ls | wc -l)'
++cd /tmp
++ls
++wc -l
+16
+```
 
 ## colors
+
+> [!NOTE|label:see more]
+> - [* iMarslo: colors](../cheatsheet/colors.md)
 
 - [Bash tips: Colors and formatting (ANSI/VT100 Control sequences)](https://misc.flogisoft.com/bash/tip_colors_and_formatting)
   ```bash
@@ -294,6 +375,7 @@ export PS1="\n${COL_DEFAULT}┌─ (\u@\h${COL_RESET} ${COL_SD_RED}\w${COL_RESET
     ![bash ps1 in conditional](../screenshot/colors/ansi/bash-ps1-conditions.png)
 
 ## functions
+
 ```bash
 function showKeyMap() { RET=$?; bind -v | awk '/keymap/ {print $NF}'; return "${RET}"; }
 function rightPrompt() {
@@ -565,7 +647,7 @@ t4  44
   drwxr-xr-x 11 marslo staff  352 Oct 14 21:22 tools
   ```
 
-### [nstalling tools via running random scripts from unknown sites](https://stackoverflow.com/a/12748630/2940319)
+### [installing tools via running random scripts from unknown sites](https://stackoverflow.com/a/12748630/2940319)
 ```bash
 $ ( wget -O - pi.dk/3 || lynx -source pi.dk/3 || curl pi.dk/3/ || \
     fetch -o - http://pi.dk/3 ) > install.sh
@@ -728,7 +810,7 @@ $ sudo du -ahx --max-depth=1 <path> | sort -k1 -rh
     0 1-23/6 * * * /usr/bin/killall -HUP mDNSResponder
     ```
 
-- localtion
+- location
   - macos
     ```bash
     $ sudo ls -Altrh /usr/lib/cron/tabs/<USERNAME>

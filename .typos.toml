@@ -22,7 +22,8 @@ extend-ignore-re = [
   "\\w+=.*\\\\033.*",
   "\\w*\\\\033\\S+",
   # vim modeline
-  "(?m)^.*\\bvim:.*$"
+  "(?m)^.*\\bvim:.*$",
+  "PS1=.*",
 ]
 
 [default.extend-words]
@@ -34,3 +35,4 @@ fo = 'fo'
 enhancd = 'enhancd'
 HPE = 'HPE'
 storaged = 'storaged'
+STRIN = 'STRIN'

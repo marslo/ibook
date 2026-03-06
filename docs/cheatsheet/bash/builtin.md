@@ -12,13 +12,14 @@
   - [options](#options)
   - [examples](#examples)
 - [readline && bind](#readline--bind)
+  - [tricky](#tricky)
   - [vi mode](#vi-mode)
   - [hybrid mode](#hybrid-mode)
   - [show-mode-in-prompt](#show-mode-in-prompt)
   - [show options](#show-options)
   - [key bindings](#key-bindings)
   - [list all names](#list-all-names)
-  - [`inputrc`](#inputrc)
+  - [inputrc](#inputrc)
   - [unbind](#unbind)
   - [tips](#tips)
 - [test](#test)
@@ -460,7 +461,7 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
 - `extglob`
 - `extquote`
 - `failglob`
-  - `-s`: show error msg and cmd not been exectued
+  - `-s`: show error msg and cmd not been executed
 - `force_fignore`
 - `globasciiranges`
 - `globstar`
@@ -702,6 +703,18 @@ ${BASH_SOURCE[0]} : /Users/marslo/main.sh
 > |      `ctrl-e`     |  `^[$` | move to the very end of the line                            |
 > |      `ctrl-a`     |  `^[^` | move to the very start of the line                          |
 
+### tricky
+#### [fix typo](https://www.commandlinefu.com/commands/view/19/runs-previous-command-but-replacing)
+
+| SOLUTION         | REFERENCE                                                                                                                 |
+|------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `^foo^bar`       | [Runs previous command but replacing](https://www.commandlinefu.com/commands/view/19/runs-previous-command-but-replacing) |
+| `!!:s/foo/bar/g` | [Runs previous command but replacing](https://www.commandlinefu.com/commands/view/19/runs-previous-command-but-replacing) |
+| `!!:gs/foo/bar`  | [Runs previous command but replacing](https://www.commandlinefu.com/commands/view/19/runs-previous-command-but-replacing) |
+
+
+![fix typo](../../screenshot/linux/bash-readline-fixtypo.png)
+
 ### vi mode
 
 > [!NOTE]
@@ -733,163 +746,7 @@ $ set -o vi
 > - [How can I setup a hybrid readline with emacs insert mode and vi command mode?](https://unix.stackexchange.com/a/409866/29178)
 > - [* vi-mode input](https://www.usenix.org.uk/content/bash.html#input)
 > - [What are readline's modes, keymaps and their default bindings?](https://unix.stackexchange.com/a/303480/29178)
-
-<!--sec data-title="~/.inputrc for hybrid mode" data-id="section8" data-show=true data-collapse=true ces-->
-```bash
-#=============================================================================
-#     FileName : .inputrc
-#       Author : marslo.jiao@gmail.com
-#      Created : 2020-08-25 15:22:56
-#   LastChange : 2024-01-13 21:08:28
-#=============================================================================
-# [GNU Readline Library](https://tiswww.case.edu/php/chet/readline/rluserman.html)
-# [PS1](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.env#L209)
-# set the mode string and cursor to indicate the vim mode
-#   - cursor shape:       `\1\e[<number> q\2` ( i.e.: `\1\e[4 q\2` )
-#   - cursor shape+color: `\1\e[<nubmer> q\e]12;<color>\a\2` ( i.e.: `\1\e[1 q\e]12;orange\a\2` )
-#     0: blinking block
-#     1: blinking block (default)
-#     2: steady block
-#     3: blinking underline
-#     4: steady underline
-#     5: blinking bar (xterm)
-#     6: steady bar (xterm)
-#                                 string settings       cursor shape
-#                        +------------------------------++--------+
-#                           color begin         color end
-#                          +------------+         +---+
-set emacs-mode-string   "\1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2\1\e[3 q\2"
-#                                      string settings              cursor shape
-#                        +------------------------------------------++--------+
-#                           color begin       color begin   color end
-#                          +------------+       +------+      +---+
-set vi-ins-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓎ \1\e[0m\2\1\e[5 q\2"
-set vi-cmd-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓏ \1\e[0m\2\1\e[4 q\2"
-set show-mode-in-prompt on
-
-# allow iso-latin1 characters to be inserted
-set convert-meta                   off
-# don't strip characters to 7 bits when reading
-set input-meta                     on
-set completion-ignore-case         on
-set show-all-if-ambiguous          on
-set show-all-if-unmodified         on
-set mark-symlinked-directories     on
-set print-completions-horizontally on
-# https://github.com/scop/bash-completion
-set visible-stats                  on
-set enable-bracketed-paste         off
-# https://groups.google.com/g/iterm2-discuss/c/K6YazwKUvjQ/m/7eqeT-AvBgAJ
-
-# TAB: menu-complete
-# set colored-completion-prefix on
-set colored-stats                  on
-set skip-completed-text            on
-# ask if more than 100 candidates
-# set completion-query-items       100
-
-set keymap emacs
-"\ee": vi-editing-mode
-
-# https://www.usenix.org.uk/content/bash.html#input
-set keymap vi-command
-"\ee": emacs-editing-mode
-# key bindings to get out of vi-editing-mode
-"v"  : ''
-"#": insert-comment
-"dw": kill-word
-"dd": kill-whole-line
-"db": backward-kill-word
-"D":kill-line
-"da\"": "lF\"df\""
-"di\"": "lF\"lmtf\"d`t"
-"ci\"": "di\"i"
-"da'": "lF'df'"
-"di'": "lF'lmtf'd`t"
-"ci'": "di'i"
-"da`": "lF\`df\`"
-"di`": "lF\`lmtf\`d`t"
-"ci`": "di`i"
-"ca`": "da`i"
-"da(": "lF(df)"
-"di(": "lF(lmtf)d`t"
-"ci(": "di(i"
-"ca(": "da(i"
-"da)": "lF(df)"
-"di)": "lF(lmtf)d`t"
-"ci)": "di(i"
-"ca)": "da(i"
-"da{": "lF{df}"
-"di{": "lF{lmtf}d`t"
-"ci{": "di{i"
-"ca{": "da{i"
-"da}": "lF{df}"
-"di}": "lF{lmtf}d`t"
-"ci}": "di}i"
-"ca}": "da}i"
-"da[": "lF[df]"
-"di[": "lF[lmtf]d`t"
-"ci[": "di[i"
-"ca[": "da[i"
-"da]": "lF[df]"
-"di]": "lF[lmtf]d`t"
-"ci]": "di]i"
-"ca]": "da]i"
-"da<": "lF<df>"
-"di<": "lF<lmtf>d`t"
-"ci<": "di<i"
-"ca<": "da<i"
-"da>": "lF<df>"
-"di>": "lF<lmtf>d`t"
-"ci>": "di>i"
-"ca>": "da>i"
-"da/": "lF/df/"
-"di/": "lF/lmtf/d`t"
-"ci/": "di/i"
-"ca/": "da/i"
-"da:": "lF:df:"
-"di:": "lF:lmtf:d`t"
-"ci:": "di:i"
-"ca:": "da:i"
-"\C-_": undo
-"\C-a": beginning-of-line
-"\C-b": backward-char
-"\C-d": delete-char
-"\C-e": end-of-line
-"\C-f": forward-char
-"\C-g": abort
-"\C-k": kill-line
-"\C-l": clear-screen
-"\C-p": previous-history
-"\C-n": next-history
-"\C-w": unix-word-rubout
-"\C-q": quoted-insert
-"\C-x\C-r": re-read-init-file
-"\e#": insert-comment
-"\e.": insert-last-argument
-"\e.": yank-last-arg
-
-set keymap vi-insert
-"\ee": emacs-editing-mode
-"\C-_": undo
-"\C-a": beginning-of-line
-"\C-b": backward-char
-"\C-d": delete-char
-"\C-e": end-of-line
-"\C-f": forward-char
-"\C-g": abort
-"\C-k": kill-line
-"\C-l": clear-screen
-"\C-p": previous-history
-"\C-n": next-history
-"\C-w": unix-word-rubout
-"\C-q": quoted-insert
-"\C-x\C-r": re-read-init-file
-"\e#": insert-comment
-"\e.": insert-last-argument
-"\e.": yank-last-arg
-```
-<!--endsec-->
+> - [* iMarslo: .inputrc](https://github.com/marslo/dotfiles/blob/main/.inputrc)
 
 ### [show-mode-in-prompt](https://github.com/calid/bash)
 
@@ -928,6 +785,20 @@ set keymap vi-insert
   > - [Xterm Control Sequences](https://www.xfree86.org/current/ctlseqs.html)
 
   ```bash
+  #                                 string settings       cursor shape
+  #                        +------------------------------++--------+
+  #                           color begin         color end
+  #                          +------------+         +---+
+  set emacs-mode-string   "\1\e[38;5;240;1m\2╰╶ ᓆ \1\e[0m\2\1\e[3 q\2"
+  #                                      string settings              cursor shape
+  #                        +------------------------------------------++--------+
+  #                           color begin       color begin   color end
+  #                          +------------+       +------+      +---+
+  set vi-ins-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[33;1m\2ᓏ \1\e[0m\2\1\e[3 q\2"
+  set vi-cmd-mode-string  "\1\e[38;5;240;1m\2╰╶ \1\e[34;1m\2ᓎ \1\e[0m\2\1\e[5 q\2"
+  set show-mode-in-prompt on
+
+  # or
   set emacs-mode-string   \1\e[4 q\e]12;red\a\2
   set vi-ins-mode-string  \1\e[5 q\e]12;green\a\2
   set vi-cmd-mode-string  \1\e[4 q\e]12;orange\a\2
@@ -943,15 +814,25 @@ set keymap vi-insert
 #### PS1
 
 > [!NOTE|label:see also:]
-> - [prompts](../../linux/basic.html#prompts)
+> - [prompts](../../linux/basic.md#prompts)
 
 ```bash
-PS1='\n\[\033[1m\]\[\033[38;5;240m\]╭╶ (\u@\h\[\033[1m\] '
-PS1+='\[\033[0;31m\]\w\[\033[1m\]\[\033[38;5;240m\]) '
-PS1+='$(__git_ps1 "- (\[\033[32;2m\]%s\[\033[0m\]\[\033[38;5;240m\]) ")\[\033[1m\]'
-PS1+='\[\033[38;5;240m\]`if [ $? = 0 ]; then echo \[\033[38\;5\;240m\]\-\>; else echo \[\033[0\;31m\]\-\>; fi`\[\033[1m\]'
-PS1+='\n\[\033[38;5;240m\] $ \[\033[1m\]\[\033[0m\]'
-export PS1
+PROMPT_FULL="\\n${COL_DEFAULT}╭╶ (\\u@\\h ${COL_RED}\\w${COL_DEFAULT}) "
+PROMPT_NEXT="\$(__git_ps1 \"- (${COL_BD_GREEN}%s${COL_NONE}${COL_DEFAULT}) \")"
+PROMPT_NEXT+="\$(_venv_info \"- (${COL_BD_MAGENTA}%s${COL_NONE}${COL_DEFAULT}) \")"
+PROMPT_NEXT+="${COL_DEFAULT}\`if [ \$? = 0 ]; then echo ${COL_IF_DEFAULT}\-\>; else echo ${COL_IF_RED}\↯; fi\`"
+PROMPT_NEXT+="\\n${COL_DEFAULT}\$ ${COL_NONE}"
+
+function pstoggle() {
+  PROMPT_SIMPLE="\\n${COL_DEFAULT}╭╶ (\\u${COL_DEFAULT}) "
+  if echo "${PS1}" | grep --color=never -q '\\u@\\h'; then
+    export PS1="${PROMPT_SIMPLE}${PROMPT_NEXT}"
+  else
+    export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
+  fi
+}
+
+export PS1="${PROMPT_FULL}${PROMPT_NEXT}"
 ```
 
 #### inputrc
@@ -1032,7 +913,7 @@ set keymap vi-insert
   set show-mode-in-prompt on
 
   # The following is a little hard to understand
-  # a full example omiting the wrapping \1 and \2
+  # a full example omitting the wrapping \1 and \2
   #
   # \e[     (open sequence: ESC CSI)
   # 48;5;   (specifies 256 bg)
@@ -1187,7 +1068,7 @@ tilde-expand can be invoked via "\e&".
 $ bind -l
 ```
 
-### `inputrc`
+### inputrc
 
 <!--sec data-title="~/.inputrc" data-id="section4" data-show=true data-collapse=true ces-->
 ```bash

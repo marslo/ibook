@@ -72,7 +72,8 @@
   - [tips](#tips)
     - [faster find and replace string](#faster-find-and-replace-string)
     - [find duplicate files](#find-duplicate-files)
-    - [random nubmer between X to 1](#random-nubmer-between-x-to-1)
+    - [random number between X to 1](#random-number-between-x-to-1)
+    - [random string](#random-string)
 - [trim](#trim)
   - [trim tailing chars](#trim-tailing-chars)
   - [remove leading & trailing whitespace](#remove-leading--trailing-whitespace)
@@ -80,7 +81,6 @@
     - [remove empty line at the end of file](#remove-empty-line-at-the-end-of-file)
     - [remove duplicate empty lines](#remove-duplicate-empty-lines)
   - [search and replace](#search-and-replace)
-- [or](#or)
   - [replace with position](#replace-with-position)
   - [check line ending](#check-line-ending)
   - [remove the ending '\n'](#remove-the-ending-%5Cn)
@@ -978,7 +978,7 @@ a b
     < 4: f
     > 5: e
 
-    # beging-end
+    # beginning-end
     $ diff --old-group-format='\begin{em}
         %<\end{em}
         ' --new-group-format='\begin{bf}
@@ -1399,7 +1399,7 @@ $ cat a.txt
 > - [Print lines between (and excluding) two patterns](https://unix.stackexchange.com/a/430154/29178)
 >
 > - see also
->   - [* imarslo : get first matching patten ( for CERTIFICATE )](./sed.html#get-first-matching-patten--for-certificate-)
+>   - [* imarslo : get first matching pattern ( for CERTIFICATE )](./sed.md#get-first-matching-pattern--for-certificate-)
 
 > [!TIP]
 > sample data:
@@ -1848,7 +1848,7 @@ second paragraph
 ## return the last matching pattern search range
 
 > [!NOTE|label:references:]
-> - [sed script to print lines between the last occurence of a pattern and an empty line](https://unix.stackexchange.com/a/647520/29178)
+> - [sed script to print lines between the last occurrence of a pattern and an empty line](https://unix.stackexchange.com/a/647520/29178)
 
 ```bash
 $ cat a
@@ -2076,7 +2076,7 @@ command 2: ###this is a comment
 ```bash
 $ find . -maxdepth 1 ! -path . -type d -print0 |
        xargs -0 -I @@ bash -c '{ \
-         tar caf "@@.tar.lzop" "@@" \
+         tar calf "@@.tar.lzop" "@@" \
          && echo Completed compressing directory "@@" ; \
        }'
 ```
@@ -2332,7 +2332,7 @@ $ find /dir_name -mtime +5 -exec rm {} \
 >             m   The modification time of the file reference
 >             t   reference is interpreted directly as a time
 >   ```
-> - [List of files modified between perticular time period](https://askubuntu.com/a/196504/92979)
+> - [List of files modified between particular time period](https://askubuntu.com/a/196504/92979)
 > - [How to find files between two dates using "find"?](https://askubuntu.com/a/533797/92979)
 > - [find files in data range](https://unix.stackexchange.com/a/256051/29178)
 >   ```bash
@@ -2482,7 +2482,7 @@ $ find -exec bash -c '
   %h: .
   ```
 
-- permision format
+- permission format
 
 
   | FORMAT | DESCRIPTION                          | EXAMPLE      |
@@ -2558,7 +2558,7 @@ $ sh -c 'S=askapache R=htaccess; find . -mount -type f | xargs -P5 -iFF grep -l 
 $ find -not -empty -type f -printf "%s\n" | sort -rn | uniq -d | xargs -I{} -n1 find -type f -size {}c -print0 | xargs -0 md5sum | sort | uniq -w32 --all-repeated=separate
 ```
 
-### [random nubmer between X to 1](https://www.commandlinefu.com/commands/view/6267/random-number-between-1-and-x)
+### [random number between X to 1](https://www.commandlinefu.com/commands/view/6267/random-number-between-1-and-x)
 ```bash
 $ echo $[RANDOM%X+1]
 
@@ -2575,10 +2575,81 @@ $ od -An -N1 -tu1 /dev/random
 $ awk 'BEGIN { srand(); print rand() }'
 ```
 
+### random string
+
+> [!TIP|label:see also:]
+> - [* iMarslo: random string](../ssl/tricky.md#random-string)
+> - [* iMarslo: password generator](../../devops/adminTools.md#generate)
+
+- [random mac aaddress](https://www.commandlinefu.com/commands/view/6619/generate-a-random-mac-address)
+  ```bash
+  $ openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
+  b7:85:cc:3e:bc:fa
+  # or FreeBSD
+  $ openssl rand 6 | xxd -p | sed 's/\(..\)/\1:/g; s/:$//'
+  ```
+
+#### mac address
+
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/745/generat-a-random-mac-address)
+  ```bash
+  $ (date; cat /proc/interrupts) | md5sum | sed -r 's/^(.{12}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'
+  ```
+
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/13995/generat-a-random-mac-address)
+  ```bash
+  $ hexdump -n6 -e '/1 ":%02X"' /dev/random | sed s/^://g
+  ```
+
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/6618/generat-a-random-mac-address)
+  ```bash
+  $ od -An -N12 -x /dev/random | md5sum | sed -r 's/^(.{12}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'
+  ```
+
+- [generate a random mac address](https://www.commandlinefu.com/commands/view/8462/generat-a-random-mac-address)
+  ```bash
+  $ od /dev/urandom -w6 -tx1 -An | sed -e 's/ //' -e 's/ /:/g' | head -n 1
+  ```
+
+#### password
+
+> [!TIP|label:references:]
+> - [Vim: word vs WORD](https://stackoverflow.com/a/54588479/2940319)
+>
+>   ![WORD VS. word](../screenshot/linux/wordvsword.png)
+
+- [generate via `/dev/urandom`](https://lists.zx2c4.com/pipermail/password-store/2016-November/002429.html)
+  ```bash
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()' | head -c 32 && echo
+  xGPqC%MeE2HU3NkH#JeA##RB^YbX49cd
+
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*()?:_-~+<=>' | head -c 32 && echo
+  e?XEGaD68^FNYI5#E^aFVgv:(6_pL>!I
+
+  $ head /dev/urandom | tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 32 && echo
+  +&7<o(zfE[WC30v'D[&RH~;qM-8J>oQC
+
+  # or
+  $ dd if=/dev/urandom bs=128 count=1 2>/dev/null | base64 | head -c 32 && echo
+  ```
+
+- [generate via openssl](https://www.commandlinefu.com/commands/view/4204/generate-random-password)
+  ```bash
+  $ openssl rand -base64 32
+  DfXwoBz8UAel09qN1rR97luKy+aFuC8N0Fua+YaSW8A=
+
+  # or: https://www.commandlinefu.com/commands/view/24565/generate-a-random-password-30-characters-long
+  $ openssl rand -rand /dev/urandom -base64 32
+  ```
+
 # trim
 ## trim tailing chars
+
+> [!NOTE|label:example string:]
 > ```bash
+> # original string
 > str='1234567890'
+> # expected output: 1234567
 > ```
 
 - `awk` + `rev`
@@ -2794,7 +2865,7 @@ $ awk '!NF{found++} found>1 && !NF{next} NF{found=""} 1' a.txt | bat --style='nu
   # or
   $ echo "$str" | sed 's:\s\s*:|:g'
   aa|bb|cc
-echo "${string:0:$(( position - 1 ))}${replacement}${string:position}"
+
   # or
   $ sed 's:\s\s*:|:g' <<< "${str}"
   aa|bb|cc
@@ -2813,12 +2884,11 @@ $ replacement=b
 $ position=3
 $ echo "${string:0:$(( position - 1 ))}${replacement}${string:position}"
 aabaa
+
+# or
+$ echo "${string:0:position-1}${replacement}${string:position}"
+aabaa
 ```
-- or
-  ```bash
-  $ echo "${string:0:position-1}${replacement}${string:position}"
-  aabaa
-  ```
 
 ## check line ending
 
@@ -2925,6 +2995,7 @@ aabaa
 >   0000000   a   b   c  \n   e   f   g  \n
 >   0000010
 >   ```
+> - [* iMarslo: ansible-vault encryption](../../devops/ansible.md#ansible-vault)
 
 - [truncate](https://stackoverflow.com/a/27274234/2940319)
   ```bash
@@ -3160,8 +3231,8 @@ $ echo -e "DCR\nDCR\nDCR" | awk 'BEGIN {t=0}; { print }; /DCR/ { t++; if ( t==2)
     </tr>
     <tr>
       <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    "age": 30<br>  }<br>}</code></pre></td>
-      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    <font sytle="color:red">"gender": "male",</font><br>    "age": 30<br>  }<br>}</code></pre></td>
-      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    <font sytle="color:red">"gender": "male",<br>    "state": "CA",</font><br>    "age": 30<br>  }<br>}</code></pre></td>
+      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    <font style="color:red">"gender": "male",</font><br>    "age": 30<br>  }<br>}</code></pre></td>
+      <td style="vertical-align: middle;"><pre><code>{<br>  "id": "1234567",<br>  "properties": {<br>    "name": "John Doe",<br>    <font style="color:red">"gender": "male",<br>    "state": "CA",</font><br>    "age": 30<br>  }<br>}</code></pre></td>
     </tr>
   </tbody>
   </table>
