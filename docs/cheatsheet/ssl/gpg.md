@@ -422,18 +422,31 @@ $ gpg --list-keys --with-colons |
 
 ### trust key
 
-| TRUST LEVEL | DESCRIPTION      |
-|-------------|------------------|
-| `1`         | Don't know       |
-| `2`         | Do NOT trust     |
-| `3`         | Marginally trust |
-| `4`         | Fully trust      |
-| `5` / `6`   | Ultimately trust |
+| EDIT-KEY TRUST | IMPORT-OWNERTRUST | DESCRIPTION      |
+|:--------------:|:-----------------:|------------------|
+|       `1`      |        `2`        | Don't know       |
+|       `2`      |        `3`        | Do NOT trust     |
+|       `3`      |        `4`        | Marginally trust |
+|       `4`      |        `5`        | Fully trust      |
+|       `5`      |        `6`        | Ultimately trust |
 
 ```bash
 # i.e.: the 2nd key
 $ PUB_KEY_ID=$(gpg --list-keys --with-colons | awk -F: '/^pub:/ {getline; print $10}' | sed -n '2p')
 $ echo "${PUB_KEY_ID}:6:" | gpg --import-ownertrust
+```
+
+```bash
+# or
+$ gpg --command-fd 0 --status-fd 1 --edit-key "${PUB_KEY_ID}" <<EOF
+trust
+5
+y
+quit
+EOF
+
+# or
+$ printf '%s\n' trust 5 y quit | gpg --command-fd 0 --status-fd 1 --edit-key "${PUB_KEY_ID}"
 ```
 
 - interactive mode

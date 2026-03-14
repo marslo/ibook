@@ -16,6 +16,10 @@
   - [using chatgpt to generate git commits](#using-chatgpt-to-generate-git-commits)
   - [using chatgpt to review git diff](#using-chatgpt-to-review-git-diff)
 - [RAG](#rag)
+- [copilot](#copilot)
+  - [install](#install)
+  - [config](#config)
+  - [usage](#usage)
 - [tips](#tips)
   - [chatgpt](#chatgpt-1)
 
@@ -522,6 +526,38 @@ jq -r '.choices[0].message.content'
 > [!TIP]
 > - [RAG - Retrieval-Augmented Generation](https://aws.amazon.com/what-is/retrieval-augmented-generation/)
 
+
+# copilot
+
+## install
+
+> [!NOTE|label:references:]
+> - [Installing GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli)
+
+```bash
+# npm
+$ npm install -g @github/copilot
+$ npm install -g @github/copilot@prerelease
+
+# macos
+$ brew install copilot-cli
+$ brew install copilot-cli@prerelease
+
+# script (unix/macos)
+$ curl -fsSL https://gh.io/copilot-install | bash
+$ curl -fsSL https://gh.io/copilot-install | VERSION="v0.0.369" PREFIX="$HOME/custom" bash
+$ wget -qO- https://gh.io/copilot-install  | bash
+```
+
+## config
+
+> [!NOTE|label:references:]
+> - [Configure GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/configure-copilot-cli)
+
+## usage
+
+> [!NOTE|label:references:]
+> - [Customize GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot)
 
 # tips
 ## chatgpt

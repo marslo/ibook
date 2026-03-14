@@ -14,6 +14,7 @@
   - [setup for multiple accounts and keys](#setup-for-multiple-accounts-and-keys)
   - [add gpg key to github](#add-gpg-key-to-github)
   - [verify](#verify)
+  - [github gpg key management](#github-gpg-key-management)
 - [tips](#tips)
   - [view the exported private key structure](#view-the-exported-private-key-structure)
 
@@ -231,6 +232,84 @@ $ git show --show-signature [--no-patch]
 
   ![git pl with gpg sign](../../screenshot/git/git-pl-gpg.png)
 
+
+### github gpg key management
+
+> [!NOTE|label:references:]
+> - `gpg: Can't check signature: No public key`:
+>   ```bash
+>   $ git show -s HEAD --show-signature
+>   commit 7eb9b4f124894a8ee7be153d763373423e1c9bd3 (origin/stable, origin/HEAD)
+>   gpg: Signature made Fri Mar 13 12:11:32 2026 PDT
+>   gpg:                using RSA key B5690EEEBB952194
+>   gpg: Can't check signature: No public key
+>   Author: John Doe <john.doe@mail.com>
+>   Date:   2026-03-13 12:11:32 -0700 Friday
+>   ```
+> - [web-flow.gpg](https://github.com/web-flow.gpg)
+> - [keyserver.ubuntu.com](https://keyserver.ubuntu.com/pks/lookup?search=968479A1AFF927E37D1A566BB5690EEEBB952194&fingerprint=on&op=index)
+> - [0xB5690EEEBB952194](https://keyserver.ubuntu.com/pks/lookup?search=B5690EEEBB952194&fingerprint=on&op=index)
+
+#### download
+```bash
+$ for k in $(gh api "users/web-flow/gpg_keys" --jq '.[]|@base64'); do
+    id="$(echo ${k} | jq -Rr '@base64d|fromjson|.key_id')"
+    raw=$(echo ${k} | jq -Rr '@base64d|fromjson|.raw_key')
+    echo "${raw}" > "github-${id}.gpg"
+  done
+
+$ ls
+github-4AEE18F83AFDEB23.gpg  github-B5690EEEBB952194.gpg
+```
+
+#### import
+```bash
+# import `B5690EEEBB952194`
+
+# using curl
+$ curl -s https://api.github.com/users/web-flow/gpg_keys |
+  jq -r '.[] | select(.key_id == "B5690EEEBB952194") | .raw_key' |
+  gpg --import
+
+# using keyserver, with port 11371
+$ gpg --keyserver pgp.mit.edu --recv-keys B5690EEEBB952194
+gpg: key B5690EEEBB952194: public key "GitHub <noreply@github.com>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+
+# or with proxy + port 80
+$ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
+      --keyserver-options http-proxy=http://proxy.domain.com:8080 \
+      --recv-keys B5690EEEBB952194
+
+# with port 443
+$ gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys B5690EEEBB952194
+gpg: key B5690EEEBB952194: "GitHub <noreply@github.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+```
+
+| PORT    | PROTOCOL | DESCRIPTION                | EXAMPLE                       |
+|---------|----------|----------------------------|-------------------------------|
+| `11371` | hkp      | default port for keyserver | keyserver.ubuntu.com          |
+| `443`   | hkps     | for https proxy            | hkps://keyserver.ubuntu.com   |
+| `80`    | hkp      | for http proxy             | hkp://keyserver.ubuntu.com:80 |
+
+#### trust
+```bash
+$ gpg --list-keys 968479A1AFF927E37D1A566BB5690EEEBB952194
+pub   rsa4096 2024-01-16 [SC]
+      968479A1AFF927E37D1A566BB5690EEEBB952194
+uid           [ unknown] GitHub <noreply@github.com>
+
+$ echo "968479A1AFF927E37D1A566BB5690EEEBB952194:6:" | gpg --import-ownertrust
+gpg: setting ownertrust to 6
+
+$ gpg --list-keys 968479A1AFF927E37D1A566BB5690EEEBB952194
+pub   rsa4096 2024-01-16 [SC]
+      968479A1AFF927E37D1A566BB5690EEEBB952194
+uid           [ultimate] GitHub <noreply@github.com>
+```
 
 ## tips
 ### view the exported private key structure
