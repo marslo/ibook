@@ -111,7 +111,7 @@
   st          = status -sb
   sts         = status
   rb          = rebase
-  co          = checkout --force --recurse-submodules
+  co          = checkout --recurse-submodules
   cb          = rev-parse --abbrev-ref HEAD
   cl          = clean -dffx
   cn          = clone --recurse-submodules --tags

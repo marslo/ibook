@@ -23,7 +23,9 @@
   - [sar](#sar)
   - [netcat](#netcat)
   - [`ip`](#ip)
-  - [datadog](#datadog)
+- [datadog](#datadog)
+- [ipmitool](#ipmitool)
+  - [check SOL status](#check-sol-status)
 - [others](#others)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -938,7 +940,39 @@ lo0 => 127.0.0.1
 en0 => 192.168.1.71
 ```
 
-## [datadog](https://www.datadoghq.com/)
+# [datadog](https://www.datadoghq.com/)
+
+# ipmitool
+
+```bash
+$ brew install ipmitool
+# or
+$ sudo apt install -y ipmitool
+```
+
+## check SOL status
+```bash
+# monitor ( terminal 1 )
+$ ipmitool -I lanplus -H <IDRAC.IP> -U root -P <password> sol activate
+[SOL Session operational.  Use ~? for help]
+Initializing Intel(R) Boot Agent GE v1.3.95
+PXE 2.1 Build 091 (WfM 2.0)
+Press Ctrl+S to enter the Setup Menu..
+
+# command ( terminal 2 )
+$ ipmitool -I lanplus -H <IDRAC.IP> -U root -P <password> chassis power reset
+Chassis Power Control: Reset
+# or
+$ ipmitool -I lanplus -H <IDRAC.IP> -U root -P <password> chassis power cycle
+# or
+$ ipmitool -I lanplus -H <IDRAC.IP> -U root -P <password> chassis power deactivate
+$ ipmitool -I lanplus -H <IDRAC.IP> -U root -P <password> chassis power activate
+```
+
+```bash
+$ ipmitool -I lanplus -H <IDRAC.IP> -U root -P <password> chassis bootdev disk options=efiboot,persistent
+Set Boot Device to disk
+```
 
 # others
 

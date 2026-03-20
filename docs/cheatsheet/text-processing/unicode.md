@@ -19,7 +19,7 @@
 - [devicons](#devicons)
   - [coding](#coding)
     - [airline](#airline)
-    - [others](#others)
+    - [prompts](#prompts)
     - [diagnostic](#diagnostic)
     - [ale](#ale)
     - [syntastic](#syntastic)
@@ -64,7 +64,7 @@
 > - [Complete list of github markdown emoji markup](https://gist.github.com/rxaviers/7360908)
 
 
-| SYMBOLS | UNICODE | HTML ENTITY NUBMER          | ENTITY NAME                                    | DESC                                       |
+| SYMBOLS | UNICODE | HTML ENTITY NUMBER          | ENTITY NAME                                    | DESC                                       |
 |:-------:|:-------:|:----------------------------|:-----------------------------------------------|:-------------------------------------------|
 |  &#160; |         | `&#160;`                    | `&nbsp;`                                       | space                                      |
 |  &#60;  |  `003C` | `&#60;` <br> `&#x3C;`       | `&lt;`                                         | less than                                  |
@@ -608,7 +608,7 @@
 |  `F1D2` |     |   `&#xF1D2;`  | git                     |
 |  `F1D3` |     |   `&#xF1D3;`  | git                     |
 | `F02A2` |   󰊢  |  `&#xF02A2;`  | git                     |
-|  `E776` |     |   `&#xE776;`  | ngix                    |
+|  `E776` |     |   `&#xE776;`  | nginx                   |
 |  `E791` |     |   `&#xE791;`  | ruby                    |
 |  `E739` |     |   `&#xE739;`  | ruby                    |
 |  `E21E` |     |   `&#xE21E;`  | ruby                    |
@@ -734,7 +734,7 @@
 |  `2B82` |     ⮂    |   `&#x2B82;`   | `airline_right_sep`          |
 |  `2B83` |     ⮃    |   `&#x2B83;`   | `airline_right_alt_sep`      |
 
-### others
+### prompts
 
 | UNICODE | ICON | HTML ENCODING |
 |:-------:|:----:|:-------------:|
@@ -774,6 +774,10 @@
 |  `E0B7` |     |   `&#xE0B7;`  |
 |  `E0B4` |     |   `&#xE0B4;`  |
 |  `E0B6` |     |   `&#xE0B6;`  |
+|  `E0B0` |     |   `&#xE0B0;`  |
+|  `E0B2` |     |   `&#xE0B2;`  |
+|  `E0B1` |     |   `&#xE0B1;`  |
+|  `E0B3` |     |   `&#xE0B3;`  |
 
 
 ### diagnostic
@@ -807,8 +811,8 @@
 
 ### syntastic
 
-| UNICODE | ICON | HTML ENCODING | COMMENTS                         |
-|:-------:|:----:|:-------------:|----------------------------------|
+| UNICODE | ICON | HTML ENCODING  | COMMENTS                         |
+|:-------:|:----:|:--------------:|----------------------------------|
 |  `03CA` |   ϊ  |   `&#x03CA;`   | `syntastic_info_symbol`          |
 |  `0835` |   ࠵  |   `&#x0835;`   | `syntastic_info_symbol`          |
 |  `0CF2` |   ೲ  |   `&#x0CF2;`   | `syntastic_info_symbol`          |
@@ -857,7 +861,7 @@
 |  `03BB` |   λ  |   `&#x03BB;`  | ml           |
 |  `03BB` |   λ  |   `&#x03BB;`  | mli          |
 |  `E241` |     |   `&#xE241;`  | log          |
-|  `E600` |     |   `&#xE600;`  | styl         |
+|  `E600` |     |   `&#xE600;`  | style        |
 |  `E603` |     |   `&#xE603;`  | sass         |
 |  `E603` |     |   `&#xE603;`  | scss         |
 |  `E606` |     |   `&#xE606;`  | py           |
@@ -928,7 +932,7 @@
 |  `E769` |     |   `&#xE769;`  | pm           |
 |  `E769` |     |   `&#xE769;`  | t            |
 |  `E76A` |     |   `&#xE76A;`  | cljs         |
-|  `E76A` |     |   `&#xE76A;`  | edn          |
+|  `E76A` |     |   `&#xE76A;`  | end          |
 |  `E781` |     |   `&#xE781;`  | js           |
 |  `E791` |     |   `&#xE791;`  | gemspec      |
 |  `E791` |     |   `&#xE791;`  | rake         |
@@ -1217,7 +1221,7 @@
 |  `29FA` |   ⧺  |   `&#x29FA;`  | ++            |
 |  `29FB` |   ⧻  |   `&#x29FB;`  | +++           |
 |  `EB64` |     |   `&#xEB64;`  | +-x%          |
-| `F11D6` |   󱇖  |  `&#xF11D6;`  | xx stragety   |
+| `F11D6` |   󱇖  |  `&#xF11D6;`  | xx strategy   |
 |  `2295` |   ⊕  |   `&#x2295;`  | O+            |
 |  `2A01` |   ⨁  |   `&#x2A01;`  | O+            |
 |  `2A22` |   ⨢  |   `&#x2A22;`  | o+            |

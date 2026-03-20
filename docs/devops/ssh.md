@@ -692,13 +692,28 @@ $ cat /etc/ssh/sshd_config
 ChallengeResponseAuthentication no
 PasswordAuthentication no
 UsePAM no
+
+# or
+$ grep -in 'include' /etc/ssh/sshd_config
+12:Include /etc/ssh/sshd_config.d/*.conf
+$ cat /etc/ssh/sshd_config.d/60-key-only-users.conf
+   1   Match User marslo,user1,user2
+   2       PasswordAuthentication no
+   3       AuthenticationMethods publickey
+$ sudo sshd -t && sudo systemctl reload sshd
+
+# verify
+$ sudo sshd -T -C user=marslo,host=localhost,addr=127.0.0.1,laddr=127.0.0.1,lport=22 | grep -E 'passwordauth|authenticationmethods'
+passwordauthentication no
+authenticationmethods publickey
 ```
+
 
 - scripts:
   ```bash
-  TIMESTAMPE=$(date +"%Y%m%d%H%M%S")
+  TIMESTAMP=$(date +"%Y%m%d%H%M%S")
   SSHDFILE="/etc/ssh/sshd_config"
-  sudo cp "${SSHDFILE}{,.org.${TIMESTAMPE}}"
+  sudo cp "${SSHDFILE}{,.org.${TIMESTAMP}}"
 
   sudo bash -c '/bin/sed -i -e "s:^\(UsePAM.*$\):# \1:" ${SSHDFILE}'
   sudo bash -c '/bin/sed -i -e "s:^\(PermitRootLogin.*$\):# \1:" ${SSHDFILE}'
