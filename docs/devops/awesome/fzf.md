@@ -22,6 +22,12 @@
   - [process](#process)
   - [kubectl](#kubectl)
   - [homebrew](#homebrew)
+- [fancy usage](#fancy-usage)
+  - [resize](#resize)
+  - [fzf environment](#fzf-environment)
+  - [fzf-preview.sh](#fzf-previewsh)
+  - [git](#git)
+  - [lolcat](#lolcat)
 - [config](#config)
   - [`ctrl-r`](#ctrl-r)
   - [`ctrl-t`](#ctrl-t)
@@ -1587,6 +1593,214 @@ $ (date; ps -ef) |
     fi
   }
   ```
+
+## fancy usage
+
+- show functions
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.58.0
+  $ declare -f |
+      perl -0 -pe 's/^}\n/}\0/gm' |
+      bat --plain --language bash --color always |
+      fzf --read0 --ansi --layout reverse --multi --highlight-line --gap
+  ```
+
+- `--gap`
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.56.0
+  $ fzf --info inline-right --gap --color gutter:-1
+  ```
+
+- hyperlinks
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.55.0
+  $ printf '<< \e]8;;http://github.com/junegunn/fzf\e\\Link to \e[32mfz\e[0mf\e]8;;\e\\ >>' | fzf --ansi
+  $ fzf --preview "printf '<< \e]8;;http://github.com/junegunn/fzf\e\\Link to \e[32mfz\e[0mf\e]8;;\e\\ >>'"
+  ```
+
+- toggle-wrap
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.54.0
+  $ history | fzf --tac --wrap --bind 'ctrl-/:toggle-wrap' --wrap-sign $'\t↳ '
+  ```
+
+- loading
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.54.0
+  $ fzf --header 'Loading ...' --header-lines 1 \
+    --bind 'start:reload:sleep 1; ps -ef' \
+    --bind 'load:change-header:Loaded!'
+  ```
+
+- gem list
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/0.51.0
+  $ gem list | fzf --with-shell 'ruby -e' \
+    --preview 'pp Gem::Specification.find_by_name({1})' \
+    --bind 'ctrl-o:execute-silent:
+        spec = Gem::Specification.find_by_name({1})
+        [spec.homepage, *spec.metadata.filter { _1.end_with?("uri") }.values].uniq.each do
+          system "open", _1
+        end
+    '
+  ```
+
+- jump
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/0.50.0
+  $ fzf --bind space:jump
+  $ fzf --bind space:jump,jump:accept
+  $ fzf --bind 'space:change-header(Type jump label)+jump,jump-cancel:change-header:Jump cancelled'
+  ```
+
+- footer
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.65.0
+  $ fzf --footer $'[Edit] [View]\n[Copy to clipboard]' \
+        --with-shell 'bash -c' \
+        --bind 'click-footer:transform:
+          [[ $FZF_CLICK_FOOTER_WORD =~ Edit ]] && echo "execute:vim \{}"
+          [[ $FZF_CLICK_FOOTER_WORD =~ View ]] && echo "execute:view \{}"
+          (( FZF_CLICK_FOOTER_LINE == 2 )) && (( FZF_CLICK_FOOTER_COLUMN < 20 )) &&
+              echo "execute-silent(echo -n \{} | pbcopy)+bell"
+        '
+  # You can click on each key name to trigger the actions bound to that key
+  $ fzf --footer 'Ctrl-E: Edit / Ctrl-V: View / Ctrl-Y: Copy to clipboard' \
+        --with-shell 'bash -c' \
+        --bind 'ctrl-e:execute:vim {}' \
+        --bind 'ctrl-v:execute:view {}' \
+        --bind 'ctrl-y:execute-silent(echo -n {} | pbcopy)+bell' \
+        --bind 'click-footer:transform:
+          [[ $FZF_CLICK_FOOTER_WORD =~ Ctrl ]] && echo "trigger(${FZF_CLICK_FOOTER_WORD%:})"
+        '
+  ```
+
+- ansi
+  ```bash
+  # https://github.com/junegunn/fzf/releases/tag/v0.63.0
+  $ for i in $(seq 16 255); do
+      echo -e "\x1b[48;5;${i}m\x1b[0Khello"
+    done | fzf --ansi
+  ```
+
+### resize
+```bash
+# https://github.com/junegunn/fzf/releases/tag/0.46.0
+# Script to dynamically resize the preview window
+$ transformer='
+  # 1 line for info, another for prompt, and 2 more lines for preview window border
+  lines=$(( FZF_LINES - FZF_MATCH_COUNT - 4 ))
+  if [[ $FZF_MATCH_COUNT -eq 0 ]]; then
+    echo "change-preview-window:hidden"
+  elif [[ $lines -gt 3 ]]; then
+    echo "change-preview-window:$lines"
+  elif [[ $FZF_PREVIEW_LINES -ne 3 ]]; then
+    echo "change-preview-window:3"
+  fi
+'
+$ seq 10000 | fzf --preview 'seq {} 10000' --preview-window up \
+                  --bind "result:transform:$transformer" \
+                  --bind "resize:transform:$transformer"
+```
+
+![fzf resize](../../screenshot/linux/fzf/fzf-resize.gif)
+
+### fzf environment
+
+#### FZF_PORT
+```bash
+# https://github.com/junegunn/fzf/releases/tag/v0.54.0
+$ fzf --listen --sync --bind 'focus:transform-header:curl -s localhost:$FZF_PORT?limit=0 | jq .'
+```
+
+#### FZF_POS
+```bash
+# https://github.com/junegunn/fzf/releases/tag/0.51.0
+# Toggle selection to the top or to the bottom
+$ seq 30 | fzf --multi --bind 'load:pos(10)' \
+  --bind 'shift-up:transform:for _ in $(seq $FZF_POS $FZF_MATCH_COUNT); do echo -n +toggle+up; done' \
+  --bind 'shift-down:transform:for _ in $(seq 1 $FZF_POS); do echo -n +toggle+down; done'
+```
+
+#### FZF_API_KEY
+```bash
+# https://github.com/junegunn/fzf/releases/tag/0.44.0
+$ export FZF_API_KEY="$(head -c 32 /dev/urandom | base64)"
+
+# server
+$ fzf --listen 0.0.0.0:6266
+$ fzf --listen-unsafe 0.0.0.0:6266
+# client
+$ curl localhost:6266 -H "x-api-key: $FZF_API_KEY" -d 'change-query(yo)'
+
+# -- or https://github.com/junegunn/fzf/releases/tag/0.39.0 --
+# server
+$ fzf --listen --bind 'start:execute-silent:echo $FZF_PORT > /tmp/fzf-port'
+# client
+$ curl "localhost:$(cat /tmp/fzf-port)" -d 'preview:echo Hello, fzf is listening on $FZF_PORT.'
+```
+
+### fzf-preview.sh
+
+> [!NOTE|label:references:]
+> - [fzf-preview.sh](https://github.com/junegunn/fzf/blob/0.44.0/bin/fzf-preview.sh)
+
+```bash
+$ fzf --preview='fzf-preview.sh {}'
+```
+
+### git
+```bash
+# https://github.com/junegunn/fzf/releases/tag/0.49.0
+$ git ls-files |
+  fzf --header 'Press CTRL-P to change preview mode' \
+      --bind='ctrl-p:transform:[[ $FZF_PREVIEW_LABEL =~ cat ]] \
+      && echo "change-preview(git log --color=always \{})+change-preview-label([[ log ]])" \
+      || echo "change-preview(bat --color=always \{})+change-preview-label([[ cat ]])"'
+```
+
+### lolcat
+
+> [!NOTE|label:references:]
+> ```bash
+> $ brew install lolcat
+> ```
+
+```bash
+# https://github.com/junegunn/fzf/releases/tag/0.35.0
+
+# With http://metaphorpsum.com/ and https://github.com/busyloop/lolcat
+label1=$(curl -s http://metaphorpsum.com/sentences/1 | lolcat -f)
+label2=$(curl -s http://metaphorpsum.com/sentences/1 | lolcat -f)
+
+# Using colors from 'cosmic_latte'
+# (See https://github.com/junegunn/fzf/blob/master/ADVANCED.md#generating-fzf-color-theme-from-vim-color-schemes)
+$ fzf --border=double \
+    --border-label="╣ ${label1} ╠" --border-label-pos=-3,bottom \
+    --color=bg+:#2b3740,bg:#202a31,spinner:#7d9761,hl:#898f9e,fg:#abb0c0,header:#898f9e,info:#459d90 \
+    --color=pointer:#7d9761,marker:#7d9761,fg+:#abb0c0,prompt:#7d9761,hl+:#7d9761,border:#2b3740,label:#2b3740 \
+    --preview='lolcat -f {}' --preview-label="┓ ${label2} ┏" \
+    --preview-window=top,border-bold \
+    --separator=$(lolcat -f -F 1.4 <<< ╸╸╸╸╸╸╸╸╸╸╸╸╸╸)
+```
+
+![lolcat + fzf](../../screenshot/linux/fzf/fzf-lolcat.png)
+
+```bash
+# others - https://github.com/junegunn/fzf/releases/tag/v0.63.0
+$ GETTER='curl -s http://metaphorpsum.com/sentences/1'
+$ fzf --style full --border --preview : \
+      --bind "focus:bg-transform-header:$GETTER" \
+      --bind "focus:+bg-transform-footer:$GETTER" \
+      --bind "focus:+bg-transform-border-label:$GETTER" \
+      --bind "focus:+bg-transform-preview-label:$GETTER" \
+      --bind "focus:+bg-transform-input-label:$GETTER" \
+      --bind "focus:+bg-transform-list-label:$GETTER" \
+      --bind "focus:+bg-transform-header-label:$GETTER" \
+      --bind "focus:+bg-transform-footer-label:$GETTER" \
+      --bind "focus:+bg-transform-ghost:$GETTER" \
+      --bind "focus:+bg-transform-prompt:$GETTER"
+```
 
 ## config
 ### [`ctrl-r`](https://github.com/junegunn/fzf#key-bindings-for-command-line)
