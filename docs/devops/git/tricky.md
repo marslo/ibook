@@ -35,6 +35,7 @@
 - [git message](#git-message)
 - [refspec](#refspec)
 - [others](#others)
+  - [case-sensitive repo in osx](#case-sensitive-repo-in-osx)
   - [alias](#alias)
   - [check help in previw.app](#check-help-in-previwapp)
   - [disk size](#disk-size)
@@ -1099,6 +1100,21 @@ $ git diff --shortstat HEAD^..HEAD
 > - [10.5 Git Internals - The Refspec](https://git-scm.com/book/en/v2/Git-Internals-The-Refspec)
 
 ## others
+
+### case-sensitive repo in osx
+```bash
+$ hdiutil create -type SPARSE \
+          -fs "Case-sensitive APFS" \
+          -size 10g  \
+          -volname casesensitive \
+          /tmp/casesensitive.dmg
+
+$ hdiutil attach ~/casesensitive.dmg.sparseimage
+
+# clone
+$ git clone https://github.com/<OWNER>/<REPO>.git /Volumes/casesensitive/<REPO>
+```
+
 ### alias
 
 {% hint style='tip' %}

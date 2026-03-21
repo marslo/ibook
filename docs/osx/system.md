@@ -29,7 +29,8 @@
   - [download older version](#download-older-version)
   - [create osx installer usb](#create-osx-installer-usb)
   - [boot with macOS USB installer](#boot-with-macos-usb-installer)
-  - [Convert a MacOS Installer to ISO](#convert-a-macos-installer-to-iso)
+  - [convert a macos installer to iso](#convert-a-macos-installer-to-iso)
+  - [create case-sensitive volume](#create-case-sensitive-volume)
 - [flushed](#flushed)
   - [disk cache](#disk-cache)
   - [flush DNS](#flush-dns)
@@ -42,7 +43,7 @@
 - [profiles](#profiles)
   - [prints all configuration profiles](#prints-all-configuration-profiles)
   - [show expanded information for profiles](#show-expanded-information-for-profiles)
-  - [shwo device enrollment configuration](#shwo-device-enrollment-configuration)
+  - [show device enrollment configuration](#show-device-enrollment-configuration)
 - [log](#log)
   - [check log stream](#check-log-stream)
 - [Q&A](#qa)
@@ -593,48 +594,60 @@ $ softwareupdate --fetch-full-installer
   ```
 
 ### boot with macOS USB installer
+
 - connect the macOS Catalina 10.15 beta install drive to to the Mac you want to install Catalina onto
 - reboot the Mac
 - immediately hold down the OPTION key upon boot, keep holding Option until you see the boot menu
 - choose the macOS Catalina 10.15 beta installer volume to boot from
 
+### [convert a macos installer to iso](https://osxdaily.com/2020/07/20/how-convert-macos-installer-iso/)
 
-### [Convert a MacOS Installer to ISO](https://osxdaily.com/2020/07/20/how-convert-macos-installer-iso/)
-- download [MacOS Mojave installer](https://itunes.apple.com/us/app/macos-mojave/id1398502828?mt=12), or the [MacOS Catalina installer](https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12) (or the installer you wish to turn into an ISO) from the Mac App Store,  untill the “Install MacOS Mojave.app” or “Install MacOS Catalina.app” application is fully downloaded and within the /Applications folder, proceed
-
+- download [MacOS Mojave installer](https://itunes.apple.com/us/app/macos-mojave/id1398502828?mt=12), or the [MacOS Catalina installer](https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12) (or the installer you wish to turn into an ISO) from the Mac App Store,  until the “Install MacOS Mojave.app” or “Install MacOS Catalina.app” application is fully downloaded and within the /Applications folder, proceed
 - open the Terminal application, create a disk image DMG file via:
-```bash
-$ hdiutil create -o /tmp/Mojave -size 8500m -volname Mojave -layout SPUD -fs HFS+J
-```
-
+  ```bash
+  $ hdiutil create -o /tmp/Mojave -size 8500m -volname Mojave -layout SPUD -fs HFS+J
+  ```
 - mount the created DMG disk image via:
-```bash
-$ hdiutil attach /tmp/Mojave.dmg -noverify -mountpoint /Volumes/Mojave
-```
-
+  ```bash
+  $ hdiutil attach /tmp/Mojave.dmg -noverify -mountpoint /Volumes/Mojave
+  ```
 - use createinstallmedia to create the macOS installer application on the mounted volume:
-```bash
-$ sudo /Applications/Install\ macOS\ Mojave.app/Contents/Resources/createinstallmedia --volume /Volumes/Mojave --nointeraction
-```
-
+  ```bash
+  $ sudo /Applications/Install\ macOS\ Mojave.app/Contents/Resources/createinstallmedia --volume /Volumes/Mojave --nointeraction
+  ```
 - unmount the volume just created:
-```bash
-$ hdiutil detach /volumes/Install\ macOS\ Mojave
-```
-
+  ```bash
+  $ hdiutil detach /volumes/Install\ macOS\ Mojave
+  ```
 - convert the DMG disk image file to an ISO disk image file (technically a CDR file but it’s the same as an iso)
+  ```bash
+  $ hdiutil convert /tmp/Mojave.dmg -format UDTO -o ~/Desktop/Mojave.cdr
+  ```
+- rename the CDR file extension to ISO to convert the CDR to ISO:
+  ```bash
+  $ mv ~/Desktop/Mojave.cdr ~/Desktop/Mojave.iso
+  ```
+
+{% hint style='success' %}
+> more info:
+> - [Convert ISO to VDI Virtual Box Image](https://osxdaily.com/2018/06/17/convert-iso-to-vdi-virtualbox-image/)
+{% endhint %}
+
+### create case-sensitive volume
+
+> [!NOTE|label:references:]
+> - see also: [* iMarslo: case-sensitive repo in osx](../devops/git/tricky.md#case-sensitive-repo-in-osx)
+
 ```bash
-$ hdiutil convert /tmp/Mojave.dmg -format UDTO -o ~/Desktop/Mojave.cdr
+$ hdiutil create -type SPARSE \
+          -fs "Case-sensitive APFS" \
+          -size 10g  \
+          -volname casesensitive \
+          /tmp/casesensitive.dmg
+
+$ hdiutil attach ~/casesensitive.dmg.sparseimage
 ```
 
-- rename the CDR file extension to ISO to convert the CDR to ISO:
-```bash
-$ mv ~/Desktop/Mojave.cdr ~/Desktop/Mojave.iso
-```
-{% hint style='success' %}
-more info:
-[Convert ISO to VDI Virtual Box Image](https://osxdaily.com/2018/06/17/convert-iso-to-vdi-virtualbox-image/)
-{% endhint %}
 
 ## flushed
 
@@ -827,7 +840,7 @@ $ sudo profiles show
 $ sudo profiles show -type configuration
 ```
 
-### shwo device enrollment configuration
+### show device enrollment configuration
 ```bash
 $ sudo profiles show -type enrollment
 ```
@@ -854,7 +867,7 @@ $ log stream --predicate 'eventMessage contains "account" OR eventMessage contai
 - issue:
   ```bash
   $ softwareupdate --fetch-full-installer
-  Downloading and installing com.apple.InstallAssistant.macOSBigSur installer
+  Downloading and installing com.apple.InstallAssistant.macOSBigSure installer
   SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
   SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
   SUPreferenceManager: Failed to set object of class: __NSCFString for key: LastRecommendedMajorOSBundleIdentifier with error: Error Domain=SUPreferenceManagerErrorDomain Code=1 "(null)"
