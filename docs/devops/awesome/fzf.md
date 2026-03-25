@@ -14,6 +14,7 @@
   - [smart open](#smart-open)
   - [others](#others)
 - [advanced usage](#advanced-usage)
+  - [command fill](#command-fill)
   - [venv selector](#venv-selector)
   - [chrome](#chrome)
   - [man page](#man-page)
@@ -1023,6 +1024,57 @@ function open() {                          # smart open
   <!--endsec-->
 
 ## advanced usage
+
+### command fill
+
+![fzf fill](../../screenshot/linux/fzf/fzf-fill.gif)
+
+```bash
+# usage: _fzf_fill "${cmd}" - similar to `Ctrl+R` in bash
+# i.e.:  _fzf_fill seq 10
+_fzf_fill() {
+  local cmd
+
+  if [[ $# -gt 1 ]] || type "$1" &>/dev/null; then
+    cmd=$("$@" | fzf --height 40% --reverse)
+  else
+    cmd="$*"
+  fi
+
+  [ -z "${cmd}" ] && return
+
+  # check count of '\n' in PS1
+  # _rows = number of '\n' + 1 (current input line)
+  local n_count
+  n_count=$(echo -n "$PS1" | grep -o "\\\\n" | wc -l)
+  local _rows=$(( n_count + 1 ))
+
+  # cleanup cursor: move up `_rows` lines, clear to the end of line, and return cursor to the beginning of line
+  tput cuu "${_rows}"
+  tput ed
+  tput cr
+
+  # render PS1 with prompt expansion and handle escape sequences properly
+  local _prompt=$(echo -ne "${PS1@P}")
+  read -re -p "${_prompt}" -i "${cmd}" hisCmd
+
+  # to remove the original command from history - 毁尸灭迹
+  # history -d $((HISTCMD)) 2>/dev/null
+  if [[ -n "${hisCmd}" ]]; then
+    history -a
+    eval "${hisCmd}"
+    # adding timestamp if HISTTIMEFORMAT is set, to keep consistent with the format in HISTFILE
+    {
+      [[ -n "$HISTTIMEFORMAT" ]] && echo "#$(date +%s)"
+      echo "${hisCmd}"
+    } >> "${HISTFILE:-$HOME/.bash_history}"
+    # read all history
+    history -n
+  fi
+}
+```
+
+
 ### venv selector
 ```bash
 # activate venv - using `fzf` to list and activate python venv

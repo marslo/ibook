@@ -21,23 +21,31 @@ branch='gh-pages'
 # declare remotes=$(git remote -v | sed -n -re 's:^origin\W*(\S+)\W*\(push\)$:\1:gp')
 remotes=$(git remote get-url origin)
 msg=$(git --no-pager show HEAD --no-patch --format="%s")
-usage="""$(c B)deploy.sh - to quickly deploy _book/* into gh-pages branch $(c)
-\nUSAGE:
-\t$(c sG)$ $0 [help] [function name]$(c)
-\nNOTICE:
-\tadd command $(c Y)'built'$(c) in ./package.json as below:
-\t\t$(c ui){$(c)
-\t\t$(c ui)  \"scripts\": {$(c)
-\t\t$(c ui)    \"built\": \"gitbook install && gitbook build\",$(c)
-\t\t$(c ui)  }$(c)
-\t\t$(c ui)}$(c)
-\n\tmore details can be found by $(c Y)$ $0 info$(c)
-\nEXAMPLE:
-\n\tdeploy _book into remote repository gh-pages branch:
-\t\t$(c Y)$ $0 doDeploy$(c)
-\n\tshow current information:
-\t\t$(c Y)$ $0 info$(c)
-\nINDEPENDENT FUNCTION NAME:
+usage="""NAME
+  $(c B)deploy.sh - to quickly deploy _book/* into gh-pages branch $(c)
+
+USAGE
+  $(c sG)$ $0 [help] [function name]$(c)
+
+NOTICE
+  add command $(c Y)'built'$(c) in $(c Csi)package.json$(c) as below:
+  $(c Gi)\`\`\`json
+  {
+    \"scripts\": {
+      \"built\": \"gitbook install && gitbook build\",
+    }
+  }
+  \`\`\`$(c)
+  more details can be found by $(c Y)$ $0 info$(c)
+
+EXAMPLE
+  $(c Wdi)# deploy _book into remote repository gh-pages branch$(c)
+  $(c Y)$ $0 doDeploy$(c)
+
+  $(c Wdi)# show current information$(c)
+  $(c Y)$ $0 info$(c)
+
+INDEPENDENT FUNCTION NAME
 """
 
 info="""
