@@ -131,6 +131,22 @@ HOST *
   # check from ssh agent
   $ ssh-add -l -E sha256
   256 SHA256:V6nCfXgETxew3yUk7ids/pL7XH8BZjm4BZlL9hPrk3w (none) (ED25519)
+  # or
+  $ ssh-add -l
+  256 SHA256:V6nCfXgETxew3yUk7ids/pL7XH8BZjm4BZlL9hPrk3w (none) (ED25519)
+  ```
+
+- verify GPG-Agent SSH Socket connection
+  ```bash
+  $ netstat -anl | grep "S.gpg-agent.ssh"
+  6916d7c90a637341 stream      0      0 931fce012153f5f8                0                0                0 /Users/marslo/.gnupg/S.gpg-agent.ssh
+
+  $ lsof -U | grep "S.gpg-agent.ssh"
+  gpg-agent  3933 marslo    7u  unix 0x6916d7c90a637341      0t0      /Users/marslo/.gnupg/S.gpg-agent.ssh
+
+  $ lsof ~/.gnupg/S.gpg-agent.ssh
+  COMMAND    PID   USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+  gpg-agent 3933 marslo    7u  unix 0x6916d7c90a637341      0t0      /Users/marslo/.gnupg/S.gpg-agent.ssh
   ```
 
 ### authorize public key

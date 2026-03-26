@@ -1096,29 +1096,31 @@ function avenv() {
   # https://github.com/junegunn/fzf/wiki/Examples#bookmarks
   # shellcheck disable=SC2016
   function b() {                             # chrome [b]ookmarks browser with jq
+    local ghome="${HOME}/Library/Application Support/Google"
+    local bookmark=''
     if [ "$(uname)" = "Darwin" ]; then
-      if [[ -e "$HOME/Library/Application Support/Google/Chrome Canary/Default/Bookmarks" ]]; then
-        bookmarks_path="$HOME/Library/Application Support/Google/Chrome Canary/Default/Bookmarks"
-      else
-        bookmarks_path="$HOME/Library/Application Support/Google/Chrome/Default/Bookmarks"
+      if test -e "${ghome}/Chrome/Default/Bookmarks"; then
+        bookmark="${ghome}/Chrome/Default/Bookmarks"
+      elif test -e "${ghome}/Chrome Canary/Default/Bookmarks"; then
+        bookmark="${ghome}/Chrome Canary/Default/Bookmarks"
       fi
       open=open
     else
-      bookmarks_path="$HOME/.config/google-chrome/Default/Bookmarks"
+      bookmark="$HOME/.config/google-chrome/Default/Bookmarks"
       open=xdg-open
     fi
 
-    jq_script='
-       def ancestors: while(. | length >= 2; del(.[-1,-2]));
+    local template='
+       def ancestors: while( . | length >= 2; del(.[-1,-2]) );
        . as $in | paths(.url?) as $key | $in | getpath($key) | {name,url, path: [$key[0:-2] | ancestors as $a | $in | getpath($a) | .name?] | reverse | join("/") } | .path + "/" + .name + "\t" + .url'
 
-    urls=$( jq -r "${jq_script}" < "${bookmarks_path}" \
+    urls=$( jq -r "${template}" < "${bookmark}" \
                | sed -E $'s/(.*)\t(.*)/\\1\t\x1b[36m\\2\x1b[m/g' \
-               | fzf --ansi \
+               | fzf --ansi --wrap \
                | cut -d$'\t' -f2
           )
     # shellcheck disable=SC2046
-    [[ -z "${urls}" ]] || "${open}" $(echo "${urls}" | xargs)
+    [[ -z "${urls}" ]] || "${open}" $(xargs -r <<< "${urls}")
   }
   ```
 
