@@ -11,10 +11,10 @@
 ## packages installation
 
 > [!TIP|label:build from local source]
-> - encounter the branch name issue or submodule fetch issue in `--HEAD`, can modify manaully and execute :
->>   ```bash
->>   $ brew install --HEAD <formula> --build-from-source -v --debug
->>   ```
+> - encounter the branch name issue or submodule fetch issue in `--HEAD`, can modify manually and execute :
+>> ```bash
+>> $ brew install --HEAD <formula> --build-from-source -v --debug
+>> ```
 
 ```bash
 # --- utils ---
@@ -27,6 +27,7 @@ $ brew install figlet
 $ brew install --HEAD toilet
 $ brew install colordiff diffutils wdiff difftastic
 $ brew install --HEAD diff-so-fancy highlight
+$ brew install lolcat                             # colorize output
 $ brew install ansifilter                         # decolorize
 $ brew install gnu-tar gzip carlocab/personal/unrar
 $ brew install zip unzip                          # info-zip
@@ -36,8 +37,8 @@ $ brew install lynx                               # text-based web browser
 $ brew install fdupes                             # find duplicate files
 $ brew install --HEAd pandoc poppler fontforge
 $ brew install --HEAD mupdf-tools                 # pdf viewer
-$ brew install pdfcpu &&                          # extract font from pdf
-  mkdir -p "$HOME/Library/Application Support/pdfcpu"
+# extract font from pdf
+$ brew install pdfcpu && mkdir -p "$HOME/Library/Application Support/pdfcpu"
 $ brew install create-dmg
 $ brew install imagemagick
 $ sudo gem install iStats -n /usr/local/bin       # requires ruby to be installed
@@ -78,6 +79,7 @@ $ brew install --HEAD kubectl jfrog-cli jq
 $ brew install --HEAD git-flow git-extras
 $ brew install --HEAD fzf fzy bat ack ag rg gum fd
 $ brew install mkdocs                             # markdown docs, usage: `mkdocs build -d site -s`
+$ brew install glow                               # markdown preview in terminal
 $ curl -o "$HOME/.local/bin/cht.sh" -fsSL 'https://cht.sh/:cht.sh' && chmod +x "$HOME/.local/bin/cht.sh"
 $ brew install --HEAD cheat
 $ brew install hashicorp/tap/vault

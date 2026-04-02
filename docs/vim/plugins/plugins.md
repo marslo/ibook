@@ -1080,7 +1080,7 @@ let g:coc_global_extensions = [ 'coc-word' ]
   coc-docker  coc-groovy  coc-htmlhint          coc-json  coc-pyright  coc-snippets
   ```
 
-- show stauts
+- show status
 
   > [!TIP|label:references:]
   > - [`TabMessage`](../viml.md#tabmessage)
@@ -1142,6 +1142,8 @@ let g:coc_global_extensions = [ 'coc-word' ]
 
 ```bash
 # tree-sitter executable not found
+$ sudo apt install -y clang libclang-dev build-essential
+$ rustup update
 $ cargo install tree-sitter-cli
 # or
 $ sudo npm i -g tree-sitter-cli
@@ -1448,7 +1450,7 @@ vmap <C-/>     <c-_>b
 >   - [* iMarslo: yamllint.yaml](https://github.com/marslo/dotfiles/blob/main/.yamllint.yaml)
 
 > [!TIP]
-> to reset the ale_lsit_window_size via autocmd:
+> to reset the ale_list_window_size via autocmd:
 >> ```vim
 >> augroup ALEResizeLocList
 >>   autocmd!
@@ -1713,7 +1715,7 @@ let g:NERDTreePatternMatchHighlightColor['.*\.bak$']  = '293739'       " #293739
   let g:DevIconsEnableFolderExtensionPatternMatching = 0
 
   :echo g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols
-  {'erl': '', 'styl': '', 'db': '', 'rmd': '', 'c++': '', 'pyc': '', 'pyd': '', 'go': '', 'suo':
+  {'erl': '', 'style': '', 'db': '', 'rmd': '', 'c++': '', 'pyc': '', 'pyd': '', 'go': '', 'suo':
   '', 'lua': '', 'bash': '', 'pyo': '', 'mustache': '', 'gif': '', 'nix': '', 'jsx': '', 'leex':
   '', 'lhs': '', 'sol': 'ﲹ', 'scala': '', 'zsh': '', 'jpeg': '', 'pem': '', 'ts': '', 'xcplaygroun
   d': '', 'fsi': '', 'coffee': '', 'scss': '', 'js': '', 'gitcommit': '', 'xul': '', 'mdx': '', '
@@ -1726,7 +1728,7 @@ let g:NERDTreePatternMatchHighlightColor['.*\.bak$']  = '293739'       " #293739
   wift': '', 'r': 'ﳒ', 'ai': '', 'fs': '', 'csh': '', 'psd': '', 'psb': '', 'heex': '', 'rss': ''
   , 'cxx': '', 'css': '', 'log': '', 'rake': '', 'sh': '', 'hpp': '', 'bat': '', 'fsx': '', 'ini'
   : '', 'gemspec': '', 'markdown': '', 'hbs': '', 'twig': '', 'rproj': '鉶', 'yaml': '', 'fsscript'
-  : '', 'ksh': '', 'vim': '', 'ejs': '', 'clj': '', 'ex': '', 'edn': '', 'slim': '', 'eex': '',
+  : '', 'ksh': '', 'vim': '', 'ejs': '', 'clj': '', 'ex': '', 'end': '', 'slim': '', 'eex': '',
   'tsx': '', 'dump': '', 'groovy': '', 'py': '', 'hxx': '', 'diff': '', 'dart': '', 'java': '', '
   yml': ''}
 

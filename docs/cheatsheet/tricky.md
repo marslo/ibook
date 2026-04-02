@@ -8,6 +8,7 @@
     - [less](#less)
     - [grep](#grep)
     - [highlight](#highlight-1)
+    - [lolcat](#lolcat)
     - [ccat](#ccat)
     - [render visualization of hexadecimal colors](#render-visualization-of-hexadecimal-colors)
     - [others](#others)
@@ -26,7 +27,7 @@
   - [special characters in usernames and passwords](#special-characters-in-usernames-and-passwords)
 - [others](#others-1)
   - [get cookie from firefox](#get-cookie-from-firefox)
-  - [downlaods bookmark](#downlaods-bookmark)
+  - [downloads bookmark](#downloads-bookmark)
   - [extract fonts from pdf](#extract-fonts-from-pdf)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -52,6 +53,8 @@
 $ curl -sg https://api.domain.com | ack --passthru 'keyword'
 ```
 
+![ack](../screenshot/linux/ack-passthru.png)
+
 ### less
 ```bash
 $ curl -sg https://api.domain.com | less -i -p 'keyword'
@@ -59,10 +62,13 @@ $ curl -sg https://api.domain.com | less -i -p 'keyword'
 
 ### [grep](https://stackoverflow.com/a/981831/2940319)
 ```bash
-$ command | grep --color=always 'pattern\|$'
-$ command | grep --color=always -E 'pattern|$'
+$ command | grep  --color=always 'pattern\|$'
+$ command | grep  --color=always -E 'pattern|$'
 $ command | egrep --color=always 'pattern|$'
 ```
+
+![grep highlight](../screenshot/linux/grep-highlight.png)
+
 - example
   ```bash
   $ curl -sg 'https://api.domain.com | jq -r . | grep --color=always '.*keyword.*\|$'
@@ -77,8 +83,64 @@ $ command | egrep --color=always 'pattern|$'
 > Highlight was designed to offer a flexible but easy to use syntax highlighter for several output formats. Instead of hardcoding syntax or colouring information, all relevant data is stored in configuration scripts. These scripts may be altered or enhanced with plug-in scripts.
 
 ```bash
-$ highlight -i git.groovy -o git.groovy.html --syntax groovy --inline-css --include-style --line-numbers
+# convert to html
+$ highlight -i git.groovy -o git.groovy.html --style molokai --syntax groovy --inline-css --include-style --line-numbers
+
+# convert to rtf
+$ highlight -O rtf --font=Consolas --font-size=24 main.cpp
+
+# highlight with color in terminal == bat
+$ highlight -O ansi --syntax=groovy git.groovy
+
+# convert to tex
+$ highlight -O latex -l my_script.py > snippet.tex
+
+# convert to svg
+$ highlight -O svg --style=molokai git.groovy > output.svg
 ```
+
+```bash
+# list all themes/styles
+$ highlight --list-scripts=themes
+
+# list all syntax
+$ highlight --list-scripts=langs
+
+# list all plugins
+$ highlight --list-scripts=plugins
+```
+
+```bash
+# integrate with fzf
+export FZF_DEFAULT_OPTS="--ansi --preview '(highlight -O truecolor -sgreenlcd -l {} 2>/dev/null || cat {}) 2>/dev/null | head -200'"
+
+# integrate with less/cat
+# pipe highlight to less
+export LESSOPEN="| $(which highlight) %s --out-format xterm256 -l --force -s solarized-light --no-trailing-nl"
+export LESS=" -R"
+alias less='less -m -N -g -i -J --line-numbers --underline-special'
+alias more='less'
+
+# use "highlight" in place of "cat"
+alias cat="highlight $1 --out-format xterm256 -l --force -s solarized-light --no-trailing-nl"
+```
+
+### lolcat
+```bash
+# rainbow cat
+$ command | lolcat
+
+# flashing rainbow cat
+$ command | lolcat -a -d 100
+$ fortune | lolcat -a -d 20 --freq=0.1 --spread=2.0
+
+$ date +"%I:%M %P" | toilet -f future | lolcat -f --freq=0.1 --spread=1.0 --truecolor
+```
+
+![lolcat](../screenshot/linux/lolcat.png)
+
+![lolcat -a](../screenshot/linux/lolcat-a.gif)
+
 
 ### [ccat](https://github.com/owenthereal/ccat)
 
@@ -99,6 +161,7 @@ $ ccat --palette
 
 > [!NOTE|label:references:]
 > - [#2705 Render visualization of hexadecimal colors (or other common formats) using true color ANSI escape sequences](https://github.com/sharkdp/bat/issues/2705)
+
 ```bash
 # colorcat
 # - cats a file, but if any line contains N hex colors, it appends the colors
@@ -122,7 +185,7 @@ function colorcat() {
         colors="${colors}${truecolor}  ${reset} "
       fi
     done
-      echo -e "$line $colors"
+      echo -e "${line} ${colors}"
   done
 }
 ```
@@ -526,7 +589,7 @@ $ cat -A output.log
 $ grep -oP '"url":"\K[^"]+' $(ls -t ~/.mozilla/firefox/*/sessionstore.js | sed q)
 ```
 
-## downlaods bookmark
+## downloads bookmark
 
 > [!TIP|label:references:]
 > - [terrorgum.com](https://terrorgum.com/tfox/books/)

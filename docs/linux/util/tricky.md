@@ -536,7 +536,7 @@ $ tput cols
 
 {% hint style='tip' %}
 > references:
-> - [imarslo: highlight output](../../cheatsheet/tricky.html#highlight-output)
+> - [imarslo: highlight output](../../cheatsheet/tricky.md#highlight-output)
 {% endhint %}
 
 ```bash
