@@ -1468,31 +1468,61 @@ Plug 'dense-analysis/ale'
 set foldlevelstart=20
 
 " dense-analysis/ale
-" error: 💢 ✘ 👾 💣  🙅 🤦; warning: ⚠ ⸮ ⸘ ☹; info: ⸚ ϔ 𐘿 𐰦 ; style_error: ᑹ; " style_warning: ᓏ ᓍ ఠ ൠ;
-let g:ale_open_list                       = 1                       " ╮ whether if open
-let g:ale_list_window_size                = 2                       " ╯ diagnostics windows
-let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%] '
+"   error: ❗‼ 💢 ✘ 👾 💣 🙅 🤦 🔥   ;
+"   warning:    ⚠ ⸮ ⸘ ☹ ᑹ 󱗗;
+"   info: ⸚ ϔ 𐘿 𐰦 󰛨 ➤;
+"   style_error: ᑹ 󰷞 󰉲 󰈸;
+"   style_warning: ᓏ ᓍ ఠ ൠ  󱋿;
+" whether if open diagnostics list window, set to `= 'on_save'` for json/jsonc
+let g:ale_open_list                       = 1
+" the height of the list window
+let g:ale_list_window_size                = 2
+let g:ale_set_loclist                     = 1
+let g:ale_set_lists_synchronously         = 1
+let g:ale_echo_msg_format                 = '[%linter%] %code%: %s [%severity%]'
 let g:ale_virtualtext_prefix              = '%comment% %type% [%code%]: '
 let g:ale_sign_error                      = '✗'
-let g:ale_sign_warning                    = 'ᑹ'
+let g:ale_sign_warning                    = 'ఠ'
 let g:ale_sign_info                       = 'ᓆ'
 let g:ale_sign_style_error                = '⍥'
 let g:ale_sign_style_warning              = '⍨'
+
+" performance enhancement
 let g:ale_lint_on_text_changed            = 'never'
+let g:ale_lint_on_enter                   = 0
+let g:ale_lint_on_insert_leave            = 1
 let g:ale_fix_on_save                     = 0
 let g:ale_lint_on_save                    = 1
+let g:ale_linters_explicit                = 1
+
 let g:ale_warn_about_trailing_blank_lines = 1
 let g:ale_warn_about_trailing_whitespace  = 1
 let g:ale_set_balloons                    = 1
 let g:ale_hover_to_preview                = 1
 let g:ale_floating_preview                = 1
 let g:ale_close_preview_on_insert         = 1
-let g:ale_groovy_npmgroovylint_options    = '--loglevel warning --config ~/.groovylintrc.json'
+let g:ale_groovy_npmgroovylint_options    = '--noserver --loglevel warning --config ' . expand('~/.groovylintrc.json')
+if executable(expand('~/.npm/bin/npm-groovy-lint'))
+  let g:ale_groovy_npmgroovylint_executable = expand('~/.npm/bin/npm-groovy-lint')
+endif
+let g:ale_linter_aliases                  = { 'Jenkinsfile': ['groovy'] }
 let g:ale_use_neovim_diagnostics_api      = 0
 " for ansbile.yaml
 let g:ale_ansible_ansible_lint_executable = 'ansible-lint'
-let g:ale_ansible_language_server_config = {}
+let g:ale_ansible_language_server_config  = {}
 let g:ale_ansible_language_server_executable = 'ansible-language-server'
+" vscodejson requires `$ npm install -g vscode-langservers-extracted`
+let g:ale_linters = {
+      \ 'c'          : ['clang', 'cppcheck'],
+      \ 'cpp'        : ['clang++', 'cppcheck'],
+      \ 'json'       : ['vscodejson'],
+      \ 'jsonc'      : ['vscodejson'],
+      \ 'html'       : ['vscodehtml'],
+      \ 'css'        : ['vscodecss'],
+      \ 'markdown'   : ['vscodemarkdown'],
+      \ 'javascript' : ['eslint'],
+      \ 'groovy'     : ['npm-groovy-lint']
+      \}
 ```
 
 - shortcuts

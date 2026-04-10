@@ -22,7 +22,8 @@
   - [newline `\r`](#newline-%5Cr)
   - [redirect cmd](#redirect-cmd)
   - [insert hex code](#insert-hex-code)
-  - [format json in vim](#format-json-in-vim)
+  - [format json](#format-json)
+  - [format html](#format-html)
   - [multiple replace in silent mode](#multiple-replace-in-silent-mode)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
   - [close buffer when close window](#close-buffer-when-close-window)
@@ -32,7 +33,6 @@
   - [navigate to Nth column](#navigate-to-nth-column)
   - [jumplist](#jumplist)
   - [print path](#print-path)
-  - [format html](#format-html)
   - [encryption with Vim](#encryption-with-vim)
   - [open vim with specific commands](#open-vim-with-specific-commands)
 - [config](#config)
@@ -736,7 +736,7 @@ endfunction
 :%call AppendAscii()
 ```
 
-### format json in vim
+### format json
 
 > [!NOTE|label:references:]
 > - [How to format a JSON file in vim](https://golang.cafe/blog/how-to-format-a-json-file-in-vim.html)
@@ -747,6 +747,12 @@ endfunction
 
 " or
 :%!python -m json.tool
+```
+
+### [format html](https://stackoverflow.com/a/63425256/2940319)
+```vim
+:%s/></>\r</g
+gg=G
 ```
 
 ### multiple replace in silent mode
@@ -854,8 +860,8 @@ N|
 ### jumplist
 
 > [!TIP|label:tips:]
-> - `:help ''`
-> - `:help ```
+> - <code>:help ''</code>
+> - <code>:help ``</code>
 
 ```vim
 " check jump list
@@ -875,8 +881,8 @@ N|
 
 - relative path:
   <kbd>ctrl</kbd> + <kbd>g</kbd>
-  or
   ```vim
+  " or
   :file
   ```
 
@@ -891,12 +897,6 @@ N|
   ```vim
   :echo expand('%:p')
   ```
-
-### [format html](https://stackoverflow.com/a/63425256/2940319)
-```vim
-:%s/></>\r</g
-gg=G
-```
 
 ### encryption with Vim
 

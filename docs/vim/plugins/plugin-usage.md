@@ -78,7 +78,7 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
 > i.e.: the second match (`=`)
 > - refer to [matches the N pattern](tricky.html#matches-the-n-pattern)
 
-- [align on first matche](https://stackoverflow.com/a/11497961/2940319)
+- [align on first match](https://stackoverflow.com/a/11497961/2940319)
   - align the first `:`
     ```vim
     :Tabularize /^[^:]*\zs:
@@ -93,14 +93,14 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
   - [via vim cmd](https://stackoverflow.com/questions/20435920/dynamic-vim-tabular-patterns)
 
     > [!NOTE]
-    > only for default left-alignemnt. Not support customized right/middle alignment.
+    > only for default left-alignment. Not support customized right/middle alignment.
     > i.e.: `/r1c1l0`
 
     ```vim
     command! -nargs=1 -range First exec <line1> . ',' . <line2> . 'Tabularize /^[^' . escape(<q-args>, '\^$.[?*~') . ']*\zs' . escape(<q-args>, '\^$.[?*~')
     ```
 
-- align with 2nd matches
+- align with 2nd match
   ```vim
   :Tabularize /^\(.\{-}\zs=\)\{N}/
                |
@@ -174,7 +174,7 @@ command! -nargs=0        Iname execute 'echo expand("%:p")'
     runningStage : proc.getOrDefault( 'stage' , ['all'] ) ,
             type : proc.type.split('^.*\\u00BB\\s*').last() ,
     ```
-    ![tabularize-3](../screenshot/vim/tabularize/tabularize-3.gif)
+    ![tabularize-3](../../screenshot/vim/tabularize/tabularize-3.gif)
 
   - `/^[^:]*/r1c1l0`
     ```groovy
