@@ -14,7 +14,7 @@
 - [developer tools](#developer-tools)
 - [troubleshooting](#troubleshooting)
   - [xcode-select: error: tool 'xcodebuild' requires Xcode](#xcode-select-error-tool-xcodebuild-requires-xcode)
-- [downlaod via wget](#downlaod-via-wget)
+- [download via wget](#download-via-wget)
 - [appendix](#appendix)
   - [xcode](#xcode)
   - [command line tool](#command-line-tool)
@@ -524,14 +524,12 @@ $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
 
 - example:
   ```bash
-  $ ls -altrh /Applications/Xcode.app/Contents/Resources/Packages/
+  $ ls -Altrh /Applications/Xcode.app/Contents/Resources/Packages/
   total 180512
   -rw-r--r--   1 root  wheel    87K Mar 10  2017 MobileDeviceDevelopment.pkg
   -rw-r--r--   1 root  wheel   5.4M Sep 30 05:28 XcodeSystemResources.pkg
   -rw-r--r--   1 root  wheel    11K Sep 30 05:28 XcodeExtensionSupport.pkg
   -rw-r--r--   1 root  wheel    83M Sep 30 05:28 MobileDevice.pkg
-  drwxr-xr-x   6 root  wheel   204B Oct 11 05:23 ./
-  drwxr-xr-x  87 root  wheel   2.9K Oct 11 05:55 ../
 
   $ for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do
   > sudo installer -pkg "$pkg" -target /;
@@ -589,7 +587,7 @@ Xcode 15.2
 Build version 15C500b
 ```
 
-## downlaod via wget
+## download via wget
 * get cookies.txt
   * install google chrome extension from [official website](https://chrome.google.com/webstore/detail/cookiestxt/njabckikapfpffapmjgojcnbfjonfjfg?hl=en)
   * login [developer.apple.com](https://developer.apple.com/download/more/)

@@ -7,7 +7,7 @@
 - [shortcuts](#shortcuts)
   - [combine multiple lines with or without space](#combine-multiple-lines-with-or-without-space)
   - [Capitalize words and regions easily](#capitalize-words-and-regions-easily)
-  - [Switching case of characters](#switching-case-of-characters)
+  - [switching case of characters](#switching-case-of-characters)
   - [counter](#counter)
   - [insert vim expression](#insert-vim-expression)
   - [delete line without copy to default register](#delete-line-without-copy-to-default-register)
@@ -23,7 +23,7 @@
   - [redirect cmd](#redirect-cmd)
   - [insert hex code](#insert-hex-code)
   - [format json in vim](#format-json-in-vim)
-  - [multiple repalce in silent mode](#multiple-repalce-in-silent-mode)
+  - [multiple replace in silent mode](#multiple-replace-in-silent-mode)
   - [run command in multiple buffers](#run-command-in-multiple-buffers)
   - [close buffer when close window](#close-buffer-when-close-window)
   - [switch in buffers](#switch-in-buffers)
@@ -39,7 +39,8 @@
   - [get platform](#get-platform)
   - [disable vim beep](#disable-vim-beep)
   - [pastetoggle](#pastetoggle)
-  - [Change up to next underscore "_" in vim](#change-up-to-next-underscore-_-in-vim)
+  - [setup dynamic ALE loc height](#setup-dynamic-ale-loc-height)
+  - [change up to next underscore "_" in vim](#change-up-to-next-underscore-_-in-vim)
 - [run vim commands in terminal](#run-vim-commands-in-terminal)
   - [vim open file and go to specific function or linenumber](#vim-open-file-and-go-to-specific-function-or-linenumber)
   - [using vim as a man-page viewer under unix](#using-vim-as-a-man-page-viewer-under-unix)
@@ -208,7 +209,7 @@ terminal
     :vnew | term top
     ```
 
-  - [open terminal in top pannel](https://www.reddit.com/r/neovim/comments/wjnmpp/comment/ijigdvl/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+  - [open terminal in top panel](https://www.reddit.com/r/neovim/comments/wjnmpp/comment/ijigdvl/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
     ```vim
     :split | resize 10 | terminal
     ```
@@ -234,7 +235,7 @@ terminal
 |    `gciw`    | capitalize inner word (from start to end)             |
 |    `gciW`    | capitalize inner WORD (from start to end)             |
 |    `gcis`    | capitalize inner sentence                             |
-|     `gc$`    | capitalize until end of line (from cursor postition)  |
+|     `gc$`    | capitalize until end of line (from cursor position)   |
 |    `gcgc`    | capitalize whole line (from start to end)             |
 |     `gcc`    | capitalize whole line                                 |
 | `{Visual}gc` | capitalize highlighted text                           |
@@ -264,7 +265,7 @@ else
 endif
 ```
 
-### [Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
+### [switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters)
 
 > [!NOTE|label:references:]
 > - [* Switching case of characters](https://vim.fandom.com/wiki/Switching_case_of_characters#Twiddle_case)
@@ -748,7 +749,7 @@ endfunction
 :%!python -m json.tool
 ```
 
-### multiple repalce in silent mode
+### multiple replace in silent mode
 
 ```vim
 :silent! %s/old/new/g | %s/old2/new2/g
@@ -761,7 +762,7 @@ endfunction
 > - `:argdo` : all files in argument list
 > - `:bufdo` : all buffers
 > - `:tabdo` : all tabs
-> - `:windo` : all windows
+> - `:window` : all windows
 >
 > **reference**:
 > - [Search and replace in multiple buffers](https://vim.fandom.com/wiki/Search_and_replace_in_multiple_buffers)
@@ -785,14 +786,14 @@ endfunction
 ### close buffer when close window
 - commands
   ```vim
-  :windo bd
+  :window bd
   :%bd
   :silent clear
   ```
 
 - autocmd
   ```vim
-  autocmd VimLeave * silent clear                                         " :windo bd
+  autocmd VimLeave * silent clear                                         " :window bd
   autocmd VimLeave * silent :%bd
   ```
 
@@ -1028,7 +1029,50 @@ set t_vb=                                                           " ┘ error/
   >   - ['lisp'](https://vimhelp.org/options.txt.html#%27lisp%27)
   >   - ['smartindent'](https://vimhelp.org/options.txt.html#%27smartindent%27)
 
-### [Change up to next underscore "_" in vim](https://til.hashrocket.com/posts/uanfzuizgu-change-up-to-next-underscore-in-vim)
+
+### setup dynamic ALE loc height
+
+```vim
+function! s:AleLocList(timer_id) abort
+  if !get(g:, 'ale_open_list', 0)
+    return
+  endif
+  let l:maxh = get(g:, 'ale_list_window_size', 10)
+  let l:back = winnr()
+  if get(g:, 'ale_set_quickfix', 0)
+    let l:n = len(getqflist())
+    if l:n < 1 | return | endif
+    let l:want = min([l:maxh, l:n])
+    copen
+    execute 'resize' l:want
+    execute l:back . 'wincmd w'
+  elseif get(g:, 'ale_set_loclist', 0)
+    let l:n = len(getloclist(0))
+    if l:n < 1 | return | endif
+    let l:want = min([l:maxh, l:n])
+    lopen
+    execute 'resize' l:want
+    execute l:back . 'wincmd w'
+  endif
+endfunction
+
+function! s:AleScheduleLoclist() abort
+  if ! exists('g:loaded_ale')
+    return
+  endif
+  call timer_start( 0, function('s:AleLocList') )
+endfunction
+
+if has( 'autocmd' )
+  " fixed with settings: g:ale_list_window_size = 2
+  augroup AleLoclist
+    autocmd!
+    autocmd User ALELintPost call s:AleScheduleLoclist()
+  augroup END
+endif
+```
+
+### [change up to next underscore "_" in vim](https://til.hashrocket.com/posts/uanfzuizgu-change-up-to-next-underscore-in-vim)
 
 ```vim
 set iskeyword-=_
@@ -1116,48 +1160,48 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 
 ### overview of multi items
 
-| pattern   | magic       | nomagic     | matches of the preceding atom                        |
-| :-------: | :---------: | :---------: | -----------------------------------------------------|
-| `/star`   | `*`         | `\*`        | 0 or more  &emsp; (as many as possible)              |
-| `/\+`     | `\+`        | `\+`        | 1 or more  &emsp; (as many as possible)              |
-| `/\=`     | `\=`        | `\=`        | 0 or 1     &emsp; (as many as possible)              |
-| `/\?`     | `\?`        | `\?`        | 0 or 1     &emsp; (as many as possible)              |
-| `/\{`     | `\{n,m}`    | `\{n,m}`    | n to m     &emsp; (as many as possible)              |
-|           | `\{n}`      | `\{n}`      | n          &emsp; exactly                            |
-|           | `\{n,}`     | `\{n,}`     | at least n &emsp; (as many as possible)              |
-|           | `\{,m}`     | `\{,m}`     | 0 to m     &emsp; (as many as possible)              |
-|           | `\{}`       | `\{}`       | 0 or more  &emsp; (as many as possible. same as `*`) |
-| `/\{-`    | `\{-n,m}`   | `\{-n,m}`   | n to m     &emsp; (as few as possible)               |
-|           | `\{-n}`     | `\{-n}`     | n    &emsp;&emsp; exactly                            |
-|           | `\{-n,}`    | `\{-n,}`    | at least n &emsp; (as few as possible)               |
-|           | `\{-,m}`    | `\{-,m}`    | 0 to m     &emsp; (as few as possible)               |
-|           | `\{-}`      | `\{-}`      | 0 or more  &emsp; (as few as possible)               |
+| PATTERN | MAGIC     | NOMAGIC   | MATCHES OF THE PRECEDING ATOM                        |
+|---------|-----------|-----------|------------------------------------------------------|
+| `/star` | `*`       | `\*`      | 0 or more  &emsp; (as many as possible)              |
+| `/\+`   | `\+`      | `\+`      | 1 or more  &emsp; (as many as possible)              |
+| `/\=`   | `\=`      | `\=`      | 0 or 1     &emsp; (as many as possible)              |
+| `/\?`   | `\?`      | `\?`      | 0 or 1     &emsp; (as many as possible)              |
+| `/\{`   | `\{n,m}`  | `\{n,m}`  | n to m     &emsp; (as many as possible)              |
+|         | `\{n}`    | `\{n}`    | n          &emsp; exactly                            |
+|         | `\{n,}`   | `\{n,}`   | at least n &emsp; (as many as possible)              |
+|         | `\{,m}`   | `\{,m}`   | 0 to m     &emsp; (as many as possible)              |
+|         | `\{}`     | `\{}`     | 0 or more  &emsp; (as many as possible. same as `*`) |
+| `/\{-`  | `\{-n,m}` | `\{-n,m}` | n to m     &emsp; (as few as possible)               |
+|         | `\{-n}`   | `\{-n}`   | n    &emsp;&emsp; exactly                            |
+|         | `\{-n,}`  | `\{-n,}`  | at least n &emsp; (as few as possible)               |
+|         | `\{-,m}`  | `\{-,m}`  | 0 to m     &emsp; (as few as possible)               |
+|         | `\{-}`    | `\{-}`    | 0 or more  &emsp; (as few as possible)               |
 
 
 ### overview of ordinary atoms
 
-| pattern |  magic  | nomagic | matches                                         |
-|:-------:|:-------:|:-------:|-------------------------------------------------|
-|   `/^`  |   `^`   |   `^`   | start-of-line (at start of pattern) /zero-width |
-|  `/\^`  |   `\^`  |   `\^`  | literal '^'                                     |
-|  `/\_^` |  `\_^`  |  `\_^`  | start-of-line (used anywhere) /zero-width       |
-|  ` /$`  |   `$`   |   `$`   | end-of-line (at end of pattern) /zero-width     |
-|  `/\$`  |   `\$`  |   `\$`  | literal '$'                                     |
-|  `/\_$` |  `\_$`  |  `\_$`  | end-of-line (used anywhere) /zero-width         |
-|   `/.`  |   `.`   |   `\.`  | any single character (not an end-of-line)       |
-|  `/\_.` |  `\_.`  |  `\_.`  | any single character or end-of-line             |
-|  `/\<`  |   `\<`  |  `\< `  | beginning of a word /zero-width                 |
-|  `/\>`  |   `\>`  |  `\> `  | end of a word /zero-width                       |
-|  `/\zs` |  `\zs`  |  `\zs`  | anything, sets start of match                   |
-|  `/\ze` |  `\ze`  |  `\ze`  | anything, sets end of match                     |
-|  `/\%^` |  `\%^`  |  `\%^`  | beginning of file /zero-width<br> E71           |
-|  `/\%$` |  `\%$`  |  `\%$`  | end of file /zero-width                         |
-|  `/\%V` |  `\%V`  |  `\%V`  | inside Visual area /zero-width                  |
-|  `/\%#` |  `\%#`  |  `\%#`  | cursor position /zero-width                     |
-| `/\%'m` |  `\%'m` |  `\%'m` | mark m position /zero-width                     |
-|  `/\%l` | `\%23l` | `\%23l` | in line 23 /zero-width                          |
-|  `/\%c` | `\%23c` | `\%23c` | in column 23 /zero-width                        |
-|  `/\%v` | `\%23v` | `\%23v` | in virtual column 23 /zero-width                |
+| PATTERN | MAGIC   | NOMAGIC | MATCHES                                         |
+|---------|---------|---------|-------------------------------------------------|
+| `/^`    | `^`     | `^`     | start-of-line (at start of pattern) /zero-width |
+| `/\^`   | `\^`    | `\^`    | literal '^'                                     |
+| `/\_^`  | `\_^`   | `\_^`   | start-of-line (used anywhere) /zero-width       |
+| ` /$`   | `$`     | `$`     | end-of-line (at end of pattern) /zero-width     |
+| `/\$`   | `\$`    | `\$`    | literal '$'                                     |
+| `/\_$`  | `\_$`   | `\_$`   | end-of-line (used anywhere) /zero-width         |
+| `/.`    | `.`     | `\.`    | any single character (not an end-of-line)       |
+| `/\_.`  | `\_.`   | `\_.`   | any single character or end-of-line             |
+| `/\<`   | `\<`    | `\< `   | beginning of a word /zero-width                 |
+| `/\>`   | `\>`    | `\> `   | end of a word /zero-width                       |
+| `/\zs`  | `\zs`   | `\zs`   | anything, sets start of match                   |
+| `/\ze`  | `\ze`   | `\ze`   | anything, sets end of match                     |
+| `/\%^`  | `\%^`   | `\%^`   | beginning of file /zero-width<br> E71           |
+| `/\%$`  | `\%$`   | `\%$`   | end of file /zero-width                         |
+| `/\%V`  | `\%V`   | `\%V`   | inside Visual area /zero-width                  |
+| `/\%#`  | `\%#`   | `\%#`   | cursor position /zero-width                     |
+| `/\%'m` | `\%'m`  | `\%'m`  | mark m position /zero-width                     |
+| `/\%l`  | `\%23l` | `\%23l` | in line 23 /zero-width                          |
+| `/\%c`  | `\%23c` | `\%23c` | in column 23 /zero-width                        |
+| `/\%v`  | `\%23v` | `\%23v` | in virtual column 23 /zero-width                |
 
 
 ### [matches the N pattern](https://stackoverflow.com/a/5424784/2940319)
@@ -1174,9 +1218,9 @@ export PAGER="/bin/sh -c \"unset PAGER;col -b -x | \
   ![regex every third](../screenshot/vim/regex/vim-regex-the3rd.gif)
 
 {% hint style='tip' %}
-[`\v`: the following chars in the pattern are "very magic"](https://vimhelp.org/pattern.txt.html#%2F%5Cv):
-- `^\(.\{-}\zsPATTERN\)\{N}` == > `\v^(.{-}\zsPATTERN){N}`
-- `^\(.\{-}\zs=\)\{N}`       == > `\v^(.{-}\zs\=){N}`
+- [`\v`: the following chars in the pattern are "very magic"](https://vimhelp.org/pattern.txt.html#%2F%5Cv):
+ - `^\(.\{-}\zsPATTERN\)\{N}` == > `\v^(.{-}\zsPATTERN){N}`
+ - `^\(.\{-}\zs=\)\{N}`       == > `\v^(.{-}\zs\=){N}`
 
 NOTICE: after using `\v` the `=` should using `\=` instead
 {% endhint %}
@@ -1252,7 +1296,7 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 
 - via digraph char
 
-  > [!NOTE|label:refrences:]
+  > [!NOTE|label:references:]
   > - [:help digraph-table](https://vimhelp.org/digraph.txt.html#digraph-table)
   > - [:help i_ctrl-k](https://vimhelp.org/insert.txt.html#i_CTRL-K)
 
@@ -1362,15 +1406,60 @@ NOTICE: after using `\v` the `=` should using `\=` instead
 >   - [#84 groovy support? : Put this in ~/.ctags](https://github.com/preservim/tagbar/issues/84#issuecomment-6615001)
 > - [`genctags`](https://github.com/nemausus/dotfiles/blob/master/bashrc#L94C1-L96C2)
 
-```bash
-# Generates ctags.
-#   Usage: exfind folly,common cpp,h,thrift | genctags
-function genctags () {
-  ctags --c++-kinds=+p --extras=+q -L -
-}
+```
+# ~/.ctags
+--exclude=*node_modules*
+--exclude=*.sass
+--exclude=*.swp
+--exclude=*tmp*
+--exclude=*.git*
+
+--tag-relative=yes
+--recurse=yes
+
+--langdef=groovy
+--langmap=groovy:.groovy
+--regex-groovy=/^[ \t]*package[ \t]+([a-zA-Z0-9.-_]+)/\1/p,package/
+--regex-groovy=/^[ \t]*(private|public)?[ \t]*(abstract|final|static)?[ \t]*class[ \t]+([A-Za-z0-9_]+)/\3/c,class/
+--regex-groovy=/^[ \t]*(private|public)?[ \t]*interface[ \t]+([A-Za-z0-9_]+)/\2/i,interface/
+--regex-groovy=/^[ \t]*(private|public)?[ \t]*trait[ \t]+([A-Za-z0-9_]+)/\2/t,trait/
+--regex-groovy=/^[ \t]*(private|public)?[ \t]*enum[ \t]+([A-Za-z0-9_]+)/\2/e,enum/
+--regex-groovy=/^[ \t]*[(abstract|final|static) \t]*((def|void|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+)?([a-zA-Z0-9_]+)\(([^)]*)\)[ \t]+/\3/m,packagemethod/
+--regex-groovy=/^[ \t]*public[ \t]+[(abstract|final|static) \t]*((def|void|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+)?([a-zA-Z0-9_]+)\(([^)]*)\)[ \t]+/\3/u,publicmethod/
+--regex-groovy=/^[ \t]*protected[ \t]+[(abstract|final|static) \t]*((def|void|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+)?([a-zA-Z0-9_]+)\(([^)]*)\)[ \t]+/\3/n,protectedmethod/
+--regex-groovy=/^[ \t]*private[ \t]+[(abstract|final|static) \t]*((def|void|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+)?([a-zA-Z0-9_]+)\(([^)]*)\)[ \t]+/\3/o,privatemethod/
+--regex-groovy=/^[ \t]*[(final|static|synchronized) \t]*(def|byte|int|short|long|float|double|boolean|char|[A-Z][A-Za-z0-9_]*)[ \t]+([a-zA-Z0-9_]+)([ \t]*[\/]+.*)?/\2/f,property/
+--regex-groovy=/^[ \t]*public[ \t]+[(final|static|synchronized) \t]*(def|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+([a-zA-Z0-9_]+)([ \t]*[\/]+.*)?/\2/j,publicfield/
+--regex-groovy=/^[ \t]*protected[ \t]+[(final|static|synchronized) \t]*(def|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+([a-zA-Z0-9_]+)([ \t]*[\/]+.*)?/\2/g,protectedfield/
+--regex-groovy=/^[ \t]*private[ \t]+[(final|static|synchronized) \t]*(def|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+([a-zA-Z0-9_]+)([ \t]*[\/]+.*)?/\2/h,privatefield/
+--regex-groovy=/^[ \t]*[(abstract|final|static) \t]*((def|void|byte|int|short|long|float|double|boolean|char|[A-Z][a-zA-Z0-9_]*)[ \t]+)?([a-zA-Z0-9_]+)\(([^)]*)\)[ \t]+/\3/b,method/
 ```
 
+```vim
+set tags=./tags;,./.tags;,tags
+```
+
+```bash
+$ brew install universal-ctags
+
+# for Jenkinsfile ( jenkinsfile/* ) and Share-libs ( vars/*, src/** )
+$ ctags --quiet --recurse --languages=Groovy \
+        --exclude=.git --exclude=node_modules --exclude='*/node_modules/*' \
+        -f .tags \
+        vars jenkinsfile src
+```
+
+| SHORTCUT                                                    | DESCRIPTION                        |
+|:------------------------------------------------------------|------------------------------------|
+| <kbd>ctrl</kbd>+<kbd>x</kbd> <kbd>ctrl</kbd>+<kbd>] </kbd>  | list all the tags candidates       |
+| <kbd>g</kbd> <kbd>]</kbd>                                   | list all the tags candidates       |
+| <kbd>ctrl</kbd>+<kbd>n</kbd> / <kbd>ctrl</kbd>+<kbd>p</kbd> | list auto-completion candidates    |
+| <kbd>ctrl</kbd>+<kbd>]</kbd>                                | jump to the tag under the cursor   |
+| <kbd>ctrl</kbd>+<kbd>t</kbd>                                | jump back from the tag             |
+| `:tjumps <function>`                                        | list the tag jumps of the function |
+
 ### [edit file in remove server](https://www.commandlinefu.com/commands/view/946/edit-a-file-on-a-remote-host-using-vim)
+
 ```bash
 $ vim scp://username@host//path/to/somefile
 ```
