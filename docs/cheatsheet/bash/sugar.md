@@ -28,14 +28,15 @@
   - [quotas](#quotas)
 - [string manipulations](#string-manipulations)
 - [compound comparison](#compound-comparison)
+  - [SC2235](#sc2235)
   - [SC2155](#sc2155)
-  - [SC2155](#sc2155-1)
   - [escape code](#escape-code)
 - [echo](#echo)
   - [echo var name from variable](#echo-var-name-from-variable)
   - [echo var name](#echo-var-name)
 - [ls](#ls)
 - [tricky](#tricky)
+  - [show timestamp for output](#show-timestamp-for-output)
   - [alias for sudo](#alias-for-sudo)
   - [get md5sum](#get-md5sum)
   - [env](#env)
@@ -343,7 +344,10 @@ $ find . -type f -daystart -mtime -$((diff+1)) -exec cp -a --parents -t /path/to
 
 ### [mirror website](https://explainshell.com/explain?cmd=wget+--mirror+--page-requisites+--html-extension+--convert-links++example.com)
 ```bash
-$ wget --mirror --page-requisites --html-extension --convert-links $URL
+$ wget --mirror --page-requisites --html-extension --convert-links "${URL}"
+
+# download .txt from URL only
+$ wget --recursive --no-parent --no-host-directories --cut-dirs=8 --accept "*.txt" "${URL}"
 
 # https://www.linuxjournal.com/content/downloading-entire-web-site-wget
 $ wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains website.org --no-parent sample.com
@@ -897,7 +901,7 @@ $ date | wc
 
 
 ## compound comparison
-### [SC2155](https://www.shellcheck.net/wiki/SC2235)
+### [SC2235](https://www.shellcheck.net/wiki/SC2235)
 - problematic code:
   ```bash
   ([ "$x" ] || [ "$y" ]) && [ "$z" ]
@@ -1054,6 +1058,44 @@ $ ls -Ap | command grep "^\."
 ```
 
 ## tricky
+
+### show timestamp for output
+
+> [!NOTE|label:references]
+> - [Append timestamp to kubernetes --watch-only command](https://stackoverflow.com/a/77534121/2940319)
+
+```bash
+# with ts ( brew install moreutils )
+#  • `-i`: incremental
+#  • `-s`: since start
+#  • `-m`: monotonic
+$ ssh -vvv user@host 2>&1 | ts -i '[%H:%M:%.S]'
+$ ping -c3 127.0.0.1 | ts -i '[%H:%M:%.S]'
+[00:00:00.000005] PING 127.0.0.1 (127.0.0.1): 56 data bytes
+[00:00:00.000835] 64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.077 ms
+[00:00:00.967500] 64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.344 ms
+[00:00:01.002399] 64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.193 ms
+[00:00:00.000203] --- 127.0.0.1 ping statistics ---
+[00:00:00.000064] 3 packets transmitted, 3 packets received, 0% packet loss
+[00:00:00.000058] round-trip min/avg/max/stddev = 0.077/0.205/0.344/0.109 ms
+
+# with gnomon ( npm i -g gnomon )
+$ ssh -vvv user@host 2>&1 | gnomon
+$ ping -c3 127.0.0.1 | gnomon
+   0.0014s   PING 127.0.0.1 (127.0.0.1): 56 data bytes
+   0.8655s   64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.080 ms
+   1.0025s   64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.253 ms
+   0.0003s   64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.274 ms
+   0.0001s   --- 127.0.0.1 ping statistics ---
+   0.0001s   3 packets transmitted, 3 packets received, 0% packet loss
+   0.0014s   round-trip min/avg/max/stddev = 0.080/0.202/0.274/0.087 ms
+   0.0004s
+
+     Total   1.8735s
+```
+
+![show timestamp for output](../../screenshot/linux/output-timestamp.png)
+
 ### alias for sudo
 
 > [!TIP|label:references:]

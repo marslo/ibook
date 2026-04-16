@@ -199,7 +199,7 @@
   printf "          "     # Blank out ", country" with x spaces
   #tput cuf $DateColumn    # Position to column 27 for date display
 
-  # -h needed to turn off formating: https://askubuntu.com/questions/1013954/bash-substring-stringoffsetlength-error/1013960#1013960
+  # -h needed to turn off formatting: https://askubuntu.com/questions/1013954/bash-substring-stringoffsetlength-error/1013960#1013960
   cal -h > /tmp/terminal
 
   CalLineCnt=1
@@ -946,9 +946,20 @@ mist='''
 
 - list all fonts
   ```bash
+  $ fd . "$(brew --prefix)"/share/figlet --follow -e tlf -e flf --color never | wc -l
+  446
+
   $ while read -r _font; do
       echo -e "\n\n>> ${_font}";
-      date +"%I:%M %P"  | figlet -w 300 -f ${_font} -d "$(brew --prefix)"/share/figlet;
+      date +"%I:%M %P"  | figlet -w $(( $(tput cols) - 3 )) -f ${_font} -d "$(brew --prefix)"/share/figlet;
+    done < <(fd . "$(brew --prefix)"/share/figlet --follow -e tlf -e flf --color never)
+
+  # with lolcat output
+  $ while read -r _font; do
+      echo -e "\n\n>> ${_font}";
+      date +"%I:%M %P"  |
+      figlet -w $(( $(tput cols) - 3 )) -f ${_font} -d "$(brew --prefix)"/share/figlet |
+      lolcat -f --freq=0.1 --spread=1.5 --truecolor;
     done < <(fd . "$(brew --prefix)"/share/figlet --follow -e tlf -e flf --color never)
   ```
 
@@ -992,7 +1003,7 @@ mist='''
     ```bash
     $ while read -r _font; do
         echo -e "\n>> ${_font}:";
-        figlet -w 200 -f "${_font}" 'fzf  bat';
+        figlet -w $(( $(tput cols) - 3 )) -f "${_font}" 'fzf  bat';
       done < <( echo 'rectangles ogre graffiti cricket chunky rounded slant smslant starwars stop doom big small' | fmt -1 )
 
     >> rectangles:
@@ -1093,9 +1104,9 @@ mist='''
 - fonts
   ```bash
   $ ls $(brew --prefix toilet)/share/figlet
-  ascii12.tlf     bigascii9.tlf  circle.tlf   future.tlf  mono9.tlf      smascii9.tlf   smmono12.tlf
-  ascii9.tlf      bigmono12.tlf  emboss.tlf   letter.tlf  pagga.tlf      smblock.tlf    smmono9.tlf
-  bigascii12.tlf  bigmono9.tlf   emboss2.tlf  mono12.tlf  smascii12.tlf  smbraille.tlf  wideterm.tlf
+  ascii12.tlf   bigascii12.tlf  bigmono9.tlf  emboss2.tlf       future.tlf  mono9.tlf      smascii9.tlf   smmono12.tlf
+  ascii9.tlf    bigascii9.tlf   circle.tlf    fauxcyrillic.tlf  letter.tlf  pagga.tlf      smblock.tlf    smmono9.tlf
+  bfraktur.tlf  bigmono12.tlf   emboss.tlf    fullcyrillic.tlf  mono12.tlf  smascii12.tlf  smbraille.tlf  wideterm.tlf
   ```
 
 - list all fonts

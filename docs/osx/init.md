@@ -24,7 +24,7 @@ $ brew install gawk grep findutils gnu-which gnu-getopt gnu-sed gnu-tar gnu-inde
 $ brew install dos2unix openldap
 $ brew install tmux corkscrew telnet tcptraceroute
 $ brew install figlet
-$ brew install --HEAD toilet
+$ brew install --HEAD toilet                      # HEAD for fonts, like `bfraktur`
 $ brew install colordiff diffutils wdiff difftastic
 $ brew install --HEAD diff-so-fancy highlight
 $ brew install lolcat                             # colorize output
