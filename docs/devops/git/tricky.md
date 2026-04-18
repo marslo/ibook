@@ -32,6 +32,12 @@
   - [gfall <branch>](#gfall-branch)
   - [iGitOpt](#igitopt)
   - [hook](#hook)
+- [filter-repo](#filter-repo)
+  - [seperate folder into new repo](#seperate-folder-into-new-repo)
+  - [change commit email](#change-commit-email)
+  - [rewrite the commit history](#rewrite-the-commit-history)
+  - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
+  - [cleanup repo](#cleanup-repo)
 - [git message](#git-message)
 - [refspec](#refspec)
 - [others](#others)
@@ -1060,6 +1066,150 @@ $ git diff --shortstat HEAD^..HEAD
   ```
   <!--endsec-->
 
+
+## filter-repo
+
+> [!TIP]
+> - [newren/git-filter-repo](https://github.com/newren/git-filter-repo)
+>  ```bash
+>  $ brew install git-filter-repo
+>  ```
+
+### seperate folder into new repo
+
+1. create new repo
+
+  ```bash
+  # extract folder-1 and its history
+  $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+    git filter-repo --force --subdirectory-filter folder-1/
+
+  # extract multiple folders
+  $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+    git filter-repo --force --path folder-1/ --path folder-2/ --path secret.key
+
+  # extract multiple folders and merge into single folder
+  # make sure no file name conflict between the folders
+  $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+    git filter-repo \
+      --path folder-1/ --path folder-2/ \
+      --path-rename folder-1/: \
+      --path-rename folder-2/:
+  ```
+
+2. clean in old repo
+
+  ```bash
+  $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+    git filter-repo --path folder-1/ --path folder-2/ --path secret.key --invert-paths
+
+  # -- with glob pattern --
+  $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+    git filter-repo --path-glob 'temp-*/' --path-glob 'logs/*.log' --invert-paths
+
+  # -- with config file --
+  $ cat to-delete.txt
+  folder-1/
+  folder-2/
+  config/passwords.json
+  internal/test-data/
+  $ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null \
+    git filter-repo --paths-from-file to-delete.txt --invert-paths
+  ```
+
+### change commit email
+
+```bash
+$ cd /path/to/repo
+
+# update email in history
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
+old = b"<OLD@DOMAIN.COM>"
+new = b"<NEW@EMAIL.COM>"
+if commit.author_email == old:
+    commit.author_email = new
+if commit.committer_email == old:
+    commit.committer_email = new
+'
+
+# readd the origin
+$ git remote add origin <remote-url>
+
+$ git push origin --all --force
+$ git push origin --tags --force
+```
+
+```bash
+# or with case-insensitive match
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
+keyword = b"<KEYWORD>"
+new = b"<NEW@EMAIL.COM>"
+if keyword in commit.author_email.lower():
+    commit.author_email = new
+if keyword in commit.committer_email.lower():
+    commit.committer_email = new
+'
+```
+
+```bash
+# or with message repalace
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo \
+  --commit-callback '
+keyword = b"<KEYWORD>"
+mail = b"<NEW@EMAIL>COM"
+
+if keyword in commit.author_email.lower():
+    commit.author_email = mail
+if keyword in commit.committer_email.lower():
+    commit.committer_email = mail
+' \
+  --message-callback '
+mail = b"<NEW@EMAIL.COM>"
+msg = message.replace(b"<old@domain.com>", mail)
+msg = msg.replace(b"<OLD@DOMAMIN.COM>", mail)
+return msg
+'
+```
+
+```bash
+# find all commits with old email
+$ git log --all --format='%h %D %ad %ae %ce %s' --date=short | grep -Fi '<KEYWORD>'
+$ git log --all --format='%ae%n%ce' | grep -i '<KEYWORD>'
+$ git log --format='%H %ad %cd %ae' --date=iso-strict | grep -i '<KEYWORD>'
+```
+
+### rewrite the commit history
+```bash
+# `ISSUE-xxx: xxxx` -> `[LEGACY] ISSUE-xxx: xxxx`
+$ git filter-repo --message-callback '
+  if not message.startswith(b"ISSUE-"):
+      return b"[LEGACY] " + message
+  return message
+'
+```
+
+### replace sensitive words in all files
+```bash
+# `my_secret_password` -> `***REDACTED***` in all files and commit messages
+$ cat expressions.txt
+regex:my_secret_password==>***REDACTED***
+$ git filter-repo --replace-text expressions.txt
+
+# "password" -> "******" in all files and commit messages
+$ git filter-repo --replace-text <( echo "password==>******" )
+
+# or with config file
+$ cat replace.txt
+password==>******
+secret==>
+$ git filter-repo --replace-text replace.txt
+```
+
+### cleanup repo
+```bash
+# cleanup the repo by removing blobs bigger than 50MB
+$ git filter-repo --strip-blobs-bigger-than 50M
+```
 
 ## git message
 
