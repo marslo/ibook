@@ -1,33 +1,28 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [gitbook install in MacOS](#gitbook-install-in-macos)
-  - [install node v12](#install-node-v12)
-  - [install gitbook](#install-gitbook)
-  - [init gitbook](#init-gitbook)
-  - [verify](#verify)
-  - [revert node back](#revert-node-back)
-- [gitbook install in Linux](#gitbook-install-in-linux)
-  - [install node v12.22.12](#install-node-v122212)
-  - [install gitbook](#install-gitbook-1)
-  - [setup local node environment](#setup-local-node-environment)
-  - [revert global node to latest version](#revert-global-node-to-latest-version)
-- [gitbook others](#gitbook-others)
+- [node install](#node-install)
+  - [nvm install](#nvm-install)
+  - [tarball install](#tarball-install)
+- [gitbook install and init](#gitbook-install-and-init)
+  - [gitbook install](#gitbook-install)
+  - [dependencies install](#dependencies-install)
+    - [troubleshooting](#troubleshooting)
+    - [verify](#verify)
+- [revert node](#revert-node)
+- [troubleshooting](#troubleshooting-1)
+- [tips](#tips)
   - [basic usage](#basic-usage)
-- [troubleshooting](#troubleshooting)
-  - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
-  - [`Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`](#error-enoent-no-such-file-or-directory-stat-_bookgitbookgitbook-plugin-github-buttonspluginjs)
-  - [`TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined``](#typeerror-err_invalid_arg_type-the-path-argument-must-be-of-type-string-received-undefined)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## gitbook install in MacOS
-
-### install node v12
+# node install
+## nvm install
 
 > [!TIP]
 > - [node-v12.22.12.pkg](https://nodejs.org/dist/v12.22.12/node-v12.22.12.pkg) | [/dist/v12.22.12](https://nodejs.org/dist/v12.22.12/)
+
+<details> <summary>install nvm ...</summary>
 
 ```bash
 # install and setup nvm
@@ -41,8 +36,12 @@ export NPM_CONFIG_PREFIX="\${NVM_DIR}"
 [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && source "$(brew --prefix)/opt/nvm/nvm.sh"
 [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm" ] && source "$(brew --prefix)/opt/nvm/etc/bash_completion.d/nvm"
 EOF
+```
+</details>
 
-# install node v12
+<details> <summary>install node v12 via nvm ...</summary>
+
+```bash
 $ source "$(brew --prefix)/opt/nvm/nvm.sh"
 $ nvm install 12
 Downloading and installing node v12.22.12...
@@ -51,82 +50,16 @@ Computing checksum with sha256sum
 Checksums matched!
 ```
 
-### install gitbook
-
-> [!TIP]
-> ```bash
-> $ npm root -g
-> /Users/marslo/.npm/lib/node_modules
->
-> $ npm config list | grep -E '^prefix'
-> prefix = "/Users/marslo/.npm"
-> ```
+</details>
 
 ```bash
-$ $HOME/.nvm/versions/node/v12.22.12/bin/npm install gitbook-cli -g
-
-# check `~/.npm` depends on `prefix` settings in `npm config list`
-$ ls -altrh ~/.npm/bin/gitbook
-lrwxr-xr-x 1 marslo staff 46 Oct 31 19:34 /Users/marslo/.npm/bin/gitbook -> ../lib/node_modules/gitbook-cli/bin/gitbook.js
-
-# setup link to `/usr/local/bin`
-$ sudo ln -sf $(realpath ~/.npm/bin/gitbook) /usr/local/bin/gitbook
-$ which -a gitbook
-/usr/local/bin/gitbook
+$ nvm use v12.22.12
 ```
 
-### init gitbook
-```bash
-# go to gitbook path
-$ cd /path/to/gitbook
+## tarball install
 
-# using node v12 by default temporary
-$ export PATH="~/.nvm/versions/node/v12.22.12/bin/:$PATH"
-$ npm --version
-6.14.16
-$ node --version
-v12.22.12
+<details> <summary>install node v12.22.12 with node-v12.22.12-linux-x64.tar.xz ...</summary>
 
-$ gitbook install
-# or
-$ gitbook install --log=debug --debug
-
-# or install via package.json automatically
-$ npm install
-```
-
-#### troubleshooting
-```bash
-$ npm install
-
-# -- or install individual package --
-$ npm install gitbook-plugin-codegroup@^2.3.5
-# or
-$ npm install gitbook-plugin-codegroup
-$ npm install string-width@^4.2.0
-$ npm install gitbook-plugin-emphasize
-$ npm install gitbook-plugin-tbfed-pagefooter
-$ npm install gitbook-plugin-image-captions
-$ npm install gitbook-plugin-github-buttons
-$ npm install gitbook-plugin-hide-element
-```
-
-### verify
-```bash
-$ gitbook serve --config=book.json
-```
-
-### revert node back
-```bash
-$ nvm use system
-```
-
-## gitbook install in Linux
-
-> [!IMPORTANT]
-> maximum node version supported is v12
-
-### install node v12.22.12
 ```bash
 # install node v12.22.12 (LTS)
 $ [[ -d /opt/node ]] || mkdir -p /opt/node
@@ -137,36 +70,67 @@ $ OLD_PATH="$PATH"
 $ export PATH="/opt/node/node-v12.22.12-linux-x64/bin/:$PATH"
 ```
 
-- previous version
-  ```bash
-  # install node v12.22.12 (LTS)
-  $ [[ -d /opt/node ]] || mkdir -p /opt/node
-  $ curl -fsSL https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-x64.tar.xz | tar xJf - -C /opt/node/
-  $ sudo update-alternatives --install /usr/local/bin/npm12  npm12  /opt/node/node-v12.22.12-linux-x64/bin/npm  10
-  $ sudo update-alternatives --install /usr/local/bin/node12 node12 /opt/node/node-v12.22.12-linux-x64/bin/node 10
-  $ sudo update-alternatives --install /usr/local/bin/npx12  npx12  /opt/node/node-v12.22.12-linux-x64/bin/npx  10
+</details>
 
-  # setup v12.22.12 as global version temporary
-  ## backup current latest node/npm/npx
-  $ sudo mv /usr/local/bin/node{,21}
-  $ sudo mv /usr/local/bin/npm{,21}
-  $ sudo mv /usr/local/bin/npx{,21}
+<details> <summary>previous version ...</summary>
 
-  ## setup global environment to v12 temporary
-  $ sudo ln -sf /usr/local/bin/npx12  /usr/local/bin/npx
-  $ sudo ln -sf /usr/local/bin/node12 /usr/local/bin/node
-  $ sudo ln -sf /usr/local/bin/npm12  /usr/local/bin/npm
-  ```
+```bash
+# install node v12.22.12 (LTS)
+$ [[ -d /opt/node ]] || mkdir -p /opt/node
+$ curl -fsSL https://nodejs.org/dist/v12.22.12/node-v12.22.12-linux-x64.tar.xz | tar xJf - -C /opt/node/
+$ sudo update-alternatives --install /usr/local/bin/npm12  npm12  /opt/node/node-v12.22.12-linux-x64/bin/npm  10
+$ sudo update-alternatives --install /usr/local/bin/node12 node12 /opt/node/node-v12.22.12-linux-x64/bin/node 10
+$ sudo update-alternatives --install /usr/local/bin/npx12  npx12  /opt/node/node-v12.22.12-linux-x64/bin/npx  10
 
-### install gitbook
+# setup v12.22.12 as global version temporary
+## backup current latest node/npm/npx
+$ sudo mv /usr/local/bin/node{,21}
+$ sudo mv /usr/local/bin/npm{,21}
+$ sudo mv /usr/local/bin/npx{,21}
 
-> [!NOTE]
+## setup global environment to v12 temporary
+$ sudo ln -sf /usr/local/bin/npx12  /usr/local/bin/npx
+$ sudo ln -sf /usr/local/bin/node12 /usr/local/bin/node
+$ sudo ln -sf /usr/local/bin/npm12  /usr/local/bin/npm
+```
+
+</details>
+
+# gitbook install and init
+
+## gitbook install
+
+> [!TIP]
+> ```bash
+> $ npm root -g
+> /Users/marslo/.npm/lib/node_modules
+>
+> $ npm config list | grep -E '^prefix'
+> prefix = "/Users/marslo/.npm"
+> ```
+
+> [!IMPORTANT]
+> - maximum node version supported is `v12`
 > - [Setup and Installation of GitBook](https://github.com/GitbookIO/gitbook/blob/master/docs/setup.md)
 
-```bahs
-$ sudo npm i -g gitbook-cli
+```bash
+$ npm install gitbook-cli -g
+# -- or --
+$ $HOME/.nvm/versions/node/v12.22.12/bin/npm install gitbook-cli -g
+# -- or --
+$ /usr/local/bin/npm12 install gitbook-cli -g
 
-# install gitboook
+# check `~/.npm` depends on `prefix` settings in `npm config list`
+$ ls -altrh ~/.npm/bin/gitbook
+lrwxr-xr-x 1 marslo staff 46 Oct 31 19:34 /Users/marslo/.npm/bin/gitbook -> ../lib/node_modules/gitbook-cli/bin/gitbook.js
+
+# [optional] setup link to `/usr/local/bin`
+$ sudo ln -sf $(realpath ~/.npm/bin/gitbook) /usr/local/bin/gitbook
+$ which -a gitbook
+/usr/local/bin/gitbook
+```
+
+```bash
 $ gitbook fetch
 CLI version: 2.3.2
 Installing GitBook 3.2.3
@@ -179,36 +143,8 @@ CLI version: 2.3.2
 GitBook version: 3.2.3
 ```
 
-### setup local node environment
-```bash
-$ cd /path/to/repo
+<details> <summary>list and install pre version ...</summary>
 
-# install dependencies
-$ export PATH="/opt/node/node-v12.22.12-linux-x64/bin/:$PATH"
-$ gitbook install
-# or
-$ npm install
-# or
-$ npm12 install
-# or
-$ /opt/node/node-v12.22.12-linux-x64/bin/npm install
-```
-
-- verify local node/gitbook environment
-  ```bash
-  $ gitbook build --log=debug --debug
-  $ gitbook serve
-  $ gitbook serve --config=book.json
-  ```
-
-### revert global node to latest version
-```bash
-$ sudo ln -sf /usr/local/bin/node21 /usr/local/bin/node
-$ sudo ln -sf /usr/local/bin/npm21  /usr/local/bin/npm
-$ sudo ln -sf /usr/local/bin/npx21  /usr/local/bin/npx
-```
-
-## gitbook others
 ```bash
 # to list all versions
 $ gitbook ls-remote
@@ -229,41 +165,82 @@ $ gitbook update
 $ gitbook --version --gitbook=2.6.7
 ```
 
-### basic usage
+</details>
 
-- check npm run commands:
-  ```bash
-  $ npm run
-  Scripts available in ibook@3.2.3 via `npm run-script`:
-    ibook:prepare
-      gitbook install
-    ibook:watch
-      npm run ibook:prepare && gitbook serve
-    ibook:dev
-      cd books && gitbook serve --config=../book.json
-    clean
-      [ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book
-    builtall
-      [ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book; gitbook install && gitbook build --log=debug --debug
-    built
-      [ -d _book ] && rm -rf _book; gitbook build --log=debug --debug
-    ibook
-      gitbook install && gitbook serve
-    deploy
-      bash deploy.sh doDeploy
-  ```
+## dependencies install
 
-- build and deploy
-  ```bash
-  $ npm run deploy
+> [!TIP]
+> - using node v12 by default temporary [optional]
+>   ```bash
+>   $ export PATH="~/.nvm/versions/node/v12.22.12/bin/:$PATH"
+>   $ npm --version
+>   6.14.16
+>   $ node --version
+>   v12.22.12
+>   ```
 
-  # or
-  $ npm12 run deploy
-  ```
+```bash
+# go to gitbook path
+$ cd /path/to/gitbook
 
-## troubleshooting
+# install dependencies
+$ gitbook install
+# or
+$ gitbook install --log=debug --debug
 
-### `if (cb) cb.apply(this, arguments)`
+# or install via package.json automatically
+$ npm install
+```
+
+### troubleshooting
+```bash
+$ npm install
+
+# -- or install individual package --
+$ npm install gitbook-plugin-codegroup@^2.3.5
+# or
+$ npm install gitbook-plugin-codegroup
+$ npm install string-width@^4.2.0
+$ npm install gitbook-plugin-emphasize
+$ npm install gitbook-plugin-tbfed-pagefooter
+$ npm install gitbook-plugin-image-captions
+$ npm install gitbook-plugin-github-buttons
+$ npm install gitbook-plugin-hide-element
+```
+
+### verify
+```bash
+$ gitbook serve --config=book.json
+
+$ gitbook build --log=debug --debug
+
+$ gitbook serve
+$ gitbook serve --config=book.json
+```
+
+# revert node
+
+<details> <summary>[nvm] revert global node ...</summary>
+
+```bash
+$ nvm use system
+```
+
+</details>
+
+<details> <summary>[tarball] revert global node ...</summary>
+
+```bash
+$ sudo ln -sf /usr/local/bin/node21 /usr/local/bin/node
+$ sudo ln -sf /usr/local/bin/npm21  /usr/local/bin/npm
+$ sudo ln -sf /usr/local/bin/npx21  /usr/local/bin/npx
+```
+
+</details>
+
+# troubleshooting
+
+## `if (cb) cb.apply(this, arguments)`
 ```bash
 $ vim $(npm root -g)/gitbook-cli/node_modules/npm/node_modules/graceful-fs/polyfills.js
 # or
@@ -273,7 +250,7 @@ $ vim /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/grac
 64   // fs.lstat = statFix(fs.lstat)
 ```
 
-### `Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`
+## `Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`
 
 > [!NOTE]
 > - [gitbook serve error with ENOENT: no such file or directory(fontsettings.js&website.css) #55](https://github.com/GitbookIO/gitbook-cli/issues/55) | [Fixing write race condition #57](https://github.com/davglass/cpr/pull/57)
@@ -304,7 +281,7 @@ $ vim /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/grac
   $ npx npm install cpr@3
   ```
 
-### `TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined``
+## `TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined``
 
 > [!NOTE]
 > - error message:
@@ -323,7 +300,40 @@ $ vim /usr/local/lib/node_modules/gitbook-cli/node_modules/npm/node_modules/grac
 >       at Promise.promise.promiseDispatch (/Users/marslo/.gitbook/versions/3.2.3/node_modules/q/q.js:796:13)
 >   ```
 
-#### how to fix
+### how to fix
 
 - change `<..>` to <code>\`<..>\`</code>
 - example: [73fdcce1242a9f3df4b099c69f2c474015521068](https://github.com/marslo/ibook/commit/73fdcce1242a9f3df4b099c69f2c474015521068#diff-c356607107b73939f9b513b702862f42b48f45325b87b456e4e40423d97791fdL544)
+
+# tips
+## basic usage
+
+- check npm run commands:
+  ```bash
+  $ npm run
+  Scripts available in ibook@3.2.3 via `npm run-script`:
+    ibook:prepare
+      gitbook install
+    ibook:watch
+      npm run ibook:prepare && gitbook serve
+    ibook:dev
+      cd books && gitbook serve --config=../book.json
+    clean
+      [ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book
+    builtall
+      [ -d node_modules ] && rm -rf node_modules; [ -d _book ] && rm -rf _book; gitbook install && gitbook build --log=debug --debug
+    built
+      [ -d _book ] && rm -rf _book; gitbook build --log=debug --debug
+    ibook
+      gitbook install && gitbook serve
+    deploy
+      bash deploy.sh doDeploy
+  ```
+
+- build and deploy
+  ```bash
+  $ npm run deploy
+
+  # or
+  $ npm12 run deploy
+  ```
