@@ -5,6 +5,12 @@
   - [auto completion](#auto-completion)
 - [authentication](#authentication)
   - [authentication scopes](#authentication-scopes)
+- [commits](#commits)
+  - [list commit](#list-commit)
+  - [get commit created time](#get-commit-created-time)
+- [tags](#tags)
+  - [list tags](#list-tags)
+  - [add lightweight tags](#add-lightweight-tags)
 - [pr](#pr)
   - [json field mapping](#json-field-mapping)
   - [create pr](#create-pr)
@@ -112,6 +118,78 @@ $ gh auth refresh -h github.com -s admin:public_key
 
 # scope: read:gpg_key
 $ gh auth refresh -s read:gpg_key
+```
+
+```bash
+# add authentication scopes
+$ gh auth refresh --scopes <scope>
+
+# i.e.:
+$ gh auth refresh -h github.com -s admin:public_key
+$ gh auth refresh -s read:gpg_key
+```
+
+```bash
+# remove authentication scopes
+$ gh auth refresh --remove-scopes <scope>
+```
+
+## commits
+
+### list commit
+```bash
+$ gh api repos/${OWNER}/${REPO}/commits/${REVISION}
+
+# i.e.:
+$ gh api repos/${OWNER}/${REPO}/commits/${REVISION} --jq '.commit.committer'
+
+$ gh api repos/${OWNER}/${REPO}/commits/${REVISION} \
+     --jq '[.sha, "\(.commit.author.name) <\(.commit.author.email)> - \(.commit.author.date)", (.commit.message | split("\n"))]'
+
+$ gh api repos/${OWNER}/${REPO}/commits/${REVISION} \
+     --jq '[
+       "revision: \(.sha)",
+       "author: \(.commit.author.name) <\(.commit.author.email)> - \(.commit.author.date)",
+       "committer: \(.commit.committer.name) <\(.commit.committer.email)> - \(.commit.committer.date)",
+       {message: (.commit.message | split("\n")) }
+     ]'
+```
+
+### get commit created time
+```bash
+$ REVISION='xxx'
+$ gh api repos/${OWNER}/${REPO}/events \
+  --jq ".[] | select(.payload.head | startswith(\"${REVISION}\")?) | [ .actor.login, .created_at ]"
+
+# or with `jq`
+$ gh api repos/${OWNER}/${REPO}/events | \
+     jq --arg rev "$REVISION" '.[] | select(.payload.head | startswith($rev)?) | [ .actor.login, .created_at ]'
+```
+
+## tags
+
+### list tags
+
+> [!TIP]
+> `GET /repos/{owner}/{repo}/git/refs/tags`
+
+```bash
+$ gh api "/repos/${OWNER}/${REPO}/git/refs/tags"
+
+# or
+$ gh api "/repos/${OWNER}/${REPO}/git/refs/tags" --jq '.[] | .object.sha + " - " + .ref'
+```
+
+### add lightweight tags
+
+> [!TIP]
+> `POST /repos/{owner}/{repo}/git/refs -f refs=refs/tags/{TAG_NAME} -f sha="<SHASUM>"`
+
+```bash
+# tag `refs/tags/<TAG_NAME>` on `${REVISION}`
+$ gh api -X POST -H "Accept: application/vnd.github+json" "/repos/${OWNER}/${REPO}/git/refs" \
+     -f ref="refs/tags/<TAG_NAME>" \
+     -f sha="${REVISION}"
 ```
 
 ## pr

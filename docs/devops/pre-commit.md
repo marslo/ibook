@@ -60,6 +60,9 @@ $ pre-commit migrate-config
 > - default `PRE_COMMIT_HOME` is `~/.cache/pre-commit`
 
 ```bash
+# clean pre-commit outdated cache
+$ pre-commit gc
+
 # clean pre-commit cache and environment ( $PRE_COMMIT_HOME )
 $ pre-commit clean
 
@@ -77,8 +80,11 @@ $ pre-commit run --all-files --show-diff-on-failure --color always
 
 # -- all files with specific hook --
 $ pre-commit run <hook_id> --all-files
-# i.e.:
+# i.e.: trailing-whitespace
 $ pre-commit run trailing-whitespace --all-files
+
+# -- from ref -> to ref --
+$ pre-commit run --show-diff-on-failure --color=always --from-ref "${START_REF}" --to-ref "${END_REF}"
 ```
 
 ### run with manual stage
@@ -122,7 +128,7 @@ $ pre-commit run --hook-stage manual --all-files
 ---
 repos:
   - repo: https://github.com/marslo/cr-manager
-    rev: v0.0.4
+    rev: v3.1.0
     hooks:
       - id: update-copyright
         args: ["--update"]
@@ -134,7 +140,7 @@ repos:
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
@@ -253,7 +259,7 @@ repos:
 ---
 repos:
   - repo: https://github.com/crate-ci/typos
-    rev: v1.31.1
+    rev: v1.45.1
     hooks:
         - id: typos
           name: Typos
