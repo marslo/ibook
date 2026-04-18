@@ -1,7 +1,9 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [commit message](#commit-message)
+- [conventional commits](#conventional-commits)
+  - [commitlint](#commitlint)
+  - [emoji](#emoji)
 - [tricky](#tricky)
   - [help and path](#help-and-path)
   - [hidden feature](#hidden-feature)
@@ -13,7 +15,6 @@
   - [remove `warning: CRLF will be replaced by LF in xxx file` for `.gitattributes`](#remove-warning-crlf-will-be-replaced-by-lf-in-xxx-file-for-gitattributes)
   - [create multiple commits](#create-multiple-commits)
   - [revision](#revision)
-  - [git commit](#git-commit)
   - [git path](#git-path)
   - [`.gitattributes`](#gitattributes)
   - [git summaries](#git-summaries)
@@ -38,22 +39,45 @@
   - [rewrite the commit history](#rewrite-the-commit-history)
   - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
   - [cleanup repo](#cleanup-repo)
-- [git message](#git-message)
 - [refspec](#refspec)
 - [others](#others)
   - [case-sensitive repo in osx](#case-sensitive-repo-in-osx)
-  - [alias](#alias)
-  - [check help in previw.app](#check-help-in-previwapp)
   - [disk size](#disk-size)
-  - [How is git commit sha1 formed](#how-is-git-commit-sha1-formed)
+  - [how is git commit sha1 formed](#how-is-git-commit-sha1-formed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## commit message
+## conventional commits
 
 > [!TIP|label:references:]
-> - [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+> - [* Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 > - [@commitlint/config-conventional](https://www.npmjs.com/package/@commitlint/config-conventional)
+> - [Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
+> - [AngularJS Git Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1&tab=t.0#heading=h.uyo6cb12dt6w)
+> - [Add Choice [ chore, revert ] to question "Select the type of change you are committing" #36](https://github.com/commitizen-tools/commitizen/issues/36#issuecomment-520243444)
+
+| TYPE       | FULL NAME     | SIMPLE DESCRIPTION                   | DESCRIPTION                                                                                                 |
+|------------|---------------|--------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `build`    |               | 构建系统或外部依赖项的变化           | changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
+| `ci`       |               | CI 配置文件和脚本的更改              | changes to our ci configuration files and scripts (example scopes: travis, circle, browserstack, saucelabs) |
+| `docs`     | documentation | 仅文档修改                           | documentation only changes                                                                                  |
+| `feat`     | feature       | 新功能                               | a new feature                                                                                               |
+| `fix`      | bugfix        | 修复问题                             | a bug fix                                                                                                   |
+| `perf`     |               | 性能提高                             | a code change that improves performance                                                                     |
+| `refactor` |               | 重构 (即不是新增功能, 也不是修改bug) | a code change that neither fixes a bug nor adds a feature                                                   |
+| `style`    | formatting    | 格式 (不影响代码运行的变动)          | changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |
+| `test`     |               | 增加测试                             | adding missing tests or correcting existing tests                                                           |
+| `chore`    | maintain      | 构建过程或辅助工具的变动             | changes to the build process or auxiliary tools and libraries such as documentation generation              |
+
+```
+docs(changelog): update changelog to beta.5
+```
+
+```
+fix(release): need to depend on latest rxjs and zone.js
+
+The version in our package.json gets copied to the one we publish, and users need the latest of these.
+```
 
 ```bash
 $ npm i -g @commitlint/config-conventional
@@ -61,6 +85,8 @@ $ npm i -g @commitlint/config-conventional
 # or
 $ npm install -g @commitlint/cli @commitlint/config-conventional
 ```
+
+### commitlint
 
 > [!TIP|label:references:]
 > - [commitlint](https://commitlint.js.org/)
@@ -78,18 +104,21 @@ module.exports = {
 };
 ```
 
-- for jira tickets
-  ```js
-  // .commitlintrc.disable-subject-case.js
-  module.exports = {
-    extends: ['@commitlint/config-conventional'],
-    rules: {
-      'header-max-length': [0],                   // disable the header-max-length rule
-      'body-max-line-length': [0],                // disable the body-max-line-length rule
-      'subject-case': [0],                        // disable the subject-case rule
-    },
-  };
-  ```
+for jira tickets
+```js
+// .commitlintrc.disable-subject-case.js
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'header-max-length': [0],                   // disable the header-max-length rule
+    'body-max-line-length': [0],                // disable the body-max-line-length rule
+    'subject-case': [0],                        // disable the subject-case rule
+  },
+};
+```
+
+
+### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
 
 ## tricky
 
@@ -329,10 +358,6 @@ done
 ```bash
 $ git rev-list --max-parents=0 HEAD
 ```
-
-### git commit
-#### [emoji](https://gist.github.com/risan/41a0e4a462477875217346027879f618)
-
 
 ### git path
 #### get absolute root path
@@ -1211,39 +1236,6 @@ $ git filter-repo --replace-text replace.txt
 $ git filter-repo --strip-blobs-bigger-than 50M
 ```
 
-## git message
-
-> [!NOTE|label:references:]
-> - [* Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-> - [Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines)
-> - [AngularJS Git Commit Message Conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit?pli=1&tab=t.0#heading=h.uyo6cb12dt6w)
-> - [Add Choice [ chore, revert ] to question "Select the type of change you are committing" #36](https://github.com/commitizen-tools/commitizen/issues/36#issuecomment-520243444)
-
-| TYPE       | FULL NAME     | SIMPLE DESCRIPTION                   | DESCRIPTION                                                                                                 |
-|------------|---------------|--------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| `build`    |               | 构建系统或外部依赖项的变化           | changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)         |
-| `ci`       |               | CI 配置文件和脚本的更改              | changes to our ci configuration files and scripts (example scopes: travis, circle, browserstack, saucelabs) |
-| `docs`     | documentation | 仅文档修改                           | documentation only changes                                                                                  |
-| `feat`     | feature       | 新功能                               | a new feature                                                                                               |
-| `fix`      | bugfix        | 修复问题                             | a bug fix                                                                                                   |
-| `perf`     |               | 性能提高                             | a code change that improves performance                                                                     |
-| `refactor` |               | 重构 (即不是新增功能, 也不是修改bug) | a code change that neither fixes a bug nor adds a feature                                                   |
-| `style`    | formatting    | 格式 (不影响代码运行的变动)          | changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)      |
-| `test`     |               | 增加测试                             | adding missing tests or correcting existing tests                                                           |
-| `chore`    | maintain      | 构建过程或辅助工具的变动             | changes to the build process or auxiliary tools and libraries such as documentation generation              |
-
-- sample
-  ```
-  docs(changelog): update changelog to beta.5
-  ```
-
-  ```
-  fix(release): need to depend on latest rxjs and zone.js
-
-  The version in our package.json gets copied to the one we publish, and users need the latest of these.
-  ```
-
-
 ## refspec
 
 > [!NOTE|label:references:]
@@ -1265,17 +1257,6 @@ $ hdiutil attach ~/casesensitive.dmg.sparseimage
 $ git clone https://github.com/<OWNER>/<REPO>.git /Volumes/casesensitive/<REPO>
 ```
 
-### alias
-
-{% hint style='tip' %}
-> references:
-> - [putermancer/.gitconfig](https://gist.github.com/putermancer/841286/5bffd46cb2a1b6fbe385a16f8bc1ce14ec45ebb7)
-> - [List Git aliases](https://stackoverflow.com/a/48697231/2940319)
-> - [Shell Tricks: One Git Alias to Rule Them All](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
-> - [automatic documentation of gitconfig aliases using sed or awk](https://stackoverflow.com/q/53841043/2940319)
-> - [git config alias escaping](https://stackoverflow.com/questions/38057261/git-config-alias-escaping/39616600#39616600)
-{% endhint %}
-
 #### show git alias
 
 {% hint style='tip' %}
@@ -1286,104 +1267,6 @@ $ git --list-cmds=alias
 $ git config --get-regexp '^alias\.'
 ```
 {% endhint %}
-
-```
-[alias]
-  # https://stackoverflow.com/q/53841043/2940319
-  ### show [g]it alia[s]
-  as         = "! bash -c '''grep --no-group-separator -A1 -e \"^\\s*###\" \"$HOME\"/.marslo/.gitalias | \n\
-                              awk \"END{if((NR%2))print p}!(NR%2){print\\$0p}{p=\\$0}\" | \n\
-                              sed -re \"s/( =)(.*)(###)/*/g\" | \n\
-                              sed -re \"s:[][]::g\" | \n\
-                              awk -F* \"{printf \\\"\\033[1;33m%-20s\\033[0m » \\033[0;34m%s\\033[0m\\n\\\", \\$1, \\$2}\" | \n\
-                              sort \n\
-                           '''"
-```
-
-- [or](https://gist.github.com/putermancer/841286/5bffd46cb2a1b6fbe385a16f8bc1ce14ec45ebb7)
-  ```
-  [alias]
-    alias = "!sh -c '[ $# = 2 ] && git config --global alias.\"$1\" \"$2\" && exit 0 || [ $# = 1 ] && [ $1 = \"--list\" ] && git config --list | grep \"alias\\.\" | sed \"s/^alias\\.\\([^=]*\\)=\\(.*\\).*/\\1@@@@=>@@@@\\2/\" | sort | column -ts \"@@@@\" && exit 0 || echo \"usage: git alias <new alias> <original command>\\n       git alias --list\" >&2 && exit 1' -"
-  ```
-
-- [or](https://stackoverflow.com/a/48697231/2940319)
-  ```
-  [alias]
-    aliases = !git config --get-regexp ^alias\\. | sed -e s/^alias.// -e s/\\ /\\ $(printf \"\\043\")--\\>\\ / | column -t -s $(printf \"\\043\")
-  ```
-
-- [or](https://brettterpstra.com/2014/08/04/shell-tricks-one-git-alias-to-rule-them-all/)
-  ```
-  $ git config --global --get-regexp alias |
-        awk -v nr=2 '{sub(/^alias\./,"")}; \
-                     { printf "\033[31m%_10s\033[1;37m", $1}; \
-                     {sep=FS}; \
-                     {for (x=nr; x<=NF; x++) \
-                     { printf "%s%s", sep, $x; }; \
-                     print "\033[0;39m"}'
-  ```
-
-  - `finda`
-    ```
-    [alias]
-      finda = "!grepalias() { git config --global --get-regexp alias | grep -i \"$1\" | awk -v nr=2 '{sub(/^alias\\./,\"\")};{printf \"\\033[31m%_10s\\033[1;37m\", $1};{sep=FS};{for (x=nr; x<=NF; x++) {printf \"%s%s\", sep, $x; }; print \"\\033[0;39m\"}'; }; grepalias"
-    ```
-
-- or [`show-cmd`](https://stackoverflow.com/a/62772985/2940319)
-  ```
-  [alias]
-      show-cmd = "!f() { \
-          sep="㊣" ;\
-          name=${1:-alias};\
-          echo -n -e '\\033[48;2;255;255;01m' ;\
-          echo -n -e '\\033[38;2;255;0;01m' ;\
-          echo "$name"; \
-          echo -n -e '\\033[m' ;\
-          git config --get-regexp ^$name\\..*$2+ | \
-          cut -c 1-40 | \
-          sed -e s/^$name.// \
-          -e s/\\ /\\ $(printf $sep)--\\>\\ / | \
-          column -t -s $(printf $sep) | \
-          sort -k 1 ;\
-      }; f"
-  ```
-
-#### ls
-
-{% hint style='tip' %}
-> references:
-> - [putermancer/.gitconfig](https://gist.github.com/putermancer/841286/5bffd46cb2a1b6fbe385a16f8bc1ce14ec45ebb7)
-> - [taxilian/.gitconfig](https://gist.github.com/taxilian/1338308)
-{% endhint %}
-
-```
-[alias]
-  ls           = "!git status -suno"
-  ls-modified  = "!git status --porcelain -uno | awk 'match($1, /M/) {print $2}'"
-  ls-added     = "!git status --porcelain -uno | awk 'match($1, /A/) {print $2}'"
-  ls-deleted   = "!git status --porcelain -uno | awk 'match($1, /D/) {print $2}'"
-  ls-renamed   = "!git status --porcelain -uno | awk 'match($1, /R/) {print $2}'"
-  ls-copied    = "!git status --porcelain -uno | awk 'match($1, /C/) {print $2}'"
-  ls-updated   = "!git status --porcelain -uno | awk 'match($1, /U/) {print $2}'"
-  ls-staged    = "!git status --porcelain -uno | grep -P '^[MA]' | awk '{ print $2 }'"
-  ls-untracked = "!git status --porcelain -uall | awk '$1 == \"??\" {print $2}'"
-```
-
-#### git alias escaping
-```
-[alias]
-  # https://stackoverflow.com/a/39616600/2940319
-  # Quote / unquote a sh command, converting it to / from a git alias string
-  quote-string = "!read -r l; printf \\\"!; printf %s \"$l\" | sed 's/\\([\\\"]\\)/\\\\\\1/g'; printf \" #\\\"\\n\" #"
-  quote-string-undo = "!read -r l; printf %s \"$l\" | sed 's/\\\\\\([\\\"]\\)/\\1/g'; printf \"\\n\" #"
-```
-
-### [check help in previw.app](https://brettterpstra.com/2014/08/05/shell-tricks-man-pages/)
-```bash
-$ MANWIDTH=80 MANPAGER='col -bx' git help rev-parse |
-              groff -P-pa4 -Tps -mandoc -c |
-              open -f -a Preview.app
-```
 
 ### [disk size](https://git-scm.com/docs/git-rev-list#Documentation/git-rev-list.txt)
 ```bash
@@ -1410,7 +1293,7 @@ $ git for-each-ref --format='%(refname)' |
 $ git rev-list --disk-usage --objects --remotes=$suspect --not --remotes=origin
 ```
 
-### [How is git commit sha1 formed](https://gist.github.com/masak/2415865)
+### [how is git commit sha1 formed](https://gist.github.com/masak/2415865)
 
 > [!NOTE|label:references:]
 > - [How is the Git hash calculated?](https://stackoverflow.com/q/35430584/2940319)
