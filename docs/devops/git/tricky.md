@@ -17,7 +17,6 @@
   - [revision](#revision)
   - [git path](#git-path)
   - [`.gitattributes`](#gitattributes)
-  - [git summaries](#git-summaries)
   - [who-am-i](#who-am-i)
   - [find bug with bisect](#find-bug-with-bisect)
   - [view file at specific commit](#view-file-at-specific-commit)
@@ -28,24 +27,22 @@
   - [git config](#git-config)
   - [generate trailers](#generate-trailers)
   - [show trailers](#show-trailers)
-- [scripts](#scripts)
-  - [fetch merge all](#fetch-merge-all)
-  - [gfall <branch>](#gfall-branch)
-  - [iGitOpt](#igitopt)
   - [hook](#hook)
 - [filter-repo](#filter-repo)
-  - [seperate folder into new repo](#seperate-folder-into-new-repo)
   - [change commit email](#change-commit-email)
+  - [seperate folder into new repo](#seperate-folder-into-new-repo)
   - [rewrite the commit history](#rewrite-the-commit-history)
   - [replace sensitive words in all files](#replace-sensitive-words-in-all-files)
   - [cleanup repo](#cleanup-repo)
-- [refspec](#refspec)
 - [others](#others)
   - [case-sensitive repo in osx](#case-sensitive-repo-in-osx)
   - [disk size](#disk-size)
   - [how is git commit sha1 formed](#how-is-git-commit-sha1-formed)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+> [!NOTE|label:references:]
+> - [10.5 Git Internals - The Refspec](https://git-scm.com/book/en/v2/Git-Internals-The-Refspec)
 
 ## conventional commits
 
@@ -421,115 +418,6 @@ $ cat .gitattributes
 path/to/file  eol=lf
 ```
 
-### git summaries
-#### get repo active days
-```bash
-$ git log --pretty='format: %ai' $1 |
-      cut -d ' ' -f 2 |
-      sort -r |
-      uniq |
-      awk '{ sum += 1 } END {print sum}'
-```
-
-#### get commit count
-- since particular commit
-  ```bash
-  $ git log --oneline <hash-id> |
-        wc -l |
-        tr -d ' '
-  635
-  ```
-- since the initial commit
-  ```bash
-  $ git log --oneline |
-        wc -l |
-        tr -d ' '
-  780
-  ```
-
-#### get all files count in the repo
-```bash
-$ git ls-files | wc -l | tr -d ' '
-```
-
-#### get contributors
-```bash
-$ git shortlog -n -s -e
-   110   marslo <marslo.jiao@gmail.com>
-    31   marslo <marslo@xxx.com>
-```
-
-[collection](https://github.com/tj/git-extras/blob/master/bin/git-summary#L81)
-```bash
-$ git shortlog -n -s -e |
-      awk ' {
-        sum += $1
-        if ($NF in emails) {
-            emails[$NF] += $1
-        } else {
-            email = $NF
-            emails[email] = $1
-            # set commits/email to empty
-            $1=$NF=""
-            sub(/^[[:space:]]+/, "", $0)
-            sub(/[[:space:]]+$/, "", $0)
-            name = $0
-            if (name in names) {
-                # when the same name is associated with existed email,
-                # merge the previous email into the later one.
-                emails[email] += emails[names[name]]
-                emails[names[name]] = 0
-            }
-            names[name] = email
-        }
-      } END {
-        for (name in names) {
-            email = names[name]
-            printf "%6d\t%s\n", emails[email], name
-      }
-    }'
-   141  marslo
-```
-
-#### format the author
-```bash
-$ git shortlog -n -s -e | awk '
-  { args[NR] = $0; sum += $0 }
-  END {
-    for (i = 1; i <= NR; ++i) {
-      printf "%s♪%2.1f%%\n", args[i], 100 * args[i] / sum
-    }
-  }
-  ' | column -t -s♪ | sed "s/\\\x09/\t/g"
-   110  marslo <marslo.jiao@gmail.com>  78.0%
-    31  marslo <marslo@xxx.com>         22.0%
-```
-
-#### show diff file only
-```bash
-$ git log --numstat --pretty="%H" --author=marslo HEAD~3..HEAD
-9fdb297ba0d2d51975e91d2b7e40fb5e96be4f5f
-
-8       1       docs/artifactory/artifactory.md
-095ec79c89d98831c0a485f55011bf81c6f712ad
-
-49      11      docs/linux/disk.md
-5       1       docs/osx/util.md
-f15a40c8dea2927db54570268aca4203cd50a416
-
-1       0       docs/SUMMARY.md
--       -       docs/screenshot/tools/ms/outlook-keychain-1.png
-81      0       docs/tools/ms.md
-```
-
-#### repo age
-```bash
-$ git log --reverse --pretty=oneline --format="%ar" |
-      head -n 1 |
-      LC_ALL=C sed 's/ago//'
-4 months
-```
-
 ### who-am-i
 
 > [!NOTE|label:references:]
@@ -786,104 +674,6 @@ $ git log --pretty=format:"%b" | command grep -E "^(Signed-off-by|Co-authored-by
   marslo <marslo.jiao@gmail.com>
   ```
 
-
-## scripts
-### [fetch merge all](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/.gitalias#L183)
-```bash
-$ cat ~/.gitconfig
-...
-[alias]
-  ua          = "!bash -c 'while read branch; do \n\
-                   echo -e \"\\033[1;33m~~> ${branch}\\033[0m\" \n\
-                   git fetch --all --force; \n\
-                   if [ 'meta/config' == \"${branch}\" ]; then \n\
-                     git fetch origin --force refs/${branch}:refs/remotes/origin/${branch} \n\
-                   fi \n\
-                   git rebase -v refs/remotes/origin/${branch}; \n\
-                   git merge --all --progress refs/remotes/origin/${branch}; \n\
-                   git remote prune origin; \n\
-                   if git --no-pager config --file $(git rev-parse --show-toplevel)/.gitmodules --get-regexp url; then \n\
-                     git submodule sync --recursive; \n\
-                     git submodule update --init --recursive \n\
-                   fi \n\
-                 done < <(git rev-parse --abbrev-ref HEAD) '"
-...
-```
-### [gfall <branch>](https://github.com/marslo/mylinux/blob/master/confs/home/.marslo/bin/ig.sh#L117)
-
-### iGitOpt
-- [ig.sh](https://raw.githubusercontent.com/marslo/mylinux/master/confs/home/.marslo/bin/ig.sh)
-
-#### `--stat`
-```bash
-$ git diff --stat HEAD^ HEAD
- docs/programming/groovy/groovy.md |  1 +
- docs/vim/tricky.md                | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
- 2 files changed, 61 insertions(+), 21 deletions(-)
-```
-
-- [for particular account](https://stackoverflow.com/a/2528129/2940319)
-  ```bash
-  $ git --no-pager diff --author='marslo' --stat HEAD^ HEAD
-   docs/programming/groovy/groovy.md |  1 +
-   docs/vim/tricky.md                | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
-   2 files changed, 61 insertions(+), 21 deletions(-)
-  ```
-
-#### `--numstat`
-```bash
-$ git --no-pager log --numstat --author="marslo" HEAD^..HEAD
-commit c361ddf2687319f978bb4ec0069b4b996607615f (HEAD -> marslo, origin/marslo)
-Author: marslo <marslo.jiao@gmail.com>
-Date:   Wed Jul 28 22:21:03 2021 +0800
-
-    add bufdo for vim
-
-1   0   docs/programming/groovy/groovy.md
-60  21  docs/vim/tricky.md
-```
-
-- for total count of changes
-  ```bash
-  $ git log --numstat --pretty="%H" --author="marslo" HEAD^..HEAD |
-        awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
-  +61, -21
-  ```
-
-- or [for pretty format](https://stackoverflow.com/a/63501669/2940319)
-  ```bash
-  $ git log HEAD^..HEAD --numstat --pretty="%H" |
-        awk 'NF==3 {added+=$1; deleted+=$2} NF==1 {commit++} END {printf("total lines added: +%d\ntotal lines deleted: -%d\ntotal commits: %d\n", added, deleted, commit)}'
-  total lines added: +61
-  total lines deleted: -21
-  total commits: 1
-  ```
-
-- [or](https://stackoverflow.com/a/61945239/2940319)
-  ```bash
-  $ git log --numstat --format="" HEAD^..HEAD |
-        awk '{files += 1}{ins += $1}{del += $2} END{print "total: "files" files, "ins" insertions(+) "del" deletions(-)"}'
-  total: 2 files, 61 insertions(+) 21 deletions(-)
-  ```
-
-  [git alias](https://stackoverflow.com/a/61945239/2940319)
-  ```bash
-  [alias]
-  summary = "!git log --numstat --format=\"\" \"$@\" | awk '{files += 1}{ins += $1}{del += $2} END{print \"total: \"files\" files, \"ins\" insertions(+) \"del\" deletions(-)\"}' #"
-  ```
-
-#### [`--shortstat`](https://stackoverflow.com/a/41307958/2940319)
-```bash
-$ git diff --shortstat HEAD^..HEAD
- 2 files changed, 61 insertions(+), 21 deletions(-)
-```
-
-- or [check for multiple commits](https://stackoverflow.com/a/53338858/2940319)
-  ```bash
-  $ git diff  $(git log -5 --pretty=format:"%h" | tail -1) --shortstat
-   7 files changed, 253 insertions(+), 24 deletions(-)
-  ```
-
 ### hook
 
 > [!NOTE|label:references:]
@@ -1091,7 +881,6 @@ $ git diff --shortstat HEAD^..HEAD
   ```
   <!--endsec-->
 
-
 ## filter-repo
 
 > [!TIP]
@@ -1099,6 +888,72 @@ $ git diff --shortstat HEAD^..HEAD
 >  ```bash
 >  $ brew install git-filter-repo
 >  ```
+
+
+> [!NOTE|label:check keywords in repo history:]
+> - [* git summaries](./statistics.md#get-contributors)
+>  ```bash
+>  # show accounts
+>  $ git shortlog -n -s -e
+>
+>  # find all commits with old email
+>  $ git log --all --format='%h %D %ad %ae %ce %s' --date=short | grep -Fi '<KEYWORD>'
+>  $ git log --all --format='%ae%n%ce' | grep -i '<KEYWORD>'
+>  $ git log --format='%H %ad %cd %ae' --date=iso-strict | grep -i '<KEYWORD>'
+>  ```
+
+### change commit email
+
+```bash
+$ cd /path/to/repo
+
+# update email in history
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
+old = b"<OLD@DOMAIN.COM>"
+new = b"<NEW@EMAIL.COM>"
+if commit.author_email == old:
+    commit.author_email = new
+if commit.committer_email == old:
+    commit.committer_email = new
+'
+
+# re-add the origin
+$ git remote add origin <remote-url>
+
+$ git push origin --all --force
+$ git push origin --tags --force
+```
+
+```bash
+# or with case-insensitive match
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
+keyword = b"<KEYWORD>"
+new = b"<NEW@EMAIL.COM>"
+if keyword in commit.author_email.lower():
+    commit.author_email = new
+if keyword in commit.committer_email.lower():
+    commit.committer_email = new
+'
+```
+
+```bash
+# or with message repalace
+$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
+keyword = b"<KEYWORD>"
+mail = b"<NEW@EMAIL>COM"
+
+if keyword in commit.author_email.lower():
+    commit.author_email = mail
+if keyword in commit.committer_email.lower():
+    commit.committer_email = mail
+' \
+  --message-callback '
+mail = b"<NEW@EMAIL.COM>"
+msg = message.replace(b"<old@domain.com>", mail)
+msg = msg.replace(b"<OLD@DOMAMIN.COM>", mail)
+return msg
+'
+```
 
 ### seperate folder into new repo
 
@@ -1142,67 +997,6 @@ $ git diff --shortstat HEAD^..HEAD
     git filter-repo --paths-from-file to-delete.txt --invert-paths
   ```
 
-### change commit email
-
-```bash
-$ cd /path/to/repo
-
-# update email in history
-$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
-old = b"<OLD@DOMAIN.COM>"
-new = b"<NEW@EMAIL.COM>"
-if commit.author_email == old:
-    commit.author_email = new
-if commit.committer_email == old:
-    commit.committer_email = new
-'
-
-# readd the origin
-$ git remote add origin <remote-url>
-
-$ git push origin --all --force
-$ git push origin --tags --force
-```
-
-```bash
-# or with case-insensitive match
-$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo --force --commit-callback '
-keyword = b"<KEYWORD>"
-new = b"<NEW@EMAIL.COM>"
-if keyword in commit.author_email.lower():
-    commit.author_email = new
-if keyword in commit.committer_email.lower():
-    commit.committer_email = new
-'
-```
-
-```bash
-# or with message repalace
-$ GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null git filter-repo \
-  --commit-callback '
-keyword = b"<KEYWORD>"
-mail = b"<NEW@EMAIL>COM"
-
-if keyword in commit.author_email.lower():
-    commit.author_email = mail
-if keyword in commit.committer_email.lower():
-    commit.committer_email = mail
-' \
-  --message-callback '
-mail = b"<NEW@EMAIL.COM>"
-msg = message.replace(b"<old@domain.com>", mail)
-msg = msg.replace(b"<OLD@DOMAMIN.COM>", mail)
-return msg
-'
-```
-
-```bash
-# find all commits with old email
-$ git log --all --format='%h %D %ad %ae %ce %s' --date=short | grep -Fi '<KEYWORD>'
-$ git log --all --format='%ae%n%ce' | grep -i '<KEYWORD>'
-$ git log --format='%H %ad %cd %ae' --date=iso-strict | grep -i '<KEYWORD>'
-```
-
 ### rewrite the commit history
 ```bash
 # `ISSUE-xxx: xxxx` -> `[LEGACY] ISSUE-xxx: xxxx`
@@ -1236,13 +1030,7 @@ $ git filter-repo --replace-text replace.txt
 $ git filter-repo --strip-blobs-bigger-than 50M
 ```
 
-## refspec
-
-> [!NOTE|label:references:]
-> - [10.5 Git Internals - The Refspec](https://git-scm.com/book/en/v2/Git-Internals-The-Refspec)
-
 ## others
-
 ### case-sensitive repo in osx
 ```bash
 $ hdiutil create -type SPARSE \

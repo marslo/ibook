@@ -1,3 +1,7 @@
+[![pages-build-deployment](https://github.com/marslo/ibook/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/marslo/ibook/actions/workflows/pages/pages-build-deployment)
+
+---
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -11,6 +15,10 @@
     - [verify](#verify)
 - [revert node](#revert-node)
 - [troubleshooting](#troubleshooting-1)
+  - [`if (cb) cb.apply(this, arguments)`](#if-cb-cbapplythis-arguments)
+  - [`Error: ENOENT: no such file or directory, stat '.../_book/gitbook/gitbook-plugin-github-buttons/plugin.js'`](#error-enoent-no-such-file-or-directory-stat-_bookgitbookgitbook-plugin-github-buttonspluginjs)
+  - [`TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined``](#typeerror-err_invalid_arg_type-the-path-argument-must-be-of-type-string-received-undefined)
+    - [how to fix](#how-to-fix)
 - [tips](#tips)
   - [basic usage](#basic-usage)
 

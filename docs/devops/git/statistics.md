@@ -1,7 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [list all user commits history with line changes](#list-all-user-commits-history-with-line-changes)
 - [commits](#commits)
   - [total commits](#total-commits)
   - [user commits](#user-commits)
@@ -10,6 +9,17 @@
   - [total changes](#total-changes)
   - [user changes](#user-changes)
   - [file changes](#file-changes)
+- [comamnds](#comamnds)
+  - [`--stat`](#--stat)
+  - [`--numstat`](#--numstat)
+  - [`--shortstat`](#--shortstat)
+  - [get repo active days](#get-repo-active-days)
+  - [get commit count](#get-commit-count)
+  - [get contributors](#get-contributors)
+  - [format the author](#format-the-author)
+  - [get all files count in the repo](#get-all-files-count-in-the-repo)
+  - [show diff file only](#show-diff-file-only)
+  - [repo age](#repo-age)
 - [tools](#tools)
   - [git-stat](#git-stat)
   - [nova git stats](#nova-git-stats)
@@ -29,7 +39,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 {% hint style='tip' %}
 > references:
 > - [* git-quick stats](https://github.com/arzzen/git-quick-stats.git)
@@ -42,11 +51,6 @@
 > - [How to count total lines changed by a specific author in a Git repository?](https://stackoverflow.com/a/7010890/2940319)
 > - [arzzen/git-quick-stats](https://github.com/arzzen/git-quick-stats)
 {% endhint %}
-
-## list all user commits history with line changes
-```bash
-$ git log ${GIT_OPT} --author="marslo" --oneline --shortstat [--no-merges]
-```
 
 ## commits
 
@@ -84,28 +88,28 @@ $ git rev-list HEAD ${GIT_OPT} --author='marslo' --count
 
 ## line changes
 
-> [!NOTE]
-> references:
+> [!NOTE|label:references:]
 > - [git contribution per author (lines)](https://stackoverflow.com/a/25480975/2940319)
 > - [escaping alias commands in a gitconfig files](https://stackoverflow.com/q/7804170/2940319)
+>
+> - list all user commits history with line changes
+>  ```bash
+>  $ git log ${GIT_OPT} --author="marslo" --oneline --shortstat [--no-merges]
+>  ```
 
 ### full history
 ```bash
 $ git ls-files -z |
       xargs -0n1 git blame -w |
       perl -n -e '/^.*?\((.*?)\s+[\d]{4}/; print $1,"\n"' |
-      sort -f |
-      uniq -c |
-      sort -nr
+      sort -f | uniq -c | sort -nr
 
 # or using sed instead of perl
 $ git ls-files -z |
       xargs -0n1 git blame -w -C |
       sed -r 's/^[^(]+\((.*) [0-9]{4}-.*/\1/' |
       sed -r 's/ +$//' |
-      sort -f |
-      uniq -c |
-      sort -nr
+      sort -f | uniq -c | sort -nr
 ```
 
 ### total changes
@@ -170,6 +174,179 @@ $ git log "${GIT_OPT}" --author='marslo' --numstat  --pretty=tformat: |
 $ git log --pretty=format: --name-only | sed '/^\s*$/d' | sort | uniq -c | sort -rg | head -100
 # windows
 $ git log --pretty=format: --name-only | sort | uniq -c | sort /R | head -100
+```
+
+## comamnds
+
+### `--stat`
+```bash
+$ git diff --stat HEAD^ HEAD
+ docs/programming/groovy/groovy.md |  1 +
+ docs/vim/tricky.md                | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 61 insertions(+), 21 deletions(-)
+
+# for particular account: https://stackoverflow.com/a/2528129/2940319
+$ git --no-pager diff --author='marslo' --stat HEAD^ HEAD
+ docs/programming/groovy/groovy.md |  1 +
+ docs/vim/tricky.md                | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------
+ 2 files changed, 61 insertions(+), 21 deletions(-)
+```
+
+### `--numstat`
+```bash
+$ git --no-pager log --numstat --author="marslo" HEAD^..HEAD
+commit c361ddf2687319f978bb4ec0069b4b996607615f (HEAD -> marslo, origin/marslo)
+Author: marslo <marslo.jiao@gmail.com>
+Date:   Wed Jul 28 22:21:03 2021 +0800
+
+    add bufdo for vim
+
+1   0   docs/programming/groovy/groovy.md
+60  21  docs/vim/tricky.md
+```
+
+```bash
+# for total count of changes
+$ git log --numstat --pretty="%H" --author="marslo" HEAD^..HEAD |
+      awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
++61, -21
+```
+
+```bash
+# for pretty format: https://stackoverflow.com/a/63501669/2940319
+$ git log HEAD^..HEAD --numstat --pretty="%H" |
+      awk 'NF==3 {added+=$1; deleted+=$2} NF==1 {commit++} END {printf("total lines added: +%d\ntotal lines deleted: -%d\ntotal commits: %d\n", added, deleted, commit)}'
+total lines added: +61
+total lines deleted: -21
+total commits: 1
+```
+
+```bash
+# or: https://stackoverflow.com/a/61945239/2940319
+$ git log --numstat --format="" HEAD^..HEAD |
+      awk '{files += 1}{ins += $1}{del += $2} END{print "total: "files" files, "ins" insertions(+) "del" deletions(-)"}'
+total: 2 files, 61 insertions(+) 21 deletions(-)
+```
+
+```bash
+# alias: https://stackoverflow.com/a/61945239/2940319
+[alias]
+  summary = "!git log --numstat --format=\"\" \"$@\" | awk '{files += 1}{ins += $1}{del += $2} END{print \"total: \"files\" files, \"ins\" insertions(+) \"del\" deletions(-)\"}' #"
+```
+
+### [`--shortstat`](https://stackoverflow.com/a/41307958/2940319)
+```bash
+$ git diff --shortstat HEAD^..HEAD
+ 2 files changed, 61 insertions(+), 21 deletions(-)
+```
+
+```bash
+# check for multiple commits: https://stackoverflow.com/a/53338858/2940319
+$ git diff  $(git log -5 --pretty=format:"%h" | tail -1) --shortstat
+ 7 files changed, 253 insertions(+), 24 deletions(-)
+```
+
+### get repo active days
+```bash
+$ git log --pretty='format: %ai' $1 |
+      cut -d ' ' -f 2 |
+      sort -r |
+      uniq |
+      awk '{ sum += 1 } END {print sum}'
+```
+
+### get commit count
+```bash
+# since particular commit
+$ git log --oneline <hash-id> | wc -l | tr -d ' '
+635
+
+# since the initial commit
+$ git log --oneline | wc -l | tr -d ' '
+780
+```
+
+### get contributors
+```bash
+$ git shortlog -n -s -e
+   110   marslo <marslo.jiao@gmail.com>
+    31   marslo <marslo@xxx.com>
+```
+
+<!--sec data-title="collection" data-id="section0" data-show=true data-collapse=true ces-->
+
+```bash
+# https://github.com/tj/git-extras/blob/master/bin/git-summary#L81
+$ git shortlog -n -s -e |
+      awk ' {
+        sum += $1
+        if ($NF in emails) {
+            emails[$NF] += $1
+        } else {
+            email = $NF
+            emails[email] = $1
+            # set commits/email to empty
+            $1=$NF=""
+            sub(/^[[:space:]]+/, "", $0)
+            sub(/[[:space:]]+$/, "", $0)
+            name = $0
+            if (name in names) {
+                # when the same name is associated with existed email,
+                # merge the previous email into the later one.
+                emails[email] += emails[names[name]]
+                emails[names[name]] = 0
+            }
+            names[name] = email
+        }
+      } END {
+        for (name in names) { email = names[name]; printf "%6d\t%s\n", emails[email], name; }
+    }'
+   141  marslo
+```
+
+<!--endsec-->
+
+### format the author
+```bash
+$ git shortlog -n -s -e | awk '
+    {
+      args[NR] = $0; sum += $0
+    } END {
+      for (i = 1; i <= NR; ++i) {
+        printf "%s♪%2.1f%%\n", args[i], 100 * args[i] / sum
+      }
+    }
+  ' | column -t -s♪ | sed "s/\\\x09/\t/g"
+   110  marslo <marslo.jiao@gmail.com>  78.0%
+    31  marslo <marslo@xxx.com>         22.0%
+```
+
+### get all files count in the repo
+```bash
+$ git ls-files | wc -l | tr -d ' '
+```
+
+### show diff file only
+```bash
+$ git log --numstat --pretty="%H" --author=marslo HEAD~3..HEAD
+9fdb297ba0d2d51975e91d2b7e40fb5e96be4f5f
+
+8       1       docs/artifactory/artifactory.md
+095ec79c89d98831c0a485f55011bf81c6f712ad
+
+49      11      docs/linux/disk.md
+5       1       docs/osx/util.md
+f15a40c8dea2927db54570268aca4203cd50a416
+
+1       0       docs/SUMMARY.md
+-       -       docs/screenshot/tools/ms/outlook-keychain-1.png
+81      0       docs/tools/ms.md
+```
+
+### repo age
+```bash
+$ git log --reverse --pretty=oneline --format="%ar" | head -n 1 | LC_ALL=C sed 's/ago//'
+4 months
 ```
 
 ## tools
@@ -332,21 +509,21 @@ $ git effort --above 15 devops/*
 
 $ git effort -- --since='3 months ago'
   path                                                                                                    commits    active days
-  devops/awesomeShell.md................................................................................. 34          16
-  vim/plugins.md......................................................................................... 26          17
-  vim/deprecated.md...................................................................................... 21          14
-  linux/basic.md......................................................................................... 17          15
-  SUMMARY.md............................................................................................. 16          9
-  linux/apt-yum.md....................................................................................... 15          14
-  linux/devenv.md........................................................................................ 14          9
-  devops/adminTools.md................................................................................... 14          10
-  cheatsheet/bash/sugar.md............................................................................... 14          13
-  cheatsheet/character/character.md...................................................................... 13          9
-  osx/apps.md............................................................................................ 12          9
-  devops/git/config.md................................................................................... 11          10
-  linux/system.md........................................................................................ 9           7
-  virtualization/kubernetes/cheatsheet.md................................................................ 8           7
-  vim/troubleshooting.md................................................................................. 8           8
+  devops/awesomeShell.md.......................................................... 34          16
+  vim/plugins.md.................................................................. 26          17
+  vim/deprecated.md............................................................... 21          14
+  linux/basic.md.................................................................. 17          15
+  SUMMARY.md...................................................................... 16          9
+  linux/apt-yum.md................................................................ 15          14
+  linux/devenv.md................................................................. 14          9
+  devops/adminTools.md............................................................ 14          10
+  cheatsheet/bash/sugar.md........................................................ 14          13
+  cheatsheet/character/character.md............................................... 13          9
+  osx/apps.md..................................................................... 12          9
+  devops/git/config.md............................................................ 11          10
+  linux/system.md................................................................. 9           7
+  virtualization/kubernetes/cheatsheet.md......................................... 8           7
+  vim/troubleshooting.md.......................................................... 8           8
 ```
 
 ### [git summary](https://github.com/tj/git-extras/blob/main/bin/git-summary)
@@ -366,6 +543,7 @@ $ git summary --line
 
 $ git log --pretty=format:"%H" --since='3 months ago' | tail -1
 435c4f75edb840a5f2c10991fc1d072eb4f51e50
+
 $ git summary 435c4f75edb840a5f2c10991fc1d072eb4f51e50..
 
  project     : mbook
@@ -478,16 +656,13 @@ docs/linux/ubuntu/apps.md                                                       
   ```bash
   $ git ls-files |
         while read f; do git blame -w -M -C -C --line-porcelain "$f" | grep -I '^author '; done |
-        sort -f |
-        uniq -ic |
-        sort -n --reverse
+        sort -f | uniq -ic | sort -n --reverse
   ```
 
   ```bash
   # https://stackoverflow.com/a/1487421/2940319
   $ git log --pretty=format:%an \
-    | awk '{ ++c[$0]; } END { for(cc in c) printf "%5d %s\n",c[cc],cc; }'\
-    | sort -r
+    | awk '{ ++c[$0]; } END { for(cc in c) printf "%5d %s\n",c[cc],cc; }' | sort -r
   ```
 
 ### others
