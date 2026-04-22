@@ -23,10 +23,11 @@
   - [user](#user)
     - [`subuid` & `subgid`](#subuid--subgid)
     - [local user management](#local-user-management)
+    - [change UID](#change-uid)
   - [group](#group)
     - [get group](#get-group)
     - [create group](#create-group)
-    - [modify group](#modify-group)
+    - [change GID](#change-gid)
     - [manager group users](#manager-group-users)
 - [tips](#tips)
   - [list account permission](#list-account-permission)
@@ -136,7 +137,7 @@ $ sudo /usr/sbin/sss_override user-show user-name
 # check current uid
 $ id -u <username>
 
-# overwride
+# override
 $ sudo /usr/sbin/sss_override user-add <username> -u <new-uid>
 $ sudo /usr/sbin/sss_cache --users
 # or
@@ -455,25 +456,24 @@ $ echo USERNAME:10000:65536 >> /etc/subgid
 {% endhint %}
 
 ```bash
-$ useradd -c "comments here" \
-          -m \
-          -d "/home/devops" \
-          -u 1000 \
-          -g 1000 \
-          -s /bin/bash \
-          devops
+$ sudo groupadd -g 1000 devops
+$ sudo useradd --comment "comments here" \
+               --create-home \
+               --home-dir /home/devops \
+               --shell /bin/bash \
+               --uid 1000 \
+               --gid 1000 \
+               --user-group devops
+               devops
+
+# or system will create GID 1000 automatically
+$ sudo useradd -c "comments here" \
+               -m \
+               -d "/home/devops" \
+               -u 1000 \
+               -s /bin/bash \
+               devops
 ```
-- or
-  ```bash
-  $ useradd --comment "comments here" \
-            --create-home \
-            --home-dir /home/devops \
-            --shell /bin/bash \
-            --uid 1000 \
-            --gid 1000 \
-            --user-group devops
-            devops
-  ```
 
 - full steps
   ```bash
@@ -493,7 +493,7 @@ $ useradd -c "comments here" \
             ${user}
   ```
 
-#### [`deluser`](http://manpages.ubuntu.com/manpages/trusty/man8/deluser.8.html) for ubunut
+#### [`deluser`](http://manpages.ubuntu.com/manpages/trusty/man8/deluser.8.html) for ubuntu
 
 > [!NOTE|label:references:]
 > - `deluser` - remove a user from the system
@@ -522,13 +522,31 @@ $ deluser <account> <group>
 $ /usr/sbin/useradd -ou 0 -g root -d /root -s /bin/bash -p $(echo password1 | openssl passwd -1 -stdin) test 2>/tmp/err
 ```
 
-- [generate secure password to userwith chpasswd](https://www.commandlinefu.com/commands/view/1491/generate-secure-password-to-userwith-chpasswd)
-  ```bash
-  $ echo "encryptedpassword" | openssl passwd -1 -stdin
+#### [generate secure password to userwith chpasswd](https://www.commandlinefu.com/commands/view/1491/generate-secure-password-to-userwith-chpasswd)
+```bash
+$ echo "encryptedpassword" | openssl passwd -1 -stdin
 
-  # or
-  $ echo "test:$(echo password | openssl passwd -1 -stdin -salt abcde)" | sudo chpasswd -e
-  ```
+# or
+$ echo "test:$(echo password | openssl passwd -1 -stdin -salt abcde)" | sudo chpasswd -e
+```
+
+### change UID
+
+> [!NOTE|label:example:]
+> - current status:
+>   - `devops` with uid `1000`
+>   - `jenkins` with uid `1001`
+> - change `devops` uid to `1100`; and `jenkins` uid to `1000`
+
+```bash
+$ sudo pkill -KILL -u devops; sudo usermod -u 1100 devops
+$ sudo find / -user 1000 -exec chown -h 1100 {} \; 2>/dev/null
+
+$ sudo pkill -KILL -u jenkins; sudo usermod -u 1000 jenkins
+$ sudo find / -user 1001 -exec chown -h 1000 {} \; 2>/dev/null
+
+$ id devops; id jenkins
+```
 
 ## group
 
@@ -631,7 +649,7 @@ $ sudo groupadd -o -g <new_gid> <group_name>
   $ groupadd --system hardwareteam
   ```
 
-### modify group
+### change GID
 
 > [!NOTE|label:references:]
 > - [Change gid of a specific group](https://unix.stackexchange.com/a/33874/29178)
@@ -639,8 +657,10 @@ $ sudo groupadd -o -g <new_gid> <group_name>
 ```bash
 $ sudo groupmod -o -g <gid> <group_name>
 
-# change file mode
-$ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
+# change file mode ( not for symbolic link )
+$ sudo find / -gid <OLD_GID> ! -type l -exec chgrp <NEW_GID> {} \;
+# or for all
+$ sudo find / -group <OLD_GID> -exec chgrp -h <NEW_GID> {} \; 2>/dev/null
 ```
 
 - `groupmod: group 'xxx' does not exist in /etc/group`
@@ -651,10 +671,13 @@ $ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
   # check available GID
   $ getent group 1994
 
-  # modify GID
+  # -- modify GID --
   $ sudo groupmod -o -g 1994 gl3
   groupmod: group 'gl3' does not exist in /etc/group
   $ sudo echo 'gl3:*:994:' >> /etc/group
+  # or
+  $ getent group 994 | sudo tee -a /etc/group
+  # verify
   $ grep gl3 /etc/group
   gl3:*:994:
 
@@ -682,7 +705,7 @@ $ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
   {% endhint %}
 
   ```bash
-  $ gpasswd -d <account> <group>
+  $ sudo gpasswd -d <account> <group>
 
   # or ubuntu
   $ sudo deluser <account> <group>
@@ -692,7 +715,7 @@ $ find / -gid OLD_GID ! -type l -exec chgrp NEW_GID {} \;
 ## list account permission
 ```bash
 $ sudo -l -U marslo
-User marslo may run the following commands on kuberentes-01:
+User marslo may run the following commands on kubernetes-01:
     (ALL) NOPASSWD: ALL
     (ALL) NOPASSWD: /usr/bin/su - devops
 ```
@@ -723,27 +746,23 @@ LC_ALL=en_US.UTF-8
 ## logout
 ```bash
 $ pkill -KILL -u ${useranme}
+
+# -- or with PID
+$ who -uH
+NAME     LINE         TIME             IDLE          PID COMMENT
+devops   pts/0        2022-06-14 05:44 00:17       41455 (192.168.1.1)
+marslo   pts/1        2022-06-14 05:58   .         50162 (192.168.1.1)
+$ sudo kill 41455
+$ who -uH
+NAME     LINE         TIME             IDLE          PID COMMENT
+marslo   pts/1        2022-06-14 05:58   .         50162 (192.168.1.1)
+
+# -- or with loginctl: https://unix.stackexchange.com/a/538885/29178
+# get login details
+$ loginctl
+# logout
+$ loginctl kill-user <username>
 ```
-- or
-  ```bash
-  $ who -uH
-  NAME     LINE         TIME             IDLE          PID COMMENT
-  devops   pts/0        2022-06-14 05:44 00:17       41455 (192.168.1.1)
-  marslo   pts/1        2022-06-14 05:58   .         50162 (192.168.1.1)
-  $ sudo kill  41455
-  $ who -uH
-  NAME     LINE         TIME             IDLE          PID COMMENT
-  marslo   pts/1        2022-06-14 05:58   .         50162 (192.168.1.1)
-  ```
-
-- [or : `loginctl`](https://unix.stackexchange.com/a/538885/29178)
-  ```bash
-  # get login details
-  $ loginctl
-
-  # logout
-  $ loginctl kill-user <username>
-  ```
 
 ### [view users password properties in linux](https://www.2daygeek.com/understanding-linux-etc-shadow-file-format/)
 ```bash
