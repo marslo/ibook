@@ -9,7 +9,11 @@
   - [identify - images](#identify---images)
 - [copy path](#copy-path)
   - [copy STDOUT into clipboard](#copy-stdout-into-clipboard)
-  - [Copy path from finder](#copy-path-from-finder)
+  - [copy path from finder](#copy-path-from-finder)
+- [input method auto switch](#input-method-auto-switch)
+  - [im-select](#im-select)
+  - [macime](#macime)
+  - [macism](#macism)
 - [create app](#create-app)
   - [cleanup icon cache and rebuild](#cleanup-icon-cache-and-rebuild)
   - [groovyConsole](#groovyconsole)
@@ -29,6 +33,7 @@
   - [modify font in plist](#modify-font-in-plist)
   - [show process details](#show-process-details)
   - [`/usr/bin/xattr`](#usrbinxattr)
+  - [hammerspoon](#hammerspoon)
 - [tips](#tips)
   - [shutdown mac via commands](#shutdown-mac-via-commands)
   - [alert on mac when server is up](#alert-on-mac-when-server-is-up)
@@ -217,7 +222,7 @@ $ <cmd> | pbcopy
   $ pwd | pbcopy
   ```
 
-### Copy path from finder
+### copy path from finder
 - [*right-click*(<kbd>control</kbd> + left-click) -> <kbd>option</kbd>](https://osxdaily.com/2013/06/19/copy-file-folder-path-mac-os-x/)
 
 ![option key](../screenshot/osx/copy-path-optional-key.png)
@@ -247,6 +252,75 @@ $ <cmd> | pbcopy
 
 ![copy path shortcut key](../screenshot/osx/copy-path-shortcut.png)
 
+## input method auto switch
+
+### im-select
+```bash
+$ brew tap daipeihust/tap
+$ brew install im-select
+
+# or
+$ curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
+
+# or compile from source
+$ git clone https://github.com/laishulu/macism /tmp/macism
+$ cd /tmp/macism && swiftc macism.swift -o macism
+$ sudo mv macism /usr/local/bin/
+```
+
+### macime
+```bash
+$ brew tap riodelphino/tap
+$ brew install macime
+```
+
+```bashaw
+# list all input method
+$ macime list
+com.apple.keylayout.US
+com.apple.CharacterPaletteIM
+com.apple.inputmethod.ironwood
+com.sogou.inputmethod.sogou.pinyin
+com.sogou.inputmethod.sogou
+
+# get current input method
+$ macime get
+com.sogou.inputmethod.sogou.pinyin
+
+# switch input method
+$ macime set com.apple.keylayout.US
+```
+
+```viml
+" autocmd for force change input method
+if executable('macime')
+  let g:ime_en = 'com.apple.keylayout.US'
+  augroup Ime_Switch
+    autocmd!
+    autocmd FocusGained  * call system( 'macime set ' . g:ime_en )
+    autocmd InsertLeave  * call system( 'macime set ' . g:ime_en )
+    autocmd CmdlineLeave * call system( 'macime set ' . g:ime_en )
+  augroup END
+endif
+
+" --- or ---
+if executable('macime')
+  let g:ime_en = 'com.apple.keylayout.US'
+  augroup Ime_Switch
+    autocmd!
+    autocmd WinEnter     * silent! call system( 'macime set ' . g:ime_en . ' &>/dev/null &' )
+    autocmd InsertLeave  * silent! call system( 'macime set ' . g:ime_en . ' &>/dev/null &' )
+    autocmd CmdlineLeave * silent! call system( 'macime set ' . g:ime_en . ' &>/dev/null &' )
+  augroup END
+endif
+```
+
+### macism
+```bash
+$ brew tap laishulu/homebrew
+$ brew install macism
+```
+
 ## create app
 
 > [!NOTE|label:references:]
@@ -266,8 +340,8 @@ $ killall Finder Dock
 
 ### groovyConsole
 
-> [!NOTE|label:expection]
-> case: run `groovyConsole` from Spolite or Alfred
+> [!NOTE|label:Expectation:]
+> case: run `groovyConsole` from Spotlight or Alfred
 > - reference:
 >   - [Install groovy console on Mac and make it runnable from dock](https://superuser.com/a/1303372/112396)
 
@@ -277,9 +351,11 @@ $ killall Finder Dock
 > Automator.app will create whole bunch of necessary files for app. only need to replace the `CFBundleExecutable` filename
 
 - Open **Automator.app** » **New** » **Application**
-  ![Automator.app » select Applicaiton](../screenshot/osx/runable-app-1.png)
+
+  ![Automator.app » select Application](../screenshot/osx/runable-app-1.png)
 
 - Select **Run Shell Script** » save to <name>.app with empty shell script
+
   ![Automator.app » select Run Shell Script](../screenshot/osx/runable-app-2.png)
 
   ![Automator.app » save to an app](../screenshot/osx/runable-app-3.png)
@@ -729,6 +805,7 @@ $ find /System/Library/Frameworks -type f -name "lsregister" -exec {} -kill -see
 ### and snippets
 - go to **System Preferences** ⇢ **Keyboard** ⇢ **Test**
 - add snippets as below
+
   ![snippets](../screenshot/osx/snippets-3.png)
 
 ### finally
@@ -741,7 +818,6 @@ $ find /System/Library/Frameworks -type f -name "lsregister" -exec {} -kill -see
 
 > [!NOTE|label:references:]
 > - [3 Ways to Insert the Mac Command Symbol](https://instructionaltechtalk.com/3-ways-to-insert-the-mac-command-symbol/)
-
 
 ![unicode hex input](../screenshot/osx/osx-input-unicode-hex.gif)
 
@@ -915,7 +991,7 @@ $ sudo asr restore --source <disk image>.dmg --target /Volumes/<volume name>
 > - [Disk Management From the Command-Line, Part 3](http://www.theinstructional.com/guides/disk-management-from-the-command-line-part-3)
 {% endhint %}
 
-#### list disks and volumns
+#### list disks and volumes
 ```bash
 $ diskutil list
 
@@ -941,7 +1017,7 @@ $ docker run cmd.cat/lshw lshw -class disk
 $ system_profiler SPStorageDataType
 ```
 
-#### check volumn info
+#### check volume info
 ```bash
 $ diskutil info <path/to/volumn>
 # i.e.:
@@ -1284,6 +1360,86 @@ $ defaults read ~/Library/Preferences/groovy.console.ui.plist
   $ /usr/bin/xattr -c test.txt
   ```
 
+### hammerspoon
+
+> [!NOTE|label:references:]
+> - [Hammerspoon](https://www.hammerspoon.org/)
+
+#### to show debug info
+```lua
+-- ~/.hammerspoon/init.lua
+local function logFocused()
+  local app = hs.application.get("Cursor")
+  if not app then print("Cursor not running"); return end
+  local focused = hs.axuielement.applicationElement(app):attributeValue("AXFocusedUIElement")
+  if not focused then print("no focused element"); return end
+  print("=== focused element ===")
+  print("role:        " .. (focused:attributeValue("AXRole")            or "nil"))
+  print("subrole:     " .. (focused:attributeValue("AXSubrole")         or "nil"))
+  print("description: " .. (focused:attributeValue("AXRoleDescription") or "nil"))
+  print("title:       " .. (focused:attributeValue("AXTitle")           or "nil"))
+  print("identifier:  " .. (focused:attributeValue("AXIdentifier")      or "nil"))
+  print("label:       " .. (focused:attributeValue("AXLabel")           or "nil"))
+  print("=======================")
+end
+
+-- ctrl + F1: log focused element
+hs.hotkey.bind({"ctrl"}, "f1", logFocused)
+```
+
+#### switch input method in cursor/vscode
+```lua
+local MACIME  = "/opt/homebrew/bin/macime"
+local ENGLISH = "com.apple.keylayout.US"
+
+-- brew tap riodelphino/tap && brew install macime
+local function switchToEnglish()
+  hs.execute(MACIME .. " set " .. ENGLISH)
+end
+
+local function getFocusedDescription(app)
+  local el = hs.axuielement.applicationElement(app):attributeValue("AXFocusedUIElement")
+  if not el then return nil end
+  return el:attributeValue("AXRoleDescription")
+end
+
+-- watch focus changes within Cursor
+local observer
+
+local function startObserver()
+  local app = hs.application.get("Cursor")
+  if not app then return end
+
+  local axApp = hs.axuielement.applicationElement(app)
+  observer = hs.axuielement.observer.new(app:pid())
+  observer:addWatcher(axApp, "AXFocusedUIElementChanged")
+  observer:callback(function()
+    local a = hs.application.get("Cursor")
+    if not a then return end
+    local desc = getFocusedDescription(a)
+    if desc == "editor" then
+      switchToEnglish()
+    end
+  end)
+  observer:start()
+end
+
+-- start observer when Cursor launches or is activated
+hs.application.watcher.new(function(name, event, _)
+  if name ~= "Cursor" then return end
+  if event == hs.application.watcher.launched
+  or event == hs.application.watcher.activated then
+    startObserver()
+  end
+  if event == hs.application.watcher.terminated then
+    if observer then observer:stop(); observer = nil end
+  end
+end):start()
+
+-- handle already-running Cursor
+startObserver()
+```
+
 ## tips
 ### shutdown mac via commands
 ```bash
@@ -1298,17 +1454,13 @@ $ ping -o -i 30 HOSTNAME && osascript -e 'tell app "Terminal" to display dialog 
 ### [turn off the screen without sleeping](https://apple.stackexchange.com/a/266103/254265)
 ```bash
 $ pmset displaysleepnow
+
+# sleep
+$ pmset sleepnow
+
+# lock
+$ pmset lock
 ```
-
-- sleep
-  ```bash
-  $ pmset sleepnow
-  ```
-
-- lock
-  ```bash
-  $ pmset lock
-  ```
 
 ### disable startup music
 ```bash
@@ -1338,22 +1490,20 @@ $ sudo jamf displayMessage -message "Hello World!"
 ### [launch iOS simulator](https://medium.com/@abrisad_it/how-to-launch-ios-simulator-and-android-emulator-on-mac-cd198295532e)
 ```bash
 $ xcrun simctl list
-$ open -a Simulator --args -CurrentDeviceUDID <your device UDID>
+$ open -a Simulator --args -CurrentDeviceUDID <DEVICE-UDID>
 ```
 
 - install the application on the device
   ```bash
-  $ xcrun simctl install <your device UDID> <path to application bundle>
-  $ xcrun simctl launch <your device UDID> <app bundle identifier>
+  $ xcrun simctl install <DEVICE-UDID> <path to application bundle>
+  $ xcrun simctl launch <DEVICE-UDID> <app bundle identifier>
+
+  # or
+  $ open -a Simulator.app
+
+  # or
+  $ open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
   ```
-  - or
-    ```bash
-    $ open -a Simulator.app
-    ```
-  - or
-    ```bash
-    $ open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
-    ```
 
 ### show startup launch apps
 ```bash
