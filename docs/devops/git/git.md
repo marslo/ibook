@@ -12,6 +12,7 @@ git command study and practice
   - [get abbrev commit ids](#get-abbrev-commit-ids)
   - [get previous commit id](#get-previous-commit-id)
   - [get next commit id](#get-next-commit-id)
+  - [get commit count between revisions](#get-commit-count-between-revisions)
 - [branch](#branch)
   - [get current branch](#get-current-branch)
   - [create empty branch](#create-empty-branch)
@@ -21,6 +22,7 @@ git command study and practice
   - [sort local branch via `committerdate`](#sort-local-branch-via-committerdate)
   - [change head](#change-head)
   - [get first parent branch](#get-first-parent-branch)
+  - [find out the ancestor or mergebase](#find-out-the-ancestor-or-mergebase)
 - [tag](#tag)
   - [show tags](#show-tags)
   - [sort git tags](#sort-git-tags)
@@ -210,6 +212,28 @@ $ git rev-list --no-walk <commit-id>^
 
 ```bash
 $ git rev-list --no-walk <commit-id>..HEAD | tail -1
+```
+
+### get commit count between revisions
+
+> [!TIP]
+> - for `git format-patch`, it will generate only non-merge commits by default, so the count should be same as `git rev-list --count --no-merges <from>..<to>`
+
+```bash
+# all commits, including merge points
+$ git rev-list --count <from>..<to>
+# -- all for branch --
+$ git rev-list --count refs/remotes/origin/branch
+
+# exclude merge points
+$ git rev-list --count --no-merges <from>..<to>
+# -- exclude merge points for branch --
+$ git rev-list --count --no-merges refs/remotes/origin/branch
+
+# only merge points
+$ git rev-list --count --merges <from>..<to>
+# -- only merge points for branch --
+$ git rev-list --count --merges refs/remotes/origin/branch
 ```
 
 ## branch
@@ -505,6 +529,31 @@ $ git branch --sort=committerdate   # ASC
 > - [How to find the nearest parent of a Git branch](https://stackoverflow.com/q/3161204/2940319)
 > - [joechrysler/who_is_my_mummy.sh](https://gist.github.com/joechrysler/6073741)
 > - [* explainshell.com](https://explainshell.com)
+
+### find out the ancestor or mergebase
+
+> [!NOTE|label:references:]
+> - `git merge-base --is-ancestor <A> <B>` -> returns -> `0` if A is an ancestor of B, otherwise returns `1`
+> - `git merge-base <A> <B>` -> returns -> the best common ancestor of A and B
+>   - exit code: `0` + print the best common ancestor -> find out
+>   - exit code `1` + print nothing -> no common ancestor
+
+```bash
+# A is ancestor of B
+$ git merge-base --is-ancestor A B
+# -- i.e. --
+$ git merge-base --is-ancestor 93cd30f9f5d8991a6909b8cb04075c9638bb40b3 remotes/origin/main
+
+# find common ancestor of a and b - lowest common ancestor - 共同的祖先
+$ git merge-base A B
+# -- i.e. --
+$ git merge-base 93cd30f9f5d8991a6909b8cb04075c9638bb40b3 remotes/origin/main
+b8e4f8ac4ac6f31188d34ae69b3a27ca879bad7b
+# i.e.:
+#        b8e4f8ac  ← merge-base（LCA）
+#        /        \
+#  ...93cd30f9  ...3d9b8e14 (main, HEAD)
+```
 
 ## tag
 
@@ -1172,28 +1221,22 @@ $ git log --graph --decorate $(git rev-list -g --all)
 
 $ git checkout <sha>
 $ git checkout -b /branch/name
+
+# or find out recent actions
+$ git reflog --no-abbrev
+
+# or find all losts
+$ git fsck --full \
+           --no-reflogs \
+           --unreachable \
+           --lost-found |
+      grep commit |
+      cut -d\  -f3 |
+      xargs -n 1 git log -n 1 --pretty=oneline
+
+# show diff
+$ git log -p <sha>
 ```
-
-- or find out recent actions
-  ```bash
-  $ git reflog --no-abbrev
-  ```
-
-- or find all losts
-  ```bash
-  $ git fsck --full \
-             --no-reflogs \
-             --unreachable \
-             --lost-found |
-        grep commit |
-        cut -d\  -f3 |
-        xargs -n 1 git log -n 1 --pretty=oneline
-  ```
-
-- show diff
-  ```bash
-  $ git log -p <sha>
-  ```
 
 #### revert single file to remotes
 ```bash

@@ -23,7 +23,6 @@
   - [update and cleanup](#update-and-cleanup)
   - [brew debug](#brew-debug)
   - [paths](#paths)
-  - [cleanup](#cleanup)
   - [list the packages installed from taps](#list-the-packages-installed-from-taps)
   - [manual download and install from local](#manual-download-and-install-from-local)
   - [`brew gist-log`](#brew-gist-log)
@@ -779,13 +778,22 @@ $ brew -v edit macvim-dev/macvim/macvim
 ```bash
 $ brew update-reset && brew cleanup
 
-# optional
+# optional - remove all caches
 $ brew cleanup -s
 # -- or --
 $ rm -rf $(brew --cache)
 
+# cleanup
+# -- remove all old versions --
+$ brew cleanup --prune=all
+# -- remove all cache files older than specified days --
+$ brew cleanup --prune=1
+
 # logs
 $ rm -rf ~/Library/Logs/Homebrew/*
+
+# locks
+$ rm -rf $(brew --prefix)/var/homebrew/locks/*
 ```
 
 ### brew debug
@@ -862,15 +870,6 @@ $ rm -rf ~/Library/Logs/Homebrew/*
   $ brew --cellar python@3
   /usr/local/Cellar/python@3.9
   ```
-
-### [cleanup](${brew_source}/brew/issues/3784#issuecomment-364675767)
-```bash
-# Remove all cache files older than specified days
-$ brew cleanup --prune=1
-
-# remove all caches
-$ brew cleanup -s
-```
 
 ### [list the packages installed from taps](https://stackoverflow.com/a/44358788/2940319)
 ```bash
